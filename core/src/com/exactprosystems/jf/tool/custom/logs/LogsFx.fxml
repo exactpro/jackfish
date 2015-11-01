@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<!--
+   Copyright (c) 2009-2015, Exactpro Systems, LLC
+   Quality Assurance & Related Development for Innovative Trading Systems.
+   All rights reserved.
+   This is unpublished, licensed software, confidential and proprietary
+   information which is the property of Exactpro Systems, LLC or its licensors.
+  -->
+
+<BorderPane fx:id="borderPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.exactprosystems.jf.tool.custom.logs.LogsFxController">
+   <top>
+      <BorderPane fx:id="ownerFindPanel" prefHeight="34.0" prefWidth="600.0" BorderPane.alignment="CENTER">
+         <left>
+            <Button fx:id="btnRefresh" mnemonicParsing="false" onAction="#refresh" BorderPane.alignment="CENTER" />
+         </left>
+      </BorderPane>
+   </top>
+</BorderPane>

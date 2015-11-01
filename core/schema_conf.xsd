@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<xs:schema version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <xs:element name="configuration" type="configuration"/>
+
+  <xs:complexType name="configuration">
+    <xs:complexContent>
+      <xs:extension base="abstractDocument">
+        <xs:sequence>
+          <xs:element name="timeFormat" type="xs:string" minOccurs="0"/>
+          <xs:element name="dateFormat" type="xs:string" minOccurs="0"/>
+          <xs:element name="dateTimeFormat" type="xs:string" minOccurs="0"/>
+          <xs:element name="additionFormats" type="xs:string" minOccurs="0"/>
+          <xs:element name="evaluatorImports" type="xs:string" minOccurs="0"/>
+          <xs:element name="inputPath" type="xs:string" minOccurs="0"/>
+          <xs:element name="outputPath" type="xs:string" minOccurs="0"/>
+          <xs:element name="variables" type="xs:string" minOccurs="0"/>
+          <xs:element name="userVariables" type="xs:string" minOccurs="0"/>
+          <xs:element name="JVMparameters" type="xs:string" minOccurs="0"/>
+          <xs:element name="JVMclasspath" type="xs:string" minOccurs="0"/>
+          <xs:element name="JREpath" type="xs:string" minOccurs="0"/>
+          <xs:element name="serverLog" type="xs:string" minOccurs="0"/>
+          <xs:element name="serverLogLevel" type="xs:string" minOccurs="0"/>
+          <xs:element name="serverLogPattern" type="xs:string" minOccurs="0"/>
+          <xs:element name="libEntry" type="libEntry" minOccurs="0" maxOccurs="unbounded"/>
+          <xs:element name="sqlEntry" type="sqlEntry" minOccurs="0" maxOccurs="unbounded"/>
+          <xs:element name="clientEntry" type="clientEntry" minOccurs="0" maxOccurs="unbounded"/>
+          <xs:element name="serviceEntry" type="serviceEntry" minOccurs="0" maxOccurs="unbounded"/>
+          <xs:element name="appEntry" type="appEntry" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="abstractDocument" abstract="true">
+    <xs:sequence/>
+  </xs:complexType>
+
+  <xs:complexType name="libEntry">
+    <xs:complexContent>
+      <xs:extension base="entry">
+        <xs:sequence>
+          <xs:element name="libPath" type="xs:string" minOccurs="0"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="entry" abstract="true">
+    <xs:sequence>
+      <xs:element name="name" type="xs:string" minOccurs="0"/>
+      <xs:element name="parameters" type="parameter" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="parameter">
+    <xs:sequence>
+      <xs:element name="key" type="xs:string" minOccurs="0"/>
+      <xs:element name="value" type="xs:string" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="sqlEntry">
+    <xs:complexContent>
+      <xs:extension base="entry">
+        <xs:sequence>
+          <xs:element name="sqlJar" type="xs:string" minOccurs="0"/>
+          <xs:element name="sqlConnection" type="xs:string" minOccurs="0"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="clientEntry">
+    <xs:complexContent>
+      <xs:extension base="entry">
+        <xs:sequence>
+          <xs:element name="clientDescription" type="xs:string" minOccurs="0"/>
+          <xs:element name="clientJar" type="xs:string" minOccurs="0"/>
+          <xs:element name="clientLimit" type="xs:int"/>
+          <xs:element name="clientDictionary" type="xs:string" minOccurs="0"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="serviceEntry">
+    <xs:complexContent>
+      <xs:extension base="entry">
+        <xs:sequence>
+          <xs:element name="serviceDescription" type="xs:string" minOccurs="0"/>
+          <xs:element name="serviceJar" type="xs:string" minOccurs="0"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="appEntry">
+    <xs:complexContent>
+      <xs:extension base="entry">
+        <xs:sequence>
+          <xs:element name="appDescription" type="xs:string" minOccurs="0"/>
+          <xs:element name="appDicPath" type="xs:string" minOccurs="0"/>
+          <xs:element name="appJar" type="xs:string" minOccurs="0"/>
+          <xs:element name="appWorkDir" type="xs:string" minOccurs="0"/>
+          <xs:element name="appStartPort" type="xs:string" minOccurs="0"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+</xs:schema>
+

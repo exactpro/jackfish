@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<dictionary xsi:schemaLocation=""
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<windows>
+		<item>
+			<key>MainFrame</key>
+			<value xsi:type="window" name="MainFrame"  pictureName="Main.jpg">
+				<self> 
+					<frame 			id="mainFrame" 			owner="" 			title="MenuSelectionManagerDemo" />
+				</self>
+				<menus>
+					<menuItem 		id="Orders" 			owner="mainFrame" 	action="Orders" />
+					<menuItem 		id="NewOrder" 			owner="mainFrame" 	action="New order..." />
+					<menuItem 		id="Quote" 				owner="mainFrame" 	action="Quote..." />
+					<menuItem 		id="TreeView" 			owner="mainFrame" 	action="Tree view..." />
+					<menuItem 		id="Exit" 				owner="mainFrame" 	action="Exit" />
+					
+					<table 			id="TableHeader"		owner="mainFrame" 	class="javax.swing.JTable" 			firstCol="#" addition="HeaderMouseRightClick" />
+					<table 			id="TableRows"			owner="mainFrame" 	class="javax.swing.JTable" 			firstCol="#" addition="RowsMouseRightClick" />
+					<menuItem 		id="AddRow" 			owner="mainFrame" 	action="Add a random row" />
+					<menuItem 		id="RemoveRow" 			owner="mainFrame" 	action="Remove this row" />
+					<menuItem 		id="subAddRow" 			owner="mainFrame" 	action="sub Add a random row" />
+					<menuItem 		id="subRemoveRow" 		owner="mainFrame" 	action="sub Remove this row" />
+					<menuItem 		id="subMenu"	 		owner="mainFrame" 	action="Submenu" />
+					
+					<menuItem 		id="subbarAddRow" 		owner="mainFrame" 	action="subbar Add a random row" />
+					<menuItem 		id="subbarRemoveRow" 	owner="mainFrame" 	action="subbar Remove this row" />
+					<menuItem 		id="subMenubar"	 		owner="mainFrame" 	action="Submenubar" />					
+										
+				</menus>
+				<tables>
+					<table 			id="Table" 				owner="mainFrame" 	class="javax.swing.JTable" 			firstCol="#" />
+				</tables>
+			</value>
+		</item>
+	    
+		<item>
+			<key>NewOrder</key>
+			<value xsi:type="window" name="NewOrder" pictureName="NewOrder.jpg">
+				<self>
+				 	<dialog 		id="dialog0" 			owner="frame0" 		name="dialog0" />
+				 </self>
+                <ifOpen>
+					<frame 			id="frame0" 			owner="" 			title="MenuSelectionManagerDemo" />
+					<wait 			id="" 					owner="frame0" 		name="dialog0" timeoutmilis="500"	addition="WaitToAppear" />
+                </ifOpen>
+				<thenOpen>
+				</thenOpen>
+				<run>
+					<click 			id="Date" 				owner="dialog0" 	name="calendar"						addition="ValueContainsDayEU"/>
+					
+					<label  		id="Label1"				owner="dialog0" 	text="Side" />
+					<textBox 		id="Side"				owner="dialog0" 	ref="Label1" rule="Top" offset="20" />
+					<label  		id="Label2"				owner="dialog0" 	text="Price" />
+					<textBox 		id="Price"				owner="dialog0" 	ref="Label2" rule="Top" />
+					<label  		id="Label3"				owner="dialog0" 	text="Quantity" />
+					<textBox 		id="Quantity"			owner="dialog0" 	ref="Label3" rule="Top" />
+					<button 		id="Qt10" 				owner="dialog0" 	text="10" />
+					<button 		id="Qt100" 				owner="dialog0" 	text="100" />
+					<button 		id="Qt500" 				owner="dialog0" 	text="500" />
+										
+					<button 		id="Qt50" 				owner="dialog0" 	text="50"/>
+					<button 		id="Qt1" 				owner="dialog0" 	ref="Qt50" rule="Bottom" />
+					<button 		id="Qt5" 				owner="dialog0" 	ref="Qt1" rule="Left" />
+					
+					<button 		id="QtClear" 			owner="dialog0" 	text="Clear" />
+					<label  		id="Label4"        		owner="dialog0" 	text="Client order ID" />
+					<textBox 		id="ClientOrderID"		owner="dialog0" 	ref="Label4" rule="Top" />
+					<label 			id="Label5" 			owner="dialog0" 	text="Anonymity" />	
+					<comboBox 		id="PreTradeAnonymity" 	owner="dialog0" 	ref="Label5" rule="Top" />
+
+					<toggleButton 	id="ExpandDialog" 		owner="dialog0" 	action=">>" 		addition="MouseLeftClick" />
+				    <click			id="Click"				owner="dialog0"		text="Market to limit" x="5" y="5" />
+					<checkBox 		id="MarketToLimit" 		owner="dialog0" 	text="Market to limit" />
+					<checkBox 		id="MarketOrder" 		owner="dialog0" 	text="Market order" />
+					<checkBox 		id="Disabled" 			owner="dialog0" 	text="Disabled checkbox" />
+					<checkBox 		id="Wrong" 				owner="dialog0" 	class="javax.swing.JCheckBox" />
+
+					<radioGroup 	id="OrderCapacity" 		owner="dialog0" 						addition="SwitchByValue" />
+					<radioGroup 	id="OrderCapacityT"		owner="dialog0" 	action="T" />
+					<radioGroup 	id="OrderCapacityP" 	owner="dialog0" 	action="P" />
+					<radioGroup 	id="OrderCapacityO"		owner="dialog0" 	action="O" />
+					<radioGroup 	id="OrderCapacityG" 	owner="dialog0" 	action="G" />
+
+					<button 		id="Enter" 				owner="dialog0" 	text="Enter" />
+
+					<wait 			id="WaitDialog" 							timeoutmilis="2000"	addition="WaitToAppear"	value="Title"/>
+					<dialog 		id="GetText"													addition="GetText"		value="Title"/>
+					<button 		id="DialogOK"			owner="GetText"		text="OK"			addition="DoNotClose"/>
+					
+					
+					<wait 			id="WaitError" 								title="Message"		timeoutmilis="2000"	addition="WaitToAppear"/>
+					<label 			id="GetError"			owner="Error"		name="OptionPane.label"	addition="GetText"/>
+					<button 		id="ErrorOK"			owner="Error"		text="OK"			addition="DoNotClose"/>
+						
+
+				</run>
+				<ifClose>
+					<dialog 		id="Error" 									title="Message"	/> 
+				</ifClose>
+				
+			</value>
+		</item>
+
+
+		<item>
+			<key>TreeView</key>
+			<value xsi:type="window" name="TreeView" pictureName="NewOrder.jpg">
+				<self>
+				 	<dialog 		id="dialog" 		owner="frame0" 		name="dialog1" />
+				 </self>
+
+				<trees>
+					<tree 			id="Tree" 			owner="dialog" 		class="javax.swing.JTree" />
+				</trees>
+				<menus>
+					<tree 			id="TreeMenu" 		owner="dialog" 		class="javax.swing.JTree" addition="MouseRightClick" />
+
+					<menuItem 		id="Add" 			owner="dialog" 		action="add" />
+					<menuItem 		id="Delete" 		owner="dialog" 		action="delete" />
+					
+					<table			id="Table"			owner="dialog"		firstCol="Col1" addition="RowsMouseRightClick" />
+					<menuItem 		id="AddRow" 		owner="dialog" 		text="AddRow" />
+				</menus>
+
+                <ifOpen>
+					<frame 			id="frame" 			owner="" 			title="MenuSelectionManagerDemo" />
+					<wait 			id="" 				owner="frame" 		name="dialog1" timeoutmilis="500"	addition="WaitToAppear" />
+                </ifOpen>
+				<thenOpen>
+				</thenOpen>
+				<run>
+					<tabPanel		id="Panel1" 		owner="dialog" 		tabName="Tab 1" weak="true" />
+					<tabPanel		id="Panel1_1" 		owner="dialog" 		tabName="Inside 1_1" weak="true" />
+					<tabPanel		id="Panel1_2" 		owner="dialog" 		tabName="Inside 1_1" weak="true" />
+				
+					<button 		id="OK" 			owner="dialog" 		text="OK" />
+					<button 		id="Cancel" 		owner="dialog" 		text="Cancel" />
+				</run>
+			</value>
+		</item>
+	</windows>
+</dictionary>

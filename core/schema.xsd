@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<xs:schema version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <xs:element name="dictionary" type="dictionary"/>
+
+  <xs:complexType name="dictionary">
+    <xs:sequence>
+      <xs:element name="windows" type="mapElementArray" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="mapElement">
+    <xs:sequence>
+      <xs:element name="key" type="xs:string" minOccurs="0"/>
+      <xs:element name="value" type="xs:anyType" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="mapElementArray" final="#all">
+    <xs:sequence>
+      <xs:element name="item" type="mapElement" minOccurs="0" maxOccurs="unbounded" nillable="true"/>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>
+

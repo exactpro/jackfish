@@ -1,0 +1,44 @@
+<project name="NetXfixed" default="build">
+	<property name="netx.release.dir"    location="release"      />
+    <property name="netx.source.dir"     location="src"          />
+    <property name="netx.build.dir"      location="build"        />
+    <property name="netx.lib.dir"     	 location="libs"          />
+
+    <target name="clean">
+        <delete dir="${netx.release.dir}"/>
+        <mkdir  dir="${netx.release.dir}"/> 
+        <delete dir="${netx.build.dir}"/> 
+        <mkdir  dir="${netx.build.dir}"/>
+    </target>
+
+	<path id="project.classpath">
+		<fileset dir="${netx.lib.dir}">
+			<patternset includes="**/*.jar" />
+		</fileset>
+	</path>
+
+    <target name="compile" depends="clean">
+        <javac srcdir="${netx.source.dir}" destdir="${netx.build.dir}" debug="on" nowarn="true">
+			<classpath refid="project.classpath" />
+    	</javac>
+        <copy todir="${netx.build.dir}">
+            <fileset dir="${netx.source.dir}">
+                <exclude name="**/*.java"/>
+            </fileset>
+        </copy>
+    </target>
+
+    <target name="build" depends="compile">
+        <echo>jar buildings...</echo>
+        <jar destfile="${netx.release.dir}/netx.jar">
+			<manifest>
+				<attribute name="Main-Class" value="net.sourceforge.jnlp.runtime.Boot" />
+				<attribute name="Class-Path" value="." />
+			</manifest>	
+            <fileset dir="${netx.build.dir}" includes="**/*.*"/>
+
+        	<zipfileset src="${netx.lib.dir}/tagsoup-1.2.1.jar" />
+        	<zipfileset src="${netx.lib.dir}/rhino-1.7R4.jar" />
+        </jar>
+    </target>
+</project>

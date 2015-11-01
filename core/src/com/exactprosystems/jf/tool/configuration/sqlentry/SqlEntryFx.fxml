@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<!--
+   Copyright (c) 2009-2015, Exactpro Systems, LLC
+   Quality Assurance & Related Development for Innovative Trading Systems.
+   All rights reserved.
+   This is unpublished, licensed software, confidential and proprietary
+   information which is the property of Exactpro Systems, LLC or its licensors.
+  -->
+
+<TitledPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="129.0" prefWidth="815.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.exactprosystems.jf.tool.configuration.sqlentry.SqlEntryFxController">
+   <content>
+      <GridPane prefHeight="89.0" prefWidth="813.0">
+        <columnConstraints>
+            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" percentWidth="15.0" prefWidth="100.0" />
+          <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" percentWidth="75.0" prefWidth="100.0" />
+          <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" percentWidth="10.0" prefWidth="100.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <Button fx:id="btnRemove" mnemonicParsing="false" onAction="#removeEntry" text="Remove" GridPane.columnIndex="2" />
+            <Label text="Jar name" />
+            <Label text="Connection string" GridPane.rowIndex="1" />
+            <TextField fx:id="tfConnectionString" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <BorderPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1">
+               <center>
+                  <TextField fx:id="tfJarName" BorderPane.alignment="CENTER" />
+               </center>
+               <right>
+                  <Button fx:id="btnChooseJarName" mnemonicParsing="false" onAction="#chooseJarName" text="..." BorderPane.alignment="CENTER" />
+               </right>
+            </BorderPane>
+            <Button mnemonicParsing="false" onAction="#testEntry" text="Test" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+         </children>
+      </GridPane>
+   </content>
+</TitledPane>

@@ -1,0 +1,28 @@
+<project name="API" default="build">
+	<property name="api.release.dir"    location="release"      />
+    <property name="api.source.dir"        location="src"          />
+    <property name="api.build.dir"      location="build"        />
+
+    <target name="clean">
+<!--        <delete dir="${api.release.dir}"/>
+        <mkdir  dir="${api.release.dir}"/> -->
+        <delete dir="${api.build.dir}"/> 
+        <mkdir  dir="${api.build.dir}"/>
+    </target>
+
+    <target name="compile" depends="clean">
+        <javac srcdir="${api.source.dir}" destdir="${api.build.dir}" debug="on"/>
+        <copy todir="${api.build.dir}">
+            <fileset dir="${api.source.dir}">
+                <exclude name="**/*.java"/>
+            </fileset>
+        </copy>
+    </target>
+
+    <target name="build" depends="compile">
+        <echo>jar buildings...</echo>
+        <jar destfile="${api.release.dir}/api.jar">
+            <fileset dir="${api.build.dir}" includes="**/*.class"/>
+        </jar>
+    </target>
+</project>

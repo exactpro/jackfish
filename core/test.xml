@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<configuration>
+    <libEntry>
+        <libName>STD</libName>
+        <libPath>matrices/libs/std.csv</libPath>
+    </libEntry>
+    <sqlEntry>
+        <sqlName>MySql</sqlName>
+        <sqlJar>extlibs/mysql-connector.jar</sqlJar>
+        <sqlConnection>jdbc:mysql://${SERVER}/${BASE}?generateSimpleParameterMetadata=true</sqlConnection>
+    </sqlEntry>
+    <sqlEntry>
+        <sqlName>PostgreSql</sqlName>
+        <sqlJar>extlibs/postgresql-9.0-801.jdbc4.jar</sqlJar>
+        <sqlConnection>jdbc:postgresql://${SERVER}/${BASE}</sqlConnection>
+    </sqlEntry>
+    <clientEntry>
+        <clientName>DTS</clientName>
+        <clientJar>clients/dts.jar</clientJar>
+        <clientPath>dtslib/log4j-1.2.17.jar</clientPath>
+        <clientLimit>0</clientLimit>
+        <clientDictionary>clients/dic/dts.xml</clientDictionary>
+        <parameters/>
+    </clientEntry>
+</configuration>

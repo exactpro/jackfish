@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<configuration>
+    <timeFormat>HH:mm:ss.SSS</timeFormat>
+    <dateFormat>dd.MM.yyyy</dateFormat>
+    <dateTimeFormat>dd.MM.yyyy HH:mm:ss.SSS</dateTimeFormat>
+    <additionFormats>dd.MM.yyyy HH:mm:ss|yyyy/MM/dd HH:mm:ss.SSS|yyyyMMdd-HH:mm:ss.SSS|dd/MM/yyyy|HH.mm|HH:mm:ss</additionFormats>
+    <evaluatorImports>com.exactprosystems.jf.common.parser,java.math,java.util.regex,java.util,java.awt,java.util.List,java.util.Map,java.lang,com.exactprosystems.jf.api.app,com.exactprosystems.jf.api.conditions,com.exactprosystems.jf.functions</evaluatorImports>
+    <outputPath>reports</outputPath>
+    <variables>vars.ini</variables>
+    <userVariables>uservars/myvars.ini</userVariables>
+    <JVMparameters></JVMparameters>
+    <JVMclasspath></JVMclasspath>
+    <JREpath></JREpath>
+    <serverLog>server.log</serverLog>
+    <serverLogLevel>ALL</serverLogLevel>
+    <serverLogPattern>%-5p %d{yyyy-MM-dd HH:mm:ss.SSS} %c{1}:%-3L-%m%n</serverLogPattern>
+    <libEntry>
+        <name>LIB</name>
+        <libPath>examples/lib.jf</libPath>
+    </libEntry>
+    <sqlEntry>
+        <name>MySql</name>
+        <sqlJar>sql/mysql-connector.jar</sqlJar>
+        <sqlConnection>jdbc:mysql://${SERVER}/${BASE}?generateSimpleParameterMetadata=true</sqlConnection>
+    </sqlEntry>
+    <sqlEntry>
+        <name>PostgreSql</name>
+        <sqlJar>sql/postgresql-9.0-801.jdbc4.jar</sqlJar>
+        <sqlConnection>jdbc:postgresql://${SERVER}/${BASE}</sqlConnection>
+    </sqlEntry>
+    <clientEntry>
+        <name>DTS</name>
+        <clientJar>clients/dts.jar</clientJar>
+        <clientLimit>0</clientLimit>
+        <clientDictionary>dic/clients/dts.xml</clientDictionary>
+    </clientEntry>
+    <clientEntry>
+        <name>FIX</name>
+        <parameters>
+            <key>UseHeartBeats</key>
+            <value>true</value>
+        </parameters>
+        <parameters>
+            <key>HeartBeatTimeout</key>
+            <value>2000</value>
+        </parameters>
+        <clientJar>clients/fix.jar</clientJar>
+        <clientLimit>0</clientLimit>
+        <clientDictionary>dic/clients/FIX50.GTI.xml</clientDictionary>
+    </clientEntry>
+    <clientEntry>
+        <name>TestClient</name>
+        <clientJar>clients/test.jar</clientJar>
+        <clientLimit>0</clientLimit>
+        <clientDictionary>dic/clients/test.xml</clientDictionary>
+    </clientEntry>
+    <serviceEntry>
+        <name>SF</name>
+        <serviceDescription>Saifish service.</serviceDescription>
+        <serviceJar>services/sf.jar</serviceJar>
+    </serviceEntry>
+    <appEntry>
+        <name>WIN</name>
+        <appDescription>Window's UIAutomation plugin</appDescription>
+        <appDicPath>dic/gui/calc.xml</appDicPath>
+        <appJar>apps/win.jar</appJar>
+        <appWorkDir>apps/</appWorkDir>
+        <appStartPort>9000</appStartPort>
+    </appEntry>
+    <appEntry>
+        <name>EXACTPRO</name>
+        <appDescription>Exactpro example</appDescription>
+        <appDicPath>dic/gui/exactpro_dic.xml</appDicPath>
+        <appJar>apps/web.jar</appJar>
+        <appWorkDir>apps/</appWorkDir>
+        <appStartPort>10000</appStartPort>
+    </appEntry>
+    <appEntry>
+        <name>SWING</name>
+        <appDescription>Adapter for testing SWING applications standalone and web start.</appDescription>
+        <appDicPath>dic/gui/swing.xml</appDicPath>
+        <appJar>apps/swing.jar</appJar>
+        <appWorkDir>apps/</appWorkDir>
+        <appStartPort>11000</appStartPort>
+    </appEntry>
+</configuration>

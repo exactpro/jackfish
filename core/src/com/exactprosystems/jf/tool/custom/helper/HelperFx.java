@@ -1,0 +1,300 @@
+////////////////////////////////////////////////////////////////////////////////
+//  Copyright (c) 2009-2015, Exactpro Systems, LLC
+//  Quality Assurance & Related Development for Innovative Trading Systems.
+//  All rights reserved.
+//  This is unpublished, licensed software, confidential and proprietary
+//  information which is the property of Exactpro Systems, LLC or its licensors.
+////////////////////////////////////////////////////////////////////////////////
+
+package com.exactprosystems.jf.tool.custom.helper;
+
+import com.exactprosystems.jf.api.common.DescriptionAttribute;
+import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
+import com.exactprosystems.jf.common.evaluator.Variables;
+import com.exactprosystems.jf.common.parser.Matrix;
+import com.exactprosystems.jf.tool.Common;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
+import java.io.IOException;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.util.*;
+import java.util.stream.Collectors;
+
+public class HelperFx
+{
+	private Matrix matrix;
+	private Class<?> clazz;
+	private HelperControllerFx controller;
+	private AbstractEvaluator evaluator;
+	private Comparator<IToString> comparatorAZ;
+	private Comparator<IToString> comparatorZA;
+
+	public HelperFx(String title, AbstractEvaluator evaluator, Matrix matrix)
+	{
+		this(title, evaluator, matrix, null);
+	}
+
+	public HelperFx(String title, AbstractEvaluator evaluator, Matrix matrix, Class<?> clazz)
+	{
+		this.evaluator = evaluator;
+		this.matrix = matrix;
+		this.clazz = clazz;
+		comparatorAZ = (o1, o2) -> o1.getName().compareTo(o2.getName());
+		comparatorZA = (o1, o2) -> o1.getName().compareTo(o2.getName()) * (-1);
+		
+		this.controller = Common.loadController(HelperFx.class.getResource("HelperFx.fxml"));
+		this.controller.init(this, title, this.clazz, this.evaluator != null);
+	}
+	
+	public String showAndWait(String value) throws IOException
+	{
+		return this.controller.showAndWait(value);
+	}
+
+	public void evaluate(String expression, boolean showVoid, boolean showStatic, boolean ascentingSorting)
+	{
+		if (this.evaluator != null)
+		{
+			Object compiled;
+			try
+			{
+				compiled = this.evaluator.compile(expression);
+			}
+			catch (Exception e)
+			{
+				this.controller.compileFailed("Compile error.\n" + e.getMessage());
+				return;
+			}
+			try
+			{
+				Object value = this.evaluator.execute(compiled);
+				Class<?> clazz = value.getClass();
+
+				if (value instanceof Class)
+				{
+					clazz = (Class<?>) value;
+				}
+
+				ObservableList<IToString> observableAll = FXCollections.observableArrayList();
+
+				for (Method method : clazz.getMethods())
+				{
+					SimpleMethod simpleMethod = getStringSimpleMethod(method);
+					if (simpleMethod != null)
+					{
+						boolean add = true;
+						
+						if (!showVoid && simpleMethod.getReturnType().equals("void"))
+						{
+							add = false;
+						}
+						
+						if (!showStatic && simpleMethod.isStatic())
+						{
+							add = false;
+						}
+						
+						if (add)
+						{
+							observableAll.add(simpleMethod);
+						}
+					}
+				}
+				
+				for (Field field : clazz.getFields())
+				{
+					SimpleField simpleField = getStringsSimpleField(field);
+					if (simpleField != null)
+					{
+						observableAll.add(simpleField);
+					}
+				}
+				
+				Collections.sort(observableAll, ascentingSorting ? comparatorAZ : comparatorZA);
+
+				this.controller.displayClass(clazz);
+				this.controller.displayMethods(observableAll);
+				this.controller.successEvaluate(value.toString());
+			}
+			catch (Exception e)
+			{
+				this.controller.evaluateFailed("Can't evaluate.\n" + e.getMessage());
+			}
+		}
+	}
+
+	public void fillVariables(final ObservableList<SimpleVariable> data)
+	{
+		Common.tryCatch(() -> {
+			Variables localVars = this.evaluator.getLocals();
+			localVars.getVars().entrySet().forEach((entry) -> data.add(new SimpleVariable(entry.getKey(), entry.getValue())));
+
+			Variables globalVars = this.evaluator.getGlobals();
+			globalVars.getVars().entrySet().forEach((entry) -> {
+				SimpleVariable simplePOJOVariables = new SimpleVariable(entry.getKey(), entry.getValue());
+				if (!data.contains(simplePOJOVariables))
+				{
+					data.add(simplePOJOVariables);
+				}
+			});
+			Optional.ofNullable(this.matrix).ifPresent(m -> m.getRoot().bypass(item -> {
+				String id = item.getId();
+				if (!Str.IsNullOrEmpty(id))
+				{
+					Object res;
+					try
+					{
+						res = evaluator.evaluate(id + ".Out");
+					}
+					catch (Exception e)
+					{
+						res = "Error";
+					}
+					data.add(new SimpleVariable(id + ".Out", res));
+				}
+			}));
+		}, "Error on set variables");
+	}
+
+	//============================================================
+	// private methods
+	//============================================================
+	private SimpleMethod getStringSimpleMethod(Method method)
+	{
+		if (method.getAnnotation(Deprecated.class) != null)
+		{
+			return null;
+		}
+		return new SimpleMethod(method);
+	}
+
+	private SimpleField getStringsSimpleField(Field field)
+	{
+		if (!Modifier.toString(field.getModifiers()).contains("public static final"))
+		{
+			return null;
+		}
+		return new SimpleField(field);
+	}
+
+
+	static class SimpleMethod implements IToString
+	{
+		private Method method;
+
+		public SimpleMethod(Method method)
+		{
+			this.method = method;
+		}
+
+		public boolean isStatic()
+		{
+			return (this.method.getModifiers() & Modifier.STATIC) != 0;
+		}
+
+		public String getName()
+		{
+			return this.method.getName();
+		}
+
+		public List<String> getParameters()
+		{
+			return Arrays.stream(this.method.getParameterTypes()).map(type -> type.getSimpleName()).collect(Collectors.toList());
+		}
+
+		public String getReturnType()
+		{
+			return this.method.getReturnType().getSimpleName();
+		}
+
+		@Override
+		public String toString()
+		{
+			StringBuilder sb = new StringBuilder();
+			sb.append(isStatic() ? "S" : "")
+				.append('\t')
+				.append(getName())
+				.append('(');
+			String comma = "";
+			for (String parameter : getParameters())
+			{
+				sb.append(comma);
+				sb.append(parameter);
+				comma = ", ";
+			}
+			sb.append(") : ")
+				.append(getReturnType());
+
+			return sb.toString();
+		}
+
+		public String getMethodWithParams()
+		{
+			StringBuilder s = new StringBuilder(getName());
+			s.append("(");
+			String comma = "";
+			for (String parameter : getParameters())
+			{
+				s.append(comma);
+				s.append(parameter);
+				comma = ", ";
+			}
+			s.append(")");
+			return s.toString();
+		}
+
+		@Override
+		public String getDescription()
+		{
+			DescriptionAttribute attr = this.method.getAnnotation(DescriptionAttribute.class);
+			if (attr == null)
+			{
+				return null;
+			}
+			return attr.text();
+		}
+	}
+
+	static class SimpleField implements IToString
+	{
+		private Field field;
+
+		public SimpleField(Field field)
+		{
+			this.field = field;
+		}
+
+		public String getName()
+		{
+			return this.field.getName();
+		}
+
+		@Override
+		public String toString()
+		{
+			return "\t" + this.field.getName();
+		}
+
+		@Override
+		public String getDescription()
+		{
+			DescriptionAttribute attr = this.field.getAnnotation(DescriptionAttribute.class);
+			if (attr == null)
+			{
+				return null;
+			}
+			return attr.text();
+		}
+	}
+
+	interface IToString
+	{
+		String toString();
+		String getName();
+		String getDescription();
+	}
+}

@@ -1,0 +1,73 @@
+<project name="WIN" default="distribute">
+	<property name="win.api.dir" location="../API" />
+    <property name="win.release.dir"    location="release"      />
+    <property name="win.source.dir"     location="src"          />
+    <property name="win.lib.dir"     	location="libs"          />
+    <property name="win.build.dir"      location="build"        />
+    <property name="win.dic.dir"     	location="dic"          />
+
+    <target name="clean">
+        <delete dir="${win.release.dir}"/>
+        <mkdir  dir="${win.release.dir}"/>
+        <delete dir="${win.build.dir}"/>
+        <mkdir  dir="${win.build.dir}"/>
+    </target>
+
+	<target name="build.api" depends="clean" >
+		<ant antfile="${win.api.dir}/build.xml" target="build" dir="${win.api.dir}">
+		</ant>		
+	</target>
+	
+	<path id="project.classpath">
+		<fileset dir="${win.lib.dir}">
+			<patternset includes="**/*.jar" />
+		</fileset>
+		<fileset dir="${win.api.dir}/release">
+			<patternset includes="**/*.jar" />
+		</fileset>
+	</path>
+
+    <target name="compile" depends="build.api">
+        <javac srcdir="${win.source.dir}" destdir="${win.build.dir}" debug="on">
+			<classpath refid="project.classpath" />
+    	</javac>
+        <copy todir="${win.build.dir}">
+            <fileset dir="${win.source.dir}">
+                <exclude name="**/*.java"/>
+            </fileset>
+        </copy>
+    </target>
+	
+	<target name="build" depends="compile">
+		<echo>jar building...</echo>
+		<jar destfile="${win.release.dir}/win.jar" basedir="${win.build.dir}">
+			<manifest>
+				<attribute name="Main-Class" value="org.eclipse.jdt.internal.jarinjarloader.JarRsrcLoader" />
+				<attribute name="Rsrc-Main-Class" value="com.exactprosystems.jf.app.WinRemoteApplication" />
+				<attribute name="Class-Path" value="." />
+				<attribute name="Rsrc-Class-Path" value="./  libs/api.jar libs/log4j-1.2.17.jar libs/gson-2.2.4.jar " />
+			</manifest>	
+            <fileset dir="${win.build.dir}" includes="**/*.class"/>
+            <fileset dir="" includes="META-INF/services/*.*"/>
+			<zipfileset src="${win.lib.dir}/jar-in-jar-loader.zip" />
+			<zipfileset prefix="libs" dir="${win.api.dir}/release" includes="api.jar" />
+			<zipfileset prefix="libs" dir="${win.lib.dir}" includes="log4j-1.2.17.jar" />
+			<zipfileset prefix="libs" dir="${win.lib.dir}" includes="gson-2.2.4.jar" />
+		</jar>
+	</target>
+	
+	<target name="distribute" depends="build">
+		<copy todir="../ActionsLibrary/apps/">
+			<fileset dir="${win.release.dir}">
+				<include name="*.jar" />
+			</fileset>
+		</copy>
+		<!--<copy todir="../ActionsLibrary/apps/dic">
+			<fileset dir="${win.dic.dir}">
+				<include name="*.xml" />
+			</fileset>
+		</copy>-->
+	</target>
+	
+
+</project>

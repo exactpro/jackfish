@@ -1,0 +1,59 @@
+<project name="MatrixService" default="distribute">
+	<property name="ms.api.dir" location="../API" />
+    <property name="ms.release.dir"    location="release"      />
+    <property name="ms.source.dir"     location="src"          />
+    <property name="ms.lib.dir"     	location="libs"          />
+    <property name="ms.build.dir"      location="build"        />
+
+    <target name="clean">
+        <delete dir="${ms.release.dir}"/>
+        <mkdir  dir="${ms.release.dir}"/>
+        <delete dir="${ms.build.dir}"/>
+        <mkdir  dir="${ms.build.dir}"/>
+    </target>
+
+	<path id="project.classpath">
+		<fileset dir="${ms.lib.dir}">
+			<patternset includes="**/*.jar" />
+		</fileset>
+		<fileset dir="${ms.api.dir}/release">
+			<patternset includes="**/*.jar" />
+		</fileset>
+	</path>
+	
+    <target name="compile" depends="clean">
+        <javac srcdir="${ms.source.dir}" destdir="${ms.build.dir}" debug="on">
+			<classpath refid="project.classpath" />
+    	</javac>
+        <copy todir="${ms.build.dir}">
+            <fileset dir="${ms.source.dir}">
+                <exclude name="**/*.java"/>
+            </fileset>
+        </copy>
+    </target>
+
+	<target name="build" depends="compile">
+		<echo>jar building...</echo>
+		<jar destfile="${ms.release.dir}/test.jar" basedir="${ms.build.dir}">
+			<manifest>
+				<attribute name="Version" value="" />
+				<attribute name="Main-Class" value="" />
+				<attribute name="Class-Path" value="." />
+			</manifest>	
+            <fileset dir="" includes="META-INF/services/*.*"/>
+            <fileset dir="${ms.build.dir}" includes="**/*.class"/>
+			
+			<zipfileset src="${ms.lib.dir}/log4j-1.2.17.jar" />
+		</jar>
+	</target>
+	
+	<target name="distribute" depends="build">
+		<copy todir="../ActionsLibrary/services/">
+			<fileset dir="${ms.release.dir}">
+				<include name="*.jar" />
+			</fileset>
+		</copy>
+	</target>
+	
+
+</project>

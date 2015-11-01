@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+   Copyright (c) 2009-2015, Exactpro Systems, LLC
+   Quality Assurance & Related Development for Innovative Trading Systems.
+   All rights reserved.
+   This is unpublished, licensed software, confidential and proprietary
+   information which is the property of Exactpro Systems, LLC or its licensors.
+  -->
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.BorderPane?>
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0"
+			prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+			fx:controller="com.exactprosystems.jf.tool.matrix.schedule.ScheduleController">
+	<center>
+		<TableView fx:id="tableView" editable="true" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+			<columns>
+				<TableColumn fx:id="columnCheckBox" prefWidth="75.0" text="#"/>
+				<TableColumn fx:id="columnMatrixName" prefWidth="75.0" text="Matrix name"/>
+				<TableColumn fx:id="columnStartDate" prefWidth="75.0" text="Start date"/>
+				<TableColumn fx:id="columnState" prefWidth="75.0" text="State"/>
+				<TableColumn fx:id="columnDone" prefWidth="75.0" text="Done"/>
+			</columns>
+		</TableView>
+	</center>
+	<top>
+		<ToolBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+			<items>
+				<Button fx:id="btnStart" mnemonicParsing="false" onAction="#startSelected"/>
+				<Button fx:id="btnStop" mnemonicParsing="false" onAction="#stopSelected"/>
+				<Button fx:id="btnDestroy" mnemonicParsing="false" onAction="#destroySelected"/>
+				<Button fx:id="btnOpenSelected" mnemonicParsing="false" onAction="#openMatrices"/>
+				<Button fx:id="btnFolder" mnemonicParsing="false" onAction="#showFolder"/>
+			</items>
+		</ToolBar>
+	</top>
+</BorderPane>

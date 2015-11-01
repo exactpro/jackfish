@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<!--
+   Copyright (c) 2009-2015, Exactpro Systems, LLC
+   Quality Assurance & Related Development for Innovative Trading Systems.
+   All rights reserved.
+   This is unpublished, licensed software, confidential and proprietary
+   information which is the property of Exactpro Systems, LLC or its licensors.
+  -->
+
+<GridPane fx:id="mainGrid" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="522.0" prefWidth="695.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.exactprosystems.jf.tool.matrix.watch.WatcherFxController">
+    <columnConstraints>
+        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" percentWidth="20.0" prefWidth="100.0" />
+        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" percentWidth="20.0" prefWidth="100.0" />
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        <RowConstraints minHeight="10.0" percentHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+    </rowConstraints>
+    <children>
+        <Button fx:id="btnAddNewExpression" mnemonicParsing="false" onAction="#addNewExpression" text="Add new" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+        <Button fx:id="btnAddAll" mnemonicParsing="false" onAction="#addAll" text="Add all" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+    </children>
+</GridPane>

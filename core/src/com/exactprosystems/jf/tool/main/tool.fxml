@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+   Copyright (c) 2009-2015, Exactpro Systems, LLC
+   Quality Assurance & Related Development for Innovative Trading Systems.
+   All rights reserved.
+   This is unpublished, licensed software, confidential and proprietary
+   information which is the property of Exactpro Systems, LLC or its licensors.
+  -->
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<GridPane fx:id="rootGrid" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="600.0"
+		  minWidth="600.0" prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8"
+		  xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.exactprosystems.jf.tool.main.MainController">
+	<columnConstraints>
+		<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+	</columnConstraints>
+	<rowConstraints>
+		<RowConstraints maxHeight="120.0" minHeight="10.0" percentHeight="100.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+	</rowConstraints>
+	<children>
+		<BorderPane prefHeight="200.0" prefWidth="200.0">
+			<top>
+				<VBox minHeight="70.0" prefHeight="70.0" prefWidth="100.0" BorderPane.alignment="CENTER">
+					<children>
+
+						<MenuBar minHeight="30.0" prefHeight="29.0" prefWidth="1276.0">
+							<menus>
+								<Menu fx:id="menuFile" mnemonicParsing="false" text="File">
+									<items>
+										<MenuItem fx:id="fileLoadConfiguration" mnemonicParsing="false"
+												  onAction="#loadConfiguration" text="Load configuration"/>
+										<MenuItem fx:id="fileNewConfiguration" mnemonicParsing="false"
+												  onAction="#newConfiguration" text="New configuration"/>
+										<SeparatorMenuItem mnemonicParsing="false"/>
+										<Menu fx:id="fileLoad" mnemonicParsing="false" text="Load">
+											<items>
+												<MenuItem fx:id="fileLoadDictionary" mnemonicParsing="false"
+														  onAction="#loadDictionary" text="Dictionary"/>
+												<MenuItem fx:id="fileLoadSystemVars" mnemonicParsing="false"
+														  onAction="#loadSystemVars" text="System variables"/>
+												<MenuItem fx:id="fileLoadMatrix" mnemonicParsing="false"
+														  onAction="#loadMatrix" text="Matrix"/>
+												<MenuItem fx:id="fileLoadPlainText" mnemonicParsing="false"
+														  onAction="#loadPlainText" text="Plain text"/>
+												<MenuItem fx:id="fileLoadCsv" mnemonicParsing="false"
+														  onAction="#loadCsv" text="Csv"/>
+											</items>
+										</Menu>
+										<Menu fx:id="fileNew" mnemonicParsing="false" text="New">
+											<items>
+												<MenuItem fx:id="fileNewDictionary" mnemonicParsing="false"
+														  onAction="#newDictionary" text="Dictionary"/>
+												<MenuItem fx:id="fileNewSystemVars" mnemonicParsing="false"
+														  onAction="#newSystemVars" text="System variables"/>
+												<MenuItem fx:id="fileNewMatrix" mnemonicParsing="false"
+														  onAction="#newMatrix" text="Matrix"/>
+												<MenuItem fx:id="fileNewPlainText" mnemonicParsing="false"
+														  onAction="#newPlainText" text="Plain text"/>
+												<MenuItem fx:id="fileNewCsv" mnemonicParsing="false"
+														  onAction="#newCsv" text="Csv"/>
+											</items>
+										</Menu>
+										<MenuItem fx:id="fileSave" mnemonicParsing="false" onAction="#saveDocument"
+												  text="Save"/>
+										<MenuItem fx:id="fileSaveAs" mnemonicParsing="false" onAction="#saveAsDocument"
+												  text="Save as..."/>
+										<MenuItem fx:id="fileSaveAll" mnemonicParsing="false" onAction="#saveAll"
+												  text="Save all"/>
+										<SeparatorMenuItem mnemonicParsing="false"/>
+										<Menu fx:id="fileLastOpenMatrix" mnemonicParsing="false"
+											  text="Last opened matrix"/>
+										<MenuItem fx:id="fileRunFromFile" mnemonicParsing="false"
+												  onAction="#runFromFile" text="Run from file"/>
+										<MenuItem fx:id="fileOpenReport" mnemonicParsing="false" onAction="#openReport" text="Open report"/>
+										<SeparatorMenuItem mnemonicParsing="false"/>
+										<MenuItem fx:id="fileClose" mnemonicParsing="false" onAction="#closeApplication"
+												  text="Close"/>
+									</items>
+								</Menu>
+								<Menu fx:id="menuEdit" mnemonicParsing="false" text="Edit">
+									<items>
+										<MenuItem fx:id="editCopy" mnemonicParsing="false" onAction="#copyItem"
+												  text="Copy"/>
+										<MenuItem fx:id="editPaste" mnemonicParsing="false" onAction="#pasteItem"
+												  text="Paste"/>
+										<SeparatorMenuItem mnemonicParsing="false"/>
+										<MenuItem fx:id="editUndo" mnemonicParsing="false" onAction="#undo"
+												  text="Undo"/>
+										<MenuItem fx:id="editRedo" mnemonicParsing="false" onAction="#redo"
+												  text="Redo"/>
+									</items>
+								</Menu>
+								<Menu fx:id="menuView" mnemonicParsing="false" text="View">
+									<items>
+										<MenuItem fx:id="viewLogs" mnemonicParsing="false" onAction="#openMainLog"
+												  text="Logs"/>
+										<MenuItem fx:id="viewSettings" mnemonicParsing="false"
+												  onAction="#showSettingsPanel" text="Settings"/>
+										<MenuItem fx:id="viewStore" mnemonicParsing="false" onAction="#showStore" text="Store"/>
+									</items>
+								</Menu>
+								<Menu fx:id="menuMatrix" mnemonicParsing="false" text="Matrix">
+									<items>
+										<MenuItem fx:id="matrixStart" mnemonicParsing="false" onAction="#startMatrix"
+												  text="Start"/>
+										<MenuItem fx:id="matrixStop" mnemonicParsing="false" onAction="#stopMatrix"
+												  text="Stop"/>
+										<SeparatorMenuItem mnemonicParsing="false"/>
+										<MenuItem fx:id="matrixSchedule" mnemonicParsing="false"
+												  onAction="#matrixSchedule" text="Matrix schedule"/>
+									</items>
+								</Menu>
+								<Menu fx:id="menuHelp" mnemonicParsing="false" text="Help">
+									<items>
+										<MenuItem fx:id="helpActionsHelp" mnemonicParsing="false"
+												  onAction="#showActionsHelp" text="Actions help"/>
+										<SeparatorMenuItem mnemonicParsing="false"/>
+										<MenuItem fx:id="helpAboutProgram" mnemonicParsing="false"
+												  onAction="#showAboutProgram" text="About program"/>
+									</items>
+								</Menu>
+							</menus>
+						</MenuBar>
+						<ToolBar fx:id="tbMain" minHeight="30.0" prefHeight="40.0" prefWidth="200.0">
+							<items>
+								<Button id="btnOpenMatrix" fx:id="btnOpenMatrix" mnemonicParsing="false" onAction="#loadMatrix"/>
+								<Button id="btnNewMatrix" fx:id="btnNewMatrix" mnemonicParsing="false" onAction="#newMatrix"/>
+								<Separator orientation="VERTICAL" prefHeight="200.0"/>
+								<Button id="btnSaveDocument" fx:id="btnSaveDocument" mnemonicParsing="false"
+										onAction="#saveDocument"/>
+								<Button fx:id="btnSaveAsDocument" mnemonicParsing="false" onAction="#saveAsDocument"/>
+								<Button fx:id="btnOpenMainLog" mnemonicParsing="false" onAction="#openMainLog"/>
+								<Button fx:id="btnShowCalculator" mnemonicParsing="false" onAction="#showCalculator"/>
+								<Separator orientation="VERTICAL" prefHeight="200.0"/>
+								<Button fx:id="btnUndo" mnemonicParsing="false" onAction="#undo"/>
+								<Button fx:id="btnRedo" mnemonicParsing="false" onAction="#redo"/>
+							</items>
+						</ToolBar>
+					</children>
+				</VBox>
+			</top>
+			<center>
+				<TabPane id="tabPane" fx:id="tabPane" minHeight="200.0" prefHeight="629.0" prefWidth="1280.0"
+						 BorderPane.alignment="CENTER"/>
+			</center>
+			<bottom>
+				<GridPane>
+					<columnConstraints>
+						<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0"/>
+						<ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" percentWidth="15.0"
+										   prefWidth="100.0"/>
+						<ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="10.0" percentWidth="15.0"
+										   prefWidth="100.0"/>
+					</columnConstraints>
+					<rowConstraints>
+						<RowConstraints minHeight="10.0" vgrow="SOMETIMES"/>
+					</rowConstraints>
+					<children>
+						<ProgressBar fx:id="progressBar" maxWidth="1.7976931348623157E308" progress="0.0"
+									 BorderPane.alignment="CENTER"/>
+						<Label fx:id="lblMemory" GridPane.columnIndex="2"/>
+						<Label fx:id="lblStartedMatrixCount" GridPane.columnIndex="1"/>
+					</children>
+				</GridPane>
+			</bottom>
+		</BorderPane>
+	</children>
+	<padding>
+		<Insets left="3.0" right="3.0"/>
+	</padding>
+</GridPane>

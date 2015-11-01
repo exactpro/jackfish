@@ -1,0 +1,69 @@
+.hidden {
+	display: none;
+}
+
+a {
+	width: 40em;
+}
+
+.tableTitle {
+	font-size: large;
+}
+
+.Passed, .Failed, .NotExecuted, .Documented, .Return {
+	font-weight: bold;
+	margin-left: 3em;
+}
+
+.Time {
+	font-weight: bold;
+}
+.ExecutionTime {
+	width: 100px;
+	text-align: right;
+}
+.Identity {
+	font-weight: bold;
+}				
+
+.Passed, .Return {
+	color: green;
+}
+
+.Failed {
+	color: red;
+}
+
+.matrixSource pre {
+	margin: 1em 0 1em 0;
+	border-top: 3px double black;
+	border-bottom: 3px double black;
+	padding: 1em 3em 1em 3em;
+}
+
+.img {
+	
+	width: 80%
+}
+
+div.tree {
+	/*border: solid 1px black;*/
+	/* margin-top: 1em; */
+	/*margin-bottom: 1em; */
+	padding: 3pt;
+}
+
+div.tree div.tree {
+	margin-left: 2em;
+}
+.defaultOperation {
+	color : red;
+	font-size : 120%;
+}
+.rotated_th {
+	-webkit-transform: rotate(270deg);
+	-moz-transform: rotate(270deg);
+	-ms-transform: rotate(270deg);
+	-o-transform: rotate(270deg);
+	transform: rotate(270deg);
+}

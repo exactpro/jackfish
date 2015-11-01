@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+   Copyright (c) 2009-2015, Exactpro Systems, LLC
+   Quality Assurance & Related Development for Innovative Trading Systems.
+   All rights reserved.
+   This is unpublished, licensed software, confidential and proprietary
+   information which is the property of Exactpro Systems, LLC or its licensors.
+  -->
+
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<GridPane prefHeight="736.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.exactprosystems.jf.tool.settings.SettingsPanelController">
+	<columnConstraints>
+		<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+	</columnConstraints>
+	<rowConstraints>
+		<RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+	</rowConstraints>
+	<children>
+		<TabPane>
+			<tabs>
+				<Tab closable="false" text="Main">
+					<content>
+						<GridPane fx:id="mainGrid" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity">
+							<columnConstraints>
+								<ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" percentWidth="30.0" prefWidth="100.0" />
+								<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+							</columnConstraints>
+							<rowConstraints>
+								<RowConstraints minHeight="10.0" percentHeight="7.0" prefHeight="30.0" vgrow="SOMETIMES" />
+								<RowConstraints minHeight="10.0" percentHeight="7.0" prefHeight="30.0" vgrow="SOMETIMES" />
+								<RowConstraints minHeight="10.0" percentHeight="7.0" prefHeight="30.0" vgrow="SOMETIMES" />
+								<RowConstraints minHeight="10.0" percentHeight="7.0" prefHeight="30.0" vgrow="SOMETIMES" />
+								<RowConstraints minHeight="10.0" percentHeight="7.0" prefHeight="30.0" vgrow="SOMETIMES" />
+								<RowConstraints minHeight="10.0" percentHeight="7.0" prefHeight="30.0" vgrow="SOMETIMES" />
+								<RowConstraints minHeight="10.0" percentHeight="7.0" prefHeight="30.0" vgrow="SOMETIMES" />
+								<RowConstraints minHeight="10.0" percentHeight="20.0" prefHeight="30.0" vgrow="SOMETIMES" />
+								<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+							</rowConstraints>
+							<children>
+								<Label text="Max last matrix count" GridPane.halignment="CENTER" />
+								<CheckBox id="useFullScreen" fx:id="useFullScreen" mnemonicParsing="false" text="Use fullscreen mode" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+								<Label text="Theme" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
+								<ComboBox id="theme" fx:id="comboBoxTheme" maxWidth="1.7976931348623157E308" prefHeight="25.0" prefWidth="326.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+								<Label text="Time notification (sec)" GridPane.rowIndex="2" />
+								<CheckBox id="useCompactMode" fx:id="useSmallWindow" mnemonicParsing="false" text="Use compact mode" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+								<Label text="Copyright" GridPane.rowIndex="7" />
+								<TextArea id="copyright" fx:id="taCopyright" prefHeight="200.0" prefWidth="200.0" promptText="Copyright" GridPane.columnIndex="1" GridPane.rowIndex="7">
+									<GridPane.margin>
+										<Insets right="5.0" />
+									</GridPane.margin>
+								</TextArea>
+								<CheckBox id="useFullScreenXpath" fx:id="useFullScreenXpath" mnemonicParsing="false" text="Use fullscreen xpath dialog" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+								<Label text="Font for text" GridPane.rowIndex="3" />
+								<HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="20.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
+									<children>
+										<ComboBox fx:id="cbFontFamily" prefWidth="150.0" />
+										<ComboBox fx:id="cbFontSize" prefWidth="150.0" />
+									</children>
+								</HBox>
+							</children>
+						</GridPane>
+					</content>
+				</Tab>
+				<Tab closable="false" text="ShortCuts">
+					<content>
+						<GridPane>
+							<columnConstraints>
+								<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+							</columnConstraints>
+							<rowConstraints>
+								<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+							</rowConstraints>
+							<children>
+								<Accordion>
+									<panes>
+										<TitledPane text="Document">
+											<content>
+												<GridPane fx:id="documentGrid">
+													<columnConstraints>
+														<ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+													</columnConstraints>
+													<rowConstraints>
+														<RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
+														<RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
+														<RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
+														<RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
+														<RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
+														<RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
+														<RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
+														<RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
+														<RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
+													</rowConstraints>
+													<children>
+													</children>
+												</GridPane>
+											</content>
+										</TitledPane>
+										<TitledPane text="Matrix">
+											<content>
+												<Accordion>
+													<panes>
+														<TitledPane text="Navigation">
+															<content>
+																<GridPane fx:id="matrixNavigationGrid">
+																	<columnConstraints>
+																		<ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+																	</columnConstraints>
+																	<rowConstraints>
+																		<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+																		<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+																		<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+																		<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+																		<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+																		<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+																		<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+																		<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+																		<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+																		<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+																		<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+																		<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+																		<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+																		<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+																		<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+																		<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+																	</rowConstraints>
+																	<children>
+																	</children>
+																</GridPane>
+															</content>
+														</TitledPane>
+														<TitledPane prefHeight="200.0" prefWidth="200.0" text="Actions">
+															<content>
+																<GridPane fx:id="matrixActionGrid">
+																	<columnConstraints>
+																		<ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+																	</columnConstraints>
+																	<rowConstraints>
+																		<RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
+																		<RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
+																		<RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
+																		<RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
+																		<RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
+																		<RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
+																		<RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
+																	</rowConstraints>
+																	<children>
+																	</children>
+																</GridPane>
+															</content>
+														</TitledPane>
+													</panes>
+												</Accordion>
+											</content>
+										</TitledPane>
+										<TitledPane prefHeight="200.0" prefWidth="200.0" text="Other">
+											<content>
+												<GridPane fx:id="otherGrid">
+													<columnConstraints>
+														<ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+													</columnConstraints>
+													<rowConstraints>
+														<RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
+														<RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
+														<RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
+														<RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
+														<RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
+													</rowConstraints>
+													<children>
+													</children>
+												</GridPane>
+											</content>
+										</TitledPane>
+									</panes>
+								</Accordion>
+							</children>
+						</GridPane>
+					</content>
+				</Tab>
+				<Tab closable="false" text="Log">
+					<content>
+						<GridPane>
+							<columnConstraints>
+								<ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="293.0" minWidth="10.0" prefWidth="137.0" />
+								<ColumnConstraints hgrow="SOMETIMES" maxWidth="478.0" minWidth="10.0" prefWidth="463.0" />
+							</columnConstraints>
+							<rowConstraints>
+								<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+								<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+								<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+								<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+								<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+								<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+								<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+							</rowConstraints>
+							<children>
+								<Label text="All" GridPane.rowIndex="6" />
+								<Label text="Debug" GridPane.rowIndex="4" />
+								<Label text="ERROR" GridPane.rowIndex="1" />
+								<Label text="FATAL" />
+								<Label text="INFO" GridPane.rowIndex="3" />
+								<Label text="TRACE" GridPane.rowIndex="5" />
+								<Label text="WARN" GridPane.rowIndex="2" />
+								<ColorPicker id="ALL" fx:id="cpAll" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+								<ColorPicker id="DEBUG" fx:id="cpDebug" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+								<ColorPicker id="ERROR" fx:id="cpError" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+								<ColorPicker id="FATAL" fx:id="cpFatal" GridPane.columnIndex="1" />
+								<ColorPicker id="INFO" fx:id="cpInfo" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+								<ColorPicker id="TRACE" fx:id="cpTrace" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+								<ColorPicker id="WARN" fx:id="cpWarn" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+							</children>
+						</GridPane>
+					</content>
+				</Tab>
+			</tabs>
+		</TabPane>
+	</children>
+</GridPane>
