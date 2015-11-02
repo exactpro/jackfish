@@ -17,7 +17,7 @@ public enum OperationKind
 	REPEAT("repeat")
 	{
 		@Override
-		public <T> boolean operate(Part part, OperationExecutor<T> executor, Locator locator, Locator additional, Locator header, List<T> list, T component,
+		public <T> boolean operate(Part part, OperationExecutor<T> executor, Locator locator, Locator rows, Locator header, List<T> list, T component,
 				Holder<T> holder, OperationResult result) throws Exception
 		{
 			for (int c = 0; c < part.i; c++)
@@ -31,7 +31,7 @@ public enum OperationKind
 	COUNT("count")
 	{
 		@Override
-		public <T> boolean operate(Part part, OperationExecutor<T> executor, Locator locator, Locator additional, Locator header, List<T> list, T component,
+		public <T> boolean operate(Part part, OperationExecutor<T> executor, Locator locator, Locator rows, Locator header, List<T> list, T component,
 				Holder<T> holder, OperationResult result) throws Exception
 		{
 			result.setText(String.valueOf(list != null ? list.size() : 0));
@@ -42,7 +42,7 @@ public enum OperationKind
 	USE("use")
 	{
 		@Override
-		public <T> boolean operate(Part part, OperationExecutor<T> executor, Locator locator, Locator additional, Locator header, List<T> list, T component,
+		public <T> boolean operate(Part part, OperationExecutor<T> executor, Locator locator, Locator rows, Locator header, List<T> list, T component,
 				Holder<T> holder, OperationResult result) throws Exception
 		{
 			if (list == null)
@@ -63,7 +63,7 @@ public enum OperationKind
 	USE_LOCATOR("use(loc)")
 	{
 		@Override
-		public <T> boolean operate(Part part, OperationExecutor<T> executor, Locator locator, Locator additional, Locator header, List<T> list, T component, Holder<T> holder, OperationResult result) throws Exception
+		public <T> boolean operate(Part part, OperationExecutor<T> executor, Locator locator, Locator rows, Locator header, List<T> list, T component, Holder<T> holder, OperationResult result) throws Exception
 		{
 			// TODO check it
 			checkComponent(component, locator);
@@ -75,7 +75,7 @@ public enum OperationKind
 	SET("set")
 	{
 		@Override
-		public <T> boolean operate(Part part, OperationExecutor<T> executor, Locator locator, Locator additional, Locator header, List<T> list, T component,
+		public <T> boolean operate(Part part, OperationExecutor<T> executor, Locator locator, Locator rows, Locator header, List<T> list, T component,
 				Holder<T> holder, OperationResult result) throws Exception
 		{
 			checkComponent(component, locator);
@@ -86,7 +86,7 @@ public enum OperationKind
 	GET_VALUE("getValue")
 	{
 		@Override
-		public <T> boolean operate(Part part, OperationExecutor<T> executor, Locator locator, Locator additional, Locator header, List<T> list, T component, Holder<T> holder, OperationResult result) throws Exception
+		public <T> boolean operate(Part part, OperationExecutor<T> executor, Locator locator, Locator rows, Locator header, List<T> list, T component, Holder<T> holder, OperationResult result) throws Exception
 		{
 			checkComponent(component, locator);
 			result.setText(executor.getValue(component));
@@ -97,7 +97,7 @@ public enum OperationKind
 	PUSH("push")
 	{
 		@Override
-		public <T> boolean operate(Part part, OperationExecutor<T> executor, Locator locator, Locator additional, Locator header, List<T> list, T component,
+		public <T> boolean operate(Part part, OperationExecutor<T> executor, Locator locator, Locator rows, Locator header, List<T> list, T component,
 				Holder<T> holder, OperationResult result) throws Exception
 		{
 			checkComponent(component, locator);
@@ -108,7 +108,7 @@ public enum OperationKind
 	PRESS("press")
 	{
 		@Override
-		public <T> boolean operate(Part part, OperationExecutor<T> executor, Locator locator, Locator additional, Locator header, List<T> list, T component,
+		public <T> boolean operate(Part part, OperationExecutor<T> executor, Locator locator, Locator rows, Locator header, List<T> list, T component,
 				Holder<T> holder, OperationResult result) throws Exception
 		{
 			checkComponent(component, locator);
@@ -119,7 +119,7 @@ public enum OperationKind
 	KEY_UP("keyUp")
 	{
 		@Override
-		public <T> boolean operate(Part part, OperationExecutor<T> executor, Locator locator, Locator additional, Locator header, List<T> list, T component,
+		public <T> boolean operate(Part part, OperationExecutor<T> executor, Locator locator, Locator rows, Locator header, List<T> list, T component,
 				Holder<T> holder, OperationResult result) throws Exception
 		{
 			checkComponent(component, locator);
@@ -130,7 +130,7 @@ public enum OperationKind
 	KEY_DOWN("keyDown")
 	{
 		@Override
-		public <T> boolean operate(Part part, OperationExecutor<T> executor, Locator locator, Locator additional, Locator header, List<T> list, T component,
+		public <T> boolean operate(Part part, OperationExecutor<T> executor, Locator locator, Locator rows, Locator header, List<T> list, T component,
 				Holder<T> holder, OperationResult result) throws Exception
 		{
 			checkComponent(component, locator);
@@ -141,7 +141,7 @@ public enum OperationKind
 	CHECK("check")
 	{
 		@Override
-		public <T> boolean operate(Part part, OperationExecutor<T> executor, Locator locator, Locator additional, Locator header, List<T> list, T component,
+		public <T> boolean operate(Part part, OperationExecutor<T> executor, Locator locator, Locator rows, Locator header, List<T> list, T component,
 				Holder<T> holder, OperationResult result) throws Exception
 		{
 			checkComponent(component, locator);
@@ -153,7 +153,7 @@ public enum OperationKind
 	CHECK_XY("check(x,y)")
 	{
 		@Override
-		public <T> boolean operate(Part part, OperationExecutor<T> executor, Locator locator, Locator additional, Locator header, List<T> list, T component, Holder<T> holder, OperationResult result) throws Exception
+		public <T> boolean operate(Part part, OperationExecutor<T> executor, Locator locator, Locator rows, Locator header, List<T> list, T component, Holder<T> holder, OperationResult result) throws Exception
 		{
 			checkComponent(component, locator);
 			String str = isTable(locator, executor) ? executor.getValueTableCell(component, part.x, part.y) : executor.getValue(component);
@@ -165,7 +165,7 @@ public enum OperationKind
 	CHECK_REGEXP("checkRegexp")
 	{
 		@Override
-		public <T> boolean operate(Part part, OperationExecutor<T> executor, Locator locator, Locator additional, Locator header, List<T> list, T component,
+		public <T> boolean operate(Part part, OperationExecutor<T> executor, Locator locator, Locator rows, Locator header, List<T> list, T component,
 				Holder<T> holder, OperationResult result) throws Exception
 		{
 			checkComponent(component, locator);
@@ -177,7 +177,7 @@ public enum OperationKind
 	CHECK_REGEXP_XY("checkRegexp(x,y)")
 	{
 		@Override
-		public <T> boolean operate(Part part, OperationExecutor<T> executor, Locator locator, Locator additional, Locator header, List<T> list, T component, Holder<T> holder, OperationResult result) throws Exception
+		public <T> boolean operate(Part part, OperationExecutor<T> executor, Locator locator, Locator rows, Locator header, List<T> list, T component, Holder<T> holder, OperationResult result) throws Exception
 		{
 			checkComponent(component, locator);
 			String str = isTable(locator, executor) ? executor.getValueTableCell(component, part.x, part.y) : executor.getValue(component);
@@ -189,7 +189,7 @@ public enum OperationKind
 	MOVE("move")
 	{
 		@Override
-		public <T> boolean operate(Part part, OperationExecutor<T> executor, Locator locator, Locator additional, Locator header, List<T> list, T component,
+		public <T> boolean operate(Part part, OperationExecutor<T> executor, Locator locator, Locator rows, Locator header, List<T> list, T component,
 				Holder<T> holder, OperationResult result) throws Exception
 		{
 			checkComponent(component, locator);
@@ -200,7 +200,7 @@ public enum OperationKind
 	MOVE_XY("move(x,y)")
 	{
 		@Override
-		public <T> boolean operate(Part part, OperationExecutor<T> executor, Locator locator, Locator additional, Locator header, List<T> list, T component,
+		public <T> boolean operate(Part part, OperationExecutor<T> executor, Locator locator, Locator rows, Locator header, List<T> list, T component,
 				Holder<T> holder, OperationResult result) throws Exception
 		{
 			checkComponent(component, locator);
@@ -211,7 +211,7 @@ public enum OperationKind
 	CLICK("click")
 	{
 		@Override
-		public <T> boolean operate(Part part, OperationExecutor<T> executor, Locator locator, Locator additional, Locator header, List<T> list, T component,
+		public <T> boolean operate(Part part, OperationExecutor<T> executor, Locator locator, Locator rows, Locator header, List<T> list, T component,
 				Holder<T> holder, OperationResult result) throws Exception
 		{
 			checkComponent(component, locator);
@@ -223,7 +223,7 @@ public enum OperationKind
 	CLICK_XY("click(x,y)")
 	{
 		@Override
-		public <T> boolean operate(Part part, OperationExecutor<T> executor, Locator locator, Locator additional, Locator header, List<T> list, T component,
+		public <T> boolean operate(Part part, OperationExecutor<T> executor, Locator locator, Locator rows, Locator header, List<T> list, T component,
 				Holder<T> holder, OperationResult result) throws Exception
 		{
 			checkComponent(component, locator);
@@ -235,7 +235,7 @@ public enum OperationKind
 	TEXT("text")
 	{
 		@Override
-		public <T> boolean operate(Part part, OperationExecutor<T> executor, Locator locator, Locator additional, Locator header, List<T> list, T component,
+		public <T> boolean operate(Part part, OperationExecutor<T> executor, Locator locator, Locator rows, Locator header, List<T> list, T component,
 				Holder<T> holder, OperationResult result) throws Exception
 		{
 			checkComponent(component, locator);
@@ -246,7 +246,7 @@ public enum OperationKind
 	TEXT_XY("text(x,y)")
 	{
 		@Override
-		public <T> boolean operate(Part part, OperationExecutor<T> executor, Locator locator, Locator additional, Locator header, List<T> list, T component,
+		public <T> boolean operate(Part part, OperationExecutor<T> executor, Locator locator, Locator rows, Locator header, List<T> list, T component,
 				Holder<T> holder, OperationResult result) throws Exception
 		{
 			checkComponent(component, locator);
@@ -257,7 +257,7 @@ public enum OperationKind
 	TOGGLE("toggle")
 	{
 		@Override
-		public <T> boolean operate(Part part, OperationExecutor<T> executor, Locator locator, Locator additional, Locator header, List<T> list, T component,
+		public <T> boolean operate(Part part, OperationExecutor<T> executor, Locator locator, Locator rows, Locator header, List<T> list, T component,
 				Holder<T> holder, OperationResult result) throws Exception
 		{
 			checkComponent(component, locator);
@@ -268,7 +268,7 @@ public enum OperationKind
 	MARK("mark")
 	{
 		@Override
-		public <T> boolean operate(Part part, OperationExecutor<T> executor, Locator locator, Locator additional, Locator header, List<T> list, T component,
+		public <T> boolean operate(Part part, OperationExecutor<T> executor, Locator locator, Locator rows, Locator header, List<T> list, T component,
 				Holder<T> holder, OperationResult result) throws Exception
 		{
 			checkComponent(component, locator);
@@ -279,7 +279,7 @@ public enum OperationKind
 	SELECT("select")
 	{
 		@Override
-		public <T> boolean operate(Part part, OperationExecutor<T> executor, Locator locator, Locator additional, Locator header, List<T> list, T component,
+		public <T> boolean operate(Part part, OperationExecutor<T> executor, Locator locator, Locator rows, Locator header, List<T> list, T component,
 				Holder<T> holder, OperationResult result) throws Exception
 		{
 			checkComponent(component, locator);
@@ -290,7 +290,7 @@ public enum OperationKind
 	EXPAND("expand")
 	{
 		@Override
-		public <T> boolean operate(Part part, OperationExecutor<T> executor, Locator locator, Locator additional, Locator header, List<T> list, T component,
+		public <T> boolean operate(Part part, OperationExecutor<T> executor, Locator locator, Locator rows, Locator header, List<T> list, T component,
 				Holder<T> holder, OperationResult result) throws Exception
 		{
 			checkComponent(component, locator);
@@ -301,7 +301,7 @@ public enum OperationKind
 	COLLAPSE("collapse")
 	{
 		@Override
-		public <T> boolean operate(Part part, OperationExecutor<T> executor, Locator locator, Locator additional, Locator header, List<T> list, T component,
+		public <T> boolean operate(Part part, OperationExecutor<T> executor, Locator locator, Locator rows, Locator header, List<T> list, T component,
 				Holder<T> holder, OperationResult result) throws Exception
 		{
 			checkComponent(component, locator);
@@ -312,7 +312,7 @@ public enum OperationKind
 	DELAY("delay")
 	{
 		@Override
-		public <T> boolean operate(Part part, OperationExecutor<T> executor, Locator locator, Locator additional, Locator header, List<T> list, T component,
+		public <T> boolean operate(Part part, OperationExecutor<T> executor, Locator locator, Locator rows, Locator header, List<T> list, T component,
 				Holder<T> holder, OperationResult result) throws Exception
 		{
 			Thread.sleep(part.i);
@@ -323,7 +323,7 @@ public enum OperationKind
 	WAIT("wait")
 	{
 		@Override
-		public <T> boolean operate(Part part, OperationExecutor<T> executor, Locator locator, Locator additional, Locator header, List<T> list, T component,
+		public <T> boolean operate(Part part, OperationExecutor<T> executor, Locator locator, Locator rows, Locator header, List<T> list, T component,
 				Holder<T> holder, OperationResult result) throws Exception
 		{
 			AtomicLong atomicLong = new AtomicLong();
@@ -336,7 +336,7 @@ public enum OperationKind
 	GET("get")
 	{
 		@Override
-		public <T> boolean operate(Part part, OperationExecutor<T> executor, Locator locator, Locator additional, Locator header, List<T> list, T component,
+		public <T> boolean operate(Part part, OperationExecutor<T> executor, Locator locator, Locator rows, Locator header, List<T> list, T component,
 				Holder<T> holder, OperationResult result) throws Exception
 		{
 			checkComponent(component, locator);
@@ -349,7 +349,7 @@ public enum OperationKind
 	GET_VALUE_XY("getValue(x,y)")
 	{
 		@Override
-		public <T> boolean operate(Part part, OperationExecutor<T> executor, Locator locator, Locator additional, Locator header, List<T> list, T component,
+		public <T> boolean operate(Part part, OperationExecutor<T> executor, Locator locator, Locator rows, Locator header, List<T> list, T component,
 				Holder<T> holder, OperationResult result) throws Exception
 		{
 			checkComponent(component, locator);
@@ -362,11 +362,11 @@ public enum OperationKind
 	GET_TABLE("getTable")
 	{
 		@Override
-		public <T> boolean operate(Part part, OperationExecutor<T> executor, Locator locator, Locator additional, Locator header, List<T> list, T component,
+		public <T> boolean operate(Part part, OperationExecutor<T> executor, Locator locator, Locator rows, Locator header, List<T> list, T component,
 				Holder<T> holder, OperationResult result) throws Exception
 		{
 			checkComponent(component, locator);
-			result.setArray(executor.getTable(component, additional, header, locator.useNumericHeader()));
+			result.setArray(executor.getTable(component, rows, header, locator.useNumericHeader()));
 			return true;
 		}
 	},
@@ -374,11 +374,11 @@ public enum OperationKind
 	GET_ROW("getRow")
 	{
 		@Override
-		public <T> boolean operate(Part part, OperationExecutor<T> executor, Locator locator, Locator additional, Locator header, List<T> list, T component,
+		public <T> boolean operate(Part part, OperationExecutor<T> executor, Locator locator, Locator rows, Locator header, List<T> list, T component,
 				Holder<T> holder, OperationResult result) throws Exception
 		{
 			checkComponent(component, locator);
-			result.setMap(executor.getRow(component, additional, header, locator.useNumericHeader(), part.valueCondition, part.colorCondition));
+			result.setMap(executor.getRow(component, rows, header, locator.useNumericHeader(), part.valueCondition, part.colorCondition));
 			return true;
 		}
 	},
@@ -386,11 +386,11 @@ public enum OperationKind
 	GET_ROW_BY_INDEX("getRowByIndex")
 	{
 		@Override
-		public <T> boolean operate(Part part, OperationExecutor<T> executor, Locator locator, Locator additional, Locator header, List<T> list, T component,
+		public <T> boolean operate(Part part, OperationExecutor<T> executor, Locator locator, Locator rows, Locator header, List<T> list, T component,
 				Holder<T> holder, OperationResult result) throws Exception
 		{
 			checkComponent(component, locator);
-			result.setMap(executor.getRowByIndex(component, additional, header, locator.useNumericHeader(), part.i));
+			result.setMap(executor.getRowByIndex(component, rows, header, locator.useNumericHeader(), part.i));
 			return true;
 		}
 	},
@@ -398,11 +398,11 @@ public enum OperationKind
 	GET_ROW_INDEXES("getRowIndexes")
 	{
 		@Override
-		public <T> boolean operate(Part part, OperationExecutor<T> executor, Locator locator, Locator additional, Locator header, List<T> list, T component,
+		public <T> boolean operate(Part part, OperationExecutor<T> executor, Locator locator, Locator rows, Locator header, List<T> list, T component,
 				Holder<T> holder, OperationResult result) throws Exception
 		{
 			checkComponent(component, locator);
-			result.setList(executor.getRowIndexes(component, additional, header, locator.useNumericHeader(), part.valueCondition, part.colorCondition));
+			result.setList(executor.getRowIndexes(component, rows, header, locator.useNumericHeader(), part.valueCondition, part.colorCondition));
 			return true;
 		}
 	},
@@ -410,11 +410,11 @@ public enum OperationKind
 	GET_ROW_WITH_COLOR("getRowWithoutColor")
 	{
 		@Override
-		public <T> boolean operate(Part part, OperationExecutor<T> executor, Locator locator, Locator additional, Locator header, List<T> list, T component,
+		public <T> boolean operate(Part part, OperationExecutor<T> executor, Locator locator, Locator rows, Locator header, List<T> list, T component,
 				Holder<T> holder, OperationResult result) throws Exception
 		{
 			checkComponent(component, locator);
-			result.setColorMap(executor.getRowWithColor(component, additional, header, locator.useNumericHeader(), part.i));
+			result.setColorMap(executor.getRowWithColor(component, rows, header, locator.useNumericHeader(), part.i));
 			return true;
 		}
 	};
@@ -430,7 +430,7 @@ public enum OperationKind
 		return this.name;
 	}
 
-	public abstract <T> boolean operate(Part part, OperationExecutor<T> executor, Locator locator, Locator additional, Locator header, List<T> list, T component,
+	public abstract <T> boolean operate(Part part, OperationExecutor<T> executor, Locator locator, Locator rows, Locator header, List<T> list, T component,
 			Holder<T> holder, OperationResult result) throws Exception;
 
 	

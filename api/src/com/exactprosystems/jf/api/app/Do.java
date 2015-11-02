@@ -300,12 +300,23 @@ public class Do
 
 	static final String wait = "Wait, while component stay @toAppear ? visible : invisible for @ms";
 	@DescriptionAttribute(text = Do.wait)
-	public static Operation wait(int ms, boolean toAppear)
+	public static Operation wait(String str)
 	{
-		return new Operation().wait(ms, toAppear);
+		return new Operation().wait(str);
 	}
 
-	
+	@DescriptionAttribute(text = Do.wait)
+	public static Operation wait(String str, int ms, boolean toAppear)
+	{
+		return new Operation().wait(str, ms, toAppear);
+	}
+
+	@DescriptionAttribute(text = Do.wait)
+	public static Operation wait(Locator locator, int ms, boolean toAppear)
+	{
+		return new Operation().wait(locator, ms, toAppear);
+	}
+
 	
 	
 	

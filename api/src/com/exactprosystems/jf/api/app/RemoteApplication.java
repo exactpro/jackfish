@@ -241,14 +241,14 @@ public abstract class RemoteApplication implements IRemoteApplication
 	}
 	
 	@Override
-	public final OperationResult operate(Locator owner, Locator element, Locator row, Locator header, Operation operation) throws RemoteException
+	public final OperationResult operate(Locator owner, Locator element, Locator rows, Locator header, Operation operation) throws RemoteException
 	{
 		try 
 		{
 			exceptionIfNull(element, 	"element", "operate");
 			exceptionIfNull(operation, "operation", "operate");
 
-			return operateDerived(owner, element, row, header, operation);
+			return operateDerived(owner, element, rows, header, operation);
 		}
 		catch (Exception e)
 		{
@@ -364,7 +364,7 @@ public abstract class RemoteApplication implements IRemoteApplication
 
 	protected abstract ImageWrapper getImageDerived(Locator owner, Locator element) throws Exception;
 
-	protected abstract OperationResult operateDerived(Locator owner, Locator element, Locator additional, Locator header, Operation operation) throws Exception;
+	protected abstract OperationResult operateDerived(Locator owner, Locator element, Locator rows, Locator header, Operation operation) throws Exception;
 
 	protected abstract void newInstanceDerived(Map<String,String> args) throws Exception;
 	

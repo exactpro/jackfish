@@ -53,19 +53,20 @@ public class Operation implements Iterable<Part>, Serializable
 
 		for (Part part : this.list)
 		{
-			processOnePart(executor, null, holder, element, null, null, result, true, part);
+			processOnePart(executor, null, holder, element, null, null, result, part);
 		}
 	}
 
-	public <T> OperationResult operate(OperationExecutor<T> executor, Locator owner, Locator element, Locator additional, Locator header) throws Exception
+	public <T> OperationResult operate(OperationExecutor<T> executor, Locator owner, Locator element, Locator rows, Locator header) throws Exception
 	{
 		OperationResult result = new OperationResult();
 		T main = null;
 		List<T> list = null;
+		
 		owner 	= this.owner   == null ? owner   : this.owner;
 		element = this.locator == null ? element : this.locator;
-		additional = this.addition == null ? additional : this.addition;
-		header = this.header == null ? header : this.header;
+		rows 	= this.rows    == null ? rows    : this.rows;
+		header 	= this.header  == null ? header  : this.header;
 
 		if (element.getAddition() == Addition.Many)
 		{
@@ -94,7 +95,7 @@ public class Operation implements Iterable<Part>, Serializable
 		Holder<T> holder = new Holder<>(main);
 		for (Part part : this.list)
 		{
-			ok = processOnePart(executor, list, holder, element, additional, header, result, ok, part);
+			ok = processOnePart(executor, list, holder, element, rows, header, result, part);
 			if (!ok)
 			{
 				break;
@@ -106,7 +107,7 @@ public class Operation implements Iterable<Part>, Serializable
 	}
 
 	private <T> boolean processOnePart(OperationExecutor<T> executor, List<T> list, Holder<T> holder, Locator element, 
-			Locator additional, Locator header, OperationResult result, boolean ok, Part part) throws Exception
+			Locator rows, Locator header, OperationResult result, Part part) throws Exception
 	{
 		T component = holder.value;
 		Locator locator = element;
@@ -139,7 +140,7 @@ public class Operation implements Iterable<Part>, Serializable
 
 		if (controlKind == ControlKind.Table && executor.tableIsContainer() && haveOneOfCoords)
 		{
-			component = executor.lookAtTable(component, additional, header, part.x, part.y);
+			component = executor.lookAtTable(component, rows, header, part.x, part.y);
 			holder.value = component;
 			part.x = Integer.MIN_VALUE;
 			part.y = Integer.MIN_VALUE;
@@ -154,7 +155,7 @@ public class Operation implements Iterable<Part>, Serializable
 			throw new Exception("Operation " + kind + " is not allowed for " + locator.getControlKind());
 		}
 		
-		return kind.operate(part, executor, locator, additional, header, list, component, holder, result);
+		return kind.operate(part, executor, locator, rows, header, list, component, holder, result);
 	}
 
 	private static boolean isReal(Locator locator)
@@ -462,9 +463,23 @@ public class Operation implements Iterable<Part>, Serializable
 	}
 
 	@DescriptionAttribute(text = Do.wait)
-	public Operation wait(int ms, boolean toAppear)
+	public Operation wait(String str)
 	{
-		this.list.add(new Part(OperationKind.WAIT).setInt(ms).setBool(toAppear));
+		this.list.add(new Part(OperationKind.WAIT).setLocatorId(str).setInt(10000).setBool(true));
+		return this;
+	}
+
+	@DescriptionAttribute(text = Do.wait)
+	public Operation wait(String str, int ms, boolean toAppear)
+	{
+		this.list.add(new Part(OperationKind.WAIT).setLocatorId(str).setInt(ms).setBool(toAppear));
+		return this;
+	}
+
+	@DescriptionAttribute(text = Do.wait)
+	public Operation wait(Locator locator, int ms, boolean toAppear)
+	{
+		this.list.add(new Part(OperationKind.WAIT).setLocator(locator).setInt(ms).setBool(toAppear));
 		return this;
 	}
 
@@ -487,7 +502,7 @@ public class Operation implements Iterable<Part>, Serializable
 	{
 		this.owner = owner;
 		this.locator = locator;
-		this.addition = addition;
+		this.rows = addition;
 		return this;
 	}
 
@@ -496,7 +511,7 @@ public class Operation implements Iterable<Part>, Serializable
 	{
 		this.owner = owner;
 		this.locator = locator;
-		this.addition = addition;
+		this.rows = addition;
 		this.header = header;
 		return this;
 	}
@@ -524,8 +539,8 @@ public class Operation implements Iterable<Part>, Serializable
 	@DescriptionAttribute(text = Do.addition)
 	public Locator addition(String id, ControlKind kind)
 	{
-		this.addition = new Locator(this, id, kind);
-		return this.addition;
+		this.rows = new Locator(this, id, kind);
+		return this.rows;
 	}
 
 	@DescriptionAttribute(text = Do.header)
@@ -538,6 +553,6 @@ public class Operation implements Iterable<Part>, Serializable
 	protected List<Part> list;
 	protected Locator locator;
 	protected Locator owner;
-	protected Locator addition;
+	protected Locator rows;
 	protected Locator header;
 }
