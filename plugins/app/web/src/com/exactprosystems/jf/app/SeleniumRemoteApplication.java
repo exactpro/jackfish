@@ -444,7 +444,7 @@ public class SeleniumRemoteApplication extends RemoteApplication
 	}
 
 	@Override
-	protected OperationResult operateDerived(Locator owner, Locator element, Locator additional, Locator header, Operation operation) throws Exception
+	protected OperationResult operateDerived(Locator owner, Locator element, Locator rows, Locator header, Operation operation) throws Exception
 	{
 		Exception real = null;
 		int repeat = 1;
@@ -452,7 +452,7 @@ public class SeleniumRemoteApplication extends RemoteApplication
 		{
 			try
 			{
-				return operation.operate(this.operationExecutor, owner, element, additional, header);
+				return operation.operate(this.operationExecutor, owner, element, rows, header);
 			}
 			catch (StaleElementReferenceException e)
 			{

@@ -165,9 +165,9 @@ public class WinRemoteApplication extends RemoteApplication
 	
 	
 	@Override
-	protected OperationResult operateDerived(Locator owner, Locator locator, Locator additional, Locator header, Operation operation) throws Exception
+	protected OperationResult operateDerived(Locator owner, Locator locator, Locator rows, Locator header, Operation operation) throws Exception
 	{
-		return operation.operate(this.operationExecutor, owner, locator, additional, header);
+		return operation.operate(this.operationExecutor, owner, locator, rows, header);
 	}
 
 	@Override
