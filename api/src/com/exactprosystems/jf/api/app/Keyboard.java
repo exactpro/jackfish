@@ -12,23 +12,37 @@ import java.io.Serializable;
 
 public enum Keyboard implements Serializable
 {
-	F1, F2, F3,
-	F4, F5, F6,
-	F7, F8, F9,
-	F10, F11, F12,
-	Down,
-	Up,
-	Right,
-	Left,
-	A,
-	B,
-	Escape,
-	Enter,
+	Escape, F1, F2, F3, F4, F5, F6, F7, F8, F9, F10, F11, F12,
+
+	DIG1, DIG2, DIG3, DIG4, DIG5, DIG6, DIG7, DIG8, DIG9, DIG0,
+
+	PLUS, MINUS, SLASH, BACK_SLASH,
+
+	Q, W, E, R, T, Y, U, I, O, P,
+	A, S, D, F, G, H, J, K, L, SEMICOLON,
+	Z, X, C, V, B, N, M,
+
+	Down, Up, Right, Left,
+
 	Tab,
+	Capslock,
+	Shift,
+	CONTROL,
+	ALT,
+	SPACE,
+	HOME,
+
+	PAGE_UP,
+	PAGE_DOWN,
+	END,
+	QUOTE,
+	DOUBLE_QUOTE,
+
+	Enter,
 	Delete,
 	Backspase,
-	Capslock,
-	Shift;
+
+	;
 
 	private static final long serialVersionUID = -1378685462384062328L;
 }
