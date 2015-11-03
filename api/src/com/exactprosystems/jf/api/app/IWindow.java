@@ -15,6 +15,7 @@ public interface IWindow
 {
 	public enum SectionKind 
 	{ 
+		Any,
 		Self,
 		OnOpen, 
 		Run, 

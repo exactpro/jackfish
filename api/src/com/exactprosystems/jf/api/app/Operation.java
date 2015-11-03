@@ -46,56 +46,41 @@ public class Operation implements Iterable<Part>, Serializable
 	//------------------------------------------------------------------------------------------------------------------
 
 
-	public <T> void operate(OperationExecutor<T> executor, Locator element, T main) throws Exception
+	public <T> void operate(OperationExecutor<T> executor, Locator locator, T element) throws Exception
 	{
 		OperationResult result = new OperationResult();
-		Holder<T> holder = new Holder<T>(main);
+		Holder<T> elementHolder = new Holder<T>(element);
+		LocatorsHolder locators = new LocatorsHolder();
+		locators.put(LocatorKind.Element, 	locator);
 
 		for (Part part : this.list)
 		{
-			processOnePart(executor, null, holder, element, null, null, result, part);
+			part.kind.operateDerived(part, executor, locators, null, elementHolder, result);
 		}
 	}
 
-	public <T> OperationResult operate(OperationExecutor<T> executor, Locator owner, Locator element, Locator rows, Locator header) throws Exception
+	public <T> OperationResult operate(OperationExecutor<T> executor, Locator owner, Locator locator, Locator rows, Locator header) throws Exception
 	{
-		OperationResult result = new OperationResult();
-		T main = null;
-		List<T> list = null;
+		if (locator == null)
+		{
+			throw new Exception("Locator is null.");
+		}
 		
-		owner 	= this.owner   == null ? owner   : this.owner;
-		element = this.locator == null ? element : this.locator;
-		rows 	= this.rows    == null ? rows    : this.rows;
-		header 	= this.header  == null ? header  : this.header;
-
-		if (element.getAddition() == Addition.Many)
-		{
-			T dialog = null;
-			if (isReal(owner))
-			{
-				dialog = executor.find(null, owner);
-			}
-			
-			if (isReal(element))
-			{
-				list = executor.findAll(element.getControlKind(), dialog, element);
-			}
-			main = list == null || list.size() == 0 ? null : list.get(0);
-		}
-		else
-		{
-			if (isReal(element))
-			{
-				main = executor.find(owner, element);
-			}
-		}
-
+		OperationResult result = new OperationResult();
+		List<T> elementList = null;
+		Holder<T> elementHolder = new Holder<T>(null);
+		
+		LocatorsHolder locators = new LocatorsHolder();
+		locators.put(LocatorKind.Element, 	locator);
+		locators.put(LocatorKind.Owner, 	owner);
+		locators.put(LocatorKind.Rows,		rows);
+		locators.put(LocatorKind.Header, 	header);
+		
 		boolean ok = false;
 		
-		Holder<T> holder = new Holder<>(main);
 		for (Part part : this.list)
 		{
-			ok = processOnePart(executor, list, holder, element, rows, header, result, part);
+			ok = part.kind.operateDerived(part, executor, locators, elementList, elementHolder, result);
 			if (!ok)
 			{
 				break;
@@ -106,63 +91,6 @@ public class Operation implements Iterable<Part>, Serializable
 		return result;
 	}
 
-	private <T> boolean processOnePart(OperationExecutor<T> executor, List<T> list, Holder<T> holder, Locator element, 
-			Locator rows, Locator header, OperationResult result, Part part) throws Exception
-	{
-		T component = holder.value;
-		Locator locator = element;
-		ControlKind controlKind = element.getControlKind();
-		
-		boolean haveX = part.x >= 0;
-		boolean haveY = part.y >= 0;
-		boolean haveOneOfCoords = haveX || haveY;
-		if (this.locator != null)
-		{
-			component = null;
-			locator = this.locator;
-			if (isReal(locator))
-			{
-				component = executor.find(this.owner, locator);
-			}
-			holder.value = component;
-			controlKind = locator.getControlKind();
-		}
-		else if (part.element != null)
-		{
-			component = null;
-			locator = part.element;
-			if (isReal(part.element) && part.kind != OperationKind.WAIT )
-			{
-				component = executor.find(part.owner, part.element);
-			}
-			holder.value = component;
-		}
-
-		if (controlKind == ControlKind.Table && executor.tableIsContainer() && haveOneOfCoords)
-		{
-			component = executor.lookAtTable(component, rows, header, part.x, part.y);
-			holder.value = component;
-			part.x = Integer.MIN_VALUE;
-			part.y = Integer.MIN_VALUE;
-		}
-		
-		// check permitions for this part
-		OperationKind kind = part.kind;
-		
-		
-		if (!locator.getControlKind().isAllowed(kind))
-		{
-			throw new Exception("Operation " + kind + " is not allowed for " + locator.getControlKind());
-		}
-		
-		return kind.operate(part, executor, locator, rows, header, list, component, holder, result);
-	}
-
-	private static boolean isReal(Locator locator)
-	{
-		return locator != null && locator.getControlKind() != null && !locator.getControlKind().isVirtual();
-	}
-	
 	public static Operation create()
 	{
 		return new Operation();
@@ -176,17 +104,16 @@ public class Operation implements Iterable<Part>, Serializable
 		}
 	}
 	
-	public boolean isEmpty()
-	{
-		return this.list.isEmpty();
-	}
-	
 	public Part addPart(OperationKind kind)
 	{
 		Part part = new Part(kind);
 		this.list.add(part);
 		return part;
 	}
+	
+	
+	
+	
 
 	@DescriptionAttribute(text = Do.repeat)
 	public Operation repeat(int i,  Operation operation)
@@ -366,6 +293,13 @@ public class Operation implements Iterable<Part>, Serializable
 		return this;
 	}
 
+	@DescriptionAttribute(text = Do.useLocatorKind)
+	public Operation use(Locator locator, LocatorKind locatorKind)
+	{
+		this.list.add(new Part(OperationKind.USE_LOCATOR).setLocator(locator).setLocatorKind(locatorKind));
+		return this;
+	}
+
 	@DescriptionAttribute(text = Do.move)
 	public Operation move()
 	{
@@ -487,72 +421,5 @@ public class Operation implements Iterable<Part>, Serializable
 	
 	
 	
-	
-	
-	@DescriptionAttribute(text = Do.locatorOwnerLocator)
-	public Operation locator(Locator owner, Locator locator)
-	{
-		this.owner = owner;
-		this.locator = locator;
-		return this;
-	}
-
-	@DescriptionAttribute(text = Do.locatorOwnerLocatorAddition)
-	public Operation locator(Locator owner, Locator locator, Locator addition)
-	{
-		this.owner = owner;
-		this.locator = locator;
-		this.rows = addition;
-		return this;
-	}
-
-	@DescriptionAttribute(text = Do.locatorOwnerLocatorAdditionHeader)
-	public Operation locator(Locator owner, Locator locator, Locator addition, Locator header)
-	{
-		this.owner = owner;
-		this.locator = locator;
-		this.rows = addition;
-		this.header = header;
-		return this;
-	}
-
-	
-	
-	
-	
-	
-	
-	@DescriptionAttribute(text = Do.owner)
-	public Locator owner(String id, ControlKind kind)
-	{
-		this.owner = new Locator(this, id, kind); 
-		return this.owner;
-	}
-	
-	@DescriptionAttribute(text = Do.locator)
-	public Locator locator(String id, ControlKind kind)
-	{
-		this.locator = new Locator(this, id, kind);
-		return this.locator;
-	}
-
-	@DescriptionAttribute(text = Do.addition)
-	public Locator addition(String id, ControlKind kind)
-	{
-		this.rows = new Locator(this, id, kind);
-		return this.rows;
-	}
-
-	@DescriptionAttribute(text = Do.header)
-	public Locator header(String id, ControlKind kind)
-	{
-		this.header = new Locator(this, id, kind);
-		return this.header;
-	}
-	
 	protected List<Part> list;
-	protected Locator locator;
-	protected Locator owner;
-	protected Locator rows;
-	protected Locator header;
 }

@@ -200,6 +200,13 @@ public class Do
 		return new Operation().use(locator);
 	}
 
+	static final String useLocatorKind = "Change context to locator with dynamic @locator and locator kind @locatorKind";
+	@DescriptionAttribute(text = Do.useLocator)
+	public static Operation use(Locator locator, LocatorKind locatorKind)
+	{
+		return new Operation().use(locator, locatorKind);
+	}
+
 	static final String move = "Move mouse to current component";
 	@DescriptionAttribute(text = Do.move)
 	public static Operation move()
@@ -315,60 +322,5 @@ public class Do
 	public static Operation wait(Locator locator, int ms, boolean toAppear)
 	{
 		return new Operation().wait(locator, ms, toAppear);
-	}
-
-	
-	
-	
-	static final String locatorOwnerLocator = "Create new operation with @owner and @locator";
-	@DescriptionAttribute(text = Do.locatorOwnerLocator)
-	public static Operation locator(Locator owner, Locator locator)
-	{
-		return new Operation().locator(owner, locator);
-	}
-
-	static final String locatorOwnerLocatorAddition = "Create new operation with @owner, @locator and @addition";
-	@DescriptionAttribute(text = Do.locatorOwnerLocatorAddition)
-	public static Operation locator(Locator owner, Locator locator, Locator addition)
-	{
-		return new Operation().locator(owner, locator, addition);
-	}
-
-	static final String locatorOwnerLocatorAdditionHeader = "Create new operation with @owner, @locator, @addition and @header";
-	@DescriptionAttribute(text = Do.locatorOwnerLocatorAdditionHeader)
-	public static Operation locator(Locator owner, Locator locator, Locator addition, Locator header)
-	{
-		return new Operation().locator(owner, locator, addition, header);
-	}
-
-	
-	
-	
-	static final String locator = "Create new dynamic locator with @id and ControlKind @kind";
-	@DescriptionAttribute(text = Do.locator)
-	public static Locator locator(String id, ControlKind kind)
-	{
-		return new Operation().locator(id, kind);
-	}
-
-	static final String owner = "Create new owner with @id and ControlKind @kind";
-	@DescriptionAttribute(text = Do.owner)
-	public static Locator owner(String id, ControlKind kind)
-	{
-		return new Operation().owner(id, kind);
-	}
-
-	static final String addition = "Create new addition with @id and ControlKind @kind";
-	@DescriptionAttribute(text = Do.addition)
-	public static Locator addition(String id, ControlKind kind)
-	{
-		return new Operation().addition(id, kind);
-	}
-
-	static final String header = "Create new header with @id and ControlKind @kind";
-	@DescriptionAttribute(text = Do.header)
-	public static Locator header(String id, ControlKind kind)
-	{
-		return new Operation().header(id, kind);
 	}
 }

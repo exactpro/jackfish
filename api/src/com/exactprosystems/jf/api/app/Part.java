@@ -34,23 +34,25 @@ public class Part implements Serializable
 		this.key = null;
 		this.mouse = null;
 
-		this.owner = null;
-		this.element = null;
+		this.locatorKind = null;
+		this.locator = null;
 	}
 	
 	public void tune(IWindow window) throws Exception
 	{
-		if (this.locatorId != null && !this.locatorId.isEmpty())
+		if (this.locatorId != null && !this.locatorId.isEmpty() && this.locatorKind != null)
 		{
-			IControl control = window.getControlForName(SectionKind.Run, this.locatorId);
+			SectionKind section = null;
+			if (this.locatorKind == LocatorKind.Element)
+			{
+				section = SectionKind.Run;
+			}
+			IControl control = window.getControlForName(section, this.locatorId);
 			if (control == null)
 			{
-				throw new Exception("Cannot find control in dialog='" + window +"' section='" + SectionKind.Run + "' name='" + this.locatorId + "'");
+				throw new Exception("Cannot find control in dialog='" + window +"' section='" + (section == null ? "Any" : section.toString()) + "' name='" + this.locatorId + "'");
 			}
-			IControl owner = window.getOwnerControl(control);
-			
-			this.owner = owner == null ? null : owner.locator();
-			this.element = control.locator();
+			this.locator = control.locator();
 		}
 	}
 
@@ -64,7 +66,7 @@ public class Part implements Serializable
 				+ (this.x != Integer.MIN_VALUE ? "x=" + this.x + " " : "")
 				+ (this.y != Integer.MIN_VALUE ? "y=" + this.y + " " : "") 
 				+ (this.text != null ? "text=" + this.text + " " : "")
-				+ (this.locatorId != null ? "locator=" + this.locatorId + " " : "")
+				+ (this.locatorId != null ? this.locatorKind + "=" + this.locatorId + " " : "")
 				+ (this.valueCondition != null ? "value condition=" + this.valueCondition + " " : "")
 				+ (this.colorCondition != null ? "color condition=" + this.colorCondition + " " : "")
 				+ (this.mouse != null ? "mouse=" + this.mouse + " " : "") 
@@ -108,15 +110,15 @@ public class Part implements Serializable
 		return this;
 	}
 
-	public Part setOwner(Locator locator)
+	public Part setLocator(Locator locator)
 	{
-		this.owner = locator;
+		this.locator = locator;
 		return this;
 	}
 
-	public Part setLocator(Locator locator)
+	public Part setLocatorKind(LocatorKind locatorKind)
 	{
-		this.element = locator;
+		this.locatorKind = locatorKind;
 		return this;
 	}
 
@@ -156,20 +158,21 @@ public class Part implements Serializable
 		return this;
 	}
 
+	protected OperationKind kind;
+
 	protected Operation operation;
-	protected String locatorId;
 	protected int i;
 	protected int x;
 	protected int y;
 	protected double d;
 	protected boolean b;
 	protected String text;
-	protected OperationKind kind;
 	protected ICondition valueCondition;
 	protected ICondition colorCondition;
 	protected MouseAction mouse;
 	protected Keyboard key;
 
-	protected Locator owner;
-	protected Locator element;
+	protected String locatorId;
+	protected LocatorKind locatorKind;
+	protected Locator locator;
 }
