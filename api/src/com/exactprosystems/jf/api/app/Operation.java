@@ -55,7 +55,7 @@ public class Operation implements Iterable<Part>, Serializable
 
 		for (Part part : this.list)
 		{
-			part.kind.operateDerived(part, executor, locators, null, elementHolder, result);
+			part.kind.operate(part, executor, new ArrayList<T>(), elementHolder, locators, result);
 		}
 	}
 
@@ -67,7 +67,7 @@ public class Operation implements Iterable<Part>, Serializable
 		}
 		
 		OperationResult result = new OperationResult();
-		List<T> elementList = null;
+		List<T> elementList = new ArrayList<T>();
 		Holder<T> elementHolder = new Holder<T>(null);
 		
 		LocatorsHolder locators = new LocatorsHolder();
@@ -76,18 +76,16 @@ public class Operation implements Iterable<Part>, Serializable
 		locators.put(LocatorKind.Rows,		rows);
 		locators.put(LocatorKind.Header, 	header);
 		
-		boolean ok = false;
-		
 		for (Part part : this.list)
 		{
-			ok = part.kind.operateDerived(part, executor, locators, elementList, elementHolder, result);
-			if (!ok)
+			if (!part.kind.operate(part, executor, elementList, elementHolder, locators, result))
 			{
-				break;
+				result.setOk(false);
+				return result;
 			}
 		}
 
-		result.setOk(ok);
+		result.setOk(true);
 		return result;
 	}
 
@@ -282,14 +280,14 @@ public class Operation implements Iterable<Part>, Serializable
 	@DescriptionAttribute(text = Do.useLocatorId)
 	public Operation use(String locator)
 	{
-		this.list.add(new Part(OperationKind.USE_LOCATOR).setLocatorId(locator));
+		this.list.add(new Part(OperationKind.USE_LOCATOR).setLocatorId(locator).setLocatorKind(LocatorKind.Element));
 		return this;
 	}
 
 	@DescriptionAttribute(text = Do.useLocator)
 	public Operation use(Locator locator)
 	{
-		this.list.add(new Part(OperationKind.USE_LOCATOR).setLocator(locator));
+		this.list.add(new Part(OperationKind.USE_LOCATOR).setLocator(locator).setLocatorKind(LocatorKind.Element));
 		return this;
 	}
 
