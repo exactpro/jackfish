@@ -418,6 +418,10 @@ public enum OperationKind
 
 			if (locator.getControlKind() == ControlKind.Table && executor.tableIsContainer())
 			{
+				if (elementHolder.value == null)
+				{
+					elementHolder.value = executor.find(owner, locator);
+				}
 				elementHolder.value = executor.lookAtTable(elementHolder.value, locators.get(LocatorKind.Rows), locators.get(LocatorKind.Header), part.x, part.y);
 				part.x = Integer.MIN_VALUE;
 				part.y = Integer.MIN_VALUE;
