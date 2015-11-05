@@ -132,7 +132,8 @@
             <key>ChromeDriverBinary</key>
             <value></value>
         </parameters>
-        <appDicPath>dic/gui/sg.xml</appDicPath>
+        <appDescription></appDescription>
+        <appDicPath>dic/gui/sg_dic.xml</appDicPath>
         <appJar>apps/web.jar</appJar>
         <appWorkDir>apps/</appWorkDir>
         <appStartPort>10200</appStartPort>

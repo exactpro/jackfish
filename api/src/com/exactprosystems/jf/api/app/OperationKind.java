@@ -422,9 +422,12 @@ public enum OperationKind
 				{
 					elementHolder.value = executor.find(owner, locator);
 				}
-				elementHolder.value = executor.lookAtTable(elementHolder.value, locators.get(LocatorKind.Rows), locators.get(LocatorKind.Header), part.x, part.y);
-				part.x = Integer.MIN_VALUE;
-				part.y = Integer.MIN_VALUE;
+				if (part.x >= 0 && part.y >= 0)
+				{
+					elementHolder.value = executor.lookAtTable(elementHolder.value, locators.get(LocatorKind.Rows), locators.get(LocatorKind.Header), part.x, part.y);
+					part.x = Integer.MIN_VALUE;
+					part.y = Integer.MIN_VALUE;
+				}
 			}
 			else
 			{
