@@ -19,6 +19,7 @@ public class ProxySwingApp extends ProxyApplication
 	public boolean connect(int port, String jar, String work, String remoteClassName, Map<String, String> driverParameters, Map<String, String> parameters) throws Exception
 	{
 		System.out.println("SwingApp.connect() port=" + port + "  jar=" + jar + " work=" + work + " class=" + remoteClassName + " params=" + Arrays.toString(parameters.values().toArray()));
+		tune(driverParameters, parameters);
 		return super.connect(port, jar, work, remoteClassName, driverParameters, parameters);
 	}
 
@@ -26,6 +27,7 @@ public class ProxySwingApp extends ProxyApplication
 	public boolean start(int port, String jar, String work, String remoteClassName, Map<String, String> driverParameters, Map<String, String> parameters) throws Exception
 	{
 		System.out.println("SwingApp.start() port=" + port + "  jar=" + jar + " work=" + work + " class=" + remoteClassName + " params=" + Arrays.toString(parameters.values().toArray()));
+		tune(driverParameters, parameters);
 		return super.start(port, jar, work, remoteClassName, driverParameters, parameters);
 	}
 
@@ -36,4 +38,19 @@ public class ProxySwingApp extends ProxyApplication
 		super.stop();
 	}
 
+	private void tune(Map<String, String> driverParameters, Map<String, String> parameters)
+	{
+		String jreExec 	= driverParameters.get(SwingAppFactory.jreExecName);
+		if (jreExec != null && !jreExec.isEmpty())
+		{
+			System.out.println(SwingAppFactory.jreExecName + "=" + jreExec);
+			driverParameters.put(ProxyApplication.JREpathName, jreExec);
+		}
+		String jreArgs 		= driverParameters.get(SwingAppFactory.jreArgsName);
+		if (jreArgs != null && !jreArgs.isEmpty())
+		{
+			System.out.println(SwingAppFactory.jreArgsName + "=" + jreArgs);
+			driverParameters.put(ProxyApplication.JVMparametersName, jreArgs);
+		}
+	}
 }

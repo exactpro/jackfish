@@ -18,13 +18,15 @@ public class SwingAppFactory implements IApplicationFactory
 	private static final int requiredMajorVersion = 1;
 	private static final int requiredMinorVersion = 28;
 
+	public final static String jreExecName 		= "jreExec";
+	public final static String jreArgsName 		= "jreArgs";
 	public final static String mainClassName 	= "MainClass";
 	public final static String jarName 			= "Jar";
 	public final static String argsName 		= "Args";
 	
 	public final static String urlName 			= "URL";
 
-	private static String[] knownParameters = { };
+	private static String[] knownParameters = { jreExecName, jreArgsName };
 	
 	private static String[] knownStartArgs = { jarName, argsName, mainClassName };
 
