@@ -446,8 +446,8 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 		if (line.size() > 0)
 		{
 			writeRecord(writer, line, indent);
-			addSpace(writer, addSpaces);
 		}
+		addSpace(writer, addSpaces);
 	}
 
 	private void writeBoolean(boolean hasValue, List<String> firstLine, List<String> secondLine, MutableValue<Boolean> field, Tokens token)
