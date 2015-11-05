@@ -52,10 +52,11 @@ public class Operation implements Iterable<Part>, Serializable
 		Holder<T> elementHolder = new Holder<T>(element);
 		LocatorsHolder locators = new LocatorsHolder();
 		locators.put(LocatorKind.Element, 	locator);
+		List<T> elementList = new ArrayList<T>();
 
 		for (Part part : this.list)
 		{
-			part.kind.operate(part, executor, new ArrayList<T>(), elementHolder, locators, result);
+			part.kind.operate(part, executor, elementList, elementHolder, locators, result);
 		}
 	}
 
