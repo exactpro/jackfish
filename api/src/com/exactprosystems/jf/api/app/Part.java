@@ -42,16 +42,36 @@ public class Part implements Serializable
 	{
 		if (this.locatorId != null && !this.locatorId.isEmpty() && this.locatorKind != null)
 		{
-			SectionKind section = null;
-			if (this.locatorKind == LocatorKind.Element)
-			{
-				section = SectionKind.Run;
-			}
-			IControl control = window.getControlForName(section, this.locatorId);
+			IControl control = window.getControlForName(SectionKind.Run, this.locatorId);
 			if (control == null)
 			{
-				throw new Exception("Cannot find control in dialog='" + window +"' section='" + (section == null ? "Any" : section.toString()) + "' name='" + this.locatorId + "'");
+				throw new Exception("Cannot find control in dialog='" + window +"' section='Run' name='" + this.locatorId + "'");
 			}
+			
+			switch (this.locatorKind)
+			{
+				case Element:
+					this.locator = control.locator();
+					break;
+					
+				case Owner:
+					control = window.getOwnerControl(control);
+					break;
+					
+				case Header:
+					control = window.getHeaderControl(control);
+					break;
+					
+				case Rows:
+					control = window.getRowsControl(control);
+					break;
+			}
+			
+			if (control == null)
+			{
+				throw new Exception("Cannot find " + this.locatorKind + " in dialog='" + window + "' name='" + this.locatorId + "'");
+			}
+			
 			this.locator = control.locator();
 		}
 	}
