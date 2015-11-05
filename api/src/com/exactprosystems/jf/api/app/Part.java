@@ -40,7 +40,7 @@ public class Part implements Serializable
 	
 	public void tune(IWindow window) throws Exception
 	{
-		if (this.kind == OperationKind.REPEAT)
+		if (this.kind == OperationKind.REPEAT && this.operation != null)
 		{
 			this.operation.tune(window);
 		}
