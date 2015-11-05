@@ -77,6 +77,8 @@ public abstract class ProxyApplication implements IApplication
 		add(commandLine, remoteClassName);
 		add(commandLine, String.valueOf(port));
 		
+		System.out.println(commandLine);
+		
 		// launch the process
 		Redirect output = Redirect.appendTo(new File("remote_out.txt"));
 		
