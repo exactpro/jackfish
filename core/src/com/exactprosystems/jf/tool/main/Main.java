@@ -440,26 +440,6 @@ public class Main extends Application
 					setConfiguration(null);
 					this.controller.close();
 					
-					// save list of all opened documents
-					this.settings.removeAll(MAIN_NS, OPENED);
-					this.settings.saveIfNeeded();
-					for (Document doc : this.docs)
-					{
-						try
-						{
-							DocumentKind kind = DocumentKind.byDocument(doc);
-							{
-								this.settings.setValue(MAIN_NS, OPENED, doc.getName(), kind.toString());
-							}
-							doc.close();
-						}
-						catch (Exception e)
-						{
-							logger.error(e.getMessage());
-						}
-					}
-					this.settings.saveIfNeeded();
-					
 					return true;
 				}
 				return false;

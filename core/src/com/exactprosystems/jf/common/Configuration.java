@@ -23,6 +23,10 @@ import com.exactprosystems.jf.common.report.HTMLReportFactory;
 import com.exactprosystems.jf.common.report.ReportFactory;
 import com.exactprosystems.jf.common.xml.schema.Xsd;
 import com.exactprosystems.jf.tool.AbstractDocument;
+import com.exactprosystems.jf.tool.Common;
+import com.exactprosystems.jf.tool.main.DocumentKind;
+import com.exactprosystems.jf.tool.main.Main;
+
 import org.apache.log4j.Logger;
 
 import javax.xml.XMLConstants;
@@ -579,6 +583,28 @@ public class Configuration extends AbstractDocument
 	    	copy = new HashSet<Document>();
 	    	copy.addAll(this.subordinates);
 		}
+		
+		// save list of all opened documents ...
+		this.settings.removeAll(Main.MAIN_NS, Main.OPENED);
+		this.settings.saveIfNeeded();
+		for (Document doc : copy)
+		{
+			try
+			{
+				DocumentKind kind = DocumentKind.byDocument(doc);
+				{
+					this.settings.setValue(Main.MAIN_NS, Main.OPENED, doc.getName(), kind.toString());
+				}
+				doc.close();
+			}
+			catch (Exception e)
+			{
+				logger.error(e.getMessage());
+			}
+		}
+		this.settings.saveIfNeeded();
+
+		// ... and then close them all
     	for (Document doc : copy)
 		{
 			try
