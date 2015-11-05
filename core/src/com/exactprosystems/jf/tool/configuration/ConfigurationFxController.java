@@ -20,7 +20,6 @@ import com.exactprosystems.jf.tool.configuration.cliententry.ClientEntryFxContro
 import com.exactprosystems.jf.tool.configuration.evaluator.EvaluatorController;
 import com.exactprosystems.jf.tool.configuration.formats.FormatsController;
 import com.exactprosystems.jf.tool.configuration.libentry.LibEntryFxController;
-import com.exactprosystems.jf.tool.configuration.logs.LogsController;
 import com.exactprosystems.jf.tool.configuration.paths.PathsController;
 import com.exactprosystems.jf.tool.configuration.serviceentry.ServiceEntryFxController;
 import com.exactprosystems.jf.tool.configuration.sqlentry.SqlEntryFxController;
@@ -64,7 +63,6 @@ public class ConfigurationFxController implements Initializable, ContainingParen
 	private ConfigurationFx							model;
 	private PathsController							pathsController;
 	private FormatsController						formatsController;
-	private LogsController							logsController;
 	private EvaluatorController						evaluatorController;
 	private Map<Entry, AppEntryFxController>		appMap		= new LinkedHashMap<>();
 	private Map<Entry, LibEntryFxController>		libMap		= new LinkedHashMap<>();
@@ -184,7 +182,8 @@ public class ConfigurationFxController implements Initializable, ContainingParen
 
 	public void close()
 	{
-		Common.tryCatch(() -> {
+		Common.tryCatch(() -> 
+		{
 			this.tab.close();
 			// TODO this should do the custom tab itself
 			Common.getTabPane().getTabs().removeAll(tab);
@@ -199,11 +198,6 @@ public class ConfigurationFxController implements Initializable, ContainingParen
 	public void displayFormats(String dateTime, String date, String time, String additionalFormat)
 	{
 		this.formatsController.display(dateTime, date, time, additionalFormat);
-	}
-
-	public void displayLogs(String logFile, String level, String pattern)
-	{
-		this.logsController.display(logFile, level, pattern);
 	}
 
 	public void displayEvaluator(String evaluatorImport)
@@ -397,9 +391,6 @@ public class ConfigurationFxController implements Initializable, ContainingParen
 		this.formatsController = Common.loadController(FormatsController.class.getResource("Formats.fxml"));
 		this.formatsController.init(model, titledPaneFormats);
 
-		this.logsController = Common.loadController(LogsController.class.getResource("Logs.fxml"));
-		this.logsController.init(model, titledPaneLogs);
-
 		this.evaluatorController = Common.loadController(EvaluatorController.class.getResource("Evaluator.fxml"));
 		this.evaluatorController.init(model, titledPaneEvaluator);
 	}
@@ -408,7 +399,7 @@ public class ConfigurationFxController implements Initializable, ContainingParen
 	// private methods
 	//============================================================
 
-	private void clear(Map map, Accordion accordion)
+	private void clear(Map<Entry, ? extends ContainingParent> map, Accordion accordion)
 	{
 		map.clear();
 		accordion.getPanes().clear();

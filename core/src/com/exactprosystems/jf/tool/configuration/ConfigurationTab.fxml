@@ -21,7 +21,6 @@
          <panes>
             <TitledPane fx:id="titledPanePaths" text="Paths" />
             <TitledPane fx:id="titledPaneFormats" text="Formats" />
-            <TitledPane fx:id="titledPaneLogs" text="Logs" />
             <TitledPane fx:id="titledPaneEvaluator" text="Evaluator" />
             <TitledPane prefHeight="454.0" prefWidth="1089.0" text="Lib entries">
                <content>

@@ -1,0 +1,10 @@
+c 578 сборки необходимо удалить следующие разделы конфигурации:
+
+    <JVMparameters>
+    <JVMclasspath>
+    <JREpath>
+    <serverLog>
+    <serverLogLevel>
+    <serverLogPattern>
+    
+    

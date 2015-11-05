@@ -8,12 +8,6 @@
     <outputPath>reports</outputPath>
     <variables>vars.ini</variables>
     <userVariables>uservars/myvars.ini</userVariables>
-    <JVMparameters></JVMparameters>
-    <JVMclasspath></JVMclasspath>
-    <JREpath></JREpath>
-    <serverLog>server.log</serverLog>
-    <serverLogLevel>ALL</serverLogLevel>
-    <serverLogPattern>%-5p %d{yyyy-MM-dd HH:mm:ss.SSS} %c{1}:%-3L-%m%n</serverLogPattern>
     <libEntry>
         <name>LIB</name>
         <libPath>examples/lib.jf</libPath>

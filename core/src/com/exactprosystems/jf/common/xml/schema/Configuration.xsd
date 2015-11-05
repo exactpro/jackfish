@@ -15,12 +15,6 @@
           <xs:element name="outputPath" type="xs:string" minOccurs="0"/>
           <xs:element name="variables" type="xs:string" minOccurs="0"/>
           <xs:element name="userVariables" type="xs:string" minOccurs="0"/>
-          <xs:element name="JVMparameters" type="xs:string" minOccurs="0"/>
-          <xs:element name="JVMclasspath" type="xs:string" minOccurs="0"/>
-          <xs:element name="JREpath" type="xs:string" minOccurs="0"/>
-          <xs:element name="serverLog" type="xs:string" minOccurs="0"/>
-          <xs:element name="serverLogLevel" type="xs:string" minOccurs="0"/>
-          <xs:element name="serverLogPattern" type="xs:string" minOccurs="0"/>
           <xs:element name="libEntry" type="libEntry" minOccurs="0" maxOccurs="unbounded"/>
           <xs:element name="sqlEntry" type="sqlEntry" minOccurs="0" maxOccurs="unbounded"/>
           <xs:element name="clientEntry" type="clientEntry" minOccurs="0" maxOccurs="unbounded"/>

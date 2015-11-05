@@ -23,8 +23,6 @@ import com.exactprosystems.jf.common.report.HTMLReportFactory;
 import com.exactprosystems.jf.common.report.ReportFactory;
 import com.exactprosystems.jf.common.xml.schema.Xsd;
 import com.exactprosystems.jf.tool.AbstractDocument;
-import com.exactprosystems.jf.tool.main.DocumentKind;
-
 import org.apache.log4j.Logger;
 
 import javax.xml.XMLConstants;
@@ -70,12 +68,6 @@ public class Configuration extends AbstractDocument
 	public static final String outputPath 			= "outputPath";
 	public static final String variables 			= "variables";
 	public static final String userVariables 		= "userVariables";
-	public static final String JVMparameters 		= "JVMparameters";
-	public static final String JVMclasspath 		= "JVMclasspath";
-	public static final String JREpath 				= "JREpath";
-	public static final String serverLog 			= "serverLog";
-	public static final String serverLogLevel 		= "serverLogLevel";
-	public static final String serverLogPattern 	= "serverLogPattern";
 
 	public static final String entryName			= "name";
 	
@@ -135,25 +127,6 @@ public class Configuration extends AbstractDocument
 	@XmlElement(name = userVariables)
 	protected String userVariablesValue;
 	
-	@XmlElement(name = JVMparameters)
-	protected String JVMparametersValue;
-	
-	@XmlElement(name = JVMclasspath)
-	protected String JVMclasspathValue;
-	
-	@XmlElement(name = JREpath)
-	protected String JREpathValue;
-	
-	@XmlElement(name = serverLog)
-	protected String serverLogValue;
-	
-	@XmlElement(name = serverLogLevel)
-	protected String serverLogLevelValue;
-	
-	@XmlElement(name = serverLogPattern)
-	protected String serverLogPatternValue;
-	
-
 	//------------------------------------------------------------------------------------------------------------------
 	// new technology
 	//------------------------------------------------------------------------------------------------------------------

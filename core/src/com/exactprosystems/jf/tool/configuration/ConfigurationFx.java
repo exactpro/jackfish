@@ -76,7 +76,6 @@ public class ConfigurationFx extends Configuration
 
 		displayPaths();
 		displayFormats();
-		displayLogs();
 		displayEvaluator();
 
 		displayLibEntries();
@@ -237,39 +236,6 @@ public class ConfigurationFx extends Configuration
 		};
 		addCommand(undo, redo);
 		super.changed(true);
-	}
-
-	// =======================================================================
-	// logs
-	// =======================================================================
-	public void displayLogs()
-	{
-		Common.tryCatch(() -> this.controller.displayLogs(get(serverLog), get(serverLogLevel), get(serverLogPattern)), "Error on init logs");
-	}
-
-	public void changeLogs(String logFilePath, String logLevel, String pattern) throws Exception
-	{
-		String lastLogFilePath	= get(Configuration.serverLog);
-		String lastLogLevel		= get(Configuration.serverLogLevel);
-		String lastPattern		= get(Configuration.serverLogPattern);
-		
-		Command undo = () -> 
-		{
-			changePath(Configuration.serverLog, lastLogFilePath);
-			change(Configuration.serverLogLevel, lastLogLevel);
-			change(Configuration.serverLogPattern, lastPattern);
-			displayLogs();
-		};
-		Command redo = () -> 
-		{
-			changePath(Configuration.serverLog, logFilePath);
-			change(Configuration.serverLogLevel, logLevel);
-			change(Configuration.serverLogPattern, pattern);
-			displayLogs();
-		};
-		addCommand(undo, redo);
-		super.changed(true);
-		
 	}
 
 	// =======================================================================
