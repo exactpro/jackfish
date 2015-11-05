@@ -1,4 +1,4 @@
-c 578 сборки необходимо удалить следующие разделы конфигурации:
+since 578 you need to remove following sections in your config:
 
     <JVMparameters>
     <JVMclasspath>
