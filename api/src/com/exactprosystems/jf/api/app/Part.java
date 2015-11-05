@@ -40,6 +40,11 @@ public class Part implements Serializable
 	
 	public void tune(IWindow window) throws Exception
 	{
+		if (this.kind == OperationKind.REPEAT)
+		{
+			this.operation.tune(window);
+		}
+		
 		if (this.locatorId != null && !this.locatorId.isEmpty() && this.locatorKind != null)
 		{
 			IControl control = window.getControlForName(SectionKind.Run, this.locatorId);
