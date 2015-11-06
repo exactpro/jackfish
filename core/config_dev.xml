@@ -8,6 +8,12 @@
     <outputPath>reports</outputPath>
     <variables>vars.ini</variables>
     <userVariables>uservars/myvars.ini</userVariables>
+    <JVMparameters></JVMparameters>
+    <JVMclasspath></JVMclasspath>
+    <JREpath></JREpath>
+    <serverLog>server.log</serverLog>
+    <serverLogLevel>ALL</serverLogLevel>
+    <serverLogPattern>%-5p %d{yyyy-MM-dd HH:mm:ss.SSS} %c{1}:%-3L-%m%n</serverLogPattern>
     <libEntry>
         <name>STD</name>
         <libPath>matrices/libs/std.jf</libPath>
@@ -107,6 +113,14 @@
     </appEntry>
     <appEntry>
         <name>JAVAWS</name>
+        <parameters>
+            <key></key>
+            <value></value>
+        </parameters>
+        <parameters>
+            <key>jreArgs</key>
+            <value>eeeeeeeeeeeeeeeeeeeeeeeeeee</value>
+        </parameters>
         <appDicPath>dic/gui/SG_swing_dic.xml</appDicPath>
         <appJar>apps/swing.jar</appJar>
         <appWorkDir>../MockApp</appWorkDir>
@@ -133,29 +147,9 @@
         <appStartPort>10200</appStartPort>
     </appEntry>
     <appEntry>
-        <name>MOCK</name>
-        <appDicPath>dic\gui\swing.xml</appDicPath>
-        <appJar>apps\swing.jar</appJar>
-        <appWorkDir>..\MockApp</appWorkDir>
-        <appStartPort>10000</appStartPort>
-    </appEntry>
-    <appEntry>
-        <name>YA</name>
-        <parameters>
-            <key>ChromeDriverPath</key>
-            <value>win/chromedriver.exe</value>
-        </parameters>
-        <parameters>
-            <key>IEDriverPath</key>
-            <value></value>
-        </parameters>
-        <parameters>
-            <key>ChromeDriverBinary</key>
-            <value></value>
-        </parameters>
-        <appDescription></appDescription>
-        <appDicPath>dic\gui\ya.xml</appDicPath>
-        <appJar>apps\web.jar</appJar>
+        <name>SGJ</name>
+        <appDicPath>dic/gui/desktop_dic.xml</appDicPath>
+        <appJar>apps/swing.jar</appJar>
         <appWorkDir>apps</appWorkDir>
         <appStartPort>8000</appStartPort>
     </appEntry>
