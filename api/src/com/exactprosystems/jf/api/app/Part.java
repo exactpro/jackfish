@@ -8,10 +8,10 @@
 
 package com.exactprosystems.jf.api.app;
 
-import java.io.Serializable;
-
 import com.exactprosystems.jf.api.app.IWindow.SectionKind;
 import com.exactprosystems.jf.api.client.ICondition;
+
+import java.io.Serializable;
 
 public class Part implements Serializable
 {
@@ -72,10 +72,10 @@ public class Part implements Serializable
 					break;
 			}
 			
-			if (control == null)
-			{
-				throw new Exception("Cannot find " + this.locatorKind + " in dialog='" + window + "' name='" + this.locatorId + "'");
-			}
+//			if (control == null)
+//			{
+//				throw new Exception("Cannot find " + this.locatorKind + " in dialog='" + window + "' name='" + this.locatorId + "'");
+//			}
 			
 			this.locator = control.locator();
 		}
