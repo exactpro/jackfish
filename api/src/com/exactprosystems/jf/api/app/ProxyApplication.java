@@ -71,7 +71,13 @@ public abstract class ProxyApplication implements IApplication
 		add(commandLine, javaRuntime);
 		
 		String jvmParameters = driverParameters.get(JVMparametersName);
-		add(commandLine, jvmParameters);
+		if (jvmParameters != null)
+		{
+			for (String param : jvmParameters.trim().split(" "))
+			{
+				add(commandLine, param);
+			}
+		}
 		add(commandLine, "-jar");
 		add(commandLine, jar);
 		add(commandLine, remoteClassName);
