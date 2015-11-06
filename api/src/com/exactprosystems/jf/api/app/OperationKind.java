@@ -17,6 +17,12 @@ public enum OperationKind
 	REPEAT("repeat")
 	{
 		@Override
+		protected boolean needToFind()
+		{
+			return false;
+		}
+
+		@Override
 		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, LocatorsHolder locators, List<T> list, Holder<T> component, OperationResult result) throws Exception
 		{
 			for (int c = 0; c < part.i; c++)
