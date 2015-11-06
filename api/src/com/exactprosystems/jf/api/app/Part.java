@@ -76,8 +76,7 @@ public class Part implements Serializable
 //			{
 //				throw new Exception("Cannot find " + this.locatorKind + " in dialog='" + window + "' name='" + this.locatorId + "'");
 //			}
-			
-			this.locator = control.locator();
+			this.locator = control == null ? null : control.locator();
 		}
 	}
 

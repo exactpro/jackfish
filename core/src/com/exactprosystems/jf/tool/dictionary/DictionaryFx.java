@@ -24,15 +24,11 @@ import com.exactprosystems.jf.common.xml.gui.Window;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.dictionary.DictionaryFxController.Result;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
-import com.exactprosystems.jf.tool.main.Main;
-
 import javafx.concurrent.Task;
 import javafx.scene.control.ButtonType;
-
-import javax.xml.bind.annotation.XmlRootElement;
-
 import org.apache.log4j.Logger;
 
+import javax.xml.bind.annotation.XmlRootElement;
 import java.io.File;
 import java.io.Reader;
 import java.util.*;
@@ -774,9 +770,9 @@ public class DictionaryFx extends GuiDictionary
 			Locator locator = getLocator(control);
 			Locator rows = getLocator(getRows(control, window));
 			Locator header = getLocator(getHeader(control, window));
-			
+			//TODO use AbstracControl.operate()
 			IRemoteApplication application = appConnection.getApplication().service();
-
+			operation.tune(window);
 			OperationResult operate = application.operate(owner, locator, rows, header, operation);
 			if (operate.isColorMapIsFilled())
 			{
