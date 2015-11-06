@@ -552,16 +552,28 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 		try
 		{
 			this.currentRobot.waitForIdle();
-			JTextComponent textComponent = component.targetCastedTo(JTextComponent.class);
-			if (!clear)
+			if (component.target instanceof JTextComponent)
 			{
-				String currentText = textComponent.getText();
-				textComponent.setText(currentText + text);
+				JTextComponent textComponent = component.targetCastedTo(JTextComponent.class);
+				if (!clear)
+				{
+					String currentText = textComponent.getText();
+					textComponent.setText(currentText + text);
+				}
+				else
+				{
+					textComponent.setText(text);
+				}
 			}
 			else
 			{
-				textComponent.setText(text);
+				if (clear)
+				{
+					component.robot.cleanUp();
+				}
+				component.robot.enterText(text);
 			}
+			
 			waitForIdle();
 			return true;
 		}
