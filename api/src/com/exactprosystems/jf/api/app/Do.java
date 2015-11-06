@@ -270,13 +270,6 @@ public class Do
 		return new Operation().toggle(bool);
 	}
 
-	static final String mark = "Mark current component";
-	@DescriptionAttribute(text = Do.mark)
-	public static Operation mark()
-	{
-		return new Operation().mark();
-	}
-
 	static final String select = "Select from current component item with text @selectItem";
 	@DescriptionAttribute(text = Do.select)
 	public static Operation select(String selectItem)

@@ -478,25 +478,6 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 
 
 	@Override
-	public boolean mark(ComponentFixture<Component> component) throws Exception
-	{
-		try
-		{
-			this.currentRobot.waitForIdle();
-			JToggleButton toggle = component.targetCastedTo(JToggleButton.class);
-			toggle.setSelected(true);
-
-			return true;
-		}
-		catch (Throwable e)
-		{
-			logger.error(String.format("mark(%s)", component));
-			logger.error(e.getMessage(), e);
-			throw e;
-		}
-	}
-
-	@Override
 	public boolean fold(ComponentFixture<Component> component, String path, boolean collaps) throws Exception
 	{
 		try

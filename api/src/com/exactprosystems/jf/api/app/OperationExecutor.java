@@ -30,7 +30,6 @@ public interface OperationExecutor<T>
 	boolean						push			(T component																											) throws Exception;
 	boolean						toggle			(T component, boolean value																								) throws Exception;
 	boolean						select			(T component, String selectedText																						) throws Exception;
-	boolean						mark			(T component																											) throws Exception;
 	boolean						fold			(T component, String path, boolean collaps																				) throws Exception;
 	boolean						text			(T component, String text, boolean clear																				) throws Exception;
 	boolean						wait			(Locator locator, int ms, boolean toAppear, AtomicLong atomicLong														) throws Exception;

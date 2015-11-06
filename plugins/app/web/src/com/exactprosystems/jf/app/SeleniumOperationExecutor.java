@@ -665,29 +665,6 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 	}
 
 	@Override
-	public boolean mark(WebElement component) throws Exception
-	{
-		Exception real = null;
-		int repeat = 1;
-		do
-		{
-			try
-			{
-				component.sendKeys("");
-				component.click();
-				return true;
-			}
-			catch (StaleElementReferenceException e)
-			{
-				real = e;
-				logger.debug("Element is no longer attached to the DOM. Try in SeleniumOperationExecutor : " + repeat);
-			}
-		}
-		while (++repeat < repeatLimit);
-		throw real;
-	}
-
-	@Override
 	public boolean fold(WebElement component, String path, boolean collaps) throws Exception
 	{
 		// TODO process the parameter path

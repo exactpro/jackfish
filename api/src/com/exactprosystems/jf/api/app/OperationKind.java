@@ -245,15 +245,6 @@ public enum OperationKind
 		}
 	},
 	
-	MARK("mark")
-	{
-		@Override
-		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, LocatorsHolder locators, List<T> list, Holder<T> component, OperationResult result) throws Exception
-		{
-            return executor.mark(component.value);
-		}
-	},
-	
 	SELECT("select")
 	{
 		@Override

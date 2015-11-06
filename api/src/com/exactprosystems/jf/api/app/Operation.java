@@ -366,13 +366,6 @@ public class Operation implements Iterable<Part>, Serializable
 		return this;
 	}
 
-	@DescriptionAttribute(text = Do.mark)
-    public Operation mark()
-    {
-        this.list.add(new Part(OperationKind.MARK));
-        return this;
-    }
-
 	@DescriptionAttribute(text = Do.select)
     public Operation select(String selectText)
     {

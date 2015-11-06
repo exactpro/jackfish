@@ -370,17 +370,6 @@ public class WindowsOperationExecutor implements OperationExecutor<UIProxy>
         return true;
     }
 
-    @Override
-    public boolean mark(UIProxy component) throws Exception
-    {
-        logger.trace("::mark " + component);
-
-        this.driver.driverDoPatternCall(component, WindowPattern.SelectionItemPattern, "Select");
-
-        logger.trace("::mark << " + true);
-        return true;
-    }
-
 	@Override
 	public boolean fold(UIProxy component, String path, boolean collaps) throws Exception
 	{
