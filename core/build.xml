@@ -6,7 +6,7 @@
    information which is the property of Exactpro Systems, LLC or its licensors.
   -->
 
-<project name="BTS" default="createTool">
+<project name="JF" default="createTool">
 
 
 	<property name="api.dir" location="../API"/>
