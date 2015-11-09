@@ -46,8 +46,8 @@ import java.util.stream.Collectors;
 
 public class MainController implements Initializable, ContainingParent
 {
-	private final static int PANE_WIDTH = 1500;
-	private final static int PANE_HEIGHT = 1000;
+	private final static int PANE_WIDTH = 800;
+	private final static int PANE_HEIGHT = 600;
 
 	private static final Logger logger = Logger.getLogger(MainController.class);
 

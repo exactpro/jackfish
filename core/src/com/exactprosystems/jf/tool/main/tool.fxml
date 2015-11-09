@@ -11,8 +11,8 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<GridPane fx:id="rootGrid" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="600.0"
-		  minWidth="600.0" prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8"
+<GridPane fx:id="rootGrid" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="300.0"
+		  minWidth="300.0" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8"
 		  xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.exactprosystems.jf.tool.main.MainController">
 	<columnConstraints>
 		<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
