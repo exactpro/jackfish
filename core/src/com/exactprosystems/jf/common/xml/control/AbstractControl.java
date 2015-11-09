@@ -13,11 +13,9 @@ import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.common.ControlsAttributes;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.HTMLhelper;
-
 import org.apache.log4j.Logger;
 
 import javax.xml.bind.annotation.*;
-
 import java.lang.reflect.Field;
 import java.rmi.RemoteException;
 
@@ -126,6 +124,24 @@ public abstract class AbstractControl implements IControl, Mutable
     {
         return getBindedClass() + (id == null ? "" : " [" + id + "]");
     }
+
+	public static AbstractControl createCopy(IControl control, IControl owner, IControl rows, IControl header) throws Exception
+	{
+		AbstractControl abstractControl = createCopy(control);
+		if (owner != null)
+		{
+			abstractControl.set(ownerIdName, owner.getID());
+		}
+		if (rows != null)
+		{
+			abstractControl.set(rowsName, rows.getID());
+		}
+		if (header != null)
+		{
+			abstractControl.set(headerName, rows.getHeaderId());
+		}
+		return abstractControl;
+	}
 
 	public static AbstractControl createCopy(IControl control) throws Exception
 	{

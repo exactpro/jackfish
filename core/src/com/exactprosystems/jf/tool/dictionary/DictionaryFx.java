@@ -29,7 +29,6 @@ import javafx.scene.control.ButtonType;
 import org.apache.log4j.Logger;
 
 import javax.xml.bind.annotation.XmlRootElement;
-import java.io.File;
 import java.io.Reader;
 import java.util.*;
 import java.util.Map.Entry;
@@ -75,7 +74,7 @@ public class DictionaryFx extends GuiDictionary
 		IWindow window = getFirstWindow();
 		displayTitle(getName());
 		displayDialog(window, getWindows());
-		dislpaySection(SectionKind.Run);
+		displaySection(SectionKind.Run);
 		if (window != null)
 		{
 			IControl control = window.getFirstControl(SectionKind.Run);
@@ -660,7 +659,7 @@ public class DictionaryFx extends GuiDictionary
 		if (owner != null)
 		{
 			SectionKind sectionKind = owner.getSection().getSectionKind();
-			dislpaySection(sectionKind);
+			displaySection(sectionKind);
 			displayElement(window, sectionKind, owner);
 		}
 	}
@@ -702,33 +701,12 @@ public class DictionaryFx extends GuiDictionary
 
 	public void sendKeys(String text, IControl control, IWindow window) throws Exception
 	{
-		if (this.appConnection != null)
-		{
-			Locator owner = getLocator(getOwner(control, window));
-			Locator locator = getLocator(control);
-			Locator addition = getLocator(getRows(control, window));
-			IRemoteApplication service = appConnection.getApplication().service();
-
-			service.operate(owner, locator, addition, null, Do.text(text));
-			
-//			displayApplicationControl(null);
-		}
+		this.operate(Do.text(text), window, control);
 	}
 
 	public void click(IControl control, IWindow window) throws Exception
 	{
-		if (this.appConnection != null)
-		{
-			Locator owner = getLocator(getOwner(control, window));
-			Locator locator = getLocator(control);
-			Locator rows = getLocator(getRows(control, window));
-			Locator header = getLocator(getHeader(control, window));
-			
-			IRemoteApplication service = this.appConnection.getApplication().service();
-			service.operate(owner, locator, rows, header, Do.click());
-			
-//			displayApplicationControl(null);
-		}
+		this.operate(Do.click(), window, control);
 	}
 
 	public void find(IControl control, IWindow window) throws Exception
@@ -736,7 +714,7 @@ public class DictionaryFx extends GuiDictionary
 		displayImage(null);
 		if (this.appConnection != null)
 		{
-			Locator owner = getLocator(getOwner(control, window));
+			Locator owner = getLocator(window.getOwnerControl(control));
 			Locator locator = getLocator(control);
 			IRemoteApplication service = this.appConnection.getApplication().service();
 			Collection<String> all = service.findAll(owner, locator);
@@ -753,16 +731,8 @@ public class DictionaryFx extends GuiDictionary
 
 	public void operate(Operation operation, IControl control, IWindow window) throws Exception
 	{
-		if (this.appConnection != null)
-		{
-			Locator owner = getLocator(getOwner(control, window));
-			Locator locator = getLocator(control);
-			Locator rows = getLocator(getRows(control, window));
-			Locator header = getLocator(getHeader(control, window));
-			//TODO use AbstracControl.operate()
-			IRemoteApplication application = appConnection.getApplication().service();
-			operation.tune(window);
-			OperationResult operate = application.operate(owner, locator, rows, header, operation);
+		Optional<OperationResult> result = this.operate(operation, window, control);
+		result.ifPresent(operate -> {
 			if (operate.isColorMapIsFilled())
 			{
 				this.controller.println(operate.getColorMap().entrySet().toString());
@@ -782,10 +752,9 @@ public class DictionaryFx extends GuiDictionary
 				{
 					this.controller.println("" + val);
 				}
+				//			displayApplicationControl(null);
 			}
-
-//			displayApplicationControl(null);
-		}
+		});
 	}
 
 	public void switchTo(String selectedItem) throws Exception
@@ -804,6 +773,21 @@ public class DictionaryFx extends GuiDictionary
 			this.appConnection.getApplication().service().refresh();
 			displayApplicationControl(null);
 		}
+	}
+
+	private Optional<OperationResult> operate(Operation operation, IWindow window, IControl control) throws Exception
+	{
+		if (this.appConnection != null)
+		{
+			IControl owner = window.getOwnerControl(control);
+			IControl rows = window.getRowsControl(control);
+			IControl header = window.getHeaderControl(control);
+
+			AbstractControl abstractControl = AbstractControl.createCopy(control, owner, rows, header);
+			OperationResult result = abstractControl.operate(this.appConnection.getApplication().service(), window, operation);
+			return Optional.of(result);
+		}
+		return Optional.empty();
 	}
 
 	
@@ -832,33 +816,6 @@ public class DictionaryFx extends GuiDictionary
 		if (control != null)
 		{
 			return control.locator();
-		}
-		return null;
-	}
-
-	private IControl getOwner(IControl control, IWindow window) throws Exception
-	{
-		if (window != null && control != null && control.getOwnerID() != null)
-		{
-			return window.getControlForName(null, control.getOwnerID());
-		}
-		return null;
-	}
-
-	private IControl getRows(IControl control, IWindow window) throws Exception
-	{
-		if (window != null && control != null && control.getRowsId() != null)
-		{
-			return window.getControlForName(null, control.getRowsId());
-		}
-		return null;
-	}
-
-	private IControl getHeader(IControl control, IWindow window) throws Exception
-	{
-		if (window != null && control != null && control.getRowsId() != null)
-		{
-			return window.getControlForName(null, control.getHeaderId());
 		}
 		return null;
 	}
@@ -937,7 +894,7 @@ public class DictionaryFx extends GuiDictionary
 
 	private void displayTitle(String name)
 	{
-		this.controller.displayTitle(getName());
+		this.controller.displayTitle(name);
 	}
 
 	private void displayDialog(IWindow window, Collection<IWindow> windows)
@@ -945,25 +902,25 @@ public class DictionaryFx extends GuiDictionary
 		this.controller.displayDialog(window, windows);
 	}
 
-	private void dislpaySection(IWindow.SectionKind sectionKind) throws Exception
+	private void displaySection(IWindow.SectionKind sectionKind) throws Exception
 	{
 		this.controller.displaySection(sectionKind);
 	}
 
 	private void displayElement(IWindow window, IWindow.SectionKind sectionKind, IControl control) throws Exception
 	{
-		IControl owner = getOwner(control, window);
-		
     	Collection<IControl> controls = null;
     	Collection<IControl> owners = null;
     	Collection<IControl> rows = null;
+		IControl owner = null;
     	IControl row = null;
     	IControl header = null;
     	if (window != null)
     	{
 			controls = window.getControls(sectionKind);
     		owners = controlsWithId(window, null);
-    		rows = controlsWithId(window, null);
+			owner = window.getOwnerControl(control);
+			rows = controlsWithId(window, null);
     		row = window.getRowsControl(control);
     		header = window.getHeaderControl(control);
     	}
