@@ -19,17 +19,20 @@ import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.DragDetector;
 import com.exactprosystems.jf.tool.custom.expfield.ExpressionField;
+import com.exactprosystems.jf.tool.custom.grideditor.DataProvider;
+import com.exactprosystems.jf.tool.custom.grideditor.SpreadsheetView;
+import com.exactprosystems.jf.tool.custom.grideditor.TableDataProvider;
 import com.exactprosystems.jf.tool.custom.label.CommentsLabel;
 import com.exactprosystems.jf.tool.custom.tab.CustomTab;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.matrix.MatrixFx;
-import com.exactprosystems.jf.tool.matrix.grid.TestTableGridPane;
 import com.exactprosystems.jf.tool.matrix.params.ParametersPane;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Region;
 
@@ -366,13 +369,13 @@ public class DisplayDriverFx implements DisplayDriver
 	public void showGrid(MatrixItem item, Object layout, int row, int column, Table table)
 	{
 		GridPane pane = (GridPane) layout;
-//		final TableGridPane grid = new TableGridPane(item, table);
-		TestTableGridPane grid = new TestTableGridPane(item, table);
-		ScrollPane scrollPane = new ScrollPane(grid);
-		DragResizer.makeResizable(scrollPane);
-		scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
-		scrollPane.setMaxWidth(1000);
-		pane.add(scrollPane, column, row, 5, 2);
+		DataProvider provider = new TableDataProvider(table);
+		SpreadsheetView view = new SpreadsheetView(provider);
+		BorderPane borderPane = new BorderPane();
+		borderPane.setCenter(view);
+		DragResizer.makeResizable(borderPane);
+		BorderPane.setMargin(view, new Insets(0, 0, 10, 0));
+		pane.add(borderPane, column, row, 5, 2);
 	}
 
 	@Override

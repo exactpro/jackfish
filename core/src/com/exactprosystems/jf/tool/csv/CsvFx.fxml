@@ -9,6 +9,6 @@
   -->
 
 <?import javafx.scene.layout.BorderPane?>
-<BorderPane fx:id="grid" prefHeight="428.0" prefWidth="504.0" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.exactprosystems.jf.tool.csv.CsvFxController" xmlns="http://javafx.com/javafx/8">
+<BorderPane prefHeight="428.0" prefWidth="504.0" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.exactprosystems.jf.tool.csv.CsvFxController" xmlns="http://javafx.com/javafx/8">
 
 </BorderPane>

@@ -512,3 +512,9 @@
 .gridCell:selected {
 	-fx-background-color : gold;
 }
+
+.resizbleRegion {
+	-fx-border-width : 0 0 3 0;
+	-fx-border-color : -fx-company-color-light;
+
+}

@@ -26,10 +26,10 @@ import java.util.ResourceBundle;
 
 public class CsvFxController implements Initializable, ContainingParent
 {
-	public BorderPane				grid;
+//	public BorderPane				borderPane;
 	public SpreadsheetView 			view;
 
-	private Parent					pane;
+	private BorderPane				pane;
 	private CsvFx					model;
 	private CustomTab				tab;
 	private DataProvider<String>	provider;
@@ -52,7 +52,7 @@ public class CsvFxController implements Initializable, ContainingParent
 	@Override
 	public void setParent(Parent parent)
 	{
-		this.pane = parent;
+		this.pane = (BorderPane) parent;
 	}
 
 	// ----------------------------------------------------------------------------------------------
@@ -97,7 +97,7 @@ public class CsvFxController implements Initializable, ContainingParent
 		{
 			this.provider = new TableDataProvider(table);
 			this.view = new SpreadsheetView(this.provider);
-			this.grid.setCenter(this.view);
+			this.pane.setCenter(this.view);
 		});
 	}
 

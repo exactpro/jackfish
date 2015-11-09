@@ -7,11 +7,13 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.exactprosystems.jf.tool.custom.treetable;
 
+import com.exactprosystems.jf.tool.CssVariables;
 import javafx.scene.Cursor;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Region;
 
-public class DragResizer {
+public class DragResizer
+{
 
 	private static final int RESIZE_MARGIN = 5;
 	private final Region region;
@@ -20,39 +22,58 @@ public class DragResizer {
 	private boolean initMinHeight;
 	private boolean dragging;
 
-	private DragResizer(Region aRegion) {
+	private DragResizer(Region aRegion)
+	{
 		region = aRegion;
 	}
 
-	public static void makeResizable(Region region) {
+	public static void makeResizable(Region region)
+	{
 		final DragResizer resizer = new DragResizer(region);
 
 		region.setOnMousePressed(resizer::mousePressed);
 		region.setOnMouseDragged(resizer::mouseDragged);
 		region.setOnMouseMoved(resizer::mouseOver);
 		region.setOnMouseReleased(resizer::mouseReleased);
+		region.setOnMouseExited(resizer::mouseExited);
 	}
 
-	protected void mouseReleased(MouseEvent event) {
+	protected void mouseReleased(MouseEvent event)
+	{
 		dragging = false;
 		region.setCursor(Cursor.DEFAULT);
 	}
 
-	protected void mouseOver(MouseEvent event) {
-		if(isInDraggableZone(event) || dragging) {
+	protected void mouseExited(MouseEvent event)
+	{
+		if (!dragging)
+			region.getStyleClass().remove(CssVariables.RESIZBLE_REGION);
+	}
+
+	protected void mouseOver(MouseEvent event)
+	{
+		if (isInDraggableZone(event) || dragging)
+		{
 			region.setCursor(Cursor.S_RESIZE);
+			if (!region.getStyleClass().contains(CssVariables.RESIZBLE_REGION))
+				region.getStyleClass().add(CssVariables.RESIZBLE_REGION);
 		}
-		else {
+		else
+		{
+			region.getStyleClass().remove(CssVariables.RESIZBLE_REGION);
 			region.setCursor(Cursor.DEFAULT);
 		}
 	}
 
-	protected boolean isInDraggableZone(MouseEvent event) {
+	protected boolean isInDraggableZone(MouseEvent event)
+	{
 		return event.getY() >= (region.getHeight() - RESIZE_MARGIN);
 	}
 
-	protected void mouseDragged(MouseEvent event) {
-		if(!dragging) {
+	protected void mouseDragged(MouseEvent event)
+	{
+		if (!dragging)
+		{
 			return;
 		}
 		double mousey = event.getY();
@@ -66,14 +87,16 @@ public class DragResizer {
 		}
 	}
 
-	protected void mousePressed(MouseEvent event) {
-
-		if(!isInDraggableZone(event)) {
+	protected void mousePressed(MouseEvent event)
+	{
+		if (!isInDraggableZone(event))
+		{
 			return;
 		}
-		region.setCursor(Cursor.S_RESIZE);
+		System.out.println(event.getSource());
 		dragging = true;
-		if (!initMinHeight) {
+		if (!initMinHeight)
+		{
 			region.setMinHeight(region.getHeight());
 			initMinHeight = true;
 		}
