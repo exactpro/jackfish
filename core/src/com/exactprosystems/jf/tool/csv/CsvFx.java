@@ -8,17 +8,16 @@
 
 package com.exactprosystems.jf.tool.csv;
 
-import java.io.File;
-import java.io.Reader;
-
-import javafx.scene.control.ButtonType;
-
 import com.exactprosystems.jf.common.DocumentInfo;
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.functions.Table;
 import com.exactprosystems.jf.tool.AbstractDocument;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
+import javafx.scene.control.ButtonType;
+
+import java.io.File;
+import java.io.Reader;
 
 @DocumentInfo(
 		newName 	= "NewCsv", 
@@ -27,6 +26,8 @@ import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 )
 public class CsvFx extends AbstractDocument
 {
+	private final char TABLE_DELIMITER = ';';
+
 	public CsvFx(String fileName, Settings settings)
 	{
 		super(fileName);
@@ -61,8 +62,8 @@ public class CsvFx extends AbstractDocument
 	public void load(Reader reader) throws Exception
 	{
 		super.load(reader);
-		
-		this.table = new Table(reader, ','); // TODO
+
+		this.table = new Table(reader, TABLE_DELIMITER); // TODO
 		initController();
 	}
 
@@ -100,7 +101,7 @@ public class CsvFx extends AbstractDocument
 		}
 		
     	super.save(fileName);
-    	this.table.save(fileName, ','); // TODO
+    	this.table.save(fileName, TABLE_DELIMITER); // TODO
 		this.controller.saved(getName());
     }
     

@@ -19,14 +19,14 @@ import com.exactprosystems.jf.tool.custom.tab.CustomTab;
 import javafx.application.Platform;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
-import javafx.scene.layout.GridPane;
+import javafx.scene.layout.BorderPane;
 
 import java.net.URL;
 import java.util.ResourceBundle;
 
 public class CsvFxController implements Initializable, ContainingParent
 {
-	public GridPane					grid;
+	public BorderPane				grid;
 	public SpreadsheetView 			view;
 
 	private Parent					pane;
@@ -97,7 +97,7 @@ public class CsvFxController implements Initializable, ContainingParent
 		{
 			this.provider = new TableDataProvider(table);
 			this.view = new SpreadsheetView(this.provider);
-			this.grid.add(this.view, 0, 0);
+			this.grid.setCenter(this.view);
 		});
 	}
 
