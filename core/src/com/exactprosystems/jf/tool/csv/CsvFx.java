@@ -10,6 +10,7 @@ package com.exactprosystems.jf.tool.csv;
 
 import java.io.File;
 import java.io.Reader;
+
 import javafx.scene.control.ButtonType;
 
 import com.exactprosystems.jf.common.DocumentInfo;
@@ -30,7 +31,11 @@ public class CsvFx extends AbstractDocument
 	{
 		super(fileName);
 		this.settings = settings;
-		this.table = new Table();
+		this.table = new Table(new String[][]
+				{
+						new String[] {	"<none>" },
+						new String[] { 	"" },
+				});
 	}
 
 	//==============================================================================================================================
