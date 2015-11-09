@@ -16,7 +16,6 @@ import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import javafx.scene.control.ButtonType;
 
-import java.io.File;
 import java.io.Reader;
 
 @DocumentInfo(
@@ -89,17 +88,6 @@ public class CsvFx extends AbstractDocument
     @Override
     public void save(String fileName) throws Exception
     {
-		if (!hasName())
-		{
-			File file = DialogsHelper.showSaveAsDialog(this);
-			if (file == null)
-			{
-				return;
-			}
-			
-			fileName = file.getPath();
-		}
-		
     	super.save(fileName);
     	this.table.save(fileName, TABLE_DELIMITER); // TODO
 		this.controller.saved(getName());

@@ -14,11 +14,9 @@ import com.exactprosystems.jf.common.parser.Parameter;
 import com.exactprosystems.jf.common.undoredo.Command;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
-
 import javafx.scene.control.ButtonType;
 import javafx.util.Pair;
 
-import java.io.File;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
@@ -72,17 +70,6 @@ public class SystemVarsFx extends SystemVars
 	@Override
 	public void save(String fileName) throws Exception
 	{
-		if (!hasName())
-		{
-			File file = DialogsHelper.showSaveAsDialog(this);
-			if (file == null)
-			{
-				return;
-			}
-			
-			fileName = file.getPath();
-		}
-		
 		super.save(fileName);
 		this.controller.saved(getName());
 	}

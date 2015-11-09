@@ -23,10 +23,8 @@ import com.exactprosystems.jf.common.report.HTMLReportFactory;
 import com.exactprosystems.jf.common.report.ReportFactory;
 import com.exactprosystems.jf.common.xml.schema.Xsd;
 import com.exactprosystems.jf.tool.AbstractDocument;
-import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.main.DocumentKind;
 import com.exactprosystems.jf.tool.main.Main;
-
 import org.apache.log4j.Logger;
 
 import javax.xml.XMLConstants;
@@ -39,7 +37,6 @@ import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
-
 import java.io.*;
 import java.lang.reflect.Field;
 import java.nio.file.Path;
@@ -587,11 +584,13 @@ public class Configuration extends AbstractDocument
 		// save list of all opened documents ...
 		this.settings.removeAll(Main.MAIN_NS, Main.OPENED);
 		this.settings.saveIfNeeded();
+		//TODO think about it. why we 2nd times closing document? this is mistake?
 		for (Document doc : copy)
 		{
 			try
 			{
 				DocumentKind kind = DocumentKind.byDocument(doc);
+				if (doc.hasName())
 				{
 					this.settings.setValue(Main.MAIN_NS, Main.OPENED, doc.getName(), kind.toString());
 				}

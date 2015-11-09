@@ -97,17 +97,6 @@ public class PlainTextFx extends AbstractDocument
     @Override
     public void save(String fileName) throws Exception
     {
-		if (!hasName())
-		{
-			File file = DialogsHelper.showSaveAsDialog(this);
-			if (file == null)
-			{
-				return;
-			}
-			
-			fileName = file.getPath();
-		}
-		
     	super.save(fileName);
     	write(fileName);
 		this.controller.saved(getName());
