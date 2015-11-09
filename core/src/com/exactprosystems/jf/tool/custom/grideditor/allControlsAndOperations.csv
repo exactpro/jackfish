@@ -1,0 +1,9 @@
+Name;Off;A;B;C;D;F;G;H
+template;;30;123;ASD;push;down_F1;up_F1;123
+prepare;;;;;;;;
+Any;;-;-;-;-;-;-;123
+Wait;;-;-;-;-;-;-;123
+Button;;-;-;-;SW;SW;SW;123
+CheckBox;;-;-;-;-;SW;SW;123
+TextBox;;-;SW;SW;-;SW;SW;123
+Table;;-;-;-;-;SW;SW;123
