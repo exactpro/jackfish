@@ -131,11 +131,20 @@ public class CsvFxController implements Initializable, ContainingParent
 		this.tfDelimiter.focusedProperty().addListener((observable, oldValue, newValue) -> {
 			if (oldValue && !newValue)
 			{
-				if (tfDelimiter.getText().length() != 0)
-				{
-					this.model.setDelimiter(tfDelimiter.getText().charAt(0));
-				}
+				setDelimiter();
 			}
 		});
+		this.tfDelimiter.setOnAction(event -> {
+			setDelimiter();
+			this.reloadCsv(event);
+		});
+	}
+
+	private void setDelimiter()
+	{
+		if (tfDelimiter.getText().length() != 0)
+		{
+			this.model.setDelimiter(tfDelimiter.getText().charAt(0));
+		}
 	}
 }
