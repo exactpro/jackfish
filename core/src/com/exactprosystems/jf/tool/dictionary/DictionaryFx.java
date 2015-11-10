@@ -44,6 +44,7 @@ public class DictionaryFx extends GuiDictionary
 
 	private static AbstractControl copyControl;
 	private static Window copyWindow;
+	private boolean isControllerInit = true;
 
 	private String currentAdapter;
 	private DictionaryFxController controller;
@@ -796,9 +797,13 @@ public class DictionaryFx extends GuiDictionary
 	//------------------------------------------------------------------------------------------------------------------
 	private void initController() throws Exception
 	{
-		this.controller = Common.loadController(DictionaryFx.class.getResource("DictionaryTab.fxml"));
-		this.controller.init(this, this.context);
-		this.context.getConfiguration().register(this);
+		if (!this.isControllerInit)
+		{
+			this.controller = Common.loadController(DictionaryFx.class.getResource("DictionaryTab.fxml"));
+			this.controller.init(this, this.context);
+			this.context.getConfiguration().register(this);
+			this.isControllerInit = true;
+		}
 	}
 
 	private String getOwnerId(IWindow window)

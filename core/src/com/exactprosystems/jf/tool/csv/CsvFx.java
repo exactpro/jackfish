@@ -119,10 +119,15 @@ public class CsvFx extends AbstractDocument
     //------------------------------------------------------------------------------------------------------------------
 	private void initController()
 	{
-		this.controller = Common.loadController(CsvFxController.class.getResource("CsvFx.fxml"));
-		this.controller.init(this, this.settings);
+		if (!this.isControllerInit)
+		{
+			this.controller = Common.loadController(CsvFxController.class.getResource("CsvFx.fxml"));
+			this.controller.init(this, this.settings);
+			this.isControllerInit = true;
+		}
 	}
 
+	private boolean isControllerInit = false;
 	private Table table;
 	private Settings settings;
 	private CsvFxController controller;

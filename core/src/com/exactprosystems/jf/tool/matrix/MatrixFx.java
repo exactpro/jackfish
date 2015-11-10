@@ -585,11 +585,15 @@ public class MatrixFx extends Matrix
 
 	private void initController() throws Exception
 	{
-		this.config.register(this);
+		if (!this.isControllerInit)
+		{
+			this.config.register(this);
 
-		this.controller = Common.loadController(MatrixFx.class.getResource("MatrixFx.fxml"));
-		this.controller.init(this, this.context, this.console);
-		setListener(this.controller);
+			this.controller = Common.loadController(MatrixFx.class.getResource("MatrixFx.fxml"));
+			this.controller.init(this, this.context, this.console);
+			setListener(this.controller);
+			this.isControllerInit = true;
+		}
 	}
 
 	private void displayGuiDictionaries() throws Exception
@@ -684,7 +688,7 @@ public class MatrixFx extends Matrix
 		}
 	}
 
-	
+	private boolean isControllerInit = false;
 	private MatrixFxController 		controller;
 	private Configuration 			config;
 	private Context 				context;

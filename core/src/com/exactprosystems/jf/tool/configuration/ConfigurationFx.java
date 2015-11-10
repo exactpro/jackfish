@@ -44,6 +44,7 @@ public class ConfigurationFx extends Configuration
 	public static final String						startParameters		= "StartParameters";
 	public static final String						connectParameters	= "ConnectParameters";
 
+	private boolean									isControllerInit = false;
 	private Main									mainModel;
 	private ConfigurationFxController				controller;
 	private Context									context;
@@ -828,9 +829,13 @@ public class ConfigurationFx extends Configuration
 	
 	private void initController()
 	{
-		this.controller = Common.loadController(ConfigurationFx.class.getResource("ConfigurationTab.fxml"));
-		this.controller.init(this);
-		this.controller.setTitle(Common.getSimpleTitle(getName()));
-		this.controller.initSubControllers(this);
+		if (!this.isControllerInit)
+		{
+			this.controller = Common.loadController(ConfigurationFx.class.getResource("ConfigurationTab.fxml"));
+			this.controller.init(this);
+			this.controller.setTitle(Common.getSimpleTitle(getName()));
+			this.controller.initSubControllers(this);
+			this.isControllerInit = true;
+		}
 	}
 }

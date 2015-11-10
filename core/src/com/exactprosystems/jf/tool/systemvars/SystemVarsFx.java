@@ -26,6 +26,7 @@ public class SystemVarsFx extends SystemVars
 {
 	private SystemVarsFxController controller;
 	private Configuration config;
+	private boolean isControllerInit = false;
 
 	public SystemVarsFx(String fileName, Configuration config) throws Exception
 	{
@@ -184,9 +185,13 @@ public class SystemVarsFx extends SystemVars
 
 	private void initController()
 	{
-		this.controller = Common.loadController(SystemVarsFx.class.getResource("SystemVarsFx.fxml"));
-		this.controller.init(this);
-		this.config.register(this);
+		if (!this.isControllerInit)
+		{
+			this.controller = Common.loadController(SystemVarsFx.class.getResource("SystemVarsFx.fxml"));
+			this.controller.init(this);
+			this.config.register(this);
+			this.isControllerInit = true;
+		}
 	}
 	
 	private ArrayList<Parameter> evaluateData() throws Exception

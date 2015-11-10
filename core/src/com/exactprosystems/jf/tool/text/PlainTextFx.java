@@ -8,23 +8,16 @@
 
 package com.exactprosystems.jf.tool.text;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.Reader;
-import java.io.Writer;
-
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
-import javafx.scene.control.ButtonType;
-
 import com.exactprosystems.jf.common.DocumentInfo;
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.tool.AbstractDocument;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+import javafx.scene.control.ButtonType;
+
+import java.io.*;
 
 @DocumentInfo(
 		newName = "NewText", 
@@ -128,8 +121,12 @@ public class PlainTextFx extends AbstractDocument
     //------------------------------------------------------------------------------------------------------------------
 	private void initController()
 	{
-		this.controller = Common.loadController(PlainTextFxController.class.getResource("PlainTextFx.fxml"));
-		this.controller.init(this, this.settings);
+		if (!this.isControllerInit)
+		{
+			this.controller = Common.loadController(PlainTextFxController.class.getResource("PlainTextFx.fxml"));
+			this.controller.init(this, this.settings);
+			this.isControllerInit = true;
+		}
 	}
 
 	private String read(Reader reader) throws IOException
@@ -159,6 +156,7 @@ public class PlainTextFx extends AbstractDocument
 		}
 	}
 
+	private boolean isControllerInit = false;
 	private StringProperty property;
 	private Settings settings;
 	private boolean changed = false;
