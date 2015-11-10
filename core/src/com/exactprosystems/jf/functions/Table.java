@@ -14,19 +14,13 @@ import com.exactprosystems.jf.api.app.Mutable;
 import com.exactprosystems.jf.api.common.Converter;
 import com.exactprosystems.jf.api.conditions.Condition;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
-import com.exactprosystems.jf.common.report.*;
+import com.exactprosystems.jf.common.report.ReportBuilder;
+import com.exactprosystems.jf.common.report.ReportHelper;
+import com.exactprosystems.jf.common.report.ReportTable;
 import com.exactprosystems.jf.sql.SqlConnection;
-import com.exactprosystems.jf.tool.Common;
-
 import org.apache.log4j.Logger;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.Reader;
-import java.io.Writer;
+import java.io.*;
 import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
@@ -463,7 +457,7 @@ public class Table implements List<Map<String, Object>>, Mutable, Cloneable
 				});
 	}
 
-	public void replace(Object source, Object dest, String ...columns)
+	public void replace(Object source, Object dest, boolean matchCell, String ...columns)
 	{
 		if (columns == null || columns.length == 0 || areEqual(source, dest))
 		{
@@ -477,7 +471,14 @@ public class Table implements List<Map<String, Object>>, Mutable, Cloneable
 			for (Header header : filtered)
 			{
 				Object value = row.get(header);
-				if (areEqual(value, source))
+				if (matchCell && value instanceof String)
+				{
+					if (((String) value).contains(source.toString()))
+					{
+						row.put(header, ((String) value).replaceAll(source.toString(), dest.toString()));
+					}
+				}
+				else if (areEqual(value, source))
 				{
 					row.put(header, dest);
 				}

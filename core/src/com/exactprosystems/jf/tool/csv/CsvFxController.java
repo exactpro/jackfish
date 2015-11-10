@@ -8,10 +8,10 @@
 
 package com.exactprosystems.jf.tool.csv;
 
+import com.exactprosystems.jf.actions.ReadableValue;
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
-import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.custom.grideditor.DataProvider;
 import com.exactprosystems.jf.tool.custom.grideditor.SpreadsheetView;
 import com.exactprosystems.jf.tool.custom.tab.CustomTab;
@@ -19,10 +19,8 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
-import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.ToolBar;
-import javafx.scene.control.Tooltip;
 import javafx.scene.layout.BorderPane;
 
 import java.net.URL;
@@ -33,8 +31,7 @@ public class CsvFxController implements Initializable, ContainingParent
 //	public BorderPane				borderPane;
 	public SpreadsheetView 			view;
 	public ToolBar					toolBar;
-	public Button					btnReloadCsv;
-	public TextField				tfDelimiter;
+	public ComboBox<ReadableValue>	cbDelimiter;
 
 	private BorderPane				pane;
 	private CsvFx					model;
@@ -51,19 +48,25 @@ public class CsvFxController implements Initializable, ContainingParent
 	@Override
 	public void initialize(URL url, ResourceBundle resourceBundle)
 	{
-		Platform.runLater(() -> {
-			btnReloadCsv.setTooltip(new Tooltip("Reload Csv"));
-			Common.customizeLabeled(btnReloadCsv, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.REFRESH);
-		});
-		listeners();
+		cbDelimiter.getItems().addAll(
+				new ReadableValue(",", "comma"),
+				new ReadableValue(";", "semicolon"),
+				new ReadableValue(":", "colon"),
+				new ReadableValue("-", "dash"),
+				new ReadableValue("\t", "tab")
+		);
+		cbDelimiter.getSelectionModel().select(1);
 	}
 
 	//============================================================
 	// events methods
 	//============================================================
-	public void reloadCsv(ActionEvent actionEvent)
+	public void setDelimiter(ActionEvent event)
 	{
-		Common.tryCatch(this.model::reloadCsv, "Error on reload csv");
+		Common.tryCatch(() -> {
+			this.model.setDelimiter(cbDelimiter.getSelectionModel().getSelectedItem().getValue().charAt(0));
+			this.model.reloadCsv();
+		}, "Error on set delimiter");
 	}
 
 	// ----------------------------------------------------------------------------------------------
@@ -81,7 +84,7 @@ public class CsvFxController implements Initializable, ContainingParent
 	public void init(CsvFx model, Settings settings)
 	{
 		this.model = model;
-		
+
 		this.tab = Common.createTab(model);
 		this.tab.setContent(this.pane);
 
@@ -113,36 +116,11 @@ public class CsvFxController implements Initializable, ContainingParent
 
 	public void displayTable(DataProvider<String> provider)
 	{
-		Platform.runLater(() -> 
+		Platform.runLater(() ->
 		{
 			this.provider = provider;
 			this.view = new SpreadsheetView(this.provider);
 			this.pane.setCenter(this.view);
 		});
-	}
-
-	//============================================================
-	// private methods
-	//============================================================
-	private void listeners()
-	{
-		this.tfDelimiter.focusedProperty().addListener((observable, oldValue, newValue) -> {
-			if (oldValue && !newValue)
-			{
-				setDelimiter();
-			}
-		});
-		this.tfDelimiter.setOnAction(event -> {
-			setDelimiter();
-			this.reloadCsv(event);
-		});
-	}
-
-	private void setDelimiter()
-	{
-		if (tfDelimiter.getText().length() != 0)
-		{
-			this.model.setDelimiter(tfDelimiter.getText().charAt(0));
-		}
 	}
 }

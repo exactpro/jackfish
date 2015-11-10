@@ -67,6 +67,7 @@ public class CsvFx extends AbstractDocument
 		super.load(reader);
 
 		this.table = new Table(reader, tableDelimiter);
+		this.provider = new TableDataProvider(this.table);
 		//TODO implements undo redo
 		initController();
 	}

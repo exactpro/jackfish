@@ -12,11 +12,13 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
 <BorderPane prefHeight="428.0" prefWidth="504.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.exactprosystems.jf.tool.csv.CsvFxController">
 	<top>
 		<ToolBar fx:id="toolBar">
-			<Button id="btnReloadCsv" fx:id="btnReloadCsv" onAction="#reloadCsv"/>
-			<TextField id="tfDelimiter" fx:id="tfDelimiter" maxWidth="80.0" minWidth="80.0" prefWidth="80.0" promptText="delimiter"/>
+			<Label text="Delimiter"/>
+			<ComboBox id="cbDelimiter" fx:id="cbDelimiter" onAction="#setDelimiter"/>
 		</ToolBar>
 	</top>
 </BorderPane>

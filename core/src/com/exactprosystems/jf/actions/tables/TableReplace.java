@@ -22,6 +22,7 @@ public class TableReplace extends AbstractAction
 	public final static String replaceName = "Replace";
 	public final static String searchName = "Search";
 	public final static String regexpName = "Regexp";
+	public final static String matchCellname = "MatchCell";
 
 	@ActionFieldAttribute(name = tableName, mandatory = true, description = "The table.")
 	protected Table 	table 	= null;
@@ -35,8 +36,12 @@ public class TableReplace extends AbstractAction
 	@ActionFieldAttribute(name = replaceName, mandatory = false, description = "If value of cell equals this value then it will be changed to Replace.")
 	protected Object 	replace = null;
 
-	@ActionFieldAttribute(name = searchName, mandatory = false, description = "If value of cell matches this regexp then it will be changed to Replace.")
+	@ActionFieldAttribute(name = regexpName, mandatory = false, description = "If value of cell matches this regexp then it will be changed to Replace.")
 	protected String 	regexp 	= null;
+
+	//TODO help me with description
+	@ActionFieldAttribute(name = matchCellname, mandatory = false, description = "")
+	protected Boolean	matchCell = true;
 
 	public TableReplace()
 	{
@@ -47,7 +52,7 @@ public class TableReplace extends AbstractAction
 	{
 		if (this.regexp == null)
 		{
-			this.table.replace(this.search, this.replace, this.columns);
+			this.table.replace(this.search, this.replace, matchCell, this.columns);
 		}
 		else
 		{
