@@ -9,13 +9,11 @@
 package com.exactprosystems.jf.tool.csv;
 
 import com.exactprosystems.jf.common.Settings;
-import com.exactprosystems.jf.functions.Table;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.custom.grideditor.DataProvider;
 import com.exactprosystems.jf.tool.custom.grideditor.SpreadsheetView;
-import com.exactprosystems.jf.tool.custom.grideditor.TableDataProvider;
 import com.exactprosystems.jf.tool.custom.tab.CustomTab;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -113,11 +111,11 @@ public class CsvFxController implements Initializable, ContainingParent
 		Platform.runLater(() -> this.tab.setTitle(title));
 	}
 
-	public void displayTable(Table table)
+	public void displayTable(DataProvider<String> provider)
 	{
 		Platform.runLater(() -> 
 		{
-			this.provider = new TableDataProvider(table);
+			this.provider = provider;
 			this.view = new SpreadsheetView(this.provider);
 			this.pane.setCenter(this.view);
 		});

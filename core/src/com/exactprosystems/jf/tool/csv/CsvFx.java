@@ -13,6 +13,8 @@ import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.functions.Table;
 import com.exactprosystems.jf.tool.AbstractDocument;
 import com.exactprosystems.jf.tool.Common;
+import com.exactprosystems.jf.tool.custom.grideditor.DataProvider;
+import com.exactprosystems.jf.tool.custom.grideditor.TableDataProvider;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import javafx.scene.control.ButtonType;
 
@@ -37,6 +39,7 @@ public class CsvFx extends AbstractDocument
 						new String[] {	"<none>" },
 						new String[] { 	"" },
 				});
+		this.provider = new TableDataProvider(this.table);
 	}
 
 	//==============================================================================================================================
@@ -48,7 +51,7 @@ public class CsvFx extends AbstractDocument
 		super.display();
 		
 		this.controller.displayTitle(Common.getSimpleTitle(getName()));
-		this.controller.displayTable(this.table);
+		this.controller.displayTable(this.provider);
 	}
 
 	@Override
@@ -64,6 +67,7 @@ public class CsvFx extends AbstractDocument
 		super.load(reader);
 
 		this.table = new Table(reader, tableDelimiter);
+		//TODO implements undo redo
 		initController();
 	}
 
@@ -146,6 +150,7 @@ public class CsvFx extends AbstractDocument
 
 	private boolean isControllerInit = false;
 	private Table table;
+	private DataProvider<String> provider;
 	private Settings settings;
 	private CsvFxController controller;
 }
