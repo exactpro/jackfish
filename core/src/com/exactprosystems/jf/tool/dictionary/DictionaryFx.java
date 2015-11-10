@@ -44,7 +44,7 @@ public class DictionaryFx extends GuiDictionary
 
 	private static AbstractControl copyControl;
 	private static Window copyWindow;
-	private boolean isControllerInit = true;
+	private boolean isControllerInit = false;
 
 	private String currentAdapter;
 	private DictionaryFxController controller;
