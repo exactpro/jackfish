@@ -56,12 +56,9 @@ public class GridCellEditor
 		if (commitValue && editing)
 		{
 			final SpreadsheetView view = handle.getView();
-			boolean match = modelCell.getCellType().match(spreadsheetCellEditor.getControlValue());
-
-			if (match && viewCell != null)
+			if (viewCell != null)
 			{
 				Object value = modelCell.getCellType().convertValue(spreadsheetCellEditor.getControlValue());
-
 				// We update the value
 				view.getProvider().setCellValue(modelCell.getColumn(), modelCell.getRow(), value);
 				editing = false;

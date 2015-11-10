@@ -31,6 +31,7 @@ import java.util.stream.Collectors;
 
 public class SpreadsheetView extends Control{
 
+	private static int currentIndexColumn = 0;
     private static final double DEFAULT_ROW_HEADER_WIDTH = 30.0;
 
     private final SpreadsheetGridView cellsView;// The main cell container.
@@ -227,7 +228,7 @@ public class SpreadsheetView extends Control{
 	public void addColumn(int index)
 	{
 		//TODO add implementation
-		this.providerProperty().get().addColumn(index, "NewColumn");
+		this.providerProperty().get().addColumn(index, "NewColumn" + currentIndexColumn++);
 		this.setDataProvider(this.providerProperty().get());
 	}
 
@@ -408,14 +409,6 @@ public class SpreadsheetView extends Control{
         cellsView.scrollToColumnIndex(columnIndex);
     }
 
-    /**
-     * Return the editor associated with the CellType. (defined in
-     * {@link SpreadsheetCellType#createEditor(SpreadsheetView)}. FIXME Maybe
-     * keep the editor references inside the SpreadsheetCellType
-     *
-     * @param cellType
-     * @return the editor associated with the CellType.
-     */
     public final Optional<SpreadsheetCellEditor> getEditor(StringCellType cellType) {
         if(cellType == null){
             return Optional.empty();
@@ -485,7 +478,7 @@ public class SpreadsheetView extends Control{
      */
     public void deleteSelectedCells() {
         for (TablePosition<ObservableList<SpreadsheetCell>, ?> position : getSelectionModel().getSelectedCells()) {
-			this.providerProperty().get().setCellValue(position.getColumn(), position.getRow(), null);
+			this.providerProperty().get().setCellValue(position.getColumn(), position.getRow(), this.providerProperty.get().defaultValue());
         }
 		setDataProvider(this.providerProperty().get());
     }
