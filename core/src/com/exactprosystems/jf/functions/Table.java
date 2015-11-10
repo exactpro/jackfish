@@ -471,11 +471,13 @@ public class Table implements List<Map<String, Object>>, Mutable, Cloneable
 			for (Header header : filtered)
 			{
 				Object value = row.get(header);
-				if (!matchCell && value instanceof String)
+				if (!matchCell)
 				{
-					if (((String) value).contains(source.toString()))
+					String sValue = String.valueOf(value);
+					String sSource = String.valueOf(source);
+					if (sValue.contains(sSource))
 					{
-						row.put(header, ((String) value).replaceAll(source.toString(), dest.toString()));
+						row.put(header, sValue.replaceAll(sSource, String.valueOf(dest)));
 					}
 				}
 				else if (areEqual(value, source))
@@ -486,7 +488,7 @@ public class Table implements List<Map<String, Object>>, Mutable, Cloneable
 		}
 	}
 
-	public void replace(String regexp, Object dest, String ...columns)
+	public void replace(String regexp, Object dest, boolean matchCell, String ...columns)
 	{
 		if (columns == null || columns.length == 0)
 		{
@@ -508,7 +510,6 @@ public class Table implements List<Map<String, Object>>, Mutable, Cloneable
 		}
 	}
 
-	
 	public void report(ReportBuilder report, String title, boolean withNumbers) throws Exception
 	{
 		String[] columns = Arrays.stream(this.headers).map(h -> h.name).toArray(num -> new String[num]);

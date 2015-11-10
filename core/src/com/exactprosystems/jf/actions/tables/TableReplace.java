@@ -40,7 +40,7 @@ public class TableReplace extends AbstractAction
 	protected String 	regexp 	= null;
 
 	//TODO help me with description
-	@ActionFieldAttribute(name = matchCellname, mandatory = false, description = "")
+	@ActionFieldAttribute(name = matchCellname, mandatory = false, description = "If matchCell true, will be get whole cell. If false - substring of text on cell")
 	protected Boolean	matchCell = true;
 
 	public TableReplace()
@@ -56,7 +56,7 @@ public class TableReplace extends AbstractAction
 		}
 		else
 		{
-			this.table.replace(this.regexp, this.replace, this.columns);
+			this.table.replace(this.regexp, this.replace, matchCell, this.columns);
 		}
 		
 		super.setResult(null);
