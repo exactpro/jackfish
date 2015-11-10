@@ -471,7 +471,7 @@ public class Table implements List<Map<String, Object>>, Mutable, Cloneable
 			for (Header header : filtered)
 			{
 				Object value = row.get(header);
-				if (matchCell && value instanceof String)
+				if (!matchCell && value instanceof String)
 				{
 					if (((String) value).contains(source.toString()))
 					{
