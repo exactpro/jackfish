@@ -16,6 +16,7 @@ import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import javafx.scene.control.ButtonType;
 
+import java.io.FileReader;
 import java.io.Reader;
 
 @DocumentInfo(
@@ -25,7 +26,7 @@ import java.io.Reader;
 )
 public class CsvFx extends AbstractDocument
 {
-	private final char TABLE_DELIMITER = ';';
+	private char tableDelimiter = ';';
 
 	public CsvFx(String fileName, Settings settings)
 	{
@@ -62,7 +63,7 @@ public class CsvFx extends AbstractDocument
 	{
 		super.load(reader);
 
-		this.table = new Table(reader, TABLE_DELIMITER); // TODO
+		this.table = new Table(reader, tableDelimiter);
 		initController();
 	}
 
@@ -89,7 +90,7 @@ public class CsvFx extends AbstractDocument
     public void save(String fileName) throws Exception
     {
     	super.save(fileName);
-    	this.table.save(fileName, TABLE_DELIMITER); // TODO
+    	this.table.save(fileName, tableDelimiter);
 		this.controller.saved(getName());
     }
     
@@ -115,8 +116,24 @@ public class CsvFx extends AbstractDocument
 		super.saved();
         this.table.saved();
     }
-	
-    //------------------------------------------------------------------------------------------------------------------
+
+	public void setDelimiter(char delimiter)
+	{
+		this.tableDelimiter = delimiter;
+	}
+
+	public void reloadCsv() throws Exception
+	{
+		if (hasName())
+		{
+			this.load(new FileReader(getName()));
+			this.display();
+		}
+	}
+
+	//============================================================
+	// private methods
+	//============================================================
 	private void initController()
 	{
 		if (!this.isControllerInit)

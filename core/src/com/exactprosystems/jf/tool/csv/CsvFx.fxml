@@ -8,7 +8,17 @@
    information which is the property of Exactpro Systems, LLC or its licensors.
   -->
 
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.layout.BorderPane?>
-<BorderPane prefHeight="428.0" prefWidth="504.0" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.exactprosystems.jf.tool.csv.CsvFxController" xmlns="http://javafx.com/javafx/8">
-
+<BorderPane prefHeight="428.0" prefWidth="504.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.exactprosystems.jf.tool.csv.CsvFxController">
+	<top>
+		<ToolBar fx:id="toolBar">
+			<items>2
+				<Button id="btnReloadCsv" fx:id="btnReloadCsv" onAction="#reloadCsv"/>
+				<TextField id="tfDelimiter" fx:id="tfDelimiter" maxWidth="80.0" minWidth="80.0" prefWidth="80.0" promptText="delimiter"/>
+			</items>
+		</ToolBar>
+	</top>
 </BorderPane>
