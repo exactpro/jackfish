@@ -66,9 +66,12 @@ public class RectangleSelection extends Rectangle
 		});
 	}
 
-	private final InvalidationListener layoutListener = (Observable observable) -> {
-		updateRectangle();
-	};
+	private final InvalidationListener layoutListener = (Observable observable) -> updateRectangle();
+
+	public GridRange getRange()
+	{
+		return this.selectionRange.range;
+	}
 
 	public final void updateRectangle()
 	{
@@ -110,6 +113,8 @@ public class RectangleSelection extends Rectangle
 		maxRow = Math.min(maxRow, bottomRow);
 		int minColumn = selectionRange.range.getLeft();
 		int maxColumn = selectionRange.range.getRight();
+
+		final CellView call = (CellView) sm.getSelectedCells().get(0).getTableColumn().getCellFactory().call(sm.getSelectedCells().get(0).getTableColumn());
 
 		GridRow gridMinRow = skin.getRowIndexed(minRow);
 		if (gridMinRow == null)
@@ -403,6 +408,17 @@ public class RectangleSelection extends Rectangle
 		public int getRight()
 		{
 			return right;
+		}
+
+		@Override
+		public String toString()
+		{
+			return "GridRange{" +
+					"top=" + top +
+					", bottom=" + bottom +
+					", left=" + left +
+					", right=" + right +
+					'}';
 		}
 	}
 }

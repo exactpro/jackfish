@@ -15,7 +15,7 @@ import javafx.collections.ObservableList;
 import javafx.collections.SetChangeListener;
 import javafx.collections.WeakSetChangeListener;
 import javafx.event.EventHandler;
-import javafx.event.WeakEventHandler;
+import javafx.scene.Cursor;
 import javafx.scene.control.*;
 import javafx.scene.control.TableView.TableViewFocusModel;
 import javafx.scene.control.TableView.TableViewSelectionModel;
@@ -69,9 +69,36 @@ public class CellView extends TableCell<ObservableList<SpreadsheetCell>, Spreads
 				}
 			}
 		};
-		this.addEventHandler(MouseEvent.DRAG_DETECTED, new WeakEventHandler<>(startFullDragEventHandler));
-		setOnMouseDragEntered(new WeakEventHandler<>(dragMouseEventHandler));
-
+		this.addEventHandler(MouseEvent.DRAG_DETECTED, startFullDragEventHandler);
+		this.addEventHandler(MouseEvent.MOUSE_MOVED, event -> {
+			if (event.getY() + 10 > getHeight() && event.getX() + 10 > getWidth() && this.isSelected())
+			{
+				this.setCursor(Cursor.CROSSHAIR);
+			}
+			else
+			{
+				this.setCursor(Cursor.DEFAULT);
+			}
+		});
+		setOnMouseDragEntered(dragMouseEventHandler);
+		setOnMouseDragReleased(event -> {
+			CellView source = ((CellView) event.getGestureSource());
+			System.out.println(source.getCursor());
+			if (source.getCursor() != null && source.getCursor().equals(Cursor.CROSSHAIR))
+			{
+				final RectangleSelection.GridRange range = this.handle.getCellsViewSkin().getRectangleSelection().getRange();
+				System.out.println(range);
+				final DataProvider provider = this.handle.getView().getProvider();
+				for (int row = range.getLeft(); row <= range.getRight(); row++)
+				{
+					for (int col = range.getTop(); col <= range.getBottom(); col++)
+					{
+						provider.setCellValue(row, col, source.getText());
+					}
+				}
+				this.handle.getView().setDataProvider(provider);
+			}
+		});
 		itemProperty().addListener(itemChangeListener);
 	}
 

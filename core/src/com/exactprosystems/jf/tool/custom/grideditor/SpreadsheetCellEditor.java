@@ -133,7 +133,9 @@ public abstract class SpreadsheetCellEditor {
 
             tf.requestFocus();
             tf.end();
-        }
+//			tf.positionCaret(tf.sel);
+			tf.selectAll();
+		}
 
         @Override
         public String getControlValue() {

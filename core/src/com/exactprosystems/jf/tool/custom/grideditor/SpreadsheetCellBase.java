@@ -32,16 +32,17 @@ public class SpreadsheetCellBase implements SpreadsheetCell, EventTarget{
 
     private ObservableSet<String> styleClass;
 
-    public SpreadsheetCellBase(final int row, final int column, final int rowSpan, final int columnSpan,final StringCellType type) {
-        this.row = row;
-        this.column = column;
-        this.type = type;
-        text = new SimpleStringProperty(""); //$NON-NLS-1$
-        graphic = new SimpleObjectProperty<>();
-        setEditable(true);
-        getStyleClass().add("spreadsheet-cell"); //$NON-NLS-1$
-        styleProperty = new SimpleStringProperty();
-    }
+	public SpreadsheetCellBase(final int row, final int column, final StringCellType type)
+	{
+		this.row = row;
+		this.column = column;
+		this.type = type;
+		text = new SimpleStringProperty(""); //$NON-NLS-1$
+		graphic = new SimpleObjectProperty<>();
+		setEditable(true);
+		getStyleClass().add("spreadsheet-cell"); //$NON-NLS-1$
+		styleProperty = new SimpleStringProperty();
+	}
 
    /***************************************************************************
      *
@@ -49,13 +50,6 @@ public class SpreadsheetCellBase implements SpreadsheetCell, EventTarget{
      *
      **************************************************************************/
 
-    /** {@inheritDoc} */
-    @Override
-    public boolean match(SpreadsheetCell cell) {
-        return type.match(cell);
-    }
-
-    // --- item
     private final ObjectProperty<Object> item = new SimpleObjectProperty<Object>(this, "item") { //$NON-NLS-1$
         @Override
         protected void invalidated() {

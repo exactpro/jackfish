@@ -13,22 +13,10 @@ import javafx.scene.control.TableView;
 public class SpreadsheetGridView extends TableView<ObservableList<SpreadsheetCell>>
 {
 	private final SpreadsheetHandle handle;
-	private String stylesheet;
 
 	public SpreadsheetGridView(SpreadsheetHandle handle)
 	{
 		this.handle = handle;
-	}
-
-	@Override
-	public String getUserAgentStylesheet()
-	{
-		if (stylesheet == null)
-		{
-			stylesheet = SpreadsheetView.class.getResource("spreadsheet.css").toExternalForm();
-		}
-
-		return stylesheet;
 	}
 
 	@Override

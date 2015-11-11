@@ -59,7 +59,7 @@ public class TableViewSpanSelectionModel extends TableView.TableViewSelectionMod
     /**
      * Make the tableView move when selection operating outside bounds
      */
-    private final Timeline timer;
+    private Timeline timer;
 
     private final EventHandler<ActionEvent> timerEventHandler = (ActionEvent event) -> {
         GridViewSkin skin = (GridViewSkin) getCellsViewSkin();
@@ -103,21 +103,19 @@ public class TableViewSpanSelectionModel extends TableView.TableViewSelectionMod
     private final EventHandler<MouseEvent> mousePressedEventHandler = (MouseEvent mouseEvent1) -> {
         key = false;
         shift = mouseEvent1.isShiftDown();
-    };
+	};
 
     private final EventHandler<MouseEvent> onDragDetectedEventHandler = new EventHandler<MouseEvent>() {
         @Override
         public void handle(MouseEvent mouseEvent) {
-            cellsView.addEventHandler(MouseEvent.MOUSE_RELEASED, dragDoneHandler);
             drag = true;
-            timer.setCycleCount(Timeline.INDEFINITE);
-            timer.play();
-        }
+			timer.setCycleCount(Timeline.INDEFINITE);
+			timer.play();
+			cellsView.addEventHandler(MouseEvent.MOUSE_RELEASED, dragDoneHandler);
+		}
     };
 
-    private final EventHandler<MouseEvent> onMouseDragEventHandler = (MouseEvent e) -> {
-        mouseEvent = e;
-    };
+    private final EventHandler<MouseEvent> onMouseDragEventHandler = (MouseEvent e) -> mouseEvent = e;
 
     private final ListChangeListener<TablePosition<ObservableList<SpreadsheetCell>, ?>> listChangeListener = this::handleSelectedCellsListChangeEvent;
 
@@ -168,8 +166,7 @@ public class TableViewSpanSelectionModel extends TableView.TableViewSelectionMod
         };
     }
 
-    private void handleSelectedCellsListChangeEvent(
-            ListChangeListener.Change<? extends TablePosition<ObservableList<SpreadsheetCell>, ?>> c) {
+    private void handleSelectedCellsListChangeEvent(ListChangeListener.Change<? extends TablePosition<ObservableList<SpreadsheetCell>, ?>> c) {
         if (makeAtomic) {
             return;
         }

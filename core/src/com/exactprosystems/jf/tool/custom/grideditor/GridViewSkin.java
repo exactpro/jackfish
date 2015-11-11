@@ -414,6 +414,11 @@ public class GridViewSkin extends TableViewSkinBase<ObservableList<SpreadsheetCe
 		((GridViewBehavior) getBehavior()).setGridViewSkin(this);
 	}
 
+	public RectangleSelection getRectangleSelection()
+	{
+		return rectangleSelection;
+	}
+
 	public void resize(TableColumnBase<?, ?> tc, int maxRows)
 	{
 		if (tc.isResizable())

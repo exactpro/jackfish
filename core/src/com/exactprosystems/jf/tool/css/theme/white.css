@@ -177,7 +177,7 @@
 
 /*MatrixListenerFx.java*/
 .executingMatrixItem {
-    -fx-background-color : -fx-company-color-dark;
+    -fx-background-color : -fx-company-color-light;
 
 }
 .defaultMatrixItem {
@@ -517,4 +517,76 @@
 	-fx-border-width : 0 0 3 0;
 	-fx-border-color : -fx-company-color-light;
 
+}
+
+.cell-spreadsheet .table-row-cell {
+    -fx-background-color: transparent;
+}
+
+/* NORMAL CELL */
+.spreadsheet-cell:filled:selected,
+.spreadsheet-cell:filled:focused:selected,
+.spreadsheet-cell:filled:focused:selected:hover {
+    -fx-background-color: -fx-company-color-light;
+    -fx-border-color: #a9a9a9;
+    -fx-border-width : 0.5px;
+    -fx-text-fill: -fx-selection-bar-text;
+
+}
+.spreadsheet-cell:hover,
+.spreadsheet-cell:filled:focused {
+    -fx-background-color: -fx-company-color-dark;
+    -fx-text-fill: white;
+    -fx-background-insets: 0, 0 0 1 0;
+}
+
+.spreadsheet-cell{
+    -fx-padding: 0 0 0 0.2em;
+    -fx-border-color: black;
+    -fx-border-width : 0.3px;
+    -fx-background-color: -fx-table-cell-border-color,white;
+}
+
+/* HORIZONTAL AND VERTICAL HEADER SELECTION */
+VerticalHeader > Label {
+    -fx-background-color: -fx-box-border, -fx-inner-border,  linear-gradient(to left, derive(-fx-color,-5%) ,derive(-fx-color,5%));
+    -fx-background-insets: 0, 0 1 1 0, 1 2 2 1;
+    -fx-font-weight: bold;
+    -fx-size: 2em;
+    -fx-text-fill: -fx-selection-bar-text;
+    -fx-alignment: center;
+    -fx-font-style : normal;
+}
+
+VerticalHeader > Label.selected{
+    -fx-background-color: -fx-company-color-light, -fx-company-color-light,  linear-gradient(to right, derive(-fx-company-color-light,-10%) ,derive(-fx-company-color-light,10%));
+    -fx-background-insets: 0, 0 1 1 0, 1 2 2 1;
+    -fx-font-weight: bold;
+    -fx-size: 2em;
+    -fx-text-fill: -fx-selection-bar-text;
+    -fx-alignment: center;
+    -fx-border-color : black;
+}
+
+HorizontalHeaderColumn > TableColumnHeader.column-header.table-column.selected{
+    -fx-background-color: -fx-company-color-light, -fx-company-color-light,  linear-gradient(to bottom, derive(-fx-company-color-light,-10%) ,derive(-fx-company-color-light,10%));
+    -fx-background-insets: 0, 0 1 1 0, 1 2 2 1;
+    -fx-font-weight: bold;
+    -fx-size: 2em;
+    -fx-text-fill: -fx-selection-bar-text;
+    -fx-alignment: center;
+    -fx-border-color : black;
+}
+
+.column-header-background.invisible { visibility: hidden; -fx-padding: -1em; }
+
+CellView > .text-input.text-field{
+    -fx-padding : 0 0 0 -0.2em;
+    -fx-background-color: transparent;
+}
+
+.selection-rectangle{
+    -fx-fill : transparent;
+    -fx-stroke : black;
+    -fx-stroke-width : 2;
 }

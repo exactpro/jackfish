@@ -72,8 +72,14 @@ public class TableDataProvider implements DataProvider<String>
 	@Override
 	public void setCellValue(int column, int row, String value)
 	{
+		final String oldCellValue = getCellValue(column, row);
+		if (oldCellValue.equals(value))
+		{
+			return;
+		}
 		String name = this.table.getHeader(column);
 		this.table.changeValue(name, row, value);
+		System.out.println("new value " + value + " row : " + row + " col : " + column);
 	}
 
 	@Override

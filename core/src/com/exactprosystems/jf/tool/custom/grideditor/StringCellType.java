@@ -27,15 +27,10 @@ public class StringCellType
 		this.converter = converter;
 	}
 
-	public boolean match(Object value)
-	{
-		return true;
-	}
-
 	public static SpreadsheetCell createCell(final int row, final int column, final String value)
 	{
 		StringCellType type = new StringCellType();
-		SpreadsheetCell cell = new SpreadsheetCellBase(row, column, 1, 1, type);
+		SpreadsheetCell cell = new SpreadsheetCellBase(row, column, type);
 		cell.setItem(value);
 		return cell;
 	}

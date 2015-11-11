@@ -37,15 +37,6 @@ public interface SpreadsheetCell {
     public static final EventType WRAP_EVENT_TYPE = new EventType("WrapTextEventType"); //$NON-NLS-1$
     
     /**
-     * Verify that the upcoming cell value can be set to the current cell. This
-     * is currently used by the Copy/Paste.
-     *
-     * @param cell
-     * @return true if the upcoming cell value can be set to the current cell.
-     */
-    public boolean match(SpreadsheetCell cell);
-
-    /**
      * Sets the value of the property Item. This should be used only at
      * initialization. Prefer {@link Grid#setCellValue(int, int, Object)} after
      * because it will compute correctly the modifiedCell. If
