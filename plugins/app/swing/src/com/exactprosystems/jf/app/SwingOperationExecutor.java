@@ -1352,6 +1352,14 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 				id = KeyEvent.VK_F1;
 				break;
 
+			case F2:
+				id = KeyEvent.VK_F2;
+				break;
+
+			case DIG1:
+				id=KeyEvent.VK_1;
+				break;
+
 			case Escape:
 				id = KeyEvent.VK_ESCAPE;
 				break;

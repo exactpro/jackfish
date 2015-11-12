@@ -817,6 +817,14 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 				}
 				switch (key)
 				{
+					case F2:
+						upOrDown(upAndDownActions, Keys.F2, b);
+						break;
+
+					case DIG1:
+						upOrDown(upAndDownActions, Keys.NUMPAD1, b);
+						break;
+
 					case Shift:
 						upOrDown(upAndDownActions, Keys.SHIFT, b);
 						break;
