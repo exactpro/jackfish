@@ -11,10 +11,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableSet;
-import javafx.event.Event;
-import javafx.event.EventHandler;
 import javafx.event.EventType;
-import javafx.scene.Node;
 
 //TODO remove this interface
 public interface SpreadsheetCell
@@ -37,8 +34,6 @@ public interface SpreadsheetCell
 
 	void setWrapText(boolean wrapText);
 
-	void setStyle(String style);
-
 	String getStyle();
 
 	StringProperty styleProperty();
@@ -54,14 +49,4 @@ public interface SpreadsheetCell
 	int getColumn();
 
 	ObservableSet<String> getStyleClass();
-
-	ObjectProperty<Node> graphicProperty();
-
-	void setGraphic(Node graphic);
-
-	Node getGraphic();
-
-	void addEventHandler(EventType<Event> eventType, EventHandler<Event> eventHandler);
-
-	void removeEventHandler(EventType<Event> eventType, EventHandler<Event> eventHandler);
 }

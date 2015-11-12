@@ -489,6 +489,6 @@ public class GridViewBehavior extends TableViewBehavior<ObservableList<Spreadshe
 
 	private boolean isEmpty(SpreadsheetCell cell)
 	{
-		return cell.getGraphic() == null && (cell.getItem() == null || (cell.getItem() instanceof Double && ((Double) cell.getItem()).isNaN()));
+		return (cell.getItem() == null || (cell.getItem() instanceof Double && ((Double) cell.getItem()).isNaN()));
 	}
 }
