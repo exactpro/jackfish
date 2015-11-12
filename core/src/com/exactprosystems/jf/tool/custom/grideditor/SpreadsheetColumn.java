@@ -58,11 +58,15 @@ public final class SpreadsheetColumn {
     private ContextMenu getColumnContextMenu() {
 		ContextMenu contextMenu = new ContextMenu();
 		contextMenu.setAutoHide(true);
-		MenuItem addColumn = new MenuItem("Add");
-		addColumn.setOnAction(e -> this.spreadsheetView.addColumn(this.spreadsheetView.getColumns().indexOf(this)));
+		MenuItem addColumnBefore = new MenuItem("Add column before");
+		addColumnBefore.setOnAction(e -> this.spreadsheetView.addColumn(this.spreadsheetView.getColumns().indexOf(this)));
+
+		MenuItem addColumnAfter = new MenuItem("Add column after");
+		addColumnAfter.setOnAction(e -> this.spreadsheetView.addColumn(this.spreadsheetView.getColumns().indexOf(this) + 1));
 
 		MenuItem removeColumn = new MenuItem("Remove");
 		removeColumn.setOnAction(e -> this.spreadsheetView.removeColumn(this.spreadsheetView.getColumns().indexOf(this)));
+
 		MenuItem renameColumn = new MenuItem("Rename");
 		renameColumn.setOnAction(e -> {
 			String oldValue = this.column.getText();
@@ -92,7 +96,7 @@ public final class SpreadsheetColumn {
 				}
 			});
 		});
-		contextMenu.getItems().addAll(addColumn, removeColumn, renameColumn);
+		contextMenu.getItems().addAll(addColumnBefore,addColumnAfter, removeColumn, renameColumn);
 		return contextMenu;
     }
 }

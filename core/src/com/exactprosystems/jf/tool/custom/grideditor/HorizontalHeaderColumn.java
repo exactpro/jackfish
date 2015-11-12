@@ -16,7 +16,6 @@ import javafx.scene.control.TableColumnBase;
 
 public class HorizontalHeaderColumn extends NestedTableColumnHeader
 {
-
 	int lastColumnResized = -1;
 
 	public HorizontalHeaderColumn(TableViewSkinBase<?, ?, ?, ?, ?, ?> skin, TableColumnBase<?, ?> tc)

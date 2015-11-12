@@ -33,8 +33,7 @@ import java.util.*;
 
 public class GridViewSkin extends TableViewSkinBase<ObservableList<SpreadsheetCell>, ObservableList<SpreadsheetCell>, TableView<ObservableList<SpreadsheetCell>>, TableViewBehavior<ObservableList<SpreadsheetCell>>, TableRow<ObservableList<SpreadsheetCell>>, TableColumn<ObservableList<SpreadsheetCell>, ?>>
 {
-
-
+	private static int clickCount = 0;
 	public static final double DEFAULT_CELL_HEIGHT;
 
 	static
@@ -357,7 +356,6 @@ public class GridViewSkin extends TableViewSkinBase<ObservableList<SpreadsheetCe
 			padding = r.snappedLeftInset() + r.snappedRightInset();
 		}
 
-
 		int rows = maxRows == -1 ? items.size() : Math.min(items.size(), maxRows == 30 ? 100 : maxRows);
 		double maxWidth = 0;
 		cell.updateTableColumn(tc);
@@ -380,6 +378,10 @@ public class GridViewSkin extends TableViewSkinBase<ObservableList<SpreadsheetCe
 		cell.updateIndex(-1);
 
 		double widthMax = maxWidth + padding;
+		if (clickCount++ % 2 == 0)
+		{
+			widthMax = tc.getText().length() * 8;
+		}
 		if (handle.getGridView().getColumnResizePolicy() == TableView.CONSTRAINED_RESIZE_POLICY)
 		{
 			widthMax = Math.max(widthMax, tc.getWidth());

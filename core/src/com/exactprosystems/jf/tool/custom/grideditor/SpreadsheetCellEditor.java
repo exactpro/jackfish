@@ -69,20 +69,8 @@ public abstract class SpreadsheetCellEditor {
      */
     public abstract Control getEditor();
 
-    /**
-     * Return the value within your editor as a string. This will be used by the
-     * {@link SpreadsheetCellType#convertValue(Object)} in order to compute
-     * whether the value is valid regarding the {@link SpreadsheetCellType}
-     * policy.
-     *
-     * @return the value within your editor as a string.
-     */
     public abstract String getControlValue();
 
-    /**
-     * This method will be called at the end of edition.<br>
-     * You will be offered the possibility to do the configuration post editing.
-     */
     public abstract void end();
 
     /***************************************************************************

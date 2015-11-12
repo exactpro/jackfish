@@ -10,9 +10,6 @@ package com.exactprosystems.jf.tool.custom.grideditor;
 import javafx.util.StringConverter;
 import javafx.util.converter.DefaultStringConverter;
 
-/**
- * The {@link SpreadsheetCell} {@link String} type base class.
- */
 public class StringCellType
 {
 	private StringConverter<String> converter;
@@ -44,7 +41,7 @@ public class StringCellType
 	{
 		String convertedValue = converter.fromString(value == null ? null : value.toString());
 		if (convertedValue == null || convertedValue.equals(""))
-		{ //$NON-NLS-1$
+		{
 			return null;
 		}
 		return convertedValue;

@@ -18,7 +18,6 @@ import java.util.Objects;
 
 public class SpreadsheetCellBase implements SpreadsheetCell, EventTarget{
 
-    //The Bit position for the editable Property.
     private static final int EDITABLE_BIT_POSITION = 4;
     private static final int WRAP_BIT_POSITION = 5;
     private final StringCellType type;

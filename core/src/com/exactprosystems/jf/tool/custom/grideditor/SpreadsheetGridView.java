@@ -24,4 +24,4 @@ public class SpreadsheetGridView extends TableView<ObservableList<SpreadsheetCel
 	{
 		return new GridViewSkin(handle);
 	}
-};
+}

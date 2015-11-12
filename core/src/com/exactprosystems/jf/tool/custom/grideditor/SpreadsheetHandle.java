@@ -8,16 +8,9 @@
 
 package com.exactprosystems.jf.tool.custom.grideditor;
 
-/**
- * Implementation vs public bridge.
- */
-public abstract class SpreadsheetHandle {
-	/** Access the main control. */
-	protected abstract SpreadsheetView getView();
-	/** Accesses the grid (ie cell table) in the spreadsheet. */
-	protected abstract SpreadsheetGridView getGridView();
-	/** Accesses the grid view (ie cell table view). */
-	protected abstract GridViewSkin getCellsViewSkin();
-	/** Whether that column width has been set by the user. */
-	protected abstract boolean isColumnWidthSet(int indexColumn);
+public interface SpreadsheetHandle {
+	SpreadsheetView getView();
+	SpreadsheetGridView getGridView();
+	GridViewSkin getCellsViewSkin();
+	boolean isColumnWidthSet(int indexColumn);
 }

@@ -21,7 +21,6 @@ import java.util.Stack;
 
 public class HorizontalPicker extends StackPane
 {
-
 	private static final String PICKER_INDEX = "PickerIndex"; //$NON-NLS-1$
 
 	private final HorizontalHeader horizontalHeader;
