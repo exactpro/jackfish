@@ -457,6 +457,17 @@ public class Table implements List<Map<String, Object>>, Mutable, Cloneable
 				});
 	}
 
+	public static void main(String[] args) throws Exception
+	{
+		Table table = new Table("load.csv", ',');
+		table.replace(" (", "(", false, "login", "password");
+		System.out.println(Arrays.toString(table.headers));
+		for (Header h : table.headers)
+		{
+			table.forEach(e -> System.out.println(e.get(h.name)));
+		}
+	}
+
 	public void replace(Object source, Object dest, boolean matchCell, String ...columns)
 	{
 		if (columns == null || columns.length == 0 || areEqual(source, dest))
@@ -477,7 +488,8 @@ public class Table implements List<Map<String, Object>>, Mutable, Cloneable
 					String sSource = String.valueOf(source);
 					if (sValue.contains(sSource))
 					{
-						row.put(header, sValue.replaceAll(sSource, String.valueOf(dest)));
+						row.remove(header);
+						row.put(header, sValue.replace(sSource, String.valueOf(dest)));
 					}
 				}
 				else if (areEqual(value, source))
@@ -487,8 +499,7 @@ public class Table implements List<Map<String, Object>>, Mutable, Cloneable
 			}
 		}
 	}
-	//TODO how use in this method matchCell?
-	public void replace(String regexp, Object dest, boolean matchCell, String ...columns)
+	public void replace(String regexp, Object dest, String ...columns)
 	{
 		if (columns == null || columns.length == 0)
 		{

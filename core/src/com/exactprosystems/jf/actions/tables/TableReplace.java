@@ -56,7 +56,7 @@ public class TableReplace extends AbstractAction
 		}
 		else
 		{
-			this.table.replace(this.regexp, this.replace, matchCell, this.columns);
+			this.table.replace(this.regexp, this.replace, this.columns);
 		}
 		
 		super.setResult(null);
