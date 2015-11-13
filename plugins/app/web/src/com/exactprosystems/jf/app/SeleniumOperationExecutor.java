@@ -754,6 +754,7 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 	{
 		Exception real = null;
 		int repeat = 1;
+		Actions actions = new Actions(this.driver);
 		do
 		{
 			try
@@ -761,31 +762,35 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 				switch (key)
 				{
 					case Down:
-						component.sendKeys(Keys.DOWN);
+						actions.sendKeys(Keys.DOWN);
 						break;
 
 					case Escape:
-						component.sendKeys(Keys.ESCAPE);
+						actions.sendKeys(Keys.ESCAPE);
 						break;
 
 					case Enter:
-						component.sendKeys(Keys.ENTER);
+						actions.sendKeys(Keys.ENTER);
 						break;
 
 					case Tab:
-						component.sendKeys(Keys.TAB);
+						actions.sendKeys(Keys.TAB);
 						break;
 
 					case Delete:
-						component.sendKeys(Keys.DELETE);
+						actions.sendKeys(Keys.DELETE);
 						break;
 
 					case Backspase:
-						component.sendKeys(Keys.BACK_SPACE);
+						actions.sendKeys(Keys.BACK_SPACE);
 						break;
 
 					case Shift:
-						component.sendKeys(Keys.SHIFT);
+						actions.sendKeys(Keys.SHIFT);
+
+					case F2:
+						actions.sendKeys(Keys.F2);
+						break;
 
 					default:
 						return false;
@@ -802,6 +807,8 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 		throw real;
 	}
 
+	//TODO MODIFIER_KEYS = new Keys[]{Keys.SHIFT, Keys.CONTROL, Keys.ALT, Keys.META, Keys.COMMAND, Keys.LEFT_ALT, Keys.LEFT_CONTROL, Keys.LEFT_SHIFT};
+	// if key not equals modifier keys will throw exception. See org.openqa.selenium.interactions.internal.SingleKeyEvent
 	@Override
 	public boolean upAndDown(WebElement component, Keyboard key, boolean b) throws Exception
 	{
@@ -818,35 +825,35 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 				switch (key)
 				{
 					case F2:
-						upOrDown(upAndDownActions, Keys.F2, b);
+						upOrDown(component,upAndDownActions, Keys.F2, b);
 						break;
 
 					case DIG1:
-						upOrDown(upAndDownActions, Keys.NUMPAD1, b);
+						upOrDown(component, upAndDownActions, Keys.NUMPAD1, b);
 						break;
 
 					case Shift:
-						upOrDown(upAndDownActions, Keys.SHIFT, b);
+						upOrDown(component,upAndDownActions, Keys.SHIFT, b);
 						break;
 
 					case Backspase:
-						upOrDown(upAndDownActions, Keys.BACK_SPACE, b);
+						upOrDown(component,upAndDownActions, Keys.BACK_SPACE, b);
 						break;
 
 					case Delete:
-						upOrDown(upAndDownActions, Keys.DELETE, b);
+						upOrDown(component,upAndDownActions, Keys.DELETE, b);
 						break;
 
 					case Enter:
-						upOrDown(upAndDownActions, Keys.ENTER, b);
+						upOrDown(component,upAndDownActions, Keys.ENTER, b);
 						break;
 
 					case Escape:
-						upOrDown(upAndDownActions, Keys.ESCAPE, b);
+						upOrDown(component,upAndDownActions, Keys.ESCAPE, b);
 						break;
 
 					case Tab:
-						upOrDown(upAndDownActions, Keys.TAB, b);
+						upOrDown(component,upAndDownActions, Keys.TAB, b);
 						break;
 
 					default:
@@ -864,15 +871,15 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 		throw real;
 	}
 
-	private void upOrDown(Actions actions, Keys keys, boolean down)
+	private void upOrDown(WebElement component, Actions actions, Keys keys, boolean down)
 	{
 		if (down)
 		{
-			actions.keyDown(keys).perform();
+			actions.keyDown(component, keys).build().perform();
 		}
 		else
 		{
-			actions.keyUp(keys).perform();
+			actions.keyUp(component, keys).build().perform();
 		}
 	}
 
