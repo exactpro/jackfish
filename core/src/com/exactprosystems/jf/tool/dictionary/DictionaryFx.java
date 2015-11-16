@@ -954,14 +954,17 @@ public class DictionaryFx extends GuiDictionary
 	private void displayApplicationControl(String title) throws Exception
 	{
 		Collection<String> entries = this.context.getConfiguration().getApplications();
+		this.controller.displayActionControl(entries, this.currentAdapter, title);
+	}
+
+	public void displayTitles() throws Exception
+	{
 		Collection<String> titles = null;
-		
 		if (this.appConnection != null)
 		{
-			titles = this.appConnection.getApplication().service().titles();		
+			titles = this.appConnection.getApplication().service().titles();
 		}
-		
-		this.controller.displayActionControl(entries, this.currentAdapter, titles, title);
+		this.controller.displayTitles(titles);
 	}
 
 	private static final Logger logger = Logger.getLogger(DictionaryFx.class);

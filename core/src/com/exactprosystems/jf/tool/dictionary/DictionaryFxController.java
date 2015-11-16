@@ -267,9 +267,14 @@ public class DictionaryFxController implements Initializable, ContainingParent
 		this.actionsController.displayApplicationStatus(status, throwable);
 	}
 
-	public void displayActionControl(Collection<String> entries, String entry, Collection<String> titles, String title)
+	public void displayTitles(Collection<String> titles)
 	{
-		this.actionsController.displayActionControl(entries, entry, titles, title);
+		this.actionsController.displayTitles(titles);
+	}
+
+	public void displayActionControl(Collection<String> entries, String entry, String title)
+	{
+		this.actionsController.displayActionControl(entries, entry, title);
 	}
 
 

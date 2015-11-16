@@ -22,6 +22,7 @@ import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 
 
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
@@ -87,6 +88,7 @@ public class ActionsController implements Initializable, ContainingParent
 		assert imageArea != null : "fx:id=\"labelArea\" was not injected: check your FXML file 'Actions.fxml'.";
 		String imageText = Images.class.getResource("texture.png").toExternalForm();
 		imageArea.setStyle("-fx-background-image:url('" + imageText + "');\n" + "    -fx-background-repeat: repeat;");
+		comboBoxWindows.setOnShowing(event -> tryCatch(() -> this.model.displayTitles(), "Error on update titles"));
 	}
 
 	public void init(DictionaryFx model, GridPane gridPane, AbstractEvaluator evaluator, NavigationController navigation, 
@@ -224,7 +226,19 @@ public class ActionsController implements Initializable, ContainingParent
 		}
 	}
 
-	public void displayActionControl(Collection<String> entries, String entry, Collection<String> titles, String title)
+	public void displayTitles(Collection<String> titles)
+	{
+		if (titles != null)
+		{
+			this.comboBoxWindows.getItems().setAll(titles);
+		}
+		else
+		{
+			this.comboBoxWindows.getItems().setAll(FXCollections.observableArrayList());
+		}
+	}
+
+	public void displayActionControl(Collection<String> entries, String entry, String title)
 	{
 		Platform.runLater(() ->
 		{
@@ -234,10 +248,6 @@ public class ActionsController implements Initializable, ContainingParent
 			}
 			this.comboBoxApps.getSelectionModel().select(entry);
 			
-			if (titles != null)
-			{
-				this.comboBoxWindows.getItems().setAll(titles);
-			}
 			/*
 				//TODO
 				this is need, because if title is null, that listener try to change value to null.
@@ -248,10 +258,10 @@ public class ActionsController implements Initializable, ContainingParent
 			{
 				this.comboBoxWindows.getSelectionModel().select(title);
 			}
-			else
-			{
-				this.comboBoxWindows.getSelectionModel().selectFirst();
-			}
+//			else
+//			{
+//				this.comboBoxWindows.getSelectionModel().selectFirst();
+//			}
 
 		});
 	}
