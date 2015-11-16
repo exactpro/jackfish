@@ -67,18 +67,6 @@
         <serviceJar>services/sf.jar</serviceJar>
     </serviceEntry>
     <appEntry>
-        <name>WEB</name>
-        <parameters>
-            <key>ChromeDriverPath</key>
-            <value>/home/abystrov/Programs/chromedriver/2.10/chromedriver</value>
-        </parameters>
-        <appDescription>Web's Selenium plugin</appDescription>
-        <appDicPath>dic/gui/iro_dic_190.xml</appDicPath>
-        <appJar>apps/web.jar</appJar>
-        <appWorkDir>apps/</appWorkDir>
-        <appStartPort>10000</appStartPort>
-    </appEntry>
-    <appEntry>
         <name>WIN</name>
         <appDescription>Window's UIAutomation plugin</appDescription>
         <appDicPath>dic/gui/calc.xml</appDicPath>
@@ -146,5 +134,16 @@
         <appJar>apps/swing.jar</appJar>
         <appWorkDir>apps</appWorkDir>
         <appStartPort>8000</appStartPort>
+    </appEntry>
+    <appEntry>
+        <name>WEB</name>
+        <parameters>
+            <key>ChromeDriverPath</key>
+            <value>unix/chromedriver</value>
+        </parameters>
+        <appDicPath>dic/gui/CurrentDictionary.xml</appDicPath>
+        <appJar>apps/web.jar</appJar>
+        <appWorkDir>apps/</appWorkDir>
+        <appStartPort>10000</appStartPort>
     </appEntry>
 </configuration>
