@@ -238,7 +238,7 @@ public class SeleniumRemoteApplication extends RemoteApplication
 			}
 		});
 		thread.start();
-		thread.join(1000);
+		thread.join(3000);
 		return res;
 	}
 
