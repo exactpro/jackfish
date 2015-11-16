@@ -261,7 +261,7 @@ public class ConfigurationFx extends Configuration
 	private void changePath(String value, String newValue)
 	{
 		Common.tryCatch(() -> {
-			if (newValue.equals("null"))
+			if (newValue == null || newValue.equals("null"))
 			{
 				return;
 			}
