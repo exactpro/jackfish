@@ -27,6 +27,7 @@ import com.exactprosystems.jf.tool.main.Main;
 import com.exactprosystems.jf.tool.matrix.MatrixFx;
 import com.exactprosystems.jf.tool.settings.SettingsPanel;
 import com.exactprosystems.jf.tool.settings.Theme;
+
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -320,7 +321,8 @@ public class ParametersPane extends CustomScrollPane
 									if (obj instanceof Xml)
 									{
 										Xml xml = (Xml)obj;
-										String initial = "" + evaluator.tryEvaluate(par.getExpression());
+										Object value = evaluator.tryEvaluate(par.getExpression());
+										String initial = value == null ? null : String.valueOf(value);
 										XpathViewer viewer = new XpathViewer(null, xml.getDocument(), null);
 										String res = viewer.show(initial, "Xpath for " + par.getName(), themePath, false);
 										if (res != null)

@@ -36,8 +36,7 @@ public class XpathViewer
 
 	public XpathViewer(Locator owner, Document document, IRemoteApplication service)
 	{
-		this.document = Optional.of(document).get(); // TODO what is meaning in
-														// it?
+		this.document = document;
 		this.owner = owner;
 		this.service = service;
 	}
