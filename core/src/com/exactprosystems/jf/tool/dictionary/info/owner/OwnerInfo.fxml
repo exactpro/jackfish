@@ -13,7 +13,7 @@
    information which is the property of Exactpro Systems, LLC or its licensors.
   -->
 
-<GridPane prefHeight="291.0" prefWidth="452.0" styleClass="gridPaneBorder" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="com.exactprosystems.jf.tool.dictionary.info.owner.OwnerInfoController">
+<GridPane prefHeight="291.0" prefWidth="452.0" styleClass="gridPaneBorder" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.exactprosystems.jf.tool.dictionary.info.owner.OwnerInfoController">
 	<columnConstraints>
 		<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="35.0" prefWidth="100.0" />
 		<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -81,49 +81,52 @@
 				</Label>
 				<TextField fx:id="tfOwnerUID" editable="false" GridPane.columnIndex="1">
 					<GridPane.margin>
-						<Insets right="1.0" />
+						<Insets right="5.0" />
 					</GridPane.margin>
 				</TextField>
 				<TextField fx:id="tfOwnerXpath" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="1">
 					<GridPane.margin>
-						<Insets right="1.0" />
+						<Insets right="5.0" />
 					</GridPane.margin>
 				</TextField>
 				<TextField fx:id="tfOwnerClass" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="2">
 					<GridPane.margin>
-						<Insets right="1.0" />
+						<Insets right="5.0" />
 					</GridPane.margin>
 				</TextField>
 				<TextField fx:id="tfOwnerName" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="3">
 					<GridPane.margin>
-						<Insets right="1.0" />
+						<Insets right="5.0" />
 					</GridPane.margin>
 				</TextField>
 				<TextField fx:id="tfOwnerTitle" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="4">
 					<GridPane.margin>
-						<Insets right="1.0" />
+						<Insets right="5.0" />
 					</GridPane.margin>
 				</TextField>
 				<TextField fx:id="tfOwnerAction" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="5">
 					<GridPane.margin>
-						<Insets right="1.0" />
+						<Insets right="5.0" />
 					</GridPane.margin>
 				</TextField>
 				<TextField fx:id="tfOwnerText" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="6">
 					<GridPane.margin>
-						<Insets right="1.0" />
+						<Insets right="5.0" />
 					</GridPane.margin>
 				</TextField>
 				<TextField fx:id="tfOwnerTooltip" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="7">
 					<GridPane.margin>
-						<Insets right="1.0" />
+						<Insets right="5.0" />
 					</GridPane.margin>
 				</TextField>
 				<Label text="Operataion" GridPane.rowIndex="8">
                <GridPane.margin>
                   <Insets left="10.0" right="10.0" />
                </GridPane.margin></Label>
-				<TextField fx:id="tfOwnerOperation" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="8" />
+				<TextField fx:id="tfOwnerOperation" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="8">
+               <GridPane.margin>
+                  <Insets right="5.0" />
+               </GridPane.margin></TextField>
 			</children>
 		</GridPane>
 		<GridPane>

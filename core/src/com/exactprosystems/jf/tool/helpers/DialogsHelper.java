@@ -186,6 +186,7 @@ public abstract class DialogsHelper
 		pane.setCenter(listView);
 		BorderPane.setAlignment(listView, Pos.CENTER);
 		TextField tf = new TextField();
+		Platform.runLater(tf::requestFocus);
 		pane.setTop(tf);
 		BorderPane.setAlignment(tf, Pos.CENTER);
 		Dialog<ButtonType> dialog = new Alert(Alert.AlertType.CONFIRMATION);

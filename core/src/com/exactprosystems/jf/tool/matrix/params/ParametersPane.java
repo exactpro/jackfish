@@ -195,6 +195,7 @@ public class ParametersPane extends CustomScrollPane
 		GridPane tempGrid = new GridPane();
 		tempGrid.setUserData(par);
 		Control key = new TextField(par.getName());
+		((TextField) key).setPromptText("Key");
 		Common.sizeTextField((TextField) key);
 		final Control finalKey = key;
 		key.focusedProperty().addListener((observable, oldValue, newValue) ->

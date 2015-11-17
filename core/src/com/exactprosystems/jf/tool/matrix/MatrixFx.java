@@ -210,7 +210,7 @@ public class MatrixFx extends Matrix
 		};
 		Command redo = () ->
 		{
-			findAndCallParameters(number, par -> par.insert(index, "key", "", TypeMandatory.Extra));
+			findAndCallParameters(number, par -> par.insert(index, "", "", TypeMandatory.Extra));
 		};
 		addCommand(undo, redo);
 	}
