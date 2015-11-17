@@ -3,7 +3,6 @@ package com.exactprosystems.jf.tool.custom.xpath;
 import com.exactprosystems.jf.api.app.IRemoteApplication;
 import com.exactprosystems.jf.api.app.Locator;
 import com.exactprosystems.jf.tool.Common;
-import javafx.application.Platform;
 import javafx.concurrent.Task;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -22,24 +21,23 @@ import java.util.stream.Stream;
 
 public class XpathViewer
 {
-	private Document document;
-	private XpathViewerContentController controller;
-	private Node currentNode;
-	private Locator owner;
-	private IRemoteApplication service;
-	private Node savedNode;
-	private String savedXpath;
+	private Document						document;
+	private XpathViewerContentController	controller;
+	private Node							currentNode;
+	private Locator							owner;
+	private IRemoteApplication				service;
+	private Node							savedNode;
+	private String							savedXpath;
 
-	enum XpathType {
-		Absolute,
-		WithArgs,
-		WithoutArgs,
-		SavedNode
+	enum XpathType
+	{
+		Absolute, WithArgs, WithoutArgs, SavedNode
 	}
 
 	public XpathViewer(Locator owner, Document document, IRemoteApplication service)
 	{
-		this.document = Optional.of(document).get(); // TODO what is meaning in it?
+		this.document = Optional.of(document).get(); // TODO what is meaning in
+														// it?
 		this.owner = owner;
 		this.service = service;
 	}
@@ -56,12 +54,12 @@ public class XpathViewer
 	public void saveXpath(String xpath)
 	{
 		this.savedXpath = xpath;
-		this.evaluate(xpath, XpathType.SavedNode);
+		evaluate(xpath, XpathType.SavedNode);
 	}
 
 	public void evaluate(String newValue)
 	{
-		this.evaluate(newValue, null);
+		evaluate(newValue, null);
 	}
 
 	public void updateNode(Node newValue, String text)
@@ -79,9 +77,28 @@ public class XpathViewer
 
 	public void createXpath(List<String> parameters)
 	{
-		createXpathAbsolute(currentNode);
-		createXpathWithoutParameters(currentNode);
-		createXpathWithParameters(currentNode, parameters);
+		String xpath1 = createXpathAbsolute(currentNode);
+		String xpath2 = createXpathWithoutParameters(currentNode);
+		String xpath3 = createXpathWithParameters(currentNode, parameters);
+
+		evaluate(xpath1, XpathType.Absolute);
+		evaluate(xpath2, XpathType.WithoutArgs);
+		evaluate(xpath3, XpathType.WithArgs);
+
+		this.controller.displayXpaths(xpath1, xpath2, xpath3);
+		
+		if (this.service != null)
+		{
+			new Thread(new Task<Void>()
+			{
+				@Override
+				protected Void call() throws Exception
+				{
+					Common.tryCatch(() -> service.highlight(owner, xpath1), "Error on highlight element");
+					return null;
+				}
+			}).start();
+		}
 	}
 
 	public void clearSavedNode()
@@ -90,9 +107,9 @@ public class XpathViewer
 		this.savedXpath = "";
 	}
 
-	//============================================================
+	// ============================================================
 	// private methods
-	//============================================================
+	// ============================================================
 	private void evaluate(String newValue, XpathType type)
 	{
 		this.controller.updateTextField();
@@ -278,72 +295,50 @@ public class XpathViewer
 		return b.toString();
 	}
 
-	private void createXpathAbsolute(Node currentNode)
+	private String createXpathAbsolute(Node currentNode)
 	{
-		Platform.runLater(() -> {
-			String xpath = null;
-			if (savedNode == null)
-			{
-				xpath = getAbsoluteXpath(currentNode, null);
-			}
-			else
-			{
-				AtomicInteger count = new AtomicInteger(0);
-				Node generalParent = getGeneralParent(currentNode, count);
-				String xpathCurrentNode = getAbsoluteXpath(currentNode, generalParent);
-				xpath = getXpath(currentNode, count, xpathCurrentNode);
-			}
-			this.controller.displayXpath1(xpath);
-			this.evaluate(xpath, XpathType.Absolute);
-			
-			if (this.service != null)
-			{
-				final String finalXpath = xpath;
-				new Thread(new Task<Void>()
-				{
-					@Override
-					protected Void call() throws Exception
-					{
-						Common.tryCatch(() -> service.highlight(owner, finalXpath), "Error on highlight element");
-						return null;
-					}
-				}).start();
-			}
-		});
+		String xpath = null;
+		if (savedNode == null)
+		{
+			xpath = getAbsoluteXpath(currentNode, null);
+		}
+		else
+		{
+			AtomicInteger count = new AtomicInteger(0);
+			Node generalParent = getGeneralParent(currentNode, count);
+			String xpathCurrentNode = getAbsoluteXpath(currentNode, generalParent);
+			xpath = getXpath(currentNode, count, xpathCurrentNode);
+		}
+		return xpath;
 	}
 
-	private void createXpathWithParameters(Node currentNode, final List<String> parameters)
+	private String createXpathWithParameters(Node currentNode, final List<String> parameters)
 	{
-		Platform.runLater(() -> {
-			String xpath = null;
-			if (savedNode != null)
-			{
-				AtomicInteger count = new AtomicInteger(0);
-				getGeneralParent(currentNode, count);
-				String xpathCurrentNode = getXpathWithParameters(currentNode, parameters);
-				xpath = getXpath(currentNode, count, xpathCurrentNode);
-			}
-			else
-			{
-				xpath = getXpathWithParameters(currentNode, parameters);
-			}
-			this.controller.displayXpath2(xpath);
-			this.evaluate(xpath, XpathType.WithArgs);
-		});
+		String xpath = null;
+		if (savedNode != null)
+		{
+			AtomicInteger count = new AtomicInteger(0);
+			getGeneralParent(currentNode, count);
+			String xpathCurrentNode = getXpathWithParameters(currentNode, parameters);
+			xpath = getXpath(currentNode, count, xpathCurrentNode);
+		}
+		else
+		{
+			xpath = getXpathWithParameters(currentNode, parameters);
+		}
+		return xpath;
 	}
 
-	private void createXpathWithoutParameters(Node currentNode)
+	private String createXpathWithoutParameters(Node currentNode)
 	{
-		Platform.runLater(() -> {
-			String xpath = "//" + currentNode.getNodeName();
-			if (savedNode != null)
-			{
-				AtomicInteger count = new AtomicInteger(0);
-				getGeneralParent(currentNode, count);
-				xpath = getXpath(currentNode, count, xpath);
-			}
-			this.controller.displayXpath3(xpath);
-			this.evaluate(xpath, XpathType.WithoutArgs);
-		});
+		String xpath = "//" + currentNode.getNodeName();
+		if (savedNode != null)
+		{
+			AtomicInteger count = new AtomicInteger(0);
+			getGeneralParent(currentNode, count);
+			xpath = getXpath(currentNode, count, xpath);
+		}
+
+		return xpath;
 	}
 }
