@@ -183,7 +183,7 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 
 	public void clearTree()
 	{
-		clearTree(treeView.getRoot());
+		deselectItems(treeView.getRoot());
 	}
 
 	public void updateTextField()
@@ -208,7 +208,7 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 	public void findNode(ArrayList<Node> nodes)
 	{
 		ArrayList<TreeItem<XpathItem>> items = new ArrayList<>();
-		find(this.treeView.getRoot(), nodes, items);
+		selectItems(this.treeView.getRoot(), nodes, items);
 		if (!items.isEmpty())
 		{
 			TreeItem<XpathItem> xpathItem = items.get(0);
@@ -278,20 +278,20 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 		return pane;
 	}
 
-	private void clearTree(TreeItem<XpathItem> root)
+	private void deselectItems(TreeItem<XpathItem> root)
 	{
 		Optional.ofNullable(root.getValue()).ifPresent(v -> v.getBox().getStyleClass().removeAll(CssVariables.XPATH_FIND_TREE_ITEM));
-		root.getChildren().forEach(this::clearTree);
+		root.getChildren().forEach(this::deselectItems);
 	}
 
-	private void find(TreeItem<XpathItem> root, ArrayList<Node> nodes, ArrayList<TreeItem<XpathItem>> items)
+	private void selectItems(TreeItem<XpathItem> root, ArrayList<Node> nodes, ArrayList<TreeItem<XpathItem>> items)
 	{
 		Optional.ofNullable(root.getValue()).ifPresent(v -> nodes.stream().filter(node -> v.getNode() == node).forEach(n ->
 		{
 			items.add(root);
 			v.getBox().getStyleClass().add(CssVariables.XPATH_FIND_TREE_ITEM);
 		}));
-		root.getChildren().forEach(child -> find(child, nodes, items));
+		root.getChildren().forEach(child -> selectItems(child, nodes, items));
 	}
 
 	private Alert createAlert(String title, String themePath)
