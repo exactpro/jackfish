@@ -24,11 +24,13 @@ import com.exactprosystems.jf.tool.matrix.MatrixFx;
 import com.exactprosystems.jf.tool.matrix.MatrixFx.PlaceToInsert;
 import com.exactprosystems.jf.tool.matrix.params.ParametersPane;
 import com.exactprosystems.jf.tool.settings.SettingsPanel;
+
 import javafx.application.Platform;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -38,6 +40,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.Window;
+
 import org.apache.log4j.Logger;
 
 import java.util.*;
@@ -317,17 +320,17 @@ public class MatrixTreeView extends TreeTableView<MatrixItem>
 		MenuItem addBefore = new MenuItem("Add before");
 		Common.setAccelerator(settings, addBefore, SettingsPanel.ADD_BEFORE);
 		addBefore.setGraphic(new ImageView(new Image(CssVariables.Icons.ADD_BEFORE_ICON)));
-		addBefore.setOnAction(event -> Common.tryCatch(() -> addBeforeMenu.show(getScene().getWindow(), x, y), "Error on add before"));
+		addBefore.setOnAction(event -> Common.tryCatch(() -> addBeforeMenu.show(getSceneWindow(), x, y), "Error on add before"));
 
 		MenuItem addAfter = new MenuItem("Add after");
 		Common.setAccelerator(settings, addAfter, SettingsPanel.ADD_AFTER);
 		addAfter.setGraphic(new ImageView(new Image(CssVariables.Icons.ADD_AFTER_ICON)));
-		addAfter.setOnAction(event -> Common.tryCatch(() -> addAfterMenu.show(getScene().getWindow(), x, y), "Error on add after"));
+		addAfter.setOnAction(event -> Common.tryCatch(() -> addAfterMenu.show(getSceneWindow(), x, y), "Error on add after"));
 
 		MenuItem addChild = new MenuItem("Add child");
 		Common.setAccelerator(settings, addChild, SettingsPanel.ADD_CHILD);
 		addChild.setGraphic(new ImageView(new Image(CssVariables.Icons.ADD_CHILD_ICON)));
-		addChild.setOnAction(event -> Common.tryCatch(() -> addChildMenu.show(getScene().getWindow(), x, y), "Error on add child"));
+		addChild.setOnAction(event -> Common.tryCatch(() -> addChildMenu.show(getSceneWindow(), x, y), "Error on add child"));
 
 		MenuItem deleteItem = new MenuItem("Delete");
 		Common.setAccelerator(settings, deleteItem, SettingsPanel.DELETE_ITEM);
@@ -364,6 +367,17 @@ public class MatrixTreeView extends TreeTableView<MatrixItem>
 			);
 
 		return contextMenu;
+	}
+
+	private Window getSceneWindow()
+	{
+		Scene scene = getScene();
+		if (scene == null)
+		{
+			return null;
+		}
+		
+		return scene.getWindow();
 	}
 
 	private ContextMenu createInsertMenu(PlaceToInsert placeToInsert)
