@@ -39,7 +39,6 @@ import java.util.regex.Pattern;
 
 public class SeleniumRemoteApplication extends RemoteApplication
 {
-	private static Map<ControlKind, ArrayList<String>> mapControlKindTags = new HashMap<>(); // TODO what for?
 	private static Map<String, ArrayList<ControlKind>> mapTagsControlKind = new HashMap<>();
 
 	public static final String itemName 	= "item";
@@ -53,32 +52,11 @@ public class SeleniumRemoteApplication extends RemoteApplication
 
 	static
 	{
-		mapControlKindTags.put(ControlKind.Any,			new SimpleArrayBuilder<String>().add("*").build());
-		mapControlKindTags.put(ControlKind.Button,		new SimpleArrayBuilder<String>().add("button").add("input").add("a").add("img").build());
-		mapControlKindTags.put(ControlKind.CheckBox,	new SimpleArrayBuilder<String>().add("button").add("input").build());
-		mapControlKindTags.put(ControlKind.ComboBox,	new SimpleArrayBuilder<String>().add("select").add("input").build());
-		mapControlKindTags.put(ControlKind.Dialog,		new SimpleArrayBuilder<String>().add("form").build());
-		mapControlKindTags.put(ControlKind.Frame,		new SimpleArrayBuilder<String>().add("form").add("body").build());
-		mapControlKindTags.put(ControlKind.Label,		new SimpleArrayBuilder<String>().add("label").build());
-		mapControlKindTags.put(ControlKind.MenuItem,	new SimpleArrayBuilder<String>().add("li").build());
-		mapControlKindTags.put(ControlKind.Panel,		new SimpleArrayBuilder<String>().add("div").build());
-		mapControlKindTags.put(ControlKind.RadioButton,	new SimpleArrayBuilder<String>().add("input").build());
-		mapControlKindTags.put(ControlKind.Row,			new SimpleArrayBuilder<String>().add("tr").build());
-		mapControlKindTags.put(ControlKind.Table,		new SimpleArrayBuilder<String>().add("table").build());
-		mapControlKindTags.put(ControlKind.TabPanel,	new SimpleArrayBuilder<String>().add("button").build());
-		mapControlKindTags.put(ControlKind.TextBox,		new SimpleArrayBuilder<String>().add("input").add("textarea").build());
-		mapControlKindTags.put(ControlKind.ToggleButton,new SimpleArrayBuilder<String>().add("input").build());
-		mapControlKindTags.put(ControlKind.ListView,	new SimpleArrayBuilder<String>().add("ul").build());
-		mapControlKindTags.put(ControlKind.Tree,		new SimpleArrayBuilder<String>().add("").build());
-		mapControlKindTags.put(ControlKind.Wait,		new SimpleArrayBuilder<String>().add("*").build());
-		mapControlKindTags.put(ControlKind.Tooltip,		new SimpleArrayBuilder<String>().add("*").build());
-		mapControlKindTags.put(ControlKind.Menu,		new SimpleArrayBuilder<String>().add("li").build());
-		mapControlKindTags.put(ControlKind.TreeItem,	new SimpleArrayBuilder<String>().add("").build());
-
 		mapTagsControlKind.put("button",	new SimpleArrayBuilder<ControlKind>().
 				add(ControlKind.Button).
 				add(ControlKind.CheckBox).
 				add(ControlKind.TabPanel).build());
+		mapTagsControlKind.put("span",	new SimpleArrayBuilder<ControlKind>().add(ControlKind.Label).build());
 		mapTagsControlKind.put("a",			new SimpleArrayBuilder<ControlKind>().add(ControlKind.Button).build());
 		mapTagsControlKind.put("img",		new SimpleArrayBuilder<ControlKind>().add(ControlKind.Button).build());
 		mapTagsControlKind.put("input",		new SimpleArrayBuilder<ControlKind>().
