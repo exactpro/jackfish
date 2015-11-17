@@ -143,6 +143,18 @@ public abstract class Common
 		return tab;
 	}
 
+	private static boolean needSelectedTab = false;
+
+	public static boolean isNeedSelectedTab()
+	{
+		return needSelectedTab;
+	}
+
+	public static void setNeedSelectedTab(boolean flag)
+	{
+		Common.needSelectedTab = flag;
+	}
+
 	// TODO move it away
 	private static Theme theme;
 

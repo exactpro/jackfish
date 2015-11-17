@@ -64,7 +64,8 @@ public abstract class CustomTab extends Tab implements AutoCloseable
 			}
 		};
 		this.watcher.saved(this.document.getName());
-
+		this.crossButton.setDisable(true);
+		this.crossButton.setVisible(false);
 		this.setOnSelectionChanged(arg0 -> {
 			crossButton.setDisable(!isSelected());
 			crossButton.setVisible(isSelected());
@@ -129,10 +130,14 @@ public abstract class CustomTab extends Tab implements AutoCloseable
 	public void setTitle(String text)
 	{
 		this.text.setText(Common.getSimpleTitle(text));
-		if (this.getTabPane() != null)
-		{
-			this.getTabPane().getSelectionModel().clearSelection();
-			this.getTabPane().getSelectionModel().select(this);
-		}
+		//TODO why we change selection model where we change title?
+//		if (this.getTabPane() != null)
+//		{
+//			this.getTabPane().getSelectionModel().clearSelection();
+//			if (Common.isNeedSelectedTab())
+//			{
+//				Common.getTabPane().getSelectionModel().select(this);
+//			}
+//		}
 	}
 }

@@ -273,7 +273,10 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 		this.tab.setContent(this.pane);
 		console.setConsole(this.listView);
 		getTabPane().getTabs().add(this.tab);
-		getTabPane().getSelectionModel().select(this.tab);
+		if (isNeedSelectedTab())
+		{
+			getTabPane().getSelectionModel().select(this.tab);
+		}
 		initializeButtons(context.getConfiguration().getSettings());
 		initShortcuts(context.getConfiguration().getSettings());
 	}

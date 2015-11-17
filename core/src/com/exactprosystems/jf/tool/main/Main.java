@@ -19,6 +19,7 @@ import com.exactprosystems.jf.common.version.VersionInfo;
 import com.exactprosystems.jf.common.xml.gui.GuiDictionary;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.configuration.ConfigurationFx;
+import com.exactprosystems.jf.tool.csv.CsvFx;
 import com.exactprosystems.jf.tool.custom.store.StoreVariable;
 import com.exactprosystems.jf.tool.dictionary.DictionaryFx;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
@@ -29,12 +30,9 @@ import com.exactprosystems.jf.tool.settings.SettingsPanel;
 import com.exactprosystems.jf.tool.settings.Theme;
 import com.exactprosystems.jf.tool.systemvars.SystemVarsFx;
 import com.exactprosystems.jf.tool.text.PlainTextFx;
-import com.exactprosystems.jf.tool.csv.CsvFx;
-
 import javafx.application.Application;
 import javafx.concurrent.Task;
 import javafx.stage.Stage;
-
 import org.apache.log4j.Logger;
 
 import java.io.File;
@@ -178,6 +176,7 @@ public class Main extends Application
 				logger.error("Error on restore opened documents");
 				logger.error(e.getMessage(), e);
 			}
+			Common.setNeedSelectedTab(true);
 //			this.controller.selectConfig();
 		}, "Error on task succeed on"));
 		
