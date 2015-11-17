@@ -584,7 +584,7 @@ public class Configuration extends AbstractDocument
 		// save list of all opened documents ...
 		this.settings.removeAll(Main.MAIN_NS, Main.OPENED);
 		this.settings.saveIfNeeded();
-		//TODO think about it. why we 2nd times closing document? this is mistake?
+
 		for (Document doc : copy)
 		{
 			try
@@ -602,19 +602,6 @@ public class Configuration extends AbstractDocument
 			}
 		}
 		this.settings.saveIfNeeded();
-
-		// ... and then close them all
-    	for (Document doc : copy)
-		{
-			try
-			{
-				doc.close();
-			}
-			catch (Exception e)
-			{
-				logger.error(e.getMessage());
-			}
-		}
     }
     
     @Override
