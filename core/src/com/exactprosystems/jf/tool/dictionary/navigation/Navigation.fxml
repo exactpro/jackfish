@@ -37,7 +37,7 @@
 					<children>
 						<Button alignment="CENTER" mnemonicParsing="false" onAction="#newWindow" text="New">
 							<HBox.margin>
-								<Insets left="20.0" />
+								<Insets left="5.0" />
 							</HBox.margin>
 						</Button>
 						<Button alignment="CENTER" mnemonicParsing="false" onAction="#deleteWindow" text="Delete" />
@@ -67,6 +67,9 @@
 							<tooltip>
 						        <Tooltip text="Find dialog" />
 						    </tooltip>
+                     <BorderPane.margin>
+                        <Insets right="5.0" />
+                     </BorderPane.margin>
 						</Button>
 					</right>
 				</BorderPane>
@@ -128,13 +131,19 @@
 					</GridPane.margin>
 				</Label>
 				
-				<CheckBox fx:id="checkBoxUseSelfAsOwner" mnemonicParsing="false" text="Use self as owner" GridPane.halignment="LEFT" GridPane.rowIndex="2" />
+				<CheckBox fx:id="checkBoxUseSelfAsOwner" mnemonicParsing="false" text="Use self as owner" GridPane.halignment="LEFT" GridPane.rowIndex="2">
+               <GridPane.margin>
+                  <Insets left="5.0" />
+               </GridPane.margin></CheckBox>
 				<BorderPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1">
 					<center>
 						<ChoiceBox fx:id="choiceBoxElement" maxWidth="1.7976931348623157E308" prefHeight="25.0" prefWidth="215.0" BorderPane.alignment="CENTER" />
 					</center>
 					<right>
-						<Button fx:id="btnFindElement" mnemonicParsing="false" onAction="#findElement" text="F" BorderPane.alignment="CENTER" />
+						<Button fx:id="btnFindElement" mnemonicParsing="false" onAction="#findElement" text="F" BorderPane.alignment="CENTER">
+                     <BorderPane.margin>
+                        <Insets right="5.0" />
+                     </BorderPane.margin></Button>
 					</right>
 				</BorderPane>
 			</children>

@@ -1,6 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+
 <!--
    Copyright (c) 2009-2015, Exactpro Systems, LLC
    Quality Assurance & Related Development for Innovative Trading Systems.
@@ -9,7 +13,7 @@
    information which is the property of Exactpro Systems, LLC or its licensors.
   -->
 
-<GridPane xmlns:fx="http://javafx.com/fxml/1" styleClass="gridPaneBorder" fx:controller="com.exactprosystems.jf.tool.dictionary.info.element.ElementInfoController">
+<GridPane styleClass="gridPaneBorder" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="com.exactprosystems.jf.tool.dictionary.info.element.ElementInfoController">
 	<columnConstraints>
 		<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="35.0" prefWidth="100.0" />
 		<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -39,7 +43,7 @@
 			<children>
 				<Label text="Element info" GridPane.columnSpan="2" GridPane.halignment="LEFT" GridPane.valignment="CENTER">
 					<GridPane.margin>
-						<Insets left="2.0" />
+						<Insets left="5.0" />
 					</GridPane.margin>
 				</Label>
 				<Label text="Owner" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="CENTER">
@@ -77,7 +81,7 @@
 						<Insets left="2.0" right="2.0" />
 					</GridPane.margin>
 				</ChoiceBox>
-				<TextField fx:id="tfID" id="id" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="3">
+				<TextField id="id" fx:id="tfID" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="3">
 					<GridPane.margin>
 						<Insets left="2.0" right="2.0" />
 					</GridPane.margin>
@@ -92,51 +96,51 @@
 						<Insets left="2.0" right="2.0" />
 					</GridPane.margin>
 				</ChoiceBox>
-				<TextField fx:id="tfTimeout" id="timeout" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="6">
+				<TextField id="timeout" fx:id="tfTimeout" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="6">
 					<GridPane.margin>
 						<Insets left="2.0" right="2.0" />
 					</GridPane.margin>
 				</TextField>
-				<Label text="Visibility" GridPane.rowIndex="7" >
+				<Label text="Visibility" GridPane.rowIndex="7">
 					<GridPane.margin>
 						<Insets right="5.0" />
 					</GridPane.margin>
 				</Label>
-				<ChoiceBox fx:id="choiceBoxVisibility" maxWidth="1.7976931348623157E308" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="7" >
+				<ChoiceBox fx:id="choiceBoxVisibility" maxWidth="1.7976931348623157E308" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="7">
 					<GridPane.margin>
 						<Insets left="2.0" right="2.0" />
 					</GridPane.margin>
 				</ChoiceBox>
-				<Label text="Header" GridPane.rowIndex="8" >
+				<Label text="Header" GridPane.rowIndex="8">
 					<GridPane.margin>
 						<Insets right="5.0" />
 					</GridPane.margin>
 				</Label>
-				<ChoiceBox fx:id="choiceBoxHeader" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="8" >
+				<ChoiceBox fx:id="choiceBoxHeader" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="8">
 					<GridPane.margin>
 						<Insets left="2.0" right="2.0" />
 					</GridPane.margin>
 				</ChoiceBox>
-				<Label text="Rows" GridPane.rowIndex="9" >
+				<Label text="Rows" GridPane.rowIndex="9">
 					<GridPane.margin>
 						<Insets right="5.0" />
 					</GridPane.margin>
 				</Label>
-				<ChoiceBox fx:id="choiceBoxRows" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="9" >
+				<ChoiceBox fx:id="choiceBoxRows" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="9">
 					<GridPane.margin>
 						<Insets left="2.0" right="2.0" />
 					</GridPane.margin>
 				</ChoiceBox>
 				<BorderPane GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="10">
 					<left>
-						<CheckBox fx:id="checkBoxWeak" mnemonicParsing="false" text="Weak" onAction="#changeWeak" >
+						<CheckBox fx:id="checkBoxWeak" mnemonicParsing="false" onAction="#changeWeak" text="Weak">
 							<GridPane.margin>
 								<Insets right="1.0" />
 							</GridPane.margin>
 						</CheckBox>
 					</left>
 					<right>
-						<CheckBox fx:id="checkBoxUseNumericHeader" mnemonicParsing="false" text="Num. header" onAction="#changeUseNumericHeader"  >
+						<CheckBox fx:id="checkBoxUseNumericHeader" mnemonicParsing="false" onAction="#changeUseNumericHeader" text="Num. header">
 							<GridPane.margin>
 								<Insets right="1.0" />
 							</GridPane.margin>
@@ -194,119 +198,146 @@
 				</Label>
 				<BorderPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1">
 					<left>
-						<CheckBox id="useAbsoluteXpath" fx:id="checkBoxAbsoluteXpath" BorderPane.alignment="CENTER"/>
+						<CheckBox id="useAbsoluteXpath" fx:id="checkBoxAbsoluteXpath" BorderPane.alignment="CENTER" />
 					</left>
 					<center>
-						<TextField fx:id="tfXpath" id="xpath" BorderPane.alignment="CENTER" />
+						<TextField id="xpath" fx:id="tfXpath" BorderPane.alignment="CENTER" />
 					</center>
 					<right>
-						<HBox BorderPane.alignment="CENTER" alignment="CENTER">
+						<HBox alignment="CENTER" BorderPane.alignment="CENTER">
 							<children>
-								<Button fx:id="xpathHelper" mnemonicParsing="false" onAction="#showTree" alignment="CENTER"/>
-								<Button id="xpath" mnemonicParsing="false" onAction="#clear" text="X" alignment="CENTER">
+								<Button alignment="CENTER" mnemonicParsing="false" onAction="#showTree" fx:id="xpathHelper" />
+								<Button id="xpath" alignment="CENTER" mnemonicParsing="false" onAction="#clear" text="X">
 									<tooltip>
-										<Tooltip text="Clear xpath"/>
+										<Tooltip text="Clear xpath" />
 									</tooltip>
 								</Button>
 							</children>
 						</HBox>
 					</right>
+               <GridPane.margin>
+                  <Insets right="5.0" />
+               </GridPane.margin>
 				</BorderPane>
 				<BorderPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
 					<center>
-						<TextField fx:id="tfUID" id="uid" BorderPane.alignment="CENTER" />
+						<TextField id="uid" fx:id="tfUID" BorderPane.alignment="CENTER" />
 					</center>
 					<right>
-						<Button id="uid" mnemonicParsing="false" onAction="#clear" text="X" BorderPane.alignment="CENTER" >
+						<Button id="uid" mnemonicParsing="false" onAction="#clear" text="X" BorderPane.alignment="CENTER">
 							<tooltip>
-								<Tooltip text="Clear user id"/>
+								<Tooltip text="Clear user id" />
 							</tooltip>
 						</Button>
 					</right>
+               <GridPane.margin>
+                  <Insets right="5.0" />
+               </GridPane.margin>
 				</BorderPane>
 				<BorderPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
 					<center>
-						<TextField fx:id="tfClass" id="class" BorderPane.alignment="CENTER" />
+						<TextField id="class" fx:id="tfClass" BorderPane.alignment="CENTER" />
 					</center>
 					<right>
-						<Button id="class" mnemonicParsing="false" onAction="#clear" text="X" BorderPane.alignment="CENTER" >
+						<Button id="class" mnemonicParsing="false" onAction="#clear" text="X" BorderPane.alignment="CENTER">
 							<tooltip>
-						        <Tooltip text="Clear class"/>
+						        <Tooltip text="Clear class" />
 						    </tooltip>
 						</Button>
 					</right>
+               <GridPane.margin>
+                  <Insets right="5.0" />
+               </GridPane.margin>
 				</BorderPane>
 				<BorderPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
 					<center>
-						<TextField fx:id="tfName" id="name" BorderPane.alignment="CENTER" />
+						<TextField id="name" fx:id="tfName" BorderPane.alignment="CENTER" />
 					</center>
 					<right>
-						<Button id="name" mnemonicParsing="false" onAction="#clear" text="X" BorderPane.alignment="CENTER" >
+						<Button id="name" mnemonicParsing="false" onAction="#clear" text="X" BorderPane.alignment="CENTER">
 							<tooltip>
-						        <Tooltip text="Clear name"/>
+						        <Tooltip text="Clear name" />
 						    </tooltip>
 						</Button>
 					</right>
+               <GridPane.margin>
+                  <Insets right="5.0" />
+               </GridPane.margin>
 				</BorderPane>
 				<BorderPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
 					<center>
-						<TextField fx:id="tfTitle" id="title" BorderPane.alignment="CENTER" />
+						<TextField id="title" fx:id="tfTitle" BorderPane.alignment="CENTER" />
 					</center>
 					<right>
-						<Button id="title" mnemonicParsing="false" onAction="#clear" text="X" BorderPane.alignment="CENTER" >
+						<Button id="title" mnemonicParsing="false" onAction="#clear" text="X" BorderPane.alignment="CENTER">
 							<tooltip>
-						        <Tooltip text="Clear title"/>
+						        <Tooltip text="Clear title" />
 						    </tooltip>
 						</Button>
 					</right>
+               <GridPane.margin>
+                  <Insets right="5.0" />
+               </GridPane.margin>
 				</BorderPane>
 				<BorderPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="5">
 					<center>
-						<TextField fx:id="tfAction" id="action" BorderPane.alignment="CENTER" />
+						<TextField id="action" fx:id="tfAction" BorderPane.alignment="CENTER" />
 					</center>
 					<right>
-						<Button id="action" mnemonicParsing="false" onAction="#clear" text="X" BorderPane.alignment="CENTER" >
+						<Button id="action" mnemonicParsing="false" onAction="#clear" text="X" BorderPane.alignment="CENTER">
 							<tooltip>
-						        <Tooltip text="Clear action"/>
+						        <Tooltip text="Clear action" />
 						    </tooltip>
 						</Button>
 					</right>
+               <GridPane.margin>
+                  <Insets right="5.0" />
+               </GridPane.margin>
 				</BorderPane>
 				<BorderPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="6">
 					<center>
-						<TextField fx:id="tfText" id="text" BorderPane.alignment="CENTER" />
+						<TextField id="text" fx:id="tfText" BorderPane.alignment="CENTER" />
 					</center>
 					<right>
-						<Button id="text" mnemonicParsing="false" onAction="#clear" text="X" BorderPane.alignment="CENTER" >
+						<Button id="text" mnemonicParsing="false" onAction="#clear" text="X" BorderPane.alignment="CENTER">
 							<tooltip>
-								<Tooltip text="Clear text"/>
+								<Tooltip text="Clear text" />
 							</tooltip>
 						</Button>
 					</right>
+               <GridPane.margin>
+                  <Insets right="5.0" />
+               </GridPane.margin>
 				</BorderPane>
 				<BorderPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="7">
 					<center>
-						<TextField fx:id="tfTooltip" id="tooltip" BorderPane.alignment="CENTER" />
+						<TextField id="tooltip" fx:id="tfTooltip" BorderPane.alignment="CENTER" />
 					</center>
 					<right>
-						<Button id="tooltip" mnemonicParsing="false" onAction="#clear" text="X" BorderPane.alignment="CENTER" >
+						<Button id="tooltip" mnemonicParsing="false" onAction="#clear" text="X" BorderPane.alignment="CENTER">
 							<tooltip>
-						        <Tooltip text="Clear tooltip"/>
+						        <Tooltip text="Clear tooltip" />
 						    </tooltip>
 						</Button>
 					</right>
+               <GridPane.margin>
+                  <Insets right="5.0" />
+               </GridPane.margin>
 				</BorderPane>
 				<BorderPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="8">
 					<center>
-						<TextField fx:id="tfExpression" id="expression" BorderPane.alignment="CENTER" />
+						<TextField id="expression" fx:id="tfExpression" BorderPane.alignment="CENTER" />
 					</center>
 					<right>
-						<Button id="expression" mnemonicParsing="false" onAction="#clear" text="X" BorderPane.alignment="CENTER" >
+						<Button id="expression" mnemonicParsing="false" onAction="#clear" text="X" BorderPane.alignment="CENTER">
 							<tooltip>
-						        <Tooltip text="Clear expression"/>
+						        <Tooltip text="Clear expression" />
 						    </tooltip>
 						</Button>
 					</right>
+               <GridPane.margin>
+                  <Insets right="5.0" />
+               </GridPane.margin>
 				</BorderPane>
 			</children>
 			<columnConstraints>

@@ -8,14 +8,8 @@
 
 package com.exactprosystems.jf.tool.dictionary.navigation;
 
-import com.exactprosystems.jf.api.app.AppConnection;
-import com.exactprosystems.jf.api.app.ControlKind;
-import com.exactprosystems.jf.api.app.IControl;
-import com.exactprosystems.jf.api.app.IRemoteApplication;
-import com.exactprosystems.jf.api.app.IWindow;
-import com.exactprosystems.jf.api.app.Locator;
+import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.app.IWindow.SectionKind;
-import com.exactprosystems.jf.api.app.Operation;
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
@@ -27,13 +21,13 @@ import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.main.Main;
 import com.exactprosystems.jf.tool.settings.SettingsPanel;
 import com.exactprosystems.jf.tool.settings.Theme;
-
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -43,14 +37,13 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
+import org.w3c.dom.Document;
 
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.ResourceBundle;
-
-import org.w3c.dom.Document;
 
 import static com.exactprosystems.jf.tool.Common.tryCatch;
 
@@ -364,7 +357,7 @@ public class NavigationController implements Initializable, ContainingParent
 		DelayShutterButton recOneButton = new DelayShutterButton("R 1", 50.0, 10000);
 		DelayShutterButton recManyButton = new DelayShutterButton("R ∞", 50.0, 10000);
 		DelayShutterButton renewButton = new DelayShutterButton("Renew", 70.0, 10000);
-
+		HBox.setMargin(recOneButton, new Insets(0, 0, 0, 5));
 		ToggleGroup group = new ToggleGroup();
 		recOneButton.setToggleGroup(group);
 		recManyButton.setToggleGroup(group);

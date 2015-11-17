@@ -1,3 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
@@ -10,7 +14,7 @@
    information which is the property of Exactpro Systems, LLC or its licensors.
   -->
 
-<GridPane styleClass="gridPaneBorder" fx:id="mainGrid" xmlns:fx="http://javafx.com/fxml/1" id="gridPaneBorder" fx:controller="com.exactprosystems.jf.tool.dictionary.actions.ActionsController">
+<GridPane id="gridPaneBorder" fx:id="mainGrid" styleClass="gridPaneBorder" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="com.exactprosystems.jf.tool.dictionary.actions.ActionsController">
 	<columnConstraints>
 		<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="34.0" prefWidth="100.0" />
 		<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="66.0" prefWidth="100.0" />
@@ -22,7 +26,7 @@
 	<children>
 		<ScrollPane fitToHeight="true" fitToWidth="true" minWidth="200.0" prefViewportHeight="397.0" prefViewportWidth="1103.0" GridPane.columnIndex="1" GridPane.rowSpan="2">
 			<content>
-				<Label fx:id="imageArea" contentDisplay="GRAPHIC_ONLY"  maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+				<Label fx:id="imageArea" contentDisplay="GRAPHIC_ONLY" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="1" />
 			</content>
 			<GridPane.margin>
 				<Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
@@ -43,7 +47,7 @@
 			</rowConstraints>
 			<children>
 				<Button fx:id="btnSendKeys" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#sendKeysAction" prefHeight="25.0" prefWidth="126.0" text="Send keys" />
-				<TextField fx:id="tfSendKeys" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.columnSpan="3" onAction="#sendKeysAction"/>
+				<TextField fx:id="tfSendKeys" maxWidth="1.7976931348623157E308" onAction="#sendKeysAction" GridPane.columnIndex="1" GridPane.columnSpan="3" />
 				<Button fx:id="btnClick" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#clickAction" text="Click" GridPane.rowIndex="1" />
 				<Button fx:id="btnFind" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#findAction" text="Find" GridPane.columnIndex="1" GridPane.rowIndex="1" />
 				<Label text="Switch to" GridPane.rowIndex="3" />
@@ -75,6 +79,9 @@
 				</HBox>
 				<Button fx:id="btnStop" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#stopConnection" text="Stop" GridPane.columnIndex="2" GridPane.rowIndex="1" />
 			</children>
+         <GridPane.margin>
+            <Insets left="5.0" right="5.0" />
+         </GridPane.margin>
 		</GridPane>
 	</children>
 	<GridPane.margin>
