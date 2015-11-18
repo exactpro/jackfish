@@ -146,4 +146,12 @@
         <appWorkDir>apps/</appWorkDir>
         <appStartPort>10000</appStartPort>
     </appEntry>
+    <appEntry>
+        <name>EC</name>
+        <appDescription>web for elite ee testing</appDescription>
+        <appDicPath>dic/gui/ec_dic.xml</appDicPath>
+        <appJar>apps/web.jar</appJar>
+        <appWorkDir>apps</appWorkDir>
+        <appStartPort>10000</appStartPort>
+    </appEntry>
 </configuration>
