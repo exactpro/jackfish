@@ -8,21 +8,6 @@
 
 package com.exactprosystems.jf.client;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.Reader;
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.ServiceLoader;
-
-import org.apache.log4j.Logger;
-
 import com.exactprosystems.jf.api.client.ClientConnection;
 import com.exactprosystems.jf.api.client.IClient;
 import com.exactprosystems.jf.api.client.IClientFactory;
@@ -33,16 +18,22 @@ import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.common.Configuration;
 import com.exactprosystems.jf.common.Configuration.ClientEntry;
 import com.exactprosystems.jf.common.Configuration.Parameter;
-import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
-import com.exactprosystems.jf.common.xml.gui.GuiDictionary;
 import com.exactprosystems.jf.common.xml.messages.MessageDictionary;
+import org.apache.log4j.Logger;
+
+import java.io.FileReader;
+import java.io.Reader;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class ClientsPool implements IClientsPool
 {
 	public ClientsPool(Configuration configuration)
 	{
 		this.configuration = configuration;
-		this.clientFactories = new HashMap<String, IClientFactory>();
+		this.clientFactories = new ConcurrentHashMap<>();
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -315,12 +306,10 @@ public class ClientsPool implements IClientsPool
 			{
 				throw new Exception("The client factory with id '" + id + "' is not found");
 			}
-			MessageDictionary dictionary = getDictionary(entry);
-			
-			clientFactory.init(dictionary); 
 			this.clientFactories.put(id, clientFactory);
 		}
-		
+		MessageDictionary dictionary = getDictionary(entry);
+		clientFactory.init(dictionary);
 		return clientFactory;
 	}
 	

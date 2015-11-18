@@ -8,18 +8,13 @@
 
 package com.exactprosystems.jf.app;
 
-import com.exactprosystems.jf.api.app.AppConnection;
-import com.exactprosystems.jf.api.app.ControlKind;
-import com.exactprosystems.jf.api.app.IApplication;
-import com.exactprosystems.jf.api.app.IApplicationFactory;
-import com.exactprosystems.jf.api.app.IApplicationPool;
+import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.common.ApiVersionInfo;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.common.Configuration;
 import com.exactprosystems.jf.common.Configuration.Parameter;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.xml.gui.GuiDictionary;
-
 import org.apache.log4j.Logger;
 
 import java.io.File;
@@ -31,14 +26,16 @@ import java.net.ServerSocket;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentSkipListSet;
 
 public class ApplicationPool implements IApplicationPool
 {
 	public ApplicationPool(Configuration configuration)
 	{
 		this.configuration = configuration;
-		this.appFactories = new HashMap<String, IApplicationFactory>();
-		this.connections = new HashSet<AppConnection>();
+		this.appFactories = new ConcurrentHashMap<>();
+		this.connections = new ConcurrentSkipListSet<>();
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -346,10 +343,10 @@ public class ApplicationPool implements IApplicationPool
 				throw new Exception("The application factory with id '" + id + "' is not found");
 			}
 			
-			GuiDictionary dictionary = getDictionary(entry);
-			applicationFactory.init(dictionary);
 			this.appFactories.put(id, applicationFactory);
 		}
+		GuiDictionary dictionary = getDictionary(entry);
+		applicationFactory.init(dictionary);
 		return applicationFactory;
 	}
 	private int firstFreePort(Configuration.AppEntry entry) throws Exception
