@@ -14,8 +14,7 @@ import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
 import com.exactprosystems.jf.actions.ReadableValue;
 import com.exactprosystems.jf.api.client.ClientConnection;
-import com.exactprosystems.jf.client.ClientsPool;
-import com.exactprosystems.jf.common.Configuration;
+import com.exactprosystems.jf.api.client.IClientsPool;
 import com.exactprosystems.jf.common.Context;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.parser.Parameters;
@@ -80,7 +79,7 @@ public class ClientLoad extends AbstractAction
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
-		ClientsPool client = context.getClients();
+		IClientsPool client = context.getClients();
 		ClientConnection connection = client.loadClient(this.id);
 		
 		super.setResult(connection);

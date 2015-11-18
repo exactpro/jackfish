@@ -9,15 +9,13 @@
 package com.exactprosystems.jf.common;
 
 import com.exactprosystems.jf.actions.ReadableValue;
-import com.exactprosystems.jf.api.app.IApplication;
 import com.exactprosystems.jf.api.app.IApplicationFactory;
-import com.exactprosystems.jf.api.client.IClient;
+import com.exactprosystems.jf.api.app.IApplicationPool;
 import com.exactprosystems.jf.api.client.IClientFactory;
+import com.exactprosystems.jf.api.client.IClientsPool;
 import com.exactprosystems.jf.api.common.IContext;
 import com.exactprosystems.jf.api.common.IMatrixRunner;
-import com.exactprosystems.jf.api.common.Str;
-import com.exactprosystems.jf.app.ApplicationPool;
-import com.exactprosystems.jf.client.ClientsPool;
+import com.exactprosystems.jf.api.service.IServicesPool;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.parser.Matrix;
 import com.exactprosystems.jf.common.parser.items.MatrixItem;
@@ -25,14 +23,10 @@ import com.exactprosystems.jf.common.parser.items.MatrixRoot;
 import com.exactprosystems.jf.common.parser.items.SubCase;
 import com.exactprosystems.jf.common.parser.listeners.IMatrixListener;
 import com.exactprosystems.jf.common.parser.listeners.RunnerListener;
-import com.exactprosystems.jf.common.xml.gui.GuiDictionary;
-import com.exactprosystems.jf.common.xml.messages.MessageDictionary;
-import com.exactprosystems.jf.service.ServicePool;
 import com.exactprosystems.jf.sql.DataBasePool;
 
 import org.apache.log4j.Logger;
 
-import java.io.FileReader;
 import java.io.PrintStream;
 import java.io.Reader;
 import java.util.*;
@@ -47,12 +41,6 @@ public class Context implements IContext, AutoCloseable, Cloneable
 
 		this.matrixListener = matrixListener;
 		this.outStream = out;
-		this.clients = new ClientsPool(configuration);
-		this.services = new ServicePool(configuration);
-		this.applications = new ApplicationPool(configuration);
-		this.databases = new DataBasePool(configuration);
-
-		this.libs = new HashMap<String, Matrix>();
 
 		this.defaultClient = null;
 		this.defaultApp = null;
@@ -78,11 +66,6 @@ public class Context implements IContext, AutoCloseable, Cloneable
 
 			clone.evaluator = this.configuration.createEvaluator();
 
-			clone.clients = new ClientsPool(this.configuration);
-			clone.services = new ServicePool(this.configuration);
-			clone.applications = new ApplicationPool(this.configuration);
-			clone.databases = new DataBasePool(this.configuration);
-
 			return clone;
 		}
 		catch (Exception e)
@@ -94,12 +77,12 @@ public class Context implements IContext, AutoCloseable, Cloneable
 
 	public void setDefaultClient(String id) throws Exception
 	{
-		this.defaultClient = this.clients.loadClientFactory(id);
+		this.defaultClient = this.configuration.getClientPool().loadClientFactory(id);
 	}
 
 	public void setDefaultApp(String id) throws Exception
 	{
-		this.defaultApp = this.applications.loadApplicationFactory(id);
+		this.defaultApp = this.configuration.getApplicationPool().loadApplicationFactory(id);
 	}
 
 	public Configuration getConfiguration()
@@ -113,26 +96,26 @@ public class Context implements IContext, AutoCloseable, Cloneable
 	}
 
 	@Override
-	public ClientsPool getClients()
+	public IClientsPool getClients()
 	{
-		return this.clients;
+		return this.configuration.getClientPool();
 	}
 
 	@Override
-	public ServicePool getServices()
+	public IServicesPool getServices()
 	{
-		return this.services;
+		return this.configuration.getServicesPool();
 	}
 
 	@Override
-	public ApplicationPool getApplications()
+	public IApplicationPool getApplications()
 	{
-		return this.applications;
+		return this.configuration.getApplicationPool();
 	}
 
 	public DataBasePool getDatabases()
 	{
-		return this.databases;
+		return this.configuration.getDataBasesPool();
 	}
 
 	public PrintStream getOut()
@@ -165,51 +148,11 @@ public class Context implements IContext, AutoCloseable, Cloneable
 	@Override
 	public void close() throws Exception
 	{
-		this.services.stopAllServices();
-		this.applications.stopAllApplications();
 	}
 
 	public SubCase referenceToSubcase(String name, MatrixItem item)
 	{
-		MatrixItem ref = item.findParent(MatrixRoot.class).find(true, SubCase.class, name);
-
-		if (ref != null && ref instanceof SubCase)
-		{
-			return (SubCase) ref;
-		}
-		if (name == null)
-		{
-			return null;
-		}
-		String[] parts = name.split("\\.");
-		if (parts.length < 2)
-		{
-			return null;
-		}
-		String ns = parts[0];
-		String id = parts[1];
-
-		Matrix matrix = this.libs.get(ns);
-		if (matrix == null)
-		{
-			matrix = this.configuration.getLib(ns);
-
-			if (matrix == null)
-			{
-				return null;
-			}
-			try
-			{
-				matrix = matrix.clone();
-			}
-			catch (CloneNotSupportedException e)
-			{
-				logger.error(e.getMessage(), e);
-			}
-			this.libs.put(ns, matrix);
-		}
-
-		return (SubCase) matrix.getRoot().find(true, SubCase.class, id);
+		return this.configuration.referenceToSubcase(name, item);
 	}
 
 	public List<ReadableValue> subcases(MatrixItem item)
@@ -254,11 +197,6 @@ public class Context implements IContext, AutoCloseable, Cloneable
 	private RunnerListener		runnerListener;
 	private IMatrixListener		matrixListener	= null;
 	private PrintStream			outStream		= null;
-	private ClientsPool			clients			= null;
-	private ServicePool			services		= null;
-	private ApplicationPool		applications	= null;
-	private DataBasePool		databases		= null;
-	private Map<String, Matrix>	libs;
 
 	private static final Logger	logger			= Logger.getLogger(Context.class);
 }

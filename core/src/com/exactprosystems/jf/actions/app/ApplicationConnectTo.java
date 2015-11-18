@@ -14,9 +14,8 @@ import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
 import com.exactprosystems.jf.actions.ReadableValue;
 import com.exactprosystems.jf.api.app.AppConnection;
+import com.exactprosystems.jf.api.app.IApplicationPool;
 import com.exactprosystems.jf.api.common.Str;
-import com.exactprosystems.jf.app.ApplicationPool;
-import com.exactprosystems.jf.common.Configuration;
 import com.exactprosystems.jf.common.Context;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.parser.Parameter;
@@ -26,7 +25,6 @@ import com.exactprosystems.jf.common.parser.items.TypeMandatory;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.common.report.ReportTable;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -108,7 +106,7 @@ public class ApplicationConnectTo extends AbstractAction
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception 
 	{
-		ApplicationPool pool = context.getApplications();
+		IApplicationPool pool = context.getApplications();
 
 		Map<String, String> args = new HashMap<>();
 		for (Parameter parameter : parameters.select(TypeMandatory.Extra))

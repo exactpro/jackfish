@@ -9,6 +9,7 @@
 package com.exactprosystems.jf.tool.configuration;
 
 import com.exactprosystems.jf.api.client.IClientFactory;
+import com.exactprosystems.jf.api.service.IServicesPool;
 import com.exactprosystems.jf.api.service.ServiceConnection;
 import com.exactprosystems.jf.app.ApplicationPool;
 import com.exactprosystems.jf.client.ClientsPool;
@@ -26,11 +27,14 @@ import com.exactprosystems.jf.tool.SupportedEntry;
 import com.exactprosystems.jf.tool.configuration.sqlentry.testing.TestingConnectionFxController;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.main.Main;
+
 import javafx.concurrent.Task;
 import javafx.scene.control.ButtonType;
+
 import org.apache.log4j.Logger;
 
 import javax.xml.bind.annotation.XmlRootElement;
+
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -462,7 +466,7 @@ public class ConfigurationFx extends Configuration
 			@Override
 			protected Void call() throws Exception
 			{
-				ServicePool services = context.getServices();
+				IServicesPool services = context.getServices();
 				controller.displayBeforeStartService();
 				ServiceConnection serviceConnection = services.loadService(entry.toString());
 				serviceMap.put(entry, serviceConnection);

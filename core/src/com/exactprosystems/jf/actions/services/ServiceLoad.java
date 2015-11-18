@@ -13,6 +13,7 @@ import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
 import com.exactprosystems.jf.actions.ReadableValue;
+import com.exactprosystems.jf.api.service.IServicesPool;
 import com.exactprosystems.jf.api.service.ServiceConnection;
 import com.exactprosystems.jf.common.Configuration;
 import com.exactprosystems.jf.common.Context;
@@ -21,8 +22,6 @@ import com.exactprosystems.jf.common.parser.Parameters;
 import com.exactprosystems.jf.common.parser.items.ActionItem.HelpKind;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.common.report.ReportTable;
-import com.exactprosystems.jf.service.ServicePool;
-
 import java.util.List;
 
 @ActionAttribute(
@@ -77,7 +76,7 @@ public class ServiceLoad extends AbstractAction
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
-		ServicePool service = context.getServices();
+		IServicesPool service = context.getServices();
 		ServiceConnection connection = service.loadService(this.id);
 		
 		super.setResult(connection);

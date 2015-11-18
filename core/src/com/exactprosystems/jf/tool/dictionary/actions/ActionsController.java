@@ -104,6 +104,7 @@ public class ActionsController implements Initializable, ContainingParent
 
 		this.comboBoxApps.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> 
 		{
+			this.model.setCurrentAdapter(newValue);
 			this.info.setAppName(newValue);
 		}); 
 

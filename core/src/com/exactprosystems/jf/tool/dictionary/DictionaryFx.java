@@ -11,7 +11,6 @@ package com.exactprosystems.jf.tool.dictionary;
 import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.app.IWindow.SectionKind;
 import com.exactprosystems.jf.api.common.Str;
-import com.exactprosystems.jf.app.ApplicationPool;
 import com.exactprosystems.jf.common.Configuration;
 import com.exactprosystems.jf.common.Context;
 import com.exactprosystems.jf.common.Settings;
@@ -24,11 +23,14 @@ import com.exactprosystems.jf.common.xml.gui.Window;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.dictionary.DictionaryFxController.Result;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
+
 import javafx.concurrent.Task;
 import javafx.scene.control.ButtonType;
+
 import org.apache.log4j.Logger;
 
 import javax.xml.bind.annotation.XmlRootElement;
+
 import java.io.Reader;
 import java.util.*;
 import java.util.Map.Entry;
@@ -105,6 +107,12 @@ public class DictionaryFx extends GuiDictionary
 		super.save(fileName);
 		this.controller.saved(getName());
 		displayTitle(getName());
+		
+		if (this.currentAdapter != null && this.context != null)
+		{
+			IApplicationFactory factory = this.context.getApplications().loadApplicationFactory(this.currentAdapter);
+			factory.init(this);
+		}
 	}
 
 	@Override
@@ -144,6 +152,11 @@ public class DictionaryFx extends GuiDictionary
 	}
 
     //------------------------------------------------------------------------------------------------------------------
+	public void setCurrentAdapter(String adapter)
+	{
+		this.currentAdapter = adapter;
+	}
+
 	public void startGrabbing() throws Exception
 	{
 		if (this.appConnection != null && this.appConnection.isGood())
@@ -831,7 +844,7 @@ public class DictionaryFx extends GuiDictionary
 		{
 			throw new Exception("You should choose app entry at first.");
 		}
-		ApplicationPool applicationPool = context.getApplications();
+		IApplicationPool applicationPool = context.getApplications();
 		
 		String parametersName 	= isStart ? startParameters : connectParameters;
 		String title 			= isStart ? "Start " : "Connect ";
@@ -874,7 +887,7 @@ public class DictionaryFx extends GuiDictionary
 			@Override
 			protected Void call() throws Exception
 			{
-				ApplicationPool applicationPool = context.getApplications();
+				IApplicationPool applicationPool = context.getApplications();
 				
 				displayApplicationStatus(ApplicationStatus.Connecting, null, null);
 				if (isStart)

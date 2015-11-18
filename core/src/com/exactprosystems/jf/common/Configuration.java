@@ -8,23 +8,34 @@
 
 package com.exactprosystems.jf.common;
 
+import com.exactprosystems.jf.api.app.IApplicationPool;
 import com.exactprosystems.jf.api.app.Mutable;
+import com.exactprosystems.jf.api.client.IClientsPool;
 import com.exactprosystems.jf.api.common.Converter;
 import com.exactprosystems.jf.api.common.DateTime;
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.api.service.IServicesPool;
+import com.exactprosystems.jf.app.ApplicationPool;
+import com.exactprosystems.jf.client.ClientsPool;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.evaluator.MvelEvaluator;
 import com.exactprosystems.jf.common.evaluator.SystemVars;
 import com.exactprosystems.jf.common.parser.Matrix;
+import com.exactprosystems.jf.common.parser.items.MatrixItem;
+import com.exactprosystems.jf.common.parser.items.MatrixRoot;
 import com.exactprosystems.jf.common.parser.items.MutableArrayList;
+import com.exactprosystems.jf.common.parser.items.SubCase;
 import com.exactprosystems.jf.common.parser.listeners.IMatrixListener;
 import com.exactprosystems.jf.common.parser.listeners.MatrixListener;
 import com.exactprosystems.jf.common.report.HTMLReportFactory;
 import com.exactprosystems.jf.common.report.ReportFactory;
 import com.exactprosystems.jf.common.xml.schema.Xsd;
+import com.exactprosystems.jf.service.ServicePool;
+import com.exactprosystems.jf.sql.DataBasePool;
 import com.exactprosystems.jf.tool.AbstractDocument;
 import com.exactprosystems.jf.tool.main.DocumentKind;
 import com.exactprosystems.jf.tool.main.Main;
+
 import org.apache.log4j.Logger;
 
 import javax.xml.XMLConstants;
@@ -37,6 +48,7 @@ import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
+
 import java.io.*;
 import java.lang.reflect.Field;
 import java.nio.file.Path;
@@ -396,7 +408,11 @@ public class Configuration extends AbstractDocument
 	public Configuration(String fileName, UpdateLibsListener listener, Settings settings)
 	{
 		super(fileName);
-		
+
+		this.listener 					= listener;
+		this.settings 					= settings;
+		this.changed 					= false;
+
 		this.libEntriesValue			= new MutableArrayList<LibEntry>();
 		this.sqlEntriesValue 			= new MutableArrayList<SqlEntry>();
 		this.clientEntriesValue			= new MutableArrayList<ClientEntry>();
@@ -406,10 +422,12 @@ public class Configuration extends AbstractDocument
 		this.globals 					= new HashMap<String, Object>();
 		this.settings 					= new Settings();
 		
-		this.listener = listener;
-		this.settings = settings;
-		this.changed = false;
-		
+		this.clients 					= new ClientsPool(this);
+		this.services 					= new ServicePool(this);
+		this.applications 				= new ApplicationPool(this);
+		this.databases 					= new DataBasePool(this);
+
+		this.libs 						= new HashMap<String, Matrix>();
 	}
 
 	public Configuration()
@@ -542,8 +560,6 @@ public class Configuration extends AbstractDocument
 	
 			Converter.setFormats(get(additionFormats));
 	
-			this.libs = new HashMap<String, Matrix>();
-			
 			updateLibs();
 	
 			this.valid = true;
@@ -602,6 +618,9 @@ public class Configuration extends AbstractDocument
 			}
 		}
 		this.settings.saveIfNeeded();
+
+		this.services.stopAllServices();
+		this.applications.stopAllApplications();
     }
     
     @Override
@@ -675,7 +694,51 @@ public class Configuration extends AbstractDocument
 		return evaluatorObj;
 	}
 
+	public SubCase referenceToSubcase(String name, MatrixItem item)
+	{
+		MatrixItem ref = item.findParent(MatrixRoot.class).find(true, SubCase.class, name);
 
+		if (ref != null && ref instanceof SubCase)
+		{
+			return (SubCase) ref;
+		}
+		if (name == null)
+		{
+			return null;
+		}
+		String[] parts = name.split("\\.");
+		if (parts.length < 2)
+		{
+			return null;
+		}
+		String ns = parts[0];
+		String id = parts[1];
+
+		Matrix matrix = this.libs.get(ns);
+		if (matrix == null)
+		{
+			matrix = getLib(ns);
+
+			if (matrix == null)
+			{
+				return null;
+			}
+			try
+			{
+				matrix = matrix.clone();
+			}
+			catch (CloneNotSupportedException e)
+			{
+				logger.error(e.getMessage(), e);
+			}
+			this.libs.put(ns, matrix);
+		}
+
+		return (SubCase) matrix.getRoot().find(true, SubCase.class, id);
+	}
+
+
+	
 	public String get(String name) throws Exception
 	{
 		Object res = get(Configuration.class, this, name);
@@ -989,10 +1052,35 @@ public class Configuration extends AbstractDocument
 	protected Map<String, Matrix>	libs;
 	protected Map<String, Object>	globals;
 	protected Settings settings;
-	
+
+	protected ClientsPool			clients;
+	protected ServicePool			services;
+	protected ApplicationPool		applications;
+	protected DataBasePool			databases;
+
 	protected final Set<Document> subordinates = new HashSet<Document>();
 	
 	protected boolean valid = false;
 
 	private static final Logger logger = Logger.getLogger(Configuration.class);
+
+	public IClientsPool getClientPool()
+	{
+		return this.clients;
+	}
+
+	public IApplicationPool getApplicationPool()
+	{
+		return this.applications;
+	}
+
+	public IServicesPool getServicesPool()
+	{
+		return this.services;
+	}
+
+	public DataBasePool getDataBasesPool()
+	{
+		return this.databases;
+	}
 }

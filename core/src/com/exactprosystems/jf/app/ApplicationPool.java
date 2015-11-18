@@ -323,7 +323,6 @@ public class ApplicationPool implements IApplicationPool
 		IApplicationFactory applicationFactory = this.appFactories.get(id);
 		if (applicationFactory == null)
 		{
-			
 			String jarName	= entry.get(Configuration.appJar);
 			
 			List<URL> urls = new ArrayList<URL>();
@@ -343,10 +342,11 @@ public class ApplicationPool implements IApplicationPool
 				throw new Exception("The application factory with id '" + id + "' is not found");
 			}
 			
+			GuiDictionary dictionary = getDictionary(entry);
+			applicationFactory.init(dictionary);
 			this.appFactories.put(id, applicationFactory);
 		}
-		GuiDictionary dictionary = getDictionary(entry);
-		applicationFactory.init(dictionary);
+		
 		return applicationFactory;
 	}
 	private int firstFreePort(Configuration.AppEntry entry) throws Exception

@@ -306,10 +306,10 @@ public class ClientsPool implements IClientsPool
 			{
 				throw new Exception("The client factory with id '" + id + "' is not found");
 			}
+			MessageDictionary dictionary = getDictionary(entry);
+			clientFactory.init(dictionary);
 			this.clientFactories.put(id, clientFactory);
 		}
-		MessageDictionary dictionary = getDictionary(entry);
-		clientFactory.init(dictionary);
 		return clientFactory;
 	}
 	

@@ -27,7 +27,7 @@ public class ActionGuiHelper
 	public static void dialogsNames(Context context, AppConnection connection, List<ReadableValue> list) throws Exception
 	{
 		IGuiDictionary dictionary = getGuiDictionary(context, connection);
-		
+
 		AbstractEvaluator evaluator = context.getEvaluator();
 		for (IWindow window : dictionary.getWindows())
 		{
