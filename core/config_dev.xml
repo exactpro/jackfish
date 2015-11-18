@@ -96,14 +96,10 @@
     <appEntry>
         <name>JAVAWS</name>
         <parameters>
-            <key></key>
+            <key>jreArgs</key>
             <value></value>
         </parameters>
-        <parameters>
-            <key>jreArgs</key>
-            <value>eeeeeeeeeeeeeeeeeeeeeeeeeee</value>
-        </parameters>
-        <appDicPath>dic/gui/SG_swing_dic.xml</appDicPath>
+        <appDicPath>dic/gui/swing.xml</appDicPath>
         <appJar>apps/swing.jar</appJar>
         <appWorkDir>../MockApp</appWorkDir>
         <appStartPort>12000</appStartPort>
@@ -145,6 +141,26 @@
         <appJar>apps/web.jar</appJar>
         <appWorkDir>apps/</appWorkDir>
         <appStartPort>10000</appStartPort>
+    </appEntry>
+    <appEntry>
+        <name>TRN</name>
+        <parameters>
+            <key>ChromeDriverPath</key>
+            <value>unix/chromedriver</value>
+        </parameters>
+        <parameters>
+            <key>IEDriverPath</key>
+            <value></value>
+        </parameters>
+        <parameters>
+            <key>ChromeDriverBinary</key>
+            <value></value>
+        </parameters>
+        <appDescription>Transparency</appDescription>
+        <appDicPath>dic/gui/transparency.xml</appDicPath>
+        <appJar>apps/web.jar</appJar>
+        <appWorkDir>apps/</appWorkDir>
+        <appStartPort>11000</appStartPort>
     </appEntry>
     <appEntry>
         <name>EC</name>
