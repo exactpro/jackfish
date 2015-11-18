@@ -420,7 +420,6 @@ public class Configuration extends AbstractDocument
 		this.appEntriesValue 			= new MutableArrayList<AppEntry>();
 		
 		this.globals 					= new HashMap<String, Object>();
-		this.settings 					= new Settings();
 		
 		this.clients 					= new ClientsPool(this);
 		this.services 					= new ServicePool(this);
