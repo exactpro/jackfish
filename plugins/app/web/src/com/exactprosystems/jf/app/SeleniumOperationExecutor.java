@@ -762,34 +762,34 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 				switch (key)
 				{
 					case Down:
-						actions.sendKeys(Keys.DOWN);
+						actions.sendKeys(component, Keys.DOWN).perform();
 						break;
 
 					case Escape:
-						actions.sendKeys(Keys.ESCAPE);
+						actions.sendKeys(component, Keys.ESCAPE).perform();
 						break;
 
 					case Enter:
-						actions.sendKeys(Keys.ENTER);
+						actions.sendKeys(component, Keys.ENTER).perform();
 						break;
 
 					case Tab:
-						actions.sendKeys(Keys.TAB);
+						actions.sendKeys(component, Keys.TAB).perform();
 						break;
 
 					case Delete:
-						actions.sendKeys(Keys.DELETE);
+						actions.sendKeys(component, Keys.DELETE).perform();
 						break;
 
 					case Backspase:
-						actions.sendKeys(Keys.BACK_SPACE);
+						actions.sendKeys(component, Keys.BACK_SPACE).perform();
 						break;
 
 					case Shift:
-						actions.sendKeys(Keys.SHIFT);
+						actions.sendKeys(component, Keys.SHIFT).perform();
 
 					case F2:
-						actions.sendKeys(Keys.F2);
+						actions.sendKeys(component, Keys.F2).perform();
 						break;
 
 					default:
