@@ -113,7 +113,7 @@ public class XpathViewer
 		{
 			if (type == null)
 			{
-				this.controller.displayFound(0);
+				this.controller.displayResults(0, true, null);
 			}
 			else if (type != XpathType.RelativeNode)
 			{
@@ -133,8 +133,7 @@ public class XpathViewer
 				{
 					nodes.add(nodeList.item(i));
 				}
-				this.controller.findNode(nodes);
-				this.controller.displayFound(nodeList.getLength());
+				this.controller.displayResults(nodeList.getLength(), true, nodes);
 			}
 			else if (type != XpathType.RelativeNode)
 			{
@@ -149,8 +148,7 @@ public class XpathViewer
 		{
 			if (type == null)
 			{
-				this.controller.incorrectXpath();
-				this.controller.displayFound(0);
+				this.controller.displayResults(0, false, null);
 			}
 		}
 	}

@@ -182,43 +182,41 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 		this.mainExpression.setText(((Button) event.getSource()).getText());
 	}
 
-	public void deselectItems()
-	{
-		deselectItems(this.treeView.getRoot());
-	}
-
-	public void incorrectXpath()
-	{
-		if (!this.mainExpression.getStyleClass().contains(CssVariables.INCORRECT_FIELD))
-		{
-			this.mainExpression.getStyleClass().add(CssVariables.INCORRECT_FIELD);
-		}
-	}
-
+	// ============================================================
+	// display methods
+	// ============================================================
 	public void displayTree(Document document)
 	{
 		this.treeView.setRoot(new TreeItem<XpathItem>());
 		displayTree(document, this.treeView.getRoot());
 	}
 
-	public void findNode(ArrayList<Node> nodes)
+	public void deselectItems()
 	{
-		ArrayList<TreeItem<XpathItem>> items = new ArrayList<>();
-		selectItems(this.treeView.getRoot(), nodes, items);
-		if (!items.isEmpty())
-		{
-			TreeItem<XpathItem> xpathItem = items.get(0);
-			int index = this.treeView.getTreeItemLevel(xpathItem);
-			this.treeView.scrollTo(index);
-		}
+		deselectItems(this.treeView.getRoot());
 	}
 
-	// ============================================================
-	// display methods
-	// ============================================================
-	public void displayFound(int count)
+	public void displayResults(int count, boolean correct, List<Node> nodes)
 	{
+		if (!correct)
+		{
+			if (!this.mainExpression.getStyleClass().contains(CssVariables.INCORRECT_FIELD))
+			{
+				this.mainExpression.getStyleClass().add(CssVariables.INCORRECT_FIELD);
+			}
+		}
 		this.lblFound.setText("Found " + count);
+		if (nodes != null)
+		{
+			ArrayList<TreeItem<XpathItem>> items = new ArrayList<>();
+			selectItems(this.treeView.getRoot(), nodes, items);
+			if (!items.isEmpty())
+			{
+				TreeItem<XpathItem> xpathItem = items.get(0);
+				int index = this.treeView.getTreeItemLevel(xpathItem);
+				this.treeView.scrollTo(index);
+			}
+		}
 	}
 
 	public void displayParams(ArrayList<String> params)
@@ -287,7 +285,7 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 		item.getChildren().forEach(this::deselectItems);
 	}
 
-	private void selectItems(TreeItem<XpathItem> root, ArrayList<Node> nodes, ArrayList<TreeItem<XpathItem>> items)
+	private void selectItems(TreeItem<XpathItem> root, List<Node> nodes, ArrayList<TreeItem<XpathItem>> items)
 	{
 		Optional.ofNullable(root.getValue()).ifPresent(v -> nodes.stream().filter(node -> v.getNode() == node).forEach(n ->
 		{
