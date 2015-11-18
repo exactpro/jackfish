@@ -153,7 +153,7 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 	// ============================================================
 	// events methods
 	// ============================================================
-	public void saveXpath(ActionEvent actionEvent)
+	public void setRelativeXpath(ActionEvent actionEvent)
 	{
 		switch (((Button) actionEvent.getSource()).getId())
 		{
