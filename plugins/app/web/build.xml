@@ -4,7 +4,6 @@
     <property name="web.source.dir"     location="src"          />
     <property name="web.lib.dir"     	location="libs"          />
     <property name="web.build.dir"      location="build"        />
-    <property name="web.dic.dir"     	location="dic"          />
 
     <target name="clean">
         <delete dir="${web.release.dir}"/>

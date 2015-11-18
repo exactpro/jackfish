@@ -1,78 +1,70 @@
 <project name="SWING" default="distribute">
-	<property name="swing.api.dir" location="../API" />
-	<property name="swing.netx.dir" location="../NetXfixed" />
-    <property name="swing.release.dir"    location="release"      />
-    <property name="swing.source.dir"     location="src"          />
-    <property name="swing.lib.dir"     	location="libs"          />
-    <property name="swing.build.dir"      location="build"        />
-    <property name="swing.dic.dir"     	location="dic"          />
+	<property name="swing.api.dir" location="../API"/>
+	<property name="swing.netx.dir" location="../NetXfixed"/>
+	<property name="swing.release.dir" location="release"/>
+	<property name="swing.source.dir" location="src"/>
+	<property name="swing.lib.dir" location="libs"/>
+	<property name="swing.build.dir" location="build"/>
 
-    <target name="clean">
-        <delete dir="${swing.release.dir}"/>
-        <mkdir  dir="${swing.release.dir}"/>
-        <delete dir="${swing.build.dir}"/>
-        <mkdir  dir="${swing.build.dir}"/>
-    </target>
+	<target name="clean">
+		<delete dir="${swing.release.dir}"/>
+		<mkdir dir="${swing.release.dir}"/>
+		<delete dir="${swing.build.dir}"/>
+		<mkdir dir="${swing.build.dir}"/>
+	</target>
 
 	<path id="project.classpath">
 		<fileset dir="${swing.lib.dir}">
-			<patternset includes="**/*.jar" />
+			<patternset includes="**/*.jar"/>
 		</fileset>
 		<fileset dir="${swing.api.dir}/release">
-			<patternset includes="**/*.jar" />
+			<patternset includes="**/*.jar"/>
 		</fileset>
 		<fileset dir="${swing.netx.dir}/release">
 			<patternset includes="**/*.jar"/>
 		</fileset>
 	</path>
-	
-    <target name="compile" depends="clean">
-        <javac srcdir="${swing.source.dir}" destdir="${swing.build.dir}" debug="on">
-			<classpath refid="project.classpath" />
-    	</javac>
-        <copy todir="${swing.build.dir}">
-            <fileset dir="${swing.source.dir}">
-                <exclude name="**/*.java"/>
-            </fileset>
-        </copy>
-    </target>
-	
-	
+
+	<target name="compile" depends="clean">
+		<javac srcdir="${swing.source.dir}" destdir="${swing.build.dir}" debug="on">
+			<classpath refid="project.classpath"/>
+		</javac>
+		<copy todir="${swing.build.dir}">
+			<fileset dir="${swing.source.dir}">
+				<exclude name="**/*.java"/>
+			</fileset>
+		</copy>
+	</target>
+
+
 	<target name="build" depends="compile">
 		<echo>jar building...</echo>
 		<jar destfile="${swing.release.dir}/swing.jar" basedir="${swing.build.dir}">
 			<manifest>
-				<attribute name="Main-Class" value="com.exactprosystems.jf.app.SwingRemoteApplication" />
-				<attribute name="Class-Path" value="." />
-			</manifest>	
-            <fileset dir="" includes="META-INF/services/*.*"/>
-			<zipfileset src="${swing.netx.dir}/release/netx.jar" /> 
-			<zipfileset src="${swing.api.dir}/release/api.jar" />
-			<zipfileset src="${swing.lib.dir}/fest-assert-1.2.jar" />
-			<zipfileset src="${swing.lib.dir}/fest-reflect-1.2.jar" />
-			<zipfileset src="${swing.lib.dir}/fest-swing-1.2.jar" />
-			<zipfileset src="${swing.lib.dir}/fest-util-1.1.2.jar" />
-			<zipfileset src="${swing.lib.dir}/log4j-1.2.17.jar" />
+				<attribute name="Main-Class" value="com.exactprosystems.jf.app.SwingRemoteApplication"/>
+				<attribute name="Class-Path" value="."/>
+			</manifest>
+			<fileset dir="" includes="META-INF/services/*.*"/>
+			<zipfileset src="${swing.netx.dir}/release/netx.jar"/>
+			<zipfileset src="${swing.api.dir}/release/api.jar"/>
+			<zipfileset src="${swing.lib.dir}/fest-assert-1.2.jar"/>
+			<zipfileset src="${swing.lib.dir}/fest-reflect-1.2.jar"/>
+			<zipfileset src="${swing.lib.dir}/fest-swing-1.2.jar"/>
+			<zipfileset src="${swing.lib.dir}/fest-util-1.1.2.jar"/>
+			<zipfileset src="${swing.lib.dir}/log4j-1.2.17.jar"/>
 		</jar>
 	</target>
-	
+
 	<target name="distribute" depends="build">
 		<copy todir="../ActionsLibrary/apps/">
 			<fileset dir="${swing.release.dir}">
-				<include name="*.jar" />
+				<include name="*.jar"/>
 			</fileset>
 		</copy>
 		<copy todir="../ActionsLibrary/testdata/resources/mock">
 			<fileset dir="${swing.release.dir}">
-				<include name="*.jar" />
+				<include name="*.jar"/>
 			</fileset>
 		</copy>
-		<copy todir="../MockApp/" failonerror="false">
-			<fileset dir="${swing.release.dir}">
-				<include name="*.jar" />
-			</fileset>
-		</copy>
-
 	</target>
-
 </project>

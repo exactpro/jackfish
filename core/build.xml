@@ -8,12 +8,10 @@
 
 <project name="JF" default="createTool">
 
-
 	<property name="api.dir" location="../API"/>
 	<property name="netx.dir" location="../NetXfixed"/>
 	<property name="src.dir" location="src"/>
 	<property name="test.dir" location="testsrc"/>
-	<property name="testdata.dir" location="testdata"/>
 	<property name="build.dir" location="build"/>
 	<property name="buildtest.dir" location="buildtest"/>
 	<property name="testdata.dir" location="testdata"/>
@@ -21,7 +19,6 @@
 	<property name="version" value="4.2.0"/>
     <property name="revision" value="local_build"/>
 	<property name="tool" location="tool"/>
-	<property name="mock.app.jar" value="../MockApp/mockapp.jar"/>
 
 	<target name="clean">
 		<delete dir="${build.dir}"/>
@@ -128,7 +125,7 @@
 			</fileset>
 		</copy>
 
-		<echo>create mock apps</echo>
+		<echo>create mock app</echo>
 		<jar destfile="${testdata.dir}/resources/mock/mockapp.jar" basedir="${buildtest.dir}" includes="**/MockApp*">
 			<manifest>
 				<attribute name="Main-Class" value="org.eclipse.jdt.internal.jarinjarloader.JarRsrcLoader"/>
@@ -186,14 +183,10 @@
 		
 		<!-- update.zip -->
 		<delete file="update.zip"/>
-		<delete  dir="${tool}" excludes="**/*.jar"></delete>
+		<delete  dir="${tool}" excludes="**/*.jar"/>
 		<zip basedir="${tool}" destfile="update.zip"/>
 
 		<!-- cleanup -->
 		<delete dir="${tool}"/>
-	</target>
-
-	<target name="copyMockApp">
-		<copy file="${mock.app.jar}" todir="apps"/>
 	</target>
 </project>

@@ -62,11 +62,6 @@
 				<include name="*.jar" />
 			</fileset>
 		</copy>
-		<!--<copy todir="../ActionsLibrary/apps/dic">
-			<fileset dir="${win.dic.dir}">
-				<include name="*.xml" />
-			</fileset>
-		</copy>-->
 	</target>
 	
 
