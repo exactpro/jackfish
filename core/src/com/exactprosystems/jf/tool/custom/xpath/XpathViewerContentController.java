@@ -430,7 +430,7 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 	{
 		this.treeView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) ->
 		{
-			Optional.ofNullable(newValue).ifPresent(v -> this.model.updateNode(v.getValue().getNode(), v.getValue().getText()));
+			Optional.ofNullable(newValue).ifPresent(v -> this.model.updateNode(v.getValue().getNode()));
 		});
 
 		Arrays.asList(this.labelXpath1Count, this.labelXpath2Count, this.labelXpath3Count).forEach(

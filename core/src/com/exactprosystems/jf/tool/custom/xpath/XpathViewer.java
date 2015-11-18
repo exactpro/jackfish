@@ -3,18 +3,20 @@ package com.exactprosystems.jf.tool.custom.xpath;
 import com.exactprosystems.jf.api.app.IRemoteApplication;
 import com.exactprosystems.jf.api.app.Locator;
 import com.exactprosystems.jf.tool.Common;
+
 import javafx.concurrent.Task;
+
 import org.w3c.dom.Document;
+import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import javax.xml.xpath.*;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -64,24 +66,30 @@ public class XpathViewer
 		evaluate(newValue, null);
 	}
 
-	public void updateNode(Node newValue, String text)
+	public void updateNode(Node node)
 	{
-		currentNode = newValue;
+		this.currentNode = node;
+		
 		ArrayList<String> params = new ArrayList<>();
-		Pattern pattern = Pattern.compile("(([^\\s]+?)=\"(.*?)\")");
-		Matcher matcher = pattern.matcher(text);
-		while (matcher.find())
+		NamedNodeMap attributes = node.getAttributes();
+		if (attributes != null)
 		{
-			params.add(matcher.group(2));
+			int length = attributes.getLength();
+			for (int i = 0; i < length; i++)
+			{
+				Node item = attributes.item(i);
+				params.add(item.getNodeName());
+			}
 		}
+		
 		this.controller.displayParams(params);
 	}
 
 	public void createXpath(List<String> parameters)
 	{
-		String xpath1 = createXpathAbsolute(currentNode);
-		String xpath2 = createXpathWithParameters(currentNode, parameters);
-		String xpath3 = createXpathWithoutParameters(currentNode);
+		String xpath1 = createXpathAbsolute(this.currentNode);
+		String xpath2 = createXpathWithParameters(this.currentNode, parameters);
+		String xpath3 = createXpathWithoutParameters(this.currentNode);
 
 		evaluate(xpath1, XpathType.Absolute);
 		evaluate(xpath2, XpathType.WithArgs);
