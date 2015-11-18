@@ -35,7 +35,7 @@ public class ApplicationPool implements IApplicationPool
 	{
 		this.configuration = configuration;
 		this.appFactories = new ConcurrentHashMap<>();
-		this.connections = new ConcurrentSkipListSet<>();
+		this.connections = new ConcurrentSkipListSet<>((o1, o2) -> Integer.compare(o1.getPort(), o2.getPort()));
 	}
 
 	//----------------------------------------------------------------------------------------------
