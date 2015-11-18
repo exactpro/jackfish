@@ -25,12 +25,12 @@ public class XpathViewer
 	private Node							currentNode;
 	private Locator							owner;
 	private IRemoteApplication				service;
-	private Node							savedNode;
-	private String							savedXpath;
+	private Node							relativeNode;
+	private String							relativeXpath;
 
 	enum XpathType
 	{
-		Absolute, WithArgs, WithoutArgs, SavedNode
+		Absolute, WithArgs, WithoutArgs, RelativeNode
 	}
 
 	public XpathViewer(Locator owner, Document document, IRemoteApplication service)
@@ -49,10 +49,14 @@ public class XpathViewer
 		return result == null ? initial : result;
 	}
 
-	public void saveXpath(String xpath)
+	public void setRelativeXpath(String xpath)
 	{
-		this.savedXpath = xpath;
-		evaluate(xpath, XpathType.SavedNode);
+		this.relativeXpath = xpath;
+		this.relativeNode = null;
+		if (xpath != null)
+		{
+			evaluate(xpath, XpathType.RelativeNode);
+		}
 	}
 
 	public void evaluate(String newValue)
@@ -76,12 +80,12 @@ public class XpathViewer
 	public void createXpath(List<String> parameters)
 	{
 		String xpath1 = createXpathAbsolute(currentNode);
-		String xpath2 = createXpathWithoutParameters(currentNode);
-		String xpath3 = createXpathWithParameters(currentNode, parameters);
+		String xpath2 = createXpathWithParameters(currentNode, parameters);
+		String xpath3 = createXpathWithoutParameters(currentNode);
 
 		evaluate(xpath1, XpathType.Absolute);
-		evaluate(xpath2, XpathType.WithoutArgs);
-		evaluate(xpath3, XpathType.WithArgs);
+		evaluate(xpath2, XpathType.WithArgs);
+		evaluate(xpath3, XpathType.WithoutArgs);
 
 		this.controller.displayXpaths(xpath1, xpath2, xpath3);
 		
@@ -99,28 +103,21 @@ public class XpathViewer
 		}
 	}
 
-	public void clearSavedNode()
-	{
-		this.savedNode = null;
-		this.savedXpath = "";
-	}
-
 	// ============================================================
 	// private methods
 	// ============================================================
 	private void evaluate(String newValue, XpathType type)
 	{
-		this.controller.updateTextField();
-		this.controller.clearTree();
+		this.controller.deselectItems();
 		if (newValue == null || newValue.trim().isEmpty())
 		{
 			if (type == null)
 			{
-				this.controller.updateFoundLabel("Found 0");
+				this.controller.displayFound(0);
 			}
-			else if (type != XpathType.SavedNode)
+			else if (type != XpathType.RelativeNode)
 			{
-				this.controller.updateXpathLabel(type, 0);
+				this.controller.displayCounters(type, 0);
 			}
 			return;
 		}
@@ -137,15 +134,15 @@ public class XpathViewer
 					nodes.add(nodeList.item(i));
 				}
 				this.controller.findNode(nodes);
-				this.controller.updateFoundLabel("Found " + nodeList.getLength());
+				this.controller.displayFound(nodeList.getLength());
 			}
-			else if (type != XpathType.SavedNode)
+			else if (type != XpathType.RelativeNode)
 			{
-				this.controller.updateXpathLabel(type, nodeList.getLength());
+				this.controller.displayCounters(type, nodeList.getLength());
 			}
 			else
 			{
-				this.savedNode = nodeList.item(0);
+				this.relativeNode = nodeList.item(0);
 			}
 		}
 		catch (XPathExpressionException e)
@@ -153,7 +150,7 @@ public class XpathViewer
 			if (type == null)
 			{
 				this.controller.incorrectXpath();
-				this.controller.updateFoundLabel("Found 0");
+				this.controller.displayFound(0);
 			}
 		}
 	}
@@ -250,17 +247,17 @@ public class XpathViewer
 	private Node getGeneralParent(Node currentNode, AtomicInteger count)
 	{
 		ArrayList<Node> nodeParents = getParents(currentNode);
-		ArrayList<Node> savedParents = getParents(savedNode);
+		ArrayList<Node> relativeParents = getParents(this.relativeNode);
 		int nodeParentsSize = nodeParents.size();
-		int savedParentsSize = savedParents.size();
-		int size = nodeParentsSize > savedParentsSize ? nodeParentsSize : savedParentsSize;
+		int relativeParentsSize = relativeParents.size();
+		int size = nodeParentsSize > relativeParentsSize ? nodeParentsSize : relativeParentsSize;
 		Node generalParent = null;
 		for (int i = 0; i < size; i++)
 		{
-			if ((i == savedParentsSize || i == nodeParentsSize) || (nodeParents.get(i) != savedParents.get(i)))
+			if ((i == relativeParentsSize || i == nodeParentsSize) || (nodeParents.get(i) != relativeParents.get(i)))
 			{
 				generalParent = nodeParents.get(i - 1);
-				count.set(savedParentsSize - i + 1);
+				count.set(relativeParentsSize - i + 1);
 				break;
 			}
 		}
@@ -270,9 +267,9 @@ public class XpathViewer
 	private String getXpath(Node currentNode, AtomicInteger count, String xpathCurrentNode)
 	{
 		String xpath;
-		StringBuilder builder = new StringBuilder(this.savedXpath);
+		StringBuilder builder = new StringBuilder(this.relativeXpath);
 		Stream.iterate(0, i -> ++i).limit(count.get()).forEach(i1 -> builder.append("/.."));
-		if (savedNode != currentNode)
+		if (this.relativeNode != currentNode)
 		{
 			builder.append(xpathCurrentNode);
 		}
@@ -296,7 +293,7 @@ public class XpathViewer
 	private String createXpathAbsolute(Node currentNode)
 	{
 		String xpath = null;
-		if (savedNode == null)
+		if (this.relativeNode == null)
 		{
 			xpath = getAbsoluteXpath(currentNode, null);
 		}
@@ -313,7 +310,7 @@ public class XpathViewer
 	private String createXpathWithParameters(Node currentNode, final List<String> parameters)
 	{
 		String xpath = null;
-		if (savedNode != null)
+		if (this.relativeNode != null)
 		{
 			AtomicInteger count = new AtomicInteger(0);
 			getGeneralParent(currentNode, count);
@@ -330,7 +327,7 @@ public class XpathViewer
 	private String createXpathWithoutParameters(Node currentNode)
 	{
 		String xpath = "//" + currentNode.getNodeName();
-		if (savedNode != null)
+		if (this.relativeNode != null)
 		{
 			AtomicInteger count = new AtomicInteger(0);
 			getGeneralParent(currentNode, count);

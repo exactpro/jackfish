@@ -59,7 +59,7 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 	public TextField			tfRelativeFrom;
 
 	// header
-	private TextField			textField;
+	private TextField			mainExpression;
 	private Label				lblFound;
 	private BorderPane			headerPane;
 
@@ -116,43 +116,11 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 	{
 		this.parent = parent;
 	}
-
-	// ============================================================
-	// events methods
-	// ============================================================
-	public void saveXpath(ActionEvent actionEvent)
-	{
-		switch (((Button) actionEvent.getSource()).getId())
-		{
-			case "btnSave1":
-				tfRelativeFrom.setText(btnXpath1.getText());
-				break;
-			case "btnSave2":
-				tfRelativeFrom.setText(btnXpath2.getText());
-				break;
-			case "btnSave3":
-				tfRelativeFrom.setText(btnXpath3.getText());
-				break;
-		}
-		this.model.saveXpath(this.tfRelativeFrom.getText());
-	}
-
-	public void clearRelativeFrom(ActionEvent actionEvent)
-	{
-		this.model.clearSavedNode();
-		tfRelativeFrom.setText("");
-		this.model.createXpath(getParams());
-	}
-
-	public void copyXpath(Event event)
-	{
-		this.textField.setText(((Button) event.getSource()).getText());
-	}
-
+	
 	public void init(XpathViewer model, String initial)
 	{
 		this.model = model;
-		this.textField.setText(initial);
+		this.mainExpression.setText(initial);
 	}
 
 	public String show(String title, String themePath, boolean fullScreen)
@@ -163,7 +131,7 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 		dialog.setOnShowing(event ->
 		{
 			expand(treeView.getRoot());
-			this.model.evaluate(this.textField.getText());
+			this.model.evaluate(this.mainExpression.getText());
 		});
 		if (fullScreen)
 		{
@@ -175,27 +143,55 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 		{
 			if (optional.get().getButtonData().equals(ButtonBar.ButtonData.OK_DONE))
 			{
-				return this.textField.getText();
+				return this.mainExpression.getText();
 			}
 		}
 		return null;
 	}
 
-	public void clearTree()
+
+	// ============================================================
+	// events methods
+	// ============================================================
+	public void saveXpath(ActionEvent actionEvent)
 	{
-		deselectItems(treeView.getRoot());
+		switch (((Button) actionEvent.getSource()).getId())
+		{
+			case "btnSave1":
+				this.tfRelativeFrom.setText(this.btnXpath1.getText());
+				break;
+			case "btnSave2":
+				this.tfRelativeFrom.setText(this.btnXpath2.getText());
+				break;
+			case "btnSave3":
+				this.tfRelativeFrom.setText(this.btnXpath3.getText());
+				break;
+		}
+		this.model.setRelativeXpath(this.tfRelativeFrom.getText());
 	}
 
-	public void updateTextField()
+	public void clearRelativeFrom(ActionEvent actionEvent)
 	{
-		textField.getStyleClass().remove(CssVariables.INCORRECT_FIELD);
+		this.model.setRelativeXpath(null);
+		this.tfRelativeFrom.setText("");
+		this.model.createXpath(getParams());
+	}
+
+	public void copyXpath(Event event)
+	{
+		this.mainExpression.setText(((Button) event.getSource()).getText());
+	}
+
+	public void deselectItems()
+	{
+		deselectItems(this.treeView.getRoot());
 	}
 
 	public void incorrectXpath()
 	{
-		if (!textField.getStyleClass().contains(CssVariables.INCORRECT_FIELD))
+		if (!this.mainExpression.getStyleClass().contains(CssVariables.INCORRECT_FIELD))
 		{
-			textField.getStyleClass().add(CssVariables.INCORRECT_FIELD);
+			this.mainExpression.getStyleClass().add(CssVariables.INCORRECT_FIELD);
 		}
 	}
 
@@ -217,9 +213,12 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 		}
 	}
 
-	public void updateFoundLabel(String text)
+	// ============================================================
+	// display methods
+	// ============================================================
+	public void displayFound(int count)
 	{
-		this.lblFound.setText(text);
+		this.lblFound.setText("Found " + count);
 	}
 
 	public void displayParams(ArrayList<String> params)
@@ -245,18 +244,18 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 		});
 	}
 
-	public void updateXpathLabel(XpathViewer.XpathType type, int newValue)
+	public void displayCounters(XpathViewer.XpathType type, int count)
 	{
 		switch (type)
 		{
 			case Absolute:
-				this.labelXpath1Count.setText(String.valueOf(newValue));
+				this.labelXpath1Count.setText(String.valueOf(count));
 				break;
 			case WithArgs:
-				this.labelXpath2Count.setText(String.valueOf(newValue));
+				this.labelXpath2Count.setText(String.valueOf(count));
 				break;
 			case WithoutArgs:
-				this.labelXpath3Count.setText(String.valueOf(newValue));
+				this.labelXpath3Count.setText(String.valueOf(count));
 				break;
 			default:
 		}
@@ -268,20 +267,24 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 	private BorderPane createHeader()
 	{
 		BorderPane pane = new BorderPane();
-		this.textField = new TextField();
+		this.mainExpression = new TextField();
 		this.lblFound = new Label("Found 0");
-		pane.setCenter(textField);
+		pane.setCenter(mainExpression);
 		pane.setRight(lblFound);
 		BorderPane.setAlignment(lblFound, Pos.CENTER);
-		BorderPane.setAlignment(textField, Pos.CENTER);
-		this.textField.textProperty().addListener((obs, oldValue, newValue) -> this.model.evaluate(newValue));
+		BorderPane.setAlignment(mainExpression, Pos.CENTER);
+		this.mainExpression.textProperty().addListener((obs, oldValue, newValue) -> 
+		{
+			this.mainExpression.getStyleClass().remove(CssVariables.INCORRECT_FIELD);
+			this.model.evaluate(newValue);
+		});
 		return pane;
 	}
 
-	private void deselectItems(TreeItem<XpathItem> root)
+	private void deselectItems(TreeItem<XpathItem> item)
 	{
-		Optional.ofNullable(root.getValue()).ifPresent(v -> v.getBox().getStyleClass().removeAll(CssVariables.XPATH_FIND_TREE_ITEM));
-		root.getChildren().forEach(this::deselectItems);
+		Optional.ofNullable(item.getValue()).ifPresent(v -> v.getBox().getStyleClass().removeAll(CssVariables.XPATH_FIND_TREE_ITEM));
+		item.getChildren().forEach(this::deselectItems);
 	}
 
 	private void selectItems(TreeItem<XpathItem> root, ArrayList<Node> nodes, ArrayList<TreeItem<XpathItem>> items)
