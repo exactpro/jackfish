@@ -65,7 +65,7 @@ public class ParametersPane extends CustomScrollPane
 
 	public ParametersPane(MatrixItem matrixItem, Context context, boolean oneLine, Parameters parameters, FormulaGenerator generator)
 	{
-		super(oneLine ? 30 : 60);
+		super(oneLine ? 30 : 65);
 		this.mainGridPane = new GridPane();
 		this.setContent(this.mainGridPane);
 		this.matrixItem = matrixItem;
@@ -80,11 +80,11 @@ public class ParametersPane extends CustomScrollPane
 
 	public void refreshParameters()
 	{
-		ObservableList<Node> children = this.mainGridPane.getChildren();
+		ObservableList<Node> children = FXCollections.observableArrayList(this.mainGridPane.getChildren());
 
 		this.mainGridPane.getChildren().clear();
 		this.mainGridPane.add(emptyBox(children), 0, 0, 1, 2);
-		
+
 		for (int i = 0; i < this.parameters.size(); i++)
 		{
 			Parameter par = this.parameters.getByIndex(i);
