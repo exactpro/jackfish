@@ -128,11 +128,7 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 		Alert dialog = createAlert(title, themePath);
 		dialog.getDialogPane().setContent(parent);
 		dialog.getDialogPane().setHeader(this.headerPane);
-		dialog.setOnShowing(event ->
-		{
-			expand(treeView.getRoot());
-			this.model.evaluate(this.mainExpression.getText());
-		});
+		dialog.setOnShowing(event -> this.model.evaluate(this.mainExpression.getText()));
 		if (fullScreen)
 		{
 			dialog.setOnShown(event -> ((Stage) dialog.getDialogPane().getScene().getWindow()).setFullScreen(true));
@@ -187,49 +183,62 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 	// ============================================================
 	public void displayTree(Document document)
 	{
-		this.treeView.setRoot(new TreeItem<XpathItem>());
-		displayTree(document, this.treeView.getRoot());
+		Platform.runLater(() ->
+		{
+			this.treeView.setRoot(new TreeItem<XpathItem>());
+			displayTree(document, this.treeView.getRoot());
+			expand(this.treeView.getRoot());
+		});
 	}
 
 	public void deselectItems()
 	{
-		deselectItems(this.treeView.getRoot());
+		Platform.runLater(() ->
+		{
+			deselectItems(this.treeView.getRoot());
+		});
 	}
 
 	public void displayResults(int count, boolean correct, List<Node> nodes)
 	{
-		if (!correct)
+		Platform.runLater(() ->
 		{
-			if (!this.mainExpression.getStyleClass().contains(CssVariables.INCORRECT_FIELD))
+			if (!correct)
 			{
-				this.mainExpression.getStyleClass().add(CssVariables.INCORRECT_FIELD);
+				if (!this.mainExpression.getStyleClass().contains(CssVariables.INCORRECT_FIELD))
+				{
+					this.mainExpression.getStyleClass().add(CssVariables.INCORRECT_FIELD);
+				}
 			}
-		}
-		this.lblFound.setText("Found " + count);
-		if (nodes != null)
-		{
-			ArrayList<TreeItem<XpathItem>> items = new ArrayList<>();
-			selectItems(this.treeView.getRoot(), nodes, items);
-			if (!items.isEmpty())
+			this.lblFound.setText("Found " + count);
+			if (nodes != null)
 			{
-				TreeItem<XpathItem> xpathItem = items.get(0);
-				int index = this.treeView.getTreeItemLevel(xpathItem);
-				this.treeView.scrollTo(index);
+				ArrayList<TreeItem<XpathItem>> items = new ArrayList<>();
+				selectItems(this.treeView.getRoot(), nodes, items);
+				if (!items.isEmpty())
+				{
+					TreeItem<XpathItem> xpathItem = items.get(0);
+					int index = this.treeView.getTreeItemLevel(xpathItem);
+					this.treeView.scrollTo(index);
+				}
 			}
-		}
+		});
 	}
 
 	public void displayParams(ArrayList<String> params)
 	{
-		this.hBoxCheckboxes.getChildren().clear();
-		params.forEach(p ->
+		Platform.runLater(() ->
 		{
-			CheckBox box = new CheckBox(p);
-			box.setSelected(true);
-			box.selectedProperty().addListener((observable, oldValue, newValue) -> this.model.createXpath(getParams()));
-			this.hBoxCheckboxes.getChildren().add(box);
+			this.hBoxCheckboxes.getChildren().clear();
+			params.forEach(p ->
+			{
+				CheckBox box = new CheckBox(p);
+				box.setSelected(true);
+				box.selectedProperty().addListener((observable, oldValue, newValue) -> this.model.createXpath(getParams()));
+				this.hBoxCheckboxes.getChildren().add(box);
+			});
+			this.model.createXpath(getParams());
 		});
-		this.model.createXpath(getParams());
 	}
 
 	public void displayXpaths(String xpath1, String xpath2, String xpath3)
@@ -244,19 +253,22 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 
 	public void displayCounters(XpathViewer.XpathType type, int count)
 	{
-		switch (type)
+		Platform.runLater(() ->
 		{
-			case Absolute:
-				this.labelXpath1Count.setText(String.valueOf(count));
-				break;
-			case WithArgs:
-				this.labelXpath2Count.setText(String.valueOf(count));
-				break;
-			case WithoutArgs:
-				this.labelXpath3Count.setText(String.valueOf(count));
-				break;
-			default:
-		}
+			switch (type)
+			{
+				case Absolute:
+					this.labelXpath1Count.setText(String.valueOf(count));
+					break;
+				case WithArgs:
+					this.labelXpath2Count.setText(String.valueOf(count));
+					break;
+				case WithoutArgs:
+					this.labelXpath3Count.setText(String.valueOf(count));
+					break;
+				default:
+			}
+		});
 	}
 
 	// ============================================================
@@ -313,7 +325,7 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 		this.treeView.getStyleClass().add(CssVariables.XPATH_TREE_VIEW);
 		TreeItem<XpathItem> rootItem = new TreeItem<>();
 		this.treeView.setRoot(rootItem);
-		treeView.setShowRoot(false);
+		this.treeView.setShowRoot(false);
 	}
 
 	private void displayTree(Node node, TreeItem<XpathItem> parent)
