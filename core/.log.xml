@@ -11,7 +11,7 @@
 
 <log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
 	<appender name="LogMainFile" class="org.apache.log4j.DailyRollingFileAppender">
-		<param name="File" value="main.log" />
+		<param name="File" value="logs/main.log" />
 		<param name="DatePattern" value="'.'yyyy-MM-dd" />
 		<param name="Append" value="false" />
 		<param name="Threshold" value="ALL" />
@@ -21,7 +21,7 @@
 	</appender>
 
 	<appender name="LogGuiFile" class="org.apache.log4j.DailyRollingFileAppender">
-		<param name="File" value="gui.log" />
+		<param name="File" value="logs/gui.log" />
 		<param name="DatePattern" value="'.'yyyy-MM-dd" />
 		<param name="Append" value="false" />
 		<param name="Threshold" value="ALL" />
