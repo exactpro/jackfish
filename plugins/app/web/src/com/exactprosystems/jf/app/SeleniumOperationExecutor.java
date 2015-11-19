@@ -660,7 +660,7 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 	@Override
 	public boolean select(WebElement component, String selectedText) throws Exception
 	{
-		new Select(component).selectByValue(selectedText);
+		new Select(component).selectByVisibleText(selectedText);
 		return true;
 	}
 
