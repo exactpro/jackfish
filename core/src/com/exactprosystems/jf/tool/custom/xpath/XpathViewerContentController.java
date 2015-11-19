@@ -46,16 +46,19 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 	// content
 	public TreeView<XpathItem>	treeView;
 	public Label				labelXpath1Count;
-	public Button				btnXpath1;
 	public Label				labelXpath2Count;
-	public Button				btnXpath2;
 	public Label				labelXpath3Count;
+	public Label				labelXpath4Count;
+	public Button				btnXpath1;
+	public Button				btnXpath2;
 	public Button				btnXpath3;
-	public HBox					hBoxCheckboxes;
-	public BorderPane			parentPane;
+	public Button				btnXpath4;
 	public Button				btnSaveXpath1;
 	public Button				btnSaveXpath2;
 	public Button				btnSaveXpath3;
+	public Button				btnSaveXpath4;
+	public HBox					hBoxCheckboxes;
+	public BorderPane			parentPane;
 	public TextField			tfRelativeFrom;
 
 	// header
@@ -232,23 +235,25 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 		});
 	}
 
-	public void displayXpaths(String xpath1, String xpath2, String xpath3)
+	public void displayXpaths(String xpath1, String xpath2, String xpath3, String xpath4)
 	{
 		Platform.runLater(() ->
 		{
 			this.btnXpath1.setText(xpath1);
 			this.btnXpath2.setText(xpath2);
 			this.btnXpath3.setText(xpath3);
+			this.btnXpath4.setText(xpath4);
 		});
 	}
 
-	public void displayCounters(List<Node> nodes1, List<Node> nodes2, List<Node> nodes3)
+	public void displayCounters(List<Node> nodes1, List<Node> nodes2, List<Node> nodes3, List<Node> nodes4)
 	{
 		Platform.runLater(() ->
 		{
 			this.labelXpath1Count.setText(String.valueOf(nodes1 == null ? "" : nodes1.size()));
 			this.labelXpath2Count.setText(String.valueOf(nodes2 == null ? "" : nodes2.size()));
 			this.labelXpath3Count.setText(String.valueOf(nodes3 == null ? "" : nodes3.size()));
+			this.labelXpath4Count.setText(String.valueOf(nodes4 == null ? "" : nodes4.size()));
 		});
 	}
 
@@ -414,7 +419,7 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 			Optional.ofNullable(newValue).ifPresent(v -> this.model.updateNode(v.getValue().getNode()));
 		});
 
-		Arrays.asList(this.labelXpath1Count, this.labelXpath2Count, this.labelXpath3Count).forEach(
+		Arrays.asList(this.labelXpath1Count, this.labelXpath2Count, this.labelXpath3Count, this.labelXpath4Count).forEach(
 				lbl -> lbl.textProperty().addListener((observable, oldValue, newValue) ->
 				{
 					lbl.getStyleClass().remove(CssVariables.FOUND_ONE_ELEMENT);
@@ -434,6 +439,10 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 					else if (lbl == this.labelXpath3Count)
 					{
 						btnSaveXpath3.setDisable(!foundOneElement);
+					}
+					else if (lbl == this.labelXpath4Count)
+					{
+						btnSaveXpath4.setDisable(!foundOneElement);
 					}
 				}));
 	}
