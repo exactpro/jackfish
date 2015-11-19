@@ -814,7 +814,7 @@ public class DictionaryFx extends GuiDictionary
 		{
 			this.controller = Common.loadController(DictionaryFx.class.getResource("DictionaryTab.fxml"));
 			this.controller.init(this, this.context);
-			this.context.getConfiguration().register(this);
+//			this.context.getConfiguration().register(this);
 			this.isControllerInit = true;
 		}
 	}

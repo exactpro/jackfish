@@ -83,11 +83,9 @@ public class CellView extends TableCell<ObservableList<SpreadsheetCell>, Spreads
 		setOnMouseDragEntered(dragMouseEventHandler);
 		setOnMouseDragReleased(event -> {
 			CellView source = ((CellView) event.getGestureSource());
-			System.out.println(source.getCursor());
 			if (source.getCursor() != null && source.getCursor().equals(Cursor.CROSSHAIR))
 			{
 				final RectangleSelection.GridRange range = this.handle.getCellsViewSkin().getRectangleSelection().getRange();
-				System.out.println(range);
 				final DataProvider provider = this.handle.getView().getProvider();
 				for (int row = range.getLeft(); row <= range.getRight(); row++)
 				{

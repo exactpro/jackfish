@@ -36,6 +36,7 @@ import javafx.stage.Stage;
 import org.apache.log4j.Logger;
 
 import java.awt.*;
+import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.StringSelection;
 import java.io.File;
 import java.io.FileReader;
@@ -436,5 +437,24 @@ public abstract class Common
 			return Font.font(parts[0], size);
 		}
 		return Font.getDefault();
+	}
+
+
+	public static void saveToClipboard(String text)
+	{
+		StringSelection stringSelection = new StringSelection(text);
+		Toolkit.getDefaultToolkit().getSystemClipboard().setContents(stringSelection, null);
+	}
+
+	public static String getFromClipboard()
+	{
+		try
+		{
+			return String.valueOf(Toolkit.getDefaultToolkit().getSystemClipboard().getData(DataFlavor.stringFlavor));
+		}
+		catch (Exception e)
+		{
+			return "";
+		}
 	}
 }

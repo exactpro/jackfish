@@ -587,7 +587,7 @@ public class MatrixFx extends Matrix
 	{
 		if (!this.isControllerInit)
 		{
-			this.config.register(this);
+//			this.config.register(this);
 
 			this.controller = Common.loadController(MatrixFx.class.getResource("MatrixFx.fxml"));
 			this.controller.init(this, this.context, this.console);

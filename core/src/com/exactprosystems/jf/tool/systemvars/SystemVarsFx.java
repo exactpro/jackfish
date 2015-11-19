@@ -189,7 +189,7 @@ public class SystemVarsFx extends SystemVars
 		{
 			this.controller = Common.loadController(SystemVarsFx.class.getResource("SystemVarsFx.fxml"));
 			this.controller.init(this);
-			this.config.register(this);
+//			this.config.register(this);
 			this.isControllerInit = true;
 		}
 	}

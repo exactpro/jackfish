@@ -557,7 +557,10 @@ public class Main extends Application
 			{
 				this.controller.updateFileLastMatrix(this.settings.getValues(MAIN_NS, kind.toString()));
 			}
-
+			if (kind != DocumentKind.CONFIGURATION)
+			{
+				this.config.register(doc);
+			}
 			return doc;
 		}
 		catch (Exception e)

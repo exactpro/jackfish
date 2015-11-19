@@ -7,6 +7,8 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.exactprosystems.jf.tool.custom.grideditor;
 
+import com.exactprosystems.jf.tool.Common;
+import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import javafx.application.Platform;
 import javafx.beans.property.*;
 import javafx.beans.value.ChangeListener;
@@ -26,6 +28,7 @@ import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class SpreadsheetView extends Control
 {
@@ -332,8 +335,117 @@ public class SpreadsheetView extends Control
 		MenuItem removeRow = new MenuItem("Remove row");
 		removeRow.setOnAction(e -> removeRow(this.getSelectionModel().getSelectedCells().get(0).getRow()));
 
-		contextMenu.getItems().addAll(addRowBefore, addRowAfter, removeRow);
+		MenuItem copyItems = new MenuItem("Copy");
+		copyItems.setOnAction(event ->  copy(false));
+
+		MenuItem copyWithHeader = new MenuItem("Copy with header");
+		copyWithHeader.setOnAction(event -> copy(true));
+
+		MenuItem pasteItems = new MenuItem("Paste");
+		pasteItems.setOnAction(event -> paste(false));
+
+		MenuItem pasteWithHeader = new MenuItem("Paste with header");
+		pasteWithHeader.setOnAction(event -> paste(true));
+		contextMenu.getItems().addAll(addRowBefore, addRowAfter, removeRow, new SeparatorMenuItem(), copyItems, copyWithHeader, pasteItems, pasteWithHeader);
 		return contextMenu;
+	}
+
+	private void copy(boolean withHeader)
+	{
+		StringBuilder copyString = new StringBuilder();
+
+		List<TablePosition> selectedCells = this.getSelectionModel().getSelectedCells();
+		List<ObservableList<SpreadsheetCell>> rows = this.providerProperty.get().getRows();
+		if (withHeader)
+		{
+			int firstRow = selectedCells.get(0).getRow();
+			String collect = selectedCells.stream().filter(cell -> firstRow == cell.getRow()).map(cell -> cell.getTableColumn().getText()).collect(Collectors.joining("\t"));
+			copyString.append(collect).append("\n");
+		}
+		int temp = selectedCells.get(0).getRow();
+		for (TablePosition cell : selectedCells)
+		{
+			int row = cell.getRow();
+			int column = cell.getColumn();
+			if (temp != row)
+			{
+				copyString.append("\n");
+				temp = row;
+			}
+			copyString.append(rows.get(row).get(column).getText());
+			copyString.append("\t");
+		}
+		Common.saveToClipboard(copyString.toString());
+	}
+
+	private void paste(boolean withHeader)
+	{
+		String text = Common.getFromClipboard();
+		System.out.println(text);
+		List<TablePosition> selectedCells = this.getSelectionModel().getSelectedCells();
+		if (selectedCells.size() != 1)
+		{
+			DialogsHelper.showInfo("Can't paste to selected cells, cause selected cell is not one");
+			return;
+		}
+		TablePosition selectedCell = selectedCells.get(0);
+		String[] rows = text.split("\n");
+		int indexSelectedColumn = selectedCell.getColumn();
+		int indexSelectedRow = selectedCell.getRow();
+
+		/**
+		 * add columns if needs
+		 */
+		int columnCount = rows[0].split("\t").length;
+		List<String> columnHeaders = this.providerProperty.get().getColumnHeaders();
+		if (indexSelectedColumn + columnCount > columnHeaders.size())
+		{
+			int addSize = indexSelectedColumn + columnCount - columnHeaders.size();
+			IntStream.range(0, addSize).forEach(i -> this.providerProperty().get().addColumn(this.providerProperty().get().columnCount(), "NewColumn" + currentIndexColumn++));
+			this.setDataProvider(providerProperty().get());
+		}
+
+		if (withHeader)
+		{
+			String[] headers = rows[0].split("\t");
+			for (int i = 0; i < columnCount; i++)
+			{
+				SpreadsheetColumn q = this.columns.get(indexSelectedColumn + i);
+				String w = headers[i];
+				this.renameColumn(q, w);
+			}
+			/**
+			 * remove 1st row from rows, because we use yet that string
+			 */
+			String[] newRows = new String[rows.length - 1];
+			for (int i = 1; i < rows.length; i++)
+			{
+				newRows[i - 1] = rows[i];
+			}
+			rows = newRows;
+		}
+
+		/**
+		 * add rows if needs
+		 */
+		int rowCount = rows.length;
+		List<String> rowHeaders = this.providerProperty().get().getRowHeaders();
+		if (indexSelectedRow + rowCount > rowHeaders.size())
+		{
+			int addSize = indexSelectedRow + rowCount - rowHeaders.size();
+			IntStream.range(0, addSize).forEach(value -> this.providerProperty().get().addRow(this.providerProperty().get().rowCount()));
+			this.setDataProvider(providerProperty().get());
+		}
+
+		for (int i = 0; i < rows.length; i++)
+		{
+			String[] cells = rows[i].split("\t");
+			for (int j = 0; j < cells.length; j++)
+			{
+				this.providerProperty().get().setCellValue(indexSelectedColumn + j, indexSelectedRow + i, cells[j]);
+			}
+		}
+		this.setDataProvider(this.getProvider());
 	}
 
 	public void deleteSelectedCells()

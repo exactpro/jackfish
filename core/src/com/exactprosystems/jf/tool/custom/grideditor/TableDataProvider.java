@@ -79,7 +79,6 @@ public class TableDataProvider implements DataProvider<String>
 		}
 		String name = this.table.getHeader(column);
 		this.table.changeValue(name, row, value);
-		System.out.println("new value " + value + " row : " + row + " col : " + column);
 	}
 
 	@Override

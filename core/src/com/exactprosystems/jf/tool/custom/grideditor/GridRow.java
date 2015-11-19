@@ -21,9 +21,6 @@ public class GridRow extends TableRow<ObservableList<SpreadsheetCell>>
 	private final SpreadsheetHandle handle;
 	DoubleProperty verticalShift = new SimpleDoubleProperty();
 
-	/***************************************************************************
-	 * * Constructor * *
-	 **************************************************************************/
 	public GridRow(SpreadsheetHandle handle)
 	{
 		super();
