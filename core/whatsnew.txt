@@ -7,4 +7,5 @@ since 578 you need to remove following sections in your config:
     <serverLogLevel>
     <serverLogPattern>
     
-    
+since 643 logs were separated to several files according their packages. 
+now logs are put into 'logs' directory. remove old main.log file in current directory.   
