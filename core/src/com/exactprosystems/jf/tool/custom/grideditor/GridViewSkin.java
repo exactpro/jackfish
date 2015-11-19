@@ -377,11 +377,7 @@ public class GridViewSkin extends TableViewSkinBase<ObservableList<SpreadsheetCe
 
 		cell.updateIndex(-1);
 
-		double widthMax = maxWidth + padding;
-		if (clickCount++ % 2 == 0)
-		{
-			widthMax = tc.getText().length() * 8;
-		}
+		double widthMax = tc.getText().length() * 8 + 20;
 		if (handle.getGridView().getColumnResizePolicy() == TableView.CONSTRAINED_RESIZE_POLICY)
 		{
 			widthMax = Math.max(widthMax, tc.getWidth());
