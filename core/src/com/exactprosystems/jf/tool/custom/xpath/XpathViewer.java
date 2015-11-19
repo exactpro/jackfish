@@ -132,7 +132,54 @@ public class XpathViewer
 		return null;
 	}
 	
-	private boolean haveSameChild(Node node)
+	private String createXpathAbsolute(Node relativeNode, Node currentNode)
+	{
+		String xpath = null;
+		if (relativeNode == null)
+		{
+			xpath = getAbsoluteXpath(currentNode, null);
+		}
+		else
+		{
+			AtomicInteger count = new AtomicInteger(0);
+			Node generalParent = getGeneralParent(relativeNode, currentNode, count);
+			String xpathCurrentNode = getAbsoluteXpath(currentNode, generalParent);
+			xpath = getXpath(relativeNode, currentNode, count, xpathCurrentNode);
+		}
+		return xpath;
+	}
+
+	private String createXpathWithParameters(Node relativeNode, Node currentNode, final List<String> parameters)
+	{
+		String xpath = null;
+		if (relativeNode != null)
+		{
+			AtomicInteger count = new AtomicInteger(0);
+			getGeneralParent(relativeNode, currentNode, count);
+			String xpathCurrentNode = getXpathWithParameters(currentNode, parameters);
+			xpath = getXpath(relativeNode, currentNode, count, xpathCurrentNode);
+		}
+		else
+		{
+			xpath = getXpathWithParameters(currentNode, parameters);
+		}
+		return xpath;
+	}
+
+	private String createXpathWithoutParameters(Node relativeNode, Node currentNode)
+	{
+		String xpath = "//" + currentNode.getNodeName();
+		if (relativeNode != null)
+		{
+			AtomicInteger count = new AtomicInteger(0);
+			getGeneralParent(relativeNode, currentNode, count);
+			xpath = getXpath(relativeNode, currentNode, count, xpath);
+		}
+
+		return xpath;
+	}
+
+	private boolean hasSiblings(Node node)
 	{
 		int res = 0;
 		Node parentNode = node.getParentNode();
@@ -181,31 +228,31 @@ public class XpathViewer
 		{
 			return null;
 		}
-		String s = node.getNodeName();
-		if (haveSameChild(node))
+		String str = node.getNodeName();
+		if (hasSiblings(node))
 		{
 			int index = getIndexNode(node);
-			s = s + "[" + index + "]";
+			str = str + "[" + index + "]";
 		}
-		return s + "/";
+		return str + "/";
 	}
 
-	private String getAbsoluteXpath(Node currentNode, Node generalParent)
+	private String getAbsoluteXpath(Node node, Node generalParent)
 	{
-		StringBuilder b = new StringBuilder(currentNode.getNodeName());
-		if (haveSameChild(currentNode))
+		StringBuilder sb = new StringBuilder(node.getNodeName());
+		if (hasSiblings(node))
 		{
-			int index = getIndexNode(currentNode);
-			b.append("[").append(index).append("]");
+			int index = getIndexNode(node);
+			sb.append("[").append(index).append("]");
 		}
-		String s;
-		Node parent = currentNode.getParentNode();
-		while ((s = getNodePath(parent, generalParent)) != null)
+		String str;
+		Node parent = node.getParentNode();
+		while ((str = getNodePath(parent, generalParent)) != null)
 		{
-			b.insert(0, s);
+			sb.insert(0, str);
 			parent = parent.getParentNode();
 		}
-		return b.insert(0, "//").toString();
+		return sb.insert(0, "//").toString();
 	}
 
 	private ArrayList<Node> getParents(Node node)
@@ -221,9 +268,9 @@ public class XpathViewer
 		return parents;
 	}
 
-	private Node getGeneralParent(Node relativeNode, Node currentNode, AtomicInteger count)
+	private Node getGeneralParent(Node relativeNode, Node node, AtomicInteger count)
 	{
-		ArrayList<Node> nodeParents = getParents(currentNode);
+		ArrayList<Node> nodeParents = getParents(node);
 		ArrayList<Node> relativeParents = getParents(relativeNode);
 		int nodeParentsSize = nodeParents.size();
 		int relativeParentsSize = relativeParents.size();
@@ -241,76 +288,29 @@ public class XpathViewer
 		return generalParent;
 	}
 
-	private String getXpath(Node relativeNode, Node currentNode, AtomicInteger count, String xpathCurrentNode)
+	private String getXpath(Node relativeNode, Node node, AtomicInteger count, String nodeXpath)
 	{
 		String xpath;
-		StringBuilder builder = new StringBuilder(this.relativeXpath);
-		Stream.iterate(0, i -> ++i).limit(count.get()).forEach(i1 -> builder.append("/.."));
-		if (relativeNode != currentNode)
+		StringBuilder sb = new StringBuilder(this.relativeXpath);
+		Stream.iterate(0, i -> ++i).limit(count.get()).forEach(i1 -> sb.append("/.."));
+		if (relativeNode != node)
 		{
-			builder.append(xpathCurrentNode);
+			sb.append(nodeXpath);
 		}
-		xpath = builder.toString();
+		xpath = sb.toString();
 		return xpath;
 	}
 
 	private String getXpathWithParameters(Node currentNode, List<String> parameters)
 	{
-		StringBuilder b = new StringBuilder("//");
-		b.append(currentNode.getNodeName());
+		StringBuilder sb = new StringBuilder("//");
+		sb.append(currentNode.getNodeName());
 		if (currentNode.getAttributes() != null)
 		{
 			String collect = parameters.stream().map(p -> "@" + currentNode.getAttributes().getNamedItem(p)).collect(Collectors.joining(" and "));
-			b.append("[").append(collect).append("]");
+			sb.append("[").append(collect).append("]");
 		}
 
-		return b.toString();
-	}
-
-	private String createXpathAbsolute(Node relativeNode, Node currentNode)
-	{
-		String xpath = null;
-		if (relativeNode == null)
-		{
-			xpath = getAbsoluteXpath(currentNode, null);
-		}
-		else
-		{
-			AtomicInteger count = new AtomicInteger(0);
-			Node generalParent = getGeneralParent(relativeNode, currentNode, count);
-			String xpathCurrentNode = getAbsoluteXpath(currentNode, generalParent);
-			xpath = getXpath(relativeNode, currentNode, count, xpathCurrentNode);
-		}
-		return xpath;
-	}
-
-	private String createXpathWithParameters(Node relativeNode, Node currentNode, final List<String> parameters)
-	{
-		String xpath = null;
-		if (relativeNode != null)
-		{
-			AtomicInteger count = new AtomicInteger(0);
-			getGeneralParent(relativeNode, currentNode, count);
-			String xpathCurrentNode = getXpathWithParameters(currentNode, parameters);
-			xpath = getXpath(relativeNode, currentNode, count, xpathCurrentNode);
-		}
-		else
-		{
-			xpath = getXpathWithParameters(currentNode, parameters);
-		}
-		return xpath;
-	}
-
-	private String createXpathWithoutParameters(Node relativeNode, Node currentNode)
-	{
-		String xpath = "//" + currentNode.getNodeName();
-		if (relativeNode != null)
-		{
-			AtomicInteger count = new AtomicInteger(0);
-			getGeneralParent(relativeNode, currentNode, count);
-			xpath = getXpath(relativeNode, currentNode, count, xpath);
-		}
-
-		return xpath;
+		return sb.toString();
 	}
 }
