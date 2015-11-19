@@ -116,7 +116,7 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 	{
 		this.parent = parent;
 	}
-	
+
 	public void init(XpathViewer model, String initial)
 	{
 		this.model = model;
@@ -145,24 +145,14 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 		return null;
 	}
 
-
 	// ============================================================
 	// events methods
 	// ============================================================
 	public void setRelativeXpath(ActionEvent actionEvent)
 	{
-		switch (((Button) actionEvent.getSource()).getId())
-		{
-			case "btnSave1":
-				this.tfRelativeFrom.setText(this.btnXpath1.getText());
-				break;
-			case "btnSave2":
-				this.tfRelativeFrom.setText(this.btnXpath2.getText());
-				break;
-			case "btnSave3":
-				this.tfRelativeFrom.setText(this.btnXpath3.getText());
-				break;
-		}
+		String id = "#" + ((Button) actionEvent.getSource()).getId();
+		String text = ((Button) this.parentPane.getScene().lookup(id)).getText();
+		this.tfRelativeFrom.setText(text);
 		this.model.setRelativeXpath(this.tfRelativeFrom.getText());
 	}
 
@@ -262,7 +252,6 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 		});
 	}
 
-
 	// ============================================================
 	// private methods
 	// ============================================================
@@ -275,7 +264,7 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 		pane.setRight(lblFound);
 		BorderPane.setAlignment(lblFound, Pos.CENTER);
 		BorderPane.setAlignment(mainExpression, Pos.CENTER);
-		this.mainExpression.textProperty().addListener((obs, oldValue, newValue) -> 
+		this.mainExpression.textProperty().addListener((obs, oldValue, newValue) ->
 		{
 			this.mainExpression.getStyleClass().remove(CssVariables.INCORRECT_FIELD);
 			this.model.applyXpath(newValue);
