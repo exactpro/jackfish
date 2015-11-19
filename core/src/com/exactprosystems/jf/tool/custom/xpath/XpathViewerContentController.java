@@ -128,7 +128,7 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 		Alert dialog = createAlert(title, themePath);
 		dialog.getDialogPane().setContent(parent);
 		dialog.getDialogPane().setHeader(this.headerPane);
-		dialog.setOnShowing(event -> this.model.evaluate(this.mainExpression.getText()));
+		dialog.setOnShowing(event -> this.model.applyXpath(this.mainExpression.getText()));
 		if (fullScreen)
 		{
 			dialog.setOnShown(event -> ((Stage) dialog.getDialogPane().getScene().getWindow()).setFullScreen(true));
@@ -170,7 +170,7 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 	{
 		this.model.setRelativeXpath(null);
 		this.tfRelativeFrom.setText("");
-		this.model.createXpath(getParams());
+		this.model.createXpaths(getParams());
 	}
 
 	public void copyXpath(Event event)
@@ -199,19 +199,19 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 		});
 	}
 
-	public void displayResults(int count, boolean correct, List<Node> nodes)
+	public void displayResults(List<Node> nodes)
 	{
 		Platform.runLater(() ->
 		{
-			if (!correct)
+			if (nodes == null)
 			{
 				if (!this.mainExpression.getStyleClass().contains(CssVariables.INCORRECT_FIELD))
 				{
 					this.mainExpression.getStyleClass().add(CssVariables.INCORRECT_FIELD);
 				}
+				this.lblFound.setText("Found 0");
 			}
-			this.lblFound.setText("Found " + count);
-			if (nodes != null)
+			else
 			{
 				ArrayList<TreeItem<XpathItem>> items = new ArrayList<>();
 				selectItems(this.treeView.getRoot(), nodes, items);
@@ -221,6 +221,7 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 					int index = this.treeView.getTreeItemLevel(xpathItem);
 					this.treeView.scrollTo(index);
 				}
+				this.lblFound.setText("Found " + nodes.size());
 			}
 		});
 	}
@@ -234,10 +235,10 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 			{
 				CheckBox box = new CheckBox(p);
 				box.setSelected(true);
-				box.selectedProperty().addListener((observable, oldValue, newValue) -> this.model.createXpath(getParams()));
+				box.selectedProperty().addListener((observable, oldValue, newValue) -> this.model.createXpaths(getParams()));
 				this.hBoxCheckboxes.getChildren().add(box);
 			});
-			this.model.createXpath(getParams());
+			this.model.createXpaths(getParams());
 		});
 	}
 
@@ -251,25 +252,16 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 		});
 	}
 
-	public void displayCounters(XpathViewer.XpathType type, int count)
+	public void displayCounters(List<Node> nodes1, List<Node> nodes2, List<Node> nodes3)
 	{
 		Platform.runLater(() ->
 		{
-			switch (type)
-			{
-				case Absolute:
-					this.labelXpath1Count.setText(String.valueOf(count));
-					break;
-				case WithArgs:
-					this.labelXpath2Count.setText(String.valueOf(count));
-					break;
-				case WithoutArgs:
-					this.labelXpath3Count.setText(String.valueOf(count));
-					break;
-				default:
-			}
+			this.labelXpath1Count.setText(String.valueOf(nodes1 == null ? "" : nodes1.size()));
+			this.labelXpath2Count.setText(String.valueOf(nodes2 == null ? "" : nodes2.size()));
+			this.labelXpath3Count.setText(String.valueOf(nodes3 == null ? "" : nodes3.size()));
 		});
 	}
+
 
 	// ============================================================
 	// private methods
@@ -286,7 +278,7 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 		this.mainExpression.textProperty().addListener((obs, oldValue, newValue) -> 
 		{
 			this.mainExpression.getStyleClass().remove(CssVariables.INCORRECT_FIELD);
-			this.model.evaluate(newValue);
+			this.model.applyXpath(newValue);
 		});
 		return pane;
 	}
@@ -456,4 +448,5 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 					}
 				}));
 	}
+
 }

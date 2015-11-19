@@ -27,13 +27,7 @@ public class XpathViewer
 	private Node							currentNode;
 	private Locator							owner;
 	private IRemoteApplication				service;
-	private Node							relativeNode;
 	private String							relativeXpath;
-
-	enum XpathType
-	{
-		Absolute, WithArgs, WithoutArgs, RelativeNode
-	}
 
 	public XpathViewer(Locator owner, Document document, IRemoteApplication service)
 	{
@@ -46,7 +40,7 @@ public class XpathViewer
 	{
 		this.controller = Common.loadController(XpathViewer.class.getResource("XpathViewerContent.fxml"));
 		this.controller.init(this, initial);
-		this.controller.displayTree(document);
+		this.controller.displayTree(this.document);
 		String result = this.controller.show(title, themePath, fullScreen);
 		return result == null ? initial : result;
 	}
@@ -54,16 +48,11 @@ public class XpathViewer
 	public void setRelativeXpath(String xpath)
 	{
 		this.relativeXpath = xpath;
-		this.relativeNode = null;
-		if (xpath != null)
-		{
-			evaluate(xpath, XpathType.RelativeNode);
-		}
 	}
 
-	public void evaluate(String newValue)
+	public void applyXpath(String xpath)
 	{
-		evaluate(newValue, null);
+		this.controller.displayResults(evaluate(xpath));
 	}
 
 	public void updateNode(Node node)
@@ -85,17 +74,21 @@ public class XpathViewer
 		this.controller.displayParams(params);
 	}
 
-	public void createXpath(List<String> parameters)
+	public void createXpaths(List<String> parameters)
 	{
-		String xpath1 = createXpathAbsolute(this.currentNode);
-		String xpath2 = createXpathWithParameters(this.currentNode, parameters);
-		String xpath3 = createXpathWithoutParameters(this.currentNode);
-
-		evaluate(xpath1, XpathType.Absolute);
-		evaluate(xpath2, XpathType.WithArgs);
-		evaluate(xpath3, XpathType.WithoutArgs);
+		Node relativeNode = null;
+		if (this.relativeXpath != null)
+		{
+			List<Node> nodes = evaluate(this.relativeXpath);
+			relativeNode = nodes == null || nodes.isEmpty() ? null : nodes.get(0);
+		}
+		
+		String xpath1 = createXpathAbsolute(relativeNode, this.currentNode);
+		String xpath2 = createXpathWithParameters(relativeNode, this.currentNode, parameters);
+		String xpath3 = createXpathWithoutParameters(relativeNode, this.currentNode);
 
 		this.controller.displayXpaths(xpath1, xpath2, xpath3);
+		this.controller.displayCounters(evaluate(xpath1), evaluate(xpath2), evaluate(xpath3));
 		
 		if (this.service != null)
 		{
@@ -114,53 +107,31 @@ public class XpathViewer
 	// ============================================================
 	// private methods
 	// ============================================================
-	private void evaluate(String newValue, XpathType type)
+	private List<Node> evaluate(String xpathStr)
 	{
-		this.controller.deselectItems();
-		if (newValue == null || newValue.trim().isEmpty())
+		if (xpathStr == null)
 		{
-			if (type == null)
-			{
-				this.controller.displayResults(0, true, null);
-			}
-			else if (type != XpathType.RelativeNode)
-			{
-				this.controller.displayCounters(type, 0);
-			}
-			return;
+			return null;
 		}
 		XPath xpath = XPathFactory.newInstance().newXPath();
 		try
 		{
-			XPathExpression compile = xpath.compile(newValue);
-			NodeList nodeList = (NodeList) compile.evaluate(document.getDocumentElement(), XPathConstants.NODESET);
-			if (type == null)
+			XPathExpression compile = xpath.compile(xpathStr);
+			NodeList nodeList = (NodeList) compile.evaluate(this.document.getDocumentElement(), XPathConstants.NODESET);
+			List<Node> nodes = new ArrayList<>();
+			for (int i = 0; i < nodeList.getLength(); i++)
 			{
-				ArrayList<Node> nodes = new ArrayList<>();
-				for (int i = 0; i < nodeList.getLength(); i++)
-				{
-					nodes.add(nodeList.item(i));
-				}
-				this.controller.displayResults(nodeList.getLength(), true, nodes);
+				nodes.add(nodeList.item(i));
 			}
-			else if (type != XpathType.RelativeNode)
-			{
-				this.controller.displayCounters(type, nodeList.getLength());
-			}
-			else
-			{
-				this.relativeNode = nodeList.item(0);
-			}
+			return nodes;
 		}
 		catch (XPathExpressionException e)
 		{
-			if (type == null)
-			{
-				this.controller.displayResults(0, false, null);
-			}
 		}
+		
+		return null;
 	}
-
+	
 	private boolean haveSameChild(Node node)
 	{
 		int res = 0;
@@ -250,10 +221,10 @@ public class XpathViewer
 		return parents;
 	}
 
-	private Node getGeneralParent(Node currentNode, AtomicInteger count)
+	private Node getGeneralParent(Node relativeNode, Node currentNode, AtomicInteger count)
 	{
 		ArrayList<Node> nodeParents = getParents(currentNode);
-		ArrayList<Node> relativeParents = getParents(this.relativeNode);
+		ArrayList<Node> relativeParents = getParents(relativeNode);
 		int nodeParentsSize = nodeParents.size();
 		int relativeParentsSize = relativeParents.size();
 		int size = nodeParentsSize > relativeParentsSize ? nodeParentsSize : relativeParentsSize;
@@ -270,12 +241,12 @@ public class XpathViewer
 		return generalParent;
 	}
 
-	private String getXpath(Node currentNode, AtomicInteger count, String xpathCurrentNode)
+	private String getXpath(Node relativeNode, Node currentNode, AtomicInteger count, String xpathCurrentNode)
 	{
 		String xpath;
 		StringBuilder builder = new StringBuilder(this.relativeXpath);
 		Stream.iterate(0, i -> ++i).limit(count.get()).forEach(i1 -> builder.append("/.."));
-		if (this.relativeNode != currentNode)
+		if (relativeNode != currentNode)
 		{
 			builder.append(xpathCurrentNode);
 		}
@@ -296,32 +267,32 @@ public class XpathViewer
 		return b.toString();
 	}
 
-	private String createXpathAbsolute(Node currentNode)
+	private String createXpathAbsolute(Node relativeNode, Node currentNode)
 	{
 		String xpath = null;
-		if (this.relativeNode == null)
+		if (relativeNode == null)
 		{
 			xpath = getAbsoluteXpath(currentNode, null);
 		}
 		else
 		{
 			AtomicInteger count = new AtomicInteger(0);
-			Node generalParent = getGeneralParent(currentNode, count);
+			Node generalParent = getGeneralParent(relativeNode, currentNode, count);
 			String xpathCurrentNode = getAbsoluteXpath(currentNode, generalParent);
-			xpath = getXpath(currentNode, count, xpathCurrentNode);
+			xpath = getXpath(relativeNode, currentNode, count, xpathCurrentNode);
 		}
 		return xpath;
 	}
 
-	private String createXpathWithParameters(Node currentNode, final List<String> parameters)
+	private String createXpathWithParameters(Node relativeNode, Node currentNode, final List<String> parameters)
 	{
 		String xpath = null;
-		if (this.relativeNode != null)
+		if (relativeNode != null)
 		{
 			AtomicInteger count = new AtomicInteger(0);
-			getGeneralParent(currentNode, count);
+			getGeneralParent(relativeNode, currentNode, count);
 			String xpathCurrentNode = getXpathWithParameters(currentNode, parameters);
-			xpath = getXpath(currentNode, count, xpathCurrentNode);
+			xpath = getXpath(relativeNode, currentNode, count, xpathCurrentNode);
 		}
 		else
 		{
@@ -330,14 +301,14 @@ public class XpathViewer
 		return xpath;
 	}
 
-	private String createXpathWithoutParameters(Node currentNode)
+	private String createXpathWithoutParameters(Node relativeNode, Node currentNode)
 	{
 		String xpath = "//" + currentNode.getNodeName();
-		if (this.relativeNode != null)
+		if (relativeNode != null)
 		{
 			AtomicInteger count = new AtomicInteger(0);
-			getGeneralParent(currentNode, count);
-			xpath = getXpath(currentNode, count, xpath);
+			getGeneralParent(relativeNode, currentNode, count);
+			xpath = getXpath(relativeNode, currentNode, count, xpath);
 		}
 
 		return xpath;
