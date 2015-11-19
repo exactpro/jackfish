@@ -157,9 +157,7 @@
 		<mkdir dir="${tool}"/>
 
 		<copy todir="${tool}/apps"><fileset dir="apps"/></copy>
-		<copy todir="${tool}/apps/unix"><fileset dir="webdrivers/unix"/></copy>
 		<chmod perm="ugo+rx" dir="${tool}/apps/unix" includes="*.*"/>
-		<copy todir="${tool}/apps/win"><fileset dir="webdrivers/win"/></copy>
 		<copy todir="${tool}/clients"><fileset dir="clients"/></copy>
 		<copy todir="${tool}/services"><fileset dir="services"/></copy>
 		<copy todir="${tool}/sql"><fileset dir="sql"/></copy>

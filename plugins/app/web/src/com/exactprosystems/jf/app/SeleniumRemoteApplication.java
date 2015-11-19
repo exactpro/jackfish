@@ -12,7 +12,6 @@ import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.app.js.JSInjection;
 import com.exactprosystems.jf.app.js.JSInjectionFactory;
-
 import org.apache.log4j.*;
 import org.jsoup.Jsoup;
 import org.openqa.selenium.*;
@@ -26,7 +25,6 @@ import org.w3c.dom.Node;
 import javax.imageio.ImageIO;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-
 import java.awt.*;
 import java.awt.event.InputEvent;
 import java.awt.image.BufferedImage;
@@ -405,20 +403,40 @@ public class SeleniumRemoteApplication extends RemoteApplication
 	@Override
 	protected ImageWrapper getImageDerived(Locator owner, Locator element) throws Exception
 	{
-		File screenshot = driver.getScreenshotAs(OutputType.FILE);
-		BufferedImage fullImg = ImageIO.read(screenshot);
-		if (element == null)
+		Exception real = null;
+		int repeat = 1;
+		do
 		{
-			return new ImageWrapper(fullImg);
-		}
+			try
+			{
+				//method webElement.getScreenshotAs not working in 2.48.2
+				File screenshot = driver.getScreenshotAs(OutputType.FILE);
+				BufferedImage fullImg = ImageIO.read(screenshot);
+				if (element == null)
+				{
+					return new ImageWrapper(fullImg);
+				}
+				WebElement component = this.operationExecutor.find(owner, element);
+				Point point = component.getLocation();
+				int eleWidth = component.getSize().getWidth();
+				int eleHeight = component.getSize().getHeight();
+				BufferedImage image = fullImg.getSubimage(point.getX(), point.getY(), eleWidth, eleHeight);
 
-		WebElement component = this.operationExecutor.find(owner, element);
-		Point point = component.getLocation();
-		int eleWidth = component.getSize().getWidth();
-		int eleHeight = component.getSize().getHeight();
-		BufferedImage image = fullImg.getSubimage(point.getX(), point.getY(), eleWidth, eleHeight);
-		
-		return new ImageWrapper(image);
+				return new ImageWrapper(image);
+			}
+			catch (StaleElementReferenceException e)
+			{
+				real = e;
+				logger.debug("Element is no longer attached to the DOM. Try in SeleniumRemoteApplication : " + repeat);
+			}
+			catch (Exception e)
+			{
+				logger.error("EXCEPTION : " + e.getMessage(), e);
+				throw new Exception(e.getMessage());
+			}
+		}
+		while (++repeat < repeatLimit);
+		throw real;
 	}
 
 	@Override

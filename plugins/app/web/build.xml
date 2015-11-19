@@ -19,7 +19,7 @@
 	
 	<path id="project.classpath">
 		<fileset dir="${web.lib.dir}">
-			<patternset includes="**/*.jar" />
+			<patternset includes="**/*.jar" excludes="oldselenium/*.jar" />
 		</fileset>
 		<fileset dir="${web.api.dir}/release">
 			<patternset includes="**/*.jar" />
@@ -44,25 +44,25 @@
 				<attribute name="Main-Class" value="org.eclipse.jdt.internal.jarinjarloader.JarRsrcLoader" />
 				<attribute name="Rsrc-Main-Class" value="com.exactprosystems.jf.app.SeleniumRemoteApplication" />
 				<attribute name="Class-Path" value="." />
-				<attribute name="Rsrc-Class-Path" value="./  libs/api.jar libs/commons-exec-1.1.jar libs/jsoup-1.8.1.jar libs/commons-logging-api.jar libs/guava-15.0.jar libs/htmlunit-2.13.jar libs/htmlunit-core-js-2.13.jar libs/httpclient-4.3.1.jar libs/httpcore-4.3.jar libs/httpmime-4.3.1.jar libs/json-20080701.jar libs/log4j-1.2.17.jar libs/operadriver-1.5.jar libs/phantomjsdriver-1.1.0.jar libs/gson-2.3.1.jar libs/selenium-java-2.45.0.jar" />
+				<attribute name="Rsrc-Class-Path" value="./  libs/api.jar libs/commons-exec-1.3.jar libs/jsoup-1.8.1.jar libs/commons-logging-1.2.jar libs/guava-18.0.jar libs/htmlunit-2.18.jar libs/htmlunit-core-js-2.17.jar libs/httpclient-4.5.1.jar libs/httpcore-4.4.3.jar libs/httpmime-4.5.jar libs/json-20080701.jar libs/log4j-1.2.17.jar libs/operadriver-1.5.jar libs/phantomjsdriver-1.2.1.jar libs/gson-2.3.1.jar libs/selenium-java-2.48.2.jar" />
 			</manifest>	
             <fileset dir="${web.build.dir}" includes="**/*.class"/>
             <fileset dir="" includes="META-INF/services/*.*"/>
 			<zipfileset src="${web.lib.dir}/jar-in-jar-loader.zip" />
 			<zipfileset prefix="libs" dir="${web.api.dir}/release" includes="api.jar" />
-			<zipfileset prefix="libs" dir="${web.lib.dir}" includes="commons-exec-1.1.jar" />
-			<zipfileset prefix="libs" dir="${web.lib.dir}" includes="commons-logging-api.jar" />
-			<zipfileset prefix="libs" dir="${web.lib.dir}" includes="guava-15.0.jar" />
-			<zipfileset prefix="libs" dir="${web.lib.dir}" includes="htmlunit-2.13.jar" />
-			<zipfileset prefix="libs" dir="${web.lib.dir}" includes="htmlunit-core-js-2.13.jar" />
-			<zipfileset prefix="libs" dir="${web.lib.dir}" includes="httpclient-4.3.1.jar" />
-			<zipfileset prefix="libs" dir="${web.lib.dir}" includes="httpcore-4.3.jar" />
-			<zipfileset prefix="libs" dir="${web.lib.dir}" includes="httpmime-4.3.1.jar" />
+			<zipfileset prefix="libs" dir="${web.lib.dir}" includes="commons-exec-1.3.jar" />
+			<zipfileset prefix="libs" dir="${web.lib.dir}" includes="commons-logging-1.2.jar" />
+			<zipfileset prefix="libs" dir="${web.lib.dir}" includes="guava-18.0.jar" />
+			<zipfileset prefix="libs" dir="${web.lib.dir}" includes="htmlunit-2.18.jar" />
+			<zipfileset prefix="libs" dir="${web.lib.dir}" includes="htmlunit-core-js-2.17.jar" />
+			<zipfileset prefix="libs" dir="${web.lib.dir}" includes="httpclient-4.5.1.jar" />
+			<zipfileset prefix="libs" dir="${web.lib.dir}" includes="httpcore-4.4.3.jar" />
+			<zipfileset prefix="libs" dir="${web.lib.dir}" includes="httpmime-4.5.jar" />
 			<zipfileset prefix="libs" dir="${web.lib.dir}" includes="json-20080701.jar" />
 			<zipfileset prefix="libs" dir="${web.lib.dir}" includes="log4j-1.2.17.jar" />
 			<zipfileset prefix="libs" dir="${web.lib.dir}" includes="operadriver-1.5.jar" />
-			<zipfileset prefix="libs" dir="${web.lib.dir}" includes="phantomjsdriver-1.1.0.jar" />
-			<zipfileset prefix="libs" dir="${web.lib.dir}" includes="selenium-java-2.45.0.jar" />
+			<zipfileset prefix="libs" dir="${web.lib.dir}" includes="phantomjsdriver-1.2.1.jar" />
+			<zipfileset prefix="libs" dir="${web.lib.dir}" includes="selenium-java-2.48.2.jar" />
 			<zipfileset prefix="libs" dir="${web.lib.dir}" includes="jsoup-1.8.1.jar" />
 			<zipfileset prefix="libs" dir="${web.lib.dir}" includes="gson-2.3.1.jar" />
 			

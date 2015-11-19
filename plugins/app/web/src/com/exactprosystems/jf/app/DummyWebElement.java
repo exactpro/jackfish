@@ -8,19 +8,22 @@
 
 package com.exactprosystems.jf.app;
 
-import java.util.List;
+import org.openqa.selenium.*;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.Dimension;
-import org.openqa.selenium.Point;
-import org.openqa.selenium.WebElement;
+import java.util.List;
 
 public class DummyWebElement implements WebElement
 {
 	public DummyWebElement()
 	{
 	}
-	
+
+	@Override
+	public <X> X getScreenshotAs(OutputType<X> target) throws WebDriverException
+	{
+		return null;
+	}
+
 	@Override
 	public void clear()
 	{
