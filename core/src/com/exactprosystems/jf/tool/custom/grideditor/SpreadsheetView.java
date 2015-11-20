@@ -7,6 +7,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.exactprosystems.jf.tool.custom.grideditor;
 
+import com.exactprosystems.jf.exceptions.ColumnIsPresentException;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import javafx.application.Platform;
@@ -207,7 +208,20 @@ public class SpreadsheetView extends Control
 
 	public void addColumn(int index)
 	{
-		this.providerProperty().get().addColumn(index, "NewColumn" + currentIndexColumn++);
+		boolean flag = true;
+		while (flag)
+		{
+			try
+			{
+				currentIndexColumn++;
+				this.providerProperty().get().addColumn(index, "NewColumn" + currentIndexColumn);
+				flag = false;
+			}
+			catch (ColumnIsPresentException e)
+			{
+				//nothing
+			}
+		}
 		this.setDataProvider(this.providerProperty().get());
 	}
 
@@ -219,8 +233,17 @@ public class SpreadsheetView extends Control
 
 	public void renameColumn(SpreadsheetColumn column, String text)
 	{
-		column.setText(text);
-		this.providerProperty().get().setColumnName(this.columns.indexOf(column), text);
+		String oldValue = column.getText();
+		try
+		{
+			this.providerProperty().get().setColumnName(this.columns.indexOf(column), text);
+			column.setText(text);
+		}
+		catch (ColumnIsPresentException e)
+		{
+			DialogsHelper.showError(e.getMessage());
+			//this.providerProperty().get().setColumnName(this.columns.indexOf(column), oldValue);
+		}
 	}
 
 	public void addRowBefore(Integer row)
@@ -279,11 +302,6 @@ public class SpreadsheetView extends Control
 	public ObservableMap<Integer, Picker> getColumnPickers()
 	{
 		return columnPickers;
-	}
-
-	public void resizeRowsToFitContent()
-	{
-		getCellsViewSkin().resizeRowsToFitContent();
 	}
 
 	public double getRowHeight(int row)
@@ -381,7 +399,6 @@ public class SpreadsheetView extends Control
 	private void paste(boolean withHeader)
 	{
 		String text = Common.getFromClipboard();
-		System.out.println(text);
 		List<TablePosition> selectedCells = this.getSelectionModel().getSelectedCells();
 		if (selectedCells.size() != 1)
 		{
@@ -415,7 +432,7 @@ public class SpreadsheetView extends Control
 				this.renameColumn(q, w);
 			}
 			/**
-			 * remove 1st row from rows, because we use yet that string
+			 * remove 1st row from rows, because we used that string yet
 			 */
 			String[] newRows = new String[rows.length - 1];
 			for (int i = 1; i < rows.length; i++)

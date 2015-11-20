@@ -12,11 +12,13 @@ import com.csvreader.CsvReader;
 import com.csvreader.CsvWriter;
 import com.exactprosystems.jf.api.app.Mutable;
 import com.exactprosystems.jf.api.common.Converter;
+import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.conditions.Condition;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.common.report.ReportHelper;
 import com.exactprosystems.jf.common.report.ReportTable;
+import com.exactprosystems.jf.exceptions.ColumnIsPresentException;
 import com.exactprosystems.jf.sql.SqlConnection;
 import org.apache.log4j.Logger;
 
@@ -348,15 +350,43 @@ public class Table implements List<Map<String, Object>>, Mutable, Cloneable
 
 		int col = this.headers.length;
 		this.headers = Arrays.copyOf(this.headers, this.headers.length + columns.length);
-
 		for (String column : columns)
 		{
-			this.headers[col++] = new Header(column, String.class);
+			int index = 0;
+			while (columnIsPresent(column))
+			{
+				column = column + index;
+			}
+			Header header = new Header(column, String.class);
+			this.headers[col++] = header;
 		}
+	}
+
+	private boolean columnIsPresent(String columnName)
+	{
+		if (this.headers == null || this.headers.length == 0)
+		{
+			return false;
+		}
+		for (Header header : this.headers)
+		{
+			if (header != null && Str.areEqual(columnName, header.name))
+			{
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public void addColumns(int index, String... columns)
 	{
+		for (String column : columns)
+		{
+			if (columnIsPresent(column))
+			{
+				throw new RuntimeException(String.format("Column with name %s already present", column));
+			}
+		}
 		this.changed = true;
 		if (this.headers == null)
 		{
@@ -903,6 +933,14 @@ public class Table implements List<Map<String, Object>>, Mutable, Cloneable
 
 	public void setHeader(int index, String s)
 	{
+		if (this.headers[index] != null && Str.areEqual(this.headers[index].name, s))
+		{
+			return;
+		}
+		if (columnIsPresent(s))
+		{
+			throw new ColumnIsPresentException(s);
+		}
 		this.changed = true;
 		this.headers[index].name = s.trim();
 	}

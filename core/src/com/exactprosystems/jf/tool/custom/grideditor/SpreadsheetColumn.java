@@ -74,6 +74,10 @@ public final class SpreadsheetColumn {
 			this.column.setGraphic(tf);
 			tf.requestFocus();
 			tf.setOnKeyPressed(e1 -> {
+				if (e1.getCode().equals(KeyCode.SHIFT))
+				{
+					//nothing
+				}
 				if (e1.getCode().equals(KeyCode.ESCAPE))
 				{
 					this.spreadsheetView.renameColumn(this, oldValue);
