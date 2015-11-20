@@ -305,7 +305,7 @@ public enum OperationKind
 			return ok;
 		}
 	},
-	
+
 	GET("get")
 	{
 		@Override

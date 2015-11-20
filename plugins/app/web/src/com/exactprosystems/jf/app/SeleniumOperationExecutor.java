@@ -761,31 +761,31 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 			{
 				switch (key)
 				{
-					case Down:
+					case DOWN:
 						actions.sendKeys(component, Keys.DOWN).perform();
 						break;
 
-					case Escape:
+					case ESCAPE:
 						actions.sendKeys(component, Keys.ESCAPE).perform();
 						break;
 
-					case Enter:
+					case ENTER:
 						actions.sendKeys(component, Keys.ENTER).perform();
 						break;
 
-					case Tab:
+					case TAB:
 						actions.sendKeys(component, Keys.TAB).perform();
 						break;
 
-					case Delete:
+					case DELETE:
 						actions.sendKeys(component, Keys.DELETE).perform();
 						break;
 
-					case Backspase:
+					case BACK_SPACE:
 						actions.sendKeys(component, Keys.BACK_SPACE).perform();
 						break;
 
-					case Shift:
+					case SHIFT:
 						actions.sendKeys(component, Keys.SHIFT).perform();
 
 					case F2:
@@ -832,28 +832,36 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 						upOrDown(component, upAndDownActions, Keys.NUMPAD1, b);
 						break;
 
-					case Shift:
+					case SHIFT:
 						upOrDown(component,upAndDownActions, Keys.SHIFT, b);
 						break;
 
-					case Backspase:
+					case BACK_SPACE:
 						upOrDown(component,upAndDownActions, Keys.BACK_SPACE, b);
 						break;
 
-					case Delete:
+					case DELETE:
 						upOrDown(component,upAndDownActions, Keys.DELETE, b);
 						break;
 
-					case Enter:
+					case ENTER:
 						upOrDown(component,upAndDownActions, Keys.ENTER, b);
 						break;
 
-					case Escape:
+					case ESCAPE:
 						upOrDown(component,upAndDownActions, Keys.ESCAPE, b);
 						break;
 
-					case Tab:
+					case TAB:
 						upOrDown(component,upAndDownActions, Keys.TAB, b);
+						break;
+
+					case CONTROL:
+						upOrDown(component, upAndDownActions, Keys.CONTROL, b);
+						break;
+
+					case INSERT:
+						upOrDown(component, upAndDownActions, Keys.INSERT, b);
 						break;
 
 					default:

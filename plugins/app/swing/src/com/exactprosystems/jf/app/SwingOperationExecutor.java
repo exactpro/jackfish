@@ -1329,16 +1329,16 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 		int id = 0;
 		switch (key)
 		{
-			case Down :
+			case DOWN :
 				id = KeyEvent.VK_DOWN;
 				break;
-			case Up:
+			case UP:
 				id = KeyEvent.VK_UP;
 				break;
-			case Left:
+			case LEFT:
 				id = KeyEvent.VK_LEFT;
 				break;
-			case Right:
+			case RIGHT:
 				id = KeyEvent.VK_RIGHT;
 				break;
 			case A :
@@ -1360,31 +1360,31 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 				id=KeyEvent.VK_1;
 				break;
 
-			case Escape:
+			case ESCAPE:
 				id = KeyEvent.VK_ESCAPE;
 				break;
 
-			case Enter:
+			case ENTER:
 				id = KeyEvent.VK_ENTER;
 				break;
 
-			case Tab:
+			case TAB:
 				id = KeyEvent.VK_TAB;
 				break;
 
-			case Delete:
+			case DELETE:
 				id = KeyEvent.VK_DELETE;
 				break;
 
-			case Backspase:
+			case BACK_SPACE:
 				id = KeyEvent.VK_BACK_SPACE;
 				break;
 
-			case Capslock:
+			case CAPS_LOCK:
 				id = KeyEvent.VK_CAPS_LOCK;
 				break;
 
-			case Shift:
+			case SHIFT:
 				id = KeyEvent.VK_SHIFT;
 				break;
 		}
