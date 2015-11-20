@@ -8,6 +8,7 @@
 
 package com.exactprosystems.jf.tool.custom.logs;
 
+import com.exactprosystems.jf.common.MainRunner;
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.common.Settings.SettingsValue;
 import com.exactprosystems.jf.common.parser.SearchHelper;
@@ -15,7 +16,9 @@ import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.custom.console.ConsoleText;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
+
 import javafx.scene.paint.Color;
+
 import org.apache.log4j.Appender;
 import org.apache.log4j.FileAppender;
 import org.apache.log4j.Level;
@@ -143,10 +146,10 @@ public class LogsFx implements AutoCloseable
 		}
 	}
 
-	// TODO we don't have a root logger now
 	private static String mainLogFileName()
 	{
-		Enumeration<Appender> e = Logger.getRootLogger().getAllAppenders();
+		@SuppressWarnings("unchecked")
+		Enumeration<Appender> e = Logger.getLogger(MainRunner.class).getParent().getAllAppenders();
 		while (e.hasMoreElements())
 		{
 			Appender app = e.nextElement();
