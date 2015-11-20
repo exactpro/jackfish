@@ -137,6 +137,20 @@ public class Do
 		return new Operation().checkRegexp(regexp, flag);
 	}
 
+	static final String checkAttr = "Check, that value of attribute @name of current component equals @value";
+	@DescriptionAttribute(text = Do.checkAttr)
+	public static Operation checkAttr(String name, String value)
+	{
+		return new Operation().checkAttr(name, value);
+	}
+
+	static final String checkAttrRegexp = "Check, that value of attribute @name of current component is matching to @regexp";
+	@DescriptionAttribute(text = Do.checkAttrRegexp)
+	public static Operation checkRegexp(String name, String regexp)
+	{
+		return new Operation().checkAttrRegexp(name, regexp);
+	}
+	
 	static final String get = "Get text of current component";
 	@DescriptionAttribute(text = Do.get)
 	public static Operation get()

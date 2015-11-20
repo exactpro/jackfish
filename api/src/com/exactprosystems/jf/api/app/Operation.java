@@ -203,13 +203,6 @@ public class Operation implements Iterable<Part>, Serializable
 		return this;
 	}
 
-//	@DescriptionAttribute(text = Do.check)
-//	public Operation checkAttr(String name, String value)
-//	{
-//		return check(word, true);
-//	}
-
-	
 	@DescriptionAttribute(text = Do.checkRegexp)
 	public Operation checkRegexp(String regexp)
 	{
@@ -222,6 +215,20 @@ public class Operation implements Iterable<Part>, Serializable
 		return checkRegexp(regexp, x, y, true);
 	}
 
+	@DescriptionAttribute(text = Do.checkAttr)
+	public Operation checkAttr(String name, String value)
+	{
+		this.list.add(new Part(OperationKind.CHECK_ATTR).setStr(name).setText(value));
+		return this;
+	}
+
+	@DescriptionAttribute(text = Do.checkAttrRegexp)
+	public Operation checkAttrRegexp(String name, String regexp)
+	{
+		this.list.add(new Part(OperationKind.CHECK_ATTR_REGEXP).setStr(name).setText(regexp));
+		return this;
+	}
+	
 	@DescriptionAttribute(text = Do.checkRegexpCoorAndFlag)
 	public Operation checkRegexp(String regexp, int x, int y, boolean flag)
 	{
@@ -246,7 +253,7 @@ public class Operation implements Iterable<Part>, Serializable
 	@DescriptionAttribute(text = Do.getAttr)
 	public Operation getAttr(String name)
 	{
-		this.list.add(new Part(OperationKind.GET_ATTR).setText(name));
+		this.list.add(new Part(OperationKind.GET_ATTR).setStr(name));
 		return this;
 	}
 

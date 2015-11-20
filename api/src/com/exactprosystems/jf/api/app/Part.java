@@ -30,6 +30,7 @@ public class Part implements Serializable
 		this.b = false;
 		this.x = Integer.MIN_VALUE;
 		this.y = Integer.MIN_VALUE;
+		this.str = null;
 		this.text = null;
 		this.key = null;
 		this.mouse = null;
@@ -89,6 +90,7 @@ public class Part implements Serializable
 				+ (this.d != Double.NaN ? "d=" + this.d + " " : "") 
 				+ (this.x != Integer.MIN_VALUE ? "x=" + this.x + " " : "")
 				+ (this.y != Integer.MIN_VALUE ? "y=" + this.y + " " : "") 
+				+ (this.str != null ? "str=" + this.str + " " : "")
 				+ (this.text != null ? "text=" + this.text + " " : "")
 				+ (this.locatorId != null ? this.locatorKind + "=" + this.locatorId + " " : "")
 				+ (this.valueCondition != null ? "value condition=" + this.valueCondition + " " : "")
@@ -113,6 +115,12 @@ public class Part implements Serializable
 	public Part setY(int y)
 	{
 		this.y = y;
+		return this;
+	}
+	
+	public Part setStr(String str)
+	{
+		this.str = str;
 		return this;
 	}
 	
@@ -190,6 +198,7 @@ public class Part implements Serializable
 	protected int y;
 	protected double d;
 	protected boolean b;
+	protected String str;
 	protected String text;
 	protected ICondition valueCondition;
 	protected ICondition colorCondition;

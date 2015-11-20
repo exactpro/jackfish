@@ -174,6 +174,28 @@ public enum OperationKind
 		}
 	},
 	
+	CHECK_ATTR("checkAttr")
+	{
+		@Override
+		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, LocatorsHolder locators, List<T> list, Holder<T> component, OperationResult result) throws Exception
+		{
+			boolean res = checkText(executor.getAttr(component.value, part.str), part.text, false, part.b);
+			result.setText(String.valueOf(res));
+			return true;
+		}
+	},
+	
+	CHECK_ATTR_REGEXP("checkAttrRegexp")
+	{
+		@Override
+		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, LocatorsHolder locators, List<T> list, Holder<T> component, OperationResult result) throws Exception
+		{
+			boolean res = checkText(executor.getAttr(component.value, part.str), part.text, true, part.b);
+			result.setText(String.valueOf(res));
+			return true;
+		}
+	},
+
 	MOVE("move")
 	{
 		@Override
@@ -322,7 +344,7 @@ public enum OperationKind
 		@Override
 		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, LocatorsHolder locators, List<T> list, Holder<T> component, OperationResult result) throws Exception
 		{
-			String str = executor.getAttr(component.value, part.text);
+			String str = executor.getAttr(component.value, part.str);
 			result.setText(str);
 			return true;
 		}
