@@ -203,6 +203,13 @@ public class Operation implements Iterable<Part>, Serializable
 		return this;
 	}
 
+//	@DescriptionAttribute(text = Do.check)
+//	public Operation checkAttr(String name, String value)
+//	{
+//		return check(word, true);
+//	}
+
+	
 	@DescriptionAttribute(text = Do.checkRegexp)
 	public Operation checkRegexp(String regexp)
 	{
@@ -233,6 +240,13 @@ public class Operation implements Iterable<Part>, Serializable
 	public Operation get()
 	{
 		this.list.add(new Part(OperationKind.GET));
+		return this;
+	}
+
+	@DescriptionAttribute(text = Do.getAttr)
+	public Operation getAttr(String name)
+	{
+		this.list.add(new Part(OperationKind.GET_ATTR).setText(name));
 		return this;
 	}
 

@@ -34,11 +34,13 @@ import java.util.concurrent.atomic.AtomicLong;
 
 public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 {
-	private static final String tag_tbody = "tbody";
-	private static final String tag_tr = "tr";
-	private static final String tag_td = "td";
-	private static final String tag_thead = "thead";
-	private static final String tag_th = "th";
+	private static final String tag_tbody 	= "tbody";
+	private static final String tag_tr 		= "tr";
+	private static final String tag_td 		= "td";
+	private static final String tag_thead 	= "thead";
+	private static final String tag_th 		= "th";
+	private static final String csv_prefix 	= "csv:";
+	
 	private final int repeatLimit = 4;
 
 	public SeleniumOperationExecutor(EventFiringWebDriver driver, Logger logger)
@@ -85,6 +87,38 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 					return component.getAttribute("value");
 				}
 				return component.getText();
+			}
+			catch (StaleElementReferenceException e)
+			{
+				real = e;
+				logger.debug("Element is no longer attached to the DOM. Try in SeleniumOperationExecutor : " + repeat);
+				//				throw new StaleElementReferenceException("Element is no longer attached to the DOM");
+			}
+		}
+		while (++repeat < repeatLimit);
+		throw real;
+	}
+
+	@Override
+	public String getAttr(WebElement component, String name) throws Exception
+	{
+		Exception real = null;
+		int repeat = 1;
+		do
+		{
+			try
+			{
+				if (name == null)
+				{
+					return null;
+				}
+				
+				if (name.startsWith(csv_prefix))
+				{
+					String csvName = name.substring(csv_prefix.length());
+					return component.getCssValue(csvName);
+				}
+				return component.getAttribute(name);
 			}
 			catch (StaleElementReferenceException e)
 			{

@@ -36,6 +36,7 @@ public interface OperationExecutor<T>
 	boolean 					setValue		(T component, double value																								) throws Exception;
 	String						getValue		(T component																											) throws Exception;
 	String						get				(T component																											) throws Exception;
+	String						getAttr			(T component, String name																								) throws Exception;
 
 	boolean 					mouseTable		(T component, int column, int row, MouseAction action																	) throws Exception;
 	boolean						textTableCell	(T component, int column, int row, String text																			) throws Exception;

@@ -10,6 +10,7 @@ package com.exactprosystems.jf.app;
 
 import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.client.ICondition;
+
 import org.apache.log4j.Logger;
 import org.fest.swing.core.ComponentMatcher;
 import org.fest.swing.core.KeyPressInfo;
@@ -26,6 +27,7 @@ import javax.swing.text.JTextComponent;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
+
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.rmi.RemoteException;
@@ -761,6 +763,24 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 		}
 	}
 
+	@Override
+	public String getAttr(ComponentFixture<Component> component, String name) throws Exception
+	{
+		try
+		{
+			this.currentRobot.waitForIdle();
+			
+			// TODO make it
+			return "";
+		}
+		catch (Throwable e)
+		{
+			logger.error(String.format("get(%s)", component));
+			logger.error(e.getMessage(), e);
+			throw e;
+		}
+	}
+	
 	@Override
 	public boolean tableIsContainer()
 	{

@@ -48,6 +48,14 @@ public class WindowsOperationExecutor implements OperationExecutor<UIProxy>
 		logger.trace("::get << " + ret);
 		return ret;
 	}
+	
+	@Override
+	public String getAttr(UIProxy component, String name) throws Exception
+	{
+		// TODO make it
+		return "";
+	}
+	
 
 	@Override
 	public Map<String, String> getRow(UIProxy component, Locator additional, Locator header, boolean useNumericHeader, ICondition valueCondition, ICondition colorCondition) throws Exception

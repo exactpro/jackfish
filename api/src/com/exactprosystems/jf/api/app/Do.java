@@ -144,6 +144,13 @@ public class Do
 		return new Operation().get();
 	}
 
+	static final String getAttr = "Get attribute with @name of current component";
+	@DescriptionAttribute(text = Do.getAttr)
+	public static Operation getAttr(String name)
+	{
+		return new Operation().getAttr(name);
+	}
+
 	static final String getValueWithCoor = "If current component is table and x and y >= 0, then get text of table from @x column and @y row";
 	@DescriptionAttribute(text = Do.getValueWithCoor)
 	public static Operation getValue(int x, int y)

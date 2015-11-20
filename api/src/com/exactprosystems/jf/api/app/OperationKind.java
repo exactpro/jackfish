@@ -317,6 +317,17 @@ public enum OperationKind
 		}
 	},
 	
+	GET_ATTR("getAttr")
+	{
+		@Override
+		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, LocatorsHolder locators, List<T> list, Holder<T> component, OperationResult result) throws Exception
+		{
+			String str = executor.getAttr(component.value, part.text);
+			result.setText(str);
+			return true;
+		}
+	},
+
 	GET_VALUE_XY("getValue(x,y)")
 	{
 		@Override
