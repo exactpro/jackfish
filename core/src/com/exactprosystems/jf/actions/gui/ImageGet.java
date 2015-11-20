@@ -91,10 +91,17 @@ public class ImageGet extends AbstractAction
 		
 		if (this.name == null)
 		{
+			boolean found = false;
 			for(IControl self : window.getControls(SectionKind.Self))
 			{
+				found = true;
 				imageWrapper = service.getImage(null, self.locator());
 				break;
+			}
+
+			if (!found)
+			{
+				throw new Exception("Cannot find any controls in dialog='" + window +"' in section " + SectionKind.Self);
 			}
 		}
 		else

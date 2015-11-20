@@ -143,6 +143,7 @@ public class LogsFx implements AutoCloseable
 		}
 	}
 
+	// TODO we don't have a root logger now
 	private static String mainLogFileName()
 	{
 		Enumeration<Appender> e = Logger.getRootLogger().getAllAppenders();

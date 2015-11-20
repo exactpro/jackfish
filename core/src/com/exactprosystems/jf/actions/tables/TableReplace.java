@@ -17,12 +17,12 @@ import com.exactprosystems.jf.functions.Table;
 	)
 public class TableReplace extends AbstractAction 
 {
-	public final static String tableName = "Table";
-	public final static String colunmsName = "Columns";
-	public final static String replaceName = "Replace";
-	public final static String searchName = "Search";
-	public final static String regexpName = "Regexp";
-	public final static String matchCellname = "MatchCell";
+	public final static String tableName 		= "Table";
+	public final static String colunmsName 		= "Columns";
+	public final static String replaceName 		= "Replace";
+	public final static String searchName 		= "Search";
+	public final static String regexpName 		= "Regexp";
+	public final static String matchCellname 	= "MatchCell";
 
 	@ActionFieldAttribute(name = tableName, mandatory = true, description = "The table.")
 	protected Table 	table 	= null;
@@ -30,17 +30,17 @@ public class TableReplace extends AbstractAction
 	@ActionFieldAttribute(name = colunmsName, mandatory = true, description = "Array of columns.")
 	protected String[]	columns 	= new String[] {};
 
-	@ActionFieldAttribute(name = searchName, mandatory = true, description = "Value that will be put into the table.")
+	@ActionFieldAttribute(name = searchName, mandatory = false, description = "If value of cell or part of cell equals this value then it will be changed to Replace.")
 	protected Object 	search 	= null;
-
-	@ActionFieldAttribute(name = replaceName, mandatory = false, description = "If value of cell equals this value then it will be changed to Replace.")
-	protected Object 	replace = null;
 
 	@ActionFieldAttribute(name = regexpName, mandatory = false, description = "If value of cell matches this regexp then it will be changed to Replace.")
 	protected String 	regexp 	= null;
 
-	//TODO help me with description
-	@ActionFieldAttribute(name = matchCellname, mandatory = false, description = "If matchCell true, will be get whole cell. If false - substring of text on cell")
+	@ActionFieldAttribute(name = replaceName, mandatory = true, description = "Value that will be put into.")
+	protected Object 	replace = null;
+
+	@ActionFieldAttribute(name = matchCellname, mandatory = false, description = "If true, whole cell will be replaced, otherwise only matching part will be replaced."
+			+ "Doesn't matter if you point Regexp.")
 	protected Boolean	matchCell = true;
 
 	public TableReplace()
@@ -52,7 +52,7 @@ public class TableReplace extends AbstractAction
 	{
 		if (this.regexp == null)
 		{
-			this.table.replace(this.search, this.replace, matchCell, this.columns);
+			this.table.replace(this.search, this.replace, this.matchCell, this.columns);
 		}
 		else
 		{
