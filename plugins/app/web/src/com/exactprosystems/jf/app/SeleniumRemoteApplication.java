@@ -533,15 +533,11 @@ public class SeleniumRemoteApplication extends RemoteApplication
 			DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
 			Document document = docBuilder.newDocument();
-
 			String outerHtml = element.getAttribute("outerHTML");
 			org.jsoup.nodes.Document doc = Jsoup.parse(outerHtml);
 			org.jsoup.nodes.Element body = doc.getElementsByTag("body").get(0);
+			buildDom(document, document, body);
 
-			int[] count = new int[]{0};
-			long begin = System.currentTimeMillis();
-			buildDom(document, document, body, count);
-			logger.debug("Created document, time : " + (System.currentTimeMillis() - begin) + " ms, total items : " + count[0]);
 			return document;
 		}
 		catch (Exception e)
@@ -580,15 +576,14 @@ public class SeleniumRemoteApplication extends RemoteApplication
 		}
 	}
 
-	private void buildDom(Document document, Node current, org.jsoup.nodes.Element element, int[] count)
+	private void buildDom(Document document, Node current, org.jsoup.nodes.Element element)
 	{
-		count[0]++;
 		Element node = document.createElement(element.tagName());
 		setNodeAttributes(node, element);
 		current.appendChild(node);
 		for (org.jsoup.nodes.Element child : element.children())
 		{
-			buildDom(document, node, child, count);
+			buildDom(document, node, child);
 		}
 	}
 
