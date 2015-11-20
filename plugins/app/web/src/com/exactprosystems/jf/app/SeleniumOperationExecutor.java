@@ -9,22 +9,21 @@
 package com.exactprosystems.jf.app;
 
 import com.exactprosystems.jf.api.app.*;
+import com.exactprosystems.jf.api.app.Keyboard;
 import com.exactprosystems.jf.api.client.ICondition;
 import org.apache.log4j.Logger;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
-import org.openqa.selenium.StaleElementReferenceException;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.interactions.*;
 import org.openqa.selenium.support.events.EventFiringWebDriver;
 import org.openqa.selenium.support.ui.Select;
 
 import java.awt.*;
+import java.lang.reflect.Method;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -47,7 +46,7 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 	{
 		this.driver = driver;
 		this.logger = logger;
-		this.upAndDownActions = new Actions(this.driver);
+		this.customAction = new CustomAction(this.driver);
 	}
 
 	@Override
@@ -535,7 +534,7 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 	public boolean mouse(WebElement component, int x, int y, MouseAction action) throws Exception
 	{
 		Exception real = null;
-		setModifier();
+		logModifier();
 		int repeat = 1;
 		do
 		{
@@ -546,22 +545,22 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 					case Move:
 						if (x == Integer.MIN_VALUE || y == Integer.MIN_VALUE)
 						{
-							upAndDownActions.moveToElement(component).perform();
+							customAction.moveToElement(component).perform();
 						}
 						else
 						{
-							upAndDownActions.moveToElement(component, x, y).perform();
+							customAction.moveToElement(component, x, y).perform();
 						}
 						break;
 
 					case LeftClick:
 						if (x == Integer.MIN_VALUE || y == Integer.MIN_VALUE)
 						{
-							upAndDownActions.moveToElement(component).click().perform();
+							customAction.moveToElement(component).click().perform();
 						}
 						else
 						{
-							upAndDownActions.moveToElement(component, x, y).click().perform();
+							customAction.moveToElement(component, x, y).click().perform();
 						}
 						break;
 
@@ -574,11 +573,11 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 						{
 							if (x == Integer.MIN_VALUE || y == Integer.MIN_VALUE)
 							{
-								upAndDownActions.moveToElement(component).doubleClick().perform();
+								customAction.moveToElement(component).doubleClick().perform();
 							}
 							else
 							{
-								upAndDownActions.moveToElement(component, x, y).doubleClick().perform();
+								customAction.moveToElement(component, x, y).doubleClick().perform();
 							}
 						}
 						break;
@@ -586,11 +585,11 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 					case RightClick:
 						if (x == Integer.MIN_VALUE || y == Integer.MIN_VALUE)
 						{
-							upAndDownActions.contextClick(component).perform();
+							customAction.contextClick(component).perform();
 						}
 						else
 						{
-							upAndDownActions.moveToElement(component, x, y).contextClick().perform();
+							customAction.moveToElement(component, x, y).contextClick().perform();
 						}
 						break;
 
@@ -775,7 +774,7 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 	public boolean press(WebElement component, Keyboard key) throws Exception
 	{
 		Exception real = null;
-		setModifier();
+		logModifier();
 		int repeat = 1;
 		do
 		{
@@ -784,47 +783,47 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 				switch (key)
 				{
 					case DOWN:
-						this.upAndDownActions.sendKeys(component, Keys.DOWN).perform();
+						this.customAction.sendKeys(component, Keys.DOWN).perform();
 						break;
 
 					case ESCAPE:
-						this.upAndDownActions.sendKeys(component, Keys.ESCAPE).perform();
+						this.customAction.sendKeys(component, Keys.ESCAPE).perform();
 						break;
 
 					case ENTER:
-						this.upAndDownActions.sendKeys(component, Keys.ENTER).perform();
+						this.customAction.sendKeys(component, Keys.ENTER).perform();
 						break;
 
 					case TAB:
-						this.upAndDownActions.sendKeys(component, Keys.TAB).perform();
+						this.customAction.sendKeys(component, Keys.TAB).perform();
 						break;
 
 					case DELETE:
-						this.upAndDownActions.sendKeys(component, Keys.DELETE).perform();
+						this.customAction.sendKeys(component, Keys.DELETE).perform();
 						break;
 
 					case BACK_SPACE:
-						this.upAndDownActions.sendKeys(component, Keys.BACK_SPACE).perform();
+						this.customAction.sendKeys(component, Keys.BACK_SPACE).perform();
 						break;
 
 					case SHIFT:
-						this.upAndDownActions.sendKeys(component, Keys.SHIFT).perform();
+						this.customAction.sendKeys(component, Keys.SHIFT).perform();
 						break;
 
 					case INSERT:
-						this.upAndDownActions.sendKeys(component, Keys.INSERT).perform();
+						this.customAction.sendKeys(component, Keys.INSERT).perform();
 						break;
 
 					case ALT:
-						this.upAndDownActions.sendKeys(component, Keys.ALT).perform();
+						this.customAction.sendKeys(component, Keys.ALT).perform();
 						break;
 
 					case CONTROL:
-						this.upAndDownActions.sendKeys(component, Keys.CONTROL).perform();
+						this.customAction.sendKeys(component, Keys.CONTROL).perform();
 						break;
 
 					case F2:
-						this.upAndDownActions.sendKeys(component, Keys.F2).perform();
+						this.customAction.sendKeys(component, Keys.F2).perform();
 						break;
 
 					default:
@@ -851,14 +850,38 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 		{
 			case SHIFT:
 				this.isShiftDown = b;
+				if (this.isShiftDown)
+				{
+					this.customAction.keyDown(Keys.SHIFT);
+				}
+				else
+				{
+					this.customAction.keyUp(Keys.SHIFT);
+				}
 				break;
 
 			case CONTROL:
 				this.isCtrlDown = b;
+				if (this.isCtrlDown)
+				{
+					this.customAction.keyDown(Keys.CONTROL);
+				}
+				else
+				{
+					this.customAction.keyUp(Keys.CONTROL);
+				}
 				break;
 
 			case ALT:
 				this.isAltDown = b;
+				if (this.isAltDown)
+				{
+					this.customAction.keyDown(Keys.ALT);
+				}
+				else
+				{
+					this.customAction.keyUp(Keys.ALT);
+				}
 				break;
 
 			default:
@@ -871,7 +894,7 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 	public boolean setValue(WebElement component, double value) throws Exception
 	{
 		Exception real = null;
-		setModifier();
+		logModifier();
 		int repeat = 1;
 		do
 		{
@@ -881,12 +904,12 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 				int width = component.getSize().getWidth();
 				if (height > width)
 				{
-					upAndDownActions.moveToElement(component, 0, (int) ((double)(value * ((double) width / 100)))).click().build().perform();
+					customAction.moveToElement(component, 0, (int) ((double) (value * ((double) width / 100)))).click().build().perform();
 				}
 				//horizontal slider
 				else
 				{
-					upAndDownActions.moveToElement(component, (int) ((double)(value * ((double) width / 100))), 0).click().build().perform();
+					customAction.moveToElement(component, (int) ((double) (value * ((double) width / 100))), 0).click().build().perform();
 				}
 
 				return true;
@@ -1183,44 +1206,54 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 		throw real;
 	}
 
-	private void setModifier()
+	private void logModifier()
 	{
-		if (this.isShiftDown)
-		{
-			this.upAndDownActions.keyDown(Keys.SHIFT);
-		}
-		else
-		{
-			this.upAndDownActions.keyUp(Keys.SHIFT);
-		}
-
-		if (this.isAltDown)
-		{
-			this.upAndDownActions.keyDown(Keys.ALT);
-		}
-		else
-		{
-			this.upAndDownActions.keyUp(Keys.ALT);
-		}
-
-		if (this.isCtrlDown)
-		{
-			this.upAndDownActions.keyDown(Keys.CONTROL);
-		}
-		else
-		{
-			this.upAndDownActions.keyUp(Keys.CONTROL);
-		}
 		logger.debug("shift press	: " + isShiftDown);
 		logger.debug("alt press		: " + isAltDown);
 		logger.debug("control press	: " + isCtrlDown);
+		for (Action action : customAction.getComposite().asList())
+		{
+			try
+			{
+				Method m = action.getClass().getDeclaredMethod("asList");
+				Object invoke = m.invoke(action);
+				logger.debug("action : " + ((List<Object>) invoke).get(0) + " : " + ((List<Object>) invoke).get(1));
+			}
+			catch (Exception e)
+			{
+				logger.debug(action + " not have method asList");
+			}
+		}
 	}
 
 	private boolean isShiftDown = false;
 	private boolean isCtrlDown = false;
 	private boolean isAltDown = false;
 
-	private Actions upAndDownActions;
+	private CustomAction customAction;
 	private EventFiringWebDriver driver;
 	private Logger logger;
+
+	private static class CustomAction extends Actions {
+
+		public CustomAction(WebDriver driver)
+		{
+			super(driver);
+		}
+
+		public CustomAction(org.openqa.selenium.interactions.Keyboard keyboard, Mouse mouse)
+		{
+			super(keyboard, mouse);
+		}
+
+		public CustomAction(org.openqa.selenium.interactions.Keyboard keyboard)
+		{
+			super(keyboard);
+		}
+
+		public CompositeAction getComposite()
+		{
+			return super.action;
+		}
+	}
 }
