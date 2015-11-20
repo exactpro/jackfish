@@ -39,14 +39,15 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 	private static final String tag_td 		= "td";
 	private static final String tag_thead 	= "thead";
 	private static final String tag_th 		= "th";
-	private static final String csv_prefix 	= "csv:";
-	
+	private static final String css_prefix	= "css:";
+
 	private final int repeatLimit = 4;
 
 	public SeleniumOperationExecutor(EventFiringWebDriver driver, Logger logger)
 	{
 		this.driver = driver;
 		this.logger = logger;
+		this.upAndDownActions = new Actions(this.driver);
 	}
 
 	@Override
@@ -92,7 +93,6 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 			{
 				real = e;
 				logger.debug("Element is no longer attached to the DOM. Try in SeleniumOperationExecutor : " + repeat);
-				//				throw new StaleElementReferenceException("Element is no longer attached to the DOM");
 			}
 		}
 		while (++repeat < repeatLimit);
@@ -113,10 +113,10 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 					return null;
 				}
 				
-				if (name.startsWith(csv_prefix))
+				if (name.startsWith(css_prefix))
 				{
-					String csvName = name.substring(csv_prefix.length());
-					return component.getCssValue(csvName);
+					String cssAttrName = name.substring(css_prefix.length());
+					return component.getCssValue(cssAttrName);
 				}
 				return component.getAttribute(name);
 			}
@@ -124,7 +124,6 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 			{
 				real = e;
 				logger.debug("Element is no longer attached to the DOM. Try in SeleniumOperationExecutor : " + repeat);
-				//				throw new StaleElementReferenceException("Element is no longer attached to the DOM");
 			}
 		}
 		while (++repeat < repeatLimit);
@@ -164,7 +163,6 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 			{
 				real = e;
 				logger.debug("Element is no longer attached to the DOM. Try in SeleniumOperationExecutor : " + repeat);
-				//				throw new StaleElementReferenceException("Element is no longer attached to the DOM");
 			}
 			catch (Exception e)
 			{
@@ -202,7 +200,6 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 			{
 				real = e;
 				logger.debug("Element is no longer attached to the DOM. Try in SeleniumOperationExecutor : " + repeat);
-				//				throw new StaleElementReferenceException("Element is no longer attached to the DOM");
 			}
 			catch (Exception e)
 			{
@@ -409,9 +406,7 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 			try
 			{
 				By by = new MatcherSelenium(controlKind, locator);
-
-				List<WebElement> ret = (window == null) ? driver.findElements(by) : window.findElements(by);
-				return ret;
+				return (window == null) ? driver.findElements(by) : window.findElements(by);
 			}
 			catch (StaleElementReferenceException e)
 			{
@@ -514,13 +509,9 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 				}
 				else
 				{
-					logger.debug("Row = " + y);
 					List<WebElement> rows = findRows(additional, tableComp);
-					logger.debug("Rows count = " + rows.size());
 					WebElement row1 = rows.get(y);
-					logger.debug("Column = " + x);
 					List<WebElement> cells1 = row1.findElements(By.tagName(tag_td));
-					logger.debug("Column count " + cells1.size());
 					return cells1.get(x);
 				}
 			}
@@ -544,33 +535,33 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 	public boolean mouse(WebElement component, int x, int y, MouseAction action) throws Exception
 	{
 		Exception real = null;
+		setModifier();
 		int repeat = 1;
 		do
 		{
 			try
 			{
-				Actions clicker = new Actions(driver);
 				switch (action)
 				{
 					case Move:
 						if (x == Integer.MIN_VALUE || y == Integer.MIN_VALUE)
 						{
-							clicker.moveToElement(component).perform();
+							upAndDownActions.moveToElement(component).perform();
 						}
 						else
 						{
-							clicker.moveToElement(component, x, y).perform();
+							upAndDownActions.moveToElement(component, x, y).perform();
 						}
 						break;
 
 					case LeftClick:
 						if (x == Integer.MIN_VALUE || y == Integer.MIN_VALUE)
 						{
-							clicker.moveToElement(component).click().perform();
+							upAndDownActions.moveToElement(component).click().perform();
 						}
 						else
 						{
-							clicker.moveToElement(component, x, y).click().perform();
+							upAndDownActions.moveToElement(component, x, y).click().perform();
 						}
 						break;
 
@@ -583,11 +574,11 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 						{
 							if (x == Integer.MIN_VALUE || y == Integer.MIN_VALUE)
 							{
-								clicker.moveToElement(component).doubleClick().perform();
+								upAndDownActions.moveToElement(component).doubleClick().perform();
 							}
 							else
 							{
-								clicker.moveToElement(component, x, y).doubleClick().perform();
+								upAndDownActions.moveToElement(component, x, y).doubleClick().perform();
 							}
 						}
 						break;
@@ -595,20 +586,17 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 					case RightClick:
 						if (x == Integer.MIN_VALUE || y == Integer.MIN_VALUE)
 						{
-							clicker.contextClick(component).perform();
+							upAndDownActions.contextClick(component).perform();
 						}
 						else
 						{
-							clicker.moveToElement(component, x, y).contextClick().perform();
+							upAndDownActions.moveToElement(component, x, y).contextClick().perform();
 						}
 						break;
 
 					case RightDoubleClick:
 						return false;
-
 				}
-
-
 				return true;
 			}
 			catch (StaleElementReferenceException e)
@@ -787,8 +775,8 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 	public boolean press(WebElement component, Keyboard key) throws Exception
 	{
 		Exception real = null;
+		setModifier();
 		int repeat = 1;
-		Actions actions = new Actions(this.driver);
 		do
 		{
 			try
@@ -796,34 +784,47 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 				switch (key)
 				{
 					case DOWN:
-						actions.sendKeys(component, Keys.DOWN).perform();
+						this.upAndDownActions.sendKeys(component, Keys.DOWN).perform();
 						break;
 
 					case ESCAPE:
-						actions.sendKeys(component, Keys.ESCAPE).perform();
+						this.upAndDownActions.sendKeys(component, Keys.ESCAPE).perform();
 						break;
 
 					case ENTER:
-						actions.sendKeys(component, Keys.ENTER).perform();
+						this.upAndDownActions.sendKeys(component, Keys.ENTER).perform();
 						break;
 
 					case TAB:
-						actions.sendKeys(component, Keys.TAB).perform();
+						this.upAndDownActions.sendKeys(component, Keys.TAB).perform();
 						break;
 
 					case DELETE:
-						actions.sendKeys(component, Keys.DELETE).perform();
+						this.upAndDownActions.sendKeys(component, Keys.DELETE).perform();
 						break;
 
 					case BACK_SPACE:
-						actions.sendKeys(component, Keys.BACK_SPACE).perform();
+						this.upAndDownActions.sendKeys(component, Keys.BACK_SPACE).perform();
 						break;
 
 					case SHIFT:
-						actions.sendKeys(component, Keys.SHIFT).perform();
+						this.upAndDownActions.sendKeys(component, Keys.SHIFT).perform();
+						break;
+
+					case INSERT:
+						this.upAndDownActions.sendKeys(component, Keys.INSERT).perform();
+						break;
+
+					case ALT:
+						this.upAndDownActions.sendKeys(component, Keys.ALT).perform();
+						break;
+
+					case CONTROL:
+						this.upAndDownActions.sendKeys(component, Keys.CONTROL).perform();
+						break;
 
 					case F2:
-						actions.sendKeys(component, Keys.F2).perform();
+						this.upAndDownActions.sendKeys(component, Keys.F2).perform();
 						break;
 
 					default:
@@ -846,106 +847,46 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 	@Override
 	public boolean upAndDown(WebElement component, Keyboard key, boolean b) throws Exception
 	{
-		Exception real = null;
-		int repeat = 1;
-		do
+		switch (key)
 		{
-			try
-			{
-				if (b)
-				{
-					upAndDownActions = new Actions(driver);
-				}
-				switch (key)
-				{
-					case F2:
-						upOrDown(component,upAndDownActions, Keys.F2, b);
-						break;
+			case SHIFT:
+				this.isShiftDown = b;
+				break;
 
-					case DIG1:
-						upOrDown(component, upAndDownActions, Keys.NUMPAD1, b);
-						break;
+			case CONTROL:
+				this.isCtrlDown = b;
+				break;
 
-					case SHIFT:
-						upOrDown(component,upAndDownActions, Keys.SHIFT, b);
-						break;
+			case ALT:
+				this.isAltDown = b;
+				break;
 
-					case BACK_SPACE:
-						upOrDown(component,upAndDownActions, Keys.BACK_SPACE, b);
-						break;
-
-					case DELETE:
-						upOrDown(component,upAndDownActions, Keys.DELETE, b);
-						break;
-
-					case ENTER:
-						upOrDown(component,upAndDownActions, Keys.ENTER, b);
-						break;
-
-					case ESCAPE:
-						upOrDown(component,upAndDownActions, Keys.ESCAPE, b);
-						break;
-
-					case TAB:
-						upOrDown(component,upAndDownActions, Keys.TAB, b);
-						break;
-
-					case CONTROL:
-						upOrDown(component, upAndDownActions, Keys.CONTROL, b);
-						break;
-
-					case INSERT:
-						upOrDown(component, upAndDownActions, Keys.INSERT, b);
-						break;
-
-					default:
-						return false;
-				}
-				return true;
-			}
-			catch (StaleElementReferenceException e)
-			{
-				real = e;
-				logger.debug("Element is no longer attached to the DOM. Try in SeleniumOperationExecutor : " + repeat);
-			}
+			default:
+				return false;
 		}
-		while (++repeat < repeatLimit);
-		throw real;
-	}
-
-	private void upOrDown(WebElement component, Actions actions, Keys keys, boolean down)
-	{
-		if (down)
-		{
-			actions.keyDown(component, keys).build().perform();
-		}
-		else
-		{
-			actions.keyUp(component, keys).build().perform();
-		}
+		return true;
 	}
 
 	@Override
 	public boolean setValue(WebElement component, double value) throws Exception
 	{
 		Exception real = null;
+		setModifier();
 		int repeat = 1;
 		do
 		{
 			try
 			{
-				Actions actions = new Actions(driver);
-
 				int height = component.getSize().getHeight();
 				int width = component.getSize().getWidth();
 				if (height > width)
 				{
-					actions.moveToElement(component, 0, (int) ((double)(value * ((double) width / 100)))).click().build().perform();
+					upAndDownActions.moveToElement(component, 0, (int) ((double)(value * ((double) width / 100)))).click().build().perform();
 				}
 				//horizontal slider
 				else
 				{
-					actions.moveToElement(component, (int) ((double)(value * ((double) width / 100))), 0).click().build().perform();
+					upAndDownActions.moveToElement(component, (int) ((double)(value * ((double) width / 100))), 0).click().build().perform();
 				}
 
 				return true;
@@ -980,7 +921,6 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 			{
 				real = e;
 				logger.debug("Element is no longer attached to the DOM. Try in SeleniumOperationExecutor : " + repeat);
-				//throw new StaleElementReferenceException("Element is no longer attached to the DOM");
 			}
 		}
 		while (++repeat < repeatLimit);
@@ -1138,7 +1078,6 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 		return result;
 	}
 
-
 	private List<WebElement> findRows(Locator additional, WebElement component) throws Exception
 	{
 		Exception real = null;
@@ -1243,6 +1182,43 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 		while (++repeat < repeatLimit);
 		throw real;
 	}
+
+	private void setModifier()
+	{
+		if (this.isShiftDown)
+		{
+			this.upAndDownActions.keyDown(Keys.SHIFT);
+		}
+		else
+		{
+			this.upAndDownActions.keyUp(Keys.SHIFT);
+		}
+
+		if (this.isAltDown)
+		{
+			this.upAndDownActions.keyDown(Keys.ALT);
+		}
+		else
+		{
+			this.upAndDownActions.keyUp(Keys.ALT);
+		}
+
+		if (this.isCtrlDown)
+		{
+			this.upAndDownActions.keyDown(Keys.CONTROL);
+		}
+		else
+		{
+			this.upAndDownActions.keyUp(Keys.CONTROL);
+		}
+		logger.debug("shift press	: " + isShiftDown);
+		logger.debug("alt press		: " + isAltDown);
+		logger.debug("control press	: " + isCtrlDown);
+	}
+
+	private boolean isShiftDown = false;
+	private boolean isCtrlDown = false;
+	private boolean isAltDown = false;
 
 	private Actions upAndDownActions;
 	private EventFiringWebDriver driver;
