@@ -8,7 +8,9 @@
 
 package com.exactprosystems.jf.common;
 
+import com.exactprosystems.jf.api.app.IApplicationFactory;
 import com.exactprosystems.jf.api.app.IApplicationPool;
+import com.exactprosystems.jf.api.app.IGuiDictionary;
 import com.exactprosystems.jf.api.app.Mutable;
 import com.exactprosystems.jf.api.client.IClientsPool;
 import com.exactprosystems.jf.api.common.Converter;
@@ -434,6 +436,27 @@ public class Configuration extends AbstractDocument
 		this("unknown", new ConsoleUpdateLibsListener(), new Settings());
 	}
 
+	
+	public IClientsPool getClientPool()
+	{
+		return this.clients;
+	}
+
+	public IApplicationPool getApplicationPool()
+	{
+		return this.applications;
+	}
+
+	public IServicesPool getServicesPool()
+	{
+		return this.services;
+	}
+
+	public DataBasePool getDataBasesPool()
+	{
+		return this.databases;
+	}
+
 	public Settings getSettings()
 	{
 		return this.settings;
@@ -455,6 +478,29 @@ public class Configuration extends AbstractDocument
 		}
 	}
 	
+	public void dictionaryChanged(String name, IGuiDictionary dictionary)
+	{
+		for (AppEntry entry : this.appEntriesValue)
+		{
+			
+			try
+			{
+				String dicName = entry.get(appDicPath);
+				String id = entry.get(entryName);
+				
+				if (dicName != null && dicName.equals(name))
+				{
+					IApplicationFactory factory = getApplicationPool().loadApplicationFactory(id);
+					factory.init(dictionary);
+				}
+			}
+			catch (Exception e)
+			{ 
+				// nothing to do
+			}
+		}
+	}
+
 	public void updateLibs()
 	{
 		this.libs.clear();
@@ -1062,24 +1108,4 @@ public class Configuration extends AbstractDocument
 	protected boolean valid = false;
 
 	private static final Logger logger = Logger.getLogger(Configuration.class);
-
-	public IClientsPool getClientPool()
-	{
-		return this.clients;
-	}
-
-	public IApplicationPool getApplicationPool()
-	{
-		return this.applications;
-	}
-
-	public IServicesPool getServicesPool()
-	{
-		return this.services;
-	}
-
-	public DataBasePool getDataBasesPool()
-	{
-		return this.databases;
-	}
 }
