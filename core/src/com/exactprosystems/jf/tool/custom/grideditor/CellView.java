@@ -11,6 +11,7 @@ import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.beans.value.WeakChangeListener;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.SetChangeListener;
 import javafx.collections.WeakSetChangeListener;
@@ -29,6 +30,7 @@ import java.util.stream.IntStream;
 public class CellView extends TableCell<ObservableList<SpreadsheetCell>, SpreadsheetCell>
 {
 	private final SpreadsheetHandle handle;
+	private ObservableList<TablePosition> selectedCell;
 
 	private static final String ANCHOR_PROPERTY_KEY = "table.anchor"; //$NON-NLS-1$
 
@@ -70,6 +72,7 @@ public class CellView extends TableCell<ObservableList<SpreadsheetCell>, Spreads
 				}
 				if (this.handle.getGridView().getSelectionModel().getSelectionMode().equals(SelectionMode.MULTIPLE))
 				{
+					this.selectedCell = FXCollections.observableArrayList(this.handle.getView().getSelectionModel().getSelectedCells());
 					startFullDrag();
 				}
 			}
@@ -97,14 +100,72 @@ public class CellView extends TableCell<ObservableList<SpreadsheetCell>, Spreads
 			CellView source = ((CellView) event.getGestureSource());
 			if (source.getCursor() != null && source.getCursor().equals(Cursor.CROSSHAIR))
 			{
+				List<TablePosition> initialCells = source.getInitialCells();
 				final RectangleSelection.GridRange range = this.handle.getCellsViewSkin().getRectangleSelection().getRange();
 				final DataProvider provider = this.handle.getView().getProvider();
-				String text = source.getText();
-				IntStream.range(range.getLeft(), range.getRight() + 1).forEach(i -> IntStream.range(range.getTop(), range.getBottom() + 1).forEach(j -> provider.setCellValue(i, j, text)));
-				this.handle.getView().setDataProvider(provider);
+				/**
+				 * only one selected cell. easy
+				 */
+				if (initialCells.size() == 1)
+				{
+					StringBuilder text = new StringBuilder(source.getText());
+					IntStream.range(range.getTop(), range.getBottom() + 1).forEach(j -> IntStream.range(range.getLeft(), range.getRight() + 1).forEach(i -> provider.setCellValue(i, j, getEvaluatedText(text))));
+					this.handle.getView().setDataProvider(provider);
+				}
+				else
+				{
+					for (TablePosition initialCell : initialCells)
+					{
+						//TODO think about progression
+						System.out.println(initialCell.getRow() + " : " + initialCell.getColumn());
+					}
+					//IntStream.range(range.getTop(), range.getBottom() + 1).forEach(j -> IntStream.range(range.getLeft(), range.getRight() + 1).forEach(i -> provider.setCellValue(i, j, getEvaluatedText(text))));
+				}
 			}
 		});
 		itemProperty().addListener(itemChangeListener);
+	}
+
+	private String getEvaluatedText(StringBuilder sb)
+	{
+		String s = sb.toString();
+		/**
+		 *  only number
+		 */
+		try
+		{
+			int i = Integer.parseInt(s);
+			sb.delete(0, sb.length());
+			int w = i + 1;
+			sb.append(w);
+			return String.valueOf(i);
+		}
+		catch (Exception e)
+		{
+			//
+		}
+		/**
+		 *  number add string
+		 */
+		try
+		{
+			//TODO need implements strings like these 96SW100, 96SW, SW100
+			//not(!) need implements(!) strings like this SW9SW
+
+		}
+		catch (Exception e)
+		{
+			//
+		}
+		/**
+		 *  only string
+		 */
+		return sb.toString();
+	}
+
+	public ObservableList<TablePosition> getInitialCells()
+	{
+		return this.selectedCell;
 	}
 
 	@Override
