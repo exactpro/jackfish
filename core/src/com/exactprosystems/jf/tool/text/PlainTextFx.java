@@ -8,6 +8,7 @@
 
 package com.exactprosystems.jf.tool.text;
 
+import com.exactprosystems.jf.common.Configuration;
 import com.exactprosystems.jf.common.DocumentInfo;
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.tool.AbstractDocument;
@@ -18,6 +19,7 @@ import javafx.beans.property.StringProperty;
 import javafx.scene.control.ButtonType;
 
 import java.io.*;
+import java.util.Optional;
 
 @DocumentInfo(
 		newName = "NewText", 
@@ -26,10 +28,13 @@ import java.io.*;
 )
 public class PlainTextFx extends AbstractDocument
 {
-	public PlainTextFx(String fileName, Settings settings)
+	private Configuration config;
+
+	public PlainTextFx(String fileName, Settings settings, Configuration config)
 	{
 		super(fileName);
 		this.settings = settings;
+		this.config = config;
 		this.property = new SimpleStringProperty()
 		{
 			@Override
@@ -99,6 +104,7 @@ public class PlainTextFx extends AbstractDocument
 	public void close() throws Exception
 	{
 		super.close();
+		Optional.ofNullable(this.config).ifPresent(c -> c.unregister(this));
 		this.controller.close();
 	}
 
@@ -125,6 +131,7 @@ public class PlainTextFx extends AbstractDocument
 		{
 			this.controller = Common.loadController(PlainTextFxController.class.getResource("PlainTextFx.fxml"));
 			this.controller.init(this, this.settings);
+			Optional.ofNullable(this.config).ifPresent(c -> c.register(this));
 			this.isControllerInit = true;
 		}
 	}

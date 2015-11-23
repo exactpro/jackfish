@@ -161,11 +161,11 @@ public class Main extends Application
 								break;
 
 							case PLAIN_TEXT:
-								loadDocument(new File(filePath), new PlainTextFx(filePath, settings), DocumentKind.PLAIN_TEXT);
+								loadDocument(new File(filePath), new PlainTextFx(filePath, settings, config), DocumentKind.PLAIN_TEXT);
 								break;
 
 							case CSV:
-								loadDocument(new File(filePath), new CsvFx(filePath, settings), DocumentKind.CSV);
+								loadDocument(new File(filePath), new CsvFx(filePath, settings, config), DocumentKind.CSV);
 								break;
 						}
 					}
@@ -253,7 +253,7 @@ public class Main extends Application
 		Optional<File> optional = chooseFile(PlainTextFx.class, filePath, DialogsHelper.OpenSaveMode.OpenFile);
 		if (optional.isPresent())
 		{
-			loadDocument(optional.get(), new PlainTextFx(optional.get().getPath(), this.settings), DocumentKind.PLAIN_TEXT);
+			loadDocument(optional.get(), new PlainTextFx(optional.get().getPath(), this.settings, this.config), DocumentKind.PLAIN_TEXT);
 		}
 	}
 
@@ -263,7 +263,7 @@ public class Main extends Application
 		Optional<File> optional = chooseFile(CsvFx.class, filePath, DialogsHelper.OpenSaveMode.OpenFile);
 		if (optional.isPresent())
 		{
-			loadDocument(optional.get(), new CsvFx(optional.get().getPath(), this.settings), DocumentKind.CSV);
+			loadDocument(optional.get(), new CsvFx(optional.get().getPath(), this.settings, this.config), DocumentKind.CSV);
 		}
 	}
 
@@ -314,13 +314,13 @@ public class Main extends Application
 	public void newPlainText() throws Exception
 	{
 		checkConfig();
-		createDocument(new PlainTextFx(newName(PlainTextFx.class), this.settings));
+		createDocument(new PlainTextFx(newName(PlainTextFx.class), this.settings, this.config));
 	}
 
 	public void newCsv() throws Exception
 	{
 		checkConfig();
-		createDocument(new CsvFx(newName(CsvFx.class), this.settings));
+		createDocument(new CsvFx(newName(CsvFx.class), this.settings, this.config));
 	}
 
 	public void runMatrixFromFile() throws Exception
@@ -539,7 +539,7 @@ public class Main extends Application
 				logger.error(e.getMessage(), e);
 				DialogsHelper.showError(e.getMessage());
 
-				doc = new PlainTextFx(doc.getName(), this.settings);
+				doc = new PlainTextFx(doc.getName(), this.settings, this.config);
 				try (Reader reader = new FileReader(file))
 				{
 					doc.load(reader);

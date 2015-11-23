@@ -567,6 +567,7 @@ public class MainController implements Initializable, ContainingParent
 		viewStore.setDisable(flag);
 		menuEdit.setDisable(flag);
 		menuMatrix.setDisable(flag);
+		fileRunFromFile.setDisable(flag);
 	}
 
 	public void clearLastMatrixMenu()
