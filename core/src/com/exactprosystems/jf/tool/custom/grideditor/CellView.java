@@ -30,7 +30,7 @@ import java.util.stream.IntStream;
 public class CellView extends TableCell<ObservableList<SpreadsheetCell>, SpreadsheetCell>
 {
 	private final SpreadsheetHandle handle;
-	private ObservableList<TablePosition> selectedCell;
+	private ObservableList<ObservableList<SpreadsheetCell>> selectedCell;
 
 	private static final String ANCHOR_PROPERTY_KEY = "table.anchor"; //$NON-NLS-1$
 
@@ -72,7 +72,8 @@ public class CellView extends TableCell<ObservableList<SpreadsheetCell>, Spreads
 				}
 				if (this.handle.getGridView().getSelectionModel().getSelectionMode().equals(SelectionMode.MULTIPLE))
 				{
-					this.selectedCell = FXCollections.observableArrayList(this.handle.getView().getSelectionModel().getSelectedCells());
+					this.selectedCell = FXCollections.observableArrayList(this.handle.getCellsViewSkin().getSelectionModel().getSelectedItems());
+
 					startFullDrag();
 				}
 			}
@@ -100,7 +101,7 @@ public class CellView extends TableCell<ObservableList<SpreadsheetCell>, Spreads
 			CellView source = ((CellView) event.getGestureSource());
 			if (source.getCursor() != null && source.getCursor().equals(Cursor.CROSSHAIR))
 			{
-				List<TablePosition> initialCells = source.getInitialCells();
+				ObservableList<ObservableList<SpreadsheetCell>>initialCells = source.getInitialCells();
 				final RectangleSelection.GridRange range = this.handle.getCellsViewSkin().getRectangleSelection().getRange();
 				final DataProvider provider = this.handle.getView().getProvider();
 				/**
@@ -113,12 +114,12 @@ public class CellView extends TableCell<ObservableList<SpreadsheetCell>, Spreads
 				}
 				else
 				{
-					for (TablePosition initialCell : initialCells)
-					{
-						//TODO think about progression
-						StringBuilder text = new StringBuilder(source.getText());
-						IntStream.range(range.getTop(), range.getBottom() + 1).forEach(j -> IntStream.range(range.getLeft(), range.getRight() + 1).forEach(i -> provider.setCellValue(i, j, getEvaluatedText(text))));
-					}
+					StringBuilder text = new StringBuilder(source.getText());
+					IntStream.range(range.getTop(), range.getBottom() + 1).forEach(j -> IntStream.range(range.getLeft(), range.getRight() + 1).forEach(i -> provider.setCellValue(i, j, getEvaluatedText(text))));
+					//for (TablePosition initialCell : initialCells)
+					//{
+					//TODO think about progression
+					//}
 					//IntStream.range(range.getTop(), range.getBottom() + 1).forEach(j -> IntStream.range(range.getLeft(), range.getRight() + 1).forEach(i -> provider.setCellValue(i, j, getEvaluatedText(text))));
 				}
 				this.handle.getView().setDataProvider(provider);
@@ -165,7 +166,7 @@ public class CellView extends TableCell<ObservableList<SpreadsheetCell>, Spreads
 		return sb.toString();
 	}
 
-	public ObservableList<TablePosition> getInitialCells()
+	public ObservableList<ObservableList<SpreadsheetCell>> getInitialCells()
 	{
 		return this.selectedCell;
 	}
