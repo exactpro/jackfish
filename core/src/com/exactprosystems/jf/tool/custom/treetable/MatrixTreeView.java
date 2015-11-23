@@ -56,6 +56,12 @@ public class MatrixTreeView extends TreeTableView<MatrixItem>
 	public static final int NUMBER_COLUMN_WIDTH =	40;
 	public static final int OFF_COLUMN_WIDTH =		25;
 	public static final int ICON_COLUMN_WIDTH =		23;
+
+	private ContextMenu addBeforeMenu;
+	private ContextMenu addAfterMenu;
+	private ContextMenu addChildMenu;
+
+
 	private final static Logger	logger	= Logger.getLogger(MatrixTreeView.class);
 	
 	public MatrixTreeView()
@@ -70,9 +76,12 @@ public class MatrixTreeView extends TreeTableView<MatrixItem>
 	public void init(MatrixFx matrix, Settings settings)
 	{
 		this.matrix = matrix;
+		addBeforeMenu = createInsertMenu(PlaceToInsert.Before);
+		addAfterMenu = createInsertMenu(PlaceToInsert.After);
+		addChildMenu = createInsertMenu(PlaceToInsert.Child);
 		ContextMenu contextMenu = createContextMenu(settings);
 
-		setRoot(new TreeItem<MatrixItem>(matrix.getRoot()));
+		setRoot(new TreeItem<>(matrix.getRoot()));
 		
 		setRowFactory(treeView ->
 		{
@@ -89,7 +98,7 @@ public class MatrixTreeView extends TreeTableView<MatrixItem>
 				logger.error(e.getMessage(), e);
 				DialogsHelper.showError(message);
 			}
-			return new TreeTableRow<MatrixItem>();
+			return new TreeTableRow<>();
 		});
 	}
 
@@ -213,15 +222,38 @@ public class MatrixTreeView extends TreeTableView<MatrixItem>
 			else if (SettingsPanel.match(settings, keyEvent, SettingsPanel.GO_TO_LINE))
 			{
 				int index = new GoToLine().show();
-				TreeItem<MatrixItem> treeItem = find(matrixItem -> matrixItem.getNumber() == index);
-				if (treeItem == null)
+				if (index != -1)
 				{
-					DialogsHelper.showError(String.format("Matrix item with number '%d' not found", index));
+					TreeItem<MatrixItem> treeItem = find(matrixItem -> matrixItem.getNumber() == index);
+					if (treeItem == null)
+					{
+						DialogsHelper.showError(String.format("Matrix item with number '%d' not found", index));
+					}
+					else
+					{
+						setCurrent(treeItem);
+					}
 				}
-				else
-				{
-					setCurrent(treeItem);
-				}
+			}
+			else if (SettingsPanel.match(settings, keyEvent, SettingsPanel.BREAK_POINT))
+			{
+				breakPoint();
+			}
+			else if (SettingsPanel.match(settings, keyEvent, SettingsPanel.DELETE_ITEM))
+			{
+				deleteCurrentItems();
+			}
+			else if (SettingsPanel.match(settings, keyEvent, SettingsPanel.COPY_ITEMS))
+			{
+				copyItems();
+			}
+			else if (SettingsPanel.match(settings, keyEvent, SettingsPanel.PASTE_ITEMS))
+			{
+				pasteItems();
+			}
+			else if (SettingsPanel.match(settings, keyEvent, SettingsPanel.HELP))
+			{
+				new ActionHelp();
 			}
 		}, "Error on do actions by shortcuts"));
 		setOnKeyReleased(keyEvent -> Common.tryCatch(() ->
@@ -277,7 +309,6 @@ public class MatrixTreeView extends TreeTableView<MatrixItem>
 					{ 
 						matrix.setOff(item.getNumber(), box.isSelected());
 						refresh();
-//						this.requestFocus();
 					});
 					setGraphic(box);
 				}
@@ -298,24 +329,39 @@ public class MatrixTreeView extends TreeTableView<MatrixItem>
 		gridColumn.prefWidthProperty().bind(this.widthProperty().subtract(numberColumn.getWidth() + iconColumn.getWidth() + offColumn.getWidth()).subtract(2));
 	}
 
+	private void breakPoint()
+	{
+		Common.tryCatch(() -> this.matrix.breakPoint(currentItem()), "Error on breakpoint");
+	}
+
+	private void deleteCurrentItems()
+	{
+		Common.tryCatch(() -> this.matrix.remove(currentItem()), "Error on delete item");
+	}
+
+	private void copyItems()
+	{
+		Common.tryCatch(() -> this.matrix.copy(selectedItems()), "Error on copy");
+	}
+
+	private void pasteItems()
+	{
+		Common.tryCatch(() -> this.matrix.paste(currentItem()), "Error on paste");
+	}
+
 	private ContextMenu createContextMenu(Settings settings)
 	{
 		ContextMenu contextMenu = new ContextMenu();
 		contextMenu.setAutoHide(true);
 		
-		ContextMenu addBeforeMenu = createInsertMenu(PlaceToInsert.Before);
-		ContextMenu addAfterMenu = createInsertMenu(PlaceToInsert.After);
-		ContextMenu addChildMenu = createInsertMenu(PlaceToInsert.Child);
-
 		Window window = Common.getTabPane().getScene().getWindow();
 		Point2D windowCoord = new Point2D(window.getX(), window.getY());
 		final double x = windowCoord.getX() + window.getWidth() / 2;
 		final double y = windowCoord.getY() + window.getHeight() / 2;
 
 		MenuItem breakPoint = new MenuItem("Breakpoint");
-		Common.setAccelerator(settings, breakPoint, SettingsPanel.BREAK_POINT);
 		breakPoint.setGraphic(new ImageView(new Image(CssVariables.Icons.BREAK_POINT_ICON)));
-		breakPoint.setOnAction(event -> Common.tryCatch(() -> this.matrix.breakPoint(currentItem()), "Error on breakpoint"));
+		breakPoint.setOnAction(event -> breakPoint());
 
 		MenuItem addBefore = new MenuItem("Add before");
 		Common.setAccelerator(settings, addBefore, SettingsPanel.ADD_BEFORE);
@@ -333,22 +379,18 @@ public class MatrixTreeView extends TreeTableView<MatrixItem>
 		addChild.setOnAction(event -> Common.tryCatch(() -> addChildMenu.show(getSceneWindow(), x, y), "Error on add child"));
 
 		MenuItem deleteItem = new MenuItem("Delete");
-		Common.setAccelerator(settings, deleteItem, SettingsPanel.DELETE_ITEM);
 		deleteItem.setGraphic(new ImageView(new Image(CssVariables.Icons.DELETE_ICON)));
-		deleteItem.setOnAction(event -> Common.tryCatch(() -> this.matrix.remove(currentItem()), "Error on delete item"));
+		deleteItem.setOnAction(event -> deleteCurrentItems());
 
 		MenuItem copy = new MenuItem("Copy");
-		Common.setAccelerator(settings, copy, SettingsPanel.COPY_ITEMS);
 		copy.setGraphic(new ImageView(new Image(CssVariables.Icons.COPY_ICON)));
-		copy.setOnAction(event -> Common.tryCatch(() -> this.matrix.copy(selectedItems()), "Error on copy"));
+		copy.setOnAction(event -> copyItems());
 		
 		MenuItem paste = new MenuItem("Paste");
-		Common.setAccelerator(settings, copy, SettingsPanel.PASTE_ITEMS);
 		paste.setGraphic(new ImageView(new Image(CssVariables.Icons.PASTE_ICON)));
-		paste.setOnAction(event -> Common.tryCatch(() -> this.matrix.paste(currentItem()), "Error on paste"));
+		paste.setOnAction(event -> pasteItems());
 
 		MenuItem help = new MenuItem("Help");
-		Common.setAccelerator(settings, help, SettingsPanel.HELP);
 		help.setGraphic(new ImageView(new Image(CssVariables.Icons.HELP_ICON)));
 		help.setOnAction(new ActionHelp());
 
@@ -368,6 +410,7 @@ public class MatrixTreeView extends TreeTableView<MatrixItem>
 
 		return contextMenu;
 	}
+
 
 	private Window getSceneWindow()
 	{

@@ -23,6 +23,7 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 
 import java.util.Optional;
+import java.util.stream.IntStream;
 
 public class CellView extends TableCell<ObservableList<SpreadsheetCell>, SpreadsheetCell>
 {
@@ -91,13 +92,8 @@ public class CellView extends TableCell<ObservableList<SpreadsheetCell>, Spreads
 			{
 				final RectangleSelection.GridRange range = this.handle.getCellsViewSkin().getRectangleSelection().getRange();
 				final DataProvider provider = this.handle.getView().getProvider();
-				for (int row = range.getLeft(); row <= range.getRight(); row++)
-				{
-					for (int col = range.getTop(); col <= range.getBottom(); col++)
-					{
-						provider.setCellValue(row, col, source.getText());
-					}
-				}
+				String text = source.getText();
+				IntStream.range(range.getLeft(), range.getRight()).forEach(i -> IntStream.range(range.getTop(), range.getBottom()).forEach(j -> provider.setCellValue(i, j, text)));
 				this.handle.getView().setDataProvider(provider);
 			}
 		});
