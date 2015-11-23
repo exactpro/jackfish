@@ -20,6 +20,8 @@ import java.util.List;
 
 public final class SpreadsheetColumn {
 
+	public static boolean isColumnEditable = false;
+
     private final SpreadsheetView spreadsheetView;
     final TableColumn<ObservableList<SpreadsheetCell>, SpreadsheetCell> column;
     private final Integer indexColumn;
@@ -69,9 +71,12 @@ public final class SpreadsheetColumn {
 
 		MenuItem renameColumn = new MenuItem("Rename");
 		renameColumn.setOnAction(e -> {
+			isColumnEditable = true;
 			String oldValue = this.column.getText();
 			TextField tf = new TextField(oldValue);
+			tf.setMaxWidth(this.column.getWidth());
 			this.column.setGraphic(tf);
+			tf.toFront();
 			tf.requestFocus();
 			tf.setOnKeyPressed(e1 -> {
 				if (e1.getCode().equals(KeyCode.SHIFT))
@@ -82,11 +87,13 @@ public final class SpreadsheetColumn {
 				{
 					this.spreadsheetView.renameColumn(this, oldValue);
 					this.column.setGraphic(null);
+					isColumnEditable = false;
 				}
 				if (e1.getCode().equals(KeyCode.TAB) || e1.getCode().equals(KeyCode.ENTER))
 				{
 					this.spreadsheetView.renameColumn(this, tf.getText());
 					this.column.setGraphic(null);
+					isColumnEditable = false;
 				}
 			});
 			tf.focusedProperty().addListener((observable, oldValue1, newValue) -> {
@@ -96,6 +103,7 @@ public final class SpreadsheetColumn {
 					{
 						this.spreadsheetView.renameColumn(this, oldValue);
 						this.column.setGraphic(null);
+						isColumnEditable = false;
 					}
 				}
 			});

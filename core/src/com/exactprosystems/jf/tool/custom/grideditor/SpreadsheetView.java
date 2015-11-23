@@ -547,7 +547,7 @@ public class SpreadsheetView extends Control
 		{
 			deleteSelectedCells();
 		}
-		else if (keyEvent.getCode() != KeyCode.SHIFT && !keyEvent.isShortcutDown() && !keyEvent.getCode().isNavigationKey() && keyEvent.getCode() != KeyCode.ESCAPE)
+		else if (keyEvent.getCode() != KeyCode.SHIFT && !keyEvent.isShortcutDown() && !keyEvent.getCode().isNavigationKey() && keyEvent.getCode() != KeyCode.ESCAPE && !SpreadsheetColumn.isColumnEditable)
 		{
 			getCellsView().edit(position.getRow(), position.getTableColumn());
 		}
