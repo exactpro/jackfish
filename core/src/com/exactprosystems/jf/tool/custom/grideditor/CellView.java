@@ -22,6 +22,7 @@ import javafx.scene.control.TableView.TableViewSelectionModel;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.IntStream;
 
@@ -69,20 +70,26 @@ public class CellView extends TableCell<ObservableList<SpreadsheetCell>, Spreads
 				}
 				if (this.handle.getGridView().getSelectionModel().getSelectionMode().equals(SelectionMode.MULTIPLE))
 				{
-					//setAnchor(getTableView(), getTableView().getFocusModel().getFocusedCell());
 					startFullDrag();
 				}
 			}
 		};
 		this.addEventHandler(MouseEvent.DRAG_DETECTED, startFullDragEventHandler);
 		this.addEventHandler(MouseEvent.MOUSE_MOVED, event -> {
-			if (event.getY() + 10 > getHeight() && event.getX() + 10 > getWidth() && this.isSelected())
+			List<TablePosition> selectedCells = this.handle.getView().getSelectionModel().getSelectedCells();
+			if (selectedCells.size() > 0)
 			{
-				this.setCursor(Cursor.CROSSHAIR);
-			}
-			else
-			{
-				this.setCursor(Cursor.DEFAULT);
+				int maxColumn = selectedCells.stream().mapToInt(TablePosition::getColumn).max().getAsInt();
+				int maxRow = selectedCells.stream().mapToInt(TablePositionBase::getRow).max().getAsInt();
+				SpreadsheetCell item = this.getItem();
+				if (event.getY() + 10 > getHeight() && event.getX() + 10 > getWidth() && item.getRow() == maxRow && item.getColumn() == maxColumn)
+				{
+					this.setCursor(Cursor.CROSSHAIR);
+				}
+				else
+				{
+					this.setCursor(Cursor.DEFAULT);
+				}
 			}
 		});
 		setOnMouseDragEntered(dragMouseEventHandler);
