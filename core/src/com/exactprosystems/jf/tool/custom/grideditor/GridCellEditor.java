@@ -58,10 +58,12 @@ public class GridCellEditor
 			final SpreadsheetView view = handle.getView();
 			if (viewCell != null)
 			{
-				Object value = modelCell.getCellType().convertValue(spreadsheetCellEditor.getControlValue());
+				String value = modelCell.getCellType().convertValue(spreadsheetCellEditor.getControlValue());
 				// We update the value
 				view.getProvider().setCellValue(modelCell.getColumn(), modelCell.getRow(), value);
 				editing = false;
+				modelCell.setItem(value);
+				viewCell.updateItem(modelCell, false);
 				viewCell.commitEdit(modelCell);
 				end();
 				spreadsheetCellEditor.end();
@@ -78,7 +80,6 @@ public class GridCellEditor
 				}
 			}
 		}
-
 		if (editing)
 		{
 			editing = false;

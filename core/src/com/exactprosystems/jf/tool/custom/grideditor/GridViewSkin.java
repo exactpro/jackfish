@@ -30,6 +30,7 @@ import javafx.util.Callback;
 
 import java.lang.reflect.Field;
 import java.util.*;
+import java.util.stream.IntStream;
 
 public class GridViewSkin extends TableViewSkinBase<ObservableList<SpreadsheetCell>, ObservableList<SpreadsheetCell>, TableView<ObservableList<SpreadsheetCell>>, TableViewBehavior<ObservableList<SpreadsheetCell>>, TableRow<ObservableList<SpreadsheetCell>>, TableColumn<ObservableList<SpreadsheetCell>, ?>>
 {
@@ -347,32 +348,20 @@ public class GridViewSkin extends TableViewSkinBase<ObservableList<SpreadsheetCe
 
 		cell.getProperties().put("deferToParentPrefWidth", Boolean.TRUE); //$NON-NLS-1$
 
-		double padding = 10;
-		Node n = cell.getSkin() == null ? null : cell.getSkin().getNode();
-		if (n instanceof Region)
-		{
-			Region r = (Region) n;
-			padding = r.snappedLeftInset() + r.snappedRightInset();
-		}
-
 		int rows = maxRows == -1 ? items.size() : Math.min(items.size(), maxRows == 30 ? 100 : maxRows);
-		double maxWidth = 0;
 		cell.updateTableColumn(tc);
 		cell.updateTableView(handle.getGridView());
-		for (int row = 0; row < rows; row++)
-		{
-			cell.updateIndex(row);
 
-			if ((cell.getText() != null && !cell.getText().isEmpty()) || cell.getGraphic() != null)
-			{
-				getChildren().add(cell);
+		int column = IntStream.range(0, spreadsheetView.getColumns().size())
+				.filter(i -> spreadsheetView.getColumns().get(i).getText().equals(tc.getText()))
+				.findFirst()
+				.getAsInt();
 
-				cell.applyCss();
-				double width = cell.prefWidth(-1);
-				maxWidth = Math.max(maxWidth, width);
-				getChildren().remove(cell);
-			}
-		}
+		double maxWidth = IntStream.range(0, rows)
+				.mapToObj(row -> (String) spreadsheetView.getProvider().getCellValue(column, row))
+				.mapToDouble(cellValue -> cellValue.length() * 8 + 30)
+				.max()
+				.getAsDouble();
 
 		cell.updateIndex(-1);
 		double widthMax = Math.max(tc.getText().length() * 8 + 20, maxWidth);

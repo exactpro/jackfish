@@ -24,6 +24,7 @@ public final class SpreadsheetColumn {
 
     private final SpreadsheetView spreadsheetView;
     final TableColumn<ObservableList<SpreadsheetCell>, SpreadsheetCell> column;
+	private final ContextMenu contextMenu;
     private final Integer indexColumn;
 
 	SpreadsheetColumn(final TableColumn<ObservableList<SpreadsheetCell>, SpreadsheetCell> column,final SpreadsheetView spreadsheetView, final Integer indexColumn, DataProvider provider) {
@@ -32,7 +33,8 @@ public final class SpreadsheetColumn {
 		column.setMinWidth(50);
 		this.indexColumn = indexColumn;
 
-		column.setContextMenu(getColumnContextMenu());
+		contextMenu = getColumnContextMenu();
+		column.setContextMenu(contextMenu);
 
 		provider.getColumnHeaders().addListener((Observable arg0) -> {
 			List<String> columnsHeader = spreadsheetView.getProvider().getColumnHeaders();
@@ -70,45 +72,48 @@ public final class SpreadsheetColumn {
 		removeColumn.setOnAction(e -> this.spreadsheetView.removeColumn(this.spreadsheetView.getColumns().indexOf(this)));
 
 		MenuItem renameColumn = new MenuItem("Rename");
-		renameColumn.setOnAction(e -> {
-			isColumnEditable = true;
-			String oldValue = this.column.getText();
-			TextField tf = new TextField(oldValue);
-			tf.setMaxWidth(this.column.getWidth());
-			this.column.setGraphic(tf);
-			tf.toFront();
-			tf.requestFocus();
-			tf.setOnKeyPressed(e1 -> {
-				if (e1.getCode().equals(KeyCode.SHIFT))
-				{
-					//nothing
-				}
-				if (e1.getCode().equals(KeyCode.ESCAPE))
+		renameColumn.setOnAction(e -> startRenameColumn());
+		contextMenu.getItems().addAll(addColumnBefore,addColumnAfter, removeColumn, renameColumn);
+		return contextMenu;
+    }
+
+	public void startRenameColumn()
+	{
+		isColumnEditable = true;
+		String oldValue = this.column.getText();
+		TextField tf = new TextField(oldValue);
+		tf.setMaxWidth(this.column.getWidth());
+		this.column.setGraphic(tf);
+		tf.toFront();
+		tf.requestFocus();
+		tf.setOnKeyPressed(e1 -> {
+			if (e1.getCode().equals(KeyCode.SHIFT))
+			{
+				//nothing
+			}
+			if (e1.getCode().equals(KeyCode.ESCAPE))
+			{
+				this.spreadsheetView.renameColumn(this, oldValue);
+				this.column.setGraphic(null);
+				isColumnEditable = false;
+			}
+			if (e1.getCode().equals(KeyCode.TAB) || e1.getCode().equals(KeyCode.ENTER))
+			{
+				this.spreadsheetView.renameColumn(this, tf.getText());
+				this.column.setGraphic(null);
+				isColumnEditable = false;
+			}
+		});
+		tf.focusedProperty().addListener((observable, oldValue1, newValue) -> {
+			if (!newValue && oldValue1)
+			{
+				if (this.column.getGraphic() != null)
 				{
 					this.spreadsheetView.renameColumn(this, oldValue);
 					this.column.setGraphic(null);
 					isColumnEditable = false;
 				}
-				if (e1.getCode().equals(KeyCode.TAB) || e1.getCode().equals(KeyCode.ENTER))
-				{
-					this.spreadsheetView.renameColumn(this, tf.getText());
-					this.column.setGraphic(null);
-					isColumnEditable = false;
-				}
-			});
-			tf.focusedProperty().addListener((observable, oldValue1, newValue) -> {
-				if (!newValue && oldValue1)
-				{
-					if (this.column.getGraphic() != null)
-					{
-						this.spreadsheetView.renameColumn(this, oldValue);
-						this.column.setGraphic(null);
-						isColumnEditable = false;
-					}
-				}
-			});
+			}
 		});
-		contextMenu.getItems().addAll(addColumnBefore,addColumnAfter, removeColumn, renameColumn);
-		return contextMenu;
-    }
+	}
 }
