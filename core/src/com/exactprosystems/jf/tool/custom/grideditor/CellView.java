@@ -110,17 +110,19 @@ public class CellView extends TableCell<ObservableList<SpreadsheetCell>, Spreads
 				{
 					StringBuilder text = new StringBuilder(source.getText());
 					IntStream.range(range.getTop(), range.getBottom() + 1).forEach(j -> IntStream.range(range.getLeft(), range.getRight() + 1).forEach(i -> provider.setCellValue(i, j, getEvaluatedText(text))));
-					this.handle.getView().setDataProvider(provider);
 				}
 				else
 				{
 					for (TablePosition initialCell : initialCells)
 					{
 						//TODO think about progression
-						System.out.println(initialCell.getRow() + " : " + initialCell.getColumn());
+						StringBuilder text = new StringBuilder(source.getText());
+						IntStream.range(range.getTop(), range.getBottom() + 1).forEach(j -> IntStream.range(range.getLeft(), range.getRight() + 1).forEach(i -> provider.setCellValue(i, j, getEvaluatedText(text))));
 					}
 					//IntStream.range(range.getTop(), range.getBottom() + 1).forEach(j -> IntStream.range(range.getLeft(), range.getRight() + 1).forEach(i -> provider.setCellValue(i, j, getEvaluatedText(text))));
 				}
+				this.handle.getView().setDataProvider(provider);
+
 			}
 		});
 		itemProperty().addListener(itemChangeListener);
