@@ -14,12 +14,15 @@ import org.w3c.dom.NodeList;
 import javax.xml.xpath.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class XpathViewer
 {
+	public static final String textName	= "text()"; 
+	
 	private Document						document;
 	private XpathViewerContentController	controller;
 	private Node							currentNode;
@@ -50,6 +53,7 @@ public class XpathViewer
 
 	public void applyXpath(String xpath)
 	{
+		this.controller.deselectItems();
 		this.controller.displayResults(evaluate(xpath));
 	}
 
@@ -72,7 +76,7 @@ public class XpathViewer
 		this.controller.displayParams(params);
 	}
 
-	public void createXpaths(List<String> parameters)
+	public void createXpaths(boolean useText, List<String> parameters)
 	{
 		Node relativeNode = null;
 		if (this.relativeXpath != null)
@@ -81,10 +85,10 @@ public class XpathViewer
 			relativeNode = nodes == null || nodes.isEmpty() ? null : nodes.get(0);
 		}
 		
-		String xpath1 = fullXpath(relativeNode, currentNode, null, true);
-		String xpath2 = fullXpath(relativeNode, currentNode, parameters, true);
-		String xpath3 = fullXpath(null, currentNode, null, false);
-		String xpath4 = fullXpath(null, currentNode, parameters, false);
+		String xpath1 = fullXpath(relativeNode, currentNode, false, null, true);
+		String xpath2 = fullXpath(relativeNode, currentNode, useText, parameters, true);
+		String xpath3 = fullXpath(null, currentNode, false, null, false);
+		String xpath4 = fullXpath(null, currentNode, useText, parameters, false);
 		
 		this.controller.displayXpaths(xpath1, xpath2, xpath3, xpath4);
 		this.controller.displayCounters(evaluate(xpath1), evaluate(xpath2), evaluate(xpath3), evaluate(xpath4));
@@ -101,6 +105,30 @@ public class XpathViewer
 				}
 			}).start();
 		}
+	}
+	
+	public static String text(Node node)
+	{
+		if (node == null)
+		{
+			return null;
+		}
+		
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < node.getChildNodes().getLength(); i++)
+		{
+			Node item = node.getChildNodes().item(i);
+			if (item.getNodeType() == Node.TEXT_NODE)
+			{
+				String value = item.getNodeValue();
+				if (value != null)
+				{
+					sb.append(value.trim().replace('\n', ' '));
+				}
+			}
+		}
+
+		return sb.toString();
 	}
 
 	// ============================================================
@@ -131,7 +159,7 @@ public class XpathViewer
 		return null;
 	}
 
-	private String fullXpath(Node relative, Node node, List<String> parameters, boolean fromRoot)
+	private String fullXpath(Node relative, Node node, boolean useText, List<String> parameters, boolean fromRoot)
 	{
 		if (node == null)
 		{
@@ -140,7 +168,7 @@ public class XpathViewer
 		
 		if (!fromRoot)
 		{
-			return "/" + xpath(node.getParentNode(), node, parameters);
+			return "/" + xpath(node.getParentNode(), node, useText, parameters);
 		}
 		
 		Node common = commonAncestor(relative, node);
@@ -151,10 +179,10 @@ public class XpathViewer
 			current = current.getParentNode();
 			backPath = backPath.concat("/..");
 		}
-		return xpath(null, relative, null) + backPath + xpath(common, node, parameters);
+		return xpath(null, relative, false, null) + backPath + xpath(common, node, useText, parameters);
 	}
 	
-	private String xpath(Node parent, Node node, List<String> parameters)
+	private String xpath(Node parent, Node node, boolean useText, List<String> parameters)
 	{
 		if (node instanceof Document)
 		{
@@ -164,9 +192,9 @@ public class XpathViewer
 		{
 			return "";
 		}
-		return xpath(parent, node.getParentNode(), null) + "/" + node.getNodeName() 
+		return xpath(parent, node.getParentNode(), false, null) + "/" + node.getNodeName() 
 				+ 	(parameters != null && !parameters.isEmpty()
-						? "[" + getParameters(node, parameters) + "]"
+						? "[" + getParameters(node, useText, parameters) + "]"
 						: (hasSiblings(node) 
 							? "[" + getIndexNode(node) + "]"
 							: ""
@@ -208,17 +236,23 @@ public class XpathViewer
 		return res;
 	}
 
-	private String getParameters(Node node, List<String> parameters)
+	private String getParameters(Node node, boolean useText, List<String> parameters)
 	{
+		String res = "";
 		NamedNodeMap attr = node.getAttributes();
 		if (attr != null)
 		{
-			return parameters.stream()
+			res = parameters.stream()
 					.filter(p -> attr.getNamedItem(p) != null)
 					.map(p -> "@" + attr.getNamedItem(p))
 					.collect(Collectors.joining(" and "));
 		}
-		return "";
+		if (useText)
+		{
+			res = res + (res.isEmpty() ? "" : " and ") + "contains(text(), \"" + text(node) + "\")";  
+		}
+		
+		return res;
 	}
 	
 	private int getIndexNode(Node node)

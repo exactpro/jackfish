@@ -29,6 +29,7 @@ import com.exactprosystems.jf.common.parser.items.MutableArrayList;
 import com.exactprosystems.jf.common.parser.items.SubCase;
 import com.exactprosystems.jf.common.parser.listeners.IMatrixListener;
 import com.exactprosystems.jf.common.parser.listeners.MatrixListener;
+import com.exactprosystems.jf.common.parser.listeners.RunnerListener;
 import com.exactprosystems.jf.common.report.HTMLReportFactory;
 import com.exactprosystems.jf.common.report.ReportFactory;
 import com.exactprosystems.jf.common.xml.schema.Xsd;
@@ -501,6 +502,11 @@ public class Configuration extends AbstractDocument
 		}
 	}
 
+	public Context createContext(IMatrixListener matrixListener, RunnerListener runnerListener, PrintStream out) throws Exception
+	{
+		return new Context(matrixListener, runnerListener, out, this);
+	}
+	
 	public void updateLibs()
 	{
 		this.libs.clear();

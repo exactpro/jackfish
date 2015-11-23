@@ -57,6 +57,7 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 	public Button				btnSaveXpath2;
 	public Button				btnSaveXpath3;
 	public Button				btnSaveXpath4;
+	public CheckBox				useText;
 	public HBox					hBoxCheckboxes;
 	public BorderPane			parentPane;
 	public TextField			tfRelativeFrom;
@@ -163,7 +164,7 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 	{
 		this.model.setRelativeXpath(null);
 		this.tfRelativeFrom.setText("");
-		this.model.createXpaths(getParams());
+		this.model.createXpaths(this.useText.isSelected(), getParams());
 	}
 
 	public void copyXpath(Event event)
@@ -171,6 +172,12 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 		this.mainExpression.setText(((Button) event.getSource()).getText());
 	}
 
+	public void onUseText(ActionEvent actionEvent)
+	{
+		this.model.createXpaths(this.useText.isSelected(), getParams());
+	}
+
+	
 	// ============================================================
 	// display methods
 	// ============================================================
@@ -228,10 +235,10 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 			{
 				CheckBox box = new CheckBox(p);
 				box.setSelected(true);
-				box.selectedProperty().addListener((observable, oldValue, newValue) -> this.model.createXpaths(getParams()));
+				box.selectedProperty().addListener((observable, oldValue, newValue) -> this.model.createXpaths(this.useText.isSelected(), getParams()));
 				this.hBoxCheckboxes.getChildren().add(box);
 			});
-			this.model.createXpaths(getParams());
+			this.model.createXpaths(this.useText.isSelected(), getParams());
 		});
 	}
 
@@ -320,20 +327,18 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 
 		TreeItem<XpathItem> root = isDocument ? parent : new TreeItem<>();
 
-		boolean hasChild = false;
 		for (int i = 0; i < node.getChildNodes().getLength(); i++)
 		{
 			Node item = node.getChildNodes().item(i);
 			if (item.getNodeType() == Node.ELEMENT_NODE)
 			{
-				hasChild = true;
 				displayTree(item, root);
 			}
 		}
 
 		if (!isDocument)
 		{
-			root.setValue(new XpathItem(stringNode(node, hasChild ? null : node.getTextContent()), node));
+			root.setValue(new XpathItem(stringNode(node, XpathViewer.text(node)), node));
 			parent.getChildren().add(root);
 		}
 	}
@@ -408,8 +413,9 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 
 	private List<String> getParams()
 	{
-		return this.hBoxCheckboxes.getChildren().stream().filter(node -> ((CheckBox) node).isSelected()).map(node -> (((CheckBox) node).getText()))
+		List<String> res = this.hBoxCheckboxes.getChildren().stream().filter(node -> ((CheckBox) node).isSelected()).map(node -> (((CheckBox) node).getText()))
 				.collect(Collectors.toList());
+		return res;
 	}
 
 	private void listeners()
