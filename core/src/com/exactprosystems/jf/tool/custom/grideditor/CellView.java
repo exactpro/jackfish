@@ -93,7 +93,7 @@ public class CellView extends TableCell<ObservableList<SpreadsheetCell>, Spreads
 				final RectangleSelection.GridRange range = this.handle.getCellsViewSkin().getRectangleSelection().getRange();
 				final DataProvider provider = this.handle.getView().getProvider();
 				String text = source.getText();
-				IntStream.range(range.getLeft(), range.getRight()).forEach(i -> IntStream.range(range.getTop(), range.getBottom()).forEach(j -> provider.setCellValue(i, j, text)));
+				IntStream.range(range.getLeft(), range.getRight() + 1).forEach(i -> IntStream.range(range.getTop(), range.getBottom() + 1).forEach(j -> provider.setCellValue(i, j, text)));
 				this.handle.getView().setDataProvider(provider);
 			}
 		});
