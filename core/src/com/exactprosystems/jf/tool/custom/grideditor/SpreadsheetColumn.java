@@ -83,6 +83,7 @@ public final class SpreadsheetColumn {
 		String oldValue = this.column.getText();
 		TextField tf = new TextField(oldValue);
 		tf.setMaxWidth(this.column.getWidth());
+		tf.setPrefWidth(this.column.getWidth());
 		this.column.setGraphic(tf);
 		tf.toFront();
 		tf.requestFocus();

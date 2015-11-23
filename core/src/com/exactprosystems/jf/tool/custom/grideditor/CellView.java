@@ -62,9 +62,13 @@ public class CellView extends TableCell<ObservableList<SpreadsheetCell>, Spreads
 		this.handle = handle;
 		EventHandler<MouseEvent> startFullDragEventHandler = mouseEvent -> {
 			{
-				if (this.handle.getGridView().getSelectionModel().getSelectionMode().equals(SelectionMode.MULTIPLE))
+				if (this.handle.getCellsViewSkin().getSelectedColumns().size() == 1 && this.handle.getCellsViewSkin().getSelectedRows().size() == 1)
 				{
 					setAnchor(getTableView(), getTableView().getFocusModel().getFocusedCell());
+				}
+				if (this.handle.getGridView().getSelectionModel().getSelectionMode().equals(SelectionMode.MULTIPLE))
+				{
+					//setAnchor(getTableView(), getTableView().getFocusModel().getFocusedCell());
 					startFullDrag();
 				}
 			}

@@ -271,52 +271,6 @@ public class GridViewSkin extends TableViewSkinBase<ObservableList<SpreadsheetCe
 		rectangleSelection.updateRectangle();
 	}
 
-	public void resizeRowsToMaximum()
-	{
-		resizeRowsToFitContent();
-
-		double maxHeight = 0;
-		for (int key : rowHeightMap.keySet())
-		{
-			maxHeight = Math.max(maxHeight, rowHeightMap.get(key));
-		}
-
-		rowHeightMap.clear();
-		int maxRows = handle.getView().getProvider().rowCount();
-		for (int row = 0; row < maxRows; row++)
-		{
-			Event.fireEvent(spreadsheetView, new SpreadsheetView.RowHeightEvent(row, maxHeight));
-			rowHeightMap.put(row, maxHeight);
-		}
-		rectangleSelection.updateRectangle();
-	}
-
-	public void resizeRowsToDefault()
-	{
-		rowHeightMap.clear();
-		for (GridRow row : (List<GridRow>) getFlow().getCells())
-		{
-			double newHeight = row.computePrefHeight(-1);
-			if (row.getPrefHeight() != newHeight)
-			{
-				row.setRowHeight(newHeight);
-				row.requestLayout();
-			}
-		}
-
-		getFlow().layoutChildren();
-
-		for (GridRow row : (List<GridRow>) getFlow().getCells())
-		{
-			double height = getRowHeight(row.getIndex());
-			if (row.getHeight() != height)
-			{
-				row.setRowHeight(height);
-			}
-		}
-		rectangleSelection.updateRectangle();
-	}
-
 	@Override
 	public void resizeColumnToFitContent(TableColumn<ObservableList<SpreadsheetCell>, ?> tc, int maxRows)
 	{
@@ -364,7 +318,7 @@ public class GridViewSkin extends TableViewSkinBase<ObservableList<SpreadsheetCe
 				.getAsDouble();
 
 		cell.updateIndex(-1);
-		double widthMax = Math.max(tc.getText().length() * 8 + 20, maxWidth);
+		double widthMax = Math.max(tc.getText().length() * 9 + 20, maxWidth);
 		if (handle.getGridView().getColumnResizePolicy() == TableView.CONSTRAINED_RESIZE_POLICY)
 		{
 			widthMax = Math.max(widthMax, tc.getWidth());
