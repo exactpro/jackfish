@@ -34,8 +34,8 @@ public class ScheduleController implements Initializable, ContainingParent
 	public Button btnStart;
 	public Button btnStop;
 	public Button btnDestroy;
-	public Button btnOpenSelected;
-	public Button btnFolder;
+	public Button btnShowSelected;
+	public Button btnLoadSeveral;
 	private Parent parent;
 	private RunnerScheduler model;
 	private Dialog dialog;
@@ -161,8 +161,8 @@ public class ScheduleController implements Initializable, ContainingParent
 		Common.customizeLabeled(this.btnStart, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.START_MATRIX_ICON);
 		Common.customizeLabeled(this.btnStop, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.STOP_MATRIX_ICON);
 		Common.customizeLabeled(this.btnDestroy, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.DESTROY_MATRIX_ICON);
-		Common.customizeLabeled(this.btnFolder, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.FOLDER_MATRIX_ICON);
-		Common.customizeLabeled(this.btnOpenSelected, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.OPEN_MATRIX_ICON);
+		Common.customizeLabeled(this.btnLoadSeveral, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.FOLDER_MATRIX_ICON);
+		Common.customizeLabeled(this.btnShowSelected, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.OPEN_MATRIX_ICON);
 	}
 
 	@Override
@@ -239,14 +239,14 @@ public class ScheduleController implements Initializable, ContainingParent
 		Common.tryCatch(() -> this.model.destroySelected(getSelected()), "Error on stop matrices");
 	}
 
-	public void showFolder(ActionEvent actionEvent)
+	public void showSelected(ActionEvent actionEvent)
 	{
-		Common.tryCatch(this.model::open, "Error on open matrices");
+		Common.tryCatch(() -> this.model.showSelected(getSelected()), "Error on show matrices");
 	}
 
-	public void openMatrices(ActionEvent actionEvent)
+	public void loadSeveral(ActionEvent actionEvent)
 	{
-		Common.tryCatch(() -> this.model.openSelected(getSelected()), "Error on show ");
+		Common.tryCatch(this.model::loadSeveral, "Error on load matrices");
 	}
 
 	private List<MatrixRunner> getSelected()

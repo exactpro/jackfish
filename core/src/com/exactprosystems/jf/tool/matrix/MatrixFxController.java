@@ -253,7 +253,7 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 	@Override
 	public String getExceptionMessage()
 	{
-		return "true";
+		return "true"; // TODO why this string means an exeption?
 	}
 
 	@Override

@@ -30,8 +30,8 @@
 				<Button fx:id="btnStart" mnemonicParsing="false" onAction="#startSelected"/>
 				<Button fx:id="btnStop" mnemonicParsing="false" onAction="#stopSelected"/>
 				<Button fx:id="btnDestroy" mnemonicParsing="false" onAction="#destroySelected"/>
-				<Button fx:id="btnOpenSelected" mnemonicParsing="false" onAction="#openMatrices"/>
-				<Button fx:id="btnFolder" mnemonicParsing="false" onAction="#showFolder"/>
+				<Button fx:id="btnShowSelected" mnemonicParsing="false" onAction="#showSelected"/>
+				<Button fx:id="btnLoadSeveral" mnemonicParsing="false" onAction="#loadSeveral"/>
 			</items>
 		</ToolBar>
 	</top>

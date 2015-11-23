@@ -90,7 +90,7 @@ public class RunnerScheduler implements RunnerListener
 		this.map.keySet().stream().filter(collect::contains).forEach(runner -> Common.tryCatch(runner::stop, "Error on start runner"));
 	}
 
-	public void open()
+	public void loadSeveral()
 	{
 		//TODO think about it
 		List<File> files = DialogsHelper.showMultipleDialog("Choose matrices", "jf files (*.jf)", "*.jf");
@@ -111,7 +111,7 @@ public class RunnerScheduler implements RunnerListener
 
 	}
 
-	public void openSelected(List<MatrixRunner> collect)
+	public void showSelected(List<MatrixRunner> collect)
 	{
 
 	}
