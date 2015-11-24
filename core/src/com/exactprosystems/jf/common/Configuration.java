@@ -501,6 +501,30 @@ public class Configuration extends AbstractDocument
 			}
 		}
 	}
+	
+	public void matrixChanged(String name, Matrix matrix)
+	{
+		for (LibEntry entry : this.libEntriesValue)
+		{
+			
+			try
+			{
+				String libName = entry.get(libPath);
+				String id = entry.get(entryName);
+				
+				if (libName != null && libName.equals(name))
+				{
+					this.libs.put(id, matrix);
+				}
+			}
+			catch (Exception e)
+			{ 
+				// nothing to do
+			}
+		}
+	}
+
+	
 
 	public Context createContext(IMatrixListener matrixListener, RunnerListener runnerListener, PrintStream out) throws Exception
 	{

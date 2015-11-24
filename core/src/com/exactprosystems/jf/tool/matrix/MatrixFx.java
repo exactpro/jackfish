@@ -53,6 +53,7 @@ public class MatrixFx extends Matrix
 	public MatrixFx(Matrix matrix, Configuration config, IMatrixListener matrixListener, RunnerListener runnerListener) throws Exception
 	{
 		super(matrix);
+		getRoot().init(this);
 		init(config, matrixListener, runnerListener);
 		initController();
 	}
@@ -98,6 +99,8 @@ public class MatrixFx extends Matrix
 	{
 		super.save(fileName);
 
+		this.config.matrixChanged(getName(), this);
+		
 		this.controller.saved(getName());
 		this.controller.displayTitle(getName());
 	}
