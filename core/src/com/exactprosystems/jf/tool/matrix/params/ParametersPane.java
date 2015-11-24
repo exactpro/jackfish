@@ -190,7 +190,23 @@ public class ParametersPane extends CustomScrollPane
 		
 		return pane;
 	}
-	
+
+	private void strech(TextField tf)
+	{
+		int size = tf.getText() != null ? (tf.getText().length() * 8 + 20) : 60;
+
+		if (tf.getScene() != null)
+		{
+			double v = tf.getScene().getWindow().getWidth() / 3;
+			if (size > v)
+			{
+				tf.setPrefWidth(v);
+				return;
+			}
+		}
+		tf.setPrefWidth(size);
+	}
+
 	private Pane parameterBox(Parameter par, int index)
 	{
 		GridPane tempGrid = new GridPane();
@@ -206,6 +222,10 @@ public class ParametersPane extends CustomScrollPane
 			if (!newValue && oldValue && !Str.areEqual(oldText, newText))
 			{
 				changeParameters(() -> getMatrix().parameterSetName(this.matrixItem, index, newText));
+			}
+			if (!newValue && oldValue)
+			{
+				strech((TextField) finalKey);
 			}
 		});
 		switch (par.getType())
