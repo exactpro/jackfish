@@ -255,7 +255,20 @@ public class MatrixTreeView extends TreeTableView<MatrixItem>
 			{
 				new ActionHelp();
 			}
+			else if (SettingsPanel.match(settings, keyEvent, SettingsPanel.ADD_BEFORE))
+			{
+				show(addBeforeMenu);
+			}
+			else if (SettingsPanel.match(settings, keyEvent, SettingsPanel.ADD_AFTER))
+			{
+				show(addAfterMenu);
+			}
+			else if (SettingsPanel.match(settings, keyEvent, SettingsPanel.ADD_CHILD))
+			{
+				show(addChildMenu);
+			}
 		}, "Error on do actions by shortcuts"));
+
 		setOnKeyReleased(keyEvent -> Common.tryCatch(() ->
 		{
 			if (SettingsPanel.match(settings, keyEvent, SettingsPanel.SHOW_ALL))
@@ -353,30 +366,22 @@ public class MatrixTreeView extends TreeTableView<MatrixItem>
 	{
 		ContextMenu contextMenu = new ContextMenu();
 		contextMenu.setAutoHide(true);
-		
-		Window window = Common.getTabPane().getScene().getWindow();
-		Point2D windowCoord = new Point2D(window.getX(), window.getY());
-		final double x = windowCoord.getX() + window.getWidth() / 2;
-		final double y = windowCoord.getY() + window.getHeight() / 2;
 
 		MenuItem breakPoint = new MenuItem("Breakpoint");
 		breakPoint.setGraphic(new ImageView(new Image(CssVariables.Icons.BREAK_POINT_ICON)));
 		breakPoint.setOnAction(event -> breakPoint());
 
 		MenuItem addBefore = new MenuItem("Add before");
-		Common.setAccelerator(settings, addBefore, SettingsPanel.ADD_BEFORE);
 		addBefore.setGraphic(new ImageView(new Image(CssVariables.Icons.ADD_BEFORE_ICON)));
-		addBefore.setOnAction(event -> Common.tryCatch(() -> show(addBeforeMenu, x, y), "Error on add before"));
+		addBefore.setOnAction(event -> Common.tryCatch(() -> show(addBeforeMenu), "Error on add before"));
 
 		MenuItem addAfter = new MenuItem("Add after");
-		Common.setAccelerator(settings, addAfter, SettingsPanel.ADD_AFTER);
 		addAfter.setGraphic(new ImageView(new Image(CssVariables.Icons.ADD_AFTER_ICON)));
-		addAfter.setOnAction(event -> Common.tryCatch(() -> show(addAfterMenu, x, y), "Error on add after"));
+		addAfter.setOnAction(event -> Common.tryCatch(() -> show(addAfterMenu), "Error on add after"));
 
 		MenuItem addChild = new MenuItem("Add child");
-		Common.setAccelerator(settings, addChild, SettingsPanel.ADD_CHILD);
 		addChild.setGraphic(new ImageView(new Image(CssVariables.Icons.ADD_CHILD_ICON)));
-		addChild.setOnAction(event -> Common.tryCatch(() -> show(addChildMenu, x, y), "Error on add child"));
+		addChild.setOnAction(event -> Common.tryCatch(() -> show(addChildMenu), "Error on add child"));
 
 		MenuItem deleteItem = new MenuItem("Delete");
 		deleteItem.setGraphic(new ImageView(new Image(CssVariables.Icons.DELETE_ICON)));
@@ -409,6 +414,15 @@ public class MatrixTreeView extends TreeTableView<MatrixItem>
 			);
 
 		return contextMenu;
+	}
+
+	private void show(ContextMenu menu)
+	{
+		Window window = Common.getTabPane().getScene().getWindow();
+		Point2D windowCoord = new Point2D(window.getX(), window.getY());
+		final double x = windowCoord.getX() + window.getWidth() / 2;
+		final double y = windowCoord.getY() + window.getHeight() / 2;
+		show(menu, x, y);
 	}
 
 	private void show(ContextMenu menu, double x, double y)

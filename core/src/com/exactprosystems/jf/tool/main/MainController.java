@@ -208,17 +208,6 @@ public class MainController implements Initializable, ContainingParent
 			helpActionsHelp.setGraphic(new ImageView(new Image(CssVariables.Icons.ACTIONS_HELP_ICON)));
 			helpAboutProgram.setGraphic(new ImageView(new Image(CssVariables.Icons.ABOUT_PROGRAM_ICON)));
 		}, "Error on set tooltips or images"));
-		setAccelerator();
-	}
-
-	private void setAccelerator()
-	{
-		Common.tryCatch(() -> {
-			Common.setAccelerator(settings, editCopy, SettingsPanel.COPY_ITEMS);
-			Common.setAccelerator(settings, editPaste, SettingsPanel.PASTE_ITEMS);
-			Common.setAccelerator(settings, editUndo, SettingsPanel.UNDO);
-			Common.setAccelerator(settings, editRedo, SettingsPanel.REDO);
-		}, "Error on set accelerators");
 	}
 
 	@Override
@@ -475,30 +464,28 @@ public class MainController implements Initializable, ContainingParent
 	public void initShortcuts()
 	{
 		setStatusBar();
-		btnSaveAsDocument.getScene().addEventFilter(KeyEvent.KEY_RELEASED, keyEvent -> {
-			Common.tryCatch(() -> {
-				if (keyEvent.getCode() == KeyCode.UNDEFINED)
-				{
-					return;
-				}
-				else if (SettingsPanel.match(settings, keyEvent, SettingsPanel.SHOW_ALL_TABS))
-				{
-					showAllTabs();
-				}
-				else if (SettingsPanel.match(settings, keyEvent, SettingsPanel.SAVE_DOCUMENT))
-				{
-					saveDocument(null);
-				}
-				else if (SettingsPanel.match(settings, keyEvent, SettingsPanel.UNDO))
-				{
-					undo(null);
-				}
-				else if (SettingsPanel.match(settings, keyEvent, SettingsPanel.REDO))
-				{
-					redo(null);
-				}
-			}, "Error on set Shortcuts");
-		});
+		btnSaveAsDocument.getScene().addEventFilter(KeyEvent.KEY_RELEASED, keyEvent -> Common.tryCatch(() -> {
+			if (keyEvent.getCode() == KeyCode.UNDEFINED)
+			{
+				return;
+			}
+			else if (SettingsPanel.match(settings, keyEvent, SettingsPanel.SHOW_ALL_TABS))
+			{
+				showAllTabs();
+			}
+			else if (SettingsPanel.match(settings, keyEvent, SettingsPanel.SAVE_DOCUMENT))
+			{
+				saveDocument(null);
+			}
+			else if (SettingsPanel.match(settings, keyEvent, SettingsPanel.UNDO))
+			{
+				undo(null);
+			}
+			else if (SettingsPanel.match(settings, keyEvent, SettingsPanel.REDO))
+			{
+				redo(null);
+			}
+		}, "Error on set Shortcuts"));
 	}
 
 	public void copyItem(ActionEvent actionEvent)
