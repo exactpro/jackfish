@@ -366,17 +366,17 @@ public class MatrixTreeView extends TreeTableView<MatrixItem>
 		MenuItem addBefore = new MenuItem("Add before");
 		Common.setAccelerator(settings, addBefore, SettingsPanel.ADD_BEFORE);
 		addBefore.setGraphic(new ImageView(new Image(CssVariables.Icons.ADD_BEFORE_ICON)));
-		addBefore.setOnAction(event -> Common.tryCatch(() -> addBeforeMenu.show(getSceneWindow(), x, y), "Error on add before"));
+		addBefore.setOnAction(event -> Common.tryCatch(() -> show(addBeforeMenu, x, y), "Error on add before"));
 
 		MenuItem addAfter = new MenuItem("Add after");
 		Common.setAccelerator(settings, addAfter, SettingsPanel.ADD_AFTER);
 		addAfter.setGraphic(new ImageView(new Image(CssVariables.Icons.ADD_AFTER_ICON)));
-		addAfter.setOnAction(event -> Common.tryCatch(() -> addAfterMenu.show(getSceneWindow(), x, y), "Error on add after"));
+		addAfter.setOnAction(event -> Common.tryCatch(() -> show(addAfterMenu, x, y), "Error on add after"));
 
 		MenuItem addChild = new MenuItem("Add child");
 		Common.setAccelerator(settings, addChild, SettingsPanel.ADD_CHILD);
 		addChild.setGraphic(new ImageView(new Image(CssVariables.Icons.ADD_CHILD_ICON)));
-		addChild.setOnAction(event -> Common.tryCatch(() -> addChildMenu.show(getSceneWindow(), x, y), "Error on add child"));
+		addChild.setOnAction(event -> Common.tryCatch(() -> show(addChildMenu, x, y), "Error on add child"));
 
 		MenuItem deleteItem = new MenuItem("Delete");
 		deleteItem.setGraphic(new ImageView(new Image(CssVariables.Icons.DELETE_ICON)));
@@ -411,6 +411,18 @@ public class MatrixTreeView extends TreeTableView<MatrixItem>
 		return contextMenu;
 	}
 
+	private void show(ContextMenu menu, double x, double y)
+	{
+		Window sceneWindow = getSceneWindow();
+		if (sceneWindow == null)
+		{
+			menu.show(Common.node, x, y);
+		}
+		else
+		{
+			menu.show(sceneWindow, x, y);
+		}
+	}
 
 	private Window getSceneWindow()
 	{

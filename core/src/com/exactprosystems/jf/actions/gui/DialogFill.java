@@ -97,9 +97,17 @@ public class DialogFill extends AbstractAction
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
+		if (connection == null)
+		{
+			throw new NullPointerException(String.format("Field with name '%s' can't be null", connectionName));
+		}
 		IApplication app = connection.getApplication();
 		String id = connection.getId();
 		IRemoteApplication service = app.service();
+		if (service == null)
+		{
+			throw new NullPointerException(String.format("Service with id '%s' not started yet", id));
+		}
 		IGuiDictionary dictionary = connection.getDictionary();
 		IWindow window = dictionary.getWindow(this.dialog);
 		Set<ControlKind> supportedControls = new HashSet<>();
@@ -121,7 +129,7 @@ public class DialogFill extends AbstractAction
 					super.setError(message(onOpen, control.getBindedClass(), id));
 					return;
 				}
-				
+
 				OperationResult res = control.operate(service, window, null);
 				if (res.isPermittedOperation())
 				{
@@ -135,7 +143,7 @@ public class DialogFill extends AbstractAction
 				}
 			}
 		}
-		
+
 		Map<String, Object> outValue = new LinkedHashMap<>();
 
 		SectionKind run = SectionKind.Run;
@@ -143,7 +151,7 @@ public class DialogFill extends AbstractAction
 		ISection sectionRun = window.getSection(run);
 		for (Parameter parameter : parameters.select(TypeMandatory.Extra))
 		{
-            String name = parameter.getName();
+			String name = parameter.getName();
 			Object obj = parameter.getValue();
 
 			IControl control = sectionRun.getControlByIdAndValue(name, obj);
