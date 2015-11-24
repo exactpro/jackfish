@@ -23,6 +23,7 @@ import javafx.scene.control.TableView.TableViewSelectionModel;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
@@ -33,7 +34,6 @@ import java.util.stream.IntStream;
 public class CellView extends TableCell<ObservableList<SpreadsheetCell>, SpreadsheetCell>
 {
 	private final SpreadsheetHandle handle;
-	private ObservableList<String> selectedStrings;
 	private ObservableList<TablePosition> selectedTablePositions;
 
 	private static final String ANCHOR_PROPERTY_KEY = "table.anchor"; //$NON-NLS-1$
@@ -77,7 +77,6 @@ public class CellView extends TableCell<ObservableList<SpreadsheetCell>, Spreads
 				if (this.handle.getGridView().getSelectionModel().getSelectionMode().equals(SelectionMode.MULTIPLE))
 				{
 					this.selectedTablePositions = FXCollections.observableArrayList(this.handle.getGridView().getSelectionModel().getSelectedCells());
-					this.selectedStrings = this.handle.getView().convert(this.selectedTablePositions);
 					startFullDrag();
 				}
 			}
@@ -120,6 +119,7 @@ public class CellView extends TableCell<ObservableList<SpreadsheetCell>, Spreads
 				}
 				else
 				{
+					int progression = 1;
 					int startRow = initialCells.get(0).getRow();
 					ObservableList<ObservableList<String>> strings = FXCollections.observableArrayList();
 					int index = 0;
@@ -140,37 +140,25 @@ public class CellView extends TableCell<ObservableList<SpreadsheetCell>, Spreads
 							strings.get(index).add(cellValue);
 						}
 					}
-//
-//					if (range.getBottom() - range.getTop() > strings.size())
-//					{
-//						for (int i = strings.size(); i < range.getBottom() - range.getTop(); i++)
-//						{
-//							ObservableList<String> observableList = strings.get(i - 1);
-//							System.out.println(observableList);
-//							ObservableList<String> list = FXCollections.observableArrayList(observableList.stream()
-//									.map(StringBuilder::new)
-//									.map(this::getEvaluatedText).collect(Collectors.toList()));
-//							strings.add(list);
-//						}
-//					}
-//					for (ObservableList<String> q : strings)
-//					{
-//						for (String s : q)
-//						{
-//							System.out.print(s + "\t");
-//						}
-//						System.out.println();
-//					}
 
+					int size = strings.size();
+					for (int i = size; i < range.getBottom() - range.getTop() + 1; i++)
+					{
+						ObservableList<String> list = strings.get(i - size);
+						ObservableList<String> collections = FXCollections.observableArrayList();
+						for (String aList : list)
+						{
+							StringBuilder builder = new StringBuilder(aList);
+							getEvaluatedText(builder, progression);
+							collections.add(builder.toString());
+						}
+						strings.add(collections);
+					}
 
 					for (int i = range.getTop(); i < range.getBottom() + 1; i++)
 					{
 						int currentIndex = i - range.getTop();
-//						if (currentIndex == strings.size())
-//						{
-//
-//						}
-						ObservableList<String> row = strings.get(currentIndex % strings.size());
+						ObservableList<String> row = strings.get(currentIndex);
 						List<StringBuilder> list = row.stream().map(StringBuilder::new).collect(Collectors.toList());
 						for (int j = range.getLeft(); j < range.getRight() + 1; j++)
 						{
@@ -185,7 +173,45 @@ public class CellView extends TableCell<ObservableList<SpreadsheetCell>, Spreads
 		itemProperty().addListener(itemChangeListener);
 	}
 
-	private String getEvaluatedText(StringBuilder sb)
+	private int evaluateProgression(ObservableList<TablePosition> initialCells, DataProvider provider)
+	{
+		int progression = 1;
+		int lastCell = 0;
+		int firstCell = 0;
+		ArrayList<Integer> list = new ArrayList<>();
+		for (int i = 0; i < initialCells.size() - 1; i++)
+		{
+			TablePosition first = initialCells.get(i);
+			TablePosition second = initialCells.get(i + 1);
+			String firstValue = (String) provider.getCellValue(first.getColumn(), first.getRow());
+			String secondValue = (String) provider.getCellValue(second.getColumn(), second.getRow());
+			try
+			{
+				int firstInt = Integer.parseInt(firstValue);
+				int secondInt = Integer.parseInt(secondValue);
+				if (i == 0)
+				{
+					firstCell = firstInt;
+				}
+				if (i == initialCells.size() - 2)
+				{
+					lastCell = secondInt;
+				}
+				list.add(secondInt - firstInt);
+			}
+			catch (NumberFormatException e)
+			{
+				return progression;
+			}
+		}
+		if (list.stream().distinct().count() == 1)
+		{
+			progression = list.get(0) + lastCell - firstCell;
+		}
+		return progression;
+	}
+
+	private String getEvaluatedText(StringBuilder sb, int progression)
 	{
 		String s = sb.toString();
 		/**
@@ -195,7 +221,7 @@ public class CellView extends TableCell<ObservableList<SpreadsheetCell>, Spreads
 		{
 			int i = Integer.parseInt(s);
 			sb.delete(0, sb.length());
-			int w = i + 1;
+			int w = i + progression;
 			sb.append(w);
 			return String.valueOf(i);
 		}
@@ -219,7 +245,7 @@ public class CellView extends TableCell<ObservableList<SpreadsheetCell>, Spreads
 				if (firstDigits != null)
 				{
 					first = Integer.parseInt(firstDigits);
-					firstNew = first + 1;
+					firstNew = first + progression;
 				}
 
 				String word = matcher.group(2);
@@ -230,7 +256,7 @@ public class CellView extends TableCell<ObservableList<SpreadsheetCell>, Spreads
 				if (lastDigits != null)
 				{
 					last = Integer.parseInt(lastDigits);
-					lastNew = last + 1;
+					lastNew = last + progression;
 				}
 
 				if (first != Integer.MIN_VALUE)
@@ -265,9 +291,9 @@ public class CellView extends TableCell<ObservableList<SpreadsheetCell>, Spreads
 		return sb.toString();
 	}
 
-	public ObservableList<String> getSelectedItems()
+	private String getEvaluatedText(StringBuilder sb)
 	{
-		return this.selectedStrings;
+		return getEvaluatedText(sb, 1);
 	}
 
 	public ObservableList<TablePosition> getSelectedTablePositions()

@@ -8,21 +8,12 @@
 
 package com.exactprosystems.jf.tool;
 
-import javafx.geometry.VPos;
+import com.exactprosystems.jf.common.parser.FormulaGenerator;
 import javafx.scene.Node;
 import javafx.scene.SnapshotParameters;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.WritableImage;
-import javafx.scene.input.ClipboardContent;
-import javafx.scene.input.DataFormat;
-import javafx.scene.input.Dragboard;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.input.TransferMode;
+import javafx.scene.input.*;
 import javafx.scene.text.Text;
-import javafx.scene.text.TextAlignment;
-
-import com.exactprosystems.jf.common.parser.FormulaGenerator;
 
 public class DragDetector
 {
@@ -35,17 +26,8 @@ public class DragDetector
 	{
 		String text = this.generator.generate();
 		Text txt = new Text(text);
-		txt.applyCss();
-		
-		Canvas canvas = new Canvas(txt.getLayoutBounds().getWidth(), txt.getLayoutBounds().getHeight());
-        GraphicsContext gc = canvas.getGraphicsContext2D();
-        gc.setTextAlign(TextAlignment.CENTER);
-        gc.setTextBaseline(VPos.CENTER);
-        gc.fillText(text, Math.round(canvas.getWidth() / 2), Math.round(canvas.getHeight() / 2) );
-
-		
 		Dragboard dragboard = ((Node)event.getSource()).startDragAndDrop(TransferMode.ANY);
-		WritableImage snapshot = canvas.snapshot(new SnapshotParameters(), null);
+		WritableImage snapshot = txt.snapshot(new SnapshotParameters(), null);
 		dragboard.setDragView(snapshot);
 		ClipboardContent content = new ClipboardContent();
 		content.put(DataFormat.PLAIN_TEXT, text);

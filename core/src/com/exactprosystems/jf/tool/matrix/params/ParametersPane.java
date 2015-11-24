@@ -83,8 +83,6 @@ public class ParametersPane extends CustomScrollPane
 		ObservableList<Node> children = FXCollections.observableArrayList(this.mainGridPane.getChildren());
 
 		this.mainGridPane.getChildren().clear();
-		this.mainGridPane.add(emptyBox(children), 0, 0, 1, 2);
-
 		for (int i = 0; i < this.parameters.size(); i++)
 		{
 			Parameter par = this.parameters.getByIndex(i);
@@ -96,6 +94,7 @@ public class ParametersPane extends CustomScrollPane
 
 			this.mainGridPane.add(exist, i + 1, 0, 1, this.oneLine ? 1 : 2);
 		}
+		this.mainGridPane.add(emptyBox(FXCollections.observableArrayList(this.mainGridPane.getChildren())), 0, 0, 1, 2);
 	}
 
 	private Pane findPane(ObservableList<Node> children, Parameter par)
