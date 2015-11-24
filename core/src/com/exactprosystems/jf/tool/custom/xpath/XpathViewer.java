@@ -193,7 +193,7 @@ public class XpathViewer
 			return "";
 		}
 		return xpath(parent, node.getParentNode(), false, null) + "/" + node.getNodeName() 
-				+ 	(parameters != null && !parameters.isEmpty()
+				+ 	(parameters != null && !parameters.isEmpty() || useText
 						? "[" + getParameters(node, useText, parameters) + "]"
 						: (hasSiblings(node) 
 							? "[" + getIndexNode(node) + "]"
@@ -251,7 +251,6 @@ public class XpathViewer
 		{
 			res = res + (res.isEmpty() ? "" : " and ") + "contains(text(), \"" + text(node) + "\")";  
 		}
-		
 		return res;
 	}
 	
