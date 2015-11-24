@@ -30,7 +30,7 @@ public class MainTestGrid extends Application
 		SpreadsheetView view = new SpreadsheetView(provider);
 		pane.setCenter(view);
 
-		Scene scene = new Scene(pane, 500, 500);
+		Scene scene = new Scene(pane, 800, 800);
 		pane.setBottom(new TextField());
 		scene.getStylesheets().setAll(Theme.WHITE.getPath());
 		primaryStage.setScene(scene);

@@ -27,12 +27,14 @@ import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class CellView extends TableCell<ObservableList<SpreadsheetCell>, SpreadsheetCell>
 {
 	private final SpreadsheetHandle handle;
-	private ObservableList<ObservableList<SpreadsheetCell>> selectedCell;
+	private ObservableList<String> selectedStrings;
+	private ObservableList<TablePosition> selectedTablePositions;
 
 	private static final String ANCHOR_PROPERTY_KEY = "table.anchor"; //$NON-NLS-1$
 
@@ -74,8 +76,8 @@ public class CellView extends TableCell<ObservableList<SpreadsheetCell>, Spreads
 				}
 				if (this.handle.getGridView().getSelectionModel().getSelectionMode().equals(SelectionMode.MULTIPLE))
 				{
-					this.selectedCell = FXCollections.observableArrayList(this.handle.getCellsViewSkin().getSelectionModel().getSelectedItems());
-
+					this.selectedTablePositions = FXCollections.observableArrayList(this.handle.getGridView().getSelectionModel().getSelectedCells());
+					this.selectedStrings = this.handle.getView().convert(this.selectedTablePositions);
 					startFullDrag();
 				}
 			}
@@ -103,7 +105,7 @@ public class CellView extends TableCell<ObservableList<SpreadsheetCell>, Spreads
 			CellView source = ((CellView) event.getGestureSource());
 			if (source.getCursor() != null && source.getCursor().equals(Cursor.CROSSHAIR))
 			{
-				ObservableList<ObservableList<SpreadsheetCell>>initialCells = source.getInitialCells();
+				ObservableList<TablePosition> initialCells = source.getSelectedTablePositions();
 				final RectangleSelection.GridRange range = this.handle.getCellsViewSkin().getRectangleSelection().getRange();
 				final DataProvider provider = this.handle.getView().getProvider();
 				/**
@@ -112,17 +114,69 @@ public class CellView extends TableCell<ObservableList<SpreadsheetCell>, Spreads
 				if (initialCells.size() == 1)
 				{
 					StringBuilder text = new StringBuilder(source.getText());
-					IntStream.range(range.getTop(), range.getBottom() + 1).forEach(j -> IntStream.range(range.getLeft(), range.getRight() + 1).forEach(i -> provider.setCellValue(i, j, getEvaluatedText(text))));
+					IntStream.range(range.getTop(), range.getBottom() + 1)
+							.forEach(j -> IntStream.range(range.getLeft(), range.getRight() + 1)
+									.forEach(i -> provider.setCellValue(i, j, getEvaluatedText(text))));
 				}
 				else
 				{
-					StringBuilder text = new StringBuilder(source.getText());
-					IntStream.range(range.getTop(), range.getBottom() + 1).forEach(j -> IntStream.range(range.getLeft(), range.getRight() + 1).forEach(i -> provider.setCellValue(i, j, getEvaluatedText(text))));
-					//for (TablePosition initialCell : initialCells)
-					//{
-					//TODO think about progression
-					//}
-					//IntStream.range(range.getTop(), range.getBottom() + 1).forEach(j -> IntStream.range(range.getLeft(), range.getRight() + 1).forEach(i -> provider.setCellValue(i, j, getEvaluatedText(text))));
+					int startRow = initialCells.get(0).getRow();
+					ObservableList<ObservableList<String>> strings = FXCollections.observableArrayList();
+					int index = 0;
+					strings.add(FXCollections.observableArrayList());
+					for (TablePosition cell : initialCells)
+					{
+						String cellValue = (String) provider.getCellValue(cell.getColumn(), cell.getRow());
+						if (cell.getRow() != startRow)
+						{
+							ObservableList<String> list = FXCollections.observableArrayList();
+							strings.add(list);
+							list.add(cellValue);
+							index++;
+							startRow = cell.getRow();
+						}
+						else
+						{
+							strings.get(index).add(cellValue);
+						}
+					}
+//
+//					if (range.getBottom() - range.getTop() > strings.size())
+//					{
+//						for (int i = strings.size(); i < range.getBottom() - range.getTop(); i++)
+//						{
+//							ObservableList<String> observableList = strings.get(i - 1);
+//							System.out.println(observableList);
+//							ObservableList<String> list = FXCollections.observableArrayList(observableList.stream()
+//									.map(StringBuilder::new)
+//									.map(this::getEvaluatedText).collect(Collectors.toList()));
+//							strings.add(list);
+//						}
+//					}
+//					for (ObservableList<String> q : strings)
+//					{
+//						for (String s : q)
+//						{
+//							System.out.print(s + "\t");
+//						}
+//						System.out.println();
+//					}
+
+
+					for (int i = range.getTop(); i < range.getBottom() + 1; i++)
+					{
+						int currentIndex = i - range.getTop();
+//						if (currentIndex == strings.size())
+//						{
+//
+//						}
+						ObservableList<String> row = strings.get(currentIndex % strings.size());
+						List<StringBuilder> list = row.stream().map(StringBuilder::new).collect(Collectors.toList());
+						for (int j = range.getLeft(); j < range.getRight() + 1; j++)
+						{
+							provider.setCellValue(j, i, getEvaluatedText(list.get((j - range.getLeft()) % row.size())));
+						}
+					}
 				}
 				this.handle.getView().setDataProvider(provider);
 
@@ -154,25 +208,50 @@ public class CellView extends TableCell<ObservableList<SpreadsheetCell>, Spreads
 		 */
 		try
 		{
-			//TODO need implements strings like these 96SW100, 96SW, SW100
-			//not(!) need implements(!) strings like this SW9SW
 			StringBuilder res = new StringBuilder();
-			Pattern compile = Pattern.compile("^(\\d+)(.*?)(\\d+)$");
+			Pattern compile = Pattern.compile("^(\\d+)?(.*?)(\\d+)?$");
 			Matcher matcher = compile.matcher(sb.toString());
 			if (matcher.find())
 			{
 				String firstDigits = matcher.group(1);
-				int first = Integer.parseInt(firstDigits);
-				int firstNew = first + 1;
+				int first = Integer.MIN_VALUE;
+				int firstNew = Integer.MIN_VALUE;
+				if (firstDigits != null)
+				{
+					first = Integer.parseInt(firstDigits);
+					firstNew = first + 1;
+				}
 
 				String word = matcher.group(2);
 
 				String lastDigits = matcher.group(3);
-				int last = Integer.parseInt(lastDigits);
-				int lastNew = last + 1;
-				res.append(first).append(word).append(last);
+				int last = Integer.MIN_VALUE;
+				int lastNew = Integer.MIN_VALUE;
+				if (lastDigits != null)
+				{
+					last = Integer.parseInt(lastDigits);
+					lastNew = last + 1;
+				}
+
+				if (first != Integer.MIN_VALUE)
+				{
+					res.append(first);
+				}
+				res.append(word);
+				if (last != Integer.MIN_VALUE)
+				{
+					res.append(last);
+				}
 				sb.delete(0, sb.length());
-				sb.append(firstNew).append(word).append(lastNew);
+				if (firstNew != Integer.MIN_VALUE)
+				{
+					sb.append(firstNew);
+				}
+				sb.append(word);
+				if (lastNew != Integer.MIN_VALUE)
+				{
+					sb.append(lastNew);
+				}
 				return res.toString();
 			}
 		}
@@ -186,9 +265,14 @@ public class CellView extends TableCell<ObservableList<SpreadsheetCell>, Spreads
 		return sb.toString();
 	}
 
-	public ObservableList<ObservableList<SpreadsheetCell>> getInitialCells()
+	public ObservableList<String> getSelectedItems()
 	{
-		return this.selectedCell;
+		return this.selectedStrings;
+	}
+
+	public ObservableList<TablePosition> getSelectedTablePositions()
+	{
+		return selectedTablePositions;
 	}
 
 	@Override

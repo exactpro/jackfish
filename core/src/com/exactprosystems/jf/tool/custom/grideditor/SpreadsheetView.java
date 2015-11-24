@@ -264,6 +264,11 @@ public class SpreadsheetView extends Control
 		this.setDataProvider(this.providerProperty().get());
 	}
 
+	public ObservableList<String> convert(ObservableList<TablePosition> focusedCells)
+	{
+		return FXCollections.observableArrayList(focusedCells.stream().map(fc -> (String) this.providerProperty().get().getCellValue(fc.getColumn(), fc.getRow())).collect(Collectors.toList()));
+	}
+
 	public TablePosition<ObservableList<SpreadsheetCell>, ?> getEditingCell()
 	{
 		return cellsView.getEditingCell();
