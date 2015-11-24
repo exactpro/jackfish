@@ -25,6 +25,8 @@ import javafx.scene.input.MouseEvent;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.IntStream;
 
 public class CellView extends TableCell<ObservableList<SpreadsheetCell>, SpreadsheetCell>
@@ -154,7 +156,25 @@ public class CellView extends TableCell<ObservableList<SpreadsheetCell>, Spreads
 		{
 			//TODO need implements strings like these 96SW100, 96SW, SW100
 			//not(!) need implements(!) strings like this SW9SW
+			StringBuilder res = new StringBuilder();
+			Pattern compile = Pattern.compile("^(\\d+)(.*?)(\\d+)$");
+			Matcher matcher = compile.matcher(sb.toString());
+			if (matcher.find())
+			{
+				String firstDigits = matcher.group(1);
+				int first = Integer.parseInt(firstDigits);
+				int firstNew = first + 1;
 
+				String word = matcher.group(2);
+
+				String lastDigits = matcher.group(3);
+				int last = Integer.parseInt(lastDigits);
+				int lastNew = last + 1;
+				res.append(first).append(word).append(last);
+				sb.delete(0, sb.length());
+				sb.append(firstNew).append(word).append(lastNew);
+				return res.toString();
+			}
 		}
 		catch (Exception e)
 		{
