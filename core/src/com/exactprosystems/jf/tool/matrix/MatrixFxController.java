@@ -100,7 +100,7 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 		{
 			TreeItem<MatrixItem> treeItem = this.tree.find(matrixItem);
 			Optional.ofNullable(treeItem).ifPresent(item -> Platform.runLater(() -> this.tree.setCurrent(item)));
-		}, "Error on move to item"), true);
+		}, "Error on moving to item"), true);
 		
 		this.splitPane.getItems().add(this.listView);
 		this.tree = new MatrixTreeView();
@@ -312,7 +312,7 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 				this.watcher = new WatcherFx(btnWatch.getScene().getWindow(), matrix, context);
 			}
 			this.watcher.show();
-		}, "Error on show watcher ");
+		}, "Error on showing watcher ");
 	}
 
 	public void close()
@@ -322,7 +322,7 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 			this.tab.close();
 			getTabPane().getTabs().remove(this.tab);
 			Optional.ofNullable(watcher).ifPresent(WatcherFx::close);
-		}, "Error on close matrix");
+		}, "Error on closing matrix");
 	}
 
 	public void displayTab(MatrixItem matrixItem)
@@ -340,28 +340,28 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 	// ------------------------------------------------------------------------------------------------------------------
 	public void showResult(ActionEvent event)
 	{
-		tryCatch(this.model::showResult, "Error on show result");
+		tryCatch(this.model::showResult, "Error on showing result");
 	}
 
 	public void stopMatrix(ActionEvent event)
 	{
-		tryCatch(this.model::stopMatrix, "Error on stop matrix");
+		tryCatch(this.model::stopMatrix, "Error on stopping matrix");
 	}
 
 	public void startMatrix(ActionEvent event)
 	{
 		listView.getItems().add(ConsoleText.defaultText("Prepare to start matrix..."));
-		tryCatch(this.model::startMatrix, "Error on start matrix. See the matrix output for details.");
+		tryCatch(this.model::startMatrix, "Error on starting matrix. See the matrix output for details.");
 	}
 
 	public void pauseMatrix(ActionEvent event)
 	{
-		tryCatch(this.model::pauseMatrix, "Error on pause matrix");
+		tryCatch(this.model::pauseMatrix, "Error on pausing matrix");
 	}
 
 	public void stepMatrix(ActionEvent event)
 	{
-		tryCatch(this.model::stepMatrix, "Error on pause matrix");
+		tryCatch(this.model::stepMatrix, "Error on stepping matrix");
 	}
 
 	public void setColor(ActionEvent event)
@@ -378,12 +378,12 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 				((ImageView) toggleBtnColor.getGraphic()).setImage(new javafx.scene.image.Image(CssVariables.Icons.COLOR_OFF_MATRIX_ICON));
 			}
 			toggleBtnColor.getTooltip().setText("Color " + (!toggleBtnColor.isSelected() ? "off" : "on"));
-		}, "Error on set color");
+		}, "Error on setting color");
 	}
 
 	public void showWatch(ActionEvent event)
 	{
-		tryCatch(this.model::showWatch, "Error on show watcher");
+		tryCatch(this.model::showWatch, "Error on showing watcher");
 	}
 
 	public void showFindPanel(ActionEvent actionEvent)
@@ -402,12 +402,12 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 
 	public void changeDefaultApp(ActionEvent actionEvent)
 	{
-		tryCatch(() -> this.model.changeDefaultApp(cbDefaultApp.getSelectionModel().getSelectedItem()), "Error on change app");
+		tryCatch(() -> this.model.changeDefaultApp(cbDefaultApp.getSelectionModel().getSelectedItem()), "Error on changing app");
 	}
 
 	public void changeDefaultClient(ActionEvent actionEvent)
 	{
-		tryCatch(() -> this.model.changeDefaultClient(cbDefaultClient.getSelectionModel().getSelectedItem()), "Error on change client");
+		tryCatch(() -> this.model.changeDefaultClient(cbDefaultClient.getSelectionModel().getSelectedItem()), "Error on changing client");
 	}
 
 	public void markAll(ActionEvent actionEvent)
@@ -422,7 +422,7 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 
 	private void mark(boolean flag)
 	{
-		tryCatch(() -> this.model.markFirstLevel(flag), "Error on mark all");
+		tryCatch(() -> this.model.markFirstLevel(flag), "Error on marking all items");
 		this.tree.refresh();
 	}
 
@@ -507,7 +507,7 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 					showFindPanel(null);
 				}
 			}
-		}, "Error on set shortcuts"));
+		}, "Error on setting shortcuts"));
 
 	}
 
@@ -534,6 +534,6 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 			customizeLabeled(btnFind, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.FIND_ON_MATRIX);
 
 			sizeButtons(BUTTON_SIZE_WITH_ICON, btnStartMatrix, btnStopMatrix, btnPauseMatrix, btnWatch, btnStepMatrix, btnShowResult);
-		}, "Error on set tooltip or images"));
+		}, "Error on setting tooltip or images"));
 	}
 }
