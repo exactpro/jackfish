@@ -20,9 +20,14 @@ public class MatrixListener implements IMatrixListener
 		this.ok = true;		
 	}
 
-	public void matrixStarted(Matrix matrix)
+	public void reset(Matrix matrix)
 	{
 		this.ok = true;
+		logger.trace("reset()");
+	}
+
+	public void matrixStarted(Matrix matrix)
+	{
 		logger.trace("matrixStarted()");
 	}
 

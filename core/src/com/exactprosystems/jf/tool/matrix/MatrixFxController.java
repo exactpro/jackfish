@@ -28,6 +28,7 @@ import com.exactprosystems.jf.tool.custom.treetable.MatrixTreeView;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.matrix.watch.WatcherFx;
 import com.exactprosystems.jf.tool.settings.SettingsPanel;
+
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.concurrent.Task;
@@ -74,8 +75,11 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 	private Parent						pane;
 	private CustomTab					tab;
 	private MatrixFx					model;
-	private DisplayDriver			driver;
+	private DisplayDriver				driver;
 	private Context						context;
+	private boolean						ok;
+	private String 						exceptionMessage;
+
 
 	// ==============================================================================================================================
 	// interface Initializable
@@ -137,6 +141,12 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 	// ------------------------------------------------------------------------------------------------------------------------------
 	// MatrixListener
 	@Override
+	public void reset(final Matrix matrix)
+	{
+		this.ok = true;
+	}
+	
+	@Override
 	public void matrixStarted(final Matrix matrix)
 	{
 		Platform.runLater(() ->
@@ -197,6 +207,8 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 	@Override
 	public void error(final Matrix matrix, int lineNumber, final MatrixItem item, final String message)
 	{
+		this.ok = false;
+		this.exceptionMessage = String.format("error(%d, %s, %s)", lineNumber, item == null ? "<null>" : item.getPath(), message);
 		Platform.runLater(() ->
 		{
 			String format = item == null ? message : String.format("%s %s", item.getPath(), message);
@@ -253,13 +265,13 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 	@Override
 	public String getExceptionMessage()
 	{
-		return "true"; // TODO why this string means an exeption?
+		return this.exceptionMessage;
 	}
 
 	@Override
 	public boolean isOk()
 	{
-		return true;
+		return this.ok;
 	}
 
 	public void init(MatrixFx model, Context context, TabConsole console)
@@ -339,7 +351,7 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 	public void startMatrix(ActionEvent event)
 	{
 		listView.getItems().add(ConsoleText.defaultText("Prepare to start matrix..."));
-		tryCatch(this.model::startMatrix, "Error on start matrix");
+		tryCatch(this.model::startMatrix, "Error on start matrix. See the matrix output for details.");
 	}
 
 	public void pauseMatrix(ActionEvent event)

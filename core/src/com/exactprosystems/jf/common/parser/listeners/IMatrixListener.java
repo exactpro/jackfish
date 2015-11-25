@@ -6,6 +6,7 @@ import com.exactprosystems.jf.common.parser.items.MatrixItem;
 
 public interface IMatrixListener
 {
+	void		reset				(Matrix matrix);
 	void		matrixStarted		(Matrix matrix);
 	void		matrixFinished		(Matrix matrix, int passed, int failed);
 	void		started				(Matrix matrix, MatrixItem item);

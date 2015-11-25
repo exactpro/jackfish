@@ -190,6 +190,11 @@ public class MatrixRunner implements IMatrixRunner, AutoCloseable
 			throw new Exception("Matrix is empty.");
 		}
 		
+		if (!this.matrix.checkMatrix(this.context, this.context.getEvaluator()))
+		{
+			throw new Exception("Matrix is incorrect.");
+		}
+		
         changeState(State.Waiting);
 
         final AbstractEvaluator evaluator = this.context.getEvaluator();
