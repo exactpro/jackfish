@@ -163,7 +163,12 @@ public class MatrixTreeView extends TreeTableView<MatrixItem>
 	public MatrixItem currentItem()
 	{
 		TreeItem<MatrixItem> selectedItem = getSelectionModel().getSelectedItem();
-		return selectedItem != null ? selectedItem.getValue() : null;
+		MatrixItem item = selectedItem != null ? selectedItem.getValue() : null;
+		if (item == null)
+		{
+			DialogsHelper.showInfo("Can't do current operation, because selected item is null");
+		}
+		return item;
 	}
 	
 	public TreeItem<MatrixItem> find(MatrixItem item)

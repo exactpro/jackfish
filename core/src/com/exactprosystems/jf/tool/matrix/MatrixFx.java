@@ -184,23 +184,24 @@ public class MatrixFx extends Matrix
 	@Override
 	public void remove(MatrixItem item)
 	{
-		MatrixItem parent = item.getParent();
-		int index = super.getIndex(item);
-		int number = item.getNumber() - 1;
-		Command undo = () ->
+		if (item != null)
 		{
-			super.insert(parent, index, item);
-			this.controller.display(item);
-//			this.controller.setCurrent(item);
-		};
-		Command redo = () ->
-		{
-			super.remove(item);
-			this.controller.remove(item);
-//			this.controller.setCurrent(find(i -> i.getNumber() == number));
-		};
-		addCommand(undo, redo);
-		super.changed(true);
+			MatrixItem parent = item.getParent();
+			int index = super.getIndex(item);
+			int number = item.getNumber() - 1;
+			Command undo = () -> {
+				super.insert(parent, index, item);
+				this.controller.display(item);
+				//			this.controller.setCurrent(item);
+			};
+			Command redo = () -> {
+				super.remove(item);
+				this.controller.remove(item);
+				//			this.controller.setCurrent(find(i -> i.getNumber() == number));
+			};
+			addCommand(undo, redo);
+			super.changed(true);
+		}
 	}
 
 	//==============================================================================================================================
