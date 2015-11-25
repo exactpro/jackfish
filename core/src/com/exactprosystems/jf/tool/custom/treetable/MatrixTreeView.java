@@ -51,6 +51,7 @@ import static com.exactprosystems.jf.tool.Common.tryCatch;
 
 public class MatrixTreeView extends TreeTableView<MatrixItem>
 {
+	public static boolean canShow = true;
 	private MatrixFx 	matrix;
 
 	public static final int NUMBER_COLUMN_WIDTH =	40;
@@ -432,14 +433,18 @@ public class MatrixTreeView extends TreeTableView<MatrixItem>
 
 	private void show(ContextMenu menu, double x, double y)
 	{
-		Window sceneWindow = getSceneWindow();
-		if (sceneWindow == null)
+		if (canShow)
 		{
-			menu.show(Common.node, x, y);
-		}
-		else
-		{
-			menu.show(sceneWindow, x, y);
+			canShow = false;
+			Window sceneWindow = getSceneWindow();
+			if (sceneWindow == null)
+			{
+				menu.show(Common.node, x, y);
+			}
+			else
+			{
+				menu.show(sceneWindow, x, y);
+			}
 		}
 	}
 
@@ -460,6 +465,7 @@ public class MatrixTreeView extends TreeTableView<MatrixItem>
 		insertMenu.setAutoHide(true);
 		insertMenu.setHideOnEscape(true);
 		insertMenu.setAutoHide(true);
+		insertMenu.setOnHiding(e -> canShow = true);
 
 		Menu actionItemMenu = new Menu("ActionItem");
 		

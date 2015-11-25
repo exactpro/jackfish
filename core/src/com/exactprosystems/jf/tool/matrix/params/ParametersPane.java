@@ -524,7 +524,7 @@ public class ParametersPane extends CustomScrollPane
 		}
 		else
 		{
-			return this.mainGridPane.getChildren().indexOf(selectedPane) - 1;
+			return this.mainGridPane.getChildren().indexOf(selectedPane);
 		}
 	}
 
