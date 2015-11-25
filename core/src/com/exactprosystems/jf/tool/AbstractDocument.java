@@ -120,6 +120,7 @@ public abstract class AbstractDocument implements Document
 		redo.execute();
 		this.provider.addCommand(undo, redo);
 		afterRedoUndo();
+		this.changed(true);
 	}
 
 	private boolean hasName = false;
