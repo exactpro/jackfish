@@ -86,18 +86,33 @@ public class ParametersPane extends CustomScrollPane
 		for (int i = 0; i < this.parameters.size(); i++)
 		{
 			Parameter par = this.parameters.getByIndex(i);
-			Pane exist = findPane(children, par);
+			GridPane exist = findPane(children, par);
 			if (exist == null)
 			{
 				exist = parameterBox(par, i);
 			}
-
+			updatePane(exist, par);
 			this.mainGridPane.add(exist, i + 1, 0, 1, this.oneLine ? 1 : 2);
 		}
 		this.mainGridPane.add(emptyBox(FXCollections.observableArrayList(this.mainGridPane.getChildren())), 0, 0, 1, 2);
 	}
 
-	private Pane findPane(ObservableList<Node> children, Parameter par)
+	private void updatePane(GridPane pane, Parameter parameter)
+	{
+		pane.getChildren().stream()
+				.filter(node -> node instanceof TextField)
+				.findFirst()
+				.filter(n -> !Str.areEqual(((TextField) n).getText(), parameter.getName()))
+				.ifPresent(n -> ((TextField) n).setText(parameter.getName()));
+
+		pane.getChildren().stream()
+				.filter(node -> node instanceof ExpressionField)
+				.findFirst()
+				.filter(n -> !Str.areEqual(((ExpressionField) n).getText(), parameter.getExpression()))
+				.ifPresent(n -> ((ExpressionField) n).setText(parameter.getExpression()));
+	}
+
+	private GridPane findPane(ObservableList<Node> children, Parameter par)
 	{
 		Optional<GridPane> opt = children.stream()
 				.filter(node -> 
@@ -206,7 +221,7 @@ public class ParametersPane extends CustomScrollPane
 		tf.setPrefWidth(size);
 	}
 
-	private Pane parameterBox(Parameter par, int index)
+	private GridPane parameterBox(Parameter par, int index)
 	{
 		GridPane tempGrid = new GridPane();
 		tempGrid.setUserData(par);
