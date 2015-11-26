@@ -154,7 +154,7 @@ public class DisplayDriverFx implements DisplayDriver
 	public void showComboBox(MatrixItem item, Object layout, int row, int column, Setter<String> set, Getter<String> get, Function<Void, List<String>> handler)
 	{
 		GridPane pane = (GridPane) layout;
-		final ComboBox<String> comboBox = new ComboBox<String>();
+		final ComboBox<String> comboBox = new ComboBox<>();
 		comboBox.setValue(get.get());
 		comboBox.setOnAction(e ->
 		{

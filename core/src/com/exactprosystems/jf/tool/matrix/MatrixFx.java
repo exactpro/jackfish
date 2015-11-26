@@ -39,6 +39,7 @@ import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 public class MatrixFx extends Matrix
 {
@@ -230,6 +231,16 @@ public class MatrixFx extends Matrix
 
 	}
 
+	public static void main(String[] args)
+	{
+		Stream.of("one", "two", "three", "four")
+				.filter(e -> e.length() > 3)
+				.peek(e -> System.out.println("Filtered value: " + e))
+				.map(String::toUpperCase)
+				.peek(e -> System.out.println("Mapped value: " + e))
+				.collect(Collectors.toList());
+	}
+
 	public void remove(List<MatrixItem> items)
 	{
 		if (items != null && !items.isEmpty())
@@ -242,6 +253,7 @@ public class MatrixFx extends Matrix
 			List<Temp> collect = items.stream().map(item -> new Temp(item.getParent(), item, super.getIndex(item))).collect(Collectors.toList());
 			Command undo = () ->
 			{
+				collect.sort((t1,t2) -> Integer.compare(t1.getIndex(), t2.getIndex()));
 				collect.forEach(temp -> {
 					super.insert(temp.getParent(), temp.getIndex(), temp.getItem());
 					this.controller.display(temp.getItem());

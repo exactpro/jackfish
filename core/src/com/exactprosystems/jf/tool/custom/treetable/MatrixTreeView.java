@@ -24,7 +24,6 @@ import com.exactprosystems.jf.tool.matrix.MatrixFx;
 import com.exactprosystems.jf.tool.matrix.MatrixFx.PlaceToInsert;
 import com.exactprosystems.jf.tool.matrix.params.ParametersPane;
 import com.exactprosystems.jf.tool.settings.SettingsPanel;
-
 import javafx.application.Platform;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.ActionEvent;
@@ -40,7 +39,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.Window;
-
 import org.apache.log4j.Logger;
 
 import java.util.*;
@@ -157,7 +155,7 @@ public class MatrixTreeView extends TreeTableView<MatrixItem>
 
 	public List<MatrixItem> currentItems()
 	{
-		return getSelectionModel().getSelectedItems().stream().map(TreeItem::getValue).collect(Collectors.toList());
+		return getSelectionModel().getSelectedCells().stream().map(TreeTablePosition::getTreeItem).map(TreeItem::getValue).collect(Collectors.toList());
 	}
 
 	public MatrixItem currentItem()
