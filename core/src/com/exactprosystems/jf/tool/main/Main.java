@@ -517,8 +517,7 @@ public class Main extends Application
 		{
 			file = new File(filePath);
 		}
-
-		return Optional.ofNullable(file);
+		return this.controller.checkFile(file) ? Optional.empty() :Optional.ofNullable(file);
 	}
 	
 	private Document loadDocument(File file, Document doc, DocumentKind kind) throws Exception

@@ -18,21 +18,17 @@ import com.exactprosystems.jf.tool.custom.tab.CustomTab;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.settings.SettingsPanel;
 import com.exactprosystems.jf.tool.settings.Theme;
-
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.*;
 import javafx.scene.control.Label;
-import javafx.scene.control.MenuItem;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.text.Font;
 import javafx.stage.Popup;
 import javafx.stage.Stage;
-
 import org.apache.log4j.Logger;
 
 import java.awt.*;
@@ -260,18 +256,6 @@ public abstract class Common
 			return value.getValue().equals(empty) ? "" : value.getValue();
 		}
 		return "";
-	}
-
-	public static void setAccelerator(Settings settings, MenuItem menuItem, String nameShortcut)
-	{
-		Common.tryCatch(() ->
-		{
-			String shortcut = getShortcut(settings, nameShortcut);
-			if (!shortcut.isEmpty())
-			{
-				menuItem.setAccelerator(KeyCodeCombination.valueOf(shortcut));
-			}
-		}, "Error on set accelerator for " + nameShortcut);
 	}
 
 	public static void customizeLabeled(Labeled n, String cssVariable, String icon)

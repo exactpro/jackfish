@@ -8,6 +8,7 @@
 
 package com.exactprosystems.jf.tool.main;
 
+import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.common.Configuration;
 import com.exactprosystems.jf.common.Document;
 import com.exactprosystems.jf.common.Settings;
@@ -562,6 +563,15 @@ public class MainController implements Initializable, ContainingParent
 		fileLastOpenMatrix.getItems().clear();
 	}
 
+	public boolean checkFile(File file)
+	{
+		Optional<Tab> first = this.tabPane.getTabs().stream().filter(f -> {
+			Document document = ((CustomTab) f).getDocument();
+			return Str.areEqual(new File(document.getName()).getAbsolutePath(), file.getAbsolutePath());
+		}).findFirst();
+		first.ifPresent(this.tabPane.getSelectionModel()::select);
+		return first.isPresent();
+	}
 	// ============================================================
 	// private methods
 	// ============================================================
