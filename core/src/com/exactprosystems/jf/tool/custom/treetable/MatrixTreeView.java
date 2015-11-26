@@ -594,7 +594,7 @@ public class MatrixTreeView extends TreeTableView<MatrixItem>
 		{
 			Configuration configuration = new Configuration();
 			IMatrixListener dummy = new SilenceMatrixListener();
-			try (Context context = new Context(dummy, new DummyRunnerListener(), null, configuration))
+			try (Context context = configuration.createContext(dummy, null))
 			{
 				TreeItem<MatrixItem> currentItem = getSelectionModel().getSelectedItem();
 				if (currentItem != null)

@@ -169,7 +169,7 @@ public class MainRunner
 			
 			printVersion();
 
-			Configuration configuration = new Configuration(configString, new ConsoleUpdateLibsListener(), new Settings());
+			Configuration configuration = new Configuration(configString, new Settings());
 			if (!Str.IsNullOrEmpty(configString))
 			{
 		    	try (BufferedReader reader = new BufferedReader(new FileReader(configString)))
@@ -274,7 +274,7 @@ public class MainRunner
 			
 			logger.info(String.format("Processing '%s' start at '%s'", matrix.getName(), startAt.toString()));
 
-			try(Context context = new Context(matrixListener, runnerListener, System.out, configuration);
+			try(Context context = configuration.createContext(matrixListener, System.out);
 				MatrixRunner runner = new MatrixRunner(context, matrix, startAt, null))
 			{
 				runner.start();

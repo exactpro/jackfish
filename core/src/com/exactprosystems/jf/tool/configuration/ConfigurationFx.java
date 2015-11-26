@@ -62,9 +62,13 @@ public class ConfigurationFx extends Configuration
 
 	public ConfigurationFx(String fileName, RunnerListener runnerListener, Settings settings, Main mainModel) throws Exception
 	{
-		super(fileName,  DialogsHelper::showError, settings);
+		super(fileName,  settings);
+		
+		super.listener = DialogsHelper::showError;
+		super.runnerListener = runnerListener;
+		
 		this.mainModel = mainModel;
-		this.context = new Context(new SilenceMatrixListener(), runnerListener, System.out, this);
+		this.context = createContext(new SilenceMatrixListener(), System.out);
 	}
 
 	//==============================================================================================================================
@@ -433,7 +437,7 @@ public class ConfigurationFx extends Configuration
 		String parametersName = startParameters;
 		String title = "Start ";
 		String[] strings = getServicesPool().wellKnownStartArgs(idEntry);
-		Settings settings = this.context.getConfiguration().getSettings();
+		Settings settings = getSettings();
 		final Map<String, String> parameters = settings.getMapValues(Settings.SERVICE + idEntry, parametersName, strings);
 
 		AbstractEvaluator evaluator = getEvaluator();

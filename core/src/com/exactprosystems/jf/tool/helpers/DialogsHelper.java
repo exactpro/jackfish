@@ -451,9 +451,9 @@ public abstract class DialogsHelper
 
 	public static void showActionsHelp()
 	{
-		Configuration config = new Configuration("Empty", DialogsHelper::showError, new Settings());
+		Configuration config = new Configuration("Empty", new Settings());
 		IMatrixListener dummy = new SilenceMatrixListener();
-		try(Context context = new Context(dummy, null, null, config))
+		try(Context context = config.createContext(dummy, null))
 		{
 			Matrix matrix = new Matrix("helpMatrix", config, new SilenceMatrixListener());
 
@@ -518,11 +518,11 @@ public abstract class DialogsHelper
 		}
 	}
 
-	public static void displayReport(File file, String matrixName, Configuration configuration, RunnerListener runnerListener)
+	public static void displayReport(File file, String matrixName, Configuration configuration)
 	{
 		final String[] matrName = {matrixName};
 		tryCatch(() -> {
-			boolean addButton = configuration != null && runnerListener != null;
+			boolean addButton = configuration != null;
 			WebView browser = new WebView();
 			WebEngine engine = browser.getEngine();
 			engine.load(file.toURI().toASCIIString());
@@ -556,7 +556,7 @@ public abstract class DialogsHelper
 				String matrix = find(engine.getDocument());
 				if (matrix != null && !matrix.isEmpty())
 				{
-					MatrixFx matrixFx = new MatrixFx(matrName[0], configuration, new MatrixListener(), runnerListener);
+					MatrixFx matrixFx = new MatrixFx(matrName[0], configuration, new MatrixListener());
 					matrixFx.load(new StringReader(matrix));
 					matrixFx.display();
 				}

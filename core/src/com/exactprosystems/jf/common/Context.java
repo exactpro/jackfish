@@ -34,14 +34,12 @@ import java.util.Map.Entry;
 
 public class Context implements IContext, AutoCloseable, Cloneable
 {
-	public Context(IMatrixListener matrixListener, RunnerListener runnerListener, PrintStream out, Configuration configuration) throws Exception
+	public Context(IMatrixListener matrixListener, PrintStream out, Configuration configuration) throws Exception
 	{
 		this.configuration = configuration;
 
 		this.matrixListener = matrixListener;
 		this.outStream = out;
-
-		this.runnerListener = runnerListener;
 	}
 
 	@Override
@@ -83,11 +81,6 @@ public class Context implements IContext, AutoCloseable, Cloneable
 	public IMatrixListener getMatrixListener()
 	{
 		return this.matrixListener;
-	}
-
-	public RunnerListener getRunnerListner()
-	{
-		return this.runnerListener;
 	}
 
 	@Override
@@ -136,7 +129,6 @@ public class Context implements IContext, AutoCloseable, Cloneable
 
 	private Configuration		configuration;
 	
-	private RunnerListener		runnerListener;
 	private IMatrixListener		matrixListener	= null;
 	private PrintStream			outStream		= null;
 

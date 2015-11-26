@@ -416,7 +416,7 @@ public class DisplayDriverFx implements DisplayDriver
 		{
 			try
 			{
-				matrixFx = new MatrixFx(matrix, this.context.getConfiguration(), this.context.getMatrixListener(), this.context.getRunnerListner());
+				matrixFx = new MatrixFx(matrix, this.context.getConfiguration(), this.context.getMatrixListener());
 				matrixFx.display();
 			}
 			catch (Exception e)

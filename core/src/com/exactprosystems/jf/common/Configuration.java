@@ -27,6 +27,7 @@ import com.exactprosystems.jf.common.parser.items.MatrixItem;
 import com.exactprosystems.jf.common.parser.items.MatrixRoot;
 import com.exactprosystems.jf.common.parser.items.MutableArrayList;
 import com.exactprosystems.jf.common.parser.items.SubCase;
+import com.exactprosystems.jf.common.parser.listeners.DummyRunnerListener;
 import com.exactprosystems.jf.common.parser.listeners.IMatrixListener;
 import com.exactprosystems.jf.common.parser.listeners.MatrixListener;
 import com.exactprosystems.jf.common.parser.listeners.RunnerListener;
@@ -408,11 +409,10 @@ public class Configuration extends AbstractDocument
 	}
 	
 
-	public Configuration(String fileName, UpdateLibsListener listener, Settings settings)
+	public Configuration(String fileName, Settings settings)
 	{
 		super(fileName, null);
 
-		this.listener 					= listener;
 		this.settings 					= settings;
 		this.changed 					= false;
 
@@ -434,7 +434,7 @@ public class Configuration extends AbstractDocument
 
 	public Configuration()
 	{
-		this("unknown", new ConsoleUpdateLibsListener(), new Settings());
+		this("unknown", new Settings());
 	}
 
 	
@@ -526,9 +526,9 @@ public class Configuration extends AbstractDocument
 
 	
 
-	public Context createContext(IMatrixListener matrixListener, RunnerListener runnerListener, PrintStream out) throws Exception
+	public Context createContext(IMatrixListener matrixListener, PrintStream out) throws Exception
 	{
-		return new Context(matrixListener, runnerListener, out, this);
+		return new Context(matrixListener, out, this);
 	}
 	
 	public void updateLibs()
@@ -862,6 +862,11 @@ public class Configuration extends AbstractDocument
 	}
 
 	
+	public RunnerListener getRunnerListener()
+	{
+		return this.runnerListener;
+	}
+	
 	public List<AppEntry> getAppEntries()
 	{
 		return this.appEntriesValue;
@@ -1128,13 +1133,14 @@ public class Configuration extends AbstractDocument
 			AppEntry.class,
 		};
 
-	protected Map<File, Long> timestampMap = new HashMap<>();
-	protected UpdateLibsListener listener;
-	protected boolean changed;
-	protected ReportFactory	reportFactoryObj;
+	protected Map<File, Long> 		timestampMap 	= new HashMap<>();
+	protected UpdateLibsListener 	listener		= new ConsoleUpdateLibsListener();
+	protected RunnerListener 		runnerListener 	= new DummyRunnerListener();
+	protected boolean 				changed;
+	protected ReportFactory			reportFactoryObj;
 	protected Map<String, Matrix>	libs;
 	protected Map<String, Object>	globals;
-	protected Settings settings;
+	protected Settings 				settings;
 
 	protected ClientsPool			clients;
 	protected ServicePool			services;
@@ -1142,8 +1148,7 @@ public class Configuration extends AbstractDocument
 	protected DataBasePool			databases;
 
 	protected AbstractEvaluator		evaluator;
-	
-	protected final Set<Document> subordinates = new HashSet<Document>();
+	protected final Set<Document> 	subordinates = new HashSet<Document>();
 	
 	protected boolean valid = false;
 

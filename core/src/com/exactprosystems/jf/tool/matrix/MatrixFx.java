@@ -50,18 +50,18 @@ public class MatrixFx extends Matrix
 
 	public static final String	Dialog				= "Matrix";
 
-	public MatrixFx(Matrix matrix, Configuration config, IMatrixListener matrixListener, RunnerListener runnerListener) throws Exception
+	public MatrixFx(Matrix matrix, Configuration config, IMatrixListener matrixListener) throws Exception
 	{
 		super(matrix, config);
 		getRoot().init(this);
-		init(config, matrixListener, runnerListener);
+		init(config, matrixListener);
 		initController();
 	}
 
-	public MatrixFx(String matrixName, Configuration config, IMatrixListener matrixListener, RunnerListener runnerListener) throws Exception
+	public MatrixFx(String matrixName, Configuration config, IMatrixListener matrixListener) throws Exception
 	{
 		super(matrixName, config, matrixListener);
-		init(config, matrixListener, runnerListener);
+		init(config, matrixListener);
 	}
 
 	//==============================================================================================================================
@@ -569,7 +569,7 @@ public class MatrixFx extends Matrix
 	public void startMatrix() throws Exception
 	{
 		this.controller.coloring();
-		this.runnerListener.subscribe(this.runner);
+		this.config.getRunnerListener().subscribe(this.runner);
 		this.runner.start();
 	}
 
@@ -619,12 +619,11 @@ public class MatrixFx extends Matrix
 	}
 
 	//==============================================================================================================================
-	private void init(Configuration config, IMatrixListener matrixListener, RunnerListener runnerListener) throws Exception
+	private void init(Configuration config, IMatrixListener matrixListener) throws Exception
 	{
 		this.config = config;
-		this.runnerListener = runnerListener;
 		this.console = new TabConsole(System.out);
-		this.context = new Context(matrixListener, runnerListener, this.console, this.config);
+		this.context = this.config.createContext(matrixListener, this.console);
 		this.runner = new MatrixRunner(this.context, this, this.startDate, null);
 		this.runner.setStartTime(this.startDate);
 
@@ -734,7 +733,6 @@ public class MatrixFx extends Matrix
 	private MatrixRunner 			runner;
 	private Date 					startDate = new Date();
 	private TabConsole 				console;
-	private RunnerListener 			runnerListener;
 
 	private static List<MatrixItem>	copyList = new ArrayList<MatrixItem>();
 

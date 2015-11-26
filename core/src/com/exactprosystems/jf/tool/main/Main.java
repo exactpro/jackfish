@@ -150,7 +150,7 @@ public class Main extends Application
 						switch (kind)
 						{
 							case MATRIX:
-								loadDocument(new File(filePath), new MatrixFx(filePath, config, new MatrixListener(), runnerListener), kind);
+								loadDocument(new File(filePath), new MatrixFx(filePath, config, new MatrixListener()), kind);
 								break;
 
 							case GUI_DICTIONARY:
@@ -167,6 +167,9 @@ public class Main extends Application
 
 							case CSV:
 								loadDocument(new File(filePath), new CsvFx(filePath, settings, config), DocumentKind.CSV);
+								break;
+								
+							default:
 								break;
 						}
 					}
@@ -234,7 +237,7 @@ public class Main extends Application
 		Optional<File> optional = chooseFile(Matrix.class, filePath, DialogsHelper.OpenSaveMode.OpenFile);
 		if (optional.isPresent())
 		{
-			loadDocument(optional.get(), new MatrixFx(optional.get().getPath(), this.config, new MatrixListener(), this.runnerListener), DocumentKind.MATRIX);
+			loadDocument(optional.get(), new MatrixFx(optional.get().getPath(), this.config, new MatrixListener()), DocumentKind.MATRIX);
 		}
 	}
 
@@ -297,7 +300,7 @@ public class Main extends Application
 	public void newMatrix() throws Exception
 	{
 		checkConfig();
-		MatrixFx doc = new MatrixFx(newName(Matrix.class), this.config, new MatrixListener(), this.runnerListener);
+		MatrixFx doc = new MatrixFx(newName(Matrix.class), this.config, new MatrixListener());
 		doc.create();
 		Settings.SettingsValue copyright = settings.getValueOrDefault(Settings.GLOBAL_NS, "Main", "copyright", "");
 		String text = copyright.getValue().replaceAll("\\\\n", "\n");
@@ -329,7 +332,7 @@ public class Main extends Application
 		Optional<File> optional = chooseFile(Matrix.class, null, DialogsHelper.OpenSaveMode.OpenFile);
 		if (optional.isPresent())
 		{
-			try (Context context = new Context(new MatrixListener(), this.runnerListener, System.out, config);
+			try (Context context = config.createContext(new MatrixListener(), System.out);
 				 MatrixRunner runner = new MatrixRunner(context, optional.get(), null, null)
 			)
 			{
@@ -341,7 +344,7 @@ public class Main extends Application
 	public void openReport() throws Exception
 	{
 		File file = DialogsHelper.showOpenSaveDialog("Choose report", "HTML files (*.html)", "*.html", OpenSaveMode.OpenFile);
-		Optional.ofNullable(file).ifPresent(f -> DialogsHelper.displayReport(f, null, this.config, this.runnerListener));
+		Optional.ofNullable(file).ifPresent(f -> DialogsHelper.displayReport(f, null, this.config));
 	}
 
 	public void stopMatrix(Document document)

@@ -42,7 +42,6 @@ public class MatrixRunner implements IMatrixRunner, AutoCloseable
 	{
 		this.startTime = startTime == null ? new Date() : startTime;
 		this.context = context;
-        this.runnerListener = context.getRunnerListner();
 		this.matrixFile = matrixFile;
 		
 		setGlobalVariable(parameterName, parameter);
@@ -54,7 +53,7 @@ public class MatrixRunner implements IMatrixRunner, AutoCloseable
 
 		this.matrix = matrix;
 		this.matrixFile = new File(this.matrix.getName());
-		this.runnerListener.subscribe(this);
+		this.context.getConfiguration().getRunnerListener().subscribe(this);
 		if (context.getMatrixListener().isOk())
 		{
 			changeState(State.Created);
@@ -88,7 +87,7 @@ public class MatrixRunner implements IMatrixRunner, AutoCloseable
 	private void loadFromReader(Context context, Reader reader) throws Exception
 	{
 		this.matrix = new Matrix(this.matrixFile.getName(), context.getConfiguration(), context.getMatrixListener());
-		this.runnerListener.subscribe(this);
+		this.context.getConfiguration().getRunnerListener().subscribe(this);
 		changeState(State.Error);
 		this.matrix.load(reader);
 
@@ -161,7 +160,7 @@ public class MatrixRunner implements IMatrixRunner, AutoCloseable
 		{
 			stop();
 			changeState(State.Destroyed);
-			this.runnerListener.unsubscribe(this);
+			this.context.getConfiguration().getRunnerListener().unsubscribe(this);
 		}
 		catch (Exception e)
 		{
@@ -333,14 +332,13 @@ public class MatrixRunner implements IMatrixRunner, AutoCloseable
     {
 		int total = this.matrix.count(null); 
 		int done = this.matrix.currentItem();
-		Optional.ofNullable(this.runnerListener).ifPresent(lis -> lis.stateChange(this, newState, done, total));
+		this.context.getConfiguration().getRunnerListener().stateChange(this, newState, done, total);
     }
 
 	private Matrix matrix = null;
 	private Context context = null;
 	private ReportBuilder report = null; 
 	private Date startTime = null;
-	private RunnerListener runnerListener = null;
 	
 	private File matrixFile = null;
 	private Thread thread = null;
