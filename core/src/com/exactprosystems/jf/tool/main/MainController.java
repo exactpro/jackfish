@@ -39,6 +39,7 @@ import javafx.stage.Stage;
 import org.apache.log4j.Logger;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.net.URL;
 import java.util.Collection;
 import java.util.Optional;
@@ -534,12 +535,21 @@ public class MainController implements Initializable, ContainingParent
 			MenuItem menuItem = new MenuItem(lastMatrix.getKey());
 			menuItem.setMnemonicParsing(false);
 			final File file = new File(lastMatrix.getValue());
-			menuItem.setOnAction(actionEvent -> Common.tryCatch(() -> model.loadMatrix(file.getAbsolutePath()), "Error on load matrix"));
+			menuItem.setOnAction(actionEvent -> Common.tryCatch(() -> {
+				try
+				{
+					model.loadMatrix(file.getAbsolutePath());
+				}
+				catch (FileNotFoundException e)
+				{
+					menuItem.getParentMenu().getItems().remove(menuItem);
+				}
+
+			}, "Error on load matrix"));
 			fileLastOpenMatrix.getItems().add(menuItem);
 		});
 		fileLastOpenMatrix.getItems().add(new SeparatorMenuItem());
 		MenuItem clearList = new MenuItem("Clear list");
-		clearList.setOnAction(actionEvent -> Common.tryCatch(model::clearFileLastOpenMatrix, "Error on clear list"));
 		clearList.setOnAction(actionEvent -> Common.tryCatch(model::clearFileLastOpenMatrix, "Error on clear list"));
 		fileLastOpenMatrix.getItems().add(clearList);
 	}

@@ -36,6 +36,7 @@ import javafx.stage.Stage;
 import org.apache.log4j.Logger;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.Reader;
 import java.util.ArrayList;
@@ -526,7 +527,11 @@ public class Main extends Application
 		{
 			return null;
 		}
-
+		if (!file.exists())
+		{
+			DialogsHelper.showError(String.format("File with name %s not found", file.getAbsoluteFile()));
+			throw new FileNotFoundException();
+		}
 		try
 		{
 			try (Reader reader = new FileReader(file))
