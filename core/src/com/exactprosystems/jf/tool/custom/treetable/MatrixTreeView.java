@@ -155,9 +155,8 @@ public class MatrixTreeView extends TreeTableView<MatrixItem>
 		expand(getRoot(), false);
 	}
 
-	public List<MatrixItem> selectedItems()
+	public List<MatrixItem> currentItems()
 	{
-
 		return getSelectionModel().getSelectedItems().stream().map(TreeItem::getValue).collect(Collectors.toList());
 	}
 
@@ -171,7 +170,7 @@ public class MatrixTreeView extends TreeTableView<MatrixItem>
 		}
 		return item;
 	}
-	
+
 	public TreeItem<MatrixItem> find(MatrixItem item)
 	{
 		return find(this.getRoot(), item);
@@ -350,17 +349,17 @@ public class MatrixTreeView extends TreeTableView<MatrixItem>
 
 	private void breakPoint()
 	{
-		Common.tryCatch(() -> this.matrix.breakPoint(currentItem()), "Error on breakpoint");
+		Common.tryCatch(() -> this.matrix.breakPoint(currentItems()), "Error on breakpoint");
 	}
 
 	private void deleteCurrentItems()
 	{
-		Common.tryCatch(() -> this.matrix.remove(currentItem()), "Error on delete item");
+		Common.tryCatch(() -> this.matrix.remove(currentItems()), "Error on delete item");
 	}
 
 	private void copyItems()
 	{
-		Common.tryCatch(() -> this.matrix.copy(selectedItems()), "Error on copy");
+		Common.tryCatch(() -> this.matrix.copy(currentItems()), "Error on copy");
 	}
 
 	private void pasteItems()

@@ -35,11 +35,10 @@ import org.apache.log4j.Logger;
 
 import java.io.File;
 import java.io.Reader;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class MatrixFx extends Matrix
 {
@@ -188,19 +187,24 @@ public class MatrixFx extends Matrix
 		{
 			MatrixItem parent = item.getParent();
 			int index = super.getIndex(item);
-			int number = item.getNumber() - 1;
 			Command undo = () -> {
 				super.insert(parent, index, item);
 				this.controller.display(item);
-				//			this.controller.setCurrent(item);
 			};
 			Command redo = () -> {
 				super.remove(item);
 				this.controller.remove(item);
-				//			this.controller.setCurrent(find(i -> i.getNumber() == number));
 			};
 			addCommand(undo, redo);
 			super.changed(true);
+		}
+	}
+
+	public void remove(List<MatrixItem> items)
+	{
+		if (items != null && !items.isEmpty())
+		{
+			items.forEach(this::remove);
 		}
 	}
 
@@ -362,24 +366,15 @@ public class MatrixFx extends Matrix
 
 		int size = root.count();
 		List<Boolean> lastStates = new ArrayList<>(size);
-		for (int i = 0; i < size; i++)
-		{
-			lastStates.add(root.get(i).isOff());
-		}
+		IntStream.range(0, size).forEach(i -> lastStates.add(root.get(i).isOff()));
 
 		Command undo = () ->
 		{
-			for (int i = 0; i < size; i++)
-			{
-				root.get(i).setOff(lastStates.get(i));
-			}
+			IntStream.range(0, size).forEach(i -> root.get(i).setOff(lastStates.get(i)));
 		};
 		Command redo = () ->
 		{
-			for (int i = 0; i < size; i++)
-			{
-				root.get(i).setOff(flag);
-			}
+			IntStream.range(0, size).forEach(i -> root.get(i).setOff(flag));
 		};
 		addCommand(undo, redo);
 	}
@@ -473,15 +468,10 @@ public class MatrixFx extends Matrix
 	{
 		this.controller.setCurrent(item);
 	}
-	
-	public void breakPoint(MatrixItem item)
-	{
-		checkAndCall(item,  matrixItem ->		
-		{
-			matrixItem.setBreakPoint(!matrixItem.isBreakPoint());
-			this.controller.refresh();
-		});
 
+	public void breakPoint(List<MatrixItem> items)
+	{
+		checkAndCall(items, item -> item.setBreakPoint(!item.isBreakPoint()));
 	}
 
 	public MatrixItem find(Predicate<MatrixItem> strategy)
@@ -605,11 +595,8 @@ public class MatrixFx extends Matrix
 		ArrayList<String> result = new ArrayList<>();
 		result.add(null);
 		this.context.getApplications().appNames();
-		
-		for (String app : this.context.getApplications().appNames())
-		{
-			result.add(app);
-		}
+
+		result.addAll(this.context.getApplications().appNames().stream().collect(Collectors.toList()));
 		this.controller.displayAppList(result);
 	}
 
@@ -617,10 +604,7 @@ public class MatrixFx extends Matrix
 	{
 		ArrayList<String> result = new ArrayList<>();
 		result.add(null);
-		for (String client : this.context.getClients().clientNames())
-		{
-			result.add(client);
-		}
+		result.addAll(this.context.getClients().clientNames().stream().collect(Collectors.toList()));
 		this.controller.displayClientList(result);
 	}
 
@@ -635,26 +619,26 @@ public class MatrixFx extends Matrix
 	{
 		void call(Parameters parameters) throws Exception;
 	}
-	
-	
-	private void checkAndCall(MatrixItem item, MatrixItemApplier applier)
+
+	private void checkAndCall(List<MatrixItem> items, MatrixItemApplier applier)
 	{
-		if (item != null && applier != null)
+		if (items != null && !items.isEmpty() && applier != null)
 		{
-			try
-			{
-				applier.call(item);
-				enumerate();
-				this.controller.refresh();
-//				this.controller.setCurrent(item);
-			}
-			catch (Exception e)
-			{ 
-				logger.error(e.getMessage(), e);
-			}
+			items.forEach(item -> {
+				try
+				{
+					applier.call(item);
+				}
+				catch (Exception e)
+				{
+					logger.error(e.getMessage(), e);
+				}
+			});
+			enumerate();
+			this.controller.refresh();
 		}
 	}
-	
+
 	private void findAndCall(int itemNumber, MatrixItemApplier applier)
 	{
 		MatrixItem item = find(it -> it.getNumber() == itemNumber);
@@ -665,7 +649,6 @@ public class MatrixFx extends Matrix
 				applier.call(item);
 				enumerate();
 				this.controller.refresh();
-//				this.controller.setCurrent(item);
 			}
 			catch (Exception e)
 			{ 
