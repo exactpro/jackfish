@@ -291,7 +291,7 @@ public class ConfigurationFx extends Configuration
 			settings.setValue(Settings.GLOBAL_NS, Settings.SQL + sql, TestingConnectionFxController.USER, user);
 			settings.setValue(Settings.GLOBAL_NS, Settings.SQL + sql, TestingConnectionFxController.DATABASE_NAME, base);
 			settings.saveIfNeeded();
-			SqlConnection connect = context.getDatabases().connect(sql, server, base, user, password);
+			SqlConnection connect = getDataBasesPool().connect(sql, server, base, user, password);
 			if (connect != null && !connect.isClosed() && connect.getConnection().isValid(1))
 			{
 				this.controller.displaySqlConnectionGood();
@@ -432,11 +432,11 @@ public class ConfigurationFx extends Configuration
 		}
 		String parametersName = startParameters;
 		String title = "Start ";
-		String[] strings = this.context.getServices().wellKnownStartArgs(idEntry);
+		String[] strings = getServicesPool().wellKnownStartArgs(idEntry);
 		Settings settings = this.context.getConfiguration().getSettings();
 		final Map<String, String> parameters = settings.getMapValues(Settings.SERVICE + idEntry, parametersName, strings);
 
-		AbstractEvaluator evaluator = this.context.getEvaluator();
+		AbstractEvaluator evaluator = getEvaluator();
 		ButtonType buttonType = DialogsHelper.showParametersDialog(title + idEntry, parameters, evaluator);
 		if (buttonType == ButtonType.CANCEL)
 		{
@@ -466,7 +466,7 @@ public class ConfigurationFx extends Configuration
 			@Override
 			protected Void call() throws Exception
 			{
-				IServicesPool services = context.getServices();
+				IServicesPool services = getServicesPool();
 				controller.displayBeforeStartService();
 				ServiceConnection serviceConnection = services.loadService(entry.toString());
 				serviceMap.put(entry, serviceConnection);
@@ -496,7 +496,7 @@ public class ConfigurationFx extends Configuration
 			ServiceConnection serviceConnection = this.serviceMap.remove(entry);
 			if (serviceConnection != null)
 			{
-				this.context.getServices().stopService(serviceConnection);
+				getServicesPool().stopService(serviceConnection);
 				this.controller.displayAfterStartService(entry, false, " stopped.");
 			}
 		}, "Error on stop service");

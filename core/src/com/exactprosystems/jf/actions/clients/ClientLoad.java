@@ -55,9 +55,9 @@ public class ClientLoad extends AbstractAction
 		switch (parameterToFill)
 		{
 			case idName:
-				for (String str : context.getClients().clientNames())
+				for (String str : context.getConfiguration().getClientPool().clientNames())
 				{
-					String quoted = context.getEvaluator().createString(str);
+					String quoted = context.getConfiguration().getEvaluator().createString(str);
 					list.add(new ReadableValue(quoted));
 				}
 				break;
@@ -70,7 +70,7 @@ public class ClientLoad extends AbstractAction
 	public void doRealDocumetation(Context context, ReportBuilder report)
 	{
 		ReportTable info = report.addTable("Available clients", 100, new int[] { 100 }, "Client name");
-		for (String protocol : context.getClients().clientNames())
+		for (String protocol : context.getConfiguration().getClientPool().clientNames())
 		{
 			info.addValues(protocol);
 		}
@@ -79,7 +79,7 @@ public class ClientLoad extends AbstractAction
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
-		IClientsPool client = context.getClients();
+		IClientsPool client = context.getConfiguration().getClientPool();
 		ClientConnection connection = client.loadClient(this.id);
 		
 		super.setResult(connection);

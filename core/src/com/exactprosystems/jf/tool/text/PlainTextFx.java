@@ -28,13 +28,10 @@ import java.util.Optional;
 )
 public class PlainTextFx extends AbstractDocument
 {
-	private Configuration config;
-
 	public PlainTextFx(String fileName, Settings settings, Configuration config)
 	{
-		super(fileName);
+		super(fileName, config);
 		this.settings = settings;
-		this.config = config;
 		this.property = new SimpleStringProperty()
 		{
 			@Override
@@ -104,7 +101,7 @@ public class PlainTextFx extends AbstractDocument
 	public void close() throws Exception
 	{
 		super.close();
-		Optional.ofNullable(this.config).ifPresent(c -> c.unregister(this));
+		Optional.ofNullable(getConfiguration()).ifPresent(c -> c.unregister(this));
 		this.controller.close();
 	}
 
@@ -131,7 +128,7 @@ public class PlainTextFx extends AbstractDocument
 		{
 			this.controller = Common.loadController(PlainTextFxController.class.getResource("PlainTextFx.fxml"));
 			this.controller.init(this, this.settings);
-			Optional.ofNullable(this.config).ifPresent(c -> c.register(this));
+			Optional.ofNullable(getConfiguration()).ifPresent(c -> c.register(this));
 			this.isControllerInit = true;
 		}
 	}

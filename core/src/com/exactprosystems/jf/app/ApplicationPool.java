@@ -378,13 +378,13 @@ public class ApplicationPool implements IApplicationPool
 		GuiDictionary dictionary = null;
 		if (!Str.IsNullOrEmpty(dictionaryName))
 		{
-			dictionary = new GuiDictionary(dictionaryName);
+			dictionary = new GuiDictionary(dictionaryName, this.configuration);
 	    	try (Reader reader = new FileReader(dictionaryName))
 	    	{
 	    		dictionary.load(reader);
 	    	}
 			
-			AbstractEvaluator evaluator = this.configuration.createEvaluator();
+			AbstractEvaluator evaluator = this.configuration.getEvaluator();
 			dictionary.evaluateAll(evaluator);
 		}
 		return dictionary;

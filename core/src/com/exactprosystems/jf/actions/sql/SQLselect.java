@@ -55,7 +55,7 @@ public class SQLselect extends AbstractAction
 		}
 		else
 		{
-			Table result = context.getDatabases().select(this.connection, this.query, parameters.select(TypeMandatory.Extra).values().toArray());
+			Table result = context.getConfiguration().getDataBasesPool().select(this.connection, this.query, parameters.select(TypeMandatory.Extra).values().toArray());
 			super.setResult(result);
 		}
 	}

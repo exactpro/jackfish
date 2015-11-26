@@ -36,7 +36,7 @@ public class WatcherFx
 		this.dialog = new File(this.matrix.getName()).getAbsolutePath();
 		this.context = context;
 		this.controller = Common.loadController(WatcherFx.class.getResource("WatcherFx.fxml"));
-		controller.init(owner, this, context.getEvaluator(), this.matrix);
+		controller.init(owner, this, context.getConfiguration().getEvaluator(), this.matrix);
 	}
 
 	public void update()
@@ -133,7 +133,7 @@ public class WatcherFx
 	{
 		try
 		{
-			newValue.setValue(String.valueOf(this.context.getEvaluator().evaluate(text)));
+			newValue.setValue(String.valueOf(this.context.getConfiguration().getEvaluator().evaluate(text)));
 		}
 		catch (Exception e)
 		{

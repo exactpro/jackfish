@@ -37,13 +37,10 @@ public class Context implements IContext, AutoCloseable, Cloneable
 	public Context(IMatrixListener matrixListener, RunnerListener runnerListener, PrintStream out, Configuration configuration) throws Exception
 	{
 		this.configuration = configuration;
-		this.evaluator = configuration.createEvaluator();
 
 		this.matrixListener = matrixListener;
 		this.outStream = out;
 
-		this.defaultClient = null;
-		this.defaultApp = null;
 		this.runnerListener = runnerListener;
 	}
 
@@ -64,8 +61,6 @@ public class Context implements IContext, AutoCloseable, Cloneable
 			clone.matrixListener = this.matrixListener;
 			clone.outStream = this.outStream;
 
-			clone.evaluator = this.configuration.createEvaluator();
-
 			return clone;
 		}
 		catch (Exception e)
@@ -75,47 +70,9 @@ public class Context implements IContext, AutoCloseable, Cloneable
 		}
 	}
 
-	public void setDefaultClient(String id) throws Exception
-	{
-		this.defaultClient = this.configuration.getClientPool().loadClientFactory(id);
-	}
-
-	public void setDefaultApp(String id) throws Exception
-	{
-		this.defaultApp = this.configuration.getApplicationPool().loadApplicationFactory(id);
-	}
-
 	public Configuration getConfiguration()
 	{
 		return this.configuration;
-	}
-
-	public AbstractEvaluator getEvaluator()
-	{
-		return this.evaluator;
-	}
-
-	@Override
-	public IClientsPool getClients()
-	{
-		return this.configuration.getClientPool();
-	}
-
-	@Override
-	public IServicesPool getServices()
-	{
-		return this.configuration.getServicesPool();
-	}
-
-	@Override
-	public IApplicationPool getApplications()
-	{
-		return this.configuration.getApplicationPool();
-	}
-
-	public DataBasePool getDatabases()
-	{
-		return this.configuration.getDataBasesPool();
 	}
 
 	public PrintStream getOut()
@@ -131,18 +88,6 @@ public class Context implements IContext, AutoCloseable, Cloneable
 	public RunnerListener getRunnerListner()
 	{
 		return this.runnerListener;
-	}
-
-	@Override
-	public IClientFactory getDefaultClient()
-	{
-		return this.defaultClient;
-	}
-
-	@Override
-	public IApplicationFactory getDefaultApp()
-	{
-		return this.defaultApp;
 	}
 
 	@Override
@@ -189,11 +134,8 @@ public class Context implements IContext, AutoCloseable, Cloneable
 		return res;
 	}
 
-	private IClientFactory		defaultClient;
-	private IApplicationFactory	defaultApp;
-
 	private Configuration		configuration;
-	private AbstractEvaluator	evaluator;
+	
 	private RunnerListener		runnerListener;
 	private IMatrixListener		matrixListener	= null;
 	private PrintStream			outStream		= null;

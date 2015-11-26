@@ -77,7 +77,7 @@ public class DialogFill extends AbstractAction
 		switch (parameterToFill)
 		{
 			case dialogName:
-				ActionGuiHelper.dialogsNames(context, this.connection, list);
+				ActionGuiHelper.dialogsNames(context, super.owner.getMatrix(), this.connection, list);
 				break;
 				
 			case doNotCloseName:
@@ -91,7 +91,7 @@ public class DialogFill extends AbstractAction
 	@Override
 	public void helpToAddParametersDerived(List<ReadableValue> list, Context context, Parameters parameters) throws Exception
 	{
-		ActionGuiHelper.extraParameters(list, context, this.connection, Str.asString(parameters.get(dialogName)), parameters);
+		ActionGuiHelper.extraParameters(list, super.owner.getMatrix(), this.connection, Str.asString(parameters.get(dialogName)), parameters);
 	}
 
 	@Override

@@ -9,6 +9,7 @@
 package com.exactprosystems.jf.tool;
 
 import com.exactprosystems.jf.common.ChangeListener;
+import com.exactprosystems.jf.common.Configuration;
 import com.exactprosystems.jf.common.Document;
 import com.exactprosystems.jf.common.DocumentInfo;
 import com.exactprosystems.jf.common.undoredo.ActionTrackProvider;
@@ -19,10 +20,17 @@ import java.util.Optional;
 
 public abstract class AbstractDocument implements Document
 {
-	public AbstractDocument(String fileName)
+	public AbstractDocument(String fileName, Configuration config)
 	{
+		this.config = config;
 		this.name = fileName;
 		this.hasName = true;
+	}
+	
+	@Override
+	public Configuration getConfiguration()
+	{
+		return this.config;
 	}
 	
 	@Override
@@ -123,6 +131,7 @@ public abstract class AbstractDocument implements Document
 		this.changed(true);
 	}
 
+	private Configuration config;
 	private boolean hasName = false;
 	private String name;
 	private ActionTrackProvider provider = new ActionTrackProvider();

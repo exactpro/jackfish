@@ -59,7 +59,7 @@ public class ServiceStart extends AbstractAction
 			String[] arr = connection.getService().getFactory().listForParameter(parameterToFill);
 			for (String str : arr)
 			{
-				list.add(new ReadableValue(context.getEvaluator().createString(str)));
+				list.add(new ReadableValue(context.getConfiguration().getEvaluator().createString(str)));
 			}
 		}
 	}

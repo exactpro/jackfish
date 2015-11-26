@@ -25,13 +25,11 @@ import java.util.stream.Collectors;
 public class SystemVarsFx extends SystemVars
 {
 	private SystemVarsFxController controller;
-	private Configuration config;
 	private boolean isControllerInit = false;
 
 	public SystemVarsFx(String fileName, Configuration config) throws Exception
 	{
-		super(fileName);
-		init(config);
+		super(fileName, config);
 	}
 
 	//==============================================================================================================================
@@ -41,7 +39,7 @@ public class SystemVarsFx extends SystemVars
 	protected void afterRedoUndo() 
 	{
 		super.afterRedoUndo();
-		this.getParameters().evaluateAll(this.evaluator);
+		this.getParameters().evaluateAll(getConfiguration().getEvaluator());
 		this.controller.displayNewParameters(getParameterList());
 	}
 	
@@ -104,7 +102,7 @@ public class SystemVarsFx extends SystemVars
 	public void close() throws Exception
 	{
 		super.close();
-		this.config.unregister(this);
+		getConfiguration().unregister(this);
 		this.controller.close();
 	}
 
@@ -177,19 +175,13 @@ public class SystemVarsFx extends SystemVars
 	}
 
 	//----------------------------------------------------------------------------------------------
-	private void init(Configuration config) throws Exception
-	{
-		this.config = config;
-		this.evaluator = config.createEvaluator();
-	}
-
 	private void initController()
 	{
 		if (!this.isControllerInit)
 		{
 			this.controller = Common.loadController(SystemVarsFx.class.getResource("SystemVarsFx.fxml"));
 			this.controller.init(this);
-			this.config.register(this);
+			getConfiguration().register(this);
 			this.isControllerInit = true;
 		}
 	}
@@ -200,7 +192,7 @@ public class SystemVarsFx extends SystemVars
 		List<Parameter> variables = this.getParameterList();
 		variables.forEach(p -> 
 		{
-			p.evaluate(this.evaluator);
+			p.evaluate(getConfiguration().getEvaluator());
 			res.add(p);
 		});
 		return res;

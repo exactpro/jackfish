@@ -13,11 +13,8 @@ import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
 import com.exactprosystems.jf.actions.ReadableValue;
-import com.exactprosystems.jf.actions.clients.ActionClientHelper;
 import com.exactprosystems.jf.api.app.AppConnection;
 import com.exactprosystems.jf.api.app.IApplication;
-import com.exactprosystems.jf.api.client.ClientConnection;
-import com.exactprosystems.jf.common.Configuration;
 import com.exactprosystems.jf.common.Context;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.parser.Parameter;
@@ -55,7 +52,7 @@ public class ApplicationNewInstance extends AbstractAction
 			return HelpKind.ChooseFromList;
 		}
 		
-		parameters.evaluateAll(context.getEvaluator());
+		parameters.evaluateAll(context.getConfiguration().getEvaluator());
 		connection = ApplicationHelper.checkConnection(connection, parameters.get(connectionName));
 		if (connection != null)
 		{
@@ -76,14 +73,14 @@ public class ApplicationNewInstance extends AbstractAction
 				break;
 				
 			default:
-				parameters.evaluateAll(context.getEvaluator());
+				parameters.evaluateAll(context.getConfiguration().getEvaluator());
 				connection = ApplicationHelper.checkConnection(connection, parameters.get(connectionName));
 				if (connection != null)
 				{
 					String[] arr = connection.getApplication().getFactory().listForParameter(parameterToFill);
 					for (String str : arr)
 					{
-						list.add(new ReadableValue(context.getEvaluator().createString(str)));
+						list.add(new ReadableValue(context.getConfiguration().getEvaluator().createString(str)));
 					}
 				}	
 				break;

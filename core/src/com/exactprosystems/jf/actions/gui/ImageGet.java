@@ -70,11 +70,11 @@ public class ImageGet extends AbstractAction
 		switch (parameterToFill)
 		{
 			case dialogName:
-				ActionGuiHelper.dialogsNames(context, this.connection, list);
+				ActionGuiHelper.dialogsNames(context, super.owner.getMatrix(), this.connection, list);
 				break;
 
 			case nameName:
-				ActionGuiHelper.extraParameters(list, context, this.connection, Str.asString(parameters.get(dialogName)), parameters);
+				ActionGuiHelper.extraParameters(list, super.owner.getMatrix(), this.connection, Str.asString(parameters.get(dialogName)), parameters);
 			default:
 		}
 	}

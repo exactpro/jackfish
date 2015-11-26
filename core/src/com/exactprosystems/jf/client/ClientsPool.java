@@ -261,7 +261,7 @@ public class ClientsPool implements IClientsPool
 		MessageDictionary dictionary = null;
 		if (!Str.IsNullOrEmpty(dictionaryName))
 		{
-			dictionary = new MessageDictionary(dictionaryName);
+			dictionary = new MessageDictionary(dictionaryName, this.configuration);
 	    	try (Reader reader = new FileReader(dictionaryName))
 	    	{
 	    		dictionary.load(reader);

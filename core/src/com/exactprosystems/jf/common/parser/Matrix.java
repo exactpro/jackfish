@@ -8,6 +8,8 @@
 
 package com.exactprosystems.jf.common.parser;
 
+import com.exactprosystems.jf.api.app.IApplicationFactory;
+import com.exactprosystems.jf.api.client.IClientFactory;
 import com.exactprosystems.jf.api.common.IMatrix;
 import com.exactprosystems.jf.common.Configuration;
 import com.exactprosystems.jf.common.Context;
@@ -19,6 +21,7 @@ import com.exactprosystems.jf.common.parser.items.TestCase;
 import com.exactprosystems.jf.common.parser.listeners.IMatrixListener;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.tool.AbstractDocument;
+
 import org.apache.log4j.Logger;
 
 import java.io.*;
@@ -31,18 +34,18 @@ import java.util.concurrent.atomic.AtomicInteger;
 @DocumentInfo(newName = "NewMatrix", extentioin = "jf", description = "Matrix")
 public class Matrix extends AbstractDocument implements IMatrix, Cloneable
 {
-	public Matrix(Matrix matrix) throws Exception
+	public Matrix(Matrix matrix, Configuration configuration) throws Exception
 	{
-		super(matrix.getName());
+		super(matrix.getName(), configuration);
 
 		this.root = matrix.root;
 		this.buffer = matrix.buffer;
 		this.matrixListener = matrix.matrixListener;
 	}
 
-	public Matrix(String matrixName, IMatrixListener matrixListener) throws Exception
+	public Matrix(String matrixName, Configuration configuration, IMatrixListener matrixListener) throws Exception
 	{
-		super(matrixName);
+		super(matrixName, configuration);
 
 		this.root = new MatrixRoot(matrixName);
 		this.buffer = new StringBuilder();
@@ -69,6 +72,48 @@ public class Matrix extends AbstractDocument implements IMatrix, Cloneable
 	{
 		AtomicInteger count = new AtomicInteger(0);
 		Optional.ofNullable(this.root).ifPresent(root -> root.bypass(item -> item.setNubmer(count.getAndIncrement())));
+	}
+	
+	
+	// ==============================================================================================================================
+	// interface IMatrix
+	// ==============================================================================================================================
+	@Override
+	public void setDefaultApp(String id)
+	{
+		try
+		{
+			this.defaultApp = getConfiguration().getApplicationPool().loadApplicationFactory(id);
+		}
+		catch (Exception e)
+		{
+			logger.error(e.getMessage(), e);
+		}
+	}
+
+	@Override
+	public IApplicationFactory getDefaultApp()
+	{
+		return this.defaultApp;
+	}
+	
+	@Override
+	public void setDefaultClient(String id)
+	{
+		try
+		{
+			this.defaultClient = getConfiguration().getClientPool().loadClientFactory(id);
+		}
+		catch (Exception e)
+		{
+			logger.error(e.getMessage(), e);
+		}
+	}
+	
+	@Override
+	public IClientFactory getDefaultClient()
+	{
+		return this.defaultClient;
 	}
 	
 	// ==============================================================================================================================
@@ -470,6 +515,9 @@ public class Matrix extends AbstractDocument implements IMatrix, Cloneable
 	protected Monitor			monitor	= new Monitor();
 	protected volatile boolean	pause;
 	protected volatile boolean	stop;
+
+	private IClientFactory		defaultClient;
+	private IApplicationFactory	defaultApp;
 
 	private int					count   = 0;
 	private MatrixItem			root	= null;

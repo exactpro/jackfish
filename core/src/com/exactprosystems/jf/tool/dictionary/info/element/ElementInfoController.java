@@ -10,7 +10,7 @@ package com.exactprosystems.jf.tool.dictionary.info.element;
 
 import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.common.Str;
-import com.exactprosystems.jf.common.Context;
+import com.exactprosystems.jf.common.Configuration;
 import com.exactprosystems.jf.common.xml.control.AbstractControl;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
@@ -66,7 +66,7 @@ public class ElementInfoController implements Initializable, ContainingParent
 	private Parent pane;
 	private NavigationController navigation;
 	private DictionaryFx model;
-	private Context context;
+	private Configuration configuration;
 	private ObservableList<ControlKind> controls;
 
 	@Override
@@ -101,11 +101,11 @@ public class ElementInfoController implements Initializable, ContainingParent
 		Platform.runLater(() -> this.checkBoxAbsoluteXpath.setTooltip(new Tooltip("Absolute xpath")));
 	}
 
-	public void init(DictionaryFx model, Context context, GridPane gridPane, NavigationController navigation, String themePath)
+	public void init(DictionaryFx model, Configuration configuration, GridPane gridPane, NavigationController navigation, String themePath)
 	{
 		this.navigation = navigation;
 		this.model = model;
-		this.context = context;
+		this.configuration = configuration;
 
 		setTextFieldListeners();
 		
@@ -134,8 +134,7 @@ public class ElementInfoController implements Initializable, ContainingParent
 								() ->
 								{
 									this.controls.clear();
-									this.controls.addAll(this.context
-											.getApplications()
+									this.controls.addAll(this.configuration.getApplicationPool()
 											.loadApplicationFactory(id)
 											.supportedControlKinds());
 								}, "Error on set supported controls");

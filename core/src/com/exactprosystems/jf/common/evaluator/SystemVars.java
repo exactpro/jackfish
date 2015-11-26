@@ -8,6 +8,7 @@
 
 package com.exactprosystems.jf.common.evaluator;
 
+import com.exactprosystems.jf.common.Configuration;
 import com.exactprosystems.jf.common.DocumentInfo;
 import com.exactprosystems.jf.common.parser.Parameter;
 import com.exactprosystems.jf.common.parser.Parameters;
@@ -28,16 +29,11 @@ public class SystemVars extends AbstractDocument
 {
 	public final static String NAME_VARIABLES = "variables";
 
-    public SystemVars(String fileName)
+    public SystemVars(String fileName, Configuration configuration)
     {
-    	super(fileName);
+    	super(fileName, configuration);
 
         parameters = new Parameters();
-    }
-
-    public void setEvaluator(AbstractEvaluator evaluator)
-    {
-        this.evaluator = evaluator;
     }
 
     //------------------------------------------------------------------------------------------------------------------
@@ -140,5 +136,4 @@ public class SystemVars extends AbstractDocument
 	}
 
     private Parameters parameters;
-    protected AbstractEvaluator evaluator;
 }

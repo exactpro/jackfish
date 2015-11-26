@@ -455,7 +455,7 @@ public abstract class DialogsHelper
 		IMatrixListener dummy = new SilenceMatrixListener();
 		try(Context context = new Context(dummy, null, null, config))
 		{
-			Matrix matrix = new Matrix("helpMatrix", new SilenceMatrixListener());
+			Matrix matrix = new Matrix("helpMatrix", config, new SilenceMatrixListener());
 
 			MatrixItem syntax = new HelpChapter("Matrix syntax");
 			syntax.init(matrix);

@@ -56,7 +56,7 @@ public class ServiceLoad extends AbstractAction
 		switch (parameterToFill)
 		{
 			case idName:
-				ActionServiceHelper.serviceNames(list, context.getEvaluator(), configuration);
+				ActionServiceHelper.serviceNames(list, configuration.getEvaluator(), configuration);
 				break;
 
 			default:
@@ -67,7 +67,7 @@ public class ServiceLoad extends AbstractAction
 	public void doRealDocumetation(Context context, ReportBuilder report)
 	{
 		ReportTable info = report.addTable("Available services", 100, new int[] { 100 }, "Service name");
-		for (String protocol : context.getServices().servicesNames())
+		for (String protocol : context.getConfiguration().getServicesPool().servicesNames())
 		{
 			info.addValues(protocol);
 		}
@@ -76,7 +76,7 @@ public class ServiceLoad extends AbstractAction
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
-		IServicesPool service = context.getServices();
+		IServicesPool service = context.getConfiguration().getServicesPool();
 		ServiceConnection connection = service.loadService(this.id);
 		
 		super.setResult(connection);

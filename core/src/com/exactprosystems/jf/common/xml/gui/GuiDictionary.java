@@ -12,6 +12,7 @@ import com.exactprosystems.jf.api.app.Addition;
 import com.exactprosystems.jf.api.app.IGuiDictionary;
 import com.exactprosystems.jf.api.app.IWindow;
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.common.Configuration;
 import com.exactprosystems.jf.common.DocumentInfo;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.parser.items.MutableArrayList;
@@ -49,12 +50,12 @@ public class GuiDictionary extends AbstractDocument implements IGuiDictionary
 {
 	public GuiDictionary()
 	{
-		this(null);
+		this(null, null);
 	}
 
-	public GuiDictionary(String fileName)
+	public GuiDictionary(String fileName, Configuration configuration)
 	{
-		super(fileName);
+		super(fileName, configuration);
 
 		this.windows = new MutableArrayList<>();
 	}

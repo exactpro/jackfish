@@ -52,7 +52,7 @@ public class SQLexecute extends AbstractAction
 		}
 		else
 		{
-			boolean result = context.getDatabases().execute(this.connection, this.query, parameters.select(TypeMandatory.Extra).values().toArray());
+			boolean result = context.getConfiguration().getDataBasesPool().execute(this.connection, this.query, parameters.select(TypeMandatory.Extra).values().toArray());
 			super.setResult(result);
 		}
 	}

@@ -456,7 +456,7 @@ public class Main extends Application
 	public void showCalculator() throws Exception
 	{
 		checkConfig();
-		this.controller.showCalculator(this.config.createEvaluator());
+		this.controller.showCalculator(this.config.getEvaluator());
 	}
 
 	public void store() throws Exception

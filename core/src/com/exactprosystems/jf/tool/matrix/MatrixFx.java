@@ -52,7 +52,7 @@ public class MatrixFx extends Matrix
 
 	public MatrixFx(Matrix matrix, Configuration config, IMatrixListener matrixListener, RunnerListener runnerListener) throws Exception
 	{
-		super(matrix);
+		super(matrix, config);
 		getRoot().init(this);
 		init(config, matrixListener, runnerListener);
 		initController();
@@ -60,7 +60,7 @@ public class MatrixFx extends Matrix
 
 	public MatrixFx(String matrixName, Configuration config, IMatrixListener matrixListener, RunnerListener runnerListener) throws Exception
 	{
-		super(matrixName, matrixListener);
+		super(matrixName, config, matrixListener);
 		init(config, matrixListener, runnerListener);
 	}
 
@@ -566,16 +566,6 @@ public class MatrixFx extends Matrix
 		this.startDate = date;
 	}
 
-	public void changeDefaultApp(String app) throws Exception
-	{
-		this.context.setDefaultApp(app);
-	}
-
-	public void changeDefaultClient(String client) throws Exception
-	{
-		this.context.setDefaultClient(client);
-	}
-
 	public void startMatrix() throws Exception
 	{
 		this.controller.coloring();
@@ -658,9 +648,7 @@ public class MatrixFx extends Matrix
 	{
 		ArrayList<String> result = new ArrayList<>();
 		result.add(null);
-		this.context.getApplications().appNames();
-
-		result.addAll(this.context.getApplications().appNames().stream().collect(Collectors.toList()));
+		result.addAll(this.context.getConfiguration().getApplicationPool().appNames().stream().collect(Collectors.toList()));
 		this.controller.displayAppList(result);
 	}
 
@@ -668,7 +656,7 @@ public class MatrixFx extends Matrix
 	{
 		ArrayList<String> result = new ArrayList<>();
 		result.add(null);
-		result.addAll(this.context.getClients().clientNames().stream().collect(Collectors.toList()));
+		result.addAll(this.context.getConfiguration().getClientPool().clientNames().stream().collect(Collectors.toList()));
 		this.controller.displayClientList(result);
 	}
 

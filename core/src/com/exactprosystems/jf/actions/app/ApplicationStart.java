@@ -52,8 +52,8 @@ public class ApplicationStart extends AbstractAction
 	@Override
 	protected void helpToAddParametersDerived(List<ReadableValue> list, Context context, Parameters parameters) throws Exception
 	{
-		parameters.evaluateAll(context.getEvaluator());
-		for (String str : context.getApplications().wellKnownStartArgs(Str.asString(parameters.get(idName))))
+		parameters.evaluateAll(context.getConfiguration().getEvaluator());
+		for (String str : context.getConfiguration().getApplicationPool().wellKnownStartArgs(Str.asString(parameters.get(idName))))
 		{
 			list.add(new ReadableValue(str));
 		}
@@ -97,7 +97,7 @@ public class ApplicationStart extends AbstractAction
 	public void doRealDocumetation(Context context, ReportBuilder report)
 	{
 		ReportTable info = report.addTable("Available apps", 100, new int[] { 100 }, "App name");
-		for (String app : context.getApplications().appNames())
+		for (String app : context.getConfiguration().getApplicationPool().appNames())
 		{
 			info.addValues(app);
 		}
@@ -106,7 +106,7 @@ public class ApplicationStart extends AbstractAction
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception 
 	{
-		IApplicationPool pool = context.getApplications();
+		IApplicationPool pool = context.getConfiguration().getApplicationPool();
 
 		Map<String, String> args = new HashMap<>();
 		for (Parameter parameter : parameters.select(TypeMandatory.Extra))

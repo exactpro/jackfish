@@ -66,7 +66,7 @@ public class ClientGetMessage extends AbstractAction
 	@Override
 	protected void helpToAddParametersDerived(List<ReadableValue> list, Context context, Parameters parameters) throws Exception
 	{
-		ActionClientHelper.additionParameters(list, context, parameters, connectionName, messageTypeName);
+		ActionClientHelper.additionParameters(list, context, super.owner.getMatrix(), parameters, connectionName, messageTypeName);
 	}
 
 	@Override
@@ -87,7 +87,7 @@ public class ClientGetMessage extends AbstractAction
 		switch (parameterToFill)
 		{
 			case messageTypeName:
-				ActionClientHelper.messageTypes(list, context, parameters, connectionName);
+				ActionClientHelper.messageTypes(list, context, super.owner.getMatrix(), parameters, connectionName);
 				break;
 				
 			case removeName:
@@ -96,7 +96,7 @@ public class ClientGetMessage extends AbstractAction
 				break;
 
 			default:
-				ActionClientHelper.messageValues(list, context, parameters, connectionName, messageTypeName, parameterToFill);
+				ActionClientHelper.messageValues(list, context, super.owner.getMatrix(), parameters, connectionName, messageTypeName, parameterToFill);
 				break;
 		}
 	}

@@ -14,6 +14,8 @@ import java.io.Reader;
 
 public interface Document extends Mutable
 {
+	Configuration getConfiguration();
+	
 	boolean hasName();
 	
 	void load(Reader reader) throws Exception;

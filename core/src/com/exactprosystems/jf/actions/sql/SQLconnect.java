@@ -69,7 +69,7 @@ public class SQLconnect  extends AbstractAction
 	protected void listToFillParameterDerived(List<ReadableValue> list, Context context, String parameterToFill, Parameters parameters) throws Exception
 	{
 		Configuration configuration = context.getConfiguration();
-		AbstractEvaluator evaluator = context.getEvaluator();
+		AbstractEvaluator evaluator = configuration.getEvaluator();
 		switch (parameterToFill)
 		{
 			case sqlName :
@@ -85,7 +85,7 @@ public class SQLconnect  extends AbstractAction
 	@Override
 	protected void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
-		SqlConnection result = context.getDatabases().connect(this.sql, this.server, this.base, this.user, this.password);
+		SqlConnection result = context.getConfiguration().getDataBasesPool().connect(this.sql, this.server, this.base, this.user, this.password);
 		
 		if (result != null && !result.isClosed())
 		{

@@ -51,7 +51,6 @@ public class DictionaryFx extends GuiDictionary
 	private String currentAdapter;
 	private DictionaryFxController controller;
 	private AppConnection appConnection;
-	private Context context;
 	private Task<Void> task;
 
 	public DictionaryFx(String fileName, Configuration config) throws Exception
@@ -61,8 +60,7 @@ public class DictionaryFx extends GuiDictionary
 
 	public DictionaryFx(String fileName, Configuration config, String currentAdapter) throws Exception
 	{
-		super(fileName);
-		this.context = new Context(null, null, null, config);
+		super(fileName, config);
 		this.currentAdapter = currentAdapter;
 	}
 
@@ -108,16 +106,13 @@ public class DictionaryFx extends GuiDictionary
 		this.controller.saved(getName());
 		displayTitle(getName());
 		
-		if (this.context != null)
+		if (this.currentAdapter != null)
 		{
-			if (this.currentAdapter != null)
-			{
-				IApplicationFactory factory = this.context.getApplications().loadApplicationFactory(this.currentAdapter);
-				factory.init(this);
-			}
-			{
-				this.context.getConfiguration().dictionaryChanged(getName(), this);
-			}
+			IApplicationFactory factory = getConfiguration().getApplicationPool().loadApplicationFactory(this.currentAdapter);
+			factory.init(this);
+		}
+		{
+			getConfiguration().dictionaryChanged(getName(), this);
 		}
 	}
 
@@ -150,8 +145,7 @@ public class DictionaryFx extends GuiDictionary
 	{
 		super.close();
 
-		this.context.getConfiguration().unregister(this);
-		this.context.close();
+		getConfiguration().unregister(this);
 		this.controller.close();
 
 		stopApplication();
@@ -819,8 +813,8 @@ public class DictionaryFx extends GuiDictionary
 		if (!this.isControllerInit)
 		{
 			this.controller = Common.loadController(DictionaryFx.class.getResource("DictionaryTab.fxml"));
-			this.controller.init(this, this.context);
-			this.context.getConfiguration().register(this);
+			this.controller.init(this, getConfiguration());
+			getConfiguration().register(this);
 			this.isControllerInit = true;
 		}
 	}
@@ -850,16 +844,16 @@ public class DictionaryFx extends GuiDictionary
 		{
 			throw new Exception("You should choose app entry at first.");
 		}
-		IApplicationPool applicationPool = context.getApplications();
+		IApplicationPool applicationPool = getConfiguration().getApplicationPool();
 		
 		String parametersName 	= isStart ? startParameters : connectParameters;
 		String title 			= isStart ? "Start " : "Connect ";
 		String[] strings 		= isStart ? applicationPool.wellKnownStartArgs(idAppEntry) : applicationPool.wellKnownConnectArgs(idAppEntry);
 
-		Settings settings = this.context.getConfiguration().getSettings();
+		Settings settings = getConfiguration().getSettings();
 		final Map<String, String> parameters = settings.getMapValues(Settings.APPLICATION + idAppEntry, parametersName, strings);
 
-		ButtonType desision = DialogsHelper.showParametersDialog(title + idAppEntry, parameters, context.getEvaluator());
+		ButtonType desision = DialogsHelper.showParametersDialog(title + idAppEntry, parameters, getConfiguration().getEvaluator());
 		
 		if (desision == ButtonType.CANCEL)
 		{
@@ -870,7 +864,7 @@ public class DictionaryFx extends GuiDictionary
 		settings.saveIfNeeded();
 
 		// evaluate parameters 
-		AbstractEvaluator evaluator = this.context.getEvaluator();
+		AbstractEvaluator evaluator = getConfiguration().getEvaluator();
 		Iterator<Entry<String, String>> iterator = parameters.entrySet().iterator();
 		while (iterator.hasNext())
 		{
@@ -893,7 +887,7 @@ public class DictionaryFx extends GuiDictionary
 			@Override
 			protected Void call() throws Exception
 			{
-				IApplicationPool applicationPool = context.getApplications();
+				IApplicationPool applicationPool = getConfiguration().getApplicationPool();
 				
 				displayApplicationStatus(ApplicationStatus.Connecting, null, null);
 				if (isStart)
@@ -972,7 +966,7 @@ public class DictionaryFx extends GuiDictionary
 
 	private void displayApplicationControl(String title) throws Exception
 	{
-		Collection<String> entries = this.context.getConfiguration().getApplications();
+		Collection<String> entries = getConfiguration().getApplications();
 		this.controller.displayActionControl(entries, this.currentAdapter, title);
 	}
 

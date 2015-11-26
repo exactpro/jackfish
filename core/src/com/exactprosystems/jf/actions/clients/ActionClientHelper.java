@@ -13,6 +13,7 @@ import com.exactprosystems.jf.api.client.*;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.common.Context;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
+import com.exactprosystems.jf.common.parser.Matrix;
 import com.exactprosystems.jf.common.parser.Parameters;
 import com.exactprosystems.jf.common.parser.items.ActionItem.HelpKind;
 
@@ -24,7 +25,7 @@ public class ActionClientHelper
 {
 	public static HelpKind canHelpWithParameters(Context context, Parameters parameters, String connectionName,  String fieldName)
 	{
-		parameters.evaluateAll(context.getEvaluator());
+		parameters.evaluateAll(context.getConfiguration().getEvaluator());
 		Object value = parameters.get(connectionName);
 		if (value instanceof ClientConnection)
 		{
@@ -36,7 +37,7 @@ public class ActionClientHelper
 	
 	public static void listToFillParameterDerived(List<ReadableValue> list, Context context, Parameters parameters, String connectionName, String parameterToFill) 
 	{
-		parameters.evaluateAll(context.getEvaluator());
+		parameters.evaluateAll(context.getConfiguration().getEvaluator());
 		Object value = parameters.get(connectionName);
 		if (value instanceof ClientConnection)
 		{
@@ -64,12 +65,12 @@ public class ActionClientHelper
 		return null;
 	}
 		
-	public static void messageTypes(List<ReadableValue> list, Context context, Parameters parameters, String connectionName) throws Exception
+	public static void messageTypes(List<ReadableValue> list, Context context, Matrix matrix, Parameters parameters, String connectionName) throws Exception
 	{
-		AbstractEvaluator evaluator = context.getEvaluator();
+		AbstractEvaluator evaluator = context.getConfiguration().getEvaluator();
 		parameters.evaluateAll(evaluator);
 		Object obj = parameters.get(connectionName);
-		IMessageDictionary dic = getMessageDictionary(context, (obj instanceof ClientConnection) ? (ClientConnection)obj : null);
+		IMessageDictionary dic = getMessageDictionary(matrix, (obj instanceof ClientConnection) ? (ClientConnection)obj : null);
 		for(IMessage message : dic.getMessages())
 		{
 			IAttribute attr = message.getAttribute("MessageType");
@@ -81,12 +82,12 @@ public class ActionClientHelper
 		}
 	}
 
-	public static void messageValues(List<ReadableValue> list, Context context, Parameters parameters, String connectionName, String messageTypeName, String fieldName) throws Exception
+	public static void messageValues(List<ReadableValue> list, Context context, Matrix matrix, Parameters parameters, String connectionName, String messageTypeName, String fieldName) throws Exception
 	{
-		AbstractEvaluator evaluator = context.getEvaluator();
+		AbstractEvaluator evaluator = context.getConfiguration().getEvaluator();
 		parameters.evaluateAll(evaluator);
 		Object obj = parameters.get(connectionName);
-		IMessageDictionary dic = getMessageDictionary(context, (obj instanceof ClientConnection) ? (ClientConnection)obj : null);
+		IMessageDictionary dic = getMessageDictionary(matrix, (obj instanceof ClientConnection) ? (ClientConnection)obj : null);
 		String messageType = Str.asString(parameters.get(messageTypeName));
 		IMessage message = dic.getMessage(messageType);
 		if (message == null)
@@ -124,12 +125,12 @@ public class ActionClientHelper
 		}
 	}
 
-	public static void additionParameters(List<ReadableValue> list, Context context, Parameters parameters, String connectionName, String messageTypeName) throws Exception
+	public static void additionParameters(List<ReadableValue> list, Context context, Matrix matrix, Parameters parameters, String connectionName, String messageTypeName) throws Exception
 	{
-		AbstractEvaluator evaluator = context.getEvaluator();
+		AbstractEvaluator evaluator = context.getConfiguration().getEvaluator();
 		parameters.evaluateAll(evaluator);
 		Object obj = parameters.get(connectionName);
-		IMessageDictionary dic = getMessageDictionary(context, (obj instanceof ClientConnection) ? (ClientConnection)obj : null);
+		IMessageDictionary dic = getMessageDictionary(matrix, (obj instanceof ClientConnection) ? (ClientConnection)obj : null);
 		String messageType = Str.asString(parameters.get(messageTypeName));
 		IMessage message = dic.getMessage(messageType);
 		if (message == null)
@@ -142,7 +143,7 @@ public class ActionClientHelper
 		}
 	}
 
-	private static IMessageDictionary getMessageDictionary(Context context, ClientConnection connection) throws Exception
+	private static IMessageDictionary getMessageDictionary(Matrix matrix, ClientConnection connection) throws Exception
 	{
 		IMessageDictionary dictionary = null;
 		if (connection != null)
@@ -151,7 +152,7 @@ public class ActionClientHelper
 		}
 		if (dictionary == null)
 		{
-			dictionary = context.getDefaultClient() == null ? null : context.getDefaultClient().getDictionary();
+			dictionary = matrix.getDefaultClient() == null ? null : matrix.getDefaultClient().getDictionary();
 		}
 
 		if (dictionary == null)

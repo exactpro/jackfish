@@ -87,7 +87,7 @@ public class MatrixRunner implements IMatrixRunner, AutoCloseable
 
 	private void loadFromReader(Context context, Reader reader) throws Exception
 	{
-		this.matrix = new Matrix(this.matrixFile.getName(), context.getMatrixListener());
+		this.matrix = new Matrix(this.matrixFile.getName(), context.getConfiguration(), context.getMatrixListener());
 		this.runnerListener.subscribe(this);
 		changeState(State.Error);
 		this.matrix.load(reader);
@@ -183,6 +183,7 @@ public class MatrixRunner implements IMatrixRunner, AutoCloseable
 		}
 		
 		Configuration configuration = this.context.getConfiguration();
+        final AbstractEvaluator evaluator = configuration.getEvaluator();
 		this.report = configuration.getReportFactory().createBuilder(configuration.get(Configuration.outputPath), this.matrixFile, new Date());
 		
 		if (this.matrix == null)
@@ -190,14 +191,13 @@ public class MatrixRunner implements IMatrixRunner, AutoCloseable
 			throw new Exception("Matrix is empty.");
 		}
 		
-		if (!this.matrix.checkMatrix(this.context, this.context.getEvaluator()))
+		if (!this.matrix.checkMatrix(this.context, evaluator))
 		{
 			throw new Exception("Matrix is incorrect.");
 		}
 		
         changeState(State.Waiting);
 
-        final AbstractEvaluator evaluator = this.context.getEvaluator();
 		this.thread = new Thread(() -> {
 			while(new Date().before(startTime))
 			{
@@ -313,13 +313,13 @@ public class MatrixRunner implements IMatrixRunner, AutoCloseable
 	@Override
 	public Object getGlobalVariable(String s)
 	{
-		return this.context.getEvaluator().getGlobals().getVariable(s);
+		return this.context.getConfiguration().getEvaluator().getGlobals().getVariable(s);
 	}
 	
 	@Override
 	public void setGlobalVariable(String name, Object value)
 	{
-		this.context.getEvaluator().getGlobals().set(name, value);
+		this.context.getConfiguration().getEvaluator().getGlobals().set(name, value);
 	}
 	
 

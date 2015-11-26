@@ -20,7 +20,6 @@ import com.exactprosystems.jf.api.client.ClientHelper;
 import com.exactprosystems.jf.api.client.IClient;
 import com.exactprosystems.jf.api.client.MapMessage;
 import com.exactprosystems.jf.api.client.Possibility;
-import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.common.Context;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.parser.Parameters;
@@ -54,7 +53,7 @@ public class ClientCreateMapMessage extends AbstractAction
 	@Override
 	protected void helpToAddParametersDerived(List<ReadableValue> list, Context context, Parameters parameters) throws Exception
 	{
-		ActionClientHelper.additionParameters(list, context, parameters, connectionName, messageTypeName);
+		ActionClientHelper.additionParameters(list, context, super.owner.getMatrix(), parameters, connectionName, messageTypeName);
 	}
 
 	@Override
@@ -75,11 +74,11 @@ public class ClientCreateMapMessage extends AbstractAction
 		switch (parameterToFill)
 		{
 			case messageTypeName:
-				ActionClientHelper.messageTypes(list, context, parameters, connectionName);
+				ActionClientHelper.messageTypes(list, context, super.owner.getMatrix(), parameters, connectionName);
 				break;
 				
 			default:
-				ActionClientHelper.messageValues(list, context, parameters, connectionName, messageTypeName, parameterToFill);
+				ActionClientHelper.messageValues(list, context, super.owner.getMatrix(), parameters, connectionName, messageTypeName, parameterToFill);
 				break;
 		}
 	}

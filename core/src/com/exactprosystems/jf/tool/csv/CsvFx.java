@@ -31,13 +31,12 @@ import java.util.Optional;
 public class CsvFx extends AbstractDocument
 {
 	private char tableDelimiter = ';';
-	private Configuration configuration;
 
 	public CsvFx(String fileName, Settings settings, Configuration config)
 	{
-		super(fileName);
+		super(fileName, config);
+		
 		this.settings = settings;
-		this.configuration = config;
 		this.table = new Table(new String[][]
 				{
 						new String[] {	"<none>" },
@@ -107,7 +106,7 @@ public class CsvFx extends AbstractDocument
 	public void close() throws Exception
 	{
 		super.close();
-		Optional.ofNullable(this.configuration).ifPresent(c -> c.unregister(this));
+		Optional.ofNullable(getConfiguration()).ifPresent(c -> c.unregister(this));
 		this.controller.close();
 	}
 
@@ -150,7 +149,7 @@ public class CsvFx extends AbstractDocument
 		{
 			this.controller = Common.loadController(CsvFxController.class.getResource("CsvFx.fxml"));
 			this.controller.init(this, this.settings);
-			Optional.ofNullable(this.configuration).ifPresent(c -> c.register(this));
+			Optional.ofNullable(getConfiguration()).ifPresent(c -> c.register(this));
 			this.isControllerInit = true;
 		}
 	}

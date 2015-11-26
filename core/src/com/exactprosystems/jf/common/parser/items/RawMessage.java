@@ -72,7 +72,7 @@ public class RawMessage extends MatrixItem
 		driver.showLabel(this, layout, 1, 2, Tokens.Client.get());
 		driver.showComboBox(this, layout, 1, 3, this.clientName, this.clientName, v ->
 		{
-			return context.getClients().clientNames();
+			return context.getConfiguration().getClientPool().clientNames();
 		}); 
 		driver.showLabel(this, layout, 1, 4, "Message type");
 		driver.showComboBox(this, layout, 1, 5, this.typeName, this.typeName, v -> 
@@ -83,7 +83,7 @@ public class RawMessage extends MatrixItem
 			}
 			try
 			{
-				IClientFactory  factory = context.getClients().loadClientFactory(this.clientName.get());
+				IClientFactory  factory = context.getConfiguration().getClientPool().loadClientFactory(this.clientName.get());
 				if (factory == null)
 				{
 					return null;

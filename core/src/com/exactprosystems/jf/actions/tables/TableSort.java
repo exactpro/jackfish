@@ -70,7 +70,7 @@ public class TableSort extends AbstractAction
 					Table table = (Table)tab;
 					for (int index = 0; index < table.getHeaderSize(); index++)
 					{
-						list.add(new ReadableValue(context.getEvaluator().createString(table.getHeader(index))));
+						list.add(new ReadableValue(context.getConfiguration().getEvaluator().createString(table.getHeader(index))));
 					}
 				}
 				break;

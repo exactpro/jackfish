@@ -403,12 +403,12 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 
 	public void changeDefaultApp(ActionEvent actionEvent)
 	{
-		tryCatch(() -> this.model.changeDefaultApp(cbDefaultApp.getSelectionModel().getSelectedItem()), "Error on changing app");
+		tryCatch(() -> this.model.setDefaultApp(cbDefaultApp.getSelectionModel().getSelectedItem()), "Error on changing app");
 	}
 
 	public void changeDefaultClient(ActionEvent actionEvent)
 	{
-		tryCatch(() -> this.model.changeDefaultClient(cbDefaultClient.getSelectionModel().getSelectedItem()), "Error on changing client");
+		tryCatch(() -> this.model.setDefaultClient(cbDefaultClient.getSelectionModel().getSelectedItem()), "Error on changing client");
 	}
 
 	public void markAll(ActionEvent actionEvent)

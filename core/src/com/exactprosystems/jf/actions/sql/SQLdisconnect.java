@@ -41,7 +41,7 @@ public class SQLdisconnect extends AbstractAction
 		}
 		else
 		{
-			context.getDatabases().disconnect(this.connection);
+			context.getConfiguration().getDataBasesPool().disconnect(this.connection);
 			super.setResult(null);
 		}
 	}

@@ -10,7 +10,7 @@ package com.exactprosystems.jf.tool.dictionary;
 
 import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.app.IWindow.SectionKind;
-import com.exactprosystems.jf.common.Context;
+import com.exactprosystems.jf.common.Configuration;
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
@@ -104,9 +104,9 @@ public class DictionaryFxController implements Initializable, ContainingParent
 		this.pane = parent;
 	}
 
-	public void init(final DictionaryFx model, Context context) throws Exception
+	public void init(final DictionaryFx model, Configuration configuration) throws Exception
 	{
-		this.settings = context.getConfiguration().getSettings();
+		this.settings = configuration.getSettings();
 		this.tab = Common.createTab(model);
 		this.tab.setContent(pane);
 
@@ -115,13 +115,13 @@ public class DictionaryFxController implements Initializable, ContainingParent
 
 		Settings.SettingsValue themePath = this.settings.getValueOrDefault(Settings.GLOBAL_NS, SettingsPanel.SETTINGS, Main.THEME, Theme.WHITE.name());
 		this.elementInfoController = Common.loadController(ElementInfoController.class.getResource("ElementInfo.fxml"));
-		this.elementInfoController.init(model, context, this.mainGridPane, this.navigationController, Theme.valueOf(themePath.getValue()).getPath());
+		this.elementInfoController.init(model, configuration, this.mainGridPane, this.navigationController, Theme.valueOf(themePath.getValue()).getPath());
 
 		this.ownerInfoController = Common.loadController(OwnerInfoController.class.getResource("OwnerInfo.fxml"));
 		this.ownerInfoController.init(this.mainGridPane);
 
 		this.actionsController = Common.loadController(ActionsController.class.getResource("Actions.fxml"));
-		this.actionsController.init(model, this.mainGridPane, context.getEvaluator(), this.navigationController, this.elementInfoController);
+		this.actionsController.init(model, this.mainGridPane, configuration.getEvaluator(), this.navigationController, this.elementInfoController);
 
 		Common.getTabPane().getTabs().add(this.tab);
 		if (Common.isNeedSelectedTab())

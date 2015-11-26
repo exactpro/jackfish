@@ -17,6 +17,7 @@ import com.exactprosystems.jf.api.app.IWindow.SectionKind;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.common.Context;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
+import com.exactprosystems.jf.common.parser.Matrix;
 import com.exactprosystems.jf.common.parser.Parameters;
 
 import java.util.Collection;
@@ -24,11 +25,11 @@ import java.util.List;
 
 public class ActionGuiHelper
 {
-	public static void dialogsNames(Context context, AppConnection connection, List<ReadableValue> list) throws Exception
+	public static void dialogsNames(Context context, Matrix matrix, AppConnection connection, List<ReadableValue> list) throws Exception
 	{
-		IGuiDictionary dictionary = getGuiDictionary(context, connection);
+		IGuiDictionary dictionary = getGuiDictionary(matrix, connection);
 
-		AbstractEvaluator evaluator = context.getEvaluator();
+		AbstractEvaluator evaluator = context.getConfiguration().getEvaluator();
 		for (IWindow window : dictionary.getWindows())
 		{
 			String quoted = evaluator.createString(window.getName());
@@ -36,9 +37,9 @@ public class ActionGuiHelper
 		}
 	}
 
-	public static void extraParameters(List<ReadableValue> list, Context context, AppConnection connection, String dlgValue, Parameters parameters) throws Exception
+	public static void extraParameters(List<ReadableValue> list, Matrix matrix, AppConnection connection, String dlgValue, Parameters parameters) throws Exception
 	{
-		IGuiDictionary dictionary = getGuiDictionary(context, connection);
+		IGuiDictionary dictionary = getGuiDictionary(matrix, connection);
 		
 		if (dictionary != null)
 		{
@@ -58,7 +59,7 @@ public class ActionGuiHelper
 	}
 	
 	
-	private static IGuiDictionary getGuiDictionary(Context context, AppConnection connection) throws Exception
+	private static IGuiDictionary getGuiDictionary(Matrix matrix, AppConnection connection) throws Exception
 	{
 		IGuiDictionary dictionary = null;
 		if (connection != null)
@@ -67,7 +68,7 @@ public class ActionGuiHelper
 		}
 		if (dictionary == null)
 		{
-			dictionary = context.getDefaultApp() == null ? null : context.getDefaultApp().getDictionary();
+			dictionary = matrix.getDefaultApp() == null ? null : matrix.getDefaultApp().getDictionary();
 		}
 
 		if (dictionary == null)

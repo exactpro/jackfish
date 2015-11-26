@@ -13,6 +13,7 @@ import com.exactprosystems.jf.api.client.IAttribute;
 import com.exactprosystems.jf.api.client.IField;
 import com.exactprosystems.jf.api.client.IMessage;
 import com.exactprosystems.jf.api.client.IMessageDictionary;
+import com.exactprosystems.jf.common.Configuration;
 import com.exactprosystems.jf.common.Document;
 import com.exactprosystems.jf.common.DocumentInfo;
 import com.exactprosystems.jf.common.xml.schema.Xsd;
@@ -47,12 +48,12 @@ public class MessageDictionary extends AbstractDocument implements IMessageDicti
 {
 	public MessageDictionary()
 	{
-		this(null);
+		this(null, null);
 	}
 
-	public MessageDictionary(String fileName)
+	public MessageDictionary(String fileName, Configuration configuration)
 	{
-		super(fileName);
+		super(fileName, configuration);
 
 		this.fields = new Fields();
 		this.messages = new Messages();

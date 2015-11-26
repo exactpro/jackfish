@@ -410,7 +410,7 @@ public class Configuration extends AbstractDocument
 
 	public Configuration(String fileName, UpdateLibsListener listener, Settings settings)
 	{
-		super(fileName);
+		super(fileName, null);
 
 		this.listener 					= listener;
 		this.settings 					= settings;
@@ -542,7 +542,7 @@ public class Configuration extends AbstractDocument
 				String name = lib.toString();
 				String path = lib.get(libPath);
 				IMatrixListener checker = new MatrixListener();
-				Matrix matrix = new Matrix(path, checker);
+				Matrix matrix = new Matrix(path, this, checker);
 				File file = new File(path);
 				Long timestamp = timestampMap.get(file);
 				newMap.put(file, timestamp);
@@ -636,6 +636,7 @@ public class Configuration extends AbstractDocument
 			Converter.setFormats(get(additionFormats));
 	
 			updateLibs();
+			createEvaluator();
 	
 			this.valid = true;
     	}
@@ -712,6 +713,10 @@ public class Configuration extends AbstractDocument
             Marshaller marshaller = jaxbContext.createMarshaller();
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
             marshaller.marshal(this, file);
+
+			updateLibs();
+			createEvaluator();
+
 			saved();
         }
         catch (FileNotFoundException e)
@@ -753,22 +758,6 @@ public class Configuration extends AbstractDocument
 	}
 
 	//------------------------------------------------------------------------------------------------------------------
-	public final AbstractEvaluator createEvaluator() throws Exception
-	{
-		String evaluatorClassName = evaluatorValue;
-		if (Str.IsNullOrEmpty(evaluatorClassName))
-		{
-			throw new Exception("Empty evaluator class name.");
-		}
-		
-		AbstractEvaluator evaluatorObj	= objectFromClassName(evaluatorClassName, AbstractEvaluator.class);
-		evaluatorObj.addImports(get(evaluatorImports).split(","));
-		setUserVariablesFromMask(get(variables), evaluatorObj);
-		setUserVariablesFromMask(get(userVariables), evaluatorObj);
-
-		return evaluatorObj;
-	}
-
 	public SubCase referenceToSubcase(String name, MatrixItem item)
 	{
 		MatrixItem ref = item.findParent(MatrixRoot.class).find(true, SubCase.class, name);
@@ -898,6 +887,11 @@ public class Configuration extends AbstractDocument
 		return this.appEntriesValue.stream().map(entry -> entry.toString()).collect(Collectors.toList());
 	}
 
+	public AbstractEvaluator getEvaluator()
+	{
+		return this.evaluator;
+	}
+	
 	public Matrix getLib(String name)
 	{
 		return this.libs.get(name);
@@ -986,6 +980,20 @@ public class Configuration extends AbstractDocument
 		}
 	}
 
+	private void createEvaluator() throws Exception
+	{
+		String evaluatorClassName = evaluatorValue;
+		if (Str.IsNullOrEmpty(evaluatorClassName))
+		{
+			throw new Exception("Empty evaluator class name.");
+		}
+		
+		this.evaluator	= objectFromClassName(evaluatorClassName, AbstractEvaluator.class);
+		this.evaluator.addImports(get(evaluatorImports).split(","));
+		setUserVariablesFromMask(get(variables), this.evaluator);
+		setUserVariablesFromMask(get(userVariables), this.evaluator);
+	}
+
 	private void setUserVariablesFromMask(String userVariablesFileName, AbstractEvaluator evaluator)  throws Exception
 	{
 		if (Str.IsNullOrEmpty(userVariablesFileName))
@@ -998,7 +1006,7 @@ public class Configuration extends AbstractDocument
 		{
 			try (Reader reader = new FileReader(file))
 			{
-				SystemVars vars = new SystemVars(userVariablesFileName);
+				SystemVars vars = new SystemVars(userVariablesFileName, this);
 				vars.load(reader);
 				vars.injectVariables(evaluator);
 			}
@@ -1027,7 +1035,7 @@ public class Configuration extends AbstractDocument
 			{
 				try (Reader reader = new FileReader(one))
 				{
-					SystemVars vars = new SystemVars(one.getPath());
+					SystemVars vars = new SystemVars(one.getPath(), this);
 					vars.load(reader);
 					vars.injectVariables(evaluator);
 				}
@@ -1133,6 +1141,8 @@ public class Configuration extends AbstractDocument
 	protected ApplicationPool		applications;
 	protected DataBasePool			databases;
 
+	protected AbstractEvaluator		evaluator;
+	
 	protected final Set<Document> subordinates = new HashSet<Document>();
 	
 	protected boolean valid = false;
