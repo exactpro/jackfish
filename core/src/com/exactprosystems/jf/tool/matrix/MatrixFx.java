@@ -27,15 +27,15 @@ import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.common.undoredo.Command;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
-
 import javafx.scene.control.ButtonType;
 import javafx.util.Pair;
-
 import org.apache.log4j.Logger;
 
 import java.io.File;
 import java.io.Reader;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -200,11 +200,64 @@ public class MatrixFx extends Matrix
 		}
 	}
 
+	private static class Temp
+	{
+		private MatrixItem parent;
+		private MatrixItem item;
+		int index;
+
+		public Temp(MatrixItem parent, MatrixItem item, int index)
+		{
+			this.parent = parent;
+			this.item = item;
+			this.index = index;
+		}
+
+		public MatrixItem getParent()
+		{
+			return parent;
+		}
+
+		public MatrixItem getItem()
+		{
+			return item;
+		}
+
+		public int getIndex()
+		{
+			return index;
+		}
+
+	}
+
 	public void remove(List<MatrixItem> items)
 	{
 		if (items != null && !items.isEmpty())
 		{
-			items.forEach(this::remove);
+			if (items.stream().map(MatrixItem::getParent).distinct().count() != 1)
+			{
+				DialogsHelper.showInfo("Only neighbors can be removed");
+				return;
+			}
+			List<Temp> collect = items.stream().map(item -> new Temp(item.getParent(), item, super.getIndex(item))).collect(Collectors.toList());
+			Command undo = () ->
+			{
+				collect.forEach(temp -> {
+					super.insert(temp.getParent(), temp.getIndex(), temp.getItem());
+					this.controller.display(temp.getItem());
+				});
+				enumerate();
+			};
+			Command redo = () ->
+			{
+				items.forEach(item -> {
+					super.remove(item);
+					this.controller.remove(item);
+				});
+				enumerate();
+			};
+			addCommand(undo, redo);
+			super.changed(true);
 		}
 	}
 
@@ -392,7 +445,6 @@ public class MatrixFx extends Matrix
 		addCommand(undo, redo);
 	}
 
-	
 	public void copy(List<MatrixItem> list) throws Exception
 	{
 		copyList.clear();
