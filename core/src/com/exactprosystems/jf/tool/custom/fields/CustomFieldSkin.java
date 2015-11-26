@@ -1,0 +1,94 @@
+////////////////////////////////////////////////////////////////////////////////
+//  Copyright (c) 2009-2015, Exactpro Systems, LLC
+//  Quality Assurance & Related Development for Innovative Trading Systems.
+//  All rights reserved.
+//  This is unpublished, licensed software, confidential and proprietary
+//  information which is the property of Exactpro Systems, LLC or its licensors.
+////////////////////////////////////////////////////////////////////////////////
+package com.exactprosystems.jf.tool.custom.fields;
+
+import com.sun.javafx.scene.control.behavior.TextFieldBehavior;
+import com.sun.javafx.scene.control.skin.TextFieldSkin;
+import javafx.beans.property.ObjectProperty;
+import javafx.css.PseudoClass;
+import javafx.geometry.Pos;
+import javafx.scene.Node;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.StackPane;
+
+import java.util.Objects;
+
+public abstract class CustomFieldSkin extends TextFieldSkin {
+
+	private static final PseudoClass HAS_RIGHT_NODE = PseudoClass.getPseudoClass("right-node-visible"); //$NON-NLS-1$
+
+	private Node right;
+	private StackPane rightPane;
+
+	private final TextField control;
+
+	public CustomFieldSkin(final TextField control) {
+		super(control, new TextFieldBehavior(control));
+
+		this.control = control;
+		updateChildren();
+
+		registerChangeListener(rightProperty(), "RIGHT_NODE"); //$NON-NLS-1$
+		registerChangeListener(control.focusedProperty(), "FOCUSED"); //$NON-NLS-1$
+	}
+
+	public abstract ObjectProperty<Node> rightProperty();
+
+	@Override
+	protected void handleControlPropertyChanged(String p) {
+		super.handleControlPropertyChanged(p);
+		if (Objects.equals(p, "RIGHT_NODE")) {
+			updateChildren();
+		}
+	}
+
+	private void updateChildren() {
+		Node newRight = rightProperty().get();
+		if (newRight != null) {
+			getChildren().remove(rightPane);
+			rightPane = new StackPane(newRight);
+			rightPane.setAlignment(Pos.CENTER_RIGHT);
+			rightPane.getStyleClass().add("right-pane"); //$NON-NLS-1$
+			getChildren().add(rightPane);
+			right = newRight;
+		}
+		control.pseudoClassStateChanged(HAS_RIGHT_NODE, right != null);
+	}
+
+	@Override
+	protected void layoutChildren(double x, double y, double w, double h) {
+		final double fullHeight = h + snappedTopInset() + snappedBottomInset();
+
+		final double rightWidth = rightPane == null ? 0.0 : snapSize(rightPane.prefWidth(fullHeight));
+
+		final double textFieldStartX = snapPosition(x) + snapSize(0.0);
+		final double textFieldWidth = w - snapSize(0.0) - snapSize(rightWidth);
+
+		super.layoutChildren(textFieldStartX, 0, textFieldWidth, fullHeight);
+
+		if (rightPane != null) {
+			final double rightStartX = rightPane == null ? 0.0 : w - rightWidth + snappedLeftInset();
+			rightPane.resizeRelocate(rightStartX, 0, rightWidth, fullHeight);
+		}
+	}
+
+	@Override
+	protected double computePrefWidth(double h, double topInset, double rightInset, double bottomInset, double leftInset) {
+		final double pw = super.computePrefWidth(h, topInset, rightInset, bottomInset, leftInset);
+		final double rightWidth = rightPane == null ? 0.0 : snapSize(rightPane.prefWidth(h));
+
+		return pw + rightWidth + leftInset + rightInset;
+	}
+
+	@Override
+	protected double computePrefHeight(double w, double topInset, double rightInset, double bottomInset, double leftInset) {
+		final double ph = super.computePrefHeight(w, topInset, rightInset, bottomInset, leftInset);
+		final double rightHeight = rightPane == null ? 0.0 : snapSize(rightPane.prefHeight(-1));
+		return Math.max(ph, rightHeight);
+	}
+}
