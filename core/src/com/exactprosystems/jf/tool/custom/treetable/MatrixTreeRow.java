@@ -52,6 +52,7 @@ public class MatrixTreeRow extends TreeTableRow<MatrixItem>
 
 	private void find(Pane parent, List<ExpressionField> fields)
 	{
+		//TODO not work
 		Optional.of(parent).filter(p -> p instanceof ExpressionField).ifPresent(p -> fields.add(((ExpressionField) p)));
 		fields.addAll(parent.getChildren().stream().filter(n -> n instanceof ExpressionField).map(n -> ((ExpressionField) n)).collect(Collectors.toList()));
 		parent.getChildren().stream().filter(n -> n instanceof Pane && !(n instanceof ExpressionField)).forEach(pane -> find(((Pane) pane), fields));
