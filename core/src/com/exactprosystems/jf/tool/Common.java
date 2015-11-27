@@ -66,7 +66,7 @@ public abstract class Common
 	public static final String					intNumberMatcher			= "^-?\\d+$";
 	public static final String					empty						= "<none>";
 	public static final int						BUTTON_SIZE_WITH_ICON		= 42;
-	public static final javafx.geometry.Insets	insetsNode					= new javafx.geometry.Insets(2, 10, 2, 10);
+	public static final javafx.geometry.Insets	insetsNode					= new javafx.geometry.Insets(2, 5, 2, 5);
 	public static final javafx.geometry.Insets	insetsGrid					= new javafx.geometry.Insets(0);
 
 	private static File							baseFile					= new File(".");
