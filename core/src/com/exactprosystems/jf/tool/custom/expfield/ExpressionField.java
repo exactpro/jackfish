@@ -34,6 +34,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 
+@Deprecated
 public class ExpressionField extends BorderPane
 {
 	private AbstractEvaluator			evaluator;

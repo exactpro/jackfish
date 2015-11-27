@@ -108,7 +108,10 @@ public class ParametersPane extends CustomScrollPane
 				.filter(node -> node instanceof NewExpressionField)
 				.findFirst()
 				.filter(n -> !Str.areEqual(((NewExpressionField) n).getText(), parameter.getExpression()))
-				.ifPresent(n -> ((NewExpressionField) n).setText(parameter.getExpression()));
+				.ifPresent(n -> {
+					((NewExpressionField) n).setText(parameter.getExpression());
+					((NewExpressionField) n).stretchIfCan(parameter.getExpression());
+				});
 	}
 
 	private GridPane findPane(ObservableList<Node> children, Parameter par)

@@ -304,7 +304,7 @@ public class NewExpressionField extends CustomField
 	}
 
 	//TODO think about it
-	private void stretchIfCan(String text)
+	public void stretchIfCan(String text)
 	{
 		int size = text != null ? (text.length() * 8 + 20) : 60;
 
@@ -317,7 +317,7 @@ public class NewExpressionField extends CustomField
 				return;
 			}
 		}
-		this.setPrefWidth(size + 20);
+		this.setPrefWidth(size+20);
 	}
 
 	private void setWidthLabels()
