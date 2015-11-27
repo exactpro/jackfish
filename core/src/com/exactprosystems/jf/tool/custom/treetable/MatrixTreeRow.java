@@ -36,6 +36,7 @@ public class MatrixTreeRow extends TreeTableRow<MatrixItem>
 		}
 	}
 
+	//TODO do this method's
 	public void showExpressionsResults()
 	{
 		List<ExpressionField> list = new ArrayList<>();

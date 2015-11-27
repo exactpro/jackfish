@@ -17,7 +17,6 @@ import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.Common.Function;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.DragDetector;
-import com.exactprosystems.jf.tool.custom.expfield.ExpressionField;
 import com.exactprosystems.jf.tool.custom.fields.NewExpressionField;
 import com.exactprosystems.jf.tool.custom.scroll.CustomScrollPane;
 import com.exactprosystems.jf.tool.custom.treetable.MatrixTreeRow;
@@ -106,10 +105,10 @@ public class ParametersPane extends CustomScrollPane
 				.ifPresent(n -> ((TextField) n).setText(parameter.getName()));
 
 		pane.getChildren().stream()
-				.filter(node -> node instanceof ExpressionField)
+				.filter(node -> node instanceof NewExpressionField)
 				.findFirst()
-				.filter(n -> !Str.areEqual(((ExpressionField) n).getText(), parameter.getExpression()))
-				.ifPresent(n -> ((ExpressionField) n).setText(parameter.getExpression()));
+				.filter(n -> !Str.areEqual(((NewExpressionField) n).getText(), parameter.getExpression()))
+				.ifPresent(n -> ((NewExpressionField) n).setText(parameter.getExpression()));
 	}
 
 	private GridPane findPane(ObservableList<Node> children, Parameter par)
@@ -423,18 +422,17 @@ public class ParametersPane extends CustomScrollPane
 				node.getParent().getStyleClass().add(CssVariables.UNFOCUSED_GRID);
 			}
 		};
-
-		if (node instanceof TextField)
+		if (node instanceof NewExpressionField)
+		{
+			((NewExpressionField) node).setChangingFocusListener(changeListener);
+		}
+		else if (node instanceof TextField)
 		{
 			node.focusedProperty().addListener(changeListener);
 		}
 		else if (node instanceof ComboBox)
 		{
 			((ComboBox<?>) node).getEditor().focusedProperty().addListener(changeListener);
-		}
-		else if (node instanceof ExpressionField)
-		{
-			((ExpressionField) node).setChangingFocusListener(changeListener);
 		}
 	}
 

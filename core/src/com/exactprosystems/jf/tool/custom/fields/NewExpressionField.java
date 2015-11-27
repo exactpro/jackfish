@@ -15,9 +15,7 @@ import com.exactprosystems.jf.common.parser.listeners.ListProvider;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.custom.expfield.ErrorHandler;
-import com.exactprosystems.jf.tool.custom.expfield.ExpressionField;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
-import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.event.EventDispatcher;
 import javafx.event.EventHandler;
@@ -87,11 +85,10 @@ public class NewExpressionField extends CustomField
 		this.hBox.setSpacing(5);
 		this.hBox.setAlignment(Pos.CENTER);
 		this.rightProperty().set(this.hBox);
-		this.textProperty().addListener((observable, oldValue, newValue) -> stretchIfCan(newValue));
 		disableDefaultContextMenu();
 		listeners();
 		showButtons();
-		Platform.runLater(() -> stretchIfCan(this.getText()));
+		stretchIfCan(this.getText());
 	}
 
 	public void setOnContextMenuRequest(EventHandler<ContextMenuEvent> event)
@@ -351,5 +348,5 @@ public class NewExpressionField extends CustomField
 		}
 	}
 
-	private final static Logger	logger	= Logger.getLogger(ExpressionField.class);
+	private final static Logger	logger	= Logger.getLogger(NewExpressionField.class);
 }
