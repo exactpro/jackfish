@@ -56,7 +56,7 @@ public class ServiceLoad extends AbstractAction
 		switch (parameterToFill)
 		{
 			case idName:
-				ActionServiceHelper.serviceNames(list, configuration.getEvaluator(), configuration);
+				ActionServiceHelper.serviceNames(list, context.getEvaluator(), configuration);
 				break;
 
 			default:

@@ -384,7 +384,7 @@ public class ApplicationPool implements IApplicationPool
 	    		dictionary.load(reader);
 	    	}
 			
-			AbstractEvaluator evaluator = this.configuration.getEvaluator();
+			AbstractEvaluator evaluator = this.configuration.createEvaluator();
 			dictionary.evaluateAll(evaluator);
 		}
 		return dictionary;

@@ -52,7 +52,7 @@ public class ApplicationNewInstance extends AbstractAction
 			return HelpKind.ChooseFromList;
 		}
 		
-		parameters.evaluateAll(context.getConfiguration().getEvaluator());
+		parameters.evaluateAll(context.getEvaluator());
 		connection = ApplicationHelper.checkConnection(connection, parameters.get(connectionName));
 		if (connection != null)
 		{
@@ -73,14 +73,14 @@ public class ApplicationNewInstance extends AbstractAction
 				break;
 				
 			default:
-				parameters.evaluateAll(context.getConfiguration().getEvaluator());
+				parameters.evaluateAll(context.getEvaluator());
 				connection = ApplicationHelper.checkConnection(connection, parameters.get(connectionName));
 				if (connection != null)
 				{
 					String[] arr = connection.getApplication().getFactory().listForParameter(parameterToFill);
 					for (String str : arr)
 					{
-						list.add(new ReadableValue(context.getConfiguration().getEvaluator().createString(str)));
+						list.add(new ReadableValue(context.getEvaluator().createString(str)));
 					}
 				}	
 				break;

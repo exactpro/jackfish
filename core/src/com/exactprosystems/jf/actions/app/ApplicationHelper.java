@@ -37,7 +37,7 @@ public class ApplicationHelper
 	
 	public static void applicationsNames(List<ReadableValue> list, Context context) throws Exception
 	{
-		AbstractEvaluator evaluator = context.getConfiguration().getEvaluator();
+		AbstractEvaluator evaluator = context.getEvaluator();
 		Configuration configuration = context.getConfiguration();
 		for (String str : configuration.getApplications())
 		{
@@ -48,7 +48,7 @@ public class ApplicationHelper
 	
 	protected void helpToAddParametersDerived(List<ReadableValue> list, Context context, Parameters parameters, String idName) throws Exception
 	{
-		parameters.evaluateAll(context.getConfiguration().getEvaluator());
+		parameters.evaluateAll(context.getEvaluator());
 		for (String str : context.getConfiguration().getApplicationPool().wellKnownStartArgs(Str.asString(parameters.get(idName))))
 		{
 			list.add(new ReadableValue(str));
@@ -58,13 +58,13 @@ public class ApplicationHelper
 	
 	public static boolean canFillParameter(Parameters parameters, Context context, String idName, String fieldName) throws Exception
 	{
-		parameters.evaluateAll(context.getConfiguration().getEvaluator());
+		parameters.evaluateAll(context.getEvaluator());
 		return context.getConfiguration().getApplicationPool().canFillParameter(Str.asString(parameters.get(idName)), fieldName);
 	}
 	
 	public static void fillListForParameter(List<ReadableValue> list, Context context, Parameters parameters, String idName,  String parameterName) throws Exception
 	{
-		AbstractEvaluator evaluator = context.getConfiguration().getEvaluator();
+		AbstractEvaluator evaluator = context.getEvaluator();
 		parameters.evaluateAll(evaluator);
 		String[] arr = context.getConfiguration().getApplicationPool().listForParameter(Str.asString(parameters.get(idName)), parameterName);
 		for (String str : arr)

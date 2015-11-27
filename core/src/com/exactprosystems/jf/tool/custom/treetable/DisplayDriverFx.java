@@ -246,7 +246,7 @@ public class DisplayDriverFx implements DisplayDriver
 	{
 		GridPane pane = (GridPane) layout;
 
-		final NewExpressionField field = new NewExpressionField(this.context.getConfiguration().getEvaluator(), get.get());
+		final NewExpressionField field = new NewExpressionField(this.context.getEvaluator(), get.get());
 		field.setFirstActionListener(firstHandler);
 		field.setSecondActionListener(secondHandler);
 		field.setChangingValueListener((observable, oldValue, newValue) ->

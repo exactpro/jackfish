@@ -261,7 +261,7 @@ public class ParametersPane extends CustomScrollPane
 		
 		if (!this.oneLine)
 		{
-			NewExpressionField expressionField = new NewExpressionField(context.getConfiguration().getEvaluator(), par.getExpression());
+			NewExpressionField expressionField = new NewExpressionField(context.getEvaluator(), par.getExpression());
 			if (matrixItem instanceof ActionItem)
 			{
 				ActionItem actionItem = (ActionItem) this.matrixItem;
@@ -300,7 +300,7 @@ public class ParametersPane extends CustomScrollPane
 									File file = DialogsHelper.showOpenSaveDialog("Choose file to open", "All files", "*.*", OpenSaveMode.OpenFile);
 									if (file != null)
 									{
-										return context.getConfiguration().getEvaluator().createString(Common.getRelativePath(file.getAbsolutePath()));
+										return context.getEvaluator().createString(Common.getRelativePath(file.getAbsolutePath()));
 									}
 									return str;
 								});
@@ -313,7 +313,7 @@ public class ParametersPane extends CustomScrollPane
 									File file = DialogsHelper.showOpenSaveDialog("Choose file to save", "All files", "*.*", OpenSaveMode.SaveFile);
 									if (file != null)
 									{
-										return context.getConfiguration().getEvaluator().createString(Common.getRelativePath(file.getAbsolutePath()));
+										return context.getEvaluator().createString(Common.getRelativePath(file.getAbsolutePath()));
 									}
 									return str;
 								});
@@ -326,7 +326,7 @@ public class ParametersPane extends CustomScrollPane
 									File file = DialogsHelper.showDirChooseDialog("Choose directory");
 									if (file != null)
 									{
-										return context.getConfiguration().getEvaluator().createString(Common.getRelativePath(file.getAbsolutePath()));
+										return context.getEvaluator().createString(Common.getRelativePath(file.getAbsolutePath()));
 									}
 									return str;
 								});
@@ -341,7 +341,7 @@ public class ParametersPane extends CustomScrollPane
 							
 						case BuildXPath:
 							expressionField.setNameFirst("X");
-							AbstractEvaluator evaluator = this.context.getConfiguration().getEvaluator();
+							AbstractEvaluator evaluator = this.context.getEvaluator();
 							Settings settings = this.context.getConfiguration().getSettings();
 							Settings.SettingsValue theme = settings.getValueOrDefault(Settings.GLOBAL_NS, SettingsPanel.SETTINGS, Main.THEME, Theme.WHITE.name());
 							String themePath = Theme.valueOf(theme.getValue()).getPath();

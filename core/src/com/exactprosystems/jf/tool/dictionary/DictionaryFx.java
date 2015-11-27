@@ -52,6 +52,7 @@ public class DictionaryFx extends GuiDictionary
 	private DictionaryFxController controller;
 	private AppConnection appConnection;
 	private Task<Void> task;
+	private AbstractEvaluator evaluator;
 
 	public DictionaryFx(String fileName, Configuration config) throws Exception
 	{
@@ -62,6 +63,7 @@ public class DictionaryFx extends GuiDictionary
 	{
 		super(fileName, config);
 		this.currentAdapter = currentAdapter;
+		this.evaluator = config.createEvaluator();
 	}
 
 	//==============================================================================================================================
@@ -813,7 +815,7 @@ public class DictionaryFx extends GuiDictionary
 		if (!this.isControllerInit)
 		{
 			this.controller = Common.loadController(DictionaryFx.class.getResource("DictionaryTab.fxml"));
-			this.controller.init(this, getConfiguration());
+			this.controller.init(this, getConfiguration(), this.evaluator);
 			getConfiguration().register(this);
 			this.isControllerInit = true;
 		}
@@ -853,7 +855,7 @@ public class DictionaryFx extends GuiDictionary
 		Settings settings = getConfiguration().getSettings();
 		final Map<String, String> parameters = settings.getMapValues(Settings.APPLICATION + idAppEntry, parametersName, strings);
 
-		ButtonType desision = DialogsHelper.showParametersDialog(title + idAppEntry, parameters, getConfiguration().getEvaluator());
+		ButtonType desision = DialogsHelper.showParametersDialog(title + idAppEntry, parameters, this.evaluator);
 		
 		if (desision == ButtonType.CANCEL)
 		{
@@ -864,7 +866,6 @@ public class DictionaryFx extends GuiDictionary
 		settings.saveIfNeeded();
 
 		// evaluate parameters 
-		AbstractEvaluator evaluator = getConfiguration().getEvaluator();
 		Iterator<Entry<String, String>> iterator = parameters.entrySet().iterator();
 		while (iterator.hasNext())
 		{

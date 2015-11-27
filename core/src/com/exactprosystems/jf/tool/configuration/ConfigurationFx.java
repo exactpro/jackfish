@@ -444,7 +444,7 @@ public class ConfigurationFx extends Configuration
 		Settings settings = getSettings();
 		final Map<String, String> parameters = settings.getMapValues(Settings.SERVICE + idEntry, parametersName, strings);
 
-		AbstractEvaluator evaluator = getEvaluator();
+		AbstractEvaluator evaluator = createEvaluator();
 		ButtonType buttonType = DialogsHelper.showParametersDialog(title + idEntry, parameters, evaluator);
 		if (buttonType == ButtonType.CANCEL)
 		{

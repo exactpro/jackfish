@@ -57,7 +57,7 @@ public class ClientStart extends AbstractAction
 	@Override
 	protected void helpToAddParametersDerived(List<ReadableValue> list, Context context, Parameters parameters) throws Exception
 	{
-		parameters.evaluateAll(context.getConfiguration().getEvaluator());
+		parameters.evaluateAll(context.getEvaluator());
 		Object value = parameters.get(connectionName);
 		if (value instanceof ClientConnection)
 		{

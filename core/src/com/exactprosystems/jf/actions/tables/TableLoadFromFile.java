@@ -62,8 +62,8 @@ public class TableLoadFromFile extends AbstractAction
 		switch (parameterToFill)
 		{
 			case delimiterName:
-				list.add(new ReadableValue(context.getConfiguration().getEvaluator().createString(",")));
-				list.add(new ReadableValue(context.getConfiguration().getEvaluator().createString(";")));
+				list.add(new ReadableValue(context.getEvaluator().createString(",")));
+				list.add(new ReadableValue(context.getEvaluator().createString(";")));
 				break;
 		}
 	}

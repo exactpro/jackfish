@@ -524,7 +524,21 @@ public class Configuration extends AbstractDocument
 		}
 	}
 
-	
+	public AbstractEvaluator createEvaluator() throws Exception
+	{
+		String evaluatorClassName = evaluatorValue;
+		if (Str.IsNullOrEmpty(evaluatorClassName))
+		{
+			throw new Exception("Empty evaluator class name.");
+		}
+		
+		AbstractEvaluator evaluator	= objectFromClassName(evaluatorClassName, AbstractEvaluator.class);
+		evaluator.addImports(get(evaluatorImports).split(","));
+		setUserVariablesFromMask(get(variables), evaluator);
+		setUserVariablesFromMask(get(userVariables), evaluator);
+		
+		return evaluator;
+	}
 
 	public Context createContext(IMatrixListener matrixListener, PrintStream out) throws Exception
 	{
@@ -636,7 +650,6 @@ public class Configuration extends AbstractDocument
 			Converter.setFormats(get(additionFormats));
 	
 			updateLibs();
-			createEvaluator();
 	
 			this.valid = true;
     	}
@@ -715,7 +728,6 @@ public class Configuration extends AbstractDocument
             marshaller.marshal(this, file);
 
 			updateLibs();
-			createEvaluator();
 
 			saved();
         }
@@ -892,11 +904,6 @@ public class Configuration extends AbstractDocument
 		return this.appEntriesValue.stream().map(entry -> entry.toString()).collect(Collectors.toList());
 	}
 
-	public AbstractEvaluator getEvaluator()
-	{
-		return this.evaluator;
-	}
-	
 	public Matrix getLib(String name)
 	{
 		return this.libs.get(name);
@@ -983,20 +990,6 @@ public class Configuration extends AbstractDocument
 			logger.error(String.format("objectFromClassName(%s, %s)", name, baseType));
 			throw e;
 		}
-	}
-
-	private void createEvaluator() throws Exception
-	{
-		String evaluatorClassName = evaluatorValue;
-		if (Str.IsNullOrEmpty(evaluatorClassName))
-		{
-			throw new Exception("Empty evaluator class name.");
-		}
-		
-		this.evaluator	= objectFromClassName(evaluatorClassName, AbstractEvaluator.class);
-		this.evaluator.addImports(get(evaluatorImports).split(","));
-		setUserVariablesFromMask(get(variables), this.evaluator);
-		setUserVariablesFromMask(get(userVariables), this.evaluator);
 	}
 
 	private void setUserVariablesFromMask(String userVariablesFileName, AbstractEvaluator evaluator)  throws Exception
@@ -1147,7 +1140,6 @@ public class Configuration extends AbstractDocument
 	protected ApplicationPool		applications;
 	protected DataBasePool			databases;
 
-	protected AbstractEvaluator		evaluator;
 	protected final Set<Document> 	subordinates = new HashSet<Document>();
 	
 	protected boolean valid = false;

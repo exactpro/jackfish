@@ -9,11 +9,13 @@
 package com.exactprosystems.jf.tool.systemvars;
 
 import com.exactprosystems.jf.common.Configuration;
+import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.evaluator.SystemVars;
 import com.exactprosystems.jf.common.parser.Parameter;
 import com.exactprosystems.jf.common.undoredo.Command;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
+
 import javafx.scene.control.ButtonType;
 import javafx.util.Pair;
 
@@ -26,10 +28,13 @@ public class SystemVarsFx extends SystemVars
 {
 	private SystemVarsFxController controller;
 	private boolean isControllerInit = false;
+	private AbstractEvaluator evaluator;
 
 	public SystemVarsFx(String fileName, Configuration config) throws Exception
 	{
 		super(fileName, config);
+		
+		this.evaluator = config.createEvaluator();
 	}
 
 	//==============================================================================================================================
@@ -39,7 +44,7 @@ public class SystemVarsFx extends SystemVars
 	protected void afterRedoUndo() 
 	{
 		super.afterRedoUndo();
-		this.getParameters().evaluateAll(getConfiguration().getEvaluator());
+		this.getParameters().evaluateAll(this.evaluator);
 		this.controller.displayNewParameters(getParameterList());
 	}
 	
@@ -192,7 +197,7 @@ public class SystemVarsFx extends SystemVars
 		List<Parameter> variables = this.getParameterList();
 		variables.forEach(p -> 
 		{
-			p.evaluate(getConfiguration().getEvaluator());
+			p.evaluate(this.evaluator);
 			res.add(p);
 		});
 		return res;

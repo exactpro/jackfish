@@ -29,7 +29,7 @@ public class ActionGuiHelper
 	{
 		IGuiDictionary dictionary = getGuiDictionary(matrix, connection);
 
-		AbstractEvaluator evaluator = context.getConfiguration().getEvaluator();
+		AbstractEvaluator evaluator = context.getEvaluator();
 		for (IWindow window : dictionary.getWindows())
 		{
 			String quoted = evaluator.createString(window.getName());

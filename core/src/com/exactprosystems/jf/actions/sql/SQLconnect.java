@@ -69,7 +69,7 @@ public class SQLconnect  extends AbstractAction
 	protected void listToFillParameterDerived(List<ReadableValue> list, Context context, String parameterToFill, Parameters parameters) throws Exception
 	{
 		Configuration configuration = context.getConfiguration();
-		AbstractEvaluator evaluator = configuration.getEvaluator();
+		AbstractEvaluator evaluator = context.getEvaluator();
 		switch (parameterToFill)
 		{
 			case sqlName :

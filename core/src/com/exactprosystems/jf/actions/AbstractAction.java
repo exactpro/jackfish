@@ -222,7 +222,7 @@ public abstract class AbstractAction implements Cloneable
     
     public final List<ReadableValue> listToFillParameter(Context context, String parameterToFill, Parameters parameters) throws Exception
     {
-    	AbstractEvaluator evaluator = context.getConfiguration().getEvaluator();
+    	AbstractEvaluator evaluator = context.getEvaluator();
     	
     	if (evaluator != null)
     	{
@@ -243,7 +243,7 @@ public abstract class AbstractAction implements Cloneable
         {
             res.put(new ReadableValue(entry.getKey()), entry.getValue().attribute.mandatory() ? TypeMandatory.Mandatory : TypeMandatory.NotMandatory);
         }
-    	AbstractEvaluator evaluator = context.getConfiguration().getEvaluator();
+    	AbstractEvaluator evaluator = context.getEvaluator();
     	
     	if (evaluator != null)
     	{

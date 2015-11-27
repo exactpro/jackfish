@@ -12,6 +12,7 @@ import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.app.IWindow.SectionKind;
 import com.exactprosystems.jf.common.Configuration;
 import com.exactprosystems.jf.common.Settings;
+import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.custom.console.ConsoleText;
@@ -104,7 +105,7 @@ public class DictionaryFxController implements Initializable, ContainingParent
 		this.pane = parent;
 	}
 
-	public void init(final DictionaryFx model, Configuration configuration) throws Exception
+	public void init(final DictionaryFx model, Configuration configuration, AbstractEvaluator evaluator) throws Exception
 	{
 		this.settings = configuration.getSettings();
 		this.tab = Common.createTab(model);
@@ -121,7 +122,7 @@ public class DictionaryFxController implements Initializable, ContainingParent
 		this.ownerInfoController.init(this.mainGridPane);
 
 		this.actionsController = Common.loadController(ActionsController.class.getResource("Actions.fxml"));
-		this.actionsController.init(model, this.mainGridPane, configuration.getEvaluator(), this.navigationController, this.elementInfoController);
+		this.actionsController.init(model, this.mainGridPane, evaluator, this.navigationController, this.elementInfoController);
 
 		Common.getTabPane().getTabs().add(this.tab);
 		if (Common.isNeedSelectedTab())

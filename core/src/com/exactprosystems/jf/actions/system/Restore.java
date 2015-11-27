@@ -46,7 +46,7 @@ public class Restore extends AbstractAction
 	@Override
 	protected void listToFillParameterDerived(List<ReadableValue> list, Context context, String parameterToFill, Parameters parameters) throws Exception
 	{
-		AbstractEvaluator evaluator = context.getConfiguration().getEvaluator();
+		AbstractEvaluator evaluator = context.getEvaluator();
 		for(Entry<String, Object> entry : context.getConfiguration().getStoreMap().entrySet())
 		{
 			list.add(new ReadableValue(evaluator.createString(entry.getKey())));

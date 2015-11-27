@@ -57,7 +57,7 @@ public class ClientLoad extends AbstractAction
 			case idName:
 				for (String str : context.getConfiguration().getClientPool().clientNames())
 				{
-					String quoted = context.getConfiguration().getEvaluator().createString(str);
+					String quoted = context.getEvaluator().createString(str);
 					list.add(new ReadableValue(quoted));
 				}
 				break;

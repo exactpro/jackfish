@@ -182,7 +182,7 @@ public class MatrixRunner implements IMatrixRunner, AutoCloseable
 		}
 		
 		Configuration configuration = this.context.getConfiguration();
-        final AbstractEvaluator evaluator = configuration.getEvaluator();
+        final AbstractEvaluator evaluator = this.context.getEvaluator();
 		this.report = configuration.getReportFactory().createBuilder(configuration.get(Configuration.outputPath), this.matrixFile, new Date());
 		
 		if (this.matrix == null)
@@ -312,13 +312,13 @@ public class MatrixRunner implements IMatrixRunner, AutoCloseable
 	@Override
 	public Object getGlobalVariable(String s)
 	{
-		return this.context.getConfiguration().getEvaluator().getGlobals().getVariable(s);
+		return this.context.getEvaluator().getGlobals().getVariable(s);
 	}
 	
 	@Override
 	public void setGlobalVariable(String name, Object value)
 	{
-		this.context.getConfiguration().getEvaluator().getGlobals().set(name, value);
+		this.context.getEvaluator().getGlobals().set(name, value);
 	}
 	
 

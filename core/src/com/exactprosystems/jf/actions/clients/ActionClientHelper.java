@@ -25,7 +25,7 @@ public class ActionClientHelper
 {
 	public static HelpKind canHelpWithParameters(Context context, Parameters parameters, String connectionName,  String fieldName)
 	{
-		parameters.evaluateAll(context.getConfiguration().getEvaluator());
+		parameters.evaluateAll(context.getEvaluator());
 		Object value = parameters.get(connectionName);
 		if (value instanceof ClientConnection)
 		{
@@ -37,7 +37,7 @@ public class ActionClientHelper
 	
 	public static void listToFillParameterDerived(List<ReadableValue> list, Context context, Parameters parameters, String connectionName, String parameterToFill) 
 	{
-		parameters.evaluateAll(context.getConfiguration().getEvaluator());
+		parameters.evaluateAll(context.getEvaluator());
 		Object value = parameters.get(connectionName);
 		if (value instanceof ClientConnection)
 		{
@@ -67,7 +67,7 @@ public class ActionClientHelper
 		
 	public static void messageTypes(List<ReadableValue> list, Context context, Matrix matrix, Parameters parameters, String connectionName) throws Exception
 	{
-		AbstractEvaluator evaluator = context.getConfiguration().getEvaluator();
+		AbstractEvaluator evaluator = context.getEvaluator();
 		parameters.evaluateAll(evaluator);
 		Object obj = parameters.get(connectionName);
 		IMessageDictionary dic = getMessageDictionary(matrix, (obj instanceof ClientConnection) ? (ClientConnection)obj : null);
@@ -84,7 +84,7 @@ public class ActionClientHelper
 
 	public static void messageValues(List<ReadableValue> list, Context context, Matrix matrix, Parameters parameters, String connectionName, String messageTypeName, String fieldName) throws Exception
 	{
-		AbstractEvaluator evaluator = context.getConfiguration().getEvaluator();
+		AbstractEvaluator evaluator = context.getEvaluator();
 		parameters.evaluateAll(evaluator);
 		Object obj = parameters.get(connectionName);
 		IMessageDictionary dic = getMessageDictionary(matrix, (obj instanceof ClientConnection) ? (ClientConnection)obj : null);
@@ -127,7 +127,7 @@ public class ActionClientHelper
 
 	public static void additionParameters(List<ReadableValue> list, Context context, Matrix matrix, Parameters parameters, String connectionName, String messageTypeName) throws Exception
 	{
-		AbstractEvaluator evaluator = context.getConfiguration().getEvaluator();
+		AbstractEvaluator evaluator = context.getEvaluator();
 		parameters.evaluateAll(evaluator);
 		Object obj = parameters.get(connectionName);
 		IMessageDictionary dic = getMessageDictionary(matrix, (obj instanceof ClientConnection) ? (ClientConnection)obj : null);
