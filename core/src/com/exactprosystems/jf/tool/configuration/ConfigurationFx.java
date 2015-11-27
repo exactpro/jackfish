@@ -9,6 +9,7 @@
 package com.exactprosystems.jf.tool.configuration;
 
 import com.exactprosystems.jf.api.client.IClientFactory;
+import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.service.IServicesPool;
 import com.exactprosystems.jf.api.service.ServiceConnection;
 import com.exactprosystems.jf.app.ApplicationPool;
@@ -27,19 +28,13 @@ import com.exactprosystems.jf.tool.SupportedEntry;
 import com.exactprosystems.jf.tool.configuration.sqlentry.testing.TestingConnectionFxController;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.main.Main;
-
 import javafx.concurrent.Task;
 import javafx.scene.control.ButtonType;
-
 import org.apache.log4j.Logger;
 
 import javax.xml.bind.annotation.XmlRootElement;
-
 import java.io.Reader;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @XmlRootElement(name = "configuration")
 public class ConfigurationFx extends Configuration
@@ -173,8 +168,11 @@ public class ConfigurationFx extends Configuration
 	{
 		String lastOutput			= get(Configuration.outputPath); 
 		String lastVariables		= get(Configuration.variables);
-		String lastUserVariables	= get(Configuration.userVariables);	
-		
+		String lastUserVariables	= get(Configuration.userVariables);
+		if (Str.areEqual(lastOutput, output) && Str.areEqual(lastVariables, variables) && Str.areEqual(lastUserVariables, userVariables))
+		{
+			return;
+		}
 		Command undo = () -> 
 		{
 			changePath(Configuration.outputPath, lastOutput);
@@ -211,8 +209,11 @@ public class ConfigurationFx extends Configuration
 		String lastDateTime			= get(Configuration.dateTimeFormat);
 		String lastDate				= get(Configuration.dateFormat); 
 		String lastTime				= get(Configuration.timeFormat);
-		String lastAdditionFormat	= get(Configuration.additionFormats);	
-
+		String lastAdditionFormat	= get(Configuration.additionFormats);
+		if (Str.areEqual(lastDateTime, dateTime) && Str.areEqual(lastDate, date) && Str.areEqual(lastTime, time) && Str.areEqual(lastAdditionFormat, additionFormat))
+		{
+			return;
+		}
 		Command undo = () -> 
 		{
 			change(Configuration.dateTimeFormat, lastDateTime);
@@ -244,7 +245,10 @@ public class ConfigurationFx extends Configuration
 	public void changeEvaluator(String evaluatorImports) throws Exception
 	{
 		String lastEvaluatorImports = get(Configuration.evaluatorImports);
-		
+		if (Str.areEqual(lastEvaluatorImports, evaluatorImports))
+		{
+			return;
+		}
 		Command undo = () -> 
 		{
 			change(Configuration.evaluatorImports, lastEvaluatorImports);
@@ -719,7 +723,10 @@ public class ConfigurationFx extends Configuration
 			String lastValue = entry.get(field);
 			Class<?> clazz = entry.getClass();
 			String name = "" + entry;
-
+			if (Objects.equals(lastValue, newValue))
+			{
+				return;
+			}
 			Command undo = () ->
 			{
 				try

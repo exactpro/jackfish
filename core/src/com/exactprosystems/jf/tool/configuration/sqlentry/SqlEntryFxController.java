@@ -12,6 +12,7 @@ import com.exactprosystems.jf.common.Configuration;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.configuration.ConfigurationFx;
+import com.exactprosystems.jf.tool.custom.fields.CustomFieldWithButton;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
@@ -20,6 +21,8 @@ import javafx.scene.control.Accordion;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
+import javafx.scene.layout.GridPane;
+
 import java.io.File;
 import java.net.URL;
 import java.util.HashMap;
@@ -29,9 +32,9 @@ import java.util.ResourceBundle;
 public class SqlEntryFxController implements Initializable, ContainingParent
 {
 	public Button					btnRemove;
-	public TextField				tfJarName;
 	public TextField				tfConnectionString;
-	public Button					btnChooseJarName;
+	public CustomFieldWithButton	cfJarName;
+	public GridPane					mainGridPane;
 
 	private TitledPane				parent;
 	private ConfigurationFx			model;
@@ -42,7 +45,14 @@ public class SqlEntryFxController implements Initializable, ContainingParent
 	{
 		assert tfConnectionString != null : "fx:id=\"tfConnectionString\" was not injected: check your FXML file 'SqlEntryFx.fxml'.";
 		assert btnRemove != null : "fx:id=\"btnRemove\" was not injected: check your FXML file 'SqlEntryFx.fxml'.";
-		assert tfJarName != null : "fx:id=\"tfJarName\" was not injected: check your FXML file 'SqlEntryFx.fxml'.";
+		this.cfJarName = new CustomFieldWithButton();
+		this.cfJarName.setButtonText("...");
+		this.cfJarName.setHandler(handler -> Common.tryCatch(() ->
+		{
+			File file = DialogsHelper.showOpenSaveDialog("Choose sql jar", "Jar files (*.jar)", "*.jar", DialogsHelper.OpenSaveMode.OpenFile);
+			this.model.changeEntryPath(entry, Configuration.sqlJar, Common.absolutePath(file));
+		}, "Error on change path to sql jar"));
+		this.mainGridPane.add(this.cfJarName, 1, 0);
 		listeners();
 	}
 
@@ -61,15 +71,6 @@ public class SqlEntryFxController implements Initializable, ContainingParent
 		{
 			this.model.removeSqlEntry(entry);
 		}, "Error on remove sql entry");
-	}
-
-	public void chooseJarName(ActionEvent event)
-	{
-		Common.tryCatch(() ->
-		{
-			File file = DialogsHelper.showOpenSaveDialog("Choose sql jar", "Jar files (*.jar)", "*.jar", DialogsHelper.OpenSaveMode.OpenFile);
-			this.model.changeEntryPath(entry, Configuration.sqlJar, Common.absolutePath(file));
-		}, "Error on change path to sql jar");
 	}
 
 	public void testEntry(ActionEvent actionEvent)
@@ -100,7 +101,7 @@ public class SqlEntryFxController implements Initializable, ContainingParent
 		Common.tryCatch(() ->
 		{
 			tfConnectionString.setText(entry.get(Configuration.sqlConnection));
-			tfJarName.setText(entry.get(Configuration.sqlJar));
+			cfJarName.setText(entry.get(Configuration.sqlJar));
 		}, "Error on update all fields in service controller");
 	}
 
@@ -111,7 +112,7 @@ public class SqlEntryFxController implements Initializable, ContainingParent
 	{
 		Map<TextField, String> map = new HashMap<>();
 		map.put(tfConnectionString, Configuration.sqlConnection);
-		map.put(tfJarName, Configuration.sqlJar);
+		map.put(cfJarName, Configuration.sqlJar);
 		return map;
 	}
 

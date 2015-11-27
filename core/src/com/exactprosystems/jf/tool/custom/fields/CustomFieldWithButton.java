@@ -38,14 +38,10 @@ public class CustomFieldWithButton extends CustomField
 	{
 		this.label = new Label(buttonText);
 		label.getStyleClass().addAll("customButton");
-
 		this.stackPane = new StackPane(label);
 		stackPane.getStyleClass().addAll("customPane"); //$NON-NLS-1$
-		stackPane.setOpacity(this.getText().isEmpty() ? 0.0 : 1.0);
 		stackPane.setCursor(Cursor.DEFAULT);
 		stackPane.setOnMouseReleased(handler);
-		stackPane.setVisible(!this.getText().isEmpty());
-
 		this.rightProperty().set(stackPane);
 	}
 

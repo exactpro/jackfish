@@ -25,17 +25,9 @@
 
 	<children>
 		<Label fx:id="lblName"/>
-		<BorderPane GridPane.columnIndex="1">
-			<center>
-				<TextField fx:id="tfPath"/>
-			</center>
+		<BorderPane fx:id="mainBorderPane" GridPane.columnIndex="1">
 			<right>
-				<HBox alignment="CENTER" spacing="5">
-					<children>
-						<Button fx:id="btnChoosePath" onAction="#chooseLibPath" text="..."/>
-						<Button fx:id="btnOpenLib" onAction="#openLib" text="Open"/>
-					</children>
-				</HBox>
+				<Button fx:id="btnOpenLib" onAction="#openLib" text="Open" BorderPane.alignment="CENTER"/>
 			</right>
 		</BorderPane>
 		<Button fx:id="btnRemoveEntry" GridPane.columnIndex="2" text="Remove entry" onAction="#removeEntry"/>

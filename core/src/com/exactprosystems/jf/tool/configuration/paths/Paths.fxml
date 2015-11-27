@@ -9,37 +9,13 @@
    information which is the property of Exactpro Systems, LLC or its licensors.
   -->
 
-<GridPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.exactprosystems.jf.tool.configuration.paths.PathsController">
+<GridPane fx:id="mainGrid" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.exactprosystems.jf.tool.configuration.paths.PathsController">
 	<children>
 		<Label text="Reports" GridPane.halignment="CENTER" GridPane.rowIndex="0" GridPane.valignment="CENTER" />
 		<Label text="System vars" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
 		<Label text="User's vars" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
 		<Button fx:id="btnOpenVars" mnemonicParsing="false" onAction="#openSystemVars" text="Open" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
 		<Button fx:id="btnOpenUserVars" mnemonicParsing="false" onAction="#openUserVars" text="Open" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2"/>
-		<BorderPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="0">
-			<center>
-				<TextField fx:id="tfPathsOutput" BorderPane.alignment="CENTER" />
-			</center>
-			<right>
-				<Button fx:id="btnPathsOutput" mnemonicParsing="false" onAction="#chooseOutputDirectory" text="..." BorderPane.alignment="CENTER" />
-			</right>
-		</BorderPane>
-		<BorderPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
-			<center>
-				<TextField fx:id="tfPathsSystemVars" BorderPane.alignment="CENTER" />
-			</center>
-			<right>
-				<Button fx:id="btnPathsSystemVars" mnemonicParsing="false" onAction="#chooseSystemVars" text="..." BorderPane.alignment="CENTER" />
-			</right>
-		</BorderPane>
-		<BorderPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
-			<center>
-				<TextField fx:id="tfPathsUsersVars" BorderPane.alignment="CENTER" />
-			</center>
-			<right>
-				<Button fx:id="btnPathUsersVars" mnemonicParsing="false" onAction="#chooseUserVars" text="..." BorderPane.alignment="CENTER" />
-			</right>
-		</BorderPane>
 	</children>
 	<columnConstraints>
 		<ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" percentWidth="15.0" prefWidth="100.0" />

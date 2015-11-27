@@ -55,7 +55,6 @@ public class ConfigurationFxController implements Initializable, ContainingParen
 
 	public TitledPane								titledPanePaths;
 	public TitledPane								titledPaneFormats;
-	public TitledPane								titledPaneLogs;
 	public TitledPane								titledPaneEvaluator;
 
 	private CustomTab								tab;
@@ -155,8 +154,6 @@ public class ConfigurationFxController implements Initializable, ContainingParen
 		Common.tryCatch(this.model::testVersionService, "Error on test service entries");
 	}
 
-
-	
 	public void displaySubControllers()
 	{
 //		this.appMap.values().stream().forEach(entry -> entry.display(accordionAppEntries));

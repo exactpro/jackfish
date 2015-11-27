@@ -14,6 +14,7 @@ import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.SupportedEntry;
 import com.exactprosystems.jf.tool.configuration.ConfigurationFx;
 import com.exactprosystems.jf.tool.configuration.ConfigurationFxController;
+import com.exactprosystems.jf.tool.custom.fields.CustomFieldWithButton;
 import com.exactprosystems.jf.tool.custom.number.NumberTextField;
 import com.exactprosystems.jf.tool.custom.table.CustomTable;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
@@ -33,15 +34,14 @@ import java.util.*;
 
 public class ClientEntryFxController implements Initializable, ContainingParent
 {
-	public TextField							tfClientJarName;
-	public Button								btnChooseClientJar;
+	public TextField							tfClientDescription;
+	public CustomFieldWithButton				cfClientJarName;
+	public CustomFieldWithButton				cfClientDictionary;
+	public NumberTextField						ntfClientLimit;
+
 	public CustomTable<Configuration.Parameter>	tableView;
 	public Button								btnRemoveEntry;
-	public TextField							tfClientDescription;
 	public Button								btnPossibilities;
-	public TextField							tfClientDictionary;
-//	public TextField							tfClientLimit;
-	public NumberTextField						ntfClientLimit;
 	public GridPane								tableGrid;
 	public GridPane								mainGrid;
 
@@ -53,14 +53,29 @@ public class ClientEntryFxController implements Initializable, ContainingParent
 	public void initialize(URL url, ResourceBundle resourceBundle)
 	{
 		assert tfClientDescription != null : "fx:id=\"tfClientDescription\" was not injected: check your FXML file 'ClientEntryFx.fxml'.";
-		assert tfClientJarName != null : "fx:id=\"tfClientJarName\" was not injected: check your FXML file 'ClientEntryFx.fxml'.";
 		assert btnRemoveEntry != null : "fx:id=\"btnRemoveEntry\" was not injected: check your FXML file 'ClientEntryFx.fxml'.";
 		assert tableGrid != null : "fx:id=\"tableGrid\" was not injected: check your FXML file 'ClientEntryFx.fxml'.";
-		assert btnChooseClientJar != null : "fx:id=\"btnChooseClientJar\" was not injected: check your FXML file 'ClientEntryFx.fxml'.";
 		assert btnPossibilities != null : "fx:id=\"btnPossibilities\" was not injected: check your FXML file 'ClientEntryFx.fxml'.";
-		assert tfClientDictionary != null : "fx:id=\"tfClientDictionary\" was not injected: check your FXML file 'ClientEntryFx.fxml'.";
 		this.ntfClientLimit = new NumberTextField();
 		mainGrid.add(this.ntfClientLimit, 1, 3);
+
+		this.cfClientJarName = new CustomFieldWithButton();
+		this.cfClientJarName.setButtonText("...");
+		this.cfClientJarName.setHandler(h -> Common.tryCatch(() ->
+		{
+			File file = DialogsHelper.showOpenSaveDialog("Choose client jar", "Jar files (*.jar)", "*.jar", DialogsHelper.OpenSaveMode.OpenFile);
+			this.model.changeEntryPath(entry, Configuration.clientJar, Common.absolutePath(file));
+		}, "Error on change path to client jar"));
+		this.mainGrid.add(this.cfClientJarName, 1, 1);
+
+		this.cfClientDictionary = new CustomFieldWithButton();
+		this.cfClientDictionary.setButtonText("...");
+		this.cfClientDictionary.setHandler(h -> Common.tryCatch(() ->
+		{
+			File file = DialogsHelper.showOpenSaveDialog("Choose client dictionary", "Xml files (*.xml)", "*.xml", DialogsHelper.OpenSaveMode.OpenFile);
+			this.model.changeEntryPath(entry, Configuration.clientDictionary, Common.absolutePath(file));
+		}, "Error on choose dictionary"));
+		this.mainGrid.add(this.cfClientDictionary, 1, 2);
 		createTableView();
 		listeners();
 	}
@@ -86,8 +101,8 @@ public class ClientEntryFxController implements Initializable, ContainingParent
 		Common.tryCatch(() ->
 		{
 			this.tfClientDescription.setText(entry.get(Configuration.clientDescription));
-			this.tfClientDictionary.setText(entry.get(Configuration.clientDictionary));
-			this.tfClientJarName.setText(entry.get(Configuration.clientJar));
+			this.cfClientDictionary.setText(entry.get(Configuration.clientDictionary));
+			this.cfClientJarName.setText(entry.get(Configuration.clientJar));
 			this.ntfClientLimit.setText(entry.get(Configuration.clientLimit));
 			displayEntryParameters(entry.getParameters());
 		}, "Error on update all fields in client controller");
@@ -112,15 +127,6 @@ public class ClientEntryFxController implements Initializable, ContainingParent
 	// ============================================================
 	// events methods
 	// ============================================================
-	public void chooseClientJar(ActionEvent event)
-	{
-		Common.tryCatch(() ->
-		{
-			File file = DialogsHelper.showOpenSaveDialog("Choose client jar", "Jar files (*.jar)", "*.jar", DialogsHelper.OpenSaveMode.OpenFile);
-			this.model.changeEntryPath(entry, Configuration.clientJar, Common.absolutePath(file));
-		}, "Error on change path to client jar");
-	}
-
 	public void showPossibilities(ActionEvent event)
 	{
 		Common.tryCatch(() -> this.model.showPossibilities(entry), "Error on show possibilities");
@@ -136,15 +142,6 @@ public class ClientEntryFxController implements Initializable, ContainingParent
 		Common.tryCatch(() -> this.model.addAllKnowClientParameters(entry, new ArrayList<>(tableView.getItems())), "Error on add all known parameters");
 	}
 
-	public void chooseDictionary(ActionEvent event)
-	{
-		Common.tryCatch(() ->
-		{
-			File file = DialogsHelper.showOpenSaveDialog("Choose client dictionary", "Xml files (*.xml)", "*.xml", DialogsHelper.OpenSaveMode.OpenFile);
-			this.model.changeEntryPath(entry, Configuration.clientDictionary, Common.absolutePath(file));
-		}, "Error on choose dictionary");
-	}
-
 	// ============================================================
 	// private methods
 	// ============================================================
@@ -153,8 +150,7 @@ public class ClientEntryFxController implements Initializable, ContainingParent
 		this.tableView = new CustomTable<>(true);
 		this.tableView.completeFirstColumn("Key", Configuration.parametersKey, false, false);
 		this.tableView.completeSecondColumn("Value", Configuration.parametersValue, true, false);
-		this.tableView.onFinishEditSecondColumn((parameter, newValue) -> Common.tryCatch(
-				() -> model.updateParameter(this.entry, parameter, newValue), "Error on update parameter"));
+		this.tableView.onFinishEditSecondColumn((parameter, newValue) -> Common.tryCatch(() -> model.updateParameter(this.entry, parameter, newValue), "Error on update parameter"));
 		GridPane.setColumnSpan(this.tableView, 4);
 		tableGrid.add(this.tableView, 0, 0);
 	}
@@ -162,9 +158,9 @@ public class ClientEntryFxController implements Initializable, ContainingParent
 	private Map<TextField, String> changeEntry()
 	{
 		Map<TextField, String> map = new HashMap<>();
-		map.put(tfClientJarName, Configuration.clientJar);
+		map.put(cfClientJarName, Configuration.clientJar);
 		map.put(tfClientDescription, Configuration.clientDescription);
-		map.put(tfClientDictionary, Configuration.clientDictionary);
+		map.put(cfClientDictionary, Configuration.clientDictionary);
 		return map;
 	}
 
@@ -183,5 +179,4 @@ public class ClientEntryFxController implements Initializable, ContainingParent
 			}
 		},"Error on change client limit parameter"));
 	}
-	private String lastClientLimit = "";
 }

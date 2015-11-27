@@ -1,12 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.control.ComboBox?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TextArea?>
-<?import javafx.scene.layout.*?>
-
 <!--
    Copyright (c) 2009-2015, Exactpro Systems, LLC
    Quality Assurance & Related Development for Innovative Trading Systems.
@@ -14,19 +7,14 @@
    This is unpublished, licensed software, confidential and proprietary
    information which is the property of Exactpro Systems, LLC or its licensors.
   -->
-
-<GridPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.exactprosystems.jf.tool.configuration.evaluator.EvaluatorController">
-	<children>
-		<Label contentDisplay="CENTER" text="Evaluator imports" />
-		<TextArea fx:id="taEvaluatorImports" prefHeight="200.0" prefWidth="200.0" GridPane.columnSpan="3" GridPane.rowIndex="1" />
-	</children>
-	<columnConstraints>
-		<ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" percentWidth="15.0" prefWidth="100.0" />
-		<ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-		<ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" percentWidth="10.0" prefWidth="100.0" />
-	</columnConstraints>
-	<rowConstraints>
-      <RowConstraints />
-      <RowConstraints />
-	</rowConstraints>
-</GridPane>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.BorderPane?>
+<BorderPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.exactprosystems.jf.tool.configuration.evaluator.EvaluatorController">
+	<top>
+		<Label contentDisplay="CENTER" text="Evaluator imports" BorderPane.alignment="CENTER_LEFT"/>
+	</top>
+	<center>
+		<TextArea fx:id="taEvaluatorImports" prefHeight="200.0" prefWidth="200.0"/>
+	</center>
+</BorderPane>
