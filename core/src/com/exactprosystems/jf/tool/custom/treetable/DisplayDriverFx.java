@@ -18,7 +18,7 @@ import com.exactprosystems.jf.functions.Table;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.DragDetector;
-import com.exactprosystems.jf.tool.custom.expfield.ExpressionField;
+import com.exactprosystems.jf.tool.custom.fields.NewExpressionField;
 import com.exactprosystems.jf.tool.custom.grideditor.DataProvider;
 import com.exactprosystems.jf.tool.custom.grideditor.SpreadsheetView;
 import com.exactprosystems.jf.tool.custom.grideditor.TableDataProvider;
@@ -246,7 +246,7 @@ public class DisplayDriverFx implements DisplayDriver
 	{
 		GridPane pane = (GridPane) layout;
 
-		final ExpressionField field = new ExpressionField(this.context.getConfiguration().getEvaluator(), get.get());
+		final NewExpressionField field = new NewExpressionField(this.context.getConfiguration().getEvaluator(), get.get());
 		field.setFirstActionListener(firstHandler);
 		field.setSecondActionListener(secondHandler);
 		field.setChangingValueListener((observable, oldValue, newValue) ->

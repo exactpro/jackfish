@@ -104,6 +104,9 @@ public class CssVariables
 	public static final String	NOT_CHANGEABLE_ROW			= "notChangeableRow";
 	public static final String	GRID_CELL					= "gridCell";
 	public static final String	RESIZBLE_REGION				= "resizbleRegion";
+
+	public static final String	SUPPORTED_ENTRY				= "supportedEntry";
+	public static final String	UNSUPPORTED_ENTRY			= "unsupportedEntry";
 	/**
 	 * Spinner css
 	 */

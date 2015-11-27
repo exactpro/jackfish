@@ -358,6 +358,7 @@ public class ConfigurationFxController implements Initializable, ContainingParen
 
 	public static void displaySupported(TitledPane pane, SupportedEntry value, String entryName)
 	{
+		//TODO may be remake this code
 		if (value.isSupported())
 		{
 			pane.setText(entryName + " confirmed");

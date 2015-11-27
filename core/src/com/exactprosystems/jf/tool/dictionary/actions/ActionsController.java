@@ -13,14 +13,12 @@ import com.exactprosystems.jf.api.app.Operation;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.css.images.Images;
-import com.exactprosystems.jf.tool.custom.expfield.ExpressionField;
+import com.exactprosystems.jf.tool.custom.fields.NewExpressionField;
 import com.exactprosystems.jf.tool.dictionary.ApplicationStatus;
 import com.exactprosystems.jf.tool.dictionary.DictionaryFx;
 import com.exactprosystems.jf.tool.dictionary.info.element.ElementInfoController;
 import com.exactprosystems.jf.tool.dictionary.navigation.NavigationController;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
-
-
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
@@ -34,17 +32,13 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 
-
 import javax.imageio.ImageIO;
-
-
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.net.URL;
 import java.util.Collection;
 import java.util.ResourceBundle;
-
 
 import static com.exactprosystems.jf.tool.Common.*;
 
@@ -61,7 +55,7 @@ public class ActionsController implements Initializable, ContainingParent
 	public ComboBox<String>			comboBoxWindows;
 
 	public GridPane					mainGrid;
-	private ExpressionField			expressionField;
+	private NewExpressionField		expressionField;
 	private Parent					pane;
 
 	private DictionaryFx			model;
@@ -98,7 +92,7 @@ public class ActionsController implements Initializable, ContainingParent
 		this.navigation = navigation;
 		this.info = info;
 
-		this.expressionField = new ExpressionField(evaluator);
+		this.expressionField = new NewExpressionField(evaluator);
 		this.elementActionsGrid.add(this.expressionField, 1, 2, 2, 1);
 		this.expressionField.setHelperForExpressionField(null, null);
 

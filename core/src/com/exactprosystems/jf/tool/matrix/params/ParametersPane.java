@@ -18,6 +18,7 @@ import com.exactprosystems.jf.tool.Common.Function;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.DragDetector;
 import com.exactprosystems.jf.tool.custom.expfield.ExpressionField;
+import com.exactprosystems.jf.tool.custom.fields.NewExpressionField;
 import com.exactprosystems.jf.tool.custom.scroll.CustomScrollPane;
 import com.exactprosystems.jf.tool.custom.treetable.MatrixTreeRow;
 import com.exactprosystems.jf.tool.custom.xpath.XpathViewer;
@@ -27,7 +28,6 @@ import com.exactprosystems.jf.tool.main.Main;
 import com.exactprosystems.jf.tool.matrix.MatrixFx;
 import com.exactprosystems.jf.tool.settings.SettingsPanel;
 import com.exactprosystems.jf.tool.settings.Theme;
-
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -261,7 +261,7 @@ public class ParametersPane extends CustomScrollPane
 		
 		if (!this.oneLine)
 		{
-			ExpressionField expressionField = new ExpressionField(context.getConfiguration().getEvaluator(), par.getExpression());
+			NewExpressionField expressionField = new NewExpressionField(context.getConfiguration().getEvaluator(), par.getExpression());
 			if (matrixItem instanceof ActionItem)
 			{
 				ActionItem actionItem = (ActionItem) this.matrixItem;

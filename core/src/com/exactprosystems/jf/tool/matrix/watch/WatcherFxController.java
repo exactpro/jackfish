@@ -13,7 +13,7 @@ import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.parser.Matrix;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
-import com.exactprosystems.jf.tool.custom.expfield.ExpressionField;
+import com.exactprosystems.jf.tool.custom.fields.NewExpressionField;
 import com.exactprosystems.jf.tool.custom.table.CustomTable;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
@@ -34,7 +34,7 @@ import java.util.ResourceBundle;
 
 public class WatcherFxController implements Initializable, ContainingParent
 {
-	public ExpressionField expressionField;
+	public NewExpressionField expressionField;
 	public Button btnAddNewExpression;
 	public Button btnAddAll;
 	public Button btnClose;
@@ -90,7 +90,7 @@ public class WatcherFxController implements Initializable, ContainingParent
 		this.dialog.initOwner(owner);
 		this.model = model;
 		this.table.setListener(this.model::removeItems);
-		this.expressionField = new ExpressionField(evaluator);
+		this.expressionField = new NewExpressionField(evaluator);
 		this.expressionField.setHelperForExpressionField("Watcher", matrix);
 		this.mainGrid.add(expressionField, 0, 1);
 		GridPane.setMargin(this.expressionField, new Insets(0, 5, 0, 5));

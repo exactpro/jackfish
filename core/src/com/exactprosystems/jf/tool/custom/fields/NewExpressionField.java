@@ -17,6 +17,7 @@ import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.custom.expfield.ErrorHandler;
 import com.exactprosystems.jf.tool.custom.expfield.ExpressionField;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.event.EventDispatcher;
 import javafx.event.EventHandler;
@@ -59,7 +60,6 @@ public class NewExpressionField extends CustomField
 		this.evaluator = evaluator;
 
 		this.setText(text);
-		stretchIfCan(this.getText());
 		this.getStyleClass().add(CssVariables.EXPRESSION_EDITOR);
 		ChangeListener<Boolean> globalListener = (observable, oldValue, newValue) ->
 		{
@@ -91,6 +91,7 @@ public class NewExpressionField extends CustomField
 		disableDefaultContextMenu();
 		listeners();
 		showButtons();
+		Platform.runLater(() -> stretchIfCan(this.getText()));
 	}
 
 	public void setOnContextMenuRequest(EventHandler<ContextMenuEvent> event)
@@ -286,8 +287,6 @@ public class NewExpressionField extends CustomField
 			}
 			event.consume();
 		});
-
-
 	}
 
 	private void disableDefaultContextMenu()
@@ -321,7 +320,7 @@ public class NewExpressionField extends CustomField
 				return;
 			}
 		}
-		this.setPrefWidth(size);
+		this.setPrefWidth(size + 20);
 	}
 
 	private void setWidthLabels()

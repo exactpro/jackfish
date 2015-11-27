@@ -648,3 +648,11 @@ CellView > .text-input.text-field{
 .expressionEditor .secondPane:hover > .expressionButton {
 	-fx-text-fill : #3CB6EB;
 }
+
+.supportedEntry {
+	-fx-text-fill : -fx-company-color-light;
+}
+
+.unsupportedEntry {
+	-fx-text-fill : red;
+}
