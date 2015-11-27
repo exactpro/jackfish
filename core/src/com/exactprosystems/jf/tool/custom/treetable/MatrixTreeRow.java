@@ -2,7 +2,8 @@ package com.exactprosystems.jf.tool.custom.treetable;
 
 import com.exactprosystems.jf.common.parser.items.MatrixItem;
 import com.exactprosystems.jf.tool.CssVariables;
-import com.exactprosystems.jf.tool.custom.expfield.ExpressionField;
+import com.exactprosystems.jf.tool.custom.fields.NewExpressionField;
+import com.exactprosystems.jf.tool.matrix.params.ParametersPane;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.TreeTableRow;
 import javafx.scene.layout.GridPane;
@@ -10,7 +11,6 @@ import javafx.scene.layout.Pane;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class MatrixTreeRow extends TreeTableRow<MatrixItem>
@@ -39,24 +39,23 @@ public class MatrixTreeRow extends TreeTableRow<MatrixItem>
 	//TODO do this method's
 	public void showExpressionsResults()
 	{
-		List<ExpressionField> list = new ArrayList<>();
+		List<NewExpressionField> list = new ArrayList<>();
 		find((GridPane) this.getTreeTableView().getSelectionModel().getSelectedItem().getValue().getLayout(), list);
-		list.forEach(ExpressionField::showShadowText);
+		list.stream().forEach(NewExpressionField::showShadowText);
 	}
 
 	public void hideExpressionsResults()
 	{
-		List<ExpressionField> list = new ArrayList<>();
+		List<NewExpressionField> list = new ArrayList<>();
 		find((GridPane) this.getTreeTableView().getSelectionModel().getSelectedItem().getValue().getLayout(), list);
-		list.forEach(ExpressionField::hideShadowText);
+		list.forEach(NewExpressionField::hideShadowText);
 	}
 
-	private void find(Pane parent, List<ExpressionField> fields)
+	private void find(Pane parent, List<NewExpressionField> fields)
 	{
-		//TODO not work
-		Optional.of(parent).filter(p -> p instanceof ExpressionField).ifPresent(p -> fields.add(((ExpressionField) p)));
-		fields.addAll(parent.getChildren().stream().filter(n -> n instanceof ExpressionField).map(n -> ((ExpressionField) n)).collect(Collectors.toList()));
-		parent.getChildren().stream().filter(n -> n instanceof Pane && !(n instanceof ExpressionField)).forEach(pane -> find(((Pane) pane), fields));
+		fields.addAll(parent.getChildren().stream().filter(n -> n instanceof NewExpressionField).map(n -> ((NewExpressionField) n)).collect(Collectors.toList()));
+		parent.getChildren().stream().filter(n -> n instanceof Pane).forEach(pane -> find(((Pane) pane), fields));
+		parent.getChildren().stream().filter(n -> n instanceof ParametersPane).map(n -> ((GridPane) ((ParametersPane) n).getContent())).forEach(gp -> find(gp, fields));
 	}
 
 }

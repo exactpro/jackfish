@@ -55,9 +55,8 @@ public class NewExpressionField extends CustomField
 
 	public NewExpressionField(AbstractEvaluator evaluator, String text)
 	{
+		super(text);
 		this.evaluator = evaluator;
-
-		this.setText(text);
 		this.getStyleClass().add(CssVariables.EXPRESSION_EDITOR);
 		ChangeListener<Boolean> globalListener = (observable, oldValue, newValue) ->
 		{
@@ -188,22 +187,22 @@ public class NewExpressionField extends CustomField
 		{
 			savedText = this.getText();
 			isHide = false;
-		}
-		if (this.evaluator != null)
-		{
-			String shadowText;
-			try
+			if (this.evaluator != null)
 			{
-				shadowText = String.valueOf(this.evaluator.evaluate(this.getText()));
-				this.getStyleClass().add(CssVariables.CORRECT_FIELD);
+				String shadowText;
+				try
+				{
+					shadowText = String.valueOf(this.evaluator.evaluate(this.getText()));
+					this.getStyleClass().add(CssVariables.CORRECT_FIELD);
+				}
+				catch (Exception e)
+				{
+					shadowText = "Error";
+					this.getStyleClass().add(CssVariables.INCORRECT_FIELD);
+				}
+				this.setEditable(false);
+				this.setText(shadowText);
 			}
-			catch (Exception e)
-			{
-				shadowText = "Error";
-				this.getStyleClass().add(CssVariables.INCORRECT_FIELD);
-			}
-			this.setEditable(false);
-			this.setText(shadowText);
 		}
 	}
 
