@@ -14,6 +14,7 @@ import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.SupportedEntry;
 import com.exactprosystems.jf.tool.configuration.ConfigurationFx;
 import com.exactprosystems.jf.tool.configuration.ConfigurationFxController;
+import com.exactprosystems.jf.tool.custom.fields.CustomFieldWithButton;
 import com.exactprosystems.jf.tool.custom.number.NumberTextField;
 import com.exactprosystems.jf.tool.custom.table.CustomTable;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
@@ -34,38 +35,49 @@ import java.util.*;
 public class AppEntryFxController implements Initializable, ContainingParent
 {
 	public TextField tfDescription;
-	public TextField tfJarName;
-	public Button btnChooseAppJar;
+	public CustomFieldWithButton cfJarName;
+	public CustomFieldWithButton cfDictionaryPath;
+	public CustomFieldWithButton cfWorkDir;
+	public NumberTextField ntfStartPort;
 	public Button btnRemoveEntry;
 	public CustomTable<Configuration.Parameter> tableView;
-	public TextField tfWorkDir;
-	public Button btnChooseWorkDir;
-//	public TextField tfStartPort;
-	public NumberTextField ntfStartPort;
-	public TextField tfDictionaryPath;
-	public Button btnChooseDictionaryPath;
-	public GridPane gridTable;
 	public GridPane mainGrid;
 
 	private TitledPane parent;
 	private ConfigurationFx model;
 	private Configuration.AppEntry entry;
 
-	private String lastStartPort = "";
-
 	@Override
 	public void initialize(URL url, ResourceBundle resourceBundle)
 	{
-		assert tfJarName != null : "fx:id=\"tfJarName\" was not injected: check your FXML file 'AppEntryFx.fxml'.";
 		assert btnRemoveEntry != null : "fx:id=\"btnRemoveEntry\" was not injected: check your FXML file 'AppEntryFx.fxml'.";
-		assert tfDictionaryPath != null : "fx:id=\"tfDictionaryPath\" was not injected: check your FXML file 'AppEntryFx.fxml'.";
-		assert tfWorkDir != null : "fx:id=\"tfWorkDir\" was not injected: check your FXML file 'AppEntryFx.fxml'.";
 		assert tfDescription != null : "fx:id=\"tfDescription\" was not injected: check your FXML file 'AppEntryFx.fxml'.";
-		assert btnChooseWorkDir != null : "fx:id=\"btnChooseWorkDir\" was not injected: check your FXML file 'AppEntryFx.fxml'.";
-		assert btnChooseDictionaryPath != null : "fx:id=\"btnChooseDictionaryPath\" was not injected: check your FXML file 'AppEntryFx.fxml'.";
-		assert btnChooseAppJar != null : "fx:id=\"btnChooseAppJar\" was not injected: check your FXML file 'AppEntryFx.fxml'.";
 		this.ntfStartPort = new NumberTextField(0);
 		this.mainGrid.add(this.ntfStartPort, 1, 4);
+		this.cfJarName = new CustomFieldWithButton();
+		this.cfJarName.setButtonText("...");
+		this.cfJarName.setHandler(h -> Common.tryCatch(() -> {
+			File file = DialogsHelper.showOpenSaveDialog("Choose app jar", "Jar files (*.jar)", "*.jar", DialogsHelper.OpenSaveMode.OpenFile);
+			model.changeEntryPath(entry, Configuration.appJar, Common.absolutePath(file));
+		}, "Error on change application path"));
+		this.mainGrid.add(this.cfJarName, 1, 1);
+
+		this.cfDictionaryPath = new CustomFieldWithButton();
+		this.cfDictionaryPath.setButtonText("...");
+		this.cfDictionaryPath.setHandler(h -> Common.tryCatch(() -> {
+			File file = DialogsHelper.showOpenSaveDialog("Choose dictionary", "Xml files (*.xml)", "*.xml", DialogsHelper.OpenSaveMode.OpenFile);
+			this.model.changeEntryPath(entry, Configuration.appDicPath, Common.absolutePath(file));
+		}, "Error on change dictionary path"));
+		this.mainGrid.add(this.cfDictionaryPath, 1, 2);
+
+		this.cfWorkDir = new CustomFieldWithButton();
+		this.cfWorkDir.setButtonText("...");
+		this.cfWorkDir.setHandler(h -> Common.tryCatch(() -> Common.tryCatch(() -> {
+			File file = DialogsHelper.showDirChooseDialog("Choose path to work dir");
+			this.model.changeEntryPath(entry, Configuration.appWorkDir, Common.absolutePath(file));
+		}, "Error on change work dir"), "Error on change dictionary path"));
+		this.mainGrid.add(this.cfWorkDir, 1, 3);
+		
 		createTableView();
 		listeners();
 		this.ntfStartPort.focusedProperty().addListener((observable, oldValue, newValue) -> Common.tryCatch(() -> {
@@ -85,25 +97,9 @@ public class AppEntryFxController implements Initializable, ContainingParent
 	//===========================================================================================
 	// events methods
 	//===========================================================================================
-	public void chooseAppJar(ActionEvent event)
-	{
-		Common.tryCatch(() -> {
-			File file = DialogsHelper.showOpenSaveDialog("Choose app jar", "Jar files (*.jar)", "*.jar", DialogsHelper.OpenSaveMode.OpenFile);
-			model.changeEntryPath(entry, Configuration.appJar, Common.absolutePath(file));
-		}, "Error on change application path");
-	}
-
 	public void removeEntry(ActionEvent event)
 	{
 		Common.tryCatch(() -> this.model.removeAppEntry(entry), "Error on remove app entry");
-	}
-
-	public void chooseWordDir(ActionEvent event)
-	{
-		Common.tryCatch(() -> {
-			File file = DialogsHelper.showDirChooseDialog("Choose path to work dir");
-			this.model.changeEntryPath(entry, Configuration.appWorkDir, Common.absolutePath(file));
-		}, "Error on change work dir");
 	}
 
 	public void addAllKnowParameters(ActionEvent event)
@@ -111,17 +107,9 @@ public class AppEntryFxController implements Initializable, ContainingParent
 		Common.tryCatch(() -> this.model.addAllKnowAppParameters(entry, new ArrayList<>(tableView.getItems())), "Error on add all known parameters");
 	}
 
-	public void chooseDictionaryPath(ActionEvent event)
-	{
-		Common.tryCatch(() -> {
-			File file = DialogsHelper.showOpenSaveDialog("Choose dictionary", "Xml files (*.xml)", "*.xml", DialogsHelper.OpenSaveMode.OpenFile);
-			this.model.changeEntryPath(entry, Configuration.appDicPath, Common.absolutePath(file));
-		}, "Error on change dictionary path");
-	}
-
 	public void openDictionary(ActionEvent event)
 	{
-		Common.tryCatch(() -> this.model.loadDictionary(tfDictionaryPath.getText(), entry.toString()), "Error on open dictionary");
+		Common.tryCatch(() -> this.model.loadDictionary(cfDictionaryPath.getText(), entry.toString()), "Error on open dictionary");
 	}
 	
 	//===========================================================================================
@@ -139,9 +127,9 @@ public class AppEntryFxController implements Initializable, ContainingParent
 	{
 		Common.tryCatch(() -> {
 			this.tfDescription.setText(entry.get(Configuration.appDescription));
-			this.tfJarName.setText(entry.get(Configuration.appJar));
-			this.tfDictionaryPath.setText(entry.get(Configuration.appDicPath));
-			this.tfWorkDir.setText(entry.get(Configuration.appWorkDir));
+			this.cfJarName.setText(entry.get(Configuration.appJar));
+			this.cfDictionaryPath.setText(entry.get(Configuration.appDicPath));
+			this.cfWorkDir.setText(entry.get(Configuration.appWorkDir));
 			this.ntfStartPort.setText(entry.get(Configuration.appStartPort));
 			displayEntryParameters(entry.getParameters());
 		}, "Error on update all fields in app controller");
@@ -174,7 +162,7 @@ public class AppEntryFxController implements Initializable, ContainingParent
 		this.tableView.completeSecondColumn("Value", Configuration.parametersValue, true, false);
 		this.tableView.onFinishEditSecondColumn((parameter, newValue) -> Common.tryCatch(() -> model.updateParameter(this.entry, parameter, newValue),"Error on update parameter"));
 		GridPane.setColumnSpan(tableView, 4);
-		gridTable.add(tableView, 0, 0);
+		this.mainGrid.add(tableView, 0, 5, 3, 1);
 	}
 
 	private void listeners()
@@ -190,9 +178,9 @@ public class AppEntryFxController implements Initializable, ContainingParent
 	private Map<TextField, String> changeEntry()
 	{
 		Map<TextField, String> map = new HashMap<>();
-		map.put(tfJarName, Configuration.appJar);
-		map.put(tfWorkDir, Configuration.appWorkDir);
-		map.put(tfDictionaryPath, Configuration.appDicPath);
+		map.put(cfJarName, Configuration.appJar);
+		map.put(cfWorkDir, Configuration.appWorkDir);
+		map.put(cfDictionaryPath, Configuration.appDicPath);
 		map.put(tfDescription, Configuration.appDescription);
 		return map;
 	}

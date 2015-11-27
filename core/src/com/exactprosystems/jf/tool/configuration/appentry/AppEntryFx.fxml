@@ -30,57 +30,10 @@
 				<Label text="Description"/>
 				<Label text="App jar name" GridPane.rowIndex="1"/>
 				<TextField fx:id="tfDescription" GridPane.columnIndex="1"/>
-				<GridPane GridPane.columnIndex="1" GridPane.rowIndex="1">
-					<columnConstraints>
-						<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
-					</columnConstraints>
-					<rowConstraints>
-						<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-					</rowConstraints>
-					<children>
-						<BorderPane prefHeight="200.0" prefWidth="200.0">
-							<right>
-								<Button fx:id="btnChooseAppJar" mnemonicParsing="false" onAction="#chooseAppJar" text="..." BorderPane.alignment="CENTER"/>
-							</right>
-							<center>
-								<TextField fx:id="tfJarName" BorderPane.alignment="CENTER"/>
-							</center>
-						</BorderPane>
-					</children>
-				</GridPane>
-				<GridPane fx:id="gridTable" GridPane.columnSpan="3" GridPane.rowIndex="5">
-					<columnConstraints>
-						<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="33.0"/>
-						<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="33.0" prefWidth="100.0"/>
-						<ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
-						<ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
-					</columnConstraints>
-					<rowConstraints>
-						<RowConstraints minHeight="10.0" vgrow="SOMETIMES"/>
-					</rowConstraints>
-					<children>
-					</children>
-				</GridPane>
 				<Button fx:id="btnRemoveEntry" mnemonicParsing="false" onAction="#removeEntry" text="Remove entry" GridPane.columnIndex="2"/>
 				<Label text="App work dir" GridPane.rowIndex="3"/>
-				<BorderPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
-					<center>
-						<TextField fx:id="tfWorkDir" BorderPane.alignment="CENTER"/>
-					</center>
-					<right>
-						<Button fx:id="btnChooseWorkDir" mnemonicParsing="false" onAction="#chooseWordDir" text="..." BorderPane.alignment="CENTER"/>
-					</right>
-				</BorderPane>
 				<Label text="App start port" GridPane.rowIndex="4"/>
 				<Label text="Dictionary path" GridPane.rowIndex="2"/>
-				<BorderPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
-					<center>
-						<TextField fx:id="tfDictionaryPath" BorderPane.alignment="CENTER"/>
-					</center>
-					<right>
-						<Button fx:id="btnChooseDictionaryPath" mnemonicParsing="false" onAction="#chooseDictionaryPath" text="..." BorderPane.alignment="CENTER"/>
-					</right>
-				</BorderPane>
 				<Button mnemonicParsing="false" onAction="#openDictionary" text="Open" GridPane.columnIndex="2" GridPane.rowIndex="2"/>
 				<Button mnemonicParsing="false" onAction="#addAllKnowParameters" text="Add all" GridPane.columnIndex="2" GridPane.rowIndex="4"/>
 			</children>
