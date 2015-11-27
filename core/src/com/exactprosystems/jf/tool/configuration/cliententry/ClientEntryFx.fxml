@@ -8,6 +8,7 @@
    information which is the property of Exactpro Systems, LLC or its licensors.
   -->
 
+<?import com.exactprosystems.jf.tool.custom.fields.CustomFieldWithButton?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <TitledPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="372.0" prefWidth="873.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.exactprosystems.jf.tool.configuration.cliententry.ClientEntryFxController">
@@ -43,7 +44,7 @@
 					</children>
 				</GridPane>
 				<Label text="Description"/>
-				<TextField fx:id="tfClientDescription" GridPane.columnIndex="1"/>
+				<CustomFieldWithButton fx:id="tfClientDescription" GridPane.columnIndex="1"/>
 				<Button fx:id="btnPossibilities" mnemonicParsing="false" onAction="#showPossibilities" prefHeight="0.0" prefWidth="110.0" text="Possibilities" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="1"/>
 				<Label text="Client dictionary" GridPane.rowIndex="2"/>
 				<Label text="Client limit" GridPane.rowIndex="3"/>

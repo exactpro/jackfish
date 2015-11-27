@@ -9,6 +9,7 @@
    information which is the property of Exactpro Systems, LLC or its licensors.
   -->
 
+<?import com.exactprosystems.jf.tool.custom.fields.CustomFieldWithButton?>
 <GridPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.exactprosystems.jf.tool.configuration.formats.FormatsController">
 	<children>
 		<Label text="Time" />
@@ -18,9 +19,9 @@
 		<Label alignment="CENTER_RIGHT" contentDisplay="CENTER" GridPane.columnIndex="2" />
 		<Label GridPane.columnIndex="2" GridPane.rowIndex="1" />
 		<Label GridPane.columnIndex="2" GridPane.rowIndex="2" />
-		<TextField fx:id="tfFormatsTime" GridPane.columnIndex="1" />
-		<TextField fx:id="tfFormatsDate" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-		<TextField fx:id="tfFormatDateTime" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+		<CustomFieldWithButton fx:id="tfFormatsTime" GridPane.columnIndex="1" />
+		<CustomFieldWithButton fx:id="tfFormatsDate" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+		<CustomFieldWithButton fx:id="tfFormatDateTime" GridPane.columnIndex="1" GridPane.rowIndex="2" />
 		<TextArea fx:id="taFormatAdditionFormat" prefHeight="200.0" prefWidth="200.0" GridPane.columnSpan="3" GridPane.rowIndex="4" />
 	</children>
 	<columnConstraints>

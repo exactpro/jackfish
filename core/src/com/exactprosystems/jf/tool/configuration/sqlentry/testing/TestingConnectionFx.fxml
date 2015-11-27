@@ -1,10 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import java.lang.*?>
-<?import javafx.scene.layout.*?>
-
 <!--
    Copyright (c) 2009-2015, Exactpro Systems, LLC
    Quality Assurance & Related Development for Innovative Trading Systems.
@@ -13,6 +8,10 @@
    information which is the property of Exactpro Systems, LLC or its licensors.
   -->
 
+<?import com.exactprosystems.jf.tool.custom.fields.CustomFieldWithButton?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 <GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="296.0" prefWidth="338.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.exactprosystems.jf.tool.configuration.sqlentry.testing.TestingConnectionFxController">
   <columnConstraints>
     <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -28,26 +27,26 @@
       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
   </rowConstraints>
    <children>
-      <TextField fx:id="tfServer" GridPane.columnIndex="1" GridPane.rowIndex="2">
+      <CustomFieldWithButton fx:id="tfServer" GridPane.columnIndex="1" GridPane.rowIndex="2">
          <GridPane.margin>
             <Insets right="5.0" />
          </GridPane.margin>
-      </TextField>
-      <TextField fx:id="tfDatabaseName" GridPane.columnIndex="1" GridPane.rowIndex="3">
+      </CustomFieldWithButton>
+      <CustomFieldWithButton fx:id="tfDatabaseName" GridPane.columnIndex="1" GridPane.rowIndex="3">
          <GridPane.margin>
             <Insets right="5.0" />
          </GridPane.margin>
-      </TextField>
+      </CustomFieldWithButton>
       <Label text="Sql server" GridPane.rowIndex="1" />
       <Label text="Server" GridPane.rowIndex="2" />
       <Label text="Database name" GridPane.rowIndex="3" />
       <Label text="User" GridPane.rowIndex="4" />
       <Label text="Password" GridPane.rowIndex="5" />
-      <TextField fx:id="tfUser" GridPane.columnIndex="1" GridPane.rowIndex="4">
+      <CustomFieldWithButton fx:id="tfUser" GridPane.columnIndex="1" GridPane.rowIndex="4">
          <GridPane.margin>
             <Insets right="5.0" />
          </GridPane.margin>
-      </TextField>
+      </CustomFieldWithButton>
       <PasswordField fx:id="pfPassword" GridPane.columnIndex="1" GridPane.rowIndex="5">
          <GridPane.margin>
             <Insets right="5.0" />

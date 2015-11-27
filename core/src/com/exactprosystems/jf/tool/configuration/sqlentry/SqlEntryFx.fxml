@@ -8,6 +8,7 @@
    information which is the property of Exactpro Systems, LLC or its licensors.
   -->
 
+<?import com.exactprosystems.jf.tool.custom.fields.CustomFieldWithButton?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <TitledPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="129.0" prefWidth="815.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.exactprosystems.jf.tool.configuration.sqlentry.SqlEntryFxController">
@@ -27,7 +28,7 @@
 				<Button fx:id="btnRemove" mnemonicParsing="false" onAction="#removeEntry" text="Remove" GridPane.columnIndex="2"/>
 				<Label text="Jar name"/>
 				<Label text="Connection string" GridPane.rowIndex="1"/>
-				<TextField fx:id="tfConnectionString" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+				<CustomFieldWithButton fx:id="tfConnectionString" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
 				<Button mnemonicParsing="false" onAction="#testEntry" text="Test" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
 			</children>
 		</GridPane>

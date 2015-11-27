@@ -24,7 +24,6 @@ import static com.exactprosystems.jf.tool.Common.tryCatch;
 
 public class FormatsController implements Initializable, ContainingParent
 {
-
 	public TextField tfFormatsTime;
 	public TextField tfFormatsDate;
 	public TextField tfFormatDateTime;
