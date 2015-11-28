@@ -13,6 +13,7 @@ import com.exactprosystems.jf.common.Settings.SettingsValue;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.main.Main;
 import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
 
 import java.io.IOException;
@@ -121,10 +122,22 @@ public class SettingsPanel
 		return first.isPresent() ? first.get().getKey() : null;
 	}
 
+	@Deprecated
 	public static boolean match(Settings settings, KeyEvent event, String shortcutName)
 	{
 		List<SettingsValue> values = settings.getValues(Settings.GLOBAL_NS, SettingsPanel.SHORTCUTS_NAME);
 		Optional<SettingsValue> first = values.stream().filter(value -> value.getKey().equals(shortcutName)).findFirst();
 		return first.isPresent() && KeyCodeCombination.valueOf(first.get().getValue()).match(event);
 	}
+	
+	public static KeyCombination shortCut(Settings settings, String name)
+	{
+		SettingsValue settingValue = settings.getValue(Settings.GLOBAL_NS, SettingsPanel.SHORTCUTS_NAME, name);
+		if (settingValue == null)
+		{
+			return null;
+		}
+		return KeyCodeCombination.valueOf(settingValue.getValue());
+	}
+
 }

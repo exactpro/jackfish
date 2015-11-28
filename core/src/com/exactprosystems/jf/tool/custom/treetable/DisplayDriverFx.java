@@ -369,7 +369,7 @@ public class DisplayDriverFx implements DisplayDriver
 	public void showGrid(MatrixItem item, Object layout, int row, int column, Table table)
 	{
 		GridPane pane = (GridPane) layout;
-		DataProvider provider = new TableDataProvider(table);
+		DataProvider<String> provider = new TableDataProvider(table);
 		SpreadsheetView view = new SpreadsheetView(provider);
 		BorderPane borderPane = new BorderPane();
 		borderPane.setCenter(view);

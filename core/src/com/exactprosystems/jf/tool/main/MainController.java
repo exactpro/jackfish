@@ -463,6 +463,7 @@ public class MainController implements Initializable, ContainingParent
 		});
 	}
 
+	// TODO remake shortcuts over Menu.setAccelerator()
 	public void initShortcuts()
 	{
 		setStatusBar();

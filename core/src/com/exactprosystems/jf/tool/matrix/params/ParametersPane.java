@@ -48,6 +48,7 @@ import javafx.scene.layout.Pane;
 import javafx.util.Pair;
 
 import java.awt.MouseInfo;
+import java.awt.Point;
 //import java.awt.*;
 import java.io.File;
 import java.time.LocalDateTime;
@@ -76,7 +77,7 @@ public class ParametersPane extends CustomScrollPane
 		this.parameters = parameters;
 		this.generator = generator;
 		
-		this.contextMenuHandler = createContextMenu();
+		this.contextMenuHandler = createContextMenuHandler();
 
 		this.setOnContextMenuRequested(this.contextMenuHandler);
 		refreshParameters();
@@ -448,11 +449,10 @@ public class ParametersPane extends CustomScrollPane
 		}
 	}
 
-	private EventHandler<ContextMenuEvent> createContextMenu()
+	private EventHandler<ContextMenuEvent> createContextMenuHandler()
 	{
 		MenuItem menuItemRemove = new MenuItem("Remove");
 		menuItemRemove.setGraphic(new ImageView(new Image(CssVariables.Icons.REMOVE_PARAMETER_ICON)));
-
 		menuItemRemove.setOnAction(event -> changeParameters(() -> this.getMatrix().parameterRemove(this.matrixItem, selectedIndex(event))));
 
 		MenuItem menuItemMoveLeft = new MenuItem("Move to left");
@@ -476,8 +476,8 @@ public class ParametersPane extends CustomScrollPane
 			Map<ReadableValue, TypeMandatory> map = actionItem.helpToAddParameters(this.context);
 			ShowAllParams params = new ShowAllParams(map, parameters, this.matrixItem.getItemName());
 			ArrayList<Pair<ReadableValue, TypeMandatory>> result = params.show();
-			
 			getMatrix().parameterInsert(this.matrixItem, fromIndex, result);
+
 		}, "Error on show all parameters"));
 
 		ObservableList<MenuItem> gridItems = FXCollections.observableArrayList(
@@ -496,11 +496,12 @@ public class ParametersPane extends CustomScrollPane
 				parent = parent.getParent();
 			}
 					
-			if (parent != null)
+			if (parent instanceof MatrixTreeRow)
 			{
 				MatrixTreeRow cell = (MatrixTreeRow) parent;
 				ObservableList<MenuItem> cellItems = cell.getContextMenu().getItems();
 				IntStream.range(0, gridItems.size()).forEach(i -> cellItems.add(i, gridItems.get(i)));
+				
 				int selectedIndex = selectedIndex(event);
 				System.err.println("!!! " + selectedIndex);
 
@@ -510,20 +511,21 @@ public class ParametersPane extends CustomScrollPane
 				menuItemRemove.setDisable(!this.parameters.canRemove(selectedIndex));
 				menuItemShowAllParameters.setDisable(!(this.matrixItem instanceof ActionItem));
 				
-				if (selectedIndex > 0)
-				{
-					focusGrid(this.mainGridPane.getChildren().get(selectedIndex), true);
-				}
-
-				cell.getContextMenu().setOnHidden(e ->
-				{
-					if (selectedIndex > 0)
-					{
-						focusGrid(this.mainGridPane.getChildren().get(selectedIndex), false);
-					}
-					cellItems.removeAll(gridItems);
-				});
-				cell.getContextMenu().show(this, MouseInfo.getPointerInfo().getLocation().getX(), MouseInfo.getPointerInfo().getLocation().getY());
+//				if (selectedIndex > 0)
+//				{
+//					focusGrid(this.mainGridPane.getChildren().get(selectedIndex), true);
+//				}
+//
+//				cell.getContextMenu().setOnHidden(e ->
+//				{
+//					if (selectedIndex > 0)
+//					{
+//						focusGrid(this.mainGridPane.getChildren().get(selectedIndex), false);
+//					}
+//					cellItems.removeAll(gridItems);
+//				});
+				Point location = MouseInfo.getPointerInfo().getLocation();
+				cell.getContextMenu().show(this, location.getX(), location.getY());
 			}
 		});
 	}

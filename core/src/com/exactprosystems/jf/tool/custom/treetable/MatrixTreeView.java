@@ -7,6 +7,7 @@ import com.exactprosystems.jf.api.client.MapMessage;
 import com.exactprosystems.jf.common.Configuration;
 import com.exactprosystems.jf.common.Context;
 import com.exactprosystems.jf.common.Settings;
+import com.exactprosystems.jf.common.Settings.SettingsValue;
 import com.exactprosystems.jf.common.parser.Tokens;
 import com.exactprosystems.jf.common.parser.items.MatrixItem;
 import com.exactprosystems.jf.common.parser.items.MatrixItemState;
@@ -34,6 +35,8 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.web.WebEngine;
@@ -238,38 +241,6 @@ public class MatrixTreeView extends TreeTableView<MatrixItem>
 					}
 				}
 			}
-			else if (SettingsPanel.match(settings, keyEvent, SettingsPanel.BREAK_POINT))
-			{
-				breakPoint();
-			}
-			else if (SettingsPanel.match(settings, keyEvent, SettingsPanel.DELETE_ITEM))
-			{
-				deleteCurrentItems();
-			}
-			else if (SettingsPanel.match(settings, keyEvent, SettingsPanel.COPY_ITEMS))
-			{
-				copyItems();
-			}
-			else if (SettingsPanel.match(settings, keyEvent, SettingsPanel.PASTE_ITEMS))
-			{
-				pasteItems();
-			}
-			else if (SettingsPanel.match(settings, keyEvent, SettingsPanel.HELP))
-			{
-				new ActionHelp();
-			}
-			else if (SettingsPanel.match(settings, keyEvent, SettingsPanel.ADD_BEFORE))
-			{
-				show(addBeforeMenu);
-			}
-			else if (SettingsPanel.match(settings, keyEvent, SettingsPanel.ADD_AFTER))
-			{
-				show(addAfterMenu);
-			}
-			else if (SettingsPanel.match(settings, keyEvent, SettingsPanel.ADD_CHILD))
-			{
-				show(addChildMenu);
-			}
 		}, "Error on do actions by shortcuts"));
 
 		setOnKeyReleased(keyEvent -> Common.tryCatch(() ->
@@ -365,6 +336,8 @@ public class MatrixTreeView extends TreeTableView<MatrixItem>
 		Common.tryCatch(() -> this.matrix.paste(currentItem()), "Error on paste");
 	}
 
+	
+	
 	private ContextMenu createContextMenu(Settings settings)
 	{
 		ContextMenu contextMenu = new ContextMenu();
@@ -372,34 +345,42 @@ public class MatrixTreeView extends TreeTableView<MatrixItem>
 
 		MenuItem breakPoint = new MenuItem("Breakpoint");
 		breakPoint.setGraphic(new ImageView(new Image(CssVariables.Icons.BREAK_POINT_ICON)));
+		breakPoint.setAccelerator(SettingsPanel.shortCut(settings, SettingsPanel.BREAK_POINT));
 		breakPoint.setOnAction(event -> breakPoint());
 
 		MenuItem addBefore = new MenuItem("Add before");
 		addBefore.setGraphic(new ImageView(new Image(CssVariables.Icons.ADD_BEFORE_ICON)));
-		addBefore.setOnAction(event -> Common.tryCatch(() -> show(addBeforeMenu), "Error on add before"));
+		addBefore.setAccelerator(SettingsPanel.shortCut(settings, SettingsPanel.ADD_BEFORE));
+		addBefore.setOnAction(event -> Common.tryCatch(() -> show(this.addBeforeMenu), "Error on add before"));
 
 		MenuItem addAfter = new MenuItem("Add after");
 		addAfter.setGraphic(new ImageView(new Image(CssVariables.Icons.ADD_AFTER_ICON)));
-		addAfter.setOnAction(event -> Common.tryCatch(() -> show(addAfterMenu), "Error on add after"));
+		addAfter.setAccelerator(SettingsPanel.shortCut(settings, SettingsPanel.ADD_AFTER));
+		addAfter.setOnAction(event -> Common.tryCatch(() -> show(this.addAfterMenu), "Error on add after"));
 
 		MenuItem addChild = new MenuItem("Add child");
 		addChild.setGraphic(new ImageView(new Image(CssVariables.Icons.ADD_CHILD_ICON)));
-		addChild.setOnAction(event -> Common.tryCatch(() -> show(addChildMenu), "Error on add child"));
+		addChild.setAccelerator(SettingsPanel.shortCut(settings, SettingsPanel.ADD_CHILD));
+		addChild.setOnAction(event -> Common.tryCatch(() -> show(this.addChildMenu), "Error on add child"));
 
 		MenuItem deleteItem = new MenuItem("Delete");
 		deleteItem.setGraphic(new ImageView(new Image(CssVariables.Icons.DELETE_ICON)));
+//		deleteItem.setAccelerator(SettingsPanel.shortCut(settings, SettingsPanel.DELETE));
 		deleteItem.setOnAction(event -> deleteCurrentItems());
 
 		MenuItem copy = new MenuItem("Copy");
 		copy.setGraphic(new ImageView(new Image(CssVariables.Icons.COPY_ICON)));
+//		copy.setAccelerator(SettingsPanel.shortCut(settings, SettingsPanel.COPY));
 		copy.setOnAction(event -> copyItems());
 		
 		MenuItem paste = new MenuItem("Paste");
 		paste.setGraphic(new ImageView(new Image(CssVariables.Icons.PASTE_ICON)));
+//		paste.setAccelerator(SettingsPanel.shortCut(settings, SettingsPanel.PASTE));
 		paste.setOnAction(event -> pasteItems());
 
 		MenuItem help = new MenuItem("Help");
 		help.setGraphic(new ImageView(new Image(CssVariables.Icons.HELP_ICON)));
+		help.setAccelerator(SettingsPanel.shortCut(settings, SettingsPanel.HELP));
 		help.setOnAction(new ActionHelp());
 
 		contextMenu.getItems().addAll(

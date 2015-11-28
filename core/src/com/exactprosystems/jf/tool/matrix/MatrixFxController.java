@@ -473,6 +473,7 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 	// ------------------------------------------------------------------------------------------------------------------
 	// private methods
 	// ------------------------------------------------------------------------------------------------------------------
+	// TODO remake shortcuts over Menu.setAccelerator()
 	private void initShortcuts(final Settings settings)
 	{
 		getTabPane().getScene().addEventFilter(KeyEvent.KEY_PRESSED, keyEvent -> tryCatch(() ->
