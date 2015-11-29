@@ -52,7 +52,8 @@ public class MatrixParametersContextMenu extends MatrixContextMenu
 	{
 		super(context, matrix, tree, settings);
 
-		setAutoHide(true);
+		super.setAutoHide(true);
+		super.setHideOnEscape(true);
 		
 		this.parRemove = new MenuItem("Remove");
 		this.parRemove.setGraphic(new ImageView(new Image(CssVariables.Icons.REMOVE_PARAMETER_ICON)));
@@ -92,6 +93,7 @@ public class MatrixParametersContextMenu extends MatrixContextMenu
 		getItems().add(4, this.parShowAll);
 		getItems().add(5, new SeparatorMenuItem());
 	} 
+	
 	
 	
 	public EventHandler<ContextMenuEvent> createContextMenuHandler()

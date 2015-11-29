@@ -52,8 +52,6 @@ import javafx.stage.Window;
 
 public class MatrixContextMenu extends ContextMenu
 {
-	private static boolean canShow = true;
-
 	private ContextMenu addBeforeMenu;
 	private ContextMenu addAfterMenu;
 	private ContextMenu addChildMenu;
@@ -129,10 +127,8 @@ public class MatrixContextMenu extends ContextMenu
 	private ContextMenu createInsertMenu(MatrixFx matrix, MatrixTreeView tree, PlaceToInsert placeToInsert)
 	{
 		ContextMenu insertMenu = new ContextMenu();
-		insertMenu.setAutoHide(true);
 		insertMenu.setHideOnEscape(true);
 		insertMenu.setAutoHide(true);
-		insertMenu.setOnHiding(e -> canShow = true);
 
 		Menu actionItemMenu = new Menu("ActionItem");
 		
@@ -323,12 +319,7 @@ public class MatrixContextMenu extends ContextMenu
 		Window window = Common.getTabPane().getScene().getWindow();
 		final double x = window.getX() + window.getWidth() / 2;
 		final double y = window.getY() + window.getHeight() / 2;
-
-		if (canShow)
-		{
-			canShow = false;
-			menu.show(Common.node, x, y);
-		}
+		menu.show(Common.node, x, y);
 	}
 
 	private class ActionHelp implements EventHandler<ActionEvent>
