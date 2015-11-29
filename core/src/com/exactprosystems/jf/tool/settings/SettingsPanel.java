@@ -111,7 +111,7 @@ public class SettingsPanel
 	public void save() throws Exception
 	{
 		this.settings.saveIfNeeded();
-		Settings.SettingsValue theme = this.settings.getValueOrDefault(Settings.GLOBAL_NS, SettingsPanel.SETTINGS, Main.THEME, Theme.WHITE.name());
+		Settings.SettingsValue theme = this.settings.getValueOrDefault(Settings.GLOBAL_NS, SETTINGS, Main.THEME, Theme.WHITE.name());
 		Common.setTheme(Theme.valueOf(theme.getValue().toUpperCase()));
 	}
 
@@ -122,17 +122,16 @@ public class SettingsPanel
 		return first.isPresent() ? first.get().getKey() : null;
 	}
 
-	@Deprecated
 	public static boolean match(Settings settings, KeyEvent event, String shortcutName)
 	{
-		List<SettingsValue> values = settings.getValues(Settings.GLOBAL_NS, SettingsPanel.SHORTCUTS_NAME);
+		List<SettingsValue> values = settings.getValues(Settings.GLOBAL_NS, SHORTCUTS_NAME);
 		Optional<SettingsValue> first = values.stream().filter(value -> value.getKey().equals(shortcutName)).findFirst();
 		return first.isPresent() && KeyCodeCombination.valueOf(first.get().getValue()).match(event);
 	}
 	
 	public static KeyCombination shortCut(Settings settings, String name)
 	{
-		SettingsValue settingValue = settings.getValue(Settings.GLOBAL_NS, SettingsPanel.SHORTCUTS_NAME, name);
+		SettingsValue settingValue = settings.getValue(Settings.GLOBAL_NS, SHORTCUTS_NAME, name);
 		if (settingValue == null)
 		{
 			return null;
