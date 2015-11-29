@@ -46,6 +46,7 @@ public class MatrixParametersContextMenu extends MatrixContextMenu
 	private MenuItem parShowAll;
 	
 	private MatrixTreeRow row;
+	private int index;
 
 	public MatrixParametersContextMenu(Context context, MatrixFx matrix, MatrixTreeView tree, Settings settings)
 	{
@@ -76,11 +77,10 @@ public class MatrixParametersContextMenu extends MatrixContextMenu
 			if (this.row != null && this.row.getItem() instanceof ActionItem)
 			{
 				ActionItem actionItem = (ActionItem) this.row.getItem();
-				int fromIndex = parameterIndex(event);
 				Map<ReadableValue, TypeMandatory> map = actionItem.helpToAddParameters(context);
 				ShowAllParams params = new ShowAllParams(map, actionItem.getParameters(), actionItem.getItemName());
 				ArrayList<Pair<ReadableValue, TypeMandatory>> result = params.show();
-				matrix.parameterInsert(actionItem, fromIndex, result);
+				matrix.parameterInsert(actionItem, this.index, result);
 			}
 
 		}, "Error on show all parameters"));
@@ -98,25 +98,23 @@ public class MatrixParametersContextMenu extends MatrixContextMenu
 	{
 		return (event ->
 		{
+			event.consume();
 			this.row = matrixTreeRow(event);
+			this.index = parameterIndex(event);
 					
 			if (this.row != null)
 			{
-				int selectedIndex = parameterIndex(event);
 				MatrixItem matrixItem = row.getItem();
 				Parameters parameters = matrixItem.getParameters();
-				boolean canMove = parameters.canMove(selectedIndex);
-				System.err.println("!!! " + selectedIndex + "  " + canMove); // TODO solve this - index is incorrect
-
+				boolean canMove = parameters.canMove(this.index);
 				this.parMoveRight.setDisable(!canMove);
 				this.parMoveLeft.setDisable(!canMove);
-				this.parRemove.setDisable(!parameters.canRemove(selectedIndex));
+				this.parRemove.setDisable(!parameters.canRemove(this.index));
 				this.parShowAll.setDisable(!(matrixItem instanceof ActionItem));
 				
 				Point location = MouseInfo.getPointerInfo().getLocation();
 				super.show(this.row, location.getX(), location.getY());
 			}
-			event.consume();
 		});
 	}
 
@@ -133,8 +131,7 @@ public class MatrixParametersContextMenu extends MatrixContextMenu
 		{
 			if (this.row != null)
 			{
-				int index = parameterIndex(event);
-				func.call(this.row.getItem(), index);
+				func.call(this.row.getItem(), this.index);
 			}
 		}, "Error on change parameters");
 	}
@@ -142,11 +139,6 @@ public class MatrixParametersContextMenu extends MatrixContextMenu
 
 	protected MatrixTreeRow matrixTreeRow(Event event)
 	{
-		if (!(event.getSource() instanceof Node))
-		{
-			return null;
-		}
-
 		Node parent = (Node)event.getSource();
 		while (parent != null)
 		{
@@ -163,14 +155,9 @@ public class MatrixParametersContextMenu extends MatrixContextMenu
 
 	protected int parameterIndex(Event event)
 	{
-		if (!(event.getSource() instanceof Node))
-		{
-			return -1;
-		}
-		
 		Node selectedPane = null;
 		Node item = (Node)event.getSource();
-		
+
 		while (item != null)
 		{
 			if (item instanceof ParameterGridPane)
@@ -180,7 +167,7 @@ public class MatrixParametersContextMenu extends MatrixContextMenu
 			}
 			item = item.getParent();
 		}
-		
+
 		if (selectedPane == null)
 		{
 			return -1;

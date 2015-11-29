@@ -145,7 +145,7 @@ public class ParametersPane extends CustomScrollPane
 
 	private Pane emptyBox(ObservableList<Node> children, EventHandler<ContextMenuEvent> contextMenuHandler)
 	{
-		GridPane pane = new ParameterGridPane();
+		GridPane pane = new EmptyParameterGridPane();
 		pane.getStyleClass().add(CssVariables.EMPTY_GRID);
 
 		Label emptyLabel = new Label();
