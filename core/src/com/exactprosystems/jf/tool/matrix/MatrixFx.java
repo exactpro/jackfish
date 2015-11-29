@@ -279,11 +279,11 @@ public class MatrixFx extends Matrix
 		int number = item.getNumber();
 		Command undo = () ->
 		{
-			findAndCallParameters(number, par -> par.remove(index));
+			findAndCallParameters(number, par -> par.remove(index + 1)); // TODO +1?
 		};
 		Command redo = () ->
 		{
-			findAndCallParameters(number, par -> par.insert(index, "", "", TypeMandatory.Extra));
+			findAndCallParameters(number, par -> par.insert(index + 1, "", "", TypeMandatory.Extra)); // TODO +1?
 		};
 		addCommand(undo, redo);
 	}

@@ -1,3 +1,11 @@
+////////////////////////////////////////////////////////////////////////////////
+//  Copyright (c) 2009-2015, Exactpro Systems, LLC
+//  Quality Assurance & Related Development for Innovative Trading Systems.
+//  All rights reserved.
+//  This is unpublished, licensed software, confidential and proprietary
+//  information which is the property of Exactpro Systems, LLC or its licensors.
+////////////////////////////////////////////////////////////////////////////////
+
 package com.exactprosystems.jf.tool.matrix.params;
 
 import com.exactprosystems.jf.actions.ReadableValue;
@@ -14,12 +22,11 @@ import com.exactprosystems.jf.common.parser.items.MatrixItem;
 import com.exactprosystems.jf.common.parser.items.TypeMandatory;
 import com.exactprosystems.jf.functions.Xml;
 import com.exactprosystems.jf.tool.Common;
-import com.exactprosystems.jf.tool.Common.Function;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.DragDetector;
 import com.exactprosystems.jf.tool.custom.fields.NewExpressionField;
 import com.exactprosystems.jf.tool.custom.scroll.CustomScrollPane;
-import com.exactprosystems.jf.tool.custom.treetable.MatrixTreeRow;
+import com.exactprosystems.jf.tool.custom.treetable.MatrixParametersContextMenu;
 import com.exactprosystems.jf.tool.custom.xpath.XpathViewer;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper.OpenSaveMode;
@@ -31,15 +38,10 @@ import com.exactprosystems.jf.tool.settings.Theme;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
@@ -47,14 +49,12 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.util.Pair;
 
-import java.awt.MouseInfo;
-import java.awt.Point;
-//import java.awt.*;
 import java.io.File;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.Optional;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 public class ParametersPane extends CustomScrollPane
 {
@@ -66,7 +66,8 @@ public class ParametersPane extends CustomScrollPane
 	private FormulaGenerator generator;
 	private EventHandler<ContextMenuEvent> contextMenuHandler;
 	
-	public ParametersPane(MatrixItem matrixItem, Context context, boolean oneLine, Parameters parameters, FormulaGenerator generator)
+	public ParametersPane(MatrixItem matrixItem, Context context, boolean oneLine, Parameters parameters, FormulaGenerator generator,
+			MatrixParametersContextMenu contextMenu)
 	{
 		super(oneLine ? 30 : 65);
 		this.mainGridPane = new GridPane();
@@ -77,9 +78,9 @@ public class ParametersPane extends CustomScrollPane
 		this.parameters = parameters;
 		this.generator = generator;
 		
-		this.contextMenuHandler = createContextMenuHandler();
+		this.contextMenuHandler = contextMenu.createContextMenuHandler();
 
-		this.setOnContextMenuRequested(this.contextMenuHandler);
+		super.setOnContextMenuRequested(this.contextMenuHandler);
 		refreshParameters();
 	}
 
@@ -91,10 +92,10 @@ public class ParametersPane extends CustomScrollPane
 		for (int i = 0; i < this.parameters.size(); i++)
 		{
 			Parameter par = this.parameters.getByIndex(i);
-			GridPane exist = findPane(children, par);
+			Pane exist = findPane(children, par);
 			if (exist == null)
 			{
-				exist = parameterBox(par, i, contextMenuHandler);
+				exist = parameterBox(par, i, this.contextMenuHandler);
 			}
 			updatePane(exist, par);
 			this.mainGridPane.add(exist, i + 1, 0, 1, this.oneLine ? 1 : 2);
@@ -102,7 +103,7 @@ public class ParametersPane extends CustomScrollPane
 		this.mainGridPane.add(emptyBox(FXCollections.observableArrayList(this.mainGridPane.getChildren()), this.contextMenuHandler), 0, 0, 1, 2);
 	}
 
-	private void updatePane(GridPane pane, Parameter parameter)
+	private void updatePane(Pane pane, Parameter parameter)
 	{
 		pane.getChildren().stream()
 				.filter(node -> node instanceof TextField)
@@ -120,7 +121,7 @@ public class ParametersPane extends CustomScrollPane
 				});
 	}
 
-	private GridPane findPane(ObservableList<Node> children, Parameter par)
+	private Pane findPane(ObservableList<Node> children, Parameter par)
 	{
 		Optional<GridPane> opt = children.stream()
 				.filter(node -> 
@@ -144,7 +145,7 @@ public class ParametersPane extends CustomScrollPane
 
 	private Pane emptyBox(ObservableList<Node> children, EventHandler<ContextMenuEvent> contextMenuHandler)
 	{
-		GridPane pane = new GridPane();
+		GridPane pane = new ParameterGridPane();
 		pane.getStyleClass().add(CssVariables.EMPTY_GRID);
 
 		Label emptyLabel = new Label();
@@ -188,10 +189,13 @@ public class ParametersPane extends CustomScrollPane
 				if (str != null && str.startsWith("[") && str.endsWith("]"))
 				{
 					String[] fields = str.substring(1, str.length() - 1).split(",");
-					changeParameters(() -> getMatrix().parameterInsert(this.matrixItem, 0, 
-							Arrays.stream(fields)
-							.map(i -> new Pair<ReadableValue, TypeMandatory>(new ReadableValue(i.trim()), TypeMandatory.Extra))
-							.collect(Collectors.toList())));
+					Common.tryCatch(() -> 
+					{
+						getMatrix().parameterInsert(this.matrixItem, 0, 
+								Arrays.stream(fields)
+								.map(i -> new Pair<ReadableValue, TypeMandatory>(new ReadableValue(i.trim()), TypeMandatory.Extra))
+								.collect(Collectors.toList()));
+					}, "Error on change parameters");
 				}
 				
 				b = true;
@@ -214,25 +218,9 @@ public class ParametersPane extends CustomScrollPane
 		return pane;
 	}
 
-	private void strech(TextField tf)
+	private Pane parameterBox(Parameter par, int index, EventHandler<ContextMenuEvent> contextMenuHandler)
 	{
-		int size = tf.getText() != null ? (tf.getText().length() * 8 + 20) : 60;
-
-		if (tf.getScene() != null)
-		{
-			double v = tf.getScene().getWindow().getWidth() / 3;
-			if (size > v)
-			{
-				tf.setPrefWidth(v);
-				return;
-			}
-		}
-		tf.setPrefWidth(size);
-	}
-
-	private GridPane parameterBox(Parameter par, int index, EventHandler<ContextMenuEvent> contextMenuHandler)
-	{
-		GridPane tempGrid = new GridPane();
+		GridPane tempGrid = new ParameterGridPane();
 		tempGrid.setUserData(par);
 		Control key = new TextField(par.getName());
 		((TextField) key).setPromptText("Key");
@@ -244,7 +232,7 @@ public class ParametersPane extends CustomScrollPane
 			String newText = ((TextField) finalKey).getText();
 			if (!newValue && oldValue && !Str.areEqual(oldText, newText))
 			{
-				changeParameters(() -> getMatrix().parameterSetName(this.matrixItem, index, newText));
+				Common.tryCatch(() -> getMatrix().parameterSetName(this.matrixItem, index, newText), "Error on change parameters");
 			}
 			if (!newValue && oldValue)
 			{
@@ -257,7 +245,10 @@ public class ParametersPane extends CustomScrollPane
 			case NotMandatory:
 				key = new Label(par.getName());
 				Common.sizeLabel((Label) key);
+			default:
+				break;
 		}
+		key.setContextMenu(null);
 		key.setOnContextMenuRequested(contextMenuHandler);
 		tempGrid.add(key, 0, 0);
 		GridPane.setMargin(key, Common.insetsNode);
@@ -271,15 +262,15 @@ public class ParametersPane extends CustomScrollPane
 		
 		if (!this.oneLine)
 		{
-			NewExpressionField expressionField = new NewExpressionField(context.getEvaluator(), par.getExpression());
-			if (matrixItem instanceof ActionItem)
+			NewExpressionField expressionField = new NewExpressionField(this.context.getEvaluator(), par.getExpression());
+			if (this.matrixItem instanceof ActionItem)
 			{
 				ActionItem actionItem = (ActionItem) this.matrixItem;
 				HelpKind howHelp = null; 
 						
 				try
 				{
-					howHelp = actionItem.howHelpWithParameter(context, par.getName());
+					howHelp = actionItem.howHelpWithParameter(this.context, par.getName());
 				}
 				catch (Exception e)
 				{ }
@@ -310,7 +301,7 @@ public class ParametersPane extends CustomScrollPane
 									File file = DialogsHelper.showOpenSaveDialog("Choose file to open", "All files", "*.*", OpenSaveMode.OpenFile);
 									if (file != null)
 									{
-										return context.getEvaluator().createString(Common.getRelativePath(file.getAbsolutePath()));
+										return this.context.getEvaluator().createString(Common.getRelativePath(file.getAbsolutePath()));
 									}
 									return str;
 								});
@@ -323,7 +314,7 @@ public class ParametersPane extends CustomScrollPane
 									File file = DialogsHelper.showOpenSaveDialog("Choose file to save", "All files", "*.*", OpenSaveMode.SaveFile);
 									if (file != null)
 									{
-										return context.getEvaluator().createString(Common.getRelativePath(file.getAbsolutePath()));
+										return this.context.getEvaluator().createString(Common.getRelativePath(file.getAbsolutePath()));
 									}
 									return str;
 								});
@@ -336,7 +327,7 @@ public class ParametersPane extends CustomScrollPane
 									File file = DialogsHelper.showDirChooseDialog("Choose directory");
 									if (file != null)
 									{
-										return context.getEvaluator().createString(Common.getRelativePath(file.getAbsolutePath()));
+										return this.context.getEvaluator().createString(Common.getRelativePath(file.getAbsolutePath()));
 									}
 									return str;
 								});
@@ -345,7 +336,7 @@ public class ParametersPane extends CustomScrollPane
 						case ChooseFromList:
 							expressionField.setChooserForExpressionField(par.getName(), () ->
 							{
-								return actionItem.listToFillParameter(context, par.getName());
+								return actionItem.listToFillParameter(this.context, par.getName());
 							});
 							break;
 							
@@ -386,15 +377,15 @@ public class ParametersPane extends CustomScrollPane
 					}
 				}
 			}
-			expressionField.setOnContextMenuRequested(contextMenuHandler);
 			expressionField.setContextMenu(null);
+			expressionField.setOnContextMenuRequested(contextMenuHandler);
 			expressionField.setNotifierForErrorHandler();
 			expressionField.setHelperForExpressionField(par.getName(), this.matrixItem.getMatrix());
 			expressionField.setChangingValueListener((observable, oldValue, newValue) ->
 			{
 				if (!newValue && oldValue)
 				{
-					changeParameters(() -> getMatrix().parameterSetValue(this.matrixItem, index, expressionField.getText()));
+					Common.tryCatch(() -> getMatrix().parameterSetValue(this.matrixItem, index, expressionField.getText()), "Error on change parameters");
 				}
 			});
 			tempGrid.add(expressionField, 0, 1);
@@ -406,22 +397,7 @@ public class ParametersPane extends CustomScrollPane
 		return tempGrid;
 	}
 
-	private void addNewGrid(int index)
-	{
-		changeParameters(() -> this.getMatrix().parameterInsert(this.matrixItem, index));
-	}
-
-	protected void moveLeft(int index)
-	{
-		changeParameters(() -> this.getMatrix().parameterMoveLeft(this.matrixItem, index));
-	}
-
-	protected void moveRight(int index)
-	{
-		changeParameters(() -> this.getMatrix().parameterMoveRight(this.matrixItem, index));
-	}
-
-	protected void focusedParent(final Node node)
+	private void focusedParent(final Node node)
 	{
 		ChangeListener<Boolean> changeListener = (observableValue, aBoolean, aBoolean2) ->
 		{
@@ -449,136 +425,22 @@ public class ParametersPane extends CustomScrollPane
 		}
 	}
 
-	private EventHandler<ContextMenuEvent> createContextMenuHandler()
+	private void strech(TextField textField)
 	{
-		MenuItem menuItemRemove = new MenuItem("Remove");
-		menuItemRemove.setGraphic(new ImageView(new Image(CssVariables.Icons.REMOVE_PARAMETER_ICON)));
-		menuItemRemove.setOnAction(event -> changeParameters(() -> this.getMatrix().parameterRemove(this.matrixItem, selectedIndex(event))));
+		int size = textField.getText() != null ? (textField.getText().length() * 8 + 20) : 60;
 
-		MenuItem menuItemMoveLeft = new MenuItem("Move to left");
-		menuItemMoveLeft.setGraphic(new ImageView(new Image(CssVariables.Icons.MOVE_LEFT_ICON)));
-		menuItemMoveLeft.setOnAction(event -> moveLeft(selectedIndex(event)));
-
-		MenuItem menuItemMoveRight = new MenuItem("Move to right");
-		menuItemMoveRight.setGraphic(new ImageView(new Image(CssVariables.Icons.MOVE_RIGHT_ICON)));
-		menuItemMoveRight.setOnAction(event -> moveRight(selectedIndex(event)));
-
-		MenuItem menuItemAdd = new MenuItem("Add param");
-		menuItemAdd.setGraphic(new ImageView(new Image(CssVariables.Icons.ADD_PARAMETER_ICON)));
-		menuItemAdd.setOnAction(event -> addNewGrid(selectedIndex(event) + 1));
-
-		MenuItem menuItemShowAllParameters = new MenuItem("All parameters");
-		menuItemShowAllParameters.setGraphic(new ImageView(new Image(CssVariables.Icons.ALL_PARAMETERS_ICON)));
-		menuItemShowAllParameters.setOnAction(event -> Common.tryCatch(() ->
+		if (textField.getScene() != null)
 		{
-			ActionItem actionItem = ((ActionItem) this.matrixItem);
-			int fromIndex = selectedIndex(event) + 1;
-			Map<ReadableValue, TypeMandatory> map = actionItem.helpToAddParameters(this.context);
-			ShowAllParams params = new ShowAllParams(map, parameters, this.matrixItem.getItemName());
-			ArrayList<Pair<ReadableValue, TypeMandatory>> result = params.show();
-			getMatrix().parameterInsert(this.matrixItem, fromIndex, result);
-
-		}, "Error on show all parameters"));
-
-		ObservableList<MenuItem> gridItems = FXCollections.observableArrayList(
-				menuItemRemove, 
-				menuItemMoveLeft, 
-				menuItemMoveRight, 
-				menuItemAdd,
-				new SeparatorMenuItem(), 
-				menuItemShowAllParameters);
-
-		return (event ->
-		{
-			Parent parent = getParent();
-			while (parent != null && !(parent instanceof MatrixTreeRow))
+			double v = textField.getScene().getWindow().getWidth() / 3;
+			if (size > v)
 			{
-				parent = parent.getParent();
+				textField.setPrefWidth(v);
+				return;
 			}
-					
-			if (parent instanceof MatrixTreeRow)
-			{
-				MatrixTreeRow cell = (MatrixTreeRow) parent;
-				ObservableList<MenuItem> cellItems = cell.getContextMenu().getItems();
-				IntStream.range(0, gridItems.size()).forEach(i -> cellItems.add(i, gridItems.get(i)));
-				
-				int selectedIndex = selectedIndex(event);
-				System.err.println("!!! " + selectedIndex);
-
-				boolean canMove = this.parameters.canMove(selectedIndex);
-				menuItemMoveRight.setDisable(!canMove);
-				menuItemMoveLeft.setDisable(!canMove);
-				menuItemRemove.setDisable(!this.parameters.canRemove(selectedIndex));
-				menuItemShowAllParameters.setDisable(!(this.matrixItem instanceof ActionItem));
-				
-//				if (selectedIndex > 0)
-//				{
-//					focusGrid(this.mainGridPane.getChildren().get(selectedIndex), true);
-//				}
-//
-//				cell.getContextMenu().setOnHidden(e ->
-//				{
-//					if (selectedIndex > 0)
-//					{
-//						focusGrid(this.mainGridPane.getChildren().get(selectedIndex), false);
-//					}
-//					cellItems.removeAll(gridItems);
-//				});
-				Point location = MouseInfo.getPointerInfo().getLocation();
-				cell.getContextMenu().show(this, location.getX(), location.getY());
-			}
-		});
-	}
-
-	private void changeParameters(Function fnc)
-	{
-		Common.tryCatch(() -> 
-		{
-			fnc.call();
-		}, "Error on change parameters");
-	}
-
-	private void focusGrid(Node selectedPane, boolean flag)
-	{
-		Optional.ofNullable(selectedPane).ifPresent(pane ->
-		{
-			pane.getStyleClass().removeAll(CssVariables.UNFOCUSED_GRID, CssVariables.FOCUSED_FIELD);
-			if (flag)
-			{
-				pane.getStyleClass().add(CssVariables.FOCUSED_FIELD);
-			}
-			else
-			{
-				pane.getStyleClass().add(CssVariables.UNFOCUSED_GRID);
-			}
-		});
-	}
-
-	private int selectedIndex(Event event)
-	{
-		Node selectedPane = null;
-		Node item = (Node)event.getSource();
-		while (item != null)
-		{
-			System.err.println(" " + item);
-			if (item instanceof GridPane)
-			{
-				selectedPane = item;
-				break;
-			}
-			item = item.getParent();
 		}
-		
-		System.err.println("  selected = " + selectedPane);
-		if (selectedPane == null)
-		{
-			return -1;
-		}
-		else
-		{
-			return this.mainGridPane.getChildren().indexOf(selectedPane);
-		}
+		textField.setPrefWidth(size);
 	}
+
 
 	private MatrixFx getMatrix()
 	{

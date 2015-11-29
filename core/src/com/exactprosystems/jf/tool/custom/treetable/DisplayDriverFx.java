@@ -44,10 +44,12 @@ import java.util.stream.Collectors;
 
 public class DisplayDriverFx implements DisplayDriver
 {
-	public DisplayDriverFx(MatrixTreeView treeView, Context context)
+	public DisplayDriverFx(MatrixTreeView treeView, Context context, MatrixContextMenu rowContextMenu, MatrixParametersContextMenu parametersContextMenu)
 	{
 		this.treeView = treeView;
 		this.context = context;
+		this.rowContextMenu = rowContextMenu;
+		this.parametersContextMenu = parametersContextMenu;
 	}
 
 	@Override
@@ -122,7 +124,7 @@ public class DisplayDriverFx implements DisplayDriver
 	public void showCheckBox(MatrixItem item, Object layout, int row, int column, String name, Setter<Boolean> set, Getter<Boolean> get)
 	{
 		GridPane pane = (GridPane) layout;
-		final CheckBox checkBox = new CheckBox(name);
+		CheckBox checkBox = new CheckBox(name);
 		checkBox.setMinWidth(name.length() * 8 + 20);
 		checkBox.setSelected(get.get());
 		checkBox.setOnAction(e ->
@@ -154,7 +156,7 @@ public class DisplayDriverFx implements DisplayDriver
 	public void showComboBox(MatrixItem item, Object layout, int row, int column, Setter<String> set, Getter<String> get, Function<Void, List<String>> handler)
 	{
 		GridPane pane = (GridPane) layout;
-		final ComboBox<String> comboBox = new ComboBox<>();
+		ComboBox<String> comboBox = new ComboBox<>();
 		comboBox.setValue(get.get());
 		comboBox.setOnAction(e ->
 		{
@@ -198,7 +200,8 @@ public class DisplayDriverFx implements DisplayDriver
 	{
 		GridPane pane = (GridPane) layout;
 
-		final TextField textBox = new TextField();
+		TextField textBox = new TextField();
+		textBox.setContextMenu(this.rowContextMenu);
 		textBox.setStyle(Common.FONT_SIZE);
 		textBox.setText(get.get());
 		Common.sizeTextField(textBox);
@@ -246,7 +249,8 @@ public class DisplayDriverFx implements DisplayDriver
 	{
 		GridPane pane = (GridPane) layout;
 
-		final NewExpressionField field = new NewExpressionField(this.context.getEvaluator(), get.get());
+		NewExpressionField field = new NewExpressionField(this.context.getEvaluator(), get.get());
+		field.setContextMenu(this.rowContextMenu);
 		field.setFirstActionListener(firstHandler);
 		field.setSecondActionListener(secondHandler);
 		field.setChangingValueListener((observable, oldValue, newValue) ->
@@ -296,7 +300,8 @@ public class DisplayDriverFx implements DisplayDriver
 	{
 		GridPane pane = (GridPane) layout;
 
-		final CommentsLabel label = new CommentsLabel();
+		CommentsLabel label = new CommentsLabel();
+		label.setContextMenu(this.rowContextMenu);
 		label.getStyleClass().addAll(CssVariables.UNFOCUSED_TEXT_AREA);
 		label.setText(fromList(comments));
 		if (label.getText().isEmpty())
@@ -338,7 +343,7 @@ public class DisplayDriverFx implements DisplayDriver
 	public void showButton(MatrixItem item, Object layout, int row, int column, String name, Function<Void, Void> action)
 	{
 		GridPane pane = (GridPane) layout;
-		final Button button = new Button(name);
+		Button button = new Button(name);
 		button.setOnAction(e -> action.apply(null));
 		pane.add(button, column, row);
 		GridPane.setMargin(button, INSETS);
@@ -348,7 +353,7 @@ public class DisplayDriverFx implements DisplayDriver
 	public void showToggleButton(MatrixItem item, Object layout, int row, int column, String name, Function<Boolean, Void> action, boolean initialValue)
 	{
 		GridPane pane = (GridPane) layout;
-		final ToggleButton toggleButton = new ToggleButton(name);
+		ToggleButton toggleButton = new ToggleButton(name);
 		toggleButton.setSelected(initialValue);
 		toggleButton.setOnAction(e -> action.apply(!toggleButton.isSelected()));
 		pane.add(toggleButton, column, row);
@@ -360,7 +365,7 @@ public class DisplayDriverFx implements DisplayDriver
 	{
 		GridPane pane = (GridPane) layout;
 
-		final ParametersPane paramsPane = new ParametersPane(item, this.context, oneLine, parameters, generator);
+		ParametersPane paramsPane = new ParametersPane(item, this.context, oneLine, parameters, generator, this.parametersContextMenu);
 		GridPane.setMargin(paramsPane, new Insets(column, 10, column, 10));
 		pane.add(paramsPane, column, row, Integer.MAX_VALUE, 2);
 	}
@@ -371,6 +376,7 @@ public class DisplayDriverFx implements DisplayDriver
 		GridPane pane = (GridPane) layout;
 		DataProvider<String> provider = new TableDataProvider(table);
 		SpreadsheetView view = new SpreadsheetView(provider);
+		view.setContextMenu(this.rowContextMenu);
 		BorderPane borderPane = new BorderPane();
 		borderPane.setCenter(view);
 		DragResizer.makeResizable(borderPane);
@@ -476,8 +482,10 @@ public class DisplayDriverFx implements DisplayDriver
 		return opt.isPresent() ? opt.get().toString() : "";
 	}
 
-	private static final Insets	INSETS			= new Insets(0, 0, 0, 5);
-	private static final String	LINE_SEPARATOR	= System.getProperty("line.separator");
-	private MatrixTreeView		treeView;
-	private Context				context;
+	private static final Insets			INSETS			= new Insets(0, 0, 0, 5);
+	private static final String			LINE_SEPARATOR	= System.getProperty("line.separator");
+	private MatrixTreeView				treeView;
+	private Context						context;
+	private MatrixContextMenu 			rowContextMenu;
+	private MatrixParametersContextMenu parametersContextMenu;
 }

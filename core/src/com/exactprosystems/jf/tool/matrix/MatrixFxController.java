@@ -24,6 +24,8 @@ import com.exactprosystems.jf.tool.custom.find.FindPanel;
 import com.exactprosystems.jf.tool.custom.find.IFind;
 import com.exactprosystems.jf.tool.custom.tab.CustomTab;
 import com.exactprosystems.jf.tool.custom.treetable.DisplayDriverFx;
+import com.exactprosystems.jf.tool.custom.treetable.MatrixContextMenu;
+import com.exactprosystems.jf.tool.custom.treetable.MatrixParametersContextMenu;
 import com.exactprosystems.jf.tool.custom.treetable.MatrixTreeView;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.matrix.watch.WatcherFx;
@@ -278,10 +280,14 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 	public void init(MatrixFx model, Context context, TabConsole console)
 	{
 		Settings settings = context.getConfiguration().getSettings();
+		
+		MatrixParametersContextMenu parametersContextMenu 	= new MatrixParametersContextMenu(context, model, this.tree, settings);
+		MatrixContextMenu 			rowContextMenu 			= new MatrixContextMenu(context, model, this.tree, settings);
+		
 		this.model = model;
 		this.context = context;
-		this.driver = new DisplayDriverFx(this.tree, this.context);
-		this.tree.init(model, settings);
+		this.driver = new DisplayDriverFx(this.tree, this.context, rowContextMenu, parametersContextMenu);
+		this.tree.init(model, settings, rowContextMenu);
 		this.tab = createTab(model);
 		this.tab.setContent(this.pane);
 		console.setConsole(this.listView);
