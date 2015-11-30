@@ -10,11 +10,8 @@ package com.exactprosystems.jf.app;
 
 import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.client.ICondition;
-
 import org.apache.log4j.Logger;
-import org.fest.swing.core.ComponentMatcher;
-import org.fest.swing.core.KeyPressInfo;
-import org.fest.swing.core.MouseClickInfo;
+import org.fest.swing.core.*;
 import org.fest.swing.core.Robot;
 import org.fest.swing.data.TableCell;
 import org.fest.swing.exception.WaitTimedOutError;
@@ -27,9 +24,10 @@ import javax.swing.text.JTextComponent;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
-
 import java.awt.*;
 import java.awt.event.KeyEvent;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.rmi.RemoteException;
 import java.util.*;
 import java.util.List;
@@ -761,6 +759,10 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 			logger.error(e.getMessage(), e);
 			throw e;
 		}
+		finally
+		{
+			waitForIdle();
+		}
 	}
 
 	@Override
@@ -769,8 +771,18 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 		try
 		{
 			this.currentRobot.waitForIdle();
-			
-			// TODO make it
+			Component currentComponent = component.component();
+			String firstLetter = String.valueOf(name.charAt(0)).toUpperCase();
+			String methodName = "get" + firstLetter + name.substring(1);
+			Method[] methods = currentComponent.getClass().getMethods();
+			for (Method method : methods)
+			{
+				if (method.getName().equals(methodName) && Modifier.isPublic(method.getModifiers()) && method.getParameterTypes().length == 0)
+				{
+					Object invoke = method.invoke(currentComponent);
+					return String.valueOf(invoke);
+				}
+			}
 			return "";
 		}
 		catch (Throwable e)
@@ -778,6 +790,10 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 			logger.error(String.format("get(%s)", component));
 			logger.error(e.getMessage(), e);
 			throw e;
+		}
+		finally
+		{
+			waitForIdle();
 		}
 	}
 	
