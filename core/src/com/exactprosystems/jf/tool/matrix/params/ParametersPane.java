@@ -26,6 +26,7 @@ import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.DragDetector;
 import com.exactprosystems.jf.tool.custom.fields.NewExpressionField;
 import com.exactprosystems.jf.tool.custom.scroll.CustomScrollPane;
+import com.exactprosystems.jf.tool.custom.treetable.MatrixContextMenu;
 import com.exactprosystems.jf.tool.custom.treetable.MatrixParametersContextMenu;
 import com.exactprosystems.jf.tool.custom.xpath.XpathViewer;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
@@ -66,8 +67,10 @@ public class ParametersPane extends CustomScrollPane
 	private FormulaGenerator generator;
 	private EventHandler<ContextMenuEvent> contextMenuHandler;
 	
+	private static ContextMenu empty = new ContextMenu();
+	
 	public ParametersPane(MatrixItem matrixItem, Context context, boolean oneLine, Parameters parameters, FormulaGenerator generator,
-			MatrixParametersContextMenu contextMenu)
+			MatrixContextMenu rowContextMenu, MatrixParametersContextMenu parametersContextMenu)
 	{
 		super(oneLine ? 30 : 65);
 		this.mainGridPane = new GridPane();
@@ -78,9 +81,10 @@ public class ParametersPane extends CustomScrollPane
 		this.parameters = parameters;
 		this.generator = generator;
 		
-		this.contextMenuHandler = contextMenu.createContextMenuHandler();
+		this.contextMenuHandler = parametersContextMenu.createContextMenuHandler();
 
-		super.setOnContextMenuRequested(this.contextMenuHandler);
+		super.setContextMenu(rowContextMenu);
+//		super.setOnContextMenuRequested(this.contextMenuHandler);
 		refreshParameters();
 	}
 
@@ -248,7 +252,7 @@ public class ParametersPane extends CustomScrollPane
 			default:
 				break;
 		}
-		key.setContextMenu(null);
+		key.setContextMenu(empty);
 		key.setOnContextMenuRequested(contextMenuHandler);
 		tempGrid.add(key, 0, 0);
 		GridPane.setMargin(key, Common.insetsNode);
@@ -377,7 +381,7 @@ public class ParametersPane extends CustomScrollPane
 					}
 				}
 			}
-			expressionField.setContextMenu(null);
+			expressionField.setContextMenu(empty);
 			expressionField.setOnContextMenuRequested(contextMenuHandler);
 			expressionField.setNotifierForErrorHandler();
 			expressionField.setHelperForExpressionField(par.getName(), this.matrixItem.getMatrix());
