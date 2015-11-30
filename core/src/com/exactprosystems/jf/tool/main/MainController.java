@@ -578,6 +578,10 @@ public class MainController implements Initializable, ContainingParent
 
 	public boolean checkFile(File file)
 	{
+		if (file == null)
+		{
+			return false;
+		}
 		Optional<Tab> first = this.tabPane.getTabs().stream().filter(f -> {
 			Document document = ((CustomTab) f).getDocument();
 			return Str.areEqual(new File(document.getName()).getAbsolutePath(), file.getAbsolutePath());
