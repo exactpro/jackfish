@@ -84,7 +84,6 @@ public class ParametersPane extends CustomScrollPane
 		this.contextMenuHandler = parametersContextMenu.createContextMenuHandler();
 
 		super.setContextMenu(rowContextMenu);
-//		super.setOnContextMenuRequested(this.contextMenuHandler);
 		refreshParameters();
 	}
 

@@ -12,6 +12,7 @@ import java.awt.MouseInfo;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Map;
+
 import com.exactprosystems.jf.actions.ReadableValue;
 import com.exactprosystems.jf.api.app.ProxyException;
 import com.exactprosystems.jf.common.Context;
