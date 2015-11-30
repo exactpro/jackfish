@@ -19,6 +19,7 @@ import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.custom.logs.LogsFx;
 import com.exactprosystems.jf.tool.custom.tab.CustomTab;
+import com.exactprosystems.jf.tool.custom.treetable.MatrixTreeView;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.matrix.MatrixFx;
 import com.exactprosystems.jf.tool.matrix.schedule.RunnerScheduler;
@@ -27,6 +28,7 @@ import com.exactprosystems.jf.tool.settings.SettingsPanel;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -602,6 +604,19 @@ public class MainController implements Initializable, ContainingParent
 			else
 			{
 				this.model.changeDocument(((CustomTab) newValue).getDocument());
+			}
+			if (oldValue != null)
+			{
+				CustomTab tab = (CustomTab) oldValue;
+				if (tab.getDocument() instanceof MatrixFx)
+				{
+					Node lookup = tab.getContent().lookup(".customTreeTableView");
+					if (lookup instanceof MatrixTreeView)
+					{
+						((MatrixTreeView) lookup).getSelectionModel().clearSelection();
+						((MatrixTreeView) lookup).getFocusModel().focus(-1);
+					}
+				}
 			}
 		});
 	}
