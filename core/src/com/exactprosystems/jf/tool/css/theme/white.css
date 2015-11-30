@@ -314,8 +314,6 @@
 /*CssVariables.java*/
 .incorrectField {
     -fx-text-fill : red;
-    -fx-background-repeat : no-repeat;
-    -fx-background-position : right center;
 
 }
 .breakPointtrue {
@@ -329,7 +327,6 @@
 
 .correctField {
     -fx-text-fill : black;
-    -fx-background-image : null;
 
 }
 
@@ -592,7 +589,6 @@ CellView > .text-input.text-field{
 }
 
 .custom-text-field {
-	-fx-text-fill: -fx-text-inner-color;
 	-fx-highlight-fill: derive(-fx-control-inner-background,-20%);
 	-fx-highlight-text-fill: -fx-text-inner-color;
 	-fx-prompt-text-fill: derive(-fx-control-inner-background,-30%);
