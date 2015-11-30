@@ -8,10 +8,6 @@
 
 package com.exactprosystems.jf.tool.custom.treetable;
 
-import java.awt.MouseInfo;
-import java.awt.Point;
-import java.util.ArrayList;
-import java.util.Map;
 
 import com.exactprosystems.jf.actions.ReadableValue;
 import com.exactprosystems.jf.api.app.ProxyException;
@@ -26,7 +22,6 @@ import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.matrix.MatrixFx;
 import com.exactprosystems.jf.tool.matrix.params.ParameterGridPane;
 import com.exactprosystems.jf.tool.matrix.params.ShowAllParams;
-
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
@@ -37,6 +32,10 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.layout.GridPane;
 import javafx.util.Pair;
+
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.Map;
 
 public class MatrixParametersContextMenu extends MatrixContextMenu
 {

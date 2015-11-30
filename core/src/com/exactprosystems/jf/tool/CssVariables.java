@@ -155,8 +155,6 @@ public class CssVariables
 		public static final String	SHOW_SETTINGS_ICON		= IMAGES_DIR + "/showSettings.png";
 		public static final String	ABOUT_PROGRAM_ICON		= IMAGES_DIR + "/aboutProgram.png";
 		public static final String	ACTIONS_HELP_ICON		= IMAGES_DIR + "/help.png";
-		public static final String	MINUS_ARROW_ICON		= IMAGES_DIR + "/minus-arrow.jpg";
-		public static final String	PLUS_ARROW_ICON			= IMAGES_DIR + "/plus-arrow.jpg";
 		public static final String	CLOSE_BUTTON_ICON		= IMAGES_DIR + "/close-button.png";
 		public static final String	ALL_PARAMETERS_ICON		= IMAGES_DIR + "/allParameters.png";
 		public static final String	REMOVE_PARAMETER_ICON	= IMAGES_DIR + "/removeParameter.png";
@@ -172,5 +170,6 @@ public class CssVariables
 		public static final String	MOVE_LEFT_ICON			= IMAGES_DIR + "/move_left.png";
 		public static final String	MOVE_RIGHT_ICON			= IMAGES_DIR + "/move_right.png";
 		public static final String	LOADING_ICON			= IMAGES_DIR + "/loading.png";
+		public static final String	GO_TO_LINE_ICON			= IMAGES_DIR + "/goToLine.png";
 	}
 }

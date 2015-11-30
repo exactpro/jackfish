@@ -8,12 +8,6 @@
 
 package com.exactprosystems.jf.tool.custom.treetable;
 
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-
 import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
 import com.exactprosystems.jf.actions.help.ActionsList;
@@ -32,23 +26,17 @@ import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.matrix.MatrixFx;
 import com.exactprosystems.jf.tool.matrix.MatrixFx.PlaceToInsert;
 import com.exactprosystems.jf.tool.settings.SettingsPanel;
-
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.Dialog;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.SeparatorMenuItem;
-import javafx.scene.control.TextInputDialog;
-import javafx.scene.control.TreeItem;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.Window;
+
+import java.util.*;
 
 public class MatrixContextMenu extends ContextMenu
 {
@@ -99,7 +87,7 @@ public class MatrixContextMenu extends ContextMenu
 		paste.setOnAction(event -> pasteItems(matrix, tree));
 
 		MenuItem gotoItem = new MenuItem("Go to line ...");
-//		gotoItem.setGraphic(new ImageView(new Image(CssVariables.Icons.GOTO_ICON))); // TODO add the icon
+		gotoItem.setGraphic(new ImageView(new Image(CssVariables.Icons.GO_TO_LINE_ICON)));
 		gotoItem.setAccelerator(SettingsPanel.shortCut(settings, SettingsPanel.GO_TO_LINE));
 		gotoItem.setOnAction(event -> gotoLine(tree));
 
