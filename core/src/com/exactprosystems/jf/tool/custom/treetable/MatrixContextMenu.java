@@ -76,6 +76,7 @@ public class MatrixContextMenu extends ContextMenu
 
 		MenuItem deleteItem = new MenuItem("Delete");
 		deleteItem.setGraphic(new ImageView(new Image(CssVariables.Icons.DELETE_ICON)));
+		addChild.setAccelerator(SettingsPanel.shortCut(settings, SettingsPanel.DELETE_ITEM));
 		deleteItem.setOnAction(event -> deleteCurrentItems(matrix, tree));
 
 		MenuItem copy = new MenuItem("Copy");
