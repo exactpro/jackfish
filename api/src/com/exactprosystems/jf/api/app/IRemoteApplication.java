@@ -26,6 +26,7 @@ public interface IRemoteApplication extends Remote
 	Collection<String>		titles		() throws RemoteException;
 	void					newInstance (Map<String, String> args) throws Exception;
 	String 					switchTo	(String title) throws RemoteException;
+	void					resize		(int hight, int width, boolean maximize, boolean minimize) throws RemoteException;
 	ImageWrapper			getImage	(Locator owner, Locator element) throws RemoteException;
 	Collection<String> 		findAll		(Locator owner, Locator element) throws RemoteException;
 	Locator 				getLocator	(Locator owner, ControlKind controlKind, int x, int y) throws RemoteException;

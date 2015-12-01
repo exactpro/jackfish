@@ -134,6 +134,12 @@ public class WinRemoteApplication extends RemoteApplication
 	}
 
 	@Override
+	protected void resizeDerived(int height, int width, boolean maximize, boolean minimize) throws Exception
+	{
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
 	protected String switchToDerived(@Name(name = "title") final String title) throws Exception
 	{
 		return this.driver.translate(String.class, switchToDerived, title);

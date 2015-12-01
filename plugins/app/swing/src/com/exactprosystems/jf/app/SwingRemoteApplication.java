@@ -9,9 +9,11 @@
 package com.exactprosystems.jf.app;
 
 import com.exactprosystems.jf.api.app.*;
+
 import net.sourceforge.jnlp.Launcher;
 import net.sourceforge.jnlp.runtime.ApplicationInstance;
 import net.sourceforge.jnlp.runtime.JNLPRuntime;
+
 import org.apache.log4j.*;
 import org.fest.swing.core.BasicRobot;
 import org.fest.swing.core.ComponentMatcher;
@@ -20,6 +22,7 @@ import org.fest.swing.fixture.ComponentFixture;
 import org.w3c.dom.Document;
 
 import javax.swing.*;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.lang.reflect.Method;
@@ -184,6 +187,35 @@ public class SwingRemoteApplication extends RemoteApplication
 		}
 		
 		return list;
+	}
+
+	@Override
+	protected void resizeDerived(int height, int width, boolean maximize, boolean minimize) throws Exception
+	{
+		if (maximize)
+		{
+			Component frame = this.operationExecutor.currentFrame();
+			if (frame instanceof JFrame)
+			{
+				((JFrame)frame).setExtendedState(JFrame.MAXIMIZED_BOTH); 
+			}
+		}
+		else if (minimize)
+		{
+			Component frame = this.operationExecutor.currentFrame();
+			if (frame instanceof JFrame)
+			{
+				((JFrame)frame).setExtendedState(JFrame.ICONIFIED); 
+			}
+		}
+		else
+		{
+			Component frame = this.operationExecutor.currentFrame();
+			if (frame instanceof JFrame)
+			{
+				((JFrame)frame).setSize(width, height); 
+			}
+		}
 	}
 
 	@Override

@@ -190,6 +190,19 @@ public abstract class RemoteApplication implements IRemoteApplication
 		}
 	}
 
+	public final void resize (int height, int width, boolean maximize, boolean minimize) throws RemoteException
+	{
+		try 
+		{
+			resizeDerived(height, width, maximize, minimize);
+		}
+		catch (Exception e)
+		{
+			String msg = String.format("Error resize(%d, %d, %b, %b)", height, width, maximize, minimize);
+			throw new ProxyException(msg, e.getMessage(), e);
+		}
+	}
+
 
 	@Override
 	public final Collection<String> findAll(Locator owner, Locator element) throws RemoteException
@@ -357,6 +370,8 @@ public abstract class RemoteApplication implements IRemoteApplication
 	protected abstract Collection<String> titlesDerived() throws Exception;
 
 	protected abstract String switchToDerived(String title) throws Exception;
+
+	protected abstract void resizeDerived (int height, int width, boolean maximize, boolean minimize) throws Exception;
 
 	protected abstract Collection<String> findAllDerived(Locator owner, Locator element) throws Exception;
 	

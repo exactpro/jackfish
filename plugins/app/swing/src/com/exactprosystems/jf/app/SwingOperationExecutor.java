@@ -567,10 +567,6 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 			}
 			else
 			{
-				if (clear)
-				{
-					component.robot.cleanUp();
-				}
 				component.robot.enterText(text);
 			}
 			

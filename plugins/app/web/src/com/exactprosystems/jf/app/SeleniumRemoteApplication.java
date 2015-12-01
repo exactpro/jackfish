@@ -12,9 +12,11 @@ import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.app.js.JSInjection;
 import com.exactprosystems.jf.app.js.JSInjectionFactory;
+
 import org.apache.log4j.*;
 import org.jsoup.Jsoup;
 import org.openqa.selenium.*;
+import org.openqa.selenium.Dimension;
 import org.openqa.selenium.Point;
 import org.openqa.selenium.support.events.EventFiringWebDriver;
 import org.w3c.dom.DOMException;
@@ -25,6 +27,7 @@ import org.w3c.dom.Node;
 import javax.imageio.ImageIO;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+
 import java.awt.*;
 import java.awt.event.InputEvent;
 import java.awt.image.BufferedImage;
@@ -148,10 +151,10 @@ public class SeleniumRemoteApplication extends RemoteApplication
 			Browser browser = Browser.valueOf(browserName.toUpperCase());
 			this.driver = new EventFiringWebDriver(browser.createDriver(chromeDriverBinary));
 			this.jsInjection = JSInjectionFactory.getJSInjection(browser);
-			this.operationExecutor = new SeleniumOperationExecutor(driver, this.logger);
+			this.operationExecutor = new SeleniumOperationExecutor(this.driver, this.logger);
 
-			driver.get(url);
-			driver.manage().window().maximize();
+			this.driver.get(url);
+			this.driver.manage().window().maximize();
 			needTune = true;
 		}
 		catch (Exception e)
@@ -164,21 +167,21 @@ public class SeleniumRemoteApplication extends RemoteApplication
 	@Override
 	protected void stopDerived() throws Exception
 	{
-		if (driver != null)
+		if (this.driver != null)
 		{
-			for (String handle : driver.getWindowHandles())
+			for (String handle : this.driver.getWindowHandles())
 			{
-				driver.switchTo().window(handle);
+				this.driver.switchTo().window(handle);
 				break;
 			}
-			driver.quit();
+			this.driver.quit();
 		}
 	}
 
 	@Override
 	protected void refreshDerived() throws Exception
 	{
-		driver.navigate().refresh();
+		this.driver.navigate().refresh();
 
 		//		Actions actions = new Actions(driver);
 		//		actions.keyDown(Keys.CONTROL).sendKeys(Keys.F5).perform();
@@ -218,6 +221,23 @@ public class SeleniumRemoteApplication extends RemoteApplication
 		return res;
 	}
 
+	@Override
+	protected void resizeDerived(int height, int width, boolean maximize, boolean minimize) throws Exception
+	{
+		if (maximize)
+		{
+			this.driver.manage().window().maximize();
+		}
+		else if (minimize)
+		{
+			throw new UnsupportedOperationException();
+		}
+		else
+		{
+			this.driver.manage().window().setSize(new Dimension(width,  height));
+		}
+	}
+	
 	@Override
 	protected String switchToDerived(final String title) throws Exception
 	{
@@ -263,7 +283,7 @@ public class SeleniumRemoteApplication extends RemoteApplication
 		{
 			return tuneDisplay();
 		}
-		WebElement o = (WebElement) driver.executeScript("return document.elementFromPoint(" + (x - offsetX) + ", " + (y - offsetY) + ");");
+		WebElement o = (WebElement) this.driver.executeScript("return document.elementFromPoint(" + (x - offsetX) + ", " + (y - offsetY) + ");");
 		return getLocator(controlKind, o);
 	}
 
@@ -279,8 +299,8 @@ public class SeleniumRemoteApplication extends RemoteApplication
 				robot.mousePress(InputEvent.BUTTON1_DOWN_MASK);
 				robot.mouseRelease(InputEvent.BUTTON1_DOWN_MASK);
 
-				Object o = driver.executeScript(JSInjectionFactory.returnLocation);
-				ArrayList longs = (ArrayList) o;
+				Object o = this.driver.executeScript(JSInjectionFactory.returnLocation);
+				ArrayList<?> longs = (ArrayList<?>) o;
 				long xL = ((Long) longs.get(0));
 				long yL = ((Long) longs.get(1));
 
@@ -370,7 +390,7 @@ public class SeleniumRemoteApplication extends RemoteApplication
 		if (owner != null)
 		{
 			By byOwner = new MatcherSelenium(owner.getControlKind(), owner);
-			List<WebElement> owners = driver.findElements(byOwner);
+			List<WebElement> owners = this.driver.findElements(byOwner);
 			if (owners.isEmpty())
 			{
 				throw new RemoteException("Owner was not found.");
@@ -384,7 +404,7 @@ public class SeleniumRemoteApplication extends RemoteApplication
 		}
 
 		By by = new MatcherSelenium(locator.getControlKind(), locator);
-		List<WebElement> elements = (ownerElement == null ? driver.findElements(by) : ownerElement.findElements(by));
+		List<WebElement> elements = (ownerElement == null ? this.driver.findElements(by) : ownerElement.findElements(by));
 
 		List<String> result = new ArrayList<>();
 		for(WebElement element : elements)
@@ -410,7 +430,7 @@ public class SeleniumRemoteApplication extends RemoteApplication
 			try
 			{
 				//method webElement.getScreenshotAs not working in 2.48.2
-				File screenshot = driver.getScreenshotAs(OutputType.FILE);
+				File screenshot = this.driver.getScreenshotAs(OutputType.FILE);
 				BufferedImage fullImg = ImageIO.read(screenshot);
 				if (element == null)
 				{
@@ -479,7 +499,7 @@ public class SeleniumRemoteApplication extends RemoteApplication
 		{
 			flag = tab.equalsIgnoreCase("true");
 		}
-		driver.executeScript("function createDoc(){var w = window.open('"+url+"'"+ (flag ? ",'_blank'" : "")+")}; createDoc();");
+		this.driver.executeScript("function createDoc(){var w = window.open('"+url+"'"+ (flag ? ",'_blank'" : "")+")}; createDoc();");
 		needTune = true;
 	}
 
@@ -522,7 +542,7 @@ public class SeleniumRemoteApplication extends RemoteApplication
 		WebElement element;
 		if (owner == null)
 		{
-			element = driver.findElement(By.tagName("body"));
+			element = this.driver.findElement(By.tagName("body"));
 		}
 		else
 		{
@@ -590,25 +610,25 @@ public class SeleniumRemoteApplication extends RemoteApplication
 	@Override
 	protected void startGrabbingDerived() throws Exception
 	{
-		this.jsInjection.injectJSHighlight(driver);
+		this.jsInjection.injectJSHighlight(this.driver);
 	}
 
 	@Override
 	protected void endGrabbingDerived() throws Exception
 	{
-		this.jsInjection.stopInject(driver);
+		this.jsInjection.stopInject(this.driver);
 	}
 
 	@Override
 	protected void highlightDerived(Locator owner, String xpath) throws Exception
 	{
-		SearchContext ownerElement = driver;
+		SearchContext ownerElement = this.driver;
 		if (owner != null)
 		{
 			ownerElement = this.operationExecutor.find(null, owner);
 		}
 		WebElement currentElement = ownerElement.findElement(By.xpath(xpath));
-		this.jsInjection.startHighLight(driver, currentElement);
+		this.jsInjection.startHighLight(this.driver, currentElement);
 		try
 		{
 			Thread.sleep(1000);
@@ -617,7 +637,7 @@ public class SeleniumRemoteApplication extends RemoteApplication
 		{
 			//
 		}
-		this.jsInjection.stopHighLight(driver, currentElement);
+		this.jsInjection.stopHighLight(this.driver, currentElement);
 	}
 
 	private EventFiringWebDriver driver;
