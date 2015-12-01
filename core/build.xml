@@ -105,6 +105,19 @@
 		<ant antfile="../ServiceMatrix/build.xml" target="distribute" dir="../ServiceMatrix"/>
 	</target>
 
+	<target name="createMock">
+		<echo>create mock app</echo>
+		<jar destfile="${testdata.dir}/resources/mock/mockapp.jar" basedir="${buildtest.dir}" includes="**/MockApp*">
+			<manifest>
+				<attribute name="Main-Class" value="org.eclipse.jdt.internal.jarinjarloader.JarRsrcLoader"/>
+				<attribute name="Rsrc-Main-Class" value="com.exactprosystems.jf.MockApp"/>
+				<attribute name="Class-Path" value="."/>
+				<attribute name="Rsrc-Class-Path" value="."/>
+			</manifest>
+			<zipfileset src="${lib.dir}/jar-in-jar-loader.zip"/>
+		</jar>
+	</target>
+
 	<target name="junit" depends="buildAll">
 		<echo>junit tests...</echo>
 		<delete dir="${buildtest.dir}"/>
@@ -124,18 +137,7 @@
 				<exclude name="**/*.java"/>
 			</fileset>
 		</copy>
-
-		<echo>create mock app</echo>
-		<jar destfile="${testdata.dir}/resources/mock/mockapp.jar" basedir="${buildtest.dir}" includes="**/MockApp*">
-			<manifest>
-				<attribute name="Main-Class" value="org.eclipse.jdt.internal.jarinjarloader.JarRsrcLoader"/>
-				<attribute name="Rsrc-Main-Class" value="com.exactprosystems.jf.MockApp"/>
-				<attribute name="Class-Path" value="."/>
-				<attribute name="Rsrc-Class-Path" value="."/>
-			</manifest>
-			<zipfileset src="${lib.dir}/jar-in-jar-loader.zip"/>
-		</jar>
-
+		<antcall target="createTool"/>
 		<junit printsummary="yes" haltonfailure="yes" showoutput="true" dir=".">
 			<classpath>
 				<path refid="project.classpath"/>
