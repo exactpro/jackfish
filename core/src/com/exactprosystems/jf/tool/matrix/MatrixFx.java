@@ -299,7 +299,7 @@ public class MatrixFx extends Matrix
 			{
 				for (int i = 0; i < size; i++)
 				{
-					par.remove(index);
+					par.remove(index + 1);
 				}
 			});
 		};
@@ -310,7 +310,7 @@ public class MatrixFx extends Matrix
 				for (int i = 0; i < size; i++)
 				{
 					Pair<ReadableValue, TypeMandatory> pair = list.get(i);
-					par.insert(index + i, pair.getKey().getValue(), "", pair.getValue());
+					par.insert(index + 1 + i, pair.getKey().getValue(), "", pair.getValue());
 				}
 			});
 		};
