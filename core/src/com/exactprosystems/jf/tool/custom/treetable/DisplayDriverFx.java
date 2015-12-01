@@ -52,6 +52,16 @@ public class DisplayDriverFx implements DisplayDriver
 		this.parametersContextMenu = parametersContextMenu;
 	}
 
+	private void selectCurrentRow(MatrixTreeRow row)
+	{
+		if (!row.isSelected())
+		{
+			this.treeView.getSelectionModel().clearSelection();
+			this.treeView.getFocusModel().focus(this.treeView.getRow(row.getTreeItem()));
+			this.treeView.getSelectionModel().select(row.getTreeItem());
+		}
+	}
+
 	@Override
 	public Object createLayout(MatrixItem item, int lines)
 	{
@@ -127,6 +137,12 @@ public class DisplayDriverFx implements DisplayDriver
 		CheckBox checkBox = new CheckBox(name);
 		checkBox.setMinWidth(name.length() * 8 + 20);
 		checkBox.setSelected(get.get());
+		checkBox.focusedProperty().addListener((observable, oldValue, newValue) -> {
+			if (!oldValue && newValue)
+			{
+				selectCurrentRow(((MatrixTreeRow) pane.getParent().getParent()));
+			}
+		});
 		checkBox.setOnAction(e ->
 		{
 			Boolean lastValue = get.get();
@@ -207,6 +223,10 @@ public class DisplayDriverFx implements DisplayDriver
 		Common.sizeTextField(textBox);
 		textBox.focusedProperty().addListener((observable, oldValue, newValue) ->
 		{
+			if (!oldValue && newValue)
+			{
+				selectCurrentRow(((MatrixTreeRow) pane.getParent().getParent()));
+			}
 			if (!newValue && oldValue)
 			{
 				String lastValue = get.get();
@@ -255,6 +275,10 @@ public class DisplayDriverFx implements DisplayDriver
 		field.setSecondActionListener(secondHandler);
 		field.setChangingValueListener((observable, oldValue, newValue) ->
 		{
+			if (!oldValue && newValue)
+			{
+				selectCurrentRow(((MatrixTreeRow) pane.getParent().getParent()));
+			}
 			if (!newValue && oldValue)
 			{
 				String lastValue = get.get();
@@ -355,7 +379,10 @@ public class DisplayDriverFx implements DisplayDriver
 		GridPane pane = (GridPane) layout;
 		ToggleButton toggleButton = new ToggleButton(name);
 		toggleButton.setSelected(initialValue);
-		toggleButton.setOnAction(e -> action.apply(!toggleButton.isSelected()));
+		toggleButton.setOnAction(e -> {
+			selectCurrentRow(((MatrixTreeRow) pane.getParent().getParent()));
+			action.apply(!toggleButton.isSelected());
+		});
 		pane.add(toggleButton, column, row);
 		GridPane.setMargin(toggleButton, INSETS);
 	}
@@ -365,7 +392,7 @@ public class DisplayDriverFx implements DisplayDriver
 	{
 		GridPane pane = (GridPane) layout;
 
-		ParametersPane paramsPane = new ParametersPane(item, this.context, oneLine, parameters, generator, this.rowContextMenu, this.parametersContextMenu);
+		ParametersPane paramsPane = new ParametersPane(item, this.context, oneLine, parameters, generator, this.rowContextMenu, this.parametersContextMenu, () -> selectCurrentRow(((MatrixTreeRow) pane.getParent().getParent())));
 		GridPane.setMargin(paramsPane, new Insets(column, 10, column, 10));
 		pane.add(paramsPane, column, row, Integer.MAX_VALUE, 2);
 	}

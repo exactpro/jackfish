@@ -35,7 +35,6 @@ import com.exactprosystems.jf.tool.main.Main;
 import com.exactprosystems.jf.tool.matrix.MatrixFx;
 import com.exactprosystems.jf.tool.settings.SettingsPanel;
 import com.exactprosystems.jf.tool.settings.Theme;
-
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -66,13 +65,14 @@ public class ParametersPane extends CustomScrollPane
 	private boolean 	oneLine;
 	private FormulaGenerator generator;
 	private EventHandler<ContextMenuEvent> contextMenuHandler;
-	
+	private Common.Function fnc;
 	private static ContextMenu empty = new ContextMenu();
 	
 	public ParametersPane(MatrixItem matrixItem, Context context, boolean oneLine, Parameters parameters, FormulaGenerator generator,
-			MatrixContextMenu rowContextMenu, MatrixParametersContextMenu parametersContextMenu)
+						  MatrixContextMenu rowContextMenu, MatrixParametersContextMenu parametersContextMenu, Common.Function fnc)
 	{
 		super(oneLine ? 30 : 65);
+		this.fnc = fnc;
 		this.mainGridPane = new GridPane();
 		this.setContent(this.mainGridPane);
 		this.matrixItem = matrixItem;
@@ -231,6 +231,10 @@ public class ParametersPane extends CustomScrollPane
 		final Control finalKey = key;
 		key.focusedProperty().addListener((observable, oldValue, newValue) ->
 		{
+			if (!oldValue && newValue)
+			{
+				Common.tryCatch(fnc::call, "Error on select current row");
+			}
 			String oldText = par.getName();
 			String newText = ((TextField) finalKey).getText();
 			if (!newValue && oldValue && !Str.areEqual(oldText, newText))
@@ -386,6 +390,10 @@ public class ParametersPane extends CustomScrollPane
 			expressionField.setHelperForExpressionField(par.getName(), this.matrixItem.getMatrix());
 			expressionField.setChangingValueListener((observable, oldValue, newValue) ->
 			{
+				if (newValue && !oldValue)
+				{
+					Common.tryCatch(fnc::call,  "Error on select current row");
+				}
 				if (!newValue && oldValue)
 				{
 					Common.tryCatch(() -> getMatrix().parameterSetValue(this.matrixItem, index, expressionField.getText()), "Error on change parameters");
