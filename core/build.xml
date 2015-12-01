@@ -137,7 +137,7 @@
 				<exclude name="**/*.java"/>
 			</fileset>
 		</copy>
-		<antcall target="createTool"/>
+		<antcall target="createMock"/>
 		<junit printsummary="yes" haltonfailure="yes" showoutput="true" dir=".">
 			<classpath>
 				<path refid="project.classpath"/>
