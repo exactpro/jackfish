@@ -287,7 +287,14 @@ public class ParametersPane extends CustomScrollPane
 					switch (howHelp)
 					{
 						case BuildQuery:
+							break;
 							
+						case BuildMeasureExpression:
+							expressionField.setNameFirst("↔");
+							expressionField.setFirstActionListener(str -> 
+							{
+								return str;
+							});
 							break;
 							
 						case ChooseDateTime:

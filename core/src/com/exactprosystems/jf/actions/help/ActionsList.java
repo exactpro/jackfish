@@ -43,6 +43,7 @@ public class ActionsList extends AbstractAction
 		        ApplicationStart.class,
 		        ApplicationStop.class,
 		        ApplicationSwitchTo.class,
+		        ApplicationResize.class,
 				ApplicationCloseWindow.class,
 		        MessageCheck.class,
 		        ClientCheckMessage.class,
