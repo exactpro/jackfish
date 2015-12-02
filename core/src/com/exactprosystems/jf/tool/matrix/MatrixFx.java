@@ -22,7 +22,6 @@ import com.exactprosystems.jf.common.parser.items.MatrixItem;
 import com.exactprosystems.jf.common.parser.items.MatrixItemAttribute;
 import com.exactprosystems.jf.common.parser.items.TypeMandatory;
 import com.exactprosystems.jf.common.parser.listeners.IMatrixListener;
-import com.exactprosystems.jf.common.parser.listeners.RunnerListener;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.common.undoredo.Command;
 import com.exactprosystems.jf.tool.Common;
@@ -471,7 +470,7 @@ public class MatrixFx extends Matrix
 	
 	public void paste(MatrixItem where) throws Exception
 	{
-		if (where != null)
+		if (where != null && !copyList.isEmpty())
 		{
 			MatrixItem parent = where.getParent();
 			int index = parent.index(where);

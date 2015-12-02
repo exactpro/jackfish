@@ -170,16 +170,8 @@ public class HorizontalHeader extends TableHeaderRow
 	{
 		working = visible;
 		setManaged(working);
-		if (!visible)
-		{
-			getStyleClass().add("invisible");
-		}
-		else
-		{
-			getStyleClass().remove("invisible");
-			requestLayout();
-			getRootHeader().layoutFixedColumns();
-			updateHighlightSelection();
-		}
+		requestLayout();
+		getRootHeader().layoutFixedColumns();
+		updateHighlightSelection();
 	}
 }
