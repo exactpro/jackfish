@@ -23,9 +23,7 @@ import javafx.scene.control.TableView.TableViewSelectionModel;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -95,10 +93,12 @@ public class CellView extends TableCell<ObservableList<SpreadsheetCell>, Spreads
 				if (event.getY() + 10 > getHeight() && event.getX() + 10 > getWidth() && item.getRow() == maxRow && item.getColumn() == maxColumn)
 				{
 					this.setCursor(Cursor.CROSSHAIR);
+					isCrosshair = true;
 				}
 				else
 				{
 					this.setCursor(Cursor.DEFAULT);
+					isCrosshair = false;
 				}
 			}
 		});
@@ -461,7 +461,6 @@ public class CellView extends TableCell<ObservableList<SpreadsheetCell>, Spreads
 
 	private void dragSelect(MouseEvent e)
 	{
-		isCrosshair = Cursor.CROSSHAIR.equals(((CellView) e.getSource()).getCursor());
 		if (!this.contains(e.getX(), e.getY()))
 		{
 			return;
