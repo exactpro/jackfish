@@ -3,20 +3,21 @@
 	-fx-company-color-light : #3CB6EB;
 
 }
+
 /*Override classes*/
 .tab-close-button {
     -fx-opacity : 0;
     -fx-background-color : transparent;
 
 }
+.tab:selected .tabLabel {
+	-fx-fill : -fx-company-color-dark;
+
+}
 .progress-bar {
     -fx-box-border: black;
     -fx-accent: blue;
     -fx-indeterminate-bar-animation-time : 3
-}
-.tab:selected .tabLabel {
-	-fx-fill : -fx-company-color-dark;
-
 }
 .button {
     -fx-background-color:
@@ -78,13 +79,11 @@
     -fx-rotate: 90;
 
 }
-
 .tree-table-row-cell:selected {
     -fx-background-color: -fx-company-color-dark;
     -fx-text-fill: -fx-selection-bar-text;
 
 }
-
 .tree-cell {
     -fx-indent : 20;
 
@@ -115,9 +114,27 @@
     -fx-border-color : black;
 
 }
+.tree-cell:filled:selected:focused, .tree-cell:filled:selected {
+    -fx-background-color: rgb(0, 160, 0);
+    -fx-text-fill: -fx-selection-bar-text;
+}
 
-/*SystemVarsFxController.java*/
+/*Custom classes*/
+.transparentBackground {
+    -fx-background-color : transparent;
+
+}
+
+/*Matrix tree view*/
+.customTreeTableView > .column-header-background {
+	visibility: hidden;
+	-fx-padding: -1em;
+
+}
+
+/*Custom Table*/
 .correctRow {
+
 
 }
 .incorrectRow {
@@ -126,160 +143,6 @@
 }
 .textFieldVar {
     -fx-background-color : rgb(124,252,0,0.2);
-
-}
-
-/*DisplayDriverFx.java*/
-.trueOffItem {
-    -fx-background-color : darkgray;
-    -fx-border-color : lightgray;
-    -fx-border-width : 1 0 1 0;
-}
-.falseOffItem {
-    -fx-background-color : transparent;
-    -fx-border-color : lightgray;
-    -fx-border-width : 1 0 1 0;
-}
-.boldLabel {
-    -fx-font-weight : bold;
-
-}
-.obliqueLabel {
-    -fx-font-style : oblique;
-
-}
-.borderLabel {
-    -fx-border-color : red;
-    -fx-border-size : 2px;
-
-}
-
-
-.customComboBox :focused {
-    -fx-border-color : transparent;
-
-}
-
-/*ExpressionField*/
-.firstButton {
-    -fx-background-color : white;
-    -fx-border-color : rgb(0, 0, 0, 0.2);
-    -fx-border-insets: 0, 1, 2;
-    -fx-border-radius: 3, 2, 2;
-
-}
-
-.secondButton {
-    -fx-background-color : white;
-    -fx-border-color : rgb(0, 0, 0, 0.2);
-    -fx-border-insets: 0, 1, 2;
-    -fx-border-radius: 3, 2, 2;
-}
-
-.tree-cell:filled:selected:focused, .tree-cell:filled:selected {
-    -fx-background-color: rgb(0, 160, 0);
-    -fx-text-fill: -fx-selection-bar-text;
-}
-
-/*CssVariables.java*/
-.breakPointtrue {
-    -fx-background-color : rgb(255, 0, 0);
-    -fx-background-insets : 0px;
-}
-.breakPointfalse {
-    -fx-background-color: transparent;
-
-}
-
-.transparentBackground {
-    -fx-background-color : transparent;
-
-}
-
-.draggedMatrixItem {
-    -fx-background-color : rgb(235, 238,212);
-
-}
-
-.dragOverMatrixItem {
-    -fx-background-color : rgb(0,255,0,0.1);
-
-}
-.mandatoryGrid {
-    -fx-background-color : rgb(255, 0 ,0 ,0.1);
-
-
-}
-.notMandatoryGrid {
-    -fx-background-color : rgb(162,255,0,0.1);
-
-}
-.extraGrid {
-
-
-}
-
-.unknownParameter {
-    -fx-background-color : darkgoldenrod;
-
-}
-
-.colorSubCase {
-    -fx-background-color : lightgreen;
-
-}
-.uncolorSubCase {
-    -fx-background-color : transparent;
-
-}
-
-.transparentScrollBar .scroll-bar:vertical .track{
-        -fx-padding:0px;
-	-fx-background-color:transparent;
-	-fx-border-color:transparent;
-	-fx-background-radius: 0em;
-	-fx-border-radius:2em;
-
-}
-
-/* The increment and decrement button CSS class of scrollbar */
-
-.transparentScrollBar .scroll-bar:vertical .increment-button ,
-.transparentScrollBar .scroll-bar:vertical .decrement-button {
-
-    -fx-background-color:transparent;
-	-fx-background-radius: 0em;
-	-fx-padding:0 0 0 0;
-}
-
-.transparentScrollBar  .scroll-bar:vertical .increment-arrow,
-.transparentScrollBar  .scroll-bar:vertical  .decrement-arrow
-{
-	-fx-shape: " ";	
-	-fx-padding:0;        
-}
-
-/* The main scrollbar **thumb** CSS class which we drag every time (movable) */
-.transparentScrollBar .scroll-bar:vertical .thumb {
-    -fx-background-color:transparent;
-	-fx-background-insets: 0, 0, 0;
-	-fx-background-radius: 2em;
-    -fx-padding:0px;
-
-}
-
-.customTreeTableView > .column-header-background {
-	visibility: hidden;
-	-fx-padding: -1em;
-
-}
-
-
-/*Matrix comment*/
-.unfocusedTextArea {
-    -fx-border-color : transparent;
-    -fx-background-color : transparent;
-    -fx-border-width : null;
 
 }
 
@@ -357,14 +220,16 @@
     -fx-background-color : red;
 
 }
+
 .executingTab {
     -fx-background-color : derived(-fx-company-color-dark, 90%);
 
 }
-.stoppedTab {
-    -fx-background-color : red;
+.finishedTab {
+    -fx-background-color : lightgreen;
 
 }
+
 .matrixFinishedOk {
     -fx-background-color : derived(#4A6E3A, 90%);
 
@@ -373,14 +238,36 @@
     -fx-background-color : derived(red, 90%);
 
 }
-.finishedTab {
-    -fx-background-color : lightgreen;
+
+.trueOffItem {
+    -fx-background-color : darkgray;
+    -fx-border-color : lightgray;
+    -fx-border-width : 1 0 1 0;
+}
+.falseOffItem {
+    -fx-background-color : transparent;
+    -fx-border-color : lightgray;
+    -fx-border-width : 1 0 1 0;
+}
+
+.boldLabel {
+    -fx-font-weight : bold;
 
 }
-.defaultTab {
+.obliqueLabel {
+    -fx-font-style : oblique;
+
+}
+.borderLabel {
+    -fx-border-color : red;
+    -fx-border-size : 2px;
+
+}
+/*Matrix comment*/
+.unfocusedTextArea {
+    -fx-border-color : transparent;
     -fx-background-color : transparent;
-    -fx-border-color : black;
-    -fx-border-width : 1px;
+    -fx-border-width : null;
 
 }
 
@@ -601,7 +488,7 @@ CellView > .text-input.text-field{
 	-fx-padding: 0.333333em 0 0.333333em 0.583em;
 
 }
-.custom-text-field:right-node-visible .right-pane {
+.custom-text-field:right-node-visible .customFieldRightPane {
 	-fx-padding: 0 3 0 3;
 
 }
@@ -645,11 +532,5 @@ CellView > .text-input.text-field{
 .expressionEditor .firstPane:hover > .expressionButton,
 .expressionEditor .secondPane:hover > .expressionButton {
 	-fx-text-fill : #3CB6EB;
-
-}
-
-/*UNUSED*/
-.gridCell:selected {
-	-fx-background-color : gold;
 
 }

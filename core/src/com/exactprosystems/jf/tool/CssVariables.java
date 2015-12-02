@@ -10,112 +10,125 @@ package com.exactprosystems.jf.tool;
 
 public class CssVariables
 {
-	// theme/preloader.css
+	/**
+	 * preloader.css
+	 */
 	public static final String	PRELOADER_GRID				= "preloaderGrid";
-	public static final String	PRELOADER_EXACTPRO_TEXT		= "preloaderExactprosystemsText";
 	public static final String	PRELOADER_JASK_FISH_TEXT	= "preloaderJackFishText";
-	public static final String	PRELOADER_LOADING_TEXT		= "preloaderLoadingText";
 
-	public static final String	CORRECT_FIELD				= "correctField";
-	public static final String	INCORRECT_FIELD				= "incorrectField";
-
-	public static final String	BREAK_POINT_TRUE			= "breakPointtrue";
-	public static final String	BREAK_POINT_FALSE			= "breakPointfalse";
-
-	public static final String	TEXT_FIELD_VARIABLES		= "textFieldVar";
-
-	public static final String	EXPRESSION_FIELD_FIRST		= "firstButton";
-	public static final String	EXPRESSION_FIELD_SECOND		= "secondButton";
-	public static final String	EXPRESSION_EDITOR			= "expressionEditor";
-
-	public static final String	UNFOCUSED_GRID				= "unfocusedGrid";
-	public static final String	FOCUSED_FIELD				= "focusedField";
-	public static final String	EMPTY_GRID					= "emptyGrid";
-	public static final String	INVISIBLE_FIELD				= "invisibleField";
-	public static final String	FOCUSED_EMPTY_GRID			= "focusedEmptyGrid";
-	public static final String	FOCUSED_PANE				= "focusedPane";
-	public static final String	UNFOCUSED_PANE				= "unfocusedPane";
-
-	public static final String	EXTRA_GRID					= "extraGrid";
-	public static final String	MANDATORY_GRID				= "mandatoryGrid";
-	public static final String	NOT_MANDATORY_GRID			= "notMandatoryGrid";
-	public static final String	TRANSPARENT_SCROLL_BAR		= "transparentScrollBar";
-
-	public static final String	TREE_ITEM_GRID				= "treeItemGridBorder";
-	public static final String	DATE_PICKER_BUTTON			= "datePickerButton";
-
-	public static final String	ITEM_OFF_TRUE				= "trueOffItem";
-	public static final String	ITEM_OFF_FALSE				= "falseOffItem";
-
-	public static final String	COLOR_SUB_CASE				= "colorSubCase";
-	public static final String	UNCOLOR_SUB_CASE			= "uncolorSubCase";
-
-	public static final String	OBLIQUE_LABEL				= "obliqueLabel";
-	public static final String	BOLD_LABEL					= "boldLabel";
-	public static final String	BORDER_LABEL				= "borderLabel";
-
-	public static final String	UNFOCUSED_TEXT_AREA			= "unfocusedTextArea";
-
-	public static final String	EXECUTING_TAB				= "executingTab";
-	public static final String	FINISHED_TAB				= "finishedTab";
-	public static final String	ERROR_MATRIX_ITEM			= "errorMatrixItem";
-	public static final String	EXECUTING_MATRIX_ITEM		= "executingMatrixItem";
-	public static final String	DEFAULT_MATRIX_ITEM			= "defaultMatrixItem";
-	public static final String	MATRIX_FINISHED_OK			= "matrixFinishedOk";
-	public static final String	MATRIX_FINISHED_BAD			= "matrixFinishedBad";
-
-	public static final String	PAUSED_MATRIX_ITEM			= "pausedMatrixItem";
-	public static final String	CONSOLE_DEFAULT_TEXT		= "consoleDefaultText";
-	public static final String	CONSOLE_PAUSED_ITEM			= "consolePausedItem";
-	public static final String	CONSOLE_ERROR_ITEM			= "consoleErrorItem";
-
+	/**
+	 * Custom classes
+	 */
+	public static final String	TAB_LABEL					= "tabLabel";
 	public static final String	TRANSPARENT_BACKGROUND		= "transparentBackground";
-	public static final String	GRID_PANE_BORDER			= "gridPaneBorder";
+	public static final String	DELAY_SHUTTER				= "delayShutter";
 
-	public static final String	UNKNOWN_PARAMETER			= "unknownParameter";
-	public static final String	PARAMETERS_PANE				= "parametersPane";
+	/*Matrix tree view*/
+	public static final String	CUSTOM_TREE_TABLE_VIEW		= "customTreeTableView";
 
+	/*Custom table*/
 	public static final String	CORRECT_ROW					= "correctRow";
 	public static final String	INCORRECT_ROW				= "incorrectRow";
+	public static final String	TEXT_FIELD_VARIABLES		= "textFieldVar";
 
-	public static final String	DRAGGED_MATRIX_ITEM			= "draggedMatrixItem";
-	public static final String	DRAG_OVER_MATRIX_ITEM		= "dragOverMatrixItem";
-
+	/*Notifier*/
 	public static final String	NOTIFIER_TITLE				= "notifierTitle";
 	public static final String	NOTIFIER_MESSAGE			= "notifierMessage";
 	public static final String	NOTIFIER					= "notifier";
 
-	public static final String	EXPECTED_CLASS				= "expectedClass";
+	/*Correct / Incorrect fields*/
+	public static final String	CORRECT_FIELD				= "correctField";
+	public static final String	INCORRECT_FIELD				= "incorrectField";
 
-	public static final String	CUSTOM_TREE_TABLE_VIEW		= "customTreeTableView";
+	/*Xpath builder*/
 	public static final String	XPATH_TREE_VIEW				= "xpathTreeView";
 	public static final String	XPATH_FIND_TREE_ITEM		= "xpathFindTreeItem";
 	public static final String	FOUND_ONE_ELEMENT			= "foundOneElement";
-	public static final String	TAB_LABEL					= "tabLabel";
-	public static final String	DELAY_SHUTTER				= "delayShutter";
 
+	/*Grid pane on dictionary tab*/
+	public static final String	GRID_PANE_BORDER			= "gridPaneBorder";
+
+	/*Matrix tab*/
+	public static final String	EXECUTING_MATRIX_ITEM		= "executingMatrixItem";
+	public static final String	DEFAULT_MATRIX_ITEM			= "defaultMatrixItem";
+	public static final String	PAUSED_MATRIX_ITEM			= "pausedMatrixItem";
+	public static final String	ERROR_MATRIX_ITEM			= "errorMatrixItem";
+
+	public static final String	EXECUTING_TAB				= "executingTab";
+	public static final String	FINISHED_TAB				= "finishedTab";
+
+	public static final String	MATRIX_FINISHED_OK			= "matrixFinishedOk";
+	public static final String	MATRIX_FINISHED_BAD			= "matrixFinishedBad";
+
+	public static final String	ITEM_OFF_TRUE				= "trueOffItem";
+	public static final String	ITEM_OFF_FALSE				= "falseOffItem";
+
+	public static final String	OBLIQUE_LABEL				= "obliqueLabel";
+	public static final String	BOLD_LABEL					= "boldLabel";
+	public static final String	BORDER_LABEL				= "borderLabel";
+	/*Matrix comment*/
+	public static final String	UNFOCUSED_TEXT_AREA			= "unfocusedTextArea";
+
+	/*Console text*/
+	public static final String	CONSOLE_DEFAULT_TEXT		= "consoleDefaultText";
+	public static final String	CONSOLE_PAUSED_ITEM			= "consolePausedItem";
+	public static final String	CONSOLE_ERROR_ITEM			= "consoleErrorItem";
+
+	/*Sql test*/
 	public static final String	SQL_CONNECTION_VALID		= "sqlConnectionValid";
 	public static final String	SQL_CONNECTION_INVALID		= "sqlConnectionInValid";
 
+	/*Helper*/
 	public static final String	COMPILE_FAILED				= "compileFailed";
 	public static final String	EVALUATE_FAILED				= "evaluateFailed";
 	public static final String	EVALUATE_SUCCESS			= "evaluateSuccess";
+	public static final String	EXPECTED_CLASS				= "expectedClass";
 
+	/*Store*/
 	public static final String	NOT_CHANGEABLE_ROW			= "notChangeableRow";
-	public static final String	GRID_CELL					= "gridCell";
+
+	/*ParametersPane*/
+	public static final String	PARAMETERS_PANE				= "parametersPane";
+
+	public static final String	FOCUSED_FIELD				= "focusedField";
+	public static final String	UNFOCUSED_GRID				= "unfocusedGrid";
+	public static final String	INVISIBLE_FIELD				= "invisibleField";
+	public static final String	FOCUSED_EMPTY_GRID			= "focusedEmptyGrid";
+	public static final String	EMPTY_GRID					= "emptyGrid";
+
+	/*Resizable region*/
 	public static final String	RESIZABLE_REGION			= "resizableRegion";
 	public static final String	RESIZABLE_REGION_HOVER		= "resizableRegionHover";
 
+	/*Spreadsheet cell*/
+	public static final String	CELL_SPREADSHEET			= "cell-spreadsheet";
+	public static final String	SPREADSHEET_CELL			= "spreadsheet-cell";
+	public static final String	SELECTION_RECTANGLE			= "selection-rectangle";
+
+	/*Supported/Unsupported entries*/
 	public static final String	SUPPORTED_ENTRY				= "supportedEntry";
 	public static final String	UNSUPPORTED_ENTRY			= "unsupportedEntry";
+
+	/*Custom Text Fields*/
+	public static final String	CUSTOM_TEXT_FIELD			= "custom-text-field";
+	public static final String	CUSTOM_FIELD_WITH_BUTTON	= "customFieldWithButton";
+	public static final String	CUSTOM_FIELD_RIGHT_PANE		= "customFieldRightPane";
+	public static final String	CUSTOM_FIELD_CUSTOM_PANE	= "customPane";
+	public static final String	CUSTOM_FIELD_CUSTOM_BUTTON	= "customButton";
+
+	/*Expression field*/
+	public static final String	EXPRESSION_EDITOR			= "expressionEditor";
+	public static final String	EXPRESSION_FIELD_FIRST		= "firstButton";
+	public static final String	EXPRESSION_FIELD_SECOND		= "secondButton";
+
 	/**
 	 * Spinner css
 	 */
-	public static final String	ARROW						= "NumberSpinnerArrow";
-	public static final String	NUMBER_FIELD				= "NumberField";
-	public static final String	NUMBER_SPINNER				= "NumberSpinner";
-	public static final String	SPINNER_BUTTON_UP			= "SpinnerButtonUp";
-	public static final String	SPINNER_BUTTON_DOWN			= "SpinnerButtonDown";
+	public static final String	ARROW						= "numberSpinnerArrow";
+	public static final String	NUMBER_FIELD				= "numberField";
+	public static final String	NUMBER_SPINNER				= "numberSpinner";
+	public static final String	SPINNER_BUTTON_UP			= "spinnerButtonUp";
+	public static final String	SPINNER_BUTTON_DOWN			= "spinnerButtonDown";
 
 	public static class Icons
 	{

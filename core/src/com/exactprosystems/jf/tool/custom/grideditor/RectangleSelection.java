@@ -7,6 +7,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.exactprosystems.jf.tool.custom.grideditor;
 
+import com.exactprosystems.jf.tool.CssVariables;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
 import javafx.event.EventHandler;
@@ -28,7 +29,7 @@ public class RectangleSelection extends Rectangle
 	{
 		this.skin = skin;
 		this.sm = sm;
-		getStyleClass().add("selection-rectangle"); 
+		getStyleClass().add(CssVariables.SELECTION_RECTANGLE);
 		setMouseTransparent(true);
 
 		selectionRange = new SelectionRange();

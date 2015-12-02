@@ -7,6 +7,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.exactprosystems.jf.tool.custom.fields;
 
+import com.exactprosystems.jf.tool.CssVariables;
 import javafx.event.EventHandler;
 import javafx.scene.Cursor;
 import javafx.scene.control.Label;
@@ -25,7 +26,7 @@ public class CustomFieldWithButton extends CustomField
 	public CustomFieldWithButton(String text)
 	{
 		super(text);
-		this.getStyleClass().add("customFieldWithButton");
+		this.getStyleClass().add(CssVariables.CUSTOM_FIELD_WITH_BUTTON);
 		updateStyle("X", defaultHandler);
 	}
 
@@ -37,9 +38,9 @@ public class CustomFieldWithButton extends CustomField
 	private void updateStyle(String buttonText, EventHandler<MouseEvent> handler)
 	{
 		this.label = new Label(buttonText);
-		label.getStyleClass().addAll("customButton");
+		label.getStyleClass().addAll(CssVariables.CUSTOM_FIELD_CUSTOM_BUTTON);
 		this.stackPane = new StackPane(label);
-		stackPane.getStyleClass().addAll("customPane"); //$NON-NLS-1$
+		stackPane.getStyleClass().addAll(CssVariables.CUSTOM_FIELD_CUSTOM_PANE);
 		stackPane.setCursor(Cursor.DEFAULT);
 		stackPane.setOnMouseReleased(handler);
 		this.rightProperty().set(stackPane);

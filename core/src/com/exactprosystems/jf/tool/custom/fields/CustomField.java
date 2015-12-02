@@ -7,6 +7,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.exactprosystems.jf.tool.custom.fields;
 
+import com.exactprosystems.jf.tool.CssVariables;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Node;
@@ -20,7 +21,7 @@ public abstract class CustomField extends TextField
 	public CustomField(String text)
 	{
 		super(text);
-		getStyleClass().add("custom-text-field");
+		getStyleClass().add(CssVariables.CUSTOM_TEXT_FIELD);
 		this.editableProperty().addListener((observable, oldValue, newValue) -> {
 			Optional.ofNullable(this.right.get()).ifPresent(node -> node.setOpacity(newValue ? 1.0 : 0.0));
 		});

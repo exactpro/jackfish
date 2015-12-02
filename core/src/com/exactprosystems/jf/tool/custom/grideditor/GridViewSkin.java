@@ -7,6 +7,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.exactprosystems.jf.tool.custom.grideditor;
 
+import com.exactprosystems.jf.tool.CssVariables;
 import com.sun.javafx.scene.control.behavior.TableViewBehavior;
 import com.sun.javafx.scene.control.skin.TableHeaderRow;
 import com.sun.javafx.scene.control.skin.TableViewSkinBase;
@@ -89,7 +90,7 @@ public class GridViewSkin extends TableViewSkinBase<ObservableList<SpreadsheetCe
 
 		tableView.setRowFactory(p -> new GridRow(handle));
 
-		tableView.getStyleClass().add("cell-spreadsheet"); //$NON-NLS-1$
+		tableView.getStyleClass().add(CssVariables.CELL_SPREADSHEET); //$NON-NLS-1$
 
 		init();
 

@@ -7,6 +7,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.exactprosystems.jf.tool.custom.fields;
 
+import com.exactprosystems.jf.tool.CssVariables;
 import com.sun.javafx.scene.control.behavior.TextFieldBehavior;
 import com.sun.javafx.scene.control.skin.TextFieldSkin;
 import javafx.beans.property.ObjectProperty;
@@ -53,7 +54,7 @@ public abstract class CustomFieldSkin extends TextFieldSkin {
 			getChildren().remove(rightPane);
 			rightPane = new StackPane(newRight);
 			rightPane.setAlignment(Pos.CENTER_RIGHT);
-			rightPane.getStyleClass().add("right-pane"); //$NON-NLS-1$
+			rightPane.getStyleClass().add(CssVariables.CUSTOM_FIELD_RIGHT_PANE);
 			getChildren().add(rightPane);
 			right = newRight;
 		}

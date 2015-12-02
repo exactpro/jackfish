@@ -7,6 +7,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.exactprosystems.jf.tool.custom.grideditor;
 
+import com.exactprosystems.jf.tool.CssVariables;
 import com.sun.javafx.event.EventHandlerManager;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
@@ -39,7 +40,7 @@ public class SpreadsheetCellBase implements SpreadsheetCell, EventTarget
 		this.type = type;
 		text = new SimpleStringProperty(""); //$NON-NLS-1$
 		setEditable(true);
-		getStyleClass().add("spreadsheet-cell"); //$NON-NLS-1$
+		getStyleClass().add(CssVariables.SPREADSHEET_CELL); //$NON-NLS-1$
 		styleProperty = new SimpleStringProperty();
 	}
 

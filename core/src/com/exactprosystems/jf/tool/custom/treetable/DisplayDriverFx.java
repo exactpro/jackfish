@@ -66,7 +66,6 @@ public class DisplayDriverFx implements DisplayDriver
 	public Object createLayout(MatrixItem item, int lines)
 	{
 		GridPane pane = new GridPane();
-		pane.getStyleClass().add(CssVariables.TREE_ITEM_GRID);
 		if (item.getParent() == null)
 		{
 			TreeItem<MatrixItem> root = new TreeItem<>(item);
