@@ -1,10 +1,10 @@
-
-
-
-
-
-
-
+////////////////////////////////////////////////////////////////////////////////
+//  Copyright (c) 2009-2015, Exactpro Systems, LLC
+//  Quality Assurance & Related Development for Innovative Trading Systems.
+//  All rights reserved.
+//  This is unpublished, licensed software, confidential and proprietary
+//  information which is the property of Exactpro Systems, LLC or its licensors.
+////////////////////////////////////////////////////////////////////////////////
 package com.exactprosystems.jf.tool.custom.grideditor;
 
 import javafx.beans.InvalidationListener;
@@ -83,7 +83,7 @@ public class RectangleSelection extends Rectangle
 		{
 			return;
 		}
-		
+
 		int topRow = topRowCell.getIndex();
 		IndexedCell bottomRowCell = skin.getFlow().getCells().get(skin.getFlow().getCells().size() - 1);
 		if (bottomRowCell == null)
@@ -110,8 +110,6 @@ public class RectangleSelection extends Rectangle
 		maxRow = Math.min(maxRow, bottomRow);
 		int minColumn = selectionRange.range.getLeft();
 		int maxColumn = selectionRange.range.getRight();
-
-		final CellView call = (CellView) sm.getSelectedCells().get(0).getTableColumn().getCellFactory().call(sm.getSelectedCells().get(0).getTableColumn());
 
 		GridRow gridMinRow = skin.getRowIndexed(minRow);
 		if (gridMinRow == null)
@@ -143,6 +141,12 @@ public class RectangleSelection extends Rectangle
 		setVisible(true);
 
 		handleVerticalPositioning(minRow, maxRow, gridMinRow, gridMaxRow);
+	}
+
+	public void updateRectangle(boolean flag)
+	{
+		handleHorizontalPositioning(0, 2);
+		handleVerticalPositioning(0, 2, skin.getRowIndexed(0), skin.getRowIndexed(2));
 	}
 
 	private void handleVerticalPositioning(int minRow, int maxRow, GridRow gridMinRow, GridRow gridMaxRow)

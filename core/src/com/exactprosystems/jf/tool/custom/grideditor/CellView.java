@@ -35,6 +35,7 @@ public class CellView extends TableCell<ObservableList<SpreadsheetCell>, Spreads
 {
 	private final SpreadsheetHandle handle;
 	private ObservableList<TablePosition> selectedTablePositions;
+	public static boolean isCrosshair = false;
 
 	private static final String ANCHOR_PROPERTY_KEY = "table.anchor"; //$NON-NLS-1$
 
@@ -76,7 +77,9 @@ public class CellView extends TableCell<ObservableList<SpreadsheetCell>, Spreads
 				}
 				if (this.handle.getGridView().getSelectionModel().getSelectionMode().equals(SelectionMode.MULTIPLE))
 				{
-					this.selectedTablePositions = FXCollections.observableArrayList(this.handle.getGridView().getSelectionModel().getSelectedCells());
+					ObservableList<TablePosition> selectedCells = this.handle.getGridView().getSelectionModel().getSelectedCells();
+					this.selectedTablePositions = FXCollections.observableArrayList(selectedCells);
+					findMinPositionAndSetAnchor(selectedCells);
 					startFullDrag();
 				}
 			}
@@ -171,6 +174,19 @@ public class CellView extends TableCell<ObservableList<SpreadsheetCell>, Spreads
 			}
 		});
 		itemProperty().addListener(itemChangeListener);
+	}
+
+	private void findMinPositionAndSetAnchor(ObservableList<TablePosition> selectedCells)
+	{
+		TablePosition min = selectedCells.get(0);
+		for (TablePosition cell : selectedCells)
+		{
+			if (cell.getColumn() < min.getColumn() && cell.getRow() < min.getRow())
+			{
+				min = cell;
+			}
+		}
+		setAnchor(getTableView(), min);
 	}
 
 	private int evaluateProgression(ObservableList<TablePosition> initialCells, DataProvider provider)
@@ -445,6 +461,7 @@ public class CellView extends TableCell<ObservableList<SpreadsheetCell>, Spreads
 
 	private void dragSelect(MouseEvent e)
 	{
+		isCrosshair = Cursor.CROSSHAIR.equals(((CellView) e.getSource()).getCursor());
 		if (!this.contains(e.getX(), e.getY()))
 		{
 			return;
@@ -474,7 +491,7 @@ public class CellView extends TableCell<ObservableList<SpreadsheetCell>, Spreads
 		final int rowCell = cell.getRow();
 		final int columnCell = cell.getColumn();
 
-		final TableViewFocusModel<?> fm = tableView.getFocusModel();
+		final TableViewFocusModel<ObservableList<SpreadsheetCell>> fm = tableView.getFocusModel();
 		if (fm == null)
 		{
 			return;
