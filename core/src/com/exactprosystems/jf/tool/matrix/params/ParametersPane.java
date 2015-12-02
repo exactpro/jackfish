@@ -67,7 +67,7 @@ public class ParametersPane extends CustomScrollPane
 	private EventHandler<ContextMenuEvent> contextMenuHandler;
 	private Common.Function fnc;
 	private static ContextMenu empty = new ContextMenu();
-	
+
 	public ParametersPane(MatrixItem matrixItem, Context context, boolean oneLine, Parameters parameters, FormulaGenerator generator,
 						  MatrixContextMenu rowContextMenu, MatrixParametersContextMenu parametersContextMenu, Common.Function fnc)
 	{
@@ -100,27 +100,29 @@ public class ParametersPane extends CustomScrollPane
 			{
 				exist = parameterBox(par, i, this.contextMenuHandler);
 			}
-			updatePane(exist, par);
+			updatePane(exist, par, i);
 			this.mainGridPane.add(exist, i + 1, 0, 1, this.oneLine ? 1 : 2);
 		}
 		this.mainGridPane.add(emptyBox(FXCollections.observableArrayList(this.mainGridPane.getChildren()), this.contextMenuHandler), 0, 0, 1, 2);
 	}
 
-	private void updatePane(Pane pane, Parameter parameter)
+	private void updatePane(Pane pane, Parameter parameter, int index)
 	{
 		pane.getChildren().stream()
 				.filter(node -> node instanceof TextField)
 				.findFirst()
-				.filter(n -> !Str.areEqual(((TextField) n).getText(), parameter.getName()))
-				.ifPresent(n -> ((TextField) n).setText(parameter.getName()));
+				.ifPresent(field -> {
+					field.focusedProperty().addListener(createKeyChangeListener(parameter, ((TextField) field), index));
+					((TextField) field).setText(parameter.getName());
+				});
 
 		pane.getChildren().stream()
 				.filter(node -> node instanceof NewExpressionField)
 				.findFirst()
-				.filter(n -> !Str.areEqual(((NewExpressionField) n).getText(), parameter.getExpression()))
-				.ifPresent(n -> {
-					((NewExpressionField) n).setText(parameter.getExpression());
-					((NewExpressionField) n).stretchIfCan(parameter.getExpression());
+				.ifPresent(field -> {
+					((NewExpressionField) field).setChangingValueListener(createExpressionChangeListener(parameter, ((NewExpressionField) field), index));
+					((NewExpressionField) field).setText(parameter.getExpression());
+					((NewExpressionField) field).stretchIfCan(parameter.getExpression());
 				});
 	}
 
@@ -221,15 +223,9 @@ public class ParametersPane extends CustomScrollPane
 		return pane;
 	}
 
-	private Pane parameterBox(Parameter par, int index, EventHandler<ContextMenuEvent> contextMenuHandler)
+	private ChangeListener<Boolean> createKeyChangeListener(Parameter par, Control finalKey, int index)
 	{
-		GridPane tempGrid = new ParameterGridPane();
-		tempGrid.setUserData(par);
-		Control key = new TextField(par.getName());
-		((TextField) key).setPromptText("Key");
-		Common.sizeTextField((TextField) key);
-		final Control finalKey = key;
-		key.focusedProperty().addListener((observable, oldValue, newValue) ->
+		return (observable, oldValue, newValue) ->
 		{
 			if (!oldValue && newValue)
 			{
@@ -245,7 +241,35 @@ public class ParametersPane extends CustomScrollPane
 			{
 				strech((TextField) finalKey);
 			}
-		});
+		};
+	}
+
+	private ChangeListener<Boolean> createExpressionChangeListener(Parameter par,  NewExpressionField expressionField, int index)
+	{
+		return (observable, oldValue, newValue) ->
+		{
+			if (newValue && !oldValue)
+			{
+				Common.tryCatch(fnc::call,  "Error on select current row");
+			}
+			String oldText = par.getExpression();
+			String newText = expressionField.getText();
+			if (!newValue && oldValue/* && !Str.areEqual(oldText, newText)*/)
+			{
+				Common.tryCatch(() -> getMatrix().parameterSetValue(this.matrixItem, index, expressionField.getText()), "Error on change parameters");
+			}
+		};
+	}
+
+	private Pane parameterBox(Parameter par, int index, EventHandler<ContextMenuEvent> contextMenuHandler)
+	{
+		GridPane tempGrid = new ParameterGridPane();
+		tempGrid.setUserData(par);
+		Control key = new TextField(par.getName());
+		((TextField) key).setPromptText("Key");
+		Common.sizeTextField((TextField) key);
+		final Control finalKey = key;
+		key.focusedProperty().addListener(createKeyChangeListener(par, finalKey, index));
 		switch (par.getType())
 		{
 			case Mandatory:
@@ -395,17 +419,7 @@ public class ParametersPane extends CustomScrollPane
 			expressionField.setOnContextMenuRequested(contextMenuHandler);
 			expressionField.setNotifierForErrorHandler();
 			expressionField.setHelperForExpressionField(par.getName(), this.matrixItem.getMatrix());
-			expressionField.setChangingValueListener((observable, oldValue, newValue) ->
-			{
-				if (newValue && !oldValue)
-				{
-					Common.tryCatch(fnc::call,  "Error on select current row");
-				}
-				if (!newValue && oldValue)
-				{
-					Common.tryCatch(() -> getMatrix().parameterSetValue(this.matrixItem, index, expressionField.getText()), "Error on change parameters");
-				}
-			});
+			expressionField.setChangingValueListener(createExpressionChangeListener(par, expressionField, index));
 			tempGrid.add(expressionField, 0, 1);
 			GridPane.setMargin(expressionField, Common.insetsNode);
 			focusedParent(expressionField);
