@@ -1,12 +1,12 @@
-/*
-    . - add StyleClass
-    # - setId()  (try not to use)
-*/
-
-/*All for application*/
 .root {
 	-fx-company-color-dark : #2A7596;
 	-fx-company-color-light : #3CB6EB;
+
+}
+/*Override classes*/
+.tab-close-button {
+    -fx-opacity : 0;
+    -fx-background-color : transparent;
 
 }
 .progress-bar {
@@ -14,10 +14,6 @@
     -fx-accent: blue;
     -fx-indeterminate-bar-animation-time : 3
 }
-/*
-    all buttons
-    win 7 button from http://fxexperience.com/2011/12/styling-fx-buttons-with-css/
-*/
 .tab:selected .tabLabel {
 	-fx-fill : -fx-company-color-dark;
 
@@ -80,6 +76,7 @@
 .tree-cell:expanded > .tree-disclosure-node > .arrow,
 .tree-table-row-cell:expanded > .tree-disclosure-node > .arrow {
     -fx-rotate: 90;
+
 }
 
 .tree-table-row-cell:selected {
@@ -157,136 +154,9 @@
 
 }
 
-.focusedTextArea {
-    -fx-border-color : gold;
-    -fx-border-width : 1px;
-
-}
-.unfocusedTextArea {
-    -fx-border-color : transparent;
-    -fx-background-color : transparent;
-    -fx-border-width : null;
-
-}
-
-/*grid pane on dictionary tab*/
-.gridPaneBorder {
-    -fx-border-color: black;
-    -fx-border-width : 1px;
-}
-
-/*MatrixListenerFx.java*/
-.executingMatrixItem {
-    -fx-background-color : -fx-company-color-light;
-
-}
-.defaultMatrixItem {
-    -fx-background-color : transparent;
-
-}
-.pausedMatrixItem {
-    -fx-background-color : rgb(255, 0, 0, 0.5);
-
-}
-.errorMatrixItem {
-    -fx-background-color : red;
-
-}
-.executingTab {
-    -fx-background-color : derived(-fx-company-color-dark, 90%);
-
-}
-.stoppedTab {
-    -fx-background-color : red;
-
-}
-.matrixFinishedOk {
-    -fx-background-color : derived(#4A6E3A, 90%);
-
-}
-.matrixFinishedBad {
-    -fx-background-color : derived(red, 90%);
-
-}
-.finishedTab {
-    -fx-background-color : lightgreen;
-
-}
-.defaultTab {
-    -fx-background-color : transparent;
-    -fx-border-color : black;
-    -fx-border-width : 1px;
-
-}
-
-/*Common.java*/
-.notifierError {
-    -fx-background-color : salmon;
-    -fx-text-fill : white;
-
-}
-.notifierSuccess {
-    -fx-background-color : lightgreen;
-
-}
-.notifierInfo {
-    -fx-background-color : lightblue;
-    -fx-text-fill : white;
-
-}
-.notifierTitle {
-    -fx-font-size : 15;
-    -fx-font-weight : bold;
-    -fx-padding : 10;
-
-}
-.notifierMessage {
-    -fx-font-size : 26;
-    -fx-padding : 10;
-
-}
-
-/*com.exactprosystems.jf.tool.grid*/
-.menuRequest {
-    -fx-border-color : aqua;
-    -fx-border-size : 5px;
-    -fx-background-color : aqua;
-
-}
-.focusedField {
-    -fx-border-color : black;
-    -fx-border-size  : 5px;
-    -fx-background-color : -fx-company-color-light;
-
-}
-.unfocusedGrid {
-    -fx-border-color : transparent;
-    -fx-background-color : transparent;
-
-}
-.invisibleField {
-    -fx-background-color : transparent;
-    -fx-border-color : transparent;
-
-}
-.focusedEmptyGrid {
-    -fx-background-color : gold;
-
-}
-.emptyGrid {
-    -fx-border-color : grey;
-    -fx-border-size : 2px;
-
-}
 
 .customComboBox :focused {
     -fx-border-color : transparent;
-
-}
-
-.tab-close-button {
-    -fx-opacity : 0;
-    -fx-background-color : transparent;
 
 }
 
@@ -312,21 +182,12 @@
 }
 
 /*CssVariables.java*/
-.incorrectField {
-    -fx-text-fill : red;
-
-}
 .breakPointtrue {
     -fx-background-color : rgb(255, 0, 0);
     -fx-background-insets : 0px;
 }
 .breakPointfalse {
     -fx-background-color: transparent;
-
-}
-
-.correctField {
-    -fx-text-fill : black;
 
 }
 
@@ -355,10 +216,6 @@
 }
 .extraGrid {
 
-
-}
-.expectedClass {
-    -fx-background-color : lightgreen;
 
 }
 
@@ -417,27 +274,131 @@
 
 }
 
-.xpathTreeView .tree-cell:selected {
-    -fx-background-color : lightgray;
+
+/*Matrix comment*/
+.unfocusedTextArea {
+    -fx-border-color : transparent;
+    -fx-background-color : transparent;
+    -fx-border-width : null;
+
 }
 
+/*Notifier*/
+.notifierError {
+    -fx-background-color : salmon;
+    -fx-text-fill : white;
+
+}
+.notifierSuccess {
+    -fx-background-color : lightgreen;
+
+}
+.notifierInfo {
+    -fx-background-color : lightblue;
+    -fx-text-fill : white;
+
+}
+.notifierTitle {
+    -fx-font-size : 15;
+    -fx-font-weight : bold;
+    -fx-padding : 10;
+
+}
+.notifierMessage {
+    -fx-font-size : 26;
+    -fx-padding : 10;
+
+}
+
+/*Correct / Incorrect fields*/
+.incorrectField {
+    -fx-text-fill : red;
+
+}
+.correctField {
+    -fx-text-fill : black;
+
+}
+
+/*XPath builder*/
+.xpathTreeView .tree-cell:selected {
+    -fx-background-color : lightgray;
+
+}
 .xpathFindTreeItem {
     -fx-background-color : aquamarine;
 
 }
 .foundOneElement {
 	-fx-text-fill : rgb(12, 216, 39)
-}
-
-.disabledTextField {
-    -fx-background-color : rgb(213, 213,213)
-}
-
-.treeItemGridBorder {
-
 
 }
 
+/*grid pane on dictionary tab*/
+.gridPaneBorder {
+    -fx-border-color: derive(-fx-text-base-color, 10%);
+    -fx-border-width : 1px;
+}
+
+/*MatrixFx tab*/
+.executingMatrixItem {
+    -fx-background-color : -fx-company-color-light;
+
+}
+.defaultMatrixItem {
+    -fx-background-color : transparent;
+
+}
+.pausedMatrixItem {
+    -fx-background-color : rgb(255, 0, 0, 0.5);
+
+}
+.errorMatrixItem {
+    -fx-background-color : red;
+
+}
+.executingTab {
+    -fx-background-color : derived(-fx-company-color-dark, 90%);
+
+}
+.stoppedTab {
+    -fx-background-color : red;
+
+}
+.matrixFinishedOk {
+    -fx-background-color : derived(#4A6E3A, 90%);
+
+}
+.matrixFinishedBad {
+    -fx-background-color : derived(red, 90%);
+
+}
+.finishedTab {
+    -fx-background-color : lightgreen;
+
+}
+.defaultTab {
+    -fx-background-color : transparent;
+    -fx-border-color : black;
+    -fx-border-width : 1px;
+
+}
+
+/*Console Text*/
+.consoleDefaultText {
+	-fx-fill : -fx-text-base-color;
+
+}
+.consolePausedItem {
+	-fx-fill : -fx-company-color-light;
+
+}
+.consoleErrorItem {
+	-fx-fill : red;
+
+}
+
+/*Sql test*/
 .sqlConnectionValid {
 	-fx-text-fill : green
 
@@ -447,6 +408,7 @@
 
 }
 
+/*Helper*/
 .compileFailed {
 	-fx-text-fill : red;
 
@@ -459,12 +421,66 @@
 	-fx-text-fill : green;
 
 }
+.expectedClass {
+    -fx-background-color : lightgreen;
 
+}
+
+/*Store*/
 .notChangeableRow {
 	-fx-background-color : rgb(128, 128, 128, 0.3);
 
 }
 
+/*ParametersPane*/
+.parametersPane {
+	-fx-background-color: transparent;
+	-fx-background-insets: 0,0,0,0;
+	-fx-padding: 0;
+
+}
+.parametersPane .scroll-bar:horizontal .increment-button,
+.parametersPane .scroll-bar:horizontal .decrement-button {
+	-fx-opacity : 0;
+	-fx-pref-width : 0px;
+
+}
+.parametersPane .scroll-bar:horizontal .track {
+	-fx-opacity : 0;
+	-fx-pref-width : 20px;
+}
+.parametersPane .scroll-bar:horizontal .thumb {
+	-fx-background-color : -fx-company-color-light;
+
+}
+
+.focusedField {
+    -fx-border-color : black;
+    -fx-border-size  : 5px;
+    -fx-background-color : -fx-company-color-light;
+
+}
+.unfocusedGrid {
+    -fx-border-color : transparent;
+    -fx-background-color : transparent;
+
+}
+.invisibleField {
+    -fx-background-color : transparent;
+    -fx-border-color : transparent;
+
+}
+.focusedEmptyGrid {
+    -fx-background-color : gold;
+
+}
+.emptyGrid {
+    -fx-border-color : grey;
+    -fx-border-size : 2px;
+
+}
+
+/*Alerts*/
 .alert.confirmation.dialog-pane,
 .text-input-dialog.dialog-pane,
 .choice-dialog.dialog-pane {
@@ -484,43 +500,24 @@
 
 }
 
-
-.parametersPane {
-	-fx-background-color: transparent;
-	-fx-background-insets: 0,0,0,0;
-	-fx-padding: 0;
-
-}
-.parametersPane .scroll-bar:horizontal .increment-button,
-.parametersPane .scroll-bar:horizontal .decrement-button {
-	-fx-opacity : 0;
-	-fx-pref-width : 0px;
+/*Resizable region*/
+.resizableRegion {
+	-fx-border-width : 0 0 2 0;
+	-fx-border-color : -fx-company-color-dark;
+	-fx-opacity : 0.5;
 
 }
-.parametersPane .scroll-bar:horizontal .track {
-	-fx-opacity : 0;
-	-fx-pref-width : 20px;
-}
-
-.parametersPane .scroll-bar:horizontal .thumb {
-	-fx-background-color : -fx-company-color-light;
-}
-
-.gridCell:selected {
-	-fx-background-color : gold;
-}
-
-.resizbleRegion {
-	-fx-border-width : 0 0 3 0;
+.resizableRegionHover {
 	-fx-border-color : -fx-company-color-light;
+	-fx-opacity : 1;
 
 }
 
+/*Spread sheet*/
 .cell-spreadsheet .table-row-cell {
     -fx-background-color: transparent;
-}
 
-/* NORMAL CELL */
+}
 .spreadsheet-cell:filled:selected,
 .spreadsheet-cell:filled:focused:selected,
 .spreadsheet-cell:filled:focused:selected:hover {
@@ -536,15 +533,12 @@
     -fx-text-fill: white;
     -fx-background-insets: 0, 0 0 1 0;
 }
-
 .spreadsheet-cell{
     -fx-padding: 0 0 0 0.2em;
     -fx-border-color: black;
     -fx-border-width : 0.3px;
     -fx-background-color: -fx-table-cell-border-color,white;
 }
-
-/* HORIZONTAL AND VERTICAL HEADER SELECTION */
 VerticalHeader > Label {
     -fx-background-color: -fx-box-border, -fx-inner-border,  linear-gradient(to left, derive(-fx-color,-5%) ,derive(-fx-color,5%));
     -fx-background-insets: 0, 0 1 1 0, 1 2 2 1;
@@ -554,7 +548,6 @@ VerticalHeader > Label {
     -fx-alignment: center;
     -fx-font-style : normal;
 }
-
 VerticalHeader > Label.selected{
     -fx-background-color: -fx-company-color-light, -fx-company-color-light,  linear-gradient(to right, derive(-fx-company-color-light,-10%) ,derive(-fx-company-color-light,10%));
     -fx-background-insets: 0, 0 1 1 0, 1 2 2 1;
@@ -564,7 +557,6 @@ VerticalHeader > Label.selected{
     -fx-alignment: center;
     -fx-border-color : black;
 }
-
 HorizontalHeaderColumn > TableColumnHeader.column-header.table-column.selected{
     -fx-background-color: -fx-company-color-light, -fx-company-color-light,  linear-gradient(to bottom, derive(-fx-company-color-light,-10%) ,derive(-fx-company-color-light,10%));
     -fx-background-insets: 0, 0 1 1 0, 1 2 2 1;
@@ -574,20 +566,28 @@ HorizontalHeaderColumn > TableColumnHeader.column-header.table-column.selected{
     -fx-alignment: center;
     -fx-border-color : black;
 }
-
 .column-header-background.invisible { visibility: hidden; -fx-padding: -1em; }
-
 CellView > .text-input.text-field{
     -fx-padding : 0 0 0 -0.2em;
     -fx-background-color: transparent;
 }
-
 .selection-rectangle{
     -fx-fill : transparent;
     -fx-stroke : black;
     -fx-stroke-width : 2;
 }
 
+/*Supported/Unsupported entries*/
+.supportedEntry {
+	-fx-text-fill : -fx-company-color-light;
+
+}
+.unsupportedEntry {
+	-fx-text-fill : red;
+
+}
+
+/*Custom Text Fields*/
 .custom-text-field {
 	-fx-highlight-fill: derive(-fx-control-inner-background,-20%);
 	-fx-highlight-text-fill: -fx-text-inner-color;
@@ -597,15 +597,14 @@ CellView > .text-input.text-field{
 	-fx-background-insets: 0, 1;
 	-fx-background-radius: 3, 2;
 }
-
 .custom-text-field:right-node-visible {
 	-fx-padding: 0.333333em 0 0.333333em 0.583em;
-}
 
+}
 .custom-text-field:right-node-visible .right-pane {
 	-fx-padding: 0 3 0 3;
-}
 
+}
 .custom-text-field:focused,
 .custom-text-field:text-field-has-focus {
 	-fx-highlight-fill: -fx-accent;
@@ -622,19 +621,22 @@ CellView > .text-input.text-field{
 
 .customFieldWithButton .customPane {
 	-fx-padding: 0 3 0 0;
-}
 
+}
 .customFieldWithButton .customPane > .customButton {
 	-fx-text-fill : #2A7596;
+
 }
 .customFieldWithButton .customPane:hover > .customButton {
 	-fx-text-fill : #3CB6EB;
+
 }
 
+/*Expression Editor*/
 .expressionEditor {
 	-fx-padding: 0 3 0 0;
-}
 
+}
 .expressionEditor .firstPane > .expressionButton,
 .expressionEditor .secondPane > .expressionButton {
 	-fx-text-fill : #2A7596;
@@ -643,12 +645,11 @@ CellView > .text-input.text-field{
 .expressionEditor .firstPane:hover > .expressionButton,
 .expressionEditor .secondPane:hover > .expressionButton {
 	-fx-text-fill : #3CB6EB;
+
 }
 
-.supportedEntry {
-	-fx-text-fill : -fx-company-color-light;
-}
+/*UNUSED*/
+.gridCell:selected {
+	-fx-background-color : gold;
 
-.unsupportedEntry {
-	-fx-text-fill : red;
 }

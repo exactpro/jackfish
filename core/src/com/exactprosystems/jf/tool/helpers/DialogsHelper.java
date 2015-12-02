@@ -18,7 +18,6 @@ import com.exactprosystems.jf.common.parser.Matrix;
 import com.exactprosystems.jf.common.parser.items.*;
 import com.exactprosystems.jf.common.parser.listeners.IMatrixListener;
 import com.exactprosystems.jf.common.parser.listeners.MatrixListener;
-import com.exactprosystems.jf.common.parser.listeners.RunnerListener;
 import com.exactprosystems.jf.common.parser.listeners.SilenceMatrixListener;
 import com.exactprosystems.jf.common.report.HelpFactory;
 import com.exactprosystems.jf.common.report.ReportBuilder;
@@ -29,7 +28,6 @@ import com.exactprosystems.jf.tool.custom.date.DateTimePicker;
 import com.exactprosystems.jf.tool.custom.date.DateTimePickerSkin;
 import com.exactprosystems.jf.tool.custom.helper.HelperFx;
 import com.exactprosystems.jf.tool.matrix.MatrixFx;
-
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -50,7 +48,6 @@ import javafx.scene.web.WebView;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Popup;
-
 import org.apache.log4j.Logger;
 import org.w3c.dom.NodeList;
 
@@ -127,6 +124,7 @@ public abstract class DialogsHelper
 		alert.getDialogPane().setContent(popupContent);
 		alert.setTitle("Select date");
 		alert.setHeaderText("Choose date");
+		alert.getDialogPane().getStylesheets().add(Common.currentTheme().getPath());
 		Optional<ButtonType> buttonType = alert.showAndWait();
 		Optional<ButtonType> btnOk = buttonType.filter(bt -> bt.getButtonData().equals(ButtonBar.ButtonData.OK_DONE));
 		if (btnOk.isPresent())

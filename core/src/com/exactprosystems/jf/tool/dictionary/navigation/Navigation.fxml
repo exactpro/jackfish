@@ -8,6 +8,7 @@
    information which is the property of Exactpro Systems, LLC or its licensors.
   -->
 
+<?import com.exactprosystems.jf.tool.CssVariables?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
@@ -21,7 +22,10 @@
 		<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
 	</rowConstraints>
 	<children>
-		<GridPane styleClass="gridPaneBorder">
+		<GridPane>
+			<styleClass>
+				<CssVariables fx:constant="GRID_PANE_BORDER"/>
+			</styleClass>
 			<columnConstraints>
 				<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="30.0" prefWidth="100.0"/>
 				<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
@@ -104,7 +108,10 @@
 				<Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
 			</GridPane.margin>
 		</GridPane>
-		<GridPane styleClass="gridPaneBorder" GridPane.columnIndex="2">
+		<GridPane GridPane.columnIndex="2">
+			<styleClass>
+				<CssVariables fx:constant="GRID_PANE_BORDER"/>
+			</styleClass>
 			<columnConstraints>
 				<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="30.0" prefWidth="100.0"/>
 				<ColumnConstraints hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0"/>

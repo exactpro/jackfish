@@ -8,6 +8,7 @@
    information which is the property of Exactpro Systems, LLC or its licensors.
   -->
 
+<?import com.exactprosystems.jf.tool.CssVariables?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.SplitPane?>
@@ -18,7 +19,10 @@
 			<items>
 				<ScrollPane fitToHeight="true" fitToWidth="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" pannable="true" prefHeight="878.0" prefWidth="1457.0">
 					<content>
-						<GridPane styleClass="gridPaneBorder" fx:id="mainGridPane" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1308.0">
+						<GridPane fx:id="mainGridPane" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1308.0">
+							<styleClass>
+								<CssVariables fx:constant="GRID_PANE_BORDER"/>
+							</styleClass>
 							<columnConstraints>
 								<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="50.0" prefWidth="100.0"/>
 								<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="50.0" prefWidth="100.0"/>

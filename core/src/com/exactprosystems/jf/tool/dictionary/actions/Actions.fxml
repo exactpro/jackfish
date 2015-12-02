@@ -8,11 +8,15 @@
    information which is the property of Exactpro Systems, LLC or its licensors.
   -->
 
+<?import com.exactprosystems.jf.tool.CssVariables?>
 <?import com.exactprosystems.jf.tool.custom.fields.CustomFieldWithButton?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<GridPane id="gridPaneBorder" fx:id="mainGrid" styleClass="gridPaneBorder" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="com.exactprosystems.jf.tool.dictionary.actions.ActionsController">
+<GridPane fx:id="mainGrid" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="com.exactprosystems.jf.tool.dictionary.actions.ActionsController">
+	<styleClass>
+		<CssVariables fx:constant="GRID_PANE_BORDER"/>
+	</styleClass>
 	<columnConstraints>
 		<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="34.0" prefWidth="100.0" />
 		<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="66.0" prefWidth="100.0" />
@@ -30,7 +34,10 @@
 				<Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
 			</GridPane.margin>
 		</ScrollPane>
-		<GridPane id="gridPaneBorder" fx:id="elementActionsGrid" GridPane.halignment="CENTER" GridPane.hgrow="SOMETIMES" GridPane.rowIndex="1" GridPane.valignment="CENTER" GridPane.vgrow="SOMETIMES">
+		<GridPane fx:id="elementActionsGrid" GridPane.halignment="CENTER" GridPane.hgrow="SOMETIMES" GridPane.rowIndex="1" GridPane.valignment="CENTER" GridPane.vgrow="SOMETIMES">
+			<styleClass>
+				<CssVariables fx:constant="GRID_PANE_BORDER"/>
+			</styleClass>
 			<columnConstraints>
 				<ColumnConstraints percentWidth="33.4" halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
 				<ColumnConstraints percentWidth="33.3" halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />

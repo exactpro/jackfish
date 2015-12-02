@@ -36,6 +36,7 @@ public class DragResizer
 		region.setOnMouseMoved(resizer::mouseOver);
 		region.setOnMouseReleased(resizer::mouseReleased);
 		region.setOnMouseExited(resizer::mouseExited);
+		region.getStyleClass().add(CssVariables.RESIZABLE_REGION);
 	}
 
 	protected void mouseReleased(MouseEvent event)
@@ -47,7 +48,7 @@ public class DragResizer
 	protected void mouseExited(MouseEvent event)
 	{
 		if (!dragging)
-			region.getStyleClass().remove(CssVariables.RESIZBLE_REGION);
+			region.getStyleClass().remove(CssVariables.RESIZABLE_REGION_HOVER);
 	}
 
 	protected void mouseOver(MouseEvent event)
@@ -55,12 +56,12 @@ public class DragResizer
 		if (isInDraggableZone(event) || dragging)
 		{
 			region.setCursor(Cursor.S_RESIZE);
-			if (!region.getStyleClass().contains(CssVariables.RESIZBLE_REGION))
-				region.getStyleClass().add(CssVariables.RESIZBLE_REGION);
+			if (!region.getStyleClass().contains(CssVariables.RESIZABLE_REGION_HOVER))
+				region.getStyleClass().add(CssVariables.RESIZABLE_REGION_HOVER);
 		}
 		else
 		{
-			region.getStyleClass().remove(CssVariables.RESIZBLE_REGION);
+			region.getStyleClass().remove(CssVariables.RESIZABLE_REGION_HOVER);
 			region.setCursor(Cursor.DEFAULT);
 		}
 	}
@@ -93,7 +94,6 @@ public class DragResizer
 		{
 			return;
 		}
-		System.out.println(event.getSource());
 		dragging = true;
 		if (!initMinHeight)
 		{

@@ -16,7 +16,6 @@ public class CssVariables
 	public static final String	PRELOADER_JASK_FISH_TEXT	= "preloaderJackFishText";
 	public static final String	PRELOADER_LOADING_TEXT		= "preloaderLoadingText";
 
-	public static final String	DISABLED_TEXT_FIELD			= "disabledTextField";
 	public static final String	CORRECT_FIELD				= "correctField";
 	public static final String	INCORRECT_FIELD				= "incorrectField";
 
@@ -71,6 +70,7 @@ public class CssVariables
 	public static final String	CONSOLE_ERROR_ITEM			= "consoleErrorItem";
 
 	public static final String	TRANSPARENT_BACKGROUND		= "transparentBackground";
+	public static final String	GRID_PANE_BORDER			= "gridPaneBorder";
 
 	public static final String	UNKNOWN_PARAMETER			= "unknownParameter";
 	public static final String	PARAMETERS_PANE				= "parametersPane";
@@ -103,7 +103,8 @@ public class CssVariables
 
 	public static final String	NOT_CHANGEABLE_ROW			= "notChangeableRow";
 	public static final String	GRID_CELL					= "gridCell";
-	public static final String	RESIZBLE_REGION				= "resizbleRegion";
+	public static final String	RESIZABLE_REGION			= "resizableRegion";
+	public static final String	RESIZABLE_REGION_HOVER		= "resizableRegionHover";
 
 	public static final String	SUPPORTED_ENTRY				= "supportedEntry";
 	public static final String	UNSUPPORTED_ENTRY			= "unsupportedEntry";

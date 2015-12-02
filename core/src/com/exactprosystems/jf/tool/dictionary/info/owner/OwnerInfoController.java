@@ -10,7 +10,6 @@ package com.exactprosystems.jf.tool.dictionary.info.owner;
 
 import com.exactprosystems.jf.api.app.IControl;
 import com.exactprosystems.jf.tool.ContainingParent;
-import com.exactprosystems.jf.tool.CssVariables;
 import javafx.application.Platform;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
@@ -19,7 +18,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 
 import java.net.URL;
-import java.util.Arrays;
 import java.util.ResourceBundle;
 
 import static com.exactprosystems.jf.tool.Common.get;
@@ -68,12 +66,6 @@ public class OwnerInfoController implements Initializable, ContainingParent
 		assert tfOwnerVisibility != null : "fx:id=\"tfOwnerVisibility\" was not injected: check your FXML file 'OwnerInfo.fxml'.";
 		assert tfOwnerAddition != null : "fx:id=\"tfOwnerAddition\" was not injected: check your FXML file 'OwnerInfo.fxml'.";
 		assert tfOwnerXpath != null : "fx:id=\"tfOwnerXpath\" was not injected: check your FXML file 'OwnerInfo.fxml'.";
-		Arrays.asList(
-				tfOwnerAction, tfOwnerControl,tfOwnerUID,
-				tfOwnerID,tfOwnerOperation,tfOwnerName,
-				tfOwnerText,tfOwnerClass,tfOwnerTooltip,
-				tfOwnerTitle,tfOwnerTimeout,tfOwnerVisibility,
-				tfOwnerAddition,tfOwnerXpath).forEach(tf -> tf.getStyleClass().add(CssVariables.DISABLED_TEXT_FIELD));
 	}
 
 	public void init(GridPane gridPane)
