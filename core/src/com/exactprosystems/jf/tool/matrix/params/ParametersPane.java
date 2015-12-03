@@ -109,7 +109,7 @@ public class ParametersPane extends CustomScrollPane
 	private void updatePane(Pane pane, Parameter parameter, int index)
 	{
 		pane.getChildren().stream()
-				.filter(node -> node instanceof TextField)
+				.filter(node -> node.getClass() == TextField.class)
 				.findFirst()
 				.ifPresent(field -> {
 					field.focusedProperty().addListener(createKeyChangeListener(parameter, ((TextField) field), index));
@@ -117,7 +117,7 @@ public class ParametersPane extends CustomScrollPane
 				});
 
 		pane.getChildren().stream()
-				.filter(node -> node instanceof NewExpressionField)
+				.filter(node -> node.getClass() == NewExpressionField.class)
 				.findFirst()
 				.ifPresent(field -> {
 					((NewExpressionField) field).setChangingValueListener(createExpressionChangeListener(parameter, ((NewExpressionField) field), index));
