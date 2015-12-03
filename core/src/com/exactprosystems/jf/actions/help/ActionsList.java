@@ -63,6 +63,8 @@ public class ActionsList extends AbstractAction
 		        ServiceStart.class,
 		        ServiceStop.class,
 		        Check.class,
+		        DialogCheckLayout.class,
+		        DialogClose.class,
 		        DialogFill.class,
 		        MessageCompareTwo.class,
 		        MessageCreate.class,
@@ -117,8 +119,7 @@ public class ActionsList extends AbstractAction
 				XmlReport.class,
 				XmlSaveToFile.class,
 				XmlSetNode.class,
-				ApplicationNewInstance.class,
-				DialogClose.class
+				ApplicationNewInstance.class
 		    };
 	
     public ActionsList()

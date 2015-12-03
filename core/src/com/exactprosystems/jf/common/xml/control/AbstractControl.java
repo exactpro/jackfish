@@ -452,6 +452,46 @@ public abstract class AbstractControl implements IControl, Mutable
 	}
 
 	@Override
+	public final CheckingLayoutResult checkLayout(IRemoteApplication remote, IWindow window, Object value)  throws Exception
+	{
+		try
+		{
+			IControl ow = window.getOwnerControl(this);
+			Locator owner = ow == null ? null : ow.locator();
+
+			Locator element = locator();
+
+			Spec operation = null;
+			if (value instanceof Spec)
+			{
+				operation = (Spec) value;
+			}
+			else
+			{
+				operation = DoSpec.visible();
+			}
+
+			operation.tune(window);
+			return remote.checkLayout(owner, element, operation);
+		}
+		catch (RemoteException re)
+		{
+			logger.error(re.getMessage(), re);
+			if (re.getMessage().contains("is not allowed"))
+			{
+				CheckingLayoutResult result = new CheckingLayoutResult();
+				return result;
+			}
+			throw re;
+		}
+		catch (Exception e)
+		{
+			logger.error(e.getMessage(), e);
+			throw e;
+		}
+	}
+
+	@Override
 	public void prepare(Part operationPart, Object value)  throws Exception
 	{ }
 
