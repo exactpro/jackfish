@@ -26,7 +26,45 @@ public class WindowsOperationExecutor implements OperationExecutor<UIProxy>
 		this.driver = driver;
 		this.logger = logger;
 	}
+
+	@Override
+	public Rectangle getRectangle(UIProxy component) throws Exception
+	{
+		logger.trace("::getRectangle " + component);
+		
+		Rectangle ret = new Rectangle(component.getX(), component.getY(), component.getWidth(), component.getHeight());
+
+		
+		logger.trace("::getRectangle << " + ret);
+		return ret;
+	}
 	
+	@Override
+	public Color getColor(String color)
+	{
+		logger.trace("::getColor " + color);
+		Color ret = null;
+		if (color != null)
+		{
+			if (color.equalsIgnoreCase("transparent"))
+			{
+				ret = new Color(255, 255, 255, 0);
+			}
+			else
+			{
+				StringBuilder colorSB = new StringBuilder(color);
+				colorSB.delete(0, 5);
+				colorSB.deleteCharAt(colorSB.length() - 1);
+				String[] colors = colorSB.toString().split(", ");
+				ret = new Color(Integer.parseInt(colors[0]), Integer.parseInt(colors[1]), Integer.parseInt(colors[2]), Integer.parseInt(colors[3]));
+			}
+		}
+
+		logger.trace("::getColor << " + ret);
+		return ret;
+	}
+
+
 	@Override
 	public String get(UIProxy component) throws Exception
 	{
@@ -200,31 +238,6 @@ public class WindowsOperationExecutor implements OperationExecutor<UIProxy>
 			logger.error(e.getMessage(), e);
 			throw new RemoteException(e.getMessage());
 		}
-	}
-
-	@Override
-	public Color getColor(String color)
-	{
-		logger.trace("::getColor " + color);
-		Color ret = null;
-		if (color != null)
-		{
-			if (color.equalsIgnoreCase("transparent"))
-			{
-				ret = new Color(255, 255, 255, 0);
-			}
-			else
-			{
-				StringBuilder colorSB = new StringBuilder(color);
-				colorSB.delete(0, 5);
-				colorSB.deleteCharAt(colorSB.length() - 1);
-				String[] colors = colorSB.toString().split(", ");
-				ret = new Color(Integer.parseInt(colors[0]), Integer.parseInt(colors[1]), Integer.parseInt(colors[2]), Integer.parseInt(colors[3]));
-			}
-		}
-
-		logger.trace("::getColor << " + ret);
-		return ret;
 	}
 
 	@Override

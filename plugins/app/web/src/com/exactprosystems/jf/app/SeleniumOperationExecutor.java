@@ -11,12 +11,15 @@ package com.exactprosystems.jf.app;
 import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.app.Keyboard;
 import com.exactprosystems.jf.api.client.ICondition;
+
 import org.apache.log4j.Logger;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.openqa.selenium.*;
+import org.openqa.selenium.Dimension;
+import org.openqa.selenium.Point;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.interactions.*;
 import org.openqa.selenium.support.events.EventFiringWebDriver;
@@ -47,6 +50,42 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 		this.driver = driver;
 		this.logger = logger;
 		this.customAction = new CustomAction(this.driver);
+	}
+
+	@Override
+	public Rectangle getRectangle(WebElement component) throws Exception
+	{
+		try
+		{
+			Point location = component.getLocation();
+			Dimension size = component.getSize();
+			return new Rectangle(location.getX(), location.getY(), size.getWidth(),size.getHeight());
+		}
+		catch (Throwable e)
+		{
+			logger.error(String.format("getRectangle(%s)", component));
+			logger.error(e.getMessage(), e);
+			throw e;
+		}
+	}
+
+	@Override
+	public Color getColor(String color) throws Exception
+	{
+		if (color == null)
+		{
+			return null;
+		}
+
+		if (color.equalsIgnoreCase("transparent"))
+		{
+			return new Color(255, 255, 255, 0);
+		}
+		StringBuilder colorSB = new StringBuilder(color);
+		colorSB.delete(0, 5);
+		colorSB.deleteCharAt(colorSB.length() - 1);
+		String[] colors = colorSB.toString().split(", ");
+		return new Color(Integer.parseInt(colors[0]), Integer.parseInt(colors[1]), Integer.parseInt(colors[2]), Integer.parseInt(colors[3]));
 	}
 
 	@Override
@@ -375,25 +414,6 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 	public static Elements findRows(Document doc)
 	{
 		return doc.select(tag_tbody).first().children();
-	}
-
-	@Override
-	public Color getColor(String color) throws Exception
-	{
-		if (color == null)
-		{
-			return null;
-		}
-
-		if (color.equalsIgnoreCase("transparent"))
-		{
-			return new Color(255, 255, 255, 0);
-		}
-		StringBuilder colorSB = new StringBuilder(color);
-		colorSB.delete(0, 5);
-		colorSB.deleteCharAt(colorSB.length() - 1);
-		String[] colors = colorSB.toString().split(", ");
-		return new Color(Integer.parseInt(colors[0]), Integer.parseInt(colors[1]), Integer.parseInt(colors[2]), Integer.parseInt(colors[3]));
 	}
 
 	public List<WebElement> findAll(ControlKind controlKind, WebElement window, Locator locator) throws Exception

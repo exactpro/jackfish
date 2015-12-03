@@ -11,12 +11,15 @@ package com.exactprosystems.jf.api.app;
 import com.exactprosystems.jf.api.client.ICondition;
 
 import java.awt.Color;
+import java.awt.Rectangle;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 
 public interface OperationExecutor<T>
 {
+	Rectangle					getRectangle	(T component) throws Exception;
+	
 	Color 						getColor		(String color) throws Exception;
 
 	List<T> 					findAll			(ControlKind controlKind, T window, Locator locator																		) throws Exception;

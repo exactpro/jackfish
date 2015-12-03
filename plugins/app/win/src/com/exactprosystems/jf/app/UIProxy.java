@@ -39,6 +39,26 @@ public class UIProxy
 		}
 	}
 	
+	public int getX()
+	{
+		return this.x;
+	}
+
+	public int getY()
+	{
+		return this.y;
+	}
+
+	public int getWidth()
+	{
+		return this.width;
+	}
+
+	public int getHeight()
+	{
+		return this.height;
+	}
+
 	public boolean isEmpty()
 	{
 		return this.id == null || this.id.length == 0;
@@ -85,4 +105,8 @@ public class UIProxy
 
 	private Map<KindInformation, DataTable> data;
 	private long[] id;
+	private int x;
+	private int y;
+	private int width;
+	private int height;
 }

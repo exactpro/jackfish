@@ -52,6 +52,22 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 	}
 
 	@Override
+	public Rectangle getRectangle(ComponentFixture<Component> component) throws Exception
+	{
+		try
+		{
+			Component comp = component.target;
+			return new Rectangle(comp.getX(), comp.getY(), comp.getWidth(),comp.getHeight());
+		}
+		catch (Throwable e)
+		{
+			logger.error(String.format("getRectangle(%s)", component));
+			logger.error(e.getMessage(), e);
+			throw e;
+		}
+	}
+	
+	@Override
 	public Color getColor(String color) throws Exception
 	{
 		try
