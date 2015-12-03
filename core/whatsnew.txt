@@ -9,3 +9,7 @@ since 578 you need to remove following sections in your config:
     
 since 643 logs were separated to several files according their packages. 
 now logs are put into 'logs' directory. remove old main.log file in current directory.   
+
+
+since 713 api was upgraded to 2.0
+we have addded layout testing 
