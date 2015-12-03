@@ -11,7 +11,9 @@ package com.exactprosystems.jf.tool.dictionary.actions;
 import com.exactprosystems.jf.api.app.ImageWrapper;
 import com.exactprosystems.jf.api.app.Operation;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
+import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
+import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.css.images.Images;
 import com.exactprosystems.jf.tool.custom.fields.NewExpressionField;
 import com.exactprosystems.jf.tool.dictionary.ApplicationStatus;
@@ -24,10 +26,7 @@ import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
@@ -84,6 +83,16 @@ public class ActionsController implements Initializable, ContainingParent
 		String imageText = Images.class.getResource("texture.png").toExternalForm();
 		imageArea.setStyle("-fx-background-image:url('" + imageText + "');\n" + "    -fx-background-repeat: repeat;");
 		comboBoxWindows.setOnShowing(event -> tryCatch(() -> this.model.displayTitles(), "Error on update titles"));
+		Platform.runLater(() -> {
+			btnStartApplication.setTooltip(new Tooltip("Start application"));
+			btnStop.setTooltip(new Tooltip("Stop application"));
+			btnConnectApplication.setTooltip(new Tooltip("Connect application"));
+
+			Common.customizeLabeled(btnStartApplication, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.START_APPLICATION);
+			Common.customizeLabeled(btnConnectApplication, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.CONNECT_APPLICATION);
+			Common.customizeLabeled(btnStop, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.STOP_APPLICATION);
+
+		});
 	}
 
 	public void init(DictionaryFx model, GridPane gridPane, AbstractEvaluator evaluator, NavigationController navigation, 
