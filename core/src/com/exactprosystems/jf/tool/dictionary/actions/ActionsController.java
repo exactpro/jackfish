@@ -38,6 +38,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.net.URL;
 import java.util.Collection;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 import static com.exactprosystems.jf.tool.Common.*;
@@ -188,7 +189,6 @@ public class ActionsController implements Initializable, ContainingParent
 				switch (status)
 				{
 					case Disconnected:
-						progressBarVisible(false);
 						this.comboBoxApps.setDisable(false);
 						this.btnStartApplication.setDisable(false);
 						this.btnConnectApplication.setDisable(false);
@@ -196,7 +196,6 @@ public class ActionsController implements Initializable, ContainingParent
 						break;
 		
 					case Connecting:
-						progressBarVisible(true);
 						this.comboBoxApps.setDisable(true);
 						this.btnStartApplication.setDisable(true);
 						this.btnConnectApplication.setDisable(true);
@@ -204,7 +203,6 @@ public class ActionsController implements Initializable, ContainingParent
 						break;
 		
 					case Connected:
-						progressBarVisible(false);
 						this.comboBoxApps.setDisable(true);
 						this.btnStartApplication.setDisable(true);
 						this.btnConnectApplication.setDisable(true);
@@ -213,12 +211,10 @@ public class ActionsController implements Initializable, ContainingParent
 				}
 			}
 		});
-		
-		if (ifTrouble != null)
-		{
-			logger.error(ifTrouble.getMessage(), ifTrouble);
-			DialogsHelper.showError(ifTrouble.getMessage());
-		}
+		Optional.ofNullable(ifTrouble).ifPresent(twrbl -> {
+			logger.error(twrbl.getMessage(), twrbl);
+			DialogsHelper.showError(twrbl.getMessage());
+		});
 	}
 
 	public void displayTitles(Collection<String> titles)

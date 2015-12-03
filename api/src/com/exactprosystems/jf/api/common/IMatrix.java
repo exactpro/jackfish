@@ -8,6 +8,7 @@
 
 package com.exactprosystems.jf.api.common;
 
+import com.exactprosystems.jf.api.app.AppConnection;
 import com.exactprosystems.jf.api.app.IApplicationFactory;
 import com.exactprosystems.jf.api.client.IClientFactory;
 
@@ -18,4 +19,6 @@ public interface IMatrix
 	
 	void 					setDefaultClient(String id);
 	IClientFactory 			getDefaultClient();
+
+	AppConnection			getDefaultApplicationConnection();
 }

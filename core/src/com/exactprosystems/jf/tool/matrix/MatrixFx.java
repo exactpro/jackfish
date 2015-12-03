@@ -9,6 +9,7 @@
 package com.exactprosystems.jf.tool.matrix;
 
 import com.exactprosystems.jf.actions.ReadableValue;
+import com.exactprosystems.jf.api.app.AppConnection;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.common.Configuration;
 import com.exactprosystems.jf.common.Context;
@@ -24,6 +25,7 @@ import com.exactprosystems.jf.common.parser.items.TypeMandatory;
 import com.exactprosystems.jf.common.parser.listeners.IMatrixListener;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.common.undoredo.Command;
+import com.exactprosystems.jf.tool.ApplicationConnector;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import javafx.scene.control.ButtonType;
@@ -38,7 +40,6 @@ import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 public class MatrixFx extends Matrix
 {
@@ -200,6 +201,12 @@ public class MatrixFx extends Matrix
 		}
 	}
 
+	@Override
+	public AppConnection getDefaultApplicationConnection()
+	{
+		return this.applicationConnector == null ? null : this.applicationConnector.getAppConnection();
+	}
+
 	private static class Temp
 	{
 		private MatrixItem parent;
@@ -228,16 +235,6 @@ public class MatrixFx extends Matrix
 			return index;
 		}
 
-	}
-
-	public static void main(String[] args)
-	{
-		Stream.of("one", "two", "three", "four")
-				.filter(e -> e.length() > 3)
-				.peek(e -> System.out.println("Filtered value: " + e))
-				.map(String::toUpperCase)
-				.peek(e -> System.out.println("Mapped value: " + e))
-				.collect(Collectors.toList());
 	}
 
 	public void remove(List<MatrixItem> items)
@@ -605,7 +602,6 @@ public class MatrixFx extends Matrix
 			this.controller.showResult(file, this.getName());
 		}
 	}
-		
 
 	public void showWatch()
 	{
@@ -617,6 +613,23 @@ public class MatrixFx extends Matrix
 		// TODO what for?
 	}
 
+	public void startDefaultApplication(String idAppEntry) throws Exception
+	{
+		this.applicationConnector.setIdAppEntry(idAppEntry);
+		this.applicationConnector.startApplication();
+	}
+
+	public void connectDefaultApplication(String idAppEntry) throws Exception
+	{
+		this.applicationConnector.setIdAppEntry(idAppEntry);
+		this.applicationConnector.connectApplication();
+	}
+
+	public void stopDefaultApplication() throws Exception
+	{
+		this.applicationConnector.stopApplication();
+	}
+
 	//==============================================================================================================================
 	private void init(Configuration config, IMatrixListener matrixListener) throws Exception
 	{
@@ -625,6 +638,7 @@ public class MatrixFx extends Matrix
 		this.context = this.config.createContext(matrixListener, this.console);
 		this.runner = new MatrixRunner(this.context, this, this.startDate, null);
 		this.runner.setStartTime(this.startDate);
+		this.applicationConnector = new ApplicationConnector(this.config);
 
 		super.saved();
 	}
@@ -639,6 +653,8 @@ public class MatrixFx extends Matrix
 			this.controller.init(this, this.context, this.console);
 			setListener(this.controller);
 			this.isControllerInit = true;
+			this.applicationConnector.setApplicationListener(this.controller::displayApplicationStatus);
+
 		}
 	}
 
@@ -732,6 +748,7 @@ public class MatrixFx extends Matrix
 	private MatrixRunner 			runner;
 	private Date 					startDate = new Date();
 	private TabConsole 				console;
+	private ApplicationConnector applicationConnector;
 
 	private static List<MatrixItem>	copyList = new ArrayList<MatrixItem>();
 

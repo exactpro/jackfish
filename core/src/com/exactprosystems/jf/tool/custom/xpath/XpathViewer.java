@@ -13,11 +13,9 @@ import org.w3c.dom.NodeList;
 
 import javax.xml.xpath.*;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class XpathViewer
 {
@@ -63,16 +61,7 @@ public class XpathViewer
 		
 		ArrayList<String> params = new ArrayList<>();
 		NamedNodeMap attributes = node.getAttributes();
-		if (attributes != null)
-		{
-			int length = attributes.getLength();
-			for (int i = 0; i < length; i++)
-			{
-				Node item = attributes.item(i);
-				params.add(item.getNodeName());
-			}
-		}
-		
+		Optional.ofNullable(attributes).ifPresent(attr-> IntStream.range(0, attr.getLength()).mapToObj(attr::item).map(Node::getNodeName).forEach(params::add));
 		this.controller.displayParams(params);
 	}
 

@@ -8,6 +8,7 @@
 
 package com.exactprosystems.jf.tool.matrix;
 
+import com.exactprosystems.jf.api.app.AppConnection;
 import com.exactprosystems.jf.common.Context;
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.common.parser.DisplayDriver;
@@ -27,6 +28,7 @@ import com.exactprosystems.jf.tool.custom.treetable.DisplayDriverFx;
 import com.exactprosystems.jf.tool.custom.treetable.MatrixContextMenu;
 import com.exactprosystems.jf.tool.custom.treetable.MatrixParametersContextMenu;
 import com.exactprosystems.jf.tool.custom.treetable.MatrixTreeView;
+import com.exactprosystems.jf.tool.dictionary.ApplicationStatus;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.matrix.watch.WatcherFx;
 import com.exactprosystems.jf.tool.settings.SettingsPanel;
@@ -69,6 +71,9 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 	public SplitPane					splitPane;
 	public GridPane						gridPane;
 	public HBox							hBox;
+	public Button btnStartDefaultApplication;
+	public Button btnConnectDefaultApplication;
+	public Button btnStopDefaultApplication;
 
 	private WatcherFx					watcher	= null;
 	private FindPanel<MatrixItem>		findPanel;
@@ -433,6 +438,21 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 		this.tree.refresh();
 	}
 
+	public void startDefaultApplication(ActionEvent actionEvent)
+	{
+		tryCatch(() -> this.model.startDefaultApplication(cbDefaultApp.getSelectionModel().getSelectedItem()), "Error on start default application");
+	}
+
+	public void connectDefaultApplication(ActionEvent actionEvent)
+	{
+		tryCatch(() -> this.model.connectDefaultApplication(cbDefaultApp.getSelectionModel().getSelectedItem()), "Error on start default application");
+	}
+
+	public void stopDefaultApplication(ActionEvent actionEvent)
+	{
+		tryCatch(() -> this.model.stopDefaultApplication(), "Error on start default application");
+	}
+
 	// ------------------------------------------------------------------------------------------------------------------
 	// display* methods
 	// ------------------------------------------------------------------------------------------------------------------
@@ -476,12 +496,40 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 		Platform.runLater(() -> this.cbDefaultClient.setItems(FXCollections.observableList(result)));
 	}
 
+	public void displayApplicationStatus(ApplicationStatus status, AppConnection connection, Throwable throwable)
+	{
+		Platform.runLater(() -> {
+			if (status != null)
+			{
+				switch (status)
+				{
+					case Connecting:
+					case Connected:
+						this.cbDefaultApp.setDisable(true);
+						this.btnStartDefaultApplication.setDisable(true);
+						this.btnConnectDefaultApplication.setDisable(true);
+						break;
+
+					case Disconnected:
+						this.cbDefaultApp.setDisable(false);
+						this.btnStartDefaultApplication.setDisable(false);
+						this.btnConnectDefaultApplication.setDisable(false);
+						break;
+				}
+			}
+		});
+		Optional.ofNullable(throwable).ifPresent(twrbl -> {
+			logger.error(twrbl.getMessage(), twrbl);
+			DialogsHelper.showError(twrbl.getMessage());
+		});
+	}
+
 	// ------------------------------------------------------------------------------------------------------------------
 	// private methods
 	// ------------------------------------------------------------------------------------------------------------------
-	// TODO remake shortcuts over Menu.setAccelerator()
 	private void initShortcuts(final Settings settings)
 	{
+		//TODO add listener to content in tab, not to scene
 		getTabPane().getScene().addEventFilter(KeyEvent.KEY_PRESSED, keyEvent -> tryCatch(() ->
 		{
 			if (tab.isSelected())
@@ -531,7 +579,13 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 			btnShowResult.setTooltip(new Tooltip("Show result"));
 			toggleBtnColor.setTooltip(new Tooltip("Color off"));
 			btnFind.setTooltip(new Tooltip("Find\n" + getShortcutTooltip(settings, SettingsPanel.FIND_ON_MATRIX)));
+			btnStartDefaultApplication.setTooltip(new Tooltip("Start default application"));
+			btnConnectDefaultApplication.setTooltip(new Tooltip("Connect default application"));
+			btnStopDefaultApplication.setTooltip(new Tooltip("Stop default application"));
 
+			customizeLabeled(btnStartDefaultApplication, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.START_APPLICATION);
+			customizeLabeled(btnConnectDefaultApplication, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.CONNECT_APPLICATION);
+			customizeLabeled(btnStopDefaultApplication, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.STOP_APPLICATION);
 			customizeLabeled(btnStartMatrix, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.START_MATRIX_ICON);
 			customizeLabeled(btnStopMatrix, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.STOP_MATRIX_ICON);
 			customizeLabeled(btnPauseMatrix, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.PAUSE_MATRIX_ICON);

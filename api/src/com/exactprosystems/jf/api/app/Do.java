@@ -146,7 +146,7 @@ public class Do
 
 	static final String checkAttrRegexp = "Check, that value of attribute @name of current component is matching to @regexp";
 	@DescriptionAttribute(text = Do.checkAttrRegexp)
-	public static Operation checkRegexp(String name, String regexp)
+	public static Operation checkAttrRegexp(String name, String regexp)
 	{
 		return new Operation().checkAttrRegexp(name, regexp);
 	}

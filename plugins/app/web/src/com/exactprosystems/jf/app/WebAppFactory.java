@@ -16,7 +16,7 @@ import com.exactprosystems.jf.api.app.IGuiDictionary;
 public class WebAppFactory implements IApplicationFactory
 {
 	private static final int requiredMajorVersion = 1;
-	private static final int requiredMinorVersion = 31;
+	private static final int requiredMinorVersion = 33;
 
 	public static final String chromeDriverPathName	= "ChromeDriverPath";
 	public static final String ieDriverPathName		= "IEDriverPath";

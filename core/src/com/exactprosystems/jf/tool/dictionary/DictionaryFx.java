@@ -12,28 +12,25 @@ import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.app.IWindow.SectionKind;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.common.Configuration;
-import com.exactprosystems.jf.common.Context;
-import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.undoredo.Command;
 import com.exactprosystems.jf.common.xml.control.AbstractControl;
 import com.exactprosystems.jf.common.xml.gui.GuiDictionary;
 import com.exactprosystems.jf.common.xml.gui.Section;
 import com.exactprosystems.jf.common.xml.gui.Window;
+import com.exactprosystems.jf.tool.ApplicationConnector;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.dictionary.DictionaryFxController.Result;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
-
 import javafx.concurrent.Task;
 import javafx.scene.control.ButtonType;
 
-import org.apache.log4j.Logger;
-
 import javax.xml.bind.annotation.XmlRootElement;
-
 import java.io.Reader;
-import java.util.*;
-import java.util.Map.Entry;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static com.exactprosystems.jf.tool.Common.tryCatchThrow;
@@ -41,18 +38,14 @@ import static com.exactprosystems.jf.tool.Common.tryCatchThrow;
 @XmlRootElement(name = "dictionary")
 public class DictionaryFx extends GuiDictionary
 {
-	public static final String startParameters = "StartParameters";
-	public static final String connectParameters = "ConnectParameters";
-
 	private static AbstractControl copyControl;
 	private static Window copyWindow;
 	private boolean isControllerInit = false;
 
 	private String currentAdapter;
 	private DictionaryFxController controller;
-	private AppConnection appConnection;
-	private Task<Void> task;
 	private AbstractEvaluator evaluator;
+	private ApplicationConnector applicationConnector;
 
 	public DictionaryFx(String fileName, Configuration config) throws Exception
 	{
@@ -83,7 +76,7 @@ public class DictionaryFx extends GuiDictionary
 			IControl control = window.getFirstControl(SectionKind.Run);
 			displayElement(window, SectionKind.Run, control);
 		}
-		displayApplicationStatus(this.appConnection != null ? ApplicationStatus.Connected : ApplicationStatus.Disconnected, null, null);
+		displayApplicationStatus(this.applicationConnector != null && this.applicationConnector.getAppConnection() != null ? ApplicationStatus.Connected : ApplicationStatus.Disconnected, null, null);
 		displayApplicationControl(null);
 	}
 
@@ -161,17 +154,17 @@ public class DictionaryFx extends GuiDictionary
 
 	public void startGrabbing() throws Exception
 	{
-		if (this.appConnection != null && this.appConnection.isGood())
+		if (isApplicationRun())
 		{
-			this.appConnection.getApplication().service().startGrabbing();
+			this.applicationConnector.getAppConnection().getApplication().service().startGrabbing();
 		}
 	}
 
 	public void endGrabbing() throws Exception
 	{
-		if (this.appConnection != null && this.appConnection.isGood())
+		if (isApplicationRun())
 		{
-			this.appConnection.getApplication().service().endGrabbing();
+			this.applicationConnector.getAppConnection().getApplication().service().endGrabbing();
 		}
 	}
 
@@ -313,9 +306,9 @@ public class DictionaryFx extends GuiDictionary
 
 	public void dialogTest(IWindow window) throws Exception
 	{
-		if (this.appConnection != null)
+		if (isApplicationRun())
 		{
-			Set<ControlKind> supported = Arrays.stream(appConnection.getApplication().getFactory().supportedControlKinds())
+			Set<ControlKind> supported = Arrays.stream(this.applicationConnector.getAppConnection().getApplication().getFactory().supportedControlKinds())
 					.collect(Collectors.toSet());
 			
 			Collection<IControl> controls = window.getControls(SectionKind.Run);
@@ -338,7 +331,7 @@ public class DictionaryFx extends GuiDictionary
 							{
 								IControl owner = window.getOwnerControl(control);
 								Locator ownerLocator = owner == null ? null : owner.locator();
-								Collection<String> all = appConnection.getApplication().service().findAll(ownerLocator, control.locator());
+								Collection<String> all = applicationConnector.getAppConnection().getApplication().service().findAll(ownerLocator, control.locator());
 								
 								Result result = null;
 								if (all.size() == 1 || (Addition.Many.equals(control.getAddition()) && all.size() > 0))
@@ -464,9 +457,9 @@ public class DictionaryFx extends GuiDictionary
 		{
 			throw new Exception("You need select a dialog at first.");
 		}
-		if (this.appConnection != null)
+		if (isApplicationRun())
 		{
-			IRemoteApplication service = this.appConnection.getApplication().service();
+			IRemoteApplication service = this.applicationConnector.getAppConnection().getApplication().service();
 			if (service != null)
 			{
 				Locator locator = service.getLocator(null, ControlKind.Any, (int) x, (int) y);
@@ -513,15 +506,20 @@ public class DictionaryFx extends GuiDictionary
 		}
 	}
 
+	private boolean isApplicationRun()
+	{
+		return this.applicationConnector != null && this.applicationConnector.getAppConnection() != null && this.applicationConnector.getAppConnection().isGood();
+	}
+
 	public void elementRenew(double x, double y, boolean useSelfAsOwner, IWindow window, IWindow.SectionKind sectionKind, IControl control)  throws Exception
 	{
 		if (window == null)
 		{
 			throw new Exception("You need select a dialog at first.");
 		}
-		if (this.appConnection != null)
+		if (isApplicationRun())
 		{
-			IRemoteApplication service = this.appConnection.getApplication().service();
+			IRemoteApplication service = this.applicationConnector.getAppConnection().getApplication().service();
 			if (service != null)
 			{
 				Locator owner = getLocator(window.getOwnerControl(control));
@@ -684,35 +682,19 @@ public class DictionaryFx extends GuiDictionary
 
 	public void startApplication(String idAppEntry) throws Exception
 	{
-		if (this.appConnection == null)
-		{
-			startConnectApplication(idAppEntry, true);
-		}
+		this.applicationConnector.setIdAppEntry(idAppEntry);
+		this.applicationConnector.startApplication();
 	}
 
 	public void connectToApplication(String idAppEntry) throws Exception
 	{
-		if (this.appConnection == null)
-		{
-			startConnectApplication(idAppEntry, false);
-		}
+		this.applicationConnector.setIdAppEntry(idAppEntry);
+		this.applicationConnector.connectApplication();
 	}
 
 	public void stopApplication() throws Exception
 	{
-		if (this.task != null && this.task.isRunning() && !this.task.isDone())
-		{
-			this.task.cancel();
-			this.task = null;
-		}
-		if (this.appConnection != null)
-		{
-			this.appConnection.close();
-			this.appConnection = null;
-		}
-		
-//		displayApplicationControl("");
-		displayApplicationStatus(ApplicationStatus.Disconnected, null, this.appConnection);
+		this.applicationConnector.stopApplication();
 	}
 
 	public void sendKeys(String text, IControl control, IWindow window) throws Exception
@@ -728,11 +710,11 @@ public class DictionaryFx extends GuiDictionary
 	public void find(IControl control, IWindow window) throws Exception
 	{
 		displayImage(null);
-		if (this.appConnection != null)
+		if (isApplicationRun())
 		{
 			Locator owner = getLocator(window.getOwnerControl(control));
 			Locator locator = getLocator(control);
-			IRemoteApplication service = this.appConnection.getApplication().service();
+			IRemoteApplication service = this.applicationConnector.getAppConnection().getApplication().service();
 			Collection<String> all = service.findAll(owner, locator);
 			for (String str : all)
 			{
@@ -775,32 +757,32 @@ public class DictionaryFx extends GuiDictionary
 
 	public void switchTo(String selectedItem) throws Exception
 	{
-		if (this.appConnection != null)
+		if (isApplicationRun())
 		{
-			String title = this.appConnection.getApplication().service().switchTo(selectedItem);
+			String title = this.applicationConnector.getAppConnection().getApplication().service().switchTo(selectedItem);
 			displayApplicationControl(title);
 		}
 	}
 	
 	public void refresh() throws Exception
 	{
-		if (this.appConnection != null)
+		if (isApplicationRun())
 		{
-			this.appConnection.getApplication().service().refresh();
+			this.applicationConnector.getAppConnection().getApplication().service().refresh();
 			displayApplicationControl(null);
 		}
 	}
 
 	private Optional<OperationResult> operate(Operation operation, IWindow window, IControl control) throws Exception
 	{
-		if (this.appConnection != null)
+		if (isApplicationRun())
 		{
 			IControl owner = window.getOwnerControl(control);
 			IControl rows = window.getRowsControl(control);
 			IControl header = window.getHeaderControl(control);
 
 			AbstractControl abstractControl = AbstractControl.createCopy(control, owner, rows, header);
-			OperationResult result = abstractControl.operate(this.appConnection.getApplication().service(), window, operation);
+			OperationResult result = abstractControl.operate(this.applicationConnector.getAppConnection().getApplication().service(), window, operation);
 			return Optional.of(result);
 		}
 		return Optional.empty();
@@ -818,6 +800,8 @@ public class DictionaryFx extends GuiDictionary
 			this.controller.init(this, getConfiguration(), this.evaluator);
 			getConfiguration().register(this);
 			this.isControllerInit = true;
+			this.applicationConnector = new ApplicationConnector(getConfiguration());
+			this.applicationConnector.setApplicationListener(this::displayApplicationStatus);
 		}
 	}
 
@@ -838,77 +822,6 @@ public class DictionaryFx extends GuiDictionary
 			return control.locator();
 		}
 		return null;
-	}
-
-	private void startConnectApplication(final String idAppEntry, final boolean isStart) throws Exception
-	{
-		if (idAppEntry == null)
-		{
-			throw new Exception("You should choose app entry at first.");
-		}
-		IApplicationPool applicationPool = getConfiguration().getApplicationPool();
-		
-		String parametersName 	= isStart ? startParameters : connectParameters;
-		String title 			= isStart ? "Start " : "Connect ";
-		String[] strings 		= isStart ? applicationPool.wellKnownStartArgs(idAppEntry) : applicationPool.wellKnownConnectArgs(idAppEntry);
-
-		Settings settings = getConfiguration().getSettings();
-		final Map<String, String> parameters = settings.getMapValues(Settings.APPLICATION + idAppEntry, parametersName, strings);
-
-		ButtonType desision = DialogsHelper.showParametersDialog(title + idAppEntry, parameters, this.evaluator);
-		
-		if (desision == ButtonType.CANCEL)
-		{
-			return;
-		}
-		
-		settings.setMapValues(Settings.APPLICATION + idAppEntry, parametersName, parameters);
-		settings.saveIfNeeded();
-
-		// evaluate parameters 
-		Iterator<Entry<String, String>> iterator = parameters.entrySet().iterator();
-		while (iterator.hasNext())
-		{
-			Entry<String, String> entry = iterator.next();
-			String name = entry.getKey();
-			String expression = entry.getValue();
-			try
-			{
-				Object value = evaluator.evaluate(expression);
-				entry.setValue(String.valueOf(value));
-			}
-			catch (Exception e)
-			{
-				throw new Exception ("Error in " + name + " = " + expression + " :" + e.getMessage(), e);
-			}
-		}
-
-		this.task = new Task<Void>()
-		{
-			@Override
-			protected Void call() throws Exception
-			{
-				IApplicationPool applicationPool = getConfiguration().getApplicationPool();
-				
-				displayApplicationStatus(ApplicationStatus.Connecting, null, null);
-				if (isStart)
-				{
-					appConnection = applicationPool.startApplication(idAppEntry, parameters);
-				}
-				else
-				{
-					appConnection = applicationPool.connectToApplication(idAppEntry, parameters);
-				}
-				return null;
-			}
-		};
-
-		this.task.setOnSucceeded(workerStateEvent -> displayApplicationStatus(ApplicationStatus.Connected, null, this.appConnection));
-		this.task.setOnFailed(workerStateEvent -> displayApplicationStatus(ApplicationStatus.Disconnected, task.getException(), null));
-		Thread thread = new Thread(task);
-		thread.setName("Start app " + thread.getId());
-		thread.setDaemon(true);
-		thread.start();
 	}
 
 	private void displayTitle(String name)
@@ -960,7 +873,7 @@ public class DictionaryFx extends GuiDictionary
 		this.controller.displayImage(imageWrapper);
 	}
 
-	private void displayApplicationStatus(ApplicationStatus status, Throwable throwable, AppConnection appConnection)
+	private void displayApplicationStatus(ApplicationStatus status, AppConnection appConnection, Throwable throwable)
 	{
 		this.controller.displayApplicationStatus(status, throwable, appConnection);
 	}
@@ -974,12 +887,10 @@ public class DictionaryFx extends GuiDictionary
 	public void displayTitles() throws Exception
 	{
 		Collection<String> titles = null;
-		if (this.appConnection != null)
+		if (isApplicationRun())
 		{
-			titles = this.appConnection.getApplication().service().titles();
+			titles = this.applicationConnector.getAppConnection().getApplication().service().titles();
 		}
 		this.controller.displayTitles(titles);
 	}
-
-	private static final Logger logger = Logger.getLogger(DictionaryFx.class);
 }

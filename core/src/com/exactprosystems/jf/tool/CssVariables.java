@@ -151,6 +151,9 @@ public class CssVariables
 		public static final String	SCHEDULER_MATRIX_ICON	= IMAGES_DIR + "/scheduler.png";
 		public static final String	FOLDER_MATRIX_ICON		= IMAGES_DIR + "/folder.png";
 		public static final String	OPEN_MATRIX_ICON		= IMAGES_DIR + "/open.png";
+		public static final String	START_APPLICATION		= IMAGES_DIR + "/start_small.png";
+		public static final String	CONNECT_APPLICATION		= IMAGES_DIR + "/connect_small.png";
+		public static final String	STOP_APPLICATION		= IMAGES_DIR + "/stop_small.png";
 
 		public static final String	STOP_MATRIX_ICON		= IMAGES_DIR + "/stop.png";
 		public static final String	PAUSE_MATRIX_ICON		= IMAGES_DIR + "/pause.png";

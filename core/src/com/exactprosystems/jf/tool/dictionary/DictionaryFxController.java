@@ -280,9 +280,4 @@ public class DictionaryFxController implements Initializable, ContainingParent
 	{
 		this.actionsController.displayActionControl(entries, entry, title);
 	}
-
-
-	// ------------------------------------------------------------------------------------------------------------------
-	// private methods
-	// ------------------------------------------------------------------------------------------------------------------
 }

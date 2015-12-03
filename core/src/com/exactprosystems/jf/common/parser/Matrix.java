@@ -8,6 +8,7 @@
 
 package com.exactprosystems.jf.common.parser;
 
+import com.exactprosystems.jf.api.app.AppConnection;
 import com.exactprosystems.jf.api.app.IApplicationFactory;
 import com.exactprosystems.jf.api.client.IClientFactory;
 import com.exactprosystems.jf.api.common.IMatrix;
@@ -115,7 +116,13 @@ public class Matrix extends AbstractDocument implements IMatrix, Cloneable
 	{
 		return this.defaultClient;
 	}
-	
+
+	@Override
+	public AppConnection getDefaultApplicationConnection()
+	{
+		return null;
+	}
+
 	// ==============================================================================================================================
 	// AbstractDocument
 	// ==============================================================================================================================
