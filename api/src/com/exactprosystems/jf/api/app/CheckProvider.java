@@ -6,20 +6,10 @@
 //  information which is the property of Exactpro Systems, LLC or its licensors.
 ////////////////////////////////////////////////////////////////////////////////
 
-package com.exactprosystems.jf.api.common;
+package com.exactprosystems.jf.api.app;
 
-public class ApiVersionInfo
+@FunctionalInterface
+public interface CheckProvider
 {
-	private static final int majorVersion = 2;
-	private static final int minorVersion = 1;
-	
-	public static int majorVersion() 
-	{
-		return majorVersion;
-	}
-	
-	public static int minorVersion() 
-	{
-		return minorVersion;
-	}
+	Piece provide(PieceKind kind);
 }

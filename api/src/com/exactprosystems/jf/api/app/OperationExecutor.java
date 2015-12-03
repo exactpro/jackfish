@@ -23,6 +23,7 @@ public interface OperationExecutor<T>
 	Color 						getColor		(String color) throws Exception;
 
 	List<T> 					findAll			(ControlKind controlKind, T window, Locator locator																		) throws Exception;
+	List<T> 					findAll			(Locator owner, Locator element																							) throws Exception;
 	T 							find			(Locator owner, Locator element																							) throws Exception;
 	T							lookAtTable		(T table, Locator additional, Locator header, int x, int y																) throws Exception;
 	boolean						tableIsContainer();

@@ -437,6 +437,47 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 		throw real;
 	}
 
+	public List<WebElement> findAll(Locator owner, Locator locator) throws Exception
+	{
+		Exception real = null;
+		int repeat = 1;
+		do
+		{
+			try
+			{
+				
+				WebElement window = null;
+
+				if (owner != null)
+				{
+					List<WebElement> elements = findAll(owner.getControlKind(), null, owner);
+
+					if (elements.isEmpty())
+					{
+						throw new RemoteException("Owner was not found. Owner: " + owner);
+					}
+
+					if (elements.size() > 1)
+					{
+						throw new RemoteException(elements.size() + " owners were found instead 1. Owner: " + owner);
+					}
+					window = elements.get(0);
+				}
+				
+				By by = new MatcherSelenium(locator.getControlKind(), locator);
+				return (window == null) ? driver.findElements(by) : window.findElements(by);
+			}
+			catch (StaleElementReferenceException e)
+			{
+				real = e;
+				logger.debug("Element is no longer attached to the DOM. Try in SeleniumOperationExecutor : " + repeat);
+			}
+		}
+		while (++repeat < repeatLimit);
+		throw real;
+	}
+
+
 	@Override
 	public WebElement find(Locator owner, Locator locator) throws Exception
 	{

@@ -6,20 +6,15 @@
 //  information which is the property of Exactpro Systems, LLC or its licensors.
 ////////////////////////////////////////////////////////////////////////////////
 
-package com.exactprosystems.jf.api.common;
+package com.exactprosystems.jf.api.app;
 
-public class ApiVersionInfo
+public class CheckingLayoutResult
 {
-	private static final int majorVersion = 2;
-	private static final int minorVersion = 1;
+
 	
-	public static int majorVersion() 
+	public boolean isOk()
 	{
-		return majorVersion;
+		return false;
 	}
-	
-	public static int minorVersion() 
-	{
-		return minorVersion;
-	}
+
 }

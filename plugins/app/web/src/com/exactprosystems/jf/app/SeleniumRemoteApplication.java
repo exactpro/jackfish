@@ -484,6 +484,33 @@ public class SeleniumRemoteApplication extends RemoteApplication
 		while (++repeat < repeatLimit);
 		throw real;
 	}
+	
+	@Override
+	protected CheckingLayoutResult checkLayoutDerived(Locator owner, Locator element, Spec spec) throws Exception
+	{
+		Exception real = null;
+		int repeat = 1;
+		do
+		{
+			try
+			{
+				return spec.perform(this.operationExecutor, owner, element);
+			}
+			catch (StaleElementReferenceException e)
+			{
+				real = e;
+				logger.debug("Element is no longer attached to the DOM. Try in SeleniumRemoteApplication : " + repeat);
+			}
+			catch (Exception e)
+			{
+				logger.error("EXCEPTION : " + e.getMessage(), e);
+				throw new Exception(e.getMessage());
+			}
+		}
+		while (++repeat < repeatLimit);
+		throw real;
+	}
+
 
 	@Override
 	protected void newInstanceDerived(Map<String, String> args) throws Exception

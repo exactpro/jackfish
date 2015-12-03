@@ -31,6 +31,7 @@ public interface IRemoteApplication extends Remote
 	Collection<String> 		findAll		(Locator owner, Locator element) throws RemoteException;
 	Locator 				getLocator	(Locator owner, ControlKind controlKind, int x, int y) throws RemoteException;
 	OperationResult 		operate		(Locator owner, Locator element, Locator row, Locator header, Operation operation) throws RemoteException;
+	CheckingLayoutResult 	checkLayout	(Locator owner, Locator element, Spec spec) throws RemoteException;
 	int 					closeAll	(Locator element, Collection<LocatorAndOperation> operations) throws RemoteException;
 	String 					closeWindow	() throws RemoteException;
 	Document				getTree		(Locator owner) throws RemoteException;

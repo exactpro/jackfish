@@ -271,6 +271,23 @@ public abstract class RemoteApplication implements IRemoteApplication
 	}
 
 	@Override
+	public final CheckingLayoutResult checkLayout(Locator owner, Locator element, Spec spec) throws RemoteException
+	{
+		try 
+		{
+			exceptionIfNull(element, 	"element", "checkLayout");
+			exceptionIfNull(spec, 		"spec", "checkLayout");
+
+			return checkLayoutDerived(owner, element, spec);
+		}
+		catch (Exception e)
+		{
+			String msg = String.format("Error checkLayout(%s, %s, %s)", owner, element, spec);
+			throw new ProxyException(msg, e.getMessage(), e);
+		}
+	}
+
+	@Override
 	public int closeAll(Locator element, Collection<LocatorAndOperation> operations) throws RemoteException
 	{
 		try 
@@ -380,6 +397,8 @@ public abstract class RemoteApplication implements IRemoteApplication
 	protected abstract ImageWrapper getImageDerived(Locator owner, Locator element) throws Exception;
 
 	protected abstract OperationResult operateDerived(Locator owner, Locator element, Locator rows, Locator header, Operation operation) throws Exception;
+	
+	protected abstract CheckingLayoutResult checkLayoutDerived(Locator owner, Locator element, Spec spec) throws Exception;
 
 	protected abstract void newInstanceDerived(Map<String,String> args) throws Exception;
 	

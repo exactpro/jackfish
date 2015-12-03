@@ -258,6 +258,24 @@ public class WindowsOperationExecutor implements OperationExecutor<UIProxy>
 		return ret;
 	}
 
+	public List<UIProxy> findAll(Locator owner, Locator locator) throws Exception
+	{
+		logger.trace("::findAll " + owner + " " + locator);
+		System.out.println("::findAll " + owner + " " + locator);
+		
+		UIProxy window = null;
+
+		List<UIProxy> ret = this.driver.driverFindAllForLocator(locator.getControlKind(), window, locator);
+		if (owner != null)
+		{
+			window = driver.driverFindFirstForLocator(owner.getControlKind(), null, owner);
+		}
+		
+		logger.trace("::findAll << " + ret);
+		System.out.println("::findAll <<" + ret);
+		return ret;
+	}
+
 	@Override
 	public UIProxy find(Locator owner, Locator locator) throws Exception
 	{

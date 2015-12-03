@@ -10,6 +10,7 @@ package com.exactprosystems.jf.app;
 
 import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.client.ICondition;
+
 import org.apache.log4j.Logger;
 import org.fest.swing.core.*;
 import org.fest.swing.core.Robot;
@@ -24,6 +25,7 @@ import javax.swing.text.JTextComponent;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
+
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.lang.reflect.Method;
@@ -124,93 +126,39 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 		}
 	}
 
-	@SuppressWarnings("unchecked")
-	private <T extends Component> ComponentFixture<T> getFixture(T component) throws RemoteException
+	@Override
+	public List<ComponentFixture<Component>> findAll(Locator owner, Locator element) throws Exception
 	{
-		if (component instanceof JButton)
+		try
 		{
-			return (ComponentFixture<T>) new JButtonFixture(this.currentRobot, (JButton) component);
-		}
-		else if (component instanceof JCheckBox)
-		{
-			return (ComponentFixture<T>) new JCheckBoxFixture(this.currentRobot, (JCheckBox) component);
-		}
-		else if (component instanceof JComboBox)
-		{
-			return (ComponentFixture<T>) new JComboBoxFixture(this.currentRobot, (JComboBox) component);
-		}
-		else if (component instanceof JDialog)
-		{
-			DialogFixture fixture = new DialogFixture(this.currentRobot, (JDialog) component);
-			fixture.target.toFront();
-			fixture.focus();
-			return (ComponentFixture<T>) fixture;
-		}
-		else if (component instanceof JFrame)
-		{
-			FrameFixture frameFixture = new FrameFixture(this.currentRobot, (Frame) component);
-			frameFixture.target.toFront();
-			return (ComponentFixture<T>) frameFixture;
-		}
-		else if (component instanceof JLabel)
-		{
-			return (ComponentFixture<T>) new JLabelFixture(this.currentRobot, (JLabel) component);
-		}
-		else if (component instanceof JList)
-		{
-			return (ComponentFixture<T>) new JListFixture(this.currentRobot, ((JList) component));
-		}
-		else if (component instanceof JMenuItem)
-		{
-			return (ComponentFixture<T>) new JMenuItemFixture(this.currentRobot, ((JMenuItem) component));
-		}
-		else if (component instanceof JPanel)
-		{
-			return (ComponentFixture<T>) new JPanelFixture(this.currentRobot, ((JPanel) component));
-		}
-		else if (component instanceof JProgressBar)
-		{
-			return (ComponentFixture<T>) new JProgressBarFixture(this.currentRobot, ((JProgressBar) component));
-		}
-		else if (component instanceof JScrollBar)
-		{
-			return (ComponentFixture<T>) new JScrollBarFixture(this.currentRobot, (JScrollBar) component);
-		}
-		else if (component instanceof JSlider)
-		{
-			return (ComponentFixture<T>) new JSliderFixture(this.currentRobot, (JSlider) component);
-		}
-		else if (component instanceof JSpinner)
-		{
-			return (ComponentFixture<T>) new JSpinnerFixture(this.currentRobot, (JSpinner) component);
-		}
-		else if (component instanceof JTable)
-		{
-			return (ComponentFixture<T>) new JTableFixture(this.currentRobot, (JTable) component);
-		}
-		else if (component instanceof JTabbedPane)
-		{
-			return (ComponentFixture<T>) new JTabbedPaneFixture(this.currentRobot, (JTabbedPane) component);
-		}
-		else if (component instanceof JTextComponent)
-		{
-			return (ComponentFixture<T>) new JTextComponentFixture(this.currentRobot, (JTextComponent) component);
-		}
-		else if (component instanceof JToggleButton)
-		{
-			return (ComponentFixture<T>) new JToggleButtonFixture(this.currentRobot, (JToggleButton) component);
-		}
-		else if (component instanceof JTree)
-		{
-			return (ComponentFixture<T>) new JTreeFixture(this.currentRobot, (JTree) component);
-		}
-		else if (component instanceof JSplitPane)
-		{
-			return (ComponentFixture<T>) new JSplitPaneFixture(this.currentRobot, ((JSplitPane) component));
-		}
-		return new ComponentFixture<T>(this.currentRobot, component){};
-	}
+			this.currentRobot.waitForIdle();
+			Container container = null;
+			if (owner != null)
+			{
+				ComponentFixture<Component> found = find(null, owner);
+				if (found != null && found.target instanceof Container)
+				{
+					container = (Container)found.target;
+				}
+			}
 
+			List<ComponentFixture<Component>> res = new ArrayList<>();
+			MatcherSwing<Component> matcher = new MatcherSwing<Component>(Component.class, container, element.getControlKind(), element);
+			Collection<Component> components = this.currentRobot.finder().findAll(container, matcher);
+			for (final Component component : components)
+			{
+				res.add(getFixture(component));
+			}
+			return res;
+		}
+		catch (Throwable e)
+		{
+			logger.error(String.format("findAll(%s, %s)", owner, element));
+			logger.error(e.getMessage(), e);
+			throw new Exception("Unable to find component " + element, e);
+		}
+	}
+	
 	@Override
 	public ComponentFixture<Component> find(Locator owner, Locator element) throws Exception
 	{
@@ -1485,4 +1433,92 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 		}
 		return this.currentFrame;
 	}
+
+	@SuppressWarnings("unchecked")
+	private <T extends Component> ComponentFixture<T> getFixture(T component) throws RemoteException
+	{
+		if (component instanceof JButton)
+		{
+			return (ComponentFixture<T>) new JButtonFixture(this.currentRobot, (JButton) component);
+		}
+		else if (component instanceof JCheckBox)
+		{
+			return (ComponentFixture<T>) new JCheckBoxFixture(this.currentRobot, (JCheckBox) component);
+		}
+		else if (component instanceof JComboBox)
+		{
+			return (ComponentFixture<T>) new JComboBoxFixture(this.currentRobot, (JComboBox) component);
+		}
+		else if (component instanceof JDialog)
+		{
+			DialogFixture fixture = new DialogFixture(this.currentRobot, (JDialog) component);
+			fixture.target.toFront();
+			fixture.focus();
+			return (ComponentFixture<T>) fixture;
+		}
+		else if (component instanceof JFrame)
+		{
+			FrameFixture frameFixture = new FrameFixture(this.currentRobot, (Frame) component);
+			frameFixture.target.toFront();
+			return (ComponentFixture<T>) frameFixture;
+		}
+		else if (component instanceof JLabel)
+		{
+			return (ComponentFixture<T>) new JLabelFixture(this.currentRobot, (JLabel) component);
+		}
+		else if (component instanceof JList)
+		{
+			return (ComponentFixture<T>) new JListFixture(this.currentRobot, ((JList) component));
+		}
+		else if (component instanceof JMenuItem)
+		{
+			return (ComponentFixture<T>) new JMenuItemFixture(this.currentRobot, ((JMenuItem) component));
+		}
+		else if (component instanceof JPanel)
+		{
+			return (ComponentFixture<T>) new JPanelFixture(this.currentRobot, ((JPanel) component));
+		}
+		else if (component instanceof JProgressBar)
+		{
+			return (ComponentFixture<T>) new JProgressBarFixture(this.currentRobot, ((JProgressBar) component));
+		}
+		else if (component instanceof JScrollBar)
+		{
+			return (ComponentFixture<T>) new JScrollBarFixture(this.currentRobot, (JScrollBar) component);
+		}
+		else if (component instanceof JSlider)
+		{
+			return (ComponentFixture<T>) new JSliderFixture(this.currentRobot, (JSlider) component);
+		}
+		else if (component instanceof JSpinner)
+		{
+			return (ComponentFixture<T>) new JSpinnerFixture(this.currentRobot, (JSpinner) component);
+		}
+		else if (component instanceof JTable)
+		{
+			return (ComponentFixture<T>) new JTableFixture(this.currentRobot, (JTable) component);
+		}
+		else if (component instanceof JTabbedPane)
+		{
+			return (ComponentFixture<T>) new JTabbedPaneFixture(this.currentRobot, (JTabbedPane) component);
+		}
+		else if (component instanceof JTextComponent)
+		{
+			return (ComponentFixture<T>) new JTextComponentFixture(this.currentRobot, (JTextComponent) component);
+		}
+		else if (component instanceof JToggleButton)
+		{
+			return (ComponentFixture<T>) new JToggleButtonFixture(this.currentRobot, (JToggleButton) component);
+		}
+		else if (component instanceof JTree)
+		{
+			return (ComponentFixture<T>) new JTreeFixture(this.currentRobot, (JTree) component);
+		}
+		else if (component instanceof JSplitPane)
+		{
+			return (ComponentFixture<T>) new JSplitPaneFixture(this.currentRobot, ((JSplitPane) component));
+		}
+		return new ComponentFixture<T>(this.currentRobot, component){};
+	}
+
 }

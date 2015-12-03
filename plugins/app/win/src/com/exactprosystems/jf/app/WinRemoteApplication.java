@@ -176,6 +176,13 @@ public class WinRemoteApplication extends RemoteApplication
 		return operation.operate(this.operationExecutor, owner, locator, rows, header);
 	}
 
+
+	@Override
+	protected CheckingLayoutResult checkLayoutDerived(Locator owner, Locator element, Spec spec) throws Exception
+	{
+		return spec.perform(this.operationExecutor, owner, element);
+	}
+
 	@Override
 	protected int closeAllDerived(Locator element, Collection<LocatorAndOperation> operations)
 			throws Exception

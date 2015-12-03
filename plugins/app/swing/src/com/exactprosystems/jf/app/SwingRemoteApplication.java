@@ -350,6 +350,12 @@ public class SwingRemoteApplication extends RemoteApplication
 	}
 
 	@Override
+	protected CheckingLayoutResult checkLayoutDerived(Locator owner, Locator element, Spec spec) throws Exception
+	{
+		return spec.perform(this.operationExecutor, owner, element);
+	}
+
+	@Override
 	protected void newInstanceDerived(Map<String, String> args) throws Exception
 	{
 		// done
