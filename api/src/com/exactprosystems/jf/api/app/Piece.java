@@ -8,11 +8,15 @@
 
 package com.exactprosystems.jf.api.app;
 
+import java.io.Serializable;
+
 import com.exactprosystems.jf.api.app.IWindow.SectionKind;
 
 
-public class Piece
+public class Piece implements Serializable
 {
+	private static final long	serialVersionUID	= -4982322639565633145L;
+
 	public Piece(PieceKind kind)
 	{
 		this.kind = kind;

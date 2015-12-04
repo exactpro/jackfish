@@ -52,14 +52,15 @@ public class Spec implements Iterable<Piece>, Serializable
 	
 	public <T> CheckingLayoutResult perform(OperationExecutor<T> executor, Locator owner, Locator locator) throws Exception
 	{
+		CheckingLayoutResult result = new CheckingLayoutResult();
 		List<T> self = executor.findAll(owner, locator);
 		
 		for (Piece check : this.list)
 		{
-			check.kind.perform(check, executor, self);
+			check.kind.perform(check, executor, self, result);
 		}
 		
-		return new CheckingLayoutResult(); // TODO
+		return result;
 	}
 	
 

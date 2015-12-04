@@ -8,13 +8,38 @@
 
 package com.exactprosystems.jf.api.app;
 
-public class CheckingLayoutResult
-{
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
-	
+public class CheckingLayoutResult implements Serializable
+{
+	private static final long	serialVersionUID	= 3562209509406788900L;
+
 	public boolean isOk()
 	{
-		return false;
+		return this.ok;
+	}
+	
+	public List<String> getErrors()
+	{
+		return this.errors;
 	}
 
+	public void error(String string)
+	{
+		this.ok = false;
+		this.errors.add(string);
+	}
+
+	public void set(boolean b)
+	{
+		if (!b)
+		{
+			this.ok = false;
+		}
+	}
+	
+	private boolean ok = true;
+	private List<String> errors = new ArrayList<String>();
 }
