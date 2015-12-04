@@ -170,4 +170,24 @@
         <appWorkDir>apps</appWorkDir>
         <appStartPort>10000</appStartPort>
     </appEntry>
+    <appEntry>
+        <name>LT</name>
+        <parameters>
+            <key>ChromeDriverPath</key>
+            <value></value>
+        </parameters>
+        <parameters>
+            <key>IEDriverPath</key>
+            <value></value>
+        </parameters>
+        <parameters>
+            <key>ChromeDriverBinary</key>
+            <value></value>
+        </parameters>
+        <appDescription>Layout testing</appDescription>
+        <appDicPath>dic/gui/LayoutTesting.xml</appDicPath>
+        <appJar>apps/web.jar</appJar>
+        <appWorkDir>apps</appWorkDir>
+        <appStartPort>7000</appStartPort>
+    </appEntry>
 </configuration>
