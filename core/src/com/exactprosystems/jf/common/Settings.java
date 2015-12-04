@@ -13,28 +13,27 @@ import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.common.parser.items.MutableArrayList;
 import org.apache.log4j.Logger;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.Marshaller;
-import javax.xml.bind.Unmarshaller;
+import javax.xml.bind.*;
 import javax.xml.bind.annotation.*;
 import java.io.*;
 import java.util.*;
+import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
 @XmlRootElement(name = "settings")
 @XmlAccessorType(XmlAccessType.NONE)
 public class Settings
 {
-	public final static String SettingsPath = ".settings.xml";
+	public final static String SettingsPath	= ".settings.xml";
 
 	static
 	{
 		if (!new File(SettingsPath).exists())
 		{
-			try (BufferedReader reader = new BufferedReader(new InputStreamReader(Settings.class.getResourceAsStream(SettingsPath)));
-				 BufferedWriter writer = new BufferedWriter(new FileWriter(SettingsPath)))
+			try (	BufferedReader reader = new BufferedReader(new InputStreamReader(Settings.class.getResourceAsStream(SettingsPath)));
+					 BufferedWriter writer = new BufferedWriter(new FileWriter(SettingsPath)))
 			{
-				String line;
+				String line = null;
 
 				while ((line = reader.readLine()) != null)
 				{
@@ -50,12 +49,12 @@ public class Settings
 		}
 	}
 
-	public final static String GLOBAL_NS = "GLOBAL";
-	public final static String APPLICATION = "APP_";
-	public static final String SERVICE = "SRV_";
-	public static final String CLIENT = "CLN_";
-	public static final String SQL = "SQL_";
-	public static final String WATCHER = "WATCHER";
+	public final static String GLOBAL_NS	= "GLOBAL";
+	public final static String APPLICATION	= "APP_";
+	public static final String SERVICE 		= "SRV_";
+	public static final String CLIENT 		= "CLN_";
+	public static final String SQL			= "SQL_";
+	public static final String WATCHER		= "WATCHER";
 
 	@XmlRootElement(name = "value")
 	@XmlAccessorType(XmlAccessType.NONE)
@@ -178,16 +177,16 @@ public class Settings
 
 	public Settings()
 	{
-		this.values = new MutableArrayList<>();
+		this.values = new MutableArrayList<SettingsValue>();
 	}
 
 	public static Settings load(String fileName) throws Exception
 	{
 		File file = new File(fileName);
-		Settings settings;
+		Settings settings = null;
 		if (file.exists())
 		{
-			try (Reader reader = new FileReader(file))
+			try(Reader reader = new FileReader(file))
 			{
 				JAXBContext jaxbContext = JAXBContext.newInstance(jaxbContextClasses);
 				Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
@@ -224,6 +223,7 @@ public class Settings
 
 	public synchronized void saveIfNeeded() throws Exception
 	{
+		//TODO always values is changed, because we not use method saved();
 		if (this.values.isChanged())
 		{
 			save();
@@ -244,31 +244,44 @@ public class Settings
 
 	public synchronized Set<String> getNamespaces()
 	{
-		return this.values.stream()
-				.filter(value -> value.getNs() != null)
-				.map(SettingsValue::getNs)
-				.collect(Collectors.toSet());
+		Set<String> set = new HashSet<String>();
+		for (SettingsValue value : this.values)
+		{
+			if (value.getNs() != null)
+			{
+				set.add(value.getNs());
+			}
+		}
+		return set;
 	}
 
 	public Map<String, String> getMapValues(String ns, String dialog, String[] names)
 	{
-		Map<String, String> res = new HashMap<>();
-		res.putAll(Arrays
-				.stream(names)
-				.collect(Collectors.toMap(key -> key, value -> null)));
+		Map<String, String> res = new HashMap<String, String>();
+		for (String s : names)
+		{
+			res.put(s, null);
+		}
 
-		res.putAll(getValues(ns, dialog)
-				.stream()
-				.collect(Collectors.toMap(SettingsValue::getKey, SettingsValue::getValue)));
+		for (SettingsValue value : getValues(ns, dialog))
+		{
+			res.put(value.getKey(), value.getValue());
+		}
 		return res;
 	}
 
 	public synchronized List<SettingsValue> getValues(String ns, String dialog)
 	{
-		return this.values
-				.stream()
-				.filter(value -> Str.areEqual(ns, value.getNs()) && Str.areEqual(dialog, value.getDialog()))
-				.collect(Collectors.toList());
+		List<SettingsValue> res = new ArrayList<SettingsValue>();
+		for (SettingsValue value : this.values)
+		{
+			if (Str.areEqual(ns, value.getNs())
+					&& Str.areEqual(dialog, value.getDialog()))
+			{
+				res.add(value);
+			}
+		}
+		return res;
 	}
 
 	public SettingsValue getValueOrDefault(String ns, String dialog, String key, String defaultValue)
@@ -285,10 +298,16 @@ public class Settings
 
 	public synchronized SettingsValue getValue(String ns, String dialog, String key)
 	{
-		return this.values
-				.stream()
-				.filter(value -> Str.areEqual(ns, value.getNs()) && Str.areEqual(dialog, value.getDialog()) && Str.areEqual(key, value.getKey()))
-				.findFirst().orElse(null);
+		for (SettingsValue value : this.values)
+		{
+			if (Str.areEqual(ns, value.getNs())
+					&& Str.areEqual(dialog, value.getDialog())
+					&& Str.areEqual(key, value.getKey()))
+			{
+				return value;
+			}
+		}
+		return null;
 	}
 
 	public synchronized void setValue(String ns, String dialog, String key, int max, String newValue)
@@ -319,7 +338,9 @@ public class Settings
 	{
 		for (SettingsValue value : this.values)
 		{
-			if (Str.areEqual(ns, value.getNs()) && Str.areEqual(dialog, value.getDialog()) && Str.areEqual(key, value.getKey()))
+			if (Str.areEqual(ns, value.getNs())
+					&& Str.areEqual(dialog, value.getDialog())
+					&& Str.areEqual(key, value.getKey()))
 			{
 				value.setValue(newValue);
 				return;
@@ -334,27 +355,24 @@ public class Settings
 
 	public void setMapValues(String ns, String dialog, Map<String, String> values)
 	{
-		values.entrySet()
-				.stream()
-				.forEach(entry -> setValue(ns, dialog, entry.getKey(), entry.getValue()));
+		for (Entry<String, String> entry : values.entrySet())
+		{
+			setValue(ns, dialog, entry.getKey(), entry.getValue());
+		}
 	}
 
 	public synchronized void removeAll(String ns, String dialog)
 	{
-		this.values.clear();
-		this.values.addAll(this.values
-				.stream()
+		this.values = this.values.stream()
 				.filter(value -> !(Str.areEqual(ns, value.getNs()) && Str.areEqual(dialog, value.getDialog())))
-				.collect(Collectors.toCollection(MutableArrayList::new)));
+				.collect(Collectors.toCollection(MutableArrayList::new));
 	}
 
 	public synchronized void remove(String ns, String dialog, String key)
 	{
-		this.values.clear();
-		this.values.addAll(this.values
-				.stream()
+		this.values = this.values.stream()
 				.filter(value -> !(Str.areEqual(ns, value.getNs()) && Str.areEqual(dialog, value.getDialog()) && Str.areEqual(key, value.getKey())))
-				.collect(Collectors.toCollection(MutableArrayList::new)));
+				.collect(Collectors.toCollection(MutableArrayList::new));
 	}
 
 	public synchronized void clear()
@@ -362,10 +380,10 @@ public class Settings
 		this.values.clear();
 	}
 
-	private static final Class<?>[] jaxbContextClasses = {Settings.class, SettingsValue.class};
+	private static final Class<?>[] jaxbContextClasses = { Settings.class, SettingsValue.class };
 
 	private final static Logger logger = Logger.getLogger(Settings.class);
 
-	private static Comparator<SettingsValue> comparator = (o1, o2) -> (int) (o2.time.getTime() - o1.time.getTime());
+	private static Comparator<SettingsValue> comparator = (o1, o2) -> (int)(o2.time.getTime() - o1.time.getTime());
 
 }
