@@ -87,11 +87,6 @@ public class MatcherSelenium extends By
 		logger.debug("locator use absolute xpath : " + locator.useAbsoluteXpath());
 		if (locator.getXpath() != null)
 		{
-			//TODO this is is Deprecated
-			if (locator.getXpath().startsWith("~"))
-			{
-				return locator.getXpath().substring(1);
-			}
 			if (locator.useAbsoluteXpath())
 			{
 				return locator.getXpath();
