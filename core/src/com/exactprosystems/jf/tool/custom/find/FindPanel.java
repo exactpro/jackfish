@@ -20,6 +20,7 @@ import javafx.scene.layout.HBox;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 // TODO it needs code review
 public class FindPanel<T> extends BorderPane
@@ -96,13 +97,7 @@ public class FindPanel<T> extends BorderPane
 			Common.customizeLabeled(btnPrevious, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.FIND_PREVIOUS);
 		});
 
-		tfFind.textProperty().addListener((observableValue, s, t1) ->
-		{
-			if (iFind != null)
-			{
-				findElements(t1);
-			}
-		});
+		tfFind.textProperty().addListener((observableValue, s, t1) -> Optional.ofNullable(iFind).ifPresent(findPanel -> findElements(t1)));
 
 		tfFind.setOnKeyPressed(keyEvent ->
 		{

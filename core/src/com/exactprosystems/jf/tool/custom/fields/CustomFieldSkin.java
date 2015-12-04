@@ -21,7 +21,7 @@ import java.util.Objects;
 
 public abstract class CustomFieldSkin extends TextFieldSkin {
 
-	private static final PseudoClass HAS_RIGHT_NODE = PseudoClass.getPseudoClass("right-node-visible"); //$NON-NLS-1$
+	private static final PseudoClass HAS_RIGHT_NODE = PseudoClass.getPseudoClass("right-node-visible");
 
 	private Node right;
 	private StackPane rightPane;
@@ -34,8 +34,8 @@ public abstract class CustomFieldSkin extends TextFieldSkin {
 		this.control = control;
 		updateChildren();
 
-		registerChangeListener(rightProperty(), "RIGHT_NODE"); //$NON-NLS-1$
-		registerChangeListener(control.focusedProperty(), "FOCUSED"); //$NON-NLS-1$
+		registerChangeListener(rightProperty(), "RIGHT_NODE");
+		registerChangeListener(control.focusedProperty(), "FOCUSED");
 	}
 
 	public abstract ObjectProperty<Node> rightProperty();

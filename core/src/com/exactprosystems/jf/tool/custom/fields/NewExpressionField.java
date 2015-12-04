@@ -67,15 +67,15 @@ public class NewExpressionField extends CustomField
 		this.focusedProperty().addListener(globalListener);
 
 		Label firstLabel = new Label("≡");
-		firstLabel.getStyleClass().setAll("expressionButton");
+		firstLabel.getStyleClass().setAll(CssVariables.EXPRESSION_BUTTON);
 		this.firstPane = new StackPane(firstLabel);
-		this.firstPane.getStyleClass().setAll("firstPane");
+		this.firstPane.getStyleClass().setAll(CssVariables.EXPRESSION_FIRST_PANE);
 		this.firstPane.setCursor(Cursor.DEFAULT);
 
 		Label secondLabel = new Label("ﬁ");
-		secondLabel.getStyleClass().setAll("expressionButton");
+		secondLabel.getStyleClass().setAll(CssVariables.EXPRESSION_BUTTON);
 		this.secondPane = new StackPane(secondLabel);
-		this.secondPane.getStyleClass().setAll("secondPane");
+		this.secondPane.getStyleClass().setAll(CssVariables.EXPRESSION_SECOND_PANE);
 		this.secondPane.setCursor(Cursor.DEFAULT);
 
 		sizeTextField();
@@ -317,21 +317,6 @@ public class NewExpressionField extends CustomField
 			}
 		}
 		this.setPrefWidth(size+20);
-	}
-
-	private void setWidthLabels()
-	{
-		int pw = 20;
-		int miw = 19;
-		int maw = 21;
-
-		this.firstPane.setPrefWidth(pw);
-		this.firstPane.setMinWidth(miw);
-		this.firstPane.setMaxWidth(maw);
-
-		this.secondPane.setPrefWidth(pw);
-		this.secondPane.setMinWidth(miw);
-		this.secondPane.setMaxWidth(maw);
 	}
 
 	private void showButtons()

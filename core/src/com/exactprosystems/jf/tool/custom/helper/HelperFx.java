@@ -44,8 +44,8 @@ public class HelperFx
 		this.matrix = matrix;
 		this.clazz = clazz;
 		comparatorAZ = (o1, o2) -> o1.getName().compareTo(o2.getName());
-		comparatorZA = (o1, o2) -> o1.getName().compareTo(o2.getName()) * (-1);
-		
+		comparatorZA = comparatorAZ.reversed();
+
 		this.controller = Common.loadController(HelperFx.class.getResource("HelperFx.fxml"));
 		this.controller.init(this, title, this.clazz, this.evaluator != null);
 	}
@@ -104,16 +104,12 @@ public class HelperFx
 						}
 					}
 				}
-				
-				for (Field field : clazz.getFields())
-				{
-					SimpleField simpleField = getStringsSimpleField(field);
-					if (simpleField != null)
-					{
-						observableAll.add(simpleField);
-					}
-				}
-				
+
+				observableAll.addAll(Arrays.stream(clazz.getFields())
+								.map(this::getStringsSimpleField)
+								.filter(simpleField -> simpleField != null)
+								.collect(Collectors.toList())
+				);
 				Collections.sort(observableAll, ascentingSorting ? comparatorAZ : comparatorZA);
 
 				this.controller.displayClass(clazz);
@@ -134,13 +130,12 @@ public class HelperFx
 			localVars.getVars().entrySet().forEach((entry) -> data.add(new SimpleVariable(entry.getKey(), entry.getValue())));
 
 			Variables globalVars = this.evaluator.getGlobals();
-			globalVars.getVars().entrySet().forEach((entry) -> {
-				SimpleVariable simplePOJOVariables = new SimpleVariable(entry.getKey(), entry.getValue());
-				if (!data.contains(simplePOJOVariables))
-				{
-					data.add(simplePOJOVariables);
-				}
-			});
+			data.addAll(globalVars.getVars().entrySet()
+					.stream()
+					.map(entry -> new SimpleVariable(entry.getKey(), entry.getValue()))
+					.filter(simpleVariable -> !data.contains(simpleVariable))
+					.collect(Collectors.toList())
+			);
 			Optional.ofNullable(this.matrix).ifPresent(m -> m.getRoot().bypass(item -> {
 				String id = item.getId();
 				if (!Str.IsNullOrEmpty(id))

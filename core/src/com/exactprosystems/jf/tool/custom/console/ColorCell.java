@@ -14,6 +14,8 @@ import javafx.scene.control.ContextMenu;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.MenuItem;
 
+import java.util.Optional;
+
 public class ColorCell<T> extends ListCell<ConsoleText<T>>
 {
 	public ColorCell(boolean mayClear)
@@ -36,13 +38,7 @@ public class ColorCell<T> extends ListCell<ConsoleText<T>>
 			getListView().getItems().clear();
 		});
 
-		copy.setOnAction(event -> {
-			if (getListView().getSelectionModel().getSelectedItem() != null)
-			{
-				ConsoleText myT = getListView().getSelectionModel().getSelectedItem();
-				Common.copyText(myT.toString());
-			}
-		});
+		copy.setOnAction(event -> Optional.ofNullable(getListView().getSelectionModel().getSelectedItem()).ifPresent(selectedItem -> Common.copyText(selectedItem.toString())));
 	}
 
 	@Override

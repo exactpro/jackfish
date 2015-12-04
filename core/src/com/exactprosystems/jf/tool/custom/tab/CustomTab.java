@@ -11,8 +11,6 @@ package com.exactprosystems.jf.tool.custom.tab;
 import com.exactprosystems.jf.common.Document;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Tab;
@@ -91,14 +89,9 @@ public abstract class CustomTab extends Tab implements AutoCloseable
 				}
 			}
 		});
-		this.crossButton.setOnAction(new EventHandler<ActionEvent>()
-		{
-			@Override
-			public void handle(ActionEvent actionEvent)
-			{
-				Common.tryCatch(() -> onClose(), "");
-				Common.tryCatch(() -> close(), "");
-			}
+		this.crossButton.setOnAction(actionEvent -> {
+			Common.tryCatch(this::onClose, "");
+			Common.tryCatch(this::close, "");
 		});
 	}
 
@@ -130,14 +123,5 @@ public abstract class CustomTab extends Tab implements AutoCloseable
 	public void setTitle(String text)
 	{
 		this.text.setText(Common.getSimpleTitle(text));
-		//TODO why we change selection model where we change title?
-//		if (this.getTabPane() != null)
-//		{
-//			this.getTabPane().getSelectionModel().clearSelection();
-//			if (Common.isNeedSelectedTab())
-//			{
-//				Common.getTabPane().getSelectionModel().select(this);
-//			}
-//		}
 	}
 }

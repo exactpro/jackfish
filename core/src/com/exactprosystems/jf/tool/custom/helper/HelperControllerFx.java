@@ -110,12 +110,11 @@ public class HelperControllerFx implements Initializable, ContainingParent
 					setText(item.toString());
 
 					String description = item.getDescription();
-					if (description != null)
-					{
+					Optional.ofNullable(item.getDescription()).ifPresent(desc -> {
 						Tooltip tooltip = new Tooltip();
 						tooltip.setText(item.getDescription());
 						setTooltip(tooltip);
-					}
+					});
 				}
 			}
 		});

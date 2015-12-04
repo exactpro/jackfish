@@ -19,6 +19,7 @@ import javafx.scene.input.KeyCode;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class CustomTable<T> extends TableView<T>
 {
@@ -90,11 +91,6 @@ public class CustomTable<T> extends TableView<T>
 			column.setVisible(false);
 			column.setVisible(true);
 		}));
-//		final int length = getColumns().size();
-//		this.getColumns().forEach(column -> Platform.runLater(() -> {
-//			column.setMaxWidth(getWidth() / length);
-//			column.setPrefWidth(getWidth() / length);
-//		}));
 	}
 
 	private void onEditCommitColumn(CustomTableColumn c, final EditCommit<T> editCommit)
@@ -164,8 +160,6 @@ public class CustomTable<T> extends TableView<T>
 			removeAll.setOnAction(event -> deleteAllItems());
 		}
 
-		//TODO this 2 methods not right, because table is deleted their items yourself, is it not right, because this must do model
-		//TODO Exactly!
 		private void deleteItems()
 		{
 			List<T> selectedItems = FXCollections.observableArrayList(getTableView().getSelectionModel().getSelectedItems());
@@ -181,8 +175,8 @@ public class CustomTable<T> extends TableView<T>
 
 		private void deleteAllItems()
 		{
-			getTableView().getItems().clear();
 			onDeleteItems(getTableView().getItems());
+			getTableView().getItems().clear();
 		}
 
 		@Override
@@ -300,9 +294,6 @@ public class CustomTable<T> extends TableView<T>
 
 	void onDeleteItems(List<T> items)
 	{
-		if (this.listener != null)
-		{
-			this.listener.onDeleteItems(items);
-		}
+		Optional.ofNullable(this.listener).ifPresent(l -> l.onDeleteItems(items));
 	}
 }

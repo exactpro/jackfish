@@ -123,6 +123,10 @@ public class CssVariables
 
 	/*Expression field*/
 	public static final String	EXPRESSION_EDITOR			= "expressionEditor";
+	public static final String	EXPRESSION_BUTTON			= "expressionButton";
+	public static final String	EXPRESSION_FIRST_PANE		= "firstPane";
+	public static final String	EXPRESSION_SECOND_PANE		= "secondPane";
+
 	public static final String	EXPRESSION_FIELD_FIRST		= "firstButton";
 	public static final String	EXPRESSION_FIELD_SECOND		= "secondButton";
 
