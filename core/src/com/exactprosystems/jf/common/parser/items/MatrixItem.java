@@ -421,7 +421,7 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 			addParameter(firstLine, secondLine, Tokens.Id.get(), this.id.get());
 		}
 
-		MatrixItemAttribute annotation = ActionItem.class.getAnnotation(MatrixItemAttribute.class);
+		MatrixItemAttribute annotation = getClass().getAnnotation(MatrixItemAttribute.class);
 		boolean hasValue = annotation.hasValue();
 		writeBoolean(hasValue, firstLine, secondLine, this.off, Tokens.Off);
 		writeBoolean(hasValue, firstLine, secondLine, this.ignoreErr, Tokens.IgnoreErr);
@@ -462,7 +462,8 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 			{
 				addParameter(firstLine, token.get());
 			}
-		}	}
+		}	
+	}
 	
 	private void writeRecord(CsvWriter writer, List<String> line, String indent) throws IOException
 	{
