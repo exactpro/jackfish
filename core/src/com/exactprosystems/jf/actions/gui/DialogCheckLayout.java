@@ -23,6 +23,7 @@ import com.exactprosystems.jf.common.parser.Parameters;
 import com.exactprosystems.jf.common.parser.items.ActionItem.HelpKind;
 import com.exactprosystems.jf.common.parser.items.TypeMandatory;
 import com.exactprosystems.jf.common.report.ReportBuilder;
+import com.exactprosystems.jf.common.report.ReportTable;
 import com.exactprosystems.jf.functions.Table;
 
 import java.util.*;
@@ -142,6 +143,8 @@ public class DialogCheckLayout extends AbstractAction
 			}
 		}
 		
+		boolean totalResult = true;
+		ReportTable table = null;
 		SectionKind run = SectionKind.Run;
 		logger.debug("Perform " + run);
 		ISection sectionRun = window.getSection(run);
@@ -157,40 +160,26 @@ public class DialogCheckLayout extends AbstractAction
 				return;
 			}
 			
-			
 			CheckingLayoutResult res = control.checkLayout(service, window, obj);
-			if (res.isOk())
-			{
-//				if (res.isColorMapIsFilled())
-//				{
-//					outValue.put(name, res.getColorMap());
-//				}
-//				else if (res.isMapFilled())
-//				{
-//					outValue.put(name, res.getMap());
-//				}
-//				else if (res.isArrayFilled())
-//				{
-//					outValue.put(name, new Table(res.getArray()));
-//				}
-//				else
-//				{
-//					String val = res.getText();
-//					outValue.put(name, val);
-//				}
-//			}
-//			else if (res.isPermittedOperation())
-//			{
-//				super.setError(res.getText());
-//				return;
-			}
-			else
-			{
-				super.setError("Run: parameter = " + name + " has returned 'false'. Process is stopped.");
-				return;
+			totalResult = totalResult && res.isOk();
+			
+			if (!res.isOk())
+			{ 
+				table = createTable(table, report);
+				for (String error : res.getErrors())
+				{
+					table.addValues(name, error);
+				}
 			}
 		}
 
+		if (!totalResult)
+		{
+			super.setError("Layout checking failed.");
+			return;
+		}
+
+		
 		if (!this.doNotClose)
 		{
 			SectionKind onClose = SectionKind.OnClose;
@@ -218,6 +207,15 @@ public class DialogCheckLayout extends AbstractAction
 		}
 
 		super.setResult(null);
+	}
+
+	private ReportTable createTable(ReportTable table, ReportBuilder report)
+	{
+		if (table != null)
+		{
+			return table;
+		}
+		return report.addTable("Layout mismatching", 0, new int[]{25, 65}, "Field", "Error");
 	}
 
 	private boolean checkControl(Set<ControlKind> supportedControls, IControl control) throws Exception

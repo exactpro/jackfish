@@ -461,18 +461,18 @@ public abstract class AbstractControl implements IControl, Mutable
 
 			Locator element = locator();
 
-			Spec operation = null;
+			Spec spec = null;
 			if (value instanceof Spec)
 			{
-				operation = (Spec) value;
+				spec = (Spec) value;
 			}
 			else
 			{
-				operation = DoSpec.visible();
+				spec = DoSpec.visible();
 			}
 
-			operation.tune(window);
-			return remote.checkLayout(owner, element, operation);
+			spec.tune(window);
+			return remote.checkLayout(owner, element, spec);
 		}
 		catch (RemoteException re)
 		{

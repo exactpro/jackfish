@@ -88,7 +88,7 @@ public class MvelEvaluator extends AbstractEvaluator
 	@Override
 	public Variables getGlobals()
 	{
-		return globals;
+		return this.globals;
 	}
 
 	@Override
