@@ -7,7 +7,6 @@ import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.custom.find.FindPanel;
 import com.exactprosystems.jf.tool.custom.find.IFind;
-
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
@@ -21,11 +20,9 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -35,15 +32,10 @@ import java.net.URL;
 import java.util.*;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class XpathViewerContentController implements Initializable, ContainingParent
 {
-	private static final Color	nodeColor		= Color.LIGHTSEAGREEN;
-	private static final Color	attrNameColor	= Color.BLUEVIOLET;
-	private static final Color	attrValueColor	= Color.BLUE;
-	private static final Color	textColor		= Color.BLACK;
-
-	// content
 	public TreeView<XpathItem>	treeView;
 	public Label				labelXpath1Count;
 	public Label				labelXpath2Count;
@@ -185,7 +177,7 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 	{
 		Platform.runLater(() ->
 		{
-			this.treeView.setRoot(new TreeItem<XpathItem>());
+			this.treeView.setRoot(new TreeItem<>());
 			displayTree(document, this.treeView.getRoot());
 			expand(this.treeView.getRoot());
 		});
@@ -193,10 +185,7 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 
 	public void deselectItems()
 	{
-		Platform.runLater(() ->
-		{
-			deselectItems(this.treeView.getRoot());
-		});
+		Platform.runLater(() -> deselectItems(this.treeView.getRoot()));
 	}
 
 	public void displayResults(List<Node> nodes)
@@ -231,13 +220,12 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 		Platform.runLater(() ->
 		{
 			this.hBoxCheckboxes.getChildren().clear();
-			params.forEach(p ->
-			{
+			this.hBoxCheckboxes.getChildren().addAll(params.stream().map(p -> {
 				CheckBox box = new CheckBox(p);
 				box.setSelected(true);
 				box.selectedProperty().addListener((observable, oldValue, newValue) -> this.model.createXpaths(this.useText.isSelected(), getParams()));
-				this.hBoxCheckboxes.getChildren().add(box);
-			});
+				return box;
+			}).collect(Collectors.toList()));
 			this.model.createXpaths(this.useText.isSelected(), getParams());
 		});
 	}
@@ -326,16 +314,10 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 		boolean isDocument = node.getNodeType() == Node.DOCUMENT_NODE;
 
 		TreeItem<XpathItem> root = isDocument ? parent : new TreeItem<>();
-
-		for (int i = 0; i < node.getChildNodes().getLength(); i++)
-		{
-			Node item = node.getChildNodes().item(i);
-			if (item.getNodeType() == Node.ELEMENT_NODE)
-			{
-				displayTree(item, root);
-			}
-		}
-
+		IntStream.range(0, node.getChildNodes().getLength())
+				.mapToObj(node.getChildNodes()::item)
+				.filter(item -> item.getNodeType() == Node.ELEMENT_NODE)
+				.forEach(item -> displayTree(item, root));
 		if (!isDocument)
 		{
 			root.setValue(new XpathItem(stringNode(node, XpathViewer.text(node)), node));
@@ -347,28 +329,28 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 	{
 		HBox box = new HBox();
 
-		box.getChildren().add(createText("<" + node.getNodeName() + " ", nodeColor, true));
+		box.getChildren().add(createText("<" + node.getNodeName() + " ", CssVariables.XPATH_NODE, true));
 		NamedNodeMap attributes = node.getAttributes();
-		if (attributes != null)
-		{
-			int length = attributes.getLength();
-			for (int i = 0; i < length; i++)
-			{
-				Node item = attributes.item(i);
-				box.getChildren().addAll(createText(item.getNodeName(), attrNameColor, false), createText("=", textColor, false),
-						createText("\"" + item.getNodeValue() + "\" ", attrValueColor, true));
-			}
-		}
-
+		Optional.ofNullable(attributes).ifPresent(atrs -> {
+			int length = atrs.getLength();
+			IntStream.range(0, length)
+					.mapToObj(atrs::item)
+					.forEach(item -> {
+						createText(item.getNodeName(), CssVariables.XPATH_ATTRIBUTE_NAME, false);
+						createText("=", CssVariables.XPATH_TEXT, false);
+						createText("\"" + item.getNodeValue() + "\" ", CssVariables.XPATH_ATTRIBUTE_VALUE, true);
+					});
+		});
 		if (Str.IsNullOrEmpty(text))
 		{
-			box.getChildren().add(createText("/>", nodeColor, true));
+			box.getChildren().add(createText("/>", CssVariables.XPATH_NODE, true));
 		}
 		else
 		{
-			box.getChildren().addAll(createText(">", nodeColor, true), createText(text, textColor, true),
-					createText("</" + node.getNodeName() + ">", nodeColor, true));
-
+			box.getChildren().addAll(
+					createText(">", CssVariables.XPATH_NODE, true),
+					createText(text, CssVariables.XPATH_TEXT, true),
+					createText("</" + node.getNodeName() + ">", CssVariables.XPATH_NODE, true));
 		}
 		return box;
 	}
@@ -379,7 +361,7 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 		item.getChildren().forEach(this::expand);
 	}
 
-	private Text createText(String text, Color color, boolean useContextMenu)
+	private Text createText(String text, String cssClass, boolean useContextMenu)
 	{
 		Text t = new Text(text);
 		if (useContextMenu && !text.isEmpty())
@@ -407,15 +389,16 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 				}
 			});
 		}
-		t.setFill(color);
+		t.getStyleClass().add(cssClass);
 		return t;
 	}
 
 	private List<String> getParams()
 	{
-		List<String> res = this.hBoxCheckboxes.getChildren().stream().filter(node -> ((CheckBox) node).isSelected()).map(node -> (((CheckBox) node).getText()))
+		return this.hBoxCheckboxes.getChildren().stream()
+				.filter(node -> ((CheckBox) node).isSelected())
+				.map(node -> (((CheckBox) node).getText()))
 				.collect(Collectors.toList());
-		return res;
 	}
 
 	private void listeners()

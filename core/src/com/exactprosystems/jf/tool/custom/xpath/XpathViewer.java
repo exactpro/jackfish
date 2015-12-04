@@ -3,17 +3,17 @@ package com.exactprosystems.jf.tool.custom.xpath;
 import com.exactprosystems.jf.api.app.IRemoteApplication;
 import com.exactprosystems.jf.api.app.Locator;
 import com.exactprosystems.jf.tool.Common;
-
 import javafx.concurrent.Task;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import javax.xml.xpath.*;
-
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -104,19 +104,13 @@ public class XpathViewer
 		}
 		
 		StringBuilder sb = new StringBuilder();
-		for (int i = 0; i < node.getChildNodes().getLength(); i++)
-		{
-			Node item = node.getChildNodes().item(i);
-			if (item.getNodeType() == Node.TEXT_NODE)
-			{
-				String value = item.getNodeValue();
-				if (value != null)
-				{
-					sb.append(value.trim().replace('\n', ' '));
-				}
-			}
-		}
-
+		IntStream.range(0, node.getChildNodes().getLength())
+				.mapToObj(i -> node.getChildNodes().item(i))
+				.filter(item -> item.getNodeType() == Node.TEXT_NODE)
+				.map(Node::getNodeValue)
+				.filter(value -> value != null)
+				.map(value -> value.trim().replace('\n', ' '))
+				.forEach(sb::append);
 		return sb.toString();
 	}
 
@@ -134,12 +128,7 @@ public class XpathViewer
 		{
 			XPathExpression compile = xpath.compile(xpathStr);
 			NodeList nodeList = (NodeList) compile.evaluate(this.document.getDocumentElement(), XPathConstants.NODESET);
-			List<Node> nodes = new ArrayList<>();
-			for (int i = 0; i < nodeList.getLength(); i++)
-			{
-				nodes.add(nodeList.item(i));
-			}
-			return nodes;
+			return IntStream.range(0, nodeList.getLength()).mapToObj(nodeList::item).collect(Collectors.toList());
 		}
 		catch (XPathExpressionException e)
 		{

@@ -196,6 +196,22 @@
 	-fx-text-fill : rgb(12, 216, 39)
 
 }
+.xpathNode {
+	-fx-fill : #20b2aa;
+
+}
+.xpathAttrName {
+	-fx-fill : #8a2be2;
+
+}
+.xpathAttrValue {
+	-fx-fill : #0000ff
+
+}
+.xpathText {
+	-fx-fill : black;
+
+}
 
 /*grid pane on dictionary tab*/
 .gridPaneBorder {

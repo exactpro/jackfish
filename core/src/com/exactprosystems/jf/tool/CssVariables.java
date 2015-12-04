@@ -44,6 +44,10 @@ public class CssVariables
 	public static final String	XPATH_TREE_VIEW				= "xpathTreeView";
 	public static final String	XPATH_FIND_TREE_ITEM		= "xpathFindTreeItem";
 	public static final String	FOUND_ONE_ELEMENT			= "foundOneElement";
+	public static final String	XPATH_NODE					= "xpathNode";
+	public static final String	XPATH_ATTRIBUTE_NAME		= "xpathAttrName";
+	public static final String	XPATH_ATTRIBUTE_VALUE		= "xpathAttrValue";
+	public static final String	XPATH_TEXT					= "xpathText";
 
 	/*Grid pane on dictionary tab*/
 	public static final String	GRID_PANE_BORDER			= "gridPaneBorder";

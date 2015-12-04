@@ -233,12 +233,32 @@
 }
 
 /*XPath builder*/
+.xpathTreeView .tree-cell:selected {
+    -fx-background-color : darkslategrey;
+
+}
 .xpathFindTreeItem {
 	-fx-background-color : aquamarine;
 
 }
 .foundOneElement {
 	-fx-text-fill : rgb(12, 216, 39)
+
+}
+.xpathNode {
+	-fx-fill : #20b2aa;
+
+}
+.xpathAttrName {
+	-fx-fill : -fx-company-color-dark;
+
+}
+.xpathAttrValue {
+	-fx-fill : -fx-company-color-light;
+
+}
+.xpathText {
+	-fx-fill : -fx-text-base-color;
 
 }
 

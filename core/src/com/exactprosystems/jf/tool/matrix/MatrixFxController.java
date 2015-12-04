@@ -529,8 +529,7 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 	// ------------------------------------------------------------------------------------------------------------------
 	private void initShortcuts(final Settings settings)
 	{
-		//TODO add listener to content in tab, not to scene
-		getTabPane().getScene().addEventFilter(KeyEvent.KEY_PRESSED, keyEvent -> tryCatch(() ->
+		this.pane.addEventFilter(KeyEvent.KEY_PRESSED, keyEvent -> tryCatch(() ->
 		{
 			if (tab.isSelected())
 			{
