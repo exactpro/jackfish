@@ -16,7 +16,7 @@ import com.exactprosystems.jf.api.app.IGuiDictionary;
 public class WinAppFactory implements IApplicationFactory
 {
 	private static final int requiredMajorVersion = 2;
-	private static final int requiredMinorVersion = 1;
+	private static final int requiredMinorVersion = 2;
 	
 	private static final String mainWindowName = "MainWindow";
 	private static final String execName = "Exec";

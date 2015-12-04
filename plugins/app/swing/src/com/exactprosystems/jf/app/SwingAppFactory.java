@@ -16,7 +16,7 @@ import com.exactprosystems.jf.api.app.IGuiDictionary;
 public class SwingAppFactory implements IApplicationFactory
 {
 	private static final int requiredMajorVersion = 2;
-	private static final int requiredMinorVersion = 1;
+	private static final int requiredMinorVersion = 2;
 
 	public final static String jreExecName 		= "jreExec";
 	public final static String jreArgsName 		= "jreArgs";

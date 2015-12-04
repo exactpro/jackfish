@@ -147,7 +147,7 @@ public enum OperationKind
 		{
 			String str = isTable(locators, executor) 
 					? executor.getValueTableCell(component.value, part.x, part.y) 
-					: executor.getValue(component.value);
+					: executor.getValue(executor.lookAtTable(component.value, locators.get(LocatorKind.Rows), locators.get(LocatorKind.Header), part.x, part.y));
 			result.setText(String.valueOf(checkText(str, part.text, false, part.b)));
 			return true;
 		}
@@ -168,7 +168,9 @@ public enum OperationKind
 		@Override
 		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, LocatorsHolder locators, List<T> list, Holder<T> component, OperationResult result) throws Exception
 		{
-			String str = isTable(locators, executor) ? executor.getValueTableCell(component.value, part.x, part.y) : executor.getValue(component.value);
+			String str = isTable(locators, executor)
+					? executor.getValueTableCell(component.value, part.x, part.y)
+					: executor.getValue(executor.lookAtTable(component.value, locators.get(LocatorKind.Rows), locators.get(LocatorKind.Header), part.x, part.y));
 			result.setText(String.valueOf(checkText(str, part.text, true, part.b)));
 			return true;
 		}
@@ -210,9 +212,22 @@ public enum OperationKind
 		@Override
 		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, LocatorsHolder locators, List<T> list, Holder<T> component, OperationResult result) throws Exception
 		{
-			return isTable(locators, executor) 
-					? executor.mouseTable(component.value, part.x, part.y, MouseAction.Move) 
-					: executor.mouse(component.value, part.x, part.y, MouseAction.Move);
+			if (isTable(locators, executor))
+			{
+				return executor.mouseTable(component.value, part.x, part.y, MouseAction.Move);
+			}
+			else
+			{
+				Locator locator = locators.get(LocatorKind.Element);
+				if (locator != null && locator.getControlKind() == ControlKind.Table)
+				{
+					return executor.mouse(executor.lookAtTable(component.value, locators.get(LocatorKind.Rows), locators.get(LocatorKind.Header), part.x, part.y), Integer.MIN_VALUE, Integer.MIN_VALUE, MouseAction.Move);
+				}
+				else
+				{
+					return executor.mouse(component.value, part.x, part.y, MouseAction.Move);
+				}
+			}
 		}
 	},
 
@@ -232,9 +247,22 @@ public enum OperationKind
 		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, LocatorsHolder locators, List<T> list, Holder<T> component, OperationResult result) throws Exception
 		{
 			MouseAction mouse = part.mouse == null ? MouseAction.LeftClick : part.mouse;
-			return isTable(locators, executor) 
-					? executor.mouseTable(component.value, part.x, part.y, mouse) 
-					: executor.mouse(component.value, part.x, part.y, mouse);
+			if (isTable(locators, executor))
+			{
+				return executor.mouseTable(component.value, part.x, part.y, mouse);
+			}
+			else
+			{
+				Locator locator = locators.get(LocatorKind.Element);
+				if (locator != null && locator.getControlKind() == ControlKind.Table)
+				{
+					return executor.mouse(executor.lookAtTable(component.value, locators.get(LocatorKind.Rows), locators.get(LocatorKind.Header), part.x, part.y), Integer.MIN_VALUE, Integer.MIN_VALUE, mouse);
+				}
+				else
+				{
+					return executor.mouse(component.value, part.x, part.y, mouse);
+				}
+			}
 		}
 	},
 	
@@ -254,7 +282,7 @@ public enum OperationKind
 		{
 			return isTable(locators, executor) 
 					? executor.textTableCell(component.value, part.x, part.y, "" + part.text) 
-					: executor.text(component.value, "" + part.text, part.b);
+					: executor.text(executor.lookAtTable(component.value, locators.get(LocatorKind.Rows), locators.get(LocatorKind.Header), part.x, part.y), "" + part.text, part.b);
 		}
 	},
 	
@@ -357,7 +385,7 @@ public enum OperationKind
 		{
 			String str = isTable(locators, executor) 
 					? executor.getValueTableCell(component.value, part.x, part.y) 
-					: executor.getValue(component.value);
+					: executor.getValue(executor.lookAtTable(component.value, locators.get(LocatorKind.Rows), locators.get(LocatorKind.Header), part.x, part.y));
 			result.setText(str);
 			return true;
 		}
@@ -452,12 +480,6 @@ public enum OperationKind
 				{
 					elementHolder.value = executor.find(owner, locator);
 				}
-				if (part.x >= 0 && part.y >= 0)
-				{
-					elementHolder.value = executor.lookAtTable(elementHolder.value, locators.get(LocatorKind.Rows), locators.get(LocatorKind.Header), part.x, part.y);
-					part.x = Integer.MIN_VALUE;
-					part.y = Integer.MIN_VALUE;
-				}
 			}
 			else
 			{
@@ -474,7 +496,7 @@ public enum OperationKind
 						List<T> list = executor.findAll(locator.getControlKind(), dialog, locator);
 						elementList.addAll(list);
 					}
-					elementHolder.value = elementList == null || elementList.size() == 0 ? null : elementList.get(0);
+					elementHolder.value = elementList.size() == 0 ? null : elementList.get(0);
 				}
 				else
 				{
@@ -491,7 +513,6 @@ public enum OperationKind
 				throw new Exception("Component is not found for locator = " + locator);
 			}
 		}
-		
 
 		return operateDerived(part, executor, locators, elementList, elementHolder, result);
 	}
@@ -505,9 +526,6 @@ public enum OperationKind
 	
 	protected abstract <T> boolean operateDerived(Part part, OperationExecutor<T> executor, LocatorsHolder locators, List<T> list, Holder<T> component, OperationResult result) throws Exception;
 
-	
-	
-	
 	private static boolean checkText(String componentText, String what, boolean isRegexp, boolean needException) throws Exception
 	{
 		boolean result;
@@ -538,11 +556,7 @@ public enum OperationKind
 	public static <T> boolean isTable(LocatorsHolder locators, OperationExecutor<T> executor)
 	{
 		Locator locator = locators.get(LocatorKind.Element);
-		if (locator == null)
-		{
-			return false;
-		}
-		return locator.getControlKind() == ControlKind.Table && !executor.tableIsContainer();
+		return locator != null && locator.getControlKind() == ControlKind.Table && !executor.tableIsContainer();
 	}
 	
 	private static boolean isReal(Locator locator)
@@ -550,6 +564,5 @@ public enum OperationKind
 		return locator != null && locator.getControlKind() != null && !locator.getControlKind().isVirtual();
 	}
 
-	
 	private String	name;
 }

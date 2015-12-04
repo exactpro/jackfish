@@ -554,7 +554,7 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 		int repeat = 1;
 		do
 		{
-			logger.info("findIntoTable(" + tableComp + ", " + x + ", " + y + ")" + (additional == null ? "" : "additional " + additional));
+			logger.info("findIntoTable(" + SeleniumRemoteApplication.getElementString(tableComp) + ", " + x + ", " + y + ")" + (additional == null ? "" : "additional " + additional));
 			try
 			{
 				if (y < 0)
