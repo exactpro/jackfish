@@ -72,6 +72,7 @@ public class CssVariables
 	public static final String	BORDER_LABEL				= "borderLabel";
 	/*Matrix comment*/
 	public static final String	UNFOCUSED_TEXT_AREA			= "unfocusedTextArea";
+	public static final String	TOGGLE_BUTTON_WITHOUT_BORDER= "toggleButtonWithoutBorder";
 
 	/*Console text*/
 	public static final String	CONSOLE_DEFAULT_TEXT		= "consoleDefaultText";

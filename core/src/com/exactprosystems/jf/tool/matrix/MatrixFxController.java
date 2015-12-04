@@ -577,6 +577,7 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 			btnStepMatrix.setTooltip(new Tooltip("Step"));
 			btnShowResult.setTooltip(new Tooltip("Show result"));
 			toggleBtnColor.setTooltip(new Tooltip("Color off"));
+			toggleBtnColor.getStyleClass().add(CssVariables.TOGGLE_BUTTON_WITHOUT_BORDER);
 			btnFind.setTooltip(new Tooltip("Find\n" + getShortcutTooltip(settings, SettingsPanel.FIND_ON_MATRIX)));
 			btnStartDefaultApplication.setTooltip(new Tooltip("Start default application"));
 			btnConnectDefaultApplication.setTooltip(new Tooltip("Connect default application"));

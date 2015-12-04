@@ -144,6 +144,10 @@
 	-fx-border-color : -fx-company-color-light;
 
 }
+.toggleButtonWithoutBorder {
+	-fx-border-width : 0px;
+	-fx-border-color : transparent;
+}
 
 /*Matrix tree view*/
 .customTreeTableView {
