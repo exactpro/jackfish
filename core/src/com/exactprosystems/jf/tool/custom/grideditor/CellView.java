@@ -21,9 +21,11 @@ import javafx.scene.control.*;
 import javafx.scene.control.TableView.TableViewFocusModel;
 import javafx.scene.control.TableView.TableViewSelectionModel;
 import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseDragEvent;
 import javafx.scene.input.MouseEvent;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
@@ -34,9 +36,15 @@ public class CellView extends TableCell<ObservableList<SpreadsheetCell>, Spreads
 {
 	private final SpreadsheetHandle handle;
 	private ObservableList<TablePosition> selectedTablePositions;
+
 	public static boolean isCrosshair = false;
 	public static TablePosition rightBottonCell;
 	public static TablePosition leftTopCell;
+	public static TablePosition directionCell;
+	public static boolean isSet = false;
+
+	public static boolean changeVertical;
+	public static boolean changeHorizontal;
 
 	public static CellView startCellView;
 	public static CellView endCellView;
@@ -91,6 +99,45 @@ public class CellView extends TableCell<ObservableList<SpreadsheetCell>, Spreads
 				}
 			}
 		};
+		this.addEventFilter(MouseDragEvent.MOUSE_DRAG_ENTERED, mouseEvent -> {
+			TablePosition currentTablePosition = new TablePosition(getTableView(), this.getIndex(), this.getTableColumn());
+			boolean needChange = !this.handle.getGridView().getSelectionModel().getSelectedCells().contains(currentTablePosition);
+			System.out.println(this.handle.getGridView().getSelectionModel().getSelectedCells().size());
+			if (this == mouseEvent.getGestureSource())
+			{
+				needChange = true;
+				isSet = false;
+			}
+			else
+			{
+				if (isCrosshair && needChange)
+				{
+					if (!CellView.isSet)
+					{
+						changeVertical = false;
+						changeHorizontal = false;
+						CellView.directionCell = currentTablePosition;
+						ObservableList<TablePosition> selectedCells = getTableView().getSelectionModel().getSelectedCells();
+						ArrayList<Integer> rowDirection = new ArrayList<>();
+						ArrayList<Integer> colDirection = new ArrayList<>();
+						for (TablePosition selectedCell : selectedCells)
+						{
+							rowDirection.add(selectedCell.getRow());
+							colDirection.add(selectedCell.getColumn());
+						}
+						if (isCrosshair && !rowDirection.contains(CellView.directionCell.getRow()))
+						{
+							changeVertical = true;
+						}
+						else if (isCrosshair && !colDirection.contains(CellView.directionCell.getColumn()))
+						{
+							changeHorizontal = true;
+						}
+						isSet = true;
+					}
+				}
+			}
+		});
 		this.addEventHandler(MouseEvent.DRAG_DETECTED, startFullDragEventHandler);
 		this.addEventHandler(MouseEvent.MOUSE_MOVED, event -> {
 			List<TablePosition> selectedCells = this.handle.getView().getSelectionModel().getSelectedCells();
@@ -114,7 +161,10 @@ public class CellView extends TableCell<ObservableList<SpreadsheetCell>, Spreads
 		});
 		setOnMouseDragEntered(dragMouseEventHandler);
 		setOnMouseDragReleased(event -> {
+			CellView.isSet = false;
 			CellView.endCellView = this;
+			CellView.directionCell = null;
+			CellView.isSet = false;
 			CellView source = ((CellView) event.getGestureSource()); // start cell view
 			if (source.getCursor() != null && source.getCursor().equals(Cursor.CROSSHAIR))
 			{
@@ -545,6 +595,7 @@ public class CellView extends TableCell<ObservableList<SpreadsheetCell>, Spreads
 		final MouseButton button = e.getButton();
 		if (button == MouseButton.PRIMARY)
 		{
+
 			final TablePositionBase<?> anchor = getAnchor(tableView, focusedCell);
 			int minRow = Math.min(anchor.getRow(), row);
 			minRow = Math.min(minRow, rowCell);
@@ -574,6 +625,17 @@ public class CellView extends TableCell<ObservableList<SpreadsheetCell>, Spreads
 			if (rightBottonCell != null)
 			{
 				maxColumn = Math.max(maxColumn, rightBottonCell.getColumn());
+			}
+
+			if (CellView.changeHorizontal)
+			{
+				maxRow = rightBottonCell.getRow();
+				minRow = leftTopCell.getRow();
+			}
+			else if (CellView.changeVertical)
+			{
+				maxColumn = rightBottonCell.getColumn();
+				minColumn = leftTopCell.getColumn();
 			}
 			if (!e.isShortcutDown())
 				sm.clearSelection();
