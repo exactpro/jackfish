@@ -66,8 +66,10 @@ public class DialogCheckLayout extends AbstractAction
 			case doNotOpenName:
 			case doNotCloseName:
 				return HelpKind.ChooseFromList;
+			case connectionName:
+				return null;
 		}
-		return null;
+		return HelpKind.BuildLayoutExpression;
 	}
 
 	@Override

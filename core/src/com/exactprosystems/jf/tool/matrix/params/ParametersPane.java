@@ -25,6 +25,7 @@ import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.DragDetector;
 import com.exactprosystems.jf.tool.custom.fields.NewExpressionField;
+import com.exactprosystems.jf.tool.custom.layout.LayoutExpressionBuilder;
 import com.exactprosystems.jf.tool.custom.scroll.CustomScrollPane;
 import com.exactprosystems.jf.tool.custom.treetable.MatrixContextMenu;
 import com.exactprosystems.jf.tool.custom.treetable.MatrixParametersContextMenu;
@@ -35,6 +36,7 @@ import com.exactprosystems.jf.tool.main.Main;
 import com.exactprosystems.jf.tool.matrix.MatrixFx;
 import com.exactprosystems.jf.tool.settings.SettingsPanel;
 import com.exactprosystems.jf.tool.settings.Theme;
+
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -305,6 +307,11 @@ public class ParametersPane extends CustomScrollPane
 				}
 				catch (Exception e)
 				{ }
+
+				AbstractEvaluator evaluator = this.context.getEvaluator();
+				Settings settings = this.context.getConfiguration().getSettings();
+				Settings.SettingsValue theme = settings.getValueOrDefault(Settings.GLOBAL_NS, SettingsPanel.SETTINGS, Main.THEME, Theme.WHITE.name());
+				String themePath = Theme.valueOf(theme.getValue()).getPath();
 				
 				if (howHelp != null ) 
 				{
@@ -313,11 +320,13 @@ public class ParametersPane extends CustomScrollPane
 						case BuildQuery:
 							break;
 							
-						case BuildMeasureExpression:
+						case BuildLayoutExpression:
 							expressionField.setNameFirst("↔");
 							expressionField.setFirstActionListener(str -> 
 							{
-								return str;
+								LayoutExpressionBuilder viewer = new LayoutExpressionBuilder();
+								String res = viewer.show(par.getExpression(), "Layout expression for " + par.getName(), themePath, false);
+								return res;
 							});
 							break;
 							
@@ -380,10 +389,6 @@ public class ParametersPane extends CustomScrollPane
 							
 						case BuildXPath:
 							expressionField.setNameFirst("X");
-							AbstractEvaluator evaluator = this.context.getEvaluator();
-							Settings settings = this.context.getConfiguration().getSettings();
-							Settings.SettingsValue theme = settings.getValueOrDefault(Settings.GLOBAL_NS, SettingsPanel.SETTINGS, Main.THEME, Theme.WHITE.name());
-							String themePath = Theme.valueOf(theme.getValue()).getPath();
 							
 							expressionField.setFirstActionListener(str -> 
 							{
