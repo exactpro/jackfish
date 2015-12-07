@@ -65,7 +65,14 @@ public enum PieceKind
 		@Override
 		protected <T> void performDerived(Piece piece, OperationExecutor<T> executor, List<T> self, List<T> others, CheckingLayoutResult result) throws Exception 
 		{
-			check(piece, executor, self, others, result, (s,o) -> o.x - (s.x + s.width));
+			check(piece, executor, self, others, result, new Measure() 
+			{
+				@Override
+				public long calc(Rectangle s, Rectangle o)
+				{
+					return o.x - (s.x + s.width);
+				}
+			});
 		}
 	},
 	
@@ -74,7 +81,14 @@ public enum PieceKind
 		@Override
 		protected <T> void performDerived(Piece piece, OperationExecutor<T> executor, List<T> self, List<T> others, CheckingLayoutResult result) throws Exception 
 		{
-			check(piece, executor, self, others, result, (s,o) -> s.x - (o.x + o.width));
+			check(piece, executor, self, others, result, new Measure() 
+			{
+				@Override
+				public long calc(Rectangle s, Rectangle o)
+				{
+					return s.x - (o.x + o.width);
+				}
+			});
 		}
 	},
 
@@ -83,7 +97,14 @@ public enum PieceKind
 		@Override
 		protected <T> void performDerived(Piece piece, OperationExecutor<T> executor, List<T> self, List<T> others, CheckingLayoutResult result) throws Exception 
 		{
-			check(piece, executor, self, others, result, (s,o) -> o.y - (s.y + s.height));
+			check(piece, executor, self, others, result, new Measure() 
+			{
+				@Override
+				public long calc(Rectangle s, Rectangle o)
+				{
+					return o.y - (s.y + s.height);
+				}
+			});
 		}
 	},
 
@@ -92,7 +113,14 @@ public enum PieceKind
 		@Override
 		protected <T> void performDerived(Piece piece, OperationExecutor<T> executor, List<T> self, List<T> others, CheckingLayoutResult result) throws Exception 
 		{
-			check(piece, executor, self, others, result, (s,o) -> s.y - (o.y + o.height));
+			check(piece, executor, self, others, result, new Measure() 
+			{
+				@Override
+				public long calc(Rectangle s, Rectangle o)
+				{
+					return s.y - (o.y + o.height);
+				}
+			});
 		}
 	},
 
@@ -101,7 +129,14 @@ public enum PieceKind
 		@Override
 		protected <T> void performDerived(Piece piece, OperationExecutor<T> executor, List<T> self, List<T> others, CheckingLayoutResult result) throws Exception 
 		{
-			check(piece, executor, self, others, result, (s,o) -> (o.x + o.width) - (s.x + s.width));
+			check(piece, executor, self, others, result, new Measure() 
+			{
+				@Override
+				public long calc(Rectangle s, Rectangle o)
+				{
+					return (o.x + o.width) - (s.x + s.width);
+				}
+			});
 		}
 	},
 	
@@ -110,7 +145,14 @@ public enum PieceKind
 		@Override
 		protected <T> void performDerived(Piece piece, OperationExecutor<T> executor, List<T> self, List<T> others, CheckingLayoutResult result) throws Exception 
 		{
-			check(piece, executor, self, others, result, (s,o) -> (s.x + s.width) - (o.x + o.width));
+			check(piece, executor, self, others, result, new Measure() 
+			{
+				@Override
+				public long calc(Rectangle s, Rectangle o)
+				{
+					return (s.x + s.width) - (o.x + o.width);
+				}
+			});
 		}
 	},
 
@@ -119,7 +161,14 @@ public enum PieceKind
 		@Override
 		protected <T> void performDerived(Piece piece, OperationExecutor<T> executor, List<T> self, List<T> others, CheckingLayoutResult result) throws Exception 
 		{
-			check(piece, executor, self, others, result, (s,o) -> (o.y + o.height) - (s.y + s.height));
+			check(piece, executor, self, others, result, new Measure() 
+			{
+				@Override
+				public long calc(Rectangle s, Rectangle o)
+				{
+					return (o.y + o.height) - (s.y + s.height);
+				}
+			});
 		}
 	},
 
@@ -128,7 +177,14 @@ public enum PieceKind
 		@Override
 		protected <T> void performDerived(Piece piece, OperationExecutor<T> executor, List<T> self, List<T> others, CheckingLayoutResult result) throws Exception 
 		{
-			check(piece, executor, self, others, result, (s,o) -> (s.y + s.height) - (o.y + o.height));
+			check(piece, executor, self, others, result, new Measure() 
+			{
+				@Override
+				public long calc(Rectangle s, Rectangle o)
+				{
+					return (s.y + s.height) - (o.y + o.height);
+				}
+			});
 		}
 	},
 
@@ -137,7 +193,14 @@ public enum PieceKind
 		@Override
 		protected <T> void performDerived(Piece piece, OperationExecutor<T> executor, List<T> self, List<T> others, CheckingLayoutResult result) throws Exception 
 		{
-			check(piece, executor, self, others, result, (s,o) -> o.x - s.x);
+			check(piece, executor, self, others, result, new Measure() 
+			{
+				@Override
+				public long calc(Rectangle s, Rectangle o)
+				{
+					return o.x - s.x;
+				}
+			});
 		}
 	},
 	
@@ -146,7 +209,14 @@ public enum PieceKind
 		@Override
 		protected <T> void performDerived(Piece piece, OperationExecutor<T> executor, List<T> self, List<T> others, CheckingLayoutResult result) throws Exception 
 		{
-			check(piece, executor, self, others, result, (s,o) -> s.x - o.x);
+			check(piece, executor, self, others, result, new Measure() 
+			{
+				@Override
+				public long calc(Rectangle s, Rectangle o)
+				{
+					return s.x - o.x;
+				}
+			});
 		}
 	},
 
@@ -155,7 +225,14 @@ public enum PieceKind
 		@Override
 		protected <T> void performDerived(Piece piece, OperationExecutor<T> executor, List<T> self, List<T> others, CheckingLayoutResult result) throws Exception 
 		{
-			check(piece, executor, self, others, result, (s,o) -> o.y - s.y);
+			check(piece, executor, self, others, result, new Measure() 
+			{
+				@Override
+				public long calc(Rectangle s, Rectangle o)
+				{
+					return o.y - s.y;
+				}
+			});
 		}
 	},
 
@@ -164,7 +241,14 @@ public enum PieceKind
 		@Override
 		protected <T> void performDerived(Piece piece, OperationExecutor<T> executor, List<T> self, List<T> others, CheckingLayoutResult result) throws Exception 
 		{
-			check(piece, executor, self, others, result, (s,o) -> s.y - o.y);
+			check(piece, executor, self, others, result, new Measure() 
+			{
+				@Override
+				public long calc(Rectangle s, Rectangle o)
+				{
+					return s.y - o.y;
+				}
+			});
 		}
 	},
 
@@ -173,7 +257,14 @@ public enum PieceKind
 		@Override
 		protected <T> void performDerived(Piece piece, OperationExecutor<T> executor, List<T> self, List<T> others, CheckingLayoutResult result) throws Exception
 		{
-			check(piece, executor, self, others, result, (s,o) -> o.x - s.x);
+			check(piece, executor, self, others, result, new Measure() 
+			{
+				@Override
+				public long calc(Rectangle s, Rectangle o)
+				{
+					return o.x - s.x;
+				}
+			});
 		}
 	},
 	
@@ -182,7 +273,14 @@ public enum PieceKind
 		@Override
 		protected <T> void performDerived(Piece piece, OperationExecutor<T> executor, List<T> self, List<T> others, CheckingLayoutResult result) throws Exception
 		{
-			check(piece, executor, self, others, result, (s,o) -> s.x - o.x);
+			check(piece, executor, self, others, result, new Measure() 
+			{
+				@Override
+				public long calc(Rectangle s, Rectangle o)
+				{
+					return s.x - o.x;
+				}
+			});
 		}
 	},
 	
@@ -191,7 +289,14 @@ public enum PieceKind
 		@Override
 		protected <T> void performDerived(Piece piece, OperationExecutor<T> executor, List<T> self, List<T> others, CheckingLayoutResult result) throws Exception
 		{
-			check(piece, executor, self, others, result, (s,o) -> o.y - s.y);
+			check(piece, executor, self, others, result, new Measure() 
+			{
+				@Override
+				public long calc(Rectangle s, Rectangle o)
+				{
+					return o.y - s.y;
+				}
+			});
 		}
 	},
 
@@ -200,7 +305,14 @@ public enum PieceKind
 		@Override
 		protected <T> void performDerived(Piece piece, OperationExecutor<T> executor, List<T> self, List<T> others, CheckingLayoutResult result) throws Exception
 		{
-			check(piece, executor, self, others, result, (s,o) -> s.y - o.y);
+			check(piece, executor, self, others, result, new Measure() 
+			{
+				@Override
+				public long calc(Rectangle s, Rectangle o)
+				{
+					return s.y - o.y;
+				}
+			});
 		}
 	},
 	
@@ -209,7 +321,14 @@ public enum PieceKind
 		@Override
 		protected <T> void performDerived(Piece piece, OperationExecutor<T> executor, List<T> self, List<T> others, CheckingLayoutResult result) throws Exception
 		{
-			check(piece, executor, self, others, result, (s,o) -> (o.x + o.width / 2) - (s.x + s.width / 2));
+			check(piece, executor, self, others, result, new Measure() 
+			{
+				@Override
+				public long calc(Rectangle s, Rectangle o)
+				{
+					return (o.x + o.width / 2) - (s.x + s.width / 2);
+				}
+			});
 		}
 	},
 
@@ -218,7 +337,14 @@ public enum PieceKind
 		@Override
 		protected <T> void performDerived(Piece piece, OperationExecutor<T> executor, List<T> self, List<T> others, CheckingLayoutResult result) throws Exception
 		{
-			check(piece, executor, self, others, result, (s,o) -> (o.y + o.height / 2) - (s.y + s.height / 2));
+			check(piece, executor, self, others, result, new Measure() 
+			{
+				@Override
+				public long calc(Rectangle s, Rectangle o)
+				{
+					return (o.y + o.height / 2) - (s.y + s.height / 2);
+				}
+			});
 		}
 	},
 
@@ -269,10 +395,9 @@ public enum PieceKind
 
 	protected abstract <T> void performDerived(Piece piece, OperationExecutor<T> executor, List<T> self, List<T> others, CheckingLayoutResult result)  throws Exception;
 
-	@FunctionalInterface
-	private interface Measure 
+	private static interface Measure 
 	{
-		long calc(Rectangle self, Rectangle other);
+		long calc(Rectangle s, Rectangle o);
 	}
 	
 	private static <T> void check(Piece piece, OperationExecutor<T> executor, List<T> self, List<T> others, CheckingLayoutResult result, Measure func) throws Exception 
