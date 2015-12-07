@@ -21,11 +21,14 @@ import javafx.event.EventHandler;
 import javafx.event.EventType;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.control.MenuItem;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.util.Pair;
 
+import java.awt.*;
 import java.util.*;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
 import java.util.stream.Collectors;
@@ -33,7 +36,7 @@ import java.util.stream.IntStream;
 
 public class SpreadsheetView extends Control
 {
-
+	public static final String EMPTY = "N";
 	private static int currentIndexColumn = 0;
 	private static final double DEFAULT_ROW_HEADER_WIDTH = 30.0;
 
@@ -262,6 +265,32 @@ public class SpreadsheetView extends Control
 	{
 		this.providerProperty().get().removeRow(row);
 		this.setDataProvider(this.providerProperty().get());
+	}
+
+	public void evaluateNewProviderForward(ObservableList<ObservableList<String>> list, Point leftTopPoint)
+	{
+		//TODO
+		System.out.println(leftTopPoint);
+		out(list);
+	}
+
+	public void evaluateNewProviderBackward(ObservableList<ObservableList<String>> list, Point leftTopPoint)
+	{
+		//TODO
+		System.out.println(leftTopPoint);
+		out(list);
+	}
+
+	private <T> void out(ObservableList<ObservableList<T>> list)
+	{
+		for (ObservableList<T> ts : list)
+		{
+			for (T t : ts)
+			{
+				System.out.print(t+"\t");
+			}
+			System.out.println();
+		}
 	}
 
 	public ObservableList<String> convert(ObservableList<TablePosition> focusedCells)

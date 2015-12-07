@@ -522,15 +522,60 @@ CellView > .text-input.text-field{
 	-fx-prompt-text-fill: transparent;
 }
 
-.customFieldWithButton .customPane {
+.customFieldWithButton .customFieldPane {
 	-fx-padding: 0 3 0 0;
 
 }
-.customFieldWithButton .customPane > .customButton {
+.customFieldWithButton .customFieldPane > .customFieldButton {
 	-fx-text-fill : #2A7596;
 
 }
-.customFieldWithButton .customPane:hover > .customButton {
+.customFieldWithButton .customFieldPane:hover > .customFieldButton {
+	-fx-text-fill : #3CB6EB;
+
+}
+
+/*Custom Area Fields*/
+.custom-area-field {
+	-fx-highlight-fill: derive(-fx-control-inner-background,-20%);
+	-fx-highlight-text-fill: -fx-text-inner-color;
+	-fx-prompt-text-fill: derive(-fx-control-inner-background,-30%);
+	-fx-background-color: linear-gradient(to bottom, derive(-fx-text-box-border, -10%), -fx-text-box-border),
+		linear-gradient(from 0px 0px to 0px 5px, derive(-fx-control-inner-background, -9%), -fx-control-inner-background);
+	-fx-background-insets: 0, 1;
+	-fx-background-radius: 3, 2;
+}
+.custom-area-field:right-node-visible {
+	/*-fx-padding: 0.333333em 0 0.333333em 0.583em;*/
+
+}
+.custom-area-field:right-node-visible .customAreaRightPane {
+	-fx-padding: 0 3 0 3;
+
+}
+.custom-area-field:focused,
+.custom-area-field:text-field-has-focus {
+	-fx-highlight-fill: -fx-accent;
+	-fx-highlight-text-fill: white;
+	-fx-background-color:
+		-fx-focus-color,
+		-fx-control-inner-background,
+		-fx-faint-focus-color,
+		linear-gradient(from 0px 0px to 0px 5px, derive(-fx-control-inner-background, -9%), -fx-control-inner-background);
+	-fx-background-insets: -0.2, 1, -1.4, 3;
+	-fx-background-radius: 3, 2, 4, 0;
+	-fx-prompt-text-fill: transparent;
+}
+
+.customAreaWithButton .customAreaPane {
+	-fx-padding: 0 3 0 0;
+
+}
+.customAreaWithButton .customAreaPane > .customAreaButton {
+	-fx-text-fill : #2A7596;
+
+}
+.customAreaWithButton .customAreaPane:hover > .customAreaButton {
 	-fx-text-fill : #3CB6EB;
 
 }

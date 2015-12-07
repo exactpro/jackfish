@@ -118,8 +118,16 @@ public class CssVariables
 	public static final String	CUSTOM_TEXT_FIELD			= "custom-text-field";
 	public static final String	CUSTOM_FIELD_WITH_BUTTON	= "customFieldWithButton";
 	public static final String	CUSTOM_FIELD_RIGHT_PANE		= "customFieldRightPane";
-	public static final String	CUSTOM_FIELD_CUSTOM_PANE	= "customPane";
-	public static final String	CUSTOM_FIELD_CUSTOM_BUTTON	= "customButton";
+	public static final String	CUSTOM_FIELD_CUSTOM_PANE	= "customFieldPane";
+	public static final String	CUSTOM_FIELD_CUSTOM_BUTTON	= "customFieldButton";
+
+	/*Custom Area Fields*/
+	public static final String	CUSTOM_TEXT_AREA			= "custom-area-field";
+	public static final String	CUSTOM_AREA_WITH_BUTTON		= "customAreaWithButton";
+	public static final String	CUSTOM_AREA_RIGHT_PANE		= "customAreaRightPane";
+	public static final String	CUSTOM_AREA_CUSTOM_PANE		= "customPane";
+	public static final String	CUSTOM_AREA_CUSTOM_BUTTON	= "customButton";
+
 
 	/*Expression field*/
 	public static final String	EXPRESSION_EDITOR			= "expressionEditor";
