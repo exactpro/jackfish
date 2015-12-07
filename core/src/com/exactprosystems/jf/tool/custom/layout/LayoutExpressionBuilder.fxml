@@ -10,7 +10,7 @@
 	<center>
 		<BorderPane fx:id="parentPane" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
 			<center>
-				<TreeView fx:id="treeView" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
+				<Label fx:id="image" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
 			</center>
 		</BorderPane>
 	</center>

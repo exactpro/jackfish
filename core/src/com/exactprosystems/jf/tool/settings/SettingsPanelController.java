@@ -13,8 +13,10 @@ import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.custom.number.NumberTextField;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.main.Main;
+
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
+import javafx.event.Event;
 import javafx.fxml.Initializable;
 import javafx.geometry.HPos;
 import javafx.scene.Parent;
@@ -23,6 +25,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+
 import org.apache.log4j.Logger;
 
 import java.net.URL;
@@ -94,13 +97,13 @@ public class SettingsPanelController implements Initializable, ContainingParent
 			this.useFullScreen.setId(Main.USE_FULL_SCREEN);
 			this.useSmallWindow.setId(Main.USE_SMALL_WINDOW);
 
-			colorMap.put(cpAll.getId(), cpAll);
-			colorMap.put(cpDebug.getId(), cpDebug);
-			colorMap.put(cpError.getId(), cpError);
 			colorMap.put(cpFatal.getId(), cpFatal);
-			colorMap.put(cpInfo.getId(), cpInfo);
-			colorMap.put(cpTrace.getId(), cpTrace);
+			colorMap.put(cpError.getId(), cpError);
 			colorMap.put(cpWarn.getId(), cpWarn);
+			colorMap.put(cpInfo.getId(), cpInfo);
+			colorMap.put(cpDebug.getId(), cpDebug);
+			colorMap.put(cpTrace.getId(), cpTrace);
+			colorMap.put(cpAll.getId(), cpAll);
 			comboBoxTheme.setItems(FXCollections.observableArrayList(Arrays.stream(Theme.values()).filter(Theme::isVisible).collect(Collectors.toList())));
 			initializeFont();
 			listeners();
@@ -399,6 +402,12 @@ public class SettingsPanelController implements Initializable, ContainingParent
 				String.valueOf(useSmallWindow.isSelected())));
 		useFullScreenXpath.setOnAction(actionEvent -> model.updateSettingsValue(useFullScreenXpath.getId(), SettingsPanel.SETTINGS,
 				String.valueOf(useFullScreenXpath.isSelected())));
+
+		this.colorMap.entrySet().forEach(entry -> 
+		{
+			entry.getValue().setOnAction(e -> 
+				this.model.updateSettingsValue(entry.getKey(), SettingsPanel.LOGS_NAME, entry.getValue().getValue().toString()) );
+		}); 
 	}
 
 	private boolean save()

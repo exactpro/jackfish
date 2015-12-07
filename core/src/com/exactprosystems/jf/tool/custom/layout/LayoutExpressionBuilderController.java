@@ -6,9 +6,7 @@ import java.util.ResourceBundle;
 
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonBar;
-import javafx.scene.control.ButtonType;
+import javafx.scene.control.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -17,6 +15,8 @@ import com.exactprosystems.jf.tool.ContainingParent;
 
 public class LayoutExpressionBuilderController implements Initializable, ContainingParent
 {
+	private Label 					image;
+	
 	private Parent					parent;
 	private LayoutExpressionBuilder	model;
 

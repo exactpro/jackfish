@@ -199,20 +199,20 @@
 								<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
 							</rowConstraints>
 							<children>
-								<Label text="All" GridPane.rowIndex="6" />
-								<Label text="Debug" GridPane.rowIndex="4" />
+								<Label text="FATAL" GridPane.rowIndex="0"/>
 								<Label text="ERROR" GridPane.rowIndex="1" />
-								<Label text="FATAL" />
-								<Label text="INFO" GridPane.rowIndex="3" />
-								<Label text="TRACE" GridPane.rowIndex="5" />
 								<Label text="WARN" GridPane.rowIndex="2" />
-								<ColorPicker id="ALL" fx:id="cpAll" GridPane.columnIndex="1" GridPane.rowIndex="6" />
-								<ColorPicker id="DEBUG" fx:id="cpDebug" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+								<Label text="INFO" GridPane.rowIndex="3" />
+								<Label text="Debug" GridPane.rowIndex="4" />
+								<Label text="TRACE" GridPane.rowIndex="5" />
+								<Label text="All" GridPane.rowIndex="6" />
+								<ColorPicker id="FATAL" fx:id="cpFatal" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
 								<ColorPicker id="ERROR" fx:id="cpError" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-								<ColorPicker id="FATAL" fx:id="cpFatal" GridPane.columnIndex="1" />
-								<ColorPicker id="INFO" fx:id="cpInfo" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-								<ColorPicker id="TRACE" fx:id="cpTrace" GridPane.columnIndex="1" GridPane.rowIndex="5" />
 								<ColorPicker id="WARN" fx:id="cpWarn" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+								<ColorPicker id="INFO" fx:id="cpInfo" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+								<ColorPicker id="DEBUG" fx:id="cpDebug" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+								<ColorPicker id="TRACE" fx:id="cpTrace" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+								<ColorPicker id="ALL" fx:id="cpAll" GridPane.columnIndex="1" GridPane.rowIndex="6" />
 							</children>
 						</GridPane>
 					</content>
