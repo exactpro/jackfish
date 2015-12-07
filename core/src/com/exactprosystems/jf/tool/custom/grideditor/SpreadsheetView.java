@@ -31,11 +31,14 @@ import java.util.*;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class SpreadsheetView extends Control
 {
+	private static final int minProgression = Integer.MIN_VALUE;
 	public static final String EMPTY = "N";
 	private static int currentIndexColumn = 0;
 	private static final double DEFAULT_ROW_HEADER_WIDTH = 30.0;
@@ -267,18 +270,118 @@ public class SpreadsheetView extends Control
 		this.setDataProvider(this.providerProperty().get());
 	}
 
+	/**
+	 * Direction : right; down; rightDown
+	 */
 	public void evaluateNewProviderForward(ObservableList<ObservableList<String>> list, Point leftTopPoint)
 	{
-		//TODO
-		System.out.println(leftTopPoint);
 		out(list);
+		int colCount = 0;
+		int maxColumns = list.get(0).size();
+		while (!list.get(0).get(colCount).equals(EMPTY))
+		{
+			colCount++;
+			if (colCount == maxColumns)
+			{
+				break;
+			}
+		}
+
+		int rowCount = 0;
+		int maxRows = list.size();
+		while (!list.get(rowCount).get(0).equals(EMPTY))
+		{
+			rowCount++;
+			if (rowCount == maxRows)
+			{
+				break;
+			}
+		}
+
+		/**
+		 *  if we selected only horizontal's rows, we don't need to update vertical columns
+		 */
+		if (rowCount != list.size())
+		{
+			/**
+			 * update all vertical
+			 */
+			for(int i = 0; i < colCount; i++)
+			{
+				ArrayList<String> vertical = new ArrayList<>();
+				for(int j = 0 ; j < rowCount; j++)
+				{
+					vertical.add(list.get(j).get(i));
+				}
+				int verticalProgression = getProgression(vertical);
+				if (verticalProgression == minProgression)
+				{
+					for(int j = rowCount; j < list.size(); j++)
+					{
+						list.get(j).set(i, getEvaluatedText(list.get(j - rowCount).get(i)));
+					}
+				}
+				else
+				{
+					for (int j = rowCount; j < list.size(); j++)
+					{
+						list.get(j).set(i, getEvaluatedText(list.get(j - 1).get(i), verticalProgression));
+					}
+				}
+			}
+		}
+
+		/**
+		 * if we select only vertical's columns, we don't need update horizontal rows
+		 */
+		if (colCount != list.get(0).size())
+		{
+			/**
+			 * update all horizontal
+			 */
+			for (int j = 0; j < list.size(); j++)
+			{
+				ArrayList<String> vertical = new ArrayList<>();
+				for(int i = 0 ; i < colCount; i++)
+				{
+					vertical.add(list.get(j).get(i));
+				}
+				int horizontalProgression = getProgression(vertical);
+				if (horizontalProgression == minProgression)
+				{
+					for(int i = colCount; i < list.get(j).size(); i++)
+					{
+						list.get(j).set(i, getEvaluatedText(list.get(j).get(i - colCount)));
+					}
+				}
+				else
+				{
+					for(int i = colCount; i < list.get(j).size(); i++)
+					{
+						list.get(j).set(i, getEvaluatedText(list.get(j).get(i - 1), horizontalProgression));
+					}
+				}
+			}
+		}
+		int y = (int) leftTopPoint.getY();
+		int x = (int) leftTopPoint.getX();
+		for (int i = 0; i < list.size(); i++)
+		{
+			for(int j = 0; j < list.get(i).size(); j++ )
+			{
+				this.providerProperty().get().setCellValue(j + y, i + x, list.get(i).get(j));
+			}
+		}
+
+		this.setDataProvider(this.providerProperty().get());
 	}
 
 	public void evaluateNewProviderBackward(ObservableList<ObservableList<String>> list, Point leftTopPoint)
 	{
-		//TODO
-		System.out.println(leftTopPoint);
+//		TODO
+//		System.out.println(leftTopPoint);
 		out(list);
+
 	}
 
 	private <T> void out(ObservableList<ObservableList<T>> list)
@@ -291,6 +394,109 @@ public class SpreadsheetView extends Control
 			}
 			System.out.println();
 		}
+		System.out.println("###");
+	}
+
+	private static int getProgression(List<String> strings)
+	{
+		int progression = minProgression;
+		ArrayList<Integer> list = new ArrayList<>();
+		for (int i = 0; i < strings.size() - 1; i++)
+		{
+			String firstValue = strings.get(i);
+			String secondValue = strings.get(i + 1);
+			try
+			{
+				//TODO think about numberWORDnumber
+				int firstInt = Integer.parseInt(firstValue);
+				int secondInt = Integer.parseInt(secondValue);
+				list.add(secondInt - firstInt);
+			}
+			catch (NumberFormatException e)
+			{
+				return progression;
+			}
+		}
+		if (list.stream().distinct().count() == 1)
+		{
+			progression = list.get(0);
+		}
+		return progression;
+	}
+
+	private String getEvaluatedText(String s, int progression)
+	{
+		/**
+		 *  only number
+		 */
+		try
+		{
+			int i = Integer.parseInt(s);
+			int w = i + progression;
+			return String.valueOf(w);
+		}
+		catch (Exception e)
+		{
+			//
+		}
+		/**
+		 *  number add string
+		 */
+		try
+		{
+			StringBuilder res = new StringBuilder();
+			Pattern compile = Pattern.compile("^(\\d+)?(.*?)(\\d+)?$");
+			Matcher matcher = compile.matcher(s);
+			if (matcher.find())
+			{
+				String firstDigits = matcher.group(1);
+				if (firstDigits != null)
+				{
+					int first = Integer.parseInt(firstDigits);
+					int firstNew = first + progression;
+					res.append(firstNew);
+				}
+
+				String word = matcher.group(2);
+				res.append(word);
+
+				String lastDigits = matcher.group(3);
+				if (lastDigits != null)
+				{
+					int last = Integer.parseInt(lastDigits);
+					int lastNew = last + progression;
+					res.append(lastNew);
+				}
+				return res.toString();
+			}
+		}
+		catch (Exception e)
+		{
+			//
+		}
+		/**
+		 *  only string
+		 */
+		return s;
+	}
+
+	private String getEvaluatedText(String s)
+	{
+		return getEvaluatedText(s, 1);
+	}
+
+	private List<String> getStrings(ObservableList<ObservableList<String>> list, Integer maxCol, Integer maxRow)
+	{
+		ArrayList<String> arrayList = new ArrayList<>();
+		if (maxCol != null)
+		{
+
+		}
+		else if (maxRow != null)
+		{
+
+		}
+		return arrayList;
 	}
 
 	public ObservableList<String> convert(ObservableList<TablePosition> focusedCells)

@@ -24,7 +24,6 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 
 import java.awt.*;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
@@ -123,20 +122,36 @@ public class CellView extends TableCell<ObservableList<SpreadsheetCell>, Spreads
 				final RectangleSelection.GridRange range = this.handle.getCellsViewSkin().getRectangleSelection().getRange();
 				final DataProvider provider = this.handle.getView().getProvider();
 				/**
-				 * only one selected cell. easy
+				 * only one selected cell. easy.
+				 * work all directions : right, up, down, left
 				 */
+
+				//TODO mb move this logic to SpreadsheetView
 				if (initialCells.size() == 1)
 				{
-					StringBuilder text = new StringBuilder(source.getText());
-					IntStream.range(range.getTop(), range.getBottom() + 1)
-							.forEach(j -> IntStream.range(range.getLeft(), range.getRight() + 1)
-									.forEach(i -> provider.setCellValue(i, j, getEvaluatedText(text))));
+					if (!startMoreLast())
+					{
+						StringBuilder text = new StringBuilder(source.getText());
+						IntStream.range(range.getTop(), range.getBottom() + 1)
+								.forEach(j -> IntStream.range(range.getLeft(), range.getRight() + 1)
+										.forEach(i -> provider.setCellValue(i, j, getEvaluatedText(text))));
+					}
+					else
+					{
+						StringBuilder text = new StringBuilder(source.getText());
+						for(int i = range.getBottom(); i > range.getTop() - 1; i--)
+						{
+							for (int j = range.getRight(); j > range.getLeft() - 1; j--)
+							{
+								provider.setCellValue(j, i, getEvaluatedText(text, -1));
+							}
+						}
+					}
 					this.handle.getView().setDataProvider(provider);
 				}
 				else
 				{
-					Point leftTopCorner = new Point(range.getTop(), range.getRight());
-					int progression = evaluateProgression(initialCells, provider);
+					Point leftTopCorner = new Point(range.getTop(), range.getLeft());
 					int startRow = initialCells.get(0).getRow();
 					ObservableList<ObservableList<String>> strings = FXCollections.observableArrayList();
 					int index = 0;
@@ -255,44 +270,6 @@ public class CellView extends TableCell<ObservableList<SpreadsheetCell>, Spreads
 			}
 		}
 		return max;
-	}
-
-	private int evaluateProgression(ObservableList<TablePosition> initialCells, DataProvider provider)
-	{
-		int progression = 1;
-		int lastCell = 0;
-		int firstCell = 0;
-		ArrayList<Integer> list = new ArrayList<>();
-		for (int i = 0; i < initialCells.size() - 1; i++)
-		{
-			TablePosition first = initialCells.get(i);
-			TablePosition second = initialCells.get(i + 1);
-			String firstValue = (String) provider.getCellValue(first.getColumn(), first.getRow());
-			String secondValue = (String) provider.getCellValue(second.getColumn(), second.getRow());
-			try
-			{
-				int firstInt = Integer.parseInt(firstValue);
-				int secondInt = Integer.parseInt(secondValue);
-				if (i == 0)
-				{
-					firstCell = firstInt;
-				}
-				if (i == initialCells.size() - 2)
-				{
-					lastCell = secondInt;
-				}
-				list.add(secondInt - firstInt);
-			}
-			catch (NumberFormatException e)
-			{
-				return progression;
-			}
-		}
-		if (list.stream().distinct().count() == 1)
-		{
-			progression = lastCell - firstCell;
-		}
-		return progression;
 	}
 
 	private String getEvaluatedText(StringBuilder sb, int progression)
