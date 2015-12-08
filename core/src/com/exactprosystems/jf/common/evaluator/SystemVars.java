@@ -130,7 +130,7 @@ public class SystemVars extends AbstractDocument
 			String key = entry.getName();
 			String value = entry.getExpression();
 			Object result = evaluator.evaluate(value);
-			evaluator.getGlobals().set(key, result);
+			evaluator.init(key, result);
 		}
 	
 	}

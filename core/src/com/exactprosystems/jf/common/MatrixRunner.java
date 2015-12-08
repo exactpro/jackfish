@@ -20,7 +20,6 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.Reader;
 import java.util.Date;
-import java.util.function.Function;
 
 public class MatrixRunner implements IMatrixRunner, AutoCloseable
 {

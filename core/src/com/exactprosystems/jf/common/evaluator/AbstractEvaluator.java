@@ -8,6 +8,9 @@
 
 package com.exactprosystems.jf.common.evaluator;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public abstract class AbstractEvaluator 
 {
 	public abstract void addImports(String[] imports);
@@ -22,11 +25,17 @@ public abstract class AbstractEvaluator
 
 	public abstract String createString(String val);
 
+	public void init(String key, Object value)
+	{
+		this.initVars.put(key, value);
+	}
+
 	public final void reset() throws Exception
 	{
-		// TODO how to init variables from vars.ini?
 		getLocals().getVars().clear();
 		getGlobals().getVars().clear();
+		
+		getGlobals().getVars().putAll(this.initVars);
 	}
 
 	public final Object compile(String expression) throws Exception
@@ -135,4 +144,6 @@ public abstract class AbstractEvaluator
 	protected abstract Object rawExecute(Object compiled) throws Exception;
 
 	protected abstract String rawTemplateEvaluate(String expression) throws Exception;
+	
+	private Map<String, Object> initVars = new HashMap<String, Object>();
 }

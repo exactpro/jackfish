@@ -536,6 +536,7 @@ public class Configuration extends AbstractDocument
 		evaluator.addImports(get(evaluatorImports).split(","));
 		setUserVariablesFromMask(get(variables), evaluator);
 		setUserVariablesFromMask(get(userVariables), evaluator);
+		evaluator.reset();
 		
 		return evaluator;
 	}

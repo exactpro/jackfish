@@ -9,22 +9,14 @@
 package com.exactprosystems.jf.common;
 
 import com.exactprosystems.jf.actions.ReadableValue;
-import com.exactprosystems.jf.api.app.IApplicationFactory;
-import com.exactprosystems.jf.api.app.IApplicationPool;
-import com.exactprosystems.jf.api.client.IClientFactory;
-import com.exactprosystems.jf.api.client.IClientsPool;
 import com.exactprosystems.jf.api.common.IContext;
 import com.exactprosystems.jf.api.common.IMatrixRunner;
-import com.exactprosystems.jf.api.service.IServicesPool;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.parser.Matrix;
 import com.exactprosystems.jf.common.parser.items.MatrixItem;
 import com.exactprosystems.jf.common.parser.items.MatrixRoot;
 import com.exactprosystems.jf.common.parser.items.SubCase;
 import com.exactprosystems.jf.common.parser.listeners.IMatrixListener;
-import com.exactprosystems.jf.common.parser.listeners.RunnerListener;
-import com.exactprosystems.jf.sql.DataBasePool;
-
 import org.apache.log4j.Logger;
 
 import java.io.PrintStream;
