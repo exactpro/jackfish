@@ -9,6 +9,7 @@
 package com.exactprosystems.jf.tool.custom.helper;
 
 import com.exactprosystems.jf.api.app.Do;
+import com.exactprosystems.jf.api.app.DoSpec;
 import com.exactprosystems.jf.api.common.DateTime;
 import com.exactprosystems.jf.api.common.Rnd;
 import com.exactprosystems.jf.api.common.Str;
@@ -70,7 +71,8 @@ public class HelperControllerFx implements Initializable, ContainingParent
 				new MenuItem(DateTime.class.getSimpleName()),
 				new MenuItem(Rnd.class.getSimpleName()),
 				new MenuItem(Str.class.getSimpleName()),
-				new MenuItem(Do.class.getSimpleName())
+				new MenuItem(Do.class.getSimpleName()),
+				new MenuItem(DoSpec.class.getSimpleName())
 		);
 		smbClass.getItems().forEach(item -> item.setOnAction(event -> this.taInput.appendText(item.getText())));
 	}
@@ -84,7 +86,7 @@ public class HelperControllerFx implements Initializable, ContainingParent
 		dialogPane.setPrefWidth(500);
 		dialogPane.setContent(parent);
 		this.dialog.setResizable(true);
-		this.dialog.setTitle("Formula generator");
+		this.dialog.setTitle("Formula interpreter");
 
 	}
 
