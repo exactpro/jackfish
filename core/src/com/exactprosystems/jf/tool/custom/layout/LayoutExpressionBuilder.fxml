@@ -1,19 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import javafx.geometry.*?>
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.*?>
+<?import com.exactprosystems.jf.tool.custom.fields.CustomFieldWithButton?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
 <?import javafx.scene.layout.*?>
-
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.exactprosystems.jf.tool.custom.layout.LayoutExpressionBuilderController">
-	<center>
-		<BorderPane fx:id="parentPane" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+	<right>
+		<BorderPane fx:id="parentPane" prefHeight="329.0" prefWidth="180.0" BorderPane.alignment="CENTER">
 			<center>
-				<Label fx:id="image" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
+				<ListView fx:id="listViewControls" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER"/>
 			</center>
+			<top>
+				<CustomFieldWithButton fx:id="cfFindControl" promptText="findControls" BorderPane.alignment="CENTER"/>
+			</top>
 		</BorderPane>
+	</right>
+	<center>
+		<Label fx:id="image" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER"/>
 	</center>
-
-
+	<top>
+		<CustomFieldWithButton BorderPane.alignment="CENTER"/>
+	</top>
+	<bottom>
+		<BorderPane fx:id="bottomPane" prefHeight="44.0" prefWidth="600.0" BorderPane.alignment="CENTER">
+			<top>
+				<HBox fx:id="hBoxCheckBoxes" prefHeight="23.0" prefWidth="600.0" BorderPane.alignment="CENTER">
+					<children>
+						<CheckBox mnemonicParsing="false" text="check 1"/>
+						<CheckBox mnemonicParsing="false" text="check 2"/>
+					</children>
+				</HBox>
+			</top>
+		</BorderPane>
+	</bottom>
 </BorderPane>

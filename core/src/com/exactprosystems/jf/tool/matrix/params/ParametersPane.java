@@ -32,11 +32,7 @@ import com.exactprosystems.jf.tool.custom.treetable.MatrixParametersContextMenu;
 import com.exactprosystems.jf.tool.custom.xpath.XpathViewer;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper.OpenSaveMode;
-import com.exactprosystems.jf.tool.main.Main;
 import com.exactprosystems.jf.tool.matrix.MatrixFx;
-import com.exactprosystems.jf.tool.settings.SettingsPanel;
-import com.exactprosystems.jf.tool.settings.Theme;
-
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -310,8 +306,7 @@ public class ParametersPane extends CustomScrollPane
 
 				AbstractEvaluator evaluator = this.context.getEvaluator();
 				Settings settings = this.context.getConfiguration().getSettings();
-				Settings.SettingsValue theme = settings.getValueOrDefault(Settings.GLOBAL_NS, SettingsPanel.SETTINGS, Main.THEME, Theme.WHITE.name());
-				String themePath = Theme.valueOf(theme.getValue()).getPath();
+				String themePath = Common.currentTheme().getPath();
 				
 				if (howHelp != null ) 
 				{
@@ -325,8 +320,7 @@ public class ParametersPane extends CustomScrollPane
 							expressionField.setFirstActionListener(str -> 
 							{
 								LayoutExpressionBuilder viewer = new LayoutExpressionBuilder();
-								String res = viewer.show(par.getExpression(), "Layout expression for " + par.getName(), themePath, false);
-								return res;
+								return viewer.show(par.getExpression(), "Layout expression for " + par.getName(), themePath, false);
 							});
 							break;
 							
