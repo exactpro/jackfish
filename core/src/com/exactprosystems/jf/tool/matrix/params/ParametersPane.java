@@ -195,7 +195,7 @@ public class ParametersPane extends CustomScrollPane
 					String[] fields = str.substring(1, str.length() - 1).split(",");
 					Common.tryCatch(() -> 
 					{
-						getMatrix().parameterInsert(this.matrixItem, 0, 
+						getMatrix().parameterInsert(this.matrixItem, -1, 
 								Arrays.stream(fields)
 								.map(i -> new Pair<ReadableValue, TypeMandatory>(new ReadableValue(i.trim()), TypeMandatory.Extra))
 								.collect(Collectors.toList()));
