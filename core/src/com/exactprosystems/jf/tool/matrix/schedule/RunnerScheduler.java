@@ -11,10 +11,14 @@ package com.exactprosystems.jf.tool.matrix.schedule;
 import com.exactprosystems.jf.common.Configuration;
 import com.exactprosystems.jf.common.Context;
 import com.exactprosystems.jf.common.MatrixRunner;
+import com.exactprosystems.jf.common.parser.Matrix;
 import com.exactprosystems.jf.common.parser.listeners.MatrixListener;
 import com.exactprosystems.jf.common.parser.listeners.RunnerListener;
 import com.exactprosystems.jf.tool.Common;
+import com.exactprosystems.jf.tool.custom.tab.CustomTab;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
+import com.exactprosystems.jf.tool.matrix.MatrixFx;
+
 import javafx.stage.Window;
 
 import org.apache.log4j.Logger;
@@ -103,7 +107,6 @@ public class RunnerScheduler implements RunnerListener
 			.filter(Objects::nonNull)
 			.forEach(file -> Common.tryCatch(() ->
 			{
-				System.out.println(file);
 				Context context = this.configuration.createContext(new MatrixListener(), System.out);
 				MatrixRunner runner = new MatrixRunner(context, file, null, null);
 				this.map.put(runner, Boolean.TRUE);
@@ -112,7 +115,34 @@ public class RunnerScheduler implements RunnerListener
 
 	public void showSelected(List<MatrixRunner> collect)
 	{
-
+		this.map.keySet().stream().filter(collect::contains).forEach(runner -> Common.tryCatch(() ->
+		{
+			runner.process((matrix, context, report, startTime) ->
+			{
+				CustomTab tab = Common.checkDocument(matrix);
+				if (tab != null)
+				{
+					matrix = (MatrixFx) tab.getDocument();
+				}
+				else
+				{
+					try
+					{
+						unsubscribe(runner);
+						matrix = new MatrixFx(matrix, context.getConfiguration(), context.getMatrixListener());
+						matrix.display();
+					}
+					catch (Exception e)
+					{
+						DialogsHelper.showError("Couldn't open the matrix " + matrix);
+						return false;
+					}
+				}
+				
+				return true;
+			});
+			
+		}, "Error on start runner"));
 	}
 
 	public void destroySelected(List<MatrixRunner> collect)

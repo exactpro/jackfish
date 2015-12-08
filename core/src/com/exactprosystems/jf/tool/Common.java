@@ -167,7 +167,8 @@ public abstract class Common
 
 	public static CustomTab checkDocument(Document doc)
 	{
-		Optional<Tab> first = tabPane.getTabs().stream().filter(tab -> ((CustomTab) tab).getDocument() == doc ).findFirst();
+		Optional<Tab> first = tabPane.getTabs().stream().filter(tab ->((CustomTab) tab).getDocument().equals(doc)).findFirst();
+
 		if (first.isPresent())
 		{
 			return (CustomTab) first.get();

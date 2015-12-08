@@ -8,16 +8,8 @@
 
 package com.exactprosystems.jf.common;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
-
-@Target(ElementType.TYPE)
-@Retention(RetentionPolicy.RUNTIME)
-public @interface DocumentInfo
+@FunctionalInterface
+public interface FourParameterFunction<T, U, V, W, R> 
 {
-	String newName();
-	String extentioin();
-	String description();
+    public R apply(T t, U u, V v, W w);
 }

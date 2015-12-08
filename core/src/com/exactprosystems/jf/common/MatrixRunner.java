@@ -12,15 +12,15 @@ import com.exactprosystems.jf.api.common.IMatrixRunner;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.parser.Matrix;
 import com.exactprosystems.jf.common.parser.Result;
-import com.exactprosystems.jf.common.parser.listeners.RunnerListener;
 import com.exactprosystems.jf.common.report.ReportBuilder;
+
 import org.apache.log4j.Logger;
 
 import java.io.File;
 import java.io.FileReader;
 import java.io.Reader;
 import java.util.Date;
-import java.util.Optional;
+import java.util.function.Function;
 
 public class MatrixRunner implements IMatrixRunner, AutoCloseable
 {
@@ -50,7 +50,7 @@ public class MatrixRunner implements IMatrixRunner, AutoCloseable
 	public MatrixRunner(Context context, Matrix matrix, Date startTime, Object parameter) throws Exception
 	{
 		this(context, startTime, new File(matrix.getName()), parameter);
-
+		
 		this.matrix = matrix;
 		this.matrixFile = new File(this.matrix.getName());
 		this.context.getConfiguration().getRunnerListener().subscribe(this);
@@ -83,39 +83,21 @@ public class MatrixRunner implements IMatrixRunner, AutoCloseable
 		}
 	}
 
-
-	private void loadFromReader(Context context, Reader reader) throws Exception
+	public Boolean process (FourParameterFunction<Matrix, Context, ReportBuilder, Date, Boolean> fn) throws Exception
 	{
-		this.matrix = new Matrix(this.matrixFile.getName(), context.getConfiguration(), context.getMatrixListener());
-		this.context.getConfiguration().getRunnerListener().subscribe(this);
-		changeState(State.Error);
-		this.matrix.load(reader);
-
-		if (context.getMatrixListener().isOk())
-		{
-			changeState(State.Created);
-		}
-		else 
-		{
-			String msg = context.getMatrixListener().getExceptionMessage();
-			logger.error(msg);
-			throw new Exception("Errors in matrix." + msg);
-		}
+		Boolean res = fn.apply(this.matrix, this.context, this.report, this.startTime);
+		return res;
 	}
 
 	@Override
 	public String toString()
 	{
-		if (this.matrix != null)
-		{
-			return getClass().getSimpleName() + "["
-					+ "name=" + this.matrix.getName()
-					+ " start at=" + this.startTime
-					+ " " + Result.Passed + "=" + this.matrix.countResult(Result.Passed)
-					+ " " + Result.Failed + "=" + this.matrix.countResult(Result.Failed)
-					+ "]";
-		}
-		return getClass().getSimpleName() + hashCode();
+		return getClass().getSimpleName() + "["
+				+ "name=" + this.matrix.getName()
+				+ " start at=" + this.startTime
+				+ " " + Result.Passed + "=" + this.matrix.countResult(Result.Passed)
+				+ " " + Result.Failed + "=" + this.matrix.countResult(Result.Failed)
+				+ "]";
 	}
 
 	public String matrix()
@@ -173,22 +155,13 @@ public class MatrixRunner implements IMatrixRunner, AutoCloseable
 	{
 		if (isRunning())
 		{
-			if (this.matrix != null)
-			{
-				changeState(State.Running);
-				this.matrix.resume(); 
-			}
-			return;
+			changeState(State.Running);
+			this.matrix.resume(); 
 		}
 		
 		Configuration configuration = this.context.getConfiguration();
         final AbstractEvaluator evaluator = this.context.getEvaluator();
 		this.report = configuration.getReportFactory().createBuilder(configuration.get(Configuration.outputPath), this.matrixFile, new Date());
-		
-		if (this.matrix == null)
-		{
-			throw new Exception("Matrix is empty.");
-		}
 		
 		if (!this.matrix.checkMatrix(this.context, evaluator))
 		{
@@ -244,11 +217,8 @@ public class MatrixRunner implements IMatrixRunner, AutoCloseable
 	@Override
 	public void stop()
 	{
-		if (this.matrix != null)
-		{
-			this.matrix.stop();
-			changeState(State.Stopped);
-		}
+		this.matrix.stop();
+		changeState(State.Stopped);
 		if (this.thread != null)
 		{
 			try
@@ -269,31 +239,22 @@ public class MatrixRunner implements IMatrixRunner, AutoCloseable
 	@Override
 	public void pause()
 	{
-		if (this.matrix != null)
-		{
-			this.matrix.pause();
-			changeState(State.Pausing);
-		}
+		this.matrix.pause();
+		changeState(State.Pausing);
 	}
 
 	@Override
 	public void step()
 	{
-		if (this.matrix != null)
-		{
-			changeState(State.Running);
-			this.matrix.step();
-	        changeState(State.Pausing);
-		}
+		changeState(State.Running);
+		this.matrix.step();
+        changeState(State.Pausing);
 	}
 	
 	@Override
 	public boolean resetAllBreakPoints()
 	{
-		if (this.matrix != null)
-		{
-			this.matrix.getRoot().bypass(v -> v.setBreakPoint(false));
-		}
+		this.matrix.getRoot().bypass(v -> v.setBreakPoint(false));
 		return true;
 	}
 	
@@ -326,6 +287,25 @@ public class MatrixRunner implements IMatrixRunner, AutoCloseable
 	public String getImagesDirPath()
 	{
 		return this.report.getReportDir();
+	}
+
+	private void loadFromReader(Context context, Reader reader) throws Exception
+	{
+		this.matrix = new Matrix(this.matrixFile.getName(), context.getConfiguration(), context.getMatrixListener());
+		this.context.getConfiguration().getRunnerListener().subscribe(this);
+		changeState(State.Error);
+		this.matrix.load(reader);
+
+		if (context.getMatrixListener().isOk())
+		{
+			changeState(State.Created);
+		}
+		else 
+		{
+			String msg = context.getMatrixListener().getExceptionMessage();
+			logger.error(msg);
+			throw new Exception("Errors in matrix." + msg);
+		}
 	}
 
 	private void changeState(State newState)

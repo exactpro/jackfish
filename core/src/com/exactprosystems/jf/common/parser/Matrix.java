@@ -75,7 +75,6 @@ public class Matrix extends AbstractDocument implements IMatrix, Cloneable
 		Optional.ofNullable(this.root).ifPresent(root -> root.bypass(item -> item.setNubmer(count.getAndIncrement())));
 	}
 	
-	
 	// ==============================================================================================================================
 	// interface IMatrix
 	// ==============================================================================================================================
