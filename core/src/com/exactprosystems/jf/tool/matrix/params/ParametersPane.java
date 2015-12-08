@@ -9,6 +9,7 @@
 package com.exactprosystems.jf.tool.matrix.params;
 
 import com.exactprosystems.jf.actions.ReadableValue;
+import com.exactprosystems.jf.actions.gui.DialogFill;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.common.Context;
 import com.exactprosystems.jf.common.Settings;
@@ -319,8 +320,23 @@ public class ParametersPane extends CustomScrollPane
 							expressionField.setNameFirst("↔");
 							expressionField.setFirstActionListener(str -> 
 							{
-								LayoutExpressionBuilder viewer = new LayoutExpressionBuilder();
-								return viewer.show(par.getExpression(), "Layout expression for " + par.getName(), themePath, false);
+								String expression = this.parameters.getExpression(DialogFill.dialogName);
+								String dialogName = null;
+								try
+								{
+									dialogName = String.valueOf(evaluator.evaluate(expression));
+								}
+								catch (Exception e) {}
+								LayoutExpressionBuilder viewer = new LayoutExpressionBuilder(par.getName(), par.getExpression(), this.matrixItem.getParent().getMatrix().getDefaultApplicationConnection(), dialogName, evaluator);
+								try
+								{
+									return viewer.show("Layout expression for " + par.getName(), false);
+								}
+								catch (Exception e)
+								{
+									DialogsHelper.showError(e.getMessage());
+								}
+								return par.getExpression();
 							});
 							break;
 							
@@ -396,7 +412,7 @@ public class ParametersPane extends CustomScrollPane
 										Object value = evaluator.tryEvaluate(par.getExpression());
 										String initial = value == null ? null : String.valueOf(value);
 										XpathViewer viewer = new XpathViewer(null, xml.getDocument(), null);
-										String res = viewer.show(initial, "Xpath for " + par.getName(), themePath, false);
+										String res = viewer.show(initial, "Xpath for " + par.getName(), themePath, false); //TODO themePath need replace to Common.currentTheme().getPath()
 										if (res != null)
 										{
 											res = evaluator.createString(res);

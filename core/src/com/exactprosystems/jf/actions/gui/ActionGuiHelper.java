@@ -59,7 +59,7 @@ public class ActionGuiHelper
 	}
 	
 	
-	private static IGuiDictionary getGuiDictionary(Matrix matrix, AppConnection connection) throws Exception
+	public static IGuiDictionary getGuiDictionary(Matrix matrix, AppConnection connection) throws Exception
 	{
 		IGuiDictionary dictionary = null;
 		if (connection != null)

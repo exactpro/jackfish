@@ -58,6 +58,7 @@ public class OperationResult implements Serializable, Map<String, String>
 		this.colorMapFilled = true;
 	}
 
+	//TODO need think and remake this method
 	public void setList(List<String> list)
 	{
 		for (int i = 0; i < list.size(); i++)

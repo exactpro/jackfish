@@ -252,7 +252,7 @@ package com.exactprosystems.jf.common.parser;
 		this.changed = this.changed || removed != null;
 	}
 
-	private String getExpression(String parameterName)
+	public String getExpression(String parameterName)
 	{
 		Optional<Parameter> first = this.parameters.stream().filter(param -> param.getName() != null && param.getName().equals(parameterName)).findFirst();
 		if (first.isPresent())
