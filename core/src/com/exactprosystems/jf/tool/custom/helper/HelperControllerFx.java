@@ -62,6 +62,8 @@ public class HelperControllerFx implements Initializable, ContainingParent
 		assert taInput != null : "fx:id=\"taInput\" was not injected: check your FXML file 'HelperFx.fxml'.";
 		assert btnOk != null : "fx:id=\"btnOk\" was not injected: check your FXML file 'HelperFx.fxml'.";
 		this.taResult.setFont(Font.font("Monospaced", 14));
+		this.taInput.setWrapText(true);
+
 		engine = viewClassName.getEngine();
 		viewClassName.setContextMenuEnabled(false);
 		smbClass.getItems().addAll(
@@ -82,6 +84,7 @@ public class HelperControllerFx implements Initializable, ContainingParent
 		dialogPane.setPrefWidth(500);
 		dialogPane.setContent(parent);
 		this.dialog.setResizable(true);
+		this.dialog.setTitle("Formula generator");
 
 	}
 
@@ -108,8 +111,6 @@ public class HelperControllerFx implements Initializable, ContainingParent
 				else
 				{
 					setText(item.toString());
-
-					String description = item.getDescription();
 					Optional.ofNullable(item.getDescription()).ifPresent(desc -> {
 						Tooltip tooltip = new Tooltip();
 						tooltip.setText(item.getDescription());
@@ -119,7 +120,7 @@ public class HelperControllerFx implements Initializable, ContainingParent
 			}
 		});
 		
-		this.dialog.setHeaderText("Helper for " + (title == null ? "Helper" : title));
+		this.dialog.setHeaderText("Parameters name = " + (title == null ? "<none>" : title));
 		listeners();
 	}
 

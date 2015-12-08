@@ -444,7 +444,7 @@ public class MainController implements Initializable, ContainingParent
 
 	public void showCalculator(AbstractEvaluator evaluator)
 	{
-		DialogsHelper.showHelperDialog("nothing", evaluator, "'Helper'", null);
+		DialogsHelper.showHelperDialog("<none>", evaluator, "'Helper'", null);
 	}
 
 	public void updateStatusBar(final int i)

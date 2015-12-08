@@ -407,12 +407,10 @@
 .resizableRegion {
 	-fx-border-width : 0 0 2 0;
 	-fx-border-color : -fx-company-color-dark;
-	-fx-opacity : 0.5;
 
 }
 .resizableRegionHover {
 	-fx-border-color : -fx-company-color-light;
-	-fx-opacity : 1;
 
 }
 
