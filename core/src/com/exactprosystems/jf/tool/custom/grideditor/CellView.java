@@ -95,9 +95,10 @@ public class CellView extends TableCell<ObservableList<SpreadsheetCell>, Spreads
 			}
 		};
 		this.addEventFilter(MouseDragEvent.MOUSE_DRAG_ENTERED, mouseEvent -> {
+			CellView startCellView = (CellView) mouseEvent.getGestureSource();
 			TablePosition currentTablePosition = new TablePosition(getTableView(), this.getIndex(), this.getTableColumn());
 			boolean needChange = !this.handle.getGridView().getSelectionModel().getSelectedCells().contains(currentTablePosition);
-			if (this == mouseEvent.getGestureSource())
+			if (this == startCellView || startCellView.getSelectedTablePositions().contains(currentTablePosition))
 			{
 				needChange = true;
 				isSet = false;
