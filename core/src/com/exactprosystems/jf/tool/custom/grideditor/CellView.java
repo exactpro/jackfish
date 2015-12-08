@@ -24,13 +24,11 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseDragEvent;
 import javafx.scene.input.MouseEvent;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.IntStream;
 
 public class CellView extends TableCell<ObservableList<SpreadsheetCell>, SpreadsheetCell>
 {
@@ -83,26 +81,22 @@ public class CellView extends TableCell<ObservableList<SpreadsheetCell>, Spreads
 		this.handle = handle;
 		EventHandler<MouseEvent> startFullDragEventHandler = mouseEvent -> {
 			{
-				if (this.handle.getCellsViewSkin().getSelectedColumns().size() == 1 && this.handle.getCellsViewSkin().getSelectedRows().size() == 1)
+				ObservableList<TablePosition> selectedCells = this.handle.getGridView().getSelectionModel().getSelectedCells();
+				this.selectedTablePositions = FXCollections.observableArrayList(selectedCells);
+				CellView.leftTopCell = findMinPosition(selectedCells);
+				CellView.rightBottonCell = findMaxPosition(selectedCells);
+				setAnchor(getTableView(), CellView.leftTopCell);
+				if (Cursor.CROSSHAIR.equals(this.getCursor()))
 				{
-					setAnchor(getTableView(), getTableView().getFocusModel().getFocusedCell());
+//					this.getStyleClass().addAll("startCell");
 				}
-				if (this.handle.getGridView().getSelectionModel().getSelectionMode().equals(SelectionMode.MULTIPLE))
-				{
-					ObservableList<TablePosition> selectedCells = this.handle.getGridView().getSelectionModel().getSelectedCells();
-					this.selectedTablePositions = FXCollections.observableArrayList(selectedCells);
-					CellView.leftTopCell = findMinPositionAndSetAnchor(selectedCells);
-					CellView.rightBottonCell = findMaxPositionAndSetAnchor(selectedCells);
-					setAnchor(getTableView(), CellView.leftTopCell);
 
-					startFullDrag();
-				}
+				startFullDrag();
 			}
 		};
 		this.addEventFilter(MouseDragEvent.MOUSE_DRAG_ENTERED, mouseEvent -> {
 			TablePosition currentTablePosition = new TablePosition(getTableView(), this.getIndex(), this.getTableColumn());
 			boolean needChange = !this.handle.getGridView().getSelectionModel().getSelectedCells().contains(currentTablePosition);
-			System.out.println(this.handle.getGridView().getSelectionModel().getSelectedCells().size());
 			if (this == mouseEvent.getGestureSource())
 			{
 				needChange = true;
@@ -166,137 +160,63 @@ public class CellView extends TableCell<ObservableList<SpreadsheetCell>, Spreads
 			CellView.directionCell = null;
 			CellView.isSet = false;
 			CellView source = ((CellView) event.getGestureSource()); // start cell view
+			source.getStyleClass().remove("startCell");
 			if (source.getCursor() != null && source.getCursor().equals(Cursor.CROSSHAIR))
 			{
 				ObservableList<TablePosition> initialCells = source.getSelectedTablePositions();
 				final RectangleSelection.GridRange range = this.handle.getCellsViewSkin().getRectangleSelection().getRange();
 				final DataProvider provider = this.handle.getView().getProvider();
-				/**
-				 * only one selected cell. easy.
-				 * work all directions : right, up, down, left
-				 */
 
-				//TODO mb move this logic to SpreadsheetView
-				if (initialCells.size() == 1)
+				int startRow = initialCells.get(0).getRow();
+				ObservableList<ObservableList<String>> initial = FXCollections.observableArrayList();
+				int index = 0;
+				initial.add(FXCollections.observableArrayList());
+				for (TablePosition cell : initialCells)
 				{
-					if (!startMoreLast())
+					String cellValue = (String) provider.getCellValue(cell.getColumn(), cell.getRow());
+					if (cell.getRow() != startRow)
 					{
-						StringBuilder text = new StringBuilder(source.getText());
-						IntStream.range(range.getTop(), range.getBottom() + 1)
-								.forEach(j -> IntStream.range(range.getLeft(), range.getRight() + 1)
-										.forEach(i -> provider.setCellValue(i, j, getEvaluatedText(text))));
+						ObservableList<String> list = FXCollections.observableArrayList();
+						initial.add(list);
+						list.add(cellValue);
+						index++;
+						startRow = cell.getRow();
 					}
 					else
 					{
-						StringBuilder text = new StringBuilder(source.getText());
-						for(int i = range.getBottom(); i > range.getTop() - 1; i--)
-						{
-							for (int j = range.getRight(); j > range.getLeft() - 1; j--)
-							{
-								provider.setCellValue(j, i, getEvaluatedText(text, -1));
-							}
-						}
+						initial.get(index).add(cellValue);
 					}
-					this.handle.getView().setDataProvider(provider);
 				}
-				else
+				if (changeVertical)
 				{
-					Point leftTopCorner = new Point(range.getTop(), range.getLeft());
-					int startRow = initialCells.get(0).getRow();
-					ObservableList<ObservableList<String>> strings = FXCollections.observableArrayList();
-					int index = 0;
-					strings.add(FXCollections.observableArrayList());
-					for (TablePosition cell : initialCells)
+					if (this.getItem().getRow() < source.getItem().getRow())
 					{
-						String cellValue = (String) provider.getCellValue(cell.getColumn(), cell.getRow());
-						if (cell.getRow() != startRow)
-						{
-							ObservableList<String> list = FXCollections.observableArrayList();
-							strings.add(list);
-							list.add(cellValue);
-							index++;
-							startRow = cell.getRow();
-						}
-						else
-						{
-							strings.get(index).add(cellValue);
-						}
-					}
-					ObservableList<ObservableList<String>> old = FXCollections.observableArrayList();
-					for(int i = range.getTop(); i < range.getBottom() + 1; i++)
-					{
-						ObservableList<String> col = FXCollections.observableArrayList();
-						for(int j = range.getLeft(); j < range.getRight() + 1; j++)
-						{
-							col.add(String.valueOf(provider.getCellValue(j, i)));
-						}
-						old.add(col);
-					}
-					/*
-					* if start cell lefted and toped that end cell, startMoreLast = false
-					* */
-					if (!startMoreLast())
-					{
-						ObservableList<ObservableList<String>> oldWithStrings = FXCollections.observableArrayList(old);
-						for(int i = 0; i < range.getBottom() - range.getTop() + 1; i++)
-						{
-							for(int j = 0; j < range.getRight() - range.getLeft() + 1; j++)
-							{
-								String res;
-								try
-								{
-									res = strings.get(i).get(j);
-								}
-								catch (Exception e)
-								{
-									res = SpreadsheetView.EMPTY;
-								}
-								oldWithStrings.get(i).set(j, res);
-							}
-						}
-						this.handle.getView().evaluateNewProviderForward(oldWithStrings,leftTopCorner);
+						this.handle.getView().extentionView(initial, SpreadsheetView.Direction.UP, range);
 					}
 					else
 					{
-						ObservableList<ObservableList<String>> oldWithStrings = FXCollections.observableArrayList(old);
-						for(int i = 0; i < range.getBottom() - range.getTop() + 1; i++)
-						{
-							for(int j = 0; j < range.getRight() - range.getLeft() + 1; j++)
-							{
-								String res;
-								res = SpreadsheetView.EMPTY;
-								oldWithStrings.get(i).set(j, res);
-							}
-						}
-						int rowCount = strings.size(); // 2
-						int colCount = strings.get(0).size(); // 3
-						for(int i = 0; i < rowCount; i++)
-						{
-							for (int j = 0; j < colCount; j++)
-							{
-								String element = strings.get(i).get(j);
-								ObservableList<String> strings1 = oldWithStrings.get(oldWithStrings.size() - rowCount + i);
-								oldWithStrings.get(oldWithStrings.size() - rowCount + i).set(strings1.size() - colCount + j, element);
-							}
-						}
-						this.handle.getView().evaluateNewProviderBackward(oldWithStrings, leftTopCorner);
+						this.handle.getView().extentionView(initial, SpreadsheetView.Direction.DOWN, range);
 					}
 				}
+				else if (changeHorizontal)
+				{
+					if (this.getItem().getColumn() < source.getItem().getColumn())
+					{
+						this.handle.getView().extentionView(initial, SpreadsheetView.Direction.LEFT, range);
+					}
+					else
+					{
+						this.handle.getView().extentionView(initial, SpreadsheetView.Direction.RIGHT, range);
+					}
+				}
+				CellView.changeHorizontal = false;
+				CellView.changeVertical = false;
 			}
 		});
 		itemProperty().addListener(itemChangeListener);
 	}
 
-	private boolean startMoreLast()
-	{
-		SpreadsheetCell start = CellView.startCellView.getItem();
-		SpreadsheetCell end = CellView.endCellView.getItem();
-		return !(CellView.startCellView == null || CellView.endCellView == null)
-				&& start.getRow() >= end.getRow()
-				&& start.getColumn() >= end.getColumn();
-	}
-
-	private TablePosition findMinPositionAndSetAnchor(ObservableList<TablePosition> selectedCells)
+	private TablePosition findMinPosition(ObservableList<TablePosition> selectedCells)
 	{
 		TablePosition min = selectedCells.get(0);
 		for (TablePosition cell : selectedCells)
@@ -309,7 +229,7 @@ public class CellView extends TableCell<ObservableList<SpreadsheetCell>, Spreads
 		return min;
 	}
 
-	private TablePosition findMaxPositionAndSetAnchor(ObservableList<TablePosition> selectedCells)
+	private TablePosition findMaxPosition(ObservableList<TablePosition> selectedCells)
 	{
 		TablePosition max = selectedCells.get(0);
 		for (TablePosition cell : selectedCells)

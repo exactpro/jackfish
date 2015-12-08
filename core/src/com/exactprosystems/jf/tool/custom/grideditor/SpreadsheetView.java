@@ -21,14 +21,11 @@ import javafx.event.EventHandler;
 import javafx.event.EventType;
 import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.control.MenuItem;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.util.Pair;
 
-import java.awt.*;
 import java.util.*;
-import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
 import java.util.regex.Matcher;
@@ -38,6 +35,10 @@ import java.util.stream.IntStream;
 
 public class SpreadsheetView extends Control
 {
+	public enum Direction {
+		UP, DOWN, LEFT, RIGHT
+	}
+
 	private static final int minProgression = Integer.MIN_VALUE;
 	public static final String EMPTY = "N";
 	private static int currentIndexColumn = 0;
@@ -270,131 +271,90 @@ public class SpreadsheetView extends Control
 		this.setDataProvider(this.providerProperty().get());
 	}
 
-	/**
-	 * Direction : right; down; rightDown
-	 */
-	public void evaluateNewProviderForward(ObservableList<ObservableList<String>> list, Point leftTopPoint)
+	public void extentionView(ObservableList<ObservableList<String>> initial, Direction direction, RectangleSelection.GridRange range)
 	{
-		out(list);
-		int colCount = 0;
-		int maxColumns = list.get(0).size();
-		while (!list.get(0).get(colCount).equals(EMPTY))
+		switch (direction)
 		{
-			colCount++;
-			if (colCount == maxColumns)
-			{
+			case UP :
+				for(int j = range.getLeft(); j < range.getRight() + 1; j++)
+				{
+					ObservableList<String> strings = FXCollections.observableArrayList();
+					int size = initial.size();
+					for (ObservableList<String> s : initial)
+					{
+						strings.add(s.get(j - range.getLeft()));
+					}
+					Collections.reverse(strings);
+					int progression = strings.size() == 1 ? 1 : getProgression(strings);
+					int skip = progression != minProgression ? 1 : size;
+					int currentProgression = progression != minProgression ? progression : -1;
+
+					for(int i = range.getBottom() - size; i > range.getTop() -1 ; i--)
+					{
+						String value = String.valueOf(this.providerProperty.get().getCellValue(j, i + skip));
+						String evaluatedText = getEvaluatedText(value, currentProgression);
+						this.providerProperty.get().setCellValue(j, i, evaluatedText);
+					}
+				}
+
 				break;
-			}
-		}
 
-		int rowCount = 0;
-		int maxRows = list.size();
-		while (!list.get(rowCount).get(0).equals(EMPTY))
-		{
-			rowCount++;
-			if (rowCount == maxRows)
-			{
+			case DOWN:
+				for(int j = range.getLeft(); j < range.getRight() + 1; j++)
+				{
+					ObservableList<String> strings = FXCollections.observableArrayList();
+					int size = initial.size();
+					for (ObservableList<String> s : initial)
+					{
+						strings.add(s.get(j - range.getLeft()));
+					}
+					int progression = strings.size() == 1 ? 1 : getProgression(strings);
+					int skip = progression != minProgression ? 1 : size;
+					int currentProgression  = progression != minProgression ? progression : 1;
+					for(int i = range.getTop() + size; i < range.getBottom() + 1; i++)
+					{
+						String value = String.valueOf(this.providerProperty.get().getCellValue(j, i - skip));
+						String evaluatedText = getEvaluatedText(value, currentProgression);
+						this.providerProperty.get().setCellValue(j, i, evaluatedText);
+
+					}
+				}
 				break;
-			}
-		}
 
-		/**
-		 *  if we selected only horizontal's rows, we don't need to update vertical columns
-		 */
-		if (rowCount != list.size())
-		{
-			/**
-			 * update all vertical
-			 */
-			for(int i = 0; i < colCount; i++)
-			{
-				ArrayList<String> vertical = new ArrayList<>();
-				for(int j = 0 ; j < rowCount; j++)
+			case LEFT:
+				for(int i = 0; i < initial.size(); i++)
 				{
-					vertical.add(list.get(j).get(i));
-				}
-				int verticalProgression = getProgression(vertical);
-				if (verticalProgression == minProgression)
-				{
-					for(int j = rowCount; j < list.size(); j++)
+					ObservableList<String> strings = initial.get(i);
+					Collections.reverse(strings);
+					int progression = strings.size() == 1 ? 1 : getProgression(strings);
+					int skip = progression != minProgression ? 1 : strings.size();
+					int currentProgression = progression != minProgression ? progression : -1;
+					for(int j = range.getRight() - strings.size(); j > range.getLeft() - 1; j--)
 					{
-						list.get(j).set(i, getEvaluatedText(list.get(j - rowCount).get(i)));
+						String value = String.valueOf(this.providerProperty.get().getCellValue(j + skip, i + range.getTop()));
+						String evaluatedText = getEvaluatedText(value, currentProgression);
+						this.providerProperty().get().setCellValue(j, i + range.getTop(), evaluatedText);
 					}
 				}
-				else
-				{
-					for (int j = rowCount; j < list.size(); j++)
-					{
-						list.get(j).set(i, getEvaluatedText(list.get(j - 1).get(i), verticalProgression));
-					}
-				}
-			}
-		}
 
-		/**
-		 * if we select only vertical's columns, we don't need update horizontal rows
-		 */
-		if (colCount != list.get(0).size())
-		{
-			/**
-			 * update all horizontal
-			 */
-			for (int j = 0; j < list.size(); j++)
-			{
-				ArrayList<String> vertical = new ArrayList<>();
-				for(int i = 0 ; i < colCount; i++)
-				{
-					vertical.add(list.get(j).get(i));
-				}
-				int horizontalProgression = getProgression(vertical);
-				if (horizontalProgression == minProgression)
-				{
-					for(int i = colCount; i < list.get(j).size(); i++)
-					{
-						list.get(j).set(i, getEvaluatedText(list.get(j).get(i - colCount)));
-					}
-				}
-				else
-				{
-					for(int i = colCount; i < list.get(j).size(); i++)
-					{
-						list.get(j).set(i, getEvaluatedText(list.get(j).get(i - 1), horizontalProgression));
-					}
-				}
-			}
-		}
-		int y = (int) leftTopPoint.getY();
-		int x = (int) leftTopPoint.getX();
-		for (int i = 0; i < list.size(); i++)
-		{
-			for(int j = 0; j < list.get(i).size(); j++ )
-			{
-				this.providerProperty().get().setCellValue(j + y, i + x, list.get(i).get(j));
-			}
-		}
+				break;
 
+			case RIGHT:
+				for(int i = 0; i < initial.size(); i++)
+				{
+					ObservableList<String> strings = initial.get(i);
+					int progression = strings.size() == 1 ? 1 : getProgression(strings);
+					int skip = progression != minProgression ? 1 : strings.size();
+					int currentProgression = progression != minProgression ? progression : 1;
+					for(int j = range.getLeft() + strings.size(); j < range.getRight() + 1; j++)
+					{
+						String evaluatedText = getEvaluatedText(String.valueOf(this.providerProperty.get().getCellValue(j - skip, i + range.getTop())), currentProgression);
+						this.providerProperty.get().setCellValue(j, i + range.getTop(), evaluatedText);
+					}
+				}
+				break;
+		}
 		this.setDataProvider(this.providerProperty().get());
-	}
-
-	public void evaluateNewProviderBackward(ObservableList<ObservableList<String>> list, Point leftTopPoint)
-	{
-//		TODO
-//		System.out.println(leftTopPoint);
-		out(list);
-
-	}
-
-	private <T> void out(ObservableList<ObservableList<T>> list)
-	{
-		for (ObservableList<T> ts : list)
-		{
-			for (T t : ts)
-			{
-				System.out.print(t+"\t");
-			}
-			System.out.println();
-		}
-		System.out.println("###");
 	}
 
 	private static int getProgression(List<String> strings)
@@ -445,7 +405,7 @@ public class SpreadsheetView extends Control
 		try
 		{
 			StringBuilder res = new StringBuilder();
-			Pattern compile = Pattern.compile("^(\\d+)?(.*?)(\\d+)?$");
+			Pattern compile = Pattern.compile("^(-?\\d+)?(.*?)(-?\\d+)?$");
 			Matcher matcher = compile.matcher(s);
 			if (matcher.find())
 			{
@@ -478,25 +438,6 @@ public class SpreadsheetView extends Control
 		 *  only string
 		 */
 		return s;
-	}
-
-	private String getEvaluatedText(String s)
-	{
-		return getEvaluatedText(s, 1);
-	}
-
-	private List<String> getStrings(ObservableList<ObservableList<String>> list, Integer maxCol, Integer maxRow)
-	{
-		ArrayList<String> arrayList = new ArrayList<>();
-		if (maxCol != null)
-		{
-
-		}
-		else if (maxRow != null)
-		{
-
-		}
-		return arrayList;
 	}
 
 	public ObservableList<String> convert(ObservableList<TablePosition> focusedCells)

@@ -479,6 +479,12 @@ CellView > .text-input.text-field{
     -fx-stroke : black;
     -fx-stroke-width : 2;
 }
+.startCell {
+	-fx-background-image : url("dialog-fewer-details.png");
+	-fx-background-position : center center;
+	-fx-background-repeat : no-repeat no-repeat;
+	-fx-background-size : 12px;
+}
 
 /*Supported/Unsupported entries*/
 .supportedEntry {
