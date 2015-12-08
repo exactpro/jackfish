@@ -22,6 +22,13 @@ public abstract class AbstractEvaluator
 
 	public abstract String createString(String val);
 
+	public final void reset() throws Exception
+	{
+		// TODO how to init variables from vars.ini?
+		getLocals().getVars().clear();
+		getGlobals().getVars().clear();
+	}
+
 	public final Object compile(String expression) throws Exception
 	{
 		if (expression == null)
@@ -128,5 +135,4 @@ public abstract class AbstractEvaluator
 	protected abstract Object rawExecute(Object compiled) throws Exception;
 
 	protected abstract String rawTemplateEvaluate(String expression) throws Exception;
-
 }
