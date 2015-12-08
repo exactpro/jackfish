@@ -38,7 +38,7 @@ public class ScheduleController implements Initializable, ContainingParent
 	public Button btnLoadSeveral;
 	private Parent parent;
 	private RunnerScheduler model;
-	private Dialog dialog;
+	private Dialog<?> dialog;
 	public TableView<RunnerWithState> tableView;
 
 	public TableColumn<RunnerWithState, String> columnMatrixName;

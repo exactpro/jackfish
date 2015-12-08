@@ -9,15 +9,20 @@
 package com.exactprosystems.jf.tool.matrix.schedule;
 
 import com.exactprosystems.jf.common.Configuration;
+import com.exactprosystems.jf.common.Context;
 import com.exactprosystems.jf.common.MatrixRunner;
+import com.exactprosystems.jf.common.parser.listeners.MatrixListener;
 import com.exactprosystems.jf.common.parser.listeners.RunnerListener;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import javafx.stage.Window;
+
 import org.apache.log4j.Logger;
 
 import java.io.File;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class RunnerScheduler implements RunnerListener
@@ -92,23 +97,17 @@ public class RunnerScheduler implements RunnerListener
 
 	public void loadSeveral()
 	{
-		//TODO think about it
 		List<File> files = DialogsHelper.showMultipleDialog("Choose matrices", "jf files (*.jf)", "*.jf");
-//		Optional.ofNullable(files)
-//				.ifPresent(list -> list.stream()
-//						.filter(Objects::nonNull)
-//						.forEach(file -> Common.tryCatch(() ->
-//								new MatrixRunner(new Context(new MatrixListener(), this, System.out, this.configuration), file, null, null), "Error on create new runner")));
-
-//		Optional.ofNullable(files)
-//				.ifPresent(list -> list.stream()
-//						.filter(Objects::nonNull)
-//						.forEach(file ->  Common.tryCatch(() -> {
-//							Reader reader = new FileReader(file);
-//							MatrixFx matrixFx = new MatrixFx(file.getName(), this.configuration, new MatrixListener(), this);
-//							matrixFx.load(reader);
-//						}, "Error on create new matrix")));
-
+		Optional.ofNullable(files)
+			.ifPresent(list -> list.stream()
+			.filter(Objects::nonNull)
+			.forEach(file -> Common.tryCatch(() ->
+			{
+				System.out.println(file);
+				Context context = this.configuration.createContext(new MatrixListener(), System.out);
+				MatrixRunner runner = new MatrixRunner(context, file, null, null);
+				this.map.put(runner, Boolean.TRUE);
+			}, "Error on create new runner")));
 	}
 
 	public void showSelected(List<MatrixRunner> collect)
