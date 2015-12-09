@@ -1,14 +1,12 @@
 package com.exactprosystems.jf.tool.custom.layout;
 
 import com.exactprosystems.jf.actions.gui.ActionGuiHelper;
-import com.exactprosystems.jf.api.app.AppConnection;
-import com.exactprosystems.jf.api.app.IGuiDictionary;
-import com.exactprosystems.jf.api.app.IWindow;
-import com.exactprosystems.jf.api.app.Locator;
+import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -34,12 +32,13 @@ public class LayoutExpressionBuilder
 	public String show(String title, boolean fullScreen) throws Exception
 	{
 		Map<String, Locator> map = new LinkedHashMap<>();
+		ArrayList<IControl> controls = new ArrayList<>();
 		if (this.appConnection != null)
 		{
 			this.dictionary = ActionGuiHelper.getGuiDictionary(null, this.appConnection);
 			IWindow window = this.dictionary.getWindow(this.windowName);
-			window.getControls(IWindow.SectionKind.Self).stream().filter(c -> !this.parameterName.equals(c.getID())).forEach(iControl -> map.put(iControl.getID(), iControl.locator()));
-			window.getControls(IWindow.SectionKind.Run).stream().filter(c -> !this.parameterName.equals(c.getID())).forEach(iControl -> map.put(iControl.getID(), iControl.locator()));
+			window.getControls(IWindow.SectionKind.Self).stream().filter(c -> !this.parameterName.equals(c.getID())).forEach(controls::add);
+			window.getControls(IWindow.SectionKind.Run).stream().filter(c -> !this.parameterName.equals(c.getID())).forEach(controls::add);
 		}
 		else
 		{
@@ -48,12 +47,12 @@ public class LayoutExpressionBuilder
 		}
 		this.controller = Common.loadController(LayoutExpressionBuilder.class.getResource("LayoutExpressionBuilder.fxml"));
 		this.controller.init(this, this.evaluator);
-		String result = this.controller.show(title, fullScreen, map);
+		String result = this.controller.show(title, fullScreen, controls);
 		return result == null ? parameterExpression : result;
 	}
 
 
-	public void displayNewLocator(Locator userData)
+	public void displayControl(IControl control)
 	{
 
 	}

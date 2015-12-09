@@ -1,24 +1,23 @@
 package com.exactprosystems.jf.tool.custom.layout;
 
-import com.exactprosystems.jf.api.app.Locator;
+import com.exactprosystems.jf.api.app.IControl;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.custom.fields.CustomFieldWithButton;
 import com.exactprosystems.jf.tool.custom.fields.NewExpressionField;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.shape.Rectangle;
-import javafx.scene.text.TextAlignment;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.net.URL;
-import java.util.Map;
+import java.util.ArrayList;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -51,7 +50,7 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 		this.mainToggleGroup.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
 			if (newValue != null)
 			{
-				this.model.displayNewLocator(((Locator) newValue.getUserData()));
+				this.model.displayControl(((IControl) newValue.getUserData()));
 			}
 		});
 		this.cfFindControl.textProperty().addListener((observable, oldValue, newValue) -> {
@@ -70,19 +69,22 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 		this.model = model;
 		this.expressionField = new NewExpressionField(evaluator, "expression Field");
 		this.bottomPane.setBottom(this.expressionField);
-		Rectangle rectangle = new Rectangle();
 	}
 
-	public String show(String title, boolean fullScreen, Map<String, Locator> map)
+	public String show(String title, boolean fullScreen, ArrayList<IControl> list)
 	{
 		Alert dialog = createAlert(title);
-		map.entrySet().stream().map(entry -> {
-			ToggleButton button = new ToggleButton(entry.getValue().toString());
+		list.stream().map(control -> {
+			ToggleButton button = new ToggleButton(control.toString());
 			button.setToggleGroup(this.mainToggleGroup);
 			button.prefWidthProperty().bind(this.vBoxControls.widthProperty().subtract(20));
-			button.setUserData(entry.getValue());
-			button.setTextAlignment(TextAlignment.LEFT);
-			button.setTooltip(new Tooltip(entry.getKey() + "\n" + entry.getValue().toString()));
+			button.setUserData(control);
+			button.setAlignment(Pos.BASELINE_LEFT);
+			button.setTooltip(new Tooltip(control.locator().toString()));
+			button.setOnAction(event -> {
+				System.out.println("asd");
+			});
+			//TODO add setOnAction(event -> {});
 			return button;
 		}).forEach(this.vBoxControls.getChildren()::add);
 		dialog.getDialogPane().setContent(parent);
