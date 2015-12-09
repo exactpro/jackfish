@@ -56,7 +56,7 @@ public class SettingsPanel
 	public static final String PAUSE_MATRIX		= "PauseMatrix";
 	public static final String SHOW_RESULT		= "ShowResult";
 	public static final String SHOW_WATCH		= "ShowWatch";
-	public static final String COLORING			= "Coloring";
+	public static final String TRACING			= "Tracing";
 	public static final String FIND_ON_MATRIX	= "FindOnMatrix";
 
 

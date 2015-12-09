@@ -347,7 +347,7 @@ public class Main extends Application
 		Optional.ofNullable(file).ifPresent(f -> DialogsHelper.displayReport(f, null, this.config));
 	}
 
-	public void stopMatrix(Document document)
+	public void stopMatrix(Document document) throws Exception
 	{
 		if (document instanceof MatrixFx)
 		{

@@ -49,7 +49,7 @@
 										</SplitMenuButton>
 										<Button fx:id="btnFind" mnemonicParsing="false" onAction="#showFindPanel"/>
 										<Button fx:id="btnWatch" mnemonicParsing="false" onAction="#showWatch"/>
-										<ToggleButton fx:id="toggleBtnColor" mnemonicParsing="false" onAction="#setColor"/>
+										<ToggleButton fx:id="toggleTracing" mnemonicParsing="false" onAction="#toogleTracing"/>
 										<Button fx:id="btnStartMatrix" mnemonicParsing="false" onAction="#startMatrix"/>
 										<Button fx:id="btnStopMatrix" mnemonicParsing="false" onAction="#stopMatrix"/>
 										<Button fx:id="btnPauseMatrix" mnemonicParsing="false" onAction="#pauseMatrix"/>

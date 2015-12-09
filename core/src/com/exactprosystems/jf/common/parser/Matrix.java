@@ -385,6 +385,11 @@ public class Matrix extends AbstractDocument implements IMatrix, Cloneable
 		return true;
 	}
 	
+	public void setTracing(boolean b)
+	{
+		this.tracing = b;
+	}
+	
 	public void start(Context context, AbstractEvaluator evaluator, ReportBuilder report)
 	{
 		assert (context != null);
@@ -440,6 +445,15 @@ public class Matrix extends AbstractDocument implements IMatrix, Cloneable
 		{
 			listener.paused(this, item);
 			this.monitor.enter();
+		}
+		if (this.tracing)
+		{
+			try
+			{
+				Thread.sleep(200);
+			}
+			catch (InterruptedException e)
+			{ }
 		}
 
 		return false;
@@ -521,6 +535,7 @@ public class Matrix extends AbstractDocument implements IMatrix, Cloneable
 	protected Monitor			monitor	= new Monitor();
 	protected volatile boolean	pause;
 	protected volatile boolean	stop;
+	protected volatile boolean	tracing;
 
 	private IClientFactory		defaultClient;
 	private IApplicationFactory	defaultApp;

@@ -302,7 +302,7 @@ public class SettingsPanelController implements Initializable, ContainingParent
 		ShortcutRow rowPauseMatrix = new ShortcutRow(SettingsPanel.PAUSE_MATRIX, edit);
 		ShortcutRow rowShowResult = new ShortcutRow(SettingsPanel.SHOW_RESULT, edit);
 		ShortcutRow rowShowWatch = new ShortcutRow(SettingsPanel.SHOW_WATCH, edit);
-		ShortcutRow rowColoring = new ShortcutRow(SettingsPanel.COLORING, edit);
+		ShortcutRow rowTracing = new ShortcutRow(SettingsPanel.TRACING, edit);
 		ShortcutRow rowFindOnMatrix = new ShortcutRow(SettingsPanel.FIND_ON_MATRIX, edit);
 
 		createOneShortcut(rowStartMatrix, matrixActionShortcuts, 0, matrixActionGrid);
@@ -310,7 +310,7 @@ public class SettingsPanelController implements Initializable, ContainingParent
 		createOneShortcut(rowPauseMatrix, matrixActionShortcuts, 2, matrixActionGrid);
 		createOneShortcut(rowShowResult, matrixActionShortcuts, 3, matrixActionGrid);
 		createOneShortcut(rowShowWatch, matrixActionShortcuts, 4, matrixActionGrid);
-		createOneShortcut(rowColoring, matrixActionShortcuts, 5, matrixActionGrid);
+		createOneShortcut(rowTracing, matrixActionShortcuts, 5, matrixActionGrid);
 		createOneShortcut(rowFindOnMatrix, matrixActionShortcuts, 6, matrixActionGrid);
 
 	}

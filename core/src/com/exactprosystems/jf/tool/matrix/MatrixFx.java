@@ -133,14 +133,8 @@ public class MatrixFx extends Matrix
 	public void close() throws Exception
 	{
 		super.close();
-
 		this.config.unregister(this);
-
-		if (this.runner != null)
-		{
-			this.runner.close();
-			this.runner = null;
-		}
+		this.runner.close();
 		
 		if (this.context != null)
 		{
@@ -279,11 +273,11 @@ public class MatrixFx extends Matrix
 		int number = item.getNumber();
 		Command undo = () ->
 		{
-			findAndCallParameters(number, par -> par.remove(index + 1)); // TODO +1?
+			findAndCallParameters(number, par -> par.remove(index + 1)); 
 		};
 		Command redo = () ->
 		{
-			findAndCallParameters(number, par -> par.insert(index + 1, "", "", TypeMandatory.Extra)); // TODO +1?
+			findAndCallParameters(number, par -> par.insert(index + 1, "", "", TypeMandatory.Extra)); 
 		};
 		addCommand(undo, redo);
 	}
@@ -573,34 +567,25 @@ public class MatrixFx extends Matrix
 		this.runner.start();
 	}
 
-	public void stopMatrix()
+	public void stopMatrix() throws Exception
 	{
-		if (this.runner != null)
-		{
-			this.runner.stop();
-			this.controller.coloring();
-		}
+		this.runner.stop();
+		this.controller.coloring();
 	}
 
-	public void pauseMatrix()
+	public void pauseMatrix() throws Exception
 	{
-		if (this.runner != null)
-		{
-			this.runner.pause();
-		}
+		this.runner.pause();
 	}
 
-	public void stepMatrix()
+	public void stepMatrix() throws Exception
 	{
-		if (this.runner != null)
-		{
-			this.runner.step();
-		}
+		this.runner.step();
 	}
 
 	public void showResult() throws Exception
 	{
-		if (this.runner != null && this.runner.getReportName() != null)
+		if (this.runner.getReportName() != null)
 		{
 			File file = new File(this.runner.getReportName());
 			this.controller.showResult(file, this.getName());
@@ -610,11 +595,6 @@ public class MatrixFx extends Matrix
 	public void showWatch()
 	{
 		this.controller.showWatcher(this, context);
-	}
-
-	public void setColor()
-	{
-		// TODO what for?
 	}
 
 	public void startDefaultApplication(String idAppEntry) throws Exception

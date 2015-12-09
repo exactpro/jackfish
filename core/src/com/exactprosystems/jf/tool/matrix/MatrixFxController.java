@@ -60,7 +60,7 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 	public Button						btnShowResult;
 	public Button						btnPauseMatrix;
 	public Button						btnStepMatrix;
-	public ToggleButton					toggleBtnColor;
+	public ToggleButton					toggleTracing;
 	public CustomListView<MatrixItem>	listView;
 	public Button						btnWatch;
 	public ScrollPane					mainScrollPane;
@@ -70,9 +70,9 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 	public SplitPane					splitPane;
 	public GridPane						gridPane;
 	public HBox							hBox;
-	public Button btnStartDefaultApplication;
-	public Button btnConnectDefaultApplication;
-	public Button btnStopDefaultApplication;
+	public Button 						btnStartDefaultApplication;
+	public Button 						btnConnectDefaultApplication;
+	public Button 						btnStopDefaultApplication;
 	public Button btnStartDefaultClient;
 	public Button btnStopDefaultClient;
 
@@ -102,7 +102,7 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 		assert mainScrollPane != null : "fx:id=\"mainScrollPane\" was not injected: check your FXML file 'MatrixFx.fxml'.";
 		assert btnPauseMatrix != null : "fx:id=\"btnPauseMatrix\" was not injected: check your FXML file 'MatrixFx.fxml'.";
 		assert btnStepMatrix != null : "fx:id=\"btnStepMatrix\" was not injected: check your FXML file 'MatrixFx.fxml'.";
-		assert toggleBtnColor != null : "fx:id=\"toggleBtnColor\" was not injected: check your FXML file 'MatrixFx.fxml'.";
+		assert toggleTracing != null : "fx:id=\"toggleTracing\" was not injected: check your FXML file 'MatrixFx.fxml'.";
 		
 		this.listView = new CustomListView<>(matrixItem -> tryCatch(() ->
 		{
@@ -235,10 +235,11 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 	@Override
 	public void started(Matrix matrix, MatrixItem item)
 	{
-		if (this.tree != null && toggleBtnColor.isSelected())
+		if (toggleTracing.isSelected())
 		{
 			TreeItem<MatrixItem> find = this.tree.find(treeItem -> treeItem.getNumber() == item.getNumber());
-			Optional.ofNullable(find).ifPresent(f -> Platform.runLater(() -> {
+			Optional.ofNullable(find).ifPresent(f -> Platform.runLater(() ->
+			{
 				GridPane layout = (GridPane) f.getValue().getLayout();
 				Optional.ofNullable(layout).ifPresent(l -> l.getStyleClass().add(CssVariables.EXECUTING_MATRIX_ITEM));
 			}));
@@ -248,27 +249,25 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 	@Override
 	public void finished(Matrix matrix, MatrixItem item, Result result)
 	{
-		Optional.ofNullable(this.tree).ifPresent(treeView -> {
-			TreeItem<MatrixItem> find = treeView.find(treeItem -> treeItem.getNumber() == item.getNumber());
-			Optional.ofNullable(find).ifPresent(f -> Platform.runLater(() -> {
-				GridPane layout = (GridPane) f.getValue().getLayout();
-				Optional.ofNullable(layout).ifPresent(l -> {
-					l.getStyleClass().remove(CssVariables.EXECUTING_MATRIX_ITEM);
-					l.getStyleClass().remove(CssVariables.PAUSED_MATRIX_ITEM);
-				});
-			}));
-		});
+		TreeItem<MatrixItem> find = this.tree.find(treeItem -> treeItem.getNumber() == item.getNumber());
+		Optional.ofNullable(find).ifPresent(f -> Platform.runLater(() ->
+		{
+			GridPane layout = (GridPane) f.getValue().getLayout();
+			Optional.ofNullable(layout).ifPresent(l ->
+			{
+				l.getStyleClass().remove(CssVariables.EXECUTING_MATRIX_ITEM);
+				l.getStyleClass().remove(CssVariables.PAUSED_MATRIX_ITEM);
+			});
+		}));
 	}
 
 	@Override
 	public void paused(Matrix matrix, final MatrixItem item)
 	{
 		Optional.ofNullable(this.watcher).ifPresent(WatcherFx::update);
-		Optional.ofNullable(this.tree).ifPresent(tree -> Platform.runLater(() -> {
-			TreeItem<MatrixItem> treeItem = tree.find(item);
-			((GridPane) treeItem.getValue().getLayout()).getStyleClass().add(CssVariables.PAUSED_MATRIX_ITEM);
-			listView.getItems().add(ConsoleText.pausedItem(String.format("Matrix paused on \'%s\'", treeItem.getValue().getItemName()), item));
-		}));
+		TreeItem<MatrixItem> treeItem = this.tree.find(item);
+		((GridPane) treeItem.getValue().getLayout()).getStyleClass().add(CssVariables.PAUSED_MATRIX_ITEM);
+		listView.getItems().add(ConsoleText.pausedItem(String.format("Matrix paused on \'%s\'", treeItem.getValue().getItemName()), item));
 	}
 
 	@Override
@@ -377,20 +376,23 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 		tryCatch(this.model::stepMatrix, "Error on stepping matrix");
 	}
 
-	public void setColor(ActionEvent event)
+	public void toogleTracing(ActionEvent event)
 	{
 		tryCatch(() ->
 		{
-			boolean b = toggleBtnColor.isSelected();
+			boolean b = toggleTracing.isSelected();
 			if (b)
 			{
-				((ImageView) toggleBtnColor.getGraphic()).setImage(new javafx.scene.image.Image(CssVariables.Icons.COLOR_ON_MATRIX_ICON));
+				((ImageView) toggleTracing.getGraphic()).setImage(new javafx.scene.image.Image(CssVariables.Icons.COLOR_ON_MATRIX_ICON));
 			}
 			else
 			{
-				((ImageView) toggleBtnColor.getGraphic()).setImage(new javafx.scene.image.Image(CssVariables.Icons.COLOR_OFF_MATRIX_ICON));
+				((ImageView) toggleTracing.getGraphic()).setImage(new javafx.scene.image.Image(CssVariables.Icons.COLOR_OFF_MATRIX_ICON));
 			}
-			toggleBtnColor.getTooltip().setText("Color " + (!toggleBtnColor.isSelected() ? "off" : "on"));
+			toggleTracing.getTooltip().setText("Color " + (!toggleTracing.isSelected() ? "off" : "on"));
+			
+			this.model.setTracing(b);
+			
 		}, "Error on setting color");
 	}
 
@@ -563,9 +565,9 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 				{
 					model.showWatch();
 				}
-				else if (SettingsPanel.match(settings, keyEvent, SettingsPanel.COLORING))
+				else if (SettingsPanel.match(settings, keyEvent, SettingsPanel.TRACING))
 				{
-					model.setColor();
+					model.setTracing(true);
 				}
 				else if (SettingsPanel.match(settings, keyEvent, SettingsPanel.FIND_ON_MATRIX))
 				{
@@ -586,8 +588,8 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 			btnWatch.setTooltip(new Tooltip("Watch"));
 			btnStepMatrix.setTooltip(new Tooltip("Step"));
 			btnShowResult.setTooltip(new Tooltip("Show result"));
-			toggleBtnColor.setTooltip(new Tooltip("Color off"));
-			toggleBtnColor.getStyleClass().add(CssVariables.TOGGLE_BUTTON_WITHOUT_BORDER);
+			toggleTracing.setTooltip(new Tooltip("Color off"));
+			toggleTracing.getStyleClass().add(CssVariables.TOGGLE_BUTTON_WITHOUT_BORDER);
 			btnFind.setTooltip(new Tooltip("Find\n" + getShortcutTooltip(settings, SettingsPanel.FIND_ON_MATRIX)));
 			btnStartDefaultApplication.setTooltip(new Tooltip("Start default application"));
 			btnConnectDefaultApplication.setTooltip(new Tooltip("Connect default application"));
@@ -606,7 +608,7 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 			customizeLabeled(btnWatch, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.WATCH_MATRIX_ICON);
 			customizeLabeled(btnStepMatrix, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.STEP_MATRIX_ICON);
 			customizeLabeled(btnShowResult, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.SHOW_RESULT_MATRIX_ICON);
-			customizeLabeled(toggleBtnColor, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.COLOR_OFF_MATRIX_ICON);
+			customizeLabeled(toggleTracing, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.COLOR_OFF_MATRIX_ICON);
 			customizeLabeled(btnFind, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.FIND_ON_MATRIX);
 
 			sizeButtons(BUTTON_SIZE_WITH_ICON, btnStartMatrix, btnStopMatrix, btnPauseMatrix, btnWatch, btnStepMatrix, btnShowResult);
