@@ -1,11 +1,13 @@
 package com.exactprosystems.jf.tool.custom.layout;
 
 import com.exactprosystems.jf.api.app.IControl;
+import com.exactprosystems.jf.api.app.Range;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.custom.fields.CustomFieldWithButton;
 import com.exactprosystems.jf.tool.custom.fields.NewExpressionField;
+import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
@@ -13,10 +15,13 @@ import javafx.scene.Parent;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -44,10 +49,15 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 	public VBox vBoxControls;
 	public CustomFieldWithButton cfFindControl;
 	public HBox hBoxCheckBoxes;
-	public BorderPane bottomPane;
 	public BorderPane parentPane;
 	public ScrollPane spControls;
-	private NewExpressionField expressionField;
+	public ChoiceBox<String> cbParameters;
+	public Label labelControlId;
+	public ChoiceBox<Range> cbRange;
+	public Button btnAddFormula;
+	public GridPane gridPane;
+	private NewExpressionField expressionFieldFirst;
+	private NewExpressionField expressionFieldSecond;
 	private ToggleGroup mainToggleGroup;
 
 	private Canvas canvas;
@@ -62,10 +72,32 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 	public void initialize(URL location, ResourceBundle resources)
 	{
 		assert vBoxControls != null : "fx:id=\"vBoxControls\" was not injected: check your FXML file 'LayoutExpressionBuilder.fxml'.";
-		assert bottomPane != null : "fx:id=\"bottomPane\" was not injected: check your FXML file 'LayoutExpressionBuilder.fxml'.";
 		assert cfFindControl != null : "fx:id=\"cfFindControl\" was not injected: check your FXML file 'LayoutExpressionBuilder.fxml'.";
 		assert hBoxCheckBoxes != null : "fx:id=\"hBoxCheckBoxes\" was not injected: check your FXML file 'LayoutExpressionBuilder.fxml'.";
 		assert parentPane != null : "fx:id=\"parentPane\" was not injected: check your FXML file 'LayoutExpressionBuilder.fxml'.";
+		this.cbParameters.getItems().addAll(
+				"visible", "count", "contains",
+				"left", "right", "top", "bottom",
+				"inLeft","inRight","inTop","inBottom",
+				"onLeft","onRight","onTop","onBottom",
+				"lAlign","rAlign","tAlign","bAlign",
+				"hCenter","vCenter"
+		);
+		this.cbParameters.getSelectionModel().select("visible");
+		this.cbParameters.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+			//TODO add logic
+		});
+		this.cbRange.getItems().addAll(Range.values());
+		this.cbRange.getSelectionModel().select(Range.EQUAL);
+		this.cbRange.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+			GridPane.setColumnSpan(this.expressionFieldFirst, 2);
+			this.expressionFieldSecond.setVisible(false);
+			if (newValue == Range.BETWEEN)
+			{
+				this.expressionFieldSecond.setVisible(true);
+				GridPane.setColumnSpan(this.expressionFieldFirst, 1);
+			}
+		});
 		this.mainToggleGroup = new ToggleGroup();
 		this.mainToggleGroup.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
 			if (newValue != null)
@@ -111,9 +143,12 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 	public void init(LayoutExpressionBuilder model, AbstractEvaluator evaluator, BufferedImage bufferedImage) throws Exception
 	{
 		this.model = model;
-		this.expressionField = new NewExpressionField(evaluator, "expression Field");
-		this.bottomPane.setBottom(this.expressionField);
-
+		this.expressionFieldFirst = new NewExpressionField(evaluator, "first");
+		this.expressionFieldSecond= new NewExpressionField(evaluator, "second");
+		this.gridPane.add(expressionFieldFirst, 3, 0);
+		this.gridPane.add(expressionFieldSecond, 4, 0);
+		this.expressionFieldSecond.setVisible(false);
+		GridPane.setColumnSpan(this.expressionFieldFirst, 2);
 		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 		ImageIO.write(bufferedImage, "jpg", outputStream);
 		Image image = new Image(new ByteArrayInputStream(outputStream.toByteArray()));
@@ -150,6 +185,11 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 		return null;
 	}
 
+	public void addFormula(ActionEvent actionEvent)
+	{
+		Common.tryCatch(()-> this.model.addFormula(cbParameters.getSelectionModel().getSelectedItem(), labelControlId.getText(), cbRange.getSelectionModel().getSelectedItem(), "first","second"),"Error on add formula");
+	}
+
 	public void displayInitialControl(Rectangle rectangle)
 	{
 		this.graphicsContext.setStroke(new Color(1, 0, 0, 1));
@@ -177,5 +217,10 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 		alert.getDialogPane().setPrefHeight(600);
 		alert.getDialogPane().setPrefWidth(800);
 		return alert;
+	}
+
+	public void displayControlId(String controlId)
+	{
+		this.labelControlId.setText(controlId);
 	}
 }

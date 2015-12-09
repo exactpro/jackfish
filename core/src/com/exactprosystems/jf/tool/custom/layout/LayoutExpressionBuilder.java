@@ -76,6 +76,7 @@ public class LayoutExpressionBuilder
 			rectangle.setRect(rectangle.getX() - this.xOffset, rectangle.getY() - this.yOffset, rectangle.getWidth(), rectangle.getHeight());
 			this.clearCanvas();
 			this.controller.displayControl(rectangle);
+			this.controller.displayControlId(control.getID());
 		}, String.format("Error on display control %s", c)));
 
 	}
@@ -84,8 +85,8 @@ public class LayoutExpressionBuilder
 	{
 		this.controller.clearCanvas();
 		this.displayInitialControl();
+		this.controller.displayControlId("");
 	}
-
 
 	private void displayInitialControl() throws Exception
 	{
@@ -105,5 +106,10 @@ public class LayoutExpressionBuilder
 	private IRemoteApplication service()
 	{
 		return this.appConnection.getApplication().service();
+	}
+
+	public void addFormula(String parameter, String controlId, Range range, String first, String second)
+	{
+		System.err.println(String.format("%s %s %s %s %s", parameter, controlId, range, first, second));
 	}
 }
