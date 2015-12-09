@@ -36,27 +36,28 @@ import java.util.ResourceBundle;
 //TODO replace all border width and fillStroke to styleClass
 public class LayoutExpressionBuilderController implements Initializable, ContainingParent
 {
-	public static final int BORDER_WIDTH =	4;
+	public static final int BORDER_WIDTH = 4;
+	public static final int OFFSET = BORDER_WIDTH / 2;
 
-	public BorderPane						mainPane;
+	public BorderPane mainPane;
 
-	public VBox								vBoxControls;
-	public CustomFieldWithButton			cfFindControl;
-	public HBox								hBoxCheckBoxes;
-	public BorderPane						bottomPane;
-	public BorderPane						parentPane;
-	public ScrollPane						spControls;
-	private NewExpressionField				expressionField;
-	private ToggleGroup						mainToggleGroup;
+	public VBox vBoxControls;
+	public CustomFieldWithButton cfFindControl;
+	public HBox hBoxCheckBoxes;
+	public BorderPane bottomPane;
+	public BorderPane parentPane;
+	public ScrollPane spControls;
+	private NewExpressionField expressionField;
+	private ToggleGroup mainToggleGroup;
 
-	private Canvas							canvas;
-	private ImageView						imageView;
-	private GraphicsContext					graphicsContext;
+	private Canvas canvas;
+	private ImageView imageView;
+	private GraphicsContext graphicsContext;
 
-	private Parent							parent;
-	private LayoutExpressionBuilder			model;
+	private Parent parent;
+	private LayoutExpressionBuilder model;
 
-	
+
 	@Override
 	public void initialize(URL location, ResourceBundle resources)
 	{
@@ -151,14 +152,14 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 
 	public void displayInitialControl(Rectangle rectangle)
 	{
-		this.graphicsContext.setStroke(new Color(1,0,0,1));
-		this.graphicsContext.strokeRect(rectangle.getX(), rectangle.getY(), rectangle.getWidth(), rectangle.getHeight());
+		this.graphicsContext.setStroke(new Color(1, 0, 0, 1));
+		this.graphicsContext.strokeRect(rectangle.getX() + OFFSET, rectangle.getY() + OFFSET, rectangle.getWidth() - BORDER_WIDTH, rectangle.getHeight() - BORDER_WIDTH);
 	}
 
 	public void displayControl(Rectangle rectangle)
 	{
-		this.graphicsContext.setStroke(new Color(0,1,0,1));
-		this.graphicsContext.strokeRect(rectangle.getX(), rectangle.getY(), rectangle.getWidth(), rectangle.getHeight());
+		this.graphicsContext.setStroke(new Color(0, 1, 0, 1));
+		this.graphicsContext.strokeRect(rectangle.getX() + OFFSET, rectangle.getY() + OFFSET, rectangle.getWidth() - BORDER_WIDTH, rectangle.getHeight() - BORDER_WIDTH);
 	}
 
 	public void clearCanvas()
