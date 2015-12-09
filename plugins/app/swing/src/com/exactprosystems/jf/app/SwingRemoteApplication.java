@@ -342,7 +342,14 @@ public class SwingRemoteApplication extends RemoteApplication
 		}
 		return new ImageWrapper(images[0]);
 	}
-	
+
+	@Override
+	protected Rectangle getRectangleDerived(Locator owner, Locator element) throws Exception
+	{
+		ComponentFixture<Component> component = this.operationExecutor.find(owner, element);
+		return this.operationExecutor.getRectangle(component);
+	}
+
 	@Override
 	protected OperationResult operateDerived(Locator owner, Locator element, Locator rows, Locator header, Operation operation) throws Exception
 	{

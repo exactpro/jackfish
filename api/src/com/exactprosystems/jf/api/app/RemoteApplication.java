@@ -10,6 +10,7 @@ package com.exactprosystems.jf.api.app;
 
 import org.w3c.dom.Document;
 
+import java.awt.*;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -252,7 +253,23 @@ public abstract class RemoteApplication implements IRemoteApplication
 			throw new ProxyException(msg, e.getMessage(), e);
 		}
 	}
-	
+
+	@Override
+	public final Rectangle getRectangle(Locator owner, Locator element) throws RemoteException
+	{
+		try
+		{
+			exceptionIfNull(element, 	"element", "getImage");
+
+			return getRectangleDerived(owner, element);
+		}
+		catch (Exception e)
+		{
+			String msg = String.format("Error operate(%s, %s)", owner, element);
+			throw new ProxyException(msg, e.getMessage(), e);
+		}
+	}
+
 	@Override
 	public final OperationResult operate(Locator owner, Locator element, Locator rows, Locator header, Operation operation) throws RemoteException
 	{
@@ -395,6 +412,8 @@ public abstract class RemoteApplication implements IRemoteApplication
 	protected abstract Locator getLocatorDerived (Locator owner, ControlKind controlKind, int x, int y) throws Exception;
 
 	protected abstract ImageWrapper getImageDerived(Locator owner, Locator element) throws Exception;
+
+	protected abstract Rectangle getRectangleDerived(Locator owner, Locator element) throws Exception;
 
 	protected abstract OperationResult operateDerived(Locator owner, Locator element, Locator rows, Locator header, Operation operation) throws Exception;
 	

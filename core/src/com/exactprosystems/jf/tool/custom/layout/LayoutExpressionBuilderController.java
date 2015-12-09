@@ -8,14 +8,26 @@ import com.exactprosystems.jf.tool.custom.fields.CustomFieldWithButton;
 import com.exactprosystems.jf.tool.custom.fields.NewExpressionField;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
+import javafx.scene.Group;
 import javafx.scene.Parent;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Optional;
@@ -23,7 +35,8 @@ import java.util.ResourceBundle;
 
 public class LayoutExpressionBuilderController implements Initializable, ContainingParent
 {
-	public Label 							image;
+	public BorderPane						mainPane;
+
 	public VBox								vBoxControls;
 	public CustomFieldWithButton			cfFindControl;
 	public HBox								hBoxCheckBoxes;
@@ -33,6 +46,10 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 	private NewExpressionField				expressionField;
 	private ToggleGroup						mainToggleGroup;
 
+	private Canvas							canvas;
+	private ImageView						imageView;
+	private GraphicsContext					graphicsContext;
+
 	private Parent							parent;
 	private LayoutExpressionBuilder			model;
 
@@ -40,7 +57,6 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 	@Override
 	public void initialize(URL location, ResourceBundle resources)
 	{
-		assert image != null : "fx:id=\"image\" was not injected: check your FXML file 'LayoutExpressionBuilder.fxml'.";
 		assert vBoxControls != null : "fx:id=\"vBoxControls\" was not injected: check your FXML file 'LayoutExpressionBuilder.fxml'.";
 		assert bottomPane != null : "fx:id=\"bottomPane\" was not injected: check your FXML file 'LayoutExpressionBuilder.fxml'.";
 		assert cfFindControl != null : "fx:id=\"cfFindControl\" was not injected: check your FXML file 'LayoutExpressionBuilder.fxml'.";
@@ -52,10 +68,32 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 			{
 				this.model.displayControl(((IControl) newValue.getUserData()));
 			}
+			else
+			{
+				Common.tryCatch(this.model::clearCanvas, "Error on clear canvas");
+			}
 		});
 		this.cfFindControl.textProperty().addListener((observable, oldValue, newValue) -> {
 			//TODO implements this logic via DialogsHelper.showFindListView()
 		});
+		createCanvas();
+	}
+
+	private void createCanvas()
+	{
+		Group group = new Group();
+		ScrollPane scrollPane = new ScrollPane(group);
+		scrollPane.setContent(group);
+		scrollPane.setFitToHeight(true);
+		scrollPane.setFitToWidth(true);
+		scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+		scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+		this.mainPane.setCenter(scrollPane);
+		this.imageView = new ImageView();
+		this.canvas = new Canvas();
+		this.graphicsContext = this.canvas.getGraphicsContext2D();
+		group.getChildren().add(this.imageView);
+		group.getChildren().add(this.canvas);
 	}
 
 	@Override
@@ -64,11 +102,18 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 		this.parent = parent;
 	}
 
-	public void init(LayoutExpressionBuilder model, AbstractEvaluator evaluator)
+	public void init(LayoutExpressionBuilder model, AbstractEvaluator evaluator, BufferedImage bufferedImage) throws Exception
 	{
 		this.model = model;
 		this.expressionField = new NewExpressionField(evaluator, "expression Field");
 		this.bottomPane.setBottom(this.expressionField);
+
+		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+		ImageIO.write(bufferedImage, "jpg", outputStream);
+		Image image = new Image(new ByteArrayInputStream(outputStream.toByteArray()));
+		this.imageView.setImage(image);
+		this.canvas.setHeight(image.getHeight());
+		this.canvas.setWidth(image.getWidth());
 	}
 
 	public String show(String title, boolean fullScreen, ArrayList<IControl> list)
@@ -81,10 +126,6 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 			button.setUserData(control);
 			button.setAlignment(Pos.BASELINE_LEFT);
 			button.setTooltip(new Tooltip(control.locator().toString()));
-			button.setOnAction(event -> {
-				System.out.println("asd");
-			});
-			//TODO add setOnAction(event -> {});
 			return button;
 		}).forEach(this.vBoxControls.getChildren()::add);
 		dialog.getDialogPane().setContent(parent);
@@ -101,6 +142,23 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 			}
 		}
 		return null;
+	}
+
+	public void displayInitialControl(Rectangle rectangle)
+	{
+		this.graphicsContext.setFill(new Color(1, 0, 0, 0.3));
+		this.graphicsContext.fillRect(rectangle.getX(), rectangle.getY(), rectangle.getWidth(), rectangle.getHeight());
+	}
+
+	public void displayControl(Rectangle rectangle)
+	{
+		this.graphicsContext.setFill(new Color(0, 1, 0, 0.3));
+		this.graphicsContext.fillRect(rectangle.getX(), rectangle.getY(), rectangle.getWidth(), rectangle.getHeight());
+	}
+
+	public void clearCanvas()
+	{
+		this.graphicsContext.clearRect(0, 0, this.imageView.getImage().getWidth(), this.imageView.getImage().getHeight());
 	}
 
 	private Alert createAlert(String title)

@@ -9,22 +9,20 @@
 package com.exactprosystems.jf.app;
 
 import com.exactprosystems.jf.api.app.*;
-
 import org.apache.log4j.*;
 import org.w3c.dom.Document;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.awt.*;
+import java.io.*;
 import java.lang.ProcessBuilder.Redirect;
 import java.lang.reflect.Method;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.rmi.RemoteException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 public class WinRemoteApplication extends RemoteApplication
 {
@@ -161,6 +159,13 @@ public class WinRemoteApplication extends RemoteApplication
 	protected ImageWrapper getImageDerived(@Name(name = "owner") Locator owner, @Name(name = "locator") Locator locator) throws Exception
 	{
 		return this.driver.translate(ImageWrapper.class, getImageDerived, owner, locator);
+	}
+
+	@Override
+	protected Rectangle getRectangleDerived(Locator owner, Locator element) throws Exception
+	{
+		//TODO
+		return null;
 	}
 
 	@Override

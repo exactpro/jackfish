@@ -460,6 +460,33 @@ public class SeleniumRemoteApplication extends RemoteApplication
 	}
 
 	@Override
+	protected Rectangle getRectangleDerived(Locator owner, Locator element) throws Exception
+	{
+		Exception real = null;
+		int repeat = 1;
+		do
+		{
+			try
+			{
+				WebElement webElement = this.operationExecutor.find(owner, element);
+				return this.operationExecutor.getRectangle(webElement);
+			}
+			catch (StaleElementReferenceException e)
+			{
+				real = e;
+				logger.debug("Element is no longer attached to the DOM. Try in SeleniumRemoteApplication : " + repeat);
+			}
+			catch (Exception e)
+			{
+				logger.error("EXCEPTION : " + e.getMessage(), e);
+				throw new Exception(e.getMessage());
+			}
+		}
+		while (++repeat < repeatLimit);
+		throw real;
+	}
+
+	@Override
 	protected OperationResult operateDerived(Locator owner, Locator element, Locator rows, Locator header, Operation operation) throws Exception
 	{
 		Exception real = null;

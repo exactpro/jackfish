@@ -10,6 +10,7 @@ package com.exactprosystems.jf.api.app;
 
 import org.w3c.dom.Document;
 
+import java.awt.*;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.Collection;
@@ -28,6 +29,7 @@ public interface IRemoteApplication extends Remote
 	String 					switchTo	(String title) throws RemoteException;
 	void					resize		(int hight, int width, boolean maximize, boolean minimize) throws RemoteException;
 	ImageWrapper			getImage	(Locator owner, Locator element) throws RemoteException;
+	Rectangle				getRectangle(Locator owner, Locator element) throws RemoteException;
 	Collection<String> 		findAll		(Locator owner, Locator element) throws RemoteException;
 	Locator 				getLocator	(Locator owner, ControlKind controlKind, int x, int y) throws RemoteException;
 	OperationResult 		operate		(Locator owner, Locator element, Locator row, Locator header, Operation operation) throws RemoteException;
