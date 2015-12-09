@@ -32,7 +32,6 @@ import com.exactprosystems.jf.tool.dictionary.ApplicationStatus;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.matrix.watch.WatcherFx;
 import com.exactprosystems.jf.tool.settings.SettingsPanel;
-
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.concurrent.Task;
@@ -74,6 +73,8 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 	public Button btnStartDefaultApplication;
 	public Button btnConnectDefaultApplication;
 	public Button btnStopDefaultApplication;
+	public Button btnStartDefaultClient;
+	public Button btnStopDefaultClient;
 
 	private WatcherFx					watcher	= null;
 	private FindPanel<MatrixItem>		findPanel;
@@ -453,6 +454,15 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 		tryCatch(() -> this.model.stopDefaultApplication(), "Error on start default application");
 	}
 
+	public void startDefaultClient(ActionEvent actionEvent)
+	{
+
+	}
+
+	public void stopDefaultClient(ActionEvent actionEvent)
+	{
+
+	}
 	// ------------------------------------------------------------------------------------------------------------------
 	// display* methods
 	// ------------------------------------------------------------------------------------------------------------------
@@ -582,10 +592,14 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 			btnStartDefaultApplication.setTooltip(new Tooltip("Start default application"));
 			btnConnectDefaultApplication.setTooltip(new Tooltip("Connect default application"));
 			btnStopDefaultApplication.setTooltip(new Tooltip("Stop default application"));
+			btnStartDefaultClient.setTooltip(new Tooltip("Start default client"));
+			btnStopDefaultClient.setTooltip(new Tooltip("Stop default client"));
 
 			customizeLabeled(btnStartDefaultApplication, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.START_APPLICATION);
 			customizeLabeled(btnConnectDefaultApplication, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.CONNECT_APPLICATION);
 			customizeLabeled(btnStopDefaultApplication, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.STOP_APPLICATION);
+			customizeLabeled(btnStopDefaultClient, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.STOP_APPLICATION);
+			customizeLabeled(btnStartDefaultClient, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.START_APPLICATION);
 			customizeLabeled(btnStartMatrix, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.START_MATRIX_ICON);
 			customizeLabeled(btnStopMatrix, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.STOP_MATRIX_ICON);
 			customizeLabeled(btnPauseMatrix, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.PAUSE_MATRIX_ICON);

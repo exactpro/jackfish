@@ -65,15 +65,12 @@
 						<GridPane GridPane.rowIndex="2">
 							<columnConstraints>
 								<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
-								<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="15.0" prefWidth="100.0"/>
 								<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
 							</columnConstraints>
 							<rowConstraints>
 								<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
 							</rowConstraints>
 							<children>
-								<Label text="Default client" GridPane.columnIndex="1" GridPane.halignment="CENTER"/>
-								<ComboBox fx:id="cbDefaultClient" maxWidth="1.7976931348623157E308" onAction="#changeDefaultClient" prefWidth="150.0" GridPane.columnIndex="2"/>
 								<BorderPane prefHeight="43.0" prefWidth="248.0">
 									<left>
 										<Label text="Default app" BorderPane.alignment="CENTER"/>
@@ -87,6 +84,25 @@
 												<Button fx:id="btnStartDefaultApplication" mnemonicParsing="false" onAction="#startDefaultApplication"/>
 												<Button fx:id="btnConnectDefaultApplication" mnemonicParsing="false" onAction="#connectDefaultApplication"/>
 												<Button fx:id="btnStopDefaultApplication" mnemonicParsing="false" onAction="#stopDefaultApplication"/>
+											</children>
+											<padding>
+												<Insets left="5.0"/>
+											</padding>
+										</HBox>
+									</right>
+								</BorderPane>
+								<BorderPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1">
+									<center>
+										<ComboBox fx:id="cbDefaultClient" maxWidth="1.7976931348623157E308" onAction="#changeDefaultClient" prefHeight="25.0" prefWidth="138.0" BorderPane.alignment="CENTER"/>
+									</center>
+									<left>
+										<Label text="Default client" BorderPane.alignment="CENTER"/>
+									</left>
+									<right>
+										<HBox alignment="CENTER_LEFT" prefHeight="43.0" prefWidth="112.0" BorderPane.alignment="CENTER">
+											<children>
+												<Button fx:id="btnStartDefaultClient" mnemonicParsing="false" onAction="#startDefaultClient"/>
+												<Button fx:id="btnStopDefaultClient" mnemonicParsing="false" onAction="#stopDefaultClient"/>
 											</children>
 											<padding>
 												<Insets left="5.0"/>
