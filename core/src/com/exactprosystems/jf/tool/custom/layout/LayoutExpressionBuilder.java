@@ -112,4 +112,38 @@ public class LayoutExpressionBuilder
 	{
 		System.err.println(String.format("%s %s %s %s %s", parameter, controlId, range, first, second));
 	}
+	
+	
+	class Assembler
+	{	
+		public Assembler(String name, boolean needStr, boolean needRange, boolean needFirst, boolean needSecond, String format)
+		{
+			this.name = name;
+			this.needStr = needStr;
+			this.needRange = needRange;
+			this.needFirst = needFirst;
+			this.needSecond = needSecond;
+			this.format = format;
+		}
+
+		String name;
+		boolean needStr;
+		boolean needRange;
+		boolean needFirst;
+		boolean needSecond;
+		String format;
+	}
+	
+	Assembler[] all = new Assembler[]
+		{
+		};
+	
+//	"visible", "count", "contains",
+//	"left", "right", "top", "bottom",
+//	"inLeft","inRight","inTop","inBottom",
+//	"onLeft","onRight","onTop","onBottom",
+//	"lAlign","rAlign","tAlign","bAlign",
+//	"hCenter","vCenter"
+	
+	
 }
