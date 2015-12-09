@@ -144,12 +144,6 @@ public class RectangleSelection extends Rectangle
 		handleVerticalPositioning(minRow, maxRow, gridMinRow, gridMaxRow);
 	}
 
-	public void updateRectangle(boolean flag)
-	{
-		handleHorizontalPositioning(0, 2);
-		handleVerticalPositioning(0, 2, skin.getRowIndexed(0), skin.getRowIndexed(2));
-	}
-
 	private void handleVerticalPositioning(int minRow, int maxRow, GridRow gridMinRow, GridRow gridMaxRow)
 	{
 		double height = 0;

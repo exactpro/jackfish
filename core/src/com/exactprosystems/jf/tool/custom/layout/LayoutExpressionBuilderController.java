@@ -12,6 +12,8 @@ import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -68,17 +70,19 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 		this.model = model;
 		this.expressionField = new NewExpressionField(evaluator, "expression Field");
 		this.bottomPane.setBottom(this.expressionField);
+		Rectangle rectangle = new Rectangle();
 	}
 
 	public String show(String title, boolean fullScreen, Map<String, Locator> map)
 	{
 		Alert dialog = createAlert(title);
 		map.entrySet().stream().map(entry -> {
-			ToggleButton button = new ToggleButton(entry.getKey());
+			ToggleButton button = new ToggleButton(entry.getValue().toString());
 			button.setToggleGroup(this.mainToggleGroup);
 			button.prefWidthProperty().bind(this.vBoxControls.widthProperty().subtract(20));
 			button.setUserData(entry.getValue());
-			button.setTooltip(new Tooltip(entry.getKey()));
+			button.setTextAlignment(TextAlignment.LEFT);
+			button.setTooltip(new Tooltip(entry.getKey() + "\n" + entry.getValue().toString()));
 			return button;
 		}).forEach(this.vBoxControls.getChildren()::add);
 		dialog.getDialogPane().setContent(parent);
