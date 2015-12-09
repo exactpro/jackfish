@@ -21,6 +21,9 @@ public class LayoutExpressionBuilder
 	private String windowName;
 	private AbstractEvaluator evaluator;
 
+	private double xOffset = 0;
+	private double yOffset = 0;
+
 	public LayoutExpressionBuilder(String parameterName, String parameterExpression, AppConnection appConnection, String windowName, AbstractEvaluator evaluator)
 	{
 		this.parameterName = parameterName;
@@ -40,8 +43,18 @@ public class LayoutExpressionBuilder
 			this.currentWindow = dictionary.getWindow(this.windowName);
 			this.currentWindow.getControls(IWindow.SectionKind.Self).stream().filter(c -> !this.parameterName.equals(c.getID())).forEach(controls::add);
 			this.currentWindow.getControls(IWindow.SectionKind.Run).stream().filter(c -> !this.parameterName.equals(c.getID())).forEach(controls::add);
-			Locator locator = this.currentWindow.getSelfControl() == null ? null : this.currentWindow.getSelfControl().locator();
-			image = service().getImage(null, locator).getImage();
+			Locator selfLocator;
+			IControl selfControl = this.currentWindow.getSelfControl();
+			if (selfControl == null)
+			{
+				throw new NullPointerException(String.format("Can't get screenshot, because self section on window %s don't contains controls", this.windowName));
+			}
+			selfLocator = selfControl.locator();
+			image = service().getImage(null, selfLocator).getImage();
+			IControl ownerSelf = this.currentWindow.getOwnerControl(selfControl);
+			Rectangle selfRectangle = service().getRectangle(ownerSelf == null ? null : ownerSelf.locator(), selfLocator);
+			this.xOffset = selfRectangle.getX();
+			this.yOffset = selfRectangle.getY();
 		}
 		else
 		{
@@ -60,6 +73,7 @@ public class LayoutExpressionBuilder
 		Optional.ofNullable(control).ifPresent(c -> Common.tryCatch(() -> {
 			IControl owner = this.currentWindow.getOwnerControl(control);
 			Rectangle rectangle = service().getRectangle(owner == null ? null : owner.locator(), control.locator());
+			rectangle.setRect(rectangle.getX() - this.xOffset, rectangle.getY() - this.yOffset, rectangle.getWidth(), rectangle.getHeight());
 			this.clearCanvas();
 			this.controller.displayControl(rectangle);
 		}, String.format("Error on display control %s", c)));
@@ -84,6 +98,7 @@ public class LayoutExpressionBuilder
 		IControl ownerControl = this.currentWindow.getOwnerControl(initialControl);
 		Locator owner = ownerControl == null ? null : ownerControl.locator();
 		Rectangle rectangle = service().getRectangle(owner, initialControl.locator());
+		rectangle.setRect(rectangle.getX() - this.xOffset, rectangle.getY() - this.yOffset, rectangle.getWidth(), rectangle.getHeight());
 		this.controller.displayInitialControl(rectangle);
 	}
 

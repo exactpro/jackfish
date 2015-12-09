@@ -147,6 +147,10 @@ public class MatrixFx extends Matrix
 			this.context.close();
 			this.context = null;
 		}
+		if (this.getDefaultApplicationConnection() != null)
+		{
+			stopDefaultApplication();
+		}
 		
 		this.controller.close();
 	}

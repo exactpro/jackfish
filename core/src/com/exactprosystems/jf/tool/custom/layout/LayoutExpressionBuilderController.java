@@ -33,8 +33,11 @@ import java.util.ArrayList;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
+//TODO replace all border width and fillStroke to styleClass
 public class LayoutExpressionBuilderController implements Initializable, ContainingParent
 {
+	public static final int BORDER_WIDTH =	4;
+
 	public BorderPane						mainPane;
 
 	public VBox								vBoxControls;
@@ -92,6 +95,8 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 		this.imageView = new ImageView();
 		this.canvas = new Canvas();
 		this.graphicsContext = this.canvas.getGraphicsContext2D();
+		this.graphicsContext.setLineWidth(BORDER_WIDTH);
+		this.graphicsContext.setLineDashes(10, 10, 10);
 		group.getChildren().add(this.imageView);
 		group.getChildren().add(this.canvas);
 	}
@@ -146,14 +151,14 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 
 	public void displayInitialControl(Rectangle rectangle)
 	{
-		this.graphicsContext.setFill(new Color(1, 0, 0, 0.3));
-		this.graphicsContext.fillRect(rectangle.getX(), rectangle.getY(), rectangle.getWidth(), rectangle.getHeight());
+		this.graphicsContext.setStroke(new Color(1,0,0,1));
+		this.graphicsContext.strokeRect(rectangle.getX(), rectangle.getY(), rectangle.getWidth(), rectangle.getHeight());
 	}
 
 	public void displayControl(Rectangle rectangle)
 	{
-		this.graphicsContext.setFill(new Color(0, 1, 0, 0.3));
-		this.graphicsContext.fillRect(rectangle.getX(), rectangle.getY(), rectangle.getWidth(), rectangle.getHeight());
+		this.graphicsContext.setStroke(new Color(0,1,0,1));
+		this.graphicsContext.strokeRect(rectangle.getX(), rectangle.getY(), rectangle.getWidth(), rectangle.getHeight());
 	}
 
 	public void clearCanvas()
