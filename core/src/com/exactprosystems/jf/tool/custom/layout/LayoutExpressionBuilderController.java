@@ -7,7 +7,7 @@ import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.custom.fields.CustomFieldWithButton;
 import com.exactprosystems.jf.tool.custom.fields.NewExpressionField;
-import com.exactprosystems.jf.tool.custom.layout.LayoutExpressionBuilder.Assembler;
+import com.exactprosystems.jf.tool.custom.layout.LayoutExpressionBuilder.SpecMethod;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
@@ -57,7 +57,7 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 	public HBox						hBoxCheckBoxes;
 	public BorderPane				parentPane;
 	public ScrollPane				spControls;
-	public ChoiceBox<Assembler>		cbParameters;
+	public ChoiceBox<SpecMethod>		cbParameters;
 	public Label					labelControlId;
 	public ChoiceBox<Range>			cbRange;
 	public Button					btnAddFormula;
@@ -193,7 +193,7 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 		rect.setVisible(true);
 	}
 
-	public void displayMethods(Assembler[] methods)
+	public void displayMethods(SpecMethod[] methods)
 	{
 		this.cbParameters.getItems().clear();
 		this.cbParameters.getItems().addAll(methods);
