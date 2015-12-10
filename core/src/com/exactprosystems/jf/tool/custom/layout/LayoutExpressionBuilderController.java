@@ -12,8 +12,6 @@ import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Parent;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -60,13 +58,12 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 	private NewExpressionField expressionFieldSecond;
 	private ToggleGroup mainToggleGroup;
 
-	private Canvas canvas;
 	private ImageView imageView;
-	private GraphicsContext graphicsContext;
-
 	private Parent parent;
 	private LayoutExpressionBuilder model;
 
+	private CustomRectangle initialRectangle;
+	private CustomRectangle selectedRectangle;
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources)
@@ -126,12 +123,16 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 		scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
 		this.mainPane.setCenter(scrollPane);
 		this.imageView = new ImageView();
-		this.canvas = new Canvas();
-		this.graphicsContext = this.canvas.getGraphicsContext2D();
-		this.graphicsContext.setLineWidth(BORDER_WIDTH);
-		this.graphicsContext.setLineDashes(10, 10, 10);
+
+		this.initialRectangle = new CustomRectangle();
+		this.selectedRectangle = new CustomRectangle();
+		this.initialRectangle.setWidthLine(BORDER_WIDTH);
+		this.selectedRectangle.setWidthLine(BORDER_WIDTH);
 		group.getChildren().add(this.imageView);
-		group.getChildren().add(this.canvas);
+		this.initialRectangle.setVisible(false);
+		this.initialRectangle.setGroup(group);
+		this.selectedRectangle.setVisible(false);
+		this.selectedRectangle.setGroup(group);
 	}
 
 	@Override
@@ -153,8 +154,6 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 		ImageIO.write(bufferedImage, "jpg", outputStream);
 		Image image = new Image(new ByteArrayInputStream(outputStream.toByteArray()));
 		this.imageView.setImage(image);
-		this.canvas.setHeight(image.getHeight());
-		this.canvas.setWidth(image.getWidth());
 	}
 
 	public String show(String title, boolean fullScreen, ArrayList<IControl> list)
@@ -192,19 +191,21 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 
 	public void displayInitialControl(Rectangle rectangle)
 	{
-		this.graphicsContext.setStroke(new Color(1, 0, 0, 1));
-		this.graphicsContext.strokeRect(rectangle.getX() + OFFSET, rectangle.getY() + OFFSET, rectangle.getWidth() - BORDER_WIDTH, rectangle.getHeight() - BORDER_WIDTH);
+		this.initialRectangle.setColor(new Color(1, 0, 0, 1));
+		this.initialRectangle.updateRectangle(rectangle.getX() + OFFSET, rectangle.getY() + OFFSET, rectangle.getWidth() - BORDER_WIDTH, rectangle.getHeight() - BORDER_WIDTH);
+		this.initialRectangle.setVisible(true);
 	}
 
 	public void displayControl(Rectangle rectangle)
 	{
-		this.graphicsContext.setStroke(new Color(0, 1, 0, 1));
-		this.graphicsContext.strokeRect(rectangle.getX() + OFFSET, rectangle.getY() + OFFSET, rectangle.getWidth() - BORDER_WIDTH, rectangle.getHeight() - BORDER_WIDTH);
+		this.selectedRectangle.setColor(new Color(0, 1, 0, 1));
+		this.selectedRectangle.updateRectangle(rectangle.getX() + OFFSET, rectangle.getY() + OFFSET, rectangle.getWidth() - BORDER_WIDTH, rectangle.getHeight() - BORDER_WIDTH);
+		this.selectedRectangle.setVisible(true);
 	}
 
 	public void clearCanvas()
 	{
-		this.graphicsContext.clearRect(0, 0, this.imageView.getImage().getWidth(), this.imageView.getImage().getHeight());
+		this.selectedRectangle.setVisible(false);
 	}
 
 	private Alert createAlert(String title)

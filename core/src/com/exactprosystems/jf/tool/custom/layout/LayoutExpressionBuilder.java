@@ -74,17 +74,15 @@ public class LayoutExpressionBuilder
 			IControl owner = this.currentWindow.getOwnerControl(control);
 			Rectangle rectangle = service().getRectangle(owner == null ? null : owner.locator(), control.locator());
 			rectangle.setRect(rectangle.getX() - this.xOffset, rectangle.getY() - this.yOffset, rectangle.getWidth(), rectangle.getHeight());
-			this.clearCanvas();
 			this.controller.displayControl(rectangle);
 			this.controller.displayControlId(control.getID());
 		}, String.format("Error on display control %s", c)));
 
 	}
 
-	public void clearCanvas() throws Exception
+	public void clearCanvas()
 	{
 		this.controller.clearCanvas();
-		this.displayInitialControl();
 		this.controller.displayControlId("");
 	}
 
