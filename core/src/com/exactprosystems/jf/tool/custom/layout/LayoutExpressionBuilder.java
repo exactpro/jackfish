@@ -9,6 +9,7 @@ import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Optional;
 
 public class LayoutExpressionBuilder
@@ -108,40 +109,58 @@ public class LayoutExpressionBuilder
 
 	public void addFormula(String parameter, String controlId, Range range, String first, String second)
 	{
-		System.err.println(String.format("%s %s %s %s %s", parameter, controlId, range, first, second));
+		Arrays.stream(all).filter(a -> a.name.equals(parameter)).forEach(a -> 
+			System.err.println(a.toString(controlId, range, first, second)));
 	}
 	
 	
-	class Assembler
+	static class Assembler
 	{	
-		public Assembler(String name, boolean needStr, boolean needRange, boolean needFirst, boolean needSecond, String format)
+		public Assembler(String name, boolean needStr, boolean needRange, String format)
 		{
 			this.name = name;
 			this.needStr = needStr;
 			this.needRange = needRange;
-			this.needFirst = needFirst;
-			this.needSecond = needSecond;
 			this.format = format;
 		}
 
+		public String toString(String controlId, Range range, String first, String second) 
+		{
+			return String.format(this.format, this.name, controlId, range == null ? "" : range.toString(first, second));
+		};
+		
 		String name;
 		boolean needStr;
 		boolean needRange;
-		boolean needFirst;
-		boolean needSecond;
 		String format;
 	}
 	
-	Assembler[] all = new Assembler[]
+	static Assembler[] all = new Assembler[]
 		{
+			// $1 name, $2 controlId, $3 range
+			new Assembler("visible", 	false,	false,	".%1$s()"), 
+			new Assembler("count", 		false,	true, 	".%1$s(%3$s)"),
+			new Assembler("contains", 	true, 	false, 	".%1$s('%2$s')"), 
+			new Assembler("left", 		true, 	true, 	".%1$s('%2$s',%3$s)"), 
+			new Assembler("right", 		true, 	true, 	".%1$s('%2$s',%3$s)"),
+			new Assembler("top", 		true, 	true, 	".%1$s('%2$s',%3$s)"), 
+			new Assembler("bottom", 	true, 	true, 	".%1$s('%2$s',%3$s)"), 
+			new Assembler("inLeft", 	true, 	true, 	".%1$s('%2$s',%3$s)"),
+			new Assembler("inRight", 	true, 	true, 	".%1$s('%2$s',%3$s)"), 
+			new Assembler("inTop", 		true, 	true, 	".%1$s('%2$s',%3$s)"), 
+			new Assembler("inBottom", 	true, 	true, 	".%1$s('%2$s',%3$s)"),
+			new Assembler("onLeft", 	true, 	true, 	".%1$s('%2$s',%3$s)"), 
+			new Assembler("onRight", 	true, 	true, 	".%1$s('%2$s',%3$s)"), 
+			new Assembler("onTop", 		true, 	true, 	".%1$s('%2$s',%3$s)"),
+			new Assembler("onBottom", 	true, 	true, 	".%1$s('%2$s',%3$s)"), 
+			new Assembler("lAlign", 	true, 	true, 	".%1$s('%2$s',%3$s)"), 
+			new Assembler("rAlign", 	true, 	true, 	".%1$s('%2$s',%3$s)"),
+			new Assembler("tAlign", 	true, 	true, 	".%1$s('%2$s',%3$s)"), 
+			new Assembler("bAlign", 	true, 	true, 	".%1$s('%2$s',%3$s)"), 
+			new Assembler("hCenter", 	true, 	true, 	".%1$s('%2$s',%3$s)"),
+			new Assembler("vCenter", 	true, 	true, 	".%1$s('%2$s',%3$s)"),		
 		};
 	
-//	"visible", "count", "contains",
-//	"left", "right", "top", "bottom",
-//	"inLeft","inRight","inTop","inBottom",
-//	"onLeft","onRight","onTop","onBottom",
-//	"lAlign","rAlign","tAlign","bAlign",
-//	"hCenter","vCenter"
 	
 	
 }
