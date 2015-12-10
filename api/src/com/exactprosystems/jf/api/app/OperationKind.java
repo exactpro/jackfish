@@ -94,6 +94,16 @@ public enum OperationKind
 		}
 	},
 
+	GET_RECTANGLE("getRectangle")
+	{
+		@Override
+		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, LocatorsHolder locators, List<T> list, Holder<T> component, OperationResult result) throws Exception
+		{
+			result.setRectangle(executor.getRectangle(component.value));
+			return true;
+		}
+	},
+
 	PUSH("push")
 	{
 		@Override

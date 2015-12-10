@@ -53,6 +53,13 @@ public class Do
 		return new Operation().getValue();
 	}
 
+	static final String getRectangle= "Return rectangle in which current component is placed.";
+	@DescriptionAttribute(text = Do.getRectangle)
+	public static Operation getRectangle()
+	{
+		return new Operation().getRectangle();
+	}
+
 	static final String push = "Push to the current component";
 	@DescriptionAttribute(text = Do.push)
 	public static Operation push()

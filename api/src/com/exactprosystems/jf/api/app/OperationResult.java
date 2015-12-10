@@ -8,6 +8,7 @@
 
 package com.exactprosystems.jf.api.app;
 
+import java.awt.Rectangle;
 import java.io.Serializable;
 import java.util.*;
 
@@ -18,6 +19,7 @@ public class OperationResult implements Serializable, Map<String, String>
 	private boolean ok = false;
 	private boolean permittedOperation = false;
 	private String text = null;
+	private Rectangle rectangle = null;
 	private LinkedHashMap<String, String> map = new LinkedHashMap<>();
 	private Map<String, ValueAndColor> colorMap = new LinkedHashMap<>();
 	private String[][] array;
@@ -31,6 +33,11 @@ public class OperationResult implements Serializable, Map<String, String>
 		this.text = text;
 	}
 
+	public void setRectangle(Rectangle rectangle)
+	{
+		this.rectangle = rectangle;
+	}
+	
 	public void setOk(boolean ok)
 	{
 		this.ok = ok;
@@ -72,6 +79,11 @@ public class OperationResult implements Serializable, Map<String, String>
 	public String getText()
 	{
 		return this.text;
+	}
+	
+	public Rectangle getRectangle()
+	{
+		return this.rectangle;
 	}
 	
 	public boolean isOk()
