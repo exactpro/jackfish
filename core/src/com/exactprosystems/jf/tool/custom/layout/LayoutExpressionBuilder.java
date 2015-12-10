@@ -94,14 +94,15 @@ public class LayoutExpressionBuilder
 		this.controller.displayControlId("");
 	}
 
-	private IRemoteApplication service()
-	{
-		return this.appConnection.getApplication().service();
-	}
-
 	public void addFormula(SpecMethod parameter, String controlId, Range range, String first, String second)
 	{
 		System.err.println(parameter.toString(controlId, range, first, second));
+	}
+
+	
+	private IRemoteApplication service()
+	{
+		return this.appConnection.getApplication().service();
 	}
 
 	static class SpecMethod
