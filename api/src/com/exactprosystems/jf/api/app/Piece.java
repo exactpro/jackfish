@@ -42,7 +42,7 @@ public class Piece implements Serializable
 		}
 		if (range != null)
 		{
-			sb.append(range.toString(this.a, this.b));
+			sb.append(range.toString("" + this.a, "" + this.b));
 		}
 		
 		sb.append(")");

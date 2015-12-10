@@ -416,7 +416,7 @@ public enum PieceKind
 		boolean res = piece.range.func(value, piece.a, piece.b);
 		if (!res)
 		{
-			result.error("" + value + " is not " + piece.range.toString(piece.a, piece.b));
+			result.error("" + value + " is not " + piece.range.toString("" + piece.a, "" + piece.b));
 		}
 	}
 

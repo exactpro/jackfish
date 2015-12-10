@@ -10,10 +10,10 @@ package com.exactprosystems.jf.api.app;
 
 public enum Range
 {
-	EQUAL
+	EQUAL ("equal")
 	{
 		@Override
-		public String toString(long a, long b)
+		public String toString(String a, String b)
 		{
 			return "" + a;
 		}
@@ -25,10 +25,10 @@ public enum Range
 		}
 	},
 	
-	LESS
+	LESS ("less")
 	{
 		@Override
-		public String toString(long a, long b)
+		public String toString(String a, String b)
 		{
 			return "less(" + a + ")";
 		}
@@ -40,10 +40,10 @@ public enum Range
 		}
 	},
 	
-	GREAT
+	GREAT ("great")
 	{
 		@Override
-		public String toString(long a, long b)
+		public String toString(String a, String b)
 		{
 			return "great(" + a + ")";
 		}
@@ -55,10 +55,10 @@ public enum Range
 		}
 	},
 	
-	ABOUT
+	ABOUT ("about")
 	{
 		@Override
-		public String toString(long a, long b)
+		public String toString(String a, String b)
 		{
 			return "about(" + a + ")";
 		}
@@ -70,10 +70,10 @@ public enum Range
 		}
 	},
 	
-	BETWEEN
+	BETWEEN ("between")
 	{
 		@Override
-		public String toString(long a, long b)
+		public String toString(String a, String b)
 		{
 			return "between(" + a + ", " + b + ")";
 		}
@@ -87,8 +87,20 @@ public enum Range
 		}
 	};
 	
+	private Range(String name)
+	{
+		this.name = name;
+	}
 	
-	public abstract String toString(long a, long b);
+	@Override
+	public String toString()
+	{
+		return this.name;
+	}
+	
+	public abstract String toString(String a, String b);
 	
 	public abstract boolean func(long x, long a, long b);
+	
+	private String name;
 }
