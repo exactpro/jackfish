@@ -10,16 +10,16 @@ import java.util.ArrayList;
 
 public class LayoutExpressionBuilder
 {
-	private LayoutExpressionBuilderController controller;
-	private String parameterName;
-	private String parameterExpression;
-	private AppConnection appConnection;
-	private IWindow currentWindow;
-	private String windowName;
-	private AbstractEvaluator evaluator;
+	private LayoutExpressionBuilderController	controller;
+	private String								parameterName;
+	private String								parameterExpression;
+	private AppConnection						appConnection;
+	private IWindow								currentWindow;
+	private String								windowName;
+	private AbstractEvaluator					evaluator;
 
-	private double xOffset = 0;
-	private double yOffset = 0;
+	private double								xOffset	= 0;
+	private double								yOffset	= 0;
 
 	public LayoutExpressionBuilder(String parameterName, String parameterExpression, AppConnection appConnection, String windowName, AbstractEvaluator evaluator)  throws Exception
 	{

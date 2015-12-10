@@ -44,32 +44,28 @@ import java.util.stream.Collectors;
 //TODO replace all border width and fillStroke to styleClass
 public class LayoutExpressionBuilderController implements Initializable, ContainingParent
 {
-	public static final int			BORDER_WIDTH	= 4;
-	public static final int			OFFSET			= BORDER_WIDTH / 2;
-
+	private static final int		BORDER_WIDTH	= 4;
+	private static final int		OFFSET			= BORDER_WIDTH / 2;
 	private static final Color		selfColor		= new Color(1, 0, 0, 1);
 	private static final Color		otherColor		= new Color(0, 1, 0, 1);
-	
-	public BorderPane				mainPane;
 
-	public VBox						vBoxControls;
-	public CustomFieldWithButton	cfFindControl;
-	public HBox						hBoxCheckBoxes;
-	public BorderPane				parentPane;
-	public ScrollPane				spControls;
-	public ChoiceBox<SpecMethod>		cbParameters;
-	public Label					labelControlId;
-	public ChoiceBox<Range>			cbRange;
-	public Button					btnAddFormula;
-	public GridPane					gridPane;
+	private BorderPane				mainPane;
+	private VBox					vBoxControls;
+	private CustomFieldWithButton	cfFindControl;
+	private HBox					hBoxCheckBoxes;
+	private BorderPane				parentPane;
+	private ScrollPane				spControls;
+	private ChoiceBox<SpecMethod>	cbParameters;
+	private Label					labelControlId;
+	private ChoiceBox<Range>		cbRange;
+	private Button					btnAddFormula;
+	private GridPane				gridPane;
 	private NewExpressionField		expressionFieldFirst;
 	private NewExpressionField		expressionFieldSecond;
 	private ToggleGroup				mainToggleGroup;
-
 	private ImageView				imageView;
 	private Parent					parent;
 	private LayoutExpressionBuilder	model;
-
 	private CustomRectangle			initialRectangle;
 	private CustomRectangle			selectedRectangle;
 
