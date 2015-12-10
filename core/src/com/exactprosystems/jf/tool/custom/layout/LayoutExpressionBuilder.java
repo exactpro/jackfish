@@ -1,16 +1,12 @@
 package com.exactprosystems.jf.tool.custom.layout;
 
-import com.exactprosystems.jf.actions.gui.ActionGuiHelper;
 import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.tool.Common;
-import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Optional;
 
 public class LayoutExpressionBuilder
 {
@@ -25,60 +21,71 @@ public class LayoutExpressionBuilder
 	private double xOffset = 0;
 	private double yOffset = 0;
 
-	public LayoutExpressionBuilder(String parameterName, String parameterExpression, AppConnection appConnection, String windowName, AbstractEvaluator evaluator)
+	public LayoutExpressionBuilder(String parameterName, String parameterExpression, AppConnection appConnection, String windowName, AbstractEvaluator evaluator)  throws Exception
 	{
+		if (appConnection == null)
+		{
+			throw new Exception("Connection is not established. \nChoose Default app at first and run it.");
+		}
+		
 		this.parameterName = parameterName;
 		this.parameterExpression = parameterExpression;
 		this.appConnection = appConnection;
 		this.windowName = windowName;
 		this.evaluator = evaluator;
+		IGuiDictionary dictionary = appConnection.getDictionary();
+		this.currentWindow = dictionary.getWindow(this.windowName);
 	}
 
 	public String show(String title, boolean fullScreen) throws Exception
 	{
 		ArrayList<IControl> controls = new ArrayList<>();
-		BufferedImage image;
-		if (this.appConnection != null)
+		controls.addAll(this.currentWindow.getControls(IWindow.SectionKind.Self));
+		controls.addAll(this.currentWindow.getControls(IWindow.SectionKind.Run));
+		
+		IControl selfControl = this.currentWindow.getSelfControl();
+		if (selfControl == null)
 		{
-			IGuiDictionary dictionary = ActionGuiHelper.getGuiDictionary(null, this.appConnection);
-			this.currentWindow = dictionary.getWindow(this.windowName);
-			this.currentWindow.getControls(IWindow.SectionKind.Self).stream().filter(c -> !this.parameterName.equals(c.getID())).forEach(controls::add);
-			this.currentWindow.getControls(IWindow.SectionKind.Run).stream().filter(c -> !this.parameterName.equals(c.getID())).forEach(controls::add);
-			Locator selfLocator;
-			IControl selfControl = this.currentWindow.getSelfControl();
-			if (selfControl == null)
-			{
-				throw new NullPointerException(String.format("Can't get screenshot, because self section on window %s don't contains controls", this.windowName));
-			}
-			selfLocator = selfControl.locator();
-			image = service().getImage(null, selfLocator).getImage();
-			IControl ownerSelf = this.currentWindow.getOwnerControl(selfControl);
-			Rectangle selfRectangle = service().getRectangle(ownerSelf == null ? null : ownerSelf.locator(), selfLocator);
-			this.xOffset = selfRectangle.getX();
-			this.yOffset = selfRectangle.getY();
+			throw new NullPointerException(
+					String.format("Can't get screenshot, because self section on window %s don't contains controls", this.windowName));
 		}
-		else
-		{
-			DialogsHelper.showError("App connection is null");
-			return this.parameterExpression;
-		}
+		Locator selfLocator = selfControl.locator();
+		BufferedImage image = service().getImage(null, selfLocator).getImage();
+		IControl ownerSelf = this.currentWindow.getOwnerControl(selfControl); 
+		Rectangle selfRectangle = service().getRectangle(ownerSelf == null ? null : ownerSelf.locator(), selfLocator);
+		this.xOffset = selfRectangle.getX();
+		this.yOffset = selfRectangle.getY();
+
 		this.controller = Common.loadController(LayoutExpressionBuilder.class.getResource("LayoutExpressionBuilder.fxml"));
 		this.controller.init(this, this.evaluator, image);
-		displayInitialControl();
+		this.controller.displayMethods(all);
+		
+		IControl initialControl = this.currentWindow.getControlForName(null, this.parameterName);
+		if (initialControl == null)
+		{
+			throw new NullPointerException(String.format("Control with name %s is not found in the window with name %s", this.parameterName, this.windowName));
+		}
+
+		displayControl(initialControl, true);
+
+
 		String result = this.controller.show(title, fullScreen, controls);
-		return result == null ? parameterExpression : result;
+		return result == null ? this.parameterExpression : result;
 	}
 
-	public void displayControl(IControl control)
+	public void displayControl(IControl control, boolean self)
 	{
-		Optional.ofNullable(control).ifPresent(c -> Common.tryCatch(() -> {
-			IControl owner = this.currentWindow.getOwnerControl(control);
-			Rectangle rectangle = service().getRectangle(owner == null ? null : owner.locator(), control.locator());
-			rectangle.setRect(rectangle.getX() - this.xOffset, rectangle.getY() - this.yOffset, rectangle.getWidth(), rectangle.getHeight());
-			this.controller.displayControl(rectangle);
-			this.controller.displayControlId(control.getID());
-		}, String.format("Error on display control %s", c)));
-
+		if (control != null)
+		{
+			Common.tryCatch(() ->
+			{
+				IControl owner = this.currentWindow.getOwnerControl(control);
+				Rectangle rectangle = service().getRectangle(owner == null ? null : owner.locator(), control.locator());
+				rectangle.setRect(rectangle.getX() - this.xOffset, rectangle.getY() - this.yOffset, rectangle.getWidth(), rectangle.getHeight());
+				this.controller.displayControl(rectangle, self);
+				this.controller.displayControlId(control.getID());
+			}, String.format("Error on display control %s", control));
+		}
 	}
 
 	public void clearCanvas()
@@ -87,35 +94,18 @@ public class LayoutExpressionBuilder
 		this.controller.displayControlId("");
 	}
 
-	private void displayInitialControl() throws Exception
-	{
-		IControl initialControl = this.currentWindow.getControlForName(null, this.parameterName);
-		if (initialControl == null)
-		{
-			throw new NullPointerException(String.format("Control with name %s not found in window with name %s", this.parameterName, this.windowName));
-		}
-
-		IControl ownerControl = this.currentWindow.getOwnerControl(initialControl);
-		Locator owner = ownerControl == null ? null : ownerControl.locator();
-		Rectangle rectangle = service().getRectangle(owner, initialControl.locator());
-		rectangle.setRect(rectangle.getX() - this.xOffset, rectangle.getY() - this.yOffset, rectangle.getWidth(), rectangle.getHeight());
-		this.controller.displayInitialControl(rectangle);
-	}
-
 	private IRemoteApplication service()
 	{
 		return this.appConnection.getApplication().service();
 	}
 
-	public void addFormula(String parameter, String controlId, Range range, String first, String second)
+	public void addFormula(Assembler parameter, String controlId, Range range, String first, String second)
 	{
-		Arrays.stream(all).filter(a -> a.name.equals(parameter)).forEach(a -> 
-			System.err.println(a.toString(controlId, range, first, second)));
+		System.err.println(parameter.toString(controlId, range, first, second));
 	}
-	
-	
+
 	static class Assembler
-	{	
+	{
 		public Assembler(String name, boolean needStr, boolean needRange, String format)
 		{
 			this.name = name;
@@ -123,16 +113,22 @@ public class LayoutExpressionBuilder
 			this.needRange = needRange;
 			this.format = format;
 		}
+		
+		@Override
+		public String toString()
+		{
+			return this.name;
+		}
 
-		public String toString(String controlId, Range range, String first, String second) 
+		public String toString(String controlId, Range range, String first, String second)
 		{
 			return String.format(this.format, this.name, controlId, range == null ? "" : range.toString(first, second));
 		};
-		
-		String name;
-		boolean needStr;
-		boolean needRange;
-		String format;
+
+		String	name;
+		boolean	needStr;
+		boolean	needRange;
+		String	format;
 	}
 	
 	static Assembler[] all = new Assembler[]

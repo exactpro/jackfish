@@ -7,6 +7,8 @@ import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.custom.fields.CustomFieldWithButton;
 import com.exactprosystems.jf.tool.custom.fields.NewExpressionField;
+import com.exactprosystems.jf.tool.custom.layout.LayoutExpressionBuilder.Assembler;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
@@ -27,44 +29,53 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import javax.imageio.ImageIO;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 //TODO replace all border width and fillStroke to styleClass
 public class LayoutExpressionBuilderController implements Initializable, ContainingParent
 {
-	public static final int BORDER_WIDTH = 4;
-	public static final int OFFSET = BORDER_WIDTH / 2;
+	public static final int			BORDER_WIDTH	= 4;
+	public static final int			OFFSET			= BORDER_WIDTH / 2;
 
-	public BorderPane mainPane;
+	private static final Color		selfColor		= new Color(1, 0, 0, 1);
+	private static final Color		otherColor		= new Color(0, 1, 0, 1);
+	
+	public BorderPane				mainPane;
 
-	public VBox vBoxControls;
-	public CustomFieldWithButton cfFindControl;
-	public HBox hBoxCheckBoxes;
-	public BorderPane parentPane;
-	public ScrollPane spControls;
-	public ChoiceBox<String> cbParameters;
-	public Label labelControlId;
-	public ChoiceBox<Range> cbRange;
-	public Button btnAddFormula;
-	public GridPane gridPane;
-	private NewExpressionField expressionFieldFirst;
-	private NewExpressionField expressionFieldSecond;
-	private ToggleGroup mainToggleGroup;
+	public VBox						vBoxControls;
+	public CustomFieldWithButton	cfFindControl;
+	public HBox						hBoxCheckBoxes;
+	public BorderPane				parentPane;
+	public ScrollPane				spControls;
+	public ChoiceBox<Assembler>		cbParameters;
+	public Label					labelControlId;
+	public ChoiceBox<Range>			cbRange;
+	public Button					btnAddFormula;
+	public GridPane					gridPane;
+	private NewExpressionField		expressionFieldFirst;
+	private NewExpressionField		expressionFieldSecond;
+	private ToggleGroup				mainToggleGroup;
 
-	private ImageView imageView;
-	private Parent parent;
-	private LayoutExpressionBuilder model;
+	private ImageView				imageView;
+	private Parent					parent;
+	private LayoutExpressionBuilder	model;
 
-	private CustomRectangle initialRectangle;
-	private CustomRectangle selectedRectangle;
+	private CustomRectangle			initialRectangle;
+	private CustomRectangle			selectedRectangle;
 
+	// ==============================================================================================================================
+	// interface Initializable
+	// ==============================================================================================================================
 	@Override
 	public void initialize(URL location, ResourceBundle resources)
 	{
@@ -72,21 +83,11 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 		assert cfFindControl != null : "fx:id=\"cfFindControl\" was not injected: check your FXML file 'LayoutExpressionBuilder.fxml'.";
 		assert hBoxCheckBoxes != null : "fx:id=\"hBoxCheckBoxes\" was not injected: check your FXML file 'LayoutExpressionBuilder.fxml'.";
 		assert parentPane != null : "fx:id=\"parentPane\" was not injected: check your FXML file 'LayoutExpressionBuilder.fxml'.";
-		this.cbParameters.getItems().addAll(
-				"visible", "count", "contains",
-				"left", "right", "top", "bottom",
-				"inLeft","inRight","inTop","inBottom",
-				"onLeft","onRight","onTop","onBottom",
-				"lAlign","rAlign","tAlign","bAlign",
-				"hCenter","vCenter"
-		);
-		this.cbParameters.getSelectionModel().select("visible");
-		this.cbParameters.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-			//TODO add logic
-		});
+
 		this.cbRange.getItems().addAll(Range.values());
-		this.cbRange.getSelectionModel().select(Range.EQUAL);
-		this.cbRange.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+		this.cbRange.getSelectionModel().selectFirst();
+		this.cbRange.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) ->
+		{
 			GridPane.setColumnSpan(this.expressionFieldFirst, 2);
 			this.expressionFieldSecond.setVisible(false);
 			if (newValue == Range.BETWEEN)
@@ -96,56 +97,43 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 			}
 		});
 		this.mainToggleGroup = new ToggleGroup();
-		this.mainToggleGroup.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
+		this.mainToggleGroup.selectedToggleProperty().addListener((observable, oldValue, newValue) ->
+		{
 			if (newValue != null)
 			{
-				this.model.displayControl(((IControl) newValue.getUserData()));
+				this.model.displayControl((IControl) newValue.getUserData(), false);
 			}
 			else
 			{
 				Common.tryCatch(this.model::clearCanvas, "Error on clear canvas");
 			}
 		});
-		this.cfFindControl.textProperty().addListener((observable, oldValue, newValue) -> {
-			//TODO implements this logic via DialogsHelper.showFindListView()
+		this.cfFindControl.textProperty().addListener((observable, oldValue, newValue) ->
+		{
+			// TODO implements this logic via DialogsHelper.showFindListView()
 		});
 		createCanvas();
 	}
 
-	private void createCanvas()
-	{
-		Group group = new Group();
-		ScrollPane scrollPane = new ScrollPane(group);
-		scrollPane.setContent(group);
-		scrollPane.setFitToHeight(true);
-		scrollPane.setFitToWidth(true);
-		scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
-		scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
-		this.mainPane.setCenter(scrollPane);
-		this.imageView = new ImageView();
-
-		this.initialRectangle = new CustomRectangle();
-		this.selectedRectangle = new CustomRectangle();
-		this.initialRectangle.setWidthLine(BORDER_WIDTH);
-		this.selectedRectangle.setWidthLine(BORDER_WIDTH);
-		group.getChildren().add(this.imageView);
-		this.initialRectangle.setVisible(false);
-		this.initialRectangle.setGroup(group);
-		this.selectedRectangle.setVisible(false);
-		this.selectedRectangle.setGroup(group);
-	}
-
+	// ==============================================================================================================================
+	// interface ContainingParent
+	// ==============================================================================================================================
 	@Override
 	public void setParent(Parent parent)
 	{
 		this.parent = parent;
 	}
 
+	// ==============================================================================================================================
+	// public methods
+	// ==============================================================================================================================
 	public void init(LayoutExpressionBuilder model, AbstractEvaluator evaluator, BufferedImage bufferedImage) throws Exception
 	{
 		this.model = model;
 		this.expressionFieldFirst = new NewExpressionField(evaluator, "first");
+		this.expressionFieldFirst.setHelperForExpressionField("First", null);
 		this.expressionFieldSecond= new NewExpressionField(evaluator, "second");
+		this.expressionFieldSecond.setHelperForExpressionField("Second", null);
 		this.gridPane.add(expressionFieldFirst, 3, 0);
 		this.gridPane.add(expressionFieldSecond, 4, 0);
 		this.expressionFieldSecond.setVisible(false);
@@ -184,29 +172,52 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 		return null;
 	}
 
+	// ==============================================================================================================================
+	// event handlers
+	// ==============================================================================================================================
 	public void addFormula(ActionEvent actionEvent)
 	{
 		Common.tryCatch(()-> this.model.addFormula(cbParameters.getSelectionModel().getSelectedItem(), labelControlId.getText(), cbRange.getSelectionModel().getSelectedItem(), "first","second"),"Error on add formula");
 	}
 
-	public void displayInitialControl(Rectangle rectangle)
+	// ==============================================================================================================================
+	// display methods
+	// ==============================================================================================================================
+	public void displayControl(Rectangle rectangle, boolean self)
 	{
-		this.initialRectangle.setColor(new Color(1, 0, 0, 1));
-		this.initialRectangle.updateRectangle(rectangle.getX() + OFFSET, rectangle.getY() + OFFSET, rectangle.getWidth() - BORDER_WIDTH, rectangle.getHeight() - BORDER_WIDTH);
-		this.initialRectangle.setVisible(true);
+		CustomRectangle rect = self ? this.initialRectangle : this.selectedRectangle;
+		Color color = self ? selfColor : otherColor;  
+
+		rect.setColor(color);
+		rect.updateRectangle(rectangle.getX() + OFFSET, rectangle.getY() + OFFSET, rectangle.getWidth() - BORDER_WIDTH, rectangle.getHeight() - BORDER_WIDTH);
+		rect.setVisible(true);
 	}
 
-	public void displayControl(Rectangle rectangle)
+	public void displayMethods(Assembler[] methods)
 	{
-		this.selectedRectangle.setColor(new Color(0, 1, 0, 1));
-		this.selectedRectangle.updateRectangle(rectangle.getX() + OFFSET, rectangle.getY() + OFFSET, rectangle.getWidth() - BORDER_WIDTH, rectangle.getHeight() - BORDER_WIDTH);
-		this.selectedRectangle.setVisible(true);
+		this.cbParameters.getItems().clear();
+		this.cbParameters.getItems().addAll(methods);
+		this.cbParameters.getSelectionModel().selectFirst();
+		this.cbParameters.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) ->
+		{
+			this.cbRange.setVisible(newValue.needRange);
+			this.labelControlId.setVisible(newValue.needStr);
+		});
+	}
+	
+	public void displayControlId(String controlId)
+	{
+		this.labelControlId.setText(controlId);
 	}
 
 	public void clearCanvas()
 	{
 		this.selectedRectangle.setVisible(false);
 	}
+
+	// ==============================================================================================================================
+	// private methods
+	// ==============================================================================================================================
 
 	private Alert createAlert(String title)
 	{
@@ -220,8 +231,27 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 		return alert;
 	}
 
-	public void displayControlId(String controlId)
+	private void createCanvas()
 	{
-		this.labelControlId.setText(controlId);
+		Group group = new Group();
+		ScrollPane scrollPane = new ScrollPane(group);
+		scrollPane.setContent(group);
+		scrollPane.setFitToHeight(true);
+		scrollPane.setFitToWidth(true);
+		scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+		scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+		this.mainPane.setCenter(scrollPane);
+		this.imageView = new ImageView();
+
+		this.initialRectangle = new CustomRectangle();
+		this.selectedRectangle = new CustomRectangle();
+		this.initialRectangle.setWidthLine(BORDER_WIDTH);
+		this.selectedRectangle.setWidthLine(BORDER_WIDTH);
+		group.getChildren().add(this.imageView);
+		this.initialRectangle.setVisible(false);
+		this.initialRectangle.setGroup(group);
+		this.selectedRectangle.setVisible(false);
+		this.selectedRectangle.setGroup(group);
 	}
+
 }

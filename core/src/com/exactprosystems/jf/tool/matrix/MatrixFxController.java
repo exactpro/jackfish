@@ -70,11 +70,11 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 	public SplitPane					splitPane;
 	public GridPane						gridPane;
 	public HBox							hBox;
-	public Button 						btnStartDefaultApplication;
-	public Button 						btnConnectDefaultApplication;
-	public Button 						btnStopDefaultApplication;
-	public Button btnStartDefaultClient;
-	public Button btnStopDefaultClient;
+	public Button						btnStartDefaultApplication;
+	public Button						btnConnectDefaultApplication;
+	public Button						btnStopDefaultApplication;
+	public Button						btnStartDefaultClient;
+	public Button						btnStopDefaultClient;
 
 	private WatcherFx					watcher	= null;
 	private FindPanel<MatrixItem>		findPanel;
@@ -86,8 +86,7 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 	private DisplayDriver				driver;
 	private Context						context;
 	private boolean						ok;
-	private String 						exceptionMessage;
-
+	private String						exceptionMessage;
 
 	// ==============================================================================================================================
 	// interface Initializable
