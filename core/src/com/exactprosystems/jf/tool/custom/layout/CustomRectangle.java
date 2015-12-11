@@ -114,24 +114,6 @@ public class CustomRectangle
 		Arrays.asList(top, left, bot, right).stream().forEach(line -> line.setVisible(flag));
 	}
 
-	public void setColor(Color color)
-	{
-		this.setColor(color, color, color, color);
-	}
-
-	public void setColor(Color top, Color right, Color bot, Color left)
-	{
-		this.top.setStroke(top);
-		this.right.setStroke(right);
-		this.bot.setStroke(bot);
-		this.left.setStroke(left);
-	}
-
-	public void setColor(Color color, LinePosition position)
-	{
-		getLineByPosition(position).ifPresent(line -> line.setStroke(color));
-	}
-
 	public void setWidthLine(double width)
 	{
 		this.setWidthLine(width, width, width, width);

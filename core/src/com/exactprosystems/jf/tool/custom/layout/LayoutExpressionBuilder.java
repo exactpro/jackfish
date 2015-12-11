@@ -155,7 +155,7 @@ public class LayoutExpressionBuilder
 			new SpecMethod("tAlign", 	true, 	true, 	".%1$s('%2$s',%3$s)"), 
 			new SpecMethod("bAlign", 	true, 	true, 	".%1$s('%2$s',%3$s)"), 
 			new SpecMethod("hCenter", 	true, 	true, 	".%1$s('%2$s',%3$s)"),
-			new SpecMethod("vCenter", 	true, 	true, 	".%1$s('%2$s',%3$s)"),		
+			new SpecMethod("vCenter", 	true, 	true, 	".%1$s('%2$s',%3$s)"),
 		};
 	
 	

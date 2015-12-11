@@ -138,7 +138,7 @@ public abstract class AbstractControl implements IControl, Mutable
 		}
 		if (header != null)
 		{
-			abstractControl.set(headerName, rows.getHeaderId());
+			abstractControl.set(headerName, header.getHeaderId());
 		}
 		return abstractControl;
 	}

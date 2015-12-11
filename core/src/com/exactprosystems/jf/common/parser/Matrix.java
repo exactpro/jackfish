@@ -22,7 +22,6 @@ import com.exactprosystems.jf.common.parser.items.TestCase;
 import com.exactprosystems.jf.common.parser.listeners.IMatrixListener;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.tool.AbstractDocument;
-
 import org.apache.log4j.Logger;
 
 import java.io.*;
@@ -35,6 +34,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 @DocumentInfo(newName = "NewMatrix", extentioin = "jf", description = "Matrix")
 public class Matrix extends AbstractDocument implements IMatrix, Cloneable
 {
+	public static final String EMPTY_STRING = "<empty>";
+
 	public Matrix(Matrix matrix, Configuration configuration) throws Exception
 	{
 		super(matrix.getName(), configuration);
@@ -81,6 +82,10 @@ public class Matrix extends AbstractDocument implements IMatrix, Cloneable
 	@Override
 	public void setDefaultApp(String id)
 	{
+		if (id.equals(EMPTY_STRING))
+		{
+			return;
+		}
 		try
 		{
 			this.defaultApp = getConfiguration().getApplicationPool().loadApplicationFactory(id);
@@ -100,6 +105,10 @@ public class Matrix extends AbstractDocument implements IMatrix, Cloneable
 	@Override
 	public void setDefaultClient(String id)
 	{
+		if (id.equals(EMPTY_STRING))
+		{
+			return;
+		}
 		try
 		{
 			this.defaultClient = getConfiguration().getClientPool().loadClientFactory(id);

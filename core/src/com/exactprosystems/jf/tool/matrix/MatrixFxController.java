@@ -499,12 +499,19 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 
 	public void displayAppList(List<String> result)
 	{
-		Platform.runLater(() -> this.cbDefaultApp.setItems(FXCollections.observableList(result)));
+		Platform.runLater(() -> {
+			this.cbDefaultApp.setItems(FXCollections.observableList(result));
+			this.cbDefaultApp.getSelectionModel().selectFirst();
+
+		});
 	}
 
 	public void displayClientList(List<String> result)
 	{
-		Platform.runLater(() -> this.cbDefaultClient.setItems(FXCollections.observableList(result)));
+		Platform.runLater(() -> {
+			this.cbDefaultClient.setItems(FXCollections.observableList(result));
+			this.cbDefaultClient.getSelectionModel().selectFirst();
+		});
 	}
 
 	public void displayApplicationStatus(ApplicationStatus status, AppConnection connection, Throwable throwable)

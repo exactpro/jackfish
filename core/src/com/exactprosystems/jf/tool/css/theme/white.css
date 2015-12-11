@@ -599,3 +599,21 @@ CellView > .text-input.text-field{
 	-fx-text-fill : #3CB6EB;
 
 }
+
+/*Layout builder*/
+.initialControl {
+	-fx-stroke : red;
+
+}
+.selectedControl {
+	-fx-stroke : green;
+
+}
+.initialControlSelectedLine {
+	-fx-stroke : -fx-company-color-light;
+
+}
+.selectedControlSelectedLine {
+	-fx-stroke : -fx-company-color-light;
+
+}

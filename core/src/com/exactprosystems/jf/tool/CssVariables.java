@@ -134,9 +134,14 @@ public class CssVariables
 	public static final String	EXPRESSION_BUTTON			= "expressionButton";
 	public static final String	EXPRESSION_FIRST_PANE		= "firstPane";
 	public static final String	EXPRESSION_SECOND_PANE		= "secondPane";
-
 	public static final String	EXPRESSION_FIELD_FIRST		= "firstButton";
 	public static final String	EXPRESSION_FIELD_SECOND		= "secondButton";
+
+	/*Layout builder*/
+	public static final String	INITIAL_CONTROL				= "initialControl";
+	public static final String	SELECTED_CONTROL			= "selectedControl";
+	public static final String	INITIAL_CONTROL_SELECTED_LINE = "initialControlSelectedLine";
+	public static final String	SELECTED_CONTROL_SELECTED_LINE = "selectedControlSelectedLine";
 
 	/**
 	 * Spinner css

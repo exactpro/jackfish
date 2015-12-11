@@ -42,6 +42,8 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 	private static final String tag_thead 	= "thead";
 	private static final String tag_th 		= "th";
 	private static final String css_prefix	= "css:";
+	private static final String row_span	= "rowspan";
+
 
 	private final int repeatLimit = 4;
 
@@ -386,26 +388,33 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 			return result;
 		}
 		Elements trOfFirstThead = firstThead.children();
-		header = trOfFirstThead.last().children();
-
-		if (useNumericHeader)
+		for (Element tr : firstThead.children())
 		{
-			for (int i = 0; i < header.size(); i++)
+			Elements select = tr.select(tag_th);
+			for (Element th : select)
 			{
-				if (header.get(i).tag().getName().equals(tag_th))
+				String s = th.attributes().get(row_span);
+				if (!s.isEmpty() && s.equals(String.valueOf(trOfFirstThead.size())))
 				{
-					result.add(String.valueOf(i));
+					result.add(th.text());
 				}
 			}
 		}
-		else
+		header = trOfFirstThead.last().children();
+
+		for (Element element : header)
 		{
-			for (Element element : header)
+			if (element.tag().getName().equals(tag_th))
 			{
-				if (element.tag().getName().equals(tag_th))
-				{
-					result.add(element.text());
-				}
+				result.add(element.text());
+			}
+		}
+
+		if (useNumericHeader)
+		{
+			for(int i =0;i<result.size(); i++)
+			{
+				result.set(i, String.valueOf(i));
 			}
 		}
 		return result;

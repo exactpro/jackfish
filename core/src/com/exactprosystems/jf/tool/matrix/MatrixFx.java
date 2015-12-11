@@ -599,12 +599,22 @@ public class MatrixFx extends Matrix
 
 	public void startDefaultApplication(String idAppEntry) throws Exception
 	{
+		if (idAppEntry.equals(EMPTY_STRING))
+		{
+			DialogsHelper.showInfo("Select not empty application id");
+			return;
+		}
 		this.applicationConnector.setIdAppEntry(idAppEntry);
 		this.applicationConnector.startApplication();
 	}
 
 	public void connectDefaultApplication(String idAppEntry) throws Exception
 	{
+		if (idAppEntry.equals(EMPTY_STRING))
+		{
+			DialogsHelper.showInfo("Select not empty application id");
+			return;
+		}
 		this.applicationConnector.setIdAppEntry(idAppEntry);
 		this.applicationConnector.connectApplication();
 	}
@@ -645,7 +655,7 @@ public class MatrixFx extends Matrix
 	private void displayGuiDictionaries() throws Exception
 	{
 		ArrayList<String> result = new ArrayList<>();
-		result.add(null);
+		result.add(EMPTY_STRING);
 		result.addAll(this.context.getConfiguration().getApplicationPool().appNames().stream().collect(Collectors.toList()));
 		this.controller.displayAppList(result);
 	}
@@ -653,7 +663,7 @@ public class MatrixFx extends Matrix
 	private void displayClientDictionaries() throws Exception
 	{
 		ArrayList<String> result = new ArrayList<>();
-		result.add(null);
+		result.add(EMPTY_STRING);
 		result.addAll(this.context.getConfiguration().getClientPool().clientNames().stream().collect(Collectors.toList()));
 		this.controller.displayClientList(result);
 	}

@@ -5,11 +5,12 @@ import com.exactprosystems.jf.api.app.Range;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
+import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.custom.fields.CustomFieldWithButton;
 import com.exactprosystems.jf.tool.custom.fields.NewExpressionField;
 import com.exactprosystems.jf.tool.custom.layout.LayoutExpressionBuilder.SpecMethod;
-
 import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
@@ -22,52 +23,44 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import javax.imageio.ImageIO;
-
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Optional;
 import java.util.ResourceBundle;
-import java.util.stream.Collectors;
 
-//TODO replace all border width and fillStroke to styleClass
 public class LayoutExpressionBuilderController implements Initializable, ContainingParent
 {
 	private static final int		BORDER_WIDTH	= 4;
 	private static final int		OFFSET			= BORDER_WIDTH / 2;
-	private static final Color		selfColor		= new Color(1, 0, 0, 1);
-	private static final Color		otherColor		= new Color(0, 1, 0, 1);
 
-	private BorderPane				mainPane;
-	private VBox					vBoxControls;
-	private CustomFieldWithButton	cfFindControl;
-	private HBox					hBoxCheckBoxes;
-	private BorderPane				parentPane;
-	private ScrollPane				spControls;
-	private ChoiceBox<SpecMethod>	cbParameters;
-	private Label					labelControlId;
-	private ChoiceBox<Range>		cbRange;
-	private Button					btnAddFormula;
-	private GridPane				gridPane;
-	private NewExpressionField		expressionFieldFirst;
-	private NewExpressionField		expressionFieldSecond;
-	private ToggleGroup				mainToggleGroup;
-	private ImageView				imageView;
-	private Parent					parent;
-	private LayoutExpressionBuilder	model;
-	private CustomRectangle			initialRectangle;
-	private CustomRectangle			selectedRectangle;
+	@FXML private BorderPane				mainPane;
+	@FXML private VBox						vBoxControls;
+	@FXML private CustomFieldWithButton		cfFindControl;
+	@FXML private BorderPane				parentPane;
+	@FXML private ScrollPane				spControls;
+	@FXML private ChoiceBox<SpecMethod>		cbParameters;
+	@FXML private Label						labelControlId;
+	@FXML private ChoiceBox<Range>			cbRange;
+	@FXML private Button					btnAddFormula;
+	@FXML private GridPane					gridPane;
+
+	private NewExpressionField				expressionFieldFirst;
+	private NewExpressionField				expressionFieldSecond;
+	private ToggleGroup						mainToggleGroup;
+	private ImageView						imageView;
+	private Parent							parent;
+	private LayoutExpressionBuilder			model;
+	private CustomRectangle					initialRectangle;
+	private CustomRectangle					selectedRectangle;
 
 	// ==============================================================================================================================
 	// interface Initializable
@@ -77,7 +70,6 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 	{
 		assert vBoxControls != null : "fx:id=\"vBoxControls\" was not injected: check your FXML file 'LayoutExpressionBuilder.fxml'.";
 		assert cfFindControl != null : "fx:id=\"cfFindControl\" was not injected: check your FXML file 'LayoutExpressionBuilder.fxml'.";
-		assert hBoxCheckBoxes != null : "fx:id=\"hBoxCheckBoxes\" was not injected: check your FXML file 'LayoutExpressionBuilder.fxml'.";
 		assert parentPane != null : "fx:id=\"parentPane\" was not injected: check your FXML file 'LayoutExpressionBuilder.fxml'.";
 
 		this.cbRange.getItems().addAll(Range.values());
@@ -182,9 +174,8 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 	public void displayControl(Rectangle rectangle, boolean self)
 	{
 		CustomRectangle rect = self ? this.initialRectangle : this.selectedRectangle;
-		Color color = self ? selfColor : otherColor;  
-
-		rect.setColor(color);
+		String styleClass = self ? CssVariables.INITIAL_CONTROL : CssVariables.SELECTED_CONTROL;
+		rect.addStyleClass(styleClass);
 		rect.updateRectangle(rectangle.getX() + OFFSET, rectangle.getY() + OFFSET, rectangle.getWidth() - BORDER_WIDTH, rectangle.getHeight() - BORDER_WIDTH);
 		rect.setVisible(true);
 	}
