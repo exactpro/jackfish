@@ -491,7 +491,7 @@ public abstract class AbstractAction implements Cloneable
         {
         	if (!assertBool.evaluate(evaluator))
         	{
-                setError(Tokens.Assert + " eror in expression: " + assertBool.getValueAsString());
+                setError(Tokens.Assert + " error in expression: " + assertBool.getValueAsString());
                 return;
         	}
         	
@@ -522,7 +522,7 @@ public abstract class AbstractAction implements Cloneable
         {
         	if (!assertOutIs.evaluate(evaluator))
         	{
-                setError(Tokens.AssertOutIs + " eror in expression: " + assertOutIs.getValueAsString());
+                setError(Tokens.AssertOutIs + " error in expression: " + assertOutIs.getValueAsString());
                 return;
         	}
         	
@@ -544,7 +544,7 @@ public abstract class AbstractAction implements Cloneable
         {
         	if (!assertOutIsNot.evaluate(evaluator))
         	{
-                setError(Tokens.AssertOutIsNot + " eror in expression: " + assertOutIsNot.getValueAsString());
+                setError(Tokens.AssertOutIsNot + " error in expression: " + assertOutIsNot.getValueAsString());
                 return;
         	}
         	
