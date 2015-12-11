@@ -19,6 +19,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -97,7 +98,12 @@ public class FindPanel<T> extends BorderPane
 			Common.customizeLabeled(btnPrevious, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.FIND_PREVIOUS);
 		});
 
-		tfFind.textProperty().addListener((observableValue, s, t1) -> Optional.ofNullable(iFind).ifPresent(findPanel -> findElements(t1)));
+		tfFind.textProperty().addListener((observableValue, s, t1) -> Optional.ofNullable(iFind).ifPresent(findPanel -> {
+			if (!t1.isEmpty())
+			{
+				findElements(t1);
+			}
+		}));
 
 		tfFind.setOnKeyPressed(keyEvent ->
 		{
@@ -110,10 +116,12 @@ public class FindPanel<T> extends BorderPane
 				btnNext.fire();
 			}
 		});
-
-		checkBoxWords.setOnAction(actionEvent -> findElements(tfFind.getText()));
-		checkBoxMatchCase.setOnAction(actionEvent -> findElements(tfFind.getText()));
-
+		Arrays.asList(checkBoxWords, checkBoxMatchCase).stream().forEach(cb -> cb.setOnAction(event -> {
+			if (!tfFind.getText().isEmpty())
+			{
+				findElements(tfFind.getText());
+			}
+		}));
 		btnPrevious.setOnAction(actionEvent ->
 		{
 			if (iFind != null && !results.isEmpty())

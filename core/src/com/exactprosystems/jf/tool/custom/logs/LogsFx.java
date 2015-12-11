@@ -31,6 +31,7 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.IntStream;
 
 public class LogsFx implements AutoCloseable
 {
@@ -92,15 +93,10 @@ public class LogsFx implements AutoCloseable
 
 	public void find(ConsoleText<String> row)
 	{
-		for (int i = 0; i < lines.size(); i++)
-		{
-			ConsoleText<String> text = lines.get(i);
-			if (text.equals(row))
-			{
-				controller.clearAndSelect(i);
-				break;
-			}
-		}
+		IntStream.range(0, lines.size())
+				.filter(i -> lines.get(i).equals(row))
+				.findFirst()
+				.ifPresent(controller::clearAndSelect);
 	}
 
 	// TODO this is should be in model

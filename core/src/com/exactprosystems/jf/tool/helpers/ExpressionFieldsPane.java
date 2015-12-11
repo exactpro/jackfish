@@ -2,7 +2,7 @@ package com.exactprosystems.jf.tool.helpers;
 
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.tool.Common;
-import com.exactprosystems.jf.tool.custom.fields.NewExpressionField;
+import com.exactprosystems.jf.tool.custom.expfield.NewExpressionField;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 

@@ -60,7 +60,11 @@
 								<ChoiceBox fx:id="choiceBoxWindow" maxWidth="1.7976931348623157E308" prefHeight="25.0" prefWidth="230.0"/>
 							</center>
 							<right>
-								<Button fx:id="btnRenameWindow" onAction="#renameWindow" text="R" BorderPane.alignment="CENTER_LEFT"/>
+								<Button fx:id="btnRenameWindow" onAction="#renameWindow" text="R" BorderPane.alignment="CENTER_LEFT">
+									<tooltip>
+										<Tooltip text="Rename dialog"/>
+									</tooltip>
+								</Button>
 							</right>
 						</BorderPane>
 					</center>

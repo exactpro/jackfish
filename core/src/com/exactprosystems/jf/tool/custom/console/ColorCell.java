@@ -45,15 +45,6 @@ public class ColorCell<T> extends ListCell<ConsoleText<T>>
 	protected void updateItem(final ConsoleText<T> s, boolean b)
 	{
 		super.updateItem(s, b);
-		Platform.runLater(() -> {
-			if (s != null)
-			{
-				setGraphic(s);
-			}
-			else
-			{
-				setGraphic(null);
-			}
-		});
+		Platform.runLater(() -> setGraphic(s));
 	}
 }

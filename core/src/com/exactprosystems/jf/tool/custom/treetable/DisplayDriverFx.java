@@ -18,7 +18,7 @@ import com.exactprosystems.jf.functions.Table;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.DragDetector;
-import com.exactprosystems.jf.tool.custom.fields.NewExpressionField;
+import com.exactprosystems.jf.tool.custom.expfield.NewExpressionField;
 import com.exactprosystems.jf.tool.custom.grideditor.DataProvider;
 import com.exactprosystems.jf.tool.custom.grideditor.SpreadsheetView;
 import com.exactprosystems.jf.tool.custom.grideditor.TableDataProvider;

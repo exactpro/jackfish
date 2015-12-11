@@ -13,7 +13,7 @@ import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.parser.Matrix;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
-import com.exactprosystems.jf.tool.custom.fields.NewExpressionField;
+import com.exactprosystems.jf.tool.custom.expfield.NewExpressionField;
 import com.exactprosystems.jf.tool.custom.table.CustomTable;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;

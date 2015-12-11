@@ -15,7 +15,7 @@ import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.css.images.Images;
-import com.exactprosystems.jf.tool.custom.fields.NewExpressionField;
+import com.exactprosystems.jf.tool.custom.expfield.NewExpressionField;
 import com.exactprosystems.jf.tool.dictionary.ApplicationStatus;
 import com.exactprosystems.jf.tool.dictionary.DictionaryFx;
 import com.exactprosystems.jf.tool.dictionary.info.element.ElementInfoController;

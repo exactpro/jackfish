@@ -10,7 +10,7 @@ package com.exactprosystems.jf.tool.custom.treetable;
 
 import com.exactprosystems.jf.common.parser.items.MatrixItem;
 import com.exactprosystems.jf.tool.CssVariables;
-import com.exactprosystems.jf.tool.custom.fields.NewExpressionField;
+import com.exactprosystems.jf.tool.custom.expfield.NewExpressionField;
 import com.exactprosystems.jf.tool.matrix.params.ParametersPane;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.TreeTableRow;

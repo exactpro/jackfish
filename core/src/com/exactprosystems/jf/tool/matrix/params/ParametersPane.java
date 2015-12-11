@@ -25,7 +25,7 @@ import com.exactprosystems.jf.functions.Xml;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.DragDetector;
-import com.exactprosystems.jf.tool.custom.fields.NewExpressionField;
+import com.exactprosystems.jf.tool.custom.expfield.NewExpressionField;
 import com.exactprosystems.jf.tool.custom.layout.LayoutExpressionBuilder;
 import com.exactprosystems.jf.tool.custom.scroll.CustomScrollPane;
 import com.exactprosystems.jf.tool.custom.treetable.MatrixContextMenu;

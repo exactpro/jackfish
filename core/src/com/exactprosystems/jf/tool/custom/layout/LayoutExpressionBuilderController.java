@@ -7,7 +7,7 @@ import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.custom.fields.CustomFieldWithButton;
-import com.exactprosystems.jf.tool.custom.fields.NewExpressionField;
+import com.exactprosystems.jf.tool.custom.expfield.NewExpressionField;
 import com.exactprosystems.jf.tool.custom.layout.LayoutExpressionBuilder.SpecMethod;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
