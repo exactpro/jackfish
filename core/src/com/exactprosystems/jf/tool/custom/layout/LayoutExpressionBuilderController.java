@@ -142,6 +142,10 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 	public void init(LayoutExpressionBuilder model, AbstractEvaluator evaluator) throws Exception
 	{
 		this.model = model;
+		this.cbRange.visibleProperty().addListener((observable, oldValue, newValue) -> {
+			this.expressionFieldFirst.setVisible(newValue);
+		});
+
 		this.expressionFieldFirst = new NewExpressionField(evaluator, "first");
 		this.expressionFieldFirst.setHelperForExpressionField("First", null);
 
@@ -191,7 +195,7 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 	// ==============================================================================================================================
 	public void addFormula(ActionEvent actionEvent)
 	{
-		Common.tryCatch(() -> this.model.addFormula(cbParameters.getSelectionModel().getSelectedItem(), labelControlId.getText(), cbRange.getSelectionModel().getSelectedItem(), "first", "second"), "Error on add formula");
+		Common.tryCatch(() -> this.model.addFormula(cbParameters.getSelectionModel().getSelectedItem(), labelControlId.getText(), cbRange.getSelectionModel().getSelectedItem(), this.expressionFieldFirst.getText(), this.expressionFieldSecond.getText()), "Error on add formula");
 	}
 
 	// ==============================================================================================================================

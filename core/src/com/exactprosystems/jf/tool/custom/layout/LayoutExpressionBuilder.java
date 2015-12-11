@@ -94,7 +94,10 @@ public class LayoutExpressionBuilder
 				Rectangle rectangle = service().getRectangle(owner == null ? null : owner.locator(), control.locator());
 				rectangle.setRect(rectangle.getX() - this.xOffset, rectangle.getY() - this.yOffset, rectangle.getWidth(), rectangle.getHeight());
 				this.controller.displayControl(rectangle, self);
-				this.controller.displayControlId(control.getID());
+				if (!self)
+				{
+					this.controller.displayControlId(control.getID());
+				}
 			}, String.format("Error on display control %s", control));
 		}
 	}
@@ -137,8 +140,6 @@ public class LayoutExpressionBuilder
 			return String.format(this.format, this.name, controlId, range == null ? "" : range.toString(first, second));
 		}
 
-		;
-
 		String name;
 		boolean needStr;
 		boolean needRange;
@@ -147,7 +148,27 @@ public class LayoutExpressionBuilder
 
 	static SpecMethod[] all = new SpecMethod[]{
 			// $1 name, $2 controlId, $3 range
-			new SpecMethod("visible", false, false, ".%1$s()"), new SpecMethod("count", false, true, ".%1$s(%3$s)"), new SpecMethod("contains", true, false, ".%1$s('%2$s')"), new SpecMethod("left", true, true, ".%1$s('%2$s',%3$s)"), new SpecMethod("right", true, true, ".%1$s('%2$s',%3$s)"), new SpecMethod("top", true, true, ".%1$s('%2$s',%3$s)"), new SpecMethod("bottom", true, true, ".%1$s('%2$s',%3$s)"), new SpecMethod("inLeft", true, true, ".%1$s('%2$s',%3$s)"), new SpecMethod("inRight", true, true, ".%1$s('%2$s',%3$s)"), new SpecMethod("inTop", true, true, ".%1$s('%2$s',%3$s)"), new SpecMethod("inBottom", true, true, ".%1$s('%2$s',%3$s)"), new SpecMethod("onLeft", true, true, ".%1$s('%2$s',%3$s)"), new SpecMethod("onRight", true, true, ".%1$s('%2$s',%3$s)"), new SpecMethod("onTop", true, true, ".%1$s('%2$s',%3$s)"), new SpecMethod("onBottom", true, true, ".%1$s('%2$s',%3$s)"), new SpecMethod("lAlign", true, true, ".%1$s('%2$s',%3$s)"), new SpecMethod("rAlign", true, true, ".%1$s('%2$s',%3$s)"), new SpecMethod("tAlign", true, true, ".%1$s('%2$s',%3$s)"), new SpecMethod("bAlign", true, true, ".%1$s('%2$s',%3$s)"), new SpecMethod("hCenter", true, true, ".%1$s('%2$s',%3$s)"), new SpecMethod("vCenter", true, true, ".%1$s('%2$s',%3$s)"),};
+			new SpecMethod("visible", false, false, ".%1$s()"), 
+			new SpecMethod("count", false, true, ".%1$s(%3$s)"), 
+			new SpecMethod("contains", true, false, ".%1$s('%2$s')"), 
+			new SpecMethod("left", true, true, ".%1$s('%2$s',%3$s)"), 
+			new SpecMethod("right", true, true, ".%1$s('%2$s',%3$s)"), 
+			new SpecMethod("top", true, true, ".%1$s('%2$s',%3$s)"), 
+			new SpecMethod("bottom", true, true, ".%1$s('%2$s',%3$s)"), 
+			new SpecMethod("inLeft", true, true, ".%1$s('%2$s',%3$s)"), 
+			new SpecMethod("inRight", true, true, ".%1$s('%2$s',%3$s)"), 
+			new SpecMethod("inTop", true, true, ".%1$s('%2$s',%3$s)"), 
+			new SpecMethod("inBottom", true, true, ".%1$s('%2$s',%3$s)"), 
+			new SpecMethod("onLeft", true, true, ".%1$s('%2$s',%3$s)"), 
+			new SpecMethod("onRight", true, true, ".%1$s('%2$s',%3$s)"), 
+			new SpecMethod("onTop", true, true, ".%1$s('%2$s',%3$s)"), 
+			new SpecMethod("onBottom", true, true, ".%1$s('%2$s',%3$s)"), 
+			new SpecMethod("lAlign", true, true, ".%1$s('%2$s',%3$s)"), 
+			new SpecMethod("rAlign", true, true, ".%1$s('%2$s',%3$s)"), 
+			new SpecMethod("tAlign", true, true, ".%1$s('%2$s',%3$s)"), 
+			new SpecMethod("bAlign", true, true, ".%1$s('%2$s',%3$s)"), 
+			new SpecMethod("hCenter", true, true, ".%1$s('%2$s',%3$s)"), 
+			new SpecMethod("vCenter", true, true, ".%1$s('%2$s',%3$s)"),};
 
 
 }
