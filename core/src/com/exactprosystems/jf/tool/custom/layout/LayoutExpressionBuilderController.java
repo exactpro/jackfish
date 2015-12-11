@@ -21,6 +21,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
@@ -32,6 +33,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Optional;
@@ -41,7 +43,8 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 {
 	private static final int BORDER_WIDTH = 4;
 	private static final int OFFSET = BORDER_WIDTH / 2;
-
+	@FXML
+	private ProgressIndicator progressIndicator;
 	@FXML
 	private BorderPane mainPane;
 	@FXML
@@ -72,6 +75,7 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 	private CustomRectangle initialRectangle;
 	private CustomRectangle selectedRectangle;
 
+	private ScrollPane mainScrollPane;
 	private ArrayList<ToggleButton> buttons = new ArrayList<>();
 
 	// ==============================================================================================================================
@@ -135,21 +139,19 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 	// ==============================================================================================================================
 	// public methods
 	// ==============================================================================================================================
-	public void init(LayoutExpressionBuilder model, AbstractEvaluator evaluator, BufferedImage bufferedImage) throws Exception
+	public void init(LayoutExpressionBuilder model, AbstractEvaluator evaluator) throws Exception
 	{
 		this.model = model;
 		this.expressionFieldFirst = new NewExpressionField(evaluator, "first");
 		this.expressionFieldFirst.setHelperForExpressionField("First", null);
+
 		this.expressionFieldSecond = new NewExpressionField(evaluator, "second");
 		this.expressionFieldSecond.setHelperForExpressionField("Second", null);
+
 		this.gridPane.add(expressionFieldFirst, 3, 0);
 		this.gridPane.add(expressionFieldSecond, 4, 0);
 		this.expressionFieldSecond.setVisible(false);
 		GridPane.setColumnSpan(this.expressionFieldFirst, 2);
-		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-		ImageIO.write(bufferedImage, "jpg", outputStream);
-		Image image = new Image(new ByteArrayInputStream(outputStream.toByteArray()));
-		this.imageView.setImage(image);
 	}
 
 	public String show(String title, boolean fullScreen, ArrayList<IControl> list)
@@ -195,6 +197,17 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 	// ==============================================================================================================================
 	// display methods
 	// ==============================================================================================================================
+	public void displayScreenShot(BufferedImage bufferedImage) throws IOException
+	{
+		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+		ImageIO.write(bufferedImage, "jpg", outputStream);
+		Image image = new Image(new ByteArrayInputStream(outputStream.toByteArray()));
+		this.imageView.setImage(image);
+		this.mainPane.getChildren().remove(this.progressIndicator);
+		this.mainPane.setCenter(this.mainScrollPane);
+		this.progressIndicator = null;
+	}
+
 	public void displayControl(Rectangle rectangle, boolean self)
 	{
 		CustomRectangle rect = self ? this.initialRectangle : this.selectedRectangle;
@@ -244,7 +257,6 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 	// ==============================================================================================================================
 	// private methods
 	// ==============================================================================================================================
-
 	private Alert createAlert(String title)
 	{
 		Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -260,15 +272,16 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 	private void createCanvas()
 	{
 		Group group = new Group();
-		ScrollPane scrollPane = new ScrollPane(group);
-		scrollPane.setContent(group);
-		scrollPane.setFitToHeight(true);
-		scrollPane.setFitToWidth(true);
-		scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
-		scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
-		this.mainPane.setCenter(scrollPane);
+		this.mainScrollPane = new ScrollPane(group);
+		mainScrollPane.setContent(group);
+		mainScrollPane.setFitToHeight(true);
+		mainScrollPane.setFitToWidth(true);
+		mainScrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+		mainScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
 		this.imageView = new ImageView();
-
+		ProgressIndicator progressIndicator = new ProgressIndicator(ProgressIndicator.INDETERMINATE_PROGRESS);
+		AnchorPane.setTopAnchor(progressIndicator, (double) 200);
+		AnchorPane.setLeftAnchor(progressIndicator, (double) 200);
 		this.initialRectangle = new CustomRectangle();
 		this.selectedRectangle = new CustomRectangle();
 		this.initialRectangle.setWidthLine(BORDER_WIDTH);

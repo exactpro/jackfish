@@ -1,47 +1,52 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import com.exactprosystems.jf.tool.custom.fields.*?>
+<?import java.lang.*?>
 <?import com.exactprosystems.jf.tool.custom.fields.CustomFieldWithButton?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<BorderPane fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
-			fx:controller="com.exactprosystems.jf.tool.custom.layout.LayoutExpressionBuilderController">
+
+<BorderPane fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.exactprosystems.jf.tool.custom.layout.LayoutExpressionBuilderController">
 	<right>
 		<BorderPane fx:id="parentPane" prefHeight="331.0" prefWidth="245.0" BorderPane.alignment="CENTER">
 			<top>
-				<CustomFieldWithButton fx:id="cfFindControl" promptText="Find control" BorderPane.alignment="CENTER"/>
+				<CustomFieldWithButton fx:id="cfFindControl" promptText="Find control" BorderPane.alignment="CENTER" />
 			</top>
 			<center>
 				<ScrollPane fx:id="spControls" fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" prefViewportHeight="306.0" prefViewportWidth="180.0">
 					<content>
-						<VBox fx:id="vBoxControls" alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER"/>
+						<VBox fx:id="vBoxControls" alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER" />
 					</content>
 				</ScrollPane>
 			</center>
 		</BorderPane>
 	</right>
 	<top>
-		<CustomFieldWithButton BorderPane.alignment="CENTER"/>
+		<CustomFieldWithButton BorderPane.alignment="CENTER" />
 	</top>
 	<bottom>
 		<GridPane fx:id="gridPane" BorderPane.alignment="CENTER">
 
 			<columnConstraints>
-				<ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" percentWidth="20.0" prefWidth="100.0"/>
-				<ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" percentWidth="15.0" prefWidth="100.0"/>
-				<ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" percentWidth="15.0" prefWidth="100.0"/>
-				<ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" percentWidth="20.0" prefWidth="100.0"/>
-				<ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" percentWidth="20.0" prefWidth="100.0"/>
-				<ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" percentWidth="10.0" prefWidth="100.0"/>
+				<ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" percentWidth="20.0" prefWidth="100.0" />
+				<ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" percentWidth="15.0" prefWidth="100.0" />
+				<ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" percentWidth="15.0" prefWidth="100.0" />
+				<ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" percentWidth="20.0" prefWidth="100.0" />
+				<ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" percentWidth="20.0" prefWidth="100.0" />
+				<ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" percentWidth="10.0" prefWidth="100.0" />
 			</columnConstraints>
 			<rowConstraints>
-				<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+				<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
 			</rowConstraints>
 			<children>
-				<ChoiceBox fx:id="cbParameters" maxWidth="1.7976931348623157E308" prefWidth="150.0"/>
-				<Label fx:id="labelControlId" text="" GridPane.columnIndex="1"/>
-				<ChoiceBox fx:id="cbRange" prefWidth="150.0" GridPane.columnIndex="2"/>
-				<Button fx:id="btnAddFormula" mnemonicParsing="false" onAction="#addFormula" text="+" GridPane.columnIndex="5"/>
+				<ChoiceBox fx:id="cbParameters" maxWidth="1.7976931348623157E308" prefWidth="150.0" />
+				<Label fx:id="labelControlId" text="" GridPane.columnIndex="1" />
+				<ChoiceBox fx:id="cbRange" prefWidth="150.0" GridPane.columnIndex="2" />
+				<Button fx:id="btnAddFormula" mnemonicParsing="false" onAction="#addFormula" text="+" GridPane.columnIndex="5" />
 			</children>
 		</GridPane>
 	</bottom>
+   <center>
+      <ProgressIndicator fx:id="progressIndicator" maxHeight="150.0" maxWidth="150.0" prefHeight="100.0" prefWidth="100.0" BorderPane.alignment="CENTER" />
+   </center>
 </BorderPane>
