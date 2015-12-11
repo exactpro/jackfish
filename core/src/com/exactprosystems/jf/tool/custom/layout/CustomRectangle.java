@@ -16,7 +16,6 @@ import javafx.scene.shape.StrokeLineCap;
 
 import java.awt.*;
 import java.util.Arrays;
-import java.util.Optional;
 
 public class CustomRectangle
 {
@@ -96,7 +95,7 @@ public class CustomRectangle
 
 	public void setLineStrokeCap(StrokeLineCap lineCap, LinePosition position)
 	{
-		getLineByPosition(position).ifPresent(line -> line.setStrokeLineCap(lineCap));
+		getLineByPosition(position).setStrokeLineCap(lineCap);
 	}
 
 	public Rectangle getRectangle()
@@ -129,7 +128,7 @@ public class CustomRectangle
 
 	public void setWidthLine(double width, LinePosition position)
 	{
-		getLineByPosition(position).ifPresent(line -> line.setStrokeWidth(width));
+		getLineByPosition(position).setStrokeWidth(width);
 	}
 
 	public void addStyleClass(String styleClass)
@@ -147,7 +146,7 @@ public class CustomRectangle
 
 	public void addStyleClass(String styleClass, LinePosition position)
 	{
-		this.getLineByPosition(position).ifPresent(line -> line.getStyleClass().add(styleClass));
+		this.getLineByPosition(position).getStyleClass().add(styleClass);
 	}
 
 	//============================================================
@@ -155,35 +154,35 @@ public class CustomRectangle
 	//============================================================
 	public void setOnMouseExited(EventHandler<MouseEvent> handler, LinePosition position)
 	{
-		getLineByPosition(position).ifPresent(line -> line.setOnMouseExited(handler));
+		getLineByPosition(position).setOnMouseExited(handler);
 	}
 
 	public void setOnMouseEntered(EventHandler<MouseEvent> handler, LinePosition position)
 	{
-		getLineByPosition(position).ifPresent(line -> line.setOnMouseEntered(handler));
+		getLineByPosition(position).setOnMouseEntered(handler);
 	}
 
 	public void setOnMouseClick(EventHandler<MouseEvent> handler, LinePosition position)
 	{
-		getLineByPosition(position).ifPresent(line -> line.setOnMouseClicked(handler));
+		getLineByPosition(position).setOnMouseClicked(handler);
 	}
 
 	//============================================================
 	// private methods
 	//============================================================
-	private Optional<Line> getLineByPosition(LinePosition position)
+	private Line getLineByPosition(LinePosition position)
 	{
 		switch (position)
 		{
 			case TOP:
-				return Optional.of(this.top);
+				return this.top;
 			case RIGHT:
-				return Optional.of(this.right);
+				return this.right;
 			case BOT:
-				return Optional.of(this.bot);
+				return this.bot;
 			case LEFT:
-				return Optional.of(this.left);
+				return this.left;
 		}
-		return Optional.empty();
+		throw new RuntimeException("Unexpected position : " + position);
 	}
 }
