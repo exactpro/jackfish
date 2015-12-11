@@ -217,7 +217,7 @@ public abstract class DialogsHelper
 				listView.getItems().addAll(list);
 			}
 			listView.getItems().clear();
-			list.stream().filter(t -> t.toString().toUpperCase().contains(t1.toUpperCase())).forEach(t -> listView.getItems().add(t));
+			list.stream().filter(t -> t.toString().toUpperCase().contains(t1.toUpperCase())).forEach(listView.getItems()::add);
 		});
 
 		tf.setOnKeyPressed(keyEvent -> {

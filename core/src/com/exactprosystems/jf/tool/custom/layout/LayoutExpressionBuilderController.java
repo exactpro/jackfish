@@ -39,28 +39,40 @@ import java.util.ResourceBundle;
 
 public class LayoutExpressionBuilderController implements Initializable, ContainingParent
 {
-	private static final int		BORDER_WIDTH	= 4;
-	private static final int		OFFSET			= BORDER_WIDTH / 2;
+	private static final int BORDER_WIDTH = 4;
+	private static final int OFFSET = BORDER_WIDTH / 2;
 
-	@FXML private BorderPane				mainPane;
-	@FXML private VBox						vBoxControls;
-	@FXML private CustomFieldWithButton		cfFindControl;
-	@FXML private BorderPane				parentPane;
-	@FXML private ScrollPane				spControls;
-	@FXML private ChoiceBox<SpecMethod>		cbParameters;
-	@FXML private Label						labelControlId;
-	@FXML private ChoiceBox<Range>			cbRange;
-	@FXML private Button					btnAddFormula;
-	@FXML private GridPane					gridPane;
+	@FXML
+	private BorderPane mainPane;
+	@FXML
+	private VBox vBoxControls;
+	@FXML
+	private CustomFieldWithButton cfFindControl;
+	@FXML
+	private BorderPane parentPane;
+	@FXML
+	private ScrollPane spControls;
+	@FXML
+	private ChoiceBox<SpecMethod> cbParameters;
+	@FXML
+	private Label labelControlId;
+	@FXML
+	private ChoiceBox<Range> cbRange;
+	@FXML
+	private Button btnAddFormula;
+	@FXML
+	private GridPane gridPane;
 
-	private NewExpressionField				expressionFieldFirst;
-	private NewExpressionField				expressionFieldSecond;
-	private ToggleGroup						mainToggleGroup;
-	private ImageView						imageView;
-	private Parent							parent;
-	private LayoutExpressionBuilder			model;
-	private CustomRectangle					initialRectangle;
-	private CustomRectangle					selectedRectangle;
+	private NewExpressionField expressionFieldFirst;
+	private NewExpressionField expressionFieldSecond;
+	private ToggleGroup mainToggleGroup;
+	private ImageView imageView;
+	private Parent parent;
+	private LayoutExpressionBuilder model;
+	private CustomRectangle initialRectangle;
+	private CustomRectangle selectedRectangle;
+
+	private ArrayList<ToggleButton> buttons = new ArrayList<>();
 
 	// ==============================================================================================================================
 	// interface Initializable
@@ -74,8 +86,7 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 
 		this.cbRange.getItems().addAll(Range.values());
 		this.cbRange.getSelectionModel().selectFirst();
-		this.cbRange.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) ->
-		{
+		this.cbRange.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
 			GridPane.setColumnSpan(this.expressionFieldFirst, 2);
 			this.expressionFieldSecond.setVisible(false);
 			if (newValue == Range.BETWEEN)
@@ -85,8 +96,7 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 			}
 		});
 		this.mainToggleGroup = new ToggleGroup();
-		this.mainToggleGroup.selectedToggleProperty().addListener((observable, oldValue, newValue) ->
-		{
+		this.mainToggleGroup.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
 			if (newValue != null)
 			{
 				this.model.displayControl((IControl) newValue.getUserData(), false);
@@ -96,9 +106,19 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 				Common.tryCatch(this.model::clearCanvas, "Error on clear canvas");
 			}
 		});
-		this.cfFindControl.textProperty().addListener((observable, oldValue, newValue) ->
-		{
-			// TODO implements this logic via DialogsHelper.showFindListView()
+		this.cfFindControl.textProperty().addListener((observable, oldValue, newValue) -> {
+			if (newValue.isEmpty())
+			{
+				this.vBoxControls.getChildren().setAll(this.buttons);
+			}
+			else
+			{
+				this.vBoxControls.getChildren().clear();
+				this.buttons
+						.stream()
+						.filter(t -> t.getText().toUpperCase().contains(newValue.toUpperCase()))
+						.forEach(this.vBoxControls.getChildren()::add);
+			}
 		});
 		createCanvas();
 	}
@@ -120,7 +140,7 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 		this.model = model;
 		this.expressionFieldFirst = new NewExpressionField(evaluator, "first");
 		this.expressionFieldFirst.setHelperForExpressionField("First", null);
-		this.expressionFieldSecond= new NewExpressionField(evaluator, "second");
+		this.expressionFieldSecond = new NewExpressionField(evaluator, "second");
 		this.expressionFieldSecond.setHelperForExpressionField("Second", null);
 		this.gridPane.add(expressionFieldFirst, 3, 0);
 		this.gridPane.add(expressionFieldSecond, 4, 0);
@@ -143,7 +163,11 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 			button.setAlignment(Pos.BASELINE_LEFT);
 			button.setTooltip(new Tooltip(control.locator().toString()));
 			return button;
-		}).forEach(this.vBoxControls.getChildren()::add);
+		}).forEach(button -> {
+			this.vBoxControls.getChildren().add(button);
+			this.buttons.add(button);
+		});
+
 		dialog.getDialogPane().setContent(parent);
 		if (fullScreen)
 		{
@@ -165,7 +189,7 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 	// ==============================================================================================================================
 	public void addFormula(ActionEvent actionEvent)
 	{
-		Common.tryCatch(()-> this.model.addFormula(cbParameters.getSelectionModel().getSelectedItem(), labelControlId.getText(), cbRange.getSelectionModel().getSelectedItem(), "first","second"),"Error on add formula");
+		Common.tryCatch(() -> this.model.addFormula(cbParameters.getSelectionModel().getSelectedItem(), labelControlId.getText(), cbRange.getSelectionModel().getSelectedItem(), "first", "second"), "Error on add formula");
 	}
 
 	// ==============================================================================================================================
@@ -182,16 +206,31 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 
 	public void displayMethods(SpecMethod[] methods)
 	{
+		this.cbRange.setVisible(false);
+		this.labelControlId.setVisible(false);
 		this.cbParameters.getItems().clear();
 		this.cbParameters.getItems().addAll(methods);
 		this.cbParameters.getSelectionModel().selectFirst();
-		this.cbParameters.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) ->
-		{
+		this.cbParameters.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+			GridPane.setColumnSpan(this.cbParameters, 1);
+			GridPane.setColumnSpan(this.labelControlId, 1);
 			this.cbRange.setVisible(newValue.needRange);
 			this.labelControlId.setVisible(newValue.needStr);
+			if (!newValue.needRange && !newValue.needStr)
+			{
+				GridPane.setColumnSpan(this.cbParameters, 3);
+			}
+			else if (newValue.needRange && !newValue.needStr)
+			{
+				GridPane.setColumnSpan(this.cbParameters, 2);
+			}
+			else if (!newValue.needRange)
+			{
+				GridPane.setColumnSpan(this.labelControlId, 2);
+			}
 		});
 	}
-	
+
 	public void displayControlId(String controlId)
 	{
 		this.labelControlId.setText(controlId);

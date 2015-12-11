@@ -37,7 +37,7 @@
 				<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
 			</rowConstraints>
 			<children>
-				<ChoiceBox maxWidth="Infinity" fx:id="cbParameters" prefWidth="150.0"/>
+				<ChoiceBox fx:id="cbParameters" maxWidth="1.7976931348623157E308" prefWidth="150.0"/>
 				<Label fx:id="labelControlId" text="" GridPane.columnIndex="1"/>
 				<ChoiceBox fx:id="cbRange" prefWidth="150.0" GridPane.columnIndex="2"/>
 				<Button fx:id="btnAddFormula" mnemonicParsing="false" onAction="#addFormula" text="+" GridPane.columnIndex="5"/>
