@@ -153,6 +153,7 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 			{
 				c3.setPercentWidth(0);
 				c4.setPercentWidth(0);
+				return;
 			}
 			if (newValue == Range.BETWEEN && cbRange.isVisible())
 			{
@@ -222,7 +223,6 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 		this.gridPane.add(expressionFieldFirst, 3, 0);
 		this.gridPane.add(expressionFieldSecond, 4, 0);
 		this.expressionFieldSecond.setVisible(false);
-		GridPane.setColumnSpan(this.expressionFieldFirst, 2);
 	}
 
 	public String show(String title, boolean fullScreen, ArrayList<IControl> list)
