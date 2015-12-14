@@ -8,7 +8,7 @@
 	<classpathentry kind="lib" path="libs/commons-exec-1.1.jar"/>
 	<classpathentry kind="lib" path="libs/javacsv.jar"/>
 	<classpathentry kind="lib" path="libs/log4j-1.2.17.jar"/>
-	<classpathentry kind="lib" path="libs/mvel2-2.2.5.Final.jar"/>
+	<classpathentry kind="lib" path="libs/mvel2-2.2.7.Final.jar"/>
 	<classpathentry kind="lib" path="libs/junit-4.12.jar"/>
 	<classpathentry kind="lib" path="libs/hamcrest-core-1.3.jar"/>
 	<classpathentry kind="output" path="bin"/>
