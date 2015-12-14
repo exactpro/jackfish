@@ -55,7 +55,6 @@ public class LayoutExpressionBuilder
 
 		this.controller = Common.loadController(LayoutExpressionBuilder.class.getResource("LayoutExpressionBuilder.fxml"));
 		this.controller.init(this, this.evaluator);
-//		this.controller.displayMethods(all);
 
 		IControl initialControl = this.currentWindow.getControlForName(null, this.parameterName);
 		if (initialControl == null)
@@ -114,62 +113,32 @@ public class LayoutExpressionBuilder
 		System.err.println(parameter.toFormula(controlId, range, first, second));
 	}
 
+	public void displayDistance(IControl selectedControl, PieceKind kind)
+	{
+		if (selectedControl != null)
+		{
+			Common.tryCatch(() -> {
+				IControl initialControl = this.currentWindow.getControlForName(null, this.parameterName);
+				Locator initialLocator = initialControl.locator();
+				IControl initialOwner = this.currentWindow.getOwnerControl(initialControl);
+				Rectangle initialRectangle = service().getRectangle(initialOwner == null ? null : initialOwner.locator(), initialLocator);
+
+				Locator selectedLocator = selectedControl.locator();
+				IControl selectedOwner = this.currentWindow.getOwnerControl(selectedControl);
+				Rectangle selectedRectangle = service().getRectangle(selectedOwner == null ? null : selectedOwner.locator(), selectedLocator);
+
+				int distance = kind.distance(initialRectangle, selectedRectangle);
+				this.controller.displayDistance(distance);
+			}, "Error on display distance");
+		}
+		else
+		{
+			this.controller.clearDistance();
+		}
+	}
 
 	private IRemoteApplication service()
 	{
 		return this.appConnection.getApplication().service();
 	}
-
-//	static class SpecMethod
-//	{
-//		public SpecMethod(String name, boolean needStr, boolean needRange, String format)
-//		{
-//			this.name = name;
-//			this.needStr = needStr;
-//			this.needRange = needRange;
-//			this.format = format;
-//		}
-//
-//		@Override
-//		public String toString()
-//		{
-//			return this.name;
-//		}
-//
-//		public String toString(String controlId, Range range, String first, String second)
-//		{
-//			return String.format(this.format, this.name, controlId, range == null ? "" : range.toString(first, second));
-//		}
-//
-//		String name;
-//		boolean needStr;
-//		boolean needRange;
-//		String format;
-//	}
-//
-//	static SpecMethod[] all = new SpecMethod[]{
-//			// $1 name, $2 controlId, $3 range
-//			new SpecMethod("visible", false, false, ".%1$s()"), 
-//			new SpecMethod("count", false, true, ".%1$s(%3$s)"), 
-//			new SpecMethod("contains", true, false, ".%1$s('%2$s')"), 
-//			new SpecMethod("left", true, true, ".%1$s('%2$s',%3$s)"), 
-//			new SpecMethod("right", true, true, ".%1$s('%2$s',%3$s)"), 
-//			new SpecMethod("top", true, true, ".%1$s('%2$s',%3$s)"), 
-//			new SpecMethod("bottom", true, true, ".%1$s('%2$s',%3$s)"), 
-//			new SpecMethod("inLeft", true, true, ".%1$s('%2$s',%3$s)"), 
-//			new SpecMethod("inRight", true, true, ".%1$s('%2$s',%3$s)"), 
-//			new SpecMethod("inTop", true, true, ".%1$s('%2$s',%3$s)"), 
-//			new SpecMethod("inBottom", true, true, ".%1$s('%2$s',%3$s)"), 
-//			new SpecMethod("onLeft", true, true, ".%1$s('%2$s',%3$s)"), 
-//			new SpecMethod("onRight", true, true, ".%1$s('%2$s',%3$s)"), 
-//			new SpecMethod("onTop", true, true, ".%1$s('%2$s',%3$s)"), 
-//			new SpecMethod("onBottom", true, true, ".%1$s('%2$s',%3$s)"), 
-//			new SpecMethod("lAlign", true, true, ".%1$s('%2$s',%3$s)"), 
-//			new SpecMethod("rAlign", true, true, ".%1$s('%2$s',%3$s)"), 
-//			new SpecMethod("tAlign", true, true, ".%1$s('%2$s',%3$s)"), 
-//			new SpecMethod("bAlign", true, true, ".%1$s('%2$s',%3$s)"), 
-//			new SpecMethod("hCenter", true, true, ".%1$s('%2$s',%3$s)"), 
-//			new SpecMethod("vCenter", true, true, ".%1$s('%2$s',%3$s)"),};
-
-
 }

@@ -9,7 +9,6 @@ import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.custom.expfield.NewExpressionField;
 import com.exactprosystems.jf.tool.custom.fields.CustomFieldWithButton;
-//import com.exactprosystems.jf.tool.custom.layout.LayoutExpressionBuilder.SpecMethod;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -99,15 +98,12 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 		assert cfFindControl != null : "fx:id=\"cfFindControl\" was not injected: check your FXML file 'LayoutExpressionBuilder.fxml'.";
 		assert parentPane != null : "fx:id=\"parentPane\" was not injected: check your FXML file 'LayoutExpressionBuilder.fxml'.";
 
-		this.cbParameters.getItems().addAll(PieceKind.values());
-		this.cbParameters.getSelectionModel().selectFirst();
-		this.cbParameters.setVisible(true);
-
-		this.cbRange.getItems().addAll(Range.values());
-		this.cbRange.getSelectionModel().selectFirst();
 		this.cbRange.setVisible(false);
-
 		this.labelControlId.setVisible(false);
+		this.cbParameters.getItems().addAll(PieceKind.values());
+		this.cbRange.getItems().addAll(Range.values());
+		this.cbParameters.getSelectionModel().selectFirst();
+		this.cbRange.getSelectionModel().selectFirst();
 
 		this.mainToggleGroup = new ToggleGroup();
 		createCanvas();
@@ -121,10 +117,12 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 			if (newValue != null)
 			{
 				this.model.displayControl((IControl) newValue.getUserData(), false);
+				this.model.displayDistance((IControl) newValue.getUserData(), this.cbParameters.getSelectionModel().getSelectedItem());
 			}
 			else
 			{
 				Common.tryCatch(this.model::clearCanvas, "Error on clear canvas");
+				this.clearDistance();
 			}
 		});
 		this.cfFindControl.textProperty().addListener((observable, oldValue, newValue) -> {
@@ -211,6 +209,9 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 				c1.setPercentWidth(0);
 				c2.setPercentWidth(0);
 			}
+
+			Optional.ofNullable(this.mainToggleGroup.getSelectedToggle())
+					.ifPresent(b -> this.model.displayDistance(((IControl) b.getUserData()), newValue));
 		});
 	}
 
@@ -238,6 +239,7 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 		this.gridPane.add(expressionFieldFirst, 3, 0);
 		this.gridPane.add(expressionFieldSecond, 4, 0);
 		this.expressionFieldSecond.setVisible(false);
+		this.expressionFieldFirst.setVisible(false);
 	}
 
 	public String show(String title, boolean fullScreen, ArrayList<IControl> list)
@@ -305,15 +307,6 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 		rect.setVisible(true);
 	}
 
-//	public void displayMethods(SpecMethod[] methods)
-//	{
-//		this.cbRange.setVisible(false);
-//		this.labelControlId.setVisible(false);
-//		this.cbParameters.getItems().clear();
-//		this.cbParameters.getItems().addAll(methods);
-//		this.cbParameters.getSelectionModel().selectFirst();
-//	}
-
 	public void displayControlId(String controlId)
 	{
 		this.labelControlId.setText(controlId);
@@ -322,6 +315,18 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 	public void clearCanvas()
 	{
 		this.selectedRectangle.setVisible(false);
+	}
+
+	public void displayDistance(int distance)
+	{
+		this.expressionFieldFirst.setText(String.valueOf(distance));
+		this.expressionFieldSecond.setText(String.valueOf(distance));
+	}
+
+	public void clearDistance()
+	{
+		this.expressionFieldFirst.setText("");
+		this.expressionFieldSecond.setText("");
 	}
 
 	// ==============================================================================================================================
@@ -362,5 +367,4 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 		this.selectedRectangle.setVisible(false);
 		this.selectedRectangle.setGroup(group);
 	}
-
 }
