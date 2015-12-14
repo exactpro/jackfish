@@ -65,7 +65,6 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 	@FXML
 	private ScrollPane spControls;
 	@FXML
-//	private ChoiceBox<SpecMethod> cbParameters;
 	private ChoiceBox<PieceKind> cbParameters;
 	@FXML
 	private Label labelControlId;
@@ -82,8 +81,10 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 	private ImageView imageView;
 	private Parent parent;
 	private LayoutExpressionBuilder model;
+
 	private CustomRectangle initialRectangle;
 	private CustomRectangle selectedRectangle;
+	private CustomArrow customArrow;
 
 	private ScrollPane mainScrollPane;
 	private ArrayList<ToggleButton> buttons = new ArrayList<>();
@@ -123,6 +124,7 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 			{
 				Common.tryCatch(this.model::clearCanvas, "Error on clear canvas");
 				this.clearDistance();
+				this.clearArrow();
 			}
 		});
 		this.cfFindControl.textProperty().addListener((observable, oldValue, newValue) -> {
@@ -312,11 +314,6 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 		this.labelControlId.setText(controlId);
 	}
 
-	public void clearCanvas()
-	{
-		this.selectedRectangle.setVisible(false);
-	}
-
 	public void displayDistance(int distance)
 	{
 		this.expressionFieldFirst.setText(String.valueOf(distance));
@@ -327,6 +324,23 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 	{
 		this.expressionFieldFirst.setText("");
 		this.expressionFieldSecond.setText("");
+	}
+
+	public void clearCanvas()
+	{
+		this.selectedRectangle.setVisible(false);
+	}
+
+	public void displayArrow(double start, double end, double where, CustomArrow.ArrowPosition position)
+	{
+		this.customArrow.setPoints(start, end);
+		this.customArrow.setPosition(position);
+		this.customArrow.show(where);
+	}
+
+	public void clearArrow()
+	{
+		this.customArrow.hide();
 	}
 
 	// ==============================================================================================================================
@@ -357,13 +371,17 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 		ProgressIndicator progressIndicator = new ProgressIndicator(ProgressIndicator.INDETERMINATE_PROGRESS);
 		AnchorPane.setTopAnchor(progressIndicator, (double) 200);
 		AnchorPane.setLeftAnchor(progressIndicator, (double) 200);
+
 		this.initialRectangle = new CustomRectangle();
 		this.selectedRectangle = new CustomRectangle();
+		this.customArrow = new CustomArrow();
 		this.initialRectangle.setWidthLine(BORDER_WIDTH);
 		this.selectedRectangle.setWidthLine(BORDER_WIDTH);
+
 		group.getChildren().add(this.imageView);
 		this.initialRectangle.setVisible(false);
 		this.initialRectangle.setGroup(group);
+		this.customArrow.setGroup(group);
 		this.selectedRectangle.setVisible(false);
 		this.selectedRectangle.setGroup(group);
 	}

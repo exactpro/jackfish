@@ -85,23 +85,6 @@ public class LayoutExpressionBuilder
 		return result == null ? this.parameterExpression : result;
 	}
 
-	public void displayControl(IControl control, boolean self)
-	{
-		if (control != null)
-		{
-			Common.tryCatch(() -> {
-				IControl owner = this.currentWindow.getOwnerControl(control);
-				Rectangle rectangle = service().getRectangle(owner == null ? null : owner.locator(), control.locator());
-				rectangle.setRect(rectangle.getX() - this.xOffset, rectangle.getY() - this.yOffset, rectangle.getWidth(), rectangle.getHeight());
-				this.controller.displayControl(rectangle, self);
-				if (!self)
-				{
-					this.controller.displayControlId(control.getID());
-				}
-			}, String.format("Error on display control %s", control));
-		}
-	}
-
 	public void clearCanvas()
 	{
 		this.controller.clearCanvas();
@@ -111,6 +94,66 @@ public class LayoutExpressionBuilder
 	public void addFormula(PieceKind parameter, String controlId, Range range, String first, String second)
 	{
 		System.err.println(parameter.toFormula(controlId, range, first, second));
+	}
+
+	public void displayArrow(Rectangle init, Rectangle selected, Arrow arrow)
+	{
+		double start = 0;
+		double end = 0;
+		CustomArrow.ArrowPosition position = null;
+		double where = 0;
+		double centerX = (Math.max(init.getCenterX(), selected.getCenterX()) + Math.min(init.getCenterX(), selected.getCenterX())) / 2;
+		double centerY = (Math.max(init.getCenterY(), selected.getCenterY()) + Math.min(init.getCenterY(), selected.getCenterY())) / 2;
+		if (arrow != null)
+		{
+			switch (arrow)
+			{
+				case LEFT_LEFT:
+//					position = CustomArrow.ArrowPosition.HORIZONTAL;
+//					where = centerY;
+//					start =
+					break;
+
+				case LEFT_RIGHT:
+
+					break;
+
+				case RIGHT_LEFT:
+
+					break;
+
+				case RIGHT_RIGHT:
+
+					break;
+
+				case BOTTOM_TOP:
+
+					break;
+
+				case TOP_BOTTOM:
+
+					break;
+
+				case TOP_TOP:
+
+					break;
+
+				case BOTTOM_BOTTOM:
+					position = CustomArrow.ArrowPosition.VERTICAL;
+					where = centerX;
+					start = init.getHeight() + init.getY();
+					end = selected.getHeight() + selected.getY();
+					break;
+
+				case H_CENTERS:
+
+					break;
+
+				case V_CENTERS:
+
+					break;
+			} this.controller.displayArrow(start, end, where, position);
+		}
 	}
 
 	public void displayDistance(IControl selectedControl, PieceKind kind)
@@ -129,11 +172,30 @@ public class LayoutExpressionBuilder
 
 				int distance = kind.distance(initialRectangle, selectedRectangle);
 				this.controller.displayDistance(distance);
+				this.displayArrow(initialRectangle, selectedRectangle, kind.arrow());
 			}, "Error on display distance");
 		}
 		else
 		{
 			this.controller.clearDistance();
+			this.controller.clearArrow();
+		}
+	}
+
+	public void displayControl(IControl control, boolean self)
+	{
+		if (control != null)
+		{
+			Common.tryCatch(() -> {
+				IControl owner = this.currentWindow.getOwnerControl(control);
+				Rectangle rectangle = service().getRectangle(owner == null ? null : owner.locator(), control.locator());
+				rectangle.setRect(rectangle.getX() - this.xOffset, rectangle.getY() - this.yOffset, rectangle.getWidth(), rectangle.getHeight());
+				this.controller.displayControl(rectangle, self);
+				if (!self)
+				{
+					this.controller.displayControlId(control.getID());
+				}
+			}, String.format("Error on display control %s", control));
 		}
 	}
 
