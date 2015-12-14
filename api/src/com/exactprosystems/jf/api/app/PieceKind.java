@@ -17,6 +17,24 @@ public enum PieceKind
 	VISIBLE("visible")
 	{
 		@Override
+		public boolean useName()
+		{
+			return false;
+		}
+
+		@Override
+		public boolean useRange()
+		{
+			return false;
+		}
+		
+		@Override
+		protected String formulaTemplate()
+		{
+			return ".%1$s()";
+		}
+
+		@Override
 		protected <T> void performDerived(Piece piece, OperationExecutor<T> executor, List<T> self, List<T> others, CheckingLayoutResult result) throws Exception 
 		{
 			result.set(self.get(0) != null); // TODO 
@@ -25,6 +43,24 @@ public enum PieceKind
 
 	COUNT("count")
 	{
+		@Override
+		public boolean useName()
+		{
+			return false;
+		}
+
+		@Override
+		public boolean useRange()
+		{
+			return true;
+		}
+		
+		@Override
+		protected String formulaTemplate()
+		{
+			return ".%1$s(%3$s)";
+		}
+
 		@Override
 		protected boolean selfNeedOne()
 		{
@@ -36,10 +72,34 @@ public enum PieceKind
 		{
 			result.set(piece.range.func(self.size(), piece.a, piece.b));
 		}
+		
+		@Override
+		public int distance(Rectangle s, Rectangle o)
+		{
+			return 1;
+		}
 	},
 	
 	CONTAINS("contains")
 	{
+		@Override
+		public boolean useName()
+		{
+			return true;
+		}
+
+		@Override
+		public boolean useRange()
+		{
+			return false;
+		}
+		
+		@Override
+		protected String formulaTemplate()
+		{
+			return ".%1$s('%2$s')";
+		}
+
 		@Override
 		protected <T> void performDerived(Piece piece, OperationExecutor<T> executor, List<T> self, List<T> others, CheckingLayoutResult result) throws Exception 
 		{
@@ -74,6 +134,12 @@ public enum PieceKind
 				}
 			});
 		}
+
+		@Override
+		public int distance(Rectangle s, Rectangle o)
+		{
+			return o.x - (s.x + s.width);
+		}
 	},
 	
 	RIGHT("right")
@@ -89,6 +155,12 @@ public enum PieceKind
 					return s.x - (o.x + o.width);
 				}
 			});
+		}
+
+		@Override
+		public int distance(Rectangle s, Rectangle o)
+		{
+			return s.x - (o.x + o.width);
 		}
 	},
 
@@ -106,6 +178,12 @@ public enum PieceKind
 				}
 			});
 		}
+
+		@Override
+		public int distance(Rectangle s, Rectangle o)
+		{
+			return o.y - (s.y + s.height);
+		}
 	},
 
 	BOTTOM("bottom")
@@ -121,6 +199,12 @@ public enum PieceKind
 					return s.y - (o.y + o.height);
 				}
 			});
+		}
+
+		@Override
+		public int distance(Rectangle s, Rectangle o)
+		{
+			return s.y - (o.y + o.height);
 		}
 	},
 
@@ -138,6 +222,12 @@ public enum PieceKind
 				}
 			});
 		}
+
+		@Override
+		public int distance(Rectangle s, Rectangle o)
+		{
+			return (o.x + o.width) - (s.x + s.width);
+		}
 	},
 	
 	INSIDE_RIGHT("inRight")
@@ -153,6 +243,12 @@ public enum PieceKind
 					return (s.x + s.width) - (o.x + o.width);
 				}
 			});
+		}
+
+		@Override
+		public int distance(Rectangle s, Rectangle o)
+		{
+			return (s.x + s.width) - (o.x + o.width);
 		}
 	},
 
@@ -170,6 +266,12 @@ public enum PieceKind
 				}
 			});
 		}
+
+		@Override
+		public int distance(Rectangle s, Rectangle o)
+		{
+			return (o.y + o.height) - (s.y + s.height);
+		}
 	},
 
 	INSIDE_BOTTOM("inBottom")
@@ -185,6 +287,12 @@ public enum PieceKind
 					return (s.y + s.height) - (o.y + o.height);
 				}
 			});
+		}
+
+		@Override
+		public int distance(Rectangle s, Rectangle o)
+		{
+			return (s.y + s.height) - (o.y + o.height);
 		}
 	},
 
@@ -202,6 +310,12 @@ public enum PieceKind
 				}
 			});
 		}
+
+		@Override
+		public int distance(Rectangle s, Rectangle o)
+		{
+			return o.x - s.x;
+		}
 	},
 	
 	ON_RIGHT("onRight")
@@ -217,6 +331,12 @@ public enum PieceKind
 					return s.x - o.x;
 				}
 			});
+		}
+
+		@Override
+		public int distance(Rectangle s, Rectangle o)
+		{
+			return s.x - o.x;
 		}
 	},
 
@@ -234,6 +354,12 @@ public enum PieceKind
 				}
 			});
 		}
+
+		@Override
+		public int distance(Rectangle s, Rectangle o)
+		{
+			return o.y - s.y;
+		}
 	},
 
 	ON_BOTTOM("onBottom")
@@ -249,6 +375,12 @@ public enum PieceKind
 					return s.y - o.y;
 				}
 			});
+		}
+
+		@Override
+		public int distance(Rectangle s, Rectangle o)
+		{
+			return s.y - o.y;
 		}
 	},
 
@@ -266,6 +398,12 @@ public enum PieceKind
 				}
 			});
 		}
+
+		@Override
+		public int distance(Rectangle s, Rectangle o)
+		{
+			return o.x - s.x;
+		}
 	},
 	
 	RIGHT_ALIGNED("rAlign")
@@ -281,6 +419,12 @@ public enum PieceKind
 					return s.x - o.x;
 				}
 			});
+		}
+
+		@Override
+		public int distance(Rectangle s, Rectangle o)
+		{
+			return s.x - o.x;
 		}
 	},
 	
@@ -298,6 +442,12 @@ public enum PieceKind
 				}
 			});
 		}
+
+		@Override
+		public int distance(Rectangle s, Rectangle o)
+		{
+			return o.y - s.y;
+		}
 	},
 
 	BOTTOM_ALIGNED("bAlign")
@@ -313,6 +463,12 @@ public enum PieceKind
 					return s.y - o.y;
 				}
 			});
+		}
+
+		@Override
+		public int distance(Rectangle s, Rectangle o)
+		{
+			return s.y - o.y;
 		}
 	},
 	
@@ -330,6 +486,12 @@ public enum PieceKind
 				}
 			});
 		}
+
+		@Override
+		public int distance(Rectangle s, Rectangle o)
+		{
+			return (o.x + o.width / 2) - (s.x + s.width / 2);
+		}
 	},
 
 	VERTICAL_CENTERED("vCenter")
@@ -346,6 +508,12 @@ public enum PieceKind
 				}
 			});
 		}
+
+		@Override
+		public int distance(Rectangle s, Rectangle o)
+		{
+			return (o.y + o.height / 2) - (s.y + s.height / 2);
+		}
 	},
 
 	;
@@ -361,6 +529,17 @@ public enum PieceKind
 		return this.name;
 	}
 	
+	
+	public boolean useName()
+	{
+		return true;
+	}
+
+	public boolean useRange()
+	{
+		return true;
+	}
+
 	public <T> void perform(Piece piece, OperationExecutor<T> executor, List<T> self, CheckingLayoutResult result)  throws Exception
 	{
 		if (selfNeedOne() && self.size() != 1 )
@@ -383,6 +562,18 @@ public enum PieceKind
 		performDerived(piece, executor, self, others, result);
 	}
 
+	public String toFormula(String controlId, Range range, String first, String second)
+	{
+		return String.format(formulaTemplate(), this.name, controlId, range == null ? "" : range.toString(first, second));
+	}
+
+	public int distance(Rectangle s, Rectangle o)
+	{
+		return 0;
+	}
+	
+	
+	
 	protected boolean selfNeedOne()
 	{
 		return true;
@@ -393,8 +584,15 @@ public enum PieceKind
 		return true;
 	}
 
+	protected String formulaTemplate()
+	{
+		return ".%1$s('%2$s',%3$s)";
+	}
+
 	protected abstract <T> void performDerived(Piece piece, OperationExecutor<T> executor, List<T> self, List<T> others, CheckingLayoutResult result)  throws Exception;
 
+	
+	
 	private static interface Measure 
 	{
 		long calc(Rectangle s, Rectangle o);
@@ -421,5 +619,5 @@ public enum PieceKind
 	}
 
 	
-	private String name;
+	private String 	name;
 }
