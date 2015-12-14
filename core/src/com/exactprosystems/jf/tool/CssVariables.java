@@ -143,6 +143,9 @@ public class CssVariables
 	public static final String	INITIAL_CONTROL_SELECTED_LINE = "initialControlSelectedLine";
 	public static final String	SELECTED_CONTROL_SELECTED_LINE = "selectedControlSelectedLine";
 
+	public static final String	LINE						= "layoutLine";
+	public static final String	LINE_ARROW					= "layoutLineArrow";
+
 	/**
 	 * Spinner css
 	 */
