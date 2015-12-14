@@ -6,8 +6,8 @@ import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.CssVariables;
-import com.exactprosystems.jf.tool.custom.fields.CustomFieldWithButton;
 import com.exactprosystems.jf.tool.custom.expfield.NewExpressionField;
+import com.exactprosystems.jf.tool.custom.fields.CustomFieldWithButton;
 import com.exactprosystems.jf.tool.custom.layout.LayoutExpressionBuilder.SpecMethod;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -21,10 +21,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -43,6 +40,16 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 {
 	private static final int BORDER_WIDTH = 4;
 	private static final int OFFSET = BORDER_WIDTH / 2;
+	@FXML
+	private ColumnConstraints c0;
+	@FXML
+	private ColumnConstraints c1;
+	@FXML
+	private ColumnConstraints c2;
+	@FXML
+	private ColumnConstraints c3;
+	@FXML
+	private ColumnConstraints c4;
 	@FXML
 	private ProgressIndicator progressIndicator;
 	@FXML
@@ -90,16 +97,14 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 
 		this.cbRange.getItems().addAll(Range.values());
 		this.cbRange.getSelectionModel().selectFirst();
-		this.cbRange.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-			GridPane.setColumnSpan(this.expressionFieldFirst, 2);
-			this.expressionFieldSecond.setVisible(false);
-			if (newValue == Range.BETWEEN)
-			{
-				this.expressionFieldSecond.setVisible(true);
-				GridPane.setColumnSpan(this.expressionFieldFirst, 1);
-			}
-		});
 		this.mainToggleGroup = new ToggleGroup();
+		createCanvas();
+		listeners();
+		visibilityListeners();
+	}
+
+	private void listeners()
+	{
 		this.mainToggleGroup.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
 			if (newValue != null)
 			{
@@ -118,13 +123,79 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 			else
 			{
 				this.vBoxControls.getChildren().clear();
-				this.buttons
-						.stream()
-						.filter(t -> t.getText().toUpperCase().contains(newValue.toUpperCase()))
-						.forEach(this.vBoxControls.getChildren()::add);
+				this.buttons.stream().filter(t -> t.getText().toUpperCase().contains(newValue.toUpperCase())).forEach(this.vBoxControls.getChildren()::add);
 			}
 		});
-		createCanvas();
+	}
+
+	private void visibilityListeners()
+	{
+		this.cbRange.visibleProperty().addListener((observable, oldValue, newValue) -> {
+			expressionFieldFirst.setVisible(newValue);
+			expressionFieldSecond.setVisible(false);
+			c3.setPercentWidth(0);
+			c4.setPercentWidth(0);
+			if (newValue)
+			{
+				c3.setPercentWidth(40);
+				c4.setPercentWidth(0);
+			}
+			if (newValue && cbRange.getSelectionModel().getSelectedItem() == Range.BETWEEN)
+			{
+				expressionFieldSecond.setVisible(true);
+				c3.setPercentWidth(20);
+				c4.setPercentWidth(20);
+			}
+		});
+
+		this.cbRange.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+			if (!cbRange.isVisible())
+			{
+				c3.setPercentWidth(0);
+				c4.setPercentWidth(0);
+			}
+			if (newValue == Range.BETWEEN && cbRange.isVisible())
+			{
+				expressionFieldSecond.setVisible(true);
+				c3.setPercentWidth(20);
+				c4.setPercentWidth(20);
+			}
+			else
+			{
+				expressionFieldSecond.setVisible(false);
+				c3.setPercentWidth(40);
+				c4.setPercentWidth(0);
+			}
+		});
+
+		this.cbParameters.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+			this.cbRange.setVisible(newValue.needRange);
+			this.labelControlId.setVisible(newValue.needStr);
+			if (newValue.needRange && newValue.needStr)
+			{
+				c0.setPercentWidth(20);
+				c1.setPercentWidth(15);
+				c2.setPercentWidth(15);
+			}
+			else if (newValue.needRange)
+			{
+				c0.setPercentWidth(35);
+				c1.setPercentWidth(0);
+				c2.setPercentWidth(15);
+			}
+			else if (newValue.needStr)
+			{
+				c0.setPercentWidth(50);
+				c1.setPercentWidth(40);
+				c2.setPercentWidth(0);
+			}
+			else
+			{
+				c0.setPercentWidth(90);
+				c1.setPercentWidth(0);
+				c2.setPercentWidth(0);
+			}
+		});
 	}
 
 	// ==============================================================================================================================
@@ -142,10 +213,6 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 	public void init(LayoutExpressionBuilder model, AbstractEvaluator evaluator) throws Exception
 	{
 		this.model = model;
-		this.cbRange.visibleProperty().addListener((observable, oldValue, newValue) -> {
-			this.expressionFieldFirst.setVisible(newValue);
-		});
-
 		this.expressionFieldFirst = new NewExpressionField(evaluator, "first");
 		this.expressionFieldFirst.setHelperForExpressionField("First", null);
 
@@ -228,24 +295,6 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 		this.cbParameters.getItems().clear();
 		this.cbParameters.getItems().addAll(methods);
 		this.cbParameters.getSelectionModel().selectFirst();
-		this.cbParameters.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-			GridPane.setColumnSpan(this.cbParameters, 1);
-			GridPane.setColumnSpan(this.labelControlId, 1);
-			this.cbRange.setVisible(newValue.needRange);
-			this.labelControlId.setVisible(newValue.needStr);
-			if (!newValue.needRange && !newValue.needStr)
-			{
-				GridPane.setColumnSpan(this.cbParameters, 3);
-			}
-			else if (newValue.needRange && !newValue.needStr)
-			{
-				GridPane.setColumnSpan(this.cbParameters, 2);
-			}
-			else if (!newValue.needRange)
-			{
-				GridPane.setColumnSpan(this.labelControlId, 2);
-			}
-		});
 	}
 
 	public void displayControlId(String controlId)

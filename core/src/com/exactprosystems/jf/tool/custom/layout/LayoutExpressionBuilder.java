@@ -8,6 +8,7 @@ import javafx.concurrent.Task;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 public class LayoutExpressionBuilder
 {
@@ -41,8 +42,8 @@ public class LayoutExpressionBuilder
 	public String show(String title, boolean fullScreen) throws Exception
 	{
 		ArrayList<IControl> controls = new ArrayList<>();
+		controls.addAll(this.currentWindow.getControls(IWindow.SectionKind.Run).stream().filter(iControl -> !iControl.getID().equals(this.parameterName)).collect(Collectors.toList()));
 		controls.addAll(this.currentWindow.getControls(IWindow.SectionKind.Self));
-		controls.addAll(this.currentWindow.getControls(IWindow.SectionKind.Run));
 
 		IControl selfControl = this.currentWindow.getSelfControl();
 		if (selfControl == null)

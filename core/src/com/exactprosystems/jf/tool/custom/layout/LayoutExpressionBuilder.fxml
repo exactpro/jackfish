@@ -28,11 +28,11 @@
 		<GridPane fx:id="gridPane" BorderPane.alignment="CENTER">
 
 			<columnConstraints>
-				<ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" percentWidth="20.0" prefWidth="100.0" />
-				<ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" percentWidth="15.0" prefWidth="100.0" />
-				<ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" percentWidth="15.0" prefWidth="100.0" />
-				<ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" percentWidth="20.0" prefWidth="100.0" />
-				<ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" percentWidth="20.0" prefWidth="100.0" />
+				<ColumnConstraints fx:id="c0" halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" percentWidth="0" prefWidth="100.0" />
+				<ColumnConstraints fx:id="c1" halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" percentWidth="0" prefWidth="100.0" />
+				<ColumnConstraints fx:id="c2" halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" percentWidth="0" prefWidth="100.0" />
+				<ColumnConstraints fx:id="c3" halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" percentWidth="0" prefWidth="100.0" />
+				<ColumnConstraints fx:id="c4" halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" percentWidth="0" prefWidth="100.0" />
 				<ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" percentWidth="10.0" prefWidth="100.0" />
 			</columnConstraints>
 			<rowConstraints>
