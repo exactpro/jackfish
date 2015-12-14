@@ -73,7 +73,7 @@ public abstract class CustomFieldSkin extends TextFieldSkin {
 		super.layoutChildren(textFieldStartX, 0, textFieldWidth, fullHeight);
 
 		if (rightPane != null) {
-			final double rightStartX = rightPane == null ? 0.0 : w - rightWidth + snappedLeftInset();
+			final double rightStartX = w - rightWidth + snappedLeftInset();
 			rightPane.resizeRelocate(rightStartX, 0, rightWidth, fullHeight);
 		}
 	}

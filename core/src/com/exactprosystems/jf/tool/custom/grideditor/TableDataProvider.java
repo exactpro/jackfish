@@ -128,7 +128,7 @@ public class TableDataProvider implements DataProvider<String>
 			for (int j = 0; j < this.columnCount(); j++)
 			{
 				Object cellValue = this.getCellValue(j, i);
-				list.add(StringCellType.createCell(i, j, cellValue == null ? "" : String.valueOf(cellValue)));
+				list.add(StringCellType.createCell(i, j, String.valueOf(cellValue)));
 			}
 			observableRows.add(list);
 		}

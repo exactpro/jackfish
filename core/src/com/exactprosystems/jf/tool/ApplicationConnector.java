@@ -166,7 +166,7 @@ public class ApplicationConnector
 		thread.setName("Start app " + this.idAppEntry + ", thread id : " + thread.getId());
 		thread.setDaemon(true);
 		thread.start();
-		return null;
+		return Optional.empty();
 	}
 
 	private void update(ApplicationStatus status, Throwable exception, boolean progessBarVisible)

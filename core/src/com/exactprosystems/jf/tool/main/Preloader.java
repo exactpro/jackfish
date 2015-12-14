@@ -70,12 +70,12 @@ public class Preloader extends Stage
 
 			private String title(int index)
 			{
-				String title = "Loading";
+				StringBuilder title = new StringBuilder("Loading");
 				for (int i = 0; i < index; i++)
 				{
-					title += ".";
+					title.append(".");
 				}
-				return title;
+				return title.toString();
 			}
 		}).start();
 	}

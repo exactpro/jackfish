@@ -47,7 +47,7 @@ public class ScheduleController implements Initializable, ContainingParent
 	public TableColumn<RunnerWithState, RunnerWithState> columnCheckBox;
 	public TableColumn<RunnerWithState, String> columnDone;
 
-	public static SimpleDateFormat formatter = new SimpleDateFormat(Common.DATE_TIME_PATTERN);
+	public static final SimpleDateFormat formatter = new SimpleDateFormat(Common.DATE_TIME_PATTERN);
 
 	private static final int widthCheckBox	= 30;
 	private static final int widthDate		= 160;

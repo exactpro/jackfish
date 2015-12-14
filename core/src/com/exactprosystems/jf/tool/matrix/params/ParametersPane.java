@@ -275,8 +275,6 @@ public class ParametersPane extends CustomScrollPane
 			case NotMandatory:
 				key = new Label(par.getName());
 				Common.sizeLabel((Label) key);
-			default:
-				break;
 		}
 		key.setContextMenu(empty);
 		key.setOnContextMenuRequested(contextMenuHandler);
