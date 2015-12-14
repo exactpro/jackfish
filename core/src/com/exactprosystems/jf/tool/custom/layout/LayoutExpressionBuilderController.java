@@ -1,6 +1,7 @@
 package com.exactprosystems.jf.tool.custom.layout;
 
 import com.exactprosystems.jf.api.app.IControl;
+import com.exactprosystems.jf.api.app.PieceKind;
 import com.exactprosystems.jf.api.app.Range;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.tool.Common;
@@ -8,7 +9,8 @@ import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.custom.expfield.NewExpressionField;
 import com.exactprosystems.jf.tool.custom.fields.CustomFieldWithButton;
-import com.exactprosystems.jf.tool.custom.layout.LayoutExpressionBuilder.SpecMethod;
+//import com.exactprosystems.jf.tool.custom.layout.LayoutExpressionBuilder.SpecMethod;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -26,6 +28,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import javax.imageio.ImageIO;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
@@ -63,7 +66,8 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 	@FXML
 	private ScrollPane spControls;
 	@FXML
-	private ChoiceBox<SpecMethod> cbParameters;
+//	private ChoiceBox<SpecMethod> cbParameters;
+	private ChoiceBox<PieceKind> cbParameters;
 	@FXML
 	private Label labelControlId;
 	@FXML
@@ -95,8 +99,16 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 		assert cfFindControl != null : "fx:id=\"cfFindControl\" was not injected: check your FXML file 'LayoutExpressionBuilder.fxml'.";
 		assert parentPane != null : "fx:id=\"parentPane\" was not injected: check your FXML file 'LayoutExpressionBuilder.fxml'.";
 
+		this.cbParameters.getItems().addAll(PieceKind.values());
+		this.cbParameters.getSelectionModel().selectFirst();
+		this.cbParameters.setVisible(true);
+
 		this.cbRange.getItems().addAll(Range.values());
 		this.cbRange.getSelectionModel().selectFirst();
+		this.cbRange.setVisible(false);
+
+		this.labelControlId.setVisible(false);
+
 		this.mainToggleGroup = new ToggleGroup();
 		createCanvas();
 		listeners();
@@ -130,7 +142,8 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 
 	private void visibilityListeners()
 	{
-		this.cbRange.visibleProperty().addListener((observable, oldValue, newValue) -> {
+		this.cbRange.visibleProperty().addListener((observable, oldValue, newValue) -> 
+		{
 			expressionFieldFirst.setVisible(newValue);
 			expressionFieldSecond.setVisible(false);
 			c3.setPercentWidth(0);
@@ -148,7 +161,8 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 			}
 		});
 
-		this.cbRange.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+		this.cbRange.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> 
+		{
 			if (!cbRange.isVisible())
 			{
 				c3.setPercentWidth(0);
@@ -169,22 +183,23 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 			}
 		});
 
-		this.cbParameters.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-			this.cbRange.setVisible(newValue.needRange);
-			this.labelControlId.setVisible(newValue.needStr);
-			if (newValue.needRange && newValue.needStr)
+		this.cbParameters.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> 
+		{
+			this.cbRange.setVisible(newValue.useRange());
+			this.labelControlId.setVisible(newValue.useName());
+			if (newValue.useRange() && newValue.useName())
 			{
 				c0.setPercentWidth(20);
 				c1.setPercentWidth(15);
 				c2.setPercentWidth(15);
 			}
-			else if (newValue.needRange)
+			else if (newValue.useRange())
 			{
 				c0.setPercentWidth(35);
 				c1.setPercentWidth(0);
 				c2.setPercentWidth(15);
 			}
-			else if (newValue.needStr)
+			else if (newValue.useName())
 			{
 				c0.setPercentWidth(50);
 				c1.setPercentWidth(40);
@@ -262,7 +277,9 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 	// ==============================================================================================================================
 	public void addFormula(ActionEvent actionEvent)
 	{
-		Common.tryCatch(() -> this.model.addFormula(cbParameters.getSelectionModel().getSelectedItem(), labelControlId.getText(), cbRange.getSelectionModel().getSelectedItem(), this.expressionFieldFirst.getText(), this.expressionFieldSecond.getText()), "Error on add formula");
+		Common.tryCatch(() -> this.model.addFormula(this.cbParameters.getSelectionModel().getSelectedItem(), 
+				this.labelControlId.getText(), this.cbRange.getSelectionModel().getSelectedItem(), 
+				this.expressionFieldFirst.getText(), this.expressionFieldSecond.getText()), "Error on add formula");
 	}
 
 	// ==============================================================================================================================
@@ -288,14 +305,14 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 		rect.setVisible(true);
 	}
 
-	public void displayMethods(SpecMethod[] methods)
-	{
-		this.cbRange.setVisible(false);
-		this.labelControlId.setVisible(false);
-		this.cbParameters.getItems().clear();
-		this.cbParameters.getItems().addAll(methods);
-		this.cbParameters.getSelectionModel().selectFirst();
-	}
+//	public void displayMethods(SpecMethod[] methods)
+//	{
+//		this.cbRange.setVisible(false);
+//		this.labelControlId.setVisible(false);
+//		this.cbParameters.getItems().clear();
+//		this.cbParameters.getItems().addAll(methods);
+//		this.cbParameters.getSelectionModel().selectFirst();
+//	}
 
 	public void displayControlId(String controlId)
 	{
