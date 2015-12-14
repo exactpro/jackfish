@@ -27,7 +27,13 @@ public enum PieceKind
 		{
 			return false;
 		}
-		
+
+		@Override
+		public Arrow arrow()
+		{
+			return null;
+		}
+
 		@Override
 		protected String formulaTemplate()
 		{
@@ -55,6 +61,12 @@ public enum PieceKind
 			return true;
 		}
 		
+		@Override
+		public Arrow arrow()
+		{
+			return null;
+		}
+
 		@Override
 		protected String formulaTemplate()
 		{
@@ -94,6 +106,12 @@ public enum PieceKind
 			return false;
 		}
 		
+		@Override
+		public Arrow arrow()
+		{
+			return null;
+		}
+
 		@Override
 		protected String formulaTemplate()
 		{
@@ -136,6 +154,12 @@ public enum PieceKind
 		}
 
 		@Override
+		public Arrow arrow()
+		{
+			return Arrow.RIGHT_LEFT;
+		}
+
+		@Override
 		public int distance(Rectangle s, Rectangle o)
 		{
 			return o.x - (s.x + s.width);
@@ -155,6 +179,12 @@ public enum PieceKind
 					return s.x - (o.x + o.width);
 				}
 			});
+		}
+
+		@Override
+		public Arrow arrow()
+		{
+			return Arrow.LEFT_RIGHT;
 		}
 
 		@Override
@@ -180,6 +210,12 @@ public enum PieceKind
 		}
 
 		@Override
+		public Arrow arrow()
+		{
+			return Arrow.BOTTOM_TOP;
+		}
+
+		@Override
 		public int distance(Rectangle s, Rectangle o)
 		{
 			return o.y - (s.y + s.height);
@@ -199,6 +235,12 @@ public enum PieceKind
 					return s.y - (o.y + o.height);
 				}
 			});
+		}
+
+		@Override
+		public Arrow arrow()
+		{
+			return Arrow.TOP_BOTTOM;
 		}
 
 		@Override
@@ -224,6 +266,12 @@ public enum PieceKind
 		}
 
 		@Override
+		public Arrow arrow()
+		{
+			return Arrow.RIGHT_RIGHT;
+		}
+
+		@Override
 		public int distance(Rectangle s, Rectangle o)
 		{
 			return (o.x + o.width) - (s.x + s.width);
@@ -243,6 +291,12 @@ public enum PieceKind
 					return (s.x + s.width) - (o.x + o.width);
 				}
 			});
+		}
+
+		@Override
+		public Arrow arrow()
+		{
+			return Arrow.LEFT_LEFT;
 		}
 
 		@Override
@@ -268,6 +322,12 @@ public enum PieceKind
 		}
 
 		@Override
+		public Arrow arrow()
+		{
+			return Arrow.BOTTOM_BOTTOM;
+		}
+
+		@Override
 		public int distance(Rectangle s, Rectangle o)
 		{
 			return (o.y + o.height) - (s.y + s.height);
@@ -287,6 +347,12 @@ public enum PieceKind
 					return (s.y + s.height) - (o.y + o.height);
 				}
 			});
+		}
+
+		@Override
+		public Arrow arrow()
+		{
+			return Arrow.TOP_TOP;
 		}
 
 		@Override
@@ -312,6 +378,12 @@ public enum PieceKind
 		}
 
 		@Override
+		public Arrow arrow()
+		{
+			return Arrow.LEFT_LEFT;
+		}
+
+		@Override
 		public int distance(Rectangle s, Rectangle o)
 		{
 			return o.x - s.x;
@@ -331,6 +403,12 @@ public enum PieceKind
 					return s.x - o.x;
 				}
 			});
+		}
+
+		@Override
+		public Arrow arrow()
+		{
+			return Arrow.RIGHT_RIGHT;
 		}
 
 		@Override
@@ -356,6 +434,12 @@ public enum PieceKind
 		}
 
 		@Override
+		public Arrow arrow()
+		{
+			return Arrow.TOP_TOP;
+		}
+
+		@Override
 		public int distance(Rectangle s, Rectangle o)
 		{
 			return o.y - s.y;
@@ -375,6 +459,12 @@ public enum PieceKind
 					return s.y - o.y;
 				}
 			});
+		}
+
+		@Override
+		public Arrow arrow()
+		{
+			return Arrow.BOTTOM_BOTTOM;
 		}
 
 		@Override
@@ -400,6 +490,12 @@ public enum PieceKind
 		}
 
 		@Override
+		public Arrow arrow()
+		{
+			return Arrow.LEFT_LEFT;
+		}
+
+		@Override
 		public int distance(Rectangle s, Rectangle o)
 		{
 			return o.x - s.x;
@@ -419,6 +515,12 @@ public enum PieceKind
 					return s.x - o.x;
 				}
 			});
+		}
+
+		@Override
+		public Arrow arrow()
+		{
+			return Arrow.RIGHT_RIGHT;
 		}
 
 		@Override
@@ -444,6 +546,12 @@ public enum PieceKind
 		}
 
 		@Override
+		public Arrow arrow()
+		{
+			return Arrow.TOP_TOP;
+		}
+
+		@Override
 		public int distance(Rectangle s, Rectangle o)
 		{
 			return o.y - s.y;
@@ -463,6 +571,12 @@ public enum PieceKind
 					return s.y - o.y;
 				}
 			});
+		}
+
+		@Override
+		public Arrow arrow()
+		{
+			return Arrow.BOTTOM_BOTTOM;
 		}
 
 		@Override
@@ -488,6 +602,12 @@ public enum PieceKind
 		}
 
 		@Override
+		public Arrow arrow()
+		{
+			return Arrow.H_CENTERS;
+		}
+
+		@Override
 		public int distance(Rectangle s, Rectangle o)
 		{
 			return (o.x + o.width / 2) - (s.x + s.width / 2);
@@ -507,6 +627,12 @@ public enum PieceKind
 					return (o.y + o.height / 2) - (s.y + s.height / 2);
 				}
 			});
+		}
+
+		@Override
+		public Arrow arrow()
+		{
+			return Arrow.V_CENTERS;
 		}
 
 		@Override
@@ -571,6 +697,9 @@ public enum PieceKind
 	{
 		return 0;
 	}
+	
+	public abstract Arrow arrow();
+	
 	
 	
 	
