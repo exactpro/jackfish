@@ -331,10 +331,10 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 		this.selectedRectangle.setVisible(false);
 	}
 
-	public void displayArrow(double start, double end, double where, CustomArrow.ArrowPosition position)
+	public void displayArrow(int start, int end, int where, CustomArrow.ArrowDirection position)
 	{
 		this.customArrow.setPoints(start, end);
-		this.customArrow.setPosition(position);
+		this.customArrow.setDirection(position);
 		this.customArrow.show(where);
 	}
 

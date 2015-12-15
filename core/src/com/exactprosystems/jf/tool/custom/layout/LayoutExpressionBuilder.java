@@ -96,84 +96,99 @@ public class LayoutExpressionBuilder
 		System.err.println(parameter.toFormula(controlId, range, first, second));
 	}
 
-	public void displayArrow(Rectangle init, Rectangle selected, Arrow arrow)
+	public void displayArrow(Rectangle self, Rectangle other, Arrow arrow)
 	{
-		double start = 0;
-		double end = 0;
-		CustomArrow.ArrowPosition position = null;
-		double where = 0;
-		double centerX = (Math.max(init.getCenterX(), selected.getCenterX()) + Math.min(init.getCenterX(), selected.getCenterX())) / 2;
-		double centerY = (Math.max(init.getCenterY(), selected.getCenterY()) + Math.min(init.getCenterY(), selected.getCenterY())) / 2;
+		int start = 0;
+		int end = 0;
+		CustomArrow.ArrowDirection position;
+		int where;
+		int centerX = (int) ((self.getCenterX() + other.getCenterX()) / 2);
+		int centerY = (int) ((self.getCenterY() + other.getCenterY()) / 2);
 		if (arrow != null)
 		{
+			if (arrow == Arrow.LEFT_LEFT || arrow == Arrow.LEFT_RIGHT || arrow == Arrow.RIGHT_LEFT || arrow == Arrow.RIGHT_RIGHT || arrow == Arrow.H_CENTERS)
+			{
+				position = CustomArrow.ArrowDirection.HORIZONTAL;
+			}
+			else
+			{
+				position = CustomArrow.ArrowDirection.VERTICAL;
+			}
 			switch (arrow)
 			{
 				case LEFT_LEFT:
-//					position = CustomArrow.ArrowPosition.HORIZONTAL;
-//					where = centerY;
-//					start =
+					start = (int) self.getX();
+					end = (int)(int) other.getX();
 					break;
 
 				case LEFT_RIGHT:
-
+					start = (int) self.getX();
+					end = (int) (other.getX() + other.getWidth());
 					break;
 
 				case RIGHT_LEFT:
-
+					start = (int) (self.getX() + self.getWidth());
+					end = (int)other.getX();
 					break;
 
 				case RIGHT_RIGHT:
-
+					start = (int) (self.getX() + self.getWidth());
+					end = (int) (other.getX() + other.getWidth());
 					break;
 
 				case BOTTOM_TOP:
-
+					start = (int) (self.getY() + self.getHeight());
+					end = (int)other.getY();
 					break;
 
 				case TOP_BOTTOM:
-
+					start = (int) self.getY();
+					end = (int) (other.getY() + other.getHeight());
 					break;
 
 				case TOP_TOP:
-
+					start = (int) self.getY();
+					end = (int)other.getY();
 					break;
 
 				case BOTTOM_BOTTOM:
-					position = CustomArrow.ArrowPosition.VERTICAL;
-					where = centerX;
-					start = init.getHeight() + init.getY();
-					end = selected.getHeight() + selected.getY();
+					start = (int) (self.getY() + self.getHeight());
+					end = (int) (other.getY() + other.getHeight());
 					break;
 
 				case H_CENTERS:
-
+					start = (int) self.getCenterX();
+					end = (int) other.getCenterX();
 					break;
 
 				case V_CENTERS:
-
+					start = (int) self.getCenterY();
+					end = (int) other.getCenterY();
 					break;
 			}
+			where = position == CustomArrow.ArrowDirection.VERTICAL ? centerX : centerY;
 			this.controller.displayArrow(start, end, where, position);
 		}
 	}
 
-	public void displayDistance(IControl selectedControl, PieceKind kind)
+	public void displayDistance(IControl otherControl, PieceKind kind)
 	{
-		if (selectedControl != null)
+		if (otherControl != null)
 		{
 			Common.tryCatch(() -> {
-				IControl initialControl = this.currentWindow.getControlForName(null, this.parameterName);
-				Locator initialLocator = initialControl.locator();
-				IControl initialOwner = this.currentWindow.getOwnerControl(initialControl);
-				Rectangle initialRectangle = service().getRectangle(initialOwner == null ? null : initialOwner.locator(), initialLocator);
+				IControl selfControl = this.currentWindow.getControlForName(null, this.parameterName);
+				Locator selfLocator = selfControl.locator();
+				IControl selfOwner = this.currentWindow.getOwnerControl(selfControl);
+				Rectangle selfRectangle = service().getRectangle(selfOwner == null ? null : selfOwner.locator(), selfLocator);
 
-				Locator selectedLocator = selectedControl.locator();
-				IControl selectedOwner = this.currentWindow.getOwnerControl(selectedControl);
-				Rectangle selectedRectangle = service().getRectangle(selectedOwner == null ? null : selectedOwner.locator(), selectedLocator);
+				Locator otherLocator = otherControl.locator();
+				IControl otherOwner = this.currentWindow.getOwnerControl(otherControl);
+				Rectangle otherRectangle = service().getRectangle(otherOwner == null ? null : otherOwner.locator(), otherLocator);
 
-				int distance = kind.distance(initialRectangle, selectedRectangle);
+				int distance = kind.distance(selfRectangle, otherRectangle);
 				this.controller.displayDistance(distance);
-				this.displayArrow(initialRectangle, selectedRectangle, kind.arrow());
+				this.controller.clearArrow();
+				this.displayArrow(selfRectangle, otherRectangle, kind.arrow());
 			}, "Error on display distance");
 		}
 		else

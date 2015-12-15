@@ -14,19 +14,19 @@ import javafx.scene.shape.Polygon;
 
 public class CustomArrow
 {
-	public enum ArrowPosition
+	public enum ArrowDirection
 	{
 		VERTICAL,
 		HORIZONTAL
 	}
 
-	public static final int TRIANGLE_BASE	= 10;
-	public static final int TRIANGLE_HEIGHT	= 13;
-	public static final int LINE_LENGTH		= 25;
+	public static final double TRIANGLE_BASE	= 10;
+	public static final double TRIANGLE_HEIGHT	= 13;
+	public static final double LINE_LENGTH		= 25;
 
-	private double start;
-	private double end;
-	private ArrowPosition position;
+	private int start;
+	private int end;
+	private ArrowDirection direction;
 
 	private boolean needShowLine2 = false;
 	private Line line2;
@@ -57,27 +57,27 @@ public class CustomArrow
 		this.t1.getStyleClass().add(CssVariables.LINE_TRIANGLE);
 		this.t2.getStyleClass().add(CssVariables.LINE_TRIANGLE);
 
-		this.position = ArrowPosition.HORIZONTAL;
+		this.direction = ArrowDirection.HORIZONTAL;
 	}
 
-	public CustomArrow(double start, double end, ArrowPosition position)
+	public CustomArrow(int start, int end, ArrowDirection direction)
 	{
 		this();
 		this.start = start;
 		this.end = end;
-		this.position = position;
+		this.direction = direction;
 	}
 
-	public void setPosition(ArrowPosition position)
+	public void setDirection(ArrowDirection direction)
 	{
-		this.position = position;
+		this.direction = direction;
 	}
 
 	/**
 	 * @param start - start line point
 	 * @param end - end line point
 	 */
-	public void setPoints(double start, double end)
+	public void setPoints(int start, int end)
 	{
 		this.start = start;
 		this.end = end;
@@ -86,7 +86,7 @@ public class CustomArrow
 	/**
 	 * @param x - this is x or y, depending on arrowPosition
 	 */
-	public void show(double x)
+	public void show(int x)
 	{
 		createLine(x);
 		this.line.setVisible(true);
@@ -104,6 +104,8 @@ public class CustomArrow
 		this.line2.setVisible(false);
 		this.t1.setVisible(false);
 		this.t2.setVisible(false);
+		this.t1.getPoints().clear();
+		this.t2.getPoints().clear();
 	}
 
 	public void setGroup(Group group)
@@ -116,10 +118,13 @@ public class CustomArrow
 		return (Math.max(this.start, this.end) - Math.min(this.start, this.end)) > (TRIANGLE_HEIGHT * 2 + 3);
 	}
 
-	private void createLine(double x)
+	private void createLine(int x)
 	{
+		this.start = Math.min(this.start, this.end);
+		this.end = Math.max(this.start, this.end);
+
 		needShowLine2 = false;
-		if (this.position == ArrowPosition.VERTICAL)
+		if (this.direction == ArrowDirection.VERTICAL)
 		{
 			if (needArrow())
 			{
@@ -128,19 +133,19 @@ public class CustomArrow
 				 *   |
 				 *  \|/
 				 */
-				this.line.setStartY(this.start);
-				this.line.setEndY(this.end);
 				this.line.setStartX(x);
 				this.line.setEndX(x);
+				this.line.setStartY(this.start);
+				this.line.setEndY(this.end);
 
 				this.t1.getPoints().addAll(
-						x, this.start,
+						(double) x, (double) this.start,
 						x-TRIANGLE_BASE/2, this.start + TRIANGLE_HEIGHT,
 						x+TRIANGLE_BASE/2, this.start + TRIANGLE_HEIGHT
 				);
 
 				this.t2.getPoints().addAll(
-						x, this.end,
+						(double) x, (double) this.end,
 						x-TRIANGLE_BASE/2, this.end - TRIANGLE_HEIGHT,
 						x+TRIANGLE_BASE/2, this.end - TRIANGLE_HEIGHT
 				);
@@ -166,13 +171,13 @@ public class CustomArrow
 				this.line2.setEndY(this.end + LINE_LENGTH);
 
 				this.t1.getPoints().addAll(
-						x, this.start,
+						(double) x, (double) this.start,
 						x - TRIANGLE_BASE/2, this.start - TRIANGLE_HEIGHT,
 						x + TRIANGLE_BASE/2, this.start - TRIANGLE_HEIGHT
 				);
 
 				this.t2.getPoints().addAll(
-						x, this.end,
+						(double) x, (double) this.end,
 						x + TRIANGLE_BASE/2, this.end + TRIANGLE_HEIGHT,
 						x - TRIANGLE_BASE/2, this.end + TRIANGLE_HEIGHT
 				);
@@ -193,13 +198,13 @@ public class CustomArrow
 				this.line.setEndY(x);
 
 				this.t1.getPoints().addAll(
-						this.start, x,
+						(double) this.start, (double) x,
 						this.start + TRIANGLE_HEIGHT, x - TRIANGLE_BASE/2,
 						this.start + TRIANGLE_HEIGHT, x + TRIANGLE_BASE/2
 				);
 
 				this.t2.getPoints().addAll(
-						this.end, x,
+						(double) this.end, (double) x,
 						this.end - TRIANGLE_HEIGHT, x + TRIANGLE_BASE/2,
 						this.end - TRIANGLE_HEIGHT, x - TRIANGLE_BASE/2
 				);
@@ -223,13 +228,13 @@ public class CustomArrow
 				this.line2.setEndY(x);
 
 				this.t1.getPoints().addAll(
-						this.start, x,
+						(double) this.start, (double) x,
 						this.start - TRIANGLE_HEIGHT, x + TRIANGLE_BASE/2,
 						this.start - TRIANGLE_HEIGHT, x - TRIANGLE_BASE/2
 				);
 
 				this.t2.getPoints().addAll(
-						this.end, x,
+						(double) this.end, (double) x,
 						this.end + TRIANGLE_HEIGHT, x - TRIANGLE_BASE/2,
 						this.end + TRIANGLE_HEIGHT, x + TRIANGLE_BASE/2
 				);
