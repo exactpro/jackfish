@@ -8,7 +8,6 @@
 
 package com.exactprosystems.jf.api.app;
 
-@FunctionalInterface
 public interface CheckProvider
 {
 	Piece provide(PieceKind kind);

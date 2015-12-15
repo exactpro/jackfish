@@ -69,7 +69,8 @@ public class Spec implements Iterable<Piece>, Serializable
 	//------------------------------------------------------------------------------------------------------------------------------
 	public Spec visible()
 	{
-		return adder(() -> new Piece(PieceKind.VISIBLE));
+		this.list.add(new Piece(PieceKind.VISIBLE));
+		return this;
 	}
 
 	//------------------------------------------------------------------------------------------------------------------------------
@@ -77,12 +78,14 @@ public class Spec implements Iterable<Piece>, Serializable
 	//------------------------------------------------------------------------------------------------------------------------------
 	public Spec count(String another, Number dist)
 	{
-		return adder(() -> new Piece(PieceKind.COUNT).setName(another).setRange(Range.EQUAL).setA(dist.longValue()));
+		this.list.add(new Piece(PieceKind.COUNT).setName(another).setRange(Range.EQUAL).setA(dist.longValue()));
+		return this;
 	}
 
 	public Spec count(String another, CheckProvider func)
 	{
-		return adder(() -> func.provide(PieceKind.COUNT).setName(another));
+		this.list.add(func.provide(PieceKind.COUNT).setName(another));
+		return this;
 	}
 	
 	//------------------------------------------------------------------------------------------------------------------------------
@@ -90,7 +93,8 @@ public class Spec implements Iterable<Piece>, Serializable
 	//------------------------------------------------------------------------------------------------------------------------------
 	public Spec contains(String another)
 	{
-		return adder(() -> new Piece(PieceKind.CONTAINS).setName(another));
+		this.list.add(new Piece(PieceKind.CONTAINS).setName(another));
+		return this;
 	}
 
 	//------------------------------------------------------------------------------------------------------------------------------
@@ -98,22 +102,26 @@ public class Spec implements Iterable<Piece>, Serializable
 	//------------------------------------------------------------------------------------------------------------------------------
 	public Spec left(String another, Number dist)
 	{
-		return adder(() -> new Piece(PieceKind.LEFT).setName(another).setRange(Range.EQUAL).setA(dist.longValue()));
+		this.list.add(new Piece(PieceKind.LEFT).setName(another).setRange(Range.EQUAL).setA(dist.longValue()));
+		return this;
 	}
 
 	public Spec left(String another, CheckProvider func)
 	{
-		return adder(() -> func.provide(PieceKind.LEFT).setName(another));
+		this.list.add(func.provide(PieceKind.LEFT).setName(another));
+		return this;
 	}
 
 	public Spec left(Locator locator, Number dist)
 	{
-		return adder(() -> new Piece(PieceKind.LEFT).setLocator(null, locator).setRange(Range.EQUAL).setA(dist.longValue()));
+		this.list.add(new Piece(PieceKind.LEFT).setLocator(null, locator).setRange(Range.EQUAL).setA(dist.longValue()));
+		return this;
 	}
 
 	public Spec left(Locator locator, CheckProvider func)
 	{
-		return adder(() -> func.provide(PieceKind.LEFT).setLocator(null, locator));
+		this.list.add(func.provide(PieceKind.LEFT).setLocator(null, locator));
+		return this;
 	}
 
 	//------------------------------------------------------------------------------------------------------------------------------
@@ -121,22 +129,26 @@ public class Spec implements Iterable<Piece>, Serializable
 	//------------------------------------------------------------------------------------------------------------------------------
 	public Spec right(String another, Number dist)
 	{
-		return adder(() -> new Piece(PieceKind.RIGHT).setName(another).setRange(Range.EQUAL).setA(dist.longValue()));
+		this.list.add(new Piece(PieceKind.RIGHT).setName(another).setRange(Range.EQUAL).setA(dist.longValue()));
+		return this;
 	}
 
 	public Spec right(String another, CheckProvider func)
 	{
-		return adder(() -> func.provide(PieceKind.RIGHT).setName(another));
+		this.list.add(func.provide(PieceKind.RIGHT).setName(another));
+		return this;
 	}
 
 	public Spec right(Locator locator, Number dist)
 	{
-		return adder(() -> new Piece(PieceKind.RIGHT).setLocator(null, locator).setRange(Range.EQUAL).setA(dist.longValue()));
+		this.list.add(new Piece(PieceKind.RIGHT).setLocator(null, locator).setRange(Range.EQUAL).setA(dist.longValue()));
+		return this;
 	}
 
 	public Spec right(Locator locator, CheckProvider func)
 	{
-		return adder(() -> func.provide(PieceKind.RIGHT).setLocator(null, locator));
+		this.list.add(func.provide(PieceKind.RIGHT).setLocator(null, locator));
+		return this;
 	}
 
 	//------------------------------------------------------------------------------------------------------------------------------
@@ -144,22 +156,26 @@ public class Spec implements Iterable<Piece>, Serializable
 	//------------------------------------------------------------------------------------------------------------------------------
 	public Spec top(String another, Number dist)
 	{
-		return adder(() -> new Piece(PieceKind.TOP).setName(another).setRange(Range.EQUAL).setA(dist.longValue()));
+		this.list.add(new Piece(PieceKind.TOP).setName(another).setRange(Range.EQUAL).setA(dist.longValue()));
+		return this;
 	}
 
 	public Spec top(String another, CheckProvider func)
 	{
-		return adder(() -> func.provide(PieceKind.TOP).setName(another));
+		this.list.add(func.provide(PieceKind.TOP).setName(another));
+		return this;
 	}
 
 	public Spec top(Locator locator, Number dist)
 	{
-		return adder(() -> new Piece(PieceKind.TOP).setLocator(null, locator).setRange(Range.EQUAL).setA(dist.longValue()));
+		this.list.add(new Piece(PieceKind.TOP).setLocator(null, locator).setRange(Range.EQUAL).setA(dist.longValue()));
+		return this;
 	}
 
 	public Spec top(Locator locator, CheckProvider func)
 	{
-		return adder(() -> func.provide(PieceKind.TOP).setLocator(null, locator));
+		this.list.add(func.provide(PieceKind.TOP).setLocator(null, locator));
+		return this;
 	}
 
 	//------------------------------------------------------------------------------------------------------------------------------
@@ -167,22 +183,26 @@ public class Spec implements Iterable<Piece>, Serializable
 	//------------------------------------------------------------------------------------------------------------------------------
 	public Spec bottom(String another, Number dist)
 	{
-		return adder(() -> new Piece(PieceKind.BOTTOM).setName(another).setRange(Range.EQUAL).setA(dist.longValue()));
+		this.list.add(new Piece(PieceKind.BOTTOM).setName(another).setRange(Range.EQUAL).setA(dist.longValue()));
+		return this;
 	}
 
 	public Spec bottom(String another, CheckProvider func)
 	{
-		return adder(() -> func.provide(PieceKind.BOTTOM).setName(another));
+		this.list.add(func.provide(PieceKind.BOTTOM).setName(another));
+		return this;
 	}
 
 	public Spec bottom(Locator locator, Number dist)
 	{
-		return adder(() -> new Piece(PieceKind.BOTTOM).setLocator(null, locator).setRange(Range.EQUAL).setA(dist.longValue()));
+		this.list.add(new Piece(PieceKind.BOTTOM).setLocator(null, locator).setRange(Range.EQUAL).setA(dist.longValue()));
+		return this;
 	}
 
 	public Spec bottom(Locator locator, CheckProvider func)
 	{
-		return adder(() -> func.provide(PieceKind.BOTTOM).setLocator(null, locator));
+		this.list.add(func.provide(PieceKind.BOTTOM).setLocator(null, locator));
+		return this;
 	}
 	
 	//------------------------------------------------------------------------------------------------------------------------------
@@ -190,22 +210,26 @@ public class Spec implements Iterable<Piece>, Serializable
 	//------------------------------------------------------------------------------------------------------------------------------
 	public Spec inLeft(String another, Number dist)
 	{
-		return adder(() -> new Piece(PieceKind.INSIDE_LEFT).setName(another).setRange(Range.EQUAL).setA(dist.longValue()));
+		this.list.add(new Piece(PieceKind.INSIDE_LEFT).setName(another).setRange(Range.EQUAL).setA(dist.longValue()));
+		return this;
 	}
 
 	public Spec inLeft(String another, CheckProvider func)
 	{
-		return adder(() -> func.provide(PieceKind.INSIDE_LEFT).setName(another));
+		this.list.add(func.provide(PieceKind.INSIDE_LEFT).setName(another));
+		return this;
 	}
 
 	public Spec inLeft(Locator locator, Number dist)
 	{
-		return adder(() -> new Piece(PieceKind.INSIDE_LEFT).setLocator(null, locator).setRange(Range.EQUAL).setA(dist.longValue()));
+		this.list.add(new Piece(PieceKind.INSIDE_LEFT).setLocator(null, locator).setRange(Range.EQUAL).setA(dist.longValue()));
+		return this;
 	}
 
 	public Spec inLeft(Locator locator, CheckProvider func)
 	{
-		return adder(() -> func.provide(PieceKind.INSIDE_LEFT).setLocator(null, locator));
+		this.list.add(func.provide(PieceKind.INSIDE_LEFT).setLocator(null, locator));
+		return this;
 	}
 
 	//------------------------------------------------------------------------------------------------------------------------------
@@ -213,22 +237,26 @@ public class Spec implements Iterable<Piece>, Serializable
 	//------------------------------------------------------------------------------------------------------------------------------
 	public Spec inRight(String another, Number dist)
 	{
-		return adder(() -> new Piece(PieceKind.INSIDE_RIGHT).setName(another).setRange(Range.EQUAL).setA(dist.longValue()));
+		this.list.add(new Piece(PieceKind.INSIDE_RIGHT).setName(another).setRange(Range.EQUAL).setA(dist.longValue()));
+		return this;
 	}
 
 	public Spec inRight(String another, CheckProvider func)
 	{
-		return adder(() -> func.provide(PieceKind.INSIDE_RIGHT).setName(another));
+		this.list.add(func.provide(PieceKind.INSIDE_RIGHT).setName(another));
+		return this;
 	}
 
 	public Spec inRight(Locator locator, Number dist)
 	{
-		return adder(() -> new Piece(PieceKind.INSIDE_RIGHT).setLocator(null, locator).setRange(Range.EQUAL).setA(dist.longValue()));
+		this.list.add(new Piece(PieceKind.INSIDE_RIGHT).setLocator(null, locator).setRange(Range.EQUAL).setA(dist.longValue()));
+		return this;
 	}
 
 	public Spec inRight(Locator locator, CheckProvider func)
 	{
-		return adder(() -> func.provide(PieceKind.INSIDE_RIGHT).setLocator(null, locator));
+		this.list.add(func.provide(PieceKind.INSIDE_RIGHT).setLocator(null, locator));
+		return this;
 	}
 
 	//------------------------------------------------------------------------------------------------------------------------------
@@ -236,22 +264,26 @@ public class Spec implements Iterable<Piece>, Serializable
 	//------------------------------------------------------------------------------------------------------------------------------
 	public Spec inTop(String another, Number dist)
 	{
-		return adder(() -> new Piece(PieceKind.INSIDE_TOP).setName(another).setRange(Range.EQUAL).setA(dist.longValue()));
+		this.list.add(new Piece(PieceKind.INSIDE_TOP).setName(another).setRange(Range.EQUAL).setA(dist.longValue()));
+		return this;
 	}
 
 	public Spec inTop(String another, CheckProvider func)
 	{
-		return adder(() -> func.provide(PieceKind.INSIDE_TOP).setName(another));
+		this.list.add(func.provide(PieceKind.INSIDE_TOP).setName(another));
+		return this;
 	}
 
 	public Spec inTop(Locator locator, Number dist)
 	{
-		return adder(() -> new Piece(PieceKind.INSIDE_TOP).setLocator(null, locator).setRange(Range.EQUAL).setA(dist.longValue()));
+		this.list.add(new Piece(PieceKind.INSIDE_TOP).setLocator(null, locator).setRange(Range.EQUAL).setA(dist.longValue()));
+		return this;
 	}
 
 	public Spec inTop(Locator locator, CheckProvider func)
 	{
-		return adder(() -> func.provide(PieceKind.INSIDE_TOP).setLocator(null, locator));
+		this.list.add(func.provide(PieceKind.INSIDE_TOP).setLocator(null, locator));
+		return this;
 	}
 
 	//------------------------------------------------------------------------------------------------------------------------------
@@ -259,22 +291,26 @@ public class Spec implements Iterable<Piece>, Serializable
 	//------------------------------------------------------------------------------------------------------------------------------
 	public Spec inBottom(String another, Number dist)
 	{
-		return adder(() -> new Piece(PieceKind.INSIDE_BOTTOM).setName(another).setRange(Range.EQUAL).setA(dist.longValue()));
+		this.list.add(new Piece(PieceKind.INSIDE_BOTTOM).setName(another).setRange(Range.EQUAL).setA(dist.longValue()));
+		return this;
 	}
 
 	public Spec inBottom(String another, CheckProvider func)
 	{
-		return adder(() -> func.provide(PieceKind.INSIDE_BOTTOM).setName(another));
+		this.list.add(func.provide(PieceKind.INSIDE_BOTTOM).setName(another));
+		return this;
 	}
 
 	public Spec inBottom(Locator locator, Number dist)
 	{
-		return adder(() -> new Piece(PieceKind.INSIDE_BOTTOM).setLocator(null, locator).setRange(Range.EQUAL).setA(dist.longValue()));
+		this.list.add(new Piece(PieceKind.INSIDE_BOTTOM).setLocator(null, locator).setRange(Range.EQUAL).setA(dist.longValue()));
+		return this;
 	}
 
 	public Spec inBottom(Locator locator, CheckProvider func)
 	{
-		return adder(() -> func.provide(PieceKind.INSIDE_BOTTOM).setLocator(null, locator));
+		this.list.add(func.provide(PieceKind.INSIDE_BOTTOM).setLocator(null, locator));
+		return this;
 	}
 
 	//------------------------------------------------------------------------------------------------------------------------------
@@ -282,22 +318,26 @@ public class Spec implements Iterable<Piece>, Serializable
 	//------------------------------------------------------------------------------------------------------------------------------
 	public Spec onLeft(String another, Number dist)
 	{
-		return adder(() -> new Piece(PieceKind.ON_LEFT).setName(another).setRange(Range.EQUAL).setA(dist.longValue()));
+		this.list.add(new Piece(PieceKind.ON_LEFT).setName(another).setRange(Range.EQUAL).setA(dist.longValue()));
+		return this;
 	}
 
 	public Spec onLeft(String another, CheckProvider func)
 	{
-		return adder(() -> func.provide(PieceKind.ON_LEFT).setName(another));
+		this.list.add(func.provide(PieceKind.ON_LEFT).setName(another));
+		return this;
 	}
 
 	public Spec onLeft(Locator locator, Number dist)
 	{
-		return adder(() -> new Piece(PieceKind.ON_LEFT).setLocator(null, locator).setRange(Range.EQUAL).setA(dist.longValue()));
+		this.list.add(new Piece(PieceKind.ON_LEFT).setLocator(null, locator).setRange(Range.EQUAL).setA(dist.longValue()));
+		return this;
 	}
 
 	public Spec onLeft(Locator locator, CheckProvider func)
 	{
-		return adder(() -> func.provide(PieceKind.ON_LEFT).setLocator(null, locator));
+		this.list.add(func.provide(PieceKind.ON_LEFT).setLocator(null, locator));
+		return this;
 	}
 
 	//------------------------------------------------------------------------------------------------------------------------------
@@ -305,22 +345,26 @@ public class Spec implements Iterable<Piece>, Serializable
 	//------------------------------------------------------------------------------------------------------------------------------
 	public Spec onRight(String another, Number dist)
 	{
-		return adder(() -> new Piece(PieceKind.ON_RIGHT).setName(another).setRange(Range.EQUAL).setA(dist.longValue()));
+		this.list.add(new Piece(PieceKind.ON_RIGHT).setName(another).setRange(Range.EQUAL).setA(dist.longValue()));
+		return this;
 	}
 
 	public Spec onRight(String another, CheckProvider func)
 	{
-		return adder(() -> func.provide(PieceKind.ON_RIGHT).setName(another));
+		this.list.add(func.provide(PieceKind.ON_RIGHT).setName(another));
+		return this;
 	}
 
 	public Spec onRight(Locator locator, Number dist)
 	{
-		return adder(() -> new Piece(PieceKind.ON_RIGHT).setLocator(null, locator).setRange(Range.EQUAL).setA(dist.longValue()));
+		this.list.add(new Piece(PieceKind.ON_RIGHT).setLocator(null, locator).setRange(Range.EQUAL).setA(dist.longValue()));
+		return this;
 	}
 
 	public Spec onRight(Locator locator, CheckProvider func)
 	{
-		return adder(() -> func.provide(PieceKind.ON_RIGHT).setLocator(null, locator));
+		this.list.add(func.provide(PieceKind.ON_RIGHT).setLocator(null, locator));
+		return this;
 	}
 
 	//------------------------------------------------------------------------------------------------------------------------------
@@ -328,22 +372,26 @@ public class Spec implements Iterable<Piece>, Serializable
 	//------------------------------------------------------------------------------------------------------------------------------
 	public Spec onTop(String another, Number dist)
 	{
-		return adder(() -> new Piece(PieceKind.ON_TOP).setName(another).setRange(Range.EQUAL).setA(dist.longValue()));
+		this.list.add(new Piece(PieceKind.ON_TOP).setName(another).setRange(Range.EQUAL).setA(dist.longValue()));
+		return this;
 	}
 
 	public Spec onTop(String another, CheckProvider func)
 	{
-		return adder(() -> func.provide(PieceKind.ON_TOP).setName(another));
+		this.list.add(func.provide(PieceKind.ON_TOP).setName(another));
+		return this;
 	}
 
 	public Spec onTop(Locator locator, Number dist)
 	{
-		return adder(() -> new Piece(PieceKind.ON_TOP).setLocator(null, locator).setRange(Range.EQUAL).setA(dist.longValue()));
+		this.list.add(new Piece(PieceKind.ON_TOP).setLocator(null, locator).setRange(Range.EQUAL).setA(dist.longValue()));
+		return this;
 	}
 
 	public Spec onTop(Locator locator, CheckProvider func)
 	{
-		return adder(() -> func.provide(PieceKind.ON_TOP).setLocator(null, locator));
+		this.list.add(func.provide(PieceKind.ON_TOP).setLocator(null, locator));
+		return this;
 	}
 
 	//------------------------------------------------------------------------------------------------------------------------------
@@ -351,22 +399,26 @@ public class Spec implements Iterable<Piece>, Serializable
 	//------------------------------------------------------------------------------------------------------------------------------
 	public Spec onBottom(String another, Number dist)
 	{
-		return adder(() -> new Piece(PieceKind.ON_BOTTOM).setName(another).setRange(Range.EQUAL).setA(dist.longValue()));
+		this.list.add(new Piece(PieceKind.ON_BOTTOM).setName(another).setRange(Range.EQUAL).setA(dist.longValue()));
+		return this;
 	}
 
 	public Spec onBottom(String another, CheckProvider func)
 	{
-		return adder(() -> func.provide(PieceKind.ON_BOTTOM).setName(another));
+		this.list.add(func.provide(PieceKind.ON_BOTTOM).setName(another));
+		return this;
 	}
 
 	public Spec onBottom(Locator locator, Number dist)
 	{
-		return adder(() -> new Piece(PieceKind.ON_BOTTOM).setLocator(null, locator).setRange(Range.EQUAL).setA(dist.longValue()));
+		this.list.add(new Piece(PieceKind.ON_BOTTOM).setLocator(null, locator).setRange(Range.EQUAL).setA(dist.longValue()));
+		return this;
 	}
 
 	public Spec onBottom(Locator locator, CheckProvider func)
 	{
-		return adder(() -> func.provide(PieceKind.ON_BOTTOM).setLocator(null, locator));
+		this.list.add(func.provide(PieceKind.ON_BOTTOM).setLocator(null, locator));
+		return this;
 	}
 	
 	//------------------------------------------------------------------------------------------------------------------------------
@@ -374,22 +426,26 @@ public class Spec implements Iterable<Piece>, Serializable
 	//------------------------------------------------------------------------------------------------------------------------------
 	public Spec lAlign(String another, Number dist)
 	{
-		return adder(() -> new Piece(PieceKind.LEFT_ALIGNED).setName(another).setRange(Range.EQUAL).setA(dist.longValue()));
+		this.list.add(new Piece(PieceKind.LEFT_ALIGNED).setName(another).setRange(Range.EQUAL).setA(dist.longValue()));
+		return this;
 	}
 
 	public Spec lAlign(String another, CheckProvider func)
 	{
-		return adder(() -> func.provide(PieceKind.LEFT_ALIGNED).setName(another));
+		this.list.add(func.provide(PieceKind.LEFT_ALIGNED).setName(another));
+		return this;
 	}
 
 	public Spec lAlign(Locator locator, Number dist)
 	{
-		return adder(() -> new Piece(PieceKind.LEFT_ALIGNED).setLocator(null, locator).setRange(Range.EQUAL).setA(dist.longValue()));
+		this.list.add(new Piece(PieceKind.LEFT_ALIGNED).setLocator(null, locator).setRange(Range.EQUAL).setA(dist.longValue()));
+		return this;
 	}
 
 	public Spec lAlign(Locator locator, CheckProvider func)
 	{
-		return adder(() -> func.provide(PieceKind.LEFT_ALIGNED).setLocator(null, locator));
+		this.list.add(func.provide(PieceKind.LEFT_ALIGNED).setLocator(null, locator));
+		return this;
 	}
 
 	//------------------------------------------------------------------------------------------------------------------------------
@@ -397,22 +453,26 @@ public class Spec implements Iterable<Piece>, Serializable
 	//------------------------------------------------------------------------------------------------------------------------------
 	public Spec rAlign(String another, Number dist)
 	{
-		return adder(() -> new Piece(PieceKind.RIGHT_ALIGNED).setName(another).setRange(Range.EQUAL).setA(dist.longValue()));
+		this.list.add(new Piece(PieceKind.RIGHT_ALIGNED).setName(another).setRange(Range.EQUAL).setA(dist.longValue()));
+		return this;
 	}
 
 	public Spec rAlign(String another, CheckProvider func)
 	{
-		return adder(() -> func.provide(PieceKind.RIGHT_ALIGNED).setName(another));
+		this.list.add(func.provide(PieceKind.RIGHT_ALIGNED).setName(another));
+		return this;
 	}
 
 	public Spec rAlign(Locator locator, Number dist)
 	{
-		return adder(() -> new Piece(PieceKind.RIGHT_ALIGNED).setLocator(null, locator).setRange(Range.EQUAL).setA(dist.longValue()));
+		this.list.add(new Piece(PieceKind.RIGHT_ALIGNED).setLocator(null, locator).setRange(Range.EQUAL).setA(dist.longValue()));
+		return this;
 	}
 
 	public Spec rAlign(Locator locator, CheckProvider func)
 	{
-		return adder(() -> func.provide(PieceKind.RIGHT_ALIGNED).setLocator(null, locator));
+		this.list.add(func.provide(PieceKind.RIGHT_ALIGNED).setLocator(null, locator));
+		return this;
 	}
 
 	//------------------------------------------------------------------------------------------------------------------------------
@@ -420,22 +480,26 @@ public class Spec implements Iterable<Piece>, Serializable
 	//------------------------------------------------------------------------------------------------------------------------------
 	public Spec tAlign(String another, Number dist)
 	{
-		return adder(() -> new Piece(PieceKind.TOP_ALIGNED).setName(another).setRange(Range.EQUAL).setA(dist.longValue()));
+		this.list.add(new Piece(PieceKind.TOP_ALIGNED).setName(another).setRange(Range.EQUAL).setA(dist.longValue()));
+		return this;
 	}
 
 	public Spec tAlign(String another, CheckProvider func)
 	{
-		return adder(() -> func.provide(PieceKind.TOP_ALIGNED).setName(another));
+		this.list.add(func.provide(PieceKind.TOP_ALIGNED).setName(another));
+		return this;
 	}
 
 	public Spec tAlign(Locator locator, Number dist)
 	{
-		return adder(() -> new Piece(PieceKind.TOP_ALIGNED).setLocator(null, locator).setRange(Range.EQUAL).setA(dist.longValue()));
+		this.list.add(new Piece(PieceKind.TOP_ALIGNED).setLocator(null, locator).setRange(Range.EQUAL).setA(dist.longValue()));
+		return this;
 	}
 
 	public Spec tAlign(Locator locator, CheckProvider func)
 	{
-		return adder(() -> func.provide(PieceKind.TOP_ALIGNED).setLocator(null, locator));
+		this.list.add(func.provide(PieceKind.TOP_ALIGNED).setLocator(null, locator));
+		return this;
 	}
 
 	//------------------------------------------------------------------------------------------------------------------------------
@@ -443,22 +507,26 @@ public class Spec implements Iterable<Piece>, Serializable
 	//------------------------------------------------------------------------------------------------------------------------------
 	public Spec bAlign(String another, Number dist)
 	{
-		return adder(() -> new Piece(PieceKind.BOTTOM_ALIGNED).setName(another).setRange(Range.EQUAL).setA(dist.longValue()));
+		this.list.add(new Piece(PieceKind.BOTTOM_ALIGNED).setName(another).setRange(Range.EQUAL).setA(dist.longValue()));
+		return this;
 	}
 
 	public Spec bAlign(String another, CheckProvider func)
 	{
-		return adder(() -> func.provide(PieceKind.BOTTOM_ALIGNED).setName(another));
+		this.list.add(func.provide(PieceKind.BOTTOM_ALIGNED).setName(another));
+		return this;
 	}
 
 	public Spec bAlign(Locator locator, Number dist)
 	{
-		return adder(() -> new Piece(PieceKind.BOTTOM_ALIGNED).setLocator(null, locator).setRange(Range.EQUAL).setA(dist.longValue()));
+		this.list.add(new Piece(PieceKind.BOTTOM_ALIGNED).setLocator(null, locator).setRange(Range.EQUAL).setA(dist.longValue()));
+		return this;
 	}
 
 	public Spec bAlign(Locator locator, CheckProvider func)
 	{
-		return adder(() -> func.provide(PieceKind.BOTTOM_ALIGNED).setLocator(null, locator));
+		this.list.add(func.provide(PieceKind.BOTTOM_ALIGNED).setLocator(null, locator));
+		return this;
 	}
 	
 	//------------------------------------------------------------------------------------------------------------------------------
@@ -466,22 +534,26 @@ public class Spec implements Iterable<Piece>, Serializable
 	//------------------------------------------------------------------------------------------------------------------------------
 	public Spec hCenter(String another, Number dist)
 	{
-		return adder(() -> new Piece(PieceKind.HORIZONTAL_CENTERED).setName(another).setRange(Range.EQUAL).setA(dist.longValue()));
+		this.list.add(new Piece(PieceKind.HORIZONTAL_CENTERED).setName(another).setRange(Range.EQUAL).setA(dist.longValue()));
+		return this;
 	}
 
 	public Spec hCenter(String another, CheckProvider func)
 	{
-		return adder(() -> func.provide(PieceKind.HORIZONTAL_CENTERED).setName(another));
+		this.list.add(func.provide(PieceKind.HORIZONTAL_CENTERED).setName(another));
+		return this;
 	}
 
 	public Spec hCenter(Locator locator, Number dist)
 	{
-		return adder(() -> new Piece(PieceKind.HORIZONTAL_CENTERED).setLocator(null, locator).setRange(Range.EQUAL).setA(dist.longValue()));
+		this.list.add(new Piece(PieceKind.HORIZONTAL_CENTERED).setLocator(null, locator).setRange(Range.EQUAL).setA(dist.longValue()));
+		return this;
 	}
 
 	public Spec hCenter(Locator locator, CheckProvider func)
 	{
-		return adder(() -> func.provide(PieceKind.HORIZONTAL_CENTERED).setLocator(null, locator));
+		this.list.add(func.provide(PieceKind.HORIZONTAL_CENTERED).setLocator(null, locator));
+		return this;
 	}
 	
 	//------------------------------------------------------------------------------------------------------------------------------
@@ -489,22 +561,26 @@ public class Spec implements Iterable<Piece>, Serializable
 	//------------------------------------------------------------------------------------------------------------------------------
 	public Spec vCenter(String another, Number dist)
 	{
-		return adder(() -> new Piece(PieceKind.VERTICAL_CENTERED).setName(another).setRange(Range.EQUAL).setA(dist.longValue()));
+		this.list.add(new Piece(PieceKind.VERTICAL_CENTERED).setName(another).setRange(Range.EQUAL).setA(dist.longValue()));
+		return this;
 	}
 
 	public Spec vCenter(String another, CheckProvider func)
 	{
-		return adder(() -> func.provide(PieceKind.VERTICAL_CENTERED).setName(another));
+		this.list.add(func.provide(PieceKind.VERTICAL_CENTERED).setName(another));
+		return this;
 	}
 
 	public Spec vCenter(Locator locator, Number dist)
 	{
-		return adder(() -> new Piece(PieceKind.VERTICAL_CENTERED).setLocator(null, locator).setRange(Range.EQUAL).setA(dist.longValue()));
+		this.list.add(new Piece(PieceKind.VERTICAL_CENTERED).setLocator(null, locator).setRange(Range.EQUAL).setA(dist.longValue()));
+		return this;
 	}
 
 	public Spec vCenter(Locator locator, CheckProvider func)
 	{
-		return adder(() -> func.provide(PieceKind.VERTICAL_CENTERED).setLocator(null, locator));
+		this.list.add(func.provide(PieceKind.VERTICAL_CENTERED).setLocator(null, locator));
+		return this;
 	}
 	
 	
@@ -513,18 +589,6 @@ public class Spec implements Iterable<Piece>, Serializable
 	
 	
 	//------------------------------------------------------------------------------------------------------------------------------
-	@FunctionalInterface
-	private interface F
-	{
-		Piece call();
-	}
-	
-	private Spec adder(F func)
-	{
-		this.list.add(func.call());
-		return this;
-	}
-	
 	protected List<Piece> list;
 
 	private static final long	serialVersionUID	= -9155953771178401088L;
