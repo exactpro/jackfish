@@ -43,6 +43,8 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 	private static final int BORDER_WIDTH = 4;
 	private static final int OFFSET = BORDER_WIDTH / 2;
 	@FXML
+	private CheckBox cbUseGrid;
+	@FXML
 	private ColumnConstraints c0;
 	@FXML
 	private ColumnConstraints c1;
@@ -82,6 +84,7 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 	private Parent parent;
 	private LayoutExpressionBuilder model;
 
+	private CustomGrid customGrid;
 	private CustomRectangle initialRectangle;
 	private CustomRectangle selectedRectangle;
 	private CustomArrow customArrow;
@@ -136,6 +139,16 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 			{
 				this.vBoxControls.getChildren().clear();
 				this.buttons.stream().filter(t -> t.getText().toUpperCase().contains(newValue.toUpperCase())).forEach(this.vBoxControls.getChildren()::add);
+			}
+		});
+		this.cbUseGrid.selectedProperty().addListener((observable, oldValue, newValue) -> {
+			if (newValue)
+			{
+				this.customGrid.show();
+			}
+			else
+			{
+				this.customGrid.hide();
 			}
 		});
 	}
@@ -296,6 +309,7 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 		this.imageView.setImage(image);
 		this.mainPane.getChildren().remove(this.progressIndicator);
 		this.mainPane.setCenter(this.mainScrollPane);
+		this.customGrid.setSize((int) image.getWidth(), (int) image.getHeight());
 		this.progressIndicator = null;
 	}
 
@@ -383,5 +397,9 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 		this.customArrow.setGroup(group);
 		this.selectedRectangle.setVisible(false);
 		this.selectedRectangle.setGroup(group);
+
+		this.customGrid = new CustomGrid();
+		this.customGrid.hide();
+		this.customGrid.setGroup(group);
 	}
 }
