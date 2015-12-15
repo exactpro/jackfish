@@ -665,7 +665,17 @@ public enum PieceKind implements Measure
 	
 	public abstract Arrow arrow();
 	
-	
+	public static PieceKind findByName(String name)
+	{
+		for (PieceKind kind : values())
+		{
+			if (kind.name.equals(name))
+			{
+				return kind;
+			}
+		}
+		return null;
+	}
 	
 	
 	protected boolean selfNeedOne()
