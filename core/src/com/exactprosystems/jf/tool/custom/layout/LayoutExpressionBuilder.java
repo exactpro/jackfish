@@ -117,43 +117,43 @@ public class LayoutExpressionBuilder
 			switch (arrow)
 			{
 				case LEFT_LEFT:
-					start = (int) self.getX();
-					end = (int)(int) other.getX();
+					start = self.x;
+					end = other.x;
 					break;
 
 				case LEFT_RIGHT:
-					start = (int) self.getX();
-					end = (int) (other.getX() + other.getWidth());
+					start = self.x;
+					end = other.x + other.width;
 					break;
 
 				case RIGHT_LEFT:
-					start = (int) (self.getX() + self.getWidth());
-					end = (int)other.getX();
+					start = self.x + self.width;
+					end = other.x;
 					break;
 
 				case RIGHT_RIGHT:
-					start = (int) (self.getX() + self.getWidth());
-					end = (int) (other.getX() + other.getWidth());
+					start = self.x + self.width;
+					end = other.x + other.width;
 					break;
 
 				case BOTTOM_TOP:
-					start = (int) (self.getY() + self.getHeight());
-					end = (int)other.getY();
+					start = self.y + self.height;
+					end = other.y;
 					break;
 
 				case TOP_BOTTOM:
-					start = (int) self.getY();
-					end = (int) (other.getY() + other.getHeight());
+					start = self.y;
+					end = other.y + other.height;
 					break;
 
 				case TOP_TOP:
-					start = (int) self.getY();
-					end = (int)other.getY();
+					start = self.y;
+					end = other.y;
 					break;
 
 				case BOTTOM_BOTTOM:
-					start = (int) (self.getY() + self.getHeight());
-					end = (int) (other.getY() + other.getHeight());
+					start = self.y + self.height;
+					end = other.y + other.height;
 					break;
 
 				case H_CENTERS:

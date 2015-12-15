@@ -190,4 +190,12 @@
         <appWorkDir>apps</appWorkDir>
         <appStartPort>7000</appStartPort>
     </appEntry>
+    <appEntry>
+        <name>LHT</name>
+        <appDescription>layout html testing</appDescription>
+        <appDicPath>dic/gui/LayoutHtmlTesting.xml</appDicPath>
+        <appJar>apps/web.jar</appJar>
+        <appWorkDir>apps</appWorkDir>
+        <appStartPort>10000</appStartPort>
+    </appEntry>
 </configuration>
