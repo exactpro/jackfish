@@ -152,7 +152,8 @@ public class LayoutExpressionBuilder
 				case V_CENTERS:
 
 					break;
-			} this.controller.displayArrow(start, end, where, position);
+			}
+			this.controller.displayArrow(start, end, where, position);
 		}
 	}
 

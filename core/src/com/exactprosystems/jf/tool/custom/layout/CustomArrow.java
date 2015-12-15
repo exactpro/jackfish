@@ -10,6 +10,7 @@ package com.exactprosystems.jf.tool.custom.layout;
 import com.exactprosystems.jf.tool.CssVariables;
 import javafx.scene.Group;
 import javafx.scene.shape.Line;
+import javafx.scene.shape.Polygon;
 
 public class CustomArrow
 {
@@ -19,36 +20,42 @@ public class CustomArrow
 		HORIZONTAL
 	}
 
-	public static final int ARROW_SIZE = 5;
+	public static final int TRIANGLE_BASE	= 10;
+	public static final int TRIANGLE_HEIGHT	= 13;
+	public static final int LINE_LENGTH		= 25;
+
 	private double start;
 	private double end;
 	private ArrowPosition position;
 
+	private boolean needShowLine2 = false;
+	private Line line2;
 	private Line line;
-	private Line l1;
-	private Line l2;
-	private Line l3;
-	private Line l4;
+	private Polygon t1;
+	private Polygon t2;
 
+	/**
+	 * default constructor
+	 * all lines and polygons are empty.
+	 * default position = horizontal.
+	 */
 	public CustomArrow()
 	{
 		this.line = new Line();
-		this.l1 = new Line();
-		this.l2 = new Line();
-		this.l3 = new Line();
-		this.l4 = new Line();
+		this.line2 = new Line();
+
+		this.t1 = new Polygon();
+		this.t2 = new Polygon();
 
 		this.line.setVisible(false);
 		this.line.getStyleClass().add(CssVariables.LINE);
+		this.line2.setVisible(false);
+		this.line.getStyleClass().add(CssVariables.LINE);
 
-		this.l1.setVisible(false);
-		this.l2.setVisible(false);
-		this.l3.setVisible(false);
-		this.l4.setVisible(false);
-		this.l1.getStyleClass().add(CssVariables.LINE_ARROW);
-		this.l2.getStyleClass().add(CssVariables.LINE_ARROW);
-		this.l3.getStyleClass().add(CssVariables.LINE_ARROW);
-		this.l4.getStyleClass().add(CssVariables.LINE_ARROW);
+		this.t1.setVisible(false);
+		this.t2.setVisible(false);
+		this.t1.getStyleClass().add(CssVariables.LINE_TRIANGLE);
+		this.t2.getStyleClass().add(CssVariables.LINE_TRIANGLE);
 
 		this.position = ArrowPosition.HORIZONTAL;
 	}
@@ -67,8 +74,8 @@ public class CustomArrow
 	}
 
 	/**
-	 * @param start - start point
-	 * @param end - end point
+	 * @param start - start line point
+	 * @param end - end line point
 	 */
 	public void setPoints(double start, double end)
 	{
@@ -83,33 +90,35 @@ public class CustomArrow
 	{
 		createLine(x);
 		this.line.setVisible(true);
-		this.l1.setVisible(true);
-		this.l2.setVisible(true);
-		this.l3.setVisible(true);
-		this.l4.setVisible(true);
+		if (this.needShowLine2)
+		{
+			this.line2.setVisible(true);
+		}
+		this.t1.setVisible(true);
+		this.t2.setVisible(true);
 	}
 
 	public void hide()
 	{
 		this.line.setVisible(false);
-		this.l1.setVisible(false);
-		this.l2.setVisible(false);
-		this.l3.setVisible(false);
-		this.l4.setVisible(false);
+		this.line2.setVisible(false);
+		this.t1.setVisible(false);
+		this.t2.setVisible(false);
 	}
 
 	public void setGroup(Group group)
 	{
-		group.getChildren().addAll(this.line, this.l1, this.l2, this.l3, this.l4);
+		group.getChildren().addAll(this.line, this.line2, this.t1, this.t2);
 	}
 
 	private boolean needArrow()
 	{
-		return Math.abs(Math.abs(this.start) - Math.abs(this.end)) > (ARROW_SIZE * 2);
+		return (Math.max(this.start, this.end) - Math.min(this.start, this.end)) > (TRIANGLE_HEIGHT * 2 + 3);
 	}
 
 	private void createLine(double x)
 	{
+		needShowLine2 = false;
 		if (this.position == ArrowPosition.VERTICAL)
 		{
 			if (needArrow())
@@ -124,57 +133,49 @@ public class CustomArrow
 				this.line.setStartX(x);
 				this.line.setEndX(x);
 
-				this.l1.setStartX(x);
-				this.l1.setEndX(x - ARROW_SIZE);
-				this.l1.setStartY(this.start);
-				this.l1.setEndY(this.start + ARROW_SIZE);
+				this.t1.getPoints().addAll(
+						x, this.start,
+						x-TRIANGLE_BASE/2, this.start + TRIANGLE_HEIGHT,
+						x+TRIANGLE_BASE/2, this.start + TRIANGLE_HEIGHT
+				);
 
-				this.l2.setStartX(x);
-				this.l2.setEndX(x + ARROW_SIZE);
-				this.l2.setStartY(this.start);
-				this.l2.setEndY(this.start + ARROW_SIZE);
-
-				this.l3.setStartX(x);
-				this.l3.setEndX(x + ARROW_SIZE);
-				this.l3.setStartY(this.end);
-				this.l3.setEndY(this.end - ARROW_SIZE);
-
-				this.l4.setStartX(x);
-				this.l4.setEndX(x - ARROW_SIZE);
-				this.l4.setStartY(this.end);
-				this.l4.setEndY(this.end - ARROW_SIZE);
+				this.t2.getPoints().addAll(
+						x, this.end,
+						x-TRIANGLE_BASE/2, this.end - TRIANGLE_HEIGHT,
+						x+TRIANGLE_BASE/2, this.end - TRIANGLE_HEIGHT
+				);
 			}
 			else
 			{
 				/**
-				 *  \/
-				 *
-				 *  /\
+				 *   |
+				 *  \ /
+				 *  / \
+				 *   |
 				 */
-				this.line.setStartX(0);
-				this.line.setEndY(0);
-				this.line.setStartY(0);
-				this.line.setEndY(0);
+				this.line.setStartX(x);
+				this.line.setEndX(x);
+				this.line.setStartY(this.start);
+				this.line.setEndY(this.start - LINE_LENGTH);
 
-				this.l1.setStartX(x);
-				this.l1.setEndX(x - ARROW_SIZE);
-				this.l1.setStartY(this.start);
-				this.l1.setEndY(this.start - ARROW_SIZE);
+				this.needShowLine2 = true;
 
-				this.l2.setStartX(x);
-				this.l2.setEndX(x + ARROW_SIZE);
-				this.l2.setStartY(this.start);
-				this.l2.setEndY(this.start - ARROW_SIZE);
+				this.line2.setStartX(x);
+				this.line2.setEndX(x);
+				this.line2.setStartY(this.end);
+				this.line2.setEndY(this.end + LINE_LENGTH);
 
-				this.l3.setStartX(x);
-				this.l3.setEndX(x + ARROW_SIZE);
-				this.l3.setStartY(this.end);
-				this.l3.setEndY(this.end + ARROW_SIZE);
+				this.t1.getPoints().addAll(
+						x, this.start,
+						x - TRIANGLE_BASE/2, this.start - TRIANGLE_HEIGHT,
+						x + TRIANGLE_BASE/2, this.start - TRIANGLE_HEIGHT
+				);
 
-				this.l4.setStartX(x);
-				this.l4.setEndX(x - ARROW_SIZE);
-				this.l4.setStartY(this.end);
-				this.l4.setEndY(this.end + ARROW_SIZE);
+				this.t2.getPoints().addAll(
+						x, this.end,
+						x + TRIANGLE_BASE/2, this.end + TRIANGLE_HEIGHT,
+						x - TRIANGLE_BASE/2, this.end + TRIANGLE_HEIGHT
+				);
 			}
 		}
 		else
@@ -191,56 +192,47 @@ public class CustomArrow
 				this.line.setEndX(this.end);
 				this.line.setEndY(x);
 
-				this.l1.setStartX(this.start);
-				this.l1.setEndX(this.start + ARROW_SIZE);
-				this.l1.setStartY(x);
-				this.l1.setEndY(x - ARROW_SIZE);
+				this.t1.getPoints().addAll(
+						this.start, x,
+						this.start + TRIANGLE_HEIGHT, x - TRIANGLE_BASE/2,
+						this.start + TRIANGLE_HEIGHT, x + TRIANGLE_BASE/2
+				);
 
-				this.l2.setStartX(this.end);
-				this.l2.setEndX(this.end - ARROW_SIZE);
-				this.l2.setStartY(x);
-				this.l2.setEndY(x - ARROW_SIZE);
-
-				this.l3.setStartX(this.end);
-				this.l3.setEndX(this.end - ARROW_SIZE);
-				this.l3.setStartY(x);
-				this.l3.setEndY(x + ARROW_SIZE);
-
-				this.l4.setStartX(this.start);
-				this.l4.setEndX(this.start + ARROW_SIZE);
-				this.l4.setStartY(x);
-				this.l4.setEndY(x + ARROW_SIZE);
+				this.t2.getPoints().addAll(
+						this.end, x,
+						this.end - TRIANGLE_HEIGHT, x + TRIANGLE_BASE/2,
+						this.end - TRIANGLE_HEIGHT, x - TRIANGLE_BASE/2
+				);
 			}
 			else
 			{
 				/**
-				 *  \  /
-				 *  /  \
+				 * __ \  / __
+				 *    /  \
 				 */
-				this.line.setStartX(0);
-				this.line.setEndY(0);
-				this.line.setStartY(0);
-				this.line.setEndY(0);
+				this.line.setStartX(this.start);
+				this.line.setEndX(this.start - LINE_LENGTH);
+				this.line.setStartY(x);
+				this.line.setEndY(x);
 
-				this.l1.setStartX(this.start);
-				this.l1.setEndX(this.start - ARROW_SIZE);
-				this.l1.setStartY(x);
-				this.l1.setEndY(x - ARROW_SIZE);
+				this.needShowLine2 = true;
 
-				this.l2.setStartX(this.end);
-				this.l2.setEndX(this.end + ARROW_SIZE);
-				this.l2.setStartY(x);
-				this.l2.setEndY(x - ARROW_SIZE);
+				this.line2.setStartX(this.end);
+				this.line2.setEndX(this.end + LINE_LENGTH);
+				this.line2.setStartY(x);
+				this.line2.setEndY(x);
 
-				this.l3.setStartX(this.end);
-				this.l3.setEndX(this.end + ARROW_SIZE);
-				this.l3.setStartY(x);
-				this.l3.setEndY(x + ARROW_SIZE);
+				this.t1.getPoints().addAll(
+						this.start, x,
+						this.start - TRIANGLE_HEIGHT, x + TRIANGLE_BASE/2,
+						this.start - TRIANGLE_HEIGHT, x - TRIANGLE_BASE/2
+				);
 
-				this.l4.setStartX(this.start);
-				this.l4.setEndX(this.start - ARROW_SIZE);
-				this.l4.setStartY(x);
-				this.l4.setEndY(x + ARROW_SIZE);
+				this.t2.getPoints().addAll(
+						this.end, x,
+						this.end + TRIANGLE_HEIGHT, x - TRIANGLE_BASE/2,
+						this.end + TRIANGLE_HEIGHT, x + TRIANGLE_BASE/2
+				);
 			}
 
 		}
