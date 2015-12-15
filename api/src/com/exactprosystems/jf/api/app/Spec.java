@@ -76,15 +76,45 @@ public class Spec implements Iterable<Piece>, Serializable
 	//------------------------------------------------------------------------------------------------------------------------------
 	// count
 	//------------------------------------------------------------------------------------------------------------------------------
-	public Spec count(String another, Number dist)
+	public Spec count(Number dist)
 	{
-		this.list.add(new Piece(PieceKind.COUNT).setName(another).setRange(Range.EQUAL).setA(dist.longValue()));
+		this.list.add(new Piece(PieceKind.COUNT).setRange(Range.EQUAL).setA(dist.longValue()));
 		return this;
 	}
 
-	public Spec count(String another, CheckProvider func)
+	public Spec count(CheckProvider func)
 	{
-		this.list.add(func.provide(PieceKind.COUNT).setName(another));
+		this.list.add(func.provide(PieceKind.COUNT));
+		return this;
+	}
+	
+	//------------------------------------------------------------------------------------------------------------------------------
+	// width
+	//------------------------------------------------------------------------------------------------------------------------------
+	public Spec width(Number dist)
+	{
+		this.list.add(new Piece(PieceKind.WIDTH).setRange(Range.EQUAL).setA(dist.longValue()));
+		return this;
+	}
+
+	public Spec width(CheckProvider func)
+	{
+		this.list.add(func.provide(PieceKind.WIDTH));
+		return this;
+	}
+	
+	//------------------------------------------------------------------------------------------------------------------------------
+	// height
+	//------------------------------------------------------------------------------------------------------------------------------
+	public Spec height(Number dist)
+	{
+		this.list.add(new Piece(PieceKind.HEIGHT).setRange(Range.EQUAL).setA(dist.longValue()));
+		return this;
+	}
+
+	public Spec height(CheckProvider func)
+	{
+		this.list.add(func.provide(PieceKind.HEIGHT));
 		return this;
 	}
 	

@@ -42,14 +42,40 @@ public class DoSpec
 	//------------------------------------------------------------------------------------------------------------------------------
 	// count
 	//------------------------------------------------------------------------------------------------------------------------------
-	public static Spec count(String another, Number dist)
+	public static Spec count(Number dist)
 	{
-		return new Spec().count(another, dist);
+		return new Spec().count(dist);
 	}
 
-	public static Spec count(String another, CheckProvider func)
+	public static Spec count(CheckProvider func)
 	{
-		return new Spec().count(another, func);
+		return new Spec().count(func);
+	}
+	
+	//------------------------------------------------------------------------------------------------------------------------------
+	// width
+	//------------------------------------------------------------------------------------------------------------------------------
+	public static Spec width(Number dist)
+	{
+		return new Spec().height(dist);
+	}
+
+	public static Spec width(CheckProvider func)
+	{
+		return new Spec().height(func);
+	}
+	
+	//------------------------------------------------------------------------------------------------------------------------------
+	// height
+	//------------------------------------------------------------------------------------------------------------------------------
+	public static Spec height(Number dist)
+	{
+		return new Spec().height(dist);
+	}
+
+	public static Spec height(CheckProvider func)
+	{
+		return new Spec().height(func);
 	}
 	
 	//------------------------------------------------------------------------------------------------------------------------------
