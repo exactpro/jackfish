@@ -65,13 +65,19 @@ public class ApplicationConnector
 			this.task.cancel();
 			this.task = null;
 		}
-		if (this.appConnection != null)
+		try
 		{
-			this.appConnection.close();
+			if (this.appConnection != null)
+			{
+				this.appConnection.close();
+			}
+		}
+		finally
+		{
 			this.appConnection = null;
+			listener().ifPresent(lis -> lis.update(ApplicationStatus.Disconnected, null, null));
 		}
 
-		listener().ifPresent(lis -> lis.update(ApplicationStatus.Disconnected, null, null));
 	}
 
 	public AppConnection getAppConnection()

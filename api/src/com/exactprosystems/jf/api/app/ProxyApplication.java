@@ -176,19 +176,24 @@ public abstract class ProxyApplication implements IApplication
 	@Override
 	public void stop() throws Exception
 	{
-		if (this.service != null)
+		try
 		{
-			this.service.stop();
-			this.service = null;
+			if (this.service != null)
+			{
+				this.service.stop();
+			}
+
+			Thread.sleep(500);
 		}
-		
-		Thread.sleep(500);
-		
-    	if (this.process != null)
-    	{
-    		this.process.destroy();
-    		this.process = null;
-    	}
+		finally
+		{
+			this.service = null;
+			if (this.process != null)
+			{
+				this.process.destroy();
+				this.process = null;
+			}
+		}
 	}
 	
 	@Override
