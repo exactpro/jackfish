@@ -211,9 +211,8 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 				c1.setPercentWidth(0);
 				c2.setPercentWidth(0);
 			}
-
-			Optional.ofNullable(this.mainToggleGroup.getSelectedToggle())
-					.ifPresent(b -> this.model.displayDistance(((IControl) b.getUserData()), newValue));
+			Toggle selectedToggle = this.mainToggleGroup.getSelectedToggle();
+			this.model.displayDistance(selectedToggle == null ? null : ((IControl) selectedToggle.getUserData()), newValue);
 		});
 	}
 

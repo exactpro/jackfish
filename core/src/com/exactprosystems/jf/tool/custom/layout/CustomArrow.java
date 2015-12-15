@@ -120,9 +120,9 @@ public class CustomArrow
 
 	private void createLine(int x)
 	{
+		int temp = this.start;
 		this.start = Math.min(this.start, this.end);
-		this.end = Math.max(this.start, this.end);
-
+		this.end = Math.max(temp, this.end);
 		needShowLine2 = false;
 		if (this.direction == ArrowDirection.VERTICAL)
 		{

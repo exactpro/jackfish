@@ -101,12 +101,13 @@ public class LayoutExpressionBuilder
 		int start = 0;
 		int end = 0;
 		CustomArrow.ArrowDirection position;
-		int where;
+		boolean isWhereSet = false;
+		int where = - 1;
 		int centerX = (int) ((self.getCenterX() + other.getCenterX()) / 2);
 		int centerY = (int) ((self.getCenterY() + other.getCenterY()) / 2);
 		if (arrow != null)
 		{
-			if (arrow == Arrow.LEFT_LEFT || arrow == Arrow.LEFT_RIGHT || arrow == Arrow.RIGHT_LEFT || arrow == Arrow.RIGHT_RIGHT || arrow == Arrow.H_CENTERS)
+			if (arrow == Arrow.LEFT_LEFT || arrow == Arrow.LEFT_RIGHT || arrow == Arrow.RIGHT_LEFT || arrow == Arrow.RIGHT_RIGHT || arrow == Arrow.H_CENTERS || arrow == Arrow.WIDTH)
 			{
 				position = CustomArrow.ArrowDirection.HORIZONTAL;
 			}
@@ -165,15 +166,49 @@ public class LayoutExpressionBuilder
 					start = (int) self.getCenterY();
 					end = (int) other.getCenterY();
 					break;
+
+				case HEIGHT:
+					isWhereSet = true;
+					where = ((int) self.getCenterX());
+					start = self.y;
+					end = self.y + self.height;
+					break;
+
+				case WIDTH:
+					isWhereSet = true;
+					where = ((int) self.getCenterY());
+					start = self.x;
+					end = self.x + self.width;
+					break;
 			}
-			where = position == CustomArrow.ArrowDirection.VERTICAL ? centerX : centerY;
+			if (!isWhereSet)
+			{
+				where = position == CustomArrow.ArrowDirection.VERTICAL ? centerX : centerY;
+			}
+			System.out.println("#######################");
+			System.out.println("start : " + start);
+			System.out.println("end   : " + end);
+			System.out.println("where : " + where);
+			System.out.println("arrow : " + arrow);
+			System.out.println("#######################");
 			this.controller.displayArrow(start, end, where, position);
 		}
 	}
 
 	public void displayDistance(IControl otherControl, PieceKind kind)
 	{
-		if (otherControl != null)
+		if (kind == PieceKind.WIDTH || kind == PieceKind.HEIGHT)
+		{
+			Common.tryCatch(()->{
+				IControl selfControl = this.currentWindow.getControlForName(null, this.parameterName);
+				Locator selfLocator = selfControl.locator();
+				IControl selfOwner = this.currentWindow.getOwnerControl(selfControl);
+				Rectangle selfRectangle = service().getRectangle(selfOwner == null ? null : selfOwner.locator(), selfLocator);
+				this.controller.clearArrow();
+				this.displayArrow(selfRectangle, new Rectangle(0, 0, 0, 0), kind.arrow());
+			}, "Error on display distance");
+		}
+		else if (otherControl != null)
 		{
 			Common.tryCatch(() -> {
 				IControl selfControl = this.currentWindow.getControlForName(null, this.parameterName);
