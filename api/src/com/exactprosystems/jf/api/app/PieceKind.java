@@ -269,7 +269,10 @@ public enum PieceKind implements Measure
 			return s.x - (o.x + o.width);
 		}
 	},
-
+	/**
+	 * If self rectangle under other rectangle, distance will be positive.
+	 * We need calculate distance between top line self control and bottom line other control
+	 */
 	TOP("top")
 	{
 		@Override
@@ -281,13 +284,13 @@ public enum PieceKind implements Measure
 		@Override
 		public Arrow arrow()
 		{
-			return Arrow.BOTTOM_TOP;
+			return Arrow.TOP_BOTTOM;
 		}
 
 		@Override
 		public int distance(Rectangle s, Rectangle o)
 		{
-			return o.y - (s.y + s.height);
+			return s.y - (o.y + o.height);
 		}
 	},
 
