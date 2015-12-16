@@ -138,6 +138,14 @@ public class FormulaParser
 		return pieces;
 	}
 	
+	public static String toFormula(List<FormulaPart> list)
+	{
+		if (list != null)
+		{
+			return list.stream().reduce(DoSpec.class.getSimpleName(), (p,s) -> p + s.toString(), String::concat);
+		}
+		return null;
+	}
 	
 	private enum States 
 	{ 
