@@ -92,6 +92,9 @@ public enum PieceKind implements Measure
 		}
 	},
 
+	/**
+	 * distance - current width on self rectangle. Always positive
+	 */
 	WIDTH("width")
 	{
 		@Override
@@ -137,6 +140,9 @@ public enum PieceKind implements Measure
 		}
 	},
 
+	/**
+	 * distance - current height of self rectangle. Always positive
+	 */
 	HEIGHT("height")
 	{
 		@Override
@@ -228,7 +234,36 @@ public enum PieceKind implements Measure
 		}
 	},
 
+	/**
+	 * If self rectangle on left on other rectangle, distance will be positive.
+	 * We need calculate distance between left line self control and right line other control
+	 */
 	LEFT("left")
+	{
+		@Override
+		protected <T> void performDerived(Piece piece, OperationExecutor<T> executor, List<T> self, List<T> others, CheckingLayoutResult result) throws Exception
+		{
+			check(piece, executor, self, others, result, this);
+		}
+
+		@Override
+		public Arrow arrow()
+		{
+			return Arrow.LEFT_RIGHT;
+		}
+
+		@Override
+		public int distance(Rectangle s, Rectangle o)
+		{
+			return s.x - (o.x + o.width);
+		}
+	},
+
+	/**
+	 * If self rectangle on right on other rectangle, distance will be positive.
+	 * We need calculate distance between right line self control and left line other control
+	 */
+	RIGHT("right")
 	{
 		@Override
 		protected <T> void performDerived(Piece piece, OperationExecutor<T> executor, List<T> self, List<T> others, CheckingLayoutResult result) throws Exception
@@ -249,26 +284,6 @@ public enum PieceKind implements Measure
 		}
 	},
 
-	RIGHT("right")
-	{
-		@Override
-		protected <T> void performDerived(Piece piece, OperationExecutor<T> executor, List<T> self, List<T> others, CheckingLayoutResult result) throws Exception
-		{
-			check(piece, executor, self, others, result, this);
-		}
-
-		@Override
-		public Arrow arrow()
-		{
-			return Arrow.LEFT_RIGHT;
-		}
-
-		@Override
-		public int distance(Rectangle s, Rectangle o)
-		{
-			return s.x - (o.x + o.width);
-		}
-	},
 	/**
 	 * If self rectangle under other rectangle, distance will be positive.
 	 * We need calculate distance between top line self control and bottom line other control
@@ -294,6 +309,10 @@ public enum PieceKind implements Measure
 		}
 	},
 
+	/**
+	 * If self rectangle above other rectangle, distance will be positive.
+	 * We need calculate distance between bottom line self control and top line other control
+	 */
 	BOTTOM("bottom")
 	{
 		@Override
@@ -305,13 +324,13 @@ public enum PieceKind implements Measure
 		@Override
 		public Arrow arrow()
 		{
-			return Arrow.TOP_BOTTOM;
+			return Arrow.BOTTOM_TOP;
 		}
 
 		@Override
 		public int distance(Rectangle s, Rectangle o)
 		{
-			return s.y - (o.y + o.height);
+			return s.y + s.height - o.y;
 		}
 	},
 
