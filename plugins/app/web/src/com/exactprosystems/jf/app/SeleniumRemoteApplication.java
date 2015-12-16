@@ -18,6 +18,7 @@ import org.jsoup.Jsoup;
 import org.openqa.selenium.*;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.Point;
+import org.openqa.selenium.remote.UnreachableBrowserException;
 import org.openqa.selenium.support.events.EventFiringWebDriver;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
@@ -167,14 +168,21 @@ public class SeleniumRemoteApplication extends RemoteApplication
 	@Override
 	protected void stopDerived() throws Exception
 	{
-		if (this.driver != null)
+		try
 		{
-			for (String handle : this.driver.getWindowHandles())
+			if (this.driver != null)
 			{
-				this.driver.switchTo().window(handle);
-				break;
+				for (String handle : this.driver.getWindowHandles())
+				{
+					this.driver.switchTo().window(handle);
+					break;
+				}
+				this.driver.quit();
 			}
-			this.driver.quit();
+		}
+		catch (UnreachableBrowserException e)
+		{
+			logger.error("Browser has been closed");
 		}
 	}
 

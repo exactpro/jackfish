@@ -21,17 +21,11 @@ public class AppConnection implements AutoCloseable
 	@Override
 	public void close() throws Exception
 	{
-		try
+		if (this.app != null)
 		{
-			if (this.app != null)
-			{
-				this.app.stop();
-			}
+			this.app.stop();
 		}
-		finally
-		{
-			this.app = null;
-		}
+		this.app = null;
 	}
 	
 	@Override
