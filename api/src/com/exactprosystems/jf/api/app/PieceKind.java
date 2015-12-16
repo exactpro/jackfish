@@ -497,7 +497,7 @@ public enum PieceKind implements Measure
 		@Override
 		public int distance(Rectangle s, Rectangle o)
 		{
-			return o.x - s.x;
+			return -INSIDE_LEFT.distance(s, o);
 		}
 	},
 
@@ -518,7 +518,7 @@ public enum PieceKind implements Measure
 		@Override
 		public int distance(Rectangle s, Rectangle o)
 		{
-			return s.x - o.x;
+			return -INSIDE_RIGHT.distance(s, o);
 		}
 	},
 
@@ -539,7 +539,7 @@ public enum PieceKind implements Measure
 		@Override
 		public int distance(Rectangle s, Rectangle o)
 		{
-			return o.y - s.y;
+			return -INSIDE_TOP.distance(s, o);
 		}
 	},
 
@@ -560,7 +560,7 @@ public enum PieceKind implements Measure
 		@Override
 		public int distance(Rectangle s, Rectangle o)
 		{
-			return s.y - o.y;
+			return -INSIDE_BOTTOM.distance(s, o);
 		}
 	},
 
