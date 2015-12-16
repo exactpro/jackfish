@@ -100,7 +100,7 @@ public class LayoutExpressionBuilder
 	{
 		int start = 0;
 		int end = 0;
-		CustomArrow.ArrowDirection position;
+		CustomArrow.ArrowDirection direction;
 		boolean isWhereSet = false;
 		int where = - 1;
 		int centerX = (int) ((self.getCenterX() + other.getCenterX()) / 2);
@@ -109,11 +109,11 @@ public class LayoutExpressionBuilder
 		{
 			if (arrow == Arrow.LEFT_LEFT || arrow == Arrow.LEFT_RIGHT || arrow == Arrow.RIGHT_LEFT || arrow == Arrow.RIGHT_RIGHT || arrow == Arrow.H_CENTERS || arrow == Arrow.WIDTH)
 			{
-				position = CustomArrow.ArrowDirection.HORIZONTAL;
+				direction = CustomArrow.ArrowDirection.HORIZONTAL;
 			}
 			else
 			{
-				position = CustomArrow.ArrowDirection.VERTICAL;
+				direction = CustomArrow.ArrowDirection.VERTICAL;
 			}
 			switch (arrow)
 			{
@@ -183,7 +183,7 @@ public class LayoutExpressionBuilder
 			}
 			if (!isWhereSet)
 			{
-				where = position == CustomArrow.ArrowDirection.VERTICAL ? centerX : centerY;
+				where = direction == CustomArrow.ArrowDirection.VERTICAL ? centerX : centerY;
 			}
 			System.out.println("#######################");
 			System.out.println("start : " + start);
@@ -191,7 +191,7 @@ public class LayoutExpressionBuilder
 			System.out.println("where : " + where);
 			System.out.println("arrow : " + arrow);
 			System.out.println("#######################");
-			this.controller.displayArrow(start, end, where, position);
+			this.controller.displayArrow(start, end, where, direction);
 		}
 	}
 
@@ -217,10 +217,12 @@ public class LayoutExpressionBuilder
 				Locator selfLocator = selfControl.locator();
 				IControl selfOwner = this.currentWindow.getOwnerControl(selfControl);
 				Rectangle selfRectangle = service().getRectangle(selfOwner == null ? null : selfOwner.locator(), selfLocator);
+				selfRectangle.setRect(selfRectangle.x - this.xOffset, selfRectangle.y - this.yOffset, selfRectangle.width, selfRectangle.height);
 
 				Locator otherLocator = otherControl.locator();
 				IControl otherOwner = this.currentWindow.getOwnerControl(otherControl);
 				Rectangle otherRectangle = service().getRectangle(otherOwner == null ? null : otherOwner.locator(), otherLocator);
+				otherRectangle.setRect(otherRectangle.x - this.xOffset, otherRectangle.y - this.yOffset, otherRectangle.width, otherRectangle.height);
 
 				int distance = kind.distance(selfRectangle, otherRectangle);
 				this.controller.displayDistance(distance);
