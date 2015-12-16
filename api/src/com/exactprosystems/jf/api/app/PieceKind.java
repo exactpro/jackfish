@@ -634,6 +634,10 @@ public enum PieceKind implements Measure
 		}
 	},
 
+	/**
+	 *  If vertical center of self rectangle on the right of vertical center of other rectangle, distance will be positive.
+	 *  We need calculate distance between vertical line's both rectangle's
+	 */
 	HORIZONTAL_CENTERED("hCenter")
 	{
 		@Override
@@ -651,10 +655,14 @@ public enum PieceKind implements Measure
 		@Override
 		public int distance(Rectangle s, Rectangle o)
 		{
-			return (o.x + o.width / 2) - (s.x + s.width / 2);
+			return (s.x + s.width / 2) - (o.x + o.width / 2);
 		}
 	},
 
+	/**
+	 *  If horizontal center of self rectangle below of horizontal center of other rectangle, distance will be positive.
+	 *  We need calculate distance between horizontal line's both rectangle's
+	 */
 	VERTICAL_CENTERED("vCenter")
 	{
 		@Override
@@ -672,13 +680,12 @@ public enum PieceKind implements Measure
 		@Override
 		public int distance(Rectangle s, Rectangle o)
 		{
-			return (o.y + o.height / 2) - (s.y + s.height / 2);
+			return (s.y + s.height / 2) - (o.y + o.height / 2);
 		}
-	},
-
+	}
 	;
 
-	private PieceKind(String name)
+	PieceKind(String name)
 	{
 		this.name = name;
 	}
