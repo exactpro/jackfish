@@ -23,6 +23,12 @@ public enum Range
 		{
 			return a == x;
 		}
+		
+		@Override
+		public boolean hasTwoArguments()
+		{
+			return false;
+		}
 	},
 	
 	LESS ("less")
@@ -37,6 +43,12 @@ public enum Range
 		public boolean func(long x, long a, long b)
 		{
 			return x < a;
+		}
+
+		@Override
+		public boolean hasTwoArguments()
+		{
+			return false;
 		}
 	},
 	
@@ -53,6 +65,12 @@ public enum Range
 		{
 			return x > a;
 		}
+
+		@Override
+		public boolean hasTwoArguments()
+		{
+			return false;
+		}
 	},
 	
 	ABOUT ("about")
@@ -67,6 +85,12 @@ public enum Range
 		public boolean func(long x, long a, long b)
 		{
 			return x/10*9 < a && a < x/10*11;
+		}
+
+		@Override
+		public boolean hasTwoArguments()
+		{
+			return false;
 		}
 	},
 	
@@ -85,6 +109,12 @@ public enum Range
 			long max = Math.max(a, b);
 			return min < x && x < max;
 		}
+
+		@Override
+		public boolean hasTwoArguments()
+		{
+			return true;
+		}
 	};
 	
 	private Range(String name)
@@ -98,7 +128,21 @@ public enum Range
 		return this.name;
 	}
 	
+	public static Range findByName(String name)
+	{
+		for (Range range : values())
+		{
+			if (range.name.equals(name))
+			{
+				return range;
+			}
+		}
+		return null;
+	}
+	
 	public abstract String toString(String a, String b);
+
+	public abstract boolean hasTwoArguments();
 	
 	public abstract boolean func(long x, long a, long b);
 	
