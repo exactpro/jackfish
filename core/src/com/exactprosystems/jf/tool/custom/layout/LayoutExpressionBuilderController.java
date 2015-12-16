@@ -9,7 +9,6 @@ import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.custom.expfield.NewExpressionField;
 import com.exactprosystems.jf.tool.custom.fields.CustomFieldWithButton;
-
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -27,7 +26,6 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import javax.imageio.ImageIO;
-
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
@@ -42,6 +40,8 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 {
 	private static final int BORDER_WIDTH = 4;
 	private static final int OFFSET = BORDER_WIDTH / 2;
+	@FXML
+	private CheckBox cbUseBorder;
 	@FXML
 	private CheckBox cbUseGrid;
 	@FXML
@@ -85,11 +85,12 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 	private LayoutExpressionBuilder model;
 
 	private CustomGrid customGrid;
-	private CustomRectangle initialRectangle;
-	private CustomRectangle selectedRectangle;
+	private CustomRectangle selfRectangle;
+	private CustomRectangle otherRectangle;
 	private CustomArrow customArrow;
 
 	private ScrollPane mainScrollPane;
+	private boolean useBorder = true;
 	private ArrayList<ToggleButton> buttons = new ArrayList<>();
 
 	// ==============================================================================================================================
@@ -151,12 +152,16 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 				this.customGrid.hide();
 			}
 		});
+		this.cbUseBorder.selectedProperty().addListener((observable, oldValue, newValue) -> {
+			useBorder = newValue;
+			this.otherRectangle.setVisible(newValue);
+			this.selfRectangle.setVisible(newValue);
+		});
 	}
 
 	private void visibilityListeners()
 	{
-		this.cbRange.visibleProperty().addListener((observable, oldValue, newValue) -> 
-		{
+		this.cbRange.visibleProperty().addListener((observable, oldValue, newValue) -> {
 			expressionFieldFirst.setVisible(newValue);
 			expressionFieldSecond.setVisible(false);
 			c3.setPercentWidth(0);
@@ -174,8 +179,7 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 			}
 		});
 
-		this.cbRange.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> 
-		{
+		this.cbRange.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
 			if (!cbRange.isVisible())
 			{
 				c3.setPercentWidth(0);
@@ -196,8 +200,7 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 			}
 		});
 
-		this.cbParameters.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> 
-		{
+		this.cbParameters.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
 			this.cbRange.setVisible(newValue.useRange());
 			this.labelControlId.setVisible(newValue.useName());
 			if (newValue.useRange() && newValue.useName())
@@ -293,9 +296,7 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 	// ==============================================================================================================================
 	public void addFormula(ActionEvent actionEvent)
 	{
-		Common.tryCatch(() -> this.model.addFormula(this.cbParameters.getSelectionModel().getSelectedItem(), 
-				this.labelControlId.getText(), this.cbRange.getSelectionModel().getSelectedItem(), 
-				this.expressionFieldFirst.getText(), this.expressionFieldSecond.getText()), "Error on add formula");
+		Common.tryCatch(() -> this.model.addFormula(this.cbParameters.getSelectionModel().getSelectedItem(), this.labelControlId.getText(), this.cbRange.getSelectionModel().getSelectedItem(), this.expressionFieldFirst.getText(), this.expressionFieldSecond.getText()), "Error on add formula");
 	}
 
 	// ==============================================================================================================================
@@ -315,11 +316,15 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 
 	public void displayControl(Rectangle rectangle, boolean self)
 	{
-		CustomRectangle rect = self ? this.initialRectangle : this.selectedRectangle;
+
+		CustomRectangle rect = self ? this.selfRectangle : this.otherRectangle;
 		String styleClass = self ? CssVariables.INITIAL_CONTROL : CssVariables.SELECTED_CONTROL;
 		rect.addStyleClass(styleClass);
 		rect.updateRectangle(rectangle.getX() + OFFSET, rectangle.getY() + OFFSET, rectangle.getWidth() - BORDER_WIDTH, rectangle.getHeight() - BORDER_WIDTH);
-		rect.setVisible(true);
+		if (useBorder)
+		{
+			rect.setVisible(true);
+		}
 	}
 
 	public void displayControlId(String controlId)
@@ -341,7 +346,7 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 
 	public void clearCanvas()
 	{
-		this.selectedRectangle.setVisible(false);
+		this.otherRectangle.setVisible(false);
 	}
 
 	public void displayArrow(int start, int end, int where, CustomArrow.ArrowDirection position)
@@ -385,18 +390,18 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 		AnchorPane.setTopAnchor(progressIndicator, (double) 200);
 		AnchorPane.setLeftAnchor(progressIndicator, (double) 200);
 
-		this.initialRectangle = new CustomRectangle();
-		this.selectedRectangle = new CustomRectangle();
+		this.selfRectangle = new CustomRectangle();
+		this.otherRectangle = new CustomRectangle();
 		this.customArrow = new CustomArrow();
-		this.initialRectangle.setWidthLine(BORDER_WIDTH);
-		this.selectedRectangle.setWidthLine(BORDER_WIDTH);
+		this.selfRectangle.setWidthLine(BORDER_WIDTH);
+		this.otherRectangle.setWidthLine(BORDER_WIDTH);
 
 		group.getChildren().add(this.imageView);
-		this.initialRectangle.setVisible(false);
-		this.initialRectangle.setGroup(group);
+		this.selfRectangle.setVisible(false);
+		this.selfRectangle.setGroup(group);
 		this.customArrow.setGroup(group);
-		this.selectedRectangle.setVisible(false);
-		this.selectedRectangle.setGroup(group);
+		this.otherRectangle.setVisible(false);
+		this.otherRectangle.setGroup(group);
 
 		this.customGrid = new CustomGrid();
 		this.customGrid.hide();

@@ -21,9 +21,12 @@
 	</right>
 	<top>
 		<BorderPane>
-			<left>
-				<CheckBox fx:id="cbUseGrid" text="Use grid"/>
-			</left>
+			<top>
+				<HBox spacing="5">
+					<CheckBox fx:id="cbUseGrid" text="Use grid"/>
+					<CheckBox fx:id="cbUseBorder" text="Use border" selected="true"/>
+				</HBox>
+			</top>
 			<center>
 				<CustomFieldWithButton BorderPane.alignment="CENTER"/>
 			</center>
