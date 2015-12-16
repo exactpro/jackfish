@@ -21,7 +21,16 @@ class FormulaPart
 		this.first = "";
 		this.second = "";
 	}
-	
+
+	public FormulaPart(PieceKind kind, Range range, String name, String first, String second)
+	{
+		this.kind = kind;
+		this.range = range;
+		this.name = name;
+		this.first = first;
+		this.second = second;
+	}
+
 	@Override
 	public String toString()
 	{
