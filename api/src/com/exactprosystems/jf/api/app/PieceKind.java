@@ -356,7 +356,10 @@ public enum PieceKind implements Measure
 			return (s.x + s.width) - (o.x + o.width);
 		}
 	},
-
+	/**
+	 * If whole self rectangle inside other rectangle, distance will be positive
+	 * We need to calculate distance between top line's both rectangles.
+	 */
 	INSIDE_TOP("inTop")
 	{
 		@Override
@@ -368,13 +371,13 @@ public enum PieceKind implements Measure
 		@Override
 		public Arrow arrow()
 		{
-			return Arrow.BOTTOM_BOTTOM;
+			return Arrow.TOP_TOP;
 		}
 
 		@Override
 		public int distance(Rectangle s, Rectangle o)
 		{
-			return (o.y + o.height) - (s.y + s.height);
+			return s.y - o.y;
 		}
 	},
 
@@ -441,6 +444,10 @@ public enum PieceKind implements Measure
 		}
 	},
 
+	/**
+	 * If top line of self rectangle above top line other rectangle, distance will be positive;
+	 * We need calculate distance between top line's both rectangles.
+	 */
 	ON_TOP("onTop")
 	{
 		@Override
@@ -525,6 +532,10 @@ public enum PieceKind implements Measure
 		}
 	},
 
+	/**
+	 * If top line of self rectangle above top line other rectangle, distance will be positive;
+	 * We need calculate distance between top line's both rectangles.
+	 */
 	TOP_ALIGNED("tAlign")
 	{
 		@Override
