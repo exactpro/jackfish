@@ -334,7 +334,36 @@ public enum PieceKind implements Measure
 		}
 	},
 
+	/**
+	 * If whole self rectangle inside other rectangle, distance will be positive
+	 * We need to calculate distance between left line's both rectangles.
+	 */
 	INSIDE_LEFT("inLeft")
+	{
+		@Override
+		protected <T> void performDerived(Piece piece, OperationExecutor<T> executor, List<T> self, List<T> others, CheckingLayoutResult result) throws Exception
+		{
+			check(piece, executor, self, others, result, this);
+		}
+
+		@Override
+		public Arrow arrow()
+		{
+			return Arrow.LEFT_LEFT;
+		}
+
+		@Override
+		public int distance(Rectangle s, Rectangle o)
+		{
+			return s.x - o.x;
+		}
+	},
+
+	/**
+	 * If whole self rectangle inside other rectangle, distance will be positive
+	 * We need to calculate distance between right line's both rectangles.
+	 */
+	INSIDE_RIGHT("inRight")
 	{
 		@Override
 		protected <T> void performDerived(Piece piece, OperationExecutor<T> executor, List<T> self, List<T> others, CheckingLayoutResult result) throws Exception
@@ -355,26 +384,6 @@ public enum PieceKind implements Measure
 		}
 	},
 
-	INSIDE_RIGHT("inRight")
-	{
-		@Override
-		protected <T> void performDerived(Piece piece, OperationExecutor<T> executor, List<T> self, List<T> others, CheckingLayoutResult result) throws Exception
-		{
-			check(piece, executor, self, others, result, this);
-		}
-
-		@Override
-		public Arrow arrow()
-		{
-			return Arrow.LEFT_LEFT;
-		}
-
-		@Override
-		public int distance(Rectangle s, Rectangle o)
-		{
-			return (s.x + s.width) - (o.x + o.width);
-		}
-	},
 	/**
 	 * If whole self rectangle inside other rectangle, distance will be positive
 	 * We need to calculate distance between top line's both rectangles.
@@ -400,6 +409,10 @@ public enum PieceKind implements Measure
 		}
 	},
 
+	/**
+	 * If whole self rectangle inside other rectangle, distance will be positive
+	 * We need to calculate distance between bottom line's both rectangles.
+	 */
 	INSIDE_BOTTOM("inBottom")
 	{
 		@Override
@@ -411,16 +424,20 @@ public enum PieceKind implements Measure
 		@Override
 		public Arrow arrow()
 		{
-			return Arrow.TOP_TOP;
+			return Arrow.BOTTOM_BOTTOM;
 		}
 
 		@Override
 		public int distance(Rectangle s, Rectangle o)
 		{
-			return (s.y + s.height) - (o.y + o.height);
+			return (o.y + o.height) - (s.y + s.height);
 		}
 	},
 
+	/**
+	 * If left line of self rectangle on the left of the left line other rectangle, distance will be positive;
+	 * We need calculate distance between left line's both rectangles.
+	 */
 	ON_LEFT("onLeft")
 	{
 		@Override
@@ -442,6 +459,10 @@ public enum PieceKind implements Measure
 		}
 	},
 
+	/**
+	 * If right line of self rectangle on the right of the right line other rectangle, distance will be positive;
+	 * We need calculate distance between right line's both rectangles.
+	 */
 	ON_RIGHT("onRight")
 	{
 		@Override
@@ -488,6 +509,10 @@ public enum PieceKind implements Measure
 		}
 	},
 
+	/**
+	 * If bottom line of self rectangle below bottom line other rectangle, distance will be positive;
+	 * We need calculate distance between bottom line's both rectangles.
+	 */
 	ON_BOTTOM("onBottom")
 	{
 		@Override
@@ -509,6 +534,10 @@ public enum PieceKind implements Measure
 		}
 	},
 
+	/**
+	 * If left line of self rectangle on the left of the left line other rectangle, distance will be positive;
+	 * We need calculate distance between left line's both rectangles.
+	 */
 	LEFT_ALIGNED("lAlign")
 	{
 		@Override
@@ -530,6 +559,10 @@ public enum PieceKind implements Measure
 		}
 	},
 
+	/**
+	 * If right line of self rectangle on the right of the right line other rectangle, distance will be positive;
+	 * We need calculate distance between right line's both rectangles.
+	 */
 	RIGHT_ALIGNED("rAlign")
 	{
 		@Override
@@ -576,6 +609,10 @@ public enum PieceKind implements Measure
 		}
 	},
 
+	/**
+	 * If bottom line of self rectangle below bottom line other rectangle, distance will be positive;
+	 * We need calculate distance between bottom line's both rectangles.
+	 */
 	BOTTOM_ALIGNED("bAlign")
 	{
 		@Override
