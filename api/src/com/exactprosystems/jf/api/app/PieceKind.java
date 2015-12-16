@@ -8,8 +8,7 @@
 
 package com.exactprosystems.jf.api.app;
 
-import java.awt.Rectangle;
-import java.io.Serializable;
+import java.awt.*;
 import java.util.Collections;
 import java.util.List;
 
@@ -42,9 +41,9 @@ public enum PieceKind implements Measure
 		}
 
 		@Override
-		protected <T> void performDerived(Piece piece, OperationExecutor<T> executor, List<T> self, List<T> others, CheckingLayoutResult result) throws Exception 
+		protected <T> void performDerived(Piece piece, OperationExecutor<T> executor, List<T> self, List<T> others, CheckingLayoutResult result) throws Exception
 		{
-			result.set(self.get(0) != null); // TODO 
+			result.set(self.get(0) != null); // TODO
 		}
 	},
 
@@ -61,7 +60,7 @@ public enum PieceKind implements Measure
 		{
 			return true;
 		}
-		
+
 		@Override
 		public Arrow arrow()
 		{
@@ -79,13 +78,13 @@ public enum PieceKind implements Measure
 		{
 			return false;
 		}
-		
+
 		@Override
-		protected <T> void performDerived(Piece piece, OperationExecutor<T> executor, List<T> self, List<T> others, CheckingLayoutResult result) throws Exception 
+		protected <T> void performDerived(Piece piece, OperationExecutor<T> executor, List<T> self, List<T> others, CheckingLayoutResult result) throws Exception
 		{
 			result.set(piece.range.func(self.size(), piece.a, piece.b));
 		}
-		
+
 		@Override
 		public int distance(Rectangle s, Rectangle o)
 		{
@@ -106,7 +105,7 @@ public enum PieceKind implements Measure
 		{
 			return true;
 		}
-		
+
 		@Override
 		public Arrow arrow()
 		{
@@ -124,13 +123,13 @@ public enum PieceKind implements Measure
 		{
 			return true;
 		}
-		
+
 		@Override
-		protected <T> void performDerived(Piece piece, OperationExecutor<T> executor, List<T> self, List<T> others, CheckingLayoutResult result) throws Exception 
+		protected <T> void performDerived(Piece piece, OperationExecutor<T> executor, List<T> self, List<T> others, CheckingLayoutResult result) throws Exception
 		{
 			check(piece, executor, self, others, result, this);
 		}
-		
+
 		@Override
 		public int distance(Rectangle s, Rectangle o)
 		{
@@ -151,7 +150,7 @@ public enum PieceKind implements Measure
 		{
 			return true;
 		}
-		
+
 		@Override
 		public Arrow arrow()
 		{
@@ -169,13 +168,13 @@ public enum PieceKind implements Measure
 		{
 			return true;
 		}
-		
+
 		@Override
-		protected <T> void performDerived(Piece piece, OperationExecutor<T> executor, List<T> self, List<T> others, CheckingLayoutResult result) throws Exception 
+		protected <T> void performDerived(Piece piece, OperationExecutor<T> executor, List<T> self, List<T> others, CheckingLayoutResult result) throws Exception
 		{
 			check(piece, executor, self, others, result, this);
 		}
-		
+
 		@Override
 		public int distance(Rectangle s, Rectangle o)
 		{
@@ -196,7 +195,7 @@ public enum PieceKind implements Measure
 		{
 			return false;
 		}
-		
+
 		@Override
 		public Arrow arrow()
 		{
@@ -210,17 +209,17 @@ public enum PieceKind implements Measure
 		}
 
 		@Override
-		protected <T> void performDerived(Piece piece, OperationExecutor<T> executor, List<T> self, List<T> others, CheckingLayoutResult result) throws Exception 
+		protected <T> void performDerived(Piece piece, OperationExecutor<T> executor, List<T> self, List<T> others, CheckingLayoutResult result) throws Exception
 		{
 			if (others == null)
 			{
 				result.error("Others elements is empty");
 				return;
 			}
-			
+
 			Rectangle s = executor.getRectangle(self.get(0));
 			Rectangle o = executor.getRectangle(others.get(0));
-			
+
 			if (	s.x > o.x || (s.x + s.width) < (o.x + o.width)
 				|| 	s.y > o.y || (s.y + s.height) < (o.y + o.height) )
 			{
@@ -232,7 +231,7 @@ public enum PieceKind implements Measure
 	LEFT("left")
 	{
 		@Override
-		protected <T> void performDerived(Piece piece, OperationExecutor<T> executor, List<T> self, List<T> others, CheckingLayoutResult result) throws Exception 
+		protected <T> void performDerived(Piece piece, OperationExecutor<T> executor, List<T> self, List<T> others, CheckingLayoutResult result) throws Exception
 		{
 			check(piece, executor, self, others, result, this);
 		}
@@ -249,13 +248,13 @@ public enum PieceKind implements Measure
 			return o.x - (s.x + s.width);
 		}
 	},
-	
+
 	RIGHT("right")
 	{
 		@Override
-		protected <T> void performDerived(Piece piece, OperationExecutor<T> executor, List<T> self, List<T> others, CheckingLayoutResult result) throws Exception 
+		protected <T> void performDerived(Piece piece, OperationExecutor<T> executor, List<T> self, List<T> others, CheckingLayoutResult result) throws Exception
 		{
-			check(piece, executor, self, others, result, this); 
+			check(piece, executor, self, others, result, this);
 		}
 
 		@Override
@@ -274,9 +273,9 @@ public enum PieceKind implements Measure
 	TOP("top")
 	{
 		@Override
-		protected <T> void performDerived(Piece piece, OperationExecutor<T> executor, List<T> self, List<T> others, CheckingLayoutResult result) throws Exception 
+		protected <T> void performDerived(Piece piece, OperationExecutor<T> executor, List<T> self, List<T> others, CheckingLayoutResult result) throws Exception
 		{
-			check(piece, executor, self, others, result, this); 
+			check(piece, executor, self, others, result, this);
 		}
 
 		@Override
@@ -295,9 +294,9 @@ public enum PieceKind implements Measure
 	BOTTOM("bottom")
 	{
 		@Override
-		protected <T> void performDerived(Piece piece, OperationExecutor<T> executor, List<T> self, List<T> others, CheckingLayoutResult result) throws Exception 
+		protected <T> void performDerived(Piece piece, OperationExecutor<T> executor, List<T> self, List<T> others, CheckingLayoutResult result) throws Exception
 		{
-			check(piece, executor, self, others, result, this); 
+			check(piece, executor, self, others, result, this);
 		}
 
 		@Override
@@ -316,9 +315,9 @@ public enum PieceKind implements Measure
 	INSIDE_LEFT("inLeft")
 	{
 		@Override
-		protected <T> void performDerived(Piece piece, OperationExecutor<T> executor, List<T> self, List<T> others, CheckingLayoutResult result) throws Exception 
+		protected <T> void performDerived(Piece piece, OperationExecutor<T> executor, List<T> self, List<T> others, CheckingLayoutResult result) throws Exception
 		{
-			check(piece, executor, self, others, result, this); 
+			check(piece, executor, self, others, result, this);
 		}
 
 		@Override
@@ -333,13 +332,13 @@ public enum PieceKind implements Measure
 			return (o.x + o.width) - (s.x + s.width);
 		}
 	},
-	
+
 	INSIDE_RIGHT("inRight")
 	{
 		@Override
-		protected <T> void performDerived(Piece piece, OperationExecutor<T> executor, List<T> self, List<T> others, CheckingLayoutResult result) throws Exception 
+		protected <T> void performDerived(Piece piece, OperationExecutor<T> executor, List<T> self, List<T> others, CheckingLayoutResult result) throws Exception
 		{
-			check(piece, executor, self, others, result, this); 
+			check(piece, executor, self, others, result, this);
 		}
 
 		@Override
@@ -358,9 +357,9 @@ public enum PieceKind implements Measure
 	INSIDE_TOP("inTop")
 	{
 		@Override
-		protected <T> void performDerived(Piece piece, OperationExecutor<T> executor, List<T> self, List<T> others, CheckingLayoutResult result) throws Exception 
+		protected <T> void performDerived(Piece piece, OperationExecutor<T> executor, List<T> self, List<T> others, CheckingLayoutResult result) throws Exception
 		{
-			check(piece, executor, self, others, result, this); 
+			check(piece, executor, self, others, result, this);
 		}
 
 		@Override
@@ -379,9 +378,9 @@ public enum PieceKind implements Measure
 	INSIDE_BOTTOM("inBottom")
 	{
 		@Override
-		protected <T> void performDerived(Piece piece, OperationExecutor<T> executor, List<T> self, List<T> others, CheckingLayoutResult result) throws Exception 
+		protected <T> void performDerived(Piece piece, OperationExecutor<T> executor, List<T> self, List<T> others, CheckingLayoutResult result) throws Exception
 		{
-			check(piece, executor, self, others, result, this); 
+			check(piece, executor, self, others, result, this);
 		}
 
 		@Override
@@ -400,9 +399,9 @@ public enum PieceKind implements Measure
 	ON_LEFT("onLeft")
 	{
 		@Override
-		protected <T> void performDerived(Piece piece, OperationExecutor<T> executor, List<T> self, List<T> others, CheckingLayoutResult result) throws Exception 
+		protected <T> void performDerived(Piece piece, OperationExecutor<T> executor, List<T> self, List<T> others, CheckingLayoutResult result) throws Exception
 		{
-			check(piece, executor, self, others, result, this); 
+			check(piece, executor, self, others, result, this);
 		}
 
 		@Override
@@ -414,16 +413,16 @@ public enum PieceKind implements Measure
 		@Override
 		public int distance(Rectangle s, Rectangle o)
 		{
-			return o.x - s.x;
+			return -INSIDE_LEFT.distance(s, o);
 		}
 	},
-	
+
 	ON_RIGHT("onRight")
 	{
 		@Override
-		protected <T> void performDerived(Piece piece, OperationExecutor<T> executor, List<T> self, List<T> others, CheckingLayoutResult result) throws Exception 
+		protected <T> void performDerived(Piece piece, OperationExecutor<T> executor, List<T> self, List<T> others, CheckingLayoutResult result) throws Exception
 		{
-			check(piece, executor, self, others, result, this); 
+			check(piece, executor, self, others, result, this);
 		}
 
 		@Override
@@ -435,16 +434,16 @@ public enum PieceKind implements Measure
 		@Override
 		public int distance(Rectangle s, Rectangle o)
 		{
-			return s.x - o.x;
+			return -INSIDE_RIGHT.distance(s, o);
 		}
 	},
 
 	ON_TOP("onTop")
 	{
 		@Override
-		protected <T> void performDerived(Piece piece, OperationExecutor<T> executor, List<T> self, List<T> others, CheckingLayoutResult result) throws Exception 
+		protected <T> void performDerived(Piece piece, OperationExecutor<T> executor, List<T> self, List<T> others, CheckingLayoutResult result) throws Exception
 		{
-			check(piece, executor, self, others, result, this); 
+			check(piece, executor, self, others, result, this);
 		}
 
 		@Override
@@ -456,16 +455,16 @@ public enum PieceKind implements Measure
 		@Override
 		public int distance(Rectangle s, Rectangle o)
 		{
-			return o.y - s.y;
+			return -INSIDE_TOP.distance(s, o);
 		}
 	},
 
 	ON_BOTTOM("onBottom")
 	{
 		@Override
-		protected <T> void performDerived(Piece piece, OperationExecutor<T> executor, List<T> self, List<T> others, CheckingLayoutResult result) throws Exception 
+		protected <T> void performDerived(Piece piece, OperationExecutor<T> executor, List<T> self, List<T> others, CheckingLayoutResult result) throws Exception
 		{
-			check(piece, executor, self, others, result, this); 
+			check(piece, executor, self, others, result, this);
 		}
 
 		@Override
@@ -477,7 +476,7 @@ public enum PieceKind implements Measure
 		@Override
 		public int distance(Rectangle s, Rectangle o)
 		{
-			return s.y - o.y;
+			return -INSIDE_BOTTOM.distance(s, o);
 		}
 	},
 
@@ -486,7 +485,7 @@ public enum PieceKind implements Measure
 		@Override
 		protected <T> void performDerived(Piece piece, OperationExecutor<T> executor, List<T> self, List<T> others, CheckingLayoutResult result) throws Exception
 		{
-			check(piece, executor, self, others, result, this); 
+			check(piece, executor, self, others, result, this);
 		}
 
 		@Override
@@ -501,13 +500,13 @@ public enum PieceKind implements Measure
 			return o.x - s.x;
 		}
 	},
-	
+
 	RIGHT_ALIGNED("rAlign")
 	{
 		@Override
 		protected <T> void performDerived(Piece piece, OperationExecutor<T> executor, List<T> self, List<T> others, CheckingLayoutResult result) throws Exception
 		{
-			check(piece, executor, self, others, result, this); 
+			check(piece, executor, self, others, result, this);
 		}
 
 		@Override
@@ -522,13 +521,13 @@ public enum PieceKind implements Measure
 			return s.x - o.x;
 		}
 	},
-	
+
 	TOP_ALIGNED("tAlign")
 	{
 		@Override
 		protected <T> void performDerived(Piece piece, OperationExecutor<T> executor, List<T> self, List<T> others, CheckingLayoutResult result) throws Exception
 		{
-			check(piece, executor, self, others, result, this); 
+			check(piece, executor, self, others, result, this);
 		}
 
 		@Override
@@ -549,7 +548,7 @@ public enum PieceKind implements Measure
 		@Override
 		protected <T> void performDerived(Piece piece, OperationExecutor<T> executor, List<T> self, List<T> others, CheckingLayoutResult result) throws Exception
 		{
-			check(piece, executor, self, others, result, this); 
+			check(piece, executor, self, others, result, this);
 		}
 
 		@Override
@@ -564,13 +563,13 @@ public enum PieceKind implements Measure
 			return s.y - o.y;
 		}
 	},
-	
+
 	HORIZONTAL_CENTERED("hCenter")
 	{
 		@Override
 		protected <T> void performDerived(Piece piece, OperationExecutor<T> executor, List<T> self, List<T> others, CheckingLayoutResult result) throws Exception
 		{
-			check(piece, executor, self, others, result, this); 
+			check(piece, executor, self, others, result, this);
 		}
 
 		@Override
@@ -591,7 +590,7 @@ public enum PieceKind implements Measure
 		@Override
 		protected <T> void performDerived(Piece piece, OperationExecutor<T> executor, List<T> self, List<T> others, CheckingLayoutResult result) throws Exception
 		{
-			check(piece, executor, self, others, result, this); 
+			check(piece, executor, self, others, result, this);
 		}
 
 		@Override
@@ -608,19 +607,19 @@ public enum PieceKind implements Measure
 	},
 
 	;
-	
+
 	private PieceKind(String name)
 	{
 		this.name = name;
 	}
-	
+
 	@Override
 	public String toString()
 	{
 		return this.name;
 	}
-	
-	
+
+
 	public boolean useName()
 	{
 		return true;
@@ -638,18 +637,18 @@ public enum PieceKind implements Measure
 			result.error("Count of element should be 1 instead " + self.size());
 			return;
 		}
-		 
+
 		List<T> others = Collections.emptyList();
 		if (piece.locator != null)
 		{
 			others = executor.findAll(piece.owner, piece.locator);
 		}
-		if (otherNeedOne() && others.size() != 1 ) 
+		if (otherNeedOne() && others.size() != 1 )
 		{
 			result.error("Count of relative elements should be 1 instead " + others.size());
 			return;
 		}
-		
+
 		performDerived(piece, executor, self, others, result);
 	}
 
@@ -662,9 +661,9 @@ public enum PieceKind implements Measure
 	{
 		return 0;
 	}
-	
+
 	public abstract Arrow arrow();
-	
+
 	public static PieceKind findByName(String name)
 	{
 		for (PieceKind kind : values())
@@ -676,8 +675,8 @@ public enum PieceKind implements Measure
 		}
 		return null;
 	}
-	
-	
+
+
 	protected boolean selfNeedOne()
 	{
 		return true;
@@ -695,21 +694,21 @@ public enum PieceKind implements Measure
 
 	protected abstract <T> void performDerived(Piece piece, OperationExecutor<T> executor, List<T> self, List<T> others, CheckingLayoutResult result)  throws Exception;
 
-	
-	
-	private static <T> void check(Piece piece, OperationExecutor<T> executor, List<T> self, List<T> others, CheckingLayoutResult result, Measure func) throws Exception 
+
+
+	private static <T> void check(Piece piece, OperationExecutor<T> executor, List<T> self, List<T> others, CheckingLayoutResult result, Measure func) throws Exception
 	{
 		if (others == null)
 		{
 			result.error("Others elements is empty");
 			return;
 		}
-		
+
 		Rectangle selfArea = executor.getRectangle(self.get(0));
 		Rectangle otherArea = executor.getRectangle(others.get(0));
-		
+
 		long value = func.distance(selfArea, otherArea);
-		
+
 		boolean res = piece.range.func(value, piece.a, piece.b);
 		if (!res)
 		{
@@ -717,6 +716,6 @@ public enum PieceKind implements Measure
 		}
 	}
 
-	
+
 	private String 	name;
 }
