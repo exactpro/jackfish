@@ -1,37 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import com.exactprosystems.jf.tool.custom.fields.CustomFieldWithButton?>
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<BorderPane fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
 			fx:controller="com.exactprosystems.jf.tool.custom.layout.LayoutExpressionBuilderController">
 	<right>
-		<BorderPane fx:id="parentPane" prefHeight="331.0" prefWidth="245.0" BorderPane.alignment="CENTER">
+		<BorderPane prefHeight="331.0" prefWidth="245.0" BorderPane.alignment="CENTER">
 			<top>
-				<CustomFieldWithButton fx:id="cfFindControl" promptText="Find control" BorderPane.alignment="CENTER"/>
+				<CustomFieldWithButton fx:id="cfFindControl" promptText="Find control" BorderPane.alignment="CENTER">
+					<BorderPane.margin>
+						<Insets bottom="5.0"/>
+					</BorderPane.margin>
+				</CustomFieldWithButton>
 			</top>
 			<center>
 				<ScrollPane fx:id="spControls" fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" prefViewportHeight="306.0" prefViewportWidth="180.0">
 					<content>
-						<VBox fx:id="vBoxControls" alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER"/>
+						<VBox fx:id="vBoxControls" alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
+							<padding>
+								<Insets bottom="5.0"/>
+							</padding>
+						</VBox>
 					</content>
 				</ScrollPane>
 			</center>
+			<BorderPane.margin>
+				<Insets left="5.0" right="5.0" top="5.0"/>
+			</BorderPane.margin>
 		</BorderPane>
 	</right>
-	<top>
-		<BorderPane>
-			<top>
-				<HBox spacing="5">
-					<CheckBox fx:id="cbUseGrid" text="Use grid"/>
-					<CheckBox fx:id="cbUseBorder" text="Use border" selected="true"/>
-				</HBox>
-			</top>
-			<center>
-				<CustomFieldWithButton BorderPane.alignment="CENTER"/>
-			</center>
-		</BorderPane>
-	</top>
 	<bottom>
 		<GridPane fx:id="gridPane" BorderPane.alignment="CENTER">
 			<columnConstraints>
@@ -51,9 +50,42 @@
 				<ChoiceBox fx:id="cbRange" prefWidth="150.0" GridPane.columnIndex="2"/>
 				<Button fx:id="btnAddFormula" mnemonicParsing="false" onAction="#addFormula" text="+" GridPane.columnIndex="5"/>
 			</children>
+			<BorderPane.margin>
+				<Insets bottom="5.0" left="5.0" right="5.0"/>
+			</BorderPane.margin>
 		</GridPane>
 	</bottom>
 	<center>
-		<ProgressIndicator fx:id="progressIndicator" maxHeight="150.0" maxWidth="150.0" prefHeight="100.0" prefWidth="100.0" BorderPane.alignment="CENTER"/>
+		<BorderPane fx:id="mainPane" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+			<center>
+				<ProgressIndicator fx:id="progressIndicator" maxHeight="150.0" maxWidth="150.0" prefHeight="100.0" prefWidth="100.0" BorderPane.alignment="CENTER"/>
+			</center>
+			<top>
+				<BorderPane BorderPane.alignment="CENTER">
+					<top>
+						<HBox spacing="10.0" BorderPane.alignment="CENTER_LEFT">
+							<children>
+								<CheckBox fx:id="cbUseGrid" text="grid"/>
+								<CheckBox fx:id="cbUseBorder" selected="true" text="border"/>
+								<CheckBox mnemonicParsing="false" text="id's"/>
+							</children>
+							<BorderPane.margin>
+								<Insets bottom="5.0"/>
+							</BorderPane.margin>
+						</HBox>
+					</top>
+					<center>
+						<HBox fx:id="formulaPane">
+							<BorderPane.margin>
+								<Insets bottom="5.0"/>
+							</BorderPane.margin>
+						</HBox>
+					</center>
+				</BorderPane>
+			</top>
+			<BorderPane.margin>
+				<Insets left="5.0" top="5.0"/>
+			</BorderPane.margin>
+		</BorderPane>
 	</center>
 </BorderPane>

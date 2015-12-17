@@ -15,7 +15,7 @@ import javafx.concurrent.Task;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class LayoutExpressionBuilder
@@ -101,7 +101,16 @@ public class LayoutExpressionBuilder
 
 	public void addFormula(PieceKind parameter, String controlId, Range range, String first, String second)
 	{
-		System.err.println(parameter.toFormula(controlId, range, first, second));
+		//TODO see this stub
+		String formula = "DoSpec.left('side-panel', 10).top('top', great(10.0)).top('top2', between  (a, b)).width(total * 0.9).contains('side-panel')";
+		System.err.println(formula);
+		java.util.List<FormulaPart> parse = FormulaParser.parse(formula);
+		this.controller.displayFormula(parse);
+	}
+
+	public void displayPart(FormulaPart part)
+	{
+
 	}
 
 	public void displayArrow(Rectangle self, Rectangle other, Arrow arrow)

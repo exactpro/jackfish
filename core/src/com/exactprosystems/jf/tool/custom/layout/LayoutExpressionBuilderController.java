@@ -11,22 +11,24 @@ package com.exactprosystems.jf.tool.custom.layout;
 import com.exactprosystems.jf.api.app.IControl;
 import com.exactprosystems.jf.api.app.PieceKind;
 import com.exactprosystems.jf.api.app.Range;
+import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.custom.expfield.NewExpressionField;
-import com.exactprosystems.jf.tool.custom.fields.CustomFieldWithButton;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
@@ -41,6 +43,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -48,6 +51,8 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 {
 	private static final int BORDER_WIDTH = 4;
 	private static final int OFFSET = BORDER_WIDTH / 2;
+	@FXML
+	private HBox formulaPane;
 	@FXML
 	private CheckBox cbUseBorder;
 	@FXML
@@ -69,9 +74,7 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 	@FXML
 	private VBox vBoxControls;
 	@FXML
-	private CustomFieldWithButton cfFindControl;
-	@FXML
-	private BorderPane parentPane;
+	private TextField cfFindControl;
 	@FXML
 	private ScrollPane spControls;
 	@FXML
@@ -109,7 +112,6 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 	{
 		assert vBoxControls != null : "fx:id=\"vBoxControls\" was not injected: check your FXML file 'LayoutExpressionBuilder.fxml'.";
 		assert cfFindControl != null : "fx:id=\"cfFindControl\" was not injected: check your FXML file 'LayoutExpressionBuilder.fxml'.";
-		assert parentPane != null : "fx:id=\"parentPane\" was not injected: check your FXML file 'LayoutExpressionBuilder.fxml'.";
 
 		this.cbRange.setVisible(false);
 		this.labelControlId.setVisible(false);
@@ -368,6 +370,11 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 		this.customArrow.show(where);
 	}
 
+	public void displayFormula(List<FormulaPart> parse)
+	{
+		parse.stream().map(this::createGrid).forEach(formulaPane.getChildren()::add);
+	}
+
 	public void clearArrow()
 	{
 		this.customArrow.hide();
@@ -383,7 +390,7 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 		alert.setTitle(title);
 		alert.setResizable(true);
 		alert.initModality(Modality.APPLICATION_MODAL);
-		alert.getDialogPane().setPrefHeight(600);
+		alert.getDialogPane().setPrefHeight(800);
 		alert.getDialogPane().setPrefWidth(800);
 		return alert;
 	}
@@ -418,5 +425,44 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 		this.customGrid = new CustomGrid();
 		this.customGrid.hide();
 		this.customGrid.setGroup(group);
+	}
+
+	private GridPane createGrid(FormulaPart part)
+	{
+		GridPane pane = new GridPane();
+		pane.setUserData(part);
+		int width = 100;
+		pane.setMaxWidth(width);
+		pane.setMinWidth(width);
+		pane.setPrefWidth(width);
+		int i = 0;
+		if (part.getKind() != null)
+		{
+			pane.add(createNode(part.getKind().toString()), 0, ++i);
+		}
+		if (!Str.IsNullOrEmpty(part.getName()))
+		{
+			pane.add(createNode(part.getName()), 0, ++i);
+		}
+		if (part.getRange() != null)
+		{
+			pane.add(createNode(part.getRange().toString()), 0, ++i);
+		}
+		if (!Str.IsNullOrEmpty(part.getFirst()))
+		{
+			pane.add(createNode(part.getFirst()), 0, ++i);
+		}
+		if (!Str.IsNullOrEmpty(part.getSecond()))
+		{
+			pane.add(createNode(part.getSecond()), 0, ++i);
+		}
+		return pane;
+	}
+
+	private Node createNode(String s)
+	{
+		TextField field = new TextField(s);
+		field.setEditable(false);
+		return field;
 	}
 }
