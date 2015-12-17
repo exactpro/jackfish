@@ -162,7 +162,10 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 		});
 		this.cbUseBorder.selectedProperty().addListener((observable, oldValue, newValue) -> {
 			useBorder = newValue;
-			this.otherRectangle.setVisible(newValue);
+			if (this.otherRectangle.isInit())
+			{
+				this.otherRectangle.setVisible(newValue);
+			}
 			this.selfRectangle.setVisible(newValue);
 		});
 	}
@@ -324,11 +327,11 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 
 	public void displayControl(Rectangle rectangle, boolean self)
 	{
-
 		CustomRectangle rect = self ? this.selfRectangle : this.otherRectangle;
-		String styleClass = self ? CssVariables.INITIAL_CONTROL : CssVariables.SELECTED_CONTROL;
+		String styleClass = self ? CssVariables.SELF_CONTROL : CssVariables.OTHER_CONTROL;
 		rect.addStyleClass(styleClass);
 		rect.updateRectangle(rectangle.getX() + OFFSET, rectangle.getY() + OFFSET, rectangle.getWidth() - BORDER_WIDTH, rectangle.getHeight() - BORDER_WIDTH);
+		rect.setInit(true);
 		if (useBorder)
 		{
 			rect.setVisible(true);
@@ -355,6 +358,7 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 	public void clearCanvas()
 	{
 		this.otherRectangle.setVisible(false);
+		this.otherRectangle.setInit(false);
 	}
 
 	public void displayArrow(int start, int end, int where, CustomArrow.ArrowDirection position)

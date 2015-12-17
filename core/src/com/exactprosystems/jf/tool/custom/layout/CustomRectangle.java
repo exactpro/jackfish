@@ -36,6 +36,8 @@ public class CustomRectangle
 	private Line right;
 	private Line bot;
 
+	private boolean isInit = false;
+
 	public CustomRectangle(Rectangle rectangle)
 	{
 		this();
@@ -91,6 +93,18 @@ public class CustomRectangle
 		this.bot.setStartY(y + h);
 		this.bot.setEndX(x + w);
 		this.bot.setEndY(y + h);
+
+		this.isInit = true;
+	}
+
+	public boolean isInit()
+	{
+		return isInit;
+	}
+
+	public void setInit(boolean init)
+	{
+		isInit = init;
 	}
 
 	public void setLineStrokeCap(StrokeLineCap lineCap, LinePosition position)

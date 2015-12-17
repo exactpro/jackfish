@@ -138,10 +138,10 @@ public class CssVariables
 	public static final String	EXPRESSION_FIELD_SECOND		= "secondButton";
 
 	/*Layout builder*/
-	public static final String	INITIAL_CONTROL				= "initialControl";
-	public static final String	SELECTED_CONTROL			= "selectedControl";
-	public static final String	INITIAL_CONTROL_SELECTED_LINE = "initialControlSelectedLine";
-	public static final String	SELECTED_CONTROL_SELECTED_LINE = "selectedControlSelectedLine";
+	public static final String SELF_CONTROL 				= "selfControl";
+	public static final String OTHER_CONTROL				= "otherControl";
+	public static final String SELF_CONTROL_SELECTED_LINE	= "selfControlSelectedLine";
+	public static final String OTHER_CONTROL_SELECTED_LINE	= "otherControlSelectedLine";
 
 	public static final String	LINE						= "layoutLine";
 	public static final String LINE_TRIANGLE				= "layoutLineTriangle";

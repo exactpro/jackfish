@@ -601,19 +601,19 @@ CellView > .text-input.text-field{
 }
 
 /*Layout builder*/
-.initialControl {
+.selfControl {
 	-fx-stroke : red;
 
 }
-.selectedControl {
+.otherControl {
 	-fx-stroke : green;
 
 }
-.initialControlSelectedLine {
+.selfControlSelectedLine {
 	-fx-stroke : -fx-company-color-light;
 
 }
-.selectedControlSelectedLine {
+.otherControlSelectedLine {
 	-fx-stroke : -fx-company-color-light;
 
 }
