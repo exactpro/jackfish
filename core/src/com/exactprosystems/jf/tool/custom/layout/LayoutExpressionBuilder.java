@@ -202,12 +202,6 @@ public class LayoutExpressionBuilder
 			{
 				where = direction == CustomArrow.ArrowDirection.VERTICAL ? centerX : centerY;
 			}
-			System.out.println("#######################");
-			System.out.println("start : " + start);
-			System.out.println("end   : " + end);
-			System.out.println("where : " + where);
-			System.out.println("arrow : " + arrow);
-			System.out.println("#######################");
 			this.controller.displayArrow(start, end, where, direction);
 		}
 	}

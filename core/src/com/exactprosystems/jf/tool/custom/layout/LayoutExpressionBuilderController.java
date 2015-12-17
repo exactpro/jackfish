@@ -27,6 +27,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -373,9 +374,9 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 	{
 		if (parse.size() > 0 && formulaPane.getChildren().size() == 0)
 		{
-			formulaPane.setMaxHeight(100);
-			formulaPane.setMinHeight(100);
-			formulaPane.setPrefHeight(100);
+			formulaPane.setMaxHeight(80);
+			formulaPane.setMinHeight(80);
+			formulaPane.setPrefHeight(80);
 		}
 		parse.stream().map(this::createGrid).forEach(formulaPane.getChildren()::add);
 	}
@@ -432,31 +433,25 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 		this.customGrid.setGroup(group);
 	}
 
-	private GridPane createGrid(FormulaPart part)
+	private Node createGrid(FormulaPart part)
 	{
-		GridPane pane = new GridPane();
-		pane.setUserData(part);
+		TextArea textArea = new TextArea();
+		textArea.setUserData(part);
 		int width = 120;
-		pane.setMaxWidth(width);
-		pane.setMinWidth(width);
-		pane.setPrefWidth(width);
-		int i = 0;
-		pane.add(createNode(part.getKind().toString()), 0, ++i);
+		textArea.setMaxWidth(width);
+		textArea.setMinWidth(width);
+		textArea.setPrefWidth(width);
+		StringBuilder sb = new StringBuilder(part.getKind().toString());
 		if (part.getKind().useName())
 		{
-			pane.add(createNode(part.getName()), 0, ++i);
+			sb.append("\n").append(part.getName());
 		}
 		if (part.getKind().useRange())
 		{
-			pane.add(createNode(part.getRange().toString(part.getFirst(), part.getSecond())), 0, ++i);
+			sb.append("\n").append(part.getRange().toString(part.getFirst(), part.getSecond()));
 		}
-		return pane;
-	}
-
-	private Node createNode(String s)
-	{
-		TextField field = new TextField(s);
-		field.setEditable(false);
-		return field;
+		textArea.setEditable(false);
+		textArea.setText(sb.toString());
+		return textArea;
 	}
 }
