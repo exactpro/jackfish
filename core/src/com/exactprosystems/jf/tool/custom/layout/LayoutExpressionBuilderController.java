@@ -159,7 +159,7 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 	public ButtonData show(String title, boolean fullScreen, ArrayList<IControl> list)
 	{
 		Alert dialog = createAlert(title);
-		list.stream().map(control ->
+		list.forEach(control ->
 		{
 			ToggleButton button = new ToggleButton(control.toString());
 			button.setToggleGroup(this.mainToggleGroup);
@@ -167,13 +167,10 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 			button.setUserData(control);
 			button.setAlignment(Pos.BASELINE_LEFT);
 			button.setTooltip(new Tooltip(control.locator().toString()));
-			return button;
-		}).forEach(button ->
-		{
 			this.vBoxControls.getChildren().add(button);
 			this.buttons.add(button);
 		});
-
+		
 		dialog.getDialogPane().setContent(parent);
 		if (fullScreen)
 		{
@@ -327,12 +324,12 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 
 	private Node createGrid(FormulaPart part)
 	{
-		ToggleButton button = new ToggleButton();
-		button.setUserData(part);
+		ToggleButton node = new ToggleButton();
+		node.setUserData(part);
 		int width = 120;
-		button.setMaxWidth(width);
-		button.setMinWidth(width);
-		button.setPrefWidth(width);
+		node.setMaxWidth(width);
+		node.setMinWidth(width);
+		node.setPrefWidth(width);
 		StringBuilder sb = new StringBuilder(part.getKind().toString());
 		if (part.getKind().useName())
 		{
@@ -342,8 +339,10 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 		{
 			sb.append("\n").append(part.getRange().toString(part.getFirst(), part.getSecond()));
 		}
-		button.setText(sb.toString());
-		return button;
+		node.setText(sb.toString());
+		node.setTooltip(new Tooltip(part.toString()));
+		
+		return node;
 	}
 
 	private void listeners()
