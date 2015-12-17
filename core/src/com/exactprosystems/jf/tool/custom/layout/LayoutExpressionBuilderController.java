@@ -372,6 +372,12 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 
 	public void displayFormula(List<FormulaPart> parse)
 	{
+		if (parse.size() > 0 && formulaPane.getChildren().size() == 0)
+		{
+			formulaPane.setMaxHeight(100);
+			formulaPane.setMinHeight(100);
+			formulaPane.setPrefHeight(100);
+		}
 		parse.stream().map(this::createGrid).forEach(formulaPane.getChildren()::add);
 	}
 
@@ -431,7 +437,7 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 	{
 		GridPane pane = new GridPane();
 		pane.setUserData(part);
-		int width = 100;
+		int width = 120;
 		pane.setMaxWidth(width);
 		pane.setMinWidth(width);
 		pane.setPrefWidth(width);
@@ -446,15 +452,7 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 		}
 		if (part.getRange() != null)
 		{
-			pane.add(createNode(part.getRange().toString()), 0, ++i);
-		}
-		if (!Str.IsNullOrEmpty(part.getFirst()))
-		{
-			pane.add(createNode(part.getFirst()), 0, ++i);
-		}
-		if (!Str.IsNullOrEmpty(part.getSecond()))
-		{
-			pane.add(createNode(part.getSecond()), 0, ++i);
+			pane.add(createNode(part.getRange().toString(part.getFirst(), part.getSecond())), 0, ++i);
 		}
 		return pane;
 	}

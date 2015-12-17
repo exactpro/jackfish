@@ -28,7 +28,7 @@ public class CustomScrollPane extends ScrollPane
 		super();
 		this.setVbarPolicy(ScrollBarPolicy.NEVER);
 		this.setHbarPolicy(ScrollBarPolicy.AS_NEEDED);
-		this.getStyleClass().add(CssVariables.PARAMETERS_PANE);
+		this.getStyleClass().add(CssVariables.CUSTOM_SCROLL_PANE);
 		this.setFitToHeight(true);
 		this.prefHeight = prefHeight;
 		this.setPrefHeight(this.prefHeight);

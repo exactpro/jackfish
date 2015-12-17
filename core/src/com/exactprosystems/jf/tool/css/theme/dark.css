@@ -395,23 +395,23 @@
 }
 
 /*ParametersPane*/
-.parametersPane {
+.customScrollPane {
 	-fx-background-color: transparent;
 	-fx-background-insets: 0,0,0,0;
 	-fx-padding: 0;
 
 }
-.parametersPane .scroll-bar:horizontal .increment-button,
-.parametersPane .scroll-bar:horizontal .decrement-button {
+.customScrollPane .scroll-bar:horizontal .increment-button,
+.customScrollPane .scroll-bar:horizontal .decrement-button {
 	-fx-opacity : 0;
 	-fx-pref-width : 0px;
 
 }
-.parametersPane .scroll-bar:horizontal .track {
+.customScrollPane .scroll-bar:horizontal .track {
 	-fx-opacity : 0;
 	-fx-pref-width : 20px;
 }
-.parametersPane .scroll-bar:horizontal .thumb {
+.customScrollPane .scroll-bar:horizontal .thumb {
 	-fx-background-color : -fx-company-color-dark;
 
 }

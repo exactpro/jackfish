@@ -93,7 +93,7 @@ public class CssVariables
 	public static final String	NOT_CHANGEABLE_ROW			= "notChangeableRow";
 
 	/*ParametersPane*/
-	public static final String	PARAMETERS_PANE				= "parametersPane";
+	public static final String CUSTOM_SCROLL_PANE 			= "customScrollPane";
 
 	public static final String	FOCUSED_FIELD				= "focusedField";
 	public static final String	UNFOCUSED_GRID				= "unfocusedGrid";
