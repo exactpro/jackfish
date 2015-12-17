@@ -73,7 +73,7 @@
 		</BorderPane>
 	</right>
 	<top>
-		<ScrollPane fitToHeight="true" fitToWidth="true" prefViewportWidth="600.0" styleClass="customScrollPane">
+		<ScrollPane fitToHeight="true" fitToWidth="true" prefViewportWidth="600.0" styleClass="customScrollPane" vbarPolicy="NEVER">
 			<content>
 				<HBox fx:id="formulaPane" BorderPane.alignment="CENTER">
 					<BorderPane.margin>

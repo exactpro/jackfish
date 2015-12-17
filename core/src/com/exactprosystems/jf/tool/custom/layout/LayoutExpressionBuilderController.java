@@ -11,7 +11,6 @@ package com.exactprosystems.jf.tool.custom.layout;
 import com.exactprosystems.jf.api.app.IControl;
 import com.exactprosystems.jf.api.app.PieceKind;
 import com.exactprosystems.jf.api.app.Range;
-import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
@@ -442,15 +441,12 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 		pane.setMinWidth(width);
 		pane.setPrefWidth(width);
 		int i = 0;
-		if (part.getKind() != null)
-		{
-			pane.add(createNode(part.getKind().toString()), 0, ++i);
-		}
-		if (!Str.IsNullOrEmpty(part.getName()))
+		pane.add(createNode(part.getKind().toString()), 0, ++i);
+		if (part.getKind().useName())
 		{
 			pane.add(createNode(part.getName()), 0, ++i);
 		}
-		if (part.getRange() != null)
+		if (part.getKind().useRange())
 		{
 			pane.add(createNode(part.getRange().toString(part.getFirst(), part.getSecond())), 0, ++i);
 		}
