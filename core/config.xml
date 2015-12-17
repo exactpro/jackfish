@@ -8,7 +8,7 @@
     <outputPath>reports</outputPath>
     <variables>vars.ini</variables>
     <userVariables>uservars/myvars.ini</userVariables>
-    <libEntry attr1="ATTR1">some text
+    <libEntry>
         <name>LIB</name>
         <libPath>examples/lib.jf</libPath>
     </libEntry>
