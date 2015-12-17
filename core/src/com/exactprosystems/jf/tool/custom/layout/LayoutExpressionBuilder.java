@@ -9,24 +9,29 @@
 package com.exactprosystems.jf.tool.custom.layout;
 
 import com.exactprosystems.jf.api.app.*;
+import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.tool.Common;
+
 import javafx.concurrent.Task;
+import javafx.scene.control.ButtonBar.ButtonData;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.*;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class LayoutExpressionBuilder
 {
 	private LayoutExpressionBuilderController controller;
 	private String parameterName;
-	private String parameterExpression;
 	private AppConnection appConnection;
 	private IWindow currentWindow;
 	private String windowName;
 	private AbstractEvaluator evaluator;
+	private String parameterExpression;
+	private List<FormulaPart> formula;
 
 	private double xOffset = 0;
 	private double yOffset = 0;
@@ -38,8 +43,21 @@ public class LayoutExpressionBuilder
 			throw new Exception("Connection is not established. \nChoose Default app at first and run it.");
 		}
 
-		this.parameterName = parameterName;
 		this.parameterExpression = parameterExpression;
+		if (Str.IsNullOrEmpty(parameterExpression))
+		{
+			this.formula = new ArrayList<FormulaPart>();
+		}
+		else
+		{
+			this.formula = FormulaParser.parse(parameterExpression);
+			if (this.formula == null)
+			{
+				throw new Exception("Can not parse this expression to split it to parts.");
+			}
+		}
+		
+		this.parameterName = parameterName;
 		this.appConnection = appConnection;
 		this.windowName = windowName;
 		this.evaluator = evaluator;
@@ -70,6 +88,8 @@ public class LayoutExpressionBuilder
 			throw new NullPointerException(String.format("Control with name %s is not found in the window with name %s", this.parameterName, this.windowName));
 		}
 
+		this.controller.displayFormula(-1, this.formula);
+		
 		Task<BufferedImage> loadImage = new Task<BufferedImage>()
 		{
 			@Override
@@ -83,14 +103,18 @@ public class LayoutExpressionBuilder
 				return image;
 			}
 		};
-		loadImage.setOnSucceeded(event -> Common.tryCatch(() -> {
+		
+		loadImage.setOnSucceeded(event -> Common.tryCatch(() -> 
+		{
 			this.controller.displayScreenShot((BufferedImage) event.getSource().getValue());
 			displayControl(initialControl, true);
 		}, "Error on get screenshot"));
 
 		new Thread(loadImage).start();
-		String result = this.controller.show(title, fullScreen, controls);
-		return result == null ? this.parameterExpression : result;
+		
+		ButtonData result = this.controller.show(title, fullScreen, controls);
+		
+		return result == null ? this.parameterExpression : FormulaParser.toFormula(this.formula);
 	}
 
 	public void clearCanvas()
@@ -99,13 +123,16 @@ public class LayoutExpressionBuilder
 		this.controller.displayControlId("");
 	}
 
-	public void addFormula(PieceKind parameter, String controlId, Range range, String first, String second)
+	public void updateFormula(int index, PieceKind kind, String name, Range range, String first, String second)
 	{
-		//TODO see this stub
-		String formula = "DoSpec.left('side-panel', 10).top('top', great(10.0)).top('top2', between  (a, b)).width(total * 0.9).contains('side-panel')";
-		System.err.println(formula);
-		java.util.List<FormulaPart> parse = FormulaParser.parse(formula);
-		this.controller.displayFormula(parse);
+		this.formula.set(index, new FormulaPart(kind, range, name, first, second));
+		this.controller.displayFormula(index, this.formula);
+	}
+	
+	public void addFormula(PieceKind kind, String name, Range range, String first, String second)
+	{
+		this.formula.add(new FormulaPart(kind, range, name, first, second));
+		this.controller.displayFormula(this.formula.size() - 1, this.formula);
 	}
 
 	public void displayPart(FormulaPart part)
