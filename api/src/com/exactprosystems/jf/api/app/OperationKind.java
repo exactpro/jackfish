@@ -23,11 +23,11 @@ public enum OperationKind
 		}
 
 		@Override
-		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, LocatorsHolder locators, List<T> list, Holder<T> component, OperationResult result) throws Exception
+		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, Holder<T> holder, OperationResult result) throws Exception
 		{
 			for (int c = 0; c < part.i; c++)
 			{
-				part.operation.operate(executor, locators.get(LocatorKind.Element), component.value);
+				part.operation.operate(executor, holder.get(LocatorKind.Element), holder.getValue());
 			}
 			return true;
 		}
@@ -36,9 +36,9 @@ public enum OperationKind
 	COUNT("count")
 	{
 		@Override
-		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, LocatorsHolder locators, List<T> list, Holder<T> component, OperationResult result) throws Exception
+		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, Holder<T> holder, OperationResult result) throws Exception
 		{
-			result.setText(String.valueOf(list != null ? list.size() : 0));
+			result.setText(String.valueOf(holder.size()));
 			return true;
 		}
 	},
@@ -46,13 +46,9 @@ public enum OperationKind
 	USE("use")
 	{
 		@Override
-		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, LocatorsHolder locators, List<T> list, Holder<T> component, OperationResult result) throws Exception
+		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, Holder<T> holder, OperationResult result) throws Exception
 		{
-			if (part.i >= list.size() || part.i < 0)
-			{
-				throw new Exception("Wrong index in 'use(" + part.i + ")' cause size is " +  list.size() + " for locator " + locators.get(LocatorKind.Element));
-			}
-			component.value = list.get(part.i);
+			holder.setIndex(part.i);
 			return true;
 		}
 	},
@@ -66,11 +62,9 @@ public enum OperationKind
 		}
 		
 		@Override
-		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, LocatorsHolder locators, List<T> list, Holder<T> component, OperationResult result) throws Exception
+		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, Holder<T> holder, OperationResult result) throws Exception
 		{
-			component.value = null;
-			list.clear();
-			locators.put(part.locatorKind, part.locator);
+			holder.put(part.locatorKind, part.locator);
 			return true;
 		}
 	},
@@ -78,18 +72,18 @@ public enum OperationKind
 	SET("set")
 	{
 		@Override
-		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, LocatorsHolder locators, List<T> list, Holder<T> component, OperationResult result) throws Exception
+		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, Holder<T> holder, OperationResult result) throws Exception
 		{
-			return executor.setValue(component.value, part.d);
+			return executor.setValue(holder.getValue(), part.d);
 		}
 	},
 
 	GET_VALUE("getValue")
 	{
 		@Override
-		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, LocatorsHolder locators, List<T> list, Holder<T> component, OperationResult result) throws Exception
+		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, Holder<T> holder, OperationResult result) throws Exception
 		{
-			result.setText(executor.getValue(component.value));
+			result.setText(executor.getValue(holder.getValue()));
 			return true;
 		}
 	},
@@ -97,9 +91,9 @@ public enum OperationKind
 	GET_RECTANGLE("getRectangle")
 	{
 		@Override
-		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, LocatorsHolder locators, List<T> list, Holder<T> component, OperationResult result) throws Exception
+		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, Holder<T> holder, OperationResult result) throws Exception
 		{
-			result.setRectangle(executor.getRectangle(component.value));
+			result.setRectangle(executor.getRectangle(holder.getValue()));
 			return true;
 		}
 	},
@@ -107,45 +101,45 @@ public enum OperationKind
 	PUSH("push")
 	{
 		@Override
-		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, LocatorsHolder locators, List<T> list, Holder<T> component, OperationResult result) throws Exception
+		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, Holder<T> holder, OperationResult result) throws Exception
 		{
-			return executor.push(component.value);
+			return executor.push(holder.getValue());
 		}
 	},
 	
 	PRESS("press")
 	{
 		@Override
-		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, LocatorsHolder locators, List<T> list, Holder<T> component, OperationResult result) throws Exception
+		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, Holder<T> holder, OperationResult result) throws Exception
 		{
-			return executor.press(component.value, part.key);
+			return executor.press(holder.getValue(), part.key);
 		}
 	},
 	
 	KEY_UP("keyUp")
 	{
 		@Override
-		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, LocatorsHolder locators, List<T> list, Holder<T> component, OperationResult result) throws Exception
+		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, Holder<T> holder, OperationResult result) throws Exception
 		{
-			return executor.upAndDown(component.value, part.key, false);
+			return executor.upAndDown(holder.getValue(), part.key, false);
 		}
 	},
 	
 	KEY_DOWN("keyDown")
 	{
 		@Override
-		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, LocatorsHolder locators, List<T> list, Holder<T> component, OperationResult result) throws Exception
+		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, Holder<T> holder, OperationResult result) throws Exception
 		{
-			return executor.upAndDown(component.value, part.key, true);
+			return executor.upAndDown(holder.getValue(), part.key, true);
 		}
 	},
 	
 	CHECK("check")
 	{
 		@Override
-		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, LocatorsHolder locators, List<T> list, Holder<T> component, OperationResult result) throws Exception
+		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, Holder<T> holder, OperationResult result) throws Exception
 		{
-			result.setText(String.valueOf(checkText(executor.getValue(component.value), part.text, false, part.b)));
+			result.setText(String.valueOf(checkText(executor.getValue(holder.getValue()), part.text, false, part.b)));
 			return true;
 		}
 	},
@@ -153,11 +147,11 @@ public enum OperationKind
 	CHECK_XY("check(x,y)")
 	{
 		@Override
-		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, LocatorsHolder locators, List<T> list, Holder<T> component, OperationResult result) throws Exception
+		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, Holder<T> holder, OperationResult result) throws Exception
 		{
-			String str = isTable(locators, executor) 
-					? executor.getValueTableCell(component.value, part.x, part.y) 
-					: executor.getValue(executor.lookAtTable(component.value, locators.get(LocatorKind.Rows), locators.get(LocatorKind.Header), part.x, part.y));
+			String str = isTable(holder, executor) 
+					? executor.getValueTableCell(holder.getValue(), part.x, part.y) 
+					: executor.getValue(executor.lookAtTable(holder.getValue(), holder.get(LocatorKind.Rows), holder.get(LocatorKind.Header), part.x, part.y));
 			result.setText(String.valueOf(checkText(str, part.text, false, part.b)));
 			return true;
 		}
@@ -166,9 +160,9 @@ public enum OperationKind
 	CHECK_REGEXP("checkRegexp")
 	{
 		@Override
-		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, LocatorsHolder locators, List<T> list, Holder<T> component, OperationResult result) throws Exception
+		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, Holder<T> holder, OperationResult result) throws Exception
 		{
-			result.setText(String.valueOf(checkText(executor.getValue(component.value), part.text, true, part.b)));
+			result.setText(String.valueOf(checkText(executor.getValue(holder.getValue()), part.text, true, part.b)));
 			return true;
 		}
 	},
@@ -176,11 +170,11 @@ public enum OperationKind
 	CHECK_REGEXP_XY("checkRegexp(x,y)")
 	{
 		@Override
-		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, LocatorsHolder locators, List<T> list, Holder<T> component, OperationResult result) throws Exception
+		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, Holder<T> holder, OperationResult result) throws Exception
 		{
-			String str = isTable(locators, executor)
-					? executor.getValueTableCell(component.value, part.x, part.y)
-					: executor.getValue(executor.lookAtTable(component.value, locators.get(LocatorKind.Rows), locators.get(LocatorKind.Header), part.x, part.y));
+			String str = isTable(holder, executor)
+					? executor.getValueTableCell(holder.getValue(), part.x, part.y)
+					: executor.getValue(executor.lookAtTable(holder.getValue(), holder.get(LocatorKind.Rows), holder.get(LocatorKind.Header), part.x, part.y));
 			result.setText(String.valueOf(checkText(str, part.text, true, part.b)));
 			return true;
 		}
@@ -189,9 +183,9 @@ public enum OperationKind
 	CHECK_ATTR("checkAttr")
 	{
 		@Override
-		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, LocatorsHolder locators, List<T> list, Holder<T> component, OperationResult result) throws Exception
+		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, Holder<T> holder, OperationResult result) throws Exception
 		{
-			boolean res = checkText(executor.getAttr(component.value, part.str), part.text, false, part.b);
+			boolean res = checkText(executor.getAttr(holder.getValue(), part.str), part.text, false, part.b);
 			result.setText(String.valueOf(res));
 			return true;
 		}
@@ -200,9 +194,9 @@ public enum OperationKind
 	CHECK_ATTR_REGEXP("checkAttrRegexp")
 	{
 		@Override
-		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, LocatorsHolder locators, List<T> list, Holder<T> component, OperationResult result) throws Exception
+		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, Holder<T> holder, OperationResult result) throws Exception
 		{
-			boolean res = checkText(executor.getAttr(component.value, part.str), part.text, true, part.b);
+			boolean res = checkText(executor.getAttr(holder.getValue(), part.str), part.text, true, part.b);
 			result.setText(String.valueOf(res));
 			return true;
 		}
@@ -211,31 +205,31 @@ public enum OperationKind
 	MOVE("move")
 	{
 		@Override
-		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, LocatorsHolder locators, List<T> list, Holder<T> component, OperationResult result) throws Exception
+		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, Holder<T> holder, OperationResult result) throws Exception
 		{
-			return executor.mouse(component.value, part.x, part.y, MouseAction.Move);
+			return executor.mouse(holder.getValue(), part.x, part.y, MouseAction.Move);
 		}
 	},
 	
 	MOVE_XY("move(x,y)")
 	{
 		@Override
-		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, LocatorsHolder locators, List<T> list, Holder<T> component, OperationResult result) throws Exception
+		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, Holder<T> holder, OperationResult result) throws Exception
 		{
-			if (isTable(locators, executor))
+			if (isTable(holder, executor))
 			{
-				return executor.mouseTable(component.value, part.x, part.y, MouseAction.Move);
+				return executor.mouseTable(holder.getValue(), part.x, part.y, MouseAction.Move);
 			}
 			else
 			{
-				Locator locator = locators.get(LocatorKind.Element);
+				Locator locator = holder.get(LocatorKind.Element);
 				if (locator != null && locator.getControlKind() == ControlKind.Table)
 				{
-					return executor.mouse(executor.lookAtTable(component.value, locators.get(LocatorKind.Rows), locators.get(LocatorKind.Header), part.x, part.y), Integer.MIN_VALUE, Integer.MIN_VALUE, MouseAction.Move);
+					return executor.mouse(executor.lookAtTable(holder.getValue(), holder.get(LocatorKind.Rows), holder.get(LocatorKind.Header), part.x, part.y), Integer.MIN_VALUE, Integer.MIN_VALUE, MouseAction.Move);
 				}
 				else
 				{
-					return executor.mouse(component.value, part.x, part.y, MouseAction.Move);
+					return executor.mouse(holder.getValue(), part.x, part.y, MouseAction.Move);
 				}
 			}
 		}
@@ -244,33 +238,33 @@ public enum OperationKind
 	CLICK("click")
 	{
 		@Override
-		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, LocatorsHolder locators, List<T> list, Holder<T> component, OperationResult result) throws Exception
+		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, Holder<T> holder, OperationResult result) throws Exception
 		{
 			MouseAction mouse = part.mouse == null ? MouseAction.LeftClick : part.mouse;
-			return executor.mouse(component.value, part.x, part.y, mouse);
+			return executor.mouse(holder.getValue(), part.x, part.y, mouse);
 		}
 	},
 	
 	CLICK_XY("click(x,y)")
 	{
 		@Override
-		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, LocatorsHolder locators, List<T> list, Holder<T> component, OperationResult result) throws Exception
+		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, Holder<T> holder, OperationResult result) throws Exception
 		{
 			MouseAction mouse = part.mouse == null ? MouseAction.LeftClick : part.mouse;
-			if (isTable(locators, executor))
+			if (isTable(holder, executor))
 			{
-				return executor.mouseTable(component.value, part.x, part.y, mouse);
+				return executor.mouseTable(holder.getValue(), part.x, part.y, mouse);
 			}
 			else
 			{
-				Locator locator = locators.get(LocatorKind.Element);
+				Locator locator = holder.get(LocatorKind.Element);
 				if (locator != null && locator.getControlKind() == ControlKind.Table)
 				{
-					return executor.mouse(executor.lookAtTable(component.value, locators.get(LocatorKind.Rows), locators.get(LocatorKind.Header), part.x, part.y), Integer.MIN_VALUE, Integer.MIN_VALUE, mouse);
+					return executor.mouse(executor.lookAtTable(holder.getValue(), holder.get(LocatorKind.Rows), holder.get(LocatorKind.Header), part.x, part.y), Integer.MIN_VALUE, Integer.MIN_VALUE, mouse);
 				}
 				else
 				{
-					return executor.mouse(component.value, part.x, part.y, mouse);
+					return executor.mouse(holder.getValue(), part.x, part.y, mouse);
 				}
 			}
 		}
@@ -279,56 +273,56 @@ public enum OperationKind
 	TEXT("text")
 	{
 		@Override
-		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, LocatorsHolder locators, List<T> list, Holder<T> component, OperationResult result) throws Exception
+		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, Holder<T> holder, OperationResult result) throws Exception
 		{
-			return executor.text(component.value, "" + part.text, part.b);
+			return executor.text(holder.getValue(), "" + part.text, part.b);
 		}
 	},
 	
 	TEXT_XY("text(x,y)")
 	{
 		@Override
-		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, LocatorsHolder locators, List<T> list, Holder<T> component, OperationResult result) throws Exception
+		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, Holder<T> holder, OperationResult result) throws Exception
 		{
-			return isTable(locators, executor) 
-					? executor.textTableCell(component.value, part.x, part.y, "" + part.text) 
-					: executor.text(executor.lookAtTable(component.value, locators.get(LocatorKind.Rows), locators.get(LocatorKind.Header), part.x, part.y), "" + part.text, part.b);
+			return isTable(holder, executor) 
+					? executor.textTableCell(holder.getValue(), part.x, part.y, "" + part.text) 
+					: executor.text(executor.lookAtTable(holder.getValue(), holder.get(LocatorKind.Rows), holder.get(LocatorKind.Header), part.x, part.y), "" + part.text, part.b);
 		}
 	},
 	
 	TOGGLE("toggle")
 	{
 		@Override
-		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, LocatorsHolder locators, List<T> list, Holder<T> component, OperationResult result) throws Exception
+		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, Holder<T> holder, OperationResult result) throws Exception
 		{
-			return executor.toggle(component.value, part.b);
+			return executor.toggle(holder.getValue(), part.b);
 		}
 	},
 	
 	SELECT("select")
 	{
 		@Override
-		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, LocatorsHolder locators, List<T> list, Holder<T> component, OperationResult result) throws Exception
+		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, Holder<T> holder, OperationResult result) throws Exception
 		{
-            return executor.select(component.value, part.text);
+            return executor.select(holder.getValue(), part.text);
 		}
 	},
 	
 	EXPAND("expand")
 	{
 		@Override
-		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, LocatorsHolder locators, List<T> list, Holder<T> component, OperationResult result) throws Exception
+		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, Holder<T> holder, OperationResult result) throws Exception
 		{
-			return executor.fold(component.value, part.text, false);
+			return executor.fold(holder.getValue(), part.text, false);
 		}
 	},
 	
 	COLLAPSE("collapse")
 	{
 		@Override
-		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, LocatorsHolder locators, List<T> list, Holder<T> component, OperationResult result) throws Exception
+		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, Holder<T> holder, OperationResult result) throws Exception
 		{
-			return executor.fold(component.value, part.text, true);
+			return executor.fold(holder.getValue(), part.text, true);
 		}
 	},
 	
@@ -341,7 +335,7 @@ public enum OperationKind
 		}
 		
 		@Override
-		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, LocatorsHolder locators, List<T> list, Holder<T> component, OperationResult result) throws Exception
+		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, Holder<T> holder, OperationResult result) throws Exception
 		{
 			Thread.sleep(part.i);
 			return true;
@@ -357,10 +351,10 @@ public enum OperationKind
 		}
 		
 		@Override
-		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, LocatorsHolder locators, List<T> list, Holder<T> component, OperationResult result) throws Exception
+		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, Holder<T> holder, OperationResult result) throws Exception
 		{
 			AtomicLong atomicLong = new AtomicLong();
-			boolean ok = executor.wait(locators.get(LocatorKind.Element), part.i , part.b, atomicLong);
+			boolean ok = executor.wait(holder.get(LocatorKind.Element), part.i , part.b, atomicLong);
 			result.setText(String.valueOf(atomicLong.get()));
 			return ok;
 		}
@@ -369,9 +363,9 @@ public enum OperationKind
 	GET("get")
 	{
 		@Override
-		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, LocatorsHolder locators, List<T> list, Holder<T> component, OperationResult result) throws Exception
+		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, Holder<T> holder, OperationResult result) throws Exception
 		{
-			String str = executor.get(component.value);
+			String str = executor.get(holder.getValue());
 			result.setText(str);
 			return true;
 		}
@@ -380,9 +374,9 @@ public enum OperationKind
 	GET_ATTR("getAttr")
 	{
 		@Override
-		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, LocatorsHolder locators, List<T> list, Holder<T> component, OperationResult result) throws Exception
+		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, Holder<T> holder, OperationResult result) throws Exception
 		{
-			String str = executor.getAttr(component.value, part.str);
+			String str = executor.getAttr(holder.getValue(), part.str);
 			result.setText(str);
 			return true;
 		}
@@ -391,11 +385,11 @@ public enum OperationKind
 	GET_VALUE_XY("getValue(x,y)")
 	{
 		@Override
-		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, LocatorsHolder locators, List<T> list, Holder<T> component, OperationResult result) throws Exception
+		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, Holder<T> holder, OperationResult result) throws Exception
 		{
-			String str = isTable(locators, executor) 
-					? executor.getValueTableCell(component.value, part.x, part.y) 
-					: executor.getValue(executor.lookAtTable(component.value, locators.get(LocatorKind.Rows), locators.get(LocatorKind.Header), part.x, part.y));
+			String str = isTable(holder, executor) 
+					? executor.getValueTableCell(holder.getValue(), part.x, part.y) 
+					: executor.getValue(executor.lookAtTable(holder.getValue(), holder.get(LocatorKind.Rows), holder.get(LocatorKind.Header), part.x, part.y));
 			result.setText(str);
 			return true;
 		}
@@ -404,10 +398,10 @@ public enum OperationKind
 	GET_TABLE("getTable")
 	{
 		@Override
-		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, LocatorsHolder locators, List<T> list, Holder<T> component, OperationResult result) throws Exception
+		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, Holder<T> holder, OperationResult result) throws Exception
 		{
-			result.setArray(executor.getTable(component.value, locators.get(LocatorKind.Rows), locators.get(LocatorKind.Header), 
-					locators.get(LocatorKind.Element).useNumericHeader()));
+			result.setArray(executor.getTable(holder.getValue(), holder.get(LocatorKind.Rows), holder.get(LocatorKind.Header), 
+					holder.get(LocatorKind.Element).useNumericHeader()));
 			return true;
 		}
 	},
@@ -415,10 +409,10 @@ public enum OperationKind
 	GET_ROW("getRow")
 	{
 		@Override
-		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, LocatorsHolder locators, List<T> list, Holder<T> component, OperationResult result) throws Exception
+		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, Holder<T> holder, OperationResult result) throws Exception
 		{
-			result.setMap(executor.getRow(component.value, locators.get(LocatorKind.Rows), locators.get(LocatorKind.Header), 
-					locators.get(LocatorKind.Element).useNumericHeader(), part.valueCondition, part.colorCondition));
+			result.setMap(executor.getRow(holder.getValue(), holder.get(LocatorKind.Rows), holder.get(LocatorKind.Header), 
+					holder.get(LocatorKind.Element).useNumericHeader(), part.valueCondition, part.colorCondition));
 			return true;
 		}
 	},
@@ -426,10 +420,10 @@ public enum OperationKind
 	GET_ROW_BY_INDEX("getRowByIndex")
 	{
 		@Override
-		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, LocatorsHolder locators, List<T> list, Holder<T> component, OperationResult result) throws Exception
+		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, Holder<T> holder, OperationResult result) throws Exception
 		{
-			result.setMap(executor.getRowByIndex(component.value, locators.get(LocatorKind.Rows), locators.get(LocatorKind.Header), 
-					locators.get(LocatorKind.Element).useNumericHeader(), part.i));
+			result.setMap(executor.getRowByIndex(holder.getValue(), holder.get(LocatorKind.Rows), holder.get(LocatorKind.Header), 
+					holder.get(LocatorKind.Element).useNumericHeader(), part.i));
 			return true;
 		}
 	},
@@ -437,10 +431,10 @@ public enum OperationKind
 	GET_ROW_INDEXES("getRowIndexes")
 	{
 		@Override
-		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, LocatorsHolder locators, List<T> list, Holder<T> component, OperationResult result) throws Exception
+		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, Holder<T> holder, OperationResult result) throws Exception
 		{
-			result.setList(executor.getRowIndexes(component.value, locators.get(LocatorKind.Rows), locators.get(LocatorKind.Header), 
-					locators.get(LocatorKind.Element).useNumericHeader(), part.valueCondition, part.colorCondition));
+			result.setList(executor.getRowIndexes(holder.getValue(), holder.get(LocatorKind.Rows), holder.get(LocatorKind.Header), 
+					holder.get(LocatorKind.Element).useNumericHeader(), part.valueCondition, part.colorCondition));
 			return true;
 		}
 	},
@@ -448,10 +442,10 @@ public enum OperationKind
 	GET_ROW_WITH_COLOR("getRowWithoutColor")
 	{
 		@Override
-		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, LocatorsHolder locators, List<T> list, Holder<T> component, OperationResult result) throws Exception
+		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, Holder<T> holder, OperationResult result) throws Exception
 		{
-			result.setColorMap(executor.getRowWithColor(component.value, locators.get(LocatorKind.Rows), locators.get(LocatorKind.Header), 
-					locators.get(LocatorKind.Element).useNumericHeader(), part.i));
+			result.setColorMap(executor.getRowWithColor(holder.getValue(), holder.get(LocatorKind.Rows), holder.get(LocatorKind.Header), 
+					holder.get(LocatorKind.Element).useNumericHeader(), part.i));
 			return true;
 		}
 	};
@@ -468,28 +462,23 @@ public enum OperationKind
 	}
 
 	
-	public <T> boolean operate(Part part, OperationExecutor<T> executor, List<T> elementList, Holder<T> elementHolder, LocatorsHolder locators,
-			OperationResult result) throws Exception
+	public <T> boolean operate(Part part, OperationExecutor<T> executor, Holder<T> holder, OperationResult result) throws Exception
 	{
 		// check permissions for this part
-		Locator locator = locators.get(LocatorKind.Element);
+		Locator locator = holder.get(LocatorKind.Element);
 		if (!locator.getControlKind().isAllowed(part.kind))
 		{
 			throw new Exception("Operation " + part.kind + " is not allowed for " + locator.getControlKind());
 		}
 
 		// find it, if it needs
-		if (needToFind() && elementHolder.value == null)
+		if (needToFind() && holder.isEmpty())
 		{
-			elementList.clear();
-			Locator owner = locators.get(LocatorKind.Owner);
+			Locator owner = holder.get(LocatorKind.Owner);
 
 			if (locator.getControlKind() == ControlKind.Table && executor.tableIsContainer())
 			{
-				if (elementHolder.value == null)
-				{
-					elementHolder.value = executor.find(owner, locator);
-				}
+				holder.setValue(executor.find(owner, locator));
 			}
 			else
 			{
@@ -504,27 +493,26 @@ public enum OperationKind
 					if (isReal(locator))
 					{
 						List<T> list = executor.findAll(locator.getControlKind(), dialog, locator);
-						elementList.addAll(list);
+						holder.setValues(list);
 					}
-					elementHolder.value = elementList.size() == 0 ? null : elementList.get(0);
 				}
 				else
 				{
 					if (isReal(locator))
 					{
-						elementHolder.value = executor.find(owner, locator);
+						holder.setValue(executor.find(owner, locator));
 					}
 				}
 			}
 			
 			
-			if (elementHolder.value == null)
+			if (holder.isEmpty())
 			{
 				throw new Exception("Component is not found for locator = " + locator);
 			}
 		}
 
-		return operateDerived(part, executor, locators, elementList, elementHolder, result);
+		return operateDerived(part, executor, holder, result);
 	}
 
 	
@@ -534,7 +522,7 @@ public enum OperationKind
 		return true;
 	}
 	
-	protected abstract <T> boolean operateDerived(Part part, OperationExecutor<T> executor, LocatorsHolder locators, List<T> list, Holder<T> component, OperationResult result) throws Exception;
+	protected abstract <T> boolean operateDerived(Part part, OperationExecutor<T> executor, Holder<T> holder, OperationResult result) throws Exception;
 
 	private static boolean checkText(String componentText, String what, boolean isRegexp, boolean needException) throws Exception
 	{
@@ -563,9 +551,9 @@ public enum OperationKind
 		return result;
 	}
 
-	public static <T> boolean isTable(LocatorsHolder locators, OperationExecutor<T> executor)
+	public static <T> boolean isTable(Holder<T> holder, OperationExecutor<T> executor)
 	{
-		Locator locator = locators.get(LocatorKind.Element);
+		Locator locator = holder.get(LocatorKind.Element);
 		return locator != null && locator.getControlKind() == ControlKind.Table && !executor.tableIsContainer();
 	}
 	

@@ -49,14 +49,12 @@ public class Operation implements Iterable<Part>, Serializable
 	public <T> void operate(OperationExecutor<T> executor, Locator locator, T element) throws Exception
 	{
 		OperationResult result = new OperationResult();
-		Holder<T> elementHolder = new Holder<T>(element);
-		LocatorsHolder locators = new LocatorsHolder();
-		locators.put(LocatorKind.Element, 	locator);
-		List<T> elementList = new ArrayList<T>();
+		Holder<T> holder = new Holder<T>(element);
+		holder.put(LocatorKind.Element, 	locator);
 
 		for (Part part : this.list)
 		{
-			part.kind.operate(part, executor, elementList, elementHolder, locators, result);
+			part.kind.operate(part, executor, holder, result);
 		}
 	}
 
@@ -68,18 +66,15 @@ public class Operation implements Iterable<Part>, Serializable
 		}
 		
 		OperationResult result = new OperationResult();
-		List<T> elementList = new ArrayList<T>();
-		Holder<T> elementHolder = new Holder<T>(null);
-		
-		LocatorsHolder locators = new LocatorsHolder();
-		locators.put(LocatorKind.Element, 	locator);
-		locators.put(LocatorKind.Owner, 	owner);
-		locators.put(LocatorKind.Rows,		rows);
-		locators.put(LocatorKind.Header, 	header);
+		Holder<T> holder = new Holder<T>(null);
+		holder.put(LocatorKind.Element, 	locator);
+		holder.put(LocatorKind.Owner, 	owner);
+		holder.put(LocatorKind.Rows,		rows);
+		holder.put(LocatorKind.Header, 	header);
 		
 		for (Part part : this.list)
 		{
-			if (!part.kind.operate(part, executor, elementList, elementHolder, locators, result))
+			if (!part.kind.operate(part, executor, holder, result))
 			{
 				result.setOk(false);
 				return result;
