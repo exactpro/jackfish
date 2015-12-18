@@ -142,6 +142,7 @@ public class CssVariables
 	public static final String OTHER_CONTROL				= "otherControl";
 	public static final String SELF_CONTROL_SELECTED_LINE	= "selfControlSelectedLine";
 	public static final String OTHER_CONTROL_SELECTED_LINE	= "otherControlSelectedLine";
+	public static final String RECTANGLE_OUTLINE			= "rectangleOutline";
 
 	public static final String	LINE						= "layoutLine";
 	public static final String LINE_TRIANGLE				= "layoutLineTriangle";

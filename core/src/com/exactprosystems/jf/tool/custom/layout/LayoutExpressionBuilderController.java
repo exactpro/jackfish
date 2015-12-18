@@ -16,7 +16,6 @@ import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.custom.expfield.NewExpressionField;
-
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -29,7 +28,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -38,7 +36,6 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import javax.imageio.ImageIO;
-
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
@@ -52,8 +49,8 @@ import java.util.ResourceBundle;
 
 public class LayoutExpressionBuilderController implements Initializable, ContainingParent
 {
-	private static final int		BORDER_WIDTH	= 4;
-	private static final int		OFFSET			= BORDER_WIDTH / 2;
+	public static final int		BORDER_WIDTH	= 4;
+	public static final int		OFFSET			= BORDER_WIDTH / 2;
 	@FXML
 	private HBox					formulaPane;
 	@FXML
@@ -270,9 +267,17 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 		}
 	}
 
+	public void displayOutLine(int selfPoint, int otherPoint, CustomArrow.ArrowDirection direction, int where)
+	{
+		this.selfRectangle.displayOutLine(selfPoint, direction, where);
+		this.otherRectangle.displayOutLine(otherPoint, direction, where);
+	}
+
 	public void clearArrow()
 	{
 		this.customArrow.hide();
+		this.otherRectangle.clearOutline();
+		this.selfRectangle.clearOutline();
 	}
 
 	// ==============================================================================================================================

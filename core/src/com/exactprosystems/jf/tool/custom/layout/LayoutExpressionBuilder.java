@@ -149,6 +149,7 @@ public class LayoutExpressionBuilder
 		int where = - 1;
 		int centerX = (int) ((self.getCenterX() + other.getCenterX()) / 2);
 		int centerY = (int) ((self.getCenterY() + other.getCenterY()) / 2);
+		boolean needOutLine = true;
 		if (arrow != null)
 		{
 			if (arrow == Arrow.LEFT_LEFT || arrow == Arrow.LEFT_RIGHT || arrow == Arrow.RIGHT_LEFT || arrow == Arrow.RIGHT_RIGHT || arrow == Arrow.H_CENTERS || arrow == Arrow.WIDTH)
@@ -212,6 +213,7 @@ public class LayoutExpressionBuilder
 					break;
 
 				case HEIGHT:
+					needOutLine = false;
 					isWhereSet = true;
 					where = ((int) self.getCenterX());
 					start = self.y;
@@ -219,6 +221,7 @@ public class LayoutExpressionBuilder
 					break;
 
 				case WIDTH:
+					needOutLine = false;
 					isWhereSet = true;
 					where = ((int) self.getCenterY());
 					start = self.x;
@@ -228,6 +231,11 @@ public class LayoutExpressionBuilder
 			if (!isWhereSet)
 			{
 				where = direction == CustomArrow.ArrowDirection.VERTICAL ? centerX : centerY;
+			}
+			this.controller.clearArrow();
+			if (needOutLine)
+			{
+				this.controller.displayOutLine(start, end, direction, where);
 			}
 			this.controller.displayArrow(start, end, where, direction);
 		}

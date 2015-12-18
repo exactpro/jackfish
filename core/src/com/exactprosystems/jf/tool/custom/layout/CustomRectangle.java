@@ -7,6 +7,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.exactprosystems.jf.tool.custom.layout;
 
+import com.exactprosystems.jf.tool.CssVariables;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.input.MouseEvent;
@@ -36,6 +37,8 @@ public class CustomRectangle
 	private Line right;
 	private Line bot;
 
+	private Line outLine;
+
 	private boolean isInit = false;
 
 	public CustomRectangle(Rectangle rectangle)
@@ -51,6 +54,11 @@ public class CustomRectangle
 		this.left = new Line();
 		this.right = new Line();
 		this.bot = new Line();
+
+		this.outLine = new Line();
+		this.outLine.getStyleClass().add(CssVariables.RECTANGLE_OUTLINE);
+		this.outLine.setStrokeWidth(LayoutExpressionBuilderController.OFFSET);
+		this.outLine.getStrokeDashArray().addAll(5.0, 5.0);
 	}
 
 	public void setUserData(Object data)
@@ -119,12 +127,13 @@ public class CustomRectangle
 
 	public void setGroup(Group group)
 	{
-		group.getChildren().addAll(top, right, bot, left);
+		group.getChildren().addAll(top, right, bot, left, outLine);
 	}
 
 	public void setVisible(boolean flag)
 	{
 		Arrays.asList(top, left, bot, right).stream().forEach(line -> line.setVisible(flag));
+		this.outLine.setVisible(false);
 	}
 
 	public void setWidthLine(double width)
@@ -163,6 +172,81 @@ public class CustomRectangle
 		this.getLineByPosition(position).getStyleClass().add(styleClass);
 	}
 
+	public void clearOutline()
+	{
+		this.outLine.setVisible(false);
+	}
+
+	/**
+	 * @param direction - arrow direction. if direction vertical outLine should be horizontal and contrariwise
+	 */
+	public void displayOutLine(int point, CustomArrow.ArrowDirection direction, int where)
+	{
+		if (direction == CustomArrow.ArrowDirection.HORIZONTAL)
+		{
+			/**
+			 * outLine Vertical
+			 */
+			if (dotOnVerticalLine(left, where) || dotOnVerticalLine(right, where))
+			{
+				/**
+				 * we not need to draw outline, because Vertical lines contains point
+				 */
+				return;
+			}
+
+			/**
+			 *  point on the continuation of right line
+			 */
+			if (right.getStartX() - LayoutExpressionBuilderController.OFFSET == point || right.getStartX() + LayoutExpressionBuilderController.OFFSET == point)
+			{
+				outLine.setStartX(point);
+				outLine.setEndX(point);
+				outLine.setEndY(where);
+				outLine.setStartY(right.getStartY() < point ? right.getStartY() : right.getEndY());
+			}
+			/**
+			 *  point on the continuation of left line
+			 */
+			else if (left.getStartX() - LayoutExpressionBuilderController.OFFSET == point || left.getStartX() + LayoutExpressionBuilderController.OFFSET == point)
+			{
+				outLine.setStartX(point);
+				outLine.setEndX(point);
+				outLine.setEndY(where);
+				outLine.setStartY(left.getStartY() < point ? left.getStartY() : left.getEndY());
+			}
+		}
+		else if (direction == CustomArrow.ArrowDirection.VERTICAL)
+		{
+			/**
+			 * outLine Horizontal
+			 */
+			if (dotOnHorizontalLine(top, where) || dotOnHorizontalLine(bot, where))
+			{
+				/**
+				 * we not need to draw outline, because horizontal lines contains point/end point
+				 */
+				return;
+			}
+			if (top.getStartY() - LayoutExpressionBuilderController.OFFSET == point || top.getStartY() + LayoutExpressionBuilderController.OFFSET == point)
+			{
+				outLine.setStartY(point);
+				outLine.setEndY(point);
+				outLine.setEndX(where);
+				outLine.setStartX(top.getStartX() < point ? top.getEndX() : top.getStartX());
+			}
+			else if (bot.getStartY() - LayoutExpressionBuilderController.OFFSET == point || bot.getStartY() + LayoutExpressionBuilderController.OFFSET == point)
+			{
+				outLine.setStartY(point);
+				outLine.setEndY(point);
+				outLine.setEndX(where);
+				outLine.setStartX(bot.getStartX() < point ? bot.getEndX() : bot.getStartX());
+			}
+		}
+		outLine.setVisible(true);
+	}
+
+
 	//============================================================
 	// events methods
 	//============================================================
@@ -198,5 +282,19 @@ public class CustomRectangle
 				return this.left;
 		}
 		throw new RuntimeException("Unexpected position : " + position);
+	}
+
+	private boolean dotOnVerticalLine(Line line, int dot)
+	{
+		double min = Math.min(line.getStartY(), line.getEndY());
+		double max = Math.max(line.getStartY(), line.getEndY());
+		return min <= dot && dot <= max;
+	}
+
+	private boolean dotOnHorizontalLine(Line line, int dot)
+	{
+		double min = Math.min(line.getStartX(), line.getEndX());
+		double max = Math.max(line.getStartX(), line.getEndX());
+		return min <= dot && dot <= max;
 	}
 }
