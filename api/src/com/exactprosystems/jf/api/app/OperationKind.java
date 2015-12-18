@@ -479,7 +479,7 @@ public enum OperationKind
 		}
 
 		// find it, if it needs
-		if (needToFind())
+		if (needToFind() && elementHolder.value == null)
 		{
 			elementList.clear();
 			Locator owner = locators.get(LocatorKind.Owner);
