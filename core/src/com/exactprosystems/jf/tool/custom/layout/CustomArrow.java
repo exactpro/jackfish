@@ -160,7 +160,7 @@ public class CustomArrow
 				 */
 				this.line.setStartX(x);
 				this.line.setEndX(x);
-				this.line.setStartY(this.start);
+				this.line.setStartY(this.end);
 				this.line.setEndY(this.start - LINE_LENGTH);
 
 				this.needShowLine2 = true;
@@ -215,7 +215,7 @@ public class CustomArrow
 				 * __ \  / __
 				 *    /  \
 				 */
-				this.line.setStartX(this.start);
+				this.line.setStartX(this.end);
 				this.line.setEndX(this.start - LINE_LENGTH);
 				this.line.setStartY(x);
 				this.line.setEndY(x);

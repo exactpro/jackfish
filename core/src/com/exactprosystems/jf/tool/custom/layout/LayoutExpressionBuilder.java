@@ -251,6 +251,7 @@ public class LayoutExpressionBuilder
 				IControl selfOwner = this.currentWindow.getOwnerControl(selfControl);
 				Rectangle selfRectangle = service().getRectangle(selfOwner == null ? null : selfOwner.locator(), selfLocator);
 				this.controller.clearArrow();
+				selfRectangle.setRect(selfRectangle.x - this.xOffset, selfRectangle.y - this.yOffset, selfRectangle.width, selfRectangle.height);
 				int distance = kind.distance(selfRectangle, null);
 				this.displayArrow(selfRectangle, new Rectangle(0, 0, 0, 0), kind.arrow());
 				this.controller.displayDistance(distance);

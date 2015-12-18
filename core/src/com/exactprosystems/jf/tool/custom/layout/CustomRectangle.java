@@ -184,6 +184,15 @@ public class CustomRectangle
 	{
 		if (direction == CustomArrow.ArrowDirection.HORIZONTAL)
 		{
+			if ((top.getStartX() + top.getEndX()) / 2 == point)
+			{
+				outLine.setStartX(point);
+				outLine.setEndX(point);
+				outLine.setStartY(where);
+				outLine.setEndY((left.getStartY() + left.getEndY()) / 2);
+				outLine.setVisible(true);
+				return;
+			}
 			/**
 			 * outLine Vertical
 			 */
@@ -192,6 +201,7 @@ public class CustomRectangle
 				/**
 				 * we not need to draw outline, because Vertical lines contains point
 				 */
+				outLine.setVisible(false);
 				return;
 			}
 
@@ -218,6 +228,15 @@ public class CustomRectangle
 		}
 		else if (direction == CustomArrow.ArrowDirection.VERTICAL)
 		{
+			if ((right.getStartY() + right.getEndY()) / 2 == point)
+			{
+				outLine.setStartY(point);
+				outLine.setEndY(point);
+				outLine.setEndX(where);
+				outLine.setStartX((top.getStartX() + top.getEndX()) / 2);
+				outLine.setVisible(true);
+				return;
+			}
 			/**
 			 * outLine Horizontal
 			 */
@@ -226,6 +245,7 @@ public class CustomRectangle
 				/**
 				 * we not need to draw outline, because horizontal lines contains point/end point
 				 */
+				outLine.setVisible(false);
 				return;
 			}
 			if (top.getStartY() - LayoutExpressionBuilderController.OFFSET == point || top.getStartY() + LayoutExpressionBuilderController.OFFSET == point)
