@@ -17,6 +17,7 @@ import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.custom.expfield.NewExpressionField;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -33,6 +34,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -87,6 +89,9 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 	private Button btnAddFormula;
 	@FXML
 	private GridPane gridPane;
+
+	private Group group;
+	private ArrayList<javafx.scene.text.Text> ids = new ArrayList<>();
 
 	private NewExpressionField expressionFieldFirst;
 	private NewExpressionField expressionFieldSecond;
@@ -311,6 +316,22 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 				.ifPresent(t -> t.setSelected(true));
 	}
 
+	public void displayId(String id, double x, double y)
+	{
+		Platform.runLater(() -> {
+			Text text = new Text(x, y + 12, id); //TODO magic const.
+			text.getStyleClass().add(CssVariables.CONTROL_ID);
+			this.group.getChildren().add(text);
+			this.ids.add(text);
+		});
+	}
+
+	public void hideIds()
+	{
+		this.ids.forEach(this.group.getChildren()::remove);
+		this.ids.clear();
+	}
+
 	// ==============================================================================================================================
 	// private methods
 	// ==============================================================================================================================
@@ -328,9 +349,9 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 
 	private void createCanvas()
 	{
-		Group group = new Group();
-		this.mainScrollPane = new ScrollPane(group);
-		mainScrollPane.setContent(group);
+		this.group = new Group();
+		this.mainScrollPane = new ScrollPane(this.group);
+		mainScrollPane.setContent(this.group);
 		mainScrollPane.setFitToHeight(true);
 		mainScrollPane.setFitToWidth(true);
 		mainScrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
@@ -346,16 +367,16 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 		this.selfRectangle.setWidthLine(BORDER_WIDTH);
 		this.otherRectangle.setWidthLine(BORDER_WIDTH);
 
-		group.getChildren().add(this.imageView);
+		this.group.getChildren().add(this.imageView);
 		this.selfRectangle.setVisible(false);
-		this.selfRectangle.setGroup(group);
-		this.customArrow.setGroup(group);
+		this.selfRectangle.setGroup(this.group);
+		this.customArrow.setGroup(this.group);
 		this.otherRectangle.setVisible(false);
-		this.otherRectangle.setGroup(group);
+		this.otherRectangle.setGroup(this.group);
 
 		this.customGrid = new CustomGrid();
 		this.customGrid.hide();
-		this.customGrid.setGroup(group);
+		this.customGrid.setGroup(this.group);
 	}
 
 	private Node createGrid(int index, FormulaPart part)
@@ -393,8 +414,7 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 	private void listeners()
 	{
 		this.cbUseId.selectedProperty().addListener((observable, oldValue, newValue) -> {
-//			this.model
-
+			this.model.displayIds(newValue);
 		});
 		this.controlsToggleGroup.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
 			if (newValue != null)

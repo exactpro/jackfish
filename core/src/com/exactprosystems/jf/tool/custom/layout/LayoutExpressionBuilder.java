@@ -313,6 +313,36 @@ public class LayoutExpressionBuilder
 		}
 	}
 
+	public void displayIds(boolean flag)
+	{
+		if (!flag)
+		{
+			this.controller.hideIds();
+			return;
+		}
+		new Thread(new Task<Void>()
+		{
+			@Override
+			protected Void call() throws Exception
+			{
+				ArrayList<IControl> controls = new ArrayList<>();
+				controls.addAll(currentWindow.getControls(IWindow.SectionKind.Run).stream().filter(iControl -> !iControl.getID().equals(parameterName)).collect(Collectors.toList()));
+				controls.addAll(currentWindow.getControls(IWindow.SectionKind.Self));
+				controls.forEach(control -> {
+					Common.tryCatch(() -> {
+						Locator locator = control.locator();
+						IControl ownerControl = currentWindow.getOwnerControl(control);
+						Rectangle rectangle = service().getRectangle(ownerControl == null ? null : ownerControl.locator(), locator);
+						double x = rectangle.getX();
+						double y = rectangle.getY();
+						controller.displayId(locator.getId(), x, y);
+					}, "");
+				});
+				return null;
+			}
+		}).start();
+	}
+
 	private IRemoteApplication service()
 	{
 		return this.appConnection.getApplication().service();

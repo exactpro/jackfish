@@ -146,6 +146,7 @@ public class CssVariables
 	public static final String	FORMULA_TOGGLE_BUTTON		= "formulaToggleButton";
 	public static final String	LINE						= "layoutLine";
 	public static final String	LINE_TRIANGLE				= "layoutLineTriangle";
+	public static final String	CONTROL_ID					= "controlId";
 
 	/**
 	 * Spinner css
