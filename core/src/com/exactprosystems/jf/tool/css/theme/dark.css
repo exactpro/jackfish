@@ -606,3 +606,25 @@ CellView > .text-input.text-field{
 	-fx-text-fill : -fx-company-color-dark;
 
 }
+
+/*Layout builder*/
+.selfControl {
+	-fx-stroke : red;
+
+}
+.otherControl {
+	-fx-stroke : green;
+
+}
+.selfControlSelectedLine {
+	-fx-stroke : -fx-company-color-light;
+
+}
+.otherControlSelectedLine {
+	-fx-stroke : -fx-company-color-light;
+
+}
+.formulaToggleButton {
+	-fx-font : 13 arial;
+	-fx-text-alignment:left
+}

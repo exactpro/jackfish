@@ -617,3 +617,7 @@ CellView > .text-input.text-field{
 	-fx-stroke : -fx-company-color-light;
 
 }
+.formulaToggleButton {
+	-fx-font : 13 arial;
+	-fx-text-alignment:left
+}

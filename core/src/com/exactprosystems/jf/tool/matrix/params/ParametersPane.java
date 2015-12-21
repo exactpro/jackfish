@@ -327,14 +327,14 @@ public class ParametersPane extends CustomScrollPane
 								catch (Exception e) {}
 								try
 								{
-									LayoutExpressionBuilder viewer = new LayoutExpressionBuilder(par.getName(), par.getExpression(), this.matrixItem.getParent().getMatrix().getDefaultApplicationConnection(), dialogName, evaluator);
+									LayoutExpressionBuilder viewer = new LayoutExpressionBuilder(par.getName(), expressionField.getText(), this.matrixItem.getParent().getMatrix().getDefaultApplicationConnection(), dialogName, evaluator);
 									return viewer.show("Layout expression for " + par.getName(), false);
 								}
 								catch (Exception e)
 								{
 									DialogsHelper.showError(e.getMessage());
 								}
-								return par.getExpression();
+								return  expressionField.getText();
 							});
 							break;
 							

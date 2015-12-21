@@ -138,14 +138,14 @@ public class CssVariables
 	public static final String	EXPRESSION_FIELD_SECOND		= "secondButton";
 
 	/*Layout builder*/
-	public static final String SELF_CONTROL 				= "selfControl";
-	public static final String OTHER_CONTROL				= "otherControl";
-	public static final String SELF_CONTROL_SELECTED_LINE	= "selfControlSelectedLine";
-	public static final String OTHER_CONTROL_SELECTED_LINE	= "otherControlSelectedLine";
-	public static final String RECTANGLE_OUTLINE			= "rectangleOutline";
-
+	public static final String	SELF_CONTROL 				= "selfControl";
+	public static final String	OTHER_CONTROL				= "otherControl";
+	public static final String	SELF_CONTROL_SELECTED_LINE	= "selfControlSelectedLine";
+	public static final String	OTHER_CONTROL_SELECTED_LINE	= "otherControlSelectedLine";
+	public static final String	RECTANGLE_OUTLINE			= "rectangleOutline";
+	public static final String	FORMULA_TOGGLE_BUTTON		= "formulaToggleButton";
 	public static final String	LINE						= "layoutLine";
-	public static final String LINE_TRIANGLE				= "layoutLineTriangle";
+	public static final String	LINE_TRIANGLE				= "layoutLineTriangle";
 
 	/**
 	 * Spinner css

@@ -46,7 +46,7 @@ public class LayoutExpressionBuilder
 		this.parameterExpression = parameterExpression;
 		if (Str.IsNullOrEmpty(parameterExpression))
 		{
-			this.formula = new ArrayList<FormulaPart>();
+			this.formula = new ArrayList<>();
 		}
 		else
 		{
@@ -135,9 +135,16 @@ public class LayoutExpressionBuilder
 		this.controller.displayFormula(this.formula.size() - 1, this.formula);
 	}
 
-	public void displayPart(FormulaPart part)
+	public void removePart(int index)
 	{
+		this.formula.remove(index);
+		this.controller.displayFormula(this.formula.size() - 1, this.formula);
+	}
 
+	public void displayPart(int index)
+	{
+		FormulaPart part = this.formula.get(index);
+		this.controller.displayPart(part.getKind(), part.getName(), part.getRange(), part.getFirst(), part.getSecond());
 	}
 
 	public void displayArrow(Rectangle self, Rectangle other, Arrow arrow)

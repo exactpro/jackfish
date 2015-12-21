@@ -32,6 +32,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -42,65 +43,63 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.List;
-import java.util.Optional;
-import java.util.ResourceBundle;
 
 public class LayoutExpressionBuilderController implements Initializable, ContainingParent
 {
-	public static final int		BORDER_WIDTH	= 4;
-	public static final int		OFFSET			= BORDER_WIDTH / 2;
+	public static final int BORDER_WIDTH = 4;
+	public static final int OFFSET = BORDER_WIDTH / 2;
 	@FXML
-	private HBox					formulaPane;
+	private HBox formulaPane;
 	@FXML
-	private CheckBox				cbUseGrid;
+	private CheckBox cbUseGrid;
 	@FXML
-	private ColumnConstraints		c0;
+	private ColumnConstraints c0;
 	@FXML
-	private ColumnConstraints		c1;
+	private ColumnConstraints c1;
 	@FXML
-	private ColumnConstraints		c2;
+	private ColumnConstraints c2;
 	@FXML
-	private ColumnConstraints		c3;
+	private ColumnConstraints c3;
 	@FXML
-	private ColumnConstraints		c4;
+	private ColumnConstraints c4;
 	@FXML
-	private ProgressIndicator		progressIndicator;
+	private ProgressIndicator progressIndicator;
 	@FXML
-	private BorderPane				mainPane;
+	private BorderPane mainPane;
 	@FXML
-	private VBox					vBoxControls;
+	private VBox vBoxControls;
 	@FXML
-	private TextField				cfFindControl;
+	private TextField cfFindControl;
 	@FXML
-	private ScrollPane				spControls;
+	private ScrollPane spControls;
 	@FXML
-	private ChoiceBox<PieceKind>	cbParameters;
+	private ChoiceBox<PieceKind> cbParameters;
 	@FXML
-	private Label					labelControlId;
+	private Label labelControlId;
 	@FXML
-	private ChoiceBox<Range>		cbRange;
+	private ChoiceBox<Range> cbRange;
 	@FXML
-	private Button					btnAddFormula; //✔
+	private Button btnAddFormula;
 	@FXML
-	private GridPane				gridPane;
+	private GridPane gridPane;
 
-	private NewExpressionField		expressionFieldFirst;
-	private NewExpressionField		expressionFieldSecond;
-	private ToggleGroup				mainToggleGroup;
-	private ImageView				imageView;
-	private Parent					parent;
-	private LayoutExpressionBuilder	model;
+	private NewExpressionField expressionFieldFirst;
+	private NewExpressionField expressionFieldSecond;
+	private ToggleGroup controlsToggleGroup;
+	private ToggleGroup formulaToggleGroup;
+	private ImageView imageView;
+	private Parent parent;
+	private LayoutExpressionBuilder model;
 
-	private CustomGrid				customGrid;
-	private CustomRectangle			selfRectangle;
-	private CustomRectangle			otherRectangle;
-	private CustomArrow				customArrow;
+	private CustomGrid customGrid;
+	private CustomRectangle selfRectangle;
+	private CustomRectangle otherRectangle;
+	private CustomArrow customArrow;
 
-	private ScrollPane				mainScrollPane;
-	private boolean					useBorder		= true;
-	private ArrayList<ToggleButton>	buttons			= new ArrayList<>();
+	private ScrollPane mainScrollPane;
+	private ArrayList<ToggleButton> buttons = new ArrayList<>();
 
 	// ==============================================================================================================================
 	// interface Initializable
@@ -118,7 +117,8 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 		this.cbParameters.getSelectionModel().selectFirst();
 		this.cbRange.getSelectionModel().selectFirst();
 
-		this.mainToggleGroup = new ToggleGroup();
+		this.controlsToggleGroup = new ToggleGroup();
+		this.formulaToggleGroup = new ToggleGroup();
 		createCanvas();
 		listeners();
 		visibilityListeners();
@@ -154,10 +154,9 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 	public ButtonData show(String title, boolean fullScreen, ArrayList<IControl> list)
 	{
 		Alert dialog = createAlert(title);
-		list.forEach(control ->
-		{
+		list.forEach(control -> {
 			ToggleButton button = new ToggleButton(control.toString());
-			button.setToggleGroup(this.mainToggleGroup);
+			button.setToggleGroup(this.controlsToggleGroup);
 			button.prefWidthProperty().bind(this.vBoxControls.widthProperty().subtract(20));
 			button.setUserData(control);
 			button.setAlignment(Pos.BASELINE_LEFT);
@@ -165,7 +164,7 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 			this.vBoxControls.getChildren().add(button);
 			this.buttons.add(button);
 		});
-		
+
 		dialog.getDialogPane().setContent(parent);
 		if (fullScreen)
 		{
@@ -184,9 +183,17 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 	// ==============================================================================================================================
 	public void addFormula(ActionEvent actionEvent)
 	{
-		Common.tryCatch(() -> this.model.addFormula(this.cbParameters.getSelectionModel().getSelectedItem(), 
-				this.labelControlId.getText(), this.cbRange.getSelectionModel().getSelectedItem(), 
-				this.expressionFieldFirst.getText(), this.expressionFieldSecond.getText()), "Error on add formula");
+		Common.tryCatch(() -> {
+			if (this.formulaToggleGroup.getSelectedToggle() != null)
+			{
+				this.model.updateFormula(((int) this.formulaToggleGroup.getSelectedToggle().getUserData()), this.cbParameters.getSelectionModel().getSelectedItem(), this.labelControlId.getText(), this.cbRange.getSelectionModel().getSelectedItem(), this.expressionFieldFirst.getText(), this.expressionFieldSecond.getText());
+				this.formulaToggleGroup.getToggles().forEach(t -> t.setSelected(false));
+			}
+			else
+			{
+				this.model.addFormula(this.cbParameters.getSelectionModel().getSelectedItem(), this.labelControlId.getText(), this.cbRange.getSelectionModel().getSelectedItem(), this.expressionFieldFirst.getText(), this.expressionFieldSecond.getText());
+			}
+		}, "Error on add formula");
 	}
 
 	// ==============================================================================================================================
@@ -211,10 +218,7 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 		rect.addStyleClass(styleClass);
 		rect.updateRectangle(rectangle.getX() + OFFSET, rectangle.getY() + OFFSET, rectangle.getWidth() - BORDER_WIDTH, rectangle.getHeight() - BORDER_WIDTH);
 		rect.setInit(true);
-		if (useBorder)
-		{
-			rect.setVisible(true);
-		}
+		rect.setVisible(true);
 	}
 
 	public void displayControlId(String controlId)
@@ -256,12 +260,15 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 			this.formulaPane.setPrefHeight(80);
 		}
 		this.formulaPane.getChildren().clear();
-		formula.stream().map(this::createGrid).forEach(this.formulaPane.getChildren()::add);
-		
+		for (int i = 0; i < formula.size(); i++)
+		{
+			this.formulaPane.getChildren().add(createGrid(i, formula.get(i)));
+		}
+
 		if (index > 0 && index < formula.size())
 		{
 			// TODO use index for current element
-			
+
 		}
 	}
 
@@ -269,6 +276,15 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 	{
 		this.selfRectangle.displayOutLine(selfPoint, direction, where);
 		this.otherRectangle.displayOutLine(otherPoint, direction, where);
+	}
+
+	public void displayPart(PieceKind kind, String name, Range range, String first, String second)
+	{
+		this.cbParameters.getSelectionModel().select(kind);
+		this.labelControlId.setText(name);
+		this.cbRange.getSelectionModel().select(range);
+		this.expressionFieldFirst.setText(first);
+		this.expressionFieldSecond.setText(second);
 	}
 
 	public void clearArrow()
@@ -325,14 +341,10 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 		this.customGrid.setGroup(group);
 	}
 
-	private Node createGrid(FormulaPart part)
+	private Node createGrid(int index, FormulaPart part)
 	{
-		ToggleButton node = new ToggleButton();
-		node.setUserData(part);
-		int width = 120;
-		node.setMaxWidth(width);
-		node.setMinWidth(width);
-		node.setPrefWidth(width);
+		CustomToggleButton node = new CustomToggleButton();
+		node.setUserData(index);
 		StringBuilder sb = new StringBuilder(part.getKind().toString());
 		if (part.getKind().useName())
 		{
@@ -342,16 +354,28 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 		{
 			sb.append("\n").append(part.getRange().toString(part.getFirst(), part.getSecond()));
 		}
+
+		double asDouble = Arrays.stream(sb.toString().split("\n")).mapToDouble(String::length).max().getAsDouble();
+		double width = asDouble * 10 + 20;
+		node.setMaxWidth(width);
+		node.setMinWidth(width);
+		node.setPrefWidth(width);
+
+		Hyperlink link = new Hyperlink("X");
+		link.getStyleClass().addAll(CssVariables.CUSTOM_FIELD_CUSTOM_BUTTON);
+		node.setRight(link);
 		node.setText(sb.toString());
+		link.setOnAction(event -> this.model.removePart(index));
 		node.setTooltip(new Tooltip(part.toString()));
-		
+		node.setTextAlignment(TextAlignment.LEFT);
+		node.getStyleClass().add(CssVariables.FORMULA_TOGGLE_BUTTON);
+		node.setToggleGroup(this.formulaToggleGroup);
 		return node;
 	}
 
 	private void listeners()
 	{
-		this.mainToggleGroup.selectedToggleProperty().addListener((observable, oldValue, newValue) ->
-		{
+		this.controlsToggleGroup.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
 			if (newValue != null)
 			{
 				this.model.displayControl((IControl) newValue.getUserData(), false);
@@ -364,8 +388,19 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 				this.clearArrow();
 			}
 		});
-		this.cfFindControl.textProperty().addListener((observable, oldValue, newValue) ->
-		{
+
+		this.formulaToggleGroup.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
+			if (newValue != null)
+			{
+				this.model.displayPart(((int) newValue.getUserData()));
+				this.btnAddFormula.setText("✔");
+			}
+			else
+			{
+				this.btnAddFormula.setText("+");
+			}
+		});
+		this.cfFindControl.textProperty().addListener((observable, oldValue, newValue) -> {
 			if (newValue.isEmpty())
 			{
 				this.vBoxControls.getChildren().setAll(this.buttons);
@@ -376,8 +411,7 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 				this.buttons.stream().filter(t -> t.getText().toUpperCase().contains(newValue.toUpperCase())).forEach(this.vBoxControls.getChildren()::add);
 			}
 		});
-		this.cbUseGrid.selectedProperty().addListener((observable, oldValue, newValue) ->
-		{
+		this.cbUseGrid.selectedProperty().addListener((observable, oldValue, newValue) -> {
 			if (newValue)
 			{
 				this.customGrid.show();
@@ -391,8 +425,7 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 
 	private void visibilityListeners()
 	{
-		this.cbRange.visibleProperty().addListener((observable, oldValue, newValue) ->
-		{
+		this.cbRange.visibleProperty().addListener((observable, oldValue, newValue) -> {
 			expressionFieldFirst.setVisible(newValue);
 			expressionFieldSecond.setVisible(false);
 			c3.setPercentWidth(0);
@@ -410,8 +443,7 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 			}
 		});
 
-		this.cbRange.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) ->
-		{
+		this.cbRange.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
 			if (!cbRange.isVisible())
 			{
 				c3.setPercentWidth(0);
@@ -432,8 +464,7 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 			}
 		});
 
-		this.cbParameters.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) ->
-		{
+		this.cbParameters.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
 			this.cbRange.setVisible(newValue.useRange());
 			this.labelControlId.setVisible(newValue.useName());
 			if (newValue.useRange() && newValue.useName())
@@ -460,9 +491,8 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 				c1.setPercentWidth(0);
 				c2.setPercentWidth(0);
 			}
-			Toggle selectedToggle = this.mainToggleGroup.getSelectedToggle();
+			Toggle selectedToggle = this.controlsToggleGroup.getSelectedToggle();
 			this.model.displayDistance(selectedToggle == null ? null : ((IControl) selectedToggle.getUserData()), newValue);
 		});
 	}
-
 }
