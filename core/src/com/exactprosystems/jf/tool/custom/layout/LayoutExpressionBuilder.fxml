@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import com.exactprosystems.jf.tool.custom.fields.CustomFieldWithButton?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
@@ -33,11 +34,11 @@
 			<center>
 				<BorderPane prefHeight="331.0" prefWidth="245.0" BorderPane.alignment="CENTER">
 					<top>
-						<TextField fx:id="cfFindControl" promptText="Find control" BorderPane.alignment="CENTER">
+						<CustomFieldWithButton fx:id="cfFindControl" promptText="Find control" BorderPane.alignment="CENTER">
 							<BorderPane.margin>
 								<Insets bottom="5.0"/>
 							</BorderPane.margin>
-						</TextField>
+						</CustomFieldWithButton>
 					</top>
 					<center>
 						<ScrollPane fx:id="spControls" fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" prefViewportHeight="306.0" prefViewportWidth="180.0">

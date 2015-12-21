@@ -17,6 +17,7 @@ import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.custom.expfield.NewExpressionField;
+import com.exactprosystems.jf.tool.custom.fields.CustomFieldWithButton;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -29,7 +30,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
@@ -75,7 +75,7 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 	@FXML
 	private VBox vBoxControls;
 	@FXML
-	private TextField cfFindControl;
+	private CustomFieldWithButton cfFindControl;
 	@FXML
 	private ScrollPane spControls;
 	@FXML
@@ -437,6 +437,7 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 		this.formulaToggleGroup.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
 			if (newValue != null)
 			{
+				this.cfFindControl.setText("");
 				this.model.displayPart(((int) newValue.getUserData()));
 				this.btnAddFormula.setText("✔");
 			}
