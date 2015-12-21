@@ -12,14 +12,15 @@ import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.tool.Common;
-
 import javafx.concurrent.Task;
 import javafx.scene.control.ButtonBar.ButtonData;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class LayoutExpressionBuilder
@@ -35,6 +36,10 @@ public class LayoutExpressionBuilder
 
 	private double xOffset = 0;
 	private double yOffset = 0;
+
+	private Map<IControl, Rectangle> mapRectangle= new LinkedHashMap<>();
+	private Map<IControl, IdWithCoordinates> mapIds = new LinkedHashMap<>();
+
 
 	public LayoutExpressionBuilder(String parameterName, String parameterExpression, AppConnection appConnection, String windowName, AbstractEvaluator evaluator) throws Exception
 	{
@@ -68,7 +73,7 @@ public class LayoutExpressionBuilder
 	public String show(String title, boolean fullScreen) throws Exception
 	{
 		ArrayList<IControl> controls = new ArrayList<>();
-		controls.addAll(this.currentWindow.getControls(IWindow.SectionKind.Run).stream().filter(iControl -> !iControl.getID().equals(this.parameterName)).collect(Collectors.toList()));
+		controls.addAll(this.currentWindow.getControls(IWindow.SectionKind.Run));
 		controls.addAll(this.currentWindow.getControls(IWindow.SectionKind.Self));
 
 		IControl selfControl = this.currentWindow.getSelfControl();
@@ -90,7 +95,7 @@ public class LayoutExpressionBuilder
 
 		this.controller.displayFormula(-1, this.formula);
 		
-		Task<BufferedImage> loadImage = new Task<BufferedImage>()
+		Task<BufferedImage> prepare = new Task<BufferedImage>()
 		{
 			@Override
 			protected BufferedImage call() throws Exception
@@ -100,19 +105,29 @@ public class LayoutExpressionBuilder
 				Rectangle selfRectangle = service().getRectangle(ownerSelf == null ? null : ownerSelf.locator(), selfLocator);
 				xOffset = selfRectangle.getX();
 				yOffset = selfRectangle.getY();
+				controls.forEach(control -> Common.tryCatch(() -> {
+					Locator locator = control.locator();
+					IControl ownerControl = currentWindow.getOwnerControl(control);
+					Locator ownerLocator = ownerControl == null ? null : ownerControl.locator();
+					Rectangle rectangle = service().getRectangle(ownerLocator, locator);
+					rectangle.setRect(rectangle.x - xOffset, rectangle.y - yOffset, rectangle.width, rectangle.height);
+					mapRectangle.put(control, rectangle);
+					IdWithCoordinates idWithCoordinates = new IdWithCoordinates(rectangle.x - xOffset, rectangle.y - yOffset, control.getID());
+					mapIds.put(control, idWithCoordinates);
+				},""));
 				return image;
 			}
 		};
 		
-		loadImage.setOnSucceeded(event -> Common.tryCatch(() -> 
+		prepare.setOnSucceeded(event -> Common.tryCatch(() ->
 		{
 			this.controller.displayScreenShot((BufferedImage) event.getSource().getValue());
 			displayControl(initialControl, true);
 		}, "Error on get screenshot"));
 
-		new Thread(loadImage).start();
+		new Thread(prepare).start();
 		
-		ButtonData result = this.controller.show(title, fullScreen, controls);
+		ButtonData result = this.controller.show(title, fullScreen, controls, this.parameterName);
 		
 		return result == null ? this.parameterExpression : FormulaParser.toFormula(this.formula);
 	}
@@ -258,12 +273,8 @@ public class LayoutExpressionBuilder
 		if (kind == PieceKind.WIDTH || kind == PieceKind.HEIGHT)
 		{
 			Common.tryCatch(()->{
-				IControl selfControl = this.currentWindow.getControlForName(null, this.parameterName);
-				Locator selfLocator = selfControl.locator();
-				IControl selfOwner = this.currentWindow.getOwnerControl(selfControl);
-				Rectangle selfRectangle = service().getRectangle(selfOwner == null ? null : selfOwner.locator(), selfLocator);
+				Rectangle selfRectangle = mapRectangle.get(otherControl);
 				this.controller.clearArrow();
-				selfRectangle.setRect(selfRectangle.x - this.xOffset, selfRectangle.y - this.yOffset, selfRectangle.width, selfRectangle.height);
 				int distance = kind.distance(selfRectangle, null);
 				this.displayArrow(selfRectangle, new Rectangle(0, 0, 0, 0), kind.arrow());
 				this.controller.displayDistance(distance);
@@ -272,16 +283,8 @@ public class LayoutExpressionBuilder
 		else if (otherControl != null)
 		{
 			Common.tryCatch(() -> {
-				IControl selfControl = this.currentWindow.getControlForName(null, this.parameterName);
-				Locator selfLocator = selfControl.locator();
-				IControl selfOwner = this.currentWindow.getOwnerControl(selfControl);
-				Rectangle selfRectangle = service().getRectangle(selfOwner == null ? null : selfOwner.locator(), selfLocator);
-				selfRectangle.setRect(selfRectangle.x - this.xOffset, selfRectangle.y - this.yOffset, selfRectangle.width, selfRectangle.height);
-
-				Locator otherLocator = otherControl.locator();
-				IControl otherOwner = this.currentWindow.getOwnerControl(otherControl);
-				Rectangle otherRectangle = service().getRectangle(otherOwner == null ? null : otherOwner.locator(), otherLocator);
-				otherRectangle.setRect(otherRectangle.x - this.xOffset, otherRectangle.y - this.yOffset, otherRectangle.width, otherRectangle.height);
+				Rectangle selfRectangle = mapRectangle.get(this.currentWindow.getControlForName(null, this.parameterName));
+				Rectangle otherRectangle = mapRectangle.get(otherControl);
 
 				int distance = kind.distance(selfRectangle, otherRectangle);
 				this.controller.displayDistance(distance);
@@ -301,9 +304,7 @@ public class LayoutExpressionBuilder
 		if (control != null)
 		{
 			Common.tryCatch(() -> {
-				IControl owner = this.currentWindow.getOwnerControl(control);
-				Rectangle rectangle = service().getRectangle(owner == null ? null : owner.locator(), control.locator());
-				rectangle.setRect(rectangle.getX() - this.xOffset, rectangle.getY() - this.yOffset, rectangle.getWidth(), rectangle.getHeight());
+				Rectangle rectangle = this.mapRectangle.get(control);
 				this.controller.displayControl(rectangle, self);
 				if (!self)
 				{
@@ -320,31 +321,28 @@ public class LayoutExpressionBuilder
 			this.controller.hideIds();
 			return;
 		}
-		new Thread(new Task<Void>()
-		{
-			@Override
-			protected Void call() throws Exception
-			{
-				ArrayList<IControl> controls = new ArrayList<>();
-				controls.addAll(currentWindow.getControls(IWindow.SectionKind.Run).stream().filter(iControl -> !iControl.getID().equals(parameterName)).collect(Collectors.toList()));
-				controls.addAll(currentWindow.getControls(IWindow.SectionKind.Self));
-				controls.forEach(control -> {
-					Common.tryCatch(() -> {
-						Locator locator = control.locator();
-						IControl ownerControl = currentWindow.getOwnerControl(control);
-						Rectangle rectangle = service().getRectangle(ownerControl == null ? null : ownerControl.locator(), locator);
-						double x = rectangle.getX();
-						double y = rectangle.getY();
-						controller.displayId(locator.getId(), x, y);
-					}, "");
-				});
-				return null;
-			}
-		}).start();
+		ArrayList<IControl> controls = new ArrayList<>();
+		controls.addAll(currentWindow.getControls(IWindow.SectionKind.Run));
+		controls.addAll(currentWindow.getControls(IWindow.SectionKind.Self));
+		List<IdWithCoordinates> collect = controls.stream().map(mapIds::get).collect(Collectors.toList());
+		this.controller.displayIds(collect);
 	}
 
 	private IRemoteApplication service()
 	{
 		return this.appConnection.getApplication().service();
+	}
+
+	static class IdWithCoordinates {
+		double x;
+		double y;
+		String id;
+
+		public IdWithCoordinates(double x, double y, String id)
+		{
+			this.x = x;
+			this.y = y;
+			this.id = id;
+		}
 	}
 }

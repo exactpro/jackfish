@@ -17,7 +17,6 @@ import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.custom.expfield.NewExpressionField;
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -91,7 +90,7 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 	private GridPane gridPane;
 
 	private Group group;
-	private ArrayList<javafx.scene.text.Text> ids = new ArrayList<>();
+	private ArrayList<javafx.scene.text.Text> ids;
 
 	private NewExpressionField expressionFieldFirst;
 	private NewExpressionField expressionFieldSecond;
@@ -105,6 +104,7 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 	private CustomRectangle selfRectangle;
 	private CustomRectangle otherRectangle;
 	private CustomArrow customArrow;
+	private Text currentText = new Text();
 
 	private ScrollPane mainScrollPane;
 	private ArrayList<ToggleButton> buttons = new ArrayList<>();
@@ -159,10 +159,10 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 		this.expressionFieldFirst.setVisible(false);
 	}
 
-	public ButtonData show(String title, boolean fullScreen, ArrayList<IControl> list)
+	public ButtonData show(String title, boolean fullScreen, ArrayList<IControl> list, String parameterName)
 	{
 		Alert dialog = createAlert(title);
-		list.forEach(control -> {
+		list.stream().filter(iControl -> !Str.areEqual(parameterName, iControl.getID())).forEach(control -> {
 			ToggleButton button = new ToggleButton(control.toString());
 			button.setToggleGroup(this.controlsToggleGroup);
 			button.prefWidthProperty().bind(this.vBoxControls.widthProperty().subtract(20));
@@ -316,20 +316,24 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 				.ifPresent(t -> t.setSelected(true));
 	}
 
-	public void displayId(String id, double x, double y)
+	public void displayIds(List<LayoutExpressionBuilder.IdWithCoordinates> ids)
 	{
-		Platform.runLater(() -> {
-			Text text = new Text(x, y + 12, id); //TODO magic const.
-			text.getStyleClass().add(CssVariables.CONTROL_ID);
-			this.group.getChildren().add(text);
-			this.ids.add(text);
-		});
+		// lazy initialize
+		if (this.ids == null)
+		{
+			this.ids = new ArrayList<>();
+			ids.stream()
+					.map(idWithCoordinates -> new Text(idWithCoordinates.x, idWithCoordinates.y + 12, idWithCoordinates.id))
+					.peek(text -> text.getStyleClass().add(CssVariables.CONTROL_ID))
+					.peek(this.group.getChildren()::add)
+					.forEach(this.ids::add);
+		}
+		this.ids.forEach(text -> text.setVisible(true));
 	}
 
 	public void hideIds()
 	{
-		this.ids.forEach(this.group.getChildren()::remove);
-		this.ids.clear();
+		this.ids.forEach(text -> text.setVisible(false));
 	}
 
 	// ==============================================================================================================================
