@@ -312,18 +312,7 @@ public class MatrixRunner implements IMatrixRunner, AutoCloseable
 		int total = this.matrix.count(null); 
 		int done = this.matrix.currentItem();
 		this.context.getConfiguration().getRunnerListener().stateChange(this, newState, done, total);
-		
-		if (newState == State.Finished)
-		{
-			try
-			{
-				this.context.getEvaluator().reset();
-			}
-			catch (Exception e)
-			{
-				logger.error(e.getMessage(), e);
-			}
-		}
+		// earlier evaluator's cleanup was here. but it is wrong. because matrices work in concurrency
     }
 
 	private Matrix matrix = null;
