@@ -59,7 +59,6 @@
 				<HBox alignment="CENTER" spacing="10.0" BorderPane.alignment="CENTER">
 					<children>
 						<CheckBox fx:id="cbUseGrid" text="grid"/>
-						<CheckBox fx:id="cbUseBorder" selected="true" text="border"/>
 						<CheckBox mnemonicParsing="false" text="id's"/>
 					</children>
 					<BorderPane.margin>

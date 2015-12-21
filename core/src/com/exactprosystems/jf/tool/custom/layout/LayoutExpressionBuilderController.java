@@ -54,8 +54,6 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 	@FXML
 	private HBox					formulaPane;
 	@FXML
-	private CheckBox				cbUseBorder;
-	@FXML
 	private CheckBox				cbUseGrid;
 	@FXML
 	private ColumnConstraints		c0;
@@ -84,7 +82,7 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 	@FXML
 	private ChoiceBox<Range>		cbRange;
 	@FXML
-	private Button					btnAddFormula;
+	private Button					btnAddFormula; //✔
 	@FXML
 	private GridPane				gridPane;
 
@@ -388,15 +386,6 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 			{
 				this.customGrid.hide();
 			}
-		});
-		this.cbUseBorder.selectedProperty().addListener((observable, oldValue, newValue) ->
-		{
-			useBorder = newValue;
-			if (this.otherRectangle.isInit())
-			{
-				this.otherRectangle.setVisible(newValue);
-			}
-			this.selfRectangle.setVisible(newValue);
 		});
 	}
 
