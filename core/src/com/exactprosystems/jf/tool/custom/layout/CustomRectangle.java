@@ -180,16 +180,31 @@ public class CustomRectangle
 	/**
 	 * @param direction - arrow direction. if direction vertical outLine should be horizontal and contrariwise
 	 */
-	public void displayOutLine(int point, CustomArrow.ArrowDirection direction, int where)
+	public void displayOutLine(int point, CustomArrow.ArrowDirection direction, int where, boolean isNeedCrossLine)
 	{
 		if (direction == CustomArrow.ArrowDirection.HORIZONTAL)
 		{
 			if ((top.getStartX() + top.getEndX()) / 2 == point)
 			{
+				double endY;
+				if (where < left.getStartY())
+				{
+					endY = bot.getEndY();
+				}
+				else
+				{
+					endY = top.getEndY();
+				}
+				double startY = where;
+				if (where > left.getStartY() && where < left.getEndY())
+				{
+					startY = left.getStartY();
+					endY = left.getEndY();
+				}
 				outLine.setStartX(point);
 				outLine.setEndX(point);
-				outLine.setStartY(where);
-				outLine.setEndY((left.getStartY() + left.getEndY()) / 2);
+				outLine.setStartY(startY);
+				outLine.setEndY(endY);
 				outLine.setVisible(true);
 				return;
 			}
@@ -230,10 +245,25 @@ public class CustomRectangle
 		{
 			if ((right.getStartY() + right.getEndY()) / 2 == point)
 			{
+				double startX;
+				double endX = where;
+				if (where < left.getStartX())
+				{
+					startX = right.getStartX();
+				}
+				else
+				{
+					startX = left.getStartX();
+				}
+				if (where > left.getEndX() && where < right.getStartX())
+				{
+					startX = left.getStartX();
+					endX = right.getStartX();
+				}
 				outLine.setStartY(point);
 				outLine.setEndY(point);
-				outLine.setEndX(where);
-				outLine.setStartX((top.getStartX() + top.getEndX()) / 2);
+				outLine.setEndX(endX);
+				outLine.setStartX(startX);
 				outLine.setVisible(true);
 				return;
 			}

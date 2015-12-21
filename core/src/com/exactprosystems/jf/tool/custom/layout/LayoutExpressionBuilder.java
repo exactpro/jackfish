@@ -174,6 +174,7 @@ public class LayoutExpressionBuilder
 		int end = 0;
 		CustomArrow.ArrowDirection direction;
 		boolean isWhereSet = false;
+		boolean isNeedCrossLine = false;
 		int where = - 1;
 		int centerX = (int) ((self.getCenterX() + other.getCenterX()) / 2);
 		int centerY = (int) ((self.getCenterY() + other.getCenterY()) / 2);
@@ -231,11 +232,13 @@ public class LayoutExpressionBuilder
 					break;
 
 				case H_CENTERS:
+					isNeedCrossLine = true;
 					start = (int) self.getCenterX();
 					end = (int) other.getCenterX();
 					break;
 
 				case V_CENTERS:
+					isNeedCrossLine = true;
 					start = (int) self.getCenterY();
 					end = (int) other.getCenterY();
 					break;
@@ -263,7 +266,7 @@ public class LayoutExpressionBuilder
 			this.controller.clearArrow();
 			if (needOutLine)
 			{
-				this.controller.displayOutLine(start, end, direction, where);
+				this.controller.displayOutLine(start, end, direction, where, isNeedCrossLine);
 			}
 			this.controller.displayArrow(start, end, where, direction);
 		}

@@ -280,10 +280,10 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 		}
 	}
 
-	public void displayOutLine(int selfPoint, int otherPoint, CustomArrow.ArrowDirection direction, int where)
+	public void displayOutLine(int selfPoint, int otherPoint, CustomArrow.ArrowDirection direction, int where, boolean isNeedCrossLine)
 	{
-		this.selfRectangle.displayOutLine(selfPoint, direction, where);
-		this.otherRectangle.displayOutLine(otherPoint, direction, where);
+		this.selfRectangle.displayOutLine(selfPoint, direction, where, isNeedCrossLine);
+		this.otherRectangle.displayOutLine(otherPoint, direction, where, isNeedCrossLine);
 	}
 
 	public void displayPart(PieceKind kind, String name, Range range, String first, String second)
