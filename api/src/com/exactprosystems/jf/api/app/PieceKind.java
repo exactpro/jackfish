@@ -330,7 +330,7 @@ public enum PieceKind implements Measure
 		@Override
 		public int distance(Rectangle s, Rectangle o)
 		{
-			return s.y + s.height - o.y;
+			return o.y - (s.y + s.height);
 		}
 	},
 

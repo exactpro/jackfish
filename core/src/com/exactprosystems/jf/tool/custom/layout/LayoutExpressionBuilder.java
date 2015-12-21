@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 public class LayoutExpressionBuilder
 {
@@ -36,6 +35,8 @@ public class LayoutExpressionBuilder
 
 	private double xOffset = 0;
 	private double yOffset = 0;
+
+	private List<IControl> controls;
 
 	private Map<IControl, Rectangle> mapRectangle= new LinkedHashMap<>();
 	private Map<IControl, IdWithCoordinates> mapIds = new LinkedHashMap<>();
@@ -72,9 +73,9 @@ public class LayoutExpressionBuilder
 
 	public String show(String title, boolean fullScreen) throws Exception
 	{
-		ArrayList<IControl> controls = new ArrayList<>();
-		controls.addAll(this.currentWindow.getControls(IWindow.SectionKind.Run));
-		controls.addAll(this.currentWindow.getControls(IWindow.SectionKind.Self));
+		this.controls = new ArrayList<>();
+		this.controls.addAll(this.currentWindow.getControls(IWindow.SectionKind.Run));
+		this.controls.addAll(this.currentWindow.getControls(IWindow.SectionKind.Self));
 
 		IControl selfControl = this.currentWindow.getSelfControl();
 		if (selfControl == null)
@@ -112,7 +113,7 @@ public class LayoutExpressionBuilder
 					Rectangle rectangle = service().getRectangle(ownerLocator, locator);
 					rectangle.setRect(rectangle.x - xOffset, rectangle.y - yOffset, rectangle.width, rectangle.height);
 					mapRectangle.put(control, rectangle);
-					IdWithCoordinates idWithCoordinates = new IdWithCoordinates(rectangle.x - xOffset, rectangle.y - yOffset, control.getID());
+					IdWithCoordinates idWithCoordinates = new IdWithCoordinates(rectangle.x, rectangle.y, control.getID());
 					mapIds.put(control, idWithCoordinates);
 				},""));
 				return image;
@@ -127,7 +128,7 @@ public class LayoutExpressionBuilder
 
 		new Thread(prepare).start();
 		
-		ButtonData result = this.controller.show(title, fullScreen, controls, this.parameterName);
+		ButtonData result = this.controller.show(title, fullScreen, this.controls, this.parameterName);
 		
 		return result == null ? this.parameterExpression : FormulaParser.toFormula(this.formula);
 	}
@@ -321,11 +322,7 @@ public class LayoutExpressionBuilder
 			this.controller.hideIds();
 			return;
 		}
-		ArrayList<IControl> controls = new ArrayList<>();
-		controls.addAll(currentWindow.getControls(IWindow.SectionKind.Run));
-		controls.addAll(currentWindow.getControls(IWindow.SectionKind.Self));
-		List<IdWithCoordinates> collect = controls.stream().map(mapIds::get).collect(Collectors.toList());
-		this.controller.displayIds(collect);
+		this.controller.displayIds(this.mapIds.values());
 	}
 
 	private IRemoteApplication service()

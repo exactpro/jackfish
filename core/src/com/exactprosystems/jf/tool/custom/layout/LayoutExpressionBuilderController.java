@@ -159,7 +159,7 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 		this.expressionFieldFirst.setVisible(false);
 	}
 
-	public ButtonData show(String title, boolean fullScreen, ArrayList<IControl> list, String parameterName)
+	public ButtonData show(String title, boolean fullScreen, List<IControl> list, String parameterName)
 	{
 		Alert dialog = createAlert(title);
 		list.stream().filter(iControl -> !Str.areEqual(parameterName, iControl.getID())).forEach(control -> {
@@ -316,7 +316,7 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 				.ifPresent(t -> t.setSelected(true));
 	}
 
-	public void displayIds(List<LayoutExpressionBuilder.IdWithCoordinates> ids)
+	public void displayIds(Collection<LayoutExpressionBuilder.IdWithCoordinates> ids)
 	{
 		// lazy initialize
 		if (this.ids == null)
