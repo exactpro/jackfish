@@ -10,8 +10,10 @@ package com.exactprosystems.jf.actions;
 
 import com.exactprosystems.jf.common.Context;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
+import com.exactprosystems.jf.common.parser.Matrix;
 import com.exactprosystems.jf.common.parser.Parameter;
 import com.exactprosystems.jf.common.parser.Parameters;
+import com.exactprosystems.jf.common.parser.ReturnAndResult;
 import com.exactprosystems.jf.common.parser.Tokens;
 import com.exactprosystems.jf.common.parser.Result;
 import com.exactprosystems.jf.common.parser.items.ActionItem;
@@ -21,6 +23,7 @@ import com.exactprosystems.jf.common.parser.items.TypeMandatory;
 import com.exactprosystems.jf.common.parser.listeners.IMatrixListener;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.common.report.ReportTable;
+import com.exactprosystems.jf.exceptions.ParametersException;
 
 import org.apache.log4j.Logger;
 
@@ -167,10 +170,22 @@ public abstract class AbstractAction implements Cloneable
             }
             else
             {
-                setError("Errors in parameters expressions.");
+				throw new ParametersException("Errors in parameters expressions " + this.toString(), parameters);
             }
 
         }
+		catch (ParametersException e)
+		{
+			setError(e.getMessage());
+			Matrix matrix = this.owner.getMatrix();
+			
+			IMatrixListener listener = context.getMatrixListener();
+			listener.error(matrix, this.owner.getNumber(), this.owner, e.getMessage());
+			for (String error : e.getParameterErrors()) 
+			{
+				listener.error(matrix, this.owner.getNumber(), this.owner, error);
+			}
+		}
         catch (Exception e)
         {
             logger.error(e.getMessage(), e);

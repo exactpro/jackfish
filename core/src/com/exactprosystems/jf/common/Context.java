@@ -51,6 +51,7 @@ public class Context implements IContext, AutoCloseable, Cloneable
 			clone.configuration = this.configuration;
 			clone.matrixListener = this.matrixListener;
 			clone.outStream = this.outStream;
+			clone.evaluator = configuration.createEvaluator();
 
 			return clone;
 		}

@@ -40,7 +40,7 @@ public class MatrixRunner implements IMatrixRunner, AutoCloseable
 	private MatrixRunner(Context context, Date startTime, File matrixFile, Object parameter) throws Exception
 	{
 		this.startTime = startTime == null ? new Date() : startTime;
-		this.context = context;
+		this.context = context.clone();
 		this.matrixFile = matrixFile;
 		
 		setGlobalVariable(parameterName, parameter);
@@ -312,7 +312,18 @@ public class MatrixRunner implements IMatrixRunner, AutoCloseable
 		int total = this.matrix.count(null); 
 		int done = this.matrix.currentItem();
 		this.context.getConfiguration().getRunnerListener().stateChange(this, newState, done, total);
-		// earlier evaluator's cleanup was here. but it is wrong. because matrices work in concurrency
+		
+		if (newState == State.Finished)
+		{
+			try
+			{
+				this.context.getEvaluator().reset();
+			}
+			catch (Exception e)
+			{
+				logger.error(e.getMessage(), e);
+			}
+		}
     }
 
 	private Matrix matrix = null;

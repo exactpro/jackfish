@@ -17,6 +17,7 @@ import com.exactprosystems.jf.common.parser.*;
 import com.exactprosystems.jf.common.parser.listeners.IMatrixListener;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.common.report.ReportTable;
+import com.exactprosystems.jf.exceptions.ParametersException;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 
 import java.util.HashSet;
@@ -211,10 +212,11 @@ public final class Call extends MatrixItem
 		try
 		{
 			boolean parametersAreCorrect = parameters.evaluateAll(evaluator);
+
 			if (!parametersAreCorrect)
 			{
 				reportParameters(report, parameters);
-	        	throw new Exception("Errors in parameters expressions #Call");
+				throw new ParametersException("Errors in parameters expressions #Call", parameters);
 			}
 			if (this.ref == null)
 			{
@@ -244,10 +246,18 @@ public final class Call extends MatrixItem
 
 			throw new MatrixException(super.getNumber(), this, "Sub case '" + this.name + "' is not found.");
 		}
+		catch (ParametersException e)
+		{
+			listener.error(getMatrix(), getNumber(), this, e.getMessage());
+			for (String error : e.getParameterErrors()) 
+			{
+				listener.error(getMatrix(), getNumber(), this, error);
+			}
+			return new ReturnAndResult(Result.Failed, null, e.getMessage());
+		}
 		catch (Exception e)
 		{
 			logger.error(e.getMessage(), e);
-			listener.error(this.owner, getNumber(), this, e.getMessage());
 			return new ReturnAndResult(Result.Failed, null, e.getMessage());
 		}
 	}	
