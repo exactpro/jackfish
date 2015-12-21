@@ -11,6 +11,7 @@ package com.exactprosystems.jf.tool.custom.layout;
 import com.exactprosystems.jf.api.app.IControl;
 import com.exactprosystems.jf.api.app.PieceKind;
 import com.exactprosystems.jf.api.app.Range;
+import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
@@ -50,6 +51,8 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 {
 	public static final int BORDER_WIDTH = 4;
 	public static final int OFFSET = BORDER_WIDTH / 2;
+	@FXML
+	private CheckBox cbUseId;
 	@FXML
 	private HBox formulaPane;
 	@FXML
@@ -294,6 +297,20 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 		this.selfRectangle.clearOutline();
 	}
 
+	public void clearControls()
+	{
+		this.controlsToggleGroup.getToggles().forEach(t -> t.setSelected(false));
+	}
+
+	public void selectControl(String name)
+	{
+		this.controlsToggleGroup.getToggles()
+				.stream()
+				.filter(t -> Str.areEqual(((IControl) t.getUserData()).getID(), name))
+				.findFirst()
+				.ifPresent(t -> t.setSelected(true));
+	}
+
 	// ==============================================================================================================================
 	// private methods
 	// ==============================================================================================================================
@@ -375,6 +392,10 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 
 	private void listeners()
 	{
+		this.cbUseId.selectedProperty().addListener((observable, oldValue, newValue) -> {
+//			this.model
+
+		});
 		this.controlsToggleGroup.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
 			if (newValue != null)
 			{

@@ -143,8 +143,13 @@ public class LayoutExpressionBuilder
 
 	public void displayPart(int index)
 	{
+		this.controller.clearControls();
 		FormulaPart part = this.formula.get(index);
 		this.controller.displayPart(part.getKind(), part.getName(), part.getRange(), part.getFirst(), part.getSecond());
+		if (!Str.IsNullOrEmpty(part.getName()))
+		{
+			this.controller.selectControl(part.getName());
+		}
 	}
 
 	public void displayArrow(Rectangle self, Rectangle other, Arrow arrow)
