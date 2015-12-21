@@ -57,6 +57,8 @@ public class Main extends Application
 	public static final String 	OPENED 				= "OPENED";
 	public static final String 	MAIN_NS 			= "MAIN";
 
+	public static final String	DEFAULT_MAX_FILES_COUNT		= "3";
+
 	private Preloader preloader;
 	private MainController controller;
 	private RunnerListener runnerListener;
@@ -556,7 +558,7 @@ public class Main extends Application
 			docs.add(doc);
 			doc.display();
 			doc.saved();
-			SettingsValue maxSettings = this.settings.getValueOrDefault(Settings.GLOBAL_NS, SettingsPanel.SETTINGS, MAX_FILES_COUNT, "3");
+			SettingsValue maxSettings = this.settings.getValueOrDefault(Settings.GLOBAL_NS, SettingsPanel.SETTINGS, MAX_FILES_COUNT, DEFAULT_MAX_FILES_COUNT);
 			int max = Integer.parseInt(maxSettings.getValue());
 			this.settings.setValue(MAIN_NS, kind.toString(), new File(doc.getName()).getName(), max, doc.getName());
 			this.settings.saveIfNeeded();

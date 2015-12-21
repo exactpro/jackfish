@@ -13,10 +13,8 @@ import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.custom.number.NumberTextField;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.main.Main;
-
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
-import javafx.event.Event;
 import javafx.fxml.Initializable;
 import javafx.geometry.HPos;
 import javafx.scene.Parent;
@@ -25,7 +23,6 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-
 import org.apache.log4j.Logger;
 
 import java.net.URL;
@@ -218,7 +215,7 @@ public class SettingsPanelController implements Initializable, ContainingParent
 		this.comboBoxTheme.getSelectionModel().select(
 				Theme.valueOf(res.get(comboBoxTheme.getId()) == null ? Theme.WHITE.name() : res.get(comboBoxTheme.getId())));
 
-		this.ntfMaxLastMatrixCount.setText(res.get(ntfMaxLastMatrixCount.getId()) == null ? "10" : res.get(ntfMaxLastMatrixCount.getId()));
+		this.ntfMaxLastMatrixCount.setText(res.get(ntfMaxLastMatrixCount.getId()) == null ? Main.DEFAULT_MAX_FILES_COUNT : res.get(ntfMaxLastMatrixCount.getId()));
 		this.ntfTimeNotification.setText(res.get(ntfTimeNotification.getId()) == null ? "5" : res.get(ntfTimeNotification.getId()));
 		this.useFullScreen.setSelected(Boolean.valueOf(res.get(useFullScreen.getId()) == null ? "false" : res.get(useFullScreen.getId())));
 		this.useSmallWindow.setSelected(Boolean.valueOf(res.get(useSmallWindow.getId()) == null ? "false" : res.get(useSmallWindow.getId())));
