@@ -353,7 +353,15 @@ public class SwingRemoteApplication extends RemoteApplication
 	@Override
 	protected OperationResult operateDerived(Locator owner, Locator element, Locator rows, Locator header, Operation operation) throws Exception
 	{
-		return operation.operate(this.operationExecutor, owner, element, rows, header);
+		try
+		{
+			return operation.operate(this.operationExecutor, owner, element, rows, header);
+		}
+		catch (Exception e)
+		{
+			logger.error("EXCEPTION : " + e.getMessage(), e);
+			throw new Exception(e.getMessage());
+		}
 	}
 
 	@Override
