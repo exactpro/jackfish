@@ -616,7 +616,7 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 		}
 		catch (Throwable e)
 		{
-			logger.error(String.format("setValue(%s, %d)", component, value));
+			logger.error(String.format("setValue(%s, %f)", component, value));
 			logger.error(e.getMessage(), e);
 			throw e;
 		}

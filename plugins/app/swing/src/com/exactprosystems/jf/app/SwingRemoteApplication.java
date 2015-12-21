@@ -9,11 +9,9 @@
 package com.exactprosystems.jf.app;
 
 import com.exactprosystems.jf.api.app.*;
-
 import net.sourceforge.jnlp.Launcher;
 import net.sourceforge.jnlp.runtime.ApplicationInstance;
 import net.sourceforge.jnlp.runtime.JNLPRuntime;
-
 import org.apache.log4j.*;
 import org.fest.swing.core.BasicRobot;
 import org.fest.swing.core.ComponentMatcher;
@@ -22,7 +20,6 @@ import org.fest.swing.fixture.ComponentFixture;
 import org.w3c.dom.Document;
 
 import javax.swing.*;
-
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.lang.reflect.Method;
@@ -43,39 +40,48 @@ public class SwingRemoteApplication extends RemoteApplication
 	@Override
 	protected void createLoggerDerived(String logName, String serverLogLevel, String serverLogPattern) throws Exception
 	{
-		logger = Logger.getLogger(SwingRemoteApplication.class);
+		try
+		{
+			logger = Logger.getLogger(SwingRemoteApplication.class);
 
-		Layout layout = new PatternLayout(serverLogPattern);
-		Appender appender = new FileAppender(layout, logName);
-		logger.addAppender(appender);
-		logger.setLevel(Level.toLevel(serverLogLevel, Level.ALL));
+			Layout layout = new PatternLayout(serverLogPattern);
+			Appender appender = new FileAppender(layout, logName);
+			logger.addAppender(appender);
+			logger.setLevel(Level.toLevel(serverLogLevel, Level.ALL));
 
-		MatcherSwing.setLogger(logger);
+			MatcherSwing.setLogger(logger);
+		}
+		catch (Exception e)
+		{
+			logger.error(String.format("createLoggerDerived($s, $s,$s)", logName, serverLogLevel, serverLogPattern));
+			logger.error(e.getMessage(), e);
+			throw e;
+		}
 	}
 
 	@Override
 	protected void connectDerived(Map<String, String> args) throws Exception
 	{
-		String url 			= args.get(SwingAppFactory.urlName);
+		String url = args.get(SwingAppFactory.urlName);
 
 		logger.debug("Connecting to web start application: url=" + url);
 
 		try
 		{
 			// java -jar netx.jar -verbose -nosecurity  -Xtrustall -Xnofork URL
-			
+
 			JNLPRuntime.setTrustAll(true);
-            JNLPRuntime.setAllowRedirect(true);
+			JNLPRuntime.setAllowRedirect(true);
 			JNLPRuntime.setDebug(true);
 			JNLPRuntime.setForksAllowed(false);
-	        JNLPRuntime.setSecurityEnabled(false);
-	        JNLPRuntime.setVerify(true);
-	        JNLPRuntime.initialize(true);
+			JNLPRuntime.setSecurityEnabled(false);
+			JNLPRuntime.setVerify(true);
+			JNLPRuntime.initialize(true);
 
 			logger.debug("Runtime init has done.");
 
 			Launcher launcher = new Launcher(false);
-			
+
 			try
 			{
 				ApplicationInstance app = launcher.launch(new URL(url));
@@ -85,7 +91,7 @@ public class SwingRemoteApplication extends RemoteApplication
 			{
 				logger.error(t.getMessage(), t);
 			}
-			
+
 			this.currentRobot = BasicRobot.robotWithCurrentAwtHierarchy();
 			this.operationExecutor = new SwingOperationExecutor(this.currentRobot, this.logger);
 
@@ -94,26 +100,27 @@ public class SwingRemoteApplication extends RemoteApplication
 				@Override
 				public void run()
 				{
-					highLighter = 	new HighLighter();
+					highLighter = new HighLighter();
 				}
-			}); 
+			});
 		}
 		catch (Exception e)
 		{
+			logger.error("connectDerived. keys : " + args.keySet() + " , value : " + args.values());
 			logger.error(e.getMessage(), e);
 			throw e;
 		}
-	
+
 		logger.debug("Application has been connected");
 	}
 
 	@Override
 	protected void runDerived(Map<String, String> args) throws Exception
 	{
-		String mainClass 	= args.get(SwingAppFactory.mainClassName);
-		String jar 			= args.get(SwingAppFactory.jarName);
-		String arg 			= args.get(SwingAppFactory.argsName);
-		
+		String mainClass = args.get(SwingAppFactory.mainClassName);
+		String jar = args.get(SwingAppFactory.jarName);
+		String arg = args.get(SwingAppFactory.argsName);
+
 		logger.debug("Launching application: class=" + mainClass + " jar=" + jar + " arg=" + arg);
 
 		try
@@ -122,33 +129,42 @@ public class SwingRemoteApplication extends RemoteApplication
 			urls.add(new URL("file:" + jar));
 
 			ClassLoader parent = getClass().getClassLoader();
-			@SuppressWarnings("resource")
-			URLClassLoader classLoader = new URLClassLoader(urls.toArray(new URL[] {}), parent);
+			@SuppressWarnings("resource") URLClassLoader classLoader = new URLClassLoader(urls.toArray(new URL[]{}), parent);
 
 			Class<?> applicationType = classLoader.loadClass(mainClass);
 			Method mainMethod = applicationType.getMethod("main", String[].class);
-			mainMethod.invoke(null, new Object[] { arg == null ? null : new String[] {arg} });
+			mainMethod.invoke(null, new Object[]{arg == null ? null : new String[]{arg}});
 
 			this.currentRobot = BasicRobot.robotWithCurrentAwtHierarchy();
 			this.operationExecutor = new SwingOperationExecutor(this.currentRobot, this.logger);
-			this.highLighter = 	new HighLighter();
+			this.highLighter = new HighLighter();
 		}
 		catch (Exception e)
 		{
+			logger.error("connectDerived. keys : " + args.keySet() + " , value : " + args.values());
 			logger.error(e.getMessage(), e);
 			throw e;
 		}
 
 		logger.debug("Application has been launched");
-		
+
 	}
 
 	@Override
 	protected void stopDerived() throws Exception
 	{
-		if (this.highLighter != null)
+		try
 		{
-			this.highLighter.close();
+			if (this.highLighter != null)
+			{
+				this.highLighter.close();
+			}
+		}
+		catch (Exception e)
+		{
+			logger.error("stopDerived()");
+			logger.error(e.getMessage(), e);
+			throw e;
 		}
 	}
 
@@ -161,100 +177,134 @@ public class SwingRemoteApplication extends RemoteApplication
 	@Override
 	protected Collection<String> titlesDerived() throws Exception
 	{
-		Collection<String> list = new ArrayList<String>();
-		Collection<Component> allDialogs = this.currentRobot.finder().findAll(new ComponentMatcher()
+		try
 		{
-			@Override
-			public boolean matches(Component component)
+			Collection<String> list = new ArrayList<String>();
+			Collection<Component> allDialogs = this.currentRobot.finder().findAll(new ComponentMatcher()
 			{
-				if (component != null && component.isShowing() && (component instanceof JFrame || component instanceof JDialog))
+				@Override
+				public boolean matches(Component component)
 				{
-					return true;
+					if (component != null && component.isShowing() && (component instanceof JFrame || component instanceof JDialog))
+					{
+						return true;
+					}
+					return false;
 				}
-				return false;
-			}
-		});
-		for (Component dialog : allDialogs)
-		{
-			if (dialog instanceof JFrame)
+			});
+			for (Component dialog : allDialogs)
 			{
-				list.add(((Frame) dialog).getTitle());
+				if (dialog instanceof JFrame)
+				{
+					list.add(((Frame) dialog).getTitle());
+				}
+				if (dialog instanceof JDialog)
+				{
+					list.add(((Dialog) dialog).getTitle());
+				}
 			}
-			if (dialog instanceof JDialog)
-			{
-				list.add(((Dialog) dialog).getTitle());
-			}
+
+			return list;
 		}
-		
-		return list;
+		catch (Exception e)
+		{
+			logger.error("titlesDerived()");
+			logger.error(e.getMessage(), e);
+			throw e;
+		}
 	}
 
 	@Override
 	protected void resizeDerived(int height, int width, boolean maximize, boolean minimize) throws Exception
 	{
-		if (maximize)
+		try
 		{
-			Component frame = this.operationExecutor.currentFrame();
-			if (frame instanceof JFrame)
+			if (maximize)
 			{
-				((JFrame)frame).setExtendedState(JFrame.MAXIMIZED_BOTH); 
+				Component frame = this.operationExecutor.currentFrame();
+				if (frame instanceof JFrame)
+				{
+					((JFrame) frame).setExtendedState(JFrame.MAXIMIZED_BOTH);
+				}
+			}
+			else if (minimize)
+			{
+				Component frame = this.operationExecutor.currentFrame();
+				if (frame instanceof JFrame)
+				{
+					((JFrame) frame).setExtendedState(JFrame.ICONIFIED);
+				}
+			}
+			else
+			{
+				Component frame = this.operationExecutor.currentFrame();
+				if (frame instanceof JFrame)
+				{
+					((JFrame) frame).setSize(width, height);
+				}
 			}
 		}
-		else if (minimize)
+		catch (Exception e)
 		{
-			Component frame = this.operationExecutor.currentFrame();
-			if (frame instanceof JFrame)
-			{
-				((JFrame)frame).setExtendedState(JFrame.ICONIFIED); 
-			}
-		}
-		else
-		{
-			Component frame = this.operationExecutor.currentFrame();
-			if (frame instanceof JFrame)
-			{
-				((JFrame)frame).setSize(width, height); 
-			}
+			logger.error(String.format("resizeDerived(%s,%s, %s, %s)", height, width, maximize, minimize));
+			logger.error(e.getMessage(), e);
+			throw e;
 		}
 	}
 
 	@Override
 	protected String switchToDerived(final String title) throws Exception
 	{
-		Component frame = this.currentRobot.finder().find(new ComponentMatcher()
+		try
 		{
-			@Override
-			public boolean matches(Component c)
+			Component frame = this.currentRobot.finder().find(new ComponentMatcher()
 			{
-				return c != null &&
-						(c instanceof JFrame &&
-						((JFrame) c).getTitle().equals(title)) || (c instanceof JDialog && ((JDialog) c).getTitle().equals(title));
-			}
-		});
-		this.operationExecutor.setCurrentFrame(frame);
-		return title; // done
+				@Override
+				public boolean matches(Component c)
+				{
+					return c != null && (c instanceof JFrame && ((JFrame) c).getTitle().equals(title)) || (c instanceof JDialog && ((JDialog) c).getTitle().equals(title));
+				}
+			});
+			this.operationExecutor.setCurrentFrame(frame);
+			return title; // done
+		}
+		catch (Exception e)
+		{
+			logger.error(String.format("swichToDerived(%s)", title));
+			logger.error(e.getMessage(), e);
+			throw e;
+		}
 	}
 
 	@Override
 	protected Collection<String> findAllDerived(Locator owner, Locator element) throws Exception
 	{
-		List<String> res = new ArrayList<String>();
-		ComponentFixture<Component> ownerFixture = null;
-		if (owner != null)
+		try
 		{
-			ownerFixture = this.operationExecutor.find(null, owner);
+			List<String> res = new ArrayList<String>();
+			ComponentFixture<Component> ownerFixture = null;
+			if (owner != null)
+			{
+				ownerFixture = this.operationExecutor.find(null, owner);
+			}
+			else
+			{
+				ownerFixture = new AnyComponentlFixture(currentRobot, this.operationExecutor.currentFrame());
+			}
+
+			List<ComponentFixture<Component>> components = this.operationExecutor.findAll(element.getControlKind(), ownerFixture, element);
+			for (ComponentFixture<Component> component : components)
+			{
+				res.add(component.toString());
+			}
+			return res;
 		}
-		else
+		catch (Exception e)
 		{
-			ownerFixture = new AnyComponentlFixture(currentRobot, this.operationExecutor.currentFrame());
+			logger.error(String.format("findAllDerived (%s,%s)", owner, element));
+			logger.error(e.getMessage(), e);
+			throw e;
 		}
-		
-		List<ComponentFixture<Component>> components = this.operationExecutor.findAll(element.getControlKind(), ownerFixture, element);
-		for (ComponentFixture<Component> component : components)
-		{
-			res.add(component.toString());
-		}
-		return res;
 	}
 
 	@Override
@@ -294,60 +344,73 @@ public class SwingRemoteApplication extends RemoteApplication
 			id = id == null ? newControlKind.name() : id;
 
 			Locator locator = new Locator(null, id, newControlKind);
-			locator
-					.clazz(MatcherSwing.getClass(component))
-					.name(MatcherSwing.getName(component))
-					.title(MatcherSwing.getTitle(component))
-					.action(MatcherSwing.getAction(component))
-					.text(MatcherSwing.getText(component))
-					.tooltip(MatcherSwing.getToolTip(component));
+			locator.clazz(MatcherSwing.getClass(component)).name(MatcherSwing.getName(component)).title(MatcherSwing.getTitle(component)).action(MatcherSwing.getAction(component)).text(MatcherSwing.getText(component)).tooltip(MatcherSwing.getToolTip(component));
 
 			return locator;
 		}
 		catch (Exception e)
 		{
-			logger.error(String.format("getLocatorDerived(%s, %s, %d, %d)", owner, controlKind,x, y));
+			logger.error(String.format("getLocatorDerived(%s, %s, %d, %d)", owner, controlKind, x, y));
 			logger.error(e.getMessage(), e);
 			throw e;
 		}
 	}
-	
+
 	@Override
 	protected ImageWrapper getImageDerived(final Locator owner, final Locator element) throws Exception
 	{
-		final BufferedImage[] images = new BufferedImage[1];
-		final Exception[] exceptions = new Exception[1];
-		final ComponentFixture<Component> component = operationExecutor.find(owner, element);
-		SwingUtilities.invokeAndWait(new Runnable()
+		try
 		{
-			@Override
-			public void run()
+			final BufferedImage[] images = new BufferedImage[1];
+			final Exception[] exceptions = new Exception[1];
+			final ComponentFixture<Component> component = operationExecutor.find(owner, element);
+			SwingUtilities.invokeAndWait(new Runnable()
 			{
-				try
+				@Override
+				public void run()
 				{
-					Component target = component.target;
-					BufferedImage image = new BufferedImage(target.getWidth(), target.getHeight(), BufferedImage.TYPE_INT_RGB);
-					target.paint(image.getGraphics()); // alternately use .printAll(..)
-					images[0] = image;
+					try
+					{
+						Component target = component.target;
+						BufferedImage image = new BufferedImage(target.getWidth(), target.getHeight(), BufferedImage.TYPE_INT_RGB);
+						target.paint(image.getGraphics()); // alternately use .printAll(..)
+						images[0] = image;
+					}
+					catch (Exception e)
+					{
+						exceptions[0] = e;
+					}
 				}
-				catch (Exception e)
-				{
-					exceptions[0] = e;
-				}
+			});
+			if (exceptions[0] != null)
+			{
+				throw exceptions[0];
 			}
-		});
-		if (exceptions[0] != null)
-		{
-			throw exceptions[0];
+			return new ImageWrapper(images[0]);
 		}
-		return new ImageWrapper(images[0]);
+		catch (Exception e)
+		{
+			logger.error(String.format("getImageDerived(%s,%s)", owner, element));
+			logger.error(e.getMessage(), e);
+			throw e;
+		}
+
 	}
 
 	@Override
 	protected Rectangle getRectangleDerived(Locator owner, Locator element) throws Exception
 	{
-		ComponentFixture<Component> component = this.operationExecutor.find(owner, element);
-		return this.operationExecutor.getRectangle(component);
+		try
+		{
+			ComponentFixture<Component> component = this.operationExecutor.find(owner, element);
+			return this.operationExecutor.getRectangle(component);
+		}
+		catch (Exception e)
+		{
+			logger.error(String.format("getRectangleDerived(%s, %s)", owner, element));
+			logger.error(e.getMessage(), e);
+			throw e;
+		}
 	}
 
 	@Override
@@ -359,6 +422,7 @@ public class SwingRemoteApplication extends RemoteApplication
 		}
 		catch (Exception e)
 		{
+			logger.error(String.format("operateDerived(%s,%s,%s,%s,%s)", owner, element, rows, header, operation));
 			logger.error("EXCEPTION : " + e.getMessage(), e);
 			throw new Exception(e.getMessage());
 		}
@@ -367,7 +431,16 @@ public class SwingRemoteApplication extends RemoteApplication
 	@Override
 	protected CheckingLayoutResult checkLayoutDerived(Locator owner, Locator element, Spec spec) throws Exception
 	{
-		return spec.perform(this.operationExecutor, owner, element);
+		try
+		{
+			return spec.perform(this.operationExecutor, owner, element);
+		}
+		catch (Exception e)
+		{
+			logger.error(String.format("checkLayoutDerived(%s,%s,%s)", owner, element, spec));
+			logger.error(e.getMessage(), e);
+			throw e;
+		}
 	}
 
 	@Override
@@ -379,26 +452,35 @@ public class SwingRemoteApplication extends RemoteApplication
 	@Override
 	protected int closeAllDerived(Locator element, Collection<LocatorAndOperation> operations) throws Exception
 	{
-		List<ComponentFixture<Component>> dialogs = this.operationExecutor.findAll(ControlKind.Any, null, element);
-		
-		for (ComponentFixture<Component> dialog : dialogs)
+		try
 		{
-			for (LocatorAndOperation pair : operations)
+			List<ComponentFixture<Component>> dialogs = this.operationExecutor.findAll(ControlKind.Any, null, element);
+
+			for (ComponentFixture<Component> dialog : dialogs)
 			{
-				Locator locator = pair.getLocator();
-				
-				List<ComponentFixture<Component>> components = this.operationExecutor.findAll(locator.getControlKind(), dialog, locator);
-				if (components.size() == 1)
+				for (LocatorAndOperation pair : operations)
 				{
-					ComponentFixture<Component> component = components.get(0);
-					Operation operation = pair.getOperation();
-					operation.operate(this.operationExecutor, locator, component);
-					
+					Locator locator = pair.getLocator();
+
+					List<ComponentFixture<Component>> components = this.operationExecutor.findAll(locator.getControlKind(), dialog, locator);
+					if (components.size() == 1)
+					{
+						ComponentFixture<Component> component = components.get(0);
+						Operation operation = pair.getOperation();
+						operation.operate(this.operationExecutor, locator, component);
+
+					}
 				}
 			}
+
+			return dialogs.size();
 		}
-		
-		return dialogs.size();
+		catch (Exception e)
+		{
+			logger.error(String.format("closeAllDerived(%s,%s)", element, operations));
+			logger.error(e.getMessage(), e);
+			throw e;
+		}
 	}
 
 	@Override
@@ -426,7 +508,8 @@ public class SwingRemoteApplication extends RemoteApplication
 		}
 		catch (Exception e)
 		{
-			logger.debug(e.getMessage(), e);
+			logger.error(String.format("getTreeDerived(%s)", owner));
+			logger.error(e.getMessage(), e);
 			throw e;
 		}
 	}
@@ -466,7 +549,8 @@ public class SwingRemoteApplication extends RemoteApplication
 		}
 		catch (Exception e)
 		{
-			logger.debug(e.getMessage(), e);
+			logger.error(String.format("hightlightDerived(%s,%s)", owner, xpath));
+			logger.error(e.getMessage(), e);
 			throw e;
 		}
 	}
@@ -477,10 +561,10 @@ public class SwingRemoteApplication extends RemoteApplication
 		{
 			return null;
 		}
-		
+
 		if (component instanceof Container)
 		{
-			Container container = (Container)component;
+			Container container = (Container) component;
 			for (Component comp : container.getComponents())
 			{
 				if (!comp.isVisible())
@@ -493,7 +577,7 @@ public class SwingRemoteApplication extends RemoteApplication
 				}
 			}
 		}
-		
+
 		return component;
 	}
 
@@ -508,7 +592,7 @@ public class SwingRemoteApplication extends RemoteApplication
 		{
 			throw new Exception("Unknown ControlKind: " + controlKind);
 		}
-		
+
 		if (found.isAssignableFrom(component.getClass()))
 		{
 			return component;
@@ -533,32 +617,32 @@ public class SwingRemoteApplication extends RemoteApplication
 	static
 	{
 		// order is important. see function determitateControlKind
-		classToControlKind.put(ControlKind.Button,		JButton.class);
-		classToControlKind.put(ControlKind.CheckBox,	JCheckBox.class);
-		classToControlKind.put(ControlKind.ComboBox,	JComboBox.class);
-		classToControlKind.put(ControlKind.Dialog,		JDialog.class);
-		classToControlKind.put(ControlKind.Frame,		JFrame.class);
-		classToControlKind.put(ControlKind.Label,		JLabel.class);
-		classToControlKind.put(ControlKind.ListView,	JList.class);
-		classToControlKind.put(ControlKind.Menu,		JMenu.class);
-		classToControlKind.put(ControlKind.MenuItem,	JMenuItem.class);
-		classToControlKind.put(ControlKind.Panel,		JPanel.class);
-		classToControlKind.put(ControlKind.ProgressBar,JProgressBar.class);
-		classToControlKind.put(ControlKind.RadioButton,	JRadioButton.class);
-		classToControlKind.put(ControlKind.ScrollBar,	JScrollBar.class);
-		classToControlKind.put(ControlKind.Slider,		JSlider.class);
-		classToControlKind.put(ControlKind.Splitter,	JSplitPane.class);
-		classToControlKind.put(ControlKind.Table,		JTable.class);
-		classToControlKind.put(ControlKind.TabPanel,	JTabbedPane.class);
-		classToControlKind.put(ControlKind.TextBox,		JTextField.class);
-		classToControlKind.put(ControlKind.ToggleButton,JToggleButton.class);
-		classToControlKind.put(ControlKind.Tooltip,		JToolTip.class);
-		classToControlKind.put(ControlKind.Tree,		JTree.class);
+		classToControlKind.put(ControlKind.Button, JButton.class);
+		classToControlKind.put(ControlKind.CheckBox, JCheckBox.class);
+		classToControlKind.put(ControlKind.ComboBox, JComboBox.class);
+		classToControlKind.put(ControlKind.Dialog, JDialog.class);
+		classToControlKind.put(ControlKind.Frame, JFrame.class);
+		classToControlKind.put(ControlKind.Label, JLabel.class);
+		classToControlKind.put(ControlKind.ListView, JList.class);
+		classToControlKind.put(ControlKind.Menu, JMenu.class);
+		classToControlKind.put(ControlKind.MenuItem, JMenuItem.class);
+		classToControlKind.put(ControlKind.Panel, JPanel.class);
+		classToControlKind.put(ControlKind.ProgressBar, JProgressBar.class);
+		classToControlKind.put(ControlKind.RadioButton, JRadioButton.class);
+		classToControlKind.put(ControlKind.ScrollBar, JScrollBar.class);
+		classToControlKind.put(ControlKind.Slider, JSlider.class);
+		classToControlKind.put(ControlKind.Splitter, JSplitPane.class);
+		classToControlKind.put(ControlKind.Table, JTable.class);
+		classToControlKind.put(ControlKind.TabPanel, JTabbedPane.class);
+		classToControlKind.put(ControlKind.TextBox, JTextField.class);
+		classToControlKind.put(ControlKind.ToggleButton, JToggleButton.class);
+		classToControlKind.put(ControlKind.Tooltip, JToolTip.class);
+		classToControlKind.put(ControlKind.Tree, JTree.class);
 
-		classToControlKind.put(ControlKind.Any, 		Component.class);
-		classToControlKind.put(ControlKind.Wait,		Component.class);
-		classToControlKind.put(ControlKind.Image,		Component.class);
-		classToControlKind.put(ControlKind.TreeItem,	Component.class);
-		classToControlKind.put(ControlKind.Row,			Component.class);
+		classToControlKind.put(ControlKind.Any, Component.class);
+		classToControlKind.put(ControlKind.Wait, Component.class);
+		classToControlKind.put(ControlKind.Image, Component.class);
+		classToControlKind.put(ControlKind.TreeItem, Component.class);
+		classToControlKind.put(ControlKind.Row, Component.class);
 	}
 }
