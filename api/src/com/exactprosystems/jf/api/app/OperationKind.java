@@ -27,7 +27,7 @@ public enum OperationKind
 		{
 			for (int c = 0; c < part.i; c++)
 			{
-				part.operation.operate(executor, holder.get(LocatorKind.Element), holder.getValue());
+				part.operation.operate(executor, holder.get(LocatorKind.Element), null);
 			}
 			return true;
 		}
