@@ -14,7 +14,7 @@ import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.SupportedEntry;
 import com.exactprosystems.jf.tool.configuration.ConfigurationFx;
 import com.exactprosystems.jf.tool.configuration.ConfigurationFxController;
-import com.exactprosystems.jf.tool.custom.fields.CustomFieldWithButton;
+import com.exactprosystems.jf.tool.custom.controls.field.CustomFieldWithButton;
 import com.exactprosystems.jf.tool.custom.table.CustomTable;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import javafx.collections.FXCollections;

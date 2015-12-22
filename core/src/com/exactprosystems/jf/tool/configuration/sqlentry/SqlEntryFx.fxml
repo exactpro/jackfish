@@ -8,7 +8,7 @@
    information which is the property of Exactpro Systems, LLC or its licensors.
   -->
 
-<?import com.exactprosystems.jf.tool.custom.fields.CustomFieldWithButton?>
+<?import com.exactprosystems.jf.tool.custom.controls.field.CustomFieldWithButton?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <TitledPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="129.0" prefWidth="815.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.exactprosystems.jf.tool.configuration.sqlentry.SqlEntryFxController">

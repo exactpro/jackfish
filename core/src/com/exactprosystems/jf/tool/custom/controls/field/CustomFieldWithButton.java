@@ -5,7 +5,7 @@
 //  This is unpublished, licensed software, confidential and proprietary
 //  information which is the property of Exactpro Systems, LLC or its licensors.
 ////////////////////////////////////////////////////////////////////////////////
-package com.exactprosystems.jf.tool.custom.fields;
+package com.exactprosystems.jf.tool.custom.controls.field;
 
 import com.exactprosystems.jf.tool.CssVariables;
 import javafx.event.EventHandler;

@@ -14,7 +14,7 @@ import com.exactprosystems.jf.common.parser.Matrix;
 import com.exactprosystems.jf.common.parser.listeners.ListProvider;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
-import com.exactprosystems.jf.tool.custom.fields.CustomField;
+import com.exactprosystems.jf.tool.custom.controls.field.CustomField;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import javafx.beans.value.ChangeListener;
 import javafx.event.EventDispatcher;

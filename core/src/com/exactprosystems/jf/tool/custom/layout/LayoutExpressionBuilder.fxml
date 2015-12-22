@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import com.exactprosystems.jf.tool.custom.fields.CustomFieldWithButton?>
+<?import com.exactprosystems.jf.tool.custom.controls.field.CustomFieldWithButton?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>

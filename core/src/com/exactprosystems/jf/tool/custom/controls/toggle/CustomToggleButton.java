@@ -5,7 +5,7 @@
 //  This is unpublished, licensed software, confidential and proprietary
 //  information which is the property of Exactpro Systems, LLC or its licensors.
 ////////////////////////////////////////////////////////////////////////////////
-package com.exactprosystems.jf.tool.custom.layout;
+package com.exactprosystems.jf.tool.custom.controls.toggle;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;

@@ -12,7 +12,7 @@ import com.exactprosystems.jf.common.Configuration;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.configuration.ConfigurationFx;
-import com.exactprosystems.jf.tool.custom.fields.CustomFieldWithButton;
+import com.exactprosystems.jf.tool.custom.controls.field.CustomFieldWithButton;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;

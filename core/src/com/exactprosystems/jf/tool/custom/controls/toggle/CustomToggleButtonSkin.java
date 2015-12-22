@@ -5,7 +5,7 @@
 //  This is unpublished, licensed software, confidential and proprietary
 //  information which is the property of Exactpro Systems, LLC or its licensors.
 ////////////////////////////////////////////////////////////////////////////////
-package com.exactprosystems.jf.tool.custom.layout;
+package com.exactprosystems.jf.tool.custom.controls.toggle;
 
 import com.exactprosystems.jf.tool.CssVariables;
 import com.sun.javafx.scene.control.skin.ToggleButtonSkin;
