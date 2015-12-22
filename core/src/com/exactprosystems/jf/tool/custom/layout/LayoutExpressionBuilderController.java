@@ -16,7 +16,7 @@ import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.CssVariables;
-import com.exactprosystems.jf.tool.custom.expfield.NewExpressionField;
+import com.exactprosystems.jf.tool.custom.expfield.ExpressionField;
 import com.exactprosystems.jf.tool.custom.fields.CustomFieldWithButton;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -92,8 +92,8 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 	private Group group;
 	private ArrayList<javafx.scene.text.Text> ids;
 
-	private NewExpressionField expressionFieldFirst;
-	private NewExpressionField expressionFieldSecond;
+	private ExpressionField expressionFieldFirst;
+	private ExpressionField expressionFieldSecond;
 	private ToggleGroup controlsToggleGroup;
 	private ToggleGroup formulaToggleGroup;
 	private ImageView imageView;
@@ -147,10 +147,10 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 	public void init(LayoutExpressionBuilder model, AbstractEvaluator evaluator) throws Exception
 	{
 		this.model = model;
-		this.expressionFieldFirst = new NewExpressionField(evaluator, "first");
+		this.expressionFieldFirst = new ExpressionField(evaluator, "first");
 		this.expressionFieldFirst.setHelperForExpressionField("First", null);
 
-		this.expressionFieldSecond = new NewExpressionField(evaluator, "second");
+		this.expressionFieldSecond = new ExpressionField(evaluator, "second");
 		this.expressionFieldSecond.setHelperForExpressionField("Second", null);
 
 		this.gridPane.add(expressionFieldFirst, 3, 0);

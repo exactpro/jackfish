@@ -10,7 +10,7 @@ package com.exactprosystems.jf.tool.custom.treetable;
 
 import com.exactprosystems.jf.common.parser.items.MatrixItem;
 import com.exactprosystems.jf.tool.CssVariables;
-import com.exactprosystems.jf.tool.custom.expfield.NewExpressionField;
+import com.exactprosystems.jf.tool.custom.expfield.ExpressionField;
 import com.exactprosystems.jf.tool.matrix.params.ParametersPane;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.TreeTableRow;
@@ -46,21 +46,21 @@ public class MatrixTreeRow extends TreeTableRow<MatrixItem>
 
 	public void showExpressionsResults()
 	{
-		List<NewExpressionField> list = new ArrayList<>();
+		List<ExpressionField> list = new ArrayList<>();
 		find((GridPane) this.getTreeTableView().getSelectionModel().getSelectedItem().getValue().getLayout(), list);
-		list.stream().forEach(NewExpressionField::showShadowText);
+		list.stream().forEach(ExpressionField::showShadowText);
 	}
 
 	public void hideExpressionsResults()
 	{
-		List<NewExpressionField> list = new ArrayList<>();
+		List<ExpressionField> list = new ArrayList<>();
 		find((GridPane) this.getTreeTableView().getSelectionModel().getSelectedItem().getValue().getLayout(), list);
-		list.forEach(NewExpressionField::hideShadowText);
+		list.forEach(ExpressionField::hideShadowText);
 	}
 
-	private void find(Pane parent, List<NewExpressionField> fields)
+	private void find(Pane parent, List<ExpressionField> fields)
 	{
-		fields.addAll(parent.getChildren().stream().filter(n -> n instanceof NewExpressionField).map(n -> ((NewExpressionField) n)).collect(Collectors.toList()));
+		fields.addAll(parent.getChildren().stream().filter(n -> n instanceof ExpressionField).map(n -> ((ExpressionField) n)).collect(Collectors.toList()));
 		parent.getChildren().stream().filter(n -> n instanceof Pane).forEach(pane -> find(((Pane) pane), fields));
 		parent.getChildren().stream().filter(n -> n instanceof ParametersPane).map(n -> ((GridPane) ((ParametersPane) n).getContent())).forEach(gp -> find(gp, fields));
 	}

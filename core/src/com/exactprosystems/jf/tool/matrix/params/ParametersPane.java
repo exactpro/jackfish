@@ -25,7 +25,7 @@ import com.exactprosystems.jf.functions.Xml;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.DragDetector;
-import com.exactprosystems.jf.tool.custom.expfield.NewExpressionField;
+import com.exactprosystems.jf.tool.custom.expfield.ExpressionField;
 import com.exactprosystems.jf.tool.custom.layout.LayoutExpressionBuilder;
 import com.exactprosystems.jf.tool.custom.scroll.CustomScrollPane;
 import com.exactprosystems.jf.tool.custom.treetable.MatrixContextMenu;
@@ -116,12 +116,12 @@ public class ParametersPane extends CustomScrollPane
 				});
 
 		pane.getChildren().stream()
-				.filter(node -> node.getClass() == NewExpressionField.class)
+				.filter(node -> node.getClass() == ExpressionField.class)
 				.findFirst()
 				.ifPresent(field -> {
-					((NewExpressionField) field).setChangingValueListener(createExpressionChangeListener(parameter, ((NewExpressionField) field), index));
-					((NewExpressionField) field).setText(parameter.getExpression());
-					((NewExpressionField) field).stretchIfCan(parameter.getExpression());
+					((ExpressionField) field).setChangingValueListener(createExpressionChangeListener(parameter, ((ExpressionField) field), index));
+					((ExpressionField) field).setText(parameter.getExpression());
+					((ExpressionField) field).stretchIfCan(parameter.getExpression());
 				});
 	}
 
@@ -243,7 +243,7 @@ public class ParametersPane extends CustomScrollPane
 		};
 	}
 
-	private ChangeListener<Boolean> createExpressionChangeListener(Parameter par,  NewExpressionField expressionField, int index)
+	private ChangeListener<Boolean> createExpressionChangeListener(Parameter par,  ExpressionField expressionField, int index)
 	{
 		return (observable, oldValue, newValue) ->
 		{
@@ -290,7 +290,7 @@ public class ParametersPane extends CustomScrollPane
 		
 		if (!this.oneLine)
 		{
-			NewExpressionField expressionField = new NewExpressionField(this.context.getEvaluator(), par.getExpression());
+			ExpressionField expressionField = new ExpressionField(this.context.getEvaluator(), par.getExpression());
 			if (this.matrixItem instanceof ActionItem)
 			{
 				ActionItem actionItem = (ActionItem) this.matrixItem;
@@ -456,9 +456,9 @@ public class ParametersPane extends CustomScrollPane
 				node.getParent().getStyleClass().add(CssVariables.UNFOCUSED_GRID);
 			}
 		};
-		if (node instanceof NewExpressionField)
+		if (node instanceof ExpressionField)
 		{
-			((NewExpressionField) node).setChangingFocusListener(changeListener);
+			((ExpressionField) node).setChangingFocusListener(changeListener);
 		}
 		else if (node instanceof TextField)
 		{

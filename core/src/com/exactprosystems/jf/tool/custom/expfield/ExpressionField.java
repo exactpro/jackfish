@@ -32,7 +32,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 
-public class NewExpressionField extends CustomField
+public class ExpressionField extends CustomField
 {
 	private AbstractEvaluator			evaluator;
 
@@ -48,12 +48,12 @@ public class NewExpressionField extends CustomField
 	private ChangeListener<Boolean> valueListener;
 	private ChangeListener<Boolean> focusListener;
 
-	public NewExpressionField(AbstractEvaluator evaluator)
+	public ExpressionField(AbstractEvaluator evaluator)
 	{
 		this(evaluator, null);
 	}
 
-	public NewExpressionField(AbstractEvaluator evaluator, String text)
+	public ExpressionField(AbstractEvaluator evaluator, String text)
 	{
 		super(text);
 		this.evaluator = evaluator;
@@ -332,5 +332,5 @@ public class NewExpressionField extends CustomField
 		}
 	}
 
-	private final static Logger	logger	= Logger.getLogger(NewExpressionField.class);
+	private final static Logger	logger	= Logger.getLogger(ExpressionField.class);
 }

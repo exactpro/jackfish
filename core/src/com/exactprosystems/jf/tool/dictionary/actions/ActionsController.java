@@ -15,7 +15,7 @@ import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.css.images.Images;
-import com.exactprosystems.jf.tool.custom.expfield.NewExpressionField;
+import com.exactprosystems.jf.tool.custom.expfield.ExpressionField;
 import com.exactprosystems.jf.tool.dictionary.ApplicationStatus;
 import com.exactprosystems.jf.tool.dictionary.DictionaryFx;
 import com.exactprosystems.jf.tool.dictionary.info.element.ElementInfoController;
@@ -55,7 +55,7 @@ public class ActionsController implements Initializable, ContainingParent
 	public ComboBox<String>			comboBoxWindows;
 
 	public GridPane					mainGrid;
-	private NewExpressionField		expressionField;
+	private ExpressionField		expressionField;
 	private Parent					pane;
 
 	private DictionaryFx			model;
@@ -102,7 +102,7 @@ public class ActionsController implements Initializable, ContainingParent
 		this.navigation = navigation;
 		this.info = info;
 
-		this.expressionField = new NewExpressionField(evaluator);
+		this.expressionField = new ExpressionField(evaluator);
 		this.elementActionsGrid.add(this.expressionField, 1, 2, 2, 1);
 		this.expressionField.setHelperForExpressionField(null, null);
 
