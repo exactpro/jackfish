@@ -13,6 +13,7 @@ import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.matrix.MatrixFx;
+
 import javafx.stage.Window;
 
 import java.io.File;

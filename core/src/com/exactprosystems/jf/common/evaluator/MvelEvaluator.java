@@ -23,6 +23,10 @@ import com.exactprosystems.jf.api.conditions.Condition;
 
 public class MvelEvaluator extends AbstractEvaluator 
 {
+	public MvelEvaluator()
+	{
+	}
+	
 	@Override
 	protected Object rawCompile(String expression)  throws Exception
 	{

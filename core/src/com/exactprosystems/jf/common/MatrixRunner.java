@@ -40,7 +40,7 @@ public class MatrixRunner implements IMatrixRunner, AutoCloseable
 	private MatrixRunner(Context context, Date startTime, File matrixFile, Object parameter) throws Exception
 	{
 		this.startTime = startTime == null ? new Date() : startTime;
-		this.context = context.clone();
+		this.context = context;
 		this.matrixFile = matrixFile;
 		
 		setGlobalVariable(parameterName, parameter);
@@ -142,6 +142,7 @@ public class MatrixRunner implements IMatrixRunner, AutoCloseable
 			stop();
 			changeState(State.Destroyed);
 			this.context.getConfiguration().getRunnerListener().unsubscribe(this);
+			this.context.close();
 		}
 		catch (Exception e)
 		{

@@ -28,8 +28,10 @@ import com.exactprosystems.jf.common.undoredo.Command;
 import com.exactprosystems.jf.tool.ApplicationConnector;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
+
 import javafx.scene.control.ButtonType;
 import javafx.util.Pair;
+
 import org.apache.log4j.Logger;
 
 import java.io.File;
@@ -594,7 +596,7 @@ public class MatrixFx extends Matrix
 
 	public void showWatch()
 	{
-		this.controller.showWatcher(this, context);
+		this.controller.showWatcher(this, this.context);
 	}
 
 	public void startDefaultApplication(String idAppEntry) throws Exception
@@ -629,7 +631,7 @@ public class MatrixFx extends Matrix
 	{
 		this.config = config;
 		this.console = new TabConsole(System.out);
-		this.context = this.config.createContext(matrixListener, this.console);
+		this.context = config.createContext(matrixListener, this.console);
 		this.runner = new MatrixRunner(this.context, this, this.startDate, null);
 		this.runner.setStartTime(this.startDate);
 		this.applicationConnector = new ApplicationConnector(this.config);

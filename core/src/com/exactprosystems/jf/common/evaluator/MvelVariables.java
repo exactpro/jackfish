@@ -8,10 +8,10 @@
 
 package com.exactprosystems.jf.common.evaluator;
 
-import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 public class MvelVariables extends Variables
 {
