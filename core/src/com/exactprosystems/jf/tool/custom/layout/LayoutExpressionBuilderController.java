@@ -21,7 +21,8 @@ import com.exactprosystems.jf.tool.custom.fields.CustomFieldWithButton;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.geometry.Pos;
+import javafx.geometry.*;
+import javafx.geometry.Insets;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -104,7 +105,6 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 	private CustomRectangle selfRectangle;
 	private CustomRectangle otherRectangle;
 	private CustomArrow customArrow;
-	private Text currentText = new Text();
 
 	private ScrollPane mainScrollPane;
 	private ArrayList<ToggleButton> buttons = new ArrayList<>();
@@ -124,7 +124,7 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 		this.cbRange.getItems().addAll(Range.values());
 		this.cbParameters.getSelectionModel().selectFirst();
 		this.cbRange.getSelectionModel().selectFirst();
-
+		BorderPane.setMargin(this.gridPane, new Insets(5, 0, 0, 0));
 		this.controlsToggleGroup = new ToggleGroup();
 		this.formulaToggleGroup = new ToggleGroup();
 		createCanvas();
@@ -215,6 +215,7 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 		this.imageView.setImage(image);
 		this.mainPane.getChildren().remove(this.progressIndicator);
 		this.mainPane.setCenter(this.mainScrollPane);
+		BorderPane.setMargin(this.mainScrollPane, new Insets(0, 0, 5, 0));
 		this.customGrid.setSize((int) image.getWidth(), (int) image.getHeight());
 		this.progressIndicator = null;
 	}
@@ -403,7 +404,7 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 		node.setMinWidth(width);
 		node.setPrefWidth(width);
 
-		Hyperlink link = new Hyperlink("X");
+		Hyperlink link = new Hyperlink("x");
 		link.getStyleClass().addAll(CssVariables.CUSTOM_FIELD_CUSTOM_BUTTON);
 		node.setRight(link);
 		node.setText(sb.toString());

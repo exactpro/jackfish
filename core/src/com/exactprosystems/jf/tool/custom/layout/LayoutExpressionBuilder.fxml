@@ -4,7 +4,8 @@
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<BorderPane fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.exactprosystems.jf.tool.custom.layout.LayoutExpressionBuilderController">
+<BorderPane fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+			fx:controller="com.exactprosystems.jf.tool.custom.layout.LayoutExpressionBuilderController">
 	<bottom>
 		<GridPane fx:id="gridPane" BorderPane.alignment="CENTER">
 			<columnConstraints>
@@ -19,10 +20,26 @@
 				<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
 			</rowConstraints>
 			<children>
-				<ChoiceBox fx:id="cbParameters" maxWidth="1.7976931348623157E308" prefWidth="150.0"/>
-				<Label fx:id="labelControlId" text="" GridPane.columnIndex="1"/>
-				<ChoiceBox fx:id="cbRange" prefWidth="150.0" GridPane.columnIndex="2"/>
-				<Button fx:id="btnAddFormula" mnemonicParsing="false" onAction="#addFormula" text="+" GridPane.columnIndex="5"/>
+				<ChoiceBox fx:id="cbParameters" maxWidth="1.7976931348623157E308" prefWidth="150.0">
+					<GridPane.margin>
+						<Insets left="3.0" right="3.0"/>
+					</GridPane.margin>
+				</ChoiceBox>
+				<Label fx:id="labelControlId" text="" GridPane.columnIndex="1">
+					<GridPane.margin>
+						<Insets left="3.0" right="3.0"/>
+					</GridPane.margin>
+				</Label>
+				<ChoiceBox fx:id="cbRange" prefWidth="150.0" GridPane.columnIndex="2">
+					<GridPane.margin>
+						<Insets left="3.0" right="3.0"/>
+					</GridPane.margin>
+				</ChoiceBox>
+				<Button fx:id="btnAddFormula" mnemonicParsing="false" onAction="#addFormula" text="+" GridPane.columnIndex="5">
+					<GridPane.margin>
+						<Insets left="3.0" right="3.0"/>
+					</GridPane.margin>
+				</Button>
 			</children>
 			<BorderPane.margin>
 				<Insets bottom="5.0" left="5.0" right="5.0"/>
@@ -43,7 +60,7 @@
 					<center>
 						<ScrollPane fx:id="spControls" fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" prefViewportHeight="306.0" prefViewportWidth="180.0">
 							<content>
-								<VBox fx:id="vBoxControls" alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
+								<VBox fx:id="vBoxControls" alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" spacing="1" BorderPane.alignment="CENTER">
 									<padding>
 										<Insets bottom="5.0"/>
 									</padding>
@@ -75,7 +92,7 @@
 	<top>
 		<ScrollPane fitToHeight="true" fitToWidth="true" prefViewportWidth="600.0" styleClass="customScrollPane" vbarPolicy="NEVER">
 			<content>
-				<HBox fx:id="formulaPane" BorderPane.alignment="CENTER">
+				<HBox fx:id="formulaPane" spacing="5.0" BorderPane.alignment="CENTER">
 					<BorderPane.margin>
 						<Insets bottom="5.0"/>
 					</BorderPane.margin>

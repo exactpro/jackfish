@@ -71,7 +71,7 @@ public abstract class CustomToggleButtonSkin extends ToggleButtonSkin
 		super.layoutChildren(textFieldStartX, 0, textFieldWidth, fullHeight);
 		if (rightPane != null) {
 			final double rightStartX = w - rightWidth + snappedLeftInset();
-			rightPane.resizeRelocate(rightStartX, 0, rightWidth, 30);
+			rightPane.resizeRelocate(rightStartX, 0, rightWidth, fullHeight/this.control.getText().split("\n").length);
 		}
 	}
 
