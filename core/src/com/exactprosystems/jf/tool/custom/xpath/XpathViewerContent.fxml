@@ -1,117 +1,141 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import javafx.geometry.*?>
+<?import com.exactprosystems.jf.tool.custom.controls.field.CustomFieldWithButton?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.Group?>
 <?import javafx.scene.layout.*?>
-
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.exactprosystems.jf.tool.custom.xpath.XpathViewerContentController">
 	<center>
 		<BorderPane fx:id="parentPane" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+			<bottom>
+				<BorderPane prefHeight="31.0" prefWidth="600.0" BorderPane.alignment="CENTER">
+					<center>
+						<CustomFieldWithButton fx:id="cfMainExpression" BorderPane.alignment="CENTER"/>
+					</center>
+					<right>
+						<Label fx:id="lblFound" text="Label" BorderPane.alignment="CENTER"/>
+					</right>
+				</BorderPane>
+			</bottom>
 			<center>
-				<TreeView fx:id="treeView" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
+				<SplitPane fx:id="splitPane" dividerPositions="0.0" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0" BorderPane.alignment="CENTER">
+					<items>
+						<ScrollPane fitToHeight="true" fitToWidth="true" minHeight="0.0" prefViewportHeight="-1.0" prefViewportWidth="-1.0">
+							<content>
+								<Group fx:id="group"/>
+							</content>
+						</ScrollPane>
+						<TreeView fx:id="treeView" prefHeight="200.0" prefWidth="200.0"/>
+					</items>
+				</SplitPane>
 			</center>
+			<top>
+				<BorderPane fx:id="findPanelOwner" prefHeight="31.0" prefWidth="600.0" BorderPane.alignment="CENTER">
+					<left>
+						<HBox alignment="CENTER_LEFT">
+							<children>
+								<CheckBox fx:id="checkBoxUseImage" mnemonicParsing="false" text="image" disable="true" BorderPane.alignment="CENTER"/>
+								<Separator orientation="VERTICAL" prefHeight="200.0"/>
+							</children>
+						</HBox>
+					</left>
+				</BorderPane>
+			</top>
 		</BorderPane>
 	</center>
 	<bottom>
 		<GridPane BorderPane.alignment="CENTER">
 			<columnConstraints>
-				<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="40.0" prefWidth="100.0" />
-				<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+				<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="40.0" prefWidth="100.0"/>
+				<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
 			</columnConstraints>
 			<rowConstraints>
-				<RowConstraints minHeight="10.0" prefHeight="10.0" vgrow="SOMETIMES" />
-				<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-            	<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-				<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-				<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-				<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-				<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+				<RowConstraints minHeight="10.0" prefHeight="10.0" vgrow="SOMETIMES"/>
+				<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+				<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+				<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+				<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+				<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+				<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
 			</rowConstraints>
 			<children>
 				<BorderPane GridPane.columnSpan="2" GridPane.rowIndex="2">
 					<left>
-						<CheckBox fx:id="useText" mnemonicParsing="false" onAction="#onUseText" text="use text()" BorderPane.alignment="CENTER_LEFT" />
-					</left>
-               <center>
-						<HBox fx:id="hBoxCheckboxes" alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="10" BorderPane.alignment="CENTER" />
-               </center>
-				</BorderPane>
-
-				<Separator prefWidth="200.0" GridPane.columnSpan="2" />
-				<BorderPane prefHeight="200.0" prefWidth="200.0" GridPane.columnSpan="2" GridPane.rowIndex="1">
-					<left>
-						<Label text="From" BorderPane.alignment="CENTER" />
+						<CheckBox fx:id="useText" mnemonicParsing="false" onAction="#onUseText" text="use text()" BorderPane.alignment="CENTER_LEFT"/>
 					</left>
 					<center>
-						<TextField fx:id="tfRelativeFrom" editable="false" maxWidth="1.7976931348623157E308" BorderPane.alignment="CENTER">
-                     <BorderPane.margin>
-                        <Insets left="5.0" right="5.0" />
-                     </BorderPane.margin></TextField>
+						<HBox fx:id="hBoxCheckboxes" alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="10" BorderPane.alignment="CENTER"/>
 					</center>
-					<right>
-						<Button mnemonicParsing="false" onAction="#clearRelativeFrom" text="X" BorderPane.alignment="CENTER" />
-					</right>
+				</BorderPane>
+
+				<Separator prefWidth="200.0" GridPane.columnSpan="2"/>
+				<BorderPane prefHeight="200.0" prefWidth="200.0" GridPane.columnSpan="2" GridPane.rowIndex="1">
+					<left>
+						<Label text="From" BorderPane.alignment="CENTER"/>
+					</left>
+					<center>
+						<CustomFieldWithButton fx:id="cfRelativeFrom" BorderPane.alignment="CENTER"/>
+					</center>
 				</BorderPane>
 				<BorderPane prefHeight="200.0" prefWidth="200.0" GridPane.columnSpan="2" GridPane.rowIndex="3">
 					<left>
-						<Label fx:id="labelXpath1Count" maxWidth="30.0" prefWidth="30.0" text="0" BorderPane.alignment="CENTER" />
+						<Label fx:id="labelXpath1Count" maxWidth="30.0" prefWidth="30.0" text="0" BorderPane.alignment="CENTER"/>
 					</left>
 					<center>
 						<Button fx:id="btnXpath1" alignment="BASELINE_LEFT" maxWidth="1.7976931348623157E308" onAction="#copyXpath" textAlignment="LEFT" BorderPane.alignment="CENTER">
 							<BorderPane.margin>
-								<Insets left="5.0" right="5.0" />
+								<Insets left="5.0" right="5.0"/>
 							</BorderPane.margin>
 						</Button>
 					</center>
 					<right>
-						<Button id="btnXpath1" fx:id="btnSaveXpath1" mnemonicParsing="false" onAction="#setRelativeXpath" text="From" BorderPane.alignment="CENTER" />
+						<Button id="btnXpath1" fx:id="btnSaveXpath1" mnemonicParsing="false" onAction="#setRelativeXpath" text="From" BorderPane.alignment="CENTER"/>
 					</right>
 				</BorderPane>
 				<BorderPane prefHeight="200.0" prefWidth="200.0" GridPane.columnSpan="2" GridPane.rowIndex="4">
 					<left>
-						<Label fx:id="labelXpath2Count" maxWidth="30.0" prefWidth="30.0" text="0" BorderPane.alignment="CENTER" />
+						<Label fx:id="labelXpath2Count" maxWidth="30.0" prefWidth="30.0" text="0" BorderPane.alignment="CENTER"/>
 					</left>
 					<center>
 						<Button fx:id="btnXpath2" alignment="BASELINE_LEFT" maxWidth="1.7976931348623157E308" onAction="#copyXpath" BorderPane.alignment="CENTER">
 							<BorderPane.margin>
-								<Insets left="5.0" right="5.0" />
+								<Insets left="5.0" right="5.0"/>
 							</BorderPane.margin>
 						</Button>
 					</center>
 					<right>
-						<Button id="btnXpath2" fx:id="btnSaveXpath2" mnemonicParsing="false" onAction="#setRelativeXpath" text="From" BorderPane.alignment="CENTER" />
+						<Button id="btnXpath2" fx:id="btnSaveXpath2" mnemonicParsing="false" onAction="#setRelativeXpath" text="From" BorderPane.alignment="CENTER"/>
 					</right>
 				</BorderPane>
 				<BorderPane prefHeight="200.0" prefWidth="200.0" GridPane.columnSpan="2" GridPane.rowIndex="5">
 					<left>
-						<Label fx:id="labelXpath3Count" maxWidth="30.0" prefWidth="30.0" text="0" BorderPane.alignment="CENTER" />
+						<Label fx:id="labelXpath3Count" maxWidth="30.0" prefWidth="30.0" text="0" BorderPane.alignment="CENTER"/>
 					</left>
 					<center>
 						<Button fx:id="btnXpath3" alignment="BASELINE_LEFT" maxWidth="1.7976931348623157E308" onAction="#copyXpath" BorderPane.alignment="CENTER">
 							<BorderPane.margin>
-								<Insets left="5.0" right="5.0" />
+								<Insets left="5.0" right="5.0"/>
 							</BorderPane.margin>
 						</Button>
 					</center>
 					<right>
-						<Button id="btnXpath3" fx:id="btnSaveXpath3" mnemonicParsing="false" onAction="#setRelativeXpath" text="From" BorderPane.alignment="CENTER" />
+						<Button id="btnXpath3" fx:id="btnSaveXpath3" mnemonicParsing="false" onAction="#setRelativeXpath" text="From" BorderPane.alignment="CENTER"/>
 					</right>
 				</BorderPane>
 				<BorderPane prefHeight="200.0" prefWidth="200.0" GridPane.columnSpan="2" GridPane.rowIndex="6">
 					<left>
-						<Label fx:id="labelXpath4Count" maxWidth="30.0" prefWidth="30.0" text="0" BorderPane.alignment="CENTER" />
+						<Label fx:id="labelXpath4Count" maxWidth="30.0" prefWidth="30.0" text="0" BorderPane.alignment="CENTER"/>
 					</left>
 					<center>
 						<Button fx:id="btnXpath4" alignment="BASELINE_LEFT" maxWidth="1.7976931348623157E308" onAction="#copyXpath" BorderPane.alignment="CENTER">
 							<BorderPane.margin>
-								<Insets left="5.0" right="5.0" />
+								<Insets left="5.0" right="5.0"/>
 							</BorderPane.margin>
 						</Button>
 					</center>
 					<right>
-						<Button id="btnXpath4" fx:id="btnSaveXpath4" mnemonicParsing="false" onAction="#setRelativeXpath" text="From" BorderPane.alignment="CENTER" />
+						<Button id="btnXpath4" fx:id="btnSaveXpath4" mnemonicParsing="false" onAction="#setRelativeXpath" text="From" BorderPane.alignment="CENTER"/>
 					</right>
 				</BorderPane>
 			</children>

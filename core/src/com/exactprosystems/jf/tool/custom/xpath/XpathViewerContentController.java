@@ -5,19 +5,24 @@ import com.exactprosystems.jf.common.parser.SearchHelper;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.CssVariables;
+import com.exactprosystems.jf.tool.custom.controls.field.CustomFieldWithButton;
 import com.exactprosystems.jf.tool.custom.find.FindPanel;
 import com.exactprosystems.jf.tool.custom.find.IFind;
+import com.exactprosystems.jf.tool.custom.layout.CustomRectangle;
+import com.exactprosystems.jf.tool.custom.layout.LayoutExpressionBuilderController;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
+import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.geometry.Pos;
+import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.TextField;
+import javafx.scene.image.*;
+import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
@@ -27,7 +32,12 @@ import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.net.URL;
 import java.util.*;
 import java.util.List;
@@ -52,21 +62,25 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 	public CheckBox				useText;
 	public HBox					hBoxCheckboxes;
 	public BorderPane			parentPane;
-	public TextField			tfRelativeFrom;
+	public CustomFieldWithButton cfRelativeFrom;
+	public CustomFieldWithButton cfMainExpression;
+	public SplitPane splitPane;
+	public BorderPane findPanelOwner;
+	public CheckBox checkBoxUseImage;
+	public Group group;
 
-	// header
-	private TextField			mainExpression;
+	@FXML
 	private Label				lblFound;
-	private BorderPane			headerPane;
 
 	private Parent				parent;
 	private XpathViewer			model;
+
+	private CustomRectangle		rectangle;
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources)
 	{
 		createTreeView();
-		this.headerPane = createHeader();
 		FindPanel<TreeItem<XpathItem>> findPanel = new FindPanel<>(new IFind<TreeItem<XpathItem>>()
 		{
 			@Override
@@ -103,7 +117,7 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 				return Arrays.stream(what.split("\\s")).filter(s -> !SearchHelper.matches(text, s, matchCase, wholeWord)).count() == 0;
 			}
 		});
-		this.parentPane.setBottom(findPanel);
+		this.findPanelOwner.setCenter(findPanel);
 		listeners();
 	}
 
@@ -116,15 +130,19 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 	public void init(XpathViewer model, String initial)
 	{
 		this.model = model;
-		this.mainExpression.setText(initial);
+		this.cfMainExpression.setText(initial);
 	}
 
 	public String show(String title, String themePath, boolean fullScreen)
 	{
 		Alert dialog = createAlert(title, themePath);
 		dialog.getDialogPane().setContent(parent);
-		dialog.getDialogPane().setHeader(this.headerPane);
-		dialog.setOnShowing(event -> this.model.applyXpath(this.mainExpression.getText()));
+		Label headerLabel = new Label();
+		headerLabel.setPrefHeight(0);
+		headerLabel.setMinHeight(0);
+		headerLabel.setMaxHeight(0);
+		dialog.getDialogPane().setHeader(headerLabel);
+		dialog.setOnShowing(event -> this.model.applyXpath(this.cfMainExpression.getText()));
 		if (fullScreen)
 		{
 			dialog.setOnShown(event -> ((Stage) dialog.getDialogPane().getScene().getWindow()).setFullScreen(true));
@@ -135,7 +153,7 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 		{
 			if (optional.get().getButtonData().equals(ButtonBar.ButtonData.OK_DONE))
 			{
-				return this.mainExpression.getText();
+				return this.cfMainExpression.getText();
 			}
 		}
 		return null;
@@ -148,20 +166,13 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 	{
 		String id = "#" + ((Button) actionEvent.getSource()).getId();
 		String text = ((Button) this.parentPane.getScene().lookup(id)).getText();
-		this.tfRelativeFrom.setText(text);
-		this.model.setRelativeXpath(this.tfRelativeFrom.getText());
-	}
-
-	public void clearRelativeFrom(ActionEvent actionEvent)
-	{
-		this.model.setRelativeXpath(null);
-		this.tfRelativeFrom.setText("");
-		this.model.createXpaths(this.useText.isSelected(), getParams());
+		this.cfRelativeFrom.setText(text);
+		this.model.setRelativeXpath(this.cfRelativeFrom.getText());
 	}
 
 	public void copyXpath(Event event)
 	{
-		this.mainExpression.setText(((Button) event.getSource()).getText());
+		this.cfMainExpression.setText(((Button) event.getSource()).getText());
 	}
 
 	public void onUseText(ActionEvent actionEvent)
@@ -169,7 +180,7 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 		this.model.createXpaths(this.useText.isSelected(), getParams());
 	}
 
-	
+
 	// ============================================================
 	// display methods
 	// ============================================================
@@ -194,9 +205,10 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 		{
 			if (nodes == null)
 			{
-				if (!this.mainExpression.getStyleClass().contains(CssVariables.INCORRECT_FIELD))
+				this.cfMainExpression.getStyleClass().remove(CssVariables.INCORRECT_FIELD);
+				if (!Str.IsNullOrEmpty(this.cfMainExpression.getText()))
 				{
-					this.mainExpression.getStyleClass().add(CssVariables.INCORRECT_FIELD);
+					this.cfMainExpression.getStyleClass().add(CssVariables.INCORRECT_FIELD);
 				}
 				this.lblFound.setText("Found 0");
 			}
@@ -252,24 +264,32 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 		});
 	}
 
+	public void displayImage(BufferedImage image) throws IOException
+	{
+		if (image != null)
+		{
+			this.checkBoxUseImage.setDisable(false);
+			this.splitPane.setDividerPositions(0.5);
+			createCanvas(image);
+			this.checkBoxUseImage.setSelected(true);
+		}
+	}
+
 	// ============================================================
 	// private methods
 	// ============================================================
-	private BorderPane createHeader()
+	private void createCanvas(BufferedImage bufferedImage) throws IOException
 	{
-		BorderPane pane = new BorderPane();
-		this.mainExpression = new TextField();
-		this.lblFound = new Label("Found 0");
-		pane.setCenter(mainExpression);
-		pane.setRight(lblFound);
-		BorderPane.setAlignment(lblFound, Pos.CENTER);
-		BorderPane.setAlignment(mainExpression, Pos.CENTER);
-		this.mainExpression.textProperty().addListener((obs, oldValue, newValue) ->
-		{
-			this.mainExpression.getStyleClass().remove(CssVariables.INCORRECT_FIELD);
-			this.model.applyXpath(newValue);
-		});
-		return pane;
+		ImageView imageView = new ImageView();
+		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+		ImageIO.write(bufferedImage, "jpg", outputStream);
+		Image image = new Image(new ByteArrayInputStream(outputStream.toByteArray()));
+		imageView.setImage(image);
+		this.group.getChildren().add(imageView);
+		this.rectangle = new CustomRectangle();
+		this.rectangle.setGroup(this.group);
+		this.rectangle.setWidthLine(LayoutExpressionBuilderController.BORDER_WIDTH);
+		this.rectangle.setVisible(false);
 	}
 
 	private void deselectItems(TreeItem<XpathItem> item)
@@ -295,8 +315,8 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 		alert.setTitle(title);
 		alert.setResizable(true);
 		alert.initModality(Modality.APPLICATION_MODAL);
-		alert.getDialogPane().setPrefHeight(600);
-		alert.getDialogPane().setPrefWidth(800);
+		alert.getDialogPane().setPrefHeight(1000);
+		alert.getDialogPane().setPrefWidth(1000);
 		return alert;
 	}
 
@@ -335,11 +355,11 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 			int length = atrs.getLength();
 			IntStream.range(0, length)
 					.mapToObj(atrs::item)
-					.forEach(item -> {
-						createText(item.getNodeName(), CssVariables.XPATH_ATTRIBUTE_NAME, false);
-						createText("=", CssVariables.XPATH_TEXT, false);
-						createText("\"" + item.getNodeValue() + "\" ", CssVariables.XPATH_ATTRIBUTE_VALUE, true);
-					});
+					.forEach(item -> box.getChildren().addAll(
+							createText(item.getNodeName(), CssVariables.XPATH_ATTRIBUTE_NAME, false),
+							createText("=", CssVariables.XPATH_TEXT, false),
+							createText("\"" + item.getNodeValue() + "\" ", CssVariables.XPATH_ATTRIBUTE_VALUE, true)
+					));
 		});
 		if (Str.IsNullOrEmpty(text))
 		{
@@ -401,8 +421,28 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 				.collect(Collectors.toList());
 	}
 
+	private void showImage(boolean flag)
+	{
+		this.splitPane.setDividerPositions(flag ? 0.5 : 0.0);
+	}
+
 	private void listeners()
 	{
+		this.cfRelativeFrom.setHandler(event -> {
+			this.model.setRelativeXpath(null);
+			this.cfRelativeFrom.setText("");
+			this.model.createXpaths(this.useText.isSelected(), getParams());
+		});
+
+		this.cfMainExpression.textProperty().addListener((obs, oldValue, newValue) ->
+		{
+			this.cfMainExpression.getStyleClass().remove(CssVariables.INCORRECT_FIELD);
+			this.model.applyXpath(newValue);
+		});
+
+		this.checkBoxUseImage.selectedProperty().addListener((observable, oldValue, newValue) -> {
+			showImage(newValue);
+		});
 		this.treeView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) ->
 		{
 			Optional.ofNullable(newValue).ifPresent(v -> this.model.updateNode(v.getValue().getNode()));

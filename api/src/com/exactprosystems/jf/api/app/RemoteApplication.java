@@ -243,7 +243,7 @@ public abstract class RemoteApplication implements IRemoteApplication
 	{
 		try 
 		{
-			exceptionIfNull(element, 	"element", "getImage");
+//			exceptionIfNull(element, 	"element", "getImage");
 
 			return getImageDerived(owner, element);
 		}

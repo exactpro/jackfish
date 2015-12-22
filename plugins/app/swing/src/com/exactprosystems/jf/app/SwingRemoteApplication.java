@@ -363,7 +363,12 @@ public class SwingRemoteApplication extends RemoteApplication
 		{
 			final BufferedImage[] images = new BufferedImage[1];
 			final Exception[] exceptions = new Exception[1];
-			final ComponentFixture<Component> component = operationExecutor.find(owner, element);
+			ComponentFixture<Component> component = null;
+			if (element != null)
+			{
+				component = operationExecutor.find(owner, element);
+			}
+			final ComponentFixture<Component> finalComponent = component;
 			SwingUtilities.invokeAndWait(new Runnable()
 			{
 				@Override
@@ -371,7 +376,15 @@ public class SwingRemoteApplication extends RemoteApplication
 				{
 					try
 					{
-						Component target = component.target;
+						Component target;
+						if (finalComponent == null)
+						{
+							target = operationExecutor.currentFrame();
+						}
+						else
+						{
+							target = finalComponent.target;
+						}
 						BufferedImage image = new BufferedImage(target.getWidth(), target.getHeight(), BufferedImage.TYPE_INT_RGB);
 						target.paint(image.getGraphics()); // alternately use .printAll(..)
 						images[0] = image;

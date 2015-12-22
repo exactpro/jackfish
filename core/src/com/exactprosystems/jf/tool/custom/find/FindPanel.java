@@ -10,6 +10,7 @@ package com.exactprosystems.jf.tool.custom.find;
 
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
+import com.exactprosystems.jf.tool.custom.controls.field.CustomFieldWithButton;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -26,7 +27,7 @@ import java.util.Optional;
 // TODO it needs code review
 public class FindPanel<T> extends BorderPane
 {
-	private TextField	tfFind;
+	private CustomFieldWithButton cfFind;
 	private Button		btnPrevious;
 	private Button		btnNext;
 	private CheckBox	checkBoxMatchCase;
@@ -39,12 +40,12 @@ public class FindPanel<T> extends BorderPane
 
 	public FindPanel()
 	{
-		this.tfFind = new TextField();
+		this.cfFind = new CustomFieldWithButton();
 		this.btnPrevious = new Button();
 		this.btnNext = new Button();
 		this.checkBoxMatchCase = new CheckBox("Match case");
 		this.checkBoxWords = new CheckBox("Whole word");
-		this.lblFind = new Label();
+		this.lblFind = new Label("Found 0");
 		createPane();
 		initialize();
 	}
@@ -59,7 +60,7 @@ public class FindPanel<T> extends BorderPane
 	public void requestFocus()
 	{
 		super.requestFocus();
-		this.tfFind.requestFocus();
+		this.cfFind.requestFocus();
 	}
 
 	public void setListener(IFind<T> iFind)
@@ -72,8 +73,8 @@ public class FindPanel<T> extends BorderPane
 	// ============================================================
 	private void createPane()
 	{
-		BorderPane.setAlignment(tfFind, Pos.CENTER);
-		this.setCenter(tfFind);
+		BorderPane.setAlignment(cfFind, Pos.CENTER);
+		this.setCenter(cfFind);
 		Label find = new Label("Find");
 		BorderPane.setMargin(find, new Insets(0, 10, 0, 0));
 		BorderPane.setAlignment(find, Pos.CENTER);
@@ -98,14 +99,18 @@ public class FindPanel<T> extends BorderPane
 			Common.customizeLabeled(btnPrevious, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.FIND_PREVIOUS);
 		});
 
-		tfFind.textProperty().addListener((observableValue, s, t1) -> Optional.ofNullable(iFind).ifPresent(findPanel -> {
+		cfFind.textProperty().addListener((observableValue, s, t1) -> Optional.ofNullable(iFind).ifPresent(findPanel -> {
 			if (!t1.isEmpty())
 			{
 				findElements(t1);
 			}
+			else
+			{
+				lblFind.setText("Found 0");
+			}
 		}));
 
-		tfFind.setOnKeyPressed(keyEvent ->
+		cfFind.setOnKeyPressed(keyEvent ->
 		{
 			if (keyEvent.getCode() == KeyCode.F3 && keyEvent.isShiftDown())
 			{
@@ -117,9 +122,9 @@ public class FindPanel<T> extends BorderPane
 			}
 		});
 		Arrays.asList(checkBoxWords, checkBoxMatchCase).stream().forEach(cb -> cb.setOnAction(event -> {
-			if (!tfFind.getText().isEmpty())
+			if (!cfFind.getText().isEmpty())
 			{
-				findElements(tfFind.getText());
+				findElements(cfFind.getText());
 			}
 		}));
 		btnPrevious.setOnAction(actionEvent ->
@@ -156,7 +161,7 @@ public class FindPanel<T> extends BorderPane
 		currentElement = -1;
 		if (results.isEmpty())
 		{
-			lblFind.setText("No matches");
+			lblFind.setText("Found 0");
 			if (!lblFind.getStyleClass().contains(CssVariables.INCORRECT_FIELD))
 			{
 				lblFind.getStyleClass().add(CssVariables.INCORRECT_FIELD);

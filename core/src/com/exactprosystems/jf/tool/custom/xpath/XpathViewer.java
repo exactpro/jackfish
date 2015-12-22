@@ -10,6 +10,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import javax.xml.xpath.*;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -40,6 +41,24 @@ public class XpathViewer
 		this.controller = Common.loadController(XpathViewer.class.getResource("XpathViewerContent.fxml"));
 		this.controller.init(this, initial);
 		this.controller.displayTree(this.document);
+		if (this.service != null)
+		{
+			Task<BufferedImage> task = new Task<BufferedImage>()
+			{
+				@Override
+				protected BufferedImage call() throws Exception
+				{
+					return service.getImage(null, owner).getImage();
+				}
+			};
+			task.setOnSucceeded(event -> Common.tryCatch(() -> this.controller.displayImage(((BufferedImage) event.getSource().getValue())), "Error on display image"));
+			task.setOnFailed(event -> Common.tryCatch(() -> this.controller.displayImage(null), "Error on display image"));
+			new Thread(task).start();
+		}
+		else
+		{
+			Common.tryCatch(() -> this.controller.displayImage(null), "Error on display image");
+		}
 		String result = this.controller.show(title, themePath, fullScreen);
 		return result == null ? initial : result;
 	}
