@@ -435,7 +435,8 @@ public abstract class AbstractControl implements IControl, Mutable
 		catch (RemoteException re)
 		{
 			logger.error(re.getMessage(), re);
-			if (re.getMessage().contains("is not allowed"))
+			//TODO
+			if (re.getMessage().contains("is not allowed") || re.getMessage().contains("does not support text entering"))
 			{
 				OperationResult result = new OperationResult();
 				result.setPermittedOperation(true);

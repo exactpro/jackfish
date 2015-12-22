@@ -528,20 +528,19 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 				{
 					textComponent.setText(text);
 				}
+				return true;
 			}
-			else
-			{
-				component.robot.enterText(text);
-			}
-			
-			waitForIdle();
-			return true;
+			throw new Exception(String.format("Component %s does not support text entering", component.target));
 		}
 		catch (Throwable e)
 		{
 			logger.error(String.format("text(%s, %s, %b)", component, text, clear));
 			logger.error(e.getMessage(), e);
 			throw e;
+		}
+		finally
+		{
+			waitForIdle();
 		}
 	}
 
