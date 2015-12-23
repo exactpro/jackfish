@@ -1,5 +1,6 @@
 package com.exactprosystems.jf.tool.custom.xpath;
 
+import com.exactprosystems.jf.api.app.ControlKind;
 import com.exactprosystems.jf.api.app.IRemoteApplication;
 import com.exactprosystems.jf.api.app.Locator;
 import com.exactprosystems.jf.tool.Common;
@@ -10,6 +11,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import javax.xml.xpath.*;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -28,6 +30,9 @@ public class XpathViewer
 	private Locator							owner;
 	private IRemoteApplication				service;
 	private String							relativeXpath;
+
+	private int xOffset = 0;
+	private int yOffset = 0;
 
 	public XpathViewer(Locator owner, Document document, IRemoteApplication service)
 	{
@@ -48,6 +53,12 @@ public class XpathViewer
 				@Override
 				protected BufferedImage call() throws Exception
 				{
+					if (owner != null)
+					{
+						Rectangle rectangle = service.getRectangle(null, owner);
+						xOffset = rectangle.x;
+						yOffset = rectangle.y;
+					}
 					return service.getImage(null, owner).getImage();
 				}
 			};
@@ -103,15 +114,20 @@ public class XpathViewer
 		
 		if (this.service != null)
 		{
-			new Thread(new Task<Void>()
+			Task<Rectangle> rectangleTask = new Task<Rectangle>()
 			{
 				@Override
-				protected Void call() throws Exception
+				protected Rectangle call() throws Exception
 				{
-					Common.tryCatch(() -> service.highlight(owner, xpath1), "Error on highlight element");
-					return null;
+					Locator locator = new Locator().kind(ControlKind.Any).id("empty").xpath(xpath1).absoluteXpath(true);
+					Rectangle rectangle = service.getRectangle(owner, locator);
+					rectangle.setRect(rectangle.x - xOffset, rectangle.y - yOffset, rectangle.width, rectangle.height);
+					return rectangle;
 				}
-			}).start();
+			};
+			rectangleTask.setOnSucceeded(event -> this.controller.displayRectangle(((Rectangle) event.getSource().getValue())));
+			rectangleTask.setOnFailed(event -> this.controller.hideRectangle());
+			new Thread(rectangleTask).start();
 		}
 	}
 	

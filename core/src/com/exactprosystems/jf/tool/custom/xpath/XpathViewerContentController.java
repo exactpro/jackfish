@@ -275,6 +275,17 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 		}
 	}
 
+	public void displayRectangle(Rectangle rectangle)
+	{
+		this.rectangle.updateRectangle(rectangle);
+		this.rectangle.setVisible(true);
+	}
+
+	public void hideRectangle()
+	{
+		this.rectangle.setVisible(false);
+	}
+
 	// ============================================================
 	// private methods
 	// ============================================================
@@ -445,7 +456,14 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 		});
 		this.treeView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) ->
 		{
-			Optional.ofNullable(newValue).ifPresent(v -> this.model.updateNode(v.getValue().getNode()));
+			if (newValue != null)
+			{
+				this.model.updateNode(newValue.getValue().getNode());
+			}
+			else
+			{
+				this.hideRectangle();
+			}
 		});
 
 		Arrays.asList(this.labelXpath1Count, this.labelXpath2Count, this.labelXpath3Count, this.labelXpath4Count).forEach(

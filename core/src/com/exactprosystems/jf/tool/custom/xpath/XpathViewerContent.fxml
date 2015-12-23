@@ -11,7 +11,7 @@
 			<bottom>
 				<BorderPane prefHeight="31.0" prefWidth="600.0" BorderPane.alignment="CENTER">
 					<center>
-						<CustomFieldWithButton fx:id="cfMainExpression" BorderPane.alignment="CENTER"/>
+						<CustomFieldWithButton fx:id="cfMainExpression" promptText="Enter xpath here" BorderPane.alignment="CENTER"/>
 					</center>
 					<right>
 						<Label fx:id="lblFound" text="Label" BorderPane.alignment="CENTER"/>
