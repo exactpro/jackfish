@@ -9,6 +9,7 @@
 package com.exactprosystems.jf.app;
 
 import com.exactprosystems.jf.api.app.ControlKind;
+import com.exactprosystems.jf.api.app.IRemoteApplication;
 import com.exactprosystems.jf.api.app.Locator;
 import com.exactprosystems.jf.api.common.Str;
 
@@ -32,7 +33,6 @@ import java.rmi.RemoteException;
 public class MatcherSwing <T extends Component> extends GenericTypeMatcher<T>
 {
 	public static final String	itemName		= "item";
-	public static final String	rectangleName	= "item";
 
 	public static final String	actionName		= "action";
 	public static final String	titleName		= "title";
@@ -315,7 +315,7 @@ public class MatcherSwing <T extends Component> extends GenericTypeMatcher<T>
     	}
 		if (addRectangles)
 		{
-			node.setUserData(rectangleName, component.getBounds(), null);
+			node.setUserData(IRemoteApplication.rectangleName, component.getBounds(), null);
 		}
     	
 		node.setAttribute(actionName,	getAction(component));
