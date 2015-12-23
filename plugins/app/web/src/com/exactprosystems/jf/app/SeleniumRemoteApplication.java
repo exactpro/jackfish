@@ -13,16 +13,15 @@ import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.app.js.JSInjection;
 import com.exactprosystems.jf.app.js.JSInjectionFactory;
 import org.apache.log4j.*;
-import org.jsoup.Jsoup;
 import org.openqa.selenium.*;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.Point;
 import org.openqa.selenium.remote.UnreachableBrowserException;
 import org.openqa.selenium.support.events.EventFiringWebDriver;
-import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import javax.imageio.ImageIO;
 import javax.xml.parsers.DocumentBuilder;
@@ -34,11 +33,98 @@ import java.io.File;
 import java.rmi.RemoteException;
 import java.util.*;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class SeleniumRemoteApplication extends RemoteApplication
 {
+	private static final String TAG_FIELD = "tag";
+	private static final String ATTRIBUTES_FIELD = "attributes";
+	private static final String ELEMENT_FIELD = "elem";
+	private static final String ELEMENT_PARENT_FIELD = "parent";
+	private static final String ATTRIBUTE_NAME_FIELD = "attrName";
+	private static final String ATTRIBUTE_VALUE_FIELD = "attrValue";
+	private static final String ELEMENT_TEXT_FIELD = "text";
+	private static final String ELEMENT_USER_DATA = "element";
+	private static final String RECTANGLE_X = "x";
+	private static final String RECTANGLE_Y = "y";
+	private static final String RECTANGLE_W = "w";
+	private static final String RECTANGLE_H = "h";
+
+
+
+	private static final String SCRIPT =
+					"function check(e) {\n" +
+					"    if (e.tagName === undefined) {\n" +
+					"        return false;\n" +
+					"    }\n" +
+					"    return true;\n" +
+					"};\n" +
+					"\n" +
+					"function text(e) {\n" +
+					"    if (e.tagName === 'input') {\n" +
+					"        return e.value;\n" +
+					"    }\n" +
+					"    return e.text;\n" +
+					"}\n" +
+					"\n" +
+					"function attrsOfElement(e) {\n" +
+					"    var a = [];\n" +
+					"    var attrs = e.attributes;\n" +
+					"    for(var i = 0; i < attrs.length; i++) {\n" +
+					"        var t = attrs[i];\n" +
+					"        console.log(t.nodeValue);\n" +
+					"        a.push({\n" +
+					"            "+ATTRIBUTE_NAME_FIELD+" : t.nodeName,\n" +
+					"            "+ATTRIBUTE_VALUE_FIELD+" : t.nodeValue\n" +
+					"        });\n" +
+					"    }\n" +
+					"    return a;\n" +
+					"}\n" +
+					"\n" +
+					"function rect(e) {\n" +
+					"    if (check(e)) {\n" +
+					"        return {\n" +
+					"            "+RECTANGLE_X+" : e.offsetLeft,\n" +
+					"            "+RECTANGLE_Y+" : e.offsetTop,\n" +
+					"            "+RECTANGLE_H+" : e.offsetHeight,\n" +
+					"            "+RECTANGLE_W+" : e.offsetWidth\n" +
+					"        }\n" +
+					"    }\n" +
+					"    return null;\n" +
+					"};\n" +
+					"\n" +
+					"function go(element, array, needRoot) {\n" +
+					"    if (check(element)) {\n" +
+					"        var temp = {\n" +
+					"            "+TAG_FIELD+" : element.tagName,\n" +
+					"            "+ATTRIBUTES_FIELD+" : attrsOfElement(element),\n" +
+					"            "+IRemoteApplication.rectangleName+" : rect(element),\n" +
+					"            "+ELEMENT_TEXT_FIELD+" : text(element),\n" +
+					"            "+ELEMENT_FIELD+" : element\n" +
+					"        };\n" +
+					"        if (needRoot === true) {\n" +
+					"            temp."+ELEMENT_PARENT_FIELD+" = element.parentElement;\n" +
+					"        }\n" +
+					"        else {\n" +
+					"            temp."+ELEMENT_PARENT_FIELD+" = element;\n" +
+					"        }\n" +
+					"        array.push(temp);\n" +
+					"        var els = element.childNodes;\n" +
+					"        for(var i=0; i<els.length; i++) {\n" +
+					"            go(els[i],array,true);\n" +
+					"        }\n" +
+					"    }\n" +
+					"};\n" +
+					"\n" +
+					"function q(root) {\n" +
+					"    var rectangles = [];\n" +
+					"    console.log('start')\n" +
+					"    go(root, rectangles, false);\n" +
+					"    console.log(\"end. found : \" + rectangles.length + \" elements\");\n" +
+					"    return rectangles;\n" +
+					"};\n" +
+					"return q(arguments[0]);"
+			;
+
 	private static Map<String, ArrayList<ControlKind>> mapTagsControlKind = new HashMap<>();
 
 	public static final String itemName 	= "item";
@@ -599,25 +685,72 @@ public class SeleniumRemoteApplication extends RemoteApplication
 	@Override
 	protected Document getTreeDerived(Locator owner) throws Exception
 	{
-		WebElement element;
+		WebElement ownerElement;
 		if (owner == null)
 		{
-			element = this.driver.findElement(By.tagName("body"));
+			ownerElement = this.driver.findElement(By.tagName("body"));
 		}
 		else
 		{
-			element = this.operationExecutor.find(null, owner);
+			ownerElement = this.operationExecutor.find(null, owner);
 		}
 		try
 		{
 			DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
 			Document document = docBuilder.newDocument();
-			String outerHtml = element.getAttribute("outerHTML");
-			org.jsoup.nodes.Document doc = Jsoup.parseBodyFragment(outerHtml);
-			org.jsoup.nodes.Element body = doc.body().child(0);
-			buildDom(document, document, body);
+			Object returnObject = driver.executeScript(SCRIPT, ownerElement);
+			/**
+			 * every row from o - is object, string value of them like this
+			 * [elem=[org.openqa.selenium.remote.RemoteWebElement@67502cce -> unknown locator], parent=[org.openqa.selenium.remote.RemoteWebElement@67502cce -> unknown locator], attributes=[{attrValue=position:absolute;width:500px;height:270px;top:0px;left:0px, attrName=style}, {attrValue=html1, attrName=id}], rectangle={w=500, x=0, h=270, y=0}, tag=DIV, id=html1, text=null, parentId=html1]
+			 * where	[] - list/array;
+			 * 			{} - map;
+			 * 	[org.openqa.selenium.remote.RemoteWebElement@67502cce -> unknown locator] - RemoteWebElement.toString();
+			 */
+			List<Map<String, Object>> list = (List<Map<String, Object>>) returnObject;
 
+			/**
+			 * we get first element of this list - this is root element;
+			 */
+			Map<String, Object> rootElement = list.get(0);
+			Element rootElem = document.createElement(((String) rootElement.get(TAG_FIELD)).toLowerCase());
+			setAttributes(rootElem, ((List<Map<String, String>>) rootElement.get(ATTRIBUTES_FIELD)));
+			rootElem.setUserData(IRemoteApplication.rectangleName, createRectangle((Map<String, String>) rootElement.get(IRemoteApplication.rectangleName)), null);
+			rootElem.setUserData(ELEMENT_USER_DATA, rootElement.get(ELEMENT_FIELD), null);
+			document.appendChild(rootElem);
+			String text = (String) rootElement.get(ELEMENT_TEXT_FIELD);
+			if (!Str.IsNullOrEmpty(text))
+			{
+				rootElem.setTextContent(text);
+			}
+
+			/**
+			 * for remaining rows we create element, find parent for them and put in document with attributes and text
+			 */
+			for (int i = 1; i < list.size(); i++)
+			{
+				Map<String, Object> el = list.get(i);
+				Element element = document.createElement(((String) el.get(TAG_FIELD)).toLowerCase());
+				setAttributes(element, ((List<Map<String, String>>) el.get(ATTRIBUTES_FIELD)));
+				element.setUserData(ELEMENT_USER_DATA, el.get(ELEMENT_FIELD), null);
+				String textElement = (String) el.get(ELEMENT_TEXT_FIELD);
+				if (!Str.IsNullOrEmpty(textElement))
+				{
+					element.setTextContent(textElement);
+				}
+				WebElement parent1 = (WebElement) el.get(ELEMENT_PARENT_FIELD);
+				Node parent = findParent(rootElem, parent1);
+				if (parent == null)
+				{
+					rootElem.appendChild(element);
+				}
+				else
+				{
+					parent.appendChild(element);
+				}
+				element.setUserData(IRemoteApplication.rectangleName, createRectangle(((Map<String, String>) el.get(IRemoteApplication.rectangleName))), null);
+			}
+			clearDocument(document);
 			return document;
 		}
 		catch (Exception e)
@@ -627,44 +760,54 @@ public class SeleniumRemoteApplication extends RemoteApplication
 		return null;
 	}
 
-	private void setNodeAttributes(Element node, org.jsoup.nodes.Element element)
+	/**
+	 * remove all WebElement's from document
+	 */
+	private void clearDocument(Node document)
 	{
-		String s = element.attributes().toString();
-		if (!s.isEmpty())
+		document.setUserData(ELEMENT_USER_DATA, null, null);
+		for(int i =0; i < document.getChildNodes().getLength(); i++)
 		{
-			s = s.substring(1);
-		}
-
-		String attributes = s;
-		Pattern pattern = Pattern.compile("([^\\s]+?)=\"(.*?)\"\\s?");
-		Matcher matcher = pattern.matcher(attributes);
-		while (matcher.find())
-		{
-			String attrName = matcher.group(1);
-			String attrValue = matcher.group(2);
-			try
-			{
-				node.setAttribute(attrName, attrValue);
-			} 
-			catch (DOMException e)
-			{ } // nothing to do - just to validate attrName
-		}
-		String ownText = element.ownText();
-		if (!Str.IsNullOrEmpty(ownText))
-		{
-			node.setTextContent(ownText);
+			Node item = document.getChildNodes().item(i);
+			item.setUserData(ELEMENT_USER_DATA, null, null);
+			clearDocument(item);
 		}
 	}
 
-	private void buildDom(Document document, Node current, org.jsoup.nodes.Element element)
+	private void setAttributes(Element element, List<Map<String, String>> map)
 	{
-		Element node = document.createElement(element.tagName());
-		setNodeAttributes(node, element);
-		current.appendChild(node);
-		for (org.jsoup.nodes.Element child : element.children())
+		for (Map<String, String> att : map)
 		{
-			buildDom(document, node, child);
+			element.setAttribute(att.get(ATTRIBUTE_NAME_FIELD), att.get(ATTRIBUTE_VALUE_FIELD));
 		}
+	}
+
+	private Node findParent(Node root, WebElement element)
+	{
+		NodeList childNodes = root.getChildNodes();
+		for (int i = 0; i < childNodes.getLength(); i++)
+		{
+			Node item = childNodes.item(i);
+			if (element.equals(item.getUserData(ELEMENT_USER_DATA)))
+			{
+				return item;
+			}
+			Node parent = findParent(item, element);
+			if (parent != null)
+			{
+				return parent;
+			}
+		}
+		return null;
+	}
+
+	private java.awt.Rectangle createRectangle(Map<String, String> map)
+	{
+		int x = Integer.parseInt(String.valueOf(map.get(RECTANGLE_X)));
+		int y = Integer.parseInt(String.valueOf(map.get(RECTANGLE_Y)));
+		int h = Integer.parseInt(String.valueOf(map.get(RECTANGLE_H)));
+		int w = Integer.parseInt(String.valueOf(map.get(RECTANGLE_W)));
+		return new java.awt.Rectangle(x, y, w, h);
 	}
 
 	@Override
