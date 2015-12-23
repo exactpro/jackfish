@@ -12,7 +12,6 @@ import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.app.js.JSInjection;
 import com.exactprosystems.jf.app.js.JSInjectionFactory;
-
 import org.apache.log4j.*;
 import org.jsoup.Jsoup;
 import org.openqa.selenium.*;
@@ -28,7 +27,6 @@ import org.w3c.dom.Node;
 import javax.imageio.ImageIO;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-
 import java.awt.*;
 import java.awt.event.InputEvent;
 import java.awt.image.BufferedImage;
@@ -616,8 +614,8 @@ public class SeleniumRemoteApplication extends RemoteApplication
 			DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
 			Document document = docBuilder.newDocument();
 			String outerHtml = element.getAttribute("outerHTML");
-			org.jsoup.nodes.Document doc = Jsoup.parse(outerHtml);
-			org.jsoup.nodes.Element body = doc.getElementsByTag("body").get(0);
+			org.jsoup.nodes.Document doc = Jsoup.parseBodyFragment(outerHtml);
+			org.jsoup.nodes.Element body = doc.body().child(0);
 			buildDom(document, document, body);
 
 			return document;
