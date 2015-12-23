@@ -18,6 +18,8 @@ import java.util.Map;
 
 public interface IRemoteApplication extends Remote
 {
+	public static final String	rectangleName	= "rectangle";
+	
 	void 					createLogger(String logName, String serverLogLevel, String serverLogPattern) throws RemoteException;
 	void 					connect		(Map<String, String> args) throws RemoteException;
 	void 					run			(Map<String, String> args) throws RemoteException;
