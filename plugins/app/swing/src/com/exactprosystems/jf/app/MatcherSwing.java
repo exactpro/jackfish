@@ -31,14 +31,15 @@ import java.rmi.RemoteException;
 
 public class MatcherSwing <T extends Component> extends GenericTypeMatcher<T>
 {
-	public static final String itemName 	= "item";
+	public static final String	itemName		= "item";
+	public static final String	rectangleName	= "item";
 
-	public static final String actionName 	= "action";
-	public static final String titleName 	= "title";
-	public static final String textName 	= "text";
-	public static final String tooltipName 	= "tooltip";
-	public static final String nameName 	= "name";
-	public static final String className 	= "class";
+	public static final String	actionName		= "action";
+	public static final String	titleName		= "title";
+	public static final String	textName		= "text";
+	public static final String	tooltipName		= "tooltip";
+	public static final String	nameName		= "name";
+	public static final String	className		= "class";
 	
 	public MatcherSwing(Class<T> type, Component owner, ControlKind controlKind, Locator locator) throws RemoteException
 	{
@@ -55,7 +56,7 @@ public class MatcherSwing <T extends Component> extends GenericTypeMatcher<T>
 		{
 			try
 			{
-				Document document = createDocument(owner, true);
+				Document document = createDocument(owner, true, false);
 				XPathFactory factory = XPathFactory.newInstance();
 				XPath xPath = factory.newXPath();
 
@@ -73,12 +74,12 @@ public class MatcherSwing <T extends Component> extends GenericTypeMatcher<T>
 		logger.debug("Matcher locator = " + locator);
 	}
 
-	public static Document createDocument(Component owner, boolean addItems) throws ParserConfigurationException
+	public static Document createDocument(Component owner, boolean addItems, boolean addRectangles) throws ParserConfigurationException
 	{
 		DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder builder = builderFactory.newDocumentBuilder();
 		Document document = builder.newDocument();
-		buildDom(document, document, owner, addItems);
+		buildDom(document, document, owner, addItems, addRectangles);
 		
 		return document;
 	}
@@ -87,7 +88,7 @@ public class MatcherSwing <T extends Component> extends GenericTypeMatcher<T>
 	{
 		try
 		{
-			Document document = createDocument(owner, true);
+			Document document = createDocument(owner, true, false);
 			XPathFactory factory = XPathFactory.newInstance();
 			XPath xPath = factory.newXPath();
 
@@ -285,7 +286,7 @@ public class MatcherSwing <T extends Component> extends GenericTypeMatcher<T>
 		return result;
 	}
 
-    public static void buildDom(Document document, Node current, Component component, boolean addItems)
+    public static void buildDom(Document document, Node current, Component component, boolean addItems, boolean addRectangles)
     {
     	if (component == null)
     	{
@@ -308,10 +309,14 @@ public class MatcherSwing <T extends Component> extends GenericTypeMatcher<T>
 			logger.debug("Error on create element with tag : '" + tagName+"'. Component class simple name : '"+ simpleName +"'.");
 			throw e;
 		}
-		if(addItems)
+		if (addItems)
     	{
     		node.setUserData(itemName, component, null);
     	}
+		if (addRectangles)
+		{
+			node.setUserData(rectangleName, component.getBounds(), null);
+		}
     	
 		node.setAttribute(actionName,	getAction(component));
 		node.setAttribute(titleName, 	getTitle(component));
@@ -331,7 +336,7 @@ public class MatcherSwing <T extends Component> extends GenericTypeMatcher<T>
     		
     		for(Component child : container.getComponents())
     		{
-    			buildDom(document, node, child, addItems);
+    			buildDom(document, node, child, addItems, addRectangles);
     		}
     	}
     }

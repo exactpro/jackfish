@@ -517,7 +517,7 @@ public class SwingRemoteApplication extends RemoteApplication
 				component = this.operationExecutor.find(null, owner).target;
 			}
 
-			return MatcherSwing.createDocument(component, false);
+			return MatcherSwing.createDocument(component, false, true);
 		}
 		catch (Exception e)
 		{
