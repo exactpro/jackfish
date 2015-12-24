@@ -113,8 +113,8 @@ public class XpathViewer
 
 		Rectangle rectangle = (Rectangle) this.currentNode.getUserData(IRemoteApplication.rectangleName);
 		Optional.ofNullable(rectangle).ifPresent(rect -> {
-			rect.setRect(rect.x - xOffset, rect.y - yOffset, rect.width, rect.height);
-			this.controller.displayRectangle(rect);
+			Rectangle newRectangle = new Rectangle(rect.x - xOffset, rect.y - yOffset, rect.width, rect.height);
+			this.controller.displayRectangle(newRectangle);
 		});
 	}
 	

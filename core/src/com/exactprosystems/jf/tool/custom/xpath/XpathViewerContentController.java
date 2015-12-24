@@ -277,8 +277,11 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 
 	public void displayRectangle(Rectangle rectangle)
 	{
-		this.rectangle.updateRectangle(rectangle);
-		this.rectangle.setVisible(true);
+		if (this.rectangle != null)
+		{
+			this.rectangle.updateRectangle(rectangle);
+			this.rectangle.setVisible(true);
+		}
 	}
 
 	public void hideRectangle()
@@ -298,6 +301,7 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 		imageView.setImage(image);
 		this.group.getChildren().add(imageView);
 		this.rectangle = new CustomRectangle();
+		this.rectangle.addStyleClass(CssVariables.XPATH_RECTANGLE);
 		this.rectangle.setGroup(this.group);
 		this.rectangle.setWidthLine(LayoutExpressionBuilderController.BORDER_WIDTH);
 		this.rectangle.setVisible(false);

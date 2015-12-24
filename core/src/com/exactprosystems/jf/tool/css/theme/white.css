@@ -212,6 +212,11 @@
 	-fx-fill : black;
 
 }
+.xpathRectangle {
+	-fx-stroke : white;
+	-fx-effect : innershadow(gaussian, black, 1, 1, 0,0);
+
+}
 
 /*grid pane on dictionary tab*/
 .gridPaneBorder {

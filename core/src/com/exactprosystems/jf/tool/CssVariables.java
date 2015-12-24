@@ -48,6 +48,7 @@ public class CssVariables
 	public static final String	XPATH_ATTRIBUTE_NAME		= "xpathAttrName";
 	public static final String	XPATH_ATTRIBUTE_VALUE		= "xpathAttrValue";
 	public static final String	XPATH_TEXT					= "xpathText";
+	public static final String	XPATH_RECTANGLE				= "xpathRectangle";
 
 	/*Grid pane on dictionary tab*/
 	public static final String	GRID_PANE_BORDER			= "gridPaneBorder";
