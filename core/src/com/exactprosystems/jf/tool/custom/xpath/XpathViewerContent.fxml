@@ -26,7 +26,12 @@
 								<Group fx:id="group"/>
 							</content>
 						</ScrollPane>
-						<TreeView fx:id="treeView" prefHeight="200.0" prefWidth="200.0"/>
+						<AnchorPane maxHeight="Infinity" maxWidth="Infinity">
+							<children>
+								<TreeView fx:id="treeView" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0"/>
+								<Button fx:id="btnFind" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0"/>
+							</children>
+						</AnchorPane>
 					</items>
 				</SplitPane>
 			</center>
@@ -35,7 +40,7 @@
 					<left>
 						<HBox alignment="CENTER_LEFT">
 							<children>
-								<CheckBox fx:id="checkBoxUseImage" mnemonicParsing="false" text="image" disable="true" BorderPane.alignment="CENTER"/>
+								<CheckBox fx:id="checkBoxUseImage" disable="true" mnemonicParsing="false" text="image" BorderPane.alignment="CENTER"/>
 								<Separator orientation="VERTICAL" prefHeight="200.0"/>
 							</children>
 						</HBox>

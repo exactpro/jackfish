@@ -68,6 +68,7 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 	public BorderPane findPanelOwner;
 	public CheckBox checkBoxUseImage;
 	public Group group;
+	public Button btnFind;
 
 	@FXML
 	private Label				lblFound;
@@ -119,6 +120,7 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 		});
 		this.findPanelOwner.setCenter(findPanel);
 		listeners();
+		Platform.runLater(() -> Common.customizeLabeled(btnFind, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.FIND_ON_MATRIX));
 	}
 
 	@Override

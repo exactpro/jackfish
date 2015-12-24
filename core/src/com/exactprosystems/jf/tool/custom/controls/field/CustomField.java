@@ -14,17 +14,15 @@ import javafx.scene.Node;
 import javafx.scene.control.Skin;
 import javafx.scene.control.TextField;
 
-import java.util.Optional;
-
 public abstract class CustomField extends TextField
 {
 	public CustomField(String text)
 	{
 		super(text);
 		getStyleClass().add(CssVariables.CUSTOM_TEXT_FIELD);
-		this.editableProperty().addListener((observable, oldValue, newValue) -> {
-			Optional.ofNullable(this.right.get()).ifPresent(node -> node.setOpacity(newValue ? 1.0 : 0.0));
-		});
+//		this.editableProperty().addListener((observable, oldValue, newValue) -> {
+//			Optional.ofNullable(this.right.get()).ifPresent(node -> node.setOpacity(newValue ? 1.0 : 0.0));
+//		});
 	}
 
 	public CustomField()
