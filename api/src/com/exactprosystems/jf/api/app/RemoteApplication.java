@@ -377,19 +377,6 @@ public abstract class RemoteApplication implements IRemoteApplication
 		}
 	}
 	
-	public void highlight	(Locator owner, String xpath) throws RemoteException
-	{
-		try
-		{
-			highlightDerived(owner, xpath);
-		}
-		catch (Exception e)
-		{
-			String msg = String.format("Error highlight(%s, %s)", owner, xpath);
-			throw new ProxyException(msg, e.getMessage(), e);
-		}
-	}
-
 
 	protected abstract void createLoggerDerived(String logName, String serverLogLevel, String serverLogPattern) throws Exception;
 	
@@ -430,8 +417,6 @@ public abstract class RemoteApplication implements IRemoteApplication
 	protected abstract void startGrabbingDerived() throws Exception;
 
 	protected abstract void endGrabbingDerived() throws Exception;
-
-	protected abstract void highlightDerived(Locator owner, String xpath) throws Exception;
 
 	private static String removeExtraQuotes(String string)
 	{

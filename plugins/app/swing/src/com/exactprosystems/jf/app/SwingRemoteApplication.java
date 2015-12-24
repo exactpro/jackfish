@@ -539,35 +539,6 @@ public class SwingRemoteApplication extends RemoteApplication
 		// done
 	}
 
-	@Override
-	protected void highlightDerived(Locator owner, String xpath) throws Exception
-	{
-		try
-		{
-			Component component = null;
-			if (owner == null)
-			{
-				component = this.operationExecutor.currentFrame();
-			}
-			else
-			{
-				component = this.operationExecutor.find(null, owner).target;
-			}
-
-			Component high = MatcherSwing.find(component, xpath);
-			if (high != null && high.isShowing())
-			{
-				this.highLighter.start(high.getLocationOnScreen(), high.getSize());
-			}
-		}
-		catch (Exception e)
-		{
-			logger.error(String.format("hightlightDerived(%s,%s)", owner, xpath));
-			logger.error(e.getMessage(), e);
-			throw e;
-		}
-	}
-
 	private Component componentAtPosition(Component component, int x, int y)
 	{
 		if (component == null)

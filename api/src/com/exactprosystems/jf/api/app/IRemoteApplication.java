@@ -41,5 +41,4 @@ public interface IRemoteApplication extends Remote
 	Document				getTree		(Locator owner) throws RemoteException;
 	void					startGrabbing() throws RemoteException;
 	void					endGrabbing	() throws RemoteException;
-	void 					highlight	(Locator owner, String xpath) throws RemoteException;
 }

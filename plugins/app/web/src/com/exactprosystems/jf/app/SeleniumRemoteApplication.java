@@ -823,27 +823,6 @@ public class SeleniumRemoteApplication extends RemoteApplication
 		this.jsInjection.stopInject(this.driver);
 	}
 
-	@Override
-	protected void highlightDerived(Locator owner, String xpath) throws Exception
-	{
-		SearchContext ownerElement = this.driver;
-		if (owner != null)
-		{
-			ownerElement = this.operationExecutor.find(null, owner);
-		}
-		WebElement currentElement = ownerElement.findElement(By.xpath(xpath));
-		this.jsInjection.startHighLight(this.driver, currentElement);
-		try
-		{
-			Thread.sleep(1000);
-		}
-		catch (Exception e)
-		{
-			//
-		}
-		this.jsInjection.stopHighLight(this.driver, currentElement);
-	}
-
 	private EventFiringWebDriver driver;
 
 	private boolean needTune = true;

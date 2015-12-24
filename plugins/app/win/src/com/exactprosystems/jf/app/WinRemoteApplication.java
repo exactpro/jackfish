@@ -238,13 +238,6 @@ public class WinRemoteApplication extends RemoteApplication
 	{
 	}
 
-	@Override
-	protected void highlightDerived(Locator owner, String xpath) throws Exception
-	{
-		// TODO Auto-generated method stub
-		
-	}
-
 	private Process			process;
 	private Driver 			driver;
 	public OperationExecutor<UIProxy> operationExecutor;
