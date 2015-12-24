@@ -105,8 +105,8 @@ public class XpathViewer
 		
 		String xpath1 = fullXpath(relativeNode, currentNode, false, 	null, 		true);
 		String xpath2 = fullXpath(relativeNode, currentNode, useText, 	parameters, true);
-		String xpath3 = fullXpath(null, 		currentNode, false, 	null, 		false);
-		String xpath4 = fullXpath(null,			currentNode, useText, 	parameters, false);
+		String xpath3 = fullXpath(relativeNode, currentNode, false, 	null, 		false);
+		String xpath4 = fullXpath(relativeNode,	currentNode, useText, 	parameters, false);
 		
 		this.controller.displayXpaths(xpath1, xpath2, xpath3, xpath4);
 		this.controller.displayCounters(evaluate(xpath1), evaluate(xpath2), evaluate(xpath3), evaluate(xpath4));
@@ -166,13 +166,12 @@ public class XpathViewer
 			return "//*";
 		}
 		
-		if (!fromRoot)
-		{
-			return "/" + xpath(node.getParentNode(), node, useText, parameters);
-		}
-		
 		if (relative == null)
 		{
+			if (!fromRoot)
+			{
+				return "/" + xpath(node.getParentNode(), node, useText, parameters);
+			}
 			return xpath(null, node, useText, parameters);
 		}
 		else
