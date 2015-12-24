@@ -603,10 +603,12 @@ CellView > .text-input.text-field{
 /*Layout builder*/
 .selfControl {
 	-fx-stroke : red;
+	-fx-effect : innershadow(gaussian, blue, 1, 1, 0,0);
 
 }
 .otherControl {
 	-fx-stroke : green;
+	-fx-effect : innershadow(gaussian, purple, 1, 1, 0,0);
 
 }
 .selfControlSelectedLine {

@@ -382,7 +382,7 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 			Element firstTr = doc.select(tag_tr).first();
 			if (firstTr == null)
 			{
-				throw new RemoteException("Table is empty");
+				throw new RemoteException("Headers not found. Check your header locator or table locator");
 			}
 			header = firstTr.children();
 			for (int i = 0; i < header.size(); i++)
