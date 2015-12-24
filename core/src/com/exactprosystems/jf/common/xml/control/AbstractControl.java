@@ -138,7 +138,7 @@ public abstract class AbstractControl implements IControl, Mutable
 		}
 		if (header != null)
 		{
-			abstractControl.set(headerName, header.getHeaderId());
+			abstractControl.set(headerName, header.getID());
 		}
 		return abstractControl;
 	}
@@ -406,7 +406,7 @@ public abstract class AbstractControl implements IControl, Mutable
 
 			IControl headerControl = window.getHeaderControl(this);
 			Locator header = headerControl == null ? null : headerControl.locator();
-
+			System.out.println("header in abs : " + header);
 			Locator element = locator();
 
 			Operation operation = null;
