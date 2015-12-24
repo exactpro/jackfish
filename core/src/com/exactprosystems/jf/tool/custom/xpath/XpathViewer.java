@@ -4,13 +4,16 @@ import com.exactprosystems.jf.api.app.ControlKind;
 import com.exactprosystems.jf.api.app.IRemoteApplication;
 import com.exactprosystems.jf.api.app.Locator;
 import com.exactprosystems.jf.tool.Common;
+
 import javafx.concurrent.Task;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import javax.xml.xpath.*;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -104,10 +107,10 @@ public class XpathViewer
 			relativeNode = nodes == null || nodes.isEmpty() ? null : nodes.get(0);
 		}
 		
-		String xpath1 = fullXpath(relativeNode, currentNode, false, null, true);
-		String xpath2 = fullXpath(relativeNode, currentNode, useText, parameters, true);
-		String xpath3 = fullXpath(null, currentNode, false, null, false);
-		String xpath4 = fullXpath(null, currentNode, useText, parameters, false);
+		String xpath1 = fullXpath(relativeNode, currentNode, false, 	null, 		true);
+		String xpath2 = fullXpath(relativeNode, currentNode, useText, 	parameters, true);
+		String xpath3 = fullXpath(null, 		currentNode, false, 	null, 		false);
+		String xpath4 = fullXpath(null,			currentNode, useText, 	parameters, false);
 		
 		this.controller.displayXpaths(xpath1, xpath2, xpath3, xpath4);
 		this.controller.displayCounters(evaluate(xpath1), evaluate(xpath2), evaluate(xpath3), evaluate(xpath4));
@@ -184,24 +187,31 @@ public class XpathViewer
 			return "/" + xpath(node.getParentNode(), node, useText, parameters);
 		}
 		
-		Node common = commonAncestor(relative, node);
-		Node current = relative;
-		String backPath = "";
-		while(current != null && current != common)
+		if (relative == null)
 		{
-			current = current.getParentNode();
-			backPath = backPath.concat("/..");
+			return xpath(null, node, useText, parameters);
 		}
-		return xpath(null, relative, false, null) + backPath + xpath(common, node, useText, parameters);
+		else
+		{
+			Node common = commonAncestor(relative, node);
+			Node current = relative;
+			String backPath = "";
+			while(current != null && !current.equals(common))
+			{
+				current = current.getParentNode();
+				backPath += "/..";
+			}
+			return this.relativeXpath + backPath + xpath(common, node, useText, parameters);
+		}
 	}
 	
 	private String xpath(Node parent, Node node, boolean useText, List<String> parameters)
 	{
 		if (node instanceof Document)
 		{
-			return "/";
+			return "";
 		}
-		if (node == null || node == parent)
+		if (node == null || node.equals(parent))
 		{
 			return "";
 		}
@@ -228,7 +238,7 @@ public class XpathViewer
 		{
 			Node ancestor1 = iterator1.next();
 			Node ancestor2 = iterator2.next();
-			if (ancestor1 != ancestor2)
+			if (!ancestor1.equals(ancestor2))
 			{
 				break;
 			}
@@ -279,7 +289,7 @@ public class XpathViewer
 			{
 				result++;
 			}
-			if (item == node)
+			if (item.equals(node))
 			{
 				return result;
 			}
