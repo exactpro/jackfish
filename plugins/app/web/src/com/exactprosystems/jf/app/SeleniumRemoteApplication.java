@@ -82,11 +82,12 @@ public class SeleniumRemoteApplication extends RemoteApplication
 					"\n" +
 					"function rect(e) {\n" +
 					"    if (check(e)) {\n" +
+					"    var rect = e.getBoundingClientRect(); \n" +
 					"        return {\n" +
-					"            "+RECTANGLE_X+" : e.offsetLeft,\n" +
-					"            "+RECTANGLE_Y+" : e.offsetTop,\n" +
-					"            "+RECTANGLE_H+" : e.offsetHeight,\n" +
-					"            "+RECTANGLE_W+" : e.offsetWidth\n" +
+					"            "+RECTANGLE_X+" : rect.left,\n" +
+					"            "+RECTANGLE_Y+" : rect.top,\n" +
+					"            "+RECTANGLE_H+" : rect.height,\n" +
+					"            "+RECTANGLE_W+" : rect.width \n" +
 					"        }\n" +
 					"    }\n" +
 					"    return null;\n" +

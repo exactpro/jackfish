@@ -1,19 +1,15 @@
 package com.exactprosystems.jf.tool.custom.xpath;
 
-import com.exactprosystems.jf.api.app.ControlKind;
 import com.exactprosystems.jf.api.app.IRemoteApplication;
 import com.exactprosystems.jf.api.app.Locator;
 import com.exactprosystems.jf.tool.Common;
-
 import javafx.concurrent.Task;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import javax.xml.xpath.*;
-
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -114,24 +110,12 @@ public class XpathViewer
 		
 		this.controller.displayXpaths(xpath1, xpath2, xpath3, xpath4);
 		this.controller.displayCounters(evaluate(xpath1), evaluate(xpath2), evaluate(xpath3), evaluate(xpath4));
-		
-		if (this.service != null)
-		{
-			Task<Rectangle> rectangleTask = new Task<Rectangle>()
-			{
-				@Override
-				protected Rectangle call() throws Exception
-				{
-					Locator locator = new Locator().kind(ControlKind.Any).id("empty").xpath(xpath1).absoluteXpath(true);
-					Rectangle rectangle = service.getRectangle(owner, locator);
-					rectangle.setRect(rectangle.x - xOffset, rectangle.y - yOffset, rectangle.width, rectangle.height);
-					return rectangle;
-				}
-			};
-			rectangleTask.setOnSucceeded(event -> this.controller.displayRectangle(((Rectangle) event.getSource().getValue())));
-			rectangleTask.setOnFailed(event -> this.controller.hideRectangle());
-			new Thread(rectangleTask).start();
-		}
+
+		Rectangle rectangle = (Rectangle) this.currentNode.getUserData(IRemoteApplication.rectangleName);
+		Optional.ofNullable(rectangle).ifPresent(rect -> {
+			rect.setRect(rect.x - xOffset, rect.y - yOffset, rect.width, rect.height);
+			this.controller.displayRectangle(rect);
+		});
 	}
 	
 	public static String text(Node node)
