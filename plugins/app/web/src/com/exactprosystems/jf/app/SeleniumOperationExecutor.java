@@ -28,10 +28,8 @@ import org.openqa.selenium.support.ui.Select;
 import java.awt.*;
 import java.lang.reflect.Method;
 import java.rmi.RemoteException;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
@@ -358,6 +356,12 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 				res[i][j] = cells.get(j).text();
 			}
 		}
+		logger.debug("Result table");
+		for (String[] re : res)
+		{
+			logger.debug(Arrays.toString(re));
+		}
+		logger.debug("############");
 		return res;
 	}
 
