@@ -21,11 +21,10 @@ import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.*;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -67,7 +66,11 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 	public SplitPane splitPane;
 	public Group group;
 	public AnchorPane anchorTree;
-	public TitledPane titledPaneImage;
+	public CheckBox cbShowImage;
+	public ScrollPane scrollPaneImage;
+	public TitledPane tpHelper;
+	public GridPane gridPaneHelper;
+	public AnchorPane anchorImage;
 
 	private FindPanel<TreeItem<XpathItem>> findPanel;
 	@FXML
@@ -82,7 +85,6 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 	public void initialize(URL location, ResourceBundle resources)
 	{
 		createTreeView();
-		this.splitPane.getStyleClass().addAll(CssVariables.SPLIT_PANE_HIDE_DIVIDER); //TODO go this string to CssVariables
 		this.findPanel = new FindPanel<>(new IFind<TreeItem<XpathItem>>()
 		{
 			@Override
@@ -119,7 +121,14 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 				return Arrays.stream(what.split("\\s")).filter(s -> !SearchHelper.matches(text, s, matchCase, wholeWord)).count() == 0;
 			}
 		});
+		this.splitPane.getStyleClass().add(CssVariables.SPLIT_PANE_HIDE_DIVIDER);
 		listeners();
+		ImageView imageViewScale = new ImageView(new Image(CssVariables.Icons.SCALE_ICON_SMALL));
+		StackPane scalePane = new StackPane(imageViewScale);
+		this.anchorImage.getChildren().add(scalePane);
+		AnchorPane.setTopAnchor(scalePane, 5.0);
+		AnchorPane.setLeftAnchor(scalePane, 0.0);
+
 		ImageView imageView = new ImageView(new Image(CssVariables.Icons.FIND_ICON_SMALL));
 		StackPane imagePane = new StackPane(imageView);
 		this.anchorTree.getChildren().add(imagePane);
@@ -127,7 +136,6 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 		this.findPanel.setVisible(false);
 		AnchorPane.setBottomAnchor(this.findPanel, 0.0);
 		AnchorPane.setLeftAnchor(this.findPanel, 25.0);
-		AnchorPane.setRightAnchor(this.findPanel, 0.0);
 
 		AnchorPane.setBottomAnchor(imagePane, 5.0);
 		AnchorPane.setLeftAnchor(imagePane, 0.0);
@@ -286,12 +294,12 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 		if (image != null)
 		{
 			this.splitPane.getStyleClass().remove(CssVariables.SPLIT_PANE_HIDE_DIVIDER);
-			this.titledPaneImage.setCollapsible(true);
-			this.titledPaneImage.expandedProperty().addListener((observable, oldValue, newValue) -> {
-				this.splitPane.setDividerPositions(newValue ? 0.5 : 0.0);
-			});
-			this.titledPaneImage.setExpanded(true);
+			scrollPaneImage.setMaxHeight(Region.USE_COMPUTED_SIZE);
+			scrollPaneImage.setPrefHeight(Region.USE_COMPUTED_SIZE);
+			this.cbShowImage.setDisable(false);
+			this.splitPane.setDividerPositions(0.5);
 			createCanvas(image);
+			this.cbShowImage.setSelected(true);
 		}
 	}
 
@@ -463,6 +471,16 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 
 	private void listeners()
 	{
+		this.cbShowImage.selectedProperty().addListener((observable, oldValue, newValue) -> {
+			showImage(newValue);
+		});
+		gridPaneHelper.visibleProperty().addListener((observable, oldValue, newValue) -> {
+			//workaround
+			if (!newValue && ((int) splitPane.getDividerPositions()[0]) == 0 && !cbShowImage.isSelected())
+			{
+				splitPane.setDividerPositions(0.0);
+			}
+		});
 		this.cfRelativeFrom.setHandler(event -> {
 			this.model.setRelativeXpath(null);
 			this.cfRelativeFrom.setText("");

@@ -196,6 +196,7 @@ public class CssVariables
 		public static final String	COLOR_OFF_MATRIX_ICON	= IMAGES_DIR + "/colorOff.png";
 		public static final String	FIND_ON_MATRIX			= IMAGES_DIR + "/find.png";
 		public static final String	FIND_ICON_SMALL			= IMAGES_DIR + "/find_small.png";
+		public static final String	SCALE_ICON_SMALL		= IMAGES_DIR + "/scale_small.png";
 		public static final String	FIND_NEXT				= IMAGES_DIR + "/next.png";
 		public static final String	FIND_PREVIOUS			= IMAGES_DIR + "/previous.png";
 		public static final String	LOG						= IMAGES_DIR + "/log.png";
