@@ -134,9 +134,9 @@ public class ActionsController implements Initializable, ContainingParent
 		tryCatch(() -> this.navigation.find(), "Error on find");
 	}
 
-	public void operate(ActionEvent actionEvent)
+	public void doIt(ActionEvent actionEvent)
 	{
-		tryCatch(() -> this.navigation.operate((Operation) this.expressionField.getEvaluatedValue()), "Error on operate");
+		tryCatch(() -> this.navigation.doIt(this.expressionField.getEvaluatedValue()), "Error on operate");
 	}
 	
 	

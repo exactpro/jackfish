@@ -21,6 +21,7 @@ import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.main.Main;
 import com.exactprosystems.jf.tool.settings.SettingsPanel;
 import com.exactprosystems.jf.tool.settings.Theme;
+
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
@@ -37,6 +38,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
+
 import org.w3c.dom.Document;
 
 import java.net.URL;
@@ -250,9 +252,9 @@ public class NavigationController implements Initializable, ContainingParent
 		this.model.find(currentElement(), currentWindow());
 	}
 
-	public void operate(Operation operation) throws Exception
+	public void doIt(Object obj) throws Exception
 	{
-		this.model.operate(operation, currentElement(), currentWindow());
+		this.model.doIt(obj, currentElement(), currentWindow());
 	}
 	
 	public void chooseXpath(IControl selectedOwner, String xpath) throws Exception

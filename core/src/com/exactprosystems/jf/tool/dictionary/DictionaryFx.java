@@ -22,10 +22,12 @@ import com.exactprosystems.jf.tool.ApplicationConnector;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.dictionary.DictionaryFxController.Result;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
+
 import javafx.concurrent.Task;
 import javafx.scene.control.ButtonType;
 
 import javax.xml.bind.annotation.XmlRootElement;
+
 import java.io.Reader;
 import java.util.Arrays;
 import java.util.Collection;
@@ -722,37 +724,65 @@ public class DictionaryFx extends GuiDictionary
 			}
 			ImageWrapper imageWrapper = service.getImage(owner, locator);
 			displayImage(imageWrapper);
-			
-//			displayApplicationControl(null);
 		}
 	}
 
-	public void operate(Operation operation, IControl control, IWindow window) throws Exception
+	public void doIt(Object obj, IControl control, IWindow window) throws Exception
 	{
-		Optional<OperationResult> result = this.operate(operation, window, control);
-		result.ifPresent(operate -> {
-			if (operate.isColorMapIsFilled())
+		if (obj instanceof Operation)
+		{
+			Operation operation = (Operation)obj;
+			
+			Optional<OperationResult> result = this.operate(operation, window, control);
+			result.ifPresent(operate -> 
 			{
-				this.controller.println(operate.getColorMap().entrySet().toString());
-			}
-			else if (operate.isMapFilled())
-			{
-				this.controller.println(operate.getMap().entrySet().toString());
-			}
-			else if (operate.isArrayFilled())
-			{
-				this.controller.println(Arrays.deepToString(operate.getArray()));
-			}
-			else
-			{
-				String val = operate.getText();
-				if (!Str.IsNullOrEmpty(val))
+				if (operate.isColorMapIsFilled())
 				{
-					this.controller.println("" + val);
+					this.controller.println(operate.getColorMap().entrySet().toString());
 				}
-				//			displayApplicationControl(null);
-			}
-		});
+				else if (operate.isMapFilled())
+				{
+					this.controller.println(operate.getMap().entrySet().toString());
+				}
+				else if (operate.isArrayFilled())
+				{
+					this.controller.println(Arrays.deepToString(operate.getArray()));
+				}
+				else
+				{
+					String val = operate.getText();
+					if (!Str.IsNullOrEmpty(val))
+					{
+						this.controller.println("" + val);
+					}
+				}
+			});
+		}
+		else if (obj instanceof Spec)
+		{
+			Spec spec = (Spec)obj;
+			
+			Optional<CheckingLayoutResult> result = this.check(spec, window, control);
+			result.ifPresent(check -> 
+			{
+				if (check.isOk())
+				{
+					this.controller.println("Check is passed");
+				}
+				else
+				{
+					this.controller.println("Check is failed:");
+					for (String err : check.getErrors())
+					{
+						this.controller.println("" + err);
+					}
+				}
+			});
+		}
+		else
+		{
+			this.controller.println("" + obj);
+		}
 	}
 
 	public void switchTo(String selectedItem) throws Exception
@@ -773,6 +803,10 @@ public class DictionaryFx extends GuiDictionary
 		}
 	}
 
+	
+	//------------------------------------------------------------------------------------------------------------------
+	// private methods
+	//------------------------------------------------------------------------------------------------------------------
 	private Optional<OperationResult> operate(Operation operation, IWindow window, IControl control) throws Exception
 	{
 		if (isApplicationRun())
@@ -788,10 +822,21 @@ public class DictionaryFx extends GuiDictionary
 		return Optional.empty();
 	}
 
-	
-	//------------------------------------------------------------------------------------------------------------------
-	// private methods
-	//------------------------------------------------------------------------------------------------------------------
+	private Optional<CheckingLayoutResult> check(Spec spec, IWindow window, IControl control) throws Exception
+	{
+		if (isApplicationRun())
+		{
+			IControl owner = window.getOwnerControl(control);
+			IControl rows = window.getRowsControl(control);
+			IControl header = window.getHeaderControl(control);
+
+			AbstractControl abstractControl = AbstractControl.createCopy(control, owner, rows, header);
+			CheckingLayoutResult result = abstractControl.checkLayout(this.applicationConnector.getAppConnection().getApplication().service(), window, spec);
+			return Optional.of(result);
+		}
+		return Optional.empty();
+	}
+
 	private void initController() throws Exception
 	{
 		if (!this.isControllerInit)
