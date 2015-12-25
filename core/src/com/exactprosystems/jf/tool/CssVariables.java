@@ -149,6 +149,10 @@ public class CssVariables
 	public static final String	LINE_TRIANGLE				= "layoutLineTriangle";
 	public static final String	CONTROL_ID					= "controlId";
 
+	/*FindPanel*/
+	public static final String	FIND_PANEL					= "findPanel";
+	public static final String	SPLIT_PANE_HIDE_DIVIDER		= "splitPaneHideDivider";
+
 	/**
 	 * Spinner css
 	 */
@@ -191,6 +195,7 @@ public class CssVariables
 		public static final String	COLOR_ON_MATRIX_ICON	= IMAGES_DIR + "/colorOn.png";
 		public static final String	COLOR_OFF_MATRIX_ICON	= IMAGES_DIR + "/colorOff.png";
 		public static final String	FIND_ON_MATRIX			= IMAGES_DIR + "/find.png";
+		public static final String	FIND_ICON_SMALL			= IMAGES_DIR + "/find_small.png";
 		public static final String	FIND_NEXT				= IMAGES_DIR + "/next.png";
 		public static final String	FIND_PREVIOUS			= IMAGES_DIR + "/previous.png";
 		public static final String	LOG						= IMAGES_DIR + "/log.png";

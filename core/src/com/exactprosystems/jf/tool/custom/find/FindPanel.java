@@ -40,6 +40,7 @@ public class FindPanel<T> extends BorderPane
 
 	public FindPanel()
 	{
+		this.getStyleClass().add(CssVariables.FIND_PANEL);
 		this.cfFind = new CustomFieldWithButton();
 		this.btnPrevious = new Button();
 		this.btnNext = new Button();

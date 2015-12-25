@@ -21,10 +21,11 @@ import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
-import javafx.scene.image.*;
 import javafx.scene.image.Image;
-import javafx.scene.layout.BorderPane;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -61,15 +62,14 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 	public Button				btnSaveXpath4;
 	public CheckBox				useText;
 	public HBox					hBoxCheckboxes;
-	public BorderPane			parentPane;
 	public CustomFieldWithButton cfRelativeFrom;
 	public CustomFieldWithButton cfMainExpression;
 	public SplitPane splitPane;
-	public BorderPane findPanelOwner;
-	public CheckBox checkBoxUseImage;
 	public Group group;
-	public Button btnFind;
+	public AnchorPane anchorTree;
+	public TitledPane titledPaneImage;
 
+	private FindPanel<TreeItem<XpathItem>> findPanel;
 	@FXML
 	private Label				lblFound;
 
@@ -82,7 +82,8 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 	public void initialize(URL location, ResourceBundle resources)
 	{
 		createTreeView();
-		FindPanel<TreeItem<XpathItem>> findPanel = new FindPanel<>(new IFind<TreeItem<XpathItem>>()
+		this.splitPane.getStyleClass().addAll(CssVariables.SPLIT_PANE_HIDE_DIVIDER); //TODO go this string to CssVariables
+		this.findPanel = new FindPanel<>(new IFind<TreeItem<XpathItem>>()
 		{
 			@Override
 			public void find(TreeItem<XpathItem> xpathItemTreeItem)
@@ -118,9 +119,24 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 				return Arrays.stream(what.split("\\s")).filter(s -> !SearchHelper.matches(text, s, matchCase, wholeWord)).count() == 0;
 			}
 		});
-		this.findPanelOwner.setCenter(findPanel);
 		listeners();
-		Platform.runLater(() -> Common.customizeLabeled(btnFind, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.FIND_ON_MATRIX));
+		ImageView imageView = new ImageView(new Image(CssVariables.Icons.FIND_ICON_SMALL));
+		StackPane imagePane = new StackPane(imageView);
+		this.anchorTree.getChildren().add(imagePane);
+		this.anchorTree.getChildren().add(this.findPanel);
+		this.findPanel.setVisible(false);
+		AnchorPane.setBottomAnchor(this.findPanel, 0.0);
+		AnchorPane.setLeftAnchor(this.findPanel, 25.0);
+		AnchorPane.setRightAnchor(this.findPanel, 0.0);
+
+		AnchorPane.setBottomAnchor(imagePane, 5.0);
+		AnchorPane.setLeftAnchor(imagePane, 0.0);
+		imageView.setOnMouseClicked(event -> this.findPanel.setVisible(!this.findPanel.isVisible()));
+
+		btnSaveXpath1.setUserData(btnXpath1);
+		btnSaveXpath2.setUserData(btnXpath2);
+		btnSaveXpath3.setUserData(btnXpath3);
+		btnSaveXpath4.setUserData(btnXpath4);
 	}
 
 	@Override
@@ -166,8 +182,7 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 	// ============================================================
 	public void setRelativeXpath(ActionEvent actionEvent)
 	{
-		String id = "#" + ((Button) actionEvent.getSource()).getId();
-		String text = ((Button) this.parentPane.getScene().lookup(id)).getText();
+		String text = ((Button) ((Button) actionEvent.getSource()).getUserData()).getText();
 		this.cfRelativeFrom.setText(text);
 		this.model.setRelativeXpath(this.cfRelativeFrom.getText());
 	}
@@ -270,10 +285,13 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 	{
 		if (image != null)
 		{
-			this.checkBoxUseImage.setDisable(false);
-			this.splitPane.setDividerPositions(0.5);
+			this.splitPane.getStyleClass().remove(CssVariables.SPLIT_PANE_HIDE_DIVIDER);
+			this.titledPaneImage.setCollapsible(true);
+			this.titledPaneImage.expandedProperty().addListener((observable, oldValue, newValue) -> {
+				this.splitPane.setDividerPositions(newValue ? 0.5 : 0.0);
+			});
+			this.titledPaneImage.setExpanded(true);
 			createCanvas(image);
-			this.checkBoxUseImage.setSelected(true);
 		}
 	}
 
@@ -288,7 +306,7 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 
 	public void hideRectangle()
 	{
-		this.rectangle.setVisible(false);
+		Optional.ofNullable(this.rectangle).ifPresent(cr -> cr.setVisible(false));
 	}
 
 	// ============================================================
@@ -457,9 +475,6 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 			this.model.applyXpath(newValue);
 		});
 
-		this.checkBoxUseImage.selectedProperty().addListener((observable, oldValue, newValue) -> {
-			showImage(newValue);
-		});
 		this.treeView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) ->
 		{
 			if (newValue != null)

@@ -628,3 +628,15 @@ CellView > .text-input.text-field{
 	-fx-font : 13 arial;
 	-fx-text-alignment:left
 }
+
+/*FindPanel*/
+.findPanel {
+	-fx-background-color : #d3d3d3;
+
+}
+.splitPaneHideDivider *.split-pane-divider {
+	-fx-padding: 0;
+	-fx-background-color: transparent;
+	-fx-background-insets: 0;
+	-fx-shape: " ";
+}
