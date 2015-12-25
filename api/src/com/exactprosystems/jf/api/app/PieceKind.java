@@ -122,12 +122,6 @@ public enum PieceKind implements Measure
 		}
 
 		@Override
-		protected boolean selfNeedOne()
-		{
-			return true;
-		}
-
-		@Override
 		protected <T> void performDerived(Piece piece, OperationExecutor<T> executor, List<T> self, List<T> others, CheckingLayoutResult result) throws Exception
 		{
 			check(piece, executor, self, others, result, this);
@@ -167,12 +161,6 @@ public enum PieceKind implements Measure
 		protected String formulaTemplate()
 		{
 			return ".%1$s(%3$s)";
-		}
-
-		@Override
-		protected boolean selfNeedOne()
-		{
-			return true;
 		}
 
 		@Override
@@ -715,6 +703,7 @@ public enum PieceKind implements Measure
 			return;
 		}
 
+		// TODO check the logic with otherNeedOne()
 		List<T> others = Collections.emptyList();
 		if (piece.locator != null)
 		{
@@ -761,7 +750,7 @@ public enum PieceKind implements Measure
 
 	protected boolean otherNeedOne()
 	{
-		return true;
+		return false;
 	}
 
 	protected String formulaTemplate()

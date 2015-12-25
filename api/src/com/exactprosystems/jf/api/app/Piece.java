@@ -27,22 +27,24 @@ public class Piece implements Serializable
 	{
 		StringBuilder sb = new StringBuilder(this.kind.toString());
 		sb.append('(');
+		String separator = "";
 		
-		if (this.name == null)
+		if (this.kind.useName())
 		{
-			if (this.owner != null)
+			separator = ", ";
+			if (this.locator != null)
 			{
-				sb.append(this.owner).append(", "); 
+				sb.append("'").append(this.locator.getId()).append("'");
 			}
-			sb.append(this.locator).append(", "); 
+			else
+			{
+				sb.append("'").append(this.name).append("'"); 
+			}
 		}
-		else
+
+		if (this.kind.useRange())
 		{
-			sb.append("'").append(this.name).append("', ");
-		}
-		if (range != null)
-		{
-			sb.append(range.toString("" + this.a, "" + this.b));
+			sb.append(separator).append(this.range.toString("" + this.a, "" + this.b));
 		}
 		
 		sb.append(")");
