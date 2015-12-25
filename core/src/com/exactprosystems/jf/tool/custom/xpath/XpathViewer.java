@@ -158,6 +158,13 @@ public class XpathViewer
 		this.controller.displayZoom(this.currentZoom);
 	}
 
+	public void resetZoom()
+	{
+		this.currentZoomPosition = 3;
+		this.currentZoom = zooms[this.currentZoomPosition];
+		this.controller.displayZoom(this.currentZoom);
+	}
+
 	// ============================================================
 	// private methods
 	// ============================================================

@@ -486,6 +486,15 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 	{
 		this.cbShowImage.selectedProperty().addListener((observable, oldValue, newValue) -> {
 			this.splitPane.setDividerPositions(newValue ? 0.5 : 0.0);
+			this.btnZoomMinus.setVisible(newValue);
+			this.btnZoomPlus.setVisible(newValue);
+			this.labelZoom.setVisible(newValue);
+		});
+		this.labelZoom.setOnMouseClicked(event -> {
+			if (event.getClickCount() == 2)
+			{
+				this.model.resetZoom();
+			}
 		});
 		Arrays.asList(this.btnZoomMinus, this.btnZoomPlus).forEach(b -> {
 			b.setOnMouseEntered(event -> b.setOpacity(1.0));

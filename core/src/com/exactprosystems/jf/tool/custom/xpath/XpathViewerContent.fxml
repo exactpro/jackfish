@@ -31,8 +31,6 @@
 								<GridPane fx:id="gridPaneHelper" prefHeight="193.0" prefWidth="429.0">
 									<columnConstraints>
 										<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
-										<ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" percentWidth="8.0" prefWidth="100.0"/>
-										<ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" percentWidth="8.0" prefWidth="100.0"/>
 									</columnConstraints>
 									<rowConstraints>
 										<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
@@ -63,18 +61,58 @@
 												<CustomFieldWithButton fx:id="cfRelativeFrom" editable="false" BorderPane.alignment="CENTER"/>
 											</center>
 										</BorderPane>
-										<Label fx:id="labelXpath1Count" maxWidth="30.0" prefWidth="30.0" text="0" GridPane.columnIndex="2" GridPane.rowIndex="2"/>
-										<Label fx:id="labelXpath2Count" maxWidth="30.0" prefWidth="30.0" text="0" GridPane.columnIndex="2" GridPane.rowIndex="3"/>
-										<Label fx:id="labelXpath3Count" maxWidth="30.0" prefWidth="30.0" text="0" GridPane.columnIndex="2" GridPane.rowIndex="4"/>
-										<Label fx:id="labelXpath4Count" maxWidth="30.0" prefWidth="30.0" text="0" GridPane.columnIndex="2" GridPane.rowIndex="5"/>
-										<Button fx:id="btnXpath1" alignment="BASELINE_LEFT" maxWidth="1.7976931348623157E308" onAction="#copyXpath" textAlignment="LEFT" GridPane.rowIndex="2"/>
-										<Button id="btnXpath1" fx:id="btnSaveXpath1" mnemonicParsing="false" onAction="#setRelativeXpath" text="Rel" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
-										<Button fx:id="btnXpath2" alignment="BASELINE_LEFT" maxWidth="1.7976931348623157E308" onAction="#copyXpath" GridPane.rowIndex="3"/>
-										<Button id="btnXpath2" fx:id="btnSaveXpath2" mnemonicParsing="false" onAction="#setRelativeXpath" text="Rel" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
-										<Button fx:id="btnXpath3" alignment="BASELINE_LEFT" maxWidth="1.7976931348623157E308" onAction="#copyXpath" GridPane.rowIndex="4"/>
-										<Button id="btnXpath3" fx:id="btnSaveXpath3" mnemonicParsing="false" onAction="#setRelativeXpath" text="Rel" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
-										<Button fx:id="btnXpath4" alignment="BASELINE_LEFT" maxWidth="1.7976931348623157E308" onAction="#copyXpath" GridPane.rowIndex="5"/>
-										<Button id="btnXpath4" fx:id="btnSaveXpath4" mnemonicParsing="false" onAction="#setRelativeXpath" text="Rel" GridPane.columnIndex="1" GridPane.rowIndex="5"/>
+										<BorderPane prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="2">
+											<center>
+												<Button fx:id="btnXpath1" alignment="BASELINE_LEFT" maxWidth="1.7976931348623157E308" onAction="#copyXpath" textAlignment="LEFT" BorderPane.alignment="CENTER"/>
+											</center>
+											<right>
+												<HBox alignment="CENTER_RIGHT" prefHeight="29.0" prefWidth="76.0" BorderPane.alignment="BOTTOM_LEFT">
+													<children>
+														<Button id="btnXpath1" fx:id="btnSaveXpath1" mnemonicParsing="false" onAction="#setRelativeXpath" text="Rel"/>
+														<Label fx:id="labelXpath1Count" maxWidth="30.0" prefWidth="30.0" text="0"/>
+													</children>
+												</HBox>
+											</right>
+										</BorderPane>
+										<BorderPane prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="3">
+											<center>
+												<Button fx:id="btnXpath2" alignment="BASELINE_LEFT" maxWidth="1.7976931348623157E308" onAction="#copyXpath" BorderPane.alignment="CENTER"/>
+											</center>
+											<right>
+												<HBox alignment="CENTER_RIGHT" prefHeight="29.0" prefWidth="76.0" BorderPane.alignment="CENTER">
+													<children>
+														<Button id="btnXpath2" fx:id="btnSaveXpath2" mnemonicParsing="false" onAction="#setRelativeXpath" text="Rel"/>
+														<Label fx:id="labelXpath2Count" maxWidth="30.0" prefWidth="30.0" text="0"/>
+													</children>
+												</HBox>
+											</right>
+										</BorderPane>
+										<BorderPane prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="4">
+											<center>
+												<Button fx:id="btnXpath3" alignment="BASELINE_LEFT" maxWidth="1.7976931348623157E308" onAction="#copyXpath" prefHeight="25.0" prefWidth="403.0" BorderPane.alignment="CENTER"/>
+											</center>
+											<right>
+												<HBox alignment="CENTER_RIGHT" prefHeight="29.0" prefWidth="76.0" BorderPane.alignment="CENTER">
+													<children>
+														<Button id="btnXpath3" fx:id="btnSaveXpath3" mnemonicParsing="false" onAction="#setRelativeXpath" text="Rel"/>
+														<Label fx:id="labelXpath3Count" maxWidth="30.0" prefWidth="30.0" text="0"/>
+													</children>
+												</HBox>
+											</right>
+										</BorderPane>
+										<BorderPane prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="5">
+											<center>
+												<Button fx:id="btnXpath4" alignment="BASELINE_LEFT" maxWidth="1.7976931348623157E308" onAction="#copyXpath" BorderPane.alignment="CENTER"/>
+											</center>
+											<right>
+												<HBox alignment="CENTER_RIGHT" prefHeight="29.0" prefWidth="76.0" BorderPane.alignment="CENTER">
+													<children>
+														<Button id="btnXpath4" fx:id="btnSaveXpath4" mnemonicParsing="false" onAction="#setRelativeXpath" text="Rel"/>
+														<Label fx:id="labelXpath4Count" maxWidth="30.0" prefWidth="30.0" text="0"/>
+													</children>
+												</HBox>
+											</right>
+										</BorderPane>
 									</children>
 								</GridPane>
 							</content>
@@ -93,7 +131,9 @@
 				<ScrollPane fx:id="scrollPaneImage" fitToHeight="true" fitToWidth="true" maxHeight="0.0" minHeight="0.0" prefHeight="0.0" prefViewportHeight="-1.0" prefViewportWidth="-1.0">
 					<content>
 						<AnchorPane fx:id="anchorImage">
-							<Group fx:id="group" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0"/>
+							<children>
+								<Group fx:id="group" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0"/>
+							</children>
 						</AnchorPane>
 					</content>
 				</ScrollPane>
@@ -106,7 +146,7 @@
 		</SplitPane>
 	</center>
 	<top>
-		<HBox fx:id="hBoxUtil" spacing="5" alignment="CENTER_LEFT" visible="false">
+		<HBox fx:id="hBoxUtil" alignment="CENTER_LEFT" spacing="5" visible="false">
 			<children>
 				<CheckBox fx:id="cbShowImage" mnemonicParsing="false" text="show image"/>
 				<Separator orientation="VERTICAL"/>
