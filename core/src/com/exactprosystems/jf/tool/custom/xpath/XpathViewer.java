@@ -25,6 +25,10 @@ public class XpathViewer
 	private double currentZoom = 1;
 	private int currentZoomPosition = 3;
 
+	private double initialWidth = 0;
+	private double initialHeight = 0;
+	private Optional<Rectangle> currentRectangle = Optional.empty();
+
 	private int xOffset = 0;
 	private Document						document;
 	private XpathViewerContentController	controller;
@@ -60,7 +64,10 @@ public class XpathViewer
 						xOffset = rectangle.x;
 						yOffset = rectangle.y;
 					}
-					return service.getImage(null, owner).getImage();
+					BufferedImage image = service.getImage(null, owner).getImage();
+					initialWidth = image.getWidth();
+					initialHeight = image.getHeight();
+					return image;
 				}
 			};
 			task.setOnSucceeded(event -> Common.tryCatch(() -> this.controller.displayImage(((BufferedImage) event.getSource().getValue())), "Error on display image"));
@@ -114,10 +121,8 @@ public class XpathViewer
 		this.controller.displayCounters(evaluate(xpath1), evaluate(xpath2), evaluate(xpath3), evaluate(xpath4));
 
 		Rectangle rectangle = (Rectangle) this.currentNode.getUserData(IRemoteApplication.rectangleName);
-		Optional.ofNullable(rectangle).ifPresent(rect -> {
-			Rectangle newRectangle = new Rectangle(rect.x - xOffset, rect.y - yOffset, rect.width, rect.height);
-			this.controller.displayRectangle(newRectangle);
-		});
+		this.currentRectangle = Optional.ofNullable(rectangle);
+		this.displayRectangle();
 	}
 	
 	public static String text(Node node)
@@ -146,6 +151,7 @@ public class XpathViewer
 		}
 		this.currentZoom = zooms[--currentZoomPosition];
 		this.controller.displayZoom(this.currentZoom);
+		resizeImage();
 	}
 
 	public void zoomPlus()
@@ -156,6 +162,7 @@ public class XpathViewer
 		}
 		this.currentZoom = zooms[++currentZoomPosition];
 		this.controller.displayZoom(this.currentZoom);
+		resizeImage();
 	}
 
 	public void resetZoom()
@@ -163,6 +170,26 @@ public class XpathViewer
 		this.currentZoomPosition = 3;
 		this.currentZoom = zooms[this.currentZoomPosition];
 		this.controller.displayZoom(this.currentZoom);
+		resizeImage();
+	}
+
+	private void resizeImage()
+	{
+		this.controller.resizeImage(this.currentZoom * this.initialWidth, this.currentZoom * this.initialHeight);
+		displayRectangle();
+	}
+
+	private void displayRectangle()
+	{
+		this.currentRectangle.ifPresent(rect -> {
+			Rectangle newRectangle = new Rectangle(
+					(int) ((rect.x - xOffset) * currentZoom),
+					(int) ((rect.y - yOffset) * currentZoom),
+					(int) ((rect.width) * currentZoom),
+					(int) ((rect.height) * currentZoom)
+			);
+			this.controller.displayRectangle(newRectangle);
+		});
 	}
 
 	// ============================================================

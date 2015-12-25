@@ -40,6 +40,7 @@ public class CustomRectangle
 	private Line outLine;
 
 	private boolean isInit = false;
+	private boolean isVisible = false;
 
 	public CustomRectangle(Rectangle rectangle)
 	{
@@ -132,8 +133,14 @@ public class CustomRectangle
 
 	public void setVisible(boolean flag)
 	{
+		this.isVisible = flag;
 		Arrays.asList(top, left, bot, right).stream().forEach(line -> line.setVisible(flag));
 		this.outLine.setVisible(false);
+	}
+
+	public boolean isVisible()
+	{
+		return this.isVisible;
 	}
 
 	public void setWidthLine(double width)

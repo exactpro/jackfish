@@ -76,6 +76,7 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 	public Button btnZoomPlus;
 	public HBox hBoxUtil;
 
+	private ImageView imageView;
 	private FindPanel<TreeItem<XpathItem>> findPanel;
 	@FXML
 	private Label				lblFound;
@@ -335,17 +336,24 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 		Optional.ofNullable(this.rectangle).ifPresent(cr -> cr.setVisible(false));
 	}
 
+	public void resizeImage(double width, double height)
+	{
+		this.imageView.setFitHeight(height);
+		this.imageView.setFitWidth(width);
+	}
+
 	// ============================================================
 	// private methods
 	// ============================================================
 	private void createCanvas(BufferedImage bufferedImage) throws IOException
 	{
-		ImageView imageView = new ImageView();
+		this.imageView = new ImageView();
 		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 		ImageIO.write(bufferedImage, "jpg", outputStream);
 		Image image = new Image(new ByteArrayInputStream(outputStream.toByteArray()));
 		imageView.setImage(image);
 		this.group.getChildren().add(imageView);
+		imageView.setPreserveRatio(true);
 		this.rectangle = new CustomRectangle();
 		this.rectangle.addStyleClass(CssVariables.XPATH_RECTANGLE);
 		this.rectangle.setGroup(this.group);
