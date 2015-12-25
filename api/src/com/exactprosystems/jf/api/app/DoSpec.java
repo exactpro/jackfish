@@ -57,12 +57,12 @@ public class DoSpec
 	//------------------------------------------------------------------------------------------------------------------------------
 	public static Spec width(Number dist)
 	{
-		return new Spec().height(dist);
+		return new Spec().width(dist);
 	}
 
 	public static Spec width(CheckProvider func)
 	{
-		return new Spec().height(func);
+		return new Spec().width(func);
 	}
 	
 	//------------------------------------------------------------------------------------------------------------------------------
