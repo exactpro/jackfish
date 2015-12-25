@@ -186,6 +186,8 @@ public class CssVariables
 		public static final String	START_APPLICATION		= IMAGES_DIR + "/start_small.png";
 		public static final String	CONNECT_APPLICATION		= IMAGES_DIR + "/connect_small.png";
 		public static final String	STOP_APPLICATION		= IMAGES_DIR + "/stop_small.png";
+		public static final String	ZOOM_PLUS				= IMAGES_DIR + "/zoom_plus.png";
+		public static final String	ZOOM_MINUS				= IMAGES_DIR + "/zoom_minus.png";
 
 		public static final String	STOP_MATRIX_ICON		= IMAGES_DIR + "/stop.png";
 		public static final String	PAUSE_MATRIX_ICON		= IMAGES_DIR + "/pause.png";

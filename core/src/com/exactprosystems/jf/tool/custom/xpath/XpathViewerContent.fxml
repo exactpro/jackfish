@@ -16,10 +16,11 @@
 				</CustomFieldWithButton>
 			</center>
 			<right>
-				<Label fx:id="lblFound" text="Label" BorderPane.alignment="CENTER">
+				<Label fx:id="lblFound" prefWidth="30" text="Label" BorderPane.alignment="CENTER">
 					<BorderPane.margin>
 						<Insets top="10.0"/>
 					</BorderPane.margin>
+
 				</Label>
 			</right>
 			<top>
@@ -105,6 +106,14 @@
 		</SplitPane>
 	</center>
 	<top>
-		<CheckBox fx:id="cbShowImage" disable="true" mnemonicParsing="false" text="show image" BorderPane.alignment="CENTER_LEFT"/>
+		<HBox fx:id="hBoxUtil" spacing="5" alignment="CENTER_LEFT" visible="false">
+			<children>
+				<CheckBox fx:id="cbShowImage" mnemonicParsing="false" text="show image"/>
+				<Separator orientation="VERTICAL"/>
+				<Button fx:id="btnZoomMinus" onAction="#zoomMinus" opacity="0.5"/>
+				<Label fx:id="labelZoom" text="100%"/>
+				<Button fx:id="btnZoomPlus" onAction="#zoomPlus" opacity="0.5"/>
+			</children>
+		</HBox>
 	</top>
 </BorderPane>

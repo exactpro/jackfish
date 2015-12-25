@@ -71,6 +71,10 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 	public TitledPane tpHelper;
 	public GridPane gridPaneHelper;
 	public AnchorPane anchorImage;
+	public Button btnZoomMinus;
+	public Label labelZoom;
+	public Button btnZoomPlus;
+	public HBox hBoxUtil;
 
 	private FindPanel<TreeItem<XpathItem>> findPanel;
 	@FXML
@@ -123,15 +127,12 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 		});
 		this.splitPane.getStyleClass().add(CssVariables.SPLIT_PANE_HIDE_DIVIDER);
 		listeners();
-		ImageView imageViewScale = new ImageView(new Image(CssVariables.Icons.SCALE_ICON_SMALL));
-		StackPane scalePane = new StackPane(imageViewScale);
-		this.anchorImage.getChildren().add(scalePane);
-		AnchorPane.setTopAnchor(scalePane, 5.0);
-		AnchorPane.setLeftAnchor(scalePane, 0.0);
-
 		ImageView imageView = new ImageView(new Image(CssVariables.Icons.FIND_ICON_SMALL));
 		StackPane imagePane = new StackPane(imageView);
 		this.anchorTree.getChildren().add(imagePane);
+		imagePane.setOpacity(0.5);
+		imagePane.setOnMouseEntered(event -> imagePane.setOpacity(1.0));
+		imagePane.setOnMouseExited(event -> imagePane.setOpacity(0.5));
 		this.anchorTree.getChildren().add(this.findPanel);
 		this.findPanel.setVisible(false);
 		AnchorPane.setBottomAnchor(this.findPanel, 0.0);
@@ -145,6 +146,9 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 		btnSaveXpath2.setUserData(btnXpath2);
 		btnSaveXpath3.setUserData(btnXpath3);
 		btnSaveXpath4.setUserData(btnXpath4);
+
+		Common.customizeLabeled(this.btnZoomPlus, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.ZOOM_PLUS);
+		Common.customizeLabeled(this.btnZoomMinus, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.ZOOM_MINUS);
 	}
 
 	@Override
@@ -205,6 +209,15 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 		this.model.createXpaths(this.useText.isSelected(), getParams());
 	}
 
+	public void zoomMinus(ActionEvent actionEvent)
+	{
+		Common.tryCatch(() -> this.model.zoomMinus(), "Error on zoom minus");
+	}
+
+	public void zoomPlus(ActionEvent actionEvent)
+	{
+		Common.tryCatch(() -> this.model.zoomPlus(), "Error on zoom plus");
+	}
 
 	// ============================================================
 	// display methods
@@ -235,7 +248,7 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 				{
 					this.cfMainExpression.getStyleClass().add(CssVariables.INCORRECT_FIELD);
 				}
-				this.lblFound.setText("Found 0");
+				this.lblFound.setText("0");
 			}
 			else
 			{
@@ -247,7 +260,7 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 					int index = this.treeView.getTreeItemLevel(xpathItem);
 					this.treeView.scrollTo(index);
 				}
-				this.lblFound.setText("Found " + nodes.size());
+				this.lblFound.setText(String.valueOf(nodes.size()));
 			}
 		});
 	}
@@ -296,9 +309,9 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 			this.splitPane.getStyleClass().remove(CssVariables.SPLIT_PANE_HIDE_DIVIDER);
 			scrollPaneImage.setMaxHeight(Region.USE_COMPUTED_SIZE);
 			scrollPaneImage.setPrefHeight(Region.USE_COMPUTED_SIZE);
-			this.cbShowImage.setDisable(false);
 			this.splitPane.setDividerPositions(0.5);
 			createCanvas(image);
+			this.hBoxUtil.setVisible(true);
 			this.cbShowImage.setSelected(true);
 		}
 	}
@@ -310,6 +323,11 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 			this.rectangle.updateRectangle(rectangle);
 			this.rectangle.setVisible(true);
 		}
+	}
+
+	public void displayZoom(double value)
+	{
+		this.labelZoom.setText(String.valueOf((int) (value * 100)) + "%");
 	}
 
 	public void hideRectangle()
@@ -464,15 +482,14 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 				.collect(Collectors.toList());
 	}
 
-	private void showImage(boolean flag)
-	{
-		this.splitPane.setDividerPositions(flag ? 0.5 : 0.0);
-	}
-
 	private void listeners()
 	{
 		this.cbShowImage.selectedProperty().addListener((observable, oldValue, newValue) -> {
-			showImage(newValue);
+			this.splitPane.setDividerPositions(newValue ? 0.5 : 0.0);
+		});
+		Arrays.asList(this.btnZoomMinus, this.btnZoomPlus).forEach(b -> {
+			b.setOnMouseEntered(event -> b.setOpacity(1.0));
+			b.setOnMouseExited(event -> b.setOpacity(0.5));
 		});
 		gridPaneHelper.visibleProperty().addListener((observable, oldValue, newValue) -> {
 			//workaround
@@ -532,5 +549,4 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 					}
 				}));
 	}
-
 }

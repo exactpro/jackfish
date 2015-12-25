@@ -21,16 +21,18 @@ import java.util.stream.IntStream;
 
 public class XpathViewer
 {
-	public static final String textName	= "text()"; 
-	
+	private static double[] zooms = new double[]{0.25, 0.5, 0.75, 1, 1.5, 2, 2.5, 3, 4};
+	private double currentZoom = 1;
+	private int currentZoomPosition = 3;
+
+	private int xOffset = 0;
 	private Document						document;
 	private XpathViewerContentController	controller;
 	private Node							currentNode;
 	private Locator							owner;
 	private IRemoteApplication				service;
-	private String							relativeXpath;
 
-	private int xOffset = 0;
+	private String							relativeXpath;
 	private int yOffset = 0;
 
 	public XpathViewer(Locator owner, Document document, IRemoteApplication service)
@@ -134,6 +136,26 @@ public class XpathViewer
 				.map(value -> value.trim().replace('\n', ' '))
 				.forEach(sb::append);
 		return sb.toString();
+	}
+
+	public void zoomMinus()
+	{
+		if (currentZoomPosition == 0)
+		{
+			return;
+		}
+		this.currentZoom = zooms[--currentZoomPosition];
+		this.controller.displayZoom(this.currentZoom);
+	}
+
+	public void zoomPlus()
+	{
+		if (currentZoomPosition == zooms.length - 1)
+		{
+			return;
+		}
+		this.currentZoom = zooms[++currentZoomPosition];
+		this.controller.displayZoom(this.currentZoom);
 	}
 
 	// ============================================================
