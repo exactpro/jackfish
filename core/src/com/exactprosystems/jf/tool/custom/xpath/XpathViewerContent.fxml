@@ -170,6 +170,7 @@
 				<CheckBox fx:id="cbShowImage" mnemonicParsing="false" text="show image"/>
 				<Separator orientation="VERTICAL"/>
 				<ScalePane fx:id="scalePane"/>
+				<ToggleButton fx:id="btnInspect" text="" opacity="0.5"/>
 			</children>
 		</HBox>
 	</top>

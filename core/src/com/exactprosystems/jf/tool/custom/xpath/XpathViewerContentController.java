@@ -73,12 +73,10 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 	public TitledPane tpHelper;
 	public GridPane gridPaneHelper;
 	public AnchorPane anchorImage;
-	public Button btnZoomMinus;
-	public Label labelZoom;
-	public Button btnZoomPlus;
 	public HBox hBoxUtil;
 
 	public ScalePane scalePane;
+	public ToggleButton btnInspect;
 
 	private ImageView imageView;
 	private FindPanel<TreeItem<XpathItem>> findPanel;
@@ -89,6 +87,8 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 	private XpathViewer			model;
 
 	private CustomRectangle		rectangle;
+	private boolean needInspect = false;
+	private CustomRectangle		inspectRectangle;
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources)
@@ -153,8 +153,12 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 		btnSaveXpath4.setUserData(btnXpath4);
 
 		this.scalePane.setListener(this);
-//		Common.customizeLabeled(this.btnZoomPlus, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.ZOOM_PLUS);
-//		Common.customizeLabeled(this.btnZoomMinus, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.ZOOM_MINUS);
+
+		Common.customizeLabeled(this.btnInspect, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.INSPECT_ICON);
+		this.inspectRectangle = new CustomRectangle();
+		this.inspectRectangle.setWidthLine(4);
+		this.inspectRectangle.addStyleClass(CssVariables.XPATH_INSPECT_RECTNAGLE);
+		this.inspectRectangle.setGroup(this.group);
 	}
 
 	@Override
@@ -338,6 +342,17 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 		this.imageView.setFitWidth(width);
 	}
 
+	public void displayInspectRectangle(Rectangle rectangle)
+	{
+		this.inspectRectangle.updateRectangle(rectangle);
+		this.inspectRectangle.setVisible(true);
+	}
+
+	public void hideInspectRectangle()
+	{
+		this.inspectRectangle.setVisible(false);
+	}
+
 	// ============================================================
 	// private methods
 	// ============================================================
@@ -488,9 +503,37 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 
 	private void listeners()
 	{
+		this.group.setOnMouseMoved(event -> {
+			if (needInspect)
+			{
+				this.model.moveOnImage(event.getX(), event.getY());
+			}
+		});
+
+		this.group.setOnMouseClicked(event -> {
+			if (needInspect)
+			{
+				this.model.clickOnImage(event.getX(), event.getY());
+			}
+		});
+
+		this.btnInspect.selectedProperty().addListener((observable, oldValue, newValue) -> {
+			this.btnInspect.setOpacity(newValue ? 1.0 : 0.5);
+			this.needInspect = newValue;
+			if (!newValue)
+			{
+				this.hideInspectRectangle();
+			}
+			if (newValue)
+			{
+				this.model.startInspect();
+			}
+		});
+
 		this.cbShowImage.selectedProperty().addListener((observable, oldValue, newValue) -> {
 			this.splitPane.setDividerPositions(newValue ? 0.5 : 0.0);
 			this.scalePane.setVisible(newValue);
+			this.btnInspect.setVisible(newValue);
 		});
 		gridPaneHelper.visibleProperty().addListener((observable, oldValue, newValue) -> {
 			//workaround

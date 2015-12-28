@@ -49,6 +49,7 @@ public class CssVariables
 	public static final String	XPATH_ATTRIBUTE_VALUE		= "xpathAttrValue";
 	public static final String	XPATH_TEXT					= "xpathText";
 	public static final String	XPATH_RECTANGLE				= "xpathRectangle";
+	public static final String	XPATH_INSPECT_RECTNAGLE		= "xpathInspectRectangle";
 
 	/*Grid pane on dictionary tab*/
 	public static final String	GRID_PANE_BORDER			= "gridPaneBorder";
@@ -204,6 +205,7 @@ public class CssVariables
 		public static final String	LOG						= IMAGES_DIR + "/log.png";
 		public static final String	REFRESH					= IMAGES_DIR + "/refresh.png";
 		public static final String	MAIN_ICON				= IMAGES_DIR + "/ide.png";
+		public static final String	INSPECT_ICON			= IMAGES_DIR + "/inspect.png";
 
 		public static final String	SHOW_SETTINGS_ICON		= IMAGES_DIR + "/showSettings.png";
 		public static final String	ABOUT_PROGRAM_ICON		= IMAGES_DIR + "/aboutProgram.png";

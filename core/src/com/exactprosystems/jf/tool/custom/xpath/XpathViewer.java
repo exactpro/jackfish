@@ -36,11 +36,15 @@ public class XpathViewer
 	private String							relativeXpath;
 	private int yOffset = 0;
 
+	private ArrayList<Rectangle> rectangles = new ArrayList<>();
+	private ArrayList<Rectangle> currentRectangles = new ArrayList<>();
+
 	public XpathViewer(Locator owner, Document document, IRemoteApplication service)
 	{
 		this.document = document;
 		this.owner = owner;
 		this.service = service;
+		this.bypassDocument(this.document);
 	}
 
 	public String show(String initial, String title, String themePath, boolean fullScreen)
@@ -146,6 +150,53 @@ public class XpathViewer
 		resizeImage();
 	}
 
+	public void startInspect()
+	{
+		this.currentRectangles.addAll(this.rectangles
+				.parallelStream()
+				.map(rect -> new Rectangle(
+						(int) ((rect.x - xOffset) * currentZoom),
+						(int) ((rect.y - xOffset) * currentZoom),
+						(int) (rect.width * currentZoom),
+						(int) (rect.height * currentZoom)
+				)).collect(Collectors.toList()));
+	}
+
+	public void moveOnImage(double x, double y)
+	{
+		Optional<Rectangle> inspectRectangle = this.currentRectangles
+				.parallelStream()
+				.filter(r ->
+					r.x < x && (r.x + r.width) > x &&
+					r.y < y && (r.y + r.height) > y
+				)
+				.sorted((r1,r2) -> Double.compare(r1.width * r1.height, r2.width * r2.height))
+				.findFirst();
+		inspectRectangle.ifPresent(this.controller::displayInspectRectangle);
+	}
+
+	public void clickOnImage(double x, double y)
+	{
+
+	}
+
+	// ============================================================
+	// private methods
+	// ============================================================
+	private void bypassDocument(Node node)
+	{
+		Object userData = node.getUserData(IRemoteApplication.rectangleName);
+		Optional.ofNullable(userData)
+				.filter(data -> data instanceof Rectangle)
+				.map(rect -> (Rectangle) rect)
+				.ifPresent(this.rectangles::add);
+
+		IntStream.range(0, node.getChildNodes().getLength())
+				.mapToObj(node.getChildNodes()::item)
+				.filter(item -> item.getNodeType() == Node.ELEMENT_NODE)
+				.forEach(this::bypassDocument);
+	}
+
 	private void resizeImage()
 	{
 		this.controller.resizeImage(this.currentZoom * this.initialWidth, this.currentZoom * this.initialHeight);
@@ -165,9 +216,6 @@ public class XpathViewer
 		});
 	}
 
-	// ============================================================
-	// private methods
-	// ============================================================
 	private List<Node> evaluate(String xpathStr)
 	{
 		if (xpathStr == null)
