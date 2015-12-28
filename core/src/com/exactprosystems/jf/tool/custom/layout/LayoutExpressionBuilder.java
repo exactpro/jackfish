@@ -24,6 +24,13 @@ import java.util.Map;
 
 public class LayoutExpressionBuilder
 {
+	private double currentZoom = 1;
+	private double initialWidth = 0;
+	private double initialHeight = 0;
+	private IControl selfControl;
+	private IControl otherControl;
+	private Arrow lastArrow = null;
+
 	private LayoutExpressionBuilderController controller;
 	private String parameterName;
 	private AppConnection appConnection;
@@ -77,19 +84,19 @@ public class LayoutExpressionBuilder
 		this.controls.addAll(this.currentWindow.getControls(IWindow.SectionKind.Run));
 		this.controls.addAll(this.currentWindow.getControls(IWindow.SectionKind.Self));
 
-		IControl selfControl = this.currentWindow.getSelfControl();
-		if (selfControl == null)
+		IControl imageControl = this.currentWindow.getSelfControl();
+		if (imageControl == null)
 		{
 			throw new NullPointerException(String.format("Can't get screenshot, because self section on window %s don't contains controls", this.windowName));
 		}
 
-		Locator selfLocator = selfControl.locator();
+		Locator imageLocator = imageControl.locator();
 
 		this.controller = Common.loadController(LayoutExpressionBuilder.class.getResource("LayoutExpressionBuilder.fxml"));
 		this.controller.init(this, this.evaluator);
 
-		IControl initialControl = this.currentWindow.getControlForName(null, this.parameterName);
-		if (initialControl == null)
+		this.selfControl = this.currentWindow.getControlForName(null, this.parameterName);
+		if (this.selfControl == null)
 		{
 			throw new NullPointerException(String.format("Control with name %s is not found in the window with name %s", this.parameterName, this.windowName));
 		}
@@ -101,9 +108,9 @@ public class LayoutExpressionBuilder
 			@Override
 			protected BufferedImage call() throws Exception
 			{
-				BufferedImage image = service().getImage(null, selfLocator).getImage();
-				IControl ownerSelf = currentWindow.getOwnerControl(selfControl);
-				Rectangle selfRectangle = service().getRectangle(ownerSelf == null ? null : ownerSelf.locator(), selfLocator);
+				BufferedImage image = service().getImage(null, imageLocator).getImage();
+				IControl ownerSelf = currentWindow.getOwnerControl(imageControl);
+				Rectangle selfRectangle = service().getRectangle(ownerSelf == null ? null : ownerSelf.locator(), imageLocator);
 				xOffset = selfRectangle.getX();
 				yOffset = selfRectangle.getY();
 				controls.forEach(control -> Common.tryCatch(() -> {
@@ -122,8 +129,11 @@ public class LayoutExpressionBuilder
 		
 		prepare.setOnSucceeded(event -> Common.tryCatch(() ->
 		{
-			this.controller.displayScreenShot((BufferedImage) event.getSource().getValue());
-			displayControl(initialControl, true);
+			BufferedImage image = (BufferedImage) event.getSource().getValue();
+			this.initialWidth = image.getWidth();
+			this.initialHeight = image.getHeight();
+			this.controller.displayScreenShot(image);
+			displayControl(this.selfControl, true);
 		}, "Error on get screenshot"));
 
 		new Thread(prepare).start();
@@ -133,8 +143,15 @@ public class LayoutExpressionBuilder
 		return result == null ? this.parameterExpression : FormulaParser.toFormula(this.formula);
 	}
 
+	public void changeScale(double scale)
+	{
+		this.currentZoom = scale;
+		this.resizeImage();
+	}
+
 	public void clearCanvas()
 	{
+		this.lastArrow = null;
 		this.controller.clearCanvas();
 		this.controller.displayControlId("");
 	}
@@ -161,14 +178,79 @@ public class LayoutExpressionBuilder
 	{
 		this.controller.clearControls();
 		FormulaPart part = this.formula.get(index);
-		this.controller.displayPart(part.getKind(), part.getName(), part.getRange(), part.getFirst(), part.getSecond());
 		if (!Str.IsNullOrEmpty(part.getName()))
 		{
 			this.controller.selectControl(part.getName());
 		}
+		this.controller.displayPart(part.getKind(), part.getName(), part.getRange(), part.getFirst(), part.getSecond());
 	}
 
-	public void displayArrow(Rectangle self, Rectangle other, Arrow arrow)
+	public void displayDistance(IControl otherControl, PieceKind kind)
+	{
+		this.lastArrow = kind.arrow();
+		if (kind == PieceKind.WIDTH || kind == PieceKind.HEIGHT)
+		{
+			Common.tryCatch(()->{
+				Rectangle selfRectangle = mapRectangle.get(otherControl);
+				this.controller.clearArrow();
+				int distance = kind.distance(selfRectangle, null);
+				this.displayArrow(getRect(selfRectangle), new Rectangle(0, 0, 0, 0), kind.arrow());
+				this.controller.displayDistance(distance);
+			}, "Error on display distance");
+		}
+		else if (otherControl != null)
+		{
+			Common.tryCatch(() -> {
+				Rectangle selfRectangle = mapRectangle.get(this.currentWindow.getControlForName(null, this.parameterName));
+				Rectangle otherRectangle = mapRectangle.get(otherControl);
+
+				int distance = kind.distance(selfRectangle, otherRectangle);
+				this.controller.displayDistance(distance);
+				this.controller.clearArrow();
+				this.displayArrow(getRect(selfRectangle), getRect(otherRectangle), kind.arrow());
+			}, "Error on display distance");
+		}
+		else
+		{
+			this.controller.clearDistance();
+			this.controller.clearArrow();
+		}
+	}
+
+	public void displayControl(IControl control, boolean self)
+	{
+		if (control != null)
+		{
+			if (!self)
+			{
+				this.otherControl = control;
+			}
+			Common.tryCatch(() -> {
+				Rectangle rectangle = this.mapRectangle.get(control);
+				Rectangle newRectangle = getRect(rectangle);
+				this.controller.displayControl(newRectangle, self);
+				if (!self)
+				{
+					this.controller.displayControlId(control.getID());
+				}
+			}, String.format("Error on display control %s", control));
+		}
+	}
+
+	public void displayIds(boolean flag)
+	{
+		if (!flag)
+		{
+			this.controller.hideIds();
+			return;
+		}
+		this.controller.displayIds(this.mapIds.values());
+	}
+
+	//============================================================
+	// private methods
+	//============================================================
+	private void displayArrow(Rectangle self, Rectangle other, Arrow arrow)
 	{
 		int start = 0;
 		int end = 0;
@@ -272,60 +354,25 @@ public class LayoutExpressionBuilder
 		}
 	}
 
-	public void displayDistance(IControl otherControl, PieceKind kind)
+	private void resizeImage()
 	{
-		if (kind == PieceKind.WIDTH || kind == PieceKind.HEIGHT)
+		this.controller.resizeImage(this.currentZoom * this.initialWidth, this.currentZoom * this.initialHeight);
+		this.displayControl(this.selfControl, true);
+		this.displayControl(this.otherControl, false);
+		if (lastArrow != null)
 		{
-			Common.tryCatch(()->{
-				Rectangle selfRectangle = mapRectangle.get(otherControl);
-				this.controller.clearArrow();
-				int distance = kind.distance(selfRectangle, null);
-				this.displayArrow(selfRectangle, new Rectangle(0, 0, 0, 0), kind.arrow());
-				this.controller.displayDistance(distance);
-			}, "Error on display distance");
-		}
-		else if (otherControl != null)
-		{
-			Common.tryCatch(() -> {
-				Rectangle selfRectangle = mapRectangle.get(this.currentWindow.getControlForName(null, this.parameterName));
-				Rectangle otherRectangle = mapRectangle.get(otherControl);
-
-				int distance = kind.distance(selfRectangle, otherRectangle);
-				this.controller.displayDistance(distance);
-				this.controller.clearArrow();
-				this.displayArrow(selfRectangle, otherRectangle, kind.arrow());
-			}, "Error on display distance");
-		}
-		else
-		{
-			this.controller.clearDistance();
-			this.controller.clearArrow();
+			this.displayArrow(getRect(mapRectangle.get(this.selfControl)), getRect(this.mapRectangle.get(this.otherControl)), this.lastArrow);
 		}
 	}
 
-	public void displayControl(IControl control, boolean self)
+	private Rectangle getRect(Rectangle rectangle)
 	{
-		if (control != null)
-		{
-			Common.tryCatch(() -> {
-				Rectangle rectangle = this.mapRectangle.get(control);
-				this.controller.displayControl(rectangle, self);
-				if (!self)
-				{
-					this.controller.displayControlId(control.getID());
-				}
-			}, String.format("Error on display control %s", control));
-		}
-	}
-
-	public void displayIds(boolean flag)
-	{
-		if (!flag)
-		{
-			this.controller.hideIds();
-			return;
-		}
-		this.controller.displayIds(this.mapIds.values());
+		return new Rectangle(
+				(int) (rectangle.x * currentZoom),
+				(int) (rectangle.y * currentZoom),
+				(int) (rectangle.width * currentZoom),
+				(int) (rectangle.height * currentZoom)
+		);
 	}
 
 	private IRemoteApplication service()

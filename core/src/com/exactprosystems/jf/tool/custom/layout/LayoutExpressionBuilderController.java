@@ -16,14 +16,16 @@ import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.CssVariables;
+import com.exactprosystems.jf.tool.custom.controls.field.CustomFieldWithButton;
 import com.exactprosystems.jf.tool.custom.controls.toggle.CustomToggleButton;
 import com.exactprosystems.jf.tool.custom.expfield.ExpressionField;
-import com.exactprosystems.jf.tool.custom.controls.field.CustomFieldWithButton;
+import com.exactprosystems.jf.tool.custom.scale.IScaleListener;
+import com.exactprosystems.jf.tool.custom.scale.ScalePane;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.geometry.*;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -50,7 +52,7 @@ import java.net.URL;
 import java.util.*;
 import java.util.List;
 
-public class LayoutExpressionBuilderController implements Initializable, ContainingParent
+public class LayoutExpressionBuilderController implements Initializable, ContainingParent, IScaleListener
 {
 	public static final int BORDER_WIDTH = 4;
 	public static final int OFFSET = BORDER_WIDTH / 2;
@@ -118,6 +120,8 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 	{
 		assert vBoxControls != null : "fx:id=\"vBoxControls\" was not injected: check your FXML file 'LayoutExpressionBuilder.fxml'.";
 		assert cfFindControl != null : "fx:id=\"cfFindControl\" was not injected: check your FXML file 'LayoutExpressionBuilder.fxml'.";
+		this.cbUseGrid.setDisable(true);
+		this.cbUseId.setDisable(true);
 
 		this.cbRange.setVisible(false);
 		this.labelControlId.setVisible(false);
@@ -140,6 +144,12 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 	public void setParent(Parent parent)
 	{
 		this.parent = parent;
+	}
+
+	@Override
+	public void changeScale(double scale)
+	{
+		this.model.changeScale(scale);
 	}
 
 	// ==============================================================================================================================
@@ -168,6 +178,7 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 			button.setToggleGroup(this.controlsToggleGroup);
 			button.prefWidthProperty().bind(this.vBoxControls.widthProperty().subtract(20));
 			button.setUserData(control);
+			button.setDisable(true);
 			button.setAlignment(Pos.BASELINE_LEFT);
 			button.setTooltip(new Tooltip(control.locator().toString()));
 			this.vBoxControls.getChildren().add(button);
@@ -215,10 +226,22 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 		Image image = new Image(new ByteArrayInputStream(outputStream.toByteArray()));
 		this.imageView.setImage(image);
 		this.mainPane.getChildren().remove(this.progressIndicator);
-		this.mainPane.setCenter(this.mainScrollPane);
+		AnchorPane anchorPane = new AnchorPane();
+		AnchorPane.setBottomAnchor(this.mainScrollPane, 0.0);
+		AnchorPane.setLeftAnchor(this.mainScrollPane, 0.0);
+		AnchorPane.setTopAnchor(this.mainScrollPane, 0.0);
+		AnchorPane.setRightAnchor(this.mainScrollPane, 0.0);
+		anchorPane.getChildren().add(this.mainScrollPane);
+		ScalePane scalePane = new ScalePane(this);
+		scalePane.setSpacing(0.0);
+		anchorPane.getChildren().add(scalePane);
+		this.mainPane.setCenter(anchorPane);
 		BorderPane.setMargin(this.mainScrollPane, new Insets(0, 0, 5, 0));
 		this.customGrid.setSize((int) image.getWidth(), (int) image.getHeight());
 		this.progressIndicator = null;
+		this.buttons.stream().parallel().forEach(b -> b.setDisable(false));
+		this.cbUseGrid.setDisable(false);
+		this.cbUseId.setDisable(false);
 	}
 
 	public void displayControl(Rectangle rectangle, boolean self)
@@ -336,6 +359,13 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 	public void hideIds()
 	{
 		this.ids.forEach(text -> text.setVisible(false));
+	}
+
+	public void resizeImage(double width, double height)
+	{
+		this.imageView.setFitHeight(height);
+		this.imageView.setFitWidth(width);
+		this.customGrid.setSize((int) width, (int) height);
 	}
 
 	// ==============================================================================================================================

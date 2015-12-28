@@ -48,6 +48,9 @@ public class CustomGrid
 	{
 		this.w = w;
 		this.h = h;
+		//workaround
+		hide();
+		show();
 	}
 
 	public void show()

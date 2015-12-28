@@ -21,10 +21,7 @@ import java.util.stream.IntStream;
 
 public class XpathViewer
 {
-	private static double[] zooms = new double[]{0.25, 0.5, 0.75, 1, 1.5, 2, 2.5, 3, 4};
-	private double currentZoom = 1;
-	private int currentZoomPosition = 3;
-
+	private double currentZoom;
 	private double initialWidth = 0;
 	private double initialHeight = 0;
 	private Optional<Rectangle> currentRectangle = Optional.empty();
@@ -143,33 +140,9 @@ public class XpathViewer
 		return sb.toString();
 	}
 
-	public void zoomMinus()
+	public void changeScale(double scale)
 	{
-		if (currentZoomPosition == 0)
-		{
-			return;
-		}
-		this.currentZoom = zooms[--currentZoomPosition];
-		this.controller.displayZoom(this.currentZoom);
-		resizeImage();
-	}
-
-	public void zoomPlus()
-	{
-		if (currentZoomPosition == zooms.length - 1)
-		{
-			return;
-		}
-		this.currentZoom = zooms[++currentZoomPosition];
-		this.controller.displayZoom(this.currentZoom);
-		resizeImage();
-	}
-
-	public void resetZoom()
-	{
-		this.currentZoomPosition = 3;
-		this.currentZoom = zooms[this.currentZoomPosition];
-		this.controller.displayZoom(this.currentZoom);
+		this.currentZoom = scale;
 		resizeImage();
 	}
 

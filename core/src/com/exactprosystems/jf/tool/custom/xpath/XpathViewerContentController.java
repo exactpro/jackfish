@@ -10,6 +10,8 @@ import com.exactprosystems.jf.tool.custom.find.FindPanel;
 import com.exactprosystems.jf.tool.custom.find.IFind;
 import com.exactprosystems.jf.tool.custom.layout.CustomRectangle;
 import com.exactprosystems.jf.tool.custom.layout.LayoutExpressionBuilderController;
+import com.exactprosystems.jf.tool.custom.scale.IScaleListener;
+import com.exactprosystems.jf.tool.custom.scale.ScalePane;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
@@ -44,7 +46,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public class XpathViewerContentController implements Initializable, ContainingParent
+public class XpathViewerContentController implements Initializable, ContainingParent, IScaleListener
 {
 	public TreeView<XpathItem>	treeView;
 	public Label				labelXpath1Count;
@@ -75,6 +77,8 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 	public Label labelZoom;
 	public Button btnZoomPlus;
 	public HBox hBoxUtil;
+
+	public ScalePane scalePane;
 
 	private ImageView imageView;
 	private FindPanel<TreeItem<XpathItem>> findPanel;
@@ -148,8 +152,15 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 		btnSaveXpath3.setUserData(btnXpath3);
 		btnSaveXpath4.setUserData(btnXpath4);
 
-		Common.customizeLabeled(this.btnZoomPlus, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.ZOOM_PLUS);
-		Common.customizeLabeled(this.btnZoomMinus, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.ZOOM_MINUS);
+		this.scalePane.setListener(this);
+//		Common.customizeLabeled(this.btnZoomPlus, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.ZOOM_PLUS);
+//		Common.customizeLabeled(this.btnZoomMinus, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.ZOOM_MINUS);
+	}
+
+	@Override
+	public void changeScale(double scale)
+	{
+		this.model.changeScale(scale);
 	}
 
 	@Override
@@ -208,16 +219,6 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 	public void onUseText(ActionEvent actionEvent)
 	{
 		this.model.createXpaths(this.useText.isSelected(), getParams());
-	}
-
-	public void zoomMinus(ActionEvent actionEvent)
-	{
-		Common.tryCatch(() -> this.model.zoomMinus(), "Error on zoom minus");
-	}
-
-	public void zoomPlus(ActionEvent actionEvent)
-	{
-		Common.tryCatch(() -> this.model.zoomPlus(), "Error on zoom plus");
 	}
 
 	// ============================================================
@@ -328,7 +329,8 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 
 	public void displayZoom(double value)
 	{
-		this.labelZoom.setText(String.valueOf((int) (value * 100)) + "%");
+		//TODO
+//		this.labelZoom.setText(String.valueOf((int) (value * 100)) + "%");
 	}
 
 	public void hideRectangle()
@@ -494,20 +496,21 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 	{
 		this.cbShowImage.selectedProperty().addListener((observable, oldValue, newValue) -> {
 			this.splitPane.setDividerPositions(newValue ? 0.5 : 0.0);
-			this.btnZoomMinus.setVisible(newValue);
-			this.btnZoomPlus.setVisible(newValue);
-			this.labelZoom.setVisible(newValue);
+			this.scalePane.setVisible(newValue);
+//			this.btnZoomMinus.setVisible(newValue);
+//			this.btnZoomPlus.setVisible(newValue);
+//			this.labelZoom.setVisible(newValue);
 		});
-		this.labelZoom.setOnMouseClicked(event -> {
-			if (event.getClickCount() == 2)
-			{
-				this.model.resetZoom();
-			}
-		});
-		Arrays.asList(this.btnZoomMinus, this.btnZoomPlus).forEach(b -> {
-			b.setOnMouseEntered(event -> b.setOpacity(1.0));
-			b.setOnMouseExited(event -> b.setOpacity(0.5));
-		});
+//		this.labelZoom.setOnMouseClicked(event -> {
+//			if (event.getClickCount() == 2)
+//			{
+//				this.model.resetZoom();
+//			}
+//		});
+//		Arrays.asList(this.btnZoomMinus, this.btnZoomPlus).forEach(b -> {
+//			b.setOnMouseEntered(event -> b.setOpacity(1.0));
+//			b.setOnMouseExited(event -> b.setOpacity(0.5));
+//		});
 		gridPaneHelper.visibleProperty().addListener((observable, oldValue, newValue) -> {
 			//workaround
 			if (!newValue && ((int) splitPane.getDividerPositions()[0]) == 0 && !cbShowImage.isSelected())
