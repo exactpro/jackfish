@@ -771,7 +771,7 @@ public enum PieceKind implements Measure
 		}
 
 		Rectangle selfArea = executor.getRectangle(self.get(0));
-		Rectangle otherArea = executor.getRectangle(others.get(0));
+		Rectangle otherArea = (others.size() > 0) ? executor.getRectangle(others.get(0)) : null;
 
 		long value = func.distance(selfArea, otherArea);
 
