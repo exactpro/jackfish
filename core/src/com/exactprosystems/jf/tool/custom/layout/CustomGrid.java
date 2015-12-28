@@ -48,19 +48,21 @@ public class CustomGrid
 	{
 		this.w = w;
 		this.h = h;
-		//workaround
-		hide();
-		show();
+		if (this.isShow)
+		{
+			this.hide();
+			this.show();
+		}
 	}
 
 	public void show()
 	{
+		if (this.group == null)
+		{
+			throw new RuntimeException("Before show grid, you need to set group");
+		}
 		if (!isShow)
 		{
-			if (this.group == null)
-			{
-				throw new RuntimeException("Before show grid, you need to set group");
-			}
 			this.createLines(w, h);
 			this.horizontalLines.stream().peek(this.group.getChildren()::add).forEach(line -> line.setVisible(true));
 			this.verticalLines.stream().peek(this.group.getChildren()::add).forEach(line -> line.setVisible(true));
@@ -78,6 +80,11 @@ public class CustomGrid
 			this.verticalLines.clear();
 			isShow = false;
 		}
+	}
+
+	public boolean isVisible()
+	{
+		return this.isShow;
 	}
 
 	private void createLines(int w, int h)

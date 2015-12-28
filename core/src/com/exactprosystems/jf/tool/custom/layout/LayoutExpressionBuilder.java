@@ -123,6 +123,7 @@ public class LayoutExpressionBuilder
 					IdWithCoordinates idWithCoordinates = new IdWithCoordinates(rectangle.x, rectangle.y, control.getID());
 					mapIds.put(control, idWithCoordinates);
 				},""));
+				controller.saveIds(mapIds.values());
 				return image;
 			}
 		};
@@ -191,9 +192,9 @@ public class LayoutExpressionBuilder
 		if (kind == PieceKind.WIDTH || kind == PieceKind.HEIGHT)
 		{
 			Common.tryCatch(()->{
-				Rectangle selfRectangle = mapRectangle.get(otherControl);
+				Rectangle selfRectangle = mapRectangle.get(this.selfControl);
 				this.controller.clearArrow();
-				int distance = kind.distance(selfRectangle, null);
+				int distance = kind.distance(selfRectangle, new Rectangle(0, 0, 0, 0));
 				this.displayArrow(getRect(selfRectangle), new Rectangle(0, 0, 0, 0), kind.arrow());
 				this.controller.displayDistance(distance);
 			}, "Error on display distance");
@@ -244,7 +245,8 @@ public class LayoutExpressionBuilder
 			this.controller.hideIds();
 			return;
 		}
-		this.controller.displayIds(this.mapIds.values());
+		this.controller.resizeIds(currentZoom);
+		this.controller.displayIds();
 	}
 
 	//============================================================
@@ -363,6 +365,7 @@ public class LayoutExpressionBuilder
 		{
 			this.displayArrow(getRect(mapRectangle.get(this.selfControl)), getRect(this.mapRectangle.get(this.otherControl)), this.lastArrow);
 		}
+		this.controller.resizeIds(currentZoom);
 	}
 
 	private Rectangle getRect(Rectangle rectangle)

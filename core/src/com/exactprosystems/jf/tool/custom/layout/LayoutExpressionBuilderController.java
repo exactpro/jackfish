@@ -94,7 +94,7 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 	private GridPane gridPane;
 
 	private Group group;
-	private ArrayList<javafx.scene.text.Text> ids;
+	private ArrayList<javafx.scene.text.Text> ids = new ArrayList<>();
 
 	private ExpressionField expressionFieldFirst;
 	private ExpressionField expressionFieldSecond;
@@ -111,6 +111,8 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 
 	private ScrollPane mainScrollPane;
 	private ArrayList<ToggleButton> buttons = new ArrayList<>();
+
+	private Map<LayoutExpressionBuilder.IdWithCoordinates, Text> mapIdText = new HashMap<>();
 
 	// ==============================================================================================================================
 	// interface Initializable
@@ -168,6 +170,17 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 		this.gridPane.add(expressionFieldSecond, 4, 0);
 		this.expressionFieldSecond.setVisible(false);
 		this.expressionFieldFirst.setVisible(false);
+	}
+
+	public void saveIds(Collection<LayoutExpressionBuilder.IdWithCoordinates> values)
+	{
+		values.stream().forEach(id -> {
+			Text text = new Text(id.x, id.y, id.id);
+			text.setVisible(false);
+			text.getStyleClass().add(CssVariables.CONTROL_ID);
+			this.group.getChildren().add(text);
+			this.mapIdText.put(id, text);
+		});
 	}
 
 	public ButtonData show(String title, boolean fullScreen, List<IControl> list, String parameterName)
@@ -239,7 +252,7 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 		BorderPane.setMargin(this.mainScrollPane, new Insets(0, 0, 5, 0));
 		this.customGrid.setSize((int) image.getWidth(), (int) image.getHeight());
 		this.progressIndicator = null;
-		this.buttons.stream().parallel().forEach(b -> b.setDisable(false));
+		this.buttons.stream().forEach(b -> b.setDisable(false));
 		this.cbUseGrid.setDisable(false);
 		this.cbUseId.setDisable(false);
 	}
@@ -341,24 +354,14 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 				.ifPresent(t -> t.setSelected(true));
 	}
 
-	public void displayIds(Collection<LayoutExpressionBuilder.IdWithCoordinates> ids)
+	public void displayIds()
 	{
-		// lazy initialize
-		if (this.ids == null)
-		{
-			this.ids = new ArrayList<>();
-			ids.stream()
-					.map(idWithCoordinates -> new Text(idWithCoordinates.x, idWithCoordinates.y + 12, idWithCoordinates.id))
-					.peek(text -> text.getStyleClass().add(CssVariables.CONTROL_ID))
-					.peek(this.group.getChildren()::add)
-					.forEach(this.ids::add);
-		}
-		this.ids.forEach(text -> text.setVisible(true));
+		this.mapIdText.values().forEach(text -> text.setVisible(true));
 	}
 
 	public void hideIds()
 	{
-		this.ids.forEach(text -> text.setVisible(false));
+		this.mapIdText.values().forEach(text -> text.setVisible(false));
 	}
 
 	public void resizeImage(double width, double height)
@@ -368,9 +371,22 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 		this.customGrid.setSize((int) width, (int) height);
 	}
 
+	public void resizeIds(double zoom)
+	{
+		this.mapIdText.forEach((idWithCoordinates, text1) -> {
+			text1.setX(idWithCoordinates.x * zoom);
+			text1.setY(idWithCoordinates.y * zoom + textOffsetY(zoom));
+		});
+	}
+
 	// ==============================================================================================================================
 	// private methods
 	// ==============================================================================================================================
+	private int textOffsetY(double zoom)
+	{
+		return zoom >= 1 ? 12 : (int) (zoom * 12);
+	}
+
 	private Alert createAlert(String title)
 	{
 		Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
