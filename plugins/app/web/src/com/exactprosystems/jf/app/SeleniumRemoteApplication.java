@@ -804,11 +804,11 @@ public class SeleniumRemoteApplication extends RemoteApplication
 
 	private java.awt.Rectangle createRectangle(Map<String, String> map)
 	{
-		int x = Integer.parseInt(String.valueOf(map.get(RECTANGLE_X)));
-		int y = Integer.parseInt(String.valueOf(map.get(RECTANGLE_Y)));
-		int h = Integer.parseInt(String.valueOf(map.get(RECTANGLE_H)));
-		int w = Integer.parseInt(String.valueOf(map.get(RECTANGLE_W)));
-		return new java.awt.Rectangle(x, y, w, h);
+		double x = Double.parseDouble(String.valueOf(map.get(RECTANGLE_X)));
+		double y = Double.parseDouble(String.valueOf(map.get(RECTANGLE_Y)));
+		double h = Double.parseDouble(String.valueOf(map.get(RECTANGLE_H)));
+		double w = Double.parseDouble(String.valueOf(map.get(RECTANGLE_W)));
+		return new java.awt.Rectangle((int)x, (int)y, (int)w, (int)h);
 	}
 
 	@Override
