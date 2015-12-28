@@ -327,12 +327,6 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 		}
 	}
 
-	public void displayZoom(double value)
-	{
-		//TODO
-//		this.labelZoom.setText(String.valueOf((int) (value * 100)) + "%");
-	}
-
 	public void hideRectangle()
 	{
 		Optional.ofNullable(this.rectangle).ifPresent(cr -> cr.setVisible(false));
@@ -497,20 +491,7 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 		this.cbShowImage.selectedProperty().addListener((observable, oldValue, newValue) -> {
 			this.splitPane.setDividerPositions(newValue ? 0.5 : 0.0);
 			this.scalePane.setVisible(newValue);
-//			this.btnZoomMinus.setVisible(newValue);
-//			this.btnZoomPlus.setVisible(newValue);
-//			this.labelZoom.setVisible(newValue);
 		});
-//		this.labelZoom.setOnMouseClicked(event -> {
-//			if (event.getClickCount() == 2)
-//			{
-//				this.model.resetZoom();
-//			}
-//		});
-//		Arrays.asList(this.btnZoomMinus, this.btnZoomPlus).forEach(b -> {
-//			b.setOnMouseEntered(event -> b.setOpacity(1.0));
-//			b.setOnMouseExited(event -> b.setOpacity(0.5));
-//		});
 		gridPaneHelper.visibleProperty().addListener((observable, oldValue, newValue) -> {
 			//workaround
 			if (!newValue && ((int) splitPane.getDividerPositions()[0]) == 0 && !cbShowImage.isSelected())

@@ -21,7 +21,7 @@ import java.util.stream.IntStream;
 
 public class XpathViewer
 {
-	private double currentZoom;
+	private double currentZoom = 1;
 	private double initialWidth = 0;
 	private double initialHeight = 0;
 	private Optional<Rectangle> currentRectangle = Optional.empty();
