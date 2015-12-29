@@ -402,6 +402,8 @@ public class MatrixFx extends Matrix
 		try
 		{
 			int number = item.getNumber();
+			//TODO why we need do it???
+			Parameters cloneParameters = parameters.clone();
 			Parameters last = item.getParameters().clone();
 			Command undo = () ->
 			{
@@ -409,7 +411,7 @@ public class MatrixFx extends Matrix
 			};
 			Command redo = () ->
 			{
-				findAndCallParameters(number, par -> par.setValue(parameters));
+				findAndCallParameters(number, par -> par.setValue(cloneParameters));
 			};
 			addCommand(undo, redo);
 		} catch (CloneNotSupportedException e)
