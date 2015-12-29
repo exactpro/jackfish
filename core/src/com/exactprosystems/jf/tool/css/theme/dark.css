@@ -270,6 +270,11 @@
 	-fx-effect : innershadow(gaussian, black, 1, 1, 0,0);
 
 }
+.xpathInspectRectangle {
+	-fx-stroke : black;
+	-fx-effect : innershadow(gaussian, white, 1, 1, 0,0);
+	-fx-stroke-dash-array : 25, 20, 5, 20;
+}
 
 /*Grids on dictionary tab*/
 .gridPaneBorder {

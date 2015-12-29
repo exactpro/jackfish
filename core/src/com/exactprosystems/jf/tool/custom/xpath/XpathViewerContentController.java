@@ -1,5 +1,6 @@
 package com.exactprosystems.jf.tool.custom.xpath;
 
+import com.exactprosystems.jf.api.app.IRemoteApplication;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.common.parser.SearchHelper;
 import com.exactprosystems.jf.tool.Common;
@@ -156,9 +157,9 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 
 		Common.customizeLabeled(this.btnInspect, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.INSPECT_ICON);
 		this.inspectRectangle = new CustomRectangle();
-		this.inspectRectangle.setWidthLine(4);
+		this.inspectRectangle.setWidthLine(LayoutExpressionBuilderController.BORDER_WIDTH);
 		this.inspectRectangle.addStyleClass(CssVariables.XPATH_INSPECT_RECTNAGLE);
-		this.inspectRectangle.setGroup(this.group);
+		this.inspectRectangle.setVisible(false);
 	}
 
 	@Override
@@ -353,9 +354,31 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 		this.inspectRectangle.setVisible(false);
 	}
 
+	public void stopInspect()
+	{
+		this.btnInspect.setSelected(false);
+	}
+
+	public void selectItem(Rectangle rectangle)
+	{
+		selectItem(rectangle, treeView.getRoot());
+	}
+
 	// ============================================================
 	// private methods
 	// ============================================================
+	private void selectItem(Rectangle rectangle, TreeItem<XpathItem> root)
+	{
+		Optional.ofNullable(root.getValue())
+				.filter(child -> Objects.nonNull(child.getNode()))
+				.map(child -> child.getNode().getUserData(IRemoteApplication.rectangleName))
+				.filter(Objects::nonNull)
+				.filter(userData -> userData instanceof Rectangle)
+				.filter(userData -> userData.equals(rectangle))
+				.ifPresent(data -> treeView.getSelectionModel().select(root));
+		root.getChildren().forEach(child -> selectItem(rectangle, child));
+	}
+
 	private void createCanvas(BufferedImage bufferedImage) throws IOException
 	{
 		this.imageView = new ImageView();
@@ -370,6 +393,7 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 		this.rectangle.setGroup(this.group);
 		this.rectangle.setWidthLine(LayoutExpressionBuilderController.BORDER_WIDTH);
 		this.rectangle.setVisible(false);
+		this.inspectRectangle.setGroup(this.group);
 	}
 
 	private void deselectItems(TreeItem<XpathItem> item)
@@ -513,7 +537,7 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 		this.group.setOnMouseClicked(event -> {
 			if (needInspect)
 			{
-				this.model.clickOnImage(event.getX(), event.getY());
+				this.model.clickOnImage();
 			}
 		});
 

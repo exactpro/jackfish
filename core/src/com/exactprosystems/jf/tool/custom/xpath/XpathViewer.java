@@ -12,10 +12,9 @@ import org.w3c.dom.NodeList;
 import javax.xml.xpath.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.*;
 import java.util.List;
-import java.util.Optional;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -25,6 +24,7 @@ public class XpathViewer
 	private double initialWidth = 0;
 	private double initialHeight = 0;
 	private Optional<Rectangle> currentRectangle = Optional.empty();
+	private Optional<Rectangle> inspectRectangle = Optional.empty();
 
 	private int xOffset = 0;
 	private Document						document;
@@ -44,7 +44,7 @@ public class XpathViewer
 		this.document = document;
 		this.owner = owner;
 		this.service = service;
-		this.bypassDocument(this.document);
+		this.bypassDocument(this.document, this.rectangles::add);
 	}
 
 	public String show(String initial, String title, String themePath, boolean fullScreen)
@@ -164,7 +164,8 @@ public class XpathViewer
 
 	public void moveOnImage(double x, double y)
 	{
-		Optional<Rectangle> inspectRectangle = this.currentRectangles
+		Rectangle oldRectangle = this.inspectRectangle.orElse(new Rectangle(-1, -1, -1, -1));
+		this.inspectRectangle = this.currentRectangles
 				.parallelStream()
 				.filter(r ->
 					r.x < x && (r.x + r.width) > x &&
@@ -172,29 +173,30 @@ public class XpathViewer
 				)
 				.sorted((r1,r2) -> Double.compare(r1.width * r1.height, r2.width * r2.height))
 				.findFirst();
-		inspectRectangle.ifPresent(this.controller::displayInspectRectangle);
+		inspectRectangle.filter(r -> !Objects.equals(r, oldRectangle)).ifPresent(this.controller::displayInspectRectangle);
 	}
 
-	public void clickOnImage(double x, double y)
+	public void clickOnImage()
 	{
-
+		this.inspectRectangle.ifPresent(this.controller::selectItem);
+		this.controller.stopInspect();
 	}
 
 	// ============================================================
 	// private methods
 	// ============================================================
-	private void bypassDocument(Node node)
+	private void bypassDocument(Node node, Consumer<Rectangle> consumer)
 	{
 		Object userData = node.getUserData(IRemoteApplication.rectangleName);
 		Optional.ofNullable(userData)
 				.filter(data -> data instanceof Rectangle)
 				.map(rect -> (Rectangle) rect)
-				.ifPresent(this.rectangles::add);
+				.ifPresent(consumer);
 
 		IntStream.range(0, node.getChildNodes().getLength())
 				.mapToObj(node.getChildNodes()::item)
 				.filter(item -> item.getNodeType() == Node.ELEMENT_NODE)
-				.forEach(this::bypassDocument);
+				.forEach(childNode -> bypassDocument(childNode, consumer));
 	}
 
 	private void resizeImage()
