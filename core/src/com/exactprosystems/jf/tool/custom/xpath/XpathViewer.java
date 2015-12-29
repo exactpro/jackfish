@@ -14,7 +14,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.*;
 import java.util.List;
-import java.util.function.Consumer;
+import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -24,7 +24,7 @@ public class XpathViewer
 	private double initialWidth = 0;
 	private double initialHeight = 0;
 	private Optional<Rectangle> currentRectangle = Optional.empty();
-	private Optional<Rectangle> inspectRectangle = Optional.empty();
+	private Optional<Map.Entry<Rectangle, String>> inspectEntry = Optional.empty();
 
 	private int xOffset = 0;
 	private Document						document;
@@ -36,15 +36,15 @@ public class XpathViewer
 	private String							relativeXpath;
 	private int yOffset = 0;
 
-	private ArrayList<Rectangle> rectangles = new ArrayList<>();
-	private ArrayList<Rectangle> currentRectangles = new ArrayList<>();
+	private Map<Rectangle, String> mapRectangles = new HashMap<>();
+	private Map<Rectangle, String> mapCurrentRectangles = new HashMap<>();
 
 	public XpathViewer(Locator owner, Document document, IRemoteApplication service)
 	{
 		this.document = document;
 		this.owner = owner;
 		this.service = service;
-		this.bypassDocument(this.document, this.rectangles::add);
+		this.bypassDocument(this.document, (r, s) -> this.mapRectangles.put(r, s));
 	}
 
 	public String show(String initial, String title, String themePath, boolean fullScreen)
@@ -152,51 +152,84 @@ public class XpathViewer
 
 	public void startInspect()
 	{
-		this.currentRectangles.addAll(this.rectangles
+		this.mapCurrentRectangles.clear();
+		this.mapCurrentRectangles.putAll(this.mapRectangles.entrySet()
 				.parallelStream()
-				.map(rect -> new Rectangle(
-						(int) ((rect.x - xOffset) * currentZoom),
-						(int) ((rect.y - xOffset) * currentZoom),
-						(int) (rect.width * currentZoom),
-						(int) (rect.height * currentZoom)
-				)).collect(Collectors.toList()));
+				.collect(Collectors.toMap(key -> new Rectangle(
+						(int) ((key.getKey().x - xOffset) * currentZoom),
+						(int) ((key.getKey().y - xOffset) * currentZoom),
+						(int) (key.getKey().width * currentZoom),
+						(int) (key.getKey().height * currentZoom)), Map.Entry::getValue))
+		);
 	}
 
 	public void moveOnImage(double x, double y)
 	{
-		Rectangle oldRectangle = this.inspectRectangle.orElse(new Rectangle(-1, -1, -1, -1));
-		this.inspectRectangle = this.currentRectangles
+		Map.Entry<Rectangle, String> oldEntry = this.inspectEntry.orElse(new AbstractMap.SimpleEntry<>(new Rectangle(-1, -1, -1, -1), ""));
+		Rectangle oldRectangle = oldEntry.getKey();
+		this.inspectEntry = this.mapCurrentRectangles.entrySet()
 				.parallelStream()
-				.filter(r ->
-					r.x < x && (r.x + r.width) > x &&
-					r.y < y && (r.y + r.height) > y
-				)
-				.sorted((r1,r2) -> Double.compare(r1.width * r1.height, r2.width * r2.height))
+				.filter(entry -> {
+					Rectangle r = entry.getKey();
+					return r.x < x && (r.x + r.width) > x &&
+							r.y < y && (r.y + r.height) > y;
+				})
+				.sorted((e1,e2) -> Double.compare(e1.getKey().width * e1.getKey().height, e2.getKey().width * e2.getKey().height))
 				.findFirst();
-		inspectRectangle.filter(r -> !Objects.equals(r, oldRectangle)).ifPresent(this.controller::displayInspectRectangle);
+		this.inspectEntry.filter(entry -> !Objects.equals(oldRectangle, entry.getKey())).ifPresent(entry -> this.controller.displayInspectRectangle(entry.getKey(), entry.getValue()));
 	}
 
 	public void clickOnImage()
 	{
-		this.inspectRectangle.ifPresent(this.controller::selectItem);
+		this.inspectEntry.ifPresent(entry -> this.controller.selectItem(entry.getKey()));
 		this.controller.stopInspect();
 	}
 
 	// ============================================================
 	// private methods
 	// ============================================================
-	private void bypassDocument(Node node, Consumer<Rectangle> consumer)
+	private String getStringNode(Node node)
+	{
+		StringBuilder builder = new StringBuilder();
+		String id = "";
+		String className = "";
+		builder.append(node.getNodeName()).append(" ");
+		NamedNodeMap attrs = node.getAttributes();
+		for (int i = 0; i < attrs.getLength(); i++)
+		{
+			Node attr = attrs.item(i);
+			if (attr != null && attr.getNodeName().equals("id"))
+			{
+				id = attr.getNodeValue();
+			}
+			if (attr != null && attr.getNodeName().equals("class"))
+			{
+				className = attr.getNodeValue();
+			}
+		}
+		if (!id.isEmpty())
+		{
+			builder.append("#").append(id).append(" ");
+		}
+		if (!className.isEmpty())
+		{
+			Arrays.stream(className.split("\\s")).forEach(cn -> builder.append(".").append(cn).append(" "));
+		}
+		return builder.toString();
+	}
+
+	private void bypassDocument(Node node, BiConsumer<Rectangle, String> biConsumer)
 	{
 		Object userData = node.getUserData(IRemoteApplication.rectangleName);
 		Optional.ofNullable(userData)
 				.filter(data -> data instanceof Rectangle)
 				.map(rect -> (Rectangle) rect)
-				.ifPresent(consumer);
+				.ifPresent(rec -> biConsumer.accept(rec, getStringNode(node)));
 
 		IntStream.range(0, node.getChildNodes().getLength())
 				.mapToObj(node.getChildNodes()::item)
 				.filter(item -> item.getNodeType() == Node.ELEMENT_NODE)
-				.forEach(childNode -> bypassDocument(childNode, consumer));
+				.forEach(childNode -> bypassDocument(childNode, biConsumer));
 	}
 
 	private void resizeImage()

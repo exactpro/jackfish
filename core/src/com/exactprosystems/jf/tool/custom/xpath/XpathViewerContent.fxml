@@ -171,6 +171,7 @@
 				<Separator orientation="VERTICAL"/>
 				<ScalePane fx:id="scalePane"/>
 				<ToggleButton fx:id="btnInspect" text="" opacity="0.5"/>
+				<Label fx:id="lblInspectRectangle" text=""/>
 			</children>
 		</HBox>
 	</top>

@@ -78,6 +78,7 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 
 	public ScalePane scalePane;
 	public ToggleButton btnInspect;
+	public Label lblInspectRectangle;
 
 	private ImageView imageView;
 	private FindPanel<TreeItem<XpathItem>> findPanel;
@@ -349,9 +350,16 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 		this.inspectRectangle.setVisible(true);
 	}
 
+	public void displayInspectRectangle(Rectangle rectangle, String tooltipText)
+	{
+		this.lblInspectRectangle.setText(tooltipText);
+		this.displayInspectRectangle(rectangle);
+	}
+
 	public void hideInspectRectangle()
 	{
 		this.inspectRectangle.setVisible(false);
+		this.lblInspectRectangle.setText("");
 	}
 
 	public void stopInspect()
