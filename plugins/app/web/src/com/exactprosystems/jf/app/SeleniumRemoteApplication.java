@@ -12,6 +12,7 @@ import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.app.js.JSInjection;
 import com.exactprosystems.jf.app.js.JSInjectionFactory;
+
 import org.apache.log4j.*;
 import org.openqa.selenium.*;
 import org.openqa.selenium.Dimension;
@@ -21,11 +22,11 @@ import org.openqa.selenium.support.events.EventFiringWebDriver;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 import javax.imageio.ImageIO;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+
 import java.awt.*;
 import java.awt.event.InputEvent;
 import java.awt.image.BufferedImage;
@@ -37,94 +38,50 @@ import java.util.List;
 public class SeleniumRemoteApplication extends RemoteApplication
 {
 	private static final String TAG_FIELD = "tag";
-	private static final String ATTRIBUTES_FIELD = "attributes";
-	private static final String ELEMENT_FIELD = "elem";
-	private static final String ELEMENT_PARENT_FIELD = "parent";
-	private static final String ATTRIBUTE_NAME_FIELD = "attrName";
-	private static final String ATTRIBUTE_VALUE_FIELD = "attrValue";
+	private static final String ATTRIBUTES_FIELD = "attr";
+	private static final String ELEMENT_CHILD_FIELD = "child";
+	private static final String ATTRIBUTE_NAME_FIELD = "name";
+	private static final String ATTRIBUTE_VALUE_FIELD = "val";
 	private static final String ELEMENT_TEXT_FIELD = "text";
-	private static final String ELEMENT_USER_DATA = "element";
-	private static final String RECTANGLE_X = "x";
-	private static final String RECTANGLE_Y = "y";
-	private static final String RECTANGLE_W = "w";
-	private static final String RECTANGLE_H = "h";
 
-
-
-	private static final String SCRIPT =
-					"function check(e) {\n" +
-					"    if (e.tagName === undefined) {\n" +
-					"        return false;\n" +
-					"    }\n" +
-					"    return true;\n" +
-					"};\n" +
-					"\n" +
-					"function text(e) {\n" +
-					"    if (e.tagName === 'input') {\n" +
-					"        return e.value;\n" +
-					"    }\n" +
-					"    return e.text;\n" +
-					"}\n" +
-					"\n" +
-					"function attrsOfElement(e) {\n" +
-					"    var a = [];\n" +
-					"    var attrs = e.attributes;\n" +
-					"    for(var i = 0; i < attrs.length; i++) {\n" +
-					"        var t = attrs[i];\n" +
-					"        console.log(t.nodeValue);\n" +
-					"        a.push({\n" +
-					"            "+ATTRIBUTE_NAME_FIELD+" : t.nodeName,\n" +
-					"            "+ATTRIBUTE_VALUE_FIELD+" : t.nodeValue\n" +
-					"        });\n" +
-					"    }\n" +
-					"    return a;\n" +
-					"}\n" +
-					"\n" +
-					"function rect(e) {\n" +
-					"    if (check(e)) {\n" +
-					"    var rect = e.getBoundingClientRect(); \n" +
-					"        return {\n" +
-					"            "+RECTANGLE_X+" : rect.left,\n" +
-					"            "+RECTANGLE_Y+" : rect.top,\n" +
-					"            "+RECTANGLE_H+" : rect.height,\n" +
-					"            "+RECTANGLE_W+" : rect.width \n" +
-					"        }\n" +
-					"    }\n" +
-					"    return null;\n" +
-					"};\n" +
-					"\n" +
-					"function go(element, array, needRoot) {\n" +
-					"    if (check(element)) {\n" +
-					"        var temp = {\n" +
-					"            "+TAG_FIELD+" : element.tagName,\n" +
-					"            "+ATTRIBUTES_FIELD+" : attrsOfElement(element),\n" +
-					"            "+IRemoteApplication.rectangleName+" : rect(element),\n" +
-					"            "+ELEMENT_TEXT_FIELD+" : text(element),\n" +
-					"            "+ELEMENT_FIELD+" : element\n" +
-					"        };\n" +
-					"        if (needRoot === true) {\n" +
-					"            temp."+ELEMENT_PARENT_FIELD+" = element.parentElement;\n" +
-					"        }\n" +
-					"        else {\n" +
-					"            temp."+ELEMENT_PARENT_FIELD+" = element;\n" +
-					"        }\n" +
-					"        array.push(temp);\n" +
-					"        var els = element.childNodes;\n" +
-					"        for(var i=0; i<els.length; i++) {\n" +
-					"            go(els[i],array,true);\n" +
-					"        }\n" +
-					"    }\n" +
-					"};\n" +
-					"\n" +
-					"function q(root) {\n" +
-					"    var rectangles = [];\n" +
-					"    console.log('start')\n" +
-					"    go(root, rectangles, false);\n" +
-					"    console.log(\"end. found : \" + rectangles.length + \" elements\");\n" +
-					"    return rectangles;\n" +
-					"};\n" +
-					"return q(arguments[0]);"
-			;
+	private static final String SCRIPT = 
+		" \n" +
+		"function attrs(e) { \n" +
+		"    var a = []; \n" +
+		"    var attrs = e.attributes; \n" +
+		"    for(var i = 0; i < attrs.length; i++) { \n" + 
+		"        var t = attrs[i]; \n" +
+		"        a.push({ \n" +
+		"            " + ATTRIBUTE_NAME_FIELD + " : t.nodeName, \n" +
+		"            " + ATTRIBUTE_VALUE_FIELD + " : t.value \n" +
+		"        }); \n" +
+		"    } \n" +
+		"    return a; \n" +
+		"}; \n" +
+		" \n" +
+		"function go(e) { \n" +
+		"    if (e.tagName !== undefined) { \n" +
+		"        var child = []; \n" +
+		"        var els = e.childNodes; \n" +
+		"        for(var i=0; i<els.length; i++) { \n" +
+		"            var ch = go(els[i]); \n" +
+		"            if (ch != null) { \n" +
+		"                child.push(ch); \n" +
+		"            } \n" +
+		"        } \n" +
+		"        var temp = { \n" +
+		"            " + TAG_FIELD + " : e.tagName, \n" +
+		"            " + ATTRIBUTES_FIELD + " : attrs(e), \n" +
+		"            " + IRemoteApplication.rectangleName + " : e.getBoundingClientRect(), \n" +
+		"            " + ELEMENT_TEXT_FIELD + " : (e.tagName === 'input') ? e.value : e.text, \n" +
+		"            " + ELEMENT_CHILD_FIELD + " : child \n" +
+		"        }; \n" +
+		"        return temp; \n" +
+		"    } \n" +
+		"    return null; \n" +
+		"}; \n" +
+		" \n" +
+		"return go(arguments[0]); \n";
 
 	private static Map<String, ArrayList<ControlKind>> mapTagsControlKind = new HashMap<>();
 
@@ -522,6 +479,8 @@ public class SeleniumRemoteApplication extends RemoteApplication
 		{
 			try
 			{
+				log("before image");
+				
 				//method webElement.getScreenshotAs not working in 2.48.2
 				File screenshot = this.driver.getScreenshotAs(OutputType.FILE);
 				BufferedImage fullImg = ImageIO.read(screenshot);
@@ -535,6 +494,7 @@ public class SeleniumRemoteApplication extends RemoteApplication
 				int eleHeight = component.getSize().getHeight();
 				BufferedImage image = fullImg.getSubimage(point.getX(), point.getY(), eleWidth, eleHeight);
 
+				log("after image");
 				return new ImageWrapper(image);
 			}
 			catch (StaleElementReferenceException e)
@@ -686,6 +646,8 @@ public class SeleniumRemoteApplication extends RemoteApplication
 	@Override
 	protected Document getTreeDerived(Locator owner) throws Exception
 	{
+		log("start");
+		
 		WebElement ownerElement;
 		if (owner == null)
 		{
@@ -700,7 +662,10 @@ public class SeleniumRemoteApplication extends RemoteApplication
 			DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
 			Document document = docBuilder.newDocument();
+			log("before script");
+			logger.info(SCRIPT);
 			Object returnObject = driver.executeScript(SCRIPT, ownerElement);
+			log("after script");
 			/**
 			 * every row from o - is object, string value of them like this
 			 * [elem=[org.openqa.selenium.remote.RemoteWebElement@67502cce -> unknown locator], parent=[org.openqa.selenium.remote.RemoteWebElement@67502cce -> unknown locator], attributes=[{attrValue=position:absolute;width:500px;height:270px;top:0px;left:0px, attrName=style}, {attrValue=html1, attrName=id}], rectangle={w=500, x=0, h=270, y=0}, tag=DIV, id=html1, text=null, parentId=html1]
@@ -708,50 +673,14 @@ public class SeleniumRemoteApplication extends RemoteApplication
 			 * 			{} - map;
 			 * 	[org.openqa.selenium.remote.RemoteWebElement@67502cce -> unknown locator] - RemoteWebElement.toString();
 			 */
-			List<Map<String, Object>> list = (List<Map<String, Object>>) returnObject;
+			Map<String, Object> rootElement = (Map<String, Object>) returnObject;
 
-			/**
-			 * we get first element of this list - this is root element;
-			 */
-			Map<String, Object> rootElement = list.get(0);
-			Element rootElem = document.createElement(((String) rootElement.get(TAG_FIELD)).toLowerCase());
-			setAttributes(rootElem, ((List<Map<String, String>>) rootElement.get(ATTRIBUTES_FIELD)));
-			rootElem.setUserData(IRemoteApplication.rectangleName, createRectangle((Map<String, String>) rootElement.get(IRemoteApplication.rectangleName)), null);
-			rootElem.setUserData(ELEMENT_USER_DATA, rootElement.get(ELEMENT_FIELD), null);
-			document.appendChild(rootElem);
-			String text = (String) rootElement.get(ELEMENT_TEXT_FIELD);
-			if (!Str.IsNullOrEmpty(text))
-			{
-				rootElem.setTextContent(text);
-			}
-
-			/**
-			 * for remaining rows we create element, find parent for them and put in document with attributes and text
-			 */
-			for (int i = 1; i < list.size(); i++)
-			{
-				Map<String, Object> el = list.get(i);
-				Element element = document.createElement(((String) el.get(TAG_FIELD)).toLowerCase());
-				setAttributes(element, ((List<Map<String, String>>) el.get(ATTRIBUTES_FIELD)));
-				element.setUserData(ELEMENT_USER_DATA, el.get(ELEMENT_FIELD), null);
-				String textElement = (String) el.get(ELEMENT_TEXT_FIELD);
-				if (!Str.IsNullOrEmpty(textElement))
-				{
-					element.setTextContent(textElement);
-				}
-				WebElement parent1 = (WebElement) el.get(ELEMENT_PARENT_FIELD);
-				Node parent = findParent(rootElem, parent1);
-				if (parent == null)
-				{
-					rootElem.appendChild(element);
-				}
-				else
-				{
-					parent.appendChild(element);
-				}
-				element.setUserData(IRemoteApplication.rectangleName, createRectangle(((Map<String, String>) el.get(IRemoteApplication.rectangleName))), null);
-			}
-			clearDocument(document);
+//			StringBuilder sb = new StringBuilder("\n");
+//			outToLog(sb, rootElement, 0);
+//			logger.info(sb.toString());
+			
+			transform (rootElement, document, document);
+			log("buid doc");
 			return document;
 		}
 		catch (Exception e)
@@ -761,53 +690,80 @@ public class SeleniumRemoteApplication extends RemoteApplication
 		return null;
 	}
 
-	/**
-	 * remove all WebElement's from document
-	 */
-	private void clearDocument(Node document)
+	private void outToLog(StringBuilder sb, Map<String, Object> map, int level)
 	{
-		document.setUserData(ELEMENT_USER_DATA, null, null);
-		for(int i =0; i < document.getChildNodes().getLength(); i++)
+		String spaces = "";
+		for (int i = 0; i < level; i++)
 		{
-			Node item = document.getChildNodes().item(i);
-			item.setUserData(ELEMENT_USER_DATA, null, null);
-			clearDocument(item);
+			spaces += "    ";
+		}
+		
+		sb.append(spaces + "tag  : " + map.get(TAG_FIELD)).append('\n');
+		sb.append(spaces + "attr : " + map.get(ATTRIBUTES_FIELD)).append('\n');
+		sb.append(spaces + "text : " + map.get(ELEMENT_TEXT_FIELD)).append('\n');
+		sb.append(spaces + "rec  : " + map.get(IRemoteApplication.rectangleName)).append('\n');
+		
+		Object childMap = map.get(ELEMENT_CHILD_FIELD);
+
+		if (childMap != null)
+		{
+			int i = 0;
+			for (Map<String, Object> ch : (List<Map<String, Object>>) childMap)
+			{
+				sb.append(spaces + "child[" + i++ + "]").append('\n');
+				outToLog(sb, ch, level + 1);
+			}
 		}
 	}
 
-	private void setAttributes(Element element, List<Map<String, String>> map)
+	private void transform(Map<String, Object> map, Document document, Node element)
 	{
-		for (Map<String, String> att : map)
+		Object tag = map.get(TAG_FIELD);
+		Element newElement = document.createElement(String.valueOf(tag).toLowerCase());
+		element.appendChild(newElement);
+		element = newElement;
+		
+		
+		setAttributes(element, ((List<Map<String, String>>) map.get(ATTRIBUTES_FIELD)));
+		String textElement = (String) map.get(ELEMENT_TEXT_FIELD);
+		if (!Str.IsNullOrEmpty(textElement))
 		{
-			element.setAttribute(att.get(ATTRIBUTE_NAME_FIELD), att.get(ATTRIBUTE_VALUE_FIELD));
+			element.setTextContent(textElement);
+		}
+		Object rec = map.get(IRemoteApplication.rectangleName);
+		if (rec != null)
+		{
+			element.setUserData(IRemoteApplication.rectangleName, createRectangle((Map<String, String>)rec), null);
+		}
+
+		Object childMap = map.get(ELEMENT_CHILD_FIELD);
+
+		if (childMap != null)
+		{
+			for (Map<String, Object> ch : (List<Map<String, Object>>) childMap)
+			{
+				transform(ch, document, element);
+			}
 		}
 	}
 
-	private Node findParent(Node root, WebElement element)
+	private void setAttributes(Node element, List<Map<String, String>> map)
 	{
-		NodeList childNodes = root.getChildNodes();
-		for (int i = 0; i < childNodes.getLength(); i++)
+		if (map != null && element instanceof Element)
 		{
-			Node item = childNodes.item(i);
-			if (element.equals(item.getUserData(ELEMENT_USER_DATA)))
+			for (Map<String, String> att : map)
 			{
-				return item;
-			}
-			Node parent = findParent(item, element);
-			if (parent != null)
-			{
-				return parent;
+				((Element)element).setAttribute(att.get(ATTRIBUTE_NAME_FIELD), att.get(ATTRIBUTE_VALUE_FIELD));
 			}
 		}
-		return null;
 	}
 
 	private java.awt.Rectangle createRectangle(Map<String, String> map)
 	{
-		double x = Double.parseDouble(String.valueOf(map.get(RECTANGLE_X)));
-		double y = Double.parseDouble(String.valueOf(map.get(RECTANGLE_Y)));
-		double h = Double.parseDouble(String.valueOf(map.get(RECTANGLE_H)));
-		double w = Double.parseDouble(String.valueOf(map.get(RECTANGLE_W)));
+		double x = Double.parseDouble(String.valueOf(map.get("left")));
+		double y = Double.parseDouble(String.valueOf(map.get("top")));
+		double h = Double.parseDouble(String.valueOf(map.get("height")));
+		double w = Double.parseDouble(String.valueOf(map.get("width")));
 		return new java.awt.Rectangle((int)x, (int)y, (int)w, (int)h);
 	}
 
@@ -822,6 +778,15 @@ public class SeleniumRemoteApplication extends RemoteApplication
 	{
 		this.jsInjection.stopInject(this.driver);
 	}
+
+	private void log(String message)
+	{
+		long newTime = System.currentTimeMillis();
+		logger.info(message + " " + (newTime - time));
+		time = newTime;
+	}
+
+	private static long time = System.currentTimeMillis();
 
 	private EventFiringWebDriver driver;
 
