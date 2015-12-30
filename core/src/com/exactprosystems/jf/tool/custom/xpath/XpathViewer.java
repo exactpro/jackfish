@@ -154,7 +154,7 @@ public class XpathViewer
 	{
 		this.mapCurrentRectangles.clear();
 		this.mapCurrentRectangles.putAll(this.mapRectangles.entrySet()
-				.parallelStream()
+				.stream()
 				.collect(Collectors.toMap(key -> new Rectangle(
 						(int) ((key.getKey().x - xOffset) * currentZoom),
 						(int) ((key.getKey().y - xOffset) * currentZoom),
@@ -168,7 +168,7 @@ public class XpathViewer
 		Map.Entry<Rectangle, String> oldEntry = this.inspectEntry.orElse(new AbstractMap.SimpleEntry<>(new Rectangle(-1, -1, -1, -1), ""));
 		Rectangle oldRectangle = oldEntry.getKey();
 		this.inspectEntry = this.mapCurrentRectangles.entrySet()
-				.parallelStream()
+				.stream()
 				.filter(entry -> {
 					Rectangle r = entry.getKey();
 					return r.x < x && (r.x + r.width) > x &&
