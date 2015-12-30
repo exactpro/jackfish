@@ -220,7 +220,8 @@
 .xpathInspectRectangle {
 	-fx-stroke : black;
 	-fx-effect : innershadow(gaussian, white, 1, 1, 0,0);
-	-fx-stroke-dash-array : 25, 20, 5, 20;
+	-fx-stroke-dash-array : 12 6 4 6;
+	-fx-stroke-width: 5;
 }
 
 /*BorderWrapper*/

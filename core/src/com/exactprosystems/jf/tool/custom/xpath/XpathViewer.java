@@ -195,16 +195,19 @@ public class XpathViewer
 		String className = "";
 		builder.append(node.getNodeName()).append(" ");
 		NamedNodeMap attrs = node.getAttributes();
-		for (int i = 0; i < attrs.getLength(); i++)
+		if (attrs != null)
 		{
-			Node attr = attrs.item(i);
-			if (attr != null && attr.getNodeName().equals("id"))
+			for (int i = 0; i < attrs.getLength(); i++)
 			{
-				id = attr.getNodeValue();
-			}
-			if (attr != null && attr.getNodeName().equals("class"))
-			{
-				className = attr.getNodeValue();
+				Node attr = attrs.item(i);
+				if (attr != null && attr.getNodeName().equals("id"))
+				{
+					id = attr.getNodeValue();
+				}
+				if (attr != null && attr.getNodeName().equals("class"))
+				{
+					className = attr.getNodeValue();
+				}
 			}
 		}
 		if (!id.isEmpty())

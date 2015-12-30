@@ -29,11 +29,18 @@ import java.util.Map.Entry;
 @ActionAttribute(
 		group					= ActionGroups.System,
 		generalDescription 		= "Compares the given map of fields to a set of name-value pairs.",
-		additionFieldsAllowed 	= true
+		additionFieldsAllowed 	= true,
+		outputType				= Boolean.class,
+		outputDescription		= "It is true if the check passes and false otherwise."
 	)
 public class Check extends AbstractAction 
 {
+	public final static String dontFailName = "DoNotFail";
 	public final static String actualName = "Actual";
+
+	@ActionFieldAttribute(name = dontFailName, mandatory = false, description = "If it is true then the action will not be failed anyway. "
+																				+ "The action only will return of checking resul.")
+	protected Boolean dontFail = false; 
 
 	@ActionFieldAttribute(name = actualName, mandatory = true, description = "Actual map of fields.")
 	protected Map<String, Object> actual = Collections.emptyMap(); 
@@ -49,7 +56,7 @@ public class Check extends AbstractAction
 		
 		if (diff == null)
 		{
-			super.setResult(null);
+			super.setResult(true);
 		}
 		else
 		{
@@ -58,8 +65,15 @@ public class Check extends AbstractAction
 			{
 				table.addValues(entry.getKey(), entry.getValue());
 			}
-			
-			super.setError("Object does not match.");
+
+			if (this.dontFail)
+			{
+				super.setResult(false);
+			}
+			else
+			{
+				super.setError("Object does not match.");
+			}
 		}
 	}
 }
