@@ -28,10 +28,8 @@ import com.exactprosystems.jf.common.undoredo.Command;
 import com.exactprosystems.jf.tool.ApplicationConnector;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
-
 import javafx.scene.control.ButtonType;
 import javafx.util.Pair;
-
 import org.apache.log4j.Logger;
 
 import java.io.File;
@@ -402,8 +400,6 @@ public class MatrixFx extends Matrix
 		try
 		{
 			int number = item.getNumber();
-			//TODO why we need do it???
-			Parameters cloneParameters = parameters.clone();
 			Parameters last = item.getParameters().clone();
 			Command undo = () ->
 			{
@@ -411,7 +407,7 @@ public class MatrixFx extends Matrix
 			};
 			Command redo = () ->
 			{
-				findAndCallParameters(number, par -> par.setValue(cloneParameters));
+				findAndCallParameters(number, par -> par.setValue(parameters));
 			};
 			addCommand(undo, redo);
 		} catch (CloneNotSupportedException e)
