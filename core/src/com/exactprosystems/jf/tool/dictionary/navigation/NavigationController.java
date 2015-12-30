@@ -13,6 +13,7 @@ import com.exactprosystems.jf.api.app.IWindow.SectionKind;
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
+import com.exactprosystems.jf.tool.custom.BorderWrapper;
 import com.exactprosystems.jf.tool.custom.shutter.DelayShutterButton;
 import com.exactprosystems.jf.tool.custom.tab.CustomTab;
 import com.exactprosystems.jf.tool.custom.xpath.XpathViewer;
@@ -37,6 +38,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 import org.w3c.dom.Document;
@@ -62,6 +64,9 @@ public class NavigationController implements Initializable, ContainingParent
 	public CheckBox checkBoxUseSelfAsOwner;
 	public BorderPane borderPaneWindow;
 	public BorderPane paneWindow;
+	public GridPane dialogGridPane;
+	public Button btnRenameWindow;
+	public GridPane elementGridPane;
 	private Parent pane;
 
 	private DictionaryFx model;
@@ -90,6 +95,10 @@ public class NavigationController implements Initializable, ContainingParent
 		assert hBoxElement != null : "fx:id=\"hBoxElement\" was not injected: check your FXML file 'Navigation.fxml'.";
 		assert btnFindElement != null : "fx:id=\"btnFindElement\" was not injected: check your FXML file 'Navigation.fxml'.";
 		assert btnFindDialog != null : "fx:id=\"btnFindDialog\" was not injected: check your FXML file 'Navigation.fxml'.";
+		Platform.runLater(() -> {
+			((GridPane) this.pane).add(BorderWrapper.wrap(this.dialogGridPane).title("Dialog").color(Color.BLACK).build(), 0, 0);
+			((GridPane) this.pane).add(BorderWrapper.wrap(this.elementGridPane).title("Element").color(Color.BLACK).build(), 2, 0);
+		});
 	}
 
 	public void init(DictionaryFx model, GridPane gridPane, Settings settings, CustomTab owner)

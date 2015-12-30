@@ -9,12 +9,12 @@
 package com.exactprosystems.jf.tool.dictionary.actions;
 
 import com.exactprosystems.jf.api.app.ImageWrapper;
-import com.exactprosystems.jf.api.app.Operation;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.css.images.Images;
+import com.exactprosystems.jf.tool.custom.BorderWrapper;
 import com.exactprosystems.jf.tool.custom.expfield.ExpressionField;
 import com.exactprosystems.jf.tool.dictionary.ApplicationStatus;
 import com.exactprosystems.jf.tool.dictionary.DictionaryFx;
@@ -29,7 +29,9 @@ import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.paint.Color;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -40,7 +42,8 @@ import java.util.Collection;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
-import static com.exactprosystems.jf.tool.Common.*;
+import static com.exactprosystems.jf.tool.Common.logger;
+import static com.exactprosystems.jf.tool.Common.tryCatch;
 
 public class ActionsController implements Initializable, ContainingParent
 {
@@ -91,6 +94,8 @@ public class ActionsController implements Initializable, ContainingParent
 			Common.customizeLabeled(btnStartApplication, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.START_APPLICATION);
 			Common.customizeLabeled(btnConnectApplication, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.CONNECT_APPLICATION);
 			Common.customizeLabeled(btnStop, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.STOP_APPLICATION);
+
+			((BorderPane) this.pane).setCenter(BorderWrapper.wrap(this.mainGrid).title("Actions").color(Color.BLACK).build());
 
 		});
 	}

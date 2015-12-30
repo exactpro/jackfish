@@ -12,169 +12,169 @@
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<GridPane prefHeight="291.0" prefWidth="452.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.exactprosystems.jf.tool.dictionary.info.owner.OwnerInfoController">
-	<styleClass>
-		<CssVariables fx:constant="GRID_PANE_BORDER"/>
-	</styleClass>
-	<columnConstraints>
-		<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="35.0" prefWidth="100.0"/>
-		<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
-	</columnConstraints>
-	<rowConstraints>
-		<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-	</rowConstraints>
-	<GridPane.margin>
-		<Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
-	</GridPane.margin>
-	<GridPane GridPane.columnIndex="1">
-		<columnConstraints>
-			<ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="10.0" percentWidth="30.0" prefWidth="100.0"/>
-			<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
-		</columnConstraints>
-		<rowConstraints>
-			<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-			<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-			<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-			<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-			<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-			<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-			<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-			<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-			<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-		</rowConstraints>
-		<Label text="UID">
+<BorderPane prefHeight="291.0" prefWidth="452.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.exactprosystems.jf.tool.dictionary.info.owner.OwnerInfoController">
+	<center>
+		<GridPane fx:id="mainGrid">
+			<columnConstraints>
+				<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="35.0" prefWidth="100.0"/>
+				<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+			</columnConstraints>
+			<rowConstraints>
+				<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+			</rowConstraints>
 			<GridPane.margin>
-				<Insets left="10.0" right="10.0"/>
+				<Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
 			</GridPane.margin>
-		</Label>
-		<Label text="Xpath" GridPane.rowIndex="1">
-			<GridPane.margin>
-				<Insets left="10.0" right="10.0"/>
-			</GridPane.margin>
-		</Label>
-		<Label text="Class" GridPane.rowIndex="2">
-			<GridPane.margin>
-				<Insets left="10.0" right="10.0"/>
-			</GridPane.margin>
-		</Label>
-		<Label text="Name" GridPane.rowIndex="3">
-			<GridPane.margin>
-				<Insets left="10.0" right="10.0"/>
-			</GridPane.margin>
-		</Label>
-		<Label text="Title" GridPane.rowIndex="4">
-			<GridPane.margin>
-				<Insets left="10.0" right="10.0"/>
-			</GridPane.margin>
-		</Label>
-		<Label text="Action" GridPane.rowIndex="5">
-			<GridPane.margin>
-				<Insets left="10.0" right="10.0"/>
-			</GridPane.margin>
-		</Label>
-		<Label text="Text" GridPane.rowIndex="6">
-			<GridPane.margin>
-				<Insets left="10.0" right="10.0"/>
-			</GridPane.margin>
-		</Label>
-		<Label text="Tooltip" GridPane.rowIndex="7">
-			<GridPane.margin>
-				<Insets left="10.0" right="10.0"/>
-			</GridPane.margin>
-		</Label>
-		<TextField fx:id="tfOwnerUID" editable="false" GridPane.columnIndex="1">
-			<GridPane.margin>
-				<Insets right="5.0"/>
-			</GridPane.margin>
-		</TextField>
-		<TextField fx:id="tfOwnerXpath" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="1">
-			<GridPane.margin>
-				<Insets right="5.0"/>
-			</GridPane.margin>
-		</TextField>
-		<TextField fx:id="tfOwnerClass" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="2">
-			<GridPane.margin>
-				<Insets right="5.0"/>
-			</GridPane.margin>
-		</TextField>
-		<TextField fx:id="tfOwnerName" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="3">
-			<GridPane.margin>
-				<Insets right="5.0"/>
-			</GridPane.margin>
-		</TextField>
-		<TextField fx:id="tfOwnerTitle" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="4">
-			<GridPane.margin>
-				<Insets right="5.0"/>
-			</GridPane.margin>
-		</TextField>
-		<TextField fx:id="tfOwnerAction" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="5">
-			<GridPane.margin>
-				<Insets right="5.0"/>
-			</GridPane.margin>
-		</TextField>
-		<TextField fx:id="tfOwnerText" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="6">
-			<GridPane.margin>
-				<Insets right="5.0"/>
-			</GridPane.margin>
-		</TextField>
-		<TextField fx:id="tfOwnerTooltip" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="7">
-			<GridPane.margin>
-				<Insets right="5.0"/>
-			</GridPane.margin>
-		</TextField>
-		<Label text="Operataion" GridPane.rowIndex="8">
-			<GridPane.margin>
-				<Insets left="10.0" right="10.0"/>
-			</GridPane.margin>
-		</Label>
-		<TextField fx:id="tfOwnerOperation" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="8">
-			<GridPane.margin>
-				<Insets right="5.0"/>
-			</GridPane.margin>
-		</TextField>
-	</GridPane>
-	<GridPane>
-		<columnConstraints>
-			<ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="10.0" percentWidth="30.0" prefWidth="100.0"/>
-			<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
-		</columnConstraints>
-		<rowConstraints>
-			<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-			<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-			<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-			<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-			<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-			<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-			<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-			<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-		</rowConstraints>
-		<Label text="Owner info"/>
-		<Label text="ID" GridPane.rowIndex="2">
-			<GridPane.margin>
-				<Insets right="5.0"/>
-			</GridPane.margin>
-		</Label>
-		<TextField fx:id="tfOwnerID" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
-		<Label text="Control" GridPane.rowIndex="3">
-			<GridPane.margin>
-				<Insets right="5.0"/>
-			</GridPane.margin>
-		</Label>
-		<TextField fx:id="tfOwnerControl" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
-		<Label text="Addition" GridPane.rowIndex="4">
-			<GridPane.margin>
-				<Insets right="5.0"/>
-			</GridPane.margin>
-		</Label>
-		<TextField fx:id="tfOwnerAddition" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
-		<Label text="Timeout" GridPane.rowIndex="5">
-			<GridPane.margin>
-				<Insets right="5.0"/>
-			</GridPane.margin>
-		</Label>
-		<TextField fx:id="tfOwnerTimeout" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="5"/>
-		<CheckBox fx:id="checkBoxOwnerWeak" disable="true" mnemonicParsing="false" text="Weak" GridPane.columnIndex="1" GridPane.rowIndex="7"/>
-		<Label text="Visibility" GridPane.rowIndex="6"/>
-		<TextField fx:id="tfOwnerVisibility" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="6"/>
-	</GridPane>
-</GridPane>
+			<GridPane GridPane.columnIndex="1">
+				<columnConstraints>
+					<ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="10.0" percentWidth="30.0" prefWidth="100.0"/>
+					<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+				</columnConstraints>
+				<rowConstraints>
+					<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+					<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+					<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+					<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+					<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+					<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+					<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+					<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+					<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+				</rowConstraints>
+				<Label text="UID">
+					<GridPane.margin>
+						<Insets left="10.0" right="10.0"/>
+					</GridPane.margin>
+				</Label>
+				<Label text="Xpath" GridPane.rowIndex="1">
+					<GridPane.margin>
+						<Insets left="10.0" right="10.0"/>
+					</GridPane.margin>
+				</Label>
+				<Label text="Class" GridPane.rowIndex="2">
+					<GridPane.margin>
+						<Insets left="10.0" right="10.0"/>
+					</GridPane.margin>
+				</Label>
+				<Label text="Name" GridPane.rowIndex="3">
+					<GridPane.margin>
+						<Insets left="10.0" right="10.0"/>
+					</GridPane.margin>
+				</Label>
+				<Label text="Title" GridPane.rowIndex="4">
+					<GridPane.margin>
+						<Insets left="10.0" right="10.0"/>
+					</GridPane.margin>
+				</Label>
+				<Label text="Action" GridPane.rowIndex="5">
+					<GridPane.margin>
+						<Insets left="10.0" right="10.0"/>
+					</GridPane.margin>
+				</Label>
+				<Label text="Text" GridPane.rowIndex="6">
+					<GridPane.margin>
+						<Insets left="10.0" right="10.0"/>
+					</GridPane.margin>
+				</Label>
+				<Label text="Tooltip" GridPane.rowIndex="7">
+					<GridPane.margin>
+						<Insets left="10.0" right="10.0"/>
+					</GridPane.margin>
+				</Label>
+				<TextField fx:id="tfOwnerUID" editable="false" GridPane.columnIndex="1">
+					<GridPane.margin>
+						<Insets right="5.0"/>
+					</GridPane.margin>
+				</TextField>
+				<TextField fx:id="tfOwnerXpath" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="1">
+					<GridPane.margin>
+						<Insets right="5.0"/>
+					</GridPane.margin>
+				</TextField>
+				<TextField fx:id="tfOwnerClass" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="2">
+					<GridPane.margin>
+						<Insets right="5.0"/>
+					</GridPane.margin>
+				</TextField>
+				<TextField fx:id="tfOwnerName" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="3">
+					<GridPane.margin>
+						<Insets right="5.0"/>
+					</GridPane.margin>
+				</TextField>
+				<TextField fx:id="tfOwnerTitle" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="4">
+					<GridPane.margin>
+						<Insets right="5.0"/>
+					</GridPane.margin>
+				</TextField>
+				<TextField fx:id="tfOwnerAction" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="5">
+					<GridPane.margin>
+						<Insets right="5.0"/>
+					</GridPane.margin>
+				</TextField>
+				<TextField fx:id="tfOwnerText" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="6">
+					<GridPane.margin>
+						<Insets right="5.0"/>
+					</GridPane.margin>
+				</TextField>
+				<TextField fx:id="tfOwnerTooltip" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="7">
+					<GridPane.margin>
+						<Insets right="5.0"/>
+					</GridPane.margin>
+				</TextField>
+				<Label text="Operataion" GridPane.rowIndex="8">
+					<GridPane.margin>
+						<Insets left="10.0" right="10.0"/>
+					</GridPane.margin>
+				</Label>
+				<TextField fx:id="tfOwnerOperation" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="8">
+					<GridPane.margin>
+						<Insets right="5.0"/>
+					</GridPane.margin>
+				</TextField>
+			</GridPane>
+			<GridPane>
+				<columnConstraints>
+					<ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="10.0" percentWidth="30.0" prefWidth="100.0"/>
+					<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+				</columnConstraints>
+				<rowConstraints>
+					<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+					<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+					<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+					<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+					<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+					<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+					<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+					<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+				</rowConstraints>
+				<Label text="ID" GridPane.rowIndex="2">
+					<GridPane.margin>
+						<Insets right="5.0"/>
+					</GridPane.margin>
+				</Label>
+				<TextField fx:id="tfOwnerID" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+				<Label text="Control" GridPane.rowIndex="3">
+					<GridPane.margin>
+						<Insets right="5.0"/>
+					</GridPane.margin>
+				</Label>
+				<TextField fx:id="tfOwnerControl" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+				<Label text="Addition" GridPane.rowIndex="4">
+					<GridPane.margin>
+						<Insets right="5.0"/>
+					</GridPane.margin>
+				</Label>
+				<TextField fx:id="tfOwnerAddition" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+				<Label text="Timeout" GridPane.rowIndex="5">
+					<GridPane.margin>
+						<Insets right="5.0"/>
+					</GridPane.margin>
+				</Label>
+				<TextField fx:id="tfOwnerTimeout" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="5"/>
+				<CheckBox fx:id="checkBoxOwnerWeak" disable="true" mnemonicParsing="false" text="Weak" GridPane.columnIndex="1" GridPane.rowIndex="7"/>
+				<Label text="Visibility" GridPane.rowIndex="6"/>
+				<TextField fx:id="tfOwnerVisibility" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="6"/>
+			</GridPane>
+		</GridPane>
+	</center>
+</BorderPane>

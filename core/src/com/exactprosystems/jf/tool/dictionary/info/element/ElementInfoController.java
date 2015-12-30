@@ -15,6 +15,7 @@ import com.exactprosystems.jf.common.xml.control.AbstractControl;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.CssVariables;
+import com.exactprosystems.jf.tool.custom.BorderWrapper;
 import com.exactprosystems.jf.tool.dictionary.DictionaryFx;
 import com.exactprosystems.jf.tool.dictionary.navigation.NavigationController;
 
@@ -28,7 +29,9 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.paint.Color;
 
 import java.net.URL;
 import java.util.Arrays;
@@ -61,6 +64,8 @@ public class ElementInfoController implements Initializable, ContainingParent
 	public TextField tfTimeout;
 	public Button xpathHelper;
 	public CheckBox checkBoxAbsoluteXpath;
+	public GridPane mainGrid;
+	public Button btnGoToOwner;
 
 
 	private Parent pane;
@@ -98,7 +103,10 @@ public class ElementInfoController implements Initializable, ContainingParent
 		assert tfTitle != null : "fx:id=\"tfTitle\" was not injected: check your FXML file 'ElementInfo.fxml'.";
 		assert checkBoxUseNumericHeader != null : "fx:id=\"checkBoxUseNumericHeader\" was not injected: check your FXML file 'ElementInfo.fxml'.";
 		Common.customizeLabeled(this.xpathHelper, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.XPATH_TREE);
-		Platform.runLater(() -> this.checkBoxAbsoluteXpath.setTooltip(new Tooltip("Absolute xpath")));
+		Platform.runLater(() -> {
+			this.checkBoxAbsoluteXpath.setTooltip(new Tooltip("Absolute xpath"));
+			((BorderPane) this.pane).setCenter(BorderWrapper.wrap(this.mainGrid).color(Color.BLACK).title("Element info").build());
+		});
 	}
 
 	public void init(DictionaryFx model, Configuration configuration, GridPane gridPane, NavigationController navigation, String themePath)
