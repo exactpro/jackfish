@@ -663,7 +663,7 @@ public class SeleniumRemoteApplication extends RemoteApplication
 			DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
 			Document document = docBuilder.newDocument();
 			log("before script");
-			logger.info(SCRIPT);
+//			logger.info(SCRIPT);
 			Object returnObject = driver.executeScript(SCRIPT, ownerElement);
 			log("after script");
 			/**
