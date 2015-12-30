@@ -7,6 +7,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.exactprosystems.jf.tool.custom;
 
+import com.exactprosystems.jf.tool.CssVariables;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
@@ -21,7 +22,7 @@ public final class BorderWrapper
 {
 	private final double outerPad = 10;
 	private final double innerPad = 15;
-	private final double radius = 0;
+	private final double radius = 5;
 	private final double thick = 1;
 	private BorderStrokeStyle strokeStyle = BorderStrokeStyle.SOLID;
 
@@ -118,6 +119,7 @@ public final class BorderWrapper
 					if (title != null)
 					{
 						titleLabel = new Label(title);
+						titleLabel.getStyleClass().add(CssVariables.BORDER_WRAPPER_TITLE);
 
 						// give the text a bit of space on the left...
 						titleLabel.setPadding(new Insets(0, 0, 0, TITLE_PADDING));

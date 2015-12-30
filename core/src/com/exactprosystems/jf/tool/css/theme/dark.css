@@ -276,10 +276,10 @@
 	-fx-stroke-dash-array : 25, 20, 5, 20;
 }
 
-/*Grids on dictionary tab*/
-.gridPaneBorder {
-	-fx-border-color: derive(-fx-text-base-color, 10%);
-	-fx-border-width : 1px;
+/*BorderWrapper*/
+.borderWrapperTitle {
+	-fx-text-fill : -fx-text-base-color;
+
 }
 
 /*MatrixFx tab*/

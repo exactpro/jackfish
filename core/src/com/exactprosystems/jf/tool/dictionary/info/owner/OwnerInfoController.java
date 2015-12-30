@@ -9,6 +9,7 @@
 package com.exactprosystems.jf.tool.dictionary.info.owner;
 
 import com.exactprosystems.jf.api.app.IControl;
+import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.custom.BorderWrapper;
 import javafx.application.Platform;
@@ -18,7 +19,6 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
-import javafx.scene.paint.Color;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -70,7 +70,7 @@ public class OwnerInfoController implements Initializable, ContainingParent
 		assert tfOwnerVisibility != null : "fx:id=\"tfOwnerVisibility\" was not injected: check your FXML file 'OwnerInfo.fxml'.";
 		assert tfOwnerAddition != null : "fx:id=\"tfOwnerAddition\" was not injected: check your FXML file 'OwnerInfo.fxml'.";
 		assert tfOwnerXpath != null : "fx:id=\"tfOwnerXpath\" was not injected: check your FXML file 'OwnerInfo.fxml'.";
-		Platform.runLater(() -> ((BorderPane) this.pane).setCenter(BorderWrapper.wrap(this.mainGrid).color(Color.BLACK).title("Owner info").build()));
+		Platform.runLater(() -> ((BorderPane) this.pane).setCenter(BorderWrapper.wrap(this.mainGrid).color(Common.currentTheme().getReverseColor()).title("Owner info").build()));
 	}
 
 	public void init(GridPane gridPane)
@@ -99,7 +99,7 @@ public class OwnerInfoController implements Initializable, ContainingParent
 			this.tfOwnerAddition.setText(get(owner, "", IControl::getAddition));
 			this.tfOwnerVisibility.setText(get(owner, "", IControl::getVisibility));
 			this.tfOwnerTimeout.setText(get(owner, "0", IControl::getTimeout));
-			this.checkBoxOwnerWeak.setSelected(owner == null ? false : owner.isWeak());
+			this.checkBoxOwnerWeak.setSelected(owner != null && owner.isWeak());
 		} );
 	}
 

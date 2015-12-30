@@ -22,7 +22,6 @@ import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.main.Main;
 import com.exactprosystems.jf.tool.settings.SettingsPanel;
 import com.exactprosystems.jf.tool.settings.Theme;
-
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
@@ -38,9 +37,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-
 import org.w3c.dom.Document;
 
 import java.net.URL;
@@ -96,8 +93,8 @@ public class NavigationController implements Initializable, ContainingParent
 		assert btnFindElement != null : "fx:id=\"btnFindElement\" was not injected: check your FXML file 'Navigation.fxml'.";
 		assert btnFindDialog != null : "fx:id=\"btnFindDialog\" was not injected: check your FXML file 'Navigation.fxml'.";
 		Platform.runLater(() -> {
-			((GridPane) this.pane).add(BorderWrapper.wrap(this.dialogGridPane).title("Dialog").color(Color.BLACK).build(), 0, 0);
-			((GridPane) this.pane).add(BorderWrapper.wrap(this.elementGridPane).title("Element").color(Color.BLACK).build(), 2, 0);
+			((GridPane) this.pane).add(BorderWrapper.wrap(this.dialogGridPane).title("Dialog").color(Common.currentTheme().getReverseColor()).build(), 0, 0);
+			((GridPane) this.pane).add(BorderWrapper.wrap(this.elementGridPane).title("Element").color(Common.currentTheme().getReverseColor()).build(), 2, 0);
 		});
 	}
 

@@ -222,10 +222,11 @@
 	-fx-effect : innershadow(gaussian, white, 1, 1, 0,0);
 	-fx-stroke-dash-array : 25, 20, 5, 20;
 }
-/*grid pane on dictionary tab*/
-.gridPaneBorder {
-    -fx-border-color: derive(-fx-text-base-color, 10%);
-    -fx-border-width : 1px;
+
+/*BorderWrapper*/
+.borderWrapperTitle {
+	-fx-text-fill : black;
+
 }
 
 /*MatrixFx tab*/

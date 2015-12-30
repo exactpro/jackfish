@@ -8,7 +8,10 @@
 
 package com.exactprosystems.jf.tool.dictionary.info.element;
 
-import com.exactprosystems.jf.api.app.*;
+import com.exactprosystems.jf.api.app.Addition;
+import com.exactprosystems.jf.api.app.ControlKind;
+import com.exactprosystems.jf.api.app.IControl;
+import com.exactprosystems.jf.api.app.Visibility;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.common.Configuration;
 import com.exactprosystems.jf.common.xml.control.AbstractControl;
@@ -18,7 +21,6 @@ import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.custom.BorderWrapper;
 import com.exactprosystems.jf.tool.dictionary.DictionaryFx;
 import com.exactprosystems.jf.tool.dictionary.navigation.NavigationController;
-
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -31,7 +33,6 @@ import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
-import javafx.scene.paint.Color;
 
 import java.net.URL;
 import java.util.Arrays;
@@ -105,7 +106,7 @@ public class ElementInfoController implements Initializable, ContainingParent
 		Common.customizeLabeled(this.xpathHelper, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.XPATH_TREE);
 		Platform.runLater(() -> {
 			this.checkBoxAbsoluteXpath.setTooltip(new Tooltip("Absolute xpath"));
-			((BorderPane) this.pane).setCenter(BorderWrapper.wrap(this.mainGrid).color(Color.BLACK).title("Element info").build());
+			((BorderPane) this.pane).setCenter(BorderWrapper.wrap(this.mainGrid).color(Common.currentTheme().getReverseColor()).title("Element info").build());
 		});
 	}
 

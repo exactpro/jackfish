@@ -51,8 +51,8 @@ public class CssVariables
 	public static final String	XPATH_RECTANGLE				= "xpathRectangle";
 	public static final String	XPATH_INSPECT_RECTNAGLE		= "xpathInspectRectangle";
 
-	/*Grid pane on dictionary tab*/
-	public static final String	GRID_PANE_BORDER			= "gridPaneBorder";
+	/*BorderWrapper*/
+	public static final String	BORDER_WRAPPER_TITLE		= "borderWrapperTitle";
 
 	/*Matrix tab*/
 	public static final String	EXECUTING_MATRIX_ITEM		= "executingMatrixItem";

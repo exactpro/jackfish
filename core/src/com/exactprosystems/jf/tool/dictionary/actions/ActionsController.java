@@ -31,7 +31,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
-import javafx.scene.paint.Color;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -95,7 +94,7 @@ public class ActionsController implements Initializable, ContainingParent
 			Common.customizeLabeled(btnConnectApplication, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.CONNECT_APPLICATION);
 			Common.customizeLabeled(btnStop, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.STOP_APPLICATION);
 
-			((BorderPane) this.pane).setCenter(BorderWrapper.wrap(this.mainGrid).title("Actions").color(Color.BLACK).build());
+			((BorderPane) this.pane).setCenter(BorderWrapper.wrap(this.mainGrid).title("Actions").color(Common.currentTheme().getReverseColor()).build());
 
 		});
 	}
