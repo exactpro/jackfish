@@ -13,6 +13,7 @@ import com.exactprosystems.jf.tool.custom.layout.CustomRectangle;
 import com.exactprosystems.jf.tool.custom.layout.LayoutExpressionBuilderController;
 import com.exactprosystems.jf.tool.custom.scale.IScaleListener;
 import com.exactprosystems.jf.tool.custom.scale.ScalePane;
+
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
@@ -31,11 +32,13 @@ import javafx.scene.layout.*;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
 import javax.imageio.ImageIO;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
@@ -91,6 +94,11 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 	private CustomRectangle		rectangle;
 	private boolean needInspect = false;
 	private CustomRectangle		inspectRectangle;
+
+	private double scale = 1.0;
+	private Dimension initial = new Dimension(0, 0);
+	private Point offset = new Point(0, 0);
+	private Map<Rectangle, Set<XpathItem>> map = new HashMap<>();
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources)
@@ -166,6 +174,7 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 	@Override
 	public void changeScale(double scale)
 	{
+		this.scale = scale;
 		this.model.changeScale(scale);
 	}
 
@@ -321,6 +330,26 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 			createCanvas(image);
 			this.hBoxUtil.setVisible(true);
 			this.cbShowImage.setSelected(true);
+			
+			buildMap(new Dimension(image.getWidth() / 16, image.getHeight() / 16), this.map, this.treeView.getRoot());
+		}
+	}
+
+	private void buildMap(Dimension cellSize, Map<Rectangle, Set<XpathItem>> map, TreeItem<XpathItem> item)
+	{
+		// TODO Auto-generated method stub
+		Rectangle rec = item.getValue().getRectangle();
+		if (rec != null)
+		{
+			Rectangle rect1 = new Rectangle(new Point(rec.x / 16, rec.y / 16), cellSize);
+			Rectangle rect2 = new Rectangle(new Point(rec.x / 16, rec.y / 16), cellSize);
+			Rectangle rect3 = new Rectangle(new Point(rec.x / 16, rec.y / 16), cellSize);
+			Rectangle rect4 = new Rectangle(new Point(rec.x / 16, rec.y / 16), cellSize);
+		}
+		
+		for (TreeItem<XpathItem> child : item.getChildren())
+		{
+			buildMap(cellSize, map, child);
 		}
 	}
 
@@ -445,15 +474,15 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 	{
 		boolean isDocument = node.getNodeType() == Node.DOCUMENT_NODE;
 
-		TreeItem<XpathItem> root = isDocument ? parent : new TreeItem<>();
+		TreeItem<XpathItem> treeItem = isDocument ? parent : new TreeItem<>();
 		IntStream.range(0, node.getChildNodes().getLength())
 				.mapToObj(node.getChildNodes()::item)
 				.filter(item -> item.getNodeType() == Node.ELEMENT_NODE)
-				.forEach(item -> displayTree(item, root));
+				.forEach(item -> displayTree(item, treeItem));
 		if (!isDocument)
 		{
-			root.setValue(new XpathItem(stringNode(node, XpathViewer.text(node)), node));
-			parent.getChildren().add(root);
+			treeItem.setValue(new XpathItem(stringNode(node, XpathViewer.text(node)), node));
+			parent.getChildren().add(treeItem);
 		}
 	}
 

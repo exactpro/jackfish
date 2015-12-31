@@ -27,6 +27,11 @@ public class XpathViewer
 	private Optional<Map.Entry<Rectangle, String>> inspectEntry = Optional.empty();
 
 	private int xOffset = 0;
+	private int yOffset = 0;
+	private Map<Rectangle, String> mapRectangles = new HashMap<>();
+	private Map<Rectangle, String> mapCurrentRectangles = new HashMap<>();
+
+
 	private Document						document;
 	private XpathViewerContentController	controller;
 	private Node							currentNode;
@@ -34,10 +39,6 @@ public class XpathViewer
 	private IRemoteApplication				service;
 
 	private String							relativeXpath;
-	private int yOffset = 0;
-
-	private Map<Rectangle, String> mapRectangles = new HashMap<>();
-	private Map<Rectangle, String> mapCurrentRectangles = new HashMap<>();
 
 	public XpathViewer(Locator owner, Document document, IRemoteApplication service)
 	{

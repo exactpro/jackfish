@@ -1,28 +1,40 @@
 package com.exactprosystems.jf.tool.custom.xpath;
 
+import java.awt.Rectangle;
+
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
+
 import org.w3c.dom.Node;
+
+import com.exactprosystems.jf.api.app.IRemoteApplication;
 
 public class XpathItem
 {
 	private HBox box;
 	private Node node;
+	private Rectangle rectangle;
 
 	public XpathItem(HBox box, Node node)
 	{
 		this.box = box;
 		this.node = node;
+		this.rectangle = (Rectangle)node.getUserData(IRemoteApplication.rectangleName);
 	}
 
 	public HBox getBox()
 	{
-		return box;
+		return this.box;
 	}
 
 	public Node getNode()
 	{
-		return node;
+		return this.node;
+	}
+	
+	public Rectangle getRectangle()
+	{
+		return this.rectangle;
 	}
 
 	public String getText()
