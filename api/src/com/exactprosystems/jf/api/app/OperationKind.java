@@ -476,35 +476,27 @@ public enum OperationKind
 		{
 			Locator owner = holder.get(LocatorKind.Owner);
 
-			if (locator.getControlKind() == ControlKind.Table && executor.tableIsContainer())
+			if (locator.getAddition() == Addition.Many)
 			{
-				holder.setValue(executor.find(owner, locator));
+				T dialog = null;
+				if (isReal(owner))
+				{
+					dialog = executor.find(null, owner);
+				}
+				
+				if (isReal(locator))
+				{
+					List<T> list = executor.findAll(locator.getControlKind(), dialog, locator);
+					holder.setValues(list);
+				}
 			}
 			else
 			{
-				if (locator.getAddition() == Addition.Many)
+				if (isReal(locator))
 				{
-					T dialog = null;
-					if (isReal(owner))
-					{
-						dialog = executor.find(null, owner);
-					}
-					
-					if (isReal(locator))
-					{
-						List<T> list = executor.findAll(locator.getControlKind(), dialog, locator);
-						holder.setValues(list);
-					}
-				}
-				else
-				{
-					if (isReal(locator))
-					{
-						holder.setValue(executor.find(owner, locator));
-					}
+					holder.setValue(executor.find(owner, locator));
 				}
 			}
-			
 			
 			if (holder.isEmpty())
 			{
