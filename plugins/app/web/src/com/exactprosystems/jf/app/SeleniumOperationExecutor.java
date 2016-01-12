@@ -21,6 +21,7 @@ import org.openqa.selenium.*;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.Point;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.interactions.*;
 import org.openqa.selenium.support.events.EventFiringWebDriver;
 import org.openqa.selenium.support.ui.Select;
@@ -856,6 +857,10 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 			{
 				switch (key)
 				{
+					case DIG1:
+						this.customAction.sendKeys(component, Keys.NUMPAD1).perform();
+						break;
+
 					case DOWN:
 						this.customAction.sendKeys(component, Keys.DOWN).perform();
 						break;
@@ -978,12 +983,12 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 				int width = component.getSize().getWidth();
 				if (height > width)
 				{
-					customAction.moveToElement(component, 0, (int) ((double) (value * ((double) width / 100)))).click().build().perform();
+					customAction.moveToElement(component, width / 2, (int) ((double) (value * ((double) height / 100)))).click().build().perform();
 				}
 				//horizontal slider
 				else
 				{
-					customAction.moveToElement(component, (int) ((double) (value * ((double) width / 100))), 0).click().build().perform();
+					customAction.moveToElement(component, (int) ((double) (value * ((double) width / 100))), height/2).click().build().perform();
 				}
 
 				return true;
