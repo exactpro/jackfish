@@ -166,7 +166,7 @@ public class Parser
 			throw new MatrixException(count, currentItem, e);
 		}
 		
-		root.bypass(v -> v.correctParametersType());
+		root.bypass(MatrixItem::correctParametersType);
 		matrix.enumerate();
 		root.saved();
 		return root;

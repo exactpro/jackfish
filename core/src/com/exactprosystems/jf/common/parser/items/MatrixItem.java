@@ -277,7 +277,7 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 	public final void init(Matrix owner, List<String> comments,
 			Map<Tokens, String> systemParameters, Parameters userParameters) throws MatrixException
 	{
-		MatrixItemAttribute annotation = ActionItem.class.getAnnotation(MatrixItemAttribute.class);
+		MatrixItemAttribute annotation = this.getClass().getAnnotation(MatrixItemAttribute.class);
 		boolean hasValue = annotation.hasValue();
 		this.owner 			= owner;
 		if (comments != null)
