@@ -496,12 +496,13 @@ public enum OperationKind
 				{
 					holder.setValue(executor.find(owner, locator));
 				}
+
+				if (holder.isEmpty())
+				{
+					throw new Exception("Component is not found for locator = " + locator);
+				}
 			}
 			
-			if (holder.isEmpty())
-			{
-				throw new Exception("Component is not found for locator = " + locator);
-			}
 		}
 
 		return operateDerived(part, executor, holder, result);
