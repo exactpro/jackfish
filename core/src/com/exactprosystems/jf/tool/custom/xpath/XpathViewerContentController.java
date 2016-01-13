@@ -96,7 +96,6 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 
 	private double										scale		= 1.0;
 	private Dimension									initial		= new Dimension(0, 0);
-	private Point										offset		= new Point(0, 0);
 	private Map<Rectangle, Set<TreeItem<XpathItem>>>	map			= new HashMap<>();
 
 	@Override
@@ -328,8 +327,6 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 			if (image != null)
 			{
 				this.initial = new Dimension(image.getWidth(), image.getHeight());
-				this.offset = new Point(offsetX, offsetY);
-				
 				this.splitPane.getStyleClass().remove(CssVariables.SPLIT_PANE_HIDE_DIVIDER);
 				scrollPaneImage.setMaxHeight(Region.USE_COMPUTED_SIZE);
 				scrollPaneImage.setPrefHeight(Region.USE_COMPUTED_SIZE);
@@ -338,6 +335,7 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 				this.hBoxUtil.setVisible(true);
 				this.cbShowImage.setSelected(true);
 				
+				correctMap(offsetX, offsetY, this.treeView.getRoot());
 				buildMap(image.getWidth(), image.getHeight(), new Dimension(image.getWidth() / 16, image.getHeight() / 16));
 			}
 		});
@@ -374,6 +372,26 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 	{
 		this.inspectRectangle.setVisible(false);
 		this.lblInspectRectangle.setText("");
+	}
+
+	private void correctMap(int offsetX, int offsetY, TreeItem<XpathItem> item)
+	{
+		XpathItem xpath = item.getValue();
+		if (xpath != null)
+		{
+			Rectangle rec = xpath.getRectangle();
+			
+			if (rec != null)
+			{
+				rec.x -= offsetX;
+				rec.y -= offsetY;
+			}
+		}
+		
+		for (TreeItem<XpathItem> child : item.getChildren())
+		{
+			correctMap(offsetX, offsetY, child);
+		}
 	}
 
 	private void buildMap(int width, int height, Dimension cellSize)
