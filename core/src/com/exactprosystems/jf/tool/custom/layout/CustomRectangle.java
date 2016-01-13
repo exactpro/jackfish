@@ -8,6 +8,7 @@
 package com.exactprosystems.jf.tool.custom.layout;
 
 import com.exactprosystems.jf.tool.CssVariables;
+
 import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.input.MouseEvent;
@@ -31,6 +32,8 @@ public class CustomRectangle
 	public static final Color DEFAULT_COLOR = Color.BLACK;
 
 	public Object data;
+	
+	private Rectangle rectangle;
 
 	private Line top;
 	private Line left;
@@ -42,14 +45,15 @@ public class CustomRectangle
 	private boolean isInit = false;
 	private boolean isVisible = false;
 
-	public CustomRectangle(Rectangle rectangle)
+	public CustomRectangle(Rectangle rectangle, double scaleFactor)
 	{
 		this();
-		updateRectangle(rectangle);
+		updateRectangle(rectangle, scaleFactor);
 	}
 
 	public CustomRectangle()
 	{
+		this.rectangle = new Rectangle();
 
 		this.top = new Line();
 		this.left = new Line();
@@ -72,17 +76,24 @@ public class CustomRectangle
 		return this.data;
 	}
 
-	public void updateRectangle(Rectangle rectangle)
+	public void update(double scaleFactor)
 	{
-		double x = rectangle.getX();
-		double y = rectangle.getY();
-		double w = rectangle.getWidth();
-		double h = rectangle.getHeight();
+		updateRectangle(this.rectangle, scaleFactor);
+	}
+
+	public void updateRectangle(Rectangle rectangle, double scaleFactor)
+	{
+		double x = rectangle.getX() * scaleFactor;
+		double y = rectangle.getY() * scaleFactor;
+		double w = rectangle.getWidth() * scaleFactor;
+		double h = rectangle.getHeight() * scaleFactor;
 		this.updateRectangle(x, y, w, h);
 	}
 
 	public void updateRectangle(double x, double y, double w, double h)
 	{
+		this.rectangle.setRect(x, y, w, h);
+		
 		this.top.setStartX(x);
 		this.top.setStartY(y);
 		this.top.setEndX(x + w);
@@ -123,7 +134,7 @@ public class CustomRectangle
 
 	public Rectangle getRectangle()
 	{
-		return new Rectangle(((int) top.getStartX()), ((int) top.getStartY()), ((int) bot.getEndX()), ((int) bot.getEndY()));
+		return this.rectangle;
 	}
 
 	public void setGroup(Group group)

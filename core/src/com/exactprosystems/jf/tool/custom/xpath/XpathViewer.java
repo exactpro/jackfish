@@ -20,16 +20,8 @@ import java.util.stream.IntStream;
 
 public class XpathViewer
 {
-	private double currentZoom = 1;
-	private double initialWidth = 0;
-	private double initialHeight = 0;
-	private Optional<Rectangle> currentRectangle = Optional.empty();
-	private Optional<Map.Entry<Rectangle, String>> inspectEntry = Optional.empty();
-
-	private int xOffset = 0;
-	private int yOffset = 0;
-	private Map<Rectangle, String> mapRectangles = new HashMap<>();
-	private Map<Rectangle, String> mapCurrentRectangles = new HashMap<>();
+//	private Map<Rectangle, String> mapRectangles = new HashMap<>();
+//	private Map<Rectangle, String> mapCurrentRectangles = new HashMap<>();
 
 
 	private Document						document;
@@ -45,7 +37,21 @@ public class XpathViewer
 		this.document = document;
 		this.owner = owner;
 		this.service = service;
-		this.bypassDocument(this.document, (r, s) -> this.mapRectangles.put(r, s));
+//		this.bypassDocument(this.document, (r, s) -> this.mapRectangles.put(r, s));
+	}
+	
+	private static class ImageAndOffset
+	{
+		public ImageAndOffset(BufferedImage image, int offsetX, int offsetY)
+		{
+			this.image = image;
+			this.offsetX = offsetX;
+			this.offsetY = offsetY;
+		}
+		
+		public BufferedImage image;
+		public int offsetX;
+		public int offsetY;
 	}
 
 	public String show(String initial, String title, String themePath, boolean fullScreen)
@@ -55,30 +61,33 @@ public class XpathViewer
 		this.controller.displayTree(this.document);
 		if (this.service != null)
 		{
-			Task<BufferedImage> task = new Task<BufferedImage>()
+			Task<ImageAndOffset> task = new Task<ImageAndOffset>()
 			{
 				@Override
-				protected BufferedImage call() throws Exception
+				protected ImageAndOffset call() throws Exception
 				{
+					int offsetX = 0, offsetY = 0;
 					if (owner != null)
 					{
 						Rectangle rectangle = service.getRectangle(null, owner);
-						xOffset = rectangle.x;
-						yOffset = rectangle.y;
+						offsetX = rectangle.x;
+						offsetY = rectangle.y;
 					}
 					BufferedImage image = service.getImage(null, owner).getImage();
-					initialWidth = image.getWidth();
-					initialHeight = image.getHeight();
-					return image;
+					return new ImageAndOffset(image, offsetX, offsetY);
 				}
 			};
-			task.setOnSucceeded(event -> Common.tryCatch(() -> this.controller.displayImage(((BufferedImage) event.getSource().getValue())), "Error on display image"));
-			task.setOnFailed(event -> Common.tryCatch(() -> this.controller.displayImage(null), "Error on display image"));
+			task.setOnSucceeded(event -> Common.tryCatch(() -> 
+			{
+				ImageAndOffset res = (ImageAndOffset) event.getSource().getValue();
+				this.controller.displayImage(res.image, res.offsetX, res.offsetY);
+			}, "Error on display image"));
+			task.setOnFailed(event -> Common.tryCatch(() -> this.controller.displayImage(null, 0, 0), "Error on display image"));
 			new Thread(task).start();
 		}
 		else
 		{
-			Common.tryCatch(() -> this.controller.displayImage(null), "Error on display image");
+			Common.tryCatch(() -> this.controller.displayImage(null, 0, 0), "Error on display image");
 		}
 		String result = this.controller.show(title, themePath, fullScreen);
 		return result == null ? initial : result;
@@ -123,8 +132,7 @@ public class XpathViewer
 		this.controller.displayCounters(evaluate(xpath1), evaluate(xpath2), evaluate(xpath3), evaluate(xpath4));
 
 		Rectangle rectangle = (Rectangle) this.currentNode.getUserData(IRemoteApplication.rectangleName);
-		this.currentRectangle = Optional.ofNullable(rectangle);
-		this.displayRectangle();
+		this.controller.displayRectangle(rectangle);
 	}
 	
 	public static String text(Node node)
@@ -145,115 +153,90 @@ public class XpathViewer
 		return sb.toString();
 	}
 
-	public void changeScale(double scale)
-	{
-		this.currentZoom = scale;
-		resizeImage();
-	}
-
-	public void startInspect()
-	{
-		this.mapCurrentRectangles.clear();
-		this.mapCurrentRectangles.putAll(this.mapRectangles.entrySet()
-				.stream()
-				.collect(Collectors.toMap(key -> new Rectangle(
-						(int) ((key.getKey().x - xOffset) * currentZoom),
-						(int) ((key.getKey().y - xOffset) * currentZoom),
-						(int) (key.getKey().width * currentZoom),
-						(int) (key.getKey().height * currentZoom)), Map.Entry::getValue))
-		);
-	}
-
-	public void moveOnImage(double x, double y)
-	{
-		Map.Entry<Rectangle, String> oldEntry = this.inspectEntry.orElse(new AbstractMap.SimpleEntry<>(new Rectangle(-1, -1, -1, -1), ""));
-		Rectangle oldRectangle = oldEntry.getKey();
-		this.inspectEntry = this.mapCurrentRectangles.entrySet()
-				.stream()
-				.filter(entry -> {
-					Rectangle r = entry.getKey();
-					return r.x < x && (r.x + r.width) > x &&
-							r.y < y && (r.y + r.height) > y;
-				})
-				.sorted((e1,e2) -> Double.compare(e1.getKey().width * e1.getKey().height, e2.getKey().width * e2.getKey().height))
-				.findFirst();
-		this.inspectEntry.filter(entry -> !Objects.equals(oldRectangle, entry.getKey())).ifPresent(entry -> this.controller.displayInspectRectangle(entry.getKey(), entry.getValue()));
-	}
-
-	public void clickOnImage()
-	{
-		this.inspectEntry.ifPresent(entry -> this.controller.selectItem(entry.getKey()));
-		this.controller.stopInspect();
-	}
+//	public void startInspect()
+//	{
+//		this.mapCurrentRectangles.clear();
+//		this.mapCurrentRectangles.putAll(this.mapRectangles.entrySet()
+//				.stream()
+//				.collect(Collectors.toMap(key -> new Rectangle(
+//						(int) ((key.getKey().x - xOffset)),
+//						(int) ((key.getKey().y - xOffset)),
+//						(int) (key.getKey().width),
+//						(int) (key.getKey().height)), Map.Entry::getValue))
+//		);
+//	}
+//
+//	public void moveOnImage(double x, double y)
+//	{
+//		Map.Entry<Rectangle, String> oldEntry = this.inspectEntry.orElse(new AbstractMap.SimpleEntry<>(new Rectangle(-1, -1, -1, -1), ""));
+//		Rectangle oldRectangle = oldEntry.getKey();
+//		this.inspectEntry = this.mapCurrentRectangles.entrySet()
+//				.stream()
+//				.filter(entry -> {
+//					Rectangle r = entry.getKey();
+//					return r.x < x && (r.x + r.width) > x &&
+//							r.y < y && (r.y + r.height) > y;
+//				})
+//				.sorted((e1,e2) -> Double.compare(e1.getKey().width * e1.getKey().height, e2.getKey().width * e2.getKey().height))
+//				.findFirst();
+//		this.inspectEntry.filter(entry -> !Objects.equals(oldRectangle, entry.getKey())).ifPresent(entry -> this.controller.displayInspectRectangle(entry.getKey(), entry.getValue()));
+//	}
+//
+//	public void clickOnImage()
+//	{
+//		this.inspectEntry.ifPresent(entry -> this.controller.selectItem(entry.getKey()));
+//		this.controller.stopInspect();
+//	}
 
 	// ============================================================
 	// private methods
 	// ============================================================
-	private String getStringNode(Node node)
-	{
-		StringBuilder builder = new StringBuilder();
-		String id = "";
-		String className = "";
-		builder.append(node.getNodeName()).append(" ");
-		NamedNodeMap attrs = node.getAttributes();
-		if (attrs != null)
-		{
-			for (int i = 0; i < attrs.getLength(); i++)
-			{
-				Node attr = attrs.item(i);
-				if (attr != null && attr.getNodeName().equals("id"))
-				{
-					id = attr.getNodeValue();
-				}
-				if (attr != null && attr.getNodeName().equals("class"))
-				{
-					className = attr.getNodeValue();
-				}
-			}
-		}
-		if (!id.isEmpty())
-		{
-			builder.append("#").append(id).append(" ");
-		}
-		if (!className.isEmpty())
-		{
-			Arrays.stream(className.split("\\s")).forEach(cn -> builder.append(".").append(cn).append(" "));
-		}
-		return builder.toString();
-	}
-
-	private void bypassDocument(Node node, BiConsumer<Rectangle, String> biConsumer)
-	{
-		Object userData = node.getUserData(IRemoteApplication.rectangleName);
-		Optional.ofNullable(userData)
-				.filter(data -> data instanceof Rectangle)
-				.map(rect -> (Rectangle) rect)
-				.ifPresent(rec -> biConsumer.accept(rec, getStringNode(node)));
-
-		IntStream.range(0, node.getChildNodes().getLength())
-				.mapToObj(node.getChildNodes()::item)
-				.filter(item -> item.getNodeType() == Node.ELEMENT_NODE)
-				.forEach(childNode -> bypassDocument(childNode, biConsumer));
-	}
-
-	private void resizeImage()
-	{
-		this.controller.resizeImage(this.currentZoom * this.initialWidth, this.currentZoom * this.initialHeight);
-		displayRectangle();
-	}
-
-	private void displayRectangle()
-	{
-		this.currentRectangle.ifPresent(rect -> {
-			Rectangle newRectangle = new Rectangle(
-					(int) ((rect.x - xOffset) * currentZoom),
-					(int) ((rect.y - yOffset) * currentZoom),
-					(int) ((rect.width) * currentZoom),
-					(int) ((rect.height) * currentZoom)
-			);
-			this.controller.displayRectangle(newRectangle);
-		});
-	}
+//	private String getStringNode(Node node)
+//	{
+//		StringBuilder builder = new StringBuilder();
+//		String id = "";
+//		String className = "";
+//		builder.append(node.getNodeName()).append(" ");
+//		NamedNodeMap attrs = node.getAttributes();
+//		if (attrs != null)
+//		{
+//			for (int i = 0; i < attrs.getLength(); i++)
+//			{
+//				Node attr = attrs.item(i);
+//				if (attr != null && attr.getNodeName().equals("id"))
+//				{
+//					id = attr.getNodeValue();
+//				}
+//				if (attr != null && attr.getNodeName().equals("class"))
+//				{
+//					className = attr.getNodeValue();
+//				}
+//			}
+//		}
+//		if (!id.isEmpty())
+//		{
+//			builder.append("#").append(id).append(" ");
+//		}
+//		if (!className.isEmpty())
+//		{
+//			Arrays.stream(className.split("\\s")).forEach(cn -> builder.append(".").append(cn).append(" "));
+//		}
+//		return builder.toString();
+//	}
+//
+//	private void bypassDocument(Node node, BiConsumer<Rectangle, String> biConsumer)
+//	{
+//		Object userData = node.getUserData(IRemoteApplication.rectangleName);
+//		Optional.ofNullable(userData)
+//				.filter(data -> data instanceof Rectangle)
+//				.map(rect -> (Rectangle) rect)
+//				.ifPresent(rec -> biConsumer.accept(rec, getStringNode(node)));
+//
+//		IntStream.range(0, node.getChildNodes().getLength())
+//				.mapToObj(node.getChildNodes()::item)
+//				.filter(item -> item.getNodeType() == Node.ELEMENT_NODE)
+//				.forEach(childNode -> bypassDocument(childNode, biConsumer));
+//	}
 
 	private List<Node> evaluate(String xpathStr)
 	{

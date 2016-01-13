@@ -58,8 +58,8 @@ public class ScalePane extends HBox
 				return;
 			}
 			this.currentZoom = this.zooms[--this.currentZoomPosition];
-			this.displayScale();
-			this.listener();
+			displayScale();
+			listener();
 		});
 
 		this.btnZoomPlus.setOnAction(event -> {
@@ -68,8 +68,8 @@ public class ScalePane extends HBox
 				return;
 			}
 			this.currentZoom = zooms[++this.currentZoomPosition];
-			this.displayScale();
-			this.listener();
+			displayScale();
+			listener();
 		});
 
 		this.btnZoomMinus.setOpacity(0.5);

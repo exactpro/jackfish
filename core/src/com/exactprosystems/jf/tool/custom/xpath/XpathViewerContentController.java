@@ -1,6 +1,5 @@
 package com.exactprosystems.jf.tool.custom.xpath;
 
-import com.exactprosystems.jf.api.app.IRemoteApplication;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.common.parser.SearchHelper;
 import com.exactprosystems.jf.tool.Common;
@@ -52,53 +51,53 @@ import java.util.stream.IntStream;
 
 public class XpathViewerContentController implements Initializable, ContainingParent, IScaleListener
 {
-	public TreeView<XpathItem>	treeView;
-	public Label				labelXpath1Count;
-	public Label				labelXpath2Count;
-	public Label				labelXpath3Count;
-	public Label				labelXpath4Count;
-	public Button				btnXpath1;
-	public Button				btnXpath2;
-	public Button				btnXpath3;
-	public Button				btnXpath4;
-	public Button				btnSaveXpath1;
-	public Button				btnSaveXpath2;
-	public Button				btnSaveXpath3;
-	public Button				btnSaveXpath4;
-	public CheckBox				useText;
-	public HBox					hBoxCheckboxes;
-	public CustomFieldWithButton cfRelativeFrom;
-	public CustomFieldWithButton cfMainExpression;
-	public SplitPane splitPane;
-	public Group group;
-	public AnchorPane anchorTree;
-	public CheckBox cbShowImage;
-	public ScrollPane scrollPaneImage;
-	public TitledPane tpHelper;
-	public GridPane gridPaneHelper;
-	public AnchorPane anchorImage;
-	public HBox hBoxUtil;
+	public TreeView<XpathItem>							treeView;
+	public Label										labelXpath1Count;
+	public Label										labelXpath2Count;
+	public Label										labelXpath3Count;
+	public Label										labelXpath4Count;
+	public Button										btnXpath1;
+	public Button										btnXpath2;
+	public Button										btnXpath3;
+	public Button										btnXpath4;
+	public Button										btnSaveXpath1;
+	public Button										btnSaveXpath2;
+	public Button										btnSaveXpath3;
+	public Button										btnSaveXpath4;
+	public CheckBox										useText;
+	public HBox											hBoxCheckboxes;
+	public CustomFieldWithButton						cfRelativeFrom;
+	public CustomFieldWithButton						cfMainExpression;
+	public SplitPane									splitPane;
+	public Group										group;
+	public AnchorPane									anchorTree;
+	public CheckBox										cbShowImage;
+	public ScrollPane									scrollPaneImage;
+	public TitledPane									tpHelper;
+	public GridPane										gridPaneHelper;
+	public AnchorPane									anchorImage;
+	public HBox											hBoxUtil;
 
-	public ScalePane scalePane;
-	public ToggleButton btnInspect;
-	public Label lblInspectRectangle;
+	public ScalePane									scalePane;
+	public ToggleButton									btnInspect;
+	public Label										lblInspectRectangle;
 
-	private ImageView imageView;
-	private FindPanel<TreeItem<XpathItem>> findPanel;
+	private ImageView									imageView;
+	private FindPanel<TreeItem<XpathItem>>				findPanel;
 	@FXML
-	private Label				lblFound;
+	private Label										lblFound;
 
-	private Parent				parent;
-	private XpathViewer			model;
+	private Parent										parent;
+	private XpathViewer									model;
 
-	private CustomRectangle		rectangle;
-	private boolean needInspect = false;
-	private CustomRectangle		inspectRectangle;
+	private CustomRectangle								rectangle;
+	private boolean										needInspect	= false;
+	private CustomRectangle								inspectRectangle;
 
-	private double scale = 1.0;
-	private Dimension initial = new Dimension(0, 0);
-	private Point offset = new Point(0, 0);
-	private Map<Rectangle, Set<XpathItem>> map = new HashMap<>();
+	private double										scale		= 1.0;
+	private Dimension									initial		= new Dimension(0, 0);
+	private Point										offset		= new Point(0, 0);
+	private Map<Rectangle, Set<TreeItem<XpathItem>>>	map			= new HashMap<>();
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources)
@@ -175,7 +174,10 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 	public void changeScale(double scale)
 	{
 		this.scale = scale;
-		this.model.changeScale(scale);
+		this.imageView.setFitHeight(this.scale * this.initial.height);
+		this.imageView.setFitWidth(this.scale * this.initial.width);
+		hideRectangle();
+		hideInspectRectangle();
 	}
 
 	@Override
@@ -243,7 +245,7 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 	{
 		Platform.runLater(() ->
 		{
-			this.treeView.setRoot(new TreeItem<>());
+			this.treeView.setRoot(new TreeItem<XpathItem>());
 			displayTree(document, this.treeView.getRoot());
 			expand(this.treeView.getRoot());
 		});
@@ -319,101 +321,100 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 		});
 	}
 
-	public void displayImage(BufferedImage image) throws IOException
+	public void displayImage(BufferedImage image, int offsetX, int offsetY) throws IOException
 	{
-		if (image != null)
+		Platform.runLater(() ->
 		{
-			this.splitPane.getStyleClass().remove(CssVariables.SPLIT_PANE_HIDE_DIVIDER);
-			scrollPaneImage.setMaxHeight(Region.USE_COMPUTED_SIZE);
-			scrollPaneImage.setPrefHeight(Region.USE_COMPUTED_SIZE);
-			this.splitPane.setDividerPositions(0.5);
-			createCanvas(image);
-			this.hBoxUtil.setVisible(true);
-			this.cbShowImage.setSelected(true);
-			
-			buildMap(new Dimension(image.getWidth() / 16, image.getHeight() / 16), this.map, this.treeView.getRoot());
-		}
+			if (image != null)
+			{
+				this.initial = new Dimension(image.getWidth(), image.getHeight());
+				this.offset = new Point(offsetX, offsetY);
+				
+				this.splitPane.getStyleClass().remove(CssVariables.SPLIT_PANE_HIDE_DIVIDER);
+				scrollPaneImage.setMaxHeight(Region.USE_COMPUTED_SIZE);
+				scrollPaneImage.setPrefHeight(Region.USE_COMPUTED_SIZE);
+				this.splitPane.setDividerPositions(0.5);
+				Common.tryCatch(() -> createCanvas(image), "Error on displaying an image.");
+				this.hBoxUtil.setVisible(true);
+				this.cbShowImage.setSelected(true);
+				
+				buildMap(image.getWidth(), image.getHeight(), new Dimension(image.getWidth() / 16, image.getHeight() / 16));
+			}
+		});
 	}
-
-	private void buildMap(Dimension cellSize, Map<Rectangle, Set<XpathItem>> map, TreeItem<XpathItem> item)
-	{
-		// TODO Auto-generated method stub
-		Rectangle rec = item.getValue().getRectangle();
-		if (rec != null)
-		{
-			Rectangle rect1 = new Rectangle(new Point(rec.x / 16, rec.y / 16), cellSize);
-			Rectangle rect2 = new Rectangle(new Point(rec.x / 16, rec.y / 16), cellSize);
-			Rectangle rect3 = new Rectangle(new Point(rec.x / 16, rec.y / 16), cellSize);
-			Rectangle rect4 = new Rectangle(new Point(rec.x / 16, rec.y / 16), cellSize);
-		}
-		
-		for (TreeItem<XpathItem> child : item.getChildren())
-		{
-			buildMap(cellSize, map, child);
-		}
-	}
-
+	
 	public void displayRectangle(Rectangle rectangle)
 	{
 		if (this.rectangle != null)
 		{
-			this.rectangle.updateRectangle(rectangle);
+			this.rectangle.updateRectangle(rectangle, this.scale);
 			this.rectangle.setVisible(true);
 		}
 	}
 
 	public void hideRectangle()
 	{
-		Optional.ofNullable(this.rectangle).ifPresent(cr -> cr.setVisible(false));
-	}
-
-	public void resizeImage(double width, double height)
-	{
-		this.imageView.setFitHeight(height);
-		this.imageView.setFitWidth(width);
-	}
-
-	public void displayInspectRectangle(Rectangle rectangle)
-	{
-		this.inspectRectangle.updateRectangle(rectangle);
-		this.inspectRectangle.setVisible(true);
-	}
-
-	public void displayInspectRectangle(Rectangle rectangle, String tooltipText)
-	{
-		this.lblInspectRectangle.setText(tooltipText);
-		this.displayInspectRectangle(rectangle);
-	}
-
-	public void hideInspectRectangle()
-	{
-		this.inspectRectangle.setVisible(false);
-		this.lblInspectRectangle.setText("");
-	}
-
-	public void stopInspect()
-	{
-		this.btnInspect.setSelected(false);
-	}
-
-	public void selectItem(Rectangle rectangle)
-	{
-		selectItem(rectangle, treeView.getRoot());
+		if (this.rectangle != null)
+		{
+			this.rectangle.setVisible(false);
+		}
 	}
 
 	// ============================================================
 	// private methods
 	// ============================================================
-	private void selectItem(Rectangle rectangle, TreeItem<XpathItem> root)
+	private void displayInspectRectangle(Rectangle rectangle, String tooltipText)
 	{
-		Optional.ofNullable(root.getValue())
-				.filter(child -> Objects.nonNull(child.getNode()))
-				.map(child -> child.getNode().getUserData(IRemoteApplication.rectangleName))
-				.filter(Objects::nonNull)
-				.filter(userData -> userData instanceof Rectangle)
-				.filter(userData -> userData.equals(rectangle))
-				.ifPresent(data -> treeView.getSelectionModel().select(root));
-		root.getChildren().forEach(child -> selectItem(rectangle, child));
+		this.inspectRectangle.updateRectangle(rectangle, this.scale);
+		this.inspectRectangle.setVisible(true);
+		this.lblInspectRectangle.setText(tooltipText);
+	}
+
+	private void hideInspectRectangle()
+	{
+		this.inspectRectangle.setVisible(false);
+		this.lblInspectRectangle.setText("");
+	}
+
+	private void buildMap(int width, int height, Dimension cellSize)
+	{
+		int x = 0;
+		while (x < width)
+		{
+			int y = 0;
+			while (y < height)
+			{
+				Rectangle key = new Rectangle(new Point(x, y), cellSize);
+				Set<TreeItem<XpathItem>> set = new HashSet<TreeItem<XpathItem>>();
+				passTree(key, set, this.treeView.getRoot());
+				if (set.size() > 0)
+				{
+					this.map.put(key, set);
+				}
+				
+				y += cellSize.height;
+			}
+			x += cellSize.width;
+		}
+	}
+
+	private void passTree(Rectangle keyRectangle, Set<TreeItem<XpathItem>> set, TreeItem<XpathItem> item)
+	{
+		XpathItem xpath = item.getValue();
+		if (xpath != null)
+		{
+			Rectangle rec = xpath.getRectangle();
+			
+			if (rec != null && rec.intersects(keyRectangle))
+			{
+				set.add(item);
+			}
+		}
+		
+		for (TreeItem<XpathItem> child : item.getChildren())
+		{
+			passTree(keyRectangle, set, child);
+		}
 	}
 
 	private void createCanvas(BufferedImage bufferedImage) throws IOException
@@ -422,9 +423,9 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 		ImageIO.write(bufferedImage, "jpg", outputStream);
 		Image image = new Image(new ByteArrayInputStream(outputStream.toByteArray()));
-		imageView.setImage(image);
+		this.imageView.setImage(image);
 		this.group.getChildren().add(imageView);
-		imageView.setPreserveRatio(true);
+		this.imageView.setPreserveRatio(true);
 		this.rectangle = new CustomRectangle();
 		this.rectangle.addStyleClass(CssVariables.XPATH_RECTANGLE);
 		this.rectangle.setGroup(this.group);
@@ -562,48 +563,107 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 				.collect(Collectors.toList());
 	}
 
+	private void moveOnImage(double x, double y)
+	{
+		TreeItem<XpathItem> item = findOnScreen(x, y); 
+		if (item != null)
+		{
+			displayInspectRectangle(item.getValue().getRectangle(), "");
+		}
+	}
+
+	private void clickOnImage(double x, double y)
+	{
+		TreeItem<XpathItem> item = findOnScreen(x, y); 
+		if (item != null)
+		{
+			this.treeView.getSelectionModel().select(item);
+			
+		}
+		this.btnInspect.setSelected(false);
+	}
+
+	private TreeItem<XpathItem> findOnScreen(double x, double y)
+	{
+		int intX = (int)(x / this.scale);
+		int intY = (int)(y / this.scale);
+		
+		int sizeX = this.initial.getSize().width / 16;
+		int sizeY = this.initial.getSize().height / 16;
+		Rectangle key = new Rectangle((intX / sizeX) * sizeX, (intY / sizeY) * sizeY, sizeX, sizeY);
+		Set<TreeItem<XpathItem>> set = this.map.get(key);
+		if (set == null)
+		{
+			return null;
+		}
+		Point mousePoint = new Point(intX, intY);
+
+		Optional<TreeItem<XpathItem>> inspected = set.stream()
+				.filter(item -> item.getValue() != null && item.getValue().getRectangle() != null)
+				.filter(item -> item.getValue().getRectangle().contains(mousePoint))
+				.sorted((r1, r2) -> Double.compare(square(r1.getValue().getRectangle()), square(r2.getValue().getRectangle())))
+				.findFirst(); 
+
+		return inspected.isPresent() ? inspected.get() : null;
+	}
+	
+	private static double square(Rectangle rec)
+	{
+		if (rec == null)
+		{
+			return 0.0;
+		}
+		return rec.width * rec.height;
+	}
+	
 	private void listeners()
 	{
-		this.group.setOnMouseMoved(event -> {
+		this.group.setOnMouseMoved(event ->
+		{
 			if (needInspect)
 			{
-				this.model.moveOnImage(event.getX(), event.getY());
+				moveOnImage(event.getX(), event.getY()); 
 			}
 		});
 
-		this.group.setOnMouseClicked(event -> {
+		this.group.setOnMouseClicked(event ->
+		{
 			if (needInspect)
 			{
-				this.model.clickOnImage();
+				clickOnImage(event.getX(), event.getY());
 			}
 		});
 
-		this.btnInspect.selectedProperty().addListener((observable, oldValue, newValue) -> {
+		this.btnInspect.selectedProperty().addListener((observable, oldValue, newValue) ->
+		{
 			this.btnInspect.setOpacity(newValue ? 1.0 : 0.5);
 			this.needInspect = newValue;
 			if (!newValue)
 			{
-				this.hideInspectRectangle();
+				hideInspectRectangle();
 			}
 			if (newValue)
 			{
-				this.model.startInspect();
+//				startInspect();
 			}
 		});
 
-		this.cbShowImage.selectedProperty().addListener((observable, oldValue, newValue) -> {
+		this.cbShowImage.selectedProperty().addListener((observable, oldValue, newValue) ->
+		{
 			this.splitPane.setDividerPositions(newValue ? 0.5 : 0.0);
 			this.scalePane.setVisible(newValue);
 			this.btnInspect.setVisible(newValue);
 		});
-		gridPaneHelper.visibleProperty().addListener((observable, oldValue, newValue) -> {
-			//workaround
-			if (!newValue && ((int) splitPane.getDividerPositions()[0]) == 0 && !cbShowImage.isSelected())
-			{
-				splitPane.setDividerPositions(0.0);
-			}
-		});
-		this.cfRelativeFrom.setHandler(event -> {
+		gridPaneHelper.visibleProperty().addListener((observable, oldValue, newValue) ->
+		{
+			// workaround
+				if (!newValue && ((int) splitPane.getDividerPositions()[0]) == 0 && !cbShowImage.isSelected())
+				{
+					splitPane.setDividerPositions(0.0);
+				}
+			});
+		this.cfRelativeFrom.setHandler(event ->
+		{
 			this.model.setRelativeXpath(null);
 			this.cfRelativeFrom.setText("");
 			this.model.createXpaths(this.useText.isSelected(), getParams());

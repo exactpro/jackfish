@@ -12,6 +12,7 @@ import com.exactprosystems.jf.actions.AbstractAction;
 import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
+import com.exactprosystems.jf.actions.ExecuteResult;
 import com.exactprosystems.jf.actions.ReadableValue;
 import com.exactprosystems.jf.common.Context;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
@@ -29,8 +30,8 @@ import java.util.List;
 		suffix					= "EXEC",
 		generalDescription 		= "Executes system command.",
 		additionFieldsAllowed 	= false,
-		outputDescription 		= "Result of output given command.",
-		outputType				= String.class
+		outputDescription 		= "Result of output given command. You can get the text over Out.Text and can get exit code over Out.ExitCode",
+		outputType				= ExecuteResult.class
 	)
 public class Execute extends AbstractAction 
 {
@@ -90,6 +91,7 @@ public class Execute extends AbstractAction
 		}
 
 	    StringBuilder sb = new StringBuilder();
+	    int exitCode = 0;
 		
 		if (this.wait)
 		{
@@ -109,10 +111,10 @@ public class Execute extends AbstractAction
 			    	sb.append(line + "\n");
 			    }		
 		    }
-		    p.waitFor();
+		    exitCode = p.waitFor();
 		    
 		}
 	 
-		super.setResult(sb.toString());
+		super.setResult(new ExecuteResult(sb.toString(), exitCode));
 	}
 }
