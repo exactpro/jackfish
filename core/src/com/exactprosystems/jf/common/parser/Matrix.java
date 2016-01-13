@@ -383,6 +383,7 @@ public class Matrix extends AbstractDocument implements IMatrix, Cloneable
 	public boolean checkMatrix(Context context, AbstractEvaluator evaluator)
 	{
 		this.matrixListener.reset(this);
+		context.getConfiguration().updateLibs();
 		this.root.check(context, evaluator, this.matrixListener, null);
 
 		if (!this.matrixListener.isOk())
@@ -415,7 +416,6 @@ public class Matrix extends AbstractDocument implements IMatrix, Cloneable
 		{
 			logger.error(e.getMessage(), e);
 		}
-		context.getConfiguration().updateLibs();
 		try
 		{
 			if (this.root != null)

@@ -563,7 +563,7 @@ public class Configuration extends AbstractDocument
 				newMap.put(file, timestamp);
 				if (timestamp == null)
 				{
-					timestampMap.put(file, file.lastModified());
+					newMap.put(file, file.lastModified());
 					this.libs.put(name, loadMatrix(file, matrix, checker, name));
 				}
 				else

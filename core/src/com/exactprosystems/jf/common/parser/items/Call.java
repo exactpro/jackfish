@@ -144,7 +144,6 @@ public final class Call extends MatrixItem
 	@Override
 	protected void writePrefixItSelf(CsvWriter writer, List<String> firstLine, List<String> secondLine)
 	{
-		addParameter(firstLine, secondLine, Tokens.Id.get(), this.id.get());
 		addParameter(firstLine, secondLine, Tokens.Call.get(), this.name.get());
 	
 		for (Parameter parameter : getParameters())
