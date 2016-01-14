@@ -47,6 +47,7 @@ import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
+import javafx.stage.Modality;
 import javafx.stage.Popup;
 import org.apache.log4j.Logger;
 import org.w3c.dom.NodeList;
@@ -534,6 +535,7 @@ public abstract class DialogsHelper
 			dialog.getDialogPane().setPrefWidth(1024);
 			dialog.getDialogPane().setPrefHeight(768);
 			dialog.getDialogPane().setContent(browser);
+			dialog.initModality(Modality.NONE);
 			dialog.setTitle("Report");
 			if (matrName[0] == null)
 			{
@@ -665,6 +667,7 @@ public abstract class DialogsHelper
 		dialog.getDialogPane().setPrefWidth(1024);
 		dialog.getDialogPane().setPrefHeight(768);
 		dialog.getDialogPane().getStylesheets().addAll(Common.currentTheme().getPath());
+		dialog.initModality(Modality.NONE);
 		dialog.show();
 	}
 

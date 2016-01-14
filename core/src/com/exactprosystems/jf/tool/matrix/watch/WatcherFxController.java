@@ -15,6 +15,7 @@ import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.custom.expfield.ExpressionField;
 import com.exactprosystems.jf.tool.custom.table.CustomTable;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
@@ -113,9 +114,11 @@ public class WatcherFxController implements Initializable, ContainingParent
 
 	public void displayData(List<Settings.SettingsValue> values)
 	{
-		this.table.getItems().clear();
-		this.table.setItems(FXCollections.observableArrayList(values));
-		this.table.update();
+		Platform.runLater(() -> {
+			this.table.getItems().clear();
+			this.table.setItems(FXCollections.observableArrayList(values));
+			this.table.update();
+		});
 	}
 
 	public void displayNewVariable(Settings.SettingsValue value)

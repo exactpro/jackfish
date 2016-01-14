@@ -43,7 +43,10 @@ public class WatcherFx
 	public void update()
 	{
 		this.evaluateData(values);
-		this.controller.displayData(values);
+		if (isShow())
+		{
+			this.controller.displayData(values);
+		}
 	}
 
 	public void show()
