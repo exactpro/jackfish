@@ -19,6 +19,7 @@ import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.custom.BorderWrapper;
+import com.exactprosystems.jf.tool.custom.controls.field.CustomFieldWithButton;
 import com.exactprosystems.jf.tool.dictionary.DictionaryFx;
 import com.exactprosystems.jf.tool.dictionary.navigation.NavigationController;
 import javafx.application.Platform;
@@ -52,16 +53,16 @@ public class ElementInfoController implements Initializable, ContainingParent
 	public ChoiceBox<IControl> choiceBoxOwner;
 	public CheckBox checkBoxWeak;
 	public CheckBox checkBoxUseNumericHeader;
-	public TextField tfID;
-	public TextField tfUID;
-	public TextField tfXpath;
-	public TextField tfClass;
-	public TextField tfText;
-	public TextField tfName;
-	public TextField tfTooltip;
-	public TextField tfAction;
-	public TextField tfTitle;
-	public TextField tfExpression;
+	public CustomFieldWithButton tfID;
+	public CustomFieldWithButton tfUID;
+	public CustomFieldWithButton tfXpath;
+	public CustomFieldWithButton tfClass;
+	public CustomFieldWithButton tfText;
+	public CustomFieldWithButton tfName;
+	public CustomFieldWithButton tfTooltip;
+	public CustomFieldWithButton tfAction;
+	public CustomFieldWithButton tfTitle;
+	public CustomFieldWithButton tfExpression;
 	public TextField tfTimeout;
 	public Button xpathHelper;
 	public CheckBox checkBoxAbsoluteXpath;
@@ -284,18 +285,14 @@ public class ElementInfoController implements Initializable, ContainingParent
 	//============================================================
 	private void setTextFieldListeners()
 	{
-		this.tfUID.focusedProperty().addListener(textFocusListener(tfUID));
-		this.tfXpath.focusedProperty().addListener(textFocusListener(tfXpath));
-		this.tfClass.focusedProperty().addListener(textFocusListener(tfClass));
-		this.tfText.focusedProperty().addListener(textFocusListener(tfText));
-		this.tfName.focusedProperty().addListener(textFocusListener(tfName));
-		this.tfTooltip.focusedProperty().addListener(textFocusListener(tfTooltip));
-		this.tfAction.focusedProperty().addListener(textFocusListener(tfAction));
-		this.tfTitle.focusedProperty().addListener(textFocusListener(tfTitle));
-		this.tfExpression.focusedProperty().addListener(textFocusListener(tfExpression));
-		this.tfTimeout.focusedProperty().addListener(numberFocusListener(this.tfTimeout));
-		this.tfID.focusedProperty().addListener(textFocusListener(this.tfID));
-
+		Arrays.stream(new CustomFieldWithButton[] {this.tfUID, this.tfXpath, this.tfClass, this.tfText, this.tfName, this.tfTooltip, this.tfAction, this.tfTitle, this.tfExpression, this.tfID})
+				.forEach(tf -> {
+					tf.focusedProperty().addListener(textFocusListener(tf));
+					tf.setHandler(event -> {
+						tf.clear();
+						changeText(tf, "");
+					});
+				});
 		this.checkBoxAbsoluteXpath.selectedProperty().addListener((obs, prev, next) -> changeBoolean(this.checkBoxAbsoluteXpath, next));
 	}
 
