@@ -8,6 +8,7 @@
 
 package com.exactprosystems.jf.actions;
 
+import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.common.Context;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.parser.Matrix;
@@ -166,7 +167,6 @@ public abstract class AbstractAction implements Cloneable
                         evaluator.getLocals().set(id, this.action);
                     }
                 }
-                checkAsserts(evaluator, assertBool, assertOutIs, assertOutIsNot);
             }
             else
             {
@@ -196,6 +196,23 @@ public abstract class AbstractAction implements Cloneable
             else
             {
                 setError("Exception occurred: " + e.getMessage());
+            }
+        }
+        
+        try
+        {
+        	checkAsserts(evaluator, assertBool, assertOutIs, assertOutIsNot);
+		}
+        catch (Exception e)
+        {
+            logger.error(e.getMessage(), e);
+            if (e.getCause() != null)
+            {
+                setError("Exception in asserts occurred: " + e.getCause().getMessage());
+            }
+            else
+            {
+                setError("Exception in asserts occurred: " + e.getMessage());
             }
         }
 
@@ -333,8 +350,17 @@ public abstract class AbstractAction implements Cloneable
 
     protected final void setError(String reason)
     {
+    	if (Str.IsNullOrEmpty(this.action.Reason))
+    	{
+            this.action.Reason = reason;
+    	}
+    	else
+    	{
+    		this.action.Reason = "Previous result: " + this.action.Result + "\n"
+    				+ "Previous reason: " + this.action.Reason + "\n"
+    				+ reason;
+    	}
         this.action.Result = Result.Failed;
-        this.action.Reason = reason;
     }
 
     protected static final Logger logger = Logger.getLogger(AbstractAction.class);
@@ -484,7 +510,7 @@ public abstract class AbstractAction implements Cloneable
     }
 
 
-    public Map<String, FieldAndAttributes> getFieldsAttributes()
+    private Map<String, FieldAndAttributes> getFieldsAttributes()
     {
         Map<String, FieldAndAttributes> fieldAttributes = new HashMap<String, FieldAndAttributes>();
         for (Field field : this.getClass().getDeclaredFields())
@@ -504,6 +530,9 @@ public abstract class AbstractAction implements Cloneable
     {
         if (!assertBool.isExpressionNullOrEmpty())
         {
+        	System.err.println("!!!");
+        	
+        	
         	if (!assertBool.evaluate(evaluator))
         	{
                 setError(Tokens.Assert + " error in expression: " + assertBool.getValueAsString());

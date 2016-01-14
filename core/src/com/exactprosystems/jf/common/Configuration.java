@@ -720,13 +720,11 @@ public class Configuration extends AbstractDocument
     	
         try(OutputStream os = new FileOutputStream(new File(fileName)))
         {
-            File file = new File(fileName);
-
             JAXBContext jaxbContext = JAXBContext.newInstance(jaxbContextClasses);
 
             Marshaller marshaller = jaxbContext.createMarshaller();
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-            marshaller.marshal(this, file);
+            marshaller.marshal(this, os);
 
 			updateLibs();
 

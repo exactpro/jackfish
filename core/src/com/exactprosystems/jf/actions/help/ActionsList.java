@@ -110,6 +110,7 @@ public class ActionsList extends AbstractAction
 		        Wait.class,
 				Vars.class,
 				XmlAddNode.class,
+				XmlChildren.class,
 				XmlCompare.class,
 				XmlFindFirst.class,
 				XmlLoadFromFile.class,

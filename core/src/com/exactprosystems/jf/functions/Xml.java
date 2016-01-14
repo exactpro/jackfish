@@ -11,12 +11,19 @@ package com.exactprosystems.jf.functions;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.Marshaller;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.OutputKeys;
@@ -38,7 +45,7 @@ import org.w3c.dom.NodeList;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.common.report.ReportTable;
 
-public class Xml 
+public class Xml  
 {
 	public Xml(String fileName) throws Exception
 	{
@@ -77,9 +84,23 @@ public class Xml
 		return Xml.class.getSimpleName() + this.node.toString();
 	}
 	
+	public void setText(String text)
+	{
+		this.node.setTextContent(text);
+	}
+
 	public String getText()
 	{
-		return this.node.getNodeValue();
+		String res = this.node.getTextContent();
+		return res == null ? "" : res;
+	}
+	
+	public void setAttributes(Map<String, Object> attr)
+	{
+		for (Entry<String, Object> entry : attr.entrySet())
+		{
+			((Element)this.node).setAttribute(entry.getKey(), String.valueOf(entry.getValue()));
+		}
 	}
 	
 	public String getAttribute(String name) throws Exception
@@ -116,12 +137,49 @@ public class Xml
 		Transformer transformer = transformerFactory.newTransformer();
 		
 		transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+		transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
 		
 		DOMSource source = new DOMSource(this.node);
 		StreamResult result = new StreamResult(new File(fileName));
  		transformer.transform( source, result);		
 		
 		return true;
+	}
+
+	public List<Xml> getChildren()
+	{
+		List<Xml> res = new ArrayList<Xml>();
+		NodeList nodes = this.node.getChildNodes();
+		
+		
+		if (nodes != null)
+		{
+			for (int i = 0; i < nodes.getLength(); i++)
+			{
+				Node node = nodes.item(i);
+				res.add(new Xml(node));
+			}
+		}
+			
+		return res;
+	}
+
+	public Xml getChild(String name)
+	{
+		NodeList nodes = this.node.getChildNodes();
+		if (nodes != null)
+		{
+			for (int i = 0; i < nodes.getLength(); i++)
+			{
+				Node node = nodes.item(i);
+				if (node.getNodeName().equals(name))
+				{
+					return new Xml(node);
+				}
+			}
+		}
+			
+		return null;
 	}
 
 	public Xml createListByXpath(String nodeName, String xpath) throws Exception
@@ -138,7 +196,7 @@ public class Xml
 
 		for (int i = 0; i < nodes.getLength(); ++i) 
 		{
-		    res.appendChild(nodes.item(i).cloneNode(true));
+		    res.appendChild(nodes.item(i));
 		}
 		
 		return new Xml(res);
@@ -151,7 +209,7 @@ public class Xml
 		
 		if (res != null)
 		{
-			return new Xml(res.cloneNode(true));
+			return new Xml(res);
 		}
 		
 		return null;
@@ -185,19 +243,6 @@ public class Xml
 		}
 	}
 
-	public void setText(String text)
-	{
-		this.node.setNodeValue(text);
-	}
-
-	public void setAttributes(Map<String, Object> attr)
-	{
-		for (Entry<String, Object> entry : attr.entrySet())
-		{
-			((Element)this.node).setAttribute(entry.getKey(), String.valueOf(entry.getValue()));
-		}
-	}
-	
 	public void addNode(Node newNode)
 	{
 		this.node.appendChild(newNode);
