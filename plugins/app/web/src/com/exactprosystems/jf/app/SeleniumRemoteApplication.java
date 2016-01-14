@@ -73,7 +73,7 @@ public class SeleniumRemoteApplication extends RemoteApplication
 		"            " + TAG_FIELD + " : e.tagName, \n" +
 		"            " + ATTRIBUTES_FIELD + " : attrs(e), \n" +
 		"            " + IRemoteApplication.rectangleName + " : e.getBoundingClientRect(), \n" +
-		"            " + ELEMENT_TEXT_FIELD + " : (e.tagName === 'input') ? e.value : e.text, \n" +
+		"            " + ELEMENT_TEXT_FIELD + " : (e.tagName === 'input') ? e.value : (e.firstChild !== null) ? e.firstChild.data : undefined, \n" +
 		"            " + ELEMENT_CHILD_FIELD + " : child \n" +
 		"        }; \n" +
 		"        return temp; \n" +
