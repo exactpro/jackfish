@@ -293,6 +293,7 @@ public class ElementInfoController implements Initializable, ContainingParent
 						changeText(tf, "");
 					});
 				});
+		this.tfTimeout.focusedProperty().addListener(numberFocusListener(this.tfTimeout));
 		this.checkBoxAbsoluteXpath.selectedProperty().addListener((obs, prev, next) -> changeBoolean(this.checkBoxAbsoluteXpath, next));
 	}
 
