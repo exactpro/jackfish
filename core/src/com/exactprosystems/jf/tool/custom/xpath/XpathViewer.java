@@ -20,10 +20,6 @@ import java.util.stream.IntStream;
 
 public class XpathViewer
 {
-//	private Map<Rectangle, String> mapRectangles = new HashMap<>();
-//	private Map<Rectangle, String> mapCurrentRectangles = new HashMap<>();
-
-
 	private Document						document;
 	private XpathViewerContentController	controller;
 	private Node							currentNode;
@@ -37,7 +33,6 @@ public class XpathViewer
 		this.document = document;
 		this.owner = owner;
 		this.service = service;
-//		this.bypassDocument(this.document, (r, s) -> this.mapRectangles.put(r, s));
 	}
 	
 	private static class ImageAndOffset
@@ -153,91 +148,9 @@ public class XpathViewer
 		return sb.toString();
 	}
 
-//	public void startInspect()
-//	{
-//		this.mapCurrentRectangles.clear();
-//		this.mapCurrentRectangles.putAll(this.mapRectangles.entrySet()
-//				.stream()
-//				.collect(Collectors.toMap(key -> new Rectangle(
-//						(int) ((key.getKey().x - xOffset)),
-//						(int) ((key.getKey().y - xOffset)),
-//						(int) (key.getKey().width),
-//						(int) (key.getKey().height)), Map.Entry::getValue))
-//		);
-//	}
-//
-//	public void moveOnImage(double x, double y)
-//	{
-//		Map.Entry<Rectangle, String> oldEntry = this.inspectEntry.orElse(new AbstractMap.SimpleEntry<>(new Rectangle(-1, -1, -1, -1), ""));
-//		Rectangle oldRectangle = oldEntry.getKey();
-//		this.inspectEntry = this.mapCurrentRectangles.entrySet()
-//				.stream()
-//				.filter(entry -> {
-//					Rectangle r = entry.getKey();
-//					return r.x < x && (r.x + r.width) > x &&
-//							r.y < y && (r.y + r.height) > y;
-//				})
-//				.sorted((e1,e2) -> Double.compare(e1.getKey().width * e1.getKey().height, e2.getKey().width * e2.getKey().height))
-//				.findFirst();
-//		this.inspectEntry.filter(entry -> !Objects.equals(oldRectangle, entry.getKey())).ifPresent(entry -> this.controller.displayInspectRectangle(entry.getKey(), entry.getValue()));
-//	}
-//
-//	public void clickOnImage()
-//	{
-//		this.inspectEntry.ifPresent(entry -> this.controller.selectItem(entry.getKey()));
-//		this.controller.stopInspect();
-//	}
-
 	// ============================================================
 	// private methods
 	// ============================================================
-//	private String getStringNode(Node node)
-//	{
-//		StringBuilder builder = new StringBuilder();
-//		String id = "";
-//		String className = "";
-//		builder.append(node.getNodeName()).append(" ");
-//		NamedNodeMap attrs = node.getAttributes();
-//		if (attrs != null)
-//		{
-//			for (int i = 0; i < attrs.getLength(); i++)
-//			{
-//				Node attr = attrs.item(i);
-//				if (attr != null && attr.getNodeName().equals("id"))
-//				{
-//					id = attr.getNodeValue();
-//				}
-//				if (attr != null && attr.getNodeName().equals("class"))
-//				{
-//					className = attr.getNodeValue();
-//				}
-//			}
-//		}
-//		if (!id.isEmpty())
-//		{
-//			builder.append("#").append(id).append(" ");
-//		}
-//		if (!className.isEmpty())
-//		{
-//			Arrays.stream(className.split("\\s")).forEach(cn -> builder.append(".").append(cn).append(" "));
-//		}
-//		return builder.toString();
-//	}
-//
-//	private void bypassDocument(Node node, BiConsumer<Rectangle, String> biConsumer)
-//	{
-//		Object userData = node.getUserData(IRemoteApplication.rectangleName);
-//		Optional.ofNullable(userData)
-//				.filter(data -> data instanceof Rectangle)
-//				.map(rect -> (Rectangle) rect)
-//				.ifPresent(rec -> biConsumer.accept(rec, getStringNode(node)));
-//
-//		IntStream.range(0, node.getChildNodes().getLength())
-//				.mapToObj(node.getChildNodes()::item)
-//				.filter(item -> item.getNodeType() == Node.ELEMENT_NODE)
-//				.forEach(childNode -> bypassDocument(childNode, biConsumer));
-//	}
-
 	private List<Node> evaluate(String xpathStr)
 	{
 		if (xpathStr == null)
