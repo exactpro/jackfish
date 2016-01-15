@@ -574,6 +574,11 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 	{
 		for (MatrixItem item : this.children)
 		{
+			if (item.isOff())
+			{
+				continue;
+			}
+			
 			if (	(clazz != null && clazz == item.getClass() || clazz == null)
 				&&	(id != null && id.equals(item.getId()) || id == null) )
 			{
@@ -585,6 +590,11 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 		{
 			for (MatrixItem item : this.children)
 			{
+				if (item.isOff())
+				{
+					continue;
+				}
+
 				MatrixItem found = item.find(everyWhere, clazz, id);
 				if (found != null)
 				{
