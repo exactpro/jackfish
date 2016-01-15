@@ -15,6 +15,7 @@ import com.exactprosystems.jf.common.DocumentInfo;
 import com.exactprosystems.jf.common.undoredo.ActionTrackProvider;
 import com.exactprosystems.jf.common.undoredo.Command;
 
+import java.io.File;
 import java.io.Reader;
 import java.util.Optional;
 
@@ -59,7 +60,7 @@ public abstract class AbstractDocument implements Document
 				return false;
 			}
 		}
-		else if (!this.name.equals(other.name))
+		else if (!new File(this.name).getAbsolutePath().equals(new File(other.name).getAbsolutePath()))
 		{
 			return false;
 		}

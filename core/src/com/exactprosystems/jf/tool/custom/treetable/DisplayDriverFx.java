@@ -443,6 +443,7 @@ public class DisplayDriverFx implements DisplayDriver
 		if (tab != null)
 		{
 			matrixFx = (MatrixFx) tab.getDocument();
+			tab.getTabPane().getSelectionModel().select(tab);
 		}
 		else
 		{
