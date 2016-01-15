@@ -128,7 +128,7 @@ public class Fail extends MatrixItem
 				report.itemIntermediate(this);
 			}
 
-			return new ReturnAndResult(Result.Failed, eval);
+			return new ReturnAndResult(Result.Failed, null, String.valueOf(eval));
 		}
 		catch (Exception e)
 		{
