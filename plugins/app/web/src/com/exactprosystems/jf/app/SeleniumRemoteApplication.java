@@ -492,6 +492,7 @@ public class SeleniumRemoteApplication extends RemoteApplication
 				Point point = component.getLocation();
 				int eleWidth = component.getSize().getWidth();
 				int eleHeight = component.getSize().getHeight();
+				//TODO add exception about image is very big/small.
 				BufferedImage image = fullImg.getSubimage(point.getX(), point.getY(), eleWidth, eleHeight);
 
 				log("after image");
