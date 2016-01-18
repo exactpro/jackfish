@@ -425,9 +425,14 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 		return result;
 	}
 
-	public static Elements findRows(Document doc)
+	public static Elements findRows(Document doc) throws Exception
 	{
-		return doc.select(tag_tbody).first().children();
+		Element first = doc.select(tag_tbody).first();
+		if (first == null)
+		{
+			throw new Exception("Can't find tag tbody in current table");
+		}
+		return first.children();
 	}
 
 	public List<WebElement> findAll(ControlKind controlKind, WebElement window, Locator locator) throws Exception
