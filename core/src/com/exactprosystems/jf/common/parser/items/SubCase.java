@@ -161,6 +161,7 @@ public final class SubCase extends MatrixItem
 	@Override
 	protected void checkItSelf(Context context, AbstractEvaluator evaluator, IMatrixListener listener, Set<String> ids, Parameters parameters)
 	{
+		//TODO check, that subcase don't contains item call, that execute current subcase ( overwise we will have stackoverflow)
 		ids = new HashSet<String>();
 		
 		super.checkItSelf(context, evaluator, listener, ids, parameters);

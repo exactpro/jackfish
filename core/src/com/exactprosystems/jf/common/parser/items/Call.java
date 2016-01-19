@@ -62,7 +62,7 @@ public final class Call extends MatrixItem
 		driver.showExpressionField(this, layout, 1, 2, Tokens.Call.get(), this.name, this.name, 
 			(str) -> 
 			{
-				String res = DialogsHelper.selectFromList("Subcases", new ReadableValue(str), context.subcases(this)).getValue();
+				String res = DialogsHelper.selectFromList("Choose sub case from list", new ReadableValue(str), context.subcases(this)).getValue();
 				updateReference(context, res);
 				if (this.ref == null)
 				{
