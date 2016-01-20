@@ -14,34 +14,13 @@ public enum Keyboard implements Serializable
 {
 	ESCAPE, F1, F2, F3, F4, F5, F6, F7, F8, F9, F10, F11, F12,
 
-	DIG1, DIG2, DIG3, DIG4, DIG5, DIG6, DIG7, DIG8, DIG9, DIG0,
+	DIG1, DIG2, DIG3, DIG4, DIG5, DIG6, DIG7, DIG8, DIG9, DIG0,BACK_SPACE,		INSERT, HOME, PAGE_UP,
+	TAB,		Q, W, E, R, T, Y, U, I, O, P,SLASH, BACK_SLASH,					DELETE, END, PAGE_DOWN,
+	CAPS_LOCK,	A, S, D, F, G, H, J, K, L, SEMICOLON, QUOTE, DOUBLE_QUOTE, ENTER,
+	SHIFT,		Z, X, C, V, B, N, M,							 					UP,
+	CONTROL,	ALT, SPACE,														LEFT,DOWN,RIGHT,
 
-	PLUS, MINUS, SLASH, BACK_SLASH,
-
-	Q, W, E, R, T, Y, U, I, O, P,
-	A, S, D, F, G, H, J, K, L, SEMICOLON,
-	Z, X, C, V, B, N, M,
-
-	DOWN, UP, RIGHT, LEFT,
-
-	TAB,
-	CAPS_LOCK,
-	SHIFT,
-	CONTROL,
-	ALT,
-	SPACE,
-	HOME,
-
-	PAGE_UP,
-	PAGE_DOWN,
-	END,
-	QUOTE,
-	DOUBLE_QUOTE,
-
-	ENTER,
-	DELETE,
-	INSERT,
-	BACK_SPACE,
+	PLUS, MINUS,
 	;
 
 	private static final long serialVersionUID = -1378685462384062328L;

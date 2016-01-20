@@ -10,9 +10,10 @@ package com.exactprosystems.jf.app;
 
 import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.client.ICondition;
-
 import org.apache.log4j.Logger;
-import org.fest.swing.core.*;
+import org.fest.swing.core.ComponentMatcher;
+import org.fest.swing.core.KeyPressInfo;
+import org.fest.swing.core.MouseClickInfo;
 import org.fest.swing.core.Robot;
 import org.fest.swing.data.TableCell;
 import org.fest.swing.exception.WaitTimedOutError;
@@ -25,7 +26,6 @@ import javax.swing.text.JTextComponent;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
-
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.lang.reflect.Method;
@@ -59,7 +59,7 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 		try
 		{
 			Component comp = component.target;
-			return new Rectangle(comp.getX(), comp.getY(), comp.getWidth(),comp.getHeight());
+			return new Rectangle(comp.getX(), comp.getY(), comp.getWidth(), comp.getHeight());
 		}
 		catch (Throwable e)
 		{
@@ -68,7 +68,7 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 			throw e;
 		}
 	}
-	
+
 	@Override
 	public Color getColor(String color) throws Exception
 	{
@@ -138,7 +138,7 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 				ComponentFixture<Component> found = find(null, owner);
 				if (found != null && found.target instanceof Container)
 				{
-					container = (Container)found.target;
+					container = (Container) found.target;
 				}
 			}
 
@@ -158,14 +158,14 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 			throw new Exception("Unable to find component " + element, e);
 		}
 	}
-	
+
 	@Override
 	public ComponentFixture<Component> find(Locator owner, Locator element) throws Exception
 	{
 		try
 		{
 			this.currentRobot.waitForIdle();
-			return  getComponent(owner, element);
+			return getComponent(owner, element);
 		}
 		catch (Throwable e)
 		{
@@ -196,7 +196,9 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 			cell.select();
 			//================
 
-			return new ComponentFixture<Component>(this.currentRobot, cell.editor()) {};
+			return new ComponentFixture<Component>(this.currentRobot, cell.editor())
+			{
+			};
 		}
 		catch (Throwable e)
 		{
@@ -423,7 +425,8 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 						break;
 					}
 				}
-			} else if (component.target instanceof JList)
+			}
+			else if (component.target instanceof JList)
 			{
 				JList jList = component.targetCastedTo(JList.class);
 				jList.setSelectedValue(selectedText, true);
@@ -465,13 +468,13 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 			else if (currentComponent instanceof JTree)
 			{
 				JTree tree = component.targetCastedTo(JTree.class);
-				TreeNode node = find((TreeNode)tree.getModel().getRoot(), 0, split);
+				TreeNode node = find((TreeNode) tree.getModel().getRoot(), 0, split);
 
 				if (node == null)
 				{
 					throw new Exception("Path '" + path + "' is not found in the tree.");
 				}
-				TreePath treePath = new TreePath(((DefaultMutableTreeNode)node).getPath());
+				TreePath treePath = new TreePath(((DefaultMutableTreeNode) node).getPath());
 				if (collaps)
 				{
 					tree.expandPath(treePath);
@@ -552,14 +555,14 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 		try
 		{
 			final MatcherSwing<Component> matcher = new MatcherSwing<Component>(Component.class, null, locator.getControlKind(), locator);
-			final boolean[] result = { false };
+			final boolean[] result = {false};
 
 			Pause.pause(new org.fest.swing.timing.Condition("Waiting")
 			{
 				@Override
 				public boolean test()
 				{
-					Collection<Component> list =currentRobot.finder().findAll(matcher);
+					Collection<Component> list = currentRobot.finder().findAll(matcher);
 
 					result[0] = !(toAppear ^ list.size() > 0);
 					return result[0];
@@ -755,7 +758,7 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 			waitForIdle();
 		}
 	}
-	
+
 	@Override
 	public boolean tableIsContainer()
 	{
@@ -848,8 +851,7 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 	}
 
 	@Override
-	public Map<String, String> getRow(ComponentFixture<Component> component, Locator rows, Locator header, boolean useNumericHeader,
-			ICondition valueCondition, ICondition colorCondition) throws Exception
+	public Map<String, String> getRow(ComponentFixture<Component> component, Locator rows, Locator header, boolean useNumericHeader, ICondition valueCondition, ICondition colorCondition) throws Exception
 	{
 		try
 		{
@@ -895,8 +897,7 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 	}
 
 	@Override
-	public List<String> getRowIndexes(ComponentFixture<Component> component, Locator additional, Locator header,
-			boolean useNumericHeader, ICondition valueCondition, ICondition colorCondition) throws Exception
+	public List<String> getRowIndexes(ComponentFixture<Component> component, Locator additional, Locator header, boolean useNumericHeader, ICondition valueCondition, ICondition colorCondition) throws Exception
 	{
 		try
 		{
@@ -917,8 +918,7 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 
 
 	@Override
-	public Map<String, String> getRowByIndex(ComponentFixture<Component> component, Locator additional, Locator header,
-			boolean useNumericHeader, int i) throws Exception
+	public Map<String, String> getRowByIndex(ComponentFixture<Component> component, Locator additional, Locator header, boolean useNumericHeader, int i) throws Exception
 	{
 		try
 		{
@@ -951,9 +951,7 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 	}
 
 	@Override
-	public Map<String, ValueAndColor> getRowWithColor(ComponentFixture<Component> component, Locator additional, Locator header,
-			boolean useNumericHeader, int i)
-			throws Exception
+	public Map<String, ValueAndColor> getRowWithColor(ComponentFixture<Component> component, Locator additional, Locator header, boolean useNumericHeader, int i) throws Exception
 	{
 		try
 		{
@@ -1027,9 +1025,9 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 	}
 
 
-    //------------------------------------------------------------------------------------------------------------------------------
-    // private methods
-    //------------------------------------------------------------------------------------------------------------------------------
+	//------------------------------------------------------------------------------------------------------------------------------
+	// private methods
+	//------------------------------------------------------------------------------------------------------------------------------
 
 	@SuppressWarnings("unchecked")
 	private <T extends Component> ComponentFixture<T> getComponent(Locator owner, Locator locator) throws RemoteException
@@ -1051,7 +1049,9 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 			{
 				case Any:
 					component = getComp(Component.class, window, locator);
-					ret =  (ComponentFixture<T>) new ComponentFixture<Component>(this.currentRobot, component) {};
+					ret = (ComponentFixture<T>) new ComponentFixture<Component>(this.currentRobot, component)
+					{
+					};
 					break;
 
 				case Button:
@@ -1153,7 +1153,7 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 					break;
 
 				case Tooltip:
-//					TODO can't find JToolTipFixture
+					//					TODO can't find JToolTipFixture
 					break;
 
 				case Tree:
@@ -1171,12 +1171,12 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 	}
 
 	@SuppressWarnings("unchecked")
-	private <T extends Component> T getComp(Class<T> type,   ComponentFixture<?> window, Locator locator) throws RemoteException
+	private <T extends Component> T getComp(Class<T> type, ComponentFixture<?> window, Locator locator) throws RemoteException
 	{
 		Component component = null;
 		if (window != null)
 		{
-			component = this.currentRobot.finder().find((Container)window.target, new MatcherSwing<T>(type, window.target, locator.getControlKind(), locator));
+			component = this.currentRobot.finder().find((Container) window.target, new MatcherSwing<T>(type, window.target, locator.getControlKind(), locator));
 		}
 		else
 		{
@@ -1200,7 +1200,7 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 		return result;
 	}
 
-	private List<String> getIndexes(JTableFixture fixture, Map<String, Integer> fieldIndexes, ICondition valueCondition, ICondition colorCondition)  throws RemoteException
+	private List<String> getIndexes(JTableFixture fixture, Map<String, Integer> fieldIndexes, ICondition valueCondition, ICondition colorCondition) throws RemoteException
 	{
 		JTable table = fixture.targetCastedTo(JTable.class);
 		List<String> res = new ArrayList<String>();
@@ -1211,7 +1211,7 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 			if (valueCondition != null)
 			{
 				String name = valueCondition.getName();
-				Integer index  = fieldIndexes.get(name);
+				Integer index = fieldIndexes.get(name);
 				if (index == null)
 				{
 					throw new RemoteException("The column '" + name + "' is not found. Possible values are: " + humanReadableHeaders(fieldIndexes));
@@ -1226,7 +1226,7 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 			if (found && colorCondition != null)
 			{
 				String name = colorCondition.getName();
-				Integer index  = fieldIndexes.get(name);
+				Integer index = fieldIndexes.get(name);
 				if (index == null)
 				{
 					throw new RemoteException("The column '" + name + "' is not found. Possible values are: " + humanReadableHeaders(fieldIndexes));
@@ -1269,7 +1269,7 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 			{
 				if (ch > 127 || ch < 32) // beyond ASCII
 				{
-					sb.append(String.format("\\u%04X", (int)ch));
+					sb.append(String.format("\\u%04X", (int) ch));
 				}
 				else
 				{
@@ -1285,7 +1285,7 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 		return sb.toString();
 	}
 
-    private void getAllTexts(Component parent, StringBuilder ret)
+	private void getAllTexts(Component parent, StringBuilder ret)
 	{
 		String text = MatcherSwing.getText(parent);
 		if (text != null)
@@ -1295,11 +1295,11 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 
 		if (parent instanceof Container)
 		{
-			for (Component component : ((Container)parent).getComponents())
+			for (Component component : ((Container) parent).getComponents())
 			{
 				if (component instanceof Container)
 				{
-					getAllTexts((Container)component, ret);
+					getAllTexts((Container) component, ret);
 				}
 				else
 				{
@@ -1324,63 +1324,234 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 		int id = 0;
 		switch (key)
 		{
-			case DOWN :
-				id = KeyEvent.VK_DOWN;
-				break;
-			case UP:
-				id = KeyEvent.VK_UP;
-				break;
-			case LEFT:
-				id = KeyEvent.VK_LEFT;
-				break;
-			case RIGHT:
-				id = KeyEvent.VK_RIGHT;
-				break;
-			case A :
-				id = KeyEvent.VK_A;
-				break;
-			case B :
-				id = KeyEvent.VK_B;
-				break;
-
-			case F1:
-				id = KeyEvent.VK_F1;
-				break;
-
-			case F2:
-				id = KeyEvent.VK_F2;
-				break;
-
-			case DIG1:
-				id=KeyEvent.VK_1;
-				break;
-
 			case ESCAPE:
 				id = KeyEvent.VK_ESCAPE;
 				break;
+			case F1:
+				id = KeyEvent.VK_F1;
+				break;
+			case F2:
+				id = KeyEvent.VK_F2;
+				break;
+			case F3:
+				id = KeyEvent.VK_F3;
+				break;
+			case F4:
+				id = KeyEvent.VK_F4;
+				break;
+			case F5:
+				id = KeyEvent.VK_F5;
+				break;
+			case F6:
+				id = KeyEvent.VK_F6;
+				break;
+			case F7:
+				id = KeyEvent.VK_F7;
+				break;
+			case F8:
+				id = KeyEvent.VK_F8;
+				break;
+			case F9:
+				id = KeyEvent.VK_F9;
+				break;
+			case F10:
+				id = KeyEvent.VK_F10;
+				break;
+			case F11:
+				id = KeyEvent.VK_F11;
+				break;
+			case F12:
+				id = KeyEvent.VK_F12;
+				break;
 
-			case ENTER:
-				id = KeyEvent.VK_ENTER;
+			case DIG1:
+				id = KeyEvent.VK_1;
+				break;
+			case DIG2:
+				id = KeyEvent.VK_2;
+				break;
+			case DIG3:
+				id = KeyEvent.VK_3;
+				break;
+			case DIG4:
+				id = KeyEvent.VK_4;
+				break;
+			case DIG5:
+				id = KeyEvent.VK_5;
+				break;
+			case DIG6:
+				id = KeyEvent.VK_6;
+				break;
+			case DIG7:
+				id = KeyEvent.VK_7;
+				break;
+			case DIG8:
+				id = KeyEvent.VK_8;
+				break;
+			case DIG9:
+				id = KeyEvent.VK_9;
+				break;
+			case DIG0:
+				id = KeyEvent.VK_0;
+				break;
+			case BACK_SPACE:
+				id = KeyEvent.VK_BACK_SPACE;
+				break;
+			case INSERT:
+				id = KeyEvent.VK_INSERT;
+				break;
+			case HOME:
+				id = KeyEvent.VK_HOME;
+				break;
+			case PAGE_UP:
+				id = KeyEvent.VK_PAGE_UP;
 				break;
 
 			case TAB:
 				id = KeyEvent.VK_TAB;
 				break;
-
+			case Q:
+				id = KeyEvent.VK_Q;
+				break;
+			case W:
+				id = KeyEvent.VK_W;
+				break;
+			case E:
+				id = KeyEvent.VK_E;
+				break;
+			case R:
+				id = KeyEvent.VK_R;
+				break;
+			case T:
+				id = KeyEvent.VK_T;
+				break;
+			case Y:
+				id = KeyEvent.VK_Y;
+				break;
+			case U:
+				id = KeyEvent.VK_U;
+				break;
+			case I:
+				id = KeyEvent.VK_I;
+				break;
+			case O:
+				id = KeyEvent.VK_O;
+				break;
+			case P:
+				id = KeyEvent.VK_P;
+				break;
+			case SLASH:
+				id = KeyEvent.VK_SLASH;
+				break;
+			case BACK_SLASH:
+				id = KeyEvent.VK_BACK_SLASH;
+				break;
 			case DELETE:
 				id = KeyEvent.VK_DELETE;
 				break;
-
-			case BACK_SPACE:
-				id = KeyEvent.VK_BACK_SPACE;
+			case END:
+				id = KeyEvent.VK_END;
+				break;
+			case PAGE_DOWN:
+				id = KeyEvent.VK_PAGE_DOWN;
 				break;
 
 			case CAPS_LOCK:
 				id = KeyEvent.VK_CAPS_LOCK;
 				break;
+			case A:
+				id = KeyEvent.VK_A;
+				break;
+			case S:
+				id = KeyEvent.VK_S;
+				break;
+			case D:
+				id = KeyEvent.VK_D;
+				break;
+			case F:
+				id = KeyEvent.VK_F;
+				break;
+			case G:
+				id = KeyEvent.VK_G;
+				break;
+			case H:
+				id = KeyEvent.VK_H;
+				break;
+			case J:
+				id = KeyEvent.VK_J;
+				break;
+			case K:
+				id = KeyEvent.VK_K;
+				break;
+			case L:
+				id = KeyEvent.VK_L;
+				break;
+			case SEMICOLON:
+				id = KeyEvent.VK_SEMICOLON;
+				break;
+			case QUOTE:
+				id = KeyEvent.VK_QUOTE;
+				break;
+			case DOUBLE_QUOTE:
+				id = KeyEvent.VK_QUOTEDBL;
+				break;
+			case ENTER:
+				id = KeyEvent.VK_ENTER;
+				break;
 
 			case SHIFT:
 				id = KeyEvent.VK_SHIFT;
+				break;
+			case Z:
+				id = KeyEvent.VK_Z;
+				break;
+			case X:
+				id = KeyEvent.VK_X;
+				break;
+			case C:
+				id = KeyEvent.VK_C;
+				break;
+			case V:
+				id = KeyEvent.VK_V;
+				break;
+			case B:
+				id = KeyEvent.VK_B;
+				break;
+			case N:
+				id = KeyEvent.VK_N;
+				break;
+			case M:
+				id = KeyEvent.VK_M;
+				break;
+			case UP:
+				id = KeyEvent.VK_UP;
+				break;
+
+			case CONTROL:
+				id = KeyEvent.VK_CONTROL;
+				break;
+			case ALT:
+				id = KeyEvent.VK_ALT;
+				break;
+			case SPACE:
+				id = KeyEvent.VK_SPACE;
+				break;
+			case LEFT:
+				id = KeyEvent.VK_LEFT;
+				break;
+			case DOWN:
+				id = KeyEvent.VK_DOWN;
+				break;
+
+			case RIGHT:
+				id = KeyEvent.VK_RIGHT;
+				break;
+
+			case PLUS:
+				id = KeyEvent.VK_PLUS;
+				break;
+			case MINUS:
+				id = KeyEvent.VK_MINUS;
 				break;
 		}
 		return id;
@@ -1517,7 +1688,9 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 		{
 			return (ComponentFixture<T>) new JSplitPaneFixture(this.currentRobot, ((JSplitPane) component));
 		}
-		return new ComponentFixture<T>(this.currentRobot, component){};
+		return new ComponentFixture<T>(this.currentRobot, component)
+		{
+		};
 	}
 
 }
