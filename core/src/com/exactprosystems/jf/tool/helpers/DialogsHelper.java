@@ -263,6 +263,7 @@ public abstract class DialogsHelper
 		TextField tf = new TextField();
 		pane.setTop(tf);
 		Dialog<ButtonType> dialog = new Alert(Alert.AlertType.CONFIRMATION);
+		dialog.getDialogPane().setPrefWidth(500);
 		dialog.setHeaderText(title);
 		dialog.getDialogPane().setContent(pane);
 		dialog.setResizable(true);

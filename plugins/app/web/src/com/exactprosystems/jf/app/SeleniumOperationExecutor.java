@@ -60,7 +60,7 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 		{
 			Point location = component.getLocation();
 			Dimension size = component.getSize();
-			return new Rectangle(location.getX(), location.getY(), size.getWidth(),size.getHeight());
+			return new Rectangle(location.getX(), location.getY(), size.getWidth(), size.getHeight());
 		}
 		catch (Throwable e)
 		{
@@ -98,19 +98,19 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 	@Override
 	public boolean mouseTable(WebElement component, int column, int row, MouseAction action) throws Exception
 	{
-		return false; 	// the realization is not needed because table is a container
+		return false;    // the realization is not needed because table is a container
 	}
 
 	@Override
 	public String getValueTableCell(WebElement component, int column, int row) throws Exception
 	{
-		return null;	// the realization is not needed because table is a container
+		return null;    // the realization is not needed because table is a container
 	}
 
 	@Override
 	public boolean textTableCell(WebElement component, int column, int row, String text) throws Exception
 	{
-		return false; 	// the realization is not needed because table is a container 
+		return false;    // the realization is not needed because table is a container 
 	}
 
 	@Override
@@ -151,7 +151,6 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 				{
 					return null;
 				}
-				
 				if (name.startsWith(css_prefix))
 				{
 					String cssAttrName = name.substring(css_prefix.length());
@@ -417,7 +416,7 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 
 		if (useNumericHeader)
 		{
-			for(int i =0;i<result.size(); i++)
+			for (int i = 0; i < result.size(); i++)
 			{
 				result.set(i, String.valueOf(i));
 			}
@@ -464,9 +463,7 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 		{
 			try
 			{
-				
 				WebElement window = null;
-
 				if (owner != null)
 				{
 					List<WebElement> elements = findAll(owner.getControlKind(), null, owner);
@@ -482,7 +479,6 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 					}
 					window = elements.get(0);
 				}
-				
 				By by = new MatcherSelenium(locator.getControlKind(), locator);
 				return (window == null) ? driver.findElements(by) : window.findElements(by);
 			}
@@ -563,7 +559,7 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 	private String getElementString(WebElement element)
 	{
 		String s = element.getAttribute("outerHTML");
-		return s.substring(0, s.indexOf(">")+1);
+		return s.substring(0, s.indexOf(">") + 1);
 	}
 
 	@Override
@@ -801,7 +797,7 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 			{
 				try
 				{
-					logger.debug("Wait to "+ (toAppear ? "" : "Dis" )+"appear for " + locator +" on time " + ms);
+					logger.debug("Wait to " + (toAppear ? "" : "Dis") + "appear for " + locator + " on time " + ms);
 					final By by = new MatcherSelenium(ControlKind.Wait, locator);
 
 					long time = System.currentTimeMillis();
@@ -863,52 +859,229 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 			{
 				switch (key)
 				{
-					case DIG1:
-						this.customAction.sendKeys(component, Keys.NUMPAD1).perform();
-						break;
-
-					case DOWN:
-						this.customAction.sendKeys(component, Keys.DOWN).perform();
-						break;
-
 					case ESCAPE:
 						this.customAction.sendKeys(component, Keys.ESCAPE).perform();
 						break;
+					case F1:
+						this.customAction.sendKeys(component, Keys.F1).perform();
+						break;
+					case F2:
+						this.customAction.sendKeys(component, Keys.F2).perform();
+						break;
+					case F3:
+						this.customAction.sendKeys(component, Keys.F3).perform();
+						break;
+					case F4:
+						this.customAction.sendKeys(component, Keys.F4).perform();
+						break;
+					case F5:
+						this.customAction.sendKeys(component, Keys.F5).perform();
+						break;
+					case F6:
+						this.customAction.sendKeys(component, Keys.F6).perform();
+						break;
+					case F7:
+						this.customAction.sendKeys(component, Keys.F7).perform();
+						break;
+					case F8:
+						this.customAction.sendKeys(component, Keys.F8).perform();
+						break;
+					case F9:
+						this.customAction.sendKeys(component, Keys.F9).perform();
+						break;
+					case F10:
+						this.customAction.sendKeys(component, Keys.F10).perform();
+						break;
+					case F11:
+						this.customAction.sendKeys(component, Keys.F11).perform();
+						break;
+					case F12:
+						this.customAction.sendKeys(component, Keys.F12).perform();
+						break;
 
-					case ENTER:
-						this.customAction.sendKeys(component, Keys.ENTER).perform();
+					case DIG1:
+						this.customAction.sendKeys(component, Keys.NUMPAD1).perform();
+						break;
+					case DIG2:
+						this.customAction.sendKeys(component, Keys.NUMPAD2).perform();
+						break;
+					case DIG3:
+						this.customAction.sendKeys(component, Keys.NUMPAD3).perform();
+						break;
+					case DIG4:
+						this.customAction.sendKeys(component, Keys.NUMPAD4).perform();
+						break;
+					case DIG5:
+						this.customAction.sendKeys(component, Keys.NUMPAD5).perform();
+						break;
+					case DIG6:
+						this.customAction.sendKeys(component, Keys.NUMPAD6).perform();
+						break;
+					case DIG7:
+						this.customAction.sendKeys(component, Keys.NUMPAD7).perform();
+						break;
+					case DIG8:
+						this.customAction.sendKeys(component, Keys.NUMPAD8).perform();
+						break;
+					case DIG9:
+						this.customAction.sendKeys(component, Keys.NUMPAD9).perform();
+						break;
+					case DIG0:
+						this.customAction.sendKeys(component, Keys.NUMPAD0).perform();
+						break;
+					case BACK_SPACE:
+						this.customAction.sendKeys(component, Keys.BACK_SPACE);
+						break;
+					case INSERT:
+						this.customAction.sendKeys(component, Keys.INSERT);
+						break;
+					case HOME:
+						this.customAction.sendKeys(component, Keys.HOME);
+						break;
+					case PAGE_UP:
+						this.customAction.sendKeys(component, Keys.PAGE_UP);
 						break;
 
 					case TAB:
-						this.customAction.sendKeys(component, Keys.TAB).perform();
+						this.customAction.sendKeys(component, Keys.TAB);
 						break;
-
+					case Q:
+						this.customAction.sendKeys(component, "q");
+						break;
+					case W:
+						this.customAction.sendKeys(component, "w");
+						break;
+					case E:
+						this.customAction.sendKeys(component, "e");
+						break;
+					case R:
+						this.customAction.sendKeys(component, "r");
+						break;
+					case T:
+						this.customAction.sendKeys(component, "t");
+						break;
+					case Y:
+						this.customAction.sendKeys(component, "y");
+						break;
+					case U:
+						this.customAction.sendKeys(component, "u");
+						break;
+					case I:
+						this.customAction.sendKeys(component, "i");
+						break;
+					case O:
+						this.customAction.sendKeys(component, "o");
+						break;
+					case P:
+						this.customAction.sendKeys(component, "p");
+						break;
+					case SLASH:
+						break;
+					case BACK_SLASH:
+						break;
 					case DELETE:
-						this.customAction.sendKeys(component, Keys.DELETE).perform();
+						this.customAction.sendKeys(component, Keys.DELETE);
+						break;
+					case END:
+						this.customAction.sendKeys(component, Keys.END);
+						break;
+					case PAGE_DOWN:
+						this.customAction.sendKeys(component, Keys.PAGE_DOWN);
 						break;
 
-					case BACK_SPACE:
-						this.customAction.sendKeys(component, Keys.BACK_SPACE).perform();
+					case CAPS_LOCK:
+						break;
+					case A:
+						this.customAction.sendKeys(component, "a");
+						break;
+					case S:
+						this.customAction.sendKeys(component, "s");
+						break;
+					case D:
+						this.customAction.sendKeys(component, "d");
+						break;
+					case F:
+						this.customAction.sendKeys(component, "f");
+						break;
+					case G:
+						this.customAction.sendKeys(component, "g");
+						break;
+					case H:
+						this.customAction.sendKeys(component, "h");
+						break;
+					case J:
+						this.customAction.sendKeys(component, "j");
+						break;
+					case K:
+						this.customAction.sendKeys(component, "k");
+						break;
+					case L:
+						this.customAction.sendKeys(component, "l");
+						break;
+					case SEMICOLON:
+						this.customAction.sendKeys(component, Keys.SEMICOLON);
+						break;
+					case QUOTE:
+						break;
+					case DOUBLE_QUOTE:
+						break;
+					case ENTER:
+						this.customAction.sendKeys(component, Keys.ENTER);
 						break;
 
 					case SHIFT:
-						this.customAction.sendKeys(component, Keys.SHIFT).perform();
+						this.customAction.sendKeys(component, Keys.SHIFT);
 						break;
-
-					case INSERT:
-						this.customAction.sendKeys(component, Keys.INSERT).perform();
+					case Z:
+						this.customAction.sendKeys(component, "z");
 						break;
-
-					case ALT:
-						this.customAction.sendKeys(component, Keys.ALT).perform();
+					case X:
+						this.customAction.sendKeys(component, "x");
+						break;
+					case C:
+						this.customAction.sendKeys(component, "c");
+						break;
+					case V:
+						this.customAction.sendKeys(component, "v");
+						break;
+					case B:
+						this.customAction.sendKeys(component, "b");
+						break;
+					case N:
+						this.customAction.sendKeys(component, "n");
+						break;
+					case M:
+						this.customAction.sendKeys(component, "m");
+						break;
+					case UP:
+						this.customAction.sendKeys(component, Keys.UP);
 						break;
 
 					case CONTROL:
-						this.customAction.sendKeys(component, Keys.CONTROL).perform();
+						this.customAction.sendKeys(component, Keys.CONTROL);
+						break;
+					case ALT:
+						this.customAction.sendKeys(component, Keys.ALT);
+						break;
+					case SPACE:
+						this.customAction.sendKeys(component, Keys.SPACE);
+						break;
+					case LEFT:
+						this.customAction.sendKeys(component, Keys.LEFT);
+						break;
+					case DOWN:
+						this.customAction.sendKeys(component, Keys.DOWN);
 						break;
 
-					case F2:
-						this.customAction.sendKeys(component, Keys.F2).perform();
+					case RIGHT:
+						this.customAction.sendKeys(component, Keys.RIGHT);
+						break;
+
+					case PLUS:
+						this.customAction.sendKeys(component, Keys.ADD);
+						break;
+					case MINUS:
+						this.customAction.sendKeys(component, Keys.SUBTRACT);
 						break;
 
 					default:
@@ -937,11 +1110,11 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 				this.isShiftDown = b;
 				if (this.isShiftDown)
 				{
-					this.customAction.keyDown(Keys.SHIFT);
+					this.customAction.keyDown(component, Keys.SHIFT);
 				}
 				else
 				{
-					this.customAction.keyUp(Keys.SHIFT);
+					this.customAction.keyUp(component, Keys.SHIFT);
 				}
 				break;
 
@@ -949,11 +1122,11 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 				this.isCtrlDown = b;
 				if (this.isCtrlDown)
 				{
-					this.customAction.keyDown(Keys.CONTROL);
+					this.customAction.keyDown(component, Keys.CONTROL);
 				}
 				else
 				{
-					this.customAction.keyUp(Keys.CONTROL);
+					this.customAction.keyUp(component, Keys.CONTROL);
 				}
 				break;
 
@@ -961,17 +1134,18 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 				this.isAltDown = b;
 				if (this.isAltDown)
 				{
-					this.customAction.keyDown(Keys.ALT);
+					this.customAction.keyDown(component, Keys.ALT);
 				}
 				else
 				{
-					this.customAction.keyUp(Keys.ALT);
+					this.customAction.keyUp(component, Keys.ALT);
 				}
 				break;
 
 			default:
 				return false;
 		}
+		logModifier();
 		return true;
 	}
 
@@ -994,7 +1168,7 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 				//horizontal slider
 				else
 				{
-					customAction.moveToElement(component, (int) ((double) (value * ((double) width / 100))), height/2).click().build().perform();
+					customAction.moveToElement(component, (int) ((double) (value * ((double) width / 100))), height / 2).click().build().perform();
 				}
 
 				return true;
@@ -1319,7 +1493,8 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 	private EventFiringWebDriver driver;
 	private Logger logger;
 
-	private static class CustomAction extends Actions {
+	private static class CustomAction extends Actions
+	{
 
 		public CustomAction(WebDriver driver)
 		{
