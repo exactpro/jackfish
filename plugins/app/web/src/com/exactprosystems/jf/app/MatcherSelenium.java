@@ -104,11 +104,19 @@ public class MatcherSelenium extends By
 			case ComboBox: 		return complexXpath(locator, "select", "input");
 			case Dialog: 		return complexXpath(locator, "form");
 			case Frame: 		return complexXpath(locator, "form", "body");
+			case Image:			return complexXpath(locator, "img");
 			case Label: 		return complexXpath(locator, "label", "span");
 			case MenuItem: 		return complexXpath(locator, "li");
 			case Panel: 		return complexXpath(locator, "div");
+			case ProgressBar:	return complexXpath(locator, "progress"); //TODO required HTML5
 			case RadioButton: 	return complexXpath(locator, "input");
 			case Row: 			return complexXpath(locator, "tr");
+			case ScrollBar:		break;
+			case Slider:		return complexXpath(locator, "div"); //TODO slider jquery : <div><span></span></div>
+			case Splitter:											 //TODO http://methvin.com/splitter/vbasic.html pls, see this slider
+				break;
+			case Spinner:											 //TODO input with 2 button's.
+				break;
 			case Table: 		return complexXpath(locator, "table");
 			case TabPanel: 		return complexXpath(locator, "button");
 			case TextBox: 		return complexXpath(locator, "input", "textarea");
