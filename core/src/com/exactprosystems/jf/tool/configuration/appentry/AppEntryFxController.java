@@ -151,6 +151,11 @@ public class AppEntryFxController implements Initializable, ContainingParent
 		ConfigurationFxController.displaySupported(parent, value, this.entry.toString());
 	}
 
+	public void showHelp(ActionEvent actionEvent)
+	{
+		Common.tryCatch(() -> this.model.showHelp(this.entry), "Error on show help");
+	}
+
 	//===========================================================================================
 	// private methods
 	//===========================================================================================

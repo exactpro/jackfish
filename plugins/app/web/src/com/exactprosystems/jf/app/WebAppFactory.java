@@ -13,10 +13,12 @@ import com.exactprosystems.jf.api.app.IApplication;
 import com.exactprosystems.jf.api.app.IApplicationFactory;
 import com.exactprosystems.jf.api.app.IGuiDictionary;
 
+import java.util.Scanner;
+
 public class WebAppFactory implements IApplicationFactory
 {
 	private static final int requiredMajorVersion = 2;
-	private static final int requiredMinorVersion = 5;
+	private static final int requiredMinorVersion = 6;
 
 	public static final String chromeDriverPathName	= "ChromeDriverPath";
 	public static final String ieDriverPathName		= "IEDriverPath";
@@ -41,7 +43,28 @@ public class WebAppFactory implements IApplicationFactory
 		};
 
 	private IGuiDictionary dictionary = null;
-	
+
+	@Override
+	public String getHelp()
+	{
+		StringBuilder builder = new StringBuilder();
+		try
+		{
+			try (Scanner in = new Scanner(WebAppFactory.class.getResourceAsStream(helpFileName)))
+			{
+				while (in.hasNext())
+				{
+					builder.append(in.nextLine());
+				}
+			}
+		}
+		catch (Exception e)
+		{
+			builder = new StringBuilder("Help not found");
+		}
+		return builder.toString();
+	}
+
 	@Override
 	public void init(IGuiDictionary dictionary)
 	{

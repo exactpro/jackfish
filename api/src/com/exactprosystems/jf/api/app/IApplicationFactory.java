@@ -13,6 +13,8 @@ import com.exactprosystems.jf.api.common.VersionSupported;
 
 public interface IApplicationFactory  extends VersionSupported, IFactory
 {
+	String helpFileName	=	"helpFile.html";
+	String				getHelp();
 	void				init(IGuiDictionary dictionary);
 	
 	String[]			wellKnownStartArgs();

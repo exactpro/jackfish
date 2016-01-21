@@ -33,6 +33,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 
+import java.io.File;
 import java.net.URL;
 import java.util.*;
 
@@ -217,6 +218,11 @@ public class ConfigurationFxController implements Initializable, ContainingParen
 	public void updateAppVersion(HashMap<Configuration.AppEntry, SupportedEntry> map)
 	{
 		map.entrySet().forEach(app -> appMap.get(app.getKey()).displaySupported(app.getValue()));
+	}
+
+	public void showAppHelp(String help)
+	{
+		DialogsHelper.showAppHelp(help);
 	}
 
 	// lib entry

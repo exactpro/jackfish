@@ -518,6 +518,22 @@ public abstract class DialogsHelper
 		}
 	}
 
+	public static void showAppHelp(String help)
+	{
+		WebView browser = new WebView();
+		WebEngine engine = browser.getEngine();
+		engine.loadContent(help);
+		Dialog<ButtonType> dialog = new Alert(Alert.AlertType.INFORMATION);
+		dialog.setResizable(true);
+		dialog.getDialogPane().setPrefWidth(1024);
+		dialog.getDialogPane().setPrefHeight(768);
+		dialog.getDialogPane().setContent(browser);
+		dialog.initModality(Modality.NONE);
+		dialog.setTitle("Help");
+		dialog.getDialogPane().getStylesheets().addAll(Common.currentTheme().getPath());
+		dialog.show();
+	}
+
 	public static void displayReport(File file, String matrixName, Configuration configuration)
 	{
 		final String[] matrName = {matrixName};

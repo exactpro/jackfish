@@ -8,6 +8,7 @@
 
 package com.exactprosystems.jf.tool.configuration;
 
+import com.exactprosystems.jf.api.app.IApplicationFactory;
 import com.exactprosystems.jf.api.client.IClientFactory;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.service.IServicesPool;
@@ -344,6 +345,13 @@ public class ConfigurationFx extends Configuration
 			}
 			this.controller.updateAppVersion(map);
 		}, "Error on test version");
+	}
+
+	public void showHelp(AppEntry entry) throws Exception
+	{
+		IApplicationFactory iApplicationFactory = this.getApplicationPool().loadApplicationFactory(entry.get(entryName));
+		String help = iApplicationFactory.getHelp();
+		this.controller.showAppHelp(help);
 	}
 
 	// =======================================================================
