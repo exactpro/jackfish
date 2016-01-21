@@ -315,7 +315,7 @@ public class MatcherSwing <T extends Component> extends GenericTypeMatcher<T>
     	}
 		if (addRectangles)
 		{
-			node.setUserData(IRemoteApplication.rectangleName, component.getBounds(), null);
+			node.setUserData(IRemoteApplication.rectangleName, getRect(component), null);
 		}
     	
 		node.setAttribute(actionName,	getAction(component));
@@ -340,6 +340,22 @@ public class MatcherSwing <T extends Component> extends GenericTypeMatcher<T>
     		}
     	}
     }
+
+	static Rectangle getRect(Component c)
+	{
+		//see Component.class , method getLocationOnWindow
+		Point curLocation = c.getLocation();
+
+		for (Container parent = c.getParent();
+			 parent != null && !(parent instanceof Window);
+			 parent = parent.getParent())
+		{
+			curLocation.x += parent.getX();
+			curLocation.y += parent.getY();
+		}
+
+		return new Rectangle(curLocation, c.getSize());
+	}
 
 	public static void setLogger(Logger log)
 	{

@@ -59,7 +59,7 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 		try
 		{
 			Component comp = component.target;
-			return new Rectangle(comp.getX(), comp.getY(), comp.getWidth(), comp.getHeight());
+			return MatcherSwing.getRect(comp);
 		}
 		catch (Throwable e)
 		{

@@ -37,6 +37,7 @@ import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Dialog;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
@@ -529,6 +530,7 @@ public abstract class DialogsHelper
 		dialog.getDialogPane().setPrefHeight(768);
 		dialog.getDialogPane().setContent(browser);
 		dialog.initModality(Modality.NONE);
+		dialog.getDialogPane().setHeader(new Label());
 		dialog.setTitle("Help");
 		dialog.getDialogPane().getStylesheets().addAll(Common.currentTheme().getPath());
 		dialog.show();
