@@ -211,7 +211,7 @@ public final class For extends MatrixItem
 			// start value
 			Number currentValue = (Number)fromValue;
 			evaluator.getLocals().set(this.var.get(), currentValue);
-			boolean condition = ((Number)currentValue).intValue() <= ((Number)toValue).intValue();
+			boolean condition = checkCondition(toValue, stepValue, currentValue);
 
 			while(condition)
 			{
@@ -221,7 +221,7 @@ public final class For extends MatrixItem
 				result = ret.getResult();
 				
 				currentValue = currentValue.intValue() + ((Number)stepValue).intValue(); 
-				condition = ((Number)currentValue).intValue() <= ((Number)toValue).intValue();
+				condition = checkCondition(toValue, stepValue, currentValue);
 				evaluator.getLocals().set(this.var.get(), currentValue);
 
 				if (result == Result.Failed)
@@ -264,6 +264,13 @@ public final class For extends MatrixItem
 			listener.error(this.owner, getNumber(), this, e.getMessage());
 			return new ReturnAndResult(Result.Failed, null, e.getMessage());
 		}
+	}
+
+	private boolean checkCondition(Object toValue, Object stepValue, Number currentValue)
+	{
+		return ((Number)stepValue).intValue() > 0 
+				? ((Number)currentValue).intValue() <= ((Number)toValue).intValue()
+				: ((Number)currentValue).intValue() >= ((Number)toValue).intValue();
 	}
 
 	private MutableValue<String> var; 
