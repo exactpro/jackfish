@@ -610,7 +610,7 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 	public boolean mouse(WebElement component, int x, int y, MouseAction action) throws Exception
 	{
 		Exception real = null;
-		logModifier();
+//		logModifier();
 		int repeat = 1;
 		do
 		{
@@ -851,7 +851,7 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 	public boolean press(WebElement component, Keyboard key) throws Exception
 	{
 		Exception real = null;
-		logModifier();
+//		logModifier();
 		int repeat = 1;
 		do
 		{
@@ -1145,7 +1145,7 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 			default:
 				return false;
 		}
-		logModifier();
+//		logModifier();
 		return true;
 	}
 
@@ -1153,7 +1153,7 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 	public boolean setValue(WebElement component, double value) throws Exception
 	{
 		Exception real = null;
-		logModifier();
+//		logModifier();
 		int repeat = 1;
 		do
 		{
