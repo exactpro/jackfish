@@ -40,7 +40,6 @@ public final class Call extends MatrixItem
 	{
 		super();
 		this.name = new MutableValue<String>();
-		this.id = new MutableValue<String>();
 	}
 
 	@Override
@@ -48,7 +47,6 @@ public final class Call extends MatrixItem
 	{
 		Call call = ((Call) super.clone());
 		call.name = this.name;
-		call.id = this.id;
 		return call;
 	}
 
