@@ -51,7 +51,7 @@ public final class TestCase extends MatrixItem
 	public MatrixItem clone() throws CloneNotSupportedException
 	{
 		TestCase clone = (TestCase) super.clone();
-		clone.name = name;
+		clone.name = name.clone();
 		return clone;
 	}
 
