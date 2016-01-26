@@ -118,14 +118,19 @@ public class MainRunner
 		    }
 
             String configString = line.getOptionValue(configName.getOpt());
+			String matrixString = line.getOptionValue(inputName.getOpt());
 
-            if (!line.hasOption(console.getOpt()))
+			if (!line.hasOption(console.getOpt()))
             {
-            	String[] guiArgs = null;
+            	String[] guiArgs = new String[2];
             	if (configString != null)
             	{
-            		guiArgs  = new String[] { configString };            	
-            	}
+					guiArgs[0] = configString;
+					if (matrixString != null)
+					{
+						guiArgs[1] = matrixString;
+					}
+				}
             	else
             	{
             		guiArgs  = new String[] {};            	
