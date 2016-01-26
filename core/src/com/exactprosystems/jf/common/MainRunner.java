@@ -117,28 +117,23 @@ public class MainRunner
 		        return;
 		    }
 
-            String configString = line.getOptionValue(configName.getOpt());
-			String matrixString = line.getOptionValue(inputName.getOpt());
+			String configString = line.getOptionValue(configName.getOpt());
 
 			if (!line.hasOption(console.getOpt()))
-            {
-            	String[] guiArgs = new String[2];
-            	if (configString != null)
-            	{
-					guiArgs[0] = configString;
-					if (matrixString != null)
-					{
-						guiArgs[1] = matrixString;
-					}
+			{
+				String[] guiArgs = null;
+				if (configString != null)
+				{
+					guiArgs = new String[]{configString};
 				}
-            	else
-            	{
-            		guiArgs  = new String[] {};            	
-            	}
-            	
-            	Application.launch(Main.class, guiArgs);
-                return;
-            }
+				else
+				{
+					guiArgs = new String[]{};
+				}
+
+				Application.launch(Main.class, guiArgs);
+				return;
+			}
 
             if (line.hasOption(saveSchema.getOpt()))
 		    {

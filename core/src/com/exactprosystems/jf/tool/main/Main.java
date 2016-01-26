@@ -143,20 +143,6 @@ public class Main extends Application
 			controller.initShortcuts();
 			try
 			{
-				final List<String> args = getParameters().getRaw();
-				if (args.size() == 2)
-				{
-					try
-					{
-						loadMatrix(args.get(1));
-					}
-					catch (Exception e)
-					{
-						DialogsHelper.showError("Error on load start matrix " + e.getMessage());
-						logger.error("Error on load start matrix");
-						logger.error(e.getMessage(), e);
-					}
-				}
 				for (SettingsValue item : settings.getValues(MAIN_NS, OPENED))
 				{
 					DocumentKind kind = DocumentKind.valueOf(item.getValue());
@@ -166,7 +152,7 @@ public class Main extends Application
 						switch (kind)
 						{
 							case MATRIX:
-								loadMatrix(filePath);
+								loadDocument(new File(filePath), new MatrixFx(filePath, config, new MatrixListener()), kind);
 								break;
 
 							case GUI_DICTIONARY:
