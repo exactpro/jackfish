@@ -9,6 +9,7 @@
 package com.exactprosystems.jf.app;
 
 import com.exactprosystems.jf.api.app.*;
+import com.exactprosystems.jf.api.common.SerializablePair;
 import org.apache.log4j.*;
 import org.w3c.dom.Document;
 
@@ -123,6 +124,18 @@ public class WinRemoteApplication extends RemoteApplication
 	protected void refreshDerived() throws Exception
 	{
 		this.driver.translate(Object.class, refreshDerived);
+	}
+
+	@Override
+	protected SerializablePair<String, Boolean> getAlertTextDerived() throws Exception
+	{
+		throw new Exception("Not presented here");
+	}
+
+	@Override
+	protected void setAlertTextDerived(String text, PerformKind performKind) throws Exception
+	{
+		throw new Exception("Not presented here");
 	}
 
 	@Override

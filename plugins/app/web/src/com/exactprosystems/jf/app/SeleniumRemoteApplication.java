@@ -9,10 +9,10 @@
 package com.exactprosystems.jf.app;
 
 import com.exactprosystems.jf.api.app.*;
+import com.exactprosystems.jf.api.common.SerializablePair;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.app.js.JSInjection;
 import com.exactprosystems.jf.app.js.JSInjectionFactory;
-
 import org.apache.log4j.*;
 import org.openqa.selenium.*;
 import org.openqa.selenium.Dimension;
@@ -26,7 +26,6 @@ import org.w3c.dom.Node;
 import javax.imageio.ImageIO;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-
 import java.awt.*;
 import java.awt.event.InputEvent;
 import java.awt.image.BufferedImage;
@@ -43,6 +42,8 @@ public class SeleniumRemoteApplication extends RemoteApplication
 	private static final String ATTRIBUTE_NAME_FIELD = "name";
 	private static final String ATTRIBUTE_VALUE_FIELD = "val";
 	private static final String ELEMENT_TEXT_FIELD = "text";
+
+	private Alert currentAlert;
 
 	private static final String SCRIPT = 
 		" \n" +
@@ -235,6 +236,47 @@ public class SeleniumRemoteApplication extends RemoteApplication
 
 		//		Actions actions = new Actions(driver);
 		//		actions.keyDown(Keys.CONTROL).sendKeys(Keys.F5).perform();
+	}
+
+	@Override
+	protected SerializablePair<String, Boolean> getAlertTextDerived() throws Exception
+	{
+		try
+		{
+			this.currentAlert = this.driver.switchTo().alert();
+		}
+		catch (NoAlertPresentException e)
+		{
+			throw new RemoteException("Alert is not present");
+		}
+		return new SerializablePair<>(this.currentAlert.getText(), true);
+	}
+
+	@Override
+	protected void setAlertTextDerived(String text, PerformKind performKind) throws Exception
+	{
+		logger.debug(String.format("setAlertTextDerived(%s,%s)", text, performKind));
+		if (this.currentAlert == null)
+		{
+			throw new RemoteException("Alert is not present");
+		}
+		logger.debug("Entered text : " + text);
+		if (!Str.IsNullOrEmpty(text))
+		{
+			this.currentAlert.sendKeys(text);
+		}
+		switch (performKind)
+		{
+
+			case Accept:
+				this.currentAlert.accept();
+				break;
+			case Dismiss:
+				this.currentAlert.dismiss();
+				break;
+			case Nothing:
+				break;
+		}
 	}
 
 	@Override

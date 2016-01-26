@@ -18,7 +18,7 @@ import java.util.Scanner;
 public class WinAppFactory implements IApplicationFactory
 {
 	private static final int requiredMajorVersion = 2;
-	private static final int requiredMinorVersion = 6;
+	private static final int requiredMinorVersion = 7;
 	
 	private static final String mainWindowName = "MainWindow";
 	private static final String execName = "Exec";

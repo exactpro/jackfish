@@ -12,4 +12,7 @@ now logs are put into 'logs' directory. remove old main.log file in current dire
 
 
 since 713 api was upgraded to 2.0
-we have addded layout testing 
+we have addded layout testing
+
+since 886 add new action : DialogAlert
+for understand this action see help

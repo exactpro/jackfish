@@ -18,7 +18,7 @@ import java.util.Scanner;
 public class SwingAppFactory implements IApplicationFactory
 {
 	private static final int requiredMajorVersion = 2;
-	private static final int requiredMinorVersion = 6;
+	private static final int requiredMinorVersion = 7;
 
 	public final static String jreExecName 		= "jreExec";
 	public final static String jreArgsName 		= "jreArgs";

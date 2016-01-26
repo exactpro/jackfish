@@ -8,6 +8,7 @@
 
 package com.exactprosystems.jf.api.app;
 
+import com.exactprosystems.jf.api.common.SerializablePair;
 import org.w3c.dom.Document;
 
 import java.awt.*;
@@ -141,6 +142,34 @@ public abstract class RemoteApplication implements IRemoteApplication
 		catch (Exception e)
 		{
 			String msg = String.format("Error refresh()");
+			throw new ProxyException(msg, e.getMessage(), e);
+		}
+	}
+
+	@Override
+	public SerializablePair<String, Boolean> getAlertText() throws RemoteException
+	{
+		try
+		{
+			return getAlertTextDerived();
+		}
+		catch (Exception e)
+		{
+			String msg = String.format("Error getAlertText()");
+			throw new ProxyException(msg, e.getMessage(), e);
+		}
+	}
+
+	@Override
+	public void setAlertText(String text, PerformKind performKind) throws RemoteException
+	{
+		try
+		{
+			setAlertTextDerived(text, performKind);
+		}
+		catch (Exception e)
+		{
+			String msg = String.format("Error setAlertText(%s, %s)", text, performKind.toString());
 			throw new ProxyException(msg, e.getMessage(), e);
 		}
 	}
@@ -387,6 +416,10 @@ public abstract class RemoteApplication implements IRemoteApplication
 	protected abstract void stopDerived() throws Exception;
 	
 	protected abstract void refreshDerived() throws Exception;
+
+	protected abstract SerializablePair<String,Boolean> getAlertTextDerived() throws Exception;
+
+	protected abstract void setAlertTextDerived(String text, PerformKind performKind) throws Exception;
 
 	protected abstract Collection<String> titlesDerived() throws Exception;
 

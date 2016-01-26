@@ -9,6 +9,7 @@
 package com.exactprosystems.jf.app;
 
 import com.exactprosystems.jf.api.app.*;
+import com.exactprosystems.jf.api.common.SerializablePair;
 import net.sourceforge.jnlp.Launcher;
 import net.sourceforge.jnlp.runtime.ApplicationInstance;
 import net.sourceforge.jnlp.runtime.JNLPRuntime;
@@ -172,6 +173,18 @@ public class SwingRemoteApplication extends RemoteApplication
 	protected void refreshDerived() throws Exception
 	{
 		// done
+	}
+
+	@Override
+	protected SerializablePair<String, Boolean> getAlertTextDerived() throws Exception
+	{
+		throw new Exception("Not presented here");
+	}
+
+	@Override
+	protected void setAlertTextDerived(String text, PerformKind performKind) throws Exception
+	{
+		throw new Exception("Not presented here");
 	}
 
 	@Override
