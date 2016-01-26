@@ -545,7 +545,7 @@ public class MainController implements Initializable, ContainingParent
 				}
 				catch (FileNotFoundException e)
 				{
-					menuItem.getParentMenu().getItems().remove(menuItem);
+					this.model.removeMatrixFromSettings(lastMatrix.getKey());
 				}
 
 			}, "Error on load matrix"));

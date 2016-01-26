@@ -577,6 +577,13 @@ public class Main extends Application
 		return null;
 	}
 
+	public void removeMatrixFromSettings(String key) throws Exception
+	{
+		this.settings.remove(MAIN_NS, DocumentKind.MATRIX.name(), key);
+		this.settings.saveIfNeeded();
+		this.controller.updateFileLastMatrix(this.settings.getValues(MAIN_NS, DocumentKind.MATRIX.name()));
+	}
+
 	private void createDocument(Document doc) throws Exception
 	{
 		if (doc == null)

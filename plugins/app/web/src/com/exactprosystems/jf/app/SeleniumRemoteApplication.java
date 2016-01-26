@@ -196,7 +196,7 @@ public class SeleniumRemoteApplication extends RemoteApplication
 			this.driver = new EventFiringWebDriver(browser.createDriver(chromeDriverBinary));
 			this.jsInjection = JSInjectionFactory.getJSInjection(browser);
 			this.operationExecutor = new SeleniumOperationExecutor(this.driver, this.logger);
-
+			this.driver.register(new WebDriverListener(this.logger));
 			this.driver.get(url);
 			this.driver.manage().window().maximize();
 			needTune = true;
@@ -260,7 +260,6 @@ public class SeleniumRemoteApplication extends RemoteApplication
 		{
 			throw new RemoteException("Alert is not present");
 		}
-		logger.debug("Entered text : " + text);
 		if (!Str.IsNullOrEmpty(text))
 		{
 			this.currentAlert.sendKeys(text);
