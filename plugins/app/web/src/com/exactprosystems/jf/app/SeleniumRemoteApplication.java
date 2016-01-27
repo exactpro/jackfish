@@ -196,7 +196,8 @@ public class SeleniumRemoteApplication extends RemoteApplication
 			this.driver = new EventFiringWebDriver(browser.createDriver(chromeDriverBinary));
 			this.jsInjection = JSInjectionFactory.getJSInjection(browser);
 			this.operationExecutor = new SeleniumOperationExecutor(this.driver, this.logger);
-			this.driver.register(new WebDriverListener(this.logger));
+			this.listener = new WebDriverListener(this.logger);
+			this.driver.register(this.listener);
 			this.driver.get(url);
 			this.driver.manage().window().maximize();
 			needTune = true;
@@ -221,6 +222,10 @@ public class SeleniumRemoteApplication extends RemoteApplication
 					break;
 				}
 				this.driver.quit();
+				if (this.listener != null)
+				{
+					this.listener.reportAll();
+				}
 			}
 		}
 		catch (UnreachableBrowserException e)
@@ -831,6 +836,7 @@ public class SeleniumRemoteApplication extends RemoteApplication
 	private static long time = System.currentTimeMillis();
 
 	private EventFiringWebDriver driver;
+	private WebDriverListener listener;
 
 	private boolean needTune = true;
 	private double offsetX;
