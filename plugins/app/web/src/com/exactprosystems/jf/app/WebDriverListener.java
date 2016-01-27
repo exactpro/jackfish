@@ -93,47 +93,51 @@ public class WebDriverListener implements WebDriverEventListener
 	@Override
 	public void afterNavigateTo(String url, WebDriver driver)
 	{
-		this.log(NAVIGATE_TO, this.timeNavigateTo);
+		this.log(NAVIGATE_TO, System.currentTimeMillis() - this.timeNavigateTo);
 	}
 
 	@Override
 	public void afterNavigateBack(WebDriver driver)
 	{
-		this.log(NAVIGATE_BACK, this.timeNavigateBack);
+		this.log(NAVIGATE_BACK, System.currentTimeMillis() - this.timeNavigateBack);
 	}
 
 	@Override
 	public void afterNavigateForward(WebDriver driver)
 	{
-		this.log(NAVIGATE_FORWARD, this.timeNavigateForward);
+		this.log(NAVIGATE_FORWARD, System.currentTimeMillis() - this.timeNavigateForward);
 	}
 
 	@Override
 	public void afterFindBy(By by, WebElement element, WebDriver driver)
 	{
-		this.findByHistogram.add(this.timeFindBy);
-		this.log(FIND_BY, this.timeFindBy);
+		long time = System.currentTimeMillis() - this.timeFindBy;
+		this.findByHistogram.add(time);
+		this.log(FIND_BY, time);
 	}
 
 	@Override
 	public void afterClickOn(WebElement element, WebDriver driver)
 	{
-		this.clickHistogram.add(this.timeClick);
-		this.log(CLICK, this.timeClick);
+		long time = System.currentTimeMillis() - this.timeClick;
+		this.clickHistogram.add(time);
+		this.log(CLICK, time);
 	}
 
 	@Override
 	public void afterChangeValueOf(WebElement element, WebDriver driver)
 	{
-		this.clickHistogram.add(this.timeText);
-		this.log(ENTER_TEXT, this.timeText);
+		long time = System.currentTimeMillis() - this.timeText;
+		this.clickHistogram.add(time);
+		this.log(ENTER_TEXT, time);
 	}
 
 	@Override
 	public void afterScript(String script, WebDriver driver)
 	{
-		this.executeScriptHistogram.add(this.timeScript);
-		this.log(EXECUTE_SCRIPT, this.timeScript);
+		long time = System.currentTimeMillis() - this.timeScript;
+		this.executeScriptHistogram.add(time);
+		this.log(EXECUTE_SCRIPT, time);
 	}
 
 	@Override
@@ -152,6 +156,6 @@ public class WebDriverListener implements WebDriverEventListener
 
 	private void log(String msg, long time)
 	{
-		this.logger.debug("$$$$ " + msg + ", time : " + (System.currentTimeMillis() - time) + "ms");
+		this.logger.debug("$$$$ " + msg + ", time : " + time + "ms");
 	}
 }

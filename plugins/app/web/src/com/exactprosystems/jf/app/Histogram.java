@@ -10,6 +10,7 @@ package com.exactprosystems.jf.app;
 import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class Histogram
@@ -56,11 +57,7 @@ public class Histogram
 	public void add(double time)
 	{
 		int range = (int) (time / STEP);
-		int index = range;
-		if (range >= list.size())
-		{
-			index = list.size() - 1;
-		}
+		int index = Math.min(range, list.size() - 1);
 		list.set(index, list.get(index) + 1);
 		long currentTime = System.currentTimeMillis();
 		if (currentTime - lastUpdate > MAX_TIME)
@@ -84,7 +81,7 @@ public class Histogram
 	{
 		StringBuilder builder = new StringBuilder("\nHistogram for " + name);
 		builder.append("\n");
-		int max = getMax();
+		int max = Collections.max(this.list);
 		for (int i = 0; i < list.size(); i++)
 		{
 			createRow(builder, max, i * STEP, list.get(i));
@@ -95,32 +92,14 @@ public class Histogram
 	private void createRow(StringBuilder builder, int max, int startRange, int number)
 	{
 		builder.append("[").append(String.format("%5d", startRange == 0 ? 0 : startRange + 1)).append(" ]")
-				//					.append(" - ")
-				//					.append(String.format("%7s", endRange == STEP * RANGE_COUNT ? "+inf )" : endRange+" ]"))
-				.append(String.format(" %7d\t\t", number)).append(star((int) ((((double) number / max)) * MAX_START_COUNT))).append("\n");
-	}
-
-	private int getMax()
-	{
-		int max = list.get(0);
-		for (int i = 1; i < list.size(); i++)
+				//.append(" - ")
+				//.append(String.format("%7s", endRange == STEP * RANGE_COUNT ? "+inf )" : endRange+" ]"))
+				.append(String.format(" %7d\t\t", number));
+		int maxStartCount = (int) ((((double) number / (max + 1))) * MAX_START_COUNT);
+		for (int i = 0; i < maxStartCount; i++)
 		{
-			Integer newMax = list.get(i);
-			if (newMax > max)
-			{
-				max = newMax;
-			}
+			builder.append("*");
 		}
-		return max;
-	}
-
-	private String star(int starCount)
-	{
-		StringBuilder sb = new StringBuilder();
-		for (int i = 0; i < starCount; i++)
-		{
-			sb.append("*");
-		}
-		return sb.toString();
+		builder.append("\n");
 	}
 }
