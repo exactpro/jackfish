@@ -20,7 +20,6 @@ import org.openqa.selenium.Dimension;
 import org.openqa.selenium.Point;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.internal.Locatable;
 import org.openqa.selenium.support.events.EventFiringWebDriver;
 import org.openqa.selenium.support.ui.Select;
 
@@ -613,7 +612,7 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 		{
 			try
 			{
-				scroolToElement(component);
+				scrollToElement(component);
 				switch (action)
 				{
 					case Move:
@@ -691,7 +690,7 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 		{
 			try
 			{
-				scroolToElement(component);
+				scrollToElement(component);
 				component.click();
 				return true;
 			}
@@ -714,7 +713,7 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 		{
 			try
 			{
-				scroolToElement(component);
+				scrollToElement(component);
 				if (clear)
 				{
 					component.clear();
@@ -741,7 +740,7 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 		{
 			try
 			{
-				scroolToElement(component);
+				scrollToElement(component);
 				component.click();
 				return true;
 			}
@@ -759,7 +758,7 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 	public boolean select(WebElement component, String selectedText) throws Exception
 	{
 		//TODO think about it
-		scroolToElement(component);
+		scrollToElement(component);
 		new Select(component).selectByVisibleText(selectedText);
 		return true;
 	}
@@ -774,7 +773,7 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 		{
 			try
 			{
-				scroolToElement(component);
+				scrollToElement(component);
 				component.click();
 				return true;
 			}
@@ -860,7 +859,7 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 		{
 			try
 			{
-				scroolToElement(component);
+				scrollToElement(component);
 				switch (key)
 				{
 					case ESCAPE:
@@ -1108,7 +1107,7 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 	@Override
 	public boolean upAndDown(WebElement component, Keyboard key, boolean b) throws Exception
 	{
-		scroolToElement(component);
+		scrollToElement(component);
 		switch (key)
 		{
 			case SHIFT:
@@ -1164,7 +1163,7 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 		{
 			try
 			{
-				scroolToElement(component);
+				scrollToElement(component);
 				int height = component.getSize().getHeight();
 				int width = component.getSize().getWidth();
 				if (height > width)
@@ -1471,12 +1470,9 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 		throw real;
 	}
 
-	private void scroolToElement(WebElement element)
+	private void scrollToElement(WebElement element)
 	{
-		if (element instanceof Locatable)
-		{
-			((Locatable) element).getCoordinates().inViewPort();
-		}
+		driver.executeScript("window.scrollTo(arguments[0].scrollWidth, arguments[0].scrollHeight)", element);
 	}
 
 	private boolean isShiftDown = false;

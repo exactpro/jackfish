@@ -95,7 +95,7 @@ public class Histogram
 				//.append(" - ")
 				//.append(String.format("%7s", endRange == STEP * RANGE_COUNT ? "+inf )" : endRange+" ]"))
 				.append(String.format(" %7d\t\t", number));
-		int maxStartCount = (int) ((((double) number / (max + 1))) * MAX_START_COUNT);
+		int maxStartCount = (int) ((((double) number / (max == 0 ? 1 : max))) * MAX_START_COUNT);
 		for (int i = 0; i < maxStartCount; i++)
 		{
 			builder.append("*");
