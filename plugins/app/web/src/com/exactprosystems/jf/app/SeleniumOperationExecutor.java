@@ -19,15 +19,12 @@ import org.openqa.selenium.*;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.Point;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.interactions.Action;
 import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.interactions.CompositeAction;
-import org.openqa.selenium.interactions.Mouse;
+import org.openqa.selenium.internal.Locatable;
 import org.openqa.selenium.support.events.EventFiringWebDriver;
 import org.openqa.selenium.support.ui.Select;
 
 import java.awt.*;
-import java.lang.reflect.Method;
 import java.rmi.RemoteException;
 import java.util.*;
 import java.util.List;
@@ -50,7 +47,7 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 	{
 		this.driver = driver;
 		this.logger = logger;
-		this.customAction = new CustomAction(this.driver);
+		this.customAction = new Actions(this.driver);
 	}
 
 	@Override
@@ -616,6 +613,7 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 		{
 			try
 			{
+				scroolToElement(component);
 				switch (action)
 				{
 					case Move:
@@ -693,6 +691,7 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 		{
 			try
 			{
+				scroolToElement(component);
 				component.click();
 				return true;
 			}
@@ -715,6 +714,7 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 		{
 			try
 			{
+				scroolToElement(component);
 				if (clear)
 				{
 					component.clear();
@@ -741,6 +741,7 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 		{
 			try
 			{
+				scroolToElement(component);
 				component.click();
 				return true;
 			}
@@ -758,6 +759,7 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 	public boolean select(WebElement component, String selectedText) throws Exception
 	{
 		//TODO think about it
+		scroolToElement(component);
 		new Select(component).selectByVisibleText(selectedText);
 		return true;
 	}
@@ -772,6 +774,7 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 		{
 			try
 			{
+				scroolToElement(component);
 				component.click();
 				return true;
 			}
@@ -857,6 +860,7 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 		{
 			try
 			{
+				scroolToElement(component);
 				switch (key)
 				{
 					case ESCAPE:
@@ -1104,6 +1108,7 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 	@Override
 	public boolean upAndDown(WebElement component, Keyboard key, boolean b) throws Exception
 	{
+		scroolToElement(component);
 		switch (key)
 		{
 			case SHIFT:
@@ -1159,6 +1164,7 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 		{
 			try
 			{
+				scroolToElement(component);
 				int height = component.getSize().getHeight();
 				int width = component.getSize().getWidth();
 				if (height > width)
@@ -1465,23 +1471,11 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 		throw real;
 	}
 
-	private void logModifier()
+	private void scroolToElement(WebElement element)
 	{
-		logger.debug("shift press	: " + isShiftDown);
-		logger.debug("alt press		: " + isAltDown);
-		logger.debug("control press	: " + isCtrlDown);
-		for (Action action : customAction.getComposite().asList())
+		if (element instanceof Locatable)
 		{
-			try
-			{
-				Method m = action.getClass().getDeclaredMethod("asList");
-				Object invoke = m.invoke(action);
-				logger.debug("action : " + ((List<Object>) invoke).get(0) + " : " + ((List<Object>) invoke).get(1));
-			}
-			catch (Exception e)
-			{
-				logger.debug(action + " not have method asList");
-			}
+			((Locatable) element).getCoordinates().inViewPort();
 		}
 	}
 
@@ -1489,31 +1483,7 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 	private boolean isCtrlDown = false;
 	private boolean isAltDown = false;
 
-	private CustomAction customAction;
+	private Actions customAction;
 	private EventFiringWebDriver driver;
 	private Logger logger;
-
-	private static class CustomAction extends Actions
-	{
-
-		public CustomAction(WebDriver driver)
-		{
-			super(driver);
-		}
-
-		public CustomAction(org.openqa.selenium.interactions.Keyboard keyboard, Mouse mouse)
-		{
-			super(keyboard, mouse);
-		}
-
-		public CustomAction(org.openqa.selenium.interactions.Keyboard keyboard)
-		{
-			super(keyboard);
-		}
-
-		public CompositeAction getComposite()
-		{
-			return super.action;
-		}
-	}
 }
