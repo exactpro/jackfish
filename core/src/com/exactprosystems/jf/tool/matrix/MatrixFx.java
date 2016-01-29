@@ -707,7 +707,7 @@ public class MatrixFx extends Matrix
 			}
 		});
 		String absolutePathMatrix = new File(this.getName()).getAbsolutePath();
-		if (breakPoints.isEmpty() && settings.getValue(Main.MAIN_NS, DIALOG_BREAKPOINT, absolutePathMatrix) != null)
+		if (breakPoints.isEmpty())
 		{
 			//if matrix was present and don't have breakpoint - remove it;
 			settings.remove(Main.MAIN_NS, DIALOG_BREAKPOINT, absolutePathMatrix);
@@ -749,9 +749,9 @@ public class MatrixFx extends Matrix
 			{
 				this.defaultAppId = split[0];
 				this.defaultClientId = split[1];
-				this.controller.setDefaultApp(this.defaultAppId);
-				this.controller.setDefaultClient(this.defaultClientId);
 			}
+			this.controller.setDefaultApp(this.defaultAppId);
+			this.controller.setDefaultClient(this.defaultClientId);
 		});
 	}
 
