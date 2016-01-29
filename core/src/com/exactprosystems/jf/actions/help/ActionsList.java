@@ -14,6 +14,7 @@ import com.exactprosystems.jf.actions.ActionGroups;
 import com.exactprosystems.jf.actions.app.*;
 import com.exactprosystems.jf.actions.clients.*;
 import com.exactprosystems.jf.actions.gui.*;
+import com.exactprosystems.jf.actions.histogram.*;
 import com.exactprosystems.jf.actions.matrix.*;
 import com.exactprosystems.jf.actions.message.*;
 import com.exactprosystems.jf.actions.services.*;
@@ -120,9 +121,7 @@ public class ActionsList extends AbstractAction
 				XmlRemove.class,
 				XmlReport.class,
 				XmlSaveToFile.class,
-				XmlSetNode.class,
-				ApplicationNewInstance.class
-		    };
+				XmlSetNode.class, ApplicationNewInstance.class, HistogramCreate.class, HistogramGetTable.class, HistogramReport.class, HistogramStart.class, HistogramStop.class,};
 	
     public ActionsList()
     {

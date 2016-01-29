@@ -86,15 +86,6 @@ public class SeleniumRemoteApplication extends RemoteApplication
 
 	private static Map<String, ArrayList<ControlKind>> mapTagsControlKind = new HashMap<>();
 
-	public static final String itemName 	= "item";
-
-	public static final String idName 		= "id";
-	public static final String titleName 	= "title";
-	public static final String textName 	= "text";
-	public static final String tooltipName 	= "tooltip";
-	public static final String nameName 	= "name";
-	public static final String className 	= "class";
-
 	static
 	{
 		mapTagsControlKind.put("button",	new SimpleArrayBuilder<ControlKind>().
@@ -222,10 +213,6 @@ public class SeleniumRemoteApplication extends RemoteApplication
 					break;
 				}
 				this.driver.quit();
-				if (this.listener != null)
-				{
-					this.listener.reportAll();
-				}
 			}
 		}
 		catch (UnreachableBrowserException e)
@@ -710,7 +697,6 @@ public class SeleniumRemoteApplication extends RemoteApplication
 			DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
 			Document document = docBuilder.newDocument();
 			log("before script");
-//			logger.info(SCRIPT);
 			Object returnObject = driver.executeScript(SCRIPT, ownerElement);
 			log("after script");
 			/**
@@ -722,10 +708,6 @@ public class SeleniumRemoteApplication extends RemoteApplication
 			 */
 			Map<String, Object> rootElement = (Map<String, Object>) returnObject;
 
-//			StringBuilder sb = new StringBuilder("\n");
-//			outToLog(sb, rootElement, 0);
-//			logger.info(sb.toString());
-			
 			transform (rootElement, document, document);
 			log("buid doc");
 			return document;
@@ -824,6 +806,12 @@ public class SeleniumRemoteApplication extends RemoteApplication
 	protected void endGrabbingDerived() throws Exception
 	{
 		this.jsInjection.stopInject(this.driver);
+	}
+
+	@Override
+	protected void subscribeDerived(HistogramTransfer histogram) throws Exception
+	{
+		this.listener.addSubscriber(histogram);
 	}
 
 	private void log(String message)

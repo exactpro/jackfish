@@ -18,7 +18,7 @@ import java.util.Scanner;
 public class WebAppFactory implements IApplicationFactory
 {
 	private static final int requiredMajorVersion = 2;
-	private static final int requiredMinorVersion = 7;
+	private static final int requiredMinorVersion = 8;
 
 	public static final String chromeDriverPathName	= "ChromeDriverPath";
 	public static final String ieDriverPathName		= "IEDriverPath";
@@ -26,6 +26,8 @@ public class WebAppFactory implements IApplicationFactory
 
 	public final static String browserName 	= "Browser";
 	public final static String urlName 		= "URL";
+
+	public static final String parameterListenName = "ParameterListen";
 
 	private static String[] knownParameters = {chromeDriverPathName, ieDriverPathName, chromeDriverBinary};
 	
@@ -41,6 +43,8 @@ public class WebAppFactory implements IApplicationFactory
 			ControlKind.Spinner, ControlKind.Table, ControlKind.TabPanel, ControlKind.TextBox, ControlKind.ToggleButton, 
 			ControlKind.Tooltip, ControlKind.Tree, ControlKind.TreeItem,
 		};
+
+	private static String[] supportedListeningParameters = {WebDriverListener.NAVIGATE_TO, WebDriverListener.NAVIGATE_BACK, WebDriverListener.NAVIGATE_FORWARD, WebDriverListener.FIND_BY, WebDriverListener.CLICK, WebDriverListener.ENTER_TEXT, WebDriverListener.EXECUTE_SCRIPT,};
 
 	private IGuiDictionary dictionary = null;
 
@@ -129,6 +133,9 @@ public class WebAppFactory implements IApplicationFactory
 				result[++i] = "Safari";
 				return result;
 
+			case parameterListenName:
+				return supportedListeningParameters;
+
 			default:
 				return new String[0];
 		}
@@ -140,6 +147,11 @@ public class WebAppFactory implements IApplicationFactory
 		return this.dictionary;
 	}
 
+	@Override
+	public String[] supportedListeningParameters()
+	{
+		return supportedListeningParameters;
+	}
 
 	//----------------------------------------------------------------------------------------------
 	// VersionSupported

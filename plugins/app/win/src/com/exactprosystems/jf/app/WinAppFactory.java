@@ -18,7 +18,7 @@ import java.util.Scanner;
 public class WinAppFactory implements IApplicationFactory
 {
 	private static final int requiredMajorVersion = 2;
-	private static final int requiredMinorVersion = 7;
+	private static final int requiredMinorVersion = 8;
 	
 	private static final String mainWindowName = "MainWindow";
 	private static final String execName = "Exec";
@@ -125,6 +125,12 @@ public class WinAppFactory implements IApplicationFactory
 	public IGuiDictionary getDictionary()
 	{
 		return this.dictionary;
+	}
+
+	@Override
+	public String[] supportedListeningParameters()
+	{
+		return new String[0];
 	}
 
 	//----------------------------------------------------------------------------------------------

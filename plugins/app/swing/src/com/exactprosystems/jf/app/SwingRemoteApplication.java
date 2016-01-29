@@ -552,6 +552,12 @@ public class SwingRemoteApplication extends RemoteApplication
 		// done
 	}
 
+	@Override
+	protected void subscribeDerived(HistogramTransfer histogram) throws Exception
+	{
+
+	}
+
 	private Component componentAtPosition(Component component, int x, int y)
 	{
 		if (component == null)

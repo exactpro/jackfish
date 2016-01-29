@@ -405,7 +405,20 @@ public abstract class RemoteApplication implements IRemoteApplication
 			throw new ProxyException(msg, e.getMessage(), e);
 		}
 	}
-	
+
+	@Override
+	public void subscribe(HistogramTransfer histogram) throws RemoteException
+	{
+		try
+		{
+			subscribeDerived(histogram);
+		}
+		catch (Exception e)
+		{
+			String msg = String.format("Error on subscribe %s", histogram);
+			throw new ProxyException(msg, e.getMessage(), e);
+		}
+	}
 
 	protected abstract void createLoggerDerived(String logName, String serverLogLevel, String serverLogPattern) throws Exception;
 	
@@ -450,6 +463,8 @@ public abstract class RemoteApplication implements IRemoteApplication
 	protected abstract void startGrabbingDerived() throws Exception;
 
 	protected abstract void endGrabbingDerived() throws Exception;
+
+	protected abstract void subscribeDerived(HistogramTransfer histogram) throws Exception;
 
 	private static String removeExtraQuotes(String string)
 	{

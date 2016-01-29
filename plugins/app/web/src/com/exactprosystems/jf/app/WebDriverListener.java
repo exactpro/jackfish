@@ -7,26 +7,27 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.exactprosystems.jf.app;
 
+import com.exactprosystems.jf.api.app.HistogramTransfer;
 import org.apache.log4j.Logger;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.events.WebDriverEventListener;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 public class WebDriverListener implements WebDriverEventListener
 {
-	private static final String NAVIGATE_TO = "Navigate to";
-	private static final String NAVIGATE_BACK = "Navigate back";
-	private static final String NAVIGATE_FORWARD = "Navigate forward";
-	private static final String FIND_BY = "Find by";
-	private static final String CLICK = "Click";
-	private static final String ENTER_TEXT = "Enter text";
-	private static final String EXECUTE_SCRIPT = "Execute script";
-
-	private Histogram findByHistogram;
-	private Histogram clickHistogram;
-	private Histogram enterTextHistogram;
-	private Histogram executeScriptHistogram;
+	public static final String NAVIGATE_TO = "Navigate to";
+	public static final String NAVIGATE_BACK = "Navigate back";
+	public static final String NAVIGATE_FORWARD = "Navigate forward";
+	public static final String FIND_BY = "Find by";
+	public static final String CLICK = "Click";
+	public static final String ENTER_TEXT = "Enter text";
+	public static final String EXECUTE_SCRIPT = "Execute script";
 
 	private long timeNavigateTo;
 	private long timeNavigateBack;
@@ -37,16 +38,34 @@ public class WebDriverListener implements WebDriverEventListener
 	private long timeScript;
 	
 	private Logger logger;
-	
+	private Map<String, List<HistogramTransfer>> subscribers;
+
 	public WebDriverListener(Logger logger)
 	{
 		this.logger = logger;
-		this.findByHistogram = new Histogram(FIND_BY, this.logger);
-		this.clickHistogram = new Histogram(CLICK, this.logger);
-		this.enterTextHistogram = new Histogram(ENTER_TEXT, this.logger);
-		this.executeScriptHistogram = new Histogram(EXECUTE_SCRIPT, this.logger);
+		this.subscribers = new HashMap<>();
+		this.subscribers.put(NAVIGATE_TO, new ArrayList<HistogramTransfer>());
+		this.subscribers.put(NAVIGATE_BACK, new ArrayList<HistogramTransfer>());
+		this.subscribers.put(NAVIGATE_FORWARD, new ArrayList<HistogramTransfer>());
+		this.subscribers.put(FIND_BY, new ArrayList<HistogramTransfer>());
+		this.subscribers.put(CLICK, new ArrayList<HistogramTransfer>());
+		this.subscribers.put(ENTER_TEXT, new ArrayList<HistogramTransfer>());
+		this.subscribers.put(EXECUTE_SCRIPT, new ArrayList<HistogramTransfer>());
+
+		//		this.findByHistogram = new Histogram(FIND_BY, this.logger);
+		//		this.clickHistogram = new Histogram(CLICK, this.logger);
+		//		this.enterTextHistogram = new Histogram(ENTER_TEXT, this.logger);
+		//		this.executeScriptHistogram = new Histogram(EXECUTE_SCRIPT, this.logger);
 	}
 
+	public void addSubscriber(HistogramTransfer transfer)
+	{
+		List<HistogramTransfer> histogramTransfers = this.subscribers.get(transfer.getName());
+		if (histogramTransfers != null)
+		{
+			histogramTransfers.add(transfer);
+		}
+	}
 
 	@Override
 	public void beforeNavigateTo(String url, WebDriver driver)
@@ -111,33 +130,25 @@ public class WebDriverListener implements WebDriverEventListener
 	@Override
 	public void afterFindBy(By by, WebElement element, WebDriver driver)
 	{
-		long time = System.currentTimeMillis() - this.timeFindBy;
-		this.findByHistogram.add(time);
-		this.log(FIND_BY, time);
+		this.log(FIND_BY, System.currentTimeMillis() - this.timeFindBy);
 	}
 
 	@Override
 	public void afterClickOn(WebElement element, WebDriver driver)
 	{
-		long time = System.currentTimeMillis() - this.timeClick;
-		this.clickHistogram.add(time);
-		this.log(CLICK, time);
+		this.log(CLICK, System.currentTimeMillis() - this.timeClick);
 	}
 
 	@Override
 	public void afterChangeValueOf(WebElement element, WebDriver driver)
 	{
-		long time = System.currentTimeMillis() - this.timeText;
-		this.clickHistogram.add(time);
-		this.log(ENTER_TEXT, time);
+		this.log(ENTER_TEXT, System.currentTimeMillis() - this.timeText);
 	}
 
 	@Override
 	public void afterScript(String script, WebDriver driver)
 	{
-		long time = System.currentTimeMillis() - this.timeScript;
-		this.executeScriptHistogram.add(time);
-		this.log(EXECUTE_SCRIPT, time);
+		this.log(EXECUTE_SCRIPT, System.currentTimeMillis() - this.timeScript);
 	}
 
 	@Override
@@ -146,16 +157,12 @@ public class WebDriverListener implements WebDriverEventListener
 		
 	}
 
-	public void reportAll()
-	{
-		this.findByHistogram.report();
-		this.clickHistogram.report();
-		this.enterTextHistogram.report();
-		this.executeScriptHistogram.report();
-	}
-
 	private void log(String msg, long time)
 	{
+		for (HistogramTransfer transfer : this.subscribers.get(msg))
+		{
+			transfer.add(time);
+		}
 		this.logger.debug("$$$$ " + msg + ", time : " + time + "ms");
 	}
 }

@@ -251,6 +251,12 @@ public class WinRemoteApplication extends RemoteApplication
 	{
 	}
 
+	@Override
+	protected void subscribeDerived(HistogramTransfer histogram) throws Exception
+	{
+
+	}
+
 	private Process			process;
 	private Driver 			driver;
 	public OperationExecutor<UIProxy> operationExecutor;

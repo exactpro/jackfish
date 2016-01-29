@@ -19,7 +19,7 @@ import java.util.Map;
 
 public interface IRemoteApplication extends Remote
 {
-	public static final String	rectangleName	= "rectangle";
+	String rectangleName = "rectangle";
 	
 	void 								createLogger(String logName, String serverLogLevel, String serverLogPattern) throws RemoteException;
 	void 								connect		(Map<String, String> args) throws RemoteException;
@@ -44,4 +44,6 @@ public interface IRemoteApplication extends Remote
 	Document							getTree		(Locator owner) throws RemoteException;
 	void								startGrabbing() throws RemoteException;
 	void								endGrabbing	() throws RemoteException;
+
+	void subscribe(HistogramTransfer histogram) throws RemoteException;
 }
