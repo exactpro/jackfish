@@ -204,7 +204,7 @@ public class Main extends Application
 			{
 				if (this.config.canClose())
 				{
-					this.config.close();
+					this.config.close(this.config.getSettings());
 					setConfiguration(null);
 				}
 				else
@@ -279,7 +279,7 @@ public class Main extends Application
 		{
 			if (this.config.canClose())
 			{
-				this.config.close();
+				this.config.close(this.config.getSettings());
 				setConfiguration(null);
 			}
 			else
@@ -441,7 +441,7 @@ public class Main extends Application
 			{
 				if(this.config.canClose())
 				{
-					this.config.close();
+					this.config.close(this.config.getSettings());
 					setConfiguration(null);
 					this.controller.close();
 					

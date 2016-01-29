@@ -8,10 +8,7 @@
 
 package com.exactprosystems.jf.tool;
 
-import com.exactprosystems.jf.common.ChangeListener;
-import com.exactprosystems.jf.common.Configuration;
-import com.exactprosystems.jf.common.Document;
-import com.exactprosystems.jf.common.DocumentInfo;
+import com.exactprosystems.jf.common.*;
 import com.exactprosystems.jf.common.undoredo.ActionTrackProvider;
 import com.exactprosystems.jf.common.undoredo.Command;
 
@@ -129,8 +126,9 @@ public abstract class AbstractDocument implements Document
 	}
 
 	@Override
-	public void close() throws Exception
+	public void close(Settings settings) throws Exception
 	{
+		Optional.ofNullable(getConfiguration()).ifPresent(c -> c.unregister(this));
 	}
 	
 	@Override

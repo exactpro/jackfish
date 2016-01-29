@@ -676,15 +676,15 @@ public class Configuration extends AbstractDocument
     }
 
     @Override
-    public void close() throws Exception 
-    {
-    	super.close();
-    	
-    	Set<Document> copy = null;
+	public void close(Settings settings) throws Exception
+	{
+		super.close(settings);
+
+		Set<Document> copy;
 		synchronized (this.subordinates)
 		{
-	    	copy = new HashSet<Document>();
-	    	copy.addAll(this.subordinates);
+			copy = new HashSet<>();
+			copy.addAll(this.subordinates);
 		}
 		
 		// save list of all opened documents ...
@@ -700,7 +700,7 @@ public class Configuration extends AbstractDocument
 				{
 					this.settings.setValue(Main.MAIN_NS, Main.OPENED, doc.getName(), kind.toString());
 				}
-				doc.close();
+				doc.close(this.settings);
 			}
 			catch (Exception e)
 			{

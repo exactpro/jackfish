@@ -134,9 +134,9 @@ public class ConfigurationFx extends Configuration
 	}
 
 	@Override
-	public void close() throws Exception
+	public void close(Settings settings) throws Exception
 	{
-		super.close();
+		super.close(settings);
 
 		if (this.mainModel != null)
 		{

@@ -293,7 +293,7 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 		this.context = context;
 		this.driver = new DisplayDriverFx(this.tree, this.context, rowContextMenu, parametersContextMenu);
 		this.tree.init(model, settings, rowContextMenu);
-		this.tab = createTab(model);
+		this.tab = createTab(model, settings);
 		this.tab.setContent(this.pane);
 		console.setConsole(this.listView);
 		getTabPane().getTabs().add(this.tab);
@@ -500,19 +500,22 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 
 	public void displayAppList(List<String> result)
 	{
-		Platform.runLater(() -> {
-			this.cbDefaultApp.setItems(FXCollections.observableList(result));
-			this.cbDefaultApp.getSelectionModel().selectFirst();
+		Platform.runLater(() -> this.cbDefaultApp.setItems(FXCollections.observableList(result)));
+	}
 
-		});
+	public void setDefaultApp(String id)
+	{
+		Platform.runLater(() -> this.cbDefaultApp.getSelectionModel().select(id));
 	}
 
 	public void displayClientList(List<String> result)
 	{
-		Platform.runLater(() -> {
-			this.cbDefaultClient.setItems(FXCollections.observableList(result));
-			this.cbDefaultClient.getSelectionModel().selectFirst();
-		});
+		Platform.runLater(() -> this.cbDefaultClient.setItems(FXCollections.observableList(result)));
+	}
+
+	public void setDefaultClient(String id)
+	{
+		Platform.runLater(() -> this.cbDefaultClient.getSelectionModel().select(id));
 	}
 
 	public void displayApplicationStatus(ApplicationStatus status, AppConnection connection, Throwable throwable)

@@ -12,6 +12,7 @@ import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.app.IWindow.SectionKind;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.common.Configuration;
+import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.undoredo.Command;
 import com.exactprosystems.jf.common.xml.control.AbstractControl;
@@ -23,11 +24,13 @@ import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.dictionary.DictionaryFxController.Result;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 
+import com.exactprosystems.jf.tool.main.Main;
 import javafx.concurrent.Task;
 import javafx.scene.control.ButtonType;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
+import java.io.File;
 import java.io.Reader;
 import java.util.Arrays;
 import java.util.Collection;
@@ -40,6 +43,7 @@ import static com.exactprosystems.jf.tool.Common.tryCatchThrow;
 @XmlRootElement(name = "dictionary")
 public class DictionaryFx extends GuiDictionary
 {
+	private static final String DIALOG_DICTIONARY_SETTINGS = "DictionarySettings";
 	private static AbstractControl copyControl;
 	private static Window copyWindow;
 	private boolean isControllerInit = false;
@@ -68,9 +72,10 @@ public class DictionaryFx extends GuiDictionary
 	public void display() throws Exception
 	{
 		super.display();
-		
-		IWindow window = getFirstWindow();
+
 		displayTitle(getName());
+
+		IWindow window = getFirstWindow();
 		displayDialog(window, getWindows());
 		displaySection(SectionKind.Run);
 		if (window != null)
@@ -80,6 +85,7 @@ public class DictionaryFx extends GuiDictionary
 		}
 		displayApplicationStatus(this.applicationConnector != null && this.applicationConnector.getAppConnection() != null ? ApplicationStatus.Connected : ApplicationStatus.Disconnected, null, null);
 		displayApplicationControl(null);
+		restoreSettings(getConfiguration().getSettings());
 	}
 
 	@Override
@@ -138,17 +144,27 @@ public class DictionaryFx extends GuiDictionary
 	}
 	
 	@Override
-	public void close() throws Exception
+	public void close(Settings settings) throws Exception
 	{
-		super.close();
+		super.close(settings);
 
-		getConfiguration().unregister(this);
 		this.controller.close();
 
 		stopApplication();
+		storeSettings(settings);
 	}
 
-    //------------------------------------------------------------------------------------------------------------------
+	//------------------------------------------------------------------------------------------------------------------
+	public void displayTitles() throws Exception
+	{
+		Collection<String> titles = null;
+		if (isApplicationRun())
+		{
+			titles = this.applicationConnector.getAppConnection().getApplication().service().titles();
+		}
+		this.controller.displayTitles(titles);
+	}
+
 	public void setCurrentAdapter(String adapter)
 	{
 		this.currentAdapter = adapter;
@@ -508,11 +524,6 @@ public class DictionaryFx extends GuiDictionary
 		}
 	}
 
-	private boolean isApplicationRun()
-	{
-		return this.applicationConnector != null && this.applicationConnector.getAppConnection() != null && this.applicationConnector.getAppConnection().isGood();
-	}
-
 	public void elementRenew(double x, double y, boolean useSelfAsOwner, IWindow window, IWindow.SectionKind sectionKind, IControl control)  throws Exception
 	{
 		if (window == null)
@@ -681,7 +692,6 @@ public class DictionaryFx extends GuiDictionary
 	}
 
 	//------------------------------------------------------------------------------------------------------------------
-
 	public void startApplication(String idAppEntry) throws Exception
 	{
 		this.applicationConnector.setIdAppEntry(idAppEntry);
@@ -807,6 +817,11 @@ public class DictionaryFx extends GuiDictionary
 	//------------------------------------------------------------------------------------------------------------------
 	// private methods
 	//------------------------------------------------------------------------------------------------------------------
+	private boolean isApplicationRun()
+	{
+		return this.applicationConnector != null && this.applicationConnector.getAppConnection() != null && this.applicationConnector.getAppConnection().isGood();
+	}
+
 	private Optional<OperationResult> operate(Operation operation, IWindow window, IControl control) throws Exception
 	{
 		if (isApplicationRun())
@@ -929,13 +944,29 @@ public class DictionaryFx extends GuiDictionary
 		this.controller.displayActionControl(entries, this.currentAdapter, title);
 	}
 
-	public void displayTitles() throws Exception
+	private void storeSettings(Settings settings) throws Exception
 	{
-		Collection<String> titles = null;
-		if (isApplicationRun())
+		String absolutePath = new File(this.getName()).getAbsolutePath();
+		String idAppEntry = this.currentAdapter;
+		if (!Str.IsNullOrEmpty(idAppEntry))
 		{
-			titles = this.applicationConnector.getAppConnection().getApplication().service().titles();
+			settings.setValue(Main.MAIN_NS, DIALOG_DICTIONARY_SETTINGS, absolutePath, idAppEntry);
 		}
-		this.controller.displayTitles(titles);
+		else
+		{
+			settings.remove(Main.MAIN_NS, DIALOG_DICTIONARY_SETTINGS, absolutePath);
+		}
+		settings.saveIfNeeded();
+	}
+
+	private void restoreSettings(Settings settings)
+	{
+		String absolutePath = new File(this.getName()).getAbsolutePath();
+		Settings.SettingsValue value = settings.getValue(Main.MAIN_NS, DIALOG_DICTIONARY_SETTINGS, absolutePath);
+		Optional.ofNullable(value).ifPresent(s -> {
+			String idApp = s.getValue();
+			this.applicationConnector.setIdAppEntry(idApp);
+			this.controller.displayActionControl(null, idApp, null);
+		});
 	}
 }

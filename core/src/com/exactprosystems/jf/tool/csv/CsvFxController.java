@@ -85,7 +85,7 @@ public class CsvFxController implements Initializable, ContainingParent
 	{
 		this.model = model;
 
-		this.tab = Common.createTab(model);
+		this.tab = Common.createTab(model, settings);
 		this.tab.setContent(this.pane);
 
 		Platform.runLater(() ->

@@ -99,7 +99,7 @@ public abstract class Common
 		}
 	}
 
-	public static CustomTab createTab(final Document model)
+	public static CustomTab createTab(final Document model, Settings settings)
 	{
 		final CustomTab[] closure = new CustomTab[] { null };
 		CustomTab tab = new CustomTab(model)
@@ -109,7 +109,7 @@ public abstract class Common
 			{
 				if (model.canClose())
 				{
-					model.close();
+					model.close(settings);
 				}
 			}
 

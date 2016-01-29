@@ -89,6 +89,11 @@ public class ApplicationConnector
 		this.idAppEntry = idAppEntry;
 	}
 
+	public String getIdAppEntry()
+	{
+		return idAppEntry;
+	}
+
 	private Optional<ApplicationListener> listener()
 	{
 		return Optional.ofNullable(this.applicationListener);
@@ -169,9 +174,9 @@ public class ApplicationConnector
 		return Optional.empty();
 	}
 
-	private void update(ApplicationStatus status, Throwable exception, boolean progessBarVisible)
+	private void update(ApplicationStatus status, Throwable exception, boolean progressBarVisible)
 	{
 		listener().ifPresent(lis -> lis.update(status, this.appConnection, exception));
-		Common.progressBarVisible(progessBarVisible);
+		Common.progressBarVisible(progressBarVisible);
 	}
 }

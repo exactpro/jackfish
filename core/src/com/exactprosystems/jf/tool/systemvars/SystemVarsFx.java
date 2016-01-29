@@ -9,6 +9,7 @@
 package com.exactprosystems.jf.tool.systemvars;
 
 import com.exactprosystems.jf.common.Configuration;
+import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.evaluator.SystemVars;
 import com.exactprosystems.jf.common.parser.Parameter;
@@ -104,10 +105,9 @@ public class SystemVarsFx extends SystemVars
 
 
 	@Override
-	public void close() throws Exception
+	public void close(Settings settings) throws Exception
 	{
-		super.close();
-		getConfiguration().unregister(this);
+		super.close(settings);
 		this.controller.close();
 	}
 

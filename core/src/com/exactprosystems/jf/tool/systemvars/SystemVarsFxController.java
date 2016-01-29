@@ -73,7 +73,7 @@ public class SystemVarsFxController implements Initializable, ContainingParent
 	public void init(SystemVarsFx model)
 	{
 		this.model = model;
-		this.tab = Common.createTab(model);
+		this.tab = Common.createTab(model, model.getConfiguration().getSettings());
 		this.tab.setContent(this.pane);
 		this.tableView.setListener(this.model::removeParameters);
 		createTable();

@@ -26,7 +26,7 @@ public interface Document extends Mutable
 	
 	boolean canClose() throws Exception;
 
-	void close() throws Exception;
+	void close(Settings settings) throws Exception;
 	
 	void save(String fileName) throws Exception;
 

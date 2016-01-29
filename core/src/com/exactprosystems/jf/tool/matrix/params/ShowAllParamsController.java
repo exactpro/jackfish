@@ -13,20 +13,15 @@ import com.exactprosystems.jf.common.parser.Parameters;
 import com.exactprosystems.jf.common.parser.items.TypeMandatory;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
-
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.Initializable;
-import javafx.scene.Cursor;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTreeCell;
-import javafx.scene.input.ClipboardContent;
-import javafx.scene.input.DataFormat;
-import javafx.scene.input.Dragboard;
-import javafx.scene.input.TransferMode;
 import javafx.util.Pair;
 
 import java.net.URL;
@@ -142,6 +137,7 @@ public class ShowAllParamsController implements Initializable, ContainingParent
 		this.dialog.setResizable(true);
 		this.dialog.getDialogPane().setContent(this.parent);
 		dialog.getDialogPane().getStylesheets().addAll(Common.currentTheme().getPath());
+		Platform.runLater(() -> expandTree(this.treeView.getRoot()));
 		Optional<ButtonType> optional = this.dialog.showAndWait();
 		ArrayList<Pair<ReadableValue, TypeMandatory>> res = new ArrayList<>();
 		if (optional.get().getButtonData().equals(ButtonBar.ButtonData.OK_DONE))
@@ -190,6 +186,12 @@ public class ShowAllParamsController implements Initializable, ContainingParent
 				c.setIndependent(true);
 			}
 		});
+	}
+
+	private void expandTree(TreeItem<ReadableValue> root)
+	{
+		root.setExpanded(true);
+		root.getChildren().forEach(this::expandTree);
 	}
 
 	private void addRemoveItem(Boolean add, CellOnList cell)

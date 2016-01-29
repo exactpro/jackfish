@@ -84,6 +84,7 @@ public class Matrix extends AbstractDocument implements IMatrix, Cloneable
 	{
 		if (id.equals(EMPTY_STRING))
 		{
+			this.defaultApp = null;
 			return;
 		}
 		try
@@ -107,6 +108,7 @@ public class Matrix extends AbstractDocument implements IMatrix, Cloneable
 	{
 		if (id.equals(EMPTY_STRING))
 		{
+			this.defaultClient = null;
 			return;
 		}
 		try

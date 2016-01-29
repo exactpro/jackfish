@@ -103,10 +103,9 @@ public class CsvFx extends AbstractDocument
     }
     
 	@Override
-	public void close() throws Exception
+	public void close(Settings settings) throws Exception
 	{
-		super.close();
-		Optional.ofNullable(getConfiguration()).ifPresent(c -> c.unregister(this));
+		super.close(settings);
 		this.controller.close();
 	}
 

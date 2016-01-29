@@ -14,6 +14,7 @@ import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.common.Configuration;
 import com.exactprosystems.jf.common.Context;
 import com.exactprosystems.jf.common.MatrixRunner;
+import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.parser.Matrix;
 import com.exactprosystems.jf.common.parser.Parameter;
@@ -28,15 +29,14 @@ import com.exactprosystems.jf.common.undoredo.Command;
 import com.exactprosystems.jf.tool.ApplicationConnector;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
+import com.exactprosystems.jf.tool.main.Main;
 import javafx.scene.control.ButtonType;
 import javafx.util.Pair;
 import org.apache.log4j.Logger;
 
 import java.io.File;
 import java.io.Reader;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -48,7 +48,11 @@ public class MatrixFx extends Matrix
 		After, Before, Child
 	}
 
+	private static final String DELIMITER = ",";
+
 	public static final String	Dialog				= "Matrix";
+	public static final String DIALOG_BREAKPOINT = "BreakPointMatrix";
+	public static final String DIALOG_DEFAULTS = "DefaultsAppAndClient";
 
 	public MatrixFx(Matrix matrix, Configuration config, IMatrixListener matrixListener) throws Exception
 	{
@@ -78,6 +82,7 @@ public class MatrixFx extends Matrix
 		displayClientDictionaries();
 
 		this.controller.displayTab(this.getRoot());
+		restoreSettings(this.getConfiguration().getSettings());
 	}
 	
 	@Override
@@ -130,12 +135,11 @@ public class MatrixFx extends Matrix
 	}
 
 	@Override
-	public void close() throws Exception
+	public void close(Settings settings) throws Exception
 	{
-		super.close();
-		this.config.unregister(this);
+		super.close(settings);
 		this.runner.close();
-		
+		storeSettings(settings);
 		if (this.context != null)
 		{
 			this.context.close();
@@ -152,6 +156,20 @@ public class MatrixFx extends Matrix
 	//==============================================================================================================================
 	// methods from Matrix
 	//==============================================================================================================================
+	@Override
+	public void setDefaultApp(String id)
+	{
+		super.setDefaultApp(id);
+		this.defaultAppId = id;
+	}
+
+	@Override
+	public void setDefaultClient(String id)
+	{
+		super.setDefaultClient(id);
+		this.defaultClientId = id;
+	}
+
 	@Override
 	public void start(Context context, AbstractEvaluator evaluator, ReportBuilder report)
 	{
@@ -633,7 +651,6 @@ public class MatrixFx extends Matrix
 		this.runner = new MatrixRunner(this.context, this, this.startDate, null);
 		this.runner.setStartTime(this.startDate);
 		this.applicationConnector = new ApplicationConnector(this.config);
-
 		super.saved();
 	}
 
@@ -678,6 +695,64 @@ public class MatrixFx extends Matrix
 	public static interface ParameterApplier
 	{
 		void call(Parameters parameters) throws Exception;
+	}
+
+	private void storeSettings(Settings settings) throws Exception
+	{
+		ArrayList<Integer> breakPoints = new ArrayList<>();
+		this.getRoot().bypass(item -> {
+			if (item.isBreakPoint())
+			{
+				breakPoints.add(item.getNumber());
+			}
+		});
+		String absolutePathMatrix = new File(this.getName()).getAbsolutePath();
+		if (breakPoints.isEmpty() && settings.getValue(Main.MAIN_NS, DIALOG_BREAKPOINT, absolutePathMatrix) != null)
+		{
+			//if matrix was present and don't have breakpoint - remove it;
+			settings.remove(Main.MAIN_NS, DIALOG_BREAKPOINT, absolutePathMatrix);
+		}
+		else
+		{
+			settings.setValue(Main.MAIN_NS, DIALOG_BREAKPOINT, absolutePathMatrix, breakPoints.stream().map(Object::toString).collect(Collectors.joining(DELIMITER)));
+		}
+
+		if (Str.areEqual(this.defaultAppId, EMPTY_STRING) && Str.areEqual(this.defaultClientId, EMPTY_STRING))
+		{
+			settings.remove(Main.MAIN_NS, DIALOG_DEFAULTS, absolutePathMatrix);
+		}
+		else
+		{
+			settings.setValue(Main.MAIN_NS, DIALOG_DEFAULTS, absolutePathMatrix, this.defaultAppId + DELIMITER + this.defaultClientId);
+		}
+		settings.saveIfNeeded();
+	}
+
+	private void restoreSettings(Settings settings)
+	{
+		Settings.SettingsValue breakPoints = settings.getValue(Main.MAIN_NS, DIALOG_BREAKPOINT, new File(this.getName()).getAbsolutePath());
+		Optional.ofNullable(breakPoints).ifPresent(setting -> {
+			List<Integer> list = Arrays.stream(setting.getValue().split(DELIMITER)).mapToInt(Integer::valueOf).mapToObj(i -> i).collect(Collectors.toList());
+
+			this.getRoot().bypass(item -> {
+				if (list.contains(item.getNumber()))
+				{
+					item.setBreakPoint(true);
+				}
+			});
+		});
+
+		Settings.SettingsValue defaults = settings.getValue(Main.MAIN_NS, DIALOG_DEFAULTS, new File(this.getName()).getAbsolutePath());
+		Optional.ofNullable(defaults).ifPresent(setting -> {
+			String[] split = setting.getValue().split(DELIMITER);
+			if (split.length == 2)
+			{
+				this.defaultAppId = split[0];
+				this.defaultClientId = split[1];
+				this.controller.setDefaultApp(this.defaultAppId);
+				this.controller.setDefaultClient(this.defaultClientId);
+			}
+		});
 	}
 
 	private void checkAndCall(List<MatrixItem> items, MatrixItemApplier applier)
@@ -743,6 +818,8 @@ public class MatrixFx extends Matrix
 	private Date 					startDate = new Date();
 	private TabConsole 				console;
 	private ApplicationConnector applicationConnector;
+	private String defaultAppId = EMPTY_STRING;
+	private String defaultClientId = EMPTY_STRING;
 
 	private static List<MatrixItem>	copyList = new ArrayList<MatrixItem>();
 

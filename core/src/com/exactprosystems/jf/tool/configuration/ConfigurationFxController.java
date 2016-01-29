@@ -33,7 +33,6 @@ import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 
-import java.io.File;
 import java.net.URL;
 import java.util.*;
 
@@ -167,7 +166,7 @@ public class ConfigurationFxController implements Initializable, ContainingParen
 	public void init(final ConfigurationFx model)
 	{
 		this.model = model;
-		this.tab = Common.createTab(model);
+		this.tab = Common.createTab(model, this.model.getSettings());
 		this.tab.setContent(this.pane);
 		Common.getTabPane().getTabs().add(this.tab);
 		Common.getTabPane().getSelectionModel().select(this.tab);
