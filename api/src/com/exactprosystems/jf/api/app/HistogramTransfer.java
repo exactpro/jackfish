@@ -8,8 +8,8 @@
 package com.exactprosystems.jf.api.app;
 
 import java.io.Serializable;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 public class HistogramTransfer implements Serializable
 {
@@ -19,19 +19,15 @@ public class HistogramTransfer implements Serializable
 	private String name;
 	private int interval;
 	private int intervalCount;
-	private LinkedHashMap<Integer, Long> map;
+	private List<Long> list;
 
 	public HistogramTransfer(String name, int interval, int intervalCount)
 	{
 		this.name = name;
 		this.interval = interval;
 		this.intervalCount = intervalCount;
-		this.map = new LinkedHashMap<>(this.intervalCount);
-	}
-
-	public String getName()
-	{
-		return name;
+		this.list = new ArrayList<>(this.intervalCount);
+		reset();
 	}
 
 	public void start()
@@ -44,18 +40,43 @@ public class HistogramTransfer implements Serializable
 		this.isListening = false;
 	}
 
-	public Map<Integer, Long> getData()
-	{
-		return this.map;
-	}
-
 	public void add(Long ms)
 	{
 		if (!isListening)
 		{
 			return;
 		}
-
+		int range = (int) (ms / this.interval);
+		int index = Math.min(range, this.list.size() - 1);
+		this.list.set(index, this.list.get(index) + 1);
 	}
 
+	public int getInterval()
+	{
+		return interval;
+	}
+
+	public int getIntervalCount()
+	{
+		return intervalCount;
+	}
+
+	public List<Long> getCopyDate()
+	{
+		return new ArrayList<>(this.list);
+	}
+
+	public String getName()
+	{
+		return name;
+	}
+
+	private void reset()
+	{
+		this.list.clear();
+		for (int i = 0; i < this.intervalCount; i++)
+		{
+			this.list.add(0L);
+		}
+	}
 }
