@@ -26,7 +26,7 @@ var scaleX = d3.scale.linear()
 
 // функция интерполяции значений на ось Y
 var scaleY = d3.scale.linear()
-			.domain([maxValue + 20, 0])
+			.domain([maxValue + 3 0])
 			.range([0, yAxisLength]);
 
 // создаем ось X
