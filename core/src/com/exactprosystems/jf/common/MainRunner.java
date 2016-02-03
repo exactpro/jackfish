@@ -119,22 +119,6 @@ public class MainRunner
 
 			String configString = line.getOptionValue(configName.getOpt());
 
-			if (!line.hasOption(console.getOpt()))
-			{
-				String[] guiArgs = null;
-				if (configString != null)
-				{
-					guiArgs = new String[]{configString};
-				}
-				else
-				{
-					guiArgs = new String[]{};
-				}
-
-				Application.launch(Main.class, guiArgs);
-				return;
-			}
-
             if (line.hasOption(saveSchema.getOpt()))
 		    {
 				saveSchema(Configuration.class, 		"schema_conf.xsd");
@@ -157,7 +141,24 @@ public class MainRunner
 		    	
 		    	System.exit(0);
 		    }
-		    
+
+			if (!line.hasOption(console.getOpt()))
+			{
+				String[] guiArgs = null;
+				if (configString != null)
+				{
+					guiArgs = new String[]{configString};
+				}
+				else
+				{
+					guiArgs = new String[]{};
+				}
+
+				Application.launch(Main.class, guiArgs);
+				return;
+			}
+
+
 			String verboseString = line.getOptionValue(traceLevel.getOpt());
 			VerboseLevel verboseLevel = VerboseLevel.All;
 			if (verboseString != null)
@@ -224,13 +225,14 @@ public class MainRunner
 				return;
 			}
 
-			processMatrix(configuration, inputFile, startAt, verboseLevel, showShortPaths);
+			boolean allPassed = processMatrix(configuration, inputFile, startAt, verboseLevel, showShortPaths);
+			exitCode = allPassed ? 0 : 1;
 		} 
 		catch (Exception e)
 		{
 			logger.error(e.getMessage(), e);
 			System.out.println("Error: " + e.getMessage());
-			exitCode = 1;
+			exitCode = 2;
 		}
 		finally
 		{
@@ -243,7 +245,14 @@ public class MainRunner
 	private static void printHelp(Options options)
 	{
 		HelpFormatter formatter = new HelpFormatter();
-		formatter.printHelp(Configuration.projectName, options );
+		formatter.printHelp(
+				"java -jar " + Configuration.projectName, 
+				"Options", options, 
+				"Exit code:\n"
+				+ "   0 : all testcases have passed\n"
+				+ "   1 : one or more testcases have failed\n"
+				+ "   2 : global fault\n", 
+				true);
 	}
 
 	private static void printVersion()
@@ -252,7 +261,7 @@ public class MainRunner
 		System.out.println("API ver. " + ApiVersionInfo.majorVersion() + "." + ApiVersionInfo.minorVersion());
 	}
 
-	private static void processMatrix(Configuration configuration, File matrix,  
+	private static boolean processMatrix(Configuration configuration, File matrix,  
 			Date startAt, VerboseLevel verboseLevel, boolean showShortPaths)
 	{
 		try
@@ -279,6 +288,8 @@ public class MainRunner
 			{
 				runner.start();
 				runner.join(0);
+				System.out.println(MainRunner.class.getSimpleName() + " finished");
+				return runner.failed() == 0;
 			}
 			catch (Exception e)
 			{
@@ -291,8 +302,7 @@ public class MainRunner
 			System.out.println(e.getMessage());
 			logger.error(e.getMessage(), e);
 		}
-
-		System.out.println(MainRunner.class.getSimpleName() + " finished");
+		return false;
 	}
 	
 	private static void saveSchema(Class<?> clazz, final String fileName)
