@@ -177,7 +177,6 @@ public final class For extends MatrixItem
 		{
 			ReturnAndResult ret = new ReturnAndResult(Result.Passed, null);
 			Result result = ret.getResult();
-			boolean wasError = false;
 			
 			if (!this.from.evaluate(evaluator))
 			{
@@ -226,8 +225,6 @@ public final class For extends MatrixItem
 
 				if (result == Result.Failed)
 				{
-					wasError = true;
-					
 					MatrixItem branchOnError = super.find(false, OnError.class, null);
 					if (branchOnError != null && branchOnError instanceof OnError)
 					{
@@ -242,7 +239,7 @@ public final class For extends MatrixItem
 					}
 				}
 
-				if (result == Result.Stopped || result == Result.Break || result == Result.Return)
+				if (result == Result.Failed || result == Result.Stopped || result == Result.Break || result == Result.Return)
 				{
 					break;
 				}
@@ -252,11 +249,7 @@ public final class For extends MatrixItem
 				}
 			}
 
-			if (wasError)
-			{
-				return new ReturnAndResult(Result.Failed, ret.getOut(), ret.getError());
-			}
-			return new ReturnAndResult(Result.Passed, ret.getOut()); 
+			return new ReturnAndResult(result, ret.getOut()); 
 		} 
 		catch (Exception e)
 		{

@@ -135,7 +135,6 @@ public class While extends MatrixItem
 		{
 			ReturnAndResult ret = new ReturnAndResult(Result.Passed);
 			Result result = ret.getResult();
-			boolean wasError = false;
 
 			this.loops = 0;
 			
@@ -165,8 +164,6 @@ public class While extends MatrixItem
 
 					if (result == Result.Failed)
 					{
-						wasError = true;
-						
 						MatrixItem branchOnError = super.find(false, OnError.class, null);
 						if (branchOnError != null && branchOnError instanceof OnError)
 						{
@@ -180,7 +177,7 @@ public class While extends MatrixItem
 						}
 					}
 
-					if (result == Result.Stopped || result == Result.Break || result == Result.Return)
+					if (result == Result.Failed || result == Result.Stopped || result == Result.Break || result == Result.Return)
 					{
 						break;
 					}
@@ -190,11 +187,7 @@ public class While extends MatrixItem
 					}
 				}
 				
-				if (wasError)
-				{
-					return new ReturnAndResult(Result.Failed, ret.getOut(), ret.getError()); 
-				}
-				return new ReturnAndResult(Result.Passed, ret.getOut()); 
+				return new ReturnAndResult(result, ret.getOut()); 
 			}
 					
 			throw new Exception("result is not type of Boolean");
