@@ -21,6 +21,7 @@ import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class HTMLReportBuilder extends ReportBuilder 
 {
@@ -296,33 +297,13 @@ public class HTMLReportBuilder extends ReportBuilder
 	@Override
 	protected void histogram(ReportWriter writer, String title, int intervalCount, int interval, List<Long> copyDate) throws IOException
 	{
-		//TODO make normal report with d3.js ( example http://metanit.com/web/d3js/4.9.php )
-		writer.fwrite("<style>\n" +
-				".town {" +
-				"	width:10px;" +
-				"	background-color : red;" +
-				"	position:relative;" +
-				"	display:inline-block;" +
-				"}\n" +
-				".town:hover{" +
-				"	background-color:green;" +
-				"}\n" +
-				".container {" +
-				"	width:75%;" +
-				"}\n" +
-				"</style>\n");
-		writer.fwrite("<p>Histogram for '%s'", title);
-		writer.fwrite("<div class='container' style=\"height:300px\">");
-		long max = Collections.max(copyDate);
-		int maxCount = 30;
-		for (int i = 0; i < intervalCount; i++)
-		{
-			Long aLong = copyDate.get(i);
-			int v = (int) ((((double) aLong / (max == 0 ? 1 : max))) * maxCount) * 10;
-			writer.fwrite("<div class='town' style=\"height:%s\"></div>", v);
-		}
-		writer.fwrite("</div>");
-		writer.fwrite("<p>%s<br>", copyDate);
+		writer.fwrite("<script src=\"http://d3js.org/d3.v3.min.js\"></script>\n");
+		writer.fwrite("<script>");
+		writer.include(getClass().getResourceAsStream("histogram.js"));
+		writer.fwrite("</script>");
+		writer.fwrite("<div class='container' style=\"height:300px\">\n" + "</div>");
+		writer.fwrite("<script>createHistogram([%s],%s,%s,%s);</script>\n", copyDate.stream().map(String::valueOf).collect(Collectors.joining(",")), Collections.max(copyDate), interval, intervalCount);
+		writer.fwrite("<ul>\n<li id=\"hstTimeRange\">Range : </li>\n<li id=\"hstTimeCount\">Count :</li>");
 	}
 
 }
