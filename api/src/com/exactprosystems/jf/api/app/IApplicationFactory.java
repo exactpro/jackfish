@@ -25,6 +25,4 @@ public interface IApplicationFactory  extends VersionSupported, IFactory
 	String 				getRemoteClassName();
 	
 	IGuiDictionary 		getDictionary();
-
-	String[] supportedListeningParameters();
 }

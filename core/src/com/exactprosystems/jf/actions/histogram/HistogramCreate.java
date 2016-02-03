@@ -8,8 +8,8 @@
 package com.exactprosystems.jf.actions.histogram;
 
 import com.exactprosystems.jf.actions.*;
-import com.exactprosystems.jf.actions.app.ApplicationHelper;
 import com.exactprosystems.jf.api.app.AppConnection;
+import com.exactprosystems.jf.api.app.HistogramMetric;
 import com.exactprosystems.jf.common.Context;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.parser.Parameters;
@@ -28,15 +28,15 @@ import java.util.List;
 public class HistogramCreate extends AbstractAction
 {
 	public static final String appConnectionName = "AppConnection";
-	public static final String listenParameterName = "ParameterListen";
+	public static final String histogramMetricName = "Metric";
 	public static final String intervalName = "Interval";
 	public static final String intervalCountName = "IntervalCount";
 
 	@ActionFieldAttribute(name = appConnectionName, description = "The application connection", mandatory = true)
 	protected AppConnection appConnection = null;
 
-	@ActionFieldAttribute(name = listenParameterName, description = "Parameter which will be listening", mandatory = true)
-	protected String parameterKind = null;
+	@ActionFieldAttribute(name = histogramMetricName, description = "Parameter which will be listening", mandatory = true)
+	protected HistogramMetric metric = null;
 
 	@ActionFieldAttribute(name = intervalName, description = "Interval. In ms. Default value is 50ms", mandatory = false)
 	protected Integer interval = 50;
@@ -49,10 +49,10 @@ public class HistogramCreate extends AbstractAction
 	{
 		switch (parameterToFill)
 		{
-			case listenParameterName:
-				if (appConnection != null)
+			case histogramMetricName:
+				for (HistogramMetric value : HistogramMetric.values())
 				{
-					ApplicationHelper.fillListForParameter(list, context, parameters, appConnection.getId(), listenParameterName);
+					list.add(new ReadableValue(context.getEvaluator().createString("HistogramMetric." + value)));
 				}
 				break;
 		}
@@ -63,7 +63,7 @@ public class HistogramCreate extends AbstractAction
 	{
 		switch (fieldName)
 		{
-			case listenParameterName:
+			case histogramMetricName:
 				return ActionItem.HelpKind.ChooseFromList;
 		}
 		return super.howHelpWithParameterDerived(context, parameters, fieldName);
@@ -76,11 +76,11 @@ public class HistogramCreate extends AbstractAction
 		{
 			throw new NullPointerException(String.format("Field with name '%s' can't be null", appConnectionName));
 		}
-		if (parameterKind == null)
+		if (metric == null)
 		{
-			throw new NullPointerException(String.format("Field with name '%s' can't be null", listenParameterName));
+			throw new NullPointerException(String.format("Field with name '%s' can't be null", histogramMetricName));
 		}
-		Histogram histogram = new Histogram(appConnection, parameterKind, interval, intervalCount);
+		Histogram histogram = new Histogram(appConnection, metric, interval, intervalCount);
 
 		setResult(histogram);
 	}

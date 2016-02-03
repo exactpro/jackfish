@@ -8,36 +8,77 @@
 package com.exactprosystems.jf.functions;
 
 import com.exactprosystems.jf.api.app.AppConnection;
-import com.exactprosystems.jf.api.app.HistogramTransfer;
+import com.exactprosystems.jf.api.app.HistogramMetric;
+import com.exactprosystems.jf.api.app.IRemoteApplication;
 import com.exactprosystems.jf.common.report.ReportBuilder;
+
+import java.io.IOException;
+import java.rmi.RemoteException;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicLong;
 
 public class Histogram
 {
-	private HistogramTransfer histogramTransfer;
+	private static final AtomicLong uniqueId = new AtomicLong(0);
+	private final HistogramMetric metric;
+	private final Integer interval;
+	private final Integer intervalCount;
 
-	public Histogram(AppConnection appConnection, String parameterKind, Integer interval, Integer intervalCount) throws Exception
+	private long id;
+	private IRemoteApplication service;
+
+	public Histogram(AppConnection appConnection, HistogramMetric metric, Integer interval, Integer intervalCount) throws Exception
 	{
-		this.histogramTransfer = new HistogramTransfer(parameterKind, interval, intervalCount);
-		appConnection.getApplication().service().subscribe(this.histogramTransfer);
+		this.id = uniqueId.incrementAndGet();
+		this.metric = metric;
+		this.interval = interval;
+		this.intervalCount = intervalCount;
+		this.service = appConnection.getApplication().service();
+		this.service.subscribe(this.id, metric, interval, intervalCount);
 	}
 
-	public void start()
+	public void start() throws Exception
 	{
-		this.histogramTransfer.start();
+		try
+		{
+			this.service.listening(this.id, true);
+		}
+		catch (RemoteException e)
+		{
+			throw new Exception("Error on start listening : " + e.getMessage(), e);
+		}
 	}
 
-	public void stop()
+	public void stop() throws Exception
 	{
-		this.histogramTransfer.stop();
+		try
+		{
+			this.service.listening(this.id, false);
+		}
+		catch (RemoteException e)
+		{
+			throw new Exception("Error on stop listening : " + e.getMessage(), e);
+		}
 	}
 
-	public void report(ReportBuilder reportBuilder, String title)
+	public void report(ReportBuilder reportBuilder, String title) throws IOException
 	{
-
+		List<Long> metrics = this.service.getMetrics(this.id);
+		reportBuilder.reportHistogram(title, this.intervalCount, this.interval, metrics);
 	}
 
 	public Table getTable()
 	{
 		return new Table(new String[]{"1", "2", "3"});
+	}
+
+	@Override
+	public String toString()
+	{
+		return "Histogram{" +
+				"metric=" + metric +
+				", interval=" + interval +
+				", intervalCount=" + intervalCount +
+				'}';
 	}
 }

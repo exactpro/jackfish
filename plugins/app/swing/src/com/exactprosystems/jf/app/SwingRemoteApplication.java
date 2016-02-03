@@ -61,7 +61,7 @@ public class SwingRemoteApplication extends RemoteApplication
 	}
 
 	@Override
-	protected void connectDerived(Map<String, String> args) throws Exception
+	protected void connectDerived(Map<String, String> args, MetricsCounter metricsCounter) throws Exception
 	{
 		String url = args.get(SwingAppFactory.urlName);
 
@@ -93,7 +93,7 @@ public class SwingRemoteApplication extends RemoteApplication
 				logger.error(t.getMessage(), t);
 			}
 
-			this.currentRobot = BasicRobot.robotWithCurrentAwtHierarchy();
+			this.currentRobot = new RobotListener(BasicRobot.robotWithCurrentAwtHierarchy(), metricsCounter);
 			this.operationExecutor = new SwingOperationExecutor(this.currentRobot, this.logger);
 
 			SwingUtilities.invokeLater(new Runnable()
@@ -116,7 +116,7 @@ public class SwingRemoteApplication extends RemoteApplication
 	}
 
 	@Override
-	protected void runDerived(Map<String, String> args) throws Exception
+	protected void runDerived(Map<String, String> args, MetricsCounter metricsCounter) throws Exception
 	{
 		String mainClass = args.get(SwingAppFactory.mainClassName);
 		String jar = args.get(SwingAppFactory.jarName);
@@ -136,7 +136,7 @@ public class SwingRemoteApplication extends RemoteApplication
 			Method mainMethod = applicationType.getMethod("main", String[].class);
 			mainMethod.invoke(null, new Object[]{arg == null ? null : new String[]{arg}});
 
-			this.currentRobot = BasicRobot.robotWithCurrentAwtHierarchy();
+			this.currentRobot = new RobotListener(BasicRobot.robotWithCurrentAwtHierarchy(), metricsCounter);
 			this.operationExecutor = new SwingOperationExecutor(this.currentRobot, this.logger);
 			this.highLighter = new HighLighter();
 		}
@@ -550,12 +550,6 @@ public class SwingRemoteApplication extends RemoteApplication
 	protected void endGrabbingDerived() throws Exception
 	{
 		// done
-	}
-
-	@Override
-	protected void subscribeDerived(HistogramTransfer histogram) throws Exception
-	{
-
 	}
 
 	private Component componentAtPosition(Component component, int x, int y)

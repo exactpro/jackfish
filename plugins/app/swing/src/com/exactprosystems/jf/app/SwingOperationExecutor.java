@@ -702,6 +702,10 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 		{
 			return ((JToolTip) currentComponent).getTipText();
 		}
+		else if (currentComponent instanceof JButton)
+		{
+			return ((JButton) currentComponent).getText();
+		}
 		throw new RemoteException(String.format("Component %s don't have value", currentComponent));
 	}
 

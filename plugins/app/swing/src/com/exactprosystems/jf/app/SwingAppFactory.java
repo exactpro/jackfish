@@ -18,7 +18,7 @@ import java.util.Scanner;
 public class SwingAppFactory implements IApplicationFactory
 {
 	private static final int requiredMajorVersion = 2;
-	private static final int requiredMinorVersion = 8;
+	private static final int requiredMinorVersion = 9;
 
 	public final static String jreExecName 		= "jreExec";
 	public final static String jreArgsName 		= "jreArgs";
@@ -124,12 +124,6 @@ public class SwingAppFactory implements IApplicationFactory
 	public IGuiDictionary getDictionary()
 	{
 		return this.dictionary;
-	}
-
-	@Override
-	public String[] supportedListeningParameters()
-	{
-		return new String[0];
 	}
 
 	//----------------------------------------------------------------------------------------------

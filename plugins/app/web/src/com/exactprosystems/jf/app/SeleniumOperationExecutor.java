@@ -20,7 +20,6 @@ import org.openqa.selenium.Dimension;
 import org.openqa.selenium.Point;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.support.events.EventFiringWebDriver;
 import org.openqa.selenium.support.ui.Select;
 
 import java.awt.*;
@@ -42,7 +41,7 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 
 	private final int repeatLimit = 4;
 
-	public SeleniumOperationExecutor(EventFiringWebDriver driver, Logger logger)
+	public SeleniumOperationExecutor(WebDriverListenerNew driver, Logger logger)
 	{
 		this.driver = driver;
 		this.logger = logger;
@@ -606,7 +605,6 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 	public boolean mouse(WebElement component, int x, int y, MouseAction action) throws Exception
 	{
 		Exception real = null;
-//		logModifier();
 		int repeat = 1;
 		do
 		{
@@ -853,7 +851,6 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 	public boolean press(WebElement component, Keyboard key) throws Exception
 	{
 		Exception real = null;
-//		logModifier();
 		int repeat = 1;
 		do
 		{
@@ -1149,7 +1146,6 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 			default:
 				return false;
 		}
-//		logModifier();
 		return true;
 	}
 
@@ -1157,7 +1153,6 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 	public boolean setValue(WebElement component, double value) throws Exception
 	{
 		Exception real = null;
-//		logModifier();
 		int repeat = 1;
 		do
 		{
@@ -1480,6 +1475,6 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 	private boolean isAltDown = false;
 
 	private Actions customAction;
-	private EventFiringWebDriver driver;
+	private WebDriverListenerNew driver;
 	private Logger logger;
 }

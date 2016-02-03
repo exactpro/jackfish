@@ -199,24 +199,18 @@ public class MatrixContextMenu extends ContextMenu
 		
 		insertMenu.getItems().addAll(
 				actionItemMenu, 
-				dataItemMenu,
-				new MenuItem(Tokens.TestCase.get()), 
+				dataItemMenu, new SeparatorMenuItem(), new MenuItem(Tokens.TestCase.get()), new SeparatorMenuItem(),
 				new MenuItem(Tokens.SubCase.get()), 
-				new MenuItem(Tokens.Return.get()), 
-				new MenuItem(Tokens.Call.get()), 
-				new MenuItem(Tokens.If.get()), 
-				new MenuItem(Tokens.Else.get()), 
+				new MenuItem(Tokens.Return.get()), new MenuItem(Tokens.Call.get()), new SeparatorMenuItem(),
+				new MenuItem(Tokens.If.get()), new MenuItem(Tokens.Else.get()), new SeparatorMenuItem(),
 				new MenuItem(Tokens.For.get()), 
 				new MenuItem(Tokens.ForEach.get()), 
 				new MenuItem(Tokens.While.get()), 
 				new MenuItem(Tokens.Continue.get()), 
-				new MenuItem(Tokens.Break.get()), 
-				new MenuItem(Tokens.OnError.get()), 
+				new MenuItem(Tokens.Break.get()), new MenuItem(Tokens.OnError.get()), new SeparatorMenuItem(),
 				new MenuItem(Tokens.Switch.get()), 
-				new MenuItem(Tokens.Case.get()), 
-				new MenuItem(Tokens.Default.get()), 
-				new MenuItem(Tokens.ReportOn.get()), 
-				new MenuItem(Tokens.ReportOff.get()), 
+				new MenuItem(Tokens.Case.get()), new MenuItem(Tokens.Default.get()), new SeparatorMenuItem(),
+				new MenuItem(Tokens.ReportOn.get()), new MenuItem(Tokens.ReportOff.get()), new SeparatorMenuItem(),
 				new MenuItem(Tokens.Fail.get())
 			);
 

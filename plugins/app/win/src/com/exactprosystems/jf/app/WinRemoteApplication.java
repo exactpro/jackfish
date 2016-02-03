@@ -89,7 +89,7 @@ public class WinRemoteApplication extends RemoteApplication
 	}
 
 	@Override
-	protected void connectDerived(@Name(name = "args") Map<String, String> args) throws Exception
+	protected void connectDerived(@Name(name = "args") Map<String, String> args, MetricsCounter metricsCounter) throws Exception
 	{
 		logger.info("##########################################################################################################");
 		logger.info("connectDerived(" + args + ")");
@@ -101,7 +101,7 @@ public class WinRemoteApplication extends RemoteApplication
 
 
 	@Override
-	protected void runDerived(@Name(name = "args") Map<String, String> args) throws Exception
+	protected void runDerived(@Name(name = "args") Map<String, String> args, MetricsCounter metricsCounter) throws Exception
 	{
 		logger.info("##########################################################################################################");
 		logger.info("derivedStart(" + args + ")");
@@ -249,12 +249,6 @@ public class WinRemoteApplication extends RemoteApplication
 	@Override
 	protected void endGrabbingDerived() throws Exception
 	{
-	}
-
-	@Override
-	protected void subscribeDerived(HistogramTransfer histogram) throws Exception
-	{
-
 	}
 
 	private Process			process;

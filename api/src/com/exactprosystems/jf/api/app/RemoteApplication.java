@@ -17,11 +17,8 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
 
 public abstract class RemoteApplication implements IRemoteApplication
 {
@@ -92,7 +89,7 @@ public abstract class RemoteApplication implements IRemoteApplication
 		{
 			exceptionIfNull(args, "args", "run");
 
-			connectDerived(args);
+			connectDerived(args, this.metricsCounter);
 		}
 		catch (Exception e)
 		{
@@ -108,7 +105,7 @@ public abstract class RemoteApplication implements IRemoteApplication
 		{
 			exceptionIfNull(args, "args", "run");
 
-			runDerived(args);
+			runDerived(args, this.metricsCounter);
 		}
 		catch (Exception e)
 		{
@@ -407,24 +404,53 @@ public abstract class RemoteApplication implements IRemoteApplication
 	}
 
 	@Override
-	public void subscribe(HistogramTransfer histogram) throws RemoteException
+	public void subscribe(long id, HistogramMetric metric, int interval, int intervalCount) throws RemoteException
 	{
 		try
 		{
-			subscribeDerived(histogram);
+			this.metricsCounter.subscribe(id, metric, interval, intervalCount);
 		}
 		catch (Exception e)
 		{
-			String msg = String.format("Error on subscribe %s", histogram);
+			String msg = String.format("Error on subscribe(%s, %s, %s, %s)", id, metric, interval, intervalCount);
+			throw new ProxyException(msg, e.getMessage(), e);
+		}
+	}
+
+	@Override
+	public void listening(long id, boolean isStart) throws RemoteException
+	{
+		try
+		{
+			this.metricsCounter.listening(id, isStart);
+		}
+		catch (Exception e)
+		{
+			String msg = String.format("Error on listening(%s, %s)", id, isStart);
+			throw new ProxyException(msg, e.getMessage(), e);
+		}
+	}
+
+	@Override
+	public List<Long> getMetrics(long id) throws RemoteException
+	{
+
+		try
+		{
+			return this.metricsCounter.getCopyDate(id);
+		}
+		catch (Exception e)
+		{
+			String msg = String.format("Error on getMetrics(%s)", id);
 			throw new ProxyException(msg, e.getMessage(), e);
 		}
 	}
 
 	protected abstract void createLoggerDerived(String logName, String serverLogLevel, String serverLogPattern) throws Exception;
-	
-	protected abstract void connectDerived(Map<String, String> args) throws Exception;
 
-	protected abstract void runDerived(Map<String, String> args) throws Exception;
+	protected abstract void connectDerived(Map<String, String> args, MetricsCounter metricsCounter) throws Exception;
+
+	protected abstract void runDerived(Map<String, String> args, MetricsCounter metricsCounter) throws Exception;
 
 	protected abstract void stopDerived() throws Exception;
 	
@@ -463,8 +489,6 @@ public abstract class RemoteApplication implements IRemoteApplication
 	protected abstract void startGrabbingDerived() throws Exception;
 
 	protected abstract void endGrabbingDerived() throws Exception;
-
-	protected abstract void subscribeDerived(HistogramTransfer histogram) throws Exception;
 
 	private static String removeExtraQuotes(String string)
 	{
@@ -506,6 +530,8 @@ public abstract class RemoteApplication implements IRemoteApplication
 			throw new NullPointerException("Parameter '" + message + "' is null in call '" + methodName + "'");
 		}
 	}
+
+	private MetricsCounter metricsCounter = new MetricsCounter();
 
 	private static List<IRemoteApplication> services = new ArrayList<IRemoteApplication>();
 

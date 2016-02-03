@@ -15,29 +15,26 @@ public class HistogramTransfer implements Serializable
 {
 	private static final long serialVersionUID = -4141790456810458507L;
 
-	private boolean isListening = false;
-	private String name;
+	private boolean isListening;
+	private HistogramMetric metric;
 	private int interval;
 	private int intervalCount;
+
 	private List<Long> list;
 
-	public HistogramTransfer(String name, int interval, int intervalCount)
+	public HistogramTransfer(HistogramMetric metric, int interval, int intervalCount)
 	{
-		this.name = name;
+		this.metric = metric;
 		this.interval = interval;
 		this.intervalCount = intervalCount;
 		this.list = new ArrayList<>(this.intervalCount);
+		this.isListening = false;
 		reset();
 	}
 
-	public void start()
+	public void listening(boolean flag)
 	{
-		this.isListening = true;
-	}
-
-	public void stop()
-	{
-		this.isListening = false;
+		this.isListening = flag;
 	}
 
 	public void add(Long ms)
@@ -66,9 +63,9 @@ public class HistogramTransfer implements Serializable
 		return new ArrayList<>(this.list);
 	}
 
-	public String getName()
+	public HistogramMetric getMetric()
 	{
-		return name;
+		return metric;
 	}
 
 	private void reset()

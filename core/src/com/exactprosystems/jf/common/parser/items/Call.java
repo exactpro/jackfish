@@ -46,7 +46,7 @@ public final class Call extends MatrixItem
 	public MatrixItem clone() throws CloneNotSupportedException
 	{
 		Call call = ((Call) super.clone());
-		call.name = this.name;
+		call.name = this.name.clone();
 		return call;
 	}
 

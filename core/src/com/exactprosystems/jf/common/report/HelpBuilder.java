@@ -18,7 +18,6 @@ import com.exactprosystems.jf.common.version.VersionInfo;
 import com.exactprosystems.jf.common.xml.control.AbstractControl;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -303,5 +302,11 @@ public class HelpBuilder extends ReportBuilder
 	protected String postProcess(String result)
 	{
 		return HTMLhelper.htmlescape(result);
+	}
+
+	@Override
+	protected void histogram(ReportWriter writer, String title, int intervalCount, int interval, List<Long> copyDate)
+	{
+
 	}
 }

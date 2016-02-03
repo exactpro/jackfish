@@ -276,7 +276,7 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 				{
 					TreeItem<XpathItem> xpathItem = items.get(0);
 					int index = this.treeView.getTreeItemLevel(xpathItem);
-					this.treeView.scrollTo(index);
+					//					this.treeView.scrollTo(index);
 				}
 				this.lblFound.setText(String.valueOf(nodes.size()));
 			}

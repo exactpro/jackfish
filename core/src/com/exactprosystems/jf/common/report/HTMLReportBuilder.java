@@ -18,7 +18,9 @@ import java.io.File;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 
 public class HTMLReportBuilder extends ReportBuilder 
 {
@@ -290,4 +292,37 @@ public class HTMLReportBuilder extends ReportBuilder
 	{
 		return HTMLhelper.htmlescape(result);
 	}
+
+	@Override
+	protected void histogram(ReportWriter writer, String title, int intervalCount, int interval, List<Long> copyDate) throws IOException
+	{
+		//TODO make normal report with d3.js ( example http://metanit.com/web/d3js/4.9.php )
+		writer.fwrite("<style>\n" +
+				".town {" +
+				"	width:10px;" +
+				"	background-color : red;" +
+				"	position:relative;" +
+				"	display:inline-block;" +
+				"}\n" +
+				".town:hover{" +
+				"	background-color:green;" +
+				"}\n" +
+				".container {" +
+				"	width:75%;" +
+				"}\n" +
+				"</style>\n");
+		writer.fwrite("<p>Histogram for '%s'", title);
+		writer.fwrite("<div class='container' style=\"height:300px\">");
+		long max = Collections.max(copyDate);
+		int maxCount = 30;
+		for (int i = 0; i < intervalCount; i++)
+		{
+			Long aLong = copyDate.get(i);
+			int v = (int) ((((double) aLong / (max == 0 ? 1 : max))) * maxCount) * 10;
+			writer.fwrite("<div class='town' style=\"height:%s\"></div>", v);
+		}
+		writer.fwrite("</div>");
+		writer.fwrite("<p>%s<br>", copyDate);
+	}
+
 }

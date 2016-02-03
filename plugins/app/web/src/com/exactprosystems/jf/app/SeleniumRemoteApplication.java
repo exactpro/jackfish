@@ -13,12 +13,12 @@ import com.exactprosystems.jf.api.common.SerializablePair;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.app.js.JSInjection;
 import com.exactprosystems.jf.app.js.JSInjectionFactory;
+import com.gargoylesoftware.htmlunit.javascript.background.JavaScriptExecutor;
 import org.apache.log4j.*;
 import org.openqa.selenium.*;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.Point;
 import org.openqa.selenium.remote.UnreachableBrowserException;
-import org.openqa.selenium.support.events.EventFiringWebDriver;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -138,14 +138,14 @@ public class SeleniumRemoteApplication extends RemoteApplication
 	}
 
 	@Override
-	protected void connectDerived(Map<String, String> args) throws Exception
+	protected void connectDerived(Map<String, String> args, MetricsCounter metricsCounter) throws Exception
 	{
 		logger.info("##########################################################################################################");
 		throw new Exception("Not supported yet.");
 	}
 
 	@Override
-	protected void runDerived(Map<String, String> args) throws Exception
+	protected void runDerived(Map<String, String> args, MetricsCounter metricsCounter) throws Exception
 	{
 		try
 		{
@@ -184,11 +184,10 @@ public class SeleniumRemoteApplication extends RemoteApplication
 				throw new Exception("url is null");
 			}
 			Browser browser = Browser.valueOf(browserName.toUpperCase());
-			this.driver = new EventFiringWebDriver(browser.createDriver(chromeDriverBinary));
+			this.driver = new WebDriverListenerNew(browser.createDriver(chromeDriverBinary), metricsCounter);
+			logger.debug("this.driver instance of JavaScriptExecutor : " + (this.driver instanceof JavaScriptExecutor));
 			this.jsInjection = JSInjectionFactory.getJSInjection(browser);
 			this.operationExecutor = new SeleniumOperationExecutor(this.driver, this.logger);
-			this.listener = new WebDriverListener(this.logger);
-			this.driver.register(this.listener);
 			this.driver.get(url);
 			this.driver.manage().window().maximize();
 			needTune = true;
@@ -808,12 +807,6 @@ public class SeleniumRemoteApplication extends RemoteApplication
 		this.jsInjection.stopInject(this.driver);
 	}
 
-	@Override
-	protected void subscribeDerived(HistogramTransfer histogram) throws Exception
-	{
-		this.listener.addSubscriber(histogram);
-	}
-
 	private void log(String message)
 	{
 		long newTime = System.currentTimeMillis();
@@ -823,8 +816,7 @@ public class SeleniumRemoteApplication extends RemoteApplication
 
 	private static long time = System.currentTimeMillis();
 
-	private EventFiringWebDriver driver;
-	private WebDriverListener listener;
+	private WebDriverListenerNew driver;
 
 	private boolean needTune = true;
 	private double offsetX;

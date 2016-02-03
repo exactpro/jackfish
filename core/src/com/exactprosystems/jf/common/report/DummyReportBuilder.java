@@ -13,6 +13,7 @@ import com.exactprosystems.jf.common.parser.items.MatrixItem;
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.List;
 
 public class DummyReportBuilder extends ReportBuilder
 {
@@ -116,4 +117,11 @@ public class DummyReportBuilder extends ReportBuilder
 	{
 		return result;
 	}
+
+	@Override
+	protected void histogram(ReportWriter writer, String title, int intervalCount, int interval, List<Long> copyDate)
+	{
+
+	}
+
 }

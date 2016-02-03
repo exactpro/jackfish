@@ -240,7 +240,12 @@ public abstract class ReportBuilder
 			}
         }
 	}
-	
+
+	public final void reportHistogram(String title, int intervalCount, int interval, List<Long> copyDate) throws IOException
+	{
+		logger.trace("Report histogram");
+		histogram(this.writer, title, intervalCount, interval, copyDate);
+	}
 	
 	protected abstract String generateReportName(String outputPath, String matrixName, String suffix, Date date) throws IOException;
 
@@ -274,8 +279,9 @@ public abstract class ReportBuilder
 	protected abstract void tableFooter(ReportWriter writer) throws IOException;
 	
 	protected abstract String postProcess(String result);
-	
-	
+
+	protected abstract void histogram(ReportWriter writer, String title, int intervalCount, int interval, List<Long> copyDate) throws IOException;
+
 	private void reportMatrix(ReportWriter writer, BufferedReader reader) throws IOException
 	{
 		logger.trace(String.format("reportMatrix(%s, %s)", writer, matrix));
