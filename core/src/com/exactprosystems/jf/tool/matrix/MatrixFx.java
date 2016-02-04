@@ -471,25 +471,24 @@ public class MatrixFx extends Matrix
 
 	public void copy(List<MatrixItem> list) throws Exception
 	{
-		copyList.clear();
-		
-		if (list != null && !list.isEmpty())
-		{
-			MatrixItem parent = list.get(0).getParent();
-
-			copyList.addAll(list.stream().filter(item -> item.getParent() == parent).collect(Collectors.toList()));
-		}
+		Parser parser = new Parser();
+		String string = parser.itemsToString(list.toArray(new MatrixItem[0]));
+		Common.saveToClipboard(string);
 	}
 	
 	public void paste(MatrixItem where) throws Exception
 	{
-		if (where != null && !copyList.isEmpty())
+		String string = Common.getFromClipboard();
+		Parser parser = new Parser();
+		MatrixItem[] items = parser.stringToItems(string);
+		
+		if (where != null && items != null)
 		{
 			MatrixItem parent = where.getParent();
 			int index = parent.index(where);
-			for (MatrixItem item : copyList)
+			for (MatrixItem item : items)
 			{
-				insert(parent, index++, item.clone());
+				insert(parent, index++, item);
 			}
 			enumerate();
 			this.controller.refresh();
@@ -820,8 +819,6 @@ public class MatrixFx extends Matrix
 	private ApplicationConnector applicationConnector;
 	private String defaultAppId = EMPTY_STRING;
 	private String defaultClientId = EMPTY_STRING;
-
-	private static List<MatrixItem>	copyList = new ArrayList<MatrixItem>();
 
 	private static final Logger	logger	= Logger.getLogger(MatrixFx.class);
 }

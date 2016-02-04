@@ -13,10 +13,15 @@ import com.csvreader.CsvWriter;
 import com.exactprosystems.jf.common.Configuration;
 import com.exactprosystems.jf.common.parser.items.*;
 import com.exactprosystems.jf.common.parser.listeners.IMatrixListener;
+import com.exactprosystems.jf.common.parser.listeners.SilenceMatrixListener;
+
 import org.apache.log4j.Logger;
 
 import javax.lang.model.type.NullType;
+
 import java.io.Reader;
+import java.io.StringReader;
+import java.io.StringWriter;
 import java.io.Writer;
 import java.util.*;
 
@@ -84,11 +89,11 @@ public class Parser
 				});
 	}
 
-	public MatrixItem readMatrix(Matrix matrix, Reader rawReader, char delimiter, IMatrixListener checkListener) throws MatrixException
+	public MatrixItem readMatrix(Matrix matrix, Reader rawReader, IMatrixListener checkListener) throws MatrixException
 	{
 		CsvReader reader = new CsvReader(rawReader);
 		reader.setSkipEmptyRecords(false);
-		reader.setDelimiter(delimiter); 
+		reader.setDelimiter(Configuration.matrixDelimiter); 
 		
 		MatrixItem root = matrix.getRoot();
 		root.init(matrix); 
@@ -275,22 +280,69 @@ public class Parser
 		return currentItem;
 	}
 
-	public void saveMatrix(MatrixItem root, Writer rawWriter, char delimiter, boolean addSpaces) throws Exception
+	public void saveMatrix(MatrixItem root, Writer rawWriter) throws Exception
 	{
-		CsvWriter writer = new CsvWriter(rawWriter, delimiter);
-		writer.setDelimiter(delimiter);
-		writer.setForceQualifier(false);
-		writer.setUseTextQualifier(false);
-		writer.setTextQualifier(prefferedQuotes);
-
+		CsvWriter writer = prepareCsvWriter(rawWriter);
 		
 		for(int index = 0; index < root.count(); index++)
 		{
-			root.get(index).write(0, writer, addSpaces);
+			write(root.get(index), writer);
+		}
+	}
+	
+	public String itemsToString(MatrixItem ... items) throws Exception
+	{
+		try (StringWriter stringWriter = new StringWriter())
+		{
+			CsvWriter writer = prepareCsvWriter(stringWriter);
+			for (MatrixItem item : items)
+			{
+				write(item, writer);
+				writer.endRecord();
+			}
+			return stringWriter.getBuffer().toString();
+		}
+	}
+
+	public MatrixItem[] stringToItems(String string) throws MatrixException, Exception
+	{
+		Reader str = new StringReader(string);
+		IMatrixListener matrixListener = new SilenceMatrixListener();
+		
+		Parser parser = new Parser();
+		MatrixItem root = parser.readMatrix(new Matrix("noname", null, matrixListener), str, matrixListener);
+
+		if (root != null)
+		{
+			MatrixItem[] res = new MatrixItem[root.count()];
+			for(int index = 0; index < root.count(); index++)
+			{
+				res[index] = root.get(index);
+			}
+			return res;
 		}
 		
+		return null;
+	}
+
+	private void write(MatrixItem root, CsvWriter writer) throws Exception
+	{
+		root.write(0, writer);
 		writer.flush();
 	}
+
+	private CsvWriter prepareCsvWriter(Writer rawWriter)
+	{
+		CsvWriter writer = new CsvWriter(rawWriter, Configuration.matrixDelimiter);
+		writer.setDelimiter(Configuration.matrixDelimiter);
+		writer.setForceQualifier(false);
+		writer.setUseTextQualifier(false);
+		writer.setTextQualifier(prefferedQuotes);
+		return writer;
+	}
+
+	
+	
 	
 	public static MatrixItem createItem(String type, String value) throws Exception
 	{

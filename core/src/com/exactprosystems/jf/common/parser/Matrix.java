@@ -152,7 +152,7 @@ public class Matrix extends AbstractDocument implements IMatrix, Cloneable
 			Reader str = new StringReader(this.buffer.toString());
 
 			Parser parser = new Parser();
-			this.root = parser.readMatrix(this, str, Configuration.matrixDelimiter, this.matrixListener);
+			this.root = parser.readMatrix(this, str, this.matrixListener);
 		}
 	}
 
@@ -182,7 +182,7 @@ public class Matrix extends AbstractDocument implements IMatrix, Cloneable
 		try (Writer rawWriter = new FileWriter(new File(fileName)))
 		{
 			Parser parser = new Parser();
-			parser.saveMatrix(this.root, rawWriter, Configuration.matrixDelimiter, true);
+			parser.saveMatrix(this.root, rawWriter);
 		}
 	}
 
@@ -233,7 +233,7 @@ public class Matrix extends AbstractDocument implements IMatrix, Cloneable
 		{
 			Parser parser = new Parser();
 			StringWriter stringWriter = new StringWriter();
-			parser.saveMatrix(this.root, stringWriter, Configuration.matrixDelimiter, true);
+			parser.saveMatrix(this.root, stringWriter);
 			return stringWriter.getBuffer().toString().toCharArray();
 		}
 		catch (Exception e)

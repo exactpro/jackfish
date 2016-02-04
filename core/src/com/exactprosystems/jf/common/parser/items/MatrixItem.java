@@ -393,7 +393,7 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 		return this.result;
 	}
 
-	public final void write(int level, CsvWriter writer, boolean addSpaces) throws IOException
+	public final void write(int level, CsvWriter writer) throws IOException
 	{
         String indent = "";
 		if (this instanceof Else)
@@ -402,7 +402,7 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 		}
 		for (int i = 0; i < level; i++)
 		{
-			indent += "\t";
+			indent += "    ";
 		}
 
 		if (this.comments != null)
@@ -436,7 +436,7 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 			for(int index = 0; index < this.count(); index++)
 			{
 				MatrixItem children = get(index);
-				children.write(level + 1, writer, addSpaces);
+				children.write(level + 1, writer);
 			}
 
 		}
@@ -447,7 +447,7 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 		{
 			writeRecord(writer, line, indent);
 		}
-		addSpace(writer, addSpaces);
+		writer.endRecord();
 	}
 
 	private void writeBoolean(boolean hasValue, List<String> firstLine, List<String> secondLine, MutableValue<Boolean> field, Tokens token)
@@ -474,14 +474,6 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 		}
 
 		writer.writeRecord(arr, true);
-	}
-
-	private void addSpace(CsvWriter writer, boolean addSpaces) throws IOException
-	{
-		if (addSpaces)
-		{
-			writer.endRecord();
-		}
 	}
 
 	public void addCopyright(String copyright)
