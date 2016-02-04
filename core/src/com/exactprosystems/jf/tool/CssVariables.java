@@ -68,6 +68,7 @@ public class CssVariables
 
 	public static final String	ITEM_OFF_TRUE				= "trueOffItem";
 	public static final String	ITEM_OFF_FALSE				= "falseOffItem";
+	public static final String SIMPLE_ITEM = "simpleItem";
 
 	public static final String	OBLIQUE_LABEL				= "obliqueLabel";
 	public static final String	BOLD_LABEL					= "boldLabel";

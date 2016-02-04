@@ -50,7 +50,7 @@ public class MatrixFx extends Matrix
 
 	private static final String DELIMITER = ",";
 
-	public static final String	Dialog				= "Matrix";
+	public static final String Dialog = "Matrix";
 	public static final String DIALOG_BREAKPOINT = "BreakPointMatrix";
 	public static final String DIALOG_DEFAULTS = "DefaultsAppAndClient";
 
@@ -77,14 +77,14 @@ public class MatrixFx extends Matrix
 		super.display();
 
 		this.controller.displayTitle(getName());
-		
+
 		displayGuiDictionaries();
 		displayClientDictionaries();
 
 		this.controller.displayTab(this.getRoot());
 		restoreSettings(this.getConfiguration().getSettings());
 	}
-	
+
 	@Override
 	public void create() throws Exception
 	{
@@ -98,14 +98,14 @@ public class MatrixFx extends Matrix
 		super.load(reader);
 		initController();
 	}
-	
+
 	@Override
 	public void save(String fileName) throws Exception
 	{
 		super.save(fileName);
 
 		this.config.matrixChanged(getName(), this);
-		
+
 		this.controller.saved(getName());
 		this.controller.displayTitle(getName());
 	}
@@ -117,7 +117,7 @@ public class MatrixFx extends Matrix
 		{
 			return false;
 		}
-		
+
 		if (isChanged())
 		{
 			ButtonType desision = DialogsHelper.showSaveFileDialog(this.getName());
@@ -130,7 +130,7 @@ public class MatrixFx extends Matrix
 				return false;
 			}
 		}
-		
+
 		return true;
 	}
 
@@ -149,10 +149,10 @@ public class MatrixFx extends Matrix
 		{
 			stopDefaultApplication();
 		}
-		
+
 		this.controller.close();
 	}
-	
+
 	//==============================================================================================================================
 	// methods from Matrix
 	//==============================================================================================================================
@@ -196,7 +196,7 @@ public class MatrixFx extends Matrix
 		addCommand(undo, redo);
 		super.changed(true);
 	}
-	
+
 	@Override
 	public void remove(MatrixItem item)
 	{
@@ -328,8 +328,8 @@ public class MatrixFx extends Matrix
 		};
 		addCommand(undo, redo);
 	}
-	
-	
+
+
 	public void parameterRemove(MatrixItem item, int index) throws CloneNotSupportedException
 	{
 		int number = item.getNumber();
@@ -432,7 +432,7 @@ public class MatrixFx extends Matrix
 		{ }
 	}
 
-	
+
 	public void markFirstLevel(boolean flag) throws Exception
 	{
 		MatrixItem root = getRoot();
@@ -475,13 +475,13 @@ public class MatrixFx extends Matrix
 		String string = parser.itemsToString(list.toArray(new MatrixItem[0]));
 		Common.saveToClipboard(string);
 	}
-	
+
 	public void paste(MatrixItem where) throws Exception
 	{
 		String string = Common.getFromClipboard();
 		Parser parser = new Parser();
 		MatrixItem[] items = parser.stringToItems(string);
-		
+
 		if (where != null && items != null)
 		{
 			MatrixItem parent = where.getParent();
@@ -495,7 +495,7 @@ public class MatrixFx extends Matrix
 			super.changed(true);
 		}
 	}
-	
+
 	public void insertNew(MatrixItem item, PlaceToInsert place, String kind, String value) throws Exception
 	{
 		MatrixItem newItem = Parser.createItem(kind, value);
@@ -503,7 +503,7 @@ public class MatrixFx extends Matrix
 		int index = parent.index(item);
 		newItem.init(this);
 		newItem.createId();
-		
+
 		MatrixItemAttribute annotation = item.getClass().getAnnotation(MatrixItemAttribute.class);
 		if (annotation != null && !annotation.hasChildren() && place == PlaceToInsert.Child)
 		{
@@ -514,16 +514,16 @@ public class MatrixFx extends Matrix
 			case Before:
 				insert(parent, index, newItem);
 				break;
-				
+
 			case After:
 				insert(parent, index + 1, newItem);
 				break;
-				
+
 			case Child:
 				insert(item, 0, newItem);
 				break;
 		}
-		
+
 		enumerate();
 		this.controller.refresh();
 		super.changed(true);
@@ -553,14 +553,14 @@ public class MatrixFx extends Matrix
 	{
 		return find(getRoot(), strategy);
 	}
-	
+
 	public MatrixItem find(MatrixItem parent, Predicate<MatrixItem> strategy)
 	{
 		if (strategy.test(parent))
 		{
 			return parent;
 		}
-		
+
 		for (int i = 0; i < parent.count(); i++)
 		{
 			MatrixItem item = find(parent.get(i), strategy);
@@ -571,7 +571,7 @@ public class MatrixFx extends Matrix
 		}
 		return null;
 	}
-	
+
 	public void setStartTime(Date date)
 	{
 		this.startDate = date;
@@ -742,8 +742,14 @@ public class MatrixFx extends Matrix
 		});
 
 		Settings.SettingsValue defaults = settings.getValue(Main.MAIN_NS, DIALOG_DEFAULTS, new File(this.getName()).getAbsolutePath());
-		Optional.ofNullable(defaults).ifPresent(setting -> {
-			String[] split = setting.getValue().split(DELIMITER);
+		if (Objects.isNull(defaults))
+		{
+			this.controller.setDefaultApp(this.defaultAppId);
+			this.controller.setDefaultClient(this.defaultClientId);
+		}
+		else
+		{
+			String[] split = defaults.getValue().split(DELIMITER);
 			if (split.length == 2)
 			{
 				this.defaultAppId = split[0];
@@ -751,7 +757,8 @@ public class MatrixFx extends Matrix
 			}
 			this.controller.setDefaultApp(this.defaultAppId);
 			this.controller.setDefaultClient(this.defaultClientId);
-		});
+		}
+
 	}
 
 	private void checkAndCall(List<MatrixItem> items, MatrixItemApplier applier)
@@ -785,7 +792,7 @@ public class MatrixFx extends Matrix
 				this.controller.refresh();
 			}
 			catch (Exception e)
-			{ 
+			{
 				logger.error(e.getMessage(), e);
 			}
 		}
@@ -803,7 +810,7 @@ public class MatrixFx extends Matrix
 //				this.controller.setCurrent(item);
 			}
 			catch (Exception e)
-			{ 
+			{
 				logger.error(e.getMessage(), e);
 			}
 		}

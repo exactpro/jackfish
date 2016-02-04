@@ -26,6 +26,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Popup;
 import javafx.stage.Stage;
@@ -424,6 +425,15 @@ public abstract class Common
 		return Font.getDefault();
 	}
 
+	public static Color stringToColor(String color)
+	{
+		return Color.web(color);
+	}
+
+	public static String colorToString(Color color)
+	{
+		return String.format("rgba(%s,%s,%s,%s)", ((int) (color.getRed() * 255)), ((int) (color.getGreen() * 255)), ((int) (color.getBlue() * 255)), color.getOpacity());
+	}
 
 	public static void saveToClipboard(String text)
 	{

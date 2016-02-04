@@ -18,6 +18,7 @@ import javafx.scene.input.KeyEvent;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class SettingsPanel
 {
@@ -25,6 +26,7 @@ public class SettingsPanel
 	public final static String	SETTINGS 		= "Main";
 	public static final String	LOGS_NAME		= "Logs";
 	public static final String	SHORTCUTS_NAME	= "Shortcuts";
+	public static final String MATRIX_COLORS = "MatrixColors";
 
 	//other shortcuts
 	public static final String SHOW_ALL_TABS	= "ShowAllTabs";
@@ -67,15 +69,22 @@ public class SettingsPanel
 	{
 		this.settings = settings;
 		this.controller = Common.loadController(getClass().getResource("Settings.fxml"));
-		this.controller.create(this);
+		this.controller.init(this);
 	}
 
 	public void show()
 	{
+		displayColors();
 		displayLogs();
 		displayShortcuts();
 		displayMain();
-		this.controller.display(Common.currentTheme().getPath(), "Settings");
+		this.controller.display("Settings");
+	}
+
+	private void displayColors()
+	{
+		List<SettingsValue> values = this.settings.getValues(Settings.GLOBAL_NS, MATRIX_COLORS);
+		this.controller.displayColors(values.stream().collect(Collectors.toMap(SettingsValue::getKey, SettingsValue::getValue)));
 	}
 
 	private void displayMain()
@@ -86,7 +95,7 @@ public class SettingsPanel
 		this.controller.displayMain(res);
 	}
 
-	public void displayLogs()
+	private void displayLogs()
 	{
 		Collection<SettingsValue> values = settings.getValues(Settings.GLOBAL_NS, LOGS_NAME);
 		Map<String, String> res = new LinkedHashMap<>();
@@ -120,6 +129,11 @@ public class SettingsPanel
 		List<SettingsValue> values = settings.getValues(Settings.GLOBAL_NS, SHORTCUTS_NAME);
 		Optional<SettingsValue> first = values.stream().filter(sv -> sv.getValue().equals(value) && !sv.getKey().equals(currentKey)).findFirst();
 		return first.isPresent() ? first.get().getKey() : null;
+	}
+
+	public void removeAll(String dialog)
+	{
+		this.settings.removeAll(Settings.GLOBAL_NS, dialog);
 	}
 
 	public static boolean match(Settings settings, KeyEvent event, String shortcutName)

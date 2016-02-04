@@ -59,7 +59,7 @@ public class MatrixTreeView extends TreeTableView<MatrixItem>
 		{
 			try
 			{
-				MatrixTreeRow row = new MatrixTreeRow(contextMenu);
+				MatrixTreeRow row = new MatrixTreeRow(contextMenu, settings);
 				shortCuts(row, settings);
 				return row;
 			}
