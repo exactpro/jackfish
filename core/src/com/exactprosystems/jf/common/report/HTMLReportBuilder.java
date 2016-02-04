@@ -297,7 +297,9 @@ public class HTMLReportBuilder extends ReportBuilder
 	@Override
 	protected void histogram(ReportWriter writer, String title, int intervalCount, int interval, List<Long> copyDate) throws IOException
 	{
-		writer.fwrite("<script src=\"http://d3js.org/d3.v3.min.js\"></script>\n");
+		writer.fwrite("<script>\n");
+		writer.include(getClass().getResourceAsStream("d3.min.js"));
+		writer.fwrite("</script>\n");
 		writer.fwrite("<script>");
 		writer.include(getClass().getResourceAsStream("histogram.js"));
 		writer.fwrite("</script>");
