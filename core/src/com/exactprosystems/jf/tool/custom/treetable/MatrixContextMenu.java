@@ -50,9 +50,9 @@ public class MatrixContextMenu extends ContextMenu
 		
 		setAutoHide(true);
 
-		this.addBeforeMenu = createInsertMenu(matrix, tree, PlaceToInsert.Before);
-		this.addAfterMenu = createInsertMenu(matrix, tree, PlaceToInsert.After);
-		this.addChildMenu = createInsertMenu(matrix, tree, PlaceToInsert.Child);
+		this.addBeforeMenu = createInsertMenu(matrix, tree, PlaceToInsert.Before, settings);
+		this.addAfterMenu = createInsertMenu(matrix, tree, PlaceToInsert.After, settings);
+		this.addChildMenu = createInsertMenu(matrix, tree, PlaceToInsert.Child, settings);
 		
 		MenuItem breakPoint = new MenuItem("Breakpoint");
 		breakPoint.setGraphic(new ImageView(new Image(CssVariables.Icons.BREAK_POINT_ICON)));
@@ -112,8 +112,8 @@ public class MatrixContextMenu extends ContextMenu
 				help
 			);
 	}
-	
-	private ContextMenu createInsertMenu(MatrixFx matrix, MatrixTreeView tree, PlaceToInsert placeToInsert)
+
+	private ContextMenu createInsertMenu(MatrixFx matrix, MatrixTreeView tree, PlaceToInsert placeToInsert, Settings settings)
 	{
 		ContextMenu insertMenu = new ContextMenu();
 		insertMenu.setHideOnEscape(true);
@@ -131,7 +131,7 @@ public class MatrixContextMenu extends ContextMenu
 		
 		Arrays.asList(ActionsList.actions).forEach(clazz ->
 		{
-			MenuItem menuItem = new MenuItem(clazz.getSimpleName());
+			MenuItem menuItem = createMenuItem(clazz.getSimpleName(), settings);
 			menuItem.setOnAction(event -> Common.tryCatch(() -> 
 			{
 				MatrixItem item = tree.currentItem();
@@ -149,7 +149,7 @@ public class MatrixContextMenu extends ContextMenu
 		});
 		
 		Menu dataItemMenu = new Menu("Raw data");
-		MenuItem insertDataTable = new MenuItem(Table.class.getSimpleName());
+		MenuItem insertDataTable = createMenuItemRaw(Table.class.getSimpleName(), settings);
 		insertDataTable.setOnAction(event -> Common.tryCatch(() -> 
 		{
 			MatrixItem item = tree.currentItem();
@@ -162,8 +162,8 @@ public class MatrixContextMenu extends ContextMenu
 				}
 			}
 		}, "Error on insert") );
-		
-		MenuItem insertDataMessage = new MenuItem(MapMessage.class.getSimpleName());
+
+		MenuItem insertDataMessage = createMenuItemRaw(MapMessage.class.getSimpleName(), settings);
 		insertDataMessage.setOnAction(event -> Common.tryCatch(() -> 
 		{
 			MatrixItem item = tree.currentItem();
@@ -176,8 +176,8 @@ public class MatrixContextMenu extends ContextMenu
 				}
 			}
 		}, "Error on insert") );
-		
-		MenuItem insertDataText = new MenuItem(Text.class.getSimpleName());
+
+		MenuItem insertDataText = createMenuItemRaw(Text.class.getSimpleName(), settings);
 		insertDataText.setOnAction(event -> Common.tryCatch(() -> 
 		{
 			MatrixItem item = tree.currentItem();
@@ -196,22 +196,8 @@ public class MatrixContextMenu extends ContextMenu
 				insertDataMessage,
 				insertDataText
 			);
-		
-		insertMenu.getItems().addAll(
-				actionItemMenu, 
-				dataItemMenu, new SeparatorMenuItem(), new MenuItem(Tokens.TestCase.get()), new SeparatorMenuItem(),
-				new MenuItem(Tokens.SubCase.get()), 
-				new MenuItem(Tokens.Return.get()), new MenuItem(Tokens.Call.get()), new SeparatorMenuItem(),
-				new MenuItem(Tokens.If.get()), new MenuItem(Tokens.Else.get()), new SeparatorMenuItem(),
-				new MenuItem(Tokens.For.get()), 
-				new MenuItem(Tokens.ForEach.get()), 
-				new MenuItem(Tokens.While.get()), 
-				new MenuItem(Tokens.Continue.get()), 
-				new MenuItem(Tokens.Break.get()), new MenuItem(Tokens.OnError.get()), new SeparatorMenuItem(),
-				new MenuItem(Tokens.Switch.get()), 
-				new MenuItem(Tokens.Case.get()), new MenuItem(Tokens.Default.get()), new SeparatorMenuItem(),
-				new MenuItem(Tokens.ReportOn.get()), new MenuItem(Tokens.ReportOff.get()), new SeparatorMenuItem(),
-				new MenuItem(Tokens.Fail.get())
+
+		insertMenu.getItems().addAll(actionItemMenu, dataItemMenu, new SeparatorMenuItem(), createMenuItem(Tokens.TestCase.get(), settings), new SeparatorMenuItem(), createMenuItem(Tokens.SubCase.get(), settings), createMenuItem(Tokens.Return.get(), settings), createMenuItem(Tokens.Call.get(), settings), new SeparatorMenuItem(), createMenuItem(Tokens.If.get(), settings), createMenuItem(Tokens.Else.get(), settings), new SeparatorMenuItem(), createMenuItem(Tokens.For.get(), settings), createMenuItem(Tokens.ForEach.get(), settings), createMenuItem(Tokens.While.get(), settings), createMenuItem(Tokens.Continue.get(), settings), createMenuItem(Tokens.Break.get(), settings), createMenuItem(Tokens.OnError.get(), settings), new SeparatorMenuItem(), createMenuItem(Tokens.Switch.get(), settings), createMenuItem(Tokens.Case.get(), settings), createMenuItem(Tokens.Default.get(), settings), new SeparatorMenuItem(), createMenuItem(Tokens.ReportOn.get(), settings), createMenuItem(Tokens.ReportOff.get(), settings), new SeparatorMenuItem(), createMenuItem(Tokens.Fail.get(), settings)
 			);
 
 		insertMenu.getItems()
@@ -231,6 +217,20 @@ public class MatrixContextMenu extends ContextMenu
 			}, "Error on add matrix item")));
 
 		return insertMenu;
+	}
+
+	private MenuItem createMenuItem(String text, Settings settings)
+	{
+		MenuItem item = new MenuItem(text);
+		Optional.ofNullable(settings.getValue(Settings.GLOBAL_NS, SettingsPanel.MATRIX_COLORS, text)).ifPresent(v -> item.setStyle("-fx-background-color :" + v.getValue()));
+		return item;
+	}
+
+	private MenuItem createMenuItemRaw(String text, Settings settings)
+	{
+		MenuItem item = new MenuItem(text);
+		Optional.ofNullable(settings.getValue(Settings.GLOBAL_NS, SettingsPanel.MATRIX_COLORS, "Raw" + text)).ifPresent(v -> item.setStyle("-fx-background-color :" + v.getValue()));
+		return item;
 	}
 
 	private void breakPoint(MatrixFx matrix, MatrixTreeView tree)

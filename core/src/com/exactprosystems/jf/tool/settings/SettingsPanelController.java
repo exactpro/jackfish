@@ -283,6 +283,7 @@ public class SettingsPanelController implements Initializable, ContainingParent
 								value1.color = item.color;
 								c.setValue(null);
 								c.setValue(value1);
+								colorMatrixMap.put(value1.name, item.color);
 							}));
 							this.updateItem(item, false);
 						});
