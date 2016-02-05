@@ -19,6 +19,7 @@ import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.main.Main;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
+import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.geometry.HPos;
 import javafx.geometry.Pos;
@@ -270,21 +271,27 @@ public class SettingsPanelController implements Initializable, ContainingParent
 					if (item.isChangeable)
 					{
 						ColorPicker color = new ColorPicker(item.color);
-						color.valueProperty().addListener((observable, oldValue, newValue) -> {
-							item.color = newValue;
+						color.setOnAction(e -> {
+							item.color = e instanceof ClearAction ? Color.TRANSPARENT : color.getValue();
 							colorMatrixMap.remove(item.name);
 							if (!item.color.equals(Color.TRANSPARENT))
 							{
 								colorMatrixMap.put(item.name, item.color);
 							}
-							updateItem(item, false);
+							Optional.ofNullable(this.getTreeItem().getChildren()).ifPresent(child -> child.forEach(c -> {
+								NameAndColor value1 = c.getValue();
+								value1.color = item.color;
+								c.setValue(null);
+								c.setValue(value1);
+							}));
+							this.updateItem(item, false);
 						});
 						HBox box = new HBox();
 						box.setAlignment(Pos.CENTER);
 						box.setSpacing(10);
 						box.getChildren().add(color);
 						Button reset = new Button("Reset");
-						reset.setOnAction(e -> color.valueProperty().setValue(Color.TRANSPARENT));
+						reset.setOnAction(e -> color.getOnAction().handle(new ClearAction()));
 						box.getChildren().add(reset);
 						pane.setRight(box);
 					}
@@ -308,7 +315,6 @@ public class SettingsPanelController implements Initializable, ContainingParent
 		Map<ActionGroups, TreeItem<NameAndColor>> map = new HashMap<>();
 		Arrays.asList(ActionGroups.values()).stream().forEach(group -> {
 			NameAndColor tmp = new NameAndColor(group.name());
-			tmp.isChangeable = false;
 			TreeItem<NameAndColor> item = createItem(tmp);
 			actionItem.getChildren().add(item);
 			map.put(group, item);
@@ -580,5 +586,10 @@ public class SettingsPanelController implements Initializable, ContainingParent
 		{
 			this.name = name;
 		}
+	}
+
+	private class ClearAction extends ActionEvent
+	{
+
 	}
 }

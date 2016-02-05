@@ -10,6 +10,8 @@ package com.exactprosystems.jf.common.parser.items;
 
 import com.csvreader.CsvWriter;
 import com.exactprosystems.jf.actions.AbstractAction;
+import com.exactprosystems.jf.actions.ActionAttribute;
+import com.exactprosystems.jf.actions.ActionGroups;
 import com.exactprosystems.jf.actions.ReadableValue;
 import com.exactprosystems.jf.actions.help.ActionsList;
 import com.exactprosystems.jf.api.common.Str;
@@ -134,6 +136,11 @@ public final class ActionItem extends MatrixItem
 		{
 			this.action.setOwner(this);
 		}
+	}
+
+	public ActionGroups group()
+	{
+		return this.action.getClass().getAnnotation(ActionAttribute.class).group();
 	}
 
 	//==============================================================================================

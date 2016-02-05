@@ -50,19 +50,34 @@ public class MatrixTreeRow extends TreeTableRow<MatrixItem>
 			}
 			else
 			{
-				String key;
 				if (item instanceof ActionItem)
 				{
-					key = ((ActionItem) item).getActionName();
+					ActionItem actionItem = (ActionItem) item;
+					String actionName = actionItem.getActionName();
+					Settings.SettingsValue value = settings.getValue(Settings.GLOBAL_NS, SettingsPanel.MATRIX_COLORS, actionName);
+					if (value != null)
+					{
+						this.setStyle("-fx-background-color : " + value.getValue());
+					}
+					else
+					{
+						String groupName = actionItem.group().name();
+						updateStyle(groupName);
+					}
 				}
 				else
 				{
-					key = item.getClass().getSimpleName();
+					String key = item.getClass().getSimpleName();
+					updateStyle(key);
 				}
-				Settings.SettingsValue value = settings.getValue(Settings.GLOBAL_NS, SettingsPanel.MATRIX_COLORS, key);
-				Optional.ofNullable(value).ifPresent(v -> this.setStyle("-fx-background-color : " + v.getValue()));
 			}
 		}
+	}
+
+	private void updateStyle(String key)
+	{
+		Settings.SettingsValue value = settings.getValue(Settings.GLOBAL_NS, SettingsPanel.MATRIX_COLORS, key);
+		Optional.ofNullable(value).ifPresent(v -> this.setStyle("-fx-background-color : " + v.getValue()));
 	}
 
 	public void showExpressionsResults()
