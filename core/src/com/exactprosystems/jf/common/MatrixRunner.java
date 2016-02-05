@@ -156,7 +156,8 @@ public class MatrixRunner implements IMatrixRunner, AutoCloseable
 		if (isRunning())
 		{
 			changeState(State.Running);
-			this.matrix.resume(); 
+			this.matrix.resume();
+			return;
 		}
 		
 		Configuration configuration = this.context.getConfiguration();

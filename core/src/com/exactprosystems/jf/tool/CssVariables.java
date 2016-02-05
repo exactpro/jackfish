@@ -222,7 +222,8 @@ public class CssVariables
 		public static final String	ADD_CHILD_ICON			= IMAGES_DIR + "/addChild.png";
 		public static final String	ADD_BEFORE_ICON			= IMAGES_DIR + "/addBefore.png";
 		public static final String	ADD_AFTER_ICON			= IMAGES_DIR + "/addAfter.png";
-		public static final String	BREAK_POINT_ICON		= IMAGES_DIR + "/breakPointTrue.png";
+		public static final String BREAK_POINT_ICON = IMAGES_DIR + "/breakPoint.png";
+		public static final String EXECUTING_ITEM_ICON = IMAGES_DIR + "/executingItem.png";
 		public static final String	MOVE_LEFT_ICON			= IMAGES_DIR + "/move_left.png";
 		public static final String	MOVE_RIGHT_ICON			= IMAGES_DIR + "/move_right.png";
 		public static final String	LOADING_ICON			= IMAGES_DIR + "/loading.png";

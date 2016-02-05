@@ -15,6 +15,7 @@ import com.exactprosystems.jf.common.parser.DisplayDriver;
 import com.exactprosystems.jf.common.parser.Matrix;
 import com.exactprosystems.jf.common.parser.Result;
 import com.exactprosystems.jf.common.parser.items.MatrixItem;
+import com.exactprosystems.jf.common.parser.items.MatrixItemState;
 import com.exactprosystems.jf.common.parser.listeners.IMatrixListener;
 import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.CssVariables;
@@ -161,9 +162,10 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 		{
 			CustomTab tab1 = checkDocument(matrix);
 			String format = String.format("Matrix '%s' started...", matrix.getName());
-			if (listView != null)
+			if (this.listView != null)
 			{
-				listView.getItems().add(ConsoleText.defaultText(format));
+				this.listView.getItems().clear();
+				this.listView.getItems().add(ConsoleText.defaultText(format));
 				Optional.ofNullable(tab1).ifPresent(t -> t.getStyleClass().add(CssVariables.EXECUTING_TAB));
 			}
 			else
@@ -183,7 +185,7 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 			{
 				listView.getItems().add(ConsoleText.defaultText(format));
 				Optional.ofNullable(tab).ifPresent(t -> {
-					t.getStyleClass().remove(CssVariables.EXECUTING_TAB);
+					tab.getStyleClass().remove(CssVariables.EXECUTING_TAB);
 					Task<Void> task = new Task<Void>()
 					{
 						@Override
@@ -191,14 +193,14 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 						{
 							if (failed == 0)
 							{
-								t.getStyleClass().add(CssVariables.MATRIX_FINISHED_OK);
+								tab.getStyleClass().add(CssVariables.MATRIX_FINISHED_OK);
 							}
 							else
 							{
-								t.getStyleClass().add(CssVariables.MATRIX_FINISHED_BAD);
+								tab.getStyleClass().add(CssVariables.MATRIX_FINISHED_BAD);
 							}
 							Thread.sleep(3000);
-							t.getStyleClass().removeAll(CssVariables.MATRIX_FINISHED_OK, CssVariables.MATRIX_FINISHED_BAD);
+							tab.getStyleClass().removeAll(CssVariables.MATRIX_FINISHED_OK, CssVariables.MATRIX_FINISHED_BAD);
 							return null;
 						}
 					};
@@ -236,28 +238,16 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 	{
 		if (toggleTracing.isSelected())
 		{
-			TreeItem<MatrixItem> find = this.tree.find(treeItem -> treeItem.getNumber() == item.getNumber());
-			Optional.ofNullable(find).ifPresent(f -> Platform.runLater(() ->
-			{
-				GridPane layout = (GridPane) f.getValue().getLayout();
-				Optional.ofNullable(layout).ifPresent(l -> l.getStyleClass().add(CssVariables.EXECUTING_MATRIX_ITEM));
-			}));
+			item.changeState(MatrixItemState.Executing);
+			Platform.runLater(this.tree::refresh);
 		}
 	}
 
 	@Override
 	public void finished(Matrix matrix, MatrixItem item, Result result)
 	{
-		TreeItem<MatrixItem> find = this.tree.find(treeItem -> treeItem.getNumber() == item.getNumber());
-		Optional.ofNullable(find).ifPresent(f -> Platform.runLater(() ->
-		{
-			GridPane layout = (GridPane) f.getValue().getLayout();
-			Optional.ofNullable(layout).ifPresent(l ->
-			{
-				l.getStyleClass().remove(CssVariables.EXECUTING_MATRIX_ITEM);
-				l.getStyleClass().remove(CssVariables.PAUSED_MATRIX_ITEM);
-			});
-		}));
+		item.changeState(item.isBreakPoint() ? MatrixItemState.BreakPoint : MatrixItemState.None);
+		Platform.runLater(this.tree::refresh);
 	}
 
 	@Override
@@ -265,8 +255,9 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 	{
 		Optional.ofNullable(this.watcher).ifPresent(WatcherFx::update);
 		TreeItem<MatrixItem> treeItem = this.tree.find(item);
-		((GridPane) treeItem.getValue().getLayout()).getStyleClass().add(CssVariables.PAUSED_MATRIX_ITEM);
+		//		((GridPane) treeItem.getValue().getLayout()).getStyleClass().add(CssVariables.PAUSED_MATRIX_ITEM);
 		DialogsHelper.showInfo(String.format("Matrix paused on \'%s\'", treeItem.getValue().getItemName()));
+		Optional.ofNullable(this.listView).ifPresent(lv -> lv.getItems().add(ConsoleText.pausedItem(String.format("Paused on %s", item), item)));
 		this.tree.scrollTo(this.tree.getRow(treeItem));
 	}
 
@@ -362,7 +353,6 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 
 	public void startMatrix(ActionEvent event)
 	{
-		listView.getItems().add(ConsoleText.defaultText("Prepare to start matrix..."));
 		tryCatch(this.model::startMatrix, "Error on starting matrix. See the matrix output for details.");
 	}
 

@@ -29,6 +29,9 @@ public class IconCell extends TreeTableCell<MatrixItem, MatrixItemState>
 				case BreakPoint:
 					image = new Image(CssVariables.Icons.BREAK_POINT_ICON);
 					break;
+				case Executing:
+					image = new Image(CssVariables.Icons.EXECUTING_ITEM_ICON);
+					break;
 				default:
 					break;
 			}
