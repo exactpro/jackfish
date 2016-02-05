@@ -149,30 +149,39 @@ public class Main extends Application
 					if (kind != null)
 					{
 						String filePath = item.getKey();
-						switch (kind)
+						File file = new File(filePath);
+						try
 						{
-							case MATRIX:
-								loadDocument(new File(filePath), new MatrixFx(filePath, config, new MatrixListener()), kind);
-								break;
+							switch (kind)
+							{
+								case MATRIX:
+									loadDocument(file, new MatrixFx(filePath, config, new MatrixListener()), kind);
+									break;
 
-							case GUI_DICTIONARY:
-								loadDocument(new File(filePath), new DictionaryFx(filePath, config, null), DocumentKind.GUI_DICTIONARY);
-								break;
+								case GUI_DICTIONARY:
+									loadDocument(file, new DictionaryFx(filePath, config, null), DocumentKind.GUI_DICTIONARY);
+									break;
 
-							case SYSTEM_VARS:
-								loadDocument(new File(filePath), new SystemVarsFx(filePath, config), DocumentKind.SYSTEM_VARS);
-								break;
+								case SYSTEM_VARS:
+									loadDocument(file, new SystemVarsFx(filePath, config), DocumentKind.SYSTEM_VARS);
+									break;
 
-							case PLAIN_TEXT:
-								loadDocument(new File(filePath), new PlainTextFx(filePath, settings, config), DocumentKind.PLAIN_TEXT);
-								break;
+								case PLAIN_TEXT:
+									loadDocument(file, new PlainTextFx(filePath, settings, config), DocumentKind.PLAIN_TEXT);
+									break;
 
-							case CSV:
-								loadDocument(new File(filePath), new CsvFx(filePath, settings, config), DocumentKind.CSV);
-								break;
-								
-							default:
-								break;
+								case CSV:
+									loadDocument(file, new CsvFx(filePath, settings, config), DocumentKind.CSV);
+									break;
+
+								default:
+									break;
+							}
+						}
+						catch (FileNotFoundException e)
+						{
+							settings.remove(MAIN_NS, OPENED, file.getAbsolutePath());
+							settings.saveIfNeeded();
 						}
 					}
 				}

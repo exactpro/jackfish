@@ -103,6 +103,20 @@ public class HTMLReportBuilder extends ReportBuilder
 	{
 		writer.fwrite("<tr><td width='200'><a href='#' class='showSource'>Matrix:  </a><td>%s\n", matrixName);
 		writer.fwrite("<tr class='matrixSource'><td colspan='2'>\n");
+		writer.fwrite("<button onclick=\"copyToClipboard(document.getElementsByTagName('pre')[0].innerHTML)\">Copy matrix</button>\n");
+		writer.fwrite("<script>\n");
+		writer.fwrite("function copyToClipboard(text) {\n" +
+				"	var w = document.createElement('textArea');\n" +
+				"	w.value = text;\n" +
+				"	w.setSelectionRange(0, text.length);\n" +
+				"	//w.style.width = 0;\n" +
+				"	//w.style.height = 0;\n" +
+				"	document.body.appendChild(w);\n" +
+				"	w.setSelectionRange(0, text.length);\n" +
+				"	var q = document.execCommand('copy');\n" +
+				"	document.body.removeChild(w);\n" +
+				"  }");
+		writer.fwrite("</script>\n");
 		writer.fwrite("<pre>\n");
 	}
 	
