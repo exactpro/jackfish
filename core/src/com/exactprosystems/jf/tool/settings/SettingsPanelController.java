@@ -461,7 +461,9 @@ public class SettingsPanelController implements Initializable, ContainingParent
 		ShortcutRow rowHelp = new ShortcutRow(SettingsPanel.HELP, edit);
 		ShortcutRow rowGoToLine = new ShortcutRow(SettingsPanel.GO_TO_LINE, edit);
 		ShortcutRow rowShowAll = new ShortcutRow(SettingsPanel.SHOW_ALL, edit);
-		ShortcutRow rowPasteItems = new ShortcutRow(SettingsPanel.PASTE_ITEMS, edit);
+		ShortcutRow rowPasteItemsAfter = new ShortcutRow(SettingsPanel.PASTE_ITEMS_AFTER, edit);
+		ShortcutRow rowPasteItemsChild = new ShortcutRow(SettingsPanel.PASTE_ITEMS_CHILD, edit);
+		ShortcutRow rowPasteItemsBefore = new ShortcutRow(SettingsPanel.PASTE_ITEMS_BEFORE, edit);
 		ShortcutRow rowCopyItems = new ShortcutRow(SettingsPanel.COPY_ITEMS, edit);
 		ShortcutRow rowDeleteItem = new ShortcutRow(SettingsPanel.DELETE_ITEM, edit);
 		ShortcutRow rowCollapseAll = new ShortcutRow(SettingsPanel.COLLAPSE_ALL, edit);
@@ -477,7 +479,9 @@ public class SettingsPanelController implements Initializable, ContainingParent
 		createOneShortcut(rowHelp, matrixNavigationShortcuts, count++, matrixNavigationGrid);
 		createOneShortcut(rowGoToLine, matrixNavigationShortcuts, count++, matrixNavigationGrid);
 		createOneShortcut(rowShowAll, matrixNavigationShortcuts, count++, matrixNavigationGrid);
-		createOneShortcut(rowPasteItems, matrixNavigationShortcuts, count++, matrixNavigationGrid);
+		createOneShortcut(rowPasteItemsAfter, matrixNavigationShortcuts, count++, matrixNavigationGrid);
+		createOneShortcut(rowPasteItemsChild, matrixNavigationShortcuts, count++, matrixNavigationGrid);
+		createOneShortcut(rowPasteItemsBefore, matrixNavigationShortcuts, count++, matrixNavigationGrid);
 		createOneShortcut(rowCopyItems, matrixNavigationShortcuts, count++, matrixNavigationGrid);
 		createOneShortcut(rowDeleteItem, matrixNavigationShortcuts, count++, matrixNavigationGrid);
 		createOneShortcut(rowCollapseAll, matrixNavigationShortcuts, count++, matrixNavigationGrid);

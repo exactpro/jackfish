@@ -490,43 +490,30 @@ public class MatrixFx extends Matrix
 			{
 				insert(parent, index++, item);
 			}
-			enumerate();
-			this.controller.refresh();
-			super.changed(true);
+		}
+		enumerate();
+		this.controller.refresh();
+		super.changed(true);
+	}
+
+	public void paste(PlaceToInsert place, MatrixItem where) throws Exception
+	{
+		String string = Common.getFromClipboard();
+		Parser parser = new Parser();
+		MatrixItem[] items = parser.stringToItems(string);
+
+		if (where != null && items != null)
+		{
+			insert(place, where, items);
 		}
 	}
 
 	public void insertNew(MatrixItem item, PlaceToInsert place, String kind, String value) throws Exception
 	{
 		MatrixItem newItem = Parser.createItem(kind, value);
-		MatrixItem parent = item.getParent();
-		int index = parent.index(item);
 		newItem.init(this);
 		newItem.createId();
-
-		MatrixItemAttribute annotation = item.getClass().getAnnotation(MatrixItemAttribute.class);
-		if (annotation != null && !annotation.hasChildren() && place == PlaceToInsert.Child)
-		{
-			place = PlaceToInsert.After;
-		}
-		switch (place)
-		{
-			case Before:
-				insert(parent, index, newItem);
-				break;
-
-			case After:
-				insert(parent, index + 1, newItem);
-				break;
-
-			case Child:
-				insert(item, 0, newItem);
-				break;
-		}
-
-		enumerate();
-		this.controller.refresh();
-		super.changed(true);
+		insert(place, item, new MatrixItem[]{newItem});
 	}
 
 	public void move(MatrixItem from, MatrixItem to) throws Exception
@@ -694,6 +681,37 @@ public class MatrixFx extends Matrix
 	public static interface ParameterApplier
 	{
 		void call(Parameters parameters) throws Exception;
+	}
+
+	private void insert(PlaceToInsert place, MatrixItem where, MatrixItem[] items)
+	{
+		MatrixItemAttribute annotation = where.getClass().getAnnotation(MatrixItemAttribute.class);
+		if (annotation != null && !annotation.hasChildren() && place == PlaceToInsert.Child)
+		{
+			place = PlaceToInsert.After;
+		}
+		MatrixItem parent = where.getParent();
+		int index = parent.index(where);
+		for (MatrixItem item : items)
+		{
+			switch (place)
+			{
+				case Before:
+					insert(parent, index, item);
+					break;
+
+				case After:
+					insert(parent, index + 1, item);
+					break;
+
+				case Child:
+					insert(where, 0, item);
+					break;
+			}
+		}
+		enumerate();
+		this.controller.refresh();
+		super.changed(true);
 	}
 
 	private void storeSettings(Settings settings) throws Exception

@@ -46,7 +46,9 @@ public class SettingsPanel
 	public static final String SHOW_ALL			= "ShowAll";
 	public static final String DELETE_ITEM		= "DeleteItem";
 	public static final String COPY_ITEMS		= "CopyItems";
-	public static final String PASTE_ITEMS		= "PasteItems";
+	public static final String PASTE_ITEMS_CHILD = "PasteItemsToChild";
+	public static final String PASTE_ITEMS_AFTER = "PasteItemsAfter";
+	public static final String PASTE_ITEMS_BEFORE = "PasteItemsBefore";
 	public static final String COLLAPSE_ALL		= "CollapseAll";
 	public static final String COLLAPSE_ONE		= "CollapseOne";
 	public static final String EXPAND_ALL		= "ExpandAll";

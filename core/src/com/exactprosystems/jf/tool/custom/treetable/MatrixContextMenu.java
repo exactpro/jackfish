@@ -82,10 +82,18 @@ public class MatrixContextMenu extends ContextMenu
 		MenuItem copy = new MenuItem("Copy");
 		copy.setGraphic(new ImageView(new Image(CssVariables.Icons.COPY_ICON)));
 		copy.setOnAction(event -> copyItems(matrix, tree));
-		
-		MenuItem paste = new MenuItem("Paste");
-		paste.setGraphic(new ImageView(new Image(CssVariables.Icons.PASTE_ICON)));
-		paste.setOnAction(event -> pasteItems(matrix, tree));
+
+		MenuItem pasteAfter = new MenuItem("Paste after");
+		pasteAfter.setGraphic(new ImageView(new Image(CssVariables.Icons.PASTE_ICON)));
+		pasteAfter.setOnAction(event -> pasteItems(PlaceToInsert.After, matrix, tree));
+
+		MenuItem pasteChild = new MenuItem("Paste child");
+		pasteChild.setGraphic(new ImageView(new Image(CssVariables.Icons.PASTE_ICON)));
+		pasteChild.setOnAction(event -> pasteItems(PlaceToInsert.Child, matrix, tree));
+
+		MenuItem pasteBefore = new MenuItem("Paste before");
+		pasteBefore.setGraphic(new ImageView(new Image(CssVariables.Icons.PASTE_ICON)));
+		pasteBefore.setOnAction(event -> pasteItems(PlaceToInsert.Before, matrix, tree));
 
 		MenuItem gotoItem = new MenuItem("Go to line ...");
 		gotoItem.setGraphic(new ImageView(new Image(CssVariables.Icons.GO_TO_LINE_ICON)));
@@ -100,8 +108,7 @@ public class MatrixContextMenu extends ContextMenu
 		getItems().addAll(
 				breakPoint,
 				new SeparatorMenuItem(),
-				copy,
-				paste,
+				copy, pasteAfter, pasteChild, pasteBefore,
 				new SeparatorMenuItem(),
 				addAfter,
 				addChild,
@@ -248,9 +255,9 @@ public class MatrixContextMenu extends ContextMenu
 		Common.tryCatch(() -> matrix.copy(tree.currentItems()), "Error on copy");
 	}
 
-	private void pasteItems(MatrixFx matrix, MatrixTreeView tree)
+	private void pasteItems(PlaceToInsert placeToInsert, MatrixFx matrix, MatrixTreeView tree)
 	{
-		Common.tryCatch(() -> matrix.paste(tree.currentItem()), "Error on paste");
+		Common.tryCatch(() -> matrix.paste(placeToInsert, tree.currentItem()), "Error on paste");
 	}
 
 	private void gotoLine(MatrixTreeView tree)

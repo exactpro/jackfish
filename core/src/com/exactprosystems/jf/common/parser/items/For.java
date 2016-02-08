@@ -87,11 +87,11 @@ public final class For extends MatrixItem
 		driver.showComment(this, layout, 0, 0, getComments());
 		driver.showTitle(this, layout, 1, 0, Tokens.For.get(), context.getConfiguration().getSettings());
 		driver.showTextBox(this, layout, 1, 1, this.var, this.var, () -> this.var.get());
-		driver.showLabel(this, layout, 1, 2, Tokens.From.get());
+		driver.showTitle(this, layout, 1, 2, Tokens.From.get(), context.getConfiguration().getSettings());
 		driver.showExpressionField(this, layout, 1, 3, Tokens.From.get(), this.from, this.from, null, null, null, null);
-		driver.showLabel(this, layout, 1, 4, Tokens.To.get());
+		driver.showTitle(this, layout, 1, 4, Tokens.To.get(), context.getConfiguration().getSettings());
 		driver.showExpressionField(this, layout, 1, 5, Tokens.To.get(), this.to, this.to, null, null, null, null);
-		driver.showLabel(this, layout, 1, 6, Tokens.Step.get());
+		driver.showTitle(this, layout, 1, 6, Tokens.Step.get(), context.getConfiguration().getSettings());
 		driver.showExpressionField(this, layout, 1, 7, Tokens.Step.get(), this.step, this.step, null, null, null, null);
 
 		return layout;
