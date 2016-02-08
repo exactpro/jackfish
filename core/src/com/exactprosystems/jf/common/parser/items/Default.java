@@ -30,7 +30,7 @@ public class Default extends MatrixItem
 	{
 		Object layout = driver.createLayout(this, 2);
 		driver.showComment(this, layout, 0, 0, getComments());
-		driver.showTitle(this, layout, 1, 0, Tokens.Default.get());
+		driver.showTitle(this, layout, 1, 0, Tokens.Default.get(), context.getConfiguration().getSettings());
 
 		return layout;
 	}

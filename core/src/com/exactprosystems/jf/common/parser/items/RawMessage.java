@@ -9,7 +9,6 @@
 package com.exactprosystems.jf.common.parser.items;
 
 import com.csvreader.CsvWriter;
-import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.api.client.IClientFactory;
 import com.exactprosystems.jf.api.client.MapMessage;
 import com.exactprosystems.jf.api.common.Str;
@@ -22,12 +21,9 @@ import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.common.report.ReportTable;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
@@ -68,7 +64,7 @@ public class RawMessage extends MatrixItem
 		Object layout = driver.createLayout(this, 3);
 		driver.showComment(this, layout, 0, 0, getComments());
 		driver.showTextBox(this, layout, 1, 0, this.id, this.id, () -> this.id.get());
-		driver.showTitle(this, layout, 1, 1, Tokens.RawMessage.get());
+		driver.showTitle(this, layout, 1, 1, Tokens.RawMessage.get(), context.getConfiguration().getSettings());
 		driver.showLabel(this, layout, 1, 2, Tokens.Client.get());
 		driver.showComboBox(this, layout, 1, 3, this.clientName, this.clientName, v ->
 		{

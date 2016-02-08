@@ -17,7 +17,6 @@ import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.common.report.ReportTable;
 
 import java.util.List;
-import java.util.Map;
 
 @MatrixItemAttribute(
 		description 	= "On error.", 
@@ -45,7 +44,7 @@ public final class OnError extends MatrixItem
 	{
 		Object layout = driver.createLayout(this, 2);
 		driver.showComment(this, layout, 0, 0, getComments());
-		driver.showTitle(this, layout, 1, 0, Tokens.OnError.get());
+		driver.showTitle(this, layout, 1, 0, Tokens.OnError.get(), context.getConfiguration().getSettings());
 
 		return layout;
 	}

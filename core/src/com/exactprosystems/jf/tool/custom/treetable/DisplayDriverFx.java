@@ -10,7 +10,9 @@ package com.exactprosystems.jf.tool.custom.treetable;
 
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.common.Context;
+import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.common.parser.*;
+import com.exactprosystems.jf.common.parser.items.ActionItem;
 import com.exactprosystems.jf.common.parser.items.CommentString;
 import com.exactprosystems.jf.common.parser.items.MatrixItem;
 import com.exactprosystems.jf.common.undoredo.Command;
@@ -27,6 +29,7 @@ import com.exactprosystems.jf.tool.custom.tab.CustomTab;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.matrix.MatrixFx;
 import com.exactprosystems.jf.tool.matrix.params.ParametersPane;
+import com.exactprosystems.jf.tool.settings.SettingsPanel;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
@@ -91,7 +94,7 @@ public class DisplayDriverFx implements DisplayDriver
 	}
 
 	@Override
-	public void showTitle(MatrixItem item, Object layout, int row, int column, String name)
+	public void showTitle(MatrixItem item, Object layout, int row, int column, String name, Settings settings)
 	{
 		GridPane pane = (GridPane) layout;
 
@@ -110,6 +113,24 @@ public class DisplayDriverFx implements DisplayDriver
 		}).findFirst().ifPresent(Node::requestFocus));
 		pane.add(label, column, row);
 		GridPane.setMargin(label, INSETS);
+		if (item instanceof ActionItem)
+		{
+			ActionItem actionItem = (ActionItem) item;
+			String actionName = actionItem.getActionName();
+			Settings.SettingsValue value = settings.getValue(Settings.GLOBAL_NS, SettingsPanel.MATRIX_COLORS, actionName);
+			if (value != null)
+			{
+				label.setStyle("-fx-text-fill : " + value.getValue());
+			}
+			else
+			{
+				updateStyle(actionItem.group().name(), settings, label);
+			}
+		}
+		else
+		{
+			updateStyle(item.getClass().getSimpleName(), settings, label);
+		}
 	}
 
 	@Override
@@ -477,6 +498,13 @@ public class DisplayDriverFx implements DisplayDriver
 			parent.getChildren().remove(treeItem);
 		}
 	}
+
+	private void updateStyle(String key, Settings settings, Label label)
+	{
+		Settings.SettingsValue value = settings.getValue(Settings.GLOBAL_NS, SettingsPanel.MATRIX_COLORS, key);
+		Optional.ofNullable(value).ifPresent(v -> label.setStyle("-fx-text-fill : " + v.getValue()));
+	}
+
 
 	private void stretchIfCan(TextField tf)
 	{

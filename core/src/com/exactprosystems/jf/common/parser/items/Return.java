@@ -71,7 +71,7 @@ public class Return extends MatrixItem
 	{
 		Object layout = driver.createLayout(this, 2);
 		driver.showComment(this, layout, 0, 0, getComments());
-		driver.showTitle(this, layout, 1, 0, Tokens.Return.get());
+		driver.showTitle(this, layout, 1, 0, Tokens.Return.get(), context.getConfiguration().getSettings());
 		driver.showExpressionField(this, layout, 1, 1, Tokens.Return.get(), this.returnValue, this.returnValue, null, null, null, null);
 
 		return layout;

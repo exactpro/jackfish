@@ -72,7 +72,7 @@ public class Case extends MatrixItem
 	{
 		Object layout = driver.createLayout(this, 2);
 		driver.showComment(this, layout, 0, 0, getComments());
-		driver.showTitle(this, layout, 1, 0, Tokens.Case.get());
+		driver.showTitle(this, layout, 1, 0, Tokens.Case.get(), context.getConfiguration().getSettings());
 		driver.showExpressionField(this, layout, 1, 1, Tokens.Case.get(), this.variant, this.variant, null, null, null, null);
 
 		return layout;

@@ -8,13 +8,10 @@
 
 package com.exactprosystems.jf.tool.custom.treetable;
 
-import com.exactprosystems.jf.common.Settings;
-import com.exactprosystems.jf.common.parser.items.ActionItem;
 import com.exactprosystems.jf.common.parser.items.MatrixItem;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.custom.expfield.ExpressionField;
 import com.exactprosystems.jf.tool.matrix.params.ParametersPane;
-import com.exactprosystems.jf.tool.settings.SettingsPanel;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.TreeTableRow;
 import javafx.scene.layout.GridPane;
@@ -22,24 +19,19 @@ import javafx.scene.layout.Pane;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class MatrixTreeRow extends TreeTableRow<MatrixItem>
 {
-	private Settings settings;
-
-	public MatrixTreeRow(ContextMenu contextMenu, Settings settings) throws Exception
+	public MatrixTreeRow(ContextMenu contextMenu) throws Exception
 	{
 		setContextMenu(contextMenu);
-		this.settings = settings;
 	}
 
 	@Override
 	protected void updateItem(MatrixItem item, boolean empty)
 	{
 		super.updateItem(item, empty);
-		this.setStyle(null);
 		this.getStyleClass().removeAll(CssVariables.SIMPLE_ITEM, CssVariables.ITEM_OFF_TRUE);
 		if (item != null)
 		{
@@ -48,36 +40,7 @@ public class MatrixTreeRow extends TreeTableRow<MatrixItem>
 			{
 				this.getStyleClass().add(CssVariables.ITEM_OFF_TRUE);
 			}
-			else
-			{
-				if (item instanceof ActionItem)
-				{
-					ActionItem actionItem = (ActionItem) item;
-					String actionName = actionItem.getActionName();
-					Settings.SettingsValue value = settings.getValue(Settings.GLOBAL_NS, SettingsPanel.MATRIX_COLORS, actionName);
-					if (value != null)
-					{
-						this.setStyle("-fx-background-color : " + value.getValue());
-					}
-					else
-					{
-						String groupName = actionItem.group().name();
-						updateStyle(groupName);
-					}
-				}
-				else
-				{
-					String key = item.getClass().getSimpleName();
-					updateStyle(key);
-				}
-			}
 		}
-	}
-
-	private void updateStyle(String key)
-	{
-		Settings.SettingsValue value = settings.getValue(Settings.GLOBAL_NS, SettingsPanel.MATRIX_COLORS, key);
-		Optional.ofNullable(value).ifPresent(v -> this.setStyle("-fx-background-color : " + v.getValue()));
 	}
 
 	public void showExpressionsResults()
