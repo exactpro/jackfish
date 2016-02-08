@@ -186,8 +186,8 @@ public class While extends MatrixItem
 						continue;
 					}
 				}
-				
-				return new ReturnAndResult(result, ret.getOut()); 
+
+				return new ReturnAndResult(result == Result.Continue ? Result.Passed : result, ret.getOut());
 			}
 					
 			throw new Exception("result is not type of Boolean");

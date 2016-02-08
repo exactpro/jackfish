@@ -203,7 +203,7 @@ public final class ForEach extends MatrixItem
 				}
 			}
 
-			return new ReturnAndResult(result, ret.getOut());
+			return new ReturnAndResult(result == Result.Continue ? Result.Passed : result, ret.getOut());
 		}
 		catch (Exception e)
 		{
