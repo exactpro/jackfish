@@ -8,19 +8,15 @@
 
 package com.exactprosystems.jf.actions.system;
 
-import java.util.List;
-import java.util.Map.Entry;
-
-import com.exactprosystems.jf.actions.AbstractAction;
-import com.exactprosystems.jf.actions.ActionAttribute;
-import com.exactprosystems.jf.actions.ActionFieldAttribute;
-import com.exactprosystems.jf.actions.ActionGroups;
-import com.exactprosystems.jf.actions.ReadableValue;
+import com.exactprosystems.jf.actions.*;
 import com.exactprosystems.jf.common.Context;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.parser.Parameters;
 import com.exactprosystems.jf.common.parser.items.ActionItem.HelpKind;
 import com.exactprosystems.jf.common.report.ReportBuilder;
+
+import java.util.List;
+import java.util.Map.Entry;
 
 @ActionAttribute(
 		group = ActionGroups.System,
@@ -33,9 +29,13 @@ import com.exactprosystems.jf.common.report.ReportBuilder;
 public class Restore extends AbstractAction
 {
 	public final static String nameName = "Name";
+	public final static String asVarName = "AsVar";
 
 	@ActionFieldAttribute(name = nameName, mandatory = true, description = "Name of a global storage object.")
 	protected String name = null;
+
+	@ActionFieldAttribute(name = asVarName, mandatory = false, description = "Create variable in global or local variables.")
+	protected String asVar = null;
 
 	@Override
 	protected HelpKind howHelpWithParameterDerived(Context context, Parameters parameters, String fieldName) throws Exception
@@ -57,7 +57,17 @@ public class Restore extends AbstractAction
 	protected void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
 		Object res = context.getConfiguration().restoreGlobal(this.name);
-		
+		if (asVar != null)
+		{
+			if (owner.isGlobal())
+			{
+				context.getEvaluator().getGlobals().set(this.asVar, res);
+			}
+			else
+			{
+				context.getEvaluator().getLocals().set(this.asVar, res);
+			}
+		}
 		super.setResult(res);
 	}
 }
