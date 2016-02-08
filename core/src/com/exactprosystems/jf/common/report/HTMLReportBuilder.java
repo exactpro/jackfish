@@ -25,6 +25,7 @@ import java.util.stream.Collectors;
 
 public class HTMLReportBuilder extends ReportBuilder 
 {
+	private static Integer diagramCount = 0;
 	private static final String reportExt = ".html";
 	private static final DateFormat dateTimeFormatter = new SimpleDateFormat("yyyyMMdd_HHmmss_");
 	
@@ -77,6 +78,13 @@ public class HTMLReportBuilder extends ReportBuilder
 		writer.fwrite(
 				"-->\n" +
 				"</script>\n");
+
+		writer.fwrite("<script>\n");
+		writer.include(getClass().getResourceAsStream("d3.min.js"));
+		writer.fwrite("</script>\n");
+		writer.fwrite("<script>\n");
+		writer.include(getClass().getResourceAsStream("histogram.js"));
+		writer.fwrite("</script>\n");
 
 		writer.fwrite(
 				"<style>\n" +
@@ -311,15 +319,10 @@ public class HTMLReportBuilder extends ReportBuilder
 	@Override
 	protected void histogram(ReportWriter writer, String title, int intervalCount, int interval, List<Long> copyDate) throws IOException
 	{
-		writer.fwrite("<script>\n");
-		writer.include(getClass().getResourceAsStream("d3.min.js"));
-		writer.fwrite("</script>\n");
-		writer.fwrite("<script>");
-		writer.include(getClass().getResourceAsStream("histogram.js"));
-		writer.fwrite("</script>");
-		writer.fwrite("<div class='container' style=\"height:300px\">\n" + "</div>");
-		writer.fwrite("<script>createHistogram([%s],%s,%s,%s);</script>\n", copyDate.stream().map(String::valueOf).collect(Collectors.joining(",")), Collections.max(copyDate), interval, intervalCount);
-		writer.fwrite("<ul>\n<li id=\"hstTimeRange\">Range : </li>\n<li id=\"hstTimeCount\">Count :</li>");
+		Integer id = ++diagramCount;
+		writer.fwrite("<div id=\"container" + id + "\" class='container' style=\"height:300px\">\n" + "</div>");
+		writer.fwrite("<script>createHistogram([%s],%s,%s,%s,%s);</script>\n", copyDate.stream().map(String::valueOf).collect(Collectors.joining(",")), Collections.max(copyDate), interval, intervalCount, id);
+		writer.fwrite("<ul>\n<li id=\"hstTimeRange" + id + "\">Range : </li>\n<li id=\"hstTimeCount" + id + "\">Count :</li>");
 	}
 
 }

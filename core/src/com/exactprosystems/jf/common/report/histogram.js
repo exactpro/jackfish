@@ -1,4 +1,4 @@
-var createHistogram = function(a, maxValue, interval, intervalCount) {
+var createHistogram = function(a, maxValue, interval, intervalCount, diagramId) {
 	var height = 300,
 	width = 1000,
 	margin=30,
@@ -8,7 +8,7 @@ var createHistogram = function(a, maxValue, interval, intervalCount) {
 		data.push({x:i, y:a[i]})
 	}
 
-var svg = d3.select("div.container").append("svg")
+var svg = d3.select("#container"+diagramId).append("svg")
 		.attr("class", "axis")
 		.attr("width", width)
 		.attr("height", height);
@@ -97,11 +97,11 @@ g.selectAll("rect.bar")
 		} else {
 			range = "[ " + data[i].x*interval + " - " + data[i+1].x*interval + " )";
 		};
-		document.getElementById("hstTimeRange").textContent = "Range : " + range;
-		document.getElementById("hstTimeCount").textContent = "Count : " + d.y;
+		document.getElementById("hstTimeRange"+diagramId).textContent = "Range : " + range;
+		document.getElementById("hstTimeCount"+diagramId).textContent = "Count : " + d.y;
 	})
 	.on("mouseout", function(d,i) {
-		document.getElementById("hstTimeRange").textContent = "Range : ";
-		document.getElementById("hstTimeCount").textContent = "Count : ";
+		document.getElementById("hstTimeRange"+diagramId).textContent = "Range : ";
+		document.getElementById("hstTimeCount"+diagramId).textContent = "Count : ";
 	})
 }
