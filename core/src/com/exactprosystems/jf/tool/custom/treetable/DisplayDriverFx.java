@@ -42,6 +42,7 @@ import javafx.scene.layout.Region;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -340,6 +341,15 @@ public class DisplayDriverFx implements DisplayDriver
 	}
 
 	@Override
+	public void showAutoCompleteBox(MatrixItem item, Object layout, int row, int column, List<String> words, Consumer<String> supplier)
+	{
+		GridPane pane = (GridPane) layout;
+		TextField field = new TextField();
+		//		new AutoCompletionTextFieldBinding<>(field, )
+		//TODO make this method
+	}
+
+	@Override
 	public void showComment(MatrixItem item, Object layout, int row, int column, List<CommentString> comments)
 	{
 		GridPane pane = (GridPane) layout;
@@ -427,6 +437,7 @@ public class DisplayDriverFx implements DisplayDriver
 		BorderPane borderPane = new BorderPane();
 		borderPane.setCenter(view);
 		DragResizer.makeResizable(borderPane);
+		view.setPrefHeight(30 * (Math.min(provider.getRowHeaders().size(), 4) + 1));
 		BorderPane.setMargin(view, new Insets(0, 0, 10, 0));
 		pane.add(borderPane, column, row, 5, 2);
 	}

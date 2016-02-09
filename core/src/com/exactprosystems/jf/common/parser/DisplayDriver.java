@@ -14,6 +14,7 @@ import com.exactprosystems.jf.common.parser.items.MatrixItem;
 import com.exactprosystems.jf.functions.Table;
 
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 public interface DisplayDriver
@@ -27,6 +28,8 @@ public interface DisplayDriver
 	void 		showTextBox			(MatrixItem item, Object layout, int row, int column, Setter<String> set, Getter<String> get, FormulaGenerator generator);
 	void 		showExpressionField	(MatrixItem item, Object layout, int row, int column, String name, Setter<String> set, Getter<String> get, 
 										Function<String, String> firstHandler, Function<String, String> secondHandler, Character first, Character second);
+
+	void showAutoCompleteBox(MatrixItem item, Object layout, int row, int column, List<String> words, Consumer<String> supplier);
 	void 		showComment			(MatrixItem item, Object layout, int row, int column, List<CommentString> lines);
 	void 		showButton			(MatrixItem item, Object layout, int row, int column, String name, Function<Void, Void> action);
 	void 		showToggleButton	(MatrixItem item, Object layout, int row, int column, String name, Function<Boolean, Void> action, boolean intialValue);
