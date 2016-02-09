@@ -72,6 +72,6 @@ public class TableLoadFromFile extends AbstractAction
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
-		super.setResult(new Table(this.file, this.delimiter.charAt(0)));
+		super.setResult(new Table(this.file, this.delimiter.charAt(0), evaluator));
 	}
 }

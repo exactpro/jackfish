@@ -20,6 +20,7 @@ import com.exactprosystems.jf.common.report.ReportHelper;
 import com.exactprosystems.jf.common.report.ReportTable;
 import com.exactprosystems.jf.exceptions.ColumnIsPresentException;
 import com.exactprosystems.jf.sql.SqlConnection;
+
 import org.apache.log4j.Logger;
 
 import java.io.*;
@@ -34,20 +35,21 @@ import java.util.stream.Collectors;
 
 public class Table implements List<Map<String, Object>>, Mutable, Cloneable
 {
-	public Table()
+	private Table(AbstractEvaluator evaluator)
 	{
+		this.evaluator = evaluator;
 		this.innerList = new ArrayList<>();
 	}
 
-	public Table(String[] headers)
+	public Table(String[] headers, AbstractEvaluator evaluator)
 	{
-		this();
+		this(evaluator);
 		addColumns(headers);
 	}
 
-	public Table(String[][] lines)
+	public Table(String[][] lines, AbstractEvaluator evaluator)
 	{
-		this();
+		this(evaluator);
 
 		String[] firstLine = lines[0];
 		addColumns(firstLine);
@@ -63,9 +65,9 @@ public class Table implements List<Map<String, Object>>, Mutable, Cloneable
 		}
 	}
 
-	public Table(ResultSet set) throws Exception
+	public Table(ResultSet set, AbstractEvaluator evaluator) throws Exception
 	{
-		this();
+		this(evaluator);
 
 		try
 		{
@@ -75,7 +77,7 @@ public class Table implements List<Map<String, Object>>, Mutable, Cloneable
 
 			for (int column = 0; column < meta.getColumnCount(); column++)
 			{
-				this.headers[column] = new Header(meta.getColumnName(column + 1), Class.forName(meta.getColumnClassName(column + 1)));
+				this.headers[column] = new Header(meta.getColumnName(column + 1), Header.HeaderType.forName(meta.getColumnClassName(column + 1)));
 			}
 
 			boolean ok = set.first();
@@ -99,9 +101,9 @@ public class Table implements List<Map<String, Object>>, Mutable, Cloneable
 		}
 	}
 
-	public Table(String fileName, char delimiter) throws Exception
+	public Table(String fileName, char delimiter, AbstractEvaluator evaluator) throws Exception
 	{
-		this();
+		this(evaluator);
 
 		this.fileName = fileName;
 		
@@ -111,9 +113,9 @@ public class Table implements List<Map<String, Object>>, Mutable, Cloneable
 		}
 	}
 
-	public Table(Reader reader, char delimiter) throws Exception
+	public Table(Reader reader, char delimiter, AbstractEvaluator evaluator) throws Exception
 	{
-		this();
+		this(evaluator);
 		read(reader, delimiter);
 	}
 
@@ -158,6 +160,11 @@ public class Table implements List<Map<String, Object>>, Mutable, Cloneable
 
 	//==============================================================================================
 	
+	public void setEvaluator(AbstractEvaluator evaluator)
+	{
+		this.evaluator = evaluator;
+	}
+	
 	public boolean removeRow(int index)
 	{
 		this.innerList.remove(index);
@@ -200,14 +207,14 @@ public class Table implements List<Map<String, Object>>, Mutable, Cloneable
 		return this;
 	}
 
-	public boolean save(String fileName, char delimiter)
+	public boolean save(String fileName, char delimiter, boolean saveValues)
 	{
 		CsvWriter writer = null;
 
 		try (Writer bufferedWriter = new BufferedWriter(new FileWriter(fileName)))
 		{
 			writer = new CsvWriter(bufferedWriter, delimiter);
-			return save(writer, "");
+			return save(writer, "", saveValues);
 		}
 		catch (Exception e)
 		{
@@ -223,7 +230,7 @@ public class Table implements List<Map<String, Object>>, Mutable, Cloneable
 		}
 	}
 	
-	public boolean save(CsvWriter writer, String indent) throws IOException
+	public boolean save(CsvWriter writer, String indent, boolean saveValues) throws IOException
 	{
 		String[] record = new String[this.headers.length];
 
@@ -237,7 +244,17 @@ public class Table implements List<Map<String, Object>>, Mutable, Cloneable
 		{
 			for (int i = 0; i < this.headers.length; i++)
 			{
-				record[i] = (i == 0 ? indent : "") + String.valueOf(f.get(this.headers[i]));
+				Object source = f.get(this.headers[i]);
+				Object value = null;
+				if (saveValues)
+				{
+					value = convertCell(headers[i], source);
+				}
+				else
+				{
+					value = source;
+				}
+				record[i] = (i == 0 ? indent : "") + String.valueOf(value);
 			}
 			writer.writeRecord(record,true);
 		}
@@ -245,34 +262,39 @@ public class Table implements List<Map<String, Object>>, Mutable, Cloneable
 	}
 	
 	
+	public void considerAsBoolean(String... columns) throws Exception
+	{
+		considerAs(Header.HeaderType.BOOL, columns);
+	}
+
 	public void considerAsInt(String... columns) throws Exception
 	{
-		considerAs(Integer.class, null, columns);
+		considerAs(Header.HeaderType.INT, columns);
 	}
 
 	public void considerAsDouble(String... columns) throws Exception
 	{
-		considerAs(Double.class, null, columns);
+		considerAs(Header.HeaderType.DOUBLE, columns);
 	}
 
 	public void considerAsDate(String... columns) throws Exception
 	{
-		considerAs(Date.class, null, columns);
+		considerAs(Header.HeaderType.DATE, columns);
 	}
 
 	public void considerAsBigDecimal(String... columns) throws Exception
 	{
-		considerAs(BigDecimal.class, null, columns);
+		considerAs(Header.HeaderType.BIG_DECIMAL, columns);
 	}
 
-	public void considerAsExpression(AbstractEvaluator evaluator, String... columns) throws Exception
+	public void considerAsExpression(String... columns) throws Exception
 	{
-		considerAs(Object.class, evaluator, columns);
+		considerAs(Header.HeaderType.EXPRESSION, columns);
 	}
 
 	public Table select(Condition[] conditions)
 	{
-		Table result = new Table();
+		Table result = new Table(this.evaluator);
 		result.headers = this.headers.clone();
 
 		for (Map<Header, Object> row : this.innerList)
@@ -357,7 +379,7 @@ public class Table implements List<Map<String, Object>>, Mutable, Cloneable
 			{
 				column = column + index;
 			}
-			Header header = new Header(column, String.class);
+			Header header = new Header(column, Header.HeaderType.STRING);
 			this.headers[col++] = header;
 		}
 	}
@@ -393,7 +415,7 @@ public class Table implements List<Map<String, Object>>, Mutable, Cloneable
 			this.headers = new Header[]{};
 		}
 		List<Header> newHeaders = new ArrayList<>(Arrays.asList(this.headers));
-		newHeaders.addAll(index, Arrays.stream(columns).map(s -> new Header(s, String.class)).collect(Collectors.toList()));
+		newHeaders.addAll(index, Arrays.stream(columns).map(s -> new Header(s, Header.HeaderType.STRING)).collect(Collectors.toList()));
 		this.headers = newHeaders.toArray(new Header[newHeaders.size()]);
 	}
 
@@ -411,7 +433,7 @@ public class Table implements List<Map<String, Object>>, Mutable, Cloneable
 		{
 			Header header = iterator.next();
 			String next = header.name;
-			if (strings.contains(next))
+			if (strings.contains(next)) // TODO why isn't equals() ?
 			{
 				int index = headers.indexOf(header);
 				if (index > 0 && index < this.innerList.size() - 1)
@@ -477,24 +499,14 @@ public class Table implements List<Map<String, Object>>, Mutable, Cloneable
 	public void changeValue(String headerName, int indexRow, Object newValue)
 	{
 		this.changed = true;
-		Optional.ofNullable(this.headers)
-				.ifPresent(headers -> {
-					Map<Header, Object> row = this.innerList.get(indexRow);
-					Optional.ofNullable(row).ifPresent(r -> {
-						r.remove(headerByName(headerName));
-						r.put(headerByName(headerName), newValue);
-					});
-				});
-	}
-
-	public static void main(String[] args) throws Exception
-	{
-		Table table = new Table("load.csv", ',');
-		table.replace(" (", "(", false, "login", "password");
-		System.out.println(Arrays.toString(table.headers));
-		for (Header h : table.headers)
+		if (this.headers != null)
 		{
-			table.forEach(e -> System.out.println(e.get(h.name)));
+			Map<Header, Object> row = this.innerList.get(indexRow);
+			if(row != null)
+			{
+				row.remove(headerByName(headerName));
+				row.put(headerByName(headerName), newValue);
+			};
 		}
 	}
 
@@ -516,7 +528,7 @@ public class Table implements List<Map<String, Object>>, Mutable, Cloneable
 				{
 					String sValue = String.valueOf(value);
 					String sSource = String.valueOf(source);
-					if (sValue.contains(sSource))
+					if (sValue.contains(sSource)) // TODO why contains ?!!
 					{
 						row.remove(header);
 						row.put(header, sValue.replace(sSource, String.valueOf(dest)));
@@ -551,14 +563,14 @@ public class Table implements List<Map<String, Object>>, Mutable, Cloneable
 		}
 	}
 
-	public void report(ReportBuilder report, String title, boolean withNumbers) throws Exception
+	public void report(ReportBuilder report, String title, boolean withNumbers, boolean reportValues) throws Exception
 	{
 		String[] columns = Arrays.stream(this.headers).map(h -> h.name).toArray(num -> new String[num]);
 		
-		report(report, title, withNumbers, columns);
+		report(report, title, withNumbers, reportValues, columns);
 	}
 
-	public void report(ReportBuilder report, String title, boolean withNumbers, String... columns) throws Exception
+	public void report(ReportBuilder report, String title, boolean withNumbers, boolean reportValues, String... columns) throws Exception
 	{
 		int[] columnsIndexes = getIndexes(columns);
 
@@ -596,7 +608,15 @@ public class Table implements List<Map<String, Object>>, Mutable, Cloneable
 
 			for (int i = addition; i < headers.length; i++)
 			{
-				value[i] = row.get(headerByName(headers[i]));
+				Header header = headerByName(headers[i]);
+				if (reportValues)
+				{
+					value[i] = convertCell(header, row.get(header));
+				}
+				else
+				{
+					value[i] = row.get(header);
+				}
 			}
 			table.addValues(value);
 			count++;
@@ -619,7 +639,7 @@ public class Table implements List<Map<String, Object>>, Mutable, Cloneable
 		boolean result = true;
 		if (ignoreRowsOrder)
 		{
-			boolean[] actualMatched = new boolean[this.innerList.size()];
+			boolean[] actualMatched = new boolean[this.innerList.size()]; 
 			boolean[] expectedMatched = new boolean[expected.innerList.size()];
 
 			int actualCounter = 0;
@@ -762,14 +782,7 @@ public class Table implements List<Map<String, Object>>, Mutable, Cloneable
 			@Override
 			public Map<String, Object> next()
 			{
-
-				Map<Header, Object> next = this.iterator.next();
-				Map<String, Object> map = new LinkedHashMap<>();
-				for (Entry<Header, Object> e : next.entrySet())
-				{
-					map.put(e.getKey().name, e.getValue());
-				}
-				return map;
+				return convertToStr(this.iterator.next());
 			}
 
 			@Override
@@ -837,7 +850,7 @@ public class Table implements List<Map<String, Object>>, Mutable, Cloneable
 	public boolean retainAll(Collection<?> c)
 	{
 		this.changed = true;
-		return this.innerList.removeAll(c);
+		return this.innerList.retainAll(c);
 	}
 
 	@Override
@@ -850,13 +863,7 @@ public class Table implements List<Map<String, Object>>, Mutable, Cloneable
 	@Override
 	public Map<String, Object> get(int index)
 	{
-		Map<Header, Object> map = this.innerList.get(index);
-		Map<String, Object> res = new LinkedHashMap<>();
-		for (Entry<Header, Object> e : map.entrySet())
-		{
-			res.put(e.getKey().name, e.getValue());
-		}
-		return res;
+		return convertToStr(this.innerList.get(index));
 	}
 
 	@Override
@@ -978,7 +985,6 @@ public class Table implements List<Map<String, Object>>, Mutable, Cloneable
 			if (!thisRow.containsKey(name) || !otherRow.containsKey(name))
 			{
 				map.put(name, new ArrayList<>());
-//				return false;
 			}
 
 			Object thisValue = thisRow.get(name);
@@ -1004,47 +1010,20 @@ public class Table implements List<Map<String, Object>>, Mutable, Cloneable
 				objects.add(otherValue);
 				objects.add(thisValue);
 				map.put(name, objects);
-//				return false;
 			}
 		}
 
 		return map;
 	}
 
-	private void considerAs(Class<?> type, AbstractEvaluator evaluator, String... columns) throws Exception
+	private void considerAs(Header.HeaderType type, String... columns) throws Exception
 	{
 		this.changed = true;
 
 		int[] columnsIndexes = getIndexes(columns);
 		for (int index : columnsIndexes)
 		{
-			this.headers[index].clazz = type;
-		}
-
-
-		for (Map<Header, Object> row : this.innerList)
-		{
-			for (int index : columnsIndexes)
-			{
-				String name = this.headers[index].name;
-				Object value = row.get(headerByName(name));
-
-				try
-				{
-					if (evaluator != null)
-					{
-						value = evaluator.evaluate("" + value);
-					}
-					else
-					{
-						value = Converter.convertToType(value, type);
-					}
-					row.put(headerByName(name), value);
-				}
-				catch (Exception e)
-				{
-				}
-			}
+			this.headers[index].type = type;
 		}
 	}
 
@@ -1088,7 +1067,6 @@ public class Table implements List<Map<String, Object>>, Mutable, Cloneable
 	private Map<Header, Object> convert(Object[] e)
 	{
 		Map<Header, Object> map = new LinkedHashMap<>();
-		
 		for (int i = 0; i < Math.min(this.headers.length, e.length); i++)
 		{
 			map.put(this.headers[i], e[i]);
@@ -1121,17 +1099,75 @@ public class Table implements List<Map<String, Object>>, Mutable, Cloneable
 		Map<String, Object> res = new LinkedHashMap<>();
 		for (Entry<Header, Object> entry : map.entrySet())
 		{
-			res.put(entry.getKey().name, entry.getValue());
+			Header header = entry.getKey();
+			Object source = entry.getValue();
+			res.put(header.name, convertCell(header, source));
 		}
 		return res;
 	}
-
-	private class Header implements Cloneable
+	
+	private Object convertCell(Header header, Object source)
 	{
-		public Header(String name, Class<?> clazz)
+		if (header.type == null)
+		{
+			return source;
+		}
+		Object value = null;
+		try
+		{
+			if (header.type == Header.HeaderType.EXPRESSION && this.evaluator != null)
+			{
+				value = this.evaluator.evaluate("" + source);
+			}
+			else
+			{
+				value = Converter.convertToType(source, header.type.clazz);
+			}
+		}
+		catch (Exception e)
+		{
+			value = e.getMessage();
+		}
+		
+		return value;
+	}
+	
+	private static class Header implements Cloneable
+	{
+		public enum HeaderType
+		{
+			STRING		(String.class),
+			BOOL		(Boolean.class),
+			INT			(Integer.class),	
+			DOUBLE		(Double.class),
+			DATE		(Date.class),
+			BIG_DECIMAL	(BigDecimal.class),
+			EXPRESSION	(Object.class), 
+			;
+			
+			HeaderType(Class<?> clazz)
+			{
+				this.clazz = clazz;
+			}
+			
+			public static com.exactprosystems.jf.functions.Table.Header.HeaderType forName(String columnClassName)
+			{
+				for (HeaderType item : values())
+				{
+					if (item.clazz.getSimpleName().equals(columnClassName))
+					{
+						return item;
+					}
+				}
+				return STRING;
+			}
+
+			public Class<?> clazz;
+		}
+		public Header(String name, HeaderType type)
 		{
 			this.name = name;
-			this.clazz = clazz;
+			this.type = type;
 			this.index = getIndex();
 		}
 
@@ -1143,13 +1179,13 @@ public class Table implements List<Map<String, Object>>, Mutable, Cloneable
 			Header clone = (Header)super.clone();
 			
 			clone.name = this.name;
+			clone.type = this.type;
 			clone.index = getIndex();
 			
 			return clone;
 		}
 
-		@SuppressWarnings("unused")
-		public Class<?> clazz;
+		HeaderType type;
 
 		public int index;
 
@@ -1318,8 +1354,8 @@ public class Table implements List<Map<String, Object>>, Mutable, Cloneable
     }
 	
 	private List<Map<Header, Object>> innerList = null;
-
 	private Header[] headers;
+	private AbstractEvaluator evaluator; 
 
 	private String fileName;
 	private static int index = 0;

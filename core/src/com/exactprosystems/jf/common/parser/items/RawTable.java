@@ -39,7 +39,7 @@ public class RawTable extends MatrixItem
 	{
 		super();
 		this.typeName = new MutableValue<>();
-		this.table = new Table(new String[][]{new String[]{"newH"}, new String[]{"newR"}});
+		this.table = new Table(new String[][]{new String[]{"newH"}, new String[]{"newR"}}, null);
 	}
 
 	@Override
@@ -105,7 +105,7 @@ public class RawTable extends MatrixItem
 	{
 		if (this.firstUsing)
 		{
-			this.table = new Table(str);
+			this.table = new Table(str, null);
 			this.firstUsing = false;
 			return;
 		}
@@ -142,7 +142,7 @@ public class RawTable extends MatrixItem
 	{
 		try
 		{
-			this.table.save(writer, indent);
+			this.table.save(writer, indent, false);
 		}
 		catch (IOException e)
 		{
@@ -187,7 +187,8 @@ public class RawTable extends MatrixItem
 	{
 		try
 		{
-			this.table.report(report, Tokens.RawTable.get(), false);
+			this.table.setEvaluator(evaluator);
+			this.table.report(report, Tokens.RawTable.get(), false, false);
 
 			Variables vars = isGlobal() ? evaluator.getGlobals() : evaluator.getLocals();
 

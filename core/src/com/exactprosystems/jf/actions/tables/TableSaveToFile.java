@@ -34,6 +34,7 @@ public class TableSaveToFile extends AbstractAction
 	public final static String tableName = "Table";
 	public final static String fileNameName = "File";
 	public final static String delimiterName = "Delimiter";
+	public final static String saveValuesName = "SaveValues";
 
 	@ActionFieldAttribute(name = tableName, mandatory = true, description = "The table.")
 	protected Table 	table 	= null;
@@ -43,7 +44,10 @@ public class TableSaveToFile extends AbstractAction
 
 	@ActionFieldAttribute(name = delimiterName, mandatory = false, description = "Delimiter of fields in the file.")
 	protected String	delimiter 	= ";";
-	
+
+	@ActionFieldAttribute(name = saveValuesName, mandatory = false, description = "Save values instead expressions.")
+	protected Boolean	saveValues 	= false;
+
 	public TableSaveToFile()
 	{
 	}
@@ -57,6 +61,7 @@ public class TableSaveToFile extends AbstractAction
 				return HelpKind.ChooseSaveFile;
 				
 			case delimiterName:
+			case saveValuesName:
 				return HelpKind.ChooseFromList;
 		}
 		
@@ -72,6 +77,11 @@ public class TableSaveToFile extends AbstractAction
 				list.add(new ReadableValue(context.getEvaluator().createString(",")));
 				list.add(new ReadableValue(context.getEvaluator().createString(";")));
 				break;
+
+			case saveValuesName:
+				list.add(ReadableValue.TRUE);
+				list.add(ReadableValue.FALSE);
+				break;
 		}
 	}
 
@@ -79,6 +89,6 @@ public class TableSaveToFile extends AbstractAction
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
-		super.setResult(this.table.save(this.fileName, this.delimiter.charAt(0)));
+		super.setResult(this.table.save(this.fileName, this.delimiter.charAt(0), this.saveValues));
 	}
 }

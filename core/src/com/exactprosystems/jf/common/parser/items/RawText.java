@@ -39,7 +39,7 @@ public class RawText extends MatrixItem
 	{
 		super();
 		this.typeName = new MutableValue<String>();
-		this.table = new Table(new String[] { "" });
+		this.table = new Table(new String[] { "" }, null);
 	}
 
 	@Override
@@ -106,7 +106,7 @@ public class RawText extends MatrixItem
 	{
 		if (this.firstUsing)
 		{
-			this.table = new Table(str);
+			this.table = new Table(str, null);
 			this.firstUsing = false;
 			return;
 		}
@@ -143,7 +143,7 @@ public class RawText extends MatrixItem
 	{
 		try
 		{
-			this.table.save(writer, indent);
+			this.table.save(writer, indent, false);
 		}
 		catch (IOException e)
 		{
@@ -183,7 +183,7 @@ public class RawText extends MatrixItem
 	{
 		try
 		{
-			this.table.report(report, Tokens.RawText.get(), false);
+			this.table.report(report, Tokens.RawText.get(), false, false);
 
 			Variables vars = isGlobal() ? evaluator.getGlobals() : evaluator.getLocals();
 

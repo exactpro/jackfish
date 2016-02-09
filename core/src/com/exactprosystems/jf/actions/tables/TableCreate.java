@@ -37,6 +37,6 @@ public class TableCreate extends AbstractAction
 	{
 		String[] headers = parameters.select(TypeMandatory.Extra).keySet().toArray(new String[] {});
 		
-		super.setResult(new Table(headers));
+		super.setResult(new Table(headers, evaluator));
 	}
 }

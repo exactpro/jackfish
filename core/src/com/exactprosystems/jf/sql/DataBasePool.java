@@ -70,7 +70,7 @@ public class DataBasePool
 
 		ResultSet result = query.executeQuery();
 		
-		return new Table(result);
+		return new Table(result, null);
 	}
 	
 	public boolean execute(SqlConnection connection, String text, Object[] objs) throws Exception

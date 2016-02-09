@@ -33,6 +33,7 @@ public class TableReport extends AbstractAction
 	public final static String titleName = "Title";
 	public final static String numbersName = "Numbers";
 	public final static String columnsName = "Columns";
+	public final static String reportValuesName = "ReportValues";
 
 	@ActionFieldAttribute(name = tableName, mandatory = true, description = "The table.")
 	protected Table 	table 	= null;
@@ -45,23 +46,35 @@ public class TableReport extends AbstractAction
 
 	@ActionFieldAttribute(name = columnsName, mandatory = false, description = "Columns printed in the report.")
 	protected String[]	columns 	= new String[] {};
-	
+
+	@ActionFieldAttribute(name = reportValuesName, mandatory = false, description = "Report values instead expressions.")
+	protected Boolean	reportValues 	= false;
+
 	public TableReport()
 	{
 	}
 
 	@Override
-	protected HelpKind howHelpWithParameterDerived(Context context, Parameters parameters, String fieldName)
+	protected HelpKind howHelpWithParameterDerived(Context context, Parameters parameters, String fieldName) throws Exception
 	{
-		return numbersName.equals(fieldName) ? HelpKind.ChooseFromList : null;
+		switch (fieldName)
+		{
+			case numbersName:
+			case reportValuesName:
+				return HelpKind.ChooseFromList;
+		}
+		
+		return null;
 	}
 
+	
 	@Override
 	protected void listToFillParameterDerived(List<ReadableValue> list, Context context, String parameterToFill, Parameters parameters) throws Exception
 	{
 		switch (parameterToFill)
 		{
 			case numbersName:
+			case reportValuesName:
 				list.add(ReadableValue.TRUE);
 				list.add(ReadableValue.FALSE);
 				break;
@@ -72,7 +85,7 @@ public class TableReport extends AbstractAction
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
-		table.report(report, this.title, this.withNumbers, this.columns);
+		table.report(report, this.title, this.withNumbers, this.reportValues, this.columns);
 		
 		super.setResult(null);
 	}

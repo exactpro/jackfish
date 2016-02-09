@@ -41,7 +41,7 @@ public class CsvFx extends AbstractDocument
 				{
 						new String[] {	"<none>" },
 						new String[] { 	"" },
-				});
+				}, null);
 		this.provider = new TableDataProvider(this.table);
 	}
 
@@ -69,7 +69,7 @@ public class CsvFx extends AbstractDocument
 	{
 		super.load(reader);
 
-		this.table = new Table(reader, tableDelimiter);
+		this.table = new Table(reader, tableDelimiter, null);
 		this.provider = new TableDataProvider(this.table);
 		//TODO implements undo redo
 		initController();
@@ -98,7 +98,7 @@ public class CsvFx extends AbstractDocument
     public void save(String fileName) throws Exception
     {
     	super.save(fileName);
-    	this.table.save(fileName, tableDelimiter);
+    	this.table.save(fileName, tableDelimiter, false);
 		this.controller.saved(getName());
     }
     

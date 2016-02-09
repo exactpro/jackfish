@@ -39,6 +39,6 @@ public class HistogramGetTable extends AbstractAction
 		{
 			throw new NullPointerException("Field 'Histogram' can't be null");
 		}
-		super.setResult(histogram.getTable());
+		super.setResult(histogram.getTable(evaluator));
 	}
 }

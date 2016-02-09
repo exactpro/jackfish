@@ -174,7 +174,7 @@ public class DialogFill extends AbstractAction
 				}
 				else if (res.isArrayFilled())
 				{
-					outValue.put(name, new Table(res.getArray()));
+					outValue.put(name, new Table(res.getArray(), evaluator));
 				}
 				else
 				{

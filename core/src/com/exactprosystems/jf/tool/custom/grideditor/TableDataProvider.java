@@ -21,24 +21,6 @@ public class TableDataProvider implements DataProvider<String>
 		this.table = table;
 	}
 
-	public TableDataProvider()
-	{
-		try
-		{
-			this.table = new Table(fileName, ';');
-		}
-		catch (Exception e)
-		{
-			this.table = new Table(new String[][]
-					{
-							new String[] {	"one",	"two", 	"tree" },
-							new String[] { 	"1",	"2",	"3" },
-							new String[] { 	"11",	"12",	"13" },
-							new String[] { 	"21",	"22",	"23" },
-					});
-		}
-	}
-	
 	@Override
 	public int rowCount()
 	{

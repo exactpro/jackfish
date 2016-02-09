@@ -10,6 +10,7 @@ package com.exactprosystems.jf.functions;
 import com.exactprosystems.jf.api.app.AppConnection;
 import com.exactprosystems.jf.api.app.HistogramMetric;
 import com.exactprosystems.jf.api.app.IRemoteApplication;
+import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 
 import java.io.IOException;
@@ -67,9 +68,9 @@ public class Histogram
 		reportBuilder.reportHistogram(title, this.intervalCount, this.interval, metrics);
 	}
 
-	public Table getTable()
+	public Table getTable(AbstractEvaluator evaluator)
 	{
-		return new Table(new String[]{"1", "2", "3"});
+		return new Table(new String[]{"1", "2", "3"}, evaluator);
 	}
 
 	@Override
