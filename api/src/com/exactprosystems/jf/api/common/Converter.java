@@ -129,6 +129,17 @@ public class Converter
 		{
 			return (T)parseDate(String.valueOf(object));
 		}
+		else if (type.isAssignableFrom(Boolean.class))
+		{
+			if (object instanceof String)
+			{
+				return (T)new Boolean(Boolean.parseBoolean(String.valueOf(object)));
+			}
+			else if (object instanceof Boolean)
+			{
+				return (T)(Boolean)object;
+			}
+		}
 		else if (type.isAssignableFrom(Integer.class))
 		{
 			if (object instanceof String)
