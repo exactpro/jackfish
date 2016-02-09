@@ -253,12 +253,19 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 	@Override
 	public void paused(Matrix matrix, final MatrixItem item)
 	{
-		Optional.ofNullable(this.watcher).ifPresent(WatcherFx::update);
-		TreeItem<MatrixItem> treeItem = this.tree.find(item);
-		//		((GridPane) treeItem.getValue().getLayout()).getStyleClass().add(CssVariables.PAUSED_MATRIX_ITEM);
-		DialogsHelper.showInfo(String.format("Matrix paused on \'%s\'", treeItem.getValue().getItemName()));
-		Optional.ofNullable(this.listView).ifPresent(lv -> lv.getItems().add(ConsoleText.pausedItem(String.format("Paused on %s", item), item)));
-		this.tree.scrollTo(this.tree.getRow(treeItem));
+		try
+		{
+			Optional.ofNullable(this.watcher).ifPresent(WatcherFx::update);
+			TreeItem<MatrixItem> treeItem = this.tree.find(item);
+			//		((GridPane) treeItem.getValue().getLayout()).getStyleClass().add(CssVariables.PAUSED_MATRIX_ITEM);
+			DialogsHelper.showInfo(String.format("Matrix paused on \'%s\'", treeItem.getValue().getItemName()));
+			Optional.ofNullable(this.listView).ifPresent(lv -> lv.getItems().add(ConsoleText.pausedItem(String.format("Paused on %s", item), item)));
+			this.tree.scrollTo(this.tree.getRow(treeItem));
+		}
+		catch (Exception e)
+		{
+			logger.error("Error on matrix paused.\n" + e.getMessage(), e);
+		}
 	}
 
 	@Override

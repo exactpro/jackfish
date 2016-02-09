@@ -269,9 +269,14 @@ public class ParametersPane extends CustomScrollPane
 							expressionField.setFirstActionListener(str -> 
 							{
 								Date res = DialogsHelper.showDateTimePicker(null);
-								LocalDateTime ldt = Common.convert(res);
-								return String.format("DateTime.date(%d, %d, %d,  %d, %d, %d)",
-										ldt.getYear(), ldt.getMonthValue(), ldt.getDayOfMonth(), ldt.getHour(), ldt.getMinute(), ldt.getSecond());
+								if (res != null)
+								{
+									LocalDateTime ldt = Common.convert(res);
+									return String.format("DateTime.date(%d, %d, %d,  %d, %d, %d)",
+											//				because localDateTime begin month from 1, not 0
+											ldt.getYear(), ldt.getMonthValue() - 1, ldt.getDayOfMonth(), ldt.getHour(), ldt.getMinute(), ldt.getSecond());
+								}
+								return expressionField.getText();
 							});
 							break;
 							

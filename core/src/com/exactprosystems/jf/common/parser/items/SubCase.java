@@ -111,7 +111,7 @@ public final class SubCase extends MatrixItem
 	@Override
 	public String getItemName()
 	{
-		return super.getItemName() + " " + (this.name == null ? "" : "(" + this.name + ")");
+		return super.getItemName() + " " + (this.name == null || this.name.isNullOrEmpty() ? "" : "(" + this.name + ")");
 	}
 
 	@Override

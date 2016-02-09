@@ -107,12 +107,8 @@ public class MatrixContextMenu extends ContextMenu
 
 		getItems().addAll(
 				breakPoint,
-				new SeparatorMenuItem(),
-				copy, pasteAfter, pasteChild, pasteBefore,
-				new SeparatorMenuItem(),
-				addAfter,
-				addChild,
-				addBefore,
+				new SeparatorMenuItem(), copy, pasteBefore, pasteChild, pasteAfter,
+				new SeparatorMenuItem(), addBefore, addChild, addAfter,
 				deleteItem,
 				gotoItem,
 				new SeparatorMenuItem(),
