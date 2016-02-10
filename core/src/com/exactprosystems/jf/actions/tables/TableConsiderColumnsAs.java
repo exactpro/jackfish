@@ -26,6 +26,7 @@ import com.exactprosystems.jf.functions.Table;
 public class TableConsiderColumnsAs extends AbstractAction 
 {
 	public final static String tableName = "Table";
+	public final static String asStringName = "String";
 	public final static String asBooleanName = "Boolean";
 	public final static String asIntegerName = "Integer";
 	public final static String asDoubleName = "Double";
@@ -35,6 +36,9 @@ public class TableConsiderColumnsAs extends AbstractAction
 
 	@ActionFieldAttribute(name = tableName, mandatory = true, description = "The table.")
 	protected Table 	table 	= null;
+
+	@ActionFieldAttribute(name = asStringName, mandatory = false, description = "Array of columns.")
+	protected String[]	asString 	= new String[] {};
 
 	@ActionFieldAttribute(name = asBooleanName, mandatory = false, description = "Array of columns.")
 	protected String[]	asBoolean 	= new String[] {};
@@ -61,6 +65,10 @@ public class TableConsiderColumnsAs extends AbstractAction
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
+		if (this.asString.length > 0)
+		{
+			this.table.considerAsString(this.asString);
+		}
 		if (this.asBoolean.length > 0)
 		{
 			this.table.considerAsBoolean(this.asBoolean);

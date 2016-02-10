@@ -262,6 +262,11 @@ public class Table implements List<Map<String, Object>>, Mutable, Cloneable
 	}
 	
 	
+	public void considerAsString(String... columns) throws Exception
+	{
+		considerAs(Header.HeaderType.STRING, columns);
+	}
+
 	public void considerAsBoolean(String... columns) throws Exception
 	{
 		considerAs(Header.HeaderType.BOOL, columns);
@@ -379,7 +384,7 @@ public class Table implements List<Map<String, Object>>, Mutable, Cloneable
 			{
 				column = column + index;
 			}
-			Header header = new Header(column, Header.HeaderType.STRING);
+			Header header = new Header(column, null);
 			this.headers[col++] = header;
 		}
 	}
@@ -415,7 +420,7 @@ public class Table implements List<Map<String, Object>>, Mutable, Cloneable
 			this.headers = new Header[]{};
 		}
 		List<Header> newHeaders = new ArrayList<>(Arrays.asList(this.headers));
-		newHeaders.addAll(index, Arrays.stream(columns).map(s -> new Header(s, Header.HeaderType.STRING)).collect(Collectors.toList()));
+		newHeaders.addAll(index, Arrays.stream(columns).map(s -> new Header(s, null)).collect(Collectors.toList()));
 		this.headers = newHeaders.toArray(new Header[newHeaders.size()]);
 	}
 
@@ -1150,7 +1155,7 @@ public class Table implements List<Map<String, Object>>, Mutable, Cloneable
 				this.clazz = clazz;
 			}
 			
-			public static com.exactprosystems.jf.functions.Table.Header.HeaderType forName(String columnClassName)
+			public static HeaderType forName(String columnClassName)
 			{
 				for (HeaderType item : values())
 				{
@@ -1159,7 +1164,7 @@ public class Table implements List<Map<String, Object>>, Mutable, Cloneable
 						return item;
 					}
 				}
-				return STRING;
+				return null;
 			}
 
 			public Class<?> clazz;
