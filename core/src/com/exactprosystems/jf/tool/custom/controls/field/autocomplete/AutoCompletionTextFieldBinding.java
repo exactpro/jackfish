@@ -8,7 +8,6 @@
 package com.exactprosystems.jf.tool.custom.controls.field.autocomplete;
 
 import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.scene.control.TextField;
 import javafx.util.Callback;
 import javafx.util.StringConverter;
@@ -75,7 +74,6 @@ public class AutoCompletionTextFieldBinding<T> extends AutoCompletionBinding<T>
 	 */
 	public AutoCompletionTextFieldBinding(final TextField textField, Callback<ISuggestionRequest, Collection<T>> suggestionProvider)
 	{
-
 		this(textField, suggestionProvider, AutoCompletionTextFieldBinding.<T>defaultStringConverter());
 	}
 
@@ -141,25 +139,15 @@ public class AutoCompletionTextFieldBinding<T> extends AutoCompletionBinding<T>
 	 **************************************************************************/
 
 
-	private final ChangeListener<String> textChangeListener = new ChangeListener<String>()
-	{
-		@Override
-		public void changed(ObservableValue<? extends String> obs, String oldText, String newText)
+	private final ChangeListener<String> textChangeListener = (obs, oldText, newText) -> {
+		if (getCompletionTarget().isFocused())
 		{
-			if (getCompletionTarget().isFocused())
-			{
-				setUserInput(newText);
-			}
+			setUserInput(newText);
 		}
 	};
 
-	private final ChangeListener<Boolean> focusChangedListener = new ChangeListener<Boolean>()
-	{
-		@Override
-		public void changed(ObservableValue<? extends Boolean> obs, Boolean oldFocused, Boolean newFocused)
-		{
-			if (!newFocused)
-				hidePopup();
-		}
+	private final ChangeListener<Boolean> focusChangedListener = (obs, oldFocused, newFocused) -> {
+		if (!newFocused)
+			hidePopup();
 	};
 }

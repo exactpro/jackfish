@@ -346,9 +346,9 @@ public class Parser
 	
 	public static MatrixItem createItem(String type, String value) throws Exception
 	{
-		Optional<Class<?>> res = Arrays.stream(knownItems).filter(clazz -> clazz.getSimpleName().equals(type)).findFirst();
+		Optional<Class<?>> res = Arrays.stream(knownItems).filter(clazz -> clazz.getSimpleName().equalsIgnoreCase(type)).findFirst();
 
-		Map<Tokens, String> systemParameters = new HashMap<Tokens, String>();
+		Map<Tokens, String> systemParameters = new HashMap<>();
 		systemParameters.put(Tokens.valueOf(type), value);
 				
 		if (res.isPresent()) 
@@ -362,7 +362,7 @@ public class Parser
 		{
 			if (type.equals(Tokens.Action.get()))
 			{
-				MatrixItem item =  (MatrixItem) ActionItem.class.newInstance();
+				MatrixItem item = ActionItem.class.newInstance();
 				item.init(null, null, systemParameters, null);
 				item.addKnownParameters();
 				return item;

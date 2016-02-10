@@ -202,7 +202,7 @@ public class MatrixFx extends Matrix
 		MatrixItem newItem = null;
 		try
 		{
-			if (Tokens.contains(newItemName))
+			if (Tokens.containsIgnoreCase(newItemName))
 			{
 				if (newItemName.equalsIgnoreCase(Tokens.RawTable.get()))
 				{
@@ -237,6 +237,7 @@ public class MatrixFx extends Matrix
 			if (newItem != null)
 			{
 				this.controller.display(newItem);
+				this.controller.setCurrent(newItem);
 			}
 		}
 

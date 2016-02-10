@@ -68,4 +68,16 @@ public enum Tokens
 		}
 		return false;
 	}
+
+	public static boolean containsIgnoreCase(String name)
+	{
+		for (Tokens token : values())
+		{
+			if (token.name().equals(name))
+			{
+				return true;
+			}
+		}
+		return false;
+	}
 }

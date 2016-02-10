@@ -109,8 +109,7 @@ public class DisplayDriverFx implements DisplayDriver
 		}
 		label.setMinWidth(name.length() * 8 + 20);
 		label.getStyleClass().add(CssVariables.OBLIQUE_LABEL);
-		label.setOnMouseClicked(mouseEvent -> pane.getChildren().stream().filter(c ->
-		{
+		label.setOnMouseClicked(mouseEvent -> pane.getChildren().stream().filter(c -> {
 			Integer rowIndex = GridPane.getRowIndex(c);
 			Integer columnIndex = GridPane.getColumnIndex(c);
 			return rowIndex != null && columnIndex != null && rowIndex == 0 && columnIndex == 0;
@@ -146,7 +145,7 @@ public class DisplayDriverFx implements DisplayDriver
 		{
 			label.getStyleClass().add(CssVariables.BOLD_LABEL);
 		}
-//		label.setPrefWidth(getPrefWidth(name));
+		//		label.setPrefWidth(getPrefWidth(name));
 		Common.sizeLabel(label);
 		GridPane.setMargin(label, new Insets(0, 0, 0, 5));
 		Platform.runLater(() -> label.setTooltip(new Tooltip(name)));
@@ -167,22 +166,19 @@ public class DisplayDriverFx implements DisplayDriver
 				selectCurrentRow(((MatrixTreeRow) pane.getParent().getParent()));
 			}
 		});
-		checkBox.setOnAction(e ->
-		{
+		checkBox.setOnAction(e -> {
 			Boolean lastValue = get.get();
 			Boolean value = checkBox.isSelected();
 			if (lastValue == value)
 			{
 				return;
 			}
-			
-			Command undo = () ->
-			{
+
+			Command undo = () -> {
 				set.set(lastValue);
 				checkBox.setSelected(lastValue);
 			};
-			Command redo = () ->
-			{
+			Command redo = () -> {
 				set.set(value);
 				checkBox.setSelected(value);
 			};
@@ -198,8 +194,7 @@ public class DisplayDriverFx implements DisplayDriver
 		GridPane pane = (GridPane) layout;
 		ComboBox<String> comboBox = new ComboBox<>();
 		comboBox.setValue(get.get());
-		comboBox.setOnAction(e ->
-		{
+		comboBox.setOnAction(e -> {
 			String lastValue = get.get();
 			String value = comboBox.getValue();
 			if (Str.areEqual(lastValue, value))
@@ -207,13 +202,11 @@ public class DisplayDriverFx implements DisplayDriver
 				return;
 			}
 
-			Command undo = () ->
-			{
+			Command undo = () -> {
 				set.set(lastValue);
 				comboBox.setValue(lastValue);
 			};
-			Command redo = () ->
-			{
+			Command redo = () -> {
 				set.set(value);
 				comboBox.setValue(value);
 			};
@@ -221,8 +214,7 @@ public class DisplayDriverFx implements DisplayDriver
 		});
 		if (handler != null)
 		{
-			comboBox.showingProperty().addListener((observable, oldValue, newValue) ->
-			{
+			comboBox.showingProperty().addListener((observable, oldValue, newValue) -> {
 				if (!oldValue && newValue)
 				{
 					List<String> list = handler.apply(null);
@@ -245,8 +237,7 @@ public class DisplayDriverFx implements DisplayDriver
 		textBox.setStyle(Common.FONT_SIZE);
 		textBox.setText(get.get());
 		Common.sizeTextField(textBox);
-		textBox.focusedProperty().addListener((observable, oldValue, newValue) ->
-		{
+		textBox.focusedProperty().addListener((observable, oldValue, newValue) -> {
 			if (!oldValue && newValue)
 			{
 				selectCurrentRow(((MatrixTreeRow) pane.getParent().getParent()));
@@ -260,14 +251,12 @@ public class DisplayDriverFx implements DisplayDriver
 					return;
 				}
 
-				Command undo = () ->
-				{
+				Command undo = () -> {
 					set.set(lastValue);
 					textBox.setText(lastValue);
 					stretchIfCan(textBox);
 				};
-				Command redo = () ->
-				{
+				Command redo = () -> {
 					set.set(value);
 					textBox.setText(value);
 					stretchIfCan(textBox);
@@ -275,21 +264,21 @@ public class DisplayDriverFx implements DisplayDriver
 				item.getMatrix().addCommand(undo, redo);
 			}
 		});
-		
+
 		if (generator != null)
 		{
 			textBox.setOnDragDetected(new DragDetector(generator)::onDragDetected);
 		}
-		
+
 		GridPane gridPane = new GridPane();
 		gridPane.add(textBox, 0, 0);
 		pane.add(gridPane, column, row);
 		GridPane.setMargin(textBox, INSETS);
+		setFocused(textBox);
 	}
 
 	@Override
-	public void showExpressionField(MatrixItem item, Object layout, int row, int column, String name, Setter<String> set, Getter<String> get,
-			Function<String, String> firstHandler, Function<String, String> secondHandler, Character first, Character second)
+	public void showExpressionField(MatrixItem item, Object layout, int row, int column, String name, Setter<String> set, Getter<String> get, Function<String, String> firstHandler, Function<String, String> secondHandler, Character first, Character second)
 	{
 		GridPane pane = (GridPane) layout;
 
@@ -297,8 +286,7 @@ public class DisplayDriverFx implements DisplayDriver
 		field.setContextMenu(this.rowContextMenu);
 		field.setFirstActionListener(firstHandler);
 		field.setSecondActionListener(secondHandler);
-		field.setChangingValueListener((observable, oldValue, newValue) ->
-		{
+		field.setChangingValueListener((observable, oldValue, newValue) -> {
 			if (!oldValue && newValue)
 			{
 				selectCurrentRow(((MatrixTreeRow) pane.getParent().getParent()));
@@ -312,13 +300,11 @@ public class DisplayDriverFx implements DisplayDriver
 					return;
 				}
 
-				Command undo = () ->
-				{
+				Command undo = () -> {
 					set.set(lastValue);
 					field.setText(lastValue);
 				};
-				Command redo = () ->
-				{
+				Command redo = () -> {
 					set.set(value);
 					field.setText(value);
 				};
@@ -347,27 +333,19 @@ public class DisplayDriverFx implements DisplayDriver
 	public void showAutoCompleteBox(MatrixItem item, Object layout, int row, int column, List<String> words, Consumer<String> supplier)
 	{
 		GridPane pane = (GridPane) layout;
-		TextField field = new TextField();
-		new AutoCompletionTextFieldBinding<>(field, SuggestionProvider.create(words));
-		field.setOnAction(e -> supplier.accept(field.getText()));
+		TextField field = new TextField("");
+		AutoCompletionTextFieldBinding<String> binding = new AutoCompletionTextFieldBinding<>(field, SuggestionProvider.create(words));
+		binding.setOnAutoCompleted(e -> accept(words, supplier, field));
+		field.setOnAction(e -> accept(words, supplier, field));
 		field.focusedProperty().addListener((observable, oldValue, newValue) -> {
 			if (!newValue && oldValue)
 			{
-				supplier.accept(field.getText());
+				accept(words, supplier, field);
 			}
 		});
 		pane.add(field, column, row);
 		GridPane.setMargin(field, INSETS);
-		new Thread(new Task<Void>()
-		{
-			@Override
-			protected Void call() throws Exception
-			{
-				Thread.sleep(300);
-				Platform.runLater(field::requestFocus);
-				return null;
-			}
-		}).start();
+		setFocused(field);
 	}
 
 	@Override
@@ -385,8 +363,7 @@ public class DisplayDriverFx implements DisplayDriver
 		}
 		label.prefWidthProperty().bind(Common.getTabPane().getScene().getWindow().widthProperty().subtract(20 + 15));
 		label.setPrefHeight(Common.setHeightComments(label.getText()));
-		label.setListener(() ->
-		{
+		label.setListener(() -> {
 			String lastValue = fromList(comments);
 			String value = label.getText();
 			if (Str.areEqual(lastValue, value))
@@ -394,15 +371,13 @@ public class DisplayDriverFx implements DisplayDriver
 				return;
 			}
 
-			Command undo = () ->
-			{
+			Command undo = () -> {
 				comments.clear();
 				comments.addAll(fromStr(lastValue));
 				label.setText(lastValue);
 				label.setPrefHeight(Common.setHeightComments(lastValue));
 			};
-			Command redo = () ->
-			{
+			Command redo = () -> {
 				comments.clear();
 				comments.addAll(fromStr(value));
 				label.setText(value);
@@ -467,8 +442,7 @@ public class DisplayDriverFx implements DisplayDriver
 	public void hide(MatrixItem item, Object layout, int row, boolean hide)
 	{
 		GridPane pane = (GridPane) layout;
-		pane.getChildren().stream().filter(child -> GridPane.getRowIndex(child) != null && GridPane.getRowIndex(child) == row).forEach(c ->
-		{
+		pane.getChildren().stream().filter(child -> GridPane.getRowIndex(child) != null && GridPane.getRowIndex(child) == row).forEach(c -> {
 			((Region) c).setPrefHeight(hide ? 0 : Control.USE_COMPUTED_SIZE);
 			((Region) c).setMaxHeight(hide ? 0 : Control.USE_COMPUTED_SIZE);
 			((Region) c).setMinHeight(hide ? 0 : Control.USE_COMPUTED_SIZE);
@@ -479,7 +453,7 @@ public class DisplayDriverFx implements DisplayDriver
 	@Override
 	public void setupCall(MatrixItem item, String reference, Parameters parameters)
 	{
-		((MatrixFx)item.getMatrix()).setupCall(item, reference, parameters);
+		((MatrixFx) item.getMatrix()).setupCall(item, reference, parameters);
 	}
 
 	@Override
@@ -569,10 +543,38 @@ public class DisplayDriverFx implements DisplayDriver
 		return opt.isPresent() ? opt.get().toString() : "";
 	}
 
-	private static final Insets			INSETS			= new Insets(0, 0, 0, 5);
-	private static final String			LINE_SEPARATOR	= System.getProperty("line.separator");
-	private MatrixTreeView				treeView;
-	private Context						context;
-	private MatrixContextMenu 			rowContextMenu;
+	private void setFocused(final TextField field)
+	{
+		new Thread(new Task<Void>()
+		{
+			@Override
+			protected Void call() throws Exception
+			{
+				Thread.sleep(300);
+				Platform.runLater(field::requestFocus);
+				return null;
+			}
+		}).start();
+	}
+
+	private void accept(List<String> words, Consumer<String> supplier, TextField field)
+	{
+		Optional<String> first = words.stream().filter(field.getText()::equalsIgnoreCase).findFirst();
+		if (first.isPresent())
+		{
+			supplier.accept(first.get());
+		}
+		else
+		{
+			supplier.accept(field.getText());
+		}
+	}
+
+
+	private static final Insets INSETS = new Insets(0, 0, 0, 5);
+	private static final String LINE_SEPARATOR = System.getProperty("line.separator");
+	private MatrixTreeView treeView;
+	private Context context;
+	private MatrixContextMenu rowContextMenu;
 	private MatrixParametersContextMenu parametersContextMenu;
 }
