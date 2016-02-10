@@ -2,6 +2,7 @@ package com.exactprosystems.jf.common.parser;
 
 public enum Tokens
 {
+	TempItem,
 	This,
 	Off,
 	Global,

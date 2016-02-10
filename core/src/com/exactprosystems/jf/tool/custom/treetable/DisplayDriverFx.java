@@ -20,6 +20,8 @@ import com.exactprosystems.jf.functions.Table;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.DragDetector;
+import com.exactprosystems.jf.tool.custom.controls.field.autocomplete.AutoCompletionTextFieldBinding;
+import com.exactprosystems.jf.tool.custom.controls.field.autocomplete.SuggestionProvider;
 import com.exactprosystems.jf.tool.custom.expfield.ExpressionField;
 import com.exactprosystems.jf.tool.custom.grideditor.DataProvider;
 import com.exactprosystems.jf.tool.custom.grideditor.SpreadsheetView;
@@ -32,6 +34,7 @@ import com.exactprosystems.jf.tool.matrix.params.ParametersPane;
 import com.exactprosystems.jf.tool.settings.SettingsPanel;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
+import javafx.concurrent.Task;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.*;
@@ -345,8 +348,26 @@ public class DisplayDriverFx implements DisplayDriver
 	{
 		GridPane pane = (GridPane) layout;
 		TextField field = new TextField();
-		//		new AutoCompletionTextFieldBinding<>(field, )
-		//TODO make this method
+		new AutoCompletionTextFieldBinding<>(field, SuggestionProvider.create(words));
+		field.setOnAction(e -> supplier.accept(field.getText()));
+		field.focusedProperty().addListener((observable, oldValue, newValue) -> {
+			if (!newValue && oldValue)
+			{
+				supplier.accept(field.getText());
+			}
+		});
+		pane.add(field, column, row);
+		GridPane.setMargin(field, INSETS);
+		new Thread(new Task<Void>()
+		{
+			@Override
+			protected Void call() throws Exception
+			{
+				Thread.sleep(300);
+				Platform.runLater(field::requestFocus);
+				return null;
+			}
+		}).start();
 	}
 
 	@Override

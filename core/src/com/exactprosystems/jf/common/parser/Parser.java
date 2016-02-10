@@ -37,7 +37,7 @@ public class Parser
 	{}
 	
 	private static Class<?> [] knownItems = new Class<?>[]
-			{
+			{TempItem.class,
 				TestCase.class,
 				ActionItem.class,
 				If.class,

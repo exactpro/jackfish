@@ -16,10 +16,7 @@ import com.exactprosystems.jf.common.Context;
 import com.exactprosystems.jf.common.MatrixRunner;
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
-import com.exactprosystems.jf.common.parser.Matrix;
-import com.exactprosystems.jf.common.parser.Parameter;
-import com.exactprosystems.jf.common.parser.Parameters;
-import com.exactprosystems.jf.common.parser.Parser;
+import com.exactprosystems.jf.common.parser.*;
 import com.exactprosystems.jf.common.parser.items.MatrixItem;
 import com.exactprosystems.jf.common.parser.items.MatrixItemAttribute;
 import com.exactprosystems.jf.common.parser.items.TypeMandatory;
@@ -197,6 +194,43 @@ public class MatrixFx extends Matrix
 		super.changed(true);
 	}
 
+	public void replace(MatrixItem tempItem, String newItemName)
+	{
+		MatrixItem parent = tempItem.getParent();
+		int index = parent.index(tempItem);
+		MatrixItem newItem = null;
+		try
+		{
+			if (Tokens.contains(newItemName))
+			{
+				newItem = Parser.createItem(newItemName, null);
+			}
+			else
+			{
+				newItem = Parser.createItem(Tokens.Action.get(), newItemName);
+			}
+			newItem.init(this);
+			newItem.createId();
+			tempItem.getParent().insert(index, newItem);
+		}
+		catch (Exception e)
+		{
+			//			DialogsHelper.showError(e.getMessage());
+		}
+		finally
+		{
+			this.controller.remove(tempItem);
+			tempItem.remove();
+			enumerate();
+			if (newItem != null)
+			{
+				this.controller.display(newItem);
+			}
+		}
+
+		super.changed(true);
+	}
+
 	@Override
 	public void remove(MatrixItem item)
 	{
@@ -291,11 +325,11 @@ public class MatrixFx extends Matrix
 		int number = item.getNumber();
 		Command undo = () ->
 		{
-			findAndCallParameters(number, par -> par.remove(index + 1)); 
+			findAndCallParameters(number, par -> par.remove(index + 1));
 		};
 		Command redo = () ->
 		{
-			findAndCallParameters(number, par -> par.insert(index + 1, "", "", TypeMandatory.Extra)); 
+			findAndCallParameters(number, par -> par.insert(index + 1, "", "", TypeMandatory.Extra));
 		};
 		addCommand(undo, redo);
 	}
@@ -304,10 +338,10 @@ public class MatrixFx extends Matrix
 	{
 		int number = item.getNumber();
 		int size = list.size();
-		
+
 		Command undo = () ->
 		{
-			findAndCallParameters(number, par -> 
+			findAndCallParameters(number, par ->
 			{
 				for (int i = 0; i < size; i++)
 				{
@@ -317,7 +351,7 @@ public class MatrixFx extends Matrix
 		};
 		Command redo = () ->
 		{
-			findAndCallParameters(number, par -> 
+			findAndCallParameters(number, par ->
 			{
 				for (int i = 0; i < size; i++)
 				{
@@ -393,7 +427,7 @@ public class MatrixFx extends Matrix
 		};
 		addCommand(undo, redo);
 	}
-	
+
 	public void parameterSetValue(MatrixItem item, int index, String value)
 	{
 		int number = item.getNumber();
@@ -412,7 +446,7 @@ public class MatrixFx extends Matrix
 		};
 		addCommand(undo, redo);
 	}
-	
+
 	public void setupCall(MatrixItem item, String reference, Parameters parameters)
 	{
 		try
@@ -455,7 +489,7 @@ public class MatrixFx extends Matrix
 		};
 		addCommand(undo, redo);
 	}
-	
+
 	public void setOff(int number, boolean flag)
 	{
 		Command undo = () ->

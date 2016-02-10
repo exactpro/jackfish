@@ -313,6 +313,11 @@ public class Matrix extends AbstractDocument implements IMatrix, Cloneable
 		}
 	}
 
+	public void replace(MatrixItem old, String value)
+	{
+
+	}
+
 	// ==============================================================================================================================
 
 	public final List<MatrixItem> find(final String what, final boolean caseSensitive, final boolean wholeWord)
