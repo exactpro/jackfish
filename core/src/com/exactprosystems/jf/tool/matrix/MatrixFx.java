@@ -23,6 +23,7 @@ import com.exactprosystems.jf.common.parser.items.TypeMandatory;
 import com.exactprosystems.jf.common.parser.listeners.IMatrixListener;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.common.undoredo.Command;
+import com.exactprosystems.jf.common.xml.control.Table;
 import com.exactprosystems.jf.tool.ApplicationConnector;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
@@ -203,7 +204,18 @@ public class MatrixFx extends Matrix
 		{
 			if (Tokens.contains(newItemName))
 			{
-				newItem = Parser.createItem(newItemName, null);
+				if (newItemName.equalsIgnoreCase(Tokens.RawTable.get()))
+				{
+					newItem = Parser.createItem(Tokens.RawTable.get(), Table.class.getSimpleName());
+				}
+				else if (newItemName.equalsIgnoreCase(Tokens.RawMessage.get()))
+				{
+					newItem = Parser.createItem(Tokens.RawMessage.get(), "none");
+				}
+				else
+				{
+					newItem = Parser.createItem(newItemName, null);
+				}
 			}
 			else
 			{
@@ -726,20 +738,21 @@ public class MatrixFx extends Matrix
 		}
 		MatrixItem parent = where.getParent();
 		int index = parent.index(where);
-		for (MatrixItem item : items)
+		for (int i = 0; i < items.length; i++)
 		{
+			MatrixItem item = items[i];
 			switch (place)
 			{
 				case Before:
-					insert(parent, index, item);
+					insert(parent, index + i, item);
 					break;
 
 				case After:
-					insert(parent, index + 1, item);
+					insert(parent, index + 1 + i, item);
 					break;
 
 				case Child:
-					insert(where, 0, item);
+					insert(where, i, item);
 					break;
 			}
 		}
