@@ -335,6 +335,18 @@ public class DisplayDriverFx implements DisplayDriver
 		TextField field = new TextField("");
 		AutoCompletionTextFieldBinding<String> binding = new AutoCompletionTextFieldBinding<>(field, SuggestionProvider.create(words));
 		binding.setOnAutoCompleted(e -> accept(words, supplier, field));
+		List<String> tempList = words.stream().map(String::toLowerCase).collect(Collectors.toList());
+		field.textProperty().addListener((observable1, oldValue1, newValue1) -> {
+			boolean present = tempList.stream().filter(s -> s.contains(newValue1.toLowerCase())).findFirst().isPresent();
+			if (present)
+			{
+				field.setStyle("-fx-text-fill : green");
+			}
+			else
+			{
+				field.setStyle("-fx-text-fill : red");
+			}
+		});
 		field.setOnAction(e -> accept(words, supplier, field));
 		field.focusedProperty().addListener((observable, oldValue, newValue) -> {
 			if (!newValue && oldValue)
