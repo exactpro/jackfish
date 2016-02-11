@@ -470,9 +470,9 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 		Platform.runLater(() -> this.tree.refresh() );
 	}
 
-	public void refreshParameters(MatrixItem item)
+	public void refreshParameters(MatrixItem item, int selectIndex)
 	{
-		Platform.runLater(() -> this.tree.refreshParameters(item) );
+		Platform.runLater(() -> this.tree.refreshParameters(item, selectIndex));
 	}
 
 	public void setCurrent(MatrixItem item)

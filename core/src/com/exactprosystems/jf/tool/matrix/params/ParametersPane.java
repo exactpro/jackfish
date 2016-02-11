@@ -82,10 +82,10 @@ public class ParametersPane extends CustomScrollPane
 		this.contextMenuHandler = parametersContextMenu.createContextMenuHandler();
 
 		super.setContextMenu(rowContextMenu);
-		refreshParameters();
+		refreshParameters(-1);
 	}
 
-	public void refreshParameters()
+	public void refreshParameters(int selectedIndex)
 	{
 		ObservableList<Node> children = FXCollections.observableArrayList(this.mainGridPane.getChildren());
 
@@ -99,6 +99,10 @@ public class ParametersPane extends CustomScrollPane
 				exist = parameterBox(par, this.contextMenuHandler);
 			}
 			exist.updateIndex(this.parameters.getIndex(par));
+			if (i == selectedIndex)
+			{
+				exist.focusParameter();
+			}
 			this.mainGridPane.add(exist, i + 1, 0, 1, this.oneLine ? 1 : 2);
 		}
 		this.mainGridPane.add(emptyBox(FXCollections.observableArrayList(this.mainGridPane.getChildren()), this.contextMenuHandler), 0, 0, 1, 2);

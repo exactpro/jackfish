@@ -41,6 +41,7 @@ public class SettingsPanel
 	public static final String ADD_BEFORE		= "AddBefore";
 	public static final String ADD_AFTER		= "AddAfter";
 	public static final String BREAK_POINT		= "BreakPoint";
+	public static final String ADD_PARAMETER = "AddParameter";
 	public static final String HELP				= "Help";
 	public static final String GO_TO_LINE		= "GoToLine";
 	public static final String SHOW_ALL			= "ShowAll";
@@ -116,7 +117,14 @@ public class SettingsPanel
 
 	public void updateSettingsValue(String key, String dialog, String newValue)
 	{
-		this.settings.setValue(Settings.GLOBAL_NS, dialog, key, newValue);
+		if (newValue.equals(Common.empty))
+		{
+			this.settings.remove(Settings.GLOBAL_NS, dialog, key);
+		}
+		else
+		{
+			this.settings.setValue(Settings.GLOBAL_NS, dialog, key, newValue);
+		}
 	}
 
 	public void save() throws Exception
@@ -144,15 +152,9 @@ public class SettingsPanel
 		Optional<SettingsValue> first = values.stream().filter(value -> value.getKey().equals(shortcutName)).findFirst();
 		return first.isPresent() && KeyCodeCombination.valueOf(first.get().getValue()).match(event);
 	}
-	
-	public static KeyCombination shortCut(Settings settings, String name)
-	{
-		SettingsValue settingValue = settings.getValue(Settings.GLOBAL_NS, SHORTCUTS_NAME, name);
-		if (settingValue == null)
-		{
-			return null;
-		}
-		return KeyCodeCombination.valueOf(settingValue.getValue());
-	}
 
+	public static Optional<KeyCombination> shortcut(Settings settings, String name)
+	{
+		return Optional.ofNullable(settings.getValue(Settings.GLOBAL_NS, SHORTCUTS_NAME, name)).map(SettingsValue::getValue).map(KeyCodeCombination::valueOf);
+	}
 }

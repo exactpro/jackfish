@@ -19,11 +19,13 @@ import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.settings.SettingsPanel;
 import com.exactprosystems.jf.tool.settings.Theme;
 import javafx.application.Platform;
+import javafx.concurrent.Task;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.*;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
@@ -79,6 +81,19 @@ public abstract class Common
 
 	public static final String					DATE_TIME_PATTERN			= "HH:mm:ss dd.MM.yyyy";
 
+	public static void setFocused(final TextField field)
+	{
+		new Thread(new Task<Void>()
+		{
+			@Override
+			protected Void call() throws Exception
+			{
+				Thread.sleep(300);
+				Platform.runLater(field::requestFocus);
+				return null;
+			}
+		}).start();
+	}
 	public static boolean appIsFocused()
 	{
 		return node != null && node.isFocused();

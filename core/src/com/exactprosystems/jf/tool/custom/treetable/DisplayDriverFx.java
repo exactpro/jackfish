@@ -34,7 +34,6 @@ import com.exactprosystems.jf.tool.matrix.params.ParametersPane;
 import com.exactprosystems.jf.tool.settings.SettingsPanel;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
-import javafx.concurrent.Task;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.*;
@@ -274,7 +273,7 @@ public class DisplayDriverFx implements DisplayDriver
 		gridPane.add(textBox, 0, 0);
 		pane.add(gridPane, column, row);
 		GridPane.setMargin(textBox, INSETS);
-		setFocused(textBox);
+		Common.setFocused(textBox);
 	}
 
 	@Override
@@ -345,7 +344,7 @@ public class DisplayDriverFx implements DisplayDriver
 		});
 		pane.add(field, column, row);
 		GridPane.setMargin(field, INSETS);
-		setFocused(field);
+		Common.setFocused(field);
 	}
 
 	@Override
@@ -541,20 +540,6 @@ public class DisplayDriverFx implements DisplayDriver
 	{
 		Optional<CommentString> opt = list.stream().reduce((cs1, cs2) -> new CommentString(cs1.toString() + LINE_SEPARATOR + cs2.toString()));
 		return opt.isPresent() ? opt.get().toString() : "";
-	}
-
-	private void setFocused(final TextField field)
-	{
-		new Thread(new Task<Void>()
-		{
-			@Override
-			protected Void call() throws Exception
-			{
-				Thread.sleep(300);
-				Platform.runLater(field::requestFocus);
-				return null;
-			}
-		}).start();
 	}
 
 	private void accept(List<String> words, Consumer<String> supplier, TextField field)

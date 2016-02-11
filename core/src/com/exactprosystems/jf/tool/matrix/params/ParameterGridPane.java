@@ -92,6 +92,20 @@ public class ParameterGridPane extends GridPane
 		return this.parameter;
 	}
 
+	public void focusParameter()
+	{
+		TextField focused;
+		if (key instanceof TextField)
+		{
+			focused = (TextField) key;
+		}
+		else
+		{
+			focused = value;
+		}
+		Common.setFocused(focused);
+	}
+
 	private void strech(TextField textField)
 	{
 		int size = textField.getText() != null ? (textField.getText().length() * 8 + 20) : 60;

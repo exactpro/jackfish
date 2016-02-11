@@ -90,7 +90,7 @@ public class ShowAllParamsController implements Initializable, ContainingParent
 		{
 			final CheckBoxTreeItem<ReadableValue> checkBox = new CheckBoxTreeItem<>(entry.getKey());
 			final boolean[] flag = { false };
-			parameters.entrySet().stream().filter(objectEntry -> objectEntry.getKey().equals(checkBox.getValue())).findFirst().ifPresent(objectEntry -> flag[0] = true);
+			parameters.entrySet().stream().filter(objectEntry -> objectEntry.getKey().equals(checkBox.getValue().getValue())).findFirst().ifPresent(objectEntry -> flag[0] = true);
 			switch (entry.getValue())
 			{
 				case Mandatory:

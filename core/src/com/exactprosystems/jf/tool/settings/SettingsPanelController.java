@@ -458,6 +458,7 @@ public class SettingsPanelController implements Initializable, ContainingParent
 		ShortcutRow rowAddBefore = new ShortcutRow(SettingsPanel.ADD_BEFORE, edit);
 		ShortcutRow rowAddAfter = new ShortcutRow(SettingsPanel.ADD_AFTER, edit);
 		ShortcutRow rowBreakPoint = new ShortcutRow(SettingsPanel.BREAK_POINT, edit);
+		ShortcutRow rowAddParameter = new ShortcutRow(SettingsPanel.ADD_PARAMETER, edit);
 		ShortcutRow rowHelp = new ShortcutRow(SettingsPanel.HELP, edit);
 		ShortcutRow rowGoToLine = new ShortcutRow(SettingsPanel.GO_TO_LINE, edit);
 		ShortcutRow rowShowAll = new ShortcutRow(SettingsPanel.SHOW_ALL, edit);
@@ -476,6 +477,7 @@ public class SettingsPanelController implements Initializable, ContainingParent
 		createOneShortcut(rowAddBefore, matrixNavigationShortcuts, count++, matrixNavigationGrid);
 		createOneShortcut(rowAddAfter, matrixNavigationShortcuts, count++, matrixNavigationGrid);
 		createOneShortcut(rowBreakPoint, matrixNavigationShortcuts, count++, matrixNavigationGrid);
+		createOneShortcut(rowAddParameter, matrixNavigationShortcuts, count++, matrixNavigationGrid);
 		createOneShortcut(rowHelp, matrixNavigationShortcuts, count++, matrixNavigationGrid);
 		createOneShortcut(rowGoToLine, matrixNavigationShortcuts, count++, matrixNavigationGrid);
 		createOneShortcut(rowShowAll, matrixNavigationShortcuts, count++, matrixNavigationGrid);

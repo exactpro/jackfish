@@ -338,11 +338,11 @@ public class MatrixFx extends Matrix
 		int number = item.getNumber();
 		Command undo = () ->
 		{
-			findAndCallParameters(number, par -> par.remove(index + 1));
+			findAndCallParameters(number, par -> par.remove(index + 1), -1);
 		};
 		Command redo = () ->
 		{
-			findAndCallParameters(number, par -> par.insert(index + 1, "", "", TypeMandatory.Extra));
+			findAndCallParameters(number, par -> par.insert(index + 1, "", "", TypeMandatory.Extra), index + 1);
 		};
 		addCommand(undo, redo);
 	}
@@ -360,7 +360,7 @@ public class MatrixFx extends Matrix
 				{
 					par.remove(index + 1);
 				}
-			});
+			}, -1);
 		};
 		Command redo = () ->
 		{
@@ -371,7 +371,7 @@ public class MatrixFx extends Matrix
 					Pair<ReadableValue, TypeMandatory> pair = list.get(i);
 					par.insert(index + 1 + i, pair.getKey().getValue(), "", pair.getValue());
 				}
-			});
+			}, -1);
 		};
 		addCommand(undo, redo);
 	}
@@ -383,11 +383,11 @@ public class MatrixFx extends Matrix
 		Parameter last = item.getParameters().getByIndex(index).clone();
 		Command undo = () ->
 		{
-			findAndCallParameters(number, par -> par.insert(index, last.getName(), last.getExpression(), last.getType()));
+			findAndCallParameters(number, par -> par.insert(index, last.getName(), last.getExpression(), last.getType()), -1);
 		};
 		Command redo = () ->
 		{
-			findAndCallParameters(number, par -> par.remove(index));
+			findAndCallParameters(number, par -> par.remove(index), -1);
 		};
 		addCommand(undo, redo);
 	}
@@ -398,11 +398,11 @@ public class MatrixFx extends Matrix
 		int size = item.getParameters().size();
 		Command undo = () ->
 		{
-			findAndCallParameters(number, par -> par.moveRight((index - 1 + size) % size));
+			findAndCallParameters(number, par -> par.moveRight((index - 1 + size) % size), -1);
 		};
 		Command redo = () ->
 		{
-			findAndCallParameters(number, par -> par.moveLeft(index));
+			findAndCallParameters(number, par -> par.moveLeft(index), -1);
 		};
 		addCommand(undo, redo);
 	}
@@ -413,11 +413,11 @@ public class MatrixFx extends Matrix
 		int size = item.getParameters().size();
 		Command undo = () ->
 		{
-			findAndCallParameters(number, par -> par.moveLeft((index + 1 + size) % size));
+			findAndCallParameters(number, par -> par.moveLeft((index + 1 + size) % size), -1);
 		};
 		Command redo = () ->
 		{
-			findAndCallParameters(number, par -> par.moveRight(index));
+			findAndCallParameters(number, par -> par.moveRight(index), -1);
 		};
 		addCommand(undo, redo);
 	}
@@ -432,11 +432,11 @@ public class MatrixFx extends Matrix
 		}
 		Command undo = () ->
 		{
-			findAndCallParameters(number, par -> par.getByIndex(index).setName(last));
+			findAndCallParameters(number, par -> par.getByIndex(index).setName(last), -1);
 		};
 		Command redo = () ->
 		{
-			findAndCallParameters(number, par -> par.getByIndex(index).setName(name));
+			findAndCallParameters(number, par -> par.getByIndex(index).setName(name), -1);
 		};
 		addCommand(undo, redo);
 	}
@@ -451,11 +451,11 @@ public class MatrixFx extends Matrix
 		}
 		Command undo = () ->
 		{
-			findAndCallParameters(number, par -> par.getByIndex(index).setExpression(last));
+			findAndCallParameters(number, par -> par.getByIndex(index).setExpression(last), -1);
 		};
 		Command redo = () ->
 		{
-			findAndCallParameters(number, par -> par.getByIndex(index).setExpression(value));
+			findAndCallParameters(number, par -> par.getByIndex(index).setExpression(value), -1);
 		};
 		addCommand(undo, redo);
 	}
@@ -468,11 +468,11 @@ public class MatrixFx extends Matrix
 			Parameters last = item.getParameters().clone();
 			Command undo = () ->
 			{
-				findAndCallParameters(number, par -> par.setValue(last));
+				findAndCallParameters(number, par -> par.setValue(last), -1);
 			};
 			Command redo = () ->
 			{
-				findAndCallParameters(number, par -> par.setValue(parameters));
+				findAndCallParameters(number, par -> par.setValue(parameters), -1);
 			};
 			addCommand(undo, redo);
 		} catch (CloneNotSupportedException e)
@@ -864,7 +864,7 @@ public class MatrixFx extends Matrix
 		}
 	}
 
-	private void findAndCallParameters(int itemNumber, ParameterApplier applier)
+	private void findAndCallParameters(int itemNumber, ParameterApplier applier, int selectIndex)
 	{
 		MatrixItem item = find(it -> it.getNumber() == itemNumber);
 		if (item != null && applier != null)
@@ -872,7 +872,7 @@ public class MatrixFx extends Matrix
 			try
 			{
 				applier.call(item.getParameters());
-				this.controller.refreshParameters(item);
+				this.controller.refreshParameters(item, selectIndex);
 //				this.controller.setCurrent(item);
 			}
 			catch (Exception e)

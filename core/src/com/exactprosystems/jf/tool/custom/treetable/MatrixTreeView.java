@@ -103,15 +103,17 @@ public class MatrixTreeView extends TreeTableView<MatrixItem>
 			col.setVisible(true);
 		});
 	}
-	
-	public void refreshParameters(MatrixItem item)
+
+	public void refreshParameters(MatrixItem item, int selectedIndex)
 	{
 		TreeItem<MatrixItem> treeItem = find(item);
 		if (treeItem != null)
 		{
 			GridPane layout = (GridPane)treeItem.getValue().getLayout();
 			{
-				layout.getChildren().stream().filter(pane -> pane instanceof ParametersPane).forEach(pane -> Platform.runLater(((ParametersPane) pane)::refreshParameters));
+				layout.getChildren().stream().filter(pane -> pane instanceof ParametersPane).forEach(pane -> Platform.runLater(() -> {
+					((ParametersPane) pane).refreshParameters(selectedIndex);
+				}));
 			}
 		}
 	}
