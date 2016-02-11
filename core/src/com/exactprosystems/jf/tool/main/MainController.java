@@ -89,8 +89,6 @@ public class MainController implements Initializable, ContainingParent
 	public MenuItem fileClose;
 
 	public Menu menuEdit;
-	public MenuItem editCopy;
-	public MenuItem editPaste;
 	public MenuItem editUndo;
 	public MenuItem editRedo;
 
@@ -202,8 +200,6 @@ public class MainController implements Initializable, ContainingParent
 			Common.customizeLabeled(btnUndo, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.UNDO_ICON);
 			Common.customizeLabeled(btnRedo, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.REDO_ICON);
 
-			editCopy.setGraphic(new ImageView(new Image(CssVariables.Icons.COPY_ICON)));
-			editPaste.setGraphic(new ImageView(new Image(CssVariables.Icons.PASTE_ICON)));
 			editUndo.setGraphic(new ImageView(new Image(CssVariables.Icons.UNDO_ICON_SMALL)));
 			editRedo.setGraphic(new ImageView(new Image(CssVariables.Icons.REDO_ICON_SMALL)));
 			matrixSchedule.setGraphic(new ImageView(new Image(CssVariables.Icons.SCHEDULER_MATRIX_ICON)));
@@ -491,38 +487,6 @@ public class MainController implements Initializable, ContainingParent
 				redo(null);
 			}
 		}, "Error on set Shortcuts"));
-	}
-
-	public void copyItem(ActionEvent actionEvent)
-	{
-		Common.tryCatch(() -> {
-			if (checkTab())
-			{
-				Tab tab = tabPane.getSelectionModel().getSelectedItem();
-				Document doc = ((CustomTab) tab).getDocument();
-
-				if (doc instanceof MatrixFx)
-				{
-					((MatrixFx) doc).copy(null); // TODO get this list from any way
-				}
-			}
-		}, "Error in copy");
-	}
-
-	public void pasteItem(ActionEvent actionEvent)
-	{
-		Common.tryCatch(() -> {
-			if (checkTab())
-			{
-				Tab tab = tabPane.getSelectionModel().getSelectedItem();
-				Document doc = ((CustomTab) tab).getDocument();
-
-				if (doc instanceof MatrixFx)
-				{
-					((MatrixFx) doc).paste(null); // TODO get this list from any way
-				}
-			}
-		}, "Error in paste");
 	}
 
 	public void openMainLog(ActionEvent actionEvent)

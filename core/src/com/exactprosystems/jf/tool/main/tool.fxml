@@ -82,11 +82,6 @@
 								</Menu>
 								<Menu fx:id="menuEdit" mnemonicParsing="false" text="Edit">
 									<items>
-										<MenuItem fx:id="editCopy" mnemonicParsing="false" onAction="#copyItem"
-												  text="Copy"/>
-										<MenuItem fx:id="editPaste" mnemonicParsing="false" onAction="#pasteItem"
-												  text="Paste"/>
-										<SeparatorMenuItem mnemonicParsing="false"/>
 										<MenuItem fx:id="editUndo" mnemonicParsing="false" onAction="#undo"
 												  text="Undo"/>
 										<MenuItem fx:id="editRedo" mnemonicParsing="false" onAction="#redo"

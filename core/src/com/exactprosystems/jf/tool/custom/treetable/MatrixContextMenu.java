@@ -57,6 +57,7 @@ public class MatrixContextMenu extends ContextMenu
 
 		MenuItem addChild = new MenuItem("Add child >>");
 		addChild.setGraphic(new ImageView(new Image(CssVariables.Icons.ADD_CHILD_ICON)));
+		addChild.setAccelerator(SettingsPanel.shortCut(settings, SettingsPanel.ADD_CHILD));
 		addChild.setOnAction(event -> Common.tryCatch(() -> matrix.insertNew(tree.currentItem(), PlaceToInsert.Child, Tokens.TempItem.get(), null), "Error on add child"));
 
 		MenuItem deleteItem = new MenuItem("Delete");
@@ -66,18 +67,22 @@ public class MatrixContextMenu extends ContextMenu
 
 		MenuItem copy = new MenuItem("Copy");
 		copy.setGraphic(new ImageView(new Image(CssVariables.Icons.COPY_ICON)));
+		copy.setAccelerator(SettingsPanel.shortCut(settings, SettingsPanel.COPY_ITEMS));
 		copy.setOnAction(event -> copyItems(matrix, tree));
 
 		MenuItem pasteAfter = new MenuItem("Paste after");
 		pasteAfter.setGraphic(new ImageView(new Image(CssVariables.Icons.PASTE_ICON)));
+		pasteAfter.setAccelerator(SettingsPanel.shortCut(settings, SettingsPanel.PASTE_ITEMS_AFTER));
 		pasteAfter.setOnAction(event -> pasteItems(PlaceToInsert.After, matrix, tree));
 
 		MenuItem pasteChild = new MenuItem("Paste child");
 		pasteChild.setGraphic(new ImageView(new Image(CssVariables.Icons.PASTE_ICON)));
+		pasteChild.setAccelerator(SettingsPanel.shortCut(settings, SettingsPanel.PASTE_ITEMS_CHILD));
 		pasteChild.setOnAction(event -> pasteItems(PlaceToInsert.Child, matrix, tree));
 
 		MenuItem pasteBefore = new MenuItem("Paste before");
 		pasteBefore.setGraphic(new ImageView(new Image(CssVariables.Icons.PASTE_ICON)));
+		pasteBefore.setAccelerator(SettingsPanel.shortCut(settings, SettingsPanel.PASTE_ITEMS_BEFORE));
 		pasteBefore.setOnAction(event -> pasteItems(PlaceToInsert.Before, matrix, tree));
 
 		MenuItem gotoItem = new MenuItem("Go to line ...");
