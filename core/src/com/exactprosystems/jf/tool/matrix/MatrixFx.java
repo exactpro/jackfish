@@ -19,6 +19,7 @@ import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.parser.*;
 import com.exactprosystems.jf.common.parser.items.MatrixItem;
 import com.exactprosystems.jf.common.parser.items.MatrixItemAttribute;
+import com.exactprosystems.jf.common.parser.items.TempItem;
 import com.exactprosystems.jf.common.parser.items.TypeMandatory;
 import com.exactprosystems.jf.common.parser.listeners.IMatrixListener;
 import com.exactprosystems.jf.common.report.ReportBuilder;
@@ -151,6 +152,12 @@ public class MatrixFx extends Matrix
 		this.controller.close();
 	}
 
+	@Override
+	protected void afterRedoUndo()
+	{
+		enumerate();
+	}
+
 	//==============================================================================================================================
 	// methods from Matrix
 	//==============================================================================================================================
@@ -191,8 +198,15 @@ public class MatrixFx extends Matrix
 			this.controller.display(what);
 //			this.controller.setCurrent(what);
 		};
-		addCommand(undo, redo);
-		super.changed(true);
+		if (!(what instanceof TempItem))
+		{
+			addCommand(undo, redo);
+			super.changed(true);
+		}
+		else
+		{
+			redo.execute();
+		}
 	}
 
 	public void replace(MatrixItem tempItem, String newItemName)
@@ -223,7 +237,8 @@ public class MatrixFx extends Matrix
 			}
 			newItem.init(this);
 			newItem.createId();
-			tempItem.getParent().insert(index, newItem);
+			insert(tempItem.getParent(), index, newItem);
+			//			tempItem.getParent().insert(index, newItem);
 		}
 		catch (Exception e)
 		{
@@ -234,11 +249,11 @@ public class MatrixFx extends Matrix
 			this.controller.remove(tempItem);
 			tempItem.remove();
 			enumerate();
-			if (newItem != null)
-			{
-				this.controller.display(newItem);
-				this.controller.setCurrent(newItem);
-			}
+			//			if (newItem != null)
+			//			{
+			//				this.controller.display(newItem);
+			//				this.controller.setCurrent(newItem);
+			//			}
 		}
 
 		super.changed(true);
