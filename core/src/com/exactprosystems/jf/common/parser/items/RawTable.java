@@ -109,8 +109,8 @@ public class RawTable extends MatrixItem
 			this.firstUsing = false;
 			return;
 		}
-		
-		this.table.addValue(str);
+
+		this.table.addValueOnParsing(str);
 	}
 	
 	@Override

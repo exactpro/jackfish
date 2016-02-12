@@ -20,7 +20,6 @@ import com.exactprosystems.jf.common.report.ReportHelper;
 import com.exactprosystems.jf.common.report.ReportTable;
 import com.exactprosystems.jf.exceptions.ColumnIsPresentException;
 import com.exactprosystems.jf.sql.SqlConnection;
-
 import org.apache.log4j.Logger;
 
 import java.io.*;
@@ -245,16 +244,19 @@ public class Table implements List<Map<String, Object>>, Mutable, Cloneable
 	
 	public boolean save(CsvWriter writer, String indent, boolean saveValues) throws IOException
 	{
-		String[] record = new String[this.headers.length];
-
+		String[] record = new String[this.headers.length + 1];
+		record[0] = indent + ROW_INDEX_SYMBOL;
 		for (int i = 0; i < this.headers.length; i++)
 		{
-			record[i] = (i == 0 ? indent : "") + this.headers[i].name;
+			record[i + 1] = this.headers[i].name;
 		}
 		writer.writeRecord(record, true);
 
-		for (Map<Header, Object> f : this.innerList)
+		List<Map<Header, Object>> innerList1 = this.innerList;
+		for (int j = 0; j < innerList1.size(); j++)
 		{
+			record[0] = indent + String.valueOf(j);
+			Map<Header, Object> f = innerList1.get(j);
 			for (int i = 0; i < this.headers.length; i++)
 			{
 				Object source = f.get(this.headers[i]);
@@ -267,9 +269,9 @@ public class Table implements List<Map<String, Object>>, Mutable, Cloneable
 				{
 					value = source;
 				}
-				record[i] = (i == 0 ? indent : "") + String.valueOf(value == null ? "" : value);
+				record[i + 1] = String.valueOf(value == null ? "" : value);
 			}
-			writer.writeRecord(record,true);
+			writer.writeRecord(record, true);
 		}
 		return true;
 	}
@@ -383,15 +385,18 @@ public class Table implements List<Map<String, Object>>, Mutable, Cloneable
 	public void addColumns(String... columns)
 	{
 		this.changed = true;
+		this.useColumnNumber = columns.length > 0 && columns[0].equals(ROW_INDEX_SYMBOL);
 		if (this.headers == null)
 		{
 			this.headers = new Header[]{};
 		}
 
 		int col = this.headers.length;
-		this.headers = Arrays.copyOf(this.headers, this.headers.length + columns.length);
-		for (String column : columns)
+		int use = useColumnNumber ? 1 : 0;
+		this.headers = Arrays.copyOf(this.headers, this.headers.length + columns.length - use);
+		for (int i = use; i < columns.length; i++)
 		{
+			String column = columns[i];
 			int index = 0;
 			while (columnIsPresent(column))
 			{
@@ -514,6 +519,22 @@ public class Table implements List<Map<String, Object>>, Mutable, Cloneable
 		}
 	}
 
+	public void addValueOnParsing(Object[] arr)
+	{
+		this.changed = true;
+		if (this.headers != null)
+		{
+			Map<Header, Object> map = new LinkedHashMap<>();
+			int s = useColumnNumber ? 1 : 0;
+			for (int i = 0; i < Math.min(this.headers.length, arr.length); i++)
+			{
+				map.put(this.headers[i], arr[i + s]);
+			}
+
+			this.innerList.add(map);
+		}
+	}
+
 	public void changeValue(String headerName, int indexRow, Object newValue)
 	{
 		this.changed = true;
@@ -524,7 +545,7 @@ public class Table implements List<Map<String, Object>>, Mutable, Cloneable
 			{
 				row.remove(headerByName(headerName));
 				row.put(headerByName(headerName), newValue);
-			};
+			}
 		}
 	}
 
@@ -1370,7 +1391,9 @@ public class Table implements List<Map<String, Object>>, Mutable, Cloneable
     	
     	return s1.equals(s2);
     }
-	
+
+	private boolean useColumnNumber = false;
+	private static final String ROW_INDEX_SYMBOL = "@";
 	private List<Map<Header, Object>> innerList = null;
 	private Header[] headers;
 	private AbstractEvaluator evaluator; 
