@@ -10,7 +10,10 @@ package com.exactprosystems.jf.actions.gui;
 import com.exactprosystems.jf.actions.*;
 import com.exactprosystems.jf.api.app.AppConnection;
 import com.exactprosystems.jf.api.app.IApplication;
+import com.exactprosystems.jf.api.app.IControl;
+import com.exactprosystems.jf.api.app.IGuiDictionary;
 import com.exactprosystems.jf.api.app.IRemoteApplication;
+import com.exactprosystems.jf.api.app.IWindow;
 import com.exactprosystems.jf.api.app.PerformKind;
 import com.exactprosystems.jf.api.common.SerializablePair;
 import com.exactprosystems.jf.common.Context;
@@ -76,8 +79,25 @@ public class DialogSwitchToWindow extends AbstractAction
 		{
 			throw new NullPointerException(String.format("Service with id '%s' not started yet", id));
 		}
+		
+		if (this.dialog == null)
+		{
+			service.switchToFrame(null);
+		}
+		else
+		{
+			IGuiDictionary dictionary = this.connection.getDictionary();
+			IWindow window = dictionary.getWindow(this.dialog);
 
-//		service.setAlertText(this.text, this.dialog);
+			logger.debug("Process dialog : " + window);
+			IControl element = window.getSelfControl();
+			if (element == null)
+			{
+				throw new Exception("In dialog " + this.dialog + " section self is empty.");
+			}
+			service.switchToFrame(element.locator());
+		}
+
 		this.setResult(null);
 	}
 }
