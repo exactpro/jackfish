@@ -103,7 +103,8 @@ public class MatcherSelenium extends By
 			case CheckBox: 		return complexXpath(locator, "button", "input");
 			case ComboBox: 		return complexXpath(locator, "select", "input");
 			case Dialog: 		return complexXpath(locator, "form");
-			case Frame: 		return complexXpath(locator, "form", "body");
+			case Frame:
+				return complexXpath(locator, "form", "body", "frame", "iframe");
 			case Image:			return complexXpath(locator, "img");
 			case Label: 		return complexXpath(locator, "label", "span");
 			case MenuItem: 		return complexXpath(locator, "li");
