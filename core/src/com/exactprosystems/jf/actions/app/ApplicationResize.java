@@ -62,7 +62,9 @@ public class ApplicationResize extends AbstractAction
 		else
 		{
 			IApplication app = connection.getApplication();
-			app.service().resize(this.height, this.width, 
+			app.service().resize(
+					this.height == null ? 0 : this.height.intValue(), 
+					this.width == null ? 0 : this.width.intValue(), 
 					this.maximize == null ? false : this.maximize.booleanValue(),
 					this.minimize == null ? false : this.minimize.booleanValue());
 			super.setResult(null);
