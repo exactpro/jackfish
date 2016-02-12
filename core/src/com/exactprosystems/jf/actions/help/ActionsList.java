@@ -68,6 +68,7 @@ public class ActionsList extends AbstractAction
 		        DialogClose.class,
 		        DialogFill.class,
 		        DialogAlert.class,
+		        DialogSwitchToWindow.class,
 		        MessageCompareTwo.class,
 		        MessageCreate.class,
 		        Execute.class,
