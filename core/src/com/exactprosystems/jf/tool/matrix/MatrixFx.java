@@ -550,6 +550,7 @@ public class MatrixFx extends Matrix
 			int index = parent.index(where);
 			for (MatrixItem item : items)
 			{
+				item.init(this);
 				insert(parent, index++, item);
 			}
 		}
@@ -745,7 +746,7 @@ public class MatrixFx extends Matrix
 		void call(Parameters parameters) throws Exception;
 	}
 
-	private void insert(PlaceToInsert place, MatrixItem where, MatrixItem[] items)
+	private void insert(PlaceToInsert place, MatrixItem where, MatrixItem[] items) throws Exception
 	{
 		MatrixItemAttribute annotation = where.getClass().getAnnotation(MatrixItemAttribute.class);
 		if (annotation != null && !annotation.hasChildren() && place == PlaceToInsert.Child)
@@ -757,6 +758,7 @@ public class MatrixFx extends Matrix
 		for (int i = 0; i < items.length; i++)
 		{
 			MatrixItem item = items[i];
+			item.init(this);
 			switch (place)
 			{
 				case Before:
