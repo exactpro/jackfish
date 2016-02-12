@@ -39,8 +39,8 @@ public class DialogSwitchToWindow extends AbstractAction
 	@ActionFieldAttribute(name = connectionName, mandatory = true, description = "The application connect")
 	protected AppConnection		connection		= null;
 
-	@ActionFieldAttribute(name = dialogName, mandatory = true, description = "Name of dialog in the dictionary on self element tool will switch to. "
-			+ "If null it will switch to the parent frame.")
+	@ActionFieldAttribute(name = dialogName, mandatory = false, description = "Name of dialog in the dictionary on self element tool will switch to. "
+			+ "If is absent tool will switch to the parent frame.")
 	protected String			dialog			= null;
 
 	@Override
