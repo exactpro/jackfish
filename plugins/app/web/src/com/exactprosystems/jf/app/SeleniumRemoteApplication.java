@@ -14,11 +14,11 @@ import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.app.js.JSInjection;
 import com.exactprosystems.jf.app.js.JSInjectionFactory;
 import com.gargoylesoftware.htmlunit.javascript.background.JavaScriptExecutor;
-
 import org.apache.log4j.*;
 import org.openqa.selenium.*;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.Point;
+import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.remote.UnreachableBrowserException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -27,7 +27,6 @@ import org.w3c.dom.Node;
 import javax.imageio.ImageIO;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-
 import java.awt.*;
 import java.awt.event.InputEvent;
 import java.awt.image.BufferedImage;
@@ -539,6 +538,35 @@ public class SeleniumRemoteApplication extends RemoteApplication
 		String s = element.getAttribute("outerHTML");
 		return s.substring(0, s.indexOf(">")+1);
 	}
+
+	//	public static void main(String[] args)
+	//	{
+	//		WebDriver driver = new FirefoxDriver();
+	//		try
+	//		{
+	//			driver.get("file:///home/andrey.bystrov/Projects/JackFish/ActionsLibrary/testdata/resources/mock/mock.html");
+	//			WebElement iframe = driver.findElement(By.tagName("iframe"));
+	//			WebDriver frame = driver.switchTo().frame(iframe);
+	//			System.out.println(frame == driver);
+	//			File screenshotAs = ((TakesScreenshot) frame).getScreenshotAs(OutputType.FILE);
+	//			BufferedImage fullImg = ImageIO.read(screenshotAs);
+	//			WebElement component = frame.findElement(By.id("myId"));
+	//			Point location = component.getLocation();
+	//			int eleWidth = component.getSize().getWidth();
+	//			int eleHeight = component.getSize().getHeight();
+	//			BufferedImage image = fullImg.getSubimage(location.getX(), location.getY(), eleWidth, eleHeight);
+	//			ImageIO.write(image, "jpeg", new File("tempimg.jpeg"));
+	//			ImageIO.write(fullImg, "jpeg", new File("full.jpeg"));
+	//		}
+	//		catch (Exception e)
+	//		{
+	//			e.printStackTrace();
+	//		}
+	//		finally
+	//		{
+	//			driver.quit();
+	//		}
+	//	}
 
 	@Override
 	protected ImageWrapper getImageDerived(Locator owner, Locator element) throws Exception
