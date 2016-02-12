@@ -52,7 +52,7 @@ public class HistogramCreate extends AbstractAction
 			case histogramMetricName:
 				for (HistogramMetric value : HistogramMetric.values())
 				{
-					list.add(new ReadableValue(context.getEvaluator().createString("HistogramMetric." + value)));
+					list.add(new ReadableValue("HistogramMetric." + value));
 				}
 				break;
 		}
