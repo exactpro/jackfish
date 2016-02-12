@@ -192,9 +192,9 @@ public class RawTable extends MatrixItem
 
 			Variables vars = isGlobal() ? evaluator.getGlobals() : evaluator.getLocals();
 
-			ReturnAndResult ret = new ReturnAndResult(Result.Passed, this.table);
+			ReturnAndResult ret = new ReturnAndResult(Result.Passed, new Table(this.table, evaluator));
 
-			if (super.getId() != null && !super.getId().isEmpty())
+			if (!super.id.isNullOrEmpty())
 			{
 				// set variable into local name space
 				vars.set(super.getId(), ret.getOut());

@@ -41,6 +41,13 @@ public class Table implements List<Map<String, Object>>, Mutable, Cloneable
 		this.innerList = new ArrayList<>();
 	}
 
+	public Table(Table table, AbstractEvaluator evaluator)
+	{
+		this(evaluator);
+		this.addColumns((String[]) Arrays.stream(table.headers).map(h -> h.name).toArray());
+		this.innerList = new ArrayList<>(table.innerList);
+	}
+
 	public Table(String[] headers, AbstractEvaluator evaluator)
 	{
 		this(evaluator);
@@ -254,7 +261,7 @@ public class Table implements List<Map<String, Object>>, Mutable, Cloneable
 				{
 					value = source;
 				}
-				record[i] = (i == 0 ? indent : "") + String.valueOf(value);
+				record[i] = (i == 0 ? indent : "") + String.valueOf(value == null ? "" : value);
 			}
 			writer.writeRecord(record,true);
 		}
