@@ -10,9 +10,11 @@ package com.exactprosystems.jf.app;
 
 import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.common.SerializablePair;
+
 import net.sourceforge.jnlp.Launcher;
 import net.sourceforge.jnlp.runtime.ApplicationInstance;
 import net.sourceforge.jnlp.runtime.JNLPRuntime;
+
 import org.apache.log4j.*;
 import org.fest.swing.core.BasicRobot;
 import org.fest.swing.core.ComponentMatcher;
@@ -21,6 +23,7 @@ import org.fest.swing.fixture.ComponentFixture;
 import org.w3c.dom.Document;
 
 import javax.swing.*;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.lang.reflect.Method;
@@ -287,6 +290,13 @@ public class SwingRemoteApplication extends RemoteApplication
 			logger.error(e.getMessage(), e);
 			throw e;
 		}
+	}
+
+	@Override
+	protected void switchToFrameDerived(Locator owner) throws Exception
+	{
+		// TODO Auto-generated method stub
+		
 	}
 
 	@Override

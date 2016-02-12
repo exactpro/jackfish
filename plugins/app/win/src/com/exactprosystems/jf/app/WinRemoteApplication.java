@@ -10,6 +10,7 @@ package com.exactprosystems.jf.app;
 
 import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.common.SerializablePair;
+
 import org.apache.log4j.*;
 import org.w3c.dom.Document;
 
@@ -154,6 +155,13 @@ public class WinRemoteApplication extends RemoteApplication
 	protected String switchToDerived(@Name(name = "title") final String title) throws Exception
 	{
 		return this.driver.translate(String.class, switchToDerived, title);
+	}
+
+	@Override
+	protected void switchToFrameDerived(Locator owner) throws Exception
+	{
+		// TODO Auto-generated method stub
+		
 	}
 
 	@Override

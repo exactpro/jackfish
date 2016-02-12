@@ -217,6 +217,21 @@ public abstract class RemoteApplication implements IRemoteApplication
 		}
 	}
 
+	@Override
+	public final void switchToFrame(Locator owner) throws RemoteException
+	{
+		try 
+		{
+			switchToFrameDerived(owner);
+		}
+		catch (Exception e)
+		{
+			String msg = String.format("Error switchToFrame(%s)", owner);
+			throw new ProxyException(msg, e.getMessage(), e);
+		}
+	}
+
+	@Override
 	public final void resize (int height, int width, boolean maximize, boolean minimize) throws RemoteException
 	{
 		try 
@@ -463,6 +478,8 @@ public abstract class RemoteApplication implements IRemoteApplication
 	protected abstract Collection<String> titlesDerived() throws Exception;
 
 	protected abstract String switchToDerived(String title) throws Exception;
+
+	protected abstract void switchToFrameDerived(Locator owner) throws Exception;
 
 	protected abstract void resizeDerived (int height, int width, boolean maximize, boolean minimize) throws Exception;
 

@@ -14,6 +14,7 @@ import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.app.js.JSInjection;
 import com.exactprosystems.jf.app.js.JSInjectionFactory;
 import com.gargoylesoftware.htmlunit.javascript.background.JavaScriptExecutor;
+
 import org.apache.log4j.*;
 import org.openqa.selenium.*;
 import org.openqa.selenium.Dimension;
@@ -26,6 +27,7 @@ import org.w3c.dom.Node;
 import javax.imageio.ImageIO;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+
 import java.awt.*;
 import java.awt.event.InputEvent;
 import java.awt.image.BufferedImage;
@@ -357,6 +359,42 @@ public class SeleniumRemoteApplication extends RemoteApplication
 		needTune = true;
 		return result[0];
 	}
+	
+	@Override
+	protected void switchToFrameDerived(Locator owner) throws Exception
+	{
+		Exception real = null;
+		int repeat = 1;
+		do
+		{
+			try
+			{
+				if (owner == null)
+				{
+					this.driver.switchTo().parentFrame();
+				}
+				else
+				{
+					WebElement component = this.operationExecutor.find(null, owner);
+					this.driver.switchTo().frame(component);
+				}
+				return;
+			}
+			catch (StaleElementReferenceException e)
+			{
+				real = e;
+				logger.debug("Element is no longer attached to the DOM. Try in SeleniumRemoteApplication : " + repeat);
+			}
+			catch (Exception e)
+			{
+				logger.error("EXCEPTION : " + e.getMessage(), e);
+				throw new Exception(e.getMessage());
+			}
+		}
+		while (++repeat < repeatLimit);
+		throw real;
+	}
+
 
 	@Override
 	protected Locator getLocatorDerived(Locator owner, ControlKind controlKind, int x, int y) throws RemoteException
