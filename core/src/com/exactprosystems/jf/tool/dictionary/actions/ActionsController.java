@@ -154,6 +154,16 @@ public class ActionsController implements Initializable, ContainingParent
 		tryCatch(() -> this.model.refresh(), "Error on refresh");
 	}
 
+	public void switchToCurrent(ActionEvent actionEvent)
+	{
+		tryCatch(() -> this.navigation.switchToCurrent(), "Error on switch to current");
+	}
+
+	public void switchToParent(ActionEvent actionEvent)
+	{
+		tryCatch(() -> this.model.switchToParent(), "Error on switch to current");
+	}
+
 	public void startApplication(ActionEvent actionEvent)
 	{
 		tryCatch(() -> this.model.startApplication(currentApp()), "Error on start application");

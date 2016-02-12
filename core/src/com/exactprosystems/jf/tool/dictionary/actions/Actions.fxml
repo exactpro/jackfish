@@ -44,6 +44,7 @@
 						<RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
 						<RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
 						<RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
+						<RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES"/>
 					</rowConstraints>
 					<children>
 						<Button fx:id="btnSendKeys" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#sendKeysAction" prefHeight="25.0" prefWidth="126.0" text="Send keys" />
@@ -54,6 +55,10 @@
 						<ComboBox fx:id="comboBoxWindows" maxWidth="1.7976931348623157E308" onAction="#changeWindow" prefHeight="25.0" prefWidth="201.0" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="3" />
 						<Button fx:id="btnDoIt" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#doIt" text="Do it" GridPane.rowIndex="2" />
 						<Button fx:id="btnRefresh" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#refresh" text="Refresh" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+						<Button fx:id="btnSwitchToCurrent" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#switchToCurrent" text="Switch to current" GridPane.columnIndex="0"
+								GridPane.rowIndex="4"/>
+						<Button fx:id="btnSwitchToParent" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#switchToParent" text="Switch to parent" GridPane.columnIndex="1"
+								GridPane.rowIndex="4"/>
 					</children>
 					<GridPane.margin>
 						<Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />

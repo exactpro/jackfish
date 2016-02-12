@@ -258,6 +258,11 @@ public class NavigationController implements Initializable, ContainingParent
 		this.model.find(currentElement(), currentWindow());
 	}
 
+	public void switchToCurrent() throws Exception
+	{
+		this.model.switchToCurrent(currentWindow());
+	}
+
 	public void doIt(Object obj) throws Exception
 	{
 		this.model.doIt(obj, currentElement(), currentWindow());

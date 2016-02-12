@@ -813,7 +813,27 @@ public class DictionaryFx extends GuiDictionary
 		}
 	}
 
-	
+	public void switchToCurrent(IWindow window) throws Exception
+	{
+		if (isApplicationRun())
+		{
+			IControl selfControl = window.getSelfControl();
+			if (selfControl == null)
+			{
+				throw new Exception("Self control must be not null on switch to current");
+			}
+			this.applicationConnector.getAppConnection().getApplication().service().switchToFrame(selfControl.locator());
+		}
+	}
+
+	public void switchToParent() throws Exception
+	{
+		if (isApplicationRun())
+		{
+			this.applicationConnector.getAppConnection().getApplication().service().switchToFrame(null);
+		}
+	}
+
 	//------------------------------------------------------------------------------------------------------------------
 	// private methods
 	//------------------------------------------------------------------------------------------------------------------
