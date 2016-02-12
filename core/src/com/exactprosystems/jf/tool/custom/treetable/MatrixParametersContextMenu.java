@@ -26,7 +26,6 @@ import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.ContextMenuEvent;
@@ -84,7 +83,6 @@ public class MatrixParametersContextMenu extends MatrixContextMenu
 		getItems().add(1, this.parMoveLeft);
 		getItems().add(2, this.parMoveRight);
 		getItems().add(4, this.parShowAll);
-		getItems().add(5, new SeparatorMenuItem());
 	} 
 	
 	

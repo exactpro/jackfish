@@ -44,8 +44,14 @@ public class Table implements List<Map<String, Object>>, Mutable, Cloneable
 	public Table(Table table, AbstractEvaluator evaluator)
 	{
 		this(evaluator);
-		this.addColumns((String[]) Arrays.stream(table.headers).map(h -> h.name).toArray());
-		this.innerList = new ArrayList<>(table.innerList);
+		this.addColumns(Arrays.stream(table.headers).map(h -> h.name).toArray(String[]::new));
+		for (int i = 0; i < table.innerList.size(); i++)
+		{
+			Map<String, Object> stringObjectMap = convertToStr(table.innerList.get(i));
+			Map<Header, Object> newMap = new LinkedHashMap<>();
+			stringObjectMap.entrySet().forEach(entry -> newMap.put(headerByName(entry.getKey()), entry.getValue()));
+			this.innerList.add(newMap);
+		}
 	}
 
 	public Table(String[] headers, AbstractEvaluator evaluator)
