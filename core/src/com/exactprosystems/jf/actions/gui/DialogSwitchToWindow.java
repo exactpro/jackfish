@@ -8,21 +8,13 @@
 package com.exactprosystems.jf.actions.gui;
 
 import com.exactprosystems.jf.actions.*;
-import com.exactprosystems.jf.api.app.AppConnection;
-import com.exactprosystems.jf.api.app.IApplication;
-import com.exactprosystems.jf.api.app.IControl;
-import com.exactprosystems.jf.api.app.IGuiDictionary;
-import com.exactprosystems.jf.api.app.IRemoteApplication;
-import com.exactprosystems.jf.api.app.IWindow;
-import com.exactprosystems.jf.api.app.PerformKind;
-import com.exactprosystems.jf.api.common.SerializablePair;
+import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.common.Context;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.parser.Parameters;
 import com.exactprosystems.jf.common.parser.items.ActionItem;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 
-import java.rmi.RemoteException;
 import java.util.List;
 
 @ActionAttribute(
@@ -35,6 +27,7 @@ public class DialogSwitchToWindow extends AbstractAction
 {
 	public static final String	connectionName	= "AppConnection";
 	public static final String	dialogName		= "Dialog";
+	public static final String frameName = "Frame";
 
 	@ActionFieldAttribute(name = connectionName, mandatory = true, description = "The application connect")
 	protected AppConnection		connection		= null;
@@ -42,6 +35,9 @@ public class DialogSwitchToWindow extends AbstractAction
 	@ActionFieldAttribute(name = dialogName, mandatory = false, description = "Name of dialog in the dictionary on self element tool will switch to. "
 			+ "If is absent tool will switch to the parent frame.")
 	protected String			dialog			= null;
+
+	@ActionFieldAttribute(name = frameName, mandatory = false, description = "Just description")
+	protected String frame = null;
 
 	@Override
 	protected ActionItem.HelpKind howHelpWithParameterDerived(Context context, Parameters parameters, String fieldName) throws Exception
@@ -86,11 +82,15 @@ public class DialogSwitchToWindow extends AbstractAction
 		}
 		else
 		{
+			if (this.frame == null)
+			{
+				throw new Exception("If u selected window, u need to select frame too");
+			}
 			IGuiDictionary dictionary = this.connection.getDictionary();
 			IWindow window = dictionary.getWindow(this.dialog);
 
 			logger.debug("Process dialog : " + window);
-			IControl element = window.getSelfControl();
+			IControl element = window.getControlForName(null, frame);
 			if (element == null)
 			{
 				throw new Exception("In dialog " + this.dialog + " section self is empty.");
