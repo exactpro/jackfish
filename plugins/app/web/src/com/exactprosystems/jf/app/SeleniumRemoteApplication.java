@@ -371,7 +371,7 @@ public class SeleniumRemoteApplication extends RemoteApplication
 			{
 				if (owner == null)
 				{
-					this.driver.switchTo().parentFrame();
+					this.driver.switchTo().defaultContent();
 				}
 				else
 				{
