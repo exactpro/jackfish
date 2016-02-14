@@ -46,6 +46,7 @@ public class ConfigurationFx extends Configuration
 
 	private boolean									isControllerInit = false;
 	private Main									mainModel;
+	//TODO replace this controller to new ConfigurationController
 	private ConfigurationFxController				controller;
 	private Context									context;
 	private Map<ServiceEntry, ServiceConnection>	serviceMap			= new HashMap<>();
@@ -313,7 +314,7 @@ public class ConfigurationFx extends Configuration
 	}
 	
 
-	public void addAllKnowAppParameters(Entry entry, ArrayList<Parameter> parameters) throws Exception
+	public void addAllKnowAppParameters(Entry entry, List<Parameter> parameters) throws Exception
 	{
 		addAllKnowParameters(entry, parameters, new ApplicationPool(this).wellKnownParameters(entry.toString()));
 	}
@@ -637,7 +638,7 @@ public class ConfigurationFx extends Configuration
 		}, "Error on removing " + clazz.getSimpleName() + " entry " + name);
 	}
 
-	private void addAllKnowParameters(Entry entry, ArrayList<Parameter> parameters, String[] strings) throws Exception
+	private void addAllKnowParameters(Entry entry, List<Parameter> parameters, String[] strings) throws Exception
 	{
 		Common.tryCatchThrow(() -> 
 		{
