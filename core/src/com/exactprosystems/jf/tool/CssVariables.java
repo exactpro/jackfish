@@ -228,5 +228,9 @@ public class CssVariables
 		public static final String	MOVE_RIGHT_ICON			= IMAGES_DIR + "/move_right.png";
 		public static final String	LOADING_ICON			= IMAGES_DIR + "/loading.png";
 		public static final String	GO_TO_LINE_ICON			= IMAGES_DIR + "/goToLine.png";
+
+		public static final String EVALUATOR_ICON = IMAGES_DIR + "/evaluatorIcon.png";
+
+
 	}
 }
