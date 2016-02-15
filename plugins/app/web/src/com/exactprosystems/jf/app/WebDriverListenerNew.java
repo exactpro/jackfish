@@ -340,6 +340,12 @@ public class WebDriverListenerNew implements WebDriver, JavascriptExecutor, HasI
 		{
 			return this.element;
 		}
+
+		@Override
+		public Rectangle getRect()
+		{
+			return this.element.getRect();
+		}
 	}
 
 	private class MouseListener implements Mouse

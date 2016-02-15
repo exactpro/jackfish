@@ -23,6 +23,7 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.Select;
 
 import java.awt.*;
+import java.awt.Rectangle;
 import java.rmi.RemoteException;
 import java.util.*;
 import java.util.List;

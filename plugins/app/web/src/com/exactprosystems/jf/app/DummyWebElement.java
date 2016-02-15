@@ -109,4 +109,10 @@ public class DummyWebElement implements WebElement
 	public void submit()
 	{
 	}
+
+	@Override
+	public Rectangle getRect()
+	{
+		return null;
+	}
 }
