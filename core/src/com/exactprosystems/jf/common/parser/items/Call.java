@@ -244,7 +244,7 @@ public final class Call extends MatrixItem
 
 				return new ReturnAndResult(Result.Passed, ret.getOut());
 			}
-
+			report.outLine(this, "Sub case '" + this.name + "' is not found.", null);
 			throw new MatrixException(super.getNumber(), this, "Sub case '" + this.name + "' is not found.");
 		}
 		catch (ParametersException e)
