@@ -233,13 +233,11 @@ public class CssVariables
 		public static final String FORMAT_ICON = IMAGES_DIR + "/formatIcon.png";
 		public static final String MATRIX_ICON = IMAGES_DIR + "/matrixIcon.png";
 		public static final String LIBRARY_ICON = IMAGES_DIR + "/libraryIcon.png";
+		public static final String FOLDER_ICON = IMAGES_DIR + "/folderIcon.png";
 		public static final String VARS_ICON = IMAGES_DIR + "/varsIcon.png";
 		public static final String SQL_ICON = IMAGES_DIR + "/sqlIcon.png";
 		public static final String CLIENT_ICON = IMAGES_DIR + "/clientIcon.png";
 		public static final String SERVICE_ICON = IMAGES_DIR + "/serviceIcon.png";
 		public static final String APP_ICON = IMAGES_DIR + "/appIcon.png";
-
-
-
 	}
 }
