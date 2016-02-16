@@ -132,11 +132,12 @@ public class Switch extends MatrixItem
         	{
         		listener.error(getMatrix(), getNumber(), this, "Switch must contain only Case or Default item. But contains " + child.getItemName());
         	}
-        	else
-        	{
-        		child.checkItSelf(context, evaluator, listener, ids, parameters);
-        	}
-        }
+			//we already check all child of switch
+			//        	else
+			//        	{
+			//        		child.checkItSelf(context, evaluator, listener, ids, parameters);
+			//        	}
+		}
     }
     
 
