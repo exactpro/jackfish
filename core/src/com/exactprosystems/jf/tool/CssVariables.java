@@ -230,6 +230,7 @@ public class CssVariables
 		public static final String	GO_TO_LINE_ICON			= IMAGES_DIR + "/goToLine.png";
 
 		public static final String EVALUATOR_ICON = IMAGES_DIR + "/evaluatorIcon.png";
+		public static final String FORMAT_ICON = IMAGES_DIR + "/formatIcon.png";
 
 
 	}
