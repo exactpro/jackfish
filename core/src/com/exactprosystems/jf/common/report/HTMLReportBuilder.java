@@ -170,7 +170,7 @@ public class HTMLReportBuilder extends ReportBuilder
 				"<tr>" +
 						"<td width='40px'>[%03d]" +
 						"<td width='100px'><span class='Identity'>%s</span>" +
-						"<td><a href='#' class='showBody'>%s:</a>" +
+						"<td><a href='javascript:void(0)' class='showBody'>%s:</a>" +
 						"<td width='200px'><span id='hs_%s'>Loading...</span>"+
 						"<td width='100px'><span class='Time'>Time:</span>\n" +
 						"<td class='ExecutionTime'><span id='time_%s'></span>\n",
@@ -207,7 +207,7 @@ public class HTMLReportBuilder extends ReportBuilder
 		}
 		else
 		{
-			writer.fwrite("<a href='#' class='label' id='%s'>%s</a><br>", labelId, string);
+			writer.fwrite("<a href='javascript:void(0)' class='label' id='%s'>%s</a><br>", labelId, string);
 		}
 	}
 	
