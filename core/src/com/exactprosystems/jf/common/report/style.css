@@ -6,6 +6,10 @@ a {
 	width: 40em;
 }
 
+a:visited {
+	color: blue;
+}
+
 .tableTitle {
 	font-size: large;
 }

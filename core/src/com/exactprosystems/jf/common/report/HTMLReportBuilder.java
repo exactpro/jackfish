@@ -146,6 +146,8 @@ public class HTMLReportBuilder extends ReportBuilder
 		writer.fwrite("<tr><td><a href='#' class='filterTotal'> Executed: </a><td> <span id='exec'>0</span>\n");
 		writer.fwrite("<tr><td><a href='#' class='filterPassed'>Passed:   </a><td> <span id='pass'>0</span>\n");
 		writer.fwrite("<tr><td><a href='#' class='filterFailed'>Failed:   </a><td> <span id='fail'>0</span>\n");
+		writer.fwrite("<tr><td><a href='#' class='filterExpandAllFailed'>Show all failed</a><td>\n");
+		writer.fwrite("<tr><td><a href='#' class='filterCollapseAll'>Collapse all</a><td>\n");
 		writer.fwrite("</table>\n");
 	}
 

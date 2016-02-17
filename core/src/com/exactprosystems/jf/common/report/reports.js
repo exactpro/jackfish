@@ -10,6 +10,7 @@ $(document).ready(function(){
 		$("a.filterTotal").css("font-weight", "normal");
 		$("a.filterPassed").css("font-weight", "normal");
 		$("a.filterFailed").css("font-weight", "normal");
+		$("a.filterExpandAllFailed").css("font-weight", "normal");
 	}
 	
 	$("a.showSource").toggle(
@@ -53,17 +54,15 @@ $(document).ready(function(){
 			}
 		);
 
-	$("a.showBody").toggle(
-			function(event) {
-				$(this).parent().parent().parent().parent().next().show();
-				event.preventDefault();
-			}, 
-			function(event) {
-				$(this).parent().parent().parent().parent().next().hide();
-				event.preventDefault();
-			}
-		);
-		
+	$("a.showBody").click(function(event) {
+		var tbl = $(this).parent().parent().parent().parent().next();
+		if (tbl.is(":visible")) {
+			tbl.hide();
+		} else {
+			tbl.show();
+		}
+	});
+
 	$("a.showChapter").toggle(
 			function(event) {
 				$(this).next().show();
@@ -75,4 +74,15 @@ $(document).ready(function(){
 			}
 		);
 
+	$("a.filterExpandAllFailed").click(function(event) {
+		plain();
+		$(this).css("font-weight", "bold");
+		$("div[title='Failed']").show();
+		$("div[title='Failed']").parent().show();
+		$("div[title='Failed'] > div[class=body]").show();
+	});
+
+	$("a.filterCollapseAll").click(function(event) {
+		$("body > div[class='tree']").hide();
+	});
 });
