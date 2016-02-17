@@ -95,7 +95,7 @@ public class MatrixContextMenu extends ContextMenu
 		SettingsPanel.shortcut(settings, SettingsPanel.HELP).ifPresent(help::setAccelerator);
 		help.setOnAction(new ActionHelp(context, tree));
 
-		MenuItem parAdd = new MenuItem("Add param");
+		MenuItem parAdd = new MenuItem("Add param to end");
 		parAdd.setGraphic(new ImageView(new Image(CssVariables.Icons.ADD_PARAMETER_ICON)));
 		SettingsPanel.shortcut(settings, SettingsPanel.ADD_PARAMETER).ifPresent(parAdd::setAccelerator);
 		parAdd.setOnAction(event -> Common.tryCatch(() -> {

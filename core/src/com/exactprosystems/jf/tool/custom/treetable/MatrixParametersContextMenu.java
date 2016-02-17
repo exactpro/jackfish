@@ -41,6 +41,7 @@ public class MatrixParametersContextMenu extends MatrixContextMenu
 	private MenuItem parRemove;
 	private MenuItem parMoveLeft;
 	private MenuItem parMoveRight;
+	private MenuItem parAdd;
 	private MenuItem parShowAll;
 
 	private MatrixTreeRow row;
@@ -64,6 +65,11 @@ public class MatrixParametersContextMenu extends MatrixContextMenu
 		this.parMoveRight.setGraphic(new ImageView(new Image(CssVariables.Icons.MOVE_RIGHT_ICON)));
 		this.parMoveRight.setOnAction(event -> changeParameters(event, matrix::parameterMoveRight));
 
+		this.parAdd = new MenuItem("Add param after");
+		this.parAdd.setGraphic(new ImageView(new Image(CssVariables.Icons.ADD_PARAMETER_ICON)));
+		this.parAdd.setOnAction(event -> changeParameters(event, matrix::parameterInsert));
+
+
 		this.parShowAll = new MenuItem("All parameters ...");
 		this.parShowAll.setGraphic(new ImageView(new Image(CssVariables.Icons.ALL_PARAMETERS_ICON)));
 		this.parShowAll.setOnAction(event -> Common.tryCatch(() ->
@@ -82,6 +88,7 @@ public class MatrixParametersContextMenu extends MatrixContextMenu
 		getItems().add(0, this.parRemove);
 		getItems().add(1, this.parMoveLeft);
 		getItems().add(2, this.parMoveRight);
+		getItems().add(3, this.parAdd);
 		getItems().add(4, this.parShowAll);
 	} 
 	
