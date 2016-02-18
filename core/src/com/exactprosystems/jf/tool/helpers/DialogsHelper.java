@@ -310,6 +310,7 @@ public abstract class DialogsHelper
 				listView.getFocusModel().focus(0);
 			}
 		});
+		Platform.runLater(tf::requestFocus);
 		dialog.getDialogPane().getStylesheets().addAll(Common.currentTheme().getPath());
 		Optional<ButtonType> buttonType = dialog.showAndWait();
 		if (buttonType.isPresent())
