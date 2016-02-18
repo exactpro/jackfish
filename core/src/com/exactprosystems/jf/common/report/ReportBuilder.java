@@ -34,11 +34,9 @@ public abstract class ReportBuilder
 		logger.trace(String.format("ReportBuilder(%s, %s)", outputPath, matrix));
 		this.reportIsOn = true;
 		
-		this.matrix = matrix;
-		
-		if(outputPath != null && this.matrix != null)
+		if(outputPath != null && matrix != null)
 		{
-			this.reportName = generateReportName(outputPath, this.matrix.getName(), suffix, currentTime);
+			this.reportName = generateReportName(outputPath, matrix.getName(), suffix, currentTime);
 			File file = new File(this.reportName);
 			File parent = file.getParentFile();
 			if (parent != null)
@@ -46,7 +44,7 @@ public abstract class ReportBuilder
 				parent.mkdirs();
 			}
 
-			this.imageDir = generateReportDir(this.matrix.getName(), currentTime);
+			this.imageDir = generateReportDir(matrix.getName(), currentTime);
 			this.reportDir = outputPath + File.separator + this.imageDir; 
 		}
 	}
@@ -284,7 +282,7 @@ public abstract class ReportBuilder
 
 	private void reportMatrix(ReportWriter writer, BufferedReader reader) throws IOException
 	{
-		logger.trace(String.format("reportMatrix(%s, %s)", writer, matrix));
+		logger.trace(String.format("reportMatrix(%s)", writer));
 
         if (reader == null)
         {
@@ -343,8 +341,6 @@ public abstract class ReportBuilder
 	}
 
 	private boolean reportIsOn;
-	
-	private File matrix = null;
 	
 	private String name = null;
 	
