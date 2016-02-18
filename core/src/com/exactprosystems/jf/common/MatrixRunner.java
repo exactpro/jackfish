@@ -99,6 +99,14 @@ public class MatrixRunner implements IMatrixRunner, AutoCloseable
 				+ "]";
 	}
 
+	public void setReportSuffix(String reportSuffix)
+	{
+		if (this.matrix != null)
+		{
+			this.matrix.setReportSuffix(reportSuffix);
+		}
+	}
+	
 	public String matrix()
 	{
 		return this.matrix.getName();
@@ -337,5 +345,4 @@ public class MatrixRunner implements IMatrixRunner, AutoCloseable
 	private Thread thread = null;
 	
 	private static final Logger logger = Logger.getLogger(MainRunner.class);
-
 }

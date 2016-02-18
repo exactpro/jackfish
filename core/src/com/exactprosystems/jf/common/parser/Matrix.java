@@ -22,6 +22,7 @@ import com.exactprosystems.jf.common.parser.items.TestCase;
 import com.exactprosystems.jf.common.parser.listeners.IMatrixListener;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.tool.AbstractDocument;
+
 import org.apache.log4j.Logger;
 
 import java.io.*;
@@ -63,6 +64,16 @@ public class Matrix extends AbstractDocument implements IMatrix, Cloneable
 			}
 
 		}
+	}
+
+	public void setReportSuffix(String reportSuffix)
+	{
+		this.reportSuffix = reportSuffix;
+	}
+
+	public String getReportSuffix()
+	{
+		return this.reportSuffix;
 	}
 
 	public void setListener(IMatrixListener listener)
@@ -560,6 +571,7 @@ public class Matrix extends AbstractDocument implements IMatrix, Cloneable
 	private MatrixItem			root	= null;
 	private StringBuilder		buffer;
 	private IMatrixListener		matrixListener;
+	private String 				reportSuffix;
 
 	private static final Logger	logger	= Logger.getLogger(Matrix.class);
 }

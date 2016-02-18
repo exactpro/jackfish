@@ -216,19 +216,20 @@ public abstract class ReportBuilder
 		}
 	}
 	
-	public final void reportFinished(Matrix context) throws Exception 
+	public final void reportFinished(Matrix matrix) throws Exception 
 	{
-		logger.trace(String.format("reportFinished(%s)", context));
+		logger.trace(String.format("reportFinished(%s)", matrix));
 
-		reportFooter(writer, context.getRoot(), new Date(), this.name);
+		reportFooter(writer, matrix.getRoot(), new Date(), this.name);
 		writer.close();
 
 		String fullName = writer.fileName();
         if (fullName != null)
         {
-        	String postSuffix = (this.name == null ? "" : " " + this.name);
+        	String postSuffix = (matrix.getReportSuffix() == null ? "" : " " + matrix.getReportSuffix()) 
+        			+ (this.name == null ? "" : " " + this.name);
         	
-            if (context.getRoot().count(Result.Failed) > 0)
+            if (matrix.getRoot().count(Result.Failed) > 0)
             {
                 Files.move(Paths.get(fullName), Paths.get(fullName.replace(suffix, failed + postSuffix)));
 				this.reportName = fullName.replace(suffix, failed + postSuffix);
