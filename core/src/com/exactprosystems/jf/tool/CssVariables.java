@@ -240,5 +240,7 @@ public class CssVariables
 		public static final String SERVICE_ICON = IMAGES_DIR + "/serviceIcon.png";
 		public static final String APP_ICON = IMAGES_DIR + "/appIcon.png";
 		public static final String FILE_SYSTEM_ICON = IMAGES_DIR + "/fileSystemIcon.png";
+		public static final String UNSUPPORT_ENTRY_ICON = IMAGES_DIR + "/unsupportIcon.png";
+		public static final String SUPPORT_ENTRY_ICON = IMAGES_DIR + "/supportIcon.png";
 	}
 }
