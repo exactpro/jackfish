@@ -99,14 +99,6 @@ public class MatrixRunner implements IMatrixRunner, AutoCloseable
 				+ "]";
 	}
 
-	public void setReportSuffix(String reportSuffix)
-	{
-		if (this.matrix != null)
-		{
-			this.matrix.setReportSuffix(reportSuffix);
-		}
-	}
-	
 	public String matrix()
 	{
 		return this.matrix.getName();

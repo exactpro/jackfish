@@ -35,7 +35,6 @@ public class MatrixRun extends AbstractAction
 	public final static String atName = "At";
 	public final static String matrixName = "Matrix";
 	public final static String parameterName = "Parameter";
-	public final static String reportSuffixName = "ReportSuffix";
 
 	@ActionFieldAttribute(name = atName, mandatory = false, description = "Time to start the matrix.")
 	protected Date at		= null;
@@ -45,9 +44,6 @@ public class MatrixRun extends AbstractAction
 
 	@ActionFieldAttribute(name = parameterName, mandatory = false, description = "Parameter for the matrix.")
 	protected Object parameter	= null;
-
-	@ActionFieldAttribute(name = reportSuffixName, mandatory = false, description = "Suffix that will be added to the report name.")
-	protected String reportSuffix	= null;
 
 	@Override
 	protected HelpKind howHelpWithParameterDerived(Context context, Parameters parameters, String fieldName) throws Exception
@@ -69,7 +65,6 @@ public class MatrixRun extends AbstractAction
 		try(Context cloneContext = context.clone() )
 		{
 			MatrixRunner runner = new MatrixRunner(cloneContext, new File(this.matrix), this.at, this.parameter);
-			runner.setReportSuffix(this.reportSuffix);
 			runner.start();
 			super.setResult(runner);
 		}

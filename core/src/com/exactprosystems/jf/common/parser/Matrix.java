@@ -66,16 +66,6 @@ public class Matrix extends AbstractDocument implements IMatrix, Cloneable
 		}
 	}
 
-	public void setReportSuffix(String reportSuffix)
-	{
-		this.reportSuffix = reportSuffix;
-	}
-
-	public String getReportSuffix()
-	{
-		return this.reportSuffix;
-	}
-
 	public void setListener(IMatrixListener listener)
 	{
 		this.matrixListener = listener;
@@ -571,7 +561,6 @@ public class Matrix extends AbstractDocument implements IMatrix, Cloneable
 	private MatrixItem			root	= null;
 	private StringBuilder		buffer;
 	private IMatrixListener		matrixListener;
-	private String 				reportSuffix;
 
 	private static final Logger	logger	= Logger.getLogger(Matrix.class);
 }

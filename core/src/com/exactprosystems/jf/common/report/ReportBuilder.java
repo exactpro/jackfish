@@ -226,8 +226,7 @@ public abstract class ReportBuilder
 		String fullName = writer.fileName();
         if (fullName != null)
         {
-        	String postSuffix = (matrix.getReportSuffix() == null ? "" : " " + matrix.getReportSuffix()) 
-        			+ (this.name == null ? "" : " " + this.name);
+        	String postSuffix = this.name == null ? "" : " " + this.name;
         	
             if (matrix.getRoot().count(Result.Failed) > 0)
             {
