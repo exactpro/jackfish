@@ -242,5 +242,10 @@ public class CssVariables
 		public static final String FILE_SYSTEM_ICON = IMAGES_DIR + "/fileSystemIcon.png";
 		public static final String UNSUPPORT_ENTRY_ICON = IMAGES_DIR + "/unsupportIcon.png";
 		public static final String SUPPORT_ENTRY_ICON = IMAGES_DIR + "/supportIcon.png";
+		public static final String COLLAPSE_ALL_ICON = IMAGES_DIR + "/collapseAllIcon.png";
+		public static final String EXPAND_ALL_ICON = IMAGES_DIR + "/expandAllIcon.png";
+		public static final String SERVICE_NOT_STARTED_ICON = IMAGES_DIR + "/serviceNotStartedIcon.png";
+		public static final String SERVICE_STARTED_GOOD_ICON = IMAGES_DIR + "/serviceStartedGoodIcon.png";
+		public static final String SERVICE_STARTED_FAIL_ICON = IMAGES_DIR + "/serviceStartedFailIcon.png";
 	}
 }

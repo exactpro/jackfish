@@ -114,6 +114,10 @@
 	-fx-border-color : black;
 
 }
+.table-row-cell:odd {
+    -fx-background: derive(-fx-control-inner-background,-5%);
+
+}
 
 /*Custom classes*/
 .transparentBackground {
