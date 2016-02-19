@@ -91,7 +91,8 @@ public class MatrixTreeView extends TreeTableView<MatrixItem>
 //				getSelectionModel().select(treeItem);
 				tryCatch(() -> Thread.sleep(100), "Error sleep");
 				treeItem.setExpanded(true);
-				scrollTo(row);
+				
+//				scrollTo(row); // TODO think about
 			});
 		}
 	}
