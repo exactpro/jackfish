@@ -46,7 +46,6 @@
     <classpathentry kind="lib" path="libs/commons-codec-1.10.jar"/>
     <classpathentry kind="lib" path="libs/httpmime-4.5.jar"/>
     <classpathentry kind="lib" path="libs/selenium-java-2.51.0.jar"/>
-    <classpathentry kind="lib" path="libs/xercesImpl-2.11.0.jar"/>
     <classpathentry kind="lib" path="libs/nekohtml-1.9.22.jar"/>
     <classpathentry kind="lib" path="libs/phantomjsdriver-1.2.1.jar"/>
     <classpathentry kind="lib" path="libs/gson-2.3.1.jar"/>
