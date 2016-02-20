@@ -86,18 +86,33 @@ public class DialogClose extends AbstractAction
 		IRemoteApplication service = app.service();
 		IControl element = window.getSelfControl();
 		
+		if (element == null)
+		{
+			super.setError("Self control is not found for dialog " + this.dialog);
+			return;
+		}
+		
 		List<LocatorAndOperation> operations = new ArrayList<LocatorAndOperation>();
 		for (IControl control : window.getSection(IWindow.SectionKind.Close).getControls())
 		{
-			Operation operation = Operation.create();
-			Iterator<Part> iter = operation.iterator();
-
-			if (iter.hasNext())
+			String expression = control.getExpression();
+			if (!Str.IsNullOrEmpty(expression))
 			{
-				control.prepare(iter.next(), null);
+				Object value = evaluator.evaluate(expression);
+				if (value instanceof Operation)
+				{
+					Operation operation = (Operation)value;
+					Iterator<Part> iter = operation.iterator();
+
+					if (iter.hasNext())
+					{
+						control.prepare(iter.next(), null);
+					}
+					operations.add(new LocatorAndOperation(control.locator(), operation));
+				}
 			}
-			operations.add(new LocatorAndOperation(control.locator(), operation));
 		}
+		
 		
 		int closed = service.closeAll(element.locator(), operations);
 		

@@ -122,7 +122,14 @@ public class ActionsList extends AbstractAction
 				XmlRemove.class,
 				XmlReport.class,
 				XmlSaveToFile.class,
-				XmlSetNode.class, ApplicationNewInstance.class, HistogramCreate.class, HistogramGetTable.class, HistogramReport.class, HistogramStart.class, HistogramStop.class,};
+				XmlSetNode.class, 
+				ApplicationNewInstance.class, 
+				HistogramCreate.class, 
+				HistogramGetTable.class, 
+				HistogramReport.class, 
+				HistogramStart.class, 
+				HistogramStop.class,
+			};
 	
     public ActionsList()
     {
