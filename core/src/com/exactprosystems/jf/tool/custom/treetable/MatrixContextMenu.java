@@ -22,12 +22,14 @@ import com.exactprosystems.jf.tool.matrix.MatrixFx.PlaceToInsert;
 import com.exactprosystems.jf.tool.settings.SettingsPanel;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
+import javafx.scene.text.Text;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 
@@ -39,66 +41,58 @@ public class MatrixContextMenu extends ContextMenu
 	public MatrixContextMenu(Context context, MatrixFx matrix, MatrixTreeView tree, Settings settings)
 	{
 		super();
-		
+
 		setAutoHide(true);
 
-		MenuItem breakPoint = new MenuItem("Breakpoint");
+		MenuItem breakPoint = new MenuItem("Breakpoint" + SettingsPanel.getShortcutName(settings, SettingsPanel.BREAK_POINT));
 		breakPoint.setGraphic(new ImageView(new Image(CssVariables.Icons.BREAK_POINT_ICON)));
 		breakPoint.setOnAction(event -> breakPoint(matrix, tree));
 
-		MenuItem addBefore = new MenuItem("Add before >>");
+		MenuItem addBefore = new MenuItem("Add before >>" + SettingsPanel.getShortcutName(settings, SettingsPanel.ADD_BEFORE));
 		addBefore.setGraphic(new ImageView(new Image(CssVariables.Icons.ADD_BEFORE_ICON)));
 		addBefore.setOnAction(event -> addBefore(tree, matrix));
 
-		MenuItem addAfter = new MenuItem("Add after >>");
+		MenuItem addAfter = new MenuItem("Add after >>" + SettingsPanel.getShortcutName(settings, SettingsPanel.ADD_AFTER));
 		addAfter.setGraphic(new ImageView(new Image(CssVariables.Icons.ADD_AFTER_ICON)));
 		addAfter.setOnAction(event -> addAfter(matrix, tree));
 
-		MenuItem addChild = new MenuItem("Add child >>");
+		MenuItem addChild = new MenuItem("Add child >>" + SettingsPanel.getShortcutName(settings, SettingsPanel.ADD_CHILD));
 		addChild.setGraphic(new ImageView(new Image(CssVariables.Icons.ADD_CHILD_ICON)));
 		addChild.setOnAction(event -> Common.tryCatch(() -> matrix.insertNew(tree.currentItem(), PlaceToInsert.Child, Tokens.TempItem.get(), null), "Error on add child"));
 
-		MenuItem deleteItem = new MenuItem("Delete");
+		MenuItem deleteItem = new MenuItem("Delete", createShortcut(SettingsPanel.DELETE_ITEM, settings));
 		deleteItem.setGraphic(new ImageView(new Image(CssVariables.Icons.DELETE_ICON)));
 		deleteItem.setOnAction(event -> deleteCurrentItems(matrix, tree));
 
-		MenuItem copy = new MenuItem("Copy");
+		MenuItem copy = new MenuItem("Copy" + SettingsPanel.getShortcutName(settings, SettingsPanel.COPY_ITEMS));
 		copy.setGraphic(new ImageView(new Image(CssVariables.Icons.COPY_ICON)));
 		copy.setOnAction(event -> copyItems(matrix, tree));
 
-		MenuItem pasteAfter = new MenuItem("Paste after");
+		MenuItem pasteAfter = new MenuItem("Paste after" + SettingsPanel.getShortcutName(settings, SettingsPanel.PASTE_ITEMS_AFTER));
 		pasteAfter.setGraphic(new ImageView(new Image(CssVariables.Icons.PASTE_ICON)));
 		pasteAfter.setOnAction(event -> pasteItems(PlaceToInsert.After, matrix, tree));
 
-		MenuItem pasteChild = new MenuItem("Paste child");
+		MenuItem pasteChild = new MenuItem("Paste child" + SettingsPanel.getShortcutName(settings, SettingsPanel.PASTE_ITEMS_CHILD));
 		pasteChild.setGraphic(new ImageView(new Image(CssVariables.Icons.PASTE_ICON)));
 		pasteChild.setOnAction(event -> pasteItems(PlaceToInsert.Child, matrix, tree));
 
-		MenuItem pasteBefore = new MenuItem("Paste before");
+		MenuItem pasteBefore = new MenuItem("Paste before" + SettingsPanel.getShortcutName(settings, SettingsPanel.PASTE_ITEMS_BEFORE));
 		pasteBefore.setGraphic(new ImageView(new Image(CssVariables.Icons.PASTE_ICON)));
 		pasteBefore.setOnAction(event -> pasteItems(PlaceToInsert.Before, matrix, tree));
 
-		MenuItem gotoItem = new MenuItem("Go to line ...");
+		MenuItem gotoItem = new MenuItem("Go to line ..." + SettingsPanel.getShortcutName(settings, SettingsPanel.GO_TO_LINE));
 		gotoItem.setGraphic(new ImageView(new Image(CssVariables.Icons.GO_TO_LINE_ICON)));
 		gotoItem.setOnAction(event -> gotoLine(tree));
 
-		MenuItem help = new MenuItem("Help");
+		MenuItem help = new MenuItem("Help" + SettingsPanel.getShortcutName(settings, SettingsPanel.HELP));
 		help.setGraphic(new ImageView(new Image(CssVariables.Icons.HELP_ICON)));
 		help.setOnAction(showHelp(context, tree));
 
-		MenuItem parAdd = new MenuItem("Add param to end");
+		MenuItem parAdd = new MenuItem("Add param to end" + SettingsPanel.getShortcutName(settings, SettingsPanel.ADD_PARAMETER));
 		parAdd.setGraphic(new ImageView(new Image(CssVariables.Icons.ADD_PARAMETER_ICON)));
 		parAdd.setOnAction(event -> addParameter(matrix, tree));
 
-		getItems().addAll(
-				breakPoint, new SeparatorMenuItem(), parAdd,
-				new SeparatorMenuItem(), copy, pasteBefore, pasteChild, pasteAfter,
-				new SeparatorMenuItem(), addBefore, addChild, addAfter,
-				deleteItem,
-				gotoItem,
-				new SeparatorMenuItem(),
-				help
-			);
+		getItems().addAll(breakPoint, new SeparatorMenuItem(), parAdd, new SeparatorMenuItem(), copy, pasteBefore, pasteChild, pasteAfter, new SeparatorMenuItem(), addBefore, addChild, addAfter, deleteItem, gotoItem, new SeparatorMenuItem(), help);
 	}
 
 	public void initShortcuts(Settings settings, MatrixTreeView treeView, MatrixFx matrix, Context context)
@@ -203,30 +197,25 @@ public class MatrixContextMenu extends ContextMenu
 	private void gotoLine(MatrixTreeView tree)
 	{
 		TextInputDialog dialog = new TextInputDialog();
-		dialog.getDialogPane().getStylesheets()
-				.add(Common.currentTheme().getPath());
+		dialog.getDialogPane().getStylesheets().add(Common.currentTheme().getPath());
 		dialog.getDialogPane().setHeader(new Pane());
 		dialog.setTitle("Enter line number");
-		dialog.getEditor()
-				.textProperty()
-				.addListener(
-						(observable, oldValue, newValue) ->
-						{
-							if (!newValue.isEmpty())
-							{
-								if (!newValue.matches(Common.intPositiveNumberMatcher))
-								{
-									dialog.getEditor().setText(oldValue);
-								}
-							}
-						});
+		dialog.getEditor().textProperty().addListener((observable, oldValue, newValue) -> {
+			if (!newValue.isEmpty())
+			{
+				if (!newValue.matches(Common.intPositiveNumberMatcher))
+				{
+					dialog.getEditor().setText(oldValue);
+				}
+			}
+		});
 		Optional<String> string = dialog.showAndWait();
 		if (string.isPresent())
 		{
 			try
 			{
-				int index =  Integer.parseInt(string.get());
-			
+				int index = Integer.parseInt(string.get());
+
 				TreeItem<MatrixItem> treeItem = tree.find(matrixItem -> matrixItem.getNumber() == index);
 				if (treeItem == null)
 				{
@@ -236,7 +225,7 @@ public class MatrixContextMenu extends ContextMenu
 				{
 					tree.setCurrent(treeItem);
 				}
-			} 
+			}
 			catch (NumberFormatException e)
 			{
 				//
@@ -251,12 +240,20 @@ public class MatrixContextMenu extends ContextMenu
 			matrix.parameterInsert(value, value.getParameters().size() - 1);
 		}, "Error on add new parameter");
 	}
-	
+
+	private Node createShortcut(String shortcutName, Settings settings)
+	{
+		String shortcut = SettingsPanel.getShortcutName(settings, shortcutName);
+		Text text = new Text(shortcut);
+		text.setOpacity(0.5);
+		return text;
+	}
+
 	private class ActionHelp implements EventHandler<ActionEvent>
 	{
 		private MatrixTreeView tree;
 		private Context context;
-		
+
 		public ActionHelp(Context context, MatrixTreeView tree)
 		{
 			this.tree = tree;
@@ -266,8 +263,7 @@ public class MatrixContextMenu extends ContextMenu
 		@Override
 		public void handle(ActionEvent actionEvent)
 		{
-			Common.tryCatch(() ->
-			{
+			Common.tryCatch(() -> {
 				MatrixItem item = this.tree.currentItem();
 				if (item != null)
 				{
