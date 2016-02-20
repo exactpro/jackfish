@@ -286,6 +286,7 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 		
 		MatrixParametersContextMenu parametersContextMenu 	= new MatrixParametersContextMenu(context, model, this.tree, settings);
 		MatrixContextMenu 			rowContextMenu 			= new MatrixContextMenu(context, model, this.tree, settings);
+		rowContextMenu.initShortcuts(settings, this.tree, model, context);
 		
 		this.model = model;
 		this.context = context;

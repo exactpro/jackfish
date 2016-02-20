@@ -197,7 +197,7 @@ public abstract class SuggestionProvider<T> implements Callback<AutoCompletionBi
 		{
 			String userTextLower = request.getUserText().toLowerCase();
 			String suggestionStr = suggestion.toString().toLowerCase();
-			return suggestionStr.contains(userTextLower) && !suggestionStr.equals(userTextLower);
+			return suggestionStr.contains(userTextLower);
 		}
 	}
 }
