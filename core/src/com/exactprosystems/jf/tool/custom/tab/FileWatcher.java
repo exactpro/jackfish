@@ -18,7 +18,7 @@ public abstract class FileWatcher implements AutoCloseable
 	private File file;
 	private Timer timer;
 	private long timeStamp;
-	private boolean chahged = false;
+	private boolean changed = false;
 	
 	public FileWatcher()
 	{
@@ -37,7 +37,7 @@ public abstract class FileWatcher implements AutoCloseable
 	
 	public void saved(String fileName)
 	{
-		this.chahged = false;
+		this.changed = false;
 		if (this.timer != null)
 		{
 			this.timer.cancel();
@@ -55,11 +55,10 @@ public abstract class FileWatcher implements AutoCloseable
 	
 	public boolean isChanged()
 	{
-		return this.chahged;
+		return this.changed;
 	}
 
 	public abstract void onChanged();
-	
 	
 	private void createTimerTask()
 	{
@@ -77,7 +76,7 @@ public abstract class FileWatcher implements AutoCloseable
 				long lastModified = file.lastModified();
 				if (timeStamp != lastModified)
 				{
-					chahged = true;
+					changed = true;
 					onChanged();
 				}
 			}
