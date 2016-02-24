@@ -25,7 +25,8 @@ public class SettingsPanel
 	public final static String	SETTINGS 		= "Main";
 	public static final String	LOGS_NAME		= "Logs";
 	public static final String	SHORTCUTS_NAME	= "Shortcuts";
-	public static final String MATRIX_COLORS = "MatrixColors";
+	public static final String	MATRIX_COLORS	= "MatrixColors";
+	public static final String	GIT				= "Git";
 
 	//other shortcuts
 	public static final String SHOW_ALL_TABS	= "ShowAllTabs";
@@ -63,6 +64,10 @@ public class SettingsPanel
 	public static final String TRACING			= "Tracing";
 	public static final String FIND_ON_MATRIX	= "FindOnMatrix";
 
+	//git
+	public static final String GIT_SSH_IDENTITY	= "gitSshIdentity";
+	public static final String GIT_KNOWN_HOST	= "gitKnownHost";
+
 
 	private Settings settings;
 	private SettingsPanelController controller;
@@ -76,11 +81,18 @@ public class SettingsPanel
 
 	public void show()
 	{
+		displayGit();
 		displayColors();
 		displayLogs();
 		displayShortcuts();
 		displayMain();
 		this.controller.display("Settings");
+	}
+
+	private void displayGit()
+	{
+		List<SettingsValue> values = this.settings.getValues(Settings.GLOBAL_NS, GIT);
+		this.controller.displayGit(values.stream().collect(Collectors.toMap(SettingsValue::getKey, SettingsValue::getValue)));
 	}
 
 	private void displayColors()

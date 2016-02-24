@@ -14,6 +14,7 @@ import com.exactprosystems.jf.actions.help.ActionsList;
 import com.exactprosystems.jf.common.parser.Tokens;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
+import com.exactprosystems.jf.tool.custom.controls.field.CustomFieldWithButton;
 import com.exactprosystems.jf.tool.custom.number.NumberTextField;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.main.Main;
@@ -33,6 +34,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import org.apache.log4j.Logger;
 
+import java.io.File;
 import java.net.URL;
 import java.util.*;
 import java.util.function.Consumer;
@@ -44,6 +46,7 @@ public class SettingsPanelController implements Initializable, ContainingParent
 	public GridPane mainGrid;
 	public TreeView<NameAndColor> treeViewColors;
 	public BorderPane colorsPane;
+	public GridPane gridGit;
 
 	private Pane pane;
 
@@ -56,6 +59,9 @@ public class SettingsPanelController implements Initializable, ContainingParent
 	public CheckBox useFullScreenXpath;
 	public NumberTextField ntfTimeNotification;
 	public TextArea taCopyright;
+	public CustomFieldWithButton cfKnownHost;
+	public CustomFieldWithButton cfSSHIdentity;
+
 
 	// Logs colors
 	public ColorPicker cpAll;
@@ -94,6 +100,20 @@ public class SettingsPanelController implements Initializable, ContainingParent
 		Common.tryCatch(() -> {
 			assert useFullScreen != null : "fx:id=\"useFullScreen\" was not injected: check your FXML file 'Settings.fxml'.";
 			assert comboBoxTheme != null : "fx:id=\"comboBoxTheme\" was not injected: check your FXML file 'Settings.fxml'.";
+			this.cfKnownHost = new CustomFieldWithButton();
+			this.cfKnownHost.setButtonText("...");
+			this.cfKnownHost.setHandler(e -> {
+				File file = DialogsHelper.showOpenSaveDialog("Choose known host file", "All files", "*", DialogsHelper.OpenSaveMode.OpenFile);
+				Optional.ofNullable(file).map(File::getAbsolutePath).ifPresent(this.cfKnownHost::setText);
+			});
+			this.gridGit.add(this.cfKnownHost, 1, 0);
+			this.cfSSHIdentity = new CustomFieldWithButton();
+			this.cfSSHIdentity.setButtonText("...");
+			this.cfSSHIdentity.setHandler(e -> {
+				File file = DialogsHelper.showOpenSaveDialog("Choose ssh identity file", "All files", "*", DialogsHelper.OpenSaveMode.OpenFile);
+				Optional.ofNullable(file).map(File::getAbsolutePath).ifPresent(this.cfSSHIdentity::setText);
+			});
+			this.gridGit.add(this.cfSSHIdentity, 1, 1);
 			this.ntfMaxLastMatrixCount = new NumberTextField(0);
 			this.ntfMaxLastMatrixCount.setId(Main.MAX_FILES_COUNT);
 			this.ntfTimeNotification = new NumberTextField(0);
@@ -166,6 +186,12 @@ public class SettingsPanelController implements Initializable, ContainingParent
 				}
 			});
 		});
+	}
+
+	public void displayGit(Map<String, String> collect)
+	{
+		this.cfKnownHost.setText(collect.getOrDefault(SettingsPanel.GIT_KNOWN_HOST, ""));
+		this.cfSSHIdentity.setText(collect.getOrDefault(SettingsPanel.GIT_SSH_IDENTITY, ""));
 	}
 
 	public void displayMain(Map<String, String> res)
@@ -546,6 +572,9 @@ public class SettingsPanelController implements Initializable, ContainingParent
 		{
 			this.model.removeAll(SettingsPanel.MATRIX_COLORS);
 			this.colorMatrixMap.entrySet().forEach(entry -> this.model.updateSettingsValue(entry.getKey(), SettingsPanel.MATRIX_COLORS, Common.colorToString(entry.getValue())));
+			this.model.removeAll(SettingsPanel.GIT);
+			this.model.updateSettingsValue(SettingsPanel.GIT_KNOWN_HOST, SettingsPanel.GIT, this.cfKnownHost.getText());
+			this.model.updateSettingsValue(SettingsPanel.GIT_SSH_IDENTITY, SettingsPanel.GIT, this.cfSSHIdentity.getText());
 			this.model.save();
 			return true;
 		}
