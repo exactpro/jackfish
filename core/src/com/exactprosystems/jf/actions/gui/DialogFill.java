@@ -27,6 +27,8 @@ import com.exactprosystems.jf.functions.Table;
 
 import java.util.*;
 
+import static com.exactprosystems.jf.actions.gui.ActionGuiHelper.*;
+
 @ActionAttribute(
 		group 					= ActionGroups.GUI, 
 		suffix					= "DLGFLL",
@@ -126,19 +128,19 @@ public class DialogFill extends AbstractAction
 			{
 				if (checkControl(supportedControls, control))
 				{
-					super.setError(message(onOpen, control.getBindedClass(), id));
+					super.setError(message(id, window, onOpen, control, "is not allowed"));
 					return;
 				}
 
 				OperationResult res = control.operate(service, window, null);
 				if (res.isPermittedOperation())
 				{
-					super.setError(res.getText());
+					super.setError(message(id, window, onOpen, control, res.getText()));
 					return;
 				}
 				if (!res.isOk())
 				{
-					super.setError("OnOpen: " + control + " has returned 'false'. Process is stopped.");
+					super.setError(message(id, window, onOpen, control, " returned 'false'. Process is stopped."));
 					return;
 				}
 			}
@@ -157,7 +159,7 @@ public class DialogFill extends AbstractAction
 			IControl control = sectionRun.getControlByIdAndValue(name, obj);
 			if (checkControl(supportedControls, control))
 			{
-				super.setError(message(run, control.getBindedClass(), id));
+				super.setError(message(id, window, run, control, "is not allowed"));
 				return;
 			}
 
@@ -184,12 +186,12 @@ public class DialogFill extends AbstractAction
 			}
 			else if (res.isPermittedOperation())
 			{
-				super.setError(res.getText());
+				super.setError(message(id, window, run, control, res.getText()));
 				return;
 			}
 			else
 			{
-				super.setError("Run: parameter = " + name + " has returned 'false'. Process is stopped.");
+				super.setError(message(id, window, run, control, " returned 'false'. Process is stopped."));
 				return;
 			}
 		}
@@ -202,19 +204,19 @@ public class DialogFill extends AbstractAction
 			{
 				if (checkControl(supportedControls, control))
 				{
-					super.setError(message(onClose, control.getBindedClass(), id));
+					super.setError(message(id, window, onClose, control, "is not allowed"));
 					return;
 				}
 
 				OperationResult res = control.operate(service, window, null);
 				if (res.isPermittedOperation())
 				{
-					super.setError(res.getText());
+					super.setError(message(id, window, onClose, control, res.getText()));
 					return;
 				}
 				if (!res.isOk())
 				{
-					super.setError("OnClose: " + control + " has returned 'false'. Process is stopped.");
+					super.setError(message(id, window, onClose, control, " returned 'false'. Process is stopped."));
 					return;
 				}
 			}
@@ -227,10 +229,4 @@ public class DialogFill extends AbstractAction
 	{
 		return !supportedControls.contains(control.getBindedClass());
 	}
-
-	private String message(SectionKind section, ControlKind kind, String id)
-	{
-		return "Control '" + section + "." + kind + "' is not allowed in '" + id + "'";
-	}
-
 }

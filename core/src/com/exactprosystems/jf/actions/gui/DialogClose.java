@@ -8,12 +8,15 @@
 
 package com.exactprosystems.jf.actions.gui;
 
+import static com.exactprosystems.jf.actions.gui.ActionGuiHelper.message;
+
 import com.exactprosystems.jf.actions.AbstractAction;
 import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
 import com.exactprosystems.jf.actions.ReadableValue;
 import com.exactprosystems.jf.api.app.*;
+import com.exactprosystems.jf.api.app.IWindow.SectionKind;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.common.Context;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
@@ -79,6 +82,7 @@ public class DialogClose extends AbstractAction
 	{
 		IGuiDictionary dictionary = this.connection.getDictionary();
 		IWindow window = dictionary.getWindow(this.dialog);
+		String id = connection.getId();
 
 		logger.debug("Process dialog : " + window);
 
@@ -88,7 +92,7 @@ public class DialogClose extends AbstractAction
 		
 		if (element == null)
 		{
-			super.setError("Self control is not found for dialog " + this.dialog);
+			super.setError(message(id, window, SectionKind.Self, null, "Self control is not found."));
 			return;
 		}
 		

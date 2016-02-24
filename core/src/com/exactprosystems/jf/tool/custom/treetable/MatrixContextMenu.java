@@ -44,7 +44,7 @@ public class MatrixContextMenu extends ContextMenu
 
 		setAutoHide(true);
 
-		MenuItem breakPoint = new MenuItem("Breakpoint" + SettingsPanel.getShortcutName(settings, SettingsPanel.BREAK_POINT));
+		MenuItem breakPoint = new MenuItem("Breakpoint" + "\t" + SettingsPanel.getShortcutName(settings, SettingsPanel.BREAK_POINT));
 		breakPoint.setGraphic(new ImageView(new Image(CssVariables.Icons.BREAK_POINT_ICON)));
 		breakPoint.setOnAction(event -> breakPoint(matrix, tree));
 

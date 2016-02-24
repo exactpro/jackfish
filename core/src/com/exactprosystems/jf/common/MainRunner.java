@@ -45,6 +45,8 @@ public class MainRunner
 			logger.info("API version:  " + ApiVersionInfo.majorVersion() + "." + ApiVersionInfo.minorVersion());
 			logger.debug("args: " + Arrays.toString(args));
 			
+			logger.info(MainRunner.class.getProtectionDomain());
+			
 			Option startAtName = OptionBuilder
 					.withArgName("time")
 					.hasArg()

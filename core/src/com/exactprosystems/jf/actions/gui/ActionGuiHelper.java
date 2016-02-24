@@ -78,4 +78,10 @@ public class ActionGuiHelper
 		return dictionary;
 	}
 	
+	public static String message(String appId, IWindow window, SectionKind section, IControl control, String msg)
+	{
+		return "App[" + appId + "] " + "Dialog[" + window.getName() +  "] Section[" + section + "] " 
+				+ (control == null ? "" : ("Control[" + control + "] ")) + msg;
+	}
+
 }

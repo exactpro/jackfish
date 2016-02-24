@@ -8,6 +8,8 @@
 
 package com.exactprosystems.jf.actions.gui;
 
+import static com.exactprosystems.jf.actions.gui.ActionGuiHelper.message;
+
 import com.exactprosystems.jf.actions.AbstractAction;
 import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionFieldAttribute;
@@ -83,6 +85,7 @@ public class ImageGet extends AbstractAction
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception 
 	{
 		IApplication app = connection.getApplication();
+		String id = connection.getId();
 		IRemoteApplication service = app.service();
 		ImageWrapper imageWrapper = null;
 		
@@ -109,7 +112,8 @@ public class ImageGet extends AbstractAction
 			IControl control = window.getControlForName(SectionKind.Run, this.name);
 			if (control == null)
 			{
-				throw new Exception("Cannot find control in dialog='" + window +"' section='" + SectionKind.Run + "' name='" + this.name + "'");
+				super.setError(message(id, window, SectionKind.Self, null, "Self control is not found."));
+				return;
 			}
 			IControl owner = window.getOwnerControl(control);
 			

@@ -7,8 +7,11 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.exactprosystems.jf.actions.gui;
 
+import static com.exactprosystems.jf.actions.gui.ActionGuiHelper.message;
+
 import com.exactprosystems.jf.actions.*;
 import com.exactprosystems.jf.api.app.*;
+import com.exactprosystems.jf.api.app.IWindow.SectionKind;
 import com.exactprosystems.jf.common.Context;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.parser.Parameters;
@@ -36,7 +39,7 @@ public class DialogSwitchToWindow extends AbstractAction
 			+ "If is absent tool will switch to the parent frame.")
 	protected String			dialog			= null;
 
-	@ActionFieldAttribute(name = frameName, mandatory = false, description = "Just description")
+	@ActionFieldAttribute(name = frameName, mandatory = false, description = "Name of locator in the dictionary on which the tool will be switch to.")
 	protected String frame = null;
 
 	@Override
@@ -84,7 +87,7 @@ public class DialogSwitchToWindow extends AbstractAction
 		{
 			if (this.frame == null)
 			{
-				throw new Exception("If u selected window, u need to select frame too");
+				throw new Exception("Parameter 'frame' is needed for not-null 'dialog' parameter.");
 			}
 			IGuiDictionary dictionary = this.connection.getDictionary();
 			IWindow window = dictionary.getWindow(this.dialog);
@@ -93,7 +96,8 @@ public class DialogSwitchToWindow extends AbstractAction
 			IControl element = window.getControlForName(null, frame);
 			if (element == null)
 			{
-				throw new Exception("In dialog " + this.dialog + " section self is empty.");
+				super.setError(message(id, window, SectionKind.Self, null, "Self control is not found."));
+				return;
 			}
 			service.switchToFrame(element.locator());
 		}
