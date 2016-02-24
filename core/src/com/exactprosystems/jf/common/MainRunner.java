@@ -30,8 +30,10 @@ import javax.xml.transform.Result;
 import javax.xml.transform.stream.StreamResult;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 public class MainRunner
 {
@@ -44,8 +46,6 @@ public class MainRunner
 			logger.info("Tool version: " + VersionInfo.getVersion());
 			logger.info("API version:  " + ApiVersionInfo.majorVersion() + "." + ApiVersionInfo.minorVersion());
 			logger.debug("args: " + Arrays.toString(args));
-			
-			logger.info(MainRunner.class.getProtectionDomain());
 			
 			Option startAtName = OptionBuilder
 					.withArgName("time")
@@ -77,6 +77,12 @@ public class MainRunner
 					.withDescription("Specify verbose level. " + Arrays.toString(VerboseLevel.values()))
 					.create("verbose");
 
+			Option password = OptionBuilder
+					.withArgName("password")
+					.hasArg()
+					.withDescription("Specify the password which will be used when tool works with a git repository. ")
+					.create("password");
+
 			Option saveSchema 	= new Option("schema", 	"Save the config schema." );
 			Option help 		= new Option("help", 	"Print this message." );
 			Option versionOut 	= new Option("version", "Print version only.");
@@ -91,6 +97,7 @@ public class MainRunner
 			options.addOption(outputName);
 			options.addOption(configName);
 			options.addOption(traceLevel);
+			options.addOption(password);
 			options.addOption(versionOut);
 			options.addOption(saveSchema);
 			options.addOption(help);
@@ -146,16 +153,18 @@ public class MainRunner
 
 			if (!line.hasOption(console.getOpt()))
 			{
+				String passwordValue = line.getOptionValue(password.getOpt());
+				
 				String[] guiArgs = null;
 				if (configString != null)
 				{
-					guiArgs = new String[]{configString};
+					guiArgs = new String[]{configString, passwordValue };
 				}
 				else
 				{
 					guiArgs = new String[]{};
 				}
-
+				
 				Application.launch(Main.class, guiArgs);
 				return;
 			}
@@ -221,7 +230,7 @@ public class MainRunner
                 System.out.println(String.format("Error: output directory %s does not exist", outputDir.getPath()));
 				error = true;
 			}
-
+			
 			if (error)
 			{
 				return;

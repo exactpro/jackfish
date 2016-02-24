@@ -30,9 +30,11 @@ import com.exactprosystems.jf.tool.settings.SettingsPanel;
 import com.exactprosystems.jf.tool.settings.Theme;
 import com.exactprosystems.jf.tool.systemvars.SystemVarsFx;
 import com.exactprosystems.jf.tool.text.PlainTextFx;
+
 import javafx.application.Application;
 import javafx.concurrent.Task;
 import javafx.stage.Stage;
+
 import org.apache.log4j.Logger;
 
 import java.io.File;
@@ -42,6 +44,7 @@ import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.Optional;
 
 public class Main extends Application
@@ -63,6 +66,8 @@ public class Main extends Application
 	private MainController controller;
 	private RunnerListener runnerListener;
 
+	// TODO use this password
+	private String password;  
 	private Configuration config;
 	private Settings settings;
 	private List<Document> docs = new ArrayList<Document>();
@@ -113,8 +118,11 @@ public class Main extends Application
 					controller.disableMenu(true);
 					
 					final List<String> args = getParameters().getRaw();
+					
 					if (args.size() > 0)
 					{
+						Main.this.password = args.size() > 1 ? args.get(1) : null; 
+						
 						loadConfiguration(args.get(0));
 						
 						controller.clearLastMatrixMenu();
@@ -603,5 +611,4 @@ public class Main extends Application
 		docs.add(doc);
 		doc.display();
 	}
-	
 }
