@@ -285,7 +285,7 @@ public class ElementInfoController implements Initializable, ContainingParent
 	//============================================================
 	private void setTextFieldListeners()
 	{
-		Arrays.stream(new CustomFieldWithButton[] {this.tfUID, this.tfXpath, this.tfClass, this.tfText, this.tfName, this.tfTooltip, this.tfAction, this.tfTitle, this.tfExpression, this.tfID})
+		Arrays.stream(new CustomFieldWithButton[] {this.tfUID, this.tfXpath, this.tfClass, this.tfText, this.tfName, this.tfTooltip, this.tfAction, this.tfTitle, this.tfExpression})
 				.forEach(tf -> {
 					tf.focusedProperty().addListener(textFocusListener(tf));
 					tf.setHandler(event -> {
@@ -293,6 +293,11 @@ public class ElementInfoController implements Initializable, ContainingParent
 						changeText(tf, "");
 					});
 				});
+		this.tfID.focusedProperty().addListener(textIdFocusListener(this.tfID));
+		this.tfID.setHandler(event -> {
+			this.tfID.clear();
+			changeText(this.tfID, "");
+		});
 		this.tfTimeout.focusedProperty().addListener(numberFocusListener(this.tfTimeout));
 		this.checkBoxAbsoluteXpath.selectedProperty().addListener((obs, prev, next) -> changeBoolean(this.checkBoxAbsoluteXpath, next));
 	}
@@ -388,6 +393,21 @@ public class ElementInfoController implements Initializable, ContainingParent
 			}
 			if (!newValue && oldValue)
 			{
+				changeText(tf, tf.getText());
+			}
+		});
+	}
+
+	private ChangeListener<Boolean> textIdFocusListener(TextField tf)
+	{
+		return ((observable, oldValue, newValue) -> {
+			if (!oldValue && newValue)
+			{
+				this.previousValue = tf.getText();
+			}
+			if (!newValue && oldValue)
+			{
+				Common.tryCatch(() -> this.navigation.checkNewId(tf.getText()), "");
 				changeText(tf, tf.getText());
 			}
 		});

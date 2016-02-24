@@ -22,6 +22,7 @@ import com.exactprosystems.jf.tool.dictionary.actions.ActionsController;
 import com.exactprosystems.jf.tool.dictionary.info.element.ElementInfoController;
 import com.exactprosystems.jf.tool.dictionary.info.owner.OwnerInfoController;
 import com.exactprosystems.jf.tool.dictionary.navigation.NavigationController;
+import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.main.Main;
 import com.exactprosystems.jf.tool.settings.SettingsPanel;
 import com.exactprosystems.jf.tool.settings.Theme;
@@ -279,5 +280,10 @@ public class DictionaryFxController implements Initializable, ContainingParent
 	public void displayActionControl(Collection<String> entries, String entry, String title)
 	{
 		this.actionsController.displayActionControl(entries, entry, title);
+	}
+
+	public void showInfo(String info)
+	{
+		DialogsHelper.showInfo(info);
 	}
 }

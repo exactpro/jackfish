@@ -287,6 +287,12 @@ public class NavigationController implements Initializable, ContainingParent
 	}
 
 
+	public void checkNewId(String id) throws Exception
+	{
+		this.model.checkNewId(currentWindow(), id);
+	}
+
+
 	// ------------------------------------------------------------------------------------------------------------------
 	// display* methods
 	// ------------------------------------------------------------------------------------------------------------------
