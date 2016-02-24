@@ -67,19 +67,15 @@
 		<jar destfile="jackfish.jar" basedir="${build.dir}">
 			<manifest>
 				<attribute name="Version" value="${version}.${revision}"/>
-				<attribute name="Main-Class" value="org.eclipse.jdt.internal.jarinjarloader.JarRsrcLoader"/>
-				<attribute name="Rsrc-Main-Class" value="com.exactprosystems.jf.common.MainRunner"/>
+				<attribute name="Main-Class" value="com.exactprosystems.jf.common.MainRunner"/>
 				<attribute name="Class-Path" value="."/>
-				<attribute name="Rsrc-Class-Path"
-						   value="./  libs/api.jar libs/commons-cli-1.2.jar libs/commons-exec-1.1.jar libs/javacsv.jar libs/log4j-1.2.17.jar libs/mvel2-2.2.7.Final.jar"/>
 			</manifest>
-			<zipfileset src="${lib.dir}/jar-in-jar-loader.zip"/>
-			<zipfileset prefix="libs" dir="${api.dir}/release" includes="api.jar"/>
-			<zipfileset prefix="libs" dir="${lib.dir}" includes="commons-cli-1.2.jar"/>
-			<zipfileset prefix="libs" dir="${lib.dir}" includes="commons-exec-1.1.jar"/>
-			<zipfileset prefix="libs" dir="${lib.dir}" includes="javacsv.jar"/>
-			<zipfileset prefix="libs" dir="${lib.dir}" includes="log4j-1.2.17.jar"/>
-			<zipfileset prefix="libs" dir="${lib.dir}" includes="mvel2-2.2.7.Final.jar"/>
+			<zipfileset src="${api.dir}/release/api.jar"/>
+			<zipfileset src="${lib.dir}/commons-cli-1.2.jar"/>
+			<zipfileset src="${lib.dir}/commons-exec-1.1.jar"/>
+			<zipfileset src="${lib.dir}/javacsv.jar"/>
+			<zipfileset src="${lib.dir}/log4j-1.2.17.jar"/>
+			<zipfileset src="${lib.dir}/mvel2-2.2.7.Final.jar"/>
 		</jar>
 	</target>
 
