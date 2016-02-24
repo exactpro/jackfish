@@ -377,6 +377,7 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 
 		beforeReport(report);
 
+		this.changeState(MatrixItemState.Executing);
 		listener.started(this.owner, this);
 		report.itemStarted(this);
 
@@ -387,7 +388,7 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 
 		report.itemFinished(this, result);
 		listener.finished(this.owner, this, this.result.getResult());
-
+		this.changeState(this.isBreakPoint() ? MatrixItemState.BreakPoint : MatrixItemState.None);
 		afterReport(report);
 
 		return this.result;

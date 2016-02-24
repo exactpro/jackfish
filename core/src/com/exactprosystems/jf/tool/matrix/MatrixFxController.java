@@ -15,7 +15,6 @@ import com.exactprosystems.jf.common.parser.DisplayDriver;
 import com.exactprosystems.jf.common.parser.Matrix;
 import com.exactprosystems.jf.common.parser.Result;
 import com.exactprosystems.jf.common.parser.items.MatrixItem;
-import com.exactprosystems.jf.common.parser.items.MatrixItemState;
 import com.exactprosystems.jf.common.parser.listeners.IMatrixListener;
 import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.CssVariables;
@@ -238,7 +237,6 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 	{
 		if (toggleTracing.isSelected())
 		{
-			item.changeState(MatrixItemState.Executing);
 			Platform.runLater(this.tree::refresh);
 		}
 	}
@@ -246,7 +244,6 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 	@Override
 	public void finished(Matrix matrix, MatrixItem item, Result result)
 	{
-		item.changeState(item.isBreakPoint() ? MatrixItemState.BreakPoint : MatrixItemState.None);
 		Platform.runLater(this.tree::refresh);
 	}
 
@@ -255,9 +252,9 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 	{
 		try
 		{
+			Platform.runLater(this.tree::refresh);
 			Optional.ofNullable(this.watcher).ifPresent(WatcherFx::update);
 			TreeItem<MatrixItem> treeItem = this.tree.find(item);
-			//		((GridPane) treeItem.getValue().getLayout()).getStyleClass().add(CssVariables.PAUSED_MATRIX_ITEM);
 			DialogsHelper.showInfo(String.format("Matrix paused on \'%s\'", treeItem.getValue().getItemName()));
 			Optional.ofNullable(this.listView).ifPresent(lv -> lv.getItems().add(ConsoleText.pausedItem(String.format("Paused on %s", item), item)));
 			this.tree.scrollTo(this.tree.getRow(treeItem));
