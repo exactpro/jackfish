@@ -273,20 +273,38 @@ public class SwingRemoteApplication extends RemoteApplication
 	{
 		try
 		{
+			logger.debug("START SWITCH TO DERIVED");
+			logger.debug(String.format("Found title : '%s'",title));
 			Component frame = this.currentRobot.finder().find(new ComponentMatcher()
 			{
 				@Override
 				public boolean matches(Component c)
 				{
+					logger.debug(String.format("component : '%s'", c));
+					if (c != null)
+					{
+						logger.debug(String.format("component.getClass() : '%s'",c.getClass()));
+						if (c instanceof Frame)
+						{
+							logger.debug(String.format("title frame: '%s' ",((Frame) c).getTitle()));
+						}
+						if (c instanceof Dialog)
+						{
+							logger.debug(String.format("title dialog : '%s'", ((Dialog) c).getTitle()));
+						}
+					}
+					logger.debug("###############################################");
 					return c != null && (c instanceof JFrame && ((JFrame) c).getTitle().equals(title)) || (c instanceof JDialog && ((JDialog) c).getTitle().equals(title));
 				}
 			});
 			this.operationExecutor.setCurrentFrame(frame);
+			logger.debug(String.format("Found frame : '%s'",frame));
+			logger.debug("END SWITCH TO DERIVED");
 			return title; // done
 		}
 		catch (Exception e)
 		{
-			logger.error(String.format("swichToDerived(%s)", title));
+			logger.error(String.format("switchToDerived(%s)", title));
 			logger.error(e.getMessage(), e);
 			throw e;
 		}
