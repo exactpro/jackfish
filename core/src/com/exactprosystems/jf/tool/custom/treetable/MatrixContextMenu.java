@@ -102,6 +102,10 @@ public class MatrixContextMenu extends ContextMenu
 			{
 				return;
 			}
+			if (!(keyEvent.getTarget() instanceof MatrixTreeView))
+			{
+				return;
+			}
 			if (SettingsPanel.match(settings, keyEvent, SettingsPanel.BREAK_POINT))
 			{
 				breakPoint(matrix, treeView);
