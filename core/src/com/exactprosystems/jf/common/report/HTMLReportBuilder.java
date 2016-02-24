@@ -11,6 +11,7 @@ package com.exactprosystems.jf.common.report;
 import com.exactprosystems.jf.common.Configuration;
 import com.exactprosystems.jf.common.parser.Matrix;
 import com.exactprosystems.jf.common.parser.Result;
+import com.exactprosystems.jf.common.parser.items.CommentString;
 import com.exactprosystems.jf.common.parser.items.MatrixItem;
 import com.exactprosystems.jf.common.version.VersionInfo;
 
@@ -166,14 +167,24 @@ public class HTMLReportBuilder extends ReportBuilder
 				id);
 
 		writer.fwrite(
-				"<table border='0' cellspacing='0' width='50%%' >\n " + 
+				"<table border='0' cellspacing='0' width='50%%' >\n ");
+
+		for (CommentString comment : item.getComments())
+		{
+			writer.fwrite(
+					"<tr><td><td>%s</tr>",
+					"" + comment); 
+		}
+
+		writer.fwrite(
+				"<table border='0' cellspacing='0' width='50%%' >\n " +
 				"<tr>" +
-						"<td width='40px'>[%03d]" +
-						"<td width='100px'><span class='Identity'>%s</span>" +
-						"<td><a href='javascript:void(0)' class='showBody'>%s:</a>" +
-						"<td width='200px'><span id='hs_%s'>Loading...</span>"+
-						"<td width='100px'><span class='Time'>Time:</span>\n" +
-						"<td class='ExecutionTime'><span id='time_%s'></span>\n",
+				"<td width='40px'>[%03d]" +
+				"<td width='100px'><span class='Identity'>%s</span>" +
+				"<td><a href='javascript:void(0)' class='showBody'>%s:</a>" +
+				"<td width='200px'><span id='hs_%s'>Loading...</span>"+
+				"<td width='100px'><span class='Time'>Time:</span>\n" +
+				"<td class='ExecutionTime'><span id='time_%s'></span>\n",
 				item.getNumber(),
 				itemId,
 				item.getItemName(),
