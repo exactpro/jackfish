@@ -35,8 +35,10 @@ import javafx.stage.Stage;
 import org.apache.log4j.Logger;
 
 import java.awt.*;
+import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.StringSelection;
+import java.awt.datatransfer.Transferable;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
@@ -48,38 +50,38 @@ import java.util.Optional;
 
 public abstract class Common
 {
-	public static ProgressBar					progressBar;
-	private static TabPane						tabPane;
+	public static ProgressBar progressBar;
+	private static TabPane tabPane;
 
-	public final static String					settingsPath				= ".settings.xml";
-	public static final String					breakPointLabel				= "breakPoint";
+	public final static String settingsPath = ".settings.xml";
+	public static final String breakPointLabel = "breakPoint";
 
-	public final static int						PREF_HEIGHT					= 23;
+	public final static int PREF_HEIGHT = 23;
 
-	public final static int						MIN_HEIGHT					= PREF_HEIGHT - 1;
-	public final static int						MAX_HEIGHT					= PREF_HEIGHT + 1;
+	public final static int MIN_HEIGHT = PREF_HEIGHT - 1;
+	public final static int MAX_HEIGHT = PREF_HEIGHT + 1;
 	/**
 	 * this field - pref width label on gui for name action item
 	 */
-	public final static int						PREF_WIDTH_LABEL			= 170;
+	public final static int PREF_WIDTH_LABEL = 170;
 
-	public static Stage							node;
+	public static Stage node;
 
-	public static final String					intPositiveNumberMatcher	= "^\\d+$";
-	public static final String					intNumberMatcher			= "^-?\\d+$";
-	public static final String					empty						= "<none>";
-	public static final int						BUTTON_SIZE_WITH_ICON		= 42;
-	public static final javafx.geometry.Insets	insetsNode					= new javafx.geometry.Insets(2, 5, 2, 5);
-	public static final javafx.geometry.Insets	insetsGrid					= new javafx.geometry.Insets(0);
+	public static final String intPositiveNumberMatcher = "^\\d+$";
+	public static final String intNumberMatcher = "^-?\\d+$";
+	public static final String empty = "<none>";
+	public static final int BUTTON_SIZE_WITH_ICON = 42;
+	public static final javafx.geometry.Insets insetsNode = new javafx.geometry.Insets(2, 5, 2, 5);
+	public static final javafx.geometry.Insets insetsGrid = new javafx.geometry.Insets(0);
 
-	private static File							baseFile					= new File(".");
-	public static Popup							popup;
+	private static File baseFile = new File(".");
+	public static Popup popup;
 
-	public static final Logger					logger						= Logger.getLogger(Common.class);
+	public static final Logger logger = Logger.getLogger(Common.class);
 
-	public static final String 					FONT_SIZE					= "-fx-font-size : 12";
+	public static final String FONT_SIZE = "-fx-font-size : 12";
 
-	public static final String					DATE_TIME_PATTERN			= "HH:mm:ss dd.MM.yyyy";
+	public static final String DATE_TIME_PATTERN = "HH:mm:ss dd.MM.yyyy";
 
 	public static void setFocused(final TextField field)
 	{
@@ -94,6 +96,7 @@ public abstract class Common
 			}
 		}).start();
 	}
+
 	public static boolean appIsFocused()
 	{
 		return node != null && node.isFocused();
@@ -117,7 +120,7 @@ public abstract class Common
 
 	public static CustomTab createTab(final Document model, Settings settings)
 	{
-		final CustomTab[] closure = new CustomTab[] { null };
+		final CustomTab[] closure = new CustomTab[]{null};
 		CustomTab tab = new CustomTab(model)
 		{
 			@Override
@@ -132,13 +135,11 @@ public abstract class Common
 			@Override
 			public void reload() throws Exception
 			{
-				Platform.runLater(() ->
-				{
+				Platform.runLater(() -> {
 					ButtonType desision = DialogsHelper.showFileChangedDialog(model.getName());
 					if (desision == ButtonType.OK)
 					{
-						Common.tryCatch(() ->
-						{
+						Common.tryCatch(() -> {
 							try (Reader reader = new FileReader(model.getName()))
 							{
 								model.load(reader);
@@ -183,7 +184,7 @@ public abstract class Common
 
 	public static CustomTab checkDocument(Document doc)
 	{
-		Optional<Tab> first = tabPane.getTabs().stream().filter(tab ->((CustomTab) tab).getDocument().equals(doc)).findFirst();
+		Optional<Tab> first = tabPane.getTabs().stream().filter(tab -> ((CustomTab) tab).getDocument().equals(doc)).findFirst();
 
 		if (first.isPresent())
 		{
@@ -194,15 +195,13 @@ public abstract class Common
 
 	public static String getRelativePath(String filePath)
 	{
+		String result = filePath;
 		String base = baseFile.getAbsolutePath().substring(0, baseFile.getAbsolutePath().length() - 1);
 		if (filePath.contains(base))
 		{
-			return filePath.substring(base.length());
+			result = filePath.substring(base.length());
 		}
-		else
-		{
-			return filePath;
-		}
+		return result.replace('\\', '/');
 	}
 
 	public static String absolutePath(File file)
@@ -322,26 +321,12 @@ public abstract class Common
 
 	public static LocalDateTime convert(Date date)
 	{
-		return LocalDateTime.of(
-				DateTime.getYears(date),
-				DateTime.getMonths(date),
-				DateTime.getDays(date),
-				DateTime.getHours(date),
-				DateTime.getMinutes(date),
-				DateTime.getSeconds(date)
-		);
+		return LocalDateTime.of(DateTime.getYears(date), DateTime.getMonths(date), DateTime.getDays(date), DateTime.getHours(date), DateTime.getMinutes(date), DateTime.getSeconds(date));
 	}
 
 	public static Date convert(LocalDateTime dateTime)
 	{
-		return DateTime.date(
-				dateTime.getYear(),
-				dateTime.getMonthValue(),
-				dateTime.getDayOfMonth(),
-				dateTime.getHour(),
-				dateTime.getMinute(),
-				dateTime.getSecond()
-		);
+		return DateTime.date(dateTime.getYear(), dateTime.getMonthValue(), dateTime.getDayOfMonth(), dateTime.getHour(), dateTime.getMinute(), dateTime.getSecond());
 	}
 
 	// --------------------------------------------------------------------------------------------------------------------------
@@ -416,8 +401,8 @@ public abstract class Common
 		}
 		return font.getName() + "$" + font.getSize();
 	}
-	
-	
+
+
 	public static Font fontFromString(String fontName)
 	{
 		if (fontName == null)
@@ -433,8 +418,9 @@ public abstract class Common
 				size = Double.parseDouble(parts[1]);
 			}
 			catch (NumberFormatException e)
-			{ }
-			
+			{
+			}
+
 			return Font.font(parts[0], size);
 		}
 		return Font.getDefault();
@@ -460,10 +446,25 @@ public abstract class Common
 	{
 		try
 		{
-			return String.valueOf(Toolkit.getDefaultToolkit().getSystemClipboard().getData(DataFlavor.stringFlavor));
+			long t1 = System.currentTimeMillis();
+			Toolkit defaultToolkit = Toolkit.getDefaultToolkit();
+			System.out.println("def toolkit : " + (System.currentTimeMillis() - t1));
+			t1 = System.currentTimeMillis();
+			Clipboard systemClipboard = defaultToolkit.getSystemClipboard();
+			System.out.println("clipboard : " + (System.currentTimeMillis() - t1));
+			t1 = System.currentTimeMillis();
+			Transferable contents = systemClipboard.getContents(null);
+			Object data = systemClipboard.getData(DataFlavor.plainTextFlavor);
+			System.out.println("get data" + (System.currentTimeMillis() - t1));
+			t1 = System.currentTimeMillis();
+			String s = String.valueOf(data);
+			System.out.println("value of " + (System.currentTimeMillis() - t1));
+			return s;
+			//			return String.valueOf(Toolkit.getDefaultToolkit().getSystemClipboard().getData(DataFlavor.stringFlavor));
 		}
 		catch (Exception e)
 		{
+			e.printStackTrace();
 			return "";
 		}
 	}
