@@ -30,11 +30,9 @@ import com.exactprosystems.jf.tool.settings.SettingsPanel;
 import com.exactprosystems.jf.tool.settings.Theme;
 import com.exactprosystems.jf.tool.systemvars.SystemVarsFx;
 import com.exactprosystems.jf.tool.text.PlainTextFx;
-
 import javafx.application.Application;
 import javafx.concurrent.Task;
 import javafx.stage.Stage;
-
 import org.apache.log4j.Logger;
 
 import java.io.File;
@@ -44,7 +42,6 @@ import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map.Entry;
 import java.util.Optional;
 
 public class Main extends Application
@@ -322,7 +319,7 @@ public class Main extends Application
 		MatrixFx doc = new MatrixFx(newName(Matrix.class), this.config, new MatrixListener());
 		doc.create();
 		Settings.SettingsValue copyright = settings.getValueOrDefault(Settings.GLOBAL_NS, "Main", "copyright", "");
-		String text = copyright.getValue().replaceAll("\\\\n", "\n");
+		String text = copyright.getValue().replaceAll("\\\\n", System.lineSeparator());
 		doc.addCopyright(text);
 		docs.add(doc);
 		doc.display();

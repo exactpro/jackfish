@@ -248,9 +248,7 @@ public class Matrix extends AbstractDocument implements IMatrix, Cloneable
 	// ==============================================================================================================================
 	public void addCopyright(String text)
 	{
-		Optional.ofNullable(this.getRoot().get(0)).ifPresent(first -> {
-			first.addCopyright(text);
-		});
+		Optional.ofNullable(this.getRoot().get(0)).ifPresent(first -> first.addCopyright(text));
 	}
 
 	public MatrixItem getRoot()

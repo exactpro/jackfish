@@ -481,7 +481,7 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 	{
 		if (this.getParent() instanceof MatrixRoot && getParent().get(0) == this)
 		{
-			this.comments.addAll(Arrays.asList(copyright.split("\n")).stream().map(CommentString::new).collect(Collectors.toList()));
+			this.comments.addAll(Arrays.asList(copyright.split(System.lineSeparator())).stream().map(CommentString::new).collect(Collectors.toList()));
 		}
 	}
 	

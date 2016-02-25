@@ -207,7 +207,7 @@ public class SettingsPanelController implements Initializable, ContainingParent
 		this.useFullScreen.setSelected(Boolean.valueOf(res.get(useFullScreen.getId()) == null ? "false" : res.get(useFullScreen.getId())));
 		this.useSmallWindow.setSelected(Boolean.valueOf(res.get(useSmallWindow.getId()) == null ? "false" : res.get(useSmallWindow.getId())));
 		this.useFullScreenXpath.setSelected(Boolean.valueOf(res.get(useFullScreenXpath.getId()) == null ? "false" : res.get(useFullScreenXpath.getId())));
-		this.taCopyright.setText(res.get(taCopyright.getId()) == null ? "" : res.get(taCopyright.getId()).replaceAll("\\\\n", "\n"));
+		this.taCopyright.setText(res.get(taCopyright.getId()) == null ? "" : res.get(taCopyright.getId()).replaceAll("\\\\n", System.lineSeparator()));
 	}
 
 	public void displayLogs(Map<String, String> res)
@@ -548,7 +548,7 @@ public class SettingsPanelController implements Initializable, ContainingParent
 		this.taCopyright.focusedProperty().addListener((observable1, oldValue, newValue) -> {
 			if (!newValue && oldValue)
 			{
-				model.updateSettingsValue(this.taCopyright.getId(), SettingsPanel.SETTINGS, this.taCopyright.getText().replaceAll("\n", "\\\\n"));
+				model.updateSettingsValue(this.taCopyright.getId(), SettingsPanel.SETTINGS, this.taCopyright.getText().replaceAll(System.lineSeparator(), "\\\\n"));
 			}
 		});
 		this.ntfMaxLastMatrixCount.focusedProperty().addListener((observable, oldValue, newValue) -> model.updateSettingsValue(ntfMaxLastMatrixCount.getId(), SettingsPanel.SETTINGS, String.valueOf(ntfMaxLastMatrixCount.getValue())));
