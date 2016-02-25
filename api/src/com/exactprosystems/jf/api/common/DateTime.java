@@ -22,7 +22,7 @@ public class DateTime extends Date
 
 	public static void main(String[] args)
 	{
-		System.out.println(DateTime.current().setTime(10, 10, 10));
+		System.out.println(DateTime.current().str("HH:mm"));
 	}
 
 	@DescriptionAttribute(text = "Sets formats for convert string to date")
@@ -185,6 +185,10 @@ public class DateTime extends Date
 		return new DateTime(calendar.getTime());
 	}
 
+	public String str(String format)
+	{
+		return new SimpleDateFormat(format).format(this);
+	}
 
 	//------------------------------------------------------------------------------------------------------------------
 	// fabric methods
