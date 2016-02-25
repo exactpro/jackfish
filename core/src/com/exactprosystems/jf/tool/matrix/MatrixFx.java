@@ -561,7 +561,9 @@ public class MatrixFx extends Matrix
 
 	public void paste(PlaceToInsert place, MatrixItem where) throws Exception
 	{
+		long t1 = System.currentTimeMillis();
 		String string = Common.getFromClipboard();
+		System.out.println("Get from clipboard : " + (System.currentTimeMillis() - t1));
 		Parser parser = new Parser();
 		MatrixItem[] items = parser.stringToItems(string);
 
@@ -841,6 +843,8 @@ public class MatrixFx extends Matrix
 			this.controller.setDefaultApp(this.defaultAppId);
 			this.controller.setDefaultClient(this.defaultClientId);
 		}
+		super.setDefaultApp(this.defaultAppId);
+		super.setDefaultClient(this.defaultClientId);
 
 	}
 
