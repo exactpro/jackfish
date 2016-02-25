@@ -26,10 +26,10 @@ public class CheckingLayoutResult implements Serializable
 		return this.errors;
 	}
 
-	public void error(String string)
+	public void error(Piece piece, String string)
 	{
 		this.ok = false;
-		this.errors.add(string);
+		this.errors.add("Processing part is [" + piece + "] " + string);
 	}
 
 	public void set(boolean b)
