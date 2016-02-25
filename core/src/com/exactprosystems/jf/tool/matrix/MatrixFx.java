@@ -563,7 +563,7 @@ public class MatrixFx extends Matrix
 	{
 		long t1 = System.currentTimeMillis();
 		String string = Common.getFromClipboard();
-		System.out.println("Get from clipboard : " + (System.currentTimeMillis() - t1));
+//		System.out.println("Get from clipboard : " + (System.currentTimeMillis() - t1));
 		Parser parser = new Parser();
 		MatrixItem[] items = parser.stringToItems(string);
 

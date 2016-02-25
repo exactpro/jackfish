@@ -448,17 +448,16 @@ public abstract class Common
 		{
 			long t1 = System.currentTimeMillis();
 			Toolkit defaultToolkit = Toolkit.getDefaultToolkit();
-			System.out.println("def toolkit : " + (System.currentTimeMillis() - t1));
+//			System.out.println("def toolkit : " + (System.currentTimeMillis() - t1));
 			t1 = System.currentTimeMillis();
 			Clipboard systemClipboard = defaultToolkit.getSystemClipboard();
-			System.out.println("clipboard : " + (System.currentTimeMillis() - t1));
+//			System.out.println("clipboard : " + (System.currentTimeMillis() - t1));
 			t1 = System.currentTimeMillis();
-			Transferable contents = systemClipboard.getContents(null);
-			Object data = systemClipboard.getData(DataFlavor.plainTextFlavor);
-			System.out.println("get data" + (System.currentTimeMillis() - t1));
+			Object data = systemClipboard.getData(DataFlavor.stringFlavor);
+//			System.out.println("get data" + (System.currentTimeMillis() - t1));
 			t1 = System.currentTimeMillis();
 			String s = String.valueOf(data);
-			System.out.println("value of " + (System.currentTimeMillis() - t1));
+//			System.out.println("value of " + (System.currentTimeMillis() - t1));
 			return s;
 			//			return String.valueOf(Toolkit.getDefaultToolkit().getSystemClipboard().getData(DataFlavor.stringFlavor));
 		}
