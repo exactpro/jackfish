@@ -544,8 +544,9 @@ public class DisplayDriverFx implements DisplayDriver
 	}
 
 	private List<CommentString> fromStr(String str)
-	{
-		return Arrays.asList(str.split(LINE_SEPARATOR)).stream().map(CommentString::new).collect(Collectors.toList());
+    {
+                                // because TextArea from javafx split line via \n, not via System.lineSeparator()
+		return Arrays.asList(str.split("\n")).stream().map(CommentString::new).collect(Collectors.toList());
 	}
 
 	private String fromList(List<CommentString> list)
