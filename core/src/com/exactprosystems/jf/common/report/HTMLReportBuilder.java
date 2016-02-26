@@ -310,7 +310,8 @@ public class HTMLReportBuilder extends ReportBuilder
 			int count = 0;
 			for (Object obj : value)
 			{
-				writer.fwrite("<td>%s", postProcess(ReportHelper.objToString(obj, count >= quotes)));
+//				writer.fwrite("<td>%s", postProcess(ReportHelper.objToString(obj, count >= quotes)));
+				writer.fwrite("<td>%s", ReportHelper.objToString(obj, count >= quotes));
 				count++;
 			}
             writer.fwrite("\n");
