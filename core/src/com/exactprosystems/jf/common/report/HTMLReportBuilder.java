@@ -311,6 +311,7 @@ public class HTMLReportBuilder extends ReportBuilder
 			for (Object obj : value)
 			{
 //				writer.fwrite("<td>%s", postProcess(ReportHelper.objToString(obj, count >= quotes)));
+				//TODO workaround
 				writer.fwrite("<td>%s", ReportHelper.objToString(obj, count >= quotes));
 				count++;
 			}

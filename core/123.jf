@@ -7,19 +7,16 @@
 // //==============================================
 #TestCase
 Test case
-    #Id;#Action;#Matrix
-    MXRN1;MatrixRun;'123.jf'
+    #For;#From;#To;#Step
+    i;0;10;1
+        #If
+        i%2 == 0
+            #Id;#Action;#i
+            qwe;Print;i
 
-    #Id;#Action;#Matrix
-    MXWT1;MatrixWait;MXRN1.Out
+        #EndIf
 
-    #Id;#Action;#File
-    TBL1;TableLoadFromFile;'link.csv'
+        #Id;#Action;#i
+        aa;Print;i
 
-    #Action;#Table;#Index;#h2
-    TableSetValue;TBL1.Out;0;'<a href="../'+MXRN1.Out.getReportName()+'">'+MXRN1.Out.getMatrixName()+'</a>'
-
-    #Action;#Table;#Title
-    TableReport;TBL1.Out;'asd'
-
-
+    #EndFor
