@@ -15,6 +15,7 @@ public enum Result
 	Return,
 	Passed,
 	Failed,
+	Ignored,
 	NotExecuted,
 	Off, 
 	Stopped

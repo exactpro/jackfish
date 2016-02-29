@@ -14,7 +14,7 @@ a:visited {
 	font-size: large;
 }
 
-.Passed, .Failed, .NotExecuted, .Documented, .Return {
+.Passed, .Failed, .Ignored, .NotExecuted, .Documented, .Return {
 	font-weight: bold;
 	margin-left: 3em;
 }
@@ -36,6 +36,10 @@ a:visited {
 
 .Failed {
 	color: red;
+}
+
+.Ignored {
+	color: orange;
 }
 
 .matrixSource pre {

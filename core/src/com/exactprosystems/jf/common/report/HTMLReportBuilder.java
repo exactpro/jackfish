@@ -172,7 +172,7 @@ public class HTMLReportBuilder extends ReportBuilder
 		for (CommentString comment : item.getComments())
 		{
 			writer.fwrite(
-					"<tr><td><td>%s</tr>",
+					"<tr><td><td>%s</tr>\n",
 					"" + comment); 
 		}
 

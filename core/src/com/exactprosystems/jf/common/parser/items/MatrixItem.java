@@ -382,11 +382,17 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 		report.itemStarted(this);
 
 		report.itemIntermediate(this);
-		long time1 = System.currentTimeMillis();
+		long startTime = System.currentTimeMillis();
 		this.result = executeItSelf(context, listener, evaluator, report, this.parameters);
-		long result = System.currentTimeMillis() - time1;
 
-		report.itemFinished(this, result);
+		if (this.result.getResult() == Result.Failed && isTrue(this.ignoreErr.get()))
+		{
+			this.result = new ReturnAndResult(Result.Ignored, this.result.getOut(), this.result.getError());
+		}
+		
+		long duration = System.currentTimeMillis() - startTime;
+
+		report.itemFinished(this, duration);
 		listener.finished(this.owner, this, this.result.getResult());
 		this.changeState(this.isBreakPoint() ? MatrixItemState.BreakPoint : MatrixItemState.None);
 		afterReport(report);
@@ -809,6 +815,7 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 
 				if (isTrue(item.ignoreErr.get()))
 				{
+					result = Result.Ignored;
 					wasError = false;
 				}
 				else
