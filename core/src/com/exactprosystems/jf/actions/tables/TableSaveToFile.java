@@ -89,6 +89,6 @@ public class TableSaveToFile extends AbstractAction
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
-		super.setResult(this.table.save(this.fileName, this.delimiter.charAt(0), this.saveValues));
+		super.setResult(this.table.save(this.fileName, this.delimiter.charAt(0), this.saveValues, false));
 	}
 }

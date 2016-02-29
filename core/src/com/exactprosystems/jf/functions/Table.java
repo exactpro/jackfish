@@ -20,6 +20,7 @@ import com.exactprosystems.jf.common.report.ReportHelper;
 import com.exactprosystems.jf.common.report.ReportTable;
 import com.exactprosystems.jf.exceptions.ColumnIsPresentException;
 import com.exactprosystems.jf.sql.SqlConnection;
+
 import org.apache.log4j.Logger;
 
 import java.io.*;
@@ -219,14 +220,14 @@ public class Table implements List<Map<String, Object>>, Mutable, Cloneable
 		return this;
 	}
 
-	public boolean save(String fileName, char delimiter, boolean saveValues)
+	public boolean save(String fileName, char delimiter, boolean saveValues, boolean withNmumbers)
 	{
 		CsvWriter writer = null;
 
 		try (Writer bufferedWriter = new BufferedWriter(new FileWriter(fileName)))
 		{
 			writer = new CsvWriter(bufferedWriter, delimiter);
-			return save(writer, "", saveValues);
+			return save(writer, "", saveValues, withNmumbers);
 		}
 		catch (Exception e)
 		{
@@ -242,20 +243,30 @@ public class Table implements List<Map<String, Object>>, Mutable, Cloneable
 		}
 	}
 	
-	public boolean save(CsvWriter writer, String indent, boolean saveValues) throws IOException
+	public boolean save(CsvWriter writer, String indent, boolean saveValues, boolean withNmumbers) throws IOException
 	{
-		String[] record = new String[this.headers.length + 1];
-		record[0] = indent + ROW_INDEX_SYMBOL;
+		int columns = this.headers.length + (withNmumbers ? 1 : 0);
+		String[] record = new String[columns];
+		int count = 0;
+		if (withNmumbers)
+		{
+			record[count++] = indent + ROW_INDEX_SYMBOL;
+		}
 		for (int i = 0; i < this.headers.length; i++)
 		{
-			record[i + 1] = this.headers[i].name;
+			record[count++] = this.headers[i].name;
 		}
 		writer.writeRecord(record, true);
+
 
 		List<Map<Header, Object>> innerList1 = this.innerList;
 		for (int j = 0; j < innerList1.size(); j++)
 		{
-			record[0] = indent + String.valueOf(j);
+			count = 0;
+			if (withNmumbers)
+			{
+				record[count++] = indent + String.valueOf(j);
+			}
 			Map<Header, Object> f = innerList1.get(j);
 			for (int i = 0; i < this.headers.length; i++)
 			{
@@ -269,7 +280,7 @@ public class Table implements List<Map<String, Object>>, Mutable, Cloneable
 				{
 					value = source;
 				}
-				record[i + 1] = String.valueOf(value == null ? "" : value);
+				record[count++] = String.valueOf(value == null ? "" : value);
 			}
 			writer.writeRecord(record, true);
 		}
@@ -385,26 +396,26 @@ public class Table implements List<Map<String, Object>>, Mutable, Cloneable
 	public void addColumns(String... columns)
 	{
 		this.changed = true;
-		this.useColumnNumber = columns.length > 0 && columns[0].equals(ROW_INDEX_SYMBOL);
-		if (this.headers == null)
+		List<Header> list = new ArrayList<Header>();
+		if (this.headers != null)
 		{
-			this.headers = new Header[]{};
+			list.addAll(Arrays.asList(this.headers));
 		}
-
-		int col = this.headers.length;
-		int use = useColumnNumber ? 1 : 0;
-		this.headers = Arrays.copyOf(this.headers, this.headers.length + columns.length - use);
-		for (int i = use; i < columns.length; i++)
+		
+		for (String column : columns)
 		{
-			String column = columns[i];
-			int index = 0;
-			while (columnIsPresent(column))
+			if (column.equals(ROW_INDEX_SYMBOL))
 			{
-				column = column + index;
+				this.useColumnNumber = true;
+				continue;
 			}
-			Header header = new Header(column, null);
-			this.headers[col++] = header;
+			if (!columnIsPresent(column))
+			{
+				list.add(new Header(column, null));
+			}
 		}
+		
+		this.headers = list.toArray(new Header[0]);
 	}
 
 	private boolean columnIsPresent(String columnName)
@@ -514,24 +525,13 @@ public class Table implements List<Map<String, Object>>, Mutable, Cloneable
 		this.changed = true;
 		if (this.headers != null)
 		{
-			Map<Header, Object> line = convert(arr);
-			this.innerList.add(line);
-		}
-	}
-
-	public void addValueOnParsing(Object[] arr)
-	{
-		this.changed = true;
-		if (this.headers != null)
-		{
-			Map<Header, Object> map = new LinkedHashMap<>();
-			int s = useColumnNumber ? 1 : 0;
-			for (int i = 0; i < Math.min(this.headers.length, arr.length); i++)
+			if (this.useColumnNumber)
 			{
-				map.put(this.headers[i], arr[i + s]);
+				arr = Arrays.copyOfRange(arr, 1, arr.length);
 			}
 
-			this.innerList.add(map);
+			Map<Header, Object> line = convert(arr);
+			this.innerList.add(line);
 		}
 	}
 

@@ -143,7 +143,7 @@ public class RawText extends MatrixItem
 	{
 		try
 		{
-			this.table.save(writer, indent, false);
+			this.table.save(writer, indent, false, true);
 		}
 		catch (IOException e)
 		{

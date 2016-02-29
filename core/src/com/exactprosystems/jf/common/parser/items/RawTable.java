@@ -110,7 +110,7 @@ public class RawTable extends MatrixItem
 			return;
 		}
 
-		this.table.addValueOnParsing(str);
+		this.table.addValue(str);
 	}
 	
 	@Override
@@ -142,7 +142,7 @@ public class RawTable extends MatrixItem
 	{
 		try
 		{
-			this.table.save(writer, indent, false);
+			this.table.save(writer, indent, false, true);
 		}
 		catch (IOException e)
 		{

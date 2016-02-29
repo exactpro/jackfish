@@ -98,7 +98,7 @@ public class CsvFx extends AbstractDocument
     public void save(String fileName) throws Exception
     {
     	super.save(fileName);
-    	this.table.save(fileName, tableDelimiter, false);
+    	this.table.save(fileName, tableDelimiter, false, false);
 		this.controller.saved(getName());
     }
     
