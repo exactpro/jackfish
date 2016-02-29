@@ -366,7 +366,6 @@ public abstract class DialogsHelper
 
 	public static File showSaveAsDialog(Document doc) throws Exception
 	{
-		System.out.println(doc);
 		Class<?> docClass = doc.getClass();
 		DocumentInfo annotation;
 		while ((annotation = docClass.getAnnotation(DocumentInfo.class)) == null && docClass.getSuperclass() != null)

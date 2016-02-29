@@ -12,9 +12,7 @@ import java.io.File;
 import java.lang.ProcessBuilder.Redirect;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 public abstract class ProxyApplication implements IApplication
@@ -71,20 +69,39 @@ public abstract class ProxyApplication implements IApplication
 		add(commandLine, javaRuntime);
 		
 		String jvmParameters = driverParameters.get(JVMparametersName);
+		StringBuilder classPath = new StringBuilder();
+		String separator = System.getProperty("path.separator");
+		classPath.append(jar).append(separator);
+
 		if (jvmParameters != null)
 		{
-			for (String param : jvmParameters.trim().split(" "))
+			String[] split = jvmParameters.trim().split(" ");
+			List<String> additionalParameters = Arrays.asList(split);
+			Iterator<String> iterator = additionalParameters.iterator();
+			while (iterator.hasNext())
 			{
-				add(commandLine, param);
+				String next = iterator.next();
+				if (next.equals("-cp") || next.equals("-classpath"))
+				{
+					classPath.append(iterator.next());
+				}
+				else
+				{
+					add(commandLine, next);
+				}
 			}
 		}
-		add(commandLine, "-jar");
-		add(commandLine, jar);
+		add(commandLine, "-cp");
+		add(commandLine, classPath.toString());
+		add(commandLine, RemoteApplication.class.getName());
 		add(commandLine, remoteClassName);
 		add(commandLine, String.valueOf(port));
 		
-		System.out.println(commandLine);
-		
+		System.err.println(commandLine);
+
+		//command need be like this
+		//java -cp jar.jar:another1.jar:another2.jar com.exactprosystems.jf.api.app.RemoteApplication remoteClassName port
+		//		classpath								mainclass										arguments
 		// launch the process
 		Redirect output = Redirect.appendTo(new File("remote_out.txt"));
 		

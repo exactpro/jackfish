@@ -97,6 +97,7 @@ public class Browser extends BorderPane
 									CustomTab customTab = new CustomTab();
 									this.getTabPane().getTabs().add(customTab);
 									this.getTabPane().getSelectionModel().select(customTab);
+
 									//TODO think about how to open
 									customTab.load(this.engine.getLocation() + href);
 								}
