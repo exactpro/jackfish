@@ -274,26 +274,11 @@ public class SwingRemoteApplication extends RemoteApplication
 		try
 		{
 			logger.debug("START SWITCH TO DERIVED");
-			logger.debug(String.format("Found title : '%s'",title));
 			Component frame = this.currentRobot.finder().find(new ComponentMatcher()
 			{
 				@Override
 				public boolean matches(Component c)
 				{
-					logger.debug(String.format("component : '%s'", c));
-					if (c != null)
-					{
-						logger.debug(String.format("component.getClass() : '%s'",c.getClass()));
-						if (c instanceof Frame)
-						{
-							logger.debug(String.format("title frame: '%s' ",((Frame) c).getTitle()));
-						}
-						if (c instanceof Dialog)
-						{
-							logger.debug(String.format("title dialog : '%s'", ((Dialog) c).getTitle()));
-						}
-					}
-					logger.debug("###############################################");
 					return c != null && (c instanceof JFrame && ((JFrame) c).getTitle().equals(title)) || (c instanceof JDialog && ((JDialog) c).getTitle().equals(title));
 				}
 			});
@@ -426,8 +411,15 @@ public class SwingRemoteApplication extends RemoteApplication
 						{
 							target = finalComponent.target;
 						}
+						logger.debug("target  : " + target);
+						logger.debug("target.getClass()  : " + target.getClass());
+						logger.debug("target.getWith()  : " + target.getWidth());
+						logger.debug("target.getHeight()  : " + target.getHeight());
 						BufferedImage image = new BufferedImage(target.getWidth(), target.getHeight(), BufferedImage.TYPE_INT_RGB);
-						target.paint(image.getGraphics()); // alternately use .printAll(..)
+						logger.debug("image : " + image);
+						Graphics graphics = image.getGraphics();
+						logger.debug("Graphics : " + graphics);
+						target.paintAll(graphics); // alternately use .printAll(..)
 						images[0] = image;
 					}
 					catch (Exception e)
