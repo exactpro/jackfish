@@ -57,7 +57,7 @@ public class SwingRemoteApplication extends RemoteApplication
 		}
 		catch (Exception e)
 		{
-			logger.error(String.format("createLoggerDerived($s, $s,$s)", logName, serverLogLevel, serverLogPattern));
+			logger.error(String.format("createLoggerDerived(%s, %s,%s)", logName, serverLogLevel, serverLogPattern));
 			logger.error(e.getMessage(), e);
 			throw e;
 		}

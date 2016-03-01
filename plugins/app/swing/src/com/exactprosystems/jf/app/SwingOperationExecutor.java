@@ -214,6 +214,7 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 		try
 		{
 			this.currentRobot.waitForIdle();
+			toFront();
 			Point point = new Point(x, y);
 			switch (action)
 			{
@@ -794,6 +795,7 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 		try
 		{
 			this.currentRobot.waitForIdle();
+			toFront();
 			JTable table = component.targetCastedTo(JTable.class);
 			JTableFixture tableFixture = new JTableFixture(this.currentRobot, table);
 			JTableCellFixture cell = tableFixture.cell(TableCell.row(row).column(column));
@@ -1697,4 +1699,15 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 		};
 	}
 
+	private void toFront()
+	{
+		Component frame = this.currentFrame();
+		if (frame instanceof JFrame)
+		{
+			((JFrame) frame).setExtendedState(JFrame.ICONIFIED);
+			this.currentRobot.waitForIdle();
+			((JFrame) frame).setExtendedState(JFrame.NORMAL);
+			this.currentRobot.waitForIdle();
+		}
+	}
 }
