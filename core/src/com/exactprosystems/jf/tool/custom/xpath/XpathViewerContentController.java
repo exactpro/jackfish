@@ -194,6 +194,9 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 	public String show(String title, String themePath, boolean fullScreen)
 	{
 		Alert dialog = createAlert(title, themePath);
+		Button okButton = (Button) dialog.getDialogPane().lookupButton(ButtonType.OK);
+		okButton.setDefaultButton(false);
+		
 		dialog.getDialogPane().setContent(parent);
 		Label headerLabel = new Label();
 		headerLabel.setPrefHeight(0);

@@ -21,6 +21,7 @@ import com.exactprosystems.jf.tool.custom.controls.toggle.CustomToggleButton;
 import com.exactprosystems.jf.tool.custom.expfield.ExpressionField;
 import com.exactprosystems.jf.tool.custom.scale.IScaleListener;
 import com.exactprosystems.jf.tool.custom.scale.ScalePane;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -43,6 +44,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import javax.imageio.ImageIO;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
@@ -390,6 +392,9 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 	private Alert createAlert(String title)
 	{
 		Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+		Button okButton = (Button) alert.getDialogPane().lookupButton(ButtonType.OK);
+		okButton.setDefaultButton(false);
+
 		alert.getDialogPane().getStylesheets().add(Common.currentTheme().getPath());
 		alert.setTitle(title);
 		alert.setResizable(true);
