@@ -563,7 +563,7 @@ public class DictionaryFx extends GuiDictionary
 		IControl controlForName = currentWindow.getControlForName(SectionKind.Run,id);
 		if (controlForName != null)
 		{
-			this.controller.showInfo(String.format("Id with name '%s' already present", id));
+			this.controller.showInfo(String.format("Id with name '%s' already exist", id));
 		}
 	}
 
