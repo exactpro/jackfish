@@ -104,7 +104,7 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 		{
 			this.currentRobot.waitForIdle();
 			Container owner = null;
-			if (window != null)
+			if (window != null && window.target instanceof Container)
 			{
 				owner = (Container) window.target;
 			}
