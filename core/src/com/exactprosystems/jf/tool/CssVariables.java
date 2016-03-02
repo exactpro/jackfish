@@ -155,6 +155,8 @@ public class CssVariables
 	public static final String	FIND_PANEL					= "findPanel";
 	public static final String	SPLIT_PANE_HIDE_DIVIDER		= "splitPaneHideDivider";
 
+	public static final String	NOT_EDITABLE_FIELD			= "notEditableField";
+
 	/**
 	 * Spinner css
 	 */

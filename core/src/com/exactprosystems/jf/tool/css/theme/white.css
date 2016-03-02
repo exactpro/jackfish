@@ -648,6 +648,11 @@ CellView > .text-input.text-field{
 	-fx-shape: " ";
 }
 
+.notEditableField {
+	-fx-opacity: 0.4
+
+}
+
 .auto-complete-popup > .list-view {
 	-fx-background-color:
 		linear-gradient(to bottom,
