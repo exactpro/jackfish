@@ -326,6 +326,7 @@ public class DisplayDriverFx implements DisplayDriver
 		temp.add(field, 0, 0);
 		pane.add(temp, column, row);
 		GridPane.setMargin(field, INSETS);
+		Common.setFocused(field);
 	}
 
 	@Override
