@@ -12,7 +12,7 @@ import com.exactprosystems.jf.tool.custom.layout.CustomRectangle;
 import com.exactprosystems.jf.tool.custom.layout.LayoutExpressionBuilderController;
 import com.exactprosystems.jf.tool.custom.scale.IScaleListener;
 import com.exactprosystems.jf.tool.custom.scale.ScalePane;
-
+import com.sun.javafx.scene.control.skin.TreeViewSkin;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
@@ -31,13 +31,11 @@ import javafx.scene.layout.*;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
 import javax.imageio.ImageIO;
-
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
@@ -51,57 +49,58 @@ import java.util.stream.IntStream;
 
 public class XpathViewerContentController implements Initializable, ContainingParent, IScaleListener
 {
-	public TreeView<XpathItem>							treeView;
-	public Label										labelXpath1Count;
-	public Label										labelXpath2Count;
-	public Label										labelXpath3Count;
-	public Label										labelXpath4Count;
-	public Button										btnXpath1;
-	public Button										btnXpath2;
-	public Button										btnXpath3;
-	public Button										btnXpath4;
-	public Button										btnSaveXpath1;
-	public Button										btnSaveXpath2;
-	public Button										btnSaveXpath3;
-	public Button										btnSaveXpath4;
-	public CheckBox										useText;
-	public HBox											hBoxCheckboxes;
-	public CustomFieldWithButton						cfRelativeFrom;
-	public CustomFieldWithButton						cfMainExpression;
-	public SplitPane									splitPane;
-	public Group										group;
-	public AnchorPane									anchorTree;
-	public CheckBox										cbShowImage;
-	public ScrollPane									scrollPaneImage;
-	public TitledPane									tpHelper;
-	public GridPane										gridPaneHelper;
-	public AnchorPane									anchorImage;
-	public HBox											hBoxUtil;
+	public TreeView<XpathItem> treeView;
+	public Label labelXpath1Count;
+	public Label labelXpath2Count;
+	public Label labelXpath3Count;
+	public Label labelXpath4Count;
+	public Button btnXpath1;
+	public Button btnXpath2;
+	public Button btnXpath3;
+	public Button btnXpath4;
+	public Button btnSaveXpath1;
+	public Button btnSaveXpath2;
+	public Button btnSaveXpath3;
+	public Button btnSaveXpath4;
+	public CheckBox useText;
+	public HBox hBoxCheckboxes;
+	public CustomFieldWithButton cfRelativeFrom;
+	public CustomFieldWithButton cfMainExpression;
+	public SplitPane splitPane;
+	public Group group;
+	public AnchorPane anchorTree;
+	public CheckBox cbShowImage;
+	public ScrollPane scrollPaneImage;
+	public TitledPane tpHelper;
+	public GridPane gridPaneHelper;
+	public AnchorPane anchorImage;
+	public HBox hBoxUtil;
 
-	public ScalePane									scalePane;
-	public ToggleButton									btnInspect;
-	public Label										lblInspectRectangle;
+	public ScalePane scalePane;
+	public ToggleButton btnInspect;
+	public Label lblInspectRectangle;
 
-	private ImageView									imageView;
-	private FindPanel<TreeItem<XpathItem>>				findPanel;
+	private ImageView imageView;
+	private FindPanel<TreeItem<XpathItem>> findPanel;
 	@FXML
-	private Label										lblFound;
+	private Label lblFound;
 
-	private Parent										parent;
-	private XpathViewer									model;
+	private Parent parent;
+	private XpathViewer model;
 
-	private CustomRectangle								rectangle;
-	private boolean										needInspect	= false;
-	private CustomRectangle								inspectRectangle;
+	private CustomRectangle rectangle;
+	private boolean needInspect = false;
+	private CustomRectangle inspectRectangle;
 
-	private double										scale		= 1.0;
-	private Dimension									initial		= new Dimension(0, 0);
-	private Map<Rectangle, Set<TreeItem<XpathItem>>>	map			= new HashMap<>();
+	private double scale = 1.0;
+	private Dimension initial = new Dimension(0, 0);
+	private Map<Rectangle, Set<TreeItem<XpathItem>>> map = new HashMap<>();
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources)
 	{
 		createTreeView();
+		this.treeView.setSkin(new TempSkin(this.treeView));
 		this.findPanel = new FindPanel<>(new IFind<TreeItem<XpathItem>>()
 		{
 			@Override
@@ -109,7 +108,12 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 			{
 				treeView.getSelectionModel().clearSelection();
 				treeView.getSelectionModel().select(xpathItemTreeItem);
-				treeView.scrollTo(treeView.getRow(xpathItemTreeItem));
+				TempSkin skin = (TempSkin) treeView.getSkin();
+				int row = treeView.getRow(xpathItemTreeItem);
+				if (!skin.isIndexVisible(row))
+				{
+					skin.show(row);
+				}
 			}
 
 			@Override
@@ -123,8 +127,7 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 
 			private void addItems(List<TreeItem<XpathItem>> list, TreeItem<XpathItem> current, String what, boolean matchCase, boolean wholeWord)
 			{
-				Optional.ofNullable(current.getValue()).ifPresent(value ->
-				{
+				Optional.ofNullable(current.getValue()).ifPresent(value -> {
 					if (matches(value.getText(), what, matchCase, wholeWord))
 					{
 						list.add(current);
@@ -196,7 +199,7 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 		Alert dialog = createAlert(title, themePath);
 		Button okButton = (Button) dialog.getDialogPane().lookupButton(ButtonType.OK);
 		okButton.setDefaultButton(false);
-		
+
 		dialog.getDialogPane().setContent(parent);
 		Label headerLabel = new Label();
 		headerLabel.setPrefHeight(0);
@@ -245,8 +248,7 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 	// ============================================================
 	public void displayTree(Document document)
 	{
-		Platform.runLater(() ->
-		{
+		Platform.runLater(() -> {
 			this.treeView.setRoot(new TreeItem<XpathItem>());
 			displayTree(document, this.treeView.getRoot());
 			expand(this.treeView.getRoot());
@@ -260,8 +262,7 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 
 	public void displayResults(List<Node> nodes)
 	{
-		Platform.runLater(() ->
-		{
+		Platform.runLater(() -> {
 			if (nodes == null)
 			{
 				this.cfMainExpression.getStyleClass().remove(CssVariables.INCORRECT_FIELD);
@@ -288,8 +289,7 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 
 	public void displayParams(ArrayList<String> params)
 	{
-		Platform.runLater(() ->
-		{
+		Platform.runLater(() -> {
 			this.hBoxCheckboxes.getChildren().clear();
 			this.hBoxCheckboxes.getChildren().addAll(params.stream().map(p -> {
 				CheckBox box = new CheckBox(p);
@@ -303,8 +303,7 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 
 	public void displayXpaths(String xpath1, String xpath2, String xpath3, String xpath4)
 	{
-		Platform.runLater(() ->
-		{
+		Platform.runLater(() -> {
 			this.btnXpath1.setText(xpath1);
 			this.btnXpath2.setText(xpath2);
 			this.btnXpath3.setText(xpath3);
@@ -314,8 +313,7 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 
 	public void displayCounters(List<Node> nodes1, List<Node> nodes2, List<Node> nodes3, List<Node> nodes4)
 	{
-		Platform.runLater(() ->
-		{
+		Platform.runLater(() -> {
 			this.labelXpath1Count.setText(String.valueOf(nodes1 == null ? "" : nodes1.size()));
 			this.labelXpath2Count.setText(String.valueOf(nodes2 == null ? "" : nodes2.size()));
 			this.labelXpath3Count.setText(String.valueOf(nodes3 == null ? "" : nodes3.size()));
@@ -325,8 +323,7 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 
 	public void displayImage(BufferedImage image, int offsetX, int offsetY) throws IOException
 	{
-		Platform.runLater(() ->
-		{
+		Platform.runLater(() -> {
 			if (image != null)
 			{
 				this.initial = new Dimension(image.getWidth(), image.getHeight());
@@ -337,13 +334,13 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 				Common.tryCatch(() -> createCanvas(image), "Error on displaying an image.");
 				this.hBoxUtil.setVisible(true);
 				this.cbShowImage.setSelected(true);
-				
+
 				correctMap(offsetX, offsetY, this.treeView.getRoot());
 				buildMap(image.getWidth(), image.getHeight(), new Dimension(image.getWidth() / 16, image.getHeight() / 16));
 			}
 		});
 	}
-	
+
 	public void displayRectangle(Rectangle rectangle)
 	{
 		if (this.rectangle != null)
@@ -383,14 +380,14 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 		if (xpath != null)
 		{
 			Rectangle rec = xpath.getRectangle();
-			
+
 			if (rec != null)
 			{
 				rec.x -= offsetX;
 				rec.y -= offsetY;
 			}
 		}
-		
+
 		for (TreeItem<XpathItem> child : item.getChildren())
 		{
 			correctMap(offsetX, offsetY, child);
@@ -412,7 +409,7 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 				{
 					this.map.put(key, set);
 				}
-				
+
 				y += cellSize.height;
 			}
 			x += cellSize.width;
@@ -425,13 +422,13 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 		if (xpath != null)
 		{
 			Rectangle rec = xpath.getRectangle();
-			
+
 			if (rec != null && rec.intersects(keyRectangle))
 			{
 				set.add(item);
 			}
 		}
-		
+
 		for (TreeItem<XpathItem> child : item.getChildren())
 		{
 			passTree(keyRectangle, set, child);
@@ -463,8 +460,7 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 
 	private void selectItems(TreeItem<XpathItem> root, List<Node> nodes, ArrayList<TreeItem<XpathItem>> items)
 	{
-		Optional.ofNullable(root.getValue()).ifPresent(v -> nodes.stream().filter(node -> v.getNode() == node).forEach(n ->
-		{
+		Optional.ofNullable(root.getValue()).ifPresent(v -> nodes.stream().filter(node -> v.getNode() == node).forEach(n -> {
 			items.add(root);
 			v.getBox().getStyleClass().add(CssVariables.XPATH_FIND_TREE_ITEM);
 		}));
@@ -497,10 +493,7 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 		boolean isDocument = node.getNodeType() == Node.DOCUMENT_NODE;
 
 		TreeItem<XpathItem> treeItem = isDocument ? parent : new TreeItem<>();
-		IntStream.range(0, node.getChildNodes().getLength())
-				.mapToObj(node.getChildNodes()::item)
-				.filter(item -> item.getNodeType() == Node.ELEMENT_NODE)
-				.forEach(item -> displayTree(item, treeItem));
+		IntStream.range(0, node.getChildNodes().getLength()).mapToObj(node.getChildNodes()::item).filter(item -> item.getNodeType() == Node.ELEMENT_NODE).forEach(item -> displayTree(item, treeItem));
 		if (!isDocument)
 		{
 			treeItem.setValue(new XpathItem(stringNode(node, XpathViewer.text(node)), node));
@@ -516,13 +509,7 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 		NamedNodeMap attributes = node.getAttributes();
 		Optional.ofNullable(attributes).ifPresent(atrs -> {
 			int length = atrs.getLength();
-			IntStream.range(0, length)
-					.mapToObj(atrs::item)
-					.forEach(item -> box.getChildren().addAll(
-							createText(item.getNodeName(), CssVariables.XPATH_ATTRIBUTE_NAME, false),
-							createText("=", CssVariables.XPATH_TEXT, false),
-							createText("\"" + item.getNodeValue() + "\" ", CssVariables.XPATH_ATTRIBUTE_VALUE, true)
-					));
+			IntStream.range(0, length).mapToObj(atrs::item).forEach(item -> box.getChildren().addAll(createText(item.getNodeName(), CssVariables.XPATH_ATTRIBUTE_NAME, false), createText("=", CssVariables.XPATH_TEXT, false), createText("\"" + item.getNodeValue() + "\" ", CssVariables.XPATH_ATTRIBUTE_VALUE, true)));
 		});
 		if (Str.IsNullOrEmpty(text))
 		{
@@ -530,10 +517,7 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 		}
 		else
 		{
-			box.getChildren().addAll(
-					createText(">", CssVariables.XPATH_NODE, true),
-					createText(text, CssVariables.XPATH_TEXT, true),
-					createText("</" + node.getNodeName() + ">", CssVariables.XPATH_NODE, true));
+			box.getChildren().addAll(createText(">", CssVariables.XPATH_NODE, true), createText(text, CssVariables.XPATH_TEXT, true), createText("</" + node.getNodeName() + ">", CssVariables.XPATH_NODE, true));
 		}
 		return box;
 	}
@@ -549,8 +533,7 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 		Text t = new Text(text);
 		if (useContextMenu && !text.isEmpty())
 		{
-			t.setOnContextMenuRequested(event ->
-			{
+			t.setOnContextMenuRequested(event -> {
 
 				MenuItem item = new MenuItem("Copy " + text);
 				item.setOnAction(e -> Common.copyText(text));
@@ -578,15 +561,12 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 
 	private List<String> getParams()
 	{
-		return this.hBoxCheckboxes.getChildren().stream()
-				.filter(node -> ((CheckBox) node).isSelected())
-				.map(node -> (((CheckBox) node).getText()))
-				.collect(Collectors.toList());
+		return this.hBoxCheckboxes.getChildren().stream().filter(node -> ((CheckBox) node).isSelected()).map(node -> (((CheckBox) node).getText())).collect(Collectors.toList());
 	}
 
 	private void moveOnImage(double x, double y)
 	{
-		TreeItem<XpathItem> item = findOnScreen(x, y); 
+		TreeItem<XpathItem> item = findOnScreen(x, y);
 		if (item != null)
 		{
 			displayInspectRectangle(item.getValue().getRectangle(), "");
@@ -595,19 +575,19 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 
 	private void clickOnImage(double x, double y)
 	{
-		TreeItem<XpathItem> item = findOnScreen(x, y); 
+		TreeItem<XpathItem> item = findOnScreen(x, y);
 		if (item != null)
 		{
 			this.treeView.getSelectionModel().select(item);
-			
+
 		}
 		this.btnInspect.setSelected(false);
 	}
 
 	private TreeItem<XpathItem> findOnScreen(double x, double y)
 	{
-		int intX = (int)(x / this.scale);
-		int intY = (int)(y / this.scale);
+		int intX = (int) (x / this.scale);
+		int intY = (int) (y / this.scale);
 		
 		int sizeX = this.initial.getSize().width / 16;
 		int sizeY = this.initial.getSize().height / 16;
@@ -627,7 +607,7 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 
 		return inspected.isPresent() ? inspected.get() : null;
 	}
-	
+
 	private static double square(Rectangle rec)
 	{
 		if (rec == null)
@@ -636,27 +616,24 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 		}
 		return rec.width * rec.height;
 	}
-	
+
 	private void listeners()
 	{
-		this.group.setOnMouseMoved(event ->
-		{
+		this.group.setOnMouseMoved(event -> {
 			if (needInspect)
 			{
-				moveOnImage(event.getX(), event.getY()); 
+				moveOnImage(event.getX(), event.getY());
 			}
 		});
 
-		this.group.setOnMouseClicked(event ->
-		{
+		this.group.setOnMouseClicked(event -> {
 			if (needInspect)
 			{
 				clickOnImage(event.getX(), event.getY());
 			}
 		});
 
-		this.btnInspect.selectedProperty().addListener((observable, oldValue, newValue) ->
-		{
+		this.btnInspect.selectedProperty().addListener((observable, oldValue, newValue) -> {
 			this.btnInspect.setOpacity(newValue ? 1.0 : 0.5);
 			this.needInspect = newValue;
 			if (!newValue)
@@ -665,39 +642,34 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 			}
 			if (newValue)
 			{
-//				startInspect();
+				//				startInspect();
 			}
 		});
 
-		this.cbShowImage.selectedProperty().addListener((observable, oldValue, newValue) ->
-		{
+		this.cbShowImage.selectedProperty().addListener((observable, oldValue, newValue) -> {
 			this.splitPane.setDividerPositions(newValue ? 0.5 : 0.0);
 			this.scalePane.setVisible(newValue);
 			this.btnInspect.setVisible(newValue);
 		});
-		gridPaneHelper.visibleProperty().addListener((observable, oldValue, newValue) ->
-		{
+		gridPaneHelper.visibleProperty().addListener((observable, oldValue, newValue) -> {
 			// workaround
-				if (!newValue && ((int) splitPane.getDividerPositions()[0]) == 0 && !cbShowImage.isSelected())
-				{
-					splitPane.setDividerPositions(0.0);
-				}
-			});
-		this.cfRelativeFrom.setHandler(event ->
-		{
+			if (!newValue && ((int) splitPane.getDividerPositions()[0]) == 0 && !cbShowImage.isSelected())
+			{
+				splitPane.setDividerPositions(0.0);
+			}
+		});
+		this.cfRelativeFrom.setHandler(event -> {
 			this.model.setRelativeXpath(null);
 			this.cfRelativeFrom.setText("");
 			this.model.createXpaths(this.useText.isSelected(), getParams());
 		});
 
-		this.cfMainExpression.textProperty().addListener((obs, oldValue, newValue) ->
-		{
+		this.cfMainExpression.textProperty().addListener((obs, oldValue, newValue) -> {
 			this.cfMainExpression.getStyleClass().remove(CssVariables.INCORRECT_FIELD);
 			this.model.applyXpath(newValue);
 		});
 
-		this.treeView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) ->
-		{
+		this.treeView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
 			if (newValue != null)
 			{
 				this.model.updateNode(newValue.getValue().getNode());
@@ -708,31 +680,50 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 			}
 		});
 
-		Arrays.asList(this.labelXpath1Count, this.labelXpath2Count, this.labelXpath3Count, this.labelXpath4Count).forEach(
-				lbl -> lbl.textProperty().addListener((observable, oldValue, newValue) ->
-				{
-					lbl.getStyleClass().remove(CssVariables.FOUND_ONE_ELEMENT);
-					boolean foundOneElement = newValue.equals("1");
-					if (foundOneElement & !lbl.getStyleClass().contains(CssVariables.FOUND_ONE_ELEMENT))
-					{
-						lbl.getStyleClass().add(CssVariables.FOUND_ONE_ELEMENT);
-					}
-					if (lbl == this.labelXpath1Count)
-					{
-						btnSaveXpath1.setDisable(!foundOneElement);
-					}
-					else if (lbl == this.labelXpath2Count)
-					{
-						btnSaveXpath2.setDisable(!foundOneElement);
-					}
-					else if (lbl == this.labelXpath3Count)
-					{
-						btnSaveXpath3.setDisable(!foundOneElement);
-					}
-					else if (lbl == this.labelXpath4Count)
-					{
-						btnSaveXpath4.setDisable(!foundOneElement);
-					}
-				}));
+		Arrays.asList(this.labelXpath1Count, this.labelXpath2Count, this.labelXpath3Count, this.labelXpath4Count).forEach(lbl -> lbl.textProperty().addListener((observable, oldValue, newValue) -> {
+			lbl.getStyleClass().remove(CssVariables.FOUND_ONE_ELEMENT);
+			boolean foundOneElement = newValue.equals("1");
+			if (foundOneElement & !lbl.getStyleClass().contains(CssVariables.FOUND_ONE_ELEMENT))
+			{
+				lbl.getStyleClass().add(CssVariables.FOUND_ONE_ELEMENT);
+			}
+			if (lbl == this.labelXpath1Count)
+			{
+				btnSaveXpath1.setDisable(!foundOneElement);
+			}
+			else if (lbl == this.labelXpath2Count)
+			{
+				btnSaveXpath2.setDisable(!foundOneElement);
+			}
+			else if (lbl == this.labelXpath3Count)
+			{
+				btnSaveXpath3.setDisable(!foundOneElement);
+			}
+			else if (lbl == this.labelXpath4Count)
+			{
+				btnSaveXpath4.setDisable(!foundOneElement);
+			}
+		}));
+	}
+
+	private class TempSkin extends TreeViewSkin<XpathItem>
+	{
+		public TempSkin(TreeView treeView)
+		{
+			super(treeView);
+		}
+
+		public void show(int index)
+		{
+			flow.show(index);
+		}
+
+		public boolean isIndexVisible(int index)
+		{
+			return flow.getFirstVisibleCell() != null &&
+					flow.getLastVisibleCell() != null &&
+					flow.getFirstVisibleCell().getIndex() <= index - 1 &&
+					flow.getLastVisibleCell().getIndex() >= index + 1;
+		}
 	}
 }

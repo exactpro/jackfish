@@ -17,6 +17,7 @@ import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.matrix.MatrixFx;
 import com.exactprosystems.jf.tool.matrix.params.ParametersPane;
 import com.exactprosystems.jf.tool.settings.SettingsPanel;
+import com.sun.javafx.scene.control.skin.TreeTableViewSkin;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.control.*;
@@ -24,7 +25,8 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.GridPane;
 import org.apache.log4j.Logger;
 
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -32,17 +34,14 @@ import static com.exactprosystems.jf.tool.Common.tryCatch;
 
 public class MatrixTreeView extends TreeTableView<MatrixItem>
 {
-	private MatrixFx 	matrix;
+	private MatrixFx matrix;
 
-	public static final int NUMBER_COLUMN_WIDTH =	40;
-	public static final int OFF_COLUMN_WIDTH =		25;
-	public static final int ICON_COLUMN_WIDTH =		23;
+	private final static Logger logger = Logger.getLogger(MatrixTreeView.class);
 
-	private final static Logger	logger	= Logger.getLogger(MatrixTreeView.class);
-	
 	public MatrixTreeView()
 	{
 		super(null);
+		this.setSkin(new MatrixTreeViewSkin(this));
 		this.setShowRoot(false);
 		this.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 		this.getStyleClass().add(CssVariables.CUSTOM_TREE_TABLE_VIEW);
@@ -54,9 +53,8 @@ public class MatrixTreeView extends TreeTableView<MatrixItem>
 		this.matrix = matrix;
 
 		setRoot(new TreeItem<>(matrix.getRoot()));
-		
-		setRowFactory(treeView ->
-		{
+
+		setRowFactory(treeView -> {
 			try
 			{
 				MatrixTreeRow row = new MatrixTreeRow(contextMenu);
@@ -77,8 +75,7 @@ public class MatrixTreeView extends TreeTableView<MatrixItem>
 	{
 		if (treeItem != null)
 		{
-			Platform.runLater(() ->
-			{
+			Platform.runLater(() -> {
 				TreeItem<MatrixItem> parent = treeItem.getParent();
 				while (parent != null)
 				{
@@ -86,17 +83,13 @@ public class MatrixTreeView extends TreeTableView<MatrixItem>
 					parent = parent.getParent();
 				}
 				final int row = getRow(treeItem);
-//				getSelectionModel().clearSelection();
 				getSelectionModel().clearAndSelect(row);
-//				getSelectionModel().select(treeItem);
 				tryCatch(() -> Thread.sleep(100), "Error sleep");
-				treeItem.setExpanded(true);
-				
-//				scrollTo(row); // TODO think about
+				scrollTo(row);
 			});
 		}
 	}
-	
+
 	public void refresh()
 	{
 		Optional.ofNullable(this.getColumns().get(0)).ifPresent(col -> {
@@ -110,7 +103,7 @@ public class MatrixTreeView extends TreeTableView<MatrixItem>
 		TreeItem<MatrixItem> treeItem = find(item);
 		if (treeItem != null)
 		{
-			GridPane layout = (GridPane)treeItem.getValue().getLayout();
+			GridPane layout = (GridPane) treeItem.getValue().getLayout();
 			{
 				layout.getChildren().stream().filter(pane -> pane instanceof ParametersPane).forEach(pane -> Platform.runLater(() -> {
 					((ParametersPane) pane).refreshParameters(selectedIndex);
@@ -118,7 +111,7 @@ public class MatrixTreeView extends TreeTableView<MatrixItem>
 			}
 		}
 	}
-	
+
 	public void expandAll()
 	{
 		expand(getRoot(), true);
@@ -140,15 +133,15 @@ public class MatrixTreeView extends TreeTableView<MatrixItem>
 		MatrixItem item = selectedItem != null ? selectedItem.getValue() : null;
 		return item;
 	}
-	
-//	public MatrixTreeRow currentRow()
-//	{
-//		// TODO Auto-generated method stub
-//		TreeItem<MatrixItem> selectedItem = getSelectionModel().getSelectedItem();
-//		getSelectionModel().
-//		
-//		return selectedItem;
-//	}
+
+	//	public MatrixTreeRow currentRow()
+	//	{
+	//		// TODO Auto-generated method stub
+	//		TreeItem<MatrixItem> selectedItem = getSelectionModel().getSelectedItem();
+	//		getSelectionModel().
+	//
+	//		return selectedItem;
+	//	}
 
 	public TreeItem<MatrixItem> find(MatrixItem item)
 	{
@@ -184,8 +177,7 @@ public class MatrixTreeView extends TreeTableView<MatrixItem>
 
 	private void shortCuts(MatrixTreeRow row, final Settings settings)
 	{
-		setOnKeyPressed(keyEvent -> Common.tryCatch(() ->
-		{
+		setOnKeyPressed(keyEvent -> Common.tryCatch(() -> {
 			if (keyEvent.getCode() == KeyCode.ENTER)
 			{
 				MatrixItem currentItem = currentItem();
@@ -205,8 +197,7 @@ public class MatrixTreeView extends TreeTableView<MatrixItem>
 			}
 		}, "Error on do actions by shortcuts"));
 
-		setOnKeyReleased(keyEvent -> Common.tryCatch(() ->
-		{
+		setOnKeyReleased(keyEvent -> Common.tryCatch(() -> {
 			if (SettingsPanel.match(settings, keyEvent, SettingsPanel.SHOW_ALL))
 			{
 				row.hideExpressionsResults();
@@ -254,8 +245,7 @@ public class MatrixTreeView extends TreeTableView<MatrixItem>
 				if (item != null)
 				{
 					box.setSelected(item.isOff());
-					box.setOnAction(event -> 
-					{ 
+					box.setOnAction(event -> {
 						matrix.setOff(item.getNumber(), box.isSelected());
 						refresh();
 					});
@@ -280,10 +270,40 @@ public class MatrixTreeView extends TreeTableView<MatrixItem>
 
 	private void expand(TreeItem<MatrixItem> rootItem, boolean flag)
 	{
-		rootItem.getChildren().forEach(item ->
-		{
+		rootItem.getChildren().forEach(item -> {
 			item.setExpanded(flag);
 			expand(item, flag);
 		});
+	}
+
+	public void scrollTo(int index)
+	{
+		MatrixTreeViewSkin skin = (MatrixTreeViewSkin) getSkin();
+		if (!skin.isIndexVisible(index))
+		{
+			skin.show(index);
+		}
+	}
+
+	private class MatrixTreeViewSkin extends TreeTableViewSkin<MatrixItem>
+	{
+
+		public MatrixTreeViewSkin(TreeTableView<MatrixItem> treeView)
+		{
+			super(treeView);
+		}
+
+		public boolean isIndexVisible(int index)
+		{
+			return flow.getFirstVisibleCell() != null &&
+					flow.getLastVisibleCell() != null &&
+					flow.getFirstVisibleCell().getIndex() <= index - 1 &&
+					flow.getLastVisibleCell().getIndex() >= index + 1;
+		}
+
+		public void show(int index)
+		{
+			flow.show(index);
+		}
 	}
 }

@@ -254,7 +254,7 @@ public class CssVariables
 		public static final String	GO_BACK						= IMAGES_DIR + "/goBack.png";
 		public static final String	GO_FORWARD					= IMAGES_DIR + "/goForward.png";
 		public static final String	RELOAD						= IMAGES_DIR + "/reload.png";
-
+		public static final String	CONFIGURATION_ICON			= IMAGES_DIR + "/configurationIcon.png";
 
 
 	}

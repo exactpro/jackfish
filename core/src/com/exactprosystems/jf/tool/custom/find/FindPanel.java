@@ -47,6 +47,9 @@ public class FindPanel<T> extends BorderPane
 		this.checkBoxMatchCase = new CheckBox("Match case");
 		this.checkBoxWords = new CheckBox("Whole word");
 		this.lblFind = new Label("Found 0");
+		this.lblFind.setPrefWidth(100);
+		this.lblFind.setMaxWidth(100);
+		this.lblFind.setMinWidth(100);
 		createPane();
 		initialize();
 	}
@@ -85,8 +88,8 @@ public class FindPanel<T> extends BorderPane
 		hBox.setAlignment(Pos.CENTER_LEFT);
 		hBox.setSpacing(10);
 		HBox.setMargin(btnPrevious, new Insets(0, 0, 0, 10));
-		hBox.getChildren().addAll(btnPrevious, btnNext, checkBoxMatchCase, checkBoxWords, lblFind);
-		BorderPane.setAlignment(hBox, Pos.CENTER);
+		hBox.getChildren().addAll(btnPrevious, btnNext, checkBoxMatchCase, checkBoxWords, lblFind, new Label());
+		BorderPane.setAlignment(hBox, Pos.CENTER_LEFT);
 		this.setRight(hBox);
 	}
 
@@ -178,5 +181,6 @@ public class FindPanel<T> extends BorderPane
 			}
 			lblFind.getStyleClass().remove(CssVariables.INCORRECT_FIELD);
 		}
+		lblFind.setTooltip(new Tooltip(lblFind.getText()));
 	}
 }
