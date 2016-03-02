@@ -1,25 +1,20 @@
 ////////////////////////////////////////////////////////////////////////////////
-//  Copyright (c) 2009-2015, Exactpro Systems, LLC
+//  Copyright (c) 2009-2016, Exactpro Systems, LLC
 //  Quality Assurance & Related Development for Innovative Trading Systems.
 //  All rights reserved.
 //  This is unpublished, licensed software, confidential and proprietary
 //  information which is the property of Exactpro Systems, LLC or its licensors.
 ////////////////////////////////////////////////////////////////////////////////
+package com.exactprosystems.jf.api.app;
 
-package com.exactprosystems.jf.api.common;
+import java.rmi.RemoteException;
 
-public class ApiVersionInfo
+public class ElementNotFoundException extends RemoteException
 {
-	private static final int majorVersion = 2;
-	private static final int minorVersion = 11;
-	
-	public static int majorVersion() 
+	private static final long serialVersionUID = -4722988704327432417L;
+
+	public ElementNotFoundException(Locator locator)
 	{
-		return majorVersion;
-	}
-	
-	public static int minorVersion() 
-	{
-		return minorVersion;
+		super("No one element was found. Element: " + locator);
 	}
 }

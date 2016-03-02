@@ -46,7 +46,7 @@ class Holder<T>
 	{
 		if (isEmpty())
 		{
-			throw new Exception("Component is not found for locator = " + locators.get(LocatorKind.Element));
+			throw new ElementNotFoundException(locators.get(LocatorKind.Element));
 		}
 
 		if (index >= this.list.size() || index < 0)

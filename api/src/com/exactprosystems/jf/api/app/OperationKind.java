@@ -499,7 +499,7 @@ public enum OperationKind
 
 				if (holder.isEmpty())
 				{
-					throw new Exception("Component is not found for locator = " + locator);
+					throw new ElementNotFoundException(locator);
 				}
 			}
 			

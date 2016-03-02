@@ -528,7 +528,7 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 					}
 					else
 					{
-						throw new RemoteException("No one element was found. Element: " + locator);
+						throw new ElementNotFoundException(locator);
 					}
 				}
 
