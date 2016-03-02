@@ -337,7 +337,26 @@ public class SettingsPanelController implements Initializable, ContainingParent
 		raws.isChangeable = false;
 		TreeItem<NameAndColor> actionItem = createItem(actions);
 		TreeItem<NameAndColor> rawItem = createItem(raws);
-		root.getChildren().addAll(actionItem, rawItem, createItem(new NameAndColor(Tokens.TestCase.name())), createItem(new NameAndColor(Tokens.SubCase.name())), createItem(new NameAndColor(Tokens.Return.name())), createItem(new NameAndColor(Tokens.Call.name())), createItem(new NameAndColor(Tokens.If.name())), createItem(new NameAndColor(Tokens.Else.name())), createItem(new NameAndColor(Tokens.For.name())), createItem(new NameAndColor(Tokens.ForEach.name())), createItem(new NameAndColor(Tokens.While.name())), createItem(new NameAndColor(Tokens.Continue.name())), createItem(new NameAndColor(Tokens.Break.name())), createItem(new NameAndColor(Tokens.OnError.name())), createItem(new NameAndColor(Tokens.Switch.name())), createItem(new NameAndColor(Tokens.Case.name())), createItem(new NameAndColor(Tokens.Default.name())), createItem(new NameAndColor(Tokens.ReportOn.name())), createItem(new NameAndColor(Tokens.ReportOff.name())), createItem(new NameAndColor(Tokens.Fail.name())));
+		root.getChildren().addAll(actionItem, rawItem, 
+				createItem(new NameAndColor(Tokens.NameSpace.name())),
+				createItem(new NameAndColor(Tokens.TestCase.name())),
+				createItem(new NameAndColor(Tokens.SubCase.name())), 
+				createItem(new NameAndColor(Tokens.Return.name())),
+				createItem(new NameAndColor(Tokens.Call.name())), 
+				createItem(new NameAndColor(Tokens.If.name())),
+				createItem(new NameAndColor(Tokens.Else.name())), 
+				createItem(new NameAndColor(Tokens.For.name())),
+				createItem(new NameAndColor(Tokens.ForEach.name())), 
+				createItem(new NameAndColor(Tokens.While.name())),
+				createItem(new NameAndColor(Tokens.Continue.name())), 
+				createItem(new NameAndColor(Tokens.Break.name())),
+				createItem(new NameAndColor(Tokens.OnError.name())), 
+				createItem(new NameAndColor(Tokens.Switch.name())),
+				createItem(new NameAndColor(Tokens.Case.name())), 
+				createItem(new NameAndColor(Tokens.Default.name())),
+				createItem(new NameAndColor(Tokens.ReportOn.name())), 
+				createItem(new NameAndColor(Tokens.ReportOff.name())),
+				createItem(new NameAndColor(Tokens.Fail.name())));
 
 		Map<ActionGroups, TreeItem<NameAndColor>> map = new HashMap<>();
 		Arrays.asList(ActionGroups.values()).stream().forEach(group -> {

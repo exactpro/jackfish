@@ -31,7 +31,11 @@ public class TempItem extends MatrixItem
 	static
 	{
 		list.addAll(Arrays.stream(ActionsList.actions).map(Class::getSimpleName).collect(Collectors.toList()));
-		list.addAll(Arrays.asList(Tokens.TestCase.get(), Tokens.SubCase.get(), Tokens.Return.get(), Tokens.Call.get(), Tokens.If.get(), Tokens.Else.get(), Tokens.For.get(), Tokens.ForEach.get(), Tokens.While.get(), Tokens.Continue.get(), Tokens.Break.get(), Tokens.OnError.get(), Tokens.Switch.get(), Tokens.Case.get(), Tokens.Default.get(), Tokens.ReportOff.get(), Tokens.ReportOn.get(), Tokens.Fail.get(), Tokens.RawTable.get(), Tokens.RawMessage.get(), Tokens.RawText.get()));
+		list.addAll(Arrays.asList(Tokens.TestCase.get(), Tokens.SubCase.get(), Tokens.Return.get(), Tokens.Call.get(), 
+				Tokens.If.get(), Tokens.Else.get(), Tokens.For.get(), Tokens.ForEach.get(), Tokens.While.get(), 
+				Tokens.Continue.get(), Tokens.Break.get(), Tokens.OnError.get(), Tokens.Switch.get(), Tokens.Case.get(), 
+				Tokens.Default.get(), Tokens.ReportOff.get(), Tokens.ReportOn.get(), Tokens.Fail.get(), Tokens.RawTable.get(), 
+				Tokens.RawMessage.get(), Tokens.RawText.get(), Tokens.NameSpace.get()));
 	}
 
 	private boolean isInit = false;

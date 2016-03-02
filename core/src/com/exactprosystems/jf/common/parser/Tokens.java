@@ -50,7 +50,10 @@ public enum Tokens
 	Client,
 	EndRawMessage,
 	RawText,
-	EndRawText;
+	EndRawText,
+	NameSpace,
+	EndNameSpace,
+	;
 
 	public String get()
 	{

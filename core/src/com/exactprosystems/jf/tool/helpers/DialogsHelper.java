@@ -464,6 +464,7 @@ public abstract class DialogsHelper
 			int ch = 0;
 			matrix.insert(null, ch++, syntax);
 			int i = 0;
+			syntax.insert(i++, new NameSpace());
 			syntax.insert(i++, new TestCase());
 			syntax.insert(i++, new SubCase());
 			syntax.insert(i++, new Return());
