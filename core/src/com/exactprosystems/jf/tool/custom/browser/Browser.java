@@ -18,17 +18,11 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebHistory;
 import javafx.scene.web.WebView;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
-import org.w3c.dom.events.EventListener;
-import org.w3c.dom.events.EventTarget;
-import org.w3c.dom.events.MouseEvent;
 
 import java.io.File;
 
 public class Browser extends BorderPane
 {
-	static final String EVENT_CLICK = "click";
 	private TabPane tabPane;
 	private File reportFile;
 
@@ -83,31 +77,6 @@ public class Browser extends BorderPane
 				if (newValue == Worker.State.SUCCEEDED)
 				{
 					this.setText(this.engine.getTitle());
-					NodeList list = this.engine.getDocument().getElementsByTagName("a");
-					EventListener listener = ev -> {
-						String domEventType = ev.getType();
-						if (domEventType.equals(EVENT_CLICK))
-						{
-							String href = ((Element) ev.getTarget()).getAttribute("href");
-							if (ev instanceof MouseEvent)
-							{
-								MouseEvent mouseEvent = ((MouseEvent) ev);
-								if (mouseEvent.getButton() == 1)
-								{
-									CustomTab customTab = new CustomTab();
-									this.getTabPane().getTabs().add(customTab);
-									this.getTabPane().getSelectionModel().select(customTab);
-
-									//TODO think about how to open
-									customTab.load(this.engine.getLocation() + href);
-								}
-							}
-						}
-					};
-					for (int i = 0; i < list.getLength(); i++)
-					{
-						((EventTarget) list.item(i)).addEventListener(EVENT_CLICK, listener, false);
-					}
 				}
 			});
 			this.engine.setCreatePopupHandler(param -> {
@@ -121,11 +90,6 @@ public class Browser extends BorderPane
 		public void load(File file)
 		{
 			this.engine.load(file.toURI().toASCIIString());
-		}
-
-		public void load(String link)
-		{
-			this.engine.load(link);
 		}
 
 		public void reload()

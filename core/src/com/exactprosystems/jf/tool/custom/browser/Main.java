@@ -24,7 +24,7 @@ public class Main extends Application
 	public void start(Stage primaryStage) throws Exception
 	{
 		Browser browser = new Browser(new File("reports/20160226_111027_testLink_PASSED.html"));
-		Scene scene = new Scene(browser, 600, 600);
+		Scene scene = new Scene(browser, 1000, 1000);
 		primaryStage.setScene(scene);
 		primaryStage.show();
 	}
