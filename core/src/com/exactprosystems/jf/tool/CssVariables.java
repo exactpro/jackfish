@@ -156,6 +156,7 @@ public class CssVariables
 	public static final String	SPLIT_PANE_HIDE_DIVIDER		= "splitPaneHideDivider";
 
 	public static final String	NOT_EDITABLE_FIELD			= "notEditableField";
+	public static final String	BROWSER						= "browser";
 
 	/**
 	 * Spinner css
@@ -224,32 +225,35 @@ public class CssVariables
 		public static final String	ADD_CHILD_ICON			= IMAGES_DIR + "/addChild.png";
 		public static final String	ADD_BEFORE_ICON			= IMAGES_DIR + "/addBefore.png";
 		public static final String	ADD_AFTER_ICON			= IMAGES_DIR + "/addAfter.png";
-		public static final String BREAK_POINT_ICON = IMAGES_DIR + "/breakPoint.png";
-		public static final String EXECUTING_ITEM_ICON = IMAGES_DIR + "/executingItem.png";
+		public static final String	BREAK_POINT_ICON 		= IMAGES_DIR + "/breakPoint.png";
+		public static final String	EXECUTING_ITEM_ICON 	= IMAGES_DIR + "/executingItem.png";
 		public static final String	MOVE_LEFT_ICON			= IMAGES_DIR + "/move_left.png";
 		public static final String	MOVE_RIGHT_ICON			= IMAGES_DIR + "/move_right.png";
 		public static final String	LOADING_ICON			= IMAGES_DIR + "/loading.png";
 		public static final String	GO_TO_LINE_ICON			= IMAGES_DIR + "/goToLine.png";
 
-		public static final String EVALUATOR_ICON = IMAGES_DIR + "/evaluatorIcon.png";
-		public static final String FORMAT_ICON = IMAGES_DIR + "/formatIcon.png";
-		public static final String MATRIX_ICON = IMAGES_DIR + "/matrixIcon.png";
-		public static final String LIBRARY_ICON = IMAGES_DIR + "/libraryIcon.png";
-		public static final String FOLDER_ICON = IMAGES_DIR + "/folderIcon.png";
-		public static final String VARS_ICON = IMAGES_DIR + "/varsIcon.png";
-		public static final String SQL_ICON = IMAGES_DIR + "/sqlIcon.png";
-		public static final String CLIENT_ICON = IMAGES_DIR + "/clientIcon.png";
-		public static final String SERVICE_ICON = IMAGES_DIR + "/serviceIcon.png";
-		public static final String APP_ICON = IMAGES_DIR + "/appIcon.png";
-		public static final String FILE_SYSTEM_ICON = IMAGES_DIR + "/fileSystemIcon.png";
-		public static final String UNSUPPORT_ENTRY_ICON = IMAGES_DIR + "/unsupportIcon.png";
-		public static final String SUPPORT_ENTRY_ICON = IMAGES_DIR + "/supportIcon.png";
-		public static final String SERVICE_NOT_STARTED_ICON = IMAGES_DIR + "/serviceNotStartedIcon.png";
-		public static final String SERVICE_STARTED_GOOD_ICON = IMAGES_DIR + "/serviceStartedGoodIcon.png";
-		public static final String SERVICE_STARTED_FAIL_ICON = IMAGES_DIR + "/serviceStartedFailIcon.png";
-		public static final String APP_DICTIONARY_ICON = IMAGES_DIR + "/appDictionaryIcon.png";
-		public static final String CLIENT_DICTIONARY_ICON = IMAGES_DIR + "/clientDictionaryIcon.png";
-		public static final String REPORT_ICON = IMAGES_DIR + "/reportFolderIcon.png";
+		public static final String	EVALUATOR_ICON				= IMAGES_DIR + "/evaluatorIcon.png";
+		public static final String	FORMAT_ICON					= IMAGES_DIR + "/formatIcon.png";
+		public static final String	MATRIX_ICON					= IMAGES_DIR + "/matrixIcon.png";
+		public static final String	LIBRARY_ICON				= IMAGES_DIR + "/libraryIcon.png";
+		public static final String	FOLDER_ICON					= IMAGES_DIR + "/folderIcon.png";
+		public static final String	VARS_ICON					= IMAGES_DIR + "/varsIcon.png";
+		public static final String	SQL_ICON					= IMAGES_DIR + "/sqlIcon.png";
+		public static final String	CLIENT_ICON					= IMAGES_DIR + "/clientIcon.png";
+		public static final String	SERVICE_ICON				= IMAGES_DIR + "/serviceIcon.png";
+		public static final String	APP_ICON					= IMAGES_DIR + "/appIcon.png";
+		public static final String	FILE_SYSTEM_ICON			= IMAGES_DIR + "/fileSystemIcon.png";
+		public static final String	UNSUPPORT_ENTRY_ICON		= IMAGES_DIR + "/unsupportIcon.png";
+		public static final String	SUPPORT_ENTRY_ICON			= IMAGES_DIR + "/supportIcon.png";
+		public static final String	SERVICE_NOT_STARTED_ICON	= IMAGES_DIR + "/serviceNotStartedIcon.png";
+		public static final String	SERVICE_STARTED_GOOD_ICON	= IMAGES_DIR + "/serviceStartedGoodIcon.png";
+		public static final String	SERVICE_STARTED_FAIL_ICON	= IMAGES_DIR + "/serviceStartedFailIcon.png";
+		public static final String	APP_DICTIONARY_ICON			= IMAGES_DIR + "/appDictionaryIcon.png";
+		public static final String	CLIENT_DICTIONARY_ICON		= IMAGES_DIR + "/clientDictionaryIcon.png";
+		public static final String	REPORT_ICON					= IMAGES_DIR + "/reportFolderIcon.png";
+		public static final String	GO_BACK						= IMAGES_DIR + "/goBack.png";
+		public static final String	GO_FORWARD					= IMAGES_DIR + "/goForward.png";
+		public static final String	RELOAD						= IMAGES_DIR + "/reload.png";
 
 
 

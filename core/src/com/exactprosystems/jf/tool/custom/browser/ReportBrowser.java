@@ -7,6 +7,8 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.exactprosystems.jf.tool.custom.browser;
 
+import com.exactprosystems.jf.tool.Common;
+import com.exactprosystems.jf.tool.CssVariables;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Worker;
@@ -18,34 +20,53 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebHistory;
 import javafx.scene.web.WebView;
+import org.w3c.dom.Document;
 
 import java.io.File;
 
-public class Browser extends BorderPane
+public class ReportBrowser extends BorderPane
 {
 	private TabPane tabPane;
 	private File reportFile;
 
-	public Browser(File reportFile)
+	public ReportBrowser(File reportFile)
 	{
+		this.getStyleClass().add(CssVariables.BROWSER);
 		this.reportFile = reportFile;
 		initTabPane();
 		initToolbar();
+	}
+
+	public String getMatrix()
+	{
+		try
+		{
+			CustomTab selectedItem = (CustomTab) this.tabPane.getSelectionModel().getSelectedItem();
+			Document document = selectedItem.engine.getDocument();
+			return document.getElementsByTagName("pre").item(0).getTextContent();
+		}
+		catch (Exception e)
+		{
+			return "";
+		}
 	}
 
 	private void initToolbar()
 	{
 		ToolBar toolBar = new ToolBar();
 
-		Button reload = new Button("Reload");
+		Button reload = new Button();
+		Common.customizeLabeled(reload, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.RELOAD);
 		reload.setOnAction(e -> ((CustomTab) this.tabPane.getSelectionModel().getSelectedItem()).reload());
 		toolBar.getItems().add(reload);
 
-		Button back = new Button("Back");
+		Button back = new Button();
+		Common.customizeLabeled(back, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.GO_BACK);
 		back.setOnAction(e -> ((CustomTab) this.tabPane.getSelectionModel().getSelectedItem()).back());
 		toolBar.getItems().add(back);
 
-		Button forward = new Button("Forward");
+		Button forward = new Button();
+		Common.customizeLabeled(forward, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.GO_FORWARD);
 		forward.setOnAction(e -> ((CustomTab) this.tabPane.getSelectionModel().getSelectedItem()).forward());
 		toolBar.getItems().add(forward);
 

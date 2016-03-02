@@ -24,6 +24,7 @@ import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.common.version.VersionInfo;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
+import com.exactprosystems.jf.tool.custom.browser.ReportBrowser;
 import com.exactprosystems.jf.tool.custom.date.DateTimePicker;
 import com.exactprosystems.jf.tool.custom.date.DateTimePickerSkin;
 import com.exactprosystems.jf.tool.custom.helper.HelperFx;
@@ -541,10 +542,7 @@ public abstract class DialogsHelper
 		final String[] matrName = {matrixName};
 		tryCatch(() -> {
 			boolean addButton = configuration != null;
-			WebView browser = new WebView();
-			WebEngine engine = browser.getEngine();
-			engine.load(file.toURI().toASCIIString());
-
+			ReportBrowser reportBrowser = new ReportBrowser(file);
 			Dialog<ButtonType> dialog = new Alert(Alert.AlertType.INFORMATION);
 			if (addButton)
 			{
@@ -553,7 +551,7 @@ public abstract class DialogsHelper
 			dialog.setResizable(true);
 			dialog.getDialogPane().setPrefWidth(1024);
 			dialog.getDialogPane().setPrefHeight(768);
-			dialog.getDialogPane().setContent(browser);
+			dialog.getDialogPane().setContent(reportBrowser);
 			dialog.initModality(Modality.NONE);
 			dialog.setTitle("Report");
 			if (matrName[0] == null)
@@ -572,7 +570,7 @@ public abstract class DialogsHelper
 			dialog.getDialogPane().getStylesheets().addAll(Common.currentTheme().getPath());
 			Optional<ButtonType> buttonType = dialog.showAndWait();
 			buttonType.filter(bt -> bt.getButtonData().equals(ButtonBar.ButtonData.OTHER)).ifPresent(type -> Common.tryCatch(() -> {
-				String matrix = find(engine.getDocument());
+				String matrix = reportBrowser.getMatrix();
 				if (matrix != null && !matrix.isEmpty())
 				{
 					MatrixFx matrixFx = new MatrixFx(matrName[0], configuration, new MatrixListener());

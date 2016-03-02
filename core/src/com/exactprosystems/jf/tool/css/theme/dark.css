@@ -662,6 +662,12 @@ CellView > .text-input.text-field{
 
 }
 
+.browser {
+	-fx-padding : 2px;
+	-fx-border-width : 2 0 2 0;
+	-fx-border-color : -fx-text-base-color;
+}
+
 .auto-complete-popup > .list-view {
 	-fx-background-color:
 		linear-gradient(to bottom,
