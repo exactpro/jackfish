@@ -18,6 +18,7 @@ import com.exactprosystems.jf.common.DocumentInfo;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.parser.items.MatrixItem;
 import com.exactprosystems.jf.common.parser.items.MatrixRoot;
+import com.exactprosystems.jf.common.parser.items.NameSpace;
 import com.exactprosystems.jf.common.parser.items.TestCase;
 import com.exactprosystems.jf.common.parser.listeners.IMatrixListener;
 import com.exactprosystems.jf.common.report.ReportBuilder;
@@ -254,6 +255,21 @@ public class Matrix extends AbstractDocument implements IMatrix, Cloneable
 	public MatrixItem getRoot()
 	{
 		return this.root;
+	}
+	
+	public List<String> nameSpaces()
+	{
+		final List<String> res = new ArrayList<>();
+
+		this.getRoot().bypass(item ->
+		{
+			if (item instanceof NameSpace)
+			{
+				res.add(((NameSpace)item).getName());
+			}
+		});
+
+		return res;
 	}
 
 	public int count(MatrixItem item)
