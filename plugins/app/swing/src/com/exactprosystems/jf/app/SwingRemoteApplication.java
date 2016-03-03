@@ -279,7 +279,7 @@ public class SwingRemoteApplication extends RemoteApplication
 				@Override
 				public boolean matches(Component c)
 				{
-					return c != null && (c instanceof JFrame && ((JFrame) c).getTitle().contains(title)) 
+					return c != null && c.isShowing() && (c instanceof JFrame && ((JFrame) c).getTitle().contains(title))
 							|| (c instanceof JDialog && ((JDialog) c).getTitle().contains(title));
 				}
 			});
