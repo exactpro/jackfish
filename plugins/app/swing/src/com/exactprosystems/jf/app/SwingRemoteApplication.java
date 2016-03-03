@@ -279,7 +279,8 @@ public class SwingRemoteApplication extends RemoteApplication
 				@Override
 				public boolean matches(Component c)
 				{
-					return c != null && (c instanceof JFrame && ((JFrame) c).getTitle().equals(title)) || (c instanceof JDialog && ((JDialog) c).getTitle().equals(title));
+					return c != null && (c instanceof JFrame && ((JFrame) c).getTitle().contains(title)) 
+							|| (c instanceof JDialog && ((JDialog) c).getTitle().contains(title));
 				}
 			});
 			this.operationExecutor.setCurrentFrame(frame);
