@@ -501,20 +501,34 @@ public class SwingRemoteApplication extends RemoteApplication
 		try
 		{
 			List<ComponentFixture<Component>> dialogs = this.operationExecutor.findAll(ControlKind.Any, null, element);
-
 			for (ComponentFixture<Component> dialog : dialogs)
-			{
-				for (LocatorAndOperation pair : operations)
+			{	
+				if (dialog != null && dialog.target instanceof Dialog)
 				{
-					Locator locator = pair.getLocator();
-
-					List<ComponentFixture<Component>> components = this.operationExecutor.findAll(locator.getControlKind(), dialog, locator);
-					if (components.size() == 1)
+					Dialog dlg = ((Dialog)dialog.target);
+					logger.debug("close dialog: " + dlg.getName() + " " + dlg.getTitle());
+					dlg.dispose();
+				}
+				else if (dialog != null && dialog.target instanceof Frame)
+				{
+					Frame frm = ((Frame)dialog.target);
+					logger.error("close frame: " + frm.getName() + " " + frm.getTitle());
+					frm.dispose();
+				}
+				else
+				{
+					for (LocatorAndOperation pair : operations)
 					{
-						ComponentFixture<Component> component = components.get(0);
-						Operation operation = pair.getOperation();
-						operation.operate(this.operationExecutor, locator, component);
-
+						Locator locator = pair.getLocator();
+	
+						List<ComponentFixture<Component>> components = this.operationExecutor.findAll(locator.getControlKind(), dialog, locator);
+						if (components.size() == 1)
+						{
+							ComponentFixture<Component> component = components.get(0);
+							Operation operation = pair.getOperation();
+							operation.operate(this.operationExecutor, locator, component);
+	
+						}
 					}
 				}
 			}
