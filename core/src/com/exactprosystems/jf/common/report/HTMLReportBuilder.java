@@ -175,6 +175,7 @@ public class HTMLReportBuilder extends ReportBuilder
 					"<tr><td><td>%s</tr>\n",
 					"" + comment); 
 		}
+		writer.fwrite("</table>\n");
 
 		writer.fwrite(
 				"<table border='0' cellspacing='0' width='50%%' >\n " +
