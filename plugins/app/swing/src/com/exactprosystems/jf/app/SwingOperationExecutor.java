@@ -108,6 +108,10 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 			{
 				owner = (Container) window.target;
 			}
+			else
+			{
+				owner = (Container) this.currentFrame();
+			}
 
 			List<ComponentFixture<Component>> res = new ArrayList<>();
 			MatcherSwing<Component> matcher = new MatcherSwing<>(Component.class, owner, controlKind, locator);
