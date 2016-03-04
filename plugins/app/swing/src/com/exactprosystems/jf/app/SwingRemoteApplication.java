@@ -501,23 +501,31 @@ public class SwingRemoteApplication extends RemoteApplication
 	{
 		try
 		{
+			int closed = 0;
 			List<ComponentFixture<Component>> dialogs = this.operationExecutor.findAll(ControlKind.Any, null, element);
 			for (ComponentFixture<Component> dialog : dialogs)
 			{	
+				if (dialog == null)
+				{
+					continue;
+				}
 				if (dialog != null && dialog.target instanceof Dialog)
 				{
 					Dialog dlg = ((Dialog)dialog.target);
 					logger.debug("close dialog: " + dlg.getName() + " " + dlg.getTitle());
 					dlg.dispose();
+					closed++;
 				}
 				else if (dialog != null && dialog.target instanceof Frame)
 				{
 					Frame frm = ((Frame)dialog.target);
-					logger.error("close frame: " + frm.getName() + " " + frm.getTitle());
+					logger.debug("close frame: " + frm.getName() + " " + frm.getTitle());
 					frm.dispose();
+					closed++;
 				}
 				else
 				{
+					logger.debug("close other: " + dialog.target);
 					for (LocatorAndOperation pair : operations)
 					{
 						Locator locator = pair.getLocator();
@@ -531,10 +539,11 @@ public class SwingRemoteApplication extends RemoteApplication
 	
 						}
 					}
+					closed++;
 				}
 			}
 
-			return dialogs.size();
+			return closed;
 		}
 		catch (Exception e)
 		{
