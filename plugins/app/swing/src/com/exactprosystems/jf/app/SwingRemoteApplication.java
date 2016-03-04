@@ -314,10 +314,6 @@ public class SwingRemoteApplication extends RemoteApplication
 			{
 				ownerFixture = this.operationExecutor.find(null, owner);
 			}
-			else
-			{
-				ownerFixture = new AnyComponentlFixture(currentRobot, this.operationExecutor.currentFrame());
-			}
 
 			List<ComponentFixture<Component>> components = this.operationExecutor.findAll(element.getControlKind(), ownerFixture, element);
 			for (ComponentFixture<Component> component : components)
