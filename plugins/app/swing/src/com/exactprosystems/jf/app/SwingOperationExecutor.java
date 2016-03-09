@@ -103,21 +103,15 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 		try
 		{
 			this.currentRobot.waitForIdle();
-			MatcherSwing<Component> matcher = null;
-			Collection<Component> components = null;
+			Container owner = null;
 			if (window != null && window.target instanceof Container)
 			{
-				Container owner = (Container) window.target;
-				matcher = new MatcherSwing<>(Component.class, owner, controlKind, locator);
-				components = this.currentRobot.finder().findAll(owner, matcher);
+				owner = (Container) window.target;
 			}
-			else
-			{
-				matcher = new MatcherSwing<>(Component.class, null, controlKind, locator);
-				components = this.currentRobot.finder().findAll(matcher);
-			}
-			
+
 			List<ComponentFixture<Component>> res = new ArrayList<>();
+			MatcherSwing<Component> matcher = new MatcherSwing<>(Component.class, owner, controlKind, locator);
+			Collection<Component> components = this.currentRobot.finder().findAll(owner, matcher);
 			for (final Component component : components)
 			{
 				res.add(getFixture(component));

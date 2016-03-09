@@ -314,6 +314,10 @@ public class SwingRemoteApplication extends RemoteApplication
 			{
 				ownerFixture = this.operationExecutor.find(null, owner);
 			}
+			else
+			{
+				ownerFixture = new AnyComponentlFixture(currentRobot, this.operationExecutor.currentFrame());
+			}
 
 			List<ComponentFixture<Component>> components = this.operationExecutor.findAll(element.getControlKind(), ownerFixture, element);
 			for (ComponentFixture<Component> component : components)
@@ -505,18 +509,11 @@ public class SwingRemoteApplication extends RemoteApplication
 				{
 					continue;
 				}
-				if (dialog != null && dialog.target instanceof Dialog)
+				if (dialog.target instanceof Window)
 				{
-					Dialog dlg = ((Dialog)dialog.target);
-					logger.debug("close dialog: " + dlg.getName() + " " + dlg.getTitle());
-					dlg.dispose();
-					closed++;
-				}
-				else if (dialog != null && dialog.target instanceof Frame)
-				{
-					Frame frm = ((Frame)dialog.target);
-					logger.debug("close frame: " + frm.getName() + " " + frm.getTitle());
-					frm.dispose();
+					Window wnd = (Window) dialog.target;
+					logger.debug("close window : " + wnd.getName());
+					wnd.dispose();
 					closed++;
 				}
 				else
