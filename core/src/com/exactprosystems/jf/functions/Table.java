@@ -32,6 +32,7 @@ import java.sql.Statement;
 import java.util.*;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class Table implements List<Map<String, Object>>, Mutable, Cloneable
 {
@@ -440,7 +441,7 @@ public class Table implements List<Map<String, Object>>, Mutable, Cloneable
 		{
 			if (columnIsPresent(column))
 			{
-				throw new RuntimeException(String.format("Column with name %s already present", column));
+				throw new ColumnIsPresentException(String.format("Column with name %s already present", column));
 			}
 		}
 		this.changed = true;
@@ -451,6 +452,8 @@ public class Table implements List<Map<String, Object>>, Mutable, Cloneable
 		List<Header> newHeaders = new ArrayList<>(Arrays.asList(this.headers));
 		newHeaders.addAll(index, Arrays.stream(columns).map(s -> new Header(s, null)).collect(Collectors.toList()));
 		this.headers = newHeaders.toArray(new Header[newHeaders.size()]);
+		//update all lines
+		this.innerList.stream().forEach(e -> Arrays.stream(this.headers).filter(h -> !e.containsKey(h)).forEach(h -> e.put(h, "")));
 	}
 
 	public void removeColumns(String... columns)
@@ -970,6 +973,11 @@ public class Table implements List<Map<String, Object>>, Mutable, Cloneable
 	public int getHeaderSize()
 	{
 		return this.headers.length;
+	}
+
+	public int getHeaderIndex(String name)
+	{
+		return IntStream.range(0, this.headers.length).filter(i -> name.equals(this.headers[i].name)).findFirst().orElse(-1);
 	}
 
 	public String getHeader(int index)

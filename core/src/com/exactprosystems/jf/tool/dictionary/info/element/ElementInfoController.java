@@ -125,7 +125,7 @@ public class ElementInfoController implements Initializable, ContainingParent
 		this.controls = FXCollections.observableArrayList(ControlKind.values());
 		this.comboBoxControl.setItems(this.controls);
 
-		gridPane.add(this.pane, 1, 1);
+		gridPane.add(this.pane, 1, 0);
 	}
 
 	public void setAppName(String id)

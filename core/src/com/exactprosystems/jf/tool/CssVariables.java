@@ -255,7 +255,13 @@ public class CssVariables
 		public static final String	GO_FORWARD					= IMAGES_DIR + "/goForward.png";
 		public static final String	RELOAD						= IMAGES_DIR + "/reload.png";
 		public static final String	CONFIGURATION_ICON			= IMAGES_DIR + "/configurationIcon.png";
-
-
+		public static final String	DICTIONARY_NEW				= IMAGES_DIR + "/new.png";
+		public static final String	DICTIONARY_DELETE			= IMAGES_DIR + "/delete_24.png";
+		public static final String	DICTIONARY_RENEW			= IMAGES_DIR + "/renew.png";
+		public static final String	DICTIONARY_TEST				= IMAGES_DIR + "/test.png";
+		public static final String	DICTIONARY_COPY				= IMAGES_DIR + "/copy_24.png";
+		public static final String	DICTIONARY_PASTE			= IMAGES_DIR + "/paste_24.png";
+		public static final String	DICTIONARY_RECORD_ONE		= IMAGES_DIR + "/record_one.png";
+		public static final String	DICTIONARY_RECORD_INF		= IMAGES_DIR + "/record_inf.png";
 	}
 }

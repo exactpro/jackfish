@@ -10,25 +10,26 @@ package com.exactprosystems.jf.tool.dictionary.navigation;
 
 import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.app.IWindow.SectionKind;
+import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
+import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.custom.BorderWrapper;
+import com.exactprosystems.jf.tool.custom.listview.FindListView;
 import com.exactprosystems.jf.tool.custom.shutter.DelayShutterButton;
 import com.exactprosystems.jf.tool.custom.tab.CustomTab;
 import com.exactprosystems.jf.tool.custom.xpath.XpathViewer;
 import com.exactprosystems.jf.tool.dictionary.DictionaryFx;
-import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.main.Main;
 import com.exactprosystems.jf.tool.settings.SettingsPanel;
 import com.exactprosystems.jf.tool.settings.Theme;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
-import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.Initializable;
-import javafx.geometry.Insets;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -43,8 +44,8 @@ import org.w3c.dom.Document;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.ResourceBundle;
+import java.util.function.Function;
 
 import static com.exactprosystems.jf.tool.Common.tryCatch;
 
@@ -53,17 +54,25 @@ public class NavigationController implements Initializable, ContainingParent
 	public Button btnFindDialog;
 	public Button btnFindElement;
 
-	public ChoiceBox<IWindow> choiceBoxWindow;
-	public ChoiceBox<IControl> choiceBoxElement;
+	public FindListView<IWindow> listViewWindow;
+	public FindListView<IControl> listViewElement;
 
 	public ToggleGroup groupSection;
 	public HBox hBoxElement;
 	public CheckBox checkBoxUseSelfAsOwner;
-	public BorderPane borderPaneWindow;
 	public BorderPane paneWindow;
-	public GridPane dialogGridPane;
+	public BorderPane paneElement;
 	public Button btnRenameWindow;
-	public GridPane elementGridPane;
+	public Button btnNewElement;
+	public Button btnDeleteElement;
+	public Button btnCopyElement;
+	public Button btnPasteElement;
+	public Button btnNewDialog;
+	public Button btnDeleteDialog;
+	public Button btnCopyDialog;
+	public Button btnPasteDialog;
+	public Button btnTestWindow;
+
 	private Parent pane;
 
 	private DictionaryFx model;
@@ -86,15 +95,45 @@ public class NavigationController implements Initializable, ContainingParent
 	public void initialize(URL url, ResourceBundle resourceBundle)
 	{
 		assert groupSection != null : "fx:id=\"buttonGroup\" was not injected: check your FXML file 'Navigation.fxml'.";
-		assert choiceBoxWindow != null : "fx:id=\"comboBoxWindow\" was not injected: check your FXML file 'Navigation.fxml'.";
-		assert choiceBoxElement != null : "fx:id=\"comboBoxElement\" was not injected: check your FXML file 'Navigation.fxml'.";
 		assert checkBoxUseSelfAsOwner != null : "fx:id=\"checkBoxUseSelfAsOwner\" was not injected: check your FXML file 'Navigation.fxml'.";
 		assert hBoxElement != null : "fx:id=\"hBoxElement\" was not injected: check your FXML file 'Navigation.fxml'.";
 		assert btnFindElement != null : "fx:id=\"btnFindElement\" was not injected: check your FXML file 'Navigation.fxml'.";
 		assert btnFindDialog != null : "fx:id=\"btnFindDialog\" was not injected: check your FXML file 'Navigation.fxml'.";
+		this.listViewWindow = new FindListView<>((w, s) -> w.getName().toUpperCase().contains(s.toUpperCase()), true);
+		this.listViewWindow.setCellFactory(param -> new CustomListCell<>((w, s) -> Common.tryCatch(() -> this.model.dialogRename(w, s), "Error on rename"), IWindow::getName));
+		this.paneWindow.setCenter(this.listViewWindow);
+		this.listViewElement = new FindListView<>((e, s) -> (!Str.IsNullOrEmpty(e.getID()) && e.getID().toUpperCase().contains(s.toUpperCase()) || (e.getBindedClass().getClazz().toUpperCase()
+				.contains(s.toUpperCase()))),
+				false);
+		this.listViewElement.setCellFactory(param -> new CustomListCell<>((w, s) -> {}, IControl::toString));
+		this.paneElement.setCenter(this.listViewElement);
 		Platform.runLater(() -> {
-			((GridPane) this.pane).add(BorderWrapper.wrap(this.dialogGridPane).title("Dialog").color(Common.currentTheme().getReverseColor()).build(), 0, 0);
-			((GridPane) this.pane).add(BorderWrapper.wrap(this.elementGridPane).title("Element").color(Common.currentTheme().getReverseColor()).build(), 2, 0);
+
+			ScrollPane scrollPaneWindow = new ScrollPane(this.paneWindow);
+			scrollPaneWindow.setFitToWidth(true);
+			scrollPaneWindow.setFitToHeight(true);
+			scrollPaneWindow.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+			scrollPaneWindow.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+			Node dialog = BorderWrapper.wrap(scrollPaneWindow).title("Dialog").color(Common.currentTheme().getReverseColor()).build();
+			((GridPane) this.pane).add(dialog, 0, 0);
+
+			ScrollPane scrollPaneElement = new ScrollPane(this.paneElement);
+			scrollPaneElement.setFitToWidth(true);
+			scrollPaneElement.setFitToHeight(true);
+			scrollPaneElement.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+			scrollPaneElement.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+			Node element = BorderWrapper.wrap(scrollPaneElement).title("Element").color(Common.currentTheme().getReverseColor()).build();
+			((GridPane) this.pane).add(element, 2, 0);
+
+			Common.customizeLabeled(this.btnNewDialog, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.DICTIONARY_NEW);
+			Common.customizeLabeled(this.btnDeleteDialog, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.DICTIONARY_DELETE);
+			Common.customizeLabeled(this.btnNewElement, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.DICTIONARY_NEW);
+			Common.customizeLabeled(this.btnDeleteElement, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.DICTIONARY_DELETE);
+			Common.customizeLabeled(this.btnTestWindow, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.DICTIONARY_TEST);
+			Common.customizeLabeled(this.btnCopyDialog, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.DICTIONARY_COPY);
+			Common.customizeLabeled(this.btnCopyElement, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.DICTIONARY_COPY);
+			Common.customizeLabeled(this.btnPasteDialog, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.DICTIONARY_PASTE);
+			Common.customizeLabeled(this.btnPasteElement, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.DICTIONARY_PASTE);
 		});
 	}
 
@@ -110,7 +149,6 @@ public class NavigationController implements Initializable, ContainingParent
 		createShutters(this.hBoxElement, owner, compactMode);
 
 		gridPane.add(this.pane, 0, 0);
-		GridPane.setColumnSpan(this.pane, 2);
 	}
 
 	// ------------------------------------------------------------------------------------------------------------------
@@ -135,43 +173,6 @@ public class NavigationController implements Initializable, ContainingParent
 	{
 		tryCatch(() -> this.model.dialogPaste(currentSection()), "Error on paste dialog");
 	}
-
-	public void findDialog(ActionEvent actionEvent)
-	{
-		tryCatch(() -> {
-			ArrayList<IWindow> windows = new ArrayList<>(this.choiceBoxWindow.getItems());
-			showFindPanel(windows, this.choiceBoxWindow, "Find dialogs");
-		}, "Error on find dialog");
-	}
-
-	public void renameWindow(ActionEvent actionEvent)
-	{
-		tryCatch(() -> {
-			final IWindow window = currentWindow();
-			final String oldName = window.getName();
-			final TextArea textField = new TextArea();
-			textField.setPrefHeight(25);
-			textField.setMinHeight(25);
-			textField.setMaxHeight(25);
-			btnFindDialog.setDisable(true);
-			borderPaneWindow.setCenter(textField);
-			textField.setText(oldName);
-			textField.requestFocus();
-			textField.positionCaret(oldName.length());
-			textField.setOnKeyPressed(keyEvent -> {
-				if (keyEvent.getCode() == KeyCode.ENTER)
-				{
-					tryCatch(() -> model.dialogRename(window, textField.getText()), "Error on rename");
-					comboBoxToFront();
-				}
-				if (keyEvent.getCode() == KeyCode.ESCAPE)
-				{
-					comboBoxToFront();
-				}
-			});
-		}, "Error on rename window");
-	}
-
 	// ------------------------------------------------------------------------------------------------------------------
 
 	public void changeSection(ActionEvent actionEvent)
@@ -198,14 +199,6 @@ public class NavigationController implements Initializable, ContainingParent
 	public void pasteElement(ActionEvent actionEvent)
 	{
 		tryCatch(() -> this.model.elementPaste(currentWindow(), currentSection()), "Error on paste element");
-	}
-
-	public void findElement(ActionEvent actionEvent)
-	{
-		tryCatch(() -> {
-			ArrayList<IControl> controls = new ArrayList<>(this.choiceBoxElement.getItems());
-			showFindPanel(controls, this.choiceBoxElement, "Find elements");
-		}, "Error on find element");
 	}
 
 	public void testingDialog(ActionEvent actionEvent)
@@ -298,7 +291,7 @@ public class NavigationController implements Initializable, ContainingParent
 	// ------------------------------------------------------------------------------------------------------------------
 	public void displayDialog(IWindow window, Collection<IWindow> windows)
 	{
-		display(window, windows, this.choiceBoxWindow, this.windowChangeListener);
+		display(window, windows, this.listViewWindow, this.windowChangeListener);
 	}
 
 	public void displaySection(SectionKind sectionKind)
@@ -321,7 +314,7 @@ public class NavigationController implements Initializable, ContainingParent
 
 	public void displayElement(IControl control, Collection<IControl> controls)
 	{
-		display(control, controls, this.choiceBoxElement, this.elementChangeListener);
+		display(control, controls, this.listViewElement, this.elementChangeListener);
 	}
 
 	// ------------------------------------------------------------------------------------------------------------------
@@ -329,7 +322,7 @@ public class NavigationController implements Initializable, ContainingParent
 	// ------------------------------------------------------------------------------------------------------------------
 	private IWindow currentWindow()
 	{
-		return this.choiceBoxWindow.getSelectionModel().getSelectedItem();
+		return this.listViewWindow.getSelectedItem();
 	}
 
 	private IWindow.SectionKind currentSection()
@@ -347,7 +340,7 @@ public class NavigationController implements Initializable, ContainingParent
 
 	private IControl currentElement()
 	{
-		return this.choiceBoxElement.getSelectionModel().getSelectedItem();
+		return this.listViewElement.getSelectedItem();
 	}
 
 	private boolean useSelfAsOwner()
@@ -357,8 +350,7 @@ public class NavigationController implements Initializable, ContainingParent
 
 	public void setChoiseBoxListeners()
 	{
-		this.choiceBoxWindow.getSelectionModel().selectedItemProperty().addListener(this.windowChangeListener);
-		this.choiceBoxElement.getSelectionModel().selectedItemProperty().addListener(this.elementChangeListener);
+		this.listViewElement.addChangeListener(this.elementChangeListener);
 	}
 
 	private EventHandler<KeyEvent> pressHandler;
@@ -373,10 +365,9 @@ public class NavigationController implements Initializable, ContainingParent
 
 	private void createShutters(HBox hBox, CustomTab owner, boolean compactMode)
 	{
-		DelayShutterButton recOneButton = new DelayShutterButton("R 1", 50.0, 10000);
-		DelayShutterButton recManyButton = new DelayShutterButton("R ∞", 50.0, 10000);
-		DelayShutterButton renewButton = new DelayShutterButton("Renew", 70.0, 10000);
-		HBox.setMargin(recOneButton, new Insets(0, 0, 0, 5));
+		DelayShutterButton recOneButton = new DelayShutterButton("Record one component", CssVariables.Icons.DICTIONARY_RECORD_ONE, 10000);
+		DelayShutterButton recManyButton = new DelayShutterButton("Record component until toggled", CssVariables.Icons.DICTIONARY_RECORD_INF, 10000);
+		DelayShutterButton renewButton = new DelayShutterButton("Rerecord current component", CssVariables.Icons.DICTIONARY_RENEW, 10000);
 		ToggleGroup group = new ToggleGroup();
 		recOneButton.setToggleGroup(group);
 		recManyButton.setToggleGroup(group);
@@ -436,39 +427,113 @@ public class NavigationController implements Initializable, ContainingParent
 		});
 	}
 
-	private <T> void showFindPanel(final List<T> list, final ChoiceBox<T> cb, String title)
-	{
-		DialogsHelper.showFindListView(list, title, t -> cb.getSelectionModel().select(t));
-	}
-
-	private <T> void display(T item, Collection<T> items, ChoiceBox<T> choiceBox, ChangeListener<T> listener)
+	private <T> void display(T item, Collection<T> items, FindListView<T> listView, ChangeListener<T> listener)
 	{
 		Platform.runLater(() -> {
-			choiceBox.getSelectionModel().selectedItemProperty().removeListener(listener);
-
-			choiceBox.getItems().clear();
+			listView.removeChangeListener(listener);
 			if (items != null)
 			{
-				choiceBox.setItems(FXCollections.observableArrayList(items));
+				listView.setData(new ArrayList<>(items), true);
 			}
 			else
 			{
-				choiceBox.setItems(FXCollections.observableArrayList());
+				listView.setData(new ArrayList<>(), true);
 			}
-			choiceBox.getSelectionModel().select(item);
-
-			choiceBox.getSelectionModel().selectedItemProperty().addListener(listener);
+			listView.selectItem(item);
+			listView.addChangeListener(listener);
 		});
-	}
-
-	private void comboBoxToFront()
-	{
-		this.borderPaneWindow.setCenter(paneWindow);
-		this.paneWindow.toFront();
-		this.btnFindDialog.setDisable(false);
 	}
 
 	private ChangeListener<IWindow> windowChangeListener = (observable, oldValue, newValue) -> tryCatch(() -> model.windowChanged(newValue, currentSection()), "Error on select window.");
 
 	private ChangeListener<IControl> elementChangeListener = (observable, oldValue, newValue) -> tryCatch(() -> model.elementChanged(currentWindow(), currentSection(), newValue), "Error on select element");
+
+	private class CustomListCell<T> extends ListCell<T>
+	{
+		private TextField textField;
+		private IUpdater<T> updater;
+		private Function<T, String> converter;
+
+		public CustomListCell(IUpdater<T> updater, Function<T, String> converter)
+		{
+			this.updater = updater;
+			this.converter = converter;
+		}
+
+		@Override
+		protected void updateItem(T item, boolean empty)
+		{
+			super.updateItem(item, empty);
+			if (item != null && !empty)
+			{
+				setText(this.converter.apply(getItem()));
+			}
+			else
+			{
+				setText(null);
+			}
+		}
+
+		@Override
+		public void startEdit()
+		{
+			super.startEdit();
+			if (textField == null)
+			{
+				createTextField();
+			}
+			textField.setText(this.converter.apply(getItem()));
+			setGraphic(textField);
+			setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
+			Platform.runLater(textField::requestFocus);
+		}
+
+		@Override
+		public void cancelEdit()
+		{
+			super.cancelEdit();
+			setText(String.valueOf(getItem()));
+			setContentDisplay(ContentDisplay.TEXT_ONLY);
+		}
+
+		private String getString()
+		{
+			return String.valueOf(getItem() == null ? "" : getItem());
+		}
+
+		private void createTextField()
+		{
+			textField = new TextField(this.converter.apply(getItem()));
+			textField.getStyleClass().add(CssVariables.TEXT_FIELD_VARIABLES);
+			textField.setMinWidth(this.getWidth() - this.getGraphicTextGap() * 2);
+			textField.setOnKeyPressed(t -> {
+				if (t.getCode() == KeyCode.ENTER)
+				{
+					this.updater.update(getItem(), textField.getText());
+					commitEdit(getItem());
+				}
+				else if (t.getCode() == KeyCode.ESCAPE)
+				{
+					cancelEdit();
+				}
+				else if (t.getCode() == KeyCode.TAB)
+				{
+					this.updater.update(getItem(), textField.getText());
+					commitEdit(getItem());
+				}
+			});
+			textField.focusedProperty().addListener((observable, oldValue, newValue) -> {
+				if (!newValue && textField != null)
+				{
+					this.updater.update(getItem(), textField.getText());
+					commitEdit(getItem());
+				}
+			});
+		}
+	}
+
+	private interface IUpdater<T>
+	{
+		void update(T item, String s);
+	}
 }

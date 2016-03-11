@@ -307,6 +307,10 @@ public class DictionaryFx extends GuiDictionary
 		if (window != null)
 		{
 			String oldName = window.getName();
+			if (oldName.equals(name))
+			{
+				return;
+			}
 			Command undo = () -> {
 				window.setName(oldName);
 				displayDialog(window, getWindows());

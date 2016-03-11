@@ -7,6 +7,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.exactprosystems.jf.tool.custom.grideditor;
 
+import com.exactprosystems.jf.common.evaluator.MvelEvaluator;
 import com.exactprosystems.jf.functions.Table;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -91,7 +92,12 @@ public class TableDataProvider implements DataProvider<String>
 	@Override
 	public void addRow(int row)
 	{
-		this.table.addValue(row, new Object[] {});
+		Object[] ar = new Object[this.columnCount()];
+		for (int i = 0; i < ar.length; i++)
+		{
+			ar[i] = this.defaultValue();
+		}
+		this.table.addValue(row, ar);
 	}
 
 	@Override

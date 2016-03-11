@@ -8,8 +8,11 @@
 
 package com.exactprosystems.jf.tool.dictionary;
 
-import com.exactprosystems.jf.api.app.*;
+import com.exactprosystems.jf.api.app.AppConnection;
+import com.exactprosystems.jf.api.app.IControl;
+import com.exactprosystems.jf.api.app.IWindow;
 import com.exactprosystems.jf.api.app.IWindow.SectionKind;
+import com.exactprosystems.jf.api.app.ImageWrapper;
 import com.exactprosystems.jf.common.Configuration;
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
@@ -20,13 +23,11 @@ import com.exactprosystems.jf.tool.custom.console.CustomListView;
 import com.exactprosystems.jf.tool.custom.tab.CustomTab;
 import com.exactprosystems.jf.tool.dictionary.actions.ActionsController;
 import com.exactprosystems.jf.tool.dictionary.info.element.ElementInfoController;
-import com.exactprosystems.jf.tool.dictionary.info.owner.OwnerInfoController;
 import com.exactprosystems.jf.tool.dictionary.navigation.NavigationController;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.main.Main;
 import com.exactprosystems.jf.tool.settings.SettingsPanel;
 import com.exactprosystems.jf.tool.settings.Theme;
-
 import javafx.application.Platform;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
@@ -73,7 +74,6 @@ public class DictionaryFxController implements Initializable, ContainingParent
 	
 	private ActionsController		actionsController;
 	private ElementInfoController	elementInfoController;
-	private OwnerInfoController		ownerInfoController;
 	private NavigationController	navigationController;
 	private Settings settings;
 
@@ -118,9 +118,6 @@ public class DictionaryFxController implements Initializable, ContainingParent
 		Settings.SettingsValue themePath = this.settings.getValueOrDefault(Settings.GLOBAL_NS, SettingsPanel.SETTINGS, Main.THEME, Theme.WHITE.name());
 		this.elementInfoController = Common.loadController(ElementInfoController.class.getResource("ElementInfo.fxml"));
 		this.elementInfoController.init(model, configuration, this.mainGridPane, this.navigationController, Theme.valueOf(themePath.getValue()).getPath());
-
-		this.ownerInfoController = Common.loadController(OwnerInfoController.class.getResource("OwnerInfo.fxml"));
-		this.ownerInfoController.init(this.mainGridPane);
 
 		this.actionsController = Common.loadController(ActionsController.class.getResource("Actions.fxml"));
 		this.actionsController.init(model, this.mainGridPane, evaluator, this.navigationController, this.elementInfoController);
@@ -257,7 +254,6 @@ public class DictionaryFxController implements Initializable, ContainingParent
 			Collection<IControl> rows, IControl row, IControl header)
 	{
 		this.navigationController.displayElement(control, controls);
-		this.ownerInfoController.displayInfo(owner);
 		this.elementInfoController.displayInfo(control, owners, owner, rows, row, header);
 	}
 

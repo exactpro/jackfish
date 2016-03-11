@@ -502,7 +502,11 @@ public class SwingRemoteApplication extends RemoteApplication
 		try
 		{
 			int closed = 0;
+			logger.debug("operations count : " + operations.size());
+			logger.debug("element : " + element.toString());
 			List<ComponentFixture<Component>> dialogs = this.operationExecutor.findAll(ControlKind.Any, null, element);
+			logger.debug("found dialogs : " + dialogs.size());
+
 			for (ComponentFixture<Component> dialog : dialogs)
 			{	
 				if (dialog == null)

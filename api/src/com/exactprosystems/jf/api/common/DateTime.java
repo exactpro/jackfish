@@ -20,11 +20,6 @@ public class DateTime extends Date
 {
 	private static final long	serialVersionUID	= 3588757755816729420L;
 
-	public static void main(String[] args)
-	{
-		System.out.println(DateTime.current().str("HH:mm"));
-	}
-
 	@DescriptionAttribute(text = "Sets formats for convert string to date")
 	public static void SetFormats(String timeFormat, String dateFormat, String dateTimeFormat)
 	{

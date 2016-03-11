@@ -4,9 +4,9 @@ import com.exactprosystems.jf.tool.CssVariables;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.scene.control.ProgressBar;
-import javafx.scene.control.ToggleButton;
-import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.*;
+import javafx.scene.image.*;
+import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 
 import java.awt.*;
@@ -19,7 +19,7 @@ public class DelayShutterButton extends BorderPane
 	private long begin;
 
 	private ToggleButton button;
-	private ProgressBar progressBar;
+	private ProgressIndicator progress;
 
 	private Timer timer;
 
@@ -31,18 +31,13 @@ public class DelayShutterButton extends BorderPane
 	private ClickHandler 				onCompleteAction;
 	private boolean timerIsCanceled = false;
 
-	public DelayShutterButton(String name, double width, long maxDelay)
+	public DelayShutterButton(String tooltip, String icon, long maxDelay)
 	{
 		super();
 		this.maxDelay = maxDelay;
-
-		
-		this.button = new ToggleButton(name);
+		this.button = new ToggleButton("", new ImageView(new Image(icon)));
+		this.button.setTooltip(new Tooltip(tooltip));
 		this.button.getStyleClass().add(CssVariables.DELAY_SHUTTER);
-		this.button.setPrefWidth(width);
-		this.button.setMinWidth(width);
-		this.button.setMaxWidth(width);
-
 		this.button.setOnAction(a -> {
 			if (this.button.isSelected())
 			{
@@ -60,15 +55,8 @@ public class DelayShutterButton extends BorderPane
 			}
 		});
 
-		this.progressBar = new ProgressBar();
-		this.progressBar.getStyleClass().add(CssVariables.DELAY_SHUTTER);
-		this.progressBar.setPrefWidth(this.button.getPrefWidth());
-		this.progressBar.setMinWidth(this.button.getMinWidth());
-		this.progressBar.setMaxWidth(this.button.getMaxWidth());
-		this.progressBar.setPrefHeight(this.button.getPrefHeight());
-		this.progressBar.setMinHeight(this.button.getMinHeight());
-		this.progressBar.setMaxHeight(this.button.getMaxHeight());
-
+		this.progress = new ProgressBar();
+		this.progress.getStyleClass().add(CssVariables.DELAY_SHUTTER);
 		setCenter(this.button);
 	}
 	
@@ -174,18 +162,24 @@ public class DelayShutterButton extends BorderPane
 		double progress = (double)value / (double)maxDelay;
 		Platform.runLater(() ->
 		{
-			progressBar.setProgress(progress);
+			this.progress.setProgress(progress);
 			if (progress <= 0)
 			{
-				progressBar.setVisible(false);
-				progressBar.toBack();
+				this.progress.setVisible(false);
+				this.progress.toBack();
 				setCenter(button);
 			}
 			else
 			{
-				progressBar.setVisible(true);
-				progressBar.toFront();
-				setCenter(progressBar);
+				this.progress.setPrefWidth(this.button.getWidth());
+				this.progress.setMinWidth(this.button.getWidth());
+				this.progress.setMaxWidth(this.button.getWidth());
+				this.progress.setPrefHeight(this.button.getHeight());
+				this.progress.setMinHeight(this.button.getHeight());
+				this.progress.setMaxHeight(this.button.getHeight());
+				this.progress.setVisible(true);
+				this.progress.toFront();
+				setCenter(this.progress);
 			}
 		});
 	}

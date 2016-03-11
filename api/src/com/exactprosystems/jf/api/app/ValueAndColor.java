@@ -44,6 +44,14 @@ public class ValueAndColor implements Serializable
 		return backColor;
 	}
 
+	@Override
+	public String toString()
+	{
+		return "value='" + value + '\'' +
+				", color=" + color +
+				", backColor=" + backColor;
+	}
+
 	private String value = null;
 	private InnerColor color = null;
 	private InnerColor backColor = null;

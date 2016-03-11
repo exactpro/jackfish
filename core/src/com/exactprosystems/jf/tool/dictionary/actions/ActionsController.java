@@ -116,7 +116,7 @@ public class ActionsController implements Initializable, ContainingParent
 			this.info.setAppName(newValue);
 		}); 
 
-		gridPane.add(this.pane, 0, 2);
+		gridPane.add(this.pane, 0, 1);
 		GridPane.setColumnSpan(this.pane, 2);
 	}
 
