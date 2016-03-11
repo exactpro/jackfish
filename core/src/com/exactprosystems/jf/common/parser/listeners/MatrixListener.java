@@ -13,7 +13,7 @@ import com.exactprosystems.jf.common.parser.Result;
 import com.exactprosystems.jf.common.parser.items.MatrixItem;
 import org.apache.log4j.Logger;
 
-public class MatrixListener implements IMatrixListener
+public class MatrixListener implements IMatrixListener, Cloneable
 {
 	public MatrixListener()
 	{
@@ -26,6 +26,21 @@ public class MatrixListener implements IMatrixListener
 		logger.trace("reset()");
 	}
 
+	@Override
+	public IMatrixListener clone() throws CloneNotSupportedException
+	{
+		try
+		{
+			MatrixListener clone = ((MatrixListener) super.clone());
+			clone.ok = true;
+			return clone;
+		}
+		catch (Exception e)
+		{
+			logger.error(e.getMessage(), e);
+			throw new InternalError();
+		}
+	}
 	public void matrixStarted(Matrix matrix)
 	{
 		logger.trace("matrixStarted()");

@@ -4,7 +4,7 @@ import com.exactprosystems.jf.common.parser.Matrix;
 import com.exactprosystems.jf.common.parser.Result;
 import com.exactprosystems.jf.common.parser.items.MatrixItem;
 
-public interface IMatrixListener
+public interface IMatrixListener extends Cloneable
 {
 	void		reset				(Matrix matrix);
 	void		matrixStarted		(Matrix matrix);
@@ -13,6 +13,7 @@ public interface IMatrixListener
 	void		paused				(Matrix matrix, MatrixItem item);
 	void		finished			(Matrix matrix, MatrixItem item, Result result);
 	void		error				(Matrix matrix, int lineNumber, MatrixItem item, String message);
+	IMatrixListener clone () throws CloneNotSupportedException;
 	String		getExceptionMessage	();
 	boolean		isOk				();
 

@@ -175,6 +175,19 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 	}
 
 	@Override
+	public IMatrixListener clone() throws CloneNotSupportedException {
+		try
+		{
+			return this;
+		}
+		catch (Exception e)
+		{
+			logger.error(e.getMessage(), e);
+			throw new InternalError();
+		}
+	}
+
+	@Override
 	public void matrixFinished(final Matrix matrix, final int passed, final int failed)
 	{
 		Platform.runLater(() ->

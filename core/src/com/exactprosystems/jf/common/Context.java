@@ -17,6 +17,7 @@ import com.exactprosystems.jf.common.parser.items.MatrixItem;
 import com.exactprosystems.jf.common.parser.items.MatrixRoot;
 import com.exactprosystems.jf.common.parser.items.SubCase;
 import com.exactprosystems.jf.common.parser.listeners.IMatrixListener;
+import com.exactprosystems.jf.common.parser.listeners.MatrixListener;
 import org.apache.log4j.Logger;
 
 import java.io.PrintStream;
@@ -49,7 +50,7 @@ public class Context implements IContext, AutoCloseable, Cloneable
 			Context clone = ((Context) super.clone());
 
 			clone.configuration = this.configuration;
-			clone.matrixListener = this.matrixListener;
+			clone.matrixListener = this.matrixListener.clone();
 			clone.outStream = this.outStream;
 			clone.evaluator = configuration.createEvaluator();
 
