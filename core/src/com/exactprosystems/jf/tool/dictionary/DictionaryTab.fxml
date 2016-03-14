@@ -19,18 +19,20 @@
 			<items>
 				<ScrollPane fitToHeight="true" fitToWidth="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" pannable="true" prefHeight="878.0" prefWidth="1457.0">
 					<content>
-						<GridPane fx:id="mainGridPane" alignment="CENTER" SplitPane.resizableWithParent="true">
+						<GridPane fx:id="mainGridPane" alignment="CENTER">
 							<fx:define>
 								<Double fx:id="widthNavigation" fx:value="900.0"/>
-								<Double fx:id="width" fx:value="300.0"/>
+								<Double fx:id="heightNavigation" fx:value="900.0"/>
+								<Double fx:id="widthInfo" fx:value="600.0"/>
+								<Double fx:id="height" fx:value="300.0"/>
 								<Double fx:id="heightActions" fx:value="250.0"/>
 							</fx:define>
 							<columnConstraints>
 								<ColumnConstraints hgrow="SOMETIMES" minWidth="$widthNavigation" prefWidth="$widthNavigation" maxWidth="$widthNavigation"/>
-								<ColumnConstraints hgrow="SOMETIMES" minWidth="$widthNavigation" prefWidth="$widthNavigation"/>
+								<ColumnConstraints hgrow="SOMETIMES" minWidth="$widthInfo" prefWidth="$widthInfo"/>
 							</columnConstraints>
 							<rowConstraints>
-								<RowConstraints minHeight="$width" percentHeight="65.0" vgrow="SOMETIMES"/>
+								<RowConstraints minHeight="$height" maxHeight="$height" prefHeight="$height" vgrow="SOMETIMES"/>
 								<RowConstraints minHeight="$heightActions" vgrow="SOMETIMES"/>
 							</rowConstraints>
 							<children>

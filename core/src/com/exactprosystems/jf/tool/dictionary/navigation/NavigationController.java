@@ -132,8 +132,6 @@ public class NavigationController implements Initializable, ContainingParent
 			((Region) element).setPrefWidth(400.0);
 			((HBox)this.pane).getChildren().add(element);
 
-			System.out.println(((HBox) this.pane).getChildren().size());
-
 			Common.customizeLabeled(this.btnNewDialog, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.DICTIONARY_NEW);
 			Common.customizeLabeled(this.btnDeleteDialog, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.DICTIONARY_DELETE);
 			Common.customizeLabeled(this.btnNewElement, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.DICTIONARY_NEW);
