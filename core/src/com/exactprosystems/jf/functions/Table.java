@@ -29,6 +29,7 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
@@ -131,6 +132,12 @@ public class Table implements List<Map<String, Object>>, Mutable, Cloneable
 	{
 		this(evaluator);
 		read(reader, delimiter);
+	}
+
+	public Table(String dirName, AbstractEvaluator evaluator) throws Exception
+	{
+		this(evaluator);
+		readFilesInfo(dirName);
 	}
 
 	//==============================================================================================
@@ -1381,6 +1388,34 @@ public class Table implements List<Map<String, Object>>, Mutable, Cloneable
 		}
 	}
 
+	private void readFilesInfo(String dirName) throws Exception
+	{
+		try
+		{
+			this.headers=null;
+			File directory = new File(dirName);
+			if (directory.isDirectory())
+			{
+				File[] files = directory.listFiles();
+				addColumns("Name", "Size", "Date", "Is directory", "Hidden");
+				for (File file : files)
+				{
+					Map<Header, Object> line = new LinkedHashMap<>();
+					line.put(headers[0], file.getName());
+					line.put(headers[1], file.length());
+					line.put(headers[2], new Date(file.lastModified()));
+					line.put(headers[3], file.isDirectory());
+					line.put(headers[4], file.isHidden());
+					this.innerList.add(line);
+				}
+			}
+		}
+		catch (Exception e)
+		{
+			logger.error(e.getMessage(), e);
+			throw e;
+		}
+	}
 	private List<Header> filter(String ... columns)
 	{
 		Set<String> set = new HashSet<String>(Arrays.asList(columns));

@@ -95,6 +95,7 @@ public class ActionsList extends AbstractAction
 		        TableCreate.class,
 				TableRemoveColumns.class,
 		        TableLoadFromFile.class,
+				TableLoadFromDir.class,
 				TableRemoveRow.class,
 				TableReplace.class,
 		        TableReport.class,
