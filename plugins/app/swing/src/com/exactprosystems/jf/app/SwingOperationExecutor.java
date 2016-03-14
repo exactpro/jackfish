@@ -10,6 +10,7 @@ package com.exactprosystems.jf.app;
 
 import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.client.ICondition;
+
 import org.apache.log4j.Logger;
 import org.fest.swing.core.ComponentMatcher;
 import org.fest.swing.core.KeyPressInfo;
@@ -26,6 +27,7 @@ import javax.swing.text.JTextComponent;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
+
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.lang.reflect.Method;
@@ -40,17 +42,11 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 {
 	private Robot currentRobot;
 	private Logger logger;
-	private Component currentFrame = null;
 
 	public SwingOperationExecutor(Robot currentRobot, Logger logger)
 	{
 		this.currentRobot = currentRobot;
 		this.logger = logger;
-	}
-
-	public void setCurrentFrame(Component frame)
-	{
-		this.currentFrame = frame;
 	}
 
 	@Override
@@ -1096,7 +1092,7 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 
 				case ListView:
 					component = getComp(JList.class, window, locator);
-					ret = (ComponentFixture<T>) new JListFixture(this.currentRobot, (JList) component);
+					ret = (ComponentFixture<T>) new JListFixture(this.currentRobot, (JList<?>) component);
 					break;
 
 				case Menu:
@@ -1186,7 +1182,7 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 		}
 		else
 		{
-			component = this.currentRobot.finder().find(new MatcherSwing<Component>(Component.class, currentFrame(), locator.getControlKind(), locator));
+			component = this.currentRobot.finder().find(new MatcherSwing<Component>(Component.class, currentRoot(), locator.getControlKind(), locator));
 		}
 
 		return (T) component;
@@ -1596,20 +1592,53 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 
 	public Component currentFrame()
 	{
-		if (this.currentFrame == null)
+		return this.currentRobot.finder().find(new ComponentMatcher()
 		{
-			this.currentFrame = this.currentRobot.finder().find(new ComponentMatcher()
+			@Override
+			public boolean matches(Component c)
 			{
-				@Override
-				public boolean matches(Component c)
-				{
-					return c != null && (c instanceof JFrame);
-				}
-			});
-		}
-		return this.currentFrame;
+				return c != null && (c instanceof JFrame);
+			}
+		});
 	}
 
+	public Component currentRoot()
+	{
+		Collection<? extends Container> roots = this.currentRobot.hierarchy().roots();
+		Container root = new Container()
+		{
+			@Override
+			public Component add(Component comp)
+			{
+				this.components.add(comp);
+				return  comp;
+			}
+			
+			@Override
+			public int getComponentCount()
+			{
+				return this.components.size();
+			}
+			
+			@Override
+			public Component getComponent(int n)
+			{
+				return this.components.get(n);
+			}
+			
+			@Override
+			public Component[] getComponents()
+			{
+				return this.components.toArray(new Component[this.components.size()]);
+			}
+			
+			private List<Component> components = new ArrayList<Component>();
+		};
+
+		return currentFrame(); 
+	}
+
+	
 	@SuppressWarnings("unchecked")
 	private <T extends Component> ComponentFixture<T> getFixture(T component) throws RemoteException
 	{
@@ -1623,7 +1652,7 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 		}
 		else if (component instanceof JComboBox)
 		{
-			return (ComponentFixture<T>) new JComboBoxFixture(this.currentRobot, (JComboBox) component);
+			return (ComponentFixture<T>) new JComboBoxFixture(this.currentRobot, (JComboBox<?>) component);
 		}
 		else if (component instanceof JDialog)
 		{
@@ -1701,7 +1730,7 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 
 	private void toFront()
 	{
-		Component frame = this.currentFrame();
+		Component frame = currentFrame();
 		if (frame instanceof JFrame)
 		{
 			((JFrame) frame).setExtendedState(JFrame.ICONIFIED);

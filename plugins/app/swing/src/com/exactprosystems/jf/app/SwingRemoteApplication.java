@@ -235,30 +235,24 @@ public class SwingRemoteApplication extends RemoteApplication
 	{
 		try
 		{
-			if (maximize)
+			Component component = this.operationExecutor.currentFrame();
+			if (component instanceof JFrame)
 			{
-				Component frame = this.operationExecutor.currentFrame();
-				if (frame instanceof JFrame)
+				JFrame frame = (JFrame)component;
+				if (maximize)
 				{
-					((JFrame) frame).setExtendedState(JFrame.MAXIMIZED_BOTH);
+					frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+				}
+				else if (minimize)
+				{
+					frame.setExtendedState(JFrame.ICONIFIED);
+				}
+				else
+				{
+					frame.setSize(width, height);
 				}
 			}
-			else if (minimize)
-			{
-				Component frame = this.operationExecutor.currentFrame();
-				if (frame instanceof JFrame)
-				{
-					((JFrame) frame).setExtendedState(JFrame.ICONIFIED);
-				}
-			}
-			else
-			{
-				Component frame = this.operationExecutor.currentFrame();
-				if (frame instanceof JFrame)
-				{
-					((JFrame) frame).setSize(width, height);
-				}
-			}
+
 		}
 		catch (Exception e)
 		{
@@ -271,36 +265,13 @@ public class SwingRemoteApplication extends RemoteApplication
 	@Override
 	protected String switchToDerived(final String title) throws Exception
 	{
-		try
-		{
-			logger.debug("START SWITCH TO DERIVED");
-			Component frame = this.currentRobot.finder().find(new ComponentMatcher()
-			{
-				@Override
-				public boolean matches(Component c)
-				{
-					return c != null && c.isShowing() && (c instanceof JFrame && ((JFrame) c).getTitle().contains(title))
-							|| (c instanceof JDialog && ((JDialog) c).getTitle().contains(title));
-				}
-			});
-			this.operationExecutor.setCurrentFrame(frame);
-			logger.debug(String.format("Found frame : '%s'",frame));
-			logger.debug("END SWITCH TO DERIVED");
-			return title; // done
-		}
-		catch (Exception e)
-		{
-			logger.error(String.format("switchToDerived(%s)", title));
-			logger.error(e.getMessage(), e);
-			throw e;
-		}
+		throw new Exception("The 'swithcTo' functionality is not implemented for this adapter.");
 	}
 
 	@Override
 	protected void switchToFrameDerived(Locator owner) throws Exception
 	{
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
@@ -316,7 +287,7 @@ public class SwingRemoteApplication extends RemoteApplication
 			}
 			else
 			{
-				ownerFixture = new AnyComponentlFixture(currentRobot, this.operationExecutor.currentFrame());
+				ownerFixture = new AnyComponentlFixture(currentRobot, this.operationExecutor.currentRoot());
 			}
 
 			List<ComponentFixture<Component>> components = this.operationExecutor.findAll(element.getControlKind(), ownerFixture, element);
@@ -346,7 +317,7 @@ public class SwingRemoteApplication extends RemoteApplication
 			}
 			else
 			{
-				main = this.operationExecutor.currentFrame();
+				main = this.operationExecutor.currentRoot();
 			}
 
 			if (main == null)
@@ -564,7 +535,7 @@ public class SwingRemoteApplication extends RemoteApplication
 			Component component = null;
 			if (owner == null)
 			{
-				component = this.operationExecutor.currentFrame();
+				component = this.operationExecutor.currentRoot();
 			}
 			else
 			{
