@@ -38,6 +38,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Region;
 import javafx.stage.Stage;
 import org.w3c.dom.Document;
 
@@ -114,16 +115,24 @@ public class NavigationController implements Initializable, ContainingParent
 			scrollPaneWindow.setFitToHeight(true);
 			scrollPaneWindow.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
 			scrollPaneWindow.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
-			Node dialog = BorderWrapper.wrap(scrollPaneWindow).title("Dialog").color(Common.currentTheme().getReverseColor()).build();
-			((GridPane) this.pane).add(dialog, 0, 0);
+			Node dialog = BorderWrapper.wrap(this.paneWindow).title("Dialog").color(Common.currentTheme().getReverseColor()).build();
+			((Region) dialog).setMinWidth(400.0);
+			((Region) dialog).setMaxWidth(400.0);
+			((Region) dialog).setPrefWidth(400.0);
+			((HBox)this.pane).getChildren().add(0,dialog);
 
 			ScrollPane scrollPaneElement = new ScrollPane(this.paneElement);
 			scrollPaneElement.setFitToWidth(true);
 			scrollPaneElement.setFitToHeight(true);
 			scrollPaneElement.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
 			scrollPaneElement.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
-			Node element = BorderWrapper.wrap(scrollPaneElement).title("Element").color(Common.currentTheme().getReverseColor()).build();
-			((GridPane) this.pane).add(element, 2, 0);
+			Node element = BorderWrapper.wrap(this.paneElement).title("Element").color(Common.currentTheme().getReverseColor()).build();
+			((Region) element).setMinWidth(400.0);
+			((Region) element).setMaxWidth(400.0);
+			((Region) element).setPrefWidth(400.0);
+			((HBox)this.pane).getChildren().add(element);
+
+			System.out.println(((HBox) this.pane).getChildren().size());
 
 			Common.customizeLabeled(this.btnNewDialog, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.DICTIONARY_NEW);
 			Common.customizeLabeled(this.btnDeleteDialog, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.DICTIONARY_DELETE);

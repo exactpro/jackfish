@@ -11,20 +11,12 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import java.lang.Double?>
-<GridPane gridLinesVisible="true" prefHeight="87.0" prefWidth="1453.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
-		  fx:controller="com.exactprosystems.jf.tool.dictionary.navigation.NavigationController">
-	<columnConstraints>
+<HBox prefHeight="87.0" prefWidth="1453.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+	  fx:controller="com.exactprosystems.jf.tool.dictionary.navigation.NavigationController">
+	<children>
 		<fx:define>
 			<Double fx:id="w" fx:value="100"/>
 		</fx:define>
-		<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
-		<ColumnConstraints hgrow="SOMETIMES" minWidth="$w" prefWidth="$w" maxWidth="$w"/>
-		<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
-	</columnConstraints>
-	<rowConstraints>
-		<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-	</rowConstraints>
-	<children>
 		<BorderPane fx:id="paneWindow">
 			<bottom>
 				<HBox alignment="CENTER_LEFT" BorderPane.alignment="BOTTOM_LEFT">
@@ -53,7 +45,7 @@
 				</HBox>
 			</bottom>
 		</BorderPane>
-		<VBox alignment="CENTER_LEFT" GridPane.columnIndex="1" GridPane.valignment="CENTER" spacing="5">
+		<VBox alignment="CENTER_LEFT" GridPane.columnIndex="1" GridPane.valignment="CENTER" minWidth="$w" maxWidth="$w" prefWidth="$w" spacing="5">
 			<children>
 				<RadioButton id="Self" mnemonicParsing="false" onAction="#changeSection" text="Self">
 					<toggleGroup>
@@ -65,7 +57,7 @@
 				<RadioButton id="OnClose" mnemonicParsing="false" onAction="#changeSection" text="On close" toggleGroup="$groupSection"/>
 				<RadioButton id="Close" mnemonicParsing="false" onAction="#changeSection" text="Close" toggleGroup="$groupSection"/>
 			</children>
-		</VBox>
+		</VBox >
 		<BorderPane fx:id="paneElement" GridPane.columnIndex="2">
 			<bottom>
 				<VBox spacing="5">
@@ -105,4 +97,4 @@
 			</bottom>
 		</BorderPane>
 	</children>
-</GridPane>
+</HBox>
