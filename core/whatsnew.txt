@@ -1,3 +1,7 @@
+since 1024 you may set firefox profile for web plugin.
+Need click button "Add all" on necessary app entries and fill the parameter FirefoxProfileDirectory.
+This link to help to fill this parameters https://support.mozilla.org/en-US/kb/profiles-where-firefox-stores-user-data
+
 since 578 you need to remove following sections in your config:
 
     <JVMparameters>

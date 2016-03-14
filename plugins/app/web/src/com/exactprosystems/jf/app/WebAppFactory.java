@@ -23,11 +23,13 @@ public class WebAppFactory implements IApplicationFactory
 	public static final String chromeDriverPathName	= "ChromeDriverPath";
 	public static final String ieDriverPathName		= "IEDriverPath";
 	public static final String chromeDriverBinary	= "ChromeDriverBinary";
+	public static final String firefoxProfileDir	= "FirefoxProfileDirectory";
+
 
 	public final static String browserName 	= "Browser";
 	public final static String urlName 		= "URL";
 
-	private static String[] knownParameters = {chromeDriverPathName, ieDriverPathName, chromeDriverBinary};
+	private static String[] knownParameters = {chromeDriverPathName, ieDriverPathName, chromeDriverBinary, firefoxProfileDir};
 	
 	private static String[] knownStartArgs = { browserName, urlName };
 

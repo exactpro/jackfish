@@ -9,6 +9,7 @@
 package com.exactprosystems.jf.app;
 
 import com.exactprosystems.jf.api.app.ProxyApplication;
+import com.exactprosystems.jf.api.common.Str;
 
 import java.util.Arrays;
 import java.util.Map;
@@ -60,5 +61,10 @@ public class ProxyWebApp extends ProxyApplication
 			parameters.put(WebAppFactory.chromeDriverBinary, chromeDriverBinary);
 		}
 
+		String firefoxProfileDir = driverParameters.get(WebAppFactory.firefoxProfileDir);
+		if (!Str.IsNullOrEmpty(firefoxProfileDir))
+		{
+			parameters.put(WebAppFactory.firefoxProfileDir, firefoxProfileDir);
+		}
 	}
 }

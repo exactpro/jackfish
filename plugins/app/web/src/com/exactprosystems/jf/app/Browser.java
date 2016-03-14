@@ -8,10 +8,12 @@
 
 package com.exactprosystems.jf.app;
 
+import com.exactprosystems.jf.api.common.Str;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.opera.OperaDriver;
 import org.openqa.selenium.phantomjs.PhantomJSDriver;
@@ -40,11 +42,16 @@ public enum Browser
 		return browserName;
 	}
 
-	public WebDriver createDriver(String pathToBinary) throws Exception
+	public WebDriver createDriver(String pathToBinary, String firefoxProfileDir) throws Exception
 	{
 		switch (this)
 		{
 			case FIREFOX:
+				if (!Str.IsNullOrEmpty(firefoxProfileDir))
+				{
+					FirefoxProfile profile = new FirefoxProfile(new File(firefoxProfileDir));
+					return new FirefoxDriver(profile);
+				}
 				return new FirefoxDriver();
 
 			case CHROME:
