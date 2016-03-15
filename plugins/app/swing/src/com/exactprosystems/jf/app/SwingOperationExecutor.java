@@ -10,8 +10,8 @@ package com.exactprosystems.jf.app;
 
 import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.client.ICondition;
-
 import org.apache.log4j.Logger;
+import org.fest.swing.awt.AWT;
 import org.fest.swing.core.ComponentMatcher;
 import org.fest.swing.core.KeyPressInfo;
 import org.fest.swing.core.MouseClickInfo;
@@ -27,9 +27,8 @@ import javax.swing.text.JTextComponent;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
-
 import java.awt.*;
-import java.awt.event.KeyEvent;
+import java.awt.event.*;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.rmi.RemoteException;
@@ -210,7 +209,7 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 		try
 		{
 			this.currentRobot.waitForIdle();
-			toFront();
+//			toFront();
 			Point point = new Point(x, y);
 			switch (action)
 			{
@@ -228,6 +227,10 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 				case LeftClick:
 					if (x == Integer.MIN_VALUE || y == Integer.MIN_VALUE)
 					{
+//						Point p = AWT.visibleCenterOf(component.target);
+//						System.out.println("point : " + p);
+//						MouseEvent mouseEvent = new MouseEvent(component.target, MouseEvent.MOUSE_CLICKED, System.currentTimeMillis(), 0, p.x, p.y, 1, false, MouseEvent.BUTTON1);
+//						component.target.dispatchEvent(mouseEvent);
 						this.currentRobot.click(component.target, MouseClickInfo.leftButton().button(), 1);
 					}
 					else
@@ -1638,6 +1641,104 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 		return currentFrame(); 
 	}
 
+	public static void main(String[] args)
+	{
+		SwingUtilities.invokeLater(new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				final JFrame frame1 = new JFrame();
+				frame1.setSize(new Dimension(300, 300));
+				final Button zzzz = new Button("zzzz");
+				zzzz.setName("My super new button");
+				Button zzzz1 = new Button("zzzz1");
+				zzzz.addActionListener(new ActionListener()
+				{
+					@Override
+					public void actionPerformed(ActionEvent e)
+					{
+						try
+						{
+							Thread.sleep(1000);
+						}
+						catch (InterruptedException e1)
+						{
+							e1.printStackTrace();
+						}
+						frame1.setLocation(0,0);
+						frame1.requestFocus();
+						Window[] windows = Window.getWindows();
+						System.out.println(windows.length);
+						System.out.println(e);
+					}
+				});
+				zzzz.addMouseListener(new MouseListener()
+				{
+					@Override
+					public void mouseClicked(MouseEvent e)
+					{
+						System.out.println("clicked : " + e);
+					}
+
+					@Override
+					public void mousePressed(MouseEvent e)
+					{
+
+					}
+
+					@Override
+					public void mouseReleased(MouseEvent e)
+					{
+
+					}
+
+					@Override
+					public void mouseEntered(MouseEvent e)
+					{
+
+					}
+
+					@Override
+					public void mouseExited(MouseEvent e)
+					{
+
+					}
+				});
+
+				zzzz1.addActionListener(new ActionListener()
+				{
+					@Override
+					public void actionPerformed(ActionEvent e)
+					{
+						Point p = AWT.visibleCenterOf(zzzz);
+
+//						MouseEvent event = new MouseEvent(zzzz, MouseEvent.MOUSE_CLICKED, System.currentTimeMillis(), 0, p.x, p.y, 2, true, MouseEvent.BUTTON1);
+//						zzzz.dispatchEvent(event);
+//						System.out.println(event);
+
+						ActionEvent event = new ActionEvent(zzzz, ActionEvent.ACTION_FIRST, "my command");
+						zzzz.dispatchEvent(event);
+//						for (ActionListener actionListener : zzzz.getActionListeners())
+//						{
+//							actionListener.actionPerformed(event);
+//						}
+						System.out.println(event);
+					}
+				});
+				GridLayout layout = new GridLayout(2, 2);
+				layout.addLayoutComponent("asd",zzzz);
+				layout.addLayoutComponent("asd1",zzzz1);
+				frame1.setLayout(layout);
+				frame1.getContentPane().add(zzzz);
+				frame1.getContentPane().add(zzzz1);
+				frame1.setVisible(true);
+
+			}
+		});
+		Window[] windows = Window.getWindows();
+		System.out.println(windows.length);
+	}
 	
 	@SuppressWarnings("unchecked")
 	private <T extends Component> ComponentFixture<T> getFixture(T component) throws RemoteException
