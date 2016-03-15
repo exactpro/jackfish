@@ -10,6 +10,7 @@ package com.exactprosystems.jf.app;
 
 import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.client.ICondition;
+
 import org.apache.log4j.Logger;
 import org.fest.swing.awt.AWT;
 import org.fest.swing.core.ComponentMatcher;
@@ -27,6 +28,7 @@ import javax.swing.text.JTextComponent;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.lang.reflect.Method;
@@ -1595,7 +1597,7 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 
 	public Component currentFrame()
 	{
-		return this.currentRobot.finder().find(new ComponentMatcher()
+		Collection<Component> list =  this.currentRobot.finder().findAll(new ComponentMatcher()
 		{
 			@Override
 			public boolean matches(Component c)
@@ -1603,143 +1605,21 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 				return c != null && (c instanceof JFrame);
 			}
 		});
+		return (list == null || list.isEmpty()) ? null : list.iterator().next();
 	}
 
 	public Component currentRoot()
 	{
 		Collection<? extends Container> roots = this.currentRobot.hierarchy().roots();
-		Container root = new Container()
+		Container root = new RootContainer();
+		for (Container element : roots)
 		{
-			@Override
-			public Component add(Component comp)
-			{
-				this.components.add(comp);
-				return  comp;
-			}
-			
-			@Override
-			public int getComponentCount()
-			{
-				return this.components.size();
-			}
-			
-			@Override
-			public Component getComponent(int n)
-			{
-				return this.components.get(n);
-			}
-			
-			@Override
-			public Component[] getComponents()
-			{
-				return this.components.toArray(new Component[this.components.size()]);
-			}
-			
-			private List<Component> components = new ArrayList<Component>();
-		};
+			root.add(element);
+		}
 
-		return currentFrame(); 
+		return root; 
 	}
 
-	public static void main(String[] args)
-	{
-		SwingUtilities.invokeLater(new Runnable()
-		{
-			@Override
-			public void run()
-			{
-				final JFrame frame1 = new JFrame();
-				frame1.setSize(new Dimension(300, 300));
-				final Button zzzz = new Button("zzzz");
-				zzzz.setName("My super new button");
-				Button zzzz1 = new Button("zzzz1");
-				zzzz.addActionListener(new ActionListener()
-				{
-					@Override
-					public void actionPerformed(ActionEvent e)
-					{
-						try
-						{
-							Thread.sleep(1000);
-						}
-						catch (InterruptedException e1)
-						{
-							e1.printStackTrace();
-						}
-						frame1.setLocation(0,0);
-						frame1.requestFocus();
-						Window[] windows = Window.getWindows();
-						System.out.println(windows.length);
-						System.out.println(e);
-					}
-				});
-				zzzz.addMouseListener(new MouseListener()
-				{
-					@Override
-					public void mouseClicked(MouseEvent e)
-					{
-						System.out.println("clicked : " + e);
-					}
-
-					@Override
-					public void mousePressed(MouseEvent e)
-					{
-
-					}
-
-					@Override
-					public void mouseReleased(MouseEvent e)
-					{
-
-					}
-
-					@Override
-					public void mouseEntered(MouseEvent e)
-					{
-
-					}
-
-					@Override
-					public void mouseExited(MouseEvent e)
-					{
-
-					}
-				});
-
-				zzzz1.addActionListener(new ActionListener()
-				{
-					@Override
-					public void actionPerformed(ActionEvent e)
-					{
-						Point p = AWT.visibleCenterOf(zzzz);
-
-//						MouseEvent event = new MouseEvent(zzzz, MouseEvent.MOUSE_CLICKED, System.currentTimeMillis(), 0, p.x, p.y, 2, true, MouseEvent.BUTTON1);
-//						zzzz.dispatchEvent(event);
-//						System.out.println(event);
-
-						ActionEvent event = new ActionEvent(zzzz, ActionEvent.ACTION_FIRST, "my command");
-						zzzz.dispatchEvent(event);
-//						for (ActionListener actionListener : zzzz.getActionListeners())
-//						{
-//							actionListener.actionPerformed(event);
-//						}
-						System.out.println(event);
-					}
-				});
-				GridLayout layout = new GridLayout(2, 2);
-				layout.addLayoutComponent("asd",zzzz);
-				layout.addLayoutComponent("asd1",zzzz1);
-				frame1.setLayout(layout);
-				frame1.getContentPane().add(zzzz);
-				frame1.getContentPane().add(zzzz1);
-				frame1.setVisible(true);
-
-			}
-		});
-		Window[] windows = Window.getWindows();
-		System.out.println(windows.length);
-	}
-	
 	@SuppressWarnings("unchecked")
 	private <T extends Component> ComponentFixture<T> getFixture(T component) throws RemoteException
 	{
