@@ -152,7 +152,7 @@ public class WinRemoteApplication extends RemoteApplication
 	}
 
 	@Override
-	protected String switchToDerived(@Name(name = "title") final String title) throws Exception
+	protected String switchToDerived(@Name(name = "title") final String title, boolean softCondition) throws Exception
 	{
 		return this.driver.translate(String.class, switchToDerived, title);
 	}

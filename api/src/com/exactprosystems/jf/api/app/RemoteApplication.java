@@ -202,13 +202,13 @@ public abstract class RemoteApplication implements IRemoteApplication
 	}
 
 	@Override
-	public final String switchTo(String title) throws RemoteException
+	public final String switchTo(String title, boolean softCondition) throws RemoteException
 	{
 		try 
 		{
 			exceptionIfNull(title, "title", "switchTo");
 
-			return switchToDerived(title);
+			return switchToDerived(title, softCondition);
 		}
 		catch (Exception e)
 		{
@@ -477,7 +477,7 @@ public abstract class RemoteApplication implements IRemoteApplication
 
 	protected abstract Collection<String> titlesDerived() throws Exception;
 
-	protected abstract String switchToDerived(String title) throws Exception;
+	protected abstract String switchToDerived(String title, boolean softCondition) throws Exception;
 
 	protected abstract void switchToFrameDerived(Locator owner) throws Exception;
 

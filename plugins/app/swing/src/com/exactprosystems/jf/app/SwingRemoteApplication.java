@@ -263,7 +263,7 @@ public class SwingRemoteApplication extends RemoteApplication
 	}
 
 	@Override
-	protected String switchToDerived(final String title) throws Exception
+	protected String switchToDerived(final String title, boolean softCondition) throws Exception
 	{
 		throw new Exception("The 'swithcTo' functionality is not implemented for this adapter.");
 	}

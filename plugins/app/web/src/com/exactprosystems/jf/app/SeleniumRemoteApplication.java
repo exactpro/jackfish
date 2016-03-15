@@ -328,7 +328,7 @@ public class SeleniumRemoteApplication extends RemoteApplication
 	}
 	
 	@Override
-	protected String switchToDerived(final String title) throws Exception
+	protected String switchToDerived(final String title, final boolean softCondition) throws Exception
 	{
 		final String[] result = new String[]{""};
 
@@ -345,7 +345,8 @@ public class SeleniumRemoteApplication extends RemoteApplication
 					{
 						driver.switchTo().window(handle);
 						result[0] = driver.getTitle();
-						if (driver.getTitle().contains(title))
+						if (softCondition && driver.getTitle().contains(title)
+								|| !softCondition && driver.getTitle().equals(title) )
 						{
 							driver.manage().window().maximize();
 							return;

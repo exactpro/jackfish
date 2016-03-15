@@ -18,7 +18,7 @@ import java.util.Scanner;
 public class WebAppFactory implements IApplicationFactory
 {
 	private static final int requiredMajorVersion = 2;
-	private static final int requiredMinorVersion = 11;
+	private static final int requiredMinorVersion = 12;
 
 	public static final String chromeDriverPathName	= "ChromeDriverPath";
 	public static final String ieDriverPathName		= "IEDriverPath";
