@@ -115,18 +115,6 @@ public class FindListView<T> extends BorderPane
 				this.listView.requestFocus();
 			}
 		});
-
-		this.listView.setOnKeyPressed(keyEvent -> {
-			switch (keyEvent.getCode())
-			{
-				case ENTER:
-				case DOWN:
-				case UP:
-					break;
-				default:
-					this.cfbFind.requestFocus();
-			}
-		});
 	}
 
 	private void filter(String newValue)

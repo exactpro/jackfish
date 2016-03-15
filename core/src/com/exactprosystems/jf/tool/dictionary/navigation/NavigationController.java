@@ -498,8 +498,9 @@ public class NavigationController implements Initializable, ContainingParent
 		@Override
 		public void cancelEdit()
 		{
+			this.textField = null;
 			super.cancelEdit();
-			setText(String.valueOf(getItem()));
+			updateItem(getItem(), false);
 			setContentDisplay(ContentDisplay.TEXT_ONLY);
 		}
 
