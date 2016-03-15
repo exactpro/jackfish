@@ -1468,8 +1468,18 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 
 	private void scrollToElement(WebElement element)
 	{
-		driver.executeScript("window.scrollTo(arguments[0].scrollWidth, arguments[0].scrollHeight)", element);
+		driver.executeScript(SCROLL_TO_SCRIPT,element);
 	}
+
+	private static final String SCROLL_TO_SCRIPT =
+			"var myScrollFunction = function(elem) {\n" +
+			"	elem.scrollIntoView(false);\n" +
+			"	var ww = document.body.offsetHeight/2;\n" +
+			"	if (elem.getBoundingClientRect().top > ww) {\n" +
+			"		window.scrollBy(0, ww);\n" +
+			"	}\n" +
+			"};\n" +
+			"myScrollFunction(arguments[0]);";
 
 	private boolean isShiftDown = false;
 	private boolean isCtrlDown = false;
