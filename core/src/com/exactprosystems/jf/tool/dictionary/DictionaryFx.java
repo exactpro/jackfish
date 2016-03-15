@@ -812,7 +812,7 @@ public class DictionaryFx extends GuiDictionary
 	{
 		if (isApplicationRun())
 		{
-			String title = this.applicationConnector.getAppConnection().getApplication().service().switchTo(selectedItem);
+			String title = this.applicationConnector.getAppConnection().getApplication().service().switchTo(selectedItem, true);
 			displayApplicationControl(title);
 		}
 	}

@@ -31,12 +31,16 @@ public class ApplicationSwitchTo extends AbstractAction
 {
 	public final static String connectionName = "AppConnection";
 	public final static String titleName = "Title";
+	public final static String softConditionName = "SoftCondition";
 
 	@ActionFieldAttribute(name = connectionName, mandatory = true, description = "The application connection." )
 	protected AppConnection	connection	= null;
 
 	@ActionFieldAttribute(name = titleName, mandatory = true, description = "A title of window.")
 	protected String 				title	= null;
+
+	@ActionFieldAttribute(name = softConditionName, mandatory = false, description = "Compare window titles and title parameter via contains().")
+	protected Boolean 				softCondition	= true;
 
 	public ApplicationSwitchTo()
 	{
@@ -52,7 +56,7 @@ public class ApplicationSwitchTo extends AbstractAction
 		else
 		{
 			IApplication app = connection.getApplication();
-			String res = app.service().switchTo(this.title);
+			String res = app.service().switchTo(this.title, this.softCondition);
 			
 			if (res.equals(""))
 			{
