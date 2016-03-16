@@ -25,11 +25,11 @@ public class Part implements Serializable
 		this.operation = null;
 		this.valueCondition = null;
 		this.colorCondition = null;
-		this.i = 0;
-		this.d = Double.NaN;
-		this.b = false;
-		this.x = Integer.MIN_VALUE;
-		this.y = Integer.MIN_VALUE;
+		this.i = null;
+		this.d = null;
+		this.b = null;
+		this.x = null;
+		this.y = null;
 		this.str = null;
 		this.text = null;
 		this.key = null;
@@ -84,20 +84,85 @@ public class Part implements Serializable
 	@Override
 	public String toString()
 	{
-		return this.kind + "[" 
-				+ " b=" + this.b + " " 
-				+ (this.i >= 0 ? "i=" + this.i + " " : "") 
-				+ (this.d != Double.NaN ? "d=" + this.d + " " : "") 
-				+ (this.x != Integer.MIN_VALUE ? "x=" + this.x + " " : "")
-				+ (this.y != Integer.MIN_VALUE ? "y=" + this.y + " " : "") 
-				+ (this.str != null ? "str=" + this.str + " " : "")
-				+ (this.text != null ? "text=" + this.text + " " : "")
-				+ (this.locatorId != null ? this.locatorKind + "=" + this.locatorId + " " : "")
-				+ (this.valueCondition != null ? "value condition=" + this.valueCondition + " " : "")
-				+ (this.colorCondition != null ? "color condition=" + this.colorCondition + " " : "")
-				+ (this.mouse != null ? "mouse=" + this.mouse + " " : "") 
-				+ (this.operation != null ? "operation=" + this.operation+ " " : "")
-				+ (this.key != null ? "key=" + this.key + " " : "") + "]";
+		StringBuilder sb = new StringBuilder(this.kind.toString()+"(");
+		String separator = "";
+		if (this.str!=null)
+		{
+			sb.append(separator).append("'").append(this.str).append("'");
+			separator=",";
+		}
+		if (this.text!=null)
+		{
+			sb.append(separator).append("'").append(this.text).append("'");
+			separator=",";
+		}
+				if (this.x!=null)
+		{
+			sb.append(separator).append(this.x);
+			separator=",";
+		}
+		if (this.y!=null)
+		{
+			sb.append(separator).append(this.y);
+			separator=",";
+		}
+		if (this.d!=null)
+		{
+			sb.append(separator).append(this.d);
+			separator=",";
+		}
+		if (this.locatorId!=null)
+		{
+			sb.append(separator).append("'").append(this.locatorId).append("'");
+			separator=",";
+		}
+		if (this.i!=null)
+		{
+			sb.append(separator).append(this.i);
+			separator = ",";
+		}
+		if (this.locator!=null)
+		{
+			sb.append(separator).append("'").append(this.locator.getId()).append("'");
+			separator=",";
+		}
+		if (this.locatorKind!=null)
+		{
+			sb.append(separator).append(this.locatorKind);
+			separator=",";
+		}
+		if (this.valueCondition!=null)
+		{
+			sb.append(separator).append("'").append(this.valueCondition.getName()).append("'");
+			separator=",";
+		}
+		if (this.colorCondition!=null)
+		{
+			sb.append(separator).append("'").append(this.colorCondition.getName()).append("'");
+			separator=",";
+		}
+		if (this.mouse!=null)
+		{
+			sb.append(separator).append(this.mouse.toString());
+			separator=",";
+		}
+		if (this.operation!=null)
+		{
+			sb.append(separator).append(this.operation);
+			separator=",";
+		}
+		if (this.key!=null)
+		{
+			sb.append(separator).append(this.key.toString());
+			separator=",";
+		}
+		if (this.b!=null)
+		{
+			sb.append(separator).append(this.b);
+			separator=",";
+		}
+		sb.append(")");
+		return sb.toString();
 	}
 	
 	public Part setInt(int i)
@@ -193,11 +258,11 @@ public class Part implements Serializable
 	protected OperationKind kind;
 
 	protected Operation operation;
-	protected int i;
-	protected int x;
-	protected int y;
-	protected double d;
-	protected boolean b;
+	protected Integer i;
+	protected Integer x;
+	protected Integer y;
+	protected Double d;
+	protected Boolean b;
 	protected String str;
 	protected String text;
 	protected ICondition valueCondition;

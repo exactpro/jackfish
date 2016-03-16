@@ -53,7 +53,7 @@ public enum OperationKind
 		}
 	},
 
-	USE_LOCATOR("use(loc)")
+	USE_LOCATOR("use")
 	{
 		@Override
 		protected boolean needToFind()
@@ -69,7 +69,7 @@ public enum OperationKind
 		}
 	},
 	
-	SET("set")
+	SET("setValue")
 	{
 		@Override
 		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, Holder<T> holder, OperationResult result) throws Exception
@@ -144,7 +144,7 @@ public enum OperationKind
 		}
 	},
 
-	CHECK_XY("check(x,y)")
+	CHECK_XY("check")
 	{
 		@Override
 		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, Holder<T> holder, OperationResult result) throws Exception
@@ -167,7 +167,7 @@ public enum OperationKind
 		}
 	},
 
-	CHECK_REGEXP_XY("checkRegexp(x,y)")
+	CHECK_REGEXP_XY("checkRegexp")
 	{
 		@Override
 		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, Holder<T> holder, OperationResult result) throws Exception
@@ -211,7 +211,7 @@ public enum OperationKind
 		}
 	},
 	
-	MOVE_XY("move(x,y)")
+	MOVE_XY("move")
 	{
 		@Override
 		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, Holder<T> holder, OperationResult result) throws Exception
@@ -245,7 +245,7 @@ public enum OperationKind
 		}
 	},
 	
-	CLICK_XY("click(x,y)")
+	CLICK_XY("click")
 	{
 		@Override
 		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, Holder<T> holder, OperationResult result) throws Exception
@@ -279,7 +279,7 @@ public enum OperationKind
 		}
 	},
 	
-	TEXT_XY("text(x,y)")
+	TEXT_XY("text")
 	{
 		@Override
 		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, Holder<T> holder, OperationResult result) throws Exception
@@ -382,7 +382,7 @@ public enum OperationKind
 		}
 	},
 
-	GET_VALUE_XY("getValue(x,y)")
+	GET_VALUE_XY("getValue")
 	{
 		@Override
 		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, Holder<T> holder, OperationResult result) throws Exception
@@ -458,6 +458,30 @@ public enum OperationKind
 	@Override
 	public String toString()
 	{
+		return this.name;
+	}
+
+	public String getName()
+	{
+		switch (this)
+		{
+			case USE_LOCATOR:
+				return "use(loc)";
+			case SET:
+				return "set";
+			case CHECK_XY:
+				return "check(x,y)";
+			case CHECK_REGEXP_XY:
+				return "checkRegexp(x,y)";
+			case MOVE_XY:
+				return "move(x,y)";
+			case CLICK_XY:
+				return "click(x,y)";
+			case TEXT_XY:
+				return "text(x,y)";
+			case GET_VALUE_XY:
+				return "getValue(x,y)";
+		}
 		return this.name;
 	}
 

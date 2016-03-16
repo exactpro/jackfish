@@ -32,7 +32,12 @@ public class Operation implements Iterable<Part>, Serializable
 	@Override
 	public String toString()
 	{
-		return getClass().getSimpleName() + Arrays.toString(this.list.toArray());
+		StringBuilder sb = new StringBuilder(Do.class.getSimpleName());
+		for (Part p : list)
+		{
+			sb.append(".").append(p.toString());
+		}
+		return sb.toString();
 	}
 
 	//------------------------------------------------------------------------------------------------------------------
