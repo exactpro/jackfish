@@ -543,9 +543,15 @@ public class SwingRemoteApplication extends RemoteApplication
 		try
 		{
 			Component component = null;
+			logger.debug("owner : " + owner);
 			if (owner == null)
 			{
 				component = this.operationExecutor.currentRoot();
+//				logger.debug("current root : " + component);
+//				logger.debug("current root hc : " + component.hashCode());
+//				component = findFirstShowing(component, this.logger);
+//				logger.debug("component : " + component);
+//				logger.debug("component hc : " + component.hashCode());
 			}
 			else
 			{
@@ -560,6 +566,37 @@ public class SwingRemoteApplication extends RemoteApplication
 			logger.error(e.getMessage(), e);
 			throw e;
 		}
+	}
+
+	static Component findFirstShowing(Component root, Logger logger)
+	{
+		logger.debug("root : " + root);
+		logger.debug("root ins Container ? " + (root instanceof Container));
+		logger.debug("root hs : " + root.hashCode());
+		if (root instanceof Container)
+		{
+			Component[] components = ((Container) root).getComponents();
+			logger.debug("find " + components.length + " components");
+			for (Component component : components)
+			{
+				logger.debug("component is showing ? " + component.isShowing());
+				logger.debug("component hs : " + component.hashCode());
+				if (component.isShowing())
+				{
+					return component;
+				}
+			}
+			logger.debug("top level components not showing");
+			for (Component component : components)
+			{
+				Component firstShowing = findFirstShowing(component, logger);
+				if (firstShowing != null)
+				{
+					return firstShowing;
+				}
+			}
+		}
+		return null;
 	}
 
 	@Override

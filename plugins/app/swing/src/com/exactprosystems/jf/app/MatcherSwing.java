@@ -344,18 +344,23 @@ public class MatcherSwing <T extends Component> extends GenericTypeMatcher<T>
 
 	static Rectangle getRect(Component c)
 	{
-		//see Component.class , method getLocationOnWindow
-		Point curLocation = c.getLocation();
-
-		for (Container parent = c.getParent();
-			 parent != null && !(parent instanceof Window);
-			 parent = parent.getParent())
+		logger.debug("getRect is showing ? " + c.isShowing());
+		logger.debug("component " + c);
+		logger.debug("component hc" + c.hashCode());
+		if (c.isShowing())
 		{
-			curLocation.x += parent.getX();
-			curLocation.y += parent.getY();
+			return new Rectangle(c.getLocationOnScreen(), c.getSize());
 		}
-
-		return new Rectangle(curLocation, c.getSize());
+		return new Rectangle(0, 0, 0, 0);
+//		//see Component.class , method getLocationOnWindow
+//		Point curLocation = c.getLocation();
+//		for (Container parent = c.getParent(); parent != null/* && !(parent instanceof Window)*/; parent = parent.getParent())
+//		{
+//			curLocation.x += parent.getX();
+//			curLocation.y += parent.getY();
+//		}
+//
+//		return new Rectangle(curLocation, c.getSize());
 	}
 
 	public static void setLogger(Logger log)

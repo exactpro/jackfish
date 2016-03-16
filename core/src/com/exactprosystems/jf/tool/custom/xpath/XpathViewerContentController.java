@@ -108,12 +108,7 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 			{
 				treeView.getSelectionModel().clearSelection();
 				treeView.getSelectionModel().select(xpathItemTreeItem);
-				TempSkin skin = (TempSkin) treeView.getSkin();
-				int row = treeView.getRow(xpathItemTreeItem);
-				if (!skin.isIndexVisible(row))
-				{
-					skin.show(row);
-				}
+				scrollToElement(xpathItemTreeItem);
 			}
 
 			@Override
@@ -170,6 +165,16 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 		this.inspectRectangle.setWidthLine(LayoutExpressionBuilderController.BORDER_WIDTH);
 		this.inspectRectangle.addStyleClass(CssVariables.XPATH_INSPECT_RECTNAGLE);
 		this.inspectRectangle.setVisible(false);
+	}
+
+	private void scrollToElement(TreeItem<XpathItem> xpathItemTreeItem)
+	{
+		TempSkin skin = (TempSkin) treeView.getSkin();
+		int row = treeView.getRow(xpathItemTreeItem);
+		if (!skin.isIndexVisible(row))
+		{
+			skin.show(row);
+		}
 	}
 
 	@Override
@@ -279,8 +284,7 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 				if (!items.isEmpty())
 				{
 					TreeItem<XpathItem> xpathItem = items.get(0);
-					int index = this.treeView.getTreeItemLevel(xpathItem);
-					//					this.treeView.scrollTo(index);
+					scrollToElement(xpathItem);
 				}
 				this.lblFound.setText(String.valueOf(nodes.size()));
 			}
@@ -579,6 +583,7 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 		if (item != null)
 		{
 			this.treeView.getSelectionModel().select(item);
+			scrollToElement(item);
 
 		}
 		this.btnInspect.setSelected(false);

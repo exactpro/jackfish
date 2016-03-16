@@ -10,12 +10,9 @@ package com.exactprosystems.jf.app;
 
 import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.client.ICondition;
-
 import org.apache.log4j.Logger;
 import org.fest.swing.awt.AWT;
-import org.fest.swing.core.ComponentMatcher;
-import org.fest.swing.core.KeyPressInfo;
-import org.fest.swing.core.MouseClickInfo;
+import org.fest.swing.core.*;
 import org.fest.swing.core.Robot;
 import org.fest.swing.data.TableCell;
 import org.fest.swing.exception.WaitTimedOutError;
@@ -28,9 +25,9 @@ import javax.swing.text.JTextComponent;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
-
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.rmi.RemoteException;
@@ -211,67 +208,112 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 		try
 		{
 			this.currentRobot.waitForIdle();
-//			toFront();
+			if (component.target instanceof JComponent)
+			{
+				Scrolling.scrollToVisible(this.currentRobot, ((JComponent) component.target));
+			}
 			Point point = new Point(x, y);
+			if (x == Integer.MIN_VALUE || y == Integer.MIN_VALUE)
+			{
+				point = AWT.visibleCenterOf(component.target);
+			}
 			switch (action)
 			{
 				case Move:
-					if (x == Integer.MIN_VALUE || y == Integer.MIN_VALUE)
-					{
-						this.currentRobot.moveMouse(component.target);
-					}
-					else
-					{
-						this.currentRobot.moveMouse(component.target, point);
-					}
+					MouseEvent eventEntered = new MouseEvent(component.target, MouseEvent.MOUSE_ENTERED, System.currentTimeMillis(), 0, point.x, point.y, 0, true, MouseEvent.NOBUTTON);
+					MouseEvent eventMoved = new MouseEvent(component.target, MouseEvent.MOUSE_MOVED, System.currentTimeMillis(), 0, point.x, point.y, 0, true, MouseEvent.NOBUTTON);
+					component.target.dispatchEvent(eventEntered);
+					component.target.dispatchEvent(eventMoved);
+					//					if (x == Integer.MIN_VALUE || y == Integer.MIN_VALUE)
+					//					{
+					//						this.currentRobot.moveMouse(component.target);
+					//					}
+					//					else
+					//					{
+					//						this.currentRobot.moveMouse(component.target, point);
+					//					}
 					break;
 
 				case LeftClick:
-					if (x == Integer.MIN_VALUE || y == Integer.MIN_VALUE)
-					{
-//						Point p = AWT.visibleCenterOf(component.target);
-//						System.out.println("point : " + p);
-//						MouseEvent mouseEvent = new MouseEvent(component.target, MouseEvent.MOUSE_CLICKED, System.currentTimeMillis(), 0, p.x, p.y, 1, false, MouseEvent.BUTTON1);
-//						component.target.dispatchEvent(mouseEvent);
-						this.currentRobot.click(component.target, MouseClickInfo.leftButton().button(), 1);
-					}
-					else
-					{
-						this.currentRobot.click(component.target, point, MouseClickInfo.leftButton().button(), 1);
-					}
+					MouseEvent eventPress = new MouseEvent(component.target, MouseEvent.MOUSE_PRESSED, System.currentTimeMillis(), 0, point.x, point.y, 1, true, MouseEvent.BUTTON1);
+					MouseEvent eventRelease = new MouseEvent(component.target, MouseEvent.MOUSE_RELEASED, System.currentTimeMillis(), 0, point.x, point.y, 1, true, MouseEvent.BUTTON1);
+					MouseEvent eventClicked = new MouseEvent(component.target, MouseEvent.MOUSE_CLICKED, System.currentTimeMillis(), 0, point.x, point.y, 1, true, MouseEvent.BUTTON1);
+
+					component.target.dispatchEvent(eventPress);
+					component.target.dispatchEvent(eventRelease);
+					//TODO we need send click event?
+					component.target.dispatchEvent(eventClicked);
 					break;
 
 				case LeftDoubleClick:
-					if (x == Integer.MIN_VALUE || y == Integer.MIN_VALUE)
+					MouseEvent eventDoublePress = new MouseEvent(component.target, MouseEvent.MOUSE_PRESSED, System.currentTimeMillis(), 0, point.x, point.y, 2, true, MouseEvent.BUTTON1);
+					MouseEvent eventDoubleRelease = new MouseEvent(component.target, MouseEvent.MOUSE_RELEASED, System.currentTimeMillis(), 0, point.x, point.y, 2, true, MouseEvent.BUTTON1);
+					MouseEvent eventDoubleClicked = new MouseEvent(component.target, MouseEvent.MOUSE_CLICKED, System.currentTimeMillis(), 0, point.x, point.y, 2, true, MouseEvent.BUTTON1);
+
+					component.target.dispatchEvent(eventDoublePress);
+					for (int i = 0; i < 1; i++)
 					{
-						this.currentRobot.click(component.target, MouseClickInfo.leftButton().button(), 2);
+						component.target.dispatchEvent(eventDoubleRelease);
+						component.target.dispatchEvent(eventDoublePress);
 					}
-					else
-					{
-						this.currentRobot.click(component.target, point, MouseClickInfo.leftButton().button(), 2);
-					}
+					component.target.dispatchEvent(eventDoubleRelease);
+					//TODO we need send click event?
+					component.target.dispatchEvent(eventDoubleClicked);
+
+					//					if (x == Integer.MIN_VALUE || y == Integer.MIN_VALUE)
+					//					{
+					//						this.currentRobot.click(component.target, MouseClickInfo.leftButton().button(), 2);
+					//					}
+					//					else
+					//					{
+					//						this.currentRobot.click(component.target, point, MouseClickInfo.leftButton().button(), 2);
+					//					}
 					break;
 
 				case RightClick:
-					if (x == Integer.MIN_VALUE || y == Integer.MIN_VALUE)
-					{
-						this.currentRobot.click(component.target, MouseClickInfo.rightButton().button(), 1);
-					}
-					else
-					{
-						this.currentRobot.click(component.target, point, MouseClickInfo.rightButton().button(), 1);
-					}
+					//TODO check last parameter on these events
+					MouseEvent eventRightPress = new MouseEvent(component.target, MouseEvent.MOUSE_PRESSED, System.currentTimeMillis(), 0, point.x, point.y, 1, true, MouseEvent.BUTTON3);
+					MouseEvent eventRightRelease = new MouseEvent(component.target, MouseEvent.MOUSE_RELEASED, System.currentTimeMillis(), 0, point.x, point.y, 1, true, MouseEvent.BUTTON3);
+					MouseEvent eventRightClicked = new MouseEvent(component.target, MouseEvent.MOUSE_CLICKED, System.currentTimeMillis(), 0, point.x, point.y, 1, true, MouseEvent.BUTTON3);
+
+					component.target.dispatchEvent(eventRightPress);
+					component.target.dispatchEvent(eventRightRelease);
+					//TODO we need send click event?
+					component.target.dispatchEvent(eventRightClicked);
+//					if (x == Integer.MIN_VALUE || y == Integer.MIN_VALUE)
+//					{
+//						this.currentRobot.click(component.target, MouseClickInfo.rightButton().button(), 1);
+//					}
+//					else
+//					{
+//						this.currentRobot.click(component.target, point, MouseClickInfo.rightButton().button(), 1);
+//					}
 					break;
 
 				case RightDoubleClick:
-					if (x == Integer.MIN_VALUE || y == Integer.MIN_VALUE)
+					MouseEvent eventDoubleRightPress = new MouseEvent(component.target, MouseEvent.MOUSE_PRESSED, System.currentTimeMillis(), 0, point.x, point.y, 2, true, MouseEvent.BUTTON3);
+					MouseEvent eventDoubleRightRelease = new MouseEvent(component.target, MouseEvent.MOUSE_RELEASED, System.currentTimeMillis(), 0, point.x, point.y, 2, true, MouseEvent.BUTTON3);
+					MouseEvent eventDoubleRightClicked = new MouseEvent(component.target, MouseEvent.MOUSE_CLICKED, System.currentTimeMillis(), 0, point.x, point.y, 2, true, MouseEvent.BUTTON3);
+
+					component.target.dispatchEvent(eventDoubleRightPress);
+					for (int i = 0; i < 1; i++)
 					{
-						this.currentRobot.click(component.target, MouseClickInfo.rightButton().button(), 2);
+						component.target.dispatchEvent(eventDoubleRightRelease);
+						component.target.dispatchEvent(eventDoubleRightPress);
 					}
-					else
-					{
-						this.currentRobot.click(component.target, point, MouseClickInfo.rightButton().button(), 2);
-					}
+					component.target.dispatchEvent(eventDoubleRightRelease);
+					//TODO we need send click event?
+					component.target.dispatchEvent(eventDoubleRightClicked);
+
+
+//					if (x == Integer.MIN_VALUE || y == Integer.MIN_VALUE)
+//					{
+//						this.currentRobot.click(component.target, MouseClickInfo.rightButton().button(), 2);
+//					}
+//					else
+//					{
+//						this.currentRobot.click(component.target, point, MouseClickInfo.rightButton().button(), 2);
+//					}
 					break;
 			}
 			return true;
@@ -796,7 +838,6 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 		try
 		{
 			this.currentRobot.waitForIdle();
-			toFront();
 			JTable table = component.targetCastedTo(JTable.class);
 			JTableFixture tableFixture = new JTableFixture(this.currentRobot, table);
 			JTableCellFixture cell = tableFixture.cell(TableCell.row(row).column(column));
@@ -1597,7 +1638,7 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 
 	public Component currentFrame()
 	{
-		Collection<Component> list =  this.currentRobot.finder().findAll(new ComponentMatcher()
+		Collection<Component> list = this.currentRobot.finder().findAll(new ComponentMatcher()
 		{
 			@Override
 			public boolean matches(Component c)
@@ -1618,7 +1659,7 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 			root.add(element);
 		}
 
-		return root; 
+		return root;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -1708,17 +1749,5 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 		return new ComponentFixture<T>(this.currentRobot, component)
 		{
 		};
-	}
-
-	private void toFront()
-	{
-		Component frame = currentFrame();
-		if (frame instanceof JFrame)
-		{
-			((JFrame) frame).setExtendedState(JFrame.ICONIFIED);
-			this.currentRobot.waitForIdle();
-			((JFrame) frame).setExtendedState(JFrame.NORMAL);
-			this.currentRobot.waitForIdle();
-		}
 	}
 }
