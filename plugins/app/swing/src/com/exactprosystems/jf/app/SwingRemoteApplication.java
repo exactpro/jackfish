@@ -326,7 +326,7 @@ public class SwingRemoteApplication extends RemoteApplication
 				throw new Exception("Can't find the main window.");
 			}
 			
-			if (main.isDisplayable())
+			if (main.isShowing()) 
 			{
 				mainCoords = main.getLocationOnScreen();
 			}
@@ -339,7 +339,7 @@ public class SwingRemoteApplication extends RemoteApplication
 				return null;
 			}
 
-			if (component.isDisplayable())
+			if (component.isShowing())
 			{
 				// we have a component and should highlight it
 				this.highLighter.start(component.getLocationOnScreen(), component.getSize());
