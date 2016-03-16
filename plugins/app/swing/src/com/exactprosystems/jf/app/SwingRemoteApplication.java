@@ -293,7 +293,7 @@ public class SwingRemoteApplication extends RemoteApplication
 			List<ComponentFixture<Component>> components = this.operationExecutor.findAll(element.getControlKind(), ownerFixture, element);
 			for (ComponentFixture<Component> component : components)
 			{
-				res.add(component.toString());
+				res.add("" + component.target);
 			}
 			return res;
 		}
@@ -311,6 +311,7 @@ public class SwingRemoteApplication extends RemoteApplication
 		try
 		{
 			Component main = null;
+			Point mainCoords = new Point();
 			if (owner != null)
 			{
 				main = this.operationExecutor.find(null, owner).target;
@@ -324,7 +325,12 @@ public class SwingRemoteApplication extends RemoteApplication
 			{
 				throw new Exception("Can't find the main window.");
 			}
-			Point mainCoords = main.getLocationOnScreen();
+			
+			if (main.isDisplayable())
+			{
+				mainCoords = main.getLocationOnScreen();
+			}
+
 			Component component = componentAtPosition(main, x - mainCoords.x, y - mainCoords.y);
 			component = parentForKind(component, controlKind);
 
@@ -333,18 +339,22 @@ public class SwingRemoteApplication extends RemoteApplication
 				return null;
 			}
 
-			// we have a component and should highlight it
-			this.highLighter.start(component.getLocationOnScreen(), component.getSize());
-
-			ControlKind newControlKind = determitateControlKind(component);
-
-			String id = component.getName();
-			id = id == null ? newControlKind.name() : id;
-
-			Locator locator = new Locator(null, id, newControlKind);
-			locator.clazz(MatcherSwing.getClass(component)).name(MatcherSwing.getName(component)).title(MatcherSwing.getTitle(component)).action(MatcherSwing.getAction(component)).text(MatcherSwing.getText(component)).tooltip(MatcherSwing.getToolTip(component));
-
-			return locator;
+			if (component.isDisplayable())
+			{
+				// we have a component and should highlight it
+				this.highLighter.start(component.getLocationOnScreen(), component.getSize());
+	
+				ControlKind newControlKind = determitateControlKind(component);
+	
+				String id = component.getName();
+				id = id == null ? newControlKind.name() : id;
+	
+				Locator locator = new Locator(null, id, newControlKind);
+				locator.clazz(MatcherSwing.getClass(component)).name(MatcherSwing.getName(component)).title(MatcherSwing.getTitle(component)).action(MatcherSwing.getAction(component)).text(MatcherSwing.getText(component)).tooltip(MatcherSwing.getToolTip(component));
+	
+				return locator;
+			}
+			return null;
 		}
 		catch (Exception e)
 		{
@@ -570,6 +580,11 @@ public class SwingRemoteApplication extends RemoteApplication
 		{
 			return null;
 		}
+
+    	if (component instanceof Dialog)
+    	{
+    		logger.error("+++ " + component);
+    	}
 
 		if (component instanceof Container)
 		{

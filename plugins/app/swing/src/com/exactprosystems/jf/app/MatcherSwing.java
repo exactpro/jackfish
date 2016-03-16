@@ -292,6 +292,7 @@ public class MatcherSwing <T extends Component> extends GenericTypeMatcher<T>
     	{
     		return;
     	}
+    	
     	Element node = null;
 		String simpleName = component.getClass().getSimpleName();
 		if (simpleName.isEmpty())

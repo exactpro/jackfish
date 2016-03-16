@@ -1611,6 +1611,7 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 	public Component currentRoot()
 	{
 		Collection<? extends Container> roots = this.currentRobot.hierarchy().roots();
+		
 		Container root = new RootContainer();
 		for (Container element : roots)
 		{
