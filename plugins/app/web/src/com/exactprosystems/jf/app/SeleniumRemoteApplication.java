@@ -636,7 +636,15 @@ public class SeleniumRemoteApplication extends RemoteApplication
 		{
 			try
 			{
-				WebElement webElement = this.operationExecutor.find(owner, element);
+				WebElement webElement;
+				if (element == null)
+				{
+					webElement = this.driver.findElements(By.xpath(".")).get(0);
+				}
+				else
+				{
+					webElement = this.operationExecutor.find(owner, element);
+				}
 				return this.operationExecutor.getRectangle(webElement);
 			}
 			catch (StaleElementReferenceException e)

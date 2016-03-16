@@ -347,11 +347,20 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 
 	public void displayRectangle(Rectangle rectangle)
 	{
-		if (this.rectangle != null)
+		if (isRectEmpty(rectangle))
+		{
+			hideRectangle();
+		}
+		else if (this.rectangle != null)
 		{
 			this.rectangle.updateRectangle(rectangle, this.scale);
 			this.rectangle.setVisible(true);
 		}
+	}
+
+	private boolean isRectEmpty(Rectangle rect)
+	{
+		return rect.height <= 0 && rect.width <= 0;
 	}
 
 	public void hideRectangle()
@@ -593,7 +602,7 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 	{
 		int intX = (int) (x / this.scale);
 		int intY = (int) (y / this.scale);
-		
+
 		int sizeX = this.initial.getSize().width / 16;
 		int sizeY = this.initial.getSize().height / 16;
 		Rectangle key = new Rectangle((intX / sizeX) * sizeX, (intY / sizeY) * sizeY, sizeX, sizeY);
@@ -604,11 +613,7 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 		}
 		Point mousePoint = new Point(intX, intY);
 
-		Optional<TreeItem<XpathItem>> inspected = set.stream()
-				.filter(item -> item.getValue() != null && item.getValue().getRectangle() != null)
-				.filter(item -> item.getValue().getRectangle().contains(mousePoint))
-				.sorted((r1, r2) -> Double.compare(square(r1.getValue().getRectangle()), square(r2.getValue().getRectangle())))
-				.findFirst(); 
+		Optional<TreeItem<XpathItem>> inspected = set.stream().filter(item -> item.getValue() != null && item.getValue().getRectangle() != null).filter(item -> item.getValue().getRectangle().contains(mousePoint)).sorted((r1, r2) -> Double.compare(square(r1.getValue().getRectangle()), square(r2.getValue().getRectangle()))).findFirst();
 
 		return inspected.isPresent() ? inspected.get() : null;
 	}

@@ -12,9 +12,10 @@ import org.w3c.dom.NodeList;
 import javax.xml.xpath.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
-import java.util.function.BiConsumer;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -62,12 +63,9 @@ public class XpathViewer
 				protected ImageAndOffset call() throws Exception
 				{
 					int offsetX = 0, offsetY = 0;
-					if (owner != null)
-					{
-						Rectangle rectangle = service.getRectangle(null, owner);
-						offsetX = rectangle.x;
-						offsetY = rectangle.y;
-					}
+					Rectangle rectangle = service.getRectangle(null, owner);
+					offsetX = rectangle.x;
+					offsetY = rectangle.y;
 					BufferedImage image = service.getImage(null, owner).getImage();
 					return new ImageAndOffset(image, offsetX, offsetY);
 				}

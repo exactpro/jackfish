@@ -430,7 +430,22 @@ public class SwingRemoteApplication extends RemoteApplication
 	{
 		try
 		{
-			ComponentFixture<Component> component = this.operationExecutor.find(owner, element);
+			ComponentFixture<Component> component;
+			if (element == null)
+			{
+				component = new ComponentFixture<Component>(this.currentRobot, this.operationExecutor.currentFrame())
+				{
+					@Override
+					protected boolean requireShowing()
+					{
+						return super.requireShowing();
+					}
+				};
+			}
+			else
+			{
+				component = this.operationExecutor.find(owner, element);
+			}
 			return this.operationExecutor.getRectangle(component);
 		}
 		catch (Exception e)
