@@ -114,6 +114,13 @@ public class Operation implements Iterable<Part>, Serializable
 	
 	
 
+	@DescriptionAttribute(text = Do.foreach)
+	public Operation foreach(Operation operation)
+	{
+		this.list.add(new Part(OperationKind.FOREACH).setOperation(operation));
+		return this;
+	}
+
 	@DescriptionAttribute(text = Do.repeat)
 	public Operation repeat(int i,  Operation operation)
 	{

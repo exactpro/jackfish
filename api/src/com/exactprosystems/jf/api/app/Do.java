@@ -18,6 +18,13 @@ import com.exactprosystems.jf.api.common.DescriptionAttribute;
  */
 public class Do
 {
+	static final String foreach = "Repeat @operation for every element found by Many locator.";
+	@DescriptionAttribute(text = Do.foreach)
+	public static Operation foreach(Operation operation)
+	{
+		return new Operation().foreach(operation);
+	}
+	
 	static final String repeat = "Repeat @operation @i times";
 	@DescriptionAttribute(text = Do.repeat)
 	public static Operation repeat(int i, Operation operation)
