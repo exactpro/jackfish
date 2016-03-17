@@ -106,7 +106,7 @@ public class Part implements Serializable
 			sb.append(separator).append(this.y);
 			separator=",";
 		}
-		if (this.d != Double.NaN)
+		if (!Double.isNaN(this.d))
 		{
 			sb.append(separator).append(this.d);
 			separator = ",";
