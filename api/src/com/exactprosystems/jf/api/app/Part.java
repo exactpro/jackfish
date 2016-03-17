@@ -25,11 +25,11 @@ public class Part implements Serializable
 		this.operation = null;
 		this.valueCondition = null;
 		this.colorCondition = null;
-		this.i = null;
-		this.d = null;
-		this.b = null;
-		this.x = null;
-		this.y = null;
+		this.i = -1;
+		this.d = Double.NaN;
+		this.b = false;
+		this.x = Integer.MIN_VALUE;
+		this.y = Integer.MIN_VALUE;
 		this.str = null;
 		this.text = null;
 		this.key = null;
@@ -96,27 +96,27 @@ public class Part implements Serializable
 			sb.append(separator).append("'").append(this.text).append("'");
 			separator=",";
 		}
-				if (this.x!=null)
+		if (this.x != Integer.MIN_VALUE)
 		{
 			sb.append(separator).append(this.x);
-			separator=",";
+			separator = ",";
 		}
-		if (this.y!=null)
+		if (this.y != Integer.MIN_VALUE)
 		{
 			sb.append(separator).append(this.y);
 			separator=",";
 		}
-		if (this.d!=null)
+		if (this.d != Double.NaN)
 		{
 			sb.append(separator).append(this.d);
-			separator=",";
+			separator = ",";
 		}
 		if (this.locatorId!=null)
 		{
 			sb.append(separator).append("'").append(this.locatorId).append("'");
 			separator=",";
 		}
-		if (this.i!=null)
+		if (this.i != -1)
 		{
 			sb.append(separator).append(this.i);
 			separator = ",";
@@ -156,7 +156,7 @@ public class Part implements Serializable
 			sb.append(separator).append(this.key.toString());
 			separator=",";
 		}
-		if (this.b!=null)
+		if (!this.b)
 		{
 			sb.append(separator).append(this.b);
 			separator=",";
@@ -258,11 +258,11 @@ public class Part implements Serializable
 	protected OperationKind kind;
 
 	protected Operation operation;
-	protected Integer i;
-	protected Integer x;
-	protected Integer y;
-	protected Double d;
-	protected Boolean b;
+	protected int i;
+	protected int x;
+	protected int y;
+	protected double d;
+	protected boolean b;
 	protected String str;
 	protected String text;
 	protected ICondition valueCondition;
