@@ -91,7 +91,6 @@
 								</Button>
 							</children>
 						</HBox>
-						<CheckBox fx:id="checkBoxUseSelfAsOwner" mnemonicParsing="false" text="Use self as owner"/>
 					</children>
 				</VBox>
 			</bottom>

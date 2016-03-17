@@ -22,7 +22,7 @@ import com.exactprosystems.jf.tool.custom.console.ConsoleText;
 import com.exactprosystems.jf.tool.custom.console.CustomListView;
 import com.exactprosystems.jf.tool.custom.tab.CustomTab;
 import com.exactprosystems.jf.tool.dictionary.actions.ActionsController;
-import com.exactprosystems.jf.tool.dictionary.info.element.ElementInfoController;
+import com.exactprosystems.jf.tool.dictionary.element.ElementInfoController;
 import com.exactprosystems.jf.tool.dictionary.navigation.NavigationController;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.main.Main;
@@ -31,14 +31,9 @@ import com.exactprosystems.jf.tool.settings.Theme;
 import javafx.application.Platform;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
 import javafx.scene.control.SplitPane;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Text;
 
 import java.net.URL;
 import java.util.Collection;
@@ -138,101 +133,9 @@ public class DictionaryFxController implements Initializable, ContainingParent
 	// ------------------------------------------------------------------------------------------------------------------
 	// display* methods
 	// ------------------------------------------------------------------------------------------------------------------
-	private ListView<BorderPaneAndControl> borderPaneListView;
-
-	private class BorderPaneAndControl
-	{
-		private IControl control;
-		private BorderPane pane;
-
-		private Text count;
-
-		public BorderPaneAndControl(IControl control)
-		{
-			this.control = control;
-			this.pane = new BorderPane();
-			this.count = new Text();
-			this.pane.setLeft(new Text(this.control.toString()));
-			this.pane.setRight(count);
-		}
-
-		public BorderPane getPane()
-		{
-			return pane;
-		}
-
-		public Text getCount()
-		{
-			return count;
-		}
-
-		@Override
-		public boolean equals(Object o)
-		{
-			if (this == o)
-				return true;
-			if (o == null || getClass() != o.getClass())
-				return false;
-
-			BorderPaneAndControl that = (BorderPaneAndControl) o;
-
-			return !(control != null ? !control.equals(that.control) : that.control != null);
-
-		}
-
-		@Override
-		public int hashCode()
-		{
-			return control != null ? control.hashCode() : 0;
-		}
-	}
-
-	public void displayTestingControls(Collection<IControl> controls)
-	{
-		Alert alert = new Alert(Alert.AlertType.INFORMATION);
-		alert.getDialogPane().getStylesheets().add(Common.currentTheme().getPath());
-		BorderPane pane = new BorderPane();
-		alert.getDialogPane().setContent(pane);
-		alert.setTitle("Test");
-		alert.setHeaderText("Testing all controls from section Run");
-		borderPaneListView = new ListView<>();
-		borderPaneListView.setCellFactory(param -> new ListCell<BorderPaneAndControl>(){
-			@Override
-			protected void updateItem(BorderPaneAndControl item, boolean empty)
-			{
-				super.updateItem(item, empty);
-				if (empty)
-				{
-					setGraphic(null);
-				}
-				else
-				{
-					setGraphic(item.getPane());
-				}
-			}
-		});
-		pane.setCenter(borderPaneListView);
-		for (IControl control : controls)
-		{
-			BorderPaneAndControl borderPane = new BorderPaneAndControl(control);
-			borderPaneListView.getItems().add(borderPane);
-		}
-		alert.show();
-		alert.setOnHidden(event -> this.borderPaneListView = null);
-	}
-
 	public void displayTestingControl(IControl control, String text, Result result)
 	{
-		Platform.runLater(() -> 
-		{
-			if (this.borderPaneListView != null)
-			{
-				int i = this.borderPaneListView.getItems().indexOf(new BorderPaneAndControl(control));
-				BorderPaneAndControl borderPaneAndControl = this.borderPaneListView.getItems().get(i);
-				borderPaneAndControl.getCount().setText(text);
-				((Text) borderPaneAndControl.getPane().getLeft()).setFill(result.getColor());
-			}
-		});
+		this.navigationController.displayTestingControl(control, text, result);
 	}
 
 	public void displayTitle(String title)
@@ -254,6 +157,11 @@ public class DictionaryFxController implements Initializable, ContainingParent
 			Collection<IControl> rows, IControl row, IControl header)
 	{
 		this.navigationController.displayElement(control, controls);
+		this.displayElementInfo(control, owners, owner, rows, row, header);
+	}
+
+	public void displayElementInfo(IControl control, Collection<IControl> owners, IControl owner, Collection<IControl> rows, IControl row, IControl header)
+	{
 		this.elementInfoController.displayInfo(control, owners, owner, rows, row, header);
 	}
 

@@ -20,9 +20,6 @@ public abstract class CustomField extends TextField
 	{
 		super(text);
 		getStyleClass().add(CssVariables.CUSTOM_TEXT_FIELD);
-//		this.editableProperty().addListener((observable, oldValue, newValue) -> {
-//			Optional.ofNullable(this.right.get()).ifPresent(node -> node.setOpacity(newValue ? 1.0 : 0.0));
-//		});
 	}
 
 	public CustomField()

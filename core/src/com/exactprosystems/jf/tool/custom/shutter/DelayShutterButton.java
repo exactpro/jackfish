@@ -38,6 +38,7 @@ public class DelayShutterButton extends BorderPane
 		this.button = new ToggleButton("", new ImageView(new Image(icon)));
 		this.button.setTooltip(new Tooltip(tooltip));
 		this.button.getStyleClass().add(CssVariables.DELAY_SHUTTER);
+		this.button.getStyleClass().add(CssVariables.TRANSPARENT_BACKGROUND);
 		this.button.setOnAction(a -> {
 			if (this.button.isSelected())
 			{

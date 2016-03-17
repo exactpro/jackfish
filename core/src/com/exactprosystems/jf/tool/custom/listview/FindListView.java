@@ -98,6 +98,11 @@ public class FindListView<T> extends BorderPane
 		this.listView.getSelectionModel().select(item);
 	}
 
+	public List<T> getItems()
+	{
+		return this.listView.getItems();
+	}
+
 	private void listeners()
 	{
 		this.cfbFind.textProperty().addListener((observable, oldValue, newValue) -> {

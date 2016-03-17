@@ -6,7 +6,7 @@
 //  information which is the property of Exactpro Systems, LLC or its licensors.
 ////////////////////////////////////////////////////////////////////////////////
 
-package com.exactprosystems.jf.tool.dictionary.info.element;
+package com.exactprosystems.jf.tool.dictionary.element;
 
 import com.exactprosystems.jf.api.app.Addition;
 import com.exactprosystems.jf.api.app.ControlKind;

@@ -39,16 +39,6 @@
 			-fx-text-fill: black;
 			-fx-font-size: 14px;
 }
-.toggle-button {
--fx-background-color:
-			#707070,
-			linear-gradient(#fcfcfc, #f3f3f3),
-			linear-gradient(#f2f2f2 0%, #ebebeb 49%, #dddddd 50%, #cfcfcf 100%);
-		-fx-background-insets: 0,1,2;
-		-fx-background-radius: 3,2,1;
-		-fx-text-fill: black;
-		-fx-font-size: 14px;
-}
 .toggle-button:hover {
 			-fx-background-color:
 				#707070,
@@ -57,10 +47,9 @@
 			-fx-background-insets: 0,1,2;
 			-fx-background-radius: 3,2,1;
 			-fx-text-fill: black;
-			-fx-font-size: 14px;
 }
 .toggle-button:selected {
-	-fx-text-fill : -fx-company-color-light;
+	-fx-background-color : derive(-fx-company-color-light, 50%);
 
 }
 .tree-cell > .tree-disclosure-node,

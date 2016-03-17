@@ -23,19 +23,14 @@ import com.exactprosystems.jf.tool.ApplicationConnector;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.dictionary.DictionaryFxController.Result;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
-
 import com.exactprosystems.jf.tool.main.Main;
 import javafx.concurrent.Task;
 import javafx.scene.control.ButtonType;
 
 import javax.xml.bind.annotation.XmlRootElement;
-
 import java.io.File;
 import java.io.Reader;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.exactprosystems.jf.tool.Common.tryCatchThrow;
@@ -216,7 +211,7 @@ public class DictionaryFx extends GuiDictionary
 
 	public void elementChanged(IWindow window, IWindow.SectionKind sectionKind, IControl control) throws Exception
 	{
-		displayElement(window, sectionKind, control);
+		displayElementInfo(window, sectionKind, control);
 	}
 
 
@@ -326,15 +321,13 @@ public class DictionaryFx extends GuiDictionary
 		}
 	}
 
-	public void dialogTest(IWindow window) throws Exception
+	public void dialogTest(IWindow window, List<IControl> controls) throws Exception
 	{
 		if (isApplicationRun())
 		{
 			Set<ControlKind> supported = Arrays.stream(this.applicationConnector.getAppConnection().getApplication().getFactory().supportedControlKinds())
 					.collect(Collectors.toSet());
 			
-			Collection<IControl> controls = window.getControls(SectionKind.Run);
-			this.controller.displayTestingControls(controls);
 			new Thread(new Task<Void>()
 			{
 				@Override
@@ -380,16 +373,13 @@ public class DictionaryFx extends GuiDictionary
 	}
 
 	//------------------------------------------------------------------------------------------------------------------
-	public void elementNew(IWindow window, IWindow.SectionKind sectionKind, boolean useSelfAsOwner) throws Exception
+	public void elementNew(IWindow window, IWindow.SectionKind sectionKind) throws Exception
 	{
 		if (window != null)
 		{
 			AbstractControl control = AbstractControl.create(ControlKind.Any);
-			if (useSelfAsOwner)
-			{
-				IControl firstControl = window.getFirstControl(SectionKind.Self);
-				Optional.ofNullable(firstControl).ifPresent(owner -> Common.tryCatch(() -> control.set(AbstractControl.ownerIdName, owner.getID()), "Error on set owner owner"));
-			}
+			IControl firstControl = window.getFirstControl(SectionKind.Self);
+			Optional.ofNullable(firstControl).ifPresent(owner -> Common.tryCatch(() -> control.set(AbstractControl.ownerIdName, owner.getID()), "Error on set owner owner"));
 			Command undo = () -> Common.tryCatch(() -> {
 				window.removeControl(control);
 				displayElement(window, sectionKind, window.getFirstControl(sectionKind));
@@ -473,7 +463,7 @@ public class DictionaryFx extends GuiDictionary
 		}
 	}
 	
-	public void elementRecord(double x, double y, boolean useSelfAsOwner, IWindow window, IWindow.SectionKind sectionKind) throws Exception
+	public void elementRecord(double x, double y, IWindow window, IWindow.SectionKind sectionKind) throws Exception
 	{
 		if (window == null)
 		{
@@ -489,8 +479,9 @@ public class DictionaryFx extends GuiDictionary
 				{
 					ControlKind controlKind = locator.getControlKind();
 					AbstractControl newControl = AbstractControl.create(controlKind);
-					
-					String ownerId = useSelfAsOwner ? getOwnerId(window) : null;
+
+					IControl selfControl = window.getSelfControl();
+					String ownerId = selfControl == null ? null : selfControl.getID();
 					
 					newControl.set(AbstractControl.idName, locator.getId());
 					newControl.set(AbstractControl.uidName, locator.getUid());
@@ -528,7 +519,7 @@ public class DictionaryFx extends GuiDictionary
 		}
 	}
 
-	public void elementRenew(double x, double y, boolean useSelfAsOwner, IWindow window, IWindow.SectionKind sectionKind, IControl control)  throws Exception
+	public void elementRenew(double x, double y, IWindow window, IWindow.SectionKind sectionKind, IControl control)  throws Exception
 	{
 		if (window == null)
 		{
@@ -893,16 +884,6 @@ public class DictionaryFx extends GuiDictionary
 		}
 	}
 
-	private String getOwnerId(IWindow window)
-	{
-		ISection section = window.getSection(IWindow.SectionKind.Self);
-		if (section == null || section.getControls().isEmpty())
-		{
-			return null;
-		}
-		return section.getControls().iterator().next().getID();
-	}
-
 	private Locator getLocator(IControl control)
 	{
 		if (control != null)
@@ -925,6 +906,25 @@ public class DictionaryFx extends GuiDictionary
 	private void displaySection(IWindow.SectionKind sectionKind) throws Exception
 	{
 		this.controller.displaySection(sectionKind);
+	}
+
+	private void displayElementInfo(IWindow window, IWindow.SectionKind sectionKind, IControl control) throws Exception
+	{
+		Collection<IControl> controls = null;
+		Collection<IControl> owners = null;
+		Collection<IControl> rows = null;
+		IControl owner = null;
+		IControl row = null;
+		IControl header = null;
+		if (window != null)
+		{
+			owners = controlsWithId(window, null);
+			owner = window.getOwnerControl(control);
+			rows = controlsWithId(window, null);
+			row = window.getRowsControl(control);
+			header = window.getHeaderControl(control);
+		}
+		this.controller.displayElementInfo(control, owners, owner, rows, row, header);
 	}
 
 	private void displayElement(IWindow window, IWindow.SectionKind sectionKind, IControl control) throws Exception

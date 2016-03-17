@@ -18,7 +18,7 @@ import com.exactprosystems.jf.tool.custom.BorderWrapper;
 import com.exactprosystems.jf.tool.custom.expfield.ExpressionField;
 import com.exactprosystems.jf.tool.dictionary.ApplicationStatus;
 import com.exactprosystems.jf.tool.dictionary.DictionaryFx;
-import com.exactprosystems.jf.tool.dictionary.info.element.ElementInfoController;
+import com.exactprosystems.jf.tool.dictionary.element.ElementInfoController;
 import com.exactprosystems.jf.tool.dictionary.navigation.NavigationController;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import javafx.application.Platform;

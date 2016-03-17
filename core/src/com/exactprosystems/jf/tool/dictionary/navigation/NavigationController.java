@@ -21,6 +21,7 @@ import com.exactprosystems.jf.tool.custom.shutter.DelayShutterButton;
 import com.exactprosystems.jf.tool.custom.tab.CustomTab;
 import com.exactprosystems.jf.tool.custom.xpath.XpathViewer;
 import com.exactprosystems.jf.tool.dictionary.DictionaryFx;
+import com.exactprosystems.jf.tool.dictionary.DictionaryFxController;
 import com.exactprosystems.jf.tool.main.Main;
 import com.exactprosystems.jf.tool.settings.SettingsPanel;
 import com.exactprosystems.jf.tool.settings.Theme;
@@ -39,6 +40,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import org.w3c.dom.Document;
 
@@ -47,6 +49,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.ResourceBundle;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import static com.exactprosystems.jf.tool.Common.tryCatch;
 
@@ -56,11 +59,10 @@ public class NavigationController implements Initializable, ContainingParent
 	public Button btnFindElement;
 
 	public FindListView<IWindow> listViewWindow;
-	public FindListView<IControl> listViewElement;
+	public FindListView<BorderPaneAndControl> listViewElement;
 
 	public ToggleGroup groupSection;
 	public HBox hBoxElement;
-	public CheckBox checkBoxUseSelfAsOwner;
 	public BorderPane paneWindow;
 	public BorderPane paneElement;
 	public Button btnRenameWindow;
@@ -96,17 +98,16 @@ public class NavigationController implements Initializable, ContainingParent
 	public void initialize(URL url, ResourceBundle resourceBundle)
 	{
 		assert groupSection != null : "fx:id=\"buttonGroup\" was not injected: check your FXML file 'Navigation.fxml'.";
-		assert checkBoxUseSelfAsOwner != null : "fx:id=\"checkBoxUseSelfAsOwner\" was not injected: check your FXML file 'Navigation.fxml'.";
 		assert hBoxElement != null : "fx:id=\"hBoxElement\" was not injected: check your FXML file 'Navigation.fxml'.";
 		assert btnFindElement != null : "fx:id=\"btnFindElement\" was not injected: check your FXML file 'Navigation.fxml'.";
 		assert btnFindDialog != null : "fx:id=\"btnFindDialog\" was not injected: check your FXML file 'Navigation.fxml'.";
 		this.listViewWindow = new FindListView<>((w, s) -> w.getName().toUpperCase().contains(s.toUpperCase()), true);
 		this.listViewWindow.setCellFactory(param -> new CustomListCell<>((w, s) -> Common.tryCatch(() -> this.model.dialogRename(w, s), "Error on rename"), IWindow::getName));
 		this.paneWindow.setCenter(this.listViewWindow);
-		this.listViewElement = new FindListView<>((e, s) -> (!Str.IsNullOrEmpty(e.getID()) && e.getID().toUpperCase().contains(s.toUpperCase()) || (e.getBindedClass().getClazz().toUpperCase()
+		this.listViewElement = new FindListView<>((e, s) -> (!Str.IsNullOrEmpty(e.control.getID()) && e.control.getID().toUpperCase().contains(s.toUpperCase()) || (e.control.getBindedClass().getClazz().toUpperCase()
 				.contains(s.toUpperCase()))),
 				false);
-		this.listViewElement.setCellFactory(param -> new CustomListCell<>((w, s) -> {}, IControl::toString));
+		this.listViewElement.setCellFactory(param -> new CustomListCell<>((w, s) -> {}, e -> e.control.toString()));
 		this.paneElement.setCenter(this.listViewElement);
 		Platform.runLater(() -> {
 
@@ -190,7 +191,7 @@ public class NavigationController implements Initializable, ContainingParent
 	// ------------------------------------------------------------------------------------------------------------------
 	public void newElement(ActionEvent actionEvent)
 	{
-		tryCatch(() -> this.model.elementNew(currentWindow(), currentSection(), useSelfAsOwner()), "Error on new element");
+		tryCatch(() -> this.model.elementNew(currentWindow(), currentSection()), "Error on new element");
 	}
 
 	public void deleteElement(ActionEvent actionEvent)
@@ -210,8 +211,7 @@ public class NavigationController implements Initializable, ContainingParent
 
 	public void testingDialog(ActionEvent actionEvent)
 	{
-		Common.tryCatch(() -> this.model.dialogTest(currentWindow()), "Error on show testing dialog");
-
+		Common.tryCatch(() -> this.model.dialogTest(currentWindow(), this.listViewElement.getItems().stream().map(b -> b.control).collect(Collectors.toList())), "Error on show testing dialog");
 	}
 
 	// ------------------------------------------------------------------------------------------------------------------
@@ -333,7 +333,18 @@ public class NavigationController implements Initializable, ContainingParent
 
 	public void displayElement(IControl control, Collection<IControl> controls)
 	{
-		display(control, controls, this.listViewElement, this.elementChangeListener);
+		display(new BorderPaneAndControl(control), controls.stream().map(BorderPaneAndControl::new).collect(Collectors.toList()), this.listViewElement, this.elementChangeListener);
+	}
+
+	public void displayTestingControl(IControl control, String text, DictionaryFxController.Result result)
+	{
+		Platform.runLater(() ->
+		{
+			int i = this.listViewElement.getItems().indexOf(new BorderPaneAndControl(control));
+			BorderPaneAndControl borderPaneAndControl = this.listViewElement.getItems().get(i);
+			borderPaneAndControl.getCount().setText(text);
+			borderPaneAndControl.getCount().setFill(result.getColor());
+		});
 	}
 
 	// ------------------------------------------------------------------------------------------------------------------
@@ -352,19 +363,13 @@ public class NavigationController implements Initializable, ContainingParent
 			return IWindow.SectionKind.Run;
 		}
 		String name = radioButton.getId();
-		IWindow.SectionKind kind = IWindow.SectionKind.valueOf(name);
 
-		return kind;
+		return SectionKind.valueOf(name);
 	}
 
 	private IControl currentElement()
 	{
-		return this.listViewElement.getSelectedItem();
-	}
-
-	private boolean useSelfAsOwner()
-	{
-		return this.checkBoxUseSelfAsOwner.isSelected();
+		return this.listViewElement.getSelectedItem().control;
 	}
 
 	public void setChoiseBoxListeners()
@@ -425,7 +430,7 @@ public class NavigationController implements Initializable, ContainingParent
 		recOneButton.setSwithconAction(h -> tryCatch(this.model::startGrabbing, ""));
 		recOneButton.setSwithcoffAction(h -> tryCatch(this.model::endGrabbing, ""));
 		recOneButton.setCompleteAction((x, y) -> {
-			tryCatch(() -> this.model.elementRecord(x, y, useSelfAsOwner(), currentWindow(), currentSection()), "");
+			tryCatch(() -> this.model.elementRecord(x, y, currentWindow(), currentSection()), "");
 			Platform.runLater(() -> ((Stage) scene.getWindow()).setIconified(false));
 			group.selectToggle(null);
 		});
@@ -433,14 +438,14 @@ public class NavigationController implements Initializable, ContainingParent
 		recManyButton.setSwithconAction(h -> tryCatch(this.model::startGrabbing, ""));
 		recManyButton.setSwithcoffAction(h -> tryCatch(this.model::endGrabbing, ""));
 		recManyButton.setCompleteAction((x, y) -> {
-			tryCatch(() -> this.model.elementRecord(x, y, useSelfAsOwner(), currentWindow(), currentSection()), "");
+			tryCatch(() -> this.model.elementRecord(x, y, currentWindow(), currentSection()), "");
 			Platform.runLater(() -> ((Stage) scene.getWindow()).setIconified(false));
 		});
 
 		renewButton.setSwithconAction(h -> tryCatch(this.model::startGrabbing, ""));
 		renewButton.setSwithcoffAction(h -> tryCatch(this.model::endGrabbing, ""));
 		renewButton.setCompleteAction((x, y) -> {
-			tryCatch(() -> model.elementRenew(x, y, useSelfAsOwner(), currentWindow(), currentSection(), currentElement()), "");
+			tryCatch(() -> model.elementRenew(x, y, currentWindow(), currentSection(), currentElement()), "");
 			Platform.runLater(() -> ((Stage) scene.getWindow()).setIconified(false));
 			group.selectToggle(null);
 		});
@@ -465,7 +470,55 @@ public class NavigationController implements Initializable, ContainingParent
 
 	private ChangeListener<IWindow> windowChangeListener = (observable, oldValue, newValue) -> tryCatch(() -> model.windowChanged(newValue, currentSection()), "Error on select window.");
 
-	private ChangeListener<IControl> elementChangeListener = (observable, oldValue, newValue) -> tryCatch(() -> model.elementChanged(currentWindow(), currentSection(), newValue), "Error on select element");
+	private ChangeListener<BorderPaneAndControl> elementChangeListener = (observable, oldValue, newValue) ->
+			tryCatch(() -> {if (newValue != null) model.elementChanged(currentWindow(), currentSection(), newValue.control);},"Error on select element");
+
+	private class BorderPaneAndControl
+	{
+		private IControl control;
+		private BorderPane pane;
+
+		private Text count;
+
+		public BorderPaneAndControl(IControl control)
+		{
+			this.control = control;
+			this.pane = new BorderPane();
+			this.count = new Text();
+			this.pane.setLeft(new Text(this.control != null ? this.control.toString() : ""));
+			this.pane.setRight(count);
+		}
+
+		public BorderPane getPane()
+		{
+			return pane;
+		}
+
+		public Text getCount()
+		{
+			return count;
+		}
+
+		@Override
+		public boolean equals(Object o)
+		{
+			if (this == o)
+				return true;
+			if (o == null || getClass() != o.getClass())
+				return false;
+
+			BorderPaneAndControl that = (BorderPaneAndControl) o;
+
+			return !(control != null ? !control.equals(that.control) : that.control != null);
+
+		}
+
+		@Override
+		public int hashCode()
+		{
+			return control != null ? control.hashCode() : 0;
+		}
+	}
 
 	private class CustomListCell<T> extends ListCell<T>
 	{
@@ -485,11 +538,19 @@ public class NavigationController implements Initializable, ContainingParent
 			super.updateItem(item, empty);
 			if (item != null && !empty)
 			{
-				setText(this.converter.apply(getItem()));
+				if (item instanceof BorderPaneAndControl)
+				{
+					setGraphic(((BorderPaneAndControl) item).getPane());
+				}
+				else
+				{
+					setText(this.converter.apply(getItem()));
+				}
 			}
 			else
 			{
 				setText(null);
+				setGraphic(null);
 			}
 		}
 
@@ -514,11 +575,6 @@ public class NavigationController implements Initializable, ContainingParent
 			super.cancelEdit();
 			updateItem(getItem(), false);
 			setContentDisplay(ContentDisplay.TEXT_ONLY);
-		}
-
-		private String getString()
-		{
-			return String.valueOf(getItem() == null ? "" : getItem());
 		}
 
 		private void createTextField()
