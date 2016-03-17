@@ -639,7 +639,7 @@ public class SeleniumRemoteApplication extends RemoteApplication
 				WebElement webElement;
 				if (element == null)
 				{
-					webElement = this.driver.findElements(By.xpath(".")).get(0);
+					webElement = this.driver.findElements(By.xpath("//html")).get(0);
 				}
 				else
 				{
