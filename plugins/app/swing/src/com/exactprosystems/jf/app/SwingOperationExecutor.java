@@ -10,10 +10,13 @@ package com.exactprosystems.jf.app;
 
 import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.client.ICondition;
+import com.exactprosystems.jf.api.common.Str;
 import org.apache.log4j.Logger;
 import org.fest.swing.awt.AWT;
-import org.fest.swing.core.*;
+import org.fest.swing.core.ComponentMatcher;
+import org.fest.swing.core.KeyPressInfo;
 import org.fest.swing.core.Robot;
+import org.fest.swing.core.Scrolling;
 import org.fest.swing.data.TableCell;
 import org.fest.swing.driver.JTableLocation;
 import org.fest.swing.exception.WaitTimedOutError;
@@ -927,7 +930,19 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 			Component editor = cell.editor();
 			if (editor != null)
 			{
-				return getValue(editor);
+				String value = getValue(editor);
+				if (Str.IsNullOrEmpty(value))
+				{
+					Component tableCellRendererComponent = table.getCellRenderer(row, column).getTableCellRendererComponent(table, null, true, true, row, column);
+					logger.debug("component : " + tableCellRendererComponent);
+					if (tableCellRendererComponent instanceof JLabel)
+					{
+						value = String.valueOf(((JLabel) tableCellRendererComponent).getIcon());
+					}
+				}
+				logger.debug("returned value " + value);
+				logger.debug("returned value is null " + (value == null));
+				return value;
 			}
 			throw new RemoteException(String.format("Table %s with row %s and column %s don't have editor", component, row, column));
 		}
