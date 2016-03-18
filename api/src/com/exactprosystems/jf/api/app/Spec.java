@@ -73,6 +73,12 @@ public class Spec implements Iterable<Piece>, Serializable
 		return this;
 	}
 
+	public Spec invisible()
+	{
+		this.list.add(new Piece(PieceKind.INVISIBLE));
+		return this;
+	}
+
 	//------------------------------------------------------------------------------------------------------------------------------
 	// count
 	//------------------------------------------------------------------------------------------------------------------------------

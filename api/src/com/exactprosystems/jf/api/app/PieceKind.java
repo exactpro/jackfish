@@ -47,6 +47,39 @@ public enum PieceKind implements Measure
 		}
 	},
 
+	INVISIBLE("invisible")
+	{
+		@Override
+		public boolean useName()
+		{
+			return false;
+		}
+
+		@Override
+		public boolean useRange()
+		{
+			return false;
+		}
+
+		@Override
+		public Arrow arrow()
+		{
+			return null;
+		}
+
+		@Override
+		protected String formulaTemplate()
+		{
+			return ".%1$s()";
+		}
+
+		@Override
+		protected <T> void performDerived(Piece piece, OperationExecutor<T> executor, List<T> self, List<T> others, CheckingLayoutResult result) throws Exception
+		{
+			result.set(self.isEmpty() || self.get(0) == null); // TODO
+		}
+	},
+
 	COUNT("count")
 	{
 		@Override
