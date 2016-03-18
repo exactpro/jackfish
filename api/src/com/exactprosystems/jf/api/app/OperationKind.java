@@ -475,7 +475,7 @@ public enum OperationKind
 		return this.name;
 	}
 
-	public String getName()
+	public String getName() // TODO WTF?
 	{
 		switch (this)
 		{
