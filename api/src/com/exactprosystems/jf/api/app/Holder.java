@@ -15,13 +15,23 @@ import java.util.Map;
 
 class Holder<T>
 {
-	public Holder(T value)
+	public Holder(T value, Locator locator)
 	{
 		this.locators = new HashMap<LocatorKind, Locator>();
 		this.list = new ArrayList<T>();
 		
+		put(LocatorKind.Element, 	locator);
 		setIndex(0);
 		setValue(value);
+	}
+	
+	@Override
+	public String toString()
+	{
+		return getClass().getSimpleName() + "["
+				+ " locators=" + this.locators
+				+ " list=" + this.list
+				+ "]";
 	}
 	
 	public void setValue(T value)

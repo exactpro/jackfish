@@ -54,8 +54,7 @@ public class Operation implements Iterable<Part>, Serializable
 	public <T> void operate(OperationExecutor<T> executor, Locator locator, T element) throws Exception
 	{
 		OperationResult result = new OperationResult();
-		Holder<T> holder = new Holder<T>(element);
-		holder.put(LocatorKind.Element, 	locator);
+		Holder<T> holder = new Holder<T>(element, locator);
 
 		for (Part part : this.list)
 		{
@@ -71,7 +70,7 @@ public class Operation implements Iterable<Part>, Serializable
 		}
 		
 		OperationResult result = new OperationResult();
-		Holder<T> holder = new Holder<T>(null);
+		Holder<T> holder = new Holder<T>(null, null);
 		holder.put(LocatorKind.Element, 	locator);
 		holder.put(LocatorKind.Owner, 	owner);
 		holder.put(LocatorKind.Rows,		rows);

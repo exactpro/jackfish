@@ -17,20 +17,11 @@ public enum OperationKind
 	FOREACH("foreach")
 	{
 		@Override
-		protected boolean needToFind()
-		{
-			return true;
-		}
-
-		@Override
 		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, Holder<T> holder, OperationResult result) throws Exception
 		{
 			for (int c = 0; c < holder.size(); c++)
 			{
 				holder.setIndex(c);
-				
-				System.err.println("## " + c + " " + holder.getValue());
-
 				part.operation.operate(executor, holder.get(LocatorKind.Element), holder.getValue());
 			}
 			return true;
@@ -551,7 +542,6 @@ public enum OperationKind
 			}
 			
 		}
-
 		return operateDerived(part, executor, holder, result);
 	}
 
