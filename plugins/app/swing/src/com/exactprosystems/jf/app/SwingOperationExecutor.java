@@ -15,6 +15,7 @@ import org.fest.swing.awt.AWT;
 import org.fest.swing.core.*;
 import org.fest.swing.core.Robot;
 import org.fest.swing.data.TableCell;
+import org.fest.swing.driver.JTableLocation;
 import org.fest.swing.exception.WaitTimedOutError;
 import org.fest.swing.finder.WindowFinder;
 import org.fest.swing.fixture.*;
@@ -217,13 +218,15 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 			{
 				point = AWT.visibleCenterOf(component.target);
 			}
+
+			final ArrayList<MouseEvent> events = new ArrayList<>();
+
+			events.add(new MouseEvent(component.target, MouseEvent.MOUSE_ENTERED, System.currentTimeMillis(), 0, point.x, point.y, 0, true, MouseEvent.NOBUTTON));
+			events.add(new MouseEvent(component.target, MouseEvent.MOUSE_MOVED, System.currentTimeMillis(), 0, point.x, point.y, 0, true, MouseEvent.NOBUTTON));
+
 			switch (action)
 			{
 				case Move:
-					MouseEvent eventEntered = new MouseEvent(component.target, MouseEvent.MOUSE_ENTERED, System.currentTimeMillis(), 0, point.x, point.y, 0, true, MouseEvent.NOBUTTON);
-					MouseEvent eventMoved = new MouseEvent(component.target, MouseEvent.MOUSE_MOVED, System.currentTimeMillis(), 0, point.x, point.y, 0, true, MouseEvent.NOBUTTON);
-					component.target.dispatchEvent(eventEntered);
-					component.target.dispatchEvent(eventMoved);
 					//					if (x == Integer.MIN_VALUE || y == Integer.MIN_VALUE)
 					//					{
 					//						this.currentRobot.moveMouse(component.target);
@@ -235,31 +238,18 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 					break;
 
 				case LeftClick:
-					MouseEvent eventPress = new MouseEvent(component.target, MouseEvent.MOUSE_PRESSED, System.currentTimeMillis(), 0, point.x, point.y, 1, true, MouseEvent.BUTTON1);
-					MouseEvent eventRelease = new MouseEvent(component.target, MouseEvent.MOUSE_RELEASED, System.currentTimeMillis(), 0, point.x, point.y, 1, true, MouseEvent.BUTTON1);
-					MouseEvent eventClicked = new MouseEvent(component.target, MouseEvent.MOUSE_CLICKED, System.currentTimeMillis(), 0, point.x, point.y, 1, true, MouseEvent.BUTTON1);
-
-					component.target.dispatchEvent(eventPress);
-					component.target.dispatchEvent(eventRelease);
-					//TODO we need send click event?
-					component.target.dispatchEvent(eventClicked);
+					events.add(new MouseEvent(component.target, MouseEvent.MOUSE_PRESSED, System.currentTimeMillis(), 0, point.x, point.y, 1, true, MouseEvent.BUTTON1));
+					events.add(new MouseEvent(component.target, MouseEvent.MOUSE_RELEASED, System.currentTimeMillis(), 0, point.x, point.y, 1, true, MouseEvent.BUTTON1));
+					events.add(new MouseEvent(component.target, MouseEvent.MOUSE_CLICKED, System.currentTimeMillis(), 0, point.x, point.y, 1, true, MouseEvent.BUTTON1));
 					break;
 
 				case LeftDoubleClick:
-					MouseEvent eventDoublePress = new MouseEvent(component.target, MouseEvent.MOUSE_PRESSED, System.currentTimeMillis(), 0, point.x, point.y, 2, true, MouseEvent.BUTTON1);
-					MouseEvent eventDoubleRelease = new MouseEvent(component.target, MouseEvent.MOUSE_RELEASED, System.currentTimeMillis(), 0, point.x, point.y, 2, true, MouseEvent.BUTTON1);
-					MouseEvent eventDoubleClicked = new MouseEvent(component.target, MouseEvent.MOUSE_CLICKED, System.currentTimeMillis(), 0, point.x, point.y, 2, true, MouseEvent.BUTTON1);
 
-					component.target.dispatchEvent(eventDoublePress);
-					for (int i = 0; i < 1; i++)
-					{
-						component.target.dispatchEvent(eventDoubleRelease);
-						component.target.dispatchEvent(eventDoublePress);
-					}
-					component.target.dispatchEvent(eventDoubleRelease);
-					//TODO we need send click event?
-					component.target.dispatchEvent(eventDoubleClicked);
-
+					events.add(new MouseEvent(component.target, MouseEvent.MOUSE_PRESSED, System.currentTimeMillis(), 0, point.x, point.y, 2, true, MouseEvent.BUTTON1));
+					events.add(new MouseEvent(component.target, MouseEvent.MOUSE_RELEASED, System.currentTimeMillis(), 0, point.x, point.y, 2, true, MouseEvent.BUTTON1));
+					events.add(new MouseEvent(component.target, MouseEvent.MOUSE_PRESSED, System.currentTimeMillis(), 0, point.x, point.y, 2, true, MouseEvent.BUTTON1));
+					events.add(new MouseEvent(component.target, MouseEvent.MOUSE_RELEASED, System.currentTimeMillis(), 0, point.x, point.y, 2, true, MouseEvent.BUTTON1));;
+					events.add(new MouseEvent(component.target, MouseEvent.MOUSE_CLICKED, System.currentTimeMillis(), 0, point.x, point.y, 2, true, MouseEvent.BUTTON1));
 					//					if (x == Integer.MIN_VALUE || y == Integer.MIN_VALUE)
 					//					{
 					//						this.currentRobot.click(component.target, MouseClickInfo.leftButton().button(), 2);
@@ -272,14 +262,16 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 
 				case RightClick:
 					//TODO check last parameter on these events
-					MouseEvent eventRightPress = new MouseEvent(component.target, MouseEvent.MOUSE_PRESSED, System.currentTimeMillis(), 0, point.x, point.y, 1, true, MouseEvent.BUTTON3);
-					MouseEvent eventRightRelease = new MouseEvent(component.target, MouseEvent.MOUSE_RELEASED, System.currentTimeMillis(), 0, point.x, point.y, 1, true, MouseEvent.BUTTON3);
-					MouseEvent eventRightClicked = new MouseEvent(component.target, MouseEvent.MOUSE_CLICKED, System.currentTimeMillis(), 0, point.x, point.y, 1, true, MouseEvent.BUTTON3);
-
-					component.target.dispatchEvent(eventRightPress);
-					component.target.dispatchEvent(eventRightRelease);
-					//TODO we need send click event?
-					component.target.dispatchEvent(eventRightClicked);
+					events.add(new MouseEvent(component.target, MouseEvent.MOUSE_PRESSED, System.currentTimeMillis(), 0, point.x, point.y, 1, true, MouseEvent.BUTTON3));
+					events.add(new MouseEvent(component.target, MouseEvent.MOUSE_RELEASED, System.currentTimeMillis(), 0, point.x, point.y, 1, true, MouseEvent.BUTTON3));
+					events.add(new MouseEvent(component.target, MouseEvent.MOUSE_CLICKED, System.currentTimeMillis(), 0, point.x, point.y, 1, true, MouseEvent.BUTTON3));
+//					MouseEvent eventRightPress = new MouseEvent(component.target, MouseEvent.MOUSE_PRESSED, System.currentTimeMillis(), 0, point.x, point.y, 1, true, MouseEvent.BUTTON3);
+//					MouseEvent eventRightRelease = new MouseEvent(component.target, MouseEvent.MOUSE_RELEASED, System.currentTimeMillis(), 0, point.x, point.y, 1, true, MouseEvent.BUTTON3);
+//					MouseEvent eventRightClicked = new MouseEvent(component.target, MouseEvent.MOUSE_CLICKED, System.currentTimeMillis(), 0, point.x, point.y, 1, true, MouseEvent.BUTTON3);
+//
+//					component.target.dispatchEvent(eventRightPress);
+//					component.target.dispatchEvent(eventRightRelease);
+//					component.target.dispatchEvent(eventRightClicked);
 //					if (x == Integer.MIN_VALUE || y == Integer.MIN_VALUE)
 //					{
 //						this.currentRobot.click(component.target, MouseClickInfo.rightButton().button(), 1);
@@ -291,19 +283,24 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 					break;
 
 				case RightDoubleClick:
-					MouseEvent eventDoubleRightPress = new MouseEvent(component.target, MouseEvent.MOUSE_PRESSED, System.currentTimeMillis(), 0, point.x, point.y, 2, true, MouseEvent.BUTTON3);
-					MouseEvent eventDoubleRightRelease = new MouseEvent(component.target, MouseEvent.MOUSE_RELEASED, System.currentTimeMillis(), 0, point.x, point.y, 2, true, MouseEvent.BUTTON3);
-					MouseEvent eventDoubleRightClicked = new MouseEvent(component.target, MouseEvent.MOUSE_CLICKED, System.currentTimeMillis(), 0, point.x, point.y, 2, true, MouseEvent.BUTTON3);
-
-					component.target.dispatchEvent(eventDoubleRightPress);
-					for (int i = 0; i < 1; i++)
-					{
-						component.target.dispatchEvent(eventDoubleRightRelease);
-						component.target.dispatchEvent(eventDoubleRightPress);
-					}
-					component.target.dispatchEvent(eventDoubleRightRelease);
-					//TODO we need send click event?
-					component.target.dispatchEvent(eventDoubleRightClicked);
+					events.add(new MouseEvent(component.target, MouseEvent.MOUSE_PRESSED, System.currentTimeMillis(), 0, point.x, point.y, 2, true, MouseEvent.BUTTON3));
+					events.add(new MouseEvent(component.target, MouseEvent.MOUSE_RELEASED, System.currentTimeMillis(), 0, point.x, point.y, 2, true, MouseEvent.BUTTON3));
+					events.add(new MouseEvent(component.target, MouseEvent.MOUSE_PRESSED, System.currentTimeMillis(), 0, point.x, point.y, 2, true, MouseEvent.BUTTON3));
+					events.add(new MouseEvent(component.target, MouseEvent.MOUSE_RELEASED, System.currentTimeMillis(), 0, point.x, point.y, 2, true, MouseEvent.BUTTON3));
+					events.add(new MouseEvent(component.target, MouseEvent.MOUSE_CLICKED, System.currentTimeMillis(), 0, point.x, point.y, 2, true, MouseEvent.BUTTON3));
+//					MouseEvent eventDoubleRightPress = new MouseEvent(component.target, MouseEvent.MOUSE_PRESSED, System.currentTimeMillis(), 0, point.x, point.y, 2, true, MouseEvent.BUTTON3);
+//					MouseEvent eventDoubleRightRelease = new MouseEvent(component.target, MouseEvent.MOUSE_RELEASED, System.currentTimeMillis(), 0, point.x, point.y, 2, true, MouseEvent.BUTTON3);
+//					MouseEvent eventDoubleRightClicked = new MouseEvent(component.target, MouseEvent.MOUSE_CLICKED, System.currentTimeMillis(), 0, point.x, point.y, 2, true, MouseEvent.BUTTON3);
+//
+//					component.target.dispatchEvent(eventDoubleRightPress);
+//					for (int i = 0; i < 1; i++)
+//					{
+//						component.target.dispatchEvent(eventDoubleRightRelease);
+//						component.target.dispatchEvent(eventDoubleRightPress);
+//					}
+//					component.target.dispatchEvent(eventDoubleRightRelease);
+//					//TODO we need send click event?
+//					component.target.dispatchEvent(eventDoubleRightClicked);
 
 
 //					if (x == Integer.MIN_VALUE || y == Integer.MIN_VALUE)
@@ -316,6 +313,18 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 //					}
 					break;
 			}
+			final Component target = component.target;
+			SwingUtilities.invokeLater(new Runnable()
+			{
+				@Override
+				public void run()
+				{
+					for (MouseEvent event : events)
+					{
+						target.dispatchEvent(event);
+					}
+				}
+			});
 			return true;
 		}
 		catch (Throwable e)
@@ -838,32 +847,64 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 		try
 		{
 			this.currentRobot.waitForIdle();
-			JTable table = component.targetCastedTo(JTable.class);
+			final JTable table = component.targetCastedTo(JTable.class);
 			JTableFixture tableFixture = new JTableFixture(this.currentRobot, table);
 			JTableCellFixture cell = tableFixture.cell(TableCell.row(row).column(column));
+			JTableLocation jTableLocation = new JTableLocation();
+			Point point = jTableLocation.pointAt(table, row, column);
+			final ArrayList<MouseEvent> events = new ArrayList<>();
+			events.add(new MouseEvent(component.target, MouseEvent.MOUSE_ENTERED, System.currentTimeMillis(), 0, point.x, point.y, 0, true, MouseEvent.NOBUTTON));
+			events.add(new MouseEvent(component.target, MouseEvent.MOUSE_MOVED, System.currentTimeMillis(), 0, point.x, point.y, 0, true, MouseEvent.NOBUTTON));
 			switch (action)
 			{
 				case Move:
-					this.currentRobot.moveMouse(table); // TODO calculate real coordinates and click on it
+//					this.currentRobot.moveMouse(table); // TODO calculate real coordinates and click on it
 					break;
 
 				case LeftClick:
-					cell.click(MouseClickInfo.leftButton().button());
+					events.add(new MouseEvent(table, MouseEvent.MOUSE_PRESSED, System.currentTimeMillis(), 0, point.x, point.y, 1, true, MouseEvent.BUTTON1));
+					events.add(new MouseEvent(table, MouseEvent.MOUSE_RELEASED, System.currentTimeMillis(), 0, point.x, point.y, 1, true, MouseEvent.BUTTON1));
+					events.add(new MouseEvent(table, MouseEvent.MOUSE_CLICKED, System.currentTimeMillis(), 0, point.x, point.y, 1, true, MouseEvent.BUTTON1));
+//					cell.click(MouseClickInfo.leftButton().button());
 					break;
 
 				case LeftDoubleClick:
-					cell.doubleClick();
+//					cell.doubleClick();
+					events.add(new MouseEvent(table, MouseEvent.MOUSE_PRESSED, System.currentTimeMillis(), 0, point.x, point.y, 2, true, MouseEvent.BUTTON1));
+					events.add(new MouseEvent(table, MouseEvent.MOUSE_RELEASED, System.currentTimeMillis(), 0, point.x, point.y, 2, true, MouseEvent.BUTTON1));
+					events.add(new MouseEvent(table, MouseEvent.MOUSE_PRESSED, System.currentTimeMillis(), 0, point.x, point.y, 2, true, MouseEvent.BUTTON1));
+					events.add(new MouseEvent(table, MouseEvent.MOUSE_RELEASED, System.currentTimeMillis(), 0, point.x, point.y, 2, true, MouseEvent.BUTTON1));;
+					events.add(new MouseEvent(table, MouseEvent.MOUSE_CLICKED, System.currentTimeMillis(), 0, point.x, point.y, 2, true, MouseEvent.BUTTON1));
 					break;
 
 				case RightClick:
-					cell.rightClick();
+//					cell.rightClick();
+					events.add(new MouseEvent(table, MouseEvent.MOUSE_PRESSED, System.currentTimeMillis(), 0, point.x, point.y, 1, true, MouseEvent.BUTTON3));
+					events.add(new MouseEvent(table, MouseEvent.MOUSE_RELEASED, System.currentTimeMillis(), 0, point.x, point.y, 1, true, MouseEvent.BUTTON3));
+					events.add(new MouseEvent(table, MouseEvent.MOUSE_CLICKED, System.currentTimeMillis(), 0, point.x, point.y, 1, true, MouseEvent.BUTTON3));
 					break;
 
 				case RightDoubleClick:
-					cell.rightClick();
-					cell.rightClick();
+//					cell.rightClick();
+//					cell.rightClick();
+					events.add(new MouseEvent(component.target, MouseEvent.MOUSE_PRESSED, System.currentTimeMillis(), 0, point.x, point.y, 2, true, MouseEvent.BUTTON3));
+					events.add(new MouseEvent(component.target, MouseEvent.MOUSE_RELEASED, System.currentTimeMillis(), 0, point.x, point.y, 2, true, MouseEvent.BUTTON3));
+					events.add(new MouseEvent(component.target, MouseEvent.MOUSE_PRESSED, System.currentTimeMillis(), 0, point.x, point.y, 2, true, MouseEvent.BUTTON3));
+					events.add(new MouseEvent(component.target, MouseEvent.MOUSE_RELEASED, System.currentTimeMillis(), 0, point.x, point.y, 2, true, MouseEvent.BUTTON3));
+					events.add(new MouseEvent(component.target, MouseEvent.MOUSE_CLICKED, System.currentTimeMillis(), 0, point.x, point.y, 2, true, MouseEvent.BUTTON3));
 					break;
 			}
+			SwingUtilities.invokeLater(new Runnable()
+			{
+				@Override
+				public void run()
+				{
+					for (MouseEvent event : events)
+					{
+						table.dispatchEvent(event);
+					}
+				}
+			});
 			return true;
 		}
 		catch (Exception e)
