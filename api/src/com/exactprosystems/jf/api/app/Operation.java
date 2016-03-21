@@ -35,7 +35,7 @@ public class Operation implements Iterable<Part>, Serializable
 		StringBuilder sb = new StringBuilder(Do.class.getSimpleName());
 		for (Part p : list)
 		{
-			sb.append(".").append(p.toString());
+			sb.append(p.toString());
 		}
 		return sb.toString();
 	}
@@ -116,7 +116,14 @@ public class Operation implements Iterable<Part>, Serializable
 	@DescriptionAttribute(text = Do.foreach)
 	public Operation foreach(Operation operation)
 	{
-		this.list.add(new Part(OperationKind.FOREACH).setOperation(operation));
+		this.list.add(new Part(OperationKind.FOREACH).setInt(Integer.MAX_VALUE).setOperation(operation));
+		return this;
+	}
+
+	@DescriptionAttribute(text = Do.foreach_max)
+	public Operation foreach(Operation operation, int max)
+	{
+		this.list.add(new Part(OperationKind.FOREACH).setInt(max).setOperation(operation));
 		return this;
 	}
 

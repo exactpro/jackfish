@@ -73,10 +73,6 @@ public class Part implements Serializable
 					break;
 			}
 			
-//			if (control == null)
-//			{
-//				throw new Exception("Cannot find " + this.locatorKind + " in dialog='" + window + "' name='" + this.locatorId + "'");
-//			}
 			this.locator = control == null ? null : control.locator();
 		}
 	}
@@ -84,85 +80,7 @@ public class Part implements Serializable
 	@Override
 	public String toString()
 	{
-		StringBuilder sb = new StringBuilder(this.kind.toString()+"(");
-		String separator = "";
-		if (this.str!=null)
-		{
-			sb.append(separator).append("'").append(this.str).append("'");
-			separator=",";
-		}
-		if (this.text!=null)
-		{
-			sb.append(separator).append("'").append(this.text).append("'");
-			separator=",";
-		}
-		if (this.x != Integer.MIN_VALUE)
-		{
-			sb.append(separator).append(this.x);
-			separator = ",";
-		}
-		if (this.y != Integer.MIN_VALUE)
-		{
-			sb.append(separator).append(this.y);
-			separator=",";
-		}
-		if (!Double.isNaN(this.d))
-		{
-			sb.append(separator).append(this.d);
-			separator = ",";
-		}
-		if (this.locatorId!=null)
-		{
-			sb.append(separator).append("'").append(this.locatorId).append("'");
-			separator=",";
-		}
-		if (this.i != -1)
-		{
-			sb.append(separator).append(this.i);
-			separator = ",";
-		}
-		if (this.locator!=null)
-		{
-			sb.append(separator).append("'").append(this.locator.getId()).append("'");
-			separator=",";
-		}
-		if (this.locatorKind!=null)
-		{
-			sb.append(separator).append(this.locatorKind);
-			separator=",";
-		}
-		if (this.valueCondition!=null)
-		{
-			sb.append(separator).append("'").append(this.valueCondition.getName()).append("'");
-			separator=",";
-		}
-		if (this.colorCondition!=null)
-		{
-			sb.append(separator).append("'").append(this.colorCondition.getName()).append("'");
-			separator=",";
-		}
-		if (this.mouse!=null)
-		{
-			sb.append(separator).append(this.mouse.toString());
-			separator=",";
-		}
-		if (this.operation!=null)
-		{
-			sb.append(separator).append(this.operation);
-			separator=",";
-		}
-		if (this.key!=null)
-		{
-			sb.append(separator).append(this.key.toString());
-			separator=",";
-		}
-		if (!this.b)
-		{
-			sb.append(separator).append(this.b);
-			separator=",";
-		}
-		sb.append(")");
-		return sb.toString();
+		return this.kind.toFormula(this);
 	}
 	
 	public Part setInt(int i)

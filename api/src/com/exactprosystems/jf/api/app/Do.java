@@ -25,6 +25,13 @@ public class Do
 		return new Operation().foreach(operation);
 	}
 	
+	static final String foreach_max = "Repeat @operation for every element found by Many locator but not more than @max times";
+	@DescriptionAttribute(text = Do.foreach_max)
+	public static Operation foreach(Operation operation, int max)
+	{
+		return new Operation().foreach(operation, max);
+	}
+
 	static final String repeat = "Repeat @operation @i times";
 	@DescriptionAttribute(text = Do.repeat)
 	public static Operation repeat(int i, Operation operation)

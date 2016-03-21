@@ -41,9 +41,15 @@ public enum PieceKind implements Measure
 		}
 
 		@Override
+		protected boolean selfNeedOne()
+		{
+			return false;
+		}
+
+		@Override
 		protected <T> void performDerived(Piece piece, OperationExecutor<T> executor, List<T> self, List<T> others, CheckingLayoutResult result) throws Exception
 		{
-			result.set(self.get(0) != null); // TODO
+			result.set(!self.isEmpty() && self.get(0) != null); 
 		}
 	},
 
@@ -74,9 +80,15 @@ public enum PieceKind implements Measure
 		}
 
 		@Override
+		protected boolean selfNeedOne()
+		{
+			return false;
+		}
+
+		@Override
 		protected <T> void performDerived(Piece piece, OperationExecutor<T> executor, List<T> self, List<T> others, CheckingLayoutResult result) throws Exception
 		{
-			result.set(self.isEmpty() || self.get(0) == null); // TODO
+			result.set(self.isEmpty() || self.get(0) == null);
 		}
 	},
 

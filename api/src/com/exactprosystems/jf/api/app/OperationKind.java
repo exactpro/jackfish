@@ -12,14 +12,34 @@ import java.rmi.RemoteException;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
+import com.exactprosystems.jf.api.client.ICondition;
+
+//Do.check('str').check('str', 1, 2, true).checkAttr('attr', 'value').checkAttrRegexp('attr', 'reg');
+//Do.click(2, 3).click().click(4, 5, MouseAction.LeftDoubleClick).collapse('path').count().delay(12).expand('path').foreach(Do.click());
+//Do.get().getAttr('attr').getRectangle().getRow(new StringCondition('field', '>', 100), null);
+//Do.getRowByIndex(21).getRowIndexes(new StringCondition('field', '>', 100), null);
+//Do.getRowWithColor(1).getTable().getValue().getValue(1, 2).keyDown(Keyboard.A).keyUp(Keyboard.B).move().move(2, 4).press(Keyboard.A);
+//Do.push().repeat(10, Do.click()).select('value').text('text', 1, 2).text('value').toggle(true);
+//Do.use('loc').use(3).wait('element').wait('loc', 100, true).wait(new Locator(), 222, true);
+//
+
+
 public enum OperationKind
 {
 	FOREACH("foreach")
 	{
 		@Override
+		protected String formulaTemplate(Part part)
+		{
+			return part.i == Integer.MAX_VALUE ? ".foreach(%1$s)" : ".foreach(%1$s, %2$d)";
+		}
+		
+		@Override
 		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, Holder<T> holder, OperationResult result) throws Exception
 		{
-			for (int c = 0; c < holder.size(); c++)
+			int max = part.i;
+			
+			for (int c = 0; c < holder.size() && c < max; c++)
 			{
 				holder.setIndex(c);
 				part.operation.operate(executor, holder.get(LocatorKind.Element), holder.getValue());
@@ -30,6 +50,12 @@ public enum OperationKind
 	
 	REPEAT("repeat")
 	{
+		@Override
+		protected String formulaTemplate(Part part)
+		{
+			return ".repeat(%2$d, %1$s)";
+		}
+
 		@Override
 		protected boolean needToFind()
 		{
@@ -50,6 +76,12 @@ public enum OperationKind
 	COUNT("count")
 	{
 		@Override
+		protected String formulaTemplate(Part part)
+		{
+			return ".count()";
+		}
+		
+		@Override
 		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, Holder<T> holder, OperationResult result) throws Exception
 		{
 			result.setText(String.valueOf(holder.size()));
@@ -60,6 +92,12 @@ public enum OperationKind
 	USE("use")
 	{
 		@Override
+		protected String formulaTemplate(Part part)
+		{
+			return ".use(%2$d)";
+		}
+
+		@Override
 		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, Holder<T> holder, OperationResult result) throws Exception
 		{
 			holder.setIndex(part.i);
@@ -67,8 +105,19 @@ public enum OperationKind
 		}
 	},
 
-	USE_LOCATOR("use")
+	USE_LOCATOR("use(loc)")
 	{
+		@Override
+		protected String formulaTemplate(Part part)
+		{
+			if (part.locatorKind != LocatorKind.Element)
+			{
+				return "";
+			}
+			
+			return part.locatorId == null ? ".use(%15$s)" : ".use('%13$s')";
+		}
+
 		@Override
 		protected boolean needToFind()
 		{
@@ -86,6 +135,12 @@ public enum OperationKind
 	SET("setValue")
 	{
 		@Override
+		protected String formulaTemplate(Part part)
+		{
+			return ".setValue(%5$f)";
+		}
+
+		@Override
 		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, Holder<T> holder, OperationResult result) throws Exception
 		{
 			return executor.setValue(holder.getValue(), part.d);
@@ -94,6 +149,12 @@ public enum OperationKind
 
 	GET_VALUE("getValue")
 	{
+		@Override
+		protected String formulaTemplate(Part part)
+		{
+			return ".getValue()";
+		}
+
 		@Override
 		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, Holder<T> holder, OperationResult result) throws Exception
 		{
@@ -105,6 +166,12 @@ public enum OperationKind
 	GET_RECTANGLE("getRectangle")
 	{
 		@Override
+		protected String formulaTemplate(Part part)
+		{
+			return ".getRectangle()";
+		}
+
+		@Override
 		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, Holder<T> holder, OperationResult result) throws Exception
 		{
 			result.setRectangle(executor.getRectangle(holder.getValue()));
@@ -115,6 +182,12 @@ public enum OperationKind
 	PUSH("push")
 	{
 		@Override
+		protected String formulaTemplate(Part part)
+		{
+			return ".push()";
+		}
+
+		@Override
 		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, Holder<T> holder, OperationResult result) throws Exception
 		{
 			return executor.push(holder.getValue());
@@ -123,6 +196,12 @@ public enum OperationKind
 	
 	PRESS("press")
 	{
+		@Override
+		protected String formulaTemplate(Part part)
+		{
+			return ".press(%12$s)";
+		}
+
 		@Override
 		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, Holder<T> holder, OperationResult result) throws Exception
 		{
@@ -133,6 +212,12 @@ public enum OperationKind
 	KEY_UP("keyUp")
 	{
 		@Override
+		protected String formulaTemplate(Part part)
+		{
+			return ".keyUp(%12$s)";
+		}
+
+		@Override
 		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, Holder<T> holder, OperationResult result) throws Exception
 		{
 			return executor.upAndDown(holder.getValue(), part.key, false);
@@ -141,6 +226,12 @@ public enum OperationKind
 	
 	KEY_DOWN("keyDown")
 	{
+		@Override
+		protected String formulaTemplate(Part part)
+		{
+			return ".keyDown(%12$s)";
+		}
+
 		@Override
 		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, Holder<T> holder, OperationResult result) throws Exception
 		{
@@ -151,6 +242,12 @@ public enum OperationKind
 	CHECK("check")
 	{
 		@Override
+		protected String formulaTemplate(Part part)
+		{
+			return ".check('%8$s', %6$b)";
+		}
+
+		@Override
 		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, Holder<T> holder, OperationResult result) throws Exception
 		{
 			result.setText(String.valueOf(checkText(executor.getValue(holder.getValue()), part.text, false, part.b)));
@@ -158,8 +255,14 @@ public enum OperationKind
 		}
 	},
 
-	CHECK_XY("check")
+	CHECK_XY("check(x,y)")
 	{
+		@Override
+		protected String formulaTemplate(Part part)
+		{
+			return ".check('%8$s', %3$d, %4$d, %6$b)";
+		}
+
 		@Override
 		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, Holder<T> holder, OperationResult result) throws Exception
 		{
@@ -174,6 +277,12 @@ public enum OperationKind
 	CHECK_REGEXP("checkRegexp")
 	{
 		@Override
+		protected String formulaTemplate(Part part)
+		{
+			return ".checkRegexp('%8$s', %6$b)";
+		}
+
+		@Override
 		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, Holder<T> holder, OperationResult result) throws Exception
 		{
 			result.setText(String.valueOf(checkText(executor.getValue(holder.getValue()), part.text, true, part.b)));
@@ -181,8 +290,14 @@ public enum OperationKind
 		}
 	},
 
-	CHECK_REGEXP_XY("checkRegexp")
+	CHECK_REGEXP_XY("checkRegexp(x,y)")
 	{
+		@Override
+		protected String formulaTemplate(Part part)
+		{
+			return ".checkRegexp('%8$s', %3$d, %4$d, %6$b)";
+		}
+
 		@Override
 		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, Holder<T> holder, OperationResult result) throws Exception
 		{
@@ -197,6 +312,12 @@ public enum OperationKind
 	CHECK_ATTR("checkAttr")
 	{
 		@Override
+		protected String formulaTemplate(Part part)
+		{
+			return ".checkRegexp('%7$s', '%8$s')";
+		}
+
+		@Override
 		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, Holder<T> holder, OperationResult result) throws Exception
 		{
 			boolean res = checkText(executor.getAttr(holder.getValue(), part.str), part.text, false, part.b);
@@ -207,6 +328,12 @@ public enum OperationKind
 	
 	CHECK_ATTR_REGEXP("checkAttrRegexp")
 	{
+		@Override
+		protected String formulaTemplate(Part part)
+		{
+			return ".checkAttrRegexp('%7$s', '%8$s', %6$b)";
+		}
+
 		@Override
 		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, Holder<T> holder, OperationResult result) throws Exception
 		{
@@ -219,14 +346,26 @@ public enum OperationKind
 	MOVE("move")
 	{
 		@Override
+		protected String formulaTemplate(Part part)
+		{
+			return ".move()";
+		}
+
+		@Override
 		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, Holder<T> holder, OperationResult result) throws Exception
 		{
 			return executor.mouse(holder.getValue(), part.x, part.y, MouseAction.Move);
 		}
 	},
 	
-	MOVE_XY("move")
+	MOVE_XY("move(x,y)")
 	{
+		@Override
+		protected String formulaTemplate(Part part)
+		{
+			return ".move(%3$d, %4$d)";
+		}
+
 		@Override
 		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, Holder<T> holder, OperationResult result) throws Exception
 		{
@@ -252,6 +391,12 @@ public enum OperationKind
 	CLICK("click")
 	{
 		@Override
+		protected String formulaTemplate(Part part)
+		{
+			return ".click(%11$s)";
+		}
+
+		@Override
 		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, Holder<T> holder, OperationResult result) throws Exception
 		{
 			MouseAction mouse = part.mouse == null ? MouseAction.LeftClick : part.mouse;
@@ -259,8 +404,14 @@ public enum OperationKind
 		}
 	},
 	
-	CLICK_XY("click")
+	CLICK_XY("click(x,y)")
 	{
+		@Override
+		protected String formulaTemplate(Part part)
+		{
+			return ".click(%3$d, %4$d, %11$s)";
+		}
+
 		@Override
 		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, Holder<T> holder, OperationResult result) throws Exception
 		{
@@ -287,14 +438,27 @@ public enum OperationKind
 	TEXT("text")
 	{
 		@Override
+		protected String formulaTemplate(Part part)
+		{
+			return ".text('%8$s', %6$b)";
+		}
+
+
+		@Override
 		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, Holder<T> holder, OperationResult result) throws Exception
 		{
 			return executor.text(holder.getValue(), "" + part.text, part.b);
 		}
 	},
 	
-	TEXT_XY("text")
+	TEXT_XY("text(x,y)")
 	{
+		@Override
+		protected String formulaTemplate(Part part)
+		{
+			return ".text('%8$s', %3$d, %4$d)";
+		}
+
 		@Override
 		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, Holder<T> holder, OperationResult result) throws Exception
 		{
@@ -307,6 +471,12 @@ public enum OperationKind
 	TOGGLE("toggle")
 	{
 		@Override
+		protected String formulaTemplate(Part part)
+		{
+			return ".toogle(%6$b)";
+		}
+
+		@Override
 		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, Holder<T> holder, OperationResult result) throws Exception
 		{
 			return executor.toggle(holder.getValue(), part.b);
@@ -315,6 +485,12 @@ public enum OperationKind
 	
 	SELECT("select")
 	{
+		@Override
+		protected String formulaTemplate(Part part)
+		{
+			return ".select('%8$s')";
+		}
+
 		@Override
 		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, Holder<T> holder, OperationResult result) throws Exception
 		{
@@ -325,6 +501,12 @@ public enum OperationKind
 	EXPAND("expand")
 	{
 		@Override
+		protected String formulaTemplate(Part part)
+		{
+			return ".expand('%8$s')";
+		}
+
+		@Override
 		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, Holder<T> holder, OperationResult result) throws Exception
 		{
 			return executor.fold(holder.getValue(), part.text, false);
@@ -334,6 +516,12 @@ public enum OperationKind
 	COLLAPSE("collapse")
 	{
 		@Override
+		protected String formulaTemplate(Part part)
+		{
+			return ".collaps('%8$s')";
+		}
+
+		@Override
 		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, Holder<T> holder, OperationResult result) throws Exception
 		{
 			return executor.fold(holder.getValue(), part.text, true);
@@ -342,6 +530,12 @@ public enum OperationKind
 	
 	DELAY("delay")
 	{
+		@Override
+		protected String formulaTemplate(Part part)
+		{
+			return ".delay(%2$d)";
+		}
+
 		@Override
 		protected boolean needToFind()
 		{
@@ -358,6 +552,13 @@ public enum OperationKind
 	
 	WAIT("wait")
 	{
+		@Override
+		protected String formulaTemplate(Part part)
+		{
+			return part.locatorId == null ? ".wait(%15$s, %2$d, %6$b)" : ".wait('%13$s', %2$d, %6$b)";
+		}
+		
+
 		@Override
 		protected boolean needToFind()
 		{
@@ -377,6 +578,12 @@ public enum OperationKind
 	GET("get")
 	{
 		@Override
+		protected String formulaTemplate(Part part)
+		{
+			return ".get()";
+		}
+
+		@Override
 		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, Holder<T> holder, OperationResult result) throws Exception
 		{
 			String str = executor.get(holder.getValue());
@@ -388,6 +595,12 @@ public enum OperationKind
 	GET_ATTR("getAttr")
 	{
 		@Override
+		protected String formulaTemplate(Part part)
+		{
+			return ".getAttr('%7$s')";
+		}
+
+		@Override
 		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, Holder<T> holder, OperationResult result) throws Exception
 		{
 			String str = executor.getAttr(holder.getValue(), part.str);
@@ -396,8 +609,14 @@ public enum OperationKind
 		}
 	},
 
-	GET_VALUE_XY("getValue")
+	GET_VALUE_XY("getValue(x,y)")
 	{
+		@Override
+		protected String formulaTemplate(Part part)
+		{
+			return ".getValue(%3$d, %4$d)";
+		}
+
 		@Override
 		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, Holder<T> holder, OperationResult result) throws Exception
 		{
@@ -412,6 +631,12 @@ public enum OperationKind
 	GET_TABLE("getTable")
 	{
 		@Override
+		protected String formulaTemplate(Part part)
+		{
+			return ".getTable()";
+		}
+
+		@Override
 		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, Holder<T> holder, OperationResult result) throws Exception
 		{
 			result.setArray(executor.getTable(holder.getValue(), holder.get(LocatorKind.Rows), holder.get(LocatorKind.Header), 
@@ -422,6 +647,12 @@ public enum OperationKind
 
 	GET_ROW("getRow")
 	{
+		@Override
+		protected String formulaTemplate(Part part)
+		{
+			return ".getRow(%9$s, %10$s)";
+		}
+
 		@Override
 		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, Holder<T> holder, OperationResult result) throws Exception
 		{
@@ -434,6 +665,12 @@ public enum OperationKind
 	GET_ROW_BY_INDEX("getRowByIndex")
 	{
 		@Override
+		protected String formulaTemplate(Part part)
+		{
+			return ".getRowByIndex(%2$d)";
+		}
+
+		@Override
 		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, Holder<T> holder, OperationResult result) throws Exception
 		{
 			result.setMap(executor.getRowByIndex(holder.getValue(), holder.get(LocatorKind.Rows), holder.get(LocatorKind.Header), 
@@ -444,6 +681,12 @@ public enum OperationKind
 
 	GET_ROW_INDEXES("getRowIndexes")
 	{
+		@Override
+		protected String formulaTemplate(Part part)
+		{
+			return ".getRowIndexes(%9$s, %10$s)";
+		}
+
 		@Override
 		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, Holder<T> holder, OperationResult result) throws Exception
 		{
@@ -456,6 +699,12 @@ public enum OperationKind
 	GET_ROW_WITH_COLOR("getRowWithoutColor")
 	{
 		@Override
+		protected String formulaTemplate(Part part)
+		{
+			return ".getRowWithoutColor(%2$d)";
+		}
+
+		@Override
 		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, Holder<T> holder, OperationResult result) throws Exception
 		{
 			result.setColorMap(executor.getRowWithColor(holder.getValue(), holder.get(LocatorKind.Rows), holder.get(LocatorKind.Header), 
@@ -463,6 +712,10 @@ public enum OperationKind
 			return true;
 		}
 	};
+	
+	
+	
+	
 
 	OperationKind(String name)
 	{
@@ -475,30 +728,26 @@ public enum OperationKind
 		return this.name;
 	}
 
-	public String getName() // TODO WTF?
+	public String toFormula(Part part)
 	{
-		switch (this)
-		{
-			case USE_LOCATOR:
-				return "use(loc)";
-			case SET:
-				return "set";
-			case CHECK_XY:
-				return "check(x,y)";
-			case CHECK_REGEXP_XY:
-				return "checkRegexp(x,y)";
-			case MOVE_XY:
-				return "move(x,y)";
-			case CLICK_XY:
-				return "click(x,y)";
-			case TEXT_XY:
-				return "text(x,y)";
-			case GET_VALUE_XY:
-				return "getValue(x,y)";
-		}
-		return this.name;
+		return String.format(formulaTemplate(part),
+								part.operation,
+								part.i,
+								part.x,
+								part.y,
+								part.d,
+								part.b,
+								part.str, 
+								part.text,
+								part.valueCondition,
+								part.colorCondition,
+								part.mouse,
+								part.key,
+								part.locatorId,
+								part.locatorKind,
+								part.locator
+							);
 	}
-
 	
 	public <T> boolean operate(Part part, OperationExecutor<T> executor, Holder<T> holder, OperationResult result) throws Exception
 	{
@@ -545,7 +794,8 @@ public enum OperationKind
 		return operateDerived(part, executor, holder, result);
 	}
 
-	
+
+	protected String formulaTemplate(Part part) { return ""; } // TODO
 
 	protected boolean needToFind()
 	{
@@ -593,4 +843,5 @@ public enum OperationKind
 	}
 
 	private String	name;
+	private String 	template;
 }
