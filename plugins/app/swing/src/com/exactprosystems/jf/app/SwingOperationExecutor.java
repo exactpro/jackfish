@@ -1712,11 +1712,6 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 		Collection<? extends Container> roots = this.currentRobot.hierarchy().roots();
 		
 		Container root = new RootContainer();
-		for (Container element : roots)
-		{
-			logger.debug("Find root : " + element);
-			root.add(element);
-		}
 		for (Window window : Window.getWindows())
 		{
 			logger.debug("Find window : " + window);
