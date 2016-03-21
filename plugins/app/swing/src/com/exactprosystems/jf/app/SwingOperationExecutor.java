@@ -324,6 +324,7 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 				{
 					for (MouseEvent event : events)
 					{
+						logger.debug("event : "  + event.toString());
 						target.dispatchEvent(event);
 					}
 				}
@@ -904,6 +905,7 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 				{
 					for (MouseEvent event : events)
 					{
+						logger.debug("event : "  + event.toString());
 						table.dispatchEvent(event);
 					}
 				}
@@ -1712,9 +1714,14 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 		Container root = new RootContainer();
 		for (Container element : roots)
 		{
+			logger.debug("Find root : " + element);
 			root.add(element);
 		}
-
+		for (Window window : Window.getWindows())
+		{
+			logger.debug("Find window : " + window);
+			root.add(window);
+		}
 		return root;
 	}
 
