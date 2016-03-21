@@ -1719,7 +1719,7 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 	}
 
 	@SuppressWarnings("unchecked")
-	private <T extends Component> ComponentFixture<T> getFixture(T component) throws RemoteException
+	public <T extends Component> ComponentFixture<T> getFixture(T component) throws RemoteException
 	{
 		if (component instanceof JButton)
 		{
