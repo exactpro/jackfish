@@ -243,16 +243,16 @@ public class Xml
 		}
 	}
 
-	public void addNode(Node newNode)
+	public void addNode(Xml copiedXML)
 	{
-		this.node.appendChild(newNode);
+		Node clonednode = copiedXML.getDocument().getFirstChild();
+		Node newnode = this.getDocument().importNode(clonednode,true);
+		this.node.appendChild(newnode);
 	}
 
-	
 	public void addNode(String nodeName, String content, Map<String, Object> attr)
 	{
-		Document doc = getDocument();  
-		
+		Document doc = getDocument();
 		if (doc == null)
 		{
 			return;
@@ -262,6 +262,7 @@ public class Xml
 		{
 			child.setAttribute(entry.getKey(), String.valueOf(entry.getValue()));
 		}
+		child.setTextContent(content);
 		this.node.appendChild(child);
 	}
 	
@@ -273,7 +274,6 @@ public class Xml
 	private void passWholeDOM(Node node, AtomicInteger hash)
 	{
 		int current = hash.get();
-		
 		NamedNodeMap attributes = node.getAttributes();
 		for (int i = 0; i < attributes.getLength(); i++)
 		{
@@ -281,15 +281,12 @@ public class Xml
 			current ^= attr.getName().hashCode();
 			current ^= attr.getValue().hashCode();
 		}
-
 		String text = node.getNodeValue();
 		if (text != null)
 		{
 			current ^= text.hashCode();
 		}
-		
 		hash.set(current);
-
 		NodeList children = node.getChildNodes();
 		for (int i = 0; i < children.getLength(); i++)
 		{

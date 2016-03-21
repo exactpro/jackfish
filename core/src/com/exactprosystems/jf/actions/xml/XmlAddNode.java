@@ -18,6 +18,10 @@ import com.exactprosystems.jf.common.parser.Parameters;
 import com.exactprosystems.jf.common.parser.items.TypeMandatory;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.functions.Xml;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 @ActionAttribute(
 		group					= ActionGroups.XML,
@@ -29,6 +33,7 @@ public class XmlAddNode extends AbstractAction
 	public final static String xmlName 		= "Xml";
 	public final static String nodeNameName = "NodeName";
 	public final static String contentName 	= "Content";
+	public final static String newXML = "NewXML";
 
 	@ActionFieldAttribute(name = xmlName, mandatory = true, description = "XML object.")
 	protected Xml 	xml 	= null;
@@ -39,6 +44,9 @@ public class XmlAddNode extends AbstractAction
 	@ActionFieldAttribute(name = contentName, mandatory = false, description = "Content of XML object.")
 	protected String 	content 	= null;
 
+	@ActionFieldAttribute(name =  newXML, mandatory = false, description = "XML object to insert")
+	protected Xml copiedXML = null;
+
 	public XmlAddNode()
 	{
 	}
@@ -46,8 +54,14 @@ public class XmlAddNode extends AbstractAction
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
-		this.xml.addNode(this.nodeName, this.content, parameters.select(TypeMandatory.Extra).makeCopy());
+		if (copiedXML == null)
+		{
+			this.xml.addNode(this.nodeName, this.content, parameters.select(TypeMandatory.Extra).makeCopy());
+		}
+		else
+		{
+			this.xml.addNode(copiedXML);
+		}
 		super.setResult(null);
 	}
 }
-

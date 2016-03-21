@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<FILE>
+	<INSTANCE>
+		<TableID>APMR01CL01</TableID>
+		<Action>0</Action>
+		<CalendarDate>2015/01/01</CalendarDate>
+		<SettlementAllowed>1</SettlementAllowed>
+		<TradingAllowed>1</TradingAllowed>
+		<EarlyClosing>0</EarlyClosing>
+		<Description>Thursday</Description>
+		<EDSPAuction>0</EDSPAuction>
+</INSTANCE>
+	<INSTANCE>
+		<TableID>APMR01CL01</TableID>
+		<Action>0</Action>
+		<CalendarDate>2015/10/01</CalendarDate>
+		<SettlementAllowed>1</SettlementAllowed>
+		<TradingAllowed>1</TradingAllowed>
+		<EarlyClosing>0</EarlyClosing>
+		<Description>Monday</Description>
+		<EDSPAuction>0</EDSPAuction>
+</INSTANCE>
+	<INSTANCE>
+		<TableID>APMR01CL03</TableID>
+		<Action>0</Action>
+		<CalendarDate>2015/12/06</CalendarDate>
+		<SettlementAllowed>1</SettlementAllowed>
+		<TradingAllowed>1</TradingAllowed>
+		<EarlyClosing>0</EarlyClosing>
+		<Description>Sunday</Description>
+		<EDSPAuction>0</EDSPAuction>
+</INSTANCE>
+</FILE>
