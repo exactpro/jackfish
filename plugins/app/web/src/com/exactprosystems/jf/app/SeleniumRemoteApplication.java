@@ -13,12 +13,10 @@ import com.exactprosystems.jf.api.common.SerializablePair;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.app.js.JSInjection;
 import com.exactprosystems.jf.app.js.JSInjectionFactory;
-import com.gargoylesoftware.htmlunit.javascript.background.JavaScriptExecutor;
 import org.apache.log4j.*;
 import org.openqa.selenium.*;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.Point;
-import org.openqa.selenium.remote.UnreachableBrowserException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -74,7 +72,12 @@ public class SeleniumRemoteApplication extends RemoteApplication
 		"        var temp = { \n" +
 		"            " + TAG_FIELD + " : e.tagName, \n" +
 		"            " + ATTRIBUTES_FIELD + " : attrs(e), \n" +
-		"            " + IRemoteApplication.rectangleName + " : e.getBoundingClientRect(), \n" +
+		"            " + IRemoteApplication.rectangleName + " : { \n" +
+		"            " + "    left : e.getBoundingClientRect().left, \n" +
+		"            " + "    top : e.getBoundingClientRect().top, \n" +
+		"            " + "    height : e.getBoundingClientRect().height, \n" +
+		"            " + "    width : e.getBoundingClientRect().width, \n" +
+		"            " + "}, \n" +
 		"            " + ELEMENT_TEXT_FIELD + " : (e.tagName === 'input') ? e.value : (e.firstChild !== null) ? e.firstChild.data : undefined, \n" +
 		"            " + ELEMENT_CHILD_FIELD + " : child \n" +
 		"        }; \n" +
@@ -192,7 +195,6 @@ public class SeleniumRemoteApplication extends RemoteApplication
 			}
 			Browser browser = Browser.valueOf(browserName.toUpperCase());
 			this.driver = new WebDriverListenerNew(browser.createDriver(chromeDriverBinary, firefoxProfileDirectory), metricsCounter);
-			logger.debug("this.driver instance of JavaScriptExecutor : " + (this.driver instanceof JavaScriptExecutor));
 			this.jsInjection = JSInjectionFactory.getJSInjection(browser);
 			this.operationExecutor = new SeleniumOperationExecutor(this.driver, this.logger);
 			this.driver.get(url);
@@ -221,7 +223,7 @@ public class SeleniumRemoteApplication extends RemoteApplication
 				this.driver.quit();
 			}
 		}
-		catch (UnreachableBrowserException e)
+		catch (WebDriverException e)
 		{
 			logger.error("Browser has been closed");
 		}
