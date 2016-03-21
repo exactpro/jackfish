@@ -112,7 +112,7 @@ public class HelpBuilder extends ReportBuilder
 		writer.fwrite("<th>Control name</th>");
 		for (OperationKind kind : OperationKind.values())
 		{
-			writer.fwrite("<th>%s</th>", kind.getName());
+			writer.fwrite("<th>%s</th>", kind.toString());
 		}
 		writer.fwrite("</tr></thead>");
 		writer.fwrite("<tbody>");
