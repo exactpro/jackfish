@@ -245,9 +245,17 @@ public class Xml
 
 	public void addNode(Xml copiedXML)
 	{
-		Node clonednode = copiedXML.getDocument().getFirstChild();
+		Node clonednode = copiedXML.node;
 		Node newnode = this.getDocument().importNode(clonednode,true);
-		this.node.appendChild(newnode);
+		if (this.node instanceof Document)
+		{
+			getDocument().getDocumentElement().appendChild(newnode);
+
+		}
+		else
+		{
+			this.node.appendChild(newnode);
+		}
 	}
 
 	public void addNode(String nodeName, String content, Map<String, Object> attr)
