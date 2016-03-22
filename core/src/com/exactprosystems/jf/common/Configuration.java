@@ -644,7 +644,7 @@ public class Configuration extends AbstractDocument
 	        setAll(config);
 	        
 			this.reportFactoryObj		= objectFromClassName(reportFactoryValue, ReportFactory.class);
-			DateTime.SetFormats(get(timeFormat), 
+			DateTime.setFormats(get(timeFormat), 
 					get(dateFormat), 
 					get(dateTimeFormat));
 	
