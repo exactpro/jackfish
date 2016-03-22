@@ -12,7 +12,6 @@ import com.exactprosystems.jf.api.app.ControlKind;
 import com.exactprosystems.jf.api.app.IRemoteApplication;
 import com.exactprosystems.jf.api.app.Locator;
 import com.exactprosystems.jf.api.common.Str;
-
 import org.apache.log4j.Logger;
 import org.fest.swing.core.GenericTypeMatcher;
 import org.w3c.dom.*;
@@ -25,7 +24,6 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
-
 import java.awt.*;
 import java.rmi.RemoteException;
 

@@ -19,10 +19,13 @@ import org.fest.swing.core.Robot;
 import org.fest.swing.core.Scrolling;
 import org.fest.swing.data.TableCell;
 import org.fest.swing.driver.JTableLocation;
+import org.fest.swing.driver.JTreeLocation;
+import org.fest.swing.edt.GuiQuery;
 import org.fest.swing.exception.WaitTimedOutError;
 import org.fest.swing.finder.WindowFinder;
 import org.fest.swing.fixture.*;
 import org.fest.swing.timing.Pause;
+import org.fest.swing.util.Pair;
 
 import javax.swing.*;
 import javax.swing.text.JTextComponent;
@@ -39,6 +42,9 @@ import java.util.*;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.concurrent.atomic.AtomicLong;
+
+import static org.fest.swing.driver.ComponentStateValidator.validateIsEnabledAndShowing;
+import static org.fest.swing.edt.GuiActionRunner.execute;
 
 public class SwingOperationExecutor implements OperationExecutor<ComponentFixture<Component>>
 {
@@ -176,34 +182,7 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 	@Override
 	public ComponentFixture<Component> lookAtTable(ComponentFixture<Component> component, Locator additional, Locator header, int x, int y) throws Exception
 	{
-		try
-		{
-			this.currentRobot.waitForIdle();
-			JTable table = component.targetCastedTo(JTable.class);
-			//================ WORK variant
-			JTableFixture tableFixture = new JTableFixture(this.currentRobot, table);
-			JTableCellFixture cell = tableFixture.cell(TableCell.row(y).column(x));
-
-			cell.click();
-			cell.doubleClick();
-			cell.rightClick();
-
-			cell.enterValue("");
-			cell.value();
-
-			cell.select();
-			//================
-
-			return new ComponentFixture<Component>(this.currentRobot, cell.editor())
-			{
-			};
-		}
-		catch (Throwable e)
-		{
-			logger.error(String.format("lookAtTable(%s, %s, %s, %d, %d)", component, additional, header, x, y));
-			logger.error(e.getMessage(), e);
-			throw e;
-		}
+		throw new Exception("This method not needed on swing plugin");
 	}
 
 	@Override
@@ -221,6 +200,10 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 			{
 				point = AWT.visibleCenterOf(component.target);
 			}
+			if (component.target instanceof JTree && y != Integer.MIN_VALUE)
+			{
+				point = scrollToRow(((JTree) component.target), y);
+			}
 
 			final ArrayList<MouseEvent> events = new ArrayList<>();
 
@@ -230,14 +213,6 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 			switch (action)
 			{
 				case Move:
-					//					if (x == Integer.MIN_VALUE || y == Integer.MIN_VALUE)
-					//					{
-					//						this.currentRobot.moveMouse(component.target);
-					//					}
-					//					else
-					//					{
-					//						this.currentRobot.moveMouse(component.target, point);
-					//					}
 					break;
 
 				case LeftClick:
@@ -253,14 +228,6 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 					events.add(new MouseEvent(component.target, MouseEvent.MOUSE_PRESSED, System.currentTimeMillis(), 0, point.x, point.y, 2, true, MouseEvent.BUTTON1));
 					events.add(new MouseEvent(component.target, MouseEvent.MOUSE_RELEASED, System.currentTimeMillis(), 0, point.x, point.y, 2, true, MouseEvent.BUTTON1));;
 					events.add(new MouseEvent(component.target, MouseEvent.MOUSE_CLICKED, System.currentTimeMillis(), 0, point.x, point.y, 2, true, MouseEvent.BUTTON1));
-					//					if (x == Integer.MIN_VALUE || y == Integer.MIN_VALUE)
-					//					{
-					//						this.currentRobot.click(component.target, MouseClickInfo.leftButton().button(), 2);
-					//					}
-					//					else
-					//					{
-					//						this.currentRobot.click(component.target, point, MouseClickInfo.leftButton().button(), 2);
-					//					}
 					break;
 
 				case RightClick:
@@ -268,21 +235,6 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 					events.add(new MouseEvent(component.target, MouseEvent.MOUSE_PRESSED, System.currentTimeMillis(), 0, point.x, point.y, 1, true, MouseEvent.BUTTON3));
 					events.add(new MouseEvent(component.target, MouseEvent.MOUSE_RELEASED, System.currentTimeMillis(), 0, point.x, point.y, 1, true, MouseEvent.BUTTON3));
 					events.add(new MouseEvent(component.target, MouseEvent.MOUSE_CLICKED, System.currentTimeMillis(), 0, point.x, point.y, 1, true, MouseEvent.BUTTON3));
-//					MouseEvent eventRightPress = new MouseEvent(component.target, MouseEvent.MOUSE_PRESSED, System.currentTimeMillis(), 0, point.x, point.y, 1, true, MouseEvent.BUTTON3);
-//					MouseEvent eventRightRelease = new MouseEvent(component.target, MouseEvent.MOUSE_RELEASED, System.currentTimeMillis(), 0, point.x, point.y, 1, true, MouseEvent.BUTTON3);
-//					MouseEvent eventRightClicked = new MouseEvent(component.target, MouseEvent.MOUSE_CLICKED, System.currentTimeMillis(), 0, point.x, point.y, 1, true, MouseEvent.BUTTON3);
-//
-//					component.target.dispatchEvent(eventRightPress);
-//					component.target.dispatchEvent(eventRightRelease);
-//					component.target.dispatchEvent(eventRightClicked);
-//					if (x == Integer.MIN_VALUE || y == Integer.MIN_VALUE)
-//					{
-//						this.currentRobot.click(component.target, MouseClickInfo.rightButton().button(), 1);
-//					}
-//					else
-//					{
-//						this.currentRobot.click(component.target, point, MouseClickInfo.rightButton().button(), 1);
-//					}
 					break;
 
 				case RightDoubleClick:
@@ -291,29 +243,6 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 					events.add(new MouseEvent(component.target, MouseEvent.MOUSE_PRESSED, System.currentTimeMillis(), 0, point.x, point.y, 2, true, MouseEvent.BUTTON3));
 					events.add(new MouseEvent(component.target, MouseEvent.MOUSE_RELEASED, System.currentTimeMillis(), 0, point.x, point.y, 2, true, MouseEvent.BUTTON3));
 					events.add(new MouseEvent(component.target, MouseEvent.MOUSE_CLICKED, System.currentTimeMillis(), 0, point.x, point.y, 2, true, MouseEvent.BUTTON3));
-//					MouseEvent eventDoubleRightPress = new MouseEvent(component.target, MouseEvent.MOUSE_PRESSED, System.currentTimeMillis(), 0, point.x, point.y, 2, true, MouseEvent.BUTTON3);
-//					MouseEvent eventDoubleRightRelease = new MouseEvent(component.target, MouseEvent.MOUSE_RELEASED, System.currentTimeMillis(), 0, point.x, point.y, 2, true, MouseEvent.BUTTON3);
-//					MouseEvent eventDoubleRightClicked = new MouseEvent(component.target, MouseEvent.MOUSE_CLICKED, System.currentTimeMillis(), 0, point.x, point.y, 2, true, MouseEvent.BUTTON3);
-//
-//					component.target.dispatchEvent(eventDoubleRightPress);
-//					for (int i = 0; i < 1; i++)
-//					{
-//						component.target.dispatchEvent(eventDoubleRightRelease);
-//						component.target.dispatchEvent(eventDoubleRightPress);
-//					}
-//					component.target.dispatchEvent(eventDoubleRightRelease);
-//					//TODO we need send click event?
-//					component.target.dispatchEvent(eventDoubleRightClicked);
-
-
-//					if (x == Integer.MIN_VALUE || y == Integer.MIN_VALUE)
-//					{
-//						this.currentRobot.click(component.target, MouseClickInfo.rightButton().button(), 2);
-//					}
-//					else
-//					{
-//						this.currentRobot.click(component.target, point, MouseClickInfo.rightButton().button(), 2);
-//					}
 					break;
 			}
 			final Component target = component.target;
@@ -1693,6 +1622,34 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 
 		return null;
 	}
+
+	/*
+	 *	these codes from org.fest.swing.driver.JTreeDriver.java
+	 */
+	private Point scrollToRow(JTree tree, int row)
+	{
+		Point p = scrollToRow(tree, row, new JTreeLocation()).ii;
+		waitForIdle();
+		return p;
+	}
+
+	private static Pair<Boolean, Point> scrollToRow(final JTree tree, final int row, final JTreeLocation location) {
+		return execute(new GuiQuery<Pair<Boolean, Point>>() {
+			protected Pair<Boolean, Point> executeInEDT() {
+				validateIsEnabledAndShowing(tree);
+				Point p = scrollToVisible(tree, row, location);
+				boolean selected = tree.getSelectionCount() == 1 && tree.isRowSelected(row);
+				return new Pair<Boolean, Point>(selected, p);
+			}
+		});
+	}
+
+	private static Point scrollToVisible(JTree tree, int row, JTreeLocation location) {
+		Pair<Rectangle, Point> boundsAndCoordinates = location.rowBoundsAndCoordinates(tree, row);
+		tree.scrollRectToVisible(boundsAndCoordinates.i);
+		return boundsAndCoordinates.ii;
+	}
+
 
 	public Component currentFrame()
 	{

@@ -54,15 +54,16 @@ public class OperationResult implements Serializable, Map<String, String>
 		this.permittedOperation = flag;
 	}
 
-	public boolean isPermittedOperation()
-	{
-		return permittedOperation;
-	}
-
 	public void setColorMap(Map<String, ValueAndColor> colorMap)
 	{
 		this.colorMap = colorMap;
 		this.colorMapFilled = true;
+	}
+
+	public void setArray(String[][] a)
+	{
+		this.array = a;
+		this.arrayFilled = true;
 	}
 
 	//TODO need think and remake this method
@@ -75,7 +76,42 @@ public class OperationResult implements Serializable, Map<String, String>
 		}
 		this.mapFilled = true;
 	}
-	
+
+	public String humanablePresentation()
+	{
+		StringBuilder builder = new StringBuilder("ok [" + this.ok + "]");
+		if (this.text != null)
+		{
+			builder.append(" text [").append(this.text).append("];");
+		}
+		if (this.rectangle != null)
+		{
+			builder.append(" rectangle [").append(this.rectangle).append("];");
+		}
+		if (!this.map.isEmpty())
+		{
+			builder.append(" map [").append(this.map).append("];");
+		}
+		if (this.permittedOperation)
+		{
+			builder.append("operation permitted [true]");
+		}
+		if (!this.colorMap.isEmpty())
+		{
+			builder.append(" color map [").append(this.colorMap).append("];");
+		}
+		if (this.array != null)
+		{
+			builder.append(" array [").append(Arrays.deepToString(this.array)).append("];");
+		}
+		return builder.toString();
+	}
+
+	public boolean isPermittedOperation()
+	{
+		return permittedOperation;
+	}
+
 	public String getText()
 	{
 		return this.text;
@@ -104,12 +140,6 @@ public class OperationResult implements Serializable, Map<String, String>
 	public Collection<String> getList()
 	{
 		return this.map.values();
-	}
-
-	public void setArray(String[][] a)
-	{
-		this.array = a;
-		this.arrayFilled = true;
 	}
 
 	public String[][] getArray()

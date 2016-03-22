@@ -748,29 +748,7 @@ public class DictionaryFx extends GuiDictionary
 			Operation operation = (Operation)obj;
 			
 			Optional<OperationResult> result = this.operate(operation, window, control);
-			result.ifPresent(operate -> 
-			{
-				if (operate.isColorMapIsFilled())
-				{
-					this.controller.println(operate.getColorMap().entrySet().toString());
-				}
-				else if (operate.isMapFilled())
-				{
-					this.controller.println(operate.getMap().entrySet().toString());
-				}
-				else if (operate.isArrayFilled())
-				{
-					this.controller.println(Arrays.deepToString(operate.getArray()));
-				}
-				else
-				{
-					String val = operate.getText();
-					if (!Str.IsNullOrEmpty(val))
-					{
-						this.controller.println("" + val);
-					}
-				}
-			});
+			result.ifPresent(operate -> this.controller.println(operate.humanablePresentation()));
 		}
 		else if (obj instanceof Spec)
 		{
