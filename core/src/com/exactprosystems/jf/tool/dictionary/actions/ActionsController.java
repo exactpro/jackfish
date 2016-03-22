@@ -57,7 +57,7 @@ public class ActionsController implements Initializable, ContainingParent
 	public ComboBox<String>			comboBoxWindows;
 
 	public GridPane					mainGrid;
-	private ExpressionField		expressionField;
+	private ExpressionField			expressionField;
 	private Parent					pane;
 
 	private DictionaryFx			model;
@@ -107,7 +107,7 @@ public class ActionsController implements Initializable, ContainingParent
 		this.info = info;
 
 		this.expressionField = new ExpressionField(evaluator);
-		this.elementActionsGrid.add(this.expressionField, 1, 2, 2, 1);
+		this.elementActionsGrid.add(this.expressionField, 1, 4, 2, 1);
 		this.expressionField.setHelperForExpressionField(null, null);
 
 		this.comboBoxApps.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> 
