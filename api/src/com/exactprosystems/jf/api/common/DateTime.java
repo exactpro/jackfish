@@ -20,14 +20,6 @@ public class DateTime extends Date
 {
 	private static final long	serialVersionUID	= 3588757755816729420L;
 
-	@DescriptionAttribute(text = "Sets formats for convert string to date")
-	public static void SetFormats(String timeFormat, String dateFormat, String dateTimeFormat)
-	{
-		timeFormater 		= new SimpleDateFormat(timeFormat);
-		dateFormater		= new SimpleDateFormat(dateFormat);
-		dateTimeFormater	= new SimpleDateFormat(dateTimeFormat);
-	}
-	
 	public DateTime()
 	{
 		super();
@@ -39,6 +31,14 @@ public class DateTime extends Date
 		setTime(date.getTime());
 	}
 
+	@DescriptionAttribute(text = "Sets formats for convert string to date")
+	public static void setFormats(String timeFormat, String dateFormat, String dateTimeFormat)
+	{
+		timeFormater 		= new SimpleDateFormat(timeFormat);
+		dateFormater		= new SimpleDateFormat(dateFormat);
+		dateTimeFormater	= new SimpleDateFormat(dateTimeFormat);
+	}
+	
 	@DescriptionAttribute(text = "Set time (hours, minutes and seconds) from @str.\n If @str dosen't fit converters, will be ParseException")
 	public DateTime setTime(String str) throws ParseException
 	{
@@ -200,7 +200,13 @@ public class DateTime extends Date
 		return getTime(new Date());
 	}
 
-	@DescriptionAttribute(text = "Return current date from @str. If @str dosen't fit converters, will be ParseException")
+	@DescriptionAttribute(text = "Return date from @str using @format for date. If @str dosen't fit converters, will be ParseException")
+	public static DateTime dateTime(String str, String format) throws ParseException
+	{
+		return new DateTime(new SimpleDateFormat(format).parse(str));
+	}
+
+	@DescriptionAttribute(text = "Return date from @str. If @str dosen't fit converters, will be ParseException")
 	public static DateTime date(String str) throws ParseException
 	{
 		return new DateTime(Converter.parseDate(str));
@@ -263,6 +269,16 @@ public class DateTime extends Date
 	//------------------------------------------------------------------------------------------------------------------
 	// formatters
 	//------------------------------------------------------------------------------------------------------------------
+	@DescriptionAttribute(text = "Convert @date to string with @format converter")
+	public static String strDate(Date date, String format)
+	{
+		if (date == null)
+		{
+			return "";
+		}
+		return new SimpleDateFormat(format).format(date);
+	}
+
 	@DescriptionAttribute(text = "Convert @date to string with date converter")
 	public static String strDate(Date date)
 	{
