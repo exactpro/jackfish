@@ -109,16 +109,6 @@ public class ElementInfoController implements Initializable, ContainingParent
 			this.checkBoxAbsoluteXpath.setTooltip(new Tooltip("Absolute xpath"));
 			((BorderPane) this.pane).setCenter(BorderWrapper.wrap(this.mainGrid).color(Common.currentTheme().getReverseColor()).title("Element info").build());
 		});
-		tfID = new CustomFieldWithButton();
-		tfUID = new CustomFieldWithButton();
-		tfXpath = new CustomFieldWithButton();
-		tfClass = new CustomFieldWithButton();
-		tfText = new CustomFieldWithButton();
-		tfName = new CustomFieldWithButton();
-		tfTooltip = new CustomFieldWithButton();
-		tfAction = new CustomFieldWithButton();
-		tfTitle = new CustomFieldWithButton();
-		tfExpression = new CustomFieldWithButton();
 	}
 
 	public void init(DictionaryFx model, Configuration configuration, GridPane gridPane, NavigationController navigation, String themePath)
