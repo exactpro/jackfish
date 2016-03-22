@@ -373,6 +373,28 @@ public class DictionaryFx extends GuiDictionary
 		}
 	}
 
+	public void dialogMove(IWindow window, IWindow.SectionKind section, Integer newIndex) throws Exception
+	{
+		int lastIndex = this.indexOf(window);
+		if (lastIndex == newIndex)
+		{
+			return;
+		}
+		Command undo = () -> Common.tryCatch(() -> {
+			super.windows.remove(newIndex.intValue());
+			this.addWindow(lastIndex, (Window) window);
+			this.displayDialog(window, getWindows());
+			displayElement(window, section, window.getFirstControl(section));
+		}, "");
+		Command redo = () -> Common.tryCatch(() -> {
+			super.windows.remove(lastIndex);
+			this.addWindow(newIndex, (Window) window);
+			this.displayDialog(window, getWindows());
+			displayElement(window, section, window.getFirstControl(section));
+		}, "");
+		addCommand(undo, redo);
+	}
+
 	//------------------------------------------------------------------------------------------------------------------
 	public void elementNew(IWindow window, IWindow.SectionKind sectionKind) throws Exception
 	{
@@ -561,6 +583,31 @@ public class DictionaryFx extends GuiDictionary
 		{
 			this.controller.showInfo(String.format("Id with name '%s' already exist", id));
 		}
+	}
+
+	public void elementMove(IWindow window, IWindow.SectionKind section, IControl control, Integer newIndex) throws Exception
+	{
+		if (window == null || section == null)
+		{
+			return;
+		}
+		int lastIndex = new ArrayList<>(window.getControls(section)).indexOf(control);
+		if (lastIndex == newIndex)
+		{
+			return;
+		}
+		Command undo = () -> Common.tryCatch(() -> {
+			window.removeControl(control);
+			window.getSection(section).addControl(lastIndex, control);
+			this.displayElement(window, section, control);
+		}, "");
+
+		Command redo = () -> Common.tryCatch(() -> {
+			window.removeControl(control);
+			window.getSection(section).addControl(newIndex, control);
+			this.displayElement(window, section, control);
+		}, "");
+		addCommand(undo, redo);
 	}
 
 	

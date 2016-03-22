@@ -5,13 +5,14 @@
 //  This is unpublished, licensed software, confidential and proprietary
 //  information which is the property of Exactpro Systems, LLC or its licensors.
 ////////////////////////////////////////////////////////////////////////////////
-package com.exactprosystems.jf.tool.custom.listview;
+package com.exactprosystems.jf.tool.dictionary;
 
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.tool.custom.controls.field.CustomFieldWithButton;
 import javafx.beans.value.ChangeListener;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import javafx.scene.control.Tooltip;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
 import javafx.util.Callback;
@@ -31,6 +32,7 @@ public class FindListView<T> extends BorderPane
 	{
 		this.filter = filter;
 		this.listView = new ListView<>();
+		this.listView.setTooltip(new Tooltip("Use drag-n-drop to reorder elements in this list"));
 		this.cfbFind = new CustomFieldWithButton();
 		this.cfbFind.setPromptText("find");
 		this.setTop(this.cfbFind);

@@ -16,7 +16,7 @@ import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.custom.BorderWrapper;
-import com.exactprosystems.jf.tool.custom.listview.FindListView;
+import com.exactprosystems.jf.tool.dictionary.FindListView;
 import com.exactprosystems.jf.tool.custom.shutter.DelayShutterButton;
 import com.exactprosystems.jf.tool.custom.tab.CustomTab;
 import com.exactprosystems.jf.tool.custom.xpath.XpathViewer;
@@ -34,8 +34,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
+import javafx.scene.input.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -48,6 +47,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.ResourceBundle;
+import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -102,12 +102,20 @@ public class NavigationController implements Initializable, ContainingParent
 		assert btnFindElement != null : "fx:id=\"btnFindElement\" was not injected: check your FXML file 'Navigation.fxml'.";
 		assert btnFindDialog != null : "fx:id=\"btnFindDialog\" was not injected: check your FXML file 'Navigation.fxml'.";
 		this.listViewWindow = new FindListView<>((w, s) -> w.getName().toUpperCase().contains(s.toUpperCase()), true);
-		this.listViewWindow.setCellFactory(param -> new CustomListCell<>((w, s) -> Common.tryCatch(() -> this.model.dialogRename(w, s), "Error on rename"), IWindow::getName));
+		this.listViewWindow.setCellFactory(param -> new CustomListCell<>(
+				(w, s) -> Common.tryCatch(() -> this.model.dialogRename(w, s), "Error on rename"),
+				IWindow::getName,
+				(d,i) ->Common.tryCatch(() -> this.model.dialogMove(d,currentSection(), i), "Error on move")
+		));
 		this.paneWindow.setCenter(this.listViewWindow);
 		this.listViewElement = new FindListView<>((e, s) -> (!Str.IsNullOrEmpty(e.control.getID()) && e.control.getID().toUpperCase().contains(s.toUpperCase()) || (e.control.getBindedClass().getClazz().toUpperCase()
 				.contains(s.toUpperCase()))),
 				false);
-		this.listViewElement.setCellFactory(param -> new CustomListCell<>((w, s) -> {}, e -> e.control.toString()));
+		this.listViewElement.setCellFactory(param -> new CustomListCell<>(
+				(w, s) -> {},
+				e -> e.control.toString(),
+				(w, i) -> Common.tryCatch(() -> this.model.elementMove(currentWindow(), currentSection(), w.control,i), "Error on move element")
+		));
 		this.paneElement.setCenter(this.listViewElement);
 		Platform.runLater(() -> {
 
@@ -333,6 +341,10 @@ public class NavigationController implements Initializable, ContainingParent
 
 	public void displayElement(IControl control, Collection<IControl> controls)
 	{
+		if (control == null)
+		{
+			controls = new ArrayList<>();
+		}
 		display(new BorderPaneAndControl(control), controls.stream().map(BorderPaneAndControl::new).collect(Collectors.toList()), this.listViewElement, this.elementChangeListener);
 	}
 
@@ -525,11 +537,43 @@ public class NavigationController implements Initializable, ContainingParent
 		private TextField textField;
 		private IUpdater<T> updater;
 		private Function<T, String> converter;
+		private BiConsumer<T, Integer> biConsumer;
 
-		public CustomListCell(IUpdater<T> updater, Function<T, String> converter)
+		public CustomListCell(IUpdater<T> updater, Function<T, String> converter, BiConsumer<T, Integer> biConsumer)
 		{
+			this.biConsumer = biConsumer;
 			this.updater = updater;
 			this.converter = converter;
+			this.setOnDragDetected(event -> {
+				if (this.getItem() != null)
+				{
+					Dragboard db = this.startDragAndDrop(TransferMode.MOVE);
+					ClipboardContent cc = new ClipboardContent();
+					int moveIndex = this.getListView().getItems().indexOf(this.getItem());
+					cc.putString(String.valueOf(moveIndex));
+					db.setContent(cc);
+				}
+			});
+
+			this.setOnDragOver(event -> {
+				if (event.getGestureSource() != this && event.getDragboard().hasString())
+				{
+					event.acceptTransferModes(TransferMode.MOVE);
+				}
+				event.consume();
+			});
+
+			this.setOnDragDropped(event -> {
+				if (getItem() == null)
+				{
+					return;
+				}
+				Dragboard db = event.getDragboard();
+				if (db.hasString())
+				{
+					biConsumer.accept(getListView().getItems().get(Integer.parseInt(db.getString())), getIndex());
+				}
+			});
 		}
 
 		@Override
