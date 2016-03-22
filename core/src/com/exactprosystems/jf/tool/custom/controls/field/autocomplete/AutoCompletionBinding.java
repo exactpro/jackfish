@@ -237,7 +237,9 @@ public abstract class AutoCompletionBinding<T> implements EventTarget
 			}
 			// create a new fetcher task
 			suggestionsTask = new FetchSuggestionsTask(userText);
-			new Thread(suggestionsTask).start();
+			Thread thread = new Thread(suggestionsTask);
+			thread.setName("Show popup autocomplete textField, thread id : " + thread.getId());
+			thread.start();
 		}
 	}
 

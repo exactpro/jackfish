@@ -45,9 +45,10 @@ public class Preloader extends Stage
 		this.initStyle(StageStyle.UNDECORATED);
 		this.setTitle("Loading...");
 		this.setScene(scene);
-		new Thread(new Task<Void>()
+		Thread thread = new Thread(new Task<Void>()
 		{
 			int index = 1;
+
 			@Override
 			protected Void call() throws Exception
 			{
@@ -77,6 +78,8 @@ public class Preloader extends Stage
 				}
 				return title.toString();
 			}
-		}).start();
+		});
+		thread.setName("Preloader thread, id :" + thread.getId());
+		thread.start();
 	}
 }

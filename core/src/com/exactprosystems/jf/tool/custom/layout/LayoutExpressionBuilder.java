@@ -137,7 +137,9 @@ public class LayoutExpressionBuilder
 			displayControl(this.selfControl, true);
 		}, "Error on get screenshot"));
 
-		new Thread(prepare).start();
+		Thread thread = new Thread(prepare);
+		thread.setName("Get screenshot from layout expression builder, thread id : " + thread.getId());
+		thread.start();
 		
 		ButtonData result = this.controller.show(title, fullScreen, this.controls, this.parameterName);
 		

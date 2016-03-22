@@ -201,7 +201,7 @@ public class Main extends Application
 		}, "Error on task succeed on"));
 		
 		Thread thread = new Thread(load);
-		thread.setName("Load " + thread.getId());
+		thread.setName("Load main gui" + thread.getId());
 		thread.start();
 	}
 	

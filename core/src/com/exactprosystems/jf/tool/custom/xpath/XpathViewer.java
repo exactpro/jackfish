@@ -76,7 +76,9 @@ public class XpathViewer
 				this.controller.displayImage(res.image, res.offsetX, res.offsetY);
 			}, "Error on display image"));
 			task.setOnFailed(event -> Common.tryCatch(() -> this.controller.displayImage(null, 0, 0), "Error on display image"));
-			new Thread(task).start();
+			Thread thread = new Thread(task);
+			thread.setName("Xpath build get image, thread id : " + thread.getId());
+			thread.start();
 		}
 		else
 		{

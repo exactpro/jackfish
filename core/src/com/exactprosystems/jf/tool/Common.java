@@ -38,7 +38,6 @@ import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.StringSelection;
-import java.awt.datatransfer.Transferable;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
@@ -85,7 +84,7 @@ public abstract class Common
 
 	public static void setFocused(final TextField field)
 	{
-		new Thread(new Task<Void>()
+		Thread thread = new Thread(new Task<Void>()
 		{
 			@Override
 			protected Void call() throws Exception
@@ -94,7 +93,9 @@ public abstract class Common
 				Platform.runLater(field::requestFocus);
 				return null;
 			}
-		}).start();
+		});
+		thread.setName("Focused field : " + field + " , thread id : " + thread.getId());
+		thread.start();
 	}
 
 	public static boolean appIsFocused()

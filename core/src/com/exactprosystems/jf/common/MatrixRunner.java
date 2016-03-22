@@ -187,6 +187,7 @@ public class MatrixRunner implements IMatrixRunner, AutoCloseable
 			MatrixRunner.this.matrix.start(context, evaluator, report);
 			changeState(State.Finished);
 		});
+		this.thread.setName("Start matrix thread, thread id : " + thread.getId());
 		this.matrix.prepareMonitor();
 		this.thread.start();
 	}

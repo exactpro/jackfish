@@ -327,15 +327,14 @@ public class DictionaryFx extends GuiDictionary
 		{
 			Set<ControlKind> supported = Arrays.stream(this.applicationConnector.getAppConnection().getApplication().getFactory().supportedControlKinds())
 					.collect(Collectors.toSet());
-			
-			new Thread(new Task<Void>()
+
+			Thread thread = new Thread(new Task<Void>()
 			{
 				@Override
 				protected Void call() throws Exception
 				{
-					
-					controls.forEach(control -> 
-					{
+
+					controls.forEach(control -> {
 						try
 						{
 							if (!supported.contains(control.getBindedClass()))
@@ -347,7 +346,7 @@ public class DictionaryFx extends GuiDictionary
 								IControl owner = window.getOwnerControl(control);
 								Locator ownerLocator = owner == null ? null : owner.locator();
 								Collection<String> all = applicationConnector.getAppConnection().getApplication().service().findAll(ownerLocator, control.locator());
-								
+
 								Result result = null;
 								if (all.size() == 1 || (Addition.Many.equals(control.getAddition()) && all.size() > 0))
 								{
@@ -357,7 +356,7 @@ public class DictionaryFx extends GuiDictionary
 								{
 									result = Result.FAILED;
 								}
-								
+
 								controller.displayTestingControl(control, String.valueOf(all.size()), result);
 							}
 						}
@@ -368,7 +367,9 @@ public class DictionaryFx extends GuiDictionary
 					});
 					return null;
 				}
-			}).start();
+			});
+			thread.setName("Test dialog, thread id : " + thread.getId());
+			thread.start();
 		}
 	}
 

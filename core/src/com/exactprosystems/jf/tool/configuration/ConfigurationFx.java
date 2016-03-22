@@ -503,7 +503,9 @@ public class ConfigurationFx extends Configuration
 			logger.error(exception.getMessage(), exception);
 			controller.displayAfterStartService(entry, false, exception.getMessage());
 		});
-		new Thread(startTask).start();
+		Thread thread = new Thread(startTask);
+		thread.setName("Start service : " + idEntry + " , thread id : " + thread.getId());
+		thread.start();
 	}
 
 	public void stopService(ServiceEntry entry) throws Exception
