@@ -48,10 +48,6 @@
 			-fx-background-radius: 3,2,1;
 			-fx-text-fill: black;
 }
-.toggle-button:selected {
-	-fx-background-color : derive(-fx-company-color-light, 50%);
-
-}
 .tree-cell > .tree-disclosure-node,
 .tree-table-row-cell > .tree-disclosure-node {
 	-fx-padding: 4 6 4 8;
@@ -112,6 +108,11 @@
 .transparentBackground {
 	-fx-background-color : transparent;
 
+}
+.delayShutter:selected {
+	-fx-background-color : derive(-fx-company-color-light, 50%);
+	-fx-background-insets: 0,1,2;
+	-fx-background-radius: 3,2,1;
 }
 
 /*Matrix tree view*/

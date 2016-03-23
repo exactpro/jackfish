@@ -20,9 +20,9 @@
 			<children>
 				<GridPane fx:id="elementActionsGrid">
 					<columnConstraints>
-						<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-						<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-						<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+						<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" percentWidth="33.3"/>
+						<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" percentWidth="33.3"/>
+						<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" percentWidth="33.4"/>
 					</columnConstraints>
 					<rowConstraints>
 						<RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -68,11 +68,14 @@
 						<Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
 					</GridPane.margin>
 				</GridPane>
-				<Label fx:id="imageArea" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1">
+				<ScrollPane fitToHeight="true" fitToWidth="true" GridPane.halignment="CENTER" GridPane.columnIndex="1" prefViewportHeight="397.0" prefViewportWidth="1103.0">
+					<content>
+						<Label fx:id="imageArea" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" contentDisplay="GRAPHIC_ONLY"/>
+					</content>
 					<GridPane.margin>
 						<Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
 					</GridPane.margin>
-				</Label>
+				</ScrollPane>
 			</children>
 		</GridPane>
 	</center>
