@@ -63,6 +63,22 @@
     </appEntry>
     <appEntry>
         <name>EXACTPRO</name>
+        <parameters>
+            <key>ChromeDriverPath</key>
+            <value>unix/chromedirver_64</value>
+        </parameters>
+        <parameters>
+            <key>IEDriverPath</key>
+            <value></value>
+        </parameters>
+        <parameters>
+            <key>ChromeDriverBinary</key>
+            <value></value>
+        </parameters>
+        <parameters>
+            <key>FirefoxProfileDirectory</key>
+            <value></value>
+        </parameters>
         <appDescription>Exactpro example</appDescription>
         <appDicPath>dic/gui/exactpro_dic.xml</appDicPath>
         <appJar>apps/web.jar</appJar>
