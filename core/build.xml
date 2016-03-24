@@ -176,7 +176,11 @@
 		
 		<!-- update.zip -->
 		<delete file="update.zip"/>
-		<delete  dir="${tool}" excludes="**/*.jar"/>
+		<delete  dir="${tool}">
+			<exclude name="**/*.jar"/>
+			<exclude name="apps/unix/*"/>
+			<exclude name="apps/win/*"/>
+		</delete>
 		<zip basedir="${tool}" destfile="update.zip"/>
 
 		<!-- cleanup -->
