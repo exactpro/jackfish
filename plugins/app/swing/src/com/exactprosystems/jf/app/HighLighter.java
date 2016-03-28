@@ -1,10 +1,7 @@
 package com.exactprosystems.jf.app;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Point;
-import javax.swing.JPanel;
-import javax.swing.JWindow;
+import javax.swing.*;
+import java.awt.*;
 
 public class HighLighter implements AutoCloseable
 {
@@ -24,10 +21,17 @@ public class HighLighter implements AutoCloseable
 	
 	public HighLighter()
 	{
-		this.top 		= new JWindow();
-		this.bottom		= new JWindow();
-		this.left		= new JWindow();
-		this.right		= new JWindow();
+		SwingUtilities.invokeLater(new Runnable()
+		{
+			@Override
+			public void run()
+			{
+			top 	= new JWindow();
+			bottom	= new JWindow();
+			left	= new JWindow();
+			right	= new JWindow();
+			}
+		});
 	}
 
 	public void start(final Point location, final Dimension dimension)

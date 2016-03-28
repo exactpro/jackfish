@@ -14,7 +14,6 @@ import com.exactprosystems.jf.api.common.Str;
 import org.apache.log4j.Logger;
 import org.fest.swing.awt.AWT;
 import org.fest.swing.core.ComponentMatcher;
-import org.fest.swing.core.KeyPressInfo;
 import org.fest.swing.core.Robot;
 import org.fest.swing.core.Scrolling;
 import org.fest.swing.data.TableCell;
@@ -33,6 +32,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 import java.awt.*;
+import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.lang.reflect.Method;
@@ -204,7 +204,6 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 			{
 				point = scrollToRow(((JTree) component.target), y);
 			}
-
 			final ArrayList<MouseEvent> events = new ArrayList<>();
 
 			events.add(new MouseEvent(component.target, MouseEvent.MOUSE_ENTERED, System.currentTimeMillis(), 0, point.x, point.y, 0, true, MouseEvent.NOBUTTON));
@@ -212,22 +211,19 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 
 			switch (action)
 			{
-				case Move:
-					break;
-
 				case LeftClick:
-					events.add(new MouseEvent(component.target, MouseEvent.MOUSE_PRESSED, System.currentTimeMillis(), 0, point.x, point.y, 1, true, MouseEvent.BUTTON1));
-					events.add(new MouseEvent(component.target, MouseEvent.MOUSE_RELEASED, System.currentTimeMillis(), 0, point.x, point.y, 1, true, MouseEvent.BUTTON1));
-					events.add(new MouseEvent(component.target, MouseEvent.MOUSE_CLICKED, System.currentTimeMillis(), 0, point.x, point.y, 1, true, MouseEvent.BUTTON1));
+					events.add(new MouseEvent(component.target, MouseEvent.MOUSE_PRESSED, System.currentTimeMillis(), 0, point.x, point.y, 1, false, MouseEvent.BUTTON1));
+					events.add(new MouseEvent(component.target, MouseEvent.MOUSE_RELEASED, System.currentTimeMillis(), 0, point.x, point.y, 1, false, MouseEvent.BUTTON1));
+					events.add(new MouseEvent(component.target, MouseEvent.MOUSE_CLICKED, System.currentTimeMillis(), 0, point.x, point.y, 1, false, MouseEvent.BUTTON1));
 					break;
 
 				case LeftDoubleClick:
 
-					events.add(new MouseEvent(component.target, MouseEvent.MOUSE_PRESSED, System.currentTimeMillis(), 0, point.x, point.y, 2, true, MouseEvent.BUTTON1));
-					events.add(new MouseEvent(component.target, MouseEvent.MOUSE_RELEASED, System.currentTimeMillis(), 0, point.x, point.y, 2, true, MouseEvent.BUTTON1));
-					events.add(new MouseEvent(component.target, MouseEvent.MOUSE_PRESSED, System.currentTimeMillis(), 0, point.x, point.y, 2, true, MouseEvent.BUTTON1));
-					events.add(new MouseEvent(component.target, MouseEvent.MOUSE_RELEASED, System.currentTimeMillis(), 0, point.x, point.y, 2, true, MouseEvent.BUTTON1));;
-					events.add(new MouseEvent(component.target, MouseEvent.MOUSE_CLICKED, System.currentTimeMillis(), 0, point.x, point.y, 2, true, MouseEvent.BUTTON1));
+					events.add(new MouseEvent(component.target, MouseEvent.MOUSE_PRESSED, System.currentTimeMillis(), 0, point.x, point.y, 2, false, MouseEvent.BUTTON1));
+					events.add(new MouseEvent(component.target, MouseEvent.MOUSE_RELEASED, System.currentTimeMillis(), 0, point.x, point.y, 2, false, MouseEvent.BUTTON1));
+					events.add(new MouseEvent(component.target, MouseEvent.MOUSE_PRESSED, System.currentTimeMillis(), 0, point.x, point.y, 2, false, MouseEvent.BUTTON1));
+					events.add(new MouseEvent(component.target, MouseEvent.MOUSE_RELEASED, System.currentTimeMillis(), 0, point.x, point.y, 2, false, MouseEvent.BUTTON1));
+					events.add(new MouseEvent(component.target, MouseEvent.MOUSE_CLICKED, System.currentTimeMillis(), 0, point.x, point.y, 2, false, MouseEvent.BUTTON1));
 					break;
 
 				case RightClick:
@@ -278,13 +274,32 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 		try
 		{
 			this.currentRobot.waitForIdle();
-			if (component instanceof KeyboardInputSimulationFixture)
+			final Component target = component.target;
+			final ArrayList<InputEvent> events = new ArrayList<>();
+			int keyCode = getKeyCode(key);
+			events.add(new KeyEvent(target, KeyEvent.KEY_PRESSED, System.currentTimeMillis(), 0, keyCode, (char) keyCode));
+			events.add(new KeyEvent(target, KeyEvent.KEY_RELEASED, System.currentTimeMillis(), 0, keyCode, (char) keyCode));
+			events.add(new KeyEvent(target, KeyEvent.KEY_TYPED, System.currentTimeMillis(), 0, KeyEvent.VK_UNDEFINED, (char) keyCode));
+			SwingUtilities.invokeLater(new Runnable()
 			{
-				KeyboardInputSimulationFixture inputSimulationFixture = (KeyboardInputSimulationFixture) component;
-				inputSimulationFixture.pressAndReleaseKey(KeyPressInfo.keyCode(getKeyCode(key)));
-				return true;
-			}
-			throw new RemoteException(String.format("Component %s dosen't support press operation", component));
+				@Override
+				public void run()
+				{
+					for (InputEvent event : events)
+					{
+						logger.debug("event : " + event);
+						target.dispatchEvent(event);
+					}
+				}
+			});
+			return true;
+//			if (component instanceof KeyboardInputSimulationFixture)
+//			{
+//				KeyboardInputSimulationFixture inputSimulationFixture = (KeyboardInputSimulationFixture) component;
+//				inputSimulationFixture.pressAndReleaseKey(KeyPressInfo.keyCode(getKeyCode(key)));
+//				return true;
+//			}
+//			throw new RemoteException(String.format("Component %s dosen't support press operation", component));
 		}
 		catch (Throwable e)
 		{
@@ -781,8 +796,6 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 		{
 			this.currentRobot.waitForIdle();
 			final JTable table = component.targetCastedTo(JTable.class);
-			JTableFixture tableFixture = new JTableFixture(this.currentRobot, table);
-			JTableCellFixture cell = tableFixture.cell(TableCell.row(row).column(column));
 			JTableLocation jTableLocation = new JTableLocation();
 			Point point = jTableLocation.pointAt(table, row, column);
 			final ArrayList<MouseEvent> events = new ArrayList<>();
@@ -790,24 +803,20 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 			events.add(new MouseEvent(component.target, MouseEvent.MOUSE_MOVED, System.currentTimeMillis(), 0, point.x, point.y, 0, true, MouseEvent.NOBUTTON));
 			switch (action)
 			{
-				case Move:
-//					this.currentRobot.moveMouse(table); // TODO calculate real coordinates and click on it
-					break;
-
 				case LeftClick:
-					events.add(new MouseEvent(table, MouseEvent.MOUSE_PRESSED, System.currentTimeMillis(), 0, point.x, point.y, 1, true, MouseEvent.BUTTON1));
-					events.add(new MouseEvent(table, MouseEvent.MOUSE_RELEASED, System.currentTimeMillis(), 0, point.x, point.y, 1, true, MouseEvent.BUTTON1));
-					events.add(new MouseEvent(table, MouseEvent.MOUSE_CLICKED, System.currentTimeMillis(), 0, point.x, point.y, 1, true, MouseEvent.BUTTON1));
-//					cell.click(MouseClickInfo.leftButton().button());
+					//TODO when we press left click parameter popupTrigger mb set false? it's right?
+					events.add(new MouseEvent(table, MouseEvent.MOUSE_PRESSED, System.currentTimeMillis(), 0, point.x, point.y, 1, false, MouseEvent.BUTTON1));
+					events.add(new MouseEvent(table, MouseEvent.MOUSE_RELEASED, System.currentTimeMillis(), 0, point.x, point.y, 1, false, MouseEvent.BUTTON1));
+					events.add(new MouseEvent(table, MouseEvent.MOUSE_CLICKED, System.currentTimeMillis(), 0, point.x, point.y, 1, false, MouseEvent.BUTTON1));
 					break;
 
 				case LeftDoubleClick:
 //					cell.doubleClick();
-					events.add(new MouseEvent(table, MouseEvent.MOUSE_PRESSED, System.currentTimeMillis(), 0, point.x, point.y, 2, true, MouseEvent.BUTTON1));
-					events.add(new MouseEvent(table, MouseEvent.MOUSE_RELEASED, System.currentTimeMillis(), 0, point.x, point.y, 2, true, MouseEvent.BUTTON1));
-					events.add(new MouseEvent(table, MouseEvent.MOUSE_PRESSED, System.currentTimeMillis(), 0, point.x, point.y, 2, true, MouseEvent.BUTTON1));
-					events.add(new MouseEvent(table, MouseEvent.MOUSE_RELEASED, System.currentTimeMillis(), 0, point.x, point.y, 2, true, MouseEvent.BUTTON1));;
-					events.add(new MouseEvent(table, MouseEvent.MOUSE_CLICKED, System.currentTimeMillis(), 0, point.x, point.y, 2, true, MouseEvent.BUTTON1));
+					events.add(new MouseEvent(table, MouseEvent.MOUSE_PRESSED, System.currentTimeMillis(), 0, point.x, point.y, 2, false, MouseEvent.BUTTON1));
+					events.add(new MouseEvent(table, MouseEvent.MOUSE_RELEASED, System.currentTimeMillis(), 0, point.x, point.y, 2, false, MouseEvent.BUTTON1));
+					events.add(new MouseEvent(table, MouseEvent.MOUSE_PRESSED, System.currentTimeMillis(), 0, point.x, point.y, 2, false, MouseEvent.BUTTON1));
+					events.add(new MouseEvent(table, MouseEvent.MOUSE_RELEASED, System.currentTimeMillis(), 0, point.x, point.y, 2, false, MouseEvent.BUTTON1));
+					events.add(new MouseEvent(table, MouseEvent.MOUSE_CLICKED, System.currentTimeMillis(), 0, point.x, point.y, 2, false, MouseEvent.BUTTON1));
 					break;
 
 				case RightClick:
@@ -1666,13 +1675,14 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 
 	public Component currentRoot()
 	{
-		Collection<? extends Container> roots = this.currentRobot.hierarchy().roots();
-		
 		Container root = new RootContainer();
 		for (Window window : Window.getWindows())
 		{
 			logger.debug("Find window : " + window);
-			root.add(window);
+			if (window.isVisible() && window.isShowing())
+			{
+				root.add(window);
+			}
 		}
 		return root;
 	}
