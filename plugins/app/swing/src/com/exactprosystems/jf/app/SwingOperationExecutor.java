@@ -371,7 +371,7 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 	}
 
 	@Override
-	public boolean toggle(ComponentFixture<Component> component, boolean value) throws Exception
+	public boolean toggle(ComponentFixture<Component> component, final boolean value) throws Exception
 	{
 		try
 		{
@@ -379,8 +379,15 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 			Component currentComponent = component.component();
 			if (currentComponent instanceof JToggleButton)
 			{
-				JToggleButton toggleButton = component.targetCastedTo(JToggleButton.class);
-				toggleButton.setSelected(value);
+				final JToggleButton toggleButton = component.targetCastedTo(JToggleButton.class);
+				SwingUtilities.invokeLater(new Runnable()
+				{
+					@Override
+					public void run()
+					{
+						toggleButton.setSelected(value);
+					}
+				});
 			}
 			return true;
 		}
