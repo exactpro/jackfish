@@ -778,14 +778,22 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 	}
 
 	@Override
-	public boolean textTableCell(ComponentFixture<Component> component, int column, int row, String text) throws Exception
+	public boolean textTableCell(ComponentFixture<Component> component, final int column, final int row, final String text) throws Exception
 	{
 		try
 		{
 			this.currentRobot.waitForIdle();
-			JTable table = component.targetCastedTo(JTable.class);
-			JTableFixture tableFixture = new JTableFixture(this.currentRobot, table);
-			tableFixture.enterValue(TableCell.row(row).column(column), text);
+			final JTable table = component.targetCastedTo(JTable.class);
+//			JTableFixture tableFixture = new JTableFixture(this.currentRobot, table);
+//			tableFixture.enterValue(TableCell.row(row).column(column), text);
+			SwingUtilities.invokeLater(new Runnable()
+			{
+				@Override
+				public void run()
+				{
+					table.setValueAt(text, row, column);
+				}
+			});
 			return true;
 		}
 		catch (Exception e)
