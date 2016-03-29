@@ -17,6 +17,8 @@ import org.apache.log4j.*;
 import org.openqa.selenium.*;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.Point;
+import org.openqa.selenium.chrome.ChromeDriverService;
+import org.openqa.selenium.ie.InternetExplorerDriverService;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -162,13 +164,13 @@ public class SeleniumRemoteApplication extends RemoteApplication
 			if (chromeDriverPath != null && !chromeDriverPath.isEmpty())
 			{
 				logger.info(WebAppFactory.chromeDriverPathName + " = " + chromeDriverPath);
-				System.setProperty("webdriver.chrome.driver", chromeDriverPath);
+				System.setProperty(ChromeDriverService.CHROME_DRIVER_EXE_PROPERTY, chromeDriverPath);
 			}
 			String ieDriverPath = args.get(WebAppFactory.ieDriverPathName);
 			if (ieDriverPath != null && !ieDriverPath.isEmpty())
 			{
 				logger.info(WebAppFactory.ieDriverPathName + " = " + ieDriverPath);
-				System.setProperty("webdriver.ie.driver", ieDriverPath);
+				System.setProperty(InternetExplorerDriverService.IE_DRIVER_EXE_PROPERTY, ieDriverPath);
 			}
 			String chromeDriverBinary = args.get(WebAppFactory.chromeDriverBinary);
 			if (chromeDriverBinary != null && !chromeDriverBinary.isEmpty())
@@ -776,7 +778,7 @@ public class SeleniumRemoteApplication extends RemoteApplication
 		WebElement ownerElement;
 		if (owner == null)
 		{
-			ownerElement = this.driver.findElement(By.tagName("body"));
+			ownerElement = this.driver.findElement(By.tagName("html"));
 		}
 		else
 		{
