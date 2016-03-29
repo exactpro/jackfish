@@ -18,6 +18,8 @@
 .control-buttons-tab {
 	-fx-opacity : 0.0;
 	-fx-pref-width : 0px;
+	-fx-max-width : 0px;
+	visibility : false;
 
 }
 .tab {
