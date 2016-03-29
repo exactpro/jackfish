@@ -96,6 +96,7 @@ public class MainController implements Initializable, ContainingParent
 	public MenuItem viewLogs;
 	public MenuItem viewSettings;
 	public MenuItem viewStore;
+	public MenuItem viewAllTabs;
 
 	public Menu menuMatrix;
 	public MenuItem matrixStart;
@@ -411,6 +412,11 @@ public class MainController implements Initializable, ContainingParent
 	public void showStore(ActionEvent actionEvent)
 	{
 		Common.tryCatch(this.model::store, "Error on show store");
+	}
+
+	public void showAllTabs(ActionEvent actionEvent)
+	{
+		Common.tryCatch(() -> this.showAllTabs(), "Error on show all tabs");
 	}
 
 	public void closeApplication(ActionEvent actionEvent)

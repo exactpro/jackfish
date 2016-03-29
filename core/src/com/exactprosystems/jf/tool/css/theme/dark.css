@@ -15,6 +15,11 @@
 	-fx-background-color : transparent;
 
 }
+.control-buttons-tab {
+	-fx-opacity : 0.0;
+	-fx-pref-width : 0px;
+
+}
 .tab {
 	-fx-background-color: linear-gradient(to top, -fx-base, derive(-fx-base,30%));
 

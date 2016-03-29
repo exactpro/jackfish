@@ -25,7 +25,6 @@
 			<top>
 				<VBox minHeight="70.0" prefHeight="70.0" prefWidth="100.0" BorderPane.alignment="CENTER">
 					<children>
-
 						<MenuBar minHeight="30.0" prefHeight="29.0" prefWidth="1276.0">
 							<menus>
 								<Menu fx:id="menuFile" mnemonicParsing="false" text="File">
@@ -95,6 +94,8 @@
 										<MenuItem fx:id="viewSettings" mnemonicParsing="false"
 												  onAction="#showSettingsPanel" text="Settings"/>
 										<MenuItem fx:id="viewStore" mnemonicParsing="false" onAction="#showStore" text="Store"/>
+										<SeparatorMenuItem/>
+										<MenuItem fx:id="viewAllTabs" mnemonicParsing="false" onAction="#showAllTabs" text="Show tabs"/>
 									</items>
 								</Menu>
 								<Menu fx:id="menuMatrix" mnemonicParsing="false" text="Matrix">
