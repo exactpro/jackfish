@@ -280,6 +280,14 @@ public final class Call extends MatrixItem
 	private void updateReference(Context context, String name)
 	{
 		this.ref = context.referenceToSubcase(name, this);
+		try
+		{
+			this.ref.init(this.owner);
+		}
+		catch (MatrixException e)
+		{
+			e.printStackTrace();
+		}
 	}
 	
 

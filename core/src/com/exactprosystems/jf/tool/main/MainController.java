@@ -416,7 +416,7 @@ public class MainController implements Initializable, ContainingParent
 
 	public void showAllTabs(ActionEvent actionEvent)
 	{
-		Common.tryCatch(() -> this.showAllTabs(), "Error on show all tabs");
+		Common.tryCatch(this::showAllTabs, "Error on show all tabs");
 	}
 
 	public void closeApplication(ActionEvent actionEvent)
