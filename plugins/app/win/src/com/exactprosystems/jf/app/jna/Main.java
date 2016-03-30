@@ -29,7 +29,7 @@ public class Main {
     public static void main(String[] args) {
         String pathToDlls = System.getProperty("user.dir") + "\\dlls\\";
         String uiAdapterPath = pathToDlls + "UIAdapter.dll";
-        String log4netPath = pathToDlls + "Log4net.dll";
+        String log4netPath = pathToDlls + "log4net.dll";
         //TODO need to write path to
         String log4netConfigurePath = pathToDlls + "Log4net.configure";
 
