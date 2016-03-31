@@ -8,6 +8,7 @@
 
 package com.exactprosystems.jf.tool.custom.console;
 
+import javafx.application.Platform;
 import javafx.collections.ListChangeListener;
 import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
@@ -61,7 +62,7 @@ public class CustomListView<T> extends ListView<ConsoleText<T>>
 		int size = this.getItems().size();
 		if (size > 0)
 		{
-			this.scrollTo(size - 1);
+			Platform.runLater(() -> this.scrollTo(size - 1));
 		}
 	};
 }
