@@ -12,11 +12,23 @@ import java.io.Serializable;
 
 public enum MouseAction  implements Serializable
 {
-	Move,
-	LeftClick,
-	RightClick,
-	LeftDoubleClick,
-	RightDoubleClick;
+	Move(0),
+	LeftClick(1),
+	RightClick(2),
+	LeftDoubleClick(3),
+	RightDoubleClick(4);
+	
+	private MouseAction(int id)
+	{
+		this.id = id;
+	}
+	
+	public int getId()
+	{
+		return this.id;
+	}
+	
+	private int id;
 
 	private static final long	serialVersionUID	= -3586047076930611493L;
 }
