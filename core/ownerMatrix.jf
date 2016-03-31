@@ -1,0 +1,25 @@
+// //==============================================
+// //  Copyright (c) 2009-2015, Exactpro Systems, LLC
+// //  Quality Assurance & Related Development for Innovative Trading Systems.
+// //  All rights reserved.
+// //  This is unpublished, licensed software, confidential and proprietary
+// //  information which is the property of Exactpro Systems, LLC or its licensors.
+// //==============================================
+#TestCase
+Test case
+    #Action;#map
+    Vars;HashMap map = new HashMap()\u003bmap.put('asd','123')\u003bmap.put('zxc',null)\u003breturn map\u003b
+
+    #Action;#map
+    Print;map
+
+    #Id;#Action;#Matrix;#Parameter
+    MXRN1;MatrixRun;'childMatrix.jf';map
+
+    #Id;#Action;#Matrix
+    MXWT1;MatrixWait;MXRN1.Out
+
+    #Action;#map
+    Print;map
+
+
