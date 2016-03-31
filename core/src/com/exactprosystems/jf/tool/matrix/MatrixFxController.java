@@ -108,6 +108,7 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 			TreeItem<MatrixItem> treeItem = this.tree.find(matrixItem);
 			Optional.ofNullable(treeItem).ifPresent(item -> Platform.runLater(() -> this.tree.setCurrent(item)));
 		}, "Error on moving to item"), true);
+		this.listView.autoScroll(true);
 		
 		this.splitPane.getItems().add(this.listView);
 		this.tree = new MatrixTreeView();

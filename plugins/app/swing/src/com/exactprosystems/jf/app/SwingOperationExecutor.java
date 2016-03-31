@@ -1069,6 +1069,14 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 				for (int column = 0; column < columns; column++)
 				{
 					Object value = table.getValueAt(row, column);
+					if (value == null)
+					{
+						Component tableCellRendererComponent = table.getCellRenderer(row, column).getTableCellRendererComponent(table, null, true, true, row, column);
+						if (tableCellRendererComponent instanceof JLabel)
+						{
+							value = String.valueOf(((JLabel) tableCellRendererComponent).getIcon());
+						}
+					}
 					res[row + 1][column] = "" + value;
 				}
 			}

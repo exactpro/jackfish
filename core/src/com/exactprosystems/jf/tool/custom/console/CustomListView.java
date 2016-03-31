@@ -8,6 +8,7 @@
 
 package com.exactprosystems.jf.tool.custom.console;
 
+import javafx.collections.ListChangeListener;
 import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
 
@@ -39,8 +40,28 @@ public class CustomListView<T> extends ListView<ConsoleText<T>>
 		this.listener = listener;
 	}
 
+	public void autoScroll(boolean flag)
+	{
+		if (flag)
+		{
+			this.getItems().addListener(changeListener);
+		}
+		else
+		{
+			this.getItems().removeListener(changeListener);
+		}
+	}
+
 	public void setListener(OnDoubleClickListener<T> listener)
 	{
 		this.listener = listener;
 	}
+
+	private ListChangeListener<ConsoleText<T>> changeListener = c -> {
+		int size = this.getItems().size();
+		if (size > 0)
+		{
+			this.scrollTo(size - 1);
+		}
+	};
 }
