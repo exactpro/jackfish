@@ -603,10 +603,9 @@ public abstract class DialogsHelper
 		return null;
 	}
 
-	private enum Notifier
+	public static enum Notifier
 	{
 		Error, Success, Info
-
 	}
 
 	private static void showNotifier(final String message, final Notifier notifier)

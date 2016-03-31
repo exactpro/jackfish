@@ -234,6 +234,48 @@
 
 }
 
+.notificationBar.dark > .notificationPane {
+    -fx-background-color: -fx-outer-border, -fx-inner-border, linear-gradient(#595959, #474747 37%, #343434);
+
+}
+.notificationBar.dark > .notificationPane .notificationTitle,
+.notificationBar.dark > .notificationPane .notificationMsg {
+    -fx-text-fill: #ebebeb;
+
+}
+.notificationBar > .notificationPane .notificationCloseButton {
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+    -fx-background-radius: 2;
+    -fx-padding: 0 0 0 0;
+    -fx-alignment: center;
+}
+.notificationBar > .notificationPane .notificationCloseButton:hover {
+    -fx-background-color: linear-gradient(#a3a3a3, #8b8b8b 34%, #777777 36%, #777777 63%, #8b8b8b 65%, #adadad);
+
+}
+.notificationBar > .notificationPane .notificationCloseButton:pressed {
+    -fx-background-color: linear-gradient(#a3a3a3, #8b8b8b 34%, #777777 36%, #777777 63%, #8b8b8b 65%, #adadad);
+
+}
+.notificationBar > .notificationPane .notificationCloseButton > .graphic {
+    -fx-background-color: #949494;
+    -fx-scale-shape: false;
+    -fx-padding: 4.5 4.5 4.5 4.5; /* Graphic is 9x9 px */
+}
+.notificationBar > .notificationPane .notificationCloseButton:hover > .graphic {
+    -fx-background-color: #fefeff;
+
+}
+.notificationBar > .notificationPane .notificationCloseButton:pressed > .graphic {
+    -fx-background-color: #cfcfcf;
+
+}
+.notificationBar > .notificationPane .notificationCloseButton > .graphic {
+    -fx-shape: "M395.992,296.758l1.794-1.794l7.292,7.292l-1.795,1.794 L395.992,296.758z M403.256,294.992l1.794,1.794l-7.292,7.292l-1.794-1.795 L403.256,294.992z";
+
+}
+
 /*Correct / Incorrect fields*/
 .incorrectField {
 	-fx-text-fill : red;

@@ -36,6 +36,13 @@ public class CssVariables
 	public static final String	NOTIFIER_MESSAGE			= "notifierMessage";
 	public static final String	NOTIFIER					= "notifier";
 
+	public static final String	NOTIFICATION_BAR			= "notificationBar";
+	public static final String	NOTIFICATION_PANE			= "notificationPane";
+	public static final String	NOTIFICATION_MSG			= "notificationMsg";
+	public static final String	NOTIFICATION_TITLE			= "notificationTitle";
+	public static final String	NOTIFICATION_CLOSE_BUTTON	= "notificationCloseButton";
+	public static final String	NOTIFICATION_PIN_BUTTON		= "notificationPinButton";
+
 	/*Correct / Incorrect fields*/
 	public static final String	CORRECT_FIELD				= "correctField";
 	public static final String	INCORRECT_FIELD				= "incorrectField";
@@ -181,6 +188,9 @@ public class CssVariables
 		public static final String	UNDO_ICON_SMALL			= IMAGES_DIR + "/undo_16.png";
 		public static final String	REDO_ICON_SMALL			= IMAGES_DIR + "/redo_16.png";
 		public static final String	DATE_ICON				= IMAGES_DIR + "/date.png";
+
+		public static final String	NOTIFICATION_PIN_TRUE	= IMAGES_DIR + "/pinTrue.png";
+		public static final String	NOTIFICATION_PIN_FALSE	= IMAGES_DIR + "/pinFalse.png";
 
 		public static final String	XPATH_TREE				= IMAGES_DIR + "/tree.png";
 		public static final String	START_MATRIX_ICON		= IMAGES_DIR + "/start.png";
