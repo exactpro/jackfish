@@ -42,17 +42,14 @@
 		<echo>jar building...</echo>
 		<jar destfile="${win.release.dir}/win.jar" basedir="${win.build.dir}">
 			<manifest>
-				<attribute name="Main-Class" value="org.eclipse.jdt.internal.jarinjarloader.JarRsrcLoader" />
-				<attribute name="Rsrc-Main-Class" value="com.exactprosystems.jf.app.WinRemoteApplication" />
-				<attribute name="Class-Path" value="." />
-				<attribute name="Rsrc-Class-Path" value="./  libs/api.jar libs/log4j-1.2.17.jar libs/gson-2.2.4.jar " />
+				<attribute name="Main-Class" value="com.exactprosystems.jf.app.WinRemoteApplication" />
+				<attribute name="Class-Path" value="./" />
 			</manifest>	
             <fileset dir="${win.build.dir}" includes="**/*.class"/>
             <fileset dir="" includes="META-INF/services/*.*"/>
-			<zipfileset src="${win.lib.dir}/jar-in-jar-loader.zip" />
-			<zipfileset prefix="libs" dir="${win.api.dir}/release" includes="api.jar" />
-			<zipfileset prefix="libs" dir="${win.lib.dir}" includes="log4j-1.2.17.jar" />
-			<zipfileset prefix="libs" dir="${win.lib.dir}" includes="gson-2.2.4.jar" />
+			<zipfileset src="${win.api.dir}/release/api.jar" />
+			<zipfileset src="${win.lib.dir}/log4j-1.2.17.jar" />
+			<zipfileset src="${win.lib.dir}/gson-2.2.4.jar" />
 		</jar>
 	</target>
 	

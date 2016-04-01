@@ -10,5 +10,17 @@ package com.exactprosystems.jf.app;
 
 public enum KindInformation
 {
-	Value, Color, BackColor
+	Value(0), Color(1), BackColor(2);
+	
+	private KindInformation(int id)
+	{
+		this.id = id;
+	}
+	
+	public int getId()
+	{
+		return this.id;
+	}
+	
+	private int id;
 }
