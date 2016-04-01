@@ -19,7 +19,10 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.geometry.VPos;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
@@ -108,7 +111,7 @@ public class Notifications
 		}
 
 		private final Map<Pos, List<Popup>> popupsMap = new HashMap<>();
-		private final double padding = 15;
+		private final double padding = 30;
 
 		private ParallelTransition parallelTransition = new ParallelTransition(new FadeTransition());
 
@@ -312,7 +315,6 @@ public class Notifications
 
 		TextArea label;
 		Label title;
-		ButtonBar actionsBar;
 		Button closeBtn;
 		ToggleButton pinBtn;
 
@@ -368,13 +370,16 @@ public class Notifications
 			this.label.setText(msg);
 			this.label.setEditable(false);
 			this.label.getStyleClass().addAll(CssVariables.NOTIFICATION_MSG, stateClass);
-//			this.label.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-			this.label.setPrefSize(400, 200);
+			int length = msg.split(System.lineSeparator()).length + 2;
+			length = Math.min(length, 10);
+			this.label.setPrefSize(400, length * 20);
+			this.label.setMinSize(400, length * 20);
+			this.label.setMaxSize(400, length * 20);
+			this.label.setWrapText(true);
 			GridPane.setVgrow(this.label, Priority.ALWAYS);
 			GridPane.setHgrow(this.label, Priority.ALWAYS);
 			GridPane.setColumnSpan(this.label, 4);
 			this.label.opacityProperty().bind(transition);
-
 
 			// initialise close button area
 			this.closeBtn = new Button();
@@ -417,23 +422,11 @@ public class Notifications
 
 		void updatePane()
 		{
-			this.actionsBar = new ButtonBar();
-			this.actionsBar.opacityProperty().bind(transition);
-			GridPane.setHgrow(actionsBar, Priority.SOMETIMES);
 			this.pane.getChildren().clear();
-
-			int row = 0;
-
-			if (title != null)
-			{
-				this.pane.add(this.title, 0, row++);
-			}
-
-			this.pane.add(this.label, 0, row);
-			this.pane.add(this.actionsBar, 1, row);
-
-			this.pane.add(this.closeBtn, 2, 0, 1, row + 1);
-			this.pane.add(this.pinBtn, 3, 0, 1, row);
+			this.pane.add(this.title, 0, 0);
+			this.pane.add(this.label, 0, 1, 3, 1);
+			this.pane.add(this.closeBtn, 2, 0);
+			this.pane.add(this.pinBtn, 1, 0);
 		}
 
 		@Override
