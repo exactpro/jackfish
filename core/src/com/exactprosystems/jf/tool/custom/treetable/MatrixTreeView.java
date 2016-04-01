@@ -184,7 +184,7 @@ public class MatrixTreeView extends TreeTableView<MatrixItem>
 				if (currentItem != null)
 				{
 					GridPane layout = (GridPane) currentItem.getLayout();
-					layout.getChildren().stream().filter(n -> n instanceof GridPane).findFirst().ifPresent(p -> ((GridPane) p).getChildren().get(0).requestFocus());
+					layout.getChildren().stream().filter(n -> n instanceof GridPane).findFirst().ifPresent(p -> Common.setFocused((TextField) ((GridPane) p).getChildren().get(0)));
 				}
 			}
 			else if (SettingsPanel.match(settings, keyEvent, SettingsPanel.SHOW_ALL))
