@@ -11,12 +11,7 @@ package com.exactprosystems.jf.actions;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.common.Context;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
-import com.exactprosystems.jf.common.parser.Matrix;
-import com.exactprosystems.jf.common.parser.Parameter;
-import com.exactprosystems.jf.common.parser.Parameters;
-import com.exactprosystems.jf.common.parser.ReturnAndResult;
-import com.exactprosystems.jf.common.parser.Tokens;
-import com.exactprosystems.jf.common.parser.Result;
+import com.exactprosystems.jf.common.parser.*;
 import com.exactprosystems.jf.common.parser.items.ActionItem;
 import com.exactprosystems.jf.common.parser.items.ActionItem.HelpKind;
 import com.exactprosystems.jf.common.parser.items.MatrixItem;
@@ -25,11 +20,9 @@ import com.exactprosystems.jf.common.parser.listeners.IMatrixListener;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.common.report.ReportTable;
 import com.exactprosystems.jf.exceptions.ParametersException;
-
 import org.apache.log4j.Logger;
 
 import javax.lang.model.type.NullType;
-
 import java.lang.reflect.Field;
 import java.util.*;
 import java.util.Map.Entry;
@@ -530,9 +523,6 @@ public abstract class AbstractAction implements Cloneable
     {
         if (!assertBool.isExpressionNullOrEmpty())
         {
-        	System.err.println("!!!");
-        	
-        	
         	if (!assertBool.evaluate(evaluator))
         	{
                 setError(Tokens.Assert + " error in expression: " + assertBool.getValueAsString());

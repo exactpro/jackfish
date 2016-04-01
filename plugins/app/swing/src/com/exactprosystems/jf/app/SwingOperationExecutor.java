@@ -427,7 +427,7 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 				for (int i = 0; i < number; i++)
 				{
 					String name = tabPane.getTitleAt(i);
-					if (name != null && name.equals(selectedText))
+					if (name != null && name.contains(selectedText))
 					{
 						tabPane.setSelectedIndex(i);
 						break;
@@ -1056,7 +1056,7 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 
 			String[][] res = new String[rows + 1][];
 
-			List<String> headers = getHeaders(table);
+			List<String> headers = getHeaders(table, useNumericHeader);
 			res[0] = new String[columns];
 			for (int column = 0; column < columns; column++)
 			{
@@ -1314,12 +1314,12 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 		return res;
 	}
 
-	private List<String> getHeaders(JTable table) throws Exception
+	private List<String> getHeaders(JTable table, boolean useNumericHeader) throws Exception
 	{
 		List<String> res = new ArrayList<String>();
 		for (int i = 0; i < table.getColumnCount(); i++)
 		{
-			res.add(table.getColumnName(i));
+			res.add(useNumericHeader ? String.valueOf(i) : table.getColumnName(i));
 		}
 		return res;
 	}
