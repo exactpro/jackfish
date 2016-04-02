@@ -1,5 +1,1 @@
-log4net.dll
-Newtonsoft.Json.dll
-UIAdapter.exe
-UIAdapter.exe.config
-UIAdapter.pdb
+UIAdapter.dll
