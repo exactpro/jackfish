@@ -19,6 +19,7 @@ import java.util.*;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
+@Deprecated
 public class WindowsOperationExecutor implements OperationExecutor<UIProxy>
 {
 	public WindowsOperationExecutor(Driver driver, Logger logger)

@@ -7,6 +7,8 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.exactprosystems.jf.app;
 
+import java.util.Arrays;
+
 public class UIProxyJNA
 {
 	private int[] id;
@@ -20,4 +22,9 @@ public class UIProxyJNA
 	{
 		return id;
 	}
+
+    @Override
+    public String toString() {
+        return "UIProxyJNA{" +"id=" + Arrays.toString(id) +'}';
+    }
 }

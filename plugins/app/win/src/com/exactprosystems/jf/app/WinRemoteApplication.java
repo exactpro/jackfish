@@ -26,6 +26,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+@Deprecated
 public class WinRemoteApplication extends RemoteApplication
 {
 	public static final String listFilesName = "list.txt";

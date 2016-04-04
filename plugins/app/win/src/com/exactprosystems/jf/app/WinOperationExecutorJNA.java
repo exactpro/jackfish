@@ -46,15 +46,43 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 	}
 
 	@Override
-	public List<UIProxyJNA> findAll(Locator owner, Locator element) throws Exception
-	{
-		return null;
-	}
+	public List<UIProxyJNA> findAll(Locator owner, Locator element) throws Exception {
+        try {
+            logger.trace(":: find all");
+            UIProxyJNA ownerElement = new UIProxyJNA(null);
+            if (owner != null) {
+                ownerElement = this.find(null, owner);
+            }
+            int length = 10;
+            int[] arr = new int[length];
+            this.driver.findAll(arr, length, ownerElement.getId(), WindowTreeScope.Children.ordinal(), WindowProperty.NameProperty.getId(), element.getName());
+            logger.trace("find all ::");
+            return null;
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+            throw e;
+        }
+    }
 
 	@Override
 	public UIProxyJNA find(Locator owner, Locator element) throws Exception
 	{
-		return null;
+        try {
+            logger.trace(":: find");
+            UIProxyJNA ownerElement = new UIProxyJNA(null);
+            if (owner != null) {
+                ownerElement = find(null, owner);
+            }
+            int length = 100;
+            int[] result = new int[length];
+            int count = this.driver.findAllForLocator(result, length, ownerElement.getId(), element.getControlKind().ordinal(), element.getUid(), element.getXpath(), element.getClazz(), element.getName(), element.getTitle(), element.getText());
+            logger.trace("find ::");
+            return new UIProxyJNA(result);
+        } catch (Exception e) {
+            logger.error(String.format("find(%s,%s)", owner, element));
+            logger.error(e.getMessage(), e);
+            throw e;
+        }
 	}
 
 	@Override

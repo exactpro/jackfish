@@ -82,7 +82,7 @@ public class WinAppFactory implements IApplicationFactory
 	@Override
 	public String getRemoteClassName()
 	{
-		return WinRemoteApplication.class.getCanonicalName();
+		return WinRemoteApplicationJNA.class.getCanonicalName();
 	}
 
 	@Override

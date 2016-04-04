@@ -155,14 +155,15 @@ public abstract class ProxyApplication implements IApplication
 	    	
 	    	Thread.sleep(1000 + attempt * 1000);
 	    }
+        System.out.println("service : " + this.service);
 
-	    
-	    if (this.service != null)
+        if (this.service != null)
 	    {
 	    	try
 	    	{
 				this.service.createLogger(remoteLog, remoteLogLevel, remoteLogPattern);
-				if (start)
+                System.out.println("service start ? : " + start);
+                if (start)
 				{
 					this.service.run(parameters);
 				}
@@ -170,10 +171,12 @@ public abstract class ProxyApplication implements IApplication
 				{
 					this.service.connect(parameters);
 				}
-			    return true;
+                System.out.println("service started");
+                return true;
 	    	}
 	    	catch (Throwable t)
 	    	{
+                t.printStackTrace(System.err);
 		    	stop();
 	    		throw t;
 	    	}
