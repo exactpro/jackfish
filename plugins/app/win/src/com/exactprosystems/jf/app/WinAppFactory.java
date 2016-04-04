@@ -20,10 +20,10 @@ public class WinAppFactory implements IApplicationFactory
 	private static final int requiredMajorVersion = 2;
 	private static final int requiredMinorVersion = 11;
 	
-	private static final String mainWindowName = "MainWindow";
-	private static final String execName = "Exec";
-	private static final String workDirName = "WorkDir";
-	private static final String argsName = "Args";
+	public static final String mainWindowName = "MainWindow";
+	public static final String execName = "Exec";
+	public static final String workDirName = "WorkDir";
+	public static final String argsName = "Args";
 	
 	private static String[] knownParameters = {  };
 	
