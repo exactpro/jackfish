@@ -176,11 +176,6 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 		//TODO need implement this method
 	}
 
-	public static void main(String[] args)
-	{
-		System.out.println(ControlKind.Any.ordinal());
-	}
-
 	@Override
 	protected Collection<String> findAllDerived(Locator owner, Locator element) throws Exception
 	{
@@ -210,20 +205,21 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 	@Override
 	protected Locator getLocatorDerived(Locator owner, ControlKind controlKind, int x, int y) throws Exception
 	{
-		//TODO
+		//TODO getControlByCoords
 		return null;
 	}
 
 	@Override
 	protected ImageWrapper getImageDerived(Locator owner, Locator element) throws Exception
 	{
-		//TODO
+		//TODO getImage
 		return null;
 	}
 
 	@Override
 	protected Rectangle getRectangleDerived(Locator owner, Locator element) throws Exception
 	{
+        //TODO see WinOperExecJNA.class method getRectangle
 		return null;
 	}
 
@@ -266,18 +262,19 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 	@Override
 	protected Document getTreeDerived(Locator owner) throws Exception
 	{
+        //TODO think about it
 		return null;
 	}
 
 	@Override
 	protected void startGrabbingDerived() throws Exception
 	{
-
+        //TODO think about it
 	}
 
 	@Override
 	protected void endGrabbingDerived() throws Exception
 	{
-
+        //TODO think about it
 	}
 }

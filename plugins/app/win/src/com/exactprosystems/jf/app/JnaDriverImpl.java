@@ -8,7 +8,15 @@ import java.io.File;
 public class JnaDriverImpl
 {
 	//TODO path need be relative
-	private static final String dllDir = "C:\\workspaces\\cs\\UIAdapter\\UIAdapter\\bin\\x64\\Release\\UIAdapter.dll";
+	private static final String dllDir = "C:\\BTS\\UIAdapter\\bin\\x64\\Release\\UIAdapter.dll";
+
+    public static void main(String[] args) throws Exception {
+        JnaDriverImpl driver = new JnaDriverImpl();
+        driver.connect("Calc");
+        System.out.println(driver.title());
+        driver.mouse(new int[]{139}, 1, 5, 5);
+        String s = "";
+    }
 
 	public JnaDriverImpl() throws Exception
 	{

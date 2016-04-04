@@ -30,18 +30,22 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 	@Override
 	public Rectangle getRectangle(UIProxyJNA component) throws Exception
 	{
+        //TODO we can get this on Visibility BoundingRectangle ( this information from UIVerify)
 		return null;
 	}
 
 	@Override
 	public Color getColor(String color) throws Exception
 	{
+        //TODO think about it
 		return null;
 	}
 
+    //TODO this method call only if element are many
 	@Override
 	public List<UIProxyJNA> findAll(ControlKind controlKind, UIProxyJNA window, Locator locator) throws Exception
 	{
+        //TODO need be implemented
 		return null;
 	}
 
@@ -73,6 +77,7 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
             if (owner != null) {
                 ownerElement = find(null, owner);
             }
+            //TODO need check returned length and recall if need
             int length = 100;
             int[] result = new int[length];
             int count = this.driver.findAllForLocator(result, length, ownerElement.getId(), element.getControlKind().ordinal(), element.getUid(), element.getXpath(), element.getClazz(), element.getName(), element.getTitle(), element.getText());
@@ -88,7 +93,7 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 	@Override
 	public UIProxyJNA lookAtTable(UIProxyJNA table, Locator additional, Locator header, int x, int y) throws Exception
 	{
-		return null;
+        throw new Exception("This method not needed on windows plugin");
 	}
 
 	@Override
@@ -119,42 +124,49 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 	@Override
 	public boolean press(UIProxyJNA component, Keyboard key) throws Exception
 	{
+        //TODO need release
 		return false;
 	}
 
 	@Override
 	public boolean upAndDown(UIProxyJNA component, Keyboard key, boolean b) throws Exception
 	{
+        //TODO need release
 		return false;
 	}
 
 	@Override
 	public boolean push(UIProxyJNA component) throws Exception
 	{
+        //TODO need call InvokerPattern, because push allowed
 		return false;
 	}
 
 	@Override
 	public boolean toggle(UIProxyJNA component, boolean value) throws Exception
 	{
+        //TODO call to checkbox, radiobutton and togglebutton - doCallPattern
 		return false;
 	}
 
 	@Override
 	public boolean select(UIProxyJNA component, String selectedText) throws Exception
 	{
+        //TODO call to listView, comboBox and tabPanel - doPatternCall
 		return false;
 	}
 
 	@Override
 	public boolean fold(UIProxyJNA component, String path, boolean collaps) throws Exception
 	{
+        //TODO call to menu and tree - doPatternCall
 		return false;
 	}
 
 	@Override
 	public boolean text(UIProxyJNA component, String text, boolean clear) throws Exception
 	{
+        //todo doPatternCall for TextBox and Panel( O_O ??? )
 		return false;
 	}
 
@@ -167,24 +179,35 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 	@Override
 	public boolean setValue(UIProxyJNA component, double value) throws Exception
 	{
+        //TODO doPatternCall from many controlKind
 		return false;
 	}
 
 	@Override
-	public String getValue(UIProxyJNA component) throws Exception
-	{
-		return null;
-	}
+	public String getValue(UIProxyJNA component) throws Exception {
+        try {
+            this.logger.info(":: getvalue");
+//            this.driver.doPatternCall(component.getId(), WindowPattern.ValuePattern.getId(),);
+            this.logger.info("getvalue ::");
+            return null;
+        } catch (Exception e) {
+            this.logger.error(String.format("getValue(%s)", component));
+            this.logger.error(e.getMessage(), e);
+            throw e;
+        }
+    }
 
 	@Override
 	public String get(UIProxyJNA component) throws Exception
 	{
+        //get property name or what?
 		return null;
 	}
 
 	@Override
 	public String getAttr(UIProxyJNA component, String name) throws Exception
 	{
+        //get Property?
 		return null;
 	}
 
