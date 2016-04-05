@@ -34,9 +34,9 @@ public class Main {
         String log4netConfigurePath = pathToDlls + "Log4net.configure";
 
         CSharpDllHandler dllHandler = new CSharpDllHandler(pathToDlls);
-        dllHandler.loadAssemblies(uiAdapterPath, log4netPath);
+//        dllHandler.loadAssemblies(uiAdapterPath, log4netPath);
         JnaAdapter jnaAdapter = dllHandler.getJnaAdapter();
-        jnaAdapter.configureLog4net(log4netConfigurePath);
+//        jnaAdapter.configureLog4net(log4netConfigurePath);
 
 
         System.out.println("Starting app");
