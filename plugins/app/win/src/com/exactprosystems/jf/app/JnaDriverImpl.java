@@ -1,9 +1,11 @@
 package com.exactprosystems.jf.app;
 
+import com.exactprosystems.jf.api.app.MouseAction;
 import com.sun.jna.Native;
 import com.sun.jna.Platform;
 
 import java.io.File;
+import java.util.Arrays;
 
 public class JnaDriverImpl
 {
@@ -14,8 +16,10 @@ public class JnaDriverImpl
         JnaDriverImpl driver = new JnaDriverImpl();
         driver.connect("Calc");
         System.out.println(driver.title());
-        driver.mouse(new int[]{139}, 1, 5, 5);
-        String s = "";
+        int l = 100 * 100;
+        int a[] = new int[l];
+        String id = "42,4458408";
+	    System.out.println(driver.getProperty(id, WindowProperty.NameProperty.getId()));
     }
 
 	public JnaDriverImpl() throws Exception
@@ -64,16 +68,16 @@ public class JnaDriverImpl
 		return title;
 	}
 
-	public String listAll(int[] ownerId, int controlKindId, String uid, String xpath, String clazz, String name, String title, String text) throws Exception
+	public String listAll(String ownerId, int controlKindId, String uid, String xpath, String clazz, String name, String title, String text) throws Exception
 	{
 		String result = this.driver.listAll(ownerId, controlKindId, uid, xpath, clazz, name, title, text);
 		checkError();
 		return result;
 	}
 
-	public String elementAttribute(int[] id, int partId) throws Exception
+	public String elementAttribute(String elementId, int partId) throws Exception
 	{
-		String result = this.driver.elementAttribute(id, partId);
+		String result = this.driver.elementAttribute(elementId, partId);
 		checkError();
 		return result;
 	}
@@ -91,50 +95,53 @@ public class JnaDriverImpl
 		checkError();
 	}
 
-	public void mouse(int[] id, int actionId, int x, int y) throws Exception
+	public void mouse(String elementId, int actionId, int x, int y) throws Exception
 	{
-		this.driver.mouse(id, actionId, x, y);
+		this.driver.mouse(elementId, actionId, x, y);
 		checkError();
 	}
 
-	public int findAllForLocator(int[] arr, int len, int[] ownerId, int controlKindId, String uid, String xpath, String clazz, String name, String title, String text) throws Exception
+	public int findAllForLocator(int[] arr, int len, String ownerId, int controlKindId, String uid, String xpath, String clazz, String name, String title, String text) throws Exception
 	{
 		int result = this.driver.findAllForLocator(arr, len, ownerId, controlKindId, uid, xpath, clazz, name, title, text);
 		checkError();
 		return result;
 	}
 
-	public int findAll(int[] arr, int len, int[] id, int scopeId, long propertyId, Object value) throws Exception
+	public int findAll(int[] arr, int len, String elementId, int scopeId, long propertyId, Object value) throws Exception
 	{
-		int result = this.driver.findAll(arr, len, id, scopeId, propertyId, value);
+		int result = this.driver.findAll(arr, len, elementId, scopeId, propertyId, value);
 		checkError();
 		return result;
 	}
 
-	public String doPatternCall(int[] id, int patternId, String method, Object[] args) throws Exception
+	public String doPatternCall(String elementId, int patternId, String method, Object[] args) throws Exception
 	{
-		String res = this.driver.doPatternCall(id, patternId, method, args);
+		String res = this.driver.doPatternCall(elementId, patternId, method, args);
 		checkError();
 		return res;
 	}
 
-	public String getProperty(int[] id, int propertyId) throws Exception
+	public String getProperty(String elementId, int propertyId) throws Exception
 	{
-		String result = this.driver.getProperty(id, propertyId);
+		String result = this.driver.getProperty(elementId, propertyId);
 		checkError();
 		return result;
 	}
 
-	public int getPatterns(int[] arr, int len, int[] id) throws Exception
+	public int getPatterns(int[] arr, int len, String elementId) throws Exception
 	{
-		int result = this.driver.getPatterns(arr, len, id);
+		int result = this.driver.getPatterns(arr, len, elementId);
 		checkError();
 		return result;
 	}
 
-	public int getImage(int[] arr, int len, int[] id) throws Exception
+	public int getImage(int[] arr, int len, String id) throws Exception
 	{
-		int result = this.driver.getImage(arr, len, id);
+        System.out.println("arr : " + Arrays.toString(arr));
+        System.out.println("len : " +  len);
+        System.out.println("id : " + id);
+        int result = this.driver.getImage(arr, len, id);
 		checkError();
 		return result;
 	}
