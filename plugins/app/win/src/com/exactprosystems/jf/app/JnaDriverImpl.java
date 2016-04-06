@@ -1,24 +1,27 @@
 package com.exactprosystems.jf.app;
 
-import com.exactprosystems.jf.api.app.MouseAction;
 import com.sun.jna.Native;
 import com.sun.jna.Platform;
 
 import java.io.File;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.rmi.RemoteException;
 import java.util.Arrays;
 
 public class JnaDriverImpl
 {
-	//TODO path need be relative
-	private static final String dllDir = "C:\\BTS\\UIAdapter\\bin\\x64\\Release\\UIAdapter.dll";
+	private final static String dllDir = "bin/UIAdapter.dll";
 
     public static void main(String[] args) throws Exception {
-        JnaDriverImpl driver = new JnaDriverImpl();
-        driver.connect("Calc");
-        System.out.println(driver.title());
-        int l = 100 * 100;
-        int a[] = new int[l];
-        String id = "42,4458408";
+	    JnaDriverImpl driver = new JnaDriverImpl();
+	    driver.connect("Calc");
+	    System.out.println(driver.title());
+	    int l = 100 * 100;
+	    int a[] = new int[l];
+	    String id = "42,4458408";
 	    System.out.println(driver.getProperty(id, WindowProperty.NameProperty.getId()));
     }
 
@@ -26,10 +29,17 @@ public class JnaDriverImpl
 	{
 		if (Platform.is64Bit())
 		{}
-		
-		if (new File(dllDir).exists())
+		Path path = Paths.get("tempFile.dll");
+		try (InputStream in = getClass().getResourceAsStream(dllDir)) {
+			Files.copy(in, path);
+		} catch (Exception e) {
+			throw new RemoteException(e.getMessage(), e);
+		}
+		String dll = path.toString();
+		System.out.println("dll path : " + dll);
+		if (new File(dll).exists())
 		{
-			this.driver = (JnaDriver) Native.loadLibrary(dllDir, JnaDriver.class);
+			this.driver = (JnaDriver) Native.loadLibrary(dll, JnaDriver.class);
 		}
 		else
 		{
@@ -42,7 +52,7 @@ public class JnaDriverImpl
 		this.driver.connect(title);
 		checkError();
 	}
-	
+
 	public void run(String exec, String workDir, String param) throws Exception
 	{
 		this.driver.run(exec, workDir, param);
