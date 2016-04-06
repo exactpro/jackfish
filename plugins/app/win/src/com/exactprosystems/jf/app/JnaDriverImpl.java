@@ -1,13 +1,12 @@
 package com.exactprosystems.jf.app;
 
+import com.exactprosystems.jf.api.common.ApiVersionInfo;
 import com.sun.jna.Native;
 import com.sun.jna.Platform;
 
 import java.io.File;
 import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.nio.file.*;
 import java.rmi.RemoteException;
 import java.util.Arrays;
 
@@ -31,11 +30,13 @@ public class JnaDriverImpl
 		{}
 		Path path = Paths.get("tempFile.dll");
 		try (InputStream in = getClass().getResourceAsStream(dllDir)) {
-			Files.copy(in, path);
+			Files.copy(in, path, StandardCopyOption.REPLACE_EXISTING);
 		} catch (Exception e) {
 			throw new RemoteException(e.getMessage(), e);
 		}
 		String dll = path.toString();
+		// TODO if i committed this string, please remove it, because this string only for debuging onyl on my computer
+		// dll = "C:\\jackfish\\AppWinGui\\src\\com\\exactprosystems\\jf\\app\\bin\\UIAdapter.dll";
 		System.out.println("dll path : " + dll);
 		if (new File(dll).exists())
 		{
@@ -92,9 +93,12 @@ public class JnaDriverImpl
 		return result;
 	}
 
-	public int elementByCoords(int[] resultId, int controlKindId, int x, int y) throws Exception
+	public int elementByCoords(int[] resultId, int length, int controlKindId, int x, int y) throws Exception
 	{
-		int result = this.driver.elementByCoords(resultId, controlKindId, x, y);
+		System.out.println("result id : " + Arrays.toString(resultId));
+		System.out.println("length : " + length);
+		System.out.println("x : " + x + " y : " + y);
+		int result = this.driver.elementByCoords(resultId, length, controlKindId, x, y);
 		checkError();
 		return result;
 	}

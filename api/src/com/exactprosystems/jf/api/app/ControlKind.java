@@ -55,6 +55,18 @@ public enum ControlKind
 		this.allOperations.addAll(Arrays.asList(allOperations));
 	}
 
+	public static ControlKind findByClazz(String clazz)
+	{
+		for (ControlKind kind : ControlKind.values())
+		{
+			if (kind.getClazz().equals(clazz))
+			{
+				return kind;
+			}
+		}
+		return Any;
+	}
+
 	public OperationKind defaultOperation()
 	{
 		return this.defaultOperation;

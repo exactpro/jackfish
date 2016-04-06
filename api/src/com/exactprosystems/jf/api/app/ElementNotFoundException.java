@@ -13,6 +13,16 @@ public class ElementNotFoundException extends RemoteException
 {
 	private static final long serialVersionUID = -4722988704327432417L;
 
+	public ElementNotFoundException(int x, int y)
+	{
+		super(String.format("Element not found by location (%d,%d)", x, y));
+	}
+
+	public ElementNotFoundException(String msg, Locator locator)
+	{
+		super(msg + locator);
+	}
+
 	public ElementNotFoundException(Locator locator)
 	{
 		super("No one element was found. Element: " + locator);

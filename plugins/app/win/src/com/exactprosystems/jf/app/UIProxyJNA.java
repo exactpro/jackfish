@@ -11,13 +11,8 @@ import java.util.Arrays;
 
 public class UIProxyJNA
 {
-    public static final String SEPARATOR = ",";
+	public static final String SEPARATOR = ",";
 	private int[] id;
-
-    public static void main(String[] args) {
-        UIProxyJNA jna = new UIProxyJNA(new int[]{42,393658});
-        System.out.println(jna.getIdString());
-    }
 
 	public UIProxyJNA(int[] id)
 	{
@@ -29,27 +24,23 @@ public class UIProxyJNA
 		return id;
 	}
 
-    public String getIdString() {
-        if (this.id == null) {
-            return null;
-        }
-        StringBuilder b = new StringBuilder();
-        for (int i : this.id) {
-            b.append(i).append(SEPARATOR);
-        }
-        return b.deleteCharAt(b.length() - 1).toString();
-    }
+	public String getIdString()
+	{
+		if (this.id == null)
+		{
+			return null;
+		}
+		StringBuilder b = new StringBuilder();
+		for (int i : this.id)
+		{
+			b.append(i).append(SEPARATOR);
+		}
+		return b.deleteCharAt(b.length() - 1).toString();
+	}
 
-    public long[] convertIdToLong() {
-        long[] r = new long[this.id.length];
-        for (int i = 0; i < r.length; i++) {
-            r[i] = id[i];
-        }
-        return r;
-    }
-
-    @Override
-    public String toString() {
-        return "UIProxyJNA{" +"id=" + Arrays.toString(id) +'}';
-    }
+	@Override
+	public String toString()
+	{
+		return "UIProxyJNA{" + "id=" + Arrays.toString(id) + '}';
+	}
 }
