@@ -16,7 +16,7 @@ public interface JnaDriver extends Library {
 	void sendKeys(String key);
 	void mouse(String elementId, int actionId, int x, int y);
 	int findAllForLocator(int[] arr, int len, String ownerId, int controlKindId, String uid, String xpath, String clazz, String name, String title, String text);
-	int findAll(int[] arr, int len, String elementId, int scopeId, long propertyId, Object value);
+	int findAll(int[] arr, int len, String elementId, int scopeId, long propertyId, String value);
 
 	/**
 	 * if @param c == -1 -> arg is null;
