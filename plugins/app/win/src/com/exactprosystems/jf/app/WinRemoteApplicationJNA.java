@@ -183,8 +183,12 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 			String result = this.driver.listAll(ownerId.getIdString(), element.getControlKind()
 					.ordinal(), element.getUid(), element.getXpath(), element.getClazz(), element.getName(), element.getTitle(), element
 					.getText());
-			//TODO mb split this string?
-			res.add(result);
+			//TODO see Program.cs line 162. Or may be split via long string ====== ?
+			String[] split = result.split("#####");
+			for(int i = 0; i < split.length && !split[i].isEmpty(); i++)
+			{
+				res.add(split[i]);
+			}
 			return res;
 		}
 		catch (Exception e)

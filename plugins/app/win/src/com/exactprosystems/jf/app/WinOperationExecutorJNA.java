@@ -123,29 +123,6 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 				throw new ElementNotFoundException("Found " + list.size() + " elements instead 1. Element : ", element);
 			}
 			return list.get(0);
-//			UIProxyJNA ownerElement = new UIProxyJNA(null);
-//			if (owner != null)
-//			{
-//				ownerElement = find(null, owner);
-//			}
-//			int length = 100;
-//			int[] result = new int[length];
-//			int count = this.driver.findAllForLocator(result, length, ownerElement.getIdString(), element.getControlKind()
-//					.ordinal(), element.getUid(), element.getXpath(), element.getClazz(), element.getName(), element.getTitle(), element
-//					.getText());
-//			if (count > length)
-//			{
-//				length = count;
-//				result = new int[length];
-//				this.driver.findAllForLocator(result, length, ownerElement.getIdString(), element.getControlKind()
-//						.ordinal(), element.getUid(), element.getXpath(), element.getClazz(), element.getName(), element
-//						.getTitle(), element.getText());
-//			}
-//			int foundElement = result[0];
-//
-//			int[] r = new int[count];
-//			System.arraycopy(result, 0, r, 0, count);
-//			return new UIProxyJNA(r);
 		}
 		catch (Exception e)
 		{
