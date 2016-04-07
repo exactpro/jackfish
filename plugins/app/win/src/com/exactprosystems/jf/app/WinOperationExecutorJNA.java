@@ -9,14 +9,13 @@ package com.exactprosystems.jf.app;
 
 import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.client.ICondition;
-import com.exactprosystems.jf.api.client.LimitedArrayList;
 import com.exactprosystems.jf.api.common.Str;
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.apache.log4j.Logger;
 
 import java.awt.*;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
@@ -185,7 +184,6 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 	@Override
 	public boolean press(UIProxyJNA component, Keyboard key) throws Exception
 	{
-
 		//TODO need release
 		return false;
 	}
@@ -202,7 +200,7 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 	{
 		try
 		{
-			this.driver.doPatternCall(component.getIdString(), WindowPattern.InvokePattern.getId(), "Invoke", null);
+			this.driver.doPatternCall(component.getIdString(), WindowPattern.InvokePattern.getId(), "Invoke", null, -1);
 			return true;
 		}
 		catch (Exception e)
@@ -216,58 +214,55 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 	@Override
 	public boolean toggle(UIProxyJNA component, boolean value) throws Exception
 	{
-		//for toggleButton and checkbox
-		boolean needForRadioButton = false;
 		try
 		{
-			String property = this.driver.getProperty(component.getIdString(), WindowProperty.ToggleStateProperty.getId());
-			boolean isSelected = property.equals("On");
-			if (value ^ isSelected)
+			String className = this.driver.getProperty(component.getIdString(), WindowProperty.ClassNameProperty.getId());
+			if (className.equalsIgnoreCase(ControlKind.ToggleButton.getClazz()) || className.equals(ControlKind.CheckBox.getClazz()))
 			{
-				this.driver.doPatternCall(component.getIdString(), WindowPattern.TogglePattern.getId(), "Toggle", null);
+				String property = this.driver.getProperty(component.getIdString(), WindowProperty.ToggleStateProperty.getId());
+				boolean isSelected = property.equals("On");
+				if (value ^ isSelected)
+				{
+					this.driver.doPatternCall(component.getIdString(), WindowPattern.TogglePattern.getId(), "Toggle", null, -1);
+				}
 			}
-		}
-		catch (Exception e)
-		{
-			if (e.getMessage().contains("is not found!"))
-			{
-				needForRadioButton = true;
-			}
-			else
-			{
-				this.logger.error(String.format("toggle(%s,%b)", component, value));
-				this.logger.error(e.getMessage(), e);
-				throw e;
-			}
-		}
-		//for radiobutton
-		if (needForRadioButton)
-		{
-			try
-			{
+			else if (className.equalsIgnoreCase(ControlKind.RadioButton.getClazz())) {
 				String property = this.driver.getProperty(component.getIdString(), WindowProperty.IsSelectedProperty.getId());
 				boolean isSelected = Boolean.parseBoolean(property);
 				if (value ^ isSelected)
 				{
-					this.driver.doPatternCall(component.getIdString(), WindowPattern.SelectionItemPattern.getId(), "Select", null);
+					this.driver.doPatternCall(component.getIdString(), WindowPattern.SelectionItemPattern.getId(), "Select", null, -1);
 				}
 			}
-			catch (Exception e)
+			else
 			{
-				this.logger.error(String.format("toggle(%s,%b)", component, value));
-				this.logger.error(e.getMessage(), e);
-				throw e;
+				return false;
 			}
+			return true;
 		}
-		//TODO call to checkbox, radiobutton and togglebutton - doCallPattern
-		return true;
+		catch (Exception e)
+		{
+			this.logger.error(String.format("toggle(%s,%b)", component, value));
+			this.logger.error(e.getMessage(), e);
+			throw e;
+		}
 	}
 
 	@Override
 	public boolean select(UIProxyJNA component, String selectedText) throws Exception
 	{
+		try
+		{
+			String property = this.driver.getProperty(component.getIdString(), WindowProperty.ClassNameProperty.getId());
+			return false;
+		}
+		catch (Exception e)
+		{
+			this.logger.error(String.format("select(%s,%s)", component, selectedText));
+			this.logger.error(e.getMessage(), e);
+			throw e;
+		}
 		//TODO call to listView, comboBox and tabPanel - doPatternCall
-		return false;
 	}
 
 	@Override
@@ -283,11 +278,11 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 		try
 		{
 			String oldText = "";
-			if (clear)
+			if (!clear)
 			{
 				oldText = this.driver.getProperty(component.getIdString(), WindowProperty.ValueProperty.getId());
 			}
-			this.driver.doPatternCall(component.getIdString(), WindowPattern.ValuePattern.getId(), "SetValue", new Object[]{oldText + text});
+			this.driver.doPatternCall(component.getIdString(), WindowPattern.ValuePattern.getId(), "SetValue", oldText + text, 0);
 			return true;
 		}
 		catch (Exception e)
@@ -349,8 +344,20 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 	@Override
 	public String getAttr(UIProxyJNA component, String name) throws Exception
 	{
-		//get Property?
-		return null;
+		try
+		{
+			if (!AttributeKind.isSupported(name))
+			{
+				throw new RemoteException("Unsupported attribute value. Can use only : " + Arrays.toString(AttributeKind.values()));
+			}
+			return this.driver.getProperty(component.getIdString(), AttributeKind.valueOf(name.toUpperCase()).ordinal());
+		}
+		catch (Exception e)
+		{
+			this.logger.error(String.format("getAttr(%s,%s)", component, name));
+			this.logger.error(e.getMessage(), e);
+			throw e;
+		}
 	}
 
 	@Override

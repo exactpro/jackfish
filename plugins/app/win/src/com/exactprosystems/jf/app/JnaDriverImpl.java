@@ -129,9 +129,9 @@ public class JnaDriverImpl
 		return result;
 	}
 
-	public String doPatternCall(String elementId, int patternId, String method, Object[] args) throws Exception
+	public String doPatternCall(String elementId, int patternId, String method, String args, int c) throws Exception
 	{
-		String res = this.driver.doPatternCall(elementId, patternId, method, args);
+		String res = this.driver.doPatternCall(elementId, patternId, method, args, c);
 		checkError();
 		return res;
 	}
