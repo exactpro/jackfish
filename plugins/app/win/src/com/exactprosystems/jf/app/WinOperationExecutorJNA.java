@@ -203,6 +203,7 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 		try
 		{
 			this.driver.mouse(component.getIdString(), action.getId(), x, y);
+			return true;
 		}
 		catch (Exception e)
 		{
@@ -210,7 +211,6 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 			logger.error(e.getMessage(), e);
 			throw e;
 		}
-		return false;
 	}
 
 	@Override
