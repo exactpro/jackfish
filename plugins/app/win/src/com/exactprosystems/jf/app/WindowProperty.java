@@ -38,6 +38,7 @@ public enum WindowProperty
 	IsRequiredForFormProperty(30025),
 	IsScrollItemPatternAvailableProperty(30035),
 	IsScrollPatternAvailableProperty(30034),
+	IsSelectedProperty(30079),
 	IsSelectionItemPatternAvailableProperty(30036),
 	IsSelectionPatternAvailableProperty(30037),
 	IsSynchronizedInputPatternAvailableProperty(30110),

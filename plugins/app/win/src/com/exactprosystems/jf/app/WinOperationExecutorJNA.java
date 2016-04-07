@@ -11,16 +11,21 @@ import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.client.ICondition;
 import com.exactprosystems.jf.api.client.LimitedArrayList;
 import com.exactprosystems.jf.api.common.Str;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.apache.log4j.Logger;
 
 import java.awt.*;
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 {
+	static final String RECTANGLE_PATTERN = "(\\d+),(\\d+),(\\d+),(\\d+)";
 	private Logger logger;
 	private JnaDriverImpl driver;
 
@@ -33,8 +38,25 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 	@Override
 	public Rectangle getRectangle(UIProxyJNA component) throws Exception
 	{
+		String property = this.driver.getProperty(component.getIdString(), WindowProperty.BoundingRectangleProperty.getId());
+		Rectangle rectangle = new Rectangle();
+		Pattern pattern = Pattern.compile(RECTANGLE_PATTERN);
+		Matcher matcher = pattern.matcher(property);
+		if (matcher.matches())
+		{
+			rectangle.setBounds(
+					Integer.parseInt(matcher.group(1)),
+					Integer.parseInt(matcher.group(2)),
+					Integer.parseInt(matcher.group(3)),
+					Integer.parseInt(matcher.group(4))
+			);
+		}
+		else
+		{
+			throw new RemoteException("returned rectangle not matches pattern \\d+,\\d+,\\d+,\\d+");
+		}
 		//TODO we can get this on Visibility BoundingRectangle ( this information from UIVerify)
-		return null;
+		return rectangle;
 	}
 
 	@Override
@@ -163,6 +185,7 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 	@Override
 	public boolean press(UIProxyJNA component, Keyboard key) throws Exception
 	{
+
 		//TODO need release
 		return false;
 	}
@@ -193,8 +216,51 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 	@Override
 	public boolean toggle(UIProxyJNA component, boolean value) throws Exception
 	{
+		//for toggleButton and checkbox
+		boolean needForRadioButton = false;
+		try
+		{
+			String property = this.driver.getProperty(component.getIdString(), WindowProperty.ToggleStateProperty.getId());
+			boolean isSelected = property.equals("On");
+			if (value ^ isSelected)
+			{
+				this.driver.doPatternCall(component.getIdString(), WindowPattern.TogglePattern.getId(), "Toggle", null);
+			}
+		}
+		catch (Exception e)
+		{
+			if (e.getMessage().contains("is not found!"))
+			{
+				needForRadioButton = true;
+			}
+			else
+			{
+				this.logger.error(String.format("toggle(%s,%b)", component, value));
+				this.logger.error(e.getMessage(), e);
+				throw e;
+			}
+		}
+		//for radiobutton
+		if (needForRadioButton)
+		{
+			try
+			{
+				String property = this.driver.getProperty(component.getIdString(), WindowProperty.IsSelectedProperty.getId());
+				boolean isSelected = Boolean.parseBoolean(property);
+				if (value ^ isSelected)
+				{
+					this.driver.doPatternCall(component.getIdString(), WindowPattern.SelectionItemPattern.getId(), "Select", null);
+				}
+			}
+			catch (Exception e)
+			{
+				this.logger.error(String.format("toggle(%s,%b)", component, value));
+				this.logger.error(e.getMessage(), e);
+				throw e;
+			}
+		}
 		//TODO call to checkbox, radiobutton and togglebutton - doCallPattern
-		return false;
+		return true;
 	}
 
 	@Override
@@ -216,11 +282,12 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 	{
 		try
 		{
+			String oldText = "";
 			if (clear)
 			{
-				this.driver.doPatternCall(component.getIdString(), WindowPattern.ValuePattern.getId(), "SetValue", new Object[]{""});
+				oldText = this.driver.getProperty(component.getIdString(), WindowProperty.ValueProperty.getId());
 			}
-			this.driver.doPatternCall(component.getIdString(), WindowPattern.ValuePattern.getId(), "SetValue", new Object[]{text});
+			this.driver.doPatternCall(component.getIdString(), WindowPattern.ValuePattern.getId(), "SetValue", new Object[]{oldText + text});
 			return true;
 		}
 		catch (Exception e)
