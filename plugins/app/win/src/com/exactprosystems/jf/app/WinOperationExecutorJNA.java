@@ -54,7 +54,6 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 		{
 			throw new RemoteException("returned rectangle not matches pattern \\d+,\\d+,\\d+,\\d+");
 		}
-		//TODO we can get this on Visibility BoundingRectangle ( this information from UIVerify)
 		return rectangle;
 	}
 
@@ -65,12 +64,45 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 		return null;
 	}
 
-	//TODO this method call only if element are many
 	@Override
 	public List<UIProxyJNA> findAll(ControlKind controlKind, UIProxyJNA window, Locator locator) throws Exception
 	{
-		//TODO need be implemented
-		return null;
+		try
+		{
+			int length = 100;
+			int[] result = new int[length];
+			int count = this.driver.findAllForLocator(result, length, window.getIdString(), locator.getControlKind()
+					.ordinal(), locator.getUid(), locator.getXpath(), locator.getClazz(), locator.getName(), locator.getTitle(), locator
+					.getText());
+			if (count > length)
+			{
+				length = count;
+				result = new int[length];
+				this.driver.findAllForLocator(result, length, window.getIdString(), locator.getControlKind()
+						.ordinal(), locator.getUid(), locator.getXpath(), locator.getClazz(), locator.getName(), locator
+						.getTitle(), locator.getText());
+			}
+			int foundElementCount = result[0];
+			List<UIProxyJNA> returnedList = new ArrayList<>();
+			int currentPosition = 1;
+			for (int i = 0; i < foundElementCount; i++)
+			{
+				int currentArrayLength = result[currentPosition++];
+				int[] elem = new int[currentArrayLength];
+				for (int j = 0; j < currentArrayLength; j++)
+				{
+					elem[j] = result[currentPosition++];
+				}
+				returnedList.add(new UIProxyJNA(elem));
+			}
+			return returnedList;
+		}
+		catch (Exception e)
+		{
+			this.logger.error(String.format("findALl(%s,%s,%s)", controlKind, window, locator));
+			this.logger.error(e.getMessage(), e);
+			throw e;
+		}
 	}
 
 	@Override
@@ -226,7 +258,8 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 					this.driver.doPatternCall(component.getIdString(), WindowPattern.TogglePattern.getId(), "Toggle", null, -1);
 				}
 			}
-			else if (className.equalsIgnoreCase(ControlKind.RadioButton.getClazz())) {
+			else if (className.equalsIgnoreCase(ControlKind.RadioButton.getClazz()))
+			{
 				String property = this.driver.getProperty(component.getIdString(), WindowProperty.IsSelectedProperty.getId());
 				boolean isSelected = Boolean.parseBoolean(property);
 				if (value ^ isSelected)
@@ -253,8 +286,25 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 	{
 		try
 		{
-			String property = this.driver.getProperty(component.getIdString(), WindowProperty.ClassNameProperty.getId());
-			return false;
+			int length = 100;
+			int[] arr = new int[length];
+			int count = this.driver.findAll(arr, length, component.getIdString(), WindowTreeScope.Children.getValue(), WindowProperty.NameProperty.getId(), selectedText);
+			if (count > length)
+			{
+				length = count;
+				arr = new int[length];
+				this.driver.findAll(arr, length, component.getIdString(), WindowTreeScope.Children.getValue(), WindowProperty.NameProperty.getId(), selectedText);
+			}
+			int foundElementCount = arr[0];
+			if (foundElementCount > 1)
+			{
+				throw new Exception("Inside current component found " + foundElementCount + " elements with name " + selectedText);
+			}
+			int itemLength = arr[1];
+			int[] itemId = new int[itemLength];
+			System.arraycopy(arr, 2, itemId, 0, itemLength);
+			this.driver.doPatternCall(new UIProxyJNA(itemId).getIdString(), WindowPattern.SelectionItemPattern.getId(), "Select", null, -1);
+			return true;
 		}
 		catch (Exception e)
 		{
@@ -262,7 +312,6 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 			this.logger.error(e.getMessage(), e);
 			throw e;
 		}
-		//TODO call to listView, comboBox and tabPanel - doPatternCall
 	}
 
 	@Override
@@ -296,12 +345,54 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 	@Override
 	public boolean wait(Locator locator, int ms, boolean toAppear, AtomicLong atomicLong) throws Exception
 	{
-		return false;
+		long begin = System.currentTimeMillis();
+		try
+		{
+			long time = System.currentTimeMillis();
+			while (System.currentTimeMillis() < time + ms)
+			{
+				try
+				{
+					List<UIProxyJNA> elements = this.findAll(null, locator);
+					if (toAppear)
+					{
+						if (elements.size() > 0)
+						{
+							return true;
+						}
+					}
+					else
+					{
+						if (elements.size() == 0)
+						{
+							return true;
+						}
+					}
+				}
+				catch (Exception e)
+				{
+					this.logger.error("Error on waiting");
+					this.logger.error(e.getMessage(), e);
+				}
+			}
+			return false;
+		}
+		catch (Exception e)
+		{
+			this.logger.error(String.format("wait(%s,%d,%b)", locator, ms, toAppear));
+			this.logger.error(e.getMessage(), e);
+			throw e;
+		}
+		finally
+		{
+			atomicLong.set(System.currentTimeMillis() - begin);
+		}
 	}
 
 	@Override
 	public boolean setValue(UIProxyJNA component, double value) throws Exception
 	{
+
 		//TODO doPatternCall from many controlKind
 		return false;
 	}

@@ -10,12 +10,12 @@ package com.exactprosystems.jf.app;
 
 public enum WindowTreeScope
 {
-    Element 	(1),
-    Children 	(2),
-    Descendants (4),
-    Subtree 	(7),
-    Parent 		(8),
-    Ancestors 	(16);
+    Element 	(1), // found only on element
+    Children 	(2), // found only children of current element
+    Descendants (4), // found on children of children of current component
+    Subtree 	(7), // found from root element
+    Parent 		(8), // not supported
+    Ancestors 	(16);// not supported
     
     WindowTreeScope(int value)
     {

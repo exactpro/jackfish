@@ -303,7 +303,7 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 	@Override
 	protected void newInstanceDerived(Map<String, String> args) throws Exception
 	{
-
+		throw new Exception("Not implemented on win plugin");
 	}
 
 	@Override
@@ -315,7 +315,7 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 	@Override
 	protected String closeWindowDerived() throws Exception
 	{
-		return null;
+		throw new Exception("Not implemented on win plugin");
 	}
 
 	@Override
@@ -328,12 +328,12 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 	@Override
 	protected void startGrabbingDerived() throws Exception
 	{
-		//TODO think about it
+
 	}
 
 	@Override
 	protected void endGrabbingDerived() throws Exception
 	{
-		//TODO think about it
+
 	}
 }

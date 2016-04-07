@@ -14,16 +14,6 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import com.exactprosystems.jf.api.client.ICondition;
 
-//Do.check('str').check('str', 1, 2, true).checkAttr('attr', 'value').checkAttrRegexp('attr', 'reg');
-//Do.click(2, 3).click().click(4, 5, MouseAction.LeftDoubleClick).collapse('path').count().delay(12).expand('path').foreach(Do.click());
-//Do.get().getAttr('attr').getRectangle().getRow(new StringCondition('field', '>', 100), null);
-//Do.getRowByIndex(21).getRowIndexes(new StringCondition('field', '>', 100), null);
-//Do.getRowWithColor(1).getTable().getValue().getValue(1, 2).keyDown(Keyboard.A).keyUp(Keyboard.B).move().move(2, 4).press(Keyboard.A);
-//Do.push().repeat(10, Do.click()).select('value').text('text', 1, 2).text('value').toggle(true);
-//Do.use('loc').use(3).wait('element').wait('loc', 100, true).wait(new Locator(), 222, true);
-//
-
-
 public enum OperationKind
 {
 	FOREACH("foreach")
