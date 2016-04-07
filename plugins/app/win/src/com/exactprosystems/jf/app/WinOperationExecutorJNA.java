@@ -300,9 +300,11 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 			{
 				throw new Exception("Inside current component found " + foundElementCount + " elements with name " + selectedText);
 			}
+			this.logger.info("Getting array : " + Arrays.toString(arr));
 			int itemLength = arr[1];
 			int[] itemId = new int[itemLength];
 			System.arraycopy(arr, 2, itemId, 0, itemLength);
+			this.logger.info("Element id array : " + Arrays.toString(itemId));
 			this.driver.doPatternCall(new UIProxyJNA(itemId).getIdString(), WindowPattern.SelectionItemPattern.getId(), "Select", null, -1);
 			return true;
 		}
