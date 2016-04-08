@@ -1,12 +1,15 @@
 package com.exactprosystems.jf.app;
 
-import com.exactprosystems.jf.api.common.ApiVersionInfo;
+import com.exactprosystems.jf.api.app.ControlKind;
 import com.sun.jna.Native;
 import com.sun.jna.Platform;
 
 import java.io.File;
 import java.io.InputStream;
-import java.nio.file.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.rmi.RemoteException;
 import java.util.Arrays;
 
@@ -105,7 +108,7 @@ public class JnaDriverImpl
 
 	public void sendKeys(String key) throws Exception
 	{
-		this.driver.sendKeys(key);
+		this.driver.sendKey(key);
 		checkError();
 	}
 

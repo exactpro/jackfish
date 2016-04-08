@@ -216,8 +216,17 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 	@Override
 	public boolean press(UIProxyJNA component, Keyboard key) throws Exception
 	{
-		//TODO need release
-		return false;
+		try
+		{
+			this.driver.sendKeys(key.name());
+			return true;
+		}
+		catch (Exception e)
+		{
+			this.logger.error(String.format("press(%s,%s)", component, key));
+			this.logger.error(e.getMessage(), e);
+			throw e;
+		}
 	}
 
 	@Override

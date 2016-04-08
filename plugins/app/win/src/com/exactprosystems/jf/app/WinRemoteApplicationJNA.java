@@ -166,7 +166,37 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 	@Override
 	protected void resizeDerived(int height, int width, boolean maximize, boolean minimize) throws Exception
 	{
-		//TODO need implement this method
+		try
+		{
+			//TODO it's right that we found main window? mb just get it on c# side and call patterns?
+			int length = 100;
+			int[] arr = new int[length];
+			driver.findAll(arr, length, null, WindowTreeScope.Element.getValue(), WindowProperty.NameProperty.getId(), this.driver.title());
+			if (arr[0] > 1)
+			{
+				throw new Exception("Found more that one main windows : " + arr[0]);
+			}
+			int[] windowRuntimeId = new int[arr[1]];
+			System.arraycopy(arr, 2, windowRuntimeId, 0, arr[1]);
+			if (maximize)
+			{
+				this.driver.doPatternCall(new UIProxyJNA(windowRuntimeId).getIdString(), WindowPattern.WindowPattern.getId(), "SetWindowVisualState", "Maximized", 0);
+			}
+			else if (minimize)
+			{
+				this.driver.doPatternCall(new UIProxyJNA(windowRuntimeId).getIdString(), WindowPattern.WindowPattern.getId(), "SetWindowVisualState", "Minimized", 0);
+			}
+			else
+			{
+				this.driver.doPatternCall(new UIProxyJNA(windowRuntimeId).getIdString(), WindowPattern.TransformPattern.getId(), "Resize", width + "%" + height, 1);
+			}
+		}
+		catch (Exception e)
+		{
+			this.logger.error(String.format("resizeDerived(%d,%d,%b,%b)", height, width, maximize, minimize));
+			this.logger.error(e.getMessage(), e);
+			throw e;
+		}
 	}
 
 	@Override
@@ -328,12 +358,12 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 	@Override
 	protected void startGrabbingDerived() throws Exception
 	{
-
+		//done
 	}
 
 	@Override
 	protected void endGrabbingDerived() throws Exception
 	{
-
+		//done
 	}
 }
