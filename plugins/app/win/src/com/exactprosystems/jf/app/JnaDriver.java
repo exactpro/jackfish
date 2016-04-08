@@ -22,6 +22,7 @@ public interface JnaDriver extends Library {
 	 * if @param c == -1 -> arg is null;
 	 * if @param c == 0 -> arg is array of string with separator %
 	 * if @param c == 1 -> arg is array of int with separator %
+	 * if @param c == 2 -> arg is array of double with separator %
 	 */
 	String doPatternCall(String elementId, int patternId, String method, String arg, int c);
 	String getProperty(String elementId, int propertyId);

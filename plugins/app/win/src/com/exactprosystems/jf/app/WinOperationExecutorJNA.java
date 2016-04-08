@@ -403,9 +403,17 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 	@Override
 	public boolean setValue(UIProxyJNA component, double value) throws Exception
 	{
-
-		//TODO doPatternCall from many controlKind
-		return false;
+		try
+		{
+			this.driver.doPatternCall(component.getIdString(), WindowPattern.RangeValuePattern.getId(), "SetValue", "" + value, 2);
+			return true;
+		}
+		catch (Exception e)
+		{
+			this.logger.error(String.format("setValue(%s,%d)", component, value));
+			this.logger.error(e.getMessage(), e);
+			throw e;
+		}
 	}
 
 	@Override
