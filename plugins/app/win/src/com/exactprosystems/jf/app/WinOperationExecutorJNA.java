@@ -71,14 +71,15 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 		{
 			int length = 100;
 			int[] result = new int[length];
-			int count = this.driver.findAllForLocator(result, length, window.getIdString(), locator.getControlKind()
+			String ownerId = window == null ? null : window.getIdString();
+			int count = this.driver.findAllForLocator(result, length, ownerId, locator.getControlKind()
 					.ordinal(), locator.getUid(), locator.getXpath(), locator.getClazz(), locator.getName(), locator.getTitle(), locator
 					.getText());
 			if (count > length)
 			{
 				length = count;
 				result = new int[length];
-				this.driver.findAllForLocator(result, length, window.getIdString(), locator.getControlKind()
+				this.driver.findAllForLocator(result, length, ownerId, locator.getControlKind()
 						.ordinal(), locator.getUid(), locator.getXpath(), locator.getClazz(), locator.getName(), locator
 						.getTitle(), locator.getText());
 			}
@@ -337,6 +338,7 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 	{
 		try
 		{
+			//todo for document ( textArea need textPattern)
 			String oldText = "";
 			if (!clear)
 			{
