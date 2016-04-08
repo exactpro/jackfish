@@ -288,12 +288,12 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 		{
 			int length = 100;
 			int[] arr = new int[length];
-			int count = this.driver.findAll(arr, length, component.getIdString(), WindowTreeScope.Children.getValue(), WindowProperty.NameProperty.getId(), selectedText);
+			int count = this.driver.findAll(arr, length, component.getIdString(), WindowTreeScope.Descendants.getValue(), WindowProperty.NameProperty.getId(), selectedText);
 			if (count > length)
 			{
 				length = count;
 				arr = new int[length];
-				this.driver.findAll(arr, length, component.getIdString(), WindowTreeScope.Children.getValue(), WindowProperty.NameProperty.getId(), selectedText);
+				this.driver.findAll(arr, length, component.getIdString(), WindowTreeScope.Descendants.getValue(), WindowProperty.NameProperty.getId(), selectedText);
 			}
 			int foundElementCount = arr[0];
 			if (foundElementCount > 1)

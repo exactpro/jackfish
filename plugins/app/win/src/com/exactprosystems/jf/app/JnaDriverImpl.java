@@ -122,7 +122,7 @@ public class JnaDriverImpl
 		return result;
 	}
 
-	public int findAll(int[] arr, int len, String elementId, int scopeId, long propertyId, String value) throws Exception
+	public int findAll(int[] arr, int len, String elementId, int scopeId, int propertyId, String value) throws Exception
 	{
 		int result = this.driver.findAll(arr, len, elementId, scopeId, propertyId, value);
 		checkError();
