@@ -11,6 +11,9 @@ import java.util.Arrays;
 
 public class UIProxyJNA
 {
+	//TODO think about it pls
+	public static final UIProxyJNA DUMMY = new UIProxyJNA(new int[0]);
+
 	public static final String SEPARATOR = ",";
 	private int[] id;
 

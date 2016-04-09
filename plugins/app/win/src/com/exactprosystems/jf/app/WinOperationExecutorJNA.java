@@ -37,7 +37,7 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 	{
 		try
 		{
-			String property = this.driver.getProperty(component.getIdString(), WindowProperty.BoundingRectangleProperty.getId());
+			String property = this.driver.getProperty(component, WindowProperty.BoundingRectangleProperty);
 			Rectangle rectangle = new Rectangle();
 			Pattern pattern = Pattern.compile(RECTANGLE_PATTERN);
 			Matcher matcher = pattern.matcher(property);
@@ -74,17 +74,15 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 		{
 			int length = 100;
 			int[] result = new int[length];
-			String ownerId = window == null ? null : window.getIdString();
-			int count = this.driver.findAllForLocator(result, length, ownerId, locator.getControlKind()
-					.ordinal(), locator.getUid(), locator.getXpath(), locator.getClazz(), locator.getName(), locator.getTitle(), locator
-					.getText());
+			UIProxyJNA owner = window == null ? new UIProxyJNA(null) : window;
+			int count = this.driver.findAllForLocator(result, owner, controlKind, locator.getUid(), locator.getXpath(), locator
+					.getClazz(), locator.getName(), locator.getTitle(), locator.getText());
 			if (count > length)
 			{
 				length = count;
 				result = new int[length];
-				this.driver.findAllForLocator(result, length, ownerId, locator.getControlKind()
-						.ordinal(), locator.getUid(), locator.getXpath(), locator.getClazz(), locator.getName(), locator
-						.getTitle(), locator.getText());
+				this.driver.findAllForLocator(result, owner, locator.getControlKind(), locator.getUid(), locator.getXpath(), locator
+						.getClazz(), locator.getName(), locator.getTitle(), locator.getText());
 			}
 			int foundElementCount = result[0];
 			List<UIProxyJNA> returnedList = new ArrayList<>();
@@ -130,16 +128,14 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 			}
 			int length = 100;
 			int[] result = new int[length];
-			int count = this.driver.findAllForLocator(result, length, ownerElement.getIdString(), element.getControlKind()
-					.ordinal(), element.getUid(), element.getXpath(), element.getClazz(), element.getName(), element.getTitle(), element
-					.getText());
+			int count = this.driver.findAllForLocator(result, ownerElement, element.getControlKind(), element.getUid(), element
+					.getXpath(), element.getClazz(), element.getName(), element.getTitle(), element.getText());
 			if (count > length)
 			{
 				length = count;
 				result = new int[length];
-				this.driver.findAllForLocator(result, length, ownerElement.getIdString(), element.getControlKind()
-						.ordinal(), element.getUid(), element.getXpath(), element.getClazz(), element.getName(), element
-						.getTitle(), element.getText());
+				this.driver.findAllForLocator(result, ownerElement, element.getControlKind(), element.getUid(), element.getXpath(), element
+						.getClazz(), element.getName(), element.getTitle(), element.getText());
 			}
 			int foundElementCount = result[0];
 			List<UIProxyJNA> returnedList = new ArrayList<>();
@@ -172,7 +168,10 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 			List<UIProxyJNA> list = findAll(owner, element);
 			if (list.isEmpty())
 			{
-				//TODO add condition if element is weak return dummy element.
+				if (element.isWeak())
+				{
+					return UIProxyJNA.DUMMY;
+				}
 				throw new ElementNotFoundException(element);
 			}
 			if (list.size() > 1)
@@ -245,7 +244,7 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 	{
 		try
 		{
-			this.driver.doPatternCall(component.getIdString(), WindowPattern.InvokePattern.getId(), "Invoke", null, -1);
+			this.driver.doPatternCall(component, WindowPattern.InvokePattern, "Invoke", null, -1);
 			return true;
 		}
 		catch (Exception e)
@@ -261,24 +260,24 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 	{
 		try
 		{
-			String className = this.driver.getProperty(component.getIdString(), WindowProperty.ClassNameProperty.getId());
+			String className = this.driver.getProperty(component, WindowProperty.ClassNameProperty);
 			if (className.equalsIgnoreCase(ControlKind.ToggleButton.getClazz()) || className.equals(ControlKind.CheckBox
 					.getClazz()))
 			{
-				String property = this.driver.getProperty(component.getIdString(), WindowProperty.ToggleStateProperty.getId());
+				String property = this.driver.getProperty(component, WindowProperty.ToggleStateProperty);
 				boolean isSelected = property.equals("On");
 				if (value ^ isSelected)
 				{
-					this.driver.doPatternCall(component.getIdString(), WindowPattern.TogglePattern.getId(), "Toggle", null, -1);
+					this.driver.doPatternCall(component, WindowPattern.TogglePattern, "Toggle", null, -1);
 				}
 			}
 			else if (className.equalsIgnoreCase(ControlKind.RadioButton.getClazz()))
 			{
-				String property = this.driver.getProperty(component.getIdString(), WindowProperty.IsSelectedProperty.getId());
+				String property = this.driver.getProperty(component, WindowProperty.IsSelectedProperty);
 				boolean isSelected = Boolean.parseBoolean(property);
 				if (value ^ isSelected)
 				{
-					this.driver.doPatternCall(component.getIdString(), WindowPattern.SelectionItemPattern.getId(), "Select", null, -1);
+					this.driver.doPatternCall(component, WindowPattern.SelectionItemPattern, "Select", null, -1);
 				}
 			}
 			else
@@ -302,14 +301,12 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 		{
 			int length = 100;
 			int[] arr = new int[length];
-			int count = this.driver.findAll(arr, length, component.getIdString(), WindowTreeScope.Descendants.getValue(), WindowProperty.NameProperty
-					.getId(), selectedText);
+			int count = this.driver.findAll(arr, component, WindowTreeScope.Descendants, WindowProperty.NameProperty, selectedText);
 			if (count > length)
 			{
 				length = count;
 				arr = new int[length];
-				this.driver.findAll(arr, length, component.getIdString(), WindowTreeScope.Descendants.getValue(), WindowProperty.NameProperty
-						.getId(), selectedText);
+				this.driver.findAll(arr, component, WindowTreeScope.Descendants, WindowProperty.NameProperty, selectedText);
 			}
 			int foundElementCount = arr[0];
 			if (foundElementCount > 1)
@@ -321,7 +318,7 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 			int[] itemId = new int[itemLength];
 			System.arraycopy(arr, 2, itemId, 0, itemLength);
 			this.logger.info("Element id array : " + Arrays.toString(itemId));
-			this.driver.doPatternCall(new UIProxyJNA(itemId).getIdString(), WindowPattern.SelectionItemPattern.getId(), "Select", null, -1);
+			this.driver.doPatternCall(new UIProxyJNA(itemId), WindowPattern.SelectionItemPattern, "Select", null, -1);
 			return true;
 		}
 		catch (Exception e)
@@ -364,9 +361,9 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 			String oldText = "";
 			if (!clear)
 			{
-				oldText = this.driver.getProperty(component.getIdString(), WindowProperty.ValueProperty.getId());
+				oldText = this.driver.getProperty(component, WindowProperty.ValueProperty);
 			}
-			this.driver.doPatternCall(component.getIdString(), WindowPattern.ValuePattern.getId(), "SetValue", oldText + text, 0);
+			this.driver.doPatternCall(component, WindowPattern.ValuePattern, "SetValue", oldText + text, 0);
 			return true;
 		}
 		catch (Exception e)
@@ -429,7 +426,7 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 	{
 		try
 		{
-			this.driver.doPatternCall(component.getIdString(), WindowPattern.RangeValuePattern.getId(), "SetValue", "" + value, 2);
+			this.driver.doPatternCall(component, WindowPattern.RangeValuePattern, "SetValue", "" + value, 2);
 			return true;
 		}
 		catch (Exception e)
@@ -445,10 +442,10 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 	{
 		try
 		{
-			String result = this.driver.getProperty(component.getIdString(), WindowProperty.ValueProperty.getId());
+			String result = this.driver.getProperty(component, WindowProperty.ValueProperty);
 			if (Str.IsNullOrEmpty(result))
 			{
-				result = this.driver.getProperty(component.getIdString(), WindowProperty.NameProperty.getId());
+				result = this.driver.getProperty(component, WindowProperty.NameProperty);
 			}
 			return result;
 		}
@@ -465,7 +462,7 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 	{
 		try
 		{
-			return this.driver.getProperty(component.getIdString(), WindowProperty.NameProperty.getId());
+			return this.driver.getProperty(component, WindowProperty.NameProperty);
 		}
 		catch (Exception e)
 		{
@@ -499,10 +496,7 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 	{
 		try
 		{
-			List<UIProxyJNA> rows = getRows(component);
-			UIProxyJNA currentRow = rows.get(row);
-			List<UIProxyJNA> cells = this.getCells(currentRow);
-			UIProxyJNA cell = cells.get(column);
+			UIProxyJNA cell = foundCellInTable(component, column, row);
 			this.driver.mouse(cell, action, Integer.MIN_VALUE, Integer.MAX_VALUE);
 			return true;
 		}
@@ -519,11 +513,8 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 	{
 		try
 		{
-			List<UIProxyJNA> rows = getRows(component);
-			UIProxyJNA currentRow = rows.get(row);
-			List<UIProxyJNA> cells = this.getCells(currentRow);
-			UIProxyJNA cell = cells.get(column);
-			this.driver.doPatternCall(cell.getIdString(), WindowPattern.ValuePattern.getId(), "SetValue", text, 0);
+			UIProxyJNA cell = foundCellInTable(component, column, row);
+			this.driver.doPatternCall(cell, WindowPattern.ValuePattern, "SetValue", text, 0);
 			return true;
 		}
 		catch (Exception e)
@@ -606,8 +597,7 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 			UIProxyJNA headerRow = rows.get(0);
 			List<String> headers = getRow(headerRow, useNumericHeader);
 
-			// +1 because the first row - is header;
-			UIProxyJNA needRow = rows.get(i + 1);
+			UIProxyJNA needRow = rows.get(i);
 			List<String> row = getRow(needRow, false);
 			for (int j = 0; j < headers.size(); j++)
 			{
@@ -644,6 +634,12 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 			for (int i = 1; i < rows.size(); i++)
 			{
 				List<String> row = getRow(rows.get(i), false);
+				//TODO check that we found row, not scrollbar
+				// but if child count of scrollbar == header.size() we have a problem :D
+				if (row.size() != headerRow.size())
+				{
+					continue;
+				}
 				for (int j = 0; j < row.size(); j++)
 				{
 					table[i][j] = row.get(j);
@@ -691,12 +687,12 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 		{
 			int length = 100;
 			int[] arr = new int[length];
-			int res = this.driver.findAll(arr, length, table.getIdString(), WindowTreeScope.Children.getValue(), WindowProperty.ClassNameProperty.getId(), "");
+			int res = this.driver.findAll(arr, table, WindowTreeScope.Children, WindowProperty.ClassNameProperty, "");
 			if (res > length)
 			{
 				length = res;
 				arr = new int[length];
-				this.driver.findAll(arr, length, table.getIdString(), WindowTreeScope.Children.getValue(), WindowProperty.ClassNameProperty.getId(), "");
+				this.driver.findAll(arr, table, WindowTreeScope.Children, WindowProperty.ClassNameProperty, "");
 			}
 			int foundElementCount = arr[0];
 			List<UIProxyJNA> rowsList = new ArrayList<>();
@@ -727,12 +723,12 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 		{
 			int length = 100;
 			int[] arr = new int[length];
-			int res = this.driver.findAll(arr, length, row.getIdString(), WindowTreeScope.Children.getValue(), WindowProperty.ClassNameProperty.getId(), "");
+			int res = this.driver.findAll(arr, row, WindowTreeScope.Children, WindowProperty.ClassNameProperty, "");
 			if (res > length)
 			{
 				length = res;
 				arr = new int[length];
-				this.driver.findAll(arr, length, row.getIdString(), WindowTreeScope.Children.getValue(), WindowProperty.ClassNameProperty.getId(), "");
+				this.driver.findAll(arr, row, WindowTreeScope.Children, WindowProperty.ClassNameProperty, "");
 			}
 
 			int foundElementCount = arr[0];
@@ -753,7 +749,7 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 			{
 				try
 				{
-					returnedList.add(useNumericHeader ? String.valueOf(i) : this.driver.getProperty(cellsList.get(i).getIdString(), WindowProperty.ValueProperty.getId()));
+					returnedList.add(useNumericHeader ? String.valueOf(i) : this.driver.getProperty(cellsList.get(i), WindowProperty.ValueProperty));
 				}
 				catch (Exception e)
 				{
@@ -776,12 +772,12 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 		{
 			int length = 100;
 			int[] arr = new int[length];
-			int res = this.driver.findAll(arr, length, row.getIdString(), WindowTreeScope.Children.getValue(), WindowProperty.ClassNameProperty.getId(), "");
+			int res = this.driver.findAll(arr, row, WindowTreeScope.Children, WindowProperty.ClassNameProperty, "");
 			if (res > length)
 			{
 				length = res;
 				arr = new int[length];
-				this.driver.findAll(arr, length, row.getIdString(), WindowTreeScope.Children.getValue(), WindowProperty.ClassNameProperty.getId(), "");
+				this.driver.findAll(arr, row, WindowTreeScope.Children, WindowProperty.ClassNameProperty, "");
 			}
 
 			int foundElementCount = arr[0];
@@ -838,84 +834,11 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 		}
 	}
 
-	private List<String> getHeaders(UIProxyJNA table, boolean useNumericHeader) throws Exception
+	private UIProxyJNA foundCellInTable(UIProxyJNA component, int column, int row) throws Exception
 	{
-		try
-		{
-			//TODO this code work only for framework WindowsForms. Need implement for Wpf applications
-			int[] topRowRuntimeId = findTopRow(table);
-			UIProxyJNA topRow = new UIProxyJNA(topRowRuntimeId);
-			int length = 100;
-			int[] arr = new int[length];
-			String headerName = "header";
-			int res = this.driver.findAll(arr, length, topRow.getIdString(), WindowTreeScope.Children.getValue(), WindowProperty.LocalizedControlTypeProperty
-					.getId(), headerName);
-			if (res > length)
-			{
-				length = res;
-				arr = new int[length];
-				this.driver.findAll(arr, length, topRow.getIdString(), WindowTreeScope.Children.getValue(), WindowProperty.LocalizedControlTypeProperty
-						.getId(), headerName);
-			}
-			int foundElementCount = arr[0];
-			List<UIProxyJNA> headerList = new ArrayList<>();
-			int currentPosition = 1;
-			for (int i = 0; i < foundElementCount; i++)
-			{
-				int currentArrayLength = arr[currentPosition++];
-				int[] elem = new int[currentArrayLength];
-				for (int j = 0; j < currentArrayLength; j++)
-				{
-					elem[j] = arr[currentPosition++];
-				}
-				headerList.add(new UIProxyJNA(elem));
-			}
-			ArrayList<String> returnedList = new ArrayList<>();
-			for (int i = 0; i < headerList.size(); i++)
-			{
-				returnedList.add(useNumericHeader ? "" + i : this.driver.getProperty(headerList.get(i).getIdString(), WindowProperty.NameProperty.getId()));
-			}
-			return returnedList;
-		}
-		catch (Exception e)
-		{
-			this.logger.error(String.format("getHeaders(%s,%b)", table, useNumericHeader));
-			this.logger.error(e.getMessage(), e);
-			throw e;
-		}
-	}
-
-	private int[] findTopRow(UIProxyJNA table) throws Exception
-	{
-		try
-		{
-			int length = 100;
-			int[] arr = new int[length];
-
-			String headName = "Top Row";
-			int res = this.driver.findAll(arr, length, table.getIdString(), WindowTreeScope.Children.getValue(), WindowProperty.NameProperty
-					.getId(), headName);
-			if (res > length)
-			{
-				length = res;
-				arr = new int[length];
-				this.driver.findAll(arr, length, table.getIdString(), WindowTreeScope.Children.getValue(), WindowProperty.NameProperty
-						.getId(), headName);
-			}
-			int foundElementCount = arr[0];
-			if (foundElementCount > 1)
-			{
-				throw new Exception("Found " + foundElementCount + " headers instead 1");
-			}
-			int[] headerRuntimeId = new int[arr[1]];
-			System.arraycopy(arr, 2, headerRuntimeId, 0, arr[1]);
-			return headerRuntimeId;
-		}
-		catch (Exception e)
-		{
-			this.logger.error(String.format("findTopRow(%s)", table));
-			this.logger.error(e.getMessage(), e);
-			throw e;
-		}
+		List<UIProxyJNA> rows = getRows(component);
+		UIProxyJNA currentRow = rows.get(row);
+		List<UIProxyJNA> cells = this.getCells(currentRow);
+		return cells.get(column);
 	}
 }

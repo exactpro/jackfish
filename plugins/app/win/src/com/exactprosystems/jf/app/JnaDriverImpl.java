@@ -19,10 +19,6 @@ import java.util.Arrays;
 /*
 	TODO  we need do all operations inside this class.
 	for example recall some methods, if returned length > initial length
-	and from executor and remoteApplication we need to call driver with normal argument (e.g. UIProxyJna, ControlKind and etc), not like this
-	string id, int kindOrdinal and etc.
-	for example see methods (right) listAll and elementAttribute
-	and not right - getImage, findAll ant other.
 */
 public class JnaDriverImpl
 {
@@ -36,7 +32,7 @@ public class JnaDriverImpl
 	    int l = 100 * 100;
 	    int a[] = new int[l];
 	    String id = "42,4458408";
-	    System.out.println(driver.getProperty(id, WindowProperty.NameProperty.getId()));
+	    System.out.println(driver.getProperty(new UIProxyJNA(new int[]{42,4458408}), WindowProperty.NameProperty));
     }
 
 	public JnaDriverImpl(Logger logger) throws Exception
@@ -100,7 +96,7 @@ public class JnaDriverImpl
 	{
 		long start = System.currentTimeMillis();
 		String title = this.driver.title();
-		this.logger.info(String.format("title(), time (ms) : %d", System.currentTimeMillis() - start));
+		this.logger.info(String.format("title() = %s, time (ms) : %d",title, System.currentTimeMillis() - start));
 		checkError();
 		return title;
 	}
@@ -118,7 +114,7 @@ public class JnaDriverImpl
 	{
 		long start = System.currentTimeMillis();
 		String result = this.driver.elementAttribute(element.getIdString(), kind.ordinal());
-		this.logger.info(String.format("elementAttribute(%s,%s), time (ms) : %d", element, kind, System.currentTimeMillis() - start));
+		this.logger.info(String.format("elementAttribute(%s,%s) = %s, time (ms) : %d", element, kind, result, System.currentTimeMillis() - start));
 		checkError();
 		return result;
 	}
@@ -127,7 +123,7 @@ public class JnaDriverImpl
 	{
 		long start = System.currentTimeMillis();
 		int result = this.driver.elementByCoords(resultId, resultId.length, kind.ordinal(), x, y);
-		this.logger.info(String.format("elementByCoords(%s,%s,%d,%d), time (ms) : %d", Arrays.toString(resultId), kind, x, y, System.currentTimeMillis() - start));
+		this.logger.info(String.format("elementByCoords(%s,%s,%d,%d) = %d, time (ms) : %d", Arrays.toString(resultId), kind, x, y, result, System.currentTimeMillis() - start));
 		checkError();
 		return result;
 	}
@@ -148,20 +144,20 @@ public class JnaDriverImpl
 		checkError();
 	}
 
-	public int findAllForLocator(int[] arr, int len, String ownerId, int controlKindId, String uid, String xpath, String clazz, String name, String title, String text) throws Exception
+	public int findAllForLocator(int[] arr, UIProxyJNA owner, ControlKind kind, String uid, String xpath, String clazz, String name, String title, String text) throws Exception
 	{
 		long start = System.currentTimeMillis();
-		int result = this.driver.findAllForLocator(arr, len, ownerId, controlKindId, uid, xpath, clazz, name, title, text);
-		this.logger.info(String.format("findAllForLocator(%s,%d,%s,%d,%s,%s,%s,%s,%s,%s), time (ms) : %d", Arrays.toString(arr), len, ownerId, controlKindId, uid, xpath, clazz, name, title, text, System.currentTimeMillis() - start));
+		int result = this.driver.findAllForLocator(arr, arr.length, owner.getIdString(), kind.ordinal(), uid, xpath, clazz, name, title, text);
+		this.logger.info(String.format("findAllForLocator(%s,%d,%s,%s,%s,%s,%s,%s,%s,%s) = %d, time (ms) : %d", Arrays.toString(arr), arr.length, owner, kind, uid, xpath, clazz, name, title, text,result, System.currentTimeMillis() - start));
 		checkError();
 		return result;
 	}
 
-	public int findAll(int[] arr, int len, String elementId, int scopeId, int propertyId, String value) throws Exception
+	public int findAll(int[] arr, UIProxyJNA owner, WindowTreeScope scope, WindowProperty property, String value) throws Exception
 	{
 		long start = System.currentTimeMillis();
-		int result = this.driver.findAll(arr, len, elementId, scopeId, propertyId, value);
-		this.logger.info(String.format("findAll(%s,%d,%s,%d,%d,%s), time (ms) : %d", Arrays.toString(arr), len, elementId, scopeId, propertyId, value, System.currentTimeMillis() - start));
+		int result = this.driver.findAll(arr, arr.length, owner.getIdString(), scope.getValue(), property.getId(), value);
+		this.logger.info(String.format("findAll(%s,%d,%s,%s,%s,%s) = %s, time (ms) : %d", Arrays.toString(arr), arr.length, owner, scope, property, value, result, System.currentTimeMillis() - start));
 		checkError();
 		return result;
 	}
@@ -172,38 +168,38 @@ public class JnaDriverImpl
 	 * if @param c == 1 -> arg is array of int with separator %<br>
 	 * if @param c == 2 -> arg is array of double with separator %<br>
 	 */
-	public String doPatternCall(String elementId, int patternId, String method, String args, int c) throws Exception
+	public String doPatternCall(UIProxyJNA element, WindowPattern pattern, String method, String args, int c) throws Exception
 	{
 		long start = System.currentTimeMillis();
-		String res = this.driver.doPatternCall(elementId, patternId, method, args, c);
-		this.logger.info(String.format("doPatternCall(%s,%d,%s,%s,%d), time (ms) : %d", elementId, patternId, method, args, c, System.currentTimeMillis() - start));
-		checkError();
-		return res;
-	}
-
-	public String getProperty(String elementId, int propertyId) throws Exception
-	{
-		long start = System.currentTimeMillis();
-		String result = this.driver.getProperty(elementId, propertyId);
-		this.logger.info(String.format("getProperty(%s,%d), time (ms) : %d", elementId, propertyId, System.currentTimeMillis() - start));
+		String result = this.driver.doPatternCall(element.getIdString(), pattern.getId(), method, args, c);
+		this.logger.info(String.format("doPatternCall(%s,%s,%s,%s,%d) = %s, time (ms) : %d", element, pattern, method, args, c, result, System.currentTimeMillis() - start));
 		checkError();
 		return result;
 	}
 
-	public int getPatterns(int[] arr, int len, String elementId) throws Exception
+	public String getProperty(UIProxyJNA element, WindowProperty property) throws Exception
 	{
 		long start = System.currentTimeMillis();
-		int result = this.driver.getPatterns(arr, len, elementId);
-		this.logger.info(String.format("getPatterns(%s,%d,%s), time (ms) : %d", Arrays.toString(arr), len, elementId, System.currentTimeMillis() - start));
+		String result = this.driver.getProperty(element.getIdString(), property.getId());
+		this.logger.info(String.format("getProperty(%s,%s) = %s, time (ms) : %d", element, property, result, System.currentTimeMillis() - start));
 		checkError();
 		return result;
 	}
 
-	public int getImage(int[] arr, int len, String id) throws Exception
+	public int getPatterns(int[] arr, UIProxyJNA element) throws Exception
 	{
 		long start = System.currentTimeMillis();
-        int result = this.driver.getImage(arr, len, id);
-		this.logger.info(String.format("getImage(%s,%d,%s), time (ms) : %d", Arrays.toString(arr), len, id, System.currentTimeMillis() - start));
+		int result = this.driver.getPatterns(arr, arr.length, element.getIdString());
+		this.logger.info(String.format("getPatterns(%s,%s,%s) = %d, time (ms) : %d", Arrays.toString(arr), arr.length, element, result, System.currentTimeMillis() - start));
+		checkError();
+		return result;
+	}
+
+	public int getImage(int[] arr, UIProxyJNA element) throws Exception
+	{
+		long start = System.currentTimeMillis();
+		int result = this.driver.getImage(arr, arr.length, element.getIdString());
+		this.logger.info(String.format("getImage(%s,%d,%s) = %s, time (ms) : %d", Arrays.toString(arr), arr.length, element.getIdString(), result, System.currentTimeMillis() - start));
 		checkError();
 		return result;
 	}

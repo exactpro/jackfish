@@ -171,7 +171,7 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 			//TODO it's right that we found main window? mb just get it on c# side and call patterns?
 			int length = 100;
 			int[] arr = new int[length];
-			driver.findAll(arr, length, null, WindowTreeScope.Element.getValue(), WindowProperty.NameProperty.getId(), this.driver.title());
+			driver.findAll(arr, new UIProxyJNA(null), WindowTreeScope.Element, WindowProperty.NameProperty, this.driver.title());
 			if (arr[0] > 1)
 			{
 				throw new Exception("Found more that one main windows : " + arr[0]);
@@ -180,15 +180,15 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 			System.arraycopy(arr, 2, windowRuntimeId, 0, arr[1]);
 			if (maximize)
 			{
-				this.driver.doPatternCall(new UIProxyJNA(windowRuntimeId).getIdString(), WindowPattern.WindowPattern.getId(), "SetWindowVisualState", "Maximized", 0);
+				this.driver.doPatternCall(new UIProxyJNA(windowRuntimeId), WindowPattern.WindowPattern, "SetWindowVisualState", "Maximized", 0);
 			}
 			else if (minimize)
 			{
-				this.driver.doPatternCall(new UIProxyJNA(windowRuntimeId).getIdString(), WindowPattern.WindowPattern.getId(), "SetWindowVisualState", "Minimized", 0);
+				this.driver.doPatternCall(new UIProxyJNA(windowRuntimeId), WindowPattern.WindowPattern, "SetWindowVisualState", "Minimized", 0);
 			}
 			else
 			{
-				this.driver.doPatternCall(new UIProxyJNA(windowRuntimeId).getIdString(), WindowPattern.TransformPattern.getId(), "Resize", width + "%" + height, 1);
+				this.driver.doPatternCall(new UIProxyJNA(windowRuntimeId), WindowPattern.TransformPattern, "Resize", width + "%" + height, 1);
 			}
 		}
 		catch (Exception e)
@@ -212,7 +212,7 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 			}
 			String result = this.driver.listAll(ownerId, element.getControlKind(), element.getUid(), element.getXpath(), element
 					.getClazz(), element.getName(), element.getTitle(), element.getText());
-			//TODO see Program.cs line 162. Or may be split via long string ====== ?
+			//TODO see Program.cs method listAll. Or may be split via long string ====== ?
 			String[] split = result.split("#####");
 			for(int i = 0; i < split.length && !split[i].isEmpty(); i++)
 			{
@@ -266,12 +266,12 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 			UIProxyJNA uiProxyJNA = this.operationExecutor.find(owner, element);
 			int length = 100 * 100;
 			int[] arr = new int[length];
-			int count = this.driver.getImage(arr, length, uiProxyJNA.getIdString());
+			int count = this.driver.getImage(arr, uiProxyJNA);
 			if (count > length)
 			{
 				length = count;
 				arr = new int[length];
-				this.driver.getImage(arr, length, uiProxyJNA.getIdString());
+				this.driver.getImage(arr, uiProxyJNA);
 			}
 			int[] result = new int[arr.length - 2];
 			System.arraycopy(arr, 2, result, 0, arr.length - 2);
