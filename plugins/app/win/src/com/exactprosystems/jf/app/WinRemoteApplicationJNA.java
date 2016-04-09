@@ -58,7 +58,7 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 			}
 			logger.info("##########################################################################################################");
 			logger.info("connectDerived(" + title + ")");
-			this.driver = new JnaDriverImpl();
+			this.driver = new JnaDriverImpl(this.logger);
 			this.operationExecutor = new WinOperationExecutorJNA(this.logger, this.driver);
 			this.driver.connect(title);
 		}
@@ -89,7 +89,7 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 			}
 			this.logger.info("##########################################################################################################");
 			this.logger.info("runDerived(" + args + ")");
-			this.driver = new JnaDriverImpl();
+			this.driver = new JnaDriverImpl(this.logger);
 			this.operationExecutor = new WinOperationExecutorJNA(this.logger, this.driver);
 			this.driver.run(exec, workDir, parameters);
 		}
@@ -210,9 +210,8 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 			{
 				ownerId = this.operationExecutor.find(null, owner);
 			}
-			String result = this.driver.listAll(ownerId.getIdString(), element.getControlKind()
-					.ordinal(), element.getUid(), element.getXpath(), element.getClazz(), element.getName(), element.getTitle(), element
-					.getText());
+			String result = this.driver.listAll(ownerId, element.getControlKind(), element.getUid(), element.getXpath(), element
+					.getClazz(), element.getName(), element.getTitle(), element.getText());
 			//TODO see Program.cs line 162. Or may be split via long string ====== ?
 			String[] split = result.split("#####");
 			for(int i = 0; i < split.length && !split[i].isEmpty(); i++)
@@ -236,7 +235,7 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 		{
 			int initialLength = 100;
 			int[] res = new int[initialLength];
-			int returnLength = this.driver.elementByCoords(res, initialLength, controlKind.ordinal(), x, y);
+			int returnLength = this.driver.elementByCoords(res, controlKind, x, y);
 			if (returnLength == 0)
 			{
 				throw new ElementNotFoundException(x, y);
@@ -245,7 +244,7 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 			{
 				initialLength = returnLength;
 				res = new int[initialLength];
-				this.driver.elementByCoords(res, initialLength, controlKind.ordinal(), x, y);
+				this.driver.elementByCoords(res, controlKind, x, y);
 			}
 			int[] newRes = new int[returnLength];
 			System.arraycopy(res, 0, newRes, 0, returnLength);

@@ -206,7 +206,7 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 	{
 		try
 		{
-			this.driver.mouse(component.getIdString(), action.getId(), x, y);
+			this.driver.mouse(component, action, x, y);
 			return true;
 		}
 		catch (Exception e)
@@ -484,7 +484,7 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 			{
 				throw new RemoteException("Unsupported attribute value. Can use only : " + Arrays.toString(AttributeKind.values()));
 			}
-			return this.driver.elementAttribute(component.getIdString(), AttributeKind.valueOf(name.toUpperCase()).ordinal());
+			return this.driver.elementAttribute(component, AttributeKind.valueOf(name.toUpperCase()));
 		}
 		catch (Exception e)
 		{
@@ -503,7 +503,7 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 			UIProxyJNA currentRow = rows.get(row);
 			List<UIProxyJNA> cells = this.getCells(currentRow);
 			UIProxyJNA cell = cells.get(column);
-			this.driver.mouse(cell.getIdString(), action.getId(), Integer.MIN_VALUE, Integer.MAX_VALUE);
+			this.driver.mouse(cell, action, Integer.MIN_VALUE, Integer.MAX_VALUE);
 			return true;
 		}
 		catch (Exception e)
@@ -663,11 +663,11 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 	{
 		try
 		{
-			String id = this.driver.elementAttribute(element.getIdString(), AttributeKind.ID.ordinal());
-			String uid = this.driver.elementAttribute(element.getIdString(), AttributeKind.UID.ordinal());
-			String clazz = this.driver.elementAttribute(element.getIdString(), AttributeKind.CLASS.ordinal());
-			String name = this.driver.elementAttribute(element.getIdString(), AttributeKind.NAME.ordinal());
-			String tooltip = this.driver.elementAttribute(element.getIdString(), AttributeKind.TEXT.ordinal());
+			String id = this.driver.elementAttribute(element, AttributeKind.ID);
+			String uid = this.driver.elementAttribute(element, AttributeKind.UID);
+			String clazz = this.driver.elementAttribute(element, AttributeKind.CLASS);
+			String name = this.driver.elementAttribute(element, AttributeKind.NAME);
+			String tooltip = this.driver.elementAttribute(element, AttributeKind.TEXT);
 			Locator locator = new Locator(null, id, ControlKind.findByClazz(clazz));
 			locator.uid(uid).clazz(clazz).name(name).tooltip(tooltip);
 			return locator;
