@@ -14,10 +14,8 @@ import org.apache.log4j.Logger;
 
 import java.awt.*;
 import java.rmi.RemoteException;
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -37,24 +35,29 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 	@Override
 	public Rectangle getRectangle(UIProxyJNA component) throws Exception
 	{
-		String property = this.driver.getProperty(component.getIdString(), WindowProperty.BoundingRectangleProperty.getId());
-		Rectangle rectangle = new Rectangle();
-		Pattern pattern = Pattern.compile(RECTANGLE_PATTERN);
-		Matcher matcher = pattern.matcher(property);
-		if (matcher.matches())
+		try
 		{
-			rectangle.setBounds(
-					Integer.parseInt(matcher.group(1)),
-					Integer.parseInt(matcher.group(2)),
-					Integer.parseInt(matcher.group(3)),
-					Integer.parseInt(matcher.group(4))
-			);
+			String property = this.driver.getProperty(component.getIdString(), WindowProperty.BoundingRectangleProperty.getId());
+			Rectangle rectangle = new Rectangle();
+			Pattern pattern = Pattern.compile(RECTANGLE_PATTERN);
+			Matcher matcher = pattern.matcher(property);
+			if (matcher.matches())
+			{
+				rectangle.setBounds(Integer.parseInt(matcher.group(1)), Integer.parseInt(matcher.group(2)), Integer.parseInt(matcher
+						.group(3)), Integer.parseInt(matcher.group(4)));
+			}
+			else
+			{
+				throw new RemoteException("returned rectangle not matches pattern \\d+,\\d+,\\d+,\\d+");
+			}
+			return rectangle;
 		}
-		else
+		catch (Exception e)
 		{
-			throw new RemoteException("returned rectangle not matches pattern \\d+,\\d+,\\d+,\\d+");
+			this.logger.error(String.format("getRectangle(%s)", component));
+			this.logger.error(e.getMessage(), e);
+			throw e;
 		}
-		return rectangle;
 	}
 
 	@Override
@@ -259,7 +262,8 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 		try
 		{
 			String className = this.driver.getProperty(component.getIdString(), WindowProperty.ClassNameProperty.getId());
-			if (className.equalsIgnoreCase(ControlKind.ToggleButton.getClazz()) || className.equals(ControlKind.CheckBox.getClazz()))
+			if (className.equalsIgnoreCase(ControlKind.ToggleButton.getClazz()) || className.equals(ControlKind.CheckBox
+					.getClazz()))
 			{
 				String property = this.driver.getProperty(component.getIdString(), WindowProperty.ToggleStateProperty.getId());
 				boolean isSelected = property.equals("On");
@@ -298,12 +302,14 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 		{
 			int length = 100;
 			int[] arr = new int[length];
-			int count = this.driver.findAll(arr, length, component.getIdString(), WindowTreeScope.Descendants.getValue(), WindowProperty.NameProperty.getId(), selectedText);
+			int count = this.driver.findAll(arr, length, component.getIdString(), WindowTreeScope.Descendants.getValue(), WindowProperty.NameProperty
+					.getId(), selectedText);
 			if (count > length)
 			{
 				length = count;
 				arr = new int[length];
-				this.driver.findAll(arr, length, component.getIdString(), WindowTreeScope.Descendants.getValue(), WindowProperty.NameProperty.getId(), selectedText);
+				this.driver.findAll(arr, length, component.getIdString(), WindowTreeScope.Descendants.getValue(), WindowProperty.NameProperty
+						.getId(), selectedText);
 			}
 			int foundElementCount = arr[0];
 			if (foundElementCount > 1)
@@ -329,8 +335,25 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 	@Override
 	public boolean fold(UIProxyJNA component, String path, boolean collaps) throws Exception
 	{
-		//TODO call to menu and tree - doPatternCall
-		return false;
+		try
+		{
+			//TODO call to menu and tree - doPatternCall
+			if (collaps)
+			{
+
+			}
+			else
+			{
+
+			}
+			return true;
+		}
+		catch (Exception e)
+		{
+			this.logger.error(String.format("fold(%s,%s,%b)", component, path, collaps));
+			this.logger.error(e.getMessage(), e);
+			throw e;
+		}
 	}
 
 	@Override
@@ -338,7 +361,6 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 	{
 		try
 		{
-			//todo for document ( textArea need textPattern)
 			String oldText = "";
 			if (!clear)
 			{
@@ -412,7 +434,7 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 		}
 		catch (Exception e)
 		{
-			this.logger.error(String.format("setValue(%s,%d)", component, value));
+			this.logger.error(String.format("setValue(%s,%e)", component, value));
 			this.logger.error(e.getMessage(), e);
 			throw e;
 		}
@@ -462,7 +484,7 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 			{
 				throw new RemoteException("Unsupported attribute value. Can use only : " + Arrays.toString(AttributeKind.values()));
 			}
-			return this.driver.getProperty(component.getIdString(), AttributeKind.valueOf(name.toUpperCase()).ordinal());
+			return this.driver.elementAttribute(component.getIdString(), AttributeKind.valueOf(name.toUpperCase()).ordinal());
 		}
 		catch (Exception e)
 		{
@@ -475,37 +497,130 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 	@Override
 	public boolean mouseTable(UIProxyJNA component, int column, int row, MouseAction action) throws Exception
 	{
-		return false;
+		try
+		{
+			List<UIProxyJNA> rows = getRows(component);
+			UIProxyJNA currentRow = rows.get(row);
+			List<UIProxyJNA> cells = this.getCells(currentRow);
+			UIProxyJNA cell = cells.get(column);
+			this.driver.mouse(cell.getIdString(), action.getId(), Integer.MIN_VALUE, Integer.MAX_VALUE);
+			return true;
+		}
+		catch (Exception e)
+		{
+			this.logger.error(String.format("mouseTable(%s,%d,%d,%s)", component, column, row, action));
+			this.logger.error(e.getMessage(), e);
+			throw e;
+		}
 	}
 
 	@Override
 	public boolean textTableCell(UIProxyJNA component, int column, int row, String text) throws Exception
 	{
-		return false;
+		try
+		{
+			List<UIProxyJNA> rows = getRows(component);
+			UIProxyJNA currentRow = rows.get(row);
+			List<UIProxyJNA> cells = this.getCells(currentRow);
+			UIProxyJNA cell = cells.get(column);
+			this.driver.doPatternCall(cell.getIdString(), WindowPattern.ValuePattern.getId(), "SetValue", text, 0);
+			return true;
+		}
+		catch (Exception e)
+		{
+			this.logger.error(String.format("textTableCell(%s,%d,%d,%s)", component, column, row, text));
+			this.logger.error(e.getMessage(), e);
+			throw e;
+		}
 	}
 
 	@Override
 	public String getValueTableCell(UIProxyJNA component, int column, int row) throws Exception
 	{
-		return null;
+		try
+		{
+			List<UIProxyJNA> rows = getRows(component);
+			UIProxyJNA needRow = rows.get(row);
+			List<String> needRows = getRow(needRow, false);
+			return needRows.get(column);
+		}
+		catch (Exception e)
+		{
+			this.logger.error(String.format("getValueTableCell(%s, %d, %d)", component, column, row));
+			this.logger.error(e.getMessage(), e);
+			throw e;
+		}
 	}
 
 	@Override
 	public Map<String, String> getRow(UIProxyJNA component, Locator additional, Locator header, boolean useNumericHeader, ICondition valueCondition, ICondition colorCondition) throws Exception
 	{
-		return null;
+		try
+		{
+			List<String> rowIndexes = getRowIndexes(component, additional, header, useNumericHeader, valueCondition, colorCondition);
+			if (rowIndexes.size() != 1)
+			{
+				throw new RemoteException("Found " + rowIndexes.size() + " instead 1");
+			}
+			return getRowByIndex(component, additional, header, useNumericHeader, Integer.parseInt(rowIndexes.get(0)));
+		}
+		catch (Exception e)
+		{
+			this.logger.error(String.format("getRow(%s,%s,%s,%b,%s,%s)", component, additional, header, useNumericHeader, valueCondition, colorCondition));
+			this.logger.error(e.getMessage(), e);
+			throw e;
+		}
 	}
 
 	@Override
 	public List<String> getRowIndexes(UIProxyJNA component, Locator additional, Locator header, boolean useNumericHeader, ICondition valueCondition, ICondition colorCondition) throws Exception
 	{
-		return null;
+		try
+		{
+			List<String> returnedList = new ArrayList<>();
+			List<UIProxyJNA> rows = getRows(component);
+			for (int i = 1; i < rows.size(); i++)
+			{
+				if (rowMatches(rows.get(i), valueCondition, colorCondition, rows.get(0), useNumericHeader))
+				{
+					returnedList.add(String.valueOf(i));
+				}
+			}
+			return returnedList;
+		}
+		catch (Exception e)
+		{
+			this.logger.error(String.format("getRowIndexes(%s,%s,%s,%b,%s,%s)", component, additional, header, useNumericHeader, valueCondition, colorCondition));
+			this.logger.error(e.getMessage(), e);
+			throw e;
+		}
 	}
 
 	@Override
 	public Map<String, String> getRowByIndex(UIProxyJNA component, Locator additional, Locator header, boolean useNumericHeader, int i) throws Exception
 	{
-		return null;
+		try
+		{
+			List<UIProxyJNA> rows = getRows(component);
+			Map<String, String> resultMap = new HashMap<>();
+			UIProxyJNA headerRow = rows.get(0);
+			List<String> headers = getRow(headerRow, useNumericHeader);
+
+			// +1 because the first row - is header;
+			UIProxyJNA needRow = rows.get(i + 1);
+			List<String> row = getRow(needRow, false);
+			for (int j = 0; j < headers.size(); j++)
+			{
+				resultMap.put(headers.get(j), row.get(j));
+			}
+			return resultMap;
+		}
+		catch (Exception e)
+		{
+			this.logger.error(String.format("getRowByIndex(%s,%s,%s,%b,%d)", component, additional, header, useNumericHeader, i));
+			this.logger.error(e.getMessage(), e);
+			throw e;
+		}
 	}
 
 	@Override
@@ -517,22 +632,290 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 	@Override
 	public String[][] getTable(UIProxyJNA component, Locator additional, Locator header, boolean useNumericHeader) throws Exception
 	{
-		return new String[0][];
+		try
+		{
+			List<UIProxyJNA> rows = getRows(component);
+			List<String> headerRow = getRow(rows.get(0), useNumericHeader);
+			String[][] table = new String[rows.size()][headerRow.size()];
+			for (int i = 0; i < headerRow.size(); i++)
+			{
+				table[0][i] = headerRow.get(i);
+			}
+			for (int i = 1; i < rows.size(); i++)
+			{
+				List<String> row = getRow(rows.get(i), false);
+				for (int j = 0; j < row.size(); j++)
+				{
+					table[i][j] = row.get(j);
+				}
+			}
+			return table;
+		}
+		catch (Exception e)
+		{
+			this.logger.error(String.format("getTable(%s,%s,%s,%b)", component, additional, header, useNumericHeader));
+			this.logger.error(e.getMessage(), e);
+			throw e;
+		}
 	}
 
 	public Locator locatorFromUIProxy(UIProxyJNA element) throws Exception
 	{
-		String uid = this.driver.getProperty(element.getIdString(), WindowProperty.AutomationIdProperty.getId());
-		String clazz = this.driver.getProperty(element.getIdString(), WindowProperty.ClassNameProperty.getId());
-		String name = this.driver.getProperty(element.getIdString(), WindowProperty.NameProperty.getId());
-		String tooltip = this.driver.getProperty(element.getIdString(), WindowProperty.HelpTextProperty.getId());
-		Locator locator = new Locator(null, "newElement", ControlKind.findByClazz(clazz));
-		locator.uid(uid).clazz(clazz).name(name).tooltip(tooltip);
-		return locator;
+		try
+		{
+			String id = this.driver.elementAttribute(element.getIdString(), AttributeKind.ID.ordinal());
+			String uid = this.driver.elementAttribute(element.getIdString(), AttributeKind.UID.ordinal());
+			String clazz = this.driver.elementAttribute(element.getIdString(), AttributeKind.CLASS.ordinal());
+			String name = this.driver.elementAttribute(element.getIdString(), AttributeKind.NAME.ordinal());
+			String tooltip = this.driver.elementAttribute(element.getIdString(), AttributeKind.TEXT.ordinal());
+			Locator locator = new Locator(null, id, ControlKind.findByClazz(clazz));
+			locator.uid(uid).clazz(clazz).name(name).tooltip(tooltip);
+			return locator;
+		}
+		catch (Exception e)
+		{
+			this.logger.error(String.format("locatorFromUIProxy(%s)", element));
+			this.logger.error(e.getMessage(), e);
+			throw e;
+		}
 	}
 
 	public Locator locatorFromUIProxy(int[] id) throws Exception
 	{
 		return locatorFromUIProxy(new UIProxyJNA(id));
+	}
+
+	private List<UIProxyJNA> getRows(UIProxyJNA table) throws Exception
+	{
+		try
+		{
+			int length = 100;
+			int[] arr = new int[length];
+			int res = this.driver.findAll(arr, length, table.getIdString(), WindowTreeScope.Children.getValue(), WindowProperty.ClassNameProperty.getId(), "");
+			if (res > length)
+			{
+				length = res;
+				arr = new int[length];
+				this.driver.findAll(arr, length, table.getIdString(), WindowTreeScope.Children.getValue(), WindowProperty.ClassNameProperty.getId(), "");
+			}
+			int foundElementCount = arr[0];
+			List<UIProxyJNA> rowsList = new ArrayList<>();
+			int currentPosition = 1;
+			for (int i = 0; i < foundElementCount; i++)
+			{
+				int currentArrayLength = arr[currentPosition++];
+				int[] elem = new int[currentArrayLength];
+				for (int j = 0; j < currentArrayLength; j++)
+				{
+					elem[j] = arr[currentPosition++];
+				}
+				rowsList.add(new UIProxyJNA(elem));
+			}
+			return rowsList;
+		}
+		catch (Exception e)
+		{
+			this.logger.error(String.format("getRows(%s)", table));
+			this.logger.error(e.getMessage(), e);
+			throw e;
+		}
+	}
+
+	private List<String> getRow(UIProxyJNA row, boolean useNumericHeader) throws Exception
+	{
+		try
+		{
+			int length = 100;
+			int[] arr = new int[length];
+			int res = this.driver.findAll(arr, length, row.getIdString(), WindowTreeScope.Children.getValue(), WindowProperty.ClassNameProperty.getId(), "");
+			if (res > length)
+			{
+				length = res;
+				arr = new int[length];
+				this.driver.findAll(arr, length, row.getIdString(), WindowTreeScope.Children.getValue(), WindowProperty.ClassNameProperty.getId(), "");
+			}
+
+			int foundElementCount = arr[0];
+			List<UIProxyJNA> cellsList = new ArrayList<>();
+			int currentPosition = 1;
+			for (int i = 0; i < foundElementCount; i++)
+			{
+				int currentArrayLength = arr[currentPosition++];
+				int[] elem = new int[currentArrayLength];
+				for (int j = 0; j < currentArrayLength; j++)
+				{
+					elem[j] = arr[currentPosition++];
+				}
+				cellsList.add(new UIProxyJNA(elem));
+			}
+			ArrayList<String> returnedList = new ArrayList<>();
+			for (int i = 0; i < cellsList.size(); i++)
+			{
+				try
+				{
+					returnedList.add(useNumericHeader ? String.valueOf(i) : this.driver.getProperty(cellsList.get(i).getIdString(), WindowProperty.ValueProperty.getId()));
+				}
+				catch (Exception e)
+				{
+					e.printStackTrace();
+				}
+			}
+			return returnedList;
+		}
+		catch (Exception e)
+		{
+			this.logger.error(String.format("getRow(%s,%b)", row, useNumericHeader));
+			this.logger.error(e.getMessage(), e);
+			throw e;
+		}
+	}
+
+	private List<UIProxyJNA> getCells(UIProxyJNA row) throws Exception
+	{
+		try
+		{
+			int length = 100;
+			int[] arr = new int[length];
+			int res = this.driver.findAll(arr, length, row.getIdString(), WindowTreeScope.Children.getValue(), WindowProperty.ClassNameProperty.getId(), "");
+			if (res > length)
+			{
+				length = res;
+				arr = new int[length];
+				this.driver.findAll(arr, length, row.getIdString(), WindowTreeScope.Children.getValue(), WindowProperty.ClassNameProperty.getId(), "");
+			}
+
+			int foundElementCount = arr[0];
+			List<UIProxyJNA> cellsList = new ArrayList<>();
+			int currentPosition = 1;
+			for (int i = 0; i < foundElementCount; i++)
+			{
+				int currentArrayLength = arr[currentPosition++];
+				int[] elem = new int[currentArrayLength];
+				for (int j = 0; j < currentArrayLength; j++)
+				{
+					elem[j] = arr[currentPosition++];
+				}
+				cellsList.add(new UIProxyJNA(elem));
+			}
+			return cellsList;
+		}
+		catch (Exception e)
+		{
+			this.logger.error(String.format("getCells(%s)", row));
+			this.logger.error(e.getMessage(), e);
+			throw e;
+		}
+	}
+
+	private boolean rowMatches(UIProxyJNA row, ICondition valueCondition, ICondition colorCondition, UIProxyJNA header, boolean useNumericHeader) throws Exception
+	{
+		try
+		{
+			List<String> headerCells = getRow(header, useNumericHeader);
+			List<String> cells = getRow(row, false);
+			for (int i = 0; i < cells.size(); i++)
+			{
+				if (valueCondition != null)
+				{
+					String name = headerCells.get(i);
+					if (!valueCondition.isMatched(name, cells.get(i)))
+					{
+						return false;
+					}
+				}
+				if (colorCondition != null)
+				{
+					//TODO do it pls
+				}
+			}
+			return true;
+		}
+		catch (Exception e)
+		{
+			this.logger.error(String.format("rowMatches(%s,%s,%s,%s,%b)", row, valueCondition, colorCondition, header, useNumericHeader));
+			this.logger.error(e.getMessage(), e);
+			throw e;
+		}
+	}
+
+	private List<String> getHeaders(UIProxyJNA table, boolean useNumericHeader) throws Exception
+	{
+		try
+		{
+			//TODO this code work only for framework WindowsForms. Need implement for Wpf applications
+			int[] topRowRuntimeId = findTopRow(table);
+			UIProxyJNA topRow = new UIProxyJNA(topRowRuntimeId);
+			int length = 100;
+			int[] arr = new int[length];
+			String headerName = "header";
+			int res = this.driver.findAll(arr, length, topRow.getIdString(), WindowTreeScope.Children.getValue(), WindowProperty.LocalizedControlTypeProperty
+					.getId(), headerName);
+			if (res > length)
+			{
+				length = res;
+				arr = new int[length];
+				this.driver.findAll(arr, length, topRow.getIdString(), WindowTreeScope.Children.getValue(), WindowProperty.LocalizedControlTypeProperty
+						.getId(), headerName);
+			}
+			int foundElementCount = arr[0];
+			List<UIProxyJNA> headerList = new ArrayList<>();
+			int currentPosition = 1;
+			for (int i = 0; i < foundElementCount; i++)
+			{
+				int currentArrayLength = arr[currentPosition++];
+				int[] elem = new int[currentArrayLength];
+				for (int j = 0; j < currentArrayLength; j++)
+				{
+					elem[j] = arr[currentPosition++];
+				}
+				headerList.add(new UIProxyJNA(elem));
+			}
+			ArrayList<String> returnedList = new ArrayList<>();
+			for (int i = 0; i < headerList.size(); i++)
+			{
+				returnedList.add(useNumericHeader ? "" + i : this.driver.getProperty(headerList.get(i).getIdString(), WindowProperty.NameProperty.getId()));
+			}
+			return returnedList;
+		}
+		catch (Exception e)
+		{
+			this.logger.error(String.format("getHeaders(%s,%b)", table, useNumericHeader));
+			this.logger.error(e.getMessage(), e);
+			throw e;
+		}
+	}
+
+	private int[] findTopRow(UIProxyJNA table) throws Exception
+	{
+		try
+		{
+			int length = 100;
+			int[] arr = new int[length];
+
+			String headName = "Top Row";
+			int res = this.driver.findAll(arr, length, table.getIdString(), WindowTreeScope.Children.getValue(), WindowProperty.NameProperty
+					.getId(), headName);
+			if (res > length)
+			{
+				length = res;
+				arr = new int[length];
+				this.driver.findAll(arr, length, table.getIdString(), WindowTreeScope.Children.getValue(), WindowProperty.NameProperty
+						.getId(), headName);
+			}
+			int foundElementCount = arr[0];
+			if (foundElementCount > 1)
+			{
+				throw new Exception("Found " + foundElementCount + " headers instead 1");
+			}
+			int[] headerRuntimeId = new int[arr[1]];
+			System.arraycopy(arr, 2, headerRuntimeId, 0, arr[1]);
+			return headerRuntimeId;
+		}
+		catch (Exception e)
+		{
+			this.logger.error(String.format("findTopRow(%s)", table));
+			this.logger.error(e.getMessage(), e);
+			throw e;
+		}
 	}
 }
