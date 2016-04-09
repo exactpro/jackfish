@@ -11,8 +11,13 @@ import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.common.SerializablePair;
 import com.exactprosystems.jf.api.common.Str;
 import org.apache.log4j.*;
+import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -350,8 +355,35 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 	@Override
 	protected Document getTreeDerived(Locator owner) throws Exception
 	{
-		//TODO think about it
+		UIProxyJNA parent;
+		if (owner == null)
+		{
+			int length = 100;
+			int[] arr = new int[length];
+			int res = this.driver.findAll(arr, new UIProxyJNA(null), WindowTreeScope.Element, WindowProperty.NameProperty, this.driver.title());
+			if (res > length)
+			{
+				length = res;
+				arr = new int[length];
+				this.driver.findAll(arr, new UIProxyJNA(null), WindowTreeScope.Element, WindowProperty.NameProperty, this.driver.title());
+			}
+			if (arr[0] > 1)
+			{
+				throw new Exception("Found more that one main windows : " + arr[0]);
+			}
+			int[] windowRuntimeId = new int[arr[1]];
+			System.arraycopy(arr, 2, windowRuntimeId, 0, arr[1]);
+			parent = new UIProxyJNA(windowRuntimeId);
+		}
+		else
+		{
+			parent = this.operationExecutor.find(null, owner);
+		}
 		return null;
+//		long start = System.currentTimeMillis();
+//		Document doc = createDoc(parent);
+//		this.logger.info("BUILD TREE TIME (MS) : " + (System.currentTimeMillis() - start));
+//		return doc;
 	}
 
 	@Override
@@ -364,5 +396,97 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 	protected void endGrabbingDerived() throws Exception
 	{
 		//done
+	}
+
+	private Document createDoc(UIProxyJNA owner) throws Exception
+	{
+		DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
+		DocumentBuilder builder = builderFactory.newDocumentBuilder();
+		Document document = builder.newDocument();
+		buildDom(document, document, owner, false, true);
+
+		return document;
+	}
+
+	private void buildDom(Document document, Node current, UIProxyJNA parent, boolean addItems, boolean addRectangles) throws Exception
+	{
+		if (parent == null)
+		{
+			return;
+		}
+		Element node = null;
+		String simpleName = this.driver.getProperty(parent, WindowProperty.LocalizedControlTypeProperty);
+		if (simpleName.isEmpty())
+		{
+			simpleName = this.driver.getProperty(parent, WindowProperty.ControlTypeProperty);
+		}
+		String tag = simpleName.replaceAll(" ", "");
+		try
+		{
+			node = document.createElement(tag);
+		}
+		catch (DOMException e)
+		{
+			logger.debug("Current component : " + parent);
+			logger.debug("Error on create element with tag : '" + tag +"'. Component class simple name : '"+ simpleName +"'.");
+			node = document.createElement("ErrorTag");
+		}
+
+		if (addItems)
+		{
+			//	node.setUserData("item", parent, null);
+		}
+		if (addRectangles)
+		{
+			node.setUserData(IRemoteApplication.rectangleName, this.operationExecutor.getRectangle(parent), null);
+		}
+		try
+		{
+			for (AttributeKind kind : AttributeKind.values())
+			{
+				String value = this.driver.elementAttribute(parent, kind);
+				if (!Str.IsNullOrEmpty(value))
+				{
+					node.setAttribute(kind.name().toLowerCase(), value);
+				}
+			}
+		}
+		catch (Exception e)
+		{
+			node.setAttribute("ERROR", "Something wrong. See remote.log for understanding");
+			this.logger.error("Error on add attribute");
+			this.logger.error(e.getMessage(), e);
+		}
+		current.appendChild(node);
+
+		int length = 100;
+		int arr[] = new int[length];
+		int res = this.driver.findAll(arr, parent, WindowTreeScope.Children, WindowProperty.TrueProperty, null);
+		if (res > length)
+		{
+			length = res;
+			arr = new int[length];
+			this.driver.findAll(arr, parent, WindowTreeScope.Children, WindowProperty.TrueProperty, null);
+		}
+		int foundElementCount = arr[0];
+		if (foundElementCount > 0)
+		{
+			List<UIProxyJNA> elementList = new ArrayList<>();
+			int currentPosition = 1;
+			for (int i = 0; i < foundElementCount; i++)
+			{
+				int currentArrayLength = arr[currentPosition++];
+				int[] elem = new int[currentArrayLength];
+				for (int j = 0; j < currentArrayLength; j++)
+				{
+					elem[j] = arr[currentPosition++];
+				}
+				elementList.add(new UIProxyJNA(elem));
+			}
+			for (UIProxyJNA newParent : elementList)
+			{
+				buildDom(document, node, newParent, addItems, addRectangles);
+			}
+		}
 	}
 }

@@ -22,7 +22,7 @@ import java.util.regex.Pattern;
 
 public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 {
-	static final String RECTANGLE_PATTERN = "(\\d+),(\\d+),(\\d+),(\\d+)";
+	static final String RECTANGLE_PATTERN = "(-?\\d+),(-?\\d+),(\\d+),(\\d+)";
 	private Logger logger;
 	private JnaDriverImpl driver;
 
@@ -38,6 +38,10 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 		try
 		{
 			String property = this.driver.getProperty(component, WindowProperty.BoundingRectangleProperty);
+			if (property.equalsIgnoreCase("Empty"))
+			{
+				return new Rectangle(0,0,0,0);
+			}
 			Rectangle rectangle = new Rectangle();
 			Pattern pattern = Pattern.compile(RECTANGLE_PATTERN);
 			Matcher matcher = pattern.matcher(property);
@@ -48,7 +52,7 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 			}
 			else
 			{
-				throw new RemoteException("returned rectangle not matches pattern \\d+,\\d+,\\d+,\\d+");
+				throw new RemoteException("returned rectangle not matches pattern " + RECTANGLE_PATTERN+" , rect : " + property);
 			}
 			return rectangle;
 		}

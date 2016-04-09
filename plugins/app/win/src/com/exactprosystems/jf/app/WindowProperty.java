@@ -64,6 +64,9 @@ public enum WindowProperty
 	ValueProperty(30045),
 	MaximumProperty(30050),
 	MinimumProperty(30049),
+
+	//create by me property
+	TrueProperty(-1),
 	;
 	
 	WindowProperty(int id)
