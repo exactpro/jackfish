@@ -174,26 +174,18 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 		try
 		{
 			//TODO it's right that we found main window? mb just get it on c# side and call patterns?
-			int length = 100;
-			int[] arr = new int[length];
-			driver.findAll(arr, new UIProxyJNA(null), WindowTreeScope.Element, WindowProperty.NameProperty, this.driver.title());
-			if (arr[0] > 1)
-			{
-				throw new Exception("Found more that one main windows : " + arr[0]);
-			}
-			int[] windowRuntimeId = new int[arr[1]];
-			System.arraycopy(arr, 2, windowRuntimeId, 0, arr[1]);
+			UIProxyJNA currentWindow = currentWindow();
 			if (maximize)
 			{
-				this.driver.doPatternCall(new UIProxyJNA(windowRuntimeId), WindowPattern.WindowPattern, "SetWindowVisualState", "Maximized", 0);
+				this.driver.doPatternCall(currentWindow, WindowPattern.WindowPattern, "SetWindowVisualState", "Maximized", 0);
 			}
 			else if (minimize)
 			{
-				this.driver.doPatternCall(new UIProxyJNA(windowRuntimeId), WindowPattern.WindowPattern, "SetWindowVisualState", "Minimized", 0);
+				this.driver.doPatternCall(currentWindow, WindowPattern.WindowPattern, "SetWindowVisualState", "Minimized", 0);
 			}
 			else
 			{
-				this.driver.doPatternCall(new UIProxyJNA(windowRuntimeId), WindowPattern.TransformPattern, "Resize", width + "%" + height, 1);
+				this.driver.doPatternCall(currentWindow, WindowPattern.TransformPattern, "Resize", width + "%" + height, 1);
 			}
 		}
 		catch (Exception e)
@@ -268,7 +260,15 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 	{
 		try
 		{
-			UIProxyJNA uiProxyJNA = this.operationExecutor.find(owner, element);
+			UIProxyJNA uiProxyJNA;
+			if (element == null)
+			{
+				uiProxyJNA = currentWindow();
+			}
+			else
+			{
+				uiProxyJNA = this.operationExecutor.find(owner, element);
+			}
 			int length = 100 * 100;
 			int[] arr = new int[length];
 			int count = this.driver.getImage(arr, uiProxyJNA);
@@ -295,7 +295,15 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 	{
 		try
 		{
-			return this.operationExecutor.getRectangle(this.operationExecutor.find(owner, element));
+			if (element == null)
+			{
+				UIProxyJNA currentWindow = currentWindow();
+				return this.operationExecutor.getRectangle(currentWindow);
+			}
+			else
+			{
+				return this.operationExecutor.getRectangle(this.operationExecutor.find(owner, element));
+			}
 		}
 		catch (Exception e)
 		{
@@ -489,4 +497,19 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 			}
 		}
 	}
+
+	private UIProxyJNA currentWindow() throws Exception
+	{
+		int length = 100;
+		int[] arr = new int[length];
+		driver.findAll(arr, new UIProxyJNA(null), WindowTreeScope.Element, WindowProperty.NameProperty, this.driver.title());
+		if (arr[0] > 1)
+		{
+			throw new Exception("Found more that one main windows : " + arr[0]);
+		}
+		int[] windowRuntimeId = new int[arr[1]];
+		System.arraycopy(arr, 2, windowRuntimeId, 0, arr[1]);
+		return new UIProxyJNA(windowRuntimeId);
+	}
+
 }

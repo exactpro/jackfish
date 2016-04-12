@@ -4,6 +4,8 @@ import com.sun.jna.Library;
 
 public interface JnaDriver extends Library {
 	String lastError();
+	String methodTime();
+	String uiAutomationTime();
 
 	void connect(String title);
 	void run(String exec, String workDir, String param);
@@ -28,4 +30,5 @@ public interface JnaDriver extends Library {
 	String getProperty(String elementId, int propertyId);
 	int getPatterns(int[] arr, int len, String elementId);
 	int getImage(int[] arr, int len, String id);
+
 }

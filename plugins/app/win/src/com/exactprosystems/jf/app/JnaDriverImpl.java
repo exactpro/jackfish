@@ -65,6 +65,7 @@ public class JnaDriverImpl
 		long start = System.currentTimeMillis();
 		this.driver.connect(title);
 		this.logger.info(String.format("connect(%s), time (ms) : %d", title, System.currentTimeMillis() - start));
+		checkCSharpTimes();
 		checkError();
 	}
 
@@ -73,6 +74,7 @@ public class JnaDriverImpl
 		long start = System.currentTimeMillis();
 		this.driver.run(exec, workDir, param);
 		this.logger.info(String.format("start(%s,%s,%s), time (ms) : %d", exec, workDir, param, System.currentTimeMillis() - start));
+		checkCSharpTimes();
 		checkError();
 	}
 
@@ -81,6 +83,7 @@ public class JnaDriverImpl
 		long start = System.currentTimeMillis();
 		this.driver.stop();
 		this.logger.info(String.format("stop(), time (ms) : %d", System.currentTimeMillis() - start));
+		checkCSharpTimes();
 		checkError();
 	}
 
@@ -89,6 +92,7 @@ public class JnaDriverImpl
 		long start = System.currentTimeMillis();
 		this.driver.refresh();
 		this.logger.info(String.format("refresh(), time (ms) : %d", System.currentTimeMillis() - start));
+		checkCSharpTimes();
 		checkError();
 	}
 
@@ -97,6 +101,7 @@ public class JnaDriverImpl
 		long start = System.currentTimeMillis();
 		String title = this.driver.title();
 		this.logger.info(String.format("title() = %s, time (ms) : %d",title, System.currentTimeMillis() - start));
+		checkCSharpTimes();
 		checkError();
 		return title;
 	}
@@ -106,6 +111,7 @@ public class JnaDriverImpl
 		long start = System.currentTimeMillis();
 		String result = this.driver.listAll(owner.getIdString(), kind.ordinal(), uid, xpath, clazz, name, title, text);
 		this.logger.info(String.format("listAll(%s,%s,%s,%s,%s,%s,%s,%s), time (ms) : %d", owner, kind, uid, xpath, clazz, name, title, text, System.currentTimeMillis() - start));
+		checkCSharpTimes();
 		checkError();
 		return result;
 	}
@@ -115,6 +121,7 @@ public class JnaDriverImpl
 		long start = System.currentTimeMillis();
 		String result = this.driver.elementAttribute(element.getIdString(), kind.ordinal());
 		this.logger.info(String.format("elementAttribute(%s,%s) = %s, time (ms) : %d", element, kind, result, System.currentTimeMillis() - start));
+		checkCSharpTimes();
 		checkError();
 		return result;
 	}
@@ -124,6 +131,7 @@ public class JnaDriverImpl
 		long start = System.currentTimeMillis();
 		int result = this.driver.elementByCoords(resultId, resultId.length, kind.ordinal(), x, y);
 		this.logger.info(String.format("elementByCoords(%s,%s,%d,%d) = %d, time (ms) : %d", Arrays.toString(resultId), kind, x, y, result, System.currentTimeMillis() - start));
+		checkCSharpTimes();
 		checkError();
 		return result;
 	}
@@ -133,6 +141,7 @@ public class JnaDriverImpl
 		long start = System.currentTimeMillis();
 		this.driver.sendKey(key);
 		this.logger.info(String.format("key(%s), time (ms) : %d", key, System.currentTimeMillis() - start));
+		checkCSharpTimes();
 		checkError();
 	}
 
@@ -141,6 +150,7 @@ public class JnaDriverImpl
 		long start = System.currentTimeMillis();
 		this.driver.mouse(element.getIdString(), action.getId(), x, y);
 		this.logger.info(String.format("mouse(%s,%s,%d,%d), time (ms) : %d", element, action, x, y, System.currentTimeMillis() - start));
+		checkCSharpTimes();
 		checkError();
 	}
 
@@ -149,6 +159,7 @@ public class JnaDriverImpl
 		long start = System.currentTimeMillis();
 		int result = this.driver.findAllForLocator(arr, arr.length, owner.getIdString(), kind.ordinal(), uid, xpath, clazz, name, title, text);
 		this.logger.info(String.format("findAllForLocator(%s,%d,%s,%s,%s,%s,%s,%s,%s,%s) = %d, time (ms) : %d", Arrays.toString(arr), arr.length, owner, kind, uid, xpath, clazz, name, title, text,result, System.currentTimeMillis() - start));
+		checkCSharpTimes();
 		checkError();
 		return result;
 	}
@@ -158,6 +169,7 @@ public class JnaDriverImpl
 		long start = System.currentTimeMillis();
 		int result = this.driver.findAll(arr, arr.length, owner.getIdString(), scope.getValue(), property.getId(), value);
 		this.logger.info(String.format("findAll(%s,%d,%s,%s,%s,%s) = %s, time (ms) : %d", Arrays.toString(arr), arr.length, owner, scope, property, value, result, System.currentTimeMillis() - start));
+		checkCSharpTimes();
 		checkError();
 		return result;
 	}
@@ -173,6 +185,7 @@ public class JnaDriverImpl
 		long start = System.currentTimeMillis();
 		String result = this.driver.doPatternCall(element.getIdString(), pattern.getId(), method, args, c);
 		this.logger.info(String.format("doPatternCall(%s,%s,%s,%s,%d) = %s, time (ms) : %d", element, pattern, method, args, c, result, System.currentTimeMillis() - start));
+		checkCSharpTimes();
 		checkError();
 		return result;
 	}
@@ -182,6 +195,7 @@ public class JnaDriverImpl
 		long start = System.currentTimeMillis();
 		String result = this.driver.getProperty(element.getIdString(), property.getId());
 		this.logger.info(String.format("getProperty(%s,%s) = %s, time (ms) : %d", element, property, result, System.currentTimeMillis() - start));
+		checkCSharpTimes();
 		checkError();
 		return result;
 	}
@@ -191,6 +205,7 @@ public class JnaDriverImpl
 		long start = System.currentTimeMillis();
 		int result = this.driver.getPatterns(arr, arr.length, element.getIdString());
 		this.logger.info(String.format("getPatterns(%s,%s,%s) = %d, time (ms) : %d", Arrays.toString(arr), arr.length, element, result, System.currentTimeMillis() - start));
+		checkCSharpTimes();
 		checkError();
 		return result;
 	}
@@ -200,18 +215,31 @@ public class JnaDriverImpl
 		long start = System.currentTimeMillis();
 		int result = this.driver.getImage(arr, arr.length, element.getIdString());
 		this.logger.info(String.format("getImage(%s,%d,%s) = %s, time (ms) : %d", Arrays.toString(arr), arr.length, element.getIdString(), result, System.currentTimeMillis() - start));
+		checkCSharpTimes();
 		checkError();
 		return result;
 	}
 
 	private void checkError() throws Exception
 	{
-		long start = System.currentTimeMillis();
 		String error = this.driver.lastError();
-		this.logger.info(String.format("checkError(), time (ms) : %d", System.currentTimeMillis() - start));
 		if (error != null)
 		{
 			throw new Exception(error);
+		}
+	}
+
+	private void checkCSharpTimes()
+	{
+		String methodTime = this.driver.methodTime();
+		if (methodTime != null)
+		{
+			this.logger.info("method time {" + methodTime + "}");
+		}
+		String uiAutomationTIme = this.driver.uiAutomationTime();
+		if (uiAutomationTIme != null)
+		{
+			this.logger.info("uiAutomation time : {" + uiAutomationTIme + "}");
 		}
 	}
 
