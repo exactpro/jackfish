@@ -19,10 +19,8 @@ import org.w3c.dom.Node;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
 
 import static com.exactprosystems.jf.app.WinAppFactory.*;
 
@@ -387,11 +385,11 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 		{
 			parent = this.operationExecutor.find(null, owner);
 		}
-		return null;
-//		long start = System.currentTimeMillis();
-//		Document doc = createDoc(parent);
-//		this.logger.info("BUILD TREE TIME (MS) : " + (System.currentTimeMillis() - start));
-//		return doc;
+//		return null;
+		long start = System.currentTimeMillis();
+		Document doc = createDoc(parent);
+		this.logger.info("BUILD TREE TIME (MS) : " + (System.currentTimeMillis() - start));
+		return doc;
 	}
 
 	@Override
@@ -428,7 +426,7 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 		{
 			simpleName = this.driver.getProperty(parent, WindowProperty.ControlTypeProperty);
 		}
-		String tag = simpleName.replaceAll(" ", "");
+		String tag = this.driver.elementAttribute(parent, AttributeKind.TYPE_NAME);
 		try
 		{
 			node = document.createElement(tag);
@@ -452,6 +450,10 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 		{
 			for (AttributeKind kind : AttributeKind.values())
 			{
+				if (kind == AttributeKind.TYPE_NAME)
+				{
+					continue;
+				}
 				String value = this.driver.elementAttribute(parent, kind);
 				if (!Str.IsNullOrEmpty(value))
 				{

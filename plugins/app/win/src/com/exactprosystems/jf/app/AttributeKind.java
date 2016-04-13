@@ -6,7 +6,8 @@ public enum AttributeKind
 	UID,
 	CLASS,
 	TEXT,
-	NAME;
+	NAME,
+	TYPE_NAME;
 
 	public static boolean isSupported(String name)
 	{
