@@ -1049,39 +1049,52 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 	{
 		try
 		{
-			this.currentRobot.waitForIdle();
-			JTable table = component.targetCastedTo(JTable.class);
-			int rows = table.getRowCount();
-			int columns = table.getColumnCount();
-
-			String[][] res = new String[rows + 1][];
-
-			List<String> headers = getHeaders(table, useNumericHeader);
-			res[0] = new String[columns];
-			for (int column = 0; column < columns; column++)
+			Exception lastE = null;
+			for(int i = 0; i < 2; i++)
 			{
-				res[0][column] = headers.get(column);
-			}
-
-			for (int row = 0; row < rows; row++)
-			{
-				res[row + 1] = new String[columns];
-				for (int column = 0; column < columns; column++)
+				try
 				{
-					Object value = table.getValueAt(row, column);
-					if (value == null)
+					this.currentRobot.waitForIdle();
+					JTable table = component.targetCastedTo(JTable.class);
+					int rows = table.getRowCount();
+					int columns = table.getColumnCount();
+
+					String[][] res = new String[rows + 1][];
+
+					List<String> headers = getHeaders(table, useNumericHeader);
+					res[0] = new String[columns];
+					for (int column = 0; column < columns; column++)
 					{
-						Component tableCellRendererComponent = table.getCellRenderer(row, column).getTableCellRendererComponent(table, null, true, true, row, column);
-						if (tableCellRendererComponent instanceof JLabel)
+						res[0][column] = headers.get(column);
+					}
+
+					for (int row = 0; row < rows; row++)
+					{
+						res[row + 1] = new String[columns];
+						for (int column = 0; column < columns; column++)
 						{
-							value = String.valueOf(((JLabel) tableCellRendererComponent).getIcon());
+							Object value = table.getValueAt(row, column);
+							if (value == null)
+							{
+								Component tableCellRendererComponent = table.getCellRenderer(row, column).getTableCellRendererComponent(table, null, true, true, row, column);
+								if (tableCellRendererComponent instanceof JLabel)
+								{
+									value = String.valueOf(((JLabel) tableCellRendererComponent).getIcon());
+								}
+							}
+							res[row + 1][column] = "" + value;
 						}
 					}
-					res[row + 1][column] = "" + value;
+					return res;
+				}
+				catch (ArrayIndexOutOfBoundsException e)
+				{
+					lastE = e;
+					this.logger.error("Table is empty");
+					this.logger.error(e.getMessage(), e);
 				}
 			}
-
-			return res;
+			throw lastE;
 		}
 		catch (Throwable e)
 		{
