@@ -468,7 +468,10 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 			this.logger.error(e.getMessage(), e);
 		}
 		current.appendChild(node);
-
+		if (tag.equalsIgnoreCase("table") || tag.equalsIgnoreCase("datagrid"))
+		{
+			return;
+		}
 		int length = 100;
 		int arr[] = new int[length];
 		int res = this.driver.findAll(arr, parent, WindowTreeScope.Children, WindowProperty.TrueProperty, null);

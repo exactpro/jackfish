@@ -303,6 +303,7 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 	{
 		try
 		{
+			//TODO for tabPane we need find only on children, not descendants
 			int length = 100;
 			int[] arr = new int[length];
 			int count = this.driver.findAll(arr, component, WindowTreeScope.Descendants, WindowProperty.NameProperty, selectedText);
