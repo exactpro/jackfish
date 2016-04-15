@@ -404,8 +404,6 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 							return true;
 						}
 					}
-					Thread.sleep(100);
-					logger.info("wait, found element : " + elements.size() + " toAppear : " + toAppear);
 				}
 				catch (Exception e)
 				{
