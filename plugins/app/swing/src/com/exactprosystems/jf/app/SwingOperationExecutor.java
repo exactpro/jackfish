@@ -1051,110 +1051,103 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 	{
 		try
 		{
-			this.currentRobot.waitForIdle();
-			
-			final Exception[] lastE = new Exception[] { null };
-			final Object[] result = new Object[] { null };
-			SwingUtilities.invokeAndWait(new Runnable()
-			{
-				
-				@Override
-				public void run()
-				{
-					try
-					{
-						JTable table = component.targetCastedTo(JTable.class);
-						int rows = table.getRowCount();
-						int columns = table.getColumnCount();
-
-						String[][] res = new String[rows + 1][];
-
-						List<String> headers = getHeaders(table, useNumericHeader);
-						res[0] = new String[columns];
-						for (int column = 0; column < columns; column++)
-						{
-							res[0][column] = headers.get(column);
-						}
-
-						for (int row = 0; row < rows; row++)
-						{
-							res[row + 1] = new String[columns];
-							for (int column = 0; column < columns; column++)
-							{
-								Object value = table.getValueAt(row, column);
-								if (value == null)
-								{
-									Component tableCellRendererComponent = table.getCellRenderer(row, column).getTableCellRendererComponent(table, null, true, true, row, column);
-									if (tableCellRendererComponent instanceof JLabel)
-									{
-										value = String.valueOf(((JLabel) tableCellRendererComponent).getIcon());
-									}
-								}
-								res[row + 1][column] = "" + value;
-							}
-						}
-						result[0] = res;
-					}
-					catch (Exception e)
-					{
-						lastE[0] = e;
-					}
-				}
-			});
-
-			if (lastE[0] != null)
-			{
-				throw lastE[0];
-			}
-			return (String[][])result[0];
-			
-			
-//			Exception lastE = null;
-//			for(int i = 0; i < 2; i++)
+//			this.currentRobot.waitForIdle();
+//			
+//			final Exception[] lastE = new Exception[] { null };
+//			final Object[] result = new Object[] { null };
+//			SwingUtilities.invokeAndWait(new Runnable()
 //			{
-//				try
+//				
+//				@Override
+//				public void run()
 //				{
-//					this.currentRobot.waitForIdle();
-//					JTable table = component.targetCastedTo(JTable.class);
-//					int rows = table.getRowCount();
-//					int columns = table.getColumnCount();
-//
-//					String[][] res = new String[rows + 1][];
-//
-//					List<String> headers = getHeaders(table, useNumericHeader);
-//					res[0] = new String[columns];
-//					for (int column = 0; column < columns; column++)
+//					try
 //					{
-//						res[0][column] = headers.get(column);
-//					}
+//						JTable table = component.targetCastedTo(JTable.class);
+//						int rows = table.getRowCount();
+//						int columns = table.getColumnCount();
 //
-//					for (int row = 0; row < rows; row++)
-//					{
-//						res[row + 1] = new String[columns];
+//						String[][] res = new String[rows + 1][];
+//
+//						List<String> headers = getHeaders(table, useNumericHeader);
+//						res[0] = new String[columns];
 //						for (int column = 0; column < columns; column++)
 //						{
-//							Object value = table.getValueAt(row, column);
-//							if (value == null)
-//							{
-//								Component tableCellRendererComponent = table.getCellRenderer(row, column).getTableCellRendererComponent(table, null, true, true, row, column);
-//								if (tableCellRendererComponent instanceof JLabel)
-//								{
-//									value = String.valueOf(((JLabel) tableCellRendererComponent).getIcon());
-//								}
-//							}
-//							res[row + 1][column] = "" + value;
+//							res[0][column] = headers.get(column);
 //						}
+//
+//						for (int row = 0; row < rows; row++)
+//						{
+//							res[row + 1] = new String[columns];
+//							for (int column = 0; column < columns; column++)
+//							{
+//								Object value = table.getValueAt(row, column);
+//								if (value == null)
+//								{
+//									Component tableCellRendererComponent = table.getCellRenderer(row, column).getTableCellRendererComponent(table, null, true, true, row, column);
+//									if (tableCellRendererComponent instanceof JLabel)
+//									{
+//										value = String.valueOf(((JLabel) tableCellRendererComponent).getIcon());
+//									}
+//								}
+//								res[row + 1][column] = "" + value;
+//							}
+//						}
+//						result[0] = res;
 //					}
-//					return res;
+//					catch (Exception e)
+//					{
+//						lastE[0] = e;
+//					}
 //				}
-//				catch (ArrayIndexOutOfBoundsException e)
-//				{
-//					lastE = e;
-//					this.logger.error("Table is empty");
-//					this.logger.error(e.getMessage(), e);
-//				}
+//			});
+//
+//			if (lastE[0] != null)
+//			{
+//				throw lastE[0];
 //			}
-//			throw lastE;
+//			return (String[][])result[0];
+			
+			
+			this.currentRobot.waitForIdle();
+			JTable table = component.targetCastedTo(JTable.class);
+			int rows = table.getRowCount();
+			int columns = table.getColumnCount();
+
+			String[][] res = new String[rows + 1][];
+
+			List<String> headers = getHeaders(table, useNumericHeader);
+			res[0] = new String[columns];
+			for (int column = 0; column < columns; column++)
+			{
+				res[0][column] = headers.get(column);
+			}
+
+			for (int row = 0; row < rows; row++)
+			{
+				res[row + 1] = new String[columns];
+				for (int column = 0; column < columns; column++)
+				{
+					Object value = table.getValueAt(row, column);
+					if (value == null)
+					{
+						try
+						{
+							Component tableCellRendererComponent = table.getCellRenderer(row, column).getTableCellRendererComponent(table, null, true, true, row, column);
+							if (tableCellRendererComponent instanceof JLabel)
+							{
+								value = String.valueOf(((JLabel) tableCellRendererComponent).getIcon());
+							}
+						}
+						catch (Exception e)
+						{
+							// TODO Auto-generated catch block
+						}
+					}
+					res[row + 1][column] = "" + value;
+				}
+			}
+			return res;
 		}
 		catch (Throwable e)
 		{
