@@ -25,9 +25,9 @@ import com.exactprosystems.jf.service.ServicePool;
 import com.exactprosystems.jf.sql.SqlConnection;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.SupportedEntry;
-import com.exactprosystems.jf.tool.configuration.sqlentry.testing.TestingConnectionFxController;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.newconfig.nodes.*;
+import com.exactprosystems.jf.tool.newconfig.testing.TestingConnectionFxController;
 
 import javafx.application.Platform;
 import javafx.concurrent.Task;
