@@ -8,10 +8,7 @@ import org.apache.log4j.Logger;
 
 import java.io.File;
 import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
+import java.nio.file.*;
 import java.rmi.RemoteException;
 import java.util.Arrays;
 
@@ -24,6 +21,7 @@ public class JnaDriverImpl
 {
 	private final Logger logger;
 	private final static String dllDir = "bin/UIAdapter.dll";
+	private final static String pdbDir = "bin/UIAdapter.pdb";
 
     public static void main(String[] args) throws Exception {
 	    JnaDriverImpl driver = new JnaDriverImpl(Logger.getLogger(JnaDriverImpl.class));
@@ -40,16 +38,27 @@ public class JnaDriverImpl
 		this.logger = logger;
 		if (Platform.is64Bit())
 		{}
-		Path path = Paths.get("tempFile.dll");
-		try (InputStream in = getClass().getResourceAsStream(dllDir)) {
-			Files.copy(in, path, StandardCopyOption.REPLACE_EXISTING);
+		Path pathDll = Paths.get("UIAdapter.dll");
+		Path pathPdb = Paths.get("UIAdapter.pdb");
+		try (
+				InputStream inDll = getClass().getResourceAsStream(dllDir);
+				InputStream inPdb = getClass().getResourceAsStream(pdbDir)
+		)
+		{
+			Files.copy(inDll, pathDll, StandardCopyOption.REPLACE_EXISTING);
+			Files.copy(inPdb, pathPdb, StandardCopyOption.REPLACE_EXISTING);
+		}
+		catch (AccessDeniedException ex)
+		{
+			//nothing
 		} catch (Exception e) {
 			throw new RemoteException(e.getMessage(), e);
 		}
-		String dll = path.toString();
+		String dll = pathDll.toString();
 		// TODO if i committed this string, please remove it, because this string only for debuging onyl on my computer
 		// dll = "C:\\jackfish\\AppWinGui\\src\\com\\exactprosystems\\jf\\app\\bin\\UIAdapter.dll";
-		System.out.println("dll path : " + dll);
+		System.out.println("dll pathDll : " + dll);
+		System.out.println("pdb pathPdb : " + pathPdb.toString());
 		if (new File(dll).exists())
 		{
 			this.driver = (JnaDriver) Native.loadLibrary(dll, JnaDriver.class);
