@@ -30,6 +30,11 @@ import javax.xml.transform.Result;
 import javax.xml.transform.stream.StreamResult;
 
 import java.io.*;
+import java.lang.ProcessBuilder.Redirect;
+import java.lang.management.ManagementFactory;
+import java.lang.management.RuntimeMXBean;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -45,7 +50,7 @@ public class MainRunner
 		{
 			logger.info("Tool version: " + VersionInfo.getVersion());
 			logger.info("API version:  " + ApiVersionInfo.majorVersion() + "." + ApiVersionInfo.minorVersion());
-			logger.debug("args: " + Arrays.toString(args));
+			logger.info("args: " + Arrays.toString(args));
 			
 			Option startAtName = OptionBuilder
 					.withArgName("time")
@@ -110,6 +115,9 @@ public class MainRunner
 			
 			CommandLine line = null;
 			
+			//---------------------------------------------------------------------------------------------------------------------
+			// parsing main options that can lead to exit immediately
+			//---------------------------------------------------------------------------------------------------------------------
 		    try 
 		    {
 		        // parse the command line arguments
@@ -125,8 +133,6 @@ public class MainRunner
 		        System.exit(1);
 		        return;
 		    }
-
-			String configString = line.getOptionValue(configName.getOpt());
 
             if (line.hasOption(saveSchema.getOpt()))
 		    {
@@ -147,29 +153,9 @@ public class MainRunner
 		    if (line.hasOption(help.getOpt()))
 		    {
 		    	printHelp(options);
-		    	
 		    	System.exit(0);
 		    }
-
-			if (!line.hasOption(console.getOpt()))
-			{
-				String passwordValue = line.getOptionValue(password.getOpt());
-				
-				String[] guiArgs = null;
-				if (configString != null)
-				{
-					guiArgs = new String[]{configString, passwordValue };
-				}
-				else
-				{
-					guiArgs = new String[]{};
-				}
-				
-				Application.launch(Main.class, guiArgs);
-				return;
-			}
-
-
+		    
 			String verboseString = line.getOptionValue(traceLevel.getOpt());
 			VerboseLevel verboseLevel = VerboseLevel.All;
 			if (verboseString != null)
@@ -177,8 +163,36 @@ public class MainRunner
 				verboseLevel = VerboseLevel.valueOf(verboseString);
 			}
 
-			boolean showShortPaths = line.hasOption(shortPaths.getOpt()); 
-			
+			//---------------------------------------------------------------------------------------------------------------------
+			// check if we need restarting app from another directory
+			//---------------------------------------------------------------------------------------------------------------------
+			String configString = line.getOptionValue(configName.getOpt());
+
+			Path newPath = needToChangeDirectory(configString);
+//			if (newPath != null)
+//			{
+//				logger.info("Restart into a new directory " + newPath);
+//				
+//				int exitValue = restartProcessInNewDir(newPath, line, options, configName);
+//				System.exit(exitValue);
+//			}
+
+			//---------------------------------------------------------------------------------------------------------------------
+			// check if we need launch app in gui mode
+			//---------------------------------------------------------------------------------------------------------------------
+			if (!line.hasOption(console.getOpt()))
+			{
+				String passwordValue = line.getOptionValue(password.getOpt());
+				String[] guiArgs = configString != null ? new String[]{ configString, passwordValue } : new String[]{};
+
+				Application.launch(Main.class, guiArgs);
+				System.exit(0);
+			}
+
+
+			//---------------------------------------------------------------------------------------------------------------------
+			// main part of work
+			//---------------------------------------------------------------------------------------------------------------------
 			printVersion();
 
 			Configuration configuration = new Configuration(configString, new Settings());
@@ -235,7 +249,8 @@ public class MainRunner
 			{
 				return;
 			}
-
+			
+			boolean showShortPaths = line.hasOption(shortPaths.getOpt()); 
 			boolean allPassed = processMatrix(configuration, inputFile, startAt, verboseLevel, showShortPaths);
 			exitCode = allPassed ? 0 : 1;
 		} 
@@ -253,6 +268,27 @@ public class MainRunner
 		System.exit(exitCode);
 	}
 
+	public static Path needToChangeDirectory(String fileName)
+	{
+		if (fileName != null)
+		{
+			File file = new File(fileName);
+			Path cwd = Paths.get("").toAbsolutePath();
+			File parentDir = file.getParentFile();
+			if (parentDir != null)
+			{
+				Path newCwd = parentDir.toPath();
+				
+				if (!cwd.equals(newCwd))
+				{
+					return newCwd;
+				}
+			}
+		}
+
+		return null;
+	}
+	
 	private static void printHelp(Options options)
 	{
 		HelpFormatter formatter = new HelpFormatter();
@@ -315,6 +351,95 @@ public class MainRunner
 		}
 		return false;
 	}
+	
+	
+	public static int restartProcessInNewDir(Path workDir, CommandLine line, Options options, Option configName) throws Exception
+	{
+		List<String> args = new ArrayList<String>();
+		for (Object op : options.getOptions())
+		{
+			Option option = (Option)op;
+			if (line.hasOption(option.getOpt()))
+			{
+				String arg = "-" + option.getOpt();
+				if (option.hasArg())
+				{
+					String value = line.getOptionValue(option.getOpt());
+					arg += "=";
+					arg += option.equals(configName) ? new File(value).getName() : value;
+				}
+				args.add(arg);
+			}
+		}
+		
+		String fileSeparator 	= System.getProperty("file.separator");
+		String javaRuntime  	= System.getProperty("java.home") + fileSeparator + "bin" + fileSeparator + "java";
+	
+		File jarName = new File(Main.class.getProtectionDomain()
+				.getCodeSource()
+				.getLocation().toURI()
+				.getPath());
+
+		RuntimeMXBean runtimeMxBean = ManagementFactory.getRuntimeMXBean();
+		List<String> jvmParameters = runtimeMxBean.getInputArguments();
+
+		// compose all command-line parameters to launch another process
+		List<String> commandLine = new ArrayList<String>();
+		add(commandLine, javaRuntime);
+		
+		if (jvmParameters != null)
+		{
+			for (String param : jvmParameters)
+			{
+				add(commandLine, param);
+			}
+		}
+		
+		if (jarName.isFile())
+		{
+			add(commandLine, "-jar");
+			add(commandLine, jarName.getAbsolutePath());
+		}
+		else
+		{
+			add(commandLine, "-cp");
+			add(commandLine, jarName.getAbsolutePath());
+			add(commandLine, Main.class.getCanonicalName());
+		}
+		
+		if (args != null)
+		{
+			for (String arg : args)
+			{
+				add(commandLine, arg);
+			}
+		}
+		
+		System.out.println(commandLine);
+		
+		// launch the process
+		ProcessBuilder builder = new ProcessBuilder(commandLine);
+		builder
+			.redirectInput(Redirect.INHERIT)
+		    .redirectOutput(Redirect.INHERIT)
+		    .redirectError(Redirect.INHERIT)
+			.directory(workDir.toFile());
+		
+		
+		Process process = builder.start();
+		process.waitFor();
+		
+		return process.exitValue();
+	}
+	
+	private static void add(List<String> list, String str)
+	{
+		if (str != null)
+		{
+			list.add(str);
+		}
+	}
+
 	
 	private static void saveSchema(Class<?> clazz, final String fileName)
 	{
