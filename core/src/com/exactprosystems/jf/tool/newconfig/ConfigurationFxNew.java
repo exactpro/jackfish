@@ -526,7 +526,7 @@ public class ConfigurationFxNew extends Configuration
 		Common.tryCatchThrow(() -> this.showTestSqlPanel(entry, values), "Error on show testing panel");
 	}
 
-	private void testSqlConnection(String sql, String server, String base, String user, String password) throws Exception
+	public void testSqlConnection(String sql, String server, String base, String user, String password) throws Exception
 	{
 		Common.tryCatch(() ->
 		{
