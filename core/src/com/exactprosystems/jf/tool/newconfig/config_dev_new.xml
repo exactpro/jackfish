@@ -1,0 +1,203 @@
+<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+<!--  Copyright (c) 2009-2016, Exactpro Systems, LLC -->
+<!--  Quality Assurance & Related Development for Innovative Trading Systems. -->
+<!--  All rights reserved. -->
+<!--  This is unpublished, licensed software, confidential and proprietary -->
+<!--  information which is the property of Exactpro Systems, LLC or its licensors. -->
+<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+<configuration>
+	<evaluatorImports>com.exactprosystems.jf.common.parser,java.math,java.util.regex,java.util,java.awt,java.awt.event,java.util.List,java.util.Map,java.lang,com.exactprosystems.jf.api.app,com.exactprosystems.jf.api.conditions,com.exactprosystems.jf.function,java.io</evaluatorImports>
+
+	<timeFormat>HH:mm:ss.SSS</timeFormat>
+	<dateFormat>dd.MM.yyyy</dateFormat>
+	<dateTimeFormat>dd.MM.yyyy HH:mm:ss.SSS</dateTimeFormat>
+	<additionFormats>dd.MM.yyyy HH:mm:ss|yyyy/MM/dd HH:mm:ss.SSS|yyyyMMdd-HH:mm:ss.SSS|dd/MM/yyyy|HH.mm|HH:mm:ss|HH:mm:ss Z|HH:mm:ss:SSS</additionFormats>
+
+	<matrixes>./matrices</matrixes>
+	<libraries>./library</libraries>
+	<variables>vars.ini,1_vars_new.ini,123vars.ini,uservars/myvars.ini</variables>
+	<reports>reports</reports>
+	<gitRemotePath>http://temp.com/project.git</gitRemotePath>
+
+	<clientDictionaryPath></clientDictionaryPath>
+	<appDictionaryPath></appDictionaryPath>
+
+	<sqlEntry>
+		<name>MySql</name>
+		<sqlJar>sql/mysql-connector.jar</sqlJar>
+		<sqlConnection>jdbc:mysql://${SERVER}/${BASE}?generateSimpleParameterMetadata=true</sqlConnection>
+	</sqlEntry>
+	<sqlEntry>
+		<name>PostgreSql</name>
+		<sqlJar>sql/postgresql-9.0-801.jdbc4.jar</sqlJar>
+		<sqlConnection>jdbc:postgresql://${SERVER}/${BASE}</sqlConnection>
+	</sqlEntry>
+	<clientEntry>
+		<name>DTS</name>
+		<parameters/>
+		<clientJar>clients/dts.jar</clientJar>
+		<clientLimit>0</clientLimit>
+		<clientDictionary>dic/clients/dts.xml</clientDictionary>
+	</clientEntry>
+	<clientEntry>
+		<name>FIX</name>
+		<parameters>
+			<key>UseHeartBeats</key>
+			<value>false</value>
+		</parameters>
+		<parameters>
+			<key>HeartBeatTimeout</key>
+			<value>2000</value>
+		</parameters>
+		<clientJar>clients/fix.jar</clientJar>
+		<clientLimit>0</clientLimit>
+		<clientDictionary>dic/clients/FIX50.GTI.xml</clientDictionary>
+	</clientEntry>
+	<clientEntry>
+		<name>TestClient</name>
+		<clientJar>clients/test.jar</clientJar>
+		<clientLimit>0</clientLimit>
+		<clientDictionary>dic/clients/test.xml</clientDictionary>
+	</clientEntry>
+	<serviceEntry>
+		<name>TEST</name>
+		<serviceJar>services/test.jar</serviceJar>
+	</serviceEntry>
+	<serviceEntry>
+		<name>SF</name>
+		<serviceDescription>Saifish service.</serviceDescription>
+		<serviceJar>services/sf.jar</serviceJar>
+	</serviceEntry>
+	<appEntry>
+		<name>WIN</name>
+		<appDescription>Window's UIAutomation plugin</appDescription>
+		<appDicPath>dic/gui/calc.xml</appDicPath>
+		<appJar>apps/win.jar</appJar>
+		<appWorkDir>apps/</appWorkDir>
+		<appStartPort>9000</appStartPort>
+	</appEntry>
+	<appEntry>
+		<name>PARFX</name>
+		<parameters>
+			<key>ChromeDriverPath</key>
+			<value>webdrivers/chromedriver</value>
+		</parameters>
+		<appDicPath>dic/gui/pfWait.xml</appDicPath>
+		<appJar>apps/web.jar</appJar>
+		<appWorkDir>apps</appWorkDir>
+		<appStartPort>9500</appStartPort>
+	</appEntry>
+	<appEntry>
+		<name>EXACTPRO</name>
+		<appDescription>Exactpro example</appDescription>
+		<appDicPath>dic/gui/exactpro_dic.xml</appDicPath>
+		<appJar>apps/web.jar</appJar>
+		<appWorkDir>apps/</appWorkDir>
+		<appStartPort>10000</appStartPort>
+	</appEntry>
+	<appEntry>
+		<name>JAVAWS</name>
+		<parameters>
+			<key>jreArgs</key>
+			<value></value>
+		</parameters>
+		<appDicPath>dic/gui/swing.xml</appDicPath>
+		<appJar>apps/swing.jar</appJar>
+		<appWorkDir>../MockApp</appWorkDir>
+		<appStartPort>12000</appStartPort>
+	</appEntry>
+	<appEntry>
+		<name>SG</name>
+		<parameters>
+			<key>ChromeDriverPath</key>
+			<value>unix/chromedriver_64</value>
+		</parameters>
+		<parameters>
+			<key>IEDriverPath</key>
+			<value></value>
+		</parameters>
+		<parameters>
+			<key>ChromeDriverBinary</key>
+			<value></value>
+		</parameters>
+		<appDescription></appDescription>
+		<appDicPath>dic/gui/sg_dic.xml</appDicPath>
+		<appJar>apps/web.jar</appJar>
+		<appWorkDir>apps/</appWorkDir>
+		<appStartPort>10200</appStartPort>
+	</appEntry>
+	<appEntry>
+		<name>SGJ</name>
+		<appDicPath>dic/gui/desktop_dic.xml</appDicPath>
+		<appJar>apps/swing.jar</appJar>
+		<appWorkDir>apps</appWorkDir>
+		<appStartPort>8000</appStartPort>
+	</appEntry>
+	<appEntry>
+		<name>WEB</name>
+		<parameters>
+			<key>ChromeDriverPath</key>
+			<value>unix/chromedriver</value>
+		</parameters>
+		<appDicPath>dic/gui/CurrentDictionary.xml</appDicPath>
+		<appJar>apps/web.jar</appJar>
+		<appWorkDir>apps/</appWorkDir>
+		<appStartPort>10000</appStartPort>
+	</appEntry>
+	<appEntry>
+		<name>TRN</name>
+		<parameters>
+			<key>ChromeDriverPath</key>
+			<value>unix/chromedriver</value>
+		</parameters>
+		<parameters>
+			<key>IEDriverPath</key>
+			<value></value>
+		</parameters>
+		<parameters>
+			<key>ChromeDriverBinary</key>
+			<value></value>
+		</parameters>
+		<appDescription>Transparency</appDescription>
+		<appDicPath>dic/gui/transparency.xml</appDicPath>
+		<appJar>apps/web.jar</appJar>
+		<appWorkDir>apps/</appWorkDir>
+		<appStartPort>11000</appStartPort>
+	</appEntry>
+	<appEntry>
+		<name>EC</name>
+		<appDescription>web for elite ee testing</appDescription>
+		<appDicPath>dic/gui/ec_dic.xml</appDicPath>
+		<appJar>apps/web.jar</appJar>
+		<appWorkDir>apps</appWorkDir>
+		<appStartPort>10000</appStartPort>
+	</appEntry>
+	<appEntry>
+		<name>LT</name>
+		<parameters>
+			<key>ChromeDriverPath</key>
+			<value></value>
+		</parameters>
+		<parameters>
+			<key>IEDriverPath</key>
+			<value></value>
+		</parameters>
+		<parameters>
+			<key>ChromeDriverBinary</key>
+			<value></value>
+		</parameters>
+		<appDescription>Layout testing</appDescription>
+		<appDicPath>dic/gui/LayoutTesting.xml</appDicPath>
+		<appJar>apps/web.jar</appJar>
+		<appWorkDir>apps</appWorkDir>
+		<appStartPort>7000</appStartPort>
+	</appEntry>
+	<appEntry>
+		<name>LHT</name>
+		<appDescription>layout html testing</appDescription>
+		<appDicPath>dic/gui/LayoutHtmlTesting.xml</appDicPath>
+		<appJar>apps/web.jar</appJar>
+		<appWorkDir>apps</appWorkDir>
+		<appStartPort>10000</appStartPort>
+	</appEntry>
+</configuration>
