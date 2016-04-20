@@ -91,13 +91,17 @@ public class Notifications
 
 	public void show()
 	{
+		if (Common.node.getScene() == null)
+		{
+			System.err.println(this.msg);
+			return;
+		}
+		
 		NotificationPopupHandler.getInstance().show(Common.node.getScene().getWindow(), this);
 	}
 
 	private static final class NotificationPopupHandler
 	{
-		private static final NotificationPopupHandler INSTANCE = new NotificationPopupHandler();
-
 		private static final Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
 
 		private double startX = 0;
@@ -105,8 +109,21 @@ public class Notifications
 		private double screenWidth;
 		private double screenHeight;
 
+		private static NotificationPopupHandler INSTANCE = null;
+
 		static NotificationPopupHandler getInstance()
 		{
+			if (INSTANCE == null)
+			{
+				synchronized (NotificationPopupHandler.class)
+				{
+					if (INSTANCE == null)
+					{
+						INSTANCE = new NotificationPopupHandler();
+					}
+				}
+			}
+			
 			return INSTANCE;
 		}
 

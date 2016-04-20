@@ -95,7 +95,7 @@ public class LibraryTreeNode extends TreeNode
 		
 		files.forEach(file -> new BuildTree(file, this.treeItem)
 				.doubleClickEvent(f -> () -> this.model.openLibrary(f))
-				.fileFilter(f -> ConfigurationFxNew.getExtension(f.getAbsolutePath()).equals(ConfigurationFxNew.MATRIX_EXTENSION))
+				.fileFilter(f -> ConfigurationFxNew.getExtension(f.getAbsolutePath()).equals(ConfigurationFxNew.matrixExt))
 				.menuTopFolder(menuTopFolder)
 				.menuFiles(menuFiles)
 				.menuFolder(menuFolders)

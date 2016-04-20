@@ -29,10 +29,14 @@
 							<menus>
 								<Menu fx:id="menuFile" mnemonicParsing="false" text="File">
 									<items>
-										<MenuItem fx:id="fileLoadConfiguration" mnemonicParsing="false"
-												  onAction="#loadConfiguration" text="Load configuration"/>
-										<MenuItem fx:id="fileNewConfiguration" mnemonicParsing="false"
-												  onAction="#newConfiguration" text="New configuration"/>
+										<MenuItem fx:id="loadConfiguration" mnemonicParsing="false" onAction="#loadConfiguration" text="Load configuration"/>
+										<MenuItem fx:id="newConfiguration" mnemonicParsing="false" onAction="#newConfiguration" text="New configuration"/>
+
+										<SeparatorMenuItem mnemonicParsing="false"/>
+
+										<MenuItem fx:id="loadConfiguration2" mnemonicParsing="false" onAction="#loadConfiguration2" text="Load new configuration"/>
+										<MenuItem fx:id="newConfiguration2" mnemonicParsing="false" onAction="#newConfiguration2" text="New new configuration"/>
+
 										<SeparatorMenuItem mnemonicParsing="false"/>
 										<Menu fx:id="fileLoad" mnemonicParsing="false" text="Load">
 											<items>

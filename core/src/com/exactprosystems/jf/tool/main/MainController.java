@@ -14,6 +14,7 @@ import com.exactprosystems.jf.common.Document;
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.common.Settings.SettingsValue;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
+import com.exactprosystems.jf.common.version.VersionInfo;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.CssVariables;
@@ -63,6 +64,8 @@ public class MainController implements Initializable, ContainingParent
 	public Menu menuFile;
 	public MenuItem fileLoadConfiguration;
 	public MenuItem fileNewConfiguration;
+	public MenuItem fileLoadConfiguration2;
+	public MenuItem fileNewConfiguration2;
 
 	public Menu fileLoad;
 	public MenuItem fileLoadDictionary;
@@ -163,6 +166,13 @@ public class MainController implements Initializable, ContainingParent
 		progressBar.setProgress(ProgressIndicator.INDETERMINATE_PROGRESS);
 		progressBar.setVisible(false);
 
+		// TODO crutch
+		if (!VersionInfo.getVersion().contains("local"))
+		{
+			this.fileLoadConfiguration2.setVisible(false);
+			this.fileNewConfiguration2.setVisible(false);
+		}
+		
 		listeners();
 
 		Common.setTabPane(tabPane);
@@ -284,6 +294,16 @@ public class MainController implements Initializable, ContainingParent
 	public void newConfiguration(ActionEvent actionEvent)
 	{
 		Common.tryCatch(this.model::newConfiguration, "Error on create new configuration");
+	}
+
+	public void loadConfiguration2(ActionEvent actionEvent)
+	{
+		Common.tryCatch(() -> this.model.loadConfiguration2(null), "Error on load configuration");
+	}
+
+	public void newConfiguration2(ActionEvent actionEvent)
+	{
+		Common.tryCatch(this.model::newConfiguration2, "Error on create new configuration");
 	}
 
 	// ====================================================

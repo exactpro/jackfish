@@ -71,6 +71,8 @@ import java.util.stream.Collectors;
 public class Configuration extends AbstractDocument
 {
 	public static final String 	projectName 		= "JackFish";
+	public static final String 	varExt 				= ".ini";
+	public static final String 	dictExt 			= ".xml";
 	public static final String 	matrixExt 			= ".jf";
 	public static final String 	matrixFilter		= "*.jf";
 	public static final char  	matrixDelimiter		= ';';
@@ -84,6 +86,8 @@ public class Configuration extends AbstractDocument
 	public static final String evaluatorImports 	= "evaluatorImports";
 	public static final String outputPath 			= "outputPath";
 	public static final String variables 			= "variables";
+	public static final String matrices 			= "matrices";
+	public static final String libraries 			= "libraries";
 	public static final String userVariables 		= "userVariables";
 
 	public static final String entryName			= "name";
@@ -128,10 +132,6 @@ public class Configuration extends AbstractDocument
 	@XmlElement(name = additionFormats)
 	protected String additionFormatsValue;
 	
-	private String reportFactoryValue = HTMLReportFactory.class.getSimpleName();
-	
-	private String evaluatorValue = MvelEvaluator.class.getSimpleName();
-	
 	@XmlElement(name = evaluatorImports)
 	protected String evaluatorImportsValue;
 	
@@ -143,6 +143,12 @@ public class Configuration extends AbstractDocument
 	
 	@XmlElement(name = userVariables)
 	protected String userVariablesValue;
+	
+	@XmlElement(name = matrices)
+	protected String matricesValue;
+	
+	@XmlElement(name = libraries)
+	protected String librariesValue;
 	
 	//------------------------------------------------------------------------------------------------------------------
 	// new technology
@@ -329,9 +335,11 @@ public class Configuration extends AbstractDocument
 	}
 
 	
+	@Deprecated
 	@XmlElement(name = libEntry)
 	public MutableArrayList<LibEntry> libEntriesValue;
 
+	@Deprecated
 	@XmlAccessorType(XmlAccessType.NONE)
 	public static class LibEntry extends Entry
 	{
@@ -545,6 +553,54 @@ public class Configuration extends AbstractDocument
 	{
 		return new Context(matrixListener, out, this);
 	}
+	
+	// TODO for new configuration
+	public void refreshLibs()
+	{
+		this.libs.clear();
+		Map<File, Long> newMap = new HashMap<File, Long>();
+		for (LibEntry lib : this.libEntriesValue)
+		{
+			try
+			{
+				String name = lib.toString();
+				String path = lib.get(libPath);
+				IMatrixListener checker = new MatrixListener();
+				Matrix matrix = new Matrix(path, this, checker);
+				File file = new File(path);
+				Long timestamp = timestampMap.get(file);
+				newMap.put(file, timestamp);
+				if (timestamp == null)
+				{
+					timestampMap.put(file, file.lastModified());
+					this.libs.put(name, loadMatrix(file, matrix, checker, name));
+				}
+				else
+				{
+					if (!timestamp.equals(file.lastModified()))
+					{
+						this.libs.put(name, loadMatrix(file, matrix, checker, name));
+					}
+					else
+					{
+						this.libs.put(name, matrix);
+					}
+
+				}
+			}
+			catch (Exception e)
+			{
+				String message = "Error on update lib : " + lib + " .\n" + e.getMessage();
+				logger.error(message);
+				logger.error(e.getMessage(), e);
+				listener.onException(message);
+			}
+		}
+		timestampMap.clear();
+		timestampMap.putAll(newMap);
+	}
+
+	
 	
 	public void updateLibs()
 	{
@@ -1125,6 +1181,8 @@ public class Configuration extends AbstractDocument
 			AppEntry.class,
 		};
 
+	protected String 				reportFactoryValue = HTMLReportFactory.class.getSimpleName();
+	protected String 				evaluatorValue = MvelEvaluator.class.getSimpleName();
 	protected Map<File, Long> 		timestampMap 	= new HashMap<>();
 	protected UpdateLibsListener 	listener		= new ConsoleUpdateLibsListener();
 	protected RunnerListener 		runnerListener 	= new DummyRunnerListener();

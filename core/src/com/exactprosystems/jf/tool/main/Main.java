@@ -26,13 +26,16 @@ import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper.OpenSaveMode;
 import com.exactprosystems.jf.tool.matrix.MatrixFx;
 import com.exactprosystems.jf.tool.matrix.schedule.RunnerScheduler;
+import com.exactprosystems.jf.tool.newconfig.ConfigurationFxNew;
 import com.exactprosystems.jf.tool.settings.SettingsPanel;
 import com.exactprosystems.jf.tool.settings.Theme;
 import com.exactprosystems.jf.tool.systemvars.SystemVarsFx;
 import com.exactprosystems.jf.tool.text.PlainTextFx;
+
 import javafx.application.Application;
 import javafx.concurrent.Task;
 import javafx.stage.Stage;
+
 import org.apache.log4j.Logger;
 
 import java.io.File;
@@ -208,6 +211,36 @@ public class Main extends Application
 	//----------------------------------------------------------------------------------------------
 	// Event handlers
 	//----------------------------------------------------------------------------------------------
+	public void loadConfiguration2(String filePath) throws Exception
+	{
+		Optional<File> optional = chooseFile(Configuration.class, filePath, DialogsHelper.OpenSaveMode.OpenFile);
+		if (optional.isPresent())
+		{
+			File file = optional.get();
+			if (this.config != null)
+			{
+				if (this.config.canClose())
+				{
+					this.config.close(this.config.getSettings());
+					setConfiguration(null);
+				}
+				else
+				{
+					return;
+				}
+			}
+
+			ConfigurationFxNew config = new ConfigurationFxNew(file.getPath(), this.runnerListener, this.settings, Main.this);
+
+			Document doc = loadDocument(file, config, DocumentKind.CONFIGURATION);
+			if (doc instanceof Configuration)
+			{
+				setConfiguration(config);
+			}
+		}
+	}
+
+	@Deprecated
 	public void loadConfiguration(String filePath) throws Exception
 	{
 		Optional<File> optional = chooseFile(Configuration.class, filePath, DialogsHelper.OpenSaveMode.OpenFile);
@@ -287,6 +320,27 @@ public class Main extends Application
 		}
 	}
 
+	public void newConfiguration2() throws Exception
+	{
+		if (this.config != null)
+		{
+			if (this.config.canClose())
+			{
+				this.config.close(this.config.getSettings());
+				setConfiguration(null);
+			}
+			else
+			{
+				return;
+			}
+		}
+		ConfigurationFxNew config = new ConfigurationFxNew(newName(Configuration.class), this.runnerListener, this.settings, Main.this);
+
+		createDocument(config);
+		setConfiguration(config);
+	}
+	
+	@Deprecated
 	public void newConfiguration() throws Exception
 	{
 		if (this.config != null)

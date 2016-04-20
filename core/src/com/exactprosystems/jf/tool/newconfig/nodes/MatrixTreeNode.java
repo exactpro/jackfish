@@ -7,6 +7,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.exactprosystems.jf.tool.newconfig.nodes;
 
+import com.exactprosystems.jf.common.Configuration;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.newconfig.ConfigurationFxNew;
@@ -93,7 +94,7 @@ public class MatrixTreeNode extends TreeNode
 		};
 		listFiles.forEach(file ->
 				new BuildTree(file, this.treeItem)
-						.fileFilter(f -> ConfigurationFxNew.getExtension(f.getAbsolutePath()).equals(ConfigurationFxNew.MATRIX_EXTENSION))
+						.fileFilter(f -> ConfigurationFxNew.getExtension(f.getAbsolutePath()).equals(Configuration.matrixExt))
 						.menuTopFolder(topFolderMenu)
 						.doubleClickEvent(f -> () -> this.model.openMatrix(f))
 						.menuFiles(menuFiles).menuFolder(menuFolders)

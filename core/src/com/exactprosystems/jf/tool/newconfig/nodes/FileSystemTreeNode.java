@@ -30,8 +30,8 @@ import java.util.stream.Collectors;
 
 public class FileSystemTreeNode extends TreeNode
 {
-	private ConfigurationFxNew model;
-	private TreeItem<TreeNode> treeItem;
+	private ConfigurationFxNew	model;
+	private TreeItem<TreeNode>	treeItem;
 
 	public FileSystemTreeNode(ConfigurationFxNew model, TreeItem<TreeNode> treeItem)
 	{
@@ -69,7 +69,8 @@ public class FileSystemTreeNode extends TreeNode
 		}
 		if (initialFiles != null)
 		{
-			Function<File, ContextMenu> menuFolders = f -> {
+			Function<File, ContextMenu> menuFolders = f ->
+			{
 				ContextMenu menu = new ContextMenu();
 
 				MenuItem itemAddAsMatrix = new MenuItem("Add as matrix src", new ImageView(new Image(CssVariables.Icons.MATRIX_ICON)));
@@ -90,12 +91,12 @@ public class FileSystemTreeNode extends TreeNode
 				menu.getItems().addAll(itemAddAsMatrix, itemAddAsLibrary, itemAddAsAppDic, itemAddAsClientDic, itemSetReportDir);
 				return menu;
 			};
-			Arrays.stream(initialFiles).sorted(ConfigurationTreeView.comparator).forEach(file ->
-					new BuildTree(file, this.treeItem)
-							.ignoredFiles(ignoreFiles.stream().map(ConfigurationFxNew::path).collect(Collectors.toList()))
-							.menuFolder(menuFolders)
-							.byPass()
-			);
+			Arrays.stream(initialFiles)
+					.sorted(ConfigurationTreeView.comparator)
+					.forEach(
+							file -> new BuildTree(file, this.treeItem)
+									.ignoredFiles(ignoreFiles.stream().map(ConfigurationFxNew::path).collect(Collectors.toList())).menuFolder(menuFolders)
+									.byPass());
 		}
 	}
 }
