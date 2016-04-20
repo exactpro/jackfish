@@ -372,7 +372,8 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 			{
 				oldText = this.driver.getProperty(component, WindowProperty.ValueProperty);
 			}
-			this.driver.doPatternCall(component, WindowPattern.ValuePattern, "SetValue", oldText + text, 0);
+//			this.driver.doPatternCall(component, WindowPattern.ValuePattern, "SetValue", oldText + text, 0);
+			this.driver.setText(component, oldText + text);
 			return true;
 		}
 		catch (Exception e)

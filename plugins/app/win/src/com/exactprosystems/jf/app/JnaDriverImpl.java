@@ -199,6 +199,15 @@ public class JnaDriverImpl
 		return result;
 	}
 
+	public void setText(UIProxyJNA element, String text) throws Exception
+	{
+		long start = System.currentTimeMillis();
+		this.driver.setText(element.getIdString(), text);
+		this.logger.info(String.format("setText(%s,%s)", element, text));
+		checkCSharpTimes();
+		checkError();
+	}
+
 	public String getProperty(UIProxyJNA element, WindowProperty property) throws Exception
 	{
 		long start = System.currentTimeMillis();

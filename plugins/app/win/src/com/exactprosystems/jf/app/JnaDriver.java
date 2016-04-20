@@ -27,6 +27,7 @@ public interface JnaDriver extends Library {
 	 * if @param c == 2 -> arg is array of double with separator %
 	 */
 	String doPatternCall(String elementId, int patternId, String method, String arg, int c);
+	void setText(String elementId, String text);
 	String getProperty(String elementId, int propertyId);
 	int getPatterns(int[] arr, int len, String elementId);
 	int getImage(int[] arr, int len, String id);
