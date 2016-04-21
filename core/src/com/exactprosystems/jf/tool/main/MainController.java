@@ -169,8 +169,8 @@ public class MainController implements Initializable, ContainingParent
 		// TODO crutch
 		if (!VersionInfo.getVersion().contains("local"))
 		{
-			this.fileLoadConfiguration2.setVisible(false);
-			this.fileNewConfiguration2.setVisible(false);
+//			this.fileLoadConfiguration2.setVisible(false);
+//			this.fileNewConfiguration2.setVisible(false);
 		}
 		
 		listeners();
