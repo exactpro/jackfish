@@ -29,8 +29,8 @@ import java.util.Optional;
 
 public class ConfigurationTreeView extends TreeView<TreeNode>
 {
-	private ParametersTableView tableView;
-	private ConfigurationFxNew configuration;
+	private ParametersTableView	tableView;
+	private ConfigurationFxNew	configuration;
 
 	public ConfigurationTreeView(ParametersTableView tableView, ConfigurationFxNew configuration)
 	{
@@ -38,12 +38,20 @@ public class ConfigurationTreeView extends TreeView<TreeNode>
 		this.configuration = configuration;
 		this.setRoot(new TreeItem<>(new ConfigurationTreeNode(this.configuration)));
 		this.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
-		this.setOnContextMenuRequested(event -> {
+		this.setOnContextMenuRequested(event ->
+		{
 			TreeNode value = this.getSelectionModel().getSelectedItem().getValue();
-			Optional.ofNullable(value).map(TreeNode::contextMenu).filter(Optional::isPresent).map(Optional::get).ifPresent(menu -> menu.show(this.getScene().getWindow(), MouseInfo.getPointerInfo().getLocation().x, MouseInfo.getPointerInfo().getLocation().y));
+			Optional.ofNullable(value)
+					.map(TreeNode::contextMenu)
+					.filter(Optional::isPresent)
+					.map(Optional::get)
+					.ifPresent(
+							menu -> menu.show(this.getScene().getWindow(), MouseInfo.getPointerInfo().getLocation().x,
+									MouseInfo.getPointerInfo().getLocation().y));
 
 		});
-		this.setOnMouseClicked(event -> {
+		this.setOnMouseClicked(event ->
+		{
 			TreeItem<TreeNode> selectedItem = this.getSelectionModel().getSelectedItem();
 			if (selectedItem != null && selectedItem.getChildren().size() == 0 && event.getClickCount() == 2)
 			{
@@ -76,7 +84,8 @@ public class ConfigurationTreeView extends TreeView<TreeNode>
 			}
 		});
 
-		this.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+		this.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) ->
+		{
 			this.tableView.updateParameters(null);
 			this.tableView.setEditableNode(newValue.getValue());
 			this.tableView.hide();
@@ -88,20 +97,21 @@ public class ConfigurationTreeView extends TreeView<TreeNode>
 		});
 	}
 
-	public static Comparator<File> comparator = (f1, f2) -> {
-		if (f1.isDirectory() && !f2.isDirectory())
-		{
-			return -1;
-		}
-		else if (!f1.isDirectory() && f2.isDirectory())
-		{
-			return 1;
-		}
-		else
-		{
-			return f1.getName().compareTo(f2.getName());
-		}
-	};
+	public static Comparator<File>	comparator	= (f1, f2) ->
+												{
+													if (f1.isDirectory() && !f2.isDirectory())
+													{
+														return -1;
+													}
+													else if (!f1.isDirectory() && f2.isDirectory())
+													{
+														return 1;
+													}
+													else
+													{
+														return f1.getName().compareTo(f2.getName());
+													}
+												};
 
 	public static Optional<String> showInputDialog(String headerText)
 	{
@@ -124,7 +134,7 @@ public class ConfigurationTreeView extends TreeView<TreeNode>
 		ContextMenu contextMenu = new ContextMenu();
 
 		javafx.scene.control.Menu menu = new javafx.scene.control.Menu("Git");
-		
+
 		MenuItem itemClone = new MenuItem("Clone");
 		itemClone.setOnAction(e -> System.out.println(String.format("file %s Clone", file)));
 

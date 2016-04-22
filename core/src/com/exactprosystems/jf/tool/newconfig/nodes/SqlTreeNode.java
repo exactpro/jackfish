@@ -8,12 +8,15 @@
 package com.exactprosystems.jf.tool.newconfig.nodes;
 
 import com.exactprosystems.jf.common.Configuration;
+import com.exactprosystems.jf.common.Settings;
+import com.exactprosystems.jf.common.Configuration.SqlEntry;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.SupportedEntry;
 import com.exactprosystems.jf.tool.newconfig.ConfigurationFxNew;
 import com.exactprosystems.jf.tool.newconfig.ConfigurationTreeView;
 import com.exactprosystems.jf.tool.newconfig.TablePair;
+import com.exactprosystems.jf.tool.newconfig.testing.TestingConnectionFxController;
 
 import javafx.scene.Node;
 import javafx.scene.control.ContextMenu;
@@ -68,6 +71,46 @@ public class SqlTreeNode extends TreeNode
 				.forEach(i -> this.treeItem.getChildren().add(i));
 	}
 
+	public void testSqlEntry(SqlEntry entry) throws Exception
+	{
+//		String s = entry.get(Configuration.entryName);
+//		List<Settings.SettingsValue> values = settings.getValues(Settings.GLOBAL_NS, Settings.SQL + s);
+//		Common.tryCatchThrow(() -> this.showTestSqlPanel(entry, values), "Error on show testing panel");
+	}
+
+	public void testSqlConnection(String sql, String server, String base, String user, String password) throws Exception
+	{
+//		Common.tryCatch(() ->
+//		{
+//			settings.removeAll(Settings.GLOBAL_NS, Settings.SQL + sql);
+//			settings.setValue(Settings.GLOBAL_NS, Settings.SQL + sql, TestingConnectionFxController.SERVER_NAME, server);
+//			settings.setValue(Settings.GLOBAL_NS, Settings.SQL + sql, TestingConnectionFxController.USER, user);
+//			settings.setValue(Settings.GLOBAL_NS, Settings.SQL + sql, TestingConnectionFxController.DATABASE_NAME, base);
+//			settings.saveIfNeeded();
+//			SqlConnection connect = getDataBasesPool().connect(sql, server, base, user, password);
+//			if (connect != null && !connect.isClosed() && connect.getConnection().isValid(1))
+//			{
+//				this.testSqlController.displayConnectionGood();
+//			}
+//			else
+//			{
+//				this.testSqlController.displayConnectionBad(null);
+//			}
+//		}, "Error on test sql connection");
+	}
+
+	private void showTestSqlPanel(SqlEntry entry, List<Settings.SettingsValue> values)
+	{
+//		Common.tryCatch(() ->
+//		{
+//			testSqlController = Common.loadController(TestingConnectionFxController.class.getResource("TestingConnectionFx.fxml"));
+//			// TODO remake TestingConnectionFxController to ConfigurationFxNew
+//			// testSqlController.init(model, entry.toString(), values);
+//				testSqlController.display();
+//			}, "Error on show test sql panel");
+	}
+
+	
 	private class SqlEntryNode extends AbstractEntryNode<Configuration.SqlEntry>
 	{
 		public SqlEntryNode(ConfigurationFxNew model, Configuration.SqlEntry sqlEntry)
@@ -88,7 +131,7 @@ public class SqlTreeNode extends TreeNode
 			MenuItem removeItem = new MenuItem("Remove", new ImageView(new Image(CssVariables.Icons.REMOVE_PARAMETER_ICON)));
 			removeItem.setOnAction(e -> Common.tryCatch(() -> model.removeSqlEntry(getEntry()), "Error on remove sql entry"));
 			MenuItem testItem = new MenuItem("Test");
-			testItem.setOnAction(e -> Common.tryCatch(() -> model.testSqlEntry(getEntry()), "Error on test sql entry"));
+			testItem.setOnAction(e -> Common.tryCatch(() -> testSqlEntry(getEntry()), "Error on test sql entry"));
 			menu.getItems().addAll(removeItem, testItem);
 			return Optional.of(menu);
 		}

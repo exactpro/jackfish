@@ -46,7 +46,7 @@ public class ConfigurationFx extends Configuration
 
 	private boolean									isControllerInit = false;
 	private Main									mainModel;
-	//TODO replace this controller to new ConfigurationController
+
 	private ConfigurationFxController				controller;
 	private Context									context;
 	private Map<ServiceEntry, ServiceConnection>	serviceMap			= new HashMap<>();

@@ -56,26 +56,11 @@ public class ConfigurationFxNew extends Configuration
 	protected File				reportFolder;
 
 	// ================================================================================
+	private ConfigurationNewFxController			controller;
+
+	
 	private Context									context;
 
-	// TODO for controller vvvvvv
-	private ParametersTableView						tableView;
-	private ConfigurationTreeView					treeView;
-	private ConfigurationToolBar					menuBar;
-
-	private EvaluatorTreeNode						evaluatorTreeNode;
-	private FormatTreeNode							formatTreeNode;
-	private MatrixTreeNode							matrixTreeNode;
-	private LibraryTreeNode							libTreeNode;
-	private VariablesTreeNode						varsTreeNode;
-	private SqlTreeNode								sqlTreeNode;
-	private ClientTreeNode							clientTreeNode;
-	private ServiceTreeNode							serviceTreeNode;
-	private AppTreeNode								appTreeNode;
-	private FileSystemTreeNode						fileSystemTreeNode;
-	private ReportTreeNode							reportTreeNode;
-	private TestingConnectionFxController			testSqlController;
-	// TODO for controller ^^^^^^^^
 
 	private Map<String, SupportedEntry>				supportedClients;
 	private Map<String, SupportedEntry>				supportedApps;
@@ -144,9 +129,9 @@ public class ConfigurationFxNew extends Configuration
 
 	public void setPane(BorderPane pane)
 	{
-		pane.setTop(this.menuBar);
-		pane.setCenter(this.treeView);
-		pane.setBottom(this.tableView);
+//		pane.setTop(this.menuBar);
+//		pane.setCenter(this.treeView);
+//		pane.setBottom(this.tableView);
 	}
 
 	// ==============================================================================================================================
@@ -167,14 +152,13 @@ public class ConfigurationFxNew extends Configuration
 		displayService();
 		displayApp();
 		displayFileSystem();
-		Platform.runLater(() -> this.treeView.getRoot().setExpanded(true));
 	}
 
 	@Override
 	public void create() throws Exception
 	{
 		super.create();
-		init();
+//		init();
 	}
 
 	@Override
@@ -183,7 +167,7 @@ public class ConfigurationFxNew extends Configuration
 		super.load(reader);
 		this.getServiceEntries().forEach(entry -> this.startedServices.put(entry.toString(), ConnectionStatus.NotStarted));
 		this.reportFolder = new File(this.get(Configuration.outputPath));
-		init();
+//		init();
 	}
 
 	@Override
@@ -240,74 +224,87 @@ public class ConfigurationFxNew extends Configuration
 	@Override
 	protected void afterRedoUndo()
 	{
-		// This need to refresh table items
-		int selectedItem = this.treeView.getSelectionModel().getSelectedIndex();
-		if (selectedItem == 0)
-		{
-			this.treeView.getSelectionModel().select(1);
-		}
-		else
-		{
-			this.treeView.getSelectionModel().selectFirst();
-		}
-		this.treeView.getSelectionModel().select(selectedItem);
+//		// This need to refresh table items
+//		int selectedItem = this.treeView.getSelectionModel().getSelectedIndex();
+//		if (selectedItem == 0)
+//		{
+//			this.treeView.getSelectionModel().select(1);
+//		}
+//		else
+//		{
+//			this.treeView.getSelectionModel().selectFirst();
+//		}
+//		this.treeView.getSelectionModel().select(selectedItem);
 	}
 
 	// ==============================================================================================================================
 
-	private void displayEvaluator() // TODO model shouldn't show any messages, so it shouldn't do try-catch
+	private void displayEvaluator()
 	{
-		Common.tryCatch(() -> this.evaluatorTreeNode.display(this.get(Configuration.evaluatorImports)), "Error on display evaluator");
+		try
+		{
+			this.controller.displayEvaluator(this.get(Configuration.evaluatorImports));
+		}
+		catch (Exception e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
-
+	
 	private void displayFormat()
 	{
-		Common.tryCatch(() -> this.formatTreeNode.display(this.get(timeFormat), this.get(dateFormat), this.get(dateTimeFormat), this.get(additionFormats)),
-				"Error on display evaluator");
+		try
+		{
+			this.controller.displayFormat(this.get(timeFormat), this.get(dateFormat), this.get(dateTimeFormat), this.get(additionFormats));
+		}
+		catch (Exception e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	private void displayMatrix()
 	{
-		Common.tryCatch(() -> this.matrixTreeNode.display(this.matrixFolders), "Error on display matrix");
+		this.controller.displayMatrix(this.matrixFolders);
 	}
-
+	
 	private void displayLibrary()
 	{
-		Common.tryCatch(() -> this.libTreeNode.display(libraryFoders), "Error on display libs");
+		this.controller.displayLibrary(this.libraryFoders);
 	}
-
+	
 	private void displayVars()
 	{
-		Common.tryCatch(() -> this.varsTreeNode.display(this.varsFiles), "Error on display vars");
+		this.controller.displayVars(this.varsFiles);
 	}
-
-	private void displaySql()
-	{
-		Common.tryCatch(() -> this.sqlTreeNode.display(this.getSqlEntries()), "Error on display sql entries");
-	}
-
-	private void displayClient()
-	{
-		Common.tryCatch(() -> this.clientTreeNode.display(this.getClientEntries(), this.supportedClients, this.listClientDictionaries),
-				"Error on display sql entries");
-	}
-
-	private void displayService()
-	{
-		Common.tryCatch(() -> this.serviceTreeNode.display(this.getServiceEntries(), this.supportedServices, this.startedServices),
-				"Error on display sql entries");
-	}
-
-	private void displayApp()
-	{
-		Common.tryCatch(() -> this.appTreeNode.display(this.getAppEntries(), this.supportedApps, this.listAppsDictionaries), "Error on display sql entries");
-	}
-
+	
 	private void displayReport()
 	{
-		Common.tryCatch(() -> this.reportTreeNode.display(this.reportFolder), "Error on display report folder");
+		this.controller.displayReport(this.reportFolder);
 	}
-
+	
+	private void displaySql()
+	{
+		this.controller.displaySql(getSqlEntries());
+	}
+	
+	private void displayClient()
+	{
+		this.controller.displayClient(getClientEntries());
+	}
+	
+	private void displayService()
+	{
+		this.controller.displayService(getServiceEntries());
+	}
+	
+	private void displayApp()
+	{
+		this.controller.displayApp(getAppEntries());
+	}
+	
 	private void displayFileSystem()
 	{
 		List<File> ignoreFiles = new ArrayList<>(this.matrixFolders);
@@ -316,7 +313,7 @@ public class ConfigurationFxNew extends Configuration
 		ignoreFiles.addAll(this.listAppsDictionaries);
 		ignoreFiles.addAll(this.listClientDictionaries);
 		ignoreFiles.add(this.reportFolder);
-		Common.tryCatch(() -> this.fileSystemTreeNode.display(this.initialFile.listFiles(), ignoreFiles), "Error on display sql entries");
+//		Common.tryCatch(() -> this.fileSystemTreeNode.display(this.initialFile.listFiles(), ignoreFiles), "Error on display sql entries");
 
 	}
 
@@ -472,8 +469,8 @@ public class ConfigurationFxNew extends Configuration
 		if (newFile)
 		{
 			System.out.println(String.format("MATRIX WITH NAME '%s' WAS ADDED ON FOLDER '%s'", newFileName, path(where)));
-			this.displayMatrix();
-			this.matrixTreeNode.select(newMatrixFile, item -> this.treeView.getSelectionModel().select(item));
+			displayMatrix();
+//			this.matrixTreeNode.select(newMatrixFile, item -> this.treeView.getSelectionModel().select(item));
 		}
 	}
 
@@ -481,7 +478,7 @@ public class ConfigurationFxNew extends Configuration
 	{
 		forceDelete(matrixFile);
 		System.out.println("removed");
-		this.displayMatrix();
+		displayMatrix();
 	}
 
 	// ============================================================
@@ -515,7 +512,7 @@ public class ConfigurationFxNew extends Configuration
 		{
 			System.out.println(String.format("Library WITH NAME '%s' WAS ADDED ON FOLDER '%s'", newFileName, path(where)));
 			this.displayLibrary();
-			this.libTreeNode.select(newLibraryFile, item -> this.treeView.getSelectionModel().select(item));
+//			this.libTreeNode.select(newLibraryFile, item -> this.treeView.getSelectionModel().select(item));
 		}
 	}
 
@@ -593,45 +590,6 @@ public class ConfigurationFxNew extends Configuration
 	public void removeSqlEntry(SqlEntry entry) throws Exception
 	{
 		removeEntry(SqlEntry.class, getSqlEntries(), "" + entry, new HashMap<>(), this::displaySql);
-	}
-
-	public void testSqlEntry(SqlEntry entry) throws Exception
-	{
-		String s = entry.get(Configuration.entryName);
-		List<Settings.SettingsValue> values = settings.getValues(Settings.GLOBAL_NS, Settings.SQL + s);
-		Common.tryCatchThrow(() -> this.showTestSqlPanel(entry, values), "Error on show testing panel");
-	}
-
-	public void testSqlConnection(String sql, String server, String base, String user, String password) throws Exception
-	{
-		Common.tryCatch(() ->
-		{
-			settings.removeAll(Settings.GLOBAL_NS, Settings.SQL + sql);
-			settings.setValue(Settings.GLOBAL_NS, Settings.SQL + sql, TestingConnectionFxController.SERVER_NAME, server);
-			settings.setValue(Settings.GLOBAL_NS, Settings.SQL + sql, TestingConnectionFxController.USER, user);
-			settings.setValue(Settings.GLOBAL_NS, Settings.SQL + sql, TestingConnectionFxController.DATABASE_NAME, base);
-			settings.saveIfNeeded();
-			SqlConnection connect = getDataBasesPool().connect(sql, server, base, user, password);
-			if (connect != null && !connect.isClosed() && connect.getConnection().isValid(1))
-			{
-				this.testSqlController.displayConnectionGood();
-			}
-			else
-			{
-				this.testSqlController.displayConnectionBad(null);
-			}
-		}, "Error on test sql connection");
-	}
-
-	private void showTestSqlPanel(SqlEntry entry, List<Settings.SettingsValue> values)
-	{
-		Common.tryCatch(() ->
-		{
-			testSqlController = Common.loadController(TestingConnectionFxController.class.getResource("TestingConnectionFx.fxml"));
-			// TODO remake TestingConnectionFxController to ConfigurationFxNew
-			// testSqlController.init(model, entry.toString(), values);
-				testSqlController.display();
-			}, "Error on show test sql panel");
 	}
 
 	public void changeSql(SqlEntry sqlEntry, String key, String value) throws Exception
@@ -778,7 +736,7 @@ public class ConfigurationFxNew extends Configuration
 				protected Void call() throws Exception
 				{
 					IServicesPool services = getServicesPool();
-					displayService();
+					controller.displayService(getServiceEntries());
 					ServiceConnection serviceConnection = services.loadService(entry.toString());
 					serviceMap.put(entry, serviceConnection);
 					services.startService(context, serviceConnection, startParameters);
@@ -789,20 +747,20 @@ public class ConfigurationFxNew extends Configuration
 			startTask.setOnSucceeded(workerStateEvent ->
 			{
 				startedServices.replace(entry.toString(), ConnectionStatus.StartSuccessful);
-				displayService();
+				this.controller.displayService(getServiceEntries());
 			});
 
 			startTask.setOnFailed(workerStateEvent ->
 			{
 				startedServices.replace(entry.toString(), ConnectionStatus.StartFailed);
-				displayService();
+				this.controller.displayService(getServiceEntries());
 			});
 			new Thread(startTask).start();
 		}
 		catch (Exception e)
 		{
 			this.startedServices.replace(entry.toString(), ConnectionStatus.StartFailed);
-			displayService();
+			this.controller.displayService(getServiceEntries());
 			throw e;
 		}
 	}
@@ -814,7 +772,7 @@ public class ConfigurationFxNew extends Configuration
 		{
 			getServicesPool().stopService(serviceConnection);
 			this.startedServices.remove(entry.toString());
-			this.displayService();
+			this.controller.displayService(getServiceEntries());
 		}
 	}
 
@@ -1109,115 +1067,6 @@ public class ConfigurationFxNew extends Configuration
 		dialog.show();
 	}
 
-	private void init() throws Exception
-	{
-		// TODO all these methods are methods for a controller
-
-		this.tableView = new ParametersTableView();
-		this.treeView = new ConfigurationTreeView(this.tableView, this);
-		this.menuBar = new ConfigurationToolBar(this);
-		
-		initEvaluator();
-		initFormat();
-		initMatrix();
-		initLibrary();
-		initVars();
-		initReport();
-		initSql();
-		initClient();
-		initService();
-		initApp();
-		this.treeView.getRoot().getChildren().add(new TreeItem<>(new SeparatorTreeNode()));
-		initFileSystem();
-	}
-
-	private void initReport()
-	{
-		TreeItem<TreeNode> reportTreeItem = new TreeItem<>();
-		this.reportTreeNode = new ReportTreeNode(this, reportTreeItem);
-		reportTreeItem.setValue(reportTreeNode);
-		this.treeView.getRoot().getChildren().add(reportTreeItem);
-	}
-
-	private void initFileSystem()
-	{
-		TreeItem<TreeNode> fileSystemTreeItem = new TreeItem<>();
-		this.fileSystemTreeNode = new FileSystemTreeNode(this, this.treeView.getRoot());
-		fileSystemTreeItem.setValue(fileSystemTreeNode);
-	}
-
-	private void initService()
-	{
-		TreeItem<TreeNode> serviceTreeItem = new TreeItem<>();
-		this.serviceTreeNode = new ServiceTreeNode(this, serviceTreeItem);
-		serviceTreeItem.setValue(serviceTreeNode);
-		this.treeView.getRoot().getChildren().add(serviceTreeItem);
-	}
-
-	private void initClient()
-	{
-		TreeItem<TreeNode> clientTreeItem = new TreeItem<>();
-		this.clientTreeNode = new ClientTreeNode(this, clientTreeItem);
-		clientTreeItem.setValue(clientTreeNode);
-		this.treeView.getRoot().getChildren().add(clientTreeItem);
-	}
-
-	private void initApp()
-	{
-		TreeItem<TreeNode> appTreeItem = new TreeItem<>();
-		this.appTreeNode = new AppTreeNode(this, appTreeItem);
-		appTreeItem.setValue(appTreeNode);
-		this.treeView.getRoot().getChildren().add(appTreeItem);
-	}
-
-	private void initSql()
-	{
-		TreeItem<TreeNode> sqlTreeItem = new TreeItem<>();
-		this.sqlTreeNode = new SqlTreeNode(this, sqlTreeItem);
-		sqlTreeItem.setValue(sqlTreeNode);
-		this.treeView.getRoot().getChildren().add(sqlTreeItem);
-	}
-
-	private void initVars()
-	{
-		TreeItem<TreeNode> varsTreeItem = new TreeItem<>();
-		this.varsTreeNode = new VariablesTreeNode(this, varsTreeItem);
-		varsTreeItem.setValue(this.varsTreeNode);
-		this.treeView.getRoot().getChildren().add(varsTreeItem);
-	}
-
-	private void initLibrary()
-	{
-		TreeItem<TreeNode> libraryTreeItem = new TreeItem<>();
-		this.libTreeNode = new LibraryTreeNode(this, libraryTreeItem);
-		libraryTreeItem.setValue(this.libTreeNode);
-		this.treeView.getRoot().getChildren().add(libraryTreeItem);
-	}
-
-	private void initMatrix()
-	{
-		TreeItem<TreeNode> matrixTreeItem = new TreeItem<>();
-		this.matrixTreeNode = new MatrixTreeNode(this, matrixTreeItem);
-		matrixTreeItem.setValue(this.matrixTreeNode);
-		this.treeView.getRoot().getChildren().add(matrixTreeItem);
-	}
-
-	private void initFormat() throws Exception
-	{
-		TreeItem<TreeNode> formatTreeItem = new TreeItem<>();
-		this.formatTreeNode = new FormatTreeNode(this, formatTreeItem);
-		formatTreeItem.setValue(this.formatTreeNode);
-		this.treeView.getRoot().getChildren().add(formatTreeItem);
-	}
-
-	private void initEvaluator() throws Exception
-	{
-		TreeItem<TreeNode> evaluatorTreeItem = new TreeItem<>();
-		this.evaluatorTreeNode = new EvaluatorTreeNode(this, evaluatorTreeItem);
-		evaluatorTreeItem.setValue(this.evaluatorTreeNode);
-		this.treeView.getRoot().getChildren().add(evaluatorTreeItem);
-	}
-
 	private void change(String value, String newValue)
 	{
 		Common.tryCatch(() -> set(value, newValue), "Error on change " + value + " to set " + newValue);
@@ -1256,4 +1105,11 @@ public class ConfigurationFxNew extends Configuration
 		int index = fileName.lastIndexOf(".");
 		return index == -1 ? "" : fileName.substring(index + 1);
 	}
+
+	private void initController()
+	{
+		this.controller = Common.loadController(ConfigurationFxNew.class.getResource("config.fxml"));
+		this.controller.init(this);
+	}
+
 }

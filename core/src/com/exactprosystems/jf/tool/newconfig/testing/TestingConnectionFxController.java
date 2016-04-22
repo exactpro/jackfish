@@ -68,7 +68,7 @@ public class TestingConnectionFxController implements Initializable, ContainingP
 	//============================================================
 	public void testConnection(ActionEvent actionEvent)
 	{
-		Common.tryCatch(() -> this.model.testSqlConnection(this.name, tfServer.getText(), tfDatabaseName.getText(), tfUser.getText(), pfPassword.getText()), "Error on test connection");
+//		Common.tryCatch(() -> this.model.testSqlConnection(this.name, tfServer.getText(), tfDatabaseName.getText(), tfUser.getText(), pfPassword.getText()), "Error on test connection");
 	}
 
 	public void init(ConfigurationFxNew model, String name,List<Settings.SettingsValue> values)
