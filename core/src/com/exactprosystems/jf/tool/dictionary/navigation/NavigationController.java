@@ -294,6 +294,7 @@ public class NavigationController implements Initializable, ContainingParent
 				owner = selectedOwner.locator();
 			}
 			IRemoteApplication service = this.appConnection.getApplication().service();
+			service.startNewDialog();
 			Document document = service.getTree(owner);
 			if (document != null)
 			{

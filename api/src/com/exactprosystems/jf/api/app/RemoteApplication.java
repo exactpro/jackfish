@@ -405,6 +405,20 @@ public abstract class RemoteApplication implements IRemoteApplication
 	}
 
 	@Override
+	public void startNewDialog() throws RemoteException
+	{
+		try
+		{
+			startNewDialogDerived();
+		}
+		catch (Exception e)
+		{
+			String msg = String.format("Error start new dialog");
+			throw new ProxyException(msg, e.getMessage(), e);
+		}
+	}
+
+	@Override
 	public void endGrabbing() throws RemoteException
 	{
 		try
@@ -502,6 +516,8 @@ public abstract class RemoteApplication implements IRemoteApplication
 	protected abstract String closeWindowDerived() throws Exception;
 
 	protected abstract Document getTreeDerived(Locator owner) throws Exception;
+
+	protected abstract void startNewDialogDerived() throws Exception;
 
 	protected abstract void startGrabbingDerived() throws Exception;
 

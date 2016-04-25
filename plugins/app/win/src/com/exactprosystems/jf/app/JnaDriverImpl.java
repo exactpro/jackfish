@@ -238,6 +238,15 @@ public class JnaDriverImpl
 		return result;
 	}
 
+	public void clearCache() throws Exception
+	{
+		long start = System.currentTimeMillis();
+		this.driver.clearCache();
+		this.logger.info(String.format("clearCache, time (ms) : %d", System.currentTimeMillis() - start));
+		checkCSharpTimes();
+		checkError();
+	}
+
 	private void checkError() throws Exception
 	{
 		String error = this.driver.lastError();

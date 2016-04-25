@@ -46,6 +46,8 @@ public interface IRemoteApplication extends Remote
 	void 						startGrabbing	() throws RemoteException;
 	void 						endGrabbing		() throws RemoteException;
 
+	void startNewDialog() throws RemoteException;
+
 	// methods for histogram
 	void 						subscribe		(long id, HistogramMetric metric, int interval, int intervalCount) throws RemoteException;
 	void 						listening		(long id, boolean isStart) throws RemoteException;

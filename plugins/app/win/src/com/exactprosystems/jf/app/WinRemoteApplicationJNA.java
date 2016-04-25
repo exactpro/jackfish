@@ -359,6 +359,12 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 	}
 
 	@Override
+	protected void startNewDialogDerived() throws Exception
+	{
+		this.driver.clearCache();
+	}
+
+	@Override
 	protected Document getTreeDerived(Locator owner) throws Exception
 	{
 		UIProxyJNA parent;

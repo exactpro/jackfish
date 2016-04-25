@@ -557,6 +557,12 @@ public class SwingRemoteApplication extends RemoteApplication
 	}
 
 	@Override
+	protected void startNewDialogDerived() throws Exception
+	{
+
+	}
+
+	@Override
 	protected Document getTreeDerived(Locator owner) throws Exception
 	{
 		try

@@ -119,7 +119,7 @@ public class DialogFill extends AbstractAction
 
 		logger.debug("Check the addition parameters");
 		window.checkParams(parameters.select(TypeMandatory.Extra).keySet());
-
+		service.startNewDialog();
 		if (!this.doNotOpen)
 		{
 			SectionKind onOpen = SectionKind.OnOpen;

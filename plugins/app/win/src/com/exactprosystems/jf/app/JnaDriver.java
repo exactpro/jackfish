@@ -32,4 +32,6 @@ public interface JnaDriver extends Library {
 	int getPatterns(int[] arr, int len, String elementId);
 	int getImage(int[] arr, int len, String id);
 
+	void clearCache();
+
 }

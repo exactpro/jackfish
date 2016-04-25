@@ -771,6 +771,12 @@ public class SeleniumRemoteApplication extends RemoteApplication
 	}
 
 	@Override
+	protected void startNewDialogDerived() throws Exception
+	{
+
+	}
+
+	@Override
 	protected Document getTreeDerived(Locator owner) throws Exception
 	{
 		log("start");
