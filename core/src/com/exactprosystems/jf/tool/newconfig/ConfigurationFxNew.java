@@ -158,7 +158,8 @@ public class ConfigurationFxNew extends Configuration
 	public void create() throws Exception
 	{
 		super.create();
-//		init();
+		this.reportFolder = new File(".");
+		initController();
 	}
 
 	@Override
@@ -167,7 +168,7 @@ public class ConfigurationFxNew extends Configuration
 		super.load(reader);
 		this.getServiceEntries().forEach(entry -> this.startedServices.put(entry.toString(), ConnectionStatus.NotStarted));
 		this.reportFolder = new File(this.get(Configuration.outputPath));
-//		init();
+		initController();
 	}
 
 	@Override

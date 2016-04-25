@@ -26,7 +26,7 @@ public class EvaluatorTreeNode extends TreeNode
 	private ConfigurationFxNew model;
 	private TreeItem<TreeNode> evaluatorTreeItem;
 
-	public EvaluatorTreeNode(ConfigurationFxNew configuration, TreeItem<TreeNode> treeItem) throws Exception
+	public EvaluatorTreeNode(ConfigurationFxNew configuration, TreeItem<TreeNode> treeItem)
 	{
 		this.model = configuration;
 		this.evaluatorTreeItem = treeItem;

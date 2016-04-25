@@ -96,8 +96,8 @@ public class ConfigurationNewFxController implements Initializable, ContainingPa
 		this.treeView = new ConfigurationTreeView(this.tableView, this.model);
 		this.menuBar = new ConfigurationToolBar(this.model);
 		
-//		initEvaluator();
-//		initFormat();
+		initEvaluator();
+		initFormat();
 		initMatrix();
 		initLibrary();
 		initVars();
@@ -256,7 +256,7 @@ public class ConfigurationNewFxController implements Initializable, ContainingPa
 		this.treeView.getRoot().getChildren().add(matrixTreeItem);
 	}
 
-	private void initFormat() throws Exception
+	private void initFormat()
 	{
 		TreeItem<TreeNode> formatTreeItem = new TreeItem<>();
 		this.formatTreeNode = new FormatTreeNode(this.model, formatTreeItem);
@@ -264,7 +264,7 @@ public class ConfigurationNewFxController implements Initializable, ContainingPa
 		this.treeView.getRoot().getChildren().add(formatTreeItem);
 	}
 
-	private void initEvaluator() throws Exception
+	private void initEvaluator()
 	{
 		TreeItem<TreeNode> evaluatorTreeItem = new TreeItem<>();
 		this.evaluatorTreeNode = new EvaluatorTreeNode(this.model, evaluatorTreeItem);

@@ -265,7 +265,7 @@ public class Matrix extends AbstractDocument implements IMatrix, Cloneable
 		{
 			if (item instanceof NameSpace)
 			{
-				res.add(((NameSpace)item).getName());
+				res.add(((NameSpace)item).getId());
 			}
 		});
 

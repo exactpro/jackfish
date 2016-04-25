@@ -35,7 +35,7 @@ public class FormatTreeNode extends TreeNode
 	private String dateTimeFormat;
 	private String additionalFormats;
 
-	public FormatTreeNode(ConfigurationFxNew configuration, TreeItem<TreeNode> treeItem) throws Exception
+	public FormatTreeNode(ConfigurationFxNew configuration, TreeItem<TreeNode> treeItem)
 	{
 		this.model = configuration;
 		this.formatTreeItem = treeItem;

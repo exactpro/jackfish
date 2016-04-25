@@ -70,6 +70,8 @@ import java.util.stream.Collectors;
 )
 public class Configuration extends AbstractDocument
 {
+	public static final String	SEPARATOR			= ",";
+
 	public static final String 	projectName 		= "JackFish";
 	public static final String 	varExt 				= ".ini";
 	public static final String 	dictExt 			= ".xml";
@@ -89,10 +91,13 @@ public class Configuration extends AbstractDocument
 	public static final String matrices 			= "matrices";
 	public static final String libraries 			= "libraries";
 	public static final String userVariables 		= "userVariables";
+	public static final String git 					= "git";
 
 	public static final String entryName			= "name";
 	
+	@Deprecated
 	public static final String libEntry				= "libEntry";
+	@Deprecated
 	public static final String libPath				= "libPath";
 
 	public static final String sqlEntry				= "sqlEntry";
@@ -150,6 +155,9 @@ public class Configuration extends AbstractDocument
 	@XmlElement(name = libraries)
 	protected String librariesValue;
 	
+	@XmlElement(name = git)
+	protected String gitValue;
+
 	//------------------------------------------------------------------------------------------------------------------
 	// new technology
 	//------------------------------------------------------------------------------------------------------------------
@@ -541,7 +549,7 @@ public class Configuration extends AbstractDocument
 		}
 		
 		AbstractEvaluator evaluator	= objectFromClassName(evaluatorClassName, AbstractEvaluator.class);
-		evaluator.addImports(get(evaluatorImports).split(","));
+		evaluator.addImports(get(evaluatorImports).split(SEPARATOR));
 		setUserVariablesFromMask(get(variables), evaluator);
 		setUserVariablesFromMask(get(userVariables), evaluator);
 		evaluator.reset();
@@ -554,54 +562,56 @@ public class Configuration extends AbstractDocument
 		return new Context(matrixListener, out, this);
 	}
 	
-	// TODO for new configuration
 	public void refreshLibs()
 	{
+		IMatrixListener checker = new MatrixListener();
 		this.libs.clear();
-		Map<File, Long> newMap = new HashMap<File, Long>();
-		for (LibEntry lib : this.libEntriesValue)
+		if (this.librariesValue == null)
 		{
-			try
+			return;
+		}
+		String[] folders = this.librariesValue.split(SEPARATOR);
+		for (String folder : folders)
+		{
+			File folderFile = new File(folder);
+			if (folderFile.exists() && folderFile.isDirectory())
 			{
-				String name = lib.toString();
-				String path = lib.get(libPath);
-				IMatrixListener checker = new MatrixListener();
-				Matrix matrix = new Matrix(path, this, checker);
-				File file = new File(path);
-				Long timestamp = timestampMap.get(file);
-				newMap.put(file, timestamp);
-				if (timestamp == null)
+				File[] libFiles = folderFile.listFiles(new FilenameFilter()
 				{
-					timestampMap.put(file, file.lastModified());
-					this.libs.put(name, loadMatrix(file, matrix, checker, name));
-				}
-				else
+					@Override
+					public boolean accept(File dir, String name)
+					{
+						return name != null && name.endsWith(matrixExt);
+					}
+				});
+				
+				for (File libFile : libFiles)
 				{
-					if (!timestamp.equals(file.lastModified()))
+					try (Reader reader = new FileReader(libFile))
 					{
-						this.libs.put(name, loadMatrix(file, matrix, checker, name));
+						Matrix matrix = new Matrix(libFile.getName(), this, checker);
+						if (!checker.isOk())
+						{
+							logger.error("Library load error: [" + libFile.getName() + "] " + checker.getExceptionMessage());
+							continue;
+						}
+						matrix.load(reader);
+						for (String ns : matrix.nameSpaces())
+						{
+							this.libs.put(ns, matrix);
+						}
 					}
-					else
+					catch (Exception e)
 					{
-						this.libs.put(name, matrix);
+						logger.error(e.getMessage(), e);
 					}
-
 				}
-			}
-			catch (Exception e)
-			{
-				String message = "Error on update lib : " + lib + " .\n" + e.getMessage();
-				logger.error(message);
-				logger.error(e.getMessage(), e);
-				listener.onException(message);
 			}
 		}
-		timestampMap.clear();
-		timestampMap.putAll(newMap);
 	}
 
 	
-	
+	@Deprecated
 	public void updateLibs()
 	{
 		this.libs.clear();
@@ -706,6 +716,7 @@ public class Configuration extends AbstractDocument
 	
 			Converter.setFormats(get(additionFormats));
 	
+			refreshLibs();
 			updateLibs();
 	
 			this.valid = true;
@@ -782,6 +793,7 @@ public class Configuration extends AbstractDocument
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
             marshaller.marshal(this, os);
 
+    		refreshLibs();
 			updateLibs();
 
 			saved();
