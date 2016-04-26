@@ -4,10 +4,12 @@
     <dateFormat>dd.MM.yyyy</dateFormat>
     <dateTimeFormat>dd.MM.yyyy HH:mm:ss.SSS</dateTimeFormat>
     <additionFormats>dd.MM.yyyy HH:mm:ss|yyyy/MM/dd HH:mm:ss.SSS|yyyyMMdd-HH:mm:ss.SSS|dd/MM/yyyy|HH.mm|HH:mm:ss|HH:mm:ss Z|HH:mm:ss:SSS</additionFormats>
-    <evaluatorImports>com.exactprosystems.jf.common.parser,java.math,java.util.regex,java.util,java.awt,java.awt.event,java.util.List,java.util.Map,java.lang,com.exactprosystems.jf.api.app,com.exactprosystems.jf.api.conditions,com.exactprosystems.jf.function,java.io</evaluatorImports>
+    <evaluatorImports>com.exactprosystems.jf.common.parser,java.math,java.util.regex,java.util,java.awt,java.awt.event,java.util.List,java.util.Map,java.lang,com.exactprosystems.jf.api.app,com.exactprosystems.jf.api.conditions,com.exactprosystems.jf.function,java.io,org.mvel2</evaluatorImports>
     <outputPath>reports</outputPath>
     <variables>vars.ini</variables>
     <userVariables>uservars/myvars.ini</userVariables>
+    <libraries>matrices/libs</libraries>
+    <git>http://temp.com/project.git</git>
     <libEntry>
         <name>STD</name>
         <libPath>matrices/libs/std.jf</libPath>
@@ -19,6 +21,14 @@
     <libEntry>
         <name>LIB</name>
         <libPath>examples/lib.jf</libPath>
+    </libEntry>
+    <libEntry>
+        <name>Contacts</name>
+        <libPath>/home/valery.florov/Downloads/23/lib/Contacts.jf</libPath>
+    </libEntry>
+    <libEntry>
+        <name>Utilites</name>
+        <libPath>/home/valery.florov/Downloads/23/lib/Utilites.jf</libPath>
     </libEntry>
     <sqlEntry>
         <name>MySql</name>
@@ -87,6 +97,18 @@
     </appEntry>
     <appEntry>
         <name>EXACTPRO</name>
+        <parameters>
+            <key>ChromeDriverPath</key>
+            <value>unix/chromedriver_64</value>
+        </parameters>
+        <parameters>
+            <key>IEDriverPath</key>
+            <value></value>
+        </parameters>
+        <parameters>
+            <key>ChromeDriverBinary</key>
+            <value></value>
+        </parameters>
         <appDescription>Exactpro example</appDescription>
         <appDicPath>dic/gui/exactpro_dic.xml</appDicPath>
         <appJar>apps/web.jar</appJar>
@@ -146,7 +168,7 @@
         <name>TRN</name>
         <parameters>
             <key>ChromeDriverPath</key>
-            <value>unix/chromedriver</value>
+            <value>unix/chromedriver_64</value>
         </parameters>
         <parameters>
             <key>IEDriverPath</key>
@@ -192,10 +214,48 @@
     </appEntry>
     <appEntry>
         <name>LHT</name>
+        <parameters>
+            <key>ChromeDriverPath</key>
+            <value>unix/chromedriver_64</value>
+        </parameters>
+        <parameters>
+            <key>IEDriverPath</key>
+            <value></value>
+        </parameters>
+        <parameters>
+            <key>ChromeDriverBinary</key>
+            <value></value>
+        </parameters>
         <appDescription>layout html testing</appDescription>
         <appDicPath>dic/gui/LayoutHtmlTesting.xml</appDicPath>
         <appJar>apps/web.jar</appJar>
         <appWorkDir>apps</appWorkDir>
         <appStartPort>10000</appStartPort>
+    </appEntry>
+    <appEntry>
+        <name>IRO</name>
+        <appDicPath>dic/gui/iro_dic_190.xml</appDicPath>
+        <appJar>apps/web.jar</appJar>
+        <appWorkDir>apps</appWorkDir>
+        <appStartPort>10000</appStartPort>
+    </appEntry>
+    <appEntry>
+        <name>RM</name>
+        <parameters>
+            <key>ChromeDriverPath</key>
+            <value>unix/chromedriver_64</value>
+        </parameters>
+        <parameters>
+            <key>IEDriverPath</key>
+            <value></value>
+        </parameters>
+        <parameters>
+            <key>ChromeDriverBinary</key>
+            <value></value>
+        </parameters>
+        <appDicPath>dic/gui/redmine.xml</appDicPath>
+        <appJar>apps/web.jar</appJar>
+        <appWorkDir>apps/</appWorkDir>
+        <appStartPort>8000</appStartPort>
     </appEntry>
 </configuration>
