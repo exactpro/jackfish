@@ -61,12 +61,32 @@ public class MainController implements Initializable, ContainingParent
 
 	private static final Logger	logger		= Logger.getLogger(MainController.class);
 
+	public TabPane				documentsPane;
+	public BorderPane			projectPane;
+
 	public ProgressBar			progressBar;
 	public BorderPane			mainPanel;
 	private LogsFx				log;
 
+	public Menu					menuFile;
+	public MenuItem				fileLoadConfiguration;
+	public MenuItem				fileNewConfiguration;
+	public MenuItem				fileLoadConfiguration2;
+	public MenuItem				fileNewConfiguration2;
+
 	public Menu					fileLoad;
+	public MenuItem				fileLoadDictionary;
+	public MenuItem				fileLoadSystemVars;
+	public MenuItem				fileLoadMatrix;
+	public MenuItem				fileLoadPlainText;
+	public MenuItem				fileLoadCsv;
+
 	public Menu					fileNew;
+	public MenuItem				fileNewDictionary;
+	public MenuItem				fileNewSystemVars;
+	public MenuItem				fileNewMatrix;
+	public MenuItem				fileNewPlainText;
+	public MenuItem				fileNewCsv;
 
 	public MenuItem				fileSave;
 	public MenuItem				fileSaveAs;
@@ -75,6 +95,8 @@ public class MainController implements Initializable, ContainingParent
 	public Menu					fileLastOpenMatrix;
 	public MenuItem				fileRunFromFile;
 	public MenuItem				fileOpenReport;
+
+	public MenuItem				fileClose;
 
 	public Menu					menuEdit;
 	public MenuItem				editUndo;
@@ -117,8 +139,6 @@ public class MainController implements Initializable, ContainingParent
 
 	private RunnerScheduler		runnerScheduler;
 
-	private TabPane				documentsPane;
-	private BorderPane			projectPane;
 	private double				position	= INIT_VALUE;
 
 	@Override
@@ -310,12 +330,12 @@ public class MainController implements Initializable, ContainingParent
 
 	public void loadConfiguration2(ActionEvent actionEvent)
 	{
-		Common.tryCatch(() -> this.model.loadConfiguration2(null), "Error on load configuration");
+		Common.tryCatch(() -> this.model.loadConfiguration2(null, this.projectPane), "Error on load configuration");
 	}
 
 	public void newConfiguration2(ActionEvent actionEvent)
 	{
-		Common.tryCatch(this.model::newConfiguration2, "Error on create new configuration");
+		Common.tryCatch(() -> this.model.newConfiguration2(this.projectPane), "Error on create new configuration");
 	}
 
 	// ====================================================

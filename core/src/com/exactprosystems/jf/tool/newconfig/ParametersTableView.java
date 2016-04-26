@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 
 public class ParametersTableView extends TableView<TablePair>
 {
-	private TreeNode editableNode;
+	private TreeNode	editableNode;
 
 	public ParametersTableView()
 	{
@@ -37,7 +37,8 @@ public class ParametersTableView extends TableView<TablePair>
 		valueColumn.setText("Value");
 		valueColumn.setCellValueFactory(new PropertyValueFactory<>("value"));
 		valueColumn.setCellFactory(e -> new TableColumnCell());
-		valueColumn.setOnEditCommit(e -> Optional.ofNullable(editableNode).ifPresent(node -> {
+		valueColumn.setOnEditCommit(e -> Optional.ofNullable(editableNode).ifPresent(node ->
+		{
 			node.updateParameter(e.getRowValue().getKey(), e.getNewValue());
 			this.updateParameters(null);
 			this.updateParameters(editableNode.getParameters());
@@ -90,7 +91,8 @@ public class ParametersTableView extends TableView<TablePair>
 		{
 			ContextMenu menu = new ContextMenu();
 			MenuItem item1 = new MenuItem("Remove");
-			item1.setOnAction(e -> {
+			item1.setOnAction(e ->
+			{
 				TablePair item = (TablePair) getTableRow().getItem();
 				if (item != null)
 				{
@@ -106,7 +108,8 @@ public class ParametersTableView extends TableView<TablePair>
 					}
 				}
 			});
-			setOnContextMenuRequested(e -> {
+			setOnContextMenuRequested(e ->
+			{
 				boolean isRemovable = getTableRow().getItem() != null && ((TablePair) getTableRow().getItem()).isRemovable();
 				item1.setDisable(!isRemovable);
 			});
@@ -131,7 +134,7 @@ public class ParametersTableView extends TableView<TablePair>
 
 	private class TableColumnCell extends TableContextMenuCell
 	{
-		private TextField textField;
+		private TextField	textField;
 
 		public TableColumnCell()
 		{
@@ -204,14 +207,16 @@ public class ParametersTableView extends TableView<TablePair>
 			{
 				this.textField = new CustomFieldWithButton(getString());
 				((CustomFieldWithButton) this.textField).setButtonText("...");
-				((CustomFieldWithButton) this.textField).setHandler(e -> {
+				((CustomFieldWithButton) this.textField).setHandler(e ->
+				{
 					ButtonType asd = DialogsHelper.showSaveFileDialog("asd");
 					commitEdit(asd.getText());
 				});
 			}
 			else
 			{
-				this.textField.focusedProperty().addListener((observable, oldValue, newValue) -> {
+				this.textField.focusedProperty().addListener((observable, oldValue, newValue) ->
+				{
 					if (!newValue && oldValue)
 					{
 						cancelEdit();
@@ -219,7 +224,8 @@ public class ParametersTableView extends TableView<TablePair>
 				});
 			}
 			this.textField.setMinWidth(this.getWidth() - this.getGraphicTextGap() * 2);
-			this.textField.setOnKeyPressed(t -> {
+			this.textField.setOnKeyPressed(t ->
+			{
 				if (t.getCode() == KeyCode.ENTER || t.getCode() == KeyCode.TAB)
 				{
 					commitEdit(this.textField.getText());

@@ -35,6 +35,7 @@ import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
 
 import java.io.File;
 import java.io.Reader;
@@ -57,6 +58,7 @@ public class ConfigurationFxNew extends Configuration
 
 	// ================================================================================
 	private ConfigurationNewFxController			controller;
+	private BorderPane								pane;
 
 	
 	private Context									context;
@@ -73,10 +75,10 @@ public class ConfigurationFxNew extends Configuration
 
 	public ConfigurationFxNew() throws Exception
 	{
-		this(null, null, null, null);
+		this(null, null, null, null, null);
 	}
 
-	public ConfigurationFxNew(String fileName, RunnerListener runnerListener, Settings settings, Main mainModel) throws Exception
+	public ConfigurationFxNew(String fileName, RunnerListener runnerListener, Settings settings, Main mainModel, BorderPane pane) throws Exception
 	{
 		super(fileName, settings);
 
@@ -92,6 +94,7 @@ public class ConfigurationFxNew extends Configuration
 
 		this.mainModel = mainModel;
 		this.context = createContext(new SilenceMatrixListener(), System.out);
+		this.pane = pane;
 	}
 
 	// ================================================================================
@@ -1130,7 +1133,7 @@ public class ConfigurationFxNew extends Configuration
 		System.err.println("initController()");
 		
 		this.controller = Common.loadController(ConfigurationFxNew.class.getResource("config.fxml"));
-		this.controller.init(this);
+		this.controller.init(this, this.pane);
 	}
 
 }

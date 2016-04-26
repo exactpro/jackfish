@@ -34,6 +34,8 @@ import com.exactprosystems.jf.tool.text.PlainTextFx;
 
 import javafx.application.Application;
 import javafx.concurrent.Task;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 import org.apache.log4j.Logger;
@@ -211,7 +213,7 @@ public class Main extends Application
 	//----------------------------------------------------------------------------------------------
 	// Event handlers
 	//----------------------------------------------------------------------------------------------
-	public void loadConfiguration2(String filePath) throws Exception
+	public void loadConfiguration2(String filePath, BorderPane pane) throws Exception
 	{
 		Optional<File> optional = chooseFile(Configuration.class, filePath, DialogsHelper.OpenSaveMode.OpenFile);
 		if (optional.isPresent())
@@ -230,7 +232,7 @@ public class Main extends Application
 				}
 			}
 
-			ConfigurationFxNew config = new ConfigurationFxNew(file.getPath(), this.runnerListener, this.settings, Main.this);
+			ConfigurationFxNew config = new ConfigurationFxNew(file.getPath(), this.runnerListener, this.settings, Main.this, pane);
 
 			Document doc = loadDocument(file, config, DocumentKind.CONFIGURATION);
 			if (doc instanceof Configuration)
@@ -320,7 +322,7 @@ public class Main extends Application
 		}
 	}
 
-	public void newConfiguration2() throws Exception
+	public void newConfiguration2(BorderPane pane) throws Exception
 	{
 		if (this.config != null)
 		{
@@ -334,7 +336,7 @@ public class Main extends Application
 				return;
 			}
 		}
-		ConfigurationFxNew config = new ConfigurationFxNew(newName(Configuration.class), this.runnerListener, this.settings, Main.this);
+		ConfigurationFxNew config = new ConfigurationFxNew(newName(Configuration.class), this.runnerListener, this.settings, Main.this, pane);
 
 		createDocument(config);
 		setConfiguration(config);
