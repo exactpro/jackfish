@@ -303,7 +303,7 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 		this.context = context;
 		this.driver = new DisplayDriverFx(this.tree, this.context, rowContextMenu, parametersContextMenu);
 		this.tree.init(model, settings, rowContextMenu);
-		this.tab = createTab(model, settings);
+		this.tab = new CustomTab(model, settings);
 		this.tab.setContent(this.pane);
 		console.setConsole(this.listView);
 		getTabPane().getTabs().add(this.tab);

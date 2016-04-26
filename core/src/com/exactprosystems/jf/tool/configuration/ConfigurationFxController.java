@@ -166,7 +166,7 @@ public class ConfigurationFxController implements Initializable, ContainingParen
 	public void init(final ConfigurationFx model)
 	{
 		this.model = model;
-		this.tab = Common.createTab(model, this.model.getSettings());
+		this.tab = new CustomTab(model, this.model.getSettings());
 		this.tab.setContent(this.pane);
 		Common.getTabPane().getTabs().add(this.tab);
 		Common.getTabPane().getSelectionModel().select(this.tab);

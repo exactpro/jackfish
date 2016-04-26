@@ -67,7 +67,7 @@ public class PlainTextFxController implements Initializable, ContainingParent
 		this.model = model;
 		SettingsValue value = settings.getValueOrDefault(Settings.GLOBAL_NS, SettingsPanel.SETTINGS, SettingsPanel.FONT, "Monospaced$16");
 		this.textArea.setFont(Common.fontFromString(value.getValue()));
-		this.tab = Common.createTab(model, settings);
+		this.tab = new CustomTab(model, settings);
 		this.tab.setContent(this.pane);
 
 		Platform.runLater(() ->

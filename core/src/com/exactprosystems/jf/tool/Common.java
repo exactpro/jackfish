@@ -119,45 +119,6 @@ public abstract class Common
 		}
 	}
 
-	public static CustomTab createTab(final Document model, Settings settings)
-	{
-		final CustomTab[] closure = new CustomTab[]{null};
-		CustomTab tab = new CustomTab(model)
-		{
-			@Override
-			public void onClose() throws Exception
-			{
-				if (model.canClose())
-				{
-					model.close(settings);
-				}
-			}
-
-			@Override
-			public void reload() throws Exception
-			{
-				Platform.runLater(() -> {
-					ButtonType desision = DialogsHelper.showFileChangedDialog(model.getName());
-					if (desision == ButtonType.OK)
-					{
-						Common.tryCatch(() -> {
-							try (Reader reader = new FileReader(model.getName()))
-							{
-								model.load(reader);
-							}
-							model.display();
-							model.saved();
-						}, "Error on reload");
-					}
-					closure[0].saved(model.getName());
-				});
-			}
-		};
-		closure[0] = tab;
-
-		return tab;
-	}
-
 	private static boolean needSelectedTab = false;
 
 	public static boolean isNeedSelectedTab()

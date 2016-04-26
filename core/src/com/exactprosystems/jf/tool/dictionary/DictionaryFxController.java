@@ -104,7 +104,7 @@ public class DictionaryFxController implements Initializable, ContainingParent
 	public void init(final DictionaryFx model, Configuration configuration, AbstractEvaluator evaluator) throws Exception
 	{
 		this.settings = configuration.getSettings();
-		this.tab = Common.createTab(model, this.settings);
+		this.tab = new CustomTab(model, this.settings);
 		this.tab.setContent(pane);
 
 		this.navigationController = Common.loadController(NavigationController.class.getResource("Navigation.fxml"));

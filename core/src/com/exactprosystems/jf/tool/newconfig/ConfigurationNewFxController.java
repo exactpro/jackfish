@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -149,21 +150,21 @@ public class ConfigurationNewFxController implements Initializable, ContainingPa
 
 	public void displayClient(List<ClientEntry> clientEntries)
 	{
-		Common.tryCatch(() -> this.clientTreeNode.display(clientEntries, null, null),
+		Common.tryCatch(() -> this.clientTreeNode.display(clientEntries, Collections.emptyMap(), Collections.emptyList()),
 //		Common.tryCatch(() -> this.clientTreeNode.display(clientEntries, this.supportedClients, this.listClientDictionaries),
 				"Error on display sql entries");
 	}
 
 	public void displayService(List<ServiceEntry> serviceEntries)
 	{
-		Common.tryCatch(() -> this.serviceTreeNode.display(serviceEntries, null, null),
+		Common.tryCatch(() -> this.serviceTreeNode.display(serviceEntries, Collections.emptyMap(), Collections.emptyMap()),
 //		Common.tryCatch(() -> this.serviceTreeNode.display(serviceEntries, this.supportedServices, this.startedServices),
 				"Error on display sql entries");
 	}
 
 	public void displayApp(List<AppEntry> appEntries)
 	{
-		Common.tryCatch(() -> this.appTreeNode.display(appEntries, null, null), "Error on display sql entries");
+		Common.tryCatch(() -> this.appTreeNode.display(appEntries, Collections.emptyMap(), Collections.emptyList()), "Error on display sql entries");
 //		Common.tryCatch(() -> this.appTreeNode.display(appEntries, this.supportedApps, this.listAppsDictionaries), "Error on display sql entries");
 	}
 

@@ -8,31 +8,41 @@
 
 package com.exactprosystems.jf.tool.custom.tab;
 
+import java.io.FileReader;
+import java.io.Reader;
+
 import com.exactprosystems.jf.common.Document;
+import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
+import com.exactprosystems.jf.tool.helpers.DialogsHelper;
+
+import javafx.application.Platform;
 import javafx.geometry.Pos;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Tab;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
+
 import org.apache.log4j.Logger;
 
-public abstract class CustomTab extends Tab implements AutoCloseable
+public class CustomTab extends Tab implements AutoCloseable
 {
-	private static final Logger logger = Logger.getLogger(CustomTab.class);
-	private static final String CHANGED_MARKER = " *";
-	private Hyperlink crossButton;
-	private Text text;
-	private Document document;
-	private FileWatcher watcher; 
+	private static final String	CHANGED_MARKER	= " *";
+	private Hyperlink			crossButton;
+	private Text				text;
+	private Document			document;
+	private FileWatcher			watcher;
+	private Settings			settings;
 
-	public CustomTab(Document document) 
+	public CustomTab(Document document, Settings settings)
 	{
 		super();
-		
+
+		this.settings = settings;
 		this.setClosable(false);
 		this.document = document;
 
@@ -49,7 +59,6 @@ public abstract class CustomTab extends Tab implements AutoCloseable
 		box.getChildren().addAll(this.text, this.crossButton);
 		this.setGraphic(box);
 
-		
 		this.watcher = new FileWatcher()
 		{
 			@Override
@@ -64,7 +73,8 @@ public abstract class CustomTab extends Tab implements AutoCloseable
 		this.watcher.saved(this.document.getName());
 		this.crossButton.setDisable(true);
 		this.crossButton.setVisible(false);
-		this.setOnSelectionChanged(arg0 -> {
+		this.setOnSelectionChanged(arg0 ->
+		{
 			crossButton.setDisable(!isSelected());
 			crossButton.setVisible(isSelected());
 			if (isSelected() && watcher.isChanged())
@@ -72,13 +82,14 @@ public abstract class CustomTab extends Tab implements AutoCloseable
 				Common.tryCatch(CustomTab.this::reload, "Error on reload");
 			}
 		});
-		this.document.setOnChange(flag -> {
+		this.document.setOnChange(flag ->
+		{
 			String text = this.text.getText();
 			if (flag)
 			{
 				if (!text.endsWith(CHANGED_MARKER))
 				{
-					this.text.setText(text+CHANGED_MARKER);
+					this.text.setText(text + CHANGED_MARKER);
 				}
 			}
 			else
@@ -89,7 +100,8 @@ public abstract class CustomTab extends Tab implements AutoCloseable
 				}
 			}
 		});
-		this.crossButton.setOnAction(actionEvent -> {
+		this.crossButton.setOnAction(actionEvent ->
+		{
 			Common.tryCatch(this::onClose, "");
 			Common.tryCatch(this::close, "");
 		});
@@ -100,15 +112,40 @@ public abstract class CustomTab extends Tab implements AutoCloseable
 	{
 		this.watcher.close();
 	}
-	
+
 	public void saved(String fileName)
 	{
 		this.watcher.saved(fileName);
 	}
-	
-	public abstract void reload() throws Exception;
-	
-	public abstract void onClose() throws Exception;
+
+	public void reload() throws Exception
+	{
+		Platform.runLater(() ->
+		{
+			ButtonType desision = DialogsHelper.showFileChangedDialog(this.document.getName());
+			if (desision == ButtonType.OK)
+			{
+				Common.tryCatch(() ->
+				{
+					try (Reader reader = new FileReader(this.document.getName()))
+					{
+						this.document.load(reader);
+					}
+					this.document.display();
+					this.document.saved();
+				}, "Error on reload");
+			}
+			saved(this.document.getName());
+		});
+	}
+
+	public void onClose() throws Exception
+	{
+		if (this.document.canClose())
+		{
+			this.document.close(settings);
+		}
+	}
 
 	public String getTitle()
 	{

@@ -86,7 +86,6 @@ public class ConfigurationFxNew extends Configuration
 		this.startedServices = new HashMap<>();
 		this.listAppsDictionaries = new ArrayList<>();
 		this.listClientDictionaries = new ArrayList<>();
-		this.context = createContext(new SilenceMatrixListener(), System.out);
 
 		super.listener = DialogsHelper::showError;
 		super.runnerListener = runnerListener;
@@ -141,6 +140,7 @@ public class ConfigurationFxNew extends Configuration
 	public void display() throws Exception
 	{
 		super.display();
+		
 		displayEvaluator();
 		displayFormat();
 		displayMatrix();
@@ -166,10 +166,28 @@ public class ConfigurationFxNew extends Configuration
 	public void load(Reader reader) throws Exception
 	{
 		super.load(reader);
+		
+		this.matrixFolders 	= fromString(super.matricesValue);
+		this.libraryFoders 	= fromString(super.librariesValue);
+		this.varsFiles 		= fromString(super.variablesValue);
+		this.reportFolder 	= new File(super.outputPathValue);
+		
+		
 		this.getServiceEntries().forEach(entry -> this.startedServices.put(entry.toString(), ConnectionStatus.NotStarted));
 		this.reportFolder = new File(this.get(Configuration.outputPath));
 		initController();
 	}
+	
+	private List<File> fromString(String str)
+	{
+		if (str != null)
+		{
+			return Arrays.stream(str.split(Configuration.SEPARATOR)).map(e -> new File(e)).collect(Collectors.toList());
+		}
+		
+		return Collections.emptyList();
+	}
+	
 
 	@Override
 	public void save(String fileName) throws Exception
@@ -1109,6 +1127,8 @@ public class ConfigurationFxNew extends Configuration
 
 	private void initController()
 	{
+		System.err.println("initController()");
+		
 		this.controller = Common.loadController(ConfigurationFxNew.class.getResource("config.fxml"));
 		this.controller.init(this);
 	}
