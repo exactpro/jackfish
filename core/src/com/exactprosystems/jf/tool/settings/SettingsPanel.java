@@ -128,7 +128,7 @@ public class SettingsPanel
 
 	public void updateSettingsValue(String key, String dialog, String newValue)
 	{
-		if (newValue.equals(Common.empty))
+		if (newValue.equals(Common.EMPTY))
 		{
 			this.settings.remove(Settings.GLOBAL_NS, dialog, key);
 		}

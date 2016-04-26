@@ -207,7 +207,7 @@ public class MatrixContextMenu extends ContextMenu
 		dialog.getEditor().textProperty().addListener((observable, oldValue, newValue) -> {
 			if (!newValue.isEmpty())
 			{
-				if (!newValue.matches(Common.intPositiveNumberMatcher))
+				if (!newValue.matches(Common.UINT_REGEXP))
 				{
 					dialog.getEditor().setText(oldValue);
 				}

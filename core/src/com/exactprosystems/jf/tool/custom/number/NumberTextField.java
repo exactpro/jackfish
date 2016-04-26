@@ -36,7 +36,7 @@ public class NumberTextField extends TextField
 		this.textProperty().addListener((observableValue, s, t1) -> {
 			if (!t1.isEmpty())
 			{
-				if (!t1.matches(Common.intNumberMatcher))
+				if (!t1.matches(Common.INT_REGEXP))
 				{
 					NumberTextField.this.setText(s);
 				}

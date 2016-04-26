@@ -264,7 +264,7 @@ public class SettingsPanelController implements Initializable, ContainingParent
 		optional.filter(bt -> bt.getButtonData().equals(ButtonBar.ButtonData.OK_DONE)).ifPresent(bt -> {
 			if (save())
 			{
-				DialogsHelper.showInfo(String.format("Settings saved to file [%s] %n Restart application for all changes apply", Common.settingsPath));
+				DialogsHelper.showInfo(String.format("Settings saved to file [%s] %n Restart application for all changes apply", Common.SETTINGS_PATH));
 			}
 			else
 			{

@@ -27,8 +27,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 
-import org.apache.log4j.Logger;
-
 public class CustomTab extends Tab implements AutoCloseable
 {
 	private static final String	CHANGED_MARKER	= " *";

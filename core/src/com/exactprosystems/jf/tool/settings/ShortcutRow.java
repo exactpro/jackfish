@@ -27,7 +27,7 @@ public class ShortcutRow extends GridPane
 	private TextField textField;
 	private Button resetButton;
 	private String key;
-	private String[] previousValue = new String[] {Common.empty};
+	private String[] previousValue = new String[] {Common.EMPTY};
 
 	public ShortcutRow(String key, EditShortcut editShortcut)
 	{
@@ -35,7 +35,7 @@ public class ShortcutRow extends GridPane
 		this.setId(this.key);
 		Label label = new Label(key);
 		label.setTooltip(new Tooltip(label.getText()));
-		this.textField = new TextField(Common.empty);
+		this.textField = new TextField(Common.EMPTY);
 		this.resetButton = new Button("Reset");
 		listeners(editShortcut);
 
@@ -72,8 +72,8 @@ public class ShortcutRow extends GridPane
 	private void listeners(final EditShortcut editShortcut)
 	{
 		this.resetButton.setOnAction(actionEvent -> {
-			textField.setText(Common.empty);
-			editShortcut.edit(key, Common.empty);
+			textField.setText(Common.EMPTY);
+			editShortcut.edit(key, Common.EMPTY);
 		});
 
 		this.textField.setOnKeyPressed(keyEvent -> {
@@ -86,7 +86,7 @@ public class ShortcutRow extends GridPane
 
 		this.textField.setOnKeyReleased(keyEvent -> {
 			String value = previousValue[0];
-			if (!value.equals(Common.empty))
+			if (!value.equals(Common.EMPTY))
 			{
 				textField.setText(value);
 				editShortcut.edit(key, value);

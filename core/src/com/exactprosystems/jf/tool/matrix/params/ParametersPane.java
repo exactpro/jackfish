@@ -210,7 +210,7 @@ public class ParametersPane extends CustomScrollPane
 		tempGrid.setKeyListener(this.fnc, (index,text) -> getMatrix().parameterSetName(this.matrixItem, index, text));
 		key.setContextMenu(empty);
 		key.setOnContextMenuRequested(contextMenuHandler);
-		GridPane.setMargin(key, Common.insetsNode);
+		GridPane.setMargin(key, Common.INSETS_NODE);
 		focusedParent(key);
 		key.setStyle(Common.FONT_SIZE);
 		
@@ -366,7 +366,7 @@ public class ParametersPane extends CustomScrollPane
 			expressionField.setHelperForExpressionField(par.getName(), this.matrixItem.getMatrix());
 			tempGrid.setValue(expressionField);
 			tempGrid.setValueListener(this.fnc, (index, text) -> getMatrix().parameterSetValue(this.matrixItem, index, text));
-			GridPane.setMargin(expressionField, Common.insetsNode);
+			GridPane.setMargin(expressionField, Common.INSETS_NODE);
 			focusedParent(expressionField);
 		}
 		tempGrid.setOnContextMenuRequested(contextMenuHandler);

@@ -18,30 +18,27 @@ import com.exactprosystems.jf.tool.custom.tab.CustomTab;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.settings.SettingsPanel;
 import com.exactprosystems.jf.tool.settings.Theme;
+
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
 import javafx.scene.Parent;
-import javafx.scene.control.Button;
 import javafx.scene.control.*;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import javafx.stage.Popup;
 import javafx.stage.Stage;
+
 import org.apache.log4j.Logger;
 
-import java.awt.*;
+import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.StringSelection;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
-import java.io.Reader;
 import java.net.URL;
 import java.time.LocalDateTime;
 import java.util.Date;
@@ -50,37 +47,27 @@ import java.util.Optional;
 public abstract class Common
 {
 	public static ProgressBar progressBar;
-	private static TabPane tabPane;
+	
+	// TODO move it to CustomTab
+	private static TabPane		tabPane;
+	public static Stage			node;
+	private static File			baseFile				= new File(".");
 
-	public final static String settingsPath = ".settings.xml";
-	public static final String breakPointLabel = "breakPoint";
+	public final static String	SETTINGS_PATH			= ".settings.xml";
+	public final static int		PREF_HEIGHT				= 23;
+	public final static int		MIN_HEIGHT				= PREF_HEIGHT - 1;
+	public final static int		MAX_HEIGHT				= PREF_HEIGHT + 1;
+	public final static int		PREF_WIDTH_LABEL		= 170;
+	public final static int		BUTTON_SIZE_WITH_ICON	= 42;
+	public final static String	UINT_REGEXP				= "^\\d+$";
+	public final static String	INT_REGEXP				= "^-?\\d+$";
+	public final static String	EMPTY					= "<none>";
+	public final static Insets	INSETS_NODE				= new Insets(2, 5, 2, 5);
+	public final static Insets	INSETS_GRID				= new Insets(0);
+	public final static String	FONT_SIZE				= "-fx-font-size : 12";
+	public final static String	DATE_TIME_PATTERN		= "HH:mm:ss dd.MM.yyyy";
 
-	public final static int PREF_HEIGHT = 23;
-
-	public final static int MIN_HEIGHT = PREF_HEIGHT - 1;
-	public final static int MAX_HEIGHT = PREF_HEIGHT + 1;
-	/**
-	 * this field - pref width label on gui for name action item
-	 */
-	public final static int PREF_WIDTH_LABEL = 170;
-
-	public static Stage node;
-
-	public static final String intPositiveNumberMatcher = "^\\d+$";
-	public static final String intNumberMatcher = "^-?\\d+$";
-	public static final String empty = "<none>";
-	public static final int BUTTON_SIZE_WITH_ICON = 42;
-	public static final javafx.geometry.Insets insetsNode = new javafx.geometry.Insets(2, 5, 2, 5);
-	public static final javafx.geometry.Insets insetsGrid = new javafx.geometry.Insets(0);
-
-	private static File baseFile = new File(".");
-	public static Popup popup;
-
-	public static final Logger logger = Logger.getLogger(Common.class);
-
-	public static final String FONT_SIZE = "-fx-font-size : 12";
-
-	public static final String DATE_TIME_PATTERN = "HH:mm:ss dd.MM.yyyy";
+	public static final Logger	logger					= Logger.getLogger(Common.class);
 
 	public static void setFocused(final TextField field)
 	{
@@ -144,6 +131,7 @@ public abstract class Common
 		return Common.theme;
 	}
 
+	// TODO move it to CustomTab
 	public static CustomTab checkDocument(Document doc)
 	{
 		Optional<Tab> first = tabPane.getTabs().stream().filter(tab -> ((CustomTab) tab).getDocument().equals(doc)).findFirst();
@@ -221,7 +209,7 @@ public abstract class Common
 		Settings.SettingsValue value = settings.getValue(Settings.GLOBAL_NS, SettingsPanel.SHORTCUTS_NAME, nameShortcut);
 		if (value != null)
 		{
-			return value.getValue().equals(empty) ? "" : "(" + value.getValue() + ")";
+			return value.getValue().equals(EMPTY) ? "" : "(" + value.getValue() + ")";
 		}
 		return "";
 	}
@@ -231,7 +219,7 @@ public abstract class Common
 		Settings.SettingsValue value = settings.getValue(Settings.GLOBAL_NS, SettingsPanel.SHORTCUTS_NAME, nameShortcut);
 		if (value != null)
 		{
-			return value.getValue().equals(empty) ? "" : value.getValue();
+			return value.getValue().equals(EMPTY) ? "" : value.getValue();
 		}
 		return "";
 	}
