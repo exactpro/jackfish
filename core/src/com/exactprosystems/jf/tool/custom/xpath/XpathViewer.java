@@ -28,7 +28,7 @@ public class XpathViewer
 	private IRemoteApplication				service;
 
 	private String							relativeXpath;
-
+	
 	public XpathViewer(Locator owner, Document document, IRemoteApplication service)
 	{
 		this.document = document;

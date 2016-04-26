@@ -21,7 +21,7 @@
 		<RowConstraints maxHeight="120.0" minHeight="10.0" percentHeight="100.0" prefHeight="30.0" vgrow="SOMETIMES"/>
 	</rowConstraints>
 	<children>
-		<BorderPane prefHeight="200.0" prefWidth="200.0">
+		<BorderPane fx:id="mainPanel" prefHeight="200.0" prefWidth="200.0">
 			<top>
 				<VBox minHeight="70.0" prefHeight="70.0" prefWidth="100.0" BorderPane.alignment="CENTER">
 					<children>

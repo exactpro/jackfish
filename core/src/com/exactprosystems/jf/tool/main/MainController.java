@@ -25,10 +25,12 @@ import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.matrix.MatrixFx;
 import com.exactprosystems.jf.tool.matrix.schedule.RunnerScheduler;
 import com.exactprosystems.jf.tool.settings.SettingsPanel;
-
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
+import javafx.geometry.Orientation;
+import javafx.geometry.VPos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -37,8 +39,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.*;
 import javafx.stage.Stage;
-
 import org.apache.log4j.Logger;
 
 import java.io.File;
@@ -54,11 +56,15 @@ public class MainController implements Initializable, ContainingParent
 	private final static int PANE_WIDTH = 800;
 	private final static int PANE_HEIGHT = 600;
 
+	private final static double INIT_VALUE = 0.15;
+	private final static double MIN_VALUE = 0.05;
+
 	private static final Logger logger = Logger.getLogger(MainController.class);
 
 	public TabPane tabPane;
 	public ProgressBar progressBar;
 	public ToolBar tbMain;
+	public BorderPane mainPanel;
 	private LogsFx log;
 
 	public Menu menuFile;
@@ -133,6 +139,8 @@ public class MainController implements Initializable, ContainingParent
 
 	private RunnerScheduler runnerScheduler;
 
+	private BorderPane configurationPanel;
+
 	@Override
 	public void initialize(URL url, ResourceBundle resourceBundle)
 	{
@@ -167,8 +175,58 @@ public class MainController implements Initializable, ContainingParent
 		progressBar.setVisible(false);
 
 		// TODO crutch
-		if (!VersionInfo.getVersion().contains("local"))
+		if (VersionInfo.getVersion().contains("local"))
 		{
+			//initialize new panel
+			SplitPane splitPane = new SplitPane();
+			splitPane.setOrientation(Orientation.HORIZONTAL);
+			splitPane.setDividerPositions(0.0);
+
+			GridPane gridPane = new GridPane();
+			gridPane.setMinWidth(20.0);
+			ColumnConstraints c0 = new ColumnConstraints();
+			c0.setHgrow(Priority.SOMETIMES);
+			c0.setMaxWidth(30.0);
+			c0.setMinWidth(30.0);
+			c0.setPrefWidth(30.0);
+			ColumnConstraints c1 = new ColumnConstraints();
+			c1.setMinWidth(10.0);
+			c1.setPrefWidth(100.0);
+			c1.setHgrow(Priority.SOMETIMES);
+			RowConstraints r0 = new RowConstraints();
+			r0.setMinHeight(10.0);
+			r0.setPrefHeight(30);
+			r0.setVgrow(Priority.SOMETIMES);
+			gridPane.getRowConstraints().add(r0);
+			gridPane.getColumnConstraints().addAll(c0, c1);
+
+			Label project = new Label("Project");
+			project.setOnMouseClicked(event -> {
+				double position = splitPane.getDividerPositions()[0];
+				if (position < MIN_VALUE)
+				{
+					splitPane.setDividerPositions(INIT_VALUE);
+				}
+				else
+				{
+					splitPane.setDividerPositions(0.0);
+				}
+			});
+			gridPane.add(project, 0, 0);
+
+			project.setRotate(-90.0);
+			GridPane.setValignment(project, VPos.TOP);
+			GridPane.setMargin(project, new Insets(20, 0, 0, -15.0));
+
+			Node node = this.mainPanel.getCenter();
+
+			splitPane.getItems().addAll(gridPane, node);
+
+			this.configurationPanel = new BorderPane();
+			this.configurationPanel.setMinWidth(0.0);
+			gridPane.add(this.configurationPanel, 1, 0);
+
+			this.mainPanel.setCenter(splitPane);
 //			this.fileLoadConfiguration2.setVisible(false);
 //			this.fileNewConfiguration2.setVisible(false);
 		}
