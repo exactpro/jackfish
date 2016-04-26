@@ -140,6 +140,7 @@ public class MainController implements Initializable, ContainingParent
 	private RunnerScheduler runnerScheduler;
 
 	private BorderPane configurationPanel;
+	private double position = INIT_VALUE;
 
 	@Override
 	public void initialize(URL url, ResourceBundle resourceBundle)
@@ -201,14 +202,16 @@ public class MainController implements Initializable, ContainingParent
 			gridPane.getColumnConstraints().addAll(c0, c1);
 
 			Label project = new Label("Project");
-			project.setOnMouseClicked(event -> {
-				double position = splitPane.getDividerPositions()[0];
-				if (position < MIN_VALUE)
+			project.setOnMouseClicked(event -> 
+			{
+				double currentPosition = splitPane.getDividerPositions()[0];
+				if (currentPosition < MIN_VALUE)
 				{
-					splitPane.setDividerPositions(INIT_VALUE);
+					splitPane.setDividerPositions(this.position);
 				}
 				else
 				{
+					this.position = currentPosition;
 					splitPane.setDividerPositions(0.0);
 				}
 			});
@@ -227,8 +230,6 @@ public class MainController implements Initializable, ContainingParent
 			gridPane.add(this.configurationPanel, 1, 0);
 
 			this.mainPanel.setCenter(splitPane);
-//			this.fileLoadConfiguration2.setVisible(false);
-//			this.fileNewConfiguration2.setVisible(false);
 		}
 		
 		listeners();
