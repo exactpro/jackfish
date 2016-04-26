@@ -53,132 +53,84 @@ import java.util.stream.Collectors;
 
 public class MainController implements Initializable, ContainingParent
 {
-	private final static int PANE_WIDTH = 800;
-	private final static int PANE_HEIGHT = 600;
+	private final static int	PANE_WIDTH	= 800;
+	private final static int	PANE_HEIGHT	= 600;
 
-	private final static double INIT_VALUE = 0.15;
-	private final static double MIN_VALUE = 0.05;
+	private final static double	INIT_VALUE	= 0.15;
+	private final static double	MIN_VALUE	= 0.05;
 
-	private static final Logger logger = Logger.getLogger(MainController.class);
+	private static final Logger	logger		= Logger.getLogger(MainController.class);
 
-	public TabPane tabPane;
-	public ProgressBar progressBar;
-	public ToolBar tbMain;
-	public BorderPane mainPanel;
-	private LogsFx log;
+	public ProgressBar			progressBar;
+	public BorderPane			mainPanel;
+	private LogsFx				log;
 
-	public Menu menuFile;
-	public MenuItem fileLoadConfiguration;
-	public MenuItem fileNewConfiguration;
-	public MenuItem fileLoadConfiguration2;
-	public MenuItem fileNewConfiguration2;
+	public Menu					fileLoad;
+	public Menu					fileNew;
 
-	public Menu fileLoad;
-	public MenuItem fileLoadDictionary;
-	public MenuItem fileLoadSystemVars;
-	public MenuItem fileLoadMatrix;
-	public MenuItem fileLoadPlainText;
-	public MenuItem fileLoadCsv;
+	public MenuItem				fileSave;
+	public MenuItem				fileSaveAs;
+	public MenuItem				fileSaveAll;
 
-	public Menu fileNew;
-	public MenuItem fileNewDictionary;
-	public MenuItem fileNewSystemVars;
-	public MenuItem fileNewMatrix;
-	public MenuItem fileNewPlainText;
-	public MenuItem fileNewCsv;
+	public Menu					fileLastOpenMatrix;
+	public MenuItem				fileRunFromFile;
+	public MenuItem				fileOpenReport;
 
-	public MenuItem fileSave;
-	public MenuItem fileSaveAs;
-	public MenuItem fileSaveAll;
+	public Menu					menuEdit;
+	public MenuItem				editUndo;
+	public MenuItem				editRedo;
 
-	public Menu fileLastOpenMatrix;
-	public MenuItem fileRunFromFile;
-	public MenuItem fileOpenReport;
+	public Menu					menuView;
+	public MenuItem				viewLogs;
+	public MenuItem				viewSettings;
+	public MenuItem				viewStore;
+	public MenuItem				viewAllTabs;
 
-	public MenuItem fileClose;
+	public Menu					menuMatrix;
+	public MenuItem				matrixStart;
+	public MenuItem				matrixStop;
+	public MenuItem				matrixSchedule;
 
-	public Menu menuEdit;
-	public MenuItem editUndo;
-	public MenuItem editRedo;
+	public Menu					menuHelp;
+	public MenuItem				helpActionsHelp;
 
-	public Menu menuView;
-	public MenuItem viewLogs;
-	public MenuItem viewSettings;
-	public MenuItem viewStore;
-	public MenuItem viewAllTabs;
+	public MenuItem				helpAboutProgram;
 
-	public Menu menuMatrix;
-	public MenuItem matrixStart;
-	public MenuItem matrixStop;
-	public MenuItem matrixSchedule;
+	public Button				btnOpenMatrix;
+	public Button				btnNewMatrix;
+	public Button				btnSaveDocument;
+	public Button				btnSaveAsDocument;
+	public Button				btnOpenMainLog;
+	public Button				btnShowCalculator;
+	public Button				btnUndo;
+	public Button				btnRedo;
 
-	public Menu menuHelp;
-	public MenuItem helpActionsHelp;
+	public Label				lblMemory;
 
-	public MenuItem helpAboutProgram;
+	private Stage				stage;
+	private Parent				pane;
 
-	public Button btnOpenMatrix;
-	public Button btnNewMatrix;
-	public Button btnSaveDocument;
-	public Button btnSaveAsDocument;
-	public Button btnOpenMainLog;
-	public Button btnShowCalculator;
-	public Button btnUndo;
-	public Button btnRedo;
+	private Main				model;
+	private Settings			settings;
 
-	public Label lblMemory;
-	public Label lblStartedMatrixCount;
+	private volatile boolean	starting	= true;
 
-	private Stage stage;
-	private Parent pane;
+	private RunnerScheduler		runnerScheduler;
 
-	private Main model;
-	private Settings settings;
-
-	private volatile boolean starting = true;
-
-	private RunnerScheduler runnerScheduler;
-
-	private BorderPane configurationPanel;
-	private double position = INIT_VALUE;
+	private TabPane				documentsPane;
+	private BorderPane			projectPane;
+	private double				position	= INIT_VALUE;
 
 	@Override
 	public void initialize(URL url, ResourceBundle resourceBundle)
 	{
-		assert matrixStop != null : "fx:id=\"matrixStop\" was not injected: check your FXML file 'tool.fxml'.";
-		assert fileLoadSystemVars != null : "fx:id=\"fileLoadSystemVars\" was not injected: check your FXML file 'tool.fxml'.";
-		assert fileLoadPlainText != null : "fx:id=\"fileLoadPlainText\" was not injected: check your FXML file 'tool.fxml'.";
-		assert fileLoadCsv != null : "fx:id=\"fileLoadCsv\" was not injected: check your FXML file 'tool.fxml'.";
-		assert menuFile != null : "fx:id=\"menuFile\" was not injected: check your FXML file 'tool.fxml'.";
-		assert fileNewConfiguration != null : "fx:id=\"fileNewConfiguration\" was not injected: check your FXML file 'tool.fxml'.";
-		assert fileNewMatrix != null : "fx:id=\"fileNewMatrix\" was not injected: check your FXML file 'tool.fxml'.";
-		assert fileLoadConfiguration != null : "fx:id=\"fileLoadConfiguration\" was not injected: check your FXML file 'tool.fxml'.";
-		assert fileLoadDictionary != null : "fx:id=\"fileLoadDictionary\" was not injected: check your FXML file 'tool.fxml'.";
-		assert matrixStart != null : "fx:id=\"matrixStart\" was not injected: check your FXML file 'tool.fxml'.";
-		assert helpAboutProgram != null : "fx:id=\"helpAboutProgram\" was not injected: check your FXML file 'tool.fxml'.";
-		assert fileLoadMatrix != null : "fx:id=\"fileLoadMatrix\" was not injected: check your FXML file 'tool.fxml'.";
-		assert fileNewSystemVars != null : "fx:id=\"fileNewSystemVars\" was not injected: check your FXML file 'tool.fxml'.";
-		assert fileNewPlainText != null : "fx:id=\"fileNewPlainText\" was not injected: check your FXML file 'tool.fxml'.";
-		assert fileNewCsv != null : "fx:id=\"fileNewCsv\" was not injected: check your FXML file 'tool.fxml'.";
-		assert progressBar != null : "fx:id=\"progressBar\" was not injected: check your FXML file 'tool.fxml'.";
-		assert fileLastOpenMatrix != null : "fx:id=\"fileLastOpenMatrix\" was not injected: check your FXML file 'tool.fxml'.";
-		assert fileClose != null : "fx:id=\"fileClose\" was not injected: check your FXML file 'tool.fxml'.";
-		assert fileNewDictionary != null : "fx:id=\"fileNewDictionary\" was not injected: check your FXML file 'tool.fxml'.";
-		assert btnSaveDocument != null : "fx:id=\"btnSaveDocument\" was not injected: check your FXML file 'tool.fxml'.";
-		assert btnSaveAsDocument != null : "fx:id=\"btnSaveAsDocument\" was not injected: check your FXML file 'tool.fxml'.";
-		assert fileSave != null : "fx:id=\"fileSave\" was not injected: check your FXML file 'tool.fxml'.";
-		assert fileSaveAs != null : "fx:id=\"fileSaveAs\" was not injected: check your FXML file 'tool.fxml'.";
-		assert menuEdit != null : "fx:id=\"menuEdit\" was not injected: check your FXML file 'tool.fxml'.";
-		assert menuHelp != null : "fx:id=\"menuHelp\" was not injected: check your FXML file 'tool.fxml'.";
-		assert tabPane != null : "fx:id=\"tabPane\" was not injected: check your FXML file 'tool.fxml'.";
-
 		progressBar.setProgress(ProgressIndicator.INDETERMINATE_PROGRESS);
 		progressBar.setVisible(false);
 
 		// TODO crutch
 		if (VersionInfo.getVersion().contains("local"))
 		{
-			//initialize new panel
+			// initialize new panel
 			SplitPane splitPane = new SplitPane();
 			splitPane.setOrientation(Orientation.HORIZONTAL);
 			splitPane.setDividerPositions(0.0);
@@ -202,7 +154,7 @@ public class MainController implements Initializable, ContainingParent
 			gridPane.getColumnConstraints().addAll(c0, c1);
 
 			Label project = new Label("Project");
-			project.setOnMouseClicked(event -> 
+			project.setOnMouseClicked(event ->
 			{
 				double currentPosition = splitPane.getDividerPositions()[0];
 				if (currentPosition < MIN_VALUE)
@@ -225,22 +177,22 @@ public class MainController implements Initializable, ContainingParent
 
 			splitPane.getItems().addAll(gridPane, node);
 
-			this.configurationPanel = new BorderPane();
-			this.configurationPanel.setMinWidth(0.0);
-			gridPane.add(this.configurationPanel, 1, 0);
+			this.projectPane = new BorderPane();
+			this.projectPane.setMinWidth(0.0);
+			gridPane.add(this.projectPane, 1, 0);
 
 			this.mainPanel.setCenter(splitPane);
 		}
-		
+
 		listeners();
 
-		Common.setTabPane(tabPane);
+		Common.setTabPane(documentsPane);
 		Common.setProgressBar(progressBar);
 	}
 
 	public void reloadTab(ActionEvent actionEvent)
 	{
-		Common.tryCatch(((CustomTab) this.tabPane.getSelectionModel().getSelectedItem())::reload, "Error on reload current tab");
+		Common.tryCatch(((CustomTab) this.documentsPane.getSelectionModel().getSelectedItem())::reload, "Error on reload current tab");
 	}
 
 	public void close()
@@ -251,7 +203,8 @@ public class MainController implements Initializable, ContainingParent
 
 	private void initializeButtons(final Settings settings)
 	{
-		Platform.runLater(() -> Common.tryCatch(() -> {
+		Platform.runLater(() -> Common.tryCatch(() ->
+		{
 			btnSaveAsDocument.setTooltip(new Tooltip("Save as"));
 			btnSaveDocument.setTooltip(new Tooltip("Save"));
 			btnOpenMatrix.setTooltip(new Tooltip("Open matrix"));
@@ -288,10 +241,10 @@ public class MainController implements Initializable, ContainingParent
 
 	public void selectConfig()
 	{
-		if (this.tabPane != null && !this.tabPane.getTabs().isEmpty())
+		if (this.documentsPane != null && !this.documentsPane.getTabs().isEmpty())
 		{
-			this.tabPane.getSelectionModel().clearSelection();
-			this.tabPane.getSelectionModel().select(0);
+			this.documentsPane.getSelectionModel().clearSelection();
+			this.documentsPane.getSelectionModel().select(0);
 		}
 	}
 
@@ -312,7 +265,7 @@ public class MainController implements Initializable, ContainingParent
 		this.settings = settings;
 		this.stage = stage;
 		this.runnerScheduler = runnerListener;
-		this.stage.setOnCloseRequest(windowEvent -> 
+		this.stage.setOnCloseRequest(windowEvent ->
 		{
 			if (!this.model.closeApplication())
 			{
@@ -333,11 +286,11 @@ public class MainController implements Initializable, ContainingParent
 
 	public Document currentDocument()
 	{
-		Tab selectedTab = this.tabPane.getSelectionModel().getSelectedItem();
-		
+		Tab selectedTab = this.documentsPane.getSelectionModel().getSelectedItem();
+
 		if (selectedTab instanceof CustomTab)
 		{
-			return ((CustomTab)selectedTab).getDocument();
+			return ((CustomTab) selectedTab).getDocument();
 		}
 		return null;
 	}
@@ -416,7 +369,7 @@ public class MainController implements Initializable, ContainingParent
 
 	public void matrixSchedule(ActionEvent event)
 	{
-		Common.tryCatch(() -> this.runnerScheduler.show(this.tabPane.getScene().getWindow()), "Error on schedule");
+		Common.tryCatch(() -> this.runnerScheduler.show(this.documentsPane.getScene().getWindow()), "Error on schedule");
 	}
 
 	public void runFromFile(ActionEvent actionEvent)
@@ -442,7 +395,6 @@ public class MainController implements Initializable, ContainingParent
 		Common.tryCatch(this.model::newPlainText, "Error on create new plain text");
 	}
 
-
 	// ====================================================
 	// Csv
 	// ====================================================
@@ -455,7 +407,6 @@ public class MainController implements Initializable, ContainingParent
 	{
 		Common.tryCatch(this.model::newCsv, "Error on create new csv file");
 	}
-
 
 	// ====================================================
 	// Document
@@ -528,29 +479,12 @@ public class MainController implements Initializable, ContainingParent
 		DialogsHelper.showHelperDialog("<none>", evaluator, "'Helper'", null);
 	}
 
-	public void updateStatusBar(final int i)
-	{
-		// TODO not used
-		Platform.runLater(() -> {
-			if (i == 0)
-			{
-				if (!lblStartedMatrixCount.getText().equals(""))
-				{
-					lblStartedMatrixCount.setText("");
-				}
-			}
-			else
-			{
-				lblStartedMatrixCount.setText("Running matrix count : " + i);
-			}
-		});
-	}
-
 	// TODO remake shortcuts over Menu.setAccelerator()
 	public void initShortcuts()
 	{
 		setStatusBar();
-		btnSaveAsDocument.getScene().addEventFilter(KeyEvent.KEY_RELEASED, keyEvent -> Common.tryCatch(() -> {
+		btnSaveAsDocument.getScene().addEventFilter(KeyEvent.KEY_RELEASED, keyEvent -> Common.tryCatch(() ->
+		{
 			if (keyEvent.getCode() == KeyCode.UNDEFINED)
 			{
 				return;
@@ -582,12 +516,13 @@ public class MainController implements Initializable, ContainingParent
 	public void updateFileLastMatrix(Collection<SettingsValue> list)
 	{
 		fileLastOpenMatrix.getItems().clear();
-		list.forEach(lastMatrix -> 
+		list.forEach(lastMatrix ->
 		{
 			MenuItem menuItem = new MenuItem(lastMatrix.getKey());
 			menuItem.setMnemonicParsing(false);
 			final File file = new File(lastMatrix.getValue());
-			menuItem.setOnAction(actionEvent -> Common.tryCatch(() -> {
+			menuItem.setOnAction(actionEvent -> Common.tryCatch(() ->
+			{
 				try
 				{
 					model.loadMatrix(file.getAbsolutePath());
@@ -631,25 +566,22 @@ public class MainController implements Initializable, ContainingParent
 		{
 			return false;
 		}
-		Optional<Tab> first = this.tabPane.getTabs().stream().filter(f -> {
+		Optional<Tab> first = this.documentsPane.getTabs().stream().filter(f ->
+		{
 			Document document = ((CustomTab) f).getDocument();
 			return Str.areEqual(new File(document.getName()).getAbsolutePath(), file.getAbsolutePath());
 		}).findFirst();
-		first.ifPresent(this.tabPane.getSelectionModel()::select);
+		first.ifPresent(this.documentsPane.getSelectionModel()::select);
 		return first.isPresent();
 	}
+
 	// ============================================================
 	// private methods
 	// ============================================================
-	private boolean checkTab()
-	{
-		return tabPane.getSelectionModel().getSelectedItem() != null;
-	}
-
 	private void listeners()
 	{
-		lblStartedMatrixCount.setOnMouseClicked(mouseEvent -> matrixSchedule(null));
-		this.tabPane.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+		this.documentsPane.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) ->
+		{
 			if (newValue == null)
 			{
 				this.model.changeDocument(null);
@@ -676,7 +608,8 @@ public class MainController implements Initializable, ContainingParent
 
 	private void openLogs()
 	{
-		Common.tryCatch(() -> {
+		Common.tryCatch(() ->
+		{
 			if (this.log == null)
 			{
 				this.log = new LogsFx(this.settings);
@@ -688,21 +621,23 @@ public class MainController implements Initializable, ContainingParent
 	private void showAllTabs()
 	{
 		ListView<String> listView = new ListView<>();
-		listView.getItems().addAll(tabPane.getTabs().stream().map(tab -> ((CustomTab) tab).getTitle()).collect(Collectors.toList()));
+		listView.getItems().addAll(documentsPane.getTabs().stream().map(tab -> ((CustomTab) tab).getTitle()).collect(Collectors.toList()));
 		Dialog<ButtonType> dialog = new Alert(Alert.AlertType.CONFIRMATION);
 		dialog.getDialogPane().setContent(listView);
 		dialog.getDialogPane().setPrefHeight(500);
 		dialog.getDialogPane().setPrefWidth(400);
 		dialog.setHeaderText("Choose tab");
 
-		listView.setOnMouseClicked(mouseEvent -> {
+		listView.setOnMouseClicked(mouseEvent ->
+		{
 			if (mouseEvent.getClickCount() == 2)
 			{
 				selectAndHide(listView, dialog);
 			}
 		});
 
-		listView.setOnKeyPressed(keyEvent -> {
+		listView.setOnKeyPressed(keyEvent ->
+		{
 			if (keyEvent.getCode() == KeyCode.ENTER)
 			{
 				selectAndHide(listView, dialog);
@@ -716,7 +651,7 @@ public class MainController implements Initializable, ContainingParent
 	private void selectAndHide(ListView<String> listView, Dialog<?> dialog)
 	{
 		String selectedItem = listView.getSelectionModel().getSelectedItem();
-		tabPane.getTabs().stream().filter(tab -> ((CustomTab) tab).getTitle().equals(selectedItem)).findFirst().ifPresent(tabPane.getSelectionModel()::select);
+		documentsPane.getTabs().stream().filter(tab -> ((CustomTab) tab).getTitle().equals(selectedItem)).findFirst().ifPresent(documentsPane.getSelectionModel()::select);
 		dialog.hide();
 	}
 
@@ -727,12 +662,14 @@ public class MainController implements Initializable, ContainingParent
 
 	private void setStatusBar()
 	{
-		Runnable runnable = () -> {
+		Runnable runnable = () ->
+		{
 			while (this.starting)
 			{
 				try
 				{
-					Platform.runLater(() -> lblMemory.setText(getMBytes(Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) + "MB of " + getMBytes(Runtime.getRuntime().maxMemory()) + "MB"));
+					Platform.runLater(() -> lblMemory.setText(getMBytes(Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) + "MB of "
+							+ getMBytes(Runtime.getRuntime().maxMemory()) + "MB"));
 
 					Thread.sleep(1000);
 				}
