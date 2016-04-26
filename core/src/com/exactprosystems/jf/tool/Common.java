@@ -50,8 +50,8 @@ public abstract class Common
 	
 	// TODO move it to CustomTab
 	private static TabPane		tabPane;
+	// TODO move it to Main
 	public static Stage			node;
-	private static File			baseFile				= new File(".");
 
 	public final static String	SETTINGS_PATH			= ".settings.xml";
 	public final static int		PREF_HEIGHT				= 23;
@@ -106,6 +106,7 @@ public abstract class Common
 		}
 	}
 
+	// TODO move it to CustomTab
 	private static boolean needSelectedTab = false;
 
 	public static boolean isNeedSelectedTab()
@@ -118,7 +119,7 @@ public abstract class Common
 		Common.needSelectedTab = flag;
 	}
 
-	// TODO move it away
+	// TODO move it to Main
 	private static Theme theme;
 
 	public static void setTheme(Theme theme)
@@ -145,8 +146,9 @@ public abstract class Common
 
 	public static String getRelativePath(String filePath)
 	{
+		File currentDir = new File(".");
 		String result = filePath;
-		String base = baseFile.getAbsolutePath().substring(0, baseFile.getAbsolutePath().length() - 1);
+		String base = currentDir.getAbsolutePath().substring(0, currentDir.getAbsolutePath().length() - 1);
 		if (filePath.contains(base))
 		{
 			result = filePath.substring(base.length());
@@ -210,16 +212,6 @@ public abstract class Common
 		if (value != null)
 		{
 			return value.getValue().equals(EMPTY) ? "" : "(" + value.getValue() + ")";
-		}
-		return "";
-	}
-
-	private static String getShortcut(Settings settings, String nameShortcut)
-	{
-		Settings.SettingsValue value = settings.getValue(Settings.GLOBAL_NS, SettingsPanel.SHORTCUTS_NAME, nameShortcut);
-		if (value != null)
-		{
-			return value.getValue().equals(EMPTY) ? "" : value.getValue();
 		}
 		return "";
 	}
