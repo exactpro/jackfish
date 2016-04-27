@@ -8,8 +8,11 @@
     <outputPath>reports</outputPath>
     <variables>vars.ini</variables>
     <userVariables>uservars/myvars.ini</userVariables>
-    <libraries>matrices/libs</libraries>
     <git>http://temp.com/project.git</git>
+    <matrix>examples</matrix>
+    <appDict>dic/gui</appDict>
+    <clientDict></clientDict>
+    <library>matrices/libs</library>
     <libEntry>
         <name>STD</name>
         <libPath>matrices/libs/std.jf</libPath>
