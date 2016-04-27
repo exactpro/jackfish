@@ -205,8 +205,9 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 			{
 				ownerId = this.operationExecutor.find(null, owner);
 			}
+			boolean many = element.getAddition() != null && element.getAddition() == Addition.Many;
 			String result = this.driver.listAll(ownerId, element.getControlKind(), element.getUid(), element.getXpath(), element
-					.getClazz(), element.getName(), element.getTitle(), element.getText());
+					.getClazz(), element.getName(), element.getTitle(), element.getText(), many);
 			//TODO see Program.cs method listAll. Or may be split via long string ====== ?
 			String[] split = result.split("#####");
 			for(int i = 0; i < split.length && !split[i].isEmpty(); i++)

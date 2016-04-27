@@ -78,15 +78,16 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 		{
 			int length = 100;
 			int[] result = new int[length];
+			boolean many = locator.getAddition() != null && locator.getAddition() == Addition.Many;
 			UIProxyJNA owner = window == null ? new UIProxyJNA(null) : window;
 			int count = this.driver.findAllForLocator(result, owner, controlKind, locator.getUid(), locator.getXpath(), locator
-					.getClazz(), locator.getName(), locator.getTitle(), locator.getText());
+					.getClazz(), locator.getName(), locator.getTitle(), locator.getText(), many);
 			if (count > length)
 			{
 				length = count;
 				result = new int[length];
 				this.driver.findAllForLocator(result, owner, locator.getControlKind(), locator.getUid(), locator.getXpath(), locator
-						.getClazz(), locator.getName(), locator.getTitle(), locator.getText());
+						.getClazz(), locator.getName(), locator.getTitle(), locator.getText(), many);
 			}
 			int foundElementCount = result[0];
 			List<UIProxyJNA> returnedList = new ArrayList<>();
@@ -130,16 +131,17 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 				}
 				ownerElement = allOwners.get(0);
 			}
+			boolean many = element.getAddition() != null && element.getAddition() == Addition.Many;
 			int length = 100;
 			int[] result = new int[length];
 			int count = this.driver.findAllForLocator(result, ownerElement, element.getControlKind(), element.getUid(), element
-					.getXpath(), element.getClazz(), element.getName(), element.getTitle(), element.getText());
+					.getXpath(), element.getClazz(), element.getName(), element.getTitle(), element.getText(), many);
 			if (count > length)
 			{
 				length = count;
 				result = new int[length];
 				this.driver.findAllForLocator(result, ownerElement, element.getControlKind(), element.getUid(), element.getXpath(), element
-						.getClazz(), element.getName(), element.getTitle(), element.getText());
+						.getClazz(), element.getName(), element.getTitle(), element.getText(), many);
 			}
 			int foundElementCount = result[0];
 			List<UIProxyJNA> returnedList = new ArrayList<>();
@@ -452,11 +454,39 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 	{
 		try
 		{
-			String result = this.driver.getProperty(component, WindowProperty.ValueProperty);
-			if (Str.IsNullOrEmpty(result))
+			//TODO for elements, which have selection pattern, we need to use it;
+			int length = 100;
+			int[] arr = new int[length];
+			int res = this.driver.getPatterns(arr, component);
+			if (res > length)
 			{
-				result = this.driver.getProperty(component, WindowProperty.NameProperty);
+				length = res;
+				arr = new int[length];
+				this.driver.getPatterns(arr, component);
 			}
+			boolean isSelectionPatternPresent = false;
+			for(int p : arr)
+			{
+				if (WindowPattern.SelectionPattern.getId() == p)
+				{
+					isSelectionPatternPresent = true;
+					break;
+				}
+			}
+			String result;
+			if (isSelectionPatternPresent)
+			{
+				result = this.driver.doPatternCall(component, WindowPattern.SelectionPattern, "GetSelection", null, -1);
+			}
+			else
+			{
+				result = this.driver.getProperty(component, WindowProperty.ValueProperty);
+				if (Str.IsNullOrEmpty(result))
+				{
+					result = this.driver.getProperty(component, WindowProperty.NameProperty);
+				}
+			}
+
 			return result;
 		}
 		catch (Exception e)

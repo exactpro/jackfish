@@ -12,12 +12,12 @@ public interface JnaDriver extends Library {
 	void stop();
 	void refresh();
 	String title();
-	String listAll(String ownerId, int controlKindId, String uid, String xpath, String clazz, String name, String title, String text);
+	String listAll(String ownerId, int controlKindId, String uid, String xpath, String clazz, String name, String title, String text, boolean many);
 	String elementAttribute(String elementId, int partId);
 	int elementByCoords(int[] resultId, int length, int controlKindId, int x, int y);
 	void sendKey(String key);
 	void mouse(String elementId, int actionId, int x, int y);
-	int findAllForLocator(int[] arr, int len, String ownerId, int controlKindId, String uid, String xpath, String clazz, String name, String title, String text);
+	int findAllForLocator(int[] arr, int len, String ownerId, int controlKindId, String uid, String xpath, String clazz, String name, String title, String text, boolean many);
 	int findAll(int[] arr, int len, String elementId, int scopeId, int propertyId, String value);
 
 	/**

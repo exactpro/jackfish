@@ -115,11 +115,11 @@ public class JnaDriverImpl
 		return title;
 	}
 
-	public String listAll(UIProxyJNA owner, ControlKind kind, String uid, String xpath, String clazz, String name, String title, String text) throws Exception
+	public String listAll(UIProxyJNA owner, ControlKind kind, String uid, String xpath, String clazz, String name, String title, String text, boolean many) throws Exception
 	{
 		long start = System.currentTimeMillis();
-		String result = this.driver.listAll(owner.getIdString(), kind.ordinal(), uid, xpath, clazz, name, title, text);
-		this.logger.info(String.format("listAll(%s,%s,%s,%s,%s,%s,%s,%s), time (ms) : %d", owner, kind, uid, xpath, clazz, name, title, text, System.currentTimeMillis() - start));
+		String result = this.driver.listAll(owner.getIdString(), kind.ordinal(), uid, xpath, clazz, name, title, text, many);
+		this.logger.info(String.format("listAll(%s,%s,%s,%s,%s,%s,%s,%s,%b), time (ms) : %d", owner, kind, uid, xpath, clazz, name, title, text, many, System.currentTimeMillis() - start));
 		checkCSharpTimes();
 		checkError();
 		return result;
@@ -163,11 +163,11 @@ public class JnaDriverImpl
 		checkError();
 	}
 
-	public int findAllForLocator(int[] arr, UIProxyJNA owner, ControlKind kind, String uid, String xpath, String clazz, String name, String title, String text) throws Exception
+	public int findAllForLocator(int[] arr, UIProxyJNA owner, ControlKind kind, String uid, String xpath, String clazz, String name, String title, String text, boolean many) throws Exception
 	{
 		long start = System.currentTimeMillis();
-		int result = this.driver.findAllForLocator(arr, arr.length, owner.getIdString(), kind.ordinal(), uid, xpath, clazz, name, title, text);
-		this.logger.info(String.format("findAllForLocator(%s,%d,%s,%s,%s,%s,%s,%s,%s,%s) = %d, time (ms) : %d", Arrays.toString(arr), arr.length, owner, kind, uid, xpath, clazz, name, title, text,result, System.currentTimeMillis() - start));
+		int result = this.driver.findAllForLocator(arr, arr.length, owner.getIdString(), kind.ordinal(), uid, xpath, clazz, name, title, text, many);
+		this.logger.info(String.format("findAllForLocator(%s,%d,%s,%s,%s,%s,%s,%s,%s,%s,%b) = %d, time (ms) : %d", Arrays.toString(arr), arr.length, owner, kind, uid, xpath, clazz, name, title, text, many, result, System.currentTimeMillis() - start));
 		checkCSharpTimes();
 		checkError();
 		return result;
