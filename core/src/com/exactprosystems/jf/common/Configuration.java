@@ -127,32 +127,40 @@ public class Configuration extends AbstractDocument
 	public static final String parametersKey		= "key";
 	public static final String parametersValue		= "value";
 
+	// TODO replace to MutableString
 	@XmlElement(name = timeFormat)
 	protected String timeFormatValue;
 	
+	// TODO replace to MutableString
 	@XmlElement(name = dateFormat)
 	protected String dateFormatValue;
 	
+	// TODO replace to MutableString
 	@XmlElement(name = dateTimeFormat)
 	protected String dateTimeFormatValue;
 	
+	// TODO replace to MutableList<MutableString>
 	@XmlElement(name = additionFormats)
 	protected String additionFormatsValue;
 	
+	// TODO replace to MutableList<MutableString>
 	@XmlElement(name = evaluatorImports)
 	protected String evaluatorImportsValue;
 	
+	// TODO replace to MutableString
 	@XmlElement(name = outputPath)
 	protected String outputPathValue;
 	
+	// TODO replace to MutableString
 	@XmlElement(name = variables)
 	protected String variablesValue;
 	
+	// TODO replace to MutableList<MutableString>
 	@XmlElement(name = userVariables)
 	protected String userVariablesValue;
 	
 	@XmlElement(name = git)
-	protected String gitValue;
+	protected MutableString gitValue;
 
 	@XmlElement(name = matrix)
 	protected MutableArrayList<MutableString> matricesValue;

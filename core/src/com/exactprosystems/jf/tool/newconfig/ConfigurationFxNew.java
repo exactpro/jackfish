@@ -102,7 +102,7 @@ public class ConfigurationFxNew extends Configuration
 
 	public String gitRemotePath()
 	{
-		return super.gitValue;
+		return super.gitValue.get();
 	}
 
 	public String getReportPath()
