@@ -17,6 +17,7 @@ import com.exactprosystems.jf.app.ApplicationPool;
 import com.exactprosystems.jf.client.ClientsPool;
 import com.exactprosystems.jf.common.Configuration;
 import com.exactprosystems.jf.common.Context;
+import com.exactprosystems.jf.common.MutableString;
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.parser.listeners.RunnerListener;
@@ -44,35 +45,27 @@ import java.util.stream.Collectors;
 
 public class ConfigurationFxNew extends Configuration
 {
-	private Main				mainModel;
-
-	public static final String	SEPARATOR				= ",";
-	public static final File	initialFile				= new File("./");
-
+	private Main									mainModel;
+	private ConfigurationNewFxController			controller;
+	private BorderPane								pane;
+	
 	// ================================================================================
 	// TODO replace this variables and methods from xml. It's only for test
 	protected List<File>			matrixFolders				= new ArrayList<>();
 	protected List<File>			libraryFoders				= new ArrayList<>();
 	protected List<File>			varsFiles					= new ArrayList<>();
-	protected File				reportFolder;
-
-	// ================================================================================
-	private ConfigurationNewFxController			controller;
-	private BorderPane								pane;
-
-	
-	private Context									context;
-
+	protected List<File>			listAppsDictionaries		= new ArrayList<>();
+	protected List<File>			listClientDictionaries		= new ArrayList<>();
+	protected File					reportFolder;
 
 	private Map<String, SupportedEntry>				supportedClients;
 	private Map<String, SupportedEntry>				supportedApps;
 	private Map<String, SupportedEntry>				supportedServices;
 	private Map<String, ConnectionStatus>			startedServices;	// TODO why is this thing here? it should be in ServicesPool
-	private List<File>								listAppsDictionaries;
-	private List<File>								listClientDictionaries;
 
 	private Map<ServiceEntry, ServiceConnection>	serviceMap	= new HashMap<>();
 
+	
 	public ConfigurationFxNew() throws Exception
 	{
 		this(null, null, null, null, null);
@@ -93,7 +86,6 @@ public class ConfigurationFxNew extends Configuration
 		super.runnerListener = runnerListener;
 
 		this.mainModel = mainModel;
-		this.context = createContext(new SilenceMatrixListener(), System.out);
 		this.pane = pane;
 	}
 
@@ -110,8 +102,7 @@ public class ConfigurationFxNew extends Configuration
 
 	public String gitRemotePath()
 	{
-		// TODO read this field from xml
-		return "http://temp.com/project.git";
+		return super.gitValue;
 	}
 
 	public String getReportPath()
@@ -127,13 +118,6 @@ public class ConfigurationFxNew extends Configuration
 	public String getClientDictionaries()
 	{
 		return this.listClientDictionaries.stream().map(ConfigurationFxNew::path).map(Common::getRelativePath).collect(Collectors.joining(SEPARATOR));
-	}
-
-	public void setPane(BorderPane pane)
-	{
-//		pane.setTop(this.menuBar);
-//		pane.setCenter(this.treeView);
-//		pane.setBottom(this.tableView);
 	}
 
 	// ==============================================================================================================================
@@ -174,24 +158,13 @@ public class ConfigurationFxNew extends Configuration
 		this.libraryFoders 	= fromString(super.librariesValue);
 		this.varsFiles 		= fromString(super.variablesValue);
 		this.reportFolder 	= new File(super.outputPathValue);
-		
-		
+		this.listAppsDictionaries = fromString(super.appDictionariesValue);
+		this.listClientDictionaries = fromString(super.clientDictionariesValue);
+
 		this.getServiceEntries().forEach(entry -> this.startedServices.put(entry.toString(), ConnectionStatus.NotStarted));
-		this.reportFolder = new File(this.get(Configuration.outputPath));
 		initController();
 	}
 	
-	private List<File> fromString(String str)
-	{
-		if (str != null)
-		{
-			return Arrays.stream(str.split(Configuration.SEPARATOR)).map(e -> new File(e)).collect(Collectors.toList());
-		}
-		
-		return Collections.emptyList();
-	}
-	
-
 	@Override
 	public void save(String fileName) throws Exception
 	{
@@ -234,11 +207,6 @@ public class ConfigurationFxNew extends Configuration
 			this.mainModel.setConfiguration(null);
 		}
 
-		if (this.context != null)
-		{
-			this.context.close();
-		}
-
 		// TODO
 		// this.controller.close();
 	}
@@ -259,86 +227,6 @@ public class ConfigurationFxNew extends Configuration
 //		this.treeView.getSelectionModel().select(selectedItem);
 	}
 
-	// ==============================================================================================================================
-
-	private void displayEvaluator()
-	{
-		try
-		{
-			this.controller.displayEvaluator(this.get(Configuration.evaluatorImports));
-		}
-		catch (Exception e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-	
-	private void displayFormat()
-	{
-		try
-		{
-			this.controller.displayFormat(this.get(timeFormat), this.get(dateFormat), this.get(dateTimeFormat), this.get(additionFormats));
-		}
-		catch (Exception e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-
-	private void displayMatrix()
-	{
-		this.controller.displayMatrix(this.matrixFolders);
-	}
-	
-	private void displayLibrary()
-	{
-		this.controller.displayLibrary(this.libraryFoders);
-	}
-	
-	private void displayVars()
-	{
-		this.controller.displayVars(this.varsFiles);
-	}
-	
-	private void displayReport()
-	{
-		this.controller.displayReport(this.reportFolder);
-	}
-	
-	private void displaySql()
-	{
-		this.controller.displaySql(getSqlEntries());
-	}
-	
-	private void displayClient()
-	{
-		this.controller.displayClient(getClientEntries());
-	}
-	
-	private void displayService()
-	{
-		this.controller.displayService(getServiceEntries());
-	}
-	
-	private void displayApp()
-	{
-		this.controller.displayApp(getAppEntries());
-	}
-	
-	private void displayFileSystem()
-	{
-		List<File> ignoreFiles = new ArrayList<>(this.matrixFolders);
-		ignoreFiles.addAll(this.libraryFoders);
-		ignoreFiles.addAll(this.varsFiles);
-		ignoreFiles.addAll(this.listAppsDictionaries);
-		ignoreFiles.addAll(this.listClientDictionaries);
-		ignoreFiles.add(this.reportFolder);
-//		Common.tryCatch(() -> this.fileSystemTreeNode.display(this.initialFile.listFiles(), ignoreFiles), "Error on display sql entries");
-
-	}
-
 	// ============================================================
 	// configuration
 	// ============================================================
@@ -349,12 +237,10 @@ public class ConfigurationFxNew extends Configuration
 
 	public void commitProject() throws Exception
 	{
-		System.out.println("commit task");
 	}
 
 	public void updateProject() throws Exception
 	{
-		System.out.println("update task");
 	}
 
 	// ============================================================
@@ -471,7 +357,6 @@ public class ConfigurationFxNew extends Configuration
 
 	public void openMatrix(File file)
 	{
-		System.out.println(String.format("MATRIX FILE %S ARE OPENED", file.getName()));
 	}
 
 	public void addNewMatrix(File parentFolder, String fileName) throws Exception
@@ -490,7 +375,6 @@ public class ConfigurationFxNew extends Configuration
 		boolean newFile = newMatrixFile.createNewFile();
 		if (newFile)
 		{
-			System.out.println(String.format("MATRIX WITH NAME '%s' WAS ADDED ON FOLDER '%s'", newFileName, path(where)));
 			displayMatrix();
 //			this.matrixTreeNode.select(newMatrixFile, item -> this.treeView.getSelectionModel().select(item));
 		}
@@ -646,6 +530,7 @@ public class ConfigurationFxNew extends Configuration
 
 	public void testClientVersion() throws Exception
 	{
+		// TODO move to the clients pool
 		this.supportedClients.clear();
 		ClientsPool clientPool = new ClientsPool(this);
 		for (ClientEntry entry : getClientEntries())
@@ -708,8 +593,9 @@ public class ConfigurationFxNew extends Configuration
 		this.displayService();
 	}
 
-	public void startService(final ServiceEntry entry) throws Exception
+	public void startService(ServiceEntry entry) throws Exception
 	{
+		// TODO move to service pool
 		try
 		{
 			final String idEntry = entry.toString();
@@ -761,7 +647,7 @@ public class ConfigurationFxNew extends Configuration
 					controller.displayService(getServiceEntries());
 					ServiceConnection serviceConnection = services.loadService(entry.toString());
 					serviceMap.put(entry, serviceConnection);
-					services.startService(context, serviceConnection, startParameters);
+					services.startService(createContext(new SilenceMatrixListener(), System.out), serviceConnection, startParameters);
 					return null;
 				}
 			};
@@ -1128,10 +1014,110 @@ public class ConfigurationFxNew extends Configuration
 		return index == -1 ? "" : fileName.substring(index + 1);
 	}
 
+	// ==============================================================================================================================
+
+	private void displayEvaluator()
+	{
+		try
+		{
+			this.controller.displayEvaluator(this.get(Configuration.evaluatorImports));
+		}
+		catch (Exception e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	private void displayFormat()
+	{
+		try
+		{
+			this.controller.displayFormat(this.get(timeFormat), this.get(dateFormat), this.get(dateTimeFormat), this.get(additionFormats));
+		}
+		catch (Exception e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	private void displayMatrix()
+	{
+		this.controller.displayMatrix(this.matrixFolders);
+	}
+	
+	private void displayLibrary()
+	{
+		this.controller.displayLibrary(this.libraryFoders);
+	}
+	
+	private void displayVars()
+	{
+		this.controller.displayVars(this.varsFiles);
+	}
+	
+	private void displayReport()
+	{
+		this.controller.displayReport(this.reportFolder);
+	}
+	
+	private void displaySql()
+	{
+		this.controller.displaySql(getSqlEntries());
+	}
+	
+	private void displayClient()
+	{
+		this.controller.displayClient(getClientEntries());
+	}
+	
+	private void displayService()
+	{
+		this.controller.displayService(getServiceEntries());
+	}
+	
+	private void displayApp()
+	{
+		this.controller.displayApp(getAppEntries());
+	}
+	
+	private void displayFileSystem()
+	{
+		List<File> ignoreFiles = new ArrayList<>();
+		
+		
+		ignoreFiles.addAll(fromString(super.matricesValue));
+		ignoreFiles.addAll(fromString(super.librariesValue));
+		ignoreFiles.addAll(fromString(super.variablesValue));
+		ignoreFiles.addAll(fromString(super.outputPathValue));
+		
+		this.controller.displayFileSystem(ignoreFiles);
+	}
+	
+	private List<File> fromString(List<MutableString> str)
+	{
+		if (str != null)
+		{
+			return str.stream().map(e -> new File(e.get())).collect(Collectors.toList());
+		}
+		
+		return Collections.emptyList();
+	}
+
+	@Deprecated
+	private List<File> fromString(String str)
+	{
+		if (str != null)
+		{
+			return Arrays.stream(str.split(Configuration.SEPARATOR)).map(e -> new File(e)).collect(Collectors.toList());
+		}
+		
+		return Collections.emptyList();
+	}
+
 	private void initController()
 	{
-		System.err.println("initController()");
-		
 		this.controller = Common.loadController(ConfigurationFxNew.class.getResource("config.fxml"));
 		this.controller.init(this, this.pane);
 	}

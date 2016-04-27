@@ -88,8 +88,10 @@ public class Configuration extends AbstractDocument
 	public static final String evaluatorImports 	= "evaluatorImports";
 	public static final String outputPath 			= "outputPath";
 	public static final String variables 			= "variables";
-	public static final String matrices 			= "matrices";
-	public static final String libraries 			= "libraries";
+	public static final String matrix 				= "matrix";
+	public static final String appDict 				= "appDict";
+	public static final String clientDict			= "clientDict";
+	public static final String library 				= "library";
 	public static final String userVariables 		= "userVariables";
 	public static final String git 					= "git";
 
@@ -106,7 +108,7 @@ public class Configuration extends AbstractDocument
 	
 	public static final String clientEntry			= "clientEntry";
 	public static final String clientDescription 	= "clientDescription";
-	public static final String clientJar				= "clientJar";
+	public static final String clientJar			= "clientJar";
 	public static final String clientDictionary		= "clientDictionary";
 	public static final String clientLimit			= "clientLimit";
 
@@ -149,15 +151,21 @@ public class Configuration extends AbstractDocument
 	@XmlElement(name = userVariables)
 	protected String userVariablesValue;
 	
-	@XmlElement(name = matrices)
-	protected String matricesValue;
-	
-	@XmlElement(name = libraries)
-	protected String librariesValue;
-	
 	@XmlElement(name = git)
 	protected String gitValue;
 
+	@XmlElement(name = matrix)
+	protected MutableArrayList<MutableString> matricesValue;
+	
+	@XmlElement(name = appDict)
+	protected MutableArrayList<MutableString> appDictionariesValue;
+
+	@XmlElement(name = clientDict)
+	protected MutableArrayList<MutableString> clientDictionariesValue;
+
+	@XmlElement(name = library)
+	protected MutableArrayList<MutableString> librariesValue;
+	
 	//------------------------------------------------------------------------------------------------------------------
 	// new technology
 	//------------------------------------------------------------------------------------------------------------------
@@ -438,6 +446,13 @@ public class Configuration extends AbstractDocument
 		this.serviceEntriesValue		= new MutableArrayList<ServiceEntry>();
 		this.appEntriesValue 			= new MutableArrayList<AppEntry>();
 		
+		this.userVariablesValue			= null;
+		this.matricesValue				= new MutableArrayList<MutableString>();
+		this.appDictionariesValue		= new MutableArrayList<MutableString>();
+		this.clientDictionariesValue	= new MutableArrayList<MutableString>();
+		this.librariesValue				= new MutableArrayList<MutableString>();
+
+		
 		this.globals 					= new HashMap<String, Object>();
 		
 		this.clients 					= new ClientsPool(this);
@@ -570,10 +585,9 @@ public class Configuration extends AbstractDocument
 		{
 			return;
 		}
-		String[] folders = this.librariesValue.split(SEPARATOR);
-		for (String folder : folders)
+		for (MutableString folder : this.librariesValue)
 		{
-			File folderFile = new File(folder);
+			File folderFile = new File(folder.get());
 			if (folderFile.exists() && folderFile.isDirectory())
 			{
 				File[] libFiles = folderFile.listFiles(new FilenameFilter()
@@ -820,7 +834,11 @@ public class Configuration extends AbstractDocument
 				|| this.sqlEntriesValue.isChanged()
 				|| this.clientEntriesValue.isChanged()
 				|| this.serviceEntriesValue.isChanged()
-				|| this.appEntriesValue.isChanged();
+				|| this.appEntriesValue.isChanged()
+				|| this.matricesValue.isChanged()
+				|| this.appDictionariesValue.isChanged()
+				|| this.clientDictionariesValue.isChanged()
+				|| this.librariesValue.isChanged();
 	}
 
 	@Override
@@ -834,6 +852,10 @@ public class Configuration extends AbstractDocument
 		this.clientEntriesValue.saved();
 		this.serviceEntriesValue.saved();
 		this.sqlEntriesValue.saved();
+		this.matricesValue.saved();
+		this.appDictionariesValue.saved();
+		this.clientDictionariesValue.saved();
+		this.librariesValue.saved();
 	}
 
 	//------------------------------------------------------------------------------------------------------------------

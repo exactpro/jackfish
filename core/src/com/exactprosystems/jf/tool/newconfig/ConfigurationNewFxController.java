@@ -2,6 +2,8 @@ package com.exactprosystems.jf.tool.newconfig;
 
 import java.io.File;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -10,15 +12,14 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.control.TreeItem;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Pane;
 
+import com.exactprosystems.jf.common.Configuration;
 import com.exactprosystems.jf.common.Configuration.AppEntry;
 import com.exactprosystems.jf.common.Configuration.ClientEntry;
 import com.exactprosystems.jf.common.Configuration.ServiceEntry;
 import com.exactprosystems.jf.common.Configuration.SqlEntry;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
-import com.exactprosystems.jf.tool.custom.tab.CustomTab;
 import com.exactprosystems.jf.tool.newconfig.nodes.AppTreeNode;
 import com.exactprosystems.jf.tool.newconfig.nodes.ClientTreeNode;
 import com.exactprosystems.jf.tool.newconfig.nodes.EvaluatorTreeNode;
@@ -36,7 +37,6 @@ import com.exactprosystems.jf.tool.newconfig.testing.TestingConnectionFxControll
 
 public class ConfigurationNewFxController implements Initializable, ContainingParent
 {
-	private Parent							content;
 	private ConfigurationFxNew				model;
 
 	private ParametersTableView				tableView;
@@ -59,7 +59,7 @@ public class ConfigurationNewFxController implements Initializable, ContainingPa
 	@Override
 	public void setParent(Parent parent)
 	{
-		this.content = parent;
+		// don't use this. all content is built by code
 	}
 
 	@Override
@@ -69,36 +69,22 @@ public class ConfigurationNewFxController implements Initializable, ContainingPa
 
 	public void init(ConfigurationFxNew configuration, BorderPane pane)
 	{
-		this.model = configuration;
-		this.tableView = new ParametersTableView();
-		this.treeView = new ConfigurationTreeView(this.tableView, this.model);
-		this.menuBar = new ConfigurationToolBar(this.model);
+		this.model 		= configuration;
+		this.tableView 	= new ParametersTableView();
+		this.treeView 	= new ConfigurationTreeView(this.tableView, this.model);
+		this.menuBar 	= new ConfigurationToolBar(this.model);
 		
 		pane.setTop(this.menuBar);
 		pane.setCenter(this.treeView);
 		pane.setBottom(this.tableView);
 		
-		initEvaluator();
-		initFormat();
-		initMatrix();
-		initLibrary();
-		initVars();
-		initReport();
-		initSql();
-		initClient();
-		initService();
-		initApp();
-		this.treeView.getRoot().getChildren().add(new TreeItem<>(new SeparatorTreeNode()));
-		initFileSystem();
+		initTreeView();
 	}
-	
-	
-
 
 	// ============================================================
 	// display* methods
 	// ============================================================
-	public void displayEvaluator(String imports) // TODO model shouldn't show any messages, so it shouldn't do try-catch
+	public void displayEvaluator(String imports) 
 	{
 		Common.tryCatch(() -> this.evaluatorTreeNode.display(imports), "Error on display evaluator");
 	}
@@ -154,104 +140,76 @@ public class ConfigurationNewFxController implements Initializable, ContainingPa
 		Common.tryCatch(() -> this.reportTreeNode.display(reportFolder), "Error on display report folder");
 	}
 
-	public void displayFileSystem()
+	public void displayFileSystem(List<File> ignoreFolders)
 	{
-//		List<File> ignoreFiles = new ArrayList<>(this.matrixFolders);
-//		ignoreFiles.addAll(this.libraryFoders);
-//		ignoreFiles.addAll(this.varsFiles);
-//		ignoreFiles.addAll(this.listAppsDictionaries);
-//		ignoreFiles.addAll(this.listClientDictionaries);
-//		ignoreFiles.add(this.reportFolder);
-//		Common.tryCatch(() -> this.fileSystemTreeNode.display(this.initialFile.listFiles(), ignoreFiles), "Error on display sql entries");
-
+		Common.tryCatch(() -> this.fileSystemTreeNode.display(new File(".").listFiles(), ignoreFolders), "Error on display sql entries");
 	}
 
-
-	private void initReport()
-	{
-		TreeItem<TreeNode> reportTreeItem = new TreeItem<>();
-		this.reportTreeNode = new ReportTreeNode(this.model, reportTreeItem);
-		reportTreeItem.setValue(reportTreeNode);
-		this.treeView.getRoot().getChildren().add(reportTreeItem);
-	}
-
-	private void initFileSystem()
-	{
-		TreeItem<TreeNode> fileSystemTreeItem = new TreeItem<>();
-		this.fileSystemTreeNode = new FileSystemTreeNode(this.model, this.treeView.getRoot());
-		fileSystemTreeItem.setValue(fileSystemTreeNode);
-	}
-
-	private void initService()
-	{
-		TreeItem<TreeNode> serviceTreeItem = new TreeItem<>();
-		this.serviceTreeNode = new ServiceTreeNode(this.model, serviceTreeItem);
-		serviceTreeItem.setValue(serviceTreeNode);
-		this.treeView.getRoot().getChildren().add(serviceTreeItem);
-	}
-
-	private void initClient()
-	{
-		TreeItem<TreeNode> clientTreeItem = new TreeItem<>();
-		this.clientTreeNode = new ClientTreeNode(this.model, clientTreeItem);
-		clientTreeItem.setValue(clientTreeNode);
-		this.treeView.getRoot().getChildren().add(clientTreeItem);
-	}
-
-	private void initApp()
-	{
-		TreeItem<TreeNode> appTreeItem = new TreeItem<>();
-		this.appTreeNode = new AppTreeNode(this.model, appTreeItem);
-		appTreeItem.setValue(appTreeNode);
-		this.treeView.getRoot().getChildren().add(appTreeItem);
-	}
-
-	private void initSql()
-	{
-		TreeItem<TreeNode> sqlTreeItem = new TreeItem<>();
-		this.sqlTreeNode = new SqlTreeNode(this.model, sqlTreeItem);
-		sqlTreeItem.setValue(sqlTreeNode);
-		this.treeView.getRoot().getChildren().add(sqlTreeItem);
-	}
-
-	private void initVars()
-	{
-		TreeItem<TreeNode> varsTreeItem = new TreeItem<>();
-		this.varsTreeNode = new VariablesTreeNode(this.model, varsTreeItem);
-		varsTreeItem.setValue(this.varsTreeNode);
-		this.treeView.getRoot().getChildren().add(varsTreeItem);
-	}
-
-	private void initLibrary()
-	{
-		TreeItem<TreeNode> libraryTreeItem = new TreeItem<>();
-		this.libTreeNode = new LibraryTreeNode(this.model, libraryTreeItem);
-		libraryTreeItem.setValue(this.libTreeNode);
-		this.treeView.getRoot().getChildren().add(libraryTreeItem);
-	}
-
-	private void initMatrix()
-	{
-		TreeItem<TreeNode> matrixTreeItem = new TreeItem<>();
-		this.matrixTreeNode = new MatrixTreeNode(this.model, matrixTreeItem);
-		matrixTreeItem.setValue(this.matrixTreeNode);
-		this.treeView.getRoot().getChildren().add(matrixTreeItem);
-	}
-
-	private void initFormat()
-	{
-		TreeItem<TreeNode> formatTreeItem = new TreeItem<>();
-		this.formatTreeNode = new FormatTreeNode(this.model, formatTreeItem);
-		formatTreeItem.setValue(this.formatTreeNode);
-		this.treeView.getRoot().getChildren().add(formatTreeItem);
-	}
-
-	private void initEvaluator()
+	private void initTreeView()
 	{
 		TreeItem<TreeNode> evaluatorTreeItem = new TreeItem<>();
 		this.evaluatorTreeNode = new EvaluatorTreeNode(this.model, evaluatorTreeItem);
-		evaluatorTreeItem.setValue(this.evaluatorTreeNode);
-		this.treeView.getRoot().getChildren().add(evaluatorTreeItem);
+		evaluatorTreeItem.setValue(evaluatorTreeNode);
+		
+		TreeItem<TreeNode> formatTreeItem = new TreeItem<>();
+		this.formatTreeNode = new FormatTreeNode(this.model, formatTreeItem);
+		formatTreeItem.setValue(this.formatTreeNode);
+		
+		TreeItem<TreeNode> matrixTreeItem = new TreeItem<>();
+		this.matrixTreeNode = new MatrixTreeNode(this.model, matrixTreeItem);
+		matrixTreeItem.setValue(this.matrixTreeNode);
+
+		TreeItem<TreeNode> libraryTreeItem = new TreeItem<>();
+		this.libTreeNode = new LibraryTreeNode(this.model, libraryTreeItem);
+		libraryTreeItem.setValue(this.libTreeNode);
+
+		TreeItem<TreeNode> varsTreeItem = new TreeItem<>();
+		this.varsTreeNode = new VariablesTreeNode(this.model, varsTreeItem);
+		varsTreeItem.setValue(this.varsTreeNode);
+
+		TreeItem<TreeNode> reportTreeItem = new TreeItem<>();
+		this.reportTreeNode = new ReportTreeNode(this.model, reportTreeItem);
+		reportTreeItem.setValue(reportTreeNode);
+
+		TreeItem<TreeNode> sqlTreeItem = new TreeItem<>();
+		this.sqlTreeNode = new SqlTreeNode(this.model, sqlTreeItem);
+		sqlTreeItem.setValue(sqlTreeNode);
+
+		TreeItem<TreeNode> clientTreeItem = new TreeItem<>();
+		this.clientTreeNode = new ClientTreeNode(this.model, clientTreeItem);
+		clientTreeItem.setValue(clientTreeNode);
+
+		TreeItem<TreeNode> serviceTreeItem = new TreeItem<>();
+		this.serviceTreeNode = new ServiceTreeNode(this.model, serviceTreeItem);
+		serviceTreeItem.setValue(serviceTreeNode);
+
+		TreeItem<TreeNode> appTreeItem = new TreeItem<>();
+		this.appTreeNode = new AppTreeNode(this.model, appTreeItem);
+		appTreeItem.setValue(appTreeNode);
+
+		TreeItem<TreeNode> separatorTreeItem = new TreeItem<>(new SeparatorTreeNode());
+		
+		TreeItem<TreeNode> fileSystemTreeItem = new TreeItem<>();
+		this.fileSystemTreeNode = new FileSystemTreeNode(this.model, this.treeView.getRoot());
+		fileSystemTreeItem.setValue(fileSystemTreeNode);
+
+		this.treeView.getRoot().getChildren().addAll(
+				Arrays.asList(
+					evaluatorTreeItem, 
+					formatTreeItem,
+					matrixTreeItem,
+					libraryTreeItem,
+					varsTreeItem,
+					reportTreeItem,
+					sqlTreeItem,
+					clientTreeItem,
+					serviceTreeItem,
+					appTreeItem,
+					separatorTreeItem,
+					fileSystemTreeItem)
+				);
+		
 		this.treeView.getRoot().setExpanded(true);
 	}
+
 }

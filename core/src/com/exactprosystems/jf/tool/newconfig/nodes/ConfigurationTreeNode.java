@@ -21,6 +21,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -43,7 +44,7 @@ public class ConfigurationTreeNode extends TreeNode
 		refresh.setOnAction(e -> Common.tryCatch(() -> model.refresh(), "Error on refresh configuration"));
 
 		menu.getItems().addAll(refresh, new SeparatorMenuItem());
-		menu.getItems().addAll(ConfigurationTreeView.gitContextMenu(ConfigurationFxNew.initialFile).getItems());
+		menu.getItems().addAll(ConfigurationTreeView.gitContextMenu(new File(".")).getItems());
 		return Optional.of(menu);
 	}
 
