@@ -88,7 +88,9 @@ public class Configuration extends AbstractDocument
 	@Deprecated
 	public static final String evaluatorImports 	= "evaluatorImports";
 	public static final String imports 				= "import";
+	@Deprecated
 	public static final String outputPath 			= "outputPath";
+	public static final String reports 				= "reports";
 	public static final String variables 			= "variables";
 	public static final String matrix 				= "matrix";
 	public static final String appDict 				= "appDict";
@@ -169,6 +171,8 @@ public class Configuration extends AbstractDocument
 	
 	
 	
+	@XmlElement(name = reports)
+	protected MutableString reportsValue;
 	
 	@XmlElement(name = git)
 	protected MutableString gitValue;
@@ -458,16 +462,20 @@ public class Configuration extends AbstractDocument
 	{
 		super(fileName, null);
 
+		this.userVariablesValue			= null;
+		this.libEntriesValue			= new MutableArrayList<LibEntry>();
+
 		this.settings 					= settings;
 		this.changed 					= false;
+		
+		this.reportsValue				= new MutableString();
+		this.gitValue					= new MutableString();
 
-		this.libEntriesValue			= new MutableArrayList<LibEntry>();
 		this.sqlEntriesValue 			= new MutableArrayList<SqlEntry>();
 		this.clientEntriesValue			= new MutableArrayList<ClientEntry>();
 		this.serviceEntriesValue		= new MutableArrayList<ServiceEntry>();
 		this.appEntriesValue 			= new MutableArrayList<AppEntry>();
 		
-		this.userVariablesValue			= null;
 		this.importsValue				= new MutableArrayList<MutableString>();
 		this.userVarsValue				= new MutableArrayList<MutableString>();
 		this.matricesValue				= new MutableArrayList<MutableString>();
@@ -854,6 +862,8 @@ public class Configuration extends AbstractDocument
 		}
 
 		return this.libEntriesValue.isChanged()
+				|| this.gitValue.isChanged()
+				|| this.reportsValue.isChanged()
 				|| this.sqlEntriesValue.isChanged()
 				|| this.clientEntriesValue.isChanged()
 				|| this.serviceEntriesValue.isChanged()
@@ -873,6 +883,8 @@ public class Configuration extends AbstractDocument
 		
 		this.changed = false;
 		this.libEntriesValue.saved();
+		this.gitValue.saved();
+		this.reportsValue.saved();
 		this.appEntriesValue.saved();
 		this.clientEntriesValue.saved();
 		this.serviceEntriesValue.saved();
