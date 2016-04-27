@@ -536,8 +536,7 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 	{
 		try
 		{
-			UIProxyJNA cell = foundCellInTable(component, column, row);
-			this.driver.mouse(cell, action, Integer.MIN_VALUE, Integer.MAX_VALUE);
+			this.driver.mouseTableCell(component, column, row, action);
 			return true;
 		}
 		catch (Exception e)
@@ -553,8 +552,7 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 	{
 		try
 		{
-			UIProxyJNA cell = foundCellInTable(component, column, row);
-			this.driver.doPatternCall(cell, WindowPattern.ValuePattern, "SetValue", text, 0);
+			this.driver.textTableCell(component, column, row, text);
 			return true;
 		}
 		catch (Exception e)
@@ -570,10 +568,7 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 	{
 		try
 		{
-			List<UIProxyJNA> rows = getRows(component);
-			UIProxyJNA needRow = rows.get(row);
-			List<String> needRows = getRow(needRow, false);
-			return needRows.get(column);
+			return this.driver.getValueTableCell(component, column, row);
 		}
 		catch (Exception e)
 		{

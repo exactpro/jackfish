@@ -69,6 +69,33 @@ public class JnaDriverImpl
 		}
 	}
 
+	//region utils methods
+	private void checkError() throws Exception
+	{
+		String error = this.driver.lastError();
+		if (error != null)
+		{
+			throw new Exception(error);
+		}
+	}
+
+	private void checkCSharpTimes()
+	{
+		String methodTime = this.driver.methodTime();
+		if (methodTime != null)
+		{
+			this.logger.info("method time {" + methodTime + "}");
+		}
+		String uiAutomationTIme = this.driver.uiAutomationTime();
+		if (uiAutomationTIme != null)
+		{
+			this.logger.info("uiAutomation time : {" + uiAutomationTIme + "}");
+		}
+	}
+
+	//endregion
+
+	//region application methods
 	public void connect(String title) throws Exception
 	{
 		long start = System.currentTimeMillis();
@@ -115,6 +142,10 @@ public class JnaDriverImpl
 		return title;
 	}
 
+	//endregion
+
+	//region find methods
+
 	public String listAll(UIProxyJNA owner, ControlKind kind, String uid, String xpath, String clazz, String name, String title, String text, boolean many) throws Exception
 	{
 		long start = System.currentTimeMillis();
@@ -125,11 +156,21 @@ public class JnaDriverImpl
 		return result;
 	}
 
-	public String elementAttribute(UIProxyJNA element, AttributeKind kind) throws Exception
+	public int findAllForLocator(int[] arr, UIProxyJNA owner, ControlKind kind, String uid, String xpath, String clazz, String name, String title, String text, boolean many) throws Exception
 	{
 		long start = System.currentTimeMillis();
-		String result = this.driver.elementAttribute(element.getIdString(), kind.ordinal());
-		this.logger.info(String.format("elementAttribute(%s,%s) = %s, time (ms) : %d", element, kind, result, System.currentTimeMillis() - start));
+		int result = this.driver.findAllForLocator(arr, arr.length, owner.getIdString(), kind.ordinal(), uid, xpath, clazz, name, title, text, many);
+		this.logger.info(String.format("findAllForLocator(%s,%d,%s,%s,%s,%s,%s,%s,%s,%s,%b) = %d, time (ms) : %d", Arrays.toString(arr), arr.length, owner, kind, uid, xpath, clazz, name, title, text, many, result, System.currentTimeMillis() - start));
+		checkCSharpTimes();
+		checkError();
+		return result;
+	}
+
+	public int findAll(int[] arr, UIProxyJNA owner, WindowTreeScope scope, WindowProperty property, String value) throws Exception
+	{
+		long start = System.currentTimeMillis();
+		int result = this.driver.findAll(arr, arr.length, owner.getIdString(), scope.getValue(), property.getId(), value);
+		this.logger.info(String.format("findAll(%s,%d,%s,%s,%s,%s) = %s, time (ms) : %d", Arrays.toString(arr), arr.length, owner, scope, property, value, result, System.currentTimeMillis() - start));
 		checkCSharpTimes();
 		checkError();
 		return result;
@@ -140,6 +181,18 @@ public class JnaDriverImpl
 		long start = System.currentTimeMillis();
 		int result = this.driver.elementByCoords(resultId, resultId.length, kind.ordinal(), x, y);
 		this.logger.info(String.format("elementByCoords(%s,%s,%d,%d) = %d, time (ms) : %d", Arrays.toString(resultId), kind, x, y, result, System.currentTimeMillis() - start));
+		checkCSharpTimes();
+		checkError();
+		return result;
+	}
+
+	//endregion
+
+	public String elementAttribute(UIProxyJNA element, AttributeKind kind) throws Exception
+	{
+		long start = System.currentTimeMillis();
+		String result = this.driver.elementAttribute(element.getIdString(), kind.ordinal());
+		this.logger.info(String.format("elementAttribute(%s,%s) = %s, time (ms) : %d", element, kind, result, System.currentTimeMillis() - start));
 		checkCSharpTimes();
 		checkError();
 		return result;
@@ -161,26 +214,6 @@ public class JnaDriverImpl
 		this.logger.info(String.format("mouse(%s,%s,%d,%d), time (ms) : %d", element, action, x, y, System.currentTimeMillis() - start));
 		checkCSharpTimes();
 		checkError();
-	}
-
-	public int findAllForLocator(int[] arr, UIProxyJNA owner, ControlKind kind, String uid, String xpath, String clazz, String name, String title, String text, boolean many) throws Exception
-	{
-		long start = System.currentTimeMillis();
-		int result = this.driver.findAllForLocator(arr, arr.length, owner.getIdString(), kind.ordinal(), uid, xpath, clazz, name, title, text, many);
-		this.logger.info(String.format("findAllForLocator(%s,%d,%s,%s,%s,%s,%s,%s,%s,%s,%b) = %d, time (ms) : %d", Arrays.toString(arr), arr.length, owner, kind, uid, xpath, clazz, name, title, text, many, result, System.currentTimeMillis() - start));
-		checkCSharpTimes();
-		checkError();
-		return result;
-	}
-
-	public int findAll(int[] arr, UIProxyJNA owner, WindowTreeScope scope, WindowProperty property, String value) throws Exception
-	{
-		long start = System.currentTimeMillis();
-		int result = this.driver.findAll(arr, arr.length, owner.getIdString(), scope.getValue(), property.getId(), value);
-		this.logger.info(String.format("findAll(%s,%d,%s,%s,%s,%s) = %s, time (ms) : %d", Arrays.toString(arr), arr.length, owner, scope, property, value, result, System.currentTimeMillis() - start));
-		checkCSharpTimes();
-		checkError();
-		return result;
 	}
 
 	/**
@@ -247,28 +280,36 @@ public class JnaDriverImpl
 		checkError();
 	}
 
-	private void checkError() throws Exception
+	//region table methods
+	public String getValueTableCell(UIProxyJNA table, int column, int row) throws Exception
 	{
-		String error = this.driver.lastError();
-		if (error != null)
-		{
-			throw new Exception(error);
-		}
+		long start = System.currentTimeMillis();
+		String result = this.driver.getValueTableCell(table.getIdString(), column, row);
+		this.logger.info(String.format("getValueTableCell(%s,%d,%d) time(ms) : %d", table, column, row, System.currentTimeMillis() - start));
+		checkCSharpTimes();
+		checkError();
+		return result;
 	}
 
-	private void checkCSharpTimes()
+	public void mouseTableCell(UIProxyJNA table, int column, int row, MouseAction mouseAction) throws Exception
 	{
-		String methodTime = this.driver.methodTime();
-		if (methodTime != null)
-		{
-			this.logger.info("method time {" + methodTime + "}");
-		}
-		String uiAutomationTIme = this.driver.uiAutomationTime();
-		if (uiAutomationTIme != null)
-		{
-			this.logger.info("uiAutomation time : {" + uiAutomationTIme + "}");
-		}
+		long start = System.currentTimeMillis();
+		this.driver.mouseTableCell(table.getIdString(), column, row, mouseAction.getId());
+		this.logger.info(String.format("mouseTableCell(%s,%d,%d, %s) time(ms) : %d", table, column, row, mouseAction, System.currentTimeMillis() - start));
+		checkCSharpTimes();
+		checkError();
 	}
+
+	public void textTableCell(UIProxyJNA table, int column, int row, String text) throws Exception
+	{
+		long start = System.currentTimeMillis();
+		this.driver.textTableCell(table.getIdString(), column, row, text);
+		this.logger.info(String.format("textTableCell(%s,%d,%d, %s) time(ms) : %d", table, column, row, text, System.currentTimeMillis() - start));
+		checkCSharpTimes();
+		checkError();
+	}
+
+	//endregion
 
 	private JnaDriver driver;
 

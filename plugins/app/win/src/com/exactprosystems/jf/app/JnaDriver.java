@@ -3,22 +3,30 @@ package com.exactprosystems.jf.app;
 import com.sun.jna.Library;
 
 public interface JnaDriver extends Library {
+	//region util methods
 	String lastError();
 	String methodTime();
 	String uiAutomationTime();
+	//endregion
 
+	//region application methods
 	void connect(String title);
 	void run(String exec, String workDir, String param);
 	void stop();
 	void refresh();
 	String title();
+	//endregion
+
+	//region find methods
 	String listAll(String ownerId, int controlKindId, String uid, String xpath, String clazz, String name, String title, String text, boolean many);
-	String elementAttribute(String elementId, int partId);
-	int elementByCoords(int[] resultId, int length, int controlKindId, int x, int y);
-	void sendKey(String key);
-	void mouse(String elementId, int actionId, int x, int y);
 	int findAllForLocator(int[] arr, int len, String ownerId, int controlKindId, String uid, String xpath, String clazz, String name, String title, String text, boolean many);
 	int findAll(int[] arr, int len, String elementId, int scopeId, int propertyId, String value);
+	int elementByCoords(int[] resultId, int length, int controlKindId, int x, int y);
+	//endregion
+
+	String elementAttribute(String elementId, int partId);
+	void sendKey(String key);
+	void mouse(String elementId, int actionId, int x, int y);
 
 	/**
 	 * if @param c == -1 -> arg is null;
@@ -33,5 +41,11 @@ public interface JnaDriver extends Library {
 	int getImage(int[] arr, int len, String id);
 
 	void clearCache();
+
+	//region table methods
+	String getValueTableCell(String elementId, int column, int row);
+	void mouseTableCell(String elementId, int column, int row, int mouseAction);
+	void textTableCell(String elementId, int column, int row, String text);
+	//endregion
 
 }
