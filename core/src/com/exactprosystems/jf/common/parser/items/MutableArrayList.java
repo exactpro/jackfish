@@ -34,6 +34,11 @@ public class MutableArrayList<T extends Mutable> extends ArrayList<T> implements
 		this.changed = false;
 	}
 
+	public void from(Collection<? extends T> c)
+	{
+		clear();
+		addAll(c);
+	}
 	
 	//==============================================================================================
 	// implements ArrayList

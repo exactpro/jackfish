@@ -236,16 +236,12 @@ public class ConfigurationFxNew extends Configuration
 	// ============================================================
 	public void addNewEvaluatorImport(String newImport) throws Exception
 	{
-		String lastImports = this.get(Configuration.evaluatorImports);
-		String newImports = lastImports + SEPARATOR + newImport;
-		this.changeImports(lastImports, newImports);
+		addString(newImport, super.importsValue, this::displayEvaluator);
 	}
 
 	public void removeImport(String evaluatorImport) throws Exception
 	{
-		String lastImports = this.get(Configuration.evaluatorImports);
-		String newImports = Arrays.stream(lastImports.split(SEPARATOR)).filter(str -> !evaluatorImport.equals(str)).collect(Collectors.joining(SEPARATOR));
-		this.changeImports(lastImports, newImports);
+		removeStr(evaluatorImport, super.importsValue, this::displayEvaluator);
 	}
 
 	public void replaceEvaluatorImport(String oldValue, String newValue) throws Exception

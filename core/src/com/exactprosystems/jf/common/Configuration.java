@@ -85,7 +85,9 @@ public class Configuration extends AbstractDocument
 	public static final String dateFormat			= "dateFormat";
 	public static final String dateTimeFormat		= "dateTimeFormat";
 	public static final String additionFormats		= "additionFormats";
+	@Deprecated
 	public static final String evaluatorImports 	= "evaluatorImports";
+	public static final String imports 				= "import";
 	public static final String outputPath 			= "outputPath";
 	public static final String variables 			= "variables";
 	public static final String matrix 				= "matrix";
@@ -145,7 +147,7 @@ public class Configuration extends AbstractDocument
 	@XmlElement(name = additionFormats)
 	protected String additionFormatsValue;
 	
-	// TODO replace to MutableList<MutableString>
+	@Deprecated
 	@XmlElement(name = evaluatorImports)
 	protected String evaluatorImportsValue;
 	
@@ -161,8 +163,18 @@ public class Configuration extends AbstractDocument
 	@XmlElement(name = userVariables)
 	protected String userVariablesValue;
 	
+	//------------------------------------------------------------------------------------------------------------------
+	// new technology
+	//------------------------------------------------------------------------------------------------------------------
+	
+	
+	
+	
 	@XmlElement(name = git)
 	protected MutableString gitValue;
+
+	@XmlElement(name = imports)
+	protected MutableArrayList<MutableString> importsValue;
 
 	@XmlElement(name = userVars)
 	protected MutableArrayList<MutableString> userVarsValue;
@@ -178,10 +190,6 @@ public class Configuration extends AbstractDocument
 
 	@XmlElement(name = library)
 	protected MutableArrayList<MutableString> librariesValue;
-	
-	//------------------------------------------------------------------------------------------------------------------
-	// new technology
-	//------------------------------------------------------------------------------------------------------------------
 	
 	@XmlAccessorType(XmlAccessType.NONE)
 	public static abstract class Entry implements Mutable
@@ -460,6 +468,7 @@ public class Configuration extends AbstractDocument
 		this.appEntriesValue 			= new MutableArrayList<AppEntry>();
 		
 		this.userVariablesValue			= null;
+		this.importsValue				= new MutableArrayList<MutableString>();
 		this.userVarsValue				= new MutableArrayList<MutableString>();
 		this.matricesValue				= new MutableArrayList<MutableString>();
 		this.appDictionariesValue		= new MutableArrayList<MutableString>();
@@ -849,6 +858,7 @@ public class Configuration extends AbstractDocument
 				|| this.clientEntriesValue.isChanged()
 				|| this.serviceEntriesValue.isChanged()
 				|| this.appEntriesValue.isChanged()
+				|| this.importsValue.isChanged()
 				|| this.userVarsValue.isChanged()
 				|| this.matricesValue.isChanged()
 				|| this.appDictionariesValue.isChanged()
@@ -867,6 +877,7 @@ public class Configuration extends AbstractDocument
 		this.clientEntriesValue.saved();
 		this.serviceEntriesValue.saved();
 		this.sqlEntriesValue.saved();
+		this.importsValue.saved();
 		this.userVarsValue.saved();
 		this.matricesValue.saved();
 		this.appDictionariesValue.saved();
@@ -920,12 +931,14 @@ public class Configuration extends AbstractDocument
 
 
 	
+	@Deprecated
 	public String get(String name) throws Exception
 	{
 		Object res = get(Configuration.class, this, name);
 		return res == null ? "" : res.toString();
 	}
 	
+	@Deprecated
 	public void set(String name, Object value) throws Exception
 	{
 		set(Configuration.class, this, name, value);
@@ -933,11 +946,13 @@ public class Configuration extends AbstractDocument
 	}
 	
 
+	@Deprecated
 	public LibEntry getLibEntry(String name) throws Exception
 	{
 		return getEntry(name, this.libEntriesValue);
 	}
 
+	@Deprecated
 	public List<LibEntry> getLibEntries()
 	{
 		return this.libEntriesValue;
@@ -1146,6 +1161,7 @@ public class Configuration extends AbstractDocument
 		}
 	}
 
+	@Deprecated
 	private static Object get(Class<?> clazz, Object object, String name) throws Exception
 	{
 		Field[] fields = clazz.getDeclaredFields();
@@ -1171,6 +1187,7 @@ public class Configuration extends AbstractDocument
 		return null;
 	}
     
+	@Deprecated
 	private static void set(Class<?> clazz, Object object, String name, Object value) throws Exception
 	{
 		Field[] fields = clazz.getDeclaredFields();
@@ -1195,6 +1212,7 @@ public class Configuration extends AbstractDocument
 		}
 	}
 	
+	@Deprecated
     private void setAll(Configuration config)
 	{
 		Field[] fields = Configuration.class.getDeclaredFields();
