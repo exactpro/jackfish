@@ -7,6 +7,8 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.exactprosystems.jf.tool.newconfig.nodes;
 
+import com.exactprosystems.jf.common.MutableString;
+import com.exactprosystems.jf.common.parser.items.MutableArrayList;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.newconfig.ConfigurationFxNew;
@@ -49,13 +51,13 @@ public class LibraryTreeNode extends TreeNode
 		return Optional.of(new Image(CssVariables.Icons.LIBRARY_ICON));
 	}
 
-	public void display(List<File> files)
+	public void display(MutableArrayList<MutableString> librariesValue)
 	{
 		this.treeItem.getChildren().clear();
 		Function<File, ContextMenu> menuTopFolder = file -> {
 			ContextMenu menu = new ContextMenu();
 			MenuItem itemRemove = new MenuItem("Remove library dir", new ImageView(new Image(CssVariables.Icons.REMOVE_PARAMETER_ICON)));
-			itemRemove.setOnAction(e -> Common.tryCatch(() -> model.removeLibraryDirectory(file), "Error on remove library directory"));
+			itemRemove.setOnAction(e -> Common.tryCatch(() -> model.removeLibraryDirectory(file.getName()), "Error on remove library directory"));
 			menu.getItems().addAll(itemRemove);
 			return menu;
 		};
@@ -93,7 +95,7 @@ public class LibraryTreeNode extends TreeNode
 			return menu;
 		};
 		
-		files.forEach(file -> new BuildTree(file, this.treeItem)
+		librariesValue.forEach(file -> new BuildTree(new File(file.get()), this.treeItem)
 				.doubleClickEvent(f -> () -> this.model.openLibrary(f))
 				.fileFilter(f -> ConfigurationFxNew.getExtension(f.getAbsolutePath()).equals(ConfigurationFxNew.matrixExt))
 				.menuTopFolder(menuTopFolder)

@@ -51,11 +51,6 @@ public class ConfigurationFxNew extends Configuration
 	
 	// ================================================================================
 	// TODO replace this variables and methods from xml. It's only for test
-	protected List<File>			matrixFolders				= new ArrayList<>();
-	protected List<File>			libraryFoders				= new ArrayList<>();
-	protected List<File>			varsFiles					= new ArrayList<>();
-	protected List<File>			listAppsDictionaries		= new ArrayList<>();
-	protected List<File>			listClientDictionaries		= new ArrayList<>();
 	protected File					reportFolder;
 
 	private Map<String, SupportedEntry>				supportedClients;
@@ -79,8 +74,6 @@ public class ConfigurationFxNew extends Configuration
 		this.supportedApps = new HashMap<>();
 		this.supportedServices = new HashMap<>();
 		this.startedServices = new HashMap<>();
-		this.listAppsDictionaries = new ArrayList<>();
-		this.listClientDictionaries = new ArrayList<>();
 
 		super.listener = DialogsHelper::showError;
 		super.runnerListener = runnerListener;
@@ -92,12 +85,12 @@ public class ConfigurationFxNew extends Configuration
 	// ================================================================================
 	public String matrixToString()
 	{
-		return this.matrixFolders.stream().map(ConfigurationFxNew::path).map(Common::getRelativePath).collect(Collectors.joining(SEPARATOR));
+		return super.matricesValue.stream().map(e -> e.get()).collect(Collectors.joining(SEPARATOR));
 	}
 
 	public String libraryToString()
 	{
-		return this.libraryFoders.stream().map(ConfigurationFxNew::path).map(Common::getRelativePath).collect(Collectors.joining(SEPARATOR));
+		return super.librariesValue.stream().map(e -> e.get()).collect(Collectors.joining(SEPARATOR));
 	}
 
 	public String gitRemotePath()
@@ -112,12 +105,12 @@ public class ConfigurationFxNew extends Configuration
 
 	public String getAppDictionaries()
 	{
-		return this.listAppsDictionaries.stream().map(ConfigurationFxNew::path).map(Common::getRelativePath).collect(Collectors.joining(SEPARATOR));
+		return super.appDictionariesValue.stream().map(e -> e.get()).collect(Collectors.joining(SEPARATOR));
 	}
 
 	public String getClientDictionaries()
 	{
-		return this.listClientDictionaries.stream().map(ConfigurationFxNew::path).map(Common::getRelativePath).collect(Collectors.joining(SEPARATOR));
+		return this.clientDictionariesValue.stream().map(e -> e.get()).collect(Collectors.joining(SEPARATOR));
 	}
 
 	// ==============================================================================================================================
@@ -153,13 +146,8 @@ public class ConfigurationFxNew extends Configuration
 	public void load(Reader reader) throws Exception
 	{
 		super.load(reader);
-		
-		this.matrixFolders 	= fromString(super.matricesValue);
-		this.libraryFoders 	= fromString(super.librariesValue);
-		this.varsFiles 		= fromString(super.variablesValue);
+
 		this.reportFolder 	= new File(super.outputPathValue);
-		this.listAppsDictionaries = fromString(super.appDictionariesValue);
-		this.listClientDictionaries = fromString(super.clientDictionariesValue);
 
 		this.getServiceEntries().forEach(entry -> this.startedServices.put(entry.toString(), ConnectionStatus.NotStarted));
 		initController();
@@ -350,9 +338,9 @@ public class ConfigurationFxNew extends Configuration
 	// ============================================================
 	// matrix
 	// ============================================================
-	public void removeMatrixDirectory(File file)
+	public void removeMatrixDirectory(String file)
 	{
-		removeFile(file, this.matrixFolders, this::displayMatrix);
+		removeStr(file, super.matricesValue, this::displayMatrix);
 	}
 
 	public void openMatrix(File file)
@@ -390,9 +378,9 @@ public class ConfigurationFxNew extends Configuration
 	// ============================================================
 	// library
 	// ============================================================
-	public void removeLibraryDirectory(File file)
+	public void removeLibraryDirectory(String file)
 	{
-		removeFile(file, this.libraryFoders, this::displayLibrary);
+		removeStr(file, super.librariesValue, this::displayLibrary);
 	}
 
 	public void openLibrary(File file)
@@ -438,9 +426,9 @@ public class ConfigurationFxNew extends Configuration
 		System.out.println(String.format("VARS FILE %S ARE OPENED", file.getName()));
 	}
 
-	public void removeVarsFile(File file)
+	public void removeVarsFile(String file)
 	{
-		removeFile(file, this.varsFiles, this::displayVars);
+		removeStr(file, super.userVarsValue, this::displayVars);
 	}
 
 	// ============================================================
@@ -542,14 +530,14 @@ public class ConfigurationFxNew extends Configuration
 		this.displayClient();
 	}
 
-	public void removeClientDictionaryFolder(File file) throws Exception
+	public void removeClientDictionaryFolder(String file) throws Exception
 	{
-		this.removeFile(file, this.listClientDictionaries, this::displayClient);
+		this.removeStr(file, super.clientDictionariesValue, this::displayClient);
 	}
 
-	public void addClientDictionaryFolder(File file) throws Exception
+	public void addClientDictionaryFolder(String file) throws Exception
 	{
-		this.addFile(file, this.listClientDictionaries, this::displayClient);
+		this.addString(file, super.clientDictionariesValue, this::displayClient);
 	}
 
 	public void openClientDictionary(ClientEntry entry) throws Exception
@@ -732,32 +720,32 @@ public class ConfigurationFxNew extends Configuration
 		DialogsHelper.showAppHelp(help);
 	}
 
-	public void removeAppDictionaryFolder(File file) throws Exception
+	public void removeAppDictionaryFolder(String file) throws Exception
 	{
-		this.removeFile(file, this.listAppsDictionaries, this::displayApp);
+		this.removeStr(file, super.appDictionariesValue, this::displayApp);
 	}
 
-	public void addAppDictionaryFolder(File file) throws Exception
+	public void addAppDictionaryFolder(String file) throws Exception
 	{
-		this.addFile(file, this.listAppsDictionaries, this::displayApp);
+		this.addString(file, super.appDictionariesValue, this::displayApp);
 	}
 
 	// ============================================================
 	// file system
 	// ============================================================
-	public void addAsMatrix(File file)
+	public void addAsMatrix(String file)
 	{
-		addFile(file, this.matrixFolders, this::displayMatrix);
+		addString(file, this.matricesValue, this::displayMatrix);
 	}
 
-	public void addAsLibrary(File file)
+	public void addAsLibrary(String file)
 	{
-		addFile(file, this.libraryFoders, this::displayLibrary);
+		addString(file, super.librariesValue, this::displayLibrary);
 	}
 
-	public void addAsVars(File file)
+	public void addAsVars(String file)
 	{
-		addFile(file, this.varsFiles, this::displayLibrary);
+		addString(file, super.userVarsValue, this::displayLibrary);
 	}
 
 	// ============================================================
@@ -904,6 +892,7 @@ public class ConfigurationFxNew extends Configuration
 		super.changed(true);
 	}
 
+	@Deprecated
 	private void removeFile(File file, List<File> list, DisplayFunction displayFunction)
 	{
 		// TODO need remove file from fileSystem
@@ -927,6 +916,30 @@ public class ConfigurationFxNew extends Configuration
 		super.changed(true);
 	}
 
+	private void removeStr(String file, List<MutableString> list, DisplayFunction displayFunction)
+	{
+		// TODO need remove file from fileSystem
+		List<MutableString> oldFiles = new ArrayList<>(list);
+		Command undo = () ->
+		{
+			list.clear();
+			list.addAll(oldFiles);
+			displayFunction.display();
+			this.displayFileSystem();
+		};
+		Command redo = () ->
+		{
+			List<MutableString> collect = list.stream().filter(f -> !path(file).equals(path(f.get()))).collect(Collectors.toList());
+			list.clear();
+			list.addAll(collect);
+			displayFunction.display();
+			this.displayFileSystem();
+		};
+		super.addCommand(undo, redo);
+		super.changed(true);
+	}
+
+	@Deprecated
 	private void addFile(File file, List<File> list, DisplayFunction displayFunction)
 	{
 		List<File> oldFiles = new ArrayList<>(list);
@@ -941,6 +954,29 @@ public class ConfigurationFxNew extends Configuration
 		{
 			List<File> collect = new ArrayList<>(list);
 			collect.add(file);
+			list.clear();
+			list.addAll(collect);
+			displayFunction.display();
+			this.displayFileSystem();
+		};
+		super.addCommand(undo, redo);
+		super.changed(true);
+	}
+
+	private void addString(String file, List<MutableString> list, DisplayFunction displayFunction)
+	{
+		List<MutableString> oldFiles = new ArrayList<>(list);
+		Command undo = () ->
+		{
+			list.clear();
+			list.addAll(oldFiles);
+			displayFunction.display();
+			this.displayFileSystem();
+		};
+		Command redo = () ->
+		{
+			List<MutableString> collect = new ArrayList<>(list);
+			collect.add(new MutableString(file));
 			list.clear();
 			list.addAll(collect);
 			displayFunction.display();
@@ -1044,17 +1080,17 @@ public class ConfigurationFxNew extends Configuration
 
 	private void displayMatrix()
 	{
-		this.controller.displayMatrix(this.matrixFolders);
+		this.controller.displayMatrix(this.matricesValue);
 	}
 	
 	private void displayLibrary()
 	{
-		this.controller.displayLibrary(this.libraryFoders);
+		this.controller.displayLibrary(super.librariesValue);
 	}
 	
 	private void displayVars()
 	{
-		this.controller.displayVars(this.varsFiles);
+		this.controller.displayVars(super.userVarsValue);
 	}
 	
 	private void displayReport()

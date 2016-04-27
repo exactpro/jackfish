@@ -74,16 +74,16 @@ public class FileSystemTreeNode extends TreeNode
 				ContextMenu menu = new ContextMenu();
 
 				MenuItem itemAddAsMatrix = new MenuItem("Add as matrix src", new ImageView(new Image(CssVariables.Icons.MATRIX_ICON)));
-				itemAddAsMatrix.setOnAction(e -> Common.tryCatch(() -> model.addAsMatrix(f), "Error on add folder as matrix src"));
+				itemAddAsMatrix.setOnAction(e -> Common.tryCatch(() -> model.addAsMatrix(f.getName()), "Error on add folder as matrix src"));
 
 				MenuItem itemAddAsLibrary = new MenuItem("Add as library src", new ImageView(new Image(CssVariables.Icons.LIBRARY_ICON)));
-				itemAddAsLibrary.setOnAction(e -> Common.tryCatch(() -> model.addAsLibrary(f), "Error on add folder as library"));
+				itemAddAsLibrary.setOnAction(e -> Common.tryCatch(() -> model.addAsLibrary(f.getName()), "Error on add folder as library"));
 
 				MenuItem itemAddAsAppDic = new MenuItem("Add as app dictionary", new ImageView(new Image(CssVariables.Icons.APP_DICTIONARY_ICON)));
-				itemAddAsAppDic.setOnAction(e -> Common.tryCatch(() -> model.addAppDictionaryFolder(f), "Error on add folder as app dictionary"));
+				itemAddAsAppDic.setOnAction(e -> Common.tryCatch(() -> model.addAppDictionaryFolder(f.getName()), "Error on add folder as app dictionary"));
 
 				MenuItem itemAddAsClientDic = new MenuItem("Add as Client dictionary", new ImageView(new Image(CssVariables.Icons.CLIENT_DICTIONARY_ICON)));
-				itemAddAsClientDic.setOnAction(e -> Common.tryCatch(() -> model.addClientDictionaryFolder(f), "Error on add folder as client dictionary"));
+				itemAddAsClientDic.setOnAction(e -> Common.tryCatch(() -> model.addClientDictionaryFolder(f.getName()), "Error on add folder as client dictionary"));
 
 				MenuItem itemSetReportDir = new MenuItem("Set report dir", new ImageView(new Image(CssVariables.Icons.REPORT_ICON)));
 				itemSetReportDir.setOnAction(e -> Common.tryCatch(() -> model.setReportFolder(f), "Error on set report folder"));

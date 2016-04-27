@@ -18,6 +18,8 @@ import com.exactprosystems.jf.common.Configuration.AppEntry;
 import com.exactprosystems.jf.common.Configuration.ClientEntry;
 import com.exactprosystems.jf.common.Configuration.ServiceEntry;
 import com.exactprosystems.jf.common.Configuration.SqlEntry;
+import com.exactprosystems.jf.common.MutableString;
+import com.exactprosystems.jf.common.parser.items.MutableArrayList;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.newconfig.nodes.AppTreeNode;
@@ -95,19 +97,19 @@ public class ConfigurationNewFxController implements Initializable, ContainingPa
 				"Error on display evaluator");
 	}
 
-	public void displayMatrix(List<File> matrixFolders)
+	public void displayMatrix(MutableArrayList<MutableString> matricesValue)
 	{
-		Common.tryCatch(() -> this.matrixTreeNode.display(matrixFolders), "Error on display matrix");
+		Common.tryCatch(() -> this.matrixTreeNode.display(matricesValue), "Error on display matrix");
 	}
 
-	public void displayLibrary(List<File> libraryFoders)
+	public void displayLibrary(MutableArrayList<MutableString> librariesValue)
 	{
-		Common.tryCatch(() -> this.libTreeNode.display(libraryFoders), "Error on display libs");
+		Common.tryCatch(() -> this.libTreeNode.display(librariesValue), "Error on display libs");
 	}
 
-	public void displayVars(List<File> varsFiles)
+	public void displayVars(MutableArrayList<MutableString> userVarsValue)
 	{
-		Common.tryCatch(() -> this.varsTreeNode.display(varsFiles), "Error on display vars");
+		Common.tryCatch(() -> this.varsTreeNode.display(userVarsValue), "Error on display vars");
 	}
 
 	public void displaySql(List<SqlEntry> sqlEntries) 

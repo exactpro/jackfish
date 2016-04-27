@@ -92,7 +92,9 @@ public class Configuration extends AbstractDocument
 	public static final String appDict 				= "appDict";
 	public static final String clientDict			= "clientDict";
 	public static final String library 				= "library";
+	@Deprecated
 	public static final String userVariables 		= "userVariables";
+	public static final String userVars 			= "userVars";
 	public static final String git 					= "git";
 
 	public static final String entryName			= "name";
@@ -155,12 +157,15 @@ public class Configuration extends AbstractDocument
 	@XmlElement(name = variables)
 	protected String variablesValue;
 	
-	// TODO replace to MutableList<MutableString>
+	@Deprecated
 	@XmlElement(name = userVariables)
 	protected String userVariablesValue;
 	
 	@XmlElement(name = git)
 	protected MutableString gitValue;
+
+	@XmlElement(name = userVars)
+	protected MutableArrayList<MutableString> userVarsValue;
 
 	@XmlElement(name = matrix)
 	protected MutableArrayList<MutableString> matricesValue;
@@ -455,6 +460,7 @@ public class Configuration extends AbstractDocument
 		this.appEntriesValue 			= new MutableArrayList<AppEntry>();
 		
 		this.userVariablesValue			= null;
+		this.userVarsValue				= new MutableArrayList<MutableString>();
 		this.matricesValue				= new MutableArrayList<MutableString>();
 		this.appDictionariesValue		= new MutableArrayList<MutableString>();
 		this.clientDictionariesValue	= new MutableArrayList<MutableString>();
@@ -843,6 +849,7 @@ public class Configuration extends AbstractDocument
 				|| this.clientEntriesValue.isChanged()
 				|| this.serviceEntriesValue.isChanged()
 				|| this.appEntriesValue.isChanged()
+				|| this.userVarsValue.isChanged()
 				|| this.matricesValue.isChanged()
 				|| this.appDictionariesValue.isChanged()
 				|| this.clientDictionariesValue.isChanged()
@@ -860,6 +867,7 @@ public class Configuration extends AbstractDocument
 		this.clientEntriesValue.saved();
 		this.serviceEntriesValue.saved();
 		this.sqlEntriesValue.saved();
+		this.userVarsValue.saved();
 		this.matricesValue.saved();
 		this.appDictionariesValue.saved();
 		this.clientDictionariesValue.saved();
