@@ -9,6 +9,7 @@
 package com.exactprosystems.jf.tool.configuration.libentry;
 
 import com.exactprosystems.jf.documents.config.Configuration;
+import com.exactprosystems.jf.documents.config.LibEntry;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.configuration.ConfigurationFx;
@@ -38,7 +39,7 @@ public class LibEntryFxController implements Initializable, ContainingParent
 
 	private GridPane parent;
 	private ConfigurationFx model;
-	private Configuration.LibEntry entry;
+	private LibEntry entry;
 
 	@Override
 	public void initialize(URL url, ResourceBundle resourceBundle)
@@ -76,7 +77,7 @@ public class LibEntryFxController implements Initializable, ContainingParent
 		Common.tryCatch(() -> this.model.openLib(cfPath.getText()), "Error on open library");
 	}
 
-	public void init(ConfigurationFx model, Configuration.LibEntry libEntry, ListView<GridPane> listViewLibs)
+	public void init(ConfigurationFx model, LibEntry libEntry, ListView<GridPane> listViewLibs)
 	{
 		this.model = model;
 		this.entry = libEntry;

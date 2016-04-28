@@ -16,9 +16,9 @@ import com.exactprosystems.jf.api.common.ApiVersionInfo;
 import com.exactprosystems.jf.api.common.IContext;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.common.xml.messages.MessageDictionary;
+import com.exactprosystems.jf.documents.config.ClientEntry;
 import com.exactprosystems.jf.documents.config.Configuration;
-import com.exactprosystems.jf.documents.config.Configuration.ClientEntry;
-import com.exactprosystems.jf.documents.config.Configuration.Parameter;
+import com.exactprosystems.jf.documents.config.Parameter;
 
 import org.apache.log4j.Logger;
 
@@ -45,7 +45,7 @@ public class ClientsPool implements IClientsPool
 	{
 		try
 		{
-			Configuration.ClientEntry entry = parametersEntry(id);
+			ClientEntry entry = parametersEntry(id);
 			IClientFactory clientFactory = loadClientFactory(id, entry);
 			return clientFactory.requiredMajorVersion();
 		}
@@ -62,7 +62,7 @@ public class ClientsPool implements IClientsPool
 	{
 		try
 		{
-			Configuration.ClientEntry entry = parametersEntry(id);
+			ClientEntry entry = parametersEntry(id);
 			IClientFactory clientFactory = loadClientFactory(id, entry);
 			return clientFactory.requiredMinorVersion();
 		}
@@ -79,7 +79,7 @@ public class ClientsPool implements IClientsPool
 	{
 		try
 		{
-			Configuration.ClientEntry entry = parametersEntry(id);
+			ClientEntry entry = parametersEntry(id);
 			IClientFactory clientFactory = loadClientFactory(id, entry);
 			return clientFactory.isSupported(ApiVersionInfo.majorVersion(), ApiVersionInfo.minorVersion());
 		}
@@ -97,7 +97,7 @@ public class ClientsPool implements IClientsPool
 	@Override
 	public boolean canFillParameter(String id, String parameterToFill) throws Exception
 	{
-		Configuration.ClientEntry entry = parametersEntry(id);
+		ClientEntry entry = parametersEntry(id);
 		IClientFactory clientFactory = loadClientFactory(id, entry);
 
 		return clientFactory.canFillParameter(parameterToFill);
@@ -106,7 +106,7 @@ public class ClientsPool implements IClientsPool
 	@Override
 	public String[] listForParameter(String id, String parameterToFill) throws Exception
 	{
-		Configuration.ClientEntry entry = parametersEntry(id);
+		ClientEntry entry = parametersEntry(id);
 		IClientFactory clientFactory = loadClientFactory(id, entry);
 
 		return clientFactory.listForParameter(parameterToFill);
@@ -116,7 +116,7 @@ public class ClientsPool implements IClientsPool
 	public List<String> clientNames()
 	{
 		List<String> result = new ArrayList<String>();
-		for (Configuration.ClientEntry entry : this.configuration.getClientEntries())
+		for (ClientEntry entry : this.configuration.getClientEntries())
 		{
 			String name = null; 
 			try
@@ -136,7 +136,7 @@ public class ClientsPool implements IClientsPool
 	@Override
 	public String[] wellKnownParameters(String id) throws Exception
 	{
-		Configuration.ClientEntry entry = parametersEntry(id);
+		ClientEntry entry = parametersEntry(id);
 		IClientFactory clientFactory = loadClientFactory(id, entry);
 
 		return clientFactory.wellKnownParameters();
@@ -146,7 +146,7 @@ public class ClientsPool implements IClientsPool
 	@Override
 	public String[] wellKnownStartArgs(String id) throws Exception
 	{
-		Configuration.ClientEntry entry = parametersEntry(id);
+		ClientEntry entry = parametersEntry(id);
 		IClientFactory clientFactory = loadClientFactory(id, entry);
 
 		return clientFactory.wellKnownStartArgs();
@@ -156,7 +156,7 @@ public class ClientsPool implements IClientsPool
 	@Override
 	public String[] wellKnownConnectArgs(String id) throws Exception
 	{
-		Configuration.ClientEntry entry = parametersEntry(id);
+		ClientEntry entry = parametersEntry(id);
 		IClientFactory clientFactory = loadClientFactory(id, entry);
 
 		return clientFactory.wellKnownConnectArgs();
@@ -256,7 +256,7 @@ public class ClientsPool implements IClientsPool
 	}
 
 	//----------------------------------------------------------------------------------------------
-	private MessageDictionary getDictionary(Configuration.ClientEntry entry) throws Exception
+	private MessageDictionary getDictionary(ClientEntry entry) throws Exception
 	{
 		String dictionaryName = entry.get(Configuration.clientDictionary);
 		MessageDictionary dictionary = null;
@@ -271,7 +271,7 @@ public class ClientsPool implements IClientsPool
 		return dictionary;
 	}
 	
-	private Configuration.ClientEntry parametersEntry(String id) throws Exception
+	private ClientEntry parametersEntry(String id) throws Exception
 	{
 		ClientEntry entry = this.configuration.getClientEntry(id);
 		if (entry == null)
@@ -282,7 +282,7 @@ public class ClientsPool implements IClientsPool
 		return entry;
 	}
 
-	private IClientFactory loadClientFactory(String id, Configuration.ClientEntry entry) throws Exception
+	private IClientFactory loadClientFactory(String id, ClientEntry entry) throws Exception
 	{
 		IClientFactory clientFactory = this.clientFactories.get(id);
 		if (clientFactory == null)

@@ -8,7 +8,9 @@
 
 package com.exactprosystems.jf.tool.configuration.appentry;
 
+import com.exactprosystems.jf.documents.config.AppEntry;
 import com.exactprosystems.jf.documents.config.Configuration;
+import com.exactprosystems.jf.documents.config.Parameter;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.SupportedEntry;
@@ -41,12 +43,12 @@ public class AppEntryFxController implements Initializable, ContainingParent
 	public CustomFieldWithButton cfWorkDir;
 	public NumberTextField ntfStartPort;
 	public Button btnRemoveEntry;
-	public CustomTable<Configuration.Parameter> tableView;
+	public CustomTable<Parameter> tableView;
 	public GridPane mainGrid;
 
 	private TitledPane parent;
 	private ConfigurationFx model;
-	private Configuration.AppEntry entry;
+	private AppEntry entry;
 
 	@Override
 	public void initialize(URL url, ResourceBundle resourceBundle)
@@ -114,7 +116,7 @@ public class AppEntryFxController implements Initializable, ContainingParent
 	}
 	
 	//===========================================================================================
-	public void init(ConfigurationFx model, Configuration.AppEntry entry, Accordion accordionAppEntries)
+	public void init(ConfigurationFx model, AppEntry entry, Accordion accordionAppEntries)
 	{
 		Common.tryCatch(() -> {
 			this.model = model;
@@ -136,7 +138,7 @@ public class AppEntryFxController implements Initializable, ContainingParent
 		}, "Error on update all fields in app controller");
 	}
 
-	public void displayEntryParameters(List<Configuration.Parameter> parameters)
+	public void displayEntryParameters(List<Parameter> parameters)
 	{
 		tableView.setItems(FXCollections.observableArrayList(parameters));
 		tableView.update();

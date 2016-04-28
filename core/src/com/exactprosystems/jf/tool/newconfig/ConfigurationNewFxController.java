@@ -12,10 +12,10 @@ import javafx.scene.Parent;
 import javafx.scene.control.TreeItem;
 import javafx.scene.layout.BorderPane;
 
-import com.exactprosystems.jf.documents.config.Configuration.AppEntry;
-import com.exactprosystems.jf.documents.config.Configuration.ClientEntry;
-import com.exactprosystems.jf.documents.config.Configuration.ServiceEntry;
-import com.exactprosystems.jf.documents.config.Configuration.SqlEntry;
+import com.exactprosystems.jf.documents.config.AppEntry;
+import com.exactprosystems.jf.documents.config.ClientEntry;
+import com.exactprosystems.jf.documents.config.ServiceEntry;
+import com.exactprosystems.jf.documents.config.SqlEntry;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.newconfig.nodes.AppTreeNode;

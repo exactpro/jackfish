@@ -15,8 +15,8 @@ import com.exactprosystems.jf.api.service.IServiceFactory;
 import com.exactprosystems.jf.api.service.IServicesPool;
 import com.exactprosystems.jf.api.service.ServiceConnection;
 import com.exactprosystems.jf.documents.config.Configuration;
-import com.exactprosystems.jf.documents.config.Configuration.Parameter;
-import com.exactprosystems.jf.documents.config.Configuration.ServiceEntry;
+import com.exactprosystems.jf.documents.config.Parameter;
+import com.exactprosystems.jf.documents.config.ServiceEntry;
 
 import org.apache.log4j.Logger;
 
@@ -43,7 +43,7 @@ public class ServicePool implements IServicesPool
 	{
 		try
 		{
-			Configuration.ServiceEntry entry = parametersEntry(id);
+			ServiceEntry entry = parametersEntry(id);
 			IServiceFactory serviceFactory = loadServiceFactory(id, entry);
 			return serviceFactory.requiredMajorVersion();
 		}
@@ -60,7 +60,7 @@ public class ServicePool implements IServicesPool
 	{
 		try
 		{
-			Configuration.ServiceEntry entry = parametersEntry(id);
+			ServiceEntry entry = parametersEntry(id);
 			IServiceFactory serviceFactory = loadServiceFactory(id, entry);
 			return serviceFactory.requiredMinorVersion();
 		}
@@ -77,7 +77,7 @@ public class ServicePool implements IServicesPool
 	{
 		try
 		{
-			Configuration.ServiceEntry entry = parametersEntry(id);
+			ServiceEntry entry = parametersEntry(id);
 			IServiceFactory serviceFactory = loadServiceFactory(id, entry);
 			return serviceFactory.isSupported(ApiVersionInfo.majorVersion(), ApiVersionInfo.minorVersion());
 		}
@@ -95,7 +95,7 @@ public class ServicePool implements IServicesPool
 	@Override
 	public boolean canFillParameter(String id, String parameterToFill) throws Exception
 	{
-		Configuration.ServiceEntry entry = parametersEntry(id);
+		ServiceEntry entry = parametersEntry(id);
 		IServiceFactory serviceFactory = loadServiceFactory(id, entry);
 
 		return serviceFactory.canFillParameter(parameterToFill);
@@ -104,7 +104,7 @@ public class ServicePool implements IServicesPool
 	@Override
 	public String[] listForParameter(String id, String parameterToFill) throws Exception
 	{
-		Configuration.ServiceEntry entry = parametersEntry(id);
+		ServiceEntry entry = parametersEntry(id);
 		IServiceFactory serviceFactory = loadServiceFactory(id, entry);
 
 		return serviceFactory.listForParameter(parameterToFill);
@@ -134,7 +134,7 @@ public class ServicePool implements IServicesPool
 	@Override
 	public String[] wellKnownParameters(String id) throws Exception
 	{
-		Configuration.ServiceEntry entry = parametersEntry(id);
+		ServiceEntry entry = parametersEntry(id);
 		IServiceFactory serviceFactory = loadServiceFactory(id, entry);
 
 		return serviceFactory.wellKnownParameters();
@@ -144,7 +144,7 @@ public class ServicePool implements IServicesPool
 	@Override
 	public String[] wellKnownStartArgs(String id) throws Exception
 	{
-		Configuration.ServiceEntry entry = parametersEntry(id);
+		ServiceEntry entry = parametersEntry(id);
 		IServiceFactory serviceFactory = loadServiceFactory(id, entry);
 
 		return serviceFactory.wellKnownStartArgs();
@@ -263,7 +263,7 @@ public class ServicePool implements IServicesPool
 	}
 	//----------------------------------------------------------------------------------------------
 	
-	private Configuration.ServiceEntry parametersEntry(String id) throws Exception
+	private ServiceEntry parametersEntry(String id) throws Exception
 	{
 		ServiceEntry entry = this.configuration.getServiceEntry(id);
 		if (entry == null)
@@ -275,7 +275,7 @@ public class ServicePool implements IServicesPool
 	}
 	
 
-	private IServiceFactory loadServiceFactory(String id, Configuration.ServiceEntry entry) throws Exception
+	private IServiceFactory loadServiceFactory(String id, ServiceEntry entry) throws Exception
 	{
 		IServiceFactory serviceFactory = this.serviceFactories.get(id);
 		if (serviceFactory == null)

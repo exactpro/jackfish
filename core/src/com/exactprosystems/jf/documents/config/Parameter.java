@@ -1,0 +1,103 @@
+////////////////////////////////////////////////////////////////////////////////
+//  Copyright (c) 2009-2015, Exactpro Systems, LLC
+//  Quality Assurance & Related Development for Innovative Trading Systems.
+//  All rights reserved.
+//  This is unpublished, licensed software, confidential and proprietary
+//  information which is the property of Exactpro Systems, LLC or its licensors.
+////////////////////////////////////////////////////////////////////////////////
+
+package com.exactprosystems.jf.documents.config;
+
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+
+import com.exactprosystems.jf.api.app.Mutable;
+
+@XmlAccessorType(XmlAccessType.NONE)
+public class Parameter implements Mutable
+{
+	@XmlElement(name = Configuration.parametersKey)
+	protected String key;
+	
+	@XmlElement(name = Configuration.parametersValue)
+	protected String value;
+
+    @Override
+    public String toString()
+    {
+        return Parameter.class.getSimpleName() + "{" + Configuration.parametersKey + "=" + key + " " + Configuration.parametersValue + "=" + value + "}";
+    }
+
+	@Override
+	public boolean isChanged()
+	{
+		return this.changed;
+	}
+
+	@Override
+	public void saved()
+	{
+		this.changed = false;
+	}
+
+	@Deprecated
+    public String get(String name) throws Exception
+	{
+		Object res = Configuration.get(Parameter.class, this, name);
+		return res == null ? "" : res.toString();
+	}
+
+	@Deprecated
+	public void set(String name, Object value) throws Exception
+	{
+		Configuration.set(Parameter.class, this, name, value);
+		changed = true;
+	}
+
+	@Override
+	public boolean equals(Object o)
+	{
+		if (this == o)
+			return true;
+		if (o == null || getClass() != o.getClass())
+			return false;
+
+		Parameter parameter = (Parameter) o;
+
+		if (key != null ? !key.equals(parameter.key) : parameter.key != null)
+			return false;
+
+		return true;
+	}
+
+	@Override
+	public int hashCode()
+	{
+		return key != null ? key.hashCode() : 0;
+	}
+
+	private boolean changed = false;
+
+	//this getters / setters need to tableView. Not Delete this methods in future
+	public void setKey(String key)
+	{
+		this.key = key;
+	}
+
+	public void setValue(String value)
+	{
+		this.value = value;
+	}
+
+	public String getKey()
+	{
+		return this.key;
+	}
+
+	public String getValue()
+	{
+		return this.value;
+	}
+
+}

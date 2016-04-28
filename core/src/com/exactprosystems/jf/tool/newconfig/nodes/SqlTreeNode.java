@@ -9,7 +9,7 @@ package com.exactprosystems.jf.tool.newconfig.nodes;
 
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.documents.config.Configuration;
-import com.exactprosystems.jf.documents.config.Configuration.SqlEntry;
+import com.exactprosystems.jf.documents.config.SqlEntry;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.SupportedEntry;
@@ -62,7 +62,7 @@ public class SqlTreeNode extends TreeNode
 		return Optional.of(new Image(CssVariables.Icons.SQL_ICON));
 	}
 
-	public void display(List<Configuration.SqlEntry> entries)
+	public void display(List<SqlEntry> entries)
 	{
 		this.treeItem.getChildren().clear();
 		entries.stream()
@@ -111,9 +111,9 @@ public class SqlTreeNode extends TreeNode
 	}
 
 	
-	private class SqlEntryNode extends AbstractEntryNode<Configuration.SqlEntry>
+	private class SqlEntryNode extends AbstractEntryNode<SqlEntry>
 	{
-		public SqlEntryNode(ConfigurationFxNew model, Configuration.SqlEntry sqlEntry)
+		public SqlEntryNode(ConfigurationFxNew model, SqlEntry sqlEntry)
 		{
 			super(model, sqlEntry);
 		}

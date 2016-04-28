@@ -9,6 +9,8 @@
 package com.exactprosystems.jf.tool.configuration.serviceentry;
 
 import com.exactprosystems.jf.documents.config.Configuration;
+import com.exactprosystems.jf.documents.config.Parameter;
+import com.exactprosystems.jf.documents.config.ServiceEntry;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.SupportedEntry;
@@ -39,14 +41,14 @@ public class ServiceEntryFxController implements Initializable, ContainingParent
 {
 	public TextField tfServiceDescription;
 	public CustomFieldWithButton cfServiceJar;
-	public CustomTable<Configuration.Parameter> tableView;
+	public CustomTable<Parameter> tableView;
 	public Button btnStartService;
 	public Button btnStopService;
 	public GridPane mainGrid;
 
 	private TitledPane parent;
 	private ConfigurationFx model;
-	private Configuration.ServiceEntry entry;
+	private ServiceEntry entry;
 
 	@Override
 	public void initialize(URL url, ResourceBundle resourceBundle)
@@ -103,7 +105,7 @@ public class ServiceEntryFxController implements Initializable, ContainingParent
 		Common.tryCatch(() -> this.model.stopService(entry), "Error on stop service");
 	}
 
-	public void init(ConfigurationFx model, Configuration.ServiceEntry entry, Accordion accordionServiceEntries)
+	public void init(ConfigurationFx model, ServiceEntry entry, Accordion accordionServiceEntries)
 	{
 		Common.tryCatch(() -> {
 			this.model = model;
@@ -114,7 +116,7 @@ public class ServiceEntryFxController implements Initializable, ContainingParent
 		}, "Error on init service entry controller");
 	}
 
-	public void displayEntryParameters(List<Configuration.Parameter> parameters)
+	public void displayEntryParameters(List<Parameter> parameters)
 	{
 		tableView.setItems(FXCollections.observableArrayList(parameters));
 	}

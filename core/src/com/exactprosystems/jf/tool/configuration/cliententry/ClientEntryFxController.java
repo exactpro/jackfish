@@ -8,7 +8,9 @@
 
 package com.exactprosystems.jf.tool.configuration.cliententry;
 
+import com.exactprosystems.jf.documents.config.ClientEntry;
 import com.exactprosystems.jf.documents.config.Configuration;
+import com.exactprosystems.jf.documents.config.Parameter;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.SupportedEntry;
@@ -40,13 +42,13 @@ public class ClientEntryFxController implements Initializable, ContainingParent
 	public CustomFieldWithButton				cfClientDictionary;
 	public NumberTextField						ntfClientLimit;
 
-	public CustomTable<Configuration.Parameter>	tableView;
+	public CustomTable<Parameter>	tableView;
 	public Button								btnRemoveEntry;
 	public Button								btnPossibilities;
 	public GridPane								tableGrid;
 	public GridPane								mainGrid;
 
-	private Configuration.ClientEntry			entry;
+	private ClientEntry			entry;
 	private ConfigurationFx						model;
 	private TitledPane							parent;
 
@@ -87,7 +89,7 @@ public class ClientEntryFxController implements Initializable, ContainingParent
 		this.parent = (TitledPane) parent;
 	}
 
-	public void init(ConfigurationFx model, Configuration.ClientEntry entry, Accordion accordionClientEntries)
+	public void init(ConfigurationFx model, ClientEntry entry, Accordion accordionClientEntries)
 	{
 		Common.tryCatch(() -> {
 			this.model = model;
@@ -109,7 +111,7 @@ public class ClientEntryFxController implements Initializable, ContainingParent
 		}, "Error on update all fields in client controller");
 	}
 
-	public void displayEntryParameters(List<Configuration.Parameter> parameters)
+	public void displayEntryParameters(List<Parameter> parameters)
 	{
 		tableView.setItems(FXCollections.observableList(parameters));
 		tableView.update();

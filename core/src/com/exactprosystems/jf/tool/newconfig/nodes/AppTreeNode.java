@@ -7,6 +7,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.exactprosystems.jf.tool.newconfig.nodes;
 
+import com.exactprosystems.jf.documents.config.AppEntry;
 import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
@@ -70,7 +71,7 @@ public class AppTreeNode extends TreeNode
 		return Optional.of(new Image(CssVariables.Icons.APP_ICON));
 	}
 
-	public void display(List<Configuration.AppEntry> entries, Map<String, SupportedEntry> map, List<File> listAppsDictionaries)
+	public void display(List<AppEntry> entries, Map<String, SupportedEntry> map, List<File> listAppsDictionaries)
 	{
 		this.treeItem.getChildren().clear();
 		this.treeItem.getChildren().add(this.appTreeItem);
@@ -81,11 +82,11 @@ public class AppTreeNode extends TreeNode
 				.forEach(i -> this.treeItem.getChildren().add(i));
 	}
 
-	private class AppEntryNode extends AbstractEntryNode<Configuration.AppEntry>
+	private class AppEntryNode extends AbstractEntryNode<AppEntry>
 	{
 		private SupportedEntry supportedEntry;
 
-		public AppEntryNode(ConfigurationFxNew model, Configuration.AppEntry entry, SupportedEntry supportedEntry)
+		public AppEntryNode(ConfigurationFxNew model, AppEntry entry, SupportedEntry supportedEntry)
 		{
 			super(model, entry);
 			this.supportedEntry = supportedEntry;
@@ -96,7 +97,7 @@ public class AppTreeNode extends TreeNode
 		{
 			try
 			{
-				Configuration.AppEntry entry = getEntry();
+				AppEntry entry = getEntry();
 				StringBuilder sb = new StringBuilder(entry.toString()).append(" : ");
 				String pathToJar = entry.get(Configuration.appJar);
 				sb.append(pathToJar.substring(pathToJar.lastIndexOf(File.separator) + 1)).append(" , ");

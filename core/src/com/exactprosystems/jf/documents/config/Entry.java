@@ -16,7 +16,6 @@ import javax.xml.bind.annotation.XmlElement;
 
 import com.exactprosystems.jf.api.app.Mutable;
 import com.exactprosystems.jf.common.parser.items.MutableArrayList;
-import com.exactprosystems.jf.documents.config.Configuration.Parameter;
 
 @XmlAccessorType(XmlAccessType.NONE)
 public abstract class Entry implements Mutable

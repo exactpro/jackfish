@@ -7,6 +7,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.exactprosystems.jf.tool.newconfig.nodes;
 
+import com.exactprosystems.jf.documents.config.ClientEntry;
 import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
@@ -70,7 +71,7 @@ public class ClientTreeNode extends TreeNode
 		return Optional.of(new Image(CssVariables.Icons.CLIENT_ICON));
 	}
 
-	public void display(List<Configuration.ClientEntry> clientEntries, Map<String, SupportedEntry> map, List<File> listClientDictionaries)
+	public void display(List<ClientEntry> clientEntries, Map<String, SupportedEntry> map, List<File> listClientDictionaries)
 	{
 		this.treeItem.getChildren().clear();
 		this.treeItem.getChildren().add(this.clientTreeItem);
@@ -81,11 +82,11 @@ public class ClientTreeNode extends TreeNode
 				.forEach(i -> this.treeItem.getChildren().add(i));
 	}
 
-	private class ClientEntryNode extends AbstractEntryNode<Configuration.ClientEntry>
+	private class ClientEntryNode extends AbstractEntryNode<ClientEntry>
 	{
 		private SupportedEntry supportedEntry;
 
-		public ClientEntryNode(ConfigurationFxNew model, Configuration.ClientEntry entry, SupportedEntry supportedEntry)
+		public ClientEntryNode(ConfigurationFxNew model, ClientEntry entry, SupportedEntry supportedEntry)
 		{
 			super(model, entry);
 			this.supportedEntry = supportedEntry;
@@ -112,7 +113,7 @@ public class ClientTreeNode extends TreeNode
 		{
 			try
 			{
-				Configuration.ClientEntry entry = getEntry();
+				ClientEntry entry = getEntry();
 				StringBuilder sb = new StringBuilder(entry.toString()).append(" : ");
 				String pathToJar = entry.get(Configuration.clientJar);
 				sb.append(pathToJar.substring(pathToJar.lastIndexOf(File.separator) + 1)).append(" , ");

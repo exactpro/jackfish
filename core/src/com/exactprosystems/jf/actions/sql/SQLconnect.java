@@ -19,6 +19,7 @@ import com.exactprosystems.jf.common.parser.items.ActionItem.HelpKind;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.documents.config.Context;
+import com.exactprosystems.jf.documents.config.SqlEntry;
 import com.exactprosystems.jf.sql.SqlConnection;
 
 import java.util.List;
@@ -73,7 +74,7 @@ public class SQLconnect  extends AbstractAction
 		switch (parameterToFill)
 		{
 			case sqlName :
-				for (Configuration.SqlEntry sqlEntry : configuration.getSqlEntries())
+				for (SqlEntry sqlEntry : configuration.getSqlEntries())
 				{
 					String quoted = evaluator.createString(sqlEntry.toString());
 					list.add(new ReadableValue(quoted));

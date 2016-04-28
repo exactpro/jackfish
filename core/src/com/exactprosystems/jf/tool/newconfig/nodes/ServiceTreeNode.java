@@ -8,6 +8,7 @@
 package com.exactprosystems.jf.tool.newconfig.nodes;
 
 import com.exactprosystems.jf.documents.config.Configuration;
+import com.exactprosystems.jf.documents.config.ServiceEntry;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.SupportedEntry;
@@ -64,7 +65,7 @@ public class ServiceTreeNode extends TreeNode
 		return Optional.of(new Image(CssVariables.Icons.SERVICE_ICON));
 	}
 
-	public void display(List<Configuration.ServiceEntry> serviceEntries, Map<String, SupportedEntry> mapSupportedEntries, Map<String, ConnectionStatus> mapServicesStatus)
+	public void display(List<ServiceEntry> serviceEntries, Map<String, SupportedEntry> mapSupportedEntries, Map<String, ConnectionStatus> mapServicesStatus)
 	{
 		this.treeItem.getChildren().clear();
 		serviceEntries.stream()
@@ -73,12 +74,12 @@ public class ServiceTreeNode extends TreeNode
 				.forEach(treeItem -> this.treeItem.getChildren().add(treeItem));
 	}
 
-	private class ServiceEntryNode extends AbstractEntryNode<Configuration.ServiceEntry>
+	private class ServiceEntryNode extends AbstractEntryNode<ServiceEntry>
 	{
 		private SupportedEntry supportedEntry;
 		private ConnectionStatus status;
 
-		public ServiceEntryNode(ConfigurationFxNew model, Configuration.ServiceEntry entry, SupportedEntry supportedEntry, ConnectionStatus status)
+		public ServiceEntryNode(ConfigurationFxNew model, ServiceEntry entry, SupportedEntry supportedEntry, ConnectionStatus status)
 		{
 			super(model, entry);
 			this.supportedEntry = supportedEntry;

@@ -20,9 +20,15 @@ import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.parser.listeners.RunnerListener;
 import com.exactprosystems.jf.common.parser.listeners.SilenceMatrixListener;
 import com.exactprosystems.jf.common.undoredo.Command;
+import com.exactprosystems.jf.documents.config.AppEntry;
+import com.exactprosystems.jf.documents.config.ClientEntry;
 import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.config.Entry;
+import com.exactprosystems.jf.documents.config.LibEntry;
+import com.exactprosystems.jf.documents.config.Parameter;
+import com.exactprosystems.jf.documents.config.ServiceEntry;
+import com.exactprosystems.jf.documents.config.SqlEntry;
 import com.exactprosystems.jf.service.ServicePool;
 import com.exactprosystems.jf.sql.SqlConnection;
 import com.exactprosystems.jf.tool.Common;
@@ -655,7 +661,7 @@ public class ConfigurationFx extends Configuration
 			
 			for (String string : strings)
 			{
-				Configuration.Parameter parameter = new Configuration.Parameter();
+				Parameter parameter = new Parameter();
 				parameter.set(Configuration.parametersKey, string);
 				parameter.set(Configuration.parametersValue, "");
 				if (!parameters.contains(parameter))

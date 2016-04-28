@@ -13,8 +13,9 @@ import com.exactprosystems.jf.api.common.ApiVersionInfo;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.xml.gui.GuiDictionary;
+import com.exactprosystems.jf.documents.config.AppEntry;
 import com.exactprosystems.jf.documents.config.Configuration;
-import com.exactprosystems.jf.documents.config.Configuration.Parameter;
+import com.exactprosystems.jf.documents.config.Parameter;
 
 import org.apache.log4j.Logger;
 
@@ -143,7 +144,7 @@ public class ApplicationPool implements IApplicationPool
 	public List<String> appNames()
 	{
 		List<String> result = new ArrayList<String>();
-		for (Configuration.AppEntry entry : this.configuration.getAppEntries())
+		for (AppEntry entry : this.configuration.getAppEntries())
 		{
 			String name = null; 
 			try
@@ -183,7 +184,7 @@ public class ApplicationPool implements IApplicationPool
 			}
 
 			// prepare initial parameters
-			Configuration.AppEntry entry = parametersEntry(id);
+			AppEntry entry = parametersEntry(id);
 			int port = firstFreePort(entry);
 
 			Map<String, String> driverParameters = getDriverParameters(entry);
@@ -227,7 +228,7 @@ public class ApplicationPool implements IApplicationPool
 			}
 			
 			// prepare initial parameters
-			Configuration.AppEntry entry = parametersEntry(id);
+			AppEntry entry = parametersEntry(id);
 			int port = firstFreePort(entry);
 			
 			Map<String, String> driverParameters = getDriverParameters(entry);
@@ -304,13 +305,13 @@ public class ApplicationPool implements IApplicationPool
 
 	private IApplicationFactory loadFactory(String id) throws Exception
 	{
-		Configuration.AppEntry entry = parametersEntry(id);
+		AppEntry entry = parametersEntry(id);
 		return loadFactory(id, entry);
 	}
 
-	private Configuration.AppEntry parametersEntry(String id) throws Exception
+	private AppEntry parametersEntry(String id) throws Exception
 	{
-		Configuration.AppEntry entry = this.configuration.getAppEntry(id);
+		AppEntry entry = this.configuration.getAppEntry(id);
 		if (entry == null)
 		{
 			throw new Exception("'" + id + "' is not found.");
@@ -319,7 +320,7 @@ public class ApplicationPool implements IApplicationPool
 		return entry;
 	}
 	
-	private IApplicationFactory loadFactory(String id, Configuration.AppEntry entry) throws Exception
+	private IApplicationFactory loadFactory(String id, AppEntry entry) throws Exception
 	{
 		IApplicationFactory applicationFactory = this.appFactories.get(id);
 		if (applicationFactory == null)
@@ -350,7 +351,7 @@ public class ApplicationPool implements IApplicationPool
 		
 		return applicationFactory;
 	}
-	private int firstFreePort(Configuration.AppEntry entry) throws Exception
+	private int firstFreePort(AppEntry entry) throws Exception
 	{
 		String startPortStr = entry.get(Configuration.appStartPort);
 		int startPort = Integer.parseInt(startPortStr);
@@ -373,7 +374,7 @@ public class ApplicationPool implements IApplicationPool
 		return port;
 	}
 	
-	private GuiDictionary getDictionary(Configuration.AppEntry entry) throws Exception
+	private GuiDictionary getDictionary(AppEntry entry) throws Exception
 	{
 		String dictionaryName = entry.get(Configuration.appDicPath);
 		GuiDictionary dictionary = null;
@@ -391,7 +392,7 @@ public class ApplicationPool implements IApplicationPool
 		return dictionary;
 	}
 	
-	private Map<String, String> getDriverParameters(Configuration.AppEntry entry) throws Exception
+	private Map<String, String> getDriverParameters(AppEntry entry) throws Exception
 	{
 		List<Parameter> list = entry.getParameters();
 		Map<String, String> driverParameters = new HashMap<String, String>();

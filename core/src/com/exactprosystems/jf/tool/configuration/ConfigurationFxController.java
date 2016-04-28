@@ -10,8 +10,12 @@ package com.exactprosystems.jf.tool.configuration;
 
 import com.exactprosystems.jf.api.client.Possibility;
 import com.exactprosystems.jf.common.Settings;
-import com.exactprosystems.jf.documents.config.Configuration;
+import com.exactprosystems.jf.documents.config.AppEntry;
+import com.exactprosystems.jf.documents.config.ClientEntry;
 import com.exactprosystems.jf.documents.config.Entry;
+import com.exactprosystems.jf.documents.config.LibEntry;
+import com.exactprosystems.jf.documents.config.ServiceEntry;
+import com.exactprosystems.jf.documents.config.SqlEntry;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.SupportedEntry;
@@ -215,7 +219,7 @@ public class ConfigurationFxController implements Initializable, ContainingParen
 		this.appMap.values().forEach(AppEntryFxController::display);
 	}
 
-	public void updateAppVersion(HashMap<Configuration.AppEntry, SupportedEntry> map)
+	public void updateAppVersion(HashMap<AppEntry, SupportedEntry> map)
 	{
 		map.entrySet().forEach(app -> appMap.get(app.getKey()).displaySupported(app.getValue()));
 	}
@@ -265,7 +269,7 @@ public class ConfigurationFxController implements Initializable, ContainingParen
 		dialog.show();
 	}
 
-	public void updateClientVersion(HashMap<Configuration.ClientEntry, SupportedEntry> map)
+	public void updateClientVersion(HashMap<ClientEntry, SupportedEntry> map)
 	{
 		map.entrySet().forEach(client -> clientMap.get(client.getKey()).displaySupported(client.getValue()));
 	}
@@ -287,7 +291,7 @@ public class ConfigurationFxController implements Initializable, ContainingParen
 		Common.progressBarVisible(true);
 	}
 
-	public void displayAfterStartService(Configuration.ServiceEntry entry, boolean isGood, String error)
+	public void displayAfterStartService(ServiceEntry entry, boolean isGood, String error)
 	{
 		Common.progressBarVisible(false);
 		if (isGood)
@@ -301,7 +305,7 @@ public class ConfigurationFxController implements Initializable, ContainingParen
 		this.serviceMap.get(entry).displayAfterStartService(isGood);
 	}
 
-	public void updateServiceVersion(HashMap<Configuration.ServiceEntry, SupportedEntry> map)
+	public void updateServiceVersion(HashMap<ServiceEntry, SupportedEntry> map)
 	{
 		map.entrySet().forEach((service) -> serviceMap.get(service.getKey()).displaySupported(service.getValue()));
 	}
@@ -319,7 +323,7 @@ public class ConfigurationFxController implements Initializable, ContainingParen
 		this.sqlMap.values().forEach(SqlEntryFxController::display);
 	}
 
-	public void showTestSqlPanel(Configuration.SqlEntry entry, List<Settings.SettingsValue> values)
+	public void showTestSqlPanel(SqlEntry entry, List<Settings.SettingsValue> values)
 	{
 		Common.tryCatch(() -> {
 			testSqlController = Common.loadController(TestingConnectionFxController.class.getResource("TestingConnectionFx.fxml"));
@@ -330,23 +334,23 @@ public class ConfigurationFxController implements Initializable, ContainingParen
 
 	public void updateEntry(Entry entry)
 	{
-		if (entry instanceof Configuration.AppEntry)
+		if (entry instanceof AppEntry)
 		{
 			appMap.get(entry).display();
 		}
-		else if (entry instanceof Configuration.LibEntry)
+		else if (entry instanceof LibEntry)
 		{
 			libMap.get(entry).display();
 		}
-		else if (entry instanceof Configuration.ClientEntry)
+		else if (entry instanceof ClientEntry)
 		{
 			clientMap.get(entry).display();
 		}
-		else if (entry instanceof Configuration.ServiceEntry)
+		else if (entry instanceof ServiceEntry)
 		{
 			serviceMap.get(entry).display();
 		}
-		else if (entry instanceof Configuration.SqlEntry)
+		else if (entry instanceof SqlEntry)
 		{
 			sqlMap.get(entry).display();
 		}

@@ -9,6 +9,7 @@
 package com.exactprosystems.jf.tool.configuration.sqlentry;
 
 import com.exactprosystems.jf.documents.config.Configuration;
+import com.exactprosystems.jf.documents.config.SqlEntry;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.configuration.ConfigurationFx;
@@ -39,7 +40,7 @@ public class SqlEntryFxController implements Initializable, ContainingParent
 
 	private TitledPane				parent;
 	private ConfigurationFx			model;
-	private Configuration.SqlEntry	entry;
+	private SqlEntry	entry;
 
 	@Override
 	public void initialize(URL url, ResourceBundle resourceBundle)
@@ -82,7 +83,7 @@ public class SqlEntryFxController implements Initializable, ContainingParent
 		}, "Error on test entry");
 	}
 
-	public void init(ConfigurationFx model, Configuration.SqlEntry entry, Accordion accordionSqlEntries)
+	public void init(ConfigurationFx model, SqlEntry entry, Accordion accordionSqlEntries)
 	{
 		Common.tryCatch(() -> {
 			this.entry = entry;
