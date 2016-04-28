@@ -17,6 +17,7 @@ import com.exactprosystems.jf.app.ApplicationPool;
 import com.exactprosystems.jf.client.ClientsPool;
 import com.exactprosystems.jf.common.Configuration;
 import com.exactprosystems.jf.common.Context;
+import com.exactprosystems.jf.common.Entry;
 import com.exactprosystems.jf.common.MutableString;
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
@@ -242,7 +243,8 @@ public class ConfigurationFxNew extends Configuration
 
 	public void replaceEvaluatorImport(String oldValue, String newValue) throws Exception
 	{
-		this.changeImports(this.get(Configuration.evaluatorImports), this.get(Configuration.evaluatorImports).replaceAll(oldValue, newValue));
+		// TODO
+//		this.changeImports(super.importsValue), this.get(Configuration.evaluatorImports).replaceAll(oldValue, newValue));
 	}
 
 	private void changeImports(String lastImports, String newImports) throws Exception
@@ -253,12 +255,12 @@ public class ConfigurationFxNew extends Configuration
 		}
 		Command undo = () ->
 		{
-			change(Configuration.evaluatorImports, lastImports);
+			change(Configuration.imports, lastImports);
 			displayEvaluator();
 		};
 		Command redo = () ->
 		{
-			change(Configuration.evaluatorImports, newImports);
+			change(Configuration.imports, newImports);
 			displayEvaluator();
 		};
 		addCommand(undo, redo);
@@ -291,20 +293,23 @@ public class ConfigurationFxNew extends Configuration
 
 	public void addNewAdditionalFormat(String newFormat) throws Exception
 	{
-		changeAdditionalFormats(this.get(additionFormats), this.get(additionFormats) + "|" + newFormat);
+		// TODO
+//		changeAdditionalFormats(this.get(additionFormats), this.get(additionFormats) + "|" + newFormat);
 	}
 
 	public void removeAdditionalFormat(String removeFormat) throws Exception
 	{
-		String oldAdditionalFormats = this.get(additionFormats);
-		String newAdditionalFormats = Arrays.stream(oldAdditionalFormats.split("\\|")).filter(str -> !removeFormat.equals(str))
-				.collect(Collectors.joining("|"));
-		changeAdditionalFormats(oldAdditionalFormats, newAdditionalFormats);
+		// TODO
+//		String oldAdditionalFormats = this.get(additionFormats);
+//		String newAdditionalFormats = Arrays.stream(oldAdditionalFormats.split("\\|")).filter(str -> !removeFormat.equals(str))
+//				.collect(Collectors.joining("|"));
+//		changeAdditionalFormats(oldAdditionalFormats, newAdditionalFormats);
 	}
 
 	public void replaceAdditionalFormat(String oldFormat, String newFormat) throws Exception
 	{
-		this.changeAdditionalFormats(this.get(additionFormats), this.get(additionFormats).replaceAll(oldFormat, newFormat));
+		// TODO
+//		this.changeAdditionalFormats(this.get(additionFormats), this.get(additionFormats).replaceAll(oldFormat, newFormat));
 	}
 
 	private void changeAdditionalFormats(String oldFormats, String newFormats)
@@ -315,12 +320,12 @@ public class ConfigurationFxNew extends Configuration
 		}
 		Command undo = () ->
 		{
-			change(Configuration.additionFormats, oldFormats);
+			change(Configuration.formats, oldFormats);
 			displayFormat();
 		};
 		Command redo = () ->
 		{
-			change(Configuration.additionFormats, newFormats);
+			change(Configuration.formats, newFormats);
 			displayFormat();
 		};
 		addCommand(undo, redo);

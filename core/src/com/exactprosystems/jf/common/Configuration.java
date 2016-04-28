@@ -220,102 +220,6 @@ public class Configuration extends AbstractDocument
 	protected MutableArrayList<MutableString> librariesValue;
 	
 	@XmlAccessorType(XmlAccessType.NONE)
-	public static abstract class Entry implements Mutable
-	{
-		@XmlElement(name = entryName)
-		protected String entryNameValue;
-
-		@XmlElement(name = parametersEntry)
-		protected MutableArrayList<Parameter> parameters;
-
-		@Override
-		public String toString()
-		{
-			return this.entryNameValue == null ? "" : this.entryNameValue;
-		}
-
-		@Override
-		public boolean isChanged()
-		{
-			if (this.changed)
-			{
-				return true;
-			}
-			if (this.parameters != null)
-			{
-				if (this.parameters.isChanged())
-				{
-					return true;
-				}
-				for (Parameter parameter : this.parameters)
-				{
-					if (parameter.isChanged())
-					{
-						return true;
-					}
-				}
-			}
-
-			return false;
-		}
-
-		@Override
-		public void saved()
-		{
-			if (this.parameters != null)
-			{
-				this.parameters.saved();
-				for (Parameter parameter : this.parameters)
-				{
-					parameter.saved();
-				}
-			}
-			changed = false;
-		}
-		
-		@Deprecated
-		public String get(String name) throws Exception
-		{
-			Object res = Configuration.get(getClass(), this, name);
-			return res == null ? "" : res.toString();
-		}
-		
-		@Deprecated
-		public void set(String name, Object value) throws Exception
-		{
-			Configuration.set(getClass(), this, name, value);
-			changed = true;
-		}
-
-		public String getParameter(String key)
-		{
-			if (this.parameters != null)
-			{
-				for (Parameter param : this.parameters)
-				{
-					if (param.key.equals(key))
-					{
-						return param.value;
-					}
-				}
-			}
-			
-			return null;
-		}
-
-		public List<Parameter> getParameters()
-		{
-			if (this.parameters == null)
-			{
-				this.parameters = new MutableArrayList<Parameter>();
-			}
-			return this.parameters;
-		}
-		
-		private boolean changed = false;
-	}
-
-	@XmlAccessorType(XmlAccessType.NONE)
 	public static class Parameter implements Mutable
 	{
 		@XmlElement(name = parametersKey)
@@ -1212,7 +1116,7 @@ public class Configuration extends AbstractDocument
 	}
 
 	@Deprecated
-	private static Object get(Class<?> clazz, Object object, String name) throws Exception
+	static Object get(Class<?> clazz, Object object, String name) throws Exception
 	{
 		Field[] fields = clazz.getDeclaredFields();
 		
@@ -1238,7 +1142,7 @@ public class Configuration extends AbstractDocument
 	}
     
 	@Deprecated
-	private static void set(Class<?> clazz, Object object, String name, Object value) throws Exception
+	static void set(Class<?> clazz, Object object, String name, Object value) throws Exception
 	{
 		Field[] fields = clazz.getDeclaredFields();
 		

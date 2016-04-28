@@ -17,6 +17,7 @@ import com.exactprosystems.jf.app.ApplicationPool;
 import com.exactprosystems.jf.client.ClientsPool;
 import com.exactprosystems.jf.common.Configuration;
 import com.exactprosystems.jf.common.Context;
+import com.exactprosystems.jf.common.Entry;
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.parser.listeners.RunnerListener;
@@ -29,11 +30,14 @@ import com.exactprosystems.jf.tool.SupportedEntry;
 import com.exactprosystems.jf.tool.configuration.sqlentry.testing.TestingConnectionFxController;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.main.Main;
+
 import javafx.concurrent.Task;
 import javafx.scene.control.ButtonType;
+
 import org.apache.log4j.Logger;
 
 import javax.xml.bind.annotation.XmlRootElement;
+
 import java.io.Reader;
 import java.util.*;
 

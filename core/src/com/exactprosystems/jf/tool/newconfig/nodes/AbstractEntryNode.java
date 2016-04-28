@@ -7,7 +7,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.exactprosystems.jf.tool.newconfig.nodes;
 
-import com.exactprosystems.jf.common.Configuration;
+import com.exactprosystems.jf.common.Entry;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.SupportedEntry;
@@ -23,7 +23,7 @@ import javafx.scene.text.Text;
 
 import java.util.Optional;
 
-public abstract class AbstractEntryNode<T extends Configuration.Entry> extends TreeNode
+public abstract class AbstractEntryNode<T extends Entry> extends TreeNode
 {
 	private ConfigurationFxNew model;
 	private T entry;
