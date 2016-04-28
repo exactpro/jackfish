@@ -25,8 +25,8 @@ import java.util.regex.Pattern;
 public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 {
 	static final String RECTANGLE_PATTERN = "(-?\\d+),(-?\\d+),(\\d+),(\\d+)";
-	private static final String SEPARATOR_CELL = "$";
-	private static final String SEPARATOR_ROWS = ";";
+	private static final String SEPARATOR_CELL = "###";
+	private static final String SEPARATOR_ROWS = ";;;";
 	private Logger logger;
 	private JnaDriverImpl driver;
 
@@ -596,8 +596,8 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 			String headerRow = split[0];
 			String row = split[1];
 			Map<String, String> map = new LinkedHashMap<>();
-			String[] headerCells = headerRow.split(SEPARATOR_ROWS);
-			String[] rowCell = row.split(SEPARATOR_ROWS);
+			String[] headerCells = headerRow.split(SEPARATOR_CELL);
+			String[] rowCell = row.split(SEPARATOR_CELL);
 			for (int i = 0; i < headerCells.length; i++)
 			{
 				map.put(headerCells[i], rowCell[i]);
@@ -651,8 +651,8 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 			String headerRow = split[0];
 			String row = split[1];
 			Map<String, String> map = new LinkedHashMap<>();
-			String[] headerCells = headerRow.split(SEPARATOR_ROWS);
-			String[] rowCell = row.split(SEPARATOR_ROWS);
+			String[] headerCells = headerRow.split(SEPARATOR_CELL);
+			String[] rowCell = row.split(SEPARATOR_CELL);
 			for (int j = 0; j < headerCells.length; j++)
 			{
 				map.put(headerCells[j], rowCell[j]);
@@ -696,7 +696,7 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 			String[] split = res.split(SEPARATOR_ROWS);
 			String headerRow = split[0];
 			String[] headerCells = headerRow.split(SEPARATOR_CELL);
-			String[][] table = new String[split.length - 1][headerCells.length];
+			String[][] table = new String[split.length][headerCells.length];
 			System.arraycopy(headerCells, 0, table[0], 0, headerCells.length);
 			for (int i = 1; i < split.length; i++)
 			{
@@ -740,8 +740,16 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 	@Override
 	public int getTableSize(UIProxyJNA component, Locator additional, Locator header, boolean useNumericHeader) throws Exception
 	{
-		// TODO Auto-generated method stub
-		return 0;
+		try
+		{
+			return this.driver.getTableSize(component);
+		}
+		catch (Exception e)
+		{
+			this.logger.error(String.format("getTableSize(%s,%s,%s,%b)", component, additional, header, useNumericHeader));
+			this.logger.error(e.getMessage(), e);
+			throw e;
+		}
 	}
 
 	public Locator locatorFromUIProxy(UIProxyJNA element) throws Exception

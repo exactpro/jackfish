@@ -337,7 +337,7 @@ public class JnaDriverImpl
 	{
 		long start = System.currentTimeMillis();
 		String res = this.driver.getRowByIndex(table.getIdString(), useNumericHeader, index);
-		this.logger.info(String.format("getRowByConditions(%s,%b,%s) : %s, time(ms) : %d", table, useNumericHeader, index, res, System.currentTimeMillis() - start));
+		this.logger.info(String.format("getRowByIndex(%s,%b,%s) : %s, time(ms) : %d", table, useNumericHeader, index, res, System.currentTimeMillis() - start));
 		checkCSharpTimes();
 		checkError();
 		return res;
@@ -348,6 +348,16 @@ public class JnaDriverImpl
 		long start = System.currentTimeMillis();
 		String res = this.driver.getTable(table.getIdString(), useNumericHeader);
 		this.logger.info(String.format("getRowByConditions(%s,%b) : %s, time(ms) : %d", table, useNumericHeader, res, System.currentTimeMillis() - start));
+		checkCSharpTimes();
+		checkError();
+		return res;
+	}
+
+	public int getTableSize(UIProxyJNA table) throws Exception
+	{
+		long start = System.currentTimeMillis();
+		int res = this.driver.getTableSize(table.getIdString());
+		this.logger.info(String.format("getTableSize(%s) : %d, time(ms) : %d", table, res, System.currentTimeMillis() - start));
 		checkCSharpTimes();
 		checkError();
 		return res;

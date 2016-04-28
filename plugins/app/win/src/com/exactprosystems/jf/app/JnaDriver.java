@@ -50,6 +50,7 @@ public interface JnaDriver extends Library {
 	String getRowIndexes(String tableId, boolean useNumericHeader, String condition);
 	String getRowByIndex(String tableId, boolean useNumericHeader, int index);
 	String getTable(String tableId, boolean useNumericHeader);
+	int getTableSize(String tableId);
 	//endregion
 
 }
