@@ -11,6 +11,7 @@ import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.client.ICondition;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.conditions.StringCondition;
+
 import org.apache.log4j.Logger;
 
 import java.awt.*;
@@ -734,6 +735,13 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 			this.logger.error(e.getMessage(), e);
 			throw e;
 		}
+	}
+
+	@Override
+	public int getTableSize(UIProxyJNA component, Locator additional, Locator header, boolean useNumericHeader) throws Exception
+	{
+		// TODO Auto-generated method stub
+		return 0;
 	}
 
 	public Locator locatorFromUIProxy(UIProxyJNA element) throws Exception

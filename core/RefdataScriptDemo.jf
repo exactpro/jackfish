@@ -8,7 +8,7 @@
 #TestCase
 Test case
     #Id;#Global;#Action;#File
-    XML1;1;XmlLoadFromFile;'/home/andrey.ryabov/Downloads/For updater/To update/Refdata/calendar_entries.xml'
+    XML1;1;XmlLoadFromFile;'For updater/To update/Refdata/calendar_entries.xml'
 
     #Id;#Action;#Xpath;#NodeName;#Xml
     XML2;XmlSelect;'/FILE/INSTANCE';'nodename';XML1.Out
@@ -93,6 +93,6 @@ Test case
     #EndForEach
 
     #Action;#Xml;#File
-    XmlSaveToFile;XML1.Out;'/home/andrey.ryabov/Downloads/For updater/To update/Refdata/calendar_entries5.xml'
+    XmlSaveToFile;XML1.Out;'For updater/Updated/Refdata/calendar_entries5.xml'
 
 

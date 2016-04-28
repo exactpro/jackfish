@@ -1107,6 +1107,12 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 		}
 	}
 
+	@Override
+	public int getTableSize(ComponentFixture<Component> component, Locator additional, Locator header, boolean useNumericHeader) throws Exception
+	{
+		// TODO Auto-generated method stub
+		return 0;
+	}
 
 	//------------------------------------------------------------------------------------------------------------------------------
 	// private methods

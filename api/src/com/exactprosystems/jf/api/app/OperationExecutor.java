@@ -50,4 +50,6 @@ public interface OperationExecutor<T>
 	Map<String,String> 			getRowByIndex	(T component, Locator additional, Locator header, boolean useNumericHeader, int i										) throws Exception;
 	Map<String, ValueAndColor>	getRowWithColor	(T component, Locator additional, Locator header, boolean useNumericHeader, int i										) throws Exception;
 	String[][]					getTable		(T component, Locator additional, Locator header, boolean useNumericHeader												) throws Exception;
+	int							getTableSize	(T component, Locator additional, Locator header, boolean useNumericHeader												) throws Exception;
+	
 }

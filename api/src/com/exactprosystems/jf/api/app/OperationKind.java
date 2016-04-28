@@ -701,7 +701,25 @@ public enum OperationKind
 					holder.get(LocatorKind.Element).useNumericHeader(), part.i));
 			return true;
 		}
-	};
+	},
+	GET_TABLE_SIZE("getTableSize")
+	{
+		@Override
+		protected String formulaTemplate(Part part)
+		{
+			return ".getTableSize()";
+		}
+
+		@Override
+		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, Holder<T> holder, OperationResult result) throws Exception
+		{
+			result.setText("" + executor.getTableSize(holder.getValue(), holder.get(LocatorKind.Rows), holder.get(LocatorKind.Header), 
+					holder.get(LocatorKind.Element).useNumericHeader()));
+
+			return true;
+		}
+	},
+	;
 	
 	
 	

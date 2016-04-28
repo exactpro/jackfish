@@ -10,6 +10,7 @@ package com.exactprosystems.jf.app;
 
 import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.client.ICondition;
+
 import org.apache.log4j.Logger;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -359,6 +360,13 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 		}
 		logger.debug("############");
 		return res;
+	}
+
+	@Override
+	public int getTableSize(WebElement component, Locator additional, Locator header, boolean useNumericHeader) throws Exception
+	{
+		// TODO Auto-generated method stub
+		return 0;
 	}
 
 	private List<String> getHeaders(String outerHtml, boolean useNumericHeader) throws RemoteException

@@ -7,19 +7,16 @@
 // //==============================================
 #TestCase
 Test case
-    #Action;#map
-    Vars;{'asd':'123', 'zxc':null}
+    #Id;#Action;#User;#Server;#Base;#Sql;#Password
+    SQLCNT1;SQLconnect;'root';'localhost';'test';'MySql';''
 
-    #Action;#map
-    Print;map
+    #Id;#Action;#Query;#Connection
+    SQLSLCT1;SQLselect;'show tables';SQLCNT1.Out
 
-    #Id;#Action;#Matrix;#Parameter
-    MXRN1;MatrixRun;'childMatrix.jf';map
+    #Action;#Table;#Title
+    TableReport;SQLSLCT1.Out;'Resultset'
 
-    #Id;#Action;#Matrix
-    MXWT1;MatrixWait;MXRN1.Out
-
-    #Action;#map
-    Print;map
+    #Id;#Action;#Connection
+    SQLDCNT1;SQLdisconnect;SQLCNT1.Out
 
 

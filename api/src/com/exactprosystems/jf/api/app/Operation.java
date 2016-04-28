@@ -319,6 +319,13 @@ public class Operation implements Iterable<Part>, Serializable
 		return this;
 	}
 
+	@DescriptionAttribute(text = Do.getTableSize)
+	public Operation getTableSize()
+	{
+		this.list.add(new Part(OperationKind.GET_TABLE_SIZE));
+		return this;
+	}
+
 	@DescriptionAttribute(text = Do.useLocatorId)
 	public Operation use(String locator)
 	{

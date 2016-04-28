@@ -227,6 +227,13 @@ public class Do
 	{
 		return new Operation().getRowWithColor(index);
 	}
+	
+	static final String getTableSize = "Return size of current table";
+	@DescriptionAttribute(text = Do.getRowWithColor)
+	public static Operation getTableSize()
+	{
+		return new Operation().getTableSize();
+	}
 
 	static final String useLocatorId = "Change context to locator with id @locator";
 	@DescriptionAttribute(text = Do.useLocatorId)

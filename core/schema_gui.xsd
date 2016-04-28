@@ -1,0 +1,366 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<xs:schema version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <xs:element name="abstractControl" type="abstractControl"/>
+
+  <xs:element name="any" type="any"/>
+
+  <xs:element name="button" type="button"/>
+
+  <xs:element name="checkBox" type="checkBox"/>
+
+  <xs:element name="comboBox" type="comboBox"/>
+
+  <xs:element name="dialog" type="dialog"/>
+
+  <xs:element name="dictionary" type="GuiDictionary"/>
+
+  <xs:element name="frame" type="frame"/>
+
+  <xs:element name="label" type="label"/>
+
+  <xs:element name="listView" type="listView"/>
+
+  <xs:element name="menu" type="menu"/>
+
+  <xs:element name="menuItem" type="menuItem"/>
+
+  <xs:element name="panel" type="panel"/>
+
+  <xs:element name="progressBar" type="progressBar"/>
+
+  <xs:element name="radioButton" type="radioButton"/>
+
+  <xs:element name="row" type="row"/>
+
+  <xs:element name="scrollBar" type="scrollBar"/>
+
+  <xs:element name="section" type="section"/>
+
+  <xs:element name="slider" type="slider"/>
+
+  <xs:element name="splitter" type="splitter"/>
+
+  <xs:element name="tabPanel" type="tabPanel"/>
+
+  <xs:element name="table" type="table"/>
+
+  <xs:element name="textBox" type="textBox"/>
+
+  <xs:element name="toggleButton" type="toggleButton"/>
+
+  <xs:element name="toolTip" type="toolTip"/>
+
+  <xs:element name="tree" type="tree"/>
+
+  <xs:element name="treeItem" type="treeItem"/>
+
+  <xs:element name="wait" type="wait"/>
+
+  <xs:element name="window" type="window"/>
+
+  <xs:complexType name="GuiDictionary">
+    <xs:complexContent>
+      <xs:extension base="abstractDocument">
+        <xs:sequence>
+          <xs:element ref="window" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="abstractDocument" abstract="true">
+    <xs:sequence/>
+  </xs:complexType>
+
+  <xs:complexType name="window">
+    <xs:sequence>
+      <xs:element name="self" type="section" minOccurs="0"/>
+      <xs:element name="onOpen" type="section" minOccurs="0"/>
+      <xs:element name="run" type="section" minOccurs="0"/>
+      <xs:element name="onClose" type="section" minOccurs="0"/>
+      <xs:element name="close" type="section" minOccurs="0"/>
+    </xs:sequence>
+    <xs:attribute name="name" type="xs:string"/>
+  </xs:complexType>
+
+  <xs:complexType name="section">
+    <xs:sequence>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element ref="any"/>
+        <xs:element ref="button"/>
+        <xs:element ref="checkBox"/>
+        <xs:element ref="comboBox"/>
+        <xs:element ref="dialog"/>
+        <xs:element ref="frame"/>
+        <xs:element ref="label"/>
+        <xs:element ref="listView"/>
+        <xs:element ref="menu"/>
+        <xs:element ref="menuItem"/>
+        <xs:element ref="panel"/>
+        <xs:element ref="radioButton"/>
+        <xs:element ref="row"/>
+        <xs:element ref="table"/>
+        <xs:element ref="tabPanel"/>
+        <xs:element ref="textBox"/>
+        <xs:element ref="toggleButton"/>
+        <xs:element ref="toolTip"/>
+        <xs:element ref="tree"/>
+        <xs:element ref="treeItem"/>
+        <xs:element ref="wait"/>
+        <xs:element name="image" type="image"/>
+        <xs:element ref="splitter"/>
+        <xs:element ref="progressBar"/>
+        <xs:element ref="scrollBar"/>
+        <xs:element ref="slider"/>
+      </xs:choice>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="any">
+    <xs:complexContent>
+      <xs:extension base="abstractControl">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="abstractControl" abstract="true">
+    <xs:sequence/>
+    <xs:attribute name="id" type="xs:string"/>
+    <xs:attribute name="uid" type="xs:string"/>
+    <xs:attribute name="xpath" type="xs:string"/>
+    <xs:attribute name="useAbsoluteXpath" type="xs:boolean"/>
+    <xs:attribute name="owner" type="xs:string"/>
+    <xs:attribute name="class" type="xs:string"/>
+    <xs:attribute name="name" type="xs:string"/>
+    <xs:attribute name="title" type="xs:string"/>
+    <xs:attribute name="action" type="xs:string"/>
+    <xs:attribute name="text" type="xs:string"/>
+    <xs:attribute name="tooltip" type="xs:string"/>
+    <xs:attribute name="addition" type="addition"/>
+    <xs:attribute name="visibility" type="visibility"/>
+    <xs:attribute name="weak" type="xs:boolean"/>
+    <xs:attribute name="timeout" type="xs:int"/>
+    <xs:attribute name="expression" type="xs:string"/>
+    <xs:attribute name="rows" type="xs:string"/>
+    <xs:attribute name="header" type="xs:string"/>
+    <xs:attribute name="useNumericHeader" type="xs:boolean"/>
+  </xs:complexType>
+
+  <xs:complexType name="button">
+    <xs:complexContent>
+      <xs:extension base="abstractControl">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="checkBox">
+    <xs:complexContent>
+      <xs:extension base="abstractControl">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="comboBox">
+    <xs:complexContent>
+      <xs:extension base="abstractControl">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="dialog">
+    <xs:complexContent>
+      <xs:extension base="abstractControl">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="frame">
+    <xs:complexContent>
+      <xs:extension base="abstractControl">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="label">
+    <xs:complexContent>
+      <xs:extension base="abstractControl">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="listView">
+    <xs:complexContent>
+      <xs:extension base="abstractControl">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="menu">
+    <xs:complexContent>
+      <xs:extension base="abstractControl">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="menuItem">
+    <xs:complexContent>
+      <xs:extension base="abstractControl">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="panel">
+    <xs:complexContent>
+      <xs:extension base="abstractControl">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="radioButton">
+    <xs:complexContent>
+      <xs:extension base="abstractControl">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="row">
+    <xs:complexContent>
+      <xs:extension base="abstractControl">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="table">
+    <xs:complexContent>
+      <xs:extension base="abstractControl">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="tabPanel">
+    <xs:complexContent>
+      <xs:extension base="abstractControl">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="textBox">
+    <xs:complexContent>
+      <xs:extension base="abstractControl">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="toggleButton">
+    <xs:complexContent>
+      <xs:extension base="abstractControl">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="toolTip">
+    <xs:complexContent>
+      <xs:extension base="abstractControl">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="tree">
+    <xs:complexContent>
+      <xs:extension base="abstractControl">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="treeItem">
+    <xs:complexContent>
+      <xs:extension base="abstractControl">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="wait">
+    <xs:complexContent>
+      <xs:extension base="abstractControl">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="image">
+    <xs:complexContent>
+      <xs:extension base="abstractControl">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="splitter">
+    <xs:complexContent>
+      <xs:extension base="abstractControl">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="progressBar">
+    <xs:complexContent>
+      <xs:extension base="abstractControl">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="scrollBar">
+    <xs:complexContent>
+      <xs:extension base="abstractControl">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="slider">
+    <xs:complexContent>
+      <xs:extension base="abstractControl">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:simpleType name="addition">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Many"/>
+      <xs:enumeration value="SwitchByValue"/>
+      <xs:enumeration value="WaitToAppear"/>
+      <xs:enumeration value="WaitToDisappear"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="visibility">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Visible"/>
+    </xs:restriction>
+  </xs:simpleType>
+</xs:schema>
+
