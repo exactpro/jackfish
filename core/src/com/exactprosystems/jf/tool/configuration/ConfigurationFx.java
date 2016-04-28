@@ -662,8 +662,7 @@ public class ConfigurationFx extends Configuration
 			for (String string : strings)
 			{
 				Parameter parameter = new Parameter();
-				parameter.set(Configuration.parametersKey, string);
-				parameter.set(Configuration.parametersValue, "");
+				parameter.setKey(string).setValue("");
 				if (!parameters.contains(parameter))
 				{
 					parameters.add(parameter);
@@ -806,7 +805,7 @@ public class ConfigurationFx extends Configuration
 		Common.tryCatchThrow(() -> 
 		{
 			String parameterName = parameter.getKey();
-			String lastValue = parameter.get(Configuration.parametersValue);
+			String lastValue = parameter.getValue();
 
 			Class<?> clazz = entry.getClass();
 			String name = "" + entry;

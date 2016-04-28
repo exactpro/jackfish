@@ -41,19 +41,19 @@ public class Parameter implements Mutable
 		this.changed = false;
 	}
 
-	@Deprecated
-    public String get(String name) throws Exception
-	{
-		Object res = Configuration.get(Parameter.class, this, name);
-		return res == null ? "" : res.toString();
-	}
-
-	@Deprecated
-	public void set(String name, Object value) throws Exception
-	{
-		Configuration.set(Parameter.class, this, name, value);
-		changed = true;
-	}
+//	@Deprecated
+//    public String get(String name) throws Exception
+//	{
+//		Object res = Configuration.get(Parameter.class, this, name);
+//		return res == null ? "" : res.toString();
+//	}
+//
+//	@Deprecated
+//	public void set(String name, Object value) throws Exception
+//	{
+//		Configuration.set(Parameter.class, this, name, value);
+//		changed = true;
+//	}
 
 	@Override
 	public boolean equals(Object o)
@@ -79,15 +79,16 @@ public class Parameter implements Mutable
 
 	private boolean changed = false;
 
-	//this getters / setters need to tableView. Not Delete this methods in future
-	public void setKey(String key)
+	public Parameter setKey(String key)
 	{
 		this.key = key;
+		return this;
 	}
 
-	public void setValue(String value)
+	public Parameter setValue(String value)
 	{
 		this.value = value;
+		return this;
 	}
 
 	public String getKey()

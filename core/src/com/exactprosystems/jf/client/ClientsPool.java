@@ -196,7 +196,7 @@ public class ClientsPool implements IClientsPool
 			Map<String, String> map = new HashMap<String, String>();
 			for (Parameter param : list)
 			{
-				map.put(param.get(Configuration.parametersKey), param.get(Configuration.parametersValue));
+				map.put(param.getKey(), param.getValue());
 			}
 
 			int limit = Integer.parseInt(entry.get(Configuration.clientLimit));

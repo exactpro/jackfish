@@ -863,8 +863,7 @@ public class ConfigurationFxNew extends Configuration
 		for (String string : strings)
 		{
 			Parameter parameter = new Parameter();
-			parameter.set(Configuration.parametersKey, string);
-			parameter.set(Configuration.parametersValue, "");
+			parameter.setKey(string).setValue("");
 			if (!parameters.contains(parameter))
 			{
 				parameters.add(parameter);
