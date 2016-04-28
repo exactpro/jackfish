@@ -53,6 +53,11 @@ public class MutableString implements Mutable
 		this.str = str;
 	}
 
+	public void set(MutableString str)
+	{
+		set(str.get());
+	}
+
 	@XmlValue
 	protected String str = null;
 	

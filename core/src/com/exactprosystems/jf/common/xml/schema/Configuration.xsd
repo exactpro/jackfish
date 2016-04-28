@@ -15,7 +15,17 @@
           <xs:element name="outputPath" type="xs:string" minOccurs="0"/>
           <xs:element name="variables" type="xs:string" minOccurs="0"/>
           <xs:element name="userVariables" type="xs:string" minOccurs="0"/>
-          <xs:element name="git" type="xs:string" minOccurs="0"/>
+          
+          <xs:element name="time" type="mutableString" minOccurs="0"/>
+          <xs:element name="date" type="mutableString" minOccurs="0"/>
+          <xs:element name="dateTime" type="mutableString" minOccurs="0"/>
+          <xs:element name="formats" type="mutableString" minOccurs="0" maxOccurs="unbounded"/>
+          <xs:element name="reports" type="mutableString" minOccurs="0"/>
+          
+          <xs:element name="git" type="mutableString" minOccurs="0"/>
+          <xs:element name="import" type="mutableString" minOccurs="0" maxOccurs="unbounded"/>
+          <xs:element name="vars" type="mutableString" minOccurs="0"/>
+          <xs:element name="userVars" type="mutableString" minOccurs="0" maxOccurs="unbounded"/>
           <xs:element name="matrix" type="mutableString" minOccurs="0" maxOccurs="unbounded"/>
           <xs:element name="appDict" type="mutableString" minOccurs="0" maxOccurs="unbounded"/>
           <xs:element name="clientDict" type="mutableString" minOccurs="0" maxOccurs="unbounded"/>

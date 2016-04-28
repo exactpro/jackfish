@@ -81,33 +81,43 @@ public class Configuration extends AbstractDocument
 	public static final String 	unicodeDelimiter	= String.valueOf("\\\\u" + Integer.toHexString(Configuration.matrixDelimiter | 0x10000).substring(1));
 
 
+	@Deprecated
 	public static final String timeFormat			= "timeFormat";
+	@Deprecated
 	public static final String dateFormat			= "dateFormat";
+	@Deprecated
 	public static final String dateTimeFormat		= "dateTimeFormat";
+	@Deprecated
 	public static final String additionFormats		= "additionFormats";
 	@Deprecated
 	public static final String evaluatorImports 	= "evaluatorImports";
-	public static final String imports 				= "import";
 	@Deprecated
 	public static final String outputPath 			= "outputPath";
-	public static final String reports 				= "reports";
+	@Deprecated
 	public static final String variables 			= "variables";
-	public static final String matrix 				= "matrix";
-	public static final String appDict 				= "appDict";
-	public static final String clientDict			= "clientDict";
-	public static final String library 				= "library";
 	@Deprecated
 	public static final String userVariables 		= "userVariables";
-	public static final String userVars 			= "userVars";
-	public static final String git 					= "git";
-
-	public static final String entryName			= "name";
-	
 	@Deprecated
 	public static final String libEntry				= "libEntry";
 	@Deprecated
 	public static final String libPath				= "libPath";
 
+	public static final String time					= "time";
+	public static final String date					= "date";
+	public static final String dateTime				= "dateTime";
+	public static final String formats				= "formats";
+	public static final String imports 				= "import";
+	public static final String reports 				= "reports";
+	public static final String vars 				= "vars";
+	public static final String matrix 				= "matrix";
+	public static final String appDict 				= "appDict";
+	public static final String clientDict			= "clientDict";
+	public static final String library 				= "library";
+	public static final String userVars 			= "userVars";
+	public static final String git 					= "git";
+
+	public static final String entryName			= "name";
+	
 	public static final String sqlEntry				= "sqlEntry";
 	public static final String sqlJar				= "sqlJar";
 	public static final String sqlConnection 		= "sqlConnection";
@@ -133,19 +143,19 @@ public class Configuration extends AbstractDocument
 	public static final String parametersKey		= "key";
 	public static final String parametersValue		= "value";
 
-	// TODO replace to MutableString
+	@Deprecated
 	@XmlElement(name = timeFormat)
 	protected String timeFormatValue;
 	
-	// TODO replace to MutableString
+	@Deprecated
 	@XmlElement(name = dateFormat)
 	protected String dateFormatValue;
 	
-	// TODO replace to MutableString
+	@Deprecated
 	@XmlElement(name = dateTimeFormat)
 	protected String dateTimeFormatValue;
 	
-	// TODO replace to MutableList<MutableString>
+	@Deprecated
 	@XmlElement(name = additionFormats)
 	protected String additionFormatsValue;
 	
@@ -153,11 +163,11 @@ public class Configuration extends AbstractDocument
 	@XmlElement(name = evaluatorImports)
 	protected String evaluatorImportsValue;
 	
-	// TODO replace to MutableString
+	@Deprecated
 	@XmlElement(name = outputPath)
 	protected String outputPathValue;
 	
-	// TODO replace to MutableString
+	@Deprecated
 	@XmlElement(name = variables)
 	protected String variablesValue;
 	
@@ -170,7 +180,18 @@ public class Configuration extends AbstractDocument
 	//------------------------------------------------------------------------------------------------------------------
 	
 	
+	@XmlElement(name = time)
+	protected MutableString timeValue;
 	
+	@XmlElement(name = date)
+	protected MutableString dateValue;
+	
+	@XmlElement(name = dateTime)
+	protected MutableString dateTimeValue;
+	
+	@XmlElement(name = formats)
+	protected MutableArrayList<MutableString> formatsValue;
+
 	@XmlElement(name = reports)
 	protected MutableString reportsValue;
 	
@@ -180,6 +201,9 @@ public class Configuration extends AbstractDocument
 	@XmlElement(name = imports)
 	protected MutableArrayList<MutableString> importsValue;
 
+	@XmlElement(name = vars)
+	protected MutableString varsValue;
+	
 	@XmlElement(name = userVars)
 	protected MutableArrayList<MutableString> userVarsValue;
 
@@ -249,12 +273,14 @@ public class Configuration extends AbstractDocument
 			changed = false;
 		}
 		
+		@Deprecated
 		public String get(String name) throws Exception
 		{
 			Object res = Configuration.get(getClass(), this, name);
 			return res == null ? "" : res.toString();
 		}
 		
+		@Deprecated
 		public void set(String name, Object value) throws Exception
 		{
 			Configuration.set(getClass(), this, name, value);
@@ -468,24 +494,25 @@ public class Configuration extends AbstractDocument
 		this.settings 					= settings;
 		this.changed 					= false;
 		
+		this.timeValue					= new MutableString();
+		this.dateValue					= new MutableString();
+		this.dateTimeValue				= new MutableString();
+		this.formatsValue				= new MutableArrayList<MutableString>();
 		this.reportsValue				= new MutableString();
 		this.gitValue					= new MutableString();
-
 		this.sqlEntriesValue 			= new MutableArrayList<SqlEntry>();
 		this.clientEntriesValue			= new MutableArrayList<ClientEntry>();
 		this.serviceEntriesValue		= new MutableArrayList<ServiceEntry>();
 		this.appEntriesValue 			= new MutableArrayList<AppEntry>();
-		
 		this.importsValue				= new MutableArrayList<MutableString>();
+		this.varsValue					= new MutableString();
 		this.userVarsValue				= new MutableArrayList<MutableString>();
 		this.matricesValue				= new MutableArrayList<MutableString>();
 		this.appDictionariesValue		= new MutableArrayList<MutableString>();
 		this.clientDictionariesValue	= new MutableArrayList<MutableString>();
 		this.librariesValue				= new MutableArrayList<MutableString>();
 
-		
 		this.globals 					= new HashMap<String, Object>();
-		
 		this.clients 					= new ClientsPool(this);
 		this.services 					= new ServicePool(this);
 		this.applications 				= new ApplicationPool(this);
@@ -860,8 +887,12 @@ public class Configuration extends AbstractDocument
 		{
 			return true;
 		}
-
+		
 		return this.libEntriesValue.isChanged()
+				|| this.timeValue.isChanged()
+				|| this.dateValue.isChanged()
+				|| this.dateTimeValue.isChanged()
+				|| this.formatsValue.isChanged()
 				|| this.gitValue.isChanged()
 				|| this.reportsValue.isChanged()
 				|| this.sqlEntriesValue.isChanged()
@@ -883,6 +914,10 @@ public class Configuration extends AbstractDocument
 		
 		this.changed = false;
 		this.libEntriesValue.saved();
+		this.timeValue.saved();
+		this.dateValue.saved();
+		this.dateTimeValue.saved();
+		this.formatsValue.saved();
 		this.gitValue.saved();
 		this.reportsValue.saved();
 		this.appEntriesValue.saved();
@@ -1076,6 +1111,7 @@ public class Configuration extends AbstractDocument
 	{
 		this.globals = map;
 	}
+	
 	@SuppressWarnings("unchecked")
 	protected <T extends Entry> T getEntry(String name, List<T> entries) throws Exception
 	{
@@ -1224,13 +1260,17 @@ public class Configuration extends AbstractDocument
 		}
 	}
 	
-	@Deprecated
     private void setAll(Configuration config)
 	{
 		Field[] fields = Configuration.class.getDeclaredFields();
 		
 		for (Field field : fields)
 		{
+			if (Mutable.class.isAssignableFrom(field.getType()))
+			{
+				continue;
+			}
+			
 			XmlElement attr = field.getAnnotation(XmlElement.class);
 			if (attr == null)
 			{
@@ -1248,6 +1288,29 @@ public class Configuration extends AbstractDocument
 				logger.error(e.getMessage(), e);
 			}
 		}
+
+		this.libEntriesValue.from(config.libEntriesValue);
+
+		this.timeValue.set(config.timeValue);
+		this.dateValue.set(config.dateValue);
+		this.dateTimeValue.set(config.dateTimeValue);
+		this.formatsValue.from(config.formatsValue);
+		this.gitValue.set(config.gitValue);
+		this.reportsValue.set(config.reportsValue);
+		this.appEntriesValue.from(config.appEntriesValue);
+		this.clientEntriesValue.from(config.clientEntriesValue);
+		this.serviceEntriesValue.from(config.serviceEntriesValue);
+		this.sqlEntriesValue.from(config.sqlEntriesValue);
+		this.importsValue.from(config.importsValue);
+		this.userVarsValue.from(config.userVarsValue);
+		this.matricesValue.from(config.matricesValue);
+		this.appDictionariesValue.from(config.appDictionariesValue);
+		this.clientDictionariesValue.from(config.clientDictionariesValue);
+		this.librariesValue.from(config.librariesValue);
+		
+		refreshLibs();
+		updateLibs();
+		
 		this.changed = false;
 	}
 
