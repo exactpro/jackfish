@@ -15,6 +15,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -23,6 +24,7 @@ import java.util.Map.Entry;
 
 public class Converter
 {
+	@Deprecated
 	public static void setFormats(String formats)
 	{
 		if (formats != null)
@@ -34,6 +36,14 @@ public class Converter
 					additionFormats.add(new SimpleDateFormat(s.trim()));
 	            }
 			}
+		}
+	}
+
+	public static void setFormats(Collection<String> formats)
+	{
+		if (formats != null)
+		{
+			formats.forEach(f -> additionFormats.add(new SimpleDateFormat(f.trim())));
 		}
 	}
 
