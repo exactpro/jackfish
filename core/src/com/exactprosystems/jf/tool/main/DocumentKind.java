@@ -8,12 +8,12 @@
 
 package com.exactprosystems.jf.tool.main;
 
-import com.exactprosystems.jf.common.Configuration;
-import com.exactprosystems.jf.common.Document;
 import com.exactprosystems.jf.common.evaluator.SystemVars;
 import com.exactprosystems.jf.common.parser.Matrix;
 import com.exactprosystems.jf.common.xml.gui.GuiDictionary;
 import com.exactprosystems.jf.common.xml.messages.MessageDictionary;
+import com.exactprosystems.jf.documents.Document;
+import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.tool.csv.CsvFx;
 import com.exactprosystems.jf.tool.text.PlainTextFx;
 

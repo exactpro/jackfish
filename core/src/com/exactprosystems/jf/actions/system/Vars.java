@@ -11,11 +11,11 @@ package com.exactprosystems.jf.actions.system;
 import com.exactprosystems.jf.actions.AbstractAction;
 import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
-import com.exactprosystems.jf.common.Context;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.parser.Parameters;
 import com.exactprosystems.jf.common.parser.items.TypeMandatory;
 import com.exactprosystems.jf.common.report.ReportBuilder;
+import com.exactprosystems.jf.documents.config.Context;
 
 @ActionAttribute(
 		group = ActionGroups.System,

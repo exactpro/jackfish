@@ -8,8 +8,8 @@
 
 package com.exactprosystems.jf.tool.matrix.watch;
 
-import com.exactprosystems.jf.common.Context;
 import com.exactprosystems.jf.common.Settings;
+import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.matrix.MatrixFx;

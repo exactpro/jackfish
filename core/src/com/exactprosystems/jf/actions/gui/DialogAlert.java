@@ -13,11 +13,11 @@ import com.exactprosystems.jf.api.app.IApplication;
 import com.exactprosystems.jf.api.app.IRemoteApplication;
 import com.exactprosystems.jf.api.app.PerformKind;
 import com.exactprosystems.jf.api.common.SerializablePair;
-import com.exactprosystems.jf.common.Context;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.parser.Parameters;
 import com.exactprosystems.jf.common.parser.items.ActionItem;
 import com.exactprosystems.jf.common.report.ReportBuilder;
+import com.exactprosystems.jf.documents.config.Context;
 
 import java.rmi.RemoteException;
 import java.util.List;

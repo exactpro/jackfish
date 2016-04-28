@@ -12,13 +12,13 @@ import com.exactprosystems.jf.api.app.Addition;
 import com.exactprosystems.jf.api.app.IGuiDictionary;
 import com.exactprosystems.jf.api.app.IWindow;
 import com.exactprosystems.jf.api.common.Str;
-import com.exactprosystems.jf.common.Configuration;
-import com.exactprosystems.jf.common.DocumentInfo;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.parser.items.MutableArrayList;
 import com.exactprosystems.jf.common.report.ReportTable;
 import com.exactprosystems.jf.common.xml.control.AbstractControl;
 import com.exactprosystems.jf.common.xml.schema.Xsd;
+import com.exactprosystems.jf.documents.DocumentInfo;
+import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.tool.AbstractDocument;
 
 import javax.xml.XMLConstants;

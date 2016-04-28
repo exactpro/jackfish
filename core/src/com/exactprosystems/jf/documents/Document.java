@@ -6,9 +6,12 @@
 //  information which is the property of Exactpro Systems, LLC or its licensors.
 ////////////////////////////////////////////////////////////////////////////////
 
-package com.exactprosystems.jf.common;
+package com.exactprosystems.jf.documents;
 
 import com.exactprosystems.jf.api.app.Mutable;
+import com.exactprosystems.jf.common.ChangeListener;
+import com.exactprosystems.jf.common.Settings;
+import com.exactprosystems.jf.documents.config.Configuration;
 
 import java.io.Reader;
 

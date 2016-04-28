@@ -7,7 +7,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.exactprosystems.jf.tool.custom.store;
 
-import com.exactprosystems.jf.common.Configuration;
+import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.tool.Common;
 
 import java.util.List;

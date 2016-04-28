@@ -9,13 +9,13 @@
 package com.exactprosystems.jf.tool.custom.treetable;
 
 import com.exactprosystems.jf.api.common.Str;
-import com.exactprosystems.jf.common.Context;
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.common.parser.*;
 import com.exactprosystems.jf.common.parser.items.ActionItem;
 import com.exactprosystems.jf.common.parser.items.CommentString;
 import com.exactprosystems.jf.common.parser.items.MatrixItem;
 import com.exactprosystems.jf.common.undoredo.Command;
+import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.functions.Table;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
@@ -32,6 +32,7 @@ import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.matrix.MatrixFx;
 import com.exactprosystems.jf.tool.matrix.params.ParametersPane;
 import com.exactprosystems.jf.tool.settings.SettingsPanel;
+
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.geometry.Insets;

@@ -6,7 +6,7 @@
 //  information which is the property of Exactpro Systems, LLC or its licensors.
 ////////////////////////////////////////////////////////////////////////////////
 
-package com.exactprosystems.jf.common;
+package com.exactprosystems.jf.documents.config;
 
 import com.exactprosystems.jf.api.app.IApplicationFactory;
 import com.exactprosystems.jf.api.app.IApplicationPool;
@@ -19,6 +19,10 @@ import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.service.IServicesPool;
 import com.exactprosystems.jf.app.ApplicationPool;
 import com.exactprosystems.jf.client.ClientsPool;
+import com.exactprosystems.jf.common.ConsoleUpdateLibsListener;
+import com.exactprosystems.jf.common.MutableString;
+import com.exactprosystems.jf.common.Settings;
+import com.exactprosystems.jf.common.UpdateLibsListener;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.evaluator.MvelEvaluator;
 import com.exactprosystems.jf.common.evaluator.SystemVars;
@@ -34,6 +38,8 @@ import com.exactprosystems.jf.common.parser.listeners.RunnerListener;
 import com.exactprosystems.jf.common.report.HTMLReportFactory;
 import com.exactprosystems.jf.common.report.ReportFactory;
 import com.exactprosystems.jf.common.xml.schema.Xsd;
+import com.exactprosystems.jf.documents.Document;
+import com.exactprosystems.jf.documents.DocumentInfo;
 import com.exactprosystems.jf.service.ServicePool;
 import com.exactprosystems.jf.sql.DataBasePool;
 import com.exactprosystems.jf.tool.AbstractDocument;
@@ -246,12 +252,14 @@ public class Configuration extends AbstractDocument
 			this.changed = false;
 		}
 
+		@Deprecated
         public String get(String name) throws Exception
 		{
 			Object res = Configuration.get(Parameter.class, this, name);
 			return res == null ? "" : res.toString();
 		}
 
+		@Deprecated
 		public void set(String name, Object value) throws Exception
 		{
 			Configuration.set(Parameter.class, this, name, value);
@@ -316,6 +324,25 @@ public class Configuration extends AbstractDocument
 	{
 		@XmlElement(name = libPath)
 		protected String libPathValue;
+
+		@Override
+		public String get(String name) throws Exception
+		{
+			switch (name)
+			{
+				case libPath: 	return this.libPathValue;
+			}
+			return null;
+		}
+
+		@Override
+		public void set(String name, Object value) throws Exception
+		{
+			switch (name)
+			{
+				case libPath: 	this.libPathValue  = "" + value;	return;
+			}
+		}
 	}
 
 	
@@ -330,6 +357,27 @@ public class Configuration extends AbstractDocument
 
 		@XmlElement(name = sqlConnection)
 		protected String sqlConnectionStringValue;
+
+		@Override
+		public String get(String name) throws Exception
+		{
+			switch (name)
+			{
+				case sqlJar: 		return this.sqlJarNameValue;
+				case sqlConnection:	return this.sqlConnectionStringValue;
+			}
+			return null;
+		}
+
+		@Override
+		public void set(String name, Object value) throws Exception
+		{
+			switch (name)
+			{
+				case sqlJar: 		this.sqlJarNameValue			= "" + value;	return;
+				case sqlConnection:	this.sqlConnectionStringValue	= "" + value;	return;
+			}
+		}
 	}
 
 	@XmlElement(name = clientEntry)
@@ -350,6 +398,30 @@ public class Configuration extends AbstractDocument
 		@XmlElement(name = clientDictionary)
 		protected String clientDictionaryValue;
 
+		@Override
+		public String get(String name) throws Exception
+		{
+			switch (name)
+			{
+				case clientDescription:	return this.descriptionValue;
+				case clientJar:			return this.clientJarNameValue;
+				case clientLimit:		return "" + this.clientLimitValue;
+				case clientDictionary:	return this.clientDictionaryValue;
+			}
+			return null;
+		}
+
+		@Override
+		public void set(String name, Object value) throws Exception
+		{
+			switch (name)
+			{
+				case clientDescription:	this.descriptionValue		= "" + value;	return;
+				case clientJar:			this.clientJarNameValue		= "" + value;	return;
+				case clientLimit:		this.clientLimitValue		= Integer.parseInt("" +value);	return;
+				case clientDictionary:	this.clientDictionaryValue	= "" + value;	return;
+			}
+		}
 	}
 	
 	@XmlElement(name = serviceEntry)
@@ -363,6 +435,27 @@ public class Configuration extends AbstractDocument
 		
 		@XmlElement(name = serviceJar)
 		protected String serviceJarNameValue;
+
+		@Override
+		public String get(String name) throws Exception
+		{
+			switch (name)
+			{
+				case serviceDescription: 	return this.descriptionValue;
+				case serviceJar:			return this.serviceJarNameValue;
+			}
+			return null;
+		}
+
+		@Override
+		public void set(String name, Object value) throws Exception
+		{
+			switch (name)
+			{
+				case serviceDescription: 	this.descriptionValue		= "" + value;	return;
+				case serviceJar:			this.serviceJarNameValue	= "" + value;	return;
+			}
+		}
 	}
 
 	@XmlElement(name = appEntry)
@@ -385,6 +478,33 @@ public class Configuration extends AbstractDocument
 		
 		@XmlElement(name = appStartPort)
 		protected String appStartPortValue;
+
+		@Override
+		public String get(String name) throws Exception
+		{
+			switch (name)
+			{
+				case appDescription: 	return this.descriptionValue;
+				case appDicPath: 		return this.appDicPathValue;
+				case appJar: 			return this.appJarNameValue;
+				case appWorkDir: 		return this.appWorkDirValue;
+				case appStartPort:		return this.appStartPortValue;
+			}
+			return null;
+		}
+
+		@Override
+		public void set(String name, Object value) throws Exception
+		{
+			switch (name)
+			{
+				case appDescription: 	this.descriptionValue	= "" + value;	return;
+				case appDicPath: 		this.appDicPathValue	= "" + value;	return;
+				case appJar: 			this.appJarNameValue	= "" + value;	return;
+				case appWorkDir: 		this.appWorkDirValue	= "" + value;	return;
+				case appStartPort:		this.appStartPortValue	= "" + value;	return;
+			}
+		}
 	}
 	
 

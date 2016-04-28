@@ -11,12 +11,12 @@ package com.exactprosystems.jf.actions.services;
 import com.exactprosystems.jf.actions.*;
 import com.exactprosystems.jf.api.service.IService;
 import com.exactprosystems.jf.api.service.ServiceConnection;
-import com.exactprosystems.jf.common.Context;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.parser.Parameters;
 import com.exactprosystems.jf.common.parser.items.TypeMandatory;
 import com.exactprosystems.jf.common.parser.items.ActionItem.HelpKind;
 import com.exactprosystems.jf.common.report.ReportBuilder;
+import com.exactprosystems.jf.documents.config.Context;
 
 import java.util.List;
 

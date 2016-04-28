@@ -15,12 +15,12 @@ import com.exactprosystems.jf.actions.ActionGroups;
 import com.exactprosystems.jf.api.client.ClientHelper;
 import com.exactprosystems.jf.api.client.MapMessage;
 import com.exactprosystems.jf.api.conditions.Condition;
-import com.exactprosystems.jf.common.Context;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.parser.Parameters;
 import com.exactprosystems.jf.common.parser.items.TypeMandatory;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.common.report.ReportTable;
+import com.exactprosystems.jf.documents.config.Context;
 
 import java.util.Map;
 import java.util.Map.Entry;

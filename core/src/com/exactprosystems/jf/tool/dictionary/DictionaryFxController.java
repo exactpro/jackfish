@@ -13,9 +13,9 @@ import com.exactprosystems.jf.api.app.IControl;
 import com.exactprosystems.jf.api.app.IWindow;
 import com.exactprosystems.jf.api.app.IWindow.SectionKind;
 import com.exactprosystems.jf.api.app.ImageWrapper;
-import com.exactprosystems.jf.common.Configuration;
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
+import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.custom.console.ConsoleText;
@@ -28,6 +28,7 @@ import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.main.Main;
 import com.exactprosystems.jf.tool.settings.SettingsPanel;
 import com.exactprosystems.jf.tool.settings.Theme;
+
 import javafx.application.Platform;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;

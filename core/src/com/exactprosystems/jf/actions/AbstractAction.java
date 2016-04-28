@@ -9,7 +9,6 @@
 package com.exactprosystems.jf.actions;
 
 import com.exactprosystems.jf.api.common.Str;
-import com.exactprosystems.jf.common.Context;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.parser.*;
 import com.exactprosystems.jf.common.parser.items.ActionItem;
@@ -19,10 +18,13 @@ import com.exactprosystems.jf.common.parser.items.TypeMandatory;
 import com.exactprosystems.jf.common.parser.listeners.IMatrixListener;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.common.report.ReportTable;
+import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.exceptions.ParametersException;
+
 import org.apache.log4j.Logger;
 
 import javax.lang.model.type.NullType;
+
 import java.lang.reflect.Field;
 import java.util.*;
 import java.util.Map.Entry;

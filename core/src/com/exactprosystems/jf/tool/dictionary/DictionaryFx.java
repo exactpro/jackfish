@@ -11,7 +11,6 @@ package com.exactprosystems.jf.tool.dictionary;
 import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.app.IWindow.SectionKind;
 import com.exactprosystems.jf.api.common.Str;
-import com.exactprosystems.jf.common.Configuration;
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.undoredo.Command;
@@ -19,15 +18,18 @@ import com.exactprosystems.jf.common.xml.control.AbstractControl;
 import com.exactprosystems.jf.common.xml.gui.GuiDictionary;
 import com.exactprosystems.jf.common.xml.gui.Section;
 import com.exactprosystems.jf.common.xml.gui.Window;
+import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.tool.ApplicationConnector;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.dictionary.DictionaryFxController.Result;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.main.Main;
+
 import javafx.concurrent.Task;
 import javafx.scene.control.ButtonType;
 
 import javax.xml.bind.annotation.XmlRootElement;
+
 import java.io.File;
 import java.io.Reader;
 import java.util.*;

@@ -6,7 +6,7 @@
 //  information which is the property of Exactpro Systems, LLC or its licensors.
 ////////////////////////////////////////////////////////////////////////////////
 
-package com.exactprosystems.jf.common;
+package com.exactprosystems.jf.documents;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

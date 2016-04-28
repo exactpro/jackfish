@@ -15,6 +15,8 @@ import com.exactprosystems.jf.common.parser.listeners.*;
 import com.exactprosystems.jf.common.version.VersionInfo;
 import com.exactprosystems.jf.common.xml.gui.GuiDictionary;
 import com.exactprosystems.jf.common.xml.messages.MessageDictionary;
+import com.exactprosystems.jf.documents.config.Configuration;
+import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.tool.main.Main;
 
 import javafx.application.Application;

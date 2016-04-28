@@ -16,7 +16,6 @@ import com.exactprosystems.jf.actions.ReadableValue;
 import com.exactprosystems.jf.api.app.AppConnection;
 import com.exactprosystems.jf.api.app.IApplicationPool;
 import com.exactprosystems.jf.api.common.Str;
-import com.exactprosystems.jf.common.Context;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.parser.Parameter;
 import com.exactprosystems.jf.common.parser.Parameters;
@@ -24,6 +23,7 @@ import com.exactprosystems.jf.common.parser.items.ActionItem.HelpKind;
 import com.exactprosystems.jf.common.parser.items.TypeMandatory;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.common.report.ReportTable;
+import com.exactprosystems.jf.documents.config.Context;
 
 import java.util.HashMap;
 import java.util.List;

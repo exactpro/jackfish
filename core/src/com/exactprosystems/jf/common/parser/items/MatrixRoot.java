@@ -8,8 +8,8 @@
 
 package com.exactprosystems.jf.common.parser.items;
 
-import com.exactprosystems.jf.common.Context;
 import com.exactprosystems.jf.common.parser.DisplayDriver;
+import com.exactprosystems.jf.documents.config.Context;
 
 import java.io.File;
 

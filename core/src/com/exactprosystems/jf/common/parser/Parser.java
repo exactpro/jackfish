@@ -10,10 +10,10 @@ package com.exactprosystems.jf.common.parser;
 
 import com.csvreader.CsvReader;
 import com.csvreader.CsvWriter;
-import com.exactprosystems.jf.common.Configuration;
 import com.exactprosystems.jf.common.parser.items.*;
 import com.exactprosystems.jf.common.parser.listeners.IMatrixListener;
 import com.exactprosystems.jf.common.parser.listeners.SilenceMatrixListener;
+import com.exactprosystems.jf.documents.config.Configuration;
 
 import org.apache.log4j.Logger;
 

@@ -1,10 +1,10 @@
 package com.exactprosystems.jf.common.parser.items;
 
 import com.csvreader.CsvWriter;
-import com.exactprosystems.jf.common.Context;
 import com.exactprosystems.jf.common.parser.*;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.common.report.ReportTable;
+import com.exactprosystems.jf.documents.config.Context;
 
 import java.util.List;
 

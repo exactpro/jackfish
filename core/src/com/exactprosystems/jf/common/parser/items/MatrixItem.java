@@ -13,13 +13,13 @@ import com.exactprosystems.jf.api.app.Mutable;
 import com.exactprosystems.jf.api.common.Converter;
 import com.exactprosystems.jf.api.common.IMatrixItem;
 import com.exactprosystems.jf.api.common.Str;
-import com.exactprosystems.jf.common.Configuration;
-import com.exactprosystems.jf.common.Context;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.evaluator.Variables;
 import com.exactprosystems.jf.common.parser.*;
 import com.exactprosystems.jf.common.parser.listeners.IMatrixListener;
 import com.exactprosystems.jf.common.report.ReportBuilder;
+import com.exactprosystems.jf.documents.config.Configuration;
+import com.exactprosystems.jf.documents.config.Context;
 
 import org.apache.log4j.Logger;
 

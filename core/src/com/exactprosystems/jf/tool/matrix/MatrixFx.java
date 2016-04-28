@@ -11,8 +11,6 @@ package com.exactprosystems.jf.tool.matrix;
 import com.exactprosystems.jf.actions.ReadableValue;
 import com.exactprosystems.jf.api.app.AppConnection;
 import com.exactprosystems.jf.api.common.Str;
-import com.exactprosystems.jf.common.Configuration;
-import com.exactprosystems.jf.common.Context;
 import com.exactprosystems.jf.common.MatrixRunner;
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
@@ -25,12 +23,16 @@ import com.exactprosystems.jf.common.parser.listeners.IMatrixListener;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.common.undoredo.Command;
 import com.exactprosystems.jf.common.xml.control.Table;
+import com.exactprosystems.jf.documents.config.Configuration;
+import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.tool.ApplicationConnector;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.main.Main;
+
 import javafx.scene.control.ButtonType;
 import javafx.util.Pair;
+
 import org.apache.log4j.Logger;
 
 import java.io.File;

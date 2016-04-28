@@ -10,7 +10,6 @@ package com.exactprosystems.jf.tool.matrix.params;
 
 import com.exactprosystems.jf.actions.ReadableValue;
 import com.exactprosystems.jf.actions.gui.DialogFill;
-import com.exactprosystems.jf.common.Context;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.parser.FormulaGenerator;
 import com.exactprosystems.jf.common.parser.Parameter;
@@ -19,6 +18,7 @@ import com.exactprosystems.jf.common.parser.items.ActionItem;
 import com.exactprosystems.jf.common.parser.items.ActionItem.HelpKind;
 import com.exactprosystems.jf.common.parser.items.MatrixItem;
 import com.exactprosystems.jf.common.parser.items.TypeMandatory;
+import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.functions.Xml;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
@@ -32,6 +32,7 @@ import com.exactprosystems.jf.tool.custom.xpath.XpathViewer;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper.OpenSaveMode;
 import com.exactprosystems.jf.tool.matrix.MatrixFx;
+
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;

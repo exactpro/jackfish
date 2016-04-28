@@ -22,6 +22,10 @@ import com.exactprosystems.jf.common.parser.listeners.SilenceMatrixListener;
 import com.exactprosystems.jf.common.report.HelpFactory;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.common.version.VersionInfo;
+import com.exactprosystems.jf.documents.Document;
+import com.exactprosystems.jf.documents.DocumentInfo;
+import com.exactprosystems.jf.documents.config.Configuration;
+import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.custom.Notifications;
 import com.exactprosystems.jf.tool.custom.browser.ReportBrowser;
@@ -29,6 +33,7 @@ import com.exactprosystems.jf.tool.custom.date.DateTimePicker;
 import com.exactprosystems.jf.tool.custom.date.DateTimePickerSkin;
 import com.exactprosystems.jf.tool.custom.helper.HelperFx;
 import com.exactprosystems.jf.tool.matrix.MatrixFx;
+
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -46,6 +51,7 @@ import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.util.Duration;
+
 import org.apache.log4j.Logger;
 import org.w3c.dom.NodeList;
 

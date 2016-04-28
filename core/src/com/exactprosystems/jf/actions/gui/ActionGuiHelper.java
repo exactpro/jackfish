@@ -15,10 +15,10 @@ import com.exactprosystems.jf.api.app.IGuiDictionary;
 import com.exactprosystems.jf.api.app.IWindow;
 import com.exactprosystems.jf.api.app.IWindow.SectionKind;
 import com.exactprosystems.jf.api.common.Str;
-import com.exactprosystems.jf.common.Context;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.parser.Matrix;
 import com.exactprosystems.jf.common.parser.Parameters;
+import com.exactprosystems.jf.documents.config.Context;
 
 import java.util.Collection;
 import java.util.List;

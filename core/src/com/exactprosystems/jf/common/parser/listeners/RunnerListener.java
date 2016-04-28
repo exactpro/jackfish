@@ -1,7 +1,7 @@
 package com.exactprosystems.jf.common.parser.listeners;
 
-import com.exactprosystems.jf.common.Configuration;
 import com.exactprosystems.jf.common.MatrixRunner;
+import com.exactprosystems.jf.documents.config.Configuration;
 
 public interface RunnerListener
 {

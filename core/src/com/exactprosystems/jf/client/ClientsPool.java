@@ -15,10 +15,11 @@ import com.exactprosystems.jf.api.client.IClientsPool;
 import com.exactprosystems.jf.api.common.ApiVersionInfo;
 import com.exactprosystems.jf.api.common.IContext;
 import com.exactprosystems.jf.api.common.Str;
-import com.exactprosystems.jf.common.Configuration;
-import com.exactprosystems.jf.common.Configuration.ClientEntry;
-import com.exactprosystems.jf.common.Configuration.Parameter;
 import com.exactprosystems.jf.common.xml.messages.MessageDictionary;
+import com.exactprosystems.jf.documents.config.Configuration;
+import com.exactprosystems.jf.documents.config.Configuration.ClientEntry;
+import com.exactprosystems.jf.documents.config.Configuration.Parameter;
+
 import org.apache.log4j.Logger;
 
 import java.io.FileReader;

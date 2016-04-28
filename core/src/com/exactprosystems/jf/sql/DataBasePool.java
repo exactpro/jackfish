@@ -21,8 +21,8 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.ServiceLoader;
 
-import com.exactprosystems.jf.common.Configuration;
-import com.exactprosystems.jf.common.Configuration.SqlEntry;
+import com.exactprosystems.jf.documents.config.Configuration;
+import com.exactprosystems.jf.documents.config.Configuration.SqlEntry;
 import com.exactprosystems.jf.functions.Table;
 
 public class DataBasePool

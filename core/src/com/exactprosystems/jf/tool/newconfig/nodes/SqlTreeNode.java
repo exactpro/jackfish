@@ -7,9 +7,9 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.exactprosystems.jf.tool.newconfig.nodes;
 
-import com.exactprosystems.jf.common.Configuration;
 import com.exactprosystems.jf.common.Settings;
-import com.exactprosystems.jf.common.Configuration.SqlEntry;
+import com.exactprosystems.jf.documents.config.Configuration;
+import com.exactprosystems.jf.documents.config.Configuration.SqlEntry;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.SupportedEntry;

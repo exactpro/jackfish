@@ -9,9 +9,9 @@
 package com.exactprosystems.jf.tool.configuration;
 
 import com.exactprosystems.jf.api.client.Possibility;
-import com.exactprosystems.jf.common.Configuration;
-import com.exactprosystems.jf.common.Entry;
 import com.exactprosystems.jf.common.Settings;
+import com.exactprosystems.jf.documents.config.Configuration;
+import com.exactprosystems.jf.documents.config.Entry;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.SupportedEntry;

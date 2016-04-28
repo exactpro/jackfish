@@ -9,11 +9,12 @@ package com.exactprosystems.jf.tool;
 
 import com.exactprosystems.jf.api.app.AppConnection;
 import com.exactprosystems.jf.api.app.IApplicationPool;
-import com.exactprosystems.jf.common.Configuration;
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
+import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.tool.dictionary.ApplicationStatus;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
+
 import javafx.concurrent.Task;
 import javafx.scene.control.ButtonType;
 

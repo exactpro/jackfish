@@ -8,18 +8,19 @@
 
 package com.exactprosystems.jf.tool.custom.treetable;
 
-import com.exactprosystems.jf.common.Context;
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.common.parser.Tokens;
 import com.exactprosystems.jf.common.parser.items.MatrixItem;
 import com.exactprosystems.jf.common.report.ContextHelpFactory;
 import com.exactprosystems.jf.common.report.ReportBuilder;
+import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.matrix.MatrixFx;
 import com.exactprosystems.jf.tool.matrix.MatrixFx.PlaceToInsert;
 import com.exactprosystems.jf.tool.settings.SettingsPanel;
+
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Node;

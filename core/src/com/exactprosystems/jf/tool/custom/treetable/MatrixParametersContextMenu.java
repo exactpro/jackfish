@@ -11,17 +11,18 @@ package com.exactprosystems.jf.tool.custom.treetable;
 
 import com.exactprosystems.jf.actions.ReadableValue;
 import com.exactprosystems.jf.api.app.ProxyException;
-import com.exactprosystems.jf.common.Context;
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.common.parser.Parameters;
 import com.exactprosystems.jf.common.parser.items.ActionItem;
 import com.exactprosystems.jf.common.parser.items.MatrixItem;
 import com.exactprosystems.jf.common.parser.items.TypeMandatory;
+import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.matrix.MatrixFx;
 import com.exactprosystems.jf.tool.matrix.params.ParameterGridPane;
 import com.exactprosystems.jf.tool.matrix.params.ShowAllParams;
+
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.Node;

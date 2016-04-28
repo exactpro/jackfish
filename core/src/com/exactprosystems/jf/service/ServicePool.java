@@ -14,9 +14,9 @@ import com.exactprosystems.jf.api.service.IService;
 import com.exactprosystems.jf.api.service.IServiceFactory;
 import com.exactprosystems.jf.api.service.IServicesPool;
 import com.exactprosystems.jf.api.service.ServiceConnection;
-import com.exactprosystems.jf.common.Configuration;
-import com.exactprosystems.jf.common.Configuration.Parameter;
-import com.exactprosystems.jf.common.Configuration.ServiceEntry;
+import com.exactprosystems.jf.documents.config.Configuration;
+import com.exactprosystems.jf.documents.config.Configuration.Parameter;
+import com.exactprosystems.jf.documents.config.Configuration.ServiceEntry;
 
 import org.apache.log4j.Logger;
 

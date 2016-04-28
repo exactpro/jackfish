@@ -8,9 +8,9 @@
 package com.exactprosystems.jf.common.parser.items;
 
 import com.exactprosystems.jf.actions.help.ActionsList;
-import com.exactprosystems.jf.common.Context;
 import com.exactprosystems.jf.common.parser.DisplayDriver;
 import com.exactprosystems.jf.common.parser.Tokens;
+import com.exactprosystems.jf.documents.config.Context;
 
 import java.util.ArrayList;
 import java.util.Arrays;

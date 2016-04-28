@@ -6,7 +6,7 @@
 //  information which is the property of Exactpro Systems, LLC or its licensors.
 ////////////////////////////////////////////////////////////////////////////////
 
-package com.exactprosystems.jf.common;
+package com.exactprosystems.jf.documents.config;
 
 import java.util.List;
 
@@ -15,8 +15,8 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 
 import com.exactprosystems.jf.api.app.Mutable;
-import com.exactprosystems.jf.common.Configuration.Parameter;
 import com.exactprosystems.jf.common.parser.items.MutableArrayList;
+import com.exactprosystems.jf.documents.config.Configuration.Parameter;
 
 @XmlAccessorType(XmlAccessType.NONE)
 public abstract class Entry implements Mutable
@@ -72,19 +72,17 @@ public abstract class Entry implements Mutable
 		changed = false;
 	}
 	
-	@Deprecated
-	public String get(String name) throws Exception
-	{
-		Object res = Configuration.get(getClass(), this, name);
-		return res == null ? "" : res.toString();
-	}
+	public abstract String get(String name) throws Exception;
+//	{
+//		Object res = Configuration.get(getClass(), this, name);
+//		return res == null ? "" : res.toString();
+//	}
 	
-	@Deprecated
-	public void set(String name, Object value) throws Exception
-	{
-		Configuration.set(getClass(), this, name, value);
-		changed = true;
-	}
+	public abstract void set(String name, Object value) throws Exception;
+//	{
+//		Configuration.set(getClass(), this, name, value);
+//		changed = true;
+//	}
 
 	public String getParameter(String key)
 	{

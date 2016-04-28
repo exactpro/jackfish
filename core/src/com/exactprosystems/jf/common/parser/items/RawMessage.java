@@ -12,13 +12,13 @@ import com.csvreader.CsvWriter;
 import com.exactprosystems.jf.api.client.IClientFactory;
 import com.exactprosystems.jf.api.client.MapMessage;
 import com.exactprosystems.jf.api.common.Str;
-import com.exactprosystems.jf.common.Context;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.evaluator.Variables;
 import com.exactprosystems.jf.common.parser.*;
 import com.exactprosystems.jf.common.parser.listeners.IMatrixListener;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.common.report.ReportTable;
+import com.exactprosystems.jf.documents.config.Context;
 
 import java.util.ArrayList;
 import java.util.HashMap;

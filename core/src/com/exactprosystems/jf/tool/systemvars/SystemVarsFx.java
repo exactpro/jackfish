@@ -8,12 +8,12 @@
 
 package com.exactprosystems.jf.tool.systemvars;
 
-import com.exactprosystems.jf.common.Configuration;
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.evaluator.SystemVars;
 import com.exactprosystems.jf.common.parser.Parameter;
 import com.exactprosystems.jf.common.undoredo.Command;
+import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 

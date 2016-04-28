@@ -8,12 +8,13 @@
 
 package com.exactprosystems.jf.tool.text;
 
-import com.exactprosystems.jf.common.Configuration;
-import com.exactprosystems.jf.common.DocumentInfo;
 import com.exactprosystems.jf.common.Settings;
+import com.exactprosystems.jf.documents.DocumentInfo;
+import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.tool.AbstractDocument;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
+
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.scene.control.ButtonType;

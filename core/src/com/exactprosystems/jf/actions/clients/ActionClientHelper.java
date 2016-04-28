@@ -11,11 +11,11 @@ package com.exactprosystems.jf.actions.clients;
 import com.exactprosystems.jf.actions.ReadableValue;
 import com.exactprosystems.jf.api.client.*;
 import com.exactprosystems.jf.api.common.Str;
-import com.exactprosystems.jf.common.Context;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.parser.Matrix;
 import com.exactprosystems.jf.common.parser.Parameters;
 import com.exactprosystems.jf.common.parser.items.ActionItem.HelpKind;
+import com.exactprosystems.jf.documents.config.Context;
 
 import org.apache.log4j.Logger;
 

@@ -11,8 +11,8 @@ package com.exactprosystems.jf.tool.custom.tab;
 import java.io.FileReader;
 import java.io.Reader;
 
-import com.exactprosystems.jf.common.Document;
 import com.exactprosystems.jf.common.Settings;
+import com.exactprosystems.jf.documents.Document;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;

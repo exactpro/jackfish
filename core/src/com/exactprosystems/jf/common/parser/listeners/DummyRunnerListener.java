@@ -1,7 +1,8 @@
 package com.exactprosystems.jf.common.parser.listeners;
 
-import com.exactprosystems.jf.common.Configuration;
 import com.exactprosystems.jf.common.MatrixRunner;
+import com.exactprosystems.jf.documents.config.Configuration;
+
 import org.apache.log4j.Logger;
 
 public class DummyRunnerListener implements RunnerListener

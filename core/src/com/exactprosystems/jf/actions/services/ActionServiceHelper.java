@@ -14,8 +14,8 @@ import org.apache.log4j.Logger;
 
 import com.exactprosystems.jf.actions.ReadableValue;
 import com.exactprosystems.jf.api.service.ServiceConnection;
-import com.exactprosystems.jf.common.Configuration;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
+import com.exactprosystems.jf.documents.config.Configuration;
 
 public class ActionServiceHelper
 {

@@ -11,12 +11,12 @@ package com.exactprosystems.jf.common.parser.items;
 import java.util.List;
 
 import com.csvreader.CsvWriter;
-import com.exactprosystems.jf.common.Context;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.parser.*;
 import com.exactprosystems.jf.common.parser.listeners.IMatrixListener;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.common.report.ReportTable;
+import com.exactprosystems.jf.documents.config.Context;
 
 @MatrixItemAttribute(
 		description = "Switches on output of the report.", 

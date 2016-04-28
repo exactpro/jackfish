@@ -9,12 +9,12 @@
 package com.exactprosystems.jf.tool.main;
 
 import com.exactprosystems.jf.api.common.Str;
-import com.exactprosystems.jf.common.Configuration;
-import com.exactprosystems.jf.common.Document;
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.common.Settings.SettingsValue;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.version.VersionInfo;
+import com.exactprosystems.jf.documents.Document;
+import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.CssVariables;
@@ -25,6 +25,7 @@ import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.matrix.MatrixFx;
 import com.exactprosystems.jf.tool.matrix.schedule.RunnerScheduler;
 import com.exactprosystems.jf.tool.settings.SettingsPanel;
+
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
@@ -41,6 +42,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
+
 import org.apache.log4j.Logger;
 
 import java.io.File;

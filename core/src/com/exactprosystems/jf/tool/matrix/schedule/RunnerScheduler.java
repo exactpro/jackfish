@@ -8,12 +8,12 @@
 
 package com.exactprosystems.jf.tool.matrix.schedule;
 
-import com.exactprosystems.jf.common.Configuration;
-import com.exactprosystems.jf.common.Context;
 import com.exactprosystems.jf.common.MatrixRunner;
 import com.exactprosystems.jf.common.parser.Matrix;
 import com.exactprosystems.jf.common.parser.listeners.MatrixListener;
 import com.exactprosystems.jf.common.parser.listeners.RunnerListener;
+import com.exactprosystems.jf.documents.config.Configuration;
+import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.custom.tab.CustomTab;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
