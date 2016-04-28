@@ -7,8 +7,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.exactprosystems.jf.tool.newconfig.nodes;
 
-import com.exactprosystems.jf.common.MutableString;
-import com.exactprosystems.jf.common.parser.items.MutableArrayList;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.newconfig.ConfigurationFxNew;
@@ -51,7 +49,7 @@ public class LibraryTreeNode extends TreeNode
 		return Optional.of(new Image(CssVariables.Icons.LIBRARY_ICON));
 	}
 
-	public void display(MutableArrayList<MutableString> librariesValue)
+	public void display(List<String> librariesValue)
 	{
 		this.treeItem.getChildren().clear();
 		Function<File, ContextMenu> menuTopFolder = file -> {
@@ -95,7 +93,7 @@ public class LibraryTreeNode extends TreeNode
 			return menu;
 		};
 		
-		librariesValue.forEach(file -> new BuildTree(new File(file.get()), this.treeItem)
+		librariesValue.forEach(file -> new BuildTree(new File(file), this.treeItem)
 				.doubleClickEvent(f -> () -> this.model.openLibrary(f))
 				.fileFilter(f -> ConfigurationFxNew.getExtension(f.getAbsolutePath()).equals(ConfigurationFxNew.matrixExt))
 				.menuTopFolder(menuTopFolder)

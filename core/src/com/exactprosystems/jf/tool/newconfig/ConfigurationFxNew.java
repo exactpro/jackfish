@@ -1021,27 +1021,27 @@ public class ConfigurationFxNew extends Configuration
 
 	private void displayEvaluator()
 	{
-		this.controller.displayEvaluator(super.importsValue);
+		this.controller.displayEvaluator(toStringList(super.importsValue));
 	}
 	
 	private void displayFormat()
 	{
-		this.controller.displayFormat(super.timeValue.get(), super.dateValue.get(), super.dateTimeValue.get(), super.formatsValue);
+		this.controller.displayFormat(super.timeValue.get(), super.dateValue.get(), super.dateTimeValue.get(), toStringList(super.formatsValue));
 	}
 
 	private void displayMatrix()
 	{
-		this.controller.displayMatrix(this.matricesValue);
+		this.controller.displayMatrix(toStringList(this.matricesValue));
 	}
 	
 	private void displayLibrary()
 	{
-		this.controller.displayLibrary(super.librariesValue);
+		this.controller.displayLibrary(toStringList(super.librariesValue));
 	}
 	
 	private void displayVars()
 	{
-		this.controller.displayVars(super.userVarsValue);
+		this.controller.displayVars(toStringList(super.userVarsValue));
 	}
 	
 	private void displayReport()

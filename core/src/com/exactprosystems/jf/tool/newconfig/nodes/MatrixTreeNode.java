@@ -8,8 +8,6 @@
 package com.exactprosystems.jf.tool.newconfig.nodes;
 
 import com.exactprosystems.jf.common.Configuration;
-import com.exactprosystems.jf.common.MutableString;
-import com.exactprosystems.jf.common.parser.items.MutableArrayList;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.newconfig.ConfigurationFxNew;
@@ -52,7 +50,7 @@ public class MatrixTreeNode extends TreeNode
 		return Optional.of(new Image(CssVariables.Icons.MATRIX_ICON));
 	}
 
-	public void display(MutableArrayList<MutableString> matricesValue)
+	public void display(List<String> matricesValue)
 	{
 		this.treeItem.getChildren().clear();
 		Function<File, ContextMenu> topFolderMenu = file -> {
@@ -95,7 +93,7 @@ public class MatrixTreeNode extends TreeNode
 			return menu;
 		};
 		matricesValue.forEach(file ->
-				new BuildTree(new File(file.get()), this.treeItem)
+				new BuildTree(new File(file), this.treeItem)
 						.fileFilter(f -> ConfigurationFxNew.getExtension(f.getAbsolutePath()).equals(Configuration.matrixExt))
 						.menuTopFolder(topFolderMenu)
 						.doubleClickEvent(f -> () -> this.model.openMatrix(f))

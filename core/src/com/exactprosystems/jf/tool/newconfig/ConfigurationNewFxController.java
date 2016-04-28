@@ -2,7 +2,6 @@ package com.exactprosystems.jf.tool.newconfig;
 
 import java.io.File;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -13,13 +12,10 @@ import javafx.scene.Parent;
 import javafx.scene.control.TreeItem;
 import javafx.scene.layout.BorderPane;
 
-import com.exactprosystems.jf.common.Configuration;
 import com.exactprosystems.jf.common.Configuration.AppEntry;
 import com.exactprosystems.jf.common.Configuration.ClientEntry;
 import com.exactprosystems.jf.common.Configuration.ServiceEntry;
 import com.exactprosystems.jf.common.Configuration.SqlEntry;
-import com.exactprosystems.jf.common.MutableString;
-import com.exactprosystems.jf.common.parser.items.MutableArrayList;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.newconfig.nodes.AppTreeNode;
@@ -86,28 +82,28 @@ public class ConfigurationNewFxController implements Initializable, ContainingPa
 	// ============================================================
 	// display* methods
 	// ============================================================
-	public void displayEvaluator(MutableArrayList<MutableString> imports) 
+	public void displayEvaluator(List<String> imports) 
 	{
 		Common.tryCatch(() -> this.evaluatorTreeNode.display(imports), "Error on display evaluator");
 	}
 
-	public void displayFormat(String timeFormat, String dateFormat, String dateTimeFormat, MutableArrayList<MutableString> additionFormats)
+	public void displayFormat(String timeFormat, String dateFormat, String dateTimeFormat, List<String> additionFormats)
 	{
 		Common.tryCatch(() -> this.formatTreeNode.display(timeFormat, dateFormat, dateTimeFormat, additionFormats),
 				"Error on display evaluator");
 	}
 
-	public void displayMatrix(MutableArrayList<MutableString> matricesValue)
+	public void displayMatrix(List<String> matricesValue)
 	{
 		Common.tryCatch(() -> this.matrixTreeNode.display(matricesValue), "Error on display matrix");
 	}
 
-	public void displayLibrary(MutableArrayList<MutableString> librariesValue)
+	public void displayLibrary(List<String> librariesValue)
 	{
 		Common.tryCatch(() -> this.libTreeNode.display(librariesValue), "Error on display libs");
 	}
 
-	public void displayVars(MutableArrayList<MutableString> userVarsValue)
+	public void displayVars(List<String> userVarsValue)
 	{
 		Common.tryCatch(() -> this.varsTreeNode.display(userVarsValue), "Error on display vars");
 	}

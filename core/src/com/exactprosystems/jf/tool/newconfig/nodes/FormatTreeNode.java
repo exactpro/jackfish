@@ -8,8 +8,6 @@
 package com.exactprosystems.jf.tool.newconfig.nodes;
 
 import com.exactprosystems.jf.common.Configuration;
-import com.exactprosystems.jf.common.MutableString;
-import com.exactprosystems.jf.common.parser.items.MutableArrayList;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.newconfig.ConfigurationFxNew;
@@ -23,7 +21,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -79,7 +76,7 @@ public class FormatTreeNode extends TreeNode
 		return Optional.of(new Image(CssVariables.Icons.FORMAT_ICON));
 	}
 
-	public void display(String timeFormat, String dateFormat, String dateTimeFormat, MutableArrayList<MutableString> additionFormats)
+	public void display(String timeFormat, String dateFormat, String dateTimeFormat, List<String> additionFormats)
 	{
 		this.timeFormat = timeFormat;
 		this.dateFormat = dateFormat;
@@ -90,7 +87,7 @@ public class FormatTreeNode extends TreeNode
 		additionFormats.stream().map(format ->
 		{
 			TreeItem<TreeNode> treeItem = new TreeItem<>();
-			TreeNode formatNode = new TreeNodeFormat(format.get());
+			TreeNode formatNode = new TreeNodeFormat(format);
 			treeItem.setValue(formatNode);
 			return treeItem;
 		}).forEach(this.formatTreeItem.getChildren()::add);
