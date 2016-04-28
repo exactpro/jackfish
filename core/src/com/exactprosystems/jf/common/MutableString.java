@@ -21,7 +21,7 @@ public class MutableString implements Mutable
 {
 	public MutableString()
 	{
-		this(null);
+		this("");
 	}
 
 	public MutableString(String str)

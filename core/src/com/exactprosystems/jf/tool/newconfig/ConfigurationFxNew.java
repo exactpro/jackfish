@@ -18,33 +18,25 @@ import com.exactprosystems.jf.client.ClientsPool;
 import com.exactprosystems.jf.common.MutableString;
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
-import com.exactprosystems.jf.common.parser.items.MutableArrayList;
 import com.exactprosystems.jf.common.parser.listeners.RunnerListener;
 import com.exactprosystems.jf.common.parser.listeners.SilenceMatrixListener;
 import com.exactprosystems.jf.common.undoredo.Command;
 import com.exactprosystems.jf.documents.config.AppEntry;
 import com.exactprosystems.jf.documents.config.ClientEntry;
 import com.exactprosystems.jf.documents.config.Configuration;
-import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.config.Entry;
 import com.exactprosystems.jf.documents.config.Parameter;
 import com.exactprosystems.jf.documents.config.ServiceEntry;
 import com.exactprosystems.jf.documents.config.SqlEntry;
 import com.exactprosystems.jf.service.ServicePool;
-import com.exactprosystems.jf.sql.SqlConnection;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.SupportedEntry;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.main.Main;
 import com.exactprosystems.jf.tool.newconfig.nodes.*;
-import com.exactprosystems.jf.tool.newconfig.testing.TestingConnectionFxController;
-
-import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Pane;
-
 import java.io.File;
 import java.io.Reader;
 import java.util.*;
@@ -260,12 +252,12 @@ public class ConfigurationFxNew extends Configuration
 		}
 		Command undo = () ->
 		{
-			change(Configuration.imports, lastImports);
+//			change(Configuration.imports, lastImports);
 			displayEvaluator();
 		};
 		Command redo = () ->
 		{
-			change(Configuration.imports, newImports);
+//			change(Configuration.imports, newImports);
 			displayEvaluator();
 		};
 		addCommand(undo, redo);
@@ -284,12 +276,12 @@ public class ConfigurationFxNew extends Configuration
 		}
 		Command undo = () ->
 		{
-			change(key, oldValue);
+//			change(key, oldValue);
 			displayFormat();
 		};
 		Command redo = () ->
 		{
-			change(key, newValue);
+//			change(key, newValue);
 			displayFormat();
 		};
 		addCommand(undo, redo);
@@ -325,12 +317,12 @@ public class ConfigurationFxNew extends Configuration
 		}
 		Command undo = () ->
 		{
-			change(Configuration.formats, oldFormats);
+//			change(Configuration.formats, oldFormats);
 			displayFormat();
 		};
 		Command redo = () ->
 		{
-			change(Configuration.formats, newFormats);
+//			change(Configuration.formats, newFormats);
 			displayFormat();
 		};
 		addCommand(undo, redo);
@@ -892,30 +884,6 @@ public class ConfigurationFxNew extends Configuration
 		super.changed(true);
 	}
 
-//	@Deprecated
-//	private void removeFile(File file, List<File> list, DisplayFunction displayFunction)
-//	{
-//		// TODO need remove file from fileSystem
-//		List<File> oldFiles = new ArrayList<>(list);
-//		Command undo = () ->
-//		{
-//			list.clear();
-//			list.addAll(oldFiles);
-//			displayFunction.display();
-//			this.displayFileSystem();
-//		};
-//		Command redo = () ->
-//		{
-//			List<File> collect = list.stream().filter(f -> !path(file).equals(path(f))).collect(Collectors.toList());
-//			list.clear();
-//			list.addAll(collect);
-//			displayFunction.display();
-//			this.displayFileSystem();
-//		};
-//		super.addCommand(undo, redo);
-//		super.changed(true);
-//	}
-//
 	private void removeString(String file, List<MutableString> list, DisplayFunction displayFunction)
 	{
 		// TODO need remove file from fileSystem
@@ -985,11 +953,6 @@ public class ConfigurationFxNew extends Configuration
 		dialog.getDialogPane().setPrefHeight(300);
 		dialog.getDialogPane().getStylesheets().addAll(Common.currentTheme().getPath());
 		dialog.show();
-	}
-
-	private void change(String value, String newValue)
-	{
-		Common.tryCatch(() -> set(value, newValue), "Error on change " + value + " to set " + newValue);
 	}
 
 	private static void forceDelete(File directory)
@@ -1095,10 +1058,4 @@ public class ConfigurationFxNew extends Configuration
 		this.controller = Common.loadController(ConfigurationFxNew.class.getResource("config.fxml"));
 		this.controller.init(this, this.pane);
 	}
-
-	private static List<String> toStringList(MutableArrayList<MutableString> str)
-	{
-		return str.stream().map(MutableString::get).collect(Collectors.toList());
-	}
-
 }

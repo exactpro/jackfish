@@ -8,12 +8,13 @@
 
 package com.exactprosystems.jf.common.evaluator;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
 public abstract class AbstractEvaluator 
 {
-	public abstract void addImports(String[] imports);
+	public abstract void addImports(Collection<String> imports);
 	
 	public abstract Variables getGlobals();
 	

@@ -222,6 +222,7 @@ public class MainRunner
 			if (outputString != null)
 			{
 				configuration.set(Configuration.outputPath, outputString);
+				configuration.getReports().set(outputString);
 			}
 
 			Date startAt = new Date();

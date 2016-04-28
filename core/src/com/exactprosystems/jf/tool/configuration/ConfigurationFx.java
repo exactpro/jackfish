@@ -58,7 +58,6 @@ public class ConfigurationFx extends Configuration
 	private Main									mainModel;
 
 	private ConfigurationFxController				controller;
-	private Context									context;
 	private Map<ServiceEntry, ServiceConnection>	serviceMap			= new HashMap<>();
 	private Task<Void>								startTask;
 
@@ -75,7 +74,6 @@ public class ConfigurationFx extends Configuration
 		super.runnerListener = runnerListener;
 		
 		this.mainModel = mainModel;
-		this.context = createContext(new SilenceMatrixListener(), System.out);
 	}
 
 	//==============================================================================================================================
@@ -152,11 +150,6 @@ public class ConfigurationFx extends Configuration
 		if (this.mainModel != null)
 		{
 			this.mainModel.setConfiguration(null);
-		}
-
-		if (this.context != null)
-		{
-			this.context.close();
 		}
 
 		this.controller.close();
@@ -497,7 +490,7 @@ public class ConfigurationFx extends Configuration
 				controller.displayBeforeStartService();
 				ServiceConnection serviceConnection = services.loadService(entry.toString());
 				serviceMap.put(entry, serviceConnection);
-				services.startService(context, serviceConnection, startParameters);
+				services.startService(createContext(new SilenceMatrixListener(), System.out), serviceConnection, startParameters);
 				return null;
 			}
 		};

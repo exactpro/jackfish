@@ -282,7 +282,38 @@ public class Configuration extends AbstractDocument
 	{
 		this("unknown", new Settings());
 	}
+	
+	public MutableString getTime()
+	{
+		return this.timeValue;
+	}
 
+	public MutableString getDate()
+	{
+		return this.dateValue;
+	}
+
+	public MutableString getDateTime()
+	{
+		return this.dateTimeValue;
+	}
+
+	public MutableString getReports()
+	{
+		return this.reportsValue;
+	}
+
+	public MutableString getGit()
+	{
+		return this.gitValue;
+	}
+
+	public MutableString getVars()
+	{
+		return this.varsValue;
+	}
+	
+	
 	
 	public IClientsPool getClientPool()
 	{
@@ -379,7 +410,14 @@ public class Configuration extends AbstractDocument
 		}
 		
 		AbstractEvaluator evaluator	= objectFromClassName(evaluatorClassName, AbstractEvaluator.class);
-		evaluator.addImports(get(evaluatorImports).split(SEPARATOR));
+		evaluator.addImports(toStringList(this.importsValue));
+		setUserVariablesFromMask(this.varsValue.get(), evaluator);
+		for (MutableString userVars : this.userVarsValue)
+		{
+			setUserVariablesFromMask(userVars.get(), evaluator);
+		}
+		
+		evaluator.addImports(Arrays.asList(this.evaluatorImportsValue.split(SEPARATOR)));
 		setUserVariablesFromMask(get(variables), evaluator);
 		setUserVariablesFromMask(get(userVariables), evaluator);
 		evaluator.reset();
@@ -539,13 +577,13 @@ public class Configuration extends AbstractDocument
 	        setAll(config);
 	        
 			this.reportFactoryObj		= objectFromClassName(reportFactoryValue, ReportFactory.class);
-			DateTime.setFormats(get(timeFormat), 
-					get(dateFormat), 
-					get(dateTimeFormat));
-	
-			Converter.setFormats(get(additionFormats));
-	
+
+			DateTime.setFormats(this.timeValue.get(), this.dateValue.get(), this.dateTimeValue.get());
+			Converter.setFormats(toStringList(this.formatsValue));
 			refreshLibs();
+
+			DateTime.setFormats(get(timeFormat), get(dateFormat), get(dateTimeFormat));
+			Converter.setFormats(get(additionFormats));
 			updateLibs();
 	
 			this.valid = true;
@@ -871,6 +909,12 @@ public class Configuration extends AbstractDocument
 		this.globals = map;
 	}
 	
+	public static List<String> toStringList(MutableArrayList<MutableString> str)
+	{
+		return str.stream().map(MutableString::get).collect(Collectors.toList());
+	}
+
+	
 	@SuppressWarnings("unchecked")
 	protected <T extends Entry> T getEntry(String name, List<T> entries) throws Exception
 	{
@@ -936,36 +980,36 @@ public class Configuration extends AbstractDocument
 				vars.injectVariables(evaluator);
 			}
 		}
-		else
-		{
-			final Path path = Paths.get(userVariablesFileName);
-			
-			String reg = path.getFileName().toString();
-			reg = reg.replace("?", ".{1}");
-			reg = reg.replace(".", "\\.");
-			reg = reg.replace("*", ".*");
-			final String regex = reg;
-			
-			File dir = path.subpath(0, path.getNameCount() - 1).toFile();
-			File[] files = dir.listFiles(new FileFilter()
-			{
-				@Override
-				public boolean accept(File pathname)
-				{
-					return pathname.getName().matches(regex);
-				}
-			});
-			 
-			for(File one : files)
-			{
-				try (Reader reader = new FileReader(one))
-				{
-					SystemVars vars = new SystemVars(one.getPath(), this);
-					vars.load(reader);
-					vars.injectVariables(evaluator);
-				}
-			}
-		}
+//		else
+//		{
+//			final Path path = Paths.get(userVariablesFileName);
+//			
+//			String reg = path.getFileName().toString();
+//			reg = reg.replace("?", ".{1}");
+//			reg = reg.replace(".", "\\.");
+//			reg = reg.replace("*", ".*");
+//			final String regex = reg;
+//			
+//			File dir = path.subpath(0, path.getNameCount() - 1).toFile();
+//			File[] files = dir.listFiles(new FileFilter()
+//			{
+//				@Override
+//				public boolean accept(File pathname)
+//				{
+//					return pathname.getName().matches(regex);
+//				}
+//			});
+//			 
+//			for(File one : files)
+//			{
+//				try (Reader reader = new FileReader(one))
+//				{
+//					SystemVars vars = new SystemVars(one.getPath(), this);
+//					vars.load(reader);
+//					vars.injectVariables(evaluator);
+//				}
+//			}
+//		}
 	}
 
 	@Deprecated
@@ -1048,8 +1092,6 @@ public class Configuration extends AbstractDocument
 			}
 		}
 
-		this.libEntriesValue.from(config.libEntriesValue);
-
 		this.timeValue.set(config.timeValue);
 		this.dateValue.set(config.dateValue);
 		this.dateTimeValue.set(config.dateTimeValue);
@@ -1069,6 +1111,8 @@ public class Configuration extends AbstractDocument
 		this.librariesValue.from(config.librariesValue);
 		
 		refreshLibs();
+
+		this.libEntriesValue.from(config.libEntriesValue);
 		updateLibs();
 		
 		this.changed = false;

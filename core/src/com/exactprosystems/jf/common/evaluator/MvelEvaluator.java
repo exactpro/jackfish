@@ -9,6 +9,7 @@
 package com.exactprosystems.jf.common.evaluator;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -118,7 +119,7 @@ public class MvelEvaluator extends AbstractEvaluator
 	}
 
 	@Override
-	public void addImports(String[] imports)
+	public void addImports(Collection<String> imports)
 	{
 		this.context.addPackageImport("java.util");
 		this.context.addPackageImport(Condition.class.getPackage().getName());
