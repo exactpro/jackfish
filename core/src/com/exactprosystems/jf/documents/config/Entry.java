@@ -72,16 +72,8 @@ public abstract class Entry implements Mutable
 	}
 	
 	public abstract String get(String name) throws Exception;
-//	{
-//		Object res = Configuration.get(getClass(), this, name);
-//		return res == null ? "" : res.toString();
-//	}
 	
 	public abstract void set(String name, Object value) throws Exception;
-//	{
-//		Configuration.set(getClass(), this, name, value);
-//		changed = true;
-//	}
 
 	public String getParameter(String key)
 	{

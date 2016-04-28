@@ -41,20 +41,6 @@ public class Parameter implements Mutable
 		this.changed = false;
 	}
 
-//	@Deprecated
-//    public String get(String name) throws Exception
-//	{
-//		Object res = Configuration.get(Parameter.class, this, name);
-//		return res == null ? "" : res.toString();
-//	}
-//
-//	@Deprecated
-//	public void set(String name, Object value) throws Exception
-//	{
-//		Configuration.set(Parameter.class, this, name, value);
-//		changed = true;
-//	}
-
 	@Override
 	public boolean equals(Object o)
 	{

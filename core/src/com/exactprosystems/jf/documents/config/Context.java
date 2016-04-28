@@ -18,8 +18,6 @@ import com.exactprosystems.jf.common.parser.items.MatrixItem;
 import com.exactprosystems.jf.common.parser.items.MatrixRoot;
 import com.exactprosystems.jf.common.parser.items.SubCase;
 import com.exactprosystems.jf.common.parser.listeners.IMatrixListener;
-import com.exactprosystems.jf.common.parser.listeners.MatrixListener;
-
 import org.apache.log4j.Logger;
 
 import java.io.PrintStream;

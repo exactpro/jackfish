@@ -737,14 +737,14 @@ public class Configuration extends AbstractDocument
 
 
 	
-//	@Deprecated
+	@Deprecated
 	public String get(String name) throws Exception
 	{
 		Object res = get(Configuration.class, this, name);
 		return res == null ? "" : res.toString();
 	}
 	
-//	@Deprecated
+	@Deprecated
 	public void set(String name, Object value) throws Exception
 	{
 		set(Configuration.class, this, name, value);
