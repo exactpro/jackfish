@@ -54,7 +54,7 @@ public class DataBasePool
 			throw new Exception(connection.toString() + " is not established." );
 		}
 		
-		PreparedStatement query = connection.getConnection().prepareStatement(text);
+		PreparedStatement query = connection.getConnection().prepareStatement(text, ResultSet.TYPE_FORWARD_ONLY);
 
 		int index = 1;
 		int limit = query.getParameterMetaData().getParameterCount();

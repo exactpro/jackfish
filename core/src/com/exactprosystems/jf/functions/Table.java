@@ -86,7 +86,6 @@ public class Table implements List<Map<String, Object>>, Mutable, Cloneable
 
 		try
 		{
-
 			ResultSetMetaData meta = set.getMetaData();
 			this.headers = new Header[meta.getColumnCount()];
 
@@ -95,8 +94,7 @@ public class Table implements List<Map<String, Object>>, Mutable, Cloneable
 				this.headers[column] = new Header(meta.getColumnName(column + 1), Header.HeaderType.forName(meta.getColumnClassName(column + 1)));
 			}
 
-			boolean ok = set.first();
-			while (ok)
+			while (set.next())
 			{
 				Map<Header, Object> line = new LinkedHashMap<>();
 
@@ -106,7 +104,6 @@ public class Table implements List<Map<String, Object>>, Mutable, Cloneable
 				}
 
 				this.innerList.add(line);
-				ok = set.next();
 			}
 		}
 		catch (Exception e)
