@@ -8,6 +8,8 @@
 package com.exactprosystems.jf.tool.newconfig.nodes;
 
 import com.exactprosystems.jf.common.Configuration;
+import com.exactprosystems.jf.common.MutableString;
+import com.exactprosystems.jf.common.parser.items.MutableArrayList;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.newconfig.ConfigurationFxNew;
@@ -33,7 +35,6 @@ public class FormatTreeNode extends TreeNode
 	private String timeFormat;
 	private String dateFormat;
 	private String dateTimeFormat;
-	private String additionalFormats;
 
 	public FormatTreeNode(ConfigurationFxNew configuration, TreeItem<TreeNode> treeItem)
 	{
@@ -60,9 +61,9 @@ public class FormatTreeNode extends TreeNode
 	public List<TablePair> getParameters()
 	{
 		List<TablePair> list = new ArrayList<>();
-		list.add(TablePair.TablePairBuilder.create().key(Configuration.timeFormat).value(this.timeFormat).build());
-		list.add(TablePair.TablePairBuilder.create().key(Configuration.dateFormat).value(this.dateFormat).build());
-		list.add(TablePair.TablePairBuilder.create().key(Configuration.dateTimeFormat).value(this.dateTimeFormat).build());
+		list.add(TablePair.TablePairBuilder.create().key(Configuration.time).value(this.timeFormat).build());
+		list.add(TablePair.TablePairBuilder.create().key(Configuration.date).value(this.dateFormat).build());
+		list.add(TablePair.TablePairBuilder.create().key(Configuration.dateTime).value(this.dateTimeFormat).build());
 		return list;
 	}
 
@@ -78,17 +79,18 @@ public class FormatTreeNode extends TreeNode
 		return Optional.of(new Image(CssVariables.Icons.FORMAT_ICON));
 	}
 
-	public void display(String timeFormat, String dateFormat, String dateTimeFormat, String additionalFormats)
+	public void display(String timeFormat, String dateFormat, String dateTimeFormat, MutableArrayList<MutableString> additionFormats)
 	{
 		this.timeFormat = timeFormat;
 		this.dateFormat = dateFormat;
 		this.dateTimeFormat = dateTimeFormat;
-		this.additionalFormats = additionalFormats;
+		
 		this.formatTreeItem.getChildren().clear();
-		String[] formats = this.additionalFormats.split("\\|");
-		Arrays.stream(formats).map(format -> {
+		
+		additionFormats.stream().map(format ->
+		{
 			TreeItem<TreeNode> treeItem = new TreeItem<>();
-			TreeNode formatNode = new TreeNodeFormat(format);
+			TreeNode formatNode = new TreeNodeFormat(format.get());
 			treeItem.setValue(formatNode);
 			return treeItem;
 		}).forEach(this.formatTreeItem.getChildren()::add);

@@ -51,7 +51,7 @@ public class FileSystemTreeNode extends TreeNode
 		return Optional.of(new Image(CssVariables.Icons.FILE_SYSTEM_ICON));
 	}
 
-	public void display(File[] initialFiles, List<File> ignoreFiles)
+	public void display(File[] initialFiles, List<String> ignoreFiles)
 	{
 		Iterator<TreeItem<TreeNode>> iterator = this.treeItem.getChildren().iterator();
 		boolean needRemove = false;
@@ -86,7 +86,7 @@ public class FileSystemTreeNode extends TreeNode
 				itemAddAsClientDic.setOnAction(e -> Common.tryCatch(() -> model.addClientDictionaryFolder(f.getName()), "Error on add folder as client dictionary"));
 
 				MenuItem itemSetReportDir = new MenuItem("Set report dir", new ImageView(new Image(CssVariables.Icons.REPORT_ICON)));
-				itemSetReportDir.setOnAction(e -> Common.tryCatch(() -> model.setReportFolder(f), "Error on set report folder"));
+				itemSetReportDir.setOnAction(e -> Common.tryCatch(() -> model.setReportFolder(f.getName()), "Error on set report folder"));
 
 				menu.getItems().addAll(itemAddAsMatrix, itemAddAsLibrary, itemAddAsAppDic, itemAddAsClientDic, itemSetReportDir);
 				return menu;

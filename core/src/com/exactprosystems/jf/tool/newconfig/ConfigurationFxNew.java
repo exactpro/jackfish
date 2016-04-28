@@ -20,6 +20,7 @@ import com.exactprosystems.jf.common.Context;
 import com.exactprosystems.jf.common.MutableString;
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
+import com.exactprosystems.jf.common.parser.items.MutableArrayList;
 import com.exactprosystems.jf.common.parser.listeners.RunnerListener;
 import com.exactprosystems.jf.common.parser.listeners.SilenceMatrixListener;
 import com.exactprosystems.jf.common.undoredo.Command;
@@ -50,8 +51,6 @@ public class ConfigurationFxNew extends Configuration
 	private BorderPane								pane;
 	
 	// ================================================================================
-	// TODO replace this variables and methods from xml. It's only for test
-	protected File					reportFolder;
 
 	private Map<String, SupportedEntry>				supportedClients;
 	private Map<String, SupportedEntry>				supportedApps;
@@ -100,7 +99,7 @@ public class ConfigurationFxNew extends Configuration
 
 	public String getReportPath()
 	{
-		return Common.getRelativePath(ConfigurationFxNew.path(this.reportFolder));
+		return super.reportsValue.get();
 	}
 
 	public String getAppDictionaries()
@@ -138,7 +137,6 @@ public class ConfigurationFxNew extends Configuration
 	public void create() throws Exception
 	{
 		super.create();
-		this.reportFolder = new File(".");
 		initController();
 	}
 
@@ -146,8 +144,6 @@ public class ConfigurationFxNew extends Configuration
 	public void load(Reader reader) throws Exception
 	{
 		super.load(reader);
-
-		this.reportFolder 	= new File(super.outputPathValue);
 
 		this.getServiceEntries().forEach(entry -> this.startedServices.put(entry.toString(), ConnectionStatus.NotStarted));
 		initController();
@@ -241,7 +237,7 @@ public class ConfigurationFxNew extends Configuration
 
 	public void removeImport(String evaluatorImport) throws Exception
 	{
-		removeStr(evaluatorImport, super.importsValue, this::displayEvaluator);
+		removeString(evaluatorImport, super.importsValue, this::displayEvaluator);
 	}
 
 	public void replaceEvaluatorImport(String oldValue, String newValue) throws Exception
@@ -336,7 +332,7 @@ public class ConfigurationFxNew extends Configuration
 	// ============================================================
 	public void removeMatrixDirectory(String file)
 	{
-		removeStr(file, super.matricesValue, this::displayMatrix);
+		removeString(file, super.matricesValue, this::displayMatrix);
 	}
 
 	public void openMatrix(File file)
@@ -376,7 +372,7 @@ public class ConfigurationFxNew extends Configuration
 	// ============================================================
 	public void removeLibraryDirectory(String file)
 	{
-		removeStr(file, super.librariesValue, this::displayLibrary);
+		removeString(file, super.librariesValue, this::displayLibrary);
 	}
 
 	public void openLibrary(File file)
@@ -424,24 +420,24 @@ public class ConfigurationFxNew extends Configuration
 
 	public void removeVarsFile(String file)
 	{
-		removeStr(file, super.userVarsValue, this::displayVars);
+		removeString(file, super.userVarsValue, this::displayVars);
 	}
 
 	// ============================================================
 	// report
 	// ============================================================
-	public void setReportFolder(File file) throws Exception
+	public void setReportFolder(String file) throws Exception
 	{
-		File lastFile = this.reportFolder;
+		String lastFile = super.reportsValue.get();
 		Command undo = () ->
 		{
-			this.reportFolder = lastFile;
+			super.reportsValue.set(lastFile);
 			this.displayReport();
 			this.displayFileSystem();
 		};
 		Command redo = () ->
 		{
-			this.reportFolder = file;
+			super.reportsValue.set(lastFile);
 			this.displayReport();
 			this.displayFileSystem();
 		};
@@ -451,21 +447,20 @@ public class ConfigurationFxNew extends Configuration
 
 	public void openReport(File file) throws Exception
 	{
+		// TODO
 		System.out.println(String.format("OPENED REPORT '%s'", path(file)));
 	}
 
-	public void removeReport(File file) throws Exception
+	public void removeReport(String file) throws Exception
 	{
-		File[] files = this.reportFolder.listFiles();
-		if (files != null)
-		{
-			this.removeFile(file, Arrays.stream(files).collect(Collectors.toList()), this::displayReport);
-		}
+		// TODO
+		System.out.println(String.format("REMOVE REPORT '%s'", path(file)));
+		this.displayReport();
 	}
 
 	public void clearReportFolder() throws Exception
 	{
-		ConfigurationFxNew.cleanDirectory(this.reportFolder);
+		cleanDirectory(new File(super.reportsValue.get()));
 		this.displayReport();
 	}
 
@@ -528,7 +523,7 @@ public class ConfigurationFxNew extends Configuration
 
 	public void removeClientDictionaryFolder(String file) throws Exception
 	{
-		this.removeStr(file, super.clientDictionariesValue, this::displayClient);
+		this.removeString(file, super.clientDictionariesValue, this::displayClient);
 	}
 
 	public void addClientDictionaryFolder(String file) throws Exception
@@ -718,7 +713,7 @@ public class ConfigurationFxNew extends Configuration
 
 	public void removeAppDictionaryFolder(String file) throws Exception
 	{
-		this.removeStr(file, super.appDictionariesValue, this::displayApp);
+		this.removeString(file, super.appDictionariesValue, this::displayApp);
 	}
 
 	public void addAppDictionaryFolder(String file) throws Exception
@@ -888,31 +883,31 @@ public class ConfigurationFxNew extends Configuration
 		super.changed(true);
 	}
 
-	@Deprecated
-	private void removeFile(File file, List<File> list, DisplayFunction displayFunction)
-	{
-		// TODO need remove file from fileSystem
-		List<File> oldFiles = new ArrayList<>(list);
-		Command undo = () ->
-		{
-			list.clear();
-			list.addAll(oldFiles);
-			displayFunction.display();
-			this.displayFileSystem();
-		};
-		Command redo = () ->
-		{
-			List<File> collect = list.stream().filter(f -> !path(file).equals(path(f))).collect(Collectors.toList());
-			list.clear();
-			list.addAll(collect);
-			displayFunction.display();
-			this.displayFileSystem();
-		};
-		super.addCommand(undo, redo);
-		super.changed(true);
-	}
-
-	private void removeStr(String file, List<MutableString> list, DisplayFunction displayFunction)
+//	@Deprecated
+//	private void removeFile(File file, List<File> list, DisplayFunction displayFunction)
+//	{
+//		// TODO need remove file from fileSystem
+//		List<File> oldFiles = new ArrayList<>(list);
+//		Command undo = () ->
+//		{
+//			list.clear();
+//			list.addAll(oldFiles);
+//			displayFunction.display();
+//			this.displayFileSystem();
+//		};
+//		Command redo = () ->
+//		{
+//			List<File> collect = list.stream().filter(f -> !path(file).equals(path(f))).collect(Collectors.toList());
+//			list.clear();
+//			list.addAll(collect);
+//			displayFunction.display();
+//			this.displayFileSystem();
+//		};
+//		super.addCommand(undo, redo);
+//		super.changed(true);
+//	}
+//
+	private void removeString(String file, List<MutableString> list, DisplayFunction displayFunction)
 	{
 		// TODO need remove file from fileSystem
 		List<MutableString> oldFiles = new ArrayList<>(list);
@@ -926,30 +921,6 @@ public class ConfigurationFxNew extends Configuration
 		Command redo = () ->
 		{
 			List<MutableString> collect = list.stream().filter(f -> !path(file).equals(path(f.get()))).collect(Collectors.toList());
-			list.clear();
-			list.addAll(collect);
-			displayFunction.display();
-			this.displayFileSystem();
-		};
-		super.addCommand(undo, redo);
-		super.changed(true);
-	}
-
-	@Deprecated
-	private void addFile(File file, List<File> list, DisplayFunction displayFunction)
-	{
-		List<File> oldFiles = new ArrayList<>(list);
-		Command undo = () ->
-		{
-			list.clear();
-			list.addAll(oldFiles);
-			displayFunction.display();
-			this.displayFileSystem();
-		};
-		Command redo = () ->
-		{
-			List<File> collect = new ArrayList<>(list);
-			collect.add(file);
 			list.clear();
 			list.addAll(collect);
 			displayFunction.display();
@@ -1050,28 +1021,12 @@ public class ConfigurationFxNew extends Configuration
 
 	private void displayEvaluator()
 	{
-		try
-		{
-			this.controller.displayEvaluator(this.get(Configuration.evaluatorImports));
-		}
-		catch (Exception e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		this.controller.displayEvaluator(super.importsValue);
 	}
 	
 	private void displayFormat()
 	{
-		try
-		{
-			this.controller.displayFormat(this.get(timeFormat), this.get(dateFormat), this.get(dateTimeFormat), this.get(additionFormats));
-		}
-		catch (Exception e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		this.controller.displayFormat(super.timeValue.get(), super.dateValue.get(), super.dateTimeValue.get(), super.formatsValue);
 	}
 
 	private void displayMatrix()
@@ -1091,7 +1046,7 @@ public class ConfigurationFxNew extends Configuration
 	
 	private void displayReport()
 	{
-		this.controller.displayReport(this.reportFolder);
+		this.controller.displayReport(super.reportsValue.get());
 	}
 	
 	private void displaySql()
@@ -1116,42 +1071,25 @@ public class ConfigurationFxNew extends Configuration
 	
 	private void displayFileSystem()
 	{
-		List<File> ignoreFiles = new ArrayList<>();
+		List<String> ignoreFiles = new ArrayList<>();
 		
-		
-		ignoreFiles.addAll(fromString(super.matricesValue));
-		ignoreFiles.addAll(fromString(super.librariesValue));
-		ignoreFiles.addAll(fromString(super.variablesValue));
-		ignoreFiles.addAll(fromString(super.outputPathValue));
+		ignoreFiles.addAll(toStringList(super.matricesValue));
+		ignoreFiles.addAll(toStringList(super.librariesValue));
+		ignoreFiles.add(super.varsValue.get());
+		ignoreFiles.add(super.reportsValue.get());
 		
 		this.controller.displayFileSystem(ignoreFiles);
 	}
 	
-	private List<File> fromString(List<MutableString> str)
-	{
-		if (str != null)
-		{
-			return str.stream().map(e -> new File(e.get())).collect(Collectors.toList());
-		}
-		
-		return Collections.emptyList();
-	}
-
-	@Deprecated
-	private List<File> fromString(String str)
-	{
-		if (str != null)
-		{
-			return Arrays.stream(str.split(Configuration.SEPARATOR)).map(e -> new File(e)).collect(Collectors.toList());
-		}
-		
-		return Collections.emptyList();
-	}
-
 	private void initController()
 	{
 		this.controller = Common.loadController(ConfigurationFxNew.class.getResource("config.fxml"));
 		this.controller.init(this, this.pane);
+	}
+
+	private static List<String> toStringList(MutableArrayList<MutableString> str)
+	{
+		return str.stream().map(MutableString::get).collect(Collectors.toList());
 	}
 
 }

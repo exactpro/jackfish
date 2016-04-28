@@ -900,6 +900,7 @@ public class Configuration extends AbstractDocument
 				|| this.serviceEntriesValue.isChanged()
 				|| this.appEntriesValue.isChanged()
 				|| this.importsValue.isChanged()
+				|| this.varsValue.isChanged()
 				|| this.userVarsValue.isChanged()
 				|| this.matricesValue.isChanged()
 				|| this.appDictionariesValue.isChanged()
@@ -925,6 +926,7 @@ public class Configuration extends AbstractDocument
 		this.serviceEntriesValue.saved();
 		this.sqlEntriesValue.saved();
 		this.importsValue.saved();
+		this.varsValue.saved();
 		this.userVarsValue.saved();
 		this.matricesValue.saved();
 		this.appDictionariesValue.saved();
@@ -978,14 +980,14 @@ public class Configuration extends AbstractDocument
 
 
 	
-	@Deprecated
+//	@Deprecated
 	public String get(String name) throws Exception
 	{
 		Object res = get(Configuration.class, this, name);
 		return res == null ? "" : res.toString();
 	}
 	
-	@Deprecated
+//	@Deprecated
 	public void set(String name, Object value) throws Exception
 	{
 		set(Configuration.class, this, name, value);
@@ -1302,6 +1304,7 @@ public class Configuration extends AbstractDocument
 		this.serviceEntriesValue.from(config.serviceEntriesValue);
 		this.sqlEntriesValue.from(config.sqlEntriesValue);
 		this.importsValue.from(config.importsValue);
+		this.varsValue.set(config.varsValue);
 		this.userVarsValue.from(config.userVarsValue);
 		this.matricesValue.from(config.matricesValue);
 		this.appDictionariesValue.from(config.appDictionariesValue);

@@ -86,12 +86,12 @@ public class ConfigurationNewFxController implements Initializable, ContainingPa
 	// ============================================================
 	// display* methods
 	// ============================================================
-	public void displayEvaluator(String imports) 
+	public void displayEvaluator(MutableArrayList<MutableString> imports) 
 	{
 		Common.tryCatch(() -> this.evaluatorTreeNode.display(imports), "Error on display evaluator");
 	}
 
-	public void displayFormat(String timeFormat, String dateFormat, String dateTimeFormat, String additionFormats)
+	public void displayFormat(String timeFormat, String dateFormat, String dateTimeFormat, MutableArrayList<MutableString> additionFormats)
 	{
 		Common.tryCatch(() -> this.formatTreeNode.display(timeFormat, dateFormat, dateTimeFormat, additionFormats),
 				"Error on display evaluator");
@@ -137,14 +137,14 @@ public class ConfigurationNewFxController implements Initializable, ContainingPa
 //		Common.tryCatch(() -> this.appTreeNode.display(appEntries, this.supportedApps, this.listAppsDictionaries), "Error on display sql entries");
 	}
 
-	public void displayReport(File reportFolder)
+	public void displayReport(String reportsValue)
 	{
-		Common.tryCatch(() -> this.reportTreeNode.display(reportFolder), "Error on display report folder");
+		Common.tryCatch(() -> this.reportTreeNode.display(reportsValue), "Error on display report folder");
 	}
 
-	public void displayFileSystem(List<File> ignoreFolders)
+	public void displayFileSystem(List<String> ignoreFiles)
 	{
-		Common.tryCatch(() -> this.fileSystemTreeNode.display(new File(".").listFiles(), ignoreFolders), "Error on display sql entries");
+		Common.tryCatch(() -> this.fileSystemTreeNode.display(new File(".").listFiles(), ignoreFiles), "Error on display sql entries");
 	}
 
 	private void initTreeView()

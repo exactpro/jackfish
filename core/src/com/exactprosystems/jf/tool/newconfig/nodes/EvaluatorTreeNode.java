@@ -7,6 +7,8 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.exactprosystems.jf.tool.newconfig.nodes;
 
+import com.exactprosystems.jf.common.MutableString;
+import com.exactprosystems.jf.common.parser.items.MutableArrayList;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.newconfig.ConfigurationFxNew;
@@ -54,13 +56,13 @@ public class EvaluatorTreeNode extends TreeNode
 		return Optional.of(image);
 	}
 
-	public void display(String evaluatorImports) throws Exception
+	public void display(MutableArrayList<MutableString> imports2) throws Exception
 	{
 		this.evaluatorTreeItem.getChildren().clear();
-		String[] imports = evaluatorImports.split(",");
-		Arrays.stream(imports).map(evaluatorImport -> {
+		imports2.stream().map(evaluatorImport ->
+		{
 			TreeItem<TreeNode> remove = new TreeItem<>();
-			TreeNode importNode = new TreeNodeImport(evaluatorImport);
+			TreeNode importNode = new TreeNodeImport(evaluatorImport.get());
 			remove.setValue(importNode);
 			return remove;
 		}).forEach(this.evaluatorTreeItem.getChildren()::add);
