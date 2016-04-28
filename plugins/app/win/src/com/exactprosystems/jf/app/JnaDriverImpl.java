@@ -2,6 +2,7 @@ package com.exactprosystems.jf.app;
 
 import com.exactprosystems.jf.api.app.ControlKind;
 import com.exactprosystems.jf.api.app.MouseAction;
+import com.exactprosystems.jf.api.conditions.StringCondition;
 import com.sun.jna.Native;
 import com.sun.jna.Platform;
 import org.apache.log4j.Logger;
@@ -307,6 +308,54 @@ public class JnaDriverImpl
 		this.logger.info(String.format("textTableCell(%s,%d,%d, %s) time(ms) : %d", table, column, row, text, System.currentTimeMillis() - start));
 		checkCSharpTimes();
 		checkError();
+	}
+
+	public String getRowByConditions(UIProxyJNA table, boolean useNumericHeader, StringCondition condition) throws Exception
+	{
+		long start = System.currentTimeMillis();
+		String stringCondition = conditionToString(condition);
+		String res = this.driver.getRowByCondition(table.getIdString(), useNumericHeader, stringCondition);
+		this.logger.info(String.format("getRowByConditions(%s,%b,%s) : %s, time(ms) : %d", table, useNumericHeader, stringCondition, res, System.currentTimeMillis() - start));
+		checkCSharpTimes();
+		checkError();
+		return res;
+	}
+
+	public String getRowIndexes(UIProxyJNA table, boolean useNumericHeader, StringCondition condition) throws Exception
+	{
+		long start = System.currentTimeMillis();
+		String stringCondition = conditionToString(condition);
+		String res = this.driver.getRowIndexes(table.getIdString(), useNumericHeader, stringCondition);
+		this.logger.info(String.format("getRowIndexes(%s,%b,%s) : %s, time(ms) : %d", table, useNumericHeader, stringCondition, res, System.currentTimeMillis() - start));
+		checkCSharpTimes();
+		checkError();
+		return res;
+
+	}
+
+	public String getRowByIndex(UIProxyJNA table, boolean useNumericHeader, int index) throws Exception
+	{
+		long start = System.currentTimeMillis();
+		String res = this.driver.getRowByIndex(table.getIdString(), useNumericHeader, index);
+		this.logger.info(String.format("getRowByConditions(%s,%b,%s) : %s, time(ms) : %d", table, useNumericHeader, index, res, System.currentTimeMillis() - start));
+		checkCSharpTimes();
+		checkError();
+		return res;
+	}
+
+	public String getTable(UIProxyJNA table, boolean useNumericHeader) throws Exception
+	{
+		long start = System.currentTimeMillis();
+		String res = this.driver.getTable(table.getIdString(), useNumericHeader);
+		this.logger.info(String.format("getRowByConditions(%s,%b) : %s, time(ms) : %d", table, useNumericHeader, res, System.currentTimeMillis() - start));
+		checkCSharpTimes();
+		checkError();
+		return res;
+	}
+
+	private String conditionToString(StringCondition condition)
+	{
+		return condition == null ? "" : condition.getName() + "," + condition.getValue() + "," + condition.isIgnoreCase();
 	}
 
 	//endregion

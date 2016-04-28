@@ -46,6 +46,10 @@ public interface JnaDriver extends Library {
 	String getValueTableCell(String elementId, int column, int row);
 	void mouseTableCell(String elementId, int column, int row, int mouseAction);
 	void textTableCell(String elementId, int column, int row, String text);
+	String getRowByCondition(String tableId, boolean useNumericHeader, String condition);
+	String getRowIndexes(String tableId, boolean useNumericHeader, String condition);
+	String getRowByIndex(String tableId, boolean useNumericHeader, int index);
+	String getTable(String tableId, boolean useNumericHeader);
 	//endregion
 
 }

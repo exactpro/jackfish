@@ -67,7 +67,18 @@ public class StringCondition extends Condition  implements Serializable
 		
 		return "'" + this.value + "' != '" + actualValue + "'";
 	}
-	
+
+	//TODO these methods need to WinPlugin
+	public boolean isIgnoreCase()
+	{
+		return ignoreCase;
+	}
+
+	public String getValue()
+	{
+		return value;
+	}
+
 	private boolean ignoreCase;
 	
 	private String value = null;
