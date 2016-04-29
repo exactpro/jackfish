@@ -10,7 +10,6 @@ package com.exactprosystems.jf.app;
 
 import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.client.ICondition;
-
 import org.apache.log4j.Logger;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -365,8 +364,28 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 	@Override
 	public int getTableSize(WebElement component, Locator additional, Locator header, boolean useNumericHeader) throws Exception
 	{
-		// TODO Auto-generated method stub
-		return 0;
+		Exception real = null;
+		int repeat = 1;
+		do
+		{
+			try
+			{
+				return findRows(additional, component).size();
+			}
+			catch (StaleElementReferenceException e)
+			{
+				real = e;
+				logger.debug("Element is no longer attached to the DOM. Try in SeleniumOperationExecutor : " + repeat);
+			}
+			catch (Exception e)
+			{
+				logger.error("Error on get row with color");
+				logger.error(e.getMessage(), e);
+				throw new RemoteException(e.getMessage());
+			}
+		}
+		while (++repeat < repeatLimit);
+		throw real;
 	}
 
 	private List<String> getHeaders(String outerHtml, boolean useNumericHeader) throws RemoteException
