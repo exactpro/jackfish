@@ -8,13 +8,13 @@
 
 package com.exactprosystems.jf.common;
 
+import com.exactprosystems.jf.api.app.Mutable;
+import com.exactprosystems.jf.api.common.Str;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlValue;
-
-import com.exactprosystems.jf.api.app.Mutable;
-import com.exactprosystems.jf.api.common.Str;
 
 @XmlAccessorType(XmlAccessType.NONE)
 public class MutableString implements Mutable
@@ -56,6 +56,31 @@ public class MutableString implements Mutable
 	public void set(MutableString str)
 	{
 		set(str.get());
+	}
+
+	@Override
+	public boolean equals(Object o)
+	{
+		if (this == o)
+			return true;
+		if (o == null || getClass() != o.getClass())
+			return false;
+
+		MutableString that = (MutableString) o;
+
+		return str != null ? str.equals(that.str) : that.str == null;
+
+	}
+
+	public boolean equals(String s)
+	{
+		return this.get().equals(s);
+	}
+
+	@Override
+	public int hashCode()
+	{
+		return  str != null ? str.hashCode() : 0;
 	}
 
 	@XmlValue

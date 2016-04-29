@@ -8,14 +8,13 @@
 
 package com.exactprosystems.jf.documents.config;
 
-import java.util.List;
+import com.exactprosystems.jf.api.app.Mutable;
+import com.exactprosystems.jf.common.parser.items.MutableArrayList;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
-
-import com.exactprosystems.jf.api.app.Mutable;
-import com.exactprosystems.jf.common.parser.items.MutableArrayList;
+import java.util.List;
 
 @XmlAccessorType(XmlAccessType.NONE)
 public abstract class Entry implements Mutable
@@ -70,25 +69,33 @@ public abstract class Entry implements Mutable
 		}
 		changed = false;
 	}
+
+	public final String get(String name) throws Exception
+	{
+		switch (name)
+		{
+			case Configuration.entryName : return this.entryNameValue;
+		}
+		return getDerived(name);
+	}
+
+	public final void set(String name, Object value) throws Exception
+	{
+		switch (name)
+		{
+			case Configuration.entryName : this.entryNameValue = "" +value; return;
+		}
+		setDerived(name, value);
+	}
+
+	protected abstract String getDerived(String name) throws Exception;
 	
-	public abstract String get(String name) throws Exception;
-	
-	public abstract void set(String name, Object value) throws Exception;
+	protected abstract void setDerived(String name, Object value) throws Exception;
 
 	public String getParameter(String key)
 	{
-		if (this.parameters != null)
-		{
-			for (Parameter param : this.parameters)
-			{
-				if (param.key.equals(key))
-				{
-					return param.value;
-				}
-			}
-		}
-		
-		return null;
+		return this.parameters.stream().filter(p -> p.key.equals(key)).map(Parameter::getValue).findFirst().orElse(null);
+
 	}
 
 	public List<Parameter> getParameters()

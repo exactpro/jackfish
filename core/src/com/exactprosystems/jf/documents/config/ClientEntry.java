@@ -28,7 +28,7 @@ public class ClientEntry extends Entry
 	protected String clientDictionaryValue;
 
 	@Override
-	public String get(String name) throws Exception
+	protected String getDerived(String name) throws Exception
 	{
 		switch (name)
 		{
@@ -41,7 +41,7 @@ public class ClientEntry extends Entry
 	}
 
 	@Override
-	public void set(String name, Object value) throws Exception
+	protected void setDerived(String name, Object value) throws Exception
 	{
 		switch (name)
 		{

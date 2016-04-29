@@ -26,6 +26,10 @@ public class ConfigurationToolBar extends BorderPane
 		ToolBar toolBar = new ToolBar();
 		Button btnFilter = new Button("Filter");
 		toolBar.getItems().addAll(btnFilter);
+
+		Button temp = new Button("temp");
+		temp.setOnAction(e -> {});
+		toolBar.getItems().add(temp);
 		this.setCenter(toolBar);
 
 	}

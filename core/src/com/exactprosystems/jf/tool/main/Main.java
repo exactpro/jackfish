@@ -9,7 +9,8 @@
 package com.exactprosystems.jf.tool.main;
 
 import com.exactprosystems.jf.api.common.Str;
-import com.exactprosystems.jf.common.*;
+import com.exactprosystems.jf.common.MatrixRunner;
+import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.common.Settings.SettingsValue;
 import com.exactprosystems.jf.common.evaluator.SystemVars;
 import com.exactprosystems.jf.common.parser.Matrix;
@@ -35,13 +36,10 @@ import com.exactprosystems.jf.tool.settings.SettingsPanel;
 import com.exactprosystems.jf.tool.settings.Theme;
 import com.exactprosystems.jf.tool.systemvars.SystemVarsFx;
 import com.exactprosystems.jf.tool.text.PlainTextFx;
-
 import javafx.application.Application;
 import javafx.concurrent.Task;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-
 import org.apache.log4j.Logger;
 
 import java.io.File;
@@ -420,6 +418,11 @@ public class Main extends Application
 	public void openReport() throws Exception
 	{
 		File file = DialogsHelper.showOpenSaveDialog("Choose report", "HTML files (*.html)", "*.html", OpenSaveMode.OpenFile);
+		openReport(file);
+	}
+
+	public void openReport(File file) throws Exception
+	{
 		Optional.ofNullable(file).ifPresent(f -> DialogsHelper.displayReport(f, null, this.config));
 	}
 

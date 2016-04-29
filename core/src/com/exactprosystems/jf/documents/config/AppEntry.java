@@ -31,7 +31,7 @@ public class AppEntry extends Entry
 	protected String appStartPortValue;
 
 	@Override
-	public String get(String name) throws Exception
+	protected String getDerived(String name) throws Exception
 	{
 		switch (name)
 		{
@@ -45,7 +45,7 @@ public class AppEntry extends Entry
 	}
 
 	@Override
-	public void set(String name, Object value) throws Exception
+	protected void setDerived(String name, Object value) throws Exception
 	{
 		switch (name)
 		{
@@ -53,7 +53,7 @@ public class AppEntry extends Entry
 			case Configuration.appDicPath: 		this.appDicPathValue	= "" + value;	return;
 			case Configuration.appJar: 			this.appJarNameValue	= "" + value;	return;
 			case Configuration.appWorkDir: 		this.appWorkDirValue	= "" + value;	return;
-			case Configuration.appStartPort:		this.appStartPortValue	= "" + value;	return;
+			case Configuration.appStartPort:	this.appStartPortValue	= "" + value;	return;
 		}
 	}
 }

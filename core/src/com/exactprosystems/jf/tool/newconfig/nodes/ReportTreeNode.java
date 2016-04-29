@@ -75,7 +75,7 @@ public class ReportTreeNode extends TreeNode
 				openReport.setOnAction(e -> Common.tryCatch(() -> this.model.openReport(file), "Error on open report"));
 
 				MenuItem removeReport = new MenuItem("Remove report", new ImageView(new Image(CssVariables.Icons.REMOVE_PARAMETER_ICON)));
-				removeReport.setOnAction(e -> Common.tryCatch(() -> this.model.removeReport(file.getName()), "Error on remove report"));
+				removeReport.setOnAction(e -> Common.tryCatch(() -> this.model.removeReport(file), "Error on remove report"));
 
 				menu.getItems().addAll(openReport, removeReport);
 				return menu;

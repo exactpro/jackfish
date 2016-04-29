@@ -98,20 +98,20 @@ public class ConfigurationTreeView extends TreeView<TreeNode>
 	}
 
 	public static Comparator<File>	comparator	= (f1, f2) ->
-												{
-													if (f1.isDirectory() && !f2.isDirectory())
-													{
-														return -1;
-													}
-													else if (!f1.isDirectory() && f2.isDirectory())
-													{
-														return 1;
-													}
-													else
-													{
-														return f1.getName().compareTo(f2.getName());
-													}
-												};
+		{
+			if (f1.isDirectory() && !f2.isDirectory())
+			{
+				return -1;
+			}
+			else if (!f1.isDirectory() && f2.isDirectory())
+			{
+				return 1;
+			}
+			else
+			{
+				return f1.getName().compareTo(f2.getName());
+			}
+		};
 
 	public static Optional<String> showInputDialog(String headerText)
 	{

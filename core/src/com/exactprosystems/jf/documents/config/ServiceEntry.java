@@ -22,7 +22,7 @@ public class ServiceEntry extends Entry
 	protected String serviceJarNameValue;
 
 	@Override
-	public String get(String name) throws Exception
+	protected String getDerived(String name) throws Exception
 	{
 		switch (name)
 		{
@@ -33,7 +33,7 @@ public class ServiceEntry extends Entry
 	}
 
 	@Override
-	public void set(String name, Object value) throws Exception
+	protected void setDerived(String name, Object value) throws Exception
 	{
 		switch (name)
 		{

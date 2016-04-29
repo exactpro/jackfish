@@ -21,22 +21,20 @@ import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.parser.listeners.RunnerListener;
 import com.exactprosystems.jf.common.parser.listeners.SilenceMatrixListener;
 import com.exactprosystems.jf.common.undoredo.Command;
-import com.exactprosystems.jf.documents.config.AppEntry;
-import com.exactprosystems.jf.documents.config.ClientEntry;
-import com.exactprosystems.jf.documents.config.Configuration;
-import com.exactprosystems.jf.documents.config.Entry;
-import com.exactprosystems.jf.documents.config.Parameter;
-import com.exactprosystems.jf.documents.config.ServiceEntry;
-import com.exactprosystems.jf.documents.config.SqlEntry;
+import com.exactprosystems.jf.documents.config.*;
 import com.exactprosystems.jf.service.ServicePool;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.SupportedEntry;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.main.Main;
-import com.exactprosystems.jf.tool.newconfig.nodes.*;
+import com.exactprosystems.jf.tool.newconfig.nodes.TreeNode;
 import javafx.concurrent.Task;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.ListView;
 import javafx.scene.layout.BorderPane;
+
 import java.io.File;
 import java.io.Reader;
 import java.util.*;
@@ -44,20 +42,20 @@ import java.util.stream.Collectors;
 
 public class ConfigurationFxNew extends Configuration
 {
-	private Main									mainModel;
-	private ConfigurationNewFxController			controller;
-	private BorderPane								pane;
-	
+	private Main mainModel;
+	private ConfigurationNewFxController controller;
+	private BorderPane pane;
+
 	// ================================================================================
 
-	private Map<String, SupportedEntry>				supportedClients;
-	private Map<String, SupportedEntry>				supportedApps;
-	private Map<String, SupportedEntry>				supportedServices;
-	private Map<String, ConnectionStatus>			startedServices;	// TODO why is this thing here? it should be in ServicesPool
+	private Map<String, SupportedEntry> supportedClients;
+	private Map<String, SupportedEntry> supportedApps;
+	private Map<String, SupportedEntry> supportedServices;
+	private Map<String, ConnectionStatus> startedServices;    // TODO why is this thing here? it should be in ServicesPool
 
-	private Map<ServiceEntry, ServiceConnection>	serviceMap	= new HashMap<>();
+	private Map<ServiceEntry, ServiceConnection> serviceMap = new HashMap<>();
 
-	
+
 	public ConfigurationFxNew() throws Exception
 	{
 		this(null, null, null, null, null);
@@ -82,12 +80,12 @@ public class ConfigurationFxNew extends Configuration
 	// ================================================================================
 	public String matrixToString()
 	{
-		return super.matricesValue.stream().map(e -> e.get()).collect(Collectors.joining(SEPARATOR));
+		return super.matricesValue.stream().map(MutableString::get).collect(Collectors.joining(SEPARATOR));
 	}
 
 	public String libraryToString()
 	{
-		return super.librariesValue.stream().map(e -> e.get()).collect(Collectors.joining(SEPARATOR));
+		return super.librariesValue.stream().map(MutableString::get).collect(Collectors.joining(SEPARATOR));
 	}
 
 	public String gitRemotePath()
@@ -102,22 +100,20 @@ public class ConfigurationFxNew extends Configuration
 
 	public String getAppDictionaries()
 	{
-		return super.appDictionariesValue.stream().map(e -> e.get()).collect(Collectors.joining(SEPARATOR));
+		return super.appDictionariesValue.stream().map(MutableString::get).collect(Collectors.joining(SEPARATOR));
 	}
 
 	public String getClientDictionaries()
 	{
-		return this.clientDictionariesValue.stream().map(e -> e.get()).collect(Collectors.joining(SEPARATOR));
+		return this.clientDictionariesValue.stream().map(MutableString::get).collect(Collectors.joining(SEPARATOR));
 	}
 
-	// ==============================================================================================================================
-	// AbstractDocument
-	// ==============================================================================================================================
+	//region abstract document
 	@Override
 	public void display() throws Exception
 	{
 		super.display();
-		
+
 		displayEvaluator();
 		displayFormat();
 		displayMatrix();
@@ -146,7 +142,7 @@ public class ConfigurationFxNew extends Configuration
 		this.getServiceEntries().forEach(entry -> this.startedServices.put(entry.toString(), ConnectionStatus.NotStarted));
 		initController();
 	}
-	
+
 	@Override
 	public void save(String fileName) throws Exception
 	{
@@ -208,10 +204,9 @@ public class ConfigurationFxNew extends Configuration
 //		}
 //		this.treeView.getSelectionModel().select(selectedItem);
 	}
+	//endregion
 
-	// ============================================================
-	// configuration
-	// ============================================================
+	//region configuration
 	public void refresh() throws Exception
 	{
 		this.display();
@@ -224,64 +219,41 @@ public class ConfigurationFxNew extends Configuration
 	public void updateProject() throws Exception
 	{
 	}
+	//endregion
 
-	// ============================================================
-	// evaluator
-	// ============================================================
+	//region evaluator
 	public void addNewEvaluatorImport(String newImport) throws Exception
 	{
-		addString(newImport, super.importsValue, this::displayEvaluator);
+		this.addString(newImport, super.importsValue, this::displayEvaluator);
 	}
 
 	public void removeImport(String evaluatorImport) throws Exception
 	{
-		removeString(evaluatorImport, super.importsValue, this::displayEvaluator);
+		this.removeString(evaluatorImport, super.importsValue, this::displayEvaluator);
 	}
 
-	public void replaceEvaluatorImport(String oldValue, String newValue) throws Exception
+	public void replaceEvaluatorImport(String oldEvaluator, String newEvaluator) throws Exception
 	{
-		// TODO
-//		this.changeImports(super.importsValue), this.get(Configuration.evaluatorImports).replaceAll(oldValue, newValue));
+		this.replaceString(oldEvaluator, newEvaluator, super.importsValue, this::displayEvaluator, false);
 	}
+	//endregion
 
-	private void changeImports(String lastImports, String newImports) throws Exception
-	{
-		if (Str.areEqual(lastImports, newImports))
-		{
-			return;
-		}
-		Command undo = () ->
-		{
-//			change(Configuration.imports, lastImports);
-			displayEvaluator();
-		};
-		Command redo = () ->
-		{
-//			change(Configuration.imports, newImports);
-			displayEvaluator();
-		};
-		addCommand(undo, redo);
-		super.changed(true);
-	}
+	//region format
 
-	// ============================================================
-	// format
-	// ============================================================
 	public void changeFormat(String key, String newValue) throws Exception
 	{
+		//TODO we need use parameter on table mutable string
 		String oldValue = this.get(key);
 		if (Str.areEqual(oldValue, newValue))
 		{
 			return;
 		}
-		Command undo = () ->
-		{
-//			change(key, oldValue);
+		Command undo = () -> {
+			//			change(key, oldValue);
 			displayFormat();
 		};
-		Command redo = () ->
-		{
-//			change(key, newValue);
+		Command redo = () -> {
+			//			change(key, newValue);
 			displayFormat();
 		};
 		addCommand(undo, redo);
@@ -290,156 +262,92 @@ public class ConfigurationFxNew extends Configuration
 
 	public void addNewAdditionalFormat(String newFormat) throws Exception
 	{
-		// TODO
-//		changeAdditionalFormats(this.get(additionFormats), this.get(additionFormats) + "|" + newFormat);
+		this.addString(newFormat, super.formatsValue, this::displayFormat);
 	}
 
 	public void removeAdditionalFormat(String removeFormat) throws Exception
 	{
-		// TODO
-//		String oldAdditionalFormats = this.get(additionFormats);
-//		String newAdditionalFormats = Arrays.stream(oldAdditionalFormats.split("\\|")).filter(str -> !removeFormat.equals(str))
-//				.collect(Collectors.joining("|"));
-//		changeAdditionalFormats(oldAdditionalFormats, newAdditionalFormats);
+		this.removeString(removeFormat, super.formatsValue, this::displayFormat);
 	}
 
 	public void replaceAdditionalFormat(String oldFormat, String newFormat) throws Exception
 	{
-		// TODO
-//		this.changeAdditionalFormats(this.get(additionFormats), this.get(additionFormats).replaceAll(oldFormat, newFormat));
+		this.replaceString(oldFormat, newFormat, super.formatsValue, this::displayFormat, false);
 	}
 
-	private void changeAdditionalFormats(String oldFormats, String newFormats)
-	{
-		if (Str.areEqual(oldFormats, newFormats))
-		{
-			return;
-		}
-		Command undo = () ->
-		{
-//			change(Configuration.formats, oldFormats);
-			displayFormat();
-		};
-		Command redo = () ->
-		{
-//			change(Configuration.formats, newFormats);
-			displayFormat();
-		};
-		addCommand(undo, redo);
-		super.changed(true);
-	}
+	//endregion
 
-	// ============================================================
-	// matrix
-	// ============================================================
+	//region matrix
 	public void removeMatrixDirectory(String file)
 	{
-		removeString(file, super.matricesValue, this::displayMatrix);
+		removeFile(file, super.matricesValue, this::displayMatrix);
 	}
 
 	public void openMatrix(File file)
 	{
+		Common.tryCatch(() -> this.mainModel.loadMatrix(path(file)), "Error on open matrix file");
 	}
 
 	public void addNewMatrix(File parentFolder, String fileName) throws Exception
 	{
-		String newFileName = fileName;
-		if (!newFileName.endsWith(Configuration.matrixExt))
-		{
-			newFileName += Configuration.matrixExt;
-		}
-		File where = parentFolder;
-		if (!parentFolder.isDirectory())
-		{
-			where = new File(path(parentFolder)).getParentFile();
-		}
-		File newMatrixFile = new File(path(where) + File.separator + newFileName);
-		boolean newFile = newMatrixFile.createNewFile();
-		if (newFile)
-		{
-			displayMatrix();
-//			this.matrixTreeNode.select(newMatrixFile, item -> this.treeView.getSelectionModel().select(item));
-		}
+		createNewFile(parentFolder, fileName, Configuration.matrixExt);
+		displayMatrix();
 	}
 
 	public void removeMatrix(File matrixFile) throws Exception
 	{
-		forceDelete(matrixFile);
-		System.out.println("removed");
-		displayMatrix();
+		removeFileFromFileSystem(matrixFile, this::displayMatrix);
 	}
 
-	// ============================================================
-	// library
-	// ============================================================
+	//endregion
+
+	//region library
 	public void removeLibraryDirectory(String file)
 	{
-		removeString(file, super.librariesValue, this::displayLibrary);
+		removeFile(file, super.librariesValue, this::displayLibrary);
 	}
 
 	public void openLibrary(File file)
 	{
-		System.out.println(String.format("LIBRARY FILE %S ARE OPENED", file.getName()));
+		//TODO we need method to open library
+		Common.tryCatch(() -> this.mainModel.loadMatrix(path(file)), "Error on open library");
 	}
 
 	public void addNewLibrary(File parentFolder, String fileName) throws Exception
 	{
-		String newFileName = fileName;
-		if (!newFileName.endsWith(Configuration.matrixExt))
-		{
-			newFileName += Configuration.matrixExt;
-		}
-		File where = parentFolder;
-		if (!parentFolder.isDirectory())
-		{
-			where = new File(path(parentFolder)).getParentFile();
-		}
-		File newLibraryFile = new File(path(where) + File.separator + newFileName);
-		boolean newFile = newLibraryFile.createNewFile();
-		if (newFile)
-		{
-			System.out.println(String.format("Library WITH NAME '%s' WAS ADDED ON FOLDER '%s'", newFileName, path(where)));
-			this.displayLibrary();
-//			this.libTreeNode.select(newLibraryFile, item -> this.treeView.getSelectionModel().select(item));
-		}
+		createNewFile(parentFolder, fileName, Configuration.matrixExt);
+		displayLibrary();
 	}
 
 	public void removeLibrary(File libraryFile) throws Exception
 	{
-		// TODO think about undo/redo files
-		forceDelete(libraryFile);
-		System.out.println("removed");
-		this.displayLibrary();
+		removeFileFromFileSystem(libraryFile, this::displayLibrary);
 	}
+	//endregion
 
-	// ============================================================
-	// variable
-	// ============================================================
+	//region variable
 	public void openVariableFile(File file)
 	{
-		System.out.println(String.format("VARS FILE %S ARE OPENED", file.getName()));
+		Common.tryCatch(() -> this.mainModel.loadSystemVars(path(file)), "Error on load system variable");
 	}
 
 	public void removeVarsFile(String file)
 	{
-		removeString(file, super.userVarsValue, this::displayVars);
+		removeFile(file, super.userVarsValue, this::displayVars);
 	}
+	//endregion
 
-	// ============================================================
-	// report
-	// ============================================================
+	//region report
 	public void setReportFolder(String file) throws Exception
 	{
 		String lastFile = super.reportsValue.get();
-		Command undo = () ->
-		{
+		Command undo = () -> {
 			super.reportsValue.set(lastFile);
 			this.displayReport();
 			this.displayFileSystem();
 		};
-		Command redo = () ->
-		{
-			super.reportsValue.set(lastFile);
+		Command redo = () -> {
+			super.reportsValue.set(file);
 			this.displayReport();
 			this.displayFileSystem();
 		};
@@ -449,26 +357,22 @@ public class ConfigurationFxNew extends Configuration
 
 	public void openReport(File file) throws Exception
 	{
-		// TODO
-		System.out.println(String.format("OPENED REPORT '%s'", path(file)));
+		Common.tryCatch(() -> this.mainModel.openReport(file), "Error on open report");
 	}
 
-	public void removeReport(String file) throws Exception
+	public void removeReport(File file) throws Exception
 	{
-		// TODO
-		System.out.println(String.format("REMOVE REPORT '%s'", path(file)));
-		this.displayReport();
+		removeFileFromFileSystem(file, this::displayReport);
 	}
 
 	public void clearReportFolder() throws Exception
 	{
-		cleanDirectory(new File(super.reportsValue.get()));
-		this.displayReport();
+		File reportFolder = new File(super.reportsValue.get());
+		Optional.ofNullable(reportFolder.listFiles()).ifPresent(files -> removeFilesFromFileSystem(Arrays.asList(files), this::displayReport));
 	}
+	//endregion
 
-	// ============================================================
-	// sql
-	// ============================================================
+	//region sql
 	public void addNewSqlEntry(String sqlName) throws Exception
 	{
 		addNewEntry(SqlEntry.class, getSqlEntries(), sqlName, this::displaySql);
@@ -483,10 +387,9 @@ public class ConfigurationFxNew extends Configuration
 	{
 		changeEntry(sqlEntry, key, value);
 	}
+	//endregion
 
-	// ============================================================
-	// client
-	// ============================================================
+	//region clients
 	public void addNewClientEntry(String clientName) throws Exception
 	{
 		addNewEntry(ClientEntry.class, getClientEntries(), clientName, this::displayClient);
@@ -517,20 +420,19 @@ public class ConfigurationFxNew extends Configuration
 		for (ClientEntry entry : getClientEntries())
 		{
 			String id = entry.toString();
-			this.supportedClients.put(entry.toString(),
-					new SupportedEntry(clientPool.isSupported(id), clientPool.requiredMajorVersion(id), clientPool.requiredMinorVersion(id)));
+			this.supportedClients.put(entry.toString(), new SupportedEntry(clientPool.isSupported(id), clientPool.requiredMajorVersion(id), clientPool.requiredMinorVersion(id)));
 		}
 		this.displayClient();
 	}
 
 	public void removeClientDictionaryFolder(String file) throws Exception
 	{
-		this.removeString(file, super.clientDictionariesValue, this::displayClient);
+		this.removeFile(file, super.clientDictionariesValue, this::displayClient);
 	}
 
 	public void addClientDictionaryFolder(String file) throws Exception
 	{
-		this.addString(file, super.clientDictionariesValue, this::displayClient);
+		this.addFile(file, super.clientDictionariesValue, this::displayClient);
 	}
 
 	public void openClientDictionary(ClientEntry entry) throws Exception
@@ -542,10 +444,9 @@ public class ConfigurationFxNew extends Configuration
 	{
 		System.out.println(String.format("CLIENT DICTIONARY PATH '%s' ARE OPENED", path(file)));
 	}
+	//endregion
 
-	// ============================================================
-	// service
-	// ============================================================
+	//region services
 	public void addNewServiceEntry(String clientName) throws Exception
 	{
 		addNewEntry(ServiceEntry.class, getServiceEntries(), clientName, this::displayService);
@@ -568,8 +469,7 @@ public class ConfigurationFxNew extends Configuration
 		for (ServiceEntry entry : getServiceEntries())
 		{
 			String id = entry.toString();
-			this.supportedServices.put(entry.toString(),
-					new SupportedEntry(servicePool.isSupported(id), servicePool.requiredMajorVersion(id), servicePool.requiredMinorVersion(id)));
+			this.supportedServices.put(entry.toString(), new SupportedEntry(servicePool.isSupported(id), servicePool.requiredMajorVersion(id), servicePool.requiredMinorVersion(id)));
 		}
 		this.displayService();
 	}
@@ -633,14 +533,12 @@ public class ConfigurationFxNew extends Configuration
 				}
 			};
 
-			startTask.setOnSucceeded(workerStateEvent ->
-			{
+			startTask.setOnSucceeded(workerStateEvent -> {
 				startedServices.replace(entry.toString(), ConnectionStatus.StartSuccessful);
 				this.controller.displayService(getServiceEntries());
 			});
 
-			startTask.setOnFailed(workerStateEvent ->
-			{
+			startTask.setOnFailed(workerStateEvent -> {
 				startedServices.replace(entry.toString(), ConnectionStatus.StartFailed);
 				this.controller.displayService(getServiceEntries());
 			});
@@ -664,10 +562,9 @@ public class ConfigurationFxNew extends Configuration
 			this.controller.displayService(getServiceEntries());
 		}
 	}
+	//endregion
 
-	// ============================================================
-	// app
-	// ============================================================
+	//region application
 	public void addNewAppEntry(String clientName) throws Exception
 	{
 		addNewEntry(AppEntry.class, getAppEntries(), clientName, this::displayApp);
@@ -690,8 +587,7 @@ public class ConfigurationFxNew extends Configuration
 		for (AppEntry entry : getAppEntries())
 		{
 			String id = entry.toString();
-			this.supportedApps.put(entry.toString(),
-					new SupportedEntry(AppPool.isSupported(id), AppPool.requiredMajorVersion(id), AppPool.requiredMinorVersion(id)));
+			this.supportedApps.put(entry.toString(), new SupportedEntry(AppPool.isSupported(id), AppPool.requiredMajorVersion(id), AppPool.requiredMinorVersion(id)));
 		}
 		this.displayApp();
 	}
@@ -715,35 +611,33 @@ public class ConfigurationFxNew extends Configuration
 
 	public void removeAppDictionaryFolder(String file) throws Exception
 	{
-		this.removeString(file, super.appDictionariesValue, this::displayApp);
+		this.removeFile(file, super.appDictionariesValue, this::displayApp);
 	}
 
 	public void addAppDictionaryFolder(String file) throws Exception
 	{
-		this.addString(file, super.appDictionariesValue, this::displayApp);
+		this.addFile(file, super.appDictionariesValue, this::displayApp);
 	}
 
-	// ============================================================
-	// file system
-	// ============================================================
+	//endregion
+
+	//region file system
 	public void addAsMatrix(String file)
 	{
-		addString(file, this.matricesValue, this::displayMatrix);
+		addFile(file, this.matricesValue, this::displayMatrix);
 	}
 
 	public void addAsLibrary(String file)
 	{
-		addString(file, super.librariesValue, this::displayLibrary);
+		addFile(file, super.librariesValue, this::displayLibrary);
 	}
 
 	public void addAsVars(String file)
 	{
-		addString(file, super.userVarsValue, this::displayLibrary);
+		addFile(file, super.userVarsValue, this::displayLibrary);
 	}
+	//endregion
 
-	// ============================================================
-	// abstract entry
-	// ============================================================
 	public void changeEntry(Entry entry, String key, Object newValue) throws Exception
 	{
 		String lastValue = entry.get(key);
@@ -762,8 +656,6 @@ public class ConfigurationFxNew extends Configuration
 		addCommand(undo, redo);
 		super.changed(true);
 	}
-
-	// ============================================================
 
 	public static String path(File file)
 	{
@@ -784,9 +676,7 @@ public class ConfigurationFxNew extends Configuration
 		return path(new File(string));
 	}
 
-	// ============================================================
-	// private methods
-	// ============================================================
+	//region private methods
 	private <T extends Entry> void addNewEntry(Class<T> clazz, List<T> list, String name, DisplayFunction func) throws Exception
 	{
 		if (name == null || name.isEmpty())
@@ -801,13 +691,11 @@ public class ConfigurationFxNew extends Configuration
 		T entry = clazz.newInstance();
 		entry.set(entryName, name);
 
-		Command undo = () ->
-		{
+		Command undo = () -> {
 			list.remove(list.size() - 1);
 			func.display();
 		};
-		Command redo = () ->
-		{
+		Command redo = () -> {
 			list.add(entry);
 			func.display();
 		};
@@ -815,8 +703,7 @@ public class ConfigurationFxNew extends Configuration
 		super.changed(true);
 	}
 
-	private <T extends Entry> void removeEntry(Class<T> clazz, List<T> list, String name, Map<String, SupportedEntry> supportedMap, DisplayFunction func)
-			throws Exception
+	private <T extends Entry> void removeEntry(Class<T> clazz, List<T> list, String name, Map<String, SupportedEntry> supportedMap, DisplayFunction func) throws Exception
 	{
 		if (name == null || name.isEmpty())
 		{
@@ -829,16 +716,14 @@ public class ConfigurationFxNew extends Configuration
 		HashMap<String, SupportedEntry> lastMap = new HashMap<>();
 		lastMap.putAll(supportedMap);
 
-		Command undo = () ->
-		{
+		Command undo = () -> {
 			list.clear();
 			list.addAll(lastList);
 			supportedMap.clear();
 			supportedMap.putAll(lastMap);
 			func.display();
 		};
-		Command redo = () ->
-		{
+		Command redo = () -> {
 			list.removeIf(entry -> entry.toString().equals(name));
 			supportedMap.remove(name);
 			func.display();
@@ -884,7 +769,29 @@ public class ConfigurationFxNew extends Configuration
 		super.changed(true);
 	}
 
-	private void removeString(String file, List<MutableString> list, DisplayFunction displayFunction)
+	private void removeString(String value, List<MutableString> list, DisplayFunction displayFunction)
+	{
+		List<MutableString> oldFiles = new ArrayList<>(list);
+		Command undo = () ->
+		{
+			list.clear();
+			list.addAll(oldFiles);
+			displayFunction.display();
+			this.displayFileSystem();
+		};
+		Command redo = () ->
+		{
+			List<MutableString> collect = list.stream().filter(f -> !f.equals(value)).collect(Collectors.toList());
+			list.clear();
+			list.addAll(collect);
+			displayFunction.display();
+			this.displayFileSystem();
+		};
+		super.addCommand(undo, redo);
+		super.changed(true);
+	}
+
+	private void removeFile(String filePath, List<MutableString> list, DisplayFunction displayFunction)
 	{
 		// TODO need remove file from fileSystem
 		List<MutableString> oldFiles = new ArrayList<>(list);
@@ -897,7 +804,7 @@ public class ConfigurationFxNew extends Configuration
 		};
 		Command redo = () ->
 		{
-			List<MutableString> collect = list.stream().filter(f -> !path(file).equals(path(f.get()))).collect(Collectors.toList());
+			List<MutableString> collect = list.stream().filter(f -> !path(filePath).equals(path(f.get()))).collect(Collectors.toList());
 			list.clear();
 			list.addAll(collect);
 			displayFunction.display();
@@ -915,7 +822,6 @@ public class ConfigurationFxNew extends Configuration
 			list.clear();
 			list.addAll(oldFiles);
 			displayFunction.display();
-			this.displayFileSystem();
 		};
 		Command redo = () ->
 		{
@@ -924,10 +830,96 @@ public class ConfigurationFxNew extends Configuration
 			list.clear();
 			list.addAll(collect);
 			displayFunction.display();
-			this.displayFileSystem();
 		};
 		super.addCommand(undo, redo);
 		super.changed(true);
+	}
+
+	private void addFile(String filePath, List<MutableString> list, DisplayFunction displayFunction)
+	{
+		List<MutableString> oldFiles = new ArrayList<>(list);
+		Command undo = () ->
+		{
+			list.clear();
+			list.addAll(oldFiles);
+			displayFunction.display();
+		};
+		Command redo = () ->
+		{
+			List<MutableString> collect = new ArrayList<>(list);
+			collect.add(new MutableString(filePath));
+			list.clear();
+			list.addAll(collect);
+			displayFunction.display();
+		};
+		super.addCommand(undo, redo);
+		super.changed(true);
+	}
+
+	private void replaceString(String oldValue, String newValue, List<MutableString> list, DisplayFunction displayFunction, boolean needUpdateFileSystem)
+	{
+		if (oldValue.equals(newValue))
+		{
+			return;
+		}
+		List<MutableString> oldValues = new ArrayList<>(list);
+		Command undo = () ->
+		{
+			list.clear();
+			list.addAll(oldValues);
+			displayFunction.display();
+			if (needUpdateFileSystem)
+			{
+				this.displayFileSystem();
+			}
+		};
+		Command redo = () ->
+		{
+			List<MutableString> collect = new ArrayList<>(list);
+			collect.set(collect.indexOf(new MutableString(oldValue)), new MutableString(newValue));
+			list.clear();
+			list.addAll(collect);
+			displayFunction.display();
+			if (needUpdateFileSystem)
+			{
+				this.displayFileSystem();
+			}
+		};
+		super.addCommand(undo, redo);
+		super.changed(true);
+	}
+
+	private File createNewFile(File parentFolder, String nameOfFile, String ext) throws Exception
+	{
+		String newFileName = nameOfFile;
+		if (!newFileName.endsWith(ext))
+		{
+			newFileName += ext;
+		}
+		File where = parentFolder;
+		if (!parentFolder.isDirectory())
+		{
+			where = new File(path(parentFolder)).getParentFile();
+		}
+		File newFile = new File(path(where) + File.separator + newFileName);
+		if (!newFile.createNewFile())
+		{
+			throw new Exception("Can't create new file");
+		}
+		return newFile;
+	}
+
+	private void removeFileFromFileSystem(File removeFile, DisplayFunction displayFunction)
+	{
+		// TODO think about undo/redo files
+		forceDelete(removeFile);
+		displayFunction.display();
+	}
+
+	private void removeFilesFromFileSystem(List<File> files, DisplayFunction displayFunction)
+	{
+		files.forEach(ConfigurationFxNew::forceDelete);
+		displayFunction.display();
 	}
 
 	private void select(TreeNode startNode)
@@ -986,16 +978,16 @@ public class ConfigurationFxNew extends Configuration
 	public static String getExtension(String fileName)
 	{
 		int index = fileName.lastIndexOf(".");
-		return index == -1 ? "" : fileName.substring(index + 1);
+		return index == -1 ? "" : fileName.substring(index);
 	}
+	//endregion
 
-	// ==============================================================================================================================
-
+	//region display methods
 	private void displayEvaluator()
 	{
 		this.controller.displayEvaluator(toStringList(super.importsValue));
 	}
-	
+
 	private void displayFormat()
 	{
 		this.controller.displayFormat(super.timeValue.get(), super.dateValue.get(), super.dateTimeValue.get(), toStringList(super.formatsValue));
@@ -1005,54 +997,55 @@ public class ConfigurationFxNew extends Configuration
 	{
 		this.controller.displayMatrix(toStringList(this.matricesValue));
 	}
-	
+
 	private void displayLibrary()
 	{
 		this.controller.displayLibrary(toStringList(super.librariesValue));
 	}
-	
+
 	private void displayVars()
 	{
 		this.controller.displayVars(toStringList(super.userVarsValue));
 	}
-	
+
 	private void displayReport()
 	{
 		this.controller.displayReport(super.reportsValue.get());
 	}
-	
+
 	private void displaySql()
 	{
 		this.controller.displaySql(getSqlEntries());
 	}
-	
+
 	private void displayClient()
 	{
 		this.controller.displayClient(getClientEntries());
 	}
-	
+
 	private void displayService()
 	{
 		this.controller.displayService(getServiceEntries());
 	}
-	
+
 	private void displayApp()
 	{
 		this.controller.displayApp(getAppEntries());
 	}
-	
+
 	private void displayFileSystem()
 	{
 		List<String> ignoreFiles = new ArrayList<>();
-		
+
 		ignoreFiles.addAll(toStringList(super.matricesValue));
 		ignoreFiles.addAll(toStringList(super.librariesValue));
 		ignoreFiles.add(super.varsValue.get());
 		ignoreFiles.add(super.reportsValue.get());
-		
+
 		this.controller.displayFileSystem(ignoreFiles);
 	}
-	
+	//endregion
+
 	private void initController()
 	{
 		this.controller = Common.loadController(ConfigurationFxNew.class.getResource("config.fxml"));
