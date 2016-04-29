@@ -599,7 +599,7 @@ public class ConfigurationFxNew extends Configuration
 
 	public void openAppsDictionary(File file) throws Exception
 	{
-		System.out.println(String.format("APP DICTIONARY PATH '%s' ARE OPENED", path(file)));
+		Common.tryCatch(() -> this.mainModel.loadDictionary(path(file), null),"Error on load dictionary");
 	}
 
 	public void showAppHelp(AppEntry entry) throws Exception

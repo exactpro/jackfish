@@ -45,7 +45,6 @@ import com.exactprosystems.jf.sql.DataBasePool;
 import com.exactprosystems.jf.tool.AbstractDocument;
 import com.exactprosystems.jf.tool.main.DocumentKind;
 import com.exactprosystems.jf.tool.main.Main;
-
 import org.apache.log4j.Logger;
 
 import javax.xml.XMLConstants;
@@ -58,11 +57,8 @@ import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
-
 import java.io.*;
 import java.lang.reflect.Field;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -312,9 +308,17 @@ public class Configuration extends AbstractDocument
 	{
 		return this.varsValue;
 	}
-	
-	
-	
+
+	public MutableArrayList<MutableString> getAppDictionariesValue()
+	{
+		return appDictionariesValue;
+	}
+
+	public MutableArrayList<MutableString> getClientDictionariesValue()
+	{
+		return clientDictionariesValue;
+	}
+
 	public IClientsPool getClientPool()
 	{
 		return this.clients;

@@ -1,37 +1,26 @@
 package com.exactprosystems.jf.tool.newconfig;
 
-import java.io.File;
-import java.net.URL;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.ResourceBundle;
-
-import javafx.fxml.Initializable;
-import javafx.scene.Parent;
-import javafx.scene.control.TreeItem;
-import javafx.scene.layout.BorderPane;
-
+import com.exactprosystems.jf.common.MutableString;
 import com.exactprosystems.jf.documents.config.AppEntry;
 import com.exactprosystems.jf.documents.config.ClientEntry;
 import com.exactprosystems.jf.documents.config.ServiceEntry;
 import com.exactprosystems.jf.documents.config.SqlEntry;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
-import com.exactprosystems.jf.tool.newconfig.nodes.AppTreeNode;
-import com.exactprosystems.jf.tool.newconfig.nodes.ClientTreeNode;
-import com.exactprosystems.jf.tool.newconfig.nodes.EvaluatorTreeNode;
-import com.exactprosystems.jf.tool.newconfig.nodes.FileSystemTreeNode;
-import com.exactprosystems.jf.tool.newconfig.nodes.FormatTreeNode;
-import com.exactprosystems.jf.tool.newconfig.nodes.LibraryTreeNode;
-import com.exactprosystems.jf.tool.newconfig.nodes.MatrixTreeNode;
-import com.exactprosystems.jf.tool.newconfig.nodes.ReportTreeNode;
-import com.exactprosystems.jf.tool.newconfig.nodes.SeparatorTreeNode;
-import com.exactprosystems.jf.tool.newconfig.nodes.ServiceTreeNode;
-import com.exactprosystems.jf.tool.newconfig.nodes.SqlTreeNode;
-import com.exactprosystems.jf.tool.newconfig.nodes.TreeNode;
-import com.exactprosystems.jf.tool.newconfig.nodes.VariablesTreeNode;
+import com.exactprosystems.jf.tool.newconfig.nodes.*;
 import com.exactprosystems.jf.tool.newconfig.testing.TestingConnectionFxController;
+import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.control.TreeItem;
+import javafx.scene.layout.BorderPane;
+
+import java.io.File;
+import java.net.URL;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 public class ConfigurationNewFxController implements Initializable, ContainingParent
 {
@@ -115,21 +104,33 @@ public class ConfigurationNewFxController implements Initializable, ContainingPa
 
 	public void displayClient(List<ClientEntry> clientEntries)
 	{
-		Common.tryCatch(() -> this.clientTreeNode.display(clientEntries, Collections.emptyMap(), Collections.emptyList()),
+		Common.tryCatch(() -> this.clientTreeNode.display(clientEntries, Collections.emptyMap(),
+				this.model.getClientDictionariesValue()
+						.stream()
+						.map(MutableString::get)
+						.map(File::new)
+						.collect(Collectors.toList())
+		),
 //		Common.tryCatch(() -> this.clientTreeNode.display(clientEntries, this.supportedClients, this.listClientDictionaries),
-				"Error on display sql entries");
+				"Error on display client entries");
 	}
 
 	public void displayService(List<ServiceEntry> serviceEntries)
 	{
 		Common.tryCatch(() -> this.serviceTreeNode.display(serviceEntries, Collections.emptyMap(), Collections.emptyMap()),
 //		Common.tryCatch(() -> this.serviceTreeNode.display(serviceEntries, this.supportedServices, this.startedServices),
-				"Error on display sql entries");
+				"Error on display service entries");
 	}
 
 	public void displayApp(List<AppEntry> appEntries)
 	{
-		Common.tryCatch(() -> this.appTreeNode.display(appEntries, Collections.emptyMap(), Collections.emptyList()), "Error on display sql entries");
+		Common.tryCatch(() -> this.appTreeNode.display(appEntries, Collections.emptyMap(),
+				this.model.getAppDictionariesValue()
+							.stream()
+							.map(MutableString::get)
+							.map(File::new)
+							.collect(Collectors.toList())
+		), "Error on display apps entries");
 //		Common.tryCatch(() -> this.appTreeNode.display(appEntries, this.supportedApps, this.listAppsDictionaries), "Error on display sql entries");
 	}
 
