@@ -21,7 +21,6 @@ import javafx.geometry.Rectangle2D;
 import javafx.geometry.VPos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -330,9 +329,10 @@ public class Notifications
 		private static final double MIN_HEIGHT = 40;
 		private Timeline closeTimeLine;
 
-		TextArea label;
+		Label label;
 		Label title;
 		Button closeBtn;
+		Button copyBtn;
 		ToggleButton pinBtn;
 
 		private GridPane pane;
@@ -383,9 +383,8 @@ public class Notifications
 			}
 
 			// initialise label area
-			this.label = new TextArea();
+			this.label = new Label();
 			this.label.setText(msg);
-			this.label.setEditable(false);
 			this.label.getStyleClass().addAll(CssVariables.NOTIFICATION_MSG, stateClass);
 			int length = msg.split(System.lineSeparator()).length + 2;
 			length = Math.min(length, 10);
@@ -409,6 +408,15 @@ public class Notifications
 			this.closeBtn.setPrefSize(16, 16);
 			this.closeBtn.setFocusTraversable(false);
 			this.closeBtn.opacityProperty().bind(this.transition);
+
+			this.copyBtn = new Button("C");
+			this.copyBtn.setOnAction((e) -> Common.copyText(this.label.getText()));
+			this.copyBtn.getStyleClass().setAll(CssVariables.NOTIFICATION_COPY_BUTTON);
+			this.copyBtn.setMinSize(16, 16);
+			this.copyBtn.setPrefSize(16, 16);
+			this.copyBtn.setMaxSize(16, 16);
+			this.copyBtn.setFocusTraversable(false);
+			this.copyBtn.opacityProperty().bind(this.transition);
 
 			this.pinBtn = new ToggleButton();
 			this.pinBtn.setGraphic(new ImageView(new Image(CssVariables.Icons.NOTIFICATION_PIN_FALSE)));
@@ -442,8 +450,9 @@ public class Notifications
 			this.pane.getChildren().clear();
 			this.pane.add(this.title, 0, 0);
 			this.pane.add(this.label, 0, 1, 3, 1);
-			this.pane.add(this.closeBtn, 2, 0);
-			this.pane.add(this.pinBtn, 1, 0);
+			this.pane.add(this.copyBtn, 1,0);
+			this.pane.add(this.pinBtn, 2, 0);
+			this.pane.add(this.closeBtn, 3, 0);
 		}
 
 		@Override

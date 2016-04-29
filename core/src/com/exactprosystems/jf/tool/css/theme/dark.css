@@ -243,6 +243,18 @@
     -fx-text-fill: #ebebeb;
 
 }
+.notificationBar > .notificationPane .notificationCopyButton {
+	-fx-text-fill : -fx-company-color-light;
+
+}
+.notificationBar > .notificationPane .notificationCopyButton:hover {
+	-fx-text-fill : -fx-company-color-dark;
+
+}
+.notificationBar > .notificationPane .notificationCopyButton:pressed {
+	-fx-text-fill : derived(-fx-company-color-light, 50%)
+
+}
 .notificationBar > .notificationPane .notificationCloseButton {
     -fx-background-color: transparent;
     -fx-background-insets: 0;

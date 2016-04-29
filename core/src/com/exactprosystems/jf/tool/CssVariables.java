@@ -41,6 +41,7 @@ public class CssVariables
 	public static final String	NOTIFICATION_MSG			= "notificationMsg";
 	public static final String	NOTIFICATION_TITLE			= "notificationTitle";
 	public static final String	NOTIFICATION_CLOSE_BUTTON	= "notificationCloseButton";
+	public static final String	NOTIFICATION_COPY_BUTTON	= "notificationCopyButton";
 	public static final String	NOTIFICATION_PIN_BUTTON		= "notificationPinButton";
 
 	/*Correct / Incorrect fields*/
