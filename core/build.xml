@@ -76,6 +76,7 @@
 			<zipfileset src="${lib.dir}/javacsv.jar"/>
 			<zipfileset src="${lib.dir}/log4j-1.2.17.jar"/>
 			<zipfileset src="${lib.dir}/mvel2-2.2.7.Final.jar"/>
+			<zipfileset src="${lib.dir}/jgit-4.2.0.201601211800-r.jar"/>
 		</jar>
 	</target>
 
