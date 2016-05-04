@@ -10,7 +10,6 @@ package com.exactprosystems.jf.tool.newconfig;
 import com.exactprosystems.jf.api.app.IApplicationFactory;
 import com.exactprosystems.jf.api.client.IClientFactory;
 import com.exactprosystems.jf.api.client.Possibility;
-import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.service.IServicesPool;
 import com.exactprosystems.jf.api.service.ServiceConnection;
 import com.exactprosystems.jf.app.ApplicationPool;
@@ -18,6 +17,8 @@ import com.exactprosystems.jf.client.ClientsPool;
 import com.exactprosystems.jf.common.MutableString;
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
+import com.exactprosystems.jf.common.parser.Matrix;
+import com.exactprosystems.jf.common.parser.listeners.MatrixListener;
 import com.exactprosystems.jf.common.parser.listeners.RunnerListener;
 import com.exactprosystems.jf.common.parser.listeners.SilenceMatrixListener;
 import com.exactprosystems.jf.common.undoredo.Command;
@@ -290,7 +291,10 @@ public class ConfigurationFx extends Configuration
 
 	public void addNewMatrix(File parentFolder, String fileName) throws Exception
 	{
-		createNewFile(parentFolder, fileName, Configuration.matrixExt);
+		File file = createNewFile(parentFolder, fileName, Configuration.matrixExt);
+		Matrix matrix = new Matrix(path(file), this, new MatrixListener());
+		matrix.create();
+		matrix.save(path(file));
 		displayMatrix();
 	}
 

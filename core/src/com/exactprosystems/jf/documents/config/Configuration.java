@@ -11,7 +11,6 @@ package com.exactprosystems.jf.documents.config;
 import com.exactprosystems.jf.api.app.IApplicationFactory;
 import com.exactprosystems.jf.api.app.IApplicationPool;
 import com.exactprosystems.jf.api.app.IGuiDictionary;
-import com.exactprosystems.jf.api.app.Mutable;
 import com.exactprosystems.jf.api.client.IClientsPool;
 import com.exactprosystems.jf.api.common.Converter;
 import com.exactprosystems.jf.api.common.DateTime;
@@ -367,14 +366,7 @@ public class Configuration extends AbstractDocument
 			File folderFile = new File(folder.get());
 			if (folderFile.exists() && folderFile.isDirectory())
 			{
-				File[] libFiles = folderFile.listFiles(new FilenameFilter()
-				{
-					@Override
-					public boolean accept(File dir, String name)
-					{
-						return name != null && name.endsWith(matrixExt);
-					}
-				});
+				File[] libFiles = folderFile.listFiles((dir, name) -> name != null && name.endsWith(matrixExt));
 				
 				for (File libFile : libFiles)
 				{
