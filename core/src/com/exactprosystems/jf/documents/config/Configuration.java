@@ -372,7 +372,7 @@ public class Configuration extends AbstractDocument
 				{
 					try (Reader reader = new FileReader(libFile))
 					{
-						Matrix matrix = new Matrix(libFile.getName(), this, checker);
+						Matrix matrix = new Matrix(libFile.getAbsolutePath(), this, checker);
 						if (!checker.isOk())
 						{
 							logger.error("Library load error: [" + libFile.getName() + "] " + checker.getExceptionMessage());
@@ -511,6 +511,7 @@ public class Configuration extends AbstractDocument
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
             marshaller.marshal(this, os);
 
+			//TODO why we do this?
     		refreshLibs();
 
 			saved();

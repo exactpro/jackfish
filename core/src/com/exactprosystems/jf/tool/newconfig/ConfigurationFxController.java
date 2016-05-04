@@ -1,6 +1,7 @@
 package com.exactprosystems.jf.tool.newconfig;
 
 import com.exactprosystems.jf.common.MutableString;
+import com.exactprosystems.jf.common.parser.Matrix;
 import com.exactprosystems.jf.documents.config.AppEntry;
 import com.exactprosystems.jf.documents.config.ClientEntry;
 import com.exactprosystems.jf.documents.config.ServiceEntry;
@@ -16,10 +17,7 @@ import javafx.scene.layout.BorderPane;
 
 import java.io.File;
 import java.net.URL;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class ConfigurationFxController implements Initializable, ContainingParent
@@ -87,9 +85,9 @@ public class ConfigurationFxController implements Initializable, ContainingParen
 		Common.tryCatch(() -> this.matrixTreeNode.display(matricesValue), "Error on display matrix");
 	}
 
-	public void displayLibrary(List<String> librariesValue)
+	public void displayLibrary(Map<String, Matrix> map)
 	{
-		Common.tryCatch(() -> this.libTreeNode.display(librariesValue), "Error on display libs");
+		Common.tryCatch(() -> this.libTreeNode.display(map), "Error on display libs");
 	}
 
 	public void displayVars(List<String> userVarsValue)

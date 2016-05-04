@@ -311,6 +311,11 @@ public class ConfigurationFx extends Configuration
 		removeFile(file, super.librariesValue, this::displayLibrary);
 	}
 
+	public void openLibrary(String path)
+	{
+		this.openLibrary(new File(path));
+	}
+
 	public void openLibrary(File file)
 	{
 		//TODO we need method to open library
@@ -1004,7 +1009,7 @@ public class ConfigurationFx extends Configuration
 
 	private void displayLibrary()
 	{
-		this.controller.displayLibrary(toStringList(super.librariesValue));
+		this.controller.displayLibrary(super.libs);
 	}
 
 	private void displayVars()
