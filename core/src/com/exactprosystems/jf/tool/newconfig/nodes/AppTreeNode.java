@@ -211,7 +211,7 @@ public class AppTreeNode extends TreeNode
 			Function<File, ContextMenu> topFolderFunc = file -> {
 				ContextMenu menu = new ContextMenu();
 				MenuItem itemRemove = new MenuItem("Remove app dictionary dir", new ImageView(new Image(CssVariables.Icons.REMOVE_PARAMETER_ICON)));
-				itemRemove.setOnAction(e -> Common.tryCatch(() -> model.removeAppDictionaryFolder(file.getName()), "Error on remove matrix directory"));
+				itemRemove.setOnAction(e -> Common.tryCatch(() -> model.excludeAppDictionaryFolder(file.getName()), "Error on remove matrix directory"));
 				menu.getItems().addAll(itemRemove);
 				return menu;
 			};

@@ -31,12 +31,9 @@ public class ConfigurationToolBar extends BorderPane
 		ToolBar toolBar = new ToolBar();
 
 		Button reload = new Button();
-		Common.customizeLabeled(reload, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.REDO_ICON_SMALL);
+		Common.customizeLabeled(reload, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.REFRESH);
 		reload.setTooltip(new Tooltip("Reload configuration"));
-		reload.setOnAction(e -> 
-		{
-			this.model.refreshLibs();
-		});
+		reload.setOnAction(e -> Common.tryCatch(() -> this.model.refresh(), "Error on refresh configuration"));
 		toolBar.getItems().add(reload);
 		this.setCenter(toolBar);
 

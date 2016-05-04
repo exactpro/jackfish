@@ -12,7 +12,6 @@ import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.newconfig.ConfigurationFx;
 import com.exactprosystems.jf.tool.newconfig.ConfigurationTreeView;
-
 import javafx.scene.Node;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
@@ -50,13 +49,22 @@ public class MatrixTreeNode extends TreeNode
 		return Optional.of(new Image(CssVariables.Icons.MATRIX_ICON));
 	}
 
+	@Override
+	public Optional<ContextMenu> contextMenu()
+	{
+		ContextMenu menu = new ContextMenu();
+		//TODO think about implementation this method
+		menu.getItems().add(new MenuItem("Git"));
+		return Optional.of(menu);
+	}
+
 	public void display(List<String> matricesValue)
 	{
 		this.treeItem.getChildren().clear();
 		Function<File, ContextMenu> topFolderMenu = file -> {
 			ContextMenu menu = new ContextMenu();
-			MenuItem itemRemove = new MenuItem("Remove matrix dir", new ImageView(new Image(CssVariables.Icons.REMOVE_PARAMETER_ICON)));
-			itemRemove.setOnAction(e -> Common.tryCatch(() -> model.removeMatrixDirectory(file.getName()), "Error on remove matrix directory"));
+			MenuItem itemRemove = new MenuItem("Exclude matrix dir", new ImageView(new Image(CssVariables.Icons.REMOVE_PARAMETER_ICON)));
+			itemRemove.setOnAction(e -> Common.tryCatch(() -> model.excludeMatrixDirectory(file.getName()), "Error on remove matrix directory"));
 			menu.getItems().addAll(itemRemove);
 			return menu;
 		};

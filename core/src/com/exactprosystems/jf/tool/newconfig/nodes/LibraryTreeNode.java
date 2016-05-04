@@ -7,6 +7,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.exactprosystems.jf.tool.newconfig.nodes;
 
+import com.exactprosystems.jf.common.MutableString;
 import com.exactprosystems.jf.common.parser.Matrix;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
@@ -48,6 +49,32 @@ public class LibraryTreeNode extends TreeNode
 		return Optional.of(new Image(CssVariables.Icons.LIBRARY_ICON));
 	}
 
+	@Override
+	public Optional<ContextMenu> contextMenu()
+	{
+		ContextMenu menu = new ContextMenu();
+
+		MenuItem refreshLibs = new MenuItem("Refresh", new ImageView(new Image(CssVariables.Icons.REFRESH)));
+		refreshLibs.setOnAction(e -> Common.tryCatch(() -> this.model.updateLibraries(), "Error on refresh libs"));
+
+		boolean isLibEmpty = this.model.getLibrariesValue().isEmpty();
+		if (!isLibEmpty)
+		{
+			Menu addLibrary = new Menu("Add new library", new ImageView(new Image(CssVariables.Icons.ADD_PARAMETER_ICON)));
+			this.model.getLibrariesValue().stream().map(MutableString::get).map(MenuItem::new).peek(item -> item.setOnAction(e -> ConfigurationTreeView.showInputDialog("Enter new name").ifPresent(name -> Common.tryCatch(() -> this.model.addNewLibrary(new File(item.getText()), name), "Error on create new library")))).forEach(addLibrary.getItems()::add);
+
+			Menu excludeLibrary = new Menu("Exclude library folder", new ImageView(new Image(CssVariables.Icons.REMOVE_PARAMETER_ICON)));
+			this.model.getLibrariesValue().stream().map(MutableString::get).map(MenuItem::new).peek(item -> item.setOnAction(e -> Common.tryCatch(() -> this.model.excludeLibraryDirectory(item.getText()), "Error on exclude library folder"))).forEach(excludeLibrary.getItems()::add);
+
+			menu.getItems().addAll(addLibrary, excludeLibrary);
+		}
+
+		menu.getItems().add(0, refreshLibs);
+		//TODO think about implementation this method
+		menu.getItems().add(new MenuItem("Git"));
+		return Optional.of(menu);
+	}
+
 	@Deprecated
 	public void display(List<String> librariesValue)
 	{
@@ -55,7 +82,7 @@ public class LibraryTreeNode extends TreeNode
 		Function<File, ContextMenu> menuTopFolder = file -> {
 			ContextMenu menu = new ContextMenu();
 			MenuItem itemRemove = new MenuItem("Remove library dir", new ImageView(new Image(CssVariables.Icons.REMOVE_PARAMETER_ICON)));
-			itemRemove.setOnAction(e -> Common.tryCatch(() -> model.removeLibraryDirectory(file.getName()), "Error on remove library directory"));
+			itemRemove.setOnAction(e -> Common.tryCatch(() -> model.excludeLibraryDirectory(file.getName()), "Error on remove library directory"));
 			menu.getItems().addAll(itemRemove);
 			return menu;
 		};
@@ -85,27 +112,17 @@ public class LibraryTreeNode extends TreeNode
 			return menu;
 		};
 
-		librariesValue.forEach(file ->
-				new BuildTree(new File(file), this.treeItem)
-						.doubleClickEvent(f -> () -> this.model.openLibrary(f))
-						.fileFilter(f -> ConfigurationFx.getExtension(f.getAbsolutePath()).equals(ConfigurationFx.matrixExt))
-						.menuTopFolder(menuTopFolder)
-						.menuFiles(menuFiles)
-						.menuFolder(menuFolders)
-						.byPass());
+		librariesValue.forEach(file -> new BuildTree(new File(file), this.treeItem).doubleClickEvent(f -> () -> this.model.openLibrary(f)).fileFilter(f -> ConfigurationFx.getExtension(f.getAbsolutePath()).equals(ConfigurationFx.matrixExt)).menuTopFolder(menuTopFolder).menuFiles(menuFiles).menuFolder(menuFolders).byPass());
 	}
 
 	public void display(Map<String, Matrix> map)
 	{
 		this.treeItem.getChildren().clear();
-		map.entrySet()
-				.stream()
-				.map(entry -> new TreeNodeLib(entry.getValue(), entry.getKey(), ConfigurationFx.path(entry.getValue().getName())))
-				.map(lib -> {
-					TreeItem<TreeNode> treeItem = new TreeItem<>();
-					treeItem.setValue(lib);
-					return treeItem;})
-				.forEach(this.treeItem.getChildren()::add);
+		map.entrySet().stream().map(entry -> new TreeNodeLib(entry.getValue(), entry.getKey(), ConfigurationFx.path(entry.getValue().getName()))).map(lib -> {
+			TreeItem<TreeNode> treeItem = new TreeItem<>();
+			treeItem.setValue(lib);
+			return treeItem;
+		}).forEach(this.treeItem.getChildren()::add);
 	}
 
 	private class TreeNodeLib extends TreeNode

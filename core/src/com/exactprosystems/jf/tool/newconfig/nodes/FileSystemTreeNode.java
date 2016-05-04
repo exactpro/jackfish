@@ -11,7 +11,6 @@ import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.newconfig.ConfigurationFx;
 import com.exactprosystems.jf.tool.newconfig.ConfigurationTreeView;
-
 import javafx.scene.Node;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
@@ -73,17 +72,17 @@ public class FileSystemTreeNode extends TreeNode
 			{
 				ContextMenu menu = new ContextMenu();
 
-				MenuItem itemAddAsMatrix = new MenuItem("Add as matrix src", new ImageView(new Image(CssVariables.Icons.MATRIX_ICON)));
-				itemAddAsMatrix.setOnAction(e -> Common.tryCatch(() -> model.addAsMatrix(f.getName()), "Error on add folder as matrix src"));
+				MenuItem itemAddAsMatrix = new MenuItem("Use as matrix src", new ImageView(new Image(CssVariables.Icons.MATRIX_ICON)));
+				itemAddAsMatrix.setOnAction(e -> Common.tryCatch(() -> model.useAsMatrix(ConfigurationFx.path(f)), "Error on add folder as matrix src"));
 
-				MenuItem itemAddAsLibrary = new MenuItem("Add as library src", new ImageView(new Image(CssVariables.Icons.LIBRARY_ICON)));
-				itemAddAsLibrary.setOnAction(e -> Common.tryCatch(() -> model.addAsLibrary(f.getName()), "Error on add folder as library"));
+				MenuItem itemAddAsLibrary = new MenuItem("Use as library src", new ImageView(new Image(CssVariables.Icons.LIBRARY_ICON)));
+				itemAddAsLibrary.setOnAction(e -> Common.tryCatch(() -> model.useAsLibrary(ConfigurationFx.path(f)), "Error on add folder as library"));
 
-				MenuItem itemAddAsAppDic = new MenuItem("Add as app dictionary", new ImageView(new Image(CssVariables.Icons.APP_DICTIONARY_ICON)));
-				itemAddAsAppDic.setOnAction(e -> Common.tryCatch(() -> model.addAppDictionaryFolder(f.getName()), "Error on add folder as app dictionary"));
+				MenuItem itemAddAsAppDic = new MenuItem("Use as app dictionary", new ImageView(new Image(CssVariables.Icons.APP_DICTIONARY_ICON)));
+				itemAddAsAppDic.setOnAction(e -> Common.tryCatch(() -> model.useAsAppDictionaryFolder(ConfigurationFx.path(f)), "Error on add folder as app dictionary"));
 
-				MenuItem itemAddAsClientDic = new MenuItem("Add as Client dictionary", new ImageView(new Image(CssVariables.Icons.CLIENT_DICTIONARY_ICON)));
-				itemAddAsClientDic.setOnAction(e -> Common.tryCatch(() -> model.addClientDictionaryFolder(f.getName()), "Error on add folder as client dictionary"));
+				MenuItem itemAddAsClientDic = new MenuItem("Use as Client dictionary", new ImageView(new Image(CssVariables.Icons.CLIENT_DICTIONARY_ICON)));
+				itemAddAsClientDic.setOnAction(e -> Common.tryCatch(() -> model.useAsClientDictionaryFolder(ConfigurationFx.path(f)), "Error on add folder as client dictionary"));
 
 				MenuItem itemSetReportDir = new MenuItem("Set report dir", new ImageView(new Image(CssVariables.Icons.REPORT_ICON)));
 				itemSetReportDir.setOnAction(e -> Common.tryCatch(() -> model.setReportFolder(f.getName()), "Error on set report folder"));

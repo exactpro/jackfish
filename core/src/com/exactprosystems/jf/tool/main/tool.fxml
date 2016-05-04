@@ -47,6 +47,7 @@
 												<MenuItem fx:id="fileNewDictionary" mnemonicParsing="false" onAction="#newDictionary" text="Dictionary"/>
 												<MenuItem fx:id="fileNewSystemVars" mnemonicParsing="false" onAction="#newSystemVars" text="System variables"/>
 												<MenuItem fx:id="fileNewMatrix" mnemonicParsing="false" onAction="#newMatrix" text="Matrix"/>
+												<MenuItem fx:id="fileNewLibrary" mnemonicParsing="false" onAction="#newLibrary" text="Library"/>
 												<MenuItem fx:id="fileNewPlainText" mnemonicParsing="false" onAction="#newPlainText" text="Plain text"/>
 												<MenuItem fx:id="fileNewCsv" mnemonicParsing="false" onAction="#newCsv" text="Csv"/>
 											</items>

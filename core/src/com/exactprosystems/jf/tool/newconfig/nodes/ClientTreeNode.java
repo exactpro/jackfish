@@ -210,7 +210,7 @@ public class ClientTreeNode extends TreeNode
 			{
 				ContextMenu menu = new ContextMenu();
 				MenuItem itemRemove = new MenuItem("Remove client dictionary dir", new ImageView(new Image(CssVariables.Icons.REMOVE_PARAMETER_ICON)));
-				itemRemove.setOnAction(e -> Common.tryCatch(() -> model.removeClientDictionaryFolder(file.getName()), "Error on remove matrix directory"));
+				itemRemove.setOnAction(e -> Common.tryCatch(() -> model.excludeClientDictionaryFolder(file.getName()), "Error on remove matrix directory"));
 				menu.getItems().addAll(itemRemove);
 				return menu;
 			};

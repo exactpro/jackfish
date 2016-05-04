@@ -15,10 +15,7 @@ import com.exactprosystems.jf.common.MatrixRunner;
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.parser.*;
-import com.exactprosystems.jf.common.parser.items.MatrixItem;
-import com.exactprosystems.jf.common.parser.items.MatrixItemAttribute;
-import com.exactprosystems.jf.common.parser.items.TempItem;
-import com.exactprosystems.jf.common.parser.items.TypeMandatory;
+import com.exactprosystems.jf.common.parser.items.*;
 import com.exactprosystems.jf.common.parser.listeners.IMatrixListener;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.common.undoredo.Command;
@@ -91,6 +88,13 @@ public class MatrixFx extends Matrix
 	{
 		super.create();
 		initController();
+	}
+
+	public void createLibrary() throws Exception
+	{
+		getRoot().get(0).remove();
+		NameSpace nameSpace = new NameSpace();
+		getRoot().insert(0, nameSpace);
 	}
 
 	@Override

@@ -43,11 +43,10 @@ import java.util.stream.Collectors;
 
 public class ConfigurationFx extends Configuration
 {
+	//region fields
 	private Main mainModel;
 	private ConfigurationFxController controller;
 	private BorderPane pane;
-
-	// ================================================================================
 
 	private Map<String, SupportedEntry> supportedClients;
 	private Map<String, SupportedEntry> supportedApps;
@@ -55,8 +54,9 @@ public class ConfigurationFx extends Configuration
 	private Map<String, ConnectionStatus> startedServices;    // TODO why is this thing here? it should be in ServicesPool
 
 	private Map<ServiceEntry, ServiceConnection> serviceMap = new HashMap<>();
+	//endregion
 
-
+	//region Constructors
 	public ConfigurationFx() throws Exception
 	{
 		this(null, null, null, null, null);
@@ -77,8 +77,9 @@ public class ConfigurationFx extends Configuration
 		this.mainModel = mainModel;
 		this.pane = pane;
 	}
+	//endregion
 
-	// ================================================================================
+	//region Utilities methods toString
 	public String matrixToString()
 	{
 		return super.matricesValue.stream().map(MutableString::get).collect(Collectors.joining(SEPARATOR));
@@ -108,6 +109,7 @@ public class ConfigurationFx extends Configuration
 	{
 		return this.clientDictionariesValue.stream().map(MutableString::get).collect(Collectors.joining(SEPARATOR));
 	}
+	//endregion
 
 	//region abstract document
 	@Override
@@ -279,9 +281,9 @@ public class ConfigurationFx extends Configuration
 	//endregion
 
 	//region matrix
-	public void removeMatrixDirectory(String file)
+	public void excludeMatrixDirectory(String file)
 	{
-		removeFile(file, super.matricesValue, this::displayMatrix);
+		excludeFile(file, super.matricesValue, this::displayMatrix);
 	}
 
 	public void openMatrix(File file)
@@ -306,9 +308,9 @@ public class ConfigurationFx extends Configuration
 	//endregion
 
 	//region library
-	public void removeLibraryDirectory(String file)
+	public void excludeLibraryDirectory(String file)
 	{
-		removeFile(file, super.librariesValue, this::displayLibrary);
+		excludeFile(file, super.librariesValue, this::displayLibrary);
 	}
 
 	public void openLibrary(String path)
@@ -332,6 +334,11 @@ public class ConfigurationFx extends Configuration
 	{
 		removeFileFromFileSystem(libraryFile, this::displayLibrary);
 	}
+
+	public void updateLibraries() throws Exception
+	{
+		this.displayLibrary();
+	}
 	//endregion
 
 	//region variable
@@ -340,9 +347,9 @@ public class ConfigurationFx extends Configuration
 		Common.tryCatch(() -> this.mainModel.loadSystemVars(path(file)), "Error on load system variable");
 	}
 
-	public void removeVarsFile(String file)
+	public void excludeVarsFile(String file)
 	{
-		removeFile(file, super.userVarsValue, this::displayVars);
+		excludeFile(file, super.userVarsValue, this::displayVars);
 	}
 	//endregion
 
@@ -434,12 +441,12 @@ public class ConfigurationFx extends Configuration
 		this.displayClient();
 	}
 
-	public void removeClientDictionaryFolder(String file) throws Exception
+	public void excludeClientDictionaryFolder(String file) throws Exception
 	{
-		this.removeFile(file, super.clientDictionariesValue, this::displayClient);
+		this.excludeFile(file, super.clientDictionariesValue, this::displayClient);
 	}
 
-	public void addClientDictionaryFolder(String file) throws Exception
+	public void useAsClientDictionaryFolder(String file) throws Exception
 	{
 		this.addFile(file, super.clientDictionariesValue, this::displayClient);
 	}
@@ -618,12 +625,12 @@ public class ConfigurationFx extends Configuration
 		DialogsHelper.showAppHelp(help);
 	}
 
-	public void removeAppDictionaryFolder(String file) throws Exception
+	public void excludeAppDictionaryFolder(String file) throws Exception
 	{
-		this.removeFile(file, super.appDictionariesValue, this::displayApp);
+		this.excludeFile(file, super.appDictionariesValue, this::displayApp);
 	}
 
-	public void addAppDictionaryFolder(String file) throws Exception
+	public void useAsAppDictionaryFolder(String file) throws Exception
 	{
 		this.addFile(file, super.appDictionariesValue, this::displayApp);
 	}
@@ -631,13 +638,14 @@ public class ConfigurationFx extends Configuration
 	//endregion
 
 	//region file system
-	public void addAsMatrix(String file)
+	public void useAsMatrix(String file)
 	{
 		addFile(file, this.matricesValue, this::displayMatrix);
 	}
 
-	public void addAsLibrary(String file)
+	public void useAsLibrary(String file)
 	{
+		System.out.println(file);
 		addFile(file, super.librariesValue, this::displayLibrary);
 	}
 
@@ -800,9 +808,8 @@ public class ConfigurationFx extends Configuration
 		super.changed(true);
 	}
 
-	private void removeFile(String filePath, List<MutableString> list, DisplayFunction displayFunction)
+	private void excludeFile(String filePath, List<MutableString> list, DisplayFunction displayFunction)
 	{
-		// TODO need remove file from fileSystem
 		List<MutableString> oldFiles = new ArrayList<>(list);
 		Command undo = () ->
 		{
@@ -852,6 +859,7 @@ public class ConfigurationFx extends Configuration
 			list.clear();
 			list.addAll(oldFiles);
 			displayFunction.display();
+			this.displayFileSystem();
 		};
 		Command redo = () ->
 		{
@@ -860,6 +868,7 @@ public class ConfigurationFx extends Configuration
 			list.clear();
 			list.addAll(collect);
 			displayFunction.display();
+			this.displayFileSystem();
 		};
 		super.addCommand(undo, redo);
 		super.changed(true);
@@ -1009,12 +1018,15 @@ public class ConfigurationFx extends Configuration
 
 	private void displayLibrary()
 	{
+		super.refreshLibs();
 		this.controller.displayLibrary(super.libs);
 	}
 
 	private void displayVars()
 	{
-		this.controller.displayVars(toStringList(super.userVarsValue));
+		List<String> varsList = toStringList(super.userVarsValue);
+		varsList.add(super.varsValue.get());
+		this.controller.displayVars(varsList);
 	}
 
 	private void displayReport()

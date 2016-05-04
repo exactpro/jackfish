@@ -331,6 +331,19 @@ public class Main extends Application
 		doc.display();
 	}
 
+	public void newLibrary() throws Exception
+	{
+		checkConfig();
+		MatrixFx doc = new MatrixFx(newName(Matrix.class), this.config, new MatrixListener());
+		doc.create();
+		doc.createLibrary();
+		Settings.SettingsValue copyright = settings.getValueOrDefault(Settings.GLOBAL_NS, "Main", "copyright", "");
+		String text = copyright.getValue().replaceAll("\\\\n", System.lineSeparator());
+		doc.addCopyright(text);
+		docs.add(doc);
+		doc.display();
+	}
+
 	public void newSystemVars() throws Exception
 	{
 		checkConfig();

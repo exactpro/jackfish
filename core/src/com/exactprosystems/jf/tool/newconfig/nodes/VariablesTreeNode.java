@@ -49,20 +49,21 @@ public class VariablesTreeNode extends TreeNode
 	public void display(List<String>  files)
 	{
 		this.variablesTreeNode.getChildren().clear();
-		files.stream().sorted((f1, f2) -> f1.compareTo(f2)).map(file -> new FileTreeNode(new File(file))
+		files.stream().sorted(String::compareTo).map(file -> new FileTreeNode(new File(file))
 		{
 			@Override
 			public Optional<ContextMenu> contextMenu()
 			{
-				ContextMenu menu = super.contextMenu().orElse(new ContextMenu());
+				ContextMenu menu = new ContextMenu();
 
 				MenuItem itemRemoveVars = new MenuItem("Remove vars file", new ImageView(new Image(CssVariables.Icons.REMOVE_PARAMETER_ICON)));
-				itemRemoveVars.setOnAction(e -> Common.tryCatch(() -> model.removeVarsFile(file), "Error on remove vars file"));
+				itemRemoveVars.setOnAction(e -> Common.tryCatch(() -> model.excludeVarsFile(file), "Error on remove vars file"));
 
 				MenuItem itemOpenVars = new MenuItem("Open vars file", new ImageView(new Image(CssVariables.Icons.VARS_ICON)));
 				itemOpenVars.setOnAction(event -> model.openVariableFile(new File(file)));
 
 				menu.getItems().addAll(itemRemoveVars, itemOpenVars);
+				menu.getItems().addAll(super.contextMenu().orElse(new ContextMenu()).getItems());
 				return Optional.of(menu);
 			}
 

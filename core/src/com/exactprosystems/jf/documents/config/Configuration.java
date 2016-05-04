@@ -257,6 +257,11 @@ public class Configuration extends AbstractDocument
 		return clientDictionariesValue;
 	}
 
+	public MutableArrayList<MutableString> getLibrariesValue()
+	{
+		return librariesValue;
+	}
+
 	public IClientsPool getClientPool()
 	{
 		return this.clients;
