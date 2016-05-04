@@ -12,14 +12,10 @@ import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.newconfig.ConfigurationFx;
 import com.exactprosystems.jf.tool.newconfig.ConfigurationTreeView;
 import com.exactprosystems.jf.tool.newconfig.TablePair;
-
 import javafx.scene.Node;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.SeparatorMenuItem;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.text.Text;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -51,15 +47,21 @@ public class ConfigurationTreeNode extends TreeNode
 	@Override
 	public Node getView()
 	{
-		return new Text("Configuration_elite");
+		String name = this.model.getName();
+		String fullPath = ConfigurationFx.path(name);
+		if (name.equals(fullPath))
+		{
+			name = new File(name).getName();
+		}
+		Label text = new Label(name + "( " + fullPath + " )");
+		text.setTooltip(new Tooltip(fullPath));
+		return text;
 	}
 
 	@Override
 	public List<TablePair> getParameters()
 	{
 		List<TablePair> list = new ArrayList<>();
-		list.add(TablePair.TablePairBuilder.create().key("version").value("2.0").edit(false).build());
-		list.add(TablePair.TablePairBuilder.create().key("description").value("some Description").build());
 		list.add(TablePair.TablePairBuilder.create().key("matrix").value(this.model.matrixToString()).tooltipSeparator(ConfigurationFx.SEPARATOR).edit(false).build());
 		list.add(TablePair.TablePairBuilder.create().key("libs").value(this.model.libraryToString()).tooltipSeparator(ConfigurationFx.SEPARATOR).edit(false).build());
 		list.add(TablePair.TablePairBuilder.create().key("gitRemotePath").value(this.model.gitRemotePath()).edit(true).build());
