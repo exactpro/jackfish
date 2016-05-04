@@ -12,7 +12,7 @@ import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.SupportedEntry;
-import com.exactprosystems.jf.tool.newconfig.ConfigurationFxNew;
+import com.exactprosystems.jf.tool.newconfig.ConfigurationFx;
 import com.exactprosystems.jf.tool.newconfig.ConfigurationTreeView;
 import com.exactprosystems.jf.tool.newconfig.TablePair;
 
@@ -33,12 +33,12 @@ import java.util.function.Function;
 
 public class ClientTreeNode extends TreeNode
 {
-	private ConfigurationFxNew model;
-	private TreeItem<TreeNode> treeItem;
-	private TreeItem<TreeNode> clientTreeItem;
-	private ClientDictionaryTreeNode clientDictionaryTreeNode;
+	private ConfigurationFx			model;
+	private TreeItem<TreeNode>			treeItem;
+	private TreeItem<TreeNode>			clientTreeItem;
+	private ClientDictionaryTreeNode	clientDictionaryTreeNode;
 
-	public ClientTreeNode(ConfigurationFxNew model, TreeItem<TreeNode> treeItem)
+	public ClientTreeNode(ConfigurationFx model, TreeItem<TreeNode> treeItem)
 	{
 		this.model = model;
 		this.treeItem = treeItem;
@@ -50,9 +50,10 @@ public class ClientTreeNode extends TreeNode
 	@Override
 	public Optional<ContextMenu> contextMenu()
 	{
-		ContextMenu menu = ConfigurationTreeView.add("Add client",
-				e -> ConfigurationTreeView.showInputDialog("Enter new client name")
-						.ifPresent(res -> Common.tryCatch(() -> this.model.addNewClientEntry(res), "Error on add new client")));
+		ContextMenu menu = ConfigurationTreeView.add(
+				"Add client",
+				e -> ConfigurationTreeView.showInputDialog("Enter new client name").ifPresent(
+						res -> Common.tryCatch(() -> this.model.addNewClientEntry(res), "Error on add new client")));
 		MenuItem itemTestVersion = new MenuItem("Test versions");
 		itemTestVersion.setOnAction(e -> Common.tryCatch(() -> this.model.testClientVersion(), "Error on test client version"));
 		menu.getItems().add(itemTestVersion);
@@ -76,17 +77,15 @@ public class ClientTreeNode extends TreeNode
 		this.treeItem.getChildren().clear();
 		this.treeItem.getChildren().add(this.clientTreeItem);
 		this.clientDictionaryTreeNode.display(listClientDictionaries);
-		clientEntries.stream()
-				.map(e -> new ClientEntryNode(model, e, map.get(e.toString())))
-				.map(e -> new TreeItem<TreeNode>(e))
+		clientEntries.stream().map(e -> new ClientEntryNode(model, e, map.get(e.toString()))).map(e -> new TreeItem<TreeNode>(e))
 				.forEach(i -> this.treeItem.getChildren().add(i));
 	}
 
 	private class ClientEntryNode extends AbstractEntryNode<ClientEntry>
 	{
-		private SupportedEntry supportedEntry;
+		private SupportedEntry	supportedEntry;
 
-		public ClientEntryNode(ConfigurationFxNew model, ClientEntry entry, SupportedEntry supportedEntry)
+		public ClientEntryNode(ConfigurationFx model, ClientEntry entry, SupportedEntry supportedEntry)
 		{
 			super(model, entry);
 			this.supportedEntry = supportedEntry;
@@ -97,13 +96,16 @@ public class ClientTreeNode extends TreeNode
 		{
 			ContextMenu menu = new ContextMenu();
 			MenuItem itemRemove = new MenuItem("Remove", new ImageView(new Image(CssVariables.Icons.REMOVE_PARAMETER_ICON)));
-			itemRemove.setOnAction(e -> Common.tryCatch(() -> model.removeClientEntry(getEntry()), String.format("Error on remove entry '%s'", getEntry().toString())));
+			itemRemove.setOnAction(e -> Common.tryCatch(() -> model.removeClientEntry(getEntry()),
+					String.format("Error on remove entry '%s'", getEntry().toString())));
 
 			MenuItem itemPossibilities = new MenuItem("Possibilities");
-			itemPossibilities.setOnAction(e -> Common.tryCatch(() -> model.showPossibilities(getEntry()), String.format("Error on show possibilities for entry '%s'", getEntry().toString())));
+			itemPossibilities.setOnAction(e -> Common.tryCatch(() -> model.showPossibilities(getEntry()),
+					String.format("Error on show possibilities for entry '%s'", getEntry().toString())));
 
 			MenuItem itemAddAll = new MenuItem("Add all known params");
-			itemAddAll.setOnAction(e -> Common.tryCatch(() -> model.addAllClientParams(getEntry()), String.format("Error on add all parameters for entry '%s'", getEntry())));
+			itemAddAll.setOnAction(e -> Common.tryCatch(() -> model.addAllClientParams(getEntry()),
+					String.format("Error on add all parameters for entry '%s'", getEntry())));
 			menu.getItems().addAll(itemRemove, itemPossibilities, itemAddAll);
 			return Optional.of(menu);
 		}
@@ -118,7 +120,7 @@ public class ClientTreeNode extends TreeNode
 				String pathToJar = entry.get(Configuration.clientJar);
 				sb.append(pathToJar.substring(pathToJar.lastIndexOf(File.separator) + 1)).append(" , ");
 				String pathToDic = entry.get(Configuration.clientDictionary);
-				sb.append(pathToDic.substring(pathToDic.lastIndexOf(File.separator) +1));
+				sb.append(pathToDic.substring(pathToDic.lastIndexOf(File.separator) + 1));
 				return sb.toString();
 			}
 			catch (Exception e)
@@ -148,13 +150,14 @@ public class ClientTreeNode extends TreeNode
 			try
 			{
 				List<TablePair> list = new ArrayList<>();
-				list.add(TablePair.TablePairBuilder.create().key(Configuration.clientDescription).value(getEntry().get(Configuration.clientDescription)).edit(true).build());
-				list.add(TablePair.TablePairBuilder.create().key(Configuration.clientJar).value(getEntry().get(Configuration.clientJar)).edit(true).isPath(true).build());
-				list.add(TablePair.TablePairBuilder.create().key(Configuration.clientDictionary).value(getEntry().get(Configuration.clientDictionary)).edit(true).isPath(true).build());
+				list.add(TablePair.TablePairBuilder.create().key(Configuration.clientDescription).value(getEntry().get(Configuration.clientDescription))
+						.edit(true).build());
+				list.add(TablePair.TablePairBuilder.create().key(Configuration.clientJar).value(getEntry().get(Configuration.clientJar)).edit(true)
+						.isPath(true).build());
+				list.add(TablePair.TablePairBuilder.create().key(Configuration.clientDictionary).value(getEntry().get(Configuration.clientDictionary))
+						.edit(true).isPath(true).build());
 				list.add(TablePair.TablePairBuilder.create().key(Configuration.clientLimit).value(getEntry().get(Configuration.clientLimit)).edit(true).build());
-				getEntry().getParameters().stream()
-						.map(parameter -> new TablePair(parameter.getKey(), parameter.getValue()))
-						.forEach(tp -> list.add(tp));
+				getEntry().getParameters().stream().map(parameter -> new TablePair(parameter.getKey(), parameter.getValue())).forEach(tp -> list.add(tp));
 				return list;
 			}
 			catch (Exception e)
@@ -179,10 +182,10 @@ public class ClientTreeNode extends TreeNode
 
 	private class ClientDictionaryTreeNode extends TreeNode
 	{
-		private TreeItem<TreeNode> treeItem;
-		private ConfigurationFxNew model;
+		private TreeItem<TreeNode>	treeItem;
+		private ConfigurationFx	model;
 
-		public ClientDictionaryTreeNode(ConfigurationFxNew model, TreeItem<TreeNode> treeItem)
+		public ClientDictionaryTreeNode(ConfigurationFx model, TreeItem<TreeNode> treeItem)
 		{
 			this.treeItem = treeItem;
 			this.model = model;
@@ -203,28 +206,25 @@ public class ClientTreeNode extends TreeNode
 		public void display(List<File> listClientDictionaries)
 		{
 			this.treeItem.getChildren().clear();
-			Function<File, ContextMenu> topFolderFunc = file -> {
+			Function<File, ContextMenu> topFolderFunc = file ->
+			{
 				ContextMenu menu = new ContextMenu();
 				MenuItem itemRemove = new MenuItem("Remove client dictionary dir", new ImageView(new Image(CssVariables.Icons.REMOVE_PARAMETER_ICON)));
 				itemRemove.setOnAction(e -> Common.tryCatch(() -> model.removeClientDictionaryFolder(file.getName()), "Error on remove matrix directory"));
 				menu.getItems().addAll(itemRemove);
 				return menu;
 			};
-			Function<File,ContextMenu> filesFunc = file ->  {
+			Function<File, ContextMenu> filesFunc = file ->
+			{
 				ContextMenu menu = new ContextMenu();
 				MenuItem itemOpedDic = new MenuItem("Open dictionary", new ImageView(new Image(CssVariables.Icons.CLIENT_DICTIONARY_ICON)));
 				itemOpedDic.setOnAction(e -> Common.tryCatch(() -> this.model.openClientDictionary(file), "Error on open client dictionary"));
 				menu.getItems().addAll(itemOpedDic);
 				return menu;
 			};
-			listClientDictionaries.forEach(file ->
-					new BuildTree(file, this.treeItem)
-							.fileFilter(f ->ConfigurationFxNew.getExtension(f.getAbsolutePath()).equals(Configuration.dictExt))
-							.doubleClickEvent(f -> () -> this.model.openClientDictionary(f))
-							.menuTopFolder(topFolderFunc)
-							.menuFiles(filesFunc)
-							.byPass()
-			);
+			listClientDictionaries.forEach(file -> new BuildTree(file, this.treeItem)
+					.fileFilter(f -> ConfigurationFx.getExtension(f.getAbsolutePath()).equals(Configuration.dictExt))
+					.doubleClickEvent(f -> () -> this.model.openClientDictionary(f)).menuTopFolder(topFolderFunc).menuFiles(filesFunc).byPass());
 		}
 	}
 }

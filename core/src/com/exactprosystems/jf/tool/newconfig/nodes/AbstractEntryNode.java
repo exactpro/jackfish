@@ -11,7 +11,7 @@ import com.exactprosystems.jf.documents.config.Entry;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.SupportedEntry;
-import com.exactprosystems.jf.tool.newconfig.ConfigurationFxNew;
+import com.exactprosystems.jf.tool.newconfig.ConfigurationFx;
 
 import javafx.scene.Node;
 import javafx.scene.control.Label;
@@ -25,10 +25,10 @@ import java.util.Optional;
 
 public abstract class AbstractEntryNode<T extends Entry> extends TreeNode
 {
-	private ConfigurationFxNew model;
+	private ConfigurationFx model;
 	private T entry;
 
-	public AbstractEntryNode(ConfigurationFxNew model, T entry)
+	public AbstractEntryNode(ConfigurationFx model, T entry)
 	{
 		this.model = model;
 		this.entry = entry;

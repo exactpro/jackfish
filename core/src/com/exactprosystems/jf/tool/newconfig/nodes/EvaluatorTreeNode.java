@@ -9,7 +9,7 @@ package com.exactprosystems.jf.tool.newconfig.nodes;
 
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
-import com.exactprosystems.jf.tool.newconfig.ConfigurationFxNew;
+import com.exactprosystems.jf.tool.newconfig.ConfigurationFx;
 import com.exactprosystems.jf.tool.newconfig.ConfigurationTreeView;
 
 import javafx.scene.Node;
@@ -23,10 +23,10 @@ import java.util.Optional;
 
 public class EvaluatorTreeNode extends TreeNode
 {
-	private ConfigurationFxNew model;
+	private ConfigurationFx model;
 	private TreeItem<TreeNode> evaluatorTreeItem;
 
-	public EvaluatorTreeNode(ConfigurationFxNew configuration, TreeItem<TreeNode> treeItem)
+	public EvaluatorTreeNode(ConfigurationFx configuration, TreeItem<TreeNode> treeItem)
 	{
 		this.model = configuration;
 		this.evaluatorTreeItem = treeItem;

@@ -40,10 +40,10 @@ import java.io.Reader;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class ConfigurationFxNew extends Configuration
+public class ConfigurationFx extends Configuration
 {
 	private Main mainModel;
-	private ConfigurationNewFxController controller;
+	private ConfigurationFxController controller;
 	private BorderPane pane;
 
 	// ================================================================================
@@ -56,12 +56,12 @@ public class ConfigurationFxNew extends Configuration
 	private Map<ServiceEntry, ServiceConnection> serviceMap = new HashMap<>();
 
 
-	public ConfigurationFxNew() throws Exception
+	public ConfigurationFx() throws Exception
 	{
 		this(null, null, null, null, null);
 	}
 
-	public ConfigurationFxNew(String fileName, RunnerListener runnerListener, Settings settings, Main mainModel, BorderPane pane) throws Exception
+	public ConfigurationFx(String fileName, RunnerListener runnerListener, Settings settings, Main mainModel, BorderPane pane) throws Exception
 	{
 		super(fileName, settings);
 
@@ -243,20 +243,20 @@ public class ConfigurationFxNew extends Configuration
 	public void changeFormat(String key, String newValue) throws Exception
 	{
 		//TODO we need use parameter on table mutable string
-		String oldValue = this.get(key);
-		if (Str.areEqual(oldValue, newValue))
-		{
-			return;
-		}
-		Command undo = () -> {
-			//			change(key, oldValue);
-			displayFormat();
-		};
-		Command redo = () -> {
-			//			change(key, newValue);
-			displayFormat();
-		};
-		addCommand(undo, redo);
+//		String oldValue = this.formatsValue.get(index); 
+//		if (Str.areEqual(oldValue, newValue))
+//		{
+//			return;
+//		}
+//		Command undo = () -> {
+//			//			change(key, oldValue);
+//			displayFormat();
+//		};
+//		Command redo = () -> {
+//			//			change(key, newValue);
+//			displayFormat();
+//		};
+//		addCommand(undo, redo);
 		super.changed(true);
 	}
 
@@ -918,7 +918,7 @@ public class ConfigurationFxNew extends Configuration
 
 	private void removeFilesFromFileSystem(List<File> files, DisplayFunction displayFunction)
 	{
-		files.forEach(ConfigurationFxNew::forceDelete);
+		files.forEach(ConfigurationFx::forceDelete);
 		displayFunction.display();
 	}
 
@@ -1048,7 +1048,7 @@ public class ConfigurationFxNew extends Configuration
 
 	private void initController()
 	{
-		this.controller = Common.loadController(ConfigurationFxNew.class.getResource("config.fxml"));
+		this.controller = Common.loadController(ConfigurationFx.class.getResource("config.fxml"));
 		this.controller.init(this, this.pane);
 	}
 }

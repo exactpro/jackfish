@@ -1,17 +1,39 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <configuration>
-    <timeFormat>HH:mm:ss.SSS</timeFormat>
-    <dateFormat>dd.MM.yyyy</dateFormat>
-    <dateTimeFormat>dd.MM.yyyy HH:mm:ss.SSS</dateTimeFormat>
-    <additionFormats>dd.MM.yyyy HH:mm:ss|yyyy/MM/dd HH:mm:ss.SSS|yyyyMMdd-HH:mm:ss.SSS|dd/MM/yyyy|HH.mm|HH:mm:ss</additionFormats>
-    <evaluatorImports>com.exactprosystems.jf.common.parser,java.math,java.util.regex,java.util,java.awt,java.util.List,java.util.Map,java.lang,com.exactprosystems.jf.api.app,com.exactprosystems.jf.api.conditions,com.exactprosystems.jf.functions</evaluatorImports>
-    <outputPath>reports</outputPath>
-    <variables>vars.ini</variables>
-    <userVariables>uservars/myvars.ini</userVariables>
-    <libEntry>
-        <name>LIB</name>
-        <libPath>examples/lib.jf</libPath>
-    </libEntry>
+    <time>HH:mm:ss.SSS</time>
+    <date>dd.MM.yyyy</date>
+    <dateTime>dd.MM.yyyy HH:mm:ss.SSS</dateTime>
+    <formats>dd.MM.yyyy HH:mm:ss</formats>
+    <formats>yyyy/MM/dd HH:mm:ss.SSS</formats>
+    <formats>yyyyMMdd-HH:mm:ss.SSS</formats>
+    <formats>dd/MM/yyyy</formats>
+    <formats>HH.mm</formats>
+    <formats>HH:mm:ss</formats>
+    <formats>HH:mm:ss Z</formats>
+    <formats>HH:mm:ss:SSS</formats>
+    <reports>reports</reports>
+    <git />
+    <import>com.exactprosystems.jf.common.parser</import>
+    <import>java.math</import>
+    <import>java.util.regex</import>
+    <import>java.util</import>
+    <import>java.awt</import>
+    <import>java.awt.event</import>
+    <import>java.util.List</import>
+    <import>java.util.Map</import>
+    <import>java.lang</import>
+    <import>com.exactprosystems.jf.api.app</import>
+    <import>com.exactprosystems.jf.api.conditions</import>
+    <import>com.exactprosystems.jf.function</import>
+    <import>java.io</import>
+    <import>org.mvel2</import>
+    <vars>vars.ini</vars>
+    <userVars>uservars/myvars.ini</userVars>
+    <matrix>examples</matrix>
+    <appDict>dic/gui</appDict>
+    <clientDict></clientDict>
+    <library>matrices/libs</library>
+    <library>libjf</library>
     <sqlEntry>
         <name>MySql</name>
         <sqlJar>sql/mysql-connector.jar</sqlJar>

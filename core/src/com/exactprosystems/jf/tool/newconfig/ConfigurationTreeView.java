@@ -30,9 +30,9 @@ import java.util.Optional;
 public class ConfigurationTreeView extends TreeView<TreeNode>
 {
 	private ParametersTableView	tableView;
-	private ConfigurationFxNew	configuration;
+	private ConfigurationFx	configuration;
 
-	public ConfigurationTreeView(ParametersTableView tableView, ConfigurationFxNew configuration)
+	public ConfigurationTreeView(ParametersTableView tableView, ConfigurationFx configuration)
 	{
 		this.tableView = tableView;
 		this.configuration = configuration;

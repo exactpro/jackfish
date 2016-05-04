@@ -12,7 +12,7 @@ import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.SupportedEntry;
-import com.exactprosystems.jf.tool.newconfig.ConfigurationFxNew;
+import com.exactprosystems.jf.tool.newconfig.ConfigurationFx;
 import com.exactprosystems.jf.tool.newconfig.ConfigurationTreeView;
 import com.exactprosystems.jf.tool.newconfig.TablePair;
 
@@ -34,11 +34,11 @@ import java.util.function.Function;
 public class AppTreeNode extends TreeNode
 {
 	private TreeItem<TreeNode> treeItem;
-	private ConfigurationFxNew model;
+	private ConfigurationFx model;
 	private TreeItem<TreeNode> appTreeItem;
 	private AppDictionaryTreeNode appDictionaryTreeNode;
 
-	public AppTreeNode(ConfigurationFxNew model, TreeItem<TreeNode> treeItem)
+	public AppTreeNode(ConfigurationFx model, TreeItem<TreeNode> treeItem)
 	{
 		this.treeItem = treeItem;
 		this.model = model;
@@ -86,7 +86,7 @@ public class AppTreeNode extends TreeNode
 	{
 		private SupportedEntry supportedEntry;
 
-		public AppEntryNode(ConfigurationFxNew model, AppEntry entry, SupportedEntry supportedEntry)
+		public AppEntryNode(ConfigurationFx model, AppEntry entry, SupportedEntry supportedEntry)
 		{
 			super(model, entry);
 			this.supportedEntry = supportedEntry;
@@ -185,9 +185,9 @@ public class AppTreeNode extends TreeNode
 	private class AppDictionaryTreeNode extends TreeNode
 	{
 		private TreeItem<TreeNode> treeItem;
-		private ConfigurationFxNew model;
+		private ConfigurationFx model;
 
-		public AppDictionaryTreeNode(ConfigurationFxNew model, TreeItem<TreeNode> treeItem)
+		public AppDictionaryTreeNode(ConfigurationFx model, TreeItem<TreeNode> treeItem)
 		{
 			this.treeItem = treeItem;
 			this.model = model;
@@ -224,7 +224,7 @@ public class AppTreeNode extends TreeNode
 			};
 			listAppDictionaries.forEach(file ->
 					new BuildTree(file, this.treeItem)
-							.fileFilter(f -> ConfigurationFxNew.getExtension(f.getAbsolutePath()).equals(Configuration.dictExt))
+							.fileFilter(f -> ConfigurationFx.getExtension(f.getAbsolutePath()).equals(Configuration.dictExt))
 							.doubleClickEvent(f -> () -> this.model.openAppsDictionary(f))
 							.menuTopFolder(topFolderFunc)
 							.menuFiles(filesFunc)

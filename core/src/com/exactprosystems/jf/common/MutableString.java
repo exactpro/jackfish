@@ -31,6 +31,12 @@ public class MutableString implements Mutable
 	}
 
 	@Override
+	public String toString()
+	{
+		return this.str == null ? "" : this.str;
+	}
+	
+	@Override
 	public boolean isChanged()
 	{
 		return this.changed;

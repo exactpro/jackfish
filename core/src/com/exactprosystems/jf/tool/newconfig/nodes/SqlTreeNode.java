@@ -13,7 +13,7 @@ import com.exactprosystems.jf.documents.config.SqlEntry;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.SupportedEntry;
-import com.exactprosystems.jf.tool.newconfig.ConfigurationFxNew;
+import com.exactprosystems.jf.tool.newconfig.ConfigurationFx;
 import com.exactprosystems.jf.tool.newconfig.ConfigurationTreeView;
 import com.exactprosystems.jf.tool.newconfig.TablePair;
 import com.exactprosystems.jf.tool.newconfig.testing.TestingConnectionFxController;
@@ -33,9 +33,9 @@ import java.util.Optional;
 public class SqlTreeNode extends TreeNode
 {
 	private TreeItem<TreeNode> treeItem;
-	private ConfigurationFxNew model;
+	private ConfigurationFx model;
 
-	public SqlTreeNode(ConfigurationFxNew model, TreeItem<TreeNode> treeItem)
+	public SqlTreeNode(ConfigurationFx model, TreeItem<TreeNode> treeItem)
 	{
 		this.treeItem = treeItem;
 		this.model = model;
@@ -113,7 +113,7 @@ public class SqlTreeNode extends TreeNode
 	
 	private class SqlEntryNode extends AbstractEntryNode<SqlEntry>
 	{
-		public SqlEntryNode(ConfigurationFxNew model, SqlEntry sqlEntry)
+		public SqlEntryNode(ConfigurationFx model, SqlEntry sqlEntry)
 		{
 			super(model, sqlEntry);
 		}

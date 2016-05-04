@@ -10,7 +10,7 @@ package com.exactprosystems.jf.tool.newconfig.nodes;
 import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
-import com.exactprosystems.jf.tool.newconfig.ConfigurationFxNew;
+import com.exactprosystems.jf.tool.newconfig.ConfigurationFx;
 import com.exactprosystems.jf.tool.newconfig.ConfigurationTreeView;
 import com.exactprosystems.jf.tool.newconfig.TablePair;
 
@@ -26,14 +26,14 @@ import java.util.Optional;
 
 public class FormatTreeNode extends TreeNode
 {
-	private ConfigurationFxNew model;
+	private ConfigurationFx model;
 	private TreeItem<TreeNode> formatTreeItem;
 
 	private String timeFormat;
 	private String dateFormat;
 	private String dateTimeFormat;
 
-	public FormatTreeNode(ConfigurationFxNew configuration, TreeItem<TreeNode> treeItem)
+	public FormatTreeNode(ConfigurationFx configuration, TreeItem<TreeNode> treeItem)
 	{
 		this.model = configuration;
 		this.formatTreeItem = treeItem;

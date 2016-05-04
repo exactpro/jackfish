@@ -1,14 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <configuration>
-    <timeFormat>HH:mm:ss.SSS</timeFormat>
-    <dateFormat>dd.MM.yyyy</dateFormat>
-    <dateTimeFormat>dd.MM.yyyy HH:mm:ss.SSS</dateTimeFormat>
-    <additionFormats>dd.MM.yyyy HH:mm:ss|yyyy/MM/dd HH:mm:ss.SSS|yyyyMMdd-HH:mm:ss.SSS|dd/MM/yyyy|HH.mm|HH:mm:ss|HH:mm:ss Z|HH:mm:ss:SSS</additionFormats>
-    <evaluatorImports>com.exactprosystems.jf.common.parser,java.math,java.util.regex,java.util,java.awt,java.awt.event,java.util.List,java.util.Map,java.lang,com.exactprosystems.jf.api.app,com.exactprosystems.jf.api.conditions,com.exactprosystems.jf.function,java.io,org.mvel2</evaluatorImports>
-    <outputPath>reports</outputPath>
-    <variables>vars.ini</variables>
-    <userVariables>uservars/myvars.ini</userVariables>
-
     <time>HH:mm:ss.SSS</time>
     <date>dd.MM.yyyy</date>
     <dateTime>dd.MM.yyyy HH:mm:ss.SSS</dateTime>
@@ -42,26 +33,6 @@
     <appDict>dic/gui</appDict>
     <clientDict></clientDict>
     <library>matrices/libs</library>
-    <libEntry>
-        <name>STD</name>
-        <libPath>matrices/libs/std.jf</libPath>
-    </libEntry>
-    <libEntry>
-        <name>ParFx</name>
-        <libPath>matrices/libs/ParFx.jf</libPath>
-    </libEntry>
-    <libEntry>
-        <name>LIB</name>
-        <libPath>examples/lib.jf</libPath>
-    </libEntry>
-    <libEntry>
-        <name>Contacts</name>
-        <libPath>/home/valery.florov/Downloads/23/lib/Contacts.jf</libPath>
-    </libEntry>
-    <libEntry>
-        <name>Utilites</name>
-        <libPath>/home/valery.florov/Downloads/23/lib/Utilites.jf</libPath>
-    </libEntry>
     <sqlEntry>
         <name>MySql</name>
         <sqlJar>sql/mysql-connector.jar</sqlJar>

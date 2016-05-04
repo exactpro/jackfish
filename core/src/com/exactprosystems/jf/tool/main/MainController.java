@@ -71,10 +71,8 @@ public class MainController implements Initializable, ContainingParent
 	private LogsFx				log;
 
 	public Menu					menuFile;
-	public MenuItem				fileLoadConfiguration;
-	public MenuItem				fileNewConfiguration;
-	public MenuItem				fileLoadConfiguration2;
-	public MenuItem				fileNewConfiguration2;
+	public MenuItem				fileOpenProject;
+	public MenuItem				fileCreateProject;
 
 	public Menu					fileLoad;
 	public MenuItem				fileLoadDictionary;
@@ -149,62 +147,58 @@ public class MainController implements Initializable, ContainingParent
 		progressBar.setProgress(ProgressIndicator.INDETERMINATE_PROGRESS);
 		progressBar.setVisible(false);
 
-		// TODO crutch
-		if (VersionInfo.getVersion().contains("local"))
+		// initialize new panel
+		SplitPane splitPane = new SplitPane();
+		splitPane.setOrientation(Orientation.HORIZONTAL);
+		splitPane.setDividerPositions(0.0);
+
+		GridPane gridPane = new GridPane();
+		gridPane.setMinWidth(20.0);
+		ColumnConstraints c0 = new ColumnConstraints();
+		c0.setHgrow(Priority.SOMETIMES);
+		c0.setMaxWidth(30.0);
+		c0.setMinWidth(30.0);
+		c0.setPrefWidth(30.0);
+		ColumnConstraints c1 = new ColumnConstraints();
+		c1.setMinWidth(10.0);
+		c1.setPrefWidth(100.0);
+		c1.setHgrow(Priority.SOMETIMES);
+		RowConstraints r0 = new RowConstraints();
+		r0.setMinHeight(10.0);
+		r0.setPrefHeight(30);
+		r0.setVgrow(Priority.SOMETIMES);
+		gridPane.getRowConstraints().add(r0);
+		gridPane.getColumnConstraints().addAll(c0, c1);
+
+		Label project = new Label("Project");
+		project.setOnMouseClicked(event ->
 		{
-			// initialize new panel
-			SplitPane splitPane = new SplitPane();
-			splitPane.setOrientation(Orientation.HORIZONTAL);
-			splitPane.setDividerPositions(0.0);
-
-			GridPane gridPane = new GridPane();
-			gridPane.setMinWidth(20.0);
-			ColumnConstraints c0 = new ColumnConstraints();
-			c0.setHgrow(Priority.SOMETIMES);
-			c0.setMaxWidth(30.0);
-			c0.setMinWidth(30.0);
-			c0.setPrefWidth(30.0);
-			ColumnConstraints c1 = new ColumnConstraints();
-			c1.setMinWidth(10.0);
-			c1.setPrefWidth(100.0);
-			c1.setHgrow(Priority.SOMETIMES);
-			RowConstraints r0 = new RowConstraints();
-			r0.setMinHeight(10.0);
-			r0.setPrefHeight(30);
-			r0.setVgrow(Priority.SOMETIMES);
-			gridPane.getRowConstraints().add(r0);
-			gridPane.getColumnConstraints().addAll(c0, c1);
-
-			Label project = new Label("Project");
-			project.setOnMouseClicked(event ->
+			double currentPosition = splitPane.getDividerPositions()[0];
+			if (currentPosition < MIN_VALUE)
 			{
-				double currentPosition = splitPane.getDividerPositions()[0];
-				if (currentPosition < MIN_VALUE)
-				{
-					splitPane.setDividerPositions(this.position);
-				}
-				else
-				{
-					this.position = currentPosition;
-					splitPane.setDividerPositions(0.0);
-				}
-			});
-			gridPane.add(project, 0, 0);
+				splitPane.setDividerPositions(this.position);
+			}
+			else
+			{
+				this.position = currentPosition;
+				splitPane.setDividerPositions(0.0);
+			}
+		});
+		gridPane.add(project, 0, 0);
 
-			project.setRotate(-90.0);
-			GridPane.setValignment(project, VPos.TOP);
-			GridPane.setMargin(project, new Insets(20, 0, 0, -15.0));
+		project.setRotate(-90.0);
+		GridPane.setValignment(project, VPos.TOP);
+		GridPane.setMargin(project, new Insets(20, 0, 0, -15.0));
 
-			Node node = this.mainPanel.getCenter();
+		Node node = this.mainPanel.getCenter();
 
-			splitPane.getItems().addAll(gridPane, node);
+		splitPane.getItems().addAll(gridPane, node);
 
-			this.projectPane = new BorderPane();
-			this.projectPane.setMinWidth(0.0);
-			gridPane.add(this.projectPane, 1, 0);
+		this.projectPane = new BorderPane();
+		this.projectPane.setMinWidth(0.0);
+		gridPane.add(this.projectPane, 1, 0);
 
-			this.mainPanel.setCenter(splitPane);
-		}
+		this.mainPanel.setCenter(splitPane);
 
 		listeners();
 
@@ -320,22 +314,12 @@ public class MainController implements Initializable, ContainingParent
 	// ====================================================
 	// Configuration
 	// ====================================================
-	public void loadConfiguration(ActionEvent actionEvent)
+	public void openProject(ActionEvent actionEvent)
 	{
-		Common.tryCatch(() -> this.model.loadConfiguration(null), "Error on load configuration");
+		Common.tryCatch(() -> this.model.openProject(null, this.projectPane), "Error on load configuration");
 	}
 
-	public void newConfiguration(ActionEvent actionEvent)
-	{
-		Common.tryCatch(this.model::newConfiguration, "Error on create new configuration");
-	}
-
-	public void loadConfiguration2(ActionEvent actionEvent)
-	{
-		Common.tryCatch(() -> this.model.loadConfiguration2(null, this.projectPane), "Error on load configuration");
-	}
-
-	public void newConfiguration2(ActionEvent actionEvent)
+	public void createProject(ActionEvent actionEvent)
 	{
 		Common.tryCatch(() -> this.model.newConfiguration2(this.projectPane), "Error on create new configuration");
 	}
@@ -673,7 +657,8 @@ public class MainController implements Initializable, ContainingParent
 	private void selectAndHide(ListView<String> listView, Dialog<?> dialog)
 	{
 		String selectedItem = listView.getSelectionModel().getSelectedItem();
-		documentsPane.getTabs().stream().filter(tab -> ((CustomTab) tab).getTitle().equals(selectedItem)).findFirst().ifPresent(documentsPane.getSelectionModel()::select);
+		documentsPane.getTabs().stream().filter(tab -> ((CustomTab) tab).getTitle().equals(selectedItem)).findFirst()
+				.ifPresent(documentsPane.getSelectionModel()::select);
 		dialog.hide();
 	}
 

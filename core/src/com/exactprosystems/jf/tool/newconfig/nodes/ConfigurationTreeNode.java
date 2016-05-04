@@ -9,7 +9,7 @@ package com.exactprosystems.jf.tool.newconfig.nodes;
 
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
-import com.exactprosystems.jf.tool.newconfig.ConfigurationFxNew;
+import com.exactprosystems.jf.tool.newconfig.ConfigurationFx;
 import com.exactprosystems.jf.tool.newconfig.ConfigurationTreeView;
 import com.exactprosystems.jf.tool.newconfig.TablePair;
 
@@ -28,9 +28,9 @@ import java.util.Optional;
 
 public class ConfigurationTreeNode extends TreeNode
 {
-	private ConfigurationFxNew model;
+	private ConfigurationFx model;
 
-	public ConfigurationTreeNode(ConfigurationFxNew model)
+	public ConfigurationTreeNode(ConfigurationFx model)
 	{
 		this.model = model;
 	}
@@ -60,12 +60,12 @@ public class ConfigurationTreeNode extends TreeNode
 		List<TablePair> list = new ArrayList<>();
 		list.add(TablePair.TablePairBuilder.create().key("version").value("2.0").edit(false).build());
 		list.add(TablePair.TablePairBuilder.create().key("description").value("some Description").build());
-		list.add(TablePair.TablePairBuilder.create().key("matrix").value(this.model.matrixToString()).tooltipSeparator(ConfigurationFxNew.SEPARATOR).edit(false).build());
-		list.add(TablePair.TablePairBuilder.create().key("libs").value(this.model.libraryToString()).tooltipSeparator(ConfigurationFxNew.SEPARATOR).edit(false).build());
+		list.add(TablePair.TablePairBuilder.create().key("matrix").value(this.model.matrixToString()).tooltipSeparator(ConfigurationFx.SEPARATOR).edit(false).build());
+		list.add(TablePair.TablePairBuilder.create().key("libs").value(this.model.libraryToString()).tooltipSeparator(ConfigurationFx.SEPARATOR).edit(false).build());
 		list.add(TablePair.TablePairBuilder.create().key("gitRemotePath").value(this.model.gitRemotePath()).edit(true).build());
 		list.add(TablePair.TablePairBuilder.create().key("reportPath").value(this.model.getReportPath()).edit(false).build());
-		list.add(TablePair.TablePairBuilder.create().key("appDictionaries").value(this.model.getAppDictionaries()).tooltipSeparator(ConfigurationFxNew.SEPARATOR).edit(false).build());
-		list.add(TablePair.TablePairBuilder.create().key("clientDictionaries").value(this.model.getClientDictionaries()).tooltipSeparator(ConfigurationFxNew.SEPARATOR).edit(false).build());
+		list.add(TablePair.TablePairBuilder.create().key("appDictionaries").value(this.model.getAppDictionaries()).tooltipSeparator(ConfigurationFx.SEPARATOR).edit(false).build());
+		list.add(TablePair.TablePairBuilder.create().key("clientDictionaries").value(this.model.getClientDictionaries()).tooltipSeparator(ConfigurationFx.SEPARATOR).edit(false).build());
 		return list;
 	}
 

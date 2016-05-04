@@ -23,7 +23,6 @@ import com.exactprosystems.jf.documents.DocumentInfo;
 import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.tool.Common;
-import com.exactprosystems.jf.tool.configuration.ConfigurationFx;
 import com.exactprosystems.jf.tool.csv.CsvFx;
 import com.exactprosystems.jf.tool.custom.store.StoreVariable;
 import com.exactprosystems.jf.tool.dictionary.DictionaryFx;
@@ -31,7 +30,7 @@ import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper.OpenSaveMode;
 import com.exactprosystems.jf.tool.matrix.MatrixFx;
 import com.exactprosystems.jf.tool.matrix.schedule.RunnerScheduler;
-import com.exactprosystems.jf.tool.newconfig.ConfigurationFxNew;
+import com.exactprosystems.jf.tool.newconfig.ConfigurationFx;
 import com.exactprosystems.jf.tool.settings.SettingsPanel;
 import com.exactprosystems.jf.tool.settings.Theme;
 import com.exactprosystems.jf.tool.systemvars.SystemVarsFx;
@@ -127,7 +126,7 @@ public class Main extends Application
 					{
 						Main.this.password = args.size() > 1 ? args.get(1) : null; 
 						
-						loadConfiguration(args.get(0));
+						openProject(args.get(0), controller.projectPane); // TODO
 						
 						controller.clearLastMatrixMenu();
 						
@@ -215,7 +214,7 @@ public class Main extends Application
 	//----------------------------------------------------------------------------------------------
 	// Event handlers
 	//----------------------------------------------------------------------------------------------
-	public void loadConfiguration2(String filePath, BorderPane pane) throws Exception
+	public void openProject(String filePath, BorderPane pane) throws Exception
 	{
 		Optional<File> optional = chooseFile(Configuration.class, filePath, DialogsHelper.OpenSaveMode.OpenFile);
 		if (optional.isPresent())
@@ -234,7 +233,7 @@ public class Main extends Application
 				}
 			}
 
-			ConfigurationFxNew config = new ConfigurationFxNew(file.getPath(), this.runnerListener, this.settings, Main.this, pane);
+			ConfigurationFx config = new ConfigurationFx(file.getPath(), this.runnerListener, this.settings, Main.this, pane);
 
 			Document doc = loadDocument(file, config, DocumentKind.CONFIGURATION);
 			if (doc instanceof Configuration)
@@ -244,36 +243,6 @@ public class Main extends Application
 		}
 	}
 
-	@Deprecated
-	public void loadConfiguration(String filePath) throws Exception
-	{
-		Optional<File> optional = chooseFile(Configuration.class, filePath, DialogsHelper.OpenSaveMode.OpenFile);
-		if (optional.isPresent())
-		{
-			File file = optional.get();
-			if (this.config != null)
-			{
-				if (this.config.canClose())
-				{
-					this.config.close(this.config.getSettings());
-					setConfiguration(null);
-				}
-				else
-				{
-					return;
-				}
-			}
-
-			ConfigurationFx config = new ConfigurationFx(file.getPath(), this.runnerListener, this.settings, Main.this);
-
-			Document doc = loadDocument(file, config, DocumentKind.CONFIGURATION);
-			if (doc instanceof Configuration)
-			{
-				setConfiguration(config);
-			}
-		}
-	}
-	
 	public void loadDictionary(String filePath, String entryName) throws Exception
 	{
 		checkConfig();
@@ -338,28 +307,7 @@ public class Main extends Application
 				return;
 			}
 		}
-		ConfigurationFxNew config = new ConfigurationFxNew(newName(Configuration.class), this.runnerListener, this.settings, Main.this, pane);
-
-		createDocument(config);
-		setConfiguration(config);
-	}
-	
-	@Deprecated
-	public void newConfiguration() throws Exception
-	{
-		if (this.config != null)
-		{
-			if (this.config.canClose())
-			{
-				this.config.close(this.config.getSettings());
-				setConfiguration(null);
-			}
-			else
-			{
-				return;
-			}
-		}
-		ConfigurationFx config = new ConfigurationFx(newName(Configuration.class), this.runnerListener, this.settings, Main.this);
+		ConfigurationFx config = new ConfigurationFx(newName(Configuration.class), this.runnerListener, this.settings, Main.this, pane);
 
 		createDocument(config);
 		setConfiguration(config);

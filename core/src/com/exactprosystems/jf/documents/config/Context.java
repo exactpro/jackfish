@@ -106,7 +106,6 @@ public class Context implements IContext, AutoCloseable, Cloneable
 				res.add(new ReadableValue(it.getId(), ((SubCase) it).getName()));
 			}
 		});
-		this.configuration.updateLibs();
 		for (Entry<String, Matrix> entry : this.configuration.getLibs().entrySet())
 		{
 			final String name = entry.getKey();

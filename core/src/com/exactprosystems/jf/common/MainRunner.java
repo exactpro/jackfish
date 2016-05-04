@@ -221,7 +221,6 @@ public class MainRunner
 			String outputString = line.getOptionValue(outputName.getOpt());
 			if (outputString != null)
 			{
-				configuration.set(Configuration.outputPath, outputString);
 				configuration.getReports().set(outputString);
 			}
 
@@ -241,7 +240,7 @@ public class MainRunner
 				error = true;
 			}
 			
-			File outputDir = new File(configuration.get(Configuration.outputPath)); 
+			File outputDir = new File(configuration.getReports().get()); 
 			if (!outputDir.exists())
 			{
                 System.out.println(String.format("Error: output directory %s does not exist", outputDir.getPath()));

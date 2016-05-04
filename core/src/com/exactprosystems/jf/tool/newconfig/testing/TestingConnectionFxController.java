@@ -12,7 +12,7 @@ import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.CssVariables;
-import com.exactprosystems.jf.tool.newconfig.ConfigurationFxNew;
+import com.exactprosystems.jf.tool.newconfig.ConfigurationFx;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
@@ -36,7 +36,7 @@ public class TestingConnectionFxController implements Initializable, ContainingP
 	public Label lblServer;
 
 	private Parent parent;
-	private ConfigurationFxNew model;
+	private ConfigurationFx model;
 	private String name;
 	private Map<String, TextField> map = new HashMap<>();
 
@@ -71,7 +71,7 @@ public class TestingConnectionFxController implements Initializable, ContainingP
 //		Common.tryCatch(() -> this.model.testSqlConnection(this.name, tfServer.getText(), tfDatabaseName.getText(), tfUser.getText(), pfPassword.getText()), "Error on test connection");
 	}
 
-	public void init(ConfigurationFxNew model, String name,List<Settings.SettingsValue> values)
+	public void init(ConfigurationFx model, String name,List<Settings.SettingsValue> values)
 	{
 		this.model = model;
 		this.name = name;

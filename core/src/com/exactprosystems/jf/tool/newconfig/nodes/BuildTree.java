@@ -8,7 +8,7 @@
 package com.exactprosystems.jf.tool.newconfig.nodes;
 
 import com.exactprosystems.jf.tool.Common;
-import com.exactprosystems.jf.tool.newconfig.ConfigurationFxNew;
+import com.exactprosystems.jf.tool.newconfig.ConfigurationFx;
 import com.exactprosystems.jf.tool.newconfig.ConfigurationTreeView;
 
 import javafx.scene.control.ContextMenu;
@@ -90,7 +90,7 @@ public class BuildTree
 
 	private void byPassReq(File rootFile, TreeItem<TreeNode> rootNode, Function<File, ContextMenu> topFolderMenu, Predicate<File> fileFilter, Function<File, ContextMenu> menuFiles, Function<File, ContextMenu> menuFolder, Function<File, Common.Function> doubleClickEvent)
 	{
-		if (this.ignoredFiles.contains(ConfigurationFxNew.path(rootFile)))
+		if (this.ignoredFiles.contains(ConfigurationFx.path(rootFile)))
 		{
 			return;
 		}

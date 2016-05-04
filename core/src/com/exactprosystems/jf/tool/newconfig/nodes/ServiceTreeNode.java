@@ -12,7 +12,7 @@ import com.exactprosystems.jf.documents.config.ServiceEntry;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.SupportedEntry;
-import com.exactprosystems.jf.tool.newconfig.ConfigurationFxNew;
+import com.exactprosystems.jf.tool.newconfig.ConfigurationFx;
 import com.exactprosystems.jf.tool.newconfig.ConfigurationTreeView;
 import com.exactprosystems.jf.tool.newconfig.ConnectionStatus;
 import com.exactprosystems.jf.tool.newconfig.TablePair;
@@ -32,10 +32,10 @@ import java.util.Optional;
 
 public class ServiceTreeNode extends TreeNode
 {
-	private ConfigurationFxNew model;
+	private ConfigurationFx model;
 	private TreeItem<TreeNode> treeItem;
 
-	public ServiceTreeNode(ConfigurationFxNew model, TreeItem<TreeNode> treeItem)
+	public ServiceTreeNode(ConfigurationFx model, TreeItem<TreeNode> treeItem)
 	{
 		this.model = model;
 		this.treeItem = treeItem;
@@ -79,7 +79,7 @@ public class ServiceTreeNode extends TreeNode
 		private SupportedEntry supportedEntry;
 		private ConnectionStatus status;
 
-		public ServiceEntryNode(ConfigurationFxNew model, ServiceEntry entry, SupportedEntry supportedEntry, ConnectionStatus status)
+		public ServiceEntryNode(ConfigurationFx model, ServiceEntry entry, SupportedEntry supportedEntry, ConnectionStatus status)
 		{
 			super(model, entry);
 			this.supportedEntry = supportedEntry;

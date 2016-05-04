@@ -9,7 +9,7 @@ package com.exactprosystems.jf.tool.newconfig.nodes;
 
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
-import com.exactprosystems.jf.tool.newconfig.ConfigurationFxNew;
+import com.exactprosystems.jf.tool.newconfig.ConfigurationFx;
 
 import javafx.scene.Node;
 import javafx.scene.control.ContextMenu;
@@ -25,10 +25,10 @@ import java.util.Optional;
 
 public class VariablesTreeNode extends TreeNode
 {
-	private ConfigurationFxNew model;
+	private ConfigurationFx model;
 	private TreeItem<TreeNode> variablesTreeNode;
 
-	public VariablesTreeNode(ConfigurationFxNew model, TreeItem<TreeNode> variablesTreeNode)
+	public VariablesTreeNode(ConfigurationFx model, TreeItem<TreeNode> variablesTreeNode)
 	{
 		this.model = model;
 		this.variablesTreeNode = variablesTreeNode;

@@ -9,7 +9,7 @@ package com.exactprosystems.jf.tool.newconfig.nodes;
 
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
-import com.exactprosystems.jf.tool.newconfig.ConfigurationFxNew;
+import com.exactprosystems.jf.tool.newconfig.ConfigurationFx;
 import com.exactprosystems.jf.tool.newconfig.ConfigurationTreeView;
 
 import javafx.scene.Node;
@@ -30,10 +30,10 @@ import java.util.stream.Collectors;
 
 public class FileSystemTreeNode extends TreeNode
 {
-	private ConfigurationFxNew	model;
+	private ConfigurationFx	model;
 	private TreeItem<TreeNode>	treeItem;
 
-	public FileSystemTreeNode(ConfigurationFxNew model, TreeItem<TreeNode> treeItem)
+	public FileSystemTreeNode(ConfigurationFx model, TreeItem<TreeNode> treeItem)
 	{
 		this.model = model;
 		this.treeItem = treeItem;
@@ -95,7 +95,7 @@ public class FileSystemTreeNode extends TreeNode
 					.sorted(ConfigurationTreeView.comparator)
 					.forEach(
 							file -> new BuildTree(file, this.treeItem)
-									.ignoredFiles(ignoreFiles.stream().map(ConfigurationFxNew::path).collect(Collectors.toList())).menuFolder(menuFolders)
+									.ignoredFiles(ignoreFiles.stream().map(ConfigurationFx::path).collect(Collectors.toList())).menuFolder(menuFolders)
 									.byPass());
 		}
 	}

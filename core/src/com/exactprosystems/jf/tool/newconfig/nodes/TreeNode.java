@@ -8,7 +8,7 @@
 package com.exactprosystems.jf.tool.newconfig.nodes;
 
 import com.exactprosystems.jf.tool.Common;
-import com.exactprosystems.jf.tool.newconfig.ConfigurationFxNew;
+import com.exactprosystems.jf.tool.newconfig.ConfigurationFx;
 import com.exactprosystems.jf.tool.newconfig.TablePair;
 
 import javafx.scene.Node;
@@ -64,7 +64,7 @@ public abstract class TreeNode
 		if (value instanceof FileTreeNode)
 		{
 			File file1 = ((FileTreeNode) value).getFile();
-			if (ConfigurationFxNew.path(file1).equals(ConfigurationFxNew.path(file)))
+			if (ConfigurationFx.path(file1).equals(ConfigurationFx.path(file)))
 			{
 				consumer.accept(root);
 				return true;

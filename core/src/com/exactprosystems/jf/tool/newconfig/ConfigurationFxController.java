@@ -22,9 +22,9 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
-public class ConfigurationNewFxController implements Initializable, ContainingParent
+public class ConfigurationFxController implements Initializable, ContainingParent
 {
-	private ConfigurationFxNew				model;
+	private ConfigurationFx					model;
 
 	private ParametersTableView				tableView;
 	private ConfigurationTreeView			treeView;
@@ -54,7 +54,7 @@ public class ConfigurationNewFxController implements Initializable, ContainingPa
 	{
 	}
 
-	public void init(ConfigurationFxNew configuration, BorderPane pane)
+	public void init(ConfigurationFx configuration, BorderPane pane)
 	{
 		this.model 		= configuration;
 		this.tableView 	= new ParametersTableView();

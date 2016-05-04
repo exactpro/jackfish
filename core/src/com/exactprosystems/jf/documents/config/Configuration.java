@@ -82,28 +82,6 @@ public class Configuration extends AbstractDocument
 	public static final char  	matrixDelimiter		= ';';
 	public static final String 	unicodeDelimiter	= String.valueOf("\\\\u" + Integer.toHexString(Configuration.matrixDelimiter | 0x10000).substring(1));
 
-
-	@Deprecated
-	public static final String timeFormat			= "timeFormat";
-	@Deprecated
-	public static final String dateFormat			= "dateFormat";
-	@Deprecated
-	public static final String dateTimeFormat		= "dateTimeFormat";
-	@Deprecated
-	public static final String additionFormats		= "additionFormats";
-	@Deprecated
-	public static final String evaluatorImports 	= "evaluatorImports";
-	@Deprecated
-	public static final String outputPath 			= "outputPath";
-	@Deprecated
-	public static final String variables 			= "variables";
-	@Deprecated
-	public static final String userVariables 		= "userVariables";
-	@Deprecated
-	public static final String libEntry				= "libEntry";
-	@Deprecated
-	public static final String libPath				= "libPath";
-
 	public static final String time					= "time";
 	public static final String date					= "date";
 	public static final String dateTime				= "dateTime";
@@ -145,38 +123,6 @@ public class Configuration extends AbstractDocument
 	public static final String parametersKey		= "key";
 	public static final String parametersValue		= "value";
 
-	@Deprecated
-	@XmlElement(name = timeFormat)
-	protected String timeFormatValue;
-	
-	@Deprecated
-	@XmlElement(name = dateFormat)
-	protected String dateFormatValue;
-	
-	@Deprecated
-	@XmlElement(name = dateTimeFormat)
-	protected String dateTimeFormatValue;
-	
-	@Deprecated
-	@XmlElement(name = additionFormats)
-	protected String additionFormatsValue;
-	
-	@Deprecated
-	@XmlElement(name = evaluatorImports)
-	protected String evaluatorImportsValue;
-	
-	@Deprecated
-	@XmlElement(name = outputPath)
-	protected String outputPathValue;
-	
-	@Deprecated
-	@XmlElement(name = variables)
-	protected String variablesValue;
-	
-	@Deprecated
-	@XmlElement(name = userVariables)
-	protected String userVariablesValue;
-	
 	//------------------------------------------------------------------------------------------------------------------
 	// new technology
 	//------------------------------------------------------------------------------------------------------------------
@@ -221,10 +167,6 @@ public class Configuration extends AbstractDocument
 	@XmlElement(name = library)
 	protected MutableArrayList<MutableString> librariesValue;
 	
-	@Deprecated
-	@XmlElement(name = libEntry)
-	public MutableArrayList<LibEntry> libEntriesValue;
-
 	@XmlElement(name = sqlEntry)
 	public MutableArrayList<SqlEntry> sqlEntriesValue;
 
@@ -240,9 +182,6 @@ public class Configuration extends AbstractDocument
 	public Configuration(String fileName, Settings settings)
 	{
 		super(fileName, null);
-
-		this.userVariablesValue			= null;
-		this.libEntriesValue			= new MutableArrayList<LibEntry>();
 
 		this.settings 					= settings;
 		this.changed 					= false;
@@ -385,24 +324,7 @@ public class Configuration extends AbstractDocument
 	
 	public void matrixChanged(String name, Matrix matrix)
 	{
-		for (LibEntry entry : this.libEntriesValue)
-		{
-			
-			try
-			{
-				String libName = entry.get(libPath);
-				String id = entry.get(entryName);
-				
-				if (libName != null && libName.equals(name))
-				{
-					this.libs.put(id, matrix);
-				}
-			}
-			catch (Exception e)
-			{ 
-				// nothing to do
-			}
-		}
+		refreshLibs();
 	}
 
 	public AbstractEvaluator createEvaluator() throws Exception
@@ -421,9 +343,6 @@ public class Configuration extends AbstractDocument
 			setUserVariablesFromMask(userVars.get(), evaluator);
 		}
 		
-		evaluator.addImports(Arrays.asList(this.evaluatorImportsValue.split(SEPARATOR)));
-		setUserVariablesFromMask(get(variables), evaluator);
-		setUserVariablesFromMask(get(userVariables), evaluator);
 		evaluator.reset();
 		
 		return evaluator;
@@ -442,6 +361,7 @@ public class Configuration extends AbstractDocument
 		{
 			return;
 		}
+
 		for (MutableString folder : this.librariesValue)
 		{
 			File folderFile = new File(folder.get());
@@ -482,67 +402,6 @@ public class Configuration extends AbstractDocument
 	}
 
 	
-	@Deprecated
-	public void updateLibs()
-	{
-		this.libs.clear();
-		Map<File, Long> newMap = new HashMap<File, Long>();
-		for (LibEntry lib : this.libEntriesValue)
-		{
-			try
-			{
-				String name = lib.toString();
-				String path = lib.get(libPath);
-				IMatrixListener checker = new MatrixListener();
-				Matrix matrix = new Matrix(path, this, checker);
-				File file = new File(path);
-				Long timestamp = timestampMap.get(file);
-				newMap.put(file, timestamp);
-				if (timestamp == null)
-				{
-					timestampMap.put(file, file.lastModified());
-					this.libs.put(name, loadMatrix(file, matrix, checker, name));
-				}
-				else
-				{
-					if (!timestamp.equals(file.lastModified()))
-					{
-						this.libs.put(name, loadMatrix(file, matrix, checker, name));
-					}
-					else
-					{
-						this.libs.put(name, matrix);
-					}
-
-				}
-			}
-			catch (Exception e)
-			{
-				String message = "Error on update lib : " + lib + " .\n" + e.getMessage();
-				logger.error(message);
-				logger.error(e.getMessage(), e);
-				listener.onException(message);
-			}
-		}
-		timestampMap.clear();
-		timestampMap.putAll(newMap);
-	}
-
-	private Matrix loadMatrix(File file, Matrix matrix, IMatrixListener checker, String name) throws Exception
-	{
-		try (Reader libReader = new FileReader(file))
-		{
-			matrix.load(libReader);
-		}
-		if (!checker.isOk())
-		{
-			logger.error(checker.getExceptionMessage());
-			throw new Exception("Library '" + name + "' is invalid. See the log.");
-		}
-		return matrix;
-	}
-
-
     //------------------------------------------------------------------------------------------------------------------
     // interface Document
     //------------------------------------------------------------------------------------------------------------------
@@ -586,10 +445,6 @@ public class Configuration extends AbstractDocument
 			Converter.setFormats(toStringList(this.formatsValue));
 			refreshLibs();
 
-			DateTime.setFormats(get(timeFormat), get(dateFormat), get(dateTimeFormat));
-			Converter.setFormats(get(additionFormats));
-			updateLibs();
-	
 			this.valid = true;
     	}
 		catch (UnmarshalException e)
@@ -665,7 +520,6 @@ public class Configuration extends AbstractDocument
             marshaller.marshal(this, os);
 
     		refreshLibs();
-			updateLibs();
 
 			saved();
         }
@@ -687,8 +541,7 @@ public class Configuration extends AbstractDocument
 			return true;
 		}
 		
-		return this.libEntriesValue.isChanged()
-				|| this.timeValue.isChanged()
+		return this.timeValue.isChanged()
 				|| this.dateValue.isChanged()
 				|| this.dateTimeValue.isChanged()
 				|| this.formatsValue.isChanged()
@@ -713,7 +566,6 @@ public class Configuration extends AbstractDocument
 		super.saved();
 		
 		this.changed = false;
-		this.libEntriesValue.saved();
 		this.timeValue.saved();
 		this.dateValue.saved();
 		this.dateTimeValue.saved();
@@ -777,35 +629,6 @@ public class Configuration extends AbstractDocument
 		return (SubCase) matrix.getRoot().find(true, SubCase.class, id);
 	}
 
-
-	
-	@Deprecated
-	public String get(String name) throws Exception
-	{
-		Object res = get(Configuration.class, this, name);
-		return res == null ? "" : res.toString();
-	}
-	
-	@Deprecated
-	public void set(String name, Object value) throws Exception
-	{
-		set(Configuration.class, this, name, value);
-		this.changed = true;
-	}
-	
-
-	@Deprecated
-	public LibEntry getLibEntry(String name) throws Exception
-	{
-		return getEntry(name, this.libEntriesValue);
-	}
-
-	@Deprecated
-	public List<LibEntry> getLibEntries()
-	{
-		return this.libEntriesValue;
-	}
-	
 	public SqlEntry getSqlEntry(String name) throws Exception
 	{
 		return getEntry(name, this.sqlEntriesValue);
@@ -984,36 +807,6 @@ public class Configuration extends AbstractDocument
 				vars.injectVariables(evaluator);
 			}
 		}
-//		else
-//		{
-//			final Path path = Paths.get(userVariablesFileName);
-//			
-//			String reg = path.getFileName().toString();
-//			reg = reg.replace("?", ".{1}");
-//			reg = reg.replace(".", "\\.");
-//			reg = reg.replace("*", ".*");
-//			final String regex = reg;
-//			
-//			File dir = path.subpath(0, path.getNameCount() - 1).toFile();
-//			File[] files = dir.listFiles(new FileFilter()
-//			{
-//				@Override
-//				public boolean accept(File pathname)
-//				{
-//					return pathname.getName().matches(regex);
-//				}
-//			});
-//			 
-//			for(File one : files)
-//			{
-//				try (Reader reader = new FileReader(one))
-//				{
-//					SystemVars vars = new SystemVars(one.getPath(), this);
-//					vars.load(reader);
-//					vars.injectVariables(evaluator);
-//				}
-//			}
-//		}
 	}
 
 	@Deprecated
@@ -1042,60 +835,8 @@ public class Configuration extends AbstractDocument
 		return null;
 	}
     
-	@Deprecated
-	static void set(Class<?> clazz, Object object, String name, Object value) throws Exception
-	{
-		Field[] fields = clazz.getDeclaredFields();
-		
-		for (Field field : fields)
-		{
-			XmlElement attr = field.getAnnotation(XmlElement.class);
-			if (attr == null)
-			{
-				continue;
-			}
-			if (attr.name().equals(name))
-			{
-				field.set(object, value);
-				return;
-			}
-		}
-
-		if (clazz.getSuperclass() != null )
-		{
-			set(clazz.getSuperclass(), object, name, value);
-		}
-	}
-	
     private void setAll(Configuration config)
 	{
-		Field[] fields = Configuration.class.getDeclaredFields();
-		
-		for (Field field : fields)
-		{
-			if (Mutable.class.isAssignableFrom(field.getType()))
-			{
-				continue;
-			}
-			
-			XmlElement attr = field.getAnnotation(XmlElement.class);
-			if (attr == null)
-			{
-				continue;
-			}
-			Object value = null;
-			try
-			{
-				value = field.get(config);
-				set(attr.name(), value);
-			}
-			catch (Exception e)
-			{
-				logger.error("name = " + attr.name() + "  value = " + value);
-				logger.error(e.getMessage(), e);
-			}
-		}
-
 		this.timeValue.set(config.timeValue);
 		this.dateValue.set(config.dateValue);
 		this.dateTimeValue.set(config.dateTimeValue);
@@ -1114,18 +855,12 @@ public class Configuration extends AbstractDocument
 		this.clientDictionariesValue.from(config.clientDictionariesValue);
 		this.librariesValue.from(config.librariesValue);
 		
-		refreshLibs();
-
-		this.libEntriesValue.from(config.libEntriesValue);
-		updateLibs();
-		
 		this.changed = false;
 	}
 
 	private static final Class<?>[] jaxbContextClasses = 
 		{ 
 			Configuration.class,
-			LibEntry.class,
 			SqlEntry.class,
 			ClientEntry.class,
 			ServiceEntry.class,

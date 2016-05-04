@@ -7,21 +7,11 @@
     <xs:complexContent>
       <xs:extension base="abstractDocument">
         <xs:sequence>
-          <xs:element name="timeFormat" type="xs:string" minOccurs="0"/>
-          <xs:element name="dateFormat" type="xs:string" minOccurs="0"/>
-          <xs:element name="dateTimeFormat" type="xs:string" minOccurs="0"/>
-          <xs:element name="additionFormats" type="xs:string" minOccurs="0"/>
-          <xs:element name="evaluatorImports" type="xs:string" minOccurs="0"/>
-          <xs:element name="outputPath" type="xs:string" minOccurs="0"/>
-          <xs:element name="variables" type="xs:string" minOccurs="0"/>
-          <xs:element name="userVariables" type="xs:string" minOccurs="0"/>
-          
           <xs:element name="time" type="mutableString" minOccurs="0"/>
           <xs:element name="date" type="mutableString" minOccurs="0"/>
           <xs:element name="dateTime" type="mutableString" minOccurs="0"/>
           <xs:element name="formats" type="mutableString" minOccurs="0" maxOccurs="unbounded"/>
           <xs:element name="reports" type="mutableString" minOccurs="0"/>
-          
           <xs:element name="git" type="mutableString" minOccurs="0"/>
           <xs:element name="import" type="mutableString" minOccurs="0" maxOccurs="unbounded"/>
           <xs:element name="vars" type="mutableString" minOccurs="0"/>
@@ -30,7 +20,6 @@
           <xs:element name="appDict" type="mutableString" minOccurs="0" maxOccurs="unbounded"/>
           <xs:element name="clientDict" type="mutableString" minOccurs="0" maxOccurs="unbounded"/>
           <xs:element name="library" type="mutableString" minOccurs="0" maxOccurs="unbounded"/>
-          <xs:element name="libEntry" type="libEntry" minOccurs="0" maxOccurs="unbounded"/>
           <xs:element name="sqlEntry" type="sqlEntry" minOccurs="0" maxOccurs="unbounded"/>
           <xs:element name="clientEntry" type="clientEntry" minOccurs="0" maxOccurs="unbounded"/>
           <xs:element name="serviceEntry" type="serviceEntry" minOccurs="0" maxOccurs="unbounded"/>
@@ -48,11 +37,12 @@
     <xs:restriction base="xs:string"/>
   </xs:simpleType>
 
-  <xs:complexType name="libEntry">
+  <xs:complexType name="sqlEntry">
     <xs:complexContent>
       <xs:extension base="entry">
         <xs:sequence>
-          <xs:element name="libPath" type="xs:string" minOccurs="0"/>
+          <xs:element name="sqlJar" type="xs:string" minOccurs="0"/>
+          <xs:element name="sqlConnection" type="xs:string" minOccurs="0"/>
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>
@@ -70,17 +60,6 @@
       <xs:element name="key" type="xs:string" minOccurs="0"/>
       <xs:element name="value" type="xs:string" minOccurs="0"/>
     </xs:sequence>
-  </xs:complexType>
-
-  <xs:complexType name="sqlEntry">
-    <xs:complexContent>
-      <xs:extension base="entry">
-        <xs:sequence>
-          <xs:element name="sqlJar" type="xs:string" minOccurs="0"/>
-          <xs:element name="sqlConnection" type="xs:string" minOccurs="0"/>
-        </xs:sequence>
-      </xs:extension>
-    </xs:complexContent>
   </xs:complexType>
 
   <xs:complexType name="clientEntry">

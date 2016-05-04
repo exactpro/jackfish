@@ -16,7 +16,7 @@
 	<property name="buildtest.dir" location="buildtest"/>
 	<property name="testdata.dir" location="testdata"/>
 	<property name="lib.dir" location="libs"/>
-	<property name="version" value="4.2.0"/>
+	<property name="version" value="4.3.0"/>
     <property name="revision" value="local_build"/>
 	<property name="tool" location="tool"/>
 
