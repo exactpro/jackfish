@@ -10,6 +10,7 @@ package com.exactprosystems.jf.tool.custom.tab;
 
 import java.io.FileReader;
 import java.io.Reader;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.documents.Document;
@@ -35,11 +36,13 @@ public class CustomTab extends Tab implements AutoCloseable
 	private Document			document;
 	private FileWatcher			watcher;
 	private Settings			settings;
+	private AtomicBoolean		warningIsShow;
 
 	public CustomTab(Document document, Settings settings)
 	{
 		super();
 
+		this.warningIsShow = new AtomicBoolean(false); 
 		this.settings = settings;
 		this.setClosable(false);
 		this.document = document;
@@ -64,7 +67,14 @@ public class CustomTab extends Tab implements AutoCloseable
 			{
 				if (Common.appIsFocused() && isSelected())
 				{
-					Common.tryCatch(CustomTab.this::reload, "Error on reload");
+					synchronized (warningIsShow) 
+					{
+						if(!warningIsShow.get())
+						{
+							Common.tryCatch(CustomTab.this::reload, "Error on reload");
+							warningIsShow.set(true);
+						}
+					}
 				}
 			}
 		};
@@ -134,6 +144,10 @@ public class CustomTab extends Tab implements AutoCloseable
 				}, "Error on reload");
 			}
 			saved(this.document.getName());
+			synchronized (warningIsShow)
+			{
+				warningIsShow.set(false);
+			}
 		});
 	}
 
