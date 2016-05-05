@@ -172,9 +172,15 @@ public abstract class ProxyApplication implements IApplication
 	    	}
 	    	catch (Throwable t)
 	    	{
-                t.printStackTrace(System.err);
-		    	stop();
-	    		throw t;
+				try
+				{
+					stop();
+				}
+				catch (Exception e)
+				{
+
+				}
+				throw t;
 	    	}
 	    }
 	    else
