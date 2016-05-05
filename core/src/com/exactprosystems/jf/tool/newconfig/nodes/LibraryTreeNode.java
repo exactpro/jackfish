@@ -60,7 +60,7 @@ public class LibraryTreeNode extends TreeNode
 		boolean isLibEmpty = this.model.getLibrariesValue().isEmpty();
 		if (!isLibEmpty)
 		{
-			Menu addLibrary = new Menu("Add new library", new ImageView(new Image(CssVariables.Icons.ADD_PARAMETER_ICON)));
+			Menu addLibrary = new Menu("Add new library to", new ImageView(new Image(CssVariables.Icons.ADD_PARAMETER_ICON)));
 			this.model.getLibrariesValue().stream().map(MutableString::get).map(MenuItem::new).peek(item -> item.setOnAction(e -> ConfigurationTreeView.showInputDialog("Enter new name").ifPresent(name -> Common.tryCatch(() -> this.model.addNewLibrary(new File(item.getText()), name), "Error on create new library")))).forEach(addLibrary.getItems()::add);
 
 			Menu excludeLibrary = new Menu("Exclude library folder", new ImageView(new Image(CssVariables.Icons.REMOVE_PARAMETER_ICON)));

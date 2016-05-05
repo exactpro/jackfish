@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.exactprosystems.jf.tool.custom.controls.field.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="198.0" prefWidth="519.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.exactprosystems.jf.tool.newconfig.wizard.WizardConfigurationController">
+   <left>
+      <VBox prefHeight="284.0" prefWidth="117.0">
+         <children>
+            <Label text="Create folders">
+               <HBox.margin>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </HBox.margin>
+               <VBox.margin>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </VBox.margin>
+            </Label>
+            <CheckBox fx:id="cbMatrixFolder" mnemonicParsing="false" selected="true" text="Matrix">
+               <VBox.margin>
+                  <Insets bottom="5.0" left="15.0" right="5.0" top="5.0" />
+               </VBox.margin>
+            </CheckBox>
+            <CheckBox fx:id="cbLibraryFolder" mnemonicParsing="false" selected="true" text="Library">
+               <VBox.margin>
+                  <Insets bottom="5.0" left="15.0" right="5.0" top="5.0" />
+               </VBox.margin>
+            </CheckBox>
+            <CheckBox fx:id="cbAppFolder" mnemonicParsing="false" selected="true" text="App dic">
+               <VBox.margin>
+                  <Insets bottom="5.0" left="15.0" right="5.0" top="5.0" />
+               </VBox.margin>
+            </CheckBox>
+            <CheckBox fx:id="cbClientFolder" mnemonicParsing="false" selected="true" text="Client dic">
+               <VBox.margin>
+                  <Insets bottom="5.0" left="15.0" right="5.0" top="5.0" />
+               </VBox.margin>
+            </CheckBox>
+            <CheckBox fx:id="cbVariablesFolder" mnemonicParsing="false" selected="true" text="Variables">
+               <VBox.margin>
+                  <Insets bottom="5.0" left="15.0" right="5.0" top="5.0" />
+               </VBox.margin>
+            </CheckBox>
+            <CheckBox fx:id="cbReportFolder" mnemonicParsing="false" selected="true" text="Report">
+               <VBox.margin>
+                  <Insets bottom="5.0" left="15.0" right="5.0" top="5.0" />
+               </VBox.margin>
+            </CheckBox>
+         </children>
+      </VBox>
+   </left>
+   <center>
+      <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
+         <children>
+            <BorderPane prefHeight="90.0" prefWidth="402.0">
+               <VBox.margin>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </VBox.margin>
+               <left>
+                  <Label text="Chose folder" BorderPane.alignment="CENTER">
+                     <BorderPane.margin>
+                        <Insets left="5.0" right="5.0" />
+                     </BorderPane.margin>
+                  </Label>
+               </left>
+               <center>
+                  <CustomFieldWithButton fx:id="cfChooseFolder" BorderPane.alignment="CENTER" />
+               </center>
+            </BorderPane>
+            <BorderPane prefHeight="90.0" prefWidth="402.0">
+               <left>
+                  <Label text="Project name" BorderPane.alignment="CENTER">
+                     <BorderPane.margin>
+                        <Insets left="5.0" right="5.0" />
+                     </BorderPane.margin>
+                  </Label>
+               </left>
+               <center>
+                  <TextField fx:id="tfProjectName" BorderPane.alignment="CENTER">
+                     <BorderPane.margin>
+                        <Insets left="5.0" right="5.0" />
+                     </BorderPane.margin>
+                  </TextField>
+               </center>
+            </BorderPane>
+         </children>
+      </VBox>
+   </center>
+</BorderPane>

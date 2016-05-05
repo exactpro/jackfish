@@ -326,7 +326,7 @@ public class ConfigurationFx extends Configuration
 
 	public void addNewLibrary(File parentFolder, String fileName) throws Exception
 	{
-		createNewFile(parentFolder, fileName, Configuration.matrixExt);
+		this.mainModel.newLibrary(checkNameExtention(parentFolder.getAbsolutePath() + File.separator + fileName, Configuration.matrixExt));
 		displayLibrary();
 	}
 
@@ -610,12 +610,17 @@ public class ConfigurationFx extends Configuration
 
 	public void openAppsDictionary(AppEntry entry) throws Exception
 	{
-		this.openAppsDictionary(new File(entry.get(Configuration.appDicPath)));
+		this.openAppsDictionary(new File(entry.get(Configuration.appDicPath)), entry.toString());
 	}
 
 	public void openAppsDictionary(File file) throws Exception
 	{
 		Common.tryCatch(() -> this.mainModel.loadDictionary(path(file), null),"Error on load dictionary");
+	}
+
+	public void openAppsDictionary(File file, String adapter) throws Exception
+	{
+		Common.tryCatch(() -> this.mainModel.loadDictionary(path(file), adapter),"Error on load dictionary");
 	}
 
 	public void showAppHelp(AppEntry entry) throws Exception
@@ -991,6 +996,15 @@ public class ConfigurationFx extends Configuration
 				}
 			}
 		}
+	}
+
+	private static String checkNameExtention(String fileName, String ext)
+	{
+		if (fileName.endsWith(ext))
+		{
+			return fileName;
+		}
+		return fileName + ext;
 	}
 
 	public static String getExtension(String fileName)

@@ -364,6 +364,19 @@ public abstract class DialogsHelper
 		return chooser.showDialog(Common.node);
 	}
 
+	public static File showDirChooseDialog(String title, String initialDirectory)
+	{
+		DirectoryChooser chooser = new DirectoryChooser();
+		File value = new File(initialDirectory);
+		if (!value.exists())
+		{
+			value = new File(getCurrentDir());
+		}
+		chooser.setInitialDirectory(value);
+		chooser.setTitle(title);
+		return chooser.showDialog(Common.node);
+	}
+
 	public static File showSaveAsDialog(Document doc) throws Exception
 	{
 		Class<?> docClass = doc.getClass();

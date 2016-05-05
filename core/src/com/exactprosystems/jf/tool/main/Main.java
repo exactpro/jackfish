@@ -31,6 +31,7 @@ import com.exactprosystems.jf.tool.helpers.DialogsHelper.OpenSaveMode;
 import com.exactprosystems.jf.tool.matrix.MatrixFx;
 import com.exactprosystems.jf.tool.matrix.schedule.RunnerScheduler;
 import com.exactprosystems.jf.tool.newconfig.ConfigurationFx;
+import com.exactprosystems.jf.tool.newconfig.wizard.WizardConfiguration;
 import com.exactprosystems.jf.tool.settings.SettingsPanel;
 import com.exactprosystems.jf.tool.settings.Theme;
 import com.exactprosystems.jf.tool.systemvars.SystemVarsFx;
@@ -41,10 +42,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import org.apache.log4j.Logger;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.Reader;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -243,6 +241,34 @@ public class Main extends Application
 		}
 	}
 
+	public void createNewProject(BorderPane pane) throws Exception
+	{
+		WizardConfiguration wizard = new WizardConfiguration(this);
+		String fullPath = wizard.display();
+		if (fullPath != null)
+		{
+			if (this.config != null)
+			{
+				if (this.config.canClose())
+				{
+					this.config.close(this.config.getSettings());
+					setConfiguration(null);
+				}
+				else
+				{
+					return;
+				}
+			}
+			File newFolder = new File(fullPath);
+			String configName = newFolder.getName();
+			String configurePath = fullPath + File.separator + configName + ".xml";
+
+			Configuration newConfig = Configuration.createNewConfiguration(configName, this.settings);
+			newConfig.save(configurePath);
+			openProject(configurePath, pane);
+		}
+	}
+
 	public void loadDictionary(String filePath, String entryName) throws Exception
 	{
 		checkConfig();
@@ -293,26 +319,6 @@ public class Main extends Application
 		}
 	}
 
-	public void newConfiguration2(BorderPane pane) throws Exception
-	{
-		if (this.config != null)
-		{
-			if (this.config.canClose())
-			{
-				this.config.close(this.config.getSettings());
-				setConfiguration(null);
-			}
-			else
-			{
-				return;
-			}
-		}
-		ConfigurationFx config = new ConfigurationFx(newName(Configuration.class), this.runnerListener, this.settings, Main.this, pane);
-
-		createDocument(config);
-		setConfiguration(config);
-	}
-	
 	public void newDictionary() throws Exception
 	{
 		checkConfig();
@@ -331,17 +337,26 @@ public class Main extends Application
 		doc.display();
 	}
 
-	public void newLibrary() throws Exception
+	public void newLibrary(String fullPath) throws Exception
 	{
 		checkConfig();
-		MatrixFx doc = new MatrixFx(newName(Matrix.class), this.config, new MatrixListener());
+		MatrixFx doc = new MatrixFx(fullPath, this.config, new MatrixListener());
 		doc.create();
 		doc.createLibrary();
 		Settings.SettingsValue copyright = settings.getValueOrDefault(Settings.GLOBAL_NS, "Main", "copyright", "");
 		String text = copyright.getValue().replaceAll("\\\\n", System.lineSeparator());
 		doc.addCopyright(text);
 		docs.add(doc);
+		if (new File(fullPath).exists())
+		{
+			doc.save(fullPath);
+		}
 		doc.display();
+	}
+
+	public void newLibrary() throws Exception
+	{
+		newLibrary(newName(Matrix.class));
 	}
 
 	public void newSystemVars() throws Exception
@@ -518,6 +533,16 @@ public class Main extends Application
 			sb.append(" [ ").append(absolutePath).append(" ]");
 		}
 		this.controller.displayTitle(sb.toString());
+	}
+
+	public void createFolder(File parentFolder, String folderName)
+	{
+		new File(parentFolder.getAbsolutePath() + File.separator + folderName).mkdir();
+	}
+
+	public void createFile(File parentFolder, String fileName) throws Exception
+	{
+		new File(parentFolder.getAbsolutePath() + File.separator + fileName).createNewFile();
 	}
 	//----------------------------------------------------------------------------------------------
 

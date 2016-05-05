@@ -309,9 +309,7 @@ public class MainController implements Initializable, ContainingParent
 		return null;
 	}
 
-	// ====================================================
-	// Configuration
-	// ====================================================
+	//region Configuration
 	public void openProject(ActionEvent actionEvent)
 	{
 		Common.tryCatch(() -> this.model.openProject(null, this.projectPane), "Error on load configuration");
@@ -319,12 +317,11 @@ public class MainController implements Initializable, ContainingParent
 
 	public void createProject(ActionEvent actionEvent)
 	{
-		Common.tryCatch(() -> this.model.newConfiguration2(this.projectPane), "Error on create new configuration");
+		Common.tryCatch(() -> this.model.createNewProject(this.projectPane), "Error on create new configuration");
 	}
+	//endregion
 
-	// ====================================================
-	// Dictionary
-	// ====================================================
+	//region Dictionary
 	public void loadDictionary(ActionEvent event)
 	{
 		Common.tryCatch(() -> this.model.loadDictionary(null, null), "Error on load dictionary");
@@ -334,10 +331,9 @@ public class MainController implements Initializable, ContainingParent
 	{
 		Common.tryCatch(this.model::newDictionary, "Error on create new dictionary");
 	}
+	//endregion
 
-	// ====================================================
-	// SystemVars
-	// ====================================================
+	//region System vars
 	public void loadSystemVars(ActionEvent event)
 	{
 		Common.tryCatch(() -> this.model.loadSystemVars(null), "Error on load system vars");
@@ -347,10 +343,9 @@ public class MainController implements Initializable, ContainingParent
 	{
 		Common.tryCatch(this.model::newSystemVars, "Error on create new system vars");
 	}
+	//endregion
 
-	// ====================================================
-	// Matrix
-	// ====================================================
+	//region Matrix
 	public void loadMatrix(ActionEvent event)
 	{
 		Common.tryCatch(() -> this.model.loadMatrix(null), "Error on load matrix");
@@ -390,10 +385,9 @@ public class MainController implements Initializable, ContainingParent
 	{
 		Common.tryCatch(this.model::openReport, "Error on open report");
 	}
+	//endregion
 
-	// ====================================================
-	// PlainText
-	// ====================================================
+	//region Plain text
 	public void loadPlainText(ActionEvent event)
 	{
 		Common.tryCatch(() -> this.model.loadPlainText(null), "Error on load plain text");
@@ -403,10 +397,9 @@ public class MainController implements Initializable, ContainingParent
 	{
 		Common.tryCatch(this.model::newPlainText, "Error on create new plain text");
 	}
+	//endregion
 
-	// ====================================================
-	// Csv
-	// ====================================================
+	//region Csv
 	public void loadCsv(ActionEvent event)
 	{
 		Common.tryCatch(() -> this.model.loadCsv(null), "Error on load csv file");
@@ -416,10 +409,9 @@ public class MainController implements Initializable, ContainingParent
 	{
 		Common.tryCatch(this.model::newCsv, "Error on create new csv file");
 	}
+	//endregion
 
-	// ====================================================
-	// Document
-	// ====================================================
+	//region Document
 	public void saveAsDocument(ActionEvent event)
 	{
 		Common.tryCatch(() -> this.model.documentSaveAs(currentDocument()), "Error on save document as");
@@ -444,10 +436,9 @@ public class MainController implements Initializable, ContainingParent
 	{
 		Common.tryCatch(() -> this.model.redo(currentDocument()), "Error on save document");
 	}
+	//endregion
 
-	// ====================================================
-	// other events
-	// ====================================================
+	//region other events
 	public void showStore(ActionEvent actionEvent)
 	{
 		Common.tryCatch(this.model::store, "Error on show store");
@@ -487,6 +478,7 @@ public class MainController implements Initializable, ContainingParent
 	{
 		DialogsHelper.showHelperDialog("<none>", evaluator, "'Helper'", null);
 	}
+	//endregion
 
 	// TODO remake shortcuts over Menu.setAccelerator()
 	public void initShortcuts()
@@ -584,9 +576,7 @@ public class MainController implements Initializable, ContainingParent
 		return first.isPresent();
 	}
 
-	// ============================================================
-	// private methods
-	// ============================================================
+	//region Private methods
 	private void listeners()
 	{
 		this.documentsPane.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) ->
@@ -699,4 +689,5 @@ public class MainController implements Initializable, ContainingParent
 		thread.setDaemon(true);
 		thread.start();
 	}
+	//endregion
 }

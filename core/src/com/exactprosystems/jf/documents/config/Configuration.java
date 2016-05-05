@@ -122,11 +122,51 @@ public class Configuration extends AbstractDocument
 	public static final String parametersKey		= "key";
 	public static final String parametersValue		= "value";
 
-	//------------------------------------------------------------------------------------------------------------------
-	// new technology
-	//------------------------------------------------------------------------------------------------------------------
-	
-	
+	//region default values for new project
+	public static final String MATRIX_FOLDER		= "matrices";
+	public static final String LIBRARY_FOLDER		= "libs";
+	public static final String APP_DIC_FOLDER		= "appDic";
+	public static final String CLIENT_DIC_FOLDER	= "clientDic";
+	public static final String USER_VARS_FOLDER		= "myVars";
+	public static final String REPORTS_FOLDER		= "reports";
+
+	public static final MutableArrayList<MutableString> DEFAULT_IMPORTS = new MutableArrayList<>();
+	static
+	{
+		DEFAULT_IMPORTS.add(new MutableString("java.math"));
+		DEFAULT_IMPORTS.add(new MutableString("java.util.regex"));
+		DEFAULT_IMPORTS.add(new MutableString("java.util"));
+		DEFAULT_IMPORTS.add(new MutableString("java.awt"));
+		DEFAULT_IMPORTS.add(new MutableString("java.awt.event"));
+		DEFAULT_IMPORTS.add(new MutableString("java.util.List"));
+		DEFAULT_IMPORTS.add(new MutableString("java.util.Map"));
+		DEFAULT_IMPORTS.add(new MutableString("java.lang"));
+		DEFAULT_IMPORTS.add(new MutableString("com.exactprosystems.jf.api.app"));
+		DEFAULT_IMPORTS.add(new MutableString("com.exactprosystems.jf.api.conditions"));
+		DEFAULT_IMPORTS.add(new MutableString("com.exactprosystems.jf.function"));
+		DEFAULT_IMPORTS.add(new MutableString("java.io"));
+		DEFAULT_IMPORTS.add(new MutableString("org.mvel2"));
+	}
+
+	public static final MutableArrayList<MutableString> DEFAULT_FORMATS = new MutableArrayList<>();
+	static
+	{
+		DEFAULT_FORMATS.add(new MutableString("dd.MM.yyyy HH:mm:ss"));
+		DEFAULT_FORMATS.add(new MutableString("yyyy/MM/dd HH:mm:ss.SSS"));
+		DEFAULT_FORMATS.add(new MutableString("yyyyMMdd-HH:mm:ss.SSS"));
+		DEFAULT_FORMATS.add(new MutableString("dd/MM/yyyy"));
+		DEFAULT_FORMATS.add(new MutableString("HH.mm"));
+		DEFAULT_FORMATS.add(new MutableString("HH:mm:ss"));
+		DEFAULT_FORMATS.add(new MutableString("HH:mm:ss Z"));
+		DEFAULT_FORMATS.add(new MutableString("HH:mm:ss:SSS"));
+	}
+
+	public static final MutableString DEFAULT_TIME = new MutableString("HH:mm:ss.SSS");
+	public static final MutableString DEFAULT_DATE = new MutableString("dd.MM.yyyy");
+	public static final MutableString DEFAULT_DATE_TIME = new MutableString("dd.MM.yyyy HH:mm:ss.SSS");
+
+	//endregion
+
 	@XmlElement(name = time)
 	protected MutableString timeValue;
 	
@@ -215,6 +255,20 @@ public class Configuration extends AbstractDocument
 	public Configuration()
 	{
 		this("unknown", new Settings());
+	}
+
+	public static Configuration createNewConfiguration(String pathToConfig, Settings settings)
+	{
+		Configuration config = new Configuration(pathToConfig, settings);
+		config.importsValue = DEFAULT_IMPORTS;
+		config.formatsValue = DEFAULT_FORMATS;
+		config.matricesValue.add(new MutableString(MATRIX_FOLDER));
+		config.librariesValue.add(new MutableString(LIBRARY_FOLDER));
+		config.userVarsValue.add(new MutableString(USER_VARS_FOLDER));
+		config.reportsValue.set(REPORTS_FOLDER);
+		config.clientDictionariesValue.add(new MutableString(CLIENT_DIC_FOLDER));
+		config.appDictionariesValue.add(new MutableString(APP_DIC_FOLDER));
+		return config;
 	}
 	
 	public MutableString getTime()
