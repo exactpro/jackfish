@@ -11,6 +11,7 @@ package com.exactprosystems.jf.app;
 import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.common.ApiVersionInfo;
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.common.MainRunner;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.xml.gui.GuiDictionary;
 import com.exactprosystems.jf.documents.config.AppEntry;
@@ -196,9 +197,8 @@ public class ApplicationPool implements IApplicationPool
 			IApplication application = applicationFactory.createApplication();
 			application.init(this, applicationFactory);
 			String remoteClassName = applicationFactory.getRemoteClassName();
-			String jarPath = entry.get(Configuration.appJar);
-			String work = entry.get(Configuration.appWorkDir);
-			jarPath = new File(jarPath).getName();
+			String jarPath = MainRunner.makeDirWithSubstitutions(entry.get(Configuration.appJar)); 
+			String work = MainRunner.makeDirWithSubstitutions(entry.get(Configuration.appWorkDir));
 
 			application.connect(port, jarPath, work, remoteClassName, driverParameters, parameters);
 
@@ -240,9 +240,8 @@ public class ApplicationPool implements IApplicationPool
 			IApplication application = applicationFactory.createApplication();
 			application.init(this, applicationFactory);
 			String remoteClassName = applicationFactory.getRemoteClassName();
-			String jarPath = entry.get(Configuration.appJar);
-			String work = entry.get(Configuration.appWorkDir);
-			jarPath = new File(jarPath).getName();
+			String jarPath = MainRunner.makeDirWithSubstitutions(entry.get(Configuration.appJar));
+			String work = MainRunner.makeDirWithSubstitutions(entry.get(Configuration.appWorkDir));
 			
 			application.start(port, jarPath, work, remoteClassName, driverParameters, parameters);
 			AppConnection connection = new AppConnection(application, id, port, applicationFactory.getDictionary());
@@ -326,6 +325,7 @@ public class ApplicationPool implements IApplicationPool
 		if (applicationFactory == null)
 		{
 			String jarName	= entry.get(Configuration.appJar);
+			jarName	= MainRunner.makeDirWithSubstitutions(jarName); 
 			
 			List<URL> urls = new ArrayList<URL>();
 			urls.add(new URL("file:" + jarName));

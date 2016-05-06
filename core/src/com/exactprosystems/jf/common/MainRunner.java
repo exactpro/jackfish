@@ -35,6 +35,7 @@ import java.io.*;
 import java.lang.ProcessBuilder.Redirect;
 import java.lang.management.ManagementFactory;
 import java.lang.management.RuntimeMXBean;
+import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -290,6 +291,34 @@ public class MainRunner
 
 		return null;
 	}
+	
+	public static String makeDirWithSubstitutions(String template)
+	{
+		if (template == null)
+		{
+			return null;
+		}
+		
+		String home = ".";
+		
+		try
+		{
+			File jarName = new File(MainRunner.class.getProtectionDomain()
+					.getCodeSource()
+					.getLocation().toURI()
+					.getPath());
+			
+			home = "" + jarName.getParentFile();
+		}
+		catch (URISyntaxException e)
+		{
+			logger.error(e.getMessage(), e);
+		}
+		
+		return template.replace("${JF}", home);
+	}
+
+
 	
 	private static void printHelp(Options options)
 	{

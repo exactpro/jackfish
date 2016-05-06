@@ -44,6 +44,7 @@ import com.exactprosystems.jf.sql.DataBasePool;
 import com.exactprosystems.jf.tool.AbstractDocument;
 import com.exactprosystems.jf.tool.main.DocumentKind;
 import com.exactprosystems.jf.tool.main.Main;
+
 import org.apache.log4j.Logger;
 
 import javax.xml.XMLConstants;
@@ -56,6 +57,7 @@ import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
+
 import java.io.*;
 import java.lang.reflect.Field;
 import java.util.*;
@@ -861,32 +863,6 @@ public class Configuration extends AbstractDocument
 		}
 	}
 
-	@Deprecated
-	static Object get(Class<?> clazz, Object object, String name) throws Exception
-	{
-		Field[] fields = clazz.getDeclaredFields();
-		
-		for (Field field : fields)
-		{
-			XmlElement attr = field.getAnnotation(XmlElement.class);
-			if (attr == null)
-			{
-				continue;
-			}
-			if (attr.name().equals(name))
-			{
-				return field.get(object);
-			}
-		}
-		
-		if (clazz.getSuperclass() != null )
-		{
-			return get(clazz.getSuperclass(), object, name);
-		}
-		
-		return null;
-	}
-    
     private void setAll(Configuration config)
 	{
 		this.timeValue.set(config.timeValue);

@@ -14,6 +14,7 @@ import com.exactprosystems.jf.api.service.IService;
 import com.exactprosystems.jf.api.service.IServiceFactory;
 import com.exactprosystems.jf.api.service.IServicesPool;
 import com.exactprosystems.jf.api.service.ServiceConnection;
+import com.exactprosystems.jf.common.MainRunner;
 import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.documents.config.Parameter;
 import com.exactprosystems.jf.documents.config.ServiceEntry;
@@ -280,7 +281,7 @@ public class ServicePool implements IServicesPool
 		IServiceFactory serviceFactory = this.serviceFactories.get(id);
 		if (serviceFactory == null)
 		{
-			String jarName	= entry.get(Configuration.serviceJar);
+			String jarName	= MainRunner.makeDirWithSubstitutions(entry.get(Configuration.serviceJar));
 			
 			List<URL> urls = new ArrayList<URL>();
 			urls.add(new URL("file:" + jarName));

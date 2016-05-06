@@ -453,7 +453,12 @@ public class Main extends Application
 	}
 
 	public void documentSave(Document document) throws Exception
-	{
+	{	
+		if (document == null)
+		{
+			return;
+		}
+		
 		if (document.getName() == null || !(new File(document.getName()).exists()) || !document.hasName())
 		{
 			documentSaveAs(document);

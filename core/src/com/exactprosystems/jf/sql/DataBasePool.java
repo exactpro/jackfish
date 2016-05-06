@@ -21,6 +21,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.ServiceLoader;
 
+import com.exactprosystems.jf.common.MainRunner;
 import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.documents.config.SqlEntry;
 import com.exactprosystems.jf.functions.Table;
@@ -131,7 +132,7 @@ public class DataBasePool
 				throw new Exception("'" + sql + "' is not found.");
 			}
 			
-			String jarName 	 = entry.get(Configuration.sqlJar);
+			String jarName 	 = MainRunner.makeDirWithSubstitutions(entry.get(Configuration.sqlJar));
 			URLClassLoader classLoader = new URLClassLoader(new URL[] { new URL("file:" + jarName) });
 			
 			ServiceLoader<Driver> loader = ServiceLoader.load(Driver.class, classLoader);

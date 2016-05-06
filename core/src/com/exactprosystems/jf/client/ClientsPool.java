@@ -15,6 +15,7 @@ import com.exactprosystems.jf.api.client.IClientsPool;
 import com.exactprosystems.jf.api.common.ApiVersionInfo;
 import com.exactprosystems.jf.api.common.IContext;
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.common.MainRunner;
 import com.exactprosystems.jf.common.xml.messages.MessageDictionary;
 import com.exactprosystems.jf.documents.config.ClientEntry;
 import com.exactprosystems.jf.documents.config.Configuration;
@@ -287,7 +288,7 @@ public class ClientsPool implements IClientsPool
 		IClientFactory clientFactory = this.clientFactories.get(id);
 		if (clientFactory == null)
 		{
-			String jarName	= entry.get(Configuration.clientJar);
+			String jarName	= MainRunner.makeDirWithSubstitutions(entry.get(Configuration.clientJar)); 
 			
 			
 			List<URL> urls = new ArrayList<URL>();
