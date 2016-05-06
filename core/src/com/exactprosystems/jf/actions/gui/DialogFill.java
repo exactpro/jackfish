@@ -26,6 +26,7 @@ import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.functions.Table;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static com.exactprosystems.jf.actions.gui.ActionGuiHelper.*;
 
@@ -39,23 +40,28 @@ import static com.exactprosystems.jf.actions.gui.ActionGuiHelper.*;
 	)
 public class DialogFill extends AbstractAction
 {
-	public final static String	connectionName	= "AppConnection";
-	public final static String	dialogName		= "Dialog";
-	public final static String	doNotOpenName	= "DoNotOpen";
-	public final static String	doNotCloseName	= "DoNotClose";
+	public final static String	connectionName			= "AppConnection";
+	public final static String	dialogName				= "Dialog";
+	public final static String	doNotOpenName			= "DoNotOpen";
+	public final static String	doNotCloseName			= "DoNotClose";
+	public final static String	stopOnFailName			= "StopOnFail";
+	
 
 	@ActionFieldAttribute(name = connectionName, mandatory = true, description = "The application connection.")
-	protected AppConnection		connection		= null;
+	protected AppConnection		connection			= null;
 
 	@ActionFieldAttribute(name = dialogName, mandatory = true, description = "A name of the dialog.")
-	protected String			dialog			= null;
+	protected String			dialog				= null;
 
 	@ActionFieldAttribute(name = doNotOpenName, mandatory = false, description = "Do not open a new dialog.")
-	protected Boolean			doNotOpen		= false;
+	protected Boolean			doNotOpen			= false;
 
 	@ActionFieldAttribute(name = doNotCloseName, mandatory = false, description = "Do not close a dialog.")
-	protected Boolean			doNotClose		= false;
+	protected Boolean			doNotClose			= false;
 
+	@ActionFieldAttribute(name = stopOnFailName, mandatory = false, description = "Stop action on fail")
+	protected Boolean			stopOnFail			= true;
+	
 	public DialogFill()
 	{
 	}
@@ -68,6 +74,7 @@ public class DialogFill extends AbstractAction
 			case dialogName:
 			case doNotOpenName:
 			case doNotCloseName:
+			case stopOnFailName:	
 				return HelpKind.ChooseFromList;
 		}
 		return null;
@@ -84,6 +91,7 @@ public class DialogFill extends AbstractAction
 				
 			case doNotCloseName:
 			case doNotOpenName:
+			case stopOnFailName:
 				list.add(ReadableValue.TRUE);
 				list.add(ReadableValue.FALSE);
 				break;
@@ -151,6 +159,7 @@ public class DialogFill extends AbstractAction
 		SectionKind run = SectionKind.Run;
 		logger.debug("Perform " + run);
 		ISection sectionRun = window.getSection(run);
+		String allReportErrors = "";
 		for (Parameter parameter : parameters.select(TypeMandatory.Extra))
 		{
 			String name = parameter.getName();
@@ -187,7 +196,15 @@ public class DialogFill extends AbstractAction
 			else if (res.isPermittedOperation())
 			{
 				super.setError(message(id, window, run, control, res.getText()));
-				return;
+				if(!stopOnFail)
+				{
+					allReportErrors += message(id, window, run, control, res.getText());
+				} 
+				else 
+				{
+					super.setError(message(id, window, run, control, res.getText()));
+					return;
+				}
 			}
 			else
 			{
@@ -223,6 +240,12 @@ public class DialogFill extends AbstractAction
 		}
 
 		super.setResult(outValue);
+		
+		if(!Str.IsNullOrEmpty(allReportErrors))
+		{
+			super.setError(allReportErrors);
+			return;
+		}	
 	}
 
 	private boolean checkControl(Set<ControlKind> supportedControls, IControl control) throws Exception
