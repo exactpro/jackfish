@@ -10,13 +10,11 @@ package com.exactprosystems.jf.tool.newconfig.nodes;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.newconfig.ConfigurationFx;
-
 import javafx.scene.Node;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.TreeItem;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 
 import java.io.File;
@@ -71,6 +69,21 @@ public class VariablesTreeNode extends TreeNode
 			public Common.Function onDoubleClickEvent()
 			{
 				return () -> model.openVariableFile(new File(file));
+			}
+
+			@Override
+			public Node getView()
+			{
+				Node view = super.getView();
+				HBox box = new HBox();
+				box.getChildren().add(view);
+				Label lblFullPath = new Label();
+				lblFullPath.getStyleClass().add(CssVariables.FULL_PATH_LABEL);
+				String path = ConfigurationFx.path(file);
+				lblFullPath.setText(" (" + path + ")");
+				lblFullPath.setTooltip(new Tooltip(path));
+				box.getChildren().add(lblFullPath);
+				return box;
 			}
 		}).map(e -> new TreeItem<TreeNode>(e)).forEach(i -> this.variablesTreeNode.getChildren().add(i));
 	}

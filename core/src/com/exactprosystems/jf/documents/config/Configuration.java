@@ -44,7 +44,6 @@ import com.exactprosystems.jf.sql.DataBasePool;
 import com.exactprosystems.jf.tool.AbstractDocument;
 import com.exactprosystems.jf.tool.main.DocumentKind;
 import com.exactprosystems.jf.tool.main.Main;
-
 import org.apache.log4j.Logger;
 
 import javax.xml.XMLConstants;
@@ -57,9 +56,7 @@ import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
-
 import java.io.*;
-import java.lang.reflect.Field;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -130,6 +127,7 @@ public class Configuration extends AbstractDocument
 	public static final String APP_DIC_FOLDER		= "appDic";
 	public static final String CLIENT_DIC_FOLDER	= "clientDic";
 	public static final String USER_VARS_FOLDER		= "myVars";
+	public static final String USER_VARS_FILE		= "myVars.ini";
 	public static final String REPORTS_FOLDER		= "reports";
 
 	public static final MutableArrayList<MutableString> DEFAULT_IMPORTS = new MutableArrayList<>();
@@ -262,11 +260,15 @@ public class Configuration extends AbstractDocument
 	public static Configuration createNewConfiguration(String pathToConfig, Settings settings)
 	{
 		Configuration config = new Configuration(pathToConfig, settings);
+		config.varsValue = new MutableString("vars.ini");
+		config.timeValue = DEFAULT_TIME;
+		config.dateValue = DEFAULT_DATE;
+		config.dateTimeValue = DEFAULT_DATE_TIME;
 		config.importsValue = DEFAULT_IMPORTS;
 		config.formatsValue = DEFAULT_FORMATS;
 		config.matricesValue.add(new MutableString(MATRIX_FOLDER));
 		config.librariesValue.add(new MutableString(LIBRARY_FOLDER));
-		config.userVarsValue.add(new MutableString(USER_VARS_FOLDER));
+		config.userVarsValue.add(new MutableString(USER_VARS_FOLDER + File.separator + USER_VARS_FILE));
 		config.reportsValue.set(REPORTS_FOLDER);
 		config.clientDictionariesValue.add(new MutableString(CLIENT_DIC_FOLDER));
 		config.appDictionariesValue.add(new MutableString(APP_DIC_FOLDER));

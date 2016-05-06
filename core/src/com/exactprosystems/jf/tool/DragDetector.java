@@ -31,7 +31,10 @@ public class DragDetector
 		dragboard.setDragView(snapshot);
 		ClipboardContent content = new ClipboardContent();
 		content.put(DataFormat.PLAIN_TEXT, text);
-		dragboard.setContent(content);
+		if (text != null)
+		{
+			dragboard.setContent(content);
+		}
 		event.consume();
 	}
 	

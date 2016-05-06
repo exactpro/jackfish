@@ -355,6 +355,11 @@ public class ConfigurationFx extends Configuration
 	{
 		excludeFile(file, super.userVarsValue, this::displayVars);
 	}
+
+	public void addUserVarsFile(File file)
+	{
+		addFile(Common.getRelativePath(path(file)), super.userVarsValue, this::displayVars);
+	}
 	//endregion
 
 	//region report

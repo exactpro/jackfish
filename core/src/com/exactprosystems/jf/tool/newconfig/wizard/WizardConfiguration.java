@@ -46,7 +46,12 @@ public class WizardConfiguration
 			if (createLibraryDir) this.model.createFolder(folder, Configuration.LIBRARY_FOLDER);
 			if (createAppDicDir) this.model.createFolder(folder, Configuration.APP_DIC_FOLDER);
 			if (createClientDicDir) this.model.createFolder(folder, Configuration.CLIENT_DIC_FOLDER);
-			if (createVarsDir) this.model.createFolder(folder, Configuration.USER_VARS_FOLDER);
+			if (createVarsDir)
+			{
+				this.model.createFolder(folder, Configuration.USER_VARS_FOLDER);
+				this.model.createFile(new File(folder + File.separator + Configuration.USER_VARS_FOLDER), Configuration.USER_VARS_FILE);
+			}
+			this.model.copyVarsFile(folder);
 			if (createReportDir) this.model.createFolder(folder, Configuration.REPORTS_FOLDER);
 
 			return this.folderDir.getAbsolutePath() + File.separator + this.newProjectName;

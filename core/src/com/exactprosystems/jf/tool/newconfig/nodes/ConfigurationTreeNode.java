@@ -16,6 +16,8 @@ import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
+import javafx.scene.text.Text;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -47,15 +49,21 @@ public class ConfigurationTreeNode extends TreeNode
 	@Override
 	public Node getView()
 	{
+		HBox box = new HBox();
 		String name = this.model.getName();
 		String fullPath = ConfigurationFx.path(name);
 		if (name.equals(fullPath))
 		{
 			name = new File(name).getName();
 		}
-		Label text = new Label(name + "( " + fullPath + " )");
-		text.setTooltip(new Tooltip(fullPath));
-		return text;
+		Text configName = new Text();
+		configName.setText(name);
+		box.getChildren().add(configName);
+		Label lblFullPath = new Label(" (" + fullPath + ")");
+		lblFullPath.setTooltip(new Tooltip(fullPath));
+		lblFullPath.getStyleClass().add(CssVariables.FULL_PATH_LABEL);
+		box.getChildren().add(lblFullPath);
+		return box;
 	}
 
 	@Override

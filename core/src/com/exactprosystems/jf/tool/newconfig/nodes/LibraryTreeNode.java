@@ -144,9 +144,10 @@ public class LibraryTreeNode extends TreeNode
 			HBox box = new HBox();
 			Text textNamespace = new Text("<" + this.namespace + "> ");
 			Text textName = new Text(new File(this.lib.getName()).getName());
-			Label fullPath = new Label(this.fullPath + " ");
-			fullPath.setTooltip(new Tooltip(this.fullPath));
-			box.getChildren().addAll(textNamespace, textName, fullPath);
+			Label lblFullPath = new Label(this.fullPath + " ");
+			lblFullPath.getStyleClass().add(CssVariables.FULL_PATH_LABEL);
+			lblFullPath.setTooltip(new Tooltip(this.fullPath));
+			box.getChildren().addAll(textNamespace, textName, lblFullPath);
 			return box;
 		}
 

@@ -43,6 +43,8 @@ import javafx.stage.Stage;
 import org.apache.log4j.Logger;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -548,6 +550,14 @@ public class Main extends Application
 	public void createFile(File parentFolder, String fileName) throws Exception
 	{
 		new File(parentFolder.getAbsolutePath() + File.separator + fileName).createNewFile();
+	}
+
+	public void copyVarsFile(File newFolder) throws Exception
+	{
+		try(InputStream stream = new FileInputStream(this.config.getVars().get()))
+		{
+			Files.copy(stream, Paths.get(newFolder.getAbsolutePath() + File.separator + "vars.ini"));
+		}
 	}
 	//----------------------------------------------------------------------------------------------
 
