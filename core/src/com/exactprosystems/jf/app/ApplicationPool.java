@@ -385,7 +385,7 @@ public class ApplicationPool implements IApplicationPool
 	    	{
 	    		dictionary.load(reader);
 	    	}
-			
+			//TODO why we do it?
 			AbstractEvaluator evaluator = this.configuration.createEvaluator();
 			dictionary.evaluateAll(evaluator);
 		}

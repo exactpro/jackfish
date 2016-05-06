@@ -15,6 +15,7 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import java.util.List;
+import java.util.Optional;
 
 @XmlAccessorType(XmlAccessType.NONE)
 public abstract class Entry implements Mutable
@@ -62,10 +63,7 @@ public abstract class Entry implements Mutable
 		if (this.parameters != null)
 		{
 			this.parameters.saved();
-			for (Parameter parameter : this.parameters)
-			{
-				parameter.saved();
-			}
+			this.parameters.forEach(Parameter::saved);
 		}
 		changed = false;
 	}
@@ -76,7 +74,7 @@ public abstract class Entry implements Mutable
 		{
 			case Configuration.entryName : return this.entryNameValue;
 		}
-		return getDerived(name);
+		return this.getParameter(name).orElse(getDerived(name));
 	}
 
 	public final void set(String name, Object value) throws Exception
@@ -85,6 +83,14 @@ public abstract class Entry implements Mutable
 		{
 			case Configuration.entryName : this.entryNameValue = "" +value; return;
 		}
+		Parameter o = new Parameter();
+		o.setKey(name);
+		int index;
+		if ((index = this.getParameters().indexOf(o)) != -1)
+		{
+			this.getParameters().get(index).setValue("" + value);
+			return;
+		}
 		setDerived(name, value);
 	}
 
@@ -92,10 +98,13 @@ public abstract class Entry implements Mutable
 	
 	protected abstract void setDerived(String name, Object value) throws Exception;
 
-	public String getParameter(String key)
+	public Optional<String> getParameter(String key)
 	{
-		return this.parameters.stream().filter(p -> p.key.equals(key)).map(Parameter::getValue).findFirst().orElse(null);
-
+		return this.getParameters()
+				.stream()
+				.filter(p -> p.key.equals(key))
+				.map(Parameter::getValue)
+				.findFirst();
 	}
 
 	public List<Parameter> getParameters()

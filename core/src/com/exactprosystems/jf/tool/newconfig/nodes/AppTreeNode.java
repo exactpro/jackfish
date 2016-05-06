@@ -12,10 +12,10 @@ import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.SupportedEntry;
+import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.newconfig.ConfigurationFx;
 import com.exactprosystems.jf.tool.newconfig.ConfigurationTreeView;
 import com.exactprosystems.jf.tool.newconfig.TablePair;
-
 import javafx.scene.Node;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
@@ -152,14 +152,18 @@ public class AppTreeNode extends TreeNode
 			try
 			{
 				List<TablePair> list = new ArrayList<>();
-				list.add(TablePair.TablePairBuilder.create().key(Configuration.appDescription).value(getEntry().get(Configuration.appDescription)).edit(true).build());
-				list.add(TablePair.TablePairBuilder.create().key(Configuration.appJar).value(getEntry().get(Configuration.appJar)).edit(true).isPath(true).build());
-				list.add(TablePair.TablePairBuilder.create().key(Configuration.appDicPath).value(getEntry().get(Configuration.appDicPath)).edit(true).isPath(true).build());
-				list.add(TablePair.TablePairBuilder.create().key(Configuration.appWorkDir).value(getEntry().get(Configuration.appWorkDir)).edit(true).build());
-				list.add(TablePair.TablePairBuilder.create().key(Configuration.appStartPort).value(getEntry().get(Configuration.appStartPort)).edit(true).build());
+				list.add(TablePair.TablePairBuilder.create(Configuration.appDescription, getEntry().get(Configuration.appDescription)).edit(true).build());
+				list.add(TablePair.TablePairBuilder.create(Configuration.appJar, getEntry().get(Configuration.appJar)).edit(true).pathFunc(
+						() -> DialogsHelper.showOpenSaveDialog("Choose plugin for adapter "+getEntry().toString(), "Jar files(*.jar)", "*.jar", DialogsHelper.OpenSaveMode.OpenFile))
+						.build());
+				list.add(TablePair.TablePairBuilder.create(Configuration.appDicPath, getEntry().get(Configuration.appDicPath)).edit(true).pathFunc(
+						() -> DialogsHelper.showOpenSaveDialog("Choose dictionary", "Xml files(*.jar)", "*.xml", DialogsHelper.OpenSaveMode.OpenFile))
+						.build());
+				list.add(TablePair.TablePairBuilder.create(Configuration.appWorkDir, getEntry().get(Configuration.appWorkDir)).edit(true).build());
+				list.add(TablePair.TablePairBuilder.create(Configuration.appStartPort, getEntry().get(Configuration.appStartPort)).edit(true).build());
 				getEntry().getParameters().stream()
 						.map(parameter -> new TablePair(parameter.getKey(), parameter.getValue()))
-						.forEach(tp -> list.add(tp));
+						.forEach(list::add);
 				return list;
 			}
 			catch (Exception e)

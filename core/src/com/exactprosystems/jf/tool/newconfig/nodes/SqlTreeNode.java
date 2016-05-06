@@ -13,11 +13,10 @@ import com.exactprosystems.jf.documents.config.SqlEntry;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.SupportedEntry;
+import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.newconfig.ConfigurationFx;
 import com.exactprosystems.jf.tool.newconfig.ConfigurationTreeView;
 import com.exactprosystems.jf.tool.newconfig.TablePair;
-import com.exactprosystems.jf.tool.newconfig.testing.TestingConnectionFxController;
-
 import javafx.scene.Node;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
@@ -142,8 +141,10 @@ public class SqlTreeNode extends TreeNode
 			try
 			{
 				List<TablePair> list = new ArrayList<>();
-				list.add(TablePair.TablePairBuilder.create().key(Configuration.sqlJar).value(getEntry().get(Configuration.sqlJar)).edit(true).isPath(true).build());
-				list.add(TablePair.TablePairBuilder.create().key(Configuration.sqlConnection).value(getEntry().get(Configuration.sqlConnection)).edit(true).build());
+				list.add(TablePair.TablePairBuilder.create(Configuration.sqlJar, getEntry().get(Configuration.sqlJar)).edit(true).pathFunc(
+						() -> DialogsHelper.showOpenSaveDialog("Choose sql", "Jar files(*.jar)", "*.jar", DialogsHelper.OpenSaveMode.OpenFile))
+						.build());
+				list.add(TablePair.TablePairBuilder.create(Configuration.sqlConnection, getEntry().get(Configuration.sqlConnection)).edit(true).build());
 				return list;
 			}
 			catch (Exception e)

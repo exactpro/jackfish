@@ -7,15 +7,15 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.exactprosystems.jf.tool.newconfig;
 
+import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.custom.controls.field.CustomFieldWithButton;
-import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.newconfig.nodes.TreeNode;
-
 import javafx.application.Platform;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
 
+import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -89,32 +89,33 @@ public class ParametersTableView extends TableView<TablePair>
 	{
 		public TableContextMenuCell()
 		{
-			ContextMenu menu = new ContextMenu();
-			MenuItem item1 = new MenuItem("Remove");
-			item1.setOnAction(e ->
-			{
-				TablePair item = (TablePair) getTableRow().getItem();
-				if (item != null)
-				{
-					try
-					{
-						item.remove();
-						getTableView().getItems().clear();
-						getTableView().getItems().addAll(editableNode.getParameters());
-					}
-					catch (Exception e1)
-					{
-						e1.printStackTrace();
-					}
-				}
-			});
-			setOnContextMenuRequested(e ->
-			{
-				boolean isRemovable = getTableRow().getItem() != null && ((TablePair) getTableRow().getItem()).isRemovable();
-				item1.setDisable(!isRemovable);
-			});
-			menu.getItems().addAll(item1);
-			this.setContextMenu(menu);
+			//TODO this not needed
+//			ContextMenu menu = new ContextMenu();
+//			MenuItem item1 = new MenuItem("Remove");
+//			item1.setOnAction(e ->
+//			{
+//				TablePair item = (TablePair) getTableRow().getItem();
+//				if (item != null)
+//				{
+//					try
+//					{
+//						item.remove();
+//						getTableView().getItems().clear();
+//						getTableView().getItems().addAll(editableNode.getParameters());
+//					}
+//					catch (Exception e1)
+//					{
+//						e1.printStackTrace();
+//					}
+//				}
+//			});
+//			setOnContextMenuRequested(e ->
+//			{
+//				boolean isRemovable = getTableRow().getItem() != null && ((TablePair) getTableRow().getItem()).isRemovable();
+//				item1.setDisable(!isRemovable);
+//			});
+//			menu.getItems().addAll(item1);
+//			this.setContextMenu(menu);
 		}
 
 		@Override
@@ -209,8 +210,16 @@ public class ParametersTableView extends TableView<TablePair>
 				((CustomFieldWithButton) this.textField).setButtonText("...");
 				((CustomFieldWithButton) this.textField).setHandler(e ->
 				{
-					ButtonType asd = DialogsHelper.showSaveFileDialog("asd");
-					commitEdit(asd.getText());
+					File file = pair.getPathFunction().get();
+					if (file != null)
+					{
+						needCancel = false;
+						commitEdit(Common.getRelativePath(file.getAbsolutePath()));
+					}
+					else
+					{
+						cancelEdit();
+					}
 				});
 			}
 			else
@@ -219,7 +228,11 @@ public class ParametersTableView extends TableView<TablePair>
 				{
 					if (!newValue && oldValue)
 					{
-						cancelEdit();
+						if (needCancel)
+						{
+							cancelEdit();
+							needCancel = true;
+						}
 					}
 				});
 			}
@@ -228,6 +241,7 @@ public class ParametersTableView extends TableView<TablePair>
 			{
 				if (t.getCode() == KeyCode.ENTER || t.getCode() == KeyCode.TAB)
 				{
+					needCancel = false;
 					commitEdit(this.textField.getText());
 				}
 				else if (t.getCode() == KeyCode.ESCAPE)
@@ -236,6 +250,8 @@ public class ParametersTableView extends TableView<TablePair>
 				}
 			});
 		}
+
+		boolean needCancel = true;
 
 		private TablePair get()
 		{

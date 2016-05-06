@@ -58,9 +58,9 @@ public class FormatTreeNode extends TreeNode
 	public List<TablePair> getParameters()
 	{
 		List<TablePair> list = new ArrayList<>();
-		list.add(TablePair.TablePairBuilder.create().key(Configuration.time).value(this.timeFormat).build());
-		list.add(TablePair.TablePairBuilder.create().key(Configuration.date).value(this.dateFormat).build());
-		list.add(TablePair.TablePairBuilder.create().key(Configuration.dateTime).value(this.dateTimeFormat).build());
+		list.add(TablePair.TablePairBuilder.create(Configuration.time, this.timeFormat).build());
+		list.add(TablePair.TablePairBuilder.create(Configuration.date, this.dateFormat).build());
+		list.add(TablePair.TablePairBuilder.create(Configuration.dateTime, this.dateTimeFormat).build());
 		return list;
 	}
 

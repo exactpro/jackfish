@@ -12,6 +12,7 @@ import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.SupportedEntry;
+import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.newconfig.ConfigurationFx;
 import com.exactprosystems.jf.tool.newconfig.ConfigurationTreeView;
 import com.exactprosystems.jf.tool.newconfig.TablePair;
@@ -150,14 +151,15 @@ public class ClientTreeNode extends TreeNode
 			try
 			{
 				List<TablePair> list = new ArrayList<>();
-				list.add(TablePair.TablePairBuilder.create().key(Configuration.clientDescription).value(getEntry().get(Configuration.clientDescription))
-						.edit(true).build());
-				list.add(TablePair.TablePairBuilder.create().key(Configuration.clientJar).value(getEntry().get(Configuration.clientJar)).edit(true)
-						.isPath(true).build());
-				list.add(TablePair.TablePairBuilder.create().key(Configuration.clientDictionary).value(getEntry().get(Configuration.clientDictionary))
-						.edit(true).isPath(true).build());
-				list.add(TablePair.TablePairBuilder.create().key(Configuration.clientLimit).value(getEntry().get(Configuration.clientLimit)).edit(true).build());
-				getEntry().getParameters().stream().map(parameter -> new TablePair(parameter.getKey(), parameter.getValue())).forEach(tp -> list.add(tp));
+				list.add(TablePair.TablePairBuilder.create(Configuration.clientDescription, getEntry().get(Configuration.clientDescription)).edit(true).build());
+				list.add(TablePair.TablePairBuilder.create(Configuration.clientJar, getEntry().get(Configuration.clientJar)).edit(true).pathFunc(
+						() -> DialogsHelper.showOpenSaveDialog("Choose client for " + getEntry().toString(), "Jar files(*.jar)", "*.jar", DialogsHelper.OpenSaveMode.OpenFile))
+						.build());
+				list.add(TablePair.TablePairBuilder.create(Configuration.clientDictionary, getEntry().get(Configuration.clientDictionary)).edit(true).pathFunc(
+						() -> DialogsHelper.showOpenSaveDialog("Choose client dictionary", "Xml files(*.xml)", "*.xml", DialogsHelper.OpenSaveMode.OpenFile))
+						.build());
+				list.add(TablePair.TablePairBuilder.create(Configuration.clientLimit, getEntry().get(Configuration.clientLimit)).edit(true).build());
+				getEntry().getParameters().stream().map(parameter -> new TablePair(parameter.getKey(), parameter.getValue())).forEach(list::add);
 				return list;
 			}
 			catch (Exception e)

@@ -12,6 +12,7 @@ import com.exactprosystems.jf.documents.config.ServiceEntry;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.SupportedEntry;
+import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.newconfig.ConfigurationFx;
 import com.exactprosystems.jf.tool.newconfig.ConfigurationTreeView;
 import com.exactprosystems.jf.tool.newconfig.ConnectionStatus;
@@ -137,11 +138,13 @@ public class ServiceTreeNode extends TreeNode
 			try
 			{
 				List<TablePair> list = new ArrayList<>();
-				list.add(TablePair.TablePairBuilder.create().key(Configuration.serviceDescription).value(getEntry().get(Configuration.serviceDescription)).edit(true).build());
-				list.add(TablePair.TablePairBuilder.create().key(Configuration.serviceJar).value(getEntry().get(Configuration.serviceJar)).edit(true).isPath(true).build());
+				list.add(TablePair.TablePairBuilder.create(Configuration.serviceDescription, getEntry().get(Configuration.serviceDescription)).edit(true).build());
+				list.add(TablePair.TablePairBuilder.create(Configuration.serviceJar, getEntry().get(Configuration.serviceJar)).edit(true).pathFunc(
+						() -> DialogsHelper.showOpenSaveDialog("Choose service", "Jar files(*.jar)", "*.jar", DialogsHelper.OpenSaveMode.OpenFile))
+						.build());
 				getEntry().getParameters().stream()
 						.map(parameter -> new TablePair(parameter.getKey(), parameter.getValue()))
-						.forEach(tp -> list.add(tp));
+						.forEach(list::add);
 				return list;
 			}
 			catch (Exception e)

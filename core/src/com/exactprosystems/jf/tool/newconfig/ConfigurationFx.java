@@ -36,11 +36,14 @@ import javafx.scene.control.Dialog;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.BorderPane;
 
+import javax.xml.bind.annotation.XmlRootElement;
 import java.io.File;
 import java.io.Reader;
 import java.util.*;
 import java.util.stream.Collectors;
 
+//TODO fix me pls, if this annotation not needed on this place
+@XmlRootElement(name = "configuration")
 public class ConfigurationFx extends Configuration
 {
 	//region fields
@@ -150,6 +153,7 @@ public class ConfigurationFx extends Configuration
 	public void save(String fileName) throws Exception
 	{
 		super.save(fileName);
+		this.controller.successfulSave();
 		// TODO
 		// this.controller.saved();
 		// this.controller.setTitle(Common.getSimpleTitle(fileName));
@@ -769,6 +773,8 @@ public class ConfigurationFx extends Configuration
 			}
 		}
 
+		List<Parameter> newParameters = new ArrayList<>(parameters);
+
 		Command undo = () ->
 		{
 			Common.tryCatch(() ->
@@ -783,7 +789,7 @@ public class ConfigurationFx extends Configuration
 			Common.tryCatch(() ->
 			{
 				entry.getParameters().clear();
-				entry.getParameters().addAll(parameters);
+				entry.getParameters().addAll(newParameters);
 				func.display();
 			}, "");
 		};

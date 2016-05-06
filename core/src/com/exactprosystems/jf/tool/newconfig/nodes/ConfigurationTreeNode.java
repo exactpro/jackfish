@@ -62,12 +62,12 @@ public class ConfigurationTreeNode extends TreeNode
 	public List<TablePair> getParameters()
 	{
 		List<TablePair> list = new ArrayList<>();
-		list.add(TablePair.TablePairBuilder.create().key("matrix").value(this.model.matrixToString()).tooltipSeparator(ConfigurationFx.SEPARATOR).edit(false).build());
-		list.add(TablePair.TablePairBuilder.create().key("libs").value(this.model.libraryToString()).tooltipSeparator(ConfigurationFx.SEPARATOR).edit(false).build());
-		list.add(TablePair.TablePairBuilder.create().key("gitRemotePath").value(this.model.gitRemotePath()).edit(true).build());
-		list.add(TablePair.TablePairBuilder.create().key("reportPath").value(this.model.getReportPath()).edit(false).build());
-		list.add(TablePair.TablePairBuilder.create().key("appDictionaries").value(this.model.getAppDictionaries()).tooltipSeparator(ConfigurationFx.SEPARATOR).edit(false).build());
-		list.add(TablePair.TablePairBuilder.create().key("clientDictionaries").value(this.model.getClientDictionaries()).tooltipSeparator(ConfigurationFx.SEPARATOR).edit(false).build());
+		list.add(TablePair.TablePairBuilder.create("matrix", this.model.matrixToString()).tooltipSeparator(ConfigurationFx.SEPARATOR).edit(false).build());
+		list.add(TablePair.TablePairBuilder.create("libs", this.model.libraryToString()).tooltipSeparator(ConfigurationFx.SEPARATOR).edit(false).build());
+		list.add(TablePair.TablePairBuilder.create("gitRemotePath", this.model.gitRemotePath()).edit(true).build());
+		list.add(TablePair.TablePairBuilder.create("reportPath", this.model.getReportPath()).edit(false).build());
+		list.add(TablePair.TablePairBuilder.create("appDictionaries", this.model.getAppDictionaries()).tooltipSeparator(ConfigurationFx.SEPARATOR).edit(false).build());
+		list.add(TablePair.TablePairBuilder.create("clientDictionaries", this.model.getClientDictionaries()).tooltipSeparator(ConfigurationFx.SEPARATOR).edit(false).build());
 		return list;
 	}
 

@@ -8,6 +8,7 @@ import com.exactprosystems.jf.documents.config.ServiceEntry;
 import com.exactprosystems.jf.documents.config.SqlEntry;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
+import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.newconfig.nodes.*;
 import com.exactprosystems.jf.tool.newconfig.testing.TestingConnectionFxController;
 import javafx.fxml.Initializable;
@@ -142,6 +143,10 @@ public class ConfigurationFxController implements Initializable, ContainingParen
 		Common.tryCatch(() -> this.fileSystemTreeNode.display(new File(".").listFiles(), ignoreFiles), "Error on display sql entries");
 	}
 
+	public void successfulSave()
+	{
+		DialogsHelper.showSuccess("Config successfully saved");
+	}
 	private void initTreeView()
 	{
 		TreeItem<TreeNode> evaluatorTreeItem = new TreeItem<>();
