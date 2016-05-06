@@ -9,6 +9,7 @@
 package com.exactprosystems.jf.tool.newconfig.testing;
 
 import com.exactprosystems.jf.common.Settings;
+import com.exactprosystems.jf.sql.SqlConnection;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.CssVariables;
@@ -68,10 +69,10 @@ public class TestingConnectionFxController implements Initializable, ContainingP
 	//============================================================
 	public void testConnection(ActionEvent actionEvent)
 	{
-//		Common.tryCatch(() -> this.model.testSqlConnection(this.name, tfServer.getText(), tfDatabaseName.getText(), tfUser.getText(), pfPassword.getText()), "Error on test connection");
+		Common.tryCatch(() -> testSqlConnection(this.name, tfServer.getText(), tfDatabaseName.getText(), tfUser.getText(), pfPassword.getText()), "Error on test connection");
 	}
 
-	public void init(ConfigurationFx model, String name,List<Settings.SettingsValue> values)
+	public void init(ConfigurationFx model, String name, List<Settings.SettingsValue> values)
 	{
 		this.model = model;
 		this.name = name;
@@ -111,4 +112,28 @@ public class TestingConnectionFxController implements Initializable, ContainingP
 			}
 		});
 	}
+	
+	public void testSqlConnection(String sql, String server, String base, String user, String password) throws Exception
+	{
+		Common.tryCatch(() ->
+		{
+			Settings settings = this.model.getSettings();
+
+			settings.removeAll(Settings.GLOBAL_NS, Settings.SQL + sql);
+			settings.setValue(Settings.GLOBAL_NS, Settings.SQL + sql, TestingConnectionFxController.SERVER_NAME, server);
+			settings.setValue(Settings.GLOBAL_NS, Settings.SQL + sql, TestingConnectionFxController.USER, user);
+			settings.setValue(Settings.GLOBAL_NS, Settings.SQL + sql, TestingConnectionFxController.DATABASE_NAME, base);
+			settings.saveIfNeeded();
+			SqlConnection connect = this.model.getDataBasesPool().connect(sql, server, base, user, password);
+			if (connect != null && !connect.isClosed() && connect.getConnection().isValid(1))
+			{
+				displayConnectionGood();
+			}
+			else
+			{
+				displayConnectionBad(null);
+			}
+		}, "Error on test sql connection");
+	}
+
 }

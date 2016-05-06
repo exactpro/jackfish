@@ -10,7 +10,6 @@ import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.newconfig.nodes.*;
-import com.exactprosystems.jf.tool.newconfig.testing.TestingConnectionFxController;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.control.TreeItem;
@@ -40,7 +39,6 @@ public class ConfigurationFxController implements Initializable, ContainingParen
 	private AppTreeNode						appTreeNode;
 	private FileSystemTreeNode				fileSystemTreeNode;
 	private ReportTreeNode					reportTreeNode;
-	private TestingConnectionFxController	testSqlController;
 	
 	@Override
 	public void setParent(Parent parent)
