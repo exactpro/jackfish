@@ -183,6 +183,8 @@ public class CssVariables
 		public static final String	NEW_MATRIX_ICON			= IMAGES_DIR + "/matrixNew.png";
 		public static final String	DOCUMENT_SAVE_ICON		= IMAGES_DIR + "/documentSave.png";
 		public static final String	DOCUMENT_SAVE_AS_ICON	= IMAGES_DIR + "/documentSaveAs.png";
+		public static final String	CONFIGURATION_SAVE_ICON	= IMAGES_DIR + "/saveConfiguration.png";
+
 		public static final String	CALCULATOR_ICON			= IMAGES_DIR + "/calc.png";
 		public static final String	UNDO_ICON				= IMAGES_DIR + "/undo_32.png";
 		public static final String	REDO_ICON				= IMAGES_DIR + "/redo_32.png";

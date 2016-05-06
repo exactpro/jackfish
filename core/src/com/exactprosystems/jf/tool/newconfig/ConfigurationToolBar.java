@@ -35,7 +35,8 @@ public class ConfigurationToolBar extends BorderPane
 		reload.setTooltip(new Tooltip("Reload configuration"));
 		reload.setOnAction(e -> Common.tryCatch(() -> this.model.refresh(), "Error on refresh configuration"));
 
-		Button saveConfig = new Button("Save");
+		Button saveConfig = new Button();
+		Common.customizeLabeled(saveConfig, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.CONFIGURATION_SAVE_ICON);
 		saveConfig.setOnAction(e -> Common.tryCatch(() -> this.model.save(this.model.getName()), "Error on save config"));
 
 		toolBar.getItems().addAll(reload, saveConfig);
