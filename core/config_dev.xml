@@ -35,18 +35,18 @@
     <library>matrices/libs</library>
     <sqlEntry>
         <name>MySql</name>
-        <sqlJar>sql/mysql-connector.jar</sqlJar>
+        <sqlJar>${JF}/sql/mysql-connector.jar</sqlJar>
         <sqlConnection>jdbc:mysql://${SERVER}/${BASE}?generateSimpleParameterMetadata=true</sqlConnection>
     </sqlEntry>
     <sqlEntry>
         <name>PostgreSql</name>
-        <sqlJar>sql/postgresql-9.0-801.jdbc4.jar</sqlJar>
+        <sqlJar>${JF}/sql/postgresql-9.0-801.jdbc4.jar</sqlJar>
         <sqlConnection>jdbc:postgresql://${SERVER}/${BASE}</sqlConnection>
     </sqlEntry>
     <clientEntry>
         <name>DTS</name>
         <parameters/>
-        <clientJar>clients/dts.jar</clientJar>
+        <clientJar>${JF}/clients/dts.jar</clientJar>
         <clientLimit>0</clientLimit>
         <clientDictionary>dic/clients/dts.xml</clientDictionary>
     </clientEntry>
@@ -60,31 +60,31 @@
             <key>HeartBeatTimeout</key>
             <value>2000</value>
         </parameters>
-        <clientJar>clients/fix.jar</clientJar>
+        <clientJar>${JF}/clients/fix.jar</clientJar>
         <clientLimit>0</clientLimit>
         <clientDictionary>dic/clients/FIX50.GTI.xml</clientDictionary>
     </clientEntry>
     <clientEntry>
         <name>TestClient</name>
-        <clientJar>clients/test.jar</clientJar>
+        <clientJar>${JF}/clients/test.jar</clientJar>
         <clientLimit>0</clientLimit>
         <clientDictionary>dic/clients/test.xml</clientDictionary>
     </clientEntry>
     <serviceEntry>
         <name>TEST</name>
-        <serviceJar>services/test.jar</serviceJar>
+        <serviceJar>${JF}/services/test.jar</serviceJar>
     </serviceEntry>
     <serviceEntry>
         <name>SF</name>
         <serviceDescription>Saifish service. </serviceDescription>
-        <serviceJar>services/sf.jar</serviceJar>
+        <serviceJar>${JF}/services/sf.jar</serviceJar>
     </serviceEntry>
     <appEntry>
         <name>WIN</name>
         <appDescription>Window's UIAutomation plugin</appDescription>
         <appDicPath>dic/gui/calc.xml</appDicPath>
-        <appJar>apps/win.jar</appJar>
-        <appWorkDir>apps/</appWorkDir>
+        <appJar>${JF}/apps/win.jar</appJar>
+        <appWorkDir>${JF}/apps/</appWorkDir>
         <appStartPort>9000</appStartPort>
     </appEntry>
     <appEntry>
@@ -94,15 +94,15 @@
             <value>webdrivers/chromedriver</value>
         </parameters>
         <appDicPath>dic/gui/pfWait.xml</appDicPath>
-        <appJar>apps/web.jar</appJar>
-        <appWorkDir>apps</appWorkDir>
+        <appJar>${JF}/apps/web.jar</appJar>
+        <appWorkDir>${JF}/apps</appWorkDir>
         <appStartPort>9500</appStartPort>
     </appEntry>
     <appEntry>
         <name>EXACTPRO</name>
         <parameters>
             <key>ChromeDriverPath</key>
-            <value>unix/chromedriver_64</value>
+            <value>${JF}/apps/unix/chromedriver_64</value>
         </parameters>
         <parameters>
             <key>IEDriverPath</key>
@@ -114,8 +114,8 @@
         </parameters>
         <appDescription>Exactpro example</appDescription>
         <appDicPath>dic/gui/exactpro_dic.xml</appDicPath>
-        <appJar>apps/web.jar</appJar>
-        <appWorkDir>apps/</appWorkDir>
+        <appJar>${JF}/apps/web.jar</appJar>
+        <appWorkDir>${JF}/apps/</appWorkDir>
         <appStartPort>10000</appStartPort>
     </appEntry>
     <appEntry>
@@ -125,15 +125,15 @@
             <value></value>
         </parameters>
         <appDicPath>dic/gui/swing.xml</appDicPath>
-        <appJar>apps/swing.jar</appJar>
-        <appWorkDir>../MockApp</appWorkDir>
+        <appJar>${JF}/apps/swing.jar</appJar>
+        <appWorkDir>${JF}/apps/</appWorkDir>
         <appStartPort>12000</appStartPort>
     </appEntry>
     <appEntry>
         <name>SG</name>
         <parameters>
             <key>ChromeDriverPath</key>
-            <value>unix/chromedriver_64</value>
+            <value>${JF}/apps/unix/chromedriver_64</value>
         </parameters>
         <parameters>
             <key>IEDriverPath</key>
@@ -145,33 +145,33 @@
         </parameters>
         <appDescription></appDescription>
         <appDicPath>dic/gui/sg_dic.xml</appDicPath>
-        <appJar>apps/web.jar</appJar>
-        <appWorkDir>apps/</appWorkDir>
+        <appJar>${JF}/apps/web.jar</appJar>
+        <appWorkDir>${JF}/apps/</appWorkDir>
         <appStartPort>10200</appStartPort>
     </appEntry>
     <appEntry>
         <name>SGJ</name>
         <appDicPath>dic/gui/desktop_dic.xml</appDicPath>
-        <appJar>apps/swing.jar</appJar>
-        <appWorkDir>apps</appWorkDir>
+        <appJar>${JF}/apps/swing.jar</appJar>
+        <appWorkDir>${JF}/apps</appWorkDir>
         <appStartPort>8000</appStartPort>
     </appEntry>
     <appEntry>
         <name>WEB</name>
         <parameters>
             <key>ChromeDriverPath</key>
-            <value>unix/chromedriver</value>
+            <value>${JF}/apps/unix/chromedriver</value>
         </parameters>
         <appDicPath>dic/gui/CurrentDictionary.xml</appDicPath>
-        <appJar>apps/web.jar</appJar>
-        <appWorkDir>apps/</appWorkDir>
+        <appJar>${JF}/apps/web.jar</appJar>
+        <appWorkDir>${JF}/apps/</appWorkDir>
         <appStartPort>10000</appStartPort>
     </appEntry>
     <appEntry>
         <name>TRN</name>
         <parameters>
             <key>ChromeDriverPath</key>
-            <value>unix/chromedriver_64</value>
+            <value>${JF}/apps/unix/chromedriver_64</value>
         </parameters>
         <parameters>
             <key>IEDriverPath</key>
@@ -183,16 +183,16 @@
         </parameters>
         <appDescription>Transparency</appDescription>
         <appDicPath>dic/gui/transparency.xml</appDicPath>
-        <appJar>apps/web.jar</appJar>
-        <appWorkDir>apps/</appWorkDir>
+        <appJar>${JF}/apps/web.jar</appJar>
+        <appWorkDir>${JF}/apps/</appWorkDir>
         <appStartPort>11000</appStartPort>
     </appEntry>
     <appEntry>
         <name>EC</name>
         <appDescription>web for elite ee testing</appDescription>
         <appDicPath>dic/gui/ec_dic.xml</appDicPath>
-        <appJar>apps/web.jar</appJar>
-        <appWorkDir>apps</appWorkDir>
+        <appJar>${JF}/apps/web.jar</appJar>
+        <appWorkDir>${JF}/apps</appWorkDir>
         <appStartPort>10000</appStartPort>
     </appEntry>
     <appEntry>
@@ -211,15 +211,15 @@
         </parameters>
         <appDescription>Layout testing</appDescription>
         <appDicPath>dic/gui/LayoutTesting.xml</appDicPath>
-        <appJar>apps/web.jar</appJar>
-        <appWorkDir>apps</appWorkDir>
+        <appJar>${JF}/apps/web.jar</appJar>
+        <appWorkDir>${JF}/apps</appWorkDir>
         <appStartPort>7000</appStartPort>
     </appEntry>
     <appEntry>
         <name>LHT</name>
         <parameters>
             <key>ChromeDriverPath</key>
-            <value>unix/chromedriver_64</value>
+            <value>${JF}/apps/unix/chromedriver_64</value>
         </parameters>
         <parameters>
             <key>IEDriverPath</key>
@@ -231,22 +231,22 @@
         </parameters>
         <appDescription>layout html testing</appDescription>
         <appDicPath>dic/gui/LayoutHtmlTesting.xml</appDicPath>
-        <appJar>apps/web.jar</appJar>
-        <appWorkDir>apps</appWorkDir>
+        <appJar>${JF}/apps/web.jar</appJar>
+        <appWorkDir>${JF}/apps</appWorkDir>
         <appStartPort>10000</appStartPort>
     </appEntry>
     <appEntry>
         <name>IRO</name>
         <appDicPath>dic/gui/iro_dic_190.xml</appDicPath>
-        <appJar>apps/web.jar</appJar>
-        <appWorkDir>apps</appWorkDir>
+        <appJar>${JF}/apps/web.jar</appJar>
+        <appWorkDir>${JF}/apps</appWorkDir>
         <appStartPort>10000</appStartPort>
     </appEntry>
     <appEntry>
         <name>RM</name>
         <parameters>
             <key>ChromeDriverPath</key>
-            <value>unix/chromedriver_64</value>
+            <value>${JF}/apps/unix/chromedriver_64</value>
         </parameters>
         <parameters>
             <key>IEDriverPath</key>
@@ -257,8 +257,8 @@
             <value></value>
         </parameters>
         <appDicPath>dic/gui/redmine.xml</appDicPath>
-        <appJar>apps/web.jar</appJar>
-        <appWorkDir>apps/</appWorkDir>
+        <appJar>${JF}/apps/web.jar</appJar>
+        <appWorkDir>${JF}/apps/</appWorkDir>
         <appStartPort>8000</appStartPort>
     </appEntry>
 </configuration>
