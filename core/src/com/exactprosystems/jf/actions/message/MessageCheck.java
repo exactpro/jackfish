@@ -68,4 +68,10 @@ public class MessageCheck extends AbstractAction
 			super.setError("The message does not match.");
 		}
 	}
+
+	@Override
+	public void initDefaultValues() {
+		// TODO Auto-generated method stub
+		
+	}
 }

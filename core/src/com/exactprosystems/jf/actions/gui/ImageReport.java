@@ -36,12 +36,18 @@ public class ImageReport extends AbstractAction
 	protected ImageWrapper		image		= null;
 
 	@ActionFieldAttribute(name = titleName, mandatory = false, description = "Title for picture.")
-	protected String			title		= null;
+	protected String			title;
 
     public ImageReport()
 	{
 	}
 
+	@Override
+	public void initDefaultValues() 
+	{
+		title		= null;
+	}
+    
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception 
 	{

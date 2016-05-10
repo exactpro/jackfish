@@ -38,28 +38,40 @@ public class TableConsiderColumnsAs extends AbstractAction
 	protected Table 	table 	= null;
 
 	@ActionFieldAttribute(name = asStringName, mandatory = false, description = "Array of columns.")
-	protected String[]	asString 	= new String[] {};
+	protected String[]	asString;
 
 	@ActionFieldAttribute(name = asBooleanName, mandatory = false, description = "Array of columns.")
-	protected String[]	asBoolean 	= new String[] {};
+	protected String[]	asBoolean;
 
 	@ActionFieldAttribute(name = asIntegerName, mandatory = false, description = "Array of columns.")
-	protected String[]	asInteger 	= new String[] {};
+	protected String[]	asInteger;
 
 	@ActionFieldAttribute(name = asDoubleName, mandatory = false, description = "Array of columns.")
-	protected String[]	asDouble 	= new String[] {};
+	protected String[]	asDouble;
 
 	@ActionFieldAttribute(name = asBigDecimalName, mandatory = false, description = "Array of columns.")
-	protected String[]	asBigDecimal 	= new String[] {};
+	protected String[]	asBigDecimal;
 
 	@ActionFieldAttribute(name = asDateName, mandatory = false, description = "Array of columns.")
-	protected String[]	asDate 	= new String[] {};
+	protected String[]	asDate;
 
 	@ActionFieldAttribute(name = asExpressionName, mandatory = false, description = "Array of columns.")
-	protected String[]	asExpression 	= new String[] {};
+	protected String[]	asExpression;
 	
 	public TableConsiderColumnsAs()
 	{
+	}
+	
+	@Override
+	public void initDefaultValues() 
+	{
+		asString 		= new String[] {};
+		asBoolean 		= new String[] {};
+		asInteger 		= new String[] {};
+		asDouble 		= new String[] {};
+		asBigDecimal 	= new String[] {};
+		asDate 			= new String[] {};
+		asExpression 	= new String[] {};
 	}
 	
 	@Override

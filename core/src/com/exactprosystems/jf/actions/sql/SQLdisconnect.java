@@ -46,4 +46,10 @@ public class SQLdisconnect extends AbstractAction
 		}
 	}
 
+	@Override
+	public void initDefaultValues() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

@@ -97,4 +97,10 @@ public class SQLconnect  extends AbstractAction
 			super.setError("Can not connect to the data base");
 		}
 	}
+
+	@Override
+	public void initDefaultValues() {
+		// TODO Auto-generated method stub
+		
+	}
 }

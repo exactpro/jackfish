@@ -83,4 +83,10 @@ public class ServiceLoad extends AbstractAction
 		super.setResult(connection);
 	}
 
+	@Override
+	public void initDefaultValues() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

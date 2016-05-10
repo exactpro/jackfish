@@ -31,11 +31,18 @@ public class Wait extends AbstractAction
 	public final static String byTimeName = "ByTime";
 
 	@ActionFieldAttribute(name = timeName, mandatory = false, description = "Time in milliseconds.")
-	protected Integer timeout = null;
+	protected Integer timeout;
 
 	@ActionFieldAttribute(name = byTimeName, mandatory = false, description = "Time until that it is needed to wait.")
-	protected Date byTime = null;
+	protected Date byTime;
 
+	@Override
+	public void initDefaultValues() 
+	{
+		timeout = null;
+		byTime = null;
+	}
+	
 	@Override
 	protected HelpKind howHelpWithParameterDerived(Context context, Parameters parameters, String fieldName) throws Exception
 	{

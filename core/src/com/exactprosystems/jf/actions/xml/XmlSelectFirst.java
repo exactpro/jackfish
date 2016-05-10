@@ -54,5 +54,11 @@ public class XmlSelectFirst extends AbstractAction
 		super.setResult(xml.createOneByXpath(this.xpath));
 	}
 
+	@Override
+	public void initDefaultValues() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }
 

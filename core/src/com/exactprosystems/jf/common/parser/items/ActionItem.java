@@ -265,6 +265,7 @@ public final class ActionItem extends MatrixItem
 	@Override
 	protected ReturnAndResult executeItSelf(Context context, IMatrixListener listener, AbstractEvaluator evaluator, ReportBuilder report, Parameters parameters)
 	{
+		this.action.initDefaultValues();
 		Result result = this.action.doAction(context, evaluator, report, parameters, super.getId(), this.assertBool, this.assertOutIs, this.assertOutIsNot);
 
 		return new ReturnAndResult(result, this.action.getOut(), this.action.getReason());

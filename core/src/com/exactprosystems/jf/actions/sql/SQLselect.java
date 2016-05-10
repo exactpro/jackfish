@@ -59,6 +59,12 @@ public class SQLselect extends AbstractAction
 			super.setResult(result);
 		}
 	}
+
+	@Override
+	public void initDefaultValues() {
+		// TODO Auto-generated method stub
+		
+	}
 		
 
 }

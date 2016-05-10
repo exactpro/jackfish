@@ -60,4 +60,10 @@ public class ApplicationCloseWindow extends AbstractAction
 			}
 		}
 	}
+
+	@Override
+	public void initDefaultValues() {
+		// TODO Auto-generated method stub
+		
+	}
 }

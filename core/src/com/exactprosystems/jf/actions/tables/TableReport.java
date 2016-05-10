@@ -42,18 +42,26 @@ public class TableReport extends AbstractAction
 	protected String 	title 	= null;
 
 	@ActionFieldAttribute(name = numbersName, mandatory = false, description = "If true then outputs row numbers.")
-	protected Boolean withNumbers = true;
+	protected Boolean withNumbers;
 
 	@ActionFieldAttribute(name = columnsName, mandatory = false, description = "Columns printed in the report.")
-	protected String[]	columns 	= new String[] {};
+	protected String[]	columns;
 
 	@ActionFieldAttribute(name = reportValuesName, mandatory = false, description = "Report values instead expressions.")
-	protected Boolean	reportValues 	= false;
+	protected Boolean	reportValues;
 
 	public TableReport()
 	{
 	}
 
+	@Override
+	public void initDefaultValues() 
+	{
+		withNumbers 	= true;
+		columns 		= new String[] {};
+		reportValues 	= false;
+	}
+	
 	@Override
 	protected HelpKind howHelpWithParameterDerived(Context context, Parameters parameters, String fieldName) throws Exception
 	{

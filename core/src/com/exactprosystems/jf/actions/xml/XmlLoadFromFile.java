@@ -49,4 +49,10 @@ public class XmlLoadFromFile extends AbstractAction
 	{
 		super.setResult(new Xml(this.file));
 	}
+
+	@Override
+	public void initDefaultValues() {
+		// TODO Auto-generated method stub
+		
+	}
 }

@@ -151,5 +151,8 @@ public class ActionsList extends AbstractAction
 			table.addValues(clazz.getSimpleName(), clazz.getAnnotation(ActionAttribute.class).generalDescription());
 		}
 	}
+
+	@Override
+	public void initDefaultValues() {}
 	
 }

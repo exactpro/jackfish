@@ -62,4 +62,10 @@ public class ClientDecode extends AbstractAction
 			super.setResult(res);
 		}
 	}
+
+	@Override
+	public void initDefaultValues() {
+		// TODO Auto-generated method stub
+		
+	}
 }

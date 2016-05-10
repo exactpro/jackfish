@@ -124,4 +124,10 @@ public class ApplicationStart extends AbstractAction
 			super.setError("Application is not started.");
 		}
 	}
+
+	@Override
+	public void initDefaultValues() {
+		// TODO Auto-generated method stub
+		
+	}
 }

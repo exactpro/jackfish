@@ -39,16 +39,24 @@ public class MessageCreate extends AbstractAction
 	public final static String fieldsName = "Fields";
 
 	@ActionFieldAttribute(name = messageTypeName, mandatory = false, description = "Message type." )
-	protected String 		messageType	= null;
+	protected String 				messageType;
 
 	@ActionFieldAttribute(name = sourceName, mandatory = false, description = "Source of message." )
-	protected String 		source	= null;
+	protected String 				source;
 
 	@ActionFieldAttribute(name = fieldsName, mandatory = false, description = "Collection of fields." )
-	protected Map<String, Object> 	fields	= null;
+	protected Map<String, Object> 	fields;
 
 	public MessageCreate()
 	{
+	}
+	
+	@Override
+	public void initDefaultValues() 
+	{
+		messageType	= null;
+		source	= null;
+		fields	= null;
 	}
 
 	@SuppressWarnings("rawtypes")

@@ -30,8 +30,14 @@ public class HistogramReport extends AbstractAction
 	protected Histogram histogram = null;
 
 	@ActionFieldAttribute(name = titleName, description = "Title of table", mandatory = false)
-	protected String title = null;
+	protected String title;
 
+	@Override
+	public void initDefaultValues() 
+	{
+		title = null;
+	}
+	
 	@Override
 	protected void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
@@ -42,4 +48,5 @@ public class HistogramReport extends AbstractAction
 		this.histogram.report(report, title);
 		setResult(null);
 	}
+
 }

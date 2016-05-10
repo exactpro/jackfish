@@ -124,4 +124,10 @@ public class ApplicationConnectTo extends AbstractAction
 			super.setError("Application is not found.");
 		}
 	}
+
+	@Override
+	public void initDefaultValues() {
+		// TODO Auto-generated method stub
+		
+	}
 }

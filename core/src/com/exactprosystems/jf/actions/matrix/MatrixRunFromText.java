@@ -38,15 +38,22 @@ public class MatrixRunFromText extends AbstractAction
 	public final static String textName = "Text";
 	public final static String parameterName = "Parameter";
 
-	@ActionFieldAttribute(name = atName, mandatory = false, description = "Time to start the matrix.")
-	protected Date at		= null;
-
-	@ActionFieldAttribute(name = parameterName, mandatory = false, description = "Parameter for the matrix.")
-	protected Object parameter	= null;
-
 	@ActionFieldAttribute(name = textName, mandatory = true, description = "Text object.")
 	protected Text text	= null;
 
+	@ActionFieldAttribute(name = atName, mandatory = false, description = "Time to start the matrix.")
+	protected Date at;
+
+	@ActionFieldAttribute(name = parameterName, mandatory = false, description = "Parameter for the matrix.")
+	protected Object parameter;
+	
+	@Override
+	public void initDefaultValues() 
+	{
+		at			= null;
+		parameter	= null;
+	}
+	
 	@Override
 	protected HelpKind howHelpWithParameterDerived(Context context, Parameters parameters, String fieldName) throws Exception
 	{

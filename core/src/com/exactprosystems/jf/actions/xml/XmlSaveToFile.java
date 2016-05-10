@@ -52,4 +52,10 @@ public class XmlSaveToFile extends AbstractAction
 	{
 		super.setResult(this.xml.save(this.fileName));
 	}
+
+	@Override
+	public void initDefaultValues() {
+		// TODO Auto-generated method stub
+		
+	}
 }

@@ -49,12 +49,18 @@ public class ClientSendMessage extends AbstractAction
 	protected String	messageType	= null;
 
 	@ActionFieldAttribute(name = checkName, mandatory = false, description = "Check the message before sending." )
-	protected boolean	check	= true;
+	protected boolean	check;
 
 	public ClientSendMessage()
 	{
 	}
 
+	@Override
+	public void initDefaultValues() 
+	{
+		check	= true;
+	}
+	
 	@Override
 	protected void helpToAddParametersDerived(List<ReadableValue> list, Context context, Parameters parameters) throws Exception
 	{
@@ -110,4 +116,6 @@ public class ClientSendMessage extends AbstractAction
 			super.setResult(str);
 		}
 	}
+
+
 }

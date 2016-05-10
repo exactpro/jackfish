@@ -40,12 +40,18 @@ public class ApplicationSwitchTo extends AbstractAction
 	protected String 				title	= null;
 
 	@ActionFieldAttribute(name = softConditionName, mandatory = false, description = "Compare window titles and title parameter via contains().")
-	protected Boolean 				softCondition	= true;
+	protected Boolean 				softCondition;
 
 	public ApplicationSwitchTo()
 	{
 	}
 
+	@Override
+	public void initDefaultValues() 
+	{
+		softCondition	= true;
+	}
+	
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception 
 	{
@@ -68,5 +74,7 @@ public class ApplicationSwitchTo extends AbstractAction
 			}
 		}
 	}
+
+
 
 }

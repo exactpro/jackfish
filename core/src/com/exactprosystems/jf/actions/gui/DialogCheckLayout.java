@@ -50,15 +50,22 @@ public class DialogCheckLayout extends AbstractAction
 	protected String			dialog			= null;
 
 	@ActionFieldAttribute(name = doNotOpenName, mandatory = false, description = "Do not open a new dialog.")
-	protected Boolean			doNotOpen		= false;
+	protected Boolean			doNotOpen;
 
 	@ActionFieldAttribute(name = doNotCloseName, mandatory = false, description = "Do not close a dialog.")
-	protected Boolean			doNotClose		= false;
+	protected Boolean			doNotClose;
 
 	public DialogCheckLayout()
 	{
 	}
 
+	@Override
+	public void initDefaultValues() 
+	{
+		doNotOpen		= false;
+		doNotClose		= false;
+	}
+	
 	@Override
 	protected HelpKind howHelpWithParameterDerived(Context context, Parameters parameters, String fieldName)
 	{
@@ -226,4 +233,6 @@ public class DialogCheckLayout extends AbstractAction
 	{
 		return !supportedControls.contains(control.getBindedClass());
 	}
+
+
 }

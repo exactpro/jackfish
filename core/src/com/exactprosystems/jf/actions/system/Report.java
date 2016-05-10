@@ -30,10 +30,16 @@ public class Report extends AbstractAction
 	public final static String strName = "Str";
 
 	@ActionFieldAttribute(name = strName, mandatory = false, description = "Reports given string and parameters to the report.")
-	protected String message 		= ""; 
+	protected String message; 
 	
 	public Report()
 	{
+	}
+	
+	@Override
+	public void initDefaultValues() 
+	{
+		message 		= ""; 
 	}
 	
 	@Override

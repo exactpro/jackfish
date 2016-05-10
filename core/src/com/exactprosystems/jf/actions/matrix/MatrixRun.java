@@ -36,15 +36,22 @@ public class MatrixRun extends AbstractAction
 	public final static String matrixName = "Matrix";
 	public final static String parameterName = "Parameter";
 
-	@ActionFieldAttribute(name = atName, mandatory = false, description = "Time to start the matrix.")
-	protected Date at		= null;
-
 	@ActionFieldAttribute(name = matrixName, mandatory = true, description = "Location of the matrix.")
 	protected String matrix	= null;
+	
+	@ActionFieldAttribute(name = atName, mandatory = false, description = "Time to start the matrix.")
+	protected Date at;
 
 	@ActionFieldAttribute(name = parameterName, mandatory = false, description = "Parameter for the matrix.")
-	protected Object parameter	= null;
+	protected Object parameter;
 
+	@Override
+	public void initDefaultValues() 
+	{
+		at			= null;
+		parameter	= null;
+	}
+	
 	@Override
 	protected HelpKind howHelpWithParameterDerived(Context context, Parameters parameters, String fieldName) throws Exception
 	{
@@ -70,4 +77,6 @@ public class MatrixRun extends AbstractAction
 		}
 
 	}
+
+
 }

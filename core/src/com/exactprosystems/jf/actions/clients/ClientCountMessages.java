@@ -49,10 +49,16 @@ public class ClientCountMessages extends AbstractAction
 	protected String	messageType	= null;
 
 	@ActionFieldAttribute(name = conditionsName, mandatory = false, description = "Conditions.")
-	protected Condition[] conditions = null;
+	protected Condition[] conditions;
 
 	public ClientCountMessages()
 	{
+	}
+	
+	@Override
+	public void initDefaultValues() 
+	{
+		conditions = null;
 	}
 	
 	@Override
@@ -112,4 +118,6 @@ public class ClientCountMessages extends AbstractAction
 			super.setResult(ret);
 		}
 	}
+
+
 }

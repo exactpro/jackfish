@@ -52,5 +52,11 @@ public class TextReport extends AbstractAction
 	{
 		return false;
 	}
+
+	@Override
+	public void initDefaultValues() {
+		// TODO Auto-generated method stub
+		
+	}
 }
 

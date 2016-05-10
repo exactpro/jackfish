@@ -59,4 +59,10 @@ public class ClientCheckMessage extends AbstractAction
 			super.setResult(map.isCorrect());
 		}
 	}
+
+	@Override
+	public void initDefaultValues() {
+		// TODO Auto-generated method stub
+		
+	}
 }

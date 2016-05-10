@@ -45,8 +45,14 @@ public class ClientSendMapMessage extends AbstractAction
 	protected MapMessage	message	= null;
 
 	@ActionFieldAttribute(name = checkName, mandatory = false, description = "Check the message before sending." )
-	protected boolean	check	= true;
+	protected boolean	check;
 
+	@Override
+	public void initDefaultValues() 
+	{
+		check	= true;
+	}
+	
 	@Override
 	protected HelpKind howHelpWithParameterDerived(Context context, Parameters parameters, String fieldName)
 	{
@@ -108,4 +114,6 @@ public class ClientSendMapMessage extends AbstractAction
 			}
 		}
 	}
+
+
 }

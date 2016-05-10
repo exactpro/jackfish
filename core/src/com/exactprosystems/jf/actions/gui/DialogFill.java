@@ -54,18 +54,25 @@ public class DialogFill extends AbstractAction
 	protected String			dialog				= null;
 
 	@ActionFieldAttribute(name = doNotOpenName, mandatory = false, description = "Do not open a new dialog.")
-	protected Boolean			doNotOpen			= false;
-
+	protected Boolean			doNotOpen;
+	
 	@ActionFieldAttribute(name = doNotCloseName, mandatory = false, description = "Do not close a dialog.")
-	protected Boolean			doNotClose			= false;
-
+	protected Boolean			doNotClose;
+	
 	@ActionFieldAttribute(name = stopOnFailName, mandatory = false, description = "Stop action on fail")
-	protected Boolean			stopOnFail			= true;
+	protected Boolean			stopOnFail;
 	
 	public DialogFill()
 	{
 	}
-
+	
+	@Override
+	public void initDefaultValues() {
+		stopOnFail	= true;
+		doNotClose	= false;
+		doNotOpen	= false;
+	}
+	
 	@Override
 	protected HelpKind howHelpWithParameterDerived(Context context, Parameters parameters, String fieldName)
 	{
@@ -252,4 +259,5 @@ public class DialogFill extends AbstractAction
 	{
 		return !supportedControls.contains(control.getBindedClass());
 	}
+
 }

@@ -48,5 +48,11 @@ public class TableSelect extends AbstractAction
 		
 		super.setResult(newTable);
 	}
+
+	@Override
+	public void initDefaultValues() {
+		// TODO Auto-generated method stub
+		
+	}
 }
 

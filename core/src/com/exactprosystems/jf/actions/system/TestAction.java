@@ -32,16 +32,24 @@ public class TestAction extends AbstractAction
 	public final static String expectedReasonName 	= "ExpectedReason";
 
 	@ActionFieldAttribute(name = expectedOutName, mandatory = false, description = "expected output value.")
-	protected Object expectedOut 		= null;
+	protected Object expectedOut;
 
 	@ActionFieldAttribute(name = expectedResultName, mandatory = false, description = "expected result value.")
-	protected String expectedResult 	= "" + Result.Passed;
+	protected String expectedResult;
 
 	@ActionFieldAttribute(name = expectedReasonName, mandatory = false, description = "expected reason value.")
-	protected String expectedReason 	= "no reason"; 
+	protected String expectedReason; 
 	
 	public TestAction()
 	{
+	}
+	
+	@Override
+	public void initDefaultValues() 
+	{
+		expectedOut 		= null;
+		expectedResult 		= "" + Result.Passed;
+		expectedReason 		= "no reason";
 	}
 	
 	@Override

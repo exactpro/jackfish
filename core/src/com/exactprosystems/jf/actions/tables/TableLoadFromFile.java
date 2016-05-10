@@ -39,7 +39,13 @@ public class TableLoadFromFile extends AbstractAction
 	protected String 	file 	= null;
 
 	@ActionFieldAttribute(name = delimiterName, mandatory = false, description = "Delimiter of fields in the file.")
-	protected String	delimiter 	= ";";
+	protected String	delimiter;
+
+	@Override
+	public void initDefaultValues() 
+	{
+		delimiter 	= ";";
+	}
 	
 	@Override
 	protected HelpKind howHelpWithParameterDerived(Context context, Parameters parameters, String fieldName) throws Exception

@@ -42,7 +42,7 @@ public class ApplicationNewInstance extends AbstractAction
 	protected AppConnection connection	= null;
 
 	@ActionFieldAttribute(name = tabName, mandatory = false, description = "Opened new tab")
-	protected Boolean tab = false;
+	protected Boolean tab;
 
 	@Override
 	protected HelpKind howHelpWithParameterDerived(Context context, Parameters parameters, String fieldName) throws Exception
@@ -106,5 +106,11 @@ public class ApplicationNewInstance extends AbstractAction
 			app.service().newInstance(args);
 			super.setResult(null);
 		}
+	}
+
+	@Override
+	public void initDefaultValues() 
+	{
+		tab = false;
 	}
 }

@@ -43,4 +43,10 @@ public class TableRemoveColumns extends AbstractAction
 		this.table.removeColumns(this.columns);
 		super.setResult(null);
 	}
+
+	@Override
+	public void initDefaultValues() {
+		// TODO Auto-generated method stub
+		
+	}
 }

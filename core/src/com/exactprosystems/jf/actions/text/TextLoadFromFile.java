@@ -49,4 +49,10 @@ public class TextLoadFromFile extends AbstractAction
 	{
 		super.setResult(new Text(this.file));
 	}
+
+	@Override
+	public void initDefaultValues() {
+		// TODO Auto-generated method stub
+		
+	}
 }

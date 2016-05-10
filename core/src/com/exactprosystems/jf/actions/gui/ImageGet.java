@@ -54,12 +54,18 @@ public class ImageGet extends AbstractAction
 	protected String			dialog			= null;
 
 	@ActionFieldAttribute(name = nameName, mandatory = false, description = "A name of element of the dialog. If omitted, then full dialog will be grabbed.")
-	protected String			name			= null;
+	protected String			name;
 
 	public ImageGet()
 	{
 	}
 
+	@Override
+	public void initDefaultValues() 
+	{
+		name	= null;
+	}
+	
 	@Override
 	protected HelpKind howHelpWithParameterDerived(Context context, Parameters parameters, String fieldName)
 	{

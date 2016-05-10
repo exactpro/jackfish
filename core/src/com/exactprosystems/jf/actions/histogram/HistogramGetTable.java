@@ -41,4 +41,10 @@ public class HistogramGetTable extends AbstractAction
 		}
 		super.setResult(histogram.getTable(evaluator));
 	}
+
+	@Override
+	public void initDefaultValues() {
+		// TODO Auto-generated method stub
+		
+	}
 }

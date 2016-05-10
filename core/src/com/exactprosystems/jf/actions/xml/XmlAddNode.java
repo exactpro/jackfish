@@ -37,19 +37,26 @@ public class XmlAddNode extends AbstractAction
 	public final static String newXML = "NewXML";
 
 	@ActionFieldAttribute(name = xmlName, mandatory = true, description = "XML object.")
-	protected Xml 	xml 	= null;
+	protected Xml 		xml 	= null;
 
 	@ActionFieldAttribute(name = nodeNameName, mandatory = true, description = "Name of XML object.")
 	protected String 	nodeName 	= null;
 
 	@ActionFieldAttribute(name = contentName, mandatory = false, description = "Content of XML object.")
-	protected String 	content 	= null;
+	protected String 	content;
 
 	@ActionFieldAttribute(name =  newXML, mandatory = false, description = "XML object to insert")
-	protected Xml copiedXML = null;
+	protected Xml 		copiedXML;
 
 	public XmlAddNode()
 	{
+	}
+
+	@Override
+	public void initDefaultValues() 
+	{
+		content 	= null;
+		copiedXML 	= null;
 	}
 	
 	@Override

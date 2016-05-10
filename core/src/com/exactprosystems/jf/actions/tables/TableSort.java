@@ -35,12 +35,18 @@ public class TableSort extends AbstractAction
 	protected String columnIndex = null;
 
 	@ActionFieldAttribute(name = ascendingName, mandatory = false, description = "Sorting policy (true, if ascending, and false, if descending")
-	protected Boolean ascending = true;
+	protected Boolean ascending;
 
 	public TableSort()
 	{
 	}
 
+	@Override
+	public void initDefaultValues() 
+	{
+		ascending = true;
+	}
+	
 	@Override
 	protected HelpKind howHelpWithParameterDerived(Context context,	Parameters parameters, String fieldName) throws Exception
 	{

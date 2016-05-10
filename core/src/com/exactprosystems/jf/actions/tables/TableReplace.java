@@ -28,23 +28,31 @@ public class TableReplace extends AbstractAction
 	protected Table 	table 	= null;
 
 	@ActionFieldAttribute(name = colunmsName, mandatory = true, description = "Array of columns.")
-	protected String[]	columns 	= new String[] {};
-
-	@ActionFieldAttribute(name = searchName, mandatory = false, description = "If value of cell or part of cell equals this value then it will be changed to Replace.")
-	protected Object 	search 	= null;
-
-	@ActionFieldAttribute(name = regexpName, mandatory = false, description = "If value of cell matches this regexp then it will be changed to Replace.")
-	protected String 	regexp 	= null;
+	protected String[]	columns = new String[] {};
 
 	@ActionFieldAttribute(name = replaceName, mandatory = true, description = "Value that will be put into.")
 	protected Object 	replace = null;
+	
+	@ActionFieldAttribute(name = searchName, mandatory = false, description = "If value of cell or part of cell equals this value then it will be changed to Replace.")
+	protected Object 	search;
+
+	@ActionFieldAttribute(name = regexpName, mandatory = false, description = "If value of cell matches this regexp then it will be changed to Replace.")
+	protected String 	regexp;
 
 	@ActionFieldAttribute(name = matchCellname, mandatory = false, description = "If true, whole cell will be replaced, otherwise only matching part will be replaced."
 			+ "Doesn't matter if you point Regexp.")
-	protected Boolean	matchCell = true;
+	protected Boolean	matchCell;
 
 	public TableReplace()
 	{
+	}
+	
+	@Override
+	public void initDefaultValues() 
+	{
+		search 	= null;
+		regexp 	= null;
+		matchCell = true;
 	}
 	
 	@Override

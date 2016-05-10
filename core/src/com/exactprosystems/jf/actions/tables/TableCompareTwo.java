@@ -42,14 +42,21 @@ public class TableCompareTwo extends AbstractAction
 	protected Table expected = null;
 
 	@ActionFieldAttribute(name = excludeName, mandatory = false, description = "Fields that will not be compare.")
-	protected String[] exclude = new String[]{};
+	protected String[] exclude;
 
 	@ActionFieldAttribute(name = ignoreRowsOrderName, mandatory = false, description = "Rows order will be ignored in comparison.")
-	protected Boolean ignoreRowsOrder = true;
+	protected Boolean ignoreRowsOrder;
 
 
 	public TableCompareTwo()
 	{
+	}
+	
+	@Override
+	public void initDefaultValues() 
+	{
+		exclude = new String[]{};
+		ignoreRowsOrder = true;
 	}
 	
 	@Override

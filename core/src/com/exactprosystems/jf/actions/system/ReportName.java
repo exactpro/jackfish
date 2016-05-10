@@ -39,5 +39,11 @@ public class ReportName extends AbstractAction
 		report.setName(this.name);
 		super.setResult(null);
 	}
+
+	@Override
+	public void initDefaultValues() {
+		// TODO Auto-generated method stub
+		
+	}
 }
 

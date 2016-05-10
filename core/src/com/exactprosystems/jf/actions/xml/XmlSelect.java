@@ -58,5 +58,11 @@ public class XmlSelect extends AbstractAction
 		super.setResult(xml.createListByXpath(this.nodeName, this.xpath));
 	}
 
+	@Override
+	public void initDefaultValues() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }
 

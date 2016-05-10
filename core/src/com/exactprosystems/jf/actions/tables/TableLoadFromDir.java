@@ -45,4 +45,10 @@ public class TableLoadFromDir extends AbstractAction
     {
         super.setResult(new Table(directory,evaluator));
     }
+
+	@Override
+	public void initDefaultValues() {
+		// TODO Auto-generated method stub
+		
+	}
 }

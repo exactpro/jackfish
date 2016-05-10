@@ -46,4 +46,10 @@ public class XmlChildren extends AbstractAction
 		super.setResult(xml.getChildren());
 	}
 
+	@Override
+	public void initDefaultValues() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

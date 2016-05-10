@@ -54,5 +54,11 @@ public class XmlFindFirst extends AbstractAction
 		super.setResult(xml.findOneByXpath(this.xpath));
 	}
 
+	@Override
+	public void initDefaultValues() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }
 

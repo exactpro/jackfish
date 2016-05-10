@@ -90,4 +90,10 @@ public class ClientStart extends AbstractAction
 		}
 	}
 
+	@Override
+	public void initDefaultValues() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

@@ -37,21 +37,30 @@ public class ApplicationResize extends AbstractAction
 	protected AppConnection	connection	= null;
 
 	@ActionFieldAttribute(name = heightName, mandatory = false, description = "The hight that will be set for the main window of application." )
-	protected Integer height = null;
+	protected Integer height;
 
 	@ActionFieldAttribute(name = widthName, mandatory = false, description = "The width that will be set for the main window of application." )
-	protected Integer width	= null;
+	protected Integer width;
 
 	@ActionFieldAttribute(name = minimizeName, mandatory = false, description = "The main window of application will be minimized." )
-	protected Boolean minimize	= null;
+	protected Boolean minimize;
 
 	@ActionFieldAttribute(name = maximizeName, mandatory = false, description = "The main window of application will be maximized." )
-	protected Boolean maximize	= null;
+	protected Boolean maximize;
 
 	public ApplicationResize()
 	{
 	}
 
+	@Override
+	public void initDefaultValues() 
+	{
+		height 		= null;
+		width		= null;
+		minimize	= null;
+		maximize	= null;
+	}
+	
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception 
 	{

@@ -40,13 +40,20 @@ public class ImageSave extends AbstractAction
 	protected ImageWrapper		image		= null;
 
 	@ActionFieldAttribute(name = dirName, mandatory = false, description = "Directory to save this image. File name will be get automaticly.")
-	protected String			dir			= null;
+	protected String			dir;
 
 	@ActionFieldAttribute(name = fileName, mandatory = false, description = "File to save this image.")
-	protected String			file		= null;
+	protected String			file;
 
 	public ImageSave()
 	{
+	}
+	
+	@Override
+	public void initDefaultValues()
+	{
+		dir			= null;
+		file		= null;
 	}
 	
 	@Override

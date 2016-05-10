@@ -43,8 +43,14 @@ public class DialogAlert extends AbstractAction
 	protected PerformKind perform = null;
 
 	@ActionFieldAttribute(name = textName, mandatory = false, description = "Text, which will be write in alert")
-	protected String text = null;
+	protected String text;
 
+	@Override
+	public void initDefaultValues() 
+	{
+		text = null;
+	}
+	
 	@Override
 	protected ActionItem.HelpKind howHelpWithParameterDerived(Context context, Parameters parameters, String fieldName) throws Exception
 	{
@@ -96,4 +102,6 @@ public class DialogAlert extends AbstractAction
 		service.setAlertText(this.text, this.perform);
 		this.setResult(alertText.getKey());
 	}
+
+
 }

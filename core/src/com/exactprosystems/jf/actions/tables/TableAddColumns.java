@@ -32,14 +32,20 @@ public class TableAddColumns extends AbstractAction
 	@ActionFieldAttribute(name = tableName, mandatory = true, description = "The table.")
 	protected Table 	table 	= null;
 
-	@ActionFieldAttribute(name = indexName, mandatory = false, description = "Index in the table")
-	protected Integer	index	= Integer.MIN_VALUE;
-
 	@ActionFieldAttribute(name = columnsName, mandatory = true, description = "Array of new columns.")
 	protected String[]	columns 	= new String[] {};
+
+	@ActionFieldAttribute(name = indexName, mandatory = false, description = "Index in the table")
+	protected Integer	index;
 	
 	public TableAddColumns()
 	{
+	}
+
+	@Override
+	public void initDefaultValues() 
+	{
+		index	= Integer.MIN_VALUE;
 	}
 	
 	@Override
@@ -57,4 +63,5 @@ public class TableAddColumns extends AbstractAction
 		super.setResult(null);
 	}
 }
+
 

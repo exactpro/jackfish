@@ -33,8 +33,13 @@ public class MatrixWait extends AbstractAction
 	protected MatrixRunner matrix	= null;
 
 	@ActionFieldAttribute(name = timeName, mandatory = false, description = "Timeout.")
-	protected long time	= 0L;
+	protected long time;
 
+	@Override
+	public void initDefaultValues() 
+	{
+		time	= 0L;
+	}
 	
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception 

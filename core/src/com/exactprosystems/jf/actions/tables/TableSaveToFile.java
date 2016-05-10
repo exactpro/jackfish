@@ -43,13 +43,20 @@ public class TableSaveToFile extends AbstractAction
 	protected String 	fileName 	= null;
 
 	@ActionFieldAttribute(name = delimiterName, mandatory = false, description = "Delimiter of fields in the file.")
-	protected String	delimiter 	= ";";
+	protected String	delimiter;
 
 	@ActionFieldAttribute(name = saveValuesName, mandatory = false, description = "Save values instead expressions.")
-	protected Boolean	saveValues 	= false;
+	protected Boolean	saveValues;
 
 	public TableSaveToFile()
 	{
+	}
+	
+	@Override
+	public void initDefaultValues()
+	{
+		delimiter 	= ";";
+		saveValues 	= false;
 	}
 	
 	@Override

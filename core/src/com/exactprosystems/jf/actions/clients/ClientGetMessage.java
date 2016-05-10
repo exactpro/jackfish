@@ -51,16 +51,24 @@ public class ClientGetMessage extends AbstractAction
 	protected String	messageType	= null;
 
 	@ActionFieldAttribute(name = conditionsName, mandatory = false, description = "Conditions which should be matched to get a message.")
-	protected Condition[] conditions = null;
+	protected Condition[] conditions;
 
 	@ActionFieldAttribute(name = timeoutName, mandatory = false, description = "Timeout in milliseconds.")
-	protected Integer timeout = 20000;
+	protected Integer timeout;
 	
 	@ActionFieldAttribute(name = removeName, mandatory = false, description = "Remove the found message.")
-	protected Boolean remove = true;
+	protected Boolean remove;
 
 	public ClientGetMessage()
 	{
+	}
+	
+	@Override
+	public void initDefaultValues() 
+	{
+		conditions = null;
+		timeout = 20000;
+		remove = true;
 	}
 	
 	@Override
@@ -123,4 +131,6 @@ public class ClientGetMessage extends AbstractAction
 			super.setError("Timeout");
 		}
 	}
+
+
 }

@@ -38,4 +38,10 @@ public class HistogramStart extends AbstractAction
 		this.histogram.start();
 		setResult(null);
 	}
+
+	@Override
+	public void initDefaultValues() {
+		// TODO Auto-generated method stub
+		
+	}
 }

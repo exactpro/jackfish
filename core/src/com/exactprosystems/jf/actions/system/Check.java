@@ -38,15 +38,16 @@ public class Check extends AbstractAction
 	public final static String dontFailName = "DoNotFail";
 	public final static String actualName = "Actual";
 
-	@ActionFieldAttribute(name = dontFailName, mandatory = false, description = "If it is true then the action will not be failed anyway. "
-																				+ "The action only will return of checking resul.")
-	protected Boolean dontFail = false; 
-
 	@ActionFieldAttribute(name = actualName, mandatory = true, description = "Actual map of fields.")
 	protected Map<String, Object> actual = Collections.emptyMap(); 
 	
+	@ActionFieldAttribute(name = dontFailName, mandatory = false, description = "If it is true then the action will not be failed anyway. "
+																			+ "The action only will return of checking resul.")
+	protected Boolean dontFail; 
+
 	public Check()
 	{
+		dontFail = false;
 	}
 	
 	@Override
@@ -75,5 +76,11 @@ public class Check extends AbstractAction
 				super.setError("Object does not match.");
 			}
 		}
+	}
+
+	@Override
+	public void initDefaultValues() {
+		// TODO Auto-generated method stub
+		
 	}
 }

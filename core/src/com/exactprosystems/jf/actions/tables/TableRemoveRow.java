@@ -37,4 +37,10 @@ public class TableRemoveRow extends AbstractAction
 	{
 		super.setResult(table.removeRow(row));
 	}
+
+	@Override
+	public void initDefaultValues() {
+		// TODO Auto-generated method stub
+		
+	}
 }

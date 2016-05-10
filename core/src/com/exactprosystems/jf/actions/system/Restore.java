@@ -35,8 +35,14 @@ public class Restore extends AbstractAction
 	protected String name = null;
 
 	@ActionFieldAttribute(name = asVarName, mandatory = false, description = "Create variable in global or local variables.")
-	protected String asVar = null;
+	protected String asVar;
 
+	@Override
+	public void initDefaultValues() 
+	{
+		asVar = null;
+	}
+	
 	@Override
 	protected HelpKind howHelpWithParameterDerived(Context context, Parameters parameters, String fieldName) throws Exception
 	{

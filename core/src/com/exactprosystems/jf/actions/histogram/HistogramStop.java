@@ -38,4 +38,10 @@ public class HistogramStop extends AbstractAction
 		this.histogram.stop();
 		setResult(null);
 	}
+
+	@Override
+	public void initDefaultValues() {
+		// TODO Auto-generated method stub
+		
+	}
 }

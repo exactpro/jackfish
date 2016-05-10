@@ -33,10 +33,16 @@ public class TableAddValue extends AbstractAction
 	protected Table 	table 	= null;
 
 	@ActionFieldAttribute(name = indexName, mandatory = false, description = "Index in the table")
-	protected Integer	index	= Integer.MIN_VALUE;
+	protected Integer	index;
 
 	public TableAddValue()
 	{
+	}
+
+	@Override
+	public void initDefaultValues() 
+	{
+		index	= Integer.MIN_VALUE;
 	}
 	
 	@Override

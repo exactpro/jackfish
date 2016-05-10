@@ -98,5 +98,11 @@ public class ClientCreateMapMessage extends AbstractAction
 			super.setResult(message);
 		}
 	}
+
+	@Override
+	public void initDefaultValues() {
+		// TODO Auto-generated method stub
+		
+	}
 		
 }

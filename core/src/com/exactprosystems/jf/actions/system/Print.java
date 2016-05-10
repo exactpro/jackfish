@@ -33,10 +33,16 @@ public class Print extends AbstractAction
 	public final static String strName = "Str";
 
 	@ActionFieldAttribute(name = strName, mandatory = false, description = "Title for this action.")
-	protected String message 		= ""; 
+	protected String message; 
 	
 	public Print()
 	{
+	}
+	
+	@Override
+	public void initDefaultValues() 
+	{
+		message 	= "";
 	}
 	
 	@Override

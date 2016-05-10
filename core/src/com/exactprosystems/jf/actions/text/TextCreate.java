@@ -49,5 +49,11 @@ public class TextCreate extends AbstractAction
 			super.setResult(text);
 		}
 	}
+
+	@Override
+	public void initDefaultValues() {
+		// TODO Auto-generated method stub
+		
+	}
 }
 

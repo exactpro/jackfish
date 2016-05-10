@@ -52,4 +52,10 @@ public class TextSaveToFile extends AbstractAction
 	{
 		super.setResult(this.text.save(this.fileName));
 	}
+
+	@Override
+	public void initDefaultValues() {
+		// TODO Auto-generated method stub
+		
+	}
 }

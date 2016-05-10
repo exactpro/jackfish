@@ -37,11 +37,18 @@ public class DialogSwitchToWindow extends AbstractAction
 
 	@ActionFieldAttribute(name = dialogName, mandatory = false, description = "Name of dialog in the dictionary on self element tool will switch to. "
 			+ "If is absent tool will switch to the parent frame.")
-	protected String			dialog			= null;
+	protected String			dialog;
 
 	@ActionFieldAttribute(name = frameName, mandatory = false, description = "Name of locator in the dictionary on which the tool will be switch to.")
-	protected String frame = null;
+	protected String 			frame;
 
+	@Override
+	public void initDefaultValues() 
+	{
+		dialog	= null;
+		frame	= null;
+	}
+	
 	@Override
 	protected ActionItem.HelpKind howHelpWithParameterDerived(Context context, Parameters parameters, String fieldName) throws Exception
 	{
@@ -104,4 +111,6 @@ public class DialogSwitchToWindow extends AbstractAction
 
 		this.setResult(null);
 	}
+
+
 }

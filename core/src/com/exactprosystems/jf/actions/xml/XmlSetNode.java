@@ -33,10 +33,16 @@ public class XmlSetNode extends AbstractAction
 	protected Xml 	xml 	= null;
 
 	@ActionFieldAttribute(name = textName, mandatory = false, description = "Text content to be set.")
-	protected String 	text 	= null;
+	protected String 	text;
 
 	public XmlSetNode()
 	{
+	}
+	
+	@Override
+	public void initDefaultValues() 
+	{
+		text 	= null;
 	}
 	
 	@Override

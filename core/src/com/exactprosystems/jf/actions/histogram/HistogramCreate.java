@@ -39,11 +39,18 @@ public class HistogramCreate extends AbstractAction
 	protected HistogramMetric metric = null;
 
 	@ActionFieldAttribute(name = intervalName, description = "Interval. In ms. Default value is 50ms", mandatory = false)
-	protected Integer interval = 50;
+	protected Integer interval;
 
 	@ActionFieldAttribute(name = intervalCountName, description = "Count of intervals. Default value is 100", mandatory = false)
-	protected Integer intervalCount = 100;
+	protected Integer intervalCount;
 
+	@Override
+	public void initDefaultValues() 
+	{
+		interval = 50;
+		intervalCount = 100;
+	}
+	
 	@Override
 	protected void listToFillParameterDerived(List<ReadableValue> list, Context context, String parameterToFill, Parameters parameters) throws Exception
 	{
@@ -84,4 +91,6 @@ public class HistogramCreate extends AbstractAction
 
 		setResult(histogram);
 	}
+
+
 }

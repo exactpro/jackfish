@@ -305,6 +305,7 @@ public abstract class AbstractAction implements Cloneable
         }
 	}
 
+	public abstract void initDefaultValues();
     
     //==========================================================================================================================
     // Protected members should be overridden
@@ -742,4 +743,5 @@ public abstract class AbstractAction implements Cloneable
     private Action action;
     
     protected MatrixItem owner;
+
 }

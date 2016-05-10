@@ -37,10 +37,15 @@ public class MessageCompareTwo extends AbstractAction
 	protected MapMessage expected = null;
 
 	@ActionFieldAttribute(name = excludeName, mandatory = false, description = "Fields that will not be compare.")
-	protected String[] exclude = null;
+	protected String[] exclude;
 	
 	public MessageCompareTwo()
 	{
+	}
+
+	@Override
+	public void initDefaultValues() {
+		exclude = null;
 	}
 	
 	@Override

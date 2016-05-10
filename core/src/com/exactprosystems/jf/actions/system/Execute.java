@@ -43,11 +43,17 @@ public class Execute extends AbstractAction
 	protected String command 	= "";
 
 	@ActionFieldAttribute(name = waitName, mandatory = false, description = "Wait while process will finish.")
-	protected Boolean wait 	= true; 
+	protected Boolean wait; 
 	
 	@ActionFieldAttribute(name = workDirName, mandatory = false, description = "Working directory for this command.")
-	protected String workDir 	= null;
+	protected String workDir;
 
+	@Override
+	public void initDefaultValues() 
+	{
+		wait 		= true; 
+		workDir		= null;
+	}
 	
 	@Override
 	protected HelpKind howHelpWithParameterDerived(Context context, Parameters parameters, String fieldName)
@@ -117,4 +123,5 @@ public class Execute extends AbstractAction
 	 
 		super.setResult(new ExecuteResult(sb.toString(), exitCode));
 	}
+
 }
