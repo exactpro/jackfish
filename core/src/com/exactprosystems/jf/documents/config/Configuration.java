@@ -26,10 +26,7 @@ import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.evaluator.MvelEvaluator;
 import com.exactprosystems.jf.common.evaluator.SystemVars;
 import com.exactprosystems.jf.common.parser.Matrix;
-import com.exactprosystems.jf.common.parser.items.MatrixItem;
-import com.exactprosystems.jf.common.parser.items.MatrixRoot;
 import com.exactprosystems.jf.common.parser.items.MutableArrayList;
-import com.exactprosystems.jf.common.parser.items.SubCase;
 import com.exactprosystems.jf.common.parser.listeners.DummyRunnerListener;
 import com.exactprosystems.jf.common.parser.listeners.IMatrixListener;
 import com.exactprosystems.jf.common.parser.listeners.MatrixListener;
@@ -574,9 +571,6 @@ public class Configuration extends AbstractDocument
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
             marshaller.marshal(this, os);
 
-			//TODO why we do this?
-    		refreshLibs();
-
 			saved();
         }
         catch (FileNotFoundException e)
@@ -642,49 +636,6 @@ public class Configuration extends AbstractDocument
 	}
 
 	//------------------------------------------------------------------------------------------------------------------
-	public SubCase referenceToSubcase(String name, MatrixItem item)
-	{
-		MatrixItem ref = item.findParent(MatrixRoot.class).find(true, SubCase.class, name);
-
-		if (ref != null && ref instanceof SubCase)
-		{
-			return (SubCase) ref;
-		}
-		if (name == null)
-		{
-			return null;
-		}
-		String[] parts = name.split("\\.");
-		if (parts.length < 2)
-		{
-			return null;
-		}
-		String ns = parts[0];
-		String id = parts[1];
-
-		Matrix matrix = this.libs.get(ns);
-		if (matrix == null)
-		{
-			matrix = getLib(ns);
-
-			if (matrix == null)
-			{
-				return null;
-			}
-			try
-			{
-				matrix = matrix.clone();
-			}
-			catch (CloneNotSupportedException e)
-			{
-				logger.error(e.getMessage(), e);
-			}
-			this.libs.put(ns, matrix);
-		}
-
-		return (SubCase) matrix.getRoot().find(true, SubCase.class, id);
-	}
-
 	public SqlEntry getSqlEntry(String name) throws Exception
 	{
 		return getEntry(name, this.sqlEntriesValue);

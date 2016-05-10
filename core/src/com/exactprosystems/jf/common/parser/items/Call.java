@@ -18,12 +18,16 @@ import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.common.report.ReportTable;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.exceptions.ParametersException;
+import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import org.mvel2.util.ThisLiteral;
 
 @MatrixItemAttribute(
 		description 	= "Subroutine Test case.", 
@@ -290,7 +294,6 @@ public final class Call extends MatrixItem
 		}
 	}
 	
-
 	//==============================================================================================
 	// Private members
 	//==============================================================================================

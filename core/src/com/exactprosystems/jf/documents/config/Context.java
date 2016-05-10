@@ -18,6 +18,7 @@ import com.exactprosystems.jf.common.parser.items.MatrixItem;
 import com.exactprosystems.jf.common.parser.items.MatrixRoot;
 import com.exactprosystems.jf.common.parser.items.SubCase;
 import com.exactprosystems.jf.common.parser.listeners.IMatrixListener;
+
 import org.apache.log4j.Logger;
 
 import java.io.PrintStream;
@@ -53,6 +54,7 @@ public class Context implements IContext, AutoCloseable, Cloneable
 			clone.matrixListener = this.matrixListener.clone();
 			clone.outStream = this.outStream;
 			clone.evaluator = configuration.createEvaluator();
+			clone.libs = new HashMap<String, Matrix>();
 
 			return clone;
 		}
@@ -90,7 +92,45 @@ public class Context implements IContext, AutoCloseable, Cloneable
 
 	public SubCase referenceToSubcase(String name, MatrixItem item)
 	{
-		return this.configuration.referenceToSubcase(name, item);
+		MatrixItem ref = item.findParent(MatrixRoot.class).find(true, SubCase.class, name);
+
+		if (ref != null && ref instanceof SubCase)
+		{
+			return (SubCase) ref;
+		}
+		if (name == null)
+		{
+			return null;
+		}
+		String[] parts = name.split("\\.");
+		if (parts.length < 2)
+		{
+			return null;
+		}
+		String ns = parts[0];
+		String id = parts[1];
+
+		Matrix matrix = this.libs.get(ns);
+		if (matrix == null)
+		{
+			matrix = this.configuration.getLib(ns);
+
+			if (matrix == null)
+			{
+				return null;
+			}
+			try
+			{
+				matrix = matrix.clone();
+			}
+			catch (CloneNotSupportedException e)
+			{
+				logger.error(e.getMessage(), e);
+			}
+			this.libs.put(ns, matrix);
+		}
+
+		return (SubCase) matrix.getRoot().find(true, SubCase.class, id);
 	}
 
 	public List<ReadableValue> subcases(MatrixItem item)
@@ -130,6 +170,7 @@ public class Context implements IContext, AutoCloseable, Cloneable
 	private AbstractEvaluator		evaluator;
 	private IMatrixListener			matrixListener	= null;
 	private PrintStream				outStream		= null;
+	private Map<String, Matrix>		libs 			= new HashMap<>();
 
-	private static final Logger	logger			= Logger.getLogger(Context.class);
+	private static final Logger	logger				= Logger.getLogger(Context.class);
 }

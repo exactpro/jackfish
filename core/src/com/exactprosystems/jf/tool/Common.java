@@ -383,7 +383,7 @@ public abstract class Common
 		StringSelection stringSelection = new StringSelection(text);
 		Toolkit.getDefaultToolkit().getSystemClipboard().setContents(stringSelection, null);
 	}
-
+	
 	public static String getFromClipboard()
 	{
 		try
