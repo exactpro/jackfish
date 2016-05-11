@@ -209,13 +209,26 @@ public class AppTreeNode extends TreeNode
 			return Optional.of(new Image(CssVariables.Icons.APP_DICTIONARY_ICON));
 		}
 
+		@Override
+		public Optional<ContextMenu> contextMenu()
+		{
+			Optional<ContextMenu> contextMenu = super.contextMenu();
+
+			MenuItem refresh = new MenuItem("Refresh", new ImageView(new Image(CssVariables.Icons.REFRESH)));
+			refresh.setOnAction(e -> Common.tryCatch(() -> this.model.refreshAppDictionaries(), "Error on refresh app dictionaries"));
+			ContextMenu ret = contextMenu.orElse(new ContextMenu());
+			ret.getItems().add(0, refresh);
+
+			return Optional.of(ret);
+		}
+
 		public void display(List<File> listAppDictionaries)
 		{
 			this.treeItem.getChildren().clear();
 			Function<File, ContextMenu> topFolderFunc = file -> {
 				ContextMenu menu = new ContextMenu();
-				MenuItem itemRemove = new MenuItem("Remove app dictionary dir", new ImageView(new Image(CssVariables.Icons.REMOVE_PARAMETER_ICON)));
-				itemRemove.setOnAction(e -> Common.tryCatch(() -> model.excludeAppDictionaryFolder(file.getName()), "Error on remove matrix directory"));
+				MenuItem itemRemove = new MenuItem("Exclude app dictionary dir", new ImageView(new Image(CssVariables.Icons.REMOVE_PARAMETER_ICON)));
+				itemRemove.setOnAction(e -> Common.tryCatch(() -> model.excludeAppDictionaryFolder(file.getName()), "Error on excluded matrix directory"));
 				menu.getItems().addAll(itemRemove);
 				return menu;
 			};

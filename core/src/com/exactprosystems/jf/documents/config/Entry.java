@@ -102,7 +102,7 @@ public abstract class Entry implements Mutable
 	{
 		return this.getParameters()
 				.stream()
-				.filter(p -> p.key.equals(key))
+				.filter(p -> p.key != null && p.key.equals(key))
 				.map(Parameter::getValue)
 				.findFirst();
 	}

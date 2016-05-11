@@ -34,7 +34,7 @@ public class ClientEntry extends Entry
 		{
 			case Configuration.clientDescription:	return this.descriptionValue;
 			case Configuration.clientJar:			return this.clientJarNameValue;
-			case Configuration.clientLimit:		return "" + this.clientLimitValue;
+			case Configuration.clientLimit:			return "" + this.clientLimitValue;
 			case Configuration.clientDictionary:	return this.clientDictionaryValue;
 		}
 		return null;
@@ -47,7 +47,7 @@ public class ClientEntry extends Entry
 		{
 			case Configuration.clientDescription:	this.descriptionValue		= "" + value;	return;
 			case Configuration.clientJar:			this.clientJarNameValue		= "" + value;	return;
-			case Configuration.clientLimit:		this.clientLimitValue		= Integer.parseInt("" +value);	return;
+			case Configuration.clientLimit:			this.clientLimitValue		= Integer.parseInt("" +value);	return;
 			case Configuration.clientDictionary:	this.clientDictionaryValue	= "" + value;	return;
 		}
 	}

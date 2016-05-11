@@ -16,7 +16,6 @@ import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.newconfig.ConfigurationFx;
 import com.exactprosystems.jf.tool.newconfig.ConfigurationTreeView;
 import com.exactprosystems.jf.tool.newconfig.TablePair;
-
 import javafx.scene.Node;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
@@ -34,7 +33,7 @@ import java.util.function.Function;
 
 public class ClientTreeNode extends TreeNode
 {
-	private ConfigurationFx			model;
+	private ConfigurationFx				model;
 	private TreeItem<TreeNode>			treeItem;
 	private TreeItem<TreeNode>			clientTreeItem;
 	private ClientDictionaryTreeNode	clientDictionaryTreeNode;
@@ -205,14 +204,27 @@ public class ClientTreeNode extends TreeNode
 			return Optional.of(new Image(CssVariables.Icons.CLIENT_DICTIONARY_ICON));
 		}
 
+		@Override
+		public Optional<ContextMenu> contextMenu()
+		{
+			Optional<ContextMenu> contextMenu = super.contextMenu();
+
+			MenuItem refresh = new MenuItem("Refresh", new ImageView(new Image(CssVariables.Icons.REFRESH)));
+			refresh.setOnAction(e -> Common.tryCatch(() -> this.model.refreshClientDictionaries(), "Error on refresh client dictionaries"));
+			ContextMenu ret = contextMenu.orElse(new ContextMenu());
+			ret.getItems().add(0, refresh);
+
+			return Optional.of(ret);
+		}
+
 		public void display(List<File> listClientDictionaries)
 		{
 			this.treeItem.getChildren().clear();
 			Function<File, ContextMenu> topFolderFunc = file ->
 			{
 				ContextMenu menu = new ContextMenu();
-				MenuItem itemRemove = new MenuItem("Remove client dictionary dir", new ImageView(new Image(CssVariables.Icons.REMOVE_PARAMETER_ICON)));
-				itemRemove.setOnAction(e -> Common.tryCatch(() -> model.excludeClientDictionaryFolder(file.getName()), "Error on remove matrix directory"));
+				MenuItem itemRemove = new MenuItem("Exclude client dictionary dir", new ImageView(new Image(CssVariables.Icons.REMOVE_PARAMETER_ICON)));
+				itemRemove.setOnAction(e -> Common.tryCatch(() -> model.excludeClientDictionaryFolder(file.getName()), "Error on excluded matrix directory"));
 				menu.getItems().addAll(itemRemove);
 				return menu;
 			};
@@ -228,5 +240,6 @@ public class ClientTreeNode extends TreeNode
 					.fileFilter(f -> ConfigurationFx.getExtension(f.getAbsolutePath()).equals(Configuration.dictExt))
 					.doubleClickEvent(f -> () -> this.model.openClientDictionary(f)).menuTopFolder(topFolderFunc).menuFiles(filesFunc).byPass());
 		}
+
 	}
 }

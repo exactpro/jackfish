@@ -45,7 +45,10 @@ public class ReportTreeNode extends TreeNode
 		MenuItem itemClear = new MenuItem("Clear folder", new ImageView(new Image(CssVariables.Icons.REMOVE_PARAMETER_ICON)));
 		itemClear.setOnAction(e -> Common.tryCatch(() -> this.model.clearReportFolder(), "Error on clear folder"));
 
-		menu.getItems().addAll(itemClear);
+		MenuItem refresh = new MenuItem("Refresh", new ImageView(new Image(CssVariables.Icons.REFRESH)));
+		refresh.setOnAction(e -> Common.tryCatch(() -> this.model.refreshReport(), "Error on refresh report folder"));
+
+		menu.getItems().addAll(refresh, itemClear);
 
 		return Optional.of(menu);
 	}
