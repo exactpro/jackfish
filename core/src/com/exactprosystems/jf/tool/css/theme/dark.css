@@ -91,7 +91,10 @@
 	-fx-border-color : derive(-fx-text-base-color, 10%);
 
 }
+Text {
+	-fx-fill : -fx-text-base-color;
 
+}
 /*Custom classes*/
 
 .transparentBackground {
@@ -788,4 +791,14 @@ CellView > .text-input.text-field{
 }
 .auto-complete-popup > .list-view > .placeholder > .label {
 	-fx-text-fill: derive(-fx-control-inner-background,-30%);
+}
+
+/*ConfigurationTree*/
+.fullPathLabel {
+	-fx-opacity : 0.5;
+
+}
+.fullPathLabel:hover {
+	-fx-opacity : 1.0
+
 }

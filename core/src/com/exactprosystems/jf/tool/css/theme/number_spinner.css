@@ -1,8 +1,3 @@
-.root{
-    -fx-font-size: 24pt;
-    -fx-base: rgb(255,0,0);
-    -fx-background-color: rgb(50,50,50);
-}
 .numberField {
     -fx-border-width: 1;
     -fx-border-color: lightgray;

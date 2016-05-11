@@ -18,22 +18,23 @@ import com.exactprosystems.jf.tool.custom.tab.CustomTab;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.settings.SettingsPanel;
 import com.exactprosystems.jf.tool.settings.Theme;
-
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.scene.Parent;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.*;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
-
 import org.apache.log4j.Logger;
 
-import java.awt.Toolkit;
+import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.StringSelection;
@@ -143,11 +144,6 @@ public abstract class Common
 		return result.replace('\\', '/');
 	}
 
-	public static String absolutePath(File file)
-	{
-		return file == null ? null : file.getAbsolutePath();
-	}
-
 	public static void sizeLabel(Label label)
 	{
 		label.setPrefWidth(label.getText().length() * 8 + 20);
@@ -241,11 +237,7 @@ public abstract class Common
 
 	public static String getSimpleTitle(String s)
 	{
-		if (s == null)
-		{
-			return null;
-		}
-		return s.substring(s.lastIndexOf(File.separatorChar) + 1);
+		return s == null ? null : s.substring(s.lastIndexOf(File.separatorChar) + 1);
 	}
 
 	public static LocalDateTime convert(Date date)
