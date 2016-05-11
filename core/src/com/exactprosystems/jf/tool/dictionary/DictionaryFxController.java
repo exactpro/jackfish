@@ -119,10 +119,7 @@ public class DictionaryFxController implements Initializable, ContainingParent
 		this.actionsController.init(model, this.mainGridPane, evaluator, this.navigationController, this.elementInfoController);
 
 		Common.getTabPane().getTabs().add(this.tab);
-		if (Common.isNeedSelectedTab())
-		{
-			Common.getTabPane().getSelectionModel().select(this.tab);
-		}
+		Common.getTabPane().getSelectionModel().select(this.tab);
 	}
 
 	public void println(String str)

@@ -58,7 +58,6 @@ public class Main extends Application
 	public static final String	TIME_NOTIFICATION	= "timeNotification";
 	public static final String	USE_FULL_SCREEN		= "useFullScreen";
 	public static final String	THEME				= "theme";
-	public static final String	USE_DEFAULT_BROWSER	= "useDefaultBrowser";
 	public static final String	USE_SMALL_WINDOW	= "useSmallWindow";
 	public static final String 	OPENED 				= "OPENED";
 	public static final String 	MAIN_NS 			= "MAIN";
@@ -75,6 +74,7 @@ public class Main extends Application
 	private Settings settings;
 	private List<Document> docs = new ArrayList<Document>();
 
+	//region public methods
 	public void setConfiguration(Configuration config)
 	{
 		this.config = config;
@@ -84,10 +84,36 @@ public class Main extends Application
 			this.controller.disableMenu(this.config == null);
 		}
 	}
-	
-	//----------------------------------------------------------------------------------------------
-	// Application
-	//----------------------------------------------------------------------------------------------
+
+	public void displayableTask(Common.Function fnc, String title, String error)
+	{
+//		TODO think about this method. We need to load fnc on another thread, but all operations with gui we need wrap to Platform.runLater
+
+//		this.controller.startTask(title);
+//		Task<Void> task = new Task<Void>()
+//		{
+//			@Override
+//			protected Void call() throws Exception
+//			{
+//				fnc.call();
+//				return null;
+//			}
+//		};
+//		task.setOnSucceeded(e -> this.controller.endTask());
+//		task.setOnFailed(e -> {
+//			Throwable exception = e.getSource().getException();
+//			logger.error(exception.getMessage(), exception);
+//			DialogsHelper.showError(exception.getMessage() + "\n" + error);
+//			this.controller.endTask();
+//		});
+//		Thread thread = new Thread(task);
+//		thread.setName("Displayable task");
+//		thread.setDaemon(true);
+//		thread.start();
+	}
+	//endregion
+
+	//region Application
 	@Override
 	public void start(final Stage stage) throws Exception
 	{
@@ -202,7 +228,6 @@ public class Main extends Application
 				logger.error("Error on restore opened documents");
 				logger.error(e.getMessage(), e);
 			}
-			Common.setNeedSelectedTab(true);
 //			this.controller.selectConfig();
 		}, "Error on task succeed on"));
 		
@@ -210,10 +235,9 @@ public class Main extends Application
 		thread.setName("Load main gui" + thread.getId());
 		thread.start();
 	}
-	
-	//----------------------------------------------------------------------------------------------
-	// Event handlers
-	//----------------------------------------------------------------------------------------------
+	//endregion
+
+	//region Event handlers
 	public void openProject(String filePath, BorderPane pane) throws Exception
 	{
 		Optional<File> optional = chooseFile(Configuration.class, filePath, DialogsHelper.OpenSaveMode.OpenFile);
@@ -559,8 +583,9 @@ public class Main extends Application
 			Files.copy(stream, Paths.get(newFolder.getAbsolutePath() + File.separator + "vars.ini"));
 		}
 	}
-	//----------------------------------------------------------------------------------------------
+	//endregion
 
+	//region private methods
 	private void checkConfig() throws Exception
 	{
 		if (this.config == null)
@@ -672,4 +697,5 @@ public class Main extends Application
 		docs.add(doc);
 		doc.display();
 	}
+	//endregion
 }

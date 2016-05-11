@@ -106,19 +106,6 @@ public abstract class Common
 		}
 	}
 
-	// TODO move it to CustomTab
-	private static boolean needSelectedTab = false;
-
-	public static boolean isNeedSelectedTab()
-	{
-		return needSelectedTab;
-	}
-
-	public static void setNeedSelectedTab(boolean flag)
-	{
-		Common.needSelectedTab = flag;
-	}
-
 	// TODO move it to Main
 	private static Theme theme;
 

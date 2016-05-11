@@ -80,10 +80,7 @@ public class SystemVarsFxController implements Initializable, ContainingParent
 		Platform.runLater(() -> 
 		{
 			Common.getTabPane().getTabs().add(SystemVarsFxController.this.tab);
-			if (Common.isNeedSelectedTab())
-			{
-				Common.getTabPane().getSelectionModel().select(this.tab);
-			}
+			Common.getTabPane().getSelectionModel().select(this.tab);
 		});
 	}
 	

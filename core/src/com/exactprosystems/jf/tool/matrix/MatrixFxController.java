@@ -32,7 +32,6 @@ import com.exactprosystems.jf.tool.dictionary.ApplicationStatus;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.matrix.watch.WatcherFx;
 import com.exactprosystems.jf.tool.settings.SettingsPanel;
-
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.concurrent.Task;
@@ -308,10 +307,7 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 		this.tab.setContent(this.pane);
 		console.setConsole(this.listView);
 		getTabPane().getTabs().add(this.tab);
-		if (isNeedSelectedTab())
-		{
-			getTabPane().getSelectionModel().select(this.tab);
-		}
+		getTabPane().getSelectionModel().select(this.tab);
 		initializeButtons(context.getConfiguration().getSettings());
 		initShortcuts(context.getConfiguration().getSettings());
 	}

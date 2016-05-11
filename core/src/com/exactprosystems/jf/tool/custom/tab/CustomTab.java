@@ -8,16 +8,11 @@
 
 package com.exactprosystems.jf.tool.custom.tab;
 
-import java.io.FileReader;
-import java.io.Reader;
-import java.util.concurrent.atomic.AtomicBoolean;
-
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.documents.Document;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
-
 import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.control.ButtonType;
@@ -28,6 +23,10 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 
+import java.io.FileReader;
+import java.io.Reader;
+import java.util.concurrent.atomic.AtomicBoolean;
+
 public class CustomTab extends Tab implements AutoCloseable
 {
 	private static final String	CHANGED_MARKER	= " *";
@@ -36,7 +35,7 @@ public class CustomTab extends Tab implements AutoCloseable
 	private Document			document;
 	private FileWatcher			watcher;
 	private Settings			settings;
-	private AtomicBoolean		warningIsShow;
+	private final AtomicBoolean		warningIsShow;
 
 	public CustomTab(Document document, Settings settings)
 	{

@@ -329,8 +329,8 @@ public class ConfigurationFx extends Configuration
 
 	public void openLibrary(File file)
 	{
-		//TODO we need method to open library
 		Common.tryCatch(() -> this.mainModel.loadMatrix(path(file)), "Error on open library");
+//		this.mainModel.displayableTask(() -> this.mainModel.loadMatrix(path(file)), "Load library", "Error on open library");
 	}
 
 	public void addNewLibrary(File parentFolder, String fileName) throws Exception

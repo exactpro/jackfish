@@ -64,6 +64,7 @@ public class MainController implements Initializable, ContainingParent
 	public BorderPane			projectPane;
 
 	public ProgressBar			progressBar;
+	public Label				progressLabel;
 	public BorderPane			mainPanel;
 	private LogsFx				log;
 
@@ -479,6 +480,22 @@ public class MainController implements Initializable, ContainingParent
 		DialogsHelper.showHelperDialog("<none>", evaluator, "'Helper'", null);
 	}
 	//endregion
+
+	public void startTask(String title)
+	{
+		Platform.runLater(() -> {
+			this.progressBar.setVisible(true);
+			this.progressLabel.setText(title);
+		});
+	}
+
+	public void endTask()
+	{
+		Platform.runLater(() -> {
+			this.progressBar.setVisible(false);
+			this.progressLabel.setText("");
+		});
+	}
 
 	// TODO remake shortcuts over Menu.setAccelerator()
 	public void initShortcuts()
