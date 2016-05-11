@@ -205,12 +205,23 @@ public class MainRunner
 		        {
 		    		configuration.load(reader);
 				}
+		    	catch (Exception e)
+		    	{
+		    		e.printStackTrace(System.err);
+		    	}
+		    	
 				if (!configuration.isValid())
 				{
 					System.out.println("Configuration is invalid! See the logs for details.");
 					System.exit(2);
 				}
 			}
+			else
+			{
+				System.out.println("Configuration option is empty.");
+				System.exit(2);
+			}
+			
 			
 			if (!line.hasOption(inputName.getOpt()))
 			{
