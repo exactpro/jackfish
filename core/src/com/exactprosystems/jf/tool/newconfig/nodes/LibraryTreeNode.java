@@ -13,6 +13,7 @@ import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.newconfig.ConfigurationFx;
 import com.exactprosystems.jf.tool.newconfig.ConfigurationTreeView;
+import com.exactprosystems.jf.tool.newconfig.TablePair;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -21,6 +22,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -144,10 +146,7 @@ public class LibraryTreeNode extends TreeNode
 			HBox box = new HBox();
 			Text textNamespace = new Text("<" + this.namespace + "> ");
 			Text textName = new Text(new File(this.lib.getName()).getName());
-			Label lblFullPath = new Label(this.fullPath + " ");
-			lblFullPath.getStyleClass().add(CssVariables.FULL_PATH_LABEL);
-			lblFullPath.setTooltip(new Tooltip(this.fullPath));
-			box.getChildren().addAll(textNamespace, textName, lblFullPath);
+			box.getChildren().addAll(textNamespace, textName);
 			return box;
 		}
 
@@ -172,6 +171,14 @@ public class LibraryTreeNode extends TreeNode
 
 			menu.getItems().addAll(itemOpen);
 			return Optional.of(menu);
+		}
+
+		@Override
+		public List<TablePair> getParameters()
+		{
+			List<TablePair> list = new ArrayList<>();
+			list.add(TablePair.TablePairBuilder.create("path", this.fullPath).edit(false).build());
+			return list;
 		}
 	}
 }

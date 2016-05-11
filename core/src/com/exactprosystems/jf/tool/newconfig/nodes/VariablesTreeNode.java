@@ -10,14 +10,17 @@ package com.exactprosystems.jf.tool.newconfig.nodes;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.newconfig.ConfigurationFx;
+import com.exactprosystems.jf.tool.newconfig.TablePair;
 import javafx.scene.Node;
-import javafx.scene.control.*;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.TreeItem;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -72,18 +75,11 @@ public class VariablesTreeNode extends TreeNode
 			}
 
 			@Override
-			public Node getView()
+			public List<TablePair> getParameters()
 			{
-				Node view = super.getView();
-				HBox box = new HBox();
-				box.getChildren().add(view);
-				Label lblFullPath = new Label();
-				lblFullPath.getStyleClass().add(CssVariables.FULL_PATH_LABEL);
-				String path = ConfigurationFx.path(file);
-				lblFullPath.setText(" (" + path + ")");
-				lblFullPath.setTooltip(new Tooltip(path));
-				box.getChildren().add(lblFullPath);
-				return box;
+				List<TablePair> list = new ArrayList<TablePair>();
+				list.add(TablePair.TablePairBuilder.create("path", ConfigurationFx.path(file)).edit(false).build());
+				return list;
 			}
 		}).map(e -> new TreeItem<TreeNode>(e)).forEach(i -> this.variablesTreeNode.getChildren().add(i));
 	}
