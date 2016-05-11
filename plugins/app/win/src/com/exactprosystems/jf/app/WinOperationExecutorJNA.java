@@ -480,7 +480,8 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 			String result;
 			if (isSelectionPatternPresent)
 			{
-				result = this.driver.doPatternCall(component, WindowPattern.SelectionPattern, "GetSelection", null, -1);
+//				result = this.driver.doPatternCall(component, WindowPattern.SelectionPattern, "GetSelection", null, -1);
+				result = this.driver.getProperty(component, WindowProperty.SelectionProperty);
 			}
 			else
 			{

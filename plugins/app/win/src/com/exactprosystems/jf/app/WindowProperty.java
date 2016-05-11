@@ -62,6 +62,7 @@ public enum WindowProperty
 	
 	ToggleStateProperty(30086),
 	ValueProperty(30045),
+	SelectionProperty(30059),
 	MaximumProperty(30050),
 	MinimumProperty(30049),
 
