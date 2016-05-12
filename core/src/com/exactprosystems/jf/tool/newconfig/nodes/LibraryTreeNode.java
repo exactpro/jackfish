@@ -63,10 +63,10 @@ public class LibraryTreeNode extends TreeNode
 		if (!isLibEmpty)
 		{
 			Menu addLibrary = new Menu("Add new library to", new ImageView(new Image(CssVariables.Icons.ADD_PARAMETER_ICON)));
-			this.model.getLibrariesValue().stream().map(MutableString::get).map(MenuItem::new).peek(item -> item.setOnAction(e -> ConfigurationTreeView.showInputDialog("Enter new name").ifPresent(name -> Common.tryCatch(() -> this.model.addNewLibrary(new File(item.getText()), name), "Error on create new library")))).forEach(addLibrary.getItems()::add);
+			this.model.getLibrariesValue().stream().map(MutableString::get).map(Common::getRelativePath).map(MenuItem::new).peek(item -> item.setOnAction(e -> ConfigurationTreeView.showInputDialog("Enter new name").ifPresent(name -> Common.tryCatch(() -> this.model.addNewLibrary(new File(item.getText()), name), "Error on create new library")))).forEach(addLibrary.getItems()::add);
 
 			Menu excludeLibrary = new Menu("Exclude library folder", new ImageView(new Image(CssVariables.Icons.REMOVE_PARAMETER_ICON)));
-			this.model.getLibrariesValue().stream().map(MutableString::get).map(MenuItem::new).peek(item -> item.setOnAction(e -> Common.tryCatch(() -> this.model.excludeLibraryDirectory(item.getText()), "Error on exclude library folder"))).forEach(excludeLibrary.getItems()::add);
+			this.model.getLibrariesValue().stream().map(MutableString::get).map(Common::getRelativePath).map(MenuItem::new).peek(item -> item.setOnAction(e -> Common.tryCatch(() -> this.model.excludeLibraryDirectory(item.getText()), "Error on exclude library folder"))).forEach(excludeLibrary.getItems()::add);
 
 			menu.getItems().addAll(addLibrary, excludeLibrary);
 		}
