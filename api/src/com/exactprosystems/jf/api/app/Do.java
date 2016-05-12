@@ -18,13 +18,14 @@ import com.exactprosystems.jf.api.common.DescriptionAttribute;
  */
 public class Do
 {
+	//region Utilities operations
 	static final String foreach = "Repeat @operation for every element found by Many locator.";
 	@DescriptionAttribute(text = Do.foreach)
 	public static Operation foreach(Operation operation)
 	{
 		return new Operation().foreach(operation);
 	}
-	
+
 	static final String foreach_max = "Repeat @operation for every element found by Many locator but not more than @max times";
 	@DescriptionAttribute(text = Do.foreach_max)
 	public static Operation foreach(Operation operation, int max)
@@ -52,56 +53,9 @@ public class Do
 	{
 		return new Operation().use(i);
 	}
+	//endregion
 
-	static final String setValue = "Set @value to component. For example, set progress to any sliders";
-	@DescriptionAttribute(text = Do.setValue)
-	public static Operation setValue(double value)
-	{
-		return new Operation().setValue(value);
-	}
-
-	static final String getValue= "Return value from current component.For example, for checkbox this will be true or false (selected or unselected).";
-	@DescriptionAttribute(text = Do.getValue)
-	public static Operation getValue()
-	{
-		return new Operation().getValue();
-	}
-
-	static final String getRectangle= "Return rectangle in which current component is placed.";
-	@DescriptionAttribute(text = Do.getRectangle)
-	public static Operation getRectangle()
-	{
-		return new Operation().getRectangle();
-	}
-
-	static final String push = "Push to the current component";
-	@DescriptionAttribute(text = Do.push)
-	public static Operation push()
-	{
-		return new Operation().push();
-	}
-
-	static final String press = "Press @key on current component. See valid variant of @Keyboard";
-	@DescriptionAttribute(text = Do.press)
-	public static Operation press(Keyboard key)
-	{
-		return new Operation().press(key);
-	}
-
-	static final String keyDown = "Press down and hold @key. See valid variant of @Keyboard";
-	@DescriptionAttribute(text = Do.keyDown)
-	public static Operation keyDown(Keyboard key)
-	{
-		return new Operation().keyDown(key);
-	}
-
-	static final String keyUp = "Press up and unhold @key. See valid variant of @Keyboard";
-	@DescriptionAttribute(text = Do.keyUp)
-	public static Operation keyUp(Keyboard key)
-	{
-		return new Operation().keyUp(key);
-	}
-
+	//region Checking operations
 	static final String check = "Check, that value of current component equals @word";
 	@DescriptionAttribute(text = Do.check)
 	public static Operation check(String word)
@@ -165,13 +119,79 @@ public class Do
 		return new Operation().checkAttr(name, value);
 	}
 
+	static final String checkAttrWithFlag = "Check, that value of attribute @name of current component equals @value. If @flag is true and @value not equals attribute with name @name, will throw " +
+			"exception";
+	@DescriptionAttribute(text = Do.checkAttrWithFlag)
+	public static Operation checkAttr(String name, String value, boolean flag)
+	{
+		return new Operation().checkAttr(name, value, flag);
+	}
+
 	static final String checkAttrRegexp = "Check, that value of attribute @name of current component is matching to @regexp";
 	@DescriptionAttribute(text = Do.checkAttrRegexp)
 	public static Operation checkAttrRegexp(String name, String regexp)
 	{
-		return new Operation().checkAttrRegexp(name, regexp);
+		return new Operation().checkAttrRegexp(name, regexp, true);
 	}
-	
+
+	static final String checkAttrRegexpWithFlag = "Check, that value of attribute @name of current component is matching to @regexp. If @flag is true and regexp not mathing, will throw exception";
+	@DescriptionAttribute(text = Do.checkAttrRegexp)
+	public static Operation checkAttrRegexp(String name, String regexp, boolean flag)
+	{
+		return new Operation().checkAttrRegexp(name, regexp, flag);
+	}
+	//endregion
+
+	//region Executing operations
+	static final String setValue = "Set @value to component. For example, set progress to any sliders";
+	@DescriptionAttribute(text = Do.setValue)
+	public static Operation setValue(double value)
+	{
+		return new Operation().setValue(value);
+	}
+
+	static final String getValue= "Return value from current component.For example, for checkbox this will be true or false (selected or unselected).";
+	@DescriptionAttribute(text = Do.getValue)
+	public static Operation getValue()
+	{
+		return new Operation().getValue();
+	}
+
+	static final String getRectangle= "Return rectangle in which current component is placed.";
+	@DescriptionAttribute(text = Do.getRectangle)
+	public static Operation getRectangle()
+	{
+		return new Operation().getRectangle();
+	}
+
+	static final String push = "Push to the current component";
+	@DescriptionAttribute(text = Do.push)
+	public static Operation push()
+	{
+		return new Operation().push();
+	}
+
+	static final String press = "Press @key on current component. See valid variant of @Keyboard";
+	@DescriptionAttribute(text = Do.press)
+	public static Operation press(Keyboard key)
+	{
+		return new Operation().press(key);
+	}
+
+	static final String keyDown = "Press down and hold @key. See valid variant of @Keyboard";
+	@DescriptionAttribute(text = Do.keyDown)
+	public static Operation keyDown(Keyboard key)
+	{
+		return new Operation().keyDown(key);
+	}
+
+	static final String keyUp = "Press up and unhold @key. See valid variant of @Keyboard";
+	@DescriptionAttribute(text = Do.keyUp)
+	public static Operation keyUp(Keyboard key)
+	{
+		return new Operation().keyUp(key);
+	}
+
 	static final String get = "Get text of current component";
 	@DescriptionAttribute(text = Do.get)
 	public static Operation get()
@@ -206,7 +226,7 @@ public class Do
 	{
 		return new Operation().getRow(valueCondition, colorCondition);
 	}
-	
+
 	static final String getRowIndexes = "Return indexes of row in current table, that fits @valueCondition and @colorCondition. See @Condition";
 	@DescriptionAttribute(text = Do.getRowIndexes)
 	public static Operation getRowIndexes(ICondition valueCondition, ICondition colorCondition)
@@ -227,33 +247,12 @@ public class Do
 	{
 		return new Operation().getRowWithColor(index);
 	}
-	
+
 	static final String getTableSize = "Return size of current table";
 	@DescriptionAttribute(text = Do.getRowWithColor)
 	public static Operation getTableSize()
 	{
 		return new Operation().getTableSize();
-	}
-
-	static final String useLocatorId = "Change context to locator with id @locator";
-	@DescriptionAttribute(text = Do.useLocatorId)
-	public static Operation use(String locator)
-	{
-		return new Operation().use(locator);
-	}
-
-	static final String useLocator = "Change context to locator with dynamic @locator";
-	@DescriptionAttribute(text = Do.useLocator)
-	public static Operation use(Locator locator)
-	{
-		return new Operation().use(locator);
-	}
-
-	static final String useLocatorKind = "Change context to locator with dynamic @locator and locator kind @locatorKind";
-	@DescriptionAttribute(text = Do.useLocator)
-	public static Operation use(Locator locator, LocatorKind locatorKind)
-	{
-		return new Operation().use(locator, locatorKind);
 	}
 
 	static final String move = "Move mouse to current component";
@@ -339,7 +338,39 @@ public class Do
 	{
 		return new Operation().collapse(path);
 	}
+	//endregion
 
+	//region Operations with locators
+	static final String useLocatorId = "Change context to locator with id @locator";
+	@DescriptionAttribute(text = Do.useLocatorId)
+	public static Operation use(String locator)
+	{
+		return new Operation().use(locator);
+	}
+
+	static final String useLocator = "Change context to locator with dynamic @locator";
+	@DescriptionAttribute(text = Do.useLocator)
+	public static Operation use(Locator locator)
+	{
+		return new Operation().use(locator);
+	}
+
+	static final String useLocatorKind = "Change context to locator with dynamic @locator and locator kind @locatorKind";
+	@DescriptionAttribute(text = Do.useLocator)
+	public static Operation use(Locator locator, LocatorKind locatorKind)
+	{
+		return new Operation().use(locator, locatorKind);
+	}
+
+	static final String useLocatorIdKind = "Change context to locator with id @locatorId and locator kind @locatorKind";
+	@DescriptionAttribute(text = Do.useLocator)
+	public static Operation use(String locatorId, LocatorKind locatorKind)
+	{
+		return new Operation().use(locatorId, locatorKind);
+	}
+	//endregion
+
+	//region Time operations
 	static final String delay = "Delay @ms";
 	@DescriptionAttribute(text = Do.delay)
 	public static Operation delay(int ms)
@@ -365,4 +396,5 @@ public class Do
 	{
 		return new Operation().wait(locator, ms, toAppear);
 	}
+	//endregion
 }

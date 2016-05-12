@@ -13,7 +13,6 @@ import com.exactprosystems.jf.api.common.DescriptionAttribute;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
@@ -238,17 +237,23 @@ public class Operation implements Iterable<Part>, Serializable
 	@DescriptionAttribute(text = Do.checkAttr)
 	public Operation checkAttr(String name, String value)
 	{
-		this.list.add(new Part(OperationKind.CHECK_ATTR).setStr(name).setText(value));
+		return checkAttr(name, value, true);
+	}
+
+	@DescriptionAttribute(text = Do.checkAttrWithFlag)
+	public Operation checkAttr(String name, String value, boolean flag)
+	{
+		this.list.add(new Part(OperationKind.CHECK_ATTR).setStr(name).setText(value).setBool(flag));
 		return this;
 	}
 
 	@DescriptionAttribute(text = Do.checkAttrRegexp)
-	public Operation checkAttrRegexp(String name, String regexp)
+	public Operation checkAttrRegexp(String name, String regexp, boolean flag)
 	{
-		this.list.add(new Part(OperationKind.CHECK_ATTR_REGEXP).setStr(name).setText(regexp));
+		this.list.add(new Part(OperationKind.CHECK_ATTR_REGEXP).setStr(name).setText(regexp).setBool(flag));
 		return this;
 	}
-	
+
 	@DescriptionAttribute(text = Do.checkRegexpCoorAndFlag)
 	public Operation checkRegexp(String regexp, int x, int y, boolean flag)
 	{
@@ -350,6 +355,13 @@ public class Operation implements Iterable<Part>, Serializable
 	public Operation use(Locator locator, LocatorKind locatorKind)
 	{
 		this.list.add(new Part(OperationKind.USE_LOCATOR).setLocator(locator).setLocatorKind(locatorKind));
+		return this;
+	}
+
+	@DescriptionAttribute(text = Do.useLocatorIdKind)
+	public Operation use(String locatorId, LocatorKind locatorKind)
+	{
+		this.list.add(new Part(OperationKind.USE_LOCATOR).setLocatorId(locatorId).setLocatorKind(locatorKind));
 		return this;
 	}
 
