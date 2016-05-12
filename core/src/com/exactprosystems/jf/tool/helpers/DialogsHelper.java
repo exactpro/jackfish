@@ -556,11 +556,12 @@ public abstract class DialogsHelper
 		tryCatch(() -> {
 			boolean addButton = configuration != null;
 			ReportBrowser reportBrowser = new ReportBrowser(file);
-			Dialog<ButtonType> dialog = new Alert(Alert.AlertType.INFORMATION);
+			Dialog<ButtonType> dialog = new Dialog<>();
 			if (addButton)
 			{
 				dialog.getDialogPane().getButtonTypes().add(new ButtonType("Open", ButtonBar.ButtonData.OTHER));
 			}
+			dialog.getDialogPane().getButtonTypes().add(new ButtonType("Close", ButtonBar.ButtonData.CANCEL_CLOSE));
 			dialog.setResizable(true);
 			dialog.getDialogPane().setPrefWidth(1024);
 			dialog.getDialogPane().setPrefHeight(768);
