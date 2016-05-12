@@ -29,6 +29,7 @@ import com.exactprosystems.jf.tool.SupportedEntry;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.main.Main;
 import com.exactprosystems.jf.tool.newconfig.nodes.TreeNode;
+
 import javafx.concurrent.Task;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
@@ -37,6 +38,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.layout.BorderPane;
 
 import javax.xml.bind.annotation.XmlRootElement;
+
 import java.io.File;
 import java.io.Reader;
 import java.util.*;
@@ -290,9 +292,9 @@ public class ConfigurationFx extends Configuration
 		excludeFile(file, super.matricesValue, this::displayMatrix);
 	}
 
-	public void openMatrix(File file)
+	public void openMatrix(File file) throws Exception
 	{
-		Common.tryCatch(() -> this.mainModel.loadMatrix(path(file)), "Error on open matrix file");
+		this.mainModel.loadMatrix(path(file));
 	}
 
 	public void addNewMatrix(File parentFolder, String fileName) throws Exception
@@ -322,14 +324,14 @@ public class ConfigurationFx extends Configuration
 		excludeFile(file, super.librariesValue, this::displayLibrary);
 	}
 
-	public void openLibrary(String path)
+	public void openLibrary(String path) throws Exception
 	{
 		this.openLibrary(new File(path));
 	}
 
-	public void openLibrary(File file)
+	public void openLibrary(File file) throws Exception
 	{
-		Common.tryCatch(() -> this.mainModel.loadMatrix(path(file)), "Error on open library");
+		this.mainModel.loadMatrix(path(file));
 //		this.mainModel.displayableTask(() -> this.mainModel.loadMatrix(path(file)), "Load library", "Error on open library");
 	}
 
@@ -351,9 +353,9 @@ public class ConfigurationFx extends Configuration
 	//endregion
 
 	//region variable
-	public void openVariableFile(File file)
+	public void openVariableFile(File file) throws Exception
 	{
-		Common.tryCatch(() -> this.mainModel.loadSystemVars(path(file)), "Error on load system variable");
+		this.mainModel.loadSystemVars(path(file));
 	}
 
 	public void excludeVarsFile(String file)
@@ -387,7 +389,7 @@ public class ConfigurationFx extends Configuration
 
 	public void openReport(File file) throws Exception
 	{
-		Common.tryCatch(() -> this.mainModel.openReport(file), "Error on open report");
+		this.mainModel.openReport(file);
 	}
 
 	public void removeReport(File file) throws Exception
@@ -640,12 +642,12 @@ public class ConfigurationFx extends Configuration
 
 	public void openAppsDictionary(File file) throws Exception
 	{
-		Common.tryCatch(() -> this.mainModel.loadDictionary(path(file), null),"Error on load dictionary");
+		this.mainModel.loadDictionary(path(file), null);
 	}
 
 	public void openAppsDictionary(File file, String adapter) throws Exception
 	{
-		Common.tryCatch(() -> this.mainModel.loadDictionary(path(file), adapter),"Error on load dictionary");
+		this.mainModel.loadDictionary(path(file), adapter);
 	}
 
 	public void showAppHelp(AppEntry entry) throws Exception

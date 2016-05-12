@@ -26,8 +26,8 @@ import java.util.Optional;
 
 public class VariablesTreeNode extends TreeNode
 {
-	private ConfigurationFx model;
-	private TreeItem<TreeNode> variablesTreeNode;
+	private ConfigurationFx		model;
+	private TreeItem<TreeNode>	variablesTreeNode;
 
 	public VariablesTreeNode(ConfigurationFx model, TreeItem<TreeNode> variablesTreeNode)
 	{
@@ -47,7 +47,7 @@ public class VariablesTreeNode extends TreeNode
 		return Optional.of(new Image(CssVariables.Icons.VARS_ICON));
 	}
 
-	public void display(List<String>  files)
+	public void display(List<String> files)
 	{
 		this.variablesTreeNode.getChildren().clear();
 		files.stream().sorted(String::compareTo).map(file -> new FileTreeNode(new File(file))
@@ -61,8 +61,7 @@ public class VariablesTreeNode extends TreeNode
 				itemRemoveVars.setOnAction(e -> Common.tryCatch(() -> model.excludeVarsFile(file), "Error on remove vars file"));
 
 				MenuItem itemOpenVars = new MenuItem("Open vars file", new ImageView(new Image(CssVariables.Icons.VARS_ICON)));
-				itemOpenVars.setOnAction(event -> model.openVariableFile(new File(file)));
-
+				itemOpenVars.setOnAction(event -> Common.tryCatch(() -> model.openVariableFile(new File(file)), "Error on load system variable"));
 				menu.getItems().addAll(itemRemoveVars, itemOpenVars);
 				menu.getItems().addAll(super.contextMenu().orElse(new ContextMenu()).getItems());
 				return Optional.of(menu);

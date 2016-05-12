@@ -28,8 +28,8 @@ import java.util.function.Function;
 
 public class MatrixTreeNode extends TreeNode
 {
-	private ConfigurationFx model;
-	private TreeItem<TreeNode> treeItem;
+	private ConfigurationFx		model;
+	private TreeItem<TreeNode>	treeItem;
 
 	public MatrixTreeNode(ConfigurationFx model, TreeItem<TreeNode> treeItem)
 	{
@@ -53,7 +53,7 @@ public class MatrixTreeNode extends TreeNode
 	public Optional<ContextMenu> contextMenu()
 	{
 		ContextMenu menu = new ContextMenu();
-		//TODO think about implementation this method
+		// TODO think about implementation this method
 		menu.getItems().add(new MenuItem("Git"));
 
 		MenuItem refresh = new MenuItem("Refresh", new ImageView(new Image(CssVariables.Icons.REFRESH)));
@@ -65,24 +65,25 @@ public class MatrixTreeNode extends TreeNode
 	public void display(List<String> matricesValue)
 	{
 		this.treeItem.getChildren().clear();
-		Function<File, ContextMenu> topFolderMenu = file -> {
+		Function<File, ContextMenu> topFolderMenu = file ->
+		{
 			ContextMenu menu = new ContextMenu();
 			MenuItem itemRemove = new MenuItem("Exclude matrix dir", new ImageView(new Image(CssVariables.Icons.REMOVE_PARAMETER_ICON)));
 			itemRemove.setOnAction(e -> Common.tryCatch(() -> model.excludeMatrixDirectory(file.getName()), "Error on remove matrix directory"));
 			menu.getItems().addAll(itemRemove);
 			return menu;
 		};
-		Function<File, ContextMenu> menuFiles = file -> {
+		Function<File, ContextMenu> menuFiles = file ->
+		{
 			ContextMenu menu = new ContextMenu();
 
 			MenuItem itemOpenMatrix = new MenuItem("Open matrix", new ImageView(new Image(CssVariables.Icons.MATRIX_ICON)));
 			itemOpenMatrix.setOnAction(e -> Common.tryCatch(() -> this.model.openMatrix(file), "Error on on open matrix"));
 
 			MenuItem addNewMatrix = new MenuItem("Add new matrix", new ImageView(new Image(CssVariables.Icons.ADD_PARAMETER_ICON)));
-			addNewMatrix.setOnAction(e ->
-					Common.tryCatch(() ->
-									ConfigurationTreeView.showInputDialog("Enter new name").ifPresent(name ->Common.tryCatch(() -> this.model.addNewMatrix(file, name), "Error on create new matrix")),
-							"Error on add new matrix"));
+			addNewMatrix.setOnAction(e -> Common.tryCatch(
+					() -> ConfigurationTreeView.showInputDialog("Enter new name").ifPresent(
+							name -> Common.tryCatch(() -> this.model.addNewMatrix(file, name), "Error on create new matrix")), "Error on add new matrix"));
 
 			MenuItem removeMatrix = new MenuItem("Remove matrix", new ImageView(new Image(CssVariables.Icons.REMOVE_PARAMETER_ICON)));
 			removeMatrix.setOnAction(e -> Common.tryCatch(() -> this.model.removeMatrix(file), "Error on remove matrix"));
@@ -90,13 +91,13 @@ public class MatrixTreeNode extends TreeNode
 			menu.getItems().addAll(itemOpenMatrix, addNewMatrix, removeMatrix);
 			return menu;
 		};
-		Function<File, ContextMenu> menuFolders = file -> {
+		Function<File, ContextMenu> menuFolders = file ->
+		{
 			ContextMenu menu = new ContextMenu();
 			MenuItem addNewMatrix = new MenuItem("Add new matrix", new ImageView(new Image(CssVariables.Icons.ADD_PARAMETER_ICON)));
-			addNewMatrix.setOnAction(e ->
-					Common.tryCatch(() ->
-							ConfigurationTreeView.showInputDialog("Enter new name").ifPresent(name -> Common.tryCatch(() -> this.model.addNewMatrix(file, name), "Error on create new matrix")),
-							"Error on add new matrix"));
+			addNewMatrix.setOnAction(e -> Common.tryCatch(
+					() -> ConfigurationTreeView.showInputDialog("Enter new name").ifPresent(
+							name -> Common.tryCatch(() -> this.model.addNewMatrix(file, name), "Error on create new matrix")), "Error on add new matrix"));
 
 			MenuItem removeFolder = new MenuItem("Remove folder", new ImageView(new Image(CssVariables.Icons.REMOVE_PARAMETER_ICON)));
 			removeFolder.setOnAction(e -> Common.tryCatch(() -> this.model.removeMatrix(file), "Error on remove folder"));
@@ -104,14 +105,10 @@ public class MatrixTreeNode extends TreeNode
 			menu.getItems().addAll(addNewMatrix, removeFolder);
 			return menu;
 		};
-		matricesValue.forEach(file ->
-				new BuildTree(new File(file), this.treeItem)
-						.fileFilter(f -> ConfigurationFx.getExtension(f.getAbsolutePath()).equals(Configuration.matrixExt))
-						.menuTopFolder(topFolderMenu)
-						.doubleClickEvent(f -> () -> this.model.openMatrix(f))
-						.menuFiles(menuFiles).menuFolder(menuFolders)
-						.byPass()
-		);
+		matricesValue.forEach(file -> new BuildTree(new File(file), this.treeItem)
+				.fileFilter(f -> ConfigurationFx.getExtension(f.getAbsolutePath()).equals(Configuration.matrixExt)).menuTopFolder(topFolderMenu)
+				.doubleClickEvent(f -> () -> Common.tryCatch(() -> this.model.openMatrix(f), "Error on open matrix file")).menuFiles(menuFiles)
+				.menuFolder(menuFolders).byPass());
 	}
 
 	public void select(File file, Consumer<TreeItem<TreeNode>> consumer)
