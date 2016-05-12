@@ -361,7 +361,7 @@ public class Operation implements Iterable<Part>, Serializable
 	@DescriptionAttribute(text = Do.useLocatorIdKind)
 	public Operation use(String locatorId, LocatorKind locatorKind)
 	{
-		this.list.add(new Part(OperationKind.USE_LOCATOR).setLocatorId(locatorId).setLocatorKind(locatorKind));
+		this.list.add(new Part(OperationKind.USE_LOCATOR).setLocatorId(locatorId).setLocatorKind(locatorKind).setBool(true));
 		return this;
 	}
 

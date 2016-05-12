@@ -53,26 +53,29 @@ public class Part implements Serializable
 			{
 				throw new Exception("Cannot find control in dialog='" + window +"' section='Run' name='" + this.locatorId + "'");
 			}
-			
-			switch (this.locatorKind)
+			//b is true, when we use Do.use(locatorId, locatorKind) and we needn't find another locator
+			if (!b)
 			{
-				case Element:
-					this.locator = control.locator();
-					break;
-					
-				case Owner:
-					control = window.getOwnerControl(control);
-					break;
-					
-				case Header:
-					control = window.getHeaderControl(control);
-					break;
-					
-				case Rows:
-					control = window.getRowsControl(control);
-					break;
+				switch (this.locatorKind)
+				{
+					case Element:
+						this.locator = control.locator();
+						break;
+
+					case Owner:
+						control = window.getOwnerControl(control);
+						break;
+
+					case Header:
+						control = window.getHeaderControl(control);
+						break;
+
+					case Rows:
+						control = window.getRowsControl(control);
+						break;
+				}
 			}
-			
+
 			this.locator = control == null ? null : control.locator();
 		}
 	}
