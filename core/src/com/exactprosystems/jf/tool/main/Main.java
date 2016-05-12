@@ -467,7 +467,7 @@ public class Main extends Application
 
 			document.save(file.getPath());
 			document.saved();
-
+			DialogsHelper.showInfo(document.getName() + " is saved successfully.");
 			if (document instanceof Matrix)
 			{
 				this.settings.remove(MAIN_NS, DocumentKind.MATRIX.name(), new File(lastName).getName());
@@ -493,9 +493,8 @@ public class Main extends Application
 		{
 			document.save(document.getName());
 			document.saved();
+			DialogsHelper.showInfo(document.getName() + " is saved successfully.");
 		}
-		
-		DialogsHelper.showInfo(document.getName() + " is saved successfully.");
 	}
 
 	public void documentsSaveAll() throws Exception

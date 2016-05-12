@@ -145,6 +145,7 @@ public class ConfigurationFxController implements Initializable, ContainingParen
 	{
 		DialogsHelper.showSuccess("Config successfully saved");
 	}
+
 	private void initTreeView()
 	{
 		TreeItem<TreeNode> evaluatorTreeItem = new TreeItem<>();

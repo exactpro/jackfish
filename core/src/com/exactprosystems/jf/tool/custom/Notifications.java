@@ -384,6 +384,7 @@ public class Notifications
 
 			// initialise label area
 			this.label = new Label();
+			this.label.setWrapText(true);
 			this.label.setText(msg);
 			this.label.getStyleClass().addAll(CssVariables.NOTIFICATION_MSG, stateClass);
 			int length = msg.split(System.lineSeparator()).length + 2;
