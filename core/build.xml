@@ -93,7 +93,7 @@
 		<ant antfile="../ClientDTS/build.xml" target="distribute" dir="../ClientDTS"/>
 		<ant antfile="../ClientFIX/build.xml" target="distribute" dir="../ClientFIX"/>
 		<ant antfile="../ClientLSE/build.xml" target="distribute" dir="../ClientLSE"/>
-		<ant antfile="../ClientSola/build.xml" target="distribute" dir="../ClientSola"/>
+		<!--<ant antfile="../ClientSola/build.xml" target="distribute" dir="../ClientSola"/>-->
 
 		<!--	services -->
 		<delete dir="services"/>
