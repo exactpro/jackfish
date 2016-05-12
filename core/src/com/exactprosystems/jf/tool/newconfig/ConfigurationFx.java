@@ -1098,7 +1098,8 @@ public class ConfigurationFx extends Configuration
 	private void displayFileSystem()
 	{
 		List<String> ignoreFiles = new ArrayList<>();
-
+		ignoreFiles.addAll(toStringList(super.appDictionariesValue));
+		ignoreFiles.addAll(toStringList(super.clientDictionariesValue));
 		ignoreFiles.addAll(toStringList(super.matricesValue));
 		ignoreFiles.addAll(toStringList(super.librariesValue));
 		ignoreFiles.add(super.varsValue.get());

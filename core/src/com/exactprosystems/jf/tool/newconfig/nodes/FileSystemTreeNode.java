@@ -68,7 +68,7 @@ public class FileSystemTreeNode extends TreeNode
 		}
 		if (initialFiles != null)
 		{
-			Function<File, ContextMenu> menuFolders = f ->
+			Function<File, ContextMenu> menuTopFolder = f ->
 			{
 				ContextMenu menu = new ContextMenu();
 
@@ -94,7 +94,7 @@ public class FileSystemTreeNode extends TreeNode
 					.sorted(ConfigurationTreeView.comparator)
 					.forEach(
 							file -> new BuildTree(file, this.treeItem)
-									.ignoredFiles(ignoreFiles.stream().map(ConfigurationFx::path).collect(Collectors.toList())).menuFolder(menuFolders)
+									.ignoredFiles(ignoreFiles.stream().map(ConfigurationFx::path).collect(Collectors.toList())).menuTopFolder(menuTopFolder)
 									.byPass());
 		}
 	}
