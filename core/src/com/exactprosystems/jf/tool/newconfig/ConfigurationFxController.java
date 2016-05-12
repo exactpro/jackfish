@@ -1,5 +1,6 @@
 package com.exactprosystems.jf.tool.newconfig;
 
+import com.exactprosystems.jf.api.service.ServiceStatus;
 import com.exactprosystems.jf.common.MutableString;
 import com.exactprosystems.jf.common.parser.Matrix;
 import com.exactprosystems.jf.documents.config.AppEntry;
@@ -112,10 +113,9 @@ public class ConfigurationFxController implements Initializable, ContainingParen
 				"Error on display client entries");
 	}
 
-	public void displayService(List<ServiceEntry> serviceEntries)
+	public void displayService(List<ServiceEntry> serviceEntries, Map<String, ServiceStatus> statusMap)
 	{
-		Common.tryCatch(() -> this.serviceTreeNode.display(serviceEntries, Collections.emptyMap(), Collections.emptyMap()),
-//		Common.tryCatch(() -> this.serviceTreeNode.display(serviceEntries, this.supportedServices, this.startedServices),
+		Common.tryCatch(() -> this.serviceTreeNode.display(serviceEntries, Collections.emptyMap(), statusMap),
 				"Error on display service entries");
 	}
 

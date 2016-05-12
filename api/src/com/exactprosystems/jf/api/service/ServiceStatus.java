@@ -1,25 +1,36 @@
 ////////////////////////////////////////////////////////////////////////////////
-//  Copyright (c) 2009-2015, Exactpro Systems, LLC
+//  Copyright (c) 2009-2016, Exactpro Systems, LLC
 //  Quality Assurance & Related Development for Innovative Trading Systems.
 //  All rights reserved.
 //  This is unpublished, licensed software, confidential and proprietary
 //  information which is the property of Exactpro Systems, LLC or its licensors.
 ////////////////////////////////////////////////////////////////////////////////
+package com.exactprosystems.jf.api.service;
 
-package com.exactprosystems.jf.api.common;
-
-public class ApiVersionInfo
+public enum ServiceStatus
 {
-	private static final int majorVersion = 2;
-	private static final int minorVersion = 15;
-	
-	public static int majorVersion() 
+	NotStarted(null),
+
+	StartSuccessful(null),
+	StartFailed(null);
+
+	private String msg;
+
+	ServiceStatus(String msg)
 	{
-		return majorVersion;
+		this.msg = msg;
 	}
-	
-	public static int minorVersion() 
+
+	public String getMsg()
 	{
-		return minorVersion;
+		return msg;
+	}
+
+	public void setMsg(String msg)
+	{
+		if (this == StartFailed)
+		{
+			this.msg = msg;
+		}
 	}
 }

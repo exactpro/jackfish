@@ -7,6 +7,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.exactprosystems.jf.tool.newconfig.nodes;
 
+import com.exactprosystems.jf.api.service.ServiceStatus;
 import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.documents.config.ServiceEntry;
 import com.exactprosystems.jf.tool.Common;
@@ -15,15 +16,12 @@ import com.exactprosystems.jf.tool.SupportedEntry;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.newconfig.ConfigurationFx;
 import com.exactprosystems.jf.tool.newconfig.ConfigurationTreeView;
-import com.exactprosystems.jf.tool.newconfig.ConnectionStatus;
 import com.exactprosystems.jf.tool.newconfig.TablePair;
-
 import javafx.scene.Node;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.TreeItem;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 
 import java.util.ArrayList;
@@ -66,11 +64,11 @@ public class ServiceTreeNode extends TreeNode
 		return Optional.of(new Image(CssVariables.Icons.SERVICE_ICON));
 	}
 
-	public void display(List<ServiceEntry> serviceEntries, Map<String, SupportedEntry> mapSupportedEntries, Map<String, ConnectionStatus> mapServicesStatus)
+	public void display(List<ServiceEntry> serviceEntries, Map<String, SupportedEntry> mapSupportedEntries, Map<String, ServiceStatus> mapStatus)
 	{
 		this.treeItem.getChildren().clear();
 		serviceEntries.stream()
-				.map(entry -> new ServiceEntryNode(model, entry, mapSupportedEntries.get(entry.toString()), mapServicesStatus.get(entry.toString())))
+				.map(entry -> new ServiceEntryNode(model, entry, mapSupportedEntries.get(entry.toString()), mapStatus.get(entry.toString())))
 				.map(serviceEntry -> new TreeItem<TreeNode>(serviceEntry))
 				.forEach(treeItem -> this.treeItem.getChildren().add(treeItem));
 	}
@@ -78,9 +76,9 @@ public class ServiceTreeNode extends TreeNode
 	private class ServiceEntryNode extends AbstractEntryNode<ServiceEntry>
 	{
 		private SupportedEntry supportedEntry;
-		private ConnectionStatus status;
+		private ServiceStatus status;
 
-		public ServiceEntryNode(ConfigurationFx model, ServiceEntry entry, SupportedEntry supportedEntry, ConnectionStatus status)
+		public ServiceEntryNode(ConfigurationFx model, ServiceEntry entry, SupportedEntry supportedEntry, ServiceStatus status)
 		{
 			super(model, entry);
 			this.supportedEntry = supportedEntry;
@@ -112,6 +110,9 @@ public class ServiceTreeNode extends TreeNode
 				switch (status)
 				{
 					case NotStarted:
+						startService.setDisable(false);
+						stopService.setDisable(true);
+						break;
 					case StartFailed:
 						startService.setDisable(false);
 						stopService.setDisable(true);
@@ -127,9 +128,31 @@ public class ServiceTreeNode extends TreeNode
 		}
 
 		@Override
+		public Node getView()
+		{
+			Node view = super.getView();
+			if (this.status != ServiceStatus.StartFailed)
+			{
+				return view;
+			}
+			HBox box = new HBox();
+			Label lbl = new Label("( " + this.status.getMsg() + " ) ");
+			lbl.setTooltip(new Tooltip(this.status.getMsg()));
+			box.getChildren().addAll(view, lbl);
+			return box;
+
+		}
+
+		@Override
 		public Optional<Image> icon()
 		{
-			return Optional.ofNullable(status).map(ConnectionStatus::getImage);
+			switch (this.status)
+			{
+				case NotStarted:		return Optional.of(new Image(CssVariables.Icons.SERVICE_NOT_STARTED_ICON));
+				case StartSuccessful:	return Optional.of(new Image(CssVariables.Icons.SERVICE_STARTED_GOOD_ICON));
+				case StartFailed:		return Optional.of(new Image(CssVariables.Icons.SERVICE_STARTED_FAIL_ICON));
+			}
+			return Optional.empty();
 		}
 
 		@Override

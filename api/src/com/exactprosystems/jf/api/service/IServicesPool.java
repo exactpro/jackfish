@@ -8,11 +8,11 @@
 
 package com.exactprosystems.jf.api.service;
 
-import java.util.List;
-import java.util.Map;
-
 import com.exactprosystems.jf.api.common.IContext;
 import com.exactprosystems.jf.api.common.IPool;
+
+import java.util.List;
+import java.util.Map;
 
 public interface IServicesPool  extends IPool
 {
@@ -25,5 +25,7 @@ public interface IServicesPool  extends IPool
 	public void startService(IContext context, ServiceConnection connection, Map<String, Object> params) throws Exception;
 	public void stopService(ServiceConnection connection) throws Exception;
 	public void stopAllServices();
+
+	public ServiceStatus getStatus(String id);
 }
 

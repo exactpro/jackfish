@@ -20,8 +20,8 @@ public class MatrixServiceFactory implements IServiceFactory
 	public final static String portName 				= "Port";
 	public final static String onConnectedName 		= "OnConnected";
 	
-	private static final int requiredMajorVersion = 1;
-	private static final int requiredMinorVersion = 24;
+	private static final int requiredMajorVersion = 2;
+	private static final int requiredMinorVersion = 15;
 
 	@Override
 	public boolean canFillParameter(String parameterToFill)

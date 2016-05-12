@@ -10,21 +10,15 @@ package com.exactprosystems.jf.service;
 
 import com.exactprosystems.jf.api.common.ApiVersionInfo;
 import com.exactprosystems.jf.api.common.IContext;
-import com.exactprosystems.jf.api.service.IService;
-import com.exactprosystems.jf.api.service.IServiceFactory;
-import com.exactprosystems.jf.api.service.IServicesPool;
-import com.exactprosystems.jf.api.service.ServiceConnection;
+import com.exactprosystems.jf.api.service.*;
 import com.exactprosystems.jf.common.MainRunner;
 import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.documents.config.Parameter;
 import com.exactprosystems.jf.documents.config.ServiceEntry;
-
 import org.apache.log4j.Logger;
 
-import java.io.File;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.nio.file.Paths;
 import java.util.*;
 
 public class ServicePool implements IServicesPool
@@ -34,6 +28,7 @@ public class ServicePool implements IServicesPool
 		this.configuration = configuration;
 		this.serviceFactories = new HashMap<String, IServiceFactory>();
 		this.connections = new HashSet<ServiceConnection>();
+		this.mapServices = new HashMap<>();
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -206,18 +201,23 @@ public class ServicePool implements IServicesPool
 	@Override
 	public synchronized void startService(IContext context, ServiceConnection connection, Map<String, Object> params) throws Exception
 	{
+		if (connection == null || connection.isBad())
+		{
+			throw new Exception("The service " + connection + " is not loaded.");
+		}
 		try
 		{
-			if (connection == null || connection.isBad())
-			{
-				throw new Exception("The service " + connection + " is not loaded.");
-			}
-			
+
 			IService service = connection.getService();
+			this.mapServices.remove(connection.getId());
+			this.mapServices.put(connection.getId(), ServiceStatus.StartSuccessful);
 			service.start(context, params);
 		}
 		catch (Exception e)
 		{
+			ServiceStatus startFailed = ServiceStatus.StartFailed;
+			startFailed.setMsg(e.getMessage());
+			this.mapServices.replace(connection.getId(), startFailed);
 			logger.error(String.format("Error in startService(%s)", connection));
 			logger.error(e.getMessage(), e);
 			throw e;
@@ -237,6 +237,7 @@ public class ServicePool implements IServicesPool
 			IService service = connection.getService();
 			service.stop();
 			this.connections.remove(connection);
+			this.mapServices.remove(connection.getId());
 		}
 		catch (Exception e)
 		{
@@ -262,6 +263,13 @@ public class ServicePool implements IServicesPool
 			}
 		}
 	}
+
+	@Override
+	public ServiceStatus getStatus(String id)
+	{
+		return Optional.ofNullable(this.mapServices.get(id)).orElse(ServiceStatus.NotStarted);
+	}
+
 	//----------------------------------------------------------------------------------------------
 	
 	private ServiceEntry parametersEntry(String id) throws Exception
@@ -312,11 +320,13 @@ public class ServicePool implements IServicesPool
 		throw new Exception("Application '" + id + "' needs API no less than " 
 				+ serviceFactory.requiredMajorVersion() + "." + serviceFactory.requiredMinorVersion());
 	}
-	
+
+	private Map<String, ServiceStatus> mapServices;
+
 	private Configuration configuration;
 
 	private Map<String, IServiceFactory> serviceFactories;
-	
+
 	private Set<ServiceConnection> connections;
 
 	private static final Logger logger = Logger.getLogger(ServicePool.class);

@@ -12,6 +12,7 @@ import com.exactprosystems.jf.api.client.IClientFactory;
 import com.exactprosystems.jf.api.client.Possibility;
 import com.exactprosystems.jf.api.service.IServicesPool;
 import com.exactprosystems.jf.api.service.ServiceConnection;
+import com.exactprosystems.jf.api.service.ServiceStatus;
 import com.exactprosystems.jf.app.ApplicationPool;
 import com.exactprosystems.jf.client.ClientsPool;
 import com.exactprosystems.jf.common.MutableString;
@@ -56,9 +57,8 @@ public class ConfigurationFx extends Configuration
 	private Map<String, SupportedEntry> supportedClients;
 	private Map<String, SupportedEntry> supportedApps;
 	private Map<String, SupportedEntry> supportedServices;
-	private Map<String, ConnectionStatus> startedServices;    // TODO why is this thing here? it should be in ServicesPool
 
-	private Map<ServiceEntry, ServiceConnection> serviceMap = new HashMap<>();
+	private Map<ServiceEntry, ServiceConnection> serviceConnectionMap = new HashMap<>();
 	//endregion
 
 	//region Constructors
@@ -74,7 +74,6 @@ public class ConfigurationFx extends Configuration
 		this.supportedClients = new HashMap<>();
 		this.supportedApps = new HashMap<>();
 		this.supportedServices = new HashMap<>();
-		this.startedServices = new HashMap<>();
 
 		super.listener = DialogsHelper::showError;
 		super.runnerListener = runnerListener;
@@ -147,7 +146,7 @@ public class ConfigurationFx extends Configuration
 	{
 		super.load(reader);
 
-		this.getServiceEntries().forEach(entry -> this.startedServices.put(entry.toString(), ConnectionStatus.NotStarted));
+//		this.getServiceEntries().forEach(entry -> this.startedServices.put(entry.toString(), ConnectionStatus.NotStarted));
 		initController();
 	}
 
@@ -519,17 +518,13 @@ public class ConfigurationFx extends Configuration
 
 	public void startService(ServiceEntry entry) throws Exception
 	{
-		// TODO move to service pool
 		try
 		{
 			final String idEntry = entry.toString();
-			for (ServiceEntry next : serviceMap.keySet())
+			if (getServicesPool().getStatus(entry.toString()) == ServiceStatus.StartSuccessful)
 			{
-				if (next.toString().equals(idEntry))
-				{
-					DialogsHelper.showInfo(String.format("Entry with id '%s' already started", idEntry));
-					return;
-				}
+				DialogsHelper.showInfo(String.format("Entry with id '%s' already started", idEntry));
+				return;
 			}
 			String parametersName = "StartParameters";
 			String title = "Start ";
@@ -568,41 +563,31 @@ public class ConfigurationFx extends Configuration
 				protected Void call() throws Exception
 				{
 					IServicesPool services = getServicesPool();
-					controller.displayService(getServiceEntries());
 					ServiceConnection serviceConnection = services.loadService(entry.toString());
-					serviceMap.put(entry, serviceConnection);
 					services.startService(createContext(new SilenceMatrixListener(), System.out), serviceConnection, startParameters);
+					serviceConnectionMap.put(entry, serviceConnection);
 					return null;
 				}
 			};
 
-			startTask.setOnSucceeded(workerStateEvent -> {
-				startedServices.replace(entry.toString(), ConnectionStatus.StartSuccessful);
-				this.controller.displayService(getServiceEntries());
-			});
-
-			startTask.setOnFailed(workerStateEvent -> {
-				startedServices.replace(entry.toString(), ConnectionStatus.StartFailed);
-				this.controller.displayService(getServiceEntries());
-			});
+			startTask.setOnSucceeded(workerStateEvent -> this.controller.displayService(getServiceEntries(), getStatuses(getServiceEntries())));
+			startTask.setOnFailed(workerStateEvent -> this.controller.displayService(getServiceEntries(), getStatuses(getServiceEntries())));
 			new Thread(startTask).start();
 		}
 		catch (Exception e)
 		{
-			this.startedServices.replace(entry.toString(), ConnectionStatus.StartFailed);
-			this.controller.displayService(getServiceEntries());
+			this.controller.displayService(getServiceEntries(), getStatuses(getServiceEntries()));
 			throw e;
 		}
 	}
 
 	public void stopService(ServiceEntry entry) throws Exception
 	{
-		ServiceConnection serviceConnection = this.serviceMap.remove(entry);
+		ServiceConnection serviceConnection = this.serviceConnectionMap.remove(entry);
 		if (serviceConnection != null)
 		{
 			getServicesPool().stopService(serviceConnection);
-			this.startedServices.remove(entry.toString());
-			this.controller.displayService(getServiceEntries());
+			this.controller.displayService(getServiceEntries(), getStatuses(getServiceEntries()));
 		}
 	}
 	//endregion
@@ -979,6 +964,11 @@ public class ConfigurationFx extends Configuration
 		displayFunction.display();
 	}
 
+	private Map<String, ServiceStatus> getStatuses(List<ServiceEntry> entries)
+	{
+		return entries.stream().collect(Collectors.toMap(Entry::toString, e -> getServicesPool().getStatus(e.toString())));
+	}
+
 	private void select(TreeNode startNode)
 	{
 
@@ -1094,7 +1084,10 @@ public class ConfigurationFx extends Configuration
 
 	private void displayService()
 	{
-		this.controller.displayService(getServiceEntries());
+		Map<String, ServiceStatus> statusMap = new HashMap<>();
+		List<ServiceEntry> serviceEntries = getServiceEntries();
+		serviceEntries.forEach(entry -> statusMap.put(entry.toString(), getServicesPool().getStatus(entry.toString())));
+		this.controller.displayService(serviceEntries, statusMap);
 	}
 
 	private void displayApp()

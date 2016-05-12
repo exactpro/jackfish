@@ -42,6 +42,11 @@ public class ServiceConnection implements AutoCloseable
 		return this.service;
 	}
 
+	public String getId()
+	{
+		return id;
+	}
+
 	private IService service;
 	
 	private String id;
