@@ -12,8 +12,6 @@ import java.rmi.RemoteException;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
-import com.exactprosystems.jf.api.client.ICondition;
-
 public enum OperationKind
 {
 	FOREACH("foreach")
@@ -817,7 +815,7 @@ public enum OperationKind
 		boolean result;
 		if (componentText == null)
 		{
-			result = false;
+			result = what == null && !isRegexp;
 		}
 		else
 		{
