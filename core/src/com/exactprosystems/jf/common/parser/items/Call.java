@@ -286,7 +286,10 @@ public final class Call extends MatrixItem
 		this.ref = context.referenceToSubcase(name, this);
 		try
 		{
-			this.ref.init(this.owner);
+			if (this.ref != null)
+			{
+				this.ref.init(this.owner);
+			}
 		}
 		catch (MatrixException e)
 		{
