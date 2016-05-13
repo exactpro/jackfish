@@ -22,11 +22,11 @@ import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.*;
-import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
@@ -70,7 +70,7 @@ public abstract class Common
 
 	public static final Logger	logger					= Logger.getLogger(Common.class);
 
-	public static void setFocused(final TextField field)
+	public static void setFocused(final Node node)
 	{
 		Thread thread = new Thread(new Task<Void>()
 		{
@@ -78,11 +78,11 @@ public abstract class Common
 			protected Void call() throws Exception
 			{
 				Thread.sleep(300);
-				Platform.runLater(field::requestFocus);
+				Platform.runLater(node::requestFocus);
 				return null;
 			}
 		});
-		thread.setName("Focused field : " + field + " , thread id : " + thread.getId());
+		thread.setName("Focused node : " + node + " , thread id : " + thread.getId());
 		thread.start();
 	}
 

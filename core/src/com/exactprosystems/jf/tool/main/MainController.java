@@ -598,24 +598,35 @@ public class MainController implements Initializable, ContainingParent
 	{
 		this.documentsPane.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) ->
 		{
+			/*if (oldValue != null)
+			{
+				CustomTab tab = (CustomTab) oldValue;
+				if (tab.getDocument() instanceof MatrixFx)
+				{
+					Node lookup = tab.getContent().lookup("."+CssVariables.CUSTOM_TREE_TABLE_VIEW);
+					if (lookup instanceof MatrixTreeView)
+					{
+						((MatrixTreeView) lookup).getSelectionModel().clearSelection();
+						((MatrixTreeView) lookup).getFocusModel().focus(-1);
+					}
+				}z
+			}*/
 			if (newValue == null)
 			{
 				this.model.changeDocument(null);
 			}
 			else
 			{
-				this.model.changeDocument(((CustomTab) newValue).getDocument());
-			}
-			if (oldValue != null)
-			{
-				CustomTab tab = (CustomTab) oldValue;
-				if (tab.getDocument() instanceof MatrixFx)
+				CustomTab newCustomTab = (CustomTab) newValue;
+				this.model.changeDocument(newCustomTab.getDocument());
+				if (newCustomTab.getDocument() instanceof MatrixFx)
 				{
-					Node lookup = tab.getContent().lookup(".customTreeTableView");
+					Node lookup = newCustomTab.getContent().lookup("."+CssVariables.CUSTOM_TREE_TABLE_VIEW);
 					if (lookup instanceof MatrixTreeView)
 					{
-						((MatrixTreeView) lookup).getSelectionModel().clearSelection();
-						((MatrixTreeView) lookup).getFocusModel().focus(-1);
+						Common.setFocused(lookup);
+//						((MatrixTreeView) lookup).getSelectionModel().selectFirst();
+//						((MatrixTreeView) lookup).getFocusModel().focus(0);
 					}
 				}
 			}
