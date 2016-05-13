@@ -76,8 +76,7 @@ public class ConfigurationFxController implements Initializable, ContainingParen
 
 	public void displayFormat(String timeFormat, String dateFormat, String dateTimeFormat, List<String> additionFormats)
 	{
-		Common.tryCatch(() -> this.formatTreeNode.display(timeFormat, dateFormat, dateTimeFormat, additionFormats),
-				"Error on display evaluator");
+		Common.tryCatch(() -> this.formatTreeNode.display(timeFormat, dateFormat, dateTimeFormat, additionFormats),"Error on display evaluator");
 	}
 
 	public void displayMatrix(List<String> matricesValue)
@@ -102,33 +101,29 @@ public class ConfigurationFxController implements Initializable, ContainingParen
 
 	public void displayClient(List<ClientEntry> clientEntries)
 	{
-		Common.tryCatch(() -> this.clientTreeNode.display(clientEntries, Collections.emptyMap(),
+		Common.tryCatch(() -> this.clientTreeNode.display(clientEntries,
 				this.model.getClientDictionariesValue()
 						.stream()
 						.map(MutableString::get)
 						.map(File::new)
 						.collect(Collectors.toList())
-		),
-//		Common.tryCatch(() -> this.clientTreeNode.display(clientEntries, this.supportedClients, this.listClientDictionaries),
-				"Error on display client entries");
+		),"Error on display client entries");
 	}
 
 	public void displayService(List<ServiceEntry> serviceEntries, Map<String, ServiceStatus> statusMap)
 	{
-		Common.tryCatch(() -> this.serviceTreeNode.display(serviceEntries, Collections.emptyMap(), statusMap),
-				"Error on display service entries");
+		Common.tryCatch(() -> this.serviceTreeNode.display(serviceEntries, statusMap),"Error on display service entries");
 	}
 
 	public void displayApp(List<AppEntry> appEntries)
 	{
-		Common.tryCatch(() -> this.appTreeNode.display(appEntries, Collections.emptyMap(),
+		Common.tryCatch(() -> this.appTreeNode.display(appEntries,
 				this.model.getAppDictionariesValue()
 							.stream()
 							.map(MutableString::get)
 							.map(File::new)
 							.collect(Collectors.toList())
 		), "Error on display apps entries");
-//		Common.tryCatch(() -> this.appTreeNode.display(appEntries, this.supportedApps, this.listAppsDictionaries), "Error on display sql entries");
 	}
 
 	public void displayReport(String reportsValue)

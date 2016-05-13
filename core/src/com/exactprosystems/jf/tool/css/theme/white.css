@@ -771,7 +771,7 @@ CellView > .text-input.text-field{
 	-fx-text-fill: derive(-fx-control-inner-background,-30%);
 }
 
-/*ConfigurationTree*/
+/*Configuration*/
 .fullPathLabel {
 	-fx-opacity : 0.5;
 

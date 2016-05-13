@@ -12,7 +12,6 @@ import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.documents.config.ServiceEntry;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
-import com.exactprosystems.jf.tool.SupportedEntry;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.newconfig.ConfigurationFx;
 import com.exactprosystems.jf.tool.newconfig.ConfigurationTreeView;
@@ -64,24 +63,22 @@ public class ServiceTreeNode extends TreeNode
 		return Optional.of(new Image(CssVariables.Icons.SERVICE_ICON));
 	}
 
-	public void display(List<ServiceEntry> serviceEntries, Map<String, SupportedEntry> mapSupportedEntries, Map<String, ServiceStatus> mapStatus)
+	public void display(List<ServiceEntry> serviceEntries, Map<String, ServiceStatus> mapStatus)
 	{
 		this.treeItem.getChildren().clear();
 		serviceEntries.stream()
-				.map(entry -> new ServiceEntryNode(model, entry, mapSupportedEntries.get(entry.toString()), mapStatus.get(entry.toString())))
+				.map(entry -> new ServiceEntryNode(model, entry, mapStatus.get(entry.toString())))
 				.map(serviceEntry -> new TreeItem<TreeNode>(serviceEntry))
 				.forEach(treeItem -> this.treeItem.getChildren().add(treeItem));
 	}
 
 	private class ServiceEntryNode extends AbstractEntryNode<ServiceEntry>
 	{
-		private SupportedEntry supportedEntry;
 		private ServiceStatus status;
 
-		public ServiceEntryNode(ConfigurationFx model, ServiceEntry entry, SupportedEntry supportedEntry, ServiceStatus status)
+		public ServiceEntryNode(ConfigurationFx model, ServiceEntry entry, ServiceStatus status)
 		{
 			super(model, entry);
-			this.supportedEntry = supportedEntry;
 			this.status = status;
 		}
 
@@ -183,10 +180,5 @@ public class ServiceTreeNode extends TreeNode
 			return () -> model.startService(getEntry());
 		}
 
-		@Override
-		protected SupportedEntry getSupportedEntry()
-		{
-			return this.supportedEntry;
-		}
 	}
 }

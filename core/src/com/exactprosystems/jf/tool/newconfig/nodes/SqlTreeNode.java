@@ -10,10 +10,8 @@ package com.exactprosystems.jf.tool.newconfig.nodes;
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.documents.config.SqlEntry;
-import com.exactprosystems.jf.sql.SqlConnection;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
-import com.exactprosystems.jf.tool.SupportedEntry;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.newconfig.ConfigurationFx;
 import com.exactprosystems.jf.tool.newconfig.ConfigurationTreeView;
@@ -98,12 +96,6 @@ public class SqlTreeNode extends TreeNode
 		public SqlEntryNode(ConfigurationFx model, SqlEntry sqlEntry)
 		{
 			super(model, sqlEntry);
-		}
-
-		@Override
-		protected SupportedEntry getSupportedEntry()
-		{
-			return null;
 		}
 
 		@Override

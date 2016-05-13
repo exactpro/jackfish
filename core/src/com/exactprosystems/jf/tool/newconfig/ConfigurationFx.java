@@ -9,7 +9,9 @@ package com.exactprosystems.jf.tool.newconfig;
 
 import com.exactprosystems.jf.api.app.IApplicationFactory;
 import com.exactprosystems.jf.api.client.IClientFactory;
+import com.exactprosystems.jf.api.client.IClientsPool;
 import com.exactprosystems.jf.api.client.Possibility;
+import com.exactprosystems.jf.api.common.IPool;
 import com.exactprosystems.jf.api.service.IServicesPool;
 import com.exactprosystems.jf.api.service.ServiceConnection;
 import com.exactprosystems.jf.api.service.ServiceStatus;
@@ -29,8 +31,6 @@ import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.SupportedEntry;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.main.Main;
-import com.exactprosystems.jf.tool.newconfig.nodes.TreeNode;
-
 import javafx.concurrent.Task;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
@@ -39,7 +39,6 @@ import javafx.scene.control.ListView;
 import javafx.scene.layout.BorderPane;
 
 import javax.xml.bind.annotation.XmlRootElement;
-
 import java.io.File;
 import java.io.Reader;
 import java.util.*;
@@ -450,14 +449,16 @@ public class ConfigurationFx extends Configuration
 
 	public void testClientVersion() throws Exception
 	{
-		// TODO move to the clients pool
 		this.supportedClients.clear();
-		ClientsPool clientPool = new ClientsPool(this);
-		for (ClientEntry entry : getClientEntries())
-		{
-			String id = entry.toString();
-			this.supportedClients.put(entry.toString(), new SupportedEntry(clientPool.isSupported(id), clientPool.requiredMajorVersion(id), clientPool.requiredMinorVersion(id)));
-		}
+		IClientsPool clientPool = getClientPool();
+		this.supportedClients.putAll(getClientEntries()
+				.stream()
+				.map(ClientEntry::toString)
+				.collect(Collectors.toMap(
+						id -> id,
+						id -> new SupportedEntry(clientPool.isSupported(id), clientPool.requiredMajorVersion(id), clientPool.requiredMinorVersion(id))
+				))
+		);
 		this.displayClient();
 	}
 
@@ -715,6 +716,29 @@ public class ConfigurationFx extends Configuration
 		return path(new File(string));
 	}
 
+	public <T extends Entry> SupportedEntry getSupportedEntry(T entry)
+	{
+		SupportedEntry supportedEntry = null;
+		String id = entry.toString();
+		IPool pool;
+		if (entry.getClass().getSimpleName().equals(ClientEntry.class.getSimpleName()))
+		{
+			pool = getClientPool();
+			supportedEntry = new SupportedEntry(pool.isSupported(id), pool.requiredMajorVersion(id), pool.requiredMinorVersion(id));
+		}
+		else if (entry.getClass().getSimpleName().equals(AppEntry.class.getSimpleName()))
+		{
+			pool = getApplicationPool();
+			supportedEntry = new SupportedEntry(pool.isSupported(id), pool.requiredMajorVersion(id), pool.requiredMinorVersion(id));
+		}
+		else if (entry.getClass().getSimpleName().equals(ServiceEntry.class.getSimpleName()))
+		{
+			pool = getServicesPool();
+			supportedEntry = new SupportedEntry(pool.isSupported(id), pool.requiredMajorVersion(id), pool.requiredMinorVersion(id));
+		}
+		return supportedEntry;
+	}
+
 	//region private methods
 	private <T extends Entry> void addNewEntry(Class<T> clazz, List<T> list, String name, DisplayFunction func) throws Exception
 	{
@@ -969,10 +993,6 @@ public class ConfigurationFx extends Configuration
 		return entries.stream().collect(Collectors.toMap(Entry::toString, e -> getServicesPool().getStatus(e.toString())));
 	}
 
-	private void select(TreeNode startNode)
-	{
-
-	}
 
 	@FunctionalInterface
 	private interface DisplayFunction
@@ -1084,10 +1104,7 @@ public class ConfigurationFx extends Configuration
 
 	private void displayService()
 	{
-		Map<String, ServiceStatus> statusMap = new HashMap<>();
-		List<ServiceEntry> serviceEntries = getServiceEntries();
-		serviceEntries.forEach(entry -> statusMap.put(entry.toString(), getServicesPool().getStatus(entry.toString())));
-		this.controller.displayService(serviceEntries, statusMap);
+		this.controller.displayService(getServiceEntries(), getStatuses(getServiceEntries()));
 	}
 
 	private void displayApp()

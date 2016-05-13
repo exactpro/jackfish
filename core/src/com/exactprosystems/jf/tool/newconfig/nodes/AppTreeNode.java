@@ -11,7 +11,6 @@ import com.exactprosystems.jf.documents.config.AppEntry;
 import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
-import com.exactprosystems.jf.tool.SupportedEntry;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.newconfig.ConfigurationFx;
 import com.exactprosystems.jf.tool.newconfig.ConfigurationTreeView;
@@ -27,7 +26,6 @@ import javafx.scene.text.Text;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 
@@ -71,25 +69,22 @@ public class AppTreeNode extends TreeNode
 		return Optional.of(new Image(CssVariables.Icons.APP_ICON));
 	}
 
-	public void display(List<AppEntry> entries, Map<String, SupportedEntry> map, List<File> listAppsDictionaries)
+	public void display(List<AppEntry> entries, List<File> listAppsDictionaries)
 	{
 		this.treeItem.getChildren().clear();
 		this.treeItem.getChildren().add(this.appTreeItem);
 		this.appDictionaryTreeNode.display(listAppsDictionaries);
 		entries.stream()
-				.map(e -> new AppEntryNode(model, e, map.get(e.toString())))
+				.map(e -> new AppEntryNode(model, e))
 				.map(e -> new TreeItem<TreeNode>(e))
 				.forEach(i -> this.treeItem.getChildren().add(i));
 	}
 
 	private class AppEntryNode extends AbstractEntryNode<AppEntry>
 	{
-		private SupportedEntry supportedEntry;
-
-		public AppEntryNode(ConfigurationFx model, AppEntry entry, SupportedEntry supportedEntry)
+		public AppEntryNode(ConfigurationFx model, AppEntry entry)
 		{
 			super(model, entry);
-			this.supportedEntry = supportedEntry;
 		}
 
 		@Override
@@ -179,11 +174,6 @@ public class AppTreeNode extends TreeNode
 			return () -> model.openAppsDictionary(getEntry());
 		}
 
-		@Override
-		protected SupportedEntry getSupportedEntry()
-		{
-			return this.supportedEntry;
-		}
 	}
 
 	private class AppDictionaryTreeNode extends TreeNode

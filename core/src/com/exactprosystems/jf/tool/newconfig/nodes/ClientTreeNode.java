@@ -11,7 +11,6 @@ import com.exactprosystems.jf.documents.config.ClientEntry;
 import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
-import com.exactprosystems.jf.tool.SupportedEntry;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.newconfig.ConfigurationFx;
 import com.exactprosystems.jf.tool.newconfig.ConfigurationTreeView;
@@ -27,7 +26,6 @@ import javafx.scene.text.Text;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 
@@ -72,23 +70,22 @@ public class ClientTreeNode extends TreeNode
 		return Optional.of(new Image(CssVariables.Icons.CLIENT_ICON));
 	}
 
-	public void display(List<ClientEntry> clientEntries, Map<String, SupportedEntry> map, List<File> listClientDictionaries)
+	public void display(List<ClientEntry> clientEntries, List<File> listClientDictionaries)
 	{
 		this.treeItem.getChildren().clear();
 		this.treeItem.getChildren().add(this.clientTreeItem);
 		this.clientDictionaryTreeNode.display(listClientDictionaries);
-		clientEntries.stream().map(e -> new ClientEntryNode(model, e, map.get(e.toString()))).map(e -> new TreeItem<TreeNode>(e))
+		clientEntries.stream()
+				.map(e -> new ClientEntryNode(model, e))
+				.map(e -> new TreeItem<TreeNode>(e))
 				.forEach(i -> this.treeItem.getChildren().add(i));
 	}
 
 	private class ClientEntryNode extends AbstractEntryNode<ClientEntry>
 	{
-		private SupportedEntry	supportedEntry;
-
-		public ClientEntryNode(ConfigurationFx model, ClientEntry entry, SupportedEntry supportedEntry)
+		public ClientEntryNode(ConfigurationFx model, ClientEntry entry)
 		{
 			super(model, entry);
-			this.supportedEntry = supportedEntry;
 		}
 
 		@Override
@@ -174,11 +171,6 @@ public class ClientTreeNode extends TreeNode
 			return () -> model.openClientDictionary(getEntry());
 		}
 
-		@Override
-		protected SupportedEntry getSupportedEntry()
-		{
-			return this.supportedEntry;
-		}
 	}
 
 	private class ClientDictionaryTreeNode extends TreeNode

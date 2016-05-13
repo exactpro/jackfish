@@ -166,8 +166,10 @@ public class CssVariables
 	public static final String	NOT_EDITABLE_FIELD			= "notEditableField";
 	public static final String	BROWSER						= "browser";
 
-	/*ConfigurationTree*/
+
+	//region Configuration
 	public static final String	FULL_PATH_LABEL				= "fullPathLabel";
+	//endregion
 
 	/**
 	 * Spinner css

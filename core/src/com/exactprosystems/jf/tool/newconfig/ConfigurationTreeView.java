@@ -15,6 +15,7 @@ import com.exactprosystems.jf.tool.newconfig.nodes.TreeNode;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.MenuItem;
@@ -68,16 +69,17 @@ public class ConfigurationTreeView extends TreeView<TreeNode>
 				setText(null);
 				if (item != null)
 				{
+					Node view = item.getView();
 					if (item instanceof SeparatorTreeNode)
 					{
-						setGraphic(item.getView());
+						setGraphic(view);
 					}
 					else
 					{
 						HBox pane = new HBox();
 						pane.setSpacing(5);
 						item.icon().map(ImageView::new).ifPresent(pane.getChildren()::add);
-						pane.getChildren().add(item.getView());
+						pane.getChildren().add(view);
 						setGraphic(pane);
 					}
 				}
