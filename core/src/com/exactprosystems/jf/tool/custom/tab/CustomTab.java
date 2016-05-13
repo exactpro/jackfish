@@ -20,6 +20,7 @@ import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Tab;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 
@@ -56,6 +57,13 @@ public class CustomTab extends Tab implements AutoCloseable
 
 		this.text = new Text();
 		this.text.getStyleClass().add(CssVariables.TAB_LABEL);
+		this.text.setOnMouseClicked(event -> {
+			if (event.getButton() == MouseButton.MIDDLE)
+			{
+				Common.tryCatch(this::onClose, "");
+				Common.tryCatch(this::close, "");
+			}
+		});
 		box.getChildren().addAll(this.text, this.crossButton);
 		this.setGraphic(box);
 
