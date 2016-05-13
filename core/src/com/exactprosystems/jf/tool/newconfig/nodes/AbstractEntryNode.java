@@ -15,6 +15,7 @@ import com.exactprosystems.jf.tool.newconfig.ConfigurationFx;
 import javafx.concurrent.Service;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -48,15 +49,22 @@ public abstract class AbstractEntryNode<T extends Entry> extends TreeNode
 	@Override
 	public Node getView()
 	{
-		Node view = cache.get(this.entry);
-		if (view != null)
+		Node cacheView = cache.get(this.entry);
+		if (cacheView != null)
 		{
-			return view;
+			return cacheView;
 		}
-		Label lbl = new Label();
-		Text name = new Text(getEntryName());
-		getDescription().filter(desc -> !desc.isEmpty()).map(Tooltip::new).ifPresent(lbl::setTooltip);
-		lbl.setGraphic(name);
+		Label viewLabel = new Label();
+		Text entryName = new Text(getEntryName());
+		getDescription().filter(desc -> !desc.isEmpty()).map(Tooltip::new).ifPresent(viewLabel::setTooltip);
+		HBox viewBox = createBox();
+		ProgressIndicator indicator = createIndicator();
+		if (needSupport())
+		{
+			viewBox.getChildren().add(indicator);
+		}
+		viewBox.getChildren().add(entryName);
+		viewLabel.setGraphic(viewBox);
 		Service<List<Node>> entryService = new EntryService(() -> {
 			SupportedEntry supportedEntry = getSupportedEntry();
 			ArrayList<Node> ret = new ArrayList<>();
@@ -78,7 +86,7 @@ public abstract class AbstractEntryNode<T extends Entry> extends TreeNode
 				}
 				Text exceptionText = new Text(text);
 				exceptionText.setOpacity(0.5);
-				ret.addAll(Arrays.asList(new ImageView(icon), name, exceptionText));
+				ret.addAll(Arrays.asList(new ImageView(icon), entryName, exceptionText));
 			}
 			return ret;
 		});
@@ -87,15 +95,32 @@ public abstract class AbstractEntryNode<T extends Entry> extends TreeNode
 			List<Node> value = (List<Node>) event.getSource().getValue();
 			if (!value.isEmpty())
 			{
-				HBox box = new HBox();
-				box.setSpacing(3);
+				HBox box = createBox();
 				box.getChildren().addAll(value);
-				lbl.setGraphic(box);
-				cache.put(this.entry, lbl);
+				viewLabel.setGraphic(box);
+				cache.put(this.entry, viewLabel);
 			}
 		});
 		entryService.start();
-		return lbl;
+		cache.put(this.entry, viewLabel);
+		return viewLabel;
+	}
+
+	private HBox createBox()
+	{
+		HBox box = new HBox();
+		box.setSpacing(3);
+		return box;
+	}
+
+	private ProgressIndicator createIndicator()
+	{
+		ProgressIndicator i = new ProgressIndicator();
+		i.setPrefSize(16, 16);
+		i.setMinSize(16, 16);
+		i.setMaxSize(16, 16);
+		i.setProgress(ProgressIndicator.INDETERMINATE_PROGRESS);
+		return i;
 	}
 
 	@Override
@@ -129,6 +154,11 @@ public abstract class AbstractEntryNode<T extends Entry> extends TreeNode
 	protected Optional<String> getDescription()
 	{
 		return Optional.empty();
+	}
+
+	protected boolean needSupport()
+	{
+		return true;
 	}
 	//endregion
 }

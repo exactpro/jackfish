@@ -128,5 +128,11 @@ public class SqlTreeNode extends TreeNode
 			}
 			return null;
 		}
+
+		@Override
+		protected boolean needSupport()
+		{
+			return false;
+		}
 	}
 }
