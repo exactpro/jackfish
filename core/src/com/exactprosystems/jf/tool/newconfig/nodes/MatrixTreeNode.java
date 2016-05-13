@@ -35,6 +35,7 @@ public class MatrixTreeNode extends TreeNode
 	{
 		this.model = model;
 		this.treeItem = treeItem;
+		BuildTree.addListenerToExpandChild(this.treeItem);
 	}
 
 	@Override

@@ -190,6 +190,7 @@ public class ClientTreeNode extends TreeNode
 		{
 			this.treeItem = treeItem;
 			this.model = model;
+			BuildTree.addListenerToExpandChild(this.treeItem);
 		}
 
 		@Override

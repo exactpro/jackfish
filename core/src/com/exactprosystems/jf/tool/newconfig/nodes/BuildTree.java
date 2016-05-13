@@ -117,6 +117,7 @@ public class BuildTree
 				}
 			};
 			TreeItem<TreeNode> folderNode = new TreeItem<>(folderTreeNode);
+			addListenerToExpandChild(folderNode);
 			rootNode.getChildren().add(folderNode);
 			Optional.ofNullable(rootFile.listFiles()).ifPresent(files -> Arrays.stream(files).sorted(ConfigurationTreeView.comparator).forEach(file -> byPassReq(file, folderNode, null, fileFilter, menuFiles, this.menuFolder, doubleClickEvent)));
 		}
@@ -147,5 +148,18 @@ public class BuildTree
 			});
 			rootNode.getChildren().add(fileNode);
 		}
+	}
+
+	public static void addListenerToExpandChild(TreeItem<TreeNode> rootItem)
+	{
+		rootItem.expandedProperty().addListener((observable, oldValue, newValue) -> {
+			if (newValue)
+			{
+				if (rootItem.getChildren().size() == 1 && rootItem.getChildren().get(0).getChildren().size() != 0)
+				{
+					rootItem.getChildren().get(0).setExpanded(true);
+				}
+			}
+		});
 	}
 }
