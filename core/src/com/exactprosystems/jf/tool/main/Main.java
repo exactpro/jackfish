@@ -23,9 +23,11 @@ import com.exactprosystems.jf.documents.DocumentInfo;
 import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.tool.Common;
+import com.exactprosystems.jf.tool.DisplayableTask;
 import com.exactprosystems.jf.tool.csv.CsvFx;
 import com.exactprosystems.jf.tool.custom.store.StoreVariable;
 import com.exactprosystems.jf.tool.dictionary.DictionaryFx;
+import com.exactprosystems.jf.tool.git.clone.GitClone;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper.OpenSaveMode;
 import com.exactprosystems.jf.tool.matrix.MatrixFx;
@@ -41,6 +43,11 @@ import javafx.concurrent.Task;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import org.apache.log4j.Logger;
+import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.errors.UnsupportedCredentialItem;
+import org.eclipse.jgit.transport.CredentialItem;
+import org.eclipse.jgit.transport.CredentialsProvider;
+import org.eclipse.jgit.transport.URIish;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -49,9 +56,13 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class Main extends Application
 {
+	private static ExecutorService executorService = Executors.newSingleThreadExecutor();
+
 	private static final Logger logger = Logger.getLogger(Main.class);
 
 	public static final String	MAX_FILES_COUNT		= "maxFilesCount";
@@ -71,6 +82,7 @@ public class Main extends Application
 	// TODO use this password
 	private String password;  
 	private Configuration config;
+	private Git git;
 	private Settings settings;
 	private List<Document> docs = new ArrayList<Document>();
 
@@ -83,33 +95,28 @@ public class Main extends Application
 		{
 			this.controller.disableMenu(this.config == null);
 		}
+		if (this.config != null)
+		{
+			//init git
+		}
 	}
 
-	public void displayableTask(Common.Function fnc, String title, String error)
+	public <T> void displayableTask(DisplayableTask<T> task, String title, String error)
 	{
-//		TODO think about this method. We need to load fnc on another thread, but all operations with gui we need wrap to Platform.runLater
-
-//		this.controller.startTask(title);
-//		Task<Void> task = new Task<Void>()
-//		{
-//			@Override
-//			protected Void call() throws Exception
-//			{
-//				fnc.call();
-//				return null;
-//			}
-//		};
-//		task.setOnSucceeded(e -> this.controller.endTask());
-//		task.setOnFailed(e -> {
-//			Throwable exception = e.getSource().getException();
-//			logger.error(exception.getMessage(), exception);
-//			DialogsHelper.showError(exception.getMessage() + "\n" + error);
-//			this.controller.endTask();
-//		});
-//		Thread thread = new Thread(task);
-//		thread.setName("Displayable task");
-//		thread.setDaemon(true);
-//		thread.start();
+		this.controller.startTask(title);
+		task.setExecutor(executorService);
+		task.setOnFailed(event -> {
+			Throwable exception = event.getSource().getException();
+			logger.error(exception.getMessage(), exception);
+			DialogsHelper.showError(exception.getMessage() + "\n" + error);
+			task.getOnFail().ifPresent(consumer -> consumer.accept(event.getSource().getException()));
+			this.controller.endTask();
+		});
+		task.setOnSucceeded(event -> {
+			task.getOnSuccess().ifPresent(t -> t.accept((T)event.getSource().getValue()));
+			this.controller.endTask();
+		});
+		task.start();
 	}
 	//endregion
 
@@ -292,6 +299,30 @@ public class Main extends Application
 			Configuration newConfig = Configuration.createNewConfiguration(configName, this.settings);
 			newConfig.save(configurePath);
 			openProject(configurePath, pane);
+		}
+	}
+
+	public void projectFromGit(BorderPane projectPane) throws Exception
+	{
+		GitClone cloneWindow = new GitClone(this);
+		String fullPath = cloneWindow.display();
+		if (fullPath != null)
+		{
+			openProject(fullPath, projectPane);
+		}
+	}
+
+	public void cloneRepository(File projectFolder, String remotePath, String username, char[] password) throws Exception
+	{
+		CredentialsProvider credentialsProvider = getCredentialsProvider(username, password);
+		try(Git git = Git.cloneRepository()
+				.setURI(remotePath)
+				.setDirectory(projectFolder)
+				.setCredentialsProvider(credentialsProvider)
+				.call()
+		)
+		{
+
 		}
 	}
 
@@ -695,6 +726,41 @@ public class Main extends Application
 		doc.create();
 		docs.add(doc);
 		doc.display();
+	}
+
+	private CredentialsProvider getCredentialsProvider(final String username, final char[] password)
+	{
+		return new CredentialsProvider()
+		{
+			@Override
+			public boolean isInteractive()
+			{
+				return true;
+			}
+
+			@Override
+			public boolean supports(CredentialItem... credentialItems)
+			{
+				return true;
+			}
+
+			@Override
+			public boolean get(URIish urIish, CredentialItem... credentialItems) throws UnsupportedCredentialItem
+			{
+				for (CredentialItem item : credentialItems)
+				{
+					if (item instanceof CredentialItem.Username)
+					{
+						((CredentialItem.Username) item).setValue(username);
+					}
+					if (item instanceof CredentialItem.Password)
+					{
+						((CredentialItem.Password) item).setValue(password);
+					}
+				}
+				return true;
+			}
+		};
 	}
 	//endregion
 }

@@ -69,8 +69,9 @@ public class MainController implements Initializable, ContainingParent
 	private LogsFx				log;
 
 	public Menu					menuFile;
-	public MenuItem				fileOpenProject;
-	public MenuItem				fileCreateProject;
+	public MenuItem				fileProjectOpen;
+	public MenuItem				fileProjectCreate;
+	public MenuItem				fileProjectFromGit;
 
 	public Menu					fileLoad;
 	public MenuItem				fileLoadDictionary;
@@ -319,6 +320,11 @@ public class MainController implements Initializable, ContainingParent
 	public void createProject(ActionEvent actionEvent)
 	{
 		Common.tryCatch(() -> this.model.createNewProject(this.projectPane), "Error on create new configuration");
+	}
+
+	public void projectFromGit(ActionEvent actionEvent)
+	{
+		Common.tryCatch(() -> this.model.projectFromGit(this.projectPane), "Error on clone project from git");
 	}
 	//endregion
 

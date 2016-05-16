@@ -152,7 +152,7 @@ public class AppTreeNode extends TreeNode
 						() -> DialogsHelper.showOpenSaveDialog("Choose plugin for adapter "+getEntry().toString(), "Jar files(*.jar)", "*.jar", DialogsHelper.OpenSaveMode.OpenFile))
 						.build());
 				list.add(TablePair.TablePairBuilder.create(Configuration.appDicPath, getEntry().get(Configuration.appDicPath)).edit(true).pathFunc(
-						() -> DialogsHelper.showOpenSaveDialog("Choose dictionary", "Xml files(*.jar)", "*.xml", DialogsHelper.OpenSaveMode.OpenFile))
+						() -> DialogsHelper.showOpenSaveDialog("Choose dictionary", "Xml files(*.xml)", "*.xml", DialogsHelper.OpenSaveMode.OpenFile))
 						.build());
 				list.add(TablePair.TablePairBuilder.create(Configuration.appWorkDir, getEntry().get(Configuration.appWorkDir)).edit(true).build());
 				list.add(TablePair.TablePairBuilder.create(Configuration.appStartPort, getEntry().get(Configuration.appStartPort)).edit(true).build());
