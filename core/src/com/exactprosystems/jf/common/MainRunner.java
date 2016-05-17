@@ -54,6 +54,7 @@ public class MainRunner
 			logger.info("Tool version: " + VersionInfo.getVersion());
 			logger.info("API version:  " + ApiVersionInfo.majorVersion() + "." + ApiVersionInfo.minorVersion());
 			logger.info("args: " + Arrays.toString(args));
+			System.err.println("args: " + Arrays.toString(args));
 			
 			Option startAtName = OptionBuilder
 					.withArgName("time")
@@ -95,8 +96,8 @@ public class MainRunner
 			Option help 		= new Option("help", 	"Print this message." );
 			Option versionOut 	= new Option("version", "Print version only.");
 			Option shortPaths 	= new Option("short", 	"Show only short paths in tracing." );
-            Option gui          = new Option("gui",     "Open GUI. Deprecated. It is behavior by default.");
             Option console      = new Option("console",	"Do not open GUI. Batch mode.");
+            Option child      	= new Option("child",	"NEVER use this option. It is only for internal purpose.");
 			
 			Options options = new Options();
 
@@ -110,8 +111,8 @@ public class MainRunner
 			options.addOption(saveSchema);
 			options.addOption(help);
 			options.addOption(shortPaths);
-            options.addOption(gui);
             options.addOption(console);
+            options.addOption(child);
 
 			
 			CommandLineParser parser = new GnuParser();
@@ -167,18 +168,34 @@ public class MainRunner
 			}
 
 			//---------------------------------------------------------------------------------------------------------------------
+			// check if this launch is a result of restarting for changing current directory
+			//---------------------------------------------------------------------------------------------------------------------
+			String configString = getRestartConfig();
+			
+			//---------------------------------------------------------------------------------------------------------------------
 			// check if we need restarting app from another directory
 			//---------------------------------------------------------------------------------------------------------------------
-			String configString = line.getOptionValue(configName.getOpt());
+			if (Str.IsNullOrEmpty(configString))
+			{
+				configString = line.getOptionValue(configName.getOpt());
+			}
 
 			Path newPath = needToChangeDirectory(configString);
-//			if (newPath != null)
-//			{
-//				logger.info("Restart into a new directory " + newPath);
-//				
-//				int exitValue = restartProcessInNewDir(newPath, line, options, configName);
-//				System.exit(exitValue);
-//			}
+			if (newPath != null)
+			{
+				logger.info("Restart into a new directory " + newPath);
+				
+				int exitValue = 0;
+				do
+				{
+					exitValue = restartProcessInNewDir(newPath, line, options, configName, child);
+					
+					System.err.println("Exit=" + exitValue);
+				} 
+				while (exitValue == magicNumber);
+				
+				System.exit(exitValue);
+			}
 
 			//---------------------------------------------------------------------------------------------------------------------
 			// check if we need launch app in gui mode
@@ -187,8 +204,19 @@ public class MainRunner
 			{
 				String passwordValue = line.getOptionValue(password.getOpt());
 				String[] guiArgs = configString != null ? new String[]{ configString, passwordValue } : new String[]{};
-
 				Application.launch(Main.class, guiArgs);
+				String config = Main.getConfigName();
+				if (config != null)
+				{
+					System.err.println("Config=" + config);
+					
+				    if (line.hasOption(child.getOpt()))
+				    {
+				    	createRestartConfig(config);
+				    	System.exit(magicNumber);
+				    }
+				}
+
 				System.exit(0);
 			}
 
@@ -395,8 +423,10 @@ public class MainRunner
 	}
 	
 	
-	public static int restartProcessInNewDir(Path workDir, CommandLine line, Options options, Option configName) throws Exception
+	public static int restartProcessInNewDir(Path workDir, CommandLine line, Options options, Option configName, Option child) throws Exception
 	{
+		System.err.println("workdir=" + workDir);
+		
 		List<String> args = new ArrayList<String>();
 		for (Object op : options.getOptions())
 		{
@@ -413,6 +443,7 @@ public class MainRunner
 				args.add(arg);
 			}
 		}
+		args.add("-" + child.getOpt());
 		
 		String fileSeparator 	= System.getProperty("file.separator");
 		String javaRuntime  	= System.getProperty("java.home") + fileSeparator + "bin" + fileSeparator + "java";
@@ -521,6 +552,40 @@ public class MainRunner
 		}
 	}
 
+	private static String getRestartConfig()
+	{
+		String res = null;
+		File file = new File(makeDirWithSubstitutions(restartFileName));
+		if (file.exists())
+		{
+			try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file))) ) 
+			{
+				res = br.readLine();
+			}
+			catch (IOException e)
+			{
+				logger.error(e.getMessage(), e);
+			}
+			file.delete();
+		}
+		
+		return res;
+	}
+	
+	private static void createRestartConfig(String name)
+	{
+		try (FileWriter fw = new FileWriter(makeDirWithSubstitutions(restartFileName)))
+		{
+			fw.write(name + '\n');
+		}
+		catch (IOException e)
+		{
+			logger.error(e.getMessage(), e);
+		}
+	}
+	
+	private static String 	restartFileName = "${JF}/.restart.txt";
+	private static int 		magicNumber = 7;
 	
 	private static final Logger logger = Logger.getLogger(MainRunner.class);
 

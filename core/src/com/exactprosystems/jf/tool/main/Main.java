@@ -9,6 +9,7 @@
 package com.exactprosystems.jf.tool.main;
 
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.common.MainRunner;
 import com.exactprosystems.jf.common.MatrixRunner;
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.common.Settings.SettingsValue;
@@ -38,10 +39,12 @@ import com.exactprosystems.jf.tool.settings.SettingsPanel;
 import com.exactprosystems.jf.tool.settings.Theme;
 import com.exactprosystems.jf.tool.systemvars.SystemVarsFx;
 import com.exactprosystems.jf.tool.text.PlainTextFx;
+
 import javafx.application.Application;
 import javafx.concurrent.Task;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+
 import org.apache.log4j.Logger;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.errors.UnsupportedCredentialItem;
@@ -51,6 +54,7 @@ import org.eclipse.jgit.transport.URIish;
 
 import java.io.*;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -75,6 +79,8 @@ public class Main extends Application
 
 	public static final String	DEFAULT_MAX_FILES_COUNT		= "3";
 
+	private static String configName = null;
+	
 	private Preloader preloader;
 	private MainController controller;
 	private RunnerListener runnerListener;
@@ -85,6 +91,14 @@ public class Main extends Application
 	private Git git;
 	private Settings settings;
 	private List<Document> docs = new ArrayList<Document>();
+
+
+	public static String getConfigName()
+	{
+		String temp = configName;
+		configName = null;
+		return temp;
+	}
 
 	//region public methods
 	public void setConfiguration(Configuration config)
@@ -262,6 +276,13 @@ public class Main extends Application
 				{
 					return;
 				}
+			}
+			
+			Path path = MainRunner.needToChangeDirectory(file.getPath());
+			if (path != null)
+			{
+				configName = file.getPath();
+				this.controller.close();
 			}
 
 			ConfigurationFx config = new ConfigurationFx(file.getPath(), this.runnerListener, this.settings, Main.this, pane);
