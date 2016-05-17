@@ -17,12 +17,14 @@ import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.opera.OperaDriver;
 import org.openqa.selenium.phantomjs.PhantomJSDriver;
+import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.safari.SafariDriver;
 
 import java.io.File;
 
 public enum Browser
 {
+	ANDROIDCHROME		("AndroidChrome"),
 	FIREFOX				("Firefox"),
 	CHROME				("Chrome"),
 	INTERNETEXPLORER	("InternetExplorer"),
@@ -54,6 +56,13 @@ public enum Browser
 				}
 				return new FirefoxDriver();
 
+			case ANDROIDCHROME:
+					ChromeOptions chromeOptions = new ChromeOptions();
+					chromeOptions.setExperimentalOption("androidPackage", "com.android.chrome");
+					DesiredCapabilities capabilities = DesiredCapabilities.chrome();
+					capabilities.setCapability(ChromeOptions.CAPABILITY, chromeOptions);
+					return new ChromeDriver(capabilities);
+				
 			case CHROME:
 				if (pathToBinary != null && !pathToBinary.isEmpty())
 				{

@@ -121,14 +121,16 @@ public class WebAppFactory implements IApplicationFactory
 		switch (parameterToFill)
 		{
 			case browserName:
-				int i = -1;
-				String[] result = new String[6];
-				result[++i] = "Firefox";
-				result[++i] = "Chrome";
-				result[++i] = "InternetExplorer";
-				result[++i] = "Opera";
-				result[++i] = "PhantomJS";
-				result[++i] = "Safari";
+				String[] result = new String[]
+						{
+							"AndroidChrome",
+							"Firefox",
+							"Chrome",
+							"InternetExplorer",
+							"Opera",
+							"PhantomJS",
+							"Safari",
+						};
 				return result;
 
 			default:

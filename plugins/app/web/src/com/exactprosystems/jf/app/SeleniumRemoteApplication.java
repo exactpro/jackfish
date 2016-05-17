@@ -200,7 +200,12 @@ public class SeleniumRemoteApplication extends RemoteApplication
 			this.jsInjection = JSInjectionFactory.getJSInjection(browser);
 			this.operationExecutor = new SeleniumOperationExecutor(this.driver, this.logger);
 			this.driver.get(url);
-			this.driver.manage().window().maximize();
+			
+			if(!browser.equals(Browser.ANDROIDCHROME))
+			{
+				this.driver.manage().window().maximize();
+			}
+
 			needTune = true;
 		}
 		catch (Exception e)
