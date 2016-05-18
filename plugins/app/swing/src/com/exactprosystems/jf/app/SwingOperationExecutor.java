@@ -1651,6 +1651,10 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 			case MINUS:
 				id = KeyEvent.VK_MINUS;
 				break;
+
+			case UNDERSCORE:
+				id = KeyEvent.VK_UNDERSCORE;
+				break;
 		}
 		return id;
 	}

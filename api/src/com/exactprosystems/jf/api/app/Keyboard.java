@@ -21,6 +21,7 @@ public enum Keyboard implements Serializable
 	CONTROL,	ALT, SPACE,														LEFT,DOWN,RIGHT,
 
 	PLUS, MINUS,
+	UNDERSCORE
 	;
 
 	private static final long serialVersionUID = -1378685462384062328L;

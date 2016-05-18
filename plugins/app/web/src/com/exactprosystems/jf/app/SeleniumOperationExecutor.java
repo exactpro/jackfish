@@ -1111,6 +1111,9 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 					case MINUS:
 						this.customAction.sendKeys( Keys.SUBTRACT).perform();
 						break;
+					case UNDERSCORE:
+						this.customAction.sendKeys(Keys.chord(Keys.SHIFT, "-")).perform();
+						break;
 
 					default:
 						return false;
