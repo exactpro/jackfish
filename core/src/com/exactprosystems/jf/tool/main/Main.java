@@ -281,7 +281,7 @@ public class Main extends Application
 			Path path = MainRunner.needToChangeDirectory(file.getPath());
 			if (path != null)
 			{
-				configName = file.getPath();
+				configName = file.getAbsolutePath();
 				this.controller.close();
 			}
 

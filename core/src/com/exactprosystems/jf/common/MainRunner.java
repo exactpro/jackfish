@@ -54,7 +54,7 @@ public class MainRunner
 			logger.info("Tool version: " + VersionInfo.getVersion());
 			logger.info("API version:  " + ApiVersionInfo.majorVersion() + "." + ApiVersionInfo.minorVersion());
 			logger.info("args: " + Arrays.toString(args));
-			System.err.println("args: " + Arrays.toString(args));
+			print("args: " + Arrays.toString(args));
 			
 			Option startAtName = OptionBuilder
 					.withArgName("time")
@@ -167,134 +167,57 @@ public class MainRunner
 				verboseLevel = VerboseLevel.valueOf(verboseString);
 			}
 
-			//---------------------------------------------------------------------------------------------------------------------
-			// check if this launch is a result of restarting for changing current directory
-			//---------------------------------------------------------------------------------------------------------------------
-			String configString = getRestartConfig();
+			String configString = line.getOptionValue(configName.getOpt());
+			print("0 configString=" + configString);
 			
-			//---------------------------------------------------------------------------------------------------------------------
-			// check if we need restarting app from another directory
-			//---------------------------------------------------------------------------------------------------------------------
-			if (Str.IsNullOrEmpty(configString))
+			while (true)
 			{
-				configString = line.getOptionValue(configName.getOpt());
-			}
+				print("1 configString=" + configString);
 
-			Path newPath = needToChangeDirectory(configString);
-			if (newPath != null)
-			{
-				logger.info("Restart into a new directory " + newPath);
+				//---------------------------------------------------------------------------------------------------------------------
+				// check if this launch is a result of restarting for changing current directory
+				//---------------------------------------------------------------------------------------------------------------------
+				if (Str.IsNullOrEmpty(configString))
+				{
+					configString = getRestartConfig();
+					print("2 configString=" + configString);
+				}
 				
-				int exitValue = 0;
-				do
+				//---------------------------------------------------------------------------------------------------------------------
+				// check if we need restarting app from another directory
+				//---------------------------------------------------------------------------------------------------------------------
+				Path newPath = needToChangeDirectory(configString);
+				if (newPath != null)
 				{
-					exitValue = restartProcessInNewDir(newPath, line, options, configName, child);
+					print("Restart in new dir=" + newPath);
 					
-					System.err.println("Exit=" + exitValue);
-				} 
-				while (exitValue == magicNumber);
-				
-				System.exit(exitValue);
-			}
-
-			//---------------------------------------------------------------------------------------------------------------------
-			// check if we need launch app in gui mode
-			//---------------------------------------------------------------------------------------------------------------------
-			if (!line.hasOption(console.getOpt()))
-			{
-				String passwordValue = line.getOptionValue(password.getOpt());
-				String[] guiArgs = configString != null ? new String[]{ configString, passwordValue } : new String[]{};
-				Application.launch(Main.class, guiArgs);
-				String config = Main.getConfigName();
-				if (config != null)
-				{
-					System.err.println("Config=" + config);
+					exitCode = restartProcessInNewDir(newPath, line, options, configName, configString, child);
 					
-				    if (line.hasOption(child.getOpt()))
-				    {
-				    	createRestartConfig(config);
-				    	System.exit(magicNumber);
-				    }
+					print("Exit=" + exitCode);
+					if (exitCode == magicNumber)
+					{
+						print("Continue!!!");
+						continue;
+					}
+					break;
 				}
-
-				System.exit(0);
-			}
-
-
-			//---------------------------------------------------------------------------------------------------------------------
-			// main part of work
-			//---------------------------------------------------------------------------------------------------------------------
-			printVersion();
-
-			Configuration configuration = new Configuration(configString, new Settings());
-			if (!Str.IsNullOrEmpty(configString))
-			{
-		    	try (BufferedReader reader = new BufferedReader(new FileReader(configString)))
-		        {
-		    		configuration.load(reader);
-				}
-		    	catch (Exception e)
-		    	{
-		    		e.printStackTrace(System.err);
-		    	}
-		    	
-				if (!configuration.isValid())
+	
+				if (line.hasOption(console.getOpt()))
 				{
-					System.out.println("Configuration is invalid! See the logs for details.");
-					System.exit(2);
+					runInConsoleMode(line, configString, verboseLevel, startAtName, inputName, outputName, shortPaths);
 				}
-			}
-			else
-			{
-				System.out.println("Configuration option is empty.");
-				System.exit(2);
-			}
-			
-			
-			if (!line.hasOption(inputName.getOpt()))
-			{
-                System.out.println(String.format("Error: need %s parameter.", inputName.getOpt()));
-                return;
+				else
+				{
+					configString = runInGuiMode(line, configString, password, child);
+					if (!Str.IsNullOrEmpty(configString))
+					{
+						continue;
+					}
+				}
+				break;
 			}
 			
-			String input = line.getOptionValue(inputName.getOpt());
-			String outputString = line.getOptionValue(outputName.getOpt());
-			if (outputString != null)
-			{
-				configuration.getReports().set(outputString);
-			}
-
-			Date startAt = new Date();
-			String timeString = line.getOptionValue(startAtName.getOpt());
-			if (timeString != null)
-			{
-				startAt = DateTime.date(timeString);
-			}
 			
-			boolean error = false;
-
-			File inputFile = new File(input); 
-			if (!inputFile.exists())
-			{
-                System.out.println(String.format("Error: input file %s does not exist", input));
-				error = true;
-			}
-			
-			File outputDir = new File(configuration.getReports().get()); 
-			if (!outputDir.exists())
-			{
-                System.out.println(String.format("Error: output directory %s does not exist", outputDir.getPath()));
-				error = true;
-			}
-			
-			if (error)
-			{
-				return;
-			}
-			
-			boolean showShortPaths = line.hasOption(shortPaths.getOpt()); 
-			boolean allPassed = processMatrix(configuration, inputFile, startAt, verboseLevel, showShortPaths);
-			exitCode = allPassed ? 0 : 1;
 		} 
 		catch (Exception e)
 		{
@@ -308,6 +231,110 @@ public class MainRunner
 
 	
 		System.exit(exitCode);
+	}
+
+	private static void runInConsoleMode(CommandLine line, String configString, VerboseLevel verboseLevel, 
+			Option startAtName, Option inputName, Option outputName, Option shortPaths) throws java.text.ParseException
+	{
+		printVersion();
+
+		Configuration configuration = new Configuration(configString, new Settings());
+		if (!Str.IsNullOrEmpty(configString))
+		{
+			try (BufferedReader reader = new BufferedReader(new FileReader(configString)))
+		    {
+				configuration.load(reader);
+			}
+			catch (Exception e)
+			{
+				e.printStackTrace(System.err);
+			}
+			
+			if (!configuration.isValid())
+			{
+				System.out.println("Configuration is invalid! See the logs for details.");
+				System.exit(2);
+			}
+		}
+		else
+		{
+			System.out.println("Configuration option is empty.");
+			System.exit(2);
+		}
+		
+		
+		if (!line.hasOption(inputName.getOpt()))
+		{
+		    System.out.println(String.format("Error: need %s parameter.", inputName.getOpt()));
+		    return;
+		}
+		
+		String input = line.getOptionValue(inputName.getOpt());
+		String outputString = line.getOptionValue(outputName.getOpt());
+		if (outputString != null)
+		{
+			configuration.getReports().set(outputString);
+		}
+
+		Date startAt = new Date();
+		String timeString = line.getOptionValue(startAtName.getOpt());
+		if (timeString != null)
+		{
+			startAt = DateTime.date(timeString);
+		}
+		
+		boolean error = false;
+
+		File inputFile = new File(input); 
+		if (!inputFile.exists())
+		{
+		    System.out.println(String.format("Error: input file %s does not exist", input));
+			error = true;
+		}
+		
+		File outputDir = new File(configuration.getReports().get()); 
+		if (!outputDir.exists())
+		{
+		    System.out.println(String.format("Error: output directory %s does not exist", outputDir.getPath()));
+			error = true;
+		}
+		
+		if (error)
+		{
+			return;
+		}
+		
+		boolean showShortPaths = line.hasOption(shortPaths.getOpt()); 
+		boolean allPassed = processMatrix(configuration, inputFile, startAt, verboseLevel, showShortPaths);
+		System.exit(allPassed ? 0 : 1);
+	}
+
+	private static String runInGuiMode(CommandLine line, String configString, Option password, Option child)
+	{
+		String passwordValue = line.getOptionValue(password.getOpt());
+		String[] guiArgs = configString != null ? new String[]{ configString, passwordValue } : new String[]{};
+		Application.launch(Main.class, guiArgs);
+		String config = Main.getConfigName();
+		if (config != null)
+		{
+			print("Config=" + config);
+			
+		    if (line.hasOption(child.getOpt()))
+		    {
+		    	print("createRestartConfig=" + config);
+		    	
+				createRestartConfig(config);
+		    	System.exit(magicNumber);
+		    }
+		}
+
+		return config;
+	}
+	
+	private static void print(String str)
+	{
+		String id = ManagementFactory.getRuntimeMXBean().getName();
+		System.err.printf("[%12s] %tT  %s%n", id, new Date(), str);
 	}
 
 	public static Path needToChangeDirectory(String fileName)
@@ -423,9 +450,9 @@ public class MainRunner
 	}
 	
 	
-	public static int restartProcessInNewDir(Path workDir, CommandLine line, Options options, Option configName, Option child) throws Exception
+	public static int restartProcessInNewDir(Path workDir, CommandLine line, Options options, Option configName, String configString, Option child) throws Exception
 	{
-		System.err.println("workdir=" + workDir);
+		print("workdir=" + workDir);
 		
 		List<String> args = new ArrayList<String>();
 		for (Object op : options.getOptions())
@@ -438,7 +465,7 @@ public class MainRunner
 				{
 					String value = line.getOptionValue(option.getOpt());
 					arg += "=";
-					arg += option.equals(configName) ? new File(value).getName() : value;
+					arg += option.equals(configName) ? new File(configString).getName() : value;
 				}
 				args.add(arg);
 			}
@@ -488,7 +515,7 @@ public class MainRunner
 			}
 		}
 		
-		System.out.println(commandLine);
+		print("newCommandLine=" + commandLine);
 		
 		// launch the process
 		ProcessBuilder builder = new ProcessBuilder(commandLine);
