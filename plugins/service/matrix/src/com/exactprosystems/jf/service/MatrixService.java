@@ -12,6 +12,7 @@ import com.exactprosystems.jf.api.common.IContext;
 import com.exactprosystems.jf.api.common.IMatrixRunner;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.service.AbstractTcpServer;
+
 import org.apache.log4j.Logger;
 
 import java.io.*;
@@ -31,6 +32,9 @@ public class MatrixService  extends AbstractTcpServer
 	@Override
 	protected void connected(IContext context, Socket clientSocket, OutputStream out, InputStream in)
 	{
+		System.out.println("Connected: " + clientSocket + " " + this.onConnected);
+
+		
 		if (Str.IsNullOrEmpty(this.onConnected))
 		{
 			return;
@@ -51,7 +55,13 @@ public class MatrixService  extends AbstractTcpServer
 			logger.error(e.getMessage(), e);
 		}
 	}
-	
+
+	@Override
+	protected void disconnected(IContext context)
+	{
+		logger.info("disconnected");
+	}
+
 	@Override
 	protected int getPort()
 	{
