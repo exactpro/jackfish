@@ -20,6 +20,7 @@ import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.tool.main.Main;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 
 import org.apache.commons.cli.*;
 import org.apache.log4j.Logger;
@@ -54,7 +55,6 @@ public class MainRunner
 			logger.info("Tool version: " + VersionInfo.getVersion());
 			logger.info("API version:  " + ApiVersionInfo.majorVersion() + "." + ApiVersionInfo.minorVersion());
 			logger.info("args: " + Arrays.toString(args));
-			print("args: " + Arrays.toString(args));
 			
 			Option startAtName = OptionBuilder
 					.withArgName("time")
@@ -168,20 +168,14 @@ public class MainRunner
 			}
 
 			String configString = line.getOptionValue(configName.getOpt());
-			print("0 configString=" + configString);
 			
 			while (true)
 			{
-				print("1 configString=" + configString);
-
 				//---------------------------------------------------------------------------------------------------------------------
 				// check if this launch is a result of restarting for changing current directory
 				//---------------------------------------------------------------------------------------------------------------------
-				if (Str.IsNullOrEmpty(configString))
-				{
-					configString = getRestartConfig();
-					print("2 configString=" + configString);
-				}
+				configString = getRestartConfig(configString);
+				line = rebuidCommadnLine(line, options, configName, configString);
 				
 				//---------------------------------------------------------------------------------------------------------------------
 				// check if we need restarting app from another directory
@@ -189,14 +183,10 @@ public class MainRunner
 				Path newPath = needToChangeDirectory(configString);
 				if (newPath != null)
 				{
-					print("Restart in new dir=" + newPath);
+					exitCode = restartProcessInNewDir(newPath, line, child);
 					
-					exitCode = restartProcessInNewDir(newPath, line, options, configName, configString, child);
-					
-					print("Exit=" + exitCode);
 					if (exitCode == magicNumber)
 					{
-						print("Continue!!!");
 						continue;
 					}
 					break;
@@ -233,6 +223,57 @@ public class MainRunner
 		System.exit(exitCode);
 	}
 
+	
+	
+	public static Path needToChangeDirectory(String fileName)
+	{
+		if (fileName != null)
+		{
+			File file = new File(fileName);
+			Path cwd = Paths.get("").toAbsolutePath();
+			File parentDir = file.getParentFile();
+			if (parentDir != null)
+			{
+				Path newCwd = parentDir.toPath();
+				
+				if (!cwd.equals(newCwd))
+				{
+					return newCwd;
+				}
+			}
+		}
+
+		return null;
+	}
+	
+	public static String makeDirWithSubstitutions(String template)
+	{
+		if (template == null)
+		{
+			return null;
+		}
+		
+		String home = ".";
+		
+		try
+		{
+			File jarName = new File(MainRunner.class.getProtectionDomain()
+					.getCodeSource()
+					.getLocation().toURI()
+					.getPath());
+			
+			home = "" + jarName.getParentFile();
+		}
+		catch (URISyntaxException e)
+		{
+			logger.error(e.getMessage(), e);
+		}
+		
+		return template.replace("${JF}", home);
+	}
+
+
+	
 	private static void runInConsoleMode(CommandLine line, String configString, VerboseLevel verboseLevel, 
 			Option startAtName, Option inputName, Option outputName, Option shortPaths) throws java.text.ParseException
 	{
@@ -317,12 +358,8 @@ public class MainRunner
 		String config = Main.getConfigName();
 		if (config != null)
 		{
-			print("Config=" + config);
-			
 		    if (line.hasOption(child.getOpt()))
 		    {
-		    	print("createRestartConfig=" + config);
-		    	
 				createRestartConfig(config);
 		    	System.exit(magicNumber);
 		    }
@@ -330,61 +367,6 @@ public class MainRunner
 
 		return config;
 	}
-	
-	private static void print(String str)
-	{
-		String id = ManagementFactory.getRuntimeMXBean().getName();
-		System.err.printf("[%12s] %tT  %s%n", id, new Date(), str);
-	}
-
-	public static Path needToChangeDirectory(String fileName)
-	{
-		if (fileName != null)
-		{
-			File file = new File(fileName);
-			Path cwd = Paths.get("").toAbsolutePath();
-			File parentDir = file.getParentFile();
-			if (parentDir != null)
-			{
-				Path newCwd = parentDir.toPath();
-				
-				if (!cwd.equals(newCwd))
-				{
-					return newCwd;
-				}
-			}
-		}
-
-		return null;
-	}
-	
-	public static String makeDirWithSubstitutions(String template)
-	{
-		if (template == null)
-		{
-			return null;
-		}
-		
-		String home = ".";
-		
-		try
-		{
-			File jarName = new File(MainRunner.class.getProtectionDomain()
-					.getCodeSource()
-					.getLocation().toURI()
-					.getPath());
-			
-			home = "" + jarName.getParentFile();
-		}
-		catch (URISyntaxException e)
-		{
-			logger.error(e.getMessage(), e);
-		}
-		
-		return template.replace("${JF}", home);
-	}
-
-
 	
 	private static void printHelp(Options options)
 	{
@@ -449,26 +431,39 @@ public class MainRunner
 		return false;
 	}
 	
-	
-	public static int restartProcessInNewDir(Path workDir, CommandLine line, Options options, Option configName, String configString, Option child) throws Exception
+	private static CommandLine rebuidCommadnLine(CommandLine line, Options options, Option configName, String configString) throws ParseException
 	{
-		print("workdir=" + workDir);
-		
-		List<String> args = new ArrayList<String>();
-		for (Object op : options.getOptions())
+		String[] arguments = new String[line.getOptions().length];
+		int count = 0;
+		for (Option option : line.getOptions())
 		{
-			Option option = (Option)op;
-			if (line.hasOption(option.getOpt()))
+			StringBuilder sb = new StringBuilder();
+			sb.append("-").append(option.getOpt());
+			
+			if (option.hasArg())
 			{
-				String arg = "-" + option.getOpt();
-				if (option.hasArg())
-				{
-					String value = line.getOptionValue(option.getOpt());
-					arg += "=";
-					arg += option.equals(configName) ? new File(configString).getName() : value;
-				}
-				args.add(arg);
+				String value = line.getOptionValue(option.getOpt());
+				sb.append("=").append(option.equals(configName) ? new File(configString).getName() : value);
 			}
+			arguments[count++] = sb.toString();
+		}
+		
+		return new GnuParser().parse(options, arguments);
+	}
+
+
+	private static int restartProcessInNewDir(Path workDir, CommandLine line, Option child) throws Exception
+	{
+		List<String> args = new ArrayList<String>();
+		for (Option option : line.getOptions())
+		{
+			String arg = "-" + option.getOpt();
+			if (option.hasArg())
+			{
+				arg += "=";
+				arg += line.getOptionValue(option.getOpt());
+			}
+			args.add(arg);
 		}
 		args.add("-" + child.getOpt());
 		
@@ -514,8 +509,6 @@ public class MainRunner
 				add(commandLine, arg);
 			}
 		}
-		
-		print("newCommandLine=" + commandLine);
 		
 		// launch the process
 		ProcessBuilder builder = new ProcessBuilder(commandLine);
@@ -579,7 +572,7 @@ public class MainRunner
 		}
 	}
 
-	private static String getRestartConfig()
+	private static String getRestartConfig(String init)
 	{
 		String res = null;
 		File file = new File(makeDirWithSubstitutions(restartFileName));
@@ -596,7 +589,7 @@ public class MainRunner
 			file.delete();
 		}
 		
-		return res;
+		return Str.IsNullOrEmpty(res) ? init : res;
 	}
 	
 	private static void createRestartConfig(String name)
