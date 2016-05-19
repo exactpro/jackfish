@@ -113,6 +113,13 @@ public class MainController implements Initializable, ContainingParent
 	public MenuItem				matrixStop;
 	public MenuItem				matrixSchedule;
 
+	public Menu					menuGit;
+	public MenuItem				gitClone;
+	public MenuItem				gitCommit;
+	public MenuItem				gitPull;
+	public MenuItem				gitReset;
+	public MenuItem				gitStatus;
+
 	public Menu					menuHelp;
 	public MenuItem				helpActionsHelp;
 
@@ -487,11 +494,49 @@ public class MainController implements Initializable, ContainingParent
 	}
 	//endregion
 
+	//region Git
+	public void gitStatus(ActionEvent event)
+	{
+		Common.tryCatch(this.model::gitStatus, "Error on show status");
+	}
+
+	public void gitClone(ActionEvent event)
+	{
+		Common.tryCatch(() -> this.model.projectFromGit(this.projectPane), "Error on clone repository");
+	}
+
+	public void gitCommit(ActionEvent event)
+	{
+		Common.tryCatch(this.model::gitCommit, "Error on commit or push");
+	}
+
+	public void gitPull(ActionEvent event)
+	{
+		Common.tryCatch(this.model::gitPull, "Error on pull");
+	}
+
+	public void gitReset(ActionEvent event)
+	{
+		Common.tryCatch(this.model::gitReset, "Error on reset");
+	}
+	//endregion
+
+	//region progress tasks
 	public void startTask(String title)
 	{
 		Platform.runLater(() -> {
 			this.progressBar.setVisible(true);
 			this.progressLabel.setText(title);
+		});
+	}
+
+	public void updateTask(String title)
+	{
+		Platform.runLater(() -> {
+			if (!this.progressLabel.getText().isEmpty())
+			{
+				this.progressLabel.setText(title);
+			}
 		});
 	}
 
@@ -502,6 +547,7 @@ public class MainController implements Initializable, ContainingParent
 			this.progressLabel.setText("");
 		});
 	}
+	//endregion
 
 	// TODO remake shortcuts over Menu.setAccelerator()
 	public void initShortcuts()

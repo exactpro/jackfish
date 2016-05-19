@@ -19,7 +19,7 @@ public class GitClone
 	private GitCloneController controller;
 
 	private String userName;
-	private char[] password;
+	private String password;
 	private String projectLocation;
 	private String remotePath;
 
@@ -59,7 +59,7 @@ public class GitClone
 		this.userName = userName;
 	}
 
-	public void setPassword(char[] password)
+	public void setPassword(String password)
 	{
 		this.password = password;
 	}

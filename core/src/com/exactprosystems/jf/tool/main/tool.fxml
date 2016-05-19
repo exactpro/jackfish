@@ -88,6 +88,15 @@
 										<MenuItem fx:id="matrixSchedule" mnemonicParsing="false" onAction="#matrixSchedule" text="Matrix schedule" />
 									</items>
 								</Menu>
+								<Menu fx:id="menuGit" mnemonicParsing="false" text="Git">
+									<items>
+										<MenuItem fx:id="gitClone" mnemonicParsing="false" text="Clone" onAction="#gitClone"/>
+										<MenuItem fx:id="gitCommit" mnemonicParsing="false" text="Commit" onAction="#gitCommit"/>
+										<MenuItem fx:id="gitPull" mnemonicParsing="false" text="Pull" onAction="#gitPull"/>
+										<MenuItem fx:id="gitReset" mnemonicParsing="false" text="Reset" onAction="#gitReset"/>
+										<MenuItem fx:id="gitStatus" mnemonicParsing="false" text="Status" onAction="#gitStatus"/>
+									</items>
+								</Menu>
 								<Menu fx:id="menuHelp" mnemonicParsing="false" text="Help">
 									<items>
 										<MenuItem fx:id="helpActionsHelp" mnemonicParsing="false" onAction="#showActionsHelp" text="Actions help" />

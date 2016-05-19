@@ -89,12 +89,15 @@ public class ConfigurationTreeView extends TreeView<TreeNode>
 		this.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) ->
 		{
 			this.tableView.updateParameters(null);
-			this.tableView.setEditableNode(newValue.getValue());
-			this.tableView.hide();
-			if (newValue.getValue().getParameters() != null)
+			if (newValue != null)
 			{
-				this.tableView.show();
-				this.tableView.updateParameters(newValue.getValue().getParameters());
+				this.tableView.setEditableNode(newValue.getValue());
+				this.tableView.hide();
+				if (newValue.getValue().getParameters() != null)
+				{
+					this.tableView.show();
+					this.tableView.updateParameters(newValue.getValue().getParameters());
+				}
 			}
 		});
 	}

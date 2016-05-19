@@ -84,7 +84,7 @@ public class GitCloneController implements Initializable, ContainingParent
 		dialog.getDialogPane().setHeader(new Label());
 		dialog.getDialogPane().setContent(this.parent);
 		dialog.setResultConverter(param -> {
-			this.model.setPassword(this.pfPassword.getText().toCharArray());
+			this.model.setPassword(this.pfPassword.getText());
 			this.model.setUserName(this.tfUserName.getText());
 			this.model.setRemotePath(this.tfURI.getText());
 			this.model.setProjectLocation(this.cfLocation.getText());

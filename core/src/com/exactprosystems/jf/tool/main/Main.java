@@ -28,7 +28,10 @@ import com.exactprosystems.jf.tool.DisplayableTask;
 import com.exactprosystems.jf.tool.csv.CsvFx;
 import com.exactprosystems.jf.tool.custom.store.StoreVariable;
 import com.exactprosystems.jf.tool.dictionary.DictionaryFx;
+import com.exactprosystems.jf.tool.git.CredentialDialog;
 import com.exactprosystems.jf.tool.git.clone.GitClone;
+import com.exactprosystems.jf.tool.git.commit.GitStatus;
+import com.exactprosystems.jf.tool.git.pull.GitPull;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper.OpenSaveMode;
 import com.exactprosystems.jf.tool.matrix.MatrixFx;
@@ -39,18 +42,22 @@ import com.exactprosystems.jf.tool.settings.SettingsPanel;
 import com.exactprosystems.jf.tool.settings.Theme;
 import com.exactprosystems.jf.tool.systemvars.SystemVarsFx;
 import com.exactprosystems.jf.tool.text.PlainTextFx;
-
+import com.jcraft.jsch.JSch;
+import com.jcraft.jsch.JSchException;
+import com.jcraft.jsch.Session;
 import javafx.application.Application;
 import javafx.concurrent.Task;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
-
 import org.apache.log4j.Logger;
 import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.PullResult;
+import org.eclipse.jgit.api.StatusCommand;
 import org.eclipse.jgit.errors.UnsupportedCredentialItem;
-import org.eclipse.jgit.transport.CredentialItem;
-import org.eclipse.jgit.transport.CredentialsProvider;
-import org.eclipse.jgit.transport.URIish;
+import org.eclipse.jgit.internal.storage.file.FileRepository;
+import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.transport.*;
+import org.eclipse.jgit.util.FS;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -80,17 +87,18 @@ public class Main extends Application
 	public static final String	DEFAULT_MAX_FILES_COUNT		= "3";
 
 	private static String configName = null;
-	
+
 	private Preloader preloader;
 	private MainController controller;
 	private RunnerListener runnerListener;
 
-	// TODO use this password
-	private String password;  
 	private Configuration config;
-	private Git git;
 	private Settings settings;
 	private List<Document> docs = new ArrayList<Document>();
+
+	//TODO not use now
+	private String username;
+	private String password;
 
 
 	public static String getConfigName()
@@ -109,10 +117,6 @@ public class Main extends Application
 		{
 			this.controller.disableMenu(this.config == null);
 		}
-		if (this.config != null)
-		{
-			//init git
-		}
 	}
 
 	public <T> void displayableTask(DisplayableTask<T> task, String title, String error)
@@ -127,7 +131,7 @@ public class Main extends Application
 			this.controller.endTask();
 		});
 		task.setOnSucceeded(event -> {
-			task.getOnSuccess().ifPresent(t -> t.accept((T)event.getSource().getValue()));
+			task.getOnSuccess().ifPresent(t -> t.accept((T) event.getSource().getValue()));
 			this.controller.endTask();
 		});
 		task.start();
@@ -168,15 +172,15 @@ public class Main extends Application
 					controller.disableMenu(true);
 					
 					final List<String> args = getParameters().getRaw();
-					
+
 					if (args.size() > 0)
 					{
-						Main.this.password = args.size() > 1 ? args.get(1) : null; 
-						
+						Main.this.password = args.size() > 1 ? args.get(1) : null;
+
 						openProject(args.get(0), controller.projectPane); // TODO
-						
+
 						controller.clearLastMatrixMenu();
-						
+
 						Collection<SettingsValue> list = settings.getValues(MAIN_NS, DocumentKind.MATRIX.toString());
 						controller.updateFileLastMatrix(list);
 					}
@@ -191,8 +195,7 @@ public class Main extends Application
 			}
 		};
 
-		load.setOnSucceeded(workerStateEvent -> Common.tryCatch(() ->
-		{
+		load.setOnSucceeded(workerStateEvent -> Common.tryCatch(() -> {
 			controller.display();
 			if (preloader != null)
 			{
@@ -249,16 +252,16 @@ public class Main extends Application
 				logger.error("Error on restore opened documents");
 				logger.error(e.getMessage(), e);
 			}
-//			this.controller.selectConfig();
+			//			this.controller.selectConfig();
 		}, "Error on task succeed on"));
-		
+
 		Thread thread = new Thread(load);
 		thread.setName("Load main gui" + thread.getId());
 		thread.start();
 	}
 	//endregion
 
-	//region Event handlers
+	//region Configuration
 	public void openProject(String filePath, BorderPane pane) throws Exception
 	{
 		Optional<File> optional = chooseFile(Configuration.class, filePath, DialogsHelper.OpenSaveMode.OpenFile);
@@ -277,7 +280,7 @@ public class Main extends Application
 					return;
 				}
 			}
-			
+
 			Path path = MainRunner.needToChangeDirectory(file.getPath());
 			if (path != null)
 			{
@@ -333,9 +336,10 @@ public class Main extends Application
 		}
 	}
 
-	public void cloneRepository(File projectFolder, String remotePath, String username, char[] password) throws Exception
+	public void cloneRepository(File projectFolder, String remotePath, String username, String password) throws Exception
 	{
-		CredentialsProvider credentialsProvider = getCredentialsProvider(username, password);
+		storeCredential(username, password);
+		CredentialsProvider credentialsProvider = getCredentialsProvider();
 		try(Git git = Git.cloneRepository()
 				.setURI(remotePath)
 				.setDirectory(projectFolder)
@@ -346,7 +350,82 @@ public class Main extends Application
 
 		}
 	}
+	//endregion
 
+	//region Git
+	public void gitStatus() throws Exception
+	{
+		try (Git git = git())
+		{
+			GitStatus gitStatus = new GitStatus(this);
+			StatusCommand status = git.status();
+			gitStatus.display(new ArrayList<>());
+		}
+
+	}
+
+	/*
+	Example out.
+
+andrey.bystrov@srt009:~/Projects/JackFish/JackFish/elite$ git pull origin master
+remote: Counting objects: 73, done.
+remote: Compressing objects: 100% (42/42), done.
+remote: Total 47 (delta 28), reused 0 (delta 0)
+Unpacking objects: 100% (47/47), done.
+From git.exactpro.com:elite
+ * branch            master     -> FETCH_HEAD
+   6789315..8626ebd  master     -> origin/master
+Updating 6789315..8626ebd
+Fast-forward
+ TestScenarios/General_matrix_run.jf |   2 +-
+ TestScenarios/Sprint53copy.csv      |  10 +-
+ TestScenarios/SubsModel.csv         | 358 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-------
+ dic/gui/ec_dic.xml                  | 168 ++++++++++++++++++++++++---------
+ lib/Agenda.jf                       |  12 +--
+ lib/Meetings.jf                     |  21 +++--
+ 6 files changed, 474 insertions(+), 97 deletions(-)
+
+andrey.bystrov@srt009:~/Projects/JackFish/JackFish/elite$ git pull origin master
+From git.exactpro.com:elite
+ * branch            master     -> FETCH_HEAD
+Already up-to-date.
+andrey.bystrov@srt009:~/Projects/JackFish/JackFish/elite$
+
+	 */
+
+	public void gitPull() throws Exception
+	{
+		try (Git git = git())
+		{
+			PullResult pull = git.pull()
+					.setCredentialsProvider(getCredentialsProvider())
+					.call();
+
+			new GitPull(this)
+					.display("Some title", new ArrayList<>());
+		}
+	}
+
+	public void gitCommit() throws Exception
+	{
+
+	}
+
+	public void gitReset() throws Exception
+	{
+
+	}
+
+	public void revertFiles(List<File> files) throws Exception
+	{
+		try (Git git = git())
+		{
+
+		}
+	}
+	//endregion
+
+	//region Load documents
 	public void loadDictionary(String filePath, String entryName) throws Exception
 	{
 		checkConfig();
@@ -356,7 +435,7 @@ public class Main extends Application
 			loadDocument(optional.get(), new DictionaryFx(optional.get().getPath(), this.config, entryName), DocumentKind.GUI_DICTIONARY);
 		}
 	}
-	
+
 	public void loadMatrix(String filePath) throws Exception
 	{
 		checkConfig();
@@ -376,7 +455,7 @@ public class Main extends Application
 			loadDocument(optional.get(), new SystemVarsFx(optional.get().getPath(), this.config), DocumentKind.SYSTEM_VARS);
 		}
 	}
-	
+
 	public void loadPlainText(String filePath) throws Exception
 	{
 		checkConfig();
@@ -396,13 +475,15 @@ public class Main extends Application
 			loadDocument(optional.get(), new CsvFx(optional.get().getPath(), this.settings, this.config), DocumentKind.CSV);
 		}
 	}
+	//endregion
 
+	//region Create documents
 	public void newDictionary() throws Exception
 	{
 		checkConfig();
 		createDocument(new DictionaryFx(newName(GuiDictionary.class), this.config));
 	}
-	
+
 	public void newMatrix() throws Exception
 	{
 		checkConfig();
@@ -454,56 +535,9 @@ public class Main extends Application
 		checkConfig();
 		createDocument(new CsvFx(newName(CsvFx.class), this.settings, this.config));
 	}
+	//endregion
 
-	public void runMatrixFromFile() throws Exception
-	{
-		Optional<File> optional = chooseFile(Matrix.class, null, DialogsHelper.OpenSaveMode.OpenFile);
-		if (optional.isPresent())
-		{
-			try (Context context = config.createContext(new MatrixListener(), System.out);
-				 MatrixRunner runner = new MatrixRunner(context, optional.get(), null, null)
-			)
-			{
-				runner.start();
-			}
-		}
-	}
-
-	public void openReport() throws Exception
-	{
-		File file = DialogsHelper.showOpenSaveDialog("Choose report", "HTML files (*.html)", "*.html", OpenSaveMode.OpenFile);
-		openReport(file);
-	}
-
-	public void openReport(File file) throws Exception
-	{
-		Optional.ofNullable(file).ifPresent(f -> DialogsHelper.displayReport(f, null, this.config));
-	}
-
-	public void stopMatrix(Document document) throws Exception
-	{
-		if (document instanceof MatrixFx)
-		{
-			((MatrixFx) document).stopMatrix();
-		}
-	}
-
-	public void startMatrix(Document document) throws Exception
-	{
-		if (document instanceof MatrixFx)
-		{
-			((MatrixFx) document).startMatrix();
-		}
-	}
-
-	public void clearFileLastOpenMatrix() throws Exception
-	{
-		this.settings.removeAll(MAIN_NS, DocumentKind.MATRIX.toString());
-		this.settings.saveIfNeeded();
-
-		this.controller.clearLastMatrixMenu();
-	}
-
+	//region Documents
 	public void documentSaveAs(Document document) throws Exception
 	{
 		if (document == null)
@@ -531,12 +565,12 @@ public class Main extends Application
 	}
 
 	public void documentSave(Document document) throws Exception
-	{	
+	{
 		if (document == null)
 		{
 			return;
 		}
-		
+
 		if (document.getName() == null || !(new File(document.getName()).exists()) || !document.hasName())
 		{
 			documentSaveAs(document);
@@ -568,18 +602,85 @@ public class Main extends Application
 		document.redo();
 	}
 
+	public void changeDocument(Document document)
+	{
+		StringBuilder sb = new StringBuilder(Configuration.projectName);
+		sb.append(" ").append(VersionInfo.getVersion());
+		if (document != null)
+		{
+			File file = new File(document.getName());
+			String absolutePath = file.getAbsolutePath();
+			sb.append(" [ ").append(absolutePath).append(" ]");
+		}
+		this.controller.displayTitle(sb.toString());
+	}
+	//endregion
+
+	//region Reports
+	public void openReport() throws Exception
+	{
+		File file = DialogsHelper.showOpenSaveDialog("Choose report", "HTML files (*.html)", "*.html", OpenSaveMode.OpenFile);
+		openReport(file);
+	}
+
+	public void openReport(File file) throws Exception
+	{
+		Optional.ofNullable(file).ifPresent(f -> DialogsHelper.displayReport(f, null, this.config));
+	}
+	//endregion
+
+	//region Matrix
+	public void runMatrixFromFile() throws Exception
+	{
+		Optional<File> optional = chooseFile(Matrix.class, null, DialogsHelper.OpenSaveMode.OpenFile);
+		if (optional.isPresent())
+		{
+			try (Context context = config.createContext(new MatrixListener(), System.out);
+				 MatrixRunner runner = new MatrixRunner(context, optional.get(), null, null)
+			)
+			{
+				runner.start();
+			}
+		}
+	}
+
+	public void stopMatrix(Document document) throws Exception
+	{
+		if (document instanceof MatrixFx)
+		{
+			((MatrixFx) document).stopMatrix();
+		}
+	}
+
+	public void startMatrix(Document document) throws Exception
+	{
+		if (document instanceof MatrixFx)
+		{
+			((MatrixFx) document).startMatrix();
+		}
+	}
+	//endregion
+
+	public void clearFileLastOpenMatrix() throws Exception
+	{
+		this.settings.removeAll(MAIN_NS, DocumentKind.MATRIX.toString());
+		this.settings.saveIfNeeded();
+
+		this.controller.clearLastMatrixMenu();
+	}
+
 	public boolean closeApplication()
 	{
 		try
 		{
 			if (this.config != null)
 			{
-				if(this.config.canClose())
+				if (this.config.canClose())
 				{
 					this.config.close(this.config.getSettings());
 					setConfiguration(null);
 					this.controller.close();
-					
+
 					return true;
 				}
 				return false;
@@ -589,7 +690,7 @@ public class Main extends Application
 		{
 			logger.error(e.getMessage(), e);
 		}
-		
+
 		return true;
 	}
 
@@ -604,19 +705,7 @@ public class Main extends Application
 		new StoreVariable(this.config).show();
 	}
 
-	public void changeDocument(Document document)
-	{
-		StringBuilder sb = new StringBuilder(Configuration.projectName);
-		sb.append(" ").append(VersionInfo.getVersion());
-		if (document != null)
-		{
-			File file = new File(document.getName());
-			String absolutePath = file.getAbsolutePath();
-			sb.append(" [ ").append(absolutePath).append(" ]");
-		}
-		this.controller.displayTitle(sb.toString());
-	}
-
+	//region Files
 	public void createFolder(File parentFolder, String folderName)
 	{
 		new File(parentFolder.getAbsolutePath() + File.separator + folderName).mkdir();
@@ -629,7 +718,7 @@ public class Main extends Application
 
 	public void copyVarsFile(File newFolder) throws Exception
 	{
-		try(InputStream stream = new FileInputStream(this.config.getVars().get()))
+		try (InputStream stream = new FileInputStream(this.config.getVars().get()))
 		{
 			Files.copy(stream, Paths.get(newFolder.getAbsolutePath() + File.separator + "vars.ini"));
 		}
@@ -677,9 +766,9 @@ public class Main extends Application
 		{
 			file = new File(filePath);
 		}
-		return this.controller.checkFile(file) ? Optional.empty() :Optional.ofNullable(file);
+		return this.controller.checkFile(file) ? Optional.empty() : Optional.ofNullable(file);
 	}
-	
+
 	private Document loadDocument(File file, Document doc, DocumentKind kind) throws Exception
 	{
 		if (doc == null)
@@ -749,8 +838,38 @@ public class Main extends Application
 		doc.display();
 	}
 
-	private CredentialsProvider getCredentialsProvider(final String username, final char[] password)
+	//region private git methods
+	private void storeCredential(String username, String password)
 	{
+		this.username = username;
+		this.password = password;
+	}
+
+	private void checkCredential()
+	{
+		if (this.username == null || this.password == null)
+		{
+			new CredentialDialog(this, this::storeCredential).display(this.username, this.password);
+		}
+	}
+
+	private Git git() throws Exception
+	{
+		jsch();
+		Repository localRepo = new FileRepository(".");
+		return new Git(localRepo);
+	}
+
+	private JschConfigSessionFactory jsch()
+	{
+		CustomJschConfigSessionFactory jschConfigSessionFactory = new CustomJschConfigSessionFactory(this.settings);
+		SshSessionFactory.setInstance(jschConfigSessionFactory);
+		return jschConfigSessionFactory;
+	}
+
+	private CredentialsProvider getCredentialsProvider()
+	{
+		checkCredential();
 		return new CredentialsProvider()
 		{
 			@Override
@@ -770,18 +889,43 @@ public class Main extends Application
 			{
 				for (CredentialItem item : credentialItems)
 				{
-					if (item instanceof CredentialItem.Username)
+					//TODO i don't understand this code
+					if (item instanceof CredentialItem.StringType)
 					{
-						((CredentialItem.Username) item).setValue(username);
-					}
-					if (item instanceof CredentialItem.Password)
-					{
-						((CredentialItem.Password) item).setValue(password);
+						((CredentialItem.StringType) item).setValue(password);
 					}
 				}
 				return true;
 			}
 		};
 	}
+
+	public static class CustomJschConfigSessionFactory extends JschConfigSessionFactory
+	{
+		private final Settings settings;
+
+		public CustomJschConfigSessionFactory(Settings settings)
+		{
+			this.settings = settings;
+		}
+
+		@Override
+		protected void configure(OpenSshConfig.Host host, Session session)
+		{
+			session.setConfig("StrictHostKeyChecking", "yes");
+		}
+
+		@Override
+		protected JSch getJSch(final OpenSshConfig.Host hc, FS fs) throws JSchException
+		{
+			JSch jsch = super.getJSch(hc, fs);
+			jsch.removeAllIdentity();
+			jsch.addIdentity(this.settings.getValueOrDefault("GLOBAL", SettingsPanel.GIT, SettingsPanel.GIT_SSH_IDENTITY, System.getProperty("user.home")+".ssh/id_rsa").getValue());
+			jsch.setKnownHosts(this.settings.getValueOrDefault("GLOBAL", SettingsPanel.GIT, SettingsPanel.GIT_KNOWN_HOST, System.getProperty("user.home")+".ssh/known_hosts").getValue());
+			return jsch;
+		}
+	}
+	//endregion
+
 	//endregion
 }
