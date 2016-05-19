@@ -73,7 +73,10 @@ public abstract class AbstractTcpServer implements IService
 						break;
 					}
 				}
+				
+				disconnected(context);
 			}
+
 		});
 		serviceThread.setDaemon(true);
 		serviceThread.start();
@@ -148,6 +151,8 @@ public abstract class AbstractTcpServer implements IService
 	}
 	
 	protected abstract void connected(IContext context, Socket socket, OutputStream out, InputStream in);
+
+	protected void disconnected(IContext context) {}
 
 	protected abstract void beforeStart(Map<String,Object> parameters);
 
