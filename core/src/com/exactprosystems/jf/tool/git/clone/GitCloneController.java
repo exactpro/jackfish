@@ -20,8 +20,11 @@ import javafx.scene.control.*;
 
 import java.io.File;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class GitCloneController implements Initializable, ContainingParent
 {
@@ -29,10 +32,14 @@ public class GitCloneController implements Initializable, ContainingParent
 	public TextField tfUserName;
 	public CustomFieldWithButton cfLocation;
 	public PasswordField pfPassword;
+	public TextField tfProjectName;
 
 	private GitClone model;
 	private Parent parent;
 	private BooleanProperty folderExist = new SimpleBooleanProperty(false);
+	private BooleanProperty projectExist = new SimpleBooleanProperty(false);
+
+	private final Pattern pattern = Pattern.compile(".*?[:/](\\w+)\\.git$");
 
 	//region ContainingParent
 	@Override
@@ -52,20 +59,26 @@ public class GitCloneController implements Initializable, ContainingParent
 			Optional.ofNullable(file).ifPresent(f -> this.cfLocation.setText(f.getAbsolutePath()));
 		});
 		this.cfLocation.textProperty().addListener((observable, oldValue, newValue) -> {
-			this.cfLocation.getStyleClass().remove(CssVariables.INCORRECT_FIELD);
+			checkLocation(newValue);
+			checkProjectName(this.tfProjectName.getText());
+		});
+		this.tfURI.textProperty().addListener((observable, oldValue, newValue) -> {
 			if (newValue != null && !newValue.isEmpty())
 			{
-				folderExist.setValue(true);
-				if (!new File(newValue).exists())
+				Matcher matcher = pattern.matcher(newValue);
+				if (matcher.find())
 				{
-					this.cfLocation.getStyleClass().add(CssVariables.INCORRECT_FIELD);
-					folderExist.setValue(false);
+					this.tfProjectName.setText(matcher.group(1));
 				}
 			}
 			else
 			{
-				folderExist.setValue(false);
+				this.tfProjectName.setText("");
 			}
+		});
+
+		this.tfProjectName.textProperty().addListener((observable, oldValue, newValue) -> {
+			checkProjectName(newValue);
 		});
 	}
 	//endregion
@@ -86,6 +99,7 @@ public class GitCloneController implements Initializable, ContainingParent
 		dialog.setResultConverter(param -> {
 			this.model.setPassword(this.pfPassword.getText());
 			this.model.setUserName(this.tfUserName.getText());
+			this.model.setProjectName(this.tfProjectName.getText());
 			this.model.setRemotePath(this.tfURI.getText());
 			this.model.setProjectLocation(this.cfLocation.getText());
 			return param.getButtonData().equals(ButtonBar.ButtonData.OK_DONE);
@@ -94,7 +108,49 @@ public class GitCloneController implements Initializable, ContainingParent
 		ButtonType buttonCreate = new ButtonType("Clone", ButtonBar.ButtonData.OK_DONE);
 		ButtonType buttonClose = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
 		dialog.getDialogPane().getButtonTypes().setAll(buttonCreate, buttonClose);
-		dialog.getDialogPane().lookupButton(buttonCreate).disableProperty().bind(folderExist.not());
+		dialog.getDialogPane().lookupButton(buttonCreate).disableProperty().bind(folderExist.not().or(projectExist.not()));
 		return dialog.showAndWait().orElse(false);
 	}
+
+	//region private methods
+	private void checkLocation(String newValue)
+	{
+		this.cfLocation.getStyleClass().remove(CssVariables.INCORRECT_FIELD);
+		if (newValue != null && !newValue.isEmpty())
+		{
+			this.folderExist.setValue(true);
+			if (!new File(newValue).exists())
+			{
+				this.cfLocation.getStyleClass().add(CssVariables.INCORRECT_FIELD);
+				this.folderExist.setValue(false);
+			}
+		}
+		else
+		{
+			this.folderExist.setValue(false);
+		}
+	}
+
+	private void checkProjectName(String newValue)
+	{
+		this.tfProjectName.getStyleClass().remove(CssVariables.INCORRECT_FIELD);
+		if (newValue != null && !newValue.isEmpty())
+		{
+			String pathToLocation = this.cfLocation.getText();
+			if (pathToLocation != null && !pathToLocation.isEmpty())
+			{
+				this.projectExist.setValue(true);
+				File folderLocation = new File(pathToLocation);
+				Optional.ofNullable(folderLocation.list()).ifPresent(list -> Arrays.asList(list).stream().filter(this.tfProjectName.getText()::equals).findFirst().ifPresent(s -> {
+					this.tfProjectName.getStyleClass().add(CssVariables.INCORRECT_FIELD);
+					this.projectExist.setValue(false);
+				}));
+			}
+		}
+		else
+		{
+			this.projectExist.setValue(false);
+		}
+	}
+	//endregion
 }

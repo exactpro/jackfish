@@ -76,7 +76,13 @@
 			<zipfileset src="${lib.dir}/javacsv.jar"/>
 			<zipfileset src="${lib.dir}/log4j-1.2.17.jar"/>
 			<zipfileset src="${lib.dir}/mvel2-2.2.7.Final.jar"/>
-			<zipfileset src="${lib.dir}/org.eclipse.jgit-4.3.1.201605051710-r.jar" includes="**/*.class"/>
+			<zipfileset src="${lib.dir}/org.eclipse.jgit-4.3.1.201605051710-r.jar">
+				<include name="**/*.class"/>
+				<include name="**/*.properties"/>
+			</zipfileset>
+			<zipfileset src="${lib.dir}/slf4j-api-1.7.21.jar"/>
+			<zipfileset src="${lib.dir}/slf4j-nop-1.7.21.jar"/>
+			<zipfileset src="${lib.dir}/jsch-0.1.53.jar"/>
 		</jar>
 	</target>
 

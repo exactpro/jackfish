@@ -22,6 +22,7 @@ public class GitClone
 	private String password;
 	private String projectLocation;
 	private String remotePath;
+	private String projectName;
 
 	public GitClone(Main model)
 	{
@@ -35,12 +36,10 @@ public class GitClone
 		boolean display = this.controller.display();
 		if (display)
 		{
-			String projectName = remotePath.substring(remotePath.lastIndexOf('/'), remotePath.lastIndexOf('.'));
-			File projectFolder = new File(projectLocation + File.separator + projectName);
-
+			File projectFolder = new File(projectLocation + File.separator + this.projectName);
 			this.model.cloneRepository(projectFolder, this.remotePath, this.userName, this.password);
 			DialogsHelper.showSuccess("Successful cloning repo " + this.remotePath);
-			return projectFolder.getAbsolutePath() + File.separator + projectName + ".xml";
+			return projectFolder.getAbsolutePath() + File.separator + this.projectName + ".xml";
 //			DisplayableTask<Void> task = new DisplayableTask<>(() -> {
 //				this.model.cloneRepository(this.projectLocation, this.remotePath, this.userName, this.password);
 //				return null;
@@ -72,5 +71,10 @@ public class GitClone
 	public void setRemotePath(String remotePath)
 	{
 		this.remotePath = remotePath;
+	}
+
+	public void setProjectName(String projectName)
+	{
+		this.projectName = projectName;
 	}
 }

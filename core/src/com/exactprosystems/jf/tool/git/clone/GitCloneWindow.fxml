@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import com.exactprosystems.jf.tool.custom.controls.field.CustomFieldWithButton?>
-<?import javafx.geometry.Insets?>
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1"
-		  xmlns="http://javafx.com/javafx/8" fx:controller="com.exactprosystems.jf.tool.git.clone.GitCloneController">
+<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8"
+		  xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.exactprosystems.jf.tool.git.clone.GitCloneController">
 	<columnConstraints>
 		<ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="10.0" percentWidth="30.0" prefWidth="100.0"/>
 		<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
 	</columnConstraints>
 	<rowConstraints>
+		<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
 		<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
 		<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
 		<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
@@ -27,19 +28,25 @@
 				<Insets right="20.0"/>
 			</GridPane.margin>
 		</Label>
-		<Label text="Username" GridPane.rowIndex="2">
+		<Label text="Username" GridPane.rowIndex="3">
 			<GridPane.margin>
 				<Insets right="20.0"/>
 			</GridPane.margin>
 		</Label>
-		<Label text="Password" GridPane.rowIndex="3">
+		<Label text="Password" GridPane.rowIndex="4">
 			<GridPane.margin>
 				<Insets right="20.0"/>
 			</GridPane.margin>
 		</Label>
-		<CustomFieldWithButton fx:id="cfLocation"  GridPane.columnIndex="1"/>
+		<CustomFieldWithButton fx:id="cfLocation" GridPane.columnIndex="1"/>
 		<TextField fx:id="tfURI" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
-		<TextField fx:id="tfUserName" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
-		<PasswordField fx:id="pfPassword" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+		<TextField fx:id="tfUserName" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+		<PasswordField fx:id="pfPassword" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+		<Label text="Project name" GridPane.rowIndex="2">
+			<GridPane.margin>
+				<Insets right="20.0"/>
+			</GridPane.margin>
+		</Label>
+		<TextField fx:id="tfProjectName" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
 	</children>
 </GridPane>
