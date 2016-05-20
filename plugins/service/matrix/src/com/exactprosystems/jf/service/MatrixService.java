@@ -12,11 +12,13 @@ import com.exactprosystems.jf.api.common.IContext;
 import com.exactprosystems.jf.api.common.IMatrixRunner;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.service.AbstractTcpServer;
+import com.exactprosystems.jf.api.service.Connection;
 
 import org.apache.log4j.Logger;
 
 import java.io.*;
 import java.net.Socket;
+import java.nio.charset.Charset;
 import java.util.Date;
 import java.util.Map;
 
@@ -42,13 +44,19 @@ public class MatrixService  extends AbstractTcpServer
 		
 		logger.info("connection accepted: " + clientSocket + " " + this.onConnected);
 		
+		Connection connection = new Connection(clientSocket, 
+				new BufferedWriter(new OutputStreamWriter(out, Charset.forName("UTF-8"))), 
+				new BufferedReader(new InputStreamReader(in, Charset.forName("UTF-8"))));
+
 		try (	Reader matrixReader 	= new FileReader(this.onConnected) )
 		{
-			IMatrixRunner runner = context.createRunner(matrixReader, new Date(), clientSocket);
+			IMatrixRunner runner = context.createRunner(matrixReader, new Date(), connection);
 			
 			runner.start();
 			runner.join(0);
 			runner.stop();
+			
+			clientSocket.close();
 		}
 		catch (Exception e)
 		{
@@ -68,8 +76,8 @@ public class MatrixService  extends AbstractTcpServer
 		return this.port;
 	}
 
-	private int port;
-	private String onConnected;
+	private int 			port;
+	private String 			onConnected;
 
 	protected static final Logger logger = Logger.getLogger(MatrixService.class);
 }
