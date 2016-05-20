@@ -23,6 +23,7 @@ public class GitClone
 	private String projectLocation;
 	private String remotePath;
 	private String projectName;
+	private boolean needOpenProject;
 
 	public GitClone(Main model)
 	{
@@ -39,7 +40,11 @@ public class GitClone
 			File projectFolder = new File(projectLocation + File.separator + this.projectName);
 			this.model.cloneRepository(projectFolder, this.remotePath, this.userName, this.password);
 			DialogsHelper.showSuccess("Successful cloning repo " + this.remotePath);
-			return projectFolder.getAbsolutePath() + File.separator + this.projectName + ".xml";
+			if (this.needOpenProject)
+			{
+				return projectFolder.getAbsolutePath() + File.separator + this.projectName + ".xml";
+			}
+			return null;
 //			DisplayableTask<Void> task = new DisplayableTask<>(() -> {
 //				this.model.cloneRepository(this.projectLocation, this.remotePath, this.userName, this.password);
 //				return null;
@@ -76,5 +81,10 @@ public class GitClone
 	public void setProjectName(String projectName)
 	{
 		this.projectName = projectName;
+	}
+
+	public void setOpenProject(boolean flag)
+	{
+		this.needOpenProject = flag;
 	}
 }

@@ -33,6 +33,7 @@ public class GitCloneController implements Initializable, ContainingParent
 	public CustomFieldWithButton cfLocation;
 	public PasswordField pfPassword;
 	public TextField tfProjectName;
+	public CheckBox cbOpenProject;
 
 	private GitClone model;
 	private Parent parent;
@@ -97,12 +98,17 @@ public class GitCloneController implements Initializable, ContainingParent
 		dialog.getDialogPane().setHeader(new Label());
 		dialog.getDialogPane().setContent(this.parent);
 		dialog.setResultConverter(param -> {
-			this.model.setPassword(this.pfPassword.getText());
-			this.model.setUserName(this.tfUserName.getText());
-			this.model.setProjectName(this.tfProjectName.getText());
-			this.model.setRemotePath(this.tfURI.getText());
-			this.model.setProjectLocation(this.cfLocation.getText());
-			return param.getButtonData().equals(ButtonBar.ButtonData.OK_DONE);
+			boolean ret = param.getButtonData().equals(ButtonBar.ButtonData.OK_DONE);
+			if (ret)
+			{
+				this.model.setPassword(this.pfPassword.getText());
+				this.model.setUserName(this.tfUserName.getText());
+				this.model.setProjectName(this.tfProjectName.getText());
+				this.model.setRemotePath(this.tfURI.getText());
+				this.model.setOpenProject(this.cbOpenProject.isSelected());
+				this.model.setProjectLocation(this.cfLocation.getText());
+			}
+			return ret;
 		});
 
 		ButtonType buttonCreate = new ButtonType("Clone", ButtonBar.ButtonData.OK_DONE);

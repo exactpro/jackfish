@@ -5,8 +5,15 @@
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.layout.BorderPane?>
+<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+<!--  Copyright (c) 2009-2016, Exactpro Systems, LLC -->
+<!--  Quality Assurance & Related Development for Innovative Trading Systems. -->
+<!--  All rights reserved. -->
+<!--  This is unpublished, licensed software, confidential and proprietary -->
+<!--  information which is the property of Exactpro Systems, LLC or its licensors. -->
+<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8"
-			xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.exactprosystems.jf.tool.git.commit.GitStatusController">
+			xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.exactprosystems.jf.tool.git.status.GitStatusController">
 	<top>
 		<ToolBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
 			<items>

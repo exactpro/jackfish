@@ -30,7 +30,7 @@ import com.exactprosystems.jf.tool.custom.store.StoreVariable;
 import com.exactprosystems.jf.tool.dictionary.DictionaryFx;
 import com.exactprosystems.jf.tool.git.CredentialDialog;
 import com.exactprosystems.jf.tool.git.clone.GitClone;
-import com.exactprosystems.jf.tool.git.commit.GitStatus;
+import com.exactprosystems.jf.tool.git.status.GitStatus;
 import com.exactprosystems.jf.tool.git.pull.GitPull;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper.OpenSaveMode;
