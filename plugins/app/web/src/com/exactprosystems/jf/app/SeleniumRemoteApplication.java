@@ -201,7 +201,7 @@ public class SeleniumRemoteApplication extends RemoteApplication
 			this.operationExecutor = new SeleniumOperationExecutor(this.driver, this.logger);
 			this.driver.get(url);
 			
-			if(!browser.equals(Browser.ANDROIDCHROME))
+			if(!browser.equals(Browser.ANDROIDBROWSER))
 			{
 				this.driver.manage().window().maximize();
 			}
