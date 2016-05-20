@@ -92,14 +92,14 @@ public class ServiceStart extends AbstractAction
 			}
 			else
 			{
-				super.setError("Connection can not be established.");
+				super.setError("Connection can not be established. Possibly the port is in use.");
 			}
 		}
 	}
 
 	@Override
-	public void initDefaultValues() {
-		// TODO Auto-generated method stub
+	public void initDefaultValues() 
+	{
 		
 	}
 
