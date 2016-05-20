@@ -433,8 +433,7 @@ public class MainRunner
 	
 	private static CommandLine rebuidCommadnLine(CommandLine line, Options options, Option configName, String configString) throws ParseException
 	{
-		String[] arguments = new String[line.getOptions().length];
-		int count = 0;
+		List<String> arguments = new ArrayList<String>();
 		for (Option option : line.getOptions())
 		{
 			StringBuilder sb = new StringBuilder();
@@ -445,10 +444,15 @@ public class MainRunner
 				String value = line.getOptionValue(option.getOpt());
 				sb.append("=").append(option.equals(configName) ? new File(configString).getName() : value);
 			}
-			arguments[count++] = sb.toString();
+			arguments.add(sb.toString());
 		}
 		
-		return new GnuParser().parse(options, arguments);
+		if (!line.hasOption(configName.getOpt()) && !Str.IsNullOrEmpty(configString))
+		{
+			arguments.add("-" + configName.getOpt() + "=" + new File(configString).getName());
+		}
+		
+		return new GnuParser().parse(options, arguments.toArray(new String[] {}));
 	}
 
 
