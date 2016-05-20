@@ -34,7 +34,6 @@
 				<Insets right="20.0"/>
 			</GridPane.margin>
 		</Label>
-		<TextField fx:id="tfProjectName" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
 		<Label text="Username" GridPane.rowIndex="3">
 			<GridPane.margin>
 				<Insets right="20.0"/>
@@ -47,6 +46,7 @@
 		</Label>
 		<CustomFieldWithButton fx:id="cfLocation" GridPane.columnIndex="1"/>
 		<TextField fx:id="tfURI" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+		<TextField fx:id="tfProjectName" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
 		<TextField fx:id="tfUserName" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
 		<PasswordField fx:id="pfPassword" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
 		<CheckBox fx:id="cbOpenProject" text="Open project" GridPane.rowIndex="5" GridPane.columnIndex="1" GridPane.halignment="RIGHT"/>
