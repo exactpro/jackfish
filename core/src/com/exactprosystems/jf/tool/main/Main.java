@@ -30,8 +30,9 @@ import com.exactprosystems.jf.tool.custom.store.StoreVariable;
 import com.exactprosystems.jf.tool.dictionary.DictionaryFx;
 import com.exactprosystems.jf.tool.git.CredentialDialog;
 import com.exactprosystems.jf.tool.git.clone.GitClone;
-import com.exactprosystems.jf.tool.git.status.GitStatus;
 import com.exactprosystems.jf.tool.git.pull.GitPull;
+import com.exactprosystems.jf.tool.git.status.GitStatus;
+import com.exactprosystems.jf.tool.git.status.GitStatusBean;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper.OpenSaveMode;
 import com.exactprosystems.jf.tool.matrix.MatrixFx;
@@ -52,10 +53,10 @@ import javafx.stage.Stage;
 import org.apache.log4j.Logger;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.PullResult;
-import org.eclipse.jgit.api.StatusCommand;
+import org.eclipse.jgit.api.Status;
 import org.eclipse.jgit.errors.UnsupportedCredentialItem;
-import org.eclipse.jgit.internal.storage.file.FileRepository;
 import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 import org.eclipse.jgit.transport.*;
 import org.eclipse.jgit.util.FS;
 
@@ -358,8 +359,12 @@ public class Main extends Application
 		try (Git git = git())
 		{
 			GitStatus gitStatus = new GitStatus(this);
-			StatusCommand status = git.status();
-			gitStatus.display(new ArrayList<>());
+			Status status = git.status().call();
+			ArrayList<GitStatusBean> list = new ArrayList<>();
+			status.getAdded().stream().map(st -> new GitStatusBean(GitStatusBean.Status.ADDED, new File(st))).forEach(list::add);
+			status.getChanged().stream().map(st -> new GitStatusBean(GitStatusBean.Status.CHANGED, new File(st))).forEach(list::add);
+			status.getRemoved().stream().map(st -> new GitStatusBean(GitStatusBean.Status.REMOVED, new File(st))).forEach(list::add);
+			gitStatus.display(list);
 		}
 
 	}
@@ -400,6 +405,7 @@ andrey.bystrov@srt009:~/Projects/JackFish/JackFish/elite$
 			PullResult pull = git.pull()
 					.setCredentialsProvider(getCredentialsProvider())
 					.call();
+
 
 			new GitPull(this)
 					.display("Some title", new ArrayList<>());
@@ -855,16 +861,18 @@ andrey.bystrov@srt009:~/Projects/JackFish/JackFish/elite$
 
 	private Git git() throws Exception
 	{
-		jsch();
-		Repository localRepo = new FileRepository(".");
+		setSSH();
+		Repository localRepo = new FileRepositoryBuilder().findGitDir().build();
 		return new Git(localRepo);
 	}
 
-	private JschConfigSessionFactory jsch()
+	private void setSSH()
 	{
 		CustomJschConfigSessionFactory jschConfigSessionFactory = new CustomJschConfigSessionFactory(this.settings);
-		SshSessionFactory.setInstance(jschConfigSessionFactory);
-		return jschConfigSessionFactory;
+		if (jschConfigSessionFactory.isValid())
+		{
+			SshSessionFactory.setInstance(jschConfigSessionFactory);
+		}
 	}
 
 	private CredentialsProvider getCredentialsProvider()
@@ -889,10 +897,10 @@ andrey.bystrov@srt009:~/Projects/JackFish/JackFish/elite$
 			{
 				for (CredentialItem item : credentialItems)
 				{
-					//TODO i don't understand this code
 					if (item instanceof CredentialItem.StringType)
 					{
 						((CredentialItem.StringType) item).setValue(password);
+						continue;
 					}
 				}
 				return true;
@@ -903,10 +911,26 @@ andrey.bystrov@srt009:~/Projects/JackFish/JackFish/elite$
 	public static class CustomJschConfigSessionFactory extends JschConfigSessionFactory
 	{
 		private final Settings settings;
+		private boolean isValid = true;
+		private String pathToIdRsa;
+		private String pathToKnownHosts;
 
 		public CustomJschConfigSessionFactory(Settings settings)
 		{
 			this.settings = settings;
+			SettingsValue idRsa = this.settings.getValue("GLOBAL", SettingsPanel.GIT, SettingsPanel.GIT_SSH_IDENTITY);
+			SettingsValue knownHosts = this.settings.getValue("GLOBAL", SettingsPanel.GIT, SettingsPanel.GIT_KNOWN_HOST);
+			this.isValid = idRsa != null && knownHosts != null;
+			if (this.isValid)
+			{
+				this.pathToIdRsa = idRsa.getValue();
+				this.pathToKnownHosts = knownHosts.getValue();
+			}
+		}
+
+		public boolean isValid()
+		{
+			return isValid;
 		}
 
 		@Override
@@ -920,8 +944,8 @@ andrey.bystrov@srt009:~/Projects/JackFish/JackFish/elite$
 		{
 			JSch jsch = super.getJSch(hc, fs);
 			jsch.removeAllIdentity();
-			jsch.addIdentity(this.settings.getValueOrDefault("GLOBAL", SettingsPanel.GIT, SettingsPanel.GIT_SSH_IDENTITY, System.getProperty("user.home")+".ssh/id_rsa").getValue());
-			jsch.setKnownHosts(this.settings.getValueOrDefault("GLOBAL", SettingsPanel.GIT, SettingsPanel.GIT_KNOWN_HOST, System.getProperty("user.home")+".ssh/known_hosts").getValue());
+			jsch.addIdentity(this.pathToIdRsa);
+			jsch.setKnownHosts(this.pathToKnownHosts);
 			return jsch;
 		}
 	}

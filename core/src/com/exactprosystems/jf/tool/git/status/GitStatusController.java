@@ -11,10 +11,13 @@ import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
+import javafx.geometry.HPos;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
+import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.GridPane;
+import javafx.scene.text.Text;
 
 import java.net.URL;
 import java.util.List;
@@ -65,7 +68,14 @@ public class GitStatusController implements Initializable, ContainingParent
 		dialog.setResizable(true);
 		dialog.getDialogPane().getStylesheets().addAll(Common.currentTheme().getPath());
 		dialog.setTitle("Git status");
-		dialog.getDialogPane().setHeader(new Label());
+		Text headerLabel = new Text();
+		if (list.isEmpty())
+		{
+			headerLabel.setText("Already up-to-date");
+		}
+		BorderPane pane = new BorderPane();
+		pane.setCenter(headerLabel);
+		dialog.getDialogPane().setHeader(pane);
 		dialog.getDialogPane().setContent(this.parent);
 		this.listView.getItems().setAll(list);
 		dialog.showAndWait();
@@ -90,9 +100,23 @@ public class GitStatusController implements Initializable, ContainingParent
 					item.setChecked(newValue);
 				});
 				pane.setLeft(box);
-				HBox hBox = new HBox();
+				GridPane gridPane = new GridPane();
+				ColumnConstraints c0 = new ColumnConstraints();
+				c0.setPercentWidth(30);
+				ColumnConstraints c1 = new ColumnConstraints();
+				c1.setPercentWidth(70);
+				gridPane.getColumnConstraints().addAll(c0, c1);
+				Label itemStatus = new Label(item.getStatus().getPreffix());
+				Label itemFile = new Label(item.getFile().getPath());
+				itemFile.getStyleClass().addAll(item.getStatus().getStyleClass());
+				itemStatus.getStyleClass().addAll(item.getStatus().getStyleClass());
 
-				pane.setCenter(hBox);
+				gridPane.add(itemStatus, 0, 0);
+				gridPane.add(itemFile, 1, 0);
+				GridPane.setHalignment(itemStatus, HPos.LEFT);
+				GridPane.setHalignment(itemFile, HPos.LEFT);
+
+				pane.setCenter(gridPane);
 				setGraphic(pane);
 			}
 		}

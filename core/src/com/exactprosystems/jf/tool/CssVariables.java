@@ -171,6 +171,13 @@ public class CssVariables
 	public static final String	FULL_PATH_LABEL				= "fullPathLabel";
 	//endregion
 
+	//region Git
+	public static final String	GIT_ADDED_FILE				= "gitAddedFile";
+	public static final String	GIT_CHANGED_FILE			= "gitChangedFile";
+	public static final String	GIT_REMOVED_FILE			= "gitRemovedFile";
+
+	//endregion
+
 	/**
 	 * Spinner css
 	 */

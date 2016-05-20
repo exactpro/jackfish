@@ -7,6 +7,8 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.exactprosystems.jf.tool.git.status;
 
+import com.exactprosystems.jf.tool.CssVariables;
+
 import java.io.File;
 
 public class GitStatusBean
@@ -14,20 +16,27 @@ public class GitStatusBean
 	public enum Status
 	{
 		//TODO add styleclasses
-		ADDED(""),
-		REMOVED(""),
-		CHANGED("");
+		ADDED		(CssVariables.GIT_ADDED_FILE,	"new file"),
+		REMOVED		(CssVariables.GIT_REMOVED_FILE,	"deleted"),
+		CHANGED		(CssVariables.GIT_CHANGED_FILE,	"modified");
 
-		private Status(String styleClass)
+		Status(String styleClass, String preffix)
 		{
-
+			this.styleClass = styleClass;
+			this.preffix = preffix;
 		}
 
 		private String styleClass;
+		private String preffix;
 
 		public String getStyleClass()
 		{
-			return styleClass;
+			return this.styleClass;
+		}
+
+		public String getPreffix()
+		{
+			return this.preffix;
 		}
 	}
 

@@ -780,3 +780,16 @@ CellView > .text-input.text-field{
 	-fx-opacity : 1.0
 
 }
+/*Git*/
+.gitAddedFile {
+	-fx-text-fill : green;
+
+}
+.gitRemovedFile {
+	-fx-text-fill : red;
+
+}
+.gitChangedFile {
+	-fx-text-fill : -fx-company-color-dark;
+
+}
