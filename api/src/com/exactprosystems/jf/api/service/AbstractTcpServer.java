@@ -13,6 +13,7 @@ import com.exactprosystems.jf.api.common.IContext;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.BindException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -38,48 +39,55 @@ public abstract class AbstractTcpServer implements IService
 
 		beforeStart(parameters);
 
-		this.serverSocket = new ServerSocket(getPort());
-		this.serviceThread = new Thread(new Runnable()
+		try
 		{
-			@Override
-			public void run()
+			this.serverSocket = new ServerSocket(getPort());
+			this.serviceThread = new Thread(new Runnable()
 			{
-				while (running)
+				@Override
+				public void run()
 				{
-					try
+					while (running)
 					{
-						final Socket clientSocket = serverSocket.accept();
-						final OutputStream out 	= clientSocket.getOutputStream();
-						final InputStream in 	= clientSocket.getInputStream();
-
-						Thread clientThread = new Thread(new Runnable()
+						try
 						{
-							@Override
-							public void run()
+							final Socket clientSocket = serverSocket.accept();
+							final OutputStream out 	= clientSocket.getOutputStream();
+							final InputStream in 	= clientSocket.getInputStream();
+
+							Thread clientThread = new Thread(new Runnable()
 							{
-								connected(context, clientSocket, out, in);
+								@Override
+								public void run()
+								{
+									connected(context, clientSocket, out, in);
+								}
+							});
+							synchronized (monitor)
+							{
+								list.add(new SocketThread(clientSocket, clientThread));
 							}
-						});
-						synchronized (monitor)
-						{
-							list.add(new SocketThread(clientSocket, clientThread));
+							clientThread.setDaemon(true);
+							clientThread.start();
 						}
-						clientThread.setDaemon(true);
-						clientThread.start();
+						catch (IOException e)
+						{
+							running = false;
+							break;
+						}
 					}
-					catch (IOException e)
-					{
-						running = false;
-						break;
-					}
+					
+					disconnected(context);
 				}
-				
-				disconnected(context);
-			}
 
-		});
-		serviceThread.setDaemon(true);
-		serviceThread.start();
+			});
+			serviceThread.setDaemon(true);
+			serviceThread.start();
+		}
+		catch (BindException e)
+		{
+			return false;
+		}
 		return true;
 	}
 
