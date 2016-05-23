@@ -202,6 +202,7 @@ public class SeleniumRemoteApplication extends RemoteApplication
 			this.driver.get(url);
 			
 			if(!browser.equals(Browser.ANDROIDBROWSER))
+				if(!browser.equals(Browser.ANDROIDCHROME))
 			{
 				this.driver.manage().window().maximize();
 			}

@@ -123,6 +123,7 @@ public class WebAppFactory implements IApplicationFactory
 			case browserName:
 				String[] result = new String[]
 						{
+							"AndroidChrome",
 							"AndroidBrowser",
 							"Firefox",
 							"Chrome",

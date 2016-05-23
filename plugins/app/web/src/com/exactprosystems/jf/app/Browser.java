@@ -24,6 +24,7 @@ import java.io.File;
 
 public enum Browser
 {
+	ANDROIDCHROME		("AndroidChrome"),
 	ANDROIDBROWSER		("AndroidBrowser"),
 	FIREFOX				("Firefox"),
 	CHROME				("Chrome"),
@@ -56,13 +57,20 @@ public enum Browser
 				}
 				return new FirefoxDriver();
 
-			case ANDROIDBROWSER:
+			case ANDROIDCHROME:
 					ChromeOptions chromeOptions = new ChromeOptions();
-					chromeOptions.setExperimentalOption("androidPackage", "com.android.browser");
-					chromeOptions.setExperimentalOption("androidActivity","com.android.browser.BrowserActivity");
-					DesiredCapabilities capabilities = new DesiredCapabilities();
-					capabilities.setCapability(ChromeOptions.CAPABILITY, chromeOptions);
-					return new ChromeDriver(capabilities);
+					chromeOptions.setExperimentalOption("androidPackage", "com.android.chrome");
+					DesiredCapabilities capabilities_chrome = new DesiredCapabilities();
+					capabilities_chrome.setCapability(ChromeOptions.CAPABILITY, chromeOptions);
+					return new ChromeDriver(capabilities_chrome);
+				
+			case ANDROIDBROWSER:
+					ChromeOptions browserOptions = new ChromeOptions();
+					browserOptions.setExperimentalOption("androidPackage", "com.android.browser");
+					browserOptions.setExperimentalOption("androidActivity","com.android.browser.BrowserActivity");
+					DesiredCapabilities capabilities_browser = new DesiredCapabilities();
+					capabilities_browser.setCapability(ChromeOptions.CAPABILITY, browserOptions);
+					return new ChromeDriver(capabilities_browser);
 				
 			case CHROME:
 				if (pathToBinary != null && !pathToBinary.isEmpty())
