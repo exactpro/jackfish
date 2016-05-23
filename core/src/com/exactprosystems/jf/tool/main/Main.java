@@ -56,6 +56,7 @@ import org.eclipse.jgit.api.PullResult;
 import org.eclipse.jgit.api.Status;
 import org.eclipse.jgit.errors.UnsupportedCredentialItem;
 import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.lib.TextProgressMonitor;
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 import org.eclipse.jgit.transport.*;
 import org.eclipse.jgit.util.FS;
@@ -345,6 +346,16 @@ public class Main extends Application
 				.setURI(remotePath)
 				.setDirectory(projectFolder)
 				.setCredentialsProvider(credentialsProvider)
+				/*
+					TODO think about it, very good idea
+					example of out textProgressMonitor
+						remote: Counting objects: 4602
+						remote: Compressing objects: 100% (4066/4066)
+						Receiving objects:      100% (4602/4602)
+						Resolving deltas:       100% (2901/2901)
+						Updating references:    100% (6/6)
+				 */
+				.setProgressMonitor(new TextProgressMonitor())
 				.call()
 		)
 		{

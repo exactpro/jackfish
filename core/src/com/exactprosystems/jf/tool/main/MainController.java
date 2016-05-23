@@ -27,9 +27,6 @@ import com.exactprosystems.jf.tool.settings.SettingsPanel;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
-import javafx.geometry.Insets;
-import javafx.geometry.Orientation;
-import javafx.geometry.VPos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -38,7 +35,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.*;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import org.apache.log4j.Logger;
 
@@ -66,6 +64,9 @@ public class MainController implements Initializable, ContainingParent
 	public ProgressBar			progressBar;
 	public Label				progressLabel;
 	public BorderPane			mainPanel;
+	public Label				projectLabel;
+	public SplitPane			splitPane;
+	public GridPane				projectGridPane;
 	private LogsFx				log;
 
 	public Menu					menuFile;
@@ -153,69 +154,11 @@ public class MainController implements Initializable, ContainingParent
 	{
 		progressBar.setProgress(ProgressIndicator.INDETERMINATE_PROGRESS);
 		progressBar.setVisible(false);
-
-		// initialize new panel
-		SplitPane splitPane = new SplitPane();
-		splitPane.setOrientation(Orientation.HORIZONTAL);
-		splitPane.setDividerPositions(0.0);
-
-		GridPane gridPane = new GridPane();
-		gridPane.setMinWidth(20.0);
-		ColumnConstraints c0 = new ColumnConstraints();
-		c0.setHgrow(Priority.SOMETIMES);
-		c0.setMaxWidth(30.0);
-		c0.setMinWidth(30.0);
-		c0.setPrefWidth(30.0);
-		ColumnConstraints c1 = new ColumnConstraints();
-		c1.setMinWidth(10.0);
-		c1.setPrefWidth(100.0);
-		c1.setHgrow(Priority.SOMETIMES);
-		RowConstraints r0 = new RowConstraints();
-		r0.setMinHeight(10.0);
-		r0.setPrefHeight(30);
-		r0.setVgrow(Priority.SOMETIMES);
-		gridPane.getRowConstraints().add(r0);
-		gridPane.getColumnConstraints().addAll(c0, c1);
-
-		Label project = new Label("Project");
-		project.setOnMouseClicked(event ->
-		{
-			double currentPosition = splitPane.getDividerPositions()[0];
-			if (currentPosition < MIN_VALUE)
-			{
-				splitPane.setDividerPositions(this.position);
-			}
-			else
-			{
-				this.position = currentPosition;
-				splitPane.setDividerPositions(0.0);
-			}
-		});
-		gridPane.add(project, 0, 0);
-
-		project.setRotate(-90.0);
-		GridPane.setValignment(project, VPos.TOP);
-		GridPane.setMargin(project, new Insets(20, 0, 0, -15.0));
-
-		Node node = this.mainPanel.getCenter();
-
-		splitPane.getItems().addAll(gridPane, node);
-
-		this.projectPane = new BorderPane();
-		this.projectPane.setMinWidth(0.0);
-		gridPane.add(this.projectPane, 1, 0);
-
-		this.mainPanel.setCenter(splitPane);
-
+		SplitPane.setResizableWithParent(this.projectGridPane, false);
 		listeners();
 
 		Common.setTabPane(documentsPane);
 		Common.setProgressBar(progressBar);
-	}
-
-	public void reloadTab(ActionEvent actionEvent)
-	{
-		Common.tryCatch(((CustomTab) this.documentsPane.getSelectionModel().getSelectedItem())::reload, "Error on reload current tab");
 	}
 
 	public void close()
@@ -260,15 +203,6 @@ public class MainController implements Initializable, ContainingParent
 	public void setParent(Parent parent)
 	{
 		this.pane = parent;
-	}
-
-	public void selectConfig()
-	{
-		if (this.documentsPane != null && !this.documentsPane.getTabs().isEmpty())
-		{
-			this.documentsPane.getSelectionModel().clearSelection();
-			this.documentsPane.getSelectionModel().select(0);
-		}
 	}
 
 	public void display()
@@ -650,19 +584,6 @@ public class MainController implements Initializable, ContainingParent
 	{
 		this.documentsPane.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) ->
 		{
-			/*if (oldValue != null)
-			{
-				CustomTab tab = (CustomTab) oldValue;
-				if (tab.getDocument() instanceof MatrixFx)
-				{
-					Node lookup = tab.getContent().lookup("."+CssVariables.CUSTOM_TREE_TABLE_VIEW);
-					if (lookup instanceof MatrixTreeView)
-					{
-						((MatrixTreeView) lookup).getSelectionModel().clearSelection();
-						((MatrixTreeView) lookup).getFocusModel().focus(-1);
-					}
-				}z
-			}*/
 			if (newValue == null)
 			{
 				this.model.changeDocument(null);
@@ -677,10 +598,22 @@ public class MainController implements Initializable, ContainingParent
 					if (lookup instanceof MatrixTreeView)
 					{
 						Common.setFocused(lookup);
-//						((MatrixTreeView) lookup).getSelectionModel().selectFirst();
-//						((MatrixTreeView) lookup).getFocusModel().focus(0);
 					}
 				}
+			}
+		});
+
+		this.projectLabel.setOnMouseClicked(event ->
+		{
+			double currentPosition = this.splitPane.getDividerPositions()[0];
+			if (currentPosition < MIN_VALUE)
+			{
+				this.splitPane.setDividerPositions(this.position);
+			}
+			else
+			{
+				this.position = currentPosition;
+				this.splitPane.setDividerPositions(0.0);
 			}
 		});
 	}
