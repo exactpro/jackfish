@@ -27,6 +27,7 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 	static final String RECTANGLE_PATTERN = "(-?\\d+),(-?\\d+),(\\d+),(\\d+)";
 	private static final String SEPARATOR_CELL = "###";
 	private static final String SEPARATOR_ROWS = ";;;";
+	private static final String EMPTY_CELL = "EMPTY_CELL_EMPTY";
 	private Logger logger;
 	private JnaDriverImpl driver;
 
@@ -601,7 +602,8 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 			String[] rowCell = row.split(SEPARATOR_CELL);
 			for (int i = 0; i < headerCells.length; i++)
 			{
-				map.put(headerCells[i], rowCell[i]);
+				String value = rowCell[i];
+				map.put(headerCells[i], value.equals(EMPTY_CELL) ? "" : value);
 			}
 			return map;
 			//			List<String> rowIndexes = getRowIndexes(component, additional, header, useNumericHeader, valueCondition, colorCondition);
@@ -656,7 +658,8 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 			String[] rowCell = row.split(SEPARATOR_CELL);
 			for (int j = 0; j < headerCells.length; j++)
 			{
-				map.put(headerCells[j], rowCell[j]);
+				String value = rowCell[j];
+				map.put(headerCells[j], value.equals(EMPTY_CELL) ? "" : value);
 			}
 			return map;
 
@@ -703,32 +706,16 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 			{
 				String row = split[i];
 				String[] rowCells = row.split(SEPARATOR_CELL);
-				System.arraycopy(rowCells, 0, table[i], 0, rowCells.length);
+				for (int j = 0; j < rowCells.length; j++)
+				{
+					if (rowCells[j].equals(EMPTY_CELL))
+					{
+						rowCells[i] = "";
+					}
+				}
+				System.arraycopy(rowCells, 0, table[i], 0, Math.min(rowCells.length, headerCells.length));
 			}
 			return table;
-
-//			List<UIProxyJNA> rows = getRows(component);
-//			List<String> headerRow = getRow(rows.get(0), useNumericHeader);
-//			String[][] table = new String[rows.size()][headerRow.size()];
-//			for (int i = 0; i < headerRow.size(); i++)
-//			{
-//				table[0][i] = headerRow.get(i);
-//			}
-//			for (int i = 1; i < rows.size(); i++)
-//			{
-//				List<String> row = getRow(rows.get(i), false);
-//				//TODO check that we found row, not scrollbar
-//				// but if child count of scrollbar == header.size() we have a problem :D
-//				if (row.size() != headerRow.size())
-//				{
-//					continue;
-//				}
-//				for (int j = 0; j < row.size(); j++)
-//				{
-//					table[i][j] = row.get(j);
-//				}
-//			}
-//			return table;
 		}
 		catch (Exception e)
 		{
