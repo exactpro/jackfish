@@ -347,7 +347,7 @@ public class JnaDriverImpl
 	{
 		long start = System.currentTimeMillis();
 		String res = this.driver.getTable(table.getIdString(), useNumericHeader);
-		this.logger.info(String.format("getRowByConditions(%s,%b) : %s, time(ms) : %d", table, useNumericHeader, res, System.currentTimeMillis() - start));
+		this.logger.info(String.format("getTable(%s,%b) : %s, time(ms) : %d", table, useNumericHeader, res, System.currentTimeMillis() - start));
 		checkCSharpTimes();
 		checkError();
 		return res;

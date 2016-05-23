@@ -710,7 +710,7 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 				{
 					if (rowCells[j].equals(EMPTY_CELL))
 					{
-						rowCells[i] = "";
+						rowCells[j] = "";
 					}
 				}
 				System.arraycopy(rowCells, 0, table[i], 0, Math.min(rowCells.length, headerCells.length));
