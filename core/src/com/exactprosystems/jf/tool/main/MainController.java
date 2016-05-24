@@ -120,6 +120,7 @@ public class MainController implements Initializable, ContainingParent
 	public MenuItem				gitPull;
 	public MenuItem				gitReset;
 	public MenuItem				gitStatus;
+	public MenuItem				gitChangeCredential;
 
 	public Menu					menuHelp;
 	public MenuItem				helpActionsHelp;
@@ -432,6 +433,11 @@ public class MainController implements Initializable, ContainingParent
 	public void gitStatus(ActionEvent event)
 	{
 		Common.tryCatch(this.model::gitStatus, "Error on show status");
+	}
+
+	public void gitChangeCredential(ActionEvent event)
+	{
+		Common.tryCatch(this.model::changeCredential, "Error on show status");
 	}
 
 	public void gitClone(ActionEvent event)

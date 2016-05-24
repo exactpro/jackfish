@@ -8,24 +8,30 @@
 package com.exactprosystems.jf.tool.git.clone;
 
 import com.exactprosystems.jf.tool.Common;
+import com.exactprosystems.jf.tool.git.CredentialBean;
 import com.exactprosystems.jf.tool.git.GitUtil;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
+import com.exactprosystems.jf.tool.main.Main;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
+import org.apache.log4j.Logger;
 import org.eclipse.jgit.lib.ProgressMonitor;
 
 import java.io.File;
 
 public class GitClone
 {
+	private static final Logger logger = Logger.getLogger(GitClone.class);
 	private GitCloneController controller;
 
 	private String locationToCloningConfig = null;
 
 	private Service<Void> service;
+	private Main model;
 
-	public GitClone()
+	public GitClone(Main model)
 	{
+		this.model = model;
 		this.controller = Common.loadController(this.getClass().getResource("GitCloneWindow.fxml"));
 		this.controller.init(this);
 	}
@@ -49,10 +55,11 @@ public class GitClone
 		}
 	}
 
-	public void cloneProject(String projectLocation, String uri, String projectName, String userName, String password, boolean openProject, ProgressMonitor monitor) throws Exception
+	public void cloneProject(String projectLocation, String uri, String projectName, boolean openProject, ProgressMonitor monitor) throws Exception
 	{
 		this.locationToCloningConfig = null;
 		this.controller.setDisable(true);
+		CredentialBean credential = model.getCredential();
 		File projectFolder = new File(projectLocation + File.separator + projectName);
 		this.service = new Service<Void>()
 		{
@@ -64,7 +71,8 @@ public class GitClone
 					@Override
 					protected Void call() throws Exception
 					{
-						GitUtil.getInstance().gitClone(uri, projectFolder, userName, password, monitor);
+						DialogsHelper.showInfo("Start cloning");
+						GitUtil.gitClone(uri, projectFolder, credential, monitor);
 						return null;
 					}
 				};
@@ -85,9 +93,9 @@ public class GitClone
 			this.controller.setDisable(false);
 		});
 		service.setOnFailed(e -> {
-			String asd;
 			Throwable exception = e.getSource().getException();
-			DialogsHelper.showError("ERROR " + exception.getMessage());
+			logger.error(exception.getMessage(), exception);
+			DialogsHelper.showError("Error on cloning repository " + exception.getMessage());
 		});
 	}
 }

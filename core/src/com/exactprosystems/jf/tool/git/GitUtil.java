@@ -7,12 +7,13 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.exactprosystems.jf.tool.git;
 
-import com.exactprosystems.jf.common.Settings;
-import com.exactprosystems.jf.tool.settings.SettingsPanel;
+import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.tool.git.status.GitStatusBean;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.Status;
 import org.eclipse.jgit.errors.UnsupportedCredentialItem;
 import org.eclipse.jgit.lib.ProgressMonitor;
 import org.eclipse.jgit.lib.Repository;
@@ -21,36 +22,28 @@ import org.eclipse.jgit.transport.*;
 import org.eclipse.jgit.util.FS;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 public class GitUtil
 {
-	private static Settings settings;
-
-	private String username;
-	private String password;
-
-	public static GitUtil getInstance()
-	{
-		return INSTANCE;
-	}
-
-	private static GitUtil INSTANCE = new GitUtil();
-
-	public static void initSettings(Settings settings)
-	{
-		GitUtil.settings = settings;
-	}
-
 	private GitUtil()
 	{
 
 	}
 
-	public void gitClone(String remotePath, File projectFolder, String username, String password, ProgressMonitor monitor) throws Exception
+	public static void gitPull(CredentialBean credentials, ProgressMonitor monitor) throws Exception
 	{
+		try (Git git = git(credentials))
+		{
+			//TODO think how to display result and how to get result
+			git.pull().setCredentialsProvider(getCredentialsProvider(credentials)).setProgressMonitor(monitor).call();
+		}
+	}
 
-		storeCredential(username, password);
-		CredentialsProvider credentialsProvider = getCredentialsProvider();
+	public static void gitClone(String remotePath, File projectFolder, CredentialBean credentials, ProgressMonitor monitor) throws Exception
+	{
+		CredentialsProvider credentialsProvider = getCredentialsProvider(credentials);
 		try(Git git = Git.cloneRepository()
 				.setURI(remotePath)
 				.setDirectory(projectFolder)
@@ -59,43 +52,41 @@ public class GitUtil
 				.call()
 		)
 		{
-
+			;
 		}
 	}
 
-	private void storeCredential(String username, String password)
+	public static List<GitStatusBean> gitStatus(CredentialBean credential) throws Exception
 	{
-		this.username = username;
-		this.password = password;
-	}
-
-	private void checkCredential()
-	{
-		if (this.username == null || this.password == null)
+		try (Git git = git(credential))
 		{
-			new CredentialDialog(this::storeCredential).display(this.username, this.password);
+			Status status = git.status().call();
+			ArrayList<GitStatusBean> list = new ArrayList<>();
+			status.getAdded().stream().map(st -> new GitStatusBean(GitStatusBean.Status.ADDED, new File(st))).forEach(list::add);
+			status.getChanged().stream().map(st -> new GitStatusBean(GitStatusBean.Status.CHANGED, new File(st))).forEach(list::add);
+			status.getRemoved().stream().map(st -> new GitStatusBean(GitStatusBean.Status.REMOVED, new File(st))).forEach(list::add);
+			return list;
 		}
 	}
 
-	private Git git() throws Exception
+	private static Git git(CredentialBean bean) throws Exception
 	{
-		setSSH();
+		setSSH(bean);
 		Repository localRepo = new FileRepositoryBuilder().findGitDir().build();
 		return new Git(localRepo);
 	}
 
-	private void setSSH()
+	private static void setSSH(CredentialBean credentials)
 	{
-		CustomJschConfigSessionFactory jschConfigSessionFactory = new CustomJschConfigSessionFactory(settings);
+		CustomJschConfigSessionFactory jschConfigSessionFactory = new CustomJschConfigSessionFactory(credentials);
 		if (jschConfigSessionFactory.isValid())
 		{
 			SshSessionFactory.setInstance(jschConfigSessionFactory);
 		}
 	}
 
-	private CredentialsProvider getCredentialsProvider()
+	private static CredentialsProvider getCredentialsProvider(CredentialBean credentials)
 	{
-		checkCredential();
 		return new CredentialsProvider()
 		{
 			@Override
@@ -117,8 +108,7 @@ public class GitUtil
 				{
 					if (item instanceof CredentialItem.StringType)
 					{
-						((CredentialItem.StringType) item).setValue(password);
-						continue;
+						((CredentialItem.StringType) item).setValue(credentials.getPassword());
 					}
 				}
 				return true;
@@ -128,21 +118,19 @@ public class GitUtil
 
 	public static class CustomJschConfigSessionFactory extends JschConfigSessionFactory
 	{
-		private final Settings settings;
 		private boolean isValid = true;
 		private String pathToIdRsa;
 		private String pathToKnownHosts;
 
-		public CustomJschConfigSessionFactory(Settings settings)
+		public CustomJschConfigSessionFactory(CredentialBean credentials)
 		{
-			this.settings = settings;
-			Settings.SettingsValue idRsa = this.settings.getValue("GLOBAL", SettingsPanel.GIT, SettingsPanel.GIT_SSH_IDENTITY);
-			Settings.SettingsValue knownHosts = this.settings.getValue("GLOBAL", SettingsPanel.GIT, SettingsPanel.GIT_KNOWN_HOST);
-			this.isValid = idRsa != null && knownHosts != null;
+			String pathToRsa = credentials.getPathToRsa();
+			String pathToHosts = credentials.getPathToHosts();
+			this.isValid = !Str.IsNullOrEmpty(pathToHosts) && !Str.IsNullOrEmpty(pathToRsa);
 			if (this.isValid)
 			{
-				this.pathToIdRsa = idRsa.getValue();
-				this.pathToKnownHosts = knownHosts.getValue();
+				this.pathToIdRsa = pathToRsa;
+				this.pathToKnownHosts = pathToHosts;
 			}
 		}
 

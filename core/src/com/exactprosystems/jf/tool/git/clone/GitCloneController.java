@@ -40,9 +40,7 @@ import java.util.regex.Pattern;
 public class GitCloneController implements Initializable, ContainingParent
 {
 	public TextField tfURI;
-	public TextField tfUserName;
 	public CustomFieldWithButton cfLocation;
-	public PasswordField pfPassword;
 	public TextField tfProjectName;
 	public CheckBox cbOpenProject;
 	public Button btnCancel;
@@ -118,7 +116,7 @@ public class GitCloneController implements Initializable, ContainingParent
 	public void cloneProject(ActionEvent actionEvent)
 	{
 		this.displayStatus(true);
-		Common.tryCatch(() -> this.model.cloneProject(this.cfLocation.getText(), this.tfURI.getText(), this.tfProjectName.getText(), this.tfUserName.getText(), this.pfPassword.getText(), this.cbOpenProject.isSelected(), this.monitor), "Error on clone project");
+		Common.tryCatch(() -> this.model.cloneProject(this.cfLocation.getText(), this.tfURI.getText(), this.tfProjectName.getText(), this.cbOpenProject.isSelected(), this.monitor), "Error on clone project");
 	}
 
 	public void setDisable(boolean flag)
@@ -142,8 +140,6 @@ public class GitCloneController implements Initializable, ContainingParent
 		}
 		this.tfProjectName.setDisable(flag);
 		this.tfURI.setDisable(flag);
-		this.tfUserName.setDisable(flag);
-		this.pfPassword.setDisable(flag);
 		this.cfLocation.setDisable(flag);
 		this.cbOpenProject.setDisable(flag);
 	}
@@ -230,7 +226,7 @@ public class GitCloneController implements Initializable, ContainingParent
 			this.monitor.clear();
 		}
 		this.scrollPane.setVisible(flag);
-		RowConstraints rowStatus = this.parent.getRowConstraints().get(6);
+		RowConstraints rowStatus = this.parent.getRowConstraints().get(4);
 
 		rowStatus.setMaxHeight(flag ? 100 : 0);
 		rowStatus.setMinHeight(flag ? 10 : 0);

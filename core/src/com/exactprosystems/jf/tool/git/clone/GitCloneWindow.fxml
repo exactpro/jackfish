@@ -16,8 +16,6 @@
 		<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
 		<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
 		<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-		<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-		<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
 		<RowConstraints minHeight="10.0" percentHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES"/>
 		<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
 	</rowConstraints>
@@ -37,16 +35,6 @@
 				<Insets right="20.0"/>
 			</GridPane.margin>
 		</Label>
-		<Label text="Username" GridPane.rowIndex="3">
-			<GridPane.margin>
-				<Insets right="20.0"/>
-			</GridPane.margin>
-		</Label>
-		<Label text="Password" GridPane.rowIndex="4">
-			<GridPane.margin>
-				<Insets right="20.0"/>
-			</GridPane.margin>
-		</Label>
 		<CustomFieldWithButton fx:id="cfLocation" GridPane.columnIndex="1">
 			<GridPane.margin>
 				<Insets right="10.0"/>
@@ -62,22 +50,12 @@
 				<Insets right="10.0"/>
 			</GridPane.margin>
 		</TextField>
-		<TextField fx:id="tfUserName" GridPane.columnIndex="1" GridPane.rowIndex="3">
-			<GridPane.margin>
-				<Insets right="10.0"/>
-			</GridPane.margin>
-		</TextField>
-		<PasswordField fx:id="pfPassword" GridPane.columnIndex="1" GridPane.rowIndex="4">
-			<GridPane.margin>
-				<Insets right="10.0"/>
-			</GridPane.margin>
-		</PasswordField>
-		<CheckBox fx:id="cbOpenProject" text="Open project" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="5">
+		<CheckBox fx:id="cbOpenProject" text="Open project" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="3">
 			<GridPane.margin>
 				<Insets right="10.0"/>
 			</GridPane.margin>
 		</CheckBox>
-		<HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" spacing="20.0" GridPane.columnIndex="1" GridPane.rowIndex="7">
+		<HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" spacing="20.0" GridPane.columnIndex="1" GridPane.rowIndex="5">
 			<children>
 				<Button fx:id="btnClone" mnemonicParsing="false" onAction="#cloneProject" text="Clone"/>
 				<Button fx:id="btnCancel" mnemonicParsing="false" onAction="#cancel" text="Close"/>
@@ -86,7 +64,7 @@
 				<Insets right="10.0" top="10.0"/>
 			</GridPane.margin>
 		</HBox>
-		<ScrollPane fx:id="scrollPane" GridPane.fillHeight="true" GridPane.fillWidth="true" GridPane.columnSpan="2" GridPane.rowIndex="6" prefHeight="200.0" prefWidth="200.0">
+		<ScrollPane fx:id="scrollPane" GridPane.fillHeight="true" GridPane.fillWidth="true" GridPane.columnSpan="2" GridPane.rowIndex="4" prefHeight="200.0" prefWidth="200.0">
 			<content>
 				<VBox fx:id="vBox">
 				</VBox>

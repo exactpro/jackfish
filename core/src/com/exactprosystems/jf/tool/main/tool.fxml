@@ -89,10 +89,13 @@
 								<Menu fx:id="menuGit" mnemonicParsing="false" text="Git">
 									<items>
 										<MenuItem fx:id="gitClone" mnemonicParsing="false" onAction="#gitClone" text="Clone"/>
+										<SeparatorMenuItem/>
 										<MenuItem fx:id="gitCommit" mnemonicParsing="false" onAction="#gitCommit" text="Commit"/>
 										<MenuItem fx:id="gitPull" mnemonicParsing="false" onAction="#gitPull" text="Pull"/>
 										<MenuItem fx:id="gitReset" mnemonicParsing="false" onAction="#gitReset" text="Reset"/>
 										<MenuItem fx:id="gitStatus" mnemonicParsing="false" onAction="#gitStatus" text="Status"/>
+										<SeparatorMenuItem/>
+										<MenuItem fx:id="gitChangeCredential" mnemonicParsing="false" onAction="#gitChangeCredential" text="Change credential"/>
 									</items>
 								</Menu>
 								<Menu fx:id="menuHelp" mnemonicParsing="false" text="Help">

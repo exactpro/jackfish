@@ -28,12 +28,12 @@ import com.exactprosystems.jf.tool.DisplayableTask;
 import com.exactprosystems.jf.tool.csv.CsvFx;
 import com.exactprosystems.jf.tool.custom.store.StoreVariable;
 import com.exactprosystems.jf.tool.dictionary.DictionaryFx;
+import com.exactprosystems.jf.tool.git.CredentialBean;
 import com.exactprosystems.jf.tool.git.CredentialDialog;
 import com.exactprosystems.jf.tool.git.GitUtil;
 import com.exactprosystems.jf.tool.git.clone.GitClone;
 import com.exactprosystems.jf.tool.git.pull.GitPull;
 import com.exactprosystems.jf.tool.git.status.GitStatus;
-import com.exactprosystems.jf.tool.git.status.GitStatusBean;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper.OpenSaveMode;
 import com.exactprosystems.jf.tool.matrix.MatrixFx;
@@ -54,10 +54,8 @@ import javafx.stage.Stage;
 import org.apache.log4j.Logger;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.PullResult;
-import org.eclipse.jgit.api.Status;
 import org.eclipse.jgit.errors.UnsupportedCredentialItem;
 import org.eclipse.jgit.lib.Repository;
-import org.eclipse.jgit.lib.TextProgressMonitor;
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 import org.eclipse.jgit.transport.*;
 import org.eclipse.jgit.util.FS;
@@ -156,7 +154,6 @@ public class Main extends Application
 			DialogsHelper.showError("Settings are invalid. Using empty settings.");
 			this.settings = new Settings();
 		}
-		GitUtil.initSettings(this.settings);
 		Common.node = stage;
 		Settings.SettingsValue theme = this.settings.getValueOrDefault(Settings.GLOBAL_NS, SettingsPanel.SETTINGS, Main.THEME, Theme.WHITE.name());
 		Common.setTheme(Theme.valueOf(theme.getValue().toUpperCase()));
@@ -331,84 +328,39 @@ public class Main extends Application
 
 	public void projectFromGit(BorderPane projectPane) throws Exception
 	{
-		GitClone cloneWindow = new GitClone();
+		GitClone cloneWindow = new GitClone(this);
 		String fullPath = cloneWindow.display();
 		if (fullPath != null)
 		{
 			openProject(fullPath, projectPane);
 		}
 	}
-
-	public void cloneRepository(File projectFolder, String remotePath, String username, String password) throws Exception
-	{
-		storeCredential(username, password);
-		CredentialsProvider credentialsProvider = getCredentialsProvider();
-		try(Git git = Git.cloneRepository()
-				.setURI(remotePath)
-				.setDirectory(projectFolder)
-				.setCredentialsProvider(credentialsProvider)
-				/*
-					TODO think about it, very good idea
-					example of out textProgressMonitor
-						remote: Counting objects: 4602
-						remote: Compressing objects: 100% (4066/4066)
-						Receiving objects:      100% (4602/4602)
-						Resolving deltas:       100% (2901/2901)
-						Updating references:    100% (6/6)
-				 */
-				.setProgressMonitor(new TextProgressMonitor())
-				.call()
-		)
-		{
-
-		}
-	}
 	//endregion
 
 	//region Git
-	public void gitStatus() throws Exception
+	public CredentialBean getCredential()
 	{
-		try (Git git = git())
-		{
-			GitStatus gitStatus = new GitStatus(this);
-			Status status = git.status().call();
-			ArrayList<GitStatusBean> list = new ArrayList<>();
-			status.getAdded().stream().map(st -> new GitStatusBean(GitStatusBean.Status.ADDED, new File(st))).forEach(list::add);
-			status.getChanged().stream().map(st -> new GitStatusBean(GitStatusBean.Status.CHANGED, new File(st))).forEach(list::add);
-			status.getRemoved().stream().map(st -> new GitStatusBean(GitStatusBean.Status.REMOVED, new File(st))).forEach(list::add);
-			gitStatus.display(list);
-		}
-
+		checkCredential();
+		SettingsValue idRsa = this.settings.getValueOrDefault("GLOBAL", SettingsPanel.GIT, SettingsPanel.GIT_SSH_IDENTITY, "");
+		SettingsValue knownHosts = this.settings.getValueOrDefault("GLOBAL", SettingsPanel.GIT, SettingsPanel.GIT_KNOWN_HOST, "");
+		return new CredentialBean(this.username, this.password, idRsa.getValue(), knownHosts.getValue());
 	}
 
-	/*
-	Example out.
+	public void saveCredential(String username, String password)
+	{
+		this.username = username;
+		this.password = password;
+	}
 
-andrey.bystrov@srt009:~/Projects/JackFish/JackFish/elite$ git pull origin master
-remote: Counting objects: 73, done.
-remote: Compressing objects: 100% (42/42), done.
-remote: Total 47 (delta 28), reused 0 (delta 0)
-Unpacking objects: 100% (47/47), done.
-From git.exactpro.com:elite
- * branch            master     -> FETCH_HEAD
-   6789315..8626ebd  master     -> origin/master
-Updating 6789315..8626ebd
-Fast-forward
- TestScenarios/General_matrix_run.jf |   2 +-
- TestScenarios/Sprint53copy.csv      |  10 +-
- TestScenarios/SubsModel.csv         | 358 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-------
- dic/gui/ec_dic.xml                  | 168 ++++++++++++++++++++++++---------
- lib/Agenda.jf                       |  12 +--
- lib/Meetings.jf                     |  21 +++--
- 6 files changed, 474 insertions(+), 97 deletions(-)
+	public void changeCredential()
+	{
+		new CredentialDialog(this::storeCredential).display(this.username, this.password);
+	}
 
-andrey.bystrov@srt009:~/Projects/JackFish/JackFish/elite$ git pull origin master
-From git.exactpro.com:elite
- * branch            master     -> FETCH_HEAD
-Already up-to-date.
-andrey.bystrov@srt009:~/Projects/JackFish/JackFish/elite$
-
-	 */
+	public void gitStatus() throws Exception
+	{
+		new GitStatus(this).display(GitUtil.gitStatus(getCredential()));
+	}
 
 	public void gitPull() throws Exception
 	{
@@ -865,7 +817,7 @@ andrey.bystrov@srt009:~/Projects/JackFish/JackFish/elite$
 
 	private void checkCredential()
 	{
-		if (this.username == null || this.password == null)
+		if (Str.IsNullOrEmpty(this.username) || Str.IsNullOrEmpty(this.password))
 		{
 			new CredentialDialog(this::storeCredential).display(this.username, this.password);
 		}
