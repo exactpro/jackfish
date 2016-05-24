@@ -5,13 +5,13 @@
 //  This is unpublished, licensed software, confidential and proprietary
 //  information which is the property of Exactpro Systems, LLC or its licensors.
 ////////////////////////////////////////////////////////////////////////////////
-package com.exactprosystems.jf.tool.git.status;
+package com.exactprosystems.jf.tool.git;
 
 import com.exactprosystems.jf.tool.CssVariables;
 
 import java.io.File;
 
-public class GitStatusBean
+public class GitBean
 {
 	public enum Status
 	{
@@ -44,7 +44,7 @@ public class GitStatusBean
 	private final File file;
 	private boolean isChecked;
 
-	public GitStatusBean(Status status, File file)
+	public GitBean(Status status, File file)
 	{
 		this.status = status;
 		this.file = file;

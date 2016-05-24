@@ -8,7 +8,6 @@
 package com.exactprosystems.jf.tool.git;
 
 import com.exactprosystems.jf.api.common.Str;
-import com.exactprosystems.jf.tool.git.status.GitStatusBean;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
@@ -56,15 +55,15 @@ public class GitUtil
 		}
 	}
 
-	public static List<GitStatusBean> gitStatus(CredentialBean credential) throws Exception
+	public static List<GitBean> gitStatus(CredentialBean credential) throws Exception
 	{
 		try (Git git = git(credential))
 		{
 			Status status = git.status().call();
-			ArrayList<GitStatusBean> list = new ArrayList<>();
-			status.getAdded().stream().map(st -> new GitStatusBean(GitStatusBean.Status.ADDED, new File(st))).forEach(list::add);
-			status.getChanged().stream().map(st -> new GitStatusBean(GitStatusBean.Status.CHANGED, new File(st))).forEach(list::add);
-			status.getRemoved().stream().map(st -> new GitStatusBean(GitStatusBean.Status.REMOVED, new File(st))).forEach(list::add);
+			ArrayList<GitBean> list = new ArrayList<>();
+			status.getAdded().stream().map(st -> new GitBean(GitBean.Status.ADDED, new File(st))).forEach(list::add);
+			status.getChanged().stream().map(st -> new GitBean(GitBean.Status.CHANGED, new File(st))).forEach(list::add);
+			status.getRemoved().stream().map(st -> new GitBean(GitBean.Status.REMOVED, new File(st))).forEach(list::add);
 			return list;
 		}
 	}

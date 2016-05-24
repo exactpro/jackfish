@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8"
+			xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.exactprosystems.jf.tool.git.commit.GitCommitController">
+	<center>
+		<BorderPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+			<center>
+				<TableView fx:id="tableView" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+					<BorderPane.margin>
+						<Insets left="7.0" right="7.0" top="7.0"/>
+					</BorderPane.margin>
+				</TableView>
+			</center>
+			<bottom>
+				<BorderPane prefHeight="112.0" prefWidth="600.0" BorderPane.alignment="CENTER">
+					<center>
+						<TextArea fx:id="taMessage" prefHeight="58.0" prefWidth="586.0" BorderPane.alignment="CENTER">
+							<BorderPane.margin>
+								<Insets left="7.0" right="7.0"/>
+							</BorderPane.margin>
+						</TextArea>
+					</center>
+					<top>
+						<Label text="Commit message" BorderPane.alignment="BOTTOM_LEFT">
+							<BorderPane.margin>
+								<Insets bottom="7.0" left="7.0" right="7.0" top="7.0"/>
+							</BorderPane.margin>
+						</Label>
+					</top>
+				</BorderPane>
+			</bottom>
+		</BorderPane>
+	</center>
+	<bottom>
+		<HBox alignment="CENTER_RIGHT" prefHeight="41.0" prefWidth="600.0" spacing="20.0" BorderPane.alignment="CENTER">
+			<children>
+				<Button fx:id="btnCommit" mnemonicParsing="false" onAction="#commitSelected" text="Commit"/>
+				<Button fx:id="btnPush" mnemonicParsing="false" onAction="#pushSelected" text="Push"/>
+				<Button fx:id="btnClose" mnemonicParsing="false" onAction="#close" text="Close"/>
+			</children>
+			<padding>
+				<Insets left="7.0" right="7.0"/>
+			</padding>
+		</HBox>
+	</bottom>
+</BorderPane>

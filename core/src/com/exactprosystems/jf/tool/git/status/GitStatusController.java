@@ -9,6 +9,7 @@ package com.exactprosystems.jf.tool.git.status;
 
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
+import com.exactprosystems.jf.tool.git.GitBean;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.geometry.HPos;
@@ -27,7 +28,7 @@ import java.util.stream.Collectors;
 public class GitStatusController implements Initializable, ContainingParent
 {
 	public Parent parent;
-	public ListView<GitStatusBean> listView;
+	public ListView<GitBean> listView;
 
 	private GitStatus model;
 
@@ -51,8 +52,8 @@ public class GitStatusController implements Initializable, ContainingParent
 	{
 		Common.tryCatch(() -> this.model.revert(this.listView.getItems()
 				.stream()
-				.filter(GitStatusBean::isChecked)
-				.map(GitStatusBean::getFile)
+				.filter(GitBean::isChecked)
+				.map(GitBean::getFile)
 				.collect(Collectors.toList())
 		), "Error on revert selected items");
 	}
@@ -62,7 +63,7 @@ public class GitStatusController implements Initializable, ContainingParent
 		this.model = model;
 	}
 
-	public void display(List<GitStatusBean> list)
+	public void display(List<GitBean> list)
 	{
 		Dialog<ButtonType> dialog = new Alert(Alert.AlertType.INFORMATION);
 		dialog.setResizable(true);
@@ -81,7 +82,7 @@ public class GitStatusController implements Initializable, ContainingParent
 		dialog.showAndWait();
 	}
 
-	private class GitStatusCell extends ListCell<GitStatusBean>
+	private class GitStatusCell extends ListCell<GitBean>
 	{
 		public GitStatusCell()
 		{
@@ -89,7 +90,7 @@ public class GitStatusController implements Initializable, ContainingParent
 		}
 
 		@Override
-		protected void updateItem(GitStatusBean item, boolean empty)
+		protected void updateItem(GitBean item, boolean empty)
 		{
 			super.updateItem(item, empty);
 			if (item != null && !empty)

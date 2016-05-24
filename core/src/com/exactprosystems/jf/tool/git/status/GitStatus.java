@@ -8,6 +8,7 @@
 package com.exactprosystems.jf.tool.git.status;
 
 import com.exactprosystems.jf.tool.Common;
+import com.exactprosystems.jf.tool.git.GitBean;
 import com.exactprosystems.jf.tool.main.Main;
 
 import java.io.File;
@@ -25,7 +26,7 @@ public class GitStatus
 		this.controller.init(this);
 	}
 
-	public void display(List<GitStatusBean> list)
+	public void display(List<GitBean> list)
 	{
 		this.controller.display(list);
 	}

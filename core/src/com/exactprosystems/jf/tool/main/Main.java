@@ -32,6 +32,7 @@ import com.exactprosystems.jf.tool.git.CredentialBean;
 import com.exactprosystems.jf.tool.git.CredentialDialog;
 import com.exactprosystems.jf.tool.git.GitUtil;
 import com.exactprosystems.jf.tool.git.clone.GitClone;
+import com.exactprosystems.jf.tool.git.commit.GitCommit;
 import com.exactprosystems.jf.tool.git.pull.GitPull;
 import com.exactprosystems.jf.tool.git.status.GitStatus;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
@@ -379,7 +380,7 @@ public class Main extends Application
 
 	public void gitCommit() throws Exception
 	{
-
+		new GitCommit(this).display();
 	}
 
 	public void gitReset() throws Exception

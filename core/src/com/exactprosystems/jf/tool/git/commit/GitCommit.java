@@ -7,7 +7,23 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.exactprosystems.jf.tool.git.commit;
 
+import com.exactprosystems.jf.tool.Common;
+import com.exactprosystems.jf.tool.main.Main;
+
 public class GitCommit
 {
+	private Main model;
+	private GitCommitController controller;
 
+	public GitCommit(Main model) throws Exception
+	{
+		this.model = model;
+		this.controller = Common.loadController(this.getClass().getResource("GitCommit.fxml"));
+		this.controller.init(this);
+	}
+
+	public void display()
+	{
+		this.controller.show();
+	}
 }
