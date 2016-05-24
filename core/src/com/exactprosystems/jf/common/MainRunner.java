@@ -18,10 +18,7 @@ import com.exactprosystems.jf.common.xml.messages.MessageDictionary;
 import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.tool.main.Main;
-
 import javafx.application.Application;
-import javafx.application.Platform;
-
 import org.apache.commons.cli.*;
 import org.apache.log4j.Logger;
 import org.apache.log4j.xml.DOMConfigurator;
@@ -31,7 +28,6 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.SchemaOutputResolver;
 import javax.xml.transform.Result;
 import javax.xml.transform.stream.StreamResult;
-
 import java.io.*;
 import java.lang.ProcessBuilder.Redirect;
 import java.lang.management.ManagementFactory;
@@ -39,10 +35,7 @@ import java.lang.management.RuntimeMXBean;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 public class MainRunner
 {
@@ -92,6 +85,12 @@ public class MainRunner
 					.withDescription("Specify the password which will be used when tool works with a git repository. ")
 					.create("password");
 
+			Option username = OptionBuilder
+					.withArgName("username")
+					.hasArg()
+					.withDescription("Specify the username which will be used when tool works with a git repository. ")
+					.create("username");
+
 			Option saveSchema 	= new Option("schema", 	"Save the config schema." );
 			Option help 		= new Option("help", 	"Print this message." );
 			Option versionOut 	= new Option("version", "Print version only.");
@@ -107,6 +106,7 @@ public class MainRunner
 			options.addOption(configName);
 			options.addOption(traceLevel);
 			options.addOption(password);
+			options.addOption(username);
 			options.addOption(versionOut);
 			options.addOption(saveSchema);
 			options.addOption(help);
@@ -198,7 +198,7 @@ public class MainRunner
 				}
 				else
 				{
-					configString = runInGuiMode(line, configString, password, child);
+					configString = runInGuiMode(line, configString, username, password, child);
 					if (!Str.IsNullOrEmpty(configString))
 					{
 						continue;
@@ -350,10 +350,11 @@ public class MainRunner
 		System.exit(allPassed ? 0 : 1);
 	}
 
-	private static String runInGuiMode(CommandLine line, String configString, Option password, Option child)
+	private static String runInGuiMode(CommandLine line, String configString, Option username, Option password, Option child)
 	{
 		String passwordValue = line.getOptionValue(password.getOpt());
-		String[] guiArgs = configString != null ? new String[]{ configString, passwordValue } : new String[]{};
+		String usernameValue = line.getOptionValue(username.getOpt());
+		String[] guiArgs = configString != null ? new String[]{ configString, usernameValue, passwordValue } : new String[]{};
 		Application.launch(Main.class, guiArgs);
 		String config = Main.getConfigName();
 		if (config != null)

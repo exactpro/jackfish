@@ -175,7 +175,8 @@ public class Main extends Application
 
 					if (args.size() > 0)
 					{
-						Main.this.password = args.size() > 1 ? args.get(1) : null;
+						Main.this.username = args.size() > 1 ? args.get(1) : null;
+						Main.this.password = args.size() > 2 ? args.get(2) : null;
 
 						openProject(args.get(0), controller.projectPane); // TODO
 
