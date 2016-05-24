@@ -7,7 +7,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.exactprosystems.jf.tool.git;
 
-import com.exactprosystems.jf.tool.main.Main;
 import javafx.scene.control.*;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
@@ -16,12 +15,10 @@ import java.util.function.BiConsumer;
 
 public class CredentialDialog
 {
-	private Main model;
 	private BiConsumer<String, String> consumer;
 
-	public CredentialDialog(Main model, BiConsumer<String, String> consumer)
+	public CredentialDialog(BiConsumer<String, String> consumer)
 	{
-		this.model = model;
 		this.consumer = consumer;
 	}
 

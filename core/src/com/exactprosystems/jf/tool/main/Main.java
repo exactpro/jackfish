@@ -29,6 +29,7 @@ import com.exactprosystems.jf.tool.csv.CsvFx;
 import com.exactprosystems.jf.tool.custom.store.StoreVariable;
 import com.exactprosystems.jf.tool.dictionary.DictionaryFx;
 import com.exactprosystems.jf.tool.git.CredentialDialog;
+import com.exactprosystems.jf.tool.git.GitUtil;
 import com.exactprosystems.jf.tool.git.clone.GitClone;
 import com.exactprosystems.jf.tool.git.pull.GitPull;
 import com.exactprosystems.jf.tool.git.status.GitStatus;
@@ -155,7 +156,7 @@ public class Main extends Application
 			DialogsHelper.showError("Settings are invalid. Using empty settings.");
 			this.settings = new Settings();
 		}
-
+		GitUtil.initSettings(this.settings);
 		Common.node = stage;
 		Settings.SettingsValue theme = this.settings.getValueOrDefault(Settings.GLOBAL_NS, SettingsPanel.SETTINGS, Main.THEME, Theme.WHITE.name());
 		Common.setTheme(Theme.valueOf(theme.getValue().toUpperCase()));
@@ -330,7 +331,7 @@ public class Main extends Application
 
 	public void projectFromGit(BorderPane projectPane) throws Exception
 	{
-		GitClone cloneWindow = new GitClone(this);
+		GitClone cloneWindow = new GitClone();
 		String fullPath = cloneWindow.display();
 		if (fullPath != null)
 		{
@@ -866,7 +867,7 @@ andrey.bystrov@srt009:~/Projects/JackFish/JackFish/elite$
 	{
 		if (this.username == null || this.password == null)
 		{
-			new CredentialDialog(this, this::storeCredential).display(this.username, this.password);
+			new CredentialDialog(this::storeCredential).display(this.username, this.password);
 		}
 	}
 
