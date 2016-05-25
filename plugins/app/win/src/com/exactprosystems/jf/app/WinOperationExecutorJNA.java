@@ -470,19 +470,27 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 				this.driver.getPatterns(arr, component);
 			}
 			boolean isSelectionPatternPresent = false;
-			for(int p : arr)
+			boolean isSelectionItemPatternPresent = false;
+			for (int p : arr)
 			{
+				if (WindowPattern.SelectionItemPattern.getId() == p)
+				{
+					isSelectionItemPatternPresent = true;
+				}
 				if (WindowPattern.SelectionPattern.getId() == p)
 				{
 					isSelectionPatternPresent = true;
-					break;
 				}
 			}
 			String result;
 			if (isSelectionPatternPresent)
 			{
-//				result = this.driver.doPatternCall(component, WindowPattern.SelectionPattern, "GetSelection", null, -1);
+				//				result = this.driver.doPatternCall(component, WindowPattern.SelectionPattern, "GetSelection", null, -1);
 				result = this.driver.getProperty(component, WindowProperty.SelectionProperty);
+			}
+			else if (isSelectionItemPatternPresent)
+			{
+				result = this.driver.getProperty(component, WindowProperty.IsSelectedProperty);
 			}
 			else
 			{

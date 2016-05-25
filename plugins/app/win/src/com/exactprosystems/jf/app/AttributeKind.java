@@ -7,7 +7,9 @@ public enum AttributeKind
 	CLASS,
 	TEXT,
 	NAME,
-	TYPE_NAME;
+	TYPE_NAME,
+	ENABLED,
+	VISIBLE;
 
 	public static boolean isSupported(String name)
 	{
