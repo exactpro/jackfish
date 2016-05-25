@@ -21,6 +21,9 @@ public class WinAppFactory implements IApplicationFactory
 	private static final int requiredMinorVersion = 15;
 	
 	public static final String mainWindowName = "MainWindow";
+	public static final String mainWindowHeight = "Height";
+	public static final String mainWindowWidth = "Width";
+
 	public static final String execName = "Exec";
 	public static final String workDirName = "WorkDir";
 	public static final String argsName = "Args";
@@ -29,7 +32,7 @@ public class WinAppFactory implements IApplicationFactory
 	
 	private static String[] knownStartArgs = { execName, workDirName, argsName };
 	
-	private static String[] knownConnectArgs = { mainWindowName };
+	private static String[] knownConnectArgs = { mainWindowName, mainWindowHeight, mainWindowWidth};
 
 	private static ControlKind[] supportedControls = 
 		{ 

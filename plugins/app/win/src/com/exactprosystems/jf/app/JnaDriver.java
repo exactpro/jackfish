@@ -10,7 +10,7 @@ public interface JnaDriver extends Library {
 	//endregion
 
 	//region application methods
-	void connect(String title);
+	void connect(String title, int height, int width);
 	void run(String exec, String workDir, String param);
 	void stop();
 	void refresh();

@@ -59,11 +59,37 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 			{
 				throw new Exception("Connection title can't be null or empty");
 			}
+			int height = Integer.MIN_VALUE;
+			int width = Integer.MIN_VALUE;
+			String heightStr = args.get(WinAppFactory.mainWindowHeight);
+			if (!Str.IsNullOrEmpty(heightStr))
+			{
+				try
+				{
+					height = Integer.valueOf(heightStr);
+				}
+				catch (NumberFormatException e)
+				{
+					throw new Exception("Parameter " + WinAppFactory.mainWindowHeight + " must be from 0 to " + Integer.MAX_VALUE + " or empty/null");
+				}
+			}
+			String widthStr = args.get(WinAppFactory.mainWindowWidth);
+			if (!Str.IsNullOrEmpty(widthStr))
+			{
+				try
+				{
+					width = Integer.valueOf(widthStr);
+				}
+				catch (NumberFormatException e)
+				{
+					throw new Exception("Parameter " + WinAppFactory.mainWindowWidth + " must be from 0 to " + Integer.MAX_VALUE + " or empty/null");
+				}
+			}
 			logger.info("##########################################################################################################");
-			logger.info("connectDerived(" + title + ")");
+			logger.info(String.format("connectionDerived(%s, %d, %d)", title, height, width));
 			this.driver = new JnaDriverImpl(this.logger);
 			this.operationExecutor = new WinOperationExecutorJNA(this.logger, this.driver);
-			this.driver.connect(title);
+			this.driver.connect(title, height, width);
 		}
 		catch (Exception e)
 		{
