@@ -438,8 +438,8 @@ public abstract class AbstractControl implements IControl, Mutable
 			if (re.getMessage().contains("is not allowed") || re.getMessage().contains("does not support text entering"))
 			{
 				OperationResult result = new OperationResult();
-				result.setPermittedOperation(true);
 				result.setText(re.getMessage());
+				result.setOk(false);
 				return result;
 			}
 			throw re;

@@ -148,14 +148,9 @@ public class DialogFill extends AbstractAction
 				}
 
 				OperationResult res = control.operate(service, window, null);
-				if (res.isPermittedOperation())
-				{
-					super.setError(message(id, window, onOpen, control, res.getText()));
-					return;
-				}
 				if (!res.isOk())
 				{
-					super.setError(message(id, window, onOpen, control, " returned 'false'. Process is stopped."));
+					super.setError(message(id, window, onOpen, control, "" + res.getValue()));
 					return;
 				}
 			}
@@ -182,41 +177,19 @@ public class DialogFill extends AbstractAction
 			OperationResult res = control.operate(service, window, obj);
 			if (res.isOk())
 			{
-				if (res.isColorMapIsFilled())
-				{
-					outValue.put(name, res.getColorMap());
-				}
-				else if (res.isMapFilled())
-				{
-					outValue.put(name, res.getMap());
-				}
-				else if (res.isArrayFilled())
-				{
-					outValue.put(name, new Table(res.getArray(), evaluator));
-				}
-				else
-				{
-					String val = res.getText();
-					outValue.put(name, val);
-				}
+				outValue.put(name, res.getValue());
 			}
-			else if (res.isPermittedOperation())
+			else 
 			{
-				super.setError(message(id, window, run, control, res.getText()));
 				if(!stopOnFail)
 				{
-					allReportErrors += message(id, window, run, control, res.getText());
+					allReportErrors += message(id, window, run, control, "" + res.getValue());
 				} 
 				else 
 				{
-					super.setError(message(id, window, run, control, res.getText()));
+					super.setError(message(id, window, run, control, "" + res.getValue()));
 					return;
 				}
-			}
-			else
-			{
-				super.setError(message(id, window, run, control, " returned 'false'. Process is stopped."));
-				return;
 			}
 		}
 
@@ -233,14 +206,9 @@ public class DialogFill extends AbstractAction
 				}
 
 				OperationResult res = control.operate(service, window, null);
-				if (res.isPermittedOperation())
-				{
-					super.setError(message(id, window, onClose, control, res.getText()));
-					return;
-				}
 				if (!res.isOk())
 				{
-					super.setError(message(id, window, onClose, control, " returned 'false'. Process is stopped."));
+					super.setError(message(id, window, onClose, control, "" + res.getValue()));
 					return;
 				}
 			}

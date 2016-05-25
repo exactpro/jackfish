@@ -12,32 +12,22 @@ import java.awt.Rectangle;
 import java.io.Serializable;
 import java.util.*;
 
-public class OperationResult implements Serializable, Map<String, String>
+public class OperationResult implements Serializable
 {
+	private static final long			serialVersionUID	= -2015741070415094348L;
 
-	private static final long serialVersionUID = -2015741070415094348L;
-	private boolean ok = false;
-	private boolean permittedOperation = false;
-	private String text = null;
-	private Rectangle rectangle = null;
-	private LinkedHashMap<String, String> map = new LinkedHashMap<>();
-	private Map<String, ValueAndColor> colorMap = new LinkedHashMap<>();
-	private String[][] array;
-
-	private boolean mapFilled = false;
-	private boolean colorMapFilled = false;
-	private boolean arrayFilled = false;
+	private boolean						ok					= false;
+	private String						text				= null;
+	private Map<String, String>			map					= null;
+	private Map<String, ValueAndColor>	colorMap			= new LinkedHashMap<>();
+	private String[][]					array				= null;
+	private Rectangle 					rectangle 			= null;
 
 	public void setText(String text)
 	{
 		this.text = text;
 	}
 
-	public void setRectangle(Rectangle rectangle)
-	{
-		this.rectangle = rectangle;
-	}
-	
 	public void setOk(boolean ok)
 	{
 		this.ok = ok;
@@ -45,38 +35,69 @@ public class OperationResult implements Serializable, Map<String, String>
 
 	public void setMap(Map<String, String> map)
 	{
+		this.map = new LinkedHashMap<>();
 		this.map.putAll(map);
-		mapFilled = true;
-	}
-
-	public void setPermittedOperation(boolean flag)
-	{
-		this.permittedOperation = flag;
 	}
 
 	public void setColorMap(Map<String, ValueAndColor> colorMap)
 	{
-		this.colorMap = colorMap;
-		this.colorMapFilled = true;
+		this.colorMap = new LinkedHashMap<>();
+		this.colorMap.putAll(colorMap);
 	}
 
 	public void setArray(String[][] a)
 	{
 		this.array = a;
-		this.arrayFilled = true;
 	}
 
-	//TODO need think and remake this method
 	public void setList(List<String> list)
 	{
+		this.map = new LinkedHashMap<>();
 		for (int i = 0; i < list.size(); i++)
 		{
 			String s = list.get(i);
 			this.map.put(String.valueOf(i), s);
 		}
-		this.mapFilled = true;
 	}
 
+	public void setRectangle(Rectangle rectangle)
+	{
+		this.rectangle = rectangle;
+	}
+	
+
+	public boolean isOk()
+	{
+		return this.ok;
+	}
+
+	public Object getValue()
+	{
+		if (this.text != null)
+		{
+			return this.text;
+		}
+		if (this.map != null)
+		{
+			return this.map;
+		}
+		if (this.colorMap != null)
+		{
+			return this.colorMap;
+		}
+		if (this.array != null)
+		{
+			return this.array;
+		}
+		if (this.rectangle != null)
+		{
+			return this.rectangle;
+		}
+		
+		return this.ok;
+	}
+	
+	
 	public String humanablePresentation()
 	{
 		StringBuilder builder = new StringBuilder("ok [" + this.ok + "]");
@@ -88,15 +109,11 @@ public class OperationResult implements Serializable, Map<String, String>
 		{
 			builder.append(" rectangle [").append(this.rectangle).append("];");
 		}
-		if (!this.map.isEmpty())
+		if (this.map != null)
 		{
 			builder.append(" map [").append(this.map).append("];");
 		}
-		if (this.permittedOperation)
-		{
-			builder.append("operation permitted [true]");
-		}
-		if (!this.colorMap.isEmpty())
+		if (this.colorMap != null)
 		{
 			builder.append(" color map [").append(this.colorMap).append("];");
 		}
@@ -107,138 +124,10 @@ public class OperationResult implements Serializable, Map<String, String>
 		return builder.toString();
 	}
 
-	public boolean isPermittedOperation()
-	{
-		return permittedOperation;
-	}
-
-	public String getText()
-	{
-		return this.text;
-	}
-	
-	public Rectangle getRectangle()
-	{
-		return this.rectangle;
-	}
-	
-	public boolean isOk()
-	{
-		return this.ok;
-	}
-
-	public Map<String,String> getMap()
-	{
-		return this.map;
-	}
-
-	public Map<String, ValueAndColor> getColorMap()
-	{
-		return colorMap;
-	}
-
-	public Collection<String> getList()
-	{
-		return this.map.values();
-	}
-
-	public String[][] getArray()
-	{
-		return array;
-	}
 
 	@Override
 	public String toString()
 	{
 		return "OpRes[ok=" + this.ok + ", text="  + this.text + "]";
-	}
-
-	@Override
-	public int size()
-	{
-		return this.map.size();
-	}
-
-	@Override
-	public boolean isEmpty()
-	{
-		return this.map.isEmpty();
-	}
-
-	@Override
-	public boolean containsKey(Object key)
-	{
-		return this.map.containsKey(key);
-	}
-
-	@Override
-	public boolean containsValue(Object value)
-	{
-		return this.map.containsValue(value);
-	}
-
-	@Override
-	public String get(Object key)
-	{
-		return this.map.get(key);
-	}
-
-	@Override
-	public String put(String key, String value)
-	{
-		this.mapFilled = true;
-		return this.map.put(key, value);
-	}
-
-	@Override
-	public String remove(Object key)
-	{
-		return this.map.remove(key);
-	}
-
-	@Override
-	public void putAll(Map<? extends String, ? extends String> m)
-	{
-		this.mapFilled = true;
-		this.map.putAll(m);
-	}
-
-	@Override
-	public void clear()
-	{
-		this.map.clear();
-	}
-
-	@Override
-	public Set<String> keySet()
-	{
-		return this.map.keySet();
-	}
-
-	@Override
-	public Collection<String> values()
-	{
-		return this.map.values();
-	}
-
-	@Override
-	public Set<Entry<String, String>> entrySet()
-	{
-		return this.map.entrySet();
-	}
-
-	public boolean isMapFilled()
-	{
-		return mapFilled;
-	}
-
-	public boolean isColorMapIsFilled()
-	{
-		return colorMapFilled;
-	}
-
-	public boolean isArrayFilled()
-	{
-		return arrayFilled;
 	}
 }

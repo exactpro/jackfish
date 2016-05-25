@@ -141,14 +141,9 @@ public class DialogCheckLayout extends AbstractAction
 				}
 
 				OperationResult res = control.operate(service, window, null);
-				if (res.isPermittedOperation())
-				{
-					super.setError(message(id, window, onOpen, control, res.getText()));
-					return;
-				}
 				if (!res.isOk())
 				{
-					super.setError(message(id, window, onOpen, control, " returned 'false'. Process is stopped."));
+					super.setError(message(id, window, onOpen, control, "" + res.getValue()));
 					return;
 				}
 			}
@@ -204,11 +199,6 @@ public class DialogCheckLayout extends AbstractAction
 				}
 
 				OperationResult res = control.operate(service, window, null);
-				if (res.isPermittedOperation())
-				{
-					super.setError(message(id, window, onClose, control, res.getText()));
-					return;
-				}
 				if (!res.isOk())
 				{
 					super.setError(message(id, window, onClose, control, " returned 'false'. Process is stopped."));
