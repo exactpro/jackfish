@@ -179,7 +179,13 @@ public class DialogFill extends AbstractAction
 				OperationResult res = control.operate(service, window, obj);
 				if (res.isOk())
 				{
-					outValue.put(name, res.getValue());
+					Object value = res.getValue();
+					if (value instanceof String[][])
+					{
+						value = new Table((String[][])value, evaluator);
+						
+					}
+					outValue.put(name, value);
 				}
 				else 
 				{
