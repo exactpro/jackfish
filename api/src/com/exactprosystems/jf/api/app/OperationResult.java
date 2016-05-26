@@ -87,7 +87,7 @@ public class OperationResult implements Serializable
 		}
 		if (this.array != null)
 		{
-			return this.array;
+			return  this.array;
 		}
 		if (this.rectangle != null)
 		{
