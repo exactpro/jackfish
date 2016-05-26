@@ -19,7 +19,7 @@ public class OperationResult implements Serializable
 	private boolean						ok					= false;
 	private String						text				= null;
 	private Map<String, String>			map					= null;
-	private Map<String, ValueAndColor>	colorMap			= new LinkedHashMap<>();
+	private Map<String, ValueAndColor>	colorMap			= null;
 	private String[][]					array				= null;
 	private Rectangle 					rectangle 			= null;
 
