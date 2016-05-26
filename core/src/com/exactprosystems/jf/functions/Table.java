@@ -506,6 +506,8 @@ public class Table implements List<Map<String, Object>>, Mutable, Cloneable
 		if (this.headers != null)
 		{
 			Map<Header, Object> line = convert(map);
+			System.err.println(line);
+			
 			if (index >= 0)
 			{
 				this.innerList.add(index, line);
@@ -1129,6 +1131,8 @@ public class Table implements List<Map<String, Object>>, Mutable, Cloneable
 	private Map<Header, Object> convert(Map<String, Object> e)
 	{
 		Map<Header, Object> map = new LinkedHashMap<>();
+		Arrays.stream(this.headers).forEach(h -> map.put(h, null));
+		
 		for (Entry<String, Object> entry : e.entrySet())
 		{
 			Header key = headerByName(entry.getKey());
