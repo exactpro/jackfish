@@ -9,6 +9,7 @@ package com.exactprosystems.jf.tool.git.status;
 
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.git.GitBean;
+import com.exactprosystems.jf.tool.git.GitUtil;
 import com.exactprosystems.jf.tool.main.Main;
 
 import java.io.File;
@@ -33,6 +34,6 @@ public class GitStatus
 
 	public void revert(List<File> collect) throws Exception
 	{
-		this.model.revertFiles(collect);
+		GitUtil.revertFiles(this.model.getCredential(), collect);
 	}
 }

@@ -16,10 +16,12 @@ public class GitBean
 	public enum Status
 	{
 		//TODO add styleclasses
-		ADDED		(CssVariables.GIT_ADDED_FILE,	"new file"),
-		REMOVED		(CssVariables.GIT_REMOVED_FILE,	"deleted"),
-		CHANGED		(CssVariables.GIT_CHANGED_FILE,	"modified"),
-		UNTRACKED	(CssVariables.GIT_UNTRACKED_FILE,	"untracked");
+		ADDED		(CssVariables.GIT_ADDED_FILE,		"new file"),
+		REMOVED		(CssVariables.GIT_REMOVED_FILE,		"deleted"),
+		CHANGED		(CssVariables.GIT_CHANGED_FILE,		"modified"),
+		UNTRACKED	(CssVariables.GIT_UNTRACKED_FILE,	"untracked"),
+		UNSTAGED	(CssVariables.GIT_UNSTAGED_FILE,	"unstaged")
+		;
 
 		Status(String styleClass, String preffix)
 		{
@@ -41,7 +43,7 @@ public class GitBean
 		}
 	}
 
-	private final Status status;
+	private Status status;
 	private final File file;
 	private boolean isChecked;
 
@@ -61,6 +63,11 @@ public class GitBean
 		return file;
 	}
 
+	public void updateStatus(Status newStatus)
+	{
+		this.status = newStatus;
+	}
+
 	public boolean isChecked()
 	{
 		return this.isChecked;
@@ -69,5 +76,25 @@ public class GitBean
 	public void setChecked(boolean checked)
 	{
 		this.isChecked = checked;
+	}
+
+	@Override
+	public boolean equals(Object o)
+	{
+		if (this == o)
+			return true;
+		if (o == null || getClass() != o.getClass())
+			return false;
+
+		GitBean gitBean = (GitBean) o;
+
+		return file != null ? file.equals(gitBean.file) : gitBean.file == null;
+
+	}
+
+	@Override
+	public int hashCode()
+	{
+		return file != null ? file.hashCode() : 0;
 	}
 }

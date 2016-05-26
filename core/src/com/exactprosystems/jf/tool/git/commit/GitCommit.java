@@ -18,6 +18,7 @@ import javafx.concurrent.Task;
 import org.apache.log4j.Logger;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class GitCommit
 {
@@ -73,8 +74,15 @@ public class GitCommit
 					@Override
 					protected Void call() throws Exception
 					{
-						DialogsHelper.showInfo("Start cloning");
-						GitUtil.gitDummy();
+						DialogsHelper.showInfo("Start " + notification + "ing");
+						if (isCommit)
+						{
+							GitUtil.gitCommit(credential, list.stream().map(GitBean::getFile).collect(Collectors.toList()), msg);
+						}
+						else
+						{
+							GitUtil.gitPush(credential, list.stream().map(GitBean::getFile).collect(Collectors.toList()), msg);
+						}
 						return null;
 					}
 				};
