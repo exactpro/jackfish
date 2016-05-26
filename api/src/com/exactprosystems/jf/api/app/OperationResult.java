@@ -94,7 +94,7 @@ public class OperationResult implements Serializable
 			return this.rectangle;
 		}
 		
-		return this.ok;
+		return null;
 	}
 	
 	

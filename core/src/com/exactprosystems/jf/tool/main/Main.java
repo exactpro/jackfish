@@ -98,7 +98,6 @@ public class Main extends Application
 	private Settings settings;
 	private List<Document> docs = new ArrayList<Document>();
 
-	//TODO not use now
 	private String username;
 	private String password;
 
