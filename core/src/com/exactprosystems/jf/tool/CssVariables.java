@@ -175,6 +175,7 @@ public class CssVariables
 	public static final String	GIT_ADDED_FILE				= "gitAddedFile";
 	public static final String	GIT_CHANGED_FILE			= "gitChangedFile";
 	public static final String	GIT_REMOVED_FILE			= "gitRemovedFile";
+	public static final String	GIT_UNTRACKED_FILE			= "gitUntrackedFile";
 
 	//endregion
 

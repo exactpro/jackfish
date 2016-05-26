@@ -18,7 +18,8 @@ public class GitBean
 		//TODO add styleclasses
 		ADDED		(CssVariables.GIT_ADDED_FILE,	"new file"),
 		REMOVED		(CssVariables.GIT_REMOVED_FILE,	"deleted"),
-		CHANGED		(CssVariables.GIT_CHANGED_FILE,	"modified");
+		CHANGED		(CssVariables.GIT_CHANGED_FILE,	"modified"),
+		UNTRACKED	(CssVariables.GIT_UNTRACKED_FILE,	"untracked");
 
 		Status(String styleClass, String preffix)
 		{

@@ -785,11 +785,33 @@ CellView > .text-input.text-field{
 	-fx-text-fill : green;
 
 }
+.gitAddedFile.table-row-cell {
+	-fx-background-color : derive(green, +90%);
+
+}
+
 .gitRemovedFile {
 	-fx-text-fill : red;
+
+}
+.gitRemovedFile.table-row-cell {
+	-fx-background-color : derive(red, +90%);
 
 }
 .gitChangedFile {
 	-fx-text-fill : -fx-company-color-dark;
 
 }
+.gitChangedFile.table-row-cell {
+	-fx-background-color : derive(-fx-company-color-dark, +90%)
+
+}
+.gitUntrackedFile {
+	-fx-text-fill : brown;
+
+}
+.gitUntrackedFile.table-row-cell {
+	-fx-background-color : brown;
+
+}
+

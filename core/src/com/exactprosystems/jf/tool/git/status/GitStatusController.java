@@ -96,11 +96,14 @@ public class GitStatusController implements Initializable, ContainingParent
 			if (item != null && !empty)
 			{
 				BorderPane pane = new BorderPane();
-				CheckBox box = new CheckBox();
-				box.selectedProperty().addListener((observable, oldValue, newValue) -> {
-					item.setChecked(newValue);
-				});
-				pane.setLeft(box);
+				if (item.getStatus() != GitBean.Status.UNTRACKED)
+				{
+					CheckBox box = new CheckBox();
+					box.selectedProperty().addListener((observable, oldValue, newValue) -> {
+						item.setChecked(newValue);
+					});
+					pane.setLeft(box);
+				}
 				GridPane gridPane = new GridPane();
 				ColumnConstraints c0 = new ColumnConstraints();
 				c0.setPercentWidth(30);

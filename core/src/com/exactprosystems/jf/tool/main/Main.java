@@ -380,7 +380,7 @@ public class Main extends Application
 
 	public void gitCommit() throws Exception
 	{
-		new GitCommit(this).display();
+		new GitCommit(this, GitUtil.gitStatus(getCredential())).display();
 	}
 
 	public void gitReset() throws Exception

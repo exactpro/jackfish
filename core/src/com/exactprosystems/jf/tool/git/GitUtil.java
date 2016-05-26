@@ -55,6 +55,15 @@ public class GitUtil
 		}
 	}
 
+	public static void gitDummy(Object... objects) throws Exception
+	{
+		for(int i = 0; i < 5; i++)
+		{
+			System.out.println("tick " + i);
+			Thread.sleep(3000);
+		}
+	}
+
 	public static List<GitBean> gitStatus(CredentialBean credential) throws Exception
 	{
 		try (Git git = git(credential))
@@ -64,6 +73,7 @@ public class GitUtil
 			status.getAdded().stream().map(st -> new GitBean(GitBean.Status.ADDED, new File(st))).forEach(list::add);
 			status.getChanged().stream().map(st -> new GitBean(GitBean.Status.CHANGED, new File(st))).forEach(list::add);
 			status.getRemoved().stream().map(st -> new GitBean(GitBean.Status.REMOVED, new File(st))).forEach(list::add);
+			status.getUntracked().stream().map(st -> new GitBean(GitBean.Status.UNTRACKED, new File(st))).forEach(list::add);
 			return list;
 		}
 	}
