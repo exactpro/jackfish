@@ -1,5 +1,4 @@
 ////////////////////////////////////////////////////////////////////////////////
-//  Copyright (c) 2009-2015, Exactpro Systems, LLC
 //  Quality Assurance & Related Development for Innovative Trading Systems.
 //  All rights reserved.
 //  This is unpublished, licensed software, confidential and proprietary
@@ -506,8 +505,6 @@ public class Table implements List<Map<String, Object>>, Mutable, Cloneable
 		if (this.headers != null)
 		{
 			Map<Header, Object> line = convert(map);
-			System.err.println(line);
-			
 			if (index >= 0)
 			{
 				this.innerList.add(index, line);
