@@ -174,22 +174,38 @@ public class DialogFill extends AbstractAction
 				return;
 			}
 
-			OperationResult res = control.operate(service, window, obj);
-			if (res.isOk())
+			try
 			{
-				outValue.put(name, res.getValue());
-			}
-			else 
-			{
-				if(!stopOnFail)
+				OperationResult res = control.operate(service, window, obj);
+				if (res.isOk())
 				{
-					allReportErrors += message(id, window, run, control, "" + res.getValue());
-				} 
+					outValue.put(name, res.getValue());
+				}
 				else 
 				{
-					super.setError(message(id, window, run, control, "" + res.getValue()));
+					if(this.stopOnFail)
+					{
+						super.setError(message(id, window, run, control, "" + res.getValue()));
+						return;
+					}
+					else 
+					{
+						allReportErrors += message(id, window, run, control, "" + res.getValue());
+					} 
+				}
+			}
+			catch (Exception e)
+			{
+				logger.error(e.getMessage(), e);
+				if (this.stopOnFail)
+				{
+					super.setError(message(id, window, run, control, e.getMessage()));
 					return;
 				}
+				else 
+				{
+					allReportErrors += message(id, window, run, control, e.getMessage());
+				} 
 			}
 		}
 
