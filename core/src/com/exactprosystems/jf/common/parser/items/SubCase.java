@@ -156,7 +156,6 @@ public final class SubCase extends MatrixItem
 	@Override
 	protected void beforeReport(ReportBuilder report)
 	{
-		report.reportSwitch(true);
 	}
 
 	@Override
@@ -218,7 +217,6 @@ public final class SubCase extends MatrixItem
 	@Override
 	protected void afterReport(ReportBuilder report)
 	{
-		report.reportSwitch(true);
 	}
 
 	// ==============================================================================================
