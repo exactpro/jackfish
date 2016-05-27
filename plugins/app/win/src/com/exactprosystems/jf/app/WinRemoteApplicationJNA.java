@@ -62,7 +62,7 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 			int height = Integer.MIN_VALUE;
 			int width = Integer.MIN_VALUE;
 			String heightStr = args.get(WinAppFactory.mainWindowHeight);
-			if (!Str.IsNullOrEmpty(heightStr))
+			if (!Str.IsNullOrEmpty(heightStr) && !heightStr.equalsIgnoreCase("null"))
 			{
 				try
 				{
@@ -74,7 +74,7 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 				}
 			}
 			String widthStr = args.get(WinAppFactory.mainWindowWidth);
-			if (!Str.IsNullOrEmpty(widthStr))
+			if (!Str.IsNullOrEmpty(widthStr) && !widthStr.equalsIgnoreCase("null"))
 			{
 				try
 				{
