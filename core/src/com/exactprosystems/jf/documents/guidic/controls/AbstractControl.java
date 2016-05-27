@@ -653,22 +653,4 @@ public abstract class AbstractControl implements IControl, Mutable
 			}
 		}
 	}
-
-	private static boolean areEqual(Integer i1, Integer i2)
-	{
-		if (i1 == i2)
-		{
-			return true;
-		}
-		if (i1 == null)
-		{
-			return i2 == null || i2.intValue() == 0;
-		}
-		if (i2 == null)
-		{
-			return i1 == null || i1.intValue() == 0;
-		}
-		
-		return i1.intValue() == i2.intValue();
-	}
 }

@@ -30,6 +30,11 @@
 		</layout>
 	</appender>
 
+	<logger name="com.exactprosystems.jf.documents">
+  		<level value="INFO"/>
+  		<appender-ref ref="LogGuiFile"/>
+ 	</logger>
+
 	<logger name="com.exactprosystems.jf.tool">
   		<level value="INFO"/>
   		<appender-ref ref="LogGuiFile"/>
