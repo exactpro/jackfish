@@ -6,7 +6,7 @@
 //  information which is the property of Exactpro Systems, LLC or its licensors.
 ////////////////////////////////////////////////////////////////////////////////
 
-package com.exactprosystems.jf.common.xml.gui;
+package com.exactprosystems.jf.documents.guidic;
 
 import javax.xml.bind.Unmarshaller.Listener;
 

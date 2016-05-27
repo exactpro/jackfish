@@ -13,12 +13,14 @@ import com.exactprosystems.jf.api.common.DateTime;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.common.parser.listeners.*;
 import com.exactprosystems.jf.common.version.VersionInfo;
-import com.exactprosystems.jf.common.xml.gui.GuiDictionary;
 import com.exactprosystems.jf.common.xml.messages.MessageDictionary;
 import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.documents.config.Context;
+import com.exactprosystems.jf.documents.guidic.GuiDictionary;
 import com.exactprosystems.jf.tool.main.Main;
+
 import javafx.application.Application;
+
 import org.apache.commons.cli.*;
 import org.apache.log4j.Logger;
 import org.apache.log4j.xml.DOMConfigurator;
@@ -28,6 +30,7 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.SchemaOutputResolver;
 import javax.xml.transform.Result;
 import javax.xml.transform.stream.StreamResult;
+
 import java.io.*;
 import java.lang.ProcessBuilder.Redirect;
 import java.lang.management.ManagementFactory;

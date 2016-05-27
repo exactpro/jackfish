@@ -13,10 +13,10 @@ import com.exactprosystems.jf.api.common.ApiVersionInfo;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.common.MainRunner;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
-import com.exactprosystems.jf.common.xml.gui.GuiDictionary;
 import com.exactprosystems.jf.documents.config.AppEntry;
 import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.documents.config.Parameter;
+import com.exactprosystems.jf.documents.guidic.GuiDictionary;
 
 import org.apache.log4j.Logger;
 

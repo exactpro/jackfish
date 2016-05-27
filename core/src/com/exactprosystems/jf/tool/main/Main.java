@@ -18,11 +18,11 @@ import com.exactprosystems.jf.common.parser.Matrix;
 import com.exactprosystems.jf.common.parser.listeners.MatrixListener;
 import com.exactprosystems.jf.common.parser.listeners.RunnerListener;
 import com.exactprosystems.jf.common.version.VersionInfo;
-import com.exactprosystems.jf.common.xml.gui.GuiDictionary;
 import com.exactprosystems.jf.documents.Document;
 import com.exactprosystems.jf.documents.DocumentInfo;
 import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.documents.config.Context;
+import com.exactprosystems.jf.documents.guidic.GuiDictionary;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.DisplayableTask;
 import com.exactprosystems.jf.tool.csv.CsvFx;
@@ -48,10 +48,12 @@ import com.exactprosystems.jf.tool.text.PlainTextFx;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
+
 import javafx.application.Application;
 import javafx.concurrent.Task;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+
 import org.apache.log4j.Logger;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.PullResult;
