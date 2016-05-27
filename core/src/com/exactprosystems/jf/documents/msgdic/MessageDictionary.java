@@ -14,10 +14,10 @@ import com.exactprosystems.jf.api.client.IField;
 import com.exactprosystems.jf.api.client.IMessage;
 import com.exactprosystems.jf.api.client.IMessageDictionary;
 import com.exactprosystems.jf.common.xml.schema.Xsd;
+import com.exactprosystems.jf.documents.AbstractDocument;
 import com.exactprosystems.jf.documents.Document;
 import com.exactprosystems.jf.documents.DocumentInfo;
 import com.exactprosystems.jf.documents.config.Configuration;
-import com.exactprosystems.jf.tool.AbstractDocument;
 
 import org.apache.log4j.Logger;
 

@@ -10,11 +10,11 @@ package com.exactprosystems.jf.documents.vars;
 
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.evaluator.LinkedProperties;
+import com.exactprosystems.jf.documents.AbstractDocument;
 import com.exactprosystems.jf.documents.DocumentInfo;
 import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.documents.matrix.parser.Parameter;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
-import com.exactprosystems.jf.tool.AbstractDocument;
 
 import java.io.FileWriter;
 import java.io.Reader;

@@ -6,13 +6,11 @@
 //  information which is the property of Exactpro Systems, LLC or its licensors.
 ////////////////////////////////////////////////////////////////////////////////
 
-package com.exactprosystems.jf.tool;
+package com.exactprosystems.jf.documents;
 
 import com.exactprosystems.jf.common.*;
 import com.exactprosystems.jf.common.undoredo.ActionTrackProvider;
 import com.exactprosystems.jf.common.undoredo.Command;
-import com.exactprosystems.jf.documents.Document;
-import com.exactprosystems.jf.documents.DocumentInfo;
 import com.exactprosystems.jf.documents.config.Configuration;
 
 import java.io.File;

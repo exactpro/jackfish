@@ -8,11 +8,13 @@
 
 package com.exactprosystems.jf.documents.text;
 
+import com.exactprosystems.jf.documents.AbstractDocument;
 import com.exactprosystems.jf.documents.DocumentInfo;
 import com.exactprosystems.jf.documents.config.Configuration;
-import com.exactprosystems.jf.tool.AbstractDocument;
+
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+
 import java.io.*;
 
 @DocumentInfo(newName = "Text", extentioin = "txt", description = "Plain text")

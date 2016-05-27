@@ -14,6 +14,7 @@ import com.exactprosystems.jf.api.client.IClientFactory;
 import com.exactprosystems.jf.api.common.IMatrix;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
+import com.exactprosystems.jf.documents.AbstractDocument;
 import com.exactprosystems.jf.documents.DocumentInfo;
 import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.documents.config.Context;
@@ -24,7 +25,6 @@ import com.exactprosystems.jf.documents.matrix.parser.items.MatrixRoot;
 import com.exactprosystems.jf.documents.matrix.parser.items.NameSpace;
 import com.exactprosystems.jf.documents.matrix.parser.items.TestCase;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
-import com.exactprosystems.jf.tool.AbstractDocument;
 
 import org.apache.log4j.Logger;
 

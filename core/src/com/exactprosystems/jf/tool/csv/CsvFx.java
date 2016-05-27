@@ -9,11 +9,11 @@
 package com.exactprosystems.jf.tool.csv;
 
 import com.exactprosystems.jf.common.Settings;
+import com.exactprosystems.jf.documents.AbstractDocument;
 import com.exactprosystems.jf.documents.DocumentInfo;
 import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.documents.csv.Csv;
 import com.exactprosystems.jf.functions.Table;
-import com.exactprosystems.jf.tool.AbstractDocument;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.custom.grideditor.DataProvider;
 import com.exactprosystems.jf.tool.custom.grideditor.TableDataProvider;

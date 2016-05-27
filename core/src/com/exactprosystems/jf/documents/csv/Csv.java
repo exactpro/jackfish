@@ -8,10 +8,11 @@
 
 package com.exactprosystems.jf.documents.csv;
 
+import com.exactprosystems.jf.documents.AbstractDocument;
 import com.exactprosystems.jf.documents.DocumentInfo;
 import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.functions.Table;
-import com.exactprosystems.jf.tool.AbstractDocument;
+
 import java.io.Reader;
 
 @DocumentInfo(newName = "Csv", extentioin = "csv", description = "CSV")
