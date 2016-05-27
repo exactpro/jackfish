@@ -595,7 +595,9 @@ public class SeleniumRemoteApplication extends RemoteApplication
 			try
 			{
 				log("before image");
-				
+
+				//That need for correct behavior
+				Thread.sleep(2000);
 				//method webElement.getScreenshotAs not working in 2.48.2
 				File screenshot = this.driver.getScreenshotAs(OutputType.FILE);
 				BufferedImage fullImg = ImageIO.read(screenshot);
