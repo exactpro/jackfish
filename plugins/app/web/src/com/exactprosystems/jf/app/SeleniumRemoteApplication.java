@@ -598,7 +598,6 @@ public class SeleniumRemoteApplication extends RemoteApplication
 
 				//That need for correct behavior
 				Thread.sleep(2000);
-				//method webElement.getScreenshotAs not working in 2.48.2
 				File screenshot = this.driver.getScreenshotAs(OutputType.FILE);
 				BufferedImage fullImg = ImageIO.read(screenshot);
 				if (element == null)
@@ -610,15 +609,20 @@ public class SeleniumRemoteApplication extends RemoteApplication
 				
 				logger.error(">>> point=" + point);
 				logger.error(">>> size=" + component.getSize());
-				
+
 				Point realPoint = new Point(Math.max(point.x, 0), Math.max(point.y, 0));
 				int eleWidth = component.getSize().getWidth() + Math.min(point.x, 0);
 				int eleHeight = component.getSize().getHeight() + Math.min(point.y, 0);
 
+				Long innerH = (Long) this.driver.executeScript("return 'innerHeight' in window ? window.innerHeight : document.documentElement.offsetHeight;");
+				Long innerW = (Long) this.driver.executeScript("return 'innerHeight' in window ? window.innerWidth : document.documentElement.offsetWidth;");
+
+				eleWidth = (int) Math.min(eleWidth, innerW);
+				eleHeight = (int) Math.min(eleHeight, innerH);
+
 				logger.error(">>> realPoint=" + realPoint);
 				logger.error(">>> size=" + eleWidth + "x" + eleHeight);
 
-				//TODO add exception about image is very big/small.
 				BufferedImage image = fullImg.getSubimage(realPoint.getX(), realPoint.getY(), eleWidth, eleHeight);
 
 				log("after image");
