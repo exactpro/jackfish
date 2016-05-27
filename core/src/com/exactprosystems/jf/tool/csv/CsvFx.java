@@ -11,6 +11,7 @@ package com.exactprosystems.jf.tool.csv;
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.documents.DocumentInfo;
 import com.exactprosystems.jf.documents.config.Configuration;
+import com.exactprosystems.jf.documents.csv.Csv;
 import com.exactprosystems.jf.functions.Table;
 import com.exactprosystems.jf.tool.AbstractDocument;
 import com.exactprosystems.jf.tool.Common;
@@ -29,21 +30,14 @@ import java.util.Optional;
 		extentioin 	= "csv", 
 		description = "CSV"
 )
-public class CsvFx extends AbstractDocument
+public class CsvFx extends Csv
 {
-	private char tableDelimiter = ';';
-
 	public CsvFx(String fileName, Settings settings, Configuration config)
 	{
 		super(fileName, config);
 		
 		this.settings = settings;
-		this.table = new Table(new String[][]
-				{
-						new String[] {	"<none>" },
-						new String[] { 	"" },
-				}, null);
-		this.provider = new TableDataProvider(this.table);
+		this.provider = new TableDataProvider(super.table);
 	}
 
 	//==============================================================================================================================
@@ -70,8 +64,7 @@ public class CsvFx extends AbstractDocument
 	{
 		super.load(reader);
 
-		this.table = new Table(reader, tableDelimiter, null);
-		this.provider = new TableDataProvider(this.table);
+		this.provider = new TableDataProvider(super.table);
 		//TODO implements undo redo
 		initController();
 	}
@@ -79,6 +72,11 @@ public class CsvFx extends AbstractDocument
     @Override
     public boolean canClose()  throws Exception
     {
+		if (!super.canClose())
+		{
+			return false;
+		}
+
 		if (isChanged())
 		{
 			ButtonType desision = DialogsHelper.showSaveFileDialog(this.getName());
@@ -99,7 +97,6 @@ public class CsvFx extends AbstractDocument
     public void save(String fileName) throws Exception
     {
     	super.save(fileName);
-    	this.table.save(fileName, tableDelimiter, false, false);
 		this.controller.saved(getName());
     }
     
@@ -111,26 +108,8 @@ public class CsvFx extends AbstractDocument
 	}
 
     //------------------------------------------------------------------------------------------------------------------
-    // interface Mutable
+    // public methods
     //------------------------------------------------------------------------------------------------------------------
-	@Override
-	public boolean isChanged()
-	{
-		return this.table.isChanged();
-	}
-
-	@Override
-	public void saved()
-	{
-		super.saved();
-        this.table.saved();
-    }
-
-	public void setDelimiter(char delimiter)
-	{
-		this.tableDelimiter = delimiter;
-	}
-
 	public void reloadCsv() throws Exception
 	{
 		if (hasName())
@@ -155,7 +134,6 @@ public class CsvFx extends AbstractDocument
 	}
 
 	private boolean isControllerInit = false;
-	private Table table;
 	private DataProvider<String> provider;
 	private Settings settings;
 	private CsvFxController controller;
