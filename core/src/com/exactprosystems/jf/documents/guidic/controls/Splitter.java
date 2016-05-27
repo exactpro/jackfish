@@ -6,10 +6,9 @@
 //  information which is the property of Exactpro Systems, LLC or its licensors.
 ////////////////////////////////////////////////////////////////////////////////
 
-package com.exactprosystems.jf.common.xml.control;
+package com.exactprosystems.jf.documents.guidic.controls;
 
 import com.exactprosystems.jf.api.app.ControlKind;
-import com.exactprosystems.jf.api.app.Part;
 import com.exactprosystems.jf.common.ControlsAttributes;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -17,19 +16,13 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @ControlsAttributes(
-		bindedClass 		= ControlKind.ComboBox
+		bindedClass 		= ControlKind.Splitter
 )
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.NONE)
-public class ComboBox extends AbstractControl
+public class Splitter extends AbstractControl
 {
-	public ComboBox()
+	public Splitter()
 	{
-	}
-	
-	@Override
-	public void prepare(Part part, Object value) throws Exception
-	{
-		part.setText(String.valueOf(value));
 	}
 }

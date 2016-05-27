@@ -6,10 +6,9 @@
 //  information which is the property of Exactpro Systems, LLC or its licensors.
 ////////////////////////////////////////////////////////////////////////////////
 
-package com.exactprosystems.jf.common.xml.control;
+package com.exactprosystems.jf.documents.guidic.controls;
 
 import com.exactprosystems.jf.api.app.ControlKind;
-import com.exactprosystems.jf.api.app.Part;
 import com.exactprosystems.jf.common.ControlsAttributes;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -17,22 +16,13 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @ControlsAttributes(
-		bindedClass 		= ControlKind.ProgressBar
+		bindedClass 		= ControlKind.Frame
 )
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.NONE)
-public class ProgressBar extends AbstractControl
+public class Frame extends AbstractControl
 {
-	public ProgressBar()
+	public Frame()
 	{
-	}
-
-	@Override
-	public void prepare(Part part, Object value) throws Exception
-	{
-		if (value instanceof Double)
-		{
-			part.setValue((Double) value);
-		}
 	}
 }

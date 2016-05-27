@@ -6,7 +6,7 @@
 //  information which is the property of Exactpro Systems, LLC or its licensors.
 ////////////////////////////////////////////////////////////////////////////////
 
-package com.exactprosystems.jf.common.xml.control;
+package com.exactprosystems.jf.documents.guidic.controls;
 
 import com.exactprosystems.jf.api.app.ControlKind;
 import com.exactprosystems.jf.common.ControlsAttributes;
@@ -16,13 +16,13 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @ControlsAttributes(
-		bindedClass 		= ControlKind.Panel
+		bindedClass 		= ControlKind.Button
 )
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.NONE)
-public class Panel extends AbstractControl
+public class Button extends AbstractControl
 {
-	public Panel()
+	public Button()
 	{
 	}
 }

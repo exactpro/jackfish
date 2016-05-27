@@ -6,7 +6,7 @@
 //  information which is the property of Exactpro Systems, LLC or its licensors.
 ////////////////////////////////////////////////////////////////////////////////
 
-package com.exactprosystems.jf.common.xml.control;
+package com.exactprosystems.jf.documents.guidic.controls;
 
 import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.common.Str;

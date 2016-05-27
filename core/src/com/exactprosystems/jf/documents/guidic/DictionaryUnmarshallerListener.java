@@ -10,7 +10,7 @@ package com.exactprosystems.jf.documents.guidic;
 
 import javax.xml.bind.Unmarshaller.Listener;
 
-import com.exactprosystems.jf.common.xml.control.AbstractControl;
+import com.exactprosystems.jf.documents.guidic.controls.AbstractControl;
 
 public class DictionaryUnmarshallerListener extends Listener
 {

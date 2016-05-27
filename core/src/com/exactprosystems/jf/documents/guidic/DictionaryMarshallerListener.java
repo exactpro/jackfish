@@ -8,7 +8,7 @@
 
 package com.exactprosystems.jf.documents.guidic;
 
-import com.exactprosystems.jf.common.xml.control.AbstractControl;
+import com.exactprosystems.jf.documents.guidic.controls.AbstractControl;
 
 import javax.xml.bind.Marshaller.Listener;
 

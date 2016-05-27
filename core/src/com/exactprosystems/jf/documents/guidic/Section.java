@@ -14,7 +14,7 @@ import com.exactprosystems.jf.api.app.ISection;
 import com.exactprosystems.jf.api.app.Mutable;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.parser.items.MutableArrayList;
-import com.exactprosystems.jf.common.xml.control.*;
+import com.exactprosystems.jf.documents.guidic.controls.*;
 
 import javax.xml.bind.annotation.*;
 

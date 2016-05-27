@@ -14,8 +14,8 @@ import com.exactprosystems.jf.actions.ActionGroups;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.parser.Parameters;
 import com.exactprosystems.jf.common.report.ReportBuilder;
-import com.exactprosystems.jf.common.xml.control.Table;
 import com.exactprosystems.jf.documents.config.Context;
+import com.exactprosystems.jf.documents.guidic.controls.Table;
 import com.exactprosystems.jf.functions.Histogram;
 
 @ActionAttribute(

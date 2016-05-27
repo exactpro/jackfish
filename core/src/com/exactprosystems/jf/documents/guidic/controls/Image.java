@@ -6,23 +6,17 @@
 //  information which is the property of Exactpro Systems, LLC or its licensors.
 ////////////////////////////////////////////////////////////////////////////////
 
-package com.exactprosystems.jf.common.xml.control;
+package com.exactprosystems.jf.documents.guidic.controls;
 
 import com.exactprosystems.jf.api.app.ControlKind;
 import com.exactprosystems.jf.common.ControlsAttributes;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlRootElement;
-
 @ControlsAttributes(
-		bindedClass			= ControlKind.Tree
+		bindedClass 		= ControlKind.Image
 )
-@XmlRootElement
-@XmlAccessorType(XmlAccessType.NONE)
-public class Tree extends AbstractControl
+public class Image extends AbstractControl
 {
-	public Tree()
+	public Image()
 	{
 	}
 }

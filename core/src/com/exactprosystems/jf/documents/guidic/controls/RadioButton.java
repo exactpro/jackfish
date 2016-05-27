@@ -1,12 +1,12 @@
 ////////////////////////////////////////////////////////////////////////////////
-//Copyright (c) 2009-2015, Exactpro Systems, LLC
-//Quality Assurance & Related Development for Innovative Trading Systems.
-//All rights reserved.
-//This is unpublished, licensed software, confidential and proprietary
-//information which is the property of Exactpro Systems, LLC or its licensors.
+//  Copyright (c) 2009-2015, Exactpro Systems, LLC
+//  Quality Assurance & Related Development for Innovative Trading Systems.
+//  All rights reserved.
+//  This is unpublished, licensed software, confidential and proprietary
+//  information which is the property of Exactpro Systems, LLC or its licensors.
 ////////////////////////////////////////////////////////////////////////////////
 
-package com.exactprosystems.jf.common.xml.control;
+package com.exactprosystems.jf.documents.guidic.controls;
 
 import com.exactprosystems.jf.api.app.ControlKind;
 import com.exactprosystems.jf.common.ControlsAttributes;
@@ -16,13 +16,13 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @ControlsAttributes(
-		bindedClass 		= ControlKind.Spinner
-		)
+		bindedClass 		= ControlKind.RadioButton
+)
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.NONE)
-public class Spinner extends AbstractControl
+public class RadioButton extends AbstractControl
 {
-	public Spinner()
+	public RadioButton()
 	{
 	}
 }

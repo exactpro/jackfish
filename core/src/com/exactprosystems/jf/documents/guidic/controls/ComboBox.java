@@ -6,7 +6,7 @@
 //  information which is the property of Exactpro Systems, LLC or its licensors.
 ////////////////////////////////////////////////////////////////////////////////
 
-package com.exactprosystems.jf.common.xml.control;
+package com.exactprosystems.jf.documents.guidic.controls;
 
 import com.exactprosystems.jf.api.app.ControlKind;
 import com.exactprosystems.jf.api.app.Part;
@@ -17,22 +17,19 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @ControlsAttributes(
-		bindedClass 		= ControlKind.TabPanel
+		bindedClass 		= ControlKind.ComboBox
 )
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.NONE)
-public class TabPanel extends AbstractControl
+public class ComboBox extends AbstractControl
 {
-	public TabPanel()
+	public ComboBox()
 	{
 	}
-
+	
 	@Override
 	public void prepare(Part part, Object value) throws Exception
 	{
-		if (value instanceof Number)
-		{
-			part.setValue(((Number)value).longValue());
-		}
+		part.setText(String.valueOf(value));
 	}
 }

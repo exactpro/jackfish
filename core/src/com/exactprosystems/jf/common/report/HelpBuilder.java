@@ -15,7 +15,7 @@ import com.exactprosystems.jf.common.parser.Matrix;
 import com.exactprosystems.jf.common.parser.Result;
 import com.exactprosystems.jf.common.parser.items.MatrixItem;
 import com.exactprosystems.jf.common.version.VersionInfo;
-import com.exactprosystems.jf.common.xml.control.AbstractControl;
+import com.exactprosystems.jf.documents.guidic.controls.AbstractControl;
 
 import java.io.IOException;
 import java.util.Date;

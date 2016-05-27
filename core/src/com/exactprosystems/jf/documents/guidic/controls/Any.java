@@ -6,10 +6,9 @@
 //  information which is the property of Exactpro Systems, LLC or its licensors.
 ////////////////////////////////////////////////////////////////////////////////
 
-package com.exactprosystems.jf.common.xml.control;
+package com.exactprosystems.jf.documents.guidic.controls;
 
 import com.exactprosystems.jf.api.app.ControlKind;
-import com.exactprosystems.jf.api.app.Part;
 import com.exactprosystems.jf.common.ControlsAttributes;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -17,22 +16,13 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @ControlsAttributes(
-		bindedClass 		= ControlKind.Slider
+		bindedClass 		= ControlKind.Any
 )
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.NONE)
-public class Slider extends AbstractControl
+public class Any extends AbstractControl
 {
-	public Slider()
+	public Any()
 	{
-	}
-	
-	@Override
-	public void prepare(Part part, Object value) throws Exception
-	{
-		if (value instanceof Double)
-		{
-			part.setValue((Double) value);
-		}
 	}
 }
