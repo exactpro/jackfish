@@ -11,37 +11,26 @@ package com.exactprosystems.jf.tool.text;
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.documents.DocumentInfo;
 import com.exactprosystems.jf.documents.config.Configuration;
-import com.exactprosystems.jf.tool.AbstractDocument;
+import com.exactprosystems.jf.documents.text.PlainText;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
 import javafx.scene.control.ButtonType;
 
 import java.io.*;
 import java.util.Optional;
 
 @DocumentInfo(
-		newName = "NewText", 
+		newName = "TextFx", 
 		extentioin = "txt", 
 		description = "Plain text"
 )
-public class PlainTextFx extends AbstractDocument
+public class PlainTextFx extends PlainText
 {
 	public PlainTextFx(String fileName, Settings settings, Configuration config)
 	{
 		super(fileName, config);
 		this.settings = settings;
-		this.property = new SimpleStringProperty()
-		{
-			@Override
-			public void set(String arg0)
-			{
-				super.set(arg0);
-				changed = true;
-			}
-		};
 	}
 
 	//==============================================================================================================================
@@ -53,7 +42,7 @@ public class PlainTextFx extends AbstractDocument
 		super.display();
 		
 		this.controller.displayTitle(Common.getSimpleTitle(getName()));
-		this.controller.displayText(property);
+		this.controller.displayText(super.property);
 	}
 
 	@Override
@@ -67,13 +56,17 @@ public class PlainTextFx extends AbstractDocument
 	public void load(Reader reader) throws Exception
 	{
 		super.load(reader);
-		this.property.set(read(reader));
 		initController();
 	}
 
     @Override
     public boolean canClose()  throws Exception
     {
+		if (!super.canClose())
+		{
+			return false;
+		}
+		
 		if (isChanged())
 		{
 			ButtonType desision = DialogsHelper.showSaveFileDialog(this.getName());
@@ -94,7 +87,6 @@ public class PlainTextFx extends AbstractDocument
     public void save(String fileName) throws Exception
     {
     	super.save(fileName);
-    	write(fileName);
 		this.controller.saved(getName());
     }
     
@@ -105,22 +97,6 @@ public class PlainTextFx extends AbstractDocument
 		this.controller.close();
 	}
 
-    //------------------------------------------------------------------------------------------------------------------
-    // interface Mutable
-    //------------------------------------------------------------------------------------------------------------------
-	@Override
-	public boolean isChanged()
-	{
-        return this.changed;
-	}
-
-	@Override
-	public void saved()
-	{
-		super.saved();
-        this.changed = false;
-    }
-	
     //------------------------------------------------------------------------------------------------------------------
 	private void initController()
 	{
@@ -133,36 +109,7 @@ public class PlainTextFx extends AbstractDocument
 		}
 	}
 
-	private String read(Reader reader) throws IOException
-	{
-		StringBuilder sb = new StringBuilder();
-		try (BufferedReader buffReader = new BufferedReader(reader))
-		{
-			String line = null;
-			while((line = buffReader.readLine()) != null)
-			{
-				sb.append(line).append('\n');
-			}
-		}
-		return sb.toString();
-	}
-
-	private void write(String fileName) throws IOException
-	{
-		try (Writer writer = new FileWriter(fileName);
-			BufferedWriter buffWriter = new BufferedWriter(writer))
-		{
-			for (String line : this.property.get().split("\n"))
-			{
-				buffWriter.write(line);
-				buffWriter.newLine();
-			}
-		}
-	}
-
 	private boolean isControllerInit = false;
-	private StringProperty property;
 	private Settings settings;
-	private boolean changed = false;
 	private PlainTextFxController controller;
 }

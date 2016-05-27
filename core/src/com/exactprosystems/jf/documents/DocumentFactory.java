@@ -14,8 +14,7 @@ import com.exactprosystems.jf.common.xml.gui.GuiDictionary;
 import com.exactprosystems.jf.common.xml.messages.MessageDictionary;
 import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.documents.csv.Csv;
-import com.exactprosystems.jf.tool.csv.CsvFx;
-import com.exactprosystems.jf.tool.text.PlainTextFx;
+import com.exactprosystems.jf.documents.text.PlainText;
 
 public interface 		DocumentFactory
 {
@@ -29,7 +28,7 @@ public interface 		DocumentFactory
 
 	Csv 				createCsv();
 
-	PlainTextFx 		createPlainText(); // TODO create intermediate class
+	PlainText 			createPlainText(); 
 
 	SystemVars 			createVars();
 }
