@@ -24,7 +24,6 @@ import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.common.UpdateLibsListener;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.evaluator.MvelEvaluator;
-import com.exactprosystems.jf.common.evaluator.SystemVars;
 import com.exactprosystems.jf.common.report.HTMLReportFactory;
 import com.exactprosystems.jf.common.report.ReportFactory;
 import com.exactprosystems.jf.common.xml.schema.Xsd;
@@ -36,6 +35,7 @@ import com.exactprosystems.jf.documents.matrix.parser.listeners.DummyRunnerListe
 import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.MatrixListener;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.RunnerListener;
+import com.exactprosystems.jf.documents.vars.SystemVars;
 import com.exactprosystems.jf.service.ServicePool;
 import com.exactprosystems.jf.sql.DataBasePool;
 import com.exactprosystems.jf.tool.AbstractDocument;
