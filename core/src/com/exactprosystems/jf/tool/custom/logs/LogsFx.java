@@ -11,7 +11,7 @@ package com.exactprosystems.jf.tool.custom.logs;
 import com.exactprosystems.jf.common.MainRunner;
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.common.Settings.SettingsValue;
-import com.exactprosystems.jf.common.parser.SearchHelper;
+import com.exactprosystems.jf.documents.matrix.parser.SearchHelper;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.custom.console.ConsoleText;

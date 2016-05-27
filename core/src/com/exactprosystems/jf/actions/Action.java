@@ -8,8 +8,8 @@
 
 package com.exactprosystems.jf.actions;
 
-import com.exactprosystems.jf.common.parser.Parameters;
-import com.exactprosystems.jf.common.parser.Result;
+import com.exactprosystems.jf.documents.matrix.parser.Parameters;
+import com.exactprosystems.jf.documents.matrix.parser.Result;
 
 public class Action
 {

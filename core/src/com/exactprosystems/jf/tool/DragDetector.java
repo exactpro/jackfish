@@ -8,7 +8,8 @@
 
 package com.exactprosystems.jf.tool;
 
-import com.exactprosystems.jf.common.parser.FormulaGenerator;
+import com.exactprosystems.jf.documents.matrix.parser.FormulaGenerator;
+
 import javafx.scene.Node;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.image.WritableImage;

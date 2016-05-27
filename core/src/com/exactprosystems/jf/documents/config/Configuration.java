@@ -25,22 +25,23 @@ import com.exactprosystems.jf.common.UpdateLibsListener;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.evaluator.MvelEvaluator;
 import com.exactprosystems.jf.common.evaluator.SystemVars;
-import com.exactprosystems.jf.common.parser.Matrix;
-import com.exactprosystems.jf.common.parser.items.MutableArrayList;
-import com.exactprosystems.jf.common.parser.listeners.DummyRunnerListener;
-import com.exactprosystems.jf.common.parser.listeners.IMatrixListener;
-import com.exactprosystems.jf.common.parser.listeners.MatrixListener;
-import com.exactprosystems.jf.common.parser.listeners.RunnerListener;
 import com.exactprosystems.jf.common.report.HTMLReportFactory;
 import com.exactprosystems.jf.common.report.ReportFactory;
 import com.exactprosystems.jf.common.xml.schema.Xsd;
 import com.exactprosystems.jf.documents.Document;
 import com.exactprosystems.jf.documents.DocumentInfo;
+import com.exactprosystems.jf.documents.matrix.Matrix;
+import com.exactprosystems.jf.documents.matrix.parser.items.MutableArrayList;
+import com.exactprosystems.jf.documents.matrix.parser.listeners.DummyRunnerListener;
+import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
+import com.exactprosystems.jf.documents.matrix.parser.listeners.MatrixListener;
+import com.exactprosystems.jf.documents.matrix.parser.listeners.RunnerListener;
 import com.exactprosystems.jf.service.ServicePool;
 import com.exactprosystems.jf.sql.DataBasePool;
 import com.exactprosystems.jf.tool.AbstractDocument;
 import com.exactprosystems.jf.tool.main.DocumentKind;
 import com.exactprosystems.jf.tool.main.Main;
+
 import org.apache.log4j.Logger;
 
 import javax.xml.XMLConstants;
@@ -53,6 +54,7 @@ import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
+
 import java.io.*;
 import java.util.*;
 import java.util.stream.Collectors;

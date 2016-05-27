@@ -10,15 +10,19 @@ package com.exactprosystems.jf.actions;
 
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
-import com.exactprosystems.jf.common.parser.*;
-import com.exactprosystems.jf.common.parser.items.ActionItem;
-import com.exactprosystems.jf.common.parser.items.ActionItem.HelpKind;
-import com.exactprosystems.jf.common.parser.items.MatrixItem;
-import com.exactprosystems.jf.common.parser.items.TypeMandatory;
-import com.exactprosystems.jf.common.parser.listeners.IMatrixListener;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.common.report.ReportTable;
 import com.exactprosystems.jf.documents.config.Context;
+import com.exactprosystems.jf.documents.matrix.Matrix;
+import com.exactprosystems.jf.documents.matrix.parser.Parameter;
+import com.exactprosystems.jf.documents.matrix.parser.Parameters;
+import com.exactprosystems.jf.documents.matrix.parser.Result;
+import com.exactprosystems.jf.documents.matrix.parser.Tokens;
+import com.exactprosystems.jf.documents.matrix.parser.items.ActionItem;
+import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
+import com.exactprosystems.jf.documents.matrix.parser.items.TypeMandatory;
+import com.exactprosystems.jf.documents.matrix.parser.items.ActionItem.HelpKind;
+import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
 import com.exactprosystems.jf.exceptions.ParametersException;
 
 import org.apache.log4j.Logger;

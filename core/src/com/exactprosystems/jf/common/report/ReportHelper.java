@@ -19,7 +19,7 @@ import org.apache.log4j.Logger;
 
 import com.exactprosystems.jf.api.client.MapMessage;
 import com.exactprosystems.jf.api.common.DateTime;
-import com.exactprosystems.jf.common.parser.Parser;
+import com.exactprosystems.jf.documents.matrix.parser.Parser;
 
 public class ReportHelper
 {

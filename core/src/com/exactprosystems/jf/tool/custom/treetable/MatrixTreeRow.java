@@ -8,10 +8,11 @@
 
 package com.exactprosystems.jf.tool.custom.treetable;
 
-import com.exactprosystems.jf.common.parser.items.MatrixItem;
+import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.custom.expfield.ExpressionField;
 import com.exactprosystems.jf.tool.matrix.params.ParametersPane;
+
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.TreeTableRow;
 import javafx.scene.layout.GridPane;

@@ -1,7 +1,7 @@
 package com.exactprosystems.jf.tool.custom.xpath;
 
 import com.exactprosystems.jf.api.common.Str;
-import com.exactprosystems.jf.common.parser.SearchHelper;
+import com.exactprosystems.jf.documents.matrix.parser.SearchHelper;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.CssVariables;
@@ -13,6 +13,7 @@ import com.exactprosystems.jf.tool.custom.layout.LayoutExpressionBuilderControll
 import com.exactprosystems.jf.tool.custom.scale.IScaleListener;
 import com.exactprosystems.jf.tool.custom.scale.ScalePane;
 import com.sun.javafx.scene.control.skin.TreeViewSkin;
+
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
@@ -31,11 +32,13 @@ import javafx.scene.layout.*;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
 import javax.imageio.ImageIO;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;

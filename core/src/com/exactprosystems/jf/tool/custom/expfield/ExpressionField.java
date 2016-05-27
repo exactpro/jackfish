@@ -10,12 +10,13 @@ package com.exactprosystems.jf.tool.custom.expfield;
 import com.exactprosystems.jf.actions.ReadableValue;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
-import com.exactprosystems.jf.common.parser.Matrix;
-import com.exactprosystems.jf.common.parser.listeners.ListProvider;
+import com.exactprosystems.jf.documents.matrix.Matrix;
+import com.exactprosystems.jf.documents.matrix.parser.listeners.ListProvider;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.custom.controls.field.CustomField;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
+
 import javafx.beans.value.ChangeListener;
 import javafx.event.EventDispatcher;
 import javafx.event.EventHandler;
@@ -26,6 +27,7 @@ import javafx.scene.control.Label;
 import javafx.scene.input.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
+
 import org.apache.log4j.Logger;
 
 import java.util.List;

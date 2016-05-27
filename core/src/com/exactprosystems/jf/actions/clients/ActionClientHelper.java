@@ -12,10 +12,10 @@ import com.exactprosystems.jf.actions.ReadableValue;
 import com.exactprosystems.jf.api.client.*;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
-import com.exactprosystems.jf.common.parser.Matrix;
-import com.exactprosystems.jf.common.parser.Parameters;
-import com.exactprosystems.jf.common.parser.items.ActionItem.HelpKind;
 import com.exactprosystems.jf.documents.config.Context;
+import com.exactprosystems.jf.documents.matrix.Matrix;
+import com.exactprosystems.jf.documents.matrix.parser.Parameters;
+import com.exactprosystems.jf.documents.matrix.parser.items.ActionItem.HelpKind;
 
 import org.apache.log4j.Logger;
 

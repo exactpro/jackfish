@@ -10,12 +10,12 @@ package com.exactprosystems.jf.tool.matrix;
 
 import com.exactprosystems.jf.api.app.AppConnection;
 import com.exactprosystems.jf.common.Settings;
-import com.exactprosystems.jf.common.parser.DisplayDriver;
-import com.exactprosystems.jf.common.parser.Matrix;
-import com.exactprosystems.jf.common.parser.Result;
-import com.exactprosystems.jf.common.parser.items.MatrixItem;
-import com.exactprosystems.jf.common.parser.listeners.IMatrixListener;
 import com.exactprosystems.jf.documents.config.Context;
+import com.exactprosystems.jf.documents.matrix.Matrix;
+import com.exactprosystems.jf.documents.matrix.parser.DisplayDriver;
+import com.exactprosystems.jf.documents.matrix.parser.Result;
+import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
+import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
 import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.custom.console.ConsoleText;
@@ -32,6 +32,7 @@ import com.exactprosystems.jf.tool.dictionary.ApplicationStatus;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.matrix.watch.WatcherFx;
 import com.exactprosystems.jf.tool.settings.SettingsPanel;
+
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.concurrent.Task;

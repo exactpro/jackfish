@@ -1,6 +1,7 @@
 package com.exactprosystems.jf.tool.custom.treetable;
 
-import com.exactprosystems.jf.common.parser.items.MatrixItem;
+import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
+
 import javafx.geometry.Insets;
 import javafx.scene.control.TreeTableCell;
 import javafx.scene.layout.GridPane;

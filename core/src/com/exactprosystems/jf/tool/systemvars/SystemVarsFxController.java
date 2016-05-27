@@ -8,12 +8,13 @@
 
 package com.exactprosystems.jf.tool.systemvars;
 
-import com.exactprosystems.jf.common.parser.Parameter;
+import com.exactprosystems.jf.documents.matrix.parser.Parameter;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.custom.tab.CustomTab;
 import com.exactprosystems.jf.tool.custom.table.CustomTable;
+
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;

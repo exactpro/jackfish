@@ -11,11 +11,11 @@ package com.exactprosystems.jf.common.report;
 import com.exactprosystems.jf.api.app.ControlKind;
 import com.exactprosystems.jf.api.app.OperationKind;
 import com.exactprosystems.jf.common.ControlsAttributes;
-import com.exactprosystems.jf.common.parser.Matrix;
-import com.exactprosystems.jf.common.parser.Result;
-import com.exactprosystems.jf.common.parser.items.MatrixItem;
 import com.exactprosystems.jf.common.version.VersionInfo;
 import com.exactprosystems.jf.documents.guidic.controls.AbstractControl;
+import com.exactprosystems.jf.documents.matrix.Matrix;
+import com.exactprosystems.jf.documents.matrix.parser.Result;
+import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 
 import java.io.IOException;
 import java.util.Date;

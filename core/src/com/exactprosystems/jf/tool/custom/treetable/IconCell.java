@@ -1,7 +1,7 @@
 package com.exactprosystems.jf.tool.custom.treetable;
 
-import com.exactprosystems.jf.common.parser.items.MatrixItem;
-import com.exactprosystems.jf.common.parser.items.MatrixItemState;
+import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
+import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItemState;
 import com.exactprosystems.jf.tool.CssVariables;
 
 import javafx.scene.control.Label;

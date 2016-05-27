@@ -3,8 +3,8 @@ package com.exactprosystems.jf.exceptions;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.exactprosystems.jf.common.parser.Parameter;
-import com.exactprosystems.jf.common.parser.Parameters;
+import com.exactprosystems.jf.documents.matrix.parser.Parameter;
+import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 
 public class ParametersException extends Exception
 {

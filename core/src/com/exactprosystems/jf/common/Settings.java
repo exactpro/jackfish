@@ -10,11 +10,13 @@ package com.exactprosystems.jf.common;
 
 import com.exactprosystems.jf.api.app.Mutable;
 import com.exactprosystems.jf.api.common.Str;
-import com.exactprosystems.jf.common.parser.items.MutableArrayList;
+import com.exactprosystems.jf.documents.matrix.parser.items.MutableArrayList;
+
 import org.apache.log4j.Logger;
 
 import javax.xml.bind.*;
 import javax.xml.bind.annotation.*;
+
 import java.io.*;
 import java.util.*;
 import java.util.Map.Entry;

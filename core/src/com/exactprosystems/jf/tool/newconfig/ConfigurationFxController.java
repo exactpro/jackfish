@@ -2,15 +2,16 @@ package com.exactprosystems.jf.tool.newconfig;
 
 import com.exactprosystems.jf.api.service.ServiceStatus;
 import com.exactprosystems.jf.common.MutableString;
-import com.exactprosystems.jf.common.parser.Matrix;
 import com.exactprosystems.jf.documents.config.AppEntry;
 import com.exactprosystems.jf.documents.config.ClientEntry;
 import com.exactprosystems.jf.documents.config.ServiceEntry;
 import com.exactprosystems.jf.documents.config.SqlEntry;
+import com.exactprosystems.jf.documents.matrix.Matrix;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.newconfig.nodes.*;
+
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.control.TreeItem;

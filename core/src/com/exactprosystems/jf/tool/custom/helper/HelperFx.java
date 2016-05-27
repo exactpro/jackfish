@@ -12,8 +12,9 @@ import com.exactprosystems.jf.api.common.DescriptionAttribute;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.evaluator.Variables;
-import com.exactprosystems.jf.common.parser.Matrix;
+import com.exactprosystems.jf.documents.matrix.Matrix;
 import com.exactprosystems.jf.tool.Common;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 

@@ -1,9 +1,10 @@
 package com.exactprosystems.jf.tool.matrix.params;
 
 import com.exactprosystems.jf.api.common.Str;
-import com.exactprosystems.jf.common.parser.Parameter;
+import com.exactprosystems.jf.documents.matrix.parser.Parameter;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.custom.expfield.ExpressionField;
+
 import javafx.beans.value.ChangeListener;
 import javafx.scene.control.Control;
 import javafx.scene.control.TextField;

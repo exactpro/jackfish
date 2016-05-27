@@ -9,8 +9,8 @@
 package com.exactprosystems.jf.tool.custom.treetable;
 
 import com.exactprosystems.jf.common.Settings;
-import com.exactprosystems.jf.common.parser.items.MatrixItem;
-import com.exactprosystems.jf.common.parser.items.MatrixItemState;
+import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
+import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItemState;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
@@ -18,11 +18,13 @@ import com.exactprosystems.jf.tool.matrix.MatrixFx;
 import com.exactprosystems.jf.tool.matrix.params.ParametersPane;
 import com.exactprosystems.jf.tool.settings.SettingsPanel;
 import com.sun.javafx.scene.control.skin.TreeTableViewSkin;
+
 import javafx.application.Platform;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.GridPane;
+
 import org.apache.log4j.Logger;
 
 import java.util.List;

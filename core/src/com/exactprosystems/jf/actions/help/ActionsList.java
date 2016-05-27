@@ -24,10 +24,10 @@ import com.exactprosystems.jf.actions.tables.*;
 import com.exactprosystems.jf.actions.text.*;
 import com.exactprosystems.jf.actions.xml.*;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
-import com.exactprosystems.jf.common.parser.Parameters;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.common.report.ReportTable;
 import com.exactprosystems.jf.documents.config.Context;
+import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 
 @ActionAttribute(
 		group					= ActionGroups.Help,

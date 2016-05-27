@@ -8,12 +8,13 @@
 package com.exactprosystems.jf.tool.newconfig.nodes;
 
 import com.exactprosystems.jf.common.MutableString;
-import com.exactprosystems.jf.common.parser.Matrix;
+import com.exactprosystems.jf.documents.matrix.Matrix;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.newconfig.ConfigurationFx;
 import com.exactprosystems.jf.tool.newconfig.ConfigurationTreeView;
 import com.exactprosystems.jf.tool.newconfig.TablePair;
+
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;

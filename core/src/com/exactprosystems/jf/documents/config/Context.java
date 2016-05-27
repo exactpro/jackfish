@@ -13,11 +13,11 @@ import com.exactprosystems.jf.api.common.IContext;
 import com.exactprosystems.jf.api.common.IMatrixRunner;
 import com.exactprosystems.jf.common.MatrixRunner;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
-import com.exactprosystems.jf.common.parser.Matrix;
-import com.exactprosystems.jf.common.parser.items.MatrixItem;
-import com.exactprosystems.jf.common.parser.items.MatrixRoot;
-import com.exactprosystems.jf.common.parser.items.SubCase;
-import com.exactprosystems.jf.common.parser.listeners.IMatrixListener;
+import com.exactprosystems.jf.documents.matrix.Matrix;
+import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
+import com.exactprosystems.jf.documents.matrix.parser.items.MatrixRoot;
+import com.exactprosystems.jf.documents.matrix.parser.items.SubCase;
+import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
 
 import org.apache.log4j.Logger;
 

@@ -20,17 +20,18 @@ import com.exactprosystems.jf.client.ClientsPool;
 import com.exactprosystems.jf.common.MutableString;
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
-import com.exactprosystems.jf.common.parser.Matrix;
-import com.exactprosystems.jf.common.parser.listeners.MatrixListener;
-import com.exactprosystems.jf.common.parser.listeners.RunnerListener;
-import com.exactprosystems.jf.common.parser.listeners.SilenceMatrixListener;
 import com.exactprosystems.jf.common.undoredo.Command;
 import com.exactprosystems.jf.documents.config.*;
+import com.exactprosystems.jf.documents.matrix.Matrix;
+import com.exactprosystems.jf.documents.matrix.parser.listeners.MatrixListener;
+import com.exactprosystems.jf.documents.matrix.parser.listeners.RunnerListener;
+import com.exactprosystems.jf.documents.matrix.parser.listeners.SilenceMatrixListener;
 import com.exactprosystems.jf.service.ServicePool;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.SupportedEntry;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.main.Main;
+
 import javafx.concurrent.Task;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
@@ -39,6 +40,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.layout.BorderPane;
 
 import javax.xml.bind.annotation.XmlRootElement;
+
 import java.io.File;
 import java.io.Reader;
 import java.util.*;

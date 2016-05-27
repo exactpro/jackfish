@@ -8,12 +8,12 @@
 
 package com.exactprosystems.jf.common.report;
 
-import com.exactprosystems.jf.common.parser.Matrix;
-import com.exactprosystems.jf.common.parser.Result;
-import com.exactprosystems.jf.common.parser.items.CommentString;
-import com.exactprosystems.jf.common.parser.items.MatrixItem;
 import com.exactprosystems.jf.common.version.VersionInfo;
 import com.exactprosystems.jf.documents.config.Configuration;
+import com.exactprosystems.jf.documents.matrix.Matrix;
+import com.exactprosystems.jf.documents.matrix.parser.Result;
+import com.exactprosystems.jf.documents.matrix.parser.items.CommentString;
+import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 
 import java.io.File;
 import java.io.IOException;

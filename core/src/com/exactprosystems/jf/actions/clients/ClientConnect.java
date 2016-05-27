@@ -19,11 +19,11 @@ import com.exactprosystems.jf.actions.ReadableValue;
 import com.exactprosystems.jf.api.client.ClientConnection;
 import com.exactprosystems.jf.api.client.IClient;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
-import com.exactprosystems.jf.common.parser.Parameters;
-import com.exactprosystems.jf.common.parser.items.TypeMandatory;
-import com.exactprosystems.jf.common.parser.items.ActionItem.HelpKind;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
+import com.exactprosystems.jf.documents.matrix.parser.Parameters;
+import com.exactprosystems.jf.documents.matrix.parser.items.TypeMandatory;
+import com.exactprosystems.jf.documents.matrix.parser.items.ActionItem.HelpKind;
 
 @ActionAttribute(
 		group = ActionGroups.Clients, 

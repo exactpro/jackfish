@@ -8,7 +8,7 @@
 
 package com.exactprosystems.jf.tool.matrix;
 
-import com.exactprosystems.jf.common.parser.items.MatrixItem;
+import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 import com.exactprosystems.jf.tool.custom.console.ConsoleText;
 import com.exactprosystems.jf.tool.custom.console.CustomListView;
 

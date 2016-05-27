@@ -9,11 +9,12 @@
 package com.exactprosystems.jf.documents.config;
 
 import com.exactprosystems.jf.api.app.Mutable;
-import com.exactprosystems.jf.common.parser.items.MutableArrayList;
+import com.exactprosystems.jf.documents.matrix.parser.items.MutableArrayList;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
+
 import java.util.List;
 import java.util.Optional;
 
