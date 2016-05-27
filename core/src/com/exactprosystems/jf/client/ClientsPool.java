@@ -16,10 +16,10 @@ import com.exactprosystems.jf.api.common.ApiVersionInfo;
 import com.exactprosystems.jf.api.common.IContext;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.common.MainRunner;
-import com.exactprosystems.jf.common.xml.messages.MessageDictionary;
 import com.exactprosystems.jf.documents.config.ClientEntry;
 import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.documents.config.Parameter;
+import com.exactprosystems.jf.documents.msgdic.MessageDictionary;
 
 import org.apache.log4j.Logger;
 

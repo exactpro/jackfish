@@ -6,7 +6,7 @@
 //  information which is the property of Exactpro Systems, LLC or its licensors.
 ////////////////////////////////////////////////////////////////////////////////
 
-package com.exactprosystems.jf.common.xml.messages;
+package com.exactprosystems.jf.documents.msgdic;
 
 import com.exactprosystems.jf.api.app.Mutable;
 import com.exactprosystems.jf.api.client.IAttribute;
