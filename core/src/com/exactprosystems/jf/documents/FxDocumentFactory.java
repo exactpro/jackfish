@@ -14,49 +14,48 @@ import com.exactprosystems.jf.tool.newconfig.ConfigurationFx;
 import com.exactprosystems.jf.tool.systemvars.SystemVarsFx;
 import com.exactprosystems.jf.tool.text.PlainTextFx;
 
-public class FxDocumentFactory 
-//	implements DocumentFactory
+public class FxDocumentFactory // extends DocumentFactory
 {
 //	
 //
 //	@Override
-//	public ConfigurationFx createConfig()
+//	public ConfigurationFx createConfig(String fileName)
 //	{
-//		return new ConfigurationFx();
+//		return new ConfigurationFx(fileName, runnerListener, settings, mainModel, pane);
 //	}
 //
 //	@Override
-//	public MatrixFx createMatrix()
+//	public MatrixFx createMatrix(String fileName)
 //	{
-//		return new MatrixFx(matrixName, this.configuration, matrixListener);
+//		return new MatrixFx(fileName, this.configuration, matrixListener);
 //	}
 //
 //	@Override
-//	public MessageDictionary createClientDictionary()
+//	public MessageDictionary createClientDictionary(String fileName)
 //	{ 
-//		return new MessageDictionary(); // TODO implement MessageDictionaryFx 
+//		return new MessageDictionary(fileName, this.configuration); // TODO implement MessageDictionaryFx 
 //	}
 //
 //	@Override
-//	public DictionaryFx createAppDictionary()
+//	public DictionaryFx createAppDictionary(String fileName)
 //	{
 //		return new DictionaryFx(fileName, this.configuration);
 //	}
 //
 //	@Override
-//	public CsvFx createCsv()
+//	public CsvFx createCsv(String fileName)
 //	{
 //		return new CsvFx(fileName, settings, this.configuration);
 //	}
 //
 //	@Override
-//	public PlainTextFx createPlainText()
+//	public PlainTextFx createPlainText(String fileName)
 //	{
 //		return new PlainTextFx(fileName, settings, this.configuration);
 //	}
 //
 //	@Override
-//	public SystemVarsFx createVars()
+//	public SystemVarsFx createVars(String fileName)
 //	{
 //		return new SystemVarsFx(fileName, this.configuration);
 //	}
