@@ -14,7 +14,7 @@ public class ConsoleDocumentFactory extends DocumentFactory
 {
 	public ConsoleDocumentFactory(IMatrixListener matrixListener)
 	{
-		super();
+		super(System.err::println);
 		
 		this.matrixListener = matrixListener;
 	}

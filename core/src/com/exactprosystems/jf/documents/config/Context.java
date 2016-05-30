@@ -38,7 +38,7 @@ public class Context implements IContext, AutoCloseable, Cloneable
 	}
 
 	@Override
-	public IMatrixRunner createRunner(Reader reader, Date startTime, Object parameter) throws Exception
+	public MatrixRunner createRunner(Reader reader, Date startTime, Object parameter) throws Exception
 	{
 		return new MatrixRunner(this, reader, startTime, parameter);
 	}

@@ -8,20 +8,26 @@
 
 package com.exactprosystems.jf.documents;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
+import java.util.function.Consumer;
+
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.documents.config.Configuration;
+import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.csv.Csv;
 import com.exactprosystems.jf.documents.guidic.GuiDictionary;
 import com.exactprosystems.jf.documents.matrix.Matrix;
+import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
 import com.exactprosystems.jf.documents.msgdic.MessageDictionary;
 import com.exactprosystems.jf.documents.text.PlainText;
 import com.exactprosystems.jf.documents.vars.SystemVars;
 
 public abstract class DocumentFactory
 {
-	public DocumentFactory()
+	public DocumentFactory(Consumer<String> errorListener)
 	{
-		
+		this.errorListener = errorListener;
 	}
 
 	public void setConfiguration(Configuration configuration)
@@ -34,6 +40,13 @@ public abstract class DocumentFactory
 		this.settings = settings;
 	}
 
+	
+	public Context 				createContext(IMatrixListener matrixListener, PrintStream out) throws Exception
+	{
+//		return new Context(matrixListener, out, this);
+		return null;
+	}
+	
 	public Configuration 		createConfig(String fileName)
 	{
 		try
@@ -42,7 +55,7 @@ public abstract class DocumentFactory
 		}
 		catch (Exception e)
 		{
-			e.printStackTrace();
+			printStackTrace(e);
 		}
 		return null;
 	}
@@ -55,7 +68,7 @@ public abstract class DocumentFactory
 		}
 		catch (Exception e)
 		{
-			e.printStackTrace();
+			printStackTrace(e);
 		}
 		return null;
 	}
@@ -68,7 +81,7 @@ public abstract class DocumentFactory
 		}
 		catch (Exception e)
 		{
-			e.printStackTrace();
+			printStackTrace(e);
 		}
 		return null;
 	}
@@ -81,7 +94,7 @@ public abstract class DocumentFactory
 		}
 		catch (Exception e)
 		{
-			e.printStackTrace();
+			printStackTrace(e);
 		}
 		return null;
 	}
@@ -94,7 +107,7 @@ public abstract class DocumentFactory
 		}
 		catch (Exception e)
 		{
-			e.printStackTrace();
+			printStackTrace(e);
 		}
 		return null;
 	}
@@ -107,7 +120,7 @@ public abstract class DocumentFactory
 		}
 		catch (Exception e)
 		{
-			e.printStackTrace();
+			printStackTrace(e);
 		}
 		return null;
 	}
@@ -120,12 +133,12 @@ public abstract class DocumentFactory
 		}
 		catch (Exception e)
 		{
-			e.printStackTrace();
+			printStackTrace(e);
 		}
 		return null;
 	}
 
-	
+
 	protected abstract Configuration 		createConfig(String fileName, Settings settings) throws Exception;
 
 	protected abstract Matrix 				createMatrix(String fileName, Configuration configuration) throws Exception;
@@ -139,8 +152,20 @@ public abstract class DocumentFactory
 	protected abstract PlainText 			createPlainText(String fileName, Configuration configuration) throws Exception; 
 
 	protected abstract SystemVars 			createVars(String fileName, Configuration configuration) throws Exception;
-	
-	private Configuration 	configuration;
 
-	private Settings 		settings;
+	
+	private void printStackTrace(Exception e)
+	{
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		PrintStream ps = new PrintStream(baos);
+		e.printStackTrace(ps);
+		
+		this.errorListener.accept(baos.toString());
+	}
+
+	protected Configuration 		configuration;
+
+	protected Settings 			settings;
+	
+	protected Consumer<String>	errorListener;  
 }

@@ -66,7 +66,7 @@ public class MatrixRunFromText extends AbstractAction
 		try (	Context contextClone =  context.clone();
 				Reader reader = new StringReader(this.text.toString())	)
 		{
-			MatrixRunner runner = new MatrixRunner(contextClone, reader, this.at, this.parameter);
+			MatrixRunner runner = contextClone.createRunner(reader, this.at, this.parameter);
 			runner.start();
 			
 			super.setResult(runner);

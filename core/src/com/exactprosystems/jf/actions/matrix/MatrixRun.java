@@ -20,6 +20,8 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.documents.matrix.parser.items.ActionItem.HelpKind;
 
 import java.io.File;
+import java.io.FileReader;
+import java.io.Reader;
 import java.util.Date;
 
 @ActionAttribute(
@@ -69,9 +71,12 @@ public class MatrixRun extends AbstractAction
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception 
 	{
-		try(Context cloneContext = context.clone() )
+		
+		
+		try(Context cloneContext = context.clone();
+			Reader reader = new FileReader(new File(this.matrix));)
 		{
-			MatrixRunner runner = new MatrixRunner(cloneContext, new File(this.matrix), this.at, this.parameter);
+			MatrixRunner runner = cloneContext.createRunner(reader, this.at, this.parameter);
 			runner.start();
 			super.setResult(runner);
 		}
