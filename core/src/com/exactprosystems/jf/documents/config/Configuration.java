@@ -18,10 +18,8 @@ import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.service.IServicesPool;
 import com.exactprosystems.jf.app.ApplicationPool;
 import com.exactprosystems.jf.client.ClientsPool;
-import com.exactprosystems.jf.common.ConsoleUpdateLibsListener;
 import com.exactprosystems.jf.common.MutableString;
 import com.exactprosystems.jf.common.Settings;
-import com.exactprosystems.jf.common.UpdateLibsListener;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.evaluator.MvelEvaluator;
 import com.exactprosystems.jf.common.report.HTMLReportFactory;
@@ -853,7 +851,6 @@ public class Configuration extends AbstractDocument
 	protected String 				reportFactoryValue = HTMLReportFactory.class.getSimpleName();
 	protected String 				evaluatorValue = MvelEvaluator.class.getSimpleName();
 	protected Map<File, Long> 		timestampMap 	= new HashMap<>();
-	protected UpdateLibsListener 	listener		= new ConsoleUpdateLibsListener();
 	protected RunnerListener 		runnerListener 	= new DummyRunnerListener();
 	protected boolean 				changed;
 	protected ReportFactory			reportFactoryObj;

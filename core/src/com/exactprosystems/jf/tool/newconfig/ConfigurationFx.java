@@ -76,7 +76,6 @@ public class ConfigurationFx extends Configuration
 		this.supportedApps = new HashMap<>();
 		this.supportedServices = new HashMap<>();
 
-		super.listener = DialogsHelper::showError;
 		super.runnerListener = runnerListener;
 
 		this.mainModel = mainModel;

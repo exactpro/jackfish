@@ -21,6 +21,17 @@ public abstract class DocumentFactory
 {
 	public DocumentFactory()
 	{
+		
+	}
+
+	public void setConfiguration(Configuration configuration)
+	{
+		this.configuration = configuration;
+	}
+
+	public void setSettings(Settings settings)
+	{
+		this.settings = settings;
 	}
 
 	public Configuration 		createConfig(String fileName)
@@ -130,5 +141,6 @@ public abstract class DocumentFactory
 	protected abstract SystemVars 			createVars(String fileName, Configuration configuration) throws Exception;
 	
 	private Configuration 	configuration;
+
 	private Settings 		settings;
 }
