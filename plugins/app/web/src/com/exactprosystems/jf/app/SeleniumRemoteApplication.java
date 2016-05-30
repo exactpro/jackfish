@@ -16,8 +16,8 @@ import com.exactprosystems.jf.app.js.JSInjectionFactory;
 import org.apache.log4j.*;
 import org.openqa.selenium.*;
 import org.openqa.selenium.Dimension;
-import org.openqa.selenium.Point;
 import org.openqa.selenium.chrome.ChromeDriverService;
+import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.ie.InternetExplorerDriverService;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -201,8 +201,7 @@ public class SeleniumRemoteApplication extends RemoteApplication
 			this.operationExecutor = new SeleniumOperationExecutor(this.driver, this.logger);
 			this.driver.get(url);
 			
-			if(!browser.equals(Browser.ANDROIDBROWSER))
-				if(!browser.equals(Browser.ANDROIDCHROME))
+			if(!browser.equals(Browser.ANDROIDBROWSER) && !browser.equals(Browser.ANDROIDCHROME))
 			{
 				this.driver.manage().window().maximize();
 			}
@@ -211,7 +210,7 @@ public class SeleniumRemoteApplication extends RemoteApplication
 		}
 		catch (Exception e)
 		{
-			logger.error(e.getMessage(),  e);
+			logger.error(e.getMessage(), e);
 			throw e;
 		}
 	}
@@ -333,10 +332,10 @@ public class SeleniumRemoteApplication extends RemoteApplication
 		}
 		else
 		{
-			this.driver.manage().window().setSize(new Dimension(width,  height));
+			this.driver.manage().window().setSize(new Dimension(width, height));
 		}
 	}
-	
+
 	@Override
 	protected String switchToDerived(final String title, final boolean softCondition) throws Exception
 	{
@@ -355,8 +354,7 @@ public class SeleniumRemoteApplication extends RemoteApplication
 					{
 						driver.switchTo().window(handle);
 						result[0] = driver.getTitle();
-						if (softCondition && driver.getTitle().contains(title)
-								|| !softCondition && driver.getTitle().equals(title) )
+						if (softCondition && driver.getTitle().contains(title) || !softCondition && driver.getTitle().equals(title))
 						{
 							driver.manage().window().maximize();
 							return;
@@ -375,7 +373,7 @@ public class SeleniumRemoteApplication extends RemoteApplication
 		needTune = true;
 		return result[0];
 	}
-	
+
 	@Override
 	protected void switchToFrameDerived(Locator owner) throws Exception
 	{
@@ -449,7 +447,7 @@ public class SeleniumRemoteApplication extends RemoteApplication
 			catch (Exception e)
 			{
 				logger.error("Error on tune display");
-				logger.error(e.getMessage(),e );
+				logger.error(e.getMessage(), e);
 				throw new ProxyException("Error on tune display", e.getMessage(), e);
 			}
 		}
@@ -543,7 +541,7 @@ public class SeleniumRemoteApplication extends RemoteApplication
 		List<WebElement> elements = (ownerElement == null ? this.driver.findElements(by) : ownerElement.findElements(by));
 
 		List<String> result = new ArrayList<>();
-		for(WebElement element : elements)
+		for (WebElement element : elements)
 		{
 			result.add(getElementString(element));
 		}
@@ -553,37 +551,8 @@ public class SeleniumRemoteApplication extends RemoteApplication
 	static String getElementString(WebElement element)
 	{
 		String s = element.getAttribute("outerHTML");
-		return s.substring(0, s.indexOf(">")+1);
+		return s.substring(0, s.indexOf(">") + 1);
 	}
-
-	//	public static void main(String[] args)
-	//	{
-	//		WebDriver driver = new FirefoxDriver();
-	//		try
-	//		{
-	//			driver.get("file:///home/andrey.bystrov/Projects/JackFish/ActionsLibrary/testdata/resources/mock/mock.html");
-	//			WebElement iframe = driver.findElement(By.tagName("iframe"));
-	//			WebDriver frame = driver.switchTo().frame(iframe);
-	//			System.out.println(frame == driver);
-	//			File screenshotAs = ((TakesScreenshot) frame).getScreenshotAs(OutputType.FILE);
-	//			BufferedImage fullImg = ImageIO.read(screenshotAs);
-	//			WebElement component = frame.findElement(By.id("myId"));
-	//			Point location = component.getLocation();
-	//			int eleWidth = component.getSize().getWidth();
-	//			int eleHeight = component.getSize().getHeight();
-	//			BufferedImage image = fullImg.getSubimage(location.getX(), location.getY(), eleWidth, eleHeight);
-	//			ImageIO.write(image, "jpeg", new File("tempimg.jpeg"));
-	//			ImageIO.write(fullImg, "jpeg", new File("full.jpeg"));
-	//		}
-	//		catch (Exception e)
-	//		{
-	//			e.printStackTrace();
-	//		}
-	//		finally
-	//		{
-	//			driver.quit();
-	//		}
-	//	}
 
 	@Override
 	protected ImageWrapper getImageDerived(Locator owner, Locator element) throws Exception
@@ -598,6 +567,7 @@ public class SeleniumRemoteApplication extends RemoteApplication
 
 				//That need for correct behavior
 				Thread.sleep(2000);
+				boolean isFullImage = this.driver.getWrappedDriver() instanceof FirefoxDriver;
 				File screenshot = this.driver.getScreenshotAs(OutputType.FILE);
 				BufferedImage fullImg = ImageIO.read(screenshot);
 				if (element == null)
@@ -605,25 +575,71 @@ public class SeleniumRemoteApplication extends RemoteApplication
 					return new ImageWrapper(fullImg);
 				}
 				WebElement component = this.operationExecutor.find(owner, element);
-				Point point = component.getLocation();
-				
-				logger.error(">>> point=" + point);
-				logger.error(">>> size=" + component.getSize());
 
-				Point realPoint = new Point(Math.max(point.x, 0), Math.max(point.y, 0));
-				int eleWidth = component.getSize().getWidth() + Math.min(point.x, 0);
-				int eleHeight = component.getSize().getHeight() + Math.min(point.y, 0);
+				Number topOffset = (Number) this.driver.executeScript("return arguments[0].getBoundingClientRect().top", component);
+				Number leftOffset = (Number) this.driver.executeScript("return arguments[0].getBoundingClientRect().left", component);
 
-				Long innerH = (Long) this.driver.executeScript("return 'innerHeight' in window ? window.innerHeight : document.documentElement.offsetHeight;");
-				Long innerW = (Long) this.driver.executeScript("return 'innerHeight' in window ? window.innerWidth : document.documentElement.offsetWidth;");
+				int componentW = component.getSize().getWidth();
+				int componentH = component.getSize().getHeight();
 
-				eleWidth = (int) Math.min(eleWidth, innerW);
-				eleHeight = (int) Math.min(eleHeight, innerH);
+				Number innerH = (Number) this.driver.executeScript("return 'innerHeight' in window ? window.innerHeight : document.documentElement.offsetHeight;");
+				Number innerW = (Number) this.driver.executeScript("return 'innerHeight' in window ? window.innerWidth : document.documentElement.offsetWidth;");
 
-				logger.error(">>> realPoint=" + realPoint);
-				logger.error(">>> size=" + eleWidth + "x" + eleHeight);
+				int x, y, h, w;
 
-				BufferedImage image = fullImg.getSubimage(realPoint.getX(), realPoint.getY(), eleWidth, eleHeight);
+				logger.info("isFullImage = " + isFullImage);
+				if (isFullImage)
+				{
+					x = component.getLocation().x + Math.abs(Math.min(0, leftOffset.intValue()));
+
+					y = component.getLocation().y + Math.abs(Math.min(0, topOffset.intValue()));
+				}
+				else
+				{
+					x = Math.max(0, leftOffset.intValue());
+					x = Math.min(x, innerW.intValue());
+
+					y = Math.max(0, topOffset.intValue());
+					y = Math.min(y, innerH.intValue());
+				}
+
+				int bottom = topOffset.intValue() + componentH;
+				int right = leftOffset.intValue() + componentW;
+
+				if (isFullImage)
+				{
+					if (topOffset.intValue() >= 0)
+					{
+						h = Math.min(componentH, innerH.intValue() - y);
+					}
+					else
+					{
+						h = Math.min(bottom, innerH.intValue());
+					}
+
+					if (leftOffset.intValue() >= 0)
+					{
+						w = Math.min(componentW, innerW.intValue() - x);
+					}
+					else
+					{
+						w = Math.min(right, innerW.intValue());
+					}
+				}
+				else
+				{
+					h = Math.min(bottom - y, innerH.intValue() - y);
+					w = Math.min(right - x, innerW.intValue() - x);
+				}
+				if (h < 0 || w < 0)
+				{
+					throw new RemoteException("Component out of screen");
+				}
+
+				logger.info(String.format("Full img {w = %d, h = %d}", fullImg.getWidth(), fullImg.getHeight()));
+				logger.info(String.format("Get sub image {x=%d, y=%d, w=%d, h=%d}", x, y, w, h));
+
+				BufferedImage image = fullImg.getSubimage(x, y, w, h);
 
 				log("after image");
 				return new ImageWrapper(image);
@@ -703,7 +719,7 @@ public class SeleniumRemoteApplication extends RemoteApplication
 		while (++repeat < repeatLimit);
 		throw real;
 	}
-	
+
 	@Override
 	protected CheckingLayoutResult checkLayoutDerived(Locator owner, Locator element, Spec spec) throws Exception
 	{
@@ -734,18 +750,18 @@ public class SeleniumRemoteApplication extends RemoteApplication
 	@Override
 	protected void newInstanceDerived(Map<String, String> args) throws Exception
 	{
-		String url 		= args.get(WebAppFactory.urlName);
+		String url = args.get(WebAppFactory.urlName);
 		if (url == null)
 		{
 			throw new Exception("url is null");
 		}
-		String tab 		= args.get("Tab");
+		String tab = args.get("Tab");
 		boolean flag = false;
 		if (tab != null)
 		{
 			flag = tab.equalsIgnoreCase("true");
 		}
-		this.driver.executeScript("function createDoc(){var w = window.open('"+url+"'"+ (flag ? ",'_blank'" : "")+")}; createDoc();");
+		this.driver.executeScript("function createDoc(){var w = window.open('" + url + "'" + (flag ? ",'_blank'" : "") + ")}; createDoc();");
 		needTune = true;
 	}
 
@@ -753,24 +769,24 @@ public class SeleniumRemoteApplication extends RemoteApplication
 	protected int closeAllDerived(Locator element, Collection<LocatorAndOperation> operations) throws Exception
 	{
 		List<WebElement> dialogs = this.operationExecutor.findAll(ControlKind.Any, null, element);
-		
+
 		for (WebElement dialog : dialogs)
 		{
 			for (LocatorAndOperation pair : operations)
 			{
 				Locator locator = pair.getLocator();
-				
+
 				List<WebElement> components = this.operationExecutor.findAll(locator.getControlKind(), dialog, locator);
 				if (components.size() == 1)
 				{
 					WebElement component = components.get(0);
 					Operation operation = pair.getOperation();
 					operation.operate(this.operationExecutor, locator, component);
-					
+
 				}
 			}
 		}
-		
+
 		return dialogs.size();
 	}
 
@@ -792,7 +808,7 @@ public class SeleniumRemoteApplication extends RemoteApplication
 	protected Document getTreeDerived(Locator owner) throws Exception
 	{
 		log("start");
-		
+
 		WebElement ownerElement;
 		if (owner == null)
 		{
@@ -819,7 +835,7 @@ public class SeleniumRemoteApplication extends RemoteApplication
 			 */
 			Map<String, Object> rootElement = (Map<String, Object>) returnObject;
 
-			transform (rootElement, document, document);
+			transform(rootElement, document, document);
 			log("buid doc");
 			return document;
 		}
@@ -837,12 +853,12 @@ public class SeleniumRemoteApplication extends RemoteApplication
 		{
 			spaces += "    ";
 		}
-		
+
 		sb.append(spaces + "tag  : " + map.get(TAG_FIELD)).append('\n');
 		sb.append(spaces + "attr : " + map.get(ATTRIBUTES_FIELD)).append('\n');
 		sb.append(spaces + "text : " + map.get(ELEMENT_TEXT_FIELD)).append('\n');
 		sb.append(spaces + "rec  : " + map.get(IRemoteApplication.rectangleName)).append('\n');
-		
+
 		Object childMap = map.get(ELEMENT_CHILD_FIELD);
 
 		if (childMap != null)
@@ -862,8 +878,7 @@ public class SeleniumRemoteApplication extends RemoteApplication
 		Element newElement = document.createElement(String.valueOf(tag).toLowerCase());
 		element.appendChild(newElement);
 		element = newElement;
-		
-		
+
 		setAttributes(element, ((List<Map<String, String>>) map.get(ATTRIBUTES_FIELD)));
 		String textElement = (String) map.get(ELEMENT_TEXT_FIELD);
 		if (!Str.IsNullOrEmpty(textElement))
@@ -873,7 +888,7 @@ public class SeleniumRemoteApplication extends RemoteApplication
 		Object rec = map.get(IRemoteApplication.rectangleName);
 		if (rec != null)
 		{
-			element.setUserData(IRemoteApplication.rectangleName, createRectangle((Map<String, String>)rec), null);
+			element.setUserData(IRemoteApplication.rectangleName, createRectangle((Map<String, String>) rec), null);
 		}
 
 		Object childMap = map.get(ELEMENT_CHILD_FIELD);
@@ -893,7 +908,7 @@ public class SeleniumRemoteApplication extends RemoteApplication
 		{
 			for (Map<String, String> att : map)
 			{
-				((Element)element).setAttribute(att.get(ATTRIBUTE_NAME_FIELD), att.get(ATTRIBUTE_VALUE_FIELD));
+				((Element) element).setAttribute(att.get(ATTRIBUTE_NAME_FIELD), att.get(ATTRIBUTE_VALUE_FIELD));
 			}
 		}
 	}
@@ -904,7 +919,7 @@ public class SeleniumRemoteApplication extends RemoteApplication
 		double y = Double.parseDouble(String.valueOf(map.get("top")));
 		double h = Double.parseDouble(String.valueOf(map.get("height")));
 		double w = Double.parseDouble(String.valueOf(map.get("width")));
-		return new java.awt.Rectangle((int)x, (int)y, (int)w, (int)h);
+		return new java.awt.Rectangle((int) x, (int) y, (int) w, (int) h);
 	}
 
 	@Override
