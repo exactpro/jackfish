@@ -7,6 +7,7 @@ public interface JnaDriver extends Library {
 	String lastError();
 	String methodTime();
 	String uiAutomationTime();
+	String getFrameworkId();
 	//endregion
 
 	//region application methods

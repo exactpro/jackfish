@@ -500,11 +500,19 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 			this.logger.error("Error on add attribute");
 			this.logger.error(e.getMessage(), e);
 		}
-		current.appendChild(node);
-		if (tag.equalsIgnoreCase("table") || tag.equalsIgnoreCase("datagrid"))
+		if (this.driver.getFrameworkId() != Framework.SILVER_LIGHT && tag.equalsIgnoreCase("table"))
 		{
 			return;
 		}
+
+		if (current.getNodeName().equalsIgnoreCase("datagrid"))
+		{
+			if (!tag.equalsIgnoreCase("header"))
+			{
+				return;
+			}
+		}
+		current.appendChild(node);
 		int length = 100;
 		int arr[] = new int[length];
 		int res = this.driver.findAll(arr, parent, WindowTreeScope.Children, WindowProperty.TrueProperty, null);

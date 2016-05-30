@@ -24,21 +24,23 @@ public class JnaDriverImpl
 	private final static String dllDir = "bin/UIAdapter.dll";
 	private final static String pdbDir = "bin/UIAdapter.pdb";
 
-    public static void main(String[] args) throws Exception {
-	    JnaDriverImpl driver = new JnaDriverImpl(Logger.getLogger(JnaDriverImpl.class));
-	    driver.connect("Form1", 100, 100);
-	    System.out.println(driver.title());
-	    int l = 100 * 100;
-	    int a[] = new int[l];
-	    String id = "42,4458408";
-	    System.out.println(driver.getProperty(new UIProxyJNA(new int[]{42,4458408}), WindowProperty.NameProperty));
-    }
+	public static void main(String[] args) throws Exception
+	{
+		JnaDriverImpl driver = new JnaDriverImpl(Logger.getLogger(JnaDriverImpl.class));
+		driver.connect("Form1", 100, 100);
+		System.out.println(driver.title());
+		int l = 100 * 100;
+		int a[] = new int[l];
+		String id = "42,4458408";
+		System.out.println(driver.getProperty(new UIProxyJNA(new int[]{42, 4458408}), WindowProperty.NameProperty));
+	}
 
 	public JnaDriverImpl(Logger logger) throws Exception
 	{
 		this.logger = logger;
 		if (Platform.is64Bit())
-		{}
+		{
+		}
 		Path pathDll = Paths.get("UIAdapter.dll");
 		Path pathPdb = Paths.get("UIAdapter.pdb");
 		try (
@@ -52,7 +54,9 @@ public class JnaDriverImpl
 		catch (AccessDeniedException ex)
 		{
 			//nothing
-		} catch (Exception e) {
+		}
+		catch (Exception e)
+		{
 			throw new RemoteException(e.getMessage(), e);
 		}
 		String dll = pathDll.toString();
@@ -94,6 +98,15 @@ public class JnaDriverImpl
 		}
 	}
 
+	public Framework getFrameworkId() throws Exception
+	{
+		long start = System.currentTimeMillis();
+		String frameworkId = this.driver.getFrameworkId();
+		this.logger.info(String.format("getFrameworkId() = %s, time (ms) : %d", frameworkId, System.currentTimeMillis() - start));
+		checkCSharpTimes();
+		checkError();
+		return Framework.byId(frameworkId);
+	}
 	//endregion
 
 	//region application methods
@@ -137,7 +150,7 @@ public class JnaDriverImpl
 	{
 		long start = System.currentTimeMillis();
 		String title = this.driver.title();
-		this.logger.info(String.format("title() = %s, time (ms) : %d",title, System.currentTimeMillis() - start));
+		this.logger.info(String.format("title() = %s, time (ms) : %d", title, System.currentTimeMillis() - start));
 		checkCSharpTimes();
 		checkError();
 		return title;
@@ -151,7 +164,8 @@ public class JnaDriverImpl
 	{
 		long start = System.currentTimeMillis();
 		String result = this.driver.listAll(owner.getIdString(), kind.ordinal(), uid, xpath, clazz, name, title, text, many);
-		this.logger.info(String.format("listAll(%s,%s,%s,%s,%s,%s,%s,%s,%b), time (ms) : %d", owner, kind, uid, xpath, clazz, name, title, text, many, System.currentTimeMillis() - start));
+		this.logger.info(String.format("listAll(%s,%s,%s,%s,%s,%s,%s,%s,%b), time (ms) : %d", owner, kind, uid, xpath, clazz, name, title, text, many, System
+				.currentTimeMillis() - start));
 		checkCSharpTimes();
 		checkError();
 		return result;
@@ -161,7 +175,8 @@ public class JnaDriverImpl
 	{
 		long start = System.currentTimeMillis();
 		int result = this.driver.findAllForLocator(arr, arr.length, owner.getIdString(), kind.ordinal(), uid, xpath, clazz, name, title, text, many);
-		this.logger.info(String.format("findAllForLocator(%s,%d,%s,%s,%s,%s,%s,%s,%s,%s,%b) = %d, time (ms) : %d", Arrays.toString(arr), arr.length, owner, kind, uid, xpath, clazz, name, title, text, many, result, System.currentTimeMillis() - start));
+		this.logger.info(String.format("findAllForLocator(%s,%d,%s,%s,%s,%s,%s,%s,%s,%s,%b) = %d, time (ms) : %d", Arrays
+				.toString(arr), arr.length, owner, kind, uid, xpath, clazz, name, title, text, many, result, System.currentTimeMillis() - start));
 		checkCSharpTimes();
 		checkError();
 		return result;
@@ -171,7 +186,8 @@ public class JnaDriverImpl
 	{
 		long start = System.currentTimeMillis();
 		int result = this.driver.findAll(arr, arr.length, owner.getIdString(), scope.getValue(), property.getId(), value);
-		this.logger.info(String.format("findAll(%s,%d,%s,%s,%s,%s) = %s, time (ms) : %d", Arrays.toString(arr), arr.length, owner, scope, property, value, result, System.currentTimeMillis() - start));
+		this.logger.info(String.format("findAll(%s,%d,%s,%s,%s,%s) = %s, time (ms) : %d", Arrays.toString(arr), arr.length, owner, scope, property, value, result, System
+				.currentTimeMillis() - start));
 		checkCSharpTimes();
 		checkError();
 		return result;
@@ -181,7 +197,8 @@ public class JnaDriverImpl
 	{
 		long start = System.currentTimeMillis();
 		int result = this.driver.elementByCoords(resultId, resultId.length, kind.ordinal(), x, y);
-		this.logger.info(String.format("elementByCoords(%s,%s,%d,%d) = %d, time (ms) : %d", Arrays.toString(resultId), kind, x, y, result, System.currentTimeMillis() - start));
+		this.logger.info(String.format("elementByCoords(%s,%s,%d,%d) = %d, time (ms) : %d", Arrays.toString(resultId), kind, x, y, result, System
+				.currentTimeMillis() - start));
 		checkCSharpTimes();
 		checkError();
 		return result;
@@ -227,7 +244,8 @@ public class JnaDriverImpl
 	{
 		long start = System.currentTimeMillis();
 		String result = this.driver.doPatternCall(element.getIdString(), pattern.getId(), method, args, c);
-		this.logger.info(String.format("doPatternCall(%s,%s,%s,%s,%d) = %s, time (ms) : %d", element, pattern, method, args, c, result, System.currentTimeMillis() - start));
+		this.logger.info(String.format("doPatternCall(%s,%s,%s,%s,%d) = %s, time (ms) : %d", element, pattern, method, args, c, result, System
+				.currentTimeMillis() - start));
 		checkCSharpTimes();
 		checkError();
 		return result;
@@ -256,7 +274,8 @@ public class JnaDriverImpl
 	{
 		long start = System.currentTimeMillis();
 		int result = this.driver.getPatterns(arr, arr.length, element.getIdString());
-		this.logger.info(String.format("getPatterns(%s,%s,%s) = %d, time (ms) : %d", Arrays.toString(arr), arr.length, element, result, System.currentTimeMillis() - start));
+		this.logger.info(String.format("getPatterns(%s,%s,%s) = %d, time (ms) : %d", Arrays.toString(arr), arr.length, element, result, System
+				.currentTimeMillis() - start));
 		checkCSharpTimes();
 		checkError();
 		return result;
@@ -266,7 +285,8 @@ public class JnaDriverImpl
 	{
 		long start = System.currentTimeMillis();
 		int result = this.driver.getImage(arr, arr.length, element.getIdString());
-		this.logger.info(String.format("getImage(%s,%d,%s) = %s, time (ms) : %d", Arrays.toString(arr), arr.length, element.getIdString(), result, System.currentTimeMillis() - start));
+		this.logger.info(String.format("getImage(%s,%d,%s) = %s, time (ms) : %d", Arrays.toString(arr), arr.length, element
+				.getIdString(), result, System.currentTimeMillis() - start));
 		checkCSharpTimes();
 		checkError();
 		return result;
@@ -296,7 +316,8 @@ public class JnaDriverImpl
 	{
 		long start = System.currentTimeMillis();
 		this.driver.mouseTableCell(table.getIdString(), column, row, mouseAction.getId());
-		this.logger.info(String.format("mouseTableCell(%s,%d,%d, %s) time(ms) : %d", table, column, row, mouseAction, System.currentTimeMillis() - start));
+		this.logger.info(String.format("mouseTableCell(%s,%d,%d, %s) time(ms) : %d", table, column, row, mouseAction, System
+				.currentTimeMillis() - start));
 		checkCSharpTimes();
 		checkError();
 	}
@@ -315,7 +336,8 @@ public class JnaDriverImpl
 		long start = System.currentTimeMillis();
 		String stringCondition = conditionToString(condition);
 		String res = this.driver.getRowByCondition(table.getIdString(), useNumericHeader, stringCondition);
-		this.logger.info(String.format("getRowByConditions(%s,%b,%s) : %s, time(ms) : %d", table, useNumericHeader, stringCondition, res, System.currentTimeMillis() - start));
+		this.logger.info(String.format("getRowByConditions(%s,%b,%s) : %s, time(ms) : %d", table, useNumericHeader, stringCondition, res, System
+				.currentTimeMillis() - start));
 		checkCSharpTimes();
 		checkError();
 		return res;
@@ -326,7 +348,8 @@ public class JnaDriverImpl
 		long start = System.currentTimeMillis();
 		String stringCondition = conditionToString(condition);
 		String res = this.driver.getRowIndexes(table.getIdString(), useNumericHeader, stringCondition);
-		this.logger.info(String.format("getRowIndexes(%s,%b,%s) : %s, time(ms) : %d", table, useNumericHeader, stringCondition, res, System.currentTimeMillis() - start));
+		this.logger.info(String.format("getRowIndexes(%s,%b,%s) : %s, time(ms) : %d", table, useNumericHeader, stringCondition, res, System
+				.currentTimeMillis() - start));
 		checkCSharpTimes();
 		checkError();
 		return res;
@@ -337,7 +360,8 @@ public class JnaDriverImpl
 	{
 		long start = System.currentTimeMillis();
 		String res = this.driver.getRowByIndex(table.getIdString(), useNumericHeader, index);
-		this.logger.info(String.format("getRowByIndex(%s,%b,%s) : %s, time(ms) : %d", table, useNumericHeader, index, res, System.currentTimeMillis() - start));
+		this.logger.info(String.format("getRowByIndex(%s,%b,%s) : %s, time(ms) : %d", table, useNumericHeader, index, res, System
+				.currentTimeMillis() - start));
 		checkCSharpTimes();
 		checkError();
 		return res;
