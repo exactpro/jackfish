@@ -89,33 +89,6 @@ public class ParametersTableView extends TableView<TablePair>
 	{
 		public TableContextMenuCell()
 		{
-			//TODO this not needed
-//			ContextMenu menu = new ContextMenu();
-//			MenuItem item1 = new MenuItem("Remove");
-//			item1.setOnAction(e ->
-//			{
-//				TablePair item = (TablePair) getTableRow().getItem();
-//				if (item != null)
-//				{
-//					try
-//					{
-//						item.remove();
-//						getTableView().getItems().clear();
-//						getTableView().getItems().addAll(editableNode.getParameters());
-//					}
-//					catch (Exception e1)
-//					{
-//						e1.printStackTrace();
-//					}
-//				}
-//			});
-//			setOnContextMenuRequested(e ->
-//			{
-//				boolean isRemovable = getTableRow().getItem() != null && ((TablePair) getTableRow().getItem()).isRemovable();
-//				item1.setDisable(!isRemovable);
-//			});
-//			menu.getItems().addAll(item1);
-//			this.setContextMenu(menu);
 		}
 
 		@Override
@@ -151,10 +124,10 @@ public class ParametersTableView extends TableView<TablePair>
 			{
 				return;
 			}
-			if (this.textField == null)
-			{
+//			if (this.textField == null)
+//			{
 				createTextField();
-			}
+//			}
 			this.textField.setText(getString());
 			setGraphic(this.textField);
 			setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
