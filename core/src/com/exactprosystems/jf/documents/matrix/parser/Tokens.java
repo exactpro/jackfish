@@ -8,7 +8,6 @@ public enum Tokens
 	Global,
 	Id,
 	Action,
-	Description,
 	IgnoreErr,
 	Out,
 	Result,
