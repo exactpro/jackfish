@@ -40,6 +40,7 @@ public class ActionsList extends AbstractAction
 			{
 		        ActionsList.class,
 		        ApplicationConnectTo.class,
+		        ApplicationGetProperties.class,
 		        ApplicationRefresh.class,
 		        ApplicationStart.class,
 		        ApplicationStop.class,
