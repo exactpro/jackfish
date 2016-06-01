@@ -49,6 +49,7 @@ public class ExpressionField extends CustomField
 
 	private ChangeListener<Boolean> valueListener;
 	private ChangeListener<Boolean> focusListener;
+	private ChangeListener<Boolean> globalListener;
 
 	public ExpressionField(AbstractEvaluator evaluator)
 	{
@@ -60,7 +61,7 @@ public class ExpressionField extends CustomField
 		super(text);
 		this.evaluator = evaluator;
 		this.getStyleClass().add(CssVariables.EXPRESSION_EDITOR);
-		ChangeListener<Boolean> globalListener = (observable, oldValue, newValue) ->
+		globalListener = (observable, oldValue, newValue) ->
 		{
 			Optional.ofNullable(valueListener).ifPresent(listener -> listener.changed(observable, oldValue, newValue));
 			Optional.ofNullable(focusListener).ifPresent(listener -> listener.changed(observable, oldValue, newValue));
@@ -90,6 +91,11 @@ public class ExpressionField extends CustomField
 		listeners();
 		showButtons();
 		stretchIfCan(this.getText());
+	}
+
+	public void clearlListener()
+	{
+		this.focusedProperty().removeListener(globalListener);
 	}
 
 	public void setOnContextMenuRequest(EventHandler<ContextMenuEvent> event)

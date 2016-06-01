@@ -33,9 +33,11 @@ import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper.OpenSaveMode;
 import com.exactprosystems.jf.tool.matrix.MatrixFx;
 
+import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.ObservableMap;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
@@ -50,7 +52,9 @@ import javafx.util.Pair;
 import java.io.File;
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -79,7 +83,7 @@ public class ParametersPane extends CustomScrollPane
 		this.oneLine = oneLine;
 		this.parameters = parameters;
 		this.generator = generator;
-		
+
 		this.contextMenuHandler = parametersContextMenu.createContextMenuHandler();
 
 		super.setContextMenu(rowContextMenu);
@@ -89,12 +93,13 @@ public class ParametersPane extends CustomScrollPane
 	public void refreshParameters(int selectedIndex)
 	{
 		ObservableList<Node> children = FXCollections.observableArrayList(this.mainGridPane.getChildren());
-
 		this.mainGridPane.getChildren().clear();
+		
 		for (int i = 0; i < this.parameters.size(); i++)
 		{
 			Parameter par = this.parameters.getByIndex(i);
-			ParameterGridPane exist = findPane(children, par);
+			ParameterGridPane exist = findAndRemovePane(children, par);
+
 			if (exist == null)
 			{
 				exist = parameterBox(par, this.contextMenuHandler);
@@ -107,19 +112,29 @@ public class ParametersPane extends CustomScrollPane
 			this.mainGridPane.add(exist, i + 1, 0, 1, this.oneLine ? 1 : 2);
 		}
 		this.mainGridPane.add(emptyBox(FXCollections.observableArrayList(this.mainGridPane.getChildren()), this.contextMenuHandler), 0, 0, 1, 2);
-	}
-
-	private ParameterGridPane findPane(ObservableList<Node> children, Parameter par)
-	{
-		Optional<ParameterGridPane> opt = children
-				.stream()
-				.filter(node -> node instanceof ParameterGridPane)
-				.map(node -> ((ParameterGridPane) node))
-				.filter(pgp -> pgp.getParameter() == par)
-				.findFirst();
 		
-//		return opt.isPresent() ? opt.get() : null;
-		return opt.orElse(null);
+		for(Node child : children)
+		{
+			if(child instanceof ParameterGridPane) ((ParameterGridPane) child).getExpressionField().clearlListener();
+		}
+	}
+	
+	private ParameterGridPane findAndRemovePane(ObservableList<Node> children, Parameter par)
+	{
+		Iterator<Node> iter = children.iterator();
+		while(iter.hasNext())
+		{
+			Node node = iter.next();
+			if(node instanceof ParameterGridPane)
+			{
+				if (((ParameterGridPane) node).getParameter() == par)
+				{
+					iter.remove();
+					return (ParameterGridPane)node;
+				}
+			} 
+		}
+		return null;
 	}
 
 	private Pane emptyBox(ObservableList<Node> children, EventHandler<ContextMenuEvent> contextMenuHandler)
@@ -330,7 +345,6 @@ public class ParametersPane extends CustomScrollPane
 							
 						case BuildXPath:
 							expressionField.setNameFirst("X");
-							
 							expressionField.setFirstActionListener(str -> 
 							{
 								for (int i = 0; i < this.parameters.size(); i++)

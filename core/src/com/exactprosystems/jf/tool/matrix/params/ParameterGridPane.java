@@ -41,6 +41,11 @@ public class ParameterGridPane extends GridPane
 		this.value = value;
 		this.add(this.value, 0, 1);
 	}
+	
+	public ExpressionField getExpressionField()
+	{
+		return this.value;
+	}
 
 	public void setKeyListener(Common.Function selectRow, BiConsumer<Integer, String> consumer)
 	{
@@ -55,7 +60,7 @@ public class ParameterGridPane extends GridPane
 				String newText = ((TextField) this.key).getText();
 				if (!newValue && oldValue && !Str.areEqual(oldText, newText))
 				{
-					//					Common.tryCatch(() -> getMatrix().parameterSetName(this.matrixItem, index, newText), "Error on change parameters");
+					// Common.tryCatch(() -> getMatrix().parameterSetName(this.matrixItem, index, newText), "Error on change parameters");
 					Common.tryCatch(() -> consumer.accept(this.index, newText), "Error on change parameters");
 				}
 				if (!newValue && oldValue)
@@ -80,7 +85,7 @@ public class ParameterGridPane extends GridPane
 				String newText = this.value.getText();
 				if (!newValue && oldValue/* && !Str.areEqual(oldText, newText)*/)
 				{
-					//					Common.tryCatch(() -> getMatrix().parameterSetValue(this.matrixItem, index, expressionField.getText()), "Error on change parameters");
+					// Common.tryCatch(() -> getMatrix().parameterSetValue(this.matrixItem, index, expressionField.getText()), "Error on change parameters");
 					Common.tryCatch(() -> consumer.accept(this.index, this.value.getText()), "Error on change parameters");
 				}
 			};
