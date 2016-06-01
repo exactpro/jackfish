@@ -10,6 +10,7 @@ package com.exactprosystems.jf.app;
 import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.common.SerializablePair;
 import com.exactprosystems.jf.api.common.Str;
+
 import org.apache.log4j.*;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
@@ -18,7 +19,9 @@ import org.w3c.dom.Node;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+
 import java.awt.*;
+import java.rmi.RemoteException;
 import java.util.*;
 import java.util.List;
 
@@ -47,6 +50,12 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 			logger.error(e.getMessage(), e);
 			throw e;
 		}
+	}
+
+	@Override
+	public String getProperty(String name) throws RemoteException
+	{
+		return null;
 	}
 
 	@Override

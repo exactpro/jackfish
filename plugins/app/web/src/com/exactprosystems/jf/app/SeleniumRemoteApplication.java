@@ -13,6 +13,7 @@ import com.exactprosystems.jf.api.common.SerializablePair;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.app.js.JSInjection;
 import com.exactprosystems.jf.app.js.JSInjectionFactory;
+
 import org.apache.log4j.*;
 import org.openqa.selenium.*;
 import org.openqa.selenium.Dimension;
@@ -26,6 +27,7 @@ import org.w3c.dom.Node;
 import javax.imageio.ImageIO;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+
 import java.awt.*;
 import java.awt.Rectangle;
 import java.awt.event.InputEvent;
@@ -141,6 +143,20 @@ public class SeleniumRemoteApplication extends RemoteApplication
 		logger.setLevel(Level.toLevel(serverLogLevel, Level.ALL));
 
 		MatcherSelenium.setLogger(logger);
+	}
+
+	@Override
+	public String getProperty(String name) throws RemoteException
+	{
+		if (this.driver != null)
+		{
+			switch (name)
+			{
+				case WebAppFactory.propertyUrlName:
+					return this.driver.getCurrentUrl();
+			}
+		}
+		return null;
 	}
 
 	@Override

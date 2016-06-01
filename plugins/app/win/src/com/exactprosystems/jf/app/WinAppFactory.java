@@ -18,7 +18,7 @@ import java.util.Scanner;
 public class WinAppFactory implements IApplicationFactory
 {
 	private static final int requiredMajorVersion = 2;
-	private static final int requiredMinorVersion = 15;
+	private static final int requiredMinorVersion = 16;
 	
 	public static final String mainWindowName = "MainWindow";
 	public static final String mainWindowHeight = "Height";
@@ -28,6 +28,8 @@ public class WinAppFactory implements IApplicationFactory
 	public static final String workDirName = "WorkDir";
 	public static final String argsName = "Args";
 	
+	private static String[] knownProperties = {  };
+
 	private static String[] knownParameters = {  };
 	
 	private static String[] knownStartArgs = { execName, workDirName, argsName };
@@ -86,6 +88,12 @@ public class WinAppFactory implements IApplicationFactory
 	public String getRemoteClassName()
 	{
 		return WinRemoteApplicationJNA.class.getCanonicalName();
+	}
+
+	@Override
+	public String[] wellKnownProperties()
+	{
+		return knownProperties;
 	}
 
 	@Override

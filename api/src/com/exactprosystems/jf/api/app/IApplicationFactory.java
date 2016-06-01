@@ -17,6 +17,7 @@ public interface IApplicationFactory  extends VersionSupported, IFactory
 	String				getHelp();
 	void				init(IGuiDictionary dictionary);
 	
+	String[]			wellKnownProperties();
 	String[]			wellKnownStartArgs();
 	String[]			wellKnownConnectArgs();
 	ControlKind[]		supportedControlKinds();

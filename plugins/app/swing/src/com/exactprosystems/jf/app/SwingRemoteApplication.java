@@ -29,6 +29,7 @@ import java.awt.image.BufferedImage;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.rmi.RemoteException;
 import java.util.*;
 import java.util.List;
 import java.util.Map.Entry;
@@ -61,6 +62,12 @@ public class SwingRemoteApplication extends RemoteApplication
 			logger.error(e.getMessage(), e);
 			throw e;
 		}
+	}
+
+	@Override
+	public String getProperty(String name) throws RemoteException
+	{
+		return null;
 	}
 
 	@Override

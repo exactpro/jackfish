@@ -18,7 +18,7 @@ import java.util.Scanner;
 public class SwingAppFactory implements IApplicationFactory
 {
 	private static final int requiredMajorVersion = 2;
-	private static final int requiredMinorVersion = 15;
+	private static final int requiredMinorVersion = 16;
 
 	public final static String jreExecName 		= "jreExec";
 	public final static String jreArgsName 		= "jreArgs";
@@ -27,6 +27,8 @@ public class SwingAppFactory implements IApplicationFactory
 	public final static String argsName 		= "Args";
 	
 	public final static String urlName 			= "URL";
+
+	private static String[] knownProperties = {  };
 
 	private static String[] knownParameters = { jreExecName, jreArgsName };
 	
@@ -82,6 +84,12 @@ public class SwingAppFactory implements IApplicationFactory
 	public String getRemoteClassName()
 	{
 		return SwingRemoteApplication.class.getCanonicalName();
+	}
+
+	@Override
+	public String[] wellKnownProperties()
+	{
+		return knownProperties;
 	}
 
 	@Override

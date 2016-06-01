@@ -9,6 +9,7 @@
 package com.exactprosystems.jf.api.app;
 
 import com.exactprosystems.jf.api.common.SerializablePair;
+
 import org.w3c.dom.Document;
 
 import java.awt.*;
@@ -21,6 +22,8 @@ import java.util.Map;
 public interface IRemoteApplication extends Remote
 {
 	String	rectangleName	= "rectangle";
+
+	String 						getProperty		(String name) throws RemoteException;
 
 	void 						createLogger	(String logName, String serverLogLevel, String serverLogPattern) throws RemoteException;
 	void 						connect			(Map<String, String> args) throws RemoteException;
@@ -52,5 +55,4 @@ public interface IRemoteApplication extends Remote
 	void 						subscribe		(long id, HistogramMetric metric, int interval, int intervalCount) throws RemoteException;
 	void 						listening		(long id, boolean isStart) throws RemoteException;
 	List<Long> 					getMetrics		(long id) throws RemoteException;
-
 }
