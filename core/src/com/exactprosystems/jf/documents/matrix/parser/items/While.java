@@ -167,7 +167,7 @@ public class While extends MatrixItem
 						throw new Exception("Error in expression #While");
 					}
 					bool = this.condition.getValue();
-
+					
 					if (result == Result.Failed)
 					{
 						MatrixItem branchOnError = super.find(false, OnError.class, null);
@@ -183,16 +183,24 @@ public class While extends MatrixItem
 						}
 					}
 
-					if (result == Result.Failed || result == Result.Stopped || result == Result.Break || result == Result.Return)
+					if(result == Result.Break)
+					{
+						result = Result.Passed;
+						break;
+					}
+					
+					if (result == Result.Failed || result == Result.Stopped || result == Result.Return)
 					{
 						break;
 					}
+					
 					if (result == Result.Continue)
 					{
 						continue;
 					}
 				}
 
+				System.out.println(result);
 				return new ReturnAndResult(result == Result.Continue ? Result.Passed : result, ret.getOut());
 			}
 					

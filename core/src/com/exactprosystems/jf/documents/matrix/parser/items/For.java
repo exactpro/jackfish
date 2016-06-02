@@ -230,7 +230,7 @@ public final class For extends MatrixItem
 				currentValue = currentValue.intValue() + ((Number)stepValue).intValue(); 
 				condition = checkCondition(toValue, stepValue, currentValue);
 				evaluator.getLocals().set(this.var.get(), currentValue);
-
+				
 				if (result == Result.Failed)
 				{
 					MatrixItem branchOnError = super.find(false, OnError.class, null);
@@ -247,16 +247,24 @@ public final class For extends MatrixItem
 					}
 				}
 
-				if (result == Result.Failed || result == Result.Stopped || result == Result.Break || result == Result.Return)
+				if(result == Result.Break)
+				{
+					result = Result.Passed;
+					break;
+				}
+				
+				if (result == Result.Failed || result == Result.Stopped || result == Result.Return)
 				{
 					break;
 				}
+				
 				if (result == Result.Continue)
 				{
 					continue;
 				}
 			}
 
+			System.out.println(result);
 			return new ReturnAndResult(result == Result.Continue ? Result.Passed : result, ret.getOut());
 		} 
 		catch (Exception e)

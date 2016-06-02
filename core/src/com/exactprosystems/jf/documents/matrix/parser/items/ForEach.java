@@ -201,10 +201,18 @@ public final class ForEach extends MatrixItem
 					}
 				}
 
-				if (result == Result.Failed || result == Result.Stopped || result == Result.Break || result == Result.Return)
+				
+				if(result == Result.Break)
+				{
+					result = Result.Passed;
+					break;
+				}
+				
+				if (result == Result.Failed || result == Result.Stopped || result == Result.Return)
 				{
 					break;
 				}
+				
 				if (result == Result.Continue)
 				{
 					continue;
