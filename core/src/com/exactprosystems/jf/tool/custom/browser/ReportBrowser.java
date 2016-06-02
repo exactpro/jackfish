@@ -12,11 +12,17 @@ import com.exactprosystems.jf.tool.CssVariables;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Worker;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.ToolBar;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.text.Text;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebHistory;
 import javafx.scene.web.WebView;
@@ -41,7 +47,7 @@ public class ReportBrowser extends BorderPane
 	{
 		try
 		{
-			CustomTab selectedItem = (CustomTab) this.tabPane.getSelectionModel().getSelectedItem();
+			CustomBrowserTab selectedItem = (CustomBrowserTab) this.tabPane.getSelectionModel().getSelectedItem();
 			Document document = selectedItem.engine.getDocument();
 			return document.getElementsByTagName("pre").item(0).getTextContent();
 		}
@@ -57,17 +63,17 @@ public class ReportBrowser extends BorderPane
 
 		Button reload = new Button();
 		Common.customizeLabeled(reload, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.RELOAD);
-		reload.setOnAction(e -> ((CustomTab) this.tabPane.getSelectionModel().getSelectedItem()).reload());
+		reload.setOnAction(e -> ((CustomBrowserTab) this.tabPane.getSelectionModel().getSelectedItem()).reload());
 		toolBar.getItems().add(reload);
 
 		Button back = new Button();
 		Common.customizeLabeled(back, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.GO_BACK);
-		back.setOnAction(e -> ((CustomTab) this.tabPane.getSelectionModel().getSelectedItem()).back());
+		back.setOnAction(e -> ((CustomBrowserTab) this.tabPane.getSelectionModel().getSelectedItem()).back());
 		toolBar.getItems().add(back);
 
 		Button forward = new Button();
 		Common.customizeLabeled(forward, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.GO_FORWARD);
-		forward.setOnAction(e -> ((CustomTab) this.tabPane.getSelectionModel().getSelectedItem()).forward());
+		forward.setOnAction(e -> ((CustomBrowserTab) this.tabPane.getSelectionModel().getSelectedItem()).forward());
 		toolBar.getItems().add(forward);
 
 		this.setTop(toolBar);
@@ -77,34 +83,65 @@ public class ReportBrowser extends BorderPane
 	{
 		this.tabPane = new TabPane();
 		this.setCenter(this.tabPane);
-		CustomTab mainTab = new CustomTab();
+		CustomBrowserTab mainTab = new CustomBrowserTab();
 		mainTab.load(this.reportFile);
 		mainTab.setClosable(false);
 		this.tabPane.getTabs().add(mainTab);
 	}
 
-	private static class CustomTab extends Tab
+	private static class CustomBrowserTab extends Tab
 	{
 		private WebEngine engine;
+		private Hyperlink crossButton;
+		private Text textTab;
 
-		public CustomTab()
+		public CustomBrowserTab()
 		{
 			WebView view = new WebView();
 			this.engine = view.getEngine();
 			this.setContent(view);
-			this.setText("New tab...");
+			
+			// Tab : название
+			textTab = new Text();
+			this.textTab.setText("New tab...");
 			Worker<Void> loadWorker = this.engine.getLoadWorker();
 			loadWorker.stateProperty().addListener((observable, oldValue, newValue) -> {
 				if (newValue == Worker.State.SUCCEEDED)
 				{
-					this.setText(this.engine.getTitle());
+					this.textTab.setText(this.engine.getTitle());
 				}
 			});
+			
+			// Tab : кнопка закрытия
+			this.setClosable(false);
+			this.crossButton = new Hyperlink();
+			Image image = new Image(CssVariables.Icons.CLOSE_BUTTON_ICON);
+			this.crossButton.setGraphic(new ImageView(image));
+			this.crossButton.setFocusTraversable(false);
+
+			HBox box = new HBox();
+			box.setAlignment(Pos.CENTER_RIGHT);
+			box.getChildren().addAll(this.textTab, this.crossButton);
+			this.setGraphic(box);
+			
 			this.engine.setCreatePopupHandler(param -> {
-				CustomTab customTab = new CustomTab();
+				CustomBrowserTab customTab = new CustomBrowserTab();
 				this.getTabPane().getTabs().add(customTab);
 				this.getTabPane().getSelectionModel().select(customTab);
 				return customTab.engine;
+			});
+			
+			this.crossButton.setDisable(true);
+			this.crossButton.setVisible(false);
+			this.setOnSelectionChanged(arg0 ->
+			{
+				crossButton.setDisable(!isSelected());
+				crossButton.setVisible(isSelected());
+			});
+			
+			this.crossButton.setOnAction(actionEvent ->
+			{
+				this.getTabPane().getTabs().remove(this);
 			});
 		}
 
@@ -144,5 +181,4 @@ public class ReportBrowser extends BorderPane
 			this.engine.load(url);
 		}
 	}
-
 }
