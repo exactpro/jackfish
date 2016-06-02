@@ -11,7 +11,6 @@ package com.exactprosystems.jf.app;
 import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.client.ICondition;
 import com.exactprosystems.jf.api.common.Str;
-
 import org.apache.log4j.Logger;
 import org.fest.swing.awt.AWT;
 import org.fest.swing.core.ComponentMatcher;
@@ -32,7 +31,6 @@ import javax.swing.text.JTextComponent;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
-
 import java.awt.*;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
@@ -942,7 +940,7 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 					{
 						throw new RemoteException("The column '" + name + "' is not found. Possible values are: " + humanReadableHeaders(fieldIndexes));
 					}
-					String value = String.valueOf(table.getModel().getValueAt(Integer.parseInt(rowsIndexes.get(0)), colIndex));
+					String value = String.valueOf(getValueTableCell(fixture, Integer.parseInt(rowsIndexes.get(0)), colIndex));
 
 					String underscopedName = name.replace(' ', '_');
 					ret.put(underscopedName, value);
@@ -997,13 +995,13 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 			Map<String, Integer> fieldIndexes = getTableHeaders(table);
 
 			Map<String, String> ret = new LinkedHashMap<String, String>();
-
+			JTableFixture fixture = (((JTableFixture) (ComponentFixture<? extends Component>) component));
 			for (Entry<String, Integer> entry : fieldIndexes.entrySet())
 			{
 				String name = entry.getKey();
 				Integer colIndex = entry.getValue();
 
-				String value = String.valueOf(table.getModel().getValueAt(i, colIndex));
+				String value = String.valueOf(getValueTableCell(fixture, i, colIndex));
 				String underscopedName = name.replace(' ', '_');
 
 				ret.put(underscopedName, value);
@@ -1019,6 +1017,17 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 		}
 	}
 
+	private Object getValueTableCell(JTableFixture fixture, int row, int column)
+	{
+		JTable table = fixture.target;
+		Object valueAt = table.getModel().getValueAt(row, column);
+		if (valueAt == null)
+		{
+			valueAt = fixture.valueAt(TableCell.row(row).column(column));
+		}
+		return valueAt;
+	}
+
 	@Override
 	public Map<String, ValueAndColor> getRowWithColor(ComponentFixture<Component> component, Locator additional, Locator header, boolean useNumericHeader, int i) throws Exception
 	{
@@ -1026,20 +1035,19 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 		{
 			this.currentRobot.waitForIdle();
 			JTable table = component.targetCastedTo(JTable.class);
-			JTableFixture fixture = new JTableFixture(this.currentRobot, table);
 			Map<String, Integer> fieldIndexes = getTableHeaders(table);
 			Map<String, ValueAndColor> ret = new LinkedHashMap<String, ValueAndColor>();
-
+			JTableFixture tableFixture = (((JTableFixture) (ComponentFixture<? extends Component>) component));
 			for (Entry<String, Integer> entry : fieldIndexes.entrySet())
 			{
 				String name = entry.getKey();
 				Integer colIndex = entry.getValue();
 
-				String value = String.valueOf(table.getModel().getValueAt(i, colIndex));
+				String value = String.valueOf(getValueTableCell(tableFixture, i, colIndex));
 				String underscopedName = name.replace(' ', '_');
 
-				Color color = fixture.foregroundAt(TableCell.row(i).column(colIndex)).target();
-				Color backColor = fixture.backgroundAt(TableCell.row(i).column(colIndex)).target();
+				Color color = tableFixture.foregroundAt(TableCell.row(i).column(colIndex)).target();
+				Color backColor = tableFixture.backgroundAt(TableCell.row(i).column(colIndex)).target();
 
 				ret.put(underscopedName, new ValueAndColor(value, color, backColor));
 			}
@@ -1072,13 +1080,13 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 			{
 				res[0][column] = headers.get(column);
 			}
-
+			JTableFixture fixture = (((JTableFixture) (ComponentFixture<? extends Component>) component));
 			for (int row = 0; row < rows; row++)
 			{
 				res[row + 1] = new String[columns];
 				for (int column = 0; column < columns; column++)
 				{
-					Object value = table.getValueAt(row, column);
+					Object value = getValueTableCell(fixture, row, column);
 					if (value == null)
 					{
 						try
@@ -1314,7 +1322,7 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 				{
 					throw new RemoteException("The column '" + name + "' is not found. Possible values are: " + humanReadableHeaders(fieldIndexes));
 				}
-				Object value = table.getModel().getValueAt(i, index);
+				Object value = getValueTableCell(fixture, i, index);
 				if (!valueCondition.isMatched(name, value))
 				{
 					found = false;
