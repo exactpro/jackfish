@@ -200,7 +200,6 @@ public class While extends MatrixItem
 					}
 				}
 
-				System.out.println(result);
 				return new ReturnAndResult(result == Result.Continue ? Result.Passed : result, ret.getOut());
 			}
 					

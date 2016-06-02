@@ -264,7 +264,6 @@ public final class For extends MatrixItem
 				}
 			}
 
-			System.out.println(result);
 			return new ReturnAndResult(result == Result.Continue ? Result.Passed : result, ret.getOut());
 		} 
 		catch (Exception e)
