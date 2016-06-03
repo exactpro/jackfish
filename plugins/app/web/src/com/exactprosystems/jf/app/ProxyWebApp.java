@@ -42,9 +42,25 @@ public class ProxyWebApp extends ProxyApplication
 		System.out.println("WebApp.stop()");
 		super.stop();
 	}
-
+	
 	private void tune(Map<String, String> driverParameters, Map<String, String> parameters)
 	{
+		String jreExec 	= driverParameters.get(WebAppFactory.jreExecName);
+		if (jreExec != null && !jreExec.isEmpty())
+		{
+			driverParameters.put(ProxyApplication.JREpathName, jreExec);
+		}
+		String jreArgs 		= driverParameters.get(WebAppFactory.jreArgsName);
+		if (jreArgs != null && !jreArgs.isEmpty())
+		{
+			driverParameters.put(ProxyApplication.JVMparametersName, jreArgs);
+		}
+
+		String safariDriverPath 	= driverParameters.get(WebAppFactory.safariDriverPathName);
+		if (safariDriverPath != null && !safariDriverPath.isEmpty())
+		{
+			parameters.put(WebAppFactory.safariDriverPathName, safariDriverPath);
+		}
 		String chromeDriverPath 	= driverParameters.get(WebAppFactory.chromeDriverPathName);
 		if (chromeDriverPath != null && !chromeDriverPath.isEmpty())
 		{

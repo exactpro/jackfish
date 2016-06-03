@@ -20,6 +20,10 @@ public class WebAppFactory implements IApplicationFactory
 	private static final int requiredMajorVersion = 2;
 	private static final int requiredMinorVersion = 16;
 
+	public final static String jreExecName 			= "jreExec";
+	public final static String jreArgsName 			= "jreArgs";
+
+	public static final String safariDriverPathName	= "SafariDriverPath";
 	public static final String chromeDriverPathName	= "ChromeDriverPath";
 	public static final String ieDriverPathName		= "IEDriverPath";
 	public static final String chromeDriverBinary	= "ChromeDriverBinary";
@@ -33,7 +37,7 @@ public class WebAppFactory implements IApplicationFactory
 
 	private static String[] knownProperties = { propertyUrlName };
 	
-	private static String[] knownParameters = { chromeDriverPathName, ieDriverPathName, chromeDriverBinary, firefoxProfileDir };
+	private static String[] knownParameters = { jreExecName, jreArgsName, safariDriverPathName, chromeDriverPathName, ieDriverPathName, chromeDriverBinary, firefoxProfileDir };
 	
 	private static String[] knownStartArgs = { browserName, urlName };
 

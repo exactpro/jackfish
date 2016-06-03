@@ -176,6 +176,15 @@ public class SeleniumRemoteApplication extends RemoteApplication
 			String browserName = args.get(WebAppFactory.browserName);
 			String url = args.get(WebAppFactory.urlName);
 
+			String safariDriverPath = args.get(WebAppFactory.safariDriverPathName);
+			if (safariDriverPath != null && !safariDriverPath.isEmpty())
+			{
+				logger.info(WebAppFactory.safariDriverPathName + " = " + safariDriverPath);
+				
+				// TODO - what?
+				
+			}
+
 			String chromeDriverPath = args.get(WebAppFactory.chromeDriverPathName);
 			if (chromeDriverPath != null && !chromeDriverPath.isEmpty())
 			{
