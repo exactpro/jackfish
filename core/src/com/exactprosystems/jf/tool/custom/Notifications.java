@@ -20,8 +20,8 @@ import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.geometry.VPos;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.ToggleButton;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
@@ -333,7 +333,7 @@ public class Notifications
 		Label title;
 		Button closeBtn;
 		Button copyBtn;
-		ToggleButton pinBtn;
+		CheckBox pinBtn;
 
 		private GridPane pane;
 
@@ -419,7 +419,8 @@ public class Notifications
 			this.copyBtn.setFocusTraversable(false);
 			this.copyBtn.opacityProperty().bind(this.transition);
 
-			this.pinBtn = new ToggleButton();
+			this.pinBtn = new CheckBox();
+			this.pinBtn.getStyleClass().clear();
 			this.pinBtn.setGraphic(new ImageView(new Image(CssVariables.Icons.NOTIFICATION_PIN_FALSE)));
 			this.pinBtn.getStyleClass().addAll(CssVariables.TRANSPARENT_BACKGROUND);
 			this.pinBtn.selectedProperty().addListener((observable, oldValue, newValue) -> {
