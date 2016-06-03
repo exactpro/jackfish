@@ -101,7 +101,6 @@ public class ReportBrowser extends BorderPane
 			this.engine = view.getEngine();
 			this.setContent(view);
 			
-			// Tab : название
 			textTab = new Text();
 			this.textTab.setText("New tab...");
 			Worker<Void> loadWorker = this.engine.getLoadWorker();
@@ -112,7 +111,6 @@ public class ReportBrowser extends BorderPane
 				}
 			});
 			
-			// Tab : кнопка закрытия
 			this.setClosable(false);
 			this.crossButton = new Hyperlink();
 			Image image = new Image(CssVariables.Icons.CLOSE_BUTTON_ICON);
