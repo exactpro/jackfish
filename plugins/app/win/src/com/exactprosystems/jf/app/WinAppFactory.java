@@ -17,20 +17,23 @@ import java.util.Scanner;
 
 public class WinAppFactory implements IApplicationFactory
 {
-	private static final int requiredMajorVersion = 2;
-	private static final int requiredMinorVersion = 16;
-	
-	public static final String mainWindowName = "MainWindow";
-	public static final String mainWindowHeight = "Height";
-	public static final String mainWindowWidth = "Width";
+	private static final int		requiredMajorVersion	= 2;
+	private static final int		requiredMinorVersion	= 16;
 
-	public static final String execName = "Exec";
-	public static final String workDirName = "WorkDir";
-	public static final String argsName = "Args";
+	public final static String		jreExecName				= "jreExec";
+	public final static String		jreArgsName				= "jreArgs";
+
+	public static final String		mainWindowName			= "MainWindow";
+	public static final String		mainWindowHeight		= "Height";
+	public static final String		mainWindowWidth			= "Width";
+
+	public static final String		execName				= "Exec";
+	public static final String		workDirName				= "WorkDir";
+	public static final String		argsName				= "Args";
 	
 	private static String[] knownProperties = {  };
 
-	private static String[] knownParameters = {  };
+	private static String[] knownParameters = { jreExecName, jreArgsName };
 	
 	private static String[] knownStartArgs = { execName, workDirName, argsName };
 	
