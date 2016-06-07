@@ -82,7 +82,10 @@ public enum Browser
 				return new ChromeDriver();
 
 			case INTERNETEXPLORER:
-				return new InternetExplorerDriver();
+				DesiredCapabilities capabilities = DesiredCapabilities.internetExplorer();
+				capabilities.setCapability(InternetExplorerDriver.FORCE_CREATE_PROCESS, true);
+				capabilities.setCapability(InternetExplorerDriver.IE_SWITCHES, "-private");
+				return new InternetExplorerDriver(capabilities);
 
 			case OPERA:
 				return new OperaDriver();
