@@ -20,6 +20,7 @@ import org.openqa.selenium.Dimension;
 import org.openqa.selenium.Point;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.safari.SafariDriver;
 import org.openqa.selenium.support.ui.Select;
@@ -738,7 +739,17 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 			try
 			{
 				scrollToElement(component);
-				component.click();
+				if(driver.getWrappedDriver() instanceof InternetExplorerDriver)
+				{
+					logger.debug("IE click");
+					JavascriptExecutor executor = (JavascriptExecutor)driver;
+					executor.executeScript("arguments[0].click();", component);
+				} 
+				else
+				{
+					logger.debug("not IE click");
+					component.click();
+				}
 				return true;
 			}
 			catch (StaleElementReferenceException e)
