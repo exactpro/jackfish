@@ -397,7 +397,6 @@ public class MainRunner
 		try
 		{
 			IMatrixListener matrixListener 	= null;
-			RunnerListener runnerListener = new DummyRunnerListener();
 			switch (verboseLevel)
 			{
 				case None:
