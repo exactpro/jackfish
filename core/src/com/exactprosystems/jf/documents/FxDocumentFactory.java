@@ -6,12 +6,12 @@ import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.RunnerListener;
-import com.exactprosystems.jf.documents.msgdic.MessageDictionary;
 import com.exactprosystems.jf.tool.csv.CsvFx;
 import com.exactprosystems.jf.tool.dictionary.DictionaryFx;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.main.Main;
 import com.exactprosystems.jf.tool.matrix.MatrixFx;
+import com.exactprosystems.jf.tool.msgdictionary.MessageDictionaryFx;
 import com.exactprosystems.jf.tool.newconfig.ConfigurationFx;
 import com.exactprosystems.jf.tool.systemvars.SystemVarsFx;
 import com.exactprosystems.jf.tool.text.PlainTextFx;
@@ -37,9 +37,9 @@ public class FxDocumentFactory extends DocumentFactory
 	}
 
 	@Override
-	public MessageDictionary createClientDictionary(String fileName, Configuration configuration) throws Exception
+	public MessageDictionaryFx createClientDictionary(String fileName, Configuration configuration) throws Exception
 	{ 
-		return new MessageDictionary(fileName, configuration); // TODO implement MessageDictionaryFx 
+		return new MessageDictionaryFx(fileName, configuration);  
 	}
 
 	@Override

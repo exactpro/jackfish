@@ -30,10 +30,4 @@ public class DummyRunnerListener implements RunnerListener
 	{
 		logger.trace(String.format("Matrix runner %s change state to %s", runner, state));
 	}
-
-	@Override
-	public void setConfiguration(Configuration configuration)
-	{
-		logger.trace(String.format("Set configuration %s", configuration));
-	}
 }

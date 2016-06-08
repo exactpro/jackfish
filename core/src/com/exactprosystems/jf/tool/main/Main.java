@@ -94,7 +94,7 @@ public class Main extends Application
 
 	private Preloader preloader;
 	private MainController controller;
-	private RunnerListener runnerListener;
+	private RunnerScheduler runnerListener;
 
 	private Configuration config;
 	private Settings settings;

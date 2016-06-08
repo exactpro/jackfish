@@ -79,7 +79,6 @@ public class RunnerScheduler implements RunnerListener
 		this.controller.displayState(matrixRunner, state, done, total);
 	}
 
-	@Override
 	public void setConfiguration(Configuration configuration)
 	{
 		this.configuration = configuration;
