@@ -19,7 +19,9 @@ import org.openqa.selenium.*;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.Point;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.safari.SafariDriver;
 import org.openqa.selenium.support.ui.Select;
 
 import java.awt.*;
@@ -642,6 +644,10 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 				switch (action)
 				{
 					case Move:
+						if (this.driver.getWrappedDriver() instanceof SafariDriver)
+						{
+							throw new RemoteException("Don't support");
+						}
 						if (x == Integer.MIN_VALUE || y == Integer.MIN_VALUE)
 						{
 							customAction.moveToElement(component).perform();
@@ -653,17 +659,28 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 						break;
 
 					case LeftClick:
-						if (x == Integer.MIN_VALUE || y == Integer.MIN_VALUE)
+						if (this.driver.getWrappedDriver() instanceof SafariDriver)
 						{
-							customAction.moveToElement(component).click().perform();
+							component.click();
 						}
 						else
 						{
-							customAction.moveToElement(component, x, y).click().perform();
+							if (x == Integer.MIN_VALUE || y == Integer.MIN_VALUE)
+							{
+								customAction.moveToElement(component).click().perform();
+							}
+							else
+							{
+								customAction.moveToElement(component, x, y).click().perform();
+							}
 						}
 						break;
 
 					case LeftDoubleClick:
+						if (this.driver.getWrappedDriver() instanceof SafariDriver)
+						{
+							throw new RemoteException("Don't support");
+						}
 						if (driver.getWrappedDriver() instanceof ChromeDriver)
 						{
 							driver.executeScript("var evt = document.createEvent('MouseEvents');" + "evt.initMouseEvent('dblclick',true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0,null);" + "arguments[0].dispatchEvent(evt);", component);
@@ -682,6 +699,10 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 						break;
 
 					case RightClick:
+						if (this.driver.getWrappedDriver() instanceof SafariDriver)
+						{
+							throw new RemoteException("Don't support");
+						}
 						if (x == Integer.MIN_VALUE || y == Integer.MIN_VALUE)
 						{
 							customAction.contextClick(component).perform();
@@ -1183,6 +1204,10 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 	@Override
 	public boolean setValue(WebElement component, double value) throws Exception
 	{
+		if (this.driver.getWrappedDriver() instanceof SafariDriver)
+		{
+			throw new Exception("Doesn't support");
+		}
 		Exception real = null;
 		int repeat = 1;
 		do
@@ -1194,12 +1219,18 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 				int width = component.getSize().getWidth();
 				if (height > width)
 				{
-					customAction.moveToElement(component, width / 2, (int) ((double) (value * ((double) height / 100)))).click().build().perform();
+					customAction.moveToElement(component, width / 2, (int) ((double) (value * ((double) height / 100))))
+							.click()
+							.build()
+							.perform();
 				}
 				//horizontal slider
 				else
 				{
-					customAction.moveToElement(component, (int) ((double) (value * ((double) width / 100))), height / 2).click().build().perform();
+					customAction.moveToElement(component, (int) ((double) (value * ((double) width / 100))), height / 2)
+							.click()
+							.build()
+							.perform();
 				}
 
 				return true;
@@ -1209,8 +1240,7 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 				real = e;
 				logger.debug("Element is no longer attached to the DOM. Try in SeleniumOperationExecutor : " + repeat);
 			}
-		}
-		while (++repeat < repeatLimit);
+		} while (++repeat < repeatLimit);
 		throw real;
 	}
 
@@ -1500,6 +1530,18 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 	{
 		driver.executeScript(SCROLL_TO_SCRIPT,element);
 	}
+
+	private static final String MOVE_TO_SCRIPT =
+			"var myMoveToFunction = function(elem) {\n"+
+			"   if (document.createEvent) {\n"+
+			"       var evObj = document.createEvent('MouseEvents');\n"+
+			"       evObj.initEvent('mouseover',true, false);\n"+
+			"       elem.dispatchEvent(evObj);\n"+
+			"   } else if (document.createEventObject) {\n"+
+			"       elem.fireEvent('onmouseover');\n"+
+			"   };\n"+
+			"};\n"+
+			"myMoveToFunction(arguments[0])";
 
 	private static final String SCROLL_TO_SCRIPT =
 			"var myScrollFunction = function(elem) {\n" +
