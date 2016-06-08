@@ -10,9 +10,9 @@ package com.exactprosystems.jf.documents.config;
 
 import com.exactprosystems.jf.actions.ReadableValue;
 import com.exactprosystems.jf.api.common.IContext;
-import com.exactprosystems.jf.api.common.IMatrixRunner;
 import com.exactprosystems.jf.common.MatrixRunner;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
+import com.exactprosystems.jf.documents.DocumentFactory;
 import com.exactprosystems.jf.documents.matrix.Matrix;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixRoot;
@@ -28,6 +28,13 @@ import java.util.Map.Entry;
 
 public class Context implements IContext, AutoCloseable, Cloneable
 {
+	public Context(DocumentFactory factory) throws Exception
+	{
+		this.factory 	= factory;
+		this.evaluator 	= factory.createEvaluator();
+	}
+
+	
 	protected Context(IMatrixListener matrixListener, PrintStream out, Configuration configuration) throws Exception
 	{
 		this.configuration = configuration;
@@ -50,11 +57,12 @@ public class Context implements IContext, AutoCloseable, Cloneable
 		{
 			Context clone = ((Context) super.clone());
 
-			clone.configuration = this.configuration;
-			clone.matrixListener = this.matrixListener.clone();
-			clone.outStream = this.outStream;
-			clone.evaluator = configuration.createEvaluator();
-			clone.libs = new HashMap<String, Matrix>();
+			clone.configuration 	= this.configuration;
+			clone.matrixListener 	= this.matrixListener == null ? null : this.matrixListener.clone();
+			clone.outStream 		= this.outStream;
+			clone.factory			= this.factory;
+			clone.evaluator 		= this.configuration.createEvaluator(); // this.factory.createEvaluator(); // TODO
+			clone.libs 				= new HashMap<String, Matrix>();
 
 			return clone;
 		}
@@ -65,21 +73,29 @@ public class Context implements IContext, AutoCloseable, Cloneable
 		}
 	}
 
-	public Configuration getConfiguration()
-	{
-		return this.configuration;
-	}
-
 	public AbstractEvaluator getEvaluator()
 	{
 		return this.evaluator;
 	}
 
+	public DocumentFactory	getFactory()
+	{
+		return this.factory;
+	}
+
+	@Deprecated
+	public Configuration getConfiguration()
+	{
+		return this.configuration;
+	}
+
+	@Deprecated
 	public PrintStream getOut()
 	{
 		return this.outStream;
 	}
 
+	@Deprecated
 	public IMatrixListener getMatrixListener()
 	{
 		return this.matrixListener;
@@ -166,10 +182,19 @@ public class Context implements IContext, AutoCloseable, Cloneable
 		return res;
 	}
 
+	@Deprecated
 	private Configuration			configuration;
-	private AbstractEvaluator		evaluator;
+	
+	@Deprecated
 	private IMatrixListener			matrixListener	= null;
+	
+	@Deprecated
 	private PrintStream				outStream		= null;
+
+	private DocumentFactory			factory;
+	
+	private AbstractEvaluator		evaluator;
+
 	private Map<String, Matrix>		libs 			= new HashMap<>();
 
 	private static final Logger	logger				= Logger.getLogger(Context.class);

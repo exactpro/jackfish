@@ -13,6 +13,7 @@ import java.io.PrintStream;
 import java.util.function.Consumer;
 
 import com.exactprosystems.jf.common.Settings;
+import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.csv.Csv;
@@ -25,9 +26,10 @@ import com.exactprosystems.jf.documents.vars.SystemVars;
 
 public abstract class DocumentFactory
 {
-	public DocumentFactory(Consumer<String> errorListener)
+	public DocumentFactory(Consumer<String> errorListener, IMatrixListener matrixListener)
 	{
 		this.errorListener = errorListener;
+		this.matrixListener = matrixListener;
 	}
 
 	public void setConfiguration(Configuration configuration)
@@ -40,11 +42,15 @@ public abstract class DocumentFactory
 		this.settings = settings;
 	}
 
+	public AbstractEvaluator createEvaluator() throws Exception
+	{
+		checkConfiguration();
+		return this.configuration.createEvaluator();
+	}
 	
 	public Context 				createContext(IMatrixListener matrixListener, PrintStream out) throws Exception
 	{
-//		return new Context(matrixListener, out, this);
-		return null;
+		return new Context(this);
 	}
 	
 	public Configuration 		createConfig(String fileName)
@@ -64,6 +70,7 @@ public abstract class DocumentFactory
 	{
 		try
 		{
+			checkConfiguration();
 			return createMatrix(fileName, this.configuration);
 		}
 		catch (Exception e)
@@ -77,6 +84,7 @@ public abstract class DocumentFactory
 	{
 		try
 		{
+			checkConfiguration();
 			return createClientDictionary(fileName, this.configuration);
 		}
 		catch (Exception e)
@@ -90,6 +98,7 @@ public abstract class DocumentFactory
 	{
 		try
 		{
+			checkConfiguration();
 			return createAppDictionary(fileName, this.configuration);
 		}
 		catch (Exception e)
@@ -103,6 +112,7 @@ public abstract class DocumentFactory
 	{
 		try
 		{
+			checkConfiguration();
 			return createCsv(fileName, this.configuration);
 		}
 		catch (Exception e)
@@ -116,6 +126,7 @@ public abstract class DocumentFactory
 	{
 		try
 		{
+			checkConfiguration();
 			return createPlainText(fileName, this.configuration); 
 		}
 		catch (Exception e)
@@ -129,6 +140,7 @@ public abstract class DocumentFactory
 	{
 		try
 		{
+			checkConfiguration();
 			return createVars(fileName, this.configuration);
 		}
 		catch (Exception e)
@@ -153,7 +165,15 @@ public abstract class DocumentFactory
 
 	protected abstract SystemVars 			createVars(String fileName, Configuration configuration) throws Exception;
 
-	
+
+	private void checkConfiguration() throws EmptyConfigurationException
+	{
+		if (this.configuration == null)
+		{
+			throw new EmptyConfigurationException();
+		}
+	}
+
 	private void printStackTrace(Exception e)
 	{
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -165,7 +185,9 @@ public abstract class DocumentFactory
 
 	protected Configuration 		configuration;
 
-	protected Settings 			settings;
+	protected IMatrixListener 		matrixListener;
 	
-	protected Consumer<String>	errorListener;  
+	protected Settings 				settings;
+	
+	protected Consumer<String>		errorListener;  
 }

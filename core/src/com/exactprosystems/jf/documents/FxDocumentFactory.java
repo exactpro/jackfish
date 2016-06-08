@@ -18,9 +18,9 @@ import com.exactprosystems.jf.tool.text.PlainTextFx;
 
 public class FxDocumentFactory extends DocumentFactory
 {
-	public FxDocumentFactory()
+	public FxDocumentFactory(IMatrixListener matrixListener)
 	{
-		super(DialogsHelper::showError);
+		super(DialogsHelper::showError, matrixListener);
 	}
 	
 
@@ -33,7 +33,7 @@ public class FxDocumentFactory extends DocumentFactory
 	@Override
 	public MatrixFx createMatrix(String fileName, Configuration configuration) throws Exception
 	{
-		return new MatrixFx(fileName, configuration, this.matrixListener);
+		return new MatrixFx(fileName, configuration, super.matrixListener);
 	}
 
 	@Override
@@ -65,8 +65,6 @@ public class FxDocumentFactory extends DocumentFactory
 	{
 		return new SystemVarsFx(fileName, configuration);
 	}
-	
-	private IMatrixListener matrixListener;
 	
 	private RunnerListener runnerListener;
 	

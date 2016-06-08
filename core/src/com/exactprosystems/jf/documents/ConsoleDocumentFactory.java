@@ -14,9 +14,7 @@ public class ConsoleDocumentFactory extends DocumentFactory
 {
 	public ConsoleDocumentFactory(IMatrixListener matrixListener)
 	{
-		super(System.err::println);
-		
-		this.matrixListener = matrixListener;
+		super(System.err::println, matrixListener);
 	}
 
 	@Override
@@ -28,7 +26,7 @@ public class ConsoleDocumentFactory extends DocumentFactory
 	@Override
 	protected Matrix createMatrix(String fileName, Configuration configuration) throws Exception
 	{
-		return new Matrix(fileName, configuration, this.matrixListener);
+		return new Matrix(fileName, configuration, super.matrixListener);
 	}
 
 	@Override
@@ -60,6 +58,4 @@ public class ConsoleDocumentFactory extends DocumentFactory
 	{
 		return new SystemVars(fileName, configuration);
 	}
-
-	private IMatrixListener matrixListener;
 }
