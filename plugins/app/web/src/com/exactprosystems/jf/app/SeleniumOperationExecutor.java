@@ -666,6 +666,24 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 						}
 						else
 						{
+							/* //reserve code in case of flicker and double clicking in the IE
+							if (x == Integer.MIN_VALUE || y == Integer.MIN_VALUE)
+							{
+								if(driver.getWrappedDriver() instanceof InternetExplorerDriver)
+								{
+									clickByJavascript(component);
+								}
+								else customAction.moveToElement(component).click().perform();
+							}
+							else
+							{
+								if(driver.getWrappedDriver() instanceof InternetExplorerDriver)
+								{
+									clickByJavascriptByXY(component, x, y);
+								}
+								else customAction.moveToElement(component, x, y).click().perform();
+							}*/
+							
 							if (x == Integer.MIN_VALUE || y == Integer.MIN_VALUE)
 							{
 								customAction.moveToElement(component).click().perform();
@@ -739,17 +757,11 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 			try
 			{
 				scrollToElement(component);
-				if(driver.getWrappedDriver() instanceof InternetExplorerDriver)
-				{
-					logger.debug("IE click");
-					JavascriptExecutor executor = (JavascriptExecutor)driver;
-					executor.executeScript("arguments[0].click();", component);
-				} 
-				else
-				{
-					logger.debug("not IE click");
-					component.click();
-				}
+				/* //reserve code in case of flicker and double clicking in the IE
+				if(driver.getWrappedDriver() instanceof InternetExplorerDriver)	clickByJavascript(component); 
+					else component.click();
+				*/
+				component.click();
 				return true;
 			}
 			catch (StaleElementReferenceException e)
@@ -1536,7 +1548,19 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 		while (++repeat < repeatLimit);
 		throw real;
 	}
-
+	/* //reserve code in case of flicker and double clicking in the IE
+	private void clickByJavascript(WebElement element)
+	{
+		driver.executeScript("arguments[0].click();", element);
+	}
+	
+	private void clickByJavascriptByXY(WebElement element, int _x, int _y)
+	{
+		int x = element.getLocation().x + _x;
+		int y = element.getLocation().y + _y;
+		driver.executeScript("document.elementFromPoint(" + x + "," + y + ").click()");
+	}*/
+	
 	private void scrollToElement(WebElement element)
 	{
 		driver.executeScript(SCROLL_TO_SCRIPT,element);
