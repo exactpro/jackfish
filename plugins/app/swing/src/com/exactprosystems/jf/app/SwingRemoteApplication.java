@@ -10,11 +10,9 @@ package com.exactprosystems.jf.app;
 
 import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.common.SerializablePair;
-
 import net.sourceforge.jnlp.Launcher;
 import net.sourceforge.jnlp.runtime.ApplicationInstance;
 import net.sourceforge.jnlp.runtime.JNLPRuntime;
-
 import org.apache.log4j.*;
 import org.fest.swing.core.BasicRobot;
 import org.fest.swing.core.ComponentMatcher;
@@ -23,8 +21,8 @@ import org.fest.swing.fixture.ComponentFixture;
 import org.w3c.dom.Document;
 
 import javax.swing.*;
-
 import java.awt.*;
+import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.lang.reflect.Method;
 import java.net.URL;
@@ -524,7 +522,7 @@ public class SwingRemoteApplication extends RemoteApplication
 				{
 					Window wnd = (Window) dialog.target;
 					logger.debug("close window : " + wnd.getName());
-					wnd.dispose();
+					wnd.dispatchEvent(new WindowEvent(wnd, WindowEvent.WINDOW_CLOSING));
 					closed++;
 				}
 				else
