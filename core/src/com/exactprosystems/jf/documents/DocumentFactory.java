@@ -8,10 +8,6 @@
 
 package com.exactprosystems.jf.documents;
 
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
-import java.util.function.Consumer;
-
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.documents.config.Configuration;
@@ -26,9 +22,8 @@ import com.exactprosystems.jf.documents.vars.SystemVars;
 
 public abstract class DocumentFactory
 {
-	public DocumentFactory(Consumer<String> errorListener)
+	public DocumentFactory()
 	{
-		this.errorListener = errorListener;
 	}
 
 	public void setConfiguration(Configuration configuration)
@@ -60,7 +55,7 @@ public abstract class DocumentFactory
 		}
 		catch (Exception e)
 		{
-			printStackTrace(e);
+			error(null, e);
 		}
 		return null;
 	}
@@ -74,7 +69,7 @@ public abstract class DocumentFactory
 		}
 		catch (Exception e)
 		{
-			printStackTrace(e);
+			error(null, e);
 		}
 		return null;
 	}
@@ -88,7 +83,7 @@ public abstract class DocumentFactory
 		}
 		catch (Exception e)
 		{
-			printStackTrace(e);
+			error(null, e);
 		}
 		return null;
 	}
@@ -102,7 +97,7 @@ public abstract class DocumentFactory
 		}
 		catch (Exception e)
 		{
-			printStackTrace(e);
+			error(null, e);
 		}
 		return null;
 	}
@@ -116,7 +111,7 @@ public abstract class DocumentFactory
 		}
 		catch (Exception e)
 		{
-			printStackTrace(e);
+			error(null, e);
 		}
 		return null;
 	}
@@ -130,7 +125,7 @@ public abstract class DocumentFactory
 		}
 		catch (Exception e)
 		{
-			printStackTrace(e);
+			error(null, e);
 		}
 		return null;
 	}
@@ -144,7 +139,7 @@ public abstract class DocumentFactory
 		}
 		catch (Exception e)
 		{
-			printStackTrace(e);
+			error(null, e);
 		}
 		return null;
 	}
@@ -165,6 +160,12 @@ public abstract class DocumentFactory
 	protected abstract SystemVars 			createVars(String fileName, Configuration configuration) throws Exception;
 
 	protected abstract IMatrixListener 		createMatrixListener();
+	
+	protected abstract void 				print(String message);
+	
+	protected abstract void 				error(String message, Exception exeption);
+	
+	protected abstract void 				popup(Notifier notifier, String message);
 
 	
 	private void checkConfiguration() throws EmptyConfigurationException
@@ -175,18 +176,7 @@ public abstract class DocumentFactory
 		}
 	}
 
-	private void printStackTrace(Exception e)
-	{
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		PrintStream ps = new PrintStream(baos);
-		e.printStackTrace(ps);
-		
-		this.errorListener.accept(baos.toString());
-	}
-
 	protected Configuration 		configuration;
 
 	protected Settings 				settings;
-	
-	protected Consumer<String>		errorListener;  
 }

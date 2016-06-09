@@ -21,7 +21,7 @@ public class FxDocumentFactory extends DocumentFactory
 {
 	public FxDocumentFactory()
 	{
-		super(DialogsHelper::showError);
+		super();
 	}
 	
 
@@ -72,7 +72,32 @@ public class FxDocumentFactory extends DocumentFactory
 	{
 		return new MatrixListenerFx();
 	}
+
+	@Override
+	protected void 				print(String message)
+	{
+		System.out.println(message); // TODO
+	}
 	
+	@Override
+	protected void 				error(String message, Exception exeption)
+	{
+		if (exeption != null)
+		{
+			DialogsHelper.showError(exeption.getMessage() + "\n" + message);
+		}
+		else
+		{
+			DialogsHelper.showError(message);
+		}
+	}
+	
+	@Override
+	protected void 				popup(Notifier notifier, String message)
+	{
+		DialogsHelper.showNotifier(message, notifier);
+	}
+
 	private RunnerListener runnerListener;
 	
 	private Main mainModel;

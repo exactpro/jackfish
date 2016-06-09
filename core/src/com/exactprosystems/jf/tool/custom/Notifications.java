@@ -7,9 +7,10 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.exactprosystems.jf.tool.custom;
 
+import com.exactprosystems.jf.documents.Notifier;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
-import com.exactprosystems.jf.tool.helpers.DialogsHelper;
+
 import javafx.animation.*;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -43,7 +44,7 @@ public class Notifications
 	private static final Pos POSITION = Pos.BOTTOM_RIGHT;
 	private static Duration hideAfterDuration = Duration.seconds(5);
 
-	private DialogsHelper.Notifier state;
+	private Notifier state;
 	private String title;
 	private String msg;
 
@@ -82,7 +83,7 @@ public class Notifications
 		return this;
 	}
 
-	public Notifications state(DialogsHelper.Notifier state)
+	public Notifications state(Notifier state)
 	{
 		this.state = state;
 		return this;
@@ -360,7 +361,7 @@ public class Notifications
 
 		public abstract void relocateInParent(double x, double y);
 
-		public NotificationBar(String msg, String ttl, DialogsHelper.Notifier state)
+		public NotificationBar(String msg, String ttl, Notifier state)
 		{
 			getStyleClass().add(CssVariables.NOTIFICATION_BAR);
 

@@ -19,6 +19,7 @@ import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.common.version.VersionInfo;
 import com.exactprosystems.jf.documents.Document;
 import com.exactprosystems.jf.documents.DocumentInfo;
+import com.exactprosystems.jf.documents.Notifier;
 import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.Matrix;
@@ -618,6 +619,18 @@ public abstract class DialogsHelper
 		}, "Error on show report");
 	}
 
+	public static void showNotifier(final String message, final Notifier notifier)
+	{
+		Platform.runLater(() -> Notifications
+				.create()
+				.msg(message)
+				.hideAfter(Duration.seconds(timeNotification))
+				.state(notifier)
+				.title(notifier.name())
+				.show());
+	}
+
+
 	private static String find(org.w3c.dom.Node root)
 	{
 		if (root.getNodeName().equalsIgnoreCase("pre"))
@@ -637,70 +650,6 @@ public abstract class DialogsHelper
 			}
 		}
 		return null;
-	}
-
-	public static enum Notifier
-	{
-		Error, Success, Info
-	}
-
-	private static void showNotifier(final String message, final Notifier notifier)
-	{
-		Platform.runLater(() -> Notifications.create().msg(message).hideAfter(Duration.seconds(timeNotification)).state(notifier).title(notifier.name()).show());
-//		Platform.runLater(() -> {
-//			if (Common.popup != null)
-//			{
-//				Common.popup.hide();
-//				Common.popup = null;
-//			}
-//		});
-//		Platform.runLater(() -> {
-//			Common.popup = new Popup();
-//			Common.popup.setHideOnEscape(true);
-//			GridPane grid = new GridPane();
-//			grid.getStyleClass().addAll(CssVariables.NOTIFIER + notifier.name());
-//
-//			Text textLabel = new Text(notifier.name());
-//			textLabel.getStyleClass().addAll(CssVariables.NOTIFIER_TITLE);
-//
-//			grid.add(textLabel, 0, 0);
-//
-//			Text textMsg = new Text(message);
-//			textMsg.getStyleClass().addAll(CssVariables.NOTIFIER_MESSAGE);
-//			grid.add(textMsg, 0, 1);
-//
-//			Common.popup.setOnShowing((event) ->
-//			{
-//				Task<Void> task = new Task<Void>()
-//				{
-//					@Override
-//					protected Void call() throws Exception
-//					{
-//						Thread.sleep(timeNotification * 1000);
-//						this.succeeded();
-//						return null;
-//					}
-//				};
-//				Thread thread = new Thread(task);
-//				thread.setName("Popup " + thread.getId());
-//				thread.start();
-//
-//				task.setOnSucceeded(workerStateEvent ->
-//				{
-//					if (Common.popup != null)
-//					{
-//						Common.popup.hide();
-//						Common.popup = null;
-//					}
-//				});
-//			});
-//
-//			Common.popup.getContent().add(grid);
-//			if (Common.node != null && Common.node.getScene() != null)
-//			{
-//				Common.popup.show(Common.node.getScene().getWindow(), Toolkit.getDefaultToolkit().getScreenSize().getWidth(), Toolkit.getDefaultToolkit().getScreenSize().getHeight());
-//			}
-//		});
 	}
 
 	private static void displayHelp(String content)

@@ -18,7 +18,7 @@ public class ConsoleDocumentFactory extends DocumentFactory
 {
 	public ConsoleDocumentFactory()
 	{
-		super(System.err::println);
+		super();
 	}
 
 	@Override
@@ -83,4 +83,30 @@ public class ConsoleDocumentFactory extends DocumentFactory
 
 		return matrixListener;
 	}
+	
+	@Override
+	protected void 				print(String message)
+	{
+		System.out.println(message);
+	}
+	
+	@Override
+	protected void 				error(String message, Exception exeption)
+	{
+		if (message != null)
+		{
+			System.err.println(message);
+		}
+		if (exeption != null)
+		{
+			exeption.printStackTrace(System.err);
+		}
+	}
+	
+	@Override
+	protected void 				popup(Notifier notifier, String message)
+	{
+		System.out.printf("[%s] %s %n", notifier, message);
+	}
+
 }
