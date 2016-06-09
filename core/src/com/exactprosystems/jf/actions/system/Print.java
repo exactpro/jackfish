@@ -62,6 +62,7 @@ public class Print extends AbstractAction
 			sb.append(parameter.getValue());
 			sb.append('\t');
 		}
+//		context.getFactory().print(sb.toString()); TODO
 		context.getOut().println(sb.toString());
 		
 		super.setResult(null);

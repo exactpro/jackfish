@@ -28,14 +28,15 @@ import java.util.Map.Entry;
 
 public class Context implements IContext, AutoCloseable, Cloneable
 {
-	public Context(DocumentFactory factory, IMatrixListener matrixListener) throws Exception
+	public Context(DocumentFactory factory, IMatrixListener matrixListener, Configuration configuration) throws Exception
 	{
 		this.factory 		= factory;
 		this.matrixListener = matrixListener;
 		this.evaluator 		= factory.createEvaluator();
+		this.configuration 	= configuration;
 	}
 
-	
+	@Deprecated
 	protected Context(IMatrixListener matrixListener, PrintStream out, Configuration configuration) throws Exception
 	{
 		this.configuration = configuration;
@@ -58,8 +59,8 @@ public class Context implements IContext, AutoCloseable, Cloneable
 		{
 			Context clone = ((Context) super.clone());
 
-			clone.configuration 	= this.configuration;
 			clone.outStream 		= this.outStream;
+			clone.configuration 	= this.configuration;
 			clone.matrixListener 	= this.matrixListener == null ? null : this.matrixListener.clone();
 			clone.factory			= this.factory;
 			clone.evaluator 		= this.configuration.createEvaluator(); // this.factory.createEvaluator(); // TODO
@@ -84,7 +85,6 @@ public class Context implements IContext, AutoCloseable, Cloneable
 		return this.factory;
 	}
 
-	@Deprecated
 	public Configuration getConfiguration()
 	{
 		return this.configuration;
@@ -182,11 +182,11 @@ public class Context implements IContext, AutoCloseable, Cloneable
 		return res;
 	}
 
-	@Deprecated
-	private Configuration			configuration;
 	
 	@Deprecated
-	private PrintStream				outStream		= null;
+	private PrintStream				outStream		= System.out;
+
+	private Configuration			configuration;
 
 	private IMatrixListener			matrixListener	= null;
 

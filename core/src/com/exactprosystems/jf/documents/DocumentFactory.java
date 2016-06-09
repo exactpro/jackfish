@@ -24,16 +24,12 @@ public abstract class DocumentFactory
 {
 	public DocumentFactory()
 	{
+		this.settings = new Settings();
 	}
 
 	public void setConfiguration(Configuration configuration)
 	{
 		this.configuration = configuration;
-	}
-
-	public void setSettings(Settings settings)
-	{
-		this.settings = settings;
 	}
 
 	public AbstractEvaluator 	createEvaluator() throws Exception
@@ -44,7 +40,7 @@ public abstract class DocumentFactory
 	
 	public Context 				createContext() throws Exception
 	{
-		return new Context(this, createMatrixListener());
+		return new Context(this, createMatrixListener(), this.configuration);
 	}
 	
 	public Configuration 		createConfig(String fileName)
@@ -144,6 +140,11 @@ public abstract class DocumentFactory
 		return null;
 	}
 
+	public abstract void 					print(String message);
+	
+	public abstract void 					error(String message, Exception exeption);
+	
+	public abstract void 					popup(String message, Notifier notifier);
 
 	protected abstract Configuration 		createConfig(String fileName, Settings settings) throws Exception;
 
@@ -161,12 +162,6 @@ public abstract class DocumentFactory
 
 	protected abstract IMatrixListener 		createMatrixListener();
 	
-	protected abstract void 				print(String message);
-	
-	protected abstract void 				error(String message, Exception exeption);
-	
-	protected abstract void 				popup(String message, Notifier notifier);
-
 	
 	private void checkConfiguration() throws EmptyConfigurationException
 	{

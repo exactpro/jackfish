@@ -85,13 +85,13 @@ public class ConsoleDocumentFactory extends DocumentFactory
 	}
 	
 	@Override
-	protected void 				print(String message)
+	public void 				print(String message)
 	{
 		System.out.println(message);
 	}
 	
 	@Override
-	protected void 				error(String message, Exception exeption)
+	public void 				error(String message, Exception exeption)
 	{
 		if (message != null)
 		{
@@ -104,7 +104,7 @@ public class ConsoleDocumentFactory extends DocumentFactory
 	}
 	
 	@Override
-	protected void 				popup(String message, Notifier notifier)
+	public void 				popup(String message, Notifier notifier)
 	{
 		System.out.printf("[%s] %s %n", notifier, message);
 	}

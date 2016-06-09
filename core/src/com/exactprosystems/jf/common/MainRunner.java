@@ -12,6 +12,8 @@ import com.exactprosystems.jf.api.common.ApiVersionInfo;
 import com.exactprosystems.jf.api.common.DateTime;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.common.version.VersionInfo;
+import com.exactprosystems.jf.documents.ConsoleDocumentFactory;
+import com.exactprosystems.jf.documents.DocumentFactory;
 import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.guidic.GuiDictionary;
@@ -282,7 +284,10 @@ public class MainRunner
 	{
 		printVersion();
 
-		Configuration configuration = new Configuration(configString, new Settings());
+		DocumentFactory factory = new ConsoleDocumentFactory();
+		Configuration configuration = factory.createConfig(configString); 
+		factory.setConfiguration(configuration);
+		
 		if (!Str.IsNullOrEmpty(configString))
 		{
 			try (BufferedReader reader = new BufferedReader(new FileReader(configString)))
@@ -349,7 +354,7 @@ public class MainRunner
 		}
 		
 		boolean showShortPaths = line.hasOption(shortPaths.getOpt()); 
-		boolean allPassed = processMatrix(configuration, inputFile, startAt, verboseLevel, showShortPaths);
+		boolean allPassed = processMatrix(factory, inputFile, startAt, verboseLevel, showShortPaths);
 		System.exit(allPassed ? 0 : 1);
 	}
 
@@ -391,33 +396,18 @@ public class MainRunner
 		System.out.println("API ver. " + ApiVersionInfo.majorVersion() + "." + ApiVersionInfo.minorVersion());
 	}
 
-	private static boolean processMatrix(Configuration configuration, File matrix,  
+	private static boolean processMatrix(DocumentFactory factory, File matrix,  
 			Date startAt, VerboseLevel verboseLevel, boolean showShortPaths)
 	{
 		try
 		{
-			IMatrixListener matrixListener 	= null;
-			switch (verboseLevel)
-			{
-				case None:
-					matrixListener 	= new MatrixListener();
-					break;
-				case Errors:
-					matrixListener 	= new ConsoleErrorMatrixListener();
-					break;
-				case All:
-					matrixListener 	= new ConsoleMatrixListener(showShortPaths);
-					break;
-			}
-			
 			logger.info(String.format("Processing '%s' start at '%s'", matrix.getName(), startAt.toString()));
 
-			try(Context context = configuration.createContext(matrixListener, System.out);
+			try( Context	context = factory.createContext();
 				MatrixRunner runner = new MatrixRunner(context, matrix, startAt, null))
 			{
 				runner.start();
 				runner.join(0);
-				System.out.println(MainRunner.class.getSimpleName() + " finished");
 				return runner.failed() == 0;
 			}
 			catch (Exception e)
