@@ -28,10 +28,11 @@ import java.util.Map.Entry;
 
 public class Context implements IContext, AutoCloseable, Cloneable
 {
-	public Context(DocumentFactory factory) throws Exception
+	public Context(DocumentFactory factory, IMatrixListener matrixListener) throws Exception
 	{
-		this.factory 	= factory;
-		this.evaluator 	= factory.createEvaluator();
+		this.factory 		= factory;
+		this.matrixListener = matrixListener;
+		this.evaluator 		= factory.createEvaluator();
 	}
 
 	
@@ -58,8 +59,8 @@ public class Context implements IContext, AutoCloseable, Cloneable
 			Context clone = ((Context) super.clone());
 
 			clone.configuration 	= this.configuration;
-			clone.matrixListener 	= this.matrixListener == null ? null : this.matrixListener.clone();
 			clone.outStream 		= this.outStream;
+			clone.matrixListener 	= this.matrixListener == null ? null : this.matrixListener.clone();
 			clone.factory			= this.factory;
 			clone.evaluator 		= this.configuration.createEvaluator(); // this.factory.createEvaluator(); // TODO
 			clone.libs 				= new HashMap<String, Matrix>();
@@ -95,7 +96,6 @@ public class Context implements IContext, AutoCloseable, Cloneable
 		return this.outStream;
 	}
 
-	@Deprecated
 	public IMatrixListener getMatrixListener()
 	{
 		return this.matrixListener;
@@ -186,10 +186,9 @@ public class Context implements IContext, AutoCloseable, Cloneable
 	private Configuration			configuration;
 	
 	@Deprecated
-	private IMatrixListener			matrixListener	= null;
-	
-	@Deprecated
 	private PrintStream				outStream		= null;
+
+	private IMatrixListener			matrixListener	= null;
 
 	private DocumentFactory			factory;
 	

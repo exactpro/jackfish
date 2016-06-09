@@ -11,6 +11,7 @@ import com.exactprosystems.jf.tool.dictionary.DictionaryFx;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.main.Main;
 import com.exactprosystems.jf.tool.matrix.MatrixFx;
+import com.exactprosystems.jf.tool.matrix.MatrixListenerFx;
 import com.exactprosystems.jf.tool.msgdictionary.MessageDictionaryFx;
 import com.exactprosystems.jf.tool.newconfig.ConfigurationFx;
 import com.exactprosystems.jf.tool.systemvars.SystemVarsFx;
@@ -18,9 +19,9 @@ import com.exactprosystems.jf.tool.text.PlainTextFx;
 
 public class FxDocumentFactory extends DocumentFactory
 {
-	public FxDocumentFactory(IMatrixListener matrixListener)
+	public FxDocumentFactory()
 	{
-		super(DialogsHelper::showError, matrixListener);
+		super(DialogsHelper::showError);
 	}
 	
 
@@ -31,9 +32,9 @@ public class FxDocumentFactory extends DocumentFactory
 	}
 
 	@Override
-	public MatrixFx createMatrix(String fileName, Configuration configuration) throws Exception
+	public MatrixFx createMatrix(String fileName, Configuration configuration, IMatrixListener matrixListener) throws Exception
 	{
-		return new MatrixFx(fileName, configuration, super.matrixListener);
+		return new MatrixFx(fileName, configuration, matrixListener);
 	}
 
 	@Override
@@ -66,9 +67,16 @@ public class FxDocumentFactory extends DocumentFactory
 		return new SystemVarsFx(fileName, configuration);
 	}
 	
+	@Override
+	protected IMatrixListener createMatrixListener()
+	{
+		return new MatrixListenerFx();
+	}
+	
 	private RunnerListener runnerListener;
 	
 	private Main mainModel;
 	
 	private BorderPane pane;
+
 }

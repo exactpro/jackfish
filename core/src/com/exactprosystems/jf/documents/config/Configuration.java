@@ -407,6 +407,7 @@ public class Configuration extends AbstractDocument
 		return evaluator;
 	}
 
+	@Deprecated
 	public Context createContext(IMatrixListener matrixListener, PrintStream out) throws Exception
 	{
 		return new Context(matrixListener, out, this);

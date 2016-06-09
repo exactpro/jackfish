@@ -26,10 +26,9 @@ import com.exactprosystems.jf.documents.vars.SystemVars;
 
 public abstract class DocumentFactory
 {
-	public DocumentFactory(Consumer<String> errorListener, IMatrixListener matrixListener)
+	public DocumentFactory(Consumer<String> errorListener)
 	{
 		this.errorListener = errorListener;
-		this.matrixListener = matrixListener;
 	}
 
 	public void setConfiguration(Configuration configuration)
@@ -42,15 +41,15 @@ public abstract class DocumentFactory
 		this.settings = settings;
 	}
 
-	public AbstractEvaluator createEvaluator() throws Exception
+	public AbstractEvaluator 	createEvaluator() throws Exception
 	{
 		checkConfiguration();
 		return this.configuration.createEvaluator();
 	}
 	
-	public Context 				createContext(IMatrixListener matrixListener, PrintStream out) throws Exception
+	public Context 				createContext() throws Exception
 	{
-		return new Context(this);
+		return new Context(this, createMatrixListener());
 	}
 	
 	public Configuration 		createConfig(String fileName)
@@ -71,7 +70,7 @@ public abstract class DocumentFactory
 		try
 		{
 			checkConfiguration();
-			return createMatrix(fileName, this.configuration);
+			return createMatrix(fileName, this.configuration, createMatrixListener());
 		}
 		catch (Exception e)
 		{
@@ -153,7 +152,7 @@ public abstract class DocumentFactory
 
 	protected abstract Configuration 		createConfig(String fileName, Settings settings) throws Exception;
 
-	protected abstract Matrix 				createMatrix(String fileName, Configuration configuration) throws Exception;
+	protected abstract Matrix 				createMatrix(String fileName, Configuration configuration, IMatrixListener matrixListener) throws Exception;
 
 	protected abstract MessageDictionary 	createClientDictionary(String fileName, Configuration configuration) throws Exception;
 
@@ -165,7 +164,9 @@ public abstract class DocumentFactory
 
 	protected abstract SystemVars 			createVars(String fileName, Configuration configuration) throws Exception;
 
+	protected abstract IMatrixListener 		createMatrixListener();
 
+	
 	private void checkConfiguration() throws EmptyConfigurationException
 	{
 		if (this.configuration == null)
@@ -185,8 +186,6 @@ public abstract class DocumentFactory
 
 	protected Configuration 		configuration;
 
-	protected IMatrixListener 		matrixListener;
-	
 	protected Settings 				settings;
 	
 	protected Consumer<String>		errorListener;  

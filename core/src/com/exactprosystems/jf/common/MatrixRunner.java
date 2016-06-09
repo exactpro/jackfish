@@ -295,6 +295,9 @@ public class MatrixRunner implements IMatrixRunner, AutoCloseable
 
 	private void loadFromReader(Context context, Reader reader) throws Exception
 	{
+// TODO		
+//		this.matrix = this.context.getFactory().createMatrix(this.matrixFile.getName());
+		
 		this.matrix = new Matrix(this.matrixFile.getName(), context.getConfiguration(), context.getMatrixListener());
 		this.context.getConfiguration().getRunnerListener().subscribe(this);
 		changeState(State.Error);
