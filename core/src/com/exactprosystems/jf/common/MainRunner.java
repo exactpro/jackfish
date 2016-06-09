@@ -284,7 +284,7 @@ public class MainRunner
 	{
 		printVersion();
 
-		DocumentFactory factory = new ConsoleDocumentFactory();
+		DocumentFactory factory = new ConsoleDocumentFactory(verboseLevel);
 		Configuration configuration = factory.createConfig(configString); 
 		factory.setConfiguration(configuration);
 		

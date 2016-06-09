@@ -16,9 +16,11 @@ import com.exactprosystems.jf.documents.vars.SystemVars;
 
 public class ConsoleDocumentFactory extends DocumentFactory
 {
-	public ConsoleDocumentFactory()
+	public ConsoleDocumentFactory(VerboseLevel verboseLevel)
 	{
 		super();
+		
+		this.verboseLevel = verboseLevel;
 	}
 
 	@Override
@@ -66,9 +68,8 @@ public class ConsoleDocumentFactory extends DocumentFactory
 	@Override
 	protected IMatrixListener createMatrixListener()
 	{
-		VerboseLevel verboseLevel = VerboseLevel.All;
 		IMatrixListener matrixListener 	= null;
-		switch (verboseLevel)
+		switch (this.verboseLevel)
 		{
 			case None:
 				matrixListener 	= new MatrixListener();
@@ -109,4 +110,5 @@ public class ConsoleDocumentFactory extends DocumentFactory
 		System.out.printf("[%s] %s %n", notifier, message);
 	}
 
+	private VerboseLevel verboseLevel;
 }
