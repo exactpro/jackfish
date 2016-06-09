@@ -104,7 +104,7 @@ public class ConsoleDocumentFactory extends DocumentFactory
 	}
 	
 	@Override
-	protected void 				popup(Notifier notifier, String message)
+	protected void 				popup(String message, Notifier notifier)
 	{
 		System.out.printf("[%s] %s %n", notifier, message);
 	}

@@ -93,7 +93,7 @@ public class FxDocumentFactory extends DocumentFactory
 	}
 	
 	@Override
-	protected void 				popup(Notifier notifier, String message)
+	protected void 				popup(String message, Notifier notifier)
 	{
 		DialogsHelper.showNotifier(message, notifier);
 	}

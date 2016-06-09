@@ -165,7 +165,7 @@ public abstract class DocumentFactory
 	
 	protected abstract void 				error(String message, Exception exeption);
 	
-	protected abstract void 				popup(Notifier notifier, String message);
+	protected abstract void 				popup(String message, Notifier notifier);
 
 	
 	private void checkConfiguration() throws EmptyConfigurationException
