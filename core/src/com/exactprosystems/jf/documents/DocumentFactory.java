@@ -24,7 +24,7 @@ public abstract class DocumentFactory
 {
 	public DocumentFactory()
 	{
-		this.settings = new Settings();
+		this.settings = Settings.load(Settings.SettingsPath);
 	}
 
 	public void setConfiguration(Configuration configuration)

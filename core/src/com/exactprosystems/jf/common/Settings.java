@@ -182,7 +182,7 @@ public class Settings
 		this.values = new MutableArrayList<SettingsValue>();
 	}
 
-	public static Settings load(String fileName) throws Exception
+	public static Settings load(String fileName)
 	{
 		File file = new File(fileName);
 		Settings settings = null;
@@ -197,6 +197,10 @@ public class Settings
 					return false;
 				});
 				settings = (Settings) unmarshaller.unmarshal(reader);
+			}
+			catch (Exception e)
+			{
+				settings = new Settings();
 			}
 		}
 		else

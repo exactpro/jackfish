@@ -17,12 +17,12 @@ public class EmptyConfigurationException extends Exception
 		super();
 	}
 	
-	EmptyConfigurationException(String str)
+	public EmptyConfigurationException(String str)
 	{
 		super(str);
 	}
 	
-	EmptyConfigurationException(Throwable t)
+	public EmptyConfigurationException(Throwable t)
 	{
 		super(t);
 	}

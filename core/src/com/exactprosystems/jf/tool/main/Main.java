@@ -15,7 +15,9 @@ import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.common.Settings.SettingsValue;
 import com.exactprosystems.jf.common.version.VersionInfo;
 import com.exactprosystems.jf.documents.Document;
+import com.exactprosystems.jf.documents.DocumentFactory;
 import com.exactprosystems.jf.documents.DocumentInfo;
+import com.exactprosystems.jf.documents.EmptyConfigurationException;
 import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.guidic.GuiDictionary;
@@ -98,6 +100,7 @@ public class Main extends Application
 
 	private Configuration config;
 	private Settings settings;
+	private DocumentFactory	factory;
 	private List<Document> docs = new ArrayList<Document>();
 
 	private String username;
@@ -703,7 +706,7 @@ public class Main extends Application
 	{
 		if (this.config == null)
 		{
-			throw new Exception("Open or create a configuration at first.");
+			throw new EmptyConfigurationException("Open or create a configuration at first.");
 		}
 	}
 
