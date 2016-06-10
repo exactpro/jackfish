@@ -1017,17 +1017,27 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 		}
 	}
 
+	private List<String> getHeaders(JTable table, boolean useNumericHeader) throws Exception
+	{
+		List<String> res = new ArrayList<String>();
+		for (int i = 0; i < table.getColumnCount(); i++)
+		{
+			res.add(useNumericHeader ? String.valueOf(i) : table.getColumnName(i));
+		}
+		return res;
+	}
+	
 	private Object getValueTableCell(JTableFixture fixture, int row, int column)
 	{
 		JTable table = fixture.target;
-		Object valueAt = table.getModel().getValueAt(row, column);
+		Object valueAt = table.getValueAt(row, column);
 		if (valueAt == null)
 		{
 			valueAt = fixture.valueAt(TableCell.row(row).column(column));
 		}
 		return valueAt;
 	}
-
+	
 	@Override
 	public Map<String, ValueAndColor> getRowWithColor(ComponentFixture<Component> component, Locator additional, Locator header, boolean useNumericHeader, int i) throws Exception
 	{
@@ -1350,16 +1360,6 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 			}
 		}
 
-		return res;
-	}
-
-	private List<String> getHeaders(JTable table, boolean useNumericHeader) throws Exception
-	{
-		List<String> res = new ArrayList<String>();
-		for (int i = 0; i < table.getColumnCount(); i++)
-		{
-			res.add(useNumericHeader ? String.valueOf(i) : table.getColumnName(i));
-		}
 		return res;
 	}
 
