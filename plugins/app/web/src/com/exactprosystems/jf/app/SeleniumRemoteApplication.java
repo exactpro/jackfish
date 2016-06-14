@@ -19,6 +19,7 @@ import org.openqa.selenium.*;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.chrome.ChromeDriverService;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.ie.InternetExplorerDriverService;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -591,8 +592,8 @@ public class SeleniumRemoteApplication extends RemoteApplication
 				log("before image");
 
 				//That need for correct behavior
-				Thread.sleep(2000);
-				boolean isFullImage = this.driver.getWrappedDriver() instanceof FirefoxDriver;
+//				Thread.sleep(2000);
+				boolean isFullImage = this.driver.getWrappedDriver() instanceof FirefoxDriver || this.driver.getWrappedDriver() instanceof InternetExplorerDriver;
 				File screenshot = this.driver.getScreenshotAs(OutputType.FILE);
 				BufferedImage fullImg = ImageIO.read(screenshot);
 				if (element == null)
@@ -635,7 +636,7 @@ public class SeleniumRemoteApplication extends RemoteApplication
 				{
 					if (topOffset.intValue() >= 0)
 					{
-						h = Math.min(componentH, innerH.intValue() - y);
+						h = Math.min(componentH, Math.abs(innerH.intValue() - y));
 					}
 					else
 					{
@@ -644,7 +645,7 @@ public class SeleniumRemoteApplication extends RemoteApplication
 
 					if (leftOffset.intValue() >= 0)
 					{
-						w = Math.min(componentW, innerW.intValue() - x);
+						w = Math.min(componentW, Math.abs(innerW.intValue() - x));
 					}
 					else
 					{
