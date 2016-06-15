@@ -641,6 +641,11 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 		{
 			try
 			{
+				if (component instanceof DummyWebElement) 
+				{
+					return true;
+				}
+				
 				scrollToElement(component);
 				switch (action)
 				{
@@ -1563,7 +1568,10 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 	
 	private void scrollToElement(WebElement element)
 	{
-		driver.executeScript(SCROLL_TO_SCRIPT,element);
+		if(!(element instanceof DummyWebElement))
+		{
+			driver.executeScript(SCROLL_TO_SCRIPT,element);
+		}
 	}
 
 	private static final String MOVE_TO_SCRIPT =
