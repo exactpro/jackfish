@@ -591,8 +591,6 @@ public class SeleniumRemoteApplication extends RemoteApplication
 			{
 				log("before image");
 
-				//That need for correct behavior
-//				Thread.sleep(2000);
 				boolean isFullImage = this.driver.getWrappedDriver() instanceof FirefoxDriver || this.driver.getWrappedDriver() instanceof InternetExplorerDriver;
 				File screenshot = this.driver.getScreenshotAs(OutputType.FILE);
 				BufferedImage fullImg = ImageIO.read(screenshot);

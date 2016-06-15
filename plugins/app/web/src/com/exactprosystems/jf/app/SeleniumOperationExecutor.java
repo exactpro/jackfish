@@ -19,8 +19,6 @@ import org.openqa.selenium.*;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.Point;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.safari.SafariDriver;
 import org.openqa.selenium.support.ui.Select;
@@ -1587,14 +1585,23 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 			"myMoveToFunction(arguments[0])";
 
 	private static final String SCROLL_TO_SCRIPT =
+			"var isScrolledIntoView = function(el) {\n" +
+			"	var elemTop = el.getBoundingClientRect().top;\n" +
+			"	var elemBottom = el.getBoundingClientRect().bottom;\n" +
+			"	var isVisible = (elemTop >= 0) && (elemBottom <= window.innerHeight);\n" +
+			"	return isVisible;\n" +
+			"};\n"+
 			"var myScrollFunction = function(elem) {\n" +
-			"	elem.scrollIntoView(false);\n" +
-			"	var ww = document.body.offsetHeight/2;\n" +
-			"	if (elem.getBoundingClientRect().top > ww) {\n" +
-			"		window.scrollBy(0, ww);\n" +
-			"	}\n" +
+			"	elem.scrollIntoView();\n" + //this function get element on bottom
+			"	if (isScrolledIntoView(elem)) {\n"+ // if element is visible - return
+			"		return;\n"+
+			"	}\n"+
+			"	var ww = window.innerHeight/2;\n" +
+			"	window.scrollBy(0, -ww);\n" + //up view of element to 1/2 of height window
 			"};\n" +
-			"myScrollFunction(arguments[0]);";
+			"if (!isScrolledIntoView(arguments[0])) {\n"+
+			"	myScrollFunction(arguments[0]);\n"+
+			"}";
 
 	private boolean isShiftDown = false;
 	private boolean isCtrlDown = false;

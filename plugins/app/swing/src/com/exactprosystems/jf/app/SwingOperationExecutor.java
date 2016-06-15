@@ -1194,6 +1194,7 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 					break;
 
 				case Frame:
+					//if need more time, use method withTimeout
 					ret = (ComponentFixture<T>) WindowFinder.findFrame(new MatcherSwing<Frame>(Frame.class, own, null, locator)).using(currentRobot);
 					FrameFixture jff = (FrameFixture) ret;
 					jff.target.toFront();

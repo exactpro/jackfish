@@ -520,9 +520,16 @@ public class SwingRemoteApplication extends RemoteApplication
 				}
 				if (dialog.target instanceof Window)
 				{
-					Window wnd = (Window) dialog.target;
+					final Window wnd = (Window) dialog.target;
 					logger.debug("close window : " + wnd.getName());
-					wnd.dispatchEvent(new WindowEvent(wnd, WindowEvent.WINDOW_CLOSING));
+					SwingUtilities.invokeLater(new Runnable()
+					{
+						@Override
+						public void run()
+						{
+							wnd.dispatchEvent(new WindowEvent(wnd, WindowEvent.WINDOW_CLOSING));
+						}
+					});
 					closed++;
 				}
 				else
