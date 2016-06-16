@@ -1572,6 +1572,17 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 		}
 	}
 
+	private static String loadScript(String path)
+	{
+		Scanner scanner = new Scanner(SeleniumOperationExecutor.class.getResourceAsStream(path));
+		StringBuilder ret = new StringBuilder();
+		while (scanner.hasNextLine())
+		{
+			ret.append(scanner.nextLine()).append("\n");
+		}
+		return ret.toString();
+	}
+
 	private static final String MOVE_TO_SCRIPT =
 			"var myMoveToFunction = function(elem) {\n"+
 			"   if (document.createEvent) {\n"+
@@ -1584,24 +1595,8 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 			"};\n"+
 			"myMoveToFunction(arguments[0])";
 
-	private static final String SCROLL_TO_SCRIPT =
-			"var isScrolledIntoView = function(el) {\n" +
-			"	var elemTop = el.getBoundingClientRect().top;\n" +
-			"	var elemBottom = el.getBoundingClientRect().bottom;\n" +
-			"	var isVisible = (elemTop >= 0) && (elemBottom <= window.innerHeight);\n" +
-			"	return isVisible;\n" +
-			"};\n"+
-			"var myScrollFunction = function(elem) {\n" +
-			"	elem.scrollIntoView();\n" + //this function get element on bottom
-			"	if (isScrolledIntoView(elem)) {\n"+ // if element is visible - return
-			"		return;\n"+
-			"	}\n"+
-			"	var ww = window.innerHeight/2;\n" +
-			"	window.scrollBy(0, -ww);\n" + //up view of element to 1/2 of height window
-			"};\n" +
-			"if (!isScrolledIntoView(arguments[0])) {\n"+
-			"	myScrollFunction(arguments[0]);\n"+
-			"}";
+	//TODO need normal scroll to function
+	private static final String SCROLL_TO_SCRIPT = loadScript("js/scrollTo.js");
 
 	private boolean isShiftDown = false;
 	private boolean isCtrlDown = false;
