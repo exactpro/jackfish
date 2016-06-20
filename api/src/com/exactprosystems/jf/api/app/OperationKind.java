@@ -515,6 +515,23 @@ public enum OperationKind
 			return executor.fold(holder.getValue(), part.text, true);
 		}
 	},
+
+	SCRIPT("script")
+	{
+		@Override
+		protected String formulaTemplate(Part part)
+		{
+			return ".script('%8%s')";
+		}
+
+		@Override
+		protected <T> boolean operateDerived(Part part, OperationExecutor<T> executor, Holder<T> holder, OperationResult result) throws Exception
+		{
+			String scriptResult = executor.script(holder.getValue(), part.text);
+			result.setText(scriptResult);
+			return true;
+		}
+	},
 	
 	DELAY("delay")
 	{

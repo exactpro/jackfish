@@ -772,6 +772,12 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 	}
 
 	@Override
+	public String script(ComponentFixture<Component> component, String script) throws Exception
+	{
+		throw new Exception("Not implement here");
+	}
+
+	@Override
 	public boolean tableIsContainer()
 	{
 		return false;

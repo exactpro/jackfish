@@ -166,6 +166,34 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 	}
 
 	@Override
+	public String script(WebElement component, String script) throws Exception
+	{
+		int repeat = 1;
+		Exception real = null;
+		do
+		{
+			try
+			{
+				Object ret = driver.executeScript(script, component);
+				return String.valueOf(ret);
+			}
+			catch (StaleElementReferenceException e)
+			{
+				real = e;
+				logger.debug("Element is no longer attached to the DOM. Try in SeleniumOperationExecutor : " + repeat);
+			}
+			catch (Exception e)
+			{
+				logger.error(String.format("Error script(%s, %s)", component, script));
+				logger.error(e.getMessage(), e);
+				throw new RemoteException(e.getMessage());
+			}
+		}
+		while (++repeat < repeatLimit);
+		throw real;
+	}
+
+	@Override
 	public Map<String, String> getRow(WebElement component, Locator additional, Locator header, boolean useNumericHeader, ICondition valueCondition, ICondition colorCondition) throws Exception
 	{
 		int repeat = 1;

@@ -338,6 +338,11 @@ public class Do
 	{
 		return new Operation().collapse(path);
 	}
+
+	public static Operation script(String script)
+	{
+		return new Operation().script(script);
+	}
 	//endregion
 
 	//region Operations with locators

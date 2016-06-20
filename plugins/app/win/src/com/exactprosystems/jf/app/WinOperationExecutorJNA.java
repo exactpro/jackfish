@@ -546,6 +546,12 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 	}
 
 	@Override
+	public String script(UIProxyJNA component, String script) throws Exception
+	{
+		throw new Exception("Not implement here");
+	}
+
+	@Override
 	public boolean mouseTable(UIProxyJNA component, int column, int row, MouseAction action) throws Exception
 	{
 		try

@@ -447,6 +447,12 @@ public class Operation implements Iterable<Part>, Serializable
         return this;
 	}
 
+	public Operation script(String script)
+	{
+		this.list.add(new Part(OperationKind.SCRIPT).setText(script));
+		return this;
+	}
+
 	@DescriptionAttribute(text = Do.delay)
 	public Operation delay(int ms)
 	{
