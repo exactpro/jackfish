@@ -422,14 +422,22 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 			}
 			else if (component.target instanceof JTabbedPane)
 			{
-				JTabbedPane tabPane = component.targetCastedTo(JTabbedPane.class);
+				final JTabbedPane tabPane = component.targetCastedTo(JTabbedPane.class);
 				int number = tabPane.getTabCount();
 				for (int i = 0; i < number; i++)
 				{
 					String name = tabPane.getTitleAt(i);
 					if (name != null && name.contains(selectedText))
 					{
-						tabPane.setSelectedIndex(i);
+						final int finalI = i;
+						SwingUtilities.invokeLater(new Runnable()
+						{
+							@Override
+							public void run()
+							{
+								tabPane.setSelectedIndex(finalI);
+							}
+						});
 						break;
 					}
 				}
