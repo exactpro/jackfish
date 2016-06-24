@@ -17,9 +17,10 @@ import com.exactprosystems.jf.app.js.JSInjectionFactory;
 import org.apache.log4j.*;
 import org.openqa.selenium.*;
 import org.openqa.selenium.Dimension;
+import org.openqa.selenium.Point;
 import org.openqa.selenium.chrome.ChromeDriverService;
 import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.ie.InternetExplorerDriver;
+
 import org.openqa.selenium.ie.InternetExplorerDriverService;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -423,7 +424,7 @@ public class SeleniumRemoteApplication extends RemoteApplication
 			catch (StaleElementReferenceException e)
 			{
 				real = e;
-				logger.debug("Element is no longer attached to the DOM. Try in SeleniumRemoteApplication : " + repeat);
+				logger.debug(msgElementNotLonger(repeat));
 			}
 			catch (Exception e)
 			{
@@ -591,87 +592,54 @@ public class SeleniumRemoteApplication extends RemoteApplication
 			{
 				log("before image");
 
-				boolean isFullImage = this.driver.getWrappedDriver() instanceof FirefoxDriver || this.driver.getWrappedDriver() instanceof InternetExplorerDriver;
-				File screenshot = this.driver.getScreenshotAs(OutputType.FILE);
-				BufferedImage fullImg = ImageIO.read(screenshot);
 				if (element == null)
 				{
+					File screenshot = this.driver.getScreenshotAs(OutputType.FILE);
+					BufferedImage fullImg = ImageIO.read(screenshot);
 					return new ImageWrapper(fullImg);
 				}
+
 				WebElement component = this.operationExecutor.find(owner, element);
 
-				Number topOffset = (Number) this.driver.executeScript("return arguments[0].getBoundingClientRect().top", component);
-				Number leftOffset = (Number) this.driver.executeScript("return arguments[0].getBoundingClientRect().left", component);
+				Point location = component.getLocation();
+				Dimension size = component.getSize();
 
-				int componentW = component.getSize().getWidth();
-				int componentH = component.getSize().getHeight();
+				logger.debug("Location of element : " + location);
+				logger.debug("Size of element : " + size);
 
-				Number innerH = (Number) this.driver.executeScript("return 'innerHeight' in window ? window.innerHeight : document.documentElement.offsetHeight;");
-				Number innerW = (Number) this.driver.executeScript("return 'innerHeight' in window ? window.innerWidth : document.documentElement.offsetWidth;");
+				java.awt.Rectangle componentRectangle = new Rectangle(location.x, location.y, size.width, size.height);
 
-				int x, y, h, w;
+				Number startX = (Number) driver.executeScript("return document.documentElement.getBoundingClientRect().left");
+				Number startY = (Number) driver.executeScript("return document.documentElement.getBoundingClientRect().top");
 
-				logger.info("isFullImage = " + isFullImage);
-				if (isFullImage)
+				Number width = (Number) driver.executeScript("return window.innerWidth");
+				Number height = (Number) driver.executeScript("return window.innerHeight");
+
+				Rectangle windowRectangle = new Rectangle(Math.abs(startX.intValue()), Math.abs(startY.intValue()), width.intValue(), height.intValue());
+				Rectangle returnRectangle = windowRectangle.intersection(componentRectangle);
+
+				if (!(driver.getWrappedDriver() instanceof FirefoxDriver))
 				{
-					x = component.getLocation().x + Math.abs(Math.min(0, leftOffset.intValue()));
-
-					y = component.getLocation().y + Math.abs(Math.min(0, topOffset.intValue()));
-				}
-				else
-				{
-					x = Math.max(0, leftOffset.intValue());
-					x = Math.min(x, innerW.intValue());
-
-					y = Math.max(0, topOffset.intValue());
-					y = Math.min(y, innerH.intValue());
+					returnRectangle.setLocation(returnRectangle.x - Math.abs(startX.intValue()), returnRectangle.y - Math.abs(startY.intValue()));
 				}
 
-				int bottom = topOffset.intValue() + componentH;
-				int right = leftOffset.intValue() + componentW;
+				logger.debug("evaluated rectangle : " + returnRectangle);
 
-				if (isFullImage)
+				if (returnRectangle.isEmpty())
 				{
-					if (topOffset.intValue() >= 0)
-					{
-						h = Math.min(componentH, Math.abs(innerH.intValue() - y));
-					}
-					else
-					{
-						h = Math.min(bottom, innerH.intValue());
-					}
-
-					if (leftOffset.intValue() >= 0)
-					{
-						w = Math.min(componentW, Math.abs(innerW.intValue() - x));
-					}
-					else
-					{
-						w = Math.min(right, innerW.intValue());
-					}
-				}
-				else
-				{
-					h = Math.min(bottom - y, innerH.intValue() - y);
-					w = Math.min(right - x, innerW.intValue() - x);
-				}
-				if (h < 0 || w < 0)
-				{
-					throw new RemoteException("Component out of screen");
+					throw new Exception("Element out of screen");
 				}
 
-				logger.info(String.format("Full img {w = %d, h = %d}", fullImg.getWidth(), fullImg.getHeight()));
-				logger.info(String.format("Get sub image {x=%d, y=%d, w=%d, h=%d}", x, y, w, h));
+				File image = driver.getScreenshotAs(OutputType.FILE);
+				BufferedImage bufferedImage = ImageIO.read(image);
 
-				BufferedImage image = fullImg.getSubimage(x, y, w, h);
-
-				log("after image");
-				return new ImageWrapper(image);
+				BufferedImage subimage = bufferedImage.getSubimage(returnRectangle.x, returnRectangle.y, returnRectangle.width, returnRectangle.height);
+				return new ImageWrapper(subimage);
 			}
 			catch (StaleElementReferenceException e)
 			{
 				real = e;
-				logger.debug("Element is no longer attached to the DOM. Try in SeleniumRemoteApplication : " + repeat);
+				logger.debug(msgElementNotLonger(repeat));
 			}
 			catch (Exception e)
 			{
@@ -681,6 +649,11 @@ public class SeleniumRemoteApplication extends RemoteApplication
 		}
 		while (++repeat < repeatLimit);
 		throw real;
+	}
+
+	private String msgElementNotLonger(int repeat)
+	{
+		return "Element is no longer attached to the DOM. Try in SeleniumRemoteApplication : " + repeat;
 	}
 
 	@Override
@@ -706,7 +679,7 @@ public class SeleniumRemoteApplication extends RemoteApplication
 			catch (StaleElementReferenceException e)
 			{
 				real = e;
-				logger.debug("Element is no longer attached to the DOM. Try in SeleniumRemoteApplication : " + repeat);
+				logger.debug(msgElementNotLonger(repeat));
 			}
 			catch (Exception e)
 			{
@@ -732,7 +705,7 @@ public class SeleniumRemoteApplication extends RemoteApplication
 			catch (StaleElementReferenceException e)
 			{
 				real = e;
-				logger.debug("Element is no longer attached to the DOM. Try in SeleniumRemoteApplication : " + repeat);
+				logger.debug(msgElementNotLonger(repeat));
 			}
 			catch (Exception e)
 			{
@@ -758,7 +731,7 @@ public class SeleniumRemoteApplication extends RemoteApplication
 			catch (StaleElementReferenceException e)
 			{
 				real = e;
-				logger.debug("Element is no longer attached to the DOM. Try in SeleniumRemoteApplication : " + repeat);
+				logger.debug(msgElementNotLonger(repeat));
 			}
 			catch (Exception e)
 			{

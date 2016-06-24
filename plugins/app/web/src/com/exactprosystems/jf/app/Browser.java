@@ -85,6 +85,7 @@ public enum Browser
 				DesiredCapabilities capabilities = DesiredCapabilities.internetExplorer();
 				capabilities.setCapability(InternetExplorerDriver.FORCE_CREATE_PROCESS, true);
 				capabilities.setCapability(InternetExplorerDriver.IE_SWITCHES, "-private");
+				capabilities.setCapability("ie.enableFullPageScreenshot", false);
 				return new InternetExplorerDriver(capabilities);
 
 			case OPERA:
