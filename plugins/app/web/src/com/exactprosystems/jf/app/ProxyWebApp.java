@@ -82,5 +82,12 @@ public class ProxyWebApp extends ProxyApplication
 		{
 			parameters.put(WebAppFactory.firefoxProfileDir, firefoxProfileDir);
 		}
+
+		String usePrivateMode = driverParameters.get(WebAppFactory.usePrivateMode);
+		if (!Str.IsNullOrEmpty(usePrivateMode))
+		{
+			parameters.put(WebAppFactory.usePrivateMode, Boolean.valueOf(usePrivateMode).toString());
+
+		}
 	}
 }

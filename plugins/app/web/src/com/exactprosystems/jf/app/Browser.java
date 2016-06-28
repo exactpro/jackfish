@@ -45,7 +45,7 @@ public enum Browser
 		return browserName;
 	}
 
-	public WebDriver createDriver(String pathToBinary, String firefoxProfileDir) throws Exception
+	public WebDriver createDriver(String pathToBinary, String firefoxProfileDir, boolean usePrivateMode) throws Exception
 	{
 		switch (this)
 		{
@@ -83,9 +83,13 @@ public enum Browser
 
 			case INTERNETEXPLORER:
 				DesiredCapabilities capabilities = DesiredCapabilities.internetExplorer();
-				capabilities.setCapability(InternetExplorerDriver.FORCE_CREATE_PROCESS, true);
-				capabilities.setCapability(InternetExplorerDriver.IE_SWITCHES, "-private");
 				capabilities.setCapability("ie.enableFullPageScreenshot", false);
+				capabilities.setCapability("enablePersistentHover", false);
+				if (usePrivateMode)
+				{
+					capabilities.setCapability(InternetExplorerDriver.FORCE_CREATE_PROCESS, true);
+					capabilities.setCapability(InternetExplorerDriver.IE_SWITCHES, "-private");
+				}
 				return new InternetExplorerDriver(capabilities);
 
 			case OPERA:

@@ -211,6 +211,13 @@ public class SeleniumRemoteApplication extends RemoteApplication
 				logger.info(WebAppFactory.firefoxProfileDir + " = " + firefoxProfileDirectory);
 			}
 
+			boolean usePrivateMode = args.get(WebAppFactory.usePrivateMode) != null;
+			if (usePrivateMode)
+			{
+				logger.info("Use private mode for browser");
+			}
+
+
 			logger.info("Starting " + browserName + " on " + url);
 
 			if (browserName == null)
@@ -223,7 +230,7 @@ public class SeleniumRemoteApplication extends RemoteApplication
 				throw new Exception("url is null");
 			}
 			Browser browser = Browser.valueOf(browserName.toUpperCase());
-			this.driver = new WebDriverListenerNew(browser.createDriver(chromeDriverBinary, firefoxProfileDirectory), metricsCounter);
+			this.driver = new WebDriverListenerNew(browser.createDriver(chromeDriverBinary, firefoxProfileDirectory, usePrivateMode), metricsCounter);
 			this.jsInjection = JSInjectionFactory.getJSInjection(browser);
 			this.operationExecutor = new SeleniumOperationExecutor(this.driver, this.logger);
 			this.driver.get(url);
