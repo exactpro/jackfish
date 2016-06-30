@@ -91,6 +91,7 @@ public class ActionsList extends AbstractAction
 		        SQLtableUpload.class,
 		        TableAddColumns.class,
 		        TableAddValue.class,
+				TableColumnRename.class,
 		        TableCompareTwo.class,
 		        TableConsiderColumnsAs.class,
 		        TableCreate.class,

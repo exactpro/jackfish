@@ -499,6 +499,19 @@ public class Table implements List<Map<String, Object>>, Mutable, Cloneable
 		}
 	}
 
+	public void renameColumn(String oldValue, String newValue) throws Exception
+	{
+		for (Header h : this.headers)
+		{
+			if (h.name.equals(oldValue))
+			{
+				h.name = newValue;
+				return;
+			}
+		}
+		throw new Exception(String.format("Column with name %s not presented into table", oldValue));
+	}
+
 	public void addValue(int index, Map<String, Object> map)
 	{
 		this.changed = true;
