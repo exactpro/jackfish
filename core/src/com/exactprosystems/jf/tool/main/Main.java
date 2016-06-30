@@ -694,6 +694,10 @@ public class Main extends Application
 
 	public void copyVarsFile(File newFolder) throws Exception
 	{
+		if (this.config == null || !(new File(this.config.getVars().get()).exists()))
+		{
+			return;
+		}
 		try (InputStream stream = new FileInputStream(this.config.getVars().get()))
 		{
 			Files.copy(stream, Paths.get(newFolder.getAbsolutePath() + File.separator + "vars.ini"));
