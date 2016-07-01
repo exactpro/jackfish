@@ -27,23 +27,50 @@ public abstract class DocumentFactory
 		this.settings = Settings.load(Settings.SettingsPath);
 	}
 
-	public void setConfiguration(Configuration configuration)
+	public final void setConfiguration(Configuration configuration)
 	{
 		this.configuration = configuration;
 	}
+	
+	public final Configuration getConfiguration()
+	{
+		return this.configuration;
+	}
 
-	public AbstractEvaluator 	createEvaluator() throws Exception
+	public final Settings getSettings()
 	{
-		checkConfiguration();
-		return this.configuration.createEvaluator();
+		return this.settings;
+	}
+
+	public final AbstractEvaluator createEvaluator()
+	{
+		try
+		{
+			checkConfiguration();
+			return this.configuration.createEvaluator();
+		}
+		catch (Exception e)
+		{
+			error(null, e);
+		}
+		return null;
+	}
+
+	public final Context 				createContext() throws Exception
+	{
+		try
+		{
+			checkConfiguration();
+			return createContext(this.configuration, createMatrixListener());
+		}
+		catch (Exception e)
+		{
+			error(null, e);
+		}
+		return null;
 	}
 	
-	public Context 				createContext() throws Exception
-	{
-		return new Context(this, createMatrixListener(), this.configuration);
-	}
-	
-	public Configuration 		createConfig(String fileName)
+	public final Configuration 		createConfig(String fileName)
 	{
 		try
 		{
@@ -56,12 +83,14 @@ public abstract class DocumentFactory
 		return null;
 	}
 
-	public Matrix 				createMatrix(String fileName)
+	public final Matrix 				createMatrix(String fileName)
 	{
 		try
 		{
 			checkConfiguration();
-			return createMatrix(fileName, this.configuration, createMatrixListener());
+			Matrix ret = createMatrix(fileName, this.configuration, createMatrixListener());
+			
+			return ret;
 		}
 		catch (Exception e)
 		{
@@ -70,7 +99,7 @@ public abstract class DocumentFactory
 		return null;
 	}
 
-	public MessageDictionary 	createClientDictionary(String fileName)
+	public final MessageDictionary 	createClientDictionary(String fileName)
 	{
 		try
 		{
@@ -84,7 +113,7 @@ public abstract class DocumentFactory
 		return null;
 	}
 
-	public GuiDictionary 		createAppDictionary(String fileName)
+	public final GuiDictionary 		createAppDictionary(String fileName)
 	{
 		try
 		{
@@ -98,7 +127,7 @@ public abstract class DocumentFactory
 		return null;
 	}
 
-	public Csv 					createCsv(String fileName)
+	public final Csv 					createCsv(String fileName)
 	{
 		try
 		{
@@ -112,7 +141,7 @@ public abstract class DocumentFactory
 		return null;
 	}
 
-	public PlainText 			createPlainText(String fileName)
+	public final PlainText 			createPlainText(String fileName)
 	{
 		try
 		{
@@ -126,7 +155,7 @@ public abstract class DocumentFactory
 		return null;
 	}
 
-	public SystemVars 			createVars(String fileName)
+	public final SystemVars 			createVars(String fileName)
 	{
 		try
 		{
@@ -140,11 +169,11 @@ public abstract class DocumentFactory
 		return null;
 	}
 
-	public abstract void 					print(String message);
-	
 	public abstract void 					error(String message, Exception exeption);
 	
 	public abstract void 					popup(String message, Notifier notifier);
+
+	protected abstract Context 				createContext(Configuration configuration, IMatrixListener matrixListener) throws Exception;
 
 	protected abstract Configuration 		createConfig(String fileName, Settings settings) throws Exception;
 
@@ -174,4 +203,5 @@ public abstract class DocumentFactory
 	protected Configuration 		configuration;
 
 	protected Settings 				settings;
+
 }

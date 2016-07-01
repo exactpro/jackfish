@@ -485,7 +485,7 @@ public class DisplayDriverFx implements DisplayDriver
 
 		Matrix matrix = item.getMatrix();
 		CustomTab tab = Common.checkDocument(matrix);
-		MatrixFx matrixFx = null;
+		Matrix matrixFx = null;
 		if (tab != null)
 		{
 			matrixFx = (MatrixFx) tab.getDocument();
@@ -495,7 +495,7 @@ public class DisplayDriverFx implements DisplayDriver
 		{
 			try
 			{
-				matrixFx = new MatrixFx(matrix, this.context.getConfiguration(), this.context.getMatrixListener());
+				matrixFx = context.getFactory().createMatrix(matrix.getName()); // TODO weird
 				matrixFx.display();
 			}
 			catch (Exception e)
@@ -505,7 +505,7 @@ public class DisplayDriverFx implements DisplayDriver
 		}
 		if (matrixFx != null)
 		{
-			matrixFx.setCurrent(item);
+			((MatrixFx)matrixFx).setCurrent(item);
 		}
 	}
 

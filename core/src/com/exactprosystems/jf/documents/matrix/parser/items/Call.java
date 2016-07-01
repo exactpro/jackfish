@@ -26,16 +26,12 @@ import com.exactprosystems.jf.documents.matrix.parser.SearchHelper;
 import com.exactprosystems.jf.documents.matrix.parser.Tokens;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
 import com.exactprosystems.jf.exceptions.ParametersException;
-import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import org.mvel2.util.ThisLiteral;
 
 @MatrixItemAttribute(
 		description 	= "Subroutine Test case.", 
@@ -68,7 +64,7 @@ public final class Call extends MatrixItem
 		Object layout = driver.createLayout(this, 3);
 		driver.showComment(this, layout, 0, 0, getComments());
 		driver.showTextBox(this, layout, 1, 0, this.id, this.id, () -> this.id.get());
-		driver.showTitle(this, layout, 1, 1, Tokens.Call.get(), context.getConfiguration().getSettings());
+		driver.showTitle(this, layout, 1, 1, Tokens.Call.get(), context.getFactory().getSettings());
 		driver.showExpressionField(this, layout, 1, 2, Tokens.Call.get(), this.name, this.name, 
 			(str) -> 
 			{

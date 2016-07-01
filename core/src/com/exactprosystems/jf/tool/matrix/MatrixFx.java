@@ -16,6 +16,7 @@ import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.common.undoredo.Command;
+import com.exactprosystems.jf.documents.DocumentFactory;
 import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.guidic.controls.Table;
@@ -60,18 +61,18 @@ public class MatrixFx extends Matrix
 	public static final String DIALOG_BREAKPOINT = "BreakPointMatrix";
 	public static final String DIALOG_DEFAULTS = "DefaultsAppAndClient";
 
-	public MatrixFx(Matrix matrix, Configuration config, IMatrixListener matrixListener) throws Exception
+	public MatrixFx(Matrix matrix, DocumentFactory factory) throws Exception
 	{
-		super(matrix, config);
+		super(matrix, factory);
 		getRoot().init(this);
-		init(config, matrixListener);
+		init(factory);
 		initController();
 	}
 
-	public MatrixFx(String matrixName, Configuration config, IMatrixListener matrixListener) throws Exception
+	public MatrixFx(String matrixName, DocumentFactory factory, IMatrixListener matrixListener) throws Exception
 	{
-		super(matrixName, config, matrixListener);
-		init(config, matrixListener);
+		super(matrixName, factory, matrixListener);
+		init(factory);
 	}
 
 	//==============================================================================================================================
@@ -88,7 +89,7 @@ public class MatrixFx extends Matrix
 		displayClientDictionaries();
 
 		this.controller.displayTab(this.getRoot());
-		restoreSettings(this.getConfiguration().getSettings());
+		restoreSettings(getFactory().getSettings());
 	}
 
 	@Override
@@ -117,7 +118,7 @@ public class MatrixFx extends Matrix
 	{
 		super.save(fileName);
 
-		this.config.matrixChanged(getName(), this);
+		getFactory().getConfiguration().matrixChanged(getName(), this);
 
 		this.controller.saved(getName());
 		this.controller.displayTitle(getName());
@@ -646,7 +647,7 @@ public class MatrixFx extends Matrix
 	public void startMatrix() throws Exception
 	{
 		this.controller.coloring();
-		this.config.getRunnerListener().subscribe(this.runner);
+		getFactory().getConfiguration().getRunnerListener().subscribe(this.runner);
 		this.runner.start();
 	}
 
@@ -708,14 +709,13 @@ public class MatrixFx extends Matrix
 	}
 
 	//==============================================================================================================================
-	private void init(Configuration config, IMatrixListener matrixListener) throws Exception
+	private void init(DocumentFactory factory) throws Exception
 	{
-		this.config = config;
 		this.console = new TabConsole(System.out);
-		this.context = config.createContext(matrixListener, this.console);
+		this.context = factory.createContext().setOut(this.console);
 		this.runner = new MatrixRunner(this.context, this, this.startDate, null);
 		this.runner.setStartTime(this.startDate);
-		this.applicationConnector = new ApplicationConnector(this.config);
+		this.applicationConnector = new ApplicationConnector(factory);
 		super.saved();
 	}
 
@@ -723,7 +723,7 @@ public class MatrixFx extends Matrix
 	{
 		if (!this.isControllerInit)
 		{
-			this.config.register(this);
+			getFactory().getConfiguration().register(this);
 
 			this.controller = Common.loadController(MatrixFx.class.getResource("MatrixFx.fxml"));
 			this.controller.init(this, this.context, this.console);
@@ -919,7 +919,6 @@ public class MatrixFx extends Matrix
 
 	private boolean isControllerInit = false;
 	private MatrixFxController 		controller;
-	private Configuration 			config;
 	private Context 				context;
 	private MatrixRunner 			runner;
 	private Date 					startDate = new Date();

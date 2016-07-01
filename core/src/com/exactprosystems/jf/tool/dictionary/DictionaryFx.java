@@ -14,7 +14,7 @@ import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.undoredo.Command;
-import com.exactprosystems.jf.documents.config.Configuration;
+import com.exactprosystems.jf.documents.DocumentFactory;
 import com.exactprosystems.jf.documents.guidic.GuiDictionary;
 import com.exactprosystems.jf.documents.guidic.Section;
 import com.exactprosystems.jf.documents.guidic.Window;
@@ -50,16 +50,16 @@ public class DictionaryFx extends GuiDictionary
 	private AbstractEvaluator evaluator;
 	private ApplicationConnector applicationConnector;
 
-	public DictionaryFx(String fileName, Configuration config) throws Exception
+	public DictionaryFx(String fileName, DocumentFactory factory) throws Exception
 	{
-		this(fileName, config, null);
+		this(fileName, factory, null);
 	}
 
-	public DictionaryFx(String fileName, Configuration config, String currentAdapter) throws Exception
+	public DictionaryFx(String fileName, DocumentFactory factory, String currentAdapter) throws Exception
 	{
-		super(fileName, config);
+		super(fileName, factory);
 		this.currentAdapter = currentAdapter;
-		this.evaluator = config.createEvaluator();
+		this.evaluator = factory.createEvaluator();
 	}
 
 	//==============================================================================================================================
@@ -82,7 +82,7 @@ public class DictionaryFx extends GuiDictionary
 		}
 		displayApplicationStatus(this.applicationConnector != null && this.applicationConnector.getAppConnection() != null ? ApplicationStatus.Connected : ApplicationStatus.Disconnected, null, null);
 		displayApplicationControl(null);
-		restoreSettings(getConfiguration().getSettings());
+		restoreSettings(getFactory().getSettings());
 	}
 
 	@Override
@@ -108,11 +108,11 @@ public class DictionaryFx extends GuiDictionary
 		
 		if (this.currentAdapter != null)
 		{
-			IApplicationFactory factory = getConfiguration().getApplicationPool().loadApplicationFactory(this.currentAdapter);
+			IApplicationFactory factory = getFactory().getConfiguration().getApplicationPool().loadApplicationFactory(this.currentAdapter);
 			factory.init(this);
 		}
 		{
-			getConfiguration().dictionaryChanged(getName(), this);
+			getFactory().getConfiguration().dictionaryChanged(getName(), this);
 		}
 	}
 
@@ -904,10 +904,10 @@ public class DictionaryFx extends GuiDictionary
 		if (!this.isControllerInit)
 		{
 			this.controller = Common.loadController(DictionaryFx.class.getResource("DictionaryTab.fxml"));
-			this.controller.init(this, getConfiguration(), this.evaluator);
-			getConfiguration().register(this);
+			this.controller.init(this, getFactory().getSettings(), getFactory().getConfiguration(), this.evaluator);
+			getFactory().getConfiguration().register(this);
 			this.isControllerInit = true;
-			this.applicationConnector = new ApplicationConnector(getConfiguration());
+			this.applicationConnector = new ApplicationConnector(getFactory());
 			this.applicationConnector.setApplicationListener(this::displayApplicationStatus);
 		}
 	}
@@ -996,7 +996,7 @@ public class DictionaryFx extends GuiDictionary
 
 	private void displayApplicationControl(String title) throws Exception
 	{
-		Collection<String> entries = getConfiguration().getApplications();
+		Collection<String> entries = getFactory().getConfiguration().getApplications();
 		this.controller.displayActionControl(entries, this.currentAdapter, title);
 	}
 

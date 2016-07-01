@@ -17,8 +17,8 @@ import java.io.Reader;
 
 public interface Document extends Mutable
 {
-	Configuration getConfiguration();
-	
+    DocumentFactory getFactory();
+
 	boolean hasName();
 	
 	void load(Reader reader) throws Exception;
@@ -38,6 +38,6 @@ public interface Document extends Mutable
 	void redo();
 
     String getName();
-
+    
 	void setOnChange(ChangeListener listener);
 }

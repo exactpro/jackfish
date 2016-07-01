@@ -82,7 +82,7 @@ public final class NameSpace extends MatrixItem
 		Object layout = driver.createLayout(this, 2);
 		driver.showComment(this, layout, 0, 0, getComments());
 		driver.showTextBox(this, layout, 1, 0, this.id, this.id, () -> this.id.get());
-		driver.showTitle(this, layout, 1, 1, Tokens.NameSpace.get(), context.getConfiguration().getSettings());
+		driver.showTitle(this, layout, 1, 1, Tokens.NameSpace.get(), context.getFactory().getSettings());
 		driver.showTextBox(this, layout, 1, 2, this.name, this.name, null);
 
 		return layout;

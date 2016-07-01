@@ -16,6 +16,7 @@ import com.exactprosystems.jf.api.common.ApiVersionInfo;
 import com.exactprosystems.jf.api.common.IContext;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.common.MainRunner;
+import com.exactprosystems.jf.documents.DocumentFactory;
 import com.exactprosystems.jf.documents.config.ClientEntry;
 import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.documents.config.Parameter;
@@ -32,9 +33,9 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class ClientsPool implements IClientsPool
 {
-	public ClientsPool(Configuration configuration)
+	public ClientsPool(DocumentFactory factory)
 	{
-		this.configuration = configuration;
+		this.factory = factory;
 		this.clientFactories = new ConcurrentHashMap<>();
 	}
 
@@ -117,7 +118,7 @@ public class ClientsPool implements IClientsPool
 	public List<String> clientNames()
 	{
 		List<String> result = new ArrayList<String>();
-		for (ClientEntry entry : this.configuration.getClientEntries())
+		for (ClientEntry entry : this.factory.getConfiguration().getClientEntries())
 		{
 			String name = null; 
 			try
@@ -263,7 +264,7 @@ public class ClientsPool implements IClientsPool
 		MessageDictionary dictionary = null;
 		if (!Str.IsNullOrEmpty(dictionaryName))
 		{
-			dictionary = new MessageDictionary(dictionaryName, this.configuration);
+			dictionary = this.factory.createClientDictionary(dictionaryName);
 	    	try (Reader reader = new FileReader(dictionaryName))
 	    	{
 	    		dictionary.load(reader);
@@ -274,7 +275,7 @@ public class ClientsPool implements IClientsPool
 	
 	private ClientEntry parametersEntry(String id) throws Exception
 	{
-		ClientEntry entry = this.configuration.getClientEntry(id);
+		ClientEntry entry = this.factory.getConfiguration().getClientEntry(id);
 		if (entry == null)
 		{
 			throw new Exception("'" + id + "' is not found.");
@@ -321,7 +322,7 @@ public class ClientsPool implements IClientsPool
 				+ clientFactory.requiredMajorVersion() + "." + clientFactory.requiredMinorVersion());
 	}
 	
-	private Configuration configuration;
+	private DocumentFactory factory;
 
 	private Map<String, IClientFactory> clientFactories;
 	

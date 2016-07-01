@@ -9,8 +9,8 @@
 package com.exactprosystems.jf.tool.text;
 
 import com.exactprosystems.jf.common.Settings;
+import com.exactprosystems.jf.documents.DocumentFactory;
 import com.exactprosystems.jf.documents.DocumentInfo;
-import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.documents.text.PlainText;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
@@ -27,10 +27,9 @@ import java.util.Optional;
 )
 public class PlainTextFx extends PlainText
 {
-	public PlainTextFx(String fileName, Settings settings, Configuration config)
+	public PlainTextFx(String fileName, DocumentFactory factory)
 	{
-		super(fileName, config);
-		this.settings = settings;
+		super(fileName, factory);
 	}
 
 	//==============================================================================================================================
@@ -103,13 +102,12 @@ public class PlainTextFx extends PlainText
 		if (!this.isControllerInit)
 		{
 			this.controller = Common.loadController(PlainTextFxController.class.getResource("PlainTextFx.fxml"));
-			this.controller.init(this, this.settings);
-			Optional.ofNullable(getConfiguration()).ifPresent(c -> c.register(this));
+			this.controller.init(this, getFactory().getSettings());
+			Optional.ofNullable(getFactory().getConfiguration()).ifPresent(c -> c.register(this));
 			this.isControllerInit = true;
 		}
 	}
 
 	private boolean isControllerInit = false;
-	private Settings settings;
 	private PlainTextFxController controller;
 }

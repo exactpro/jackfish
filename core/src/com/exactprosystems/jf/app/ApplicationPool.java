@@ -13,6 +13,7 @@ import com.exactprosystems.jf.api.common.ApiVersionInfo;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.common.MainRunner;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
+import com.exactprosystems.jf.documents.DocumentFactory;
 import com.exactprosystems.jf.documents.config.AppEntry;
 import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.documents.config.Parameter;
@@ -20,7 +21,6 @@ import com.exactprosystems.jf.documents.guidic.GuiDictionary;
 
 import org.apache.log4j.Logger;
 
-import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
@@ -34,9 +34,9 @@ import java.util.concurrent.ConcurrentSkipListSet;
 
 public class ApplicationPool implements IApplicationPool
 {
-	public ApplicationPool(Configuration configuration)
+	public ApplicationPool(DocumentFactory factory)
 	{
-		this.configuration = configuration;
+		this.factory = factory;
 		this.appFactories = new ConcurrentHashMap<>();
 		this.connections = new ConcurrentSkipListSet<>((o1, o2) -> Integer.compare(o1.getPort(), o2.getPort()));
 	}
@@ -145,7 +145,7 @@ public class ApplicationPool implements IApplicationPool
 	public List<String> appNames()
 	{
 		List<String> result = new ArrayList<String>();
-		for (AppEntry entry : this.configuration.getAppEntries())
+		for (AppEntry entry : this.factory.getConfiguration().getAppEntries())
 		{
 			String name = null; 
 			try
@@ -310,7 +310,7 @@ public class ApplicationPool implements IApplicationPool
 
 	private AppEntry parametersEntry(String id) throws Exception
 	{
-		AppEntry entry = this.configuration.getAppEntry(id);
+		AppEntry entry = this.factory.getConfiguration().getAppEntry(id);
 		if (entry == null)
 		{
 			throw new Exception("'" + id + "' is not found.");
@@ -380,13 +380,13 @@ public class ApplicationPool implements IApplicationPool
 		GuiDictionary dictionary = null;
 		if (!Str.IsNullOrEmpty(dictionaryName))
 		{
-			dictionary = new GuiDictionary(dictionaryName, this.configuration);
+			dictionary = this.factory.createAppDictionary(dictionaryName);
 	    	try (Reader reader = new FileReader(dictionaryName))
 	    	{
 	    		dictionary.load(reader);
 	    	}
 			//TODO why we do it?
-			AbstractEvaluator evaluator = this.configuration.createEvaluator();
+			AbstractEvaluator evaluator = this.factory.createEvaluator();
 			dictionary.evaluateAll(evaluator);
 		}
 		return dictionary;
@@ -433,7 +433,7 @@ public class ApplicationPool implements IApplicationPool
 	}
 
 
-	private Configuration configuration;
+	private DocumentFactory factory;
 
 	private Map<String, IApplicationFactory> appFactories;
 

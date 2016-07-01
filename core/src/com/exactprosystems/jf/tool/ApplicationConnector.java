@@ -11,7 +11,7 @@ import com.exactprosystems.jf.api.app.AppConnection;
 import com.exactprosystems.jf.api.app.IApplicationPool;
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
-import com.exactprosystems.jf.documents.config.Configuration;
+import com.exactprosystems.jf.documents.DocumentFactory;
 import com.exactprosystems.jf.tool.dictionary.ApplicationStatus;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 
@@ -33,20 +33,20 @@ public class ApplicationConnector
 	public static final java.lang.String connectParameters = "ConnectParameters";
 
 	private String idAppEntry;
-	private Configuration configuration;
+	private DocumentFactory factory;
 	private Task<Void> task;
 	private AppConnection appConnection;
 	private ApplicationListener applicationListener;
 
-	public ApplicationConnector(Configuration configuration)
+	public ApplicationConnector(DocumentFactory factory)
 	{
-		this(null, configuration);
+		this(null, factory);
 	}
 
-	public ApplicationConnector(String idAppEntry, Configuration config)
+	public ApplicationConnector(String idAppEntry, DocumentFactory factory)
 	{
 		this.idAppEntry = idAppEntry;
-		this.configuration = config;
+		this.factory = factory;
 	}
 
 	public Optional<AppConnection> startApplication()  throws Exception
@@ -102,7 +102,7 @@ public class ApplicationConnector
 
 	private Optional<AppConnection> runApplication(boolean isStart) throws Exception
 	{
-		AbstractEvaluator evaluator = this.configuration.createEvaluator();
+		AbstractEvaluator evaluator = this.factory.createEvaluator();
 		if (this.appConnection != null)
 		{
 			throw new Exception("You need to stop old application, before run new");
@@ -111,13 +111,13 @@ public class ApplicationConnector
 		{
 			throw new Exception("You should choose app entry at first.");
 		}
-		IApplicationPool applicationPool	= this.configuration.getApplicationPool();
+		IApplicationPool applicationPool	= this.factory.getConfiguration().getApplicationPool();
 
 		String parametersName 		= isStart ? startParameters : connectParameters;
 		String title 				= isStart ? "Start " : "Connect ";
 		String[] strings 			= isStart ? applicationPool.wellKnownStartArgs(idAppEntry) : applicationPool.wellKnownConnectArgs(idAppEntry);
 
-		Settings settings = this.configuration.getSettings();
+		Settings settings = this.factory.getSettings();
 		final Map<String, String> parameters = settings.getMapValues(Settings.APPLICATION + idAppEntry, parametersName, strings);
 
 		ButtonType desision = DialogsHelper.showParametersDialog(title + idAppEntry, parameters, evaluator);
@@ -152,7 +152,7 @@ public class ApplicationConnector
 			@Override
 			protected Void call() throws Exception
 			{
-				IApplicationPool applicationPool = configuration.getApplicationPool();
+				IApplicationPool applicationPool = factory.getConfiguration().getApplicationPool();
 				update(ApplicationStatus.Connecting, null, true);
 				if (isStart)
 				{

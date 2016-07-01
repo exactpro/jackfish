@@ -18,6 +18,7 @@ import com.exactprosystems.jf.documents.Document;
 import com.exactprosystems.jf.documents.DocumentFactory;
 import com.exactprosystems.jf.documents.DocumentInfo;
 import com.exactprosystems.jf.documents.EmptyConfigurationException;
+import com.exactprosystems.jf.documents.FxDocumentFactory;
 import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.guidic.GuiDictionary;
@@ -106,7 +107,6 @@ public class Main extends Application
 	private String username;
 	private String password;
 
-
 	public static String getConfigName()
 	{
 		String temp = configName;
@@ -118,7 +118,7 @@ public class Main extends Application
 	public void setConfiguration(Configuration config)
 	{
 		this.config = config;
-		this.runnerListener.setConfiguration(this.config);
+		this.factory.setConfiguration(this.config);
 		if (this.controller != null)
 		{
 			this.controller.disableMenu(this.config == null);
@@ -150,7 +150,8 @@ public class Main extends Application
 	{
 		try
 		{
-			this.settings = Settings.load(Settings.SettingsPath);
+			this.factory = new FxDocumentFactory(Main.this);
+			this.settings = Settings.load(Settings.SettingsPath); // TODO
 			DialogsHelper.setTimeNotification(Integer.parseInt(this.settings.getValueOrDefault(Settings.GLOBAL_NS, SettingsPanel.SETTINGS, Main.TIME_NOTIFICATION, "5").getValue()));
 		}
 		catch (Exception e)
@@ -159,6 +160,7 @@ public class Main extends Application
 			DialogsHelper.showError("Settings are invalid. Using empty settings.");
 			this.settings = new Settings();
 		}
+
 		Common.node = stage;
 		Settings.SettingsValue theme = this.settings.getValueOrDefault(Settings.GLOBAL_NS, SettingsPanel.SETTINGS, Main.THEME, Theme.WHITE.name());
 		Common.setTheme(Theme.valueOf(theme.getValue().toUpperCase()));
@@ -173,8 +175,10 @@ public class Main extends Application
 				try
 				{
 					controller = Common.loadController(Main.class.getResource("tool.fxml"));
-					controller.init(Main.this, settings, stage, ((RunnerScheduler) runnerListener));
+
+					controller.init(factory, Main.this, settings, stage, ((RunnerScheduler) runnerListener));
 					controller.disableMenu(true);
+
 					
 					final List<String> args = getParameters().getRaw();
 
@@ -201,7 +205,8 @@ public class Main extends Application
 			}
 		};
 
-		load.setOnSucceeded(workerStateEvent -> Common.tryCatch(() -> {
+		load.setOnSucceeded(workerStateEvent -> Common.tryCatch(() -> 
+		{
 			controller.display();
 			if (preloader != null)
 			{
@@ -222,23 +227,23 @@ public class Main extends Application
 							switch (kind)
 							{
 								case MATRIX:
-									loadDocument(file, new MatrixFx(filePath, config, new MatrixListener()), kind);
+									loadDocument(file, factory.createMatrix(filePath), kind);
 									break;
 
 								case GUI_DICTIONARY:
-									loadDocument(file, new DictionaryFx(filePath, config, null), DocumentKind.GUI_DICTIONARY);
+									loadDocument(file, factory.createAppDictionary(filePath), kind);
 									break;
 
 								case SYSTEM_VARS:
-									loadDocument(file, new SystemVarsFx(filePath, config), DocumentKind.SYSTEM_VARS);
+									loadDocument(file, factory.createVars(filePath), kind);
 									break;
 
 								case PLAIN_TEXT:
-									loadDocument(file, new PlainTextFx(filePath, settings, config), DocumentKind.PLAIN_TEXT);
+									loadDocument(file, factory.createPlainText(filePath), kind);
 									break;
 
 								case CSV:
-									loadDocument(file, new CsvFx(filePath, settings, config), DocumentKind.CSV);
+									loadDocument(file, factory.createCsv(filePath), kind);
 									break;
 
 								default:
@@ -278,7 +283,7 @@ public class Main extends Application
 			{
 				if (this.config.canClose())
 				{
-					this.config.close(this.config.getSettings());
+					this.config.close(this.factory.getSettings());
 					setConfiguration(null);
 				}
 				else
@@ -294,13 +299,14 @@ public class Main extends Application
 				this.controller.close();
 			}
 
-			ConfigurationFx config = new ConfigurationFx(file.getPath(), this.runnerListener, this.settings, Main.this, pane);
-
-			Document doc = loadDocument(file, config, DocumentKind.CONFIGURATION);
-			if (doc instanceof Configuration)
+			Configuration config = this.factory.createConfig(file.getPath());
+			if (config instanceof ConfigurationFx)
 			{
 				setConfiguration(config);
+				((ConfigurationFx) config).setPane(pane);
 			}
+
+			loadDocument(file, config, DocumentKind.CONFIGURATION);
 		}
 	}
 
@@ -314,7 +320,7 @@ public class Main extends Application
 			{
 				if (this.config.canClose())
 				{
-					this.config.close(this.config.getSettings());
+					this.config.close(this.factory.getSettings());
 					setConfiguration(null);
 				}
 				else
@@ -326,7 +332,7 @@ public class Main extends Application
 			String configName = newFolder.getName();
 			String configurePath = fullPath + File.separator + configName + ".xml";
 
-			Configuration newConfig = Configuration.createNewConfiguration(configName, this.settings);
+			Configuration newConfig = Configuration.createNewConfiguration(configName, this.factory);
 			newConfig.save(configurePath);
 			openProject(configurePath, pane);
 		}
@@ -408,7 +414,7 @@ public class Main extends Application
 		Optional<File> optional = chooseFile(GuiDictionary.class, filePath, DialogsHelper.OpenSaveMode.OpenFile);
 		if (optional.isPresent())
 		{
-			loadDocument(optional.get(), new DictionaryFx(optional.get().getPath(), this.config, entryName), DocumentKind.GUI_DICTIONARY);
+			loadDocument(optional.get(), this.factory.createAppDictionary(optional.get().getPath()), DocumentKind.GUI_DICTIONARY);
 		}
 	}
 
@@ -418,7 +424,7 @@ public class Main extends Application
 		Optional<File> optional = chooseFile(Matrix.class, filePath, DialogsHelper.OpenSaveMode.OpenFile);
 		if (optional.isPresent())
 		{
-			loadDocument(optional.get(), new MatrixFx(optional.get().getPath(), this.config, new MatrixListener()), DocumentKind.MATRIX);
+			loadDocument(optional.get(), this.factory.createMatrix(optional.get().getPath()), DocumentKind.MATRIX);
 		}
 	}
 
@@ -428,7 +434,7 @@ public class Main extends Application
 		Optional<File> optional = chooseFile(SystemVars.class, filePath, DialogsHelper.OpenSaveMode.OpenFile);
 		if (optional.isPresent())
 		{
-			loadDocument(optional.get(), new SystemVarsFx(optional.get().getPath(), this.config), DocumentKind.SYSTEM_VARS);
+			loadDocument(optional.get(), this.factory.createVars(optional.get().getPath()), DocumentKind.SYSTEM_VARS);
 		}
 	}
 
@@ -438,7 +444,7 @@ public class Main extends Application
 		Optional<File> optional = chooseFile(PlainTextFx.class, filePath, DialogsHelper.OpenSaveMode.OpenFile);
 		if (optional.isPresent())
 		{
-			loadDocument(optional.get(), new PlainTextFx(optional.get().getPath(), this.settings, this.config), DocumentKind.PLAIN_TEXT);
+			loadDocument(optional.get(), this.factory.createPlainText(optional.get().getPath()), DocumentKind.PLAIN_TEXT);
 		}
 	}
 
@@ -448,7 +454,7 @@ public class Main extends Application
 		Optional<File> optional = chooseFile(CsvFx.class, filePath, DialogsHelper.OpenSaveMode.OpenFile);
 		if (optional.isPresent())
 		{
-			loadDocument(optional.get(), new CsvFx(optional.get().getPath(), this.settings, this.config), DocumentKind.CSV);
+			loadDocument(optional.get(), this.factory.createCsv(optional.get().getPath()), DocumentKind.CSV);
 		}
 	}
 	//endregion
@@ -457,13 +463,13 @@ public class Main extends Application
 	public void newDictionary() throws Exception
 	{
 		checkConfig();
-		createDocument(new DictionaryFx(newName(GuiDictionary.class), this.config));
+		createDocument(this.factory.createAppDictionary(newName(GuiDictionary.class)));
 	}
 
 	public void newMatrix() throws Exception
 	{
 		checkConfig();
-		MatrixFx doc = new MatrixFx(newName(Matrix.class), this.config, new MatrixListener());
+		Matrix doc = this.factory.createMatrix(newName(Matrix.class));
 		doc.create();
 		Settings.SettingsValue copyright = settings.getValueOrDefault(Settings.GLOBAL_NS, "Main", "copyright", "");
 		String text = copyright.getValue().replaceAll("\\\\n", System.lineSeparator());
@@ -475,9 +481,12 @@ public class Main extends Application
 	public void newLibrary(String fullPath) throws Exception
 	{
 		checkConfig();
-		MatrixFx doc = new MatrixFx(fullPath, this.config, new MatrixListener());
+		Matrix doc = this.factory.createMatrix(fullPath);
 		doc.create();
-		doc.createLibrary();
+		if (doc instanceof MatrixFx)
+		{
+			((MatrixFx)doc).createLibrary();
+		}
 		Settings.SettingsValue copyright = settings.getValueOrDefault(Settings.GLOBAL_NS, "Main", "copyright", "");
 		String text = copyright.getValue().replaceAll("\\\\n", System.lineSeparator());
 		doc.addCopyright(text);
@@ -497,19 +506,19 @@ public class Main extends Application
 	public void newSystemVars() throws Exception
 	{
 		checkConfig();
-		createDocument(new SystemVarsFx(newName(SystemVars.class), this.config));
+		createDocument(this.factory.createVars(newName(SystemVars.class)));
 	}
 
 	public void newPlainText() throws Exception
 	{
 		checkConfig();
-		createDocument(new PlainTextFx(newName(PlainTextFx.class), this.settings, this.config));
+		createDocument(this.factory.createPlainText(newName(PlainTextFx.class)));
 	}
 
 	public void newCsv() throws Exception
 	{
 		checkConfig();
-		createDocument(new CsvFx(newName(CsvFx.class), this.settings, this.config));
+		createDocument(this.factory.createCsv(newName(CsvFx.class)));
 	}
 	//endregion
 
@@ -601,7 +610,7 @@ public class Main extends Application
 
 	public void openReport(File file) throws Exception
 	{
-		Optional.ofNullable(file).ifPresent(f -> DialogsHelper.displayReport(f, null, this.config));
+		Optional.ofNullable(file).ifPresent(f -> DialogsHelper.displayReport(f, null, this.factory));
 	}
 	//endregion
 
@@ -611,7 +620,7 @@ public class Main extends Application
 		Optional<File> optional = chooseFile(Matrix.class, null, DialogsHelper.OpenSaveMode.OpenFile);
 		if (optional.isPresent())
 		{
-			try (Context context = config.createContext(new MatrixListener(), System.out);
+			try (Context context = this.factory.createContext(); 
 				 MatrixRunner runner = new MatrixRunner(context, optional.get(), null, null)
 			)
 			{
@@ -653,7 +662,7 @@ public class Main extends Application
 			{
 				if (this.config.canClose())
 				{
-					this.config.close(this.config.getSettings());
+					this.config.close(this.factory.getSettings());
 					setConfiguration(null);
 					this.controller.close();
 
@@ -771,7 +780,7 @@ public class Main extends Application
 				logger.error(e.getMessage(), e);
 				DialogsHelper.showError(e.getMessage());
 
-				doc = new PlainTextFx(doc.getName(), this.settings, this.config);
+				doc = this.factory.createPlainText(doc.getName());
 				try (Reader reader = new FileReader(file))
 				{
 					doc.load(reader);

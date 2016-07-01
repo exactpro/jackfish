@@ -3,6 +3,7 @@ package com.exactprosystems.jf.documents;
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.common.VerboseLevel;
 import com.exactprosystems.jf.documents.config.Configuration;
+import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.csv.Csv;
 import com.exactprosystems.jf.documents.guidic.GuiDictionary;
 import com.exactprosystems.jf.documents.matrix.Matrix;
@@ -24,45 +25,51 @@ public class ConsoleDocumentFactory extends DocumentFactory
 	}
 
 	@Override
+	protected Context createContext(Configuration configuration, IMatrixListener matrixListener) throws Exception
+	{
+		return new Context(this, matrixListener, System.out);
+	}
+	
+	@Override
 	protected Configuration createConfig(String fileName, Settings settings)
 	{
-		return new Configuration(fileName, settings);
+		return new Configuration(fileName, this);
 	}
 
 	@Override
 	protected Matrix createMatrix(String fileName, Configuration configuration, IMatrixListener matrixListener) throws Exception
 	{
-		return new Matrix(fileName, configuration, matrixListener);
+		return new Matrix(fileName, this, matrixListener);
 	}
 
 	@Override
 	protected MessageDictionary createClientDictionary(String fileName, Configuration configuration) throws Exception
 	{
-		return new MessageDictionary(fileName, configuration);
+		return new MessageDictionary(fileName, this);
 	}
 
 	@Override
 	protected GuiDictionary createAppDictionary(String fileName, Configuration configuration) throws Exception
 	{
-		return new GuiDictionary(fileName, configuration);
+		return new GuiDictionary(fileName, this);
 	}
 
 	@Override
 	protected Csv createCsv(String fileName, Configuration configuration) throws Exception
 	{
-		return new Csv(fileName, configuration);
+		return new Csv(fileName, this);
 	}
 
 	@Override
 	protected PlainText createPlainText(String fileName, Configuration configuration) throws Exception
 	{
-		return new PlainText(fileName, configuration);
+		return new PlainText(fileName, this);
 	}
 
 	@Override
 	protected SystemVars createVars(String fileName, Configuration configuration) throws Exception
 	{
-		return new SystemVars(fileName, configuration);
+		return new SystemVars(fileName, this);
 	}
 
 	@Override
@@ -83,12 +90,6 @@ public class ConsoleDocumentFactory extends DocumentFactory
 		}
 
 		return matrixListener;
-	}
-	
-	@Override
-	public void 				print(String message)
-	{
-		System.out.println(message);
 	}
 	
 	@Override

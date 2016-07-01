@@ -18,6 +18,7 @@ import com.exactprosystems.jf.common.report.HelpFactory;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.common.version.VersionInfo;
 import com.exactprosystems.jf.documents.Document;
+import com.exactprosystems.jf.documents.DocumentFactory;
 import com.exactprosystems.jf.documents.DocumentInfo;
 import com.exactprosystems.jf.documents.Notifier;
 import com.exactprosystems.jf.documents.config.Configuration;
@@ -487,13 +488,11 @@ public abstract class DialogsHelper
 		dialog.show();
 	}
 
-	public static void showActionsHelp()
+	public static void showActionsHelp(DocumentFactory factory)
 	{
-		Configuration config = new Configuration("Empty", new Settings());
-		IMatrixListener dummy = new SilenceMatrixListener();
-		try(Context context = config.createContext(dummy, null))
+		try(Context context = factory.createContext())
 		{
-			Matrix matrix = new Matrix("helpMatrix", config, new SilenceMatrixListener());
+			Matrix matrix = factory.createMatrix("helpMatrix");
 
 			MatrixItem syntax = new HelpChapter("Matrix syntax");
 			syntax.init(matrix);
@@ -574,10 +573,12 @@ public abstract class DialogsHelper
 		dialog.show();
 	}
 
-	public static void displayReport(File file, String matrixName, Configuration configuration)
+	public static void displayReport(File file, String matrixName, DocumentFactory factory)
 	{
+		
 		final String[] matrName = {matrixName};
 		tryCatch(() -> {
+			Configuration configuration = factory.getConfiguration();
 			boolean addButton = configuration != null;
 			ReportBrowser reportBrowser = new ReportBrowser(file);
 			Dialog<ButtonType> dialog = new Dialog<>();
@@ -608,12 +609,12 @@ public abstract class DialogsHelper
 			dialog.getDialogPane().getStylesheets().addAll(Common.currentTheme().getPath());
 			Optional<ButtonType> buttonType = dialog.showAndWait();
 			buttonType.filter(bt -> bt.getButtonData().equals(ButtonBar.ButtonData.OTHER)).ifPresent(type -> Common.tryCatch(() -> {
-				String matrix = reportBrowser.getMatrix();
-				if (matrix != null && !matrix.isEmpty())
+				String name = reportBrowser.getMatrix();
+				if (name != null && !name.isEmpty())
 				{
-					MatrixFx matrixFx = new MatrixFx(matrName[0], configuration, new MatrixListener());
-					matrixFx.load(new StringReader(matrix));
-					matrixFx.display();
+					Matrix matrix = factory.createMatrix(matrName[0]);
+					matrix.load(new StringReader(name));
+					matrix.display();
 				}
 			}, "Error on open matrix from report"));
 		}, "Error on show report");

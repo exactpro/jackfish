@@ -13,6 +13,7 @@ import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.common.Settings.SettingsValue;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.documents.Document;
+import com.exactprosystems.jf.documents.DocumentFactory;
 import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
@@ -24,6 +25,7 @@ import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.matrix.MatrixFx;
 import com.exactprosystems.jf.tool.matrix.schedule.RunnerScheduler;
 import com.exactprosystems.jf.tool.settings.SettingsPanel;
+
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
@@ -38,6 +40,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
+
 import org.apache.log4j.Logger;
 
 import java.io.File;
@@ -141,6 +144,7 @@ public class MainController implements Initializable, ContainingParent
 	private Stage				stage;
 	private Parent				pane;
 
+	private DocumentFactory 	factory;
 	private Main				model;
 	private Settings			settings;
 
@@ -217,8 +221,9 @@ public class MainController implements Initializable, ContainingParent
 		this.stage.show();
 	}
 
-	public void init(Main model, Settings settings, Stage stage, RunnerScheduler runnerListener)
+	public void init(DocumentFactory factory, Main model, Settings settings, Stage stage, RunnerScheduler runnerListener)
 	{
+		this.factory = factory;
 		this.model = model;
 		this.settings = settings;
 		this.stage = stage;
@@ -415,7 +420,7 @@ public class MainController implements Initializable, ContainingParent
 
 	public void showActionsHelp(ActionEvent event)
 	{
-		Common.tryCatch(DialogsHelper::showActionsHelp, "Error on show actions panel");
+		Common.tryCatch(() -> DialogsHelper.showActionsHelp(factory), "Error on show actions panel");
 	}
 
 	public void showCalculator(ActionEvent event)

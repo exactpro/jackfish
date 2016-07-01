@@ -27,6 +27,7 @@ import com.exactprosystems.jf.common.report.ReportFactory;
 import com.exactprosystems.jf.common.xml.schema.Xsd;
 import com.exactprosystems.jf.documents.AbstractDocument;
 import com.exactprosystems.jf.documents.Document;
+import com.exactprosystems.jf.documents.DocumentFactory;
 import com.exactprosystems.jf.documents.DocumentInfo;
 import com.exactprosystems.jf.documents.matrix.Matrix;
 import com.exactprosystems.jf.documents.matrix.parser.items.MutableArrayList;
@@ -215,11 +216,10 @@ public class Configuration extends AbstractDocument
 	@XmlElement(name = appEntry)
 	public MutableArrayList<AppEntry> appEntriesValue;
 
-	public Configuration(String fileName, Settings settings)
+	public Configuration(String fileName, DocumentFactory factory)
 	{
-		super(fileName, null);
+		super(fileName, factory);
 
-		this.settings 					= settings;
 		this.changed 					= false;
 		
 		this.timeValue					= new MutableString();
@@ -241,22 +241,23 @@ public class Configuration extends AbstractDocument
 		this.librariesValue				= new MutableArrayList<MutableString>();
 
 		this.globals 					= new HashMap<String, Object>();
-		this.clients 					= new ClientsPool(this);
-		this.services 					= new ServicePool(this);
-		this.applications 				= new ApplicationPool(this);
-		this.databases 					= new DataBasePool(this);
+		this.clients 					= new ClientsPool(factory);
+		this.services 					= new ServicePool(factory);
+		this.applications 				= new ApplicationPool(factory);
+		this.databases 					= new DataBasePool(factory);
 
 		this.libs 						= new HashMap<String, Matrix>();
 	}
 
 	public Configuration()
 	{
-		this("unknown", new Settings());
+		this("unknown", null);
 	}
 
-	public static Configuration createNewConfiguration(String pathToConfig, Settings settings)
+	public static Configuration createNewConfiguration(String pathToConfig, DocumentFactory factory)
 	{
-		Configuration config = new Configuration(pathToConfig, settings);
+		Configuration config = new Configuration(pathToConfig, factory);
+		
 		config.varsValue = new MutableString("vars.ini");
 		config.timeValue = DEFAULT_TIME;
 		config.dateValue = DEFAULT_DATE;
@@ -269,6 +270,7 @@ public class Configuration extends AbstractDocument
 		config.reportsValue.set(REPORTS_FOLDER);
 		config.clientDictionariesValue.add(new MutableString(CLIENT_DIC_FOLDER));
 		config.appDictionariesValue.add(new MutableString(APP_DIC_FOLDER));
+		
 		return config;
 	}
 	
@@ -337,11 +339,6 @@ public class Configuration extends AbstractDocument
 		return this.databases;
 	}
 
-	public Settings getSettings()
-	{
-		return this.settings;
-	}
-	
 	public void storeGlobal(String name, Object value)
 	{
 		synchronized (this.globals)
@@ -388,31 +385,18 @@ public class Configuration extends AbstractDocument
 
 	public AbstractEvaluator createEvaluator() throws Exception
 	{
-		String evaluatorClassName = evaluatorValue;
-		if (Str.IsNullOrEmpty(evaluatorClassName))
+		if (Str.IsNullOrEmpty(this.evaluatorValue))
 		{
 			throw new Exception("Empty evaluator class name.");
 		}
 		
-		AbstractEvaluator evaluator	= objectFromClassName(evaluatorClassName, AbstractEvaluator.class);
+		AbstractEvaluator evaluator	= objectFromClassName(this.evaluatorValue, AbstractEvaluator.class);
 		evaluator.addImports(toStringList(this.importsValue));
-		setUserVariablesFromMask(this.varsValue.get(), evaluator);
-		for (MutableString userVars : this.userVarsValue)
-		{
-			setUserVariablesFromMask(userVars.get(), evaluator);
-		}
-		
 		evaluator.reset();
 		
 		return evaluator;
 	}
 
-	@Deprecated
-	public Context createContext(IMatrixListener matrixListener, PrintStream out) throws Exception
-	{
-		return new Context(matrixListener, out, this);
-	}
-	
 	public void refreshLibs()
 	{
 		IMatrixListener checker = new MatrixListener();
@@ -433,7 +417,7 @@ public class Configuration extends AbstractDocument
 				{
 					try (Reader reader = new FileReader(libFile))
 					{
-						Matrix matrix = new Matrix(libFile.getAbsolutePath(), this, checker);
+						Matrix matrix = getFactory().createMatrix(libFile.getAbsolutePath()); 
 						if (!checker.isOk())
 						{
 							logger.error("Library load error: [" + libFile.getName() + "] " + checker.getExceptionMessage());
@@ -454,6 +438,25 @@ public class Configuration extends AbstractDocument
 		}
 	}
 
+	public void refreshVars()
+	{
+		try
+		{
+			AbstractEvaluator evaluator	= objectFromClassName(this.evaluatorValue, AbstractEvaluator.class);
+			evaluator.addImports(toStringList(this.importsValue));
+
+			setUserVariablesFromMask(this.varsValue.get(), evaluator);
+			for (MutableString userVars : this.userVarsValue)
+			{
+				setUserVariablesFromMask(userVars.get(), evaluator);
+			}
+		}
+		catch (Exception e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 	
     //------------------------------------------------------------------------------------------------------------------
     // interface Document
@@ -490,6 +493,8 @@ public class Configuration extends AbstractDocument
 	        });
 	
 	        Configuration config = (Configuration) unmarshaller.unmarshal(reader);
+	        config.factory = getFactory();
+	        
 	        setAll(config);
 	        
 			this.reportFactoryObj		= objectFromClassName(reportFactoryValue, ReportFactory.class);
@@ -497,6 +502,7 @@ public class Configuration extends AbstractDocument
 			DateTime.setFormats(this.timeValue.get(), this.dateValue.get(), this.dateTimeValue.get());
 			Converter.setFormats(toStringList(this.formatsValue));
 			refreshLibs();
+			refreshVars();
 
 			this.valid = true;
     	}
@@ -534,8 +540,8 @@ public class Configuration extends AbstractDocument
 		}
 		
 		// save list of all opened documents ...
-		this.settings.removeAll(Main.MAIN_NS, Main.OPENED);
-		this.settings.saveIfNeeded();
+		settings.removeAll(Main.MAIN_NS, Main.OPENED);
+		settings.saveIfNeeded();
 
 		for (Document doc : copy)
 		{
@@ -544,16 +550,16 @@ public class Configuration extends AbstractDocument
 				DocumentKind kind = DocumentKind.byDocument(doc);
 				if (doc.hasName())
 				{
-					this.settings.setValue(Main.MAIN_NS, Main.OPENED, doc.getName(), kind.toString());
+					settings.setValue(Main.MAIN_NS, Main.OPENED, doc.getName(), kind.toString());
 				}
-				doc.close(this.settings);
+				doc.close(settings);
 			}
 			catch (Exception e)
 			{
 				logger.error(e.getMessage());
 			}
 		}
-		this.settings.saveIfNeeded();
+		settings.saveIfNeeded();
 
 		this.services.stopAllServices();
 		this.applications.stopAllApplications();
@@ -810,7 +816,7 @@ public class Configuration extends AbstractDocument
 		{
 			try (Reader reader = new FileReader(file))
 			{
-				SystemVars vars = new SystemVars(userVariablesFileName, this);
+				SystemVars vars = getFactory().createVars(userVariablesFileName);
 				vars.load(reader);
 				vars.injectVariables(evaluator);
 			}
@@ -857,7 +863,6 @@ public class Configuration extends AbstractDocument
 	protected ReportFactory			reportFactoryObj;
 	protected Map<String, Matrix>	libs;
 	protected Map<String, Object>	globals;
-	protected Settings 				settings;
 
 	protected ClientsPool			clients;
 	protected ServicePool			services;

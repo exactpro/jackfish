@@ -27,7 +27,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.function.Function;
 
 public class LibraryTreeNode extends TreeNode
 {
@@ -76,46 +75,6 @@ public class LibraryTreeNode extends TreeNode
 		//TODO think about implementation this method
 		menu.getItems().add(new MenuItem("Git"));
 		return Optional.of(menu);
-	}
-
-	@Deprecated
-	public void display(List<String> librariesValue)
-	{
-		this.treeItem.getChildren().clear();
-		Function<File, ContextMenu> menuTopFolder = file -> {
-			ContextMenu menu = new ContextMenu();
-			MenuItem itemRemove = new MenuItem("Remove library dir", new ImageView(new Image(CssVariables.Icons.REMOVE_PARAMETER_ICON)));
-			itemRemove.setOnAction(e -> Common.tryCatch(() -> model.excludeLibraryDirectory(file.getName()), "Error on remove library directory"));
-			menu.getItems().addAll(itemRemove);
-			return menu;
-		};
-		Function<File, ContextMenu> menuFiles = file -> {
-			ContextMenu menu = new ContextMenu();
-			MenuItem itemOpen = new MenuItem("Open library", new ImageView(new Image(CssVariables.Icons.LIBRARY_ICON)));
-			itemOpen.setOnAction(e -> Common.tryCatch(() -> this.model.openLibrary(file), "Error on open library file"));
-
-			MenuItem addNewLibrary = new MenuItem("Add new library", new ImageView(new Image(CssVariables.Icons.ADD_PARAMETER_ICON)));
-			addNewLibrary.setOnAction(e -> ConfigurationTreeView.showInputDialog("Enter new name").ifPresent(name -> Common.tryCatch(() -> this.model.addNewLibrary(file, name), "Error on create new library")));
-
-			MenuItem removeLibrary = new MenuItem("Remove library", new ImageView(new Image(CssVariables.Icons.REMOVE_PARAMETER_ICON)));
-			removeLibrary.setOnAction(e -> Common.tryCatch(() -> this.model.removeLibrary(file), "Error on remove library"));
-
-			menu.getItems().addAll(itemOpen, addNewLibrary, removeLibrary);
-			return menu;
-		};
-		Function<File, ContextMenu> menuFolders = file -> {
-			ContextMenu menu = new ContextMenu();
-			MenuItem addNewLibrary = new MenuItem("Add new library", new ImageView(new Image(CssVariables.Icons.ADD_PARAMETER_ICON)));
-			addNewLibrary.setOnAction(e -> ConfigurationTreeView.showInputDialog("Enter new name").ifPresent(name -> Common.tryCatch(() -> this.model.addNewLibrary(file, name), "Error on create new library")));
-
-			MenuItem removeFolder = new MenuItem("Remove folder", new ImageView(new Image(CssVariables.Icons.REMOVE_PARAMETER_ICON)));
-			removeFolder.setOnAction(e -> Common.tryCatch(() -> this.model.removeLibrary(file), "Error on remove folder"));
-
-			menu.getItems().addAll(addNewLibrary, removeFolder);
-			return menu;
-		};
-
-		librariesValue.forEach(file -> new BuildTree(new File(file), this.treeItem).doubleClickEvent(f -> () -> this.model.openLibrary(f)).fileFilter(f -> ConfigurationFx.getExtension(f.getAbsolutePath()).equals(ConfigurationFx.matrixExt)).menuTopFolder(menuTopFolder).menuFiles(menuFiles).menuFolder(menuFolders).byPass());
 	}
 
 	public void display(Map<String, Matrix> map)

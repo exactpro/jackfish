@@ -9,6 +9,7 @@
 package com.exactprosystems.jf.tool.matrix.schedule;
 
 import com.exactprosystems.jf.common.MatrixRunner;
+import com.exactprosystems.jf.documents.DocumentFactory;
 import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.Matrix;
@@ -34,7 +35,7 @@ public class RunnerScheduler implements RunnerListener
 	private static final Logger logger = Logger.getLogger(RunnerScheduler.class);
 	private ScheduleController controller;
 	private ConcurrentHashMap<MatrixRunner, Boolean> map;
-	private Configuration configuration;
+	private DocumentFactory factory;
 
 	public RunnerScheduler() throws Exception
 	{
@@ -79,9 +80,9 @@ public class RunnerScheduler implements RunnerListener
 		this.controller.displayState(matrixRunner, state, done, total);
 	}
 
-	public void setConfiguration(Configuration configuration)
+	public void setDocumentFactory(DocumentFactory factory)
 	{
-		this.configuration = configuration;
+		this.factory = factory;
 	}
 
 	public void startSelected(List<MatrixRunner> collect)
@@ -106,7 +107,7 @@ public class RunnerScheduler implements RunnerListener
 			.filter(Objects::nonNull)
 			.forEach(file -> Common.tryCatch(() ->
 			{
-				Context context = this.configuration.createContext(new MatrixListener(), System.out);
+				Context context = this.factory.createContext();
 				MatrixRunner runner = new MatrixRunner(context, file, null, null);
 				this.map.put(runner, Boolean.TRUE);
 			}, "Error on create new runner")));
@@ -128,7 +129,7 @@ public class RunnerScheduler implements RunnerListener
 					try
 					{
 						unsubscribe(runner);
-						matrix = new MatrixFx(matrix, context.getConfiguration(), context.getMatrixListener());
+						matrix = this.factory.createMatrix(matrix.getName()); // TODO something weird
 						matrix.display();
 					}
 					catch (Exception e)

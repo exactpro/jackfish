@@ -8,6 +8,7 @@
 
 package com.exactprosystems.jf.tool.systemvars;
 
+import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.documents.matrix.parser.Parameter;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
@@ -71,10 +72,10 @@ public class SystemVarsFxController implements Initializable, ContainingParent
 	//----------------------------------------------------------------------------------------------
 	// Public methods
 	//----------------------------------------------------------------------------------------------
-	public void init(SystemVarsFx model)
+	public void init(SystemVarsFx model, Settings settings)
 	{
 		this.model = model;
-		this.tab = new CustomTab(model, model.getConfiguration().getSettings());
+		this.tab = new CustomTab(model, settings);
 		this.tab.setContent(this.pane);
 		this.tableView.setListener(this.model::removeParameters);
 		createTable();

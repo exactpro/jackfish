@@ -102,9 +102,9 @@ public class DictionaryFxController implements Initializable, ContainingParent
 		this.pane = parent;
 	}
 
-	public void init(final DictionaryFx model, Configuration configuration, AbstractEvaluator evaluator) throws Exception
+	public void init(final DictionaryFx model, Settings settings, Configuration configuration, AbstractEvaluator evaluator) throws Exception
 	{
-		this.settings = configuration.getSettings();
+		this.settings = settings;
 		this.tab = new CustomTab(model, this.settings);
 		this.tab.setContent(pane);
 

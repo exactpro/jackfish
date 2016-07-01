@@ -1,11 +1,18 @@
 package com.exactprosystems.jf.documents;
 
-import javafx.scene.layout.BorderPane;
+import org.apache.log4j.Logger;
 
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.documents.config.Configuration;
+import com.exactprosystems.jf.documents.config.Context;
+import com.exactprosystems.jf.documents.csv.Csv;
+import com.exactprosystems.jf.documents.guidic.GuiDictionary;
+import com.exactprosystems.jf.documents.matrix.Matrix;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.RunnerListener;
+import com.exactprosystems.jf.documents.msgdic.MessageDictionary;
+import com.exactprosystems.jf.documents.text.PlainText;
+import com.exactprosystems.jf.documents.vars.SystemVars;
 import com.exactprosystems.jf.tool.csv.CsvFx;
 import com.exactprosystems.jf.tool.dictionary.DictionaryFx;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
@@ -19,52 +26,59 @@ import com.exactprosystems.jf.tool.text.PlainTextFx;
 
 public class FxDocumentFactory extends DocumentFactory
 {
-	public FxDocumentFactory()
+	public FxDocumentFactory(Main mainModel)
 	{
 		super();
+
+		this.mainModel = mainModel;
 	}
 	
-
 	@Override
-	public ConfigurationFx createConfig(String fileName, Settings settings) throws Exception
+	protected Context createContext(Configuration configuration, IMatrixListener matrixListener) throws Exception
 	{
-		return new ConfigurationFx(fileName, this.runnerListener, settings, this.mainModel, this.pane);
+		return new Context(this, matrixListener, System.out);
 	}
 
 	@Override
-	public MatrixFx createMatrix(String fileName, Configuration configuration, IMatrixListener matrixListener) throws Exception
+	protected Configuration createConfig(String fileName, Settings settings) throws Exception
 	{
-		return new MatrixFx(fileName, configuration, matrixListener);
+		return new ConfigurationFx(this, fileName, this.runnerListener, this.mainModel);
 	}
 
 	@Override
-	public MessageDictionaryFx createClientDictionary(String fileName, Configuration configuration) throws Exception
+	protected Matrix createMatrix(String fileName, Configuration configuration, IMatrixListener matrixListener) throws Exception
+	{
+		return new MatrixFx(fileName, this, matrixListener);
+	}
+
+	@Override
+	protected MessageDictionary createClientDictionary(String fileName, Configuration configuration) throws Exception
 	{ 
-		return new MessageDictionaryFx(fileName, configuration);  
+		return new MessageDictionaryFx(fileName, this);  
 	}
 
 	@Override
-	public DictionaryFx createAppDictionary(String fileName, Configuration configuration) throws Exception
+	protected GuiDictionary createAppDictionary(String fileName, Configuration configuration) throws Exception
 	{
-		return new DictionaryFx(fileName, configuration);
+		return new DictionaryFx(fileName, this);
 	}
 
 	@Override
-	public CsvFx createCsv(String fileName, Configuration configuration) throws Exception
+	protected Csv createCsv(String fileName, Configuration configuration) throws Exception
 	{
-		return new CsvFx(fileName, super.settings, configuration);
+		return new CsvFx(fileName, this);
 	}
 
 	@Override
-	public PlainTextFx createPlainText(String fileName, Configuration configuration) throws Exception
+	protected PlainText createPlainText(String fileName, Configuration configuration) throws Exception
 	{
-		return new PlainTextFx(fileName, super.settings, configuration);
+		return new PlainTextFx(fileName, this);
 	}
 
 	@Override
-	public SystemVarsFx createVars(String fileName, Configuration configuration) throws Exception
+	protected SystemVars createVars(String fileName, Configuration configuration) throws Exception
 	{
-		return new SystemVarsFx(fileName, configuration);
+		return new SystemVarsFx(fileName, this);
 	}
 	
 	@Override
@@ -74,16 +88,11 @@ public class FxDocumentFactory extends DocumentFactory
 	}
 
 	@Override
-	public void 				print(String message)
-	{
-		System.out.println(message); // TODO
-	}
-	
-	@Override
 	public void 				error(String message, Exception exeption)
 	{
 		if (exeption != null)
 		{
+			logger.error(">> " + exeption.getMessage() + "\n" + message, exeption);
 			DialogsHelper.showError(exeption.getMessage() + "\n" + message);
 		}
 		else
@@ -101,7 +110,6 @@ public class FxDocumentFactory extends DocumentFactory
 	private RunnerListener runnerListener;
 	
 	private Main mainModel;
-	
-	private BorderPane pane;
 
+	private static final Logger logger = Logger.getLogger(FxDocumentFactory.class);
 }

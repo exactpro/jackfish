@@ -294,7 +294,7 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 
 	public void init(MatrixFx model, Context context, TabConsole console)
 	{
-		Settings settings = context.getConfiguration().getSettings();
+		Settings settings = context.getFactory().getSettings();
 		
 		MatrixParametersContextMenu parametersContextMenu 	= new MatrixParametersContextMenu(context, model, this.tree, settings);
 		MatrixContextMenu 			rowContextMenu 			= new MatrixContextMenu(context, model, this.tree, settings);
@@ -309,8 +309,8 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 		console.setConsole(this.listView);
 		getTabPane().getTabs().add(this.tab);
 		getTabPane().getSelectionModel().select(this.tab);
-		initializeButtons(context.getConfiguration().getSettings());
-		initShortcuts(context.getConfiguration().getSettings());
+		initializeButtons(context.getFactory().getSettings());
+		initShortcuts(context.getFactory().getSettings());
 	}
 
 	public void saved(String name)

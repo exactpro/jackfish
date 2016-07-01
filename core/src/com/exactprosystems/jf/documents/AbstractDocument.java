@@ -11,17 +11,15 @@ package com.exactprosystems.jf.documents;
 import com.exactprosystems.jf.common.*;
 import com.exactprosystems.jf.common.undoredo.ActionTrackProvider;
 import com.exactprosystems.jf.common.undoredo.Command;
-import com.exactprosystems.jf.documents.config.Configuration;
-
 import java.io.File;
 import java.io.Reader;
 import java.util.Optional;
 
 public abstract class AbstractDocument implements Document
 {
-	public AbstractDocument(String fileName, Configuration config)
+	public AbstractDocument(String fileName, DocumentFactory factory)
 	{
-		this.config = config;
+		this.factory = factory;
 		this.name = fileName;
 		this.hasName = true;
 	}
@@ -65,12 +63,6 @@ public abstract class AbstractDocument implements Document
 		return true;
 	}
 
-	@Override
-	public Configuration getConfiguration()
-	{
-		return this.config;
-	}
-	
 	@Override
 	public boolean hasName()
 	{
@@ -124,12 +116,13 @@ public abstract class AbstractDocument implements Document
 	@Override
 	public void display() throws Exception
 	{
+		System.err.println(">> " + getName());
 	}
 
 	@Override
 	public void close(Settings settings) throws Exception
 	{
-		Optional.ofNullable(getConfiguration()).ifPresent(c -> c.unregister(this));
+		Optional.ofNullable(getFactory().getConfiguration()).ifPresent(c -> c.unregister(this));
 	}
 	
 	@Override
@@ -151,6 +144,11 @@ public abstract class AbstractDocument implements Document
 		this.listener = listener;
 	}
 
+	@Override
+	public DocumentFactory getFactory()
+	{
+		return this.factory;
+	}
 	
 	
 	protected void changed(boolean flag)
@@ -170,9 +168,9 @@ public abstract class AbstractDocument implements Document
 		this.changed(true);
 	}
 
-	private Configuration config;
-	private boolean hasName = false;
-	private String name;
-	private ActionTrackProvider provider = new ActionTrackProvider();
-	private ChangeListener listener;
+	protected 	DocumentFactory 	factory;
+	private 	boolean 			hasName = false;
+	private 	String 				name;
+	private 	ActionTrackProvider provider = new ActionTrackProvider();
+	private 	ChangeListener 		listener;
 }

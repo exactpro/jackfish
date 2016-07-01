@@ -9,9 +9,8 @@
 package com.exactprosystems.jf.documents.text;
 
 import com.exactprosystems.jf.documents.AbstractDocument;
+import com.exactprosystems.jf.documents.DocumentFactory;
 import com.exactprosystems.jf.documents.DocumentInfo;
-import com.exactprosystems.jf.documents.config.Configuration;
-
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
@@ -20,9 +19,9 @@ import java.io.*;
 @DocumentInfo(newName = "Text", extentioin = "txt", description = "Plain text")
 public class PlainText extends AbstractDocument
 {
-	public PlainText(String fileName, Configuration config)
+	public PlainText(String fileName, DocumentFactory factory)
 	{
-		super(fileName, config);
+		super(fileName, factory);
 		this.property = new SimpleStringProperty()
 		{
 			@Override

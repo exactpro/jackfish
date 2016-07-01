@@ -9,11 +9,9 @@
 package com.exactprosystems.jf.tool.csv;
 
 import com.exactprosystems.jf.common.Settings;
-import com.exactprosystems.jf.documents.AbstractDocument;
+import com.exactprosystems.jf.documents.DocumentFactory;
 import com.exactprosystems.jf.documents.DocumentInfo;
-import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.documents.csv.Csv;
-import com.exactprosystems.jf.functions.Table;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.custom.grideditor.DataProvider;
 import com.exactprosystems.jf.tool.custom.grideditor.TableDataProvider;
@@ -32,11 +30,10 @@ import java.util.Optional;
 )
 public class CsvFx extends Csv
 {
-	public CsvFx(String fileName, Settings settings, Configuration config)
+	public CsvFx(String fileName, DocumentFactory factory)
 	{
-		super(fileName, config);
+		super(fileName, factory);
 		
-		this.settings = settings;
 		this.provider = new TableDataProvider(super.table);
 	}
 
@@ -127,14 +124,13 @@ public class CsvFx extends Csv
 		if (!this.isControllerInit)
 		{
 			this.controller = Common.loadController(CsvFxController.class.getResource("CsvFx.fxml"));
-			this.controller.init(this, this.settings);
-			Optional.ofNullable(getConfiguration()).ifPresent(c -> c.register(this));
+			this.controller.init(this, getFactory().getSettings());
+			Optional.ofNullable(getFactory().getConfiguration()).ifPresent(c -> c.register(this));
 			this.isControllerInit = true;
 		}
 	}
 
 	private boolean isControllerInit = false;
 	private DataProvider<String> provider;
-	private Settings settings;
 	private CsvFxController controller;
 }

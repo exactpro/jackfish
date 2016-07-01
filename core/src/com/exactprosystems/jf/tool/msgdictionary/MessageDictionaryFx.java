@@ -8,14 +8,14 @@
 
 package com.exactprosystems.jf.tool.msgdictionary;
 
-import com.exactprosystems.jf.documents.config.Configuration;
+import com.exactprosystems.jf.documents.DocumentFactory;
 import com.exactprosystems.jf.documents.msgdic.MessageDictionary;
 
 public class MessageDictionaryFx extends MessageDictionary
 {
-	public MessageDictionaryFx(String fileName, Configuration configuration)
+	public MessageDictionaryFx(String fileName, DocumentFactory factory)
 	{
-		super(fileName, configuration);
+		super(fileName, factory);
 	}
 
 

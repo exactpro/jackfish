@@ -61,7 +61,7 @@ public class WatcherFx
 
 	public void afterRendering()
 	{
-		this.values = this.context.getConfiguration().getSettings().getValues(Settings.WATCHER, dialog);
+		this.values = this.context.getFactory().getSettings().getValues(Settings.WATCHER, dialog);
 		this.evaluateData(values);
 		this.controller.displayData(values);
 	}
@@ -75,7 +75,7 @@ public class WatcherFx
 
 	public void saveData() throws Exception
 	{
-		Settings settings = this.context.getConfiguration().getSettings();
+		Settings settings = this.context.getFactory().getSettings();
 		settings.removeAll(Settings.WATCHER, dialog);
 		values.forEach(value -> settings.setValue(Settings.WATCHER, dialog, value.getKey(), value.getValue()));
 		settings.saveIfNeeded();

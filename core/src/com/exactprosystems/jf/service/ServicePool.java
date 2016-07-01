@@ -12,9 +12,11 @@ import com.exactprosystems.jf.api.common.ApiVersionInfo;
 import com.exactprosystems.jf.api.common.IContext;
 import com.exactprosystems.jf.api.service.*;
 import com.exactprosystems.jf.common.MainRunner;
+import com.exactprosystems.jf.documents.DocumentFactory;
 import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.documents.config.Parameter;
 import com.exactprosystems.jf.documents.config.ServiceEntry;
+
 import org.apache.log4j.Logger;
 
 import java.net.URL;
@@ -23,9 +25,9 @@ import java.util.*;
 
 public class ServicePool implements IServicesPool
 {
-	public ServicePool(Configuration configuration)
+	public ServicePool(DocumentFactory factory)
 	{
-		this.configuration = configuration;
+		this.factory = factory;
 		this.serviceFactories = new HashMap<String, IServiceFactory>();
 		this.connections = new HashSet<ServiceConnection>();
 		this.mapServices = new HashMap<>();
@@ -110,7 +112,7 @@ public class ServicePool implements IServicesPool
 	public List<String> servicesNames()
 	{
 		List<String> result = new ArrayList<String>();
-		for (ServiceEntry entry : this.configuration.getServiceEntries())
+		for (ServiceEntry entry : this.factory.getConfiguration().getServiceEntries())
 		{
 			String name = null; 
 			try
@@ -274,7 +276,7 @@ public class ServicePool implements IServicesPool
 	
 	private ServiceEntry parametersEntry(String id) throws Exception
 	{
-		ServiceEntry entry = this.configuration.getServiceEntry(id);
+		ServiceEntry entry = this.factory.getConfiguration().getServiceEntry(id);
 		if (entry == null)
 		{
 			throw new Exception("'" + id + "' is not found.");
@@ -323,7 +325,7 @@ public class ServicePool implements IServicesPool
 
 	private Map<String, ServiceStatus> mapServices;
 
-	private Configuration configuration;
+	private DocumentFactory factory;
 
 	private Map<String, IServiceFactory> serviceFactories;
 

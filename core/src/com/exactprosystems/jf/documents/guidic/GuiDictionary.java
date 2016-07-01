@@ -16,8 +16,8 @@ import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportTable;
 import com.exactprosystems.jf.common.xml.schema.Xsd;
 import com.exactprosystems.jf.documents.AbstractDocument;
+import com.exactprosystems.jf.documents.DocumentFactory;
 import com.exactprosystems.jf.documents.DocumentInfo;
-import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.documents.guidic.controls.AbstractControl;
 import com.exactprosystems.jf.documents.matrix.parser.items.MutableArrayList;
 
@@ -53,9 +53,9 @@ public class GuiDictionary extends AbstractDocument implements IGuiDictionary
 		this(null, null);
 	}
 
-	public GuiDictionary(String fileName, Configuration configuration)
+	public GuiDictionary(String fileName, DocumentFactory factory)
 	{
-		super(fileName, configuration);
+		super(fileName, factory);
 
 		this.windows = new MutableArrayList<>();
 	}
@@ -102,6 +102,7 @@ public class GuiDictionary extends AbstractDocument implements IGuiDictionary
 			unmarshaller.setListener(new DictionaryUnmarshallerListener());
 
 			GuiDictionary dictionary = (GuiDictionary) unmarshaller.unmarshal(reader);
+			dictionary.factory = getFactory();
 
 			this.windows.clear();
 			this.windows.addAll(dictionary.windows);

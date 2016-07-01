@@ -22,15 +22,16 @@ import java.util.Properties;
 import java.util.ServiceLoader;
 
 import com.exactprosystems.jf.common.MainRunner;
+import com.exactprosystems.jf.documents.DocumentFactory;
 import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.documents.config.SqlEntry;
 import com.exactprosystems.jf.functions.Table;
 
 public class DataBasePool
 {
-	public DataBasePool(Configuration configuration)
+	public DataBasePool(DocumentFactory factory)
 	{
-		this.configuration = configuration;
+		this.factory = factory;
 		this.drivers = new HashMap<String, Driver>();
 	}
 	
@@ -107,7 +108,7 @@ public class DataBasePool
 
 	private Connection connection(String sql, Driver driver, String server, String base, String user, String password) throws Exception
 	{
-		SqlEntry entry = this.configuration.getSqlEntry(sql);
+		SqlEntry entry = this.factory.getConfiguration().getSqlEntry(sql);
 		String url 	 = entry.get(Configuration.sqlConnection);
 		String connectionString = url.replace("${SERVER}", server).replace("${BASE}", base);
 		Properties prop = new Properties();
@@ -126,7 +127,7 @@ public class DataBasePool
 		Driver driver = this.drivers.get(sql);
 		if (driver == null)
 		{
-			SqlEntry entry = this.configuration.getSqlEntry(sql);
+			SqlEntry entry = this.factory.getConfiguration().getSqlEntry(sql);
 			if (entry == null)
 			{
 				throw new Exception("'" + sql + "' is not found.");
@@ -157,7 +158,7 @@ public class DataBasePool
 		return driver;
 	}
 	
-	private Configuration configuration = null;
+	private DocumentFactory factory = null;
 	
 	private Map<String, Driver> drivers = null;
 }

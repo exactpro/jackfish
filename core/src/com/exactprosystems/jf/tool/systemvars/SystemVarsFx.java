@@ -11,7 +11,7 @@ package com.exactprosystems.jf.tool.systemvars;
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.undoredo.Command;
-import com.exactprosystems.jf.documents.config.Configuration;
+import com.exactprosystems.jf.documents.DocumentFactory;
 import com.exactprosystems.jf.documents.matrix.parser.Parameter;
 import com.exactprosystems.jf.documents.vars.SystemVars;
 import com.exactprosystems.jf.tool.Common;
@@ -31,11 +31,9 @@ public class SystemVarsFx extends SystemVars
 	private boolean isControllerInit = false;
 	private AbstractEvaluator evaluator;
 
-	public SystemVarsFx(String fileName, Configuration config) throws Exception
+	public SystemVarsFx(String fileName, DocumentFactory factory) throws Exception
 	{
-		super(fileName, config);
-		
-		this.evaluator = config.createEvaluator();
+		super(fileName, factory);
 	}
 
 	//==============================================================================================================================
@@ -45,7 +43,10 @@ public class SystemVarsFx extends SystemVars
 	protected void afterRedoUndo() 
 	{
 		super.afterRedoUndo();
-		this.getParameters().evaluateAll(this.evaluator);
+		if (super.evaluator != null)
+		{
+			this.getParameters().evaluateAll(super.evaluator);
+		}
 		this.controller.displayNewParameters(getParameterList());
 	}
 	
@@ -185,8 +186,8 @@ public class SystemVarsFx extends SystemVars
 		if (!this.isControllerInit)
 		{
 			this.controller = Common.loadController(SystemVarsFx.class.getResource("SystemVarsFx.fxml"));
-			this.controller.init(this);
-			getConfiguration().register(this);
+			this.controller.init(this, getFactory().getSettings());
+			getFactory().getConfiguration().register(this);
 			this.isControllerInit = true;
 		}
 	}

@@ -74,7 +74,7 @@ public class SqlTreeNode extends TreeNode
 
 	public void testSqlEntry(SqlEntry entry) throws Exception
 	{
-		Settings settings = this.model.getSettings();
+		Settings settings = this.model.getFactory().getSettings();
 		String s = entry.get(Configuration.entryName);
 		List<Settings.SettingsValue> values = settings.getValues(Settings.GLOBAL_NS, Settings.SQL + s);
 		Common.tryCatchThrow(() -> this.showTestSqlPanel(entry, values), "Error on show testing panel");

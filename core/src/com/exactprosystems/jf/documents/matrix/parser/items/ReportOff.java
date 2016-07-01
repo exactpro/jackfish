@@ -43,7 +43,7 @@ public class ReportOff extends MatrixItem
 	{
 		Object layout = driver.createLayout(this, 2);
 		driver.showComment(this, layout, 0, 0, getComments());
-		driver.showTitle(this, layout, 1, 0, Tokens.ReportOff.get(), context.getConfiguration().getSettings());
+		driver.showTitle(this, layout, 1, 0, Tokens.ReportOff.get(), context.getFactory().getSettings());
 
 		return layout;
 	}

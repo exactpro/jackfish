@@ -9,8 +9,8 @@
 package com.exactprosystems.jf.documents.csv;
 
 import com.exactprosystems.jf.documents.AbstractDocument;
+import com.exactprosystems.jf.documents.DocumentFactory;
 import com.exactprosystems.jf.documents.DocumentInfo;
-import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.functions.Table;
 
 import java.io.Reader;
@@ -18,9 +18,9 @@ import java.io.Reader;
 @DocumentInfo(newName = "Csv", extentioin = "csv", description = "CSV")
 public class Csv extends AbstractDocument
 {
-	public Csv(String fileName, Configuration config)
+	public Csv(String fileName, DocumentFactory factory)
 	{
-		super(fileName, config);
+		super(fileName, factory);
 
 		this.table = new Table(new String[][] 
 				{ 

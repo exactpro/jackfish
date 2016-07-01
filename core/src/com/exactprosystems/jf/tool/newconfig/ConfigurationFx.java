@@ -21,11 +21,10 @@ import com.exactprosystems.jf.common.MutableString;
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.undoredo.Command;
+import com.exactprosystems.jf.documents.DocumentFactory;
 import com.exactprosystems.jf.documents.config.*;
 import com.exactprosystems.jf.documents.matrix.Matrix;
-import com.exactprosystems.jf.documents.matrix.parser.listeners.MatrixListener;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.RunnerListener;
-import com.exactprosystems.jf.documents.matrix.parser.listeners.SilenceMatrixListener;
 import com.exactprosystems.jf.service.ServicePool;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.SupportedEntry;
@@ -39,15 +38,11 @@ import javafx.scene.control.Dialog;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.BorderPane;
 
-import javax.xml.bind.annotation.XmlRootElement;
-
 import java.io.File;
 import java.io.Reader;
 import java.util.*;
 import java.util.stream.Collectors;
 
-//TODO fix me pls, if this annotation not needed on this place
-@XmlRootElement(name = "configuration")
 public class ConfigurationFx extends Configuration
 {
 	//region fields
@@ -65,24 +60,35 @@ public class ConfigurationFx extends Configuration
 	//region Constructors
 	public ConfigurationFx() throws Exception
 	{
-		this(null, null, null, null, null);
+		this(null, null, null, null);
 	}
 
-	public ConfigurationFx(String fileName, RunnerListener runnerListener, Settings settings, Main mainModel, BorderPane pane) throws Exception
+	public ConfigurationFx(DocumentFactory factory, String fileName, RunnerListener runnerListener, Main mainModel) throws Exception
 	{
-		super(fileName, settings);
+		super(fileName, factory);
 
 		this.supportedClients = new HashMap<>();
 		this.supportedApps = new HashMap<>();
 		this.supportedServices = new HashMap<>();
 
-		super.runnerListener = runnerListener;
+		if (runnerListener != null)
+		{
+			super.runnerListener = runnerListener;
+		}
 
 		this.mainModel = mainModel;
-		this.pane = pane;
 	}
 	//endregion
 
+	//region Getters/Setters
+	
+	public void setPane(BorderPane pane)
+	{
+		this.pane = pane;
+	}
+
+	//endregion
+	
 	//region Utilities methods toString
 	public String matrixToString()
 	{
@@ -299,7 +305,7 @@ public class ConfigurationFx extends Configuration
 	public void addNewMatrix(File parentFolder, String fileName) throws Exception
 	{
 		File file = createNewFile(parentFolder, fileName, Configuration.matrixExt);
-		Matrix matrix = new Matrix(path(file), this, new MatrixListener());
+		Matrix matrix = getFactory().createMatrix(path(file));
 		matrix.create();
 		matrix.save(path(file));
 		displayMatrix();
@@ -438,14 +444,14 @@ public class ConfigurationFx extends Configuration
 
 	public void showPossibilities(ClientEntry entry) throws Exception
 	{
-		ClientsPool pool = new ClientsPool(this);
+		ClientsPool pool = new ClientsPool(getFactory());
 		IClientFactory factory = pool.loadClientFactory(entry.toString());
 		this.showPossibilities(factory.possebilities(), entry.toString());
 	}
 
 	public void addAllClientParams(ClientEntry entry) throws Exception
 	{
-		addAllKnowParameters(entry, entry.getParameters(), new ClientsPool(this).wellKnownParameters("" + entry), this::displayClient);
+		addAllKnowParameters(entry, entry.getParameters(), new ClientsPool(getFactory()).wellKnownParameters("" + entry), this::displayClient);
 	}
 
 	public void testClientVersion() throws Exception
@@ -503,13 +509,13 @@ public class ConfigurationFx extends Configuration
 
 	public void addAllServiceParams(ServiceEntry entry) throws Exception
 	{
-		addAllKnowParameters(entry, entry.getParameters(), new ServicePool(this).wellKnownParameters("" + entry), this::displayService);
+		addAllKnowParameters(entry, entry.getParameters(), new ServicePool(getFactory()).wellKnownParameters("" + entry), this::displayService);
 	}
 
 	public void testServiceVersion() throws Exception
 	{
 		this.supportedServices.clear();
-		ServicePool servicePool = new ServicePool(this);
+		ServicePool servicePool = new ServicePool(getFactory());
 		for (ServiceEntry entry : getServiceEntries())
 		{
 			String id = entry.toString();
@@ -531,7 +537,7 @@ public class ConfigurationFx extends Configuration
 			String parametersName = "StartParameters";
 			String title = "Start ";
 			String[] strings = getServicesPool().wellKnownStartArgs(idEntry);
-			Settings settings = getSettings();
+			Settings settings = getFactory().getSettings();
 			final Map<String, String> parameters = settings.getMapValues(Settings.SERVICE + idEntry, parametersName, strings);
 
 			AbstractEvaluator evaluator = createEvaluator();
@@ -566,7 +572,7 @@ public class ConfigurationFx extends Configuration
 				{
 					IServicesPool services = getServicesPool();
 					ServiceConnection serviceConnection = services.loadService(entry.toString());
-					services.startService(createContext(new SilenceMatrixListener(), System.out), serviceConnection, startParameters);
+					services.startService(getFactory().createContext(), serviceConnection, startParameters);
 					serviceConnectionMap.put(entry, serviceConnection);
 					return null;
 				}
@@ -607,13 +613,13 @@ public class ConfigurationFx extends Configuration
 
 	public void addAllAppParams(AppEntry entry) throws Exception
 	{
-		addAllKnowParameters(entry, entry.getParameters(), new ApplicationPool(this).wellKnownParameters("" + entry), this::displayApp);
+		addAllKnowParameters(entry, entry.getParameters(), new ApplicationPool(getFactory()).wellKnownParameters("" + entry), this::displayApp);
 	}
 
 	public void testAppVersion() throws Exception
 	{
 		this.supportedApps.clear();
-		ApplicationPool AppPool = new ApplicationPool(this);
+		ApplicationPool AppPool = new ApplicationPool(getFactory());
 		for (AppEntry entry : getAppEntries())
 		{
 			String id = entry.toString();

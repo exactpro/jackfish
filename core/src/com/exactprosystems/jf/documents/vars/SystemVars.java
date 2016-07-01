@@ -11,8 +11,8 @@ package com.exactprosystems.jf.documents.vars;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.evaluator.LinkedProperties;
 import com.exactprosystems.jf.documents.AbstractDocument;
+import com.exactprosystems.jf.documents.DocumentFactory;
 import com.exactprosystems.jf.documents.DocumentInfo;
-import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.documents.matrix.parser.Parameter;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 
@@ -31,9 +31,9 @@ public class SystemVars extends AbstractDocument
 {
 	public final static String NAME_VARIABLES = "variables";
 
-    public SystemVars(String fileName, Configuration configuration)
+    public SystemVars(String fileName, DocumentFactory factory)
     {
-    	super(fileName, configuration);
+    	super(fileName, factory);
 
         parameters = new Parameters();
     }
@@ -127,6 +127,7 @@ public class SystemVars extends AbstractDocument
 
 	public void injectVariables(AbstractEvaluator evaluator) throws Exception
 	{
+		this.evaluator = evaluator;
 		for (Parameter entry : this.parameters)
 		{
 			String key = entry.getName();
@@ -137,5 +138,7 @@ public class SystemVars extends AbstractDocument
 	
 	}
 
+	protected AbstractEvaluator evaluator;
+	
     private Parameters parameters;
 }

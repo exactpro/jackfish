@@ -28,22 +28,12 @@ import java.util.Map.Entry;
 
 public class Context implements IContext, AutoCloseable, Cloneable
 {
-	public Context(DocumentFactory factory, IMatrixListener matrixListener, Configuration configuration) throws Exception
+	public Context(DocumentFactory factory, IMatrixListener matrixListener, PrintStream out) throws Exception
 	{
 		this.factory 		= factory;
 		this.matrixListener = matrixListener;
+		this.outStream 		= out;
 		this.evaluator 		= factory.createEvaluator();
-		this.configuration 	= configuration;
-	}
-
-	@Deprecated
-	protected Context(IMatrixListener matrixListener, PrintStream out, Configuration configuration) throws Exception
-	{
-		this.configuration = configuration;
-		this.evaluator = configuration.createEvaluator();
-
-		this.matrixListener = matrixListener;
-		this.outStream = out;
 	}
 
 	@Override
@@ -60,10 +50,9 @@ public class Context implements IContext, AutoCloseable, Cloneable
 			Context clone = ((Context) super.clone());
 
 			clone.outStream 		= this.outStream;
-			clone.configuration 	= this.configuration;
 			clone.matrixListener 	= this.matrixListener == null ? null : this.matrixListener.clone();
 			clone.factory			= this.factory;
-			clone.evaluator 		= this.configuration.createEvaluator(); // this.factory.createEvaluator(); // TODO
+			clone.evaluator 		= this.factory.createEvaluator();
 			clone.libs 				= new HashMap<String, Matrix>();
 
 			return clone;
@@ -75,6 +64,12 @@ public class Context implements IContext, AutoCloseable, Cloneable
 		}
 	}
 
+	public Context setOut(PrintStream out)
+	{
+		this.outStream = out;
+		return this;
+	}
+	
 	public AbstractEvaluator getEvaluator()
 	{
 		return this.evaluator;
@@ -87,10 +82,9 @@ public class Context implements IContext, AutoCloseable, Cloneable
 
 	public Configuration getConfiguration()
 	{
-		return this.configuration;
+		return this.factory.getConfiguration();
 	}
 
-	@Deprecated
 	public PrintStream getOut()
 	{
 		return this.outStream;
@@ -129,7 +123,7 @@ public class Context implements IContext, AutoCloseable, Cloneable
 		Matrix matrix = this.libs.get(ns);
 		if (matrix == null)
 		{
-			matrix = this.configuration.getLib(ns);
+			matrix = getConfiguration().getLib(ns);
 
 			if (matrix == null)
 			{
@@ -162,7 +156,7 @@ public class Context implements IContext, AutoCloseable, Cloneable
 				res.add(new ReadableValue(it.getId(), ((SubCase) it).getName()));
 			}
 		});
-		for (Entry<String, Matrix> entry : this.configuration.getLibs().entrySet())
+		for (Entry<String, Matrix> entry : getConfiguration().getLibs().entrySet())
 		{
 			final String name = entry.getKey();
 			Matrix lib = entry.getValue();
@@ -183,15 +177,9 @@ public class Context implements IContext, AutoCloseable, Cloneable
 	}
 
 	
-	@Deprecated
-	private PrintStream				outStream		= System.out;
-
-	private Configuration			configuration;
-
-	private IMatrixListener			matrixListener	= null;
-
 	private DocumentFactory			factory;
-	
+	private PrintStream				outStream;
+	private IMatrixListener			matrixListener;
 	private AbstractEvaluator		evaluator;
 
 	private Map<String, Matrix>		libs 			= new HashMap<>();

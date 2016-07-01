@@ -86,9 +86,9 @@ public final class ForEach extends MatrixItem
 	{
 		Object layout = driver.createLayout(this, 2);
 		driver.showComment(this, layout, 0, 0, getComments());
-		driver.showTitle(this, layout, 1, 0, Tokens.ForEach.get(), context.getConfiguration().getSettings());
+		driver.showTitle(this, layout, 1, 0, Tokens.ForEach.get(), context.getFactory().getSettings());
 		driver.showTextBox(this, layout, 1, 1, this.var, this.var, () -> this.var.get());
-		driver.showTitle(this, layout, 1, 2, Tokens.In.get(), context.getConfiguration().getSettings());
+		driver.showTitle(this, layout, 1, 2, Tokens.In.get(), context.getFactory().getSettings());
 		driver.showExpressionField(this, layout, 1, 3, Tokens.In.get(), this.in, this.in, null, null, null, null);
 
 		return layout;

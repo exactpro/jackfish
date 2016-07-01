@@ -15,8 +15,8 @@ import com.exactprosystems.jf.api.common.IMatrix;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.AbstractDocument;
+import com.exactprosystems.jf.documents.DocumentFactory;
 import com.exactprosystems.jf.documents.DocumentInfo;
-import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Parser;
 import com.exactprosystems.jf.documents.matrix.parser.Result;
@@ -40,18 +40,18 @@ public class Matrix extends AbstractDocument implements IMatrix, Cloneable
 {
 	public static final String EMPTY_STRING = "<empty>";
 
-	public Matrix(Matrix matrix, Configuration configuration) throws Exception
+	public Matrix(Matrix matrix, DocumentFactory factory) throws Exception
 	{
-		super(matrix.getName(), configuration);
+		super(matrix.getName(), factory);
 
 		this.root = matrix.root;
 		this.buffer = matrix.buffer;
 		this.matrixListener = matrix.matrixListener;
 	}
 
-	public Matrix(String matrixName, Configuration configuration, IMatrixListener matrixListener) throws Exception
+	public Matrix(String matrixName, DocumentFactory factory, IMatrixListener matrixListener) throws Exception
 	{
-		super(matrixName, configuration);
+		super(matrixName, factory);
 
 		this.root = new MatrixRoot(matrixName);
 		this.buffer = new StringBuilder();
@@ -93,7 +93,7 @@ public class Matrix extends AbstractDocument implements IMatrix, Cloneable
 		}
 		try
 		{
-			this.defaultApp = getConfiguration().getApplicationPool().loadApplicationFactory(id);
+			this.defaultApp = getFactory().getConfiguration().getApplicationPool().loadApplicationFactory(id);
 		}
 		catch (Exception e)
 		{
@@ -117,7 +117,7 @@ public class Matrix extends AbstractDocument implements IMatrix, Cloneable
 		}
 		try
 		{
-			this.defaultClient = getConfiguration().getClientPool().loadClientFactory(id);
+			this.defaultClient = getFactory().getConfiguration().getClientPool().loadClientFactory(id);
 		}
 		catch (Exception e)
 		{

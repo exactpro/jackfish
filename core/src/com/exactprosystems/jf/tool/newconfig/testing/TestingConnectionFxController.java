@@ -117,7 +117,7 @@ public class TestingConnectionFxController implements Initializable, ContainingP
 	{
 		Common.tryCatch(() ->
 		{
-			Settings settings = this.model.getSettings();
+			Settings settings = this.model.getFactory().getSettings();
 
 			settings.removeAll(Settings.GLOBAL_NS, Settings.SQL + sql);
 			settings.setValue(Settings.GLOBAL_NS, Settings.SQL + sql, TestingConnectionFxController.SERVER_NAME, server);

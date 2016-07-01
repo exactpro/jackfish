@@ -15,12 +15,8 @@ import com.exactprosystems.jf.api.client.IMessage;
 import com.exactprosystems.jf.api.client.IMessageDictionary;
 import com.exactprosystems.jf.common.xml.schema.Xsd;
 import com.exactprosystems.jf.documents.AbstractDocument;
-import com.exactprosystems.jf.documents.Document;
+import com.exactprosystems.jf.documents.DocumentFactory;
 import com.exactprosystems.jf.documents.DocumentInfo;
-import com.exactprosystems.jf.documents.config.Configuration;
-
-import org.apache.log4j.Logger;
-
 import javax.xml.XMLConstants;
 import javax.xml.bind.*;
 import javax.xml.bind.annotation.*;
@@ -51,9 +47,9 @@ public class MessageDictionary extends AbstractDocument implements IMessageDicti
 		this(null, null);
 	}
 
-	public MessageDictionary(String fileName, Configuration configuration)
+	public MessageDictionary(String fileName, DocumentFactory factory)
 	{
-		super(fileName, configuration);
+		super(fileName, factory);
 
 		this.fields = new Fields();
 		this.messages = new Messages();
@@ -155,6 +151,7 @@ public class MessageDictionary extends AbstractDocument implements IMessageDicti
 		});
 
 		MessageDictionary messageDictionary = ((MessageDictionary) unmarshaller.unmarshal(reader));
+		messageDictionary.factory = getFactory();
 		
 		this.fields = messageDictionary.fields;
 		this.messages = messageDictionary.messages;
