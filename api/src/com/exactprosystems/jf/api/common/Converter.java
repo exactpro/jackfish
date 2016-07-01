@@ -24,21 +24,6 @@ import java.util.Map.Entry;
 
 public class Converter
 {
-	@Deprecated
-	public static void setFormats(String formats)
-	{
-		if (formats != null)
-		{
-			for(String s : formats.split("\\|"))
-			{
-				if (s != null && !s.isEmpty())
-				{
-					additionFormats.add(new SimpleDateFormat(s.trim()));
-	            }
-			}
-		}
-	}
-
 	public static void setFormats(Collection<String> formats)
 	{
 		if (formats != null)
