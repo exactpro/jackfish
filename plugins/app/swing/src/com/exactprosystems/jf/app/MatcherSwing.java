@@ -406,6 +406,21 @@ public class MatcherSwing <T extends Component> extends GenericTypeMatcher<T>
 		return result;
 	}
 
+	@Override
+	public String toString()
+	{
+		StringBuilder builder = new StringBuilder("MatcherSwing :").append("\n");
+		if (nodelist != null)
+		{
+			builder.append("found by xpath : ").append(nodelist.getLength()).append("\n");
+		}
+		if (locator != null)
+		{
+			builder.append("locator : ").append(locator);
+		}
+		return builder.toString();
+	}
+
 	private NodeList nodelist = null;
 	private Locator locator = null;
 

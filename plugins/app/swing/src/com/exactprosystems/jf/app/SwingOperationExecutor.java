@@ -1209,6 +1209,10 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 
 				case Frame:
 					//if need more time, use method withTimeout
+					if (own == null)
+					{
+						own = this.currentRoot();
+					}
 					ret = (ComponentFixture<T>) WindowFinder.findFrame(new MatcherSwing<Frame>(Frame.class, own, null, locator)).using(currentRobot);
 					FrameFixture jff = (FrameFixture) ret;
 					jff.target.toFront();
