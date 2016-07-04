@@ -309,6 +309,7 @@ public class ConfigurationFx extends Configuration
 		File file = createNewFile(parentFolder, fileName, Configuration.matrixExt);
 		Matrix matrix = getFactory().createMatrix(path(file));
 		matrix.create();
+		matrix.display();
 		matrix.save(path(file));
 		displayMatrix();
 	}
