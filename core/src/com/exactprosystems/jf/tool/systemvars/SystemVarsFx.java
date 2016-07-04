@@ -55,6 +55,8 @@ public class SystemVarsFx extends SystemVars
 	{
 		super.display();
 		
+		initController();
+	
 		this.controller.displayTitle(Common.getSimpleTitle(getName()));
 		this.controller.displayNewParameters(evaluateData());
 	}
@@ -63,14 +65,12 @@ public class SystemVarsFx extends SystemVars
 	public void create() throws Exception
 	{
 		super.create();
-		initController();
 	}
 	
 	@Override
 	public void load(Reader reader) throws Exception
 	{
 		super.load(reader);
-		initController();
 	}
 	
 	@Override

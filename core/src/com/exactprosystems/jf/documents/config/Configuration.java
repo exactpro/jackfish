@@ -380,7 +380,7 @@ public class Configuration extends AbstractDocument
 	
 	public void matrixChanged(String name, Matrix matrix)
 	{
-		refreshLibs();
+		refreshLibs(); 
 	}
 
 	public AbstractEvaluator createEvaluator() throws Exception
@@ -501,7 +501,7 @@ public class Configuration extends AbstractDocument
 
 			DateTime.setFormats(this.timeValue.get(), this.dateValue.get(), this.dateTimeValue.get());
 			Converter.setFormats(toStringList(this.formatsValue));
-			refreshLibs();
+			refreshLibs(); 
 			refreshVars();
 
 			this.valid = true;

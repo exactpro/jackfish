@@ -15,6 +15,7 @@ import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.custom.grideditor.DataProvider;
 import com.exactprosystems.jf.tool.custom.grideditor.SpreadsheetView;
 import com.exactprosystems.jf.tool.custom.tab.CustomTab;
+
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
@@ -23,6 +24,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.ToolBar;
 import javafx.scene.layout.BorderPane;
 
+import java.io.FileReader;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -63,9 +65,14 @@ public class CsvFxController implements Initializable, ContainingParent
 	//============================================================
 	public void setDelimiter(ActionEvent event)
 	{
-		Common.tryCatch(() -> {
+		Common.tryCatch(() -> 
+		{
 			this.model.setDelimiter(cbDelimiter.getSelectionModel().getSelectedItem().getValue().charAt(0));
-			this.model.reloadCsv();
+			if (this.model.hasName())
+			{
+				this.model.load(new FileReader(this.model.getName()));
+				this.model.display();
+			}
 		}, "Error on set delimiter");
 	}
 

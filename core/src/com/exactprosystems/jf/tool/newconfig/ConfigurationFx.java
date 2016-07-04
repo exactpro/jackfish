@@ -50,6 +50,8 @@ public class ConfigurationFx extends Configuration
 	private ConfigurationFxController controller;
 	private BorderPane pane;
 
+	private boolean isControllerInit = false;
+
 	private Map<String, SupportedEntry> supportedClients;
 	private Map<String, SupportedEntry> supportedApps;
 	private Map<String, SupportedEntry> supportedServices;
@@ -127,6 +129,8 @@ public class ConfigurationFx extends Configuration
 	{
 		super.display();
 
+		initController();
+
 		displayEvaluator();
 		displayFormat();
 		displayMatrix();
@@ -144,7 +148,6 @@ public class ConfigurationFx extends Configuration
 	public void create() throws Exception
 	{
 		super.create();
-		initController();
 	}
 
 	@Override
@@ -153,7 +156,6 @@ public class ConfigurationFx extends Configuration
 		super.load(reader);
 
 //		this.getServiceEntries().forEach(entry -> this.startedServices.put(entry.toString(), ConnectionStatus.NotStarted));
-		initController();
 	}
 
 	@Override
@@ -1135,7 +1137,12 @@ public class ConfigurationFx extends Configuration
 
 	private void initController()
 	{
-		this.controller = Common.loadController(ConfigurationFx.class.getResource("config.fxml"));
-		this.controller.init(this, this.pane);
+		if (!this.isControllerInit)
+		{
+			this.controller = Common.loadController(ConfigurationFx.class.getResource("config.fxml"));
+			this.controller.init(this, this.pane);
+			
+			this.isControllerInit = true;
+		}
 	}
 }

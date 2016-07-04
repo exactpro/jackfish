@@ -70,6 +70,8 @@ public class DictionaryFx extends GuiDictionary
 	{
 		super.display();
 
+		initController();
+
 		displayTitle(getName());
 
 		IWindow window = getFirstWindow();
@@ -89,14 +91,12 @@ public class DictionaryFx extends GuiDictionary
 	public void create() throws Exception
 	{
 		super.create();
-		initController();
 	}
 	
 	@Override
 	public void load(Reader reader) throws Exception
 	{
 		super.load(reader);
-		initController();
 	}
 	
 	@Override

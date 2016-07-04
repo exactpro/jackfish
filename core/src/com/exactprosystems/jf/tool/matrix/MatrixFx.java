@@ -66,7 +66,6 @@ public class MatrixFx extends Matrix
 		super(matrix, factory);
 		getRoot().init(this);
 		init(factory);
-		initController();
 	}
 
 	public MatrixFx(String matrixName, DocumentFactory factory, IMatrixListener matrixListener) throws Exception
@@ -83,6 +82,8 @@ public class MatrixFx extends Matrix
 	{
 		super.display();
 
+		initController();
+
 		this.controller.displayTitle(getName());
 
 		displayGuiDictionaries();
@@ -96,7 +97,6 @@ public class MatrixFx extends Matrix
 	public void create() throws Exception
 	{
 		super.create();
-		initController();
 	}
 
 	public void createLibrary() throws Exception
@@ -110,7 +110,6 @@ public class MatrixFx extends Matrix
 	public void load(Reader reader) throws Exception
 	{
 		super.load(reader);
-		initController();
 	}
 
 	@Override

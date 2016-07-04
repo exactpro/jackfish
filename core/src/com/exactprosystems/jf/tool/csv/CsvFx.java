@@ -19,7 +19,6 @@ import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 
 import javafx.scene.control.ButtonType;
 
-import java.io.FileReader;
 import java.io.Reader;
 import java.util.Optional;
 
@@ -45,6 +44,7 @@ public class CsvFx extends Csv
 	{
 		super.display();
 		
+		initController();
 		this.controller.displayTitle(Common.getSimpleTitle(getName()));
 		this.controller.displayTable(this.provider);
 	}
@@ -53,7 +53,6 @@ public class CsvFx extends Csv
 	public void create() throws Exception
 	{
 		super.create();
-		initController();
 	}
 	
 	@Override
@@ -63,7 +62,6 @@ public class CsvFx extends Csv
 
 		this.provider = new TableDataProvider(super.table);
 		//TODO implements undo redo
-		initController();
 	}
 
     @Override
@@ -102,18 +100,6 @@ public class CsvFx extends Csv
 	{
 		super.close(settings);
 		this.controller.close();
-	}
-
-    //------------------------------------------------------------------------------------------------------------------
-    // public methods
-    //------------------------------------------------------------------------------------------------------------------
-	public void reloadCsv() throws Exception
-	{
-		if (hasName())
-		{
-			this.load(new FileReader(getName()));
-			this.display();
-		}
 	}
 
 	//============================================================
