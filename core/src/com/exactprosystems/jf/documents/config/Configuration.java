@@ -247,6 +247,7 @@ public class Configuration extends AbstractDocument
 		this.databases 					= new DataBasePool(factory);
 
 		this.libs 						= new HashMap<String, Matrix>();
+		this.systemVars					= new HashSet<SystemVars>();
 	}
 
 	public Configuration()
@@ -392,6 +393,11 @@ public class Configuration extends AbstractDocument
 		
 		AbstractEvaluator evaluator	= objectFromClassName(this.evaluatorValue, AbstractEvaluator.class);
 		evaluator.addImports(toStringList(this.importsValue));
+
+		for (SystemVars vars : this.systemVars)
+		{
+			vars.injectVariables(evaluator);
+		}
 		evaluator.reset();
 		
 		return evaluator;
@@ -442,19 +448,17 @@ public class Configuration extends AbstractDocument
 	{
 		try
 		{
-			AbstractEvaluator evaluator	= objectFromClassName(this.evaluatorValue, AbstractEvaluator.class);
-			evaluator.addImports(toStringList(this.importsValue));
-
-			setUserVariablesFromMask(this.varsValue.get(), evaluator);
+			this.systemVars.clear();
+			
+			setUserVariablesFromMask(this.varsValue.get());
 			for (MutableString userVars : this.userVarsValue)
 			{
-				setUserVariablesFromMask(userVars.get(), evaluator);
+				setUserVariablesFromMask(userVars.get());
 			}
 		}
 		catch (Exception e)
 		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 	}
 	
@@ -804,7 +808,7 @@ public class Configuration extends AbstractDocument
 		}
 	}
 
-	private void setUserVariablesFromMask(String userVariablesFileName, AbstractEvaluator evaluator)  throws Exception
+	private void setUserVariablesFromMask(String userVariablesFileName)  throws Exception
 	{
 		if (Str.IsNullOrEmpty(userVariablesFileName))
 		{
@@ -818,7 +822,7 @@ public class Configuration extends AbstractDocument
 			{
 				SystemVars vars = getFactory().createVars(userVariablesFileName);
 				vars.load(reader);
-				vars.injectVariables(evaluator);
+				this.systemVars.add(vars);
 			}
 		}
 	}
@@ -862,7 +866,8 @@ public class Configuration extends AbstractDocument
 	protected boolean 				changed;
 	protected ReportFactory			reportFactoryObj;
 	protected Map<String, Matrix>	libs;
-	protected Map<String, Object>	globals;
+	protected Map<String, Object>	globals; 
+	protected Set<SystemVars>		systemVars; 
 
 	protected ClientsPool			clients;
 	protected ServicePool			services;

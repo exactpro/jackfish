@@ -127,18 +127,16 @@ public class SystemVars extends AbstractDocument
 
 	public void injectVariables(AbstractEvaluator evaluator) throws Exception
 	{
-		this.evaluator = evaluator;
 		for (Parameter entry : this.parameters)
 		{
 			String key = entry.getName();
 			String value = entry.getExpression();
 			Object result = evaluator.evaluate(value);
+			
 			evaluator.init(key, result);
 		}
 	
 	}
 
-	protected AbstractEvaluator evaluator;
-	
     private Parameters parameters;
 }

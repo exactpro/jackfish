@@ -116,7 +116,6 @@ public abstract class AbstractDocument implements Document
 	@Override
 	public void display() throws Exception
 	{
-		System.err.println(">> " + getName());
 	}
 
 	@Override

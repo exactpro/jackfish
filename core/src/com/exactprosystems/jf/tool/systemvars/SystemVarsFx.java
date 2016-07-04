@@ -29,7 +29,6 @@ public class SystemVarsFx extends SystemVars
 {
 	private SystemVarsFxController controller;
 	private boolean isControllerInit = false;
-	private AbstractEvaluator evaluator;
 
 	public SystemVarsFx(String fileName, DocumentFactory factory) throws Exception
 	{
@@ -43,10 +42,9 @@ public class SystemVarsFx extends SystemVars
 	protected void afterRedoUndo() 
 	{
 		super.afterRedoUndo();
-		if (super.evaluator != null)
-		{
-			this.getParameters().evaluateAll(super.evaluator);
-		}
+
+		AbstractEvaluator evaluator = getFactory().createEvaluator();
+		this.getParameters().evaluateAll(evaluator);
 		this.controller.displayNewParameters(getParameterList());
 	}
 	
@@ -194,11 +192,13 @@ public class SystemVarsFx extends SystemVars
 	
 	private ArrayList<Parameter> evaluateData() throws Exception
 	{
+		AbstractEvaluator evaluator = getFactory().createEvaluator();
+		
 		ArrayList<Parameter> res = new ArrayList<>();
 		List<Parameter> variables = this.getParameterList();
 		variables.forEach(p -> 
 		{
-			p.evaluate(this.evaluator);
+			p.evaluate(evaluator);
 			res.add(p);
 		});
 		return res;
