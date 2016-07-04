@@ -198,6 +198,12 @@ public class MatrixFx extends Matrix
 	@Override
 	public void insert(MatrixItem item, int index, MatrixItem what)
 	{
+		if (item == null)
+		{
+			super.insert(item, index, what);
+			return;
+		}
+		
 		int lastIndex = Math.min(item.count() - 1, index);
 		int number = lastIndex < 0 ? item.getNumber() : item.get(lastIndex).getNumber();
 		Command undo = () ->

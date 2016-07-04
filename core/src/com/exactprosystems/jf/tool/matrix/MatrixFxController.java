@@ -320,7 +320,7 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 
 	public void showResult(File file, String matrixName)
 	{
-		DialogsHelper.displayReport(file, matrixName, null);
+		DialogsHelper.displayReport(file, matrixName, this.model.getFactory());
 	}
 
 	public void showWatcher(MatrixFx matrix, Context context)

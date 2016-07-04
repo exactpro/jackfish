@@ -37,6 +37,7 @@ import com.exactprosystems.jf.documents.matrix.parser.items.ForEach;
 import com.exactprosystems.jf.documents.matrix.parser.items.HelpChapter;
 import com.exactprosystems.jf.documents.matrix.parser.items.If;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
+import com.exactprosystems.jf.documents.matrix.parser.items.MatrixRoot;
 import com.exactprosystems.jf.documents.matrix.parser.items.NameSpace;
 import com.exactprosystems.jf.documents.matrix.parser.items.OnError;
 import com.exactprosystems.jf.documents.matrix.parser.items.RawMessage;
