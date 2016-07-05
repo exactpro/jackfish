@@ -22,7 +22,6 @@ import com.exactprosystems.jf.tool.custom.BorderWrapper;
 import com.exactprosystems.jf.tool.custom.controls.field.CustomFieldWithButton;
 import com.exactprosystems.jf.tool.dictionary.DictionaryFx;
 import com.exactprosystems.jf.tool.dictionary.navigation.NavigationController;
-
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -69,6 +68,8 @@ public class ElementInfoController implements Initializable, ContainingParent
 	public CheckBox checkBoxAbsoluteXpath;
 	public GridPane mainGrid;
 	public Button btnGoToOwner;
+	public GridPane fieldGrid;
+	public GridPane identifiersGrid;
 
 
 	private Parent pane;
@@ -110,6 +111,15 @@ public class ElementInfoController implements Initializable, ContainingParent
 			this.checkBoxAbsoluteXpath.setTooltip(new Tooltip("Absolute xpath"));
 			((BorderPane) this.pane).setCenter(BorderWrapper.wrap(this.mainGrid).color(Common.currentTheme().getReverseColor()).title("Element info").build());
 		});
+
+		Arrays.asList(tfID, tfUID, tfXpath, tfClass, tfText, tfName, tfTooltip, tfAction, tfTitle, tfExpression).forEach(tf -> {
+			tf.prefWidthProperty().bind(this.fieldGrid.getColumnConstraints().get(1).maxWidthProperty());
+			tf.maxWidthProperty().bind(this.fieldGrid.getColumnConstraints().get(1).maxWidthProperty());
+			tf.minWidthProperty().bind(this.fieldGrid.getColumnConstraints().get(1).minWidthProperty());
+		});
+		this.tfUID.prefWidthProperty().bind(this.identifiersGrid.getColumnConstraints().get(1).maxWidthProperty());
+		this.tfUID.maxWidthProperty().bind(this.identifiersGrid.getColumnConstraints().get(1).maxWidthProperty());
+		this.tfUID.minWidthProperty().bind(this.identifiersGrid.getColumnConstraints().get(1).minWidthProperty());
 	}
 
 	public void init(DictionaryFx model, Configuration configuration, GridPane gridPane, NavigationController navigation, String themePath)

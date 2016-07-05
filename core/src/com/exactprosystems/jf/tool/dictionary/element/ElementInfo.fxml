@@ -24,7 +24,7 @@
 				<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
 			</rowConstraints>
 			<children>
-				<GridPane>
+				<GridPane fx:id="identifiersGrid">
 					<columnConstraints>
 						<ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="10.0" percentWidth="30.0" prefWidth="100.0"/>
 						<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
@@ -145,7 +145,7 @@
 						</BorderPane>
 					</children>
 				</GridPane>
-				<GridPane GridPane.columnIndex="1">
+				<GridPane fx:id="fieldGrid" GridPane.columnIndex="1">
 					<children>
 						<Label text="UID" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
 							<GridPane.margin>
