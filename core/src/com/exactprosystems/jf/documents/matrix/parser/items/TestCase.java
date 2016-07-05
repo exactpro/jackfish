@@ -17,6 +17,7 @@ import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.DisplayDriver;
 import com.exactprosystems.jf.documents.matrix.parser.MutableValue;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
+import com.exactprosystems.jf.documents.matrix.parser.Result;
 import com.exactprosystems.jf.documents.matrix.parser.ReturnAndResult;
 import com.exactprosystems.jf.documents.matrix.parser.SearchHelper;
 import com.exactprosystems.jf.documents.matrix.parser.Tokens;
@@ -154,7 +155,21 @@ public final class TestCase extends MatrixItem
 	{
 		this.locals = evaluator.createLocals();
 
-		return executeChildren(context, listener, evaluator, report, new Class<?>[] { OnError.class }, this.locals);
+		ReturnAndResult ret = executeChildren(context, listener, evaluator, report, new Class<?>[] { OnError.class }, this.locals);
+		Result result = ret.getResult();
+		
+		if (result == Result.Failed)
+		{
+			MatrixItem branchOnError = super.find(false, OnError.class, null);
+			if (branchOnError != null && branchOnError instanceof OnError)
+			{
+				((OnError)branchOnError).setError(ret.getError());
+				
+				ret = branchOnError.execute(context, listener, evaluator, report);
+				result = ret.getResult();
+			}
+		}
+		return ret;
 	}
 
 	@Override

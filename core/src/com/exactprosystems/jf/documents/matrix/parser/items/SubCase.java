@@ -203,11 +203,25 @@ public final class SubCase extends MatrixItem
 			reportParameters(report, parameters);
 			report.itemIntermediate(this);
 
+			
 			Variables oldLocals = evaluator.getLocals();
-			ReturnAndResult res = executeChildren(context, listener, evaluator, report, new Class<?>[] { OnError.class }, this.locals);
+			ReturnAndResult ret = executeChildren(context, listener, evaluator, report, new Class<?>[] { OnError.class }, this.locals);
 			evaluator.setLocals(oldLocals);
 
-			return res;
+			Result result = ret.getResult();
+			
+			if (result == Result.Failed)
+			{
+				MatrixItem branchOnError = super.find(false, OnError.class, null);
+				if (branchOnError != null && branchOnError instanceof OnError)
+				{
+					((OnError)branchOnError).setError(ret.getError());
+					
+					ret = branchOnError.execute(context, listener, evaluator, report);
+					result = ret.getResult();
+				}
+			}
+			return ret;
 		}
 		catch (Exception e)
 		{

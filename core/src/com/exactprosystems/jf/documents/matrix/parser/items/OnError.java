@@ -86,6 +86,7 @@ public final class OnError extends MatrixItem
 		try
 		{
 			evaluator.getLocals().getVars().put(Parser.error, 	this.error);
+//			evaluator.getLocals().getVars().put(Parser.error, 	new MatrixError(this.error)); TODO uncomment this
 			return super.executeItSelf(context, listener, evaluator, report, parameters);
 		}
 		catch (Exception e)
