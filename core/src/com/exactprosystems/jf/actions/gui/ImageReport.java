@@ -8,8 +8,6 @@
 
 package com.exactprosystems.jf.actions.gui;
 
-import java.io.File;
-
 import com.exactprosystems.jf.actions.AbstractAction;
 import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionFieldAttribute;
@@ -20,12 +18,16 @@ import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 
+import java.io.File;
+
 
 @ActionAttribute(
 		group					= ActionGroups.GUI,
 		suffix					= "IMGRPT",
 		generalDescription 		= "Get an image from screen",
-		additionFieldsAllowed 	= false
+		additionFieldsAllowed 	= false,
+		outputDescription 		= "Path to image.",
+		outputType 				= String.class
 	)
 public class ImageReport extends AbstractAction
 {
@@ -51,17 +53,23 @@ public class ImageReport extends AbstractAction
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception 
 	{
+		if (image == null)
+		{
+			throw new Exception("Image can't be null");
+		}
+		String outPath = this.image.getFileName();
 		if (this.image.getFileName() == null)
 		{
 			File file = this.image.saveToDir(report.getReportDir());
-			report.outImage(super.owner, file.getName(), this.title); 
+			outPath = file.getPath();
+			report.outImage(super.owner, file.getName(), this.title);
 		}
 		else
 		{
 			report.outImage(super.owner, this.image.getFileName(), this.title); 
 		}
 		
-		super.setResult(null);
+		super.setResult(outPath);
 	}
 
 }
