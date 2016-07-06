@@ -28,7 +28,7 @@ public class ParametersTableView extends TableView<TablePair>
 	public ParametersTableView()
 	{
 		this.hide();
-		this.setHeightTable(200);
+//		this.setHeightTable(200);
 		TableColumn<TablePair, String> keyColumn = new TableColumn<>();
 		keyColumn.setText("Parameter");
 		keyColumn.setCellValueFactory(new PropertyValueFactory<>("key"));

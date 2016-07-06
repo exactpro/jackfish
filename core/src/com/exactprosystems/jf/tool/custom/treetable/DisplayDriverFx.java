@@ -140,6 +140,7 @@ public class DisplayDriverFx implements DisplayDriver
 		{
 			updateStyle(item.getClass().getSimpleName(), settings, label);
 		}
+		Common.setFocused(label);
 	}
 
 	@Override
@@ -280,7 +281,7 @@ public class DisplayDriverFx implements DisplayDriver
 		gridPane.add(textBox, 0, 0);
 		pane.add(gridPane, column, row);
 		GridPane.setMargin(textBox, INSETS);
-		Common.setFocused(textBox);
+//		Common.setFocused(textBox);
 	}
 
 	@Override
@@ -333,7 +334,7 @@ public class DisplayDriverFx implements DisplayDriver
 		temp.add(field, 0, 0);
 		pane.add(temp, column, row);
 		GridPane.setMargin(field, INSETS);
-		Common.setFocused(field);
+//		Common.setFocused(field);
 	}
 
 	@Override

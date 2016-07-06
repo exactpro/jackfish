@@ -13,7 +13,9 @@ import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.newconfig.nodes.*;
 
 import javafx.fxml.Initializable;
+import javafx.geometry.Orientation;
 import javafx.scene.Parent;
+import javafx.scene.control.SplitPane;
 import javafx.scene.control.TreeItem;
 import javafx.scene.layout.BorderPane;
 
@@ -61,9 +63,13 @@ public class ConfigurationFxController implements Initializable, ContainingParen
 		this.menuBar 	= new ConfigurationToolBar(this.model);
 		
 		pane.setTop(this.menuBar);
-		pane.setCenter(this.treeView);
-		pane.setBottom(this.tableView);
-		
+
+		SplitPane splitPane = new SplitPane();
+		splitPane.setOrientation(Orientation.VERTICAL);
+		splitPane.getItems().addAll(this.treeView, this.tableView);
+		splitPane.setDividerPositions(0.8);
+		pane.setCenter(splitPane);
+
 		initTreeView();
 	}
 
