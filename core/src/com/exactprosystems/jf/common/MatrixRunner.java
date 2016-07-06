@@ -165,10 +165,10 @@ public class MatrixRunner implements IMatrixRunner, AutoCloseable
 		Configuration configuration = this.context.getConfiguration();
         final AbstractEvaluator evaluator = this.context.getEvaluator();
 		this.report = configuration.getReportFactory().createBuilder(configuration.getReports().get(), this.matrixFile, new Date());
-		
-		if (!this.matrix.checkMatrix(this.context, evaluator))
+		StringBuilder errorMsg = new StringBuilder();
+		if (!this.matrix.checkMatrix(this.context, evaluator, errorMsg))
 		{
-			throw new Exception("Matrix is incorrect.");
+			throw new Exception("Matrix is incorrect. Errors : " + errorMsg.toString());
 		}
 		
         changeState(State.Waiting);
