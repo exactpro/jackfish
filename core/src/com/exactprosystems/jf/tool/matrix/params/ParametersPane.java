@@ -16,9 +16,9 @@ import com.exactprosystems.jf.documents.matrix.parser.FormulaGenerator;
 import com.exactprosystems.jf.documents.matrix.parser.Parameter;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.documents.matrix.parser.items.ActionItem;
+import com.exactprosystems.jf.documents.matrix.parser.items.ActionItem.HelpKind;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 import com.exactprosystems.jf.documents.matrix.parser.items.TypeMandatory;
-import com.exactprosystems.jf.documents.matrix.parser.items.ActionItem.HelpKind;
 import com.exactprosystems.jf.functions.Xml;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
@@ -32,12 +32,9 @@ import com.exactprosystems.jf.tool.custom.xpath.XpathViewer;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper.OpenSaveMode;
 import com.exactprosystems.jf.tool.matrix.MatrixFx;
-
-import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.collections.ObservableMap;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
@@ -47,16 +44,15 @@ import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.RowConstraints;
 import javafx.util.Pair;
 
 import java.io.File;
 import java.time.LocalDateTime;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class ParametersPane extends CustomScrollPane
@@ -77,6 +73,19 @@ public class ParametersPane extends CustomScrollPane
 		super(oneLine ? 30 : 65);
 		this.fnc = fnc;
 		this.mainGridPane = new GridPane();
+		RowConstraints r0 = new RowConstraints();
+		r0.setMaxHeight(29);
+		r0.setPrefHeight(29);
+		r0.setMinHeight(29);
+		this.mainGridPane.getRowConstraints().add(r0);
+		if (!oneLine)
+		{
+			RowConstraints r1 = new RowConstraints();
+			r1.setMaxHeight(34);
+			r1.setPrefHeight(34);
+			r1.setMinHeight(34);
+			this.mainGridPane.getRowConstraints().add(r1);
+		}
 		this.setContent(this.mainGridPane);
 		this.matrixItem = matrixItem;
 		this.context = context;
