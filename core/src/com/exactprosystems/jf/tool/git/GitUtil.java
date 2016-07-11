@@ -8,24 +8,26 @@
 package com.exactprosystems.jf.tool.git;
 
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.tool.Common;
+import com.exactprosystems.jf.tool.git.pull.GitPullBean;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
-import org.eclipse.jgit.api.AddCommand;
-import org.eclipse.jgit.api.Git;
-import org.eclipse.jgit.api.Status;
+import org.eclipse.jgit.api.*;
+import org.eclipse.jgit.api.errors.CheckoutConflictException;
+import org.eclipse.jgit.diff.DiffEntry;
 import org.eclipse.jgit.errors.UnsupportedCredentialItem;
+import org.eclipse.jgit.lib.ObjectId;
+import org.eclipse.jgit.lib.ObjectReader;
 import org.eclipse.jgit.lib.ProgressMonitor;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 import org.eclipse.jgit.transport.*;
+import org.eclipse.jgit.treewalk.CanonicalTreeParser;
 import org.eclipse.jgit.util.FS;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class GitUtil
@@ -37,15 +39,88 @@ public class GitUtil
 
 	public static void revertFiles(CredentialBean bean, List<File> files) throws Exception
 	{
-		System.out.println("not implemented now");
+		try (Git git = git(bean))
+		{
+			CheckoutCommand checkout = git.checkout();
+			files.stream().map(File::getPath).map(Common::getRelativePath).forEach(checkout::addPath);
+			checkout.call();
+		}
 	}
 
-	public static void gitPull(CredentialBean credentials, ProgressMonitor monitor) throws Exception
+	public static List<GitPullBean> gitPull(CredentialBean bean, ProgressMonitor monitor) throws Exception
 	{
-		try (Git git = git(credentials))
+		try (Git git = git(bean))
 		{
-			//TODO think how to display result and how to get result
-			git.pull().setCredentialsProvider(getCredentialsProvider(credentials)).setProgressMonitor(monitor).call();
+			//from http://stackoverflow.com/a/26170467/3452146
+			ObjectId oldHead = git.getRepository().resolve("HEAD^{tree}");
+
+			List<GitPullBean> list = new ArrayList<>();
+			try
+			{
+				PullResult pullResult = git.pull().setCredentialsProvider(getCredentialsProvider(bean)).setProgressMonitor(monitor).call();
+				MergeResult m = pullResult.getMergeResult();
+				if (m != null)
+				{
+					Map<String, int[][]> allConflicts = m.getConflicts();
+					if (allConflicts != null)
+					{
+						for (String path : allConflicts.keySet()) {
+							int[][] c = allConflicts.get(path);
+							System.out.println("Conflicts in file " + path);
+							list.add(new GitPullBean(path, true));
+							for (int i = 0; i < c.length; ++i) {
+								System.out.println("  Conflict #" + i);
+								for (int j = 0; j < (c[i].length) - 1; ++j) {
+									if (c[i][j] >= 0)
+										System.out.println("    Chunk for " + m.getMergedCommits()[j] + " starts on line #" + c[i][j]);
+								}
+							}
+						}
+					}
+				}
+			}
+			catch (CheckoutConflictException cce)
+			{
+				throw new Exception("\nNeed to commit the files before pulling : " + cce.getConflictingPaths().toString());
+			}
+
+			ObjectId head = git.getRepository().resolve("HEAD^{tree}");
+			ObjectReader reader = git.getRepository().newObjectReader();
+			CanonicalTreeParser oldTreeIter = new CanonicalTreeParser();
+			oldTreeIter.reset(reader, oldHead);
+			CanonicalTreeParser newTreeIter = new CanonicalTreeParser();
+			newTreeIter.reset(reader, head);
+			List<DiffEntry> diffs = git.diff()
+					.setNewTree(newTreeIter)
+					.setOldTree(oldTreeIter)
+					.call();
+
+
+
+			for (DiffEntry diff : diffs)
+			{
+				String fileName = null;
+				DiffEntry.ChangeType changeType = diff.getChangeType();
+				switch (changeType)
+				{
+					case ADD:
+						fileName = diff.getNewPath();
+						break;
+					case MODIFY:
+						fileName = diff.getNewPath();
+						break;
+					case DELETE:
+						fileName = diff.getOldPath();
+						break;
+					case RENAME:
+						break;
+					case COPY:
+						break;
+				}
+				GitPullBean pullBean = new GitPullBean(fileName, false);
+				list.add(pullBean);
+			}
+			return list;
 		}
 	}
 
@@ -59,20 +134,20 @@ public class GitUtil
 		}
 	}
 
-	public static void gitCommit(CredentialBean bean, List<File> files, String msg) throws Exception
+	public static void gitCommit(CredentialBean bean, List<File> files, String msg, boolean isAmend) throws Exception
 	{
 		try (Git git = git(bean))
 		{
 			AddCommand add = git.add();
-			files.stream().map(File::getPath).forEach(add::addFilepattern);
+			files.stream().map(File::getPath).map(Common::getRelativePath).forEach(add::addFilepattern);
 			add.call();
-			git.commit().setMessage(msg).call();
+			git.commit().setAmend(isAmend).setAll(true).setMessage(msg).call();
 		}
 	}
 
-	public static void gitPush(CredentialBean bean, List<File> files, String msg) throws Exception
+	public static void gitPush(CredentialBean bean, List<File> files, String msg, boolean isAmend) throws Exception
 	{
-		gitCommit(bean, files, msg);
+		gitCommit(bean, files, msg, isAmend);
 		try (Git git = git(bean))
 		{
 			//TODO add pushing command
@@ -107,6 +182,23 @@ public class GitUtil
 		}
 	}
 
+	public static void gitRemoveFile(CredentialBean bean, File file) throws Exception
+	{
+		try (Git git = git(bean))
+		{
+			git.rm().addFilepattern(file.getName()).call();
+		}
+	}
+
+	public static void gitAddFile(CredentialBean bean, File file) throws Exception
+	{
+		try (Git git = git(bean))
+		{
+			git.add().addFilepattern(Common.getRelativePath(file.getPath())).call();
+		}
+	}
+
+	//region private methods
 	private static void replaceFiles(List<GitBean> mainList, Set<String> newList, GitBean.Status status)
 	{
 		List<GitBean> collect = newList.stream().map(st -> new GitBean(status, new File(st))).collect(Collectors.toList());
@@ -160,7 +252,7 @@ public class GitUtil
 		};
 	}
 
-	public static class CustomJschConfigSessionFactory extends JschConfigSessionFactory
+	private static class CustomJschConfigSessionFactory extends JschConfigSessionFactory
 	{
 		private boolean isValid = true;
 		private String pathToIdRsa;
@@ -199,4 +291,5 @@ public class GitUtil
 			return jsch;
 		}
 	}
+	//endregion
 }

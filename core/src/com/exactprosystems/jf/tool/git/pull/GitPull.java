@@ -8,46 +8,86 @@
 package com.exactprosystems.jf.tool.git.pull;
 
 import com.exactprosystems.jf.tool.Common;
+import com.exactprosystems.jf.tool.git.CredentialBean;
+import com.exactprosystems.jf.tool.git.GitUtil;
+import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.main.Main;
-import javafx.collections.FXCollections;
-import javafx.scene.control.*;
+import javafx.concurrent.Service;
+import javafx.concurrent.Task;
+import org.eclipse.jgit.lib.ProgressMonitor;
 
-import java.io.File;
 import java.util.List;
+
+import static com.exactprosystems.jf.tool.Common.logger;
 
 public class GitPull
 {
 	private final Main model;
 
+	private Service<List<GitPullBean>> service;
+	private GitPullController controller;
+
 	public GitPull(Main model)
 	{
 		this.model = model;
+		this.controller = Common.loadController(this.getClass().getResource("GitPull.fxml"));
+		this.controller.init(this);
 	}
 
-	public void display(String title, List<File> files)
+	public void close() throws Exception
 	{
-		Dialog<ButtonType> dialog = new Alert(Alert.AlertType.INFORMATION);
-		dialog.setResizable(true);
-		dialog.getDialogPane().getStylesheets().addAll(Common.currentTheme().getPath());
-		dialog.setTitle("Git pull");
-		dialog.getDialogPane().setHeaderText(title);
-		ListView<File> listView = new ListView<>(FXCollections.observableArrayList(files));
-		listView.setCellFactory(p -> new ListCell<File>(){
+		if (this.service == null || !this.service.isRunning())
+		{
+			this.controller.hide();
+		}
+		if (this.service != null && this.service.isRunning())
+		{
+			this.service.cancel();
+			this.service = null;
+		}
+	}
+
+	public void pull(ProgressMonitor monitor) throws Exception
+	{
+		this.controller.startPulling();
+		CredentialBean credential = this.model.getCredential();
+		this.service = new Service<List<GitPullBean>>()
+		{
 			@Override
-			protected void updateItem(File item, boolean empty)
+			protected Task<List<GitPullBean>> createTask()
 			{
-				super.updateItem(item, empty);
-				if (item != null && !empty)
+				return new Task<List<GitPullBean>>()
 				{
-					setText(Common.getRelativePath(item.getAbsolutePath()));
-				}
-				else
-				{
-					setText(null);
-				}
+					@Override
+					protected List<GitPullBean> call() throws Exception
+					{
+						DialogsHelper.showInfo("Start pulling");
+						return GitUtil.gitPull(credential, monitor);
+					}
+				};
 			}
+		};
+		service.start();
+		service.setOnSucceeded(e -> {
+			DialogsHelper.showSuccess("Successful pulling");
+			this.controller.displayFiles(((List<GitPullBean>) e.getSource().getValue()));
+			this.controller.endPulling("Pull done. All files up to date");
 		});
-		dialog.getDialogPane().setContent(listView);
-		dialog.showAndWait();
+		service.setOnCancelled(e -> {
+			DialogsHelper.showInfo("Task canceled by user");
+			this.controller.endPulling("");
+		});
+		service.setOnFailed(e -> {
+			Throwable exception = e.getSource().getException();
+			logger.error(exception.getMessage(), exception);
+			DialogsHelper.showError("Error on pulling" + exception.getMessage());
+			this.controller.endPulling("Error on pulling");
+		});
+	}
+
+
+	public void display()
+	{
+		this.controller.show();
 	}
 }

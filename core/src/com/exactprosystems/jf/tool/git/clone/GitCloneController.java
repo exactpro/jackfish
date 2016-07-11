@@ -12,22 +12,18 @@ import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.custom.controls.field.CustomFieldWithButton;
+import com.exactprosystems.jf.tool.git.VBoxProgressMonitor;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
-import javafx.application.Platform;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
-import org.eclipse.jgit.lib.BatchingProgressMonitor;
 
 import java.io.File;
 import java.net.URL;
@@ -235,98 +231,4 @@ public class GitCloneController implements Initializable, ContainingParent
 	}
 	//endregion
 
-	private class VBoxProgressMonitor extends BatchingProgressMonitor
-	{
-		private VBox box;
-		private int currentIndex = 0;
-
-		public VBoxProgressMonitor(VBox box)
-		{
-			this.box = box;
-		}
-
-		public void clear()
-		{
-			this.box.getChildren().forEach(n -> n = null);
-			this.box.getChildren().clear();
-			this.currentIndex = 0;
-		}
-
-		@Override
-		protected void onUpdate(String taskName, int workCurr)
-		{
-			StringBuilder s = new StringBuilder();
-			format(s, taskName, workCurr);
-			send(s);
-		}
-
-		@Override
-		protected void onEndTask(String taskName, int workCurr)
-		{
-			StringBuilder s = new StringBuilder();
-			format(s, taskName, workCurr);
-			send(s);
-		}
-
-		private void format(StringBuilder s, String taskName, int workCurr)
-		{
-			s.append(taskName);
-			s.append(": ");
-			while (s.length() < 25)
-				s.append(' ');
-			s.append(workCurr);
-		}
-
-		@Override
-		protected void onUpdate(String taskName, int cmp, int totalWork, int pcnt)
-		{
-			StringBuilder s = new StringBuilder();
-			format(s, taskName, cmp, totalWork, pcnt);
-			send(s);
-		}
-
-		@Override
-		protected void onEndTask(String taskName, int cmp, int totalWork, int pcnt)
-		{
-			StringBuilder s = new StringBuilder();
-			format(s, taskName, cmp, totalWork, pcnt);
-			currentIndex++;
-			send(s);
-		}
-
-		private void format(StringBuilder s, String taskName, int cmp, int totalWork, int pcnt)
-		{
-			s.append(taskName);
-			s.append(": ");
-			while (s.length() < 25)
-				s.append(' ');
-
-			String endStr = String.valueOf(totalWork);
-			String curStr = String.valueOf(cmp);
-			while (curStr.length() < endStr.length())
-				curStr = " " + curStr;
-			if (pcnt < 100)
-				s.append(' ');
-			if (pcnt < 10)
-				s.append(' ');
-			s.append(pcnt);
-			s.append("% (");
-			s.append(curStr);
-			s.append("/");
-			s.append(endStr);
-			s.append(")");
-		}
-
-		private void send(StringBuilder s)
-		{
-			Platform.runLater(() -> {
-				ObservableList<Node> children = this.box.getChildren();
-				if (currentIndex > children.size() - 1)
-				{
-					children.add(new Text());
-				}
-				((Text) children.get(children.size() - 1)).setText(s.toString());
-			});
-		}
-	}
 }

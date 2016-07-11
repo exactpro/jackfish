@@ -8,8 +8,6 @@
 
 package com.exactprosystems.jf.actions.system;
 
-import java.util.Date;
-
 import com.exactprosystems.jf.actions.AbstractAction;
 import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionFieldAttribute;
@@ -19,6 +17,8 @@ import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.documents.matrix.parser.items.ActionItem.HelpKind;
+
+import java.util.Date;
 
 @ActionAttribute(
 		group					= ActionGroups.System,
@@ -52,6 +52,7 @@ public class Wait extends AbstractAction
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
+		//TODO need to do it in cycle
 		if (this.timeout != null)
 		{
 			Thread.sleep(this.timeout);

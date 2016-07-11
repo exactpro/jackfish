@@ -49,17 +49,17 @@ public class GitCommit
 		}
 	}
 
-	public void commit(String msg, List<GitBean> list) throws Exception
+	public void commit(String msg, List<GitBean> list, boolean isAmend) throws Exception
 	{
-		this.commitOrPush(msg, list, true);
+		this.commitOrPush(msg, list, true, isAmend);
 	}
 
-	public void push(String msg, List<GitBean> list) throws Exception
+	public void push(String msg, List<GitBean> list, boolean isAmend) throws Exception
 	{
-		this.commitOrPush(msg, list, false);
+		this.commitOrPush(msg, list, false, isAmend);
 	}
 
-	private void commitOrPush(String msg, List<GitBean> list, boolean isCommit) throws Exception
+	private void commitOrPush(String msg, List<GitBean> list, boolean isCommit, boolean isAmend) throws Exception
 	{
 		String notification = isCommit ? "commit" : "push";
 		this.controller.setDisable(true);
@@ -77,11 +77,11 @@ public class GitCommit
 						DialogsHelper.showInfo("Start " + notification + "ing");
 						if (isCommit)
 						{
-							GitUtil.gitCommit(credential, list.stream().map(GitBean::getFile).collect(Collectors.toList()), msg);
+							GitUtil.gitCommit(credential, list.stream().map(GitBean::getFile).collect(Collectors.toList()), msg, isAmend);
 						}
 						else
 						{
-							GitUtil.gitPush(credential, list.stream().map(GitBean::getFile).collect(Collectors.toList()), msg);
+							GitUtil.gitPush(credential, list.stream().map(GitBean::getFile).collect(Collectors.toList()), msg, isAmend);
 						}
 						return null;
 					}

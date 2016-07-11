@@ -14,23 +14,16 @@ import com.exactprosystems.jf.common.MatrixRunner;
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.common.Settings.SettingsValue;
 import com.exactprosystems.jf.common.version.VersionInfo;
-import com.exactprosystems.jf.documents.Document;
-import com.exactprosystems.jf.documents.DocumentFactory;
-import com.exactprosystems.jf.documents.DocumentInfo;
-import com.exactprosystems.jf.documents.EmptyConfigurationException;
-import com.exactprosystems.jf.documents.FxDocumentFactory;
+import com.exactprosystems.jf.documents.*;
 import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.guidic.GuiDictionary;
 import com.exactprosystems.jf.documents.matrix.Matrix;
-import com.exactprosystems.jf.documents.matrix.parser.listeners.MatrixListener;
-import com.exactprosystems.jf.documents.matrix.parser.listeners.RunnerListener;
 import com.exactprosystems.jf.documents.vars.SystemVars;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.DisplayableTask;
 import com.exactprosystems.jf.tool.csv.CsvFx;
 import com.exactprosystems.jf.tool.custom.store.StoreVariable;
-import com.exactprosystems.jf.tool.dictionary.DictionaryFx;
 import com.exactprosystems.jf.tool.git.CredentialBean;
 import com.exactprosystems.jf.tool.git.CredentialDialog;
 import com.exactprosystems.jf.tool.git.GitUtil;
@@ -46,20 +39,16 @@ import com.exactprosystems.jf.tool.newconfig.ConfigurationFx;
 import com.exactprosystems.jf.tool.newconfig.wizard.WizardConfiguration;
 import com.exactprosystems.jf.tool.settings.SettingsPanel;
 import com.exactprosystems.jf.tool.settings.Theme;
-import com.exactprosystems.jf.tool.systemvars.SystemVarsFx;
 import com.exactprosystems.jf.tool.text.PlainTextFx;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
-
 import javafx.application.Application;
 import javafx.concurrent.Task;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
-
 import org.apache.log4j.Logger;
 import org.eclipse.jgit.api.Git;
-import org.eclipse.jgit.api.PullResult;
 import org.eclipse.jgit.errors.UnsupportedCredentialItem;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
@@ -176,7 +165,7 @@ public class Main extends Application
 				{
 					controller = Common.loadController(Main.class.getResource("tool.fxml"));
 
-					controller.init(factory, Main.this, settings, stage, ((RunnerScheduler) runnerListener));
+					controller.init(factory, Main.this, settings, stage, runnerListener);
 					controller.disableMenu(true);
 
 					
@@ -376,16 +365,7 @@ public class Main extends Application
 
 	public void gitPull() throws Exception
 	{
-		try (Git git = git())
-		{
-			PullResult pull = git.pull()
-					.setCredentialsProvider(getCredentialsProvider())
-					.call();
-
-
-			new GitPull(this)
-					.display("Some title", new ArrayList<>());
-		}
+		new GitPull(this).display();
 	}
 
 	public void gitCommit() throws Exception

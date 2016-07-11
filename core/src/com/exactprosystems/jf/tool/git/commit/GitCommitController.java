@@ -32,6 +32,7 @@ public class GitCommitController implements Initializable, ContainingParent
 	public Button btnCommit;
 	public Button btnPush;
 	public Button btnClose;
+	public CheckBox cbAmend;
 
 	private BooleanBinding binding;
 	private GitCommit model;
@@ -41,8 +42,6 @@ public class GitCommitController implements Initializable, ContainingParent
 	@Override
 	public void initialize(URL location, ResourceBundle resources)
 	{
-		//TODO set visible true when we understand how to get commit
-		this.btnCommit.setVisible(false);
 		this.binding = this.taMessage.textProperty().isEmpty();
 		this.btnPush.disableProperty().bind(this.binding);
 		this.btnCommit.disableProperty().bind(this.binding);
@@ -68,12 +67,13 @@ public class GitCommitController implements Initializable, ContainingParent
 	//region event methods
 	public void commitSelected(ActionEvent actionEvent)
 	{
-		Common.tryCatch(() -> this.model.commit(this.taMessage.getText(), this.tableView.getItems().stream().filter(GitBean::isChecked).collect(Collectors.toList())), "Error on commit");
+		Common.tryCatch(() -> this.model.commit(this.taMessage.getText(), this.tableView.getItems().stream().filter(GitBean::isChecked).collect(Collectors.toList()), this.cbAmend.isSelected()), "Error on " +
+				"commit");
 	}
 
 	public void pushSelected(ActionEvent actionEvent)
 	{
-		Common.tryCatch(() -> this.model.push(this.taMessage.getText(), this.tableView.getItems().stream().filter(GitBean::isChecked).collect(Collectors.toList())), "Error on push");
+		Common.tryCatch(() -> this.model.push(this.taMessage.getText(), this.tableView.getItems().stream().filter(GitBean::isChecked).collect(Collectors.toList()), this.cbAmend.isSelected()), "Error on push");
 	}
 
 	public void close(ActionEvent actionEvent)
