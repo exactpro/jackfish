@@ -58,7 +58,7 @@ import java.io.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
-@XmlRootElement
+@XmlRootElement(name="configuration")
 @XmlAccessorType(XmlAccessType.NONE)
 
 @DocumentInfo(
@@ -405,6 +405,9 @@ public class Configuration extends AbstractDocument
 
 	public void refreshLibs()
 	{
+//		System.err.println("-------------------------- refreshLibs()");
+
+		
 		IMatrixListener checker = new MatrixListener();
 		this.libs.clear();
 		if (this.librariesValue == null)
@@ -421,6 +424,8 @@ public class Configuration extends AbstractDocument
 				
 				for (File libFile : libFiles)
 				{
+					System.err.println("== " + libFile);
+					
 					try (Reader reader = new FileReader(libFile))
 					{
 						Matrix matrix = getFactory().createMatrix(libFile.getAbsolutePath()); 
@@ -430,9 +435,17 @@ public class Configuration extends AbstractDocument
 							continue;
 						}
 						matrix.load(reader);
-						for (String ns : matrix.nameSpaces())
+						List<String> namespaces = matrix.nameSpaces();
+						if (namespaces.isEmpty())
 						{
-							this.libs.put(ns, matrix);
+							matrix.close(this.getFactory().getSettings());
+						}
+						else
+						{
+							for (String ns : namespaces)
+							{
+								this.libs.put(ns, matrix);
+							}
 						}
 					}
 					catch (Exception e)

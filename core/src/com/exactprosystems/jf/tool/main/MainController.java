@@ -221,13 +221,13 @@ public class MainController implements Initializable, ContainingParent
 		this.stage.show();
 	}
 
-	public void init(DocumentFactory factory, Main model, Settings settings, Stage stage, RunnerScheduler runnerListener)
+	public void init(DocumentFactory factory, Main model, Settings settings, Stage stage)
 	{
 		this.factory = factory;
 		this.model = model;
 		this.settings = settings;
 		this.stage = stage;
-		this.runnerScheduler = runnerListener;
+		this.runnerScheduler = (RunnerScheduler) factory.getRunnerListener();
 		this.stage.setOnCloseRequest(windowEvent ->
 		{
 			if (!this.model.closeApplication())

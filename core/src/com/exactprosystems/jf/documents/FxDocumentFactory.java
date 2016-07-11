@@ -19,6 +19,7 @@ import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.main.Main;
 import com.exactprosystems.jf.tool.matrix.MatrixFx;
 import com.exactprosystems.jf.tool.matrix.MatrixListenerFx;
+import com.exactprosystems.jf.tool.matrix.schedule.RunnerScheduler;
 import com.exactprosystems.jf.tool.msgdictionary.MessageDictionaryFx;
 import com.exactprosystems.jf.tool.newconfig.ConfigurationFx;
 import com.exactprosystems.jf.tool.systemvars.SystemVarsFx;
@@ -26,11 +27,12 @@ import com.exactprosystems.jf.tool.text.PlainTextFx;
 
 public class FxDocumentFactory extends DocumentFactory
 {
-	public FxDocumentFactory(Main mainModel)
+	public FxDocumentFactory(Main mainModel) throws Exception
 	{
 		super();
 
 		this.mainModel = mainModel;
+		this.runnerListener = new RunnerScheduler();
 	}
 	
 	@Override
@@ -107,9 +109,16 @@ public class FxDocumentFactory extends DocumentFactory
 		DialogsHelper.showNotifier(message, notifier);
 	}
 
+	@Override
+	public RunnerListener getRunnerListener()
+	{
+		return this.runnerListener;
+	}
+
 	private RunnerListener runnerListener;
 	
 	private Main mainModel;
 
 	private static final Logger logger = Logger.getLogger(FxDocumentFactory.class);
+
 }

@@ -9,8 +9,10 @@ import com.exactprosystems.jf.documents.guidic.GuiDictionary;
 import com.exactprosystems.jf.documents.matrix.Matrix;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.ConsoleErrorMatrixListener;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.ConsoleMatrixListener;
+import com.exactprosystems.jf.documents.matrix.parser.listeners.DummyRunnerListener;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.MatrixListener;
+import com.exactprosystems.jf.documents.matrix.parser.listeners.RunnerListener;
 import com.exactprosystems.jf.documents.msgdic.MessageDictionary;
 import com.exactprosystems.jf.documents.text.PlainText;
 import com.exactprosystems.jf.documents.vars.SystemVars;
@@ -110,6 +112,13 @@ public class ConsoleDocumentFactory extends DocumentFactory
 	{
 		System.out.printf("[%s] %s %n", notifier, message);
 	}
+
+	@Override
+	public RunnerListener getRunnerListener()
+	{
+		return new DummyRunnerListener();
+	}
+
 
 	private VerboseLevel verboseLevel;
 }

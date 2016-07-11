@@ -43,6 +43,9 @@ import java.io.Reader;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
+@XmlRootElement(name="configuration")
 public class ConfigurationFx extends Configuration
 {
 	//region fields

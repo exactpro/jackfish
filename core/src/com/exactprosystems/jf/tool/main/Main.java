@@ -86,7 +86,7 @@ public class Main extends Application
 
 	private Preloader preloader;
 	private MainController controller;
-	private RunnerScheduler runnerListener;
+//	private RunnerScheduler runnerListener;
 
 	private Configuration config;
 	private Settings settings;
@@ -155,7 +155,7 @@ public class Main extends Application
 		Common.setTheme(Theme.valueOf(theme.getValue().toUpperCase()));
 		this.preloader = new Preloader();
 		this.preloader.show();
-		this.runnerListener = new RunnerScheduler();
+//		this.runnerListener = new RunnerScheduler();
 		Task<Object> load = new Task<Object>()
 		{
 			@Override
@@ -164,8 +164,7 @@ public class Main extends Application
 				try
 				{
 					controller = Common.loadController(Main.class.getResource("tool.fxml"));
-
-					controller.init(factory, Main.this, settings, stage, runnerListener);
+					controller.init(factory, Main.this, settings, stage);
 					controller.disableMenu(true);
 
 					

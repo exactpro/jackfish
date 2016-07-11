@@ -717,10 +717,13 @@ public class MatrixFx extends Matrix
 	private void init(DocumentFactory factory) throws Exception
 	{
 		this.console = new TabConsole(System.out);
-		this.context = factory.createContext().setOut(this.console);
+		this.context = factory.createContext();
+		
+		this.context.setOut(this.console);
 		this.runner = new MatrixRunner(this.context, this, this.startDate, null);
 		this.runner.setStartTime(this.startDate);
 		this.applicationConnector = new ApplicationConnector(factory);
+
 		super.saved();
 	}
 

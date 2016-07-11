@@ -16,9 +16,11 @@ import com.exactprosystems.jf.documents.csv.Csv;
 import com.exactprosystems.jf.documents.guidic.GuiDictionary;
 import com.exactprosystems.jf.documents.matrix.Matrix;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
+import com.exactprosystems.jf.documents.matrix.parser.listeners.RunnerListener;
 import com.exactprosystems.jf.documents.msgdic.MessageDictionary;
 import com.exactprosystems.jf.documents.text.PlainText;
 import com.exactprosystems.jf.documents.vars.SystemVars;
+import com.exactprosystems.jf.tool.matrix.schedule.RunnerScheduler;
 
 public abstract class DocumentFactory
 {
@@ -191,6 +193,7 @@ public abstract class DocumentFactory
 
 	protected abstract IMatrixListener 		createMatrixListener();
 	
+	public abstract RunnerListener 		getRunnerListener();
 	
 	private void checkConfiguration() throws EmptyConfigurationException
 	{
@@ -203,5 +206,4 @@ public abstract class DocumentFactory
 	protected Configuration 		configuration;
 
 	protected Settings 				settings;
-
 }

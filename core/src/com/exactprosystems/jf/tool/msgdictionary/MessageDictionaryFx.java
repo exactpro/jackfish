@@ -8,9 +8,12 @@
 
 package com.exactprosystems.jf.tool.msgdictionary;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
 import com.exactprosystems.jf.documents.DocumentFactory;
 import com.exactprosystems.jf.documents.msgdic.MessageDictionary;
 
+@XmlRootElement(name = "dictionary")
 public class MessageDictionaryFx extends MessageDictionary
 {
 	public MessageDictionaryFx(String fileName, DocumentFactory factory)

@@ -55,6 +55,8 @@ public class RunnerScheduler implements RunnerListener
 	@Override
 	public void subscribe(MatrixRunner runner)
 	{
+//		System.err.println(">> " + runner.getMatrixName());
+		
 		if (this.map.containsKey(runner))
 		{
 			return;
@@ -68,6 +70,8 @@ public class RunnerScheduler implements RunnerListener
 	@Override
 	public void unsubscribe(MatrixRunner runner)
 	{
+//		System.err.println("<< " + runner.getMatrixName());
+
 		Boolean remove = this.map.remove(runner);
 		remove = remove == null ? true : remove;
 		logger.trace(String.format("MatrixRunner %s subscribe %s", runner.toString(), (remove ? "" : "un") + "successful"));
