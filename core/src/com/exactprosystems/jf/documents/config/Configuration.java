@@ -38,6 +38,7 @@ import com.exactprosystems.jf.documents.matrix.parser.listeners.RunnerListener;
 import com.exactprosystems.jf.documents.vars.SystemVars;
 import com.exactprosystems.jf.service.ServicePool;
 import com.exactprosystems.jf.sql.DataBasePool;
+import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.main.DocumentKind;
 import com.exactprosystems.jf.tool.main.Main;
 
@@ -381,7 +382,7 @@ public class Configuration extends AbstractDocument
 	
 	public void matrixChanged(String name, Matrix matrix)
 	{
-		refreshLibs(); 
+//		refreshLibs(); 
 	}
 
 	public AbstractEvaluator createEvaluator() throws Exception
@@ -403,11 +404,22 @@ public class Configuration extends AbstractDocument
 		return evaluator;
 	}
 
-	public void refreshLibs()
+	
+	public void refresh()  throws Exception
 	{
-//		System.err.println("-------------------------- refreshLibs()");
+		refreshVars();
+		refreshLibs();
+		refreshMatrices();
+		refreshAppDictionaries();
+		refreshClientDictionaries();
+		refreshReport();
 
-		
+		display();
+	}
+
+	
+	protected void refreshLibs()
+	{
 		IMatrixListener checker = new MatrixListener();
 		this.libs.clear();
 		if (this.librariesValue == null)
@@ -424,11 +436,9 @@ public class Configuration extends AbstractDocument
 				
 				for (File libFile : libFiles)
 				{
-					System.err.println("== " + libFile);
-					
 					try (Reader reader = new FileReader(libFile))
 					{
-						Matrix matrix = getFactory().createMatrix(libFile.getAbsolutePath()); 
+						Matrix matrix = getFactory().createLibrary(libFile.getAbsolutePath()); 
 						if (!checker.isOk())
 						{
 							logger.error("Library load error: [" + libFile.getName() + "] " + checker.getExceptionMessage());
@@ -457,7 +467,7 @@ public class Configuration extends AbstractDocument
 		}
 	}
 
-	public void refreshVars()
+	protected void refreshVars()
 	{
 		try
 		{
@@ -474,6 +484,18 @@ public class Configuration extends AbstractDocument
 			logger.error(e.getMessage(), e);
 		}
 	}
+	
+	public void refreshMatrices()
+	{}
+	
+	public void refreshAppDictionaries()  
+	{}
+	
+	public void refreshClientDictionaries() 
+	{}
+	
+	public void refreshReport() 
+	{}
 	
     //------------------------------------------------------------------------------------------------------------------
     // interface Document
@@ -518,8 +540,8 @@ public class Configuration extends AbstractDocument
 
 			DateTime.setFormats(this.timeValue.get(), this.dateValue.get(), this.dateTimeValue.get());
 			Converter.setFormats(toStringList(this.formatsValue));
-			refreshLibs(); 
-			refreshVars();
+			
+			refresh(); 
 
 			this.valid = true;
     	}

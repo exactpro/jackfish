@@ -85,6 +85,22 @@ public abstract class DocumentFactory
 		return null;
 	}
 
+	public final Matrix 				createLibrary(String fileName)
+	{
+		try
+		{
+			checkConfiguration();
+			Matrix ret = createLibrary(fileName, this.configuration, createMatrixListener());
+			
+			return ret;
+		}
+		catch (Exception e)
+		{
+			error(null, e);
+		}
+		return null;
+	}
+
 	public final Matrix 				createMatrix(String fileName)
 	{
 		try
@@ -178,6 +194,8 @@ public abstract class DocumentFactory
 	protected abstract Context 				createContext(Configuration configuration, IMatrixListener matrixListener) throws Exception;
 
 	protected abstract Configuration 		createConfig(String fileName, Settings settings) throws Exception;
+
+	protected abstract Matrix 				createLibrary(String fileName, Configuration configuration, IMatrixListener matrixListener) throws Exception;
 
 	protected abstract Matrix 				createMatrix(String fileName, Configuration configuration, IMatrixListener matrixListener) throws Exception;
 

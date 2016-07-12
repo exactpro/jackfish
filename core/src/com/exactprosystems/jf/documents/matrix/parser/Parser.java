@@ -314,7 +314,7 @@ public class Parser
 		IMatrixListener matrixListener = new SilenceMatrixListener();
 		
 		Parser parser = new Parser();
-		MatrixItem root = parser.readMatrix(new Matrix("noname", null, matrixListener), str, matrixListener);
+		MatrixItem root = parser.readMatrix(new Matrix("noname", null, matrixListener, false), str, matrixListener);
 
 		if (root != null)
 		{

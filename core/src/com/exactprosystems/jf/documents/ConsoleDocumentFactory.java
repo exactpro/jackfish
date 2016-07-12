@@ -39,9 +39,15 @@ public class ConsoleDocumentFactory extends DocumentFactory
 	}
 
 	@Override
+	protected Matrix createLibrary(String fileName, Configuration configuration, IMatrixListener matrixListener) throws Exception
+	{
+		return new Matrix(fileName, this, matrixListener, true);
+	}
+
+	@Override
 	protected Matrix createMatrix(String fileName, Configuration configuration, IMatrixListener matrixListener) throws Exception
 	{
-		return new Matrix(fileName, this, matrixListener);
+		return new Matrix(fileName, this, matrixListener, false);
 	}
 
 	@Override

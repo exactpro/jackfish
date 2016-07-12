@@ -48,9 +48,15 @@ public class FxDocumentFactory extends DocumentFactory
 	}
 
 	@Override
+	protected Matrix createLibrary(String fileName, Configuration configuration, IMatrixListener matrixListener) throws Exception
+	{
+		return new MatrixFx(fileName, this, matrixListener, true);
+	}
+
+	@Override
 	protected Matrix createMatrix(String fileName, Configuration configuration, IMatrixListener matrixListener) throws Exception
 	{
-		return new MatrixFx(fileName, this, matrixListener);
+		return new MatrixFx(fileName, this, matrixListener, false);
 	}
 
 	@Override

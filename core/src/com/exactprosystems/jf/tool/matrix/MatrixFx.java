@@ -61,16 +61,9 @@ public class MatrixFx extends Matrix
 	public static final String DIALOG_BREAKPOINT = "BreakPointMatrix";
 	public static final String DIALOG_DEFAULTS = "DefaultsAppAndClient";
 
-	public MatrixFx(Matrix matrix, DocumentFactory factory) throws Exception
+	public MatrixFx(String matrixName, DocumentFactory factory, IMatrixListener matrixListener, boolean isLibrary) throws Exception
 	{
-		super(matrix, factory);
-		getRoot().init(this);
-		init(factory);
-	}
-
-	public MatrixFx(String matrixName, DocumentFactory factory, IMatrixListener matrixListener) throws Exception
-	{
-		super(matrixName, factory, matrixListener);
+		super(matrixName, factory, matrixListener, isLibrary);
 		init(factory);
 	}
 
@@ -151,7 +144,10 @@ public class MatrixFx extends Matrix
 	public void close(Settings settings) throws Exception
 	{
 		super.close(settings);
-		this.runner.close();
+		if (this.runner != null)
+		{
+			this.runner.close();
+		}
 		storeSettings(settings);
 		if (this.context != null)
 		{
@@ -651,30 +647,42 @@ public class MatrixFx extends Matrix
 
 	public void startMatrix() throws Exception
 	{
-		this.controller.coloring();
-		getFactory().getConfiguration().getRunnerListener().subscribe(this.runner);
-		this.runner.start();
+		if (this.runner != null)
+		{
+			this.controller.coloring();
+			getFactory().getConfiguration().getRunnerListener().subscribe(this.runner);
+			this.runner.start();
+		}
 	}
 
 	public void stopMatrix() throws Exception
 	{
-		this.runner.stop();
-		this.controller.coloring();
+		if (this.runner != null)
+		{
+			this.runner.stop();
+			this.controller.coloring();
+		}
 	}
 
 	public void pauseMatrix() throws Exception
 	{
-		this.runner.pause();
+		if (this.runner != null)
+		{
+			this.runner.pause();
+		}
 	}
 
 	public void stepMatrix() throws Exception
 	{
-		this.runner.step();
+		if (this.runner != null)
+		{
+			this.runner.step();
+		}
 	}
 
 	public void showResult() throws Exception
 	{
-		if (this.runner.getReportName() != null)
+		if (this.runner != null && this.runner.getReportName() != null)
 		{
 			File file = new File(this.runner.getReportName());
 			this.controller.showResult(file, this.getName());
@@ -719,9 +727,13 @@ public class MatrixFx extends Matrix
 		this.console = new TabConsole(System.out);
 		this.context = factory.createContext();
 		
-		this.context.setOut(this.console);
-		this.runner = new MatrixRunner(this.context, this, this.startDate, null);
-		this.runner.setStartTime(this.startDate);
+		if (!isLibrary())
+		{
+			this.context.setOut(this.console);
+			this.runner = new MatrixRunner(this.context, this, this.startDate, null);
+			this.runner.setStartTime(this.startDate);
+		}
+		
 		this.applicationConnector = new ApplicationConnector(factory);
 
 		super.saved();

@@ -40,19 +40,11 @@ public class Matrix extends AbstractDocument implements IMatrix, Cloneable
 {
 	public static final String EMPTY_STRING = "<empty>";
 
-	public Matrix(Matrix matrix, DocumentFactory factory) throws Exception
-	{
-		super(matrix.getName(), factory);
-
-		this.root = matrix.root;
-		this.buffer = matrix.buffer;
-		this.matrixListener = matrix.matrixListener;
-	}
-
-	public Matrix(String matrixName, DocumentFactory factory, IMatrixListener matrixListener) throws Exception
+	public Matrix(String matrixName, DocumentFactory factory, IMatrixListener matrixListener, boolean isLibrary) throws Exception
 	{
 		super(matrixName, factory);
 
+		this.isLibrary = isLibrary;
 		this.root = new MatrixRoot(matrixName);
 		this.buffer = new StringBuilder();
 		this.matrixListener = matrixListener;
@@ -249,6 +241,11 @@ public class Matrix extends AbstractDocument implements IMatrix, Cloneable
 	// ==============================================================================================================================
 	// interface to edit Matrix
 	// ==============================================================================================================================
+	public boolean isLibrary()
+	{
+		return this.isLibrary;
+	}
+	
 	public void addCopyright(String text)
 	{
 		Optional.ofNullable(this.getRoot().get(0)).ifPresent(first -> first.addCopyright(text));
@@ -573,6 +570,7 @@ public class Matrix extends AbstractDocument implements IMatrix, Cloneable
 	private IClientFactory		defaultClient;
 	private IApplicationFactory	defaultApp;
 
+	private boolean				isLibrary;
 	private int					count   = 0;
 	private MatrixItem			root	= null;
 	private StringBuilder		buffer;
