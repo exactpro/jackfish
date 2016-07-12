@@ -17,6 +17,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.BorderPane;
 
 import java.net.URL;
 import java.util.Arrays;
@@ -33,6 +34,8 @@ public class GitCommitController implements Initializable, ContainingParent
 	public Button btnPush;
 	public Button btnClose;
 	public CheckBox cbAmend;
+	public ListView<String> listView;
+	public BorderPane unpushingPane;
 
 	private BooleanBinding binding;
 	private GitCommit model;
@@ -48,12 +51,13 @@ public class GitCommitController implements Initializable, ContainingParent
 	}
 	//endregion
 
-	public void init(GitCommit model, List<GitBean> list)
+	public void init(GitCommit model, List<GitBean> list, List<String> commits)
 	{
 		this.model = model;
 		initDialog();
 		initTable();
 		this.tableView.getItems().setAll(list);
+		this.listView.getItems().setAll(commits);
 	}
 
 	//region ContainingParent
@@ -156,7 +160,7 @@ public class GitCommitController implements Initializable, ContainingParent
 
 		TableColumn<GitBean, String> fileColumn = new TableColumn<>("Name");
 		fileColumn.setCellValueFactory(new PropertyValueFactory<>("file"));
-		fileColumn.prefWidthProperty().bind(this.tableView.widthProperty().subtract(30.0 + 100.0 + 5.0));
+		fileColumn.prefWidthProperty().bind(this.tableView.widthProperty().subtract(30.0 + 100.0 + 2.0));
 
 		TableColumn<GitBean, GitBean.Status> statusColumn = new TableColumn<>("Status");
 		statusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));

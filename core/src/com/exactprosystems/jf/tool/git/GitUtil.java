@@ -17,10 +17,8 @@ import org.eclipse.jgit.api.*;
 import org.eclipse.jgit.api.errors.CheckoutConflictException;
 import org.eclipse.jgit.diff.DiffEntry;
 import org.eclipse.jgit.errors.UnsupportedCredentialItem;
-import org.eclipse.jgit.lib.ObjectId;
-import org.eclipse.jgit.lib.ObjectReader;
-import org.eclipse.jgit.lib.ProgressMonitor;
-import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.lib.*;
+import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 import org.eclipse.jgit.transport.*;
 import org.eclipse.jgit.treewalk.CanonicalTreeParser;
@@ -169,7 +167,10 @@ public class GitUtil
 
 	public static void gitPush(CredentialBean bean, List<File> files, String msg, boolean isAmend) throws Exception
 	{
-		gitCommit(bean, files, msg, isAmend);
+		if (!files.isEmpty())
+		{
+			gitCommit(bean, files, msg, isAmend);
+		}
 		try (Git git = git(bean))
 		{
 			git.push().setCredentialsProvider(getCredentialsProvider(bean)).setAtomic(true).call();
@@ -199,6 +200,29 @@ public class GitUtil
 			replaceFiles(list, status.getChanged(), GitBean.Status.CHANGED);
 			replaceFiles(list, status.getRemoved(), GitBean.Status.REMOVED);
 			Collections.sort(list, (b1,b2) -> b1.getStatus().compareTo(b2.getStatus()));
+			return list;
+		}
+	}
+
+	public static void main(String[] args) throws Exception
+	{
+		GitUtil.gitUnpushingCommits(new CredentialBean("AndrewBystrov", "Andrew17051993", "", ""));
+	}
+
+	public static List<String> gitUnpushingCommits(CredentialBean credentialBean) throws Exception
+	{
+		try (Git git = git(credentialBean))
+		{
+			List<String> list = new ArrayList<>();
+
+			LogCommand log = git.log();
+			Repository repo = git.getRepository();
+			log.addRange(repo.exactRef("refs/remotes/origin/master").getObjectId(), repo.exactRef("HEAD").getObjectId());
+			Iterable<RevCommit> call = log.call();
+			for (RevCommit aCall : call)
+			{
+				list.add(aCall.getName());
+			}
 			return list;
 		}
 	}

@@ -34,7 +34,6 @@ import com.exactprosystems.jf.tool.git.status.GitStatus;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper.OpenSaveMode;
 import com.exactprosystems.jf.tool.matrix.MatrixFx;
-import com.exactprosystems.jf.tool.matrix.schedule.RunnerScheduler;
 import com.exactprosystems.jf.tool.newconfig.ConfigurationFx;
 import com.exactprosystems.jf.tool.newconfig.wizard.WizardConfiguration;
 import com.exactprosystems.jf.tool.settings.SettingsPanel;
@@ -369,7 +368,8 @@ public class Main extends Application
 
 	public void gitCommit() throws Exception
 	{
-		new GitCommit(this, GitUtil.gitStatus(getCredential())).display();
+		CredentialBean credential = getCredential();
+		new GitCommit(this, GitUtil.gitStatus(credential), GitUtil.gitUnpushingCommits(credential)).display();
 	}
 
 	public void gitReset() throws Exception

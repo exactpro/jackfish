@@ -29,11 +29,11 @@ public class GitCommit
 
 	private Service<Void> service;
 
-	public GitCommit(Main model, List<GitBean> list) throws Exception
+	public GitCommit(Main model, List<GitBean> list, List<String> unpushedCommits) throws Exception
 	{
 		this.model = model;
 		this.controller = Common.loadController(this.getClass().getResource("GitCommit.fxml"));
-		this.controller.init(this, list);
+		this.controller.init(this, list, unpushedCommits);
 	}
 
 	public void close() throws Exception
