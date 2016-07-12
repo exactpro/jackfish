@@ -8,6 +8,7 @@
 package com.exactprosystems.jf.tool.git.status;
 
 import com.exactprosystems.jf.tool.Common;
+import com.exactprosystems.jf.tool.git.CredentialBean;
 import com.exactprosystems.jf.tool.git.GitBean;
 import com.exactprosystems.jf.tool.git.GitUtil;
 import com.exactprosystems.jf.tool.main.Main;
@@ -32,8 +33,16 @@ public class GitStatus
 		this.controller.display(list);
 	}
 
-	public void revert(List<File> collect) throws Exception
+	public void revertFiles(List<File> collect) throws Exception
 	{
-		GitUtil.revertFiles(this.model.getCredential(), collect);
+		CredentialBean credential = this.model.getCredential();
+		GitUtil.revertFiles(credential, collect);
+		this.controller.updateFiles(GitUtil.gitStatus(credential));
+	}
+
+	public void ignoreFiles(List<File> collect) throws Exception
+	{
+		GitUtil.ignoreFiles(collect);
+		this.controller.updateFiles(GitUtil.gitStatus(this.model.getCredential()));
 	}
 }

@@ -27,6 +27,7 @@ import org.eclipse.jgit.treewalk.CanonicalTreeParser;
 import org.eclipse.jgit.util.FS;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -45,6 +46,19 @@ public class GitUtil
 			files.stream().map(File::getPath).map(Common::getRelativePath).forEach(checkout::addPath);
 			checkout.call();
 		}
+	}
+
+	public static void ignoreFiles(List<File> files) throws Exception
+	{
+		File gitIgnore = checkGitIgnoreFile();
+		try (FileWriter writer = new FileWriter(gitIgnore))
+		{
+			for (File file : files)
+			{
+				writer.write(Common.getRelativePath(file.getAbsolutePath())+"\n");
+			}
+		}
+
 	}
 
 	public static List<GitPullBean> gitPull(CredentialBean bean, ProgressMonitor monitor) throws Exception
@@ -150,8 +164,7 @@ public class GitUtil
 		gitCommit(bean, files, msg, isAmend);
 		try (Git git = git(bean))
 		{
-			//TODO add pushing command
-//			git.commit().setMessage(msg).call();
+			git.push().setAtomic(true).call();
 		}
 	}
 
@@ -199,6 +212,16 @@ public class GitUtil
 	}
 
 	//region private methods
+	private static File checkGitIgnoreFile() throws Exception
+	{
+		File file = new File(".gitignore");
+		if (!file.exists())
+		{
+			file.createNewFile();
+		}
+		return file;
+	}
+
 	private static void replaceFiles(List<GitBean> mainList, Set<String> newList, GitBean.Status status)
 	{
 		List<GitBean> collect = newList.stream().map(st -> new GitBean(status, new File(st))).collect(Collectors.toList());

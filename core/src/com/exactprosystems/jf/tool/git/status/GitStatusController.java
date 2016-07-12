@@ -50,7 +50,12 @@ public class GitStatusController implements Initializable, ContainingParent
 
 	public void revertSelected(ActionEvent actionEvent)
 	{
-		Common.tryCatch(() -> this.model.revert(this.listView.getItems().stream().filter(GitBean::isChecked).map(GitBean::getFile).collect(Collectors.toList())), "Error on revert selected items");
+		Common.tryCatch(() -> this.model.revertFiles(this.listView.getItems().stream().filter(GitBean::isChecked).map(GitBean::getFile).collect(Collectors.toList())), "Error on revert selected items");
+	}
+
+	public void ignoreSelected(ActionEvent actionEvent)
+	{
+		Common.tryCatch(() -> this.model.ignoreFiles(this.listView.getItems().stream().filter(GitBean::isChecked).map(GitBean::getFile).collect(Collectors.toList())), "Error on ignore selected items");
 	}
 
 	public void init(GitStatus model)
@@ -75,6 +80,12 @@ public class GitStatusController implements Initializable, ContainingParent
 		dialog.getDialogPane().setContent(this.parent);
 		this.listView.getItems().setAll(list);
 		dialog.showAndWait();
+	}
+
+	public void updateFiles(List<GitBean> list)
+	{
+		this.listView.getItems().clear();
+		this.listView.getItems().setAll(list);
 	}
 
 	private class GitStatusCell extends ListCell<GitBean>
@@ -114,6 +125,10 @@ public class GitStatusController implements Initializable, ContainingParent
 
 				pane.setCenter(gridPane);
 				setGraphic(pane);
+			}
+			else
+			{
+				setGraphic(null);
 			}
 		}
 	}
