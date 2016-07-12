@@ -30,6 +30,7 @@ import com.exactprosystems.jf.tool.git.GitUtil;
 import com.exactprosystems.jf.tool.git.clone.GitClone;
 import com.exactprosystems.jf.tool.git.commit.GitCommit;
 import com.exactprosystems.jf.tool.git.pull.GitPull;
+import com.exactprosystems.jf.tool.git.reset.GitReset;
 import com.exactprosystems.jf.tool.git.status.GitStatus;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper.OpenSaveMode;
@@ -376,7 +377,7 @@ public class Main extends Application
 
 	public void gitReset() throws Exception
 	{
-
+		new GitReset(this, GitUtil.gitGetCommits(getCredential())).display();
 	}
 
 	public void revertFiles(List<File> files) throws Exception

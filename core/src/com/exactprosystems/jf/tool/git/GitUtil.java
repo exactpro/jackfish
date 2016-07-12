@@ -177,6 +177,20 @@ public class GitUtil
 		}
 	}
 
+	public static List<String> gitGetCommits(CredentialBean bean) throws Exception
+	{
+		try (Git git = git(bean))
+		{
+			List<String> list = new ArrayList<>();
+			Iterable<RevCommit> commits = git.log().all().call();
+			for (RevCommit commit : commits)
+			{
+				list.add(commit.getName());
+			}
+			return list;
+		}
+	}
+
 	public static void gitDummy(Object... objects) throws Exception
 	{
 		for (int i = 0; i < 5; i++)
