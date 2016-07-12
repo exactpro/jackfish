@@ -7,10 +7,12 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.exactprosystems.jf.tool.git;
 
+import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 
+import java.util.Arrays;
 import java.util.function.BiConsumer;
 
 public class CredentialDialog
@@ -41,10 +43,14 @@ public class CredentialDialog
 		PasswordField pfPassword = new PasswordField();
 		pfPassword.setText(password != null ? password : "");
 
-		gridPane.add(new Label("Username"), 0, 0);
+		Label labelUserName = new Label("Username");
+		gridPane.add(labelUserName, 0, 0);
 		gridPane.add(tfUsername, 1, 0);
-		gridPane.add(new Label("Password"), 0, 1);
+		Label labelPassword = new Label("Password");
+		gridPane.add(labelPassword, 0, 1);
 		gridPane.add(pfPassword, 1, 1);
+
+		Arrays.asList(tfUsername, pfPassword, labelPassword, labelUserName).stream().forEach(n -> GridPane.setMargin(n, new Insets(2, 0, 2, 0)));
 
 		dialog.setTitle("Credential");
 		dialog.setHeaderText("Store credential");

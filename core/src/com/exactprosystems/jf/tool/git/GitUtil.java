@@ -61,6 +61,14 @@ public class GitUtil
 
 	}
 
+	public static void gitReset(CredentialBean bean, String ref) throws Exception
+	{
+		try (Git git = git(bean))
+		{
+			git.reset().setRef(ref).setMode(ResetCommand.ResetType.HARD).call();
+		}
+	}
+
 	public static List<GitPullBean> gitPull(CredentialBean bean, ProgressMonitor monitor) throws Exception
 	{
 		try (Git git = git(bean))
@@ -164,7 +172,7 @@ public class GitUtil
 		gitCommit(bean, files, msg, isAmend);
 		try (Git git = git(bean))
 		{
-			git.push().setAtomic(true).call();
+			git.push().setCredentialsProvider(getCredentialsProvider(bean)).setAtomic(true).call();
 		}
 	}
 
