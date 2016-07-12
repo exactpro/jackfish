@@ -25,7 +25,6 @@ import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.matrix.MatrixFx;
 import com.exactprosystems.jf.tool.matrix.schedule.RunnerScheduler;
 import com.exactprosystems.jf.tool.settings.SettingsPanel;
-
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
@@ -40,7 +39,6 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
-
 import org.apache.log4j.Logger;
 
 import java.io.File;
@@ -50,6 +48,8 @@ import java.util.Collection;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
+
+import static com.exactprosystems.jf.documents.config.Configuration.git;
 
 public class MainController implements Initializable, ContainingParent
 {
@@ -568,6 +568,15 @@ public class MainController implements Initializable, ContainingParent
 		menuEdit.setDisable(flag);
 		menuMatrix.setDisable(flag);
 		fileRunFromFile.setDisable(flag);
+	}
+
+	public void isGit(boolean flag)
+	{
+		gitCommit.setDisable(!flag);
+		gitPull.setDisable(!flag);
+		gitReset.setDisable(!flag);
+		gitStatus.setDisable(!flag);
+		gitChangeCredential.setDisable(!flag);
 	}
 
 	public void clearLastMatrixMenu()
