@@ -10,6 +10,7 @@ package com.exactprosystems.jf.app;
 
 import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.client.ICondition;
+import com.exactprosystems.jf.api.common.Str;
 import org.apache.log4j.Logger;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -841,8 +842,19 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 		{
 			try
 			{
+				boolean isNormalCheckBox = component.getTagName().equals("input") && Str.areEqual(component.getAttribute("type"), "checkbox");
 				scrollToElement(component);
-				component.click();
+				if (isNormalCheckBox)
+				{
+					if (value ^ Str.areEqual(component.getAttribute("checked"), "true"))
+					{
+						component.click();
+					}
+				}
+				else
+				{
+					component.click();
+				}
 				return true;
 			}
 			catch (StaleElementReferenceException e)
