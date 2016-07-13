@@ -72,7 +72,7 @@ public class GitUtil
 		}
 		try (Git git = git(bean))
 		{
-			git.push().setCredentialsProvider(getCredentialsProvider(bean)).setAtomic(true).call();
+			git.push().setPushAll().setCredentialsProvider(getCredentialsProvider(bean)).setAtomic(true).call();
 		}
 	}
 
@@ -338,7 +338,11 @@ public class GitUtil
 				{
 					if (item instanceof CredentialItem.StringType)
 					{
-						((CredentialItem.StringType) item).setValue(credentials.getPassword());
+						((CredentialItem.StringType) item).setValue(credentials.getUsername());
+					}
+					else if (item instanceof CredentialItem.Password)
+					{
+						((CredentialItem.Password) item).setValue(credentials.getPassword().toCharArray());
 					}
 				}
 				return true;

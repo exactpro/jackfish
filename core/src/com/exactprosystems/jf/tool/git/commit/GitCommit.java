@@ -101,7 +101,8 @@ public class GitCommit
 		service.setOnFailed(e -> {
 			Throwable exception = e.getSource().getException();
 			logger.error(exception.getMessage(), exception);
-			DialogsHelper.showError("Error on " + notification + exception.getMessage());
+			DialogsHelper.showError("Error on " + notification + "\n" + exception.getMessage());
+			this.controller.setDisable(false);
 		});
 	}
 
