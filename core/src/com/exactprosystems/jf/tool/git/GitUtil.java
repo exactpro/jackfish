@@ -10,6 +10,7 @@ package com.exactprosystems.jf.tool.git;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.git.pull.GitPullBean;
+import com.exactprosystems.jf.tool.git.reset.GitResetBean;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
@@ -19,15 +20,21 @@ import org.eclipse.jgit.diff.DiffEntry;
 import org.eclipse.jgit.errors.UnsupportedCredentialItem;
 import org.eclipse.jgit.lib.*;
 import org.eclipse.jgit.revwalk.RevCommit;
+import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 import org.eclipse.jgit.transport.*;
 import org.eclipse.jgit.treewalk.CanonicalTreeParser;
+import org.eclipse.jgit.treewalk.TreeWalk;
 import org.eclipse.jgit.util.FS;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.util.*;
 import java.util.stream.Collectors;
+
+import static org.eclipse.jgit.lib.Constants.DEFAULT_REMOTE_NAME;
+import static org.eclipse.jgit.lib.Constants.MASTER;
+import static org.eclipse.jgit.lib.Constants.R_REMOTES;
 
 public class GitUtil
 {
@@ -64,6 +71,34 @@ public class GitUtil
 		try (Git git = git(bean))
 		{
 			git.reset().setRef(ref).setMode(ResetCommand.ResetType.HARD).call();
+		}
+	}
+
+	public static List<File> getCommitFiles(CredentialBean bean, RevCommit commit) throws Exception
+	{
+		try (Git git = git(bean))
+		{
+			List<File> list = new ArrayList<>();
+
+			ObjectId currentId = commit.getTree().getId();
+			ObjectId parentId = commit.getParent(0).getTree().getId();
+
+			ObjectReader reader = git.getRepository().newObjectReader();
+
+			CanonicalTreeParser oldTreeIter = new CanonicalTreeParser();
+			oldTreeIter.reset(reader, parentId);
+
+			CanonicalTreeParser newTreeIter = new CanonicalTreeParser();
+			newTreeIter.reset(reader, currentId);
+
+			List<DiffEntry> diffs = git.diff()
+					.setNewTree(newTreeIter)
+					.setOldTree(oldTreeIter)
+					.call();
+
+			list.addAll(diffs.stream().map(diff -> new File(diff.getChangeType() == DiffEntry.ChangeType.DELETE ? diff.getOldPath() : diff.getNewPath())).collect(Collectors.toList()));
+
+			return list;
 		}
 	}
 
@@ -177,15 +212,15 @@ public class GitUtil
 		}
 	}
 
-	public static List<String> gitGetCommits(CredentialBean bean) throws Exception
+	public static List<GitResetBean> gitGetCommits(CredentialBean bean) throws Exception
 	{
 		try (Git git = git(bean))
 		{
-			List<String> list = new ArrayList<>();
+			List<GitResetBean> list = new ArrayList<>();
 			Iterable<RevCommit> commits = git.log().all().call();
 			for (RevCommit commit : commits)
 			{
-				list.add(commit.getName());
+				list.add(new GitResetBean(commit, bean));
 			}
 			return list;
 		}
@@ -218,11 +253,6 @@ public class GitUtil
 		}
 	}
 
-	public static void main(String[] args) throws Exception
-	{
-		GitUtil.gitUnpushingCommits(new CredentialBean("AndrewBystrov", "Andrew17051993", "", ""));
-	}
-
 	public static List<String> gitUnpushingCommits(CredentialBean credentialBean) throws Exception
 	{
 		try (Git git = git(credentialBean))
@@ -231,7 +261,7 @@ public class GitUtil
 
 			LogCommand log = git.log();
 			Repository repo = git.getRepository();
-			log.addRange(repo.exactRef("refs/remotes/origin/master").getObjectId(), repo.exactRef("HEAD").getObjectId());
+			log.addRange(repo.exactRef(R_REMOTES + DEFAULT_REMOTE_NAME + "/" + MASTER).getObjectId(), repo.exactRef(Constants.HEAD).getObjectId());
 			Iterable<RevCommit> call = log.call();
 			for (RevCommit aCall : call)
 			{
@@ -260,7 +290,7 @@ public class GitUtil
 	//region private methods
 	private static File checkGitIgnoreFile() throws Exception
 	{
-		File file = new File(".gitignore");
+		File file = new File(Constants.GITIGNORE_FILENAME);
 		if (!file.exists())
 		{
 			file.createNewFile();

@@ -17,7 +17,7 @@ public class GitReset
 	private final Main model;
 	private final GitResetController controller;
 
-	public GitReset(Main model, List<String> list) throws Exception
+	public GitReset(Main model, List<GitResetBean> list) throws Exception
 	{
 		this.model = model;
 		this.controller = Common.loadController(this.getClass().getResource("GitReset.fxml"));
@@ -25,9 +25,10 @@ public class GitReset
 
 	}
 
-	public void select(String item)
+	public void select(GitResetBean item) throws Exception
 	{
-
+		this.controller.displayMessage(item.getMessage());
+		this.controller.displayFiles(item.getFiles());
 	}
 
 	public void display()
