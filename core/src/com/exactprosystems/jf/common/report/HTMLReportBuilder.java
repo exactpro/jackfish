@@ -144,7 +144,7 @@ public class HTMLReportBuilder extends ReportBuilder
 	@Override
 	protected void reportMatrixRow(ReportWriter writer, int count, String line) throws IOException
 	{
-		writer.fwrite("%s\n", HTMLhelper.htmlescape(line));
+		writer.fwrite("%s\n", line);
 	}
 
 	@Override
