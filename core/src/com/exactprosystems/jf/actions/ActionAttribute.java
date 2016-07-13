@@ -21,7 +21,11 @@ public @interface ActionAttribute
 	ActionGroups group();
 	String suffix() default "";
 	boolean additionFieldsAllowed();
-	String generalDescription();
-	String outputDescription() default "No output value.";
 	Class<?> outputType() default NullType.class;
+
+	String generalDescription();
+	String additionalDescription() default "";
+	String outputDescription() default "No output value.";
+	String seeAlso() default "";
+	String examples() default "";
 }

@@ -23,6 +23,18 @@ public class ContextHelpBuilder extends ReportBuilder
         super(null, null, currentTime);
     }
 
+	@Override
+	protected String postProcess(String result)
+	{
+		return super.postProcess(HTMLhelper.htmlescape(result));
+	}
+
+	@Override
+	protected String replaceMarker(String marker)
+	{
+		return HTMLhelper.htmlMarker(marker);
+	}
+
     @Override
     protected String generateReportName(String outputPath, String matrixName, String suffix, Date date)
     {
@@ -166,15 +178,8 @@ public class ContextHelpBuilder extends ReportBuilder
 	}
 
 	@Override
-	protected String postProcess(String result)
-	{
-		return HTMLhelper.htmlescape(result);
-	}
-
-	@Override
 	protected void histogram(ReportWriter writer, String title, int intervalCount, int interval, List<Long> copyDate)
 	{
 
 	}
-
 }

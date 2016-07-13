@@ -27,6 +27,18 @@ public class HelpBuilder extends ReportBuilder
     {
         super(null, null, currentTime);
     }
+    
+	@Override
+	protected String postProcess(String result)
+	{
+		return super.postProcess(HTMLhelper.htmlescape(result));
+	}
+
+	@Override
+	protected String replaceMarker(String marker)
+	{
+		return HTMLhelper.htmlMarker(marker);
+	}
 
     @Override
     protected String generateReportName(String outputPath, String matrixName, String suffix, Date date)
@@ -296,12 +308,6 @@ public class HelpBuilder extends ReportBuilder
 	protected void tableFooter(ReportWriter writer) throws IOException
 	{
         writer.fwrite("</table>\n");
-	}
-
-	@Override
-	protected String postProcess(String result)
-	{
-		return HTMLhelper.htmlescape(result);
 	}
 
 	@Override

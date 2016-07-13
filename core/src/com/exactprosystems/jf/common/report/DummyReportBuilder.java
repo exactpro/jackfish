@@ -24,6 +24,18 @@ public class DummyReportBuilder extends ReportBuilder
 	}
 
 	@Override
+	protected String postProcess(String result)
+	{
+		return super.postProcess(result);
+	}
+
+	@Override
+	protected String replaceMarker(String marker)
+	{
+		return "";
+	}
+
+	@Override
 	protected String generateReportName(String outputPath, String matrixName, String suffix, Date date)
 			throws IOException
 	{
@@ -110,12 +122,6 @@ public class DummyReportBuilder extends ReportBuilder
 	@Override
 	protected void tableFooter(ReportWriter writer) throws IOException
 	{
-	}
-
-	@Override
-	protected String postProcess(String result)
-	{
-		return result;
 	}
 
 	@Override

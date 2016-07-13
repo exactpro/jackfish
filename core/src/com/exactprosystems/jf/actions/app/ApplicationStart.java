@@ -30,13 +30,18 @@ import java.util.List;
 import java.util.Map;
 
 @ActionAttribute(
-		group					= ActionGroups.App,
-		suffix					= "APPSTR",
-		generalDescription 		= "Starts the application under tests.",
-		additionFieldsAllowed 	= true,
-		outputDescription 		= "Connection to the application.",
-		outputType				= AppConnection.class
-	)
+group					= ActionGroups.App,
+suffix					= "APPSTR",
+additionFieldsAllowed 	= true,
+outputType				= AppConnection.class,
+generalDescription 		= "Starts the application under tests.",
+additionalDescription	= "",
+outputDescription 		= "Connection to the application.",
+seeAlso					= "{{$ApplicationStop$}}, {{$ApplicationConnectTo$}}",
+examples				= "{{#{{`#Action;#AppId;#Browser;#URL`}}"
+						+ "{{#{{`ApplicationStart;'WEB';'Chrome';'https://www.google.com'`}}"
+						+ "#}}"
+)
 public class ApplicationStart extends AbstractAction 
 {
 	public static final String idName 	= "AppId";

@@ -22,12 +22,16 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public abstract class ReportBuilder 
 {
-	public final static String suffix = "_RUNNING";
-	public final static String passed = "_PASSED";
-	public final static String failed = "_FAILED";
+	public final static String suffix 	= "_RUNNING";
+	public final static String passed 	= "_PASSED";
+	public final static String failed 	= "_FAILED";
+	public final static String OM		= "{{";
+	public final static String CM		= "}}";
 	
 	public ReportBuilder(String outputPath, File matrix, Date currentTime) throws IOException
 	{
@@ -160,7 +164,7 @@ public abstract class ReportBuilder
 				dir.mkdir();
 			}
 			
-			reportImage(this.writer, item, this.imageDir + File.separator + fileName, title);
+			reportImage(this.writer, item, this.imageDir + File.separator + fileName, postProcess(title));
 		} 
 		catch (IOException e)
 		{
@@ -172,6 +176,7 @@ public abstract class ReportBuilder
 	{
 		try
 		{
+			string = postProcess(string);
 			if (labelId == null)
 			{
 				if (this.reportIsOn)
@@ -218,7 +223,7 @@ public abstract class ReportBuilder
 	{
 		logger.trace(String.format("reportFinished(%s)", matrix));
 
-		reportFooter(writer, matrix.getRoot(), new Date(), this.name);
+		reportFooter(writer, matrix.getRoot(), new Date(), postProcess(this.name));
 		writer.close();
 
 		String fullName = writer.fileName();
@@ -245,6 +250,31 @@ public abstract class ReportBuilder
 		histogram(this.writer, title, intervalCount, interval, copyDate);
 	}
 	
+	protected String postProcess(String source)
+	{
+		if (source == null)
+		{
+			return null;
+		}
+		
+		String reg = "((\\{\\{[1|2|3|$|#|@|`|_])|([1|2|3|$|#|@|`|_]\\}\\}))";
+
+		Pattern patt = Pattern.compile(reg);
+		Matcher m = patt.matcher(source);
+		StringBuffer sb = new StringBuffer(source.length());
+		while (m.find())
+		{
+			String text = m.group(1);
+			String replace = replaceMarker(text);
+			m.appendReplacement(sb, replace);
+		}
+		m.appendTail(sb);
+		
+		return sb.toString();
+	}
+	
+	protected abstract String replaceMarker(String marker);
+	
 	protected abstract String generateReportName(String outputPath, String matrixName, String suffix, Date date) throws IOException;
 
 	protected abstract String generateReportDir(String matrixName, Date date) throws IOException;
@@ -269,17 +299,16 @@ public abstract class ReportBuilder
 
 	protected abstract void reportItemFooter(ReportWriter writer, MatrixItem entry, Integer id, long time) throws IOException;
 	
-	
 	protected abstract void tableHeader(ReportWriter writer, String tableTitle, String[] columns, int[] percents) throws IOException;
 
 	protected abstract void tableRow(ReportWriter writer, int quotes, Object ... value) throws IOException;
 
 	protected abstract void tableFooter(ReportWriter writer) throws IOException;
 	
-	protected abstract String postProcess(String result);
-
 	protected abstract void histogram(ReportWriter writer, String title, int intervalCount, int interval, List<Long> copyDate) throws IOException;
 
+
+	
 	private void reportMatrix(ReportWriter writer, BufferedReader reader) throws IOException
 	{
 		logger.trace(String.format("reportMatrix(%s)", writer));
@@ -290,14 +319,14 @@ public abstract class ReportBuilder
         }
 		try
 	    {
-			reportMatrixHeader(writer, this.reportName);
+			reportMatrixHeader(writer, postProcess(this.reportName));
 
 			BufferedReader src = reader;
 			String line;
 			int count = 1;
 			while ((line = src.readLine()) != null)
 			{
-				reportMatrixRow(writer, count, line);
+				reportMatrixRow(writer, count, postProcess(line));
 				count++;
 			}
 			src.close();
@@ -319,11 +348,22 @@ public abstract class ReportBuilder
     		{
     			if (table.getData() != null)
     			{
-					tableHeader(writer, table.getTitle(), table.getColumns(), null);
+    				String[] columns = table.getColumns();
+    				for (int i = 0; i < columns.length; i++)
+    				{
+    					columns[i] = postProcess(columns[i]);
+    				}
+    				
+					tableHeader(writer, postProcess(table.getTitle()), columns, null);
 		
 		        	for (Object[] data : table.getData())
 		        	{
-			            tableRow(writer, data.length, data);
+	    				for (int i = 0; i < data.length; i++)
+	    				{
+	    					data[i] = postProcess(data[i] == null ? null : data[i].toString());
+	    				}
+		        		
+		        		tableRow(writer, data.length, data);
 		        	}
 		
 		        	tableFooter(writer);

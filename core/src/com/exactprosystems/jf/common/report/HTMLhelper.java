@@ -11,6 +11,9 @@ package com.exactprosystems.jf.common.report;
 import java.util.HashMap;
 import java.util.Map;
 
+import static  com.exactprosystems.jf.common.report.ReportBuilder.OM;
+import static  com.exactprosystems.jf.common.report.ReportBuilder.CM;
+
 public class HTMLhelper
 {
 	// see http://hotwired.lycos.com/webmonkey/reference/special_characters/
@@ -101,6 +104,43 @@ public class HTMLhelper
 			e2i.put((String)entities[i][0], (Integer)entities[i][1]);
 			i2e.put((Integer)entities[i][1], (String)entities[i][0]);
 		}
+	}
+	
+	
+	public static String htmlMarker(String marker)
+	{
+		if (marker == null)
+		{
+			return "";
+		}
+		
+		switch (marker)
+		{
+			case OM + "1": return "<h1>";
+			case "1" + CM: return "</h1>";	
+
+			case OM + "2": return "<h2>";
+			case "2" + CM: return "</h2>";	
+
+			case OM + "3": return "<h3>";
+			case "3" + CM: return "</h3>";	
+
+			case OM + "$": return "<b><i>";		
+			case "$" + CM: return "</i></b>";		
+
+			case OM + "#": return "<code>";	
+			case "#" + CM: return "</code>";	
+
+			case OM + "@": return "<a>";
+			case "@" + CM: return "</a>";
+
+			case OM + "`": return "<p>";
+			case "`" + CM: return "</p>";
+
+			case OM + "_": return "<u>";
+			case "_" + CM: return "</u>";
+		}
+		return "";
 	}
 
 	/**
