@@ -10,6 +10,7 @@ package com.exactprosystems.jf.tool.git;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.git.pull.GitPullBean;
+import com.exactprosystems.jf.tool.git.reset.FileWithStatusBean;
 import com.exactprosystems.jf.tool.git.reset.GitResetBean;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
@@ -20,11 +21,9 @@ import org.eclipse.jgit.diff.DiffEntry;
 import org.eclipse.jgit.errors.UnsupportedCredentialItem;
 import org.eclipse.jgit.lib.*;
 import org.eclipse.jgit.revwalk.RevCommit;
-import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 import org.eclipse.jgit.transport.*;
 import org.eclipse.jgit.treewalk.CanonicalTreeParser;
-import org.eclipse.jgit.treewalk.TreeWalk;
 import org.eclipse.jgit.util.FS;
 
 import java.io.File;
@@ -32,9 +31,7 @@ import java.io.FileWriter;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static org.eclipse.jgit.lib.Constants.DEFAULT_REMOTE_NAME;
-import static org.eclipse.jgit.lib.Constants.MASTER;
-import static org.eclipse.jgit.lib.Constants.R_REMOTES;
+import static org.eclipse.jgit.lib.Constants.*;
 
 public class GitUtil
 {
@@ -43,65 +40,62 @@ public class GitUtil
 
 	}
 
-	public static void revertFiles(CredentialBean bean, List<File> files) throws Exception
+	//region Clone
+	public static void gitClone(String remotePath, File projectFolder, CredentialBean credentials, ProgressMonitor monitor) throws Exception
+	{
+		CredentialsProvider credentialsProvider = getCredentialsProvider(credentials);
+		try (Git git = Git.cloneRepository().setURI(remotePath).setDirectory(projectFolder).setCredentialsProvider(credentialsProvider).setProgressMonitor(monitor).call()
+		)
+		{
+			;
+		}
+	}
+	//endregion
+
+	//region Commit
+	public static void gitCommit(CredentialBean bean, List<File> files, String msg, boolean isAmend) throws Exception
 	{
 		try (Git git = git(bean))
 		{
-			CheckoutCommand checkout = git.checkout();
-			files.stream().map(File::getPath).map(Common::getRelativePath).forEach(checkout::addPath);
-			checkout.call();
+			AddCommand add = git.add();
+			files.stream().map(File::getPath).map(Common::getRelativePath).forEach(add::addFilepattern);
+			add.call();
+			git.commit().setAmend(isAmend).setAll(true).setMessage(msg).call();
 		}
 	}
 
-	public static void ignoreFiles(List<File> files) throws Exception
+	public static void gitPush(CredentialBean bean, List<File> files, String msg, boolean isAmend) throws Exception
 	{
-		File gitIgnore = checkGitIgnoreFile();
-		try (FileWriter writer = new FileWriter(gitIgnore))
+		if (!files.isEmpty())
 		{
-			for (File file : files)
+			gitCommit(bean, files, msg, isAmend);
+		}
+		try (Git git = git(bean))
+		{
+			git.push().setCredentialsProvider(getCredentialsProvider(bean)).setAtomic(true).call();
+		}
+	}
+
+	public static List<String> gitUnpushingCommits(CredentialBean credentialBean) throws Exception
+	{
+		try (Git git = git(credentialBean))
+		{
+			List<String> list = new ArrayList<>();
+
+			LogCommand log = git.log();
+			Repository repo = git.getRepository();
+			log.addRange(repo.exactRef(R_REMOTES + DEFAULT_REMOTE_NAME + "/" + MASTER).getObjectId(), repo.exactRef(Constants.HEAD).getObjectId());
+			Iterable<RevCommit> call = log.call();
+			for (RevCommit aCall : call)
 			{
-				writer.write(Common.getRelativePath(file.getAbsolutePath())+"\n");
+				list.add(aCall.getName());
 			}
-		}
-
-	}
-
-	public static void gitReset(CredentialBean bean, String ref) throws Exception
-	{
-		try (Git git = git(bean))
-		{
-			git.reset().setRef(ref).setMode(ResetCommand.ResetType.HARD).call();
-		}
-	}
-
-	public static List<File> getCommitFiles(CredentialBean bean, RevCommit commit) throws Exception
-	{
-		try (Git git = git(bean))
-		{
-			List<File> list = new ArrayList<>();
-
-			ObjectId currentId = commit.getTree().getId();
-			ObjectId parentId = commit.getParent(0).getTree().getId();
-
-			ObjectReader reader = git.getRepository().newObjectReader();
-
-			CanonicalTreeParser oldTreeIter = new CanonicalTreeParser();
-			oldTreeIter.reset(reader, parentId);
-
-			CanonicalTreeParser newTreeIter = new CanonicalTreeParser();
-			newTreeIter.reset(reader, currentId);
-
-			List<DiffEntry> diffs = git.diff()
-					.setNewTree(newTreeIter)
-					.setOldTree(oldTreeIter)
-					.call();
-
-			list.addAll(diffs.stream().map(diff -> new File(diff.getChangeType() == DiffEntry.ChangeType.DELETE ? diff.getOldPath() : diff.getNewPath())).collect(Collectors.toList()));
-
 			return list;
 		}
 	}
+	//endregion
 
+	//region Pull
 	public static List<GitPullBean> gitPull(CredentialBean bean, ProgressMonitor monitor) throws Exception
 	{
 		try (Git git = git(bean))
@@ -178,37 +172,46 @@ public class GitUtil
 			return list;
 		}
 	}
+	//endregion
 
-	public static void gitClone(String remotePath, File projectFolder, CredentialBean credentials, ProgressMonitor monitor) throws Exception
-	{
-		CredentialsProvider credentialsProvider = getCredentialsProvider(credentials);
-		try (Git git = Git.cloneRepository().setURI(remotePath).setDirectory(projectFolder).setCredentialsProvider(credentialsProvider).setProgressMonitor(monitor).call()
-		)
-		{
-			;
-		}
-	}
-
-	public static void gitCommit(CredentialBean bean, List<File> files, String msg, boolean isAmend) throws Exception
+	//region Reset
+	public static void gitReset(CredentialBean bean, String ref) throws Exception
 	{
 		try (Git git = git(bean))
 		{
-			AddCommand add = git.add();
-			files.stream().map(File::getPath).map(Common::getRelativePath).forEach(add::addFilepattern);
-			add.call();
-			git.commit().setAmend(isAmend).setAll(true).setMessage(msg).call();
+			git.reset().setRef(ref).setMode(ResetCommand.ResetType.HARD).call();
 		}
 	}
 
-	public static void gitPush(CredentialBean bean, List<File> files, String msg, boolean isAmend) throws Exception
+	public static List<FileWithStatusBean> getCommitFiles(CredentialBean bean, RevCommit commit) throws Exception
 	{
-		if (!files.isEmpty())
-		{
-			gitCommit(bean, files, msg, isAmend);
-		}
 		try (Git git = git(bean))
 		{
-			git.push().setCredentialsProvider(getCredentialsProvider(bean)).setAtomic(true).call();
+			List<FileWithStatusBean> list = new ArrayList<>();
+
+			ObjectId currentId = commit.getTree().getId();
+			ObjectId parentId = commit.getTree().getId();
+			if (commit.getParentCount() != 0)
+			{
+				parentId = commit.getParent(0).getTree().getId();
+			}
+
+			ObjectReader reader = git.getRepository().newObjectReader();
+
+			CanonicalTreeParser oldTreeIter = new CanonicalTreeParser();
+			oldTreeIter.reset(reader, parentId);
+
+			CanonicalTreeParser newTreeIter = new CanonicalTreeParser();
+			newTreeIter.reset(reader, currentId);
+
+			List<DiffEntry> diffs = git.diff()
+					.setNewTree(newTreeIter)
+					.setOldTree(oldTreeIter)
+					.call();
+
+			list.addAll(diffs.stream().map(FileWithStatusBean::new).collect(Collectors.toList()));
+
+			return list;
 		}
 	}
 
@@ -225,14 +228,30 @@ public class GitUtil
 			return list;
 		}
 	}
+	//endregion
 
-	public static void gitDummy(Object... objects) throws Exception
+	//region Status
+	public static void revertFiles(CredentialBean bean, List<File> files) throws Exception
 	{
-		for (int i = 0; i < 5; i++)
+		try (Git git = git(bean))
 		{
-			System.out.println("tick " + i);
-			Thread.sleep(3000);
+			CheckoutCommand checkout = git.checkout();
+			files.stream().map(File::getPath).map(Common::getRelativePath).forEach(checkout::addPath);
+			checkout.call();
 		}
+	}
+
+	public static void ignoreFiles(List<File> files) throws Exception
+	{
+		File gitIgnore = checkGitIgnoreFile();
+		try (FileWriter writer = new FileWriter(gitIgnore))
+		{
+			for (File file : files)
+			{
+				writer.write(Common.getRelativePath(file.getAbsolutePath())+"\n");
+			}
+		}
+
 	}
 
 	public static List<GitBean> gitStatus(CredentialBean credential) throws Exception
@@ -252,38 +271,14 @@ public class GitUtil
 			return list;
 		}
 	}
+	//endregion
 
-	public static List<String> gitUnpushingCommits(CredentialBean credentialBean) throws Exception
+	public static void gitDummy(Object... objects) throws Exception
 	{
-		try (Git git = git(credentialBean))
+		for (int i = 0; i < 5; i++)
 		{
-			List<String> list = new ArrayList<>();
-
-			LogCommand log = git.log();
-			Repository repo = git.getRepository();
-			log.addRange(repo.exactRef(R_REMOTES + DEFAULT_REMOTE_NAME + "/" + MASTER).getObjectId(), repo.exactRef(Constants.HEAD).getObjectId());
-			Iterable<RevCommit> call = log.call();
-			for (RevCommit aCall : call)
-			{
-				list.add(aCall.getName());
-			}
-			return list;
-		}
-	}
-
-	public static void gitRemoveFile(CredentialBean bean, File file) throws Exception
-	{
-		try (Git git = git(bean))
-		{
-			git.rm().addFilepattern(file.getName()).call();
-		}
-	}
-
-	public static void gitAddFile(CredentialBean bean, File file) throws Exception
-	{
-		try (Git git = git(bean))
-		{
-			git.add().addFilepattern(Common.getRelativePath(file.getPath())).call();
+			System.out.println("tick " + i);
+			Thread.sleep(3000);
 		}
 	}
 

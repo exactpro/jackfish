@@ -5,12 +5,8 @@ import com.exactprosystems.jf.tool.git.GitUtil;
 import org.eclipse.jgit.lib.PersonIdent;
 import org.eclipse.jgit.revwalk.RevCommit;
 
-import java.io.File;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-
-import static com.exactprosystems.jf.tool.Common.DATE_TIME_PATTERN;
 
 public class GitResetBean
 {
@@ -44,7 +40,7 @@ public class GitResetBean
 		return authorIdent.getName() + "<" + authorIdent.getEmailAddress() + ">";
 	}
 
-	public List<File> getFiles() throws Exception
+	public List<FileWithStatusBean> getFiles() throws Exception
 	{
 		return GitUtil.getCommitFiles(bean, commit);
 	}

@@ -17,7 +17,6 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
-import java.io.File;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -45,12 +44,12 @@ public class GitResetController implements Initializable, ContainingParent
 
 	public void cancel(ActionEvent actionEvent)
 	{
-
+		this.hide();
 	}
 
 	public void reset(ActionEvent actionEvent)
 	{
-
+		Common.tryCatch(() -> this.model.reset(this.tableView.getSelectionModel().getSelectedItem()), "Error on reset");
 	}
 
 	//region ContainingParent
@@ -75,15 +74,16 @@ public class GitResetController implements Initializable, ContainingParent
 		this.lblCommitMessage.setText(message);
 	}
 
-	public void displayFiles(List<File> files)
+	public void displayFiles(List<FileWithStatusBean> files)
 	{
 		this.vboxFiles.getChildren().clear();
-		for (File file : files)
+		for (FileWithStatusBean bean : files)
 		{
-			this.vboxFiles.getChildren().add(new Text(Common.getRelativePath(file.getAbsolutePath())));
+			Text e = new Text(bean.getChangeType().name().charAt(0) +"\t"+ Common.getRelativePath(bean.getFile().getAbsolutePath()));
+			e.setFill(bean.getColor());
+			this.vboxFiles.getChildren().add(e);
 		}
 	}
-
 
 	public void show()
 	{
