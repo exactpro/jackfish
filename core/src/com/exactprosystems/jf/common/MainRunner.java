@@ -17,12 +17,9 @@ import com.exactprosystems.jf.documents.DocumentFactory;
 import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.guidic.GuiDictionary;
-import com.exactprosystems.jf.documents.matrix.parser.listeners.*;
 import com.exactprosystems.jf.documents.msgdic.MessageDictionary;
 import com.exactprosystems.jf.tool.main.Main;
-
 import javafx.application.Application;
-
 import org.apache.commons.cli.*;
 import org.apache.log4j.Logger;
 import org.apache.log4j.xml.DOMConfigurator;
@@ -32,7 +29,6 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.SchemaOutputResolver;
 import javax.xml.transform.Result;
 import javax.xml.transform.stream.StreamResult;
-
 import java.io.*;
 import java.lang.ProcessBuilder.Redirect;
 import java.lang.management.ManagementFactory;
@@ -40,7 +36,10 @@ import java.lang.management.RuntimeMXBean;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 
 public class MainRunner
 {
@@ -52,7 +51,7 @@ public class MainRunner
 		{
 			logger.info("Tool version: " + VersionInfo.getVersion());
 			logger.info("API version:  " + ApiVersionInfo.majorVersion() + "." + ApiVersionInfo.minorVersion());
-			logger.info("args: " + Arrays.toString(args));
+			logger.info("args: " + Arrays.toString(hidePassword(args)));
 			
 			Option startAtName = OptionBuilder
 					.withArgName("time")
@@ -599,6 +598,17 @@ public class MainRunner
 		{
 			logger.error(e.getMessage(), e);
 		}
+	}
+
+	private static String[] hidePassword(String[] args)
+	{
+		String[] a = new String[args.length];
+		for (int i = 0; i < args.length; i++)
+		{
+			String arg = args[i];
+			a[i] = arg.startsWith("-password") ? "-password=*****" : arg;
+		}
+		return a;
 	}
 	
 	private static String 	restartFileName = "${JF}/.restart.txt";
