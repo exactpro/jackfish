@@ -336,13 +336,19 @@ public class GitUtil
 			{
 				for (CredentialItem item : credentialItems)
 				{
-					if (item instanceof CredentialItem.StringType)
+					//for github
+					if (item instanceof CredentialItem.Username)
 					{
 						((CredentialItem.StringType) item).setValue(credentials.getUsername());
 					}
 					else if (item instanceof CredentialItem.Password)
 					{
 						((CredentialItem.Password) item).setValue(credentials.getPassword().toCharArray());
+					}
+					//for ssh
+					else if (item instanceof CredentialItem.StringType)
+					{
+						((CredentialItem.StringType) item).setValue(credentials.getPassword());
 					}
 				}
 				return true;

@@ -96,6 +96,7 @@ public class GitClone
 			Throwable exception = e.getSource().getException();
 			logger.error(exception.getMessage(), exception);
 			DialogsHelper.showError("Error on cloning repository " + exception.getMessage());
+			this.controller.setDisable(false);
 		});
 	}
 }

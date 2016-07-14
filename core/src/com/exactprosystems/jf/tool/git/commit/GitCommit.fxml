@@ -67,7 +67,6 @@
 	<bottom>
 		<HBox alignment="CENTER_RIGHT" prefHeight="41.0" prefWidth="600.0" spacing="20.0" BorderPane.alignment="CENTER">
 			<children>
-				<CheckBox fx:id="cbAmend" mnemonicParsing="false" text="Amend"/>
 				<Button fx:id="btnCommit" mnemonicParsing="false" onAction="#commitSelected" text="Commit"/>
 				<Button fx:id="btnPush" mnemonicParsing="false" onAction="#pushSelected" text="Commit and Push"/>
 				<Button fx:id="btnClose" mnemonicParsing="false" onAction="#close" text="Close"/>
