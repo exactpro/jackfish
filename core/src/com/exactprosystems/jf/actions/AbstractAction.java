@@ -376,8 +376,8 @@ public abstract class AbstractAction implements Cloneable
         Class<?> type = getClass();
         ActionAttribute attr = type.getAnnotation(ActionAttribute.class);
 
-        table = report.addTable("", 100, new int[] { 30, 70 },
-                new String[] {getClass().getSimpleName(), ""});
+        table = report.addTable("", true, 100,
+                new int[] { 30, 70 }, new String[] {getClass().getSimpleName(), ""});
 
         table.addValues("Description", attr.generalDescription());
         if (attr.additionFieldsAllowed())
@@ -396,8 +396,8 @@ public abstract class AbstractAction implements Cloneable
         // Input
         Map<String, FieldAndAttributes> fieldsAttr = getFieldsAttributes();
 
-        table = report.addTable("Input:", 4, new int[] {0, 0, 60, 0, 0},
-                new String[] {"Field name", "Field type", "Description", "Mandatory", "Default value"});
+        table = report.addTable("Input:", true, 4,
+                new int[] {0, 0, 60, 0, 0}, new String[] {"Field name", "Field type", "Description", "Mandatory", "Default value"});
 
         for (Entry<String, FieldAndAttributes> entry : fieldsAttr.entrySet())
         {
@@ -413,8 +413,8 @@ public abstract class AbstractAction implements Cloneable
         }
 
         // Output
-        table = report.addTable("Output:", 100, new int[] {20, 40},
-                new String[] {"Output type", "Description"});
+        table = report.addTable("Output:", true, 100,
+                new int[] {20, 40}, new String[] {"Output type", "Description"});
 
         table.addValues(typeDescription(attr.outputType()),
                 attr.outputDescription());
@@ -424,8 +424,8 @@ public abstract class AbstractAction implements Cloneable
     {
         if (!parameters.isEmpty())
         {
-            ReportTable table = report.addTable("Input parameters", 2, new int[] {20, 40, 40},
-                    new String[] {"Parameter", "Expression", "Value"});
+            ReportTable table = report.addTable("Input parameters", false, 2,
+                    new int[] {20, 40, 40}, new String[] {"Parameter", "Expression", "Value"});
 
             for (Parameter param : parameters)
             {
@@ -438,16 +438,16 @@ public abstract class AbstractAction implements Cloneable
     {
         if (!assertBool.isExpressionNullOrEmpty() || !assertOutIs.isExpressionNullOrEmpty() || !assertOutIsNot.isExpressionNullOrEmpty())
         {
-	        ReportTable assertTable = report.addTable("Asserts", 1, new int[] {20, 40, 40},
-	                new String[] {"Statement", "Expression", "Value"});
+	        ReportTable assertTable = report.addTable("Asserts", false, 1,
+	                new int[] {20, 40, 40}, new String[] {"Statement", "Expression", "Value"});
 	
 	        tableAssertRowIfNotNull(assertTable, "Assert", 			assertBool.getExpression(), 	assertBool.getValue());
 	        tableAssertRowIfNotNull(assertTable, "AssertOutIs", 	assertOutIs.getExpression(), 	assertOutIs.getValue());
 	        tableAssertRowIfNotNull(assertTable, "AssertOutIsNot", 	assertOutIsNot.getExpression(),	assertOutIsNot.getValue());
         }
 
-        ReportTable resultTable = report.addTable("Results", 1, new int[] {20, 80},
-                new String[] {"Parameter", "Value"});
+        ReportTable resultTable = report.addTable("Results", false, 1,
+                new int[] {20, 80}, new String[] {"Parameter", "Value"});
 
         tableRowIfNotNull(resultTable, "Result", 	this.action.Result);
         tableRowIfNotNull(resultTable, "Reason", 	this.action.Reason.isEmpty() ? null : this.action.Reason);

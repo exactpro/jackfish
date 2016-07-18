@@ -67,7 +67,7 @@ public class ServiceLoad extends AbstractAction
 	@Override
 	public void doRealDocumetation(Context context, ReportBuilder report)
 	{
-		ReportTable info = report.addTable("Available services", 100, new int[] { 100 }, "Service name");
+		ReportTable info = report.addTable("Available services", true, 100, new int[] { 100 }, "Service name");
 		for (String protocol : context.getConfiguration().getServicesPool().servicesNames())
 		{
 			info.addValues(protocol);

@@ -137,7 +137,7 @@ public final class ForEach extends MatrixItem
 	protected void docItSelf(Context context, ReportBuilder report)
 	{
 		ReportTable table;
-		table = report.addTable("", 100, new int[] { 30, 70 }, new String[] { "Chapter", "Description" });
+		table = report.addTable("", true, 100, new int[] { 30, 70 }, new String[] { "Chapter", "Description" });
 
 		table.addValues("Destination", "To organize a loop over a collection");
 		table.addValues("Examples", "<code>#ForEach;#In<p>row;TAB</code>");

@@ -85,7 +85,7 @@ public class Text implements List<String>, Mutable
 	
 	public void report(ReportBuilder report, String title) throws Exception
 	{
-		ReportTable table = report.addTable(title, 0, new int[] {});
+		ReportTable table = report.addTable(title, true, 0, new int[] {});
 		
 		for(String list : this.list)
 		{

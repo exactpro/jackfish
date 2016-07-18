@@ -88,12 +88,12 @@ public abstract class ReportBuilder
 		return this.reportIsOn;
 	}
 
-	public final ReportTable addTable(String title, int quotedSince, int[] widths, String ... columns)
+	public final ReportTable addTable(String title, boolean decoraded, int quotedSince, int[] widths, String ... columns)
 	{
 		Integer uniq = this.uniques.peek();
 		logger.trace(String.format("addTable(%s) current = %s", title, uniq));
 		
-		ReportTable info = new ReportTable(title, quotedSince, widths, columns);
+		ReportTable info = new ReportTable(title, decoraded, quotedSince, widths, columns);
 		
 		this.reportData.get(uniq).add(info);
 		
@@ -223,7 +223,7 @@ public abstract class ReportBuilder
 	{
 		logger.trace(String.format("reportFinished(%s)", matrix));
 
-		reportFooter(writer, matrix.getRoot(), new Date(), postProcess(this.name));
+		reportFooter(writer, matrix.getRoot(), new Date(), this.name);
 		writer.close();
 
 		String fullName = writer.fileName();
@@ -319,7 +319,7 @@ public abstract class ReportBuilder
         }
 		try
 	    {
-			reportMatrixHeader(writer, postProcess(this.reportName));
+			reportMatrixHeader(writer, this.reportName);
 
 			BufferedReader src = reader;
 			String line;
@@ -349,18 +349,28 @@ public abstract class ReportBuilder
     			if (table.getData() != null)
     			{
     				String[] columns = table.getColumns();
-    				for (int i = 0; i < columns.length; i++)
+    				if (table.isDecorated())
     				{
-    					columns[i] = postProcess(columns[i]);
+	    				for (int i = 0; i < columns.length; i++)
+	    				{
+	    					columns[i] = postProcess(columns[i]);
+	    				}
+						tableHeader(writer, postProcess(table.getTitle()), columns, null);
+    				}
+    				else
+    				{
+						tableHeader(writer, table.getTitle(), columns, null);
     				}
     				
-					tableHeader(writer, postProcess(table.getTitle()), columns, null);
 		
 		        	for (Object[] data : table.getData())
 		        	{
-	    				for (int i = 0; i < data.length; i++)
+	    				if (table.isDecorated())
 	    				{
-	    					data[i] = postProcess(data[i] == null ? null : data[i].toString());
+		    				for (int i = 0; i < data.length; i++)
+		    				{
+		    					data[i] = postProcess(data[i] == null ? null : data[i].toString());
+		    				}
 	    				}
 		        		
 		        		tableRow(writer, data.length, data);

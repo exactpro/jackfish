@@ -155,8 +155,8 @@ public final class NameSpace extends MatrixItem
 	protected void docItSelf(Context context, ReportBuilder report)
 	{
         ReportTable table;
-        table = report.addTable("", 100, new int[] { 30, 70 },
-                new String[] { "Chapter", "Description"});
+        table = report.addTable("", true, 100,
+                new int[] { 30, 70 }, new String[] { "Chapter", "Description"});
 
         table.addValues("Destination", "NameSpace is needed to make a library.");
         table.addValues("Examples", "<code>#Id;#NameSpace<p>NS;Description</code>");

@@ -147,7 +147,7 @@ public class ActionsList extends AbstractAction
 
 	protected void doRealDocumetation(Context context, ReportBuilder report)
 	{
-		ReportTable table = report.addTable("Registered actions", 100, new int[] { 20, 80 }, "Action", "Description");
+		ReportTable table = report.addTable("Registered actions", true, 100, new int[] { 20, 80 }, "Action", "Description");
 		for (Class<?> clazz : actions)
 		{
 			table.addValues(clazz.getSimpleName(), clazz.getAnnotation(ActionAttribute.class).generalDescription());

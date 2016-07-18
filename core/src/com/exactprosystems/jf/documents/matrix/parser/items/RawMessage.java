@@ -234,7 +234,7 @@ public class RawMessage extends MatrixItem
 	protected void docItSelf(Context context, ReportBuilder report)
 	{
 		ReportTable table;
-		table = report.addTable("", 100, new int[] { 30, 70 }, new String[] {
+		table = report.addTable("", true, 100, new int[] { 30, 70 }, new String[] {
 				"Chapter", "Description" });
 
 		table.addValues("Destination", "To describe message");
@@ -246,7 +246,7 @@ public class RawMessage extends MatrixItem
 	{
 		try
 		{
-			ReportTable table = report.addTable("Message", 100, new int[] { });
+			ReportTable table = report.addTable("Message", true, 100, new int[] { });
 			table.addValues(Str.asString(this.message));
 			Variables vars = isGlobal() ? evaluator.getGlobals() : evaluator.getLocals();
 			ReturnAndResult ret = new ReturnAndResult(Result.Passed, this.message);

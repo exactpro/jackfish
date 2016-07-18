@@ -41,8 +41,8 @@ public class Default extends MatrixItem
 	protected void docItSelf(Context context, ReportBuilder report)
 	{
         ReportTable table;
-        table = report.addTable("", 100, new int[] { 30, 70 },
-                new String[] { "Chapter", "Description"});
+        table = report.addTable("", true, 100,
+                new int[] { 30, 70 }, new String[] { "Chapter", "Description"});
 
         table.addValues("Destination", "Switch's alternative branch");
         table.addValues("Examples", "<code>#Default</code>");

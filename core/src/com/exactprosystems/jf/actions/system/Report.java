@@ -62,11 +62,17 @@ public class Report extends AbstractAction
 		
 		boolean on = report.reportIsOn();
 		report.reportSwitch(true);
-		ReportTable info = report.addTable(sb.toString(), 0, new int[] {});
+		ReportTable info = report.addTable(sb.toString(), true, 0, new int[] {});
 		info.addValues("");
 		report.reportSwitch(on);
 		
 		
 		super.setResult(null);
+	}
+
+	@Override
+	protected boolean reportAllDetail()
+	{
+		return false;
 	}
 }

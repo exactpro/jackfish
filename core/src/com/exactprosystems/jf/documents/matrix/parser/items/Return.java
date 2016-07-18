@@ -101,8 +101,8 @@ public class Return extends MatrixItem
 	protected void docItSelf(Context context, ReportBuilder report)
 	{
         ReportTable table;
-        table = report.addTable("", 100, new int[] { 30, 70 },
-                new String[] { "Chapter", "Description"});
+        table = report.addTable("", true, 100,
+                new int[] { 30, 70 }, new String[] { "Chapter", "Description"});
 
         table.addValues("Destination", "Returns a value from SubCase to calling action");
         table.addValues("Examples", "<code>#Return<p>123</code>");
@@ -124,8 +124,8 @@ public class Return extends MatrixItem
 			this.returnValue.evaluate(evaluator);
 			if (!this.returnValue.isValid())
 			{
-				ReportTable table = report.addTable("Return", 1, new int[] {50, 50}, 
-						new String[] {"Expression", "Error"});
+				ReportTable table = report.addTable("Return", true, 1, 
+						new int[] {50, 50}, new String[] {"Expression", "Error"});
 			
 				String msg = "Error in expression #Return";
 	        	table.addValues(this.returnValue.getExpression(), msg);
@@ -138,8 +138,8 @@ public class Return extends MatrixItem
 			Object eval = this.returnValue.getValue();
 			if (this.returnValue != null)
 			{
-				ReportTable table = report.addTable("Return", 1, new int[] {50, 50}, 
-						new String[] {"Expression", "Value"});
+				ReportTable table = report.addTable("Return", true, 1, 
+						new int[] {50, 50}, new String[] {"Expression", "Value"});
 			
 	        	table.addValues(this.returnValue.getExpression(), eval);
 

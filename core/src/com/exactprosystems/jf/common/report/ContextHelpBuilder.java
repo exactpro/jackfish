@@ -26,7 +26,8 @@ public class ContextHelpBuilder extends ReportBuilder
 	@Override
 	protected String postProcess(String result)
 	{
-		return super.postProcess(HTMLhelper.htmlescape(result));
+		return super.postProcess(result);
+//		return super.postProcess(HTMLhelper.htmlescape(result));
 	}
 
 	@Override

@@ -13,9 +13,10 @@ import java.util.List;
 
 public class ReportTable
 {
-	public ReportTable(String title, int quotedSince, int[] widths, String[] columns)
+	public ReportTable(String title, boolean decorated, int quotedSince, int[] widths, String[] columns)
 	{
 		this.title = title;
+		this.decorated = decorated;
 		this.columns = columns;
 	}
 
@@ -33,6 +34,11 @@ public class ReportTable
 	{
 		return this.title;
 	}
+	
+	public boolean isDecorated()
+	{
+		return this.decorated;
+	}
 
 	public String[] getColumns()
 	{
@@ -44,6 +50,7 @@ public class ReportTable
 		return this.data;
 	}
 
+	protected boolean decorated;
 	protected String title;
 	protected String[] columns;
 	protected List<Object[]> data;

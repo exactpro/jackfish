@@ -206,8 +206,8 @@ public final class Call extends MatrixItem
 	protected void docItSelf(Context context, ReportBuilder report)
 	{
         ReportTable table;
-        table = report.addTable("", 100, new int[] { 30, 70 },
-                new String[] { "Chapter", "Description"});
+        table = report.addTable("", true, 100,
+                new int[] { 30, 70 }, new String[] { "Chapter", "Description"});
 
         table.addValues("Destination", "To call subroutine");
         table.addValues("Examples", "<code>#Call</code>");
@@ -275,8 +275,8 @@ public final class Call extends MatrixItem
     {
         if (!parameters.isEmpty())
         {
-            ReportTable table = report.addTable("Input parameters", 2, new int[] {20, 40, 40},
-                    new String[] {"Parameter", "Expression", "Value"});
+            ReportTable table = report.addTable("Input parameters", true, 2,
+                    new int[] {20, 40, 40}, new String[] {"Parameter", "Expression", "Value"});
 
             for (Parameter param : parameters)
             {

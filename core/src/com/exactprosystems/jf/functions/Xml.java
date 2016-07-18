@@ -126,7 +126,7 @@ public class Xml
 		StreamResult result = new StreamResult(output);
  		transformer.transform( source, result);		
  		
-		ReportTable table = report.addTable(title, 0, new int[] {}, new String[] {});
+		ReportTable table = report.addTable(title, false, 0, new int[] {}, new String[] {});
 		String buff = new String(output.toByteArray(), StandardCharsets.UTF_8);
 		table.addValues(buff);
 	}

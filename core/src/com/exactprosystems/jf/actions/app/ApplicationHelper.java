@@ -13,6 +13,7 @@ import java.util.List;
 import com.exactprosystems.jf.actions.ReadableValue;
 import com.exactprosystems.jf.api.app.AppConnection;
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.app.ApplicationPool;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.documents.config.Context;
@@ -20,6 +21,12 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 
 public class ApplicationHelper
 {
+	public static ApplicationPool getPool(AppConnection connection, Context context, Parameters parameters, String idName)
+	{
+		return null;
+	}
+
+	
 	public static AppConnection checkConnection(AppConnection connection, Object parameter)
 	{
 		if (connection != null)
@@ -49,6 +56,8 @@ public class ApplicationHelper
 	protected void helpToAddParametersDerived(List<ReadableValue> list, Context context, Parameters parameters, String idName) throws Exception
 	{
 		parameters.evaluateAll(context.getEvaluator());
+		
+		
 		for (String str : context.getConfiguration().getApplicationPool().wellKnownStartArgs(Str.asString(parameters.get(idName))))
 		{
 			list.add(new ReadableValue(str));

@@ -95,7 +95,7 @@ public class ApplicationConnectTo extends AbstractAction
 	@Override
 	public void doRealDocumetation(Context context, ReportBuilder report)
 	{
-		ReportTable info = report.addTable("Available apps", 100, new int[] { 100 }, "App name");
+		ReportTable info = report.addTable("Available apps", true, 100, new int[] { 100 }, "App name");
 		for (String app : context.getConfiguration().getApplicationPool().appNames())
 		{
 			info.addValues(app);

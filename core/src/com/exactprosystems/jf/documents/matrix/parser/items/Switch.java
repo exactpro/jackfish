@@ -119,8 +119,8 @@ public class Switch extends MatrixItem
 	protected void docItSelf(Context context, ReportBuilder report)
 	{
         ReportTable table;
-        table = report.addTable("", 100, new int[] { 30, 70 },
-                new String[] { "Chapter", "Description"});
+        table = report.addTable("", true, 100,
+                new int[] { 30, 70 }, new String[] { "Chapter", "Description"});
 
         table.addValues("Destination", "To check a condition and execute one or another branch of script");
         table.addValues("Examples", "<code>#Switch</code>");
@@ -158,8 +158,8 @@ public class Switch extends MatrixItem
 			this.switcher.evaluate(evaluator);
 			if (!this.switcher.isValid())
 			{
-				ReportTable table = report.addTable("Switch", 1, new int[] {50, 50}, 
-						new String[] {"Expression", "Error"});
+				ReportTable table = report.addTable("Switch", true, 1, 
+						new int[] {50, 50}, new String[] {"Expression", "Error"});
 			
 				String msg = "Error in expression #Switch";
 	        	table.addValues(this.switcher.getExpression(), msg);

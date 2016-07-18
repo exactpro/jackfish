@@ -19,8 +19,10 @@ import com.exactprosystems.jf.actions.ActionGroups;
 import com.exactprosystems.jf.actions.ReadableValue;
 import com.exactprosystems.jf.api.app.AppConnection;
 import com.exactprosystems.jf.api.app.IApplication;
+import com.exactprosystems.jf.api.app.IApplicationFactory;
 import com.exactprosystems.jf.api.app.IRemoteApplication;
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.app.ApplicationPool;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
@@ -49,6 +51,13 @@ public class ApplicationGetProperties extends AbstractAction
 	@Override
 	protected void helpToAddParametersDerived(List<ReadableValue> list, Context context, Parameters parameters) throws Exception
 	{
+//		// TODO remove it
+//		ApplicationPool pool; 
+//		IApplicationFactory app = this.owner.getMatrix().getDefaultApp();
+//		boolean b = app.canFillParameter("");
+//		// TODO remove it
+		
+		
 		parameters.evaluateAll(context.getEvaluator());
 		connection = ApplicationHelper.checkConnection(connection, parameters.get(connectionName));
 		if (connection != null)

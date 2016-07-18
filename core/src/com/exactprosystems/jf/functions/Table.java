@@ -653,7 +653,7 @@ public class Table implements List<Map<String, Object>>, Mutable, Cloneable
 			headers[col++ + addition] = this.headers[index].name;
 		}
 
-		ReportTable table = report.addTable(title, 0, new int[]{}, headers);
+		ReportTable table = report.addTable(title, true, 0, new int[]{}, headers);
 
 		int count = 0;
 		for (Map<Header, Object> row : this.innerList)
@@ -1021,7 +1021,7 @@ public class Table implements List<Map<String, Object>>, Mutable, Cloneable
 		{
 			return table;
 		}
-		return report.addTable("Diffirents", 0, new int[]{10, 45, 45}, "#", "Expected", "Actual");
+		return report.addTable("Diffirents", true, 0, new int[]{10, 45, 45}, "#", "Expected", "Actual");
 	}
 
 	private Set<String> names(Table expected, String[] exclude)

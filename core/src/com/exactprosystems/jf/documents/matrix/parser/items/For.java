@@ -161,8 +161,8 @@ public final class For extends MatrixItem
 	protected void docItSelf(Context context, ReportBuilder report)
 	{
         ReportTable table;
-        table = report.addTable("", 100, new int[] { 30, 70 },
-                new String[] { "Chapter", "Description"});
+        table = report.addTable("", true, 100,
+                new int[] { 30, 70 }, new String[] { "Chapter", "Description"});
 
         table.addValues("Destination", "To organize a loop for counter from begin value to end value with step");
         table.addValues("Examples", "<code>#For;#From;#To;#Step<p>i;1;100;2</code>");
