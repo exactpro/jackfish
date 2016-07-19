@@ -20,6 +20,7 @@ import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Parameter;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
+import com.exactprosystems.jf.documents.matrix.parser.items.ErrorKind;
 import com.exactprosystems.jf.documents.matrix.parser.items.TypeMandatory;
 import com.exactprosystems.jf.documents.matrix.parser.items.ActionItem.HelpKind;
 
@@ -92,7 +93,7 @@ public class ApplicationNewInstance extends AbstractAction
 	{
 		if (this.connection == null)
 		{
-			super.setError("Connection is null");
+			super.setError("Connection is null", ErrorKind.EMPTY_PARAMETER);
 		}
 		else
 		{

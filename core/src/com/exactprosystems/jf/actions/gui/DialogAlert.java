@@ -18,6 +18,7 @@ import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.documents.matrix.parser.items.ActionItem;
+import com.exactprosystems.jf.documents.matrix.parser.items.ErrorKind;
 
 import java.rmi.RemoteException;
 import java.util.List;
@@ -73,20 +74,23 @@ public class DialogAlert extends AbstractAction
 	@Override
 	protected void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
-		if (connection == null)
+		if (this.connection == null)
 		{
-			throw new NullPointerException(String.format("Field with name '%s' can't be null", connectionName));
+			super.setError(String.format("Field with name '%s' can't be null", connectionName), ErrorKind.EMPTY_PARAMETER);
+			return;
 		}
 		IApplication app = connection.getApplication();
 		String id = connection.getId();
 		IRemoteApplication service = app.service();
 		if (service == null)
 		{
-			throw new NullPointerException(String.format("Service with id '%s' not started yet", id));
+			super.setError(String.format("App with id '%s' not started yet", id), ErrorKind.APPLICATION_ERROR);
+			return;
 		}
 		if (this.perform == null)
 		{
-			throw new Exception(String.format("Field with name '%s' can't be null", performName));
+			super.setError(String.format("Field with name '%s' can't be null", performName), ErrorKind.EMPTY_PARAMETER);
+			return;
 		}
 
 		SerializablePair<String, Boolean> alertText;
@@ -96,7 +100,7 @@ public class DialogAlert extends AbstractAction
 		}
 		catch (RemoteException e)
 		{
-			super.setError("Alert is not presented");
+			super.setError(e.getMessage(), ErrorKind.EXCEPTION);
 			return;
 		}
 		service.setAlertText(this.text, this.perform);

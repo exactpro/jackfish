@@ -12,11 +12,18 @@ import com.exactprosystems.jf.api.common.Str;
 
 public class MatrixError
 {
-	public MatrixError(String message)
+	public MatrixError(String message, ErrorKind kind, MatrixItem where)
 	{
 		this.message = message;
+		this.kind = kind;
+		this.where = where;
 	}
 	
+	public MatrixError(String message)
+	{
+		this(message, ErrorKind.OTHER, null);
+	}
+
 	@Override
 	public String toString()
 	{
@@ -44,5 +51,7 @@ public class MatrixError
 		return false;
 	}
 	
+	public MatrixItem where;
 	public String message;
+	public ErrorKind kind;
 }

@@ -23,6 +23,7 @@ import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.documents.matrix.parser.items.ActionItem.HelpKind;
+import com.exactprosystems.jf.documents.matrix.parser.items.ErrorKind;
 
 import java.util.List;
 
@@ -88,7 +89,7 @@ public class ClientSendMapMessage extends AbstractAction
 	{
 		if (this.connection == null)
 		{
-			super.setError("Connection is null");
+			super.setError("Connection is null",  ErrorKind.EMPTY_PARAMETER);
 		}
 		else
 		{
@@ -104,7 +105,7 @@ public class ClientSendMapMessage extends AbstractAction
 				}
 				else
 				{
-					super.setError("Message is failed.");
+					super.setError("Message is failed.", ErrorKind.CLIENT_ERROR);
 				}
 			}
 			else

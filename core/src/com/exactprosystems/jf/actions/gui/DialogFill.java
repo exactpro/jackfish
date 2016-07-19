@@ -21,13 +21,12 @@ import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Parameter;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
+import com.exactprosystems.jf.documents.matrix.parser.items.ErrorKind;
 import com.exactprosystems.jf.documents.matrix.parser.items.TypeMandatory;
 import com.exactprosystems.jf.documents.matrix.parser.items.ActionItem.HelpKind;
 import com.exactprosystems.jf.functions.Table;
 
 import java.util.*;
-import java.util.concurrent.atomic.AtomicBoolean;
-
 import static com.exactprosystems.jf.actions.gui.ActionGuiHelper.*;
 
 @ActionAttribute(
@@ -143,14 +142,14 @@ public class DialogFill extends AbstractAction
 			{
 				if (checkControl(supportedControls, control))
 				{
-					super.setError(message(id, window, onOpen, control, "is not allowed"));
+					super.setError(message(id, window, onOpen, control, "is not allowed"), ErrorKind.ACTION_NOT_ALLOWED);
 					return;
 				}
 
 				OperationResult res = control.operate(service, window, null);
 				if (!res.isOk())
 				{
-					super.setError(message(id, window, onOpen, control, "" + res.getValue()));
+					super.setError(message(id, window, onOpen, control, "" + res.getValue()), ErrorKind.DIALOG_NOT_FOUND);
 					return;
 				}
 			}
@@ -168,9 +167,15 @@ public class DialogFill extends AbstractAction
 			Object obj = parameter.getValue();
 
 			IControl control = sectionRun.getControlByIdAndValue(name, obj);
+			if (control == null)
+			{
+				super.setError(message(id, window, run, control, "is not allowed"), ErrorKind.LOCATOR_NOT_FOUND);
+				return;
+			}
+			
 			if (checkControl(supportedControls, control))
 			{
-				super.setError(message(id, window, run, control, "is not allowed"));
+				super.setError(message(id, window, run, control, "is not allowed"), ErrorKind.ACTION_NOT_ALLOWED);
 				return;
 			}
 
@@ -191,7 +196,7 @@ public class DialogFill extends AbstractAction
 				{
 					if(this.stopOnFail)
 					{
-						super.setError(message(id, window, run, control, "" + res.getValue()));
+						super.setError(message(id, window, run, control, "" + res.getValue()), ErrorKind.ELEMENT_NOT_FOUND);
 						return;
 					}
 					else 
@@ -205,7 +210,7 @@ public class DialogFill extends AbstractAction
 				logger.error(e.getMessage(), e);
 				if (this.stopOnFail)
 				{
-					super.setError(message(id, window, run, control, e.getMessage()));
+					super.setError(message(id, window, run, control, e.getMessage()), ErrorKind.EXCEPTION);
 					return;
 				}
 				else 
@@ -223,14 +228,14 @@ public class DialogFill extends AbstractAction
 			{
 				if (checkControl(supportedControls, control))
 				{
-					super.setError(message(id, window, onClose, control, "is not allowed"));
+					super.setError(message(id, window, onClose, control, "is not allowed"), ErrorKind.ACTION_NOT_ALLOWED);
 					return;
 				}
 
 				OperationResult res = control.operate(service, window, null);
 				if (!res.isOk())
 				{
-					super.setError(message(id, window, onClose, control, "" + res.getValue()));
+					super.setError(message(id, window, onClose, control, "" + res.getValue()), ErrorKind.ELEMENT_NOT_FOUND);
 					return;
 				}
 			}
@@ -240,7 +245,7 @@ public class DialogFill extends AbstractAction
 		
 		if(!Str.IsNullOrEmpty(allReportErrors))
 		{
-			super.setError(allReportErrors);
+			super.setError(allReportErrors, ErrorKind.MANY_ERRORS);
 			return;
 		}	
 	}

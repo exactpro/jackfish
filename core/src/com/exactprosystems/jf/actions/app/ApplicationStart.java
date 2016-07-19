@@ -22,6 +22,7 @@ import com.exactprosystems.jf.common.report.ReportTable;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Parameter;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
+import com.exactprosystems.jf.documents.matrix.parser.items.ErrorKind;
 import com.exactprosystems.jf.documents.matrix.parser.items.TypeMandatory;
 import com.exactprosystems.jf.documents.matrix.parser.items.ActionItem.HelpKind;
 
@@ -126,7 +127,7 @@ public class ApplicationStart extends AbstractAction
 		}
 		else
 		{
-			super.setError("Application is not started.");
+			super.setError("Application is not started.", ErrorKind.APPLICATION_ERROR);
 		}
 	}
 

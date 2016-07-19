@@ -262,12 +262,12 @@ public final class Call extends MatrixItem
 			{
 				listener.error(getMatrix(), getNumber(), this, error);
 			}
-			return new ReturnAndResult(Result.Failed, null, e.getMessage());
+			return new ReturnAndResult(Result.Failed, e.getMessage(), ErrorKind.EXCEPTION, this);
 		}
 		catch (Exception e)
 		{
 			logger.error(e.getMessage(), e);
-			return new ReturnAndResult(Result.Failed, null, e.getMessage());
+			return new ReturnAndResult(Result.Failed, e.getMessage(), ErrorKind.EXCEPTION, this);
 		}
 	}	
 

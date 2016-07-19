@@ -20,6 +20,7 @@ import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.common.report.ReportTable;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
+import com.exactprosystems.jf.documents.matrix.parser.items.ErrorKind;
 import com.exactprosystems.jf.documents.matrix.parser.items.TypeMandatory;
 
 import java.util.Collections;
@@ -73,7 +74,7 @@ public class Check extends AbstractAction
 			}
 			else
 			{
-				super.setError("Object does not match.");
+				super.setError("Object does not match.", ErrorKind.NOT_EQUAL);
 			}
 		}
 	}

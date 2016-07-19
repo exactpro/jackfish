@@ -17,6 +17,7 @@ import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.documents.matrix.parser.items.ActionItem.HelpKind;
+import com.exactprosystems.jf.documents.matrix.parser.items.ErrorKind;
 
 import java.util.Date;
 
@@ -69,7 +70,7 @@ public class Wait extends AbstractAction
 		}
 		else
 		{
-			super.setError("It is needed to set up either '" + timeName + "' or '" +byTimeName + "'.");
+			super.setError("It is needed to set up either '" + timeName + "' or '" +byTimeName + "'.", ErrorKind.WRONG_PARAMETERS);
 		}
 	}
 }

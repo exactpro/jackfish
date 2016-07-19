@@ -396,7 +396,7 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 
 		if (this.result.getResult() == Result.Failed && isTrue(this.ignoreErr.get()))
 		{
-			this.result = new ReturnAndResult(Result.Ignored, this.result.getOut(), this.result.getError());
+			this.result = new ReturnAndResult(this.result.getError(), Result.Ignored);
 		}
 		
 		long duration = System.currentTimeMillis() - startTime;
@@ -781,7 +781,7 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 	{
 		boolean wasError = false;
 		Object out = null;
-		String error = null;
+		MatrixError error = null;
 		for(MatrixItem item : this.children)
 		{
 			if (executeUntilNot != null)
@@ -804,7 +804,7 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 			{
 				if (wasError)
 				{
-					return new ReturnAndResult(Result.Failed, out, ret.getError());
+					return new ReturnAndResult(ret.getError(), Result.Failed);
 				}
 				return new ReturnAndResult(result, out);
 			}
@@ -812,7 +812,7 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 			{
 				if (wasError)
 				{
-					return new ReturnAndResult(Result.Failed, out, ret.getError());
+					return new ReturnAndResult(ret.getError(), Result.Failed);
 				}
 				return new ReturnAndResult(Result.Continue, out);
 			}
@@ -834,7 +834,14 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 			}
 		}
 
-		return new ReturnAndResult(wasError ? Result.Failed : Result.Passed, out, error);
+		if (wasError)
+		{
+			return new ReturnAndResult(error, Result.Failed);
+		}
+		else
+		{
+			return new ReturnAndResult(Result.Passed, out);
+		}
 	}
 
 	protected final void addParameter(List<String> firstLine, List<String> secondLine, String parameter, String value)

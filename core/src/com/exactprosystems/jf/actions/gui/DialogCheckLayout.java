@@ -24,6 +24,7 @@ import com.exactprosystems.jf.common.report.ReportTable;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Parameter;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
+import com.exactprosystems.jf.documents.matrix.parser.items.ErrorKind;
 import com.exactprosystems.jf.documents.matrix.parser.items.TypeMandatory;
 import com.exactprosystems.jf.documents.matrix.parser.items.ActionItem.HelpKind;
 import com.exactprosystems.jf.functions.Table;
@@ -136,14 +137,14 @@ public class DialogCheckLayout extends AbstractAction
 			{
 				if (checkControl(supportedControls, control))
 				{
-					super.setError(message(id, window, onOpen, control, "is not allowed"));
+					super.setError(message(id, window, onOpen, control, "is not allowed"), ErrorKind.ACTION_NOT_ALLOWED);
 					return;
 				}
 
 				OperationResult res = control.operate(service, window, null);
 				if (!res.isOk())
 				{
-					super.setError(message(id, window, onOpen, control, "" + res.getValue()));
+					super.setError(message(id, window, onOpen, control, "" + res.getValue()), ErrorKind.NOT_EQUAL);
 					return;
 				}
 			}
@@ -160,9 +161,15 @@ public class DialogCheckLayout extends AbstractAction
 			Object obj = parameter.getValue();
 
 			IControl control = sectionRun.getControlByIdAndValue(name, obj);
+			if (control == null)
+			{
+				super.setError(message(id, window, run, control, "is not allowed"), ErrorKind.LOCATOR_NOT_FOUND);
+				return;
+			}
+
 			if (checkControl(supportedControls, control))
 			{
-				super.setError(message(id, window, run, control, "is not allowed"));
+				super.setError(message(id, window, run, control, "is not allowed"), ErrorKind.ACTION_NOT_ALLOWED);
 				return;
 			}
 			
@@ -181,7 +188,7 @@ public class DialogCheckLayout extends AbstractAction
 
 		if (!totalResult)
 		{
-			super.setError(message(id, window, run, null, "Layout checking failed."));
+			super.setError(message(id, window, run, null, "Layout checking failed."), ErrorKind.NOT_EQUAL);
 			return;
 		}
 
@@ -194,14 +201,14 @@ public class DialogCheckLayout extends AbstractAction
 			{
 				if (checkControl(supportedControls, control))
 				{
-					super.setError(message(id, window, onClose, control, "is not allowed"));
+					super.setError(message(id, window, onClose, control, "is not allowed"), ErrorKind.ACTION_NOT_ALLOWED);
 					return;
 				}
 
 				OperationResult res = control.operate(service, window, null);
 				if (!res.isOk())
 				{
-					super.setError(message(id, window, onClose, control, " returned 'false'. Process is stopped."));
+					super.setError(message(id, window, onClose, control, " returned 'false'. Process is stopped."), ErrorKind.NOT_EQUAL);
 					return;
 				}
 			}

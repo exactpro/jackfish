@@ -18,6 +18,7 @@ import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
+import com.exactprosystems.jf.documents.matrix.parser.items.ErrorKind;
 
 @ActionAttribute(
 		group					= ActionGroups.App,
@@ -43,7 +44,7 @@ public class ApplicationCloseWindow extends AbstractAction
 	{
 		if (this.connection == null)
 		{
-			super.setError("Connection is null");
+			super.setError("Connection is null", ErrorKind.EMPTY_PARAMETER);
 		}
 		else
 		{
@@ -52,7 +53,7 @@ public class ApplicationCloseWindow extends AbstractAction
 
 			if (res.equals(""))
 			{
-				super.setError("Can not close the window");
+				super.setError("Can not close the window", ErrorKind.ELEMENT_NOT_FOUND);
 			}
 			else
 			{

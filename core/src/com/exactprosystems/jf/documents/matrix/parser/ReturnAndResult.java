@@ -8,23 +8,35 @@
 
 package com.exactprosystems.jf.documents.matrix.parser;
 
+import com.exactprosystems.jf.documents.matrix.parser.items.ErrorKind;
+import com.exactprosystems.jf.documents.matrix.parser.items.MatrixError;
+import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
+
 public class ReturnAndResult implements Cloneable
 {
-	public ReturnAndResult(Result result, Object out)
-	{
-		this(result, out, null);
-	}
-	
-	public ReturnAndResult(Result result, Object out, String error)
+	public ReturnAndResult(MatrixError error, Result result)
 	{
 		this.result = result;
-		this.out = out;
+		this.out = null;
 		this.error = error;
 	}
 
-	public ReturnAndResult (Result result)
+	public ReturnAndResult(Result result, String message, ErrorKind kind, MatrixItem place)
 	{
 		this.result = result;
+		this.out = null;
+		this.error = message == null ? null : new MatrixError(message, kind, place);
+	}
+
+	public ReturnAndResult(Result result, Object out)
+	{
+		this.result = result;
+		this.out = out;
+	}
+	
+	public ReturnAndResult (Result result)
+	{
+		this(result, null);
 	}
 	
 	public Result getResult()
@@ -37,12 +49,12 @@ public class ReturnAndResult implements Cloneable
 		return this.out;
 	}
 
-	public String getError()
+	public MatrixError getError()
 	{
 		return this.error;
 	}
 
 	private Result result;
 	private Object out;
-	private String error;
+	private MatrixError error;
 }

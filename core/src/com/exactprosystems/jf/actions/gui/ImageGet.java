@@ -29,6 +29,7 @@ import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.documents.matrix.parser.items.ActionItem.HelpKind;
+import com.exactprosystems.jf.documents.matrix.parser.items.ErrorKind;
 
 import java.util.List;
 
@@ -118,7 +119,7 @@ public class ImageGet extends AbstractAction
 			IControl control = window.getControlForName(SectionKind.Run, this.name);
 			if (control == null)
 			{
-				super.setError(message(id, window, SectionKind.Self, null, "Self control is not found."));
+				super.setError(message(id, window, SectionKind.Self, null, "Self control is not found."), ErrorKind.ELEMENT_NOT_FOUND);
 				return;
 			}
 			IControl owner = window.getOwnerControl(control);

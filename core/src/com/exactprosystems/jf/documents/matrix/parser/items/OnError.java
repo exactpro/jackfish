@@ -40,9 +40,14 @@ public final class OnError extends MatrixItem
 		super();
 	}
 
-	public void setError(String error)
+	public void setError(MatrixError error)
 	{
-		this.error = error;
+		this.matrixError = error;
+	}
+
+	public void setError(String error, ErrorKind errorKind, MatrixItem where)
+	{
+		this.matrixError = new MatrixError(error, errorKind, where);
 	}
 	
 	@Override
@@ -85,17 +90,17 @@ public final class OnError extends MatrixItem
 	{
 		try
 		{
-			evaluator.getLocals().getVars().put(Parser.error, 	this.error);
-//			evaluator.getLocals().getVars().put(Parser.error, 	new MatrixError(this.error)); TODO uncomment this
+			evaluator.getLocals().getVars().put(Parser.error, 	this.matrixError == null ? null : this.matrixError.message);
+			evaluator.getLocals().getVars().put(Parser.err, 	this.matrixError == null ? new MatrixError("Unknown", ErrorKind.OTHER, this) : this.matrixError);
 			return super.executeItSelf(context, listener, evaluator, report, parameters);
 		}
 		catch (Exception e)
 		{
 			logger.error(e.getMessage(), e);
 			listener.error(this.owner, getNumber(), this, e.getMessage());
-			return new ReturnAndResult(Result.Failed, null, e.getMessage());
+			return new ReturnAndResult(Result.Failed, e.getMessage(), ErrorKind.EXCEPTION, this);
 		}
 	}
 	
-	private String error = null; 
+	private MatrixError matrixError = null;
 }

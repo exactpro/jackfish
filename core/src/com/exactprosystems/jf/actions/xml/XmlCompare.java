@@ -16,6 +16,7 @@ import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
+import com.exactprosystems.jf.documents.matrix.parser.items.ErrorKind;
 import com.exactprosystems.jf.functions.Xml;
 
 @ActionAttribute(
@@ -46,13 +47,13 @@ public class XmlCompare extends AbstractAction
 	{
 		if (this.actual == null)
 		{
-			super.setError("Actual XML object is null");
+			super.setError("Actual XML object is null", ErrorKind.EMPTY_PARAMETER);
 			return;
 		}
 
 		if (this.expected == null)
 		{
-			super.setError("Expected XML object is null");
+			super.setError("Expected XML object is null", ErrorKind.EMPTY_PARAMETER);
 			return;
 		}
 	

@@ -19,6 +19,7 @@ import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
+import com.exactprosystems.jf.documents.matrix.parser.items.ErrorKind;
 import com.exactprosystems.jf.documents.matrix.parser.items.ActionItem.HelpKind;
 import com.exactprosystems.jf.functions.Table;
 
@@ -83,13 +84,13 @@ public class TableCompareTwo extends AbstractAction
 	{
 		if (this.actual == null)
 		{
-			super.setError("Actual table is null");
+			super.setError("Actual table is null", ErrorKind.EMPTY_PARAMETER);
 			return;
 		}
 
 		if (this.expected == null)
 		{
-			super.setError("Expected table is null");
+			super.setError("Expected table is null", ErrorKind.EMPTY_PARAMETER);
 			return;
 		}
 	
@@ -101,7 +102,7 @@ public class TableCompareTwo extends AbstractAction
 		}
 		else
 		{
-			super.setError("Tables are not equal.");
+			super.setError("Tables are not equal.", ErrorKind.NOT_EQUAL);
 		}
 	}
 }

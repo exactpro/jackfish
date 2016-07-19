@@ -17,6 +17,7 @@ import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
+import com.exactprosystems.jf.documents.matrix.parser.items.ErrorKind;
 
 @ActionAttribute(
 		group					= ActionGroups.Messages,
@@ -53,13 +54,13 @@ public class MessageCompareTwo extends AbstractAction
 	{
 		if (this.actual == null)
 		{
-			super.setError("Actual message is null");
+			super.setError("Actual message is null", ErrorKind.EMPTY_PARAMETER);
 			return;
 		}
 
 		if (this.expected == null)
 		{
-			super.setError("Expected message is null");
+			super.setError("Expected message is null", ErrorKind.EMPTY_PARAMETER);
 			return;
 		}
 		
@@ -70,7 +71,7 @@ public class MessageCompareTwo extends AbstractAction
 		}
 		else
 		{
-			super.setError("Messages are not equal.");
+			super.setError("Messages are not equal.", ErrorKind.NOT_EQUAL);
 		}
 	}
 }

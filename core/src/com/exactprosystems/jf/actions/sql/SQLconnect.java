@@ -20,8 +20,10 @@ import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.config.SqlEntry;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.documents.matrix.parser.items.ActionItem.HelpKind;
+import com.exactprosystems.jf.documents.matrix.parser.items.ErrorKind;
 import com.exactprosystems.jf.sql.SqlConnection;
 
+import java.sql.SQLException;
 import java.util.List;
 
 @ActionAttribute(
@@ -86,21 +88,28 @@ public class SQLconnect  extends AbstractAction
 	@Override
 	protected void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
-		SqlConnection result = context.getConfiguration().getDataBasesPool().connect(this.sql, this.server, this.base, this.user, this.password);
-		
-		if (result != null && !result.isClosed())
+		SqlConnection result;
+		try
 		{
-			super.setResult(result);
+			result = context.getConfiguration().getDataBasesPool().connect(this.sql, this.server, this.base, this.user, this.password);
+
+			if (result != null && !result.isClosed())
+			{
+				super.setResult(result);
+			}
+			else
+			{
+				super.setError("Can not connect to the data base", ErrorKind.SQL_ERROR);
+			}
 		}
-		else
+		catch (SQLException e)
 		{
-			super.setError("Can not connect to the data base");
+			super.setError(e.getMessage(), ErrorKind.SQL_ERROR);
 		}
 	}
 
 	@Override
-	public void initDefaultValues() {
-		// TODO Auto-generated method stub
-		
+	public void initDefaultValues() 
+	{
 	}
 }

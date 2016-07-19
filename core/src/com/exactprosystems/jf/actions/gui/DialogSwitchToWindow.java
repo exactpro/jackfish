@@ -17,6 +17,7 @@ import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.documents.matrix.parser.items.ActionItem;
+import com.exactprosystems.jf.documents.matrix.parser.items.ErrorKind;
 
 import java.util.List;
 
@@ -103,7 +104,7 @@ public class DialogSwitchToWindow extends AbstractAction
 			IControl element = window.getControlForName(null, frame);
 			if (element == null)
 			{
-				super.setError(message(id, window, SectionKind.Self, null, "Self control is not found."));
+				super.setError(message(id, window, SectionKind.Self, null, "Self control is not found."), ErrorKind.ELEMENT_NOT_FOUND);
 				return;
 			}
 			service.switchToFrame(element.locator());

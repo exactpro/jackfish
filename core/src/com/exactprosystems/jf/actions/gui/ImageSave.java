@@ -18,6 +18,7 @@ import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.documents.matrix.parser.items.ActionItem.HelpKind;
+import com.exactprosystems.jf.documents.matrix.parser.items.ErrorKind;
 
 import java.io.File;
 
@@ -86,7 +87,7 @@ public class ImageSave extends AbstractAction
 		}
 		else
 		{
-			super.setError("Either dir or file should be filled.");
+			super.setError("Either dir or file should be filled.", ErrorKind.WRONG_PARAMETERS);
 		}
 	}
 

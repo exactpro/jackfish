@@ -19,6 +19,7 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.documents.matrix.parser.Result;
 import com.exactprosystems.jf.documents.matrix.parser.Tokens;
 import com.exactprosystems.jf.documents.matrix.parser.items.ActionItem;
+import com.exactprosystems.jf.documents.matrix.parser.items.ErrorKind;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 import com.exactprosystems.jf.documents.matrix.parser.items.TypeMandatory;
 import com.exactprosystems.jf.documents.matrix.parser.items.ActionItem.HelpKind;
@@ -175,7 +176,7 @@ public abstract class AbstractAction implements Cloneable
         }
 		catch (ParametersException e)
 		{
-			setError(e.getMessage());
+			setError(e.getMessage(), ErrorKind.EXPRESSION_ERROR);
 			Matrix matrix = this.owner.getMatrix();
 			
 			IMatrixListener listener = context.getMatrixListener();
@@ -190,11 +191,11 @@ public abstract class AbstractAction implements Cloneable
             logger.error(e.getMessage(), e);
             if (e.getCause() != null)
             {
-                setError("Exception occurred: " + e.getCause().getMessage());
+                setError("Exception occurred: " + e.getCause().getMessage(), ErrorKind.EXCEPTION);
             }
             else
             {
-                setError("Exception occurred: " + e.getMessage());
+                setError("Exception occurred: " + e.getMessage(), ErrorKind.EXCEPTION);
             }
         }
         
@@ -207,11 +208,11 @@ public abstract class AbstractAction implements Cloneable
             logger.error(e.getMessage(), e);
             if (e.getCause() != null)
             {
-                setError("Exception in asserts occurred: " + e.getCause().getMessage());
+                setError("Exception in asserts occurred: " + e.getCause().getMessage(), ErrorKind.EXCEPTION);
             }
             else
             {
-                setError("Exception in asserts occurred: " + e.getMessage());
+                setError("Exception in asserts occurred: " + e.getMessage(), ErrorKind.EXCEPTION);
             }
         }
 
@@ -348,7 +349,7 @@ public abstract class AbstractAction implements Cloneable
         this.action.Result = Result.Passed;
     }
 
-    protected final void setError(String reason)
+    protected final void setError(String reason, ErrorKind kind)
     {
     	if (Str.IsNullOrEmpty(this.action.Reason))
     	{
@@ -542,7 +543,7 @@ public abstract class AbstractAction implements Cloneable
         {
         	if (!assertBool.evaluate(evaluator))
         	{
-                setError(Tokens.Assert + " error in expression: " + assertBool.getValueAsString());
+                setError(Tokens.Assert + " error in expression: " + assertBool.getValueAsString(), ErrorKind.EXPRESSION_ERROR);
                 return;
         	}
         	
@@ -551,7 +552,7 @@ public abstract class AbstractAction implements Cloneable
             {
                 if (!(Boolean)value)
                 {
-                    setError(Tokens.Assert + " is false");
+                    setError(Tokens.Assert + " is false", ErrorKind.ASSERT);
                     return ;
                 }
                 else
@@ -564,7 +565,7 @@ public abstract class AbstractAction implements Cloneable
             }
             else
             {
-                setError(Tokens.Assert + " must have type of Boolean");
+                setError(Tokens.Assert + " must have type of Boolean", ErrorKind.EXPRESSION_ERROR);
                 return;
             }
         }
@@ -573,13 +574,13 @@ public abstract class AbstractAction implements Cloneable
         {
         	if (!assertOutIs.evaluate(evaluator))
         	{
-                setError(Tokens.AssertOutIs + " error in expression: " + assertOutIs.getValueAsString());
+                setError(Tokens.AssertOutIs + " error in expression: " + assertOutIs.getValueAsString(), ErrorKind.EXPRESSION_ERROR);
                 return;
         	}
         	
             if (!areObjectsEqual(assertOutIs.getValue(), this.action.Out))
             {
-                setError(Tokens.AssertOutIs + " is false");
+                setError(Tokens.AssertOutIs + " is false", ErrorKind.ASSERT);
                 return;
             }
             else
@@ -595,13 +596,13 @@ public abstract class AbstractAction implements Cloneable
         {
         	if (!assertOutIsNot.evaluate(evaluator))
         	{
-                setError(Tokens.AssertOutIsNot + " error in expression: " + assertOutIsNot.getValueAsString());
+                setError(Tokens.AssertOutIsNot + " error in expression: " + assertOutIsNot.getValueAsString(), ErrorKind.EXPRESSION_ERROR);
                 return;
         	}
         	
             if (areObjectsEqual(assertOutIsNot.getValue(), this.action.Out))
             {
-                setError(Tokens.AssertOutIsNot + " is false");
+                setError(Tokens.AssertOutIsNot + " is false", ErrorKind.ASSERT);
                 return;
             }
             else

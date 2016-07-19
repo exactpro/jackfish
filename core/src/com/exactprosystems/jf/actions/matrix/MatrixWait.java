@@ -17,6 +17,7 @@ import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
+import com.exactprosystems.jf.documents.matrix.parser.items.ErrorKind;
 
 @ActionAttribute(
 		group					= ActionGroups.Matrix,
@@ -46,7 +47,7 @@ public class MatrixWait extends AbstractAction
 	{
 		if (this.matrix == null)
 		{
-			super.setError("The matrix object is null");
+			super.setError("The matrix object is null", ErrorKind.EMPTY_PARAMETER);
 		}
 		else
 		{

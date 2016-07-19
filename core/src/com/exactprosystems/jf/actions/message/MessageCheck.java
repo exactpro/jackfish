@@ -20,6 +20,7 @@ import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.common.report.ReportTable;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
+import com.exactprosystems.jf.documents.matrix.parser.items.ErrorKind;
 import com.exactprosystems.jf.documents.matrix.parser.items.TypeMandatory;
 
 import java.util.Map;
@@ -47,7 +48,7 @@ public class MessageCheck extends AbstractAction
 	{
 		if (this.actual == null)
 		{
-			super.setError("Actual object is null");
+			super.setError("Actual object is null", ErrorKind.EMPTY_PARAMETER);
 			return;
 		}
 		
@@ -65,7 +66,7 @@ public class MessageCheck extends AbstractAction
 				table.addValues(entry.getKey(), entry.getValue());
 			}
 			
-			super.setError("The message does not match.");
+			super.setError("The message does not match.", ErrorKind.NOT_EQUAL);
 		}
 	}
 

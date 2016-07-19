@@ -23,6 +23,7 @@ import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.documents.matrix.parser.items.ActionItem.HelpKind;
+import com.exactprosystems.jf.documents.matrix.parser.items.ErrorKind;
 
 import org.apache.log4j.Logger;
 
@@ -92,7 +93,7 @@ public class DialogClose extends AbstractAction
 		
 		if (element == null)
 		{
-			super.setError(message(id, window, SectionKind.Self, null, "Self control is not found."));
+			super.setError(message(id, window, SectionKind.Self, null, "Self control is not found."), ErrorKind.ELEMENT_NOT_FOUND);
 			return;
 		}
 		

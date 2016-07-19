@@ -133,15 +133,20 @@ public class Fail extends MatrixItem
 				table.addValues(this.failValue.getExpression(), eval);
 
 				report.itemIntermediate(this);
+				
+				if (eval instanceof MatrixError)
+				{
+					return new ReturnAndResult((MatrixError)eval, Result.Failed);
+				}
 			}
 
-			return new ReturnAndResult(Result.Failed, null, String.valueOf(eval));
+			return new ReturnAndResult(Result.Failed, String.valueOf(eval), ErrorKind.FAIL, this);
 		}
 		catch (Exception e)
 		{
 			logger.error(e.getMessage(), e);
 			listener.error(this.owner, getNumber(), this, e.getMessage());
-			return new ReturnAndResult(Result.Failed, null, e.getMessage());
+			return new ReturnAndResult(Result.Failed, e.getMessage(), ErrorKind.EXCEPTION, this);
 		}
 	}
 

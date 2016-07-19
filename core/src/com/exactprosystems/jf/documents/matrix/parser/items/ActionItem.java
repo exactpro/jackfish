@@ -275,7 +275,14 @@ public final class ActionItem extends MatrixItem
 		this.action.initDefaultValues();
 		Result result = this.action.doAction(context, evaluator, report, parameters, super.getId(), this.assertBool, this.assertOutIs, this.assertOutIsNot);
 
-		return new ReturnAndResult(result, this.action.getOut(), this.action.getReason());
+		if (result == Result.Failed || result == Result.Ignored)
+		{
+			return new ReturnAndResult(result, this.action.getReason(), ErrorKind.FAIL, this);
+		}
+		else
+		{
+			return new ReturnAndResult(result, this.action.getOut());
+		}
 	}
 
 	@Override

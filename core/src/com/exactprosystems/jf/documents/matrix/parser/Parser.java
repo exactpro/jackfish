@@ -30,6 +30,7 @@ public class Parser
 {
 	// other syntax details
 	public static final String	error					= "error";
+	public static final String	err						= "err";
 	public static final String	commentPrefix			= "//";
 	public static final String	systemPrefix			= "#";
 	public static final char	prefferedQuotes			= '"';

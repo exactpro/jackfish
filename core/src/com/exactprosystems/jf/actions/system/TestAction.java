@@ -17,6 +17,7 @@ import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.documents.matrix.parser.Result;
+import com.exactprosystems.jf.documents.matrix.parser.items.ErrorKind;
 
 @ActionAttribute(
 		group					= ActionGroups.System,
@@ -63,7 +64,7 @@ public class TestAction extends AbstractAction
 		}
 		else
 		{
-			super.setError(this.expectedReason);
+			super.setError(this.expectedReason, ErrorKind.OTHER);
 		}
 	}
 }
