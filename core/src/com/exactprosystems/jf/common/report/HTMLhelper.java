@@ -125,13 +125,13 @@ public class HTMLhelper
 			case OM + "3": return "<h3>";
 			case "3" + CM: return "</h3>";	
 
-			case OM + "$": return "<b><i>";		
+			case OM + "$": return "<b style=\"color:#8e44ad\"><i>";		
 			case "$" + CM: return "</i></b>";		
 
-			case OM + "#": return "<code>";	
-			case "#" + CM: return "</code>";	
-
-			case OM + "@": return "<a>";
+			case OM + "#": return "<pre style=\"padding-left: 10px; color:#16a085; margin: 10px; border-left: 1px solid #CCC;\"><code>";	
+			case "#" + CM: return "</code></pre>";	
+			
+			case OM + "@": return "<a style=\"color:Blue\">";
 			case "@" + CM: return "</a>";
 
 			case OM + "`": return "<p>";
