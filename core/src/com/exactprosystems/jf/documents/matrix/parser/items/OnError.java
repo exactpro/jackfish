@@ -90,7 +90,7 @@ public final class OnError extends MatrixItem
 	{
 		try
 		{
-			evaluator.getLocals().getVars().put(Parser.error, 	this.matrixError == null ? null : this.matrixError.message);
+			evaluator.getLocals().getVars().put(Parser.error, 	this.matrixError == null ? null : this.matrixError.Message);
 			evaluator.getLocals().getVars().put(Parser.err, 	this.matrixError == null ? new MatrixError("Unknown", ErrorKind.OTHER, this) : this.matrixError);
 			return super.executeItSelf(context, listener, evaluator, report, parameters);
 		}

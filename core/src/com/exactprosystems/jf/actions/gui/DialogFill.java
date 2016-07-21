@@ -15,6 +15,9 @@ import com.exactprosystems.jf.actions.ActionGroups;
 import com.exactprosystems.jf.actions.ReadableValue;
 import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.app.IWindow.SectionKind;
+import com.exactprosystems.jf.api.app.exception.ElementIsNotFoundException;
+import com.exactprosystems.jf.api.app.exception.OperationIsNotAllowedException;
+import com.exactprosystems.jf.api.app.exception.ParameterIsNullException;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
@@ -26,7 +29,12 @@ import com.exactprosystems.jf.documents.matrix.parser.items.TypeMandatory;
 import com.exactprosystems.jf.documents.matrix.parser.items.ActionItem.HelpKind;
 import com.exactprosystems.jf.functions.Table;
 
+import java.rmi.RemoteException;
+import java.rmi.ServerException;
 import java.util.*;
+
+import javax.naming.OperationNotSupportedException;
+
 import static com.exactprosystems.jf.actions.gui.ActionGuiHelper.*;
 
 @ActionAttribute(
@@ -115,14 +123,16 @@ public class DialogFill extends AbstractAction
 	{
 		if (connection == null)
 		{
-			throw new NullPointerException(String.format("Field with name '%s' can't be null", connectionName));
+			super.setError("Connection is null", ErrorKind.EMPTY_PARAMETER);
+			return;
 		}
 		IApplication app = connection.getApplication();
 		String id = connection.getId();
 		IRemoteApplication service = app.service();
 		if (service == null)
 		{
-			throw new NullPointerException(String.format("Service with id '%s' not started yet", id));
+			super.setError("Connection is not established", ErrorKind.APPLICATION_ERROR);
+			return;
 		}
 		IGuiDictionary dictionary = connection.getDictionary();
 		IWindow window = dictionary.getWindow(this.dialog);
@@ -142,14 +152,14 @@ public class DialogFill extends AbstractAction
 			{
 				if (checkControl(supportedControls, control))
 				{
-					super.setError(message(id, window, onOpen, control, "is not allowed"), ErrorKind.ACTION_NOT_ALLOWED);
+					super.setError(message(id, window, onOpen, control, "is not allowed"), ErrorKind.OPERATION_NOT_ALLOWED);
 					return;
 				}
 
 				OperationResult res = control.operate(service, window, null);
 				if (!res.isOk())
 				{
-					super.setError(message(id, window, onOpen, control, "" + res.getValue()), ErrorKind.DIALOG_NOT_FOUND);
+					super.setError(message(id, window, onOpen, control, "" + res.getValue()), ErrorKind.OPERATION_FAILED);
 					return;
 				}
 			}
@@ -175,7 +185,7 @@ public class DialogFill extends AbstractAction
 			
 			if (checkControl(supportedControls, control))
 			{
-				super.setError(message(id, window, run, control, "is not allowed"), ErrorKind.ACTION_NOT_ALLOWED);
+				super.setError(message(id, window, run, control, "is not allowed"), ErrorKind.OPERATION_NOT_ALLOWED);
 				return;
 			}
 
@@ -196,7 +206,7 @@ public class DialogFill extends AbstractAction
 				{
 					if(this.stopOnFail)
 					{
-						super.setError(message(id, window, run, control, "" + res.getValue()), ErrorKind.ELEMENT_NOT_FOUND);
+						super.setError(message(id, window, run, control, "" + res.getValue()), ErrorKind.OPERATION_FAILED);
 						return;
 					}
 					else 
@@ -205,9 +215,31 @@ public class DialogFill extends AbstractAction
 					} 
 				}
 			}
+			catch (ServerException e) // TODO disgusting code. we need to redo it any way.
+			{
+				RemoteException t = (RemoteException)e.getCause();
+				String mes = message(id, window, run, control, t.getMessage());
+				
+				if (t instanceof ElementIsNotFoundException)
+				{
+					super.setError(mes, ErrorKind.ELEMENT_NOT_FOUND);
+					return;
+				}
+				else if (t instanceof OperationIsNotAllowedException)
+				{
+					super.setError(mes, ErrorKind.OPERATION_NOT_ALLOWED);
+					return;
+				}
+				else if (t instanceof ParameterIsNullException)
+				{
+					super.setError(mes, ErrorKind.EMPTY_PARAMETER);
+					return;
+				}
+				
+				throw t;
+			}
 			catch (Exception e)
 			{
-				logger.error(e.getMessage(), e);
 				if (this.stopOnFail)
 				{
 					super.setError(message(id, window, run, control, e.getMessage()), ErrorKind.EXCEPTION);
@@ -228,14 +260,14 @@ public class DialogFill extends AbstractAction
 			{
 				if (checkControl(supportedControls, control))
 				{
-					super.setError(message(id, window, onClose, control, "is not allowed"), ErrorKind.ACTION_NOT_ALLOWED);
+					super.setError(message(id, window, onClose, control, "is not allowed"), ErrorKind.OPERATION_NOT_ALLOWED);
 					return;
 				}
 
 				OperationResult res = control.operate(service, window, null);
 				if (!res.isOk())
 				{
-					super.setError(message(id, window, onClose, control, "" + res.getValue()), ErrorKind.ELEMENT_NOT_FOUND);
+					super.setError(message(id, window, onClose, control, "" + res.getValue()), ErrorKind.OPERATION_FAILED);
 					return;
 				}
 			}
@@ -246,7 +278,6 @@ public class DialogFill extends AbstractAction
 		if(!Str.IsNullOrEmpty(allReportErrors))
 		{
 			super.setError(allReportErrors, ErrorKind.MANY_ERRORS);
-			return;
 		}	
 	}
 

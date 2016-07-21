@@ -8,18 +8,31 @@
 
 package com.exactprosystems.jf.actions.gui;
 
+import static com.exactprosystems.jf.actions.gui.ActionGuiHelper.message;
+
+import com.exactprosystems.jf.actions.AbstractAction;
 import com.exactprosystems.jf.actions.ReadableValue;
 import com.exactprosystems.jf.api.app.AppConnection;
 import com.exactprosystems.jf.api.app.IControl;
 import com.exactprosystems.jf.api.app.IGuiDictionary;
 import com.exactprosystems.jf.api.app.IWindow;
+import com.exactprosystems.jf.api.app.OperationResult;
 import com.exactprosystems.jf.api.app.IWindow.SectionKind;
+import com.exactprosystems.jf.api.app.exception.ElementIsNotFoundException;
+import com.exactprosystems.jf.api.app.exception.OperationIsNotAllowedException;
+import com.exactprosystems.jf.api.app.exception.ParameterIsNullException;
+import com.exactprosystems.jf.api.app.exception.ProxyException;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.Matrix;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
+import com.exactprosystems.jf.documents.matrix.parser.items.ErrorKind;
+import com.exactprosystems.jf.tool.Common.Function;
+import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 
+import java.rmi.RemoteException;
+import java.rmi.ServerException;
 import java.util.Collection;
 import java.util.List;
 
@@ -83,5 +96,54 @@ public class ActionGuiHelper
 		return "App[" + appId + "] " + "Dialog[" + window.getName() +  "] Section[" + section + "] " 
 				+ (control == null ? "" : ("Control[" + control + "] ")) + msg;
 	}
+
+	
+//	@FunctionalInterface
+//	public static interface RemoteFunction <T>  
+//	{
+//		T call() throws Exception;
+//	}
+//
+//	@FunctionalInterface
+//	public static interface OnErrorFunction  
+//	{
+//		String errorMessage() throws Exception;
+//	}
+//
+//	public static <T> T tryCatch(AbstractAction action, boolean stopOnFail, RemoteFunction<T> fn, OnErrorFunction error) throws Exception
+//	{
+//		try
+//		{
+//			return fn.call();
+//		}
+//		catch (ServerException e)
+//		{
+//			RemoteException t = (RemoteException)e.getCause();
+//			String mes = error.errorMessage();
+//			
+//			if (t instanceof ElementIsNotFoundException)
+//			{
+//				action.setError(mes, ErrorKind.ELEMENT_NOT_FOUND);
+//				return;
+//			}
+//			else if (t instanceof OperationIsNotAllowedException)
+//			{
+//				action.setError(mes, ErrorKind.OPERATION_NOT_ALLOWED);
+//				return;
+//			}
+//			else if (t instanceof ParameterIsNullException)
+//			{
+//				action.setError(mes, ErrorKind.EMPTY_PARAMETER);
+//				return;
+//			}
+//			
+//			throw t;
+//		}
+//		catch (Exception e)
+//		{
+//		}
+//		
+//		return null;
+//	}
 
 }

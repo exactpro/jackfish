@@ -137,7 +137,7 @@ public class DialogCheckLayout extends AbstractAction
 			{
 				if (checkControl(supportedControls, control))
 				{
-					super.setError(message(id, window, onOpen, control, "is not allowed"), ErrorKind.ACTION_NOT_ALLOWED);
+					super.setError(message(id, window, onOpen, control, "is not allowed"), ErrorKind.OPERATION_NOT_ALLOWED);
 					return;
 				}
 
@@ -169,7 +169,7 @@ public class DialogCheckLayout extends AbstractAction
 
 			if (checkControl(supportedControls, control))
 			{
-				super.setError(message(id, window, run, control, "is not allowed"), ErrorKind.ACTION_NOT_ALLOWED);
+				super.setError(message(id, window, run, control, "is not allowed"), ErrorKind.OPERATION_NOT_ALLOWED);
 				return;
 			}
 			
@@ -201,7 +201,7 @@ public class DialogCheckLayout extends AbstractAction
 			{
 				if (checkControl(supportedControls, control))
 				{
-					super.setError(message(id, window, onClose, control, "is not allowed"), ErrorKind.ACTION_NOT_ALLOWED);
+					super.setError(message(id, window, onClose, control, "is not allowed"), ErrorKind.OPERATION_NOT_ALLOWED);
 					return;
 				}
 

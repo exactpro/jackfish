@@ -125,6 +125,9 @@ public class HTMLhelper
 			case OM + "3": return "<h3>";
 			case "3" + CM: return "</h3>";	
 
+			case OM + "4": return "<h4>";
+			case "4" + CM: return "</h4>";	
+
 			case OM + "$": return "<b style=\"color:#8e44ad\"><i>";		
 			case "$" + CM: return "</i></b>";		
 

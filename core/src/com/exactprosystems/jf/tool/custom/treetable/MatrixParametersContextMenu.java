@@ -10,7 +10,7 @@ package com.exactprosystems.jf.tool.custom.treetable;
 
 
 import com.exactprosystems.jf.actions.ReadableValue;
-import com.exactprosystems.jf.api.app.ProxyException;
+import com.exactprosystems.jf.api.app.exception.ProxyException;
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;

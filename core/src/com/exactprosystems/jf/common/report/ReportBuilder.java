@@ -257,7 +257,7 @@ public abstract class ReportBuilder
 			return null;
 		}
 		
-		String reg = "((\\{\\{[1|2|3|$|#|@|`|_])|([1|2|3|$|#|@|`|_]\\}\\}))";
+		String reg = "((\\{\\{[1|2|3|4|$|#|@|`|_])|([1|2|3|4|$|#|@|`|_]\\}\\}))";
 
 		Pattern patt = Pattern.compile(reg);
 		Matcher m = patt.matcher(source);

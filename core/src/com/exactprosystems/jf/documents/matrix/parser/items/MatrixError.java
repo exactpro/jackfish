@@ -8,50 +8,22 @@
 
 package com.exactprosystems.jf.documents.matrix.parser.items;
 
-import com.exactprosystems.jf.api.common.Str;
-
 public class MatrixError
 {
 	public MatrixError(String message, ErrorKind kind, MatrixItem where)
 	{
-		this.message = message;
-		this.kind = kind;
-		this.where = where;
+		this.Message 	= message;
+		this.Kind 		= kind;
+		this.Where 		= where;
 	}
 	
-	public MatrixError(String message)
-	{
-		this(message, ErrorKind.OTHER, null);
-	}
-
 	@Override
 	public String toString()
 	{
-		return this.message;
+		return this.Message;
 	}
 	
-	@Override
-	public boolean equals(Object obj)
-	{
-		if (obj == null)
-		{
-			return false;
-		}
-		
-		if (obj instanceof String)
-		{
-			return Str.areEqual(this.message, (String)obj);
-		}
-
-		if (obj instanceof MatrixError)
-		{
-			return Str.areEqual(this.message, ((MatrixError)obj).message);
-		}
-		
-		return false;
-	}
-	
-	public MatrixItem where;
-	public String message;
-	public ErrorKind kind;
+	public MatrixItem 	Where;
+	public String 		Message;
+	public ErrorKind 	Kind;
 }

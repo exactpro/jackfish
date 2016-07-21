@@ -431,7 +431,7 @@ public abstract class AbstractControl implements IControl, Mutable
 			operation.tune(window);
 			return remote.operate(owner, element, rows, header, operation);
 		}
-		catch (RemoteException re)
+		catch (RemoteException re) // TODO remove it
 		{
 			logger.error(re.getMessage(), re);
 			//TODO

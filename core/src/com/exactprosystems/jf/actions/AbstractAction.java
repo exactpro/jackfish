@@ -74,6 +74,11 @@ public abstract class AbstractAction implements Cloneable
         return this.action.Reason;
     }
     
+    public final ErrorKind getErrorKind()
+    {
+        return this.action.Kind;
+    }
+    
 	public void setOwner(MatrixItem owner)
 	{
 		if (this.action != null)
@@ -362,6 +367,7 @@ public abstract class AbstractAction implements Cloneable
     				+ reason;
     	}
         this.action.Result = Result.Failed;
+        this.action.Kind = kind;
     }
 
     protected static final Logger logger = Logger.getLogger(AbstractAction.class);
@@ -450,9 +456,10 @@ public abstract class AbstractAction implements Cloneable
         ReportTable resultTable = report.addTable("Results", false, 1,
                 new int[] {20, 80}, new String[] {"Parameter", "Value"});
 
-        tableRowIfNotNull(resultTable, "Result", 	this.action.Result);
-        tableRowIfNotNull(resultTable, "Reason", 	this.action.Reason.isEmpty() ? null : this.action.Reason);
-        tableRowIfNotNull(resultTable, "Out", 		this.action.Out);
+        tableRowIfNotNull(resultTable, "Result", 		this.action.Result);
+        tableRowIfNotNull(resultTable, "Error kind", 	this.action.Kind);
+        tableRowIfNotNull(resultTable, "Reason", 		this.action.Reason.isEmpty() ? null : this.action.Reason);
+        tableRowIfNotNull(resultTable, "Out", 			this.action.Out);
     }
 
     private void tableRowIfNotNull(ReportTable table, Object title, Object obj)
@@ -729,6 +736,7 @@ public abstract class AbstractAction implements Cloneable
             clone.Out = null;
             clone.In = null;
             clone.Reason = "";
+            clone.Kind = null;
             clone.Result = null;
             return clone;
         }
@@ -736,7 +744,7 @@ public abstract class AbstractAction implements Cloneable
         @Override
     	public String toString()
     	{
-    		return getClass().getSimpleName() + " {Result=" + this.Result + " Reason=" + this.Reason + "}";
+    		return getClass().getSimpleName() + " {Result=" + this.Result + " ErrorKind=" + this.Kind + " Reason=" + this.Reason + "}";
     	}
     	
 		public void clearResults()
@@ -744,6 +752,7 @@ public abstract class AbstractAction implements Cloneable
             this.Out = null;
             this.Result = null;
             this.Reason = "";
+            this.Kind = null;
         }
     	
     	public Object Out;
@@ -751,6 +760,8 @@ public abstract class AbstractAction implements Cloneable
     	public Parameters In;
     	
     	public String Reason;
+    	
+    	public ErrorKind Kind;
     	
     	public Result Result;
     }

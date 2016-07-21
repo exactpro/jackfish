@@ -277,7 +277,7 @@ public final class ActionItem extends MatrixItem
 
 		if (result == Result.Failed || result == Result.Ignored)
 		{
-			return new ReturnAndResult(result, this.action.getReason(), ErrorKind.FAIL, this);
+			return new ReturnAndResult(result, this.action.getReason(), this.action.getErrorKind(), this);
 		}
 		else
 		{

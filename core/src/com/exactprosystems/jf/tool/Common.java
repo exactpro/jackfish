@@ -9,7 +9,7 @@
 package com.exactprosystems.jf.tool;
 
 import com.exactprosystems.jf.api.app.IControl;
-import com.exactprosystems.jf.api.app.ProxyException;
+import com.exactprosystems.jf.api.app.exception.ProxyException;
 import com.exactprosystems.jf.api.common.DateTime;
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.documents.Document;
@@ -18,6 +18,7 @@ import com.exactprosystems.jf.tool.custom.tab.CustomTab;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.settings.SettingsPanel;
 import com.exactprosystems.jf.tool.settings.Theme;
+
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.fxml.FXMLLoader;
@@ -32,6 +33,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
+
 import org.apache.log4j.Logger;
 
 import java.awt.*;
