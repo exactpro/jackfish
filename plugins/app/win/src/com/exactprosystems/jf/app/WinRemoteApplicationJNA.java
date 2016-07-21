@@ -8,6 +8,8 @@
 package com.exactprosystems.jf.app;
 
 import com.exactprosystems.jf.api.app.*;
+import com.exactprosystems.jf.api.app.exception.ElementIsNotFoundException;
+import com.exactprosystems.jf.api.app.exception.FeatureIsNotSupportedException;
 import com.exactprosystems.jf.api.common.SerializablePair;
 import com.exactprosystems.jf.api.common.Str;
 
@@ -44,6 +46,10 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 			logger.addAppender(appender);
 			logger.setLevel(Level.toLevel(serverLogLevel, Level.ALL));
 		}
+		catch (RemoteException e)
+		{
+			throw e;
+		}
 		catch (Exception e)
 		{
 			logger.error(String.format("createLoggerDerived(%s, %s,%s)", logName, serverLogLevel, serverLogPattern));
@@ -55,7 +61,7 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 	@Override
 	public String getProperty(String name) throws RemoteException
 	{
-		return null;
+		throw new FeatureIsNotSupportedException("getProperty");
 	}
 
 	@Override
@@ -100,6 +106,10 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 			this.operationExecutor = new WinOperationExecutorJNA(this.logger, this.driver);
 			this.driver.connect(title, height, width);
 		}
+		catch (RemoteException e)
+		{
+			throw e;
+		}
 		catch (Exception e)
 		{
 			logger.error("connectionDerived(" + args + ")");
@@ -131,6 +141,10 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 			this.operationExecutor = new WinOperationExecutorJNA(this.logger, this.driver);
 			this.driver.run(exec, workDir, parameters);
 		}
+		catch (RemoteException e)
+		{
+			throw e;
+		}
 		catch (Exception e)
 		{
 			logger.error("runDerived(" + args + ")");
@@ -145,6 +159,10 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 		try
 		{
 			this.driver.stop();
+		}
+		catch (RemoteException e)
+		{
+			throw e;
 		}
 		catch (Exception e)
 		{
@@ -161,6 +179,10 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 		{
 			this.driver.refresh();
 		}
+		catch (RemoteException e)
+		{
+			throw e;
+		}
 		catch (Exception e)
 		{
 			logger.error("refreshDerived()");
@@ -172,13 +194,13 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 	@Override
 	protected SerializablePair<String, Boolean> getAlertTextDerived() throws Exception
 	{
-		throw new Exception("Not presented here");
+		throw new FeatureIsNotSupportedException("getAlertText");
 	}
 
 	@Override
 	protected void setAlertTextDerived(String text, PerformKind performKind) throws Exception
 	{
-		throw new Exception("Not presented here");
+		throw new FeatureIsNotSupportedException("setAlertText");
 	}
 
 	@Override
@@ -192,13 +214,13 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 	@Override
 	protected String switchToDerived(String title, boolean softCondition) throws Exception
 	{
-		throw new Exception("Not presented here");
+		throw new FeatureIsNotSupportedException("switchTo");
 	}
 
 	@Override
 	protected void switchToFrameDerived(Locator owner) throws Exception
 	{
-		throw new Exception("Not presented here");
+		throw new FeatureIsNotSupportedException("switchToFrame");
 	}
 
 	@Override
@@ -220,6 +242,10 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 			{
 				this.driver.doPatternCall(currentWindow, WindowPattern.TransformPattern, "Resize", width + "%" + height, 1);
 			}
+		}
+		catch (RemoteException e)
+		{
+			throw e;
 		}
 		catch (Exception e)
 		{
@@ -251,6 +277,10 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 			}
 			return res;
 		}
+		catch (RemoteException e)
+		{
+			throw e;
+		}
 		catch (Exception e)
 		{
 			logger.error(String.format("findAllDerived(%s,%s)", owner, element));
@@ -269,7 +299,7 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 			int returnLength = this.driver.elementByCoords(res, controlKind, x, y);
 			if (returnLength == 0)
 			{
-				throw new ElementNotFoundException(x, y);
+				throw new ElementIsNotFoundException(x, y);
 			}
 			if (returnLength > initialLength)
 			{
@@ -280,6 +310,10 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 			int[] newRes = new int[returnLength];
 			System.arraycopy(res, 0, newRes, 0, returnLength);
 			return this.operationExecutor.locatorFromUIProxy(newRes);
+		}
+		catch (RemoteException e)
+		{
+			throw e;
 		}
 		catch (Exception e)
 		{
@@ -316,6 +350,10 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 			System.arraycopy(arr, 2, result, 0, arr.length - 2);
 			return new ImageWrapper(arr[0], arr[1], result);
 		}
+		catch (RemoteException e)
+		{
+			throw e;
+		}
 		catch (Exception e)
 		{
 			this.logger.error(String.format("getImagedDerived(%s,%s)", owner, element));
@@ -339,6 +377,10 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 				return this.operationExecutor.getRectangle(this.operationExecutor.find(owner, element));
 			}
 		}
+		catch (RemoteException e)
+		{
+			throw e;
+		}
 		catch (Exception e)
 		{
 			this.logger.error(String.format("getRectangleDerived(%s,%s)", owner, element));
@@ -353,6 +395,10 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 		try
 		{
 			return operation.operate(this.operationExecutor, owner, element, rows, header);
+		}
+		catch (RemoteException e)
+		{
+			throw e;
 		}
 		catch (Exception e)
 		{
@@ -369,9 +415,14 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 		{
 			return spec.perform(this.operationExecutor, owner, element);
 		}
+		catch (RemoteException e)
+		{
+			throw e;
+		}
 		catch (Exception e)
 		{
 			this.logger.error(String.format("checkLayoutDerived(%s,%s,%s)", owner, element, spec));
+			this.logger.error(e.getMessage(), e);
 			throw e;
 		}
 	}
@@ -379,19 +430,19 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 	@Override
 	protected void newInstanceDerived(Map<String, String> args) throws Exception
 	{
-		throw new Exception("Not implemented on win plugin");
+		throw new FeatureIsNotSupportedException("newInstance");
 	}
 
 	@Override
 	protected int closeAllDerived(Locator element, Collection<LocatorAndOperation> operations) throws Exception
 	{
-		return 0;
+		throw new FeatureIsNotSupportedException("closeAll");
 	}
 
 	@Override
 	protected String closeWindowDerived() throws Exception
 	{
-		throw new Exception("Not implemented on win plugin");
+		throw new FeatureIsNotSupportedException("closeWindow");
 	}
 
 	@Override

@@ -5,25 +5,32 @@
 //  This is unpublished, licensed software, confidential and proprietary
 //  information which is the property of Exactpro Systems, LLC or its licensors.
 ////////////////////////////////////////////////////////////////////////////////
-package com.exactprosystems.jf.api.app;
+package com.exactprosystems.jf.api.app.exception;
 
 import java.rmi.RemoteException;
 
-public class ElementNotFoundException extends RemoteException
+import com.exactprosystems.jf.api.app.Locator;
+
+public class ElementIsNotFoundException extends RemoteException
 {
 	private static final long serialVersionUID = -4722988704327432417L;
 
-	public ElementNotFoundException(int x, int y)
+	public ElementIsNotFoundException(String msg)
+	{
+		super(msg);
+	}
+
+	public ElementIsNotFoundException(int x, int y)
 	{
 		super(String.format("Element not found by location (%d,%d)", x, y));
 	}
 
-	public ElementNotFoundException(String msg, Locator locator)
+	public ElementIsNotFoundException(String msg, Locator locator)
 	{
 		super(msg + locator);
 	}
 
-	public ElementNotFoundException(Locator locator)
+	public ElementIsNotFoundException(Locator locator)
 	{
 		super("No one element was found. Element: " + locator);
 	}

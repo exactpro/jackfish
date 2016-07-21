@@ -8,6 +8,7 @@
 
 package com.exactprosystems.jf.api.app;
 
+import com.exactprosystems.jf.api.app.exception.ParameterIsNullException;
 import com.exactprosystems.jf.api.client.ICondition;
 import com.exactprosystems.jf.api.common.DescriptionAttribute;
 
@@ -65,7 +66,7 @@ public class Operation implements Iterable<Part>, Serializable
 	{
 		if (locator == null)
 		{
-			throw new Exception("Locator is null.");
+			throw new ParameterIsNullException("locator");
 		}
 		
 		OperationResult result = new OperationResult();

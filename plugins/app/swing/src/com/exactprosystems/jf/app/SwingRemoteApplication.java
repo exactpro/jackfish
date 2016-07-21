@@ -9,10 +9,13 @@
 package com.exactprosystems.jf.app;
 
 import com.exactprosystems.jf.api.app.*;
+import com.exactprosystems.jf.api.app.exception.FeatureIsNotSupportedException;
 import com.exactprosystems.jf.api.common.SerializablePair;
+
 import net.sourceforge.jnlp.Launcher;
 import net.sourceforge.jnlp.runtime.ApplicationInstance;
 import net.sourceforge.jnlp.runtime.JNLPRuntime;
+
 import org.apache.log4j.*;
 import org.fest.swing.core.BasicRobot;
 import org.fest.swing.core.ComponentMatcher;
@@ -21,6 +24,7 @@ import org.fest.swing.fixture.ComponentFixture;
 import org.w3c.dom.Document;
 
 import javax.swing.*;
+
 import java.awt.*;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
@@ -54,6 +58,10 @@ public class SwingRemoteApplication extends RemoteApplication
 
 			MatcherSwing.setLogger(logger);
 		}
+		catch (RemoteException e)
+		{
+			throw e;
+		}
 		catch (Exception e)
 		{
 			logger.error(String.format("createLoggerDerived(%s, %s,%s)", logName, serverLogLevel, serverLogPattern));
@@ -65,7 +73,7 @@ public class SwingRemoteApplication extends RemoteApplication
 	@Override
 	public String getProperty(String name) throws RemoteException
 	{
-		return null;
+		throw new FeatureIsNotSupportedException("getProperty");
 	}
 
 	@Override
@@ -169,6 +177,10 @@ public class SwingRemoteApplication extends RemoteApplication
 				this.highLighter.close();
 			}
 		}
+		catch (RemoteException e)
+		{
+			throw e;
+		}
 		catch (Exception e)
 		{
 			logger.error("stopDerived()");
@@ -180,19 +192,19 @@ public class SwingRemoteApplication extends RemoteApplication
 	@Override
 	protected void refreshDerived() throws Exception
 	{
-		// done
+		throw new FeatureIsNotSupportedException("refresh");
 	}
 
 	@Override
 	protected SerializablePair<String, Boolean> getAlertTextDerived() throws Exception
 	{
-		throw new Exception("Not presented here");
+		throw new FeatureIsNotSupportedException("getAlertText");
 	}
 
 	@Override
 	protected void setAlertTextDerived(String text, PerformKind performKind) throws Exception
 	{
-		throw new Exception("Not presented here");
+		throw new FeatureIsNotSupportedException("setAlertText");
 	}
 
 	@Override
@@ -270,13 +282,13 @@ public class SwingRemoteApplication extends RemoteApplication
 	@Override
 	protected String switchToDerived(final String title, boolean softCondition) throws Exception
 	{
-		throw new Exception("The 'swithcTo' functionality is not implemented for this adapter.");
+		throw new FeatureIsNotSupportedException("switchTo");
 	}
 
 	@Override
 	protected void switchToFrameDerived(Locator owner) throws Exception
 	{
-		// TODO Auto-generated method stub
+		throw new FeatureIsNotSupportedException("switchToFrame");
 	}
 
 	@Override
@@ -301,6 +313,10 @@ public class SwingRemoteApplication extends RemoteApplication
 				res.add("" + component.target);
 			}
 			return res;
+		}
+		catch (RemoteException e)
+		{
+			throw e;
 		}
 		catch (Exception e)
 		{
@@ -360,6 +376,10 @@ public class SwingRemoteApplication extends RemoteApplication
 				return locator;
 			}
 			return null;
+		}
+		catch (RemoteException e)
+		{
+			throw e;
 		}
 		catch (Exception e)
 		{
@@ -421,6 +441,10 @@ public class SwingRemoteApplication extends RemoteApplication
 			}
 			return new ImageWrapper(images[0]);
 		}
+		catch (RemoteException e)
+		{
+			throw e;
+		}
 		catch (Exception e)
 		{
 			logger.error(String.format("getImageDerived(%s,%s)", owner, element));
@@ -453,6 +477,10 @@ public class SwingRemoteApplication extends RemoteApplication
 			}
 			return this.operationExecutor.getRectangle(component);
 		}
+		catch (RemoteException e)
+		{
+			throw e;
+		}
 		catch (Exception e)
 		{
 			logger.error(String.format("getRectangleDerived(%s, %s)", owner, element));
@@ -467,6 +495,10 @@ public class SwingRemoteApplication extends RemoteApplication
 		try
 		{
 			return operation.operate(this.operationExecutor, owner, element, rows, header);
+		}
+		catch (RemoteException e)
+		{
+			throw e;
 		}
 		catch (Exception e)
 		{
@@ -483,6 +515,10 @@ public class SwingRemoteApplication extends RemoteApplication
 		{
 			return spec.perform(this.operationExecutor, owner, element);
 		}
+		catch (RemoteException e)
+		{
+			throw e;
+		}
 		catch (Exception e)
 		{
 			logger.error(String.format("checkLayoutDerived(%s,%s,%s)", owner, element, spec));
@@ -494,7 +530,7 @@ public class SwingRemoteApplication extends RemoteApplication
 	@Override
 	protected void newInstanceDerived(Map<String, String> args) throws Exception
 	{
-		// done
+		throw new FeatureIsNotSupportedException("newInstance");
 	}
 
 	@Override
@@ -554,6 +590,10 @@ public class SwingRemoteApplication extends RemoteApplication
 
 			return closed;
 		}
+		catch (RemoteException e)
+		{
+			throw e;
+		}
 		catch (Exception e)
 		{
 			logger.error(String.format("closeAllDerived(%s,%s)", element, operations));
@@ -565,13 +605,13 @@ public class SwingRemoteApplication extends RemoteApplication
 	@Override
 	protected String closeWindowDerived() throws Exception
 	{
-		return null; // done
+		throw new FeatureIsNotSupportedException("closeWindow()");
 	}
 
 	@Override
 	protected void startNewDialogDerived() throws Exception
 	{
-
+		throw new FeatureIsNotSupportedException("startNewDialog");
 	}
 
 	@Override
@@ -596,6 +636,10 @@ public class SwingRemoteApplication extends RemoteApplication
 			}
 
 			return MatcherSwing.createDocument(component, false, true);
+		}
+		catch (RemoteException e)
+		{
+			throw e;
 		}
 		catch (Exception e)
 		{

@@ -8,7 +8,10 @@
 
 package com.exactprosystems.jf.api.app;
 
+import com.exactprosystems.jf.api.app.exception.ElementIsNotFoundException;
+import com.exactprosystems.jf.api.app.exception.ProxyException;
 import com.exactprosystems.jf.api.common.SerializablePair;
+
 import org.w3c.dom.Document;
 
 import java.awt.*;
@@ -73,6 +76,10 @@ public abstract class RemoteApplication implements IRemoteApplication
 			
 			createLoggerDerived(logName, serverLogLevel, serverLogPattern);
 		}
+		catch (RemoteException e)
+		{
+			throw e;
+		}
 		catch (Exception e)
 		{
 			String msg = String.format("Error createLogger(%s, %s, %s)", logName, serverLogLevel, serverLogPattern);
@@ -91,6 +98,10 @@ public abstract class RemoteApplication implements IRemoteApplication
 
 			connectDerived(args, this.metricsCounter);
 		}
+		catch (RemoteException e)
+		{
+			throw e;
+		}
 		catch (Exception e)
 		{
 			String msg = String.format("Error connect(%s)", args == null ? "null" : Arrays.toString(args.entrySet().toArray()));
@@ -107,6 +118,10 @@ public abstract class RemoteApplication implements IRemoteApplication
 
 			runDerived(args, this.metricsCounter);
 		}
+		catch (RemoteException e)
+		{
+			throw e;
+		}
 		catch (Exception e)
 		{
 			String msg = String.format("Error run(%s)", args == null ? "null" : Arrays.toString(args.entrySet().toArray()));
@@ -120,6 +135,10 @@ public abstract class RemoteApplication implements IRemoteApplication
 		try 
 		{
 			stopDerived();
+		}
+		catch (RemoteException e)
+		{
+			throw e;
 		}
 		catch (Exception e)
 		{
@@ -136,6 +155,10 @@ public abstract class RemoteApplication implements IRemoteApplication
 		{
 			refreshDerived();
 		}
+		catch (RemoteException e)
+		{
+			throw e;
+		}
 		catch (Exception e)
 		{
 			String msg = String.format("Error refresh()");
@@ -149,6 +172,10 @@ public abstract class RemoteApplication implements IRemoteApplication
 		try
 		{
 			return getAlertTextDerived();
+		}
+		catch (RemoteException e)
+		{
+			throw e;
 		}
 		catch (Exception e)
 		{
@@ -164,6 +191,10 @@ public abstract class RemoteApplication implements IRemoteApplication
 		{
 			setAlertTextDerived(text, performKind);
 		}
+		catch (RemoteException e)
+		{
+			throw e;
+		}
 		catch (Exception e)
 		{
 			String msg = String.format("Error setAlertText(%s, %s)", text, performKind.toString());
@@ -177,6 +208,10 @@ public abstract class RemoteApplication implements IRemoteApplication
 		try 
 		{
 			return titlesDerived();
+		}
+		catch (RemoteException e)
+		{
+			throw e;
 		}
 		catch (Exception e)
 		{
@@ -194,6 +229,10 @@ public abstract class RemoteApplication implements IRemoteApplication
 
 			newInstanceDerived(args);
 		}
+		catch (RemoteException e)
+		{
+			throw e;
+		}
 		catch (Exception e)
 		{
 			String msg = String.format("Error newInstance(%s)", args == null ? "null" : Arrays.toString(args.entrySet().toArray()));
@@ -210,6 +249,10 @@ public abstract class RemoteApplication implements IRemoteApplication
 
 			return switchToDerived(title, softCondition);
 		}
+		catch (RemoteException e)
+		{
+			throw e;
+		}
 		catch (Exception e)
 		{
 			String msg = String.format("Error switchTo(%s)", title);
@@ -224,6 +267,10 @@ public abstract class RemoteApplication implements IRemoteApplication
 		{
 			switchToFrameDerived(owner);
 		}
+		catch (RemoteException e)
+		{
+			throw e;
+		}
 		catch (Exception e)
 		{
 			String msg = String.format("Error switchToFrame(%s)", owner);
@@ -237,6 +284,10 @@ public abstract class RemoteApplication implements IRemoteApplication
 		try 
 		{
 			resizeDerived(height, width, maximize, minimize);
+		}
+		catch (RemoteException e)
+		{
+			throw e;
 		}
 		catch (Exception e)
 		{
@@ -255,10 +306,16 @@ public abstract class RemoteApplication implements IRemoteApplication
 			
 			return findAllDerived(owner, element);
 		}
+		catch (RemoteException e)
+		{
+			throw e;
+		}
 		catch (Exception e)
 		{
 			String msg = String.format("Error findAll(%s, %s)", owner, element);
-			throw new ProxyException(msg, e.getMessage(), e);
+//			throw new ProxyException(msg, e.getMessage(), e);
+			System.err.println("~~~~~~ " + msg);
+			throw new ElementIsNotFoundException(msg, element);
 		}
 	}
 	
@@ -270,6 +327,10 @@ public abstract class RemoteApplication implements IRemoteApplication
 			exceptionIfNull(controlKind, 	"controlKind", "getLocator");
 
 			return getLocatorDerived(owner, controlKind, x, y);
+		}
+		catch (RemoteException e)
+		{
+			throw e;
 		}
 		catch (Exception e)
 		{
@@ -284,9 +345,11 @@ public abstract class RemoteApplication implements IRemoteApplication
 	{
 		try 
 		{
-//			exceptionIfNull(element, 	"element", "getImage");
-
 			return getImageDerived(owner, element);
+		}
+		catch (RemoteException e)
+		{
+			throw e;
 		}
 		catch (Exception e)
 		{
@@ -300,9 +363,11 @@ public abstract class RemoteApplication implements IRemoteApplication
 	{
 		try
 		{
-//			exceptionIfNull(element, 	"element", "getImage");
-
 			return getRectangleDerived(owner, element);
+		}
+		catch (RemoteException e)
+		{
+			throw e;
 		}
 		catch (Exception e)
 		{
@@ -321,6 +386,10 @@ public abstract class RemoteApplication implements IRemoteApplication
 
 			return operateDerived(owner, element, rows, header, operation);
 		}
+		catch (RemoteException e)
+		{
+			throw e;
+		}
 		catch (Exception e)
 		{
 			String msg = String.format("Error operate(%s, %s, %s)", owner, element, operation);
@@ -337,6 +406,10 @@ public abstract class RemoteApplication implements IRemoteApplication
 			exceptionIfNull(spec, 		"spec", "checkLayout");
 
 			return checkLayoutDerived(owner, element, spec);
+		}
+		catch (RemoteException e)
+		{
+			throw e;
 		}
 		catch (Exception e)
 		{
@@ -355,6 +428,10 @@ public abstract class RemoteApplication implements IRemoteApplication
 
 			return closeAllDerived(element, operations);
 		}
+		catch (RemoteException e)
+		{
+			throw e;
+		}
 		catch (Exception e)
 		{
 			String msg = String.format("Error closeAll(%s, %s)", element, Arrays.toString(operations.toArray()));
@@ -368,6 +445,10 @@ public abstract class RemoteApplication implements IRemoteApplication
 		try
 		{
 			return closeWindowDerived();
+		}
+		catch (RemoteException e)
+		{
+			throw e;
 		}
 		catch (Exception e)
 		{
@@ -383,6 +464,10 @@ public abstract class RemoteApplication implements IRemoteApplication
 		{
 			return getTreeDerived(owner);
 		}
+		catch (RemoteException e)
+		{
+			throw e;
+		}
 		catch (Exception e)
 		{
 			String msg = String.format("Error getTree(%s)", owner);
@@ -396,6 +481,10 @@ public abstract class RemoteApplication implements IRemoteApplication
 		try
 		{
 			startGrabbingDerived();
+		}
+		catch (RemoteException e)
+		{
+			throw e;
 		}
 		catch (Exception e)
 		{
@@ -411,6 +500,10 @@ public abstract class RemoteApplication implements IRemoteApplication
 		{
 			startNewDialogDerived();
 		}
+		catch (RemoteException e)
+		{
+			throw e;
+		}
 		catch (Exception e)
 		{
 			String msg = String.format("Error start new dialog");
@@ -424,6 +517,10 @@ public abstract class RemoteApplication implements IRemoteApplication
 		try
 		{
 			endGrabbingDerived();
+		}
+		catch (RemoteException e)
+		{
+			throw e;
 		}
 		catch (Exception e)
 		{
@@ -453,6 +550,10 @@ public abstract class RemoteApplication implements IRemoteApplication
 		{
 			this.metricsCounter.listening(id, isStart);
 		}
+		catch (RemoteException e)
+		{
+			throw e;
+		}
 		catch (Exception e)
 		{
 			String msg = String.format("Error on listening(%s, %s)", id, isStart);
@@ -467,6 +568,10 @@ public abstract class RemoteApplication implements IRemoteApplication
 		try
 		{
 			return this.metricsCounter.getCopyDate(id);
+		}
+		catch (RemoteException e)
+		{
+			throw e;
 		}
 		catch (Exception e)
 		{

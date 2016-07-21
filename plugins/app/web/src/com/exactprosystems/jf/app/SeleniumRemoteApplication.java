@@ -9,6 +9,9 @@
 package com.exactprosystems.jf.app;
 
 import com.exactprosystems.jf.api.app.*;
+import com.exactprosystems.jf.api.app.exception.FeatureIsNotSupportedException;
+import com.exactprosystems.jf.api.app.exception.ParameterIsNullException;
+import com.exactprosystems.jf.api.app.exception.ProxyException;
 import com.exactprosystems.jf.api.common.SerializablePair;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.app.js.JSInjection;
@@ -20,7 +23,6 @@ import org.openqa.selenium.Dimension;
 import org.openqa.selenium.Point;
 import org.openqa.selenium.chrome.ChromeDriverService;
 import org.openqa.selenium.firefox.FirefoxDriver;
-
 import org.openqa.selenium.ie.InternetExplorerDriverService;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -165,7 +167,7 @@ public class SeleniumRemoteApplication extends RemoteApplication
 	protected void connectDerived(Map<String, String> args, MetricsCounter metricsCounter) throws Exception
 	{
 		logger.info("##########################################################################################################");
-		throw new Exception("Not supported yet.");
+		throw new FeatureIsNotSupportedException("Connect");
 	}
 
 	@Override
@@ -222,12 +224,12 @@ public class SeleniumRemoteApplication extends RemoteApplication
 
 			if (browserName == null)
 			{
-				throw new Exception("browser is null");
+				throw new ParameterIsNullException(WebAppFactory.browserName);
 			}
 
 			if (url == null)
 			{
-				throw new Exception("url is null");
+				throw new ParameterIsNullException(WebAppFactory.urlName);
 			}
 			Browser browser = Browser.valueOf(browserName.toUpperCase());
 			this.driver = new WebDriverListenerNew(browser.createDriver(chromeDriverBinary, firefoxProfileDirectory, usePrivateMode), metricsCounter);
@@ -433,6 +435,10 @@ public class SeleniumRemoteApplication extends RemoteApplication
 				real = e;
 				logger.debug(msgElementNotLonger(repeat));
 			}
+			catch (RemoteException e)
+			{
+				throw e;
+			}
 			catch (Exception e)
 			{
 				logger.error("EXCEPTION : " + e.getMessage(), e);
@@ -445,7 +451,7 @@ public class SeleniumRemoteApplication extends RemoteApplication
 
 
 	@Override
-	protected Locator getLocatorDerived(Locator owner, ControlKind controlKind, int x, int y) throws RemoteException
+	protected Locator getLocatorDerived(Locator owner, ControlKind controlKind, int x, int y) throws Exception
 	{
 		if (needTune)
 		{
@@ -455,7 +461,7 @@ public class SeleniumRemoteApplication extends RemoteApplication
 		return getLocator(controlKind, o);
 	}
 
-	private Locator tuneDisplay() throws RemoteException
+	private Locator tuneDisplay() throws Exception
 	{
 		if (needTune)
 		{
@@ -482,7 +488,7 @@ public class SeleniumRemoteApplication extends RemoteApplication
 			{
 				logger.error("Error on tune display");
 				logger.error(e.getMessage(), e);
-				throw new ProxyException("Error on tune display", e.getMessage(), e);
+				throw new Exception(e.getMessage());
 			}
 		}
 		needTune = false;
@@ -648,9 +654,13 @@ public class SeleniumRemoteApplication extends RemoteApplication
 				real = e;
 				logger.debug(msgElementNotLonger(repeat));
 			}
+			catch (RemoteException e)
+			{
+				throw e;
+			}
 			catch (Exception e)
 			{
-				logger.error("EXCEPTION : " + e.getMessage(), e);
+				logger.error(e.getMessage(), e);
 				throw new Exception(e.getMessage());
 			}
 		}
@@ -688,9 +698,13 @@ public class SeleniumRemoteApplication extends RemoteApplication
 				real = e;
 				logger.debug(msgElementNotLonger(repeat));
 			}
+			catch (RemoteException e)
+			{
+				throw e;
+			}
 			catch (Exception e)
 			{
-				logger.error("EXCEPTION : " + e.getMessage(), e);
+				logger.error(e.getMessage(), e);
 				throw new Exception(e.getMessage());
 			}
 		}
@@ -714,9 +728,13 @@ public class SeleniumRemoteApplication extends RemoteApplication
 				real = e;
 				logger.debug(msgElementNotLonger(repeat));
 			}
+			catch (RemoteException e)
+			{
+				throw e;
+			}
 			catch (Exception e)
 			{
-				logger.error("EXCEPTION : " + e.getMessage(), e);
+				logger.error(e.getMessage(), e);
 				throw new Exception(e.getMessage());
 			}
 		}
@@ -740,9 +758,13 @@ public class SeleniumRemoteApplication extends RemoteApplication
 				real = e;
 				logger.debug(msgElementNotLonger(repeat));
 			}
+			catch (RemoteException e)
+			{
+				throw e;
+			}
 			catch (Exception e)
 			{
-				logger.error("EXCEPTION : " + e.getMessage(), e);
+				logger.error(e.getMessage(), e);
 				throw new Exception(e.getMessage());
 			}
 		}

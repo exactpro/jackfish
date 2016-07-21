@@ -9,8 +9,11 @@
 package com.exactprosystems.jf.app;
 
 import com.exactprosystems.jf.api.app.*;
+import com.exactprosystems.jf.api.app.exception.ElementIsNotFoundException;
+import com.exactprosystems.jf.api.app.exception.TooManyElementsException;
 import com.exactprosystems.jf.api.client.ICondition;
 import com.exactprosystems.jf.api.common.Str;
+
 import org.apache.log4j.Logger;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -418,65 +421,6 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 		throw real;
 	}
 
-	private List<String> getHeaders(String outerHtml, boolean useNumericHeader) throws RemoteException
-	{
-		Document doc = Jsoup.parse(outerHtml);
-		ArrayList<String> result = new ArrayList<>();
-		Elements header = null;
-		/*
-			try to find element with tag thead.
-		 */
-		Element firstThead = doc.select(tag_thead).first();
-		/*
-			if firstThead thead is not present, try to find rows in this table.
-		 */
-		if (firstThead == null)
-		{
-			Element firstTr = doc.select(tag_tr).first();
-			if (firstTr == null)
-			{
-				throw new RemoteException("Headers not found. Check your header locator or table locator");
-			}
-			header = firstTr.children();
-			for (int i = 0; i < header.size(); i++)
-			{
-				result.add(String.valueOf(i));
-			}
-			return result;
-		}
-		Elements trOfFirstThead = firstThead.children();
-		for (Element tr : firstThead.children())
-		{
-			Elements select = tr.select(tag_th);
-			for (Element th : select)
-			{
-				String s = th.attributes().get(row_span);
-				if (!s.isEmpty() && s.equals(String.valueOf(trOfFirstThead.size())))
-				{
-					result.add(th.text());
-				}
-			}
-		}
-		header = trOfFirstThead.last().children();
-
-		for (Element element : header)
-		{
-			if (element.tag().getName().equals(tag_th))
-			{
-				result.add(element.text());
-			}
-		}
-
-		if (useNumericHeader)
-		{
-			for (int i = 0; i < result.size(); i++)
-			{
-				result.set(i, String.valueOf(i));
-			}
-		}
-		return result;
-	}
-
 	public static Elements findRows(Document doc) throws Exception
 	{
 		Element first = doc.select(tag_tbody).first();
@@ -523,12 +467,12 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 
 					if (elements.isEmpty())
 					{
-						throw new RemoteException("Owner was not found. Owner: " + owner);
+						throw new ElementIsNotFoundException("Owner", owner);
 					}
 
 					if (elements.size() > 1)
 					{
-						throw new RemoteException(elements.size() + " owners were found instead 1. Owner: " + owner);
+						throw new TooManyElementsException("" + elements.size(),owner);
 					}
 					window = elements.get(0);
 				}
@@ -563,12 +507,12 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 
 					if (elements.isEmpty())
 					{
-						throw new RemoteException("Owner was not found. Owner: " + owner);
+						throw new ElementIsNotFoundException("Owner", owner);
 					}
 
 					if (elements.size() > 1)
 					{
-						throw new RemoteException(elements.size() + " owners were found instead 1. Owner: " + owner);
+						throw new TooManyElementsException("" + elements.size(), owner);
 					}
 					window = elements.get(0);
 				}
@@ -585,7 +529,7 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 					}
 					else
 					{
-						throw new ElementNotFoundException(locator);
+						throw new ElementIsNotFoundException(locator);
 					}
 				}
 
@@ -595,7 +539,7 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 					{
 						logger.error("Found : " + getElementString(element));
 					}
-					throw new RemoteException(elements.size() + " elements were found instead 1. Element: " + locator);
+					throw new TooManyElementsException("" + elements.size(), locator);
 				}
 				return elements.get(0);
 			}
@@ -607,12 +551,6 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 		}
 		while (++repeat < repeatLimit);
 		throw real;
-	}
-
-	private String getElementString(WebElement element)
-	{
-		String s = element.getAttribute("outerHTML");
-		return s.substring(0, s.indexOf(">") + 1);
 	}
 
 	@Override
@@ -650,7 +588,6 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 			}
 			catch (Exception e)
 			{
-				logger.error("Error on find into table");
 				logger.error(e.getMessage(), e);
 				throw new RemoteException("Error on find into table");
 			}
@@ -1334,6 +1271,73 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 		}
 		while (++repeat < repeatLimit);
 		throw real;
+	}
+	
+	
+
+	private String getElementString(WebElement element)
+	{
+		String s = element.getAttribute("outerHTML");
+		return s.substring(0, s.indexOf(">") + 1);
+	}
+
+	private List<String> getHeaders(String outerHtml, boolean useNumericHeader) throws RemoteException
+	{
+		Document doc = Jsoup.parse(outerHtml);
+		ArrayList<String> result = new ArrayList<>();
+		Elements header = null;
+		/*
+			try to find element with tag thead.
+		 */
+		Element firstThead = doc.select(tag_thead).first();
+		/*
+			if firstThead thead is not present, try to find rows in this table.
+		 */
+		if (firstThead == null)
+		{
+			Element firstTr = doc.select(tag_tr).first();
+			if (firstTr == null)
+			{
+				throw new RemoteException("Headers not found. Check your header locator or table locator");
+			}
+			header = firstTr.children();
+			for (int i = 0; i < header.size(); i++)
+			{
+				result.add(String.valueOf(i));
+			}
+			return result;
+		}
+		Elements trOfFirstThead = firstThead.children();
+		for (Element tr : firstThead.children())
+		{
+			Elements select = tr.select(tag_th);
+			for (Element th : select)
+			{
+				String s = th.attributes().get(row_span);
+				if (!s.isEmpty() && s.equals(String.valueOf(trOfFirstThead.size())))
+				{
+					result.add(th.text());
+				}
+			}
+		}
+		header = trOfFirstThead.last().children();
+
+		for (Element element : header)
+		{
+			if (element.tag().getName().equals(tag_th))
+			{
+				result.add(element.text());
+			}
+		}
+
+		if (useNumericHeader)
+		{
+			for (int i = 0; i < result.size(); i++)
+			{
+				result.set(i, String.valueOf(i));
+			}
+		}
+		return result;
 	}
 
 	private Map<String, String> getRowValues(WebElement row, List<String> headers) throws Exception

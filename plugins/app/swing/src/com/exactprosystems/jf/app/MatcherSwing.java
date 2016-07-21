@@ -11,7 +11,10 @@ package com.exactprosystems.jf.app;
 import com.exactprosystems.jf.api.app.ControlKind;
 import com.exactprosystems.jf.api.app.IRemoteApplication;
 import com.exactprosystems.jf.api.app.Locator;
+import com.exactprosystems.jf.api.app.exception.ElementIsNotFoundException;
+import com.exactprosystems.jf.api.app.exception.ParameterIsNullException;
 import com.exactprosystems.jf.api.common.Str;
+
 import org.apache.log4j.Logger;
 import org.fest.swing.core.GenericTypeMatcher;
 import org.w3c.dom.*;
@@ -24,6 +27,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
+
 import java.awt.*;
 import java.rmi.RemoteException;
 
@@ -45,7 +49,7 @@ public class MatcherSwing <T extends Component> extends GenericTypeMatcher<T>
 		
 		if (locator == null)
 		{
-			throw new NullPointerException("locator");
+			throw new ParameterIsNullException("locator");
 		}
 		this.locator = locator;
 
@@ -64,7 +68,7 @@ public class MatcherSwing <T extends Component> extends GenericTypeMatcher<T>
 			catch (Exception pe)
 			{
 				logger.error(pe.getMessage(), pe);
-				throw new RemoteException("Xpath is wrong " + xpath, pe);
+				throw new ElementIsNotFoundException("Wrong xpath: " + xpath, locator);
 			}
 		}
 		
@@ -304,8 +308,8 @@ public class MatcherSwing <T extends Component> extends GenericTypeMatcher<T>
 		}
 		catch (DOMException e)
 		{
-			logger.debug("Current component : " + component);
-			logger.debug("Error on create element with tag : '" + tagName+"'. Component class simple name : '"+ simpleName +"'.");
+			logger.error("Current component : " + component);
+			logger.error("Error on create element with tag : '" + tagName+"'. Component class simple name : '"+ simpleName +"'.");
 			throw e;
 		}
 		if (addItems)

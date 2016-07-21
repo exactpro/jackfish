@@ -8,6 +8,10 @@
 package com.exactprosystems.jf.app;
 
 import com.exactprosystems.jf.api.app.*;
+import com.exactprosystems.jf.api.app.exception.ElementIsNotFoundException;
+import com.exactprosystems.jf.api.app.exception.FeatureIsNotSupportedException;
+import com.exactprosystems.jf.api.app.exception.OperationIsNotAllowedException;
+import com.exactprosystems.jf.api.app.exception.WrongParameterException;
 import com.exactprosystems.jf.api.client.ICondition;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.conditions.StringCondition;
@@ -61,6 +65,10 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 			}
 			return rectangle;
 		}
+		catch (RemoteException e)
+		{
+			throw e;
+		}
 		catch (Exception e)
 		{
 			this.logger.error(String.format("getRectangle(%s)", component));
@@ -109,6 +117,10 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 			}
 			return returnedList;
 		}
+		catch (RemoteException e)
+		{
+			throw e;
+		}
 		catch (Exception e)
 		{
 			this.logger.error(String.format("findALl(%s,%s,%s)", controlKind, window, locator));
@@ -128,11 +140,11 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 				List<UIProxyJNA> allOwners = findAll(null, owner);
 				if (allOwners.isEmpty())
 				{
-					throw new ElementNotFoundException("Owner was not found. Owner: ", owner);
+					throw new ElementIsNotFoundException("Owner was not found. Owner: ", owner);
 				}
 				if (allOwners.size() > 1)
 				{
-					throw new ElementNotFoundException(allOwners.size() + " owners were found instead 1. Owner: ", owner);
+					throw new ElementIsNotFoundException(allOwners.size() + " owners were found instead 1. Owner: ", owner);
 				}
 				ownerElement = allOwners.get(0);
 			}
@@ -163,6 +175,10 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 			}
 			return returnedList;
 		}
+		catch (RemoteException e)
+		{
+			throw e;
+		}
 		catch (Exception e)
 		{
 			logger.error(String.format("findAll(%s,%s)", owner, element));
@@ -183,13 +199,17 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 				{
 					return UIProxyJNA.DUMMY;
 				}
-				throw new ElementNotFoundException(element);
+				throw new ElementIsNotFoundException(element);
 			}
 			if (list.size() > 1)
 			{
-				throw new ElementNotFoundException("Found " + list.size() + " elements instead 1. Element : ", element);
+				throw new ElementIsNotFoundException("Found " + list.size() + " elements instead 1. Element : ", element);
 			}
 			return list.get(0);
+		}
+		catch (RemoteException e)
+		{
+			throw e;
 		}
 		catch (Exception e)
 		{
@@ -202,7 +222,7 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 	@Override
 	public UIProxyJNA lookAtTable(UIProxyJNA table, Locator additional, Locator header, int x, int y) throws Exception
 	{
-		throw new Exception("This method not needed on windows plugin");
+		throw new FeatureIsNotSupportedException("lookAtTable");
 	}
 
 	@Override
@@ -219,6 +239,10 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 			this.driver.mouse(component, action, x, y);
 			return true;
 		}
+		catch (RemoteException e)
+		{
+			throw e;
+		}
 		catch (Exception e)
 		{
 			logger.error(String.format("mouse(%s,%d,%d,%s)", component, x, y, action));
@@ -234,6 +258,10 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 		{
 			this.driver.sendKeys(key.name());
 			return true;
+		}
+		catch (RemoteException e)
+		{
+			throw e;
 		}
 		catch (Exception e)
 		{
@@ -257,6 +285,10 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 		{
 			this.driver.doPatternCall(component, WindowPattern.InvokePattern, "Invoke", null, -1);
 			return true;
+		}
+		catch (RemoteException e)
+		{
+			throw e;
 		}
 		catch (Exception e)
 		{
@@ -297,6 +329,10 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 			}
 			return true;
 		}
+		catch (RemoteException e)
+		{
+			throw e;
+		}
 		catch (Exception e)
 		{
 			this.logger.error(String.format("toggle(%s,%b)", component, value));
@@ -327,7 +363,7 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 			int foundElementCount = arr[0];
 			if (foundElementCount > 1)
 			{
-				throw new Exception("Inside current component found " + foundElementCount + " elements with name " + selectedText);
+				throw new WrongParameterException("Inside current component found " + foundElementCount + " elements with name " + selectedText);
 			}
 			this.logger.info("Getting array : " + Arrays.toString(arr));
 			int itemLength = arr[1];
@@ -336,6 +372,10 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 			this.logger.info("Element id array : " + Arrays.toString(itemId));
 			this.driver.doPatternCall(new UIProxyJNA(itemId), WindowPattern.SelectionItemPattern, "Select", null, -1);
 			return true;
+		}
+		catch (RemoteException e)
+		{
+			throw e;
 		}
 		catch (Exception e)
 		{
@@ -350,7 +390,7 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 	{
 		try
 		{
-			//TODO call to menu and tree - doPatternCall
+			//TODO call to menu and tree - doPatternCall 
 			if (collaps)
 			{
 
@@ -382,6 +422,10 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 //			this.driver.doPatternCall(component, WindowPattern.ValuePattern, "SetValue", oldText + text, 0);
 			this.driver.setText(component, oldText + text);
 			return true;
+		}
+		catch (RemoteException e)
+		{
+			throw e;
 		}
 		catch (Exception e)
 		{
@@ -446,6 +490,10 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 			this.driver.doPatternCall(component, WindowPattern.RangeValuePattern, "SetValue", "" + value, 2);
 			return true;
 		}
+		catch (RemoteException e)
+		{
+			throw e;
+		}
 		catch (Exception e)
 		{
 			this.logger.error(String.format("setValue(%s,%e)", component, value));
@@ -503,6 +551,10 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 
 			return result;
 		}
+		catch (RemoteException e)
+		{
+			throw e;
+		}
 		catch (Exception e)
 		{
 			this.logger.error(String.format("getValue(%s)", component));
@@ -517,6 +569,10 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 		try
 		{
 			return this.driver.getProperty(component, WindowProperty.NameProperty);
+		}
+		catch (RemoteException e)
+		{
+			throw e;
 		}
 		catch (Exception e)
 		{
@@ -533,9 +589,13 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 		{
 			if (!AttributeKind.isSupported(name))
 			{
-				throw new RemoteException("Unsupported attribute value. Can use only : " + Arrays.toString(AttributeKind.values()));
+				throw new OperationIsNotAllowedException("Unsupported attribute value. Can use only : " + Arrays.toString(AttributeKind.values()));
 			}
 			return this.driver.elementAttribute(component, AttributeKind.valueOf(name.toUpperCase()));
+		}
+		catch (RemoteException e)
+		{
+			throw e;
 		}
 		catch (Exception e)
 		{
@@ -548,7 +608,7 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 	@Override
 	public String script(UIProxyJNA component, String script) throws Exception
 	{
-		throw new Exception("Not implement here");
+		throw new FeatureIsNotSupportedException("script");
 	}
 
 	@Override
@@ -558,6 +618,10 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 		{
 			this.driver.mouseTableCell(component, column, row, action);
 			return true;
+		}
+		catch (RemoteException e)
+		{
+			throw e;
 		}
 		catch (Exception e)
 		{
@@ -575,6 +639,10 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 			this.driver.textTableCell(component, column, row, text);
 			return true;
 		}
+		catch (RemoteException e)
+		{
+			throw e;
+		}
 		catch (Exception e)
 		{
 			this.logger.error(String.format("textTableCell(%s,%d,%d,%s)", component, column, row, text));
@@ -589,6 +657,10 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 		try
 		{
 			return this.driver.getValueTableCell(component, column, row);
+		}
+		catch (RemoteException e)
+		{
+			throw e;
 		}
 		catch (Exception e)
 		{
@@ -605,7 +677,7 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 		{
 			if (valueCondition != null && !(valueCondition instanceof StringCondition))
 			{
-				throw new RemoteException("In win plugin value condition must be StringCondition");
+				throw new WrongParameterException("In win plugin value condition must be StringCondition");
 			}
 			String result = this.driver.getRowByConditions(component, useNumericHeader, ((StringCondition) valueCondition));
 			String[] split = result.split(SEPARATOR_ROWS);
@@ -627,6 +699,10 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 //			}
 //			return getRowByIndex(component, additional, header, useNumericHeader, Integer.parseInt(rowIndexes.get(0)));
 		}
+		catch (RemoteException e)
+		{
+			throw e;
+		}
 		catch (Exception e)
 		{
 			this.logger.error(String.format("getRow(%s,%s,%s,%b,%s,%s)", component, additional, header, useNumericHeader, valueCondition, colorCondition));
@@ -642,13 +718,17 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 		{
 			if (valueCondition != null && !(valueCondition instanceof StringCondition))
 			{
-				throw new RemoteException("In win plugin value condition must be StringCondition");
+				throw new WrongParameterException("In win plugin value condition must be StringCondition");
 			}
 			String result = this.driver.getRowIndexes(component, useNumericHeader, ((StringCondition) valueCondition));
 			List<String> returnedList = new ArrayList<>();
 			String[] indexes = result.split(SEPARATOR_CELL);
 			Collections.addAll(returnedList, indexes);
 			return returnedList;
+		}
+		catch (RemoteException e)
+		{
+			throw e;
 		}
 		catch (Exception e)
 		{
@@ -701,7 +781,7 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 	@Override
 	public Map<String, ValueAndColor> getRowWithColor(UIProxyJNA component, Locator additional, Locator header, boolean useNumericHeader, int i) throws Exception
 	{
-		return null;
+		return null; // TODO WTF?
 	}
 
 	@Override
@@ -731,6 +811,10 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 			}
 			return table;
 		}
+		catch (RemoteException e)
+		{
+			throw e;
+		}
 		catch (Exception e)
 		{
 			this.logger.error(String.format("getTable(%s,%s,%s,%b)", component, additional, header, useNumericHeader));
@@ -745,6 +829,10 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 		try
 		{
 			return this.driver.getTableSize(component);
+		}
+		catch (RemoteException e)
+		{
+			throw e;
 		}
 		catch (Exception e)
 		{

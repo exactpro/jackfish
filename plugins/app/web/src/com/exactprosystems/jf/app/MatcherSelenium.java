@@ -16,6 +16,7 @@ import org.openqa.selenium.WebElement;
 import com.exactprosystems.jf.api.app.ControlKind;
 import com.exactprosystems.jf.api.app.Locator;
 import com.exactprosystems.jf.api.app.Visibility;
+import com.exactprosystems.jf.api.app.exception.ParameterIsNullException;
 
 import java.rmi.RemoteException;
 import java.util.ArrayList;
@@ -27,7 +28,7 @@ public class MatcherSelenium extends By
 	{
 		if (locator == null)
 		{
-			throw new NullPointerException("locator");
+			throw new ParameterIsNullException("locator");
 		}
 
 		this.xpath = xpathFromControl(controlKind, locator);

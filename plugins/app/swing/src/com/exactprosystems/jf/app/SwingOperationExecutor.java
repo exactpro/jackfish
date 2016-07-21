@@ -9,8 +9,13 @@
 package com.exactprosystems.jf.app;
 
 import com.exactprosystems.jf.api.app.*;
+import com.exactprosystems.jf.api.app.exception.ElementIsNotFoundException;
+import com.exactprosystems.jf.api.app.exception.FeatureIsNotSupportedException;
+import com.exactprosystems.jf.api.app.exception.OperationIsNotAllowedException;
+import com.exactprosystems.jf.api.app.exception.WrongParameterException;
 import com.exactprosystems.jf.api.client.ICondition;
 import com.exactprosystems.jf.api.common.Str;
+
 import org.apache.log4j.Logger;
 import org.fest.swing.awt.AWT;
 import org.fest.swing.core.ComponentMatcher;
@@ -31,6 +36,7 @@ import javax.swing.text.JTextComponent;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
+
 import java.awt.*;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
@@ -56,6 +62,34 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 		this.currentRobot = currentRobot;
 		this.logger = logger;
 	}
+
+	public Component currentFrame()
+	{
+		Collection<Component> list = this.currentRobot.finder().findAll(new ComponentMatcher()
+		{
+			@Override
+			public boolean matches(Component c)
+			{
+				return c != null && (c instanceof JFrame);
+			}
+		});
+		return (list == null || list.isEmpty()) ? null : list.iterator().next();
+	}
+
+	public Component currentRoot()
+	{
+		Container root = new RootContainer();
+		for (Window window : Window.getWindows())
+		{
+			logger.debug("Find window : " + window);
+			if (window.isVisible() && window.isShowing())
+			{
+				root.add(window);
+			}
+		}
+		return root;
+	}
+
 
 	@Override
 	public Rectangle getRectangle(ComponentFixture<Component> component) throws Exception
@@ -122,6 +156,10 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 			}
 			return res;
 		}
+		catch (RemoteException e)
+		{
+			throw e;
+		}
 		catch (Throwable e)
 		{
 			logger.error(String.format("findAll(%s, %s, %s)", controlKind, window, locator));
@@ -155,11 +193,15 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 			}
 			return res;
 		}
+		catch (RemoteException e)
+		{
+			throw e;
+		}
 		catch (Throwable e)
 		{
 			logger.error(String.format("findAll(%s, %s)", owner, element));
 			logger.error(e.getMessage(), e);
-			throw new Exception("Unable to find component " + element, e);
+			throw new ElementIsNotFoundException("Unable to find component ", element);
 		}
 	}
 
@@ -171,18 +213,22 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 			this.currentRobot.waitForIdle();
 			return getComponent(owner, element);
 		}
+		catch (RemoteException e)
+		{
+			throw e;
+		}
 		catch (Throwable e)
 		{
 			logger.error(String.format("find(%s, %s)", owner, element));
 			logger.error(e.getMessage(), e);
-			throw new Exception("Unable to find component " + element, e);
+			throw new ElementIsNotFoundException("Unable to find component ", element);
 		}
 	}
 
 	@Override
 	public ComponentFixture<Component> lookAtTable(ComponentFixture<Component> component, Locator additional, Locator header, int x, int y) throws Exception
 	{
-		throw new Exception("This method not needed on swing plugin");
+		throw new FeatureIsNotSupportedException("lookAtTable");
 	}
 
 	@Override
@@ -334,7 +380,11 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 				waitForIdle();
 				return true;
 			}
-			throw new RemoteException(String.format("Component %s dosen't support press operation", component));
+			throw new OperationIsNotAllowedException(String.format("Component %s dosen't support press operation", component));
+		}
+		catch (RemoteException e)
+		{
+			throw e;
 		}
 		catch (Throwable e)
 		{
@@ -410,7 +460,7 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 		{
 			if (!component.target.isEnabled())
 			{
-				throw new RemoteException("Component " + component + " is disabled.");
+				throw new OperationIsNotAllowedException("Component " + component + " is disabled.");
 			}
 
 			this.currentRobot.waitForIdle();
@@ -451,6 +501,10 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 			waitForIdle();
 			return true;
 		}
+		catch (RemoteException e)
+		{
+			throw e;
+		}
 		catch (Throwable e)
 		{
 			logger.error(String.format("select(%s, %s)", component, selectedText));
@@ -488,7 +542,7 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 
 				if (node == null)
 				{
-					throw new Exception("Path '" + path + "' is not found in the tree.");
+					throw new WrongParameterException("Path '" + path + "' is not found in the tree.");
 				}
 				TreePath treePath = new TreePath(((DefaultMutableTreeNode) node).getPath());
 				if (collaps)
@@ -503,6 +557,10 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 
 			return true;
 		}
+		catch (RemoteException e)
+		{
+			throw e;
+		}
 		catch (Throwable e)
 		{
 			logger.error(String.format("fold(%s, %b)", component, collaps));
@@ -510,24 +568,6 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 			throw e;
 		}
 	}
-
-	private JMenu expand(JMenu parent, String menuName) throws RemoteException
-	{
-		for (int i = 0; i < parent.getItemCount(); i++)
-		{
-			Component menuComponent = parent.getMenuComponent(i);
-			if (menuComponent instanceof JMenu)
-			{
-				JMenu returnMenu = (JMenu) menuComponent;
-				logger.debug("found menu : " + returnMenu.getText());
-				returnMenu.setPopupMenuVisible(true);
-				logger.debug("Menu visible? : " + returnMenu.isPopupMenuVisible());
-				return returnMenu;
-			}
-		}
-		throw new RemoteException(String.format("Menu with name '%s' not found in menu '%s'", menuName, parent.getText()));
-	}
-
 
 	@Override
 	public boolean text(ComponentFixture<Component> component, String text, boolean clear) throws Exception
@@ -549,7 +589,11 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 				}
 				return true;
 			}
-			throw new Exception(String.format("Component %s does not support text entering", component.target));
+			throw new OperationIsNotAllowedException(String.format("Component %s does not support text entering", component.target));
+		}
+		catch (RemoteException e)
+		{
+			throw e;
 		}
 		catch (Throwable e)
 		{
@@ -591,6 +635,10 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 		{
 			logger.error("timeout expired.");
 			return false;
+		}
+		catch (RemoteException e)
+		{
+			throw e;
 		}
 		catch (Throwable e)
 		{
@@ -652,77 +700,16 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 			Component currentComponent = component.component();
 			return getValue(currentComponent);
 		}
+		catch (RemoteException e)
+		{
+			throw e;
+		}
 		catch (Throwable e)
 		{
 			logger.error(String.format("getValue(%s)", component));
 			logger.error(e.getMessage(), e);
 			throw e;
 		}
-	}
-
-	private String getValue(Component currentComponent) throws RemoteException
-	{
-		if (currentComponent instanceof JToggleButton)
-		{
-			return String.valueOf(((JToggleButton) currentComponent).isSelected());
-		}
-		else if (currentComponent instanceof JComboBox)
-		{
-			return String.valueOf(((JComboBox) currentComponent).getSelectedItem());
-		}
-		else if (currentComponent instanceof JList)
-		{
-			return String.valueOf(((JList) currentComponent).getSelectedValue());
-		}
-		else if (currentComponent instanceof JProgressBar)
-		{
-			return String.valueOf(((JProgressBar) currentComponent).getValue());
-		}
-		else if (currentComponent instanceof JScrollBar)
-		{
-			return String.valueOf(((JScrollBar) currentComponent).getValue());
-		}
-		else if (currentComponent instanceof JSlider)
-		{
-			return String.valueOf(((JSlider) currentComponent).getValue());
-		}
-		else if (currentComponent instanceof JTabbedPane)
-		{
-			JTabbedPane pane = ((JTabbedPane) currentComponent);
-			return pane.getTitleAt(pane.getSelectedIndex());
-		}
-		else if (currentComponent instanceof JTree)
-		{
-			return ((JTree) currentComponent).getSelectionPath().toString();
-		}
-		else if (currentComponent instanceof JLabel)
-		{
-			return ((JLabel) currentComponent).getText();
-		}
-		else if (currentComponent instanceof JTextComponent)
-		{
-			return ((JTextComponent) currentComponent).getText();
-		}
-		else if (currentComponent instanceof JPanel)
-		{
-			StringBuilder builder = new StringBuilder();
-			getAllTexts(currentComponent, builder);
-			return builder.toString();
-		}
-		else if (currentComponent instanceof JSplitPane)
-		{
-			JSplitPane splitPane = (JSplitPane) currentComponent;
-			return String.valueOf(splitPane.getDividerLocation());
-		}
-		else if (currentComponent instanceof JToolTip)
-		{
-			return ((JToolTip) currentComponent).getTipText();
-		}
-		else if (currentComponent instanceof JButton)
-		{
-			return ((JButton) currentComponent).getText();
-		}
-		throw new RemoteException(String.format("Component %s don't have value", currentComponent));
 	}
 
 	@Override
@@ -782,7 +769,7 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 	@Override
 	public String script(ComponentFixture<Component> component, String script) throws Exception
 	{
-		throw new Exception("Not implement here");
+		throw new FeatureIsNotSupportedException("script");
 	}
 
 	@Override
@@ -921,7 +908,11 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 				logger.debug("returned value is null " + (value == null));
 				return value;
 			}
-			throw new RemoteException(String.format("Table %s with row %s and column %s don't have editor", component, row, column));
+			throw new OperationIsNotAllowedException(String.format("Table %s with row %s and column %s don't have editor", component, row, column));
+		}
+		catch (RemoteException e)
+		{
+			throw e;
 		}
 		catch (Throwable e)
 		{
@@ -952,7 +943,7 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 					Integer colIndex = fieldIndexes.get(name);
 					if (colIndex == null)
 					{
-						throw new RemoteException("The column '" + name + "' is not found. Possible values are: " + humanReadableHeaders(fieldIndexes));
+						throw new WrongParameterException("The column '" + name + "' is not found. Possible values are: " + humanReadableHeaders(fieldIndexes));
 					}
 					String value = String.valueOf(getValueTableCell(fixture, Integer.parseInt(rowsIndexes.get(0)), colIndex));
 
@@ -968,6 +959,10 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 			}
 
 			return null;
+		}
+		catch (RemoteException e)
+		{
+			throw e;
 		}
 		catch (Throwable e)
 		{
@@ -988,6 +983,10 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 			Map<String, Integer> fieldIndexes = getTableHeaders(table);
 
 			return getIndexes(fixture, fieldIndexes, valueCondition, colorCondition);
+		}
+		catch (RemoteException e)
+		{
+			throw e;
 		}
 		catch (Throwable e)
 		{
@@ -1031,27 +1030,6 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 		}
 	}
 
-	private List<String> getHeaders(JTable table, boolean useNumericHeader) throws Exception
-	{
-		List<String> res = new ArrayList<String>();
-		for (int i = 0; i < table.getColumnCount(); i++)
-		{
-			res.add(useNumericHeader ? String.valueOf(i) : table.getColumnName(i));
-		}
-		return res;
-	}
-	
-	private Object getValueTableCell(JTableFixture fixture, int row, int column)
-	{
-		JTable table = fixture.target;
-		Object valueAt = table.getValueAt(row, column);
-		if (valueAt == null)
-		{
-			valueAt = fixture.valueAt(TableCell.row(row).column(column));
-		}
-		return valueAt;
-	}
-	
 	@Override
 	public Map<String, ValueAndColor> getRowWithColor(ComponentFixture<Component> component, Locator additional, Locator header, boolean useNumericHeader, int i) throws Exception
 	{
@@ -1130,6 +1108,10 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 				}
 			}
 			return res;
+		}
+		catch (RemoteException e)
+		{
+			throw e;
 		}
 		catch (Throwable e)
 		{
@@ -1297,12 +1279,115 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 					break;
 
 				default:
-					throw new RemoteException("Cannot find the component : " + controlKind);
+					throw new ElementIsNotFoundException(locator);
 			}
 		}
 		this.currentRobot.waitForIdle();
 
 		return ret;
+	}
+	
+	private List<String> getHeaders(JTable table, boolean useNumericHeader) throws Exception
+	{
+		List<String> res = new ArrayList<String>();
+		for (int i = 0; i < table.getColumnCount(); i++)
+		{
+			res.add(useNumericHeader ? String.valueOf(i) : table.getColumnName(i));
+		}
+		return res;
+	}
+	
+	private Object getValueTableCell(JTableFixture fixture, int row, int column)
+	{
+		JTable table = fixture.target;
+		Object valueAt = table.getValueAt(row, column);
+		if (valueAt == null)
+		{
+			valueAt = fixture.valueAt(TableCell.row(row).column(column));
+		}
+		return valueAt;
+	}
+	
+	private String getValue(Component currentComponent) throws RemoteException
+	{
+		if (currentComponent instanceof JToggleButton)
+		{
+			return String.valueOf(((JToggleButton) currentComponent).isSelected());
+		}
+		else if (currentComponent instanceof JComboBox)
+		{
+			return String.valueOf(((JComboBox) currentComponent).getSelectedItem());
+		}
+		else if (currentComponent instanceof JList)
+		{
+			return String.valueOf(((JList) currentComponent).getSelectedValue());
+		}
+		else if (currentComponent instanceof JProgressBar)
+		{
+			return String.valueOf(((JProgressBar) currentComponent).getValue());
+		}
+		else if (currentComponent instanceof JScrollBar)
+		{
+			return String.valueOf(((JScrollBar) currentComponent).getValue());
+		}
+		else if (currentComponent instanceof JSlider)
+		{
+			return String.valueOf(((JSlider) currentComponent).getValue());
+		}
+		else if (currentComponent instanceof JTabbedPane)
+		{
+			JTabbedPane pane = ((JTabbedPane) currentComponent);
+			return pane.getTitleAt(pane.getSelectedIndex());
+		}
+		else if (currentComponent instanceof JTree)
+		{
+			return ((JTree) currentComponent).getSelectionPath().toString();
+		}
+		else if (currentComponent instanceof JLabel)
+		{
+			return ((JLabel) currentComponent).getText();
+		}
+		else if (currentComponent instanceof JTextComponent)
+		{
+			return ((JTextComponent) currentComponent).getText();
+		}
+		else if (currentComponent instanceof JPanel)
+		{
+			StringBuilder builder = new StringBuilder();
+			getAllTexts(currentComponent, builder);
+			return builder.toString();
+		}
+		else if (currentComponent instanceof JSplitPane)
+		{
+			JSplitPane splitPane = (JSplitPane) currentComponent;
+			return String.valueOf(splitPane.getDividerLocation());
+		}
+		else if (currentComponent instanceof JToolTip)
+		{
+			return ((JToolTip) currentComponent).getTipText();
+		}
+		else if (currentComponent instanceof JButton)
+		{
+			return ((JButton) currentComponent).getText();
+		}
+		throw new OperationIsNotAllowedException(String.format("Component %s don't have value", currentComponent));
+	}
+	
+	private JMenu expand(JMenu parent, String menuName) throws RemoteException
+	{
+		for (int i = 0; i < parent.getItemCount(); i++)
+		{
+			Component menuComponent = parent.getMenuComponent(i);
+			if (menuComponent instanceof JMenu)
+			{
+				JMenu returnMenu = (JMenu) menuComponent;
+				logger.debug("found menu : " + returnMenu.getText());
+				returnMenu.setPopupMenuVisible(true);
+				logger.debug("Menu visible? : " + returnMenu.isPopupMenuVisible());
+				return returnMenu;
+			}
+		}
+		throw new WrongParameterException(String.format("Menu with name '%s' not found in menu '%s'", menuName, parent.getText()));
 	}
 
 	@SuppressWarnings("unchecked")
@@ -1349,7 +1434,7 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 				Integer index = fieldIndexes.get(name);
 				if (index == null)
 				{
-					throw new RemoteException("The column '" + name + "' is not found. Possible values are: " + humanReadableHeaders(fieldIndexes));
+					throw new WrongParameterException("The column '" + name + "' is not found. Possible values are: " + humanReadableHeaders(fieldIndexes));
 				}
 				Object value = getValueTableCell(fixture, i, index);
 				if (!valueCondition.isMatched(name, value))
@@ -1364,7 +1449,7 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 				Integer index = fieldIndexes.get(name);
 				if (index == null)
 				{
-					throw new RemoteException("The column '" + name + "' is not found. Possible values are: " + humanReadableHeaders(fieldIndexes));
+					throw new WrongParameterException("The column '" + name + "' is not found. Possible values are: " + humanReadableHeaders(fieldIndexes));
 				}
 				Color color = fixture.foregroundAt(TableCell.row(i).column(index)).target();
 				if (!colorCondition.isMatched(name, color))
@@ -1718,7 +1803,7 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 	}
 
 	/*
-	 *	these codes from org.fest.swing.driver.JTreeDriver.java
+	 *	this code from org.fest.swing.driver.JTreeDriver.java
 	 */
 	private Point scrollToRow(JTree tree, int row)
 	{
@@ -1727,9 +1812,12 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 		return p;
 	}
 
-	private static Pair<Boolean, Point> scrollToRow(final JTree tree, final int row, final JTreeLocation location) {
-		return execute(new GuiQuery<Pair<Boolean, Point>>() {
-			protected Pair<Boolean, Point> executeInEDT() {
+	private static Pair<Boolean, Point> scrollToRow(final JTree tree, final int row, final JTreeLocation location)
+	{
+		return execute(new GuiQuery<Pair<Boolean, Point>>()
+		{
+			protected Pair<Boolean, Point> executeInEDT()
+			{
 				validateIsEnabledAndShowing(tree);
 				Point p = scrollToVisible(tree, row, location);
 				boolean selected = tree.getSelectionCount() == 1 && tree.isRowSelected(row);
@@ -1738,42 +1826,15 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 		});
 	}
 
-	private static Point scrollToVisible(JTree tree, int row, JTreeLocation location) {
+	private static Point scrollToVisible(JTree tree, int row, JTreeLocation location)
+	{
 		Pair<Rectangle, Point> boundsAndCoordinates = location.rowBoundsAndCoordinates(tree, row);
 		tree.scrollRectToVisible(boundsAndCoordinates.i);
 		return boundsAndCoordinates.ii;
 	}
 
-
-	public Component currentFrame()
-	{
-		Collection<Component> list = this.currentRobot.finder().findAll(new ComponentMatcher()
-		{
-			@Override
-			public boolean matches(Component c)
-			{
-				return c != null && (c instanceof JFrame);
-			}
-		});
-		return (list == null || list.isEmpty()) ? null : list.iterator().next();
-	}
-
-	public Component currentRoot()
-	{
-		Container root = new RootContainer();
-		for (Window window : Window.getWindows())
-		{
-			logger.debug("Find window : " + window);
-			if (window.isVisible() && window.isShowing())
-			{
-				root.add(window);
-			}
-		}
-		return root;
-	}
-
 	@SuppressWarnings("unchecked")
-	public <T extends Component> ComponentFixture<T> getFixture(T component) throws RemoteException
+	<T extends Component> ComponentFixture<T> getFixture(T component) throws RemoteException
 	{
 		if (component instanceof JButton)
 		{

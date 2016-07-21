@@ -6,10 +6,9 @@
 //  information which is the property of Exactpro Systems, LLC or its licensors.
 ////////////////////////////////////////////////////////////////////////////////
 
-package com.exactprosystems.jf.api.app;
+package com.exactprosystems.jf.api.app.exception;
 
 import java.rmi.RemoteException;
-import java.util.Arrays;
 
 public class ProxyException extends RemoteException
 {
