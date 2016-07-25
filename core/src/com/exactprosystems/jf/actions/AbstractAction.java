@@ -9,6 +9,7 @@
 package com.exactprosystems.jf.actions;
 
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.common.report.ReportTable;
@@ -19,7 +20,6 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.documents.matrix.parser.Result;
 import com.exactprosystems.jf.documents.matrix.parser.Tokens;
 import com.exactprosystems.jf.documents.matrix.parser.items.ActionItem;
-import com.exactprosystems.jf.documents.matrix.parser.items.ErrorKind;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 import com.exactprosystems.jf.documents.matrix.parser.items.TypeMandatory;
 import com.exactprosystems.jf.documents.matrix.parser.items.ActionItem.HelpKind;
@@ -559,7 +559,7 @@ public abstract class AbstractAction implements Cloneable
             {
                 if (!(Boolean)value)
                 {
-                    setError(Tokens.Assert + " is false", ErrorKind.ASSERT);
+                    setError(assertBool.getExpression(), ErrorKind.ASSERT);
                     return ;
                 }
                 else
@@ -587,7 +587,7 @@ public abstract class AbstractAction implements Cloneable
         	
             if (!areObjectsEqual(assertOutIs.getValue(), this.action.Out))
             {
-                setError(Tokens.AssertOutIs + " is false", ErrorKind.ASSERT);
+                setError(assertOutIs.getExpression(), ErrorKind.ASSERT);
                 return;
             }
             else
@@ -609,7 +609,7 @@ public abstract class AbstractAction implements Cloneable
         	
             if (areObjectsEqual(assertOutIsNot.getValue(), this.action.Out))
             {
-                setError(Tokens.AssertOutIsNot + " is false", ErrorKind.ASSERT);
+                setError(assertOutIsNot.getExpression(), ErrorKind.ASSERT);
                 return;
             }
             else

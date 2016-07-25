@@ -8,6 +8,8 @@
 
 package com.exactprosystems.jf.documents.matrix.parser.items;
 
+import com.exactprosystems.jf.api.error.ErrorKind;
+
 public class MatrixError
 {
 	public MatrixError(String message, ErrorKind kind, MatrixItem where)

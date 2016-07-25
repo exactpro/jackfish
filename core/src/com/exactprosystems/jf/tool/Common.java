@@ -9,8 +9,8 @@
 package com.exactprosystems.jf.tool;
 
 import com.exactprosystems.jf.api.app.IControl;
-import com.exactprosystems.jf.api.app.exception.ProxyException;
 import com.exactprosystems.jf.api.common.DateTime;
+import com.exactprosystems.jf.api.error.app.ProxyException;
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.documents.Document;
 import com.exactprosystems.jf.tool.custom.label.CommentsLabel;

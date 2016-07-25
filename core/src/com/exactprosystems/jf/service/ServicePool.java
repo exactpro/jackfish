@@ -10,6 +10,8 @@ package com.exactprosystems.jf.service;
 
 import com.exactprosystems.jf.api.common.ApiVersionInfo;
 import com.exactprosystems.jf.api.common.IContext;
+import com.exactprosystems.jf.api.common.exception.EmptyParameterException;
+import com.exactprosystems.jf.api.common.exception.VersionException;
 import com.exactprosystems.jf.api.service.*;
 import com.exactprosystems.jf.common.MainRunner;
 import com.exactprosystems.jf.documents.DocumentFactory;
@@ -37,12 +39,12 @@ public class ServicePool implements IServicesPool
 	// PoolVersionSupported
 	//----------------------------------------------------------------------------------------------
 	@Override
-	public int requiredMajorVersion(String id)
+	public int requiredMajorVersion(String serviceId)
 	{
 		try
 		{
-			ServiceEntry entry = parametersEntry(id);
-			IServiceFactory serviceFactory = loadServiceFactory(id, entry);
+			ServiceEntry entry = parametersEntry(serviceId);
+			IServiceFactory serviceFactory = loadServiceFactory(serviceId, entry);
 			return serviceFactory.requiredMajorVersion();
 		}
 		catch (Exception e)
@@ -54,12 +56,12 @@ public class ServicePool implements IServicesPool
 	}
 
 	@Override
-	public int requiredMinorVersion(String id)
+	public int requiredMinorVersion(String serviceId)
 	{
 		try
 		{
-			ServiceEntry entry = parametersEntry(id);
-			IServiceFactory serviceFactory = loadServiceFactory(id, entry);
+			ServiceEntry entry = parametersEntry(serviceId);
+			IServiceFactory serviceFactory = loadServiceFactory(serviceId, entry);
 			return serviceFactory.requiredMinorVersion();
 		}
 		catch (Exception e)
@@ -71,12 +73,12 @@ public class ServicePool implements IServicesPool
 	}
 
 	@Override
-	public boolean isSupported(String id)
+	public boolean isSupported(String serviceId)
 	{
 		try
 		{
-			ServiceEntry entry = parametersEntry(id);
-			IServiceFactory serviceFactory = loadServiceFactory(id, entry);
+			ServiceEntry entry = parametersEntry(serviceId);
+			IServiceFactory serviceFactory = loadServiceFactory(serviceId, entry);
 			return serviceFactory.isSupported(ApiVersionInfo.majorVersion(), ApiVersionInfo.minorVersion());
 		}
 		catch (Exception e)
@@ -91,19 +93,19 @@ public class ServicePool implements IServicesPool
 	// IServicePool
 	//----------------------------------------------------------------------------------------------
 	@Override
-	public boolean canFillParameter(String id, String parameterToFill) throws Exception
+	public boolean canFillParameter(String serviceId, String parameterToFill) throws Exception
 	{
-		ServiceEntry entry = parametersEntry(id);
-		IServiceFactory serviceFactory = loadServiceFactory(id, entry);
+		ServiceEntry entry = parametersEntry(serviceId);
+		IServiceFactory serviceFactory = loadServiceFactory(serviceId, entry);
 
 		return serviceFactory.canFillParameter(parameterToFill);
 	}
 
 	@Override
-	public String[] listForParameter(String id, String parameterToFill) throws Exception
+	public String[] listForParameter(String serviceId, String parameterToFill) throws Exception
 	{
-		ServiceEntry entry = parametersEntry(id);
-		IServiceFactory serviceFactory = loadServiceFactory(id, entry);
+		ServiceEntry entry = parametersEntry(serviceId);
+		IServiceFactory serviceFactory = loadServiceFactory(serviceId, entry);
 
 		return serviceFactory.listForParameter(parameterToFill);
 	}
@@ -130,20 +132,20 @@ public class ServicePool implements IServicesPool
 	}	
 
 	@Override
-	public String[] wellKnownParameters(String id) throws Exception
+	public String[] wellKnownParameters(String serviceId) throws Exception
 	{
-		ServiceEntry entry = parametersEntry(id);
-		IServiceFactory serviceFactory = loadServiceFactory(id, entry);
+		ServiceEntry entry = parametersEntry(serviceId);
+		IServiceFactory serviceFactory = loadServiceFactory(serviceId, entry);
 
 		return serviceFactory.wellKnownParameters();
 	}
 
 
 	@Override
-	public String[] wellKnownStartArgs(String id) throws Exception
+	public String[] wellKnownStartArgs(String serviceId) throws Exception
 	{
-		ServiceEntry entry = parametersEntry(id);
-		IServiceFactory serviceFactory = loadServiceFactory(id, entry);
+		ServiceEntry entry = parametersEntry(serviceId);
+		IServiceFactory serviceFactory = loadServiceFactory(serviceId, entry);
 
 		return serviceFactory.wellKnownStartArgs();
 	}
@@ -151,32 +153,32 @@ public class ServicePool implements IServicesPool
 	
 
 	@Override
-	public IServiceFactory loadServiceFactory(String id) throws Exception
+	public IServiceFactory loadServiceFactory(String serviceId) throws Exception
 	{
-		ServiceEntry entry = parametersEntry(id);
-		IServiceFactory serviceFactory = loadServiceFactory(id, entry);
+		ServiceEntry entry = parametersEntry(serviceId);
+		IServiceFactory serviceFactory = loadServiceFactory(serviceId, entry);
 		if (!serviceFactory.isSupported(ApiVersionInfo.majorVersion(), ApiVersionInfo.minorVersion()))
 		{
-			throwException(id, serviceFactory);
+			throwException(serviceId, serviceFactory);
 		}
 		return serviceFactory;
 	}
 
 	@Override
-	public synchronized ServiceConnection loadService(String id) throws Exception
+	public synchronized ServiceConnection loadService(String serviceId) throws Exception
 	{
 		try
 		{
-			if (id == null)
+			if (serviceId == null)
 			{
-				throw new Exception("id");
+				throw new EmptyParameterException("serviceId");
 			}
 			
-			ServiceEntry entry = parametersEntry(id);
-			IServiceFactory serviceFactory = loadServiceFactory(id, entry);
+			ServiceEntry entry = parametersEntry(serviceId);
+			IServiceFactory serviceFactory = loadServiceFactory(serviceId, entry);
 			if (!serviceFactory.isSupported(ApiVersionInfo.majorVersion(), ApiVersionInfo.minorVersion()))
 			{
-				throwException(id, serviceFactory);
+				throwException(serviceId, serviceFactory);
 			}
 			List<Parameter> list = entry.getParameters();
 			Map<String, String> map = new HashMap<String, String>();
@@ -187,14 +189,14 @@ public class ServicePool implements IServicesPool
 
 			IService service = serviceFactory.createService();
 			service.init(this, serviceFactory, map);
-			ServiceConnection connection = new ServiceConnection(service, id);
+			ServiceConnection connection = new ServiceConnection(service, serviceId);
 			this.connections.add(connection);
 
 			return connection;
 		}
 		catch (Throwable t)
 		{
-			logger.error(String.format("Error in loadService(%s)", id));
+			logger.error(String.format("Error in loadService(%s)", serviceId));
 			logger.error(t.getMessage(), t);
 			throw new Exception(t.getMessage(), t);
 		}
@@ -267,28 +269,28 @@ public class ServicePool implements IServicesPool
 	}
 
 	@Override
-	public ServiceStatus getStatus(String id)
+	public ServiceStatus getStatus(String serviceId)
 	{
-		return Optional.ofNullable(this.mapServices.get(id)).orElse(ServiceStatus.NotStarted);
+		return Optional.ofNullable(this.mapServices.get(serviceId)).orElse(ServiceStatus.NotStarted);
 	}
 
 	//----------------------------------------------------------------------------------------------
 	
-	private ServiceEntry parametersEntry(String id) throws Exception
+	private ServiceEntry parametersEntry(String serviceId) throws Exception
 	{
-		ServiceEntry entry = this.factory.getConfiguration().getServiceEntry(id);
+		ServiceEntry entry = this.factory.getConfiguration().getServiceEntry(serviceId);
 		if (entry == null)
 		{
-			throw new Exception("'" + id + "' is not found.");
+			throw new Exception("'" + serviceId + "' is not found.");
 		}
 		
 		return entry;
 	}
 	
 
-	private IServiceFactory loadServiceFactory(String id, ServiceEntry entry) throws Exception
+	private IServiceFactory loadServiceFactory(String serviceId, ServiceEntry entry) throws Exception
 	{
-		IServiceFactory serviceFactory = this.serviceFactories.get(id);
+		IServiceFactory serviceFactory = this.serviceFactories.get(serviceId);
 		if (serviceFactory == null)
 		{
 			String jarName	= MainRunner.makeDirWithSubstitutions(entry.get(Configuration.serviceJar));
@@ -304,22 +306,22 @@ public class ServicePool implements IServicesPool
 			if(iterator.hasNext())
 			{
 				serviceFactory = iterator.next();
-				this.serviceFactories.put(id, serviceFactory);
+				this.serviceFactories.put(serviceId, serviceFactory);
 			}
 			if (serviceFactory == null)
 			{
-				throw new Exception("The service factory with id '" + id + "' is not found");
+				throw new Exception("The service factory with serviceId '" + serviceId + "' is not found");
 			}
 			
-			this.serviceFactories.put(id, serviceFactory);
+			this.serviceFactories.put(serviceId, serviceFactory);
 		}
 		
 		return serviceFactory;
 	}
 	
-	private void throwException(String id, IServiceFactory serviceFactory) throws Exception
+	private void throwException(String serviceId, IServiceFactory serviceFactory) throws Exception
 	{
-		throw new Exception("Application '" + id + "' needs API no less than " 
+		throw new VersionException("Application '" + serviceId + "' needs API no less than " 
 				+ serviceFactory.requiredMajorVersion() + "." + serviceFactory.requiredMinorVersion());
 	}
 

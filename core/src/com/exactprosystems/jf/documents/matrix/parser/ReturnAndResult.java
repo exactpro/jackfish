@@ -8,7 +8,7 @@
 
 package com.exactprosystems.jf.documents.matrix.parser;
 
-import com.exactprosystems.jf.documents.matrix.parser.items.ErrorKind;
+import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixError;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 

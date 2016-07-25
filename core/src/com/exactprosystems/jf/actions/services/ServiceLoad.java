@@ -77,10 +77,18 @@ public class ServiceLoad extends AbstractAction
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
-		IServicesPool service = context.getConfiguration().getServicesPool();
-		ServiceConnection connection = service.loadService(this.id);
-		
-		super.setResult(connection);
+		try
+		{
+			IServicesPool service = context.getConfiguration().getServicesPool();
+			ServiceConnection connection = service.loadService(this.id);
+			
+			super.setResult(connection);
+		}
+		catch (Exception e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	@Override
