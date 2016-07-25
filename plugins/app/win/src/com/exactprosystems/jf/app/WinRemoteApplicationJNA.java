@@ -8,10 +8,10 @@
 package com.exactprosystems.jf.app;
 
 import com.exactprosystems.jf.api.app.*;
-import com.exactprosystems.jf.api.app.exception.ElementIsNotFoundException;
-import com.exactprosystems.jf.api.app.exception.FeatureIsNotSupportedException;
 import com.exactprosystems.jf.api.common.SerializablePair;
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.api.error.app.ElementNotFoundException;
+import com.exactprosystems.jf.api.error.app.FeatureNotSupportedException;
 
 import org.apache.log4j.*;
 import org.w3c.dom.DOMException;
@@ -61,7 +61,7 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 	@Override
 	public String getProperty(String name) throws RemoteException
 	{
-		throw new FeatureIsNotSupportedException("getProperty");
+		throw new FeatureNotSupportedException("getProperty");
 	}
 
 	@Override
@@ -194,13 +194,13 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 	@Override
 	protected SerializablePair<String, Boolean> getAlertTextDerived() throws Exception
 	{
-		throw new FeatureIsNotSupportedException("getAlertText");
+		throw new FeatureNotSupportedException("getAlertText");
 	}
 
 	@Override
 	protected void setAlertTextDerived(String text, PerformKind performKind) throws Exception
 	{
-		throw new FeatureIsNotSupportedException("setAlertText");
+		throw new FeatureNotSupportedException("setAlertText");
 	}
 
 	@Override
@@ -214,13 +214,13 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 	@Override
 	protected String switchToDerived(String title, boolean softCondition) throws Exception
 	{
-		throw new FeatureIsNotSupportedException("switchTo");
+		throw new FeatureNotSupportedException("switchTo");
 	}
 
 	@Override
 	protected void switchToFrameDerived(Locator owner) throws Exception
 	{
-		throw new FeatureIsNotSupportedException("switchToFrame");
+		throw new FeatureNotSupportedException("switchToFrame");
 	}
 
 	@Override
@@ -299,7 +299,7 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 			int returnLength = this.driver.elementByCoords(res, controlKind, x, y);
 			if (returnLength == 0)
 			{
-				throw new ElementIsNotFoundException(x, y);
+				throw new ElementNotFoundException(x, y);
 			}
 			if (returnLength > initialLength)
 			{
@@ -430,19 +430,19 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 	@Override
 	protected void newInstanceDerived(Map<String, String> args) throws Exception
 	{
-		throw new FeatureIsNotSupportedException("newInstance");
+		throw new FeatureNotSupportedException("newInstance");
 	}
 
 	@Override
 	protected int closeAllDerived(Locator element, Collection<LocatorAndOperation> operations) throws Exception
 	{
-		throw new FeatureIsNotSupportedException("closeAll");
+		throw new FeatureNotSupportedException("closeAll");
 	}
 
 	@Override
 	protected String closeWindowDerived() throws Exception
 	{
-		throw new FeatureIsNotSupportedException("closeWindow");
+		throw new FeatureNotSupportedException("closeWindow");
 	}
 
 	@Override

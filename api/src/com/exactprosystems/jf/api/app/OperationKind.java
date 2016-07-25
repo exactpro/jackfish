@@ -12,8 +12,8 @@ import java.rmi.RemoteException;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
-import com.exactprosystems.jf.api.app.exception.ElementIsNotFoundException;
-import com.exactprosystems.jf.api.app.exception.OperationIsNotAllowedException;
+import com.exactprosystems.jf.api.error.app.ElementNotFoundException;
+import com.exactprosystems.jf.api.error.app.OperationNotAllowedException;
 
 public enum OperationKind
 {
@@ -781,7 +781,7 @@ public enum OperationKind
 		Locator locator = holder.get(LocatorKind.Element);
 		if (!locator.getControlKind().isAllowed(part.kind))
 		{
-			throw new OperationIsNotAllowedException("Operation " + part.kind + " is not allowed for " + locator.getControlKind());
+			throw new OperationNotAllowedException("Operation " + part.kind + " is not allowed for " + locator.getControlKind());
 		}
 
 		// find it, if it needs
@@ -812,7 +812,7 @@ public enum OperationKind
 
 				if (holder.isEmpty())
 				{
-					throw new ElementIsNotFoundException(locator);
+					throw new ElementNotFoundException(locator);
 				}
 			}
 			

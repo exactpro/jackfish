@@ -9,10 +9,10 @@
 package com.exactprosystems.jf.app;
 
 import com.exactprosystems.jf.api.app.*;
-import com.exactprosystems.jf.api.app.exception.ElementIsNotFoundException;
-import com.exactprosystems.jf.api.app.exception.TooManyElementsException;
 import com.exactprosystems.jf.api.client.ICondition;
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.api.error.app.ElementNotFoundException;
+import com.exactprosystems.jf.api.error.app.TooManyElementsException;
 
 import org.apache.log4j.Logger;
 import org.jsoup.Jsoup;
@@ -467,7 +467,7 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 
 					if (elements.isEmpty())
 					{
-						throw new ElementIsNotFoundException("Owner", owner);
+						throw new ElementNotFoundException("Owner", owner);
 					}
 
 					if (elements.size() > 1)
@@ -507,7 +507,7 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 
 					if (elements.isEmpty())
 					{
-						throw new ElementIsNotFoundException("Owner", owner);
+						throw new ElementNotFoundException("Owner", owner);
 					}
 
 					if (elements.size() > 1)
@@ -529,7 +529,7 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 					}
 					else
 					{
-						throw new ElementIsNotFoundException(locator);
+						throw new ElementNotFoundException(locator);
 					}
 				}
 

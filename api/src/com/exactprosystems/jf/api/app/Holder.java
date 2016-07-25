@@ -13,7 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.exactprosystems.jf.api.app.exception.ElementIsNotFoundException;
+import com.exactprosystems.jf.api.error.app.ElementNotFoundException;
 
 class Holder<T>
 {
@@ -58,7 +58,7 @@ class Holder<T>
 	{
 		if (isEmpty())
 		{
-			throw new ElementIsNotFoundException(locators.get(LocatorKind.Element));
+			throw new ElementNotFoundException(locators.get(LocatorKind.Element));
 		}
 
 		if (index >= this.list.size() || index < 0)

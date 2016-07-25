@@ -9,11 +9,11 @@
 package com.exactprosystems.jf.app;
 
 import com.exactprosystems.jf.api.app.*;
-import com.exactprosystems.jf.api.app.exception.FeatureIsNotSupportedException;
-import com.exactprosystems.jf.api.app.exception.ParameterIsNullException;
-import com.exactprosystems.jf.api.app.exception.ProxyException;
 import com.exactprosystems.jf.api.common.SerializablePair;
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.api.error.app.FeatureNotSupportedException;
+import com.exactprosystems.jf.api.error.app.NullParameterException;
+import com.exactprosystems.jf.api.error.app.ProxyException;
 import com.exactprosystems.jf.app.js.JSInjection;
 import com.exactprosystems.jf.app.js.JSInjectionFactory;
 
@@ -167,7 +167,7 @@ public class SeleniumRemoteApplication extends RemoteApplication
 	protected void connectDerived(Map<String, String> args, MetricsCounter metricsCounter) throws Exception
 	{
 		logger.info("##########################################################################################################");
-		throw new FeatureIsNotSupportedException("Connect");
+		throw new FeatureNotSupportedException("Connect");
 	}
 
 	@Override
@@ -224,12 +224,12 @@ public class SeleniumRemoteApplication extends RemoteApplication
 
 			if (browserName == null)
 			{
-				throw new ParameterIsNullException(WebAppFactory.browserName);
+				throw new NullParameterException(WebAppFactory.browserName);
 			}
 
 			if (url == null)
 			{
-				throw new ParameterIsNullException(WebAppFactory.urlName);
+				throw new NullParameterException(WebAppFactory.urlName);
 			}
 			Browser browser = Browser.valueOf(browserName.toUpperCase());
 			this.driver = new WebDriverListenerNew(browser.createDriver(chromeDriverBinary, firefoxProfileDirectory, usePrivateMode), metricsCounter);

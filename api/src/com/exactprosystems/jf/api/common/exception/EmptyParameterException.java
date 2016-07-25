@@ -6,15 +6,13 @@
 //information which is the property of Exactpro Systems, LLC or its licensors.
 ////////////////////////////////////////////////////////////////////////////////
 
-package com.exactprosystems.jf.api.app.exception;
+package com.exactprosystems.jf.api.common.exception;
 
-import java.rmi.RemoteException;
-
-public class InternalErrorException extends RemoteException
+public class EmptyParameterException extends Exception
 {
-	private static final long	serialVersionUID	= -7416135304101526315L;
+	private static final long	serialVersionUID	= -449426338160659754L;
 
-	public InternalErrorException(String message)
+	public EmptyParameterException(String message)
 	{
 		super(message);
 	}

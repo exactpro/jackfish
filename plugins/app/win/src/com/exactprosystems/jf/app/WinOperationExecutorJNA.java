@@ -8,13 +8,13 @@
 package com.exactprosystems.jf.app;
 
 import com.exactprosystems.jf.api.app.*;
-import com.exactprosystems.jf.api.app.exception.ElementIsNotFoundException;
-import com.exactprosystems.jf.api.app.exception.FeatureIsNotSupportedException;
-import com.exactprosystems.jf.api.app.exception.OperationIsNotAllowedException;
-import com.exactprosystems.jf.api.app.exception.WrongParameterException;
 import com.exactprosystems.jf.api.client.ICondition;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.conditions.StringCondition;
+import com.exactprosystems.jf.api.error.app.ElementNotFoundException;
+import com.exactprosystems.jf.api.error.app.FeatureNotSupportedException;
+import com.exactprosystems.jf.api.error.app.OperationNotAllowedException;
+import com.exactprosystems.jf.api.error.app.WrongParameterException;
 
 import org.apache.log4j.Logger;
 
@@ -140,11 +140,11 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 				List<UIProxyJNA> allOwners = findAll(null, owner);
 				if (allOwners.isEmpty())
 				{
-					throw new ElementIsNotFoundException("Owner was not found. Owner: ", owner);
+					throw new ElementNotFoundException("Owner was not found. Owner: ", owner);
 				}
 				if (allOwners.size() > 1)
 				{
-					throw new ElementIsNotFoundException(allOwners.size() + " owners were found instead 1. Owner: ", owner);
+					throw new ElementNotFoundException(allOwners.size() + " owners were found instead 1. Owner: ", owner);
 				}
 				ownerElement = allOwners.get(0);
 			}
@@ -199,11 +199,11 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 				{
 					return UIProxyJNA.DUMMY;
 				}
-				throw new ElementIsNotFoundException(element);
+				throw new ElementNotFoundException(element);
 			}
 			if (list.size() > 1)
 			{
-				throw new ElementIsNotFoundException("Found " + list.size() + " elements instead 1. Element : ", element);
+				throw new ElementNotFoundException("Found " + list.size() + " elements instead 1. Element : ", element);
 			}
 			return list.get(0);
 		}
@@ -222,7 +222,7 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 	@Override
 	public UIProxyJNA lookAtTable(UIProxyJNA table, Locator additional, Locator header, int x, int y) throws Exception
 	{
-		throw new FeatureIsNotSupportedException("lookAtTable");
+		throw new FeatureNotSupportedException("lookAtTable");
 	}
 
 	@Override
@@ -599,7 +599,7 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 		{
 			if (!AttributeKind.isSupported(name))
 			{
-				throw new OperationIsNotAllowedException("Unsupported attribute value. Can use only : " + Arrays.toString(AttributeKind.values()));
+				throw new OperationNotAllowedException("Unsupported attribute value. Can use only : " + Arrays.toString(AttributeKind.values()));
 			}
 			return this.driver.elementAttribute(component, AttributeKind.valueOf(name.toUpperCase()));
 		}
@@ -618,7 +618,7 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 	@Override
 	public String script(UIProxyJNA component, String script) throws Exception
 	{
-		throw new FeatureIsNotSupportedException("script");
+		throw new FeatureNotSupportedException("script");
 	}
 
 	@Override

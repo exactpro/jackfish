@@ -11,9 +11,9 @@ package com.exactprosystems.jf.app;
 import com.exactprosystems.jf.api.app.ControlKind;
 import com.exactprosystems.jf.api.app.IRemoteApplication;
 import com.exactprosystems.jf.api.app.Locator;
-import com.exactprosystems.jf.api.app.exception.ElementIsNotFoundException;
-import com.exactprosystems.jf.api.app.exception.ParameterIsNullException;
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.api.error.app.ElementNotFoundException;
+import com.exactprosystems.jf.api.error.app.NullParameterException;
 
 import org.apache.log4j.Logger;
 import org.fest.swing.core.GenericTypeMatcher;
@@ -49,7 +49,7 @@ public class MatcherSwing <T extends Component> extends GenericTypeMatcher<T>
 		
 		if (locator == null)
 		{
-			throw new ParameterIsNullException("locator");
+			throw new NullParameterException("locator");
 		}
 		this.locator = locator;
 
@@ -68,7 +68,7 @@ public class MatcherSwing <T extends Component> extends GenericTypeMatcher<T>
 			catch (Exception pe)
 			{
 				logger.error(pe.getMessage(), pe);
-				throw new ElementIsNotFoundException("Wrong xpath: " + xpath, locator);
+				throw new ElementNotFoundException("Wrong xpath: " + xpath, locator);
 			}
 		}
 		

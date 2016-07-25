@@ -8,9 +8,9 @@
 
 package com.exactprosystems.jf.api.app;
 
-import com.exactprosystems.jf.api.app.exception.ElementIsNotFoundException;
-import com.exactprosystems.jf.api.app.exception.ProxyException;
 import com.exactprosystems.jf.api.common.SerializablePair;
+import com.exactprosystems.jf.api.error.app.ElementNotFoundException;
+import com.exactprosystems.jf.api.error.app.ProxyException;
 
 import org.w3c.dom.Document;
 
@@ -315,7 +315,7 @@ public abstract class RemoteApplication implements IRemoteApplication
 			String msg = String.format("Error findAll(%s, %s)", owner, element);
 //			throw new ProxyException(msg, e.getMessage(), e);
 			System.err.println("~~~~~~ " + msg);
-			throw new ElementIsNotFoundException(msg, element);
+			throw new ElementNotFoundException(msg, element);
 		}
 	}
 	

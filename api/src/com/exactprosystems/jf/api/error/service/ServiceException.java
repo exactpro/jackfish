@@ -6,16 +6,23 @@
 //information which is the property of Exactpro Systems, LLC or its licensors.
 ////////////////////////////////////////////////////////////////////////////////
 
-package com.exactprosystems.jf.api.app.exception;
+package com.exactprosystems.jf.api.error.service;
 
-import java.rmi.RemoteException;
+import com.exactprosystems.jf.api.error.ErrorKind;
+import com.exactprosystems.jf.api.error.JFException;
 
-public class ParameterIsNullException extends RemoteException
+public class ServiceException extends JFException
 {
-	private static final long	serialVersionUID	= 2729558079619073423L;
+	private static final long	serialVersionUID	= 2653699261504393579L;
 
-	public ParameterIsNullException(String message)
+	public ServiceException(String message)
 	{
-		super(message);
+		super(message, null);
+	}
+
+	@Override
+	public ErrorKind getErrorKind()
+	{
+		return ErrorKind.SERVICE_ERROR;
 	}
 }

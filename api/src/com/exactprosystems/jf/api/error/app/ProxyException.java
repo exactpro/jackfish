@@ -6,17 +6,18 @@
 //  information which is the property of Exactpro Systems, LLC or its licensors.
 ////////////////////////////////////////////////////////////////////////////////
 
-package com.exactprosystems.jf.api.app.exception;
+package com.exactprosystems.jf.api.error.app;
 
-import java.rmi.RemoteException;
+import com.exactprosystems.jf.api.error.ErrorKind;
+import com.exactprosystems.jf.api.error.JFRemoteException;
 
-public class ProxyException extends RemoteException
+public class ProxyException extends JFRemoteException
 {
 	private static final long	serialVersionUID	= -7998700941400982238L;
 
 	public ProxyException(String message, String shortMessage, Throwable cause)
 	{
-        super(message);
+        super(message, cause);
         this.message = message;
         this.shortMessage = shortMessage;
         this.stackTrace = cause.getStackTrace();
@@ -44,4 +45,10 @@ public class ProxyException extends RemoteException
 	private String message = null;
 
 	private String shortMessage = null;
+
+	@Override
+	public ErrorKind getErrorKind()
+	{
+		return ErrorKind.EXCEPTION;
+	}
 }

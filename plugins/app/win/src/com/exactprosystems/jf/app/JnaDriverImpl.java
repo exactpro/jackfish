@@ -2,8 +2,15 @@ package com.exactprosystems.jf.app;
 
 import com.exactprosystems.jf.api.app.ControlKind;
 import com.exactprosystems.jf.api.app.MouseAction;
-import com.exactprosystems.jf.api.app.exception.*;
 import com.exactprosystems.jf.api.conditions.StringCondition;
+import com.exactprosystems.jf.api.error.app.ElementNotFoundException;
+import com.exactprosystems.jf.api.error.app.FeatureNotSupportedException;
+import com.exactprosystems.jf.api.error.app.InternalErrorException;
+import com.exactprosystems.jf.api.error.app.OperationNotAllowedException;
+import com.exactprosystems.jf.api.error.app.NullParameterException;
+import com.exactprosystems.jf.api.error.app.ProxyException;
+import com.exactprosystems.jf.api.error.app.TooManyElementsException;
+import com.exactprosystems.jf.api.error.app.WrongParameterException;
 import com.sun.jna.Native;
 import com.sun.jna.Platform;
 
@@ -11,7 +18,6 @@ import org.apache.log4j.Logger;
 
 import java.io.File;
 import java.io.InputStream;
-import java.lang.reflect.Constructor;
 import java.nio.file.*;
 import java.rmi.RemoteException;
 import java.util.Arrays;
@@ -383,11 +389,11 @@ public class JnaDriverImpl
 		{
 			switch (errorNumber)
 			{
-				case 0: throw new FeatureIsNotSupportedException(error);
-				case 1: throw new ParameterIsNullException(error);
+				case 0: throw new FeatureNotSupportedException(error);
+				case 1: throw new NullParameterException(error);
 				case 2: throw new WrongParameterException(error);
-				case 3: throw new OperationIsNotAllowedException(error);
-				case 4: throw new ElementIsNotFoundException(error);
+				case 3: throw new OperationNotAllowedException(error);
+				case 4: throw new ElementNotFoundException(error);
 				case 5: throw new TooManyElementsException(error);
 				case 6: throw new InternalErrorException(error);
 			}

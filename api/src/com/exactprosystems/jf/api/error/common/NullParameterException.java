@@ -6,16 +6,23 @@
 //information which is the property of Exactpro Systems, LLC or its licensors.
 ////////////////////////////////////////////////////////////////////////////////
 
-package com.exactprosystems.jf.api.app.exception;
+package com.exactprosystems.jf.api.error.common;
 
-import java.rmi.RemoteException;
+import com.exactprosystems.jf.api.error.ErrorKind;
+import com.exactprosystems.jf.api.error.JFException;
 
-public class FeatureIsNotSupportedException extends RemoteException
+public class NullParameterException extends JFException
 {
-	private static final long	serialVersionUID	= -3425794163466334307L;
+	private static final long	serialVersionUID	= 2729558079619073423L;
 
-	public FeatureIsNotSupportedException(String message)
+	public NullParameterException(String message)
 	{
-		super(message);
+		super(message, null);
+	}
+
+	@Override
+	public ErrorKind getErrorKind()
+	{
+		return ErrorKind.EMPTY_PARAMETER;
 	}
 }

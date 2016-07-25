@@ -9,12 +9,12 @@
 package com.exactprosystems.jf.app;
 
 import com.exactprosystems.jf.api.app.*;
-import com.exactprosystems.jf.api.app.exception.ElementIsNotFoundException;
-import com.exactprosystems.jf.api.app.exception.FeatureIsNotSupportedException;
-import com.exactprosystems.jf.api.app.exception.OperationIsNotAllowedException;
-import com.exactprosystems.jf.api.app.exception.WrongParameterException;
 import com.exactprosystems.jf.api.client.ICondition;
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.api.error.app.ElementNotFoundException;
+import com.exactprosystems.jf.api.error.app.FeatureNotSupportedException;
+import com.exactprosystems.jf.api.error.app.OperationNotAllowedException;
+import com.exactprosystems.jf.api.error.app.WrongParameterException;
 
 import org.apache.log4j.Logger;
 import org.fest.swing.awt.AWT;
@@ -201,7 +201,7 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 		{
 			logger.error(String.format("findAll(%s, %s)", owner, element));
 			logger.error(e.getMessage(), e);
-			throw new ElementIsNotFoundException("Unable to find component ", element);
+			throw new ElementNotFoundException("Unable to find component ", element);
 		}
 	}
 
@@ -221,14 +221,14 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 		{
 			logger.error(String.format("find(%s, %s)", owner, element));
 			logger.error(e.getMessage(), e);
-			throw new ElementIsNotFoundException("Unable to find component ", element);
+			throw new ElementNotFoundException("Unable to find component ", element);
 		}
 	}
 
 	@Override
 	public ComponentFixture<Component> lookAtTable(ComponentFixture<Component> component, Locator additional, Locator header, int x, int y) throws Exception
 	{
-		throw new FeatureIsNotSupportedException("lookAtTable");
+		throw new FeatureNotSupportedException("lookAtTable");
 	}
 
 	@Override
@@ -380,7 +380,7 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 				waitForIdle();
 				return true;
 			}
-			throw new OperationIsNotAllowedException(String.format("Component %s dosen't support press operation", component));
+			throw new OperationNotAllowedException(String.format("Component %s dosen't support press operation", component));
 		}
 		catch (RemoteException e)
 		{
@@ -460,7 +460,7 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 		{
 			if (!component.target.isEnabled())
 			{
-				throw new OperationIsNotAllowedException("Component " + component + " is disabled.");
+				throw new OperationNotAllowedException("Component " + component + " is disabled.");
 			}
 
 			this.currentRobot.waitForIdle();
@@ -589,7 +589,7 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 				}
 				return true;
 			}
-			throw new OperationIsNotAllowedException(String.format("Component %s does not support text entering", component.target));
+			throw new OperationNotAllowedException(String.format("Component %s does not support text entering", component.target));
 		}
 		catch (RemoteException e)
 		{
@@ -769,7 +769,7 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 	@Override
 	public String script(ComponentFixture<Component> component, String script) throws Exception
 	{
-		throw new FeatureIsNotSupportedException("script");
+		throw new FeatureNotSupportedException("script");
 	}
 
 	@Override
@@ -908,7 +908,7 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 				logger.debug("returned value is null " + (value == null));
 				return value;
 			}
-			throw new OperationIsNotAllowedException(String.format("Table %s with row %s and column %s don't have editor", component, row, column));
+			throw new OperationNotAllowedException(String.format("Table %s with row %s and column %s don't have editor", component, row, column));
 		}
 		catch (RemoteException e)
 		{
@@ -1279,7 +1279,7 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 					break;
 
 				default:
-					throw new ElementIsNotFoundException(locator);
+					throw new ElementNotFoundException(locator);
 			}
 		}
 		this.currentRobot.waitForIdle();
@@ -1370,7 +1370,7 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 		{
 			return ((JButton) currentComponent).getText();
 		}
-		throw new OperationIsNotAllowedException(String.format("Component %s don't have value", currentComponent));
+		throw new OperationNotAllowedException(String.format("Component %s don't have value", currentComponent));
 	}
 	
 	private JMenu expand(JMenu parent, String menuName) throws RemoteException

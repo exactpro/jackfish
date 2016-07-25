@@ -6,16 +6,23 @@
 //information which is the property of Exactpro Systems, LLC or its licensors.
 ////////////////////////////////////////////////////////////////////////////////
 
-package com.exactprosystems.jf.api.app.exception;
+package com.exactprosystems.jf.api.error.app;
 
-import java.rmi.RemoteException;
+import com.exactprosystems.jf.api.error.ErrorKind;
+import com.exactprosystems.jf.api.error.JFRemoteException;
 
-public class OperationIsNotAllowedException extends RemoteException
+public class WrongParameterException extends JFRemoteException
 {
-	private static final long	serialVersionUID	= 4045805559537133458L;
+	private static final long	serialVersionUID	= 549198083199268097L;
 
-	public OperationIsNotAllowedException(String message)
+	public WrongParameterException(String message)
 	{
-		super(message);
+		super(message, null);
+	}
+
+	@Override
+	public ErrorKind getErrorKind()
+	{
+		return ErrorKind.WRONG_PARAMETERS;
 	}
 }

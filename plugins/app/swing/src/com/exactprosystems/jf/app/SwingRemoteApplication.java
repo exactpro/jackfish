@@ -9,8 +9,8 @@
 package com.exactprosystems.jf.app;
 
 import com.exactprosystems.jf.api.app.*;
-import com.exactprosystems.jf.api.app.exception.FeatureIsNotSupportedException;
 import com.exactprosystems.jf.api.common.SerializablePair;
+import com.exactprosystems.jf.api.error.app.FeatureNotSupportedException;
 
 import net.sourceforge.jnlp.Launcher;
 import net.sourceforge.jnlp.runtime.ApplicationInstance;
@@ -73,7 +73,7 @@ public class SwingRemoteApplication extends RemoteApplication
 	@Override
 	public String getProperty(String name) throws RemoteException
 	{
-		throw new FeatureIsNotSupportedException("getProperty");
+		throw new FeatureNotSupportedException("getProperty");
 	}
 
 	@Override
@@ -192,19 +192,19 @@ public class SwingRemoteApplication extends RemoteApplication
 	@Override
 	protected void refreshDerived() throws Exception
 	{
-		throw new FeatureIsNotSupportedException("refresh");
+		throw new FeatureNotSupportedException("refresh");
 	}
 
 	@Override
 	protected SerializablePair<String, Boolean> getAlertTextDerived() throws Exception
 	{
-		throw new FeatureIsNotSupportedException("getAlertText");
+		throw new FeatureNotSupportedException("getAlertText");
 	}
 
 	@Override
 	protected void setAlertTextDerived(String text, PerformKind performKind) throws Exception
 	{
-		throw new FeatureIsNotSupportedException("setAlertText");
+		throw new FeatureNotSupportedException("setAlertText");
 	}
 
 	@Override
@@ -282,13 +282,13 @@ public class SwingRemoteApplication extends RemoteApplication
 	@Override
 	protected String switchToDerived(final String title, boolean softCondition) throws Exception
 	{
-		throw new FeatureIsNotSupportedException("switchTo");
+		throw new FeatureNotSupportedException("switchTo");
 	}
 
 	@Override
 	protected void switchToFrameDerived(Locator owner) throws Exception
 	{
-		throw new FeatureIsNotSupportedException("switchToFrame");
+		throw new FeatureNotSupportedException("switchToFrame");
 	}
 
 	@Override
@@ -530,7 +530,7 @@ public class SwingRemoteApplication extends RemoteApplication
 	@Override
 	protected void newInstanceDerived(Map<String, String> args) throws Exception
 	{
-		throw new FeatureIsNotSupportedException("newInstance");
+		throw new FeatureNotSupportedException("newInstance");
 	}
 
 	@Override
@@ -605,13 +605,13 @@ public class SwingRemoteApplication extends RemoteApplication
 	@Override
 	protected String closeWindowDerived() throws Exception
 	{
-		throw new FeatureIsNotSupportedException("closeWindow()");
+		throw new FeatureNotSupportedException("closeWindow()");
 	}
 
 	@Override
 	protected void startNewDialogDerived() throws Exception
 	{
-		throw new FeatureIsNotSupportedException("startNewDialog");
+		throw new FeatureNotSupportedException("startNewDialog");
 	}
 
 	@Override

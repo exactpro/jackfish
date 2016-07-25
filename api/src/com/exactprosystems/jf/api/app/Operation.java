@@ -8,9 +8,9 @@
 
 package com.exactprosystems.jf.api.app;
 
-import com.exactprosystems.jf.api.app.exception.ParameterIsNullException;
 import com.exactprosystems.jf.api.client.ICondition;
 import com.exactprosystems.jf.api.common.DescriptionAttribute;
+import com.exactprosystems.jf.api.error.app.NullParameterException;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -66,7 +66,7 @@ public class Operation implements Iterable<Part>, Serializable
 	{
 		if (locator == null)
 		{
-			throw new ParameterIsNullException("locator");
+			throw new NullParameterException("locator");
 		}
 		
 		OperationResult result = new OperationResult();
