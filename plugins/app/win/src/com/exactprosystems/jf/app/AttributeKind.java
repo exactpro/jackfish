@@ -9,7 +9,8 @@ public enum AttributeKind
 	NAME,
 	TYPE_NAME,
 	ENABLED,
-	VISIBLE;
+	VISIBLE,
+	ITEMS;
 
 	public static boolean isSupported(String name)
 	{

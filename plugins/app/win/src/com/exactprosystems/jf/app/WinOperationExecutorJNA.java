@@ -601,7 +601,17 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 			{
 				throw new OperationNotAllowedException("Unsupported attribute value. Can use only : " + Arrays.toString(AttributeKind.values()));
 			}
-			return this.driver.elementAttribute(component, AttributeKind.valueOf(name.toUpperCase()));
+			
+			AttributeKind kind = AttributeKind.valueOf(name.toUpperCase());
+			
+			if(kind == AttributeKind.ITEMS)
+			{
+				Rectangle rect = getRectangle(component);
+				int[] xy = {rect.x + 20, rect.y + rect.height + 1};
+				return this.driver.elementAttribute(new UIProxyJNA(xy), kind);
+			}
+			
+			return this.driver.elementAttribute(component, kind);
 		}
 		catch (RemoteException e)
 		{
