@@ -75,10 +75,8 @@ public class MatrixRun extends AbstractAction
 		try(Context cloneContext = context.clone();
 			Reader reader = new FileReader(new File(this.matrix));)
 		{
-			Matrix matrix = context.getFactory().createMatrix(this.matrix);
-			matrix.load(reader);
-			
-			MatrixRunner runner = new MatrixRunner(context, matrix, this.at, this.parameter);
+			//TODO need use constructor matrixrunner with file, not reader. bug #35073
+			MatrixRunner runner = cloneContext.createRunner(reader, this.at, this.parameter);
 			runner.start();
 			super.setResult(runner);
 		}
