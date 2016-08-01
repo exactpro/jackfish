@@ -30,13 +30,13 @@ public class WebAppFactory implements IApplicationFactory
 	public static final String firefoxProfileDir	= "FirefoxProfileDirectory";
 	public static final String usePrivateMode       = "UsePrivateMode";
 
-
 	public final static String browserName 	= "Browser";
 	public final static String urlName 		= "URL";
 
 	public static final String propertyUrlName	= "URL";
-
-	private static String[] knownProperties = { propertyUrlName };
+	public static final String propertyTitle	= "Title";
+	
+	private static String[] knownProperties = { propertyUrlName, propertyTitle };
 	
 	private static String[] knownParameters = { jreExecName, jreArgsName, safariDriverPathName, chromeDriverPathName, ieDriverPathName, chromeDriverBinary, firefoxProfileDir, usePrivateMode };
 	

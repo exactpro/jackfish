@@ -158,6 +158,9 @@ public class SeleniumRemoteApplication extends RemoteApplication
 			{
 				case WebAppFactory.propertyUrlName:
 					return this.driver.getCurrentUrl();
+
+				case WebAppFactory.propertyTitle:
+					return this.driver.getTitle();
 			}
 		}
 		return null;
