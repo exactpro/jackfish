@@ -44,8 +44,7 @@ public class GitUtil
 	public static void gitClone(String remotePath, File projectFolder, CredentialBean credentials, ProgressMonitor monitor) throws Exception
 	{
 		CredentialsProvider credentialsProvider = getCredentialsProvider(credentials);
-		try (Git git = Git.cloneRepository().setURI(remotePath).setDirectory(projectFolder).setCredentialsProvider(credentialsProvider).setProgressMonitor(monitor).call()
-		)
+		try (Git git = Git.cloneRepository().setURI(remotePath).setDirectory(projectFolder).setCredentialsProvider(credentialsProvider).setProgressMonitor(monitor).call())
 		{
 			;
 		}
@@ -133,7 +132,7 @@ public class GitUtil
 				throw new Exception("\nNeed to commit the files before pulling : " + cce.getConflictingPaths().toString());
 			}
 
-			ObjectId head = git.getRepository().resolve("HEAD^{tree}");
+			ObjectId head = git.getRepository().resolve("refs/remotes/origin/HEAD^{tree}");
 			ObjectReader reader = git.getRepository().newObjectReader();
 			CanonicalTreeParser oldTreeIter = new CanonicalTreeParser();
 			oldTreeIter.reset(reader, oldHead);
@@ -143,8 +142,6 @@ public class GitUtil
 					.setNewTree(newTreeIter)
 					.setOldTree(oldTreeIter)
 					.call();
-
-
 
 			for (DiffEntry diff : diffs)
 			{
@@ -204,10 +201,7 @@ public class GitUtil
 			CanonicalTreeParser newTreeIter = new CanonicalTreeParser();
 			newTreeIter.reset(reader, currentId);
 
-			List<DiffEntry> diffs = git.diff()
-					.setNewTree(newTreeIter)
-					.setOldTree(oldTreeIter)
-					.call();
+			List<DiffEntry> diffs = git.diff().setNewTree(newTreeIter).setOldTree(oldTreeIter).call();
 
 			list.addAll(diffs.stream().map(FileWithStatusBean::new).collect(Collectors.toList()));
 
@@ -248,7 +242,7 @@ public class GitUtil
 		{
 			for (File file : files)
 			{
-				writer.write(Common.getRelativePath(file.getAbsolutePath())+"\n");
+				writer.write(Common.getRelativePath(file.getAbsolutePath()) + "\n");
 			}
 		}
 
@@ -267,7 +261,7 @@ public class GitUtil
 			replaceFiles(list, status.getAdded(), GitBean.Status.ADDED);
 			replaceFiles(list, status.getChanged(), GitBean.Status.CHANGED);
 			replaceFiles(list, status.getRemoved(), GitBean.Status.REMOVED);
-			Collections.sort(list, (b1,b2) -> b1.getStatus().compareTo(b2.getStatus()));
+			Collections.sort(list, (b1, b2) -> b1.getStatus().compareTo(b2.getStatus()));
 			return list;
 		}
 	}
