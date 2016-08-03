@@ -20,7 +20,8 @@ public class GitBean
 		REMOVED		(CssVariables.GIT_REMOVED_FILE,		"deleted"),
 		CHANGED		(CssVariables.GIT_CHANGED_FILE,		"modified"),
 		UNTRACKED	(CssVariables.GIT_UNTRACKED_FILE,	"untracked"),
-		UNSTAGED	(CssVariables.GIT_UNSTAGED_FILE,	"unstaged")
+		UNSTAGED	(CssVariables.GIT_UNSTAGED_FILE,	"unstaged"),
+		CONFLICTING	(CssVariables.GIT_UNSTAGED_FILE,	"conflicting");
 		;
 
 		Status(String styleClass, String preffix)

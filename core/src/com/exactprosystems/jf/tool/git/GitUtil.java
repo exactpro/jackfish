@@ -40,6 +40,23 @@ public class GitUtil
 
 	}
 
+	public static void main(String[] args) throws Exception
+	{
+		CredentialBean bean = new CredentialBean("AndrewBystrov", "Andrew17051993", "", "");
+		try (Git git = git(bean))
+		{
+			ObjectId oldHead = git.getRepository().resolve("HEAD^{tree}");
+			ObjectId head = git.getRepository().resolve("HEAD^{tree}");
+			ObjectReader reader = git.getRepository().newObjectReader();
+			CanonicalTreeParser oldTreeIter = new CanonicalTreeParser();
+			oldTreeIter.reset(reader, oldHead);
+			CanonicalTreeParser newTreeIter = new CanonicalTreeParser();
+			newTreeIter.reset(reader, head);
+			List<DiffEntry> diffs = git.diff().setNewTree(newTreeIter).setOldTree(oldTreeIter).call();
+			diffs.forEach(System.out::println);
+		}
+	}
+
 	//region Clone
 	public static void gitClone(String remotePath, File projectFolder, CredentialBean credentials, ProgressMonitor monitor) throws Exception
 	{
@@ -106,6 +123,7 @@ public class GitUtil
 			try
 			{
 				PullResult pullResult = git.pull().setCredentialsProvider(getCredentialsProvider(bean)).setProgressMonitor(monitor).call();
+
 				MergeResult m = pullResult.getMergeResult();
 				if (m != null)
 				{
@@ -116,9 +134,9 @@ public class GitUtil
 							int[][] c = allConflicts.get(path);
 							System.out.println("Conflicts in file " + path);
 							list.add(new GitPullBean(path, true));
-							for (int i = 0; i < c.length; ++i) {
+							for (int i = 0; i < c.length; i++) {
 								System.out.println("  Conflict #" + i);
-								for (int j = 0; j < (c[i].length) - 1; ++j) {
+								for (int j = 0; j < c[i].length - 1 ; j++) {
 									if (c[i][j] >= 0)
 										System.out.println("    Chunk for " + m.getMergedCommits()[j] + " starts on line #" + c[i][j]);
 								}
@@ -264,6 +282,7 @@ public class GitUtil
 			replaceFiles(list, status.getAdded(), GitBean.Status.ADDED);
 			replaceFiles(list, status.getChanged(), GitBean.Status.CHANGED);
 			replaceFiles(list, status.getRemoved(), GitBean.Status.REMOVED);
+			replaceFiles(list, status.getConflicting(), GitBean.Status.CONFLICTING);
 			Collections.sort(list, (b1, b2) -> b1.getStatus().compareTo(b2.getStatus()));
 			return list;
 		}
