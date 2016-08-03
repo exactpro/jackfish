@@ -27,4 +27,24 @@ public class GitPullBean
 	{
 		return needMerge;
 	}
+
+	@Override
+	public boolean equals(Object o)
+	{
+		if (this == o)
+			return true;
+		if (o == null || getClass() != o.getClass())
+			return false;
+
+		GitPullBean that = (GitPullBean) o;
+
+		return fileName != null ? fileName.equals(that.fileName) : that.fileName == null;
+
+	}
+
+	@Override
+	public int hashCode()
+	{
+		return fileName != null ? fileName.hashCode() : 0;
+	}
 }

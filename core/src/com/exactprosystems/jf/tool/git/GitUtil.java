@@ -164,7 +164,10 @@ public class GitUtil
 						break;
 				}
 				GitPullBean pullBean = new GitPullBean(fileName, false);
-				list.add(pullBean);
+				if (!list.contains(pullBean))
+				{
+					list.add(pullBean);
+				}
 			}
 			return list;
 		}
