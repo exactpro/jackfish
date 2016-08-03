@@ -28,9 +28,9 @@ public class GitStatus
 		this.controller.init(this);
 	}
 
-	public void display(List<GitBean> list)
+	public void display(List<GitBean> list, String state)
 	{
-		this.controller.display(list);
+		this.controller.display(list, state);
 	}
 
 	public void revertFiles(List<File> collect) throws Exception

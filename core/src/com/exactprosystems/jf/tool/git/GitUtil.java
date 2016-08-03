@@ -88,7 +88,7 @@ public class GitUtil
 		}
 		try (Git git = git(bean))
 		{
-			git.push().setPushAll().setCredentialsProvider(getCredentialsProvider(bean)).setAtomic(true).call();
+			git.push().setPushAll().setCredentialsProvider(getCredentialsProvider(bean))/*.setAtomic(true)*/.call();
 		}
 	}
 
@@ -163,24 +163,8 @@ public class GitUtil
 
 			for (DiffEntry diff : diffs)
 			{
-				String fileName = null;
 				DiffEntry.ChangeType changeType = diff.getChangeType();
-				switch (changeType)
-				{
-					case ADD:
-						fileName = diff.getNewPath();
-						break;
-					case MODIFY:
-						fileName = diff.getNewPath();
-						break;
-					case DELETE:
-						fileName = diff.getOldPath();
-						break;
-					case RENAME:
-						break;
-					case COPY:
-						break;
-				}
+				String fileName = changeType == DiffEntry.ChangeType.DELETE ? diff.getOldPath() : diff.getNewPath();
 				GitPullBean pullBean = new GitPullBean(fileName, false);
 				if (!list.contains(pullBean))
 				{
@@ -285,6 +269,14 @@ public class GitUtil
 			replaceFiles(list, status.getConflicting(), GitBean.Status.CONFLICTING);
 			Collections.sort(list, (b1, b2) -> b1.getStatus().compareTo(b2.getStatus()));
 			return list;
+		}
+	}
+
+	public static String gitState(CredentialBean bean) throws Exception
+	{
+		try(Git git = git(bean))
+		{
+			return git.getRepository().getRepositoryState().getDescription();
 		}
 	}
 	//endregion

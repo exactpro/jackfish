@@ -361,7 +361,8 @@ public class Main extends Application
 
 	public void gitStatus() throws Exception
 	{
-		new GitStatus(this).display(GitUtil.gitStatus(getCredential()));
+		CredentialBean credential = getCredential();
+		new GitStatus(this).display(GitUtil.gitStatus(credential), GitUtil.gitState(credential));
 	}
 
 	public void gitPull() throws Exception
@@ -380,13 +381,6 @@ public class Main extends Application
 		new GitReset(this, GitUtil.gitGetCommits(getCredential())).display();
 	}
 
-	public void revertFiles(List<File> files) throws Exception
-	{
-		try (Git git = git())
-		{
-
-		}
-	}
 	//endregion
 
 	//region Load documents

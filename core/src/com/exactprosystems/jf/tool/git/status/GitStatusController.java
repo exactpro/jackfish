@@ -63,16 +63,16 @@ public class GitStatusController implements Initializable, ContainingParent
 		this.model = model;
 	}
 
-	public void display(List<GitBean> list)
+	public void display(List<GitBean> list, String state)
 	{
 		Dialog<ButtonType> dialog = new Alert(Alert.AlertType.INFORMATION);
 		dialog.setResizable(true);
 		dialog.getDialogPane().getStylesheets().addAll(Common.currentTheme().getPath());
 		dialog.setTitle("Git status");
-		Text headerLabel = new Text();
+		Text headerLabel = new Text(state);
 		if (list.isEmpty())
 		{
-			headerLabel.setText("Already up-to-date");
+			headerLabel.setText(headerLabel.getText() + " , Already up-to-date");
 		}
 		BorderPane pane = new BorderPane();
 		pane.setCenter(headerLabel);
