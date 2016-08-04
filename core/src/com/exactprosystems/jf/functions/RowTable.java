@@ -14,7 +14,7 @@ import java.util.Map;
 import java.util.Set;
 
 
-public class RowTable implements Map<String, Object>
+public class RowTable implements Map<String, Object>, Cloneable
 {
 	public RowTable(Map<Header, Object> map)
 	{
@@ -31,8 +31,28 @@ public class RowTable implements Map<String, Object>
 		this(new LinkedHashMap<Header, Object>());
 	}
 	
+	@Override
+	public String toString()
+	{
+		return this.source.toString();
+	}
+	
+
+	//==============================================================================================
+	// Interface Cloneable
+	//==============================================================================================
+	@Override
+	public RowTable clone() throws CloneNotSupportedException
+	{
+		RowTable clone = new RowTable(); 
+		clone.putAll(this);
+		return clone;
+	}
 
 
+	//==============================================================================================
+	// Interface Map
+	//==============================================================================================
 
 	@Override
 	public int size()
