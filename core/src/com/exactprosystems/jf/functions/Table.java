@@ -23,18 +23,16 @@ import com.exactprosystems.jf.sql.SqlConnection;
 import org.apache.log4j.Logger;
 
 import java.io.*;
-import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public class Table implements List<Map<String, Object>>, Mutable, Cloneable
+public class Table implements List<RowTable>, Mutable, Cloneable
 {
 	private Table(AbstractEvaluator evaluator)
 	{
@@ -70,7 +68,9 @@ public class Table implements List<Map<String, Object>>, Mutable, Cloneable
 		for (int i = 1; i < lines.length; i++)
 		{
 			String[] line = lines[i];
-			Map<String, Object> res = new LinkedHashMap<>();
+			
+			RowTable res = new RowTable();
+			
 			for (int j = 0; j < line.length; j++)
 			{
 				res.put(firstLine[j], line[j]);
@@ -825,9 +825,9 @@ public class Table implements List<Map<String, Object>>, Mutable, Cloneable
 	}
 
 	@Override
-	public Iterator<Map<String, Object>> iterator()
+	public Iterator<RowTable> iterator()
 	{
-		return new Iterator<Map<String, Object>>()
+		return new Iterator<RowTable>()
 		{
 			private Iterator<Map<Header, Object>> iterator = innerList.iterator();
 
@@ -838,7 +838,7 @@ public class Table implements List<Map<String, Object>>, Mutable, Cloneable
 			}
 
 			@Override
-			public Map<String, Object> next()
+			public RowTable next()
 			{
 				return convertToStr(this.iterator.next());
 			}
@@ -864,7 +864,7 @@ public class Table implements List<Map<String, Object>>, Mutable, Cloneable
 	}
 
 	@Override
-	public boolean add(Map<String, Object> e)
+	public boolean add(RowTable e)
 	{
 		this.changed = true;
 		return this.innerList.add(convert(e));
@@ -884,14 +884,14 @@ public class Table implements List<Map<String, Object>>, Mutable, Cloneable
 	}
 
 	@Override
-	public boolean addAll(Collection<? extends Map<String, Object>> c)
+	public boolean addAll(Collection<? extends RowTable> c)
 	{
 		this.changed = true;
 		return this.innerList.addAll(convert(c));
 	}
 
 	@Override
-	public boolean addAll(int index, Collection<? extends Map<String, Object>> c)
+	public boolean addAll(int index, Collection<? extends RowTable> c)
 	{
 		this.changed = true;
 		return this.innerList.addAll(index, convert(c));
@@ -919,13 +919,13 @@ public class Table implements List<Map<String, Object>>, Mutable, Cloneable
 	}
 
 	@Override
-	public Map<String, Object> get(int index)
+	public RowTable get(int index)
 	{
 		return convertToStr(this.innerList.get(index));
 	}
 
 	@Override
-	public Map<String, Object> set(int index, Map<String, Object> element)
+	public RowTable set(int index, RowTable element)
 	{
 		this.changed = true;
 		Map<Header, Object> convert = convert(element);
@@ -934,14 +934,14 @@ public class Table implements List<Map<String, Object>>, Mutable, Cloneable
 	}
 
 	@Override
-	public void add(int index, Map<String, Object> element)
+	public void add(int index, RowTable element)
 	{
 		this.changed = true;
 		this.innerList.add(index, convert(element));
 	}
 
 	@Override
-	public Map<String, Object> remove(int index)
+	public RowTable remove(int index)
 	{
 		this.changed = true;
 		Map<Header, Object> remove = this.innerList.remove(index);
@@ -961,22 +961,22 @@ public class Table implements List<Map<String, Object>>, Mutable, Cloneable
 	}
 
 	@Override
-	public ListIterator<Map<String, Object>> listIterator()
+	public ListIterator<RowTable> listIterator()
 	{
 		return new TableListIterator(innerList.listIterator());
 	}
 
 	@Override
-	public ListIterator<Map<String, Object>> listIterator(int index)
+	public ListIterator<RowTable> listIterator(int index)
 	{
 		return new TableListIterator(innerList.listIterator(index));
 	}
 
 	@Override
-	public List<Map<String, Object>> subList(int fromIndex, int toIndex)
+	public List<RowTable> subList(int fromIndex, int toIndex)
 	{
 		List<Map<Header, Object>> maps = this.innerList.subList(fromIndex, toIndex);
-		List<Map<String, Object>> res = new ArrayList<>();
+		List<RowTable> res = new ArrayList<>();
 		for (Map<Header, Object> map : maps)
 		{
 			res.add(convertToStr(map));
@@ -1159,9 +1159,9 @@ public class Table implements List<Map<String, Object>>, Mutable, Cloneable
 		return e.stream().map(this::convert).collect(Collectors.toList());
 	}
 
-	private Map<String, Object> convertToStr(Map<Header, Object> map)
+	private RowTable convertToStr(Map<Header, Object> map)
 	{
-		Map<String, Object> res = new LinkedHashMap<>();
+		RowTable res = new RowTable(map);
 		for (Entry<Header, Object> entry : map.entrySet())
 		{
 			Header header = entry.getKey();
@@ -1197,96 +1197,7 @@ public class Table implements List<Map<String, Object>>, Mutable, Cloneable
 		return value;
 	}
 	
-	private static class Header implements Cloneable
-	{
-		public enum HeaderType
-		{
-			STRING		(String.class),
-			BOOL		(Boolean.class),
-			INT			(Integer.class),	
-			DOUBLE		(Double.class),
-			DATE		(Date.class),
-			BIG_DECIMAL	(BigDecimal.class),
-			EXPRESSION	(Object.class), 
-			;
-			
-			HeaderType(Class<?> clazz)
-			{
-				this.clazz = clazz;
-			}
-			
-			public static HeaderType forName(String columnClassName)
-			{
-				for (HeaderType item : values())
-				{
-					if (item.clazz.getSimpleName().equals(columnClassName))
-					{
-						return item;
-					}
-				}
-				return null;
-			}
-
-			public Class<?> clazz;
-		}
-		public Header(String name, HeaderType type)
-		{
-			this.name = name;
-			this.type = type;
-			this.index = getIndex();
-		}
-
-		public String name;
-		
-		@Override
-		protected Object clone() throws CloneNotSupportedException
-		{
-			Header clone = (Header)super.clone();
-			
-			clone.name = this.name;
-			clone.type = this.type;
-			clone.index = getIndex();
-			
-			return clone;
-		}
-
-		HeaderType type;
-
-		public int index;
-
-		@Override
-		public String toString()
-		{
-			return this.name;
-		}
-
-		@Override
-		public boolean equals(Object o)
-		{
-			if (this == o)
-				return true;
-			if (o == null || getClass() != o.getClass())
-				return false;
-
-			Header header = (Header) o;
-
-			return index == header.index;
-
-		}
-
-		@Override
-		public int hashCode()
-		{
-			return index;
-		}
-
-		private int getIndex()
-		{
-			return Table.index++;
-		}
-	}
-
-	private class TableListIterator implements ListIterator<Map<String, Object>>
+	private class TableListIterator implements ListIterator<RowTable>
 	{
 		private ListIterator<Map<Header, Object>> iterator;
 
@@ -1302,7 +1213,7 @@ public class Table implements List<Map<String, Object>>, Mutable, Cloneable
 		}
 
 		@Override
-		public Map<String, Object> next()
+		public RowTable next()
 		{
 			return convertToStr(this.iterator.next());
 		}
@@ -1314,7 +1225,7 @@ public class Table implements List<Map<String, Object>>, Mutable, Cloneable
 		}
 
 		@Override
-		public Map<String, Object> previous()
+		public RowTable previous()
 		{
 			return convertToStr(this.iterator.previous());
 		}
@@ -1338,13 +1249,13 @@ public class Table implements List<Map<String, Object>>, Mutable, Cloneable
 		}
 
 		@Override
-		public void set(Map<String, Object> stringObjectMap)
+		public void set(RowTable stringObjectMap)
 		{
 			this.iterator.set(convert(stringObjectMap));
 		}
 
 		@Override
-		public void add(Map<String, Object> stringObjectMap)
+		public void add(RowTable stringObjectMap)
 		{
 			this.iterator.add(convert(stringObjectMap));
 		}
@@ -1453,7 +1364,7 @@ public class Table implements List<Map<String, Object>>, Mutable, Cloneable
 	private AbstractEvaluator evaluator; 
 
 	private String fileName;
-	private static int index = 0;
+	static int index = 0;
 	private boolean changed;
 	private static final Logger logger = Logger.getLogger(Table.class);
 }
