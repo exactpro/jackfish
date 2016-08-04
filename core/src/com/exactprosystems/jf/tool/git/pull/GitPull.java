@@ -68,11 +68,11 @@ public class GitPull
 			}
 		};
 		service.start();
-		service.setOnSucceeded(e -> {
+		service.setOnSucceeded(e -> Common.tryCatch(() -> {
 			DialogsHelper.showSuccess("Successful pulling");
-			this.controller.displayFiles(((List<GitPullBean>) e.getSource().getValue()));
+			this.displayFiles(((List<GitPullBean>) e.getSource().getValue()));
 			this.controller.endPulling("Pull done. All files up to date");
-		});
+		}, "Error on display files"));
 		service.setOnCancelled(e -> {
 			DialogsHelper.showInfo("Task canceled by user");
 			this.controller.endPulling("");
@@ -85,9 +85,18 @@ public class GitPull
 		});
 	}
 
-
 	public void display()
 	{
 		this.controller.show();
+	}
+
+	private void displayFiles(List<GitPullBean> list) throws Exception
+	{
+		if (list.stream().anyMatch(GitPullBean::isNeedMerge))
+		{
+			List<String> strings = this.model.gitMerge();
+			list.stream().filter(b -> strings.contains(b.getFileName())).forEach(GitPullBean::resolve);
+		}
+		this.controller.displayFiles(list);
 	}
 }

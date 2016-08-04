@@ -440,6 +440,11 @@ public class MainController implements Initializable, ContainingParent
 		Common.tryCatch(this.model::gitStatus, "Error on show status");
 	}
 
+	public void gitMerge(ActionEvent event)
+	{
+		Common.tryCatch(this.model::gitMerge, "Error on show status");
+	}
+
 	public void gitChangeCredential(ActionEvent event)
 	{
 		Common.tryCatch(this.model::changeCredential, "Error on show status");

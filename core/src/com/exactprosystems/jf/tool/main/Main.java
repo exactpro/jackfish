@@ -26,9 +26,12 @@ import com.exactprosystems.jf.tool.csv.CsvFx;
 import com.exactprosystems.jf.tool.custom.store.StoreVariable;
 import com.exactprosystems.jf.tool.git.CredentialBean;
 import com.exactprosystems.jf.tool.git.CredentialDialog;
+import com.exactprosystems.jf.tool.git.GitBean;
 import com.exactprosystems.jf.tool.git.GitUtil;
 import com.exactprosystems.jf.tool.git.clone.GitClone;
 import com.exactprosystems.jf.tool.git.commit.GitCommit;
+import com.exactprosystems.jf.tool.git.merge.GitMerge;
+import com.exactprosystems.jf.tool.git.merge.GitMergeBean;
 import com.exactprosystems.jf.tool.git.pull.GitPull;
 import com.exactprosystems.jf.tool.git.reset.GitReset;
 import com.exactprosystems.jf.tool.git.status.GitStatus;
@@ -65,6 +68,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.stream.Collectors;
 
 public class Main extends Application
 {
@@ -363,6 +367,21 @@ public class Main extends Application
 	{
 		CredentialBean credential = getCredential();
 		new GitStatus(this).display(GitUtil.gitStatus(credential), GitUtil.gitState(credential));
+	}
+
+	public List<String> gitMerge() throws Exception
+	{
+		List<GitMergeBean> collect = GitUtil.gitStatus(getCredential())
+				.stream()
+				.filter(gb -> gb.getStatus() == GitBean.Status.CONFLICTING)
+				.map(GitBean::getFile)
+				.map(File::getAbsolutePath)
+				.map(Common::getRelativePath)
+				.map(GitMergeBean::new)
+				.collect(Collectors.toList());
+		GitMerge gitMerge = new GitMerge(this, collect);
+		gitMerge.display();
+		return gitMerge.getMergedFiles();
 	}
 
 	public void gitPull() throws Exception
