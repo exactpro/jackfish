@@ -9,6 +9,8 @@ package com.exactprosystems.jf.tool.git.pull;
 
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
+import com.exactprosystems.jf.tool.git.CredentialBean;
+import com.exactprosystems.jf.tool.git.GitUtil;
 import com.exactprosystems.jf.tool.git.VBoxProgressMonitor;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import javafx.application.Platform;
@@ -36,6 +38,7 @@ public class GitPullController implements Initializable, ContainingParent
 
 	private Alert dialog;
 	private GitPull model;
+	private CredentialBean credential;
 	private VBoxProgressMonitor progressMonitor;
 
 	//region Initializable
@@ -55,9 +58,10 @@ public class GitPullController implements Initializable, ContainingParent
 	}
 	//endregion
 
-	public void init(GitPull model)
+	public void init(GitPull model, CredentialBean credential)
 	{
 		this.model = model;
+		this.credential = credential;
 		initDialog();
 		initTable();
 	}
@@ -128,11 +132,11 @@ public class GitPullController implements Initializable, ContainingParent
 	{
 		TableColumn<GitPullBean, String> nameColumn = new TableColumn<>("File name");
 		nameColumn.setCellValueFactory(new PropertyValueFactory<>("fileName"));
-		nameColumn.prefWidthProperty().bind(this.tableView.widthProperty().multiply(0.8));
+		nameColumn.prefWidthProperty().bind(this.tableView.widthProperty().multiply(0.6));
 
 		TableColumn<GitPullBean, Boolean> mergeColumn = new TableColumn<>("Merge");
 		mergeColumn.setCellValueFactory(new PropertyValueFactory<>("needMerge"));
-		mergeColumn.prefWidthProperty().bind(this.tableView.widthProperty().multiply(0.2));
+		mergeColumn.prefWidthProperty().bind(this.tableView.widthProperty().multiply(0.4));
 		mergeColumn.setCellFactory(p -> new TableCell<GitPullBean, Boolean>(){
 			@Override
 			protected void updateItem(Boolean item, boolean empty)
@@ -146,9 +150,30 @@ public class GitPullController implements Initializable, ContainingParent
 				{
 					if (item)
 					{
-						Button button = new Button("Need merge");
-						button.setOnAction(e -> DialogsHelper.showInfo("Merge not implemented yet. Merge yourself"));
-						setGraphic(button);
+						SplitMenuButton menuButton = new SplitMenuButton();
+						menuButton.setText("Need merge");
+						MenuItem acceptTheirs = new MenuItem("Accept Theirs");
+						MenuItem acceptYours = new MenuItem("Accept Yours");
+						MenuItem merge = new MenuItem("Merge");
+
+						menuButton.getItems().addAll(acceptTheirs, acceptYours, merge);
+
+						acceptTheirs.setOnAction(e -> Common.tryCatch(() -> {
+							GitPullBean pullBean = (GitPullBean) getTableRow().getItem();
+							GitUtil.mergeTheirs(credential, pullBean.getFileName());
+							pullBean.resolve();
+							refresh();
+						}, "Error on accept theirs"));
+
+						acceptYours.setOnAction(e -> Common.tryCatch(() -> {
+							GitPullBean pullBean = (GitPullBean) getTableRow().getItem();
+							GitUtil.mergeYours(credential, pullBean.getFileName());
+							pullBean.resolve();
+							refresh();
+						}, "Error on accept ours"));
+
+						menuButton.setOnAction(e -> DialogsHelper.showInfo("Merge not implemented yet. Merge yourself"));
+						setGraphic(menuButton);
 					}
 					else
 					{
@@ -158,6 +183,15 @@ public class GitPullController implements Initializable, ContainingParent
 			}
 		});
 		this.tableView.getColumns().addAll(nameColumn, mergeColumn);
+	}
+
+	private void refresh()
+	{
+		this.tableView.getColumns().forEach(c -> Platform.runLater(() -> {
+			c.setVisible(false);
+			c.setVisible(true);
+		}));
+
 	}
 
 	//endregion

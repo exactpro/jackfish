@@ -10,7 +10,7 @@ package com.exactprosystems.jf.tool.git.pull;
 public class GitPullBean
 {
 	private final String fileName;
-	private final boolean needMerge;
+	private boolean needMerge;
 
 	public GitPullBean(String fileName, boolean needMerge)
 	{
@@ -26,6 +26,11 @@ public class GitPullBean
 	public boolean isNeedMerge()
 	{
 		return needMerge;
+	}
+
+	public void resolve()
+	{
+		this.needMerge = false;
 	}
 
 	@Override

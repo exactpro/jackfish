@@ -21,12 +21,17 @@ import org.eclipse.jgit.diff.DiffEntry;
 import org.eclipse.jgit.errors.UnsupportedCredentialItem;
 import org.eclipse.jgit.lib.*;
 import org.eclipse.jgit.revwalk.RevCommit;
+import org.eclipse.jgit.revwalk.RevTree;
+import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 import org.eclipse.jgit.transport.*;
 import org.eclipse.jgit.treewalk.CanonicalTreeParser;
+import org.eclipse.jgit.treewalk.TreeWalk;
+import org.eclipse.jgit.treewalk.filter.PathFilter;
 import org.eclipse.jgit.util.FS;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -116,7 +121,6 @@ public class GitUtil
 	{
 		try (Git git = git(bean))
 		{
-			//from http://stackoverflow.com/a/26170467/3452146
 			ObjectId oldHead = git.getRepository().resolve("HEAD^{tree}");
 
 			List<GitPullBean> list = new ArrayList<>();
@@ -280,6 +284,67 @@ public class GitUtil
 		}
 	}
 	//endregion
+
+	//region Merge
+	public static void mergeTheirs(CredentialBean credentialBean, String filePath) throws Exception
+	{
+		try (Git git = git(credentialBean))
+		{
+			Repository repository = git.getRepository();
+			ObjectId lastCommitId = repository.resolve(Constants.MERGE_HEAD);
+			try (RevWalk revWalk = new RevWalk(repository))
+			{
+				RevCommit commit = revWalk.parseCommit(lastCommitId);
+				RevTree tree = commit.getTree();
+				try (TreeWalk treeWalk = new TreeWalk(repository))
+				{
+					treeWalk.addTree(tree);
+					treeWalk.setRecursive(true);
+					treeWalk.setFilter(PathFilter.create(filePath));
+					if (!treeWalk.next())
+					{
+						// we don't have merge file
+						return;
+					}
+					ObjectId objectId = treeWalk.getObjectId(0);
+					ObjectLoader loader = repository.open(objectId);
+					loader.copyTo(new FileOutputStream(filePath));
+				}
+			}
+			git.add().addFilepattern(filePath).call();
+		}
+	}
+
+	public static void mergeYours(CredentialBean credentialBean, String filePath) throws Exception
+	{
+		try (Git git = git(credentialBean))
+		{
+			Repository repository = git.getRepository();
+			ObjectId lastCommitId = repository.resolve(Constants.HEAD);
+			try (RevWalk revWalk = new RevWalk(repository))
+			{
+				RevCommit commit = revWalk.parseCommit(lastCommitId);
+				RevTree tree = commit.getTree();
+				try (TreeWalk treeWalk = new TreeWalk(repository))
+				{
+					treeWalk.addTree(tree);
+					treeWalk.setRecursive(true);
+					treeWalk.setFilter(PathFilter.create(filePath));
+					if (!treeWalk.next())
+					{
+						// we don't have merge file
+						return;
+					}
+					ObjectId objectId = treeWalk.getObjectId(0);
+					ObjectLoader loader = repository.open(objectId);
+					loader.copyTo(new FileOutputStream(filePath));
+				}
+			}
+			git.add().addFilepattern(filePath).call();
+		}
+	}
+	//endregion
+
 
 	public static void gitDummy(Object... objects) throws Exception
 	{

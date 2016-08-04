@@ -31,7 +31,7 @@ public class GitPull
 	{
 		this.model = model;
 		this.controller = Common.loadController(this.getClass().getResource("GitPull.fxml"));
-		this.controller.init(this);
+		this.controller.init(this, this.model.getCredential());
 	}
 
 	public void close() throws Exception
