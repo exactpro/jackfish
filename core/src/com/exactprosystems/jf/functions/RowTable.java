@@ -13,6 +13,8 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
+import com.exactprosystems.jf.functions.Header.HeaderType;
+
 
 public class RowTable implements Map<String, Object>, Cloneable
 {
@@ -105,6 +107,9 @@ public class RowTable implements Map<String, Object>, Cloneable
 			}
 		}
 
+		Header header = new Header(key, HeaderType.STRING);
+		this.source.put(header, value);
+		
 		return null;
 	}
 
