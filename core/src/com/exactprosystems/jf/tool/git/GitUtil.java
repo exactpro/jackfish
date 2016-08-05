@@ -93,7 +93,34 @@ public class GitUtil
 		}
 		try (Git git = git(bean))
 		{
-			git.push().setPushAll().setCredentialsProvider(getCredentialsProvider(bean))/*.setAtomic(true)*/.call();
+			Iterable<PushResult> call = git.push().setPushAll().setCredentialsProvider(getCredentialsProvider(bean)).call();
+			for (PushResult pushResult : call)
+			{
+				for (RemoteRefUpdate update : pushResult.getRemoteUpdates())
+				{
+					// https://bugs.eclipse.org/bugs/show_bug.cgi?id=478199#c2
+					switch (update.getStatus())
+					{
+						case NOT_ATTEMPTED:
+							break;
+						case UP_TO_DATE:
+							break;
+						case REJECTED_NONFASTFORWARD: throw new Exception("You need to update your local copy, merge and after that push");
+						case REJECTED_NODELETE:
+							break;
+						case REJECTED_REMOTE_CHANGED:
+							break;
+						case REJECTED_OTHER_REASON:
+							break;
+						case NON_EXISTING:
+							break;
+						case AWAITING_REPORT:
+							break;
+						case OK:
+							break;
+					}
+				}
+			}
 		}
 	}
 
