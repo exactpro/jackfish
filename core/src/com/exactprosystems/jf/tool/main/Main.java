@@ -144,7 +144,7 @@ public class Main extends Application
 		try
 		{
 			this.factory = new FxDocumentFactory(Main.this);
-			this.settings = Settings.load(Settings.SettingsPath); // TODO
+			this.settings = this.factory.getSettings();
 			DialogsHelper.setTimeNotification(Integer.parseInt(this.settings.getValueOrDefault(Settings.GLOBAL_NS, SettingsPanel.SETTINGS, Main.TIME_NOTIFICATION, "5").getValue()));
 		}
 		catch (Exception e)
