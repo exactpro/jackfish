@@ -16,10 +16,12 @@ import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 import org.eclipse.jgit.api.*;
+import org.eclipse.jgit.api.MergeResult;
 import org.eclipse.jgit.api.errors.CheckoutConflictException;
 import org.eclipse.jgit.diff.DiffEntry;
 import org.eclipse.jgit.errors.UnsupportedCredentialItem;
 import org.eclipse.jgit.lib.*;
+import org.eclipse.jgit.merge.*;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevTree;
 import org.eclipse.jgit.revwalk.RevWalk;
@@ -33,6 +35,11 @@ import org.eclipse.jgit.util.FS;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
+import java.io.PrintWriter;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -43,23 +50,6 @@ public class GitUtil
 	private GitUtil()
 	{
 
-	}
-
-	public static void main(String[] args) throws Exception
-	{
-		CredentialBean bean = new CredentialBean("AndrewBystrov", "Andrew17051993", "", "");
-		try (Git git = git(bean))
-		{
-			ObjectId oldHead = git.getRepository().resolve("HEAD^{tree}");
-			ObjectId head = git.getRepository().resolve("HEAD^{tree}");
-			ObjectReader reader = git.getRepository().newObjectReader();
-			CanonicalTreeParser oldTreeIter = new CanonicalTreeParser();
-			oldTreeIter.reset(reader, oldHead);
-			CanonicalTreeParser newTreeIter = new CanonicalTreeParser();
-			newTreeIter.reset(reader, head);
-			List<DiffEntry> diffs = git.diff().setNewTree(newTreeIter).setOldTree(oldTreeIter).call();
-			diffs.forEach(System.out::println);
-		}
 	}
 
 	//region Clone
@@ -105,7 +95,8 @@ public class GitUtil
 							break;
 						case UP_TO_DATE:
 							break;
-						case REJECTED_NONFASTFORWARD: throw new Exception("You need to update your local copy, merge and after that push");
+						case REJECTED_NONFASTFORWARD:
+							throw new Exception("You need to pull your local copy, merge and after that push");
 						case REJECTED_NODELETE:
 							break;
 						case REJECTED_REMOTE_CHANGED:
@@ -161,13 +152,16 @@ public class GitUtil
 					Map<String, int[][]> allConflicts = m.getConflicts();
 					if (allConflicts != null)
 					{
-						for (String path : allConflicts.keySet()) {
+						for (String path : allConflicts.keySet())
+						{
 							int[][] c = allConflicts.get(path);
 							System.out.println("Conflicts in file " + path);
 							list.add(new GitPullBean(path, true));
-							for (int i = 0; i < c.length; i++) {
+							for (int i = 0; i < c.length; i++)
+							{
 								System.out.println("  Conflict #" + i);
-								for (int j = 0; j < c[i].length - 1 ; j++) {
+								for (int j = 0; j < c[i].length - 1; j++)
+								{
 									if (c[i][j] >= 0)
 										System.out.println("    Chunk for " + m.getMergedCommits()[j] + " starts on line #" + c[i][j]);
 								}
@@ -187,10 +181,7 @@ public class GitUtil
 			oldTreeIter.reset(reader, oldHead);
 			CanonicalTreeParser newTreeIter = new CanonicalTreeParser();
 			newTreeIter.reset(reader, head);
-			List<DiffEntry> diffs = git.diff()
-					.setNewTree(newTreeIter)
-					.setOldTree(oldTreeIter)
-					.call();
+			List<DiffEntry> diffs = git.diff().setNewTree(newTreeIter).setOldTree(oldTreeIter).call();
 
 			for (DiffEntry diff : diffs)
 			{
@@ -204,6 +195,77 @@ public class GitUtil
 			}
 			return list;
 		}
+	}
+
+	public static void main(String[] args) throws Exception
+	{
+		CredentialBean bean = new CredentialBean("AndrewBystrov", "Andrew17051993", "", "");
+		gitPull(bean, new TextProgressMonitor());
+		int[][] qqs = getConflicts(bean, "qq");
+	}
+
+	public static int[][] getConflicts(CredentialBean bean, String fileName) throws Exception
+	{
+		try (Git git = git(bean))
+		{
+			Repository repo = git.getRepository();
+			ThreeWayMerger merger = new StrategyResolve().newMerger(repo, true);
+			boolean res = merger.merge(repo.resolve(Constants.HEAD), repo.resolve(Constants.FETCH_HEAD));
+			ResolveMerger resolveMerger = (ResolveMerger) merger;
+
+			Map<String, org.eclipse.jgit.merge.MergeResult<?>> mergeResults = resolveMerger.getMergeResults();
+
+			org.eclipse.jgit.merge.MergeResult<?> mergeChunks = mergeResults.get(fileName);
+			if (mergeChunks == null)
+			{
+				return null;
+			}
+			if (!mergeChunks.containsConflicts())
+			{
+				return null;
+			}
+			int nrOfConflicts = 0;
+			for (MergeChunk mergeChunk : mergeChunks)
+			{
+				if (mergeChunk.getConflictState() == MergeChunk.ConflictState.FIRST_CONFLICTING_RANGE)
+				{
+					nrOfConflicts++;
+				}
+			}
+			int currentConflict = -1;
+			int[][] ret = new int[nrOfConflicts][3];
+			for (MergeChunk mergeChunk : mergeChunks)
+			{
+				// to store the end of this chunk (end of the last conflicting range)
+				int endOfChunk = 0;
+				if (mergeChunk.getConflictState().equals(MergeChunk.ConflictState.FIRST_CONFLICTING_RANGE))
+				{
+					if (currentConflict > -1)
+					{
+						// there was a previous conflicting range for which the end
+						// is not set yet - set it!
+						ret[currentConflict][2] = endOfChunk;
+					}
+					currentConflict++;
+					endOfChunk = mergeChunk.getEnd();
+					ret[currentConflict][mergeChunk.getSequenceIndex()] = mergeChunk.getBegin();
+				}
+				if (mergeChunk.getConflictState().equals(MergeChunk.ConflictState.NEXT_CONFLICTING_RANGE))
+				{
+					if (mergeChunk.getEnd() > endOfChunk)
+					{
+						endOfChunk = mergeChunk.getEnd();
+					}
+					ret[currentConflict][mergeChunk.getSequenceIndex()] = mergeChunk.getBegin();
+				}
+			}
+
+			MergeFormatter formatter = new MergeFormatter();
+			formatter.formatMerge(System.out, mergeChunks, "names", "ours", "theirs", Charset.defaultCharset().name());
+
+			String asd = "asd";
+		}
+		return new int[5][];
 	}
 	//endregion
 
@@ -305,7 +367,7 @@ public class GitUtil
 
 	public static String gitState(CredentialBean bean) throws Exception
 	{
-		try(Git git = git(bean))
+		try (Git git = git(bean))
 		{
 			return git.getRepository().getRepositoryState().getDescription();
 		}
@@ -313,9 +375,9 @@ public class GitUtil
 	//endregion
 
 	//region Merge
-	public static void mergeTheirs(CredentialBean credentialBean, String filePath) throws Exception
+	public static List<String> getTheirs(CredentialBean bean, String filePath) throws Exception
 	{
-		try (Git git = git(credentialBean))
+		try(Git git = git(bean))
 		{
 			Repository repository = git.getRepository();
 			ObjectId lastCommitId = repository.resolve(Constants.MERGE_HEAD);
@@ -330,21 +392,32 @@ public class GitUtil
 					treeWalk.setFilter(PathFilter.create(filePath));
 					if (!treeWalk.next())
 					{
-						// we don't have merge file
-						return;
+						return Collections.emptyList();
 					}
 					ObjectId objectId = treeWalk.getObjectId(0);
 					ObjectLoader loader = repository.open(objectId);
-					loader.copyTo(new FileOutputStream(filePath));
+					File tmpFile = File.createTempFile("temp", null);
+					loader.copyTo(new FileOutputStream(tmpFile));
+					return readFile(tmpFile, true);
 				}
 			}
-			git.add().addFilepattern(filePath).call();
 		}
 	}
 
-	public static void mergeYours(CredentialBean credentialBean, String filePath) throws Exception
+	public static void mergeTheirs(CredentialBean credentialBean, String filePath) throws Exception
 	{
+		List<String> theirs = getTheirs(credentialBean, filePath);
+		writeToFile(new File(filePath), theirs);
 		try (Git git = git(credentialBean))
+		{
+			git.add().addFilepattern(filePath).call();
+		}
+
+	}
+
+	public static List<String> getYours(CredentialBean bean, String filePath) throws Exception
+	{
+		try (Git git = git(bean))
 		{
 			Repository repository = git.getRepository();
 			ObjectId lastCommitId = repository.resolve(Constants.HEAD);
@@ -359,14 +432,24 @@ public class GitUtil
 					treeWalk.setFilter(PathFilter.create(filePath));
 					if (!treeWalk.next())
 					{
-						// we don't have merge file
-						return;
+						return Collections.emptyList();
 					}
 					ObjectId objectId = treeWalk.getObjectId(0);
 					ObjectLoader loader = repository.open(objectId);
-					loader.copyTo(new FileOutputStream(filePath));
+					File tmpFile = File.createTempFile("temp", null);
+					loader.copyTo(new FileOutputStream(tmpFile));
+					return readFile(tmpFile, true);
 				}
 			}
+		}
+	}
+
+	public static void mergeYours(CredentialBean credentialBean, String filePath) throws Exception
+	{
+		List<String> yours = getYours(credentialBean, filePath);
+		writeToFile(new File(filePath), yours);
+		try (Git git = git(credentialBean))
+		{
 			git.add().addFilepattern(filePath).call();
 		}
 	}
@@ -454,6 +537,25 @@ public class GitUtil
 				return true;
 			}
 		};
+	}
+
+	private static List<String> readFile(File file, boolean needRemove) throws Exception
+	{
+		Path path = Paths.get(file.toURI());
+		List<String> lines = Files.readAllLines(path, Charset.defaultCharset());
+		if (needRemove)
+		{
+			Files.delete(path);
+		}
+		return lines;
+	}
+
+	private static void writeToFile(File file, List<String> lines) throws Exception
+	{
+		try (PrintWriter writer = new PrintWriter(new FileWriter(file)))
+		{
+			lines.forEach(writer::println);
+		}
 	}
 
 	private static class CustomJschConfigSessionFactory extends JschConfigSessionFactory

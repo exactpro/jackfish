@@ -9,6 +9,7 @@ package com.exactprosystems.jf.tool.git.merge;
 
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
+import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
@@ -89,20 +90,7 @@ public class GitMergeController implements Initializable, ContainingParent
 	//region private methods
 	private void initDialog()
 	{
-		this.dialog = new Alert(Alert.AlertType.INFORMATION);
-		this.dialog.setResult(new ButtonType("", ButtonBar.ButtonData.CANCEL_CLOSE));
-		this.dialog.setResizable(true);
-		this.dialog.getDialogPane().getStylesheets().addAll(Common.currentTheme().getPath());
-		this.dialog.setTitle("Resolve conflicts");
-		this.dialog.getDialogPane().setHeader(new Label());
-		this.dialog.getDialogPane().setContent(this.parent);
-		ButtonType buttonCreate = new ButtonType("", ButtonBar.ButtonData.OTHER);
-		this.dialog.getButtonTypes().setAll(buttonCreate);
-		Button button = (Button) this.dialog.getDialogPane().lookupButton(buttonCreate);
-		button.setPrefHeight(0.0);
-		button.setMaxHeight(0.0);
-		button.setMinHeight(0.0);
-		button.setVisible(false);
+		this.dialog = DialogsHelper.createGitDialog("Resolve conflicts", this.parent);
 	}
 
 	private void initTable()

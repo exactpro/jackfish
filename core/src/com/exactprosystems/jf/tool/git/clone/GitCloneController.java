@@ -198,20 +198,7 @@ public class GitCloneController implements Initializable, ContainingParent
 
 	private void initDialog()
 	{
-		this.dialog = new Alert(Alert.AlertType.INFORMATION);
-		this.dialog.setResult(new ButtonType("", ButtonBar.ButtonData.CANCEL_CLOSE));
-		this.dialog.setResizable(true);
-		this.dialog.getDialogPane().getStylesheets().addAll(Common.currentTheme().getPath());
-		this.dialog.setTitle("Clone project");
-		this.dialog.getDialogPane().setHeader(new Label());
-		this.dialog.getDialogPane().setContent(this.parent);
-		ButtonType buttonCreate = new ButtonType("", ButtonBar.ButtonData.OTHER);
-		this.dialog.getButtonTypes().setAll(buttonCreate);
-		Button button = (Button) this.dialog.getDialogPane().lookupButton(buttonCreate);
-		button.setPrefHeight(0.0);
-		button.setMaxHeight(0.0);
-		button.setMinHeight(0.0);
-		button.setVisible(false);
+		this.dialog = DialogsHelper.createGitDialog("Clone project", this.parent);
 		displayStatus(false);
 	}
 

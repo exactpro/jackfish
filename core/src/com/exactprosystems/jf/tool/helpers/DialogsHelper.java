@@ -12,7 +12,6 @@ import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
 import com.exactprosystems.jf.actions.help.ActionsList;
 import com.exactprosystems.jf.api.common.ApiVersionInfo;
-import com.exactprosystems.jf.common.*;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.HelpFactory;
 import com.exactprosystems.jf.common.report.ReportBuilder;
@@ -24,47 +23,19 @@ import com.exactprosystems.jf.documents.Notifier;
 import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.Matrix;
-import com.exactprosystems.jf.documents.matrix.parser.items.ActionItem;
-import com.exactprosystems.jf.documents.matrix.parser.items.Break;
-import com.exactprosystems.jf.documents.matrix.parser.items.Call;
-import com.exactprosystems.jf.documents.matrix.parser.items.Case;
-import com.exactprosystems.jf.documents.matrix.parser.items.Continue;
-import com.exactprosystems.jf.documents.matrix.parser.items.Default;
-import com.exactprosystems.jf.documents.matrix.parser.items.Else;
-import com.exactprosystems.jf.documents.matrix.parser.items.Fail;
-import com.exactprosystems.jf.documents.matrix.parser.items.For;
-import com.exactprosystems.jf.documents.matrix.parser.items.ForEach;
-import com.exactprosystems.jf.documents.matrix.parser.items.HelpChapter;
-import com.exactprosystems.jf.documents.matrix.parser.items.If;
-import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
-import com.exactprosystems.jf.documents.matrix.parser.items.MatrixRoot;
-import com.exactprosystems.jf.documents.matrix.parser.items.NameSpace;
-import com.exactprosystems.jf.documents.matrix.parser.items.OnError;
-import com.exactprosystems.jf.documents.matrix.parser.items.RawMessage;
-import com.exactprosystems.jf.documents.matrix.parser.items.RawTable;
-import com.exactprosystems.jf.documents.matrix.parser.items.ReportOff;
-import com.exactprosystems.jf.documents.matrix.parser.items.ReportOn;
-import com.exactprosystems.jf.documents.matrix.parser.items.Return;
-import com.exactprosystems.jf.documents.matrix.parser.items.SubCase;
-import com.exactprosystems.jf.documents.matrix.parser.items.Switch;
-import com.exactprosystems.jf.documents.matrix.parser.items.TestCase;
-import com.exactprosystems.jf.documents.matrix.parser.items.While;
-import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
-import com.exactprosystems.jf.documents.matrix.parser.listeners.MatrixListener;
-import com.exactprosystems.jf.documents.matrix.parser.listeners.SilenceMatrixListener;
+import com.exactprosystems.jf.documents.matrix.parser.items.*;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.custom.Notifications;
 import com.exactprosystems.jf.tool.custom.browser.ReportBrowser;
 import com.exactprosystems.jf.tool.custom.date.DateTimePicker;
 import com.exactprosystems.jf.tool.custom.date.DateTimePickerSkin;
 import com.exactprosystems.jf.tool.custom.helper.HelperFx;
-import com.exactprosystems.jf.tool.matrix.MatrixFx;
-
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
@@ -77,7 +48,6 @@ import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.util.Duration;
-
 import org.apache.log4j.Logger;
 import org.w3c.dom.NodeList;
 
@@ -632,6 +602,24 @@ public abstract class DialogsHelper
 				.show());
 	}
 
+	public static Alert createGitDialog(String title, Parent parent)
+	{
+		Alert dialog = new Alert(Alert.AlertType.INFORMATION);
+		dialog.setResult(new ButtonType("", ButtonBar.ButtonData.CANCEL_CLOSE));
+		dialog.setResizable(true);
+		dialog.getDialogPane().getStylesheets().addAll(Common.currentTheme().getPath());
+		dialog.setTitle(title);
+		dialog.getDialogPane().setHeader(new Label());
+		dialog.getDialogPane().setContent(parent);
+		ButtonType buttonCreate = new ButtonType("", ButtonBar.ButtonData.OTHER);
+		dialog.getButtonTypes().setAll(buttonCreate);
+		Button button = (Button) dialog.getDialogPane().lookupButton(buttonCreate);
+		button.setPrefHeight(0.0);
+		button.setMaxHeight(0.0);
+		button.setMinHeight(0.0);
+		button.setVisible(false);
+		return dialog;
+	}
 
 	private static String find(org.w3c.dom.Node root)
 	{
