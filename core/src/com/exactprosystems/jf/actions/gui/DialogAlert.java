@@ -100,6 +100,7 @@ public class DialogAlert extends AbstractAction
 		}
 		catch (RemoteException e)
 		{
+			logger.error(e.getMessage(), e);
 			super.setError(e.getMessage(), ErrorKind.EXCEPTION);
 			return;
 		}
