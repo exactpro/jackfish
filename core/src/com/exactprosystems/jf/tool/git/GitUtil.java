@@ -35,11 +35,7 @@ import org.eclipse.jgit.util.FS;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
-import java.io.PrintWriter;
 import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -398,7 +394,7 @@ public class GitUtil
 					ObjectLoader loader = repository.open(objectId);
 					File tmpFile = File.createTempFile("temp", null);
 					loader.copyTo(new FileOutputStream(tmpFile));
-					return readFile(tmpFile, true);
+					return Common.readFile(tmpFile, true);
 				}
 			}
 		}
@@ -407,7 +403,7 @@ public class GitUtil
 	public static void mergeTheirs(CredentialBean credentialBean, String filePath) throws Exception
 	{
 		List<String> theirs = getTheirs(credentialBean, filePath);
-		writeToFile(new File(filePath), theirs);
+		Common.writeToFile(new File(filePath), theirs);
 		try (Git git = git(credentialBean))
 		{
 			git.add().addFilepattern(filePath).call();
@@ -438,7 +434,7 @@ public class GitUtil
 					ObjectLoader loader = repository.open(objectId);
 					File tmpFile = File.createTempFile("temp", null);
 					loader.copyTo(new FileOutputStream(tmpFile));
-					return readFile(tmpFile, true);
+					return Common.readFile(tmpFile, true);
 				}
 			}
 		}
@@ -447,8 +443,16 @@ public class GitUtil
 	public static void mergeYours(CredentialBean credentialBean, String filePath) throws Exception
 	{
 		List<String> yours = getYours(credentialBean, filePath);
-		writeToFile(new File(filePath), yours);
+		Common.writeToFile(new File(filePath), yours);
 		try (Git git = git(credentialBean))
+		{
+			git.add().addFilepattern(filePath).call();
+		}
+	}
+
+	public static void addFileToIndex(CredentialBean bean, String filePath) throws Exception
+	{
+		try (Git git = git(bean))
 		{
 			git.add().addFilepattern(filePath).call();
 		}
@@ -537,25 +541,6 @@ public class GitUtil
 				return true;
 			}
 		};
-	}
-
-	private static List<String> readFile(File file, boolean needRemove) throws Exception
-	{
-		Path path = Paths.get(file.toURI());
-		List<String> lines = Files.readAllLines(path, Charset.defaultCharset());
-		if (needRemove)
-		{
-			Files.delete(path);
-		}
-		return lines;
-	}
-
-	private static void writeToFile(File file, List<String> lines) throws Exception
-	{
-		try (PrintWriter writer = new PrintWriter(new FileWriter(file)))
-		{
-			lines.forEach(writer::println);
-		}
 	}
 
 	private static class CustomJschConfigSessionFactory extends JschConfigSessionFactory

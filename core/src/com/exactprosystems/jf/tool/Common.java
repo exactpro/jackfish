@@ -18,7 +18,6 @@ import com.exactprosystems.jf.tool.custom.tab.CustomTab;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.settings.SettingsPanel;
 import com.exactprosystems.jf.tool.settings.Theme;
-
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.fxml.FXMLLoader;
@@ -33,7 +32,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
-
 import org.apache.log4j.Logger;
 
 import java.awt.*;
@@ -41,10 +39,17 @@ import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.StringSelection;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.URL;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 public abstract class Common
@@ -388,6 +393,25 @@ public abstract class Common
 		{
 			e.printStackTrace();
 			return "";
+		}
+	}
+
+	public static List<String> readFile(File file, boolean needRemove) throws Exception
+	{
+		Path path = Paths.get(file.toURI());
+		List<String> lines = Files.readAllLines(path, Charset.defaultCharset());
+		if (needRemove)
+		{
+			Files.delete(path);
+		}
+		return lines;
+	}
+
+	public static void writeToFile(File file, List<String> lines) throws Exception
+	{
+		try (PrintWriter writer = new PrintWriter(new FileWriter(file)))
+		{
+			lines.forEach(writer::println);
 		}
 	}
 }

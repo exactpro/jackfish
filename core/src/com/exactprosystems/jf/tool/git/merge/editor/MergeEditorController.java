@@ -7,6 +7,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.exactprosystems.jf.tool.git.merge.editor;
 
+import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import javafx.event.ActionEvent;
@@ -17,7 +18,6 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextArea;
 
 import java.net.URL;
-import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -66,23 +66,41 @@ public class MergeEditorController implements Initializable, ContainingParent
 
 	public void save(ActionEvent actionEvent)
 	{
-		this.dialog.setResult(ButtonType.YES);
-		this.dialog.close();
+		Common.tryCatch(() -> this.model.saveResult(this.taResult.getText()), "Error on save result");
 	}
 
 	public void close(ActionEvent actionEvent)
 	{
-		this.dialog.setResult(ButtonType.CANCEL);
+		Common.tryCatch(() -> this.model.close(), "Error on close");
+	}
+
+	public void acceptYours(ActionEvent actionEvent)
+	{
+		Common.tryCatch(() -> this.model.acceptYours(), "Error on accept yours");
+	}
+
+	public void acceptTheirs(ActionEvent actionEvent)
+	{
+		Common.tryCatch(() -> this.model.acceptTheirs(), "Error on accept theirs");
+	}
+
+	public void displayYours(String yours)
+	{
+		this.taYour.setText(yours);
+	}
+
+	public void displayTheirs(String theirs)
+	{
+		this.taTheir.setText(theirs);
+	}
+
+	public void displayResult(String result)
+	{
+		this.taResult.setText(result);
+	}
+
+	public void closeDialog()
+	{
 		this.dialog.close();
-	}
-
-	public void displayYours(List<String> yours)
-	{
-		this.taYour.setText(yours.stream().reduce((s, s2) -> s + System.lineSeparator() + s2).orElse(""));
-	}
-
-	public void displayTheirs(List<String> theirs)
-	{
-		this.taTheir.setText(theirs.stream().reduce((s, s2) -> s + System.lineSeparator() + s2).orElse(""));
 	}
 }

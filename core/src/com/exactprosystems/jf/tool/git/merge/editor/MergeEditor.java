@@ -11,10 +11,16 @@ import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.git.GitUtil;
 import com.exactprosystems.jf.tool.main.Main;
 
+import java.io.File;
+import java.util.Arrays;
+
 public class MergeEditor
 {
 	private final String filePath;
 	private final Main model;
+
+	private String yoursText;
+	private String theirsText;
 
 	private MergeEditorController controller;
 
@@ -24,12 +30,44 @@ public class MergeEditor
 		this.model = model;
 		this.controller = Common.loadController(this.getClass().getResource("MergeEditor.fxml"));
 		this.controller.init(this);
-		this.controller.displayYours(GitUtil.getYours(this.model.getCredential(), filePath));
-		this.controller.displayTheirs(GitUtil.getTheirs(this.model.getCredential(), filePath));
+
+		this.yoursText = GitUtil.getYours(this.model.getCredential(), filePath).stream().reduce((s, s2) -> s + System.lineSeparator() + s2).orElse("");
+		this.theirsText = GitUtil.getTheirs(this.model.getCredential(), filePath).stream().reduce((s, s2) -> s + System.lineSeparator() + s2).orElse("");
+		this.controller.displayYours(this.yoursText);
+		this.controller.displayTheirs(this.theirsText);
+		this.controller.displayResult(""); // TODO eval result
 	}
 
 	public void display()
 	{
 		this.controller.show();
+	}
+
+	public void acceptTheirs()
+	{
+		this.controller.displayResult(this.theirsText);
+	}
+
+	public void acceptYours()
+	{
+		this.controller.displayResult(this.yoursText);
+	}
+
+	public void close()
+	{
+		check();
+		this.controller.closeDialog();
+	}
+
+	public void saveResult(String result) throws Exception
+	{
+		check();
+		Common.writeToFile(new File(this.filePath), Arrays.asList(result.split(System.lineSeparator())));
+		GitUtil.addFileToIndex(this.model.getCredential(), this.filePath);
+	}
+
+	private void check()
+	{
+
 	}
 }

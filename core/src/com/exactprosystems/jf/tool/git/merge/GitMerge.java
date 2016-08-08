@@ -10,7 +10,6 @@ package com.exactprosystems.jf.tool.git.merge;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.git.GitUtil;
 import com.exactprosystems.jf.tool.git.merge.editor.MergeEditor;
-import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.main.Main;
 
 import java.util.ArrayList;
@@ -60,8 +59,6 @@ public class GitMerge
 
 	public void merge(GitMergeBean bean) throws Exception
 	{
-		GitUtil.getConflicts(this.model.getCredential(), bean.getFileName());
 		new MergeEditor(this.model, bean.getFileName()).display();
-		DialogsHelper.showInfo("Don't implement yet. Merge by yourself");
 	}
 }
