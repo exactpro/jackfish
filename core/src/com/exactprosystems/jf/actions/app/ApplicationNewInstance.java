@@ -48,7 +48,7 @@ public class ApplicationNewInstance extends AbstractAction
 	@Override
 	protected void helpToAddParametersDerived(List<ReadableValue> list, Context context, Parameters parameters) throws Exception
 	{
-		ApplicationHelper.helpToAddParameters(list, this.owner.getMatrix(), context, parameters, null, connectionName);
+		Helper.helpToAddParameters(list, this.owner.getMatrix(), context, parameters, null, connectionName);
 	}
 
 	@Override
@@ -62,7 +62,7 @@ public class ApplicationNewInstance extends AbstractAction
 				break;
 				
 			default:
-				res = ApplicationHelper.canFillParameter(this.owner.getMatrix(), context, parameters, null, connectionName, fieldName);
+				res = Helper.canFillParameter(this.owner.getMatrix(), context, parameters, null, connectionName, fieldName);
 				break;
 		}	
 		
@@ -80,7 +80,7 @@ public class ApplicationNewInstance extends AbstractAction
 				break;
 				
 			default:
-				ApplicationHelper.fillListForParameter(list, this.owner.getMatrix(), context, parameters, null, connectionName, parameterToFill);
+				Helper.fillListForParameter(list, this.owner.getMatrix(), context, parameters, null, connectionName, parameterToFill);
 				break;
 		}
 	}

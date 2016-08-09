@@ -50,20 +50,20 @@ public class ApplicationGetProperties extends AbstractAction
 	@Override
 	protected void helpToAddParametersDerived(List<ReadableValue> list, Context context, Parameters parameters) throws Exception
 	{
-		ApplicationHelper.helpToAddParameters(list, this.owner.getMatrix(), context, parameters, null, connectionName);
+		Helper.helpToAddParameters(list, this.owner.getMatrix(), context, parameters, null, connectionName);
 	}
 
 	@Override
 	protected HelpKind howHelpWithParameterDerived(Context context, Parameters parameters, String fieldName) throws Exception
 	{
-		boolean res = ApplicationHelper.canFillParameter(this.owner.getMatrix(), context, parameters, null, connectionName, fieldName);
+		boolean res = Helper.canFillParameter(this.owner.getMatrix(), context, parameters, null, connectionName, fieldName);
 		return res ? HelpKind.ChooseFromList : null;
 	}
 	
 	@Override
 	protected void listToFillParameterDerived(List<ReadableValue> list, Context context, String parameterToFill, Parameters parameters) throws Exception
 	{
-		ApplicationHelper.fillListForParameter(list, this.owner.getMatrix(), context, parameters, null, connectionName, parameterToFill);
+		Helper.fillListForParameter(list, this.owner.getMatrix(), context, parameters, null, connectionName, parameterToFill);
 	}
 	
 

@@ -91,7 +91,7 @@ public class ApplicationStart extends AbstractAction
 	@Override
 	protected void helpToAddParametersDerived(List<ReadableValue> list, Context context, Parameters parameters) throws Exception
 	{
-		ApplicationHelper.helpToAddParameters(list, this.owner.getMatrix(), context, parameters, idName, null);
+		Helper.helpToAddParameters(list, this.owner.getMatrix(), context, parameters, idName, null);
 	}
 
 
@@ -106,7 +106,7 @@ public class ApplicationStart extends AbstractAction
 				break;
 				
 			default:
-				res = ApplicationHelper.canFillParameter(this.owner.getMatrix(), context, parameters, idName, null, fieldName);
+				res = Helper.canFillParameter(this.owner.getMatrix(), context, parameters, idName, null, fieldName);
 				break;
 		}	
 		
@@ -119,11 +119,11 @@ public class ApplicationStart extends AbstractAction
 		switch (parameterToFill)
 		{
 			case idName:
-				ApplicationHelper.applicationsNames(list, context);
+				Helper.applicationsNames(list, context);
 				break;
 
 			default:
-				ApplicationHelper.fillListForParameter(list, this.owner.getMatrix(), context, parameters, idName, null, parameterToFill);
+				Helper.fillListForParameter(list, this.owner.getMatrix(), context, parameters, idName, null, parameterToFill);
 				break;
 		}
 	}
