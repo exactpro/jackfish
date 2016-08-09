@@ -46,21 +46,27 @@ public class ApplicationNewInstance extends AbstractAction
 	protected Boolean tab;
 
 	@Override
+	protected void helpToAddParametersDerived(List<ReadableValue> list, Context context, Parameters parameters) throws Exception
+	{
+		ApplicationHelper.helpToAddParameters(list, this.owner.getMatrix(), context, parameters, null, connectionName);
+	}
+
+	@Override
 	protected HelpKind howHelpWithParameterDerived(Context context, Parameters parameters, String fieldName) throws Exception
 	{
-		if (tabName.equals(fieldName))
+		boolean res = false;
+		switch (fieldName)
 		{
-			return HelpKind.ChooseFromList;
-		}
-		
-		parameters.evaluateAll(context.getEvaluator());
-		connection = ApplicationHelper.checkConnection(connection, parameters.get(connectionName));
-		if (connection != null)
-		{
-			connection.getApplication().getFactory().canFillParameter(fieldName);
+			case tabName:
+				res = true;
+				break;
+				
+			default:
+				res = ApplicationHelper.canFillParameter(this.owner.getMatrix(), context, parameters, null, connectionName, fieldName);
+				break;
 		}	
 		
-		return null;
+		return res ? HelpKind.ChooseFromList : null;
 	}
 	
 	@Override
@@ -74,16 +80,7 @@ public class ApplicationNewInstance extends AbstractAction
 				break;
 				
 			default:
-				parameters.evaluateAll(context.getEvaluator());
-				connection = ApplicationHelper.checkConnection(connection, parameters.get(connectionName));
-				if (connection != null)
-				{
-					String[] arr = connection.getApplication().getFactory().listForParameter(parameterToFill);
-					for (String str : arr)
-					{
-						list.add(new ReadableValue(context.getEvaluator().createString(str)));
-					}
-				}	
+				ApplicationHelper.fillListForParameter(list, this.owner.getMatrix(), context, parameters, null, connectionName, parameterToFill);
 				break;
 		}
 	}

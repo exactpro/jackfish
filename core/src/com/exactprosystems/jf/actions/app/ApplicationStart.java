@@ -91,11 +91,7 @@ public class ApplicationStart extends AbstractAction
 	@Override
 	protected void helpToAddParametersDerived(List<ReadableValue> list, Context context, Parameters parameters) throws Exception
 	{
-		parameters.evaluateAll(context.getEvaluator());
-		for (String str : context.getConfiguration().getApplicationPool().wellKnownStartArgs(Str.asString(parameters.get(idName))))
-		{
-			list.add(new ReadableValue(str));
-		}
+		ApplicationHelper.helpToAddParameters(list, this.owner.getMatrix(), context, parameters, idName, null);
 	}
 
 
@@ -110,7 +106,7 @@ public class ApplicationStart extends AbstractAction
 				break;
 				
 			default:
-				res = ApplicationHelper.canFillParameter(parameters, context, idName, fieldName);
+				res = ApplicationHelper.canFillParameter(this.owner.getMatrix(), context, parameters, idName, null, fieldName);
 				break;
 		}	
 		
@@ -127,7 +123,7 @@ public class ApplicationStart extends AbstractAction
 				break;
 
 			default:
-				ApplicationHelper.fillListForParameter(list, context, parameters, idName, parameterToFill);
+				ApplicationHelper.fillListForParameter(list, this.owner.getMatrix(), context, parameters, idName, null, parameterToFill);
 				break;
 		}
 	}
@@ -165,8 +161,7 @@ public class ApplicationStart extends AbstractAction
 	}
 
 	@Override
-	public void initDefaultValues() {
-		// TODO Auto-generated method stub
-		
+	public void initDefaultValues() 
+	{
 	}
 }

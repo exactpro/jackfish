@@ -21,9 +21,7 @@ import com.exactprosystems.jf.api.app.AppConnection;
 import com.exactprosystems.jf.api.app.IApplication;
 import com.exactprosystems.jf.api.app.IApplicationFactory;
 import com.exactprosystems.jf.api.app.IRemoteApplication;
-import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.error.ErrorKind;
-import com.exactprosystems.jf.app.ApplicationPool;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
@@ -52,15 +50,22 @@ public class ApplicationGetProperties extends AbstractAction
 	@Override
 	protected void helpToAddParametersDerived(List<ReadableValue> list, Context context, Parameters parameters) throws Exception
 	{
-		IApplicationFactory factory = ApplicationHelper.getFactory(null, this.owner.getMatrix(), context, parameters, connectionName);
-		String[] args = factory.wellKnownProperties();
-		
-		for (String arg : args)
-		{
-			list.add(new ReadableValue(arg));
-		}
+		ApplicationHelper.helpToAddParameters(list, this.owner.getMatrix(), context, parameters, null, connectionName);
 	}
 
+	@Override
+	protected HelpKind howHelpWithParameterDerived(Context context, Parameters parameters, String fieldName) throws Exception
+	{
+		boolean res = ApplicationHelper.canFillParameter(this.owner.getMatrix(), context, parameters, null, connectionName, fieldName);
+		return res ? HelpKind.ChooseFromList : null;
+	}
+	
+	@Override
+	protected void listToFillParameterDerived(List<ReadableValue> list, Context context, String parameterToFill, Parameters parameters) throws Exception
+	{
+		ApplicationHelper.fillListForParameter(list, this.owner.getMatrix(), context, parameters, null, connectionName, parameterToFill);
+	}
+	
 
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception

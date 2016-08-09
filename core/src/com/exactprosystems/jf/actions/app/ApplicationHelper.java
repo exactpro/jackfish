@@ -13,7 +13,6 @@ import java.util.List;
 import com.exactprosystems.jf.actions.ReadableValue;
 import com.exactprosystems.jf.api.app.AppConnection;
 import com.exactprosystems.jf.api.app.IApplicationFactory;
-import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.documents.config.Context;
@@ -22,13 +21,36 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 
 public class ApplicationHelper
 {
-	public static IApplicationFactory getFactory(String appId, Matrix matrix, Context context, Parameters parameters, String idName) throws Exception
+	public static void applicationsNames(List<ReadableValue> list, Context context) throws Exception
 	{
-		if (appId != null)
+		AbstractEvaluator evaluator = context.getEvaluator();
+		Configuration configuration = context.getConfiguration();
+		for (String str : configuration.getApplications())
+		{
+			list.add(new ReadableValue(evaluator.createString(str)));
+		}
+	}
+	
+	public static IApplicationFactory getFactory(Matrix matrix, Context context, Parameters parameters, String appName, String connectionName) throws Exception
+	{
+		try
+		{
+			parameters.evaluateAll(context.getEvaluator());
+		}
+		catch (Exception e)
+		{
+			// nothing to do
+		}
+
+		if (appName != null)
 		{
 			try
 			{
-				return context.getConfiguration().getApplicationPool().loadApplicationFactory(appId);
+		 		Object app = parameters.get(appName);
+				if (app != null)
+				{
+					return context.getConfiguration().getApplicationPool().loadApplicationFactory(app.toString());
+				}
 			}
 			catch (Exception e)
 			{
@@ -36,74 +58,58 @@ public class ApplicationHelper
 			}
 		}
 		
-		parameters.evaluateAll(context.getEvaluator());
- 		Object conn = parameters.get(idName);
-		if (conn instanceof AppConnection)
+		if (connectionName != null)
 		{
-			AppConnection connection = (AppConnection)conn;
-			return connection.getApplication().getFactory();
-		}
-
+			try
+			{
+		 		Object connection = parameters.get(connectionName);
+				if (connection instanceof AppConnection)
+				{
+					return ((AppConnection)connection).getApplication().getFactory();
+				}
+			}
+			catch (Exception e)
+			{
+				// nothing to do
+			}
 		
-		return matrix.getDefaultApp();
+		}
+		
+		IApplicationFactory factory = matrix.getDefaultApp();
+		if (factory == null)
+		{
+			throw new Exception("Choose default application at first.");
+		}
+		
+		return factory;
 	}
 
-	
-	public static AppConnection checkConnection(AppConnection connection, Object parameter)
+	public static void helpToAddParameters(List<ReadableValue> list, Matrix matrix, Context context, Parameters parameters,
+			String idName, String connectionName) throws Exception
 	{
-		if (connection != null)
+		IApplicationFactory factory = getFactory(matrix, context, parameters, idName, connectionName);
+		for (String arg : factory.wellKnownProperties())
 		{
-			return connection;
+			list.add(new ReadableValue(arg));
 		}
-		
-		if (parameter instanceof AppConnection)
-		{
-			return (AppConnection)parameter;
-		}
-		
-		return null;
+	}
+
+	public static boolean canFillParameter(Matrix matrix, Context context, Parameters parameters, 
+			String idName, String connectionName, String parameterName) throws Exception
+	{
+		IApplicationFactory factory = getFactory(matrix, context, parameters, idName, connectionName);
+		return factory.canFillParameter(parameterName);
 	}
 	
-	public static void applicationsNames(List<ReadableValue> list, Context context) throws Exception
+	public static void fillListForParameter(List<ReadableValue> list, Matrix matrix, Context context, Parameters parameters, 
+			String idName, String connectionName, String parameterName) throws Exception
 	{
 		AbstractEvaluator evaluator = context.getEvaluator();
-		Configuration configuration = context.getConfiguration();
-		for (String str : configuration.getApplications())
+		IApplicationFactory factory = getFactory(matrix, context, parameters, idName, connectionName);
+		for (String str : factory.listForParameter(parameterName))
 		{
-			String quoted = evaluator.createString(str);
-			list.add(new ReadableValue(quoted));
+			list.add(new ReadableValue(evaluator.createString(str)));
 		}
 	}
 	
-	protected void helpToAddParametersDerived(List<ReadableValue> list, Context context, Parameters parameters, String idName) throws Exception
-	{
-		parameters.evaluateAll(context.getEvaluator());
-		
-		
-		for (String str : context.getConfiguration().getApplicationPool().wellKnownStartArgs(Str.asString(parameters.get(idName))))
-		{
-			list.add(new ReadableValue(str));
-		}
-	}
-	
-	
-	public static boolean canFillParameter(Parameters parameters, Context context, String idName, String fieldName) throws Exception
-	{
-		parameters.evaluateAll(context.getEvaluator());
-		return context.getConfiguration().getApplicationPool().canFillParameter(Str.asString(parameters.get(idName)), fieldName);
-	}
-	
-	public static void fillListForParameter(List<ReadableValue> list, Context context, Parameters parameters, String idName,  String parameterName) throws Exception
-	{
-		AbstractEvaluator evaluator = context.getEvaluator();
-		parameters.evaluateAll(evaluator);
-		String[] arr = context.getConfiguration().getApplicationPool().listForParameter(Str.asString(parameters.get(idName)), parameterName);
-		for (String str : arr)
-		{
-			String quoted = evaluator.createString(str);
-			list.add(new ReadableValue(quoted));
-		}
-	}
-	
-
 }

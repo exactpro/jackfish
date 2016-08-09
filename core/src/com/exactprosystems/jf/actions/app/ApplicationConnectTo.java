@@ -53,11 +53,7 @@ public class ApplicationConnectTo extends AbstractAction
 	@Override
 	protected void helpToAddParametersDerived(List<ReadableValue> list, Context context, Parameters parameters) throws Exception
 	{
-		parameters.evaluateAll(context.getEvaluator());
-		for (String str : context.getConfiguration().getApplicationPool().wellKnownConnectArgs(Str.asString(parameters.get(idName))))
-		{
-			list.add(new ReadableValue(str));
-		}
+		ApplicationHelper.helpToAddParameters(list, this.owner.getMatrix(), context, parameters, idName, null);
 	}
 
 	@Override
@@ -71,7 +67,7 @@ public class ApplicationConnectTo extends AbstractAction
 				break;
 				
 			default:
-				res = ApplicationHelper.canFillParameter(parameters, context, idName, fieldName);
+				res = ApplicationHelper.canFillParameter(this.owner.getMatrix(), context, parameters, idName, null, fieldName);
 				break;
 		}	
 		
@@ -88,7 +84,7 @@ public class ApplicationConnectTo extends AbstractAction
 				break;
 
 			default:
-				ApplicationHelper.fillListForParameter(list, context, parameters, idName, parameterToFill);
+				ApplicationHelper.fillListForParameter(list, this.owner.getMatrix(), context, parameters, idName, null, parameterToFill);
 				break;
 		}
 	}
