@@ -52,24 +52,13 @@ public class ApplicationGetProperties extends AbstractAction
 	@Override
 	protected void helpToAddParametersDerived(List<ReadableValue> list, Context context, Parameters parameters) throws Exception
 	{
-//		// TODO remove it
-//		ApplicationPool pool; 
-//		IApplicationFactory app = this.owner.getMatrix().getDefaultApp();
-//		boolean b = app.canFillParameter("");
-//		// TODO remove it
+		IApplicationFactory factory = ApplicationHelper.getFactory(null, this.owner.getMatrix(), context, parameters, connectionName);
+		String[] args = factory.wellKnownProperties();
 		
-		
-		parameters.evaluateAll(context.getEvaluator());
-		connection = ApplicationHelper.checkConnection(connection, parameters.get(connectionName));
-		if (connection != null)
+		for (String arg : args)
 		{
-			String[] args = connection.getApplication().getFactory().wellKnownProperties();
-			
-			for (String arg : args)
-			{
-				list.add(new ReadableValue(arg));
-			}
-		}	
+			list.add(new ReadableValue(arg));
+		}
 	}
 
 

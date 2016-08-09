@@ -12,18 +12,40 @@ import java.util.List;
 
 import com.exactprosystems.jf.actions.ReadableValue;
 import com.exactprosystems.jf.api.app.AppConnection;
+import com.exactprosystems.jf.api.app.IApplicationFactory;
 import com.exactprosystems.jf.api.common.Str;
-import com.exactprosystems.jf.app.ApplicationPool;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.documents.config.Context;
+import com.exactprosystems.jf.documents.matrix.Matrix;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 
 public class ApplicationHelper
 {
-	public static ApplicationPool getPool(AppConnection connection, Context context, Parameters parameters, String idName)
+	public static IApplicationFactory getFactory(String appId, Matrix matrix, Context context, Parameters parameters, String idName) throws Exception
 	{
-		return null;
+		if (appId != null)
+		{
+			try
+			{
+				return context.getConfiguration().getApplicationPool().loadApplicationFactory(appId);
+			}
+			catch (Exception e)
+			{
+				// nothing to do
+			}
+		}
+		
+		parameters.evaluateAll(context.getEvaluator());
+ 		Object conn = parameters.get(idName);
+		if (conn instanceof AppConnection)
+		{
+			AppConnection connection = (AppConnection)conn;
+			return connection.getApplication().getFactory();
+		}
+
+		
+		return matrix.getDefaultApp();
 	}
 
 	

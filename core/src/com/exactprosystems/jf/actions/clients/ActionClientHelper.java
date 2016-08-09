@@ -23,6 +23,31 @@ import java.util.List;
 
 public class ActionClientHelper
 {
+	public static IClientFactory getFactory(String clientId, Matrix matrix, Context context, Parameters parameters, String idName) throws Exception
+	{
+		if (clientId != null)
+		{
+			try
+			{
+				return context.getConfiguration().getClientPool().loadClientFactory(clientId);
+			}
+			catch (Exception e)
+			{
+				// nothing to do
+			}
+		}
+		
+		parameters.evaluateAll(context.getEvaluator());
+ 		Object conn = parameters.get(idName);
+		if (conn instanceof ClientConnection)
+		{
+			ClientConnection connection = (ClientConnection)conn;
+			return connection.getClient().getFactory();
+		}
+		
+		return matrix.getDefaultClient();
+	}
+	
 	public static HelpKind canHelpWithParameters(Context context, Parameters parameters, String connectionName,  String fieldName)
 	{
 		parameters.evaluateAll(context.getEvaluator());

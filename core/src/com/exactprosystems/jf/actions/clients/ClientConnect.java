@@ -18,6 +18,7 @@ import com.exactprosystems.jf.actions.ActionGroups;
 import com.exactprosystems.jf.actions.ReadableValue;
 import com.exactprosystems.jf.api.client.ClientConnection;
 import com.exactprosystems.jf.api.client.IClient;
+import com.exactprosystems.jf.api.client.IClientFactory;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
@@ -63,14 +64,12 @@ public class ClientConnect extends AbstractAction
 	@Override
 	protected void helpToAddParametersDerived(List<ReadableValue> list, Context context, Parameters parameters) throws Exception
 	{
-		parameters.evaluateAll(context.getEvaluator());
-		Object value = parameters.get(connectionName);
-		if (value instanceof ClientConnection)
+		IClientFactory factory = ActionClientHelper.getFactory(null, this.owner.getMatrix(), context, parameters, connectionName);
+		String[] args = factory.wellKnownConnectArgs();
+		
+		for (String arg : args)
 		{
-			for (String str : ((ClientConnection)value).getClient().getFactory().wellKnownConnectArgs())
-			{
-				list.add(new ReadableValue(str));
-			}
+			list.add(new ReadableValue(arg));
 		}
 	}
 
