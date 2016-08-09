@@ -816,6 +816,15 @@ CellView > .text-input.text-field{
 
 }
 
-.needColor .content {
-	-fx-background-color: green;
+.gitMergeNoConflict .content{
+	-fx-background-color : rgba(0,255,0, 0.3);
+
+}
+.gitMergeYourConflict .content{
+	-fx-background-color : rgba(255,0,0,0.3);
+
+}
+.gitMergeTheirConflict .content {
+	-fx-background-color : rgba(0,0,255,0.3);
+
 }
