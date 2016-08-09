@@ -295,5 +295,8 @@ public class CssVariables
 		public static final String	DICTIONARY_PASTE			= IMAGES_DIR + "/paste_24.png";
 		public static final String	DICTIONARY_RECORD_ONE		= IMAGES_DIR + "/record_one.png";
 		public static final String	DICTIONARY_RECORD_INF		= IMAGES_DIR + "/record_inf.png";
+
+		public static final String	GIT_ACCEPT_YOUR				= IMAGES_DIR + "/acceptYour.png";
+		public static final String	GIT_ACCEPT_THEIR			= IMAGES_DIR + "/acceptTheir.png";
 	}
 }

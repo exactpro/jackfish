@@ -12,15 +12,17 @@ import com.exactprosystems.jf.tool.git.GitUtil;
 import com.exactprosystems.jf.tool.main.Main;
 
 import java.io.File;
-import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class MergeEditor
 {
 	private final String filePath;
 	private final Main model;
 
-	private String yoursText;
-	private String theirsText;
+	private List<String> yourLines;
+	private List<String> theirLines;
+	private List<Chunk> conflicts;
 
 	private MergeEditorController controller;
 
@@ -29,13 +31,13 @@ public class MergeEditor
 		this.filePath = filePath;
 		this.model = model;
 		this.controller = Common.loadController(this.getClass().getResource("MergeEditor.fxml"));
-		this.controller.init(this);
+		this.controller.init(this, this.filePath);
 
-		this.yoursText = GitUtil.getYours(this.model.getCredential(), filePath).stream().reduce((s, s2) -> s + System.lineSeparator() + s2).orElse("");
-		this.theirsText = GitUtil.getTheirs(this.model.getCredential(), filePath).stream().reduce((s, s2) -> s + System.lineSeparator() + s2).orElse("");
-		this.controller.displayYours(this.yoursText);
-		this.controller.displayTheirs(this.theirsText);
-		this.controller.displayResult(""); // TODO eval result
+		this.yourLines = GitUtil.getYours(this.model.getCredential(), filePath);
+		this.theirLines = GitUtil.getTheirs(this.model.getCredential(), filePath);
+		this.conflicts = GitUtil.getConflicts(this.model.getCredential(), this.filePath);
+
+		evaluate();
 	}
 
 	public void display()
@@ -45,29 +47,44 @@ public class MergeEditor
 
 	public void acceptTheirs()
 	{
-		this.controller.displayResult(this.theirsText);
+//		this.controller.displayResult(this.theirLines);
 	}
 
 	public void acceptYours()
 	{
-		this.controller.displayResult(this.yoursText);
+//		this.controller.displayResult(this.yourLines);
 	}
 
 	public void close()
 	{
-		check();
 		this.controller.closeDialog();
 	}
 
-	public void saveResult(String result) throws Exception
+	public void saveResult(List<String> result) throws Exception
 	{
-		check();
-		Common.writeToFile(new File(this.filePath), Arrays.asList(result.split(System.lineSeparator())));
+		Common.writeToFile(new File(this.filePath), result);
 		GitUtil.addFileToIndex(this.model.getCredential(), this.filePath);
 	}
 
-	private void check()
+	void dialogShown() throws Exception
 	{
+		this.controller.displayLines(this.conflicts);
+	}
 
+	private void evaluate()
+	{
+		List<Chunk> conflicts = this.conflicts;
+		Chunk previousChunk;
+		for (int i = 0; i < conflicts.size(); i++)
+		{
+			Chunk conflict = conflicts.get(i);
+			List<String> subYour = this.yourLines.subList(conflict.getFirstStart(), conflict.getFirstEnd());
+			List<String> subTheir = this.theirLines.subList(conflict.getSecondStart(), conflict.getSecondEnd());
+			String yourText = subYour.stream().collect(Collectors.joining("\n"));
+			String theirText = subTheir.stream().collect(Collectors.joining("\n"));
+			this.controller.addLines(yourText, theirText, "", true, i);
+
+			previousChunk = conflict;
+		}
 	}
 }

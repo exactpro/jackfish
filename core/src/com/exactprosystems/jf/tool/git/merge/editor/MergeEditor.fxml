@@ -1,55 +1,76 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8"
-			xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.exactprosystems.jf.tool.git.merge.editor.MergeEditorController">
-	<center>
-		<GridPane hgap="5.0" vgap="5.0" BorderPane.alignment="CENTER">
-			<columnConstraints>
-				<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
-				<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
-				<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
-			</columnConstraints>
-			<rowConstraints>
-				<RowConstraints minHeight="10.0" percentHeight="5.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-				<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-			</rowConstraints>
-			<children>
-				<Label text="Your version"/>
-				<Label text="Result" GridPane.columnIndex="1"/>
-				<Label text="Their version" GridPane.columnIndex="2"/>
-				<TextArea fx:id="taYour" editable="false" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1"/>
-				<TextArea fx:id="taResult" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
-				<TextArea fx:id="taTheir" editable="false" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
-			</children>
-			<BorderPane.margin>
-				<Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
-			</BorderPane.margin>
-		</GridPane>
-	</center>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.exactprosystems.jf.tool.git.merge.editor.MergeEditorController">
 	<top>
 		<ToolBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
 			<items>
-				<Button mnemonicParsing="false" text="Accept theirs" onAction="#acceptTheirs"/>
-				<Button mnemonicParsing="false" text="Accept yours" onAction="#acceptYours"/>
+				<Button mnemonicParsing="false" onAction="#acceptTheirs" text="Accept theirs" />
+				<Button mnemonicParsing="false" onAction="#acceptYours" text="Accept yours" />
 			</items>
 			<BorderPane.margin>
-				<Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+				<Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
 			</BorderPane.margin>
 		</ToolBar>
 	</top>
 	<bottom>
 		<HBox alignment="CENTER_RIGHT" prefHeight="46.0" prefWidth="600.0" spacing="20.0" BorderPane.alignment="CENTER">
 			<children>
-				<Button mnemonicParsing="false" text="Save" onAction="#save"/>
-				<Button mnemonicParsing="false" text="Close" onAction="#close"/>
+				<Button mnemonicParsing="false" onAction="#save" text="Save" />
+				<Button mnemonicParsing="false" onAction="#close" text="Close" />
 			</children>
 			<BorderPane.margin>
-				<Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+				<Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
 			</BorderPane.margin>
 		</HBox>
 	</bottom>
+   <center>
+      <BorderPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+         <center>
+            <ScrollPane fitToWidth="true" prefViewportHeight="454.70001220703125" prefViewportWidth="991.0">
+               <content>
+            		<GridPane fx:id="gridPane" maxHeight="1.7976931348623157E308" BorderPane.alignment="CENTER">
+            			<columnConstraints>
+            				<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            				<ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="40.0" minWidth="40.0" prefWidth="40.0" />
+            				<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            				<ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="40.0" minWidth="40.0" prefWidth="40.0" />
+            				<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            			</columnConstraints>
+            			<rowConstraints>
+            				<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            			</rowConstraints>
+            			<BorderPane.margin>
+            				<Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+            			</BorderPane.margin>
+            		</GridPane>
+               </content>
+            </ScrollPane>
+         </center>
+         <top>
+            <GridPane BorderPane.alignment="CENTER">
+              <columnConstraints>
+                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="40.0" minWidth="40.0" prefWidth="40.0" />
+                  <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="40.0" minWidth="40.0" prefWidth="40.0" />
+                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
+              </rowConstraints>
+               <children>
+      				<Label text="Your version" />
+      				<Label text="Result" GridPane.columnIndex="2" />
+      				<Label text="Their version" GridPane.columnIndex="4" />
+               </children>
+            </GridPane>
+         </top>
+      </BorderPane>
+   </center>
 </BorderPane>

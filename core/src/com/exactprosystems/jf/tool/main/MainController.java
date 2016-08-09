@@ -49,8 +49,6 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
-import static com.exactprosystems.jf.documents.config.Configuration.git;
-
 public class MainController implements Initializable, ContainingParent
 {
 	private final static int	PANE_WIDTH	= 800;
@@ -123,6 +121,7 @@ public class MainController implements Initializable, ContainingParent
 	public MenuItem				gitPull;
 	public MenuItem				gitReset;
 	public MenuItem				gitStatus;
+	public MenuItem				gitMerge;
 	public MenuItem				gitChangeCredential;
 
 	public Menu					menuHelp;
@@ -581,6 +580,7 @@ public class MainController implements Initializable, ContainingParent
 		gitPull.setDisable(!flag);
 		gitReset.setDisable(!flag);
 		gitStatus.setDisable(!flag);
+		gitMerge.setDisable(!flag);
 		gitChangeCredential.setDisable(!flag);
 	}
 

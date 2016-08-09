@@ -9,6 +9,7 @@ package com.exactprosystems.jf.tool.git;
 
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.tool.Common;
+import com.exactprosystems.jf.tool.git.merge.editor.Chunk;
 import com.exactprosystems.jf.tool.git.pull.GitPullBean;
 import com.exactprosystems.jf.tool.git.reset.FileWithStatusBean;
 import com.exactprosystems.jf.tool.git.reset.GitResetBean;
@@ -16,12 +17,14 @@ import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 import org.eclipse.jgit.api.*;
-import org.eclipse.jgit.api.MergeResult;
 import org.eclipse.jgit.api.errors.CheckoutConflictException;
 import org.eclipse.jgit.diff.DiffEntry;
 import org.eclipse.jgit.errors.UnsupportedCredentialItem;
 import org.eclipse.jgit.lib.*;
-import org.eclipse.jgit.merge.*;
+import org.eclipse.jgit.merge.MergeChunk;
+import org.eclipse.jgit.merge.ResolveMerger;
+import org.eclipse.jgit.merge.StrategyResolve;
+import org.eclipse.jgit.merge.ThreeWayMerger;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevTree;
 import org.eclipse.jgit.revwalk.RevWalk;
@@ -35,7 +38,6 @@ import org.eclipse.jgit.util.FS;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
-import java.nio.charset.Charset;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -196,17 +198,20 @@ public class GitUtil
 	public static void main(String[] args) throws Exception
 	{
 		CredentialBean bean = new CredentialBean("AndrewBystrov", "Andrew17051993", "", "");
-		gitPull(bean, new TextProgressMonitor());
-		int[][] qqs = getConflicts(bean, "qq");
+//		gitPull(bean, new TextProgressMonitor());
+		getConflicts(bean, "qq");
+//		qq.forEach(System.out::println);
+
+		String asd = "asd";
 	}
 
-	public static int[][] getConflicts(CredentialBean bean, String fileName) throws Exception
+	public static List<Chunk> getConflicts(CredentialBean bean, String fileName) throws Exception
 	{
 		try (Git git = git(bean))
 		{
 			Repository repo = git.getRepository();
 			ThreeWayMerger merger = new StrategyResolve().newMerger(repo, true);
-			boolean res = merger.merge(repo.resolve(Constants.HEAD), repo.resolve(Constants.FETCH_HEAD));
+			merger.merge(repo.resolve(Constants.HEAD), repo.resolve(Constants.FETCH_HEAD));
 			ResolveMerger resolveMerger = (ResolveMerger) merger;
 
 			Map<String, org.eclipse.jgit.merge.MergeResult<?>> mergeResults = resolveMerger.getMergeResults();
@@ -220,48 +225,60 @@ public class GitUtil
 			{
 				return null;
 			}
-			int nrOfConflicts = 0;
+			List<Chunk> lines = new ArrayList<>();
+			Chunk curCh = null;
+
 			for (MergeChunk mergeChunk : mergeChunks)
 			{
-				if (mergeChunk.getConflictState() == MergeChunk.ConflictState.FIRST_CONFLICTING_RANGE)
+				MergeChunk.ConflictState conflictState = mergeChunk.getConflictState();
+				switch (conflictState)
 				{
-					nrOfConflicts++;
-				}
-			}
-			int currentConflict = -1;
-			int[][] ret = new int[nrOfConflicts][3];
-			for (MergeChunk mergeChunk : mergeChunks)
-			{
-				// to store the end of this chunk (end of the last conflicting range)
-				int endOfChunk = 0;
-				if (mergeChunk.getConflictState().equals(MergeChunk.ConflictState.FIRST_CONFLICTING_RANGE))
-				{
-					if (currentConflict > -1)
-					{
-						// there was a previous conflicting range for which the end
-						// is not set yet - set it!
-						ret[currentConflict][2] = endOfChunk;
-					}
-					currentConflict++;
-					endOfChunk = mergeChunk.getEnd();
-					ret[currentConflict][mergeChunk.getSequenceIndex()] = mergeChunk.getBegin();
-				}
-				if (mergeChunk.getConflictState().equals(MergeChunk.ConflictState.NEXT_CONFLICTING_RANGE))
-				{
-					if (mergeChunk.getEnd() > endOfChunk)
-					{
-						endOfChunk = mergeChunk.getEnd();
-					}
-					ret[currentConflict][mergeChunk.getSequenceIndex()] = mergeChunk.getBegin();
+					case NO_CONFLICT: break;
+					case FIRST_CONFLICTING_RANGE:
+						curCh = new Chunk(mergeChunk.getBegin(), mergeChunk.getEnd());
+						lines.add(curCh);
+						break;
+					case NEXT_CONFLICTING_RANGE:
+						curCh.setSecondStart(mergeChunk.getBegin());
+						curCh.setSecondEnd(mergeChunk.getEnd());
+						break;
 				}
 			}
 
-			MergeFormatter formatter = new MergeFormatter();
-			formatter.formatMerge(System.out, mergeChunks, "names", "ours", "theirs", Charset.defaultCharset().name());
-
-			String asd = "asd";
+//			int currentConflict = -1;
+//
+//
+//			int[][] ret = new int[nrOfConflicts][3];
+//			for (MergeChunk mergeChunk : mergeChunks)
+//			{
+//				// to store the end of this chunk (end of the last conflicting range)
+//				int endOfChunk = 0;
+//				if (mergeChunk.getConflictState().equals(MergeChunk.ConflictState.FIRST_CONFLICTING_RANGE))
+//				{
+//					if (currentConflict > -1)
+//					{
+//						// there was a previous conflicting range for which the end
+//						// is not set yet - set it!
+//						ret[currentConflict][2] = endOfChunk;
+//					}
+//					currentConflict++;
+//					endOfChunk = mergeChunk.getEnd();
+//					ret[currentConflict][mergeChunk.getSequenceIndex()] = mergeChunk.getBegin();
+//				}
+//				if (mergeChunk.getConflictState().equals(MergeChunk.ConflictState.NEXT_CONFLICTING_RANGE))
+//				{
+//					if (mergeChunk.getEnd() > endOfChunk)
+//					{
+//						endOfChunk = mergeChunk.getEnd();
+//					}
+//					ret[currentConflict][mergeChunk.getSequenceIndex()] = mergeChunk.getBegin();
+//				}
+//			}
+//
+//			String asd = "asd";
+//			return null;
+			return lines;
 		}
-		return new int[5][];
 	}
 	//endregion
 
