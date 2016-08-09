@@ -16,6 +16,11 @@ import com.exactprosystems.jf.documents.msgdic.MessageDictionary;
 @XmlRootElement(name = "dictionary")
 public class MessageDictionaryFx extends MessageDictionary
 {
+	public MessageDictionaryFx()
+	{
+		super();
+	}
+	
 	public MessageDictionaryFx(String fileName, DocumentFactory factory)
 	{
 		super(fileName, factory);
