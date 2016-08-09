@@ -811,4 +811,11 @@ CellView > .text-input.text-field{
 	-fx-background-color : brown;
 
 }
+.changesLine {
+	-fx-background-color : #20b2aa
 
+}
+
+.needColor .content {
+	-fx-background-color: green;
+}
