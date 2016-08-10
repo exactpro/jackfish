@@ -7,7 +7,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.exactprosystems.jf.actions.gui;
 
-import static com.exactprosystems.jf.actions.gui.ActionGuiHelper.message;
+import static com.exactprosystems.jf.actions.gui.Helper.message;
 
 import com.exactprosystems.jf.actions.*;
 import com.exactprosystems.jf.api.app.*;
@@ -67,7 +67,7 @@ public class DialogSwitchToWindow extends AbstractAction
 		switch (parameterToFill)
 		{
 			case dialogName:
-				ActionGuiHelper.dialogsNames(context, super.owner.getMatrix(), this.connection, list);
+				Helper.dialogsNames(context, super.owner.getMatrix(), this.connection, list);
 				break;
 		}
 	}

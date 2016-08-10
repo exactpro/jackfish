@@ -35,7 +35,7 @@ import java.util.*;
 
 import javax.naming.OperationNotSupportedException;
 
-import static com.exactprosystems.jf.actions.gui.ActionGuiHelper.*;
+import static com.exactprosystems.jf.actions.gui.Helper.*;
 
 @ActionAttribute(
 		group 					= ActionGroups.GUI, 
@@ -100,7 +100,7 @@ public class DialogFill extends AbstractAction
 		switch (parameterToFill)
 		{
 			case dialogName:
-				ActionGuiHelper.dialogsNames(context, super.owner.getMatrix(), this.connection, list);
+				Helper.dialogsNames(context, super.owner.getMatrix(), this.connection, list);
 				break;
 				
 			case doNotCloseName:
@@ -115,7 +115,7 @@ public class DialogFill extends AbstractAction
 	@Override
 	public void helpToAddParametersDerived(List<ReadableValue> list, Context context, Parameters parameters) throws Exception
 	{
-		ActionGuiHelper.extraParameters(list, super.owner.getMatrix(), this.connection, Str.asString(parameters.get(dialogName)), parameters);
+		Helper.extraParameters(list, super.owner.getMatrix(), this.connection, Str.asString(parameters.get(dialogName)), parameters);
 	}
 
 	@Override

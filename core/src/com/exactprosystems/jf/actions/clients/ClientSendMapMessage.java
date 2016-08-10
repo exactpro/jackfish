@@ -48,20 +48,21 @@ public class ClientSendMapMessage extends AbstractAction
 	@ActionFieldAttribute(name = checkName, mandatory = false, description = "Check the message before sending." )
 	protected boolean	check;
 
-	@Override
-	public void initDefaultValues() 
+
+	public ClientSendMapMessage()
 	{
-		check	= true;
 	}
-	
+
+
 	@Override
-	protected HelpKind howHelpWithParameterDerived(Context context, Parameters parameters, String fieldName)
+	protected HelpKind howHelpWithParameterDerived(Context context, Parameters parameters, String fieldName) throws Exception
 	{
 		if (checkName.equals(fieldName))
 		{
 			return HelpKind.ChooseFromList;
 		}
-		return ActionClientHelper.canHelpWithParameters(context, parameters, connectionName, fieldName);
+		boolean res = Helper.canFillParameter(this.owner.getMatrix(), context, parameters, null, connectionName, fieldName);
+		return res ? HelpKind.ChooseFromList : null;
 	}
 
 	@Override
@@ -72,16 +73,18 @@ public class ClientSendMapMessage extends AbstractAction
 			case checkName:
 				list.add(ReadableValue.TRUE);
 				list.add(ReadableValue.FALSE);
-
 				break;
 				
-			default:
-					ActionClientHelper.listToFillParameterDerived(list, context, parameters, connectionName, parameterToFill);
+			case messageName:
+				Helper.messageTypes(list, this.owner.getMatrix(), context, parameters, null, connectionName);
+				break;
 		}
 	}
 
-	public ClientSendMapMessage()
+	@Override
+	public void initDefaultValues() 
 	{
+		check	= true;
 	}
 
 	@Override

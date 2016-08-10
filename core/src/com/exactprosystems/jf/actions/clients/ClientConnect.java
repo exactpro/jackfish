@@ -18,7 +18,7 @@ import com.exactprosystems.jf.actions.ActionGroups;
 import com.exactprosystems.jf.actions.ReadableValue;
 import com.exactprosystems.jf.api.client.ClientConnection;
 import com.exactprosystems.jf.api.client.IClient;
-import com.exactprosystems.jf.api.client.IClientFactory;
+import com.exactprosystems.jf.api.common.ParametersKind;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
@@ -50,27 +50,27 @@ public class ClientConnect extends AbstractAction
 	}
 
 	@Override
+	protected void helpToAddParametersDerived(List<ReadableValue> list, Context context, Parameters parameters) throws Exception
+	{
+		Helper.helpToAddParameters(list, ParametersKind.CONNECT, context, this.owner.getMatrix(), parameters, null, connectionName, null);
+	}
+
+	@Override
 	protected HelpKind howHelpWithParameterDerived(Context context, Parameters parameters, String fieldName) throws Exception
 	{
-		return ActionClientHelper.canHelpWithParameters(context, parameters, connectionName, fieldName);
+		boolean res = Helper.canFillParameter(this.owner.getMatrix(), context, parameters, null, connectionName, fieldName);
+		return res ? HelpKind.ChooseFromList : null;
 	}
 	
 	@Override
 	protected void listToFillParameterDerived(List<ReadableValue> list, Context context, String parameterToFill, Parameters parameters) throws Exception
 	{
-		ActionClientHelper.listToFillParameterDerived(list, context, parameters, connectionName, parameterToFill);
+		Helper.messageValues(list, context, this.owner.getMatrix(), parameters, null, connectionName, null, parameterToFill);
 	}
 
 	@Override
-	protected void helpToAddParametersDerived(List<ReadableValue> list, Context context, Parameters parameters) throws Exception
+	public void initDefaultValues() 
 	{
-		IClientFactory factory = ActionClientHelper.getFactory(null, this.owner.getMatrix(), context, parameters, connectionName);
-		String[] args = factory.wellKnownConnectArgs();
-		
-		for (String arg : args)
-		{
-			list.add(new ReadableValue(arg));
-		}
 	}
 
 	@Override
@@ -94,11 +94,4 @@ public class ClientConnect extends AbstractAction
 			}
 		}
 	}
-
-	@Override
-	public void initDefaultValues() {
-		// TODO Auto-generated method stub
-		
-	}
-
 }

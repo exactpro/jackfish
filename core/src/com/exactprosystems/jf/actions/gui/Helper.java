@@ -8,7 +8,7 @@
 
 package com.exactprosystems.jf.actions.gui;
 
-import static com.exactprosystems.jf.actions.gui.ActionGuiHelper.message;
+import static com.exactprosystems.jf.actions.gui.Helper.message;
 
 import com.exactprosystems.jf.actions.AbstractAction;
 import com.exactprosystems.jf.actions.ReadableValue;
@@ -36,7 +36,7 @@ import java.rmi.ServerException;
 import java.util.Collection;
 import java.util.List;
 
-public class ActionGuiHelper
+public class Helper
 {
 	public static void dialogsNames(Context context, Matrix matrix, AppConnection connection, List<ReadableValue> list) throws Exception
 	{

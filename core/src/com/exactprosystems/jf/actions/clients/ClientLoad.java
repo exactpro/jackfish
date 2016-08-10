@@ -55,11 +55,7 @@ public class ClientLoad extends AbstractAction
 		switch (parameterToFill)
 		{
 			case idName:
-				for (String str : context.getConfiguration().getClientPool().clientNames())
-				{
-					String quoted = context.getEvaluator().createString(str);
-					list.add(new ReadableValue(quoted));
-				}
+				Helper.clientsNames(list, context);
 				break;
 
 			default:
@@ -77,6 +73,11 @@ public class ClientLoad extends AbstractAction
 	}
 	
 	@Override
+	public void initDefaultValues() 
+	{
+	}
+
+	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
 		IClientsPool client = context.getConfiguration().getClientPool();
@@ -84,11 +85,4 @@ public class ClientLoad extends AbstractAction
 		
 		super.setResult(connection);
 	}
-
-	@Override
-	public void initDefaultValues() {
-		// TODO Auto-generated method stub
-		
-	}
-
 }

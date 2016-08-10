@@ -17,6 +17,7 @@ import com.exactprosystems.jf.api.client.ClientConnection;
 import com.exactprosystems.jf.api.client.ClientHelper;
 import com.exactprosystems.jf.api.client.IClient;
 import com.exactprosystems.jf.api.client.Possibility;
+import com.exactprosystems.jf.api.common.ParametersKind;
 import com.exactprosystems.jf.api.conditions.Condition;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
@@ -57,15 +58,9 @@ public class ClientCountMessages extends AbstractAction
 	}
 	
 	@Override
-	public void initDefaultValues() 
-	{
-		conditions = null;
-	}
-	
-	@Override
 	protected void helpToAddParametersDerived(List<ReadableValue> list, Context context, Parameters parameters) throws Exception
 	{
-		ActionClientHelper.additionParameters(list, context, super.owner.getMatrix(), parameters, connectionName, messageTypeName);
+		Helper.helpToAddParameters(list, ParametersKind.ENCODE, context, this.owner.getMatrix(), parameters, null, connectionName, messageTypeName);
 	}
 
 	@Override
@@ -75,8 +70,8 @@ public class ClientCountMessages extends AbstractAction
 		{
 			return HelpKind.ChooseFromList;
 		}
-		
-		return ActionClientHelper.canHelpWithParameters(context, parameters, connectionName, fieldName);
+		boolean res = Helper.canFillParameter(this.owner.getMatrix(), context, parameters, null, connectionName, fieldName);
+		return res ? HelpKind.ChooseFromList : null;
 	}
 	
 	@Override
@@ -85,15 +80,21 @@ public class ClientCountMessages extends AbstractAction
 		switch (parameterToFill)
 		{
 			case messageTypeName:
-				ActionClientHelper.messageTypes(list, context, super.owner.getMatrix(), parameters, connectionName);
+				Helper.messageTypes(list, this.owner.getMatrix(), context, parameters, null, connectionName);
 				break;
 				
 			default:
-				ActionClientHelper.messageValues(list, context, super.owner.getMatrix(), parameters, connectionName, messageTypeName, parameterToFill);
+				Helper.messageValues(list, context, this.owner.getMatrix(), parameters, null, connectionName, messageTypeName, parameterToFill);
 				break;
 		}
 	}
 	
+	@Override
+	public void initDefaultValues() 
+	{
+		conditions = null;
+	}
+
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator)  throws Exception
 	{

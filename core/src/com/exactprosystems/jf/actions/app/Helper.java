@@ -88,7 +88,7 @@ public class Helper
 			String idName, String connectionName) throws Exception
 	{
 		IApplicationFactory factory = getFactory(matrix, context, parameters, idName, connectionName);
-		for (String arg : factory.wellKnownProperties())
+		for (String arg : factory.wellKnownParameters())
 		{
 			list.add(new ReadableValue(arg));
 		}

@@ -8,7 +8,7 @@
 
 package com.exactprosystems.jf.actions.gui;
 
-import static com.exactprosystems.jf.actions.gui.ActionGuiHelper.message;
+import static com.exactprosystems.jf.actions.gui.Helper.message;
 
 import com.exactprosystems.jf.actions.AbstractAction;
 import com.exactprosystems.jf.actions.ActionAttribute;
@@ -79,11 +79,11 @@ public class ImageGet extends AbstractAction
 		switch (parameterToFill)
 		{
 			case dialogName:
-				ActionGuiHelper.dialogsNames(context, super.owner.getMatrix(), this.connection, list);
+				Helper.dialogsNames(context, super.owner.getMatrix(), this.connection, list);
 				break;
 
 			case nameName:
-				ActionGuiHelper.extraParameters(list, super.owner.getMatrix(), this.connection, Str.asString(parameters.get(dialogName)), parameters);
+				Helper.extraParameters(list, super.owner.getMatrix(), this.connection, Str.asString(parameters.get(dialogName)), parameters);
 			default:
 		}
 	}

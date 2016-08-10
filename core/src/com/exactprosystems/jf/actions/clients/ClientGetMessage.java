@@ -20,6 +20,7 @@ import com.exactprosystems.jf.api.client.ClientHelper;
 import com.exactprosystems.jf.api.client.IClient;
 import com.exactprosystems.jf.api.client.MapMessage;
 import com.exactprosystems.jf.api.client.Possibility;
+import com.exactprosystems.jf.api.common.ParametersKind;
 import com.exactprosystems.jf.api.conditions.Condition;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
@@ -65,30 +66,21 @@ public class ClientGetMessage extends AbstractAction
 	}
 	
 	@Override
-	public void initDefaultValues() 
-	{
-		conditions = null;
-		timeout = 20000;
-		remove = true;
-	}
-	
-	@Override
 	protected void helpToAddParametersDerived(List<ReadableValue> list, Context context, Parameters parameters) throws Exception
 	{
-		ActionClientHelper.additionParameters(list, context, super.owner.getMatrix(), parameters, connectionName, messageTypeName);
+		Helper.helpToAddParameters(list, ParametersKind.ENCODE, context, this.owner.getMatrix(), parameters, null, connectionName, messageTypeName);
 	}
 
 	@Override
 	protected HelpKind howHelpWithParameterDerived(Context context, Parameters parameters, String fieldName) throws Exception
 	{
-		if (messageTypeName.equals(fieldName) || removeName.equals(fieldName))
+		if (messageTypeName.equals(fieldName))
 		{
 			return HelpKind.ChooseFromList;
 		}
-		
-		return ActionClientHelper.canHelpWithParameters(context, parameters, connectionName, fieldName);
+		boolean res = Helper.canFillParameter(this.owner.getMatrix(), context, parameters, null, connectionName, fieldName);
+		return res ? HelpKind.ChooseFromList : null;
 	}
-	
 	
 	@Override
 	protected void listToFillParameterDerived(List<ReadableValue> list, Context context, String parameterToFill, Parameters parameters) throws Exception
@@ -96,7 +88,7 @@ public class ClientGetMessage extends AbstractAction
 		switch (parameterToFill)
 		{
 			case messageTypeName:
-				ActionClientHelper.messageTypes(list, context, super.owner.getMatrix(), parameters, connectionName);
+				Helper.messageTypes(list, this.owner.getMatrix(), context, parameters, null, connectionName);
 				break;
 				
 			case removeName:
@@ -105,9 +97,17 @@ public class ClientGetMessage extends AbstractAction
 				break;
 
 			default:
-				ActionClientHelper.messageValues(list, context, super.owner.getMatrix(), parameters, connectionName, messageTypeName, parameterToFill);
+				Helper.messageValues(list, context, this.owner.getMatrix(), parameters, null, connectionName, messageTypeName, parameterToFill);
 				break;
 		}
+	}
+	
+	@Override
+	public void initDefaultValues() 
+	{
+		conditions = null;
+		timeout = 20000;
+		remove = true;
 	}
 	
 	@Override

@@ -8,7 +8,7 @@
 
 package com.exactprosystems.jf.actions.gui;
 
-import static com.exactprosystems.jf.actions.gui.ActionGuiHelper.message;
+import static com.exactprosystems.jf.actions.gui.Helper.message;
 
 import com.exactprosystems.jf.actions.AbstractAction;
 import com.exactprosystems.jf.actions.ActionAttribute;
@@ -64,7 +64,7 @@ public class DialogClose extends AbstractAction
 		switch (parameterToFill)
 		{
 			case dialogName:
-				ActionGuiHelper.dialogsNames(context, super.owner.getMatrix(), this.connection, list);
+				Helper.dialogsNames(context, super.owner.getMatrix(), this.connection, list);
 				break;
 
 			default:
@@ -75,7 +75,7 @@ public class DialogClose extends AbstractAction
 	@Override
 	public void helpToAddParametersDerived(List<ReadableValue> list, Context context, Parameters parameters) throws Exception
 	{
-		ActionGuiHelper.extraParameters(list, super.owner.getMatrix(), this.connection, Str.asString(parameters.get(dialogName)), parameters);
+		Helper.extraParameters(list, super.owner.getMatrix(), this.connection, Str.asString(parameters.get(dialogName)), parameters);
 	}
 
 	@Override
