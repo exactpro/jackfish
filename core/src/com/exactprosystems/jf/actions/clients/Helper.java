@@ -19,7 +19,7 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 
 import java.util.List;
 
-public class Helper
+class Helper
 {
 	public static void clientsNames(List<ReadableValue> list, Context context) throws Exception
 	{

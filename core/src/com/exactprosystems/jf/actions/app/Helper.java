@@ -20,7 +20,7 @@ import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.Matrix;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 
-public class Helper
+class Helper
 {
 	public static void applicationsNames(List<ReadableValue> list, Context context) throws Exception
 	{
