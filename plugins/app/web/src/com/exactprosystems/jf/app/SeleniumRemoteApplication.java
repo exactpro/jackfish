@@ -13,10 +13,8 @@ import com.exactprosystems.jf.api.common.SerializablePair;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.error.app.FeatureNotSupportedException;
 import com.exactprosystems.jf.api.error.app.NullParameterException;
-import com.exactprosystems.jf.api.error.app.ProxyException;
 import com.exactprosystems.jf.app.js.JSInjection;
 import com.exactprosystems.jf.app.js.JSInjectionFactory;
-
 import org.apache.log4j.*;
 import org.openqa.selenium.*;
 import org.openqa.selenium.Dimension;
@@ -31,7 +29,6 @@ import org.w3c.dom.Node;
 import javax.imageio.ImageIO;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-
 import java.awt.*;
 import java.awt.Rectangle;
 import java.awt.event.InputEvent;
@@ -628,8 +625,10 @@ public class SeleniumRemoteApplication extends RemoteApplication
 				Number startX = (Number) driver.executeScript("return document.documentElement.getBoundingClientRect().left");
 				Number startY = (Number) driver.executeScript("return document.documentElement.getBoundingClientRect().top");
 
-				Number width = (Number) driver.executeScript("return window.innerWidth");
-				Number height = (Number) driver.executeScript("return window.innerHeight");
+				Number width = (Number) driver.executeScript(
+						"return window.innerWidth || document.documentElement.getBoundingClientRect().right - document.documentElement.getBoundingClientRect().left");
+				Number height = (Number) driver.executeScript(
+						"return window.innerHeight || document.documentElement.getBoundingClientRect().bottom - document.documentElement.getBoundingClientRect().top");
 
 				Rectangle windowRectangle = new Rectangle(Math.abs(startX.intValue()), Math.abs(startY.intValue()), width.intValue(), height.intValue());
 				Rectangle returnRectangle = windowRectangle.intersection(componentRectangle);
