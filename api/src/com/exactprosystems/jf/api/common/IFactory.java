@@ -5,11 +5,16 @@
 //  This is unpublished, licensed software, confidential and proprietary
 //  information which is the property of Exactpro Systems, LLC or its licensors.
 ////////////////////////////////////////////////////////////////////////////////
+
 package com.exactprosystems.jf.api.common;
 
 public interface IFactory
 {
+	String[]		wellKnownParameters(ParametersKind kind);
+
+	@Deprecated
 	String[]		wellKnownParameters();
+	
 	boolean			canFillParameter(String parameterToFill);
 	String[]		listForParameter(String parameterToFill);
 }

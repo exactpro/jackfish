@@ -8,6 +8,7 @@
 
 package com.exactprosystems.jf.service;
 
+import com.exactprosystems.jf.api.common.ParametersKind;
 import com.exactprosystems.jf.api.service.IService;
 import com.exactprosystems.jf.api.service.IServiceFactory;
 import com.exactprosystems.jf.api.service.ServiceHelper;
@@ -21,7 +22,7 @@ public class MatrixServiceFactory implements IServiceFactory
 	public final static String onConnectedName 		= "OnConnected";
 	
 	private static final int requiredMajorVersion = 2;
-	private static final int requiredMinorVersion = 15;
+	private static final int requiredMinorVersion = 19;
 
 	@Override
 	public boolean canFillParameter(String parameterToFill)
@@ -75,6 +76,13 @@ public class MatrixServiceFactory implements IServiceFactory
 	public boolean isSupported(int major, int minor)
 	{
 		return (major * 1000 + minor) >= (requiredMajorVersion * 1000 + requiredMinorVersion);
+	}
+
+	@Override
+	public String[] wellKnownParameters(ParametersKind kind)
+	{
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	private static String[] knownParameters = { };

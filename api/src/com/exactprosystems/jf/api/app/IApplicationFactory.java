@@ -17,9 +17,14 @@ public interface IApplicationFactory  extends VersionSupported, IFactory
 	String				getHelp();
 	void				init(IGuiDictionary dictionary);
 	
+	@Deprecated
 	String[]			wellKnownProperties();
+	@Deprecated
 	String[]			wellKnownStartArgs();
+	@Deprecated
 	String[]			wellKnownConnectArgs();
+
+	
 	ControlKind[]		supportedControlKinds();
 
 	IApplication 		createApplication() throws Exception;

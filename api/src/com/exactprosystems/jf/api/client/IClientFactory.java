@@ -17,7 +17,9 @@ public interface IClientFactory  extends VersionSupported, IFactory
 {
 	void				init(IMessageDictionary dictionary);
 	
+	@Deprecated
 	String[] 			wellKnownStartArgs();
+	@Deprecated
 	String[]			wellKnownConnectArgs();
 
 	IClient 			createClient();

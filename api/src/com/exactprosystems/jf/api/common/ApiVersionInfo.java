@@ -11,7 +11,7 @@ package com.exactprosystems.jf.api.common;
 public class ApiVersionInfo
 {
 	private static final int majorVersion = 2;
-	private static final int minorVersion = 18;
+	private static final int minorVersion = 19;
 	
 	public static int majorVersion() 
 	{

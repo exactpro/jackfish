@@ -6,18 +6,9 @@
 //  information which is the property of Exactpro Systems, LLC or its licensors.
 ////////////////////////////////////////////////////////////////////////////////
 
-package com.exactprosystems.jf.api.service;
+package com.exactprosystems.jf.api.common;
 
-import java.util.Set;
-
-import com.exactprosystems.jf.api.common.IFactory;
-import com.exactprosystems.jf.api.common.VersionSupported;
-
-public interface IServiceFactory  extends VersionSupported, IFactory
+public enum ParametersKind
 {
-	@Deprecated
-	String[] wellKnownStartArgs();
-
-	IService createService();
-	Set<ServicePossibility> possebilities();
+	LOAD, START, CONNECT, STOP, PROPERTY, ENCODE 
 }

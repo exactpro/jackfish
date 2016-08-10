@@ -12,13 +12,14 @@ import com.exactprosystems.jf.api.app.ControlKind;
 import com.exactprosystems.jf.api.app.IApplication;
 import com.exactprosystems.jf.api.app.IApplicationFactory;
 import com.exactprosystems.jf.api.app.IGuiDictionary;
+import com.exactprosystems.jf.api.common.ParametersKind;
 
 import java.util.Scanner;
 
 public class WebAppFactory implements IApplicationFactory
 {
 	private static final int requiredMajorVersion = 2;
-	private static final int requiredMinorVersion = 18;
+	private static final int requiredMinorVersion = 19;
 
 	public final static String jreExecName 			= "jreExec";
 	public final static String jreArgsName 			= "jreArgs";
@@ -182,4 +183,11 @@ public class WebAppFactory implements IApplicationFactory
 	}
 	//----------------------------------------------------------------------------------------------
 
+
+	@Override
+	public String[] wellKnownParameters(ParametersKind kind)
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
