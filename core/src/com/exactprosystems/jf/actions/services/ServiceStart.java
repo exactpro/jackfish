@@ -9,6 +9,7 @@
 package com.exactprosystems.jf.actions.services;
 
 import com.exactprosystems.jf.actions.*;
+import com.exactprosystems.jf.api.common.ParametersKind;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.api.service.IService;
 import com.exactprosystems.jf.api.service.ServiceConnection;
@@ -70,7 +71,7 @@ public class ServiceStart extends AbstractAction
 	protected void helpToAddParametersDerived(List<ReadableValue> list, Context context, Parameters parameters) throws Exception
 	{
 		ServiceConnection connection = ActionServiceHelper.checkConnection(parameters.get(connectionName));
-		for (String str : connection.getService().getFactory().wellKnownStartArgs())
+		for (String str : connection.getService().getFactory().wellKnownParameters(ParametersKind.START))
 		{
 			list.add(new ReadableValue(str));
 		}

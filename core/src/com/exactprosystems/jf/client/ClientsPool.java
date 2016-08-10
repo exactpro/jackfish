@@ -97,24 +97,6 @@ public class ClientsPool implements IClientsPool
 	// IClientPool
 	//----------------------------------------------------------------------------------------------
 	@Override
-	public boolean canFillParameter(String id, String parameterToFill) throws Exception
-	{
-		ClientEntry entry = parametersEntry(id);
-		IClientFactory clientFactory = loadClientFactory(id, entry);
-
-		return clientFactory.canFillParameter(parameterToFill);
-	}
-
-	@Override
-	public String[] listForParameter(String id, String parameterToFill) throws Exception
-	{
-		ClientEntry entry = parametersEntry(id);
-		IClientFactory clientFactory = loadClientFactory(id, entry);
-
-		return clientFactory.listForParameter(parameterToFill);
-	}
-
-	@Override
 	public List<String> clientNames()
 	{
 		List<String> result = new ArrayList<String>();
@@ -134,36 +116,6 @@ public class ClientsPool implements IClientsPool
 		}
 		return result;
 	}	
-
-	@Override
-	public String[] wellKnownParameters(String id) throws Exception
-	{
-		ClientEntry entry = parametersEntry(id);
-		IClientFactory clientFactory = loadClientFactory(id, entry);
-
-		return clientFactory.wellKnownParameters();
-	}
-
-
-	@Override
-	public String[] wellKnownStartArgs(String id) throws Exception
-	{
-		ClientEntry entry = parametersEntry(id);
-		IClientFactory clientFactory = loadClientFactory(id, entry);
-
-		return clientFactory.wellKnownStartArgs();
-	}
-
-
-	@Override
-	public String[] wellKnownConnectArgs(String id) throws Exception
-	{
-		ClientEntry entry = parametersEntry(id);
-		IClientFactory clientFactory = loadClientFactory(id, entry);
-
-		return clientFactory.wellKnownConnectArgs();
-	}
-	
 
 	@Override
 	public IClientFactory loadClientFactory(String id) throws Exception

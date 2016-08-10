@@ -12,6 +12,8 @@ import com.exactprosystems.jf.api.client.IClientFactory;
 import com.exactprosystems.jf.api.client.IClientsPool;
 import com.exactprosystems.jf.api.client.Possibility;
 import com.exactprosystems.jf.api.common.IPool;
+import com.exactprosystems.jf.api.common.ParametersKind;
+import com.exactprosystems.jf.api.service.IServiceFactory;
 import com.exactprosystems.jf.api.service.IServicesPool;
 import com.exactprosystems.jf.api.service.ServiceConnection;
 import com.exactprosystems.jf.api.service.ServiceStatus;
@@ -444,14 +446,14 @@ public class ConfigurationFx extends Configuration
 
 	public void showPossibilities(ClientEntry entry) throws Exception
 	{
-		ClientsPool pool = new ClientsPool(getFactory());
-		IClientFactory factory = pool.loadClientFactory(entry.toString());
+		IClientFactory factory = getClientPool().loadClientFactory(entry.toString());
 		this.showPossibilities(factory.possebilities(), entry.toString());
 	}
 
 	public void addAllClientParams(ClientEntry entry) throws Exception
 	{
-		addAllKnowParameters(entry, entry.getParameters(), new ClientsPool(getFactory()).wellKnownParameters("" + entry), this::displayClient);
+		IClientFactory factory = getClientPool().loadClientFactory("" + entry);
+		addAllKnowParameters(entry, entry.getParameters(), factory.wellKnownParameters(ParametersKind.LOAD), this::displayClient);
 	}
 
 	public void testClientVersion() throws Exception
@@ -509,13 +511,14 @@ public class ConfigurationFx extends Configuration
 
 	public void addAllServiceParams(ServiceEntry entry) throws Exception
 	{
-		addAllKnowParameters(entry, entry.getParameters(), new ServicePool(getFactory()).wellKnownParameters("" + entry), this::displayService);
+		IServiceFactory factory = getServicesPool().loadServiceFactory("" + entry);
+		addAllKnowParameters(entry, entry.getParameters(), factory.wellKnownParameters(ParametersKind.LOAD), this::displayService);
 	}
 
 	public void testServiceVersion() throws Exception
 	{
 		this.supportedServices.clear();
-		ServicePool servicePool = new ServicePool(getFactory());
+		IServicesPool servicePool = getServicesPool();
 		for (ServiceEntry entry : getServiceEntries())
 		{
 			String id = entry.toString();
@@ -536,7 +539,7 @@ public class ConfigurationFx extends Configuration
 			}
 			String parametersName = "StartParameters";
 			String title = "Start ";
-			String[] strings = getServicesPool().wellKnownStartArgs(idEntry);
+			String[] strings = getServicesPool().loadServiceFactory(idEntry).wellKnownParameters(ParametersKind.START);
 			Settings settings = getFactory().getSettings();
 			final Map<String, String> parameters = settings.getMapValues(Settings.SERVICE + idEntry, parametersName, strings);
 
@@ -613,7 +616,8 @@ public class ConfigurationFx extends Configuration
 
 	public void addAllAppParams(AppEntry entry) throws Exception
 	{
-		addAllKnowParameters(entry, entry.getParameters(), new ApplicationPool(getFactory()).wellKnownParameters("" + entry), this::displayApp);
+		IApplicationFactory factory = getApplicationPool().loadApplicationFactory("" + entry);
+		addAllKnowParameters(entry, entry.getParameters(), factory.wellKnownParameters(ParametersKind.LOAD), this::displayApp);
 	}
 
 	public void testAppVersion() throws Exception

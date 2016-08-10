@@ -15,6 +15,7 @@ import com.exactprosystems.jf.actions.ActionGroups;
 import com.exactprosystems.jf.actions.ReadableValue;
 import com.exactprosystems.jf.api.app.AppConnection;
 import com.exactprosystems.jf.api.app.IApplication;
+import com.exactprosystems.jf.api.common.ParametersKind;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
@@ -48,7 +49,7 @@ public class ApplicationNewInstance extends AbstractAction
 	@Override
 	protected void helpToAddParametersDerived(List<ReadableValue> list, Context context, Parameters parameters) throws Exception
 	{
-		Helper.helpToAddParameters(list, this.owner.getMatrix(), context, parameters, null, connectionName);
+		Helper.helpToAddParameters(list, ParametersKind.START, this.owner.getMatrix(), context, parameters, null, connectionName);
 	}
 
 	@Override

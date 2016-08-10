@@ -8,7 +8,9 @@
 package com.exactprosystems.jf.tool;
 
 import com.exactprosystems.jf.api.app.AppConnection;
+import com.exactprosystems.jf.api.app.IApplicationFactory;
 import com.exactprosystems.jf.api.app.IApplicationPool;
+import com.exactprosystems.jf.api.common.ParametersKind;
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.documents.DocumentFactory;
@@ -112,10 +114,11 @@ public class ApplicationConnector
 			throw new Exception("You should choose app entry at first.");
 		}
 		IApplicationPool applicationPool	= this.factory.getConfiguration().getApplicationPool();
+		IApplicationFactory appFactory 		= applicationPool.loadApplicationFactory(idAppEntry);
 
 		String parametersName 		= isStart ? startParameters : connectParameters;
 		String title 				= isStart ? "Start " : "Connect ";
-		String[] strings 			= isStart ? applicationPool.wellKnownStartArgs(idAppEntry) : applicationPool.wellKnownConnectArgs(idAppEntry);
+		String[] strings 			= appFactory.wellKnownParameters(isStart ? ParametersKind.START : ParametersKind.CONNECT);
 
 		Settings settings = this.factory.getSettings();
 		final Map<String, String> parameters = settings.getMapValues(Settings.APPLICATION + idAppEntry, parametersName, strings);

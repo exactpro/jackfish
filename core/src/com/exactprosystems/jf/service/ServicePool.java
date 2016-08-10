@@ -55,6 +55,7 @@ public class ServicePool implements IServicesPool
 		return -1;
 	}
 
+	
 	@Override
 	public int requiredMinorVersion(String serviceId)
 	{
@@ -92,23 +93,23 @@ public class ServicePool implements IServicesPool
 	//----------------------------------------------------------------------------------------------
 	// IServicePool
 	//----------------------------------------------------------------------------------------------
-	@Override
-	public boolean canFillParameter(String serviceId, String parameterToFill) throws Exception
-	{
-		ServiceEntry entry = parametersEntry(serviceId);
-		IServiceFactory serviceFactory = loadServiceFactory(serviceId, entry);
-
-		return serviceFactory.canFillParameter(parameterToFill);
-	}
-
-	@Override
-	public String[] listForParameter(String serviceId, String parameterToFill) throws Exception
-	{
-		ServiceEntry entry = parametersEntry(serviceId);
-		IServiceFactory serviceFactory = loadServiceFactory(serviceId, entry);
-
-		return serviceFactory.listForParameter(parameterToFill);
-	}
+//	@Override
+//	public boolean canFillParameter(String serviceId, String parameterToFill) throws Exception
+//	{
+//		ServiceEntry entry = parametersEntry(serviceId);
+//		IServiceFactory serviceFactory = loadServiceFactory(serviceId, entry);
+//
+//		return serviceFactory.canFillParameter(parameterToFill);
+//	}
+//
+//	@Override
+//	public String[] listForParameter(String serviceId, String parameterToFill) throws Exception
+//	{
+//		ServiceEntry entry = parametersEntry(serviceId);
+//		IServiceFactory serviceFactory = loadServiceFactory(serviceId, entry);
+//
+//		return serviceFactory.listForParameter(parameterToFill);
+//	}
 
 	@Override
 	public List<String> servicesNames()
@@ -131,24 +132,24 @@ public class ServicePool implements IServicesPool
 		return result;
 	}	
 
-	@Override
-	public String[] wellKnownParameters(String serviceId) throws Exception
-	{
-		ServiceEntry entry = parametersEntry(serviceId);
-		IServiceFactory serviceFactory = loadServiceFactory(serviceId, entry);
-
-		return serviceFactory.wellKnownParameters();
-	}
-
-
-	@Override
-	public String[] wellKnownStartArgs(String serviceId) throws Exception
-	{
-		ServiceEntry entry = parametersEntry(serviceId);
-		IServiceFactory serviceFactory = loadServiceFactory(serviceId, entry);
-
-		return serviceFactory.wellKnownStartArgs();
-	}
+//	@Override
+//	public String[] wellKnownParameters(String serviceId) throws Exception
+//	{
+//		ServiceEntry entry = parametersEntry(serviceId);
+//		IServiceFactory serviceFactory = loadServiceFactory(serviceId, entry);
+//
+//		return serviceFactory.wellKnownParameters();
+//	}
+//
+//
+//	@Override
+//	public String[] wellKnownStartArgs(String serviceId) throws Exception
+//	{
+//		ServiceEntry entry = parametersEntry(serviceId);
+//		IServiceFactory serviceFactory = loadServiceFactory(serviceId, entry);
+//
+//		return serviceFactory.wellKnownStartArgs();
+//	}
 
 	
 

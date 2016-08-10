@@ -96,49 +96,11 @@ public class ApplicationPool implements IApplicationPool
 	// IApplicationPool
 	//----------------------------------------------------------------------------------------------
 	@Override
-	public String[] wellKnownParameters(String id) throws Exception
-	{
-		IApplicationFactory applicationFactory = loadFactory(id);
-
-		return applicationFactory.wellKnownParameters();
-	}
-
-	@Override
-	public String[] wellKnownStartArgs(String id) throws Exception
-	{
-		IApplicationFactory applicationFactory = loadFactory(id);
-
-		return applicationFactory.wellKnownStartArgs();
-	}
-
-	@Override
-	public String[] wellKnownConnectArgs(String id) throws Exception
-	{
-		IApplicationFactory applicationFactory = loadFactory(id);
-
-		return applicationFactory.wellKnownConnectArgs();
-	}
-
-	@Override
 	public ControlKind[] supportedControlKinds(String id) throws Exception
 	{
 		IApplicationFactory applicationFactory = loadFactory(id);
 
 		return applicationFactory.supportedControlKinds();
-	}
-
-	@Override
-	public boolean canFillParameter(String id, String parameterToFill) throws Exception
-	{
-		IApplicationFactory applicationFactory = loadFactory(id);
-		return applicationFactory.canFillParameter(parameterToFill);
-	}
-
-	@Override
-	public String[] listForParameter(String id, String parameterToFill) throws Exception
-	{
-		IApplicationFactory applicationFactory = loadFactory(id);
-		return applicationFactory.listForParameter(parameterToFill);
 	}
 
 	@Override

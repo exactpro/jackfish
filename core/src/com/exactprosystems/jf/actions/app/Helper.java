@@ -13,6 +13,7 @@ import java.util.List;
 import com.exactprosystems.jf.actions.ReadableValue;
 import com.exactprosystems.jf.api.app.AppConnection;
 import com.exactprosystems.jf.api.app.IApplicationFactory;
+import com.exactprosystems.jf.api.common.ParametersKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.documents.config.Context;
@@ -84,11 +85,11 @@ public class Helper
 		return factory;
 	}
 
-	public static void helpToAddParameters(List<ReadableValue> list, Matrix matrix, Context context, Parameters parameters,
+	public static void helpToAddParameters(List<ReadableValue> list, ParametersKind kind, Matrix matrix, Context context, Parameters parameters,
 			String idName, String connectionName) throws Exception
 	{
 		IApplicationFactory factory = getFactory(matrix, context, parameters, idName, connectionName);
-		for (String arg : factory.wellKnownParameters())
+		for (String arg : factory.wellKnownParameters(kind))
 		{
 			list.add(new ReadableValue(arg));
 		}
