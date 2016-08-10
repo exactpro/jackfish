@@ -29,14 +29,8 @@ public class SwingAppFactory implements IApplicationFactory
 	
 	public final static String urlName 			= "URL";
 
-	private static String[] knownProperties = {  };
+	private static String[] empty = {  };
 
-	private static String[] knownParameters = { jreExecName, jreArgsName };
-	
-	private static String[] knownStartArgs = { jarName, argsName, mainClassName };
-
-	private static String[] knownConnectArgs = { urlName };
-	
 	private static ControlKind[] supportedControls = 
 		{ 
 			ControlKind.Any, ControlKind.Wait, ControlKind.Button, ControlKind.CheckBox, ControlKind.ComboBox, ControlKind.Dialog,
@@ -48,6 +42,36 @@ public class SwingAppFactory implements IApplicationFactory
 
 	private IGuiDictionary dictionary = null;
 
+	//----------------------------------------------------------------------------------------------
+	// IFactory
+	//----------------------------------------------------------------------------------------------
+	@Override
+	public String[] wellKnownParameters(ParametersKind kind)
+	{
+		switch (kind)
+		{
+			case LOAD:		return new String[] { jreExecName, jreArgsName };
+			case START:		return new String[] { jarName, argsName, mainClassName };
+			case CONNECT:	return new String[] { urlName };
+			default:		return empty;	
+		}
+	}
+	
+	@Override
+	public boolean canFillParameter(String parameterToFill)
+	{
+		return false;
+	}
+
+	@Override
+	public String[] listForParameter(String parameterToFill)
+	{
+		return empty;
+	}
+
+	//----------------------------------------------------------------------------------------------
+	// IApplicationFactory
+	//----------------------------------------------------------------------------------------------
 	@Override
 	public String getHelp()
 	{
@@ -88,45 +112,9 @@ public class SwingAppFactory implements IApplicationFactory
 	}
 
 	@Override
-	public String[] wellKnownProperties()
-	{
-		return knownProperties;
-	}
-
-	@Override
-	public String[] wellKnownParameters()
-	{
-		return knownParameters;
-	}
-
-	@Override
-	public String[] wellKnownStartArgs()
-	{
-		return knownStartArgs;
-	}
-
-	@Override
-	public String[] wellKnownConnectArgs()
-	{
-		return knownConnectArgs;
-	}
-
-	@Override
 	public ControlKind[] supportedControlKinds()
 	{
 		return supportedControls;
-	}
-
-	@Override
-	public boolean canFillParameter(String parameterToFill)
-	{
-		return false;
-	}
-
-	@Override
-	public String[] listForParameter(String parameterToFill)
-	{
-		return new String[0];
 	}
 
 	@Override
@@ -154,12 +142,5 @@ public class SwingAppFactory implements IApplicationFactory
 	public boolean isSupported(int major, int minor)
 	{
 		return (major * 1000 + minor) >= (requiredMajorVersion * 1000 + requiredMinorVersion);
-	}
-
-	@Override
-	public String[] wellKnownParameters(ParametersKind kind)
-	{
-		// TODO Auto-generated method stub
-		return null;
 	}
 }

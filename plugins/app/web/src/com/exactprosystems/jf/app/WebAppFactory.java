@@ -19,7 +19,7 @@ import java.util.Scanner;
 public class WebAppFactory implements IApplicationFactory
 {
 	private static final int requiredMajorVersion = 2;
-	private static final int requiredMinorVersion = 19;
+	private static final int requiredMinorVersion = 20;
 
 	public final static String jreExecName 			= "jreExec";
 	public final static String jreArgsName 			= "jreArgs";
@@ -31,19 +31,13 @@ public class WebAppFactory implements IApplicationFactory
 	public static final String firefoxProfileDir	= "FirefoxProfileDirectory";
 	public static final String usePrivateMode       = "UsePrivateMode";
 
-	public final static String browserName 	= "Browser";
-	public final static String urlName 		= "URL";
+	public final static String browserName 			= "Browser";
+	public final static String urlName 				= "URL";
 
-	public static final String propertyUrlName	= "URL";
-	public static final String propertyTitle	= "Title";
+	public static final String propertyUrlName		= "URL";
+	public static final String propertyTitle		= "Title";
 	
-	private static String[] knownProperties = { propertyUrlName, propertyTitle };
-	
-	private static String[] knownParameters = { jreExecName, jreArgsName, safariDriverPathName, chromeDriverPathName, ieDriverPathName, chromeDriverBinary, firefoxProfileDir, usePrivateMode };
-	
-	private static String[] knownStartArgs = { browserName, urlName };
-
-	private static String[] knownConnectArgs = { };
+	private static String[] empty = {  };
 
 	private static ControlKind[] supportedControls = 
 		{ 
@@ -56,6 +50,56 @@ public class WebAppFactory implements IApplicationFactory
 
 	private IGuiDictionary dictionary = null;
 
+
+
+	//----------------------------------------------------------------------------------------------
+	// IFactory
+	//----------------------------------------------------------------------------------------------
+	@Override
+	public String[] wellKnownParameters(ParametersKind kind)
+	{
+		switch (kind)
+		{
+			case LOAD:		return new String[] { jreExecName, jreArgsName, safariDriverPathName, chromeDriverPathName, ieDriverPathName, chromeDriverBinary, firefoxProfileDir, usePrivateMode };
+			case START:		return new String[] { browserName, urlName };
+			case PROPERTY:	return new String[] { propertyUrlName, propertyTitle };
+			default:		return empty;	
+		}
+	}
+
+	@Override
+	public boolean canFillParameter(String parameterToFill)
+	{
+		return browserName.equals(parameterToFill);
+	}
+
+	@Override
+	public String[] listForParameter(String parameterToFill)
+	{
+		switch (parameterToFill)
+		{
+			case browserName:
+				String[] result = new String[]
+						{
+							"AndroidChrome",
+							"AndroidBrowser",
+							"Firefox",
+							"Chrome",
+							"InternetExplorer",
+							"Opera",
+							"PhantomJS",
+							"Safari",
+						};
+				return result;
+
+			default:
+				return new String[0];
+		}
+	}
+
+	//----------------------------------------------------------------------------------------------
+	// IApplicationFactory
+	//----------------------------------------------------------------------------------------------
 	@Override
 	public String getHelp()
 	{
@@ -96,65 +140,11 @@ public class WebAppFactory implements IApplicationFactory
 	}
 
 	@Override
-	public String[] wellKnownProperties()
-	{
-		return knownProperties;
-	}
-
-	@Override
-	public String[] wellKnownParameters()
-	{
-		return knownParameters;
-	}
-
-	@Override
-	public String[] wellKnownStartArgs()
-	{
-		return knownStartArgs;
-	}
-
-	@Override
-	public String[] wellKnownConnectArgs()
-	{
-		return knownConnectArgs;
-	}
-
-	@Override
 	public ControlKind[] supportedControlKinds()
 	{
 		return supportedControls;
 	}
 
-	@Override
-	public boolean canFillParameter(String parameterToFill)
-	{
-		return browserName.equals(parameterToFill);
-	}
-
-	@Override
-	public String[] listForParameter(String parameterToFill)
-	{
-		switch (parameterToFill)
-		{
-			case browserName:
-				String[] result = new String[]
-						{
-							"AndroidChrome",
-							"AndroidBrowser",
-							"Firefox",
-							"Chrome",
-							"InternetExplorer",
-							"Opera",
-							"PhantomJS",
-							"Safari",
-						};
-				return result;
-
-			default:
-				return new String[0];
-		}
-	}
-	
 	@Override
 	public IGuiDictionary getDictionary()
 	{
@@ -182,12 +172,4 @@ public class WebAppFactory implements IApplicationFactory
 		return (major * 1000 + minor) >= (requiredMajorVersion * 1000 + requiredMinorVersion);
 	}
 	//----------------------------------------------------------------------------------------------
-
-
-	@Override
-	public String[] wellKnownParameters(ParametersKind kind)
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
 }

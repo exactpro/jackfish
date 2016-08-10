@@ -17,8 +17,6 @@ public interface IApplicationPool extends IPool
 {
 	List<String> appNames();
 	
-	String[] 			wellKnownStartArgs(String id) throws Exception;
-	String[] 			wellKnownConnectArgs(String id) throws Exception;
 	ControlKind[]		supportedControlKinds(String id) throws Exception;
 	
 	IApplicationFactory	loadApplicationFactory(String id) throws Exception;

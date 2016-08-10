@@ -18,11 +18,26 @@ import java.util.Set;
 
 public class MatrixServiceFactory implements IServiceFactory
 {
-	public final static String portName 				= "Port";
+	public final static String portName 			= "Port";
 	public final static String onConnectedName 		= "OnConnected";
 	
 	private static final int requiredMajorVersion = 2;
-	private static final int requiredMinorVersion = 19;
+	private static final int requiredMinorVersion = 20;
+
+	private static String[] empty = {  };
+
+	//----------------------------------------------------------------------------------------------
+	// IFactory
+	//----------------------------------------------------------------------------------------------
+	@Override
+	public String[] wellKnownParameters(ParametersKind kind)
+	{
+		switch (kind)
+		{
+			case START:	return new String[] { portName, onConnectedName };
+			default:	return empty;	
+		}
+	}
 
 	@Override
 	public boolean canFillParameter(String parameterToFill)
@@ -33,21 +48,12 @@ public class MatrixServiceFactory implements IServiceFactory
 	@Override
 	public String[] listForParameter(String parameterToFill)
 	{
-		return new String[0];
+		return empty;
 	}
 
-	@Override
-	public String[] wellKnownParameters()
-	{
-		return knownParameters;
-	}
-
-	@Override
-	public String[] wellKnownStartArgs()
-	{
-		return knownStartArgs;
-	}
-
+	//----------------------------------------------------------------------------------------------
+	// IServiceFactory
+	//----------------------------------------------------------------------------------------------
 	@Override
 	public IService createService()
 	{
@@ -60,6 +66,9 @@ public class MatrixServiceFactory implements IServiceFactory
 		return ServiceHelper.possebilities(MatrixService.class);
 	}
 
+	//----------------------------------------------------------------------------------------------
+	// VersionSupported
+	//----------------------------------------------------------------------------------------------
 	@Override
 	public int requiredMajorVersion()
 	{
@@ -77,15 +86,4 @@ public class MatrixServiceFactory implements IServiceFactory
 	{
 		return (major * 1000 + minor) >= (requiredMajorVersion * 1000 + requiredMinorVersion);
 	}
-
-	@Override
-	public String[] wellKnownParameters(ParametersKind kind)
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	private static String[] knownParameters = { };
-	
-	private static String[] knownStartArgs = { portName, onConnectedName };
 }

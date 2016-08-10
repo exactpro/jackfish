@@ -11,10 +11,6 @@ package com.exactprosystems.jf.api.common;
 public interface IFactory
 {
 	String[]		wellKnownParameters(ParametersKind kind);
-
-	@Deprecated
-	String[]		wellKnownParameters();
-	
 	boolean			canFillParameter(String parameterToFill);
 	String[]		listForParameter(String parameterToFill);
 }

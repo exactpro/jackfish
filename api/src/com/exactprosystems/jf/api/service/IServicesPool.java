@@ -18,8 +18,6 @@ public interface IServicesPool  extends IPool
 {
 	public List<String> servicesNames();
 	
-	public String[] 			wellKnownStartArgs(String id) throws Exception;
-	
 	public IServiceFactory loadServiceFactory(String id) throws Exception;
 	public ServiceConnection loadService(String id) throws Exception;
 	public void startService(IContext context, ServiceConnection connection, Map<String, Object> params) throws Exception;

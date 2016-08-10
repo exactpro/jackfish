@@ -9,10 +9,6 @@ package com.exactprosystems.jf.api.common;
 
 public interface IPool
 {
-	String[] 		wellKnownParameters(String id) throws Exception;
-	boolean			canFillParameter(String id, String parameterToFill) throws Exception;
-	String[]		listForParameter(String id, String parameterToFill) throws Exception;
-
 	int 			requiredMajorVersion(String id);
 	int 			requiredMinorVersion(String id);
 	

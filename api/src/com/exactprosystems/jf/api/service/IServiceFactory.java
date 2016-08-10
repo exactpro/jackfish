@@ -15,9 +15,6 @@ import com.exactprosystems.jf.api.common.VersionSupported;
 
 public interface IServiceFactory  extends VersionSupported, IFactory
 {
-	@Deprecated
-	String[] wellKnownStartArgs();
-
 	IService createService();
 	Set<ServicePossibility> possebilities();
 }

@@ -19,7 +19,7 @@ import java.util.Scanner;
 public class WinAppFactory implements IApplicationFactory
 {
 	private static final int		requiredMajorVersion	= 2;
-	private static final int		requiredMinorVersion	= 19;
+	private static final int		requiredMinorVersion	= 20;
 
 	public final static String		jreExecName				= "jreExec";
 	public final static String		jreArgsName				= "jreArgs";
@@ -32,13 +32,7 @@ public class WinAppFactory implements IApplicationFactory
 	public static final String		workDirName				= "WorkDir";
 	public static final String		argsName				= "Args";
 	
-	private static String[] knownProperties = {  };
-
-	private static String[] knownParameters = { jreExecName, jreArgsName };
-	
-	private static String[] knownStartArgs = { execName, workDirName, argsName };
-	
-	private static String[] knownConnectArgs = { mainWindowName, mainWindowHeight, mainWindowWidth};
+	private static String[] empty = {  };
 
 	private static ControlKind[] supportedControls = 
 		{ 
@@ -50,6 +44,33 @@ public class WinAppFactory implements IApplicationFactory
 		};
 
 	private IGuiDictionary dictionary = null;
+
+	//----------------------------------------------------------------------------------------------
+	// IFactory
+	//----------------------------------------------------------------------------------------------
+	@Override
+	public String[] wellKnownParameters(ParametersKind kind)
+	{
+		switch (kind)
+		{
+			case LOAD:		return new String[] { jreExecName, jreArgsName };
+			case START:		return new String[] { execName, workDirName, argsName };
+			case CONNECT:	return new String[] { mainWindowName, mainWindowHeight, mainWindowWidth};
+			default:		return empty;	
+		}
+	}
+	
+	@Override
+	public boolean canFillParameter(String parameterToFill)
+	{
+		return false;
+	}
+
+	@Override
+	public String[] listForParameter(String parameterToFill)
+	{
+		return empty;
+	}
 
 	//----------------------------------------------------------------------------------------------
 	// IApplicationFactory
@@ -95,45 +116,9 @@ public class WinAppFactory implements IApplicationFactory
 	}
 
 	@Override
-	public String[] wellKnownProperties()
-	{
-		return knownProperties;
-	}
-
-	@Override
-	public String[] wellKnownParameters()
-	{
-		return knownParameters;
-	}
-
-	@Override
-	public String[] wellKnownStartArgs()
-	{
-		return knownStartArgs;
-	}
-
-	@Override
-	public String[] wellKnownConnectArgs()
-	{
-		return knownConnectArgs;
-	}
-
-	@Override
 	public ControlKind[] supportedControlKinds()
 	{
 		return supportedControls;
-	}
-
-	@Override
-	public boolean canFillParameter(String parameterToFill)
-	{
-		return false;
-	}
-
-	@Override
-	public String[] listForParameter(String parameterToFill)
-	{
-		return new String[0];
 	}
 
 	@Override
@@ -163,11 +148,4 @@ public class WinAppFactory implements IApplicationFactory
 		return (major * 1000 + minor) >= (requiredMajorVersion * 1000 + requiredMinorVersion);
 	}
 	//----------------------------------------------------------------------------------------------
-
-	@Override
-	public String[] wellKnownParameters(ParametersKind kind)
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
 }

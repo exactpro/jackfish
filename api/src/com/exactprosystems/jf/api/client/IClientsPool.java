@@ -18,9 +18,6 @@ public interface IClientsPool  extends IPool
 {
 	List<String> clientNames();
 	
-	String[] 			wellKnownStartArgs(String id) throws Exception;
-	String[] 			wellKnownConnectArgs(String id) throws Exception;
-	
 	IClientFactory 		loadClientFactory(String id) throws Exception;
 	ClientConnection 	loadClient(String id) throws Exception;
 	void 				startClient(IContext context, ClientConnection connection, Map<String, Object> params) throws Exception;
