@@ -12,6 +12,8 @@ import com.exactprosystems.jf.tool.git.GitUtil;
 import com.exactprosystems.jf.tool.main.Main;
 
 import java.io.File;
+import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,7 +37,7 @@ public class MergeEditor
 
 		this.yourLines = GitUtil.getYours(this.model.getCredential(), filePath);
 		this.theirLines = GitUtil.getTheirs(this.model.getCredential(), filePath);
-		this.conflicts = GitUtil.getConflicts(this.model.getCredential(), this.filePath);
+		this.conflicts = GitUtil.getConflictsNew(this.model.getCredential(), this.filePath);
 
 		evaluate();
 	}
@@ -45,19 +47,16 @@ public class MergeEditor
 		this.controller.show();
 	}
 
-	public void acceptTheirs()
-	{
-//		this.controller.displayResult(this.theirLines);
-	}
-
-	public void acceptYours()
-	{
-//		this.controller.displayResult(this.yourLines);
-	}
-
 	public void close()
 	{
 		this.controller.closeDialog();
+	}
+
+	public void saveResult(String result) throws Exception
+	{
+		Common.writeToFile(new File(this.filePath), Arrays.asList(result.split("\n")));
+		GitUtil.addFileToIndex(this.model.getCredential(), this.filePath);
+		this.close();
 	}
 
 	public void saveResult(List<String> result) throws Exception
@@ -66,25 +65,45 @@ public class MergeEditor
 		GitUtil.addFileToIndex(this.model.getCredential(), this.filePath);
 	}
 
-	void dialogShown() throws Exception
+	private void evaluate() throws Exception
 	{
-		this.controller.displayLines(this.conflicts);
+		Iterator<Chunk> iterator = this.conflicts.iterator();
+		int i = 0;
+		Chunk lastTheirChunk = null;
+		while (iterator.hasNext())
+		{
+			Chunk chunk = iterator.next();
+			if (!chunk.isHasConflict())
+			{
+				String yourText = listToStr(this.yourLines.subList(chunk.getStart(), chunk.getEnd()));
+				String theirText;
+				if (lastTheirChunk == null)
+				{
+					theirText = listToStr(this.theirLines.subList(chunk.getStart(), chunk.getEnd()));
+				}
+				else
+				{
+					int length = chunk.getEnd() - chunk.getStart();
+					theirText = listToStr(this.theirLines.subList(lastTheirChunk.getEnd(), lastTheirChunk.getEnd() + length));
+				}
+				this.controller.addLines(yourText, theirText, yourText, false, i);
+			}
+			else
+			{
+				Chunk.ChunkState state = chunk.getState();
+				assert state == Chunk.ChunkState.Your;
+				Chunk theirChunk = iterator.next();
+				String yourText = listToStr(this.yourLines.subList(chunk.getStart(), chunk.getEnd()));
+				String theirText = listToStr(this.theirLines.subList(theirChunk.getStart(), theirChunk.getEnd()));
+				this.controller.addLines(yourText, theirText, "", true, i);
+				lastTheirChunk = theirChunk;
+			}
+			i++;
+		}
 	}
 
-	private void evaluate()
+	private String listToStr(List<String> list)
 	{
-		List<Chunk> conflicts = this.conflicts;
-		Chunk previousChunk;
-		for (int i = 0; i < conflicts.size(); i++)
-		{
-			Chunk conflict = conflicts.get(i);
-			List<String> subYour = this.yourLines.subList(conflict.getFirstStart(), conflict.getFirstEnd());
-			List<String> subTheir = this.theirLines.subList(conflict.getSecondStart(), conflict.getSecondEnd());
-			String yourText = subYour.stream().collect(Collectors.joining("\n"));
-			String theirText = subTheir.stream().collect(Collectors.joining("\n"));
-			this.controller.addLines(yourText, theirText, "", true, i);
-
-			previousChunk = conflict;
-		}
+		return list.stream().collect(Collectors.joining("\n"));
 	}
 }

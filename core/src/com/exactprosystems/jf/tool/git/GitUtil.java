@@ -199,12 +199,67 @@ public class GitUtil
 	{
 		CredentialBean bean = new CredentialBean("AndrewBystrov", "Andrew17051993", "", "");
 //		gitPull(bean, new TextProgressMonitor());
-		getConflicts(bean, "qq");
+//		getConflicts(bean, "qq");
 //		qq.forEach(System.out::println);
 
 		String asd = "asd";
 	}
 
+	public static List<Chunk> getConflictsNew(CredentialBean bean, String fileName) throws Exception
+	{
+		try (Git git = git(bean))
+		{
+			Repository repo = git.getRepository();
+			ThreeWayMerger merger = new StrategyResolve().newMerger(repo, true);
+			merger.merge(repo.resolve(Constants.HEAD), repo.resolve(Constants.FETCH_HEAD));
+			ResolveMerger resolveMerger = (ResolveMerger) merger;
+
+			Map<String, org.eclipse.jgit.merge.MergeResult<?>> mergeResults = resolveMerger.getMergeResults();
+
+			org.eclipse.jgit.merge.MergeResult<?> mergeChunks = mergeResults.get(fileName);
+			if (mergeChunks == null)
+			{
+				return null;
+			}
+			if (!mergeChunks.containsConflicts())
+			{
+				return null;
+			}
+			List<Chunk> lines = new ArrayList<>();
+			Chunk curCh = null;
+
+			int nrOfConflicts = 0;
+			// just counting
+			for (MergeChunk mergeChunk : mergeChunks) {
+				if (mergeChunk.getConflictState().equals(MergeChunk.ConflictState.FIRST_CONFLICTING_RANGE)) {
+					nrOfConflicts++;
+				}
+			}
+
+			String asd = "aaaaa";
+
+			for (MergeChunk mergeChunk : mergeChunks)
+			{
+				MergeChunk.ConflictState conflictState = mergeChunk.getConflictState();
+				switch (conflictState)
+				{
+					case NO_CONFLICT:
+						lines.add(new Chunk(false, mergeChunk.getBegin(), mergeChunk.getEnd(), null));
+						break;
+					case FIRST_CONFLICTING_RANGE:
+						lines.add(new Chunk(true, mergeChunk.getBegin(), mergeChunk.getEnd(), Chunk.ChunkState.Your));
+						break;
+					case NEXT_CONFLICTING_RANGE:
+						lines.add(new Chunk(true, mergeChunk.getBegin(), mergeChunk.getEnd(), Chunk.ChunkState.Their));
+						break;
+				}
+			}
+
+			return lines;
+		}
+	}
+
+	/*@Deprecated
 	public static List<Chunk> getConflicts(CredentialBean bean, String fileName) throws Exception
 	{
 		try (Git git = git(bean))
@@ -279,7 +334,7 @@ public class GitUtil
 //			return null;
 			return lines;
 		}
-	}
+	}*/
 	//endregion
 
 	//region Reset

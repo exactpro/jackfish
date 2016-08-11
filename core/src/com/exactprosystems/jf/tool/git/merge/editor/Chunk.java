@@ -9,75 +9,75 @@ package com.exactprosystems.jf.tool.git.merge.editor;
 
 public class Chunk
 {
-	private int firstStart;
-	private int firstEnd;
+	public enum ChunkState
+	{
+		Your,
+		Their
+	}
 
-	private int secondStart;
-	private int secondEnd;
+	private boolean hasConflict;
+
+	private int start;
+	private int end;
+
+	private ChunkState state;
+
+	public Chunk(boolean hasConflict, int start, int end, ChunkState state)
+	{
+		this.hasConflict = hasConflict;
+		this.start = start;
+		this.end = end;
+		this.state = state;
+	}
 
 	public Chunk()
 	{
 	}
 
-	public Chunk(int firstStart, int firstEnd, int secondStart, int secondEnd)
+	public boolean isHasConflict()
 	{
-		this.firstStart = firstStart;
-		this.firstEnd = firstEnd;
-		this.secondStart = secondStart;
-		this.secondEnd = secondEnd;
+		return hasConflict;
 	}
 
-	public Chunk(int firstStart, int firstEnd)
+	public void setHasConflict(boolean hasConflict)
 	{
-		this.firstStart = firstStart;
-		this.firstEnd = firstEnd;
+		this.hasConflict = hasConflict;
 	}
 
-	public int getFirstStart()
+	public int getStart()
 	{
-		return firstStart;
+		return start;
 	}
 
-	public int getSecondStart()
+	public void setStart(int start)
 	{
-		return secondStart;
+		this.start = start;
 	}
 
-	public void setSecondStart(int secondStart)
+	public int getEnd()
 	{
-		this.secondStart = secondStart;
+		return end;
 	}
 
-	public void setFirstStart(int firstStart)
+	public void setEnd(int end)
 	{
-		this.firstStart = firstStart;
+		this.end = end;
 	}
 
-	public int getFirstEnd()
+	public ChunkState getState()
 	{
-		return firstEnd;
+		return state;
 	}
 
-	public void setFirstEnd(int firstEnd)
+	public void setState(ChunkState state)
 	{
-		this.firstEnd = firstEnd;
-	}
-
-	public int getSecondEnd()
-	{
-		return secondEnd;
-	}
-
-	public void setSecondEnd(int secondEnd)
-	{
-		this.secondEnd = secondEnd;
+		this.state = state;
 	}
 
 	@Override
 	public String toString()
 	{
-		return	"1st : ["+this.firstStart+"; " + this.firstEnd + ")\n"
-				+
-				"2nd : ["+this.secondStart+";"+this.secondEnd + ")";
+		return "[ " + start + ", " + end + " ), " + (hasConflict ? state.name() : " No conflict");
 	}
+
 }

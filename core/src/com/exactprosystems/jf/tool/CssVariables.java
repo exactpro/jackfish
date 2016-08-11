@@ -179,9 +179,9 @@ public class CssVariables
 	public static final String	GIT_UNSTAGED_FILE			= "gitUnstagedFile";
 	public static final String	CHANGES_LINE				= "changesLine";
 
-	public static final String GIT_MERGE_NO_CONFLICT = "gitMergeNoConflict";
-	public static final String GIT_MERGE_YOUR_CONFLICT = "gitMergeYourConflict";
-	public static final String GIT_MERGE_THEIR_CONFLICT = "gitMergeTheirConflict";
+	public static final String GIT_MERGE_NO_CONFLICT		= "gitMergeNoConflict";
+	public static final String GIT_MERGE_YOUR_CONFLICT		= "gitMergeYourConflict";
+	public static final String GIT_MERGE_THEIR_CONFLICT		= "gitMergeTheirConflict";
 
 	//endregion
 
