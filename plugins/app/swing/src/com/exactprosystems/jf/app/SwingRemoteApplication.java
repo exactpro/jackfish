@@ -611,7 +611,7 @@ public class SwingRemoteApplication extends RemoteApplication
 	@Override
 	protected void startNewDialogDerived() throws Exception
 	{
-		throw new FeatureNotSupportedException("startNewDialog");
+		//done
 	}
 
 	@Override
