@@ -59,6 +59,7 @@ public class ActionsList extends AbstractAction
 		        ClientLoad.class,
 		        ClientSendMessage.class,
 		        ClientSendMapMessage.class,
+		        ClientSendRawMessage.class,
 		        ClientStart.class,
 		        ClientStop.class,
 		        ServiceLoad.class,

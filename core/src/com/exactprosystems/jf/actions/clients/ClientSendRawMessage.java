@@ -12,39 +12,61 @@ import com.exactprosystems.jf.actions.AbstractAction;
 import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
+import com.exactprosystems.jf.actions.ReadableValue;
 import com.exactprosystems.jf.api.client.ClientConnection;
 import com.exactprosystems.jf.api.client.ClientHelper;
 import com.exactprosystems.jf.api.client.IClient;
 import com.exactprosystems.jf.api.client.MapMessage;
 import com.exactprosystems.jf.api.client.Possibility;
-import com.exactprosystems.jf.api.common.Converter;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
+import com.exactprosystems.jf.documents.matrix.parser.items.ActionItem.HelpKind;
+
+import java.util.List;
 
 @ActionAttribute(
-		group = ActionGroups.Clients, 
-		suffix					= "CLDEC",
-		generalDescription = "Convert given array of bytes to a MapMessage. ", 
-		additionFieldsAllowed = false, 
-		outputDescription = "Converted message.", 
-		outputType = MapMessage.class
-		)
-public class ClientDecode extends AbstractAction
+		group					= ActionGroups.Clients,
+		suffix					= "CLSRM",
+		generalDescription 		= "Sends array of bytes over client's connection without any preprocessing. ",
+		additionFieldsAllowed 	= false
+	)
+public class ClientSendRawMessage extends AbstractAction
 {
-	public final static String connectionName 	= "ClientConnection";
-	public final static String arrayName 		= "Array";
+	public final static String connectionName = "ClientConnection";
+	public final static String dataName = "Data";
 
 	@ActionFieldAttribute(name = connectionName, mandatory = true, description = "The client connection." )
 	protected ClientConnection	connection	= null;
 
-	@ActionFieldAttribute(name = arrayName, mandatory = true, description = "Array of bytes.")
-	protected Byte[]	array	= null;
+	@ActionFieldAttribute(name = dataName, mandatory = true, description = "Array of bytes that will be sent 'as is'." )
+	protected byte[]	data	= null;
 
-	public ClientDecode()
+
+
+	public ClientSendRawMessage()
 	{
+	}
+
+
+	@Override
+	protected HelpKind howHelpWithParameterDerived(Context context, Parameters parameters, String fieldName) throws Exception
+	{
+		boolean res = Helper.canFillParameter(this.owner.getMatrix(), context, parameters, null, connectionName, fieldName);
+		return res ? HelpKind.ChooseFromList : null;
+	}
+
+	@Override
+	protected void listToFillParameterDerived(List<ReadableValue> list, Context context, String parameterToFill, Parameters parameters) throws Exception
+	{
+		switch (parameterToFill)
+		{
+			case dataName:
+				Helper.messageTypes(list, this.owner.getMatrix(), context, parameters, null, connectionName);
+				break;
+		}
 	}
 
 	@Override
@@ -57,15 +79,17 @@ public class ClientDecode extends AbstractAction
 	{
 		if (this.connection == null)
 		{
-			super.setError("Connection is null", ErrorKind.EMPTY_PARAMETER);
+			super.setError("Connection is null",  ErrorKind.EMPTY_PARAMETER);
 		}
 		else
 		{
 			IClient client = this.connection.getClient();
-			ClientHelper.errorIfDisable(client.getClass(), Possibility.Decoding);			
-			MapMessage res = client.getCodec().decode(Converter.convertToByteArray(this.array));
-	
-			super.setResult(res);
+			ClientHelper.errorIfDisable(client.getClass(), Possibility.Sending);			
+
+			client.sendMessage(this.data, false);
+			super.setResult(null);
 		}
 	}
+
+
 }

@@ -47,6 +47,11 @@ public class ClientEncode extends AbstractAction
 	}
 	
 	@Override
+	public void initDefaultValues() 
+	{
+	}
+
+	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
 		if (this.connection == null)
@@ -63,9 +68,4 @@ public class ClientEncode extends AbstractAction
 		}
 	}
 
-	@Override
-	public void initDefaultValues() {
-		// TODO Auto-generated method stub
-		
-	}
 }

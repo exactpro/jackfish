@@ -81,7 +81,7 @@ public class ClientStart extends AbstractAction
 			boolean res = client.start(context, parameters.select(TypeMandatory.Extra));
 			if (res)
 			{
-				super.setResult(null);
+				super.setResult(res);
 			}
 			else
 			{
