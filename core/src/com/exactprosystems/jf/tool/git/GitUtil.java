@@ -13,6 +13,7 @@ import com.exactprosystems.jf.tool.git.merge.editor.Chunk;
 import com.exactprosystems.jf.tool.git.pull.GitPullBean;
 import com.exactprosystems.jf.tool.git.reset.FileWithStatusBean;
 import com.exactprosystems.jf.tool.git.reset.GitResetBean;
+import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
@@ -144,29 +145,29 @@ public class GitUtil
 			{
 				PullResult pullResult = git.pull().setCredentialsProvider(getCredentialsProvider(bean)).setProgressMonitor(monitor).call();
 
-				MergeResult m = pullResult.getMergeResult();
-				if (m != null)
-				{
-					Map<String, int[][]> allConflicts = m.getConflicts();
-					if (allConflicts != null)
-					{
-						for (String path : allConflicts.keySet())
-						{
-							int[][] c = allConflicts.get(path);
-							System.out.println("Conflicts in file " + path);
-							list.add(new GitPullBean(path, true));
-							for (int i = 0; i < c.length; i++)
-							{
-								System.out.println("  Conflict #" + i);
-								for (int j = 0; j < c[i].length - 1; j++)
-								{
-									if (c[i][j] >= 0)
-										System.out.println("    Chunk for " + m.getMergedCommits()[j] + " starts on line #" + c[i][j]);
-								}
-							}
-						}
-					}
-				}
+//				MergeResult m = pullResult.getMergeResult();
+//				if (m != null)
+//				{
+//					Map<String, int[][]> allConflicts = m.getConflicts();
+//					if (allConflicts != null)
+//					{
+//						for (String path : allConflicts.keySet())
+//						{
+//							int[][] c = allConflicts.get(path);
+//							System.out.println("Conflicts in file " + path);
+//							list.add(new GitPullBean(path, true));
+//							for (int i = 0; i < c.length; i++)
+//							{
+//								System.out.println("  Conflict #" + i);
+//								for (int j = 0; j < c[i].length - 1; j++)
+//								{
+//									if (c[i][j] >= 0)
+//										System.out.println("    Chunk for " + m.getMergedCommits()[j] + " starts on line #" + c[i][j]);
+//								}
+//							}
+//						}
+//					}
+//				}
 			}
 			catch (CheckoutConflictException cce)
 			{
@@ -174,6 +175,11 @@ public class GitUtil
 			}
 
 			ObjectId head = git.getRepository().resolve("refs/remotes/origin/HEAD^{tree}");
+			if (head == null)
+			{
+				head = git.getRepository().resolve("HEAD^{tree}");
+				DialogsHelper.showInfo("Something wrong. Pulled files can't showing correctly. Try to push all your files and reclone project");
+			}
 			ObjectReader reader = git.getRepository().newObjectReader();
 			CanonicalTreeParser oldTreeIter = new CanonicalTreeParser();
 			oldTreeIter.reset(reader, oldHead);
