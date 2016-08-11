@@ -12,6 +12,7 @@ public enum Possibility
 {
 	Receiving			("Receivingmessages"),
 	Sending				("Sending messages"),
+	RawSending			("Sending raw messages"),
 	Encoding			("Encoding to raw messages"),
 	Decoding 			("Decoding from raw messages"),
 	

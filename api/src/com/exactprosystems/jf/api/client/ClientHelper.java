@@ -13,6 +13,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import com.exactprosystems.jf.api.common.Str;
+
 public class ClientHelper
 {
 	public static Map<String, String> difference(MapMessage actual, ICondition[] conditions) throws Exception 
@@ -37,13 +39,13 @@ public class ClientHelper
 		return null;
 	}
 	
-	public static boolean isMatches(MapMessage message, String messageType, ICondition[] conditions) throws Exception
+	public static boolean isMatched(MapMessage message, String messageType, ICondition[] conditions) throws Exception
 	{
 		if (conditions == null)
 		{
 			return true;
 		}
-		if (!message.getMessageType().equals(message))
+		if (!Str.areEqual(message.getMessageType(), messageType))
 		{
 			return false;
 		}

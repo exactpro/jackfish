@@ -119,7 +119,7 @@ public abstract class AbstractClient implements IClient
 				while(iter.hasNext())
 				{
 					MapMessage message = iter.next();
-					if (ClientHelper.isMatches(message, messageType, conditions) && ClientHelper.isMatches(message, messageType, parametersConditions))
+					if (ClientHelper.isMatched(message, messageType, conditions) && ClientHelper.isMatched(message, messageType, parametersConditions))
 					{
 						if (remove)
 						{
@@ -149,7 +149,7 @@ public abstract class AbstractClient implements IClient
 			MapMessage[] list = new MapMessage[size];
 			for (MapMessage message : this.messages.toArray(list))
 			{
-				if (ClientHelper.isMatches(message, messageType, conditions) && ClientHelper.isMatches(message, messageType, parametersConditions))
+				if (ClientHelper.isMatched(message, messageType, conditions) && ClientHelper.isMatched(message, messageType, parametersConditions))
 				{
 					count++;
 				}
@@ -268,6 +268,7 @@ public abstract class AbstractClient implements IClient
 								}
 								catch (InterruptedException e)
 								{
+									// nothing to do
 								}
 							}
 						}
