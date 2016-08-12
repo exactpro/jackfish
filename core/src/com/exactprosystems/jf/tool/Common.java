@@ -130,13 +130,8 @@ public abstract class Common
 	// TODO move it to CustomTab
 	public static CustomTab checkDocument(Document doc)
 	{
-		Optional<Tab> first = tabPane.getTabs().stream().filter(tab -> ((CustomTab) tab).getDocument().equals(doc)).findFirst();
-
-		if (first.isPresent())
-		{
-			return (CustomTab) first.get();
-		}
-		return null;
+		Optional<Tab> first = tabPane.getTabs().stream().filter(tab -> ((CustomTab) tab).getDocument() == doc).findFirst();
+		return first.map(t -> (CustomTab) t).orElse(null);
 	}
 
 	public static String getRelativePath(String filePath)
