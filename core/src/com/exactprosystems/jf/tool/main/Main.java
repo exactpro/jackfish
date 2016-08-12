@@ -95,7 +95,6 @@ public class Main extends Application
 	private Configuration config;
 	private Settings settings;
 	private DocumentFactory	factory;
-	private List<Document> docs = new ArrayList<Document>();
 
 	private String username;
 	private String password;
@@ -469,7 +468,6 @@ public class Main extends Application
 		Settings.SettingsValue copyright = settings.getValueOrDefault(Settings.GLOBAL_NS, "Main", "copyright", "");
 		String text = copyright.getValue().replaceAll("\\\\n", System.lineSeparator());
 		doc.addCopyright(text);
-		docs.add(doc);
 		doc.display();
 	}
 
@@ -485,7 +483,6 @@ public class Main extends Application
 		Settings.SettingsValue copyright = settings.getValueOrDefault(Settings.GLOBAL_NS, "Main", "copyright", "");
 		String text = copyright.getValue().replaceAll("\\\\n", System.lineSeparator());
 		doc.addCopyright(text);
-		docs.add(doc);
 		if (new File(fullPath).exists())
 		{
 			doc.save(fullPath);
@@ -565,7 +562,7 @@ public class Main extends Application
 
 	public void documentsSaveAll() throws Exception
 	{
-		for (Document document : this.docs)
+		for (Document document : this.config.getSubordinates())
 		{
 			documentSave(document);
 		}
@@ -782,7 +779,6 @@ public class Main extends Application
 				}
 			}
 
-			docs.add(doc);
 			doc.display();
 			doc.saved();
 			SettingsValue maxSettings = this.settings.getValueOrDefault(Settings.GLOBAL_NS, SettingsPanel.SETTINGS, MAX_FILES_COUNT, DEFAULT_MAX_FILES_COUNT);
@@ -818,7 +814,6 @@ public class Main extends Application
 			return;
 		}
 		doc.create();
-		docs.add(doc);
 		doc.display();
 	}
 
