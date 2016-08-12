@@ -791,7 +791,7 @@ public class Configuration extends AbstractDocument
 		return str.stream().map(MutableString::get).collect(Collectors.toList());
 	}
 
-	public Set<Document> getSubordinates()
+	public List<Document> getSubordinates()
 	{
 		return subordinates;
 	}
@@ -910,8 +910,7 @@ public class Configuration extends AbstractDocument
 	protected ApplicationPool		applications;
 	protected DataBasePool			databases;
 
-	//TODO think about it, because if we create 2 new matrix, on this collection we will have one matrix, because they hashCode will are equals
-	protected final Set<Document> 	subordinates = new HashSet<Document>();
+	protected final List<Document> 	subordinates = new ArrayList<>();
 	
 	protected boolean valid = false;
 
