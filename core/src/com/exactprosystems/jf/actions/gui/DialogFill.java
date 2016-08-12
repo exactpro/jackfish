@@ -33,8 +33,6 @@ import java.rmi.RemoteException;
 import java.rmi.ServerException;
 import java.util.*;
 
-import javax.naming.OperationNotSupportedException;
-
 import static com.exactprosystems.jf.actions.gui.Helper.*;
 
 @ActionAttribute(
@@ -115,7 +113,7 @@ public class DialogFill extends AbstractAction
 	@Override
 	public void helpToAddParametersDerived(List<ReadableValue> list, Context context, Parameters parameters) throws Exception
 	{
-		Helper.extraParameters(list, super.owner.getMatrix(), this.connection, Str.asString(parameters.get(dialogName)), parameters);
+		Helper.extraParameters(list, super.owner.getMatrix(), this.connection, Str.asString(parameters.get(dialogName)), false);
 	}
 
 	@Override

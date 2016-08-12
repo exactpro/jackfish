@@ -18,8 +18,7 @@ import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.Matrix;
-import com.exactprosystems.jf.documents.matrix.parser.Parameters;
-import java.util.Collection;
+
 import java.util.List;
 
 class Helper
@@ -36,7 +35,7 @@ class Helper
 		}
 	}
 
-	public static void extraParameters(List<ReadableValue> list, Matrix matrix, AppConnection connection, String dlgValue, Parameters parameters) throws Exception
+	public static void extraParameters(List<ReadableValue> list, Matrix matrix, AppConnection connection, String dlgValue, boolean needQuote) throws Exception
 	{
 		IGuiDictionary dictionary = getGuiDictionary(matrix, connection);
 		
@@ -45,14 +44,18 @@ class Helper
 			IWindow window = dictionary.getWindow(String.valueOf(dlgValue));
 			if (window != null)
 			{
-				Collection<IControl> controls = window.getControls(SectionKind.Run);
-				for (IControl control : controls)
-				{
-					if (!Str.IsNullOrEmpty(control.getID()))
-					{
-						list.add(new ReadableValue(control.getID(), control.toString()));
-					}
-				}
+				window.getControls(SectionKind.Run)
+						.stream()
+						.filter(control -> !Str.IsNullOrEmpty(control.getID()))
+						.map(control -> {
+							String id = control.getID();
+							if (needQuote)
+							{
+								id = "'" + id + "'";
+							}
+							return new ReadableValue(id, control.toString());
+						})
+						.forEach(list::add);
 			}
 		}
 	}
