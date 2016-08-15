@@ -849,7 +849,7 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 		firstLine.add(Parser.systemPrefix + parameter);
 		if (value == null)
 		{
-			secondLine.add("" + value);
+			secondLine.add("");
 		}
 		else
 		{

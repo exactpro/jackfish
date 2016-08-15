@@ -110,6 +110,7 @@ public class Parser
 		String[] headers 		= null;
 		ItemTypeAndAttribute itemAttr = null;
 		String[] str;
+		boolean needFillValue = false;
 		
 		try
 		{
@@ -118,12 +119,12 @@ public class Parser
 				count++;
 				str = reader.getValues();
 
-				if (arrayOfEmpties(str))
+				if (arrayOfEmpties(str) && !needFillValue)
 				{	
 					// nothing to do
 					continue;
 				}
-				
+
 				if (str[0].startsWith(commentPrefix))
 				{
 					// it is a comment
@@ -138,8 +139,17 @@ public class Parser
 					
 					// determinate - what is it 
 					itemAttr = lookUp(count, headers);
-					
-					if (itemAttr != null && !itemAttr.attribute.hasValue())
+
+					if(needFillValue)
+					{
+						throw new MatrixException(count, null, "Not value for header in action.  Matrix name '" + matrix.getName() + "'");
+					}
+					else
+					{
+						needFillValue = itemAttr.attribute.hasValue();
+					}
+
+					if (!needFillValue)
 					{
 						// no wait other line
 						currentItem = addNewMatrixItem(matrix, currentItem, itemAttr, headers, null, comments);
@@ -160,7 +170,9 @@ public class Parser
 					{
 						throw new MatrixException(count, null, "No header for action.  Matrix name '" + matrix.getName() + "'");
 					}
-	
+
+					needFillValue = false;
+
 					currentItem = addNewMatrixItem(matrix, currentItem, itemAttr, headers, str, comments);
 					comments.clear();
 				}
