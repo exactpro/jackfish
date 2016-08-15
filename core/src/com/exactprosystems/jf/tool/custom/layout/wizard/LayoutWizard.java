@@ -42,6 +42,7 @@ public class LayoutWizard
 	{
 		this.table = table;
 		this.dataProvider = new TableDataProvider(table);
+		validateTable();
 		this.dictionary = appConnection.getDictionary();
 		this.appConnection = appConnection;
 		this.controller = Common.loadController(this.getClass().getResource("LayoutWizard.fxml"));
@@ -169,5 +170,10 @@ public class LayoutWizard
 //		{
 //			this.displayArrow(getRect(mapRectangle.get(this.selfControl)), getRect(this.mapRectangle.get(this.otherControl)), this.lastArrow);
 //		}
+	}
+
+	private void validateTable()
+	{
+		//TODO implements this method pls
 	}
 }

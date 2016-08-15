@@ -22,7 +22,6 @@ import com.exactprosystems.jf.tool.custom.scale.ScalePane;
 import javafx.beans.value.ChangeListener;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Parent;
@@ -109,7 +108,6 @@ public class LayoutWizardController implements Initializable, ContainingParent, 
 		this.imageView.setImage(image);
 		this.paneImage.getChildren().removeAll(this.progressIndicator, this.progressText);
 		this.paneImage.setCenter(this.mainScrollPane);
-		BorderPane.setMargin(this.mainScrollPane, new Insets(0, 0, 5, 0));
 		this.customGrid.setSize((int) image.getWidth(), (int) image.getHeight());
 	}
 
@@ -221,8 +219,8 @@ public class LayoutWizardController implements Initializable, ContainingParent, 
 	private void initDialog()
 	{
 		this.dialog = new Alert(Alert.AlertType.INFORMATION);
-		this.dialog.setHeight(1000);
-		this.dialog.setWidth(1000);
+		this.dialog.getDialogPane().setPrefHeight(1000);
+		this.dialog.getDialogPane().setPrefWidth(1000);
 		this.dialog.setResult(new ButtonType("", ButtonBar.ButtonData.CANCEL_CLOSE));
 		this.dialog.setResizable(true);
 		this.dialog.getDialogPane().getStylesheets().addAll(Common.currentTheme().getPath());
