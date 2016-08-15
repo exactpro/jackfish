@@ -9,12 +9,11 @@ package com.exactprosystems.jf.tool.custom.layout.wizard;
 
 import com.exactprosystems.jf.api.app.IControl;
 import com.exactprosystems.jf.api.app.IWindow;
-import com.exactprosystems.jf.functions.Table;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
+import com.exactprosystems.jf.tool.custom.combobox.CheckedComboBox;
 import com.exactprosystems.jf.tool.custom.grideditor.DataProvider;
 import com.exactprosystems.jf.tool.custom.grideditor.SpreadsheetView;
-import com.exactprosystems.jf.tool.custom.grideditor.TableDataProvider;
 import com.exactprosystems.jf.tool.custom.layout.CustomArrow;
 import com.exactprosystems.jf.tool.custom.layout.CustomGrid;
 import com.exactprosystems.jf.tool.custom.layout.CustomRectangle;
@@ -23,15 +22,22 @@ import com.exactprosystems.jf.tool.custom.scale.ScalePane;
 import javafx.beans.value.ChangeListener;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.text.Text;
 import javafx.stage.Modality;
 
+import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Collection;
@@ -45,7 +51,7 @@ public class LayoutWizardController implements Initializable, ContainingParent, 
 	public Parent parent;
 	public BorderPane paneTable;
 	public ComboBox<IWindow> cbDialog;
-	public ComboBox<IControl> cbElement;
+	public CheckedComboBox<IControl> cbElement;
 	public BorderPane paneImage;
 
 	private LayoutWizard model;
@@ -61,15 +67,19 @@ public class LayoutWizardController implements Initializable, ContainingParent, 
 	private CustomRectangle otherRectangle;
 	private CustomArrow customArrow;
 
-	private ChangeListener<IWindow> windowChangeListener = (observable, oldValue, newValue) -> this.model.changeDialog(newValue);
+	private ProgressIndicator progressIndicator;
+	private Text progressText;
 
-	public void init(LayoutWizard wizard, Table table)
+	private ChangeListener<IWindow> windowChangeListener = (observable, oldValue, newValue) -> Common.tryCatch(() -> this.model.changeDialog(newValue), "Error on change dialog");
+	private SpreadsheetView view;
+
+	public void init(LayoutWizard wizard, DataProvider<String> provider)
 	{
 		this.model = wizard;
 
-		this.provider = new TableDataProvider(table);
-		SpreadsheetView view = new SpreadsheetView(provider);
-		this.paneTable.setCenter(view);
+		this.provider = provider;
+		this.view = new SpreadsheetView(this.provider);
+		this.paneTable.setCenter(this.view);
 
 		initDialog();
 		createCanvas();
@@ -77,29 +87,52 @@ public class LayoutWizardController implements Initializable, ContainingParent, 
 		this.paneImage.setCenter(this.mainScrollPane);
 	}
 
+	//region work with image
+	public void clearImage()
+	{
+		this.paneImage.setCenter(null);
+		this.paneImage.setBottom(null);
+	}
+
+	public void beforeLoadImage(String dialogName)
+	{
+		this.paneImage.setCenter(this.progressIndicator = new ProgressIndicator(ProgressIndicator.INDETERMINATE_PROGRESS));
+		this.paneImage.setBottom(this.progressText = new Text(String.format("Loading image for dialog '%s' ...", dialogName)));
+		BorderPane.setAlignment(this.progressText, Pos.CENTER);
+	}
+
 	public void displayScreenShot(BufferedImage bufferedImage) throws IOException
 	{
-		//		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-		//		ImageIO.write(bufferedImage, "jpg", outputStream);
-		//		Image image = new Image(new ByteArrayInputStream(outputStream.toByteArray()));
-		//		this.imageView.setImage(image);
-		//		this.mainPane.getChildren().remove(this.progressIndicator);
-		//		AnchorPane anchorPane = new AnchorPane();
-		//		AnchorPane.setBottomAnchor(this.mainScrollPane, 0.0);
-		//		AnchorPane.setLeftAnchor(this.mainScrollPane, 0.0);
-		//		AnchorPane.setTopAnchor(this.mainScrollPane, 0.0);
-		//		AnchorPane.setRightAnchor(this.mainScrollPane, 0.0);
-		//		anchorPane.getChildren().add(this.mainScrollPane);
-		//		ScalePane scalePane = new ScalePane(this);
-		//		scalePane.setSpacing(0.0);
-		//		anchorPane.getChildren().add(scalePane);
-		//		this.mainPane.setCenter(anchorPane);
-		//		BorderPane.setMargin(this.mainScrollPane, new Insets(0, 0, 5, 0));
-		//		this.customGrid.setSize((int) image.getWidth(), (int) image.getHeight());
-		//		this.progressIndicator = null;
-		//		this.buttons.stream().forEach(b -> b.setDisable(false));
-		//		this.cbUseGrid.setDisable(false);
-		//		this.cbUseId.setDisable(false);
+		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+		ImageIO.write(bufferedImage, "jpg", outputStream);
+		Image image = new Image(new ByteArrayInputStream(outputStream.toByteArray()));
+		this.imageView.setImage(image);
+		this.paneImage.getChildren().removeAll(this.progressIndicator, this.progressText);
+		this.paneImage.setCenter(this.mainScrollPane);
+		BorderPane.setMargin(this.mainScrollPane, new Insets(0, 0, 5, 0));
+		this.customGrid.setSize((int) image.getWidth(), (int) image.getHeight());
+	}
+
+	public void resizeImage(double width, double height)
+	{
+		this.imageView.setFitHeight(height);
+		this.imageView.setFitWidth(width);
+		this.customGrid.setSize((int) width, (int) height);
+	}
+
+	//region IScaleListener
+	@Override
+	public void changeScale(double scale)
+	{
+		this.model.changeScale(scale);
+	}
+	//endregion
+
+	//endregion
+
+	public void displayWindow(IWindow window)
+	{
+		this.view.renameColumn(0, window.getName());
 	}
 
 	public void displayDialogs(Collection<IWindow> dialogs)
@@ -121,14 +154,6 @@ public class LayoutWizardController implements Initializable, ContainingParent, 
 	{
 		this.dialog.hide();
 	}
-
-	//region IScaleListener
-	@Override
-	public void changeScale(double scale)
-	{
-		this.model.changeScale(scale);
-	}
-	//endregion
 
 	//region Initializable
 	@Override
@@ -157,6 +182,8 @@ public class LayoutWizardController implements Initializable, ContainingParent, 
 		scalePane.setPrefHeight(30.0);
 		scalePane.setMaxHeight(30.0);
 		this.paneImage.setTop(scalePane);
+
+		this.cbElement.setOnHidden(e -> this.model.selectItems(this.cbElement.getChecked()));
 	}
 	//endregion
 
@@ -194,6 +221,8 @@ public class LayoutWizardController implements Initializable, ContainingParent, 
 	private void initDialog()
 	{
 		this.dialog = new Alert(Alert.AlertType.INFORMATION);
+		this.dialog.setHeight(1000);
+		this.dialog.setWidth(1000);
 		this.dialog.setResult(new ButtonType("", ButtonBar.ButtonData.CANCEL_CLOSE));
 		this.dialog.setResizable(true);
 		this.dialog.getDialogPane().getStylesheets().addAll(Common.currentTheme().getPath());

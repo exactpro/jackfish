@@ -23,7 +23,7 @@ public class TooManyElementsException extends JFRemoteException
 
 	public TooManyElementsException(String msg, Locator locator)
 	{
-		super(msg + locator, null);
+		super(msg +" " + locator, null);
 	}
 
 	public TooManyElementsException(Locator locator)

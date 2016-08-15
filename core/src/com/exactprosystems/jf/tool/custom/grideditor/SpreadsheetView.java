@@ -35,8 +35,12 @@ import java.util.stream.IntStream;
 
 public class SpreadsheetView extends Control
 {
-	public enum Direction {
-		UP, DOWN, LEFT, RIGHT
+	public enum Direction
+	{
+		UP,
+		DOWN,
+		LEFT,
+		RIGHT
 	}
 
 	private static final int minProgression = Integer.MIN_VALUE;
@@ -65,14 +69,17 @@ public class SpreadsheetView extends Control
 		{
 			return SpreadsheetView.this;
 		}
+
 		public GridViewSkin getCellsViewSkin()
 		{
 			return SpreadsheetView.this.getCellsViewSkin();
 		}
+
 		public SpreadsheetGridView getGridView()
 		{
 			return SpreadsheetView.this.getCellsView();
 		}
+
 		public boolean isColumnWidthSet(int indexColumn)
 		{
 			return columnWidthSet.get(indexColumn);
@@ -175,7 +182,8 @@ public class SpreadsheetView extends Control
 		}
 		List<Pair<Integer, Integer>> selectedCells = getSelectionModel().getSelectedCells().stream().map(position -> new Pair<>(position.getRow(), position.getColumn())).collect(Collectors.toList());
 
-		Runnable runnable = () -> {
+		Runnable runnable = () ->
+		{
 			if (cellsView.getColumns().size() > provider.columnCount())
 			{
 				cellsView.getColumns().remove(provider.columnCount(), cellsView.getColumns().size());
@@ -238,6 +246,13 @@ public class SpreadsheetView extends Control
 		this.setDataProvider(providerProperty().get());
 	}
 
+	public void renameColumn(int index, String text)
+	{
+		SpreadsheetColumn spreadsheetColumn = this.columns.get(index);
+		this.providerProperty().get().setColumnName(index, text);
+		spreadsheetColumn.setText(text);
+	}
+
 	public void renameColumn(SpreadsheetColumn column, String text)
 	{
 		String oldValue = column.getText();
@@ -275,8 +290,8 @@ public class SpreadsheetView extends Control
 	{
 		switch (direction)
 		{
-			case UP :
-				for(int j = range.getLeft(); j < range.getRight() + 1; j++)
+			case UP:
+				for (int j = range.getLeft(); j < range.getRight() + 1; j++)
 				{
 					ObservableList<String> strings = FXCollections.observableArrayList();
 					int size = initial.size();
@@ -289,7 +304,7 @@ public class SpreadsheetView extends Control
 					int skip = progression != minProgression ? 1 : size;
 					int currentProgression = progression != minProgression ? progression : -1;
 
-					for(int i = range.getBottom() - size; i > range.getTop() -1 ; i--)
+					for (int i = range.getBottom() - size; i > range.getTop() - 1; i--)
 					{
 						String value = String.valueOf(this.providerProperty.get().getCellValue(j, i + skip));
 						String evaluatedText = getEvaluatedText(value, currentProgression);
@@ -300,7 +315,7 @@ public class SpreadsheetView extends Control
 				break;
 
 			case DOWN:
-				for(int j = range.getLeft(); j < range.getRight() + 1; j++)
+				for (int j = range.getLeft(); j < range.getRight() + 1; j++)
 				{
 					ObservableList<String> strings = FXCollections.observableArrayList();
 					int size = initial.size();
@@ -310,8 +325,8 @@ public class SpreadsheetView extends Control
 					}
 					int progression = strings.size() == 1 ? 1 : getProgression(strings);
 					int skip = progression != minProgression ? 1 : size;
-					int currentProgression  = progression != minProgression ? progression : 1;
-					for(int i = range.getTop() + size; i < range.getBottom() + 1; i++)
+					int currentProgression = progression != minProgression ? progression : 1;
+					for (int i = range.getTop() + size; i < range.getBottom() + 1; i++)
 					{
 						String value = String.valueOf(this.providerProperty.get().getCellValue(j, i - skip));
 						String evaluatedText = getEvaluatedText(value, currentProgression);
@@ -322,14 +337,14 @@ public class SpreadsheetView extends Control
 				break;
 
 			case LEFT:
-				for(int i = 0; i < initial.size(); i++)
+				for (int i = 0; i < initial.size(); i++)
 				{
 					ObservableList<String> strings = initial.get(i);
 					Collections.reverse(strings);
 					int progression = strings.size() == 1 ? 1 : getProgression(strings);
 					int skip = progression != minProgression ? 1 : strings.size();
 					int currentProgression = progression != minProgression ? progression : -1;
-					for(int j = range.getRight() - strings.size(); j > range.getLeft() - 1; j--)
+					for (int j = range.getRight() - strings.size(); j > range.getLeft() - 1; j--)
 					{
 						String value = String.valueOf(this.providerProperty.get().getCellValue(j + skip, i + range.getTop()));
 						String evaluatedText = getEvaluatedText(value, currentProgression);
@@ -340,13 +355,13 @@ public class SpreadsheetView extends Control
 				break;
 
 			case RIGHT:
-				for(int i = 0; i < initial.size(); i++)
+				for (int i = 0; i < initial.size(); i++)
 				{
 					ObservableList<String> strings = initial.get(i);
 					int progression = strings.size() == 1 ? 1 : getProgression(strings);
 					int skip = progression != minProgression ? 1 : strings.size();
 					int currentProgression = progression != minProgression ? progression : 1;
-					for(int j = range.getLeft() + strings.size(); j < range.getRight() + 1; j++)
+					for (int j = range.getLeft() + strings.size(); j < range.getRight() + 1; j++)
 					{
 						String evaluatedText = getEvaluatedText(String.valueOf(this.providerProperty.get().getCellValue(j - skip, i + range.getTop())), currentProgression);
 						this.providerProperty.get().setCellValue(j, i + range.getTop(), evaluatedText);
@@ -535,7 +550,7 @@ public class SpreadsheetView extends Control
 		removeRow.setOnAction(e -> removeRow(this.getSelectionModel().getSelectedCells().get(0).getRow()));
 
 		MenuItem copyItems = new MenuItem("Copy");
-		copyItems.setOnAction(event ->  copy(false));
+		copyItems.setOnAction(event -> copy(false));
 
 		MenuItem copyWithHeader = new MenuItem("Copy with header");
 		copyWithHeader.setOnAction(event -> copy(true));
@@ -673,7 +688,8 @@ public class SpreadsheetView extends Control
 
 			column.setEditable(true);
 			column.setSortable(false);
-			column.setCellValueFactory((TableColumn.CellDataFeatures<ObservableList<SpreadsheetCell>, SpreadsheetCell> p) -> {
+			column.setCellValueFactory((TableColumn.CellDataFeatures<ObservableList<SpreadsheetCell>, SpreadsheetCell> p) ->
+			{
 				if (columnIndex >= p.getValue().size())
 				{
 					return null;
@@ -685,7 +701,8 @@ public class SpreadsheetView extends Control
 		return column;
 	}
 
-	private final EventHandler<KeyEvent> keyPressedHandler = (KeyEvent keyEvent) -> {
+	private final EventHandler<KeyEvent> keyPressedHandler = (KeyEvent keyEvent) ->
+	{
 		TablePosition<ObservableList<SpreadsheetCell>, ?> position = getSelectionModel().getFocusedCell();
 		// Go to the next row only if we're not editing
 		if (getEditingCell() != null && keyEvent.getCode().equals(KeyCode.ESCAPE))

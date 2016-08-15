@@ -38,8 +38,8 @@ public class TestLayoutWizard extends Application
 			new String[]{"a", "b"},
 			new String[]{"1", "2"}
 		}, new Configuration().createEvaluator());
+		Common.node = stage;
 		Common.setTheme(Theme.WHITE);
-
 		Common.setProgressBar(new ProgressBar());
 
 		ConsoleDocumentFactory factory = new ConsoleDocumentFactory(VerboseLevel.All);
@@ -58,7 +58,7 @@ public class TestLayoutWizard extends Application
 			}
 		});
 		connector.startApplication();
-		stage.setScene(new Scene(new Pane()));
+		stage.setScene(new Scene(new Pane(), 10, 10));
 		stage.show();
 	}
 }

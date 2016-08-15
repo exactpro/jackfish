@@ -83,11 +83,6 @@ public class ScalePane extends HBox
 		this.getChildren().addAll(this.btnZoomMinus, this.labelZoom, this.btnZoomPlus);
 	}
 
-	public ScalePane()
-	{
-		this(null);
-	}
-
 	public void setListener(IScaleListener listener)
 	{
 		this.listener = listener;

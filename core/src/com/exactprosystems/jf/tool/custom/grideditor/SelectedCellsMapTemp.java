@@ -1,6 +1,3 @@
-
-
-
 package com.exactprosystems.jf.tool.custom.grideditor;
 
 import javafx.collections.FXCollections;
