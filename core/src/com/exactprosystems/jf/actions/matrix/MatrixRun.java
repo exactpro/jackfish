@@ -16,7 +16,6 @@ import com.exactprosystems.jf.common.MatrixRunner;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
-import com.exactprosystems.jf.documents.matrix.Matrix;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.documents.matrix.parser.items.ActionItem.HelpKind;
 
@@ -73,10 +72,10 @@ public class MatrixRun extends AbstractAction
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception 
 	{
 		try(Context cloneContext = context.clone();
-			Reader reader = new FileReader(new File(this.matrix));)
+			Reader reader = new FileReader(new File(this.matrix)))
 		{
-			//TODO need use constructor matrixrunner with file, not reader. bug #35073
 			MatrixRunner runner = cloneContext.createRunner(reader, this.at, this.parameter);
+			runner.setMatrixFile(new File(this.matrix));
 			runner.start();
 			super.setResult(runner);
 		}

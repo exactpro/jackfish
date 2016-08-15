@@ -134,7 +134,10 @@ public class MatrixRunner implements IMatrixRunner, AutoCloseable
 		return this.report == null ? null : report.getReportName();
 	}
 
-	
+	public void setMatrixFile(File file)
+	{
+		this.matrixFile = file;
+	}
 	
 	@Override
 	public void close() throws Exception
