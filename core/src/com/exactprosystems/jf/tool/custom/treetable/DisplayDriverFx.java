@@ -8,6 +8,7 @@
 
 package com.exactprosystems.jf.tool.custom.treetable;
 
+import com.exactprosystems.jf.api.app.AppConnection;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.common.undoredo.Command;
@@ -33,6 +34,7 @@ import com.exactprosystems.jf.tool.custom.grideditor.DataProvider;
 import com.exactprosystems.jf.tool.custom.grideditor.SpreadsheetView;
 import com.exactprosystems.jf.tool.custom.grideditor.TableDataProvider;
 import com.exactprosystems.jf.tool.custom.label.CommentsLabel;
+import com.exactprosystems.jf.tool.custom.layout.wizard.LayoutWizard;
 import com.exactprosystems.jf.tool.custom.tab.CustomTab;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.matrix.MatrixFx;
@@ -410,11 +412,11 @@ public class DisplayDriverFx implements DisplayDriver
 	}
 
 	@Override
-	public void showButton(MatrixItem item, Object layout, int row, int column, String name, Function<Void, Void> action)
+	public void showButton(MatrixItem item, Object layout, int row, int column, String name, Function<MatrixItem, Void> action)
 	{
 		GridPane pane = (GridPane) layout;
 		Button button = new Button(name);
-		button.setOnAction(e -> action.apply(null));
+		button.setOnAction(e -> action.apply(item));
 		pane.add(button, column, row);
 		GridPane.setMargin(button, INSETS);
 	}
@@ -455,7 +457,7 @@ public class DisplayDriverFx implements DisplayDriver
 		DragResizer.makeResizable(borderPane);
 		view.setPrefHeight(30 * (Math.min(provider.getRowHeaders().size(), 4) + 1));
 		BorderPane.setMargin(view, new Insets(0, 0, 10, 0));
-		pane.add(borderPane, column, row, 5, 2);
+		pane.add(borderPane, column, row, 6, 2);
 	}
 
 	@Override
@@ -523,6 +525,19 @@ public class DisplayDriverFx implements DisplayDriver
 		{
 			parent.getChildren().remove(treeItem);
 		}
+	}
+
+	@Override
+	public void layoutWizard(MatrixItem item, Table table, Context context)
+	{
+		AppConnection defaultApplicationConnection = item.getMatrix().getDefaultApplicationConnection();
+		if (defaultApplicationConnection == null)
+		{
+			DialogsHelper.showInfo("You need to start application");
+			return;
+		}
+		LayoutWizard wizard = new LayoutWizard(table, defaultApplicationConnection);
+		wizard.show();
 	}
 
 	private void updateStyle(String key, Settings settings, Label label)

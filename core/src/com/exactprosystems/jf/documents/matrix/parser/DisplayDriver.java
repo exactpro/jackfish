@@ -9,6 +9,7 @@
 package com.exactprosystems.jf.documents.matrix.parser;
 
 import com.exactprosystems.jf.common.Settings;
+import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.items.CommentString;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 import com.exactprosystems.jf.functions.Table;
@@ -21,7 +22,7 @@ public interface DisplayDriver
 {
 	Object 		createLayout		(MatrixItem item, int lines);
 
-	void showTitle(MatrixItem item, Object layout, int row, int column, String name, Settings settings);
+	void		showTitle(MatrixItem item, Object layout, int row, int column, String name, Settings settings);
 	void 		showLabel			(MatrixItem item, Object layout, int row, int column, String name);
 	void 		showCheckBox		(MatrixItem item, Object layout, int row, int column, String name, Setter<Boolean> set, Getter<Boolean> get);
 	void 		showComboBox		(MatrixItem item, Object layout, int row, int column, Setter<String> set, Getter<String> get, Function<Void, List<String>> handler);
@@ -29,14 +30,15 @@ public interface DisplayDriver
 	void 		showExpressionField	(MatrixItem item, Object layout, int row, int column, String name, Setter<String> set, Getter<String> get, 
 										Function<String, String> firstHandler, Function<String, String> secondHandler, Character first, Character second);
 
-	void showAutoCompleteBox(MatrixItem item, Object layout, int row, int column, List<String> words, Consumer<String> supplier);
+	void		showAutoCompleteBox(MatrixItem item, Object layout, int row, int column, List<String> words, Consumer<String> supplier);
 	void 		showComment			(MatrixItem item, Object layout, int row, int column, List<CommentString> lines);
-	void 		showButton			(MatrixItem item, Object layout, int row, int column, String name, Function<Void, Void> action);
-	void 		showToggleButton	(MatrixItem item, Object layout, int row, int column, String name, Function<Boolean, Void> action, boolean intialValue);
+	void 		showButton			(MatrixItem item, Object layout, int row, int column, String name, Function<MatrixItem, Void> action);
+	void 		showToggleButton	(MatrixItem item, Object layout, int row, int column, String name, Function<Boolean, Void> action, boolean initialValue);
 	void 		showParameters		(MatrixItem item, Object layout, int row, int column, Parameters parameters, FormulaGenerator generator, boolean oneLine);
 	void 		showGrid			(MatrixItem item, Object layout, int row, int column, Table table);
 	void 		hide				(MatrixItem item, Object layout, int row, boolean hide);
 	void		setupCall			(MatrixItem item, String reference, Parameters parameters);
 	void 		setCurrentItem		(MatrixItem item);
 	void		deleteItem			(MatrixItem item);
+	void		layoutWizard		(MatrixItem item, Table table, Context context);
 }

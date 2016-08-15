@@ -72,6 +72,10 @@ public class RawTable extends MatrixItem
 			return null;
 		}, this.table.size() != 0);
 		driver.hide(this, layout, 2, this.table.size() == 0);
+		driver.showButton(this, layout, 1, 5, "Layout wizard",(item) -> {
+			driver.layoutWizard(item, table, context);
+			return null;
+		});
 		return layout;
 	}
 
