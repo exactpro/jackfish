@@ -179,17 +179,17 @@
 		<delete dir="${tool}/apps/cache"/>
 
 		<!-- build.zip -->
-		<delete file="build.zip"/>
-		<zip basedir="${tool}" destfile="build.zip"/>
+		<delete file="build*.zip"/>
+		<zip basedir="${tool}" destfile="build${revision}.zip"/>
 		
 		<!-- update.zip -->
-		<delete file="update.zip"/>
+		<delete file="update*.zip"/>
 		<delete  dir="${tool}">
 			<exclude name="**/*.jar"/>
 			<exclude name="apps/unix/*"/>
 			<exclude name="apps/win/*"/>
 		</delete>
-		<zip basedir="${tool}" destfile="update.zip"/>
+		<zip basedir="${tool}" destfile="update${revision}.zip"/>
 
 		<!-- cleanup -->
 		<delete dir="${tool}"/>
