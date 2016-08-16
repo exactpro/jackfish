@@ -30,6 +30,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 
@@ -39,12 +41,16 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class LayoutWizardController implements Initializable, ContainingParent, IScaleListener
 {
+	private static final Function<IControl, String> converter = IControl::getID;
 	public static final int BORDER_WIDTH = 4;
 	public static final int OFFSET = BORDER_WIDTH / 2;
 
@@ -52,9 +58,12 @@ public class LayoutWizardController implements Initializable, ContainingParent, 
 	public ComboBox<IWindow> cbDialog;
 	public CheckedComboBox<IControl> cbElement;
 	public BorderPane paneImage;
-	public ListView lvVertical;
 	public BorderPane paneFormula;
-	public ListView lvHorizontal;
+	public VBox vBox;
+	public HBox hBox;
+
+	private ToggleGroup tgVertical;
+	private ToggleGroup tgHorizontal;
 
 	private ExpressionField formulaField;
 
@@ -78,7 +87,6 @@ public class LayoutWizardController implements Initializable, ContainingParent, 
 	public void init(LayoutWizard wizard, AbstractEvaluator evaluator)
 	{
 		this.model = wizard;
-		this.cbElement.setStringConverter(IControl::getID);
 
 		initDialog();
 		createCanvas();
@@ -145,6 +153,33 @@ public class LayoutWizardController implements Initializable, ContainingParent, 
 		this.cbElement.getItems().setAll(controls);
 	}
 
+	public void displaySelectedControls(List<IControl> controls)
+	{
+		List<IControl> lv = new ArrayList<>(controls);
+		List<IControl> lh = new ArrayList<>(controls);
+		this.vBox.getChildren().setAll(lv
+				.stream()
+				.map(ic -> {
+					ToggleButton button = new ToggleButton(converter.apply(ic));
+					button.setUserData(ic);
+					button.setToggleGroup(tgVertical);
+					button.setMaxWidth(Double.MAX_VALUE);
+					return button;
+				})
+				.collect(Collectors.toList())
+		);
+		this.hBox.getChildren().setAll(lh
+				.stream()
+				.map(ic -> {
+					ToggleButton button = new ToggleButton(converter.apply(ic));
+					button.setUserData(ic);
+					button.setToggleGroup(tgHorizontal);
+					return button;
+				})
+				.collect(Collectors.toList())
+		);
+	}
+
 	public void show()
 	{
 		this.dialog.show();
@@ -184,6 +219,10 @@ public class LayoutWizardController implements Initializable, ContainingParent, 
 		this.paneImage.setTop(scalePane);
 
 		this.cbElement.setOnHidden(e -> this.model.selectItems(this.cbElement.getChecked()));
+		this.cbElement.setStringConverter(converter);
+
+		this.tgHorizontal = new ToggleGroup();
+		this.tgVertical = new ToggleGroup();
 	}
 	//endregion
 
@@ -275,6 +314,7 @@ public class LayoutWizardController implements Initializable, ContainingParent, 
 	private void createFormula(AbstractEvaluator evaluator)
 	{
 		this.formulaField = new ExpressionField(evaluator);
+		this.formulaField.setHelperForExpressionField("Layout formula", null);
 		this.paneFormula.setCenter(this.formulaField);
 	}
 	//endregion

@@ -37,6 +37,8 @@ public class LayoutWizard
 	private double initialWidth = 0;
 	private double initialHeight = 0;
 
+	private List<IControl> oldCheckedList = new ArrayList<>();
+
 	public LayoutWizard(Table table, AppConnection appConnection, AbstractEvaluator evaluator)
 	{
 		this.table = new Table(table, evaluator);
@@ -61,6 +63,7 @@ public class LayoutWizard
 			}
 		});
 		this.controller.displayWindow(window.orElse(null), controlsList);
+		this.selectItems(controlsList);
 	}
 
 	public void show()
@@ -99,7 +102,8 @@ public class LayoutWizard
 
 	void selectItems(List<IControl> checked)
 	{
-		System.out.println("Checked : " + checked.toString());
+		checkControls(checked);
+		this.controller.displaySelectedControls(checked);
 	}
 
 	private void loadImage(IWindow window) throws Exception
@@ -222,5 +226,13 @@ public class LayoutWizard
 			this.table.removeColumns(headers.toArray(new String[headers.size()]));
 		}
 		return result;
+	}
+
+	private void checkControls(List<IControl> newControls)
+	{
+		//TODO implement this methods
+
+		this.oldCheckedList.clear();
+		this.oldCheckedList.addAll(newControls);
 	}
 }
