@@ -15,18 +15,18 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.Skin;
-import javafx.util.StringConverter;
 
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class CheckedComboBox<T> extends ComboBox<T>
 {
 	private Map<T, Boolean> map = new LinkedHashMap<>();
 
-	private StringConverter<T> stringConverter;
+	private Function<T, String> converter;
 	private CustomListCell<T> buttonCell;
 
 	public CheckedComboBox()
@@ -77,9 +77,9 @@ public class CheckedComboBox<T> extends ComboBox<T>
 		});
 	}
 
-	public void setStringConverter(StringConverter<T> stringConverter)
+	public void setStringConverter(Function<T, String> stringConverter)
 	{
-		this.stringConverter = stringConverter;
+		this.converter = stringConverter;
 	}
 
 	public List<T> getChecked()
@@ -89,6 +89,11 @@ public class CheckedComboBox<T> extends ComboBox<T>
 				.filter(Map.Entry::getValue)
 				.map(Map.Entry::getKey)
 				.collect(Collectors.toList());
+	}
+
+	public void setChecked(List<T> list)
+	{
+		list.forEach(t -> this.map.put(t, true));
 	}
 
 	@Override
@@ -116,7 +121,7 @@ public class CheckedComboBox<T> extends ComboBox<T>
 
 	private String convertToString(T value)
 	{
-		return this.stringConverter == null ? value.toString() : this.stringConverter.toString(value);
+		return this.converter == null ? value.toString() : this.converter.apply(value);
 	}
 
 	private class CustomListCell<S> extends ListCell<S>

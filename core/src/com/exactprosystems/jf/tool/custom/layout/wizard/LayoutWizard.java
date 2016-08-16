@@ -8,10 +8,9 @@
 package com.exactprosystems.jf.tool.custom.layout.wizard;
 
 import com.exactprosystems.jf.api.app.*;
+import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.functions.Table;
 import com.exactprosystems.jf.tool.Common;
-import com.exactprosystems.jf.tool.custom.grideditor.DataProvider;
-import com.exactprosystems.jf.tool.custom.grideditor.TableDataProvider;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import javafx.concurrent.Task;
 import org.apache.log4j.Logger;
@@ -20,6 +19,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.*;
 import java.util.List;
+import java.util.stream.IntStream;
 
 public class LayoutWizard
 {
@@ -28,7 +28,6 @@ public class LayoutWizard
 	private IGuiDictionary dictionary;
 	private AppConnection appConnection;
 	private Table table;
-	private DataProvider<String> dataProvider;
 	private Task<BufferedImage> task;
 
 	private double xOffset = 0;
@@ -38,30 +37,38 @@ public class LayoutWizard
 	private double initialWidth = 0;
 	private double initialHeight = 0;
 
-	public LayoutWizard(Table table, AppConnection appConnection)
+	public LayoutWizard(Table table, AppConnection appConnection, AbstractEvaluator evaluator)
 	{
-		this.table = table;
-		this.dataProvider = new TableDataProvider(table);
-		validateTable();
+		this.table = new Table(table, evaluator);
 		this.dictionary = appConnection.getDictionary();
 		this.appConnection = appConnection;
-		this.controller = Common.loadController(this.getClass().getResource("LayoutWizard.fxml"));
-		this.controller.init(this, dataProvider);
-		Collection<IWindow> windows = dictionary.getWindows();
-		this.controller.displayDialogs(windows);
-		String dialogName = this.table.getHeader(0);
-		Optional<String> first = windows.stream().map(IWindow::getName).filter(dialogName::equals).findFirst();
-		if (!first.isPresent())
+		if (!tableIsValid())
 		{
-			DialogsHelper.showInfo(String.format("Dialog with name '%s' not found", dialogName));
-			//TODO mb ask user for remove columns?
+			return;
 		}
-
+		this.controller = Common.loadController(this.getClass().getResource("LayoutWizard.fxml"));
+		this.controller.init(this, evaluator);
+		this.controller.displayDialogs(this.dictionary.getWindows());
+		String header = this.table.getHeaderSize() > 0 ? this.table.getHeader(0) : null;
+		Optional<IWindow> window = this.dictionary.getWindows().stream().filter(w -> w.getName().equals(header)).findFirst();
+		List<IControl> controlsList = new ArrayList<>();
+		window.ifPresent(w -> {
+			Collection<IControl> controls = w.getControls(IWindow.SectionKind.Run);
+			for (int i = 0; i < this.table.getHeaderSize(); i++)
+			{
+				String h = this.table.getHeader(i);
+				controls.stream().filter(c -> c.getID().equals(h)).findFirst().ifPresent(controlsList::add);
+			}
+		});
+		this.controller.displayWindow(window.orElse(null), controlsList);
 	}
 
 	public void show()
 	{
-		this.controller.show();
+		if (this.controller != null)
+		{
+			this.controller.show();
+		}
 	}
 
 	void close()
@@ -87,9 +94,6 @@ public class LayoutWizard
 			return;
 		}
 		this.controller.displayControls(window.getControls(IWindow.SectionKind.Run));
-
-		this.controller.displayWindow(window);
-
 		loadImage(window);
 	}
 
@@ -172,8 +176,51 @@ public class LayoutWizard
 //		}
 	}
 
-	private void validateTable()
+	private boolean tableIsValid()
 	{
-		//TODO implements this method pls
+		boolean[] hasError = {false};
+		StringBuilder sbError = new StringBuilder("The table is not valid. See errors below :\n");
+		int[] errorCount = {0};
+		String dialogName = this.table.getHeader(0);
+		Optional<String> first = dictionary.getWindows().stream().map(IWindow::getName).filter(dialogName::equals).findFirst();
+		if (!first.isPresent())
+		{
+			sbError.append(errorCount[0]++).append(": ");
+			sbError.append(String.format("In the header with number 0 need be the name of dialog. Dialog with name '%s' not found", dialogName));
+			sbError.append("\n");
+			hasError[0] = true;
+		}
+		if (this.table.getHeaderSize() - 1 != this.table.size())
+		{
+			sbError.append(errorCount[0]++).append(": ");
+			sbError.append("The table must be square");
+			sbError.append("\n");
+			hasError[0] = true;
+		}
+		int l = Math.min(this.table.getHeaderSize() - 1, this.table.size());
+		IntStream.range(0, l).forEach(i ->
+		{
+			String header = this.table.getHeader(i + 1);
+			String cell = String.valueOf(this.table.get(i).get(dialogName));
+			if (!header.equals(cell))
+			{
+				sbError.append(errorCount[0]++).append(": ");
+				sbError.append(String.format("The row with index %d ( %s ) not equals the header with index %d ( %s) ", i, cell, i + 1, header));
+				sbError.append("\n");
+				hasError[0] = true;
+			}
+		});
+		boolean result = !hasError[0] || DialogsHelper.showYesNoDialog(sbError.toString(), "Would you like continue process with empty table?");
+		if (result && hasError[0])
+		{
+			this.table.clear();
+			List<String> headers = new ArrayList<>();
+			for (int i = 0; i < this.table.getHeaderSize(); i++)
+			{
+				headers.add(table.getHeader(i));
+			}
+			this.table.removeColumns(headers.toArray(new String[headers.size()]));
+		}
+		return result;
 	}
 }

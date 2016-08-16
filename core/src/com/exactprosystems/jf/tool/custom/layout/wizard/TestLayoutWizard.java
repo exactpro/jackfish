@@ -35,8 +35,9 @@ public class TestLayoutWizard extends Application
 	public void start(Stage stage) throws Exception
 	{
 		Table table = new Table(new String[][]{
-			new String[]{"a", "b"},
-			new String[]{"1", "2"}
+			new String[]{"Main", "Button", "TextBox"},
+			new String[]{"Button", ""},
+			new String[]{"TextBox", ""}
 		}, new Configuration().createEvaluator());
 		Common.node = stage;
 		Common.setTheme(Theme.WHITE);
@@ -53,8 +54,16 @@ public class TestLayoutWizard extends Application
 		connector.setApplicationListener((status, connection, throwable) -> {
 			if (connection != null)
 			{
-				LayoutWizard wizard = new LayoutWizard(table, connection);
-				wizard.show();
+				LayoutWizard wizard = null;
+				try
+				{
+					wizard = new LayoutWizard(table, connection, configuration.createEvaluator());
+					wizard.show();
+				}
+				catch (Exception e)
+				{
+					e.printStackTrace();
+				}
 			}
 		});
 		connector.startApplication();

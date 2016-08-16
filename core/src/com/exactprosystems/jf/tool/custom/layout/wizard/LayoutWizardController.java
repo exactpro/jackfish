@@ -9,11 +9,11 @@ package com.exactprosystems.jf.tool.custom.layout.wizard;
 
 import com.exactprosystems.jf.api.app.IControl;
 import com.exactprosystems.jf.api.app.IWindow;
+import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.custom.combobox.CheckedComboBox;
-import com.exactprosystems.jf.tool.custom.grideditor.DataProvider;
-import com.exactprosystems.jf.tool.custom.grideditor.SpreadsheetView;
+import com.exactprosystems.jf.tool.custom.expfield.ExpressionField;
 import com.exactprosystems.jf.tool.custom.layout.CustomArrow;
 import com.exactprosystems.jf.tool.custom.layout.CustomGrid;
 import com.exactprosystems.jf.tool.custom.layout.CustomRectangle;
@@ -40,6 +40,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Collection;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class LayoutWizardController implements Initializable, ContainingParent, IScaleListener
@@ -48,14 +49,17 @@ public class LayoutWizardController implements Initializable, ContainingParent, 
 	public static final int OFFSET = BORDER_WIDTH / 2;
 
 	public Parent parent;
-	public BorderPane paneTable;
 	public ComboBox<IWindow> cbDialog;
 	public CheckedComboBox<IControl> cbElement;
 	public BorderPane paneImage;
+	public ListView lvVertical;
+	public BorderPane paneFormula;
+	public ListView lvHorizontal;
+
+	private ExpressionField formulaField;
 
 	private LayoutWizard model;
 	private Alert dialog;
-	private DataProvider<String> provider;
 
 	private Group group;
 	private ScrollPane mainScrollPane;
@@ -70,18 +74,15 @@ public class LayoutWizardController implements Initializable, ContainingParent, 
 	private Text progressText;
 
 	private ChangeListener<IWindow> windowChangeListener = (observable, oldValue, newValue) -> Common.tryCatch(() -> this.model.changeDialog(newValue), "Error on change dialog");
-	private SpreadsheetView view;
 
-	public void init(LayoutWizard wizard, DataProvider<String> provider)
+	public void init(LayoutWizard wizard, AbstractEvaluator evaluator)
 	{
 		this.model = wizard;
-
-		this.provider = provider;
-		this.view = new SpreadsheetView(this.provider);
-		this.paneTable.setCenter(this.view);
+		this.cbElement.setStringConverter(IControl::getID);
 
 		initDialog();
 		createCanvas();
+		createFormula(evaluator);
 
 		this.paneImage.setCenter(this.mainScrollPane);
 	}
@@ -128,9 +129,10 @@ public class LayoutWizardController implements Initializable, ContainingParent, 
 
 	//endregion
 
-	public void displayWindow(IWindow window)
+	public void displayWindow(IWindow window, List<IControl> checkedControls)
 	{
-		this.view.renameColumn(0, window.getName());
+		this.cbDialog.getSelectionModel().select(window);
+		this.cbElement.setChecked(checkedControls);
 	}
 
 	public void displayDialogs(Collection<IWindow> dialogs)
@@ -219,6 +221,7 @@ public class LayoutWizardController implements Initializable, ContainingParent, 
 	private void initDialog()
 	{
 		this.dialog = new Alert(Alert.AlertType.INFORMATION);
+		this.dialog.getDialogPane().getStylesheets().add(Common.currentTheme().getPath());
 		this.dialog.getDialogPane().setPrefHeight(1000);
 		this.dialog.getDialogPane().setPrefWidth(1000);
 		this.dialog.setResult(new ButtonType("", ButtonBar.ButtonData.CANCEL_CLOSE));
@@ -267,6 +270,12 @@ public class LayoutWizardController implements Initializable, ContainingParent, 
 		this.customGrid = new CustomGrid();
 		this.customGrid.hide();
 		this.customGrid.setGroup(this.group);
+	}
+
+	private void createFormula(AbstractEvaluator evaluator)
+	{
+		this.formulaField = new ExpressionField(evaluator);
+		this.paneFormula.setCenter(this.formulaField);
 	}
 	//endregion
 }

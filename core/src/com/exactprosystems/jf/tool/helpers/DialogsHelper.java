@@ -621,6 +621,16 @@ public abstract class DialogsHelper
 		return dialog;
 	}
 
+	public static boolean showYesNoDialog(String message, String question)
+	{
+		Dialog<ButtonType> dialog = new Alert(Alert.AlertType.CONFIRMATION);
+		dialog.setHeaderText(question);
+		dialog.getDialogPane().setPrefWidth(1000);
+		dialog.setContentText(message);
+		((Button) dialog.getDialogPane().lookupButton(ButtonType.CANCEL)).setText("No");
+		return dialog.showAndWait().filter(bt -> bt.getButtonData().equals(ButtonBar.ButtonData.OK_DONE)).isPresent();
+	}
+
 	private static String find(org.w3c.dom.Node root)
 	{
 		if (root.getNodeName().equalsIgnoreCase("pre"))
