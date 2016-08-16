@@ -179,11 +179,16 @@
 		<delete dir="${tool}/apps/cache"/>
 
 		<!-- build.zip -->
-		<delete file="build*.zip"/>
+		<delete quiet="true">
+		    <fileset dir="." includes="build*.zip"/>
+		</delete>
+		
 		<zip basedir="${tool}" destfile="build${revision}.zip"/>
 		
 		<!-- update.zip -->
-		<delete file="update*.zip"/>
+		<delete quiet="true">
+		    <fileset dir="." includes="update*.zip"/>
+		</delete>
 		<delete  dir="${tool}">
 			<exclude name="**/*.jar"/>
 			<exclude name="apps/unix/*"/>
