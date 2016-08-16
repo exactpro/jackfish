@@ -536,7 +536,7 @@ public class DisplayDriverFx implements DisplayDriver
 			DialogsHelper.showInfo("You need to start application");
 			return;
 		}
-		LayoutWizard wizard = new LayoutWizard(table, defaultApplicationConnection);
+		LayoutWizard wizard = new LayoutWizard(table, defaultApplicationConnection, context.getEvaluator());
 		wizard.show();
 	}
 
