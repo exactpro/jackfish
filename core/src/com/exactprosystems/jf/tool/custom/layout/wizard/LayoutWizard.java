@@ -42,6 +42,9 @@ public class LayoutWizard
 
 	private List<IControl> oldCheckedList = new ArrayList<>();
 
+	private IControl hControl;
+	private IControl vControl;
+
 	public LayoutWizard(Table table, AppConnection appConnection, AbstractEvaluator evaluator)
 	{
 		this.oldTable = table;
@@ -122,6 +125,31 @@ public class LayoutWizard
 
 	}
 
+	void displayHRect(IControl control)
+	{
+		this.hControl = control;
+		this.controller.displayRect(getRect(this.mapRectangle.get(control)), true);
+	}
+
+	void displayVRect(IControl control)
+	{
+		this.vControl = control;
+		this.controller.displayRect(getRect(this.mapRectangle.get(control)), false);
+	}
+
+	void hideHRect()
+	{
+		this.hControl = null;
+		this.controller.hideRect(true);
+	}
+
+	void hideVRect()
+	{
+		this.vControl = null;
+		this.controller.hideRect(false);
+	}
+
+	//region private methods
 	private void loadImage(IWindow window) throws Exception
 	{
 		this.controller.clearImage();
@@ -203,12 +231,30 @@ public class LayoutWizard
 	private void resizeImage()
 	{
 		this.controller.resizeImage(this.currentZoom * this.initialWidth, this.currentZoom * this.initialHeight);
+		if (hControl != null)
+		{
+			this.controller.changeScaleRect(getRect(this.mapRectangle.get(this.hControl)), true);
+		}
+		if (vControl != null)
+		{
+			this.controller.changeScaleRect(getRect(this.mapRectangle.get(this.vControl)), false);
+		}
 //		this.displayControl(this.selfControl, true);
 //		this.displayControl(this.otherControl, false);
 //		if (lastArrow != null)
 //		{
 //			this.displayArrow(getRect(mapRectangle.get(this.selfControl)), getRect(this.mapRectangle.get(this.otherControl)), this.lastArrow);
 //		}
+	}
+
+	private Rectangle getRect(Rectangle rectangle)
+	{
+		return new Rectangle(
+				(int) (rectangle.x * currentZoom),
+				(int) (rectangle.y * currentZoom),
+				(int) (rectangle.width * currentZoom),
+				(int) (rectangle.height * currentZoom)
+		);
 	}
 
 	private boolean tableIsValid()
@@ -272,4 +318,5 @@ public class LayoutWizard
 		this.oldCheckedList.clear();
 		this.oldCheckedList.addAll(newControls);
 	}
+	//endregion
 }

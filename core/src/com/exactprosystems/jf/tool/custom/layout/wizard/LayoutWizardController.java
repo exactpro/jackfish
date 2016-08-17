@@ -12,6 +12,7 @@ import com.exactprosystems.jf.api.app.IWindow;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
+import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.custom.combobox.CheckedComboBox;
 import com.exactprosystems.jf.tool.custom.expfield.ExpressionField;
 import com.exactprosystems.jf.tool.custom.layout.CustomArrow;
@@ -22,10 +23,14 @@ import com.exactprosystems.jf.tool.custom.scale.ScalePane;
 import javafx.beans.value.ChangeListener;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
+import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
@@ -37,6 +42,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Modality;
 
 import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -62,6 +68,14 @@ public class LayoutWizardController implements Initializable, ContainingParent, 
 	public BorderPane paneFormula;
 	public VBox vBox;
 	public HBox hBox;
+	public CheckBox cbVisibility;
+	public CheckBox cbCount;
+	public CheckBox cbSize;
+	public CheckBox cbNear;
+	public CheckBox cbCross;
+	public CheckBox cbCenter;
+
+	private CheckBox cbGrid;
 
 	private ToggleGroup tgVertical;
 	private ToggleGroup tgHorizontal;
@@ -75,9 +89,9 @@ public class LayoutWizardController implements Initializable, ContainingParent, 
 	private ScrollPane mainScrollPane;
 	private ImageView imageView;
 
+	private CustomRectangle vRectangle;
+	private CustomRectangle hRectangle;
 	private CustomGrid customGrid;
-	private CustomRectangle selfRectangle;
-	private CustomRectangle otherRectangle;
 	private CustomArrow customArrow;
 
 	private ChangeListener<IWindow> windowChangeListener = (observable, oldValue, newValue) -> Common.tryCatch(() -> this.model.changeDialog(newValue), "Error on change dialog");
@@ -123,7 +137,7 @@ public class LayoutWizardController implements Initializable, ContainingParent, 
 		ImageIO.write(bufferedImage, "jpg", outputStream);
 		Image image = new Image(new ByteArrayInputStream(outputStream.toByteArray()));
 		this.imageView.setImage(image);
-		this.paneImage.getChildren().removeAll(this.paneImage.getChildren());
+		this.paneImage.setBottom(null);
 		this.paneImage.setCenter(this.mainScrollPane);
 		this.customGrid.setSize((int) image.getWidth(), (int) image.getHeight());
 	}
@@ -165,27 +179,41 @@ public class LayoutWizardController implements Initializable, ContainingParent, 
 	{
 		List<IControl> lv = new ArrayList<>(controls);
 		List<IControl> lh = new ArrayList<>(controls);
-		this.vBox.getChildren().setAll(lv
-				.stream()
-				.map(ic -> {
-					ToggleButton button = new ToggleButton(converter.apply(ic));
-					button.setUserData(ic);
-					button.setToggleGroup(tgVertical);
-					button.setMaxWidth(Double.MAX_VALUE);
-					return button;
-				})
-				.collect(Collectors.toList())
-		);
-		this.hBox.getChildren().setAll(lh
-				.stream()
-				.map(ic -> {
-					ToggleButton button = new ToggleButton(converter.apply(ic));
-					button.setUserData(ic);
-					button.setToggleGroup(tgHorizontal);
-					return button;
-				})
-				.collect(Collectors.toList())
-		);
+		this.vBox.getChildren().setAll(lv.stream().map(ic ->
+		{
+			ToggleButton button = new ToggleButton(converter.apply(ic));
+			button.setUserData(ic);
+			button.setToggleGroup(tgVertical);
+			button.setMaxWidth(Double.MAX_VALUE);
+			return button;
+		}).collect(Collectors.toList()));
+		this.hBox.getChildren().setAll(lh.stream().map(ic ->
+		{
+			ToggleButton button = new ToggleButton(converter.apply(ic));
+			button.setUserData(ic);
+			button.setToggleGroup(tgHorizontal);
+			return button;
+		}).collect(Collectors.toList()));
+	}
+
+	public void displayRect(Rectangle rectangle, boolean isHorizontal)
+	{
+		CustomRectangle r = isHorizontal ? hRectangle : vRectangle;
+		r.updateRectangle(rectangle.getX() + OFFSET, rectangle.getY() + OFFSET, rectangle.getWidth() - BORDER_WIDTH, rectangle.getHeight() - BORDER_WIDTH);
+		r.setInit(true);
+		r.setVisible(true);
+	}
+
+	public void hideRect(boolean isHorizontal)
+	{
+		CustomRectangle r = isHorizontal ? hRectangle : vRectangle;
+		r.setVisible(false);
+	}
+
+	public void changeScaleRect(Rectangle rectangle, boolean isHorizontal)
+	{
+		CustomRectangle r = isHorizontal ? hRectangle : vRectangle;
+		r.updateRectangle(rectangle.getX() + OFFSET, rectangle.getY() + OFFSET, rectangle.getWidth() - BORDER_WIDTH, rectangle.getHeight() - BORDER_WIDTH);
 	}
 
 	public void show()
@@ -224,6 +252,22 @@ public class LayoutWizardController implements Initializable, ContainingParent, 
 		scalePane.setMinHeight(30.0);
 		scalePane.setPrefHeight(30.0);
 		scalePane.setMaxHeight(30.0);
+
+		scalePane.getChildren().add(new Separator(Orientation.VERTICAL));
+		this.cbGrid = new CheckBox("Show grid");
+		this.cbGrid.selectedProperty().addListener((observable, oldValue, newValue) ->
+		{
+			if (newValue)
+			{
+				this.customGrid.show();
+			}
+			else
+			{
+				this.customGrid.hide();
+			}
+		});
+		scalePane.getChildren().add(this.cbGrid);
+
 		this.paneImage.setTop(scalePane);
 
 		this.cbElement.setOnHidden(e -> this.model.selectItems(this.cbElement.getChecked()));
@@ -232,14 +276,32 @@ public class LayoutWizardController implements Initializable, ContainingParent, 
 		this.tgHorizontal = new ToggleGroup();
 		this.tgVertical = new ToggleGroup();
 
-		this.tgHorizontal.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
+		this.tgHorizontal.selectedToggleProperty().addListener((observable, oldValue, newValue) ->
+		{
+			if (newValue != null)
+			{
+				this.model.displayHRect(((IControl) newValue.getUserData()));
+			}
+			else
+			{
+				this.model.hideHRect();
+			}
 			if (newValue != null && this.tgVertical.getSelectedToggle() != null)
 			{
 				this.model.changeItem(((IControl) newValue.getUserData()), ((IControl) this.tgVertical.getSelectedToggle().getUserData()));
 			}
 		});
 
-		this.tgVertical.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
+		this.tgVertical.selectedToggleProperty().addListener((observable, oldValue, newValue) ->
+		{
+			if (newValue != null)
+			{
+				this.model.displayVRect(((IControl) newValue.getUserData()));
+			}
+			else
+			{
+				this.model.hideVRect();
+			}
 			if (newValue != null && this.tgHorizontal.getSelectedToggle() != null)
 			{
 				this.model.changeItem(((IControl) this.tgHorizontal.getSelectedToggle().getUserData()), ((IControl) newValue.getUserData()));
@@ -315,18 +377,20 @@ public class LayoutWizardController implements Initializable, ContainingParent, 
 		AnchorPane.setTopAnchor(progressIndicator, (double) 200);
 		AnchorPane.setLeftAnchor(progressIndicator, (double) 200);
 
-		this.selfRectangle = new CustomRectangle();
-		this.otherRectangle = new CustomRectangle();
+		this.vRectangle = new CustomRectangle();
+		this.vRectangle.addStyleClass(CssVariables.SELF_CONTROL);
+		this.hRectangle = new CustomRectangle();
+		this.hRectangle.addStyleClass(CssVariables.OTHER_CONTROL);
 		this.customArrow = new CustomArrow();
-		this.selfRectangle.setWidthLine(BORDER_WIDTH);
-		this.otherRectangle.setWidthLine(BORDER_WIDTH);
+		this.vRectangle.setWidthLine(BORDER_WIDTH);
+		this.hRectangle.setWidthLine(BORDER_WIDTH);
 
 		this.group.getChildren().add(this.imageView);
-		this.selfRectangle.setVisible(false);
-		this.selfRectangle.setGroup(this.group);
+		this.vRectangle.setVisible(false);
+		this.vRectangle.setGroup(this.group);
 		this.customArrow.setGroup(this.group);
-		this.otherRectangle.setVisible(false);
-		this.otherRectangle.setGroup(this.group);
+		this.hRectangle.setVisible(false);
+		this.hRectangle.setGroup(this.group);
 
 		this.customGrid = new CustomGrid();
 		this.customGrid.hide();
