@@ -46,7 +46,7 @@ public class RawTable extends MatrixItem
 	{
 		super();
 		this.typeName = new MutableValue<>();
-		this.table = new Table(new String[][]{new String[]{"newH"}, new String[]{"newR"}}, null);
+		this.table = Table.emptyTable();
 	}
 
 	@Override

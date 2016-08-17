@@ -32,6 +32,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 
@@ -79,9 +80,6 @@ public class LayoutWizardController implements Initializable, ContainingParent, 
 	private CustomRectangle otherRectangle;
 	private CustomArrow customArrow;
 
-	private ProgressIndicator progressIndicator;
-	private Text progressText;
-
 	private ChangeListener<IWindow> windowChangeListener = (observable, oldValue, newValue) -> Common.tryCatch(() -> this.model.changeDialog(newValue), "Error on change dialog");
 
 	public void init(LayoutWizard wizard, AbstractEvaluator evaluator)
@@ -104,9 +102,19 @@ public class LayoutWizardController implements Initializable, ContainingParent, 
 
 	public void beforeLoadImage(String dialogName)
 	{
-		this.paneImage.setCenter(this.progressIndicator = new ProgressIndicator(ProgressIndicator.INDETERMINATE_PROGRESS));
-		this.paneImage.setBottom(this.progressText = new Text(String.format("Loading image for dialog '%s' ...", dialogName)));
-		BorderPane.setAlignment(this.progressText, Pos.CENTER);
+		this.paneImage.setCenter(new ProgressIndicator(ProgressIndicator.INDETERMINATE_PROGRESS));
+		Text text = new Text(String.format("Loading image for dialog '%s' ...", dialogName));
+		this.paneImage.setBottom(text);
+		BorderPane.setAlignment(text, Pos.CENTER);
+	}
+
+	public void loadImageFailed()
+	{
+		clearImage();
+		Text value = new Text("Interactive mode is not available, because dialog not found");
+		value.setStroke(Color.RED);
+		BorderPane.setAlignment(value, Pos.CENTER);
+		this.paneImage.setCenter(value);
 	}
 
 	public void displayScreenShot(BufferedImage bufferedImage) throws IOException
@@ -115,7 +123,7 @@ public class LayoutWizardController implements Initializable, ContainingParent, 
 		ImageIO.write(bufferedImage, "jpg", outputStream);
 		Image image = new Image(new ByteArrayInputStream(outputStream.toByteArray()));
 		this.imageView.setImage(image);
-		this.paneImage.getChildren().removeAll(this.progressIndicator, this.progressText);
+		this.paneImage.getChildren().removeAll(this.paneImage.getChildren());
 		this.paneImage.setCenter(this.mainScrollPane);
 		this.customGrid.setSize((int) image.getWidth(), (int) image.getHeight());
 	}

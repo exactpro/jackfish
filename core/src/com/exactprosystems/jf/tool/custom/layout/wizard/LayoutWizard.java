@@ -17,6 +17,7 @@ import org.apache.log4j.Logger;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.rmi.ServerException;
 import java.util.*;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -53,17 +54,23 @@ public class LayoutWizard
 		}
 		this.controller = Common.loadController(this.getClass().getResource("LayoutWizard.fxml"));
 		this.controller.init(this, evaluator);
-		this.controller.displayDialogs(this.dictionary.getWindows());
+		this.controller.displayDialogs(this.dictionary.getWindows().stream()
+				.filter(w -> Common.tryCatch(w::getSelfControl, "nothing", null) != null)
+				.collect(Collectors.toList())
+		);
 		String header = this.table.getHeaderSize() > 0 ? this.table.getHeader(0) : null;
 		Optional<IWindow> window = this.dictionary.getWindows().stream().filter(w -> w.getName().equals(header)).findFirst();
 		List<IControl> controlsList = new ArrayList<>();
-		window.ifPresent(w -> {
+		window.ifPresent(w ->
+		{
 			Collection<IControl> controls = w.getControls(IWindow.SectionKind.Run);
-			for (int i = 0; i < this.table.getHeaderSize(); i++)
-			{
-				String h = this.table.getHeader(i);
-				controls.stream().filter(c -> c.getID().equals(h)).findFirst().ifPresent(controlsList::add);
-			}
+			IntStream.range(0, this.table.getHeaderSize())
+					.mapToObj(i -> this.table.getHeader(i))
+					.forEach(h -> controls.stream()
+							.filter(c -> c.getID().equals(h))
+							.findFirst()
+							.ifPresent(controlsList::add)
+					);
 		});
 		this.controller.displayWindow(window.orElse(null), controlsList);
 		this.selectItems(controlsList);
@@ -138,7 +145,16 @@ public class LayoutWizard
 			@Override
 			protected BufferedImage call() throws Exception
 			{
-				BufferedImage image = service().getImage(null, imageLocator).getImage();
+				BufferedImage image = null;
+				try
+				{
+					image = service().getImage(null, imageLocator).getImage();
+				}
+				//TODO need catch ElementNotFoundException, not ServerException
+				catch (ServerException e)
+				{
+					return null;
+				}
 				Rectangle selfRectangle = service().getRectangle(null, imageLocator);
 				xOffset = selfRectangle.getX();
 				yOffset = selfRectangle.getY();
@@ -156,10 +172,16 @@ public class LayoutWizard
 		this.task.setOnSucceeded(event -> Common.tryCatch(() ->
 		{
 			BufferedImage image = (BufferedImage) event.getSource().getValue();
-			this.initialWidth = image.getWidth();
-			this.initialHeight = image.getHeight();
-			this.controller.displayScreenShot(image);
-			this.controller.displayScreenShot(image);
+			if (image == null)
+			{
+				this.controller.loadImageFailed();
+			}
+			else
+			{
+				this.initialWidth = image.getWidth();
+				this.initialHeight = image.getHeight();
+				this.controller.displayScreenShot(image);
+			}
 		}, "Error on get screenshot"));
 		this.task.setOnFailed(event -> Common.tryCatch(() -> {
 			Throwable exception = event.getSource().getException();
@@ -191,6 +213,10 @@ public class LayoutWizard
 
 	private boolean tableIsValid()
 	{
+		if (this.table.isEmptyTable())
+		{
+			return true;
+		}
 		boolean[] hasError = {false};
 		StringBuilder sbError = new StringBuilder("The table is not valid. See errors below :\n");
 		int[] errorCount = {0};

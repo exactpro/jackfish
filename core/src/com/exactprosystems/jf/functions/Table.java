@@ -34,6 +34,8 @@ import java.util.stream.IntStream;
 
 public class Table implements List<RowTable>, Mutable, Cloneable
 {
+	private static final String EMPTY_HEADER	= "newH";
+	private static final String EMPTY_ROW		= "newR";
 	private Table(AbstractEvaluator evaluator)
 	{
 		this.evaluator = evaluator;
@@ -136,6 +138,11 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 		readFilesInfo(dirName);
 	}
 
+	public static Table emptyTable()
+	{
+		return new Table(new String[][]{new String[]{EMPTY_HEADER}, new String[]{EMPTY_ROW}}, null);
+	}
+
 	//==============================================================================================
 	// Interface Mutable
 	//==============================================================================================
@@ -176,6 +183,14 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 	}
 
 	//==============================================================================================
+
+	public boolean isEmptyTable()
+	{
+		return this.headers.length == 1
+				&& this.headers[0].name.equals(EMPTY_HEADER)
+				&& this.innerList.size() == 1
+				&& this.innerList.get(0).get(headerByName(EMPTY_HEADER)).equals(EMPTY_ROW);
+	}
 
 	public void fillFromTable(Table table)
 	{

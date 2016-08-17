@@ -261,6 +261,11 @@ public abstract class Common
 		void call() throws ProxyException, Exception;
 	}
 
+	public interface FunctionWithReturn<T>
+	{
+		T call() throws ProxyException, Exception;
+	}
+
 	public static void tryCatch(Function fn, String error)
 	{
 		try
@@ -277,6 +282,25 @@ public abstract class Common
 			logger.error(e.getMessage(), e);
 			DialogsHelper.showError(e.getMessage() + "\n" + error);
 		}
+	}
+
+	public static <T> T tryCatch(FunctionWithReturn<T> func, String error, T defaultValue)
+	{
+		try
+		{
+			return func.call();
+		}
+		catch (ProxyException e)
+		{
+			logger.error(e.getFullMessage(), e.getCause());
+			DialogsHelper.showError(e.getFullMessage() + " : " + error);
+		}
+		catch (Exception e)
+		{
+			logger.error(e.getMessage(), e);
+			DialogsHelper.showError(e.getMessage() + "\n" + error);
+		}
+		return defaultValue;
 	}
 
 	public static void tryCatchThrow(Function fn, String msg) throws Exception
