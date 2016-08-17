@@ -176,6 +176,20 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 	}
 
 	//==============================================================================================
+
+	public void setTable(Table table)
+	{
+		this.headers = new ArrayList<Header>().toArray(new Header[0]);
+		this.innerList.clear();
+		this.addColumns(Arrays.stream(table.headers).map(h -> h.name).toArray(String[]::new));
+		for (int i = 0; i < table.innerList.size(); i++)
+		{
+			Map<String, Object> stringObjectMap = convertToStr(table.innerList.get(i));
+			Map<Header, Object> newMap = new LinkedHashMap<>();
+			stringObjectMap.entrySet().forEach(entry -> newMap.put(headerByName(entry.getKey()), entry.getValue()));
+			this.innerList.add(newMap);
+		}
+	}
 	
 	public void setEvaluator(AbstractEvaluator evaluator)
 	{

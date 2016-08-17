@@ -19,6 +19,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.*;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class LayoutWizard
@@ -28,6 +29,7 @@ public class LayoutWizard
 	private IGuiDictionary dictionary;
 	private AppConnection appConnection;
 	private Table table;
+	private Table oldTable;
 	private Task<BufferedImage> task;
 
 	private double xOffset = 0;
@@ -41,6 +43,7 @@ public class LayoutWizard
 
 	public LayoutWizard(Table table, AppConnection appConnection, AbstractEvaluator evaluator)
 	{
+		this.oldTable = table;
 		this.table = new Table(table, evaluator);
 		this.dictionary = appConnection.getDictionary();
 		this.appConnection = appConnection;
@@ -81,7 +84,9 @@ public class LayoutWizard
 
 	void accept()
 	{
-
+		//TODO think about how to return table
+//		this.oldTable.setTable(this.table);
+		close();
 	}
 
 	void changeScale(double scale)
@@ -104,6 +109,11 @@ public class LayoutWizard
 	{
 		checkControls(checked);
 		this.controller.displaySelectedControls(checked);
+	}
+
+	void changeItem(IControl horizontal, IControl vertical)
+	{
+
 	}
 
 	private void loadImage(IWindow window) throws Exception
@@ -231,6 +241,8 @@ public class LayoutWizard
 	private void checkControls(List<IControl> newControls)
 	{
 		//TODO implement this methods
+		List<IControl> list = oldCheckedList.stream().filter(c -> !newControls.contains(c)).collect(Collectors.toList());
+
 
 		this.oldCheckedList.clear();
 		this.oldCheckedList.addAll(newControls);

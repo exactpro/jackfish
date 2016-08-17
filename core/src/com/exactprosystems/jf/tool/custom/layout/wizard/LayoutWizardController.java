@@ -182,7 +182,7 @@ public class LayoutWizardController implements Initializable, ContainingParent, 
 
 	public void show()
 	{
-		this.dialog.show();
+		this.dialog.showAndWait();
 	}
 
 	public void hide()
@@ -223,6 +223,20 @@ public class LayoutWizardController implements Initializable, ContainingParent, 
 
 		this.tgHorizontal = new ToggleGroup();
 		this.tgVertical = new ToggleGroup();
+
+		this.tgHorizontal.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
+			if (newValue != null && this.tgVertical.getSelectedToggle() != null)
+			{
+				this.model.changeItem(((IControl) newValue.getUserData()), ((IControl) this.tgVertical.getSelectedToggle().getUserData()));
+			}
+		});
+
+		this.tgVertical.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
+			if (newValue != null && this.tgHorizontal.getSelectedToggle() != null)
+			{
+				this.model.changeItem(((IControl) this.tgHorizontal.getSelectedToggle().getUserData()), ((IControl) newValue.getUserData()));
+			}
+		});
 	}
 	//endregion
 
