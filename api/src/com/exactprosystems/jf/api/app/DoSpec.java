@@ -8,6 +8,7 @@
 
 package com.exactprosystems.jf.api.app;
 
+import java.awt.Color;
 
 public class DoSpec
 {
@@ -29,6 +30,29 @@ public class DoSpec
 	public static CheckProvider between(Number n, Number m)
 	{
 		return  (kind) -> new Piece(kind).setRange(Range.BETWEEN).setA(n.longValue()).setB(m.longValue()); 
+	}
+
+	//------------------------------------------------------------------------------------------------------------------------------
+	// attributes
+	//------------------------------------------------------------------------------------------------------------------------------
+	public static Spec text(String text)
+	{
+		return new Spec().text(text);
+	}
+
+	public static Spec color(Color color)
+	{
+		return new Spec().color(color);
+	}
+
+	public static Spec backColor(Color color)
+	{
+		return new Spec().backColor(color);
+	}
+
+	public static Spec attr(String name, String value)
+	{
+		return new Spec().attr(name, value);
 	}
 
 	//------------------------------------------------------------------------------------------------------------------------------

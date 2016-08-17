@@ -12,8 +12,156 @@ import java.awt.*;
 import java.util.Collections;
 import java.util.List;
 
+import com.exactprosystems.jf.api.common.Str;
+
 public enum PieceKind implements Measure
 {
+	TEXT("text")
+	{
+		@Override
+		public boolean useName()
+		{
+			return true;
+		}
+
+		@Override
+		public boolean useRange()
+		{
+			return false;
+		}
+
+		@Override
+		public Arrow arrow()
+		{
+			return null;
+		}
+
+		@Override
+		protected String formulaTemplate()
+		{
+			return ".%1$s(%2$s)"; 
+ 		}
+
+		@Override
+		protected <T> void performDerived(Piece piece, OperationExecutor<T> executor, List<T> self, List<T> others, CheckingLayoutResult result) throws Exception
+		{
+			String text = null;
+			if(!self.isEmpty() && self.get(0) != null)
+			{
+				text = executor.get(self.get(0));
+			}
+			
+			result.set(Str.areEqual(text, piece.name)); 
+		}
+	},
+
+	COLOR("color")
+	{
+		@Override
+		public boolean useName()
+		{
+			return false;
+		}
+
+		@Override
+		public boolean useRange()
+		{
+			return false;
+		}
+
+		@Override
+		public Arrow arrow()
+		{
+			return null;
+		}
+
+		@Override
+		protected String formulaTemplate()
+		{
+			return ".%1$s(%5$s)";
+		}
+
+		@Override
+		protected <T> void performDerived(Piece piece, OperationExecutor<T> executor, List<T> self, List<T> others, CheckingLayoutResult result) throws Exception
+		{
+			result.set(!self.isEmpty() && self.get(0) != null); 	// FIXME
+		}
+	},
+
+	BACK_COLOR("backColor")
+	{
+		@Override
+		public boolean useName()
+		{
+			return false;
+		}
+
+		@Override
+		public boolean useRange()
+		{
+			return false;
+		}
+
+		@Override
+		public Arrow arrow()
+		{
+			return null;
+		}
+
+		@Override
+		protected String formulaTemplate()
+		{
+			return ".%1$s(%5$s)";
+		}
+
+		@Override
+		protected <T> void performDerived(Piece piece, OperationExecutor<T> executor, List<T> self, List<T> others, CheckingLayoutResult result) throws Exception
+		{
+			result.set(!self.isEmpty() && self.get(0) != null);  // FIXME
+		} 
+	},
+
+	ATTR("attr")
+	{
+		@Override
+		public boolean useName()
+		{
+			return false;
+		}
+
+		@Override
+		public boolean useRange()
+		{
+			return false;
+		}
+
+		@Override
+		public Arrow arrow()
+		{
+			return null;
+		}
+
+		@Override
+		protected String formulaTemplate()
+		{
+			return ".%1$s(%2$s, %4$s)";
+		}
+
+		@Override
+		protected <T> void performDerived(Piece piece, OperationExecutor<T> executor, List<T> self, List<T> others, CheckingLayoutResult result) throws Exception
+		{
+			String text = null;
+			if(!self.isEmpty() && self.get(0) != null)
+			{
+				text = executor.getAttr(self.get(0), piece.name);
+			}
+			
+			result.set(Str.areEqual(text, piece.text)); 
+		}
+	},
+
+
+
 	VISIBLE("visible")
 	{
 		@Override
@@ -763,9 +911,9 @@ public enum PieceKind implements Measure
 		performDerived(piece, executor, self, others, result);
 	}
 
-	public String toFormula(String controlId, Range range, String first, String second)
+	public String toFormula(String controlId, Range range, String first, String second, String text, String color)
 	{
-		return String.format(formulaTemplate(), this.name, controlId, range == null ? "" : range.toString(first, second));
+		return String.format(formulaTemplate(), this.name, controlId, range == null ? "" : range.toString(first, second), text, color);
 	}
 
 	public int distance(Rectangle s, Rectangle o)

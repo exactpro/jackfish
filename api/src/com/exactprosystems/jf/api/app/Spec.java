@@ -8,6 +8,7 @@
 
 package com.exactprosystems.jf.api.app;
 
+import java.awt.Color;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -37,7 +38,7 @@ public class Spec implements Iterable<Piece>, Serializable
 		StringBuilder sb = new StringBuilder(DoSpec.class.getSimpleName());
 		for (Piece piece : this.list)
 		{
-			sb.append('.').append(piece.toString());
+			sb.append(piece.toString());
 		}
 		return sb.toString();
 	}
@@ -63,7 +64,34 @@ public class Spec implements Iterable<Piece>, Serializable
 		return result;
 	}
 	
+	
+	//------------------------------------------------------------------------------------------------------------------------------
+	// attributes
+	//------------------------------------------------------------------------------------------------------------------------------
+	public Spec text(String text)
+	{
+		this.list.add(new Piece(PieceKind.TEXT).setName(text));
+		return this;
+	}
 
+	public Spec color(Color color)
+	{
+		this.list.add(new Piece(PieceKind.COLOR).setColor(color));
+		return this;
+	}
+
+	public Spec backColor(Color color)
+	{
+		this.list.add(new Piece(PieceKind.BACK_COLOR).setColor(color));
+		return this;
+	}
+
+	public Spec attr(String name, String value)
+	{
+		this.list.add(new Piece(PieceKind.ATTR).setName(name).setText(value));
+		return this;
+	}
+	
 	//------------------------------------------------------------------------------------------------------------------------------
 	// visible
 	//------------------------------------------------------------------------------------------------------------------------------

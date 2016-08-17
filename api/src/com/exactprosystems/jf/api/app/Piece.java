@@ -8,6 +8,7 @@
 
 package com.exactprosystems.jf.api.app;
 
+import java.awt.Color;
 import java.io.Serializable;
 
 import com.exactprosystems.jf.api.app.IWindow.SectionKind;
@@ -25,31 +26,7 @@ public class Piece implements Serializable
 	@Override
 	public String toString()
 	{
-		StringBuilder sb = new StringBuilder(this.kind.toString());
-		sb.append('(');
-		String separator = "";
-		
-		if (this.kind.useName())
-		{
-			separator = ", ";
-			if (this.locator != null)
-			{
-				sb.append("'").append(this.locator.getId()).append("'");
-			}
-			else
-			{
-				sb.append("'").append(this.name).append("'"); 
-			}
-		}
-
-		if (this.kind.useRange())
-		{
-			sb.append(separator).append(this.range.toString("" + this.a, "" + this.b));
-		}
-		
-		sb.append(")");
-		
-		return sb.toString();
+		return this.kind.toFormula(this.name, this.range, "" + this.a, "" + this.b, "" + this.text, "" + this.color);
 	}
 	
 	public void tune(IWindow window) throws Exception
@@ -104,6 +81,19 @@ public class Piece implements Serializable
 		return this;
 	}
 
+	public Piece setText(String text)
+	{
+		this.text = text;
+		return this;
+	}
+	
+	public Piece setColor(Color color)
+	{
+		this.color = color;
+		return this;
+	}
+	
+
 	protected PieceKind kind;
 	protected String name;
 	protected Locator owner;
@@ -111,4 +101,7 @@ public class Piece implements Serializable
 	protected long a;
 	protected long b;
 	protected Range range;
+	protected String text;
+	protected Color color;
+
 }
