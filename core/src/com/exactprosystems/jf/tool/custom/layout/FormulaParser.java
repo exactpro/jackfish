@@ -8,7 +8,9 @@
 
 package com.exactprosystems.jf.tool.custom.layout;
 
+import java.awt.Color;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -18,9 +20,24 @@ import java.util.function.Predicate;
 import com.exactprosystems.jf.api.app.DoSpec;
 import com.exactprosystems.jf.api.app.PieceKind;
 import com.exactprosystems.jf.api.app.Range;
+import com.exactprosystems.jf.api.app.Spec;
 
 public class FormulaParser
 {
+	public static void main(String[] args)
+	{
+		Spec spec = DoSpec.text("text").color(Color.BLUE).attr("class", "some_class");
+		
+		String str = spec.toString();
+		System.out.println("spec=" + str);
+
+		str = "DoSpec.text('something')";
+
+		List<FormulaPart> res = FormulaParser.parse(str);
+		
+		System.out.println(toFormula(res));
+	}
+	
 	public static List<FormulaPart> parse(String str)
 	{
 		AtomicInteger levelCounter = new AtomicInteger(0);

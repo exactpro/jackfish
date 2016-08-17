@@ -34,7 +34,7 @@ class FormulaPart
 	@Override
 	public String toString()
 	{
-		return this.kind.toFormula(this.name, this.range, this.first, this.second);
+		return this.kind.toFormula(this.name, this.range, this.first, this.second, this.first, this.second);
 	}
 	
 	public PieceKind getKind()
