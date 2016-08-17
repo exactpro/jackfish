@@ -15,6 +15,7 @@ import com.exactprosystems.jf.api.error.app.ProxyException;
 import org.w3c.dom.Document;
 
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -345,6 +346,13 @@ public abstract class RemoteApplication implements IRemoteApplication
 	{
 		try 
 		{
+			if (owner == null && element == null)
+			{
+				Rectangle screenRect = new Rectangle(Toolkit.getDefaultToolkit().getScreenSize());
+				BufferedImage capture = new Robot().createScreenCapture(screenRect);
+				return new ImageWrapper(capture);
+			}
+			
 			return getImageDerived(owner, element);
 		}
 		catch (RemoteException e)
