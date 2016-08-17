@@ -177,7 +177,7 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 
 	//==============================================================================================
 
-	public void setTable(Table table)
+	public void fillFromTable(Table table)
 	{
 		this.headers = new ArrayList<Header>().toArray(new Header[0]);
 		this.innerList.clear();
