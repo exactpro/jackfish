@@ -84,8 +84,7 @@ public class LayoutWizard
 
 	void accept()
 	{
-		//TODO think about how to return table
-//		this.oldTable.setTable(this.table);
+		this.oldTable.fillFromTable(this.table);
 		close();
 	}
 
