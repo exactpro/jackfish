@@ -195,6 +195,7 @@ public final class SubCase extends MatrixItem
 			return new ReturnAndResult(Result.NotExecuted);
 		}
 
+		Variables oldLocals = null;
 		try
 		{
 			this.locals = evaluator.createLocals();
@@ -205,9 +206,8 @@ public final class SubCase extends MatrixItem
 			report.itemIntermediate(this);
 
 			
-			Variables oldLocals = evaluator.getLocals();
+			oldLocals = evaluator.getLocals();
 			ReturnAndResult ret = executeChildren(context, listener, evaluator, report, new Class<?>[] { OnError.class }, this.locals);
-			evaluator.setLocals(oldLocals);
 
 			Result result = ret.getResult();
 			
@@ -233,6 +233,7 @@ public final class SubCase extends MatrixItem
 		finally
 		{
 			this.call = false;
+			evaluator.setLocals(oldLocals);
 		}
 	}
 
