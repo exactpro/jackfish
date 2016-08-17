@@ -29,6 +29,11 @@ public class ScalePane extends HBox
 
 	private IScaleListener listener;
 
+	public ScalePane()
+	{
+		this(null);
+	}
+
 	public ScalePane(IScaleListener listener)
 	{
 		super();
