@@ -41,7 +41,7 @@ public class ImageGet extends AbstractAction
 	@ActionFieldAttribute(name = connectionName, mandatory = true, description = "The application connection.")
 	protected AppConnection		connection		= null;
 
-	@ActionFieldAttribute(name = dialogName, mandatory = true, description = "A name of the dialog.")
+	@ActionFieldAttribute(name = dialogName, mandatory = false, description = "A name of the dialog. If omitted, then full screen will be grabbed.")
 	protected String			dialog			= null;
 
 	@ActionFieldAttribute(name = nameName, mandatory = false, description = "A name of element of the dialog. If omitted, then full dialog will be grabbed.")
@@ -54,7 +54,8 @@ public class ImageGet extends AbstractAction
 	@Override
 	public void initDefaultValues() 
 	{
-		name	= null;
+		this.dialog = null;
+		this.name	= null;
 	}
 	
 	@Override
@@ -86,35 +87,42 @@ public class ImageGet extends AbstractAction
 		IRemoteApplication service = app.service();
 		ImageWrapper imageWrapper = null;
 		
-		IGuiDictionary dictionary = connection.getDictionary();
-		IWindow window = dictionary.getWindow(this.dialog);
-		
-		if (this.name == null)
+		if (this.dialog == null)
 		{
-			boolean found = false;
-			for(IControl self : window.getControls(SectionKind.Self))
-			{
-				found = true;
-				imageWrapper = service.getImage(null, self.locator());
-				break;
-			}
-
-			if (!found)
-			{
-				throw new Exception("Cannot find any controls in dialog='" + window +"' in section " + SectionKind.Self);
-			}
+			imageWrapper = service.getImage(null, null);
 		}
 		else
 		{
-			IControl control = window.getControlForName(SectionKind.Run, this.name);
-			if (control == null)
-			{
-				super.setError(message(id, window, SectionKind.Self, null, "Self control is not found."), ErrorKind.ELEMENT_NOT_FOUND);
-				return;
-			}
-			IControl owner = window.getOwnerControl(control);
+			IGuiDictionary dictionary = connection.getDictionary();
+			IWindow window = dictionary.getWindow(this.dialog);
 			
-			imageWrapper = service.getImage(owner == null ? null : owner.locator(), control.locator());
+			if (this.name == null)
+			{
+				boolean found = false;
+				for(IControl self : window.getControls(SectionKind.Self))
+				{
+					found = true;
+					imageWrapper = service.getImage(null, self.locator());
+					break;
+				}
+	
+				if (!found)
+				{
+					throw new Exception("Cannot find any controls in dialog='" + window +"' in section " + SectionKind.Self);
+				}
+			}
+			else
+			{
+				IControl control = window.getControlForName(SectionKind.Run, this.name);
+				if (control == null)
+				{
+					super.setError(message(id, window, SectionKind.Self, null, "Self control is not found."), ErrorKind.ELEMENT_NOT_FOUND);
+					return;
+				}
+				IControl owner = window.getOwnerControl(control);
+				
+				imageWrapper = service.getImage(owner == null ? null : owner.locator(), control.locator());
+			}
 		}
 
         super.setResult(imageWrapper);
