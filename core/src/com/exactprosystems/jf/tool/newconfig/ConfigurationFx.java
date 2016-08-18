@@ -409,7 +409,8 @@ public class ConfigurationFx extends Configuration
 	public void refreshReport()
 	{
 		super.refreshReport();
-		this.displayReport();
+		//TODO think about it
+//		this.displayReport();
 	}
 	//endregion
 
