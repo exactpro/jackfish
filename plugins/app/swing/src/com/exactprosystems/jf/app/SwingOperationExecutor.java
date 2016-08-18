@@ -141,7 +141,7 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 		try
 		{
 			this.currentRobot.waitForIdle();
-			Container owner = null;
+			Container owner = (Container) currentRoot();
 			if (window != null && window.target instanceof Container)
 			{
 				owner = (Container) window.target;
@@ -174,7 +174,7 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 		try
 		{
 			this.currentRobot.waitForIdle();
-			Container container = null;
+			Container container = (Container) currentRoot();
 			if (owner != null)
 			{
 				ComponentFixture<Component> found = find(null, owner);
@@ -185,7 +185,7 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 			}
 
 			List<ComponentFixture<Component>> res = new ArrayList<>();
-			MatcherSwing<Component> matcher = new MatcherSwing<Component>(Component.class, container, element.getControlKind(), element);
+			MatcherSwing<Component> matcher = new MatcherSwing<>(Component.class, container, element.getControlKind(), element);
 			Collection<Component> components = this.currentRobot.finder().findAll(container, matcher);
 			for (final Component component : components)
 			{
@@ -614,7 +614,6 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 
 		try
 		{
-//			final MatcherSwing<Component> matcher = new MatcherSwing<Component>(Component.class, null, locator.getControlKind(), locator);
 			final boolean[] result = {false};
 
 			Pause.pause(new org.fest.swing.timing.Condition("Waiting")
@@ -625,11 +624,11 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 					MatcherSwing<Component> matcher = null;
 					try
 					{
-						matcher = new MatcherSwing<Component>(Component.class, currentRoot(), locator.getControlKind(), locator);
+						matcher = new MatcherSwing<>(Component.class, currentRoot(), locator.getControlKind(), locator);
 					}
 					catch (RemoteException e)
 					{
-						e.printStackTrace();
+						logger.error(e.getMessage(), e);
 					}
 					Collection<Component> list = currentRobot.finder().findAll(matcher);
 
