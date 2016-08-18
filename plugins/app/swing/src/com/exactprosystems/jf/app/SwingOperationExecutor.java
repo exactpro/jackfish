@@ -81,7 +81,7 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 		Container root = new RootContainer();
 		for (Window window : Window.getWindows())
 		{
-			logger.debug("Find window : " + window);
+			logger.trace("Find window : " + window);
 			if (window.isVisible() && window.isShowing())
 			{
 				root.add(window);
@@ -608,13 +608,13 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 	}
 
 	@Override
-	public boolean wait(Locator locator, int ms, final boolean toAppear, AtomicLong atomicLong) throws Exception
+	public boolean wait(final Locator locator, int ms, final boolean toAppear, AtomicLong atomicLong) throws Exception
 	{
 		long begin = System.currentTimeMillis();
 
 		try
 		{
-			final MatcherSwing<Component> matcher = new MatcherSwing<Component>(Component.class, null, locator.getControlKind(), locator);
+//			final MatcherSwing<Component> matcher = new MatcherSwing<Component>(Component.class, null, locator.getControlKind(), locator);
 			final boolean[] result = {false};
 
 			Pause.pause(new org.fest.swing.timing.Condition("Waiting")
@@ -622,6 +622,15 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 				@Override
 				public boolean test()
 				{
+					MatcherSwing<Component> matcher = null;
+					try
+					{
+						matcher = new MatcherSwing<Component>(Component.class, currentRoot(), locator.getControlKind(), locator);
+					}
+					catch (RemoteException e)
+					{
+						e.printStackTrace();
+					}
 					Collection<Component> list = currentRobot.finder().findAll(matcher);
 
 					result[0] = !(toAppear ^ list.size() > 0);
@@ -636,10 +645,10 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 			logger.error("timeout expired.");
 			return false;
 		}
-		catch (RemoteException e)
-		{
-			throw e;
-		}
+//		catch (RemoteException e)
+//		{
+//			throw e;
+//		}
 		catch (Throwable e)
 		{
 			logger.error(String.format("wait(%s, %d, %b, %s)", locator, ms, toAppear, atomicLong));
