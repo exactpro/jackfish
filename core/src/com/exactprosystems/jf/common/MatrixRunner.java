@@ -94,7 +94,7 @@ public class MatrixRunner implements IMatrixRunner, AutoCloseable
 	public String toString()
 	{
 		return getClass().getSimpleName() + "["
-				+ "name=" + this.matrix.getName()
+				+ "name=" + this.matrixFile.getName()
 				+ " start at=" + this.startTime
 				+ " " + Result.Passed + "=" + this.matrix.countResult(Result.Passed)
 				+ " " + Result.Failed + "=" + this.matrix.countResult(Result.Failed)

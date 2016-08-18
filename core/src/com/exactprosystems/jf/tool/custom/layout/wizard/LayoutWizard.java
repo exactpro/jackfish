@@ -9,6 +9,7 @@ package com.exactprosystems.jf.tool.custom.layout.wizard;
 
 import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
+import com.exactprosystems.jf.documents.matrix.parser.TableUtils;
 import com.exactprosystems.jf.functions.Table;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
@@ -51,7 +52,7 @@ public class LayoutWizard
 		this.table = new Table(table, evaluator);
 		this.dictionary = appConnection.getDictionary();
 		this.appConnection = appConnection;
-		if (!tableIsValid())
+		if (!TableUtils.tableIsValid(this.table, this.table.getHeader(0), this.dictionary, st -> DialogsHelper.showYesNoDialog(st, "Would you like continue process with empty table?")))
 		{
 			return;
 		}

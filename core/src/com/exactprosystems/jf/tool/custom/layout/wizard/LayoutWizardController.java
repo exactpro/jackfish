@@ -183,7 +183,7 @@ public class LayoutWizardController implements Initializable, ContainingParent, 
 		{
 			ToggleButton button = new ToggleButton(converter.apply(ic));
 			button.setUserData(ic);
-			button.setToggleGroup(tgVertical);
+//			button.setToggleGroup(tgVertical);
 			button.setMaxWidth(Double.MAX_VALUE);
 			return button;
 		}).collect(Collectors.toList()));
@@ -191,7 +191,7 @@ public class LayoutWizardController implements Initializable, ContainingParent, 
 		{
 			ToggleButton button = new ToggleButton(converter.apply(ic));
 			button.setUserData(ic);
-			button.setToggleGroup(tgHorizontal);
+//			button.setToggleGroup(tgHorizontal);
 			return button;
 		}).collect(Collectors.toList()));
 	}

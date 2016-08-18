@@ -18,7 +18,6 @@ import com.exactprosystems.jf.api.service.IServicesPool;
 import com.exactprosystems.jf.api.service.ServiceConnection;
 import com.exactprosystems.jf.api.service.ServiceStatus;
 import com.exactprosystems.jf.app.ApplicationPool;
-import com.exactprosystems.jf.client.ClientsPool;
 import com.exactprosystems.jf.common.MutableString;
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
@@ -27,12 +26,10 @@ import com.exactprosystems.jf.documents.DocumentFactory;
 import com.exactprosystems.jf.documents.config.*;
 import com.exactprosystems.jf.documents.matrix.Matrix;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.RunnerListener;
-import com.exactprosystems.jf.service.ServicePool;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.SupportedEntry;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.main.Main;
-
 import javafx.concurrent.Task;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
@@ -40,12 +37,11 @@ import javafx.scene.control.Dialog;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.BorderPane;
 
+import javax.xml.bind.annotation.XmlRootElement;
 import java.io.File;
 import java.io.Reader;
 import java.util.*;
 import java.util.stream.Collectors;
-
-import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement(name="configuration")
 public class ConfigurationFx extends Configuration
@@ -413,6 +409,7 @@ public class ConfigurationFx extends Configuration
 	public void refreshReport()
 	{
 		super.refreshReport();
+		this.displayReport();
 	}
 	//endregion
 

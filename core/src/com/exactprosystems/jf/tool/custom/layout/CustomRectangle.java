@@ -314,6 +314,13 @@ public class CustomRectangle
 		outLine.setVisible(true);
 	}
 
+	public boolean isSame(CustomRectangle other)
+	{
+		return this.top.getStartX() == other.top.getStartX()
+						&& this.top.getEndX() == other.top.getEndX()
+						&& this.left.getStartY() == other.left.getStartY()
+						&& this.left.getEndY() == other.left.getEndY();
+	}
 
 	//============================================================
 	// events methods
