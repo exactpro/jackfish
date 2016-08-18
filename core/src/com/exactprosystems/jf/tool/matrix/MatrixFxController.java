@@ -32,7 +32,6 @@ import com.exactprosystems.jf.tool.dictionary.ApplicationStatus;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.matrix.watch.WatcherFx;
 import com.exactprosystems.jf.tool.settings.SettingsPanel;
-
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.concurrent.Task;
@@ -475,6 +474,15 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 	// ------------------------------------------------------------------------------------------------------------------
 	// display* methods
 	// ------------------------------------------------------------------------------------------------------------------
+	public void displayBeforeStart(String msg)
+	{
+		Platform.runLater(() ->
+		{
+			this.listView.getItems().clear();
+			this.listView.getItems().add(ConsoleText.defaultText(msg));
+		});
+	}
+
 	public void refresh()
 	{
 		Platform.runLater(() -> this.tree.refresh() );

@@ -17,7 +17,6 @@ import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.common.undoredo.Command;
 import com.exactprosystems.jf.documents.DocumentFactory;
-import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.guidic.controls.Table;
 import com.exactprosystems.jf.documents.matrix.Matrix;
@@ -25,20 +24,14 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameter;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.documents.matrix.parser.Parser;
 import com.exactprosystems.jf.documents.matrix.parser.Tokens;
-import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
-import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItemAttribute;
-import com.exactprosystems.jf.documents.matrix.parser.items.NameSpace;
-import com.exactprosystems.jf.documents.matrix.parser.items.TempItem;
-import com.exactprosystems.jf.documents.matrix.parser.items.TypeMandatory;
+import com.exactprosystems.jf.documents.matrix.parser.items.*;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
 import com.exactprosystems.jf.tool.ApplicationConnector;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.main.Main;
-
 import javafx.scene.control.ButtonType;
 import javafx.util.Pair;
-
 import org.apache.log4j.Logger;
 
 import java.io.File;
@@ -643,6 +636,7 @@ public class MatrixFx extends Matrix
 	public void setStartTime(Date date)
 	{
 		this.startDate = date;
+		this.runner.setStartTime(date);
 	}
 
 	public void startMatrix() throws Exception
@@ -651,6 +645,10 @@ public class MatrixFx extends Matrix
 		{
 			this.controller.coloring();
 			getFactory().getConfiguration().getRunnerListener().subscribe(this.runner);
+			if (!this.runner.isRunning())
+			{
+				this.controller.displayBeforeStart("Matrix will start at " + this.runner.startTime());
+			}
 			this.runner.start();
 		}
 	}
