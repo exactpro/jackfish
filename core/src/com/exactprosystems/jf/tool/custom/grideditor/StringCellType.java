@@ -42,7 +42,7 @@ public class StringCellType
 		String convertedValue = converter.fromString(value == null ? null : value.toString());
 		if (convertedValue == null || convertedValue.equals(""))
 		{
-			return null;
+			return "";
 		}
 		return convertedValue;
 	}
