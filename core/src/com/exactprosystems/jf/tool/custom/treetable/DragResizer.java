@@ -12,6 +12,9 @@ import javafx.scene.Cursor;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Region;
 
+import java.util.Optional;
+import java.util.function.DoubleConsumer;
+
 public class DragResizer
 {
 
@@ -21,15 +24,17 @@ public class DragResizer
 	private double y;
 	private boolean initMinHeight;
 	private boolean dragging;
+	private DoubleConsumer consumer;
 
-	private DragResizer(Region aRegion)
+	private DragResizer(Region aRegion, DoubleConsumer consumer)
 	{
-		region = aRegion;
+		this.region = aRegion;
+		this.consumer = consumer;
 	}
 
-	public static void makeResizable(Region region)
+	public static void makeResizable(Region region, DoubleConsumer consumer)
 	{
-		final DragResizer resizer = new DragResizer(region);
+		final DragResizer resizer = new DragResizer(region, consumer);
 
 		region.setOnMousePressed(resizer::mousePressed);
 		region.setOnMouseDragged(resizer::mouseDragged);
@@ -43,6 +48,7 @@ public class DragResizer
 	{
 		dragging = false;
 		region.setCursor(Cursor.DEFAULT);
+		Optional.ofNullable(this.consumer).ifPresent(c -> c.accept(this.region.getPrefHeight()));
 	}
 
 	protected void mouseExited(MouseEvent event)

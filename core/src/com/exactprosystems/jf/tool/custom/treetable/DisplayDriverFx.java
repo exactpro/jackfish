@@ -454,7 +454,7 @@ public class DisplayDriverFx implements DisplayDriver
 		view.setContextMenu(this.rowContextMenu);
 		BorderPane borderPane = new BorderPane();
 		borderPane.setCenter(view);
-		DragResizer.makeResizable(borderPane);
+		DragResizer.makeResizable(borderPane, view::setPrefHeight);
 		view.setPrefHeight(30 * (Math.min(provider.getRowHeaders().size(), 4) + 1));
 		BorderPane.setMargin(view, new Insets(0, 0, 10, 0));
 		pane.add(borderPane, column, row, 6, 2);
