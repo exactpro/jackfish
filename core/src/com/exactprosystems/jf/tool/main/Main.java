@@ -163,39 +163,42 @@ public class Main extends Application
 			@Override
 			protected Object call() throws Exception
 			{
-				try
+				controller = Common.loadController(Main.class.getResource("tool.fxml"));
+				controller.init(factory, Main.this, settings, stage);
+				controller.disableMenu(true);
+				boolean isGit = new File(".git").exists();
+				controller.isGit(isGit);
+
+				final List<String> args = getParameters().getRaw();
+
+				if (args.size() > 0)
 				{
-					controller = Common.loadController(Main.class.getResource("tool.fxml"));
-					controller.init(factory, Main.this, settings, stage);
-					controller.disableMenu(true);
-					boolean isGit = new File(".git").exists();
-					controller.isGit(isGit);
+					Main.this.username = args.size() > 1 ? args.get(1) : null;
+					Main.this.password = args.size() > 2 ? args.get(2) : null;
 
-					
-					final List<String> args = getParameters().getRaw();
+					openProject(args.get(0), controller.projectPane); // TODO
 
-					if (args.size() > 0)
-					{
-						Main.this.username = args.size() > 1 ? args.get(1) : null;
-						Main.this.password = args.size() > 2 ? args.get(2) : null;
+					controller.clearLastMatrixMenu();
 
-						openProject(args.get(0), controller.projectPane); // TODO
-
-						controller.clearLastMatrixMenu();
-
-						Collection<SettingsValue> list = settings.getValues(MAIN_NS, DocumentKind.MATRIX.toString());
-						controller.updateFileLastMatrix(list);
-					}
-					return null;
-				}
-				catch (Exception e)
-				{
-					logger.error("Error on load tool");
-					logger.error(e.getMessage(), e);
+					Collection<SettingsValue> list = settings.getValues(MAIN_NS, DocumentKind.MATRIX.toString());
+					controller.updateFileLastMatrix(list);
 				}
 				return null;
 			}
 		};
+
+		load.setOnFailed(event -> {
+			setConfiguration(null);
+			Throwable exception = event.getSource().getException();
+			logger.error("Error on load tool");
+			logger.error(exception.getMessage(), exception);
+			controller.display();
+			if (preloader != null)
+			{
+				preloader.hide();
+			}
+			controller.initShortcuts();
+		});
 
 		load.setOnSucceeded(workerStateEvent -> Common.tryCatch(() -> 
 		{
