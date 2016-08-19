@@ -8,6 +8,7 @@
 
 package com.exactprosystems.jf.api.client;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -41,13 +42,13 @@ public class ClientHelper
 	
 	public static boolean isMatched(MapMessage message, String messageType, ICondition[] conditions) throws Exception
 	{
-		if (conditions == null)
-		{
-			return true;
-		}
 		if (!Str.areEqual(message.getMessageType(), messageType))
 		{
 			return false;
+		}
+		if (conditions == null || conditions.length == 0)
+		{
+			return true;
 		}
 		
 		for (ICondition condition : conditions)

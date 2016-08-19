@@ -92,6 +92,11 @@ public class MapMessage implements Map<String, Object>, Serializable, Mutable, C
 		return this.messageType;
 	}
 	
+	public void setMessageType(String messageType)
+	{
+		this.messageType = messageType;
+	}
+
 	@Override
 	public String toString()
 	{

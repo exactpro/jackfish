@@ -12,10 +12,12 @@ import com.exactprosystems.jf.api.common.IContext;
 import com.exactprosystems.jf.api.conditions.Condition;
 
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 public abstract class AbstractClient implements IClient
 {
@@ -29,11 +31,11 @@ public abstract class AbstractClient implements IClient
 	{
 		if (limit > 0)
 		{
-			this.messages = new LimitedArrayList<MapMessage>(limit);
+			this.messages = Collections.synchronizedList(new LimitedArrayList<MapMessage>(limit));
 		}
 		else
 		{
-			this.messages = new CopyOnWriteArrayList<MapMessage>();
+			this.messages = Collections.synchronizedList(new ArrayList<MapMessage>());
 		}
 		this.pool = pool;
 		this.factory = factory;
@@ -123,7 +125,6 @@ public abstract class AbstractClient implements IClient
 					{
 						if (remove)
 						{
-							//TODO java.lang.UnsupportedOperationException
 							iter.remove();
 						}
 						return message;
@@ -295,5 +296,5 @@ public abstract class AbstractClient implements IClient
 	
 	private Thread heartBeatThread;
 
-	private volatile CopyOnWriteArrayList<MapMessage> messages;
+	private volatile List<MapMessage> messages;
 }
