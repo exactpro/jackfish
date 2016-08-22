@@ -21,6 +21,7 @@ import org.fest.swing.core.BasicRobot;
 import org.fest.swing.core.ComponentMatcher;
 import org.fest.swing.core.Robot;
 import org.fest.swing.fixture.ComponentFixture;
+import org.fest.swing.fixture.JComboBoxFixture;
 import org.w3c.dom.Document;
 
 import javax.swing.*;
@@ -311,6 +312,14 @@ public class SwingRemoteApplication extends RemoteApplication
 			for (ComponentFixture<Component> component : components)
 			{
 				res.add("" + component.target);
+				JComboBox<?> combobox = component.targetCastedTo(JComboBox.class);
+				if (combobox != null)
+				{
+					for (int i = 0; i < combobox.getModel().getSize(); i++)
+					{
+						res.add("value=" + combobox.getModel().getElementAt(i));
+					}
+				}
 			}
 			return res;
 		}
