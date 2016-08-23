@@ -474,6 +474,21 @@ public enum OperationKind
 		}
 	},
 	
+	SELECT_BY_INDEX("select")
+	{
+		@Override
+		protected String formulaTemplate(Part part)
+		{
+			return ".select('%2$d')";
+		}
+
+		@Override
+		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, Holder<T> holder, OperationResult result) throws Exception
+		{
+            return executor.selectByIndex(holder.getValue(), part.i);
+		}
+	},
+	
 	SELECT("select")
 	{
 		@Override

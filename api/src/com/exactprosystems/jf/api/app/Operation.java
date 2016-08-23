@@ -427,6 +427,13 @@ public class Operation implements Iterable<Part>, Serializable
 		return this;
 	}
 
+	@DescriptionAttribute(text = Do.selectByIndex)
+    public Operation select(int index)
+    {
+        this.list.add(new Part(OperationKind.SELECT_BY_INDEX).setInt(index));
+        return this;
+    }
+
 	@DescriptionAttribute(text = Do.select)
     public Operation select(String selectText)
     {

@@ -318,6 +318,13 @@ public class Do
 		return new Operation().toggle(bool);
 	}
 
+	static final String selectByIndex = "Select from current component item with index @index";
+	@DescriptionAttribute(text = Do.selectByIndex)
+	public static Operation select(int index)
+	{
+		return new Operation().select(index);
+	}
+
 	static final String select = "Select from current component item with text @selectItem";
 	@DescriptionAttribute(text = Do.select)
 	public static Operation select(String selectItem)

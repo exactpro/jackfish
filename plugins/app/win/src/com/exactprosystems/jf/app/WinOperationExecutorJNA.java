@@ -342,6 +342,13 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 	}
 
 	@Override
+	public boolean selectByIndex(UIProxyJNA component, int index) throws Exception
+	{
+		throw new OperationNotAllowedException("selectByIndex()"); // TODO need to implement
+	}
+		
+		
+	@Override
 	public boolean select(UIProxyJNA component, String selectedText) throws Exception
 	{
 		try

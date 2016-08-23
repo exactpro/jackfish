@@ -453,6 +453,74 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 		}
 	}
 
+	@Override 
+	public boolean selectByIndex(ComponentFixture<Component> component, final int index) throws Exception
+	{
+		try
+		{
+			if (!component.target.isEnabled())
+			{
+				throw new OperationNotAllowedException("Component " + component + " is disabled.");
+			}
+
+			this.currentRobot.waitForIdle();
+
+			if (component.target instanceof JComboBox)
+			{
+				final JComboBox<?> comboBox = component.targetCastedTo(JComboBox.class);
+				if (index >= 0 && index < comboBox.getItemCount())
+				{
+					SwingUtilities.invokeLater(new Runnable()
+					{
+						@Override
+						public void run()
+						{
+							comboBox.setSelectedIndex(index);
+						}
+					});
+					
+					return true;
+				}
+				return false;
+			}
+			else if (component.target instanceof JTabbedPane)
+			{
+				final JTabbedPane tabPane = component.targetCastedTo(JTabbedPane.class);
+				if (index >= 0 && index < tabPane.getTabCount())
+				{
+					SwingUtilities.invokeLater(new Runnable()
+					{
+						@Override
+						public void run()
+						{
+							tabPane.setSelectedIndex(index);
+						}
+					});
+					return true;
+				}
+				return false;
+			}
+			else if (component.target instanceof JList)
+			{
+				JList jList = component.targetCastedTo(JList.class);
+				jList.setSelectedIndex(index);
+			}
+
+			waitForIdle();
+			return true;
+		}
+		catch (RemoteException e)
+		{
+			throw e;
+		}
+		catch (Throwable e)
+		{
+			logger.error(String.format("selectByIndex(%s, %d)", component, index));
+			logger.error(e.getMessage(), e);
+			throw e;
+		}
+	}
+
 	@Override
 	public boolean select(ComponentFixture<Component> component, String selectedText) throws Exception
 	{
@@ -467,8 +535,26 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 
 			if (component.target instanceof JComboBox)
 			{
-				JComboBox<?> comboBox = component.targetCastedTo(JComboBox.class);
-				comboBox.setSelectedItem(selectedText);
+				final JComboBox<?> comboBox = component.targetCastedTo(JComboBox.class);
+				for(int i = 0; i < comboBox.getItemCount(); i++)
+				{
+					Object value = comboBox.getItemAt(i);
+					if (value != null &&  ("" + value).equals(selectedText))
+					{
+						final int index = i;
+						SwingUtilities.invokeLater(new Runnable()
+						{
+							@Override
+							public void run()
+							{
+								comboBox.setSelectedIndex(index);
+							}
+						});
+						
+						return true;
+					}
+				}
+				return false;
 			}
 			else if (component.target instanceof JTabbedPane)
 			{
@@ -479,18 +565,19 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 					String name = tabPane.getTitleAt(i);
 					if (name != null && name.contains(selectedText))
 					{
-						final int finalI = i;
+						final int index = i;
 						SwingUtilities.invokeLater(new Runnable()
 						{
 							@Override
 							public void run()
 							{
-								tabPane.setSelectedIndex(finalI);
+								tabPane.setSelectedIndex(index);
 							}
 						});
-						break;
+						return true;
 					}
 				}
+				return false;
 			}
 			else if (component.target instanceof JList)
 			{

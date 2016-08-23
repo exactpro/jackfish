@@ -805,6 +805,14 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 	}
 
 	@Override
+	public boolean selectByIndex(WebElement component, int index) throws Exception
+	{
+		scrollToElement(component);
+		new Select(component).selectByIndex(index);
+		return true;
+	}
+
+	@Override
 	public boolean select(WebElement component, String selectedText) throws Exception
 	{
 		//TODO think about it
