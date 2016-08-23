@@ -312,9 +312,9 @@ public class SwingRemoteApplication extends RemoteApplication
 			for (ComponentFixture<Component> component : components)
 			{
 				res.add("" + component.target);
-				JComboBox<?> combobox = component.targetCastedTo(JComboBox.class);
-				if (combobox != null)
+				if (component.target instanceof JComboBox)
 				{
+					JComboBox<?> combobox = (JComboBox<?>)component.target;
 					for (int i = 0; i < combobox.getModel().getSize(); i++)
 					{
 						res.add("value=" + combobox.getModel().getElementAt(i));
