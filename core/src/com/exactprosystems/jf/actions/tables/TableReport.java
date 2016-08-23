@@ -13,6 +13,7 @@ import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
 import com.exactprosystems.jf.actions.ReadableValue;
+import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
@@ -93,7 +94,12 @@ public class TableReport extends AbstractAction
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
-		table.report(report, this.title, this.withNumbers, this.reportValues, this.columns);
+		if (this.table == null)
+		{
+			super.setError("Table is null", ErrorKind.EMPTY_PARAMETER);
+			return;
+		}
+		this.table.report(report, this.title, this.withNumbers, this.reportValues, this.columns);
 		
 		super.setResult(null);
 	}
