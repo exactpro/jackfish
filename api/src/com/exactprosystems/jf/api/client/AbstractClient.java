@@ -87,13 +87,20 @@ public abstract class AbstractClient implements IClient
 		}
 		afterStop();
 	}
+	
+	@Override
+	public void setProperties(Map<String, Object> properties)
+	{
+		// TODO Auto-generated method stub
+		
+	}
 
 	@Override
 	public synchronized String sendMessage(String messageType, Map<String, Object> parameters, boolean check) throws Exception
 	{
 		this.lastTime = 0;
 		ICodec codec = getCodec();
-		codec.tune(messageType, parameters);
+//		codec.tune(messageType, parameters); // TODO posible it is extra
 		byte[] data = codec.encode(messageType, parameters);
 		return sendMessage(data, check);
 	}

@@ -60,6 +60,8 @@ public abstract class AbstractDictionaryCodec implements ICodec
 			throw new Exception("Unknown message type " + messageType);
 		}
 		
+		tune(messageType, message);
+		
 		FlexBuffer result = new FlexBuffer(10);
 		encodeStart(messageType, this.dictionary, mess, result); 
 		

@@ -20,6 +20,8 @@ public interface IClient
 	boolean 	connect(IContext context, Socket socket, Map<String, Object> parameters) throws Exception;
 	void 		stop() throws Exception;
 
+	void 		setProperties(Map<String, Object> properties);
+
 	String		sendMessage(String messageType, Map<String, Object> parameters, boolean check) throws Exception;
 	String		sendMessage(byte[] bytes, boolean check) throws Exception;
 	
