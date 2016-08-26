@@ -7,7 +7,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.exactprosystems.jf.tool.custom;
 
-import com.exactprosystems.jf.documents.Notifier;
+import com.exactprosystems.jf.functions.Notifier;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
 

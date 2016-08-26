@@ -16,6 +16,7 @@ import com.exactprosystems.jf.documents.matrix.parser.listeners.RunnerListener;
 import com.exactprosystems.jf.documents.msgdic.MessageDictionary;
 import com.exactprosystems.jf.documents.text.PlainText;
 import com.exactprosystems.jf.documents.vars.SystemVars;
+import com.exactprosystems.jf.functions.Notifier;
 
 public class ConsoleDocumentFactory extends DocumentFactory
 {

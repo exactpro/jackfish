@@ -13,6 +13,7 @@ import com.exactprosystems.jf.documents.matrix.parser.listeners.RunnerListener;
 import com.exactprosystems.jf.documents.msgdic.MessageDictionary;
 import com.exactprosystems.jf.documents.text.PlainText;
 import com.exactprosystems.jf.documents.vars.SystemVars;
+import com.exactprosystems.jf.functions.Notifier;
 import com.exactprosystems.jf.tool.csv.CsvFx;
 import com.exactprosystems.jf.tool.dictionary.DictionaryFx;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;

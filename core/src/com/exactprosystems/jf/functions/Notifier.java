@@ -6,7 +6,7 @@
 //  information which is the property of Exactpro Systems, LLC or its licensors.
 ////////////////////////////////////////////////////////////////////////////////
 
-package com.exactprosystems.jf.documents;
+package com.exactprosystems.jf.functions;
 
 public enum Notifier
 {
