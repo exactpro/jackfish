@@ -8,7 +8,6 @@
 
 package com.exactprosystems.jf.api.client;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;

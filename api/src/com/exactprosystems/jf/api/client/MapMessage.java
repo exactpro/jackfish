@@ -23,6 +23,8 @@ import com.exactprosystems.jf.api.app.Mutable;
 public class MapMessage implements Map<String, Object>, Serializable, Mutable, Cloneable
 {
 	private static final long	serialVersionUID	= -1159773416112486653L;
+	
+	public static final String messageTypeName = "MessageType";
 
 	public MapMessage(String source)
 	{
@@ -103,9 +105,10 @@ public class MapMessage implements Map<String, Object>, Serializable, Mutable, C
 		StringBuilder sb = new StringBuilder("MapMessage { ");
 		if (this.messageType != null)
 		{
-			sb.append("MessageType = ");
-			sb.append(this.messageType);
-			sb.append("\n");
+			sb.append(messageTypeName)
+				.append(" = ")
+				.append(this.messageType)
+				.append("\n");
 		}
 		
 		String comma = "";
