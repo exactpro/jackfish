@@ -95,9 +95,9 @@ public class AppTreeNode extends TreeNode
 				AppEntry entry = getEntry();
 				StringBuilder sb = new StringBuilder(entry.toString()).append(" : ");
 				String pathToJar = entry.get(Configuration.appJar);
-				sb.append(pathToJar.substring(pathToJar.lastIndexOf(File.separator) + 1)).append(" , ");
+				sb.append(pathToJar == null ? "<none>" : pathToJar.substring(pathToJar.lastIndexOf(File.separator) + 1)).append(" , ");
 				String dicPath = entry.get(Configuration.appDicPath);
-				sb.append(dicPath.substring(dicPath.lastIndexOf(File.separator) + 1));
+				sb.append(dicPath == null ? "<none>" : dicPath.substring(dicPath.lastIndexOf(File.separator) + 1));
 				return sb.toString();
 			}
 			catch (Exception e)

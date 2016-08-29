@@ -1,36 +1,36 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-
-<!--
-   Copyright (c) 2009-2015, Exactpro Systems, LLC
-   Quality Assurance & Related Development for Innovative Trading Systems.
-   All rights reserved.
-   This is unpublished, licensed software, confidential and proprietary
-   information which is the property of Exactpro Systems, LLC or its licensors.
-  -->
 <xs:schema version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
 
   <xs:element name="dictionary" type="MessageDictionary"/>
 
   <xs:complexType name="MessageDictionary">
-    <xs:sequence>
-      <xs:element name="description" type="xs:string" minOccurs="0"/>
-      <xs:element name="fields" minOccurs="0">
-        <xs:complexType>
-          <xs:sequence>
-            <xs:element name="field" type="Field" minOccurs="0" maxOccurs="unbounded"/>
-          </xs:sequence>
-        </xs:complexType>
-      </xs:element>
-      <xs:element name="messages" minOccurs="0">
-        <xs:complexType>
-          <xs:sequence>
-            <xs:element name="message" type="Message" minOccurs="0" maxOccurs="unbounded"/>
-          </xs:sequence>
-        </xs:complexType>
-      </xs:element>
-    </xs:sequence>
-    <xs:attribute name="name" type="xs:NMTOKEN" use="required"/>
-    <xs:attribute name="version" type="xs:string"/>
+    <xs:complexContent>
+      <xs:extension base="abstractDocument">
+        <xs:sequence>
+          <xs:element name="description" type="xs:string" minOccurs="0"/>
+          <xs:element name="fields" minOccurs="0">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="field" type="Field" minOccurs="0" maxOccurs="unbounded"/>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="messages" minOccurs="0">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="message" type="Message" minOccurs="0" maxOccurs="unbounded"/>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+        </xs:sequence>
+        <xs:attribute name="name" type="xs:NMTOKEN" use="required"/>
+        <xs:attribute name="version" type="xs:string"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="abstractDocument" abstract="true">
+    <xs:sequence/>
   </xs:complexType>
 
   <xs:complexType name="Field">

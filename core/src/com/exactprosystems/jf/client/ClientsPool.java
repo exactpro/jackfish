@@ -53,7 +53,7 @@ public class ClientsPool implements IClientsPool
 		}
 		catch (Exception e)
 		{
-			logger.error(e.getMessage());
+			logger.error(e.getMessage(), e);
 		}
 
 		return -1;
@@ -70,7 +70,7 @@ public class ClientsPool implements IClientsPool
 		}
 		catch (Exception e)
 		{
-			logger.error(e.getMessage());
+			logger.error(e.getMessage(), e);
 		}
 
 		return -1;
@@ -83,11 +83,12 @@ public class ClientsPool implements IClientsPool
 		{
 			ClientEntry entry = parametersEntry(id);
 			IClientFactory clientFactory = loadClientFactory(id, entry);
-			return clientFactory.isSupported(ApiVersionInfo.majorVersion(), ApiVersionInfo.minorVersion());
+			boolean ret = clientFactory.isSupported(ApiVersionInfo.majorVersion(), ApiVersionInfo.minorVersion());
+			return ret;
 		}
 		catch (Exception e)
 		{
-			logger.error(e.getMessage());
+			logger.error(e.getMessage(), e);
 		}
 
 		return false;
