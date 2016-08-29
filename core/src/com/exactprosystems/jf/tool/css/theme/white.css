@@ -498,7 +498,7 @@
 
 /*Resizable region*/
 .resizableRegion {
-	-fx-border-width : 0 0 2 0;
+	-fx-border-width : 0 0 5 0;
 	-fx-border-color : -fx-company-color-dark;
 
 }

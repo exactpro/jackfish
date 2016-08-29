@@ -456,8 +456,10 @@ public class DisplayDriverFx implements DisplayDriver
 		borderPane.setCenter(view);
 		DragResizer.makeResizable(borderPane, view::setPrefHeight);
 		view.setPrefHeight(30 * (Math.min(provider.getRowHeaders().size(), 4) + 1));
-		BorderPane.setMargin(view, new Insets(0, 0, 10, 0));
-		pane.add(borderPane, column, row, 6, 2);
+		BorderPane newPane = new BorderPane();
+		newPane.setCenter(borderPane);
+		BorderPane.setMargin(newPane, new Insets(0, 0, 10, 0));
+		pane.add(newPane, column, row, 6, 2);
 	}
 
 	@Override

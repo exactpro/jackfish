@@ -17,7 +17,6 @@ import java.util.function.DoubleConsumer;
 
 public class DragResizer
 {
-
 	private static final int RESIZE_MARGIN = 5;
 	private final Region region;
 	private final int MIN_VALUE = 40;
@@ -46,29 +45,33 @@ public class DragResizer
 
 	protected void mouseReleased(MouseEvent event)
 	{
-		dragging = false;
-		region.setCursor(Cursor.DEFAULT);
+		this.dragging = false;
+		this.region.setCursor(Cursor.DEFAULT);
 		Optional.ofNullable(this.consumer).ifPresent(c -> c.accept(this.region.getPrefHeight()));
 	}
 
 	protected void mouseExited(MouseEvent event)
 	{
-		if (!dragging)
-			region.getStyleClass().remove(CssVariables.RESIZABLE_REGION_HOVER);
+		if (!this.dragging)
+		{
+			this.region.getStyleClass().remove(CssVariables.RESIZABLE_REGION_HOVER);
+		}
 	}
 
 	protected void mouseOver(MouseEvent event)
 	{
-		if (isInDraggableZone(event) || dragging)
+		if (this.isInDraggableZone(event) || this.dragging)
 		{
-			region.setCursor(Cursor.S_RESIZE);
-			if (!region.getStyleClass().contains(CssVariables.RESIZABLE_REGION_HOVER))
-				region.getStyleClass().add(CssVariables.RESIZABLE_REGION_HOVER);
+			this.region.setCursor(Cursor.S_RESIZE);
+			if (!this.region.getStyleClass().contains(CssVariables.RESIZABLE_REGION_HOVER))
+			{
+				this.region.getStyleClass().add(CssVariables.RESIZABLE_REGION_HOVER);
+			}
 		}
 		else
 		{
-			region.getStyleClass().remove(CssVariables.RESIZABLE_REGION_HOVER);
-			region.setCursor(Cursor.DEFAULT);
+			this.region.getStyleClass().remove(CssVariables.RESIZABLE_REGION_HOVER);
+			this.region.setCursor(Cursor.DEFAULT);
 		}
 	}
 
@@ -100,13 +103,14 @@ public class DragResizer
 		{
 			return;
 		}
-		dragging = true;
-		if (!initMinHeight)
-		{
-			region.setMinHeight(region.getHeight());
-			initMinHeight = true;
-		}
+		this.dragging = true;
+		this.region.setMinHeight(this.region.getHeight());
+//		if (!this.initMinHeight)
+//		{
+//			this.region.setMinHeight(this.region.getHeight());
+//			this.initMinHeight = true;
+//		}
 
-		y = event.getY();
+		this.y = event.getY();
 	}
 }
