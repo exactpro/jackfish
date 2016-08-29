@@ -94,7 +94,6 @@ public class GuiDictionary extends AbstractDocument implements IGuiDictionary
 				public boolean handleEvent(ValidationEvent event)
 				{
 					System.out.println("Error in dictionary : " + event);
-
 					return false;
 				}
 			});

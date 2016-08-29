@@ -128,38 +128,44 @@ public class MessageDictionary extends AbstractDocument implements IMessageDicti
 	@Override
 	public void load(Reader reader) throws Exception
 	{
-		super.load(reader);
-		
-		jaxbContextClasses[0] = this.getClass();
-		JAXBContext jaxbContext = JAXBContext.newInstance(jaxbContextClasses);
-
-		SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-		Source schemaFile = new StreamSource(Xsd.class.getResourceAsStream("MessageDictionary.xsd"));
-		Schema schema = schemaFactory.newSchema(schemaFile);
-
-		Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
-
-		unmarshaller.setSchema(schema);
-		unmarshaller.setEventHandler(new ValidationEventHandler()
+		try
 		{
-			@Override
-			public boolean handleEvent(ValidationEvent event)
+			super.load(reader);
+			
+			JAXBContext jaxbContext = JAXBContext.newInstance(jaxbContextClasses);
+	
+			SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+			Source schemaFile = new StreamSource(Xsd.class.getResourceAsStream("MessageDictionary.xsd"));
+			Schema schema = schemaFactory.newSchema(schemaFile);
+	
+			Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
+	
+			unmarshaller.setSchema(schema);
+			unmarshaller.setEventHandler(new ValidationEventHandler()
 			{
-				System.out.println("Error in message dictionary : " + event);
-				return false;
-			}
-		});
-
-		MessageDictionary messageDictionary = ((MessageDictionary) unmarshaller.unmarshal(reader));
-		messageDictionary.factory = getFactory();
-		
-		this.fields = messageDictionary.fields;
-		this.messages = messageDictionary.messages;
-		this.description = messageDictionary.description;
-		this.name = messageDictionary.name;
-		this.version = messageDictionary.version;
-		
-		this.changed = true;
+				@Override
+				public boolean handleEvent(ValidationEvent event)
+				{
+					System.out.println("Error in message dictionary : " + event);
+					return false;
+				}
+			});
+	
+			MessageDictionary messageDictionary = ((MessageDictionary) unmarshaller.unmarshal(reader));
+			messageDictionary.factory = getFactory();
+			
+			this.fields = messageDictionary.fields;
+			this.messages = messageDictionary.messages;
+			this.description = messageDictionary.description;
+			this.name = messageDictionary.name;
+			this.version = messageDictionary.version;
+			
+			this.changed = true;
+		}
+		catch (UnmarshalException e)
+		{
+			throw new Exception(e.getCause().getMessage(), e.getCause());
+		}
 	}
 
 	@Override
