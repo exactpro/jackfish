@@ -19,6 +19,8 @@ public interface IClient
 	boolean 	start(IContext context, Map<String, Object> parameters) throws Exception;
 	boolean 	connect(IContext context, Socket socket, Map<String, Object> parameters) throws Exception;
 	void 		stop() throws Exception;
+	
+	boolean		isOpen();
 
 	void 		setProperties(Map<String, Object> properties);
 
