@@ -33,6 +33,11 @@ public class ClientConnection implements AutoCloseable
 		return ClientConnection.class.getSimpleName() + "{" + this.id + ":" +hashCode() + "}";
 	}
 	
+	public boolean isOpen()
+	{
+		return this.client != null && this.client.isOpen();
+	}
+	
 	public boolean isBad()
 	{
 		return this.client == null;
