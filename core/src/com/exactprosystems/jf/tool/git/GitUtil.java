@@ -615,6 +615,11 @@ public class GitUtil
 					{
 						((CredentialItem.StringType) item).setValue(credentials.getPassword());
 					}
+					//this need for ssh on windows
+					else if (item instanceof CredentialItem.YesNoType)
+					{
+						((CredentialItem.YesNoType) item).setValue(true);
+					}
 				}
 				return true;
 			}
