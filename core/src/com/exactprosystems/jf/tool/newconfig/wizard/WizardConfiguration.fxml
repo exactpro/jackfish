@@ -60,7 +60,7 @@
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </VBox.margin>
                <left>
-                  <Label text="Chose folder" BorderPane.alignment="CENTER">
+                  <Label text="Choose folder" BorderPane.alignment="CENTER">
                      <BorderPane.margin>
                         <Insets left="5.0" right="5.0" />
                      </BorderPane.margin>
