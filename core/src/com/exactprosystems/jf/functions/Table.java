@@ -490,11 +490,11 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 
 	public void removeColumns(String... columns)
 	{
-		this.changed = true;
 		if (this.headers == null)
 		{
 			return;
 		}
+		this.changed = true;
 		List<String> strings = Arrays.asList(columns);
 		List<Header> headers = new ArrayList<>(Arrays.asList(this.headers));
 		Iterator<Header> iterator = headers.iterator();
@@ -504,11 +504,7 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 			String next = header.name;
 			if (strings.contains(next)) // TODO why isn't equals() ?
 			{
-				int index = headers.indexOf(header);
-				if (index > 0 && index < this.innerList.size() - 1)
-				{
-					this.innerList.get(index).remove(header);
-				}
+				this.innerList.forEach(row -> row.remove(header));
 				iterator.remove();
 			}
 		}
