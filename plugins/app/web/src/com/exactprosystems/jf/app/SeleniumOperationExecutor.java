@@ -1269,6 +1269,10 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 				{
 					return component.getAttribute("value");
 				}
+				else if (component.getTagName().equals("select"))
+				{
+					return new Select(component).getFirstSelectedOption().getText();
+				}
 				return component.getText();
 			}
 			catch (StaleElementReferenceException e)
