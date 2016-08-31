@@ -145,29 +145,26 @@ public class GitUtil
 			{
 				PullResult pullResult = git.pull().setCredentialsProvider(getCredentialsProvider(bean)).setProgressMonitor(monitor).call();
 
-//				MergeResult m = pullResult.getMergeResult();
-//				if (m != null)
-//				{
-//					Map<String, int[][]> allConflicts = m.getConflicts();
-//					if (allConflicts != null)
-//					{
-//						for (String path : allConflicts.keySet())
-//						{
-//							int[][] c = allConflicts.get(path);
-//							System.out.println("Conflicts in file " + path);
-//							list.add(new GitPullBean(path, true));
-//							for (int i = 0; i < c.length; i++)
-//							{
-//								System.out.println("  Conflict #" + i);
-//								for (int j = 0; j < c[i].length - 1; j++)
-//								{
-//									if (c[i][j] >= 0)
-//										System.out.println("    Chunk for " + m.getMergedCommits()[j] + " starts on line #" + c[i][j]);
-//								}
-//							}
-//						}
-//					}
-//				}
+				MergeResult m = pullResult.getMergeResult();
+				if (m != null)
+				{
+					Map<String, int[][]> allConflicts = m.getConflicts();
+					if (allConflicts != null)
+					{
+						list.addAll(allConflicts.keySet().stream().map(path -> new GitPullBean(path, true)).collect(Collectors.toList()));
+						//							int[][] c = allConflicts.get(path);
+						//							System.out.println("Conflicts in file " + path);
+						//							for (int i = 0; i < c.length; i++)
+						//							{
+						//								System.out.println("  Conflict #" + i);
+						//								for (int j = 0; j < c[i].length - 1; j++)
+						//								{
+						//									if (c[i][j] >= 0)
+						//										System.out.println("    Chunk for " + m.getMergedCommits()[j] + " starts on line #" + c[i][j]);
+						//								}
+						//							}
+					}
+				}
 			}
 			catch (CheckoutConflictException cce)
 			{
