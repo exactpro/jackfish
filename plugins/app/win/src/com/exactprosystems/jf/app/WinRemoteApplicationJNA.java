@@ -12,7 +12,6 @@ import com.exactprosystems.jf.api.common.SerializablePair;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.error.app.ElementNotFoundException;
 import com.exactprosystems.jf.api.error.app.FeatureNotSupportedException;
-
 import org.apache.log4j.*;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
@@ -21,11 +20,13 @@ import org.w3c.dom.Node;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.rmi.RemoteException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 import static com.exactprosystems.jf.app.WinAppFactory.*;
 
@@ -230,6 +231,10 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 		{
 			//TODO it's right that we found main window? mb just get it on c# side and call patterns?
 			UIProxyJNA currentWindow = currentWindow();
+			if (currentWindow == null)
+			{
+				throw new ElementNotFoundException("Current window not found");
+			}
 			if (maximize)
 			{
 				this.driver.doPatternCall(currentWindow, WindowPattern.WindowPattern, "SetWindowVisualState", "Maximized", 0);
@@ -332,6 +337,12 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 			if (element == null)
 			{
 				uiProxyJNA = currentWindow();
+				if (uiProxyJNA == null)
+				{
+					Rectangle screenRect = new Rectangle(Toolkit.getDefaultToolkit().getScreenSize());
+					BufferedImage capture = new Robot().createScreenCapture(screenRect);
+					return new ImageWrapper(capture);
+				}
 			}
 			else
 			{
@@ -370,6 +381,10 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 			if (element == null)
 			{
 				UIProxyJNA currentWindow = currentWindow();
+				if (currentWindow == null)
+				{
+					throw new ElementNotFoundException("Current window not found");
+				}
 				return this.operationExecutor.getRectangle(currentWindow);
 			}
 			else
@@ -608,7 +623,11 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 	{
 		int length = 100;
 		int[] arr = new int[length];
-		driver.findAll(arr, new UIProxyJNA(null), WindowTreeScope.Element, WindowProperty.NameProperty, this.driver.title());
+		int defaultValue = driver.findAll(arr, new UIProxyJNA(null), WindowTreeScope.Element, WindowProperty.NameProperty, this.driver.title());
+		if (defaultValue == 0)
+		{
+			return null;
+		}
 		if (arr[0] > 1)
 		{
 			throw new Exception("Found more that one main windows : " + arr[0]);

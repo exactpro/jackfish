@@ -11,21 +11,17 @@ package com.exactprosystems.jf.app;
 import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.common.SerializablePair;
 import com.exactprosystems.jf.api.error.app.FeatureNotSupportedException;
-
 import net.sourceforge.jnlp.Launcher;
 import net.sourceforge.jnlp.runtime.ApplicationInstance;
 import net.sourceforge.jnlp.runtime.JNLPRuntime;
-
 import org.apache.log4j.*;
 import org.fest.swing.core.BasicRobot;
 import org.fest.swing.core.ComponentMatcher;
 import org.fest.swing.core.Robot;
 import org.fest.swing.fixture.ComponentFixture;
-import org.fest.swing.fixture.JComboBoxFixture;
 import org.w3c.dom.Document;
 
 import javax.swing.*;
-
 import java.awt.*;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
@@ -422,6 +418,12 @@ public class SwingRemoteApplication extends RemoteApplication
 						if (finalComponent == null)
 						{
 							target = operationExecutor.currentFrame();
+							if (target == null)
+							{
+								Rectangle desktopRect = new Rectangle(Toolkit.getDefaultToolkit().getScreenSize());
+								images[0] = new java.awt.Robot().createScreenCapture(desktopRect);
+								return;
+							}
 						}
 						else
 						{
