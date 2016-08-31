@@ -46,15 +46,6 @@ public enum Browser
 		return browserName;
 	}
 
-	public static void main(String[] args) throws Exception
-	{
-		System.setProperty(ChromeDriverService.CHROME_DRIVER_EXE_PROPERTY, "/home/andrey.bystrov/Projects/JackFish/ActionsLibrary/apps/unix/chromedriver_64");
-		ChromeDriver driver = new ChromeDriver();
-		driver.get("http://google.ru");
-		System.in.read();
-		driver.quit();
-	}
-
 	public WebDriver createDriver(String pathToBinary, String firefoxProfileDir, boolean usePrivateMode) throws Exception
 	{
 		switch (this)
