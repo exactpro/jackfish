@@ -11,6 +11,7 @@ package com.exactprosystems.jf.app;
 import com.exactprosystems.jf.api.common.Str;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeDriverService;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxProfile;
@@ -45,6 +46,15 @@ public enum Browser
 		return browserName;
 	}
 
+	public static void main(String[] args) throws Exception
+	{
+		System.setProperty(ChromeDriverService.CHROME_DRIVER_EXE_PROPERTY, "/home/andrey.bystrov/Projects/JackFish/ActionsLibrary/apps/unix/chromedriver_64");
+		ChromeDriver driver = new ChromeDriver();
+		driver.get("http://google.ru");
+		System.in.read();
+		driver.quit();
+	}
+
 	public WebDriver createDriver(String pathToBinary, String firefoxProfileDir, boolean usePrivateMode) throws Exception
 	{
 		switch (this)
@@ -73,14 +83,13 @@ public enum Browser
 					return new ChromeDriver(capabilities_browser);
 				
 			case CHROME:
+				ChromeOptions options = new ChromeOptions();
+				options.addArguments("--disable-extensions"); // TODO think about it. Mb take out this on parameters for adapter?
 				if (pathToBinary != null && !pathToBinary.isEmpty())
 				{
-					ChromeOptions options = new ChromeOptions();
 					options.setBinary(new File(pathToBinary));
-					options.addArguments("--disable-extensions"); // TODO think about it. Mb take out this on parameters for adapter?
-					return new ChromeDriver(options);
 				}
-				return new ChromeDriver();
+				return new ChromeDriver(options);
 
 			case INTERNETEXPLORER:
 				DesiredCapabilities capabilities = DesiredCapabilities.internetExplorer();
