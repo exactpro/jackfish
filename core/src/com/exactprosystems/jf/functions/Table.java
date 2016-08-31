@@ -498,14 +498,17 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 		List<String> strings = Arrays.asList(columns);
 		List<Header> headers = new ArrayList<>(Arrays.asList(this.headers));
 		Iterator<Header> iterator = headers.iterator();
-		iterator.forEachRemaining(header -> {
+		while (iterator.hasNext())
+		{
+			Header header = iterator.next();
 			String next = header.name;
 			if (strings.contains(next)) // TODO why isn't equals() ?
 			{
 				this.innerList.forEach(row -> row.remove(header));
 				iterator.remove();
 			}
-		});
+
+		}
 		this.headers = headers.toArray(new Header[headers.size()]);
 	}
 

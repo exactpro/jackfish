@@ -77,6 +77,7 @@ public enum Browser
 				{
 					ChromeOptions options = new ChromeOptions();
 					options.setBinary(new File(pathToBinary));
+					options.addArguments("--disable-extensions"); // TODO think about it. Mb take out this on parameters for adapter?
 					return new ChromeDriver(options);
 				}
 				return new ChromeDriver();
