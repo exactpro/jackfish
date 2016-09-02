@@ -8,12 +8,12 @@
 
 package com.exactprosystems.jf.api.app;
 
+import com.exactprosystems.jf.api.error.app.ElementNotFoundException;
+import com.exactprosystems.jf.api.error.app.OperationNotAllowedException;
+
 import java.rmi.RemoteException;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
-
-import com.exactprosystems.jf.api.error.app.ElementNotFoundException;
-import com.exactprosystems.jf.api.error.app.OperationNotAllowedException;
 
 public enum OperationKind
 {
@@ -794,6 +794,10 @@ public enum OperationKind
 	{
 		// check permissions for this part
 		Locator locator = holder.get(LocatorKind.Element);
+		if (locator.isDummy() && part.locator == null)
+		{
+			throw new OperationNotAllowedException("Can't use operate for dummy locator and dummy control");
+		}
 		if (!locator.getControlKind().isAllowed(part.kind))
 		{
 			throw new OperationNotAllowedException("Operation " + part.kind + " is not allowed for " + locator.getControlKind());

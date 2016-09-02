@@ -267,6 +267,10 @@ public class Window implements IWindow, Mutable
 		for (String fieldName : params)
 		{
 			boolean found = false;
+			if (fieldName.isEmpty())
+			{
+				continue;
+			}
 			for (IControl control : this.run.getControls())
 			{
 				String controlFieldName = control.getID(); 

@@ -215,6 +215,17 @@ public abstract class AbstractControl implements IControl, Mutable
 		return ret;
     }
 
+	public static AbstractControl createDummy() throws Exception
+	{
+		AbstractControl ret = create(ControlKind.Any);
+		ret.id = IControl.DUMMY;
+		ret.uid = IControl.DUMMY;
+		ret.xpath = IControl.DUMMY;
+		ret.clazz = IControl.DUMMY;
+		ret.name = IControl.DUMMY;
+		return ret;
+	}
+
 	public boolean changedControlKind(ControlKind kind)
 	{
 		if (kind == null)

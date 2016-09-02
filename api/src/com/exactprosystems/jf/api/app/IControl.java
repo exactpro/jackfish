@@ -40,4 +40,6 @@ public interface IControl
 	void prepare(Part operationPart, Object value)  throws Exception;
 	OperationResult operate(IRemoteApplication remote, IWindow window, Object value)  throws Exception;
 	CheckingLayoutResult checkLayout(IRemoteApplication remote, IWindow window, Object value)  throws Exception;
+
+	String DUMMY = "$DUMMY$";
 }

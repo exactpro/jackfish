@@ -301,6 +301,16 @@ public class Locator implements Serializable
 		return this.operation;
 	}
 
+	public boolean isDummy()
+	{
+		return isDummy(this.id) && isDummy(this.uid) && isDummy(this.xpath) && isDummy(this.clazz) && isDummy(this.name);
+	}
+
+	private boolean isDummy(String str)
+	{
+		return str != null && str.equals(IControl.DUMMY);
+	}
+
 
 	private static String notNull(String str)
 	{
