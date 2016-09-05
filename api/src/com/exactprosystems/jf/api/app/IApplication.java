@@ -16,8 +16,8 @@ public interface IApplication
 	
 	void 				init(IApplicationPool pool, IApplicationFactory factory) throws Exception;
 
-	boolean				connect(int port, String jar, String work, String remoteClassName, Map<String, String> driverParameters, Map<String, String> parameters) throws Exception;
-	boolean 			start(int port, String jar, String work, String remoteClassName, Map<String, String> driverParameters, Map<String, String> parameters) throws Exception;
+	int					connect(int port, String jar, String work, String remoteClassName, Map<String, String> driverParameters, Map<String, String> parameters) throws Exception;
+	int 				start(int port, String jar, String work, String remoteClassName, Map<String, String> driverParameters, Map<String, String> parameters) throws Exception;
 	void 				stop() throws Exception;
 
 	IRemoteApplication 	service();

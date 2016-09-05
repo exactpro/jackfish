@@ -36,18 +36,18 @@ public abstract class ProxyApplication implements IApplication
 	}
 
 	@Override
-	public boolean connect(int port, String jar, String work, String remoteClassName, Map<String, String> driverParameters, Map<String, String> parameters) throws Exception
+	public int connect(int port, String jar, String work, String remoteClassName, Map<String, String> driverParameters, Map<String, String> parameters) throws Exception
 	{
 		return startOrConnect(false, port, jar, work, remoteClassName, driverParameters, parameters);
 	}
 
 	@Override
-	public boolean start(int port, String jar, String work, String remoteClassName, Map<String, String> driverParameters, Map<String, String> parameters) throws Exception
+	public int start(int port, String jar, String work, String remoteClassName, Map<String, String> driverParameters, Map<String, String> parameters) throws Exception
 	{
 		return startOrConnect(true, port, jar, work, remoteClassName, driverParameters, parameters);
 	}
 
-	public boolean startOrConnect(boolean start, int port, String jar, String work, String remoteClassName, Map<String, String> driverParameters, Map<String, String> parameters) throws Exception
+	public int startOrConnect(boolean start, int port, String jar, String work, String remoteClassName, Map<String, String> driverParameters, Map<String, String> parameters) throws Exception
 	{
 		String fileSeparator 	= System.getProperty("file.separator");
 		
@@ -160,15 +160,8 @@ public abstract class ProxyApplication implements IApplication
 	    	try
 	    	{
 				this.service.createLogger(remoteLog, remoteLogLevel, remoteLogPattern);
-                if (start)
-				{
-					this.service.run(parameters);
-				}
-				else
-				{
-					this.service.connect(parameters);
-				}
-                return true;
+                int pid = start ? this.service.run(parameters) : this.service.connect(parameters);
+                return pid;
 	    	}
 	    	catch (Throwable t)
 	    	{

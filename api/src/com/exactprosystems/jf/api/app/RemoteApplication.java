@@ -89,13 +89,13 @@ public abstract class RemoteApplication implements IRemoteApplication
 
 
 	@Override
-	public final void connect(Map<String, String> args) throws RemoteException
+	public final int connect(Map<String, String> args) throws RemoteException
 	{
 		try 
 		{
 			exceptionIfNull(args, "args", "run");
 
-			connectDerived(args, this.metricsCounter);
+			return connectDerived(args, this.metricsCounter);
 		}
 		catch (RemoteException e)
 		{
@@ -109,13 +109,13 @@ public abstract class RemoteApplication implements IRemoteApplication
 	}
 
 	@Override
-	public final void run(Map<String, String> args) throws RemoteException
+	public final int run(Map<String, String> args) throws RemoteException
 	{
 		try 
 		{
 			exceptionIfNull(args, "args", "run");
 
-			runDerived(args, this.metricsCounter);
+			return runDerived(args, this.metricsCounter);
 		}
 		catch (RemoteException e)
 		{
@@ -581,9 +581,9 @@ public abstract class RemoteApplication implements IRemoteApplication
 
 	protected abstract void createLoggerDerived(String logName, String serverLogLevel, String serverLogPattern) throws Exception;
 
-	protected abstract void connectDerived(Map<String, String> args, MetricsCounter metricsCounter) throws Exception;
+	protected abstract int connectDerived(Map<String, String> args, MetricsCounter metricsCounter) throws Exception;
 
-	protected abstract void runDerived(Map<String, String> args, MetricsCounter metricsCounter) throws Exception;
+	protected abstract int runDerived(Map<String, String> args, MetricsCounter metricsCounter) throws Exception;
 
 	protected abstract void stopDerived() throws Exception;
 	

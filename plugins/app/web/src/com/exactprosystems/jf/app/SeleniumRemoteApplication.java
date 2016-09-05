@@ -164,14 +164,14 @@ public class SeleniumRemoteApplication extends RemoteApplication
 	}
 
 	@Override
-	protected void connectDerived(Map<String, String> args, MetricsCounter metricsCounter) throws Exception
+	protected int connectDerived(Map<String, String> args, MetricsCounter metricsCounter) throws Exception
 	{
 		logger.info("##########################################################################################################");
 		throw new FeatureNotSupportedException("Connect");
 	}
 
 	@Override
-	protected void runDerived(Map<String, String> args, MetricsCounter metricsCounter) throws Exception
+	protected int runDerived(Map<String, String> args, MetricsCounter metricsCounter) throws Exception
 	{
 		try
 		{
@@ -249,6 +249,8 @@ public class SeleniumRemoteApplication extends RemoteApplication
 			logger.error(e.getMessage(), e);
 			throw e;
 		}
+		
+		return -1;
 	}
 
 	@Override

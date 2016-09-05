@@ -66,7 +66,7 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 	}
 
 	@Override
-	protected void connectDerived(Map<String, String> args, MetricsCounter metricsCounter) throws Exception
+	protected int connectDerived(Map<String, String> args, MetricsCounter metricsCounter) throws Exception
 	{
 		try
 		{
@@ -89,6 +89,7 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 					throw new Exception("Parameter " + WinAppFactory.mainWindowHeight + " must be from 0 to " + Integer.MAX_VALUE + " or empty/null");
 				}
 			}
+
 			String widthStr = args.get(WinAppFactory.mainWindowWidth);
 			if (!Str.IsNullOrEmpty(widthStr) && !widthStr.equalsIgnoreCase("null"))
 			{
@@ -101,11 +102,26 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 					throw new Exception("Parameter " + WinAppFactory.mainWindowWidth + " must be from 0 to " + Integer.MAX_VALUE + " or empty/null");
 				}
 			}
+
+			int pid = -1;
+			String pidStr = args.get(WinAppFactory.pidName);
+			if (!Str.IsNullOrEmpty(pidStr) && !pidStr.equalsIgnoreCase("null"))
+			{
+				try
+				{
+					pid = Integer.valueOf(pidStr);
+				}
+				catch (NumberFormatException e)
+				{
+					throw new Exception("Parameter " + WinAppFactory.pidName + " must be from 0 to " + Integer.MAX_VALUE + " or empty/null");
+				}
+			}
+
 			logger.info("##########################################################################################################");
 			logger.info(String.format("connectionDerived(%s, %d, %d)", title, height, width));
 			this.driver = new JnaDriverImpl(this.logger);
 			this.operationExecutor = new WinOperationExecutorJNA(this.logger, this.driver);
-			this.driver.connect(title, height, width);
+			return this.driver.connect(title, height, width, pid);
 		}
 		catch (RemoteException e)
 		{
@@ -120,7 +136,7 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 	}
 
 	@Override
-	protected void runDerived(Map<String, String> args, MetricsCounter metricsCounter) throws Exception
+	protected int runDerived(Map<String, String> args, MetricsCounter metricsCounter) throws Exception
 	{
 		try
 		{
@@ -140,7 +156,7 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 			this.logger.info("runDerived(" + args + ")");
 			this.driver = new JnaDriverImpl(this.logger);
 			this.operationExecutor = new WinOperationExecutorJNA(this.logger, this.driver);
-			this.driver.run(exec, workDir, parameters);
+			return this.driver.run(exec, workDir, parameters);
 		}
 		catch (RemoteException e)
 		{

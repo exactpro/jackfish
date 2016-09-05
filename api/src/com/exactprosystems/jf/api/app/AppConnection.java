@@ -10,12 +10,13 @@ package com.exactprosystems.jf.api.app;
 
 public class AppConnection implements AutoCloseable
 {
-	public AppConnection(IApplication connection, String id, int port, IGuiDictionary dictionary)
+	public AppConnection(IApplication connection, String id, int port, IGuiDictionary dictionary, int pid)
 	{
 		this.app = connection;
 		this.id = id;
 		this.port = port;
 		this.dictionary = dictionary;
+		this.pid = pid;
 	}
 
 	@Override
@@ -27,43 +28,50 @@ public class AppConnection implements AutoCloseable
 		}
 		this.app = null;
 	}
-	
+
 	@Override
 	public String toString()
 	{
-		return AppConnection.class.getSimpleName() + "{" + this.id + ":" +hashCode() + "}";
+		return AppConnection.class.getSimpleName() + "{" + this.id + ":" + hashCode() + "}";
 	}
-	
+
 	public String getId()
 	{
 		return this.id;
 	}
-	
+
 	public boolean isGood()
 	{
 		return this.app != null;
 	}
-	
+
 	public IApplication getApplication()
 	{
 		return this.app;
 	}
-	
+
 	public int getPort()
 	{
 		return this.port;
 	}
-	
+
 	public IGuiDictionary getDictionary()
 	{
 		return this.dictionary;
 	}
-	
+
+	public int getProcessId()
+	{
+		return this.pid;
+	}
+
 	private IApplication app;
-	
+
 	private String id;
-	
+
 	private int port;
-	
+
 	private IGuiDictionary dictionary;
+
+	private int pid;
 }

@@ -26,8 +26,8 @@ public interface IRemoteApplication extends Remote
 	String 						getProperty		(String name) throws RemoteException;
 
 	void 						createLogger	(String logName, String serverLogLevel, String serverLogPattern) throws RemoteException;
-	void 						connect			(Map<String, String> args) throws RemoteException;
-	void 						run				(Map<String, String> args) throws RemoteException;
+	int 						connect			(Map<String, String> args) throws RemoteException;
+	int 						run				(Map<String, String> args) throws RemoteException;
 	void 						stop			() throws RemoteException;
 	SerializablePair<String, Boolean> getAlertText() throws RemoteException;
 	void 						setAlertText	(String text, PerformKind performKind) throws RemoteException;

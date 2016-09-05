@@ -36,7 +36,7 @@ public class JnaDriverImpl
 	public static void main(String[] args) throws Exception
 	{
 		JnaDriverImpl driver = new JnaDriverImpl(Logger.getLogger(JnaDriverImpl.class));
-		driver.connect("Form1", 100, 100);
+		driver.connect("Form1", 100, 100, -1);
 		System.out.println(driver.title());
 		int l = 100 * 100;
 		int a[] = new int[l];
@@ -93,22 +93,26 @@ public class JnaDriverImpl
 	//endregion
 
 	//region application methods
-	public void connect(String title, int height, int width) throws Exception
+	public int connect(String title, int height, int width, int pid) throws Exception
 	{
 		long start = System.currentTimeMillis();
-		this.driver.connect(title, height, width);
+		int ret = this.driver.connect(title, height, width, pid); // TODO return process id
 		this.logger.info(String.format("connect(%s), time (ms) : %d", title, System.currentTimeMillis() - start));
 		checkCSharpTimes();
 		checkError();
+		
+		return ret;
 	}
 
-	public void run(String exec, String workDir, String param) throws Exception
+	public int run(String exec, String workDir, String param) throws Exception
 	{
 		long start = System.currentTimeMillis();
-		this.driver.run(exec, workDir, param);
+		int ret = this.driver.run(exec, workDir, param); // TODO return process id
 		this.logger.info(String.format("start(%s,%s,%s), time (ms) : %d", exec, workDir, param, System.currentTimeMillis() - start));
 		checkCSharpTimes();
 		checkError();
+		
+		return ret; 
 	}
 
 	public void stop() throws Exception

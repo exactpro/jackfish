@@ -11,8 +11,8 @@ public interface JnaDriver extends Library {
 	//endregion
 
 	//region application methods
-	void connect(String title, int height, int width);
-	void run(String exec, String workDir, String param);
+	int connect(String title, int height, int width, int pid); 	// TODO implement this
+	int run(String exec, String workDir, String param);			// TODO implement this
 	void stop();
 	void refresh();
 	String title();
