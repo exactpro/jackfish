@@ -29,6 +29,7 @@ public interface IControl
 	String 				getExpression();
 	String 				getRowsId();
 	String 				getHeaderId();
+	String				getColumns();
 	boolean 			isWeak();
 	boolean				useNumericHeader();
 	int					getTimeout();

@@ -44,6 +44,7 @@ public abstract class AbstractControl implements IControl, Mutable
 	public static final String expressionName		= "expression";
 	public static final String rowsName 			= "rows";
 	public static final String headerName 			= "header";
+	public static final String columnsName 			= "columns";
 	public static final String useNumericHeaderName = "useNumericHeader";
 
 	@XmlAttribute(name = idName)
@@ -99,6 +100,9 @@ public abstract class AbstractControl implements IControl, Mutable
 
 	@XmlAttribute(name = headerName)
 	protected String header;
+
+	@XmlAttribute(name = columnsName)
+	protected String columns;
 
 	@XmlAttribute(name = useNumericHeaderName)
 	protected Boolean useNumericHeader;
@@ -211,6 +215,7 @@ public abstract class AbstractControl implements IControl, Mutable
 		ret.useNumericHeader = locator.useNumericHeader();
 		ret.rows = "";
 		ret.header = "";
+		ret.columns = "";
 		ret.absoluteXpath = locator.useAbsoluteXpath();
 		return ret;
     }
@@ -399,6 +404,12 @@ public abstract class AbstractControl implements IControl, Mutable
 	}
 
 	@Override
+	public String getColumns()
+	{
+		return this.columns;
+	}
+
+	@Override
 	public Locator locator()
 	{
 		return new Locator(this);
@@ -540,6 +551,7 @@ public abstract class AbstractControl implements IControl, Mutable
 		this.text = xmlToText(this.text);
 		this.tooltip = xmlToText(this.tooltip);
 		this.expression = xmlToText(this.expression);
+		this.columns = xmlToText(this.columns);
 	}
 
 	public void correctAllText()
@@ -557,6 +569,7 @@ public abstract class AbstractControl implements IControl, Mutable
 		this.expression = textToXml(this.expression);
 		this.rows = textToXml(this.rows);
 		this.header = textToXml(this.header);
+		this.columns = textToXml(this.columns);
 		this.weak = booleanToXml(this.weak);
 		this.useNumericHeader = booleanToXml(this.useNumericHeader);
 		this.timeout = integerToXml(this.timeout);

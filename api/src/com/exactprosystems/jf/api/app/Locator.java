@@ -8,6 +8,7 @@
 
 package com.exactprosystems.jf.api.app;
 
+import com.exactprosystems.jf.api.common.Str;
 import java.io.Serializable;
 
 public class Locator implements Serializable
@@ -34,6 +35,7 @@ public class Locator implements Serializable
 		this.visibility			= control.getVisibility();
 		this.useNumericHeader	= control.useNumericHeader();
 		this.useAbsoluteXpath	= control.useAbsoluteXpath();
+		this.columns			= notNull(control.getColumns());
 	}
 
 	public Locator(Operation operation, String id, ControlKind kind)
@@ -114,6 +116,10 @@ public class Locator implements Serializable
 		{
 			sb.append(comma);		sb.append("useAbsoluteXpath = ");sb.append(this.useAbsoluteXpath);
 		}
+		if (!Str.IsNullOrEmpty(this.columns))
+		{
+			sb.append(comma);		sb.append("columns = ");sb.append(this.columns);
+		}
 		
 		sb.append("]");
 		
@@ -173,6 +179,11 @@ public class Locator implements Serializable
 	public String getExpression()
 	{
 		return this.expression;
+	}
+
+	public String getColumns()
+	{
+		return columns;
 	}
 
 	public boolean isWeak()
@@ -278,6 +289,12 @@ public class Locator implements Serializable
 		return this;
 	}
 
+	public Locator columns(String columns)
+	{
+		this.columns = columns;
+		return this;
+	}
+
 	public Locator numericHeader(Boolean useNumericHeader)
 	{
 		this.useNumericHeader = useNumericHeader;
@@ -334,6 +351,7 @@ public class Locator implements Serializable
 	private String text;
 	private String tooltip;
 	private String expression;
+	private String columns;
 	private Boolean weak;
 	private Addition addition;
 	private Visibility visibility;
