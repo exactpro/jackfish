@@ -662,8 +662,7 @@ public enum OperationKind
 		@Override
 		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, Holder<T> holder, OperationResult result) throws Exception
 		{
-			result.setArray(executor.getTable(holder.getValue(), holder.get(LocatorKind.Rows), holder.get(LocatorKind.Header), 
-					holder.get(LocatorKind.Element).useNumericHeader()));
+			result.setArray(executor.getTable(holder.getValue(), holder.get(LocatorKind.Rows), holder.get(LocatorKind.Header), holder.get(LocatorKind.Element).useNumericHeader(), null));
 			return true;
 		}
 	},
@@ -680,7 +679,7 @@ public enum OperationKind
 		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, Holder<T> holder, OperationResult result) throws Exception
 		{
 			result.setMap(executor.getRow(holder.getValue(), holder.get(LocatorKind.Rows), holder.get(LocatorKind.Header), 
-					holder.get(LocatorKind.Element).useNumericHeader(), part.valueCondition, part.colorCondition));
+					holder.get(LocatorKind.Element).useNumericHeader(), null, part.valueCondition, part.colorCondition));
 			return true;
 		}
 	},
@@ -697,7 +696,7 @@ public enum OperationKind
 		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, Holder<T> holder, OperationResult result) throws Exception
 		{
 			result.setMap(executor.getRowByIndex(holder.getValue(), holder.get(LocatorKind.Rows), holder.get(LocatorKind.Header), 
-					holder.get(LocatorKind.Element).useNumericHeader(), part.i));
+					holder.get(LocatorKind.Element).useNumericHeader(), null, part.i));
 			return true;
 		}
 	},
@@ -714,7 +713,7 @@ public enum OperationKind
 		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, Holder<T> holder, OperationResult result) throws Exception
 		{
 			result.setList(executor.getRowIndexes(holder.getValue(), holder.get(LocatorKind.Rows), holder.get(LocatorKind.Header), 
-					holder.get(LocatorKind.Element).useNumericHeader(), part.valueCondition, part.colorCondition));
+					holder.get(LocatorKind.Element).useNumericHeader(), null, part.valueCondition, part.colorCondition));
 			return true;
 		}
 	},
@@ -731,7 +730,7 @@ public enum OperationKind
 		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, Holder<T> holder, OperationResult result) throws Exception
 		{
 			result.setColorMap(executor.getRowWithColor(holder.getValue(), holder.get(LocatorKind.Rows), holder.get(LocatorKind.Header), 
-					holder.get(LocatorKind.Element).useNumericHeader(), part.i));
+					holder.get(LocatorKind.Element).useNumericHeader(), null, part.i));
 			return true;
 		}
 	},

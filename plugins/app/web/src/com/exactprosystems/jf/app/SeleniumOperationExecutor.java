@@ -198,7 +198,7 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 	}
 
 	@Override
-	public Map<String, String> getRow(WebElement component, Locator additional, Locator header, boolean useNumericHeader, ICondition valueCondition, ICondition colorCondition) throws Exception
+	public Map<String, String> getRow(WebElement component, Locator additional, Locator header, boolean useNumericHeader, String[] columns, ICondition valueCondition, ICondition colorCondition) throws Exception
 	{
 		int repeat = 1;
 		Exception real = null;
@@ -243,7 +243,7 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 	}
 
 	@Override
-	public List<String> getRowIndexes(WebElement component, Locator additional, Locator header, boolean useNumericHeader, ICondition valueCondition, ICondition colorCondition) throws Exception
+	public List<String> getRowIndexes(WebElement component, Locator additional, Locator header, boolean useNumericHeader, String[] columns, ICondition valueCondition, ICondition colorCondition) throws Exception
 	{
 		Exception real = null;
 		int repeat = 1;
@@ -280,7 +280,7 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 	}
 
 	@Override
-	public Map<String, String> getRowByIndex(WebElement component, Locator additional, Locator header, boolean useNumericHeader, int i) throws Exception
+	public Map<String, String> getRowByIndex(WebElement component, Locator additional, Locator header, boolean useNumericHeader, String[] columns, int i) throws Exception
 	{
 		Exception real = null;
 		int repeat = 1;
@@ -314,7 +314,7 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 	}
 
 	@Override
-	public Map<String, ValueAndColor> getRowWithColor(WebElement component, Locator additional, Locator header, boolean useNumericHeader, int i) throws Exception
+	public Map<String, ValueAndColor> getRowWithColor(WebElement component, Locator additional, Locator header, boolean useNumericHeader, String[] columns, int i) throws Exception
 	{
 		Exception real = null;
 		int repeat = 1;
@@ -354,7 +354,7 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 	}
 
 	@Override
-	public String[][] getTable(WebElement component, Locator additional, Locator header, boolean useNumericHeader) throws Exception
+	public String[][] getTable(WebElement component, Locator additional, Locator header, boolean useNumericHeader, String[] columns) throws Exception
 	{
 		String outerHTML = component.getAttribute("outerHTML");
 		Document doc = Jsoup.parse(outerHTML);

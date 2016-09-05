@@ -1018,7 +1018,7 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 	}
 
 	@Override
-	public Map<String, String> getRow(ComponentFixture<Component> component, Locator rows, Locator header, boolean useNumericHeader, ICondition valueCondition, ICondition colorCondition) throws Exception
+	public Map<String, String> getRow(ComponentFixture<Component> component, Locator rows, Locator header, boolean useNumericHeader, String[] columns, ICondition valueCondition, ICondition colorCondition) throws Exception
 	{
 		try
 		{
@@ -1068,7 +1068,7 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 	}
 
 	@Override
-	public List<String> getRowIndexes(ComponentFixture<Component> component, Locator additional, Locator header, boolean useNumericHeader, ICondition valueCondition, ICondition colorCondition) throws Exception
+	public List<String> getRowIndexes(ComponentFixture<Component> component, Locator additional, Locator header, boolean useNumericHeader, String[] columns, ICondition valueCondition, ICondition colorCondition) throws Exception
 	{
 		try
 		{
@@ -1093,7 +1093,7 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 
 
 	@Override
-	public Map<String, String> getRowByIndex(ComponentFixture<Component> component, Locator additional, Locator header, boolean useNumericHeader, int i) throws Exception
+	public Map<String, String> getRowByIndex(ComponentFixture<Component> component, Locator additional, Locator header, boolean useNumericHeader, String[] columns, int i) throws Exception
 	{
 		try
 		{
@@ -1126,7 +1126,7 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 	}
 
 	@Override
-	public Map<String, ValueAndColor> getRowWithColor(ComponentFixture<Component> component, Locator additional, Locator header, boolean useNumericHeader, int i) throws Exception
+	public Map<String, ValueAndColor> getRowWithColor(ComponentFixture<Component> component, Locator additional, Locator header, boolean useNumericHeader, String[] columns, int i) throws Exception
 	{
 		try
 		{
@@ -1160,28 +1160,28 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 	}
 
 	@Override
-	public String[][] getTable(final ComponentFixture<Component> component, Locator additional, Locator header, final boolean useNumericHeader) throws Exception
+	public String[][] getTable(final ComponentFixture<Component> component, Locator additional, Locator header, final boolean useNumericHeader, String[] columns) throws Exception
 	{
 		try
 		{
 			this.currentRobot.waitForIdle();
 			JTable table = component.targetCastedTo(JTable.class);
 			int rows = table.getRowCount();
-			int columns = table.getColumnCount();
+			int columnsCount = table.getColumnCount();
 
 			String[][] res = new String[rows + 1][];
 
 			List<String> headers = getHeaders(table, useNumericHeader);
-			res[0] = new String[columns];
-			for (int column = 0; column < columns; column++)
+			res[0] = new String[columnsCount];
+			for (int column = 0; column < columnsCount; column++)
 			{
 				res[0][column] = headers.get(column);
 			}
 			JTableFixture fixture = (((JTableFixture) (ComponentFixture<? extends Component>) component));
 			for (int row = 0; row < rows; row++)
 			{
-				res[row + 1] = new String[columns];
-				for (int column = 0; column < columns; column++)
+				res[row + 1] = new String[columnsCount];
+				for (int column = 0; column < columnsCount; column++)
 				{
 					Object value = getValueTableCell(fixture, row, column);
 					if (value == null)
