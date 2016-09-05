@@ -182,6 +182,7 @@ public abstract class AbstractControl implements IControl, Mutable
 		copy.set(expressionName,		control.getExpression()		);
 		copy.set(rowsName,				control.getRowsId()			);
 		copy.set(headerName,			control.getHeaderId()		);
+		copy.set(columnsName,			control.getColumns()		);
 		copy.set(useNumericHeaderName,	control.useNumericHeader()	);
 		copy.set(absoluteXpathName,		control.useAbsoluteXpath()	);
 
