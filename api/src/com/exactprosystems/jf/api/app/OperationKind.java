@@ -8,6 +8,7 @@
 
 package com.exactprosystems.jf.api.app;
 
+import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.error.app.ElementNotFoundException;
 import com.exactprosystems.jf.api.error.app.OperationNotAllowedException;
 
@@ -662,7 +663,7 @@ public enum OperationKind
 		@Override
 		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, Holder<T> holder, OperationResult result) throws Exception
 		{
-			result.setArray(executor.getTable(holder.getValue(), holder.get(LocatorKind.Rows), holder.get(LocatorKind.Header), holder.get(LocatorKind.Element).useNumericHeader(), null));
+			result.setArray(executor.getTable(holder.getValue(), holder.get(LocatorKind.Rows), holder.get(LocatorKind.Header), holder.get(LocatorKind.Element).useNumericHeader(), OperationKind.columns(holder.get(LocatorKind.Element))));
 			return true;
 		}
 	},
@@ -679,7 +680,7 @@ public enum OperationKind
 		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, Holder<T> holder, OperationResult result) throws Exception
 		{
 			result.setMap(executor.getRow(holder.getValue(), holder.get(LocatorKind.Rows), holder.get(LocatorKind.Header), 
-					holder.get(LocatorKind.Element).useNumericHeader(), null, part.valueCondition, part.colorCondition));
+					holder.get(LocatorKind.Element).useNumericHeader(), OperationKind.columns(holder.get(LocatorKind.Element)), part.valueCondition, part.colorCondition));
 			return true;
 		}
 	},
@@ -696,7 +697,7 @@ public enum OperationKind
 		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, Holder<T> holder, OperationResult result) throws Exception
 		{
 			result.setMap(executor.getRowByIndex(holder.getValue(), holder.get(LocatorKind.Rows), holder.get(LocatorKind.Header), 
-					holder.get(LocatorKind.Element).useNumericHeader(), null, part.i));
+					holder.get(LocatorKind.Element).useNumericHeader(), OperationKind.columns(holder.get(LocatorKind.Element)), part.i));
 			return true;
 		}
 	},
@@ -713,7 +714,7 @@ public enum OperationKind
 		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, Holder<T> holder, OperationResult result) throws Exception
 		{
 			result.setList(executor.getRowIndexes(holder.getValue(), holder.get(LocatorKind.Rows), holder.get(LocatorKind.Header), 
-					holder.get(LocatorKind.Element).useNumericHeader(), null, part.valueCondition, part.colorCondition));
+					holder.get(LocatorKind.Element).useNumericHeader(), OperationKind.columns(holder.get(LocatorKind.Element)), part.valueCondition, part.colorCondition));
 			return true;
 		}
 	},
@@ -730,7 +731,7 @@ public enum OperationKind
 		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, Holder<T> holder, OperationResult result) throws Exception
 		{
 			result.setColorMap(executor.getRowWithColor(holder.getValue(), holder.get(LocatorKind.Rows), holder.get(LocatorKind.Header), 
-					holder.get(LocatorKind.Element).useNumericHeader(), null, part.i));
+					holder.get(LocatorKind.Element).useNumericHeader(), OperationKind.columns(holder.get(LocatorKind.Element)), part.i));
 			return true;
 		}
 	},
@@ -884,6 +885,16 @@ public enum OperationKind
 	private static boolean isReal(Locator locator)
 	{
 		return locator != null && locator.getControlKind() != null && !locator.getControlKind().isVirtual();
+	}
+
+	private static String[] columns(Locator locator)
+	{
+		String columns = locator.getColumns();
+		if (Str.IsNullOrEmpty(columns))
+		{
+			return null;
+		}
+		return columns.split("\\|");
 	}
 
 	private String	name;
