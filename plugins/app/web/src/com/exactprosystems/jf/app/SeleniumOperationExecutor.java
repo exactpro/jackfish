@@ -208,7 +208,7 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 			{
 				List<Map<String, String>> list = new ArrayList<>();
 
-				List<String> headers = getHeaders(component, useNumericHeader, header);
+				List<String> headers = getHeaders(component, useNumericHeader, header, columns);
 
 				List<WebElement> rows = findRows(additional, component);
 
@@ -256,7 +256,7 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 				for (int i = 0; i < rows.size(); i++)
 				{
 					WebElement row = rows.get(i);
-					if (rowMatches(row, valueCondition, colorCondition, getHeaders(component, useNumericHeader, header)))
+					if (rowMatches(row, valueCondition, colorCondition, getHeaders(component, useNumericHeader, header, columns)))
 					{
 						result.add(String.valueOf(i));
 					}
@@ -288,7 +288,7 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 		{
 			try
 			{
-				List<String> headers = getHeaders(component, useNumericHeader, header);
+				List<String> headers = getHeaders(component, useNumericHeader, header, columns);
 				List<WebElement> rows = findRows(additional, component);
 				if (i > rows.size() - 1 || i < 0)
 				{
@@ -322,7 +322,7 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 		{
 			try
 			{
-				List<String> headers = getHeaders(component, useNumericHeader, header);
+				List<String> headers = getHeaders(component, useNumericHeader, header, columns);
 				List<WebElement> rows = findRows(additional, component);
 
 				if (rows.isEmpty())
@@ -358,16 +358,7 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 	{
 		String outerHTML = component.getAttribute("outerHTML");
 		Document doc = Jsoup.parse(outerHTML);
-		List<String> headers;
-		if (header != null)
-		{
-			WebElement element = find(null, header);
-			headers = getHeaders(element.getAttribute("outerHTML"), useNumericHeader);
-		}
-		else
-		{
-			headers = getHeaders(outerHTML, useNumericHeader);
-		}
+		List<String> headers = getHeaders(outerHTML, useNumericHeader, columns);
 		logger.debug("Headers : " + headers);
 		Elements rows = findRows(doc);
 		logger.debug("Rows size : " + rows.size());
@@ -969,179 +960,179 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 						this.customAction.sendKeys( Keys.NUMPAD3).perform();
 						break;
 					case DIG4:
-						this.customAction.sendKeys( Keys.NUMPAD4).perform();
+						this.customAction.sendKeys(Keys.NUMPAD4).perform();
 						break;
 					case DIG5:
-						this.customAction.sendKeys( Keys.NUMPAD5).perform();
+						this.customAction.sendKeys(Keys.NUMPAD5).perform();
 						break;
 					case DIG6:
-						this.customAction.sendKeys( Keys.NUMPAD6).perform();
+						this.customAction.sendKeys(Keys.NUMPAD6).perform();
 						break;
 					case DIG7:
-						this.customAction.sendKeys( Keys.NUMPAD7).perform();
+						this.customAction.sendKeys(Keys.NUMPAD7).perform();
 						break;
 					case DIG8:
-						this.customAction.sendKeys( Keys.NUMPAD8).perform();
+						this.customAction.sendKeys(Keys.NUMPAD8).perform();
 						break;
 					case DIG9:
-						this.customAction.sendKeys( Keys.NUMPAD9).perform();
+						this.customAction.sendKeys(Keys.NUMPAD9).perform();
 						break;
 					case DIG0:
-						this.customAction.sendKeys( Keys.NUMPAD0).perform();
+						this.customAction.sendKeys(Keys.NUMPAD0).perform();
 						break;
 					case BACK_SPACE:
-						this.customAction.sendKeys( Keys.BACK_SPACE).perform();
+						this.customAction.sendKeys(Keys.BACK_SPACE).perform();
 						break;
 					case INSERT:
-						this.customAction.sendKeys( Keys.INSERT).perform();
+						this.customAction.sendKeys(Keys.INSERT).perform();
 						break;
 					case HOME:
-						this.customAction.sendKeys( Keys.HOME).perform();
+						this.customAction.sendKeys(Keys.HOME).perform();
 						break;
 					case PAGE_UP:
-						this.customAction.sendKeys( Keys.PAGE_UP).perform();
+						this.customAction.sendKeys(Keys.PAGE_UP).perform();
 						break;
 
 					case TAB:
-						this.customAction.sendKeys( Keys.TAB).perform();
+						this.customAction.sendKeys(Keys.TAB).perform();
 						break;
 					case Q:
-						this.customAction.sendKeys( "q").perform();
+						this.customAction.sendKeys("q").perform();
 						break;
 					case W:
-						this.customAction.sendKeys( "w").perform();
+						this.customAction.sendKeys("w").perform();
 						break;
 					case E:
-						this.customAction.sendKeys( "e").perform();
+						this.customAction.sendKeys("e").perform();
 						break;
 					case R:
-						this.customAction.sendKeys( "r").perform();
+						this.customAction.sendKeys("r").perform();
 						break;
 					case T:
-						this.customAction.sendKeys( "t").perform();
+						this.customAction.sendKeys("t").perform();
 						break;
 					case Y:
-						this.customAction.sendKeys( "y").perform();
+						this.customAction.sendKeys("y").perform();
 						break;
 					case U:
-						this.customAction.sendKeys( "u").perform();
+						this.customAction.sendKeys("u").perform();
 						break;
 					case I:
-						this.customAction.sendKeys( "i").perform();
+						this.customAction.sendKeys("i").perform();
 						break;
 					case O:
-						this.customAction.sendKeys( "o").perform();
+						this.customAction.sendKeys("o").perform();
 						break;
 					case P:
-						this.customAction.sendKeys( "p").perform();
+						this.customAction.sendKeys("p").perform();
 						break;
 					case SLASH:
 						break;
 					case BACK_SLASH:
 						break;
 					case DELETE:
-						this.customAction.sendKeys( Keys.DELETE).perform();
+						this.customAction.sendKeys(Keys.DELETE).perform();
 						break;
 					case END:
-						this.customAction.sendKeys( Keys.END).perform();
+						this.customAction.sendKeys(Keys.END).perform();
 						break;
 					case PAGE_DOWN:
-						this.customAction.sendKeys( Keys.PAGE_DOWN).perform();
+						this.customAction.sendKeys(Keys.PAGE_DOWN).perform();
 						break;
 
 					case CAPS_LOCK:
 						break;
 					case A:
-						this.customAction.sendKeys( "a").perform();
+						this.customAction.sendKeys("a").perform();
 						break;
 					case S:
-						this.customAction.sendKeys( "s").perform();
+						this.customAction.sendKeys("s").perform();
 						break;
 					case D:
-						this.customAction.sendKeys( "d").perform();
+						this.customAction.sendKeys("d").perform();
 						break;
 					case F:
-						this.customAction.sendKeys( "f").perform();
+						this.customAction.sendKeys("f").perform();
 						break;
 					case G:
-						this.customAction.sendKeys( "g").perform();
+						this.customAction.sendKeys("g").perform();
 						break;
 					case H:
-						this.customAction.sendKeys( "h").perform();
+						this.customAction.sendKeys("h").perform();
 						break;
 					case J:
-						this.customAction.sendKeys( "j").perform();
+						this.customAction.sendKeys("j").perform();
 						break;
 					case K:
-						this.customAction.sendKeys( "k").perform();
+						this.customAction.sendKeys("k").perform();
 						break;
 					case L:
-						this.customAction.sendKeys( "l").perform();
+						this.customAction.sendKeys("l").perform();
 						break;
 					case SEMICOLON:
-						this.customAction.sendKeys( Keys.SEMICOLON).perform();
+						this.customAction.sendKeys(Keys.SEMICOLON).perform();
 						break;
 					case QUOTE:
 						break;
 					case DOUBLE_QUOTE:
 						break;
 					case ENTER:
-						this.customAction.sendKeys( Keys.ENTER).perform();
+						this.customAction.sendKeys(Keys.ENTER).perform();
 						break;
 
 					case SHIFT:
-						this.customAction.sendKeys( Keys.SHIFT).perform();
+						this.customAction.sendKeys(Keys.SHIFT).perform();
 						break;
 					case Z:
-						this.customAction.sendKeys( "z").perform();
+						this.customAction.sendKeys("z").perform();
 						break;
 					case X:
-						this.customAction.sendKeys( "x").perform();
+						this.customAction.sendKeys("x").perform();
 						break;
 					case C:
-						this.customAction.sendKeys( "c").perform();
+						this.customAction.sendKeys("c").perform();
 						break;
 					case V:
-						this.customAction.sendKeys( "v").perform();
+						this.customAction.sendKeys("v").perform();
 						break;
 					case B:
-						this.customAction.sendKeys( "b").perform();
+						this.customAction.sendKeys("b").perform();
 						break;
 					case N:
-						this.customAction.sendKeys( "n").perform();
+						this.customAction.sendKeys("n").perform();
 						break;
 					case M:
-						this.customAction.sendKeys( "m").perform();
+						this.customAction.sendKeys("m").perform();
 						break;
 					case UP:
-						this.customAction.sendKeys( Keys.UP).perform();
+						this.customAction.sendKeys(Keys.UP).perform();
 						break;
 
 					case CONTROL:
-						this.customAction.sendKeys( Keys.CONTROL).perform();
+						this.customAction.sendKeys(Keys.CONTROL).perform();
 						break;
 					case ALT:
-						this.customAction.sendKeys( Keys.ALT).perform();
+						this.customAction.sendKeys(Keys.ALT).perform();
 						break;
 					case SPACE:
-						this.customAction.sendKeys( Keys.SPACE).perform();
+						this.customAction.sendKeys(Keys.SPACE).perform();
 						break;
 					case LEFT:
-						this.customAction.sendKeys( Keys.LEFT).perform();
+						this.customAction.sendKeys(Keys.LEFT).perform();
 						break;
 					case DOWN:
-						this.customAction.sendKeys( Keys.DOWN).perform();
+						this.customAction.sendKeys(Keys.DOWN).perform();
 						break;
 
 					case RIGHT:
-						this.customAction.sendKeys( Keys.RIGHT).perform();
+						this.customAction.sendKeys(Keys.RIGHT).perform();
 						break;
 
 					case PLUS:
-						this.customAction.sendKeys( Keys.ADD).perform();
+						this.customAction.sendKeys(Keys.ADD).perform();
 						break;
 					case MINUS:
-						this.customAction.sendKeys( Keys.SUBTRACT).perform();
+						this.customAction.sendKeys(Keys.SUBTRACT).perform();
 						break;
 					case UNDERSCORE:
 						this.customAction.sendKeys(Keys.chord(Keys.SHIFT, "-")).perform();
@@ -1230,18 +1221,12 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 				int width = component.getSize().getWidth();
 				if (height > width)
 				{
-					customAction.moveToElement(component, width / 2, (int) ((double) (value * ((double) height / 100))))
-							.click()
-							.build()
-							.perform();
+					customAction.moveToElement(component, width / 2, (int) ((double) (value * ((double) height / 100)))).click().build().perform();
 				}
 				//horizontal slider
 				else
 				{
-					customAction.moveToElement(component, (int) ((double) (value * ((double) width / 100))), height / 2)
-							.click()
-							.build()
-							.perform();
+					customAction.moveToElement(component, (int) ((double) (value * ((double) width / 100))), height / 2).click().build().perform();
 				}
 
 				return true;
@@ -1251,7 +1236,8 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 				real = e;
 				logger.debug("Element is no longer attached to the DOM. Try in SeleniumOperationExecutor : " + repeat);
 			}
-		} while (++repeat < repeatLimit);
+		}
+		while (++repeat < repeatLimit);
 		throw real;
 	}
 
@@ -1293,13 +1279,13 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 		return s.substring(0, s.indexOf(">") + 1);
 	}
 
-	private List<String> getHeaders(String outerHtml, boolean useNumericHeader) throws RemoteException
+	private List<String> getHeaders(String outerHtml, boolean useNumericHeader, String[] columns) throws RemoteException
 	{
 		Document doc = Jsoup.parse(outerHtml);
 		ArrayList<String> result = new ArrayList<>();
 		Elements header = null;
 		/*
-			try to find element with tag thead.
+			try to the find element with tag thead.
 		 */
 		Element firstThead = doc.select(tag_thead).first();
 		/*
@@ -1313,12 +1299,16 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 				throw new RemoteException("Headers not found. Check your header locator or table locator");
 			}
 			header = firstTr.children();
-			for (int i = 0; i < header.size(); i++)
+			return convertColumnsToHeaders(header, columns, new IText<Element>()
 			{
-				result.add(String.valueOf(i));
-			}
-			return result;
+				@Override
+				public String getText(Element element)
+				{
+					return element.text();
+				}
+			});
 		}
+
 		Elements trOfFirstThead = firstThead.children();
 		for (Element tr : firstThead.children())
 		{
@@ -1341,15 +1331,14 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 				result.add(element.text());
 			}
 		}
-
-		if (useNumericHeader)
+		return convertColumnsToHeaders(result, columns, new IText<String>()
 		{
-			for (int i = 0; i < result.size(); i++)
+			@Override
+			public String getText(String s)
 			{
-				result.set(i, String.valueOf(i));
+				return s;
 			}
-		}
-		return result;
+		});
 	}
 
 	private Map<String, String> getRowValues(WebElement row, List<String> headers) throws Exception
@@ -1413,7 +1402,7 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 		throw real;
 	}
 
-	private List<String> getHeaders(WebElement grid, boolean useNumericHeader, Locator header) throws Exception
+	private List<String> getHeaders(WebElement grid, @Deprecated boolean useNumericHeader, @Deprecated Locator header, String[] columns) throws Exception
 	{
 		Exception real = null;
 		int repeat = 1;
@@ -1422,59 +1411,31 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 			try
 			{
 				logger.debug("Header : " + header + "  != null : " + (header != null));
-				List<String> result = new ArrayList<>();
-				if (header != null)
+				if (columns != null)
 				{
-					WebElement headerTable = find(null, header);
-					List<WebElement> thRows = headerTable.findElements(By.tagName(tag_th));
-					if (!thRows.isEmpty())
-					{
-						for (WebElement thRow : thRows)
-						{
-							result.add(thRow.getText());
-						}
-						return result;
-					}
-					List<WebElement> tdRows = headerTable.findElements(By.tagName(tag_td));
-					if (!tdRows.isEmpty())
-					{
-						for (WebElement tdRow : tdRows)
-						{
-							result.add(tdRow.getText());
-						}
-						return result;
-					}
+					this.logger.debug("Columns : " + Arrays.toString(columns));
 				}
-				List<WebElement> firstHeader = null;
-				List<WebElement> headerTable = grid.findElements(By.tagName(tag_thead));
-				if (headerTable.isEmpty())
+				List<WebElement> theadSections = grid.findElements(By.tagName(tag_thead));
+				if (theadSections.isEmpty())
 				{
-					return getHeaders(grid, result);
+					return getHeaders(grid, columns);
 				}
 
-				List<WebElement> headers1 = headerTable.get(0).findElements(By.tagName(tag_tr));
-				if (headers1.isEmpty())
+				List<WebElement> trsFromThead = theadSections.get(0).findElements(By.tagName(tag_tr));
+				if (trsFromThead.isEmpty())
 				{
-					return getHeaders(grid, result);
+					return getHeaders(grid, columns);
 				}
-				WebElement headers = headers1.get(headers1.size() - 1);
-				firstHeader = headers.findElements(By.tagName(tag_th));
-				logger.debug("use numeric : " + useNumericHeader);
-				if (useNumericHeader)
+				WebElement headers = trsFromThead.get(trsFromThead.size() - 1);
+				List<WebElement> firstHeader = headers.findElements(By.tagName(tag_th));
+				return convertColumnsToHeaders(firstHeader, columns, new IText<WebElement>()
 				{
-					for (int i = 0; i < firstHeader.size(); i++)
+					@Override
+					public String getText(WebElement webElement)
 					{
-						result.add(String.valueOf(i));
+						return webElement.getText();
 					}
-				}
-				else
-				{
-					for (WebElement element : firstHeader)
-					{
-						result.add(element.getText().trim());
-					}
-				}
-				return result;
+				});
 			}
 			catch (StaleElementReferenceException e)
 			{
@@ -1486,21 +1447,93 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 		throw real;
 	}
 
-	private List<String> getHeaders(WebElement grid, List<String> result) throws RemoteException
+	//	public static void main(String[] args)
+	//	{
+	//		System.out.println(q(Arrays.asList("a", "b", "c", "d", "e"), new String[]{"z", "x", "c"}));
+	//		System.out.println(q(Arrays.asList("a", "b"), new String[]{"z", "x", "c"}));
+	//		System.out.println(q(Arrays.asList("a", "b", "c"), new String[]{"z", "x", "c"}));
+	//	}
+	//
+	//	private static List<String> q(List<String> list, String[] arr)
+	//	{
+	//		ArrayList<String> res = new ArrayList<>();
+	//		int i;
+	//		Iterator<String> iterator = list.iterator();
+	//		for(i = 0; i < arr.length; i++)
+	//		{
+	//			if (iterator.hasNext())
+	//			{
+	//				iterator.next();
+	//				res.add(arr[i]);
+	//			}
+	//			else
+	//			{
+	//				break;
+	//			}
+	//		}
+	//		while (iterator.hasNext())
+	//		{
+	//			iterator.next();
+	//			res.add(String.valueOf(i++));
+	//		}
+	//
+	//		return res;
+	//	}
+
+	interface IText<T>
 	{
-		List<WebElement> header;
+		String getText(T t);
+	}
+
+	private <T> List<String> convertColumnsToHeaders(Iterable<T> headers, String[] columns, IText<T> func)
+	{
+		List<String> res = new ArrayList<>();
+		if (columns == null)
+		{
+			for (T header : headers)
+			{
+				res.add(func.getText(header));
+			}
+			return res;
+		}
+		int i;
+		Iterator<T> iterator = headers.iterator();
+		for(i = 0; i < columns.length; i++)
+		{
+			if (iterator.hasNext())
+			{
+				iterator.next();
+				res.add(columns[i]);
+			}
+			else
+			{
+				break;
+			}
+		}
+		while (iterator.hasNext())
+		{
+			iterator.next();
+			res.add(String.valueOf(i++));
+		}
+
+		return res;
+	}
+
+	private List<String> getHeaders(WebElement grid, String[] columns) throws RemoteException
+	{
 		List<WebElement> firstRow = grid.findElements(By.tagName(tag_tr));
 		if (firstRow.isEmpty())
 		{
 			throw new RemoteException("Table is empty");
 		}
-		header = firstRow.get(0).findElements(By.tagName(tag_td));
-
-		for (int i = 0; i < header.size(); i++)
+		return convertColumnsToHeaders(firstRow.get(0).findElements(By.tagName(tag_td)), columns, new IText<WebElement>()
 		{
-			result.add(String.valueOf(i));
-		}
-		return result;
+			@Override
+			public String getText(WebElement webElement)
+			{
+				return webElement.getText();
+			}
+		});
 	}
 
 	private List<WebElement> findRows(Locator additional, WebElement component) throws Exception
