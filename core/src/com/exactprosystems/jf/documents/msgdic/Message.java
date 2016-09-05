@@ -25,6 +25,12 @@ public class Message extends Field implements IMessage
 	public Message()
 	{
 	}
+	
+	@Override
+	public String toString()
+	{
+		return Message.class.getSimpleName() + "{" + this.fields + "}";
+	}
 
 	@XmlElement(name = "field")
 	protected List<Field>	fields;

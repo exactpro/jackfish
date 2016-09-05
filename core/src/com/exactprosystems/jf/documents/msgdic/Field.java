@@ -37,6 +37,12 @@ public class Field implements IField
 		this.attributes = new ArrayList<Attribute>();
 		this.values = new ArrayList<Attribute>();
 	}
+	
+	@Override
+	public String toString()
+	{
+		return Field.class.getSimpleName() + ":" + this.name + "{" + this.attributes + "}";
+	}
 
 	protected String			description;
 

@@ -27,6 +27,12 @@ public class Attribute implements IAttribute
 	public Attribute()
 	{
 	}
+	
+	@Override
+	public String toString()
+	{
+		return this.name + "=" + this.value;
+	}
 
 	@XmlValue
 	protected String	value;
