@@ -1025,7 +1025,7 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 			this.currentRobot.waitForIdle();
 			JTable table = component.targetCastedTo(JTable.class);
 			JTableFixture fixture = new JTableFixture(this.currentRobot, table);
-			Map<String, Integer> fieldIndexes = getTableHeaders(table);
+			Map<String, Integer> fieldIndexes = getTableHeaders(table, columns);
 			List<String> rowsIndexes = getIndexes(fixture, fieldIndexes, valueCondition, colorCondition);
 
 			if (rowsIndexes.size() == 1)
@@ -1075,7 +1075,7 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 			this.currentRobot.waitForIdle();
 			JTable table = component.targetCastedTo(JTable.class);
 			JTableFixture fixture = new JTableFixture(this.currentRobot, table);
-			Map<String, Integer> fieldIndexes = getTableHeaders(table);
+			Map<String, Integer> fieldIndexes = getTableHeaders(table, columns);
 
 			return getIndexes(fixture, fieldIndexes, valueCondition, colorCondition);
 		}
@@ -1103,15 +1103,7 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 			Map<String, Integer> fieldIndexes = null;
 			Map<String, String> ret = new LinkedHashMap<String, String>();
 
-			if(columns == null)
-			{
-				fieldIndexes = getTableHeaders(table);
-			}
-			else
-			{
-				fieldIndexes = getTableHeadersFromColumn(columns);
-			}
-
+			fieldIndexes = getTableHeaders(table, columns);
 			JTableFixture fixture = (((JTableFixture) (ComponentFixture<? extends Component>) component));
 			for (Entry<String, Integer> entry : fieldIndexes.entrySet()) {
 				String name = entry.getKey();
@@ -1153,7 +1145,7 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 		{
 			this.currentRobot.waitForIdle();
 			JTable table = component.targetCastedTo(JTable.class);
-			Map<String, Integer> fieldIndexes = getTableHeaders(table);
+			Map<String, Integer> fieldIndexes = getTableHeaders(table, columns);
 			Map<String, ValueAndColor> ret = new LinkedHashMap<String, ValueAndColor>();
 			JTableFixture tableFixture = (((JTableFixture) (ComponentFixture<? extends Component>) component));
 			for (Entry<String, Integer> entry : fieldIndexes.entrySet())
@@ -1191,13 +1183,10 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 			int columnsCount = table.getColumnCount();
 
 			String[][] res = new String[rows + 1][];
-
-			List<String> headers = getHeaders(table, useNumericHeader);
 			res[0] = new String[columnsCount];
-			for (int column = 0; column < columnsCount; column++)
-			{
-				res[0][column] = headers.get(column);
-			}
+			Map<String, Integer> headers = getTableHeaders(table, columns);
+			headers.forEach((s, integer) -> res[0][integer] = (useNumericHeader) ? String.valueOf(integer) : s);
+
 			JTableFixture fixture = (((JTableFixture) (ComponentFixture<? extends Component>) component));
 			for (int row = 0; row < rows; row++)
 			{
@@ -1224,12 +1213,7 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 				}
 			}
 			return res;
-		}
-		catch (RemoteException e)
-		{
-			throw e;
-		}
-		catch (Throwable e)
+		} catch (Throwable e)
 		{
 			logger.error(String.format("getTable(%s, %s, %s, %b)", component, additional, header, useNumericHeader));
 			logger.error(e.getMessage(), e);
@@ -1402,17 +1386,30 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 
 		return ret;
 	}
-	
-	private List<String> getHeaders(JTable table, boolean useNumericHeader) throws Exception
+
+	private static Map<String, Integer> getTableHeaders(final JTable table, String[] columns)
 	{
-		List<String> res = new ArrayList<String>();
-		for (int i = 0; i < table.getColumnCount(); i++)
+		Map<String, Integer> result = new LinkedHashMap<String, Integer>();
+		String realName = "";
+
+		for (int i = 0; i < table.getColumnModel().getColumnCount(); i++)
 		{
-			res.add(useNumericHeader ? String.valueOf(i) : table.getColumnName(i));
+			if(columns == null)
+			{
+				realName = table.getColumnModel().getColumn(i).getHeaderValue().toString();
+			}
+			else
+			{
+				realName = (i < columns.length) ? columns[i] : String.valueOf(i);
+			}
+
+			String underscopedName = realName.replace(' ', '_');
+			result.put(underscopedName, i);
 		}
-		return res;
+
+		return result;
 	}
-	
+
 	private Object getValueTableCell(JTableFixture fixture, int row, int column)
 	{
 		JTable table = fixture.target;
@@ -1520,20 +1517,6 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 		}
 
 		return (T) component;
-	}
-
-	private static Map<String, Integer> getTableHeaders(final JTable table)
-	{
-		Map<String, Integer> result = new LinkedHashMap<String, Integer>();
-
-		for (int i = 0; i < table.getColumnModel().getColumnCount(); i++)
-		{
-			String realName = table.getColumnModel().getColumn(i).getHeaderValue().toString();
-			String underscopedName = realName.replace(' ', '_');
-			result.put(underscopedName, i);
-		}
-
-		return result;
 	}
 
 	private List<String> getIndexes(JTableFixture fixture, Map<String, Integer> fieldIndexes, ICondition valueCondition, ICondition colorCondition) throws RemoteException
