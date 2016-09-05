@@ -14,6 +14,8 @@ import com.exactprosystems.jf.api.error.app.FeatureNotSupportedException;
 import net.sourceforge.jnlp.Launcher;
 import net.sourceforge.jnlp.runtime.ApplicationInstance;
 import net.sourceforge.jnlp.runtime.JNLPRuntime;
+import sun.management.VMManagement;
+
 import org.apache.log4j.*;
 import org.fest.swing.core.BasicRobot;
 import org.fest.swing.core.ComponentMatcher;
@@ -25,6 +27,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
+import java.lang.management.ManagementFactory;
+import java.lang.management.RuntimeMXBean;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -74,16 +78,16 @@ public class SwingRemoteApplication extends RemoteApplication
 	}
 
 	@Override
-	protected void connectDerived(Map<String, String> args, MetricsCounter metricsCounter) throws Exception
+	protected int connectDerived(Map<String, String> args, MetricsCounter metricsCounter) throws Exception
 	{
 		String url = args.get(SwingAppFactory.urlName);
 
 		logger.debug("Connecting to web start application: url=" + url);
-
+		
 		try
 		{
 			// java -jar netx.jar -verbose -nosecurity  -Xtrustall -Xnofork URL
-
+			
 			JNLPRuntime.setTrustAll(true);
 			JNLPRuntime.setAllowRedirect(true);
 			JNLPRuntime.setDebug(true);
@@ -126,10 +130,12 @@ public class SwingRemoteApplication extends RemoteApplication
 		}
 
 		logger.debug("Application has been connected");
+		
+		return currentProcessId();
 	}
 
 	@Override
-	protected void runDerived(Map<String, String> args, MetricsCounter metricsCounter) throws Exception
+	protected int runDerived(Map<String, String> args, MetricsCounter metricsCounter) throws Exception
 	{
 		String mainClass = args.get(SwingAppFactory.mainClassName);
 		String jar = args.get(SwingAppFactory.jarName);
@@ -162,6 +168,7 @@ public class SwingRemoteApplication extends RemoteApplication
 
 		logger.debug("Application has been launched");
 
+		return currentProcessId();
 	}
 
 	@Override
@@ -764,6 +771,25 @@ public class SwingRemoteApplication extends RemoteApplication
 		}
 		return ControlKind.Any;
 	}
+
+	private int currentProcessId()
+	{
+		try
+		{
+			RuntimeMXBean runtime = ManagementFactory.getRuntimeMXBean();
+			java.lang.reflect.Field jvm = runtime.getClass().getDeclaredField("jvm");
+			jvm.setAccessible(true);
+			VMManagement mgmt = (VMManagement) jvm.get(runtime);
+			Method pidMethod = mgmt.getClass().getDeclaredMethod("getProcessId");
+			pidMethod.setAccessible(true);
+			return (Integer) pidMethod.invoke(mgmt);
+		} 
+		catch (Exception e)
+		{
+			return -1;
+		}
+	}
+
 
 	private static Map<ControlKind, Class<? extends Component>> classToControlKind = new LinkedHashMap<>();
 

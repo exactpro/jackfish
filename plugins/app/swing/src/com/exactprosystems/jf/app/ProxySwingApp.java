@@ -16,7 +16,7 @@ import com.exactprosystems.jf.api.app.ProxyApplication;
 public class ProxySwingApp extends ProxyApplication
 {
 	@Override
-	public boolean connect(int port, String jar, String work, String remoteClassName, Map<String, String> driverParameters, Map<String, String> parameters) throws Exception
+	public int connect(int port, String jar, String work, String remoteClassName, Map<String, String> driverParameters, Map<String, String> parameters) throws Exception
 	{
 		System.out.println("SwingApp.connect() port=" + port + "  jar=" + jar + " work=" + work + " class=" + remoteClassName + " params=" + Arrays.toString(parameters.values().toArray()));
 		tune(driverParameters, parameters);
@@ -24,7 +24,7 @@ public class ProxySwingApp extends ProxyApplication
 	}
 
 	@Override
-	public boolean start(int port, String jar, String work, String remoteClassName, Map<String, String> driverParameters, Map<String, String> parameters) throws Exception
+	public int start(int port, String jar, String work, String remoteClassName, Map<String, String> driverParameters, Map<String, String> parameters) throws Exception
 	{
 		System.out.println("SwingApp.start() port=" + port + "  jar=" + jar + " work=" + work + " class=" + remoteClassName + " params=" + Arrays.toString(parameters.values().toArray()));
 		tune(driverParameters, parameters);
