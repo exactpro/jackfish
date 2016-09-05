@@ -60,6 +60,7 @@ public class ElementInfoController implements Initializable, ContainingParent
 	public CustomFieldWithButton tfText;
 	public CustomFieldWithButton tfName;
 	public CustomFieldWithButton tfTooltip;
+	public CustomFieldWithButton tfColumns;
 	public CustomFieldWithButton tfAction;
 	public CustomFieldWithButton tfTitle;
 	public CustomFieldWithButton tfExpression;
@@ -112,7 +113,7 @@ public class ElementInfoController implements Initializable, ContainingParent
 			((BorderPane) this.pane).setCenter(BorderWrapper.wrap(this.mainGrid).color(Common.currentTheme().getReverseColor()).title("Element info").build());
 		});
 
-		Arrays.asList(tfID, tfUID, tfXpath, tfClass, tfText, tfName, tfTooltip, tfAction, tfTitle, tfExpression).forEach(tf -> {
+		Arrays.asList(tfID, tfUID, tfXpath, tfClass, tfText, tfName, tfTooltip, tfColumns, tfAction, tfTitle, tfExpression).forEach(tf -> {
 			tf.prefWidthProperty().bind(this.fieldGrid.getColumnConstraints().get(1).maxWidthProperty());
 			tf.maxWidthProperty().bind(this.fieldGrid.getColumnConstraints().get(1).maxWidthProperty());
 			tf.minWidthProperty().bind(this.fieldGrid.getColumnConstraints().get(1).minWidthProperty());
@@ -281,6 +282,7 @@ public class ElementInfoController implements Initializable, ContainingParent
 			this.tfTitle.setText(get(control, "", IControl::getTitle));
 			this.tfAction.setText(get(control, "", IControl::getAction));
 			this.tfTooltip.setText(get(control, "", IControl::getTooltip));
+			this.tfColumns.setText(get(control, "", IControl::getColumns));
 			this.tfExpression.setText(get(control, "", IControl::getExpression));
 			this.tfTimeout.setText(get(control, "0", IControl::getTimeout));
 
@@ -296,7 +298,7 @@ public class ElementInfoController implements Initializable, ContainingParent
 	//============================================================
 	private void setTextFieldListeners()
 	{
-		Arrays.stream(new CustomFieldWithButton[] {this.tfUID, this.tfXpath, this.tfClass, this.tfText, this.tfName, this.tfTooltip, this.tfAction, this.tfTitle, this.tfExpression})
+		Arrays.stream(new CustomFieldWithButton[] {this.tfUID, this.tfXpath, this.tfClass, this.tfText, this.tfName, this.tfTooltip, this.tfColumns, this.tfAction, this.tfTitle, this.tfExpression})
 				.forEach(tf -> {
 					tf.focusedProperty().addListener(textFocusListener(tf));
 					tf.setHandler(event -> {
@@ -329,7 +331,7 @@ public class ElementInfoController implements Initializable, ContainingParent
 		tryCatch(() -> {
 					Arrays.asList(
 							this.tfUID, this.tfClass,this.tfText,
-							this.tfName, this.tfTooltip, this.tfAction,
+							this.tfName, this.tfTooltip, this.tfColumns, this.tfAction,
 							this.tfTitle).forEach(tf -> tf.setDisable(value));
 					this.navigation.parameterSet(source.getId(), value);
 				}, "Error on changing " + source.getId()
