@@ -1100,12 +1100,20 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 			this.currentRobot.waitForIdle();
 			JTable table = component.targetCastedTo(JTable.class);
 
-			Map<String, Integer> fieldIndexes = getTableHeaders(table);
-
+			Map<String, Integer> fieldIndexes = null;
 			Map<String, String> ret = new LinkedHashMap<String, String>();
-			JTableFixture fixture = (((JTableFixture) (ComponentFixture<? extends Component>) component));
-			for (Entry<String, Integer> entry : fieldIndexes.entrySet())
+
+			if(columns == null)
 			{
+				fieldIndexes = getTableHeaders(table);
+			}
+			else
+			{
+				fieldIndexes = getTableHeadersFromColumn(columns);
+			}
+
+			JTableFixture fixture = (((JTableFixture) (ComponentFixture<? extends Component>) component));
+			for (Entry<String, Integer> entry : fieldIndexes.entrySet()) {
 				String name = entry.getKey();
 				Integer colIndex = entry.getValue();
 
@@ -1114,7 +1122,6 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 
 				ret.put(underscopedName, value);
 			}
-
 			return ret;
 		}
 		catch (Throwable e)
@@ -1124,6 +1131,20 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 			throw e;
 		}
 	}
+
+	private Map<String, Integer> getTableHeadersFromColumn(String[] columns) {
+		Map<String, Integer> result = new LinkedHashMap<String, Integer>();
+
+		for (int i = 0; i < columns.length; i++)
+		{
+			String realName = columns[i];
+			String underscopedName = realName.replace(' ', '_');
+			result.put(underscopedName, i);
+		}
+
+		return result;
+	}
+
 
 	@Override
 	public Map<String, ValueAndColor> getRowWithColor(ComponentFixture<Component> component, Locator additional, Locator header, boolean useNumericHeader, String[] columns, int i) throws Exception
