@@ -162,9 +162,9 @@ public class ApplicationPool implements IApplicationPool
 			String jarPath = MainRunner.makeDirWithSubstitutions(entry.get(Configuration.appJar)); 
 			String work = MainRunner.makeDirWithSubstitutions(entry.get(Configuration.appWorkDir));
 
-			application.connect(port, jarPath, work, remoteClassName, driverParameters, parameters);
+			int pid = application.connect(port, jarPath, work, remoteClassName, driverParameters, parameters);
 
-			return new AppConnection(application, id, port, applicationFactory.getDictionary());
+			return new AppConnection(application, id, port, applicationFactory.getDictionary(), pid);
 		}
 		catch (InterruptedException e)
 		{
@@ -205,8 +205,8 @@ public class ApplicationPool implements IApplicationPool
 			String jarPath = MainRunner.makeDirWithSubstitutions(entry.get(Configuration.appJar));
 			String work = MainRunner.makeDirWithSubstitutions(entry.get(Configuration.appWorkDir));
 			
-			application.start(port, jarPath, work, remoteClassName, driverParameters, parameters);
-			AppConnection connection = new AppConnection(application, id, port, applicationFactory.getDictionary());
+			int pid = application.start(port, jarPath, work, remoteClassName, driverParameters, parameters);
+			AppConnection connection = new AppConnection(application, id, port, applicationFactory.getDictionary(), pid);
 			this.connections.add(connection);
 			
 			return connection;

@@ -41,12 +41,12 @@ import java.util.Map;
 	)
 public class ApplicationConnectTo extends AbstractAction 
 {
-	public static final String idName 	= "AppId";
+	public static final String idName 			= "AppId";
 
 
 	@ActionFieldAttribute(name = idName, mandatory = true, description = "The application id." )
 	protected String 		id	= null;
-	
+
 	public ApplicationConnectTo()
 	{
 	}
