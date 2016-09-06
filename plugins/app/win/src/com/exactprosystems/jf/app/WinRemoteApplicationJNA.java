@@ -103,7 +103,7 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 				}
 			}
 
-			int pid = -1;
+			int pid = Integer.MIN_VALUE;
 			String pidStr = args.get(WinAppFactory.pidName);
 			if (!Str.IsNullOrEmpty(pidStr) && !pidStr.equalsIgnoreCase("null"))
 			{
@@ -574,7 +574,7 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 		{
 			for (AttributeKind kind : AttributeKind.values())
 			{
-				if (kind == AttributeKind.TYPE_NAME)
+				if (kind == AttributeKind.TYPE_NAME || kind == AttributeKind.ITEMS)
 				{
 					continue;
 				}

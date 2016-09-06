@@ -96,7 +96,7 @@ public class JnaDriverImpl
 	public int connect(String title, int height, int width, int pid) throws Exception
 	{
 		long start = System.currentTimeMillis();
-		int ret = this.driver.connect(title, height, width, pid); // TODO return process id
+		int ret = this.driver.connect(title, height, width, pid);
 		this.logger.info(String.format("connect(%s), time (ms) : %d", title, System.currentTimeMillis() - start));
 		checkCSharpTimes();
 		checkError();
@@ -107,12 +107,12 @@ public class JnaDriverImpl
 	public int run(String exec, String workDir, String param) throws Exception
 	{
 		long start = System.currentTimeMillis();
-		int ret = this.driver.run(exec, workDir, param); // TODO return process id
+		int ret = this.driver.run(exec, workDir, param);
 		this.logger.info(String.format("start(%s,%s,%s), time (ms) : %d", exec, workDir, param, System.currentTimeMillis() - start));
 		checkCSharpTimes();
 		checkError();
 		
-		return ret; 
+		return ret;
 	}
 
 	public void stop() throws Exception
