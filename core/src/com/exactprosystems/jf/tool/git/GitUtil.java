@@ -198,16 +198,6 @@ public class GitUtil
 		}
 	}
 
-	public static void main(String[] args) throws Exception
-	{
-		CredentialBean bean = new CredentialBean("AndrewBystrov", "Andrew17051993", "", "");
-//		gitPull(bean, new TextProgressMonitor());
-//		getConflicts(bean, "qq");
-//		qq.forEach(System.out::println);
-
-		String asd = "asd";
-	}
-
 	public static List<Chunk> getConflictsNew(CredentialBean bean, String fileName) throws Exception
 	{
 		try (Git git = git(bean))
