@@ -453,7 +453,9 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 			{
 				try
 				{
+					this.driver.clearCache();
 					List<UIProxyJNA> elements = this.findAll(null, locator);
+					this.logger.debug("Found : " + elements.size() + " elements on method wait");
 					if (toAppear)
 					{
 						if (elements.size() > 0)
