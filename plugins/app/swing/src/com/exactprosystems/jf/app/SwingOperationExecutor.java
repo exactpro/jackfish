@@ -1185,7 +1185,13 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 			String[][] res = new String[rows + 1][];
 			res[0] = new String[columnsCount];
 			Map<String, Integer> headers = getTableHeaders(table, columns);
-			headers.forEach((s, integer) -> res[0][integer] = (useNumericHeader) ? String.valueOf(integer) : s);
+			for (Entry<String, Integer> entry : headers.entrySet())
+			{
+				String columnCaption = entry.getKey();
+				Integer columnNumber = entry.getValue();
+
+				res[0][columnNumber] = (useNumericHeader) ? String.valueOf(columnNumber) : columnCaption;
+			}
 
 			JTableFixture fixture = (((JTableFixture) (ComponentFixture<? extends Component>) component));
 			for (int row = 0; row < rows; row++)
