@@ -23,10 +23,8 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.rmi.RemoteException;
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
 
 import static com.exactprosystems.jf.app.WinAppFactory.*;
 
@@ -116,12 +114,25 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 					throw new Exception("Parameter " + WinAppFactory.pidName + " must be from 0 to " + Integer.MAX_VALUE + " or empty/null");
 				}
 			}
+			ControlKind controlKind = null;
+			String controlKindStr = args.get(WinAppFactory.controlKindName);
+			if (!Str.IsNullOrEmpty(controlKindStr) && !controlKindStr.equals("null"))
+			{
+				try
+				{
+					controlKind = ControlKind.valueOf(controlKindStr);
+				}
+				catch (IllegalArgumentException e)
+				{
+					throw new Exception("Parameter " + WinAppFactory.controlKindName + " must be only of " + Arrays.toString(ControlKind.values()) + " or empty/null");
+				}
+			}
 
 			logger.info("##########################################################################################################");
-			logger.info(String.format("connectionDerived(%s, %d, %d)", title, height, width));
+			logger.info(String.format("connectionDerived(%s, %d, %d, %d, %s)", title, height, width, pid, controlKind));
 			this.driver = new JnaDriverImpl(this.logger);
 			this.operationExecutor = new WinOperationExecutorJNA(this.logger, this.driver);
-			return this.driver.connect(title, height, width, pid);
+			return this.driver.connect(title, height, width, pid, controlKind);
 		}
 		catch (RemoteException e)
 		{

@@ -36,7 +36,7 @@ public class JnaDriverImpl
 	public static void main(String[] args) throws Exception
 	{
 		JnaDriverImpl driver = new JnaDriverImpl(Logger.getLogger(JnaDriverImpl.class));
-		driver.connect("Form1", 100, 100, -1);
+		driver.connect("Form1", 100, 100, -1, null);
 		System.out.println(driver.title());
 		int l = 100 * 100;
 		int a[] = new int[l];
@@ -93,10 +93,10 @@ public class JnaDriverImpl
 	//endregion
 
 	//region application methods
-	public int connect(String title, int height, int width, int pid) throws Exception
+	public int connect(String title, int height, int width, int pid, ControlKind controlKind) throws Exception
 	{
 		long start = System.currentTimeMillis();
-		int ret = this.driver.connect(title, height, width, pid);
+		int ret = this.driver.connect(title, height, width, pid, controlKind == null ? Integer.MIN_VALUE : controlKind.ordinal());
 		this.logger.info(String.format("connect(%s), time (ms) : %d", title, System.currentTimeMillis() - start));
 		checkCSharpTimes();
 		checkError();
