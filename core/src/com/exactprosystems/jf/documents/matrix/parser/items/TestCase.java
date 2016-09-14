@@ -22,6 +22,8 @@ import com.exactprosystems.jf.documents.matrix.parser.ReturnAndResult;
 import com.exactprosystems.jf.documents.matrix.parser.SearchHelper;
 import com.exactprosystems.jf.documents.matrix.parser.Tokens;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
+import com.exactprosystems.jf.functions.RowTable;
+import com.exactprosystems.jf.functions.Table;
 
 import java.util.HashSet;
 import java.util.List;
@@ -153,20 +155,45 @@ public final class TestCase extends MatrixItem
 	@Override
 	protected ReturnAndResult executeItSelf(Context context, IMatrixListener listener, AbstractEvaluator evaluator, ReportBuilder report, Parameters parameters)
 	{
-		this.locals = evaluator.createLocals();
-
-		ReturnAndResult ret = executeChildren(context, listener, evaluator, report, new Class<?>[] { OnError.class }, this.locals);
-		Result result = ret.getResult();
-		
-		if (result == Result.Failed)
+		ReturnAndResult ret = null;
+		Table table = context.getTable();
+		int index = -1;
+		try
 		{
-			MatrixItem branchOnError = super.find(false, OnError.class, null);
-			if (branchOnError != null && branchOnError instanceof OnError)
+			if (table != null)
 			{
-				((OnError)branchOnError).setError(ret.getError());
-				
-				ret = branchOnError.execute(context, listener, evaluator, report);
-				result = ret.getResult();
+				index = table.size();
+				table.addValue(index, new Object[] {});
+				table.changeValue(Context.numberColumn, index, this.getNumber());
+				table.changeValue(Context.nameColumn, 	index, this.getName());
+			}
+			
+			this.locals = evaluator.createLocals();
+
+			ret = executeChildren(context, listener, evaluator, report, new Class<?>[] { OnError.class }, this.locals);
+			Result result = ret.getResult();
+			
+			if (result == Result.Failed)
+			{
+				MatrixItem branchOnError = super.find(false, OnError.class, null);
+				if (branchOnError != null && branchOnError instanceof OnError)
+				{
+					((OnError)branchOnError).setError(ret.getError());
+					
+					ret = branchOnError.execute(context, listener, evaluator, report);
+					result = ret.getResult();
+				}
+			}
+			if (index >= 0)
+			{
+				table.changeValue(Context.resultColumn, index, result);
+			}
+		} 
+		catch (Exception e)
+		{
+			if (index >= 0)
+			{
+				table.changeValue(Context.resultColumn, 	index, Result.Failed);
 			}
 		}
 		return ret;

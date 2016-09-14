@@ -40,6 +40,11 @@ public class TableSelect extends AbstractAction
 	}
 	
 	@Override
+	public void initDefaultValues() 
+	{
+	}
+
+	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
 		Parameters extra = parameters.select(TypeMandatory.Extra);
@@ -47,12 +52,6 @@ public class TableSelect extends AbstractAction
 		Table newTable = this.table.select(conditions);
 		
 		super.setResult(newTable);
-	}
-
-	@Override
-	public void initDefaultValues() {
-		// TODO Auto-generated method stub
-		
 	}
 }
 

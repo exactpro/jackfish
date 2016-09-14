@@ -93,7 +93,21 @@ public final class OnError extends MatrixItem
 		{
 			evaluator.getLocals().getVars().put(Parser.error, 	this.matrixError == null ? null : this.matrixError.Message);
 			evaluator.getLocals().getVars().put(Parser.err, 	this.matrixError == null ? new MatrixError("Unknown", ErrorKind.OTHER, this) : this.matrixError);
-			return super.executeItSelf(context, listener, evaluator, report, parameters);
+			ReturnAndResult ret = super.executeItSelf(context, listener, evaluator, report, parameters);
+			Result result = ret.getResult();
+					
+			if (result == Result.Failed)
+			{
+				MatrixItem branchOnError = super.find(false, OnError.class, null);
+				if (branchOnError != null && branchOnError instanceof OnError)
+				{
+					((OnError)branchOnError).setError(ret.getError());
+					
+					ret = branchOnError.execute(context, listener, evaluator, report);
+				}
+			}
+
+			return ret;
 		}
 		catch (Exception e)
 		{

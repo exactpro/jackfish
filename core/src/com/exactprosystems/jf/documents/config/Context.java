@@ -18,6 +18,7 @@ import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixRoot;
 import com.exactprosystems.jf.documents.matrix.parser.items.SubCase;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
+import com.exactprosystems.jf.functions.Table;
 
 import org.apache.log4j.Logger;
 
@@ -28,12 +29,21 @@ import java.util.Map.Entry;
 
 public class Context implements IContext, AutoCloseable, Cloneable
 {
+	public static final String numberColumn 	= "Number";
+	public static final String nameColumn 		= "Name";
+	public static final String resultColumn 	= "Result";
+	public static final String reasonColumn 	= "Reason";
+	public static final String errorItemColumn 	= "ErrorItem";
+	
 	public Context(DocumentFactory factory, IMatrixListener matrixListener, PrintStream out) throws Exception
 	{
 		this.factory 		= factory;
 		this.matrixListener = matrixListener;
 		this.outStream 		= out;
 		this.evaluator 		= factory.createEvaluator();
+
+		String headers[] = new String[] { numberColumn, nameColumn, resultColumn, reasonColumn, errorItemColumn };
+		this.resultTable = new Table(headers, this.evaluator);
 	}
 
 	@Override
@@ -54,6 +64,7 @@ public class Context implements IContext, AutoCloseable, Cloneable
 			clone.factory			= this.factory;
 			clone.evaluator 		= this.factory.createEvaluator();
 			clone.libs 				= new HashMap<String, Matrix>();
+			clone.resultTable		= this.resultTable.clone();
 
 			return clone;
 		}
@@ -95,6 +106,11 @@ public class Context implements IContext, AutoCloseable, Cloneable
 		return this.matrixListener;
 	}
 
+	public Table getTable()
+	{
+		return this.resultTable;
+	}
+	
 	@Override
 	public void close() throws Exception
 	{
@@ -181,6 +197,7 @@ public class Context implements IContext, AutoCloseable, Cloneable
 	private PrintStream				outStream;
 	private IMatrixListener			matrixListener;
 	private AbstractEvaluator		evaluator;
+	private Table 					resultTable;
 
 	private Map<String, Matrix>		libs 			= new HashMap<>();
 

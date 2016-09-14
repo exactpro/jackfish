@@ -15,6 +15,7 @@ import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.Matrix;
 import com.exactprosystems.jf.documents.matrix.parser.Result;
+import com.exactprosystems.jf.functions.Table;
 
 import org.apache.log4j.Logger;
 
@@ -26,7 +27,8 @@ import java.util.Date;
 public class MatrixRunner implements IMatrixRunner, AutoCloseable
 {
 	public static final String parameterName = "parameter";
-	
+
+
     public static enum State
     {
     	Error,
@@ -128,6 +130,11 @@ public class MatrixRunner implements IMatrixRunner, AutoCloseable
 		return this.startTime;
 	}
 
+	public Table getTable()
+	{
+		return this.context.getTable();
+	}
+	
 	@Override
 	public String getReportName()
 	{
@@ -163,6 +170,10 @@ public class MatrixRunner implements IMatrixRunner, AutoCloseable
 			changeState(State.Running);
 			this.matrix.resume();
 			return;
+		}
+		else
+		{
+			this.context.getTable().clear();
 		}
 		
 		Configuration configuration = this.context.getConfiguration();

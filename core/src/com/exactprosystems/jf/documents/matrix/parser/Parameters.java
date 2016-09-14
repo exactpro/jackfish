@@ -210,6 +210,16 @@ import java.util.stream.Collectors;
 		return this.parameters.get(index);
 	}
 	
+	public Parameter getByName(String name)
+	{
+		Optional<Parameter> first = this.parameters.stream().filter(param -> param.getName() != null && param.getName().equals(name)).findFirst();
+		if (first.isPresent())
+		{
+			return first.get();
+		}
+		return null;
+	}
+
 	public int getIndex(Parameter parameter)
 	{
 		int count = 0;
