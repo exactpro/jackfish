@@ -10,6 +10,7 @@ package com.exactprosystems.jf.api.client;
 
 public interface ICondition
 {
+	public String serialize();
 	public String getName();
 	public boolean isMatched(String otherName, Object otherValue);
 	public boolean isMatched2(String otherName, Object otherValue1, Object otherValue2);

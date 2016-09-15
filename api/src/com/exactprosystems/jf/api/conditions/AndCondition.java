@@ -8,48 +8,56 @@
 
 package com.exactprosystems.jf.api.conditions;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
 public class AndCondition extends Condition
 {
 	private static final long serialVersionUID = -7043230215754395460L;
 
-	public AndCondition(Condition cond1, Condition cond2) throws Exception
+	public AndCondition(Condition ... cond) throws Exception
 	{
 		super(null);
 		
-		this.cond1 = cond1;
-		this.cond2 = cond2;
+		this.cond = cond == null ? Collections.emptyList() : Arrays.asList(cond);
 	}
 
 	@Override
+	public String serialize()
+	{
+		return start + simpleName() + separator + getName() + separator + this.cond.stream().map(s -> s.serialize()).reduce((s1,s2) -> s1 + separator + s2).orElse("") + finish; 
+	}
+	
+	@Override
 	public String toString()
 	{
-		return this.cond1.toString() + " AND " + this.cond2;
+		return this.cond.stream().map(s -> s.toString()).reduce((s1,s2) -> s1 + " AND " + s2).orElse("");
 	}
 	
 	@Override
 	public String getName()
 	{
-		return this.cond1.getName();
+		return this.cond.stream().map(s -> s.getName()).findFirst().orElse("");
 	}
 	
 	@Override
 	public boolean isMatched(String otherName, Object otherValue)
 	{
-		return this.cond1.isMatched(otherName, otherValue) && this.cond2.isMatched(otherName, otherValue);
+		return this.cond.stream().map(c -> c.isMatched(otherName, otherValue)).reduce((s1, s2) -> s1 && s2).orElse(false);
 	}
 	
     @Override
     public boolean isMatched2(String otherName, Object otherValue1, Object otherValue2)
     {
-        return this.cond1.isMatched2(otherName, otherValue1, otherValue2) && this.cond2.isMatched2(otherName, otherValue1,otherValue2);
+		return this.cond.stream().map(c -> c.isMatched2(otherName, otherValue1, otherValue2)).reduce((s1, s2) -> s1 && s2).orElse(false);
     }
 
     @Override
     public String explanation(String name, Object actualValue)
     {
-    	return "(" + cond1.explanation(name, actualValue) + ") & (" + cond2.explanation(name, actualValue) + ")";
+		return this.cond.stream().map(s -> "(" + s.explanation(name, actualValue) + ")").reduce((s1,s2) -> s1 + " & " + s2).orElse("");
     }
     
-	private Condition cond1;
-	private Condition cond2;
+	private List<Condition> cond;
 }

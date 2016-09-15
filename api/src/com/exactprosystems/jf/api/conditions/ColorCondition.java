@@ -31,6 +31,12 @@ public class ColorCondition extends Condition implements Serializable
 	}
 
 	@Override
+	public String serialize()
+	{
+		return start + simpleName() + separator + getName() + separator + this.value + separator + this.foreground + finish;
+	}
+	
+	@Override
 	public String toString()
 	{
 		return ColorCondition.class.getSimpleName() + " [name=" + getName() + ", value=" + value  + ", foreground=" + foreground + "]";

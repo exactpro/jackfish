@@ -19,6 +19,10 @@ import java.util.Map.Entry;
 public abstract class Condition implements ICondition, Serializable
 {
 	private static final long	serialVersionUID	= -7581472488041624617L;
+	
+	public static final char 	separator			= '\001';
+	public static final char 	start				= '[';
+	public static final char 	finish				= ']';
 
 	public 	static Condition[] convertToCondition(Map<String, Object> expected) throws Exception
 	{
@@ -62,14 +66,14 @@ public abstract class Condition implements ICondition, Serializable
 		return new StringCondition(name, "" + expectedValue);
 	}
 	
-	public static AndCondition and(Condition cond1, Condition cond2) throws Exception
+	public static AndCondition and(Condition ... cond) throws Exception
 	{
-		return new AndCondition(cond1, cond2);
+		return new AndCondition(cond);
 	}
 	
-	public static OrCondition or(Condition cond1, Condition cond2) throws Exception
+	public static OrCondition or(Condition ... cond) throws Exception
 	{
-		return new OrCondition(cond1, cond2);
+		return new OrCondition(cond);
 	}
 	
 	public static NotCondition not(Condition cond)
@@ -81,6 +85,9 @@ public abstract class Condition implements ICondition, Serializable
 	{
 		this.name = name;
 	}
+	
+	
+	
 	
 	@Override
 	public String getName()
@@ -96,6 +103,11 @@ public abstract class Condition implements ICondition, Serializable
 		}
 
 		return this.name.equals(otherName);
+	}
+	
+	protected String simpleName()
+	{
+		return getClass().getSimpleName();
 	}
 	
 	protected static boolean areStringEqual(String s1, String s2)

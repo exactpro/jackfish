@@ -30,6 +30,12 @@ public class NumberCondition extends RelativeCondition  implements Serializable
 	}
 
 	@Override
+	public String serialize()
+	{
+		return start + simpleName() + separator + getName() + separator + this.relation.getSign() + separator + this.value + finish;
+	}
+
+	@Override
 	public String toString()
 	{
 		return this.getClass().getSimpleName() + " [name=" + getName() + " " + this.relation.getSign() + " value=" + value + "]";

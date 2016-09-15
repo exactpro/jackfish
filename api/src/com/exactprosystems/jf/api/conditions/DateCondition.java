@@ -43,6 +43,12 @@ public class DateCondition extends RelativeCondition  implements Serializable
 	}
 
 	@Override
+	public String serialize()
+	{
+		return start + simpleName() + separator + getName() + separator + this.relation.getSign() + separator + this.value + separator + this.precision + finish;
+	}
+
+	@Override
 	public String toString()
 	{
 		return DateCondition.class.getSimpleName() + " [name=" + getName() + " " + this.relation.getSign() + " value=" + DateTime.strDateTime(value) + "]";

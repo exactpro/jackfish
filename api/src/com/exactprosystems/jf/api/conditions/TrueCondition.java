@@ -26,6 +26,12 @@ public class TrueCondition extends Condition  implements Serializable
 	}
 
 	@Override
+	public String serialize()
+	{
+		return start + simpleName() + separator + getName() + finish;
+	}
+
+	@Override
 	public String toString()
 	{
 		return getClass().getSimpleName() + " [name=" + getName() + "]";

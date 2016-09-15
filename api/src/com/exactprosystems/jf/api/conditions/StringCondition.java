@@ -28,6 +28,12 @@ public class StringCondition extends Condition  implements Serializable
 	}
 
 	@Override
+	public String serialize()
+	{
+		return start + simpleName() + separator + getName() + separator + this.value + separator + this.ignoreCase + finish;
+	}
+
+	@Override
 	public String toString()
 	{
 		return StringCondition.class.getSimpleName() + " [name=" + getName() + ", value=" + value + ", ignoreCase=" + ignoreCase + "]";

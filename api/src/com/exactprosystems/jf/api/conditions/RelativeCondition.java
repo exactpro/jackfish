@@ -20,7 +20,7 @@ public abstract class RelativeCondition extends Condition  implements Serializab
 		super(name);
 		this.relation = Relations.value(relationStr);
 	}
-
+	
 	@Override
 	public boolean isMatched(String otherName, Object otherValue)
 	{

@@ -15,14 +15,18 @@ public class RegexpCondition extends Condition implements Serializable
 {
 	private static final long serialVersionUID = -1292265002640952551L;
 
-	private String pattern;
-
 	public RegexpCondition(String name, String pattern)
 	{
 		super(name);
 		this.pattern = pattern;
 	}
 
+	@Override
+	public String serialize()
+	{
+		return start + simpleName() + separator + getName() + separator + this.pattern + finish;
+	}
+	
 	@Override
 	public boolean isMatched(String otherName, Object otherValue)
 	{
@@ -51,4 +55,6 @@ public class RegexpCondition extends Condition implements Serializable
 	{
 		return RegexpCondition.class.getSimpleName() + "[name="+getName()+", pattern=" +this.pattern+"]";
 	}
+
+	private String pattern;
 }

@@ -21,6 +21,12 @@ public class EmptyCondition extends Condition  implements Serializable
 	}
 
 	@Override
+	public String serialize()
+	{
+		return start + simpleName() + separator + getName() + finish;
+	}
+	
+	@Override
 	public String toString()
 	{
 		return EmptyCondition.class.getSimpleName() + " [name=" + getName() + "]";
