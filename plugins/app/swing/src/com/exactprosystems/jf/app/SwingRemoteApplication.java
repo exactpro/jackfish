@@ -14,7 +14,6 @@ import com.exactprosystems.jf.api.error.app.FeatureNotSupportedException;
 import net.sourceforge.jnlp.Launcher;
 import net.sourceforge.jnlp.runtime.ApplicationInstance;
 import net.sourceforge.jnlp.runtime.JNLPRuntime;
-import sun.management.VMManagement;
 
 import org.apache.log4j.*;
 import org.fest.swing.core.BasicRobot;
@@ -779,7 +778,7 @@ public class SwingRemoteApplication extends RemoteApplication
 			RuntimeMXBean runtime = ManagementFactory.getRuntimeMXBean();
 			java.lang.reflect.Field jvm = runtime.getClass().getDeclaredField("jvm");
 			jvm.setAccessible(true);
-			VMManagement mgmt = (VMManagement) jvm.get(runtime);
+			Object mgmt = jvm.get(runtime); // recheck it
 			Method pidMethod = mgmt.getClass().getDeclaredMethod("getProcessId");
 			pidMethod.setAccessible(true);
 			return (Integer) pidMethod.invoke(mgmt);
