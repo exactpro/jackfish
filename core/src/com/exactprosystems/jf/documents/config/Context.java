@@ -29,11 +29,14 @@ import java.util.Map.Entry;
 
 public class Context implements IContext, AutoCloseable, Cloneable
 {
-	public static final String numberColumn 	= "Number";
-	public static final String nameColumn 		= "Name";
-	public static final String resultColumn 	= "Result";
-	public static final String reasonColumn 	= "Reason";
-	public static final String errorItemColumn 	= "ErrorItem";
+	public static final String matrixColumn 			= "Matrix";
+	public static final String testCaseNumberColumn 	= "TestCaseNumber";
+	public static final String testCaseColumn 			= "TestCase";
+	public static final String resultColumn 			= "Result";
+	public static final String errorPlaceColumn 		= "ErrorPlace";
+	public static final String errorPlacePathColumn 	= "ErrorPlacePath";
+	public static final String errorKindColumn 			= "ErrorKind";
+	public static final String errorMessageColumn 		= "ErrorMessage";
 	
 	public Context(DocumentFactory factory, IMatrixListener matrixListener, PrintStream out) throws Exception
 	{
@@ -42,8 +45,7 @@ public class Context implements IContext, AutoCloseable, Cloneable
 		this.outStream 		= out;
 		this.evaluator 		= factory.createEvaluator();
 
-		String headers[] = new String[] { numberColumn, nameColumn, resultColumn, reasonColumn, errorItemColumn };
-		this.resultTable = new Table(headers, this.evaluator);
+		this.resultTable 	= createResultTable();
 	}
 
 	@Override
@@ -190,6 +192,16 @@ public class Context implements IContext, AutoCloseable, Cloneable
 		}
 
 		return res;
+	}
+
+	private Table createResultTable()
+	{
+		String headers[] = new String[] 
+				{ 
+					matrixColumn, testCaseNumberColumn, testCaseColumn, resultColumn, 
+					errorPlaceColumn, errorPlacePathColumn, errorKindColumn, errorMessageColumn
+				};
+		return new Table(headers, this.evaluator);
 	}
 
 	

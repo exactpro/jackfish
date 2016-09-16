@@ -9,6 +9,7 @@
 package com.exactprosystems.jf.documents.matrix.parser.items;
 
 import com.csvreader.CsvWriter;
+import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.evaluator.Variables;
 import com.exactprosystems.jf.common.report.ReportBuilder;
@@ -157,15 +158,19 @@ public final class TestCase extends MatrixItem
 	{
 		ReturnAndResult ret = null;
 		Table table = context.getTable();
-		int index = -1;
+		RowTable row = new RowTable();
+		
 		try
 		{
 			if (table != null)
 			{
-				index = table.size();
-				table.addValue(index, new Object[] {});
-				table.changeValue(Context.numberColumn, index, this.getNumber());
-				table.changeValue(Context.nameColumn, 	index, this.getName());
+//				matrixColumn, testCaseNumberColumn, testCaseColumn, resultColumn, 
+//				errorPlaceColumn, errorPlacePathColumn, errorKindColumn, errorMessageColumn
+//				
+//				table.addValue(index, new Object[] {});
+//				table.changeValue(Context.matrixColumn, index, this.getNumber());
+//				table.changeValue(Context.numberColumn, index, this.getNumber());
+//				table.changeValue(Context.nameColumn, 	index, this.getName());
 			}
 			
 			this.locals = evaluator.createLocals();
@@ -184,16 +189,25 @@ public final class TestCase extends MatrixItem
 					result = ret.getResult();
 				}
 			}
-			if (index >= 0)
+			if (table != null)
 			{
-				table.changeValue(Context.resultColumn, index, result);
+//				table.changeValue(Context.resultColumn, index, result);
 			}
 		} 
 		catch (Exception e)
 		{
-			if (index >= 0)
+//			table.changeValue(Context.resultColumn, 	index, Result.Failed);
+//
+//			Context.matrixColumn, Context.testCaseNumberColumn, Context.testCaseColumn, Context.resultColumn, 
+//			Context.errorPlaceColumn, Context.errorPlacePathColumn, Context.errorKindColumn, Context.errorMessageColumn
+//
+//			row.put(key, value);
+		}
+		finally
+		{
+			if (table != null)
 			{
-				table.changeValue(Context.resultColumn, 	index, Result.Failed);
+				table.add(row);
 			}
 		}
 		return ret;
