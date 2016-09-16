@@ -21,7 +21,7 @@ public class NotCondition extends Condition
 	@Override
 	public String serialize()
 	{
-		return start + simpleName() + separator + getName() + separator + this.cond.serialize() + finish;
+		return "!" + start + getName() + separator + this.cond.serialize() + finish;
 	}
 	
 	@Override

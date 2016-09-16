@@ -28,7 +28,7 @@ public class TrueCondition extends Condition  implements Serializable
 	@Override
 	public String serialize()
 	{
-		return start + simpleName() + separator + getName() + finish;
+		return "E" + start + getName() + finish;
 	}
 
 	@Override

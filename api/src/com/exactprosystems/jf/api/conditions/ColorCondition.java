@@ -33,7 +33,7 @@ public class ColorCondition extends Condition implements Serializable
 	@Override
 	public String serialize()
 	{
-		return start + simpleName() + separator + getName() + separator + this.value + separator + this.foreground + finish;
+		return "C" + start + getName() + separator + this.value + separator + this.foreground + finish;
 	}
 	
 	@Override

@@ -24,7 +24,7 @@ public class RegexpCondition extends Condition implements Serializable
 	@Override
 	public String serialize()
 	{
-		return start + simpleName() + separator + getName() + separator + this.pattern + finish;
+		return "R" + start + getName() + separator + this.pattern + finish;
 	}
 	
 	@Override

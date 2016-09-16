@@ -26,7 +26,7 @@ public class AndCondition extends Condition
 	@Override
 	public String serialize()
 	{
-		return start + simpleName() + separator + getName() + separator + this.cond.stream().map(s -> s.serialize()).reduce((s1,s2) -> s1 + separator + s2).orElse("") + finish; 
+		return "&" + start + this.cond.stream().map(s -> s.serialize()).reduce((s1,s2) -> s1 + separator + s2).orElse("") + finish; 
 	}
 	
 	@Override

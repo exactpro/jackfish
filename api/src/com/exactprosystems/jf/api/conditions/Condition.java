@@ -21,8 +21,8 @@ public abstract class Condition implements ICondition, Serializable
 	private static final long	serialVersionUID	= -7581472488041624617L;
 	
 	public static final char 	separator			= '\001';
-	public static final char 	start				= '[';
-	public static final char 	finish				= ']';
+	public static final char 	start				= '{';
+	public static final char 	finish				= '}';
 
 	public 	static Condition[] convertToCondition(Map<String, Object> expected) throws Exception
 	{
@@ -103,11 +103,6 @@ public abstract class Condition implements ICondition, Serializable
 		}
 
 		return this.name.equals(otherName);
-	}
-	
-	protected String simpleName()
-	{
-		return getClass().getSimpleName();
 	}
 	
 	protected static boolean areStringEqual(String s1, String s2)

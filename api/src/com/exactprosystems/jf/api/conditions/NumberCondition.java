@@ -32,7 +32,7 @@ public class NumberCondition extends RelativeCondition  implements Serializable
 	@Override
 	public String serialize()
 	{
-		return start + simpleName() + separator + getName() + separator + this.relation.getSign() + separator + this.value + finish;
+		return "N" + start + getName() + separator + this.relation.getSign() + separator + this.value + finish;
 	}
 
 	@Override
