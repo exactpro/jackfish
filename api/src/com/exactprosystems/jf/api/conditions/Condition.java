@@ -20,7 +20,7 @@ public abstract class Condition implements ICondition, Serializable
 {
 	private static final long	serialVersionUID	= -7581472488041624617L;
 	
-	public static final char 	separator			= '\001';
+	public static final char 	separator			= '|';
 	public static final char 	start				= '{';
 	public static final char 	finish				= '}';
 
