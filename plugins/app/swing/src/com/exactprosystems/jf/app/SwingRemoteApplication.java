@@ -9,8 +9,10 @@
 package com.exactprosystems.jf.app;
 
 import com.exactprosystems.jf.api.app.*;
+import com.exactprosystems.jf.api.common.ProcessTools;
 import com.exactprosystems.jf.api.common.SerializablePair;
 import com.exactprosystems.jf.api.error.app.FeatureNotSupportedException;
+
 import net.sourceforge.jnlp.Launcher;
 import net.sourceforge.jnlp.runtime.ApplicationInstance;
 import net.sourceforge.jnlp.runtime.JNLPRuntime;
@@ -23,6 +25,7 @@ import org.fest.swing.fixture.ComponentFixture;
 import org.w3c.dom.Document;
 
 import javax.swing.*;
+
 import java.awt.*;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
@@ -130,7 +133,7 @@ public class SwingRemoteApplication extends RemoteApplication
 
 		logger.debug("Application has been connected");
 		
-		return currentProcessId();
+		return ProcessTools.currentProcessId();
 	}
 
 	@Override
@@ -167,7 +170,7 @@ public class SwingRemoteApplication extends RemoteApplication
 
 		logger.debug("Application has been launched");
 
-		return currentProcessId();
+		return ProcessTools.currentProcessId();
 	}
 
 	@Override
@@ -770,25 +773,6 @@ public class SwingRemoteApplication extends RemoteApplication
 		}
 		return ControlKind.Any;
 	}
-
-	private int currentProcessId()
-	{
-		try
-		{
-			RuntimeMXBean runtime = ManagementFactory.getRuntimeMXBean();
-			java.lang.reflect.Field jvm = runtime.getClass().getDeclaredField("jvm");
-			jvm.setAccessible(true);
-			Object mgmt = jvm.get(runtime); // recheck it
-			Method pidMethod = mgmt.getClass().getDeclaredMethod("getProcessId");
-			pidMethod.setAccessible(true);
-			return (Integer) pidMethod.invoke(mgmt);
-		} 
-		catch (Exception e)
-		{
-			return -1;
-		}
-	}
-
 
 	private static Map<ControlKind, Class<? extends Component>> classToControlKind = new LinkedHashMap<>();
 
