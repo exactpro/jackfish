@@ -10,6 +10,7 @@ package com.exactprosystems.jf.app;
 import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.client.ICondition;
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.api.conditions.Condition;
 import com.exactprosystems.jf.api.conditions.StringCondition;
 import com.exactprosystems.jf.api.error.app.ElementNotFoundException;
 import com.exactprosystems.jf.api.error.app.FeatureNotSupportedException;
@@ -704,11 +705,7 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 	{
 		try
 		{
-			if (valueCondition != null && !(valueCondition instanceof StringCondition))
-			{
-				throw new WrongParameterException("In win plugin value condition must be StringCondition");
-			}
-			String result = this.driver.getRowByConditions(component, useNumericHeader, ((StringCondition) valueCondition));
+			String result = this.driver.getRowByConditions(component, useNumericHeader, (Condition)valueCondition);
 			String[] split = result.split(SEPARATOR_ROWS);
 			String headerRow = split[0];
 			String row = split[1];

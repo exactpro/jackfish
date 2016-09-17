@@ -60,7 +60,7 @@ public class StringCondition extends Condition  implements Serializable
 	@Override
 	public boolean isMatched2(String otherName, Object otherValue1, Object otherValue2)
 	{
-		return false;
+    	return isMatched(otherName, otherValue1);
 	}
 
 	@Override

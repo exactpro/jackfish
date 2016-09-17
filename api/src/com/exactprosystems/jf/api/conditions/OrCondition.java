@@ -50,7 +50,7 @@ public class OrCondition extends Condition
     @Override
     public boolean isMatched2(String otherName, Object otherValue1, Object otherValue2)
     {
-		return this.cond.stream().map(c -> c.isMatched2(otherName, otherValue1, otherValue2)).reduce((s1, s2) -> s1 || s2).orElse(true);
+    	return isMatched(otherName, otherValue1);
     }
 
     @Override

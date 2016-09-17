@@ -2,6 +2,7 @@ package com.exactprosystems.jf.app;
 
 import com.exactprosystems.jf.api.app.ControlKind;
 import com.exactprosystems.jf.api.app.MouseAction;
+import com.exactprosystems.jf.api.conditions.Condition;
 import com.exactprosystems.jf.api.conditions.StringCondition;
 import com.exactprosystems.jf.api.error.app.ElementNotFoundException;
 import com.exactprosystems.jf.api.error.app.FeatureNotSupportedException;
@@ -325,10 +326,10 @@ public class JnaDriverImpl
 		checkError();
 	}
 
-	public String getRowByConditions(UIProxyJNA table, boolean useNumericHeader, StringCondition condition) throws Exception
+	public String getRowByConditions(UIProxyJNA table, boolean useNumericHeader, Condition condition) throws Exception
 	{
 		long start = System.currentTimeMillis();
-		String stringCondition = conditionToString(condition);
+		String stringCondition = condition.serialize();
 		String res = this.driver.getRowByCondition(table.getIdString(), useNumericHeader, stringCondition);
 		this.logger.info(String.format("getRowByConditions(%s,%b,%s) : %s, time(ms) : %d", table, useNumericHeader, stringCondition, res, 
 				System.currentTimeMillis() - start));
@@ -337,10 +338,10 @@ public class JnaDriverImpl
 		return res;
 	}
 
-	public String getRowIndexes(UIProxyJNA table, boolean useNumericHeader, StringCondition condition) throws Exception
+	public String getRowIndexes(UIProxyJNA table, boolean useNumericHeader, Condition condition) throws Exception
 	{
 		long start = System.currentTimeMillis();
-		String stringCondition = conditionToString(condition);
+		String stringCondition = condition.serialize();
 		String res = this.driver.getRowIndexes(table.getIdString(), useNumericHeader, stringCondition);
 		this.logger.info(String.format("getRowIndexes(%s,%b,%s) : %s, time(ms) : %d", table, useNumericHeader, stringCondition, res, 
 				System.currentTimeMillis() - start));
@@ -380,11 +381,11 @@ public class JnaDriverImpl
 		return res;
 	}
 
-	private String conditionToString(StringCondition condition)
-	{
-		return condition == null ? "" : condition.getName() + "," + condition.getValue() + "," + condition.isIgnoreCase();
-	}
-
+//	private String conditionToString(StringCondition condition)
+//	{
+//		return condition == null ? "" : condition.getName() + "," + condition.getValue() + "," + condition.isIgnoreCase();
+//	}
+//
 	private void checkError() throws RemoteException
 	{
 		String error = this.driver.lastError();
