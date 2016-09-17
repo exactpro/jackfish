@@ -245,6 +245,7 @@ public class Configuration extends AbstractDocument
 		this.databases 					= new DataBasePool(factory);
 
 		this.libs 						= new HashMap<String, Matrix>();
+		this.libActuality 				= new HashMap<String, Date>();
 		this.systemVars					= new HashSet<SystemVars>();
 	}
 
@@ -418,7 +419,6 @@ public class Configuration extends AbstractDocument
 	protected void refreshLibs()
 	{
 		IMatrixListener checker = new MatrixListener();
-		this.libs.clear();
 		if (this.librariesValue == null)
 		{
 			return;
@@ -433,6 +433,14 @@ public class Configuration extends AbstractDocument
 				
 				for (File libFile : libFiles)
 				{
+					Date currentTime  = new Date(libFile.lastModified());
+					Date previousTime = this.libActuality.put(libFile.getAbsolutePath(), currentTime);
+					
+					if (previousTime != null && !currentTime.after(previousTime))
+					{
+						continue;
+					}
+					
 					try (Reader reader = new FileReader(libFile))
 					{
 						Matrix matrix = getFactory().createLibrary(libFile.getAbsolutePath()); 
@@ -902,6 +910,7 @@ public class Configuration extends AbstractDocument
 	protected boolean 				changed;
 	protected ReportFactory			reportFactoryObj;
 	protected Map<String, Matrix>	libs;
+	protected Map<String, Date>		libActuality;
 	protected Map<String, Object>	globals; 
 	protected Set<SystemVars>		systemVars; 
 

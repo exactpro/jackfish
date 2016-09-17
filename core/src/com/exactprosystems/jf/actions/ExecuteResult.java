@@ -10,20 +10,24 @@ package com.exactprosystems.jf.actions;
 
 public class ExecuteResult
 {
-	public ExecuteResult(String text, int exitCode)
+	public ExecuteResult(String text, int exitCode, int pid)
 	{
 		this.Text = text;
 		this.ExitCode = exitCode;
+		this.PID = pid;
 	}
 	
 	@Override
 	public String toString()
 	{
-		return "ExitCode: " + this.ExitCode + "\n"
-			+ "Text: " + this.Text;
+		return "PID:      " + this.PID + "\n"
+			+  "ExitCode: " + this.ExitCode + "\n"
+			+  "Text:     " + this.Text;
 	}
 	
 	public String Text;
 
 	public int ExitCode;
+	
+	public int PID;
 }

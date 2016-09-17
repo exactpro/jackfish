@@ -14,6 +14,7 @@ import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
 import com.exactprosystems.jf.actions.ExecuteResult;
 import com.exactprosystems.jf.actions.ReadableValue;
+import com.exactprosystems.jf.api.common.ProcessTools;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
@@ -85,23 +86,24 @@ public class Execute extends AbstractAction
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
-		Process p = null;
+		Process process = null;
 		Runtime runtime = Runtime.getRuntime();
 		if (this.workDir != null)
 		{
-			p = runtime.exec(this.command, null, new File(this.workDir));
+			process = runtime.exec(this.command, null, new File(this.workDir));
 		}
 		else
 		{
-			p = runtime.exec(this.command);
+			process = runtime.exec(this.command);
 		}
 
 	    StringBuilder sb = new StringBuilder();
 	    int exitCode = 0;
+	    int pid = ProcessTools.processId(process);
 		
 		if (this.wait)
 		{
-		    try(BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream())))
+		    try(BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream())))
 		    {
 			    String line = "";			
 			    while ((line = reader.readLine()) != null) 
@@ -109,7 +111,7 @@ public class Execute extends AbstractAction
 			    	sb.append(line + "\n");
 			    }		
 		    }
-		    try(BufferedReader reader = new BufferedReader(new InputStreamReader(p.getErrorStream())))
+		    try(BufferedReader reader = new BufferedReader(new InputStreamReader(process.getErrorStream())))
 		    {
 			    String line = "";			
 			    while ((line = reader.readLine()) != null) 
@@ -117,11 +119,11 @@ public class Execute extends AbstractAction
 			    	sb.append(line + "\n");
 			    }		
 		    }
-		    exitCode = p.waitFor();
+		    exitCode = process.waitFor();
 		    
 		}
 	 
-		super.setResult(new ExecuteResult(sb.toString(), exitCode));
+		super.setResult(new ExecuteResult(sb.toString(), exitCode, pid));
 	}
 
 }
