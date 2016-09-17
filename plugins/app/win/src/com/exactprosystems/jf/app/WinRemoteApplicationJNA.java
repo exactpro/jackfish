@@ -69,10 +69,6 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 		try
 		{
 			String title = args.get(WinAppFactory.mainWindowName);
-			if (Str.IsNullOrEmpty(title))
-			{
-				throw new Exception("Connection title can't be null or empty");
-			}
 			int height = Integer.MIN_VALUE;
 			int width = Integer.MIN_VALUE;
 			String heightStr = args.get(WinAppFactory.mainWindowHeight);
