@@ -15,10 +15,14 @@ import com.exactprosystems.jf.api.error.app.WrongParameterException;
 import com.sun.jna.Native;
 import com.sun.jna.Platform;
 
+import com.sun.jna.Pointer;
+import com.sun.jna.platform.win32.Kernel32;
+import com.sun.jna.platform.win32.WinNT;
 import org.apache.log4j.Logger;
 
 import java.io.File;
 import java.io.InputStream;
+import java.lang.reflect.Field;
 import java.nio.file.*;
 import java.rmi.RemoteException;
 import java.util.Arrays;
@@ -37,8 +41,8 @@ public class JnaDriverImpl
 	public static void main(String[] args) throws Exception
 	{
 		JnaDriverImpl driver = new JnaDriverImpl(Logger.getLogger(JnaDriverImpl.class));
-		driver.connect("Form1", 100, 100, -1, null);
-		System.out.println(driver.title());
+		driver.connect("", 351, 425, Integer.MIN_VALUE, ControlKind.Panel);
+		System.out.println("title : " + driver.title());
 		int l = 100 * 100;
 		int a[] = new int[l];
 		String id = "42,4458408";
@@ -74,6 +78,7 @@ public class JnaDriverImpl
 		if (new File(dll).exists())
 		{
 			this.driver = (JnaDriver) Native.loadLibrary(dll, JnaDriver.class);
+			//this.driver = (JnaDriver) Native.loadLibrary("C:\\jackfish\\AppWinGui\\src\\com\\exactprosystems\\jf\\app\\bin\\UIAdapter.dll", JnaDriver.class);
 		}
 		else
 		{

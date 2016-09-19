@@ -707,6 +707,11 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 		{
 			String result = this.driver.getRowByConditions(component, useNumericHeader, (Condition)valueCondition);
 			String[] split = result.split(SEPARATOR_ROWS);
+			if (split.length < 2)
+			{
+				//TODO replace via JFRemoteException
+				throw new Exception("Row is not found");
+			}
 			String headerRow = split[0];
 			String row = split[1];
 			Map<String, String> map = new LinkedHashMap<>();
@@ -718,12 +723,6 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 				map.put(headerCells[i], value.equals(EMPTY_CELL) ? "" : value);
 			}
 			return map;
-			//			List<String> rowIndexes = getRowIndexes(component, additional, header, useNumericHeader, valueCondition, colorCondition);
-//			if (rowIndexes.size() != 1)
-//			{
-//				throw new RemoteException("Found " + rowIndexes.size() + " instead 1");
-//			}
-//			return getRowByIndex(component, additional, header, useNumericHeader, Integer.parseInt(rowIndexes.get(0)));
 		}
 		catch (RemoteException e)
 		{
