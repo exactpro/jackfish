@@ -8,6 +8,8 @@
 
 package com.exactprosystems.jf.api.common;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -17,19 +19,14 @@ public class Str
 			text = "Return array of strings with groups, that were found in string @string with @pattern.\n" + "See also Regular expressions")
 	public static String[] groups(String string, String pattern)
 	{
-
+		ArrayList<String> res = new ArrayList<>();
 		Pattern p = Pattern.compile(pattern);
 		Matcher matcher = p.matcher(string);
-		if (matcher.matches())
+		while (matcher.find())
 		{
-			String[] returnArray = new String[matcher.groupCount()];
-			for (int i = 1; i <= matcher.groupCount(); i++)
-			{
-				returnArray[i - 1] = matcher.group(i);
-			}
-			return returnArray;
+			res.add(matcher.group());
 		}
-		return new String[0];
+		return res.toArray(new String[res.size()]);
 	}
 
 	@DescriptionAttribute(text = "Return true, if strings @s1 and @s2 are equivalents")
