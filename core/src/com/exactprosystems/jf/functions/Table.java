@@ -512,6 +512,12 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 		this.headers = headers.toArray(new Header[headers.size()]);
 	}
 
+	public void setValue(int index, RowTable row)
+	{
+		this.changed = true;
+		this.innerList.set(index, convert(row));
+	}
+
 	public void setValue(int index, Map<String, Object> map)
 	{
 		this.changed = true;

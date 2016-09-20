@@ -27,6 +27,7 @@ import com.exactprosystems.jf.functions.RowTable;
 import com.exactprosystems.jf.functions.Table;
 
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -64,6 +65,12 @@ public final class TestCase extends MatrixItem
 		return clone;
 	}
 
+	@Override
+	public String toString()
+	{
+		return super.toString() + " " + getName();
+	}
+	
 	//==============================================================================================
 	// Interface Mutable
 	//==============================================================================================
@@ -164,13 +171,11 @@ public final class TestCase extends MatrixItem
 		{
 			if (table != null)
 			{
-//				matrixColumn, testCaseNumberColumn, testCaseColumn, resultColumn, 
-//				errorPlaceColumn, errorPlacePathColumn, errorKindColumn, errorMessageColumn
-//				
-//				table.addValue(index, new Object[] {});
-//				table.changeValue(Context.matrixColumn, index, this.getNumber());
-//				table.changeValue(Context.numberColumn, index, this.getNumber());
-//				table.changeValue(Context.nameColumn, 	index, this.getName());
+				row.put(Context.matrixColumn, 			this.owner.getName());
+				row.put(Context.testCaseNumberColumn, 	this.getNumber());
+				row.put(Context.testCaseColumn, 		this);
+				
+				table.add(row);
 			}
 			
 			this.locals = evaluator.createLocals();
@@ -189,25 +194,34 @@ public final class TestCase extends MatrixItem
 					result = ret.getResult();
 				}
 			}
-			if (table != null)
+			if (table != null && table.size() > 0)
 			{
-//				table.changeValue(Context.resultColumn, index, result);
+				row.put(Context.resultColumn, 			result);
+				
+				MatrixError error = ret.getError();
+				if (error != null)
+				{
+					row.put(Context.errorKindColumn, 		error.Kind);
+					row.put(Context.errorPlaceColumn, 		error.Where);
+					row.put(Context.errorPlacePathColumn, 	error.Where.getPath());
+					row.put(Context.errorMessageColumn, 	error.Message);
+				}
+				
+				table.setValue(table.size() - 1, row);
 			}
 		} 
 		catch (Exception e)
 		{
-//			table.changeValue(Context.resultColumn, 	index, Result.Failed);
-//
-//			Context.matrixColumn, Context.testCaseNumberColumn, Context.testCaseColumn, Context.resultColumn, 
-//			Context.errorPlaceColumn, Context.errorPlacePathColumn, Context.errorKindColumn, Context.errorMessageColumn
-//
-//			row.put(key, value);
-		}
-		finally
-		{
-			if (table != null)
+			if (table != null && table.size() > 0)
 			{
-				table.add(row);
+				row.put(Context.resultColumn, 			result);
+				
+				row.put(Context.errorKindColumn, 		ErrorKind.EXCEPTION);
+				row.put(Context.errorPlaceColumn, 		this);
+				row.put(Context.errorPlacePathColumn, 	this.getPath());
+				row.put(Context.errorMessageColumn, 	e.getMessage());
+				
+				table.setValue(table.size() - 1, row);
 			}
 		}
 		return ret;

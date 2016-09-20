@@ -10,6 +10,7 @@ package com.exactprosystems.jf.documents.config;
 
 import com.exactprosystems.jf.actions.ReadableValue;
 import com.exactprosystems.jf.api.common.IContext;
+import com.exactprosystems.jf.api.common.IMatrix;
 import com.exactprosystems.jf.common.MatrixRunner;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.documents.DocumentFactory;
@@ -37,6 +38,11 @@ public class Context implements IContext, AutoCloseable, Cloneable
 	public static final String errorPlacePathColumn 	= "ErrorPlacePath";
 	public static final String errorKindColumn 			= "ErrorKind";
 	public static final String errorMessageColumn 		= "ErrorMessage";
+	public static final String[] resultColumns = new String[]
+			{
+				matrixColumn, testCaseNumberColumn, testCaseColumn, resultColumn, 
+				errorPlaceColumn, errorPlacePathColumn, errorKindColumn, errorMessageColumn
+			};
 	
 	public Context(DocumentFactory factory, IMatrixListener matrixListener, PrintStream out) throws Exception
 	{
@@ -45,7 +51,7 @@ public class Context implements IContext, AutoCloseable, Cloneable
 		this.outStream 		= out;
 		this.evaluator 		= factory.createEvaluator();
 
-		this.resultTable 	= createResultTable();
+		createResultTable();
 	}
 
 	@Override
@@ -75,6 +81,16 @@ public class Context implements IContext, AutoCloseable, Cloneable
 			logger.error(e.getMessage(), e);
 			throw new InternalError();
 		}
+	}
+
+	public void createResultTable()
+	{
+		String headers[] = new String[] 
+				{ 
+					matrixColumn, testCaseNumberColumn, testCaseColumn, resultColumn, 
+					errorPlaceColumn, errorPlacePathColumn, errorKindColumn, errorMessageColumn
+				};
+		this.resultTable =  new Table(headers, this.evaluator);
 	}
 
 	public Context setOut(PrintStream out)
@@ -194,17 +210,6 @@ public class Context implements IContext, AutoCloseable, Cloneable
 		return res;
 	}
 
-	private Table createResultTable()
-	{
-		String headers[] = new String[] 
-				{ 
-					matrixColumn, testCaseNumberColumn, testCaseColumn, resultColumn, 
-					errorPlaceColumn, errorPlacePathColumn, errorKindColumn, errorMessageColumn
-				};
-		return new Table(headers, this.evaluator);
-	}
-
-	
 	private DocumentFactory			factory;
 	private PrintStream				outStream;
 	private IMatrixListener			matrixListener;

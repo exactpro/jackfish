@@ -87,6 +87,7 @@ public class ActionsList extends AbstractAction
 		        ReportName.class,
 		        Restore.class,
 		        ResultTable.class,
+		        ResultTableUserValue.class,
 		        Show.class,
 		        Store.class,
 		        SQLconnect.class,

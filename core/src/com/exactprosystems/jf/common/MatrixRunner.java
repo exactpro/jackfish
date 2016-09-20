@@ -173,7 +173,7 @@ public class MatrixRunner implements IMatrixRunner, AutoCloseable
 		}
 		else
 		{
-			this.context.getTable().clear();
+			this.context.createResultTable();
 		}
 		
 		Configuration configuration = this.context.getConfiguration();
