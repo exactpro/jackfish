@@ -22,6 +22,7 @@ import org.fest.swing.core.ComponentMatcher;
 import org.fest.swing.core.Robot;
 import org.fest.swing.core.Scrolling;
 import org.fest.swing.data.TableCell;
+import org.fest.swing.driver.JLabelDriver;
 import org.fest.swing.driver.JTableLocation;
 import org.fest.swing.driver.JTreeLocation;
 import org.fest.swing.edt.GuiQuery;
@@ -32,6 +33,7 @@ import org.fest.swing.timing.Pause;
 import org.fest.swing.util.Pair;
 
 import javax.swing.*;
+import javax.swing.table.TableCellRenderer;
 import javax.swing.text.JTextComponent;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeNode;
@@ -41,6 +43,8 @@ import java.awt.*;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.rmi.RemoteException;
@@ -976,38 +980,8 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 		{
 			this.currentRobot.waitForIdle();
 			JTable table = component.targetCastedTo(JTable.class);
-			JTableFixture tableFixture = new JTableFixture(this.currentRobot, table);
-			JTableCellFixture cell = tableFixture.cell(TableCell.row(row).column(column));
-			Component editor = cell.editor();
-			if (editor != null)
-			{
-				String value = getValue(editor);
-				if (Str.IsNullOrEmpty(value))
-				{
-					try
-					{
-						Component tableCellRendererComponent = table.getCellRenderer(row, column).getTableCellRendererComponent(table, null, true, true, row, column);
-						logger.debug("component : " + tableCellRendererComponent);
-						if (tableCellRendererComponent instanceof JLabel)
-						{
-							value = String.valueOf(((JLabel) tableCellRendererComponent).getIcon());
-						}
-					}
-					catch (Exception e)
-					{
-						logger.error("Could not get an icon: " + e.getMessage());
-					}
-
-				}
-				logger.debug("returned value " + value);
-				logger.debug("returned value is null " + (value == null));
-				return value;
-			}
-			throw new OperationNotAllowedException(String.format("Table %s with row %s and column %s don't have editor", component, row, column));
-		}
-		catch (RemoteException e)
-		{
-			throw e;
+			JTableFixture fixture = new JTableFixture(this.currentRobot, table);
+			return String.valueOf(getValueTableCell(fixture, row, column));
 		}
 		catch (Throwable e)
 		{
@@ -1416,14 +1390,45 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 		return result;
 	}
 
-	private Object getValueTableCell(JTableFixture fixture, int row, int column)
+	private String getIconPath(JLabel label)
 	{
-		JTable table = fixture.target;
-		Object valueAt = table.getValueAt(row, column);
-		if (valueAt == null)
+		try
 		{
-			valueAt = fixture.valueAt(TableCell.row(row).column(column));
+			logger.debug("try get icon from cell");
+			return String.valueOf(label.getIcon());
 		}
+		catch (Exception e)
+		{
+			logger.error("Could not get an icon: " + e.getMessage());
+		}
+		return null;
+	}
+
+	private Object getValueTableCell(JTableFixture fixture, int row, int column) throws IllegalAccessException
+	{
+	    JTable table = fixture.target;
+		Object valueAt = table.getValueAt(row, column);
+
+		if (valueAt != null)
+		{
+			TableCellRenderer defaultRenderer = table.getDefaultRenderer(table.getColumnClass(column));
+			Component tableCellRendererComponent = defaultRenderer.getTableCellRendererComponent(table, valueAt, false, false, row, column);
+			logger.debug("component : " + tableCellRendererComponent);
+			if (tableCellRendererComponent instanceof JLabel)
+			{
+				JLabel jLabel = (JLabel) tableCellRendererComponent;
+				if(jLabel.getText().isEmpty())
+				{
+					return getIconPath(jLabel);
+				}
+				else
+				{
+					return jLabel.getText();
+				}
+			}
+        }
+
+		valueAt = fixture.valueAt(TableCell.row(row).column(column));
 		return valueAt;
 	}
 	
@@ -1525,7 +1530,7 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 		return (T) component;
 	}
 
-	private List<String> getIndexes(JTableFixture fixture, Map<String, Integer> fieldIndexes, ICondition valueCondition, ICondition colorCondition) throws RemoteException
+	private List<String> getIndexes(JTableFixture fixture, Map<String, Integer> fieldIndexes, ICondition valueCondition, ICondition colorCondition) throws RemoteException, IllegalAccessException
 	{
 		JTable table = fixture.targetCastedTo(JTable.class);
 		List<String> res = new ArrayList<String>();
