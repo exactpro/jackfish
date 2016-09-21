@@ -10,7 +10,6 @@ package com.exactprosystems.jf.documents.config;
 
 import com.exactprosystems.jf.actions.ReadableValue;
 import com.exactprosystems.jf.api.common.IContext;
-import com.exactprosystems.jf.api.common.IMatrix;
 import com.exactprosystems.jf.common.MatrixRunner;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.documents.DocumentFactory;
@@ -20,7 +19,6 @@ import com.exactprosystems.jf.documents.matrix.parser.items.MatrixRoot;
 import com.exactprosystems.jf.documents.matrix.parser.items.SubCase;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
 import com.exactprosystems.jf.functions.Table;
-
 import org.apache.log4j.Logger;
 
 import java.io.PrintStream;
@@ -154,7 +152,7 @@ public class Context implements IContext, AutoCloseable, Cloneable
 		String ns = parts[0];
 		String id = parts[1];
 
-		Matrix matrix = this.libs.get(ns);
+		Matrix matrix = getConfiguration().getLibs().get(ns);
 		if (matrix == null)
 		{
 			matrix = getConfiguration().getLib(ns);
@@ -216,6 +214,7 @@ public class Context implements IContext, AutoCloseable, Cloneable
 	private AbstractEvaluator		evaluator;
 	private Table 					resultTable;
 
+	//TODO need to remove it, cause this the same as Configuration.libs
 	private Map<String, Matrix>		libs 			= new HashMap<>();
 
 	private static final Logger	logger				= Logger.getLogger(Context.class);
