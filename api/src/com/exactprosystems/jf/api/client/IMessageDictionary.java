@@ -15,6 +15,7 @@ public interface IMessageDictionary
 	String			getDescription();
 	IField 			getField(String name);
 	List<IField>	getFields();
+	IMessage 		getMessageByName(String name);
 	IMessage 		getMessage(String name);
 	List<IMessage>	getMessages();
 	String			getVersion();

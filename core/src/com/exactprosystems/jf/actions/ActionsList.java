@@ -6,11 +6,8 @@
 //  information which is the property of Exactpro Systems, LLC or its licensors.
 ////////////////////////////////////////////////////////////////////////////////
 
-package com.exactprosystems.jf.actions.help;
+package com.exactprosystems.jf.actions;
 
-import com.exactprosystems.jf.actions.AbstractAction;
-import com.exactprosystems.jf.actions.ActionAttribute;
-import com.exactprosystems.jf.actions.ActionGroups;
 import com.exactprosystems.jf.actions.app.*;
 import com.exactprosystems.jf.actions.clients.*;
 import com.exactprosystems.jf.actions.gui.*;
@@ -23,22 +20,11 @@ import com.exactprosystems.jf.actions.system.*;
 import com.exactprosystems.jf.actions.tables.*;
 import com.exactprosystems.jf.actions.text.*;
 import com.exactprosystems.jf.actions.xml.*;
-import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
-import com.exactprosystems.jf.common.report.ReportBuilder;
-import com.exactprosystems.jf.common.report.ReportTable;
-import com.exactprosystems.jf.documents.config.Context;
-import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 
-@ActionAttribute(
-		group					= ActionGroups.Help,
-		generalDescription 		= "Prints a list of actions followed by short descriptions.",
-		additionFieldsAllowed 	= false
-	)
-public class ActionsList extends AbstractAction 
+public class ActionsList 
 {
 	public static Class<?>[] actions = new Class<?>[]
 			{
-		        ActionsList.class,
 		        ApplicationConnectTo.class,
 		        ApplicationGetProperties.class,
 		        ApplicationRefresh.class,
@@ -141,28 +127,5 @@ public class ActionsList extends AbstractAction
 				HistogramStart.class, 
 				HistogramStop.class,
 			};
-	
-    public ActionsList()
-    {
-    }
-	
-	@Override
-	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
-	{
-		doRealDocumetation(context, report);
-		super.setResult(null);
-	}
 
-	protected void doRealDocumetation(Context context, ReportBuilder report)
-	{
-		ReportTable table = report.addTable("Registered actions", true, 100, new int[] { 20, 80 }, "Action", "Description");
-		for (Class<?> clazz : actions)
-		{
-			table.addValues(clazz.getSimpleName(), clazz.getAnnotation(ActionAttribute.class).generalDescription());
-		}
-	}
-
-	@Override
-	public void initDefaultValues() {}
-	
 }

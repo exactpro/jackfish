@@ -7,7 +7,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.exactprosystems.jf.documents.matrix.parser.items;
 
-import com.exactprosystems.jf.actions.help.ActionsList;
+import com.exactprosystems.jf.actions.ActionsList;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.DisplayDriver;
 import com.exactprosystems.jf.documents.matrix.parser.Tokens;

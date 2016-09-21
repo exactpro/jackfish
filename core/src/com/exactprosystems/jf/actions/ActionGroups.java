@@ -10,5 +10,5 @@ package com.exactprosystems.jf.actions;
 
 public enum ActionGroups
 {
-	GUI, System, App, Messages, Clients, Services, Tables, Text, XML, SQL, Matrix, Help, Histograms
+	GUI, System, App, Messages, Clients, Services, Tables, Text, XML, SQL, Matrix, Histograms
 }

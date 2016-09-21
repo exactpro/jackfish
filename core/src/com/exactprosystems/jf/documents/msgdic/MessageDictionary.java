@@ -251,6 +251,21 @@ public class MessageDictionary extends AbstractDocument implements IMessageDicti
 	}
 
 	@Override
+	public IMessage 		getMessageByName(String name)
+	{
+		for (Message mess : this.messages.messages)
+		{
+			String str = mess.getName();
+			if (str != null && str.equals(name))
+			{
+				return mess;
+			}
+		}
+			
+		return null; 
+	}
+
+	@Override
 	public IMessage 		getMessage(String name)
 	{
 		for (Message mess : this.messages.messages)

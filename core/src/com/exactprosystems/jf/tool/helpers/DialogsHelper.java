@@ -10,7 +10,7 @@ package com.exactprosystems.jf.tool.helpers;
 
 import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
-import com.exactprosystems.jf.actions.help.ActionsList;
+import com.exactprosystems.jf.actions.ActionsList;
 import com.exactprosystems.jf.api.common.ApiVersionInfo;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.HelpFactory;

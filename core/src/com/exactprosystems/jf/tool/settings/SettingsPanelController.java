@@ -10,7 +10,7 @@ package com.exactprosystems.jf.tool.settings;
 
 import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
-import com.exactprosystems.jf.actions.help.ActionsList;
+import com.exactprosystems.jf.actions.ActionsList;
 import com.exactprosystems.jf.documents.matrix.parser.Tokens;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;

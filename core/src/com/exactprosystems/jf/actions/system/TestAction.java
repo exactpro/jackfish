@@ -19,6 +19,7 @@ import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.documents.matrix.parser.Result;
 
+@Deprecated
 @ActionAttribute(
 		group					= ActionGroups.System,
 		generalDescription 		= "Test action only. Sets output, result and reason from its parameters",
