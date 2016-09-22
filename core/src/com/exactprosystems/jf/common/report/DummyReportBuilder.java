@@ -30,6 +30,12 @@ public class DummyReportBuilder extends ReportBuilder
 	}
 
 	@Override
+	protected String decorateStyle(String value, String style)
+	{
+		return "";
+	}
+
+	@Override
 	protected String replaceMarker(String marker)
 	{
 		return "";

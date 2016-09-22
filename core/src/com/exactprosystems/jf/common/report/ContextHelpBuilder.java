@@ -31,6 +31,12 @@ public class ContextHelpBuilder extends ReportBuilder
 	}
 
 	@Override
+	protected String decorateStyle(String value, String style)
+	{
+		return HTMLhelper.htmlMarker(value);
+	}
+
+	@Override
 	protected String replaceMarker(String marker)
 	{
 		return HTMLhelper.htmlMarker(marker);

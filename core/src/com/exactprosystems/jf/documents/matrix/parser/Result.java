@@ -19,4 +19,10 @@ public enum Result
 	NotExecuted,
 	Off, 
 	Stopped
+	;
+	
+	public String getStyle()
+	{
+		return this.name();
+	}
 }

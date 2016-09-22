@@ -163,6 +163,7 @@ public final class TestCase extends MatrixItem
 	@Override
 	protected ReturnAndResult executeItSelf(Context context, IMatrixListener listener, AbstractEvaluator evaluator, ReportBuilder report, Parameters parameters)
 	{
+		Result res = null;
 		ReturnAndResult ret = null;
 		Table table = context.getTable();
 		RowTable row = new RowTable();
@@ -181,9 +182,9 @@ public final class TestCase extends MatrixItem
 			this.locals = evaluator.createLocals();
 
 			ret = executeChildren(context, listener, evaluator, report, new Class<?>[] { OnError.class }, this.locals);
-			Result result = ret.getResult();
+			res = ret.getResult();
 			
-			if (result == Result.Failed)
+			if (res == Result.Failed)
 			{
 				MatrixItem branchOnError = super.find(false, OnError.class, null);
 				if (branchOnError != null && branchOnError instanceof OnError)
@@ -191,12 +192,12 @@ public final class TestCase extends MatrixItem
 					((OnError)branchOnError).setError(ret.getError());
 					
 					ret = branchOnError.execute(context, listener, evaluator, report);
-					result = ret.getResult();
+					res = ret.getResult();
 				}
 			}
 			if (table != null && table.size() > 0)
 			{
-				row.put(Context.resultColumn, 			result);
+				row.put(Context.resultColumn, 			res);
 				
 				MatrixError error = ret.getError();
 				if (error != null)
@@ -214,7 +215,7 @@ public final class TestCase extends MatrixItem
 		{
 			if (table != null && table.size() > 0)
 			{
-				row.put(Context.resultColumn, 			result);
+				row.put(Context.resultColumn, 			res);
 				
 				row.put(Context.errorKindColumn, 		ErrorKind.EXCEPTION);
 				row.put(Context.errorPlaceColumn, 		this);

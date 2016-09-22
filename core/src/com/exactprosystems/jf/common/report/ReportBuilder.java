@@ -250,6 +250,7 @@ public abstract class ReportBuilder
 		histogram(this.writer, title, intervalCount, interval, copyDate);
 	}
 	
+
 	protected String postProcess(String source)
 	{
 		if (source == null)
@@ -273,6 +274,23 @@ public abstract class ReportBuilder
 		return sb.toString();
 	}
 	
+	public String decorateStyle(Object value, String style)
+	{
+		if (value == null)
+		{
+			return "";
+		}
+		
+		return decorateStyle(value.toString(), style);
+	}
+
+	public String decorateLink(String name, String link)
+	{
+		return "";
+	}
+	
+	protected abstract String decorateStyle(String value, String style);
+
 	protected abstract String replaceMarker(String marker);
 	
 	protected abstract String generateReportName(String outputPath, String matrixName, String suffix, Date date) throws IOException;
@@ -410,4 +428,5 @@ public abstract class ReportBuilder
 
 
 	protected static final Logger logger = Logger.getLogger(ReportBuilder.class);
+
 }

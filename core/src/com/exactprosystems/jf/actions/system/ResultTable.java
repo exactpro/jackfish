@@ -21,6 +21,7 @@ import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
+import com.exactprosystems.jf.documents.matrix.parser.Result;
 import com.exactprosystems.jf.documents.matrix.parser.items.ActionItem.HelpKind;
 import com.exactprosystems.jf.functions.RowTable;
 import com.exactprosystems.jf.functions.Table;
@@ -47,7 +48,7 @@ public class ResultTable extends AbstractAction
 	@Override
 	public void initDefaultValues()
 	{
-		this.decorated = null;
+		this.matrix = null;
 	}
 
 	@Override
@@ -90,7 +91,9 @@ public class ResultTable extends AbstractAction
 		{
 			for (RowTable row : copy)
 			{
-				row.put(Context.resultColumn, "##" + row.get(Context.resultColumn) + "##");
+				Result res = (Result)row.get(Context.resultColumn);
+				String str = report.decorateStyle(row.get(Context.resultColumn), res == null ? "" : res.getStyle());
+				row.put(Context.resultColumn, str);
 			}
 		}
 		

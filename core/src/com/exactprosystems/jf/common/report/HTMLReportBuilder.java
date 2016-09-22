@@ -43,6 +43,12 @@ public class HTMLReportBuilder extends ReportBuilder
 	}
 
 	@Override
+	protected String decorateStyle(String value, String style)
+	{
+		return String.format("<span class=\"%s\">%s</span>", style, value);
+	}
+
+	@Override
 	protected String replaceMarker(String marker)
 	{
 		return HTMLhelper.htmlMarker(marker);
