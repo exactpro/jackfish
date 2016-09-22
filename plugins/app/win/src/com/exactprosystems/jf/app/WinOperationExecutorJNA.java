@@ -741,10 +741,6 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 	{
 		try
 		{
-			if (valueCondition != null && !(valueCondition instanceof StringCondition))
-			{
-				throw new WrongParameterException("In win plugin value condition must be StringCondition");
-			}
 			String result = this.driver.getRowIndexes(component, useNumericHeader, ((StringCondition) valueCondition));
 			List<String> returnedList = new ArrayList<>();
 			String[] indexes = result.split(SEPARATOR_CELL);
