@@ -1367,7 +1367,7 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 		return ret;
 	}
 
-	private static Map<String, Integer> getTableHeaders(final JTable table, String[] columns)
+	private Map<String, Integer> getTableHeaders(final JTable table, String[] columns)
 	{
 		Map<String, Integer> result = new LinkedHashMap<String, Integer>();
 		String realName = "";
@@ -1376,7 +1376,7 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 		{
 			if(columns == null)
 			{
-				realName = table.getColumnModel().getColumn(i).getHeaderValue().toString();
+				realName = table.getColumnName(i);
 			}
 			else
 			{
@@ -1394,7 +1394,6 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 	{
 		try
 		{
-			logger.debug("try get icon from cell");
 			return String.valueOf(label.getIcon());
 		}
 		catch (Exception e)
@@ -1419,10 +1418,12 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 				JLabel jLabel = (JLabel) tableCellRendererComponent;
 				if(jLabel.getText().isEmpty())
 				{
+					logger.debug("try to get icon from: ");
 					return getIconPath(jLabel);
 				}
 				else
 				{
+					logger.debug("try to get text from: " + jLabel.getText());
 					return jLabel.getText();
 				}
 			}
