@@ -127,6 +127,7 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 			logger.info("##########################################################################################################");
 			logger.info(String.format("connectionDerived(%s, %d, %d, %d, %s)", title, height, width, pid, controlKind));
 			this.driver = new JnaDriverImpl(this.logger);
+			setMaxTimeout(this.driver, args.get(maxTimeout));
 			this.operationExecutor = new WinOperationExecutorJNA(this.logger, this.driver);
 			return this.driver.connect(title, height, width, pid, controlKind);
 		}
@@ -162,6 +163,7 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 			this.logger.info("##########################################################################################################");
 			this.logger.info("runDerived(" + args + ")");
 			this.driver = new JnaDriverImpl(this.logger);
+			setMaxTimeout(this.driver, args.get(maxTimeout));
 			this.operationExecutor = new WinOperationExecutorJNA(this.logger, this.driver);
 			return this.driver.run(exec, workDir, parameters);
 		}
@@ -174,6 +176,22 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 			logger.error("runDerived(" + args + ")");
 			logger.error(e.getMessage(), e);
 			throw e;
+		}
+	}
+
+	private void setMaxTimeout(JnaDriverImpl driver, String maxTimeout) throws Exception
+	{
+		if (!Str.IsNullOrEmpty(maxTimeout))
+		{
+			try
+			{
+				int timeout = Integer.parseInt(maxTimeout);
+				driver.maxTimeout(timeout);
+			}
+			catch (NumberFormatException e)
+			{
+				throw new Exception("Parameter " + WinAppFactory.maxTimeout + " must be from 0 to " + Integer.MAX_VALUE + " or empty/null");
+			}
 		}
 	}
 

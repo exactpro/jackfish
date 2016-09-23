@@ -8,6 +8,7 @@ public interface JnaDriver extends Library {
 	String methodTime();
 	String uiAutomationTime();
 	String getFrameworkId();
+	void maxTimeout(int timeout);
 	//endregion
 
 	//region application methods

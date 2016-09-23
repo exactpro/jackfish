@@ -84,6 +84,15 @@ public class JnaDriverImpl
 		checkError();
 		return Framework.byId(frameworkId);
 	}
+
+	public void maxTimeout(int timeout) throws Exception
+	{
+		long start = System.currentTimeMillis();
+		this.driver.maxTimeout(timeout);
+		this.logger.info(String.format("maxTimeout(%d), time (ms) : %d", timeout, System.currentTimeMillis() - start));
+		checkCSharpTimes();
+		checkError();
+	}
 	//endregion
 
 	//region application methods
