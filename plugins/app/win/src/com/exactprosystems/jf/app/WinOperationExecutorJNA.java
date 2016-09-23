@@ -11,12 +11,10 @@ import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.client.ICondition;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.conditions.Condition;
-import com.exactprosystems.jf.api.conditions.StringCondition;
 import com.exactprosystems.jf.api.error.app.ElementNotFoundException;
 import com.exactprosystems.jf.api.error.app.FeatureNotSupportedException;
 import com.exactprosystems.jf.api.error.app.OperationNotAllowedException;
 import com.exactprosystems.jf.api.error.app.WrongParameterException;
-
 import org.apache.log4j.Logger;
 
 import java.awt.*;
@@ -741,7 +739,7 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 	{
 		try
 		{
-			String result = this.driver.getRowIndexes(component, useNumericHeader, ((StringCondition) valueCondition));
+			String result = this.driver.getRowIndexes(component, useNumericHeader, valueCondition);
 			List<String> returnedList = new ArrayList<>();
 			String[] indexes = result.split(SEPARATOR_CELL);
 			Collections.addAll(returnedList, indexes);

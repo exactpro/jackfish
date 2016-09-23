@@ -2,27 +2,15 @@ package com.exactprosystems.jf.app;
 
 import com.exactprosystems.jf.api.app.ControlKind;
 import com.exactprosystems.jf.api.app.MouseAction;
+import com.exactprosystems.jf.api.client.ICondition;
 import com.exactprosystems.jf.api.conditions.Condition;
-import com.exactprosystems.jf.api.conditions.StringCondition;
-import com.exactprosystems.jf.api.error.app.ElementNotFoundException;
-import com.exactprosystems.jf.api.error.app.FeatureNotSupportedException;
-import com.exactprosystems.jf.api.error.app.InternalErrorException;
-import com.exactprosystems.jf.api.error.app.OperationNotAllowedException;
-import com.exactprosystems.jf.api.error.app.NullParameterException;
-import com.exactprosystems.jf.api.error.app.ProxyException;
-import com.exactprosystems.jf.api.error.app.TooManyElementsException;
-import com.exactprosystems.jf.api.error.app.WrongParameterException;
+import com.exactprosystems.jf.api.error.app.*;
 import com.sun.jna.Native;
 import com.sun.jna.Platform;
-
-import com.sun.jna.Pointer;
-import com.sun.jna.platform.win32.Kernel32;
-import com.sun.jna.platform.win32.WinNT;
 import org.apache.log4j.Logger;
 
 import java.io.File;
 import java.io.InputStream;
-import java.lang.reflect.Field;
 import java.nio.file.*;
 import java.rmi.RemoteException;
 import java.util.Arrays;
@@ -343,7 +331,7 @@ public class JnaDriverImpl
 		return res;
 	}
 
-	public String getRowIndexes(UIProxyJNA table, boolean useNumericHeader, Condition condition) throws Exception
+	public String getRowIndexes(UIProxyJNA table, boolean useNumericHeader, ICondition condition) throws Exception
 	{
 		long start = System.currentTimeMillis();
 		String stringCondition = condition.serialize();
