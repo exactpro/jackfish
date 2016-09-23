@@ -68,6 +68,12 @@ public class HTMLReportBuilder extends ReportBuilder
 	}
 	
 	@Override
+	protected void putMark(ReportWriter writer, String mark) throws IOException
+	{
+//		writer.fwrite(String.format("<span id=\"TESTCASE_%s\"/>", mark));
+	}
+
+	@Override
 	protected String generateReportDir(String matrixName, Date date) throws IOException
 	{
 		if (matrixName.toLowerCase().endsWith(Configuration.matrixExt))
@@ -220,7 +226,7 @@ public class HTMLReportBuilder extends ReportBuilder
 	}
 
 	@Override
-	protected void reportImage(ReportWriter writer, MatrixItem item, String fileName, String title) throws IOException
+	protected void reportImage(ReportWriter writer, MatrixItem item, String beforeTestcase, String fileName, String title) throws IOException
 	{
 		writer.fwrite(
 				"<span class='tableTitle'>%s</span><br>",
@@ -230,7 +236,7 @@ public class HTMLReportBuilder extends ReportBuilder
 	}
 	
 	@Override
-	protected void reportItemLine(ReportWriter writer, MatrixItem item, String string, String labelId) throws IOException
+	protected void reportItemLine(ReportWriter writer, MatrixItem item, String beforeTestcase, String string, String labelId) throws IOException
 	{
 		if (labelId == null)
 		{

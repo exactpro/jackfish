@@ -186,7 +186,7 @@ public class RawTable extends MatrixItem
 	protected void docItSelf(Context context, ReportBuilder report)
 	{
 		ReportTable table;
-		table = report.addTable("", true, 100, new int[] { 30, 70 }, new String[] {
+		table = report.addTable("", null, true, 100, new int[] { 30, 70 }, new String[] {
 				"Chapter", "Description" });
 
 		table.addValues("Destination", "To describe block of data");
@@ -199,7 +199,7 @@ public class RawTable extends MatrixItem
 		try
 		{
 			this.table.setEvaluator(evaluator);
-			this.table.report(report, Tokens.RawTable.get(), false, false);
+			this.table.report(report, null, Tokens.RawTable.get(), false, false);
 
 			Variables vars = isGlobal() ? evaluator.getGlobals() : evaluator.getLocals();
 

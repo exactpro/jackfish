@@ -26,10 +26,14 @@ import com.exactprosystems.jf.functions.Text;
 public class TextReport extends AbstractAction 
 {
 	public final static String textName = "Text";
+	public final static String beforeTestCaseName = "BeforeTestCase";
 	public final static String titleName = "Title";
 
 	@ActionFieldAttribute(name = textName, mandatory = true, description = "The text object.")
 	protected Text 	text 	= null;
+
+	@ActionFieldAttribute(name = beforeTestCaseName, mandatory = false, description = "The name of Testcase before witch the text will be put.")
+	protected String 	beforeTestCase 	= null;
 
 	@ActionFieldAttribute(name = titleName, mandatory = true, description = "Title.")
 	protected String 	title 	= null;
@@ -40,9 +44,15 @@ public class TextReport extends AbstractAction
 	}
 
 	@Override
+	public void initDefaultValues() 
+	{
+		this.beforeTestCase = null;
+	}
+
+	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
-		text.report(report, this.title);
+		text.report(report, this.beforeTestCase, this.title);
 		
 		super.setResult(null);
 	}
@@ -51,12 +61,6 @@ public class TextReport extends AbstractAction
 	protected boolean reportAllDetail()
 	{
 		return false;
-	}
-
-	@Override
-	public void initDefaultValues() {
-		// TODO Auto-generated method stub
-		
 	}
 }
 

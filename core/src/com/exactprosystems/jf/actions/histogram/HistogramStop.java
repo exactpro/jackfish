@@ -17,6 +17,7 @@ import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.functions.Histogram;
 
+@Deprecated
 @ActionAttribute(
 		group = ActionGroups.Histograms,
 		additionFieldsAllowed = false,

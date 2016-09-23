@@ -180,7 +180,7 @@ public class RawText extends MatrixItem
 	protected void docItSelf(Context context, ReportBuilder report)
 	{
 		ReportTable table;
-		table = report.addTable("", true, 100, new int[] { 30, 70 }, new String[] { "Chapter", "Description" });
+		table = report.addTable("", null, true, 100, new int[] { 30, 70 }, new String[] { "Chapter", "Description" });
 
 		table.addValues("Destination", "To describe block of data");
 	}
@@ -190,7 +190,7 @@ public class RawText extends MatrixItem
 	{
 		try
 		{
-			this.table.report(report, Tokens.RawText.get(), false, false);
+			this.table.report(report, null, Tokens.RawText.get(), false, false);
 
 			Variables vars = isGlobal() ? evaluator.getGlobals() : evaluator.getLocals();
 

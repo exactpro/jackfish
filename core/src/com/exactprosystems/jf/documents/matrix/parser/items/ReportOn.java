@@ -22,6 +22,7 @@ import com.exactprosystems.jf.documents.matrix.parser.ReturnAndResult;
 import com.exactprosystems.jf.documents.matrix.parser.Tokens;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
 
+@Deprecated
 @MatrixItemAttribute(
 		description = "Switches on output of the report.", 
 		shouldContain 	= { Tokens.ReportOn },
@@ -64,7 +65,7 @@ public class ReportOn extends MatrixItem
 	protected void docItSelf(Context context, ReportBuilder report)
 	{
         ReportTable table;
-        table = report.addTable("", true, 100,
+        table = report.addTable("", null, true, 100,
                 new int[] { 30, 70 }, new String[] { "Chapter", "Description"});
 
         table.addValues("Destination", "Swithces output to report on");

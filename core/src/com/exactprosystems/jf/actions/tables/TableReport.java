@@ -31,6 +31,7 @@ import java.util.List;
 public class TableReport extends AbstractAction 
 {
 	public final static String tableName = "Table";
+	public final static String beforeTestCaseName = "BeforeTestCase";
 	public final static String titleName = "Title";
 	public final static String numbersName = "Numbers";
 	public final static String columnsName = "Columns";
@@ -38,6 +39,9 @@ public class TableReport extends AbstractAction
 
 	@ActionFieldAttribute(name = tableName, mandatory = true, description = "The table.")
 	protected Table 	table 	= null;
+
+	@ActionFieldAttribute(name = beforeTestCaseName, mandatory = false, description = "The name of Testcase before witch the table will be put.")
+	protected String 	beforeTestCase 	= null;
 
 	@ActionFieldAttribute(name = titleName, mandatory = true, description = "Title.")
 	protected String 	title 	= null;
@@ -58,9 +62,10 @@ public class TableReport extends AbstractAction
 	@Override
 	public void initDefaultValues() 
 	{
-		withNumbers 	= true;
-		columns 		= new String[] {};
-		reportValues 	= false;
+		this.beforeTestCase = null;
+		this.withNumbers 	= true;
+		this.columns 		= new String[] {};
+		this.reportValues 	= false;
 	}
 	
 	@Override
@@ -99,7 +104,7 @@ public class TableReport extends AbstractAction
 			super.setError("Table is null", ErrorKind.EMPTY_PARAMETER);
 			return;
 		}
-		this.table.report(report, this.title, this.withNumbers, this.reportValues, this.columns);
+		this.table.report(report, this.beforeTestCase, this.title, this.withNumbers, this.reportValues, this.columns);
 		
 		super.setResult(null);
 	}

@@ -26,10 +26,14 @@ import com.exactprosystems.jf.functions.Xml;
 public class XmlReport extends AbstractAction 
 {
 	public final static String xmlName 	= "Xml";
+	public final static String beforeTestCaseName = "BeforeTestCase";
 	public final static String titleName = "Title";
 
 	@ActionFieldAttribute(name = xmlName, mandatory = true, description = "XML object.")
 	protected Xml 	xml 	= null;
+
+	@ActionFieldAttribute(name = beforeTestCaseName, mandatory = false, description = "The name of Testcase before witch the xml will be put.")
+	protected String 	beforeTestCase 	= null;
 
 	@ActionFieldAttribute(name = titleName, mandatory = true, description = "Title.")
 	protected String 	title 	= null;
@@ -39,9 +43,15 @@ public class XmlReport extends AbstractAction
 	}
 
 	@Override
+	public void initDefaultValues() 
+	{
+		this.beforeTestCase = null;
+	}
+	
+	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
-		this.xml.report(report, this.title);
+		this.xml.report(report, this.beforeTestCase, this.title);
 		
 		super.setResult(null);
 	}
@@ -50,12 +60,6 @@ public class XmlReport extends AbstractAction
 	protected boolean reportAllDetail()
 	{
 		return false;
-	}
-
-	@Override
-	public void initDefaultValues() {
-		// TODO Auto-generated method stub
-		
 	}
 }
 

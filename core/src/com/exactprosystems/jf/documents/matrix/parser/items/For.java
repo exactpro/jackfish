@@ -162,7 +162,7 @@ public final class For extends MatrixItem
 	protected void docItSelf(Context context, ReportBuilder report)
 	{
         ReportTable table;
-        table = report.addTable("", true, 100,
+        table = report.addTable("", null, true, 100,
                 new int[] { 30, 70 }, new String[] { "Chapter", "Description"});
 
         table.addValues("Destination", "To organize a loop for counter from begin value to end value with step");
@@ -223,7 +223,7 @@ public final class For extends MatrixItem
 
 			while(condition)
 			{
-				report.outLine(this, String.format("loop %s = %s", this.var, currentValue), currentValue.intValue());
+				report.outLine(this, null, String.format("loop %s = %s", this.var, currentValue), currentValue.intValue());
 				
 				ret = executeChildren(context, listener, evaluator, report, new Class<?>[] { OnError.class }, null);
 				result = ret.getResult();

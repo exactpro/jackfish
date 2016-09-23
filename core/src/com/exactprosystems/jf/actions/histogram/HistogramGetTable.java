@@ -18,6 +18,7 @@ import com.exactprosystems.jf.documents.guidic.controls.Table;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.functions.Histogram;
 
+@Deprecated
 @ActionAttribute(
 		group = ActionGroups.Histograms,
 		suffix = "HSTTBL",

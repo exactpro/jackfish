@@ -83,9 +83,9 @@ public class Text implements List<String>, Mutable
 		return true;
 	}
 	
-	public void report(ReportBuilder report, String title) throws Exception
+	public void report(ReportBuilder report, String beforeTestcase, String title) throws Exception
 	{
-		ReportTable table = report.addTable(title, true, 0, new int[] {});
+		ReportTable table = report.addTable(title, beforeTestcase, true, 0, new int[] {});
 		
 		for(String list : this.list)
 		{

@@ -221,7 +221,7 @@ public class DialogCheckLayout extends AbstractAction
 		{
 			return table;
 		}
-		return report.addTable("Layout mismatching", true, 0, new int[]{25, 65}, "Field", "Error");
+		return report.addTable("Layout mismatching", null, true, 0, new int[]{25, 65}, "Field", "Error");
 	}
 
 	private boolean checkControl(Set<ControlKind> supportedControls, IControl control) throws Exception

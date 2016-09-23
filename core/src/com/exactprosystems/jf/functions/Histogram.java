@@ -18,6 +18,7 @@ import java.rmi.RemoteException;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
+@Deprecated
 public class Histogram
 {
 	private static final AtomicLong uniqueId = new AtomicLong(0);

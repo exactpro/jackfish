@@ -179,7 +179,7 @@ public final class SubCase extends MatrixItem
 	protected void docItSelf(Context context, ReportBuilder report)
 	{
         ReportTable table;
-        table = report.addTable("", true, 100,
+        table = report.addTable("", null, true, 100,
                 new int[] { 30, 70 }, new String[] { "Chapter", "Description"});
 
         table.addValues("Destination", "SubCase is needed to make script shorter.");
@@ -247,7 +247,7 @@ public final class SubCase extends MatrixItem
 	// ==============================================================================================
 	private void reportParameters(ReportBuilder report, Parameters parameters)
 	{
-		ReportTable table = report.addTable("Input parameters", true, 2, new int[] { 20, 40, 40 }, new String[] { "Parameter", "Expression", "Value" });
+		ReportTable table = report.addTable("Input parameters", null, true, 2, new int[] { 20, 40, 40 }, new String[] { "Parameter", "Expression", "Value" });
 
 		for (Parameter parameter : parameters)
 		{

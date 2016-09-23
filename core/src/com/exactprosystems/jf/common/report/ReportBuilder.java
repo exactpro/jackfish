@@ -88,14 +88,20 @@ public abstract class ReportBuilder
 		return this.reportIsOn;
 	}
 
-	public final ReportTable addTable(String title, boolean decoraded, int quotedSince, int[] widths, String ... columns)
+	public final void putMark(String str) throws Exception 
+	{
+		logger.trace(String.format("putMark(%s)", str));
+		putMark(this.writer, str);
+	}
+
+	public final ReportTable addTable(String beforeTestcase, String title, boolean decoraded, int quotedSince, int[] widths, String ... columns)
 	{
 		Integer uniq = this.uniques.peek();
 		logger.trace(String.format("addTable(%s) current = %s", title, uniq));
 		
 		ReportTable info = new ReportTable(title, decoraded, quotedSince, widths, columns);
 		
-		this.reportData.get(uniq).add(info);
+		this.reportData.get(uniq).add(info); // TODO deal with it
 		
 		return info;
 	}
@@ -153,7 +159,7 @@ public abstract class ReportBuilder
 		}
 	}
 	
-	public final void outImage(MatrixItem item, String fileName, String title)
+	public final void outImage(MatrixItem item, String beforeTestcase, String fileName, String title)
 	{
 		logger.trace(String.format("outImage(%s, %s, %s)", item.getItemName(), fileName, title));
 		try
@@ -164,7 +170,7 @@ public abstract class ReportBuilder
 				dir.mkdir();
 			}
 			
-			reportImage(this.writer, item, this.imageDir + File.separator + fileName, postProcess(title));
+			reportImage(this.writer, item, beforeTestcase, this.imageDir + File.separator + fileName, postProcess(title));
 		} 
 		catch (IOException e)
 		{
@@ -172,7 +178,7 @@ public abstract class ReportBuilder
 		}
 	}
 
-	public final void outLine(MatrixItem item, String string, Integer labelId)
+	public final void outLine(MatrixItem item, String beforeTestcase, String string, Integer labelId)
 	{
 		try
 		{
@@ -181,7 +187,7 @@ public abstract class ReportBuilder
 			{
 				if (this.reportIsOn)
 				{
-					reportItemLine(this.writer, item, string, null);
+					reportItemLine(this.writer, item, beforeTestcase, string, null);
 				}
 			}
 			else
@@ -189,7 +195,7 @@ public abstract class ReportBuilder
 				Integer uniq = this.uniques.peek();
 				if (this.reportIsOn)
 				{
-					reportItemLine(this.writer, item, string, "" + uniq + "_" + labelId);
+					reportItemLine(this.writer, item, beforeTestcase, string, "" + uniq + "_" + labelId);
 				}
 			}
 		} 
@@ -297,6 +303,8 @@ public abstract class ReportBuilder
 
 	protected abstract String generateReportDir(String matrixName, Date date) throws IOException;
 
+	protected abstract void putMark(ReportWriter writer, String mark) throws IOException;
+
 	protected abstract void reportHeader(ReportWriter writer, Matrix context, Date date) throws IOException;
 
 	protected abstract void reportMatrixHeader(ReportWriter writer, String matrix) throws IOException;
@@ -311,9 +319,9 @@ public abstract class ReportBuilder
 
 	protected abstract void reportItemHeader(ReportWriter writer, MatrixItem entry, Integer id) throws IOException;
 	
-	protected abstract void reportItemLine(ReportWriter writer, MatrixItem item, String string, String labelId) throws IOException;
+	protected abstract void reportItemLine(ReportWriter writer, MatrixItem item, String beforeTestcase, String string, String labelId) throws IOException;
 
-	protected abstract void reportImage(ReportWriter writer, MatrixItem item, String fileName, String title) throws IOException;
+	protected abstract void reportImage(ReportWriter writer, MatrixItem item, String beforeTestcase, String fileName, String title) throws IOException;
 
 	protected abstract void reportItemFooter(ReportWriter writer, MatrixItem entry, Integer id, long time) throws IOException;
 	
@@ -428,5 +436,4 @@ public abstract class ReportBuilder
 
 
 	protected static final Logger logger = Logger.getLogger(ReportBuilder.class);
-
 }

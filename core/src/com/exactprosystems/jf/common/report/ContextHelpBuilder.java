@@ -54,6 +54,11 @@ public class ContextHelpBuilder extends ReportBuilder
 		return null;
 	}
 
+	@Override
+	protected void putMark(ReportWriter writer, String mark) throws IOException
+	{
+	}
+	
     @Override
     protected void reportHeader(ReportWriter writer, Matrix context, Date date) throws IOException
     {
@@ -113,13 +118,13 @@ public class ContextHelpBuilder extends ReportBuilder
     }
 
 	@Override
-	protected void reportImage(ReportWriter writer, MatrixItem item, String fileName, String title) throws IOException
+	protected void reportImage(ReportWriter writer, MatrixItem item, String beforeTestcase, String fileName, String title) throws IOException
 	{
 		
 	}
 
 	@Override
-	protected void reportItemLine(ReportWriter writer, MatrixItem item, String string, String labelId) throws IOException
+	protected void reportItemLine(ReportWriter writer, MatrixItem item, String beforeTestcase, String string, String labelId) throws IOException
 	{
 	}
 	

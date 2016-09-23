@@ -32,10 +32,14 @@ import java.io.File;
 public class ImageReport extends AbstractAction
 {
 	public final static String	imageName	= "Image";
+	public final static String beforeTestCaseName = "BeforeTestCase";
 	public final static String	titleName	= "Title";
 	
 	@ActionFieldAttribute(name = imageName, mandatory = true, description = "Image to report.")
 	protected ImageWrapper		image		= null;
+
+	@ActionFieldAttribute(name = beforeTestCaseName, mandatory = false, description = "The name of Testcase before witch the picture will be put.")
+	protected String 	beforeTestCase 	= null;
 
 	@ActionFieldAttribute(name = titleName, mandatory = false, description = "Title for picture.")
 	protected String			title;
@@ -47,7 +51,8 @@ public class ImageReport extends AbstractAction
 	@Override
 	public void initDefaultValues() 
 	{
-		title		= null;
+		this.beforeTestCase	= null;
+		this.title			= null;
 	}
     
 	@Override
@@ -62,11 +67,11 @@ public class ImageReport extends AbstractAction
 		{
 			File file = this.image.saveToDir(report.getReportDir());
 			outPath = file.getPath();
-			report.outImage(super.owner, file.getName(), this.title);
+			report.outImage(super.owner, this.beforeTestCase, file.getName(), this.title);
 		}
 		else
 		{
-			report.outImage(super.owner, this.image.getFileName(), this.title); 
+			report.outImage(super.owner, this.beforeTestCase, this.image.getFileName(), this.title); 
 		}
 		
 		super.setResult(outPath);

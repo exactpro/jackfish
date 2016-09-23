@@ -27,7 +27,11 @@ import com.exactprosystems.jf.documents.matrix.parser.items.TypeMandatory;
 	)
 public class Report extends AbstractAction 
 {
+	public final static String beforeTestCaseName = "BeforeTestCase";
 	public final static String strName = "Str";
+
+	@ActionFieldAttribute(name = beforeTestCaseName, mandatory = false, description = "The name of Testcase before witch the table will be put.")
+	protected String 	beforeTestCase 	= null;
 
 	@ActionFieldAttribute(name = strName, mandatory = false, description = "Reports given string and parameters to the report.")
 	protected String message; 
@@ -39,7 +43,8 @@ public class Report extends AbstractAction
 	@Override
 	public void initDefaultValues() 
 	{
-		message 		= ""; 
+		this.message 		= "";
+		this.beforeTestCase = null;
 	}
 	
 	@Override
@@ -62,7 +67,7 @@ public class Report extends AbstractAction
 		
 		boolean on = report.reportIsOn();
 		report.reportSwitch(true);
-		ReportTable info = report.addTable(sb.toString(), true, 0, new int[] {});
+		ReportTable info = report.addTable(sb.toString(), this.beforeTestCase, true, 0, new int[] {});
 		info.addValues("");
 		report.reportSwitch(on);
 		

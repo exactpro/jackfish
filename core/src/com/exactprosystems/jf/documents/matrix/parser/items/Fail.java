@@ -95,7 +95,7 @@ public class Fail extends MatrixItem
 	protected void docItSelf(Context context, ReportBuilder report)
 	{
 		ReportTable table;
-		table = report.addTable("", true, 100, new int[] { 30, 70 }, new String[] { "Chapter", "Description" });
+		table = report.addTable("", null, true, 100, new int[] { 30, 70 }, new String[] { "Chapter", "Description" });
 
 		table.addValues("Destination", "Make this TestCase failed");
 		table.addValues("Examples", "<code>#Fail<p>'Error due the condition'</code>");
@@ -117,7 +117,7 @@ public class Fail extends MatrixItem
 			this.failValue.evaluate(evaluator);
 			if (!this.failValue.isValid())
 			{
-				ReportTable table = report.addTable("Fail", true, 1, new int[] { 50, 50 }, new String[] { "Expression", "Error" });
+				ReportTable table = report.addTable("Fail", null, true, 1, new int[] { 50, 50 }, new String[] { "Expression", "Error" });
 
 				String msg = "Error in expression #Fail";
 				table.addValues(this.failValue.getExpression(), msg);
@@ -129,7 +129,7 @@ public class Fail extends MatrixItem
 			Object eval = this.failValue.getValue();
 			if (this.failValue != null)
 			{
-				ReportTable table = report.addTable("Fail", true, 1, new int[] { 50, 50 }, new String[] { "Expression", "Value" });
+				ReportTable table = report.addTable("Fail", null, true, 1, new int[] { 50, 50 }, new String[] { "Expression", "Value" });
 
 				table.addValues(this.failValue.getExpression(), eval);
 

@@ -119,7 +119,7 @@ public class While extends MatrixItem
 	protected void docItSelf(Context context, ReportBuilder report)
 	{
         ReportTable table;
-        table = report.addTable("", true, 100,
+        table = report.addTable("", null, true, 100,
                 new int[] { 30, 70 }, new String[] { "Chapter", "Description"});
 
         table.addValues("Destination", "To organize a loop with precondition");
@@ -156,7 +156,7 @@ public class While extends MatrixItem
 			{
 				while((Boolean)bool)
 				{
-					report.outLine(this, "loop", this.loops);
+					report.outLine(this, null, "loop", this.loops);
 
 					ret = executeChildren(context, listener, evaluator, report, new Class<?>[] { OnError.class }, null);
 					result = ret.getResult();

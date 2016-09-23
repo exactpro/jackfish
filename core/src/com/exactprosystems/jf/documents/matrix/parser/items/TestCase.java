@@ -145,14 +145,22 @@ public final class TestCase extends MatrixItem
 	@Override
 	protected void beforeReport(ReportBuilder report)
 	{
-		report.reportSwitch(true);
+		try
+		{
+			report.putMark(this.name.get());
+			report.reportSwitch(true);
+		}
+		catch (Exception e)
+		{
+			logger.error(e.getMessage(), e);
+		}
 	}
 
 	@Override
 	protected void docItSelf(Context context, ReportBuilder report)
 	{
         ReportTable table;
-        table = report.addTable("", true, 100,
+        table = report.addTable("", null, true, 100,
                 new int[] { 30, 70 }, new String[] { "Chapter", "Description"});
 
         table.addValues("Destination", "TestCase is needed to make script shorter.");

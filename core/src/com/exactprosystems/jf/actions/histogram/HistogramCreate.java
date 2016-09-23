@@ -19,6 +19,7 @@ import com.exactprosystems.jf.functions.Histogram;
 
 import java.util.List;
 
+@Deprecated
 @ActionAttribute(
 		group = ActionGroups.Histograms,
 		suffix = "HST",

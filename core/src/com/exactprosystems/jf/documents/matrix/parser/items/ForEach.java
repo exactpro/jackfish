@@ -138,7 +138,7 @@ public final class ForEach extends MatrixItem
 	protected void docItSelf(Context context, ReportBuilder report)
 	{
 		ReportTable table;
-		table = report.addTable("", true, 100, new int[] { 30, 70 }, new String[] { "Chapter", "Description" });
+		table = report.addTable("", null, true, 100, new int[] { 30, 70 }, new String[] { "Chapter", "Description" });
 
 		table.addValues("Destination", "To organize a loop over a collection");
 		table.addValues("Examples", "<code>#ForEach;#In<p>row;TAB</code>");
@@ -179,7 +179,7 @@ public final class ForEach extends MatrixItem
 				Object currentValue = iterator.next();
 				evaluator.getLocals().set(this.var.get(), currentValue);
 
-				report.outLine(this, String.format("loop %s = %s", this.var, Str.asString(currentValue)), count++);
+				report.outLine(this, null, String.format("loop %s = %s", this.var, Str.asString(currentValue)), count++);
 
 				ret = executeChildren(context, listener, evaluator, report, new Class<?>[] { OnError.class }, null);
 				result = ret.getResult();
