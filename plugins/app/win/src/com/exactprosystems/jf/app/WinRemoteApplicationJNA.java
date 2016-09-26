@@ -126,6 +126,7 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 
 			logger.info("##########################################################################################################");
 			logger.info(String.format("connectionDerived(%s, %d, %d, %d, %s)", title, height, width, pid, controlKind));
+			logger.info("All parameters : " + args.toString());
 			this.driver = new JnaDriverImpl(this.logger);
 			setMaxTimeout(this.driver, args.get(maxTimeout));
 			this.operationExecutor = new WinOperationExecutorJNA(this.logger, this.driver);
@@ -181,6 +182,7 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 
 	private void setMaxTimeout(JnaDriverImpl driver, String maxTimeout) throws Exception
 	{
+		this.logger.debug("Max timeout : " + maxTimeout);
 		if (!Str.IsNullOrEmpty(maxTimeout))
 		{
 			try

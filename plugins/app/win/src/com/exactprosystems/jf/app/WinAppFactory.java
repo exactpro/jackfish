@@ -23,7 +23,7 @@ public class WinAppFactory implements IApplicationFactory
 
 	public final static String		jreExecName				= "jreExec";
 	public final static String		jreArgsName				= "jreArgs";
-	public static final String		maxTimeout				= "Max timeout";
+	public static final String maxTimeout = "MaxTimeout";
 
 	public static final String		mainWindowName			= "MainWindow";
 	public static final String		mainWindowHeight		= "Height";

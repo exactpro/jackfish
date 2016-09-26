@@ -391,7 +391,7 @@ public class JnaDriverImpl
 	private void checkError() throws RemoteException
 	{
 		String error = this.driver.lastError();
-		int errorNumber = 4; // TODO we need to implement this.driver.lastErrorNumber()
+		int errorNumber = this.driver.lastErrorNumber();
 		if (error != null)
 		{
 			switch (errorNumber)
@@ -403,6 +403,8 @@ public class JnaDriverImpl
 				case 4: throw new ElementNotFoundException(error);
 				case 5: throw new TooManyElementsException(error);
 				case 6: throw new InternalErrorException(error);
+				case 7:
+					throw new TimeoutException(error);
 			}
 		}
 	}

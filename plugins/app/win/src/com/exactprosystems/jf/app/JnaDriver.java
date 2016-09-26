@@ -5,6 +5,8 @@ import com.sun.jna.Library;
 public interface JnaDriver extends Library {
 	//region util methods
 	String lastError();
+
+	int lastErrorNumber();
 	String methodTime();
 	String uiAutomationTime();
 	String getFrameworkId();

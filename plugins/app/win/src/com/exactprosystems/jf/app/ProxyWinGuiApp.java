@@ -60,16 +60,18 @@ public class ProxyWinGuiApp extends ProxyApplication
 			System.out.println(WinAppFactory.jreArgsName + "=" + jreArgs);
 			driverParameters.put(ProxyApplication.JVMparametersName, jreArgs);
 		}
+		String maxTimeout = driverParameters.get(WinAppFactory.maxTimeout);
+		if (maxTimeout != null && !maxTimeout.isEmpty())
+		{
+			System.out.println(WinAppFactory.maxTimeout + " = " + maxTimeout);
+			parameters.put(WinAppFactory.maxTimeout, maxTimeout);
+		}
 	}
 
 	private boolean isWindows()
 	{
-		String OS = System.getProperty("os.name"); 
-		if (OS != null)
-		{
-			return OS.startsWith("Windows");
-		}
+		String OS = System.getProperty("os.name");
+		return OS != null && OS.startsWith("Windows");
 
-		return false;
 	}
 }
