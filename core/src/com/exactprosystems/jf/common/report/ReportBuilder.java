@@ -94,7 +94,7 @@ public abstract class ReportBuilder
 		putMark(this.writer, str);
 	}
 
-	public final ReportTable addTable(String beforeTestcase, String title, boolean decoraded, int quotedSince, int[] widths, String ... columns)
+	public final ReportTable addTable(String title, String beforeTestcase, boolean decoraded, int quotedSince, int[] widths, String ... columns)
 	{
 		Integer uniq = this.uniques.peek();
 		logger.trace(String.format("addTable(%s) current = %s", title, uniq));

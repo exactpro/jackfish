@@ -58,6 +58,7 @@ public class ActionsList
 		        DialogFill.class,
 		        DialogAlert.class,
 		        DialogSwitchToWindow.class,
+		        DialogValidate.class,
 		        MessageCheck.class,
 		        MessageCompareTwo.class,
 		        MessageCreate.class,

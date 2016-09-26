@@ -70,7 +70,7 @@ public class HTMLReportBuilder extends ReportBuilder
 	@Override
 	protected void putMark(ReportWriter writer, String mark) throws IOException
 	{
-//		writer.fwrite(String.format("<span id=\"TESTCASE_%s\"/>", mark));
+		writer.fwrite(String.format("<span id=\"TESTCASE_%s\"/>", mark));
 	}
 
 	@Override
