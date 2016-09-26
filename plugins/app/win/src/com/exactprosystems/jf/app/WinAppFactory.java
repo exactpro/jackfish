@@ -30,6 +30,7 @@ public class WinAppFactory implements IApplicationFactory
 	public static final String		mainWindowWidth			= "Width";
 	public static final String		pidName					= "PID";
 	public static final String		controlKindName			= "ControlKind";
+	public static final String connectionTimeout = "Timeout";
 
 	public static final String		execName				= "Exec";
 	public static final String		workDirName				= "WorkDir";
@@ -58,7 +59,8 @@ public class WinAppFactory implements IApplicationFactory
 		{
 			case LOAD:		return new String[] { jreExecName, jreArgsName, maxTimeout};
 			case START:		return new String[] { execName, workDirName, argsName };
-			case CONNECT:	return new String[] { mainWindowName, mainWindowHeight, mainWindowWidth, pidName, controlKindName };
+			case CONNECT:
+				return new String[]{mainWindowName, mainWindowHeight, mainWindowWidth, pidName, controlKindName, connectionTimeout};
 			default:		return empty;	
 		}
 	}
