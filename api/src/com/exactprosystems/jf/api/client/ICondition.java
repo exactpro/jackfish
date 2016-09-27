@@ -8,13 +8,20 @@
 
 package com.exactprosystems.jf.api.client;
 
+import java.util.Map;
+
 public interface ICondition
 {
-	public String serialize();
-	public String getName();
-	public boolean isMatched(String otherName, Object otherValue);
-	public boolean isMatched2(String otherName, Object otherValue1, Object otherValue2);
+	String serialize();
+	String getName();
 
-	public String explanation(String name, Object actualValue);
+	boolean isMatched(Map<String, Object> map);
+
+	@Deprecated
+	boolean isMatched(String otherName, Object otherValue);
+	@Deprecated
+	boolean isMatched2(String otherName, Object otherValue1, Object otherValue2);
+
+	String explanation(String name, Object actualValue);
 
 }

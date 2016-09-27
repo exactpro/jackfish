@@ -8,7 +8,10 @@
 
 package com.exactprosystems.jf.api.conditions;
 
+import com.exactprosystems.jf.api.common.Str;
+
 import java.io.Serializable;
+import java.util.Map;
 
 public abstract class RelativeCondition extends Condition  implements Serializable
 {
@@ -20,7 +23,35 @@ public abstract class RelativeCondition extends Condition  implements Serializab
 		super(name);
 		this.relation = Relations.value(relationStr);
 	}
-	
+
+	@Override
+	public boolean isMatched(Map<String, Object> map)
+	{
+		String name = getName();
+		if (Str.IsNullOrEmpty(name))
+		{
+			return true;
+		}
+		Object value = map.get(name);
+
+		Integer result = compare(value);
+		if (result == null)
+		{
+			return false;
+		}
+
+		switch (this.relation)
+		{
+			case Less:		return result < 0;
+			case LessEqual:	return result < 0 || result == 0;
+			case Equal:		return result == 0;
+			case Great:		return result > 0;
+			case GreatEqual:return result > 0 || result == 0;
+		}
+
+		return false;
+	}
+
 	@Override
 	public boolean isMatched(String otherName, Object otherValue)
 	{

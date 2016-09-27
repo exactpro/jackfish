@@ -8,7 +8,10 @@
 
 package com.exactprosystems.jf.api.conditions;
 
+import com.exactprosystems.jf.api.common.Str;
+
 import java.io.Serializable;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 public class RegexpCondition extends Condition implements Serializable
@@ -26,7 +29,20 @@ public class RegexpCondition extends Condition implements Serializable
 	{
 		return "R" + start + getName() + separator + this.pattern + finish;
 	}
-	
+
+	@Override
+	public boolean isMatched(Map<String, Object> map)
+	{
+		String name = getName();
+		if (Str.IsNullOrEmpty(name))
+		{
+			return true;
+		}
+		Object value = map.get(name);
+		String strValue = "" + value;
+		return Pattern.compile(this.pattern).matcher(strValue).find();
+	}
+
 	@Override
 	public boolean isMatched(String otherName, Object otherValue)
 	{

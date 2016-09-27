@@ -8,7 +8,10 @@
 
 package com.exactprosystems.jf.api.conditions;
 
+import com.exactprosystems.jf.api.common.Str;
+
 import java.io.Serializable;
+import java.util.Map;
 
 public class StringCondition extends Condition  implements Serializable
 {
@@ -31,6 +34,23 @@ public class StringCondition extends Condition  implements Serializable
 	public String serialize()
 	{
 		return "S" + start + getName() + separator + this.value + separator + this.ignoreCase + finish;
+	}
+
+	@Override
+	public boolean isMatched(Map<String, Object> map)
+	{
+		String name = getName();
+		if (Str.IsNullOrEmpty(name))
+		{
+			return true;
+		}
+		Object value = map.get(name);
+		String strValue = "" + value;
+		if (this.ignoreCase)
+		{
+			return strValue.equalsIgnoreCase(this.value);
+		}
+		return strValue.equalsIgnoreCase(this.value);
 	}
 
 	@Override

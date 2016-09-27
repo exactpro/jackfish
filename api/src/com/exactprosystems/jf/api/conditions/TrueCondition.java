@@ -9,6 +9,7 @@
 package com.exactprosystems.jf.api.conditions;
 
 import java.io.Serializable;
+import java.util.Map;
 
 public class TrueCondition extends Condition  implements Serializable
 {
@@ -29,6 +30,12 @@ public class TrueCondition extends Condition  implements Serializable
 	public String serialize()
 	{
 		return "E" + start + getName() + finish;
+	}
+
+	@Override
+	public boolean isMatched(Map<String, Object> map)
+	{
+		return true;
 	}
 
 	@Override

@@ -11,6 +11,7 @@ package com.exactprosystems.jf.api.conditions;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 public class AndCondition extends Condition
 {
@@ -40,7 +41,13 @@ public class AndCondition extends Condition
 	{
 		return this.cond.stream().map(s -> s.getName()).findFirst().orElse("");
 	}
-	
+
+	@Override
+	public boolean isMatched(Map<String, Object> map)
+	{
+		return this.cond.stream().map(c -> c.isMatched(map)).reduce((s1, s2) -> s1 && s2).orElse(true);
+	}
+
 	@Override
 	public boolean isMatched(String otherName, Object otherValue)
 	{

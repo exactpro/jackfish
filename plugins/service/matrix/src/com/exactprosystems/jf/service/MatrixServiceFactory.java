@@ -22,7 +22,7 @@ public class MatrixServiceFactory implements IServiceFactory
 	public final static String onConnectedName 		= "OnConnected";
 	
 	private static final int requiredMajorVersion = 2;
-	private static final int requiredMinorVersion = 20;
+	private static final int requiredMinorVersion = 24;
 
 	private static String[] empty = {  };
 

@@ -8,12 +8,12 @@
 
 package com.exactprosystems.jf.api.client;
 
+import com.exactprosystems.jf.api.common.Str;
+
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-
-import com.exactprosystems.jf.api.common.Str;
 
 public class ClientHelper
 {

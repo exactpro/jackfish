@@ -104,16 +104,6 @@ public abstract class Condition implements ICondition, Serializable
 
 		return this.name.equals(otherName);
 	}
-	
-	protected static boolean areStringEqual(String s1, String s2)
-	{
-		if (s1 == null || s2 == null)
-		{
-			return s1 == s2;
-		}
-		
-		return s1.equals(s2);
-	}
-	
+
 	private String name;
 }

@@ -8,7 +8,10 @@
 
 package com.exactprosystems.jf.api.conditions;
 
+import com.exactprosystems.jf.api.common.Str;
+
 import java.io.Serializable;
+import java.util.Map;
 
 public class EmptyCondition extends Condition  implements Serializable
 {
@@ -25,7 +28,19 @@ public class EmptyCondition extends Condition  implements Serializable
 	{
 		return "E" + start + getName() + finish;
 	}
-	
+
+	@Override
+	public boolean isMatched(Map<String, Object> map)
+	{
+		String name = getName();
+		if (Str.IsNullOrEmpty(name))
+		{
+			return true;
+		}
+		Object value = map.get(name);
+		return value == null || ("" + value).isEmpty();
+	}
+
 	@Override
 	public String toString()
 	{

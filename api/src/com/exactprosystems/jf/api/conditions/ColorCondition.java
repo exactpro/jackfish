@@ -9,9 +9,11 @@
 package com.exactprosystems.jf.api.conditions;
 
 import com.exactprosystems.jf.api.app.InnerColor;
+import com.exactprosystems.jf.api.common.Str;
 
 import java.awt.*;
 import java.io.Serializable;
+import java.util.Map;
 
 public class ColorCondition extends Condition implements Serializable
 {
@@ -40,6 +42,19 @@ public class ColorCondition extends Condition implements Serializable
 	public String toString()
 	{
 		return ColorCondition.class.getSimpleName() + " [name=" + getName() + ", value=" + value  + ", foreground=" + foreground + "]";
+	}
+
+	@Override
+	public boolean isMatched(Map<String, Object> map)
+	{
+		String name = getName();
+		if (Str.IsNullOrEmpty(name))
+		{
+			return true;
+		}
+		Object value = map.get(name);
+
+		return value instanceof Color && this.value.equals(value);
 	}
 
 	@Override

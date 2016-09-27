@@ -1606,27 +1606,24 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 			try
 			{
 				List<WebElement> cells = row.findElements(By.tagName(tag_td));
+				Map<String, Object> map = new LinkedHashMap<>();
 				for (int i = 0; i < cells.size(); i++)
 				{
 					WebElement cell = cells.get(i);
-
-					String name = (i < headers.size() ? headers.get(i) : null);
-					if (valueCondition != null)
+					map.put(i < headers.size() ? headers.get(i) : null, cell.getText());
+				}
+				if (valueCondition != null)
+				{
+					if (!valueCondition.isMatched(map))
 					{
-						if (!valueCondition.isMatched(name, cell.getText()))
-						{
-							return false;
-						}
+						return false;
 					}
-
-					if (colorCondition != null)
+				}
+				if (colorCondition != null)
+				{
+					if (!colorCondition.isMatched(map))
 					{
-						Color color = getColor(cell.getCssValue("color"));
-						Color bgColor = getColor(cell.getCssValue("background-color"));
-						if (!colorCondition.isMatched2(name, color, bgColor))
-						{
-							return false;
-						}
+						return false;
 					}
 				}
 				return true;
