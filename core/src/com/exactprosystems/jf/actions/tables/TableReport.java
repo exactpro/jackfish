@@ -104,7 +104,7 @@ public class TableReport extends AbstractAction
 			super.setError("Table is null", ErrorKind.EMPTY_PARAMETER);
 			return;
 		}
-		this.table.report(report, this.beforeTestCase, this.title, this.withNumbers, this.reportValues, this.columns);
+		this.table.report(report, this.title, this.beforeTestCase, this.withNumbers, this.reportValues, this.columns);
 		
 		super.setResult(null);
 	}

@@ -94,9 +94,22 @@ public class ResultTable extends AbstractAction
 				Result res = (Result)row.get(Context.resultColumn);
 				String str = report.decorateStyle(row.get(Context.resultColumn), res == null ? "" : res.getStyle());
 				row.put(Context.resultColumn, str);
+
+				replace(row, Context.errorPlaceColumn);
+				replace(row, Context.errorPlacePathColumn);
+				replace(row, Context.errorKindColumn);
+				replace(row, Context.errorMessageColumn);
 			}
 		}
 		
 		super.setResult(copy);
 	}
+
+	private void replace(RowTable row, String columnName)
+	{
+		Object value = row.get(columnName);
+		row.put(columnName, value == null ? "" : value.toString());
+	}
 }
+
+

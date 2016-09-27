@@ -653,14 +653,14 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 		}
 	}
 
-	public void report(ReportBuilder report, String beforeTestcase, String title, boolean withNumbers, boolean reportValues) throws Exception
+	public void report(ReportBuilder report, String title, String beforeTestcase, boolean withNumbers, boolean reportValues) throws Exception
 	{
 		String[] columns = Arrays.stream(this.headers).map(h -> h.name).toArray(num -> new String[num]);
 		
-		report(report, beforeTestcase, title, withNumbers, reportValues, columns);
+		report(report, title, beforeTestcase, withNumbers, reportValues, columns);
 	}
 
-	public void report(ReportBuilder report, String beforeTestcase, String title, boolean withNumbers, boolean reportValues, String... columns) throws Exception
+	public void report(ReportBuilder report, String title, String beforeTestcase, boolean withNumbers, boolean reportValues, String... columns) throws Exception
 	{
 		int[] columnsIndexes = getIndexes(columns);
 
@@ -685,7 +685,7 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 			headers[col++ + addition] = this.headers[index].name;
 		}
 
-		ReportTable table = report.addTable(beforeTestcase, title, true, 0, new int[]{}, headers);
+		ReportTable table = report.addTable(title, beforeTestcase, true, 0, new int[]{}, headers);
 
 		int count = 0;
 		for (Map<Header, Object> row : this.innerList)
