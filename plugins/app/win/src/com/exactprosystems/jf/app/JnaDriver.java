@@ -30,6 +30,8 @@ public interface JnaDriver extends Library {
 
 	String elementAttribute(String elementId, int partId);
 	void sendKey(String key);
+
+	void upAndDown(String key, boolean isDown);
 	void mouse(String elementId, int actionId, int x, int y);
 
 	/**

@@ -217,6 +217,15 @@ public class JnaDriverImpl
 		checkError();
 	}
 
+	public void upAndDown(String key, boolean isDown) throws Exception
+	{
+		long start = System.currentTimeMillis();
+		this.driver.upAndDown(key, isDown);
+		this.logger.info(String.format("upAndDown (%s, %b), time (ms) : %d", key, isDown, System.currentTimeMillis() - start));
+		checkCSharpTimes();
+		checkError();
+	}
+
 	public void mouse(UIProxyJNA element, MouseAction action, int x, int y) throws Exception
 	{
 		long start = System.currentTimeMillis();

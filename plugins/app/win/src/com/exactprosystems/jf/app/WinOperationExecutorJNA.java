@@ -273,8 +273,21 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 	@Override
 	public boolean upAndDown(UIProxyJNA component, Keyboard key, boolean b) throws Exception
 	{
-		//TODO need release
-		return false;
+		try
+		{
+			this.driver.upAndDown(key.name(), b);
+			return true;
+		}
+		catch (RemoteException e)
+		{
+			throw e;
+		}
+		catch (Exception e)
+		{
+			this.logger.error(String.format("push(%s)", component));
+			this.logger.error(e.getMessage(), e);
+			throw e;
+		}
 	}
 
 	@Override
