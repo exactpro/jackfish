@@ -4,8 +4,13 @@ $(document).ready(function(){
     $("body > div[title='Failed']").hide();
 	$("a.showBody").parent().parent().parent().parent().next().hide();
 	$("a.showChapter").next().hide();
-    
-    
+
+	$("div.movable").each(function(index) {
+		var me = $(this);
+        $("#TC_" + me.data("moveto"))[0].appendChild(me[0]);
+		me.attr('class','moved');
+	})
+
 	var plain = function() {
 		$("a.filterTotal").css("font-weight", "normal");
 		$("a.filterPassed").css("font-weight", "normal");

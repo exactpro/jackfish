@@ -35,7 +35,7 @@ import java.util.Set;
 @MatrixItemAttribute(
 		description 	= "Test case.", 
 		shouldContain 	= { Tokens.TestCase },
-		mayContain 		= { Tokens.Off },
+		mayContain 		= { Tokens.Id, Tokens.Off },
 		closes			= MatrixRoot.class,
         real			= true,
 		hasValue 		= true, 
@@ -98,8 +98,9 @@ public final class TestCase extends MatrixItem
 	{
 		Object layout = driver.createLayout(this, 2);
 		driver.showComment(this, layout, 0, 0, getComments());
-		driver.showTitle(this, layout, 1, 0, Tokens.TestCase.get(), context.getFactory().getSettings());
-		driver.showTextBox(this, layout, 1, 1, this.name, this.name, null);
+		driver.showTextBox(this, layout, 1, 0, this.id, this.id, () -> this.id.get());
+		driver.showTitle(this, layout, 1, 1, Tokens.TestCase.get(), context.getFactory().getSettings());
+		driver.showTextBox(this, layout, 1, 2, this.name, this.name, null);
 
 		return layout;
 	}
@@ -147,7 +148,7 @@ public final class TestCase extends MatrixItem
 	{
 		try
 		{
-			report.putMark(this.name.get());
+			report.putMark(this.id.get());
 			report.reportSwitch(true);
 		}
 		catch (Exception e)

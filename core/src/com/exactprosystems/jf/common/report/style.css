@@ -93,3 +93,10 @@ div.tree div.tree {
 .bar:hover {
 	fill:green;
 }
+
+div.movable{
+	display: none;
+}
+div.moved {
+	display: inherit;
+}

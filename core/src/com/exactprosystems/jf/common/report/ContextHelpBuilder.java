@@ -142,7 +142,7 @@ public class ContextHelpBuilder extends ReportBuilder
 	
 
 	@Override
-	protected void tableHeader(ReportWriter writer, String tableTitle, String[] columns, int[] percents) throws IOException
+	protected void tableHeader(ReportWriter writer, ReportTable table, String tableTitle, String[] columns, int[] percents) throws IOException
 	{
 		writer.fwrite(
 				"<span class='tableTitle'>%s</span><br>",
@@ -168,7 +168,7 @@ public class ContextHelpBuilder extends ReportBuilder
 	}
 	
 	@Override
-	protected void tableRow(ReportWriter writer, int quotes, Object ... value) throws IOException
+	protected void tableRow(ReportWriter writer, ReportTable table, int quotes, Object ... value) throws IOException
 	{
 		if (value != null)
         {
@@ -184,7 +184,7 @@ public class ContextHelpBuilder extends ReportBuilder
 	}
 
 	@Override
-	protected void tableFooter(ReportWriter writer) throws IOException
+	protected void tableFooter(ReportWriter writer, ReportTable table) throws IOException
 	{
         writer.fwrite("</table>\n");
 	}

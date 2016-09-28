@@ -99,7 +99,7 @@ public abstract class ReportBuilder
 		Integer uniq = this.uniques.peek();
 		logger.trace(String.format("addTable(%s) current = %s", title, uniq));
 		
-		ReportTable info = new ReportTable(title, decoraded, quotedSince, widths, columns);
+		ReportTable info = new ReportTable(title, beforeTestcase, decoraded, quotedSince, widths, columns);
 		
 		this.reportData.get(uniq).add(info); // TODO deal with it
 		
@@ -325,11 +325,11 @@ public abstract class ReportBuilder
 
 	protected abstract void reportItemFooter(ReportWriter writer, MatrixItem entry, Integer id, long time) throws IOException;
 	
-	protected abstract void tableHeader(ReportWriter writer, String tableTitle, String[] columns, int[] percents) throws IOException;
+	protected abstract void tableHeader(ReportWriter writer, ReportTable table, String tableTitle, String[] columns, int[] percents) throws IOException;
 
-	protected abstract void tableRow(ReportWriter writer, int quotes, Object ... value) throws IOException;
+	protected abstract void tableRow(ReportWriter writer, ReportTable table, int quotes, Object ... value) throws IOException;
 
-	protected abstract void tableFooter(ReportWriter writer) throws IOException;
+	protected abstract void tableFooter(ReportWriter writer, ReportTable table) throws IOException;
 	
 	protected abstract void histogram(ReportWriter writer, String title, int intervalCount, int interval, List<Long> copyDate) throws IOException;
 
@@ -374,18 +374,18 @@ public abstract class ReportBuilder
     		{
     			if (table.getData() != null)
     			{
-    				String[] columns = table.getColumns();
+        			String[] columns = table.getColumns();
     				if (table.isDecorated())
     				{
 	    				for (int i = 0; i < columns.length; i++)
 	    				{
 	    					columns[i] = postProcess(columns[i]);
 	    				}
-						tableHeader(writer, postProcess(table.getTitle()), columns, null);
+						tableHeader(writer, table, postProcess(table.getTitle()), columns, null);
     				}
     				else
     				{
-						tableHeader(writer, table.getTitle(), columns, null);
+						tableHeader(writer, table, table.getTitle(), columns, null);
     				}
     				
 		
@@ -399,10 +399,10 @@ public abstract class ReportBuilder
 		    				}
 	    				}
 		        		
-		        		tableRow(writer, data.length, data);
+		        		tableRow(writer, table, data.length, data);
 		        	}
 		
-		        	tableFooter(writer);
+		        	tableFooter(writer, table);
     			}
     		}
     	}

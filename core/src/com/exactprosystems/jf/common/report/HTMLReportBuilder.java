@@ -70,7 +70,7 @@ public class HTMLReportBuilder extends ReportBuilder
 	@Override
 	protected void putMark(ReportWriter writer, String mark) throws IOException
 	{
-		writer.fwrite(String.format("<span id=\"TESTCASE_%s\"></span>", mark));
+		writer.fwrite(String.format("<div id=\"TC_%s\" ></div>", mark));
 	}
 
 	@Override
@@ -228,11 +228,21 @@ public class HTMLReportBuilder extends ReportBuilder
 	@Override
 	protected void reportImage(ReportWriter writer, MatrixItem item, String beforeTestcase, String fileName, String title) throws IOException
 	{
+		if (beforeTestcase != null)
+		{
+			writer.fwrite(
+					"<div class='movable' data-moveto='%s' >\n",
+					beforeTestcase);
+		}
 		writer.fwrite(
 				"<span class='tableTitle'>%s</span><br>",
 				this.postProcess(title));
 		
 		writer.fwrite("<img src='%s' class='img'/><br>", fileName);
+		if (beforeTestcase != null)
+		{
+			writer.fwrite("</div>\n");
+		}
 	}
 	
 	@Override
@@ -302,8 +312,15 @@ public class HTMLReportBuilder extends ReportBuilder
 	
 
 	@Override
-	protected void tableHeader(ReportWriter writer, String tableTitle, String[] columns, int[] percents) throws IOException
+	protected void tableHeader(ReportWriter writer, ReportTable table, String tableTitle, String[] columns, int[] percents) throws IOException
 	{
+		if (table.getBeforeTestcase() != null)
+		{
+			writer.fwrite(
+					"<div class='movable' data-moveto='%s' >\n",
+					table.getBeforeTestcase());
+		}
+		
 		writer.fwrite(
 				"<span class='tableTitle'>%s</span><br>",
 				this.postProcess(tableTitle));
@@ -328,7 +345,7 @@ public class HTMLReportBuilder extends ReportBuilder
 	}
 	
 	@Override
-	protected void tableRow(ReportWriter writer, int quotes, Object ... value) throws IOException
+	protected void tableRow(ReportWriter writer, ReportTable table, int quotes, Object ... value) throws IOException
 	{
 		if (value != null)
         {
@@ -346,9 +363,13 @@ public class HTMLReportBuilder extends ReportBuilder
 	}
 
 	@Override
-	protected void tableFooter(ReportWriter writer) throws IOException
+	protected void tableFooter(ReportWriter writer, ReportTable table) throws IOException
 	{
         writer.fwrite("</table>\n");
+		if (table.getBeforeTestcase() != null)
+		{
+			writer.fwrite("</div>\n");
+		}
 	}
 
 	@Override
