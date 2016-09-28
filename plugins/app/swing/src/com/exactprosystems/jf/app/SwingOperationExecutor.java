@@ -1372,15 +1372,14 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 
 	private String getIconPath(JLabel label)
 	{
-		try
+		if(label.getIcon() != null)
 		{
 			return String.valueOf(label.getIcon());
 		}
-		catch (Exception e)
+		else
 		{
-			logger.error("Could not get an icon: " + e.getMessage());
+			return "";
 		}
-		return null;
 	}
 
 	private Object getValueTableCell(JTableFixture fixture, int row, int column) throws IllegalAccessException
@@ -1398,12 +1397,10 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 				JLabel jLabel = (JLabel) tableCellRendererComponent;
 				if(jLabel.getText().isEmpty())
 				{
-					logger.debug("try to get icon from: ");
 					return getIconPath(jLabel);
 				}
 				else
 				{
-					logger.debug("try to get text from: " + jLabel.getText());
 					return jLabel.getText();
 				}
 			}
