@@ -1389,9 +1389,7 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 
 		if (valueAt != null)
 		{
-			TableCellRenderer defaultRenderer = table.getDefaultRenderer(table.getColumnClass(column));
-			Component tableCellRendererComponent = defaultRenderer.getTableCellRendererComponent(table, valueAt, false, false, row, column);
-			logger.debug("component : " + tableCellRendererComponent);
+			Component tableCellRendererComponent = table.getCellRenderer(row, column).getTableCellRendererComponent(table,valueAt, false, false, row, column);
 			if (tableCellRendererComponent instanceof JLabel)
 			{
 				JLabel jLabel = (JLabel) tableCellRendererComponent;
