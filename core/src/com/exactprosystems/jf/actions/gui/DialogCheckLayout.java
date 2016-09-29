@@ -22,10 +22,7 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.documents.matrix.parser.items.ActionItem.HelpKind;
 import com.exactprosystems.jf.documents.matrix.parser.items.TypeMandatory;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static com.exactprosystems.jf.actions.gui.Helper.message;
 
@@ -41,6 +38,7 @@ public class DialogCheckLayout extends AbstractAction
 	public final static String	dialogName		= "Dialog";
 	public final static String	doNotOpenName	= "DoNotOpen";
 	public final static String	doNotCloseName	= "DoNotClose";
+	public static final String	fieldsName		= "Fields";
 
 	@ActionFieldAttribute(name = connectionName, mandatory = true, description = "The application connection.")
 	protected AppConnection		connection		= null;
@@ -53,6 +51,10 @@ public class DialogCheckLayout extends AbstractAction
 
 	@ActionFieldAttribute(name = doNotCloseName, mandatory = false, description = "Do not close a dialog.")
 	protected Boolean			doNotClose;
+
+	@ActionFieldAttribute(name = fieldsName, mandatory = false, description = "Map of control name : control operation.")
+	protected Map<String, Object> fields;
+
 
 	public DialogCheckLayout()
 	{
@@ -125,7 +127,19 @@ public class DialogCheckLayout extends AbstractAction
 		logger.debug("Process dialog: " + window);
 
 		logger.debug("Check the addition parameters");
-		window.checkParams(parameters.select(TypeMandatory.Extra).keySet());
+		Parameters controlMap;
+		if (this.fields != null)
+		{
+			controlMap = new Parameters();
+			Parameters finalControlMap = controlMap;
+			this.fields.entrySet().forEach(entry -> finalControlMap.add(entry.getKey(), "" + entry.getValue()));
+			controlMap.evaluateAll(context.getEvaluator());
+		}
+		else
+		{
+			controlMap = parameters.select(TypeMandatory.Extra);
+		}
+		window.checkParams(controlMap.keySet());
 
 		if (!this.doNotOpen)
 		{
@@ -153,7 +167,7 @@ public class DialogCheckLayout extends AbstractAction
 		SectionKind run = SectionKind.Run;
 		logger.debug("Perform " + run);
 		ISection sectionRun = window.getSection(run);
-		for (Parameter parameter : parameters.select(TypeMandatory.Extra))
+		for (Parameter parameter : controlMap)
 		{
 			String name = parameter.getName();
 			Object obj = parameter.getValue();

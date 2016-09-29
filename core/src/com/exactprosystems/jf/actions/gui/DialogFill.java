@@ -47,7 +47,7 @@ public class DialogFill extends AbstractAction
 	public final static String	doNotOpenName			= "DoNotOpen";
 	public final static String	doNotCloseName			= "DoNotClose";
 	public final static String	stopOnFailName			= "StopOnFail";
-	
+	public static final String	fieldsName				= "Fields";
 
 	@ActionFieldAttribute(name = connectionName, mandatory = true, description = "The application connection.")
 	protected AppConnection		connection			= null;
@@ -63,7 +63,10 @@ public class DialogFill extends AbstractAction
 	
 	@ActionFieldAttribute(name = stopOnFailName, mandatory = false, description = "Stop action on fail")
 	protected Boolean			stopOnFail;
-	
+
+	@ActionFieldAttribute(name = fieldsName, mandatory = false, description = "Map of control name : control operation.")
+	protected Map<String, Object> fields;
+
 	public DialogFill()
 	{
 	}
@@ -73,6 +76,7 @@ public class DialogFill extends AbstractAction
 		stopOnFail	= true;
 		doNotClose	= false;
 		doNotOpen	= false;
+		fields		= null;
 	}
 	
 	@Override
@@ -137,7 +141,19 @@ public class DialogFill extends AbstractAction
 		logger.debug("Process dialog: " + window);
 
 		logger.debug("Check the addition parameters");
-		window.checkParams(parameters.select(TypeMandatory.Extra).keySet());
+		Parameters controlMap;
+		if (this.fields != null)
+		{
+			controlMap = new Parameters();
+			Parameters finalControlMap = controlMap;
+			this.fields.entrySet().forEach(entry -> finalControlMap.add(entry.getKey(), "" + entry.getValue()));
+			controlMap.evaluateAll(context.getEvaluator());
+		}
+		else
+		{
+			controlMap = parameters.select(TypeMandatory.Extra);
+		}
+		window.checkParams(controlMap.keySet());
 		service.startNewDialog();
 		if (!this.doNotOpen)
 		{
@@ -166,7 +182,7 @@ public class DialogFill extends AbstractAction
 		logger.debug("Perform " + run);
 		ISection sectionRun = window.getSection(run);
 		String allReportErrors = "";
-		for (Parameter parameter : parameters.select(TypeMandatory.Extra))
+		for (Parameter parameter : controlMap)
 		{
 			String name = parameter.getName();
 			Object obj = parameter.getValue();
