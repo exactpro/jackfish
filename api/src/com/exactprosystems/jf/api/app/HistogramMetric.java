@@ -7,6 +7,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.exactprosystems.jf.api.app;
 
+@Deprecated
 public enum HistogramMetric
 {
 	Find("Find"),

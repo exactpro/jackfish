@@ -11,6 +11,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+@Deprecated
 public class HistogramTransfer implements Serializable
 {
 	private static final long serialVersionUID = -4141790456810458507L;
