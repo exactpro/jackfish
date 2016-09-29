@@ -8,6 +8,7 @@
 
 package com.exactprosystems.jf.common.report;
 
+import com.exactprosystems.jf.api.app.ChartKind;
 import com.exactprosystems.jf.api.app.ControlKind;
 import com.exactprosystems.jf.api.app.OperationKind;
 import com.exactprosystems.jf.common.ControlsAttributes;
@@ -16,10 +17,12 @@ import com.exactprosystems.jf.documents.guidic.controls.AbstractControl;
 import com.exactprosystems.jf.documents.matrix.Matrix;
 import com.exactprosystems.jf.documents.matrix.parser.Result;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
+import com.exactprosystems.jf.functions.Table;
 
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 public class HelpBuilder extends ReportBuilder
 {
@@ -326,5 +329,11 @@ public class HelpBuilder extends ReportBuilder
 	protected void histogram(ReportWriter writer, String title, int intervalCount, int interval, List<Long> copyDate)
 	{
 
+	}
+
+	@Override
+	protected void reportChar(ReportWriter writer, ChartKind chartKind, String title, String beforeTestCase, Table table, Map<String, Object> values) throws IOException
+	{
+		
 	}
 }

@@ -8,12 +8,14 @@
 
 package com.exactprosystems.jf.common.report;
 
+import com.exactprosystems.jf.api.app.ChartKind;
 import com.exactprosystems.jf.common.version.VersionInfo;
 import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.documents.matrix.Matrix;
 import com.exactprosystems.jf.documents.matrix.parser.Result;
 import com.exactprosystems.jf.documents.matrix.parser.items.CommentString;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
+import com.exactprosystems.jf.functions.Table;
 
 import java.io.File;
 import java.io.IOException;
@@ -22,6 +24,7 @@ import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class HTMLReportBuilder extends ReportBuilder 
@@ -381,4 +384,26 @@ public class HTMLReportBuilder extends ReportBuilder
 		writer.fwrite("<ul>\n<li id=\"hstTimeRange" + id + "\">Range : </li>\n<li id=\"hstTimeCount" + id + "\">Count :</li>");
 	}
 
+	@Override
+	protected void reportChar(ReportWriter writer, ChartKind chartKind, String title, String beforeTestCase, Table table, Map<String, Object> values) throws IOException
+	{
+		if (beforeTestCase != null)
+		{
+			writer.fwrite(
+					"<div class='movable' data-moveto='%s' >\n",
+					beforeTestCase);
+		}
+		writer.fwrite(
+				"<span class='tableTitle'>%s</span><br>",
+				this.postProcess(title));
+		
+		// TODO implement it
+		
+		
+		if (beforeTestCase != null)
+		{
+			writer.fwrite("</div>\n");
+		}
+		
+	}
 }

@@ -69,6 +69,7 @@ public class ActionsList
 		        MatrixRunFromText.class,
 		        MatrixRun.class,
 		        MatrixWait.class,
+		        Chart.class,
 		        Print.class,
 		        Report.class,
 		        ReportName.class,
