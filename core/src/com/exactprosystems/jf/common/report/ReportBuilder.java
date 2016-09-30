@@ -8,12 +8,11 @@
 
 package com.exactprosystems.jf.common.report;
 
-import com.exactprosystems.jf.api.app.ChartKind;
+import com.exactprosystems.jf.charts.ChartBuilder;
 import com.exactprosystems.jf.documents.matrix.Matrix;
 import com.exactprosystems.jf.documents.matrix.parser.Result;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 import com.exactprosystems.jf.documents.matrix.parser.items.TestCase;
-import com.exactprosystems.jf.functions.Table;
 
 import org.apache.log4j.Logger;
 
@@ -252,10 +251,10 @@ public abstract class ReportBuilder
         }
 	}
 
-	public void reportChar(ChartKind chartKind, String title, String beforeTestCase, Table table, Map<String, Object> values) throws IOException
+	public void reportChart(String title, String beforeTestCase, ChartBuilder chartBuilder) throws IOException
 	{
 		logger.trace("reportChar");
-		reportChar(this.writer, chartKind, title, beforeTestCase, table, values);
+		reportChart(this.writer, title, beforeTestCase, chartBuilder);
 	}
 
 	@Deprecated
@@ -343,7 +342,7 @@ public abstract class ReportBuilder
 	@Deprecated
 	protected abstract void histogram(ReportWriter writer, String title, int intervalCount, int interval, List<Long> copyDate) throws IOException;
 
-	protected abstract void reportChar(ReportWriter writer, ChartKind chartKind, String title, String beforeTestCase, Table table, Map<String, Object> values) throws IOException;
+	protected abstract void reportChart(ReportWriter writer, String title, String beforeTestCase, ChartBuilder chartBuilder) throws IOException;
 
 
 	

@@ -8,14 +8,13 @@
 
 package com.exactprosystems.jf.common.report;
 
-import com.exactprosystems.jf.api.app.ChartKind;
+import com.exactprosystems.jf.charts.ChartBuilder;
 import com.exactprosystems.jf.common.version.VersionInfo;
 import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.documents.matrix.Matrix;
 import com.exactprosystems.jf.documents.matrix.parser.Result;
 import com.exactprosystems.jf.documents.matrix.parser.items.CommentString;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
-import com.exactprosystems.jf.functions.Table;
 
 import java.io.File;
 import java.io.IOException;
@@ -24,7 +23,6 @@ import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 public class HTMLReportBuilder extends ReportBuilder 
@@ -385,7 +383,7 @@ public class HTMLReportBuilder extends ReportBuilder
 	}
 
 	@Override
-	protected void reportChar(ReportWriter writer, ChartKind chartKind, String title, String beforeTestCase, Table table, Map<String, Object> values) throws IOException
+	protected void reportChart(ReportWriter writer, String title, String beforeTestCase, ChartBuilder chartBuilder) throws IOException
 	{
 		if (beforeTestCase != null)
 		{
@@ -397,6 +395,7 @@ public class HTMLReportBuilder extends ReportBuilder
 				"<span class='tableTitle'>%s</span><br>",
 				this.postProcess(title));
 		
+		chartBuilder.report(this);
 		// TODO implement it
 		
 		
