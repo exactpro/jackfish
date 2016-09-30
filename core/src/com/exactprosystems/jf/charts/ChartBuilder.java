@@ -12,6 +12,7 @@ import java.util.List;
 
 import com.exactprosystems.jf.actions.ReadableValue;
 import com.exactprosystems.jf.common.report.ReportBuilder;
+import com.exactprosystems.jf.common.report.ReportWriter;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.functions.Table;
@@ -24,7 +25,7 @@ public class ChartBuilder
 		this.params = params;
 	}
 	
-	public void report(ReportBuilder report)
+	public void report(ReportWriter writer)
 	{
 		
 	}

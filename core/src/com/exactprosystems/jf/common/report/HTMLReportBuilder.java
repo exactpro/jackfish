@@ -395,7 +395,7 @@ public class HTMLReportBuilder extends ReportBuilder
 				"<span class='tableTitle'>%s</span><br>",
 				this.postProcess(title));
 		
-		chartBuilder.report(this);
+		chartBuilder.report(writer);
 		// TODO implement it
 		
 		
