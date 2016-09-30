@@ -199,7 +199,7 @@ public class RawTable extends MatrixItem
 		try
 		{
 			this.table.setEvaluator(evaluator);
-			this.table.report(report, null, Tokens.RawTable.get(), false, false);
+			this.table.report(report, Tokens.RawTable.get(), null, false, false);
 
 			Variables vars = isGlobal() ? evaluator.getGlobals() : evaluator.getLocals();
 
