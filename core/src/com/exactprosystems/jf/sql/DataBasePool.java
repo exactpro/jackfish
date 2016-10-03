@@ -8,24 +8,16 @@
 
 package com.exactprosystems.jf.sql;
 
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.sql.Connection;
-import java.sql.Driver;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Properties;
-import java.util.ServiceLoader;
-
 import com.exactprosystems.jf.common.MainRunner;
 import com.exactprosystems.jf.documents.DocumentFactory;
 import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.documents.config.SqlEntry;
 import com.exactprosystems.jf.functions.Table;
+
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.sql.*;
+import java.util.*;
 
 public class DataBasePool
 {
@@ -140,8 +132,8 @@ public class DataBasePool
 			Iterator<Driver> iterator = loader.iterator();
 			while(iterator.hasNext())
 			{
-				Driver next = iterator.next();
-				if (next.getClass().getSimpleName().startsWith("Driver"))
+				Driver next = iterator.next();								// for oracle jdbc driver
+				if (next.getClass().getSimpleName().startsWith("Driver") || next.getClass().getSimpleName().startsWith("OracleDriver"))
 				{
 					driver = next;
 				}
