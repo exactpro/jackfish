@@ -30,7 +30,6 @@ import org.fest.swing.timing.Pause;
 import org.fest.swing.util.Pair;
 
 import javax.swing.*;
-import javax.swing.table.TableCellRenderer;
 import javax.swing.text.JTextComponent;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeNode;
@@ -1370,42 +1369,31 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 		return result;
 	}
 
-	private String getIconPath(JLabel label)
+	private Object getValueTableCell(JTableFixture fixture, int row, int column) throws IllegalAccessException
 	{
-		if(label.getIcon() != null)
+		JTable table = fixture.target;
+		Object valueAt = table.getValueAt(row, column);
+		Component rendererComponent = table.getCellRenderer(row, column).getTableCellRendererComponent(table, valueAt, true, true, row, column);
+		if (rendererComponent instanceof JLabel)
 		{
-			return String.valueOf(label.getIcon());
+			JLabel label = (JLabel) rendererComponent;
+			StringBuffer result = new StringBuffer();
+			result.append(label.getText());
+			if(!label.getText().isEmpty() && label.getIcon() != null)
+			{
+				result.append(" | ");
+			}
+			if(label.getIcon() != null)
+			{
+				result.append(label.getIcon());
+			}
+			return result;
 		}
 		else
 		{
-			return "";
+			logger.info("rendererComponent doesn't have a JLabel class, but has: " + rendererComponent.getClass().getName());
+			return rendererComponent.getClass().getName();
 		}
-	}
-
-	private Object getValueTableCell(JTableFixture fixture, int row, int column) throws IllegalAccessException
-	{
-	    JTable table = fixture.target;
-		Object valueAt = table.getValueAt(row, column);
-
-		if (valueAt != null)
-		{
-			Component tableCellRendererComponent = table.getCellRenderer(row, column).getTableCellRendererComponent(table,valueAt, false, false, row, column);
-			if (tableCellRendererComponent instanceof JLabel)
-			{
-				JLabel jLabel = (JLabel) tableCellRendererComponent;
-				if(jLabel.getText().isEmpty())
-				{
-					return getIconPath(jLabel);
-				}
-				else
-				{
-					return jLabel.getText();
-				}
-			}
-        }
-
-		valueAt = fixture.valueAt(TableCell.row(row).column(column));
-		return valueAt;
 	}
 	
 	private String getValue(Component currentComponent) throws RemoteException
