@@ -28,6 +28,7 @@ import java.util.stream.Collectors;
 public class HTMLReportBuilder extends ReportBuilder 
 {
 	private static Integer diagramCount = 0;
+	private static Integer chartCount = 0;
 	private static final String reportExt = ".html";
 	private static final DateFormat dateTimeFormatter = new SimpleDateFormat("yyyyMMdd_HHmmss_");
 	
@@ -109,8 +110,14 @@ public class HTMLReportBuilder extends ReportBuilder
 		writer.fwrite("<script>\n");
 		writer.include(getClass().getResourceAsStream("d3.min.js"));
 		writer.fwrite("</script>\n");
+
+		//TODO remove it
 		writer.fwrite("<script>\n");
 		writer.include(getClass().getResourceAsStream("histogram.js"));
+		writer.fwrite("</script>\n");
+
+		writer.fwrite("<script>\n");
+		writer.include(getClass().getResourceAsStream("charts.js"));
 		writer.fwrite("</script>\n");
 
 		writer.fwrite(
@@ -394,8 +401,8 @@ public class HTMLReportBuilder extends ReportBuilder
 		writer.fwrite(
 				"<span class='tableTitle'>%s</span><br>",
 				this.postProcess(title));
-		
-		chartBuilder.report(writer);
+
+		chartBuilder.report(writer, ++chartCount);
 		// TODO implement it
 		
 		

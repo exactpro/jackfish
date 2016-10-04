@@ -29,7 +29,8 @@ public enum ErrorKind
 	TIMEOUT					("Timeout"),
 	MANY_ERRORS				("Many errors"),
 	FAIL					("Fail"), 
-	OTHER					("Other"), 
+	OTHER					("Other"),
+	CHART_EXCEPTION			("Chart exception"),
 	;
 
 	

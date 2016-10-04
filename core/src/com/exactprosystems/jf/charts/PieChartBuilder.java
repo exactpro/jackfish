@@ -8,16 +8,82 @@
 
 package com.exactprosystems.jf.charts;
 
+import com.exactprosystems.jf.actions.ReadableValue;
+import com.exactprosystems.jf.api.error.JFException;
+import com.exactprosystems.jf.api.error.common.ChartException;
+import com.exactprosystems.jf.api.error.common.NullParameterException;
+import com.exactprosystems.jf.common.report.ReportWriter;
+import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.functions.Table;
 
+import java.io.IOException;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
 public class PieChartBuilder extends ChartBuilder
 {
-	public PieChartBuilder(Table table, Parameters params)
+	public static final String valuesColumnName = "Values";
+	public static final String labelsColumnName = "Labels";
+
+	private String valueColumnName;
+	private String labelColumnName;
+
+	public PieChartBuilder(Table table, Parameters params) throws JFException
 	{
 		super(table, params);
+		Object valueColumn = params.get(valuesColumnName);
+		if (valueColumn == null)
+		{
+			throw new NullParameterException(String.format("Parameter %s can't be null", valuesColumnName));
+		}
+		this.valueColumnName = "" + valueColumn;
+		AtomicBoolean ab = new AtomicBoolean(false);
+		int headerSize = table.getHeaderSize();
+		IntStream.range(0, headerSize)
+				.mapToObj(table::getHeader)
+				.filter(valueColumn::equals)
+				.findFirst()
+				.ifPresent(s1 -> ab.set(true));
 
-		// TODO Auto-generated constructor stub
+		if (!ab.get())
+		{
+			throw new ChartException(String.format("Column with name %s not presented", valueColumnName));
+		}
+		if (!table.stream().allMatch(rt -> rt.get(valueColumnName).toString().chars().allMatch(Character::isDigit)))
+		{
+			throw new ChartException(String.format("All values from column %s must be a number", valueColumnName));
+		}
+		Object labelColumn = params.get(labelsColumnName);
+		if (labelColumn == null)
+		{
+			this.labelColumnName = IntStream.range(0, headerSize)
+					.mapToObj(table::getHeader)
+					.filter(s -> !valueColumn.equals(s))
+					.findFirst()
+					.orElseThrow(() -> new ChartException("Pie chart can't be drawing from table with one column"));
+		}
+		else
+		{
+			this.labelColumnName = "" + labelColumn;
+		}
 	}
 
+	@Override
+	public void report(ReportWriter writer, Integer id) throws IOException
+	{
+		String chartId = "chart_" + id;
+		writer.fwrite("<div id='%s' class=container></div>", chartId);
+		String data = "[" + this.table.stream().map(rt -> String.format("{'value' : %s, 'label' : '%s'}", rt.get(valueColumnName), rt.get(labelColumnName))).collect(Collectors.joining(",")) + "]";
+		writer.fwrite("<script>createPieChart('%s',%s)</script>", chartId, data);
+	}
+
+	@Override
+	public void helpToAddParameters(List<ReadableValue> list, Context context) throws Exception
+	{
+		list.add(new ReadableValue(valuesColumnName, "Column name, which describe values for pie chart"));
+		list.add(new ReadableValue(labelsColumnName, "Column name, which describe labels for pie chart"));
+	}
 }

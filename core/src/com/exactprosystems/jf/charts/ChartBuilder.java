@@ -8,14 +8,14 @@
 
 package com.exactprosystems.jf.charts;
 
-import java.util.List;
-
 import com.exactprosystems.jf.actions.ReadableValue;
-import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.common.report.ReportWriter;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.functions.Table;
+
+import java.io.IOException;
+import java.util.List;
 
 public class ChartBuilder
 {
@@ -24,15 +24,17 @@ public class ChartBuilder
 		this.table = table;
 		this.params = params;
 	}
-	
-	public void report(ReportWriter writer)
+
+	//TODO need be abstract
+	public void report(ReportWriter writer, Integer integer) throws IOException
 	{
 		
 	}
-	
+
+	//TODO need be abstract
 	public void helpToAddParameters(List<ReadableValue> list, Context context) throws Exception
 	{
-		
+		String s = "";
 	}
 
 	
