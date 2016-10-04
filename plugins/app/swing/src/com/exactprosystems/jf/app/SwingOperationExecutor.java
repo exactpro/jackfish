@@ -1355,7 +1355,11 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 		{
 			if(columns == null)
 			{
-				realName = table.getColumnName(i);
+                realName = table.getColumnModel().getColumn(i).getHeaderValue().toString();
+                if(realName.equals("-"))
+                {
+                    realName = "";
+                }
 			}
 			else
 			{
