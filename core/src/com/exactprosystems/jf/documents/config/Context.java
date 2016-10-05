@@ -152,24 +152,11 @@ public class Context implements IContext, AutoCloseable, Cloneable
 		String ns = parts[0];
 		String id = parts[1];
 
-		Matrix matrix = this.libs.get(ns);
-		if (matrix == null)
-		{
-			matrix = getConfiguration().getLib(ns);
-
-			if (matrix == null)
-			{
-				return null;
-			}
-			try
-			{
-				matrix = matrix.clone();
-			}
-			catch (CloneNotSupportedException e)
-			{
-				logger.error(e.getMessage(), e);
-			}
-			this.libs.put(ns, matrix);
+		Matrix matrix = getConfiguration().getLibs().get(ns);
+		try {
+			matrix = matrix.clone();
+		} catch (CloneNotSupportedException e) {
+			logger.error(e.getMessage(), e);
 		}
 
 		return (SubCase) matrix.getRoot().find(true, SubCase.class, id);
