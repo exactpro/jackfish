@@ -33,6 +33,7 @@ public class ActionsList
 		        ApplicationSwitchTo.class,
 		        ApplicationResize.class,
 				ApplicationCloseWindow.class,
+				ApplicationNavigate.class,
 		        ClientCheckMessage.class,
 		        ClientCheckFields.class,
 		        ClientClearMessages.class,

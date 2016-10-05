@@ -256,6 +256,12 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 	}
 
 	@Override
+	protected void navigateDerived(NavigateKind kind) throws Exception
+	{
+		throw new FeatureNotSupportedException("navigate");
+	}
+
+	@Override
 	protected void setAlertTextDerived(String text, PerformKind performKind) throws Exception
 	{
 		throw new FeatureNotSupportedException("setAlertText");

@@ -29,8 +29,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
-import java.lang.management.ManagementFactory;
-import java.lang.management.RuntimeMXBean;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -205,6 +203,12 @@ public class SwingRemoteApplication extends RemoteApplication
 	protected SerializablePair<String, Boolean> getAlertTextDerived() throws Exception
 	{
 		throw new FeatureNotSupportedException("getAlertText");
+	}
+
+	@Override
+	protected void navigateDerived(NavigateKind kind) throws Exception
+	{
+		throw new FeatureNotSupportedException("navigate");
 	}
 
 	@Override

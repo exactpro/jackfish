@@ -184,6 +184,24 @@ public abstract class RemoteApplication implements IRemoteApplication
 	}
 
 	@Override
+	public void navigate(NavigateKind kind) throws RemoteException
+	{
+		try
+		{
+			navigateDerived(kind);
+		}
+		catch (RemoteException e)
+		{
+			throw e;
+		}
+		catch (Exception e)
+		{
+			String msg = String.format("Error navigate(%s)", kind);
+			throw new ProxyException(msg, e.getMessage(), e);
+		}
+	}
+
+	@Override
 	public void setAlertText(String text, PerformKind performKind) throws RemoteException
 	{
 		try
@@ -590,6 +608,8 @@ public abstract class RemoteApplication implements IRemoteApplication
 	protected abstract void refreshDerived() throws Exception;
 
 	protected abstract SerializablePair<String,Boolean> getAlertTextDerived() throws Exception;
+
+	protected abstract void navigateDerived(NavigateKind kind) throws Exception;
 
 	protected abstract void setAlertTextDerived(String text, PerformKind performKind) throws Exception;
 

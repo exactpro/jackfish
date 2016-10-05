@@ -30,6 +30,7 @@ public interface IRemoteApplication extends Remote
 	int 						run				(Map<String, String> args) throws RemoteException;
 	void 						stop			() throws RemoteException;
 	SerializablePair<String, Boolean> getAlertText() throws RemoteException;
+	void						navigate		(NavigateKind kind) throws RemoteException;
 	void 						setAlertText	(String text, PerformKind performKind) throws RemoteException;
 	void 						refresh			() throws RemoteException;
 	Collection<String> 			titles			() throws RemoteException;

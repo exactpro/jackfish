@@ -298,6 +298,21 @@ public class SeleniumRemoteApplication extends RemoteApplication
 	}
 
 	@Override
+	protected void navigateDerived(NavigateKind kind) throws Exception
+	{
+		switch (kind)
+		{
+
+			case BACK:
+				this.driver.navigate().back();
+				break;
+			case FORWARD:
+				this.driver.navigate().back();
+				break;
+		}
+	}
+
+	@Override
 	protected void setAlertTextDerived(String text, PerformKind performKind) throws Exception
 	{
 		logger.debug(String.format("setAlertTextDerived(%s,%s)", text, performKind));
