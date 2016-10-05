@@ -4,16 +4,6 @@ var createPieChart = function(diagramId, data) {
 	var r = h/2;
 	var color = d3.scale.category20();
 
-	/*
-	var data = [
-		{"label":"Category A", "value":200},
-		{"label":"Category B", "value":200},
-		{"label":"Category C", "value":200},
-		{"label":"Category E", "value":200},
-		{"label":"Category F", "value":200}
-	];
-	*/
-
 	var vis = d3.select('#'+diagramId)
 		.append("svg:svg")
 		.data([data])
@@ -174,10 +164,133 @@ var createBarChart = function(diagramId, data, yAxisDescription) {
 
 }
 
-var createGanntChart = function(diagramId) {
+var createLineChart = function(diagramId, data, yAxisDescription) {
 
+	var margin = {top: 20, right: 80, bottom: 30, left: 50},
+		width = 900 - margin.left - margin.right,
+		height = 300 - margin.top - margin.bottom;
+	var x = d3.scale.linear().range([0, width]);
+	var y = d3.scale.linear().range([height, 0]);
+	var color = d3.scale.category20();
+	var labelColumn = "label"
+
+	//add information for data
+	var tickCountStr = "tickCountStr";
+	while(data[0][tickCountStr] !== undefined) {
+		tickCountStr+=1
+	}
+	for(var i = 0; i < data.length; i++) {
+		data[i][tickCountStr] = i;
+	}
+	
+	var xAxis = d3.svg.axis()
+		.scale(x)
+		.ticks(Math.min(data.length, 10))
+		.tickFormat(function(d,i) {
+			return data[i].label
+		})
+		.orient("bottom");
+	
+	var yAxis = d3.svg.axis()
+		.scale(y)
+		.orient("left");
+	
+	var line = d3.svg
+		.line()
+		.interpolate("cardinal")
+		.x(function(d) {
+			return x(d.tickCountStr)
+		})
+		.y(function(d) {
+			return y(d.value)
+		});
+	
+	var svg = d3.select("#"+diagramId)
+		.append("svg")
+		.data([data])
+		.attr("width", width + margin.left + margin.right + 100)
+		.attr("height", height + margin.top + margin.bottom + 100)
+		.append("g")
+		.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+	
+	color.domain(d3.keys(data[0]).filter(function(key) {
+		return key !== "label" && key !== tickCountStr;
+	}))
+	
+	var lines = color.domain().map(function(name) {
+		console.log(name)
+		return {
+			name: name,
+			values: data.map(function(d) {
+				return {
+					tickCountStr: d.tickCountStr,
+					value: +d[name]
+				};
+			})
+		}
+	});
+	x.domain(d3.extent(data, function(d) {
+			return d.tickCountStr;
+		})
+	);
+	y.domain([
+		d3.min(lines, function(c) {
+			return d3.min(c.values, function(v) {
+				return v.value;
+			});
+		}),
+		d3.max(lines, function(c) {
+			return d3.max(c.values, function(v) {
+				return v.value;
+			});
+		})
+	]);
+	svg.append("g")
+		.attr("class", "x axis")
+		.attr("transform", "translate(0," + height + ")")
+		.call(xAxis);
+	
+	svg.append("g")
+		.attr("class", "y axis")
+		.call(yAxis)
+		.append("text")
+		.attr("transform", "rotate(-90)")
+		.attr("y", 6)
+		.attr("dy", ".71em")
+		.style("text-anchor", "end")
+		.text(yAxisDescription);
+	
+	var myLine = svg.selectAll(".myLine")
+		.data(lines)
+		.enter().append("g")
+		.attr("class", "myLine");
+	
+	myLine.append("path")
+		.attr("class", "line")
+		.attr("d", function(d) {
+			return line(d.values)
+		})
+		.style("stroke", function(d) {
+			return color(d.name);
+		});
+	
+	myLine.append("text")
+		.datum(function(d) {
+			return {
+				name: d.name,
+				value: d.values[d.values.length - 1]
+			};
+		})
+		.attr("transform", function(d) {
+			return "translate(" + x(d.value.tickCountStr) + "," + y(d.value.value) + ")";
+		})
+		.attr("x", 3)
+		.attr("dy", ".35em")
+		.text(function(d) {
+			return d.name
+		});
 }
 
-var createLineChart = function(diagramId) {
+var createGanntChart = function(diagramId) {
 
 }

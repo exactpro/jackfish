@@ -75,23 +75,22 @@ div.tree div.tree {
 	-o-transform: rotate(270deg);
 	transform: rotate(270deg);
 }
-.axis path, .axis line {
+.axis path,
+.axis line {
 	fill: none;
-	stroke: #333;
-}
-.axis .grid-line {
 	stroke: #000;
-	stroke-opacity: 0.2;
+	shape-rendering: crispEdges;
 }
-.axis text {
-	font: 10px Verdana;
+
+.line {
+	fill: none;
+	stroke: steelblue;
+	stroke-width: 1.5px;
 }
-.bar {
-	stroke: none;
-	fill: #4682B4;
-}
-.bar:hover {
-	fill:green;
+
+.text {
+	stroke : black;
+	color : black
 }
 
 div.movable{
