@@ -403,9 +403,7 @@ public class HTMLReportBuilder extends ReportBuilder
 				this.postProcess(title));
 
 		chartBuilder.report(writer, ++chartCount);
-		// TODO implement it
-		
-		
+
 		if (beforeTestCase != null)
 		{
 			writer.fwrite("</div>\n");

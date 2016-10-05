@@ -8,12 +8,13 @@
 
 package com.exactprosystems.jf.charts;
 
+import com.exactprosystems.jf.api.error.JFException;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.functions.Table;
 
 public class GanntChartBuilder extends ChartBuilder
 {
-	public GanntChartBuilder(Table table, Parameters params)
+	public GanntChartBuilder(Table table, Parameters params) throws JFException
 	{
 		super(table, params);
 

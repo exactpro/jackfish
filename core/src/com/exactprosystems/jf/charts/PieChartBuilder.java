@@ -25,8 +25,8 @@ import java.util.stream.IntStream;
 
 public class PieChartBuilder extends ChartBuilder
 {
-	public static final String valuesColumnName = "Values";
-	public static final String labelsColumnName = "Labels";
+	private static final String valuesColumnName = "Values";
+	private static final String labelsColumnName = "Labels";
 
 	private String valueColumnName;
 	private String labelColumnName;
@@ -50,9 +50,9 @@ public class PieChartBuilder extends ChartBuilder
 
 		if (!ab.get())
 		{
-			throw new ChartException(String.format("Column with name %s not presented", valueColumnName));
+			throw new ChartException(String.format("Column with name %s is not presented", valueColumnName));
 		}
-		if (!table.stream().allMatch(rt -> rt.get(valueColumnName).toString().chars().allMatch(Character::isDigit)))
+		if (!table.stream().allMatch(rt -> isNumber(rt.get(valueColumnName).toString())))
 		{
 			throw new ChartException(String.format("All values from column %s must be a number", valueColumnName));
 		}
