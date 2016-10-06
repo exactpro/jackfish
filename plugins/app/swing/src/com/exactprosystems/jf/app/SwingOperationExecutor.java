@@ -1395,8 +1395,8 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 		}
 		else
 		{
-			logger.info("rendererComponent doesn't have a JLabel class, but has: " + rendererComponent.getClass().getName());
-			return rendererComponent.getClass().getName();
+			valueAt = fixture.valueAt(TableCell.row(row).column(column));
+			return valueAt;
 		}
 	}
 	
