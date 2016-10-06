@@ -513,6 +513,23 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 		this.headers = headers.toArray(new Header[headers.size()]);
 	}
 
+	public void updateValue(int index, RowTable row)
+	{
+		this.changed = true;
+		Map<Header, Object> newMap = new LinkedHashMap<>();
+		Map<Header, Object> oldMap = this.innerList.get(index);
+		Arrays.stream(this.headers).forEach(h ->
+		{
+			Object rowValue = row.get(h.name);
+			if (rowValue == null)
+			{
+				rowValue = oldMap.get(h);
+			}
+			newMap.put(h, rowValue);
+		});
+		this.innerList.set(index, newMap);
+	}
+
 	public void setValue(int index, RowTable row)
 	{
 		this.changed = true;

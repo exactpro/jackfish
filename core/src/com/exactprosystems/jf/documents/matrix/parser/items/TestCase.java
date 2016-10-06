@@ -15,19 +15,12 @@ import com.exactprosystems.jf.common.evaluator.Variables;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.common.report.ReportTable;
 import com.exactprosystems.jf.documents.config.Context;
-import com.exactprosystems.jf.documents.matrix.parser.DisplayDriver;
-import com.exactprosystems.jf.documents.matrix.parser.MutableValue;
-import com.exactprosystems.jf.documents.matrix.parser.Parameters;
-import com.exactprosystems.jf.documents.matrix.parser.Result;
-import com.exactprosystems.jf.documents.matrix.parser.ReturnAndResult;
-import com.exactprosystems.jf.documents.matrix.parser.SearchHelper;
-import com.exactprosystems.jf.documents.matrix.parser.Tokens;
+import com.exactprosystems.jf.documents.matrix.parser.*;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
 import com.exactprosystems.jf.functions.RowTable;
 import com.exactprosystems.jf.functions.Table;
 
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -217,7 +210,7 @@ public final class TestCase extends MatrixItem
 					row.put(Context.errorMessageColumn, 	error.Message);
 				}
 				
-				table.setValue(table.size() - 1, row);
+				table.updateValue(table.size() - 1, row);
 			}
 		} 
 		catch (Exception e)
@@ -231,7 +224,7 @@ public final class TestCase extends MatrixItem
 				row.put(Context.errorPlacePathColumn, 	this.getPath());
 				row.put(Context.errorMessageColumn, 	e.getMessage());
 				
-				table.setValue(table.size() - 1, row);
+				table.updateValue(table.size() - 1, row);
 			}
 		}
 		return ret;
