@@ -8,12 +8,7 @@
 
 package com.exactprosystems.jf.actions.system;
 
-import java.util.List;
-import com.exactprosystems.jf.actions.AbstractAction;
-import com.exactprosystems.jf.actions.ActionAttribute;
-import com.exactprosystems.jf.actions.ActionFieldAttribute;
-import com.exactprosystems.jf.actions.ActionGroups;
-import com.exactprosystems.jf.actions.ReadableValue;
+import com.exactprosystems.jf.actions.*;
 import com.exactprosystems.jf.api.app.ChartKind;
 import com.exactprosystems.jf.charts.ChartBuilder;
 import com.exactprosystems.jf.charts.ChartFactory;
@@ -25,11 +20,13 @@ import com.exactprosystems.jf.documents.matrix.parser.items.ActionItem.HelpKind;
 import com.exactprosystems.jf.documents.matrix.parser.items.TypeMandatory;
 import com.exactprosystems.jf.functions.Table;
 
+import java.util.List;
+
 @ActionAttribute(
 		group = ActionGroups.System, 
 		generalDescription = "Reports a chart to the report.", 
 		additionFieldsAllowed = true)
-public class Chart extends AbstractAction
+public class ChartReport extends AbstractAction
 {
 	public final static String 	titleName 			= "Title";
 	public final static String 	tableName 			= "Table";
@@ -48,7 +45,7 @@ public class Chart extends AbstractAction
 	@ActionFieldAttribute(name = beforeTestCaseName, mandatory = false, description = "The name of Testcase before witch the table will be put.")
 	protected String			beforeTestCase		= null;
 
-	public Chart()
+	public ChartReport()
 	{
 	}
 

@@ -70,7 +70,7 @@ public class ActionsList
 		        MatrixRunFromText.class,
 		        MatrixRun.class,
 		        MatrixWait.class,
-		        Chart.class,
+		        ChartReport.class,
 		        Print.class,
 		        Report.class,
 		        ReportName.class,

@@ -32,6 +32,7 @@ import java.awt.Rectangle;
 import java.rmi.RemoteException;
 import java.util.*;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
@@ -358,9 +359,14 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 	{
 		String outerHTML = component.getAttribute("outerHTML");
 		Document doc = Jsoup.parse(outerHTML);
-		List<String> headers = getHeaders(outerHTML, useNumericHeader, columns);
+		AtomicBoolean ab = new AtomicBoolean(false);
+		List<String> headers = getHeaders(outerHTML, ab, columns);
 		logger.debug("Headers : " + headers);
 		Elements rows = findRows(doc);
+		if (ab.get())
+		{
+			rows.remove(0);
+		}
 		logger.debug("Rows size : " + rows.size());
 		String[][] res = new String[rows.size() + 1][headers.size()];
 		for (int i = 0; i < res[0].length; i++)
@@ -1279,7 +1285,7 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 		return s.substring(0, s.indexOf(">") + 1);
 	}
 
-	private List<String> getHeaders(String outerHtml, boolean useNumericHeader, String[] columns) throws RemoteException
+	private List<String> getHeaders(String outerHtml, AtomicBoolean columnsIsRow, String[] columns) throws RemoteException
 	{
 		Document doc = Jsoup.parse(outerHtml);
 		ArrayList<String> result = new ArrayList<>();
@@ -1299,6 +1305,7 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 				throw new RemoteException("Headers not found. Check your header locator or table locator");
 			}
 			header = firstTr.children();
+			columnsIsRow.set(true);
 			return convertColumnsToHeaders(header, columns, new IText<Element>()
 			{
 				@Override
