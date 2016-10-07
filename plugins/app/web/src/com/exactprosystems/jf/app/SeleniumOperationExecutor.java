@@ -13,7 +13,6 @@ import com.exactprosystems.jf.api.client.ICondition;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.error.app.ElementNotFoundException;
 import com.exactprosystems.jf.api.error.app.TooManyElementsException;
-
 import org.apache.log4j.Logger;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -92,6 +91,7 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 		return new Color(Integer.parseInt(colors[0]), Integer.parseInt(colors[1]), Integer.parseInt(colors[2]), Integer.parseInt(colors[3]));
 	}
 
+	//region table is container
 	@Override
 	public boolean tableIsContainer()
 	{
@@ -115,6 +115,7 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 	{
 		return false;    // the realization is not needed because table is a container 
 	}
+	//endregion
 
 	@Override
 	public String get(WebElement component) throws Exception
@@ -199,6 +200,123 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 		throw real;
 	}
 
+	//region public table methods
+	/*
+	we need parse another tables
+<div>
+	<span> thead tr th
+	<table id="t1">
+		<thead>
+			<tr>
+				<th>th1</th>
+				<th>th2</th>
+				<th>th3</th>
+			</tr>
+		</thead>
+	
+		<tbody>
+			<tr>
+				<td>td1</td>
+				<td>td2</td>
+				<td>td3</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+<div>
+	<span>thead tr td
+	<table id="t2">
+		<thead>
+			<tr>
+				<td>th1</td>
+				<td>th2</td>
+				<td>th3</td>
+			</tr>
+		</thead>
+	
+		<tbody>
+			<tr>
+				<td>td1</td>
+				<td>td2</td>
+				<td>td3</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+	
+<div>
+	<span> thead th
+	<table id="t3">
+		<thead>
+			<th>th1</th>
+			<th>th2</th>
+			<th>th3</th>
+		</thead>
+	
+		<tbody>
+			<tr>
+				<td>td1</td>
+				<td>td2</td>
+				<td>td3</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+	
+<div>
+	<span> thead td
+	<table id="t4">
+		<thead>
+			<td>th1</td>
+			<td>th2</td>
+			<td>th3</td>
+		</thead>
+	
+		<tbody>
+			<tr>
+				<td>td1</td>
+				<td>td2</td>
+				<td>td3</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+	
+<div>
+	<span> tr th
+	<table id="t5">
+		<tbody>
+			<tr>
+				<th>th1</th>
+				<th>th2</th>
+				<th>th3</th>
+			</tr>
+			<tr>
+				<td>td1</td>
+				<td>td2</td>
+				<td>td3</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+<div>
+	<span> tr td
+	<table id="t6">
+		<tbody>
+			<tr>
+				<td>th1</td>
+				<td>th2</td>
+				<td>th3</td>
+			</tr>
+			<tr>
+				<td>td1</td>
+				<td>td2</td>
+				<td>td3</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+	 */
 	@Override
 	public Map<String, String> getRow(WebElement table, Locator additional, Locator header, boolean useNumericHeader, String[] columns, ICondition valueCondition, ICondition colorCondition) throws Exception
 	{
@@ -364,7 +482,7 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 		String outerHTML = component.getAttribute("outerHTML");
 		Document doc = Jsoup.parse(outerHTML);
 		AtomicBoolean ab = new AtomicBoolean(false);
-		List<String> headers = getHeaders(outerHTML, ab, columns);
+		List<String> headers = getHeadersFromHTML(outerHTML, ab, columns);
 		logger.debug("Headers : " + headers);
 		Elements rows = findRows(doc);
 		if (ab.get())
@@ -421,17 +539,10 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 		while (++repeat < repeatLimit);
 		throw real;
 	}
+	//endregion
 
-	public static Elements findRows(Document doc) throws Exception
-	{
-		Element first = doc.select(tag_tbody).first();
-		if (first == null)
-		{
-			throw new Exception("Can't find tag tbody in current table");
-		}
-		return first.children();
-	}
-
+	//region public find methods
+	@Override
 	public List<WebElement> findAll(ControlKind controlKind, WebElement window, Locator locator) throws Exception
 	{
 		Exception real = null;
@@ -453,6 +564,7 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 		throw real;
 	}
 
+	@Override
 	public List<WebElement> findAll(Locator owner, Locator locator) throws Exception
 	{
 		Exception real = null;
@@ -489,7 +601,6 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 		while (++repeat < repeatLimit);
 		throw real;
 	}
-
 
 	@Override
 	public WebElement find(Locator owner, Locator locator) throws Exception
@@ -596,6 +707,7 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 		while (++repeat < repeatLimit);
 		throw real;
 	}
+	//endregion
 
 	@Override
 	public boolean mouse(WebElement component, int x, int y, MouseAction action) throws Exception
@@ -1163,7 +1275,7 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 		throw real;
 	}
 
-	//TODO MODIFIER_KEYS = new Keys[]{Keys.SHIFT, Keys.CONTROL, Keys.ALT, Keys.META, Keys.COMMAND, Keys.LEFT_ALT, Keys.LEFT_CONTROL, Keys.LEFT_SHIFT};
+	// MODIFIER_KEYS = new Keys[]{Keys.SHIFT, Keys.CONTROL, Keys.ALT, Keys.META, Keys.COMMAND, Keys.LEFT_ALT, Keys.LEFT_CONTROL, Keys.LEFT_SHIFT};
 	// if key not equals modifier keys will throw exception. See org.openqa.selenium.interactions.internal.SingleKeyEvent
 	@Override
 	public boolean upAndDown(WebElement component, Keyboard key, boolean b) throws Exception
@@ -1280,37 +1392,36 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 		while (++repeat < repeatLimit);
 		throw real;
 	}
-	
-	
 
+	//region private methods
 	private String getElementString(WebElement element)
 	{
 		String s = element.getAttribute("outerHTML");
 		return s.substring(0, s.indexOf(">") + 1);
 	}
 
-	private List<String> getHeaders(String outerHtml, AtomicBoolean columnsIsRow, String[] columns) throws RemoteException
+	private List<String> getHeadersFromHTML(String outerHtml, AtomicBoolean columnsIsRow, String[] columns) throws RemoteException
 	{
 		Document doc = Jsoup.parse(outerHtml);
 		ArrayList<String> result = new ArrayList<>();
-		Elements header = null;
+		Elements headerElements = null;
 		/*
 			try to the find element with tag thead.
 		 */
-		Element firstThead = doc.select(tag_thead).first();
+		Element lastThead = doc.select(tag_thead).last();
 		/*
-			if firstThead thead is not present, try to find rows in this table.
+			if lastThead thead is not present, try to find rows in this table.
 		 */
-		if (firstThead == null)
+		if (lastThead == null)
 		{
 			Element firstTr = doc.select(tag_tr).first();
 			if (firstTr == null)
 			{
 				throw new RemoteException("Headers not found. Check your header locator or table locator");
 			}
-			header = firstTr.children();
+			headerElements = firstTr.children();
 			columnsIsRow.set(true);
-			return convertColumnsToHeaders(header, columns, new IText<Element>()
+			return convertColumnsToHeaders(headerElements, columns, new IText<Element>()
 			{
 				@Override
 				public String getText(Element element)
@@ -1320,27 +1431,28 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 			});
 		}
 
-		Elements trOfFirstThead = firstThead.children();
-		for (Element tr : firstThead.children())
+		Elements theadChildren = lastThead.children();
+		for (Element tr : lastThead.children())
 		{
 			Elements select = tr.select(tag_th);
 			for (Element th : select)
 			{
 				String s = th.attributes().get(row_span);
-				if (!s.isEmpty() && s.equals(String.valueOf(trOfFirstThead.size())))
+				if (!s.isEmpty() && s.equals(String.valueOf(theadChildren.size())))
 				{
 					result.add(th.text());
 				}
 			}
 		}
-		header = trOfFirstThead.last().children();
-
-		for (Element element : header)
+		String firstTheadChildTagName = theadChildren.first().tagName();
+		Element header = lastThead;
+		switch (firstTheadChildTagName)
 		{
-			if (element.tag().getName().equals(tag_th))
-			{
-				result.add(element.text());
-			}
+			case tag_tr: header = theadChildren.last(); break;
+		}
+		for (Element element : header.children())
+		{
+			result.add(element.text());
 		}
 		return convertColumnsToHeaders(result, columns, new IText<String>()
 		{
@@ -1391,17 +1503,25 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 		{
 			try
 			{
-				List<WebElement> headerTable = grid.findElements(By.tagName(tag_thead));
-				if (headerTable.isEmpty())
+				List<WebElement> theadSections = grid.findElements(By.xpath("child::"+tag_thead));
+				if (theadSections.isEmpty())
 				{
-					List<WebElement> firstRow = grid.findElements(By.tagName(tag_tr));
-					if (firstRow.isEmpty())
-					{
-						throw new RemoteException("Table is empty");
-					}
-					return firstRow.get(0).findElements(By.tagName(tag_td));
+					return getHeadersFromBody(grid);
 				}
-				return headerTable.get(0).findElements(By.tagName(tag_th));
+				WebElement lastThead = theadSections.get(theadSections.size() - 1);
+				List<WebElement> lastTheadElements = lastThead.findElements(By.xpath("child::*"));
+
+				if (lastTheadElements.isEmpty())
+				{
+					return getHeadersFromBody(grid);
+				}
+				WebElement webHeader = lastThead;
+				String firstChildTagFromLastThead = lastTheadElements.get(0).getTagName();
+				switch (firstChildTagFromLastThead)
+				{
+					case tag_tr: webHeader = lastThead.findElement(By.xpath("child::tr[last()]"));
+				}
+				return webHeader.findElements(By.xpath("child::*"));
 			}
 			catch (StaleElementReferenceException e)
 			{
@@ -1426,20 +1546,27 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 				{
 					this.logger.debug("Columns : " + Arrays.toString(columns));
 				}
-				List<WebElement> theadSections = grid.findElements(By.tagName(tag_thead));
+
+				List<WebElement> theadSections = grid.findElements(By.xpath("child::"+tag_thead)); // find only on child
 				if (theadSections.isEmpty())
 				{
-					return getHeaders(grid, columns);
+					return getHeadersFromBody(grid, columns);
+				}
+				WebElement lastThead = theadSections.get(theadSections.size() - 1);
+				List<WebElement> lastTheadElements = lastThead.findElements(By.xpath("child::*"));
+
+				if (lastTheadElements.isEmpty())
+				{
+					return getHeadersFromBody(grid, columns);
 				}
 
-				List<WebElement> trsFromThead = theadSections.get(0).findElements(By.tagName(tag_tr));
-				if (trsFromThead.isEmpty())
+				WebElement webHeader = lastThead;
+				String firstChildTagFromLastThead = lastTheadElements.get(0).getTagName();
+				switch (firstChildTagFromLastThead)
 				{
-					return getHeaders(grid, columns);
+					case tag_tr: webHeader = lastThead.findElement(By.xpath("child::tr[last()]"));
 				}
-				WebElement headers = trsFromThead.get(trsFromThead.size() - 1);
-				List<WebElement> firstHeader = headers.findElements(By.tagName(tag_th));
-				return convertColumnsToHeaders(firstHeader, columns, new IText<WebElement>()
+				return convertColumnsToHeaders(webHeader.findElements(By.xpath("child::*")), columns, new IText<WebElement>()
 				{
 					@Override
 					public String getText(WebElement webElement)
@@ -1461,6 +1588,16 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 	interface IText<T>
 	{
 		String getText(T t);
+	}
+
+	private List<WebElement> cellsFromHeader(WebElement header)
+	{
+		List<WebElement> cells = header.findElements(By.tagName(tag_th));
+		if (cells.isEmpty())
+		{
+			header.findElements(By.tagName(tag_tr));
+		}
+		return cells;
 	}
 
 	private <T> List<String> convertColumnsToHeaders(Iterable<T> headers, String[] columns, IText<T> func)
@@ -1497,7 +1634,7 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 		return res;
 	}
 
-	private List<String> getHeaders(WebElement grid, String[] columns) throws RemoteException
+	private List<String> getHeadersFromBody(WebElement grid, String[] columns) throws RemoteException
 	{
 		List<WebElement> rows = grid.findElements(By.tagName(tag_tr));
 		if (rows.isEmpty())
@@ -1519,6 +1656,28 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 				return webElement.getText();
 			}
 		});
+	}
+
+	/**
+	 * we use current method, if table dosn't contains tag thead and we fill find header from tbody.
+	 */
+	private List<WebElement> getHeadersFromBody(WebElement grid) throws RemoteException
+	{
+		List<WebElement> tbodyElements = grid.findElements(By.xpath("child::" + tag_tbody));
+		if (tbodyElements.isEmpty())
+		{
+			throw new RemoteException("Table is empty");
+		}
+
+		WebElement firstTbody = tbodyElements.get(0);
+
+		List<WebElement> trs = firstTbody.findElements(By.xpath("child::tr"));
+		if (trs.isEmpty())
+		{
+			throw new RemoteException("Table is empty");
+		}
+
+		return trs.get(0).findElements(By.xpath("child::*"));
 	}
 
 	private List<WebElement> findRows(Locator additional, WebElement table) throws Exception
@@ -1688,6 +1847,17 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 		}
 		return ret.toString();
 	}
+
+	private static Elements findRows(Document doc) throws Exception
+	{
+		Element first = doc.select(tag_tbody).first();
+		if (first == null)
+		{
+			throw new Exception("Can't find tag tbody in current table");
+		}
+		return first.children();
+	}
+	//endregion
 
 	private static final String MOVE_TO_SCRIPT =
 			"var myMoveToFunction = function(elem) {\n"+
