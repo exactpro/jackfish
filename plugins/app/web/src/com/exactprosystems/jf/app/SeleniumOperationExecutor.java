@@ -23,6 +23,7 @@ import org.openqa.selenium.*;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.Point;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeDriverService;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.safari.SafariDriver;
 import org.openqa.selenium.support.ui.Select;
@@ -199,7 +200,7 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 	}
 
 	@Override
-	public Map<String, String> getRow(WebElement component, Locator additional, Locator header, boolean useNumericHeader, String[] columns, ICondition valueCondition, ICondition colorCondition) throws Exception
+	public Map<String, String> getRow(WebElement table, Locator additional, Locator header, boolean useNumericHeader, String[] columns, ICondition valueCondition, ICondition colorCondition) throws Exception
 	{
 		int repeat = 1;
 		Exception real = null;
@@ -209,9 +210,9 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 			{
 				List<Map<String, String>> list = new ArrayList<>();
 
-				List<String> headers = getHeaders(component, useNumericHeader, header, columns);
+				List<String> headers = getHeaders(table, useNumericHeader, header, columns);
 
-				List<WebElement> rows = findRows(additional, component);
+				List<WebElement> rows = findRows(additional, table);
 
 				for (WebElement row : rows)
 				{
@@ -234,7 +235,7 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 			}
 			catch (Exception e)
 			{
-				logger.error(String.format("Error getRow(%s, %s, %s)", component, valueCondition, colorCondition));
+				logger.error(String.format("Error getRow(%s, %s, %s)", table, valueCondition, colorCondition));
 				logger.error(e.getMessage(), e);
 				throw new RemoteException(e.getMessage());
 			}
@@ -244,7 +245,7 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 	}
 
 	@Override
-	public List<String> getRowIndexes(WebElement component, Locator additional, Locator header, boolean useNumericHeader, String[] columns, ICondition valueCondition, ICondition colorCondition) throws Exception
+	public List<String> getRowIndexes(WebElement table, Locator additional, Locator header, boolean useNumericHeader, String[] columns, ICondition valueCondition, ICondition colorCondition) throws Exception
 	{
 		Exception real = null;
 		int repeat = 1;
@@ -253,11 +254,12 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 			try
 			{
 				List<String> result = new ArrayList<>();
-				List<WebElement> rows = findRows(additional, component);
+				List<WebElement> rows = findRows(additional, table);
+				List<String> headers = getHeaders(table, useNumericHeader, header, columns);
 				for (int i = 0; i < rows.size(); i++)
 				{
 					WebElement row = rows.get(i);
-					if (rowMatches(row, valueCondition, colorCondition, getHeaders(component, useNumericHeader, header, columns)))
+					if (rowMatches(row, valueCondition, colorCondition, headers))
 					{
 						result.add(String.valueOf(i));
 					}
@@ -271,7 +273,7 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 			}
 			catch (Exception e)
 			{
-				logger.error(String.format("Error getRowIndexes(%s, %s, %s)", component, valueCondition, colorCondition));
+				logger.error(String.format("Error getRowIndexes(%s, %s, %s)", table, valueCondition, colorCondition));
 				logger.error(e.getMessage(), e);
 				throw new RemoteException(e.getMessage());
 			}
@@ -281,7 +283,7 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 	}
 
 	@Override
-	public Map<String, String> getRowByIndex(WebElement component, Locator additional, Locator header, boolean useNumericHeader, String[] columns, int i) throws Exception
+	public Map<String, String> getRowByIndex(WebElement table, Locator additional, Locator header, boolean useNumericHeader, String[] columns, int i) throws Exception
 	{
 		Exception real = null;
 		int repeat = 1;
@@ -289,14 +291,16 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 		{
 			try
 			{
-				List<String> headers = getHeaders(component, useNumericHeader, header, columns);
-				List<WebElement> rows = findRows(additional, component);
+				List<String> headers = getHeaders(table, useNumericHeader, header, columns);
+				this.logger.debug("Found headers : " + headers);
+				List<WebElement> rows = findRows(additional, table);
+				this.logger.debug("Found rows. Rows size : " + rows.size());
 				if (i > rows.size() - 1 || i < 0)
 				{
 					throw new RemoteException("Invalid index : " + i + ", max index : " + (rows.size() - 1));
 				}
+				this.logger.debug("rows.get(i).getText() : " + rows.get(i).getText());
 				return getRowValues(rows.get(i), headers);
-
 			}
 			catch (StaleElementReferenceException e)
 			{
@@ -1358,7 +1362,7 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 			{
 				Map<String, String> result = new LinkedHashMap<>();
 				List<WebElement> cells = row.findElements(By.tagName(tag_td));
-
+				this.logger.debug("Found cells : " + cells.size());
 				for (int i = 0; i < (headers.size() > cells.size() ? cells.size() : headers.size()); i++)
 				{
 					String key = headers.get(i);
@@ -1454,39 +1458,6 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 		throw real;
 	}
 
-	//	public static void main(String[] args)
-	//	{
-	//		System.out.println(q(Arrays.asList("a", "b", "c", "d", "e"), new String[]{"z", "x", "c"}));
-	//		System.out.println(q(Arrays.asList("a", "b"), new String[]{"z", "x", "c"}));
-	//		System.out.println(q(Arrays.asList("a", "b", "c"), new String[]{"z", "x", "c"}));
-	//	}
-	//
-	//	private static List<String> q(List<String> list, String[] arr)
-	//	{
-	//		ArrayList<String> res = new ArrayList<>();
-	//		int i;
-	//		Iterator<String> iterator = list.iterator();
-	//		for(i = 0; i < arr.length; i++)
-	//		{
-	//			if (iterator.hasNext())
-	//			{
-	//				iterator.next();
-	//				res.add(arr[i]);
-	//			}
-	//			else
-	//			{
-	//				break;
-	//			}
-	//		}
-	//		while (iterator.hasNext())
-	//		{
-	//			iterator.next();
-	//			res.add(String.valueOf(i++));
-	//		}
-	//
-	//		return res;
-	//	}
-
 	interface IText<T>
 	{
 		String getText(T t);
@@ -1528,12 +1499,19 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 
 	private List<String> getHeaders(WebElement grid, String[] columns) throws RemoteException
 	{
-		List<WebElement> firstRow = grid.findElements(By.tagName(tag_tr));
-		if (firstRow.isEmpty())
+		List<WebElement> rows = grid.findElements(By.tagName(tag_tr));
+		if (rows.isEmpty())
 		{
 			throw new RemoteException("Table is empty");
 		}
-		return convertColumnsToHeaders(firstRow.get(0).findElements(By.tagName(tag_td)), columns, new IText<WebElement>()
+		WebElement firstRow = rows.get(0);
+		markRowIsHeader(firstRow, true);
+		List<WebElement> cells = firstRow.findElements(By.tagName(tag_th));;
+		if (cells.isEmpty())
+		{
+			cells = firstRow.findElements(By.tagName(tag_td));
+		}
+		return convertColumnsToHeaders(cells, columns, new IText<WebElement>()
 		{
 			@Override
 			public String getText(WebElement webElement)
@@ -1543,7 +1521,7 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 		});
 	}
 
-	private List<WebElement> findRows(Locator additional, WebElement component) throws Exception
+	private List<WebElement> findRows(Locator additional, WebElement table) throws Exception
 	{
 		Exception real = null;
 		int repeat = 1;
@@ -1554,11 +1532,15 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 				if (additional != null)
 				{
 					MatcherSelenium by = new MatcherSelenium(ControlKind.Row, additional);
-					return component.findElement(By.tagName(tag_tbody)).findElements(by);
+					List<WebElement> elements = table.findElement(By.tagName(tag_tbody)).findElements(by);
+					unmarkRowIsHeader(table);
+					return elements;
 				}
 				else
 				{
-					return component.findElement(By.tagName(tag_tbody)).findElements(By.tagName(tag_tr));
+					List<WebElement> elements = table.findElement(By.tagName(tag_tbody)).findElements(this.selectRowsWithoutHeader());
+					unmarkRowIsHeader(table);
+					return elements;
 				}
 			}
 			catch (StaleElementReferenceException e)
@@ -1665,6 +1647,37 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 		}
 	}
 
+	private By selectRowsWithoutHeader()
+	{
+		return By.xpath(String.format(".//%s[not(@%s)]", tag_tr, markAttribute));
+	}
+
+	private By selectRowLikeHeader()
+	{
+		return By.xpath(String.format(".//%s[@%s]", tag_tr, markAttribute));
+	}
+
+	private void markRowIsHeader(WebElement row, boolean isSet)
+	{
+		if (isSet)
+		{
+			this.driver.executeScript("arguments[0].setAttribute(\"" + markAttribute + "\", \"true\")", row);
+		}
+		else
+		{
+			this.driver.executeScript("arguments[0].removeAttribute(\"" + markAttribute + "\")", row);
+		}
+	}
+
+	private void unmarkRowIsHeader(WebElement grid)
+	{
+		List<WebElement> elements = grid.findElements(selectRowLikeHeader());
+		if (!elements.isEmpty())
+		{
+			markRowIsHeader(elements.get(0), false);
+		}
+	}
+
 	private static String loadScript(String path)
 	{
 		Scanner scanner = new Scanner(SeleniumOperationExecutor.class.getResourceAsStream(path));
@@ -1690,6 +1703,8 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 
 	//TODO need normal scroll to function
 	private static final String SCROLL_TO_SCRIPT = loadScript("js/scrollTo.js");
+
+	private String markAttribute = "seleniummarkattribute";
 
 	private boolean isShiftDown = false;
 	private boolean isCtrlDown = false;

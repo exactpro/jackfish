@@ -7,33 +7,7 @@
 // //==============================================
 #TestCase
 Line chart
-   #Id;#Action;#labels;#val1;#val2
-       TBL1;TableCreate;;;
-
-       #Action;#c1;#c2;#c3
-       Vars;1;2;3
-
-       #For;#From;#To;#Step
-       i;1;11;1
-           #Action;#Table;#labels;#val1;#val2;
-           TableAddValue;TBL1.Out;'lab'+i;Rnd.rnd(0,100);Rnd.rnd(0,100)
-
-           #Action;#c1;#c2;#c3
-           Vars;c1+3;c2+3;c3+3
-
-       #EndFor
-
-       #Action;#Table;#Title
-       TableReport;TBL1.Out;'my title'
-
-       #Action;#Table;#Kind;#Title;#Labels
-       Chart;TBL1.Out;ChartKind.Line;'Line chart';'labels'
-
-
-#Off;#TestCase
-0;Bar chart
-
-	#Id;#Action;#labels;#val1;#val2
+    #Id;#Action;#labels;#val1;#val2
     TBL1;TableCreate;;;
 
     #Action;#c1;#c2;#c3
@@ -41,7 +15,7 @@ Line chart
 
     #For;#From;#To;#Step
     i;1;11;1
-        #Action;#Table;#labels;#val1;#val2;
+        #Action;#Table;#labels;#val1;#val2
         TableAddValue;TBL1.Out;'lab'+i;Rnd.rnd(0,100);Rnd.rnd(0,100)
 
         #Action;#c1;#c2;#c3
@@ -53,10 +27,36 @@ Line chart
     TableReport;TBL1.Out;'my title'
 
     #Action;#Table;#Kind;#Title;#Labels
-    Chart;TBL1.Out;ChartKind.Bar;'Bar chart';'labels'
+    ChartReport;TBL1.Out;ChartKind.Line;'Line chart';'labels'
 
-#Off;#TestCase
-0;Pie chart
+
+#TestCase
+Bar chart
+    #Id;#Action;#labels;#val1;#val2
+    TBL1;TableCreate;;;
+
+    #Action;#c1;#c2;#c3
+    Vars;1;2;3
+
+    #For;#From;#To;#Step
+    i;1;11;1
+        #Action;#Table;#labels;#val1;#val2
+        TableAddValue;TBL1.Out;'lab'+i;Rnd.rnd(0,100);Rnd.rnd(0,100)
+
+        #Action;#c1;#c2;#c3
+        Vars;c1+3;c2+3;c3+3
+
+    #EndFor
+
+    #Action;#Table;#Title
+    TableReport;TBL1.Out;'my title'
+
+    #Action;#Table;#Kind;#Title;#Labels
+    ChartReport;TBL1.Out;ChartKind.Bar;'Bar chart';'labels'
+
+
+#TestCase
+Pie chart
     #Id;#Action;#persantge;#values
     TBL1;TableCreate;;
 
@@ -71,12 +71,12 @@ Line chart
     TableReport;TBL1.Out;'my title'
 
     #Action;#Table;#Kind;#Title;#Values
-    Chart;TBL1.Out;ChartKind.Pie;'Pie chart';'persantge'
+    ChartReport;TBL1.Out;ChartKind.Pie;'Pie chart';'persantge'
 
 
 #Off;#TestCase
 1;Gangt chart
     #Action;#Table;#Kind;#Title
-    Chart;;;
+    ChartReport;;;
 
 
