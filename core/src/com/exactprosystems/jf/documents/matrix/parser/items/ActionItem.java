@@ -89,7 +89,7 @@ public final class ActionItem extends MatrixItem
 		driver.showTextBox(this, layout, 1, 0, this.id::set, this.id::get, () -> this.id.get() + ".Out");
 		driver.showTitle(this, layout, 1, 1, Tokens.Action.get(), context.getFactory().getSettings());
 		driver.showTitle(this, layout, 1, 2, getActionName(), context.getFactory().getSettings());
-		driver.showParameters(this, layout, 1, 3, this.parameters, () -> this.id.get() + ".In.", false);
+		driver.showParameters(this, layout, 1, 3, this.parameters, () -> this.id.get() + ".In.", false, true);
 		driver.showCheckBox(this, layout, 2, 0, "Global", this.global, this.global);
 		driver.showCheckBox(this, layout, 2, 1, "Ignore", this.ignoreErr, this.ignoreErr);
 		long count = Arrays.asList(this.assertBool, this.assertOutIs, this.assertOutIsNot).stream()

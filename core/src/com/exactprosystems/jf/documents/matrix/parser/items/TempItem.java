@@ -35,7 +35,7 @@ public class TempItem extends MatrixItem
 				Tokens.If.get(), Tokens.Else.get(), Tokens.For.get(), Tokens.ForEach.get(), Tokens.While.get(), 
 				Tokens.Continue.get(), Tokens.Break.get(), Tokens.OnError.get(), Tokens.Switch.get(), Tokens.Case.get(), 
 				Tokens.Default.get(), Tokens.ReportOff.get(), Tokens.ReportOn.get(), Tokens.Fail.get(), Tokens.RawTable.get(), 
-				Tokens.RawMessage.get(), Tokens.RawText.get(), Tokens.NameSpace.get()));
+				Tokens.RawMessage.get(), Tokens.RawText.get(), Tokens.NameSpace.get()/*, Tokens.VarsItem.get()*/));
 	}
 
 	private boolean isInit = false;

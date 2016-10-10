@@ -14,12 +14,7 @@ import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.common.undoredo.Command;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.Matrix;
-import com.exactprosystems.jf.documents.matrix.parser.DisplayDriver;
-import com.exactprosystems.jf.documents.matrix.parser.FormulaGenerator;
-import com.exactprosystems.jf.documents.matrix.parser.Getter;
-import com.exactprosystems.jf.documents.matrix.parser.Parameters;
-import com.exactprosystems.jf.documents.matrix.parser.Setter;
-import com.exactprosystems.jf.documents.matrix.parser.Tokens;
+import com.exactprosystems.jf.documents.matrix.parser.*;
 import com.exactprosystems.jf.documents.matrix.parser.items.ActionItem;
 import com.exactprosystems.jf.documents.matrix.parser.items.CommentString;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
@@ -40,7 +35,6 @@ import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.matrix.MatrixFx;
 import com.exactprosystems.jf.tool.matrix.params.ParametersPane;
 import com.exactprosystems.jf.tool.settings.SettingsPanel;
-
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
@@ -436,11 +430,11 @@ public class DisplayDriverFx implements DisplayDriver
 	}
 
 	@Override
-	public void showParameters(MatrixItem item, Object layout, int row, int column, Parameters parameters, FormulaGenerator generator, boolean oneLine)
+	public void showParameters(MatrixItem item, Object layout, int row, int column, Parameters parameters, FormulaGenerator generator, boolean oneLine, boolean horizontal)
 	{
 		GridPane pane = (GridPane) layout;
 
-		ParametersPane paramsPane = new ParametersPane(item, this.context, oneLine, parameters, generator, this.rowContextMenu, this.parametersContextMenu, () -> selectCurrentRow(((MatrixTreeRow) pane.getParent().getParent())));
+		ParametersPane paramsPane = new ParametersPane(item, this.context, oneLine, parameters, generator, this.rowContextMenu, this.parametersContextMenu, () -> selectCurrentRow(((MatrixTreeRow) pane.getParent().getParent())), horizontal);
 		GridPane.setMargin(paramsPane, new Insets(column, 10, column, 10));
 		pane.add(paramsPane, column, row, Integer.MAX_VALUE, 2);
 	}

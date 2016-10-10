@@ -57,35 +57,44 @@ import java.util.stream.Collectors;
 
 public class ParametersPane extends CustomScrollPane
 {
+    private static final int oneLineHeight = 30;
+    private static final int twoLineHeight = 65;
+
 	private GridPane	mainGridPane;
 	private Context		context;
 	private Parameters	parameters;
 	private MatrixItem	matrixItem;
 	private boolean 	oneLine;
+    private boolean     horizontal;
 	private FormulaGenerator generator;
 	private EventHandler<ContextMenuEvent> contextMenuHandler;
 	private Common.Function fnc;
 	private static ContextMenu empty = new ContextMenu();
 
 	public ParametersPane(MatrixItem matrixItem, Context context, boolean oneLine, Parameters parameters, FormulaGenerator generator,
-						  MatrixContextMenu rowContextMenu, MatrixParametersContextMenu parametersContextMenu, Common.Function fnc)
+						  MatrixContextMenu rowContextMenu, MatrixParametersContextMenu parametersContextMenu, Common.Function fnc, boolean horizontal)
 	{
-		super(oneLine ? 30 : 65);
-		this.fnc = fnc;
+        super(oneLine ? oneLineHeight : twoLineHeight);
 		this.mainGridPane = new GridPane();
-		RowConstraints r0 = new RowConstraints();
-		r0.setMaxHeight(29);
-		r0.setPrefHeight(29);
-		r0.setMinHeight(29);
-		this.mainGridPane.getRowConstraints().add(r0);
-		if (!oneLine)
-		{
-			RowConstraints r1 = new RowConstraints();
-			r1.setMaxHeight(34);
-			r1.setPrefHeight(34);
-			r1.setMinHeight(34);
-			this.mainGridPane.getRowConstraints().add(r1);
-		}
+        this.horizontal = horizontal;
+        if(this.horizontal)
+        {
+            RowConstraints r0 = new RowConstraints();
+            r0.setMaxHeight(29);
+            r0.setPrefHeight(29);
+            r0.setMinHeight(29);
+            this.mainGridPane.getRowConstraints().add(r0);
+            if (!oneLine)
+            {
+                RowConstraints r1 = new RowConstraints();
+                r1.setMaxHeight(34);
+                r1.setPrefHeight(34);
+                r1.setMinHeight(34);
+                this.mainGridPane.getRowConstraints().add(r1);
+            }
+        }
+
+        this.fnc = fnc;
 		this.setContent(this.mainGridPane);
 		this.matrixItem = matrixItem;
 		this.context = context;
@@ -118,10 +127,27 @@ public class ParametersPane extends CustomScrollPane
 			{
 				exist.focusParameter();
 			}
-			this.mainGridPane.add(exist, i + 1, 0, 1, this.oneLine ? 1 : 2);
+
+            if(this.horizontal)
+            {
+                this.mainGridPane.add(exist, i + 1, 0, 1, this.oneLine ? 1 : 2);
+            }
+            else
+            {
+                this.mainGridPane.add(exist, 0, i + 2, 1, 1);
+            }
 		}
 		this.mainGridPane.add(emptyBox(FXCollections.observableArrayList(this.mainGridPane.getChildren()), this.contextMenuHandler), 0, 0, 1, 2);
-		
+        if(!this.horizontal)
+        {
+            if(this.parameters.size() > 0 && this.parameters.size() < 6 )
+            {
+                int height = this.parameters.size() * oneLineHeight;
+                super.setPrefHeight(height);
+                super.changeHeight();
+            }
+        }
+
 		for(Node child : children)
 		{
 			if(child instanceof ParameterGridPane) ((ParameterGridPane) child).getExpressionField().clearlListener();
@@ -388,7 +414,7 @@ public class ParametersPane extends CustomScrollPane
 			expressionField.setOnContextMenuRequested(contextMenuHandler);
 			expressionField.setNotifierForErrorHandler();
 			expressionField.setHelperForExpressionField(par.getName(), this.matrixItem.getMatrix());
-			tempGrid.setValue(expressionField);
+			tempGrid.setValue(expressionField, this.horizontal);
 			tempGrid.setValueListener(this.fnc, (index, text) -> getMatrix().parameterSetValue(this.matrixItem, index, text));
 			GridPane.setMargin(expressionField, Common.INSETS_NODE);
 			focusedParent(expressionField);

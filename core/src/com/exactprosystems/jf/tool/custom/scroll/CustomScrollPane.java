@@ -16,7 +16,7 @@ import javafx.scene.control.Skin;
 
 public class CustomScrollPane extends ScrollPane
 {
-	private final int prefHeight;
+    private int prefHeight;
 
 	public CustomScrollPane()
 	{
@@ -26,13 +26,24 @@ public class CustomScrollPane extends ScrollPane
 	public CustomScrollPane(int prefHeight)
 	{
 		super();
-		this.setVbarPolicy(ScrollBarPolicy.NEVER);
+		this.setVbarPolicy(ScrollBarPolicy.AS_NEEDED);
 		this.setHbarPolicy(ScrollBarPolicy.AS_NEEDED);
 		this.getStyleClass().add(CssVariables.CUSTOM_SCROLL_PANE);
 		this.setFitToHeight(true);
 		this.prefHeight = prefHeight;
 		this.setPrefHeight(this.prefHeight);
 	}
+
+    protected void setPrefHeight(int prefHeight) {
+        this.prefHeight = prefHeight;
+    }
+
+	protected void changeHeight()
+    {
+        this.setPrefHeight(prefHeight + 15);
+        this.setMinHeight(prefHeight + 16);
+        this.setMaxHeight(prefHeight + 14);
+    }
 
 	@Override
 	protected Skin<?> createDefaultSkin()

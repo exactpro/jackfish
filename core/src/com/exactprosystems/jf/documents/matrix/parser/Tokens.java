@@ -52,6 +52,7 @@ public enum Tokens
 	EndRawText,
 	NameSpace,
 	EndNameSpace,
+    VarsItem,
 	;
 
 	public String get()
