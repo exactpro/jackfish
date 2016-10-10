@@ -72,6 +72,7 @@ public class MatrixRunner implements IMatrixRunner, AutoCloseable
 
 	public MatrixRunner(Context context, Reader reader, Date startTime, Object parameter) throws Exception
 	{
+		//TODO please review this.
 		this(context, startTime, new File("new"), parameter);
 		
 		loadFromReader(context, reader);
@@ -285,7 +286,7 @@ public class MatrixRunner implements IMatrixRunner, AutoCloseable
 	@Override
     public String getMatrixName()
     {
-        return  this.matrix.getName();
+        return this.matrixFile.getPath();
     }
 
 	@Override
