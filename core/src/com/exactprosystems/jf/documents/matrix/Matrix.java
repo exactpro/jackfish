@@ -441,6 +441,7 @@ public class Matrix extends AbstractDocument implements IMatrix, Cloneable
 		{
 			if (this.root != null)
 			{
+				this.root.bypass(MatrixItem::correctParametersType);
 				for (this.count = 0; this.count < this.root.count(); this.count++)
 				{
 					MatrixItem item = this.root.get(this.count);
