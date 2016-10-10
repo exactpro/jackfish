@@ -132,14 +132,12 @@ public class Configuration extends AbstractDocument
 		DEFAULT_IMPORTS.add(new MutableString("java.math"));
 		DEFAULT_IMPORTS.add(new MutableString("java.util.regex"));
 		DEFAULT_IMPORTS.add(new MutableString("java.util"));
-		DEFAULT_IMPORTS.add(new MutableString("java.awt"));
-		DEFAULT_IMPORTS.add(new MutableString("java.awt.event"));
 		DEFAULT_IMPORTS.add(new MutableString("java.util.List"));
 		DEFAULT_IMPORTS.add(new MutableString("java.util.Map"));
 		DEFAULT_IMPORTS.add(new MutableString("java.lang"));
 		DEFAULT_IMPORTS.add(new MutableString("com.exactprosystems.jf.api.app"));
 		DEFAULT_IMPORTS.add(new MutableString("com.exactprosystems.jf.api.conditions"));
-		DEFAULT_IMPORTS.add(new MutableString("com.exactprosystems.jf.function"));
+		DEFAULT_IMPORTS.add(new MutableString("com.exactprosystems.jf.functions"));
 		DEFAULT_IMPORTS.add(new MutableString("java.io"));
 		DEFAULT_IMPORTS.add(new MutableString("org.mvel2"));
 	}
@@ -156,7 +154,16 @@ public class Configuration extends AbstractDocument
 		DEFAULT_FORMATS.add(new MutableString("HH:mm:ss Z"));
 		DEFAULT_FORMATS.add(new MutableString("HH:mm:ss:SSS"));
 	}
-
+	public static final MutableString DEFAULT_SYSTEM_VARS = new MutableString(
+			"TRUE=true\n" +
+			"FALSE=false\n" +
+			"min=def (a, b) java.lang.Math.min(a, b)\n"+
+			"max=def (a, b) java.lang.Math.max(a, b)\n" +
+			"less=def (a) DoSpec.less(a)\n" +
+			"great=def (a) DoSpec.great(a)\n" +
+			"about=def (a) DoSpec.about(a)\n" +
+			"between=def (a, b) DoSpec.between(a, b)"
+	);
 	public static final MutableString DEFAULT_TIME = new MutableString("HH:mm:ss.SSS");
 	public static final MutableString DEFAULT_DATE = new MutableString("dd.MM.yyyy");
 	public static final MutableString DEFAULT_DATE_TIME = new MutableString("dd.MM.yyyy HH:mm:ss.SSS");

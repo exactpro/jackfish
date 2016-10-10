@@ -699,7 +699,12 @@ public class Main extends Application
 	{
 		if (this.config == null || !(new File(this.config.getVars().get()).exists()))
 		{
-			return;
+			File newVarsFile = new File(newFolder.getAbsolutePath() + File.separator + "vars.ini");
+			newVarsFile.createNewFile();
+			try (PrintWriter writer = new PrintWriter(newVarsFile))
+			{
+				writer.print(Configuration.DEFAULT_SYSTEM_VARS.get());
+			}
 		}
 		try (InputStream stream = new FileInputStream(this.config.getVars().get()))
 		{
