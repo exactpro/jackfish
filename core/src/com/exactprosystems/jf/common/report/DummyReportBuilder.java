@@ -90,7 +90,7 @@ public class DummyReportBuilder extends ReportBuilder
 	}
 
 	@Override
-	protected void reportFooter(ReportWriter writer, MatrixItem entry, Date date, String name)
+	protected void reportFooter(ReportWriter writer, MatrixItem entry, Date date, String name, String reportName)
 			throws IOException
 	{
 	}

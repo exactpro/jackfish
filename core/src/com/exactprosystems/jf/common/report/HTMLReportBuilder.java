@@ -143,7 +143,7 @@ public class HTMLReportBuilder extends ReportBuilder
 	@Override
 	protected void reportMatrixHeader(ReportWriter writer, String matrixName) throws IOException
 	{
-		writer.fwrite("<tr><td width='200'><a href='#' class='showSource'>Matrix:  </a><td>%s\n", matrixName);
+		writer.fwrite("<tr><td width='200'><a href='#' class='showSource'>Matrix:  </a><td><span id='reportName'>%s</span>\n", matrixName);
 		writer.fwrite("<tr class='matrixSource'><td colspan='2'>\n");
 		writer.fwrite("<button onclick=\"copyToClipboard(document.getElementsByTagName('pre')[0].innerHTML)\">Copy matrix</button>\n");
 		writer.fwrite("<script>\n");
@@ -296,7 +296,7 @@ public class HTMLReportBuilder extends ReportBuilder
 	}
 
 	@Override
-	protected void reportFooter(ReportWriter writer, MatrixItem item, Date date, String name) throws IOException
+	protected void reportFooter(ReportWriter writer, MatrixItem item, Date date, String name, String reportName) throws IOException
 	{
 		writer.fwrite("<script type='text/javascript'>\n" +
 		    "<!--\n" +
@@ -305,13 +305,15 @@ public class HTMLReportBuilder extends ReportBuilder
 		    "document.getElementById('fail').innerHTML = '<span> %d </span>'\n" +
 		    "document.getElementById('finishTime').innerHTML = '<span>%tF %tT</span>'\n" + 
 		    "document.getElementById('name').innerHTML = '<span>%s</span>'\n" + 
+		    "document.getElementById('reportName').innerHTML = '<span>%s</span>'\n" +
 		    "-->\n" +
 		    "</script>\n",
 		    	item.count(Result.Passed) + item.count(Result.Failed),
 		    	item.count(Result.Passed),
 		    	item.count(Result.Failed),
 		    	date, date, 
-		    	(name == null ? "" : name) 
+		    	(name == null ? "" : name),
+				reportName
 				);
 		
 		writer.fwrite("</body>\n");

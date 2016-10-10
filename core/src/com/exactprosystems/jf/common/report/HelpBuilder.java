@@ -268,7 +268,7 @@ public class HelpBuilder extends ReportBuilder
 	}
 
 	@Override
-	protected void reportFooter(ReportWriter writer, MatrixItem item, Date date, String name) throws IOException
+	protected void reportFooter(ReportWriter writer, MatrixItem item, Date date, String name, String reportName) throws IOException
 	{
 		writer.fwrite("</body>\n");
 		writer.fwrite("</html>");

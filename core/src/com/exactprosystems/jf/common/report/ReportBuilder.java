@@ -230,25 +230,30 @@ public abstract class ReportBuilder
 	{
 		logger.trace(String.format("reportFinished(%s)", matrix));
 
-		reportFooter(writer, matrix.getRoot(), new Date(), this.name);
-		writer.close();
 
 		String fullName = writer.fileName();
         if (fullName != null)
         {
         	String postSuffix = this.name == null ? "" : " " + this.name;
-        	
-            if (matrix.getRoot().count(Result.Failed) > 0)
-            {
-                Files.move(Paths.get(fullName), Paths.get(fullName.replace(suffix, failed + postSuffix)));
-				this.reportName = fullName.replace(suffix, failed + postSuffix);
-            }
-            else
-            {
-                Files.move(Paths.get(fullName), Paths.get(fullName.replace(suffix, passed + postSuffix)));
-				this.reportName = fullName.replace(suffix, passed + postSuffix);
-			}
+			String replacement = (matrix.getRoot().count(Result.Failed) > 0 ? failed : passed) + postSuffix;
+
+			Files.move(Paths.get(fullName), Paths.get(fullName.replace(suffix, replacement)));
+			this.reportName = fullName.replace(suffix, replacement);
+
+//            if (matrix.getRoot().count(Result.Failed) > 0)
+//            {
+//              Files.move(Paths.get(fullName), Paths.get(fullName.replace(suffix, failed + postSuffix)));
+//				this.reportName = fullName.replace(suffix, failed + postSuffix);
+//            }
+//            else
+//            {
+//                Files.move(Paths.get(fullName), Paths.get(fullName.replace(suffix, passed + postSuffix)));
+//				this.reportName = fullName.replace(suffix, passed + postSuffix);
+//			}
         }
+
+		reportFooter(writer, matrix.getRoot(), new Date(), this.name, this.reportName);
+		writer.close();
 	}
 
 	public void reportChart(String title, String beforeTestCase, ChartBuilder chartBuilder) throws IOException
@@ -323,7 +328,7 @@ public abstract class ReportBuilder
 	
 	protected abstract void reportHeaderTotal(ReportWriter writer, Matrix context, Date date) throws IOException;
 
-	protected abstract void reportFooter(ReportWriter writer, MatrixItem entry, Date date, String name) throws IOException;
+	protected abstract void reportFooter(ReportWriter writer, MatrixItem entry, Date date, String name, String reportName) throws IOException;
 
 	protected abstract void reportItemHeader(ReportWriter writer, MatrixItem entry, Integer id) throws IOException;
 	
