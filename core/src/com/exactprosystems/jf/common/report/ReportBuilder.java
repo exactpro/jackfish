@@ -232,28 +232,20 @@ public abstract class ReportBuilder
 
 
 		String fullName = writer.fileName();
-        if (fullName != null)
+		String postSuffix = this.name == null ? "" : " " + this.name;
+		String replacement = (matrix.getRoot().count(Result.Failed) > 0 ? failed : passed) + postSuffix;
+		if (fullName != null)
         {
-        	String postSuffix = this.name == null ? "" : " " + this.name;
-			String replacement = (matrix.getRoot().count(Result.Failed) > 0 ? failed : passed) + postSuffix;
-
-			Files.move(Paths.get(fullName), Paths.get(fullName.replace(suffix, replacement)));
 			this.reportName = fullName.replace(suffix, replacement);
-
-//            if (matrix.getRoot().count(Result.Failed) > 0)
-//            {
-//              Files.move(Paths.get(fullName), Paths.get(fullName.replace(suffix, failed + postSuffix)));
-//				this.reportName = fullName.replace(suffix, failed + postSuffix);
-//            }
-//            else
-//            {
-//                Files.move(Paths.get(fullName), Paths.get(fullName.replace(suffix, passed + postSuffix)));
-//				this.reportName = fullName.replace(suffix, passed + postSuffix);
-//			}
-        }
+		}
 
 		reportFooter(writer, matrix.getRoot(), new Date(), this.name, this.reportName);
 		writer.close();
+
+		if (fullName != null)
+		{
+			Files.move(Paths.get(fullName), Paths.get(fullName.replace(suffix, replacement)));
+		}
 	}
 
 	public void reportChart(String title, String beforeTestCase, ChartBuilder chartBuilder) throws IOException
