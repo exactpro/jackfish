@@ -16,7 +16,7 @@ import javafx.scene.control.Skin;
 
 public class CustomScrollPane extends ScrollPane
 {
-    private int prefHeight;
+    private static final int heightHorizontalScroll = 14;
 
 	public CustomScrollPane()
 	{
@@ -30,51 +30,28 @@ public class CustomScrollPane extends ScrollPane
 		this.setHbarPolicy(ScrollBarPolicy.AS_NEEDED);
 		this.getStyleClass().add(CssVariables.CUSTOM_SCROLL_PANE);
 		this.setFitToHeight(true);
-		this.prefHeight = prefHeight;
-		this.setPrefHeight(this.prefHeight);
+		this.setPrefHeight(prefHeight + heightHorizontalScroll);
 	}
-
-    protected void setPrefHeight(int prefHeight) {
-        this.prefHeight = prefHeight;
-    }
-
-	protected void changeHeight()
-    {
-        this.setPrefHeight(prefHeight + 15);
-        this.setMinHeight(prefHeight + 16);
-        this.setMaxHeight(prefHeight + 14);
-    }
 
 	@Override
 	protected Skin<?> createDefaultSkin()
 	{
 		CustomScrollPaneSkin skin = new CustomScrollPaneSkin(this);
 		ScrollBar hsb = skin.getHsb();
-		if (hsb.isVisible())
-		{
-			Platform.runLater(() -> {
-				this.setPrefHeight(prefHeight + 15);
-				this.setMinHeight(prefHeight + 16);
-				this.setMaxHeight(prefHeight + 14);
-			});
-		}
 		hsb.visibleProperty().addListener((observable, oldValue, newValue) -> {
-			if (newValue && !oldValue)
-			{
 				Platform.runLater(() -> {
-					this.setPrefHeight(prefHeight + 15);
-					this.setMinHeight(prefHeight + 16);
-					this.setMaxHeight(prefHeight + 14);
+                    //without horizontal scroll
+                    if(oldValue && !newValue)
+                    {
+                        this.setPrefHeight(getPrefHeight() - heightHorizontalScroll);
+                    }
+
+                    //with horizontal scroll
+                    if(!oldValue && newValue)
+                    {
+                        this.setPrefHeight(getPrefHeight() + heightHorizontalScroll);
+                    }
 				});
-			}
-			else if (!newValue && oldValue)
-			{
-				Platform.runLater(() -> {
-					this.setPrefHeight(prefHeight);
-					this.setMinHeight(prefHeight - 1);
-					this.setMaxHeight(prefHeight + 1);
-				});
-			}
 		});
 		return skin;
 	}
