@@ -7,22 +7,29 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.exactprosystems.jf.documents.matrix.parser.items;
 
+import com.csvreader.CsvWriter;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.DisplayDriver;
+import com.exactprosystems.jf.documents.matrix.parser.MutableValue;
+import com.exactprosystems.jf.documents.matrix.parser.Parameter;
 import com.exactprosystems.jf.documents.matrix.parser.Tokens;
+
+import java.util.List;
+import java.util.Map;
 
 @MatrixItemAttribute(
 		description = "Create vars",
 		shouldContain = {Tokens.VarsItem},
 		mayContain = {Tokens.Off},
 		real = true,
-		hasValue = false,
+		hasValue = true,
 		hasParameters = true,
 		hasChildren = false)
 public class VarsItem extends MatrixItem
 {
     public VarsItem() {
         super();
+        this.name = new MutableValue<String>();
     }
 
     @Override
@@ -36,4 +43,42 @@ public class VarsItem extends MatrixItem
         driver.showCheckBox(this, layout, 1, 2, "Global", this.global, this.global);
 		return layout;
 	}
+
+    @Override
+    public MatrixItem clone() throws CloneNotSupportedException
+    {
+        VarsItem varsItem = (VarsItem) super.clone();
+        varsItem.name = this.name.clone();
+        return varsItem;
+    }
+
+    public String getName()
+    {
+        return this.name.get();
+    }
+
+    @Override
+    protected void initItSelf(Map<Tokens, String> systemParameters)
+    {
+        this.name.set(systemParameters.get(Tokens.VarsItem));
+    }
+
+    @Override
+    protected String itemSuffixSelf()
+    {
+        return "VARSITEM_";
+    }
+
+    @Override
+    protected void writePrefixItSelf(CsvWriter writer, List<String> firstLine, List<String> secondLine)
+    {
+        addParameter(firstLine, secondLine, Tokens.VarsItem.get(), this.name.get());
+
+        for (Parameter entry : getParameters())
+        {
+            super.addParameter(firstLine, secondLine, entry.getName(), entry.getExpression());
+        }
+    }
+
+    private MutableValue<String> name;
 }
