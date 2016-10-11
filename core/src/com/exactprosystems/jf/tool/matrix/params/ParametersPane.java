@@ -147,10 +147,14 @@ public class ParametersPane extends CustomScrollPane
             }
         }
 
-		for(Node child : children)
-		{
-			if(child instanceof ParameterGridPane) ((ParameterGridPane) child).getExpressionField().clearlListener();
-		}
+        if(!oneLine)
+        {
+            for (Node child : children) {
+                if (child instanceof ParameterGridPane) {
+                    ((ParameterGridPane) child).getExpressionField().clearlListener();
+                }
+            }
+        }
 	}
 	
 	private ParameterGridPane findAndRemovePane(ObservableList<Node> children, Parameter par)
