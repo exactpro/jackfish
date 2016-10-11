@@ -716,12 +716,11 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 	{
 		try
 		{
-			String result = this.driver.getRowByConditions(component, useNumericHeader, (Condition)valueCondition);
+			String result = this.driver.getRowByConditions(component, useNumericHeader, (Condition) valueCondition, columnsToString(columns));
 			String[] split = result.split(SEPARATOR_ROWS);
 			if (split.length < 2)
 			{
-				//TODO replace via JFRemoteException
-				throw new Exception("Row is not found");
+				throw new ElementNotFoundException("Row is not found");
 			}
 			String headerRow = split[0];
 			String row = split[1];
@@ -752,7 +751,7 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 	{
 		try
 		{
-			String result = this.driver.getRowIndexes(component, useNumericHeader, valueCondition);
+			String result = this.driver.getRowIndexes(component, useNumericHeader, valueCondition, columnsToString(columns));
 			List<String> returnedList = new ArrayList<>();
 			String[] indexes = result.split(SEPARATOR_CELL);
 			Collections.addAll(returnedList, indexes);
@@ -780,7 +779,7 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 			String headerRow = split[0];
 			String row = split[1];
 			Map<String, String> map = new LinkedHashMap<>();
-			String[] headerCells = headerRow.split(SEPARATOR_CELL);
+			String[] headerCells = convertColumns(headerRow.split(SEPARATOR_CELL), columns);
 			String[] rowCell = row.split(SEPARATOR_CELL);
 			for (int j = 0; j < headerCells.length; j++)
 			{
@@ -788,19 +787,6 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 				map.put(headerCells[j], value.equals(EMPTY_CELL) ? "" : value);
 			}
 			return map;
-
-//			List<UIProxyJNA> rows = getRows(component);
-//			Map<String, String> resultMap = new HashMap<>();
-//			UIProxyJNA headerRow = rows.get(0);
-//			List<String> headers = getRow(headerRow, useNumericHeader);
-//
-//			UIProxyJNA needRow = rows.get(i);
-//			List<String> row = getRow(needRow, false);
-//			for (int j = 0; j < headers.size(); j++)
-//			{
-//				resultMap.put(headers.get(j), row.get(j));
-//			}
-//			return resultMap;
 		}
 		catch (Exception e)
 		{
@@ -825,7 +811,7 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 
 			String[] split = res.split(SEPARATOR_ROWS);
 			String headerRow = split[0];
-			String[] headerCells = headerRow.split(SEPARATOR_CELL);
+			String[] headerCells = convertColumns(headerRow.split(SEPARATOR_CELL), columns);
 			String[][] table = new String[split.length][headerCells.length];
 			System.arraycopy(headerCells, 0, table[0], 0, headerCells.length);
 			for (int i = 1; i < split.length; i++)
@@ -898,5 +884,51 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 	public Locator locatorFromUIProxy(int[] id) throws Exception
 	{
 		return locatorFromUIProxy(new UIProxyJNA(id));
+	}
+
+	private String columnsToString(String[] a)
+	{
+		if (a == null || a.length == 0)
+		{
+			return "";
+		}
+		StringBuilder sb = new StringBuilder();
+		String sep = "";
+		for (String s : a)
+		{
+			sb.append(sep).append(s);
+			sep = SEPARATOR_CELL;
+		}
+		return sb.toString();
+	}
+
+	private String[] convertColumns(String[] arrayFromGui, String[] columns)
+	{
+		ArrayList<String> res = new ArrayList<>();
+		if (columns == null)
+		{
+			return arrayFromGui;
+		}
+		Iterator<String> iterator = Arrays.asList(arrayFromGui).iterator();
+		int i;
+		for (i = 0; i < columns.length; i++)
+		{
+			if (iterator.hasNext())
+			{
+				iterator.next();
+				res.add(columns[i]);
+			}
+			else
+			{
+				break;
+			}
+		}
+		while (iterator.hasNext())
+		{
+			iterator.next();
+			res.add(String.valueOf(i++));
+		}
+
+		return res.toArray(new String[res.size()]);
 	}
 }

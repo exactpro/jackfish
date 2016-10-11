@@ -337,11 +337,11 @@ public class JnaDriverImpl
 		checkError();
 	}
 
-	public String getRowByConditions(UIProxyJNA table, boolean useNumericHeader, Condition condition) throws Exception
+	public String getRowByConditions(UIProxyJNA table, boolean useNumericHeader, Condition condition, String columns) throws Exception
 	{
 		long start = System.currentTimeMillis();
 		String stringCondition = condition.serialize();
-		String res = this.driver.getRowByCondition(table.getIdString(), useNumericHeader, stringCondition);
+		String res = this.driver.getRowByCondition(table.getIdString(), useNumericHeader, stringCondition, columns);
 		this.logger.info(String.format("getRowByConditions(%s,%b,%s) : %s, time(ms) : %d", table, useNumericHeader, stringCondition, res, 
 				System.currentTimeMillis() - start));
 		checkCSharpTimes();
@@ -349,11 +349,11 @@ public class JnaDriverImpl
 		return res;
 	}
 
-	public String getRowIndexes(UIProxyJNA table, boolean useNumericHeader, ICondition condition) throws Exception
+	public String getRowIndexes(UIProxyJNA table, boolean useNumericHeader, ICondition condition, String columns) throws Exception
 	{
 		long start = System.currentTimeMillis();
 		String stringCondition = condition.serialize();
-		String res = this.driver.getRowIndexes(table.getIdString(), useNumericHeader, stringCondition);
+		String res = this.driver.getRowIndexes(table.getIdString(), useNumericHeader, stringCondition, columns);
 		this.logger.info(String.format("getRowIndexes(%s,%b,%s) : %s, time(ms) : %d", table, useNumericHeader, stringCondition, res, 
 				System.currentTimeMillis() - start));
 		checkCSharpTimes();

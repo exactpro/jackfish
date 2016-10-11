@@ -300,11 +300,11 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 			}
 			if (maximize)
 			{
-				this.driver.doPatternCall(currentWindow, WindowPattern.WindowPattern, "SetWindowVisualState", "Maximized", 0);
+				this.driver.doPatternCall(currentWindow, WindowPattern.WindowPattern, "SetWindowVisualState", "Maximized", 3);
 			}
 			else if (minimize)
 			{
-				this.driver.doPatternCall(currentWindow, WindowPattern.WindowPattern, "SetWindowVisualState", "Minimized", 0);
+				this.driver.doPatternCall(currentWindow, WindowPattern.WindowPattern, "SetWindowVisualState", "Minimized", 3);
 			}
 			else
 			{

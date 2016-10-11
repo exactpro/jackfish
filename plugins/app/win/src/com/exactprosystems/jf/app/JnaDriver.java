@@ -39,6 +39,7 @@ public interface JnaDriver extends Library {
 	 * if @param c == 0 -> arg is array of string with separator %
 	 * if @param c == 1 -> arg is array of int with separator %
 	 * if @param c == 2 -> arg is array of double with separator %
+	 * if @param c == 3 -> arg is array of WindowVisualState with separator %
 	 */
 	String doPatternCall(String elementId, int patternId, String method, String arg, int c);
 	void setText(String elementId, String text);
@@ -52,8 +53,10 @@ public interface JnaDriver extends Library {
 	String getValueTableCell(String elementId, int column, int row);
 	void mouseTableCell(String elementId, int column, int row, int mouseAction);
 	void textTableCell(String elementId, int column, int row, String text);
-	String getRowByCondition(String tableId, boolean useNumericHeader, String condition);
-	String getRowIndexes(String tableId, boolean useNumericHeader, String condition);
+
+	String getRowByCondition(String tableId, boolean useNumericHeader, String condition, String columns);
+
+	String getRowIndexes(String tableId, boolean useNumericHeader, String condition, String columns);
 	String getRowByIndex(String tableId, boolean useNumericHeader, int index);
 	String getTable(String tableId, boolean useNumericHeader);
 	int getTableSize(String tableId);
