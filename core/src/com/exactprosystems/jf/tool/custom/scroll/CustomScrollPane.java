@@ -40,16 +40,15 @@ public class CustomScrollPane extends ScrollPane
 		ScrollBar hsb = skin.getHsb();
 		hsb.visibleProperty().addListener((observable, oldValue, newValue) -> {
 				Platform.runLater(() -> {
-                    //without horizontal scroll
+
                     if(oldValue && !newValue)
                     {
-                        this.setPrefHeight(getPrefHeight() - heightHorizontalScroll);
+                        this.setPrefHeight(this.getPrefHeight() - heightHorizontalScroll);
                     }
 
-                    //with horizontal scroll
                     if(!oldValue && newValue)
                     {
-                        this.setPrefHeight(getPrefHeight() + heightHorizontalScroll);
+                        this.setPrefHeight(this.getPrefHeight() + heightHorizontalScroll);
                     }
 				});
 		});

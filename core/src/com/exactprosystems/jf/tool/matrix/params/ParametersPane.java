@@ -57,7 +57,7 @@ import java.util.stream.Collectors;
 
 public class ParametersPane extends CustomScrollPane
 {
-    private static final int oneLineHeight = 30;
+    private static final int oneLineHeight = 34;
     private static final int twoLineHeight = 66;
 
 	private GridPane	mainGridPane;
@@ -142,7 +142,7 @@ public class ParametersPane extends CustomScrollPane
         {
             if(this.parameters.size() > 0 && this.parameters.size() < 6 )
             {
-                int height = this.parameters.size() * oneLineHeight + oneLineHeight;
+                int height = (this.parameters.size() + 1) * oneLineHeight;
                 super.setPrefHeight(height);
             }
         }
