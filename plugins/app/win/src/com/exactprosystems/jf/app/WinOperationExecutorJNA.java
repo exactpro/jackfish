@@ -541,7 +541,8 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 			boolean isSelectionPatternPresent = false;
 			boolean isSelectionItemPatternPresent = false;
 			boolean isTogglePattern = false;
-			
+			boolean isTextPattern = false;
+
 			for (int p : arr)
 			{
 				if (WindowPattern.TogglePattern.getId() == p)
@@ -555,6 +556,10 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 				if (WindowPattern.SelectionPattern.getId() == p)
 				{
 					isSelectionPatternPresent = true;
+				}
+				if (WindowPattern.TextPattern.getId() == p)
+				{
+					isTextPattern = true;
 				}
 			}
 			String result;
@@ -570,6 +575,10 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 			else if (isTogglePattern)
 			{
 				result = this.driver.getProperty(component, WindowProperty.ToggleStateProperty);
+			}
+			else if (isTextPattern)
+			{
+				result = this.driver.getProperty(component, WindowProperty.IsTextPatternAvailableProperty);
 			}
 			else
 			{
