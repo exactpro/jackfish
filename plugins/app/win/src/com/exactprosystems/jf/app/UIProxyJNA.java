@@ -34,9 +34,11 @@ public class UIProxyJNA
 			return null;
 		}
 		StringBuilder b = new StringBuilder();
+		String sep = "";
 		for (int i : this.id)
 		{
-			b.append(i).append(SEPARATOR);
+			b.append(sep).append(i);
+			sep = SEPARATOR;
 		}
 		return b.deleteCharAt(b.length() - 1).toString();
 	}
