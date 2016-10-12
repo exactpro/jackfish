@@ -142,9 +142,14 @@ public class ParametersPane extends CustomScrollPane
         {
             if(this.parameters.size() > 0 && this.parameters.size() < 6 )
             {
+				this.setVbarPolicy(ScrollBarPolicy.NEVER);
                 int height = (this.parameters.size() + 1) * oneLineHeight;
                 super.setPrefHeight(height);
             }
+            else
+			{
+				this.setVbarPolicy(ScrollBarPolicy.AS_NEEDED);
+			}
         }
 
         if(!oneLine)
