@@ -8,11 +8,16 @@
 package com.exactprosystems.jf.documents.matrix.parser.items;
 
 import com.csvreader.CsvWriter;
+import com.exactprosystems.jf.api.error.ErrorKind;
+import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
+import com.exactprosystems.jf.common.evaluator.Variables;
+import com.exactprosystems.jf.common.report.ReportBuilder;
+import com.exactprosystems.jf.common.report.ReportTable;
 import com.exactprosystems.jf.documents.config.Context;
-import com.exactprosystems.jf.documents.matrix.parser.DisplayDriver;
-import com.exactprosystems.jf.documents.matrix.parser.MutableValue;
-import com.exactprosystems.jf.documents.matrix.parser.Parameter;
-import com.exactprosystems.jf.documents.matrix.parser.Tokens;
+import com.exactprosystems.jf.documents.matrix.parser.*;
+import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
+import com.exactprosystems.jf.exceptions.ParametersException;
+import com.exactprosystems.jf.functions.Table;
 
 import java.util.List;
 import java.util.Map;
@@ -77,6 +82,57 @@ public class VarsItem extends MatrixItem
         for (Parameter entry : getParameters())
         {
             super.addParameter(firstLine, secondLine, entry.getName(), entry.getExpression());
+        }
+    }
+
+    @Override
+    protected ReturnAndResult executeItSelf(Context context, IMatrixListener listener, AbstractEvaluator evaluator,
+                                            ReportBuilder report, Parameters parameters)
+    {
+        try
+        {
+            boolean parametersAreCorrect = parameters.evaluateAll(evaluator);
+            if (!parametersAreCorrect)
+            {
+                reportParameters(report, parameters);
+                throw new ParametersException("Errors in parameters expressions #VarsItem", parameters);
+            }
+
+            if (super.isGlobal())
+            {
+                evaluator.getGlobals().set(parameters.select(TypeMandatory.Extra));
+            }
+            else
+            {
+                evaluator.getLocals().set(parameters.select(TypeMandatory.Extra));
+            }
+
+            reportParameters(report, parameters);
+            return new ReturnAndResult(Result.Passed);
+        }
+        catch (ParametersException e)
+        {
+            listener.error(getMatrix(), getNumber(), this, e.getMessage());
+            for (String error : e.getParameterErrors())
+            {
+                listener.error(getMatrix(), getNumber(), this, error);
+            }
+            return new ReturnAndResult(Result.Failed, e.getMessage(), ErrorKind.EXCEPTION, this);
+        }
+        catch (Exception e)
+        {
+            logger.error(e.getMessage(), e);
+            return new ReturnAndResult(Result.Failed, e.getMessage(), ErrorKind.EXCEPTION, this);
+        }
+    }
+
+    private void reportParameters(ReportBuilder report, Parameters parameters)
+    {
+        ReportTable table = report.addTable("Input parameters", null, true, 2, new int[] { 20, 40, 40 }, "Parameter", "Expression", "Value");
+
+        for (Parameter parameter : parameters)
+        {
+            table.addValues(parameter.getName(), parameter.getExpression(), parameter.getValue());
         }
     }
 
