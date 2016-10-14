@@ -40,7 +40,7 @@ public class UIProxyJNA
 			b.append(sep).append(i);
 			sep = SEPARATOR;
 		}
-		return b.deleteCharAt(b.length() - 1).toString();
+		return b.toString();
 	}
 
 	@Override
