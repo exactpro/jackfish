@@ -91,25 +91,25 @@ public class VarsItem extends MatrixItem
     {
         try
         {
-            boolean paramIsValid = false;
+            boolean errorsInParams = false;
             for (Parameter param : parameters)
             {
-                paramIsValid = param.evaluate(evaluator);
-                if (!paramIsValid)
+                if (!param.evaluate(evaluator))
                 {
-                    break;
+                    errorsInParams = true;
+                    continue;
                 }
                 if (super.isGlobal())
                 {
-                    evaluator.getGlobals().set(parameters.select(TypeMandatory.Extra));
+                    evaluator.getGlobals().set(param.getName(),param.getValue());
                 }
                 else
                 {
-                    evaluator.getLocals().set(parameters.select(TypeMandatory.Extra));
+                    evaluator.getLocals().set(param.getName(),param.getValue());
                 }
             }
 
-            if (!paramIsValid)
+            if (errorsInParams)
             {
                 reportParameters(report, parameters);
                 throw new ParametersException("Errors in parameters expressions #VarsItem", parameters);
@@ -120,8 +120,10 @@ public class VarsItem extends MatrixItem
         }
         catch (ParametersException e)
         {
-            List<String> errors = e.getParameterErrors();
-            listener.error(getMatrix(), getNumber(), this, errors.get(0));
+            for (String error : e.getParameterErrors())
+            {
+                listener.error(getMatrix(), getNumber(), this, error);
+            }
             return new ReturnAndResult(Result.Failed, e.getMessage(), ErrorKind.EXCEPTION, this);
         }
         catch (Exception e)
