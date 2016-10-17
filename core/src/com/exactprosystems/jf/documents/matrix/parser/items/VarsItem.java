@@ -21,6 +21,7 @@ import com.exactprosystems.jf.functions.Table;
 
 import java.util.List;
 import java.util.Map;
+import java.util.function.BiConsumer;
 
 @MatrixItemAttribute(
 		description = "Create vars",
@@ -92,6 +93,7 @@ public class VarsItem extends MatrixItem
         try
         {
             boolean errorsInParams = false;
+            BiConsumer<String,Object> consumer = super.isGlobal() ? evaluator.getGlobals()::set : evaluator.getLocals()::set;
             for (Parameter param : parameters)
             {
                 if (!param.evaluate(evaluator))
@@ -99,14 +101,7 @@ public class VarsItem extends MatrixItem
                     errorsInParams = true;
                     continue;
                 }
-                if (super.isGlobal())
-                {
-                    evaluator.getGlobals().set(param.getName(),param.getValue());
-                }
-                else
-                {
-                    evaluator.getLocals().set(param.getName(),param.getValue());
-                }
+                consumer.accept(param.getName(), param.getValue());
             }
 
             if (errorsInParams)
