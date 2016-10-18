@@ -20,7 +20,6 @@ import com.exactprosystems.jf.common.report.ReportHelper;
 import com.exactprosystems.jf.common.report.ReportTable;
 import com.exactprosystems.jf.exceptions.ColumnIsPresentException;
 import com.exactprosystems.jf.sql.SqlConnection;
-
 import org.apache.log4j.Logger;
 
 import java.io.*;
@@ -240,15 +239,8 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 		{
 			Object obj1 = o1.get(header);
 			Object obj2 = o2.get(header);
-			int compare;
-			if (obj1 instanceof Number && obj2 instanceof Number)
-			{
-				compare = Double.valueOf(((Number) obj1).doubleValue()).compareTo(((Number) obj2).doubleValue());
-			}
-			else
-			{
-				compare = String.valueOf(obj1).compareTo(String.valueOf(obj2));
-			}
+			Header.HeaderType type = header.type == null ? Header.HeaderType.STRING : header.type;
+			int compare = type.compare(obj1, obj2);
 			return az ? compare : (-1) * compare;
 		});
 		return this;
@@ -1364,12 +1356,16 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 	{
 		try
 		{
-			this.headers=null;
 			File directory = new File(dirName);
 			if (directory.isDirectory())
 			{
-				File[] files = directory.listFiles();
+				this.headers = null;
 				addColumns("Name", "Size", "Date", "Is directory", "Hidden");
+				this.considerAsString("Name");
+				this.considerAsBoolean("Is directory", "Hidden");
+				this.considerAsDouble("Size");
+				this.considerAsDate("Date");
+				File[] files = directory.listFiles();
 				for (File file : files)
 				{
 					Map<Header, Object> line = new LinkedHashMap<>();

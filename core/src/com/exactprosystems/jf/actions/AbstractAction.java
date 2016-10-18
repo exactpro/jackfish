@@ -397,7 +397,7 @@ public abstract class AbstractAction implements Cloneable
         	table.addValues("Additional fields", "No");
         }
         table.addValues("See also", attr.seeAlso());
-        table.addValues("Exapmles", attr.examples());
+        table.addValues("Examples", attr.examples());
 
 
         // Input

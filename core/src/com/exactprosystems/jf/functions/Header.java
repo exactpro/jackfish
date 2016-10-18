@@ -1,5 +1,7 @@
 package com.exactprosystems.jf.functions;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -31,6 +33,31 @@ class Header implements Cloneable
 				}
 			}
 			return null;
+		}
+
+		public int compare(Object obj1, Object obj2)
+		{
+			if (!obj1.getClass().isAssignableFrom(this.clazz) && !obj2.getClass().isAssignableFrom(this.clazz))
+			{
+				return String.valueOf(obj1).compareTo(String.valueOf(obj2));
+			}
+			if (Comparable.class.isAssignableFrom(this.clazz))
+			{
+				try
+				{
+					Method compareTo = this.clazz.getMethod("compareTo", Object.class);
+					return ((int) compareTo.invoke(obj1, obj2));
+				}
+				catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e)
+				{
+					e.printStackTrace();
+				}
+				return 0;
+			}
+			else
+			{
+				return String.valueOf(obj1).compareTo(String.valueOf(obj2));
+			}
 		}
 
 		public Class<?> clazz;
