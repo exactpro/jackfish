@@ -75,7 +75,7 @@ public class Parser
 				RawText.class,
 				EndRawText.class,
 				EndRawText.class,
-				VarsItem.class,
+				Let.class,
 			};
 
 	public static void main(String[] args)

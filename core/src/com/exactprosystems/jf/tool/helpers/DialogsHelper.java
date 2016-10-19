@@ -472,6 +472,7 @@ public abstract class DialogsHelper
 			int i = 0;
 			syntax.insert(i++, new NameSpace());
 			syntax.insert(i++, new TestCase());
+			syntax.insert(i++, new Let());
 			syntax.insert(i++, new SubCase());
 			syntax.insert(i++, new Return());
 			syntax.insert(i++, new Call());

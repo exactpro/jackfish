@@ -87,7 +87,7 @@ public final class SubCase extends MatrixItem
 		driver.showTextBox(this, layout, 1, 0, this.id, this.id, () -> this.id.get());
 		driver.showTitle(this, layout, 1, 1, Tokens.SubCase.get(), context.getFactory().getSettings());
 		driver.showTextBox(this, layout, 1, 2, this.name, this.name, null);
-		driver.showParameters(this, layout, 1, 3, this.parameters, () -> "", true, true);
+		driver.showParameters(this, layout, 1, 3, this.parameters, () -> "", true);
 
 		return layout;
 	}

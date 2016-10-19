@@ -90,7 +90,7 @@ public final class Call extends MatrixItem
 				driver.setCurrentItem(context.referenceToSubcase(str, this));
 				return str;
 			}, null, 'G' ); 
-		driver.showParameters(this, layout, 1, 3, this.parameters, null, false, true);
+		driver.showParameters(this, layout, 1, 3, this.parameters, null, false);
 		driver.showCheckBox(this, layout, 2, 0, "Global", this.global, this.global);
 
 		return layout;
