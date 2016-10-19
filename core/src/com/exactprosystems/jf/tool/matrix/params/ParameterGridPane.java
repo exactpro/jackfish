@@ -39,7 +39,7 @@ public class ParameterGridPane extends GridPane
 	public void setValue(ExpressionField value)
 	{
 		this.value = value;
-        this.add(this.value, 1, 0);
+        this.add(this.value, 0, 1);
 	}
 	
 	public ExpressionField getExpressionField()
