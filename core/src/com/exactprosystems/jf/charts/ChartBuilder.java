@@ -18,8 +18,7 @@ import com.exactprosystems.jf.functions.Table;
 import java.io.IOException;
 import java.util.List;
 
-//TODO need be abstract
-public class ChartBuilder
+public abstract class ChartBuilder
 {
 	ChartBuilder(Table table, Parameters params) throws JFException
 	{
@@ -27,17 +26,9 @@ public class ChartBuilder
 		this.params = params;
 	}
 
-	//TODO need be abstract
-	public void report(ReportWriter writer, Integer integer) throws IOException
-	{
-		
-	}
+	public abstract void report(ReportWriter writer, Integer integer) throws IOException;
 
-	//TODO need be abstract
-	public void helpToAddParameters(List<ReadableValue> list, Context context) throws Exception
-	{
-
-	}
+	public abstract void helpToAddParameters(List<ReadableValue> list, Context context) throws Exception;
 
 	protected static boolean isNumber(String s)
 	{

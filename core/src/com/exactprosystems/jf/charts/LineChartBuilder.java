@@ -47,36 +47,37 @@ public class LineChartBuilder extends ChartBuilder
 		}
 
 		this.labelColumn = "" + lblColumn;
-		AtomicBoolean ab = new AtomicBoolean(false);
-		int headerSize = table.getHeaderSize();
-		IntStream.range(0, headerSize)
-				.mapToObj(table::getHeader)
-				.filter(this.labelColumn::equals)
-				.findFirst()
-				.ifPresent(s1 -> ab.set(true));
-
-		if (!ab.get())
-		{
-			throw new ChartException(String.format("Column with name %s is not presented", labelColumnName));
-		}
-
-		boolean allMatch = IntStream.range(0, table.getHeaderSize())	//for all headers
-				.mapToObj(table::getHeader)								//get header name
-				.filter(header -> !lblColumn.equals(header))			//exclude labelColumn
-				.allMatch(headerName ->
-						IntStream.range(0, this.table.size())				//for all rows
-								.mapToObj(this.table::get)					//get row
-								.allMatch(rt -> isNumber(rt.get(headerName).toString()))
-				);
-		if (!allMatch)
-		{
-			throw new ChartException("All values from columns, exclude label column, must be a number");
-		}
 	}
 
 	@Override
 	public void report(ReportWriter writer, Integer count) throws IOException
 	{
+//		AtomicBoolean ab = new AtomicBoolean(false);
+//		int headerSize = table.getHeaderSize();
+//		IntStream.range(0, headerSize)
+//				.mapToObj(table::getHeader)
+//				.filter(this.labelColumn::equals)
+//				.findFirst()
+//				.ifPresent(s1 -> ab.set(true));
+//
+//		if (!ab.get())
+//		{
+//			throw new ChartException(String.format("Column with name %s is not presented", labelColumnName));
+//		}
+//
+//		boolean allMatch = IntStream.range(0, table.getHeaderSize())	//for all headers
+//				.mapToObj(table::getHeader)								//get header name
+//				.filter(header -> !this.labelColumn.equals(header))			//exclude labelColumn
+//				.allMatch(headerName ->
+//						IntStream.range(0, this.table.size())				//for all rows
+//								.mapToObj(this.table::get)					//get row
+//								.allMatch(rt -> isNumber(rt.get(headerName).toString()))
+//				);
+//		if (!allMatch)
+//		{
+//			throw new ChartException("All values from columns, exclude label column, must be a number");
+//		}
+
 		String chartId = "chart_" + count;
 
 		writer.fwrite("<div id='%s' class=container></div>", chartId);

@@ -254,13 +254,6 @@ public abstract class ReportBuilder
 		reportChart(this.writer, title, beforeTestCase, chartBuilder);
 	}
 
-	@Deprecated
-	public final void reportHistogram(String title, int intervalCount, int interval, List<Long> copyDate) throws IOException
-	{
-		logger.trace("Report histogram");
-		histogram(this.writer, title, intervalCount, interval, copyDate);
-	}
-	
 
 	protected String postProcess(String source)
 	{
@@ -336,9 +329,6 @@ public abstract class ReportBuilder
 
 	protected abstract void tableFooter(ReportWriter writer, ReportTable table) throws IOException;
 	
-	@Deprecated
-	protected abstract void histogram(ReportWriter writer, String title, int intervalCount, int interval, List<Long> copyDate) throws IOException;
-
 	protected abstract void reportChart(ReportWriter writer, String title, String beforeTestCase, ChartBuilder chartBuilder) throws IOException;
 
 

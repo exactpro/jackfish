@@ -10,6 +10,7 @@ package com.exactprosystems.jf.actions.system;
 
 import com.exactprosystems.jf.actions.*;
 import com.exactprosystems.jf.api.app.ChartKind;
+import com.exactprosystems.jf.api.error.common.NullParameterException;
 import com.exactprosystems.jf.charts.ChartBuilder;
 import com.exactprosystems.jf.charts.ChartFactory;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
@@ -59,8 +60,25 @@ public class ChartReport extends AbstractAction
 	public void helpToAddParametersDerived(List<ReadableValue> list, Context context, Parameters parameters) throws Exception
 	{
 		parameters.evaluateAll(context.getEvaluator());
-		ChartKind kind = (ChartKind) parameters.get(kindName);
-		Table tab = (Table) parameters.get(tableName);
+		Object kindObj 	= parameters.get(kindName);
+		Object tabObj 	= parameters.get(tableName);
+
+		ChartKind kind 	= null;
+		Table tab 		= null;
+
+		if (kindObj instanceof ChartKind)
+		{
+			kind = (ChartKind) kindObj;
+		}
+		else
+		{
+			throw new NullParameterException(kindName);
+		}
+
+		if (tabObj instanceof Table)
+		{
+			tab = (Table) tabObj;
+		}
 		
 		ChartBuilder chartBuilder = ChartFactory.createChartBuilder(kind, tab, parameters.select(TypeMandatory.Extra));
 		chartBuilder.helpToAddParameters(list, context);

@@ -39,41 +39,44 @@ public class PieChartBuilder extends ChartBuilder
 		{
 			throw new NullParameterException(String.format("Parameter %s can't be null", valuesColumnName));
 		}
+		
 		this.valueColumnName = "" + valueColumn;
-		AtomicBoolean ab = new AtomicBoolean(false);
-		int headerSize = table.getHeaderSize();
-		IntStream.range(0, headerSize)
-				.mapToObj(table::getHeader)
-				.filter(valueColumn::equals)
-				.findFirst()
-				.ifPresent(s1 -> ab.set(true));
-
-		if (!ab.get())
-		{
-			throw new ChartException(String.format("Column with name %s is not presented", valueColumnName));
-		}
-		if (!table.stream().allMatch(rt -> isNumber(rt.get(valueColumnName).toString())))
-		{
-			throw new ChartException(String.format("All values from column %s must be a number", valueColumnName));
-		}
-		Object labelColumn = params.get(labelsColumnName);
-		if (labelColumn == null)
-		{
-			this.labelColumnName = IntStream.range(0, headerSize)
-					.mapToObj(table::getHeader)
-					.filter(s -> !valueColumn.equals(s))
-					.findFirst()
-					.orElseThrow(() -> new ChartException("Pie chart can't be drawing from table with one column"));
-		}
-		else
-		{
-			this.labelColumnName = "" + labelColumn;
-		}
 	}
 
 	@Override
 	public void report(ReportWriter writer, Integer id) throws IOException
 	{
+//		AtomicBoolean ab = new AtomicBoolean(false);
+//		int headerSize = table.getHeaderSize();
+//		IntStream.range(0, headerSize)
+//				.mapToObj(table::getHeader)
+//				.filter(valueColumnName::equals)
+//				.findFirst()
+//				.ifPresent(s1 -> ab.set(true));
+//
+//		if (!ab.get())
+//		{
+//			throw new ChartException(String.format("Column with name %s is not presented", valueColumnName));
+//		}
+//		if (!table.stream().allMatch(rt -> isNumber(rt.get(valueColumnName).toString())))
+//		{
+//			throw new ChartException(String.format("All values from column %s must be a number", valueColumnName));
+//		}
+//		Object labelColumn = params.get(labelsColumnName);
+//		if (labelColumn == null)
+//		{
+//			this.labelColumnName = IntStream.range(0, headerSize)
+//					.mapToObj(table::getHeader)
+//					.filter(s -> !valueColumnName.equals(s))
+//					.findFirst()
+//					.orElseThrow(() -> new ChartException("Pie chart can't be drawing from table with one column"));
+//		}
+//		else
+//		{
+//			this.labelColumnName = "" + labelColumn;
+//		}
+
+		
 		String chartId = "chart_" + id;
 		writer.fwrite("<div id='%s' class=container></div>", chartId);
 		String data = "[" + this.table.stream().map(rt -> String.format("{'value' : %s, 'label' : '%s'}", rt.get(valueColumnName), rt.get(labelColumnName))).collect(Collectors.joining(",")) + "]";

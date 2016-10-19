@@ -11,7 +11,6 @@ package com.exactprosystems.jf.actions;
 import com.exactprosystems.jf.actions.app.*;
 import com.exactprosystems.jf.actions.clients.*;
 import com.exactprosystems.jf.actions.gui.*;
-import com.exactprosystems.jf.actions.histogram.*;
 import com.exactprosystems.jf.actions.matrix.*;
 import com.exactprosystems.jf.actions.message.*;
 import com.exactprosystems.jf.actions.services.*;
@@ -109,7 +108,6 @@ public class ActionsList
 		        TextReport.class,
 		        TextSaveToFile.class,
 		        TextSetValue.class,
-		        TestAction.class,
 		        Wait.class,
 				Vars.class,
 				XmlAddNode.class,
@@ -124,11 +122,6 @@ public class ActionsList
 				XmlSaveToFile.class,
 				XmlSetNode.class, 
 				ApplicationNewInstance.class, 
-				HistogramCreate.class, 
-				HistogramGetTable.class, 
-				HistogramReport.class, 
-				HistogramStart.class, 
-				HistogramStop.class,
 			};
 
 }

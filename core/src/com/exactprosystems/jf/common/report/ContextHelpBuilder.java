@@ -191,12 +191,6 @@ public class ContextHelpBuilder extends ReportBuilder
 	}
 
 	@Override
-	protected void histogram(ReportWriter writer, String title, int intervalCount, int interval, List<Long> copyDate)
-	{
-
-	}
-
-	@Override
 	protected void reportChart(ReportWriter writer, String title, String beforeTestCase, ChartBuilder chartBuilder) throws IOException
 	{
 		

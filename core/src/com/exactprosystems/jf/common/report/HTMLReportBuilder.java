@@ -111,11 +111,6 @@ public class HTMLReportBuilder extends ReportBuilder
 		writer.include(getClass().getResourceAsStream("d3.min.js"));
 		writer.fwrite("</script>\n");
 
-		//TODO remove it
-		writer.fwrite("<script>\n");
-		writer.include(getClass().getResourceAsStream("histogram.js"));
-		writer.fwrite("</script>\n");
-
 		writer.fwrite("<script>\n");
 		writer.include(getClass().getResourceAsStream("charts.js"));
 		writer.fwrite("</script>\n");
@@ -380,15 +375,6 @@ public class HTMLReportBuilder extends ReportBuilder
 		{
 			writer.fwrite("</div>\n");
 		}
-	}
-
-	@Override
-	protected void histogram(ReportWriter writer, String title, int intervalCount, int interval, List<Long> copyDate) throws IOException
-	{
-		Integer id = ++diagramCount;
-		writer.fwrite("<div id=\"container" + id + "\" class='container' style=\"height:300px\">\n" + "</div>");
-		writer.fwrite("<script>createHistogram([%s],%s,%s,%s,%s);</script>\n", copyDate.stream().map(String::valueOf).collect(Collectors.joining(",")), Collections.max(copyDate), interval, intervalCount, id);
-		writer.fwrite("<ul>\n<li id=\"hstTimeRange" + id + "\">Range : </li>\n<li id=\"hstTimeCount" + id + "\">Count :</li>");
 	}
 
 	@Override
