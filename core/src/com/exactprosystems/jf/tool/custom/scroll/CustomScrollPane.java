@@ -16,7 +16,7 @@ import javafx.scene.control.Skin;
 
 public class CustomScrollPane extends ScrollPane
 {
-    private static final int heightHorizontalScroll = 14;
+    private static final int heightHorizontalScroll = 16;
 
 	public CustomScrollPane()
 	{
