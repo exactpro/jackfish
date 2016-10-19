@@ -8,7 +8,9 @@
 
 package com.exactprosystems.jf.actions.system;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.exactprosystems.jf.actions.AbstractAction;
 import com.exactprosystems.jf.actions.ActionAttribute;
@@ -87,6 +89,9 @@ public class ResultTable extends AbstractAction
 		}
 		
 		Table copy = result.clone();
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put(Context.resultColumn, Result.Passed);
+		copy.setValue(copy.size() - 1, map);
 		if (this.decorated)
 		{
 			for (RowTable row : copy)
