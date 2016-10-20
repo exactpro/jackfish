@@ -53,6 +53,7 @@ public enum Tokens
 	NameSpace,
 	EndNameSpace,
 	Let,
+	EndStep,
 	;
 
 	public String get()

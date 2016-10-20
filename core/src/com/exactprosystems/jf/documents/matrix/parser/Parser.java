@@ -44,6 +44,8 @@ public class Parser
 				NameSpace.class,
 				EndNameSpace.class,
 				TestCase.class,
+				Step.class,
+				EndStep.class,
 				ActionItem.class,
 				If.class,
 				Else.class,

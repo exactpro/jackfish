@@ -17,6 +17,7 @@ a:visited {
 .Passed, .Failed, .Ignored, .NotExecuted, .Documented, .Return {
 	font-weight: bold;
 	margin-left: 3em;
+	text-align: left;
 }
 
 .Time {

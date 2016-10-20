@@ -169,13 +169,16 @@ public final class TestCase extends MatrixItem
 		ReturnAndResult ret = null;
 		Table table = context.getTable();
 		RowTable row = new RowTable();
+		int position = -1;
 		
 		try
 		{
 			if (table != null)
 			{
+				position = table.size();
+
 				row.put(Context.matrixColumn, 			this.owner.getName());
-				row.put(Context.testCaseNumberColumn, 	this.getNumber());
+				row.put(Context.testCaseIdColumn, 		this.getId());
 				row.put(Context.testCaseColumn, 		this);
 				
 				table.add(row);
@@ -197,7 +200,7 @@ public final class TestCase extends MatrixItem
 					res = ret.getResult();
 				}
 			}
-			if (table != null && table.size() > 0)
+			if (table != null && position >= 0)
 			{
 				row.put(Context.resultColumn, 			res);
 				
@@ -210,12 +213,12 @@ public final class TestCase extends MatrixItem
 					row.put(Context.errorMessageColumn, 	error.Message);
 				}
 				
-				table.updateValue(table.size() - 1, row);
+				table.updateValue(position, row);
 			}
 		} 
 		catch (Exception e)
 		{
-			if (table != null && table.size() > 0)
+			if (table != null && table.size() >= 0)
 			{
 				row.put(Context.resultColumn, 			res);
 				
@@ -224,7 +227,7 @@ public final class TestCase extends MatrixItem
 				row.put(Context.errorPlacePathColumn, 	this.getPath());
 				row.put(Context.errorMessageColumn, 	e.getMessage());
 				
-				table.updateValue(table.size() - 1, row);
+				table.updateValue(position, row);
 			}
 		}
 		return ret;

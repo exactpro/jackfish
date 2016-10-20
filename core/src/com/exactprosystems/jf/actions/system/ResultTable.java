@@ -11,6 +11,8 @@ package com.exactprosystems.jf.actions.system;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.function.Function;
 
 import com.exactprosystems.jf.actions.AbstractAction;
 import com.exactprosystems.jf.actions.ActionAttribute;
@@ -25,6 +27,8 @@ import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.documents.matrix.parser.Result;
 import com.exactprosystems.jf.documents.matrix.parser.items.ActionItem.HelpKind;
+import com.exactprosystems.jf.documents.matrix.parser.items.Step;
+import com.exactprosystems.jf.documents.matrix.parser.items.TestCase;
 import com.exactprosystems.jf.functions.RowTable;
 import com.exactprosystems.jf.functions.Table;
 
@@ -100,20 +104,29 @@ public class ResultTable extends AbstractAction
 				String str = report.decorateStyle(row.get(Context.resultColumn), res == null ? "" : res.getStyle());
 				row.put(Context.resultColumn, str);
 
-				replace(row, Context.errorPlaceColumn);
-				replace(row, Context.errorPlacePathColumn);
-				replace(row, Context.errorKindColumn);
-				replace(row, Context.errorMessageColumn);
+				replace(row, Context.testCaseColumn, 		e -> spaceIfNull(((TestCase)e).getName()) );
+				replace(row, Context.testCaseIdColumn, 		this::spaceIfNull);
+				replace(row, Context.stepIdentityColumn, 	this::spaceIfNull);
+				replace(row, Context.stepColumn, 			e -> spaceIfNull(row.get(Context.stepIdentityColumn)) );
+				replace(row, Context.errorPlaceColumn, 		this::spaceIfNull);
+				replace(row, Context.errorPlacePathColumn, 	this::spaceIfNull);
+				replace(row, Context.errorKindColumn, 		this::spaceIfNull);
+				replace(row, Context.errorMessageColumn, 	this::spaceIfNull);
 			}
 		}
 		
 		super.setResult(copy);
 	}
 
-	private void replace(RowTable row, String columnName)
+	private void replace(RowTable row, String columnName, Function<Object, String> func)
 	{
 		Object value = row.get(columnName);
-		row.put(columnName, value == null ? "" : value.toString());
+		row.put(columnName, func.apply(value));
+	}
+	
+	private String spaceIfNull(Object obj)
+	{
+		return obj == null ? "" : obj.toString();
 	}
 }
 
