@@ -161,7 +161,7 @@ public class Converter
 		{
 			if (object instanceof String)
 			{
-				return (T)new BigInteger(String.valueOf(object));
+				return (T)new BigInteger(String.valueOf(object).trim());
 			}
 			else if (object instanceof Number)
 			{
@@ -172,7 +172,7 @@ public class Converter
 		{
 			if (object instanceof String)
 			{
-				return (T)new BigDecimal(String.valueOf(object));
+				return (T)new BigDecimal(String.valueOf(object).trim());
 			}
 			else if (object instanceof Number)
 			{
