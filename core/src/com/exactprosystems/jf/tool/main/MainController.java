@@ -64,6 +64,8 @@ public class MainController implements Initializable, ContainingParent
 
 	public ProgressBar			progressBar;
 	public Label				progressLabel;
+	public Button btnReloadConfig;
+	public Button				btnSaveConfig;
 	public BorderPane			mainPanel;
 	public Label				projectLabel;
 	public SplitPane			splitPane;
@@ -163,6 +165,14 @@ public class MainController implements Initializable, ContainingParent
 
 		Common.setTabPane(documentsPane);
 		Common.setProgressBar(progressBar);
+
+		Common.customizeLabeled(this.btnReloadConfig, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.REFRESH);
+		this.btnReloadConfig.setTooltip(new Tooltip("Reload configuration"));
+		this.btnReloadConfig.setOnAction(e -> Common.tryCatch(() -> this.model.refreshConfig(), "Error on refresh configuration"));
+
+		Common.customizeLabeled(this.btnSaveConfig, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.CONFIGURATION_SAVE_ICON);
+		this.btnSaveConfig.setOnAction(e -> Common.tryCatch(() -> this.model.saveConfig(), "Error on save config"));
+
 	}
 
 	public void close()

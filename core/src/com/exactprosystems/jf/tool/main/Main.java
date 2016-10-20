@@ -342,6 +342,22 @@ public class Main extends Application
 			openProject(fullPath, projectPane);
 		}
 	}
+
+	public void refreshConfig() throws Exception
+	{
+		if (this.config != null)
+		{
+			this.config.refresh();
+		}
+	}
+
+	public void saveConfig() throws Exception
+	{
+		if (this.config != null)
+		{
+			this.config.save(this.config.getName());
+		}
+	}
 	//endregion
 
 	//region Git

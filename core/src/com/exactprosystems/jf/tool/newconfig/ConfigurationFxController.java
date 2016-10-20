@@ -30,7 +30,7 @@ public class ConfigurationFxController implements Initializable, ContainingParen
 
 	private ParametersTableView				tableView;
 	private ConfigurationTreeView			treeView;
-	private ConfigurationToolBar			menuBar;
+//	private ConfigurationToolBar			menuBar;
 
 	private EvaluatorTreeNode				evaluatorTreeNode;
 	private FormatTreeNode					formatTreeNode;
@@ -60,9 +60,9 @@ public class ConfigurationFxController implements Initializable, ContainingParen
 		this.model 		= configuration;
 		this.tableView 	= new ParametersTableView();
 		this.treeView 	= new ConfigurationTreeView(this.tableView, this.model);
-		this.menuBar 	= new ConfigurationToolBar(this.model);
+//		this.menuBar 	= new ConfigurationToolBar(this.model);
 		
-		pane.setTop(this.menuBar);
+//		pane.setTop(this.menuBar);
 
 		SplitPane splitPane = new SplitPane();
 		splitPane.setOrientation(Orientation.VERTICAL);

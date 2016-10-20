@@ -129,7 +129,7 @@
 			<center>
 				<SplitPane fx:id="splitPane" dividerPositions="0.0">
 					<items>
-						<GridPane fx:id="projectGridPane" minWidth="20.0">
+						<GridPane fx:id="projectGridPane" minWidth="30.0">
 							<columnConstraints>
 								<ColumnConstraints hgrow="SOMETIMES" maxWidth="30.0" minWidth="30.0" prefWidth="30.0"/>
 								<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
@@ -138,11 +138,22 @@
 								<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
 							</rowConstraints>
 							<children>
-								<Label fx:id="projectLabel" rotate="-90.0" text="Project" GridPane.valignment="TOP">
+								<VBox GridPane.valignment="TOP" GridPane.halignment="CENTER" spacing="20">
+									<children>
+										<Label fx:id="projectLabel" rotate="-90.0" text="Project">
+											<VBox.margin>
+												<Insets left="-10.0"/>
+											</VBox.margin>
+										</Label>
+										<VBox >
+											<Button fx:id="btnReloadConfig"/>
+											<Button fx:id="btnSaveConfig"/>
+										</VBox>
+									</children>
 									<GridPane.margin>
-										<Insets left="-15.0" top="20.0"/>
+										<Insets top="20.0"/>
 									</GridPane.margin>
-								</Label>
+								</VBox>
 								<BorderPane fx:id="projectPane" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1"/>
 							</children>
 						</GridPane>
