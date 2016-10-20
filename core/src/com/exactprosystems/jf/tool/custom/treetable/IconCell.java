@@ -3,15 +3,14 @@ package com.exactprosystems.jf.tool.custom.treetable;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItemState;
 import com.exactprosystems.jf.tool.CssVariables;
-
-import javafx.scene.control.Label;
 import javafx.scene.control.TreeTableCell;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 public class IconCell extends TreeTableCell<MatrixItem, MatrixItemState>
 {
-	private Label label = new Label();
+	private static final ImageView BREAK_POINT_IMAGE_VIEW = new ImageView(new Image(CssVariables.Icons.BREAK_POINT_ICON));
+	private static final ImageView EXECUTING_IMAGE_VIEW = new ImageView(new Image(CssVariables.Icons.EXECUTING_ITEM_ICON));
 
 	public IconCell()
 	{
@@ -23,21 +22,11 @@ public class IconCell extends TreeTableCell<MatrixItem, MatrixItemState>
 		super.updateItem(state, empty);
 		if (state != null)
 		{
-			Image image = null;
 			switch (state)
 			{
-				case BreakPoint:
-					image = new Image(CssVariables.Icons.BREAK_POINT_ICON);
-					break;
-				case Executing:
-					image = new Image(CssVariables.Icons.EXECUTING_ITEM_ICON);
-					break;
-				default:
-					break;
+				case BreakPoint:	setGraphic(BREAK_POINT_IMAGE_VIEW); return;
+				case Executing:		setGraphic(EXECUTING_IMAGE_VIEW); return;
 			}
-			label.setGraphic(new ImageView(image));
-			label.setMinWidth(20);
-			setGraphic(this.label);
 		}
 		else
 		{

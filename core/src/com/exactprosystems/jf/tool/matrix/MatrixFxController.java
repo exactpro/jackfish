@@ -258,7 +258,10 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 	@Override
 	public void finished(Matrix matrix, MatrixItem item, Result result)
 	{
-		Platform.runLater(this.tree::refresh);
+		if (toggleTracing.isSelected())
+		{
+			Platform.runLater(this.tree::refresh);
+		}
 	}
 
 	@Override

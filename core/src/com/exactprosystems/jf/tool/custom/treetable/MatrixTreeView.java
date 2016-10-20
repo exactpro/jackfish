@@ -305,7 +305,7 @@ public class MatrixTreeView extends TreeTableView<MatrixItem>
 
 		public void show(int index)
 		{
-			flow.show(index);
+			Platform.runLater(() -> flow.show(index));
 		}
 	}
 }
