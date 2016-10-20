@@ -118,7 +118,7 @@ public class Let extends MatrixItem
     @Override
     protected void checkItSelf(Context context, AbstractEvaluator evaluator, IMatrixListener listener, Set<String> ids, Parameters parameters)
     {
-        super.checkItSelf(context, evaluator, listener, ids, parameters);
+    	// do not call super.checkItSelf(...) because id may be the same for several Let items.
         this.value.prepareAndCheck(evaluator, listener, this);
     }
 	
