@@ -10,6 +10,7 @@ package com.exactprosystems.jf.api.app;
 
 import java.io.File;
 import java.lang.ProcessBuilder.Redirect;
+import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.*;
@@ -193,8 +194,18 @@ public abstract class ProxyApplication implements IApplication
 	{
 		if (this.service != null)
 		{
-			this.service.stop();
-			this.service = null;
+			try
+			{
+				this.service.stop();
+			}
+			catch(RemoteException e)
+			{
+				// if app was closed earlier, go to finally
+			}
+			finally
+			{
+				this.service = null;
+			}
 		}
 
 		Thread.sleep(500);
