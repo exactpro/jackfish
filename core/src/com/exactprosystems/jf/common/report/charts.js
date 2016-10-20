@@ -197,7 +197,7 @@ var createLineChart = function(diagramId, data, yAxisDescription) {
 	
 	var line = d3.svg
 		.line()
-		.interpolate("cardinal")
+		//.interpolate("cardinal")
 		.x(function(d) {
 			return x(d.tickCountStr)
 		})
