@@ -86,11 +86,25 @@ public class ImageWrapper implements Serializable
 		return this.fileName;
 	}
 
+
+	public String getDescription()
+	{
+		return this.description;
+	}
+
+	public void setDescription(String description)
+	{
+		this.description = description;
+	}
+	
 	@Override
 	public String toString()
 	{
-		return getClass().getSimpleName() + "[" + this.width + "x" + this.height + "]";
+		return (this.description == null ? getClass().getSimpleName() : this.description )+ "[" + this.width + "x" + this.height + "]";
 	}
 
+	
+	
 	private String	fileName	= null;
+	private String 	description	= null;
 }
