@@ -13,9 +13,8 @@ public enum Tokens
 	Result,
 	Reason,
 	TestCase,
-	AssertOutIs,
-	AssertOutIsNot,
 	Assert,
+	Message,
 	SubCase,
 	EndSubCase,
 	Call,
@@ -40,7 +39,9 @@ public enum Tokens
 	Continue,
 	Return,
 	OnError,
+	@Deprecated
 	ReportOn,
+	@Deprecated
 	ReportOff,
 	Fail,
 	RawTable,

@@ -36,7 +36,7 @@ import java.util.Set;
 @MatrixItemAttribute(
 		description 		= "Adds new action into matrix",
 		shouldContain 		= { Tokens.Action},
-		mayContain 			= { Tokens.Id, Tokens.Off, Tokens.Global, Tokens.IgnoreErr, Tokens.Assert, Tokens.AssertOutIs, Tokens.AssertOutIsNot },
+		mayContain 			= { Tokens.Id, Tokens.Off, Tokens.Global, Tokens.IgnoreErr, Tokens.Assert },
 		real				= true,
 		hasValue 			= true,
 		hasParameters 		= true,
@@ -51,8 +51,6 @@ public final class ActionItem extends MatrixItem
 	{
 		super();
 		this.assertBool = new Parameter(Tokens.Assert.get(), null);
-		this.assertOutIs = new Parameter(Tokens.AssertOutIs.get(), null);
-		this.assertOutIsNot = new Parameter(Tokens.AssertOutIsNot.get(), null);
 	}
 
 	public ActionItem(String actionName) throws Exception
@@ -67,9 +65,6 @@ public final class ActionItem extends MatrixItem
 		ActionItem clone = (ActionItem) super.clone();
 
 		clone.assertBool = this.assertBool.clone();
-		clone.assertOutIs = this.assertOutIs.clone();
-		clone.assertOutIsNot = this.assertOutIsNot.clone();
-
 		clone.action = action.clone();
 
 		return clone;
@@ -92,20 +87,14 @@ public final class ActionItem extends MatrixItem
 		driver.showParameters(this, layout, 1, 3, this.parameters, () -> this.id.get() + ".In.", false);
 		driver.showCheckBox(this, layout, 2, 0, "Global", this.global, this.global);
 		driver.showCheckBox(this, layout, 2, 1, "Ignore", this.ignoreErr, this.ignoreErr);
-		long count = Arrays.asList(this.assertBool, this.assertOutIs, this.assertOutIsNot).stream()
-				.map(p -> !p.isExpressionNullOrEmpty()).filter(b -> b).count();
 		driver.showToggleButton(this, layout, 2, 2, "Asserts", b ->
 		{
 			driver.hide(this, layout, 3, b);
 			return null;
-		}, !(count == 0));
-		driver.showLabel(this, layout, 3, 0, Tokens.Assert.get());
-		driver.showExpressionField(this, layout, 3, 1, Tokens.Assert.get(), this.assertBool, this.assertBool, null, null, null, null);
-		driver.showLabel(this, layout, 3, 2, Tokens.AssertOutIs.get());
-		driver.showExpressionField(this, layout, 3, 3, Tokens.AssertOutIs.get(), this.assertOutIs, this.assertOutIs, null, null, null, null);
-		driver.showLabel(this, layout, 3, 4, Tokens.AssertOutIsNot.get());
-		driver.showExpressionField(this, layout, 3, 5, Tokens.AssertOutIsNot.get(), this.assertOutIsNot, this.assertOutIsNot, null, null, null, null);
-		driver.hide(this, layout, 3, count == 0);
+		}, !(this.assertBool.isExpressionNullOrEmpty()));
+		driver.showLabel(this, layout, 3, 2, Tokens.Assert.get());
+		driver.showExpressionField(this, layout, 3, 3, Tokens.Assert.get(), this.assertBool, this.assertBool, null, null, null, null);
+		driver.hide(this, layout, 3, this.assertBool.isExpressionNullOrEmpty());
 		return layout;
 	}
 
@@ -156,9 +145,7 @@ public final class ActionItem extends MatrixItem
     @Override
     public boolean isChanged()
     {
-    	if (	this.assertBool.isChanged()
-    		||	this.assertOutIs.isChanged()
-    		||	this.assertOutIsNot.isChanged() )
+    	if (this.assertBool.isChanged() )
     	{
     		return true;
     	}
@@ -170,8 +157,6 @@ public final class ActionItem extends MatrixItem
     {
     	super.saved();
     	this.assertBool.saved();
-    	this.assertOutIs.saved();
-    	this.assertOutIsNot.saved();
     }
 	
 	//==============================================================================================
@@ -203,8 +188,6 @@ public final class ActionItem extends MatrixItem
 	{
 		String actionName = systemParameters.get(Tokens.Action);
 		this.assertBool.setExpression(systemParameters.get(Tokens.Assert));
-		this.assertOutIs.setExpression(systemParameters.get(Tokens.AssertOutIs));
-		this.assertOutIsNot.setExpression(systemParameters.get(Tokens.AssertOutIsNot));
 
 		try
 		{
@@ -240,14 +223,6 @@ public final class ActionItem extends MatrixItem
 		{
 			super.addParameter(firstLine, secondLine, Tokens.Assert.get(), this.assertBool.getExpression());
 		}
-		if (!this.assertOutIs.isExpressionNullOrEmpty())
-		{
-			super.addParameter(firstLine, secondLine, Tokens.AssertOutIs.get(), this.assertOutIs.getExpression());
-		}
-		if (!this.assertOutIsNot.isExpressionNullOrEmpty())
-		{
-			super.addParameter(firstLine, secondLine, Tokens.AssertOutIsNot.get(), this.assertOutIsNot.getExpression());
-		}
 
 		for (Parameter parameter : getParameters())
 		{
@@ -273,7 +248,7 @@ public final class ActionItem extends MatrixItem
 	protected ReturnAndResult executeItSelf(Context context, IMatrixListener listener, AbstractEvaluator evaluator, ReportBuilder report, Parameters parameters)
 	{
 		this.action.initDefaultValues();
-		Result result = this.action.doAction(context, evaluator, report, parameters, super.getId(), this.assertBool, this.assertOutIs, this.assertOutIsNot);
+		Result result = this.action.doAction(context, evaluator, report, parameters, super.getId(), this.assertBool);
 
 		if (result == Result.Failed || result == Result.Ignored)
 		{
@@ -290,8 +265,6 @@ public final class ActionItem extends MatrixItem
 	{
 		return SearchHelper.matches(this.action.getClass().getSimpleName(), what, caseSensitive, wholeWord) ||
 				SearchHelper.matches(this.assertBool.getExpression(), what, caseSensitive, wholeWord) ||
-				SearchHelper.matches(this.assertOutIs.getExpression(), what, caseSensitive, wholeWord) ||
-				SearchHelper.matches(this.assertOutIsNot.getExpression(), what, caseSensitive, wholeWord) ||
 				SearchHelper.matches(Tokens.Action.get(), what, caseSensitive, wholeWord) ||
 				getParameters().matches(what, caseSensitive, wholeWord);
 	}
@@ -323,8 +296,4 @@ public final class ActionItem extends MatrixItem
 	private AbstractAction action;
 
 	private Parameter assertBool;
-
-	private Parameter assertOutIs;
-
-	private Parameter assertOutIsNot;
 }

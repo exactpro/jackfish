@@ -126,7 +126,7 @@ public abstract class AbstractAction implements Cloneable
     }
 
     public final Result doAction(Context context, AbstractEvaluator evaluator,
-                                 ReportBuilder report, Parameters parameters, String id, Parameter assertBool, Parameter assertOutIs, Parameter assertOutIsNot)
+                                 ReportBuilder report, Parameters parameters, String id, Parameter assertBool)
     {
         try
         {
@@ -206,7 +206,7 @@ public abstract class AbstractAction implements Cloneable
         
         try
         {
-        	checkAsserts(evaluator, assertBool, assertOutIs, assertOutIsNot);
+        	checkAsserts(evaluator, assertBool);
 		}
         catch (Exception e)
         {
@@ -223,7 +223,7 @@ public abstract class AbstractAction implements Cloneable
 
         if (reportAllDetail() || this.action.Result != Result.Passed)
         {
-            reportResults(report, assertBool, assertOutIs, assertOutIsNot);
+            reportResults(report, assertBool);
         }
 
         evaluator.getLocals().delete(Tokens.This.get());
@@ -441,16 +441,14 @@ public abstract class AbstractAction implements Cloneable
         }
     }
 
-    private void reportResults(ReportBuilder report, Parameter assertBool, Parameter assertOutIs, Parameter assertOutIsNot)
+    private void reportResults(ReportBuilder report, Parameter assertBool)
     {
-        if (!assertBool.isExpressionNullOrEmpty() || !assertOutIs.isExpressionNullOrEmpty() || !assertOutIsNot.isExpressionNullOrEmpty())
+        if (!assertBool.isExpressionNullOrEmpty() )
         {
 	        ReportTable assertTable = report.addTable("Asserts", null, false, 1,
 	                new int[] {20, 40, 40}, new String[] {"Statement", "Expression", "Value"});
 	
 	        tableAssertRowIfNotNull(assertTable, "Assert", 			assertBool.getExpression(), 	assertBool.getValue());
-	        tableAssertRowIfNotNull(assertTable, "AssertOutIs", 	assertOutIs.getExpression(), 	assertOutIs.getValue());
-	        tableAssertRowIfNotNull(assertTable, "AssertOutIsNot", 	assertOutIsNot.getExpression(),	assertOutIsNot.getValue());
         }
 
         ReportTable resultTable = report.addTable("Results", null, false, 1,
@@ -544,7 +542,7 @@ public abstract class AbstractAction implements Cloneable
 
 
     private void checkAsserts(AbstractEvaluator evaluator, 
-    		Parameter assertBool, Parameter assertOutIs, Parameter assertOutIsNot) throws Exception
+    		Parameter assertBool) throws Exception
     {
         if (!assertBool.isExpressionNullOrEmpty())
         {
@@ -574,50 +572,6 @@ public abstract class AbstractAction implements Cloneable
             {
                 setError(Tokens.Assert + " must have type of Boolean", ErrorKind.EXPRESSION_ERROR);
                 return;
-            }
-        }
-
-        if (!assertOutIs.isExpressionNullOrEmpty())
-        {
-        	if (!assertOutIs.evaluate(evaluator))
-        	{
-                setError(Tokens.AssertOutIs + " error in expression: " + assertOutIs.getValueAsString(), ErrorKind.EXPRESSION_ERROR);
-                return;
-        	}
-        	
-            if (!areObjectsEqual(assertOutIs.getValue(), this.action.Out))
-            {
-                setError(assertOutIs.getExpression(), ErrorKind.ASSERT);
-                return;
-            }
-            else
-            {
-            	if (this.action.Result != Result.Passed)
-            	{
-            		setResult(null);
-            	}
-            }
-        }
-
-        if (!assertOutIsNot.isExpressionNullOrEmpty())
-        {
-        	if (!assertOutIsNot.evaluate(evaluator))
-        	{
-                setError(Tokens.AssertOutIsNot + " error in expression: " + assertOutIsNot.getValueAsString(), ErrorKind.EXPRESSION_ERROR);
-                return;
-        	}
-        	
-            if (areObjectsEqual(assertOutIsNot.getValue(), this.action.Out))
-            {
-                setError(assertOutIsNot.getExpression(), ErrorKind.ASSERT);
-                return;
-            }
-            else
-            {
-            	if (this.action.Result != Result.Passed)
-            	{
-            		setResult(null);
-            	}
             }
         }
     }

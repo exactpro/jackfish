@@ -78,6 +78,7 @@ public class Parser
 				EndRawText.class,
 				EndRawText.class,
 				Let.class,
+				Assert.class,
 			};
 
 	public static void main(String[] args)
