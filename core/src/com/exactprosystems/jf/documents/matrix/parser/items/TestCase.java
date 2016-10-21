@@ -202,17 +202,8 @@ public final class TestCase extends MatrixItem
 			}
 			if (table != null && position >= 0)
 			{
-				row.put(Context.resultColumn, 			res);
-				
-				MatrixError error = ret.getError();
-				if (error != null)
-				{
-					row.put(Context.errorKindColumn, 		error.Kind);
-					row.put(Context.errorPlaceColumn, 		error.Where);
-					row.put(Context.errorPlacePathColumn, 	error.Where.getPath());
-					row.put(Context.errorMessageColumn, 	error.Message);
-				}
-				
+				row.put(Context.resultColumn, 		res);
+				row.put(Context.errorColumn, 		ret.getError());
 				table.updateValue(position, row);
 			}
 		} 
@@ -220,13 +211,8 @@ public final class TestCase extends MatrixItem
 		{
 			if (table != null && table.size() >= 0)
 			{
-				row.put(Context.resultColumn, 			res);
-				
-				row.put(Context.errorKindColumn, 		ErrorKind.EXCEPTION);
-				row.put(Context.errorPlaceColumn, 		this);
-				row.put(Context.errorPlacePathColumn, 	this.getPath());
-				row.put(Context.errorMessageColumn, 	e.getMessage());
-				
+				row.put(Context.resultColumn, 		res);
+				row.put(Context.errorColumn, 		new MatrixError(e.getMessage(), ErrorKind.EXCEPTION, this));
 				table.updateValue(position, row);
 			}
 		}

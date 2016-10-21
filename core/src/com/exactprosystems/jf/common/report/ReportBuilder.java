@@ -284,16 +284,32 @@ public abstract class ReportBuilder
 		{
 			return "";
 		}
-		
 		return decorateStyle(value.toString(), style);
 	}
 
-	public String decorateLink(String name, String link)
+	public String decorateLink(Object value, String link)
 	{
-		return "";
+		if (value == null)
+		{
+			return "";
+		}
+		return decorateLink(value.toString(), link);
 	}
-	
+
+	public String decorateExpandingBlock(Object value, String content)
+	{
+		if (value == null)
+		{
+			return "";
+		}
+		return decorateExpandingBlock(value.toString(), content);
+	}
+
 	protected abstract String decorateStyle(String value, String style);
+
+	protected abstract String decorateLink(String name, String link);
+
+	protected abstract String decorateExpandingBlock(String name, String content);
 
 	protected abstract String replaceMarker(String marker);
 	

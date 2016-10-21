@@ -51,6 +51,27 @@ public class HTMLReportBuilder extends ReportBuilder
 	}
 
 	@Override
+	protected String decorateLink(String name, String link)
+	{
+		String res = String.format("<a href=\"%s\" target=\"_blank\">%s</a>",
+				link,
+				name);
+		
+		return res;
+	}
+
+	@Override
+	protected String decorateExpandingBlock(String name, String content)
+	{
+		String res = String.format("<a href=\"\" onclick=\"obj=this.parentNode.childNodes[1].style; "
+				+ "obj.display=(obj.display!='block')?'block':'none'; return false;\">%s</a>"
+				+ "<div style='display: none;'>%s</div>",				
+				name,
+				content);
+		return res;
+	}
+
+	@Override
 	protected String replaceMarker(String marker)
 	{
 		return HTMLhelper.htmlMarker(marker);
@@ -358,8 +379,6 @@ public class HTMLReportBuilder extends ReportBuilder
 			int count = 0;
 			for (Object obj : value)
 			{
-//				writer.fwrite("<td>%s", postProcess(ReportHelper.objToString(obj, count >= quotes)));
-				//TODO workaround
 				writer.fwrite("<td>%s", ReportHelper.objToString(obj, count >= quotes));
 				count++;
 			}

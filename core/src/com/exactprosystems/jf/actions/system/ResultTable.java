@@ -8,6 +8,8 @@
 
 package com.exactprosystems.jf.actions.system;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,6 +29,7 @@ import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.documents.matrix.parser.Result;
 import com.exactprosystems.jf.documents.matrix.parser.items.ActionItem.HelpKind;
+import com.exactprosystems.jf.documents.matrix.parser.items.MatrixError;
 import com.exactprosystems.jf.documents.matrix.parser.items.Step;
 import com.exactprosystems.jf.documents.matrix.parser.items.TestCase;
 import com.exactprosystems.jf.functions.RowTable;
@@ -98,8 +101,19 @@ public class ResultTable extends AbstractAction
 		copy.setValue(copy.size() - 1, map);
 		if (this.decorated)
 		{
+			String passed = report.decorateStyle(Result.Passed.name(), Result.Passed.getStyle());
+
 			for (RowTable row : copy)
 			{
+				Object matrix = row.get(Context.matrixColumn);
+				if (matrix != null)
+				{
+					Path path = Paths.get(matrix.toString());
+					String shortName = path.getFileName().toString();
+					String matrixStr = report.decorateExpandingBlock(shortName, matrix.toString());
+					replace(row, Context.matrixColumn, 		e -> matrixStr);
+				}
+				
 				Result res = (Result)row.get(Context.resultColumn);
 				String str = report.decorateStyle(row.get(Context.resultColumn), res == null ? "" : res.getStyle());
 				row.put(Context.resultColumn, str);
@@ -108,10 +122,18 @@ public class ResultTable extends AbstractAction
 				replace(row, Context.testCaseIdColumn, 		this::spaceIfNull);
 				replace(row, Context.stepIdentityColumn, 	this::spaceIfNull);
 				replace(row, Context.stepColumn, 			e -> spaceIfNull(row.get(Context.stepIdentityColumn)) );
-				replace(row, Context.errorPlaceColumn, 		this::spaceIfNull);
-				replace(row, Context.errorPlacePathColumn, 	this::spaceIfNull);
-				replace(row, Context.errorKindColumn, 		this::spaceIfNull);
-				replace(row, Context.errorMessageColumn, 	this::spaceIfNull);
+				
+				Object error = row.get(Context.errorColumn);
+				if (error instanceof MatrixError)
+				{
+					MatrixError matrixError = (MatrixError)error;
+					String errorStr = report.decorateExpandingBlock(matrixError.Kind.toString(), matrixError.Message);
+					replace(row, Context.errorColumn, 		e -> errorStr);
+				}
+				else
+				{
+					replace(row, Context.errorColumn, 		e -> passed);
+				}
 			}
 		}
 		

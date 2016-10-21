@@ -43,6 +43,18 @@ public class HelpBuilder extends ReportBuilder
 	}
 
 	@Override
+	protected String decorateLink(String name, String link)
+	{
+		return HTMLhelper.htmlMarker(name);
+	}
+
+	@Override
+	protected String decorateExpandingBlock(String name, String content)
+	{
+		return HTMLhelper.htmlMarker(name);
+	}
+
+	@Override
 	protected String replaceMarker(String marker)
 	{
 		return HTMLhelper.htmlMarker(marker);

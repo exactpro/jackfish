@@ -34,14 +34,10 @@ public class Context implements IContext, AutoCloseable, Cloneable
 	public static final String stepColumn 				= "Step";
 	public static final String stepIdentityColumn 		= "StepIdentity";
 	public static final String resultColumn 			= "Result";
-	public static final String errorPlaceColumn 		= "ErrorPlace";
-	public static final String errorPlacePathColumn 	= "ErrorPlacePath";
-	public static final String errorKindColumn 			= "ErrorKind";
-	public static final String errorMessageColumn 		= "ErrorMessage";
+	public static final String errorColumn 				= "Error";
 	public static final String[] resultColumns = new String[]
 			{
-				matrixColumn, testCaseIdColumn, testCaseColumn, resultColumn, 
-				errorPlaceColumn, errorPlacePathColumn, errorKindColumn, errorMessageColumn
+				matrixColumn, testCaseIdColumn, testCaseColumn, resultColumn, errorColumn
 			};
 	
 	public Context(DocumentFactory factory, IMatrixListener matrixListener, PrintStream out) throws Exception
@@ -88,8 +84,7 @@ public class Context implements IContext, AutoCloseable, Cloneable
 		String headers[] = new String[] 
 				{ 
 					matrixColumn, testCaseIdColumn, testCaseColumn, stepColumn, stepIdentityColumn,  
-					resultColumn, 
-					errorPlaceColumn, errorPlacePathColumn, errorKindColumn, errorMessageColumn
+					resultColumn, errorColumn
 				};
 		this.resultTable =  new Table(headers, this.evaluator);
 	}

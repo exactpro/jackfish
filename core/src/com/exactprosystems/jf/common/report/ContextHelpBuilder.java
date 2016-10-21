@@ -50,6 +50,18 @@ public class ContextHelpBuilder extends ReportBuilder
     }
 
 	@Override
+	protected String decorateLink(String name, String link)
+	{
+		return "";
+	}
+
+	@Override
+	protected String decorateExpandingBlock(String name, String content)
+	{
+		return "";
+	}
+
+	@Override
 	protected String generateReportDir(String matrixName, Date date) throws IOException
 	{
 		return null;
