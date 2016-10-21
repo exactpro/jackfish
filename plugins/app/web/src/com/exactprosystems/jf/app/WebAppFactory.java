@@ -26,6 +26,7 @@ public class WebAppFactory implements IApplicationFactory
 
 	public static final String safariDriverPathName	= "SafariDriverPath";
 	public static final String chromeDriverPathName	= "ChromeDriverPath";
+	public static final String geckoDriverPathName	= "GeckoDriverPath";
 	public static final String ieDriverPathName		= "IEDriverPath";
 	public static final String chromeDriverBinary	= "ChromeDriverBinary";
 	public static final String firefoxProfileDir	= "FirefoxProfileDirectory";
@@ -60,7 +61,8 @@ public class WebAppFactory implements IApplicationFactory
 	{
 		switch (kind)
 		{
-			case LOAD:		return new String[] { jreExecName, jreArgsName, safariDriverPathName, chromeDriverPathName, ieDriverPathName, chromeDriverBinary, firefoxProfileDir, usePrivateMode };
+			case LOAD:		return new String[] { jreExecName, jreArgsName, safariDriverPathName, chromeDriverPathName, geckoDriverPathName, ieDriverPathName, chromeDriverBinary, firefoxProfileDir,
+					usePrivateMode };
 			case START:		return new String[] { browserName, urlName };
 			case PROPERTY:	return new String[] { propertyUrlName, propertyTitle };
 			default:		return empty;	

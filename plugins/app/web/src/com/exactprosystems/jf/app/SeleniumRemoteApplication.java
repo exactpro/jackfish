@@ -21,6 +21,7 @@ import org.openqa.selenium.Dimension;
 import org.openqa.selenium.Point;
 import org.openqa.selenium.chrome.ChromeDriverService;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.GeckoDriverService;
 import org.openqa.selenium.ie.InternetExplorerDriverService;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -195,6 +196,14 @@ public class SeleniumRemoteApplication extends RemoteApplication
 				logger.info(WebAppFactory.chromeDriverPathName + " = " + chromeDriverPath);
 				System.setProperty(ChromeDriverService.CHROME_DRIVER_EXE_PROPERTY, chromeDriverPath);
 			}
+
+			String geckoDriverPath = args.get(WebAppFactory.geckoDriverPathName);
+			if (geckoDriverPath != null && !geckoDriverPath.isEmpty())
+			{
+				logger.info(WebAppFactory.geckoDriverPathName + " = " + geckoDriverPath);
+				System.setProperty(GeckoDriverService.GECKO_DRIVER_EXE_PROPERTY, geckoDriverPath);
+			}
+			
 			String ieDriverPath = args.get(WebAppFactory.ieDriverPathName);
 			if (ieDriverPath != null && !ieDriverPath.isEmpty())
 			{

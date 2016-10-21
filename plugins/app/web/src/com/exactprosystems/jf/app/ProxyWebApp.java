@@ -66,6 +66,13 @@ public class ProxyWebApp extends ProxyApplication
 		{
 			parameters.put(WebAppFactory.chromeDriverPathName, chromeDriverPath);
 		}
+
+		String geckoDriverPath 	= driverParameters.get(WebAppFactory.geckoDriverPathName);
+		if (geckoDriverPath != null && !geckoDriverPath.isEmpty())
+		{
+			parameters.put(WebAppFactory.geckoDriverPathName, geckoDriverPath);
+		}
+		
 		String ieDriverPath 		= driverParameters.get(WebAppFactory.ieDriverPathName);
 		if (ieDriverPath != null && !ieDriverPath.isEmpty())
 		{
