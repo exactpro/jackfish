@@ -667,15 +667,9 @@ public class DictionaryFx extends GuiDictionary
 			{
 				AbstractControl copy = AbstractControl.createCopy(control);
 				Object oldValue = copy.get(parameter);
-				Command undo = () -> Common.tryCatch(() -> {
-					((AbstractControl) control).set(parameter, oldValue);
-				}, "");
-				Command redo = () -> Common.tryCatch(() -> {
-					((AbstractControl) control).set(parameter, value);
-				}, "");
+				Command undo = () -> Common.tryCatch(() -> ((AbstractControl) control).set(parameter, oldValue), "");
+				Command redo = () -> Common.tryCatch(() -> ((AbstractControl) control).set(parameter, value), "");
 				addCommand(undo, redo);
-
-//				((AbstractControl)control).set(parameter, value);
 				super.changed(true);
 			}
 		}, "Cannot set field '" + parameter + "' to value '" + value + "'");
