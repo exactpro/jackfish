@@ -21,13 +21,6 @@ import java.util.Collection;
  */
 public class AutoCompletionTextFieldBinding<T> extends AutoCompletionBinding<T>
 {
-
-	/***************************************************************************
-	 * *
-	 * Static properties and methods                                           *
-	 * *
-	 **************************************************************************/
-
 	private static <T> StringConverter<T> defaultStringConverter()
 	{
 		return new StringConverter<T>()
@@ -38,7 +31,6 @@ public class AutoCompletionTextFieldBinding<T> extends AutoCompletionBinding<T>
 				return t == null ? null : t.toString();
 			}
 
-			@SuppressWarnings("unchecked")
 			@Override
 			public T fromString(String string)
 			{
@@ -47,46 +39,15 @@ public class AutoCompletionTextFieldBinding<T> extends AutoCompletionBinding<T>
 		};
 	}
 
-	/***************************************************************************
-	 *                                                                         *
-	 * Private fields                                                          *
-	 *                                                                         *
-	 **************************************************************************/
-
-	/**
-	 * String converter to be used to convert suggestions to strings.
-	 */
 	private StringConverter<T> converter;
 
-
-	/***************************************************************************
-	 *                                                                         *
-	 * Constructors                                                            *
-	 *                                                                         *
-	 **************************************************************************/
-
-	/**
-	 * Creates a new auto-completion binding between the given textField
-	 * and the given suggestion provider.
-	 *
-	 * @param textField
-	 * @param suggestionProvider
-	 */
 	public AutoCompletionTextFieldBinding(final TextField textField, Callback<ISuggestionRequest, Collection<T>> suggestionProvider)
 	{
-		this(textField, suggestionProvider, AutoCompletionTextFieldBinding.<T>defaultStringConverter());
+		this(textField, suggestionProvider, AutoCompletionTextFieldBinding.defaultStringConverter());
 	}
 
-	/**
-	 * Creates a new auto-completion binding between the given textField
-	 * and the given suggestion provider.
-	 *
-	 * @param textField
-	 * @param suggestionProvider
-	 */
 	public AutoCompletionTextFieldBinding(final TextField textField, Callback<ISuggestionRequest, Collection<T>> suggestionProvider, final StringConverter<T> converter)
 	{
-
 		super(textField, suggestionProvider, converter);
 		this.converter = converter;
 
@@ -94,25 +55,12 @@ public class AutoCompletionTextFieldBinding<T> extends AutoCompletionBinding<T>
 		getCompletionTarget().focusedProperty().addListener(focusChangedListener);
 	}
 
-
-	/***************************************************************************
-	 *                                                                         *
-	 * Public API                                                              *
-	 *                                                                         *
-	 **************************************************************************/
-
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public TextField getCompletionTarget()
 	{
 		return (TextField) super.getCompletionTarget();
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void dispose()
 	{
@@ -120,9 +68,6 @@ public class AutoCompletionTextFieldBinding<T> extends AutoCompletionBinding<T>
 		getCompletionTarget().focusedProperty().removeListener(focusChangedListener);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected void completeUserInput(T completion)
 	{
@@ -130,14 +75,6 @@ public class AutoCompletionTextFieldBinding<T> extends AutoCompletionBinding<T>
 		getCompletionTarget().setText(newText);
 		getCompletionTarget().positionCaret(newText.length());
 	}
-
-
-	/***************************************************************************
-	 * *
-	 * Event Listeners                                                         *
-	 * *
-	 **************************************************************************/
-
 
 	private final ChangeListener<String> textChangeListener = (obs, oldText, newText) -> {
 		if (getCompletionTarget().isFocused())

@@ -18,7 +18,6 @@ import javafx.scene.input.MouseButton;
 
 public class AutoCompletePopupSkin<T> implements Skin<AutoCompletePopup<T>>
 {
-
 	private final AutoCompletePopup<T> control;
 	private final ListView<T> suggestionList;
 	final int LIST_CELL_HEIGHT = 24;
@@ -29,13 +28,6 @@ public class AutoCompletePopupSkin<T> implements Skin<AutoCompletePopup<T>>
 		suggestionList = new ListView<>(control.getSuggestions());
 
 		suggestionList.getStyleClass().add(AutoCompletePopup.DEFAULT_STYLE_CLASS);
-
-		/**
-		 * Here we bind the prefHeightProperty to the minimum height between the
-		 * max visible rows and the current items list. We also add an arbitrary
-		 * 5 number because when we have only one item we have the vertical
-		 * scrollBar showing for no reason.
-		 */
 		suggestionList.prefHeightProperty().bind(Bindings.min(control.visibleRowCountProperty(), Bindings.size(suggestionList.getItems())).multiply(LIST_CELL_HEIGHT).add(5));
 		suggestionList.setCellFactory(TextFieldListCell.forListView(control.getConverter()));
 		registerEventListener();
