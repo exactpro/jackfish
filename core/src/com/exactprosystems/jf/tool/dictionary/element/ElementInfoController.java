@@ -78,6 +78,7 @@ public class ElementInfoController implements Initializable, ContainingParent
 	private DictionaryFx model;
 	private Configuration configuration;
 	private ObservableList<ControlKind> controls;
+	private IControl currentControl;
 
 	@Override
 	public void setParent(Parent parent)
@@ -290,6 +291,7 @@ public class ElementInfoController implements Initializable, ContainingParent
 			this.checkBoxUseNumericHeader.setSelected(control != null && control.useNumericHeader());
 			this.checkBoxAbsoluteXpath.setSelected(control != null && control.useAbsoluteXpath());
 			this.previousValue = "";
+			this.currentControl = control;
 		});
 	}
 
@@ -320,7 +322,7 @@ public class ElementInfoController implements Initializable, ContainingParent
 		tryCatch(() -> {
 			if (!Str.areEqual(value, previousValue))
 			{
-				this.navigation.parameterSet(source.getId(), value);
+				this.navigation.parameterSet(source.getId(), value, currentControl);
 				previousValue = value;
 			}
 		}, "Error on changing " + source.getId());

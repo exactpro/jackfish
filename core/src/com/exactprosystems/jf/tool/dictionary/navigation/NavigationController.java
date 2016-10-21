@@ -250,6 +250,10 @@ public class NavigationController implements Initializable, ContainingParent
 		this.model.parameterSet(currentWindow(), currentSection(), currentElement(), parameter, value);
 	}
 
+	public void parameterSet(String parameter, Object value, IControl control) throws Exception
+	{
+		this.model.parameterSet(currentWindow(), currentSection(), control, parameter, value);
+	}
 
 	public void sendKeys(String text) throws Exception
 	{

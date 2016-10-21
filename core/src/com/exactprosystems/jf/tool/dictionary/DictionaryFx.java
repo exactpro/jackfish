@@ -669,11 +669,9 @@ public class DictionaryFx extends GuiDictionary
 				Object oldValue = copy.get(parameter);
 				Command undo = () -> Common.tryCatch(() -> {
 					((AbstractControl) control).set(parameter, oldValue);
-					displayElement(window, sectionKind, control);
 				}, "");
 				Command redo = () -> Common.tryCatch(() -> {
 					((AbstractControl) control).set(parameter, value);
-					displayElement(window, sectionKind, control);
 				}, "");
 				addCommand(undo, redo);
 
