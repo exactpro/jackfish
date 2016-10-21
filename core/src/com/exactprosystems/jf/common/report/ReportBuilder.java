@@ -79,6 +79,11 @@ public abstract class ReportBuilder
 		return this.reportDir;
 	}
 	
+	public final String getImageDir()
+	{
+		return this.imageDir;
+	}
+	
 	public final void reportSwitch(boolean on)
 	{
 		this.reportIsOn = on;
@@ -162,7 +167,7 @@ public abstract class ReportBuilder
 	
 	public final void outImage(MatrixItem item, String beforeTestcase, String fileName, String title)
 	{
-		logger.trace(String.format("outImage(%s, %s, %s)", item.getItemName(), fileName, title));
+		logger.trace(String.format("outImage(%s, %s, %s)", item, fileName, title));
 		try
 		{
 			File dir = new File(this.reportDir);

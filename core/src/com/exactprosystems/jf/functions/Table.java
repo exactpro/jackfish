@@ -10,6 +10,7 @@ package com.exactprosystems.jf.functions;
 
 import com.csvreader.CsvReader;
 import com.csvreader.CsvWriter;
+import com.exactprosystems.jf.api.app.ImageWrapper;
 import com.exactprosystems.jf.api.app.Mutable;
 import com.exactprosystems.jf.api.common.Converter;
 import com.exactprosystems.jf.api.common.Str;
@@ -20,6 +21,7 @@ import com.exactprosystems.jf.common.report.ReportHelper;
 import com.exactprosystems.jf.common.report.ReportTable;
 import com.exactprosystems.jf.exceptions.ColumnIsPresentException;
 import com.exactprosystems.jf.sql.SqlConnection;
+
 import org.apache.log4j.Logger;
 
 import java.io.*;
@@ -715,7 +717,15 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 				}
 				else
 				{
-					value[i] = row.get(header);
+					Object v = row.get(header);
+					if (v instanceof ImageWrapper)
+					{
+						ImageWrapper iw = (ImageWrapper)v;
+						String description = iw.getDescription() == null ? iw.toString() : iw.getDescription();
+						String file = iw.getFileName() == null ? iw.saveToDir(report.getReportDir()).getName() : iw.getFileName();
+						v = report.decorateLink(description, report.getImageDir() + File.separator + file);
+					}
+					value[i] = v;
 				}
 			}
 			table.addValues(value);

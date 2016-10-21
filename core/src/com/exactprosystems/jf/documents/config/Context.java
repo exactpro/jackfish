@@ -37,7 +37,7 @@ public class Context implements IContext, AutoCloseable, Cloneable
 	public static final String errorColumn 				= "Error";
 	public static final String[] resultColumns = new String[]
 			{
-				matrixColumn, testCaseIdColumn, testCaseColumn, resultColumn, errorColumn
+				matrixColumn, testCaseIdColumn, testCaseColumn, stepIdentityColumn, stepColumn, resultColumn, errorColumn
 			};
 	
 	public Context(DocumentFactory factory, IMatrixListener matrixListener, PrintStream out) throws Exception

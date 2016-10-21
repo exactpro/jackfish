@@ -10,10 +10,14 @@ package com.exactprosystems.jf.actions.system;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Function;
 
 import com.exactprosystems.jf.actions.AbstractAction;
@@ -102,6 +106,8 @@ public class ResultTable extends AbstractAction
 		if (this.decorated)
 		{
 			String passed = report.decorateStyle(Result.Passed.name(), Result.Passed.getStyle());
+			Set<String> knownColumns = new HashSet<String>();
+			knownColumns.addAll(Arrays.asList(Context.resultColumns));
 
 			for (RowTable row : copy)
 			{
@@ -133,6 +139,17 @@ public class ResultTable extends AbstractAction
 				else
 				{
 					replace(row, Context.errorColumn, 		e -> passed);
+				}
+				
+				for (Entry<String, Object> entry : row.entrySet())
+				{
+					String key = entry.getKey();
+					if (knownColumns.contains(key))
+					{
+						continue;
+					}
+					Object value = row.get(key);
+					row.put(key, value == null ? "" : value);
 				}
 			}
 		}

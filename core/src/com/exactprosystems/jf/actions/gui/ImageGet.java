@@ -37,6 +37,7 @@ public class ImageGet extends AbstractAction
 	public final static String	connectionName	= "AppConnection";
 	public final static String	dialogName		= "Dialog";
 	public final static String	nameName		= "Name";
+	public final static String	descriptionName	= "Description";
 	
 	@ActionFieldAttribute(name = connectionName, mandatory = true, description = "The application connection.")
 	protected AppConnection		connection		= null;
@@ -46,6 +47,9 @@ public class ImageGet extends AbstractAction
 
 	@ActionFieldAttribute(name = nameName, mandatory = false, description = "A name of element of the dialog. If omitted, then full dialog will be grabbed.")
 	protected String			name;
+
+	@ActionFieldAttribute(name = descriptionName, mandatory = false, description = "A description of this image. In the report it become a tooltip.")
+	protected String			description;
 
 	public ImageGet()
 	{
@@ -125,6 +129,10 @@ public class ImageGet extends AbstractAction
 			}
 		}
 
+		if (imageWrapper != null)
+		{
+			imageWrapper.setDescription(this.description);
+		}
         super.setResult(imageWrapper);
 	}
 
