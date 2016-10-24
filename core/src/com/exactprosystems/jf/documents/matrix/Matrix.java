@@ -25,14 +25,12 @@ import com.exactprosystems.jf.documents.matrix.parser.items.MatrixRoot;
 import com.exactprosystems.jf.documents.matrix.parser.items.NameSpace;
 import com.exactprosystems.jf.documents.matrix.parser.items.TestCase;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
-
 import org.apache.log4j.Logger;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @DocumentInfo(newName = "NewMatrix", extentioin = "jf", description = "Matrix")
@@ -422,11 +420,6 @@ public class Matrix extends AbstractDocument implements IMatrix, Cloneable
 		return true;
 	}
 	
-	public void setTracing(boolean b)
-	{
-		this.tracing = b;
-	}
-	
 	public void start(Context context, AbstractEvaluator evaluator, ReportBuilder report)
 	{
 		assert (context != null);
@@ -470,109 +463,6 @@ public class Matrix extends AbstractDocument implements IMatrix, Cloneable
 		}
 		this.matrixListener.matrixFinished(this, countResult(Result.Passed), countResult(Result.Failed));
 	}
-
-	public boolean checkMonitor(IMatrixListener listener, MatrixItem item)
-	{
-		if (this.stop)
-		{
-			return true;
-		}
-
-		if (item.isBreakPoint() || this.pause)
-		{
-			listener.paused(this, item);
-			this.monitor.enter();
-		}
-		if (this.tracing)
-		{
-			try
-			{
-				Thread.sleep(200);
-			}
-			catch (InterruptedException e)
-			{ }
-		}
-
-		return false;
-	}
-
-	public void prepareMonitor()
-	{
-		this.pause = false;
-		this.stop = false;
-	}
-
-	public void stop()
-	{
-		this.pause = false;
-		this.stop = true;
-		this.monitor.leave();
-	}
-
-	public void pause()
-	{
-		this.pause = true;
-		this.stop = false;
-	}
-
-	public void step()
-	{
-		this.pause = true;
-		this.stop = false;
-		this.monitor.leave();
-	}
-
-	public void resume()
-	{
-		this.pause = false;
-		this.stop = false;
-		this.monitor.leave();
-	}
-
-	// ==============================================================================================================================
-	private class Monitor
-	{
-		public void enter()
-		{
-			synchronized (this.obj)
-			{
-				if (this.obj.get())
-				{
-					try
-					{
-						this.obj.set(false);
-						while (!this.obj.get())
-						{
-							this.obj.wait();
-						}
-					}
-					catch (InterruptedException e)
-					{
-						logger.error(e.getMessage(), e);
-					}
-				}
-			}
-		}
-
-		public void leave()
-		{
-			while (!this.obj.get())
-			{
-				synchronized (this.obj)
-				{
-					this.obj.set(true);
-					this.obj.notifyAll();
-				}
-			}
-		}
-
-		private AtomicBoolean	obj	= new AtomicBoolean(true);
-	}
-
-	protected Monitor			monitor	= new Monitor();
-	protected volatile boolean	pause;
-	protected volatile boolean	stop;
-	protected volatile boolean	tracing;
 
 	private IClientFactory		defaultClient;
 	private IApplicationFactory	defaultApp;
