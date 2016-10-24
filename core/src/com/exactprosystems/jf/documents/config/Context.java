@@ -16,6 +16,7 @@ import com.exactprosystems.jf.documents.DocumentFactory;
 import com.exactprosystems.jf.documents.matrix.Matrix;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixRoot;
+import com.exactprosystems.jf.documents.matrix.parser.items.NameSpace;
 import com.exactprosystems.jf.documents.matrix.parser.items.SubCase;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
 import com.exactprosystems.jf.functions.Table;
@@ -157,7 +158,12 @@ public class Context implements IContext, AutoCloseable, Cloneable
 			logger.error(e.getMessage(), e);
 		}
 
-		return (SubCase) matrix.getRoot().find(true, SubCase.class, id);
+		MatrixItem mitem = matrix.getRoot().find(false, NameSpace.class, ns);
+		if(mitem == null) {
+			return null;
+		}
+
+		return (SubCase) mitem.find(true, SubCase.class, id);
 	}
 
 	public List<ReadableValue> subcases(MatrixItem item)
@@ -180,13 +186,17 @@ public class Context implements IContext, AutoCloseable, Cloneable
 
 			if (lib != null)
 			{
-				lib.getRoot().bypass(it ->
+				MatrixItem mitem = lib.getRoot().find(false, NameSpace.class, name);
+				if(mitem != null)
 				{
-					if (it instanceof SubCase)
+					mitem.bypass(it ->
 					{
-						res.add(new ReadableValue(name + "." + it.getId(), ((SubCase) it).getName()));
-					}
-				});
+						if (it instanceof SubCase)
+						{
+							res.add(new ReadableValue(name + "." + it.getId(), ((SubCase) it).getName()));
+						}
+					});
+				}
 			}
 		}
 
