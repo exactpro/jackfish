@@ -446,7 +446,7 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 		this.headers = list.toArray(new Header[0]);
 	}
 
-	private boolean columnIsPresent(String columnName)
+	public boolean columnIsPresent(String columnName)
 	{
 		if (this.headers == null || this.headers.length == 0)
 		{

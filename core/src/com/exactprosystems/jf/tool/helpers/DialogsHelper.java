@@ -49,7 +49,6 @@ import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.util.Duration;
 import org.apache.log4j.Logger;
-import org.w3c.dom.NodeList;
 
 import java.io.File;
 import java.io.IOException;
@@ -242,6 +241,7 @@ public abstract class DialogsHelper
 
 	public static <T> T selectFromList(String title, T initValue, final List<T> list)
 	{
+		@SuppressWarnings("unchecked")
 		T[] result = (T[]) new Object[] { initValue };
 
 		if (list == null || list.isEmpty())
@@ -472,7 +472,9 @@ public abstract class DialogsHelper
 			int i = 0;
 			syntax.insert(i++, new NameSpace());
 			syntax.insert(i++, new TestCase());
+			syntax.insert(i++, new Step());
 			syntax.insert(i++, new Let());
+			syntax.insert(i++, new Assert());
 			syntax.insert(i++, new SubCase());
 			syntax.insert(i++, new Return());
 			syntax.insert(i++, new Call());
@@ -492,6 +494,7 @@ public abstract class DialogsHelper
 			syntax.insert(i++, new Fail());
 			syntax.insert(i++, new RawTable());
 			syntax.insert(i++, new RawMessage());
+			syntax.insert(i++, new RawText());
 
 			MatrixItem actions = new HelpChapter("All actions by groups");
 			matrix.insert(null, ch++, actions);
@@ -630,27 +633,6 @@ public abstract class DialogsHelper
 		dialog.setContentText(message);
 		((Button) dialog.getDialogPane().lookupButton(ButtonType.CANCEL)).setText("No");
 		return dialog.showAndWait().filter(bt -> bt.getButtonData().equals(ButtonBar.ButtonData.OK_DONE)).isPresent();
-	}
-
-	private static String find(org.w3c.dom.Node root)
-	{
-		if (root.getNodeName().equalsIgnoreCase("pre"))
-		{
-			return root.getTextContent();
-		}
-		NodeList childNodes = root.getChildNodes();
-		if (childNodes != null)
-		{
-			for (int i = 0; i < childNodes.getLength(); i++)
-			{
-				String find = find(childNodes.item(i));
-				if (find != null)
-				{
-					return find;
-				}
-			}
-		}
-		return null;
 	}
 
 	private static void displayHelp(String content)

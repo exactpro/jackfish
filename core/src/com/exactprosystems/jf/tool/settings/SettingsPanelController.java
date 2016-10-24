@@ -335,12 +335,10 @@ public class SettingsPanelController implements Initializable, ContainingParent
 
 		NameAndColor actions = new NameAndColor("Actions");
 		actions.isChangeable = false;
-		NameAndColor raws = new NameAndColor("Raw data");
-		raws.isChangeable = false;
 		TreeItem<NameAndColor> actionItem = createItem(actions);
-		TreeItem<NameAndColor> rawItem = createItem(raws);
-		root.getChildren().addAll(actionItem, rawItem, 
+		root.getChildren().addAll(actionItem,  
 				createItem(new NameAndColor(Tokens.NameSpace.name())),
+				createItem(new NameAndColor(Tokens.Step.name())),
 				createItem(new NameAndColor(Tokens.TestCase.name())),
 				createItem(new NameAndColor(Tokens.SubCase.name())), 
 				createItem(new NameAndColor(Tokens.Return.name())),
@@ -358,7 +356,13 @@ public class SettingsPanelController implements Initializable, ContainingParent
 				createItem(new NameAndColor(Tokens.Default.name())),
 				createItem(new NameAndColor(Tokens.ReportOn.name())), 
 				createItem(new NameAndColor(Tokens.ReportOff.name())),
-				createItem(new NameAndColor(Tokens.Fail.name())));
+				createItem(new NameAndColor(Tokens.Fail.name())),
+				createItem(new NameAndColor(Tokens.Let.name())),
+				createItem(new NameAndColor(Tokens.Assert.name())),
+				createItem(new NameAndColor(Tokens.RawTable.name())),
+				createItem(new NameAndColor(Tokens.RawText.name())),
+				createItem(new NameAndColor(Tokens.RawMessage.name()))
+				);
 
 		Map<ActionGroups, TreeItem<NameAndColor>> map = new HashMap<>();
 		Arrays.asList(ActionGroups.values()).stream().forEach(group -> {
@@ -372,10 +376,6 @@ public class SettingsPanelController implements Initializable, ContainingParent
 			ActionGroups aClazz = clazz.getAnnotation(ActionAttribute.class).group();
 			map.get(aClazz).getChildren().add(createItem(nameAndColor));
 		});
-		Arrays.asList(Tokens.RawTable, Tokens.RawMessage, Tokens.RawText).forEach(token -> {
-			NameAndColor nameAndColor = new NameAndColor(token.name());
-			rawItem.getChildren().add(createItem(nameAndColor));
-		});
 
 		HBox bar = new HBox();
 		bar.setSpacing(20);
@@ -384,11 +384,9 @@ public class SettingsPanelController implements Initializable, ContainingParent
 		Button clearAll = new Button("Clear all");
 		expandAll.setOnAction(e -> {
 			workWithTree(actionItem, item -> item.setExpanded(true));
-			workWithTree(rawItem, item -> item.setExpanded(true));
 		});
 		collapseAll.setOnAction(e -> {
 			workWithTree(actionItem, item -> item.setExpanded(false));
-			workWithTree(rawItem, item -> item.setExpanded(false));
 		});
 		clearAll.setOnAction(e -> workWithTree(this.treeViewColors.getRoot(), item -> {
 			NameAndColor value = item.getValue();
