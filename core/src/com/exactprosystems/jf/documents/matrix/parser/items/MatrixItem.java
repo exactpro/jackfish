@@ -379,7 +379,7 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 			return new ReturnAndResult(Result.Off);
 		}
 
-		if (this.owner.checkMonitor(listener, this))
+		if (context.checkMonitor(listener, this))
 		{
 			return new ReturnAndResult(Result.Stopped);
 		}

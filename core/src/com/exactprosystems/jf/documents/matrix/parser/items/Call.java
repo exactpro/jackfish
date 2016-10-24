@@ -171,7 +171,7 @@ public final class Call extends MatrixItem
 	{
 		updateReference(context, this.name.get());
 		
-		if (this.id != null && !this.id.isNullOrEmpty() && ids.contains(this.id))
+		if (this.id != null && !this.id.isNullOrEmpty() && ids.contains(this.id.get()))
 		{
 			listener.error(this.owner, getNumber(), this, "id '" + this.id + "' has already defined.");
 		}
@@ -289,17 +289,6 @@ public final class Call extends MatrixItem
 	private void updateReference(Context context, String name)
 	{
 		this.ref = context.referenceToSubcase(name, this);
-		try
-		{
-			if (this.ref != null)
-			{
-				this.ref.init(this.owner);
-			}
-		}
-		catch (MatrixException e)
-		{
-			e.printStackTrace();
-		}
 	}
 	
 	//==============================================================================================

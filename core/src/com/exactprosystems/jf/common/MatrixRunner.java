@@ -169,7 +169,7 @@ public class MatrixRunner implements IMatrixRunner, AutoCloseable
 		if (isRunning())
 		{
 			changeState(State.Running);
-			this.matrix.resume();
+			this.context.resume();
 			return;
 		}
 		else
@@ -205,7 +205,7 @@ public class MatrixRunner implements IMatrixRunner, AutoCloseable
 			changeState(State.Finished);
 		});
 		this.thread.setName("Start matrix thread, thread id : " + thread.getId());
-		this.matrix.prepareMonitor();
+		this.context.prepareMonitor();
 		this.thread.start();
 	}
 	
@@ -236,7 +236,7 @@ public class MatrixRunner implements IMatrixRunner, AutoCloseable
 	@Override
 	public void stop()
 	{
-		this.matrix.stop();
+		this.context.stop();
 		changeState(State.Stopped);
 		if (this.thread != null)
 		{
@@ -258,7 +258,7 @@ public class MatrixRunner implements IMatrixRunner, AutoCloseable
 	@Override
 	public void pause()
 	{
-		this.matrix.pause();
+		this.context.pause();
 		changeState(State.Pausing);
 	}
 
@@ -266,7 +266,7 @@ public class MatrixRunner implements IMatrixRunner, AutoCloseable
 	public void step()
 	{
 		changeState(State.Running);
-		this.matrix.step();
+		this.context.step();
         changeState(State.Pausing);
 	}
 	

@@ -26,6 +26,7 @@ import java.io.PrintStream;
 import java.io.Reader;
 import java.util.*;
 import java.util.Map.Entry;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Context implements IContext, AutoCloseable, Cloneable
 {
@@ -40,13 +41,15 @@ public class Context implements IContext, AutoCloseable, Cloneable
 			{
 				matrixColumn, testCaseIdColumn, testCaseColumn, stepIdentityColumn, stepColumn, resultColumn, errorColumn
 			};
+
+	private Monitor monitor = new Monitor();
 	
 	public Context(DocumentFactory factory, IMatrixListener matrixListener, PrintStream out) throws Exception
 	{
-		this.factory 		= factory;
+		this.factory = factory;
 		this.matrixListener = matrixListener;
-		this.outStream 		= out;
-		this.evaluator 		= factory.createEvaluator();
+		this.outStream = out;
+		this.evaluator = factory.createEvaluator();
 
 		createResultTable();
 	}
@@ -101,7 +104,7 @@ public class Context implements IContext, AutoCloseable, Cloneable
 		return this.evaluator;
 	}
 
-	public DocumentFactory	getFactory()
+	public DocumentFactory getFactory()
 	{
 		return this.factory;
 	}
@@ -152,9 +155,12 @@ public class Context implements IContext, AutoCloseable, Cloneable
 		String id = parts[1];
 
 		Matrix matrix = getConfiguration().getLibs().get(ns);
-		try {
+		try
+		{
 			matrix = matrix.clone();
-		} catch (CloneNotSupportedException e) {
+		}
+		catch (CloneNotSupportedException e)
+		{
 			logger.error(e.getMessage(), e);
 		}
 
@@ -203,14 +209,122 @@ public class Context implements IContext, AutoCloseable, Cloneable
 		return res;
 	}
 
-	private DocumentFactory			factory;
-	private PrintStream				outStream;
-	private IMatrixListener			matrixListener;
-	private AbstractEvaluator		evaluator;
-	private Table 					resultTable;
+	private class Monitor
+	{
+		public void enter()
+		{
+			synchronized (this.obj)
+			{
+				if (this.obj.get())
+				{
+					try
+					{
+						this.obj.set(false);
+						while (!this.obj.get())
+						{
+							this.obj.wait();
+						}
+					}
+					catch (InterruptedException e)
+					{
+						logger.error(e.getMessage(), e);
+					}
+				}
+			}
+		}
+
+		public void leave()
+		{
+			while (!this.obj.get())
+			{
+				synchronized (this.obj)
+				{
+					this.obj.set(true);
+					this.obj.notifyAll();
+				}
+			}
+		}
+
+		private final AtomicBoolean obj	= new AtomicBoolean(true);
+	}
+
+	public void setTracing(boolean value)
+	{
+		this.tracing = value;
+	}
+
+	public boolean checkMonitor(IMatrixListener listener, MatrixItem item)
+	{
+		if (this.stop)
+		{
+			return true;
+		}
+
+		if (item.isBreakPoint() || this.pause)
+		{
+			listener.paused(item.getMatrix(), item);
+			this.monitor.enter();
+		}
+		if (this.tracing)
+		{
+			try
+			{
+				Thread.sleep(200);
+			}
+			catch (InterruptedException e)
+			{ }
+		}
+
+		return false;
+	}
+
+	public void prepareMonitor()
+	{
+		this.pause = false;
+		this.stop = false;
+	}
+
+	public void stop()
+	{
+		this.pause = false;
+		this.stop = true;
+		this.monitor.leave();
+	}
+
+	public void pause()
+	{
+		this.pause = true;
+		this.stop = false;
+	}
+
+	public void step()
+	{
+		this.pause = true;
+		this.stop = false;
+		this.monitor.leave();
+	}
+
+	public void resume()
+	{
+		this.pause = false;
+		this.stop = false;
+		this.monitor.leave();
+	}
+
+	private volatile boolean	pause;
+	private volatile boolean	stop;
+	private volatile boolean	tracing;
+
+	private DocumentFactory factory;
+	private PrintStream outStream;
+	private IMatrixListener matrixListener;
+	private AbstractEvaluator evaluator;
+	private Table resultTable;
 
 	//TODO need to remove it, cause this the same as Configuration.libs
-	private Map<String, Matrix>		libs 			= new HashMap<>();
+	private Map<String, Matrix> libs = new HashMap<>();
 
-	private static final Logger	logger				= Logger.getLogger(Context.class);
+	private static final Logger logger = Logger.getLogger(Context.class);
+
+
 }

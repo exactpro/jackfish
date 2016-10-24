@@ -272,9 +272,17 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 			Platform.runLater(this.tree::refresh);
 			Optional.ofNullable(this.watcher).ifPresent(WatcherFx::update);
 			TreeItem<MatrixItem> treeItem = this.tree.find(item);
-			DialogsHelper.showInfo(String.format("Matrix paused on \'%s\'", treeItem.getValue().getItemName()));
-			Optional.ofNullable(this.listView).ifPresent(lv -> lv.getItems().add(ConsoleText.pausedItem(String.format("Paused on %s", item), item)));
-			this.tree.scrollTo(this.tree.getRow(treeItem));
+			if (treeItem == null)
+			{
+				DialogsHelper.showInfo(String.format("Matrix paused on \'%s\' in file \'%s\'", item, matrix.getName()));
+				Optional.ofNullable(this.listView).ifPresent(lv -> lv.getItems().add(ConsoleText.pausedItem(String.format("Paused on %s", item), null)));
+			}
+			else
+			{
+				DialogsHelper.showInfo(String.format("Matrix paused on \'%s\'", treeItem.getValue().getItemName()));
+				Optional.ofNullable(this.listView).ifPresent(lv -> lv.getItems().add(ConsoleText.pausedItem(String.format("Paused on %s", item), item)));
+				this.tree.scrollTo(this.tree.getRow(treeItem));
+			}
 		}
 		catch (Exception e)
 		{
@@ -400,7 +408,7 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 			}
 			toggleTracing.getTooltip().setText("Color " + (!toggleTracing.isSelected() ? "off" : "on"));
 			
-			this.model.setTracing(b);
+			this.context.setTracing(b);
 			
 		}, "Error on setting color");
 	}
@@ -598,7 +606,7 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 				}
 				else if (SettingsPanel.match(settings, keyEvent, SettingsPanel.TRACING))
 				{
-					model.setTracing(true);
+					this.context.setTracing(true);
 				}
 				else if (SettingsPanel.match(settings, keyEvent, SettingsPanel.FIND_ON_MATRIX))
 				{
