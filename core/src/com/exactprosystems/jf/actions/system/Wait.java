@@ -43,6 +43,8 @@ public class Wait extends AbstractAction
 		timeout = null;
 		byTime = null;
 	}
+
+	private int sleepCount = 20;
 	
 	@Override
 	protected HelpKind howHelpWithParameterDerived(Context context, Parameters parameters, String fieldName) throws Exception
@@ -53,10 +55,9 @@ public class Wait extends AbstractAction
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
-		//TODO need to do it in cycle
 		if (this.timeout != null)
 		{
-			Thread.sleep(this.timeout);
+			sleep(this.timeout);
 			super.setResult(null);
 		}
 		else if (this.byTime != null)
@@ -64,13 +65,27 @@ public class Wait extends AbstractAction
 			long timeout = this.byTime.getTime() - (new Date().getTime());
 			if (timeout > 0)
 			{
-				Thread.sleep(timeout);
+				sleep(timeout);
 			}
 			super.setResult(null);
 		}
 		else
 		{
 			super.setError("It is needed to set up either '" + timeName + "' or '" +byTimeName + "'.", ErrorKind.WRONG_PARAMETERS);
+		}
+	}
+
+	private void sleep(long timeout) throws InterruptedException
+	{
+		long quotient = timeout / sleepCount;
+		long module = timeout % sleepCount;
+		for (int i = 0; i < sleepCount; i++)
+		{
+			Thread.sleep(quotient);
+		}
+		if (module > 0)
+		{
+			Thread.sleep(module);
 		}
 	}
 }
