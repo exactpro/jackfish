@@ -44,7 +44,7 @@ public class Wait extends AbstractAction
 		byTime = null;
 	}
 
-	private int sleepCount = 20;
+	private final int sleepCount = 20;
 	
 	@Override
 	protected HelpKind howHelpWithParameterDerived(Context context, Parameters parameters, String fieldName) throws Exception
@@ -79,9 +79,12 @@ public class Wait extends AbstractAction
 	{
 		long quotient = timeout / sleepCount;
 		long module = timeout % sleepCount;
-		for (int i = 0; i < sleepCount; i++)
+		if (quotient > 0)
 		{
-			Thread.sleep(quotient);
+			for (int i = 0; i < sleepCount; i++)
+			{
+				Thread.sleep(quotient);
+			}
 		}
 		if (module > 0)
 		{
