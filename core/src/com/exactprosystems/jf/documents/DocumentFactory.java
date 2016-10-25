@@ -50,7 +50,9 @@ public abstract class DocumentFactory
 		try
 		{
 			checkConfiguration();
-			return this.configuration.createEvaluator();
+			AbstractEvaluator eval = this.configuration.createEvaluator();
+			 
+			 return eval;
 		}
 		catch (Exception e)
 		{
