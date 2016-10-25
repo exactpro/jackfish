@@ -50,7 +50,6 @@ import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 public abstract class Common
 {
@@ -130,8 +129,12 @@ public abstract class Common
 	// TODO move it to CustomTab
 	public static CustomTab checkDocument(Document doc)
 	{
-		Optional<Tab> first = tabPane.getTabs().stream().filter(tab -> ((CustomTab) tab).getDocument() == doc).findFirst();
-		return first.map(t -> (CustomTab) t).orElse(null);
+		return tabPane.getTabs()
+				.stream()
+				.map(t -> (CustomTab) t)
+				.filter(tab -> tab.getDocument().equals(doc))
+				.findFirst()
+				.orElse(null);
 	}
 
 	public static String getRelativePath(String filePath)

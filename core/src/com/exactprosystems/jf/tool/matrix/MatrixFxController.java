@@ -506,7 +506,14 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 
 	public void setCurrent(MatrixItem item)
 	{
-		Platform.runLater(() -> this.tree.setCurrent(this.tree.find(item)) );
+		Platform.runLater(() -> {
+			TreeItem<MatrixItem> treeItem = this.tree.find(item);
+			if (treeItem == null)
+			{
+				treeItem = this.tree.find(this.tree.getRoot(), matrixItem -> item.getId().equals(matrixItem.getId()));
+			}
+			this.tree.setCurrent(treeItem);
+		} );
 	}
 
 	public void remove(MatrixItem item)

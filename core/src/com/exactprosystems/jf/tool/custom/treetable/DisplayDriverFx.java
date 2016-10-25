@@ -44,6 +44,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Region;
 
+import java.io.FileReader;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -496,6 +497,7 @@ public class DisplayDriverFx implements DisplayDriver
 			try
 			{
 				matrixFx = context.getFactory().createMatrix(matrix.getName()); // TODO weird
+				matrixFx.load(new FileReader(matrix.getName()));
 				matrixFx.display();
 			}
 			catch (Exception e)

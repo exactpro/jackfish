@@ -136,15 +136,6 @@ public class MatrixTreeView extends TreeTableView<MatrixItem>
 		return item;
 	}
 
-	//	public MatrixTreeRow currentRow()
-	//	{
-	//		// TODO Auto-generated method stub
-	//		TreeItem<MatrixItem> selectedItem = getSelectionModel().getSelectedItem();
-	//		getSelectionModel().
-	//
-	//		return selectedItem;
-	//	}
-
 	public TreeItem<MatrixItem> find(MatrixItem item)
 	{
 		return find(this.getRoot(), item);
