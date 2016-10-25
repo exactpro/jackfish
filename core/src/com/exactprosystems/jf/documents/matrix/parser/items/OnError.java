@@ -87,13 +87,13 @@ public final class OnError extends MatrixItem
 	
 
 	@Override
-	protected ReturnAndResult executeItSelf(Context context, IMatrixListener listener, AbstractEvaluator evaluator, ReportBuilder report, Parameters parameters)
+	protected ReturnAndResult executeItSelf(long start, Context context, IMatrixListener listener, AbstractEvaluator evaluator, ReportBuilder report, Parameters parameters)
 	{
 		try
 		{
 			evaluator.getLocals().getVars().put(Parser.error, 	this.matrixError == null ? null : this.matrixError.Message);
 			evaluator.getLocals().getVars().put(Parser.err, 	this.matrixError == null ? new MatrixError("Unknown", ErrorKind.OTHER, this) : this.matrixError);
-			ReturnAndResult ret = super.executeItSelf(context, listener, evaluator, report, parameters);
+			ReturnAndResult ret = super.executeItSelf(start, context, listener, evaluator, report, parameters);
 			Result result = ret.getResult();
 					
 			if (result == Result.Failed)
@@ -113,7 +113,7 @@ public final class OnError extends MatrixItem
 		{
 			logger.error(e.getMessage(), e);
 			listener.error(this.owner, getNumber(), this, e.getMessage());
-			return new ReturnAndResult(Result.Failed, e.getMessage(), ErrorKind.EXCEPTION, this);
+			return new ReturnAndResult(start, Result.Failed, e.getMessage(), ErrorKind.EXCEPTION, this);
 		}
 	}
 	

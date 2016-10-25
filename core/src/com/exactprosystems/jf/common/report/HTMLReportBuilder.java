@@ -47,7 +47,7 @@ public class HTMLReportBuilder extends ReportBuilder
 	@Override
 	protected String decorateStyle(String value, String style)
 	{
-		return String.format("<span class=\"%s\">%s</span>", style, value);
+		return String.format("<div class=\"%s\">%s</div>", style, value);
 	}
 
 	@Override

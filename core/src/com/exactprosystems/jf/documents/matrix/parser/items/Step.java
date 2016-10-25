@@ -149,7 +149,7 @@ public class Step extends MatrixItem
     
 
     @Override
-	protected ReturnAndResult executeItSelf(Context context, IMatrixListener listener, AbstractEvaluator evaluator, ReportBuilder report, Parameters parameters)
+	protected ReturnAndResult executeItSelf(long start, Context context, IMatrixListener listener, AbstractEvaluator evaluator, ReportBuilder report, Parameters parameters)
 	{
 		ReturnAndResult ret = null;
 		Result res = null;
@@ -182,12 +182,12 @@ public class Step extends MatrixItem
 			
 			
 			
-			ret = new ReturnAndResult(Result.Passed);
+			ret = new ReturnAndResult(start, Result.Passed);
 			res = ret.getResult();
 			
 			report.outLine(this, null, String.format("Step %s", identifyValue), null);
 
-			ret = executeChildren(context, listener, evaluator, report, new Class<?>[] { OnError.class }, null);
+			ret = executeChildren(start, context, listener, evaluator, report, new Class<?>[] { OnError.class }, null);
 			res = ret.getResult();
 
 			
@@ -204,6 +204,7 @@ public class Step extends MatrixItem
 
 			if (table != null && position >= 0)
 			{
+				row.put(Context.timeColumn, 		ret.getTime());
 				row.put(Context.resultColumn, 		res);
 				row.put(Context.errorColumn, 		ret.getError());
 				table.updateValue(position, row);
@@ -216,11 +217,12 @@ public class Step extends MatrixItem
 
 			if (table != null && position >= 0)
 			{
+				row.put(Context.timeColumn, 		ret.getTime());
 				row.put(Context.resultColumn, 		res);
 				row.put(Context.errorColumn, 		new MatrixError(e.getMessage(), ErrorKind.EXCEPTION, this));
 				table.updateValue(position, row);
 			}
-			return new ReturnAndResult(Result.Failed, e.getMessage(), ErrorKind.EXCEPTION, this);
+			return new ReturnAndResult(start, Result.Failed, e.getMessage(), ErrorKind.EXCEPTION, this);
 		}
 
 		return ret;

@@ -150,12 +150,10 @@ public class Switch extends MatrixItem
     
 
 	@Override
-	protected ReturnAndResult executeItSelf(Context context, IMatrixListener listener, AbstractEvaluator evaluator, ReportBuilder report, Parameters parameters)
+	protected ReturnAndResult executeItSelf(long start, Context context, IMatrixListener listener, AbstractEvaluator evaluator, ReportBuilder report, Parameters parameters)
 	{
 		try
 		{
-			ReturnAndResult ret = new ReturnAndResult(Result.Passed);
-			
 			this.switcher.evaluate(evaluator);
 			if (!this.switcher.isValid())
 			{
@@ -183,16 +181,14 @@ public class Switch extends MatrixItem
 						{
 							if (eval == null)
 							{
-								ret = item.execute(context, listener, evaluator, report);
-								break;
+								return item.execute(context, listener, evaluator, report);
 							}
 						}
 						else
 						{
 							if (value.equals(eval))
 							{
-								ret = item.execute(context, listener, evaluator, report);
-								break;
+								return item.execute(context, listener, evaluator, report);
 							}
 						}
 					}
@@ -203,18 +199,17 @@ public class Switch extends MatrixItem
 				}
 				else if (item instanceof Default)
 				{
-					ret = item.execute(context, listener, evaluator, report);
-					break;
+					return item.execute(context, listener, evaluator, report);
 				}
 			}
 			
-			return ret;
+			return new ReturnAndResult(start, Result.Passed);
 		}
 		catch (Exception e)
 		{
 			logger.error(e.getMessage(), e);
 			listener.error(this.owner, getNumber(), this, e.getMessage());
-			return new ReturnAndResult(Result.Failed, e.getMessage(), ErrorKind.EXCEPTION, this);
+			return new ReturnAndResult(start, Result.Failed, e.getMessage(), ErrorKind.EXCEPTION, this);
 		}
 	}
 

@@ -137,11 +137,11 @@ public class If extends MatrixItem
     
 
 	@Override
-	protected ReturnAndResult executeItSelf(Context context, IMatrixListener listener, AbstractEvaluator evaluator, ReportBuilder report, Parameters parameters)
+	protected ReturnAndResult executeItSelf(long start, Context context, IMatrixListener listener, AbstractEvaluator evaluator, ReportBuilder report, Parameters parameters)
 	{
 		try
 		{
-			ReturnAndResult ret = new ReturnAndResult(Result.Passed);
+			ReturnAndResult ret = null;
 			
 			this.condition.evaluate(evaluator);
 			if (!this.condition.isValid())
@@ -161,7 +161,8 @@ public class If extends MatrixItem
 				Boolean	bool = (Boolean) eval;
 				if (bool)
 				{
-					ret = executeChildren(context, listener, evaluator, report, new Class<?>[] { Else.class }, null);
+					ret = executeChildren(start, context, listener, evaluator, report, new Class<?>[] { Else.class }, null);
+					return ret;
 				}
 				else
 				{
@@ -170,9 +171,9 @@ public class If extends MatrixItem
 					{
 						return branchElse.execute(context, listener, evaluator, report);
 					}
+					return new ReturnAndResult(start, Result.Passed);
 				}
 
-				return ret;
 			}
 
 			throw new Exception("result is not type of Boolean");
@@ -181,7 +182,7 @@ public class If extends MatrixItem
 		{
 			logger.error(e.getMessage(), e);
 			listener.error(this.owner, getNumber(), this, e.getMessage());
-			return new ReturnAndResult(Result.Failed, e.getMessage(), ErrorKind.EXCEPTION, this);
+			return new ReturnAndResult(start, Result.Failed, e.getMessage(), ErrorKind.EXCEPTION, this);
 		}
 	}
 

@@ -188,11 +188,11 @@ public final class SubCase extends MatrixItem
 	}
 
 	@Override
-	protected ReturnAndResult executeItSelf(Context context, IMatrixListener listener, AbstractEvaluator evaluator, ReportBuilder report, Parameters parameters)
+	protected ReturnAndResult executeItSelf(long start, Context context, IMatrixListener listener, AbstractEvaluator evaluator, ReportBuilder report, Parameters parameters)
 	{
 		if (!this.call)
 		{
-			return new ReturnAndResult(Result.NotExecuted);
+			return new ReturnAndResult(start, Result.NotExecuted);
 		}
 
 		Variables oldLocals = null;
@@ -207,7 +207,7 @@ public final class SubCase extends MatrixItem
 
 			
 			oldLocals = evaluator.getLocals();
-			ReturnAndResult ret = executeChildren(context, listener, evaluator, report, new Class<?>[] { OnError.class }, this.locals);
+			ReturnAndResult ret = executeChildren(start, context, listener, evaluator, report, new Class<?>[] { OnError.class }, this.locals);
 
 			Result result = ret.getResult();
 			
@@ -228,7 +228,7 @@ public final class SubCase extends MatrixItem
 		{
 			logger.error(e.getMessage(), e);
 			listener.error(this.owner, getNumber(), this, e.getMessage());
-			return new ReturnAndResult(Result.Failed, e.getMessage(), ErrorKind.EXCEPTION, this);
+			return new ReturnAndResult(start, Result.Failed, e.getMessage(), ErrorKind.EXCEPTION, this);
 		}
 		finally
 		{

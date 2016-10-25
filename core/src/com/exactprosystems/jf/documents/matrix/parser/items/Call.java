@@ -217,7 +217,7 @@ public final class Call extends MatrixItem
 	
 
 	@Override
-	protected ReturnAndResult executeItSelf(Context context, IMatrixListener listener, AbstractEvaluator evaluator, ReportBuilder report, Parameters parameters)
+	protected ReturnAndResult executeItSelf(long start, Context context, IMatrixListener listener, AbstractEvaluator evaluator, ReportBuilder report, Parameters parameters)
 	{
 		try
 		{
@@ -251,7 +251,7 @@ public final class Call extends MatrixItem
 					return ret;
 				}
 
-				return new ReturnAndResult(Result.Passed, ret.getOut());
+				return new ReturnAndResult(start, Result.Passed, ret.getOut());
 			}
 			report.outLine(this, null, "Sub case '" + this.name + "' is not found.", null);
 			throw new MatrixException(super.getNumber(), this, "Sub case '" + this.name + "' is not found.");
@@ -263,12 +263,12 @@ public final class Call extends MatrixItem
 			{
 				listener.error(getMatrix(), getNumber(), this, error);
 			}
-			return new ReturnAndResult(Result.Failed, e.getMessage(), ErrorKind.EXCEPTION, this);
+			return new ReturnAndResult(start, Result.Failed, e.getMessage(), ErrorKind.EXCEPTION, this);
 		}
 		catch (Exception e)
 		{
 			logger.error(e.getMessage(), e);
-			return new ReturnAndResult(Result.Failed, e.getMessage(), ErrorKind.EXCEPTION, this);
+			return new ReturnAndResult(start, Result.Failed, e.getMessage(), ErrorKind.EXCEPTION, this);
 		}
 	}	
 

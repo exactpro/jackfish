@@ -242,7 +242,7 @@ public class RawMessage extends MatrixItem
 	}
 
 	@Override
-	protected ReturnAndResult executeItSelf(Context context, IMatrixListener listener, AbstractEvaluator evaluator,
+	protected ReturnAndResult executeItSelf(long start, Context context, IMatrixListener listener, AbstractEvaluator evaluator,
 			ReportBuilder report, Parameters parameters)
 	{
 		try
@@ -250,7 +250,7 @@ public class RawMessage extends MatrixItem
 			ReportTable table = report.addTable("Message", null, true, 100, new int[] { });
 			table.addValues(Str.asString(this.message));
 			Variables vars = isGlobal() ? evaluator.getGlobals() : evaluator.getLocals();
-			ReturnAndResult ret = new ReturnAndResult(Result.Passed, this.message);
+			ReturnAndResult ret = new ReturnAndResult(start, Result.Passed, this.message);
 
 			if (super.getId() != null && !super.getId().isEmpty())
 			{
@@ -264,7 +264,7 @@ public class RawMessage extends MatrixItem
 		{
 			logger.error(e.getMessage(), e);
 			listener.error(this.owner, getNumber(), this, e.getMessage());
-			return new ReturnAndResult(Result.Failed, e.getMessage(), ErrorKind.EXCEPTION, this);
+			return new ReturnAndResult(start, Result.Failed, e.getMessage(), ErrorKind.EXCEPTION, this);
 		}
 	}
 

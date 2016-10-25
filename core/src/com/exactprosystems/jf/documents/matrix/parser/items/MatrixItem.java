@@ -372,16 +372,18 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 
 	public final ReturnAndResult execute(Context context, IMatrixListener listener, AbstractEvaluator evaluator, ReportBuilder report)
 	{
+		long start = System.currentTimeMillis();
+
 		this.result = null;
 
 		if (isTrue(this.off.get()))
 		{
-			return new ReturnAndResult(Result.Off);
+			return new ReturnAndResult(start, Result.Off);
 		}
 
 		if (context.checkMonitor(listener, this))
 		{
-			return new ReturnAndResult(Result.Stopped);
+			return new ReturnAndResult(start, Result.Stopped);
 		}
 
 		beforeReport(report);
@@ -391,16 +393,15 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 		report.itemStarted(this);
 
 		report.itemIntermediate(this);
-		long startTime = System.currentTimeMillis();
-		this.result = executeItSelf(context, listener, evaluator, report, this.parameters);
-
+		
+		this.result = executeItSelf(start, context, listener, evaluator, report, this.parameters);
+		long duration = this.result.getTime();
+		
 		if (this.result.getResult() == Result.Failed && isTrue(this.ignoreErr.get()))
 		{
-			this.result = new ReturnAndResult(this.result.getError(), Result.Ignored);
+			this.result = new ReturnAndResult(start, this.result.getError(), Result.Ignored);
 		}
 		
-		long duration = System.currentTimeMillis() - startTime;
-
 		report.itemFinished(this, duration);
 		listener.finished(this.owner, this, this.result.getResult());
 		this.changeState(this.isBreakPoint() ? MatrixItemState.BreakPoint : MatrixItemState.None);
@@ -760,9 +761,9 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 	{
 	}
 
-	protected ReturnAndResult executeItSelf(Context context, IMatrixListener listener, AbstractEvaluator evaluator, ReportBuilder report, Parameters parameters)
+	protected ReturnAndResult executeItSelf(long start, Context context, IMatrixListener listener, AbstractEvaluator evaluator, ReportBuilder report, Parameters parameters)
 	{
-		return executeChildren(context, listener, evaluator, report, null, null);
+		return executeChildren(start, context, listener, evaluator, report, null, null);
 	}
 
 	protected void afterReport(ReportBuilder report)
@@ -776,7 +777,7 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 	{
 	}
 
-	protected ReturnAndResult executeChildren(Context context,  IMatrixListener listener, AbstractEvaluator evaluator,
+	protected final ReturnAndResult executeChildren(long start, Context context,  IMatrixListener listener, AbstractEvaluator evaluator,
 			ReportBuilder report, Class<?>[] executeUntilNot, Variables locals)
 	{
 		boolean wasError = false;
@@ -804,17 +805,17 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 			{
 				if (wasError)
 				{
-					return new ReturnAndResult(ret.getError(), Result.Failed);
+					return new ReturnAndResult(start, ret.getError(), Result.Failed);
 				}
-				return new ReturnAndResult(result, out);
+				return new ReturnAndResult(start, result, out);
 			}
 			else if (result == Result.Continue)
 			{
 				if (wasError)
 				{
-					return new ReturnAndResult(ret.getError(), Result.Failed);
+					return new ReturnAndResult(start, ret.getError(), Result.Failed);
 				}
-				return new ReturnAndResult(Result.Continue, out);
+				return new ReturnAndResult(start, Result.Continue, out);
 			}
 
 			if (result == Result.Failed)
@@ -836,11 +837,11 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 
 		if (wasError)
 		{
-			return new ReturnAndResult(error, Result.Failed);
+			return new ReturnAndResult(start, error, Result.Failed);
 		}
 		else
 		{
-			return new ReturnAndResult(Result.Passed, out);
+			return new ReturnAndResult(start, Result.Passed, out);
 		}
 	}
 

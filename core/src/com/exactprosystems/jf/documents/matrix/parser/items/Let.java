@@ -123,7 +123,7 @@ public class Let extends MatrixItem
     }
 	
 	@Override
-	protected ReturnAndResult executeItSelf(Context context, IMatrixListener listener, AbstractEvaluator evaluator, ReportBuilder report, Parameters parameters)
+	protected ReturnAndResult executeItSelf(long start, Context context, IMatrixListener listener, AbstractEvaluator evaluator, ReportBuilder report, Parameters parameters)
 	{
 		try
 		{
@@ -153,13 +153,13 @@ public class Let extends MatrixItem
         	table.addValues(this.value.getExpression(), val);
 			report.itemIntermediate(this);
 	
-			return new ReturnAndResult(Result.Passed, val);
+			return new ReturnAndResult(start, Result.Passed, val);
 		}
 		catch (Exception e)
 		{
 			logger.error(e.getMessage(), e);
 			listener.error(this.owner, getNumber(), this, e.getMessage());
-			return new ReturnAndResult(Result.Failed, e.getMessage(), ErrorKind.EXCEPTION, this);
+			return new ReturnAndResult(start, Result.Failed, e.getMessage(), ErrorKind.EXCEPTION, this);
 		}
 	}
 

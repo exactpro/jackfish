@@ -14,29 +14,32 @@ import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 
 public class ReturnAndResult implements Cloneable
 {
-	public ReturnAndResult(MatrixError error, Result result)
+	public ReturnAndResult(long start, MatrixError error, Result result)
 	{
+		this.time = System.currentTimeMillis() - start;
 		this.result = result;
 		this.out = null;
 		this.error = error;
 	}
 
-	public ReturnAndResult(Result result, String message, ErrorKind kind, MatrixItem place)
+	public ReturnAndResult(long start, Result result, String message, ErrorKind kind, MatrixItem place)
 	{
+		this.time = System.currentTimeMillis() - start;
 		this.result = result;
 		this.out = null;
 		this.error = message == null ? null : new MatrixError(message, kind, place);
 	}
 
-	public ReturnAndResult(Result result, Object out)
+	public ReturnAndResult(long start, Result result, Object out)
 	{
+		this.time = System.currentTimeMillis() - start;
 		this.result = result;
 		this.out = out;
 	}
 	
-	public ReturnAndResult (Result result)
+	public ReturnAndResult (long start, Result result)
 	{
-		this(result, null);
+		this(start, result, null);
 	}
 	
 	public Result getResult()
@@ -53,8 +56,14 @@ public class ReturnAndResult implements Cloneable
 	{
 		return this.error;
 	}
+	
+	public long getTime()
+	{
+		return this.time;
+	}
 
 	private Result result;
 	private Object out;
 	private MatrixError error;
+	private long time;
 }

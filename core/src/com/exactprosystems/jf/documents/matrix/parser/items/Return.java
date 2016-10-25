@@ -118,7 +118,7 @@ public class Return extends MatrixItem
     }
 	
 	@Override
-	protected ReturnAndResult executeItSelf(Context context, IMatrixListener listener, AbstractEvaluator evaluator, ReportBuilder report, Parameters parameters)
+	protected ReturnAndResult executeItSelf(long start, Context context, IMatrixListener listener, AbstractEvaluator evaluator, ReportBuilder report, Parameters parameters)
 	{
 		try
 		{
@@ -147,13 +147,13 @@ public class Return extends MatrixItem
 				report.itemIntermediate(this);
 			}
 	
-			return new ReturnAndResult(Result.Return, eval);
+			return new ReturnAndResult(start, Result.Return, eval);
 		}
 		catch (Exception e)
 		{
 			logger.error(e.getMessage(), e);
 			listener.error(this.owner, getNumber(), this, e.getMessage());
-			return new ReturnAndResult(Result.Failed, e.getMessage(), ErrorKind.EXCEPTION, this);
+			return new ReturnAndResult(start, Result.Failed, e.getMessage(), ErrorKind.EXCEPTION, this);
 		}
 	}
 

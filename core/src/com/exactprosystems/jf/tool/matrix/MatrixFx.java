@@ -105,8 +105,11 @@ public class MatrixFx extends Matrix
 
 		getFactory().getConfiguration().matrixChanged(getName(), this);
 
-		this.controller.saved(getName());
-		this.controller.displayTitle(getName());
+		if (this.controller != null)
+		{
+			this.controller.saved(getName());
+			this.controller.displayTitle(getName());
+		}
 	}
 
 	@Override

@@ -136,12 +136,12 @@ public class While extends MatrixItem
     
 
     @Override
-	protected ReturnAndResult executeItSelf(Context context, IMatrixListener listener, AbstractEvaluator evaluator, ReportBuilder report, Parameters parameters)
+	protected ReturnAndResult executeItSelf(long start, Context context, IMatrixListener listener, AbstractEvaluator evaluator, ReportBuilder report, Parameters parameters)
 	{
 		try
 		{
-			ReturnAndResult ret = new ReturnAndResult(Result.Passed);
-			Result result = ret.getResult();
+			ReturnAndResult ret = null;
+			Result result = null;
 
 			this.loops = 0;
 			
@@ -158,7 +158,7 @@ public class While extends MatrixItem
 				{
 					report.outLine(this, null, "loop", this.loops);
 
-					ret = executeChildren(context, listener, evaluator, report, new Class<?>[] { OnError.class }, null);
+					ret = executeChildren(start, context, listener, evaluator, report, new Class<?>[] { OnError.class }, null);
 					result = ret.getResult();
 
 					this.loops++;
@@ -201,7 +201,7 @@ public class While extends MatrixItem
 					}
 				}
 
-				return new ReturnAndResult(result == Result.Continue ? Result.Passed : result, ret.getOut());
+				return new ReturnAndResult(start, result == Result.Continue ? Result.Passed : result, ret.getOut());
 			}
 					
 			throw new Exception("result is not type of Boolean");
@@ -210,7 +210,7 @@ public class While extends MatrixItem
 		{
 			logger.error(e.getMessage(), e);
 			listener.error(this.owner, getNumber(), this, e.getMessage());
-			return new ReturnAndResult(Result.Failed, e.getMessage(), ErrorKind.EXCEPTION, this);
+			return new ReturnAndResult(start, Result.Failed, e.getMessage(), ErrorKind.EXCEPTION, this);
 		}
 	}
 

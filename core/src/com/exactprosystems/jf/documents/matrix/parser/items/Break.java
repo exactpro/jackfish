@@ -63,9 +63,9 @@ public class Break extends MatrixItem
 	
 
 	@Override
-	protected ReturnAndResult executeItSelf(Context context, IMatrixListener listener, AbstractEvaluator evaluator, ReportBuilder report, Parameters parameters)
+	protected ReturnAndResult executeItSelf(long start, Context context, IMatrixListener listener, AbstractEvaluator evaluator, ReportBuilder report, Parameters parameters)
 	{
-		return new ReturnAndResult(Result.Break); 
+		return new ReturnAndResult(start, Result.Break); 
 	}
 
     @Override

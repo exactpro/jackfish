@@ -35,11 +35,12 @@ public class Context implements IContext, AutoCloseable, Cloneable
 	public static final String testCaseColumn 			= "TestCase";
 	public static final String stepColumn 				= "Step";
 	public static final String stepIdentityColumn 		= "StepIdentity";
+	public static final String timeColumn 				= "Time";
 	public static final String resultColumn 			= "Result";
 	public static final String errorColumn 				= "Error";
 	public static final String[] resultColumns = new String[]
 			{
-				matrixColumn, testCaseIdColumn, testCaseColumn, stepIdentityColumn, stepColumn, resultColumn, errorColumn
+				matrixColumn, testCaseIdColumn, testCaseColumn, stepIdentityColumn, stepColumn, timeColumn, resultColumn, errorColumn
 			};
 
 	private Monitor monitor = new Monitor();
@@ -85,11 +86,7 @@ public class Context implements IContext, AutoCloseable, Cloneable
 
 	public void createResultTable()
 	{
-		String headers[] = new String[] 
-				{ 
-					matrixColumn, testCaseIdColumn, testCaseColumn, stepColumn, stepIdentityColumn,  
-					resultColumn, errorColumn
-				};
+		String headers[] = resultColumns;
 		this.resultTable =  new Table(headers, this.evaluator);
 	}
 
@@ -155,6 +152,10 @@ public class Context implements IContext, AutoCloseable, Cloneable
 		String id = parts[1];
 
 		Matrix matrix = getConfiguration().getLibs().get(ns);
+		if (matrix == null)
+		{
+			return null;
+		}
 		try
 		{
 			matrix = matrix.clone();

@@ -125,7 +125,7 @@ public class Assert extends MatrixItem
     }
 	
 	@Override
-	protected ReturnAndResult executeItSelf(Context context, IMatrixListener listener, AbstractEvaluator evaluator, ReportBuilder report, Parameters parameters)
+	protected ReturnAndResult executeItSelf(long start, Context context, IMatrixListener listener, AbstractEvaluator evaluator, ReportBuilder report, Parameters parameters)
 	{
 		try
 		{
@@ -148,7 +148,7 @@ public class Assert extends MatrixItem
 		        	table.addValues(this.message.getExpression(), this.message.getValueAsString());
 				}
 
-				return new ReturnAndResult(Result.Failed, msg, ErrorKind.EXCEPTION, this);
+				return new ReturnAndResult(start, Result.Failed, msg, ErrorKind.EXCEPTION, this);
 			}
 			
 			
@@ -164,7 +164,7 @@ public class Assert extends MatrixItem
 		        	table.addValues(this.assertion.getExpression(), bool);
 					report.itemIntermediate(this);
 					
-					return new ReturnAndResult(Result.Passed, null); 
+					return new ReturnAndResult(start, Result.Passed, null); 
 				}
 				else
 				{
@@ -172,17 +172,17 @@ public class Assert extends MatrixItem
 		        	table.addValues(this.message.getExpression(), this.message.getValueAsString());
 					report.itemIntermediate(this);
 					
-					return new ReturnAndResult(Result.Failed, this.message.getValueAsString(), ErrorKind.ASSERT, this); 
+					return new ReturnAndResult(start, Result.Failed, this.message.getValueAsString(), ErrorKind.ASSERT, this); 
 				}
 			}
 	
-			return new ReturnAndResult(Result.Failed, "Assert expression should be boolean", ErrorKind.EXPRESSION_ERROR, this);
+			return new ReturnAndResult(start, Result.Failed, "Assert expression should be boolean", ErrorKind.EXPRESSION_ERROR, this);
 		}
 		catch (Exception e)
 		{
 			logger.error(e.getMessage(), e);
 			listener.error(this.owner, getNumber(), this, e.getMessage());
-			return new ReturnAndResult(Result.Failed, e.getMessage(), ErrorKind.EXCEPTION, this);
+			return new ReturnAndResult(start, Result.Failed, e.getMessage(), ErrorKind.EXCEPTION, this);
 		}
 	}
 

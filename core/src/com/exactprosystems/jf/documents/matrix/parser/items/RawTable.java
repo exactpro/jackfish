@@ -193,7 +193,7 @@ public class RawTable extends MatrixItem
 	}
 
 	@Override
-	protected ReturnAndResult executeItSelf(Context context, IMatrixListener listener, AbstractEvaluator evaluator,
+	protected ReturnAndResult executeItSelf(long start, Context context, IMatrixListener listener, AbstractEvaluator evaluator,
 			ReportBuilder report, Parameters parameters)
 	{
 		try
@@ -203,7 +203,7 @@ public class RawTable extends MatrixItem
 
 			Variables vars = isGlobal() ? evaluator.getGlobals() : evaluator.getLocals();
 
-			ReturnAndResult ret = new ReturnAndResult(Result.Passed, new Table(this.table, evaluator));
+			ReturnAndResult ret = new ReturnAndResult(start, Result.Passed, new Table(this.table, evaluator));
 
 			if (!super.id.isNullOrEmpty())
 			{
@@ -217,7 +217,7 @@ public class RawTable extends MatrixItem
 		{
 			logger.error(e.getMessage(), e);
 			listener.error(this.owner, getNumber(), this, e.getMessage());
-			return new ReturnAndResult(Result.Failed, e.getMessage(), ErrorKind.EXCEPTION, this);
+			return new ReturnAndResult(start, Result.Failed, e.getMessage(), ErrorKind.EXCEPTION, this);
 		}
 	}
 

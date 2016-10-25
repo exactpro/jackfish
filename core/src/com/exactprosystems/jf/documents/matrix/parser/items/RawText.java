@@ -186,7 +186,7 @@ public class RawText extends MatrixItem
 	}
 
 	@Override
-	protected ReturnAndResult executeItSelf(Context context, IMatrixListener listener, AbstractEvaluator evaluator, ReportBuilder report, Parameters parameters)
+	protected ReturnAndResult executeItSelf(long start, Context context, IMatrixListener listener, AbstractEvaluator evaluator, ReportBuilder report, Parameters parameters)
 	{
 		try
 		{
@@ -194,7 +194,7 @@ public class RawText extends MatrixItem
 
 			Variables vars = isGlobal() ? evaluator.getGlobals() : evaluator.getLocals();
 
-			ReturnAndResult ret = new ReturnAndResult(Result.Passed, this.table);
+			ReturnAndResult ret = new ReturnAndResult(start, Result.Passed, this.table);
 
 			if (super.getId() != null && !super.getId().isEmpty())
 			{
@@ -208,7 +208,7 @@ public class RawText extends MatrixItem
 		{
 			logger.error(e.getMessage(), e);
 			listener.error(this.owner, getNumber(), this, e.getMessage());
-			return new ReturnAndResult(Result.Failed, e.getMessage(), ErrorKind.EXCEPTION, this);
+			return new ReturnAndResult(start, Result.Failed, e.getMessage(), ErrorKind.EXCEPTION, this);
 		}
 	}
 

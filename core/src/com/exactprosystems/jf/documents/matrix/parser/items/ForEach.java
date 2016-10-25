@@ -153,12 +153,12 @@ public final class ForEach extends MatrixItem
 	}
 
 	@Override
-	protected ReturnAndResult executeItSelf(Context context, IMatrixListener listener, AbstractEvaluator evaluator, ReportBuilder report, Parameters parameters)
+	protected ReturnAndResult executeItSelf(long start, Context context, IMatrixListener listener, AbstractEvaluator evaluator, ReportBuilder report, Parameters parameters)
 	{
 		try
 		{
-			ReturnAndResult ret = new ReturnAndResult(Result.Passed, null);
-			Result result = ret.getResult();
+			ReturnAndResult ret = null;
+			Result result = null;
 
 			if (!this.in.evaluate(evaluator))
 			{
@@ -181,7 +181,7 @@ public final class ForEach extends MatrixItem
 
 				report.outLine(this, null, String.format("loop %s = %s", this.var, Str.asString(currentValue)), count++);
 
-				ret = executeChildren(context, listener, evaluator, report, new Class<?>[] { OnError.class }, null);
+				ret = executeChildren(start, context, listener, evaluator, report, new Class<?>[] { OnError.class }, null);
 				result = ret.getResult();
 
 				evaluator.getLocals().set(this.var.get(), currentValue);
@@ -220,13 +220,13 @@ public final class ForEach extends MatrixItem
 				}
 			}
 
-			return new ReturnAndResult(result == Result.Continue ? Result.Passed : result, ret.getOut());
+			return new ReturnAndResult(start, result == Result.Continue ? Result.Passed : result, ret.getOut());
 		}
 		catch (Exception e)
 		{
 			logger.error(e.getMessage(), e);
 			listener.error(this.owner, getNumber(), this, e.getMessage());
-			return new ReturnAndResult(Result.Failed, e.getMessage(), ErrorKind.EXCEPTION, this);
+			return new ReturnAndResult(start, Result.Failed, e.getMessage(), ErrorKind.EXCEPTION, this);
 		}
 	}
 

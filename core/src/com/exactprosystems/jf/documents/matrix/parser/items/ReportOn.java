@@ -74,8 +74,8 @@ public class ReportOn extends MatrixItem
 	}
 
 	@Override
-	protected ReturnAndResult executeItSelf(Context context, IMatrixListener listener, AbstractEvaluator evaluator, ReportBuilder report, Parameters parameters)
+	protected ReturnAndResult executeItSelf(long start, Context context, IMatrixListener listener, AbstractEvaluator evaluator, ReportBuilder report, Parameters parameters)
 	{
-		return new ReturnAndResult(Result.Passed); 
+		return new ReturnAndResult(start, Result.Passed); 
 	}
 }

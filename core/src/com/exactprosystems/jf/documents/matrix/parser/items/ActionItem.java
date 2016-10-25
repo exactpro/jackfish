@@ -245,18 +245,18 @@ public final class ActionItem extends MatrixItem
 	}
 
 	@Override
-	protected ReturnAndResult executeItSelf(Context context, IMatrixListener listener, AbstractEvaluator evaluator, ReportBuilder report, Parameters parameters)
+	protected ReturnAndResult executeItSelf(long start, Context context, IMatrixListener listener, AbstractEvaluator evaluator, ReportBuilder report, Parameters parameters)
 	{
 		this.action.initDefaultValues();
 		Result result = this.action.doAction(context, evaluator, report, parameters, super.getId(), this.assertBool);
 
 		if (result == Result.Failed || result == Result.Ignored)
 		{
-			return new ReturnAndResult(result, this.action.getReason(), this.action.getErrorKind(), this);
+			return new ReturnAndResult(start, result, this.action.getReason(), this.action.getErrorKind(), this);
 		}
 		else
 		{
-			return new ReturnAndResult(result, this.action.getOut());
+			return new ReturnAndResult(start, result, this.action.getOut());
 		}
 	}
 

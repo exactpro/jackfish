@@ -165,7 +165,7 @@ public final class NameSpace extends MatrixItem
 	}
 
 	@Override
-	protected ReturnAndResult executeItSelf(Context context, IMatrixListener listener, AbstractEvaluator evaluator, ReportBuilder report, Parameters parameters)
+	protected ReturnAndResult executeItSelf(long start, Context context, IMatrixListener listener, AbstractEvaluator evaluator, ReportBuilder report, Parameters parameters)
 	{
 		Variables oldLocals = null;
 		try
@@ -177,7 +177,7 @@ public final class NameSpace extends MatrixItem
 			report.itemIntermediate(this);
 
 			oldLocals = evaluator.getLocals();
-			ReturnAndResult res = executeChildren(context, listener, evaluator, report, new Class<?>[] { OnError.class }, this.locals);
+			ReturnAndResult res = executeChildren(start, context, listener, evaluator, report, new Class<?>[] { OnError.class }, this.locals);
 
 			return res;
 		}
@@ -185,7 +185,7 @@ public final class NameSpace extends MatrixItem
 		{
 			logger.error(e.getMessage(), e);
 			listener.error(this.owner, getNumber(), this, e.getMessage());
-			return new ReturnAndResult(Result.Failed, e.getMessage(), ErrorKind.EXCEPTION, this);
+			return new ReturnAndResult(start, Result.Failed, e.getMessage(), ErrorKind.EXCEPTION, this);
 		}
 		finally
 		{

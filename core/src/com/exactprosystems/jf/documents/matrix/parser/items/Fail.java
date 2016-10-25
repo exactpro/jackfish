@@ -110,7 +110,7 @@ public class Fail extends MatrixItem
 	}
 
 	@Override
-	protected ReturnAndResult executeItSelf(Context context, IMatrixListener listener, AbstractEvaluator evaluator, ReportBuilder report, Parameters parameters)
+	protected ReturnAndResult executeItSelf(long start, Context context, IMatrixListener listener, AbstractEvaluator evaluator, ReportBuilder report, Parameters parameters)
 	{
 		try
 		{
@@ -137,17 +137,17 @@ public class Fail extends MatrixItem
 				
 				if (eval instanceof MatrixError)
 				{
-					return new ReturnAndResult((MatrixError)eval, Result.Failed);
+					return new ReturnAndResult(start, (MatrixError)eval, Result.Failed);
 				}
 			}
 
-			return new ReturnAndResult(Result.Failed, String.valueOf(eval), ErrorKind.FAIL, this);
+			return new ReturnAndResult(start, Result.Failed, String.valueOf(eval), ErrorKind.FAIL, this);
 		}
 		catch (Exception e)
 		{
 			logger.error(e.getMessage(), e);
 			listener.error(this.owner, getNumber(), this, e.getMessage());
-			return new ReturnAndResult(Result.Failed, e.getMessage(), ErrorKind.EXCEPTION, this);
+			return new ReturnAndResult(start, Result.Failed, e.getMessage(), ErrorKind.EXCEPTION, this);
 		}
 	}
 

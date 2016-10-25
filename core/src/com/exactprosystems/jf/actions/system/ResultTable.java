@@ -128,6 +128,7 @@ public class ResultTable extends AbstractAction
 				replace(row, Context.testCaseIdColumn, 		this::spaceIfNull);
 				replace(row, Context.stepIdentityColumn, 	this::spaceIfNull);
 				replace(row, Context.stepColumn, 			e -> spaceIfNull(row.get(Context.stepIdentityColumn)) );
+				replace(row, Context.timeColumn, 			e -> report.decorateStyle(e == null ? "" : (e + " ms"), "ExecutionTime") );
 				
 				Object error = row.get(Context.errorColumn);
 				if (error instanceof MatrixError)

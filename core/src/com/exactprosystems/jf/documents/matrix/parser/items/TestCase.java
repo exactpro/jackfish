@@ -163,7 +163,7 @@ public final class TestCase extends MatrixItem
 	}
 	
 	@Override
-	protected ReturnAndResult executeItSelf(Context context, IMatrixListener listener, AbstractEvaluator evaluator, ReportBuilder report, Parameters parameters)
+	protected ReturnAndResult executeItSelf(long start, Context context, IMatrixListener listener, AbstractEvaluator evaluator, ReportBuilder report, Parameters parameters)
 	{
 		Result res = null;
 		ReturnAndResult ret = null;
@@ -186,7 +186,7 @@ public final class TestCase extends MatrixItem
 			
 			this.locals = evaluator.createLocals();
 
-			ret = executeChildren(context, listener, evaluator, report, new Class<?>[] { OnError.class }, this.locals);
+			ret = executeChildren(start, context, listener, evaluator, report, new Class<?>[] { OnError.class }, this.locals);
 			res = ret.getResult();
 			
 			if (res == Result.Failed)
@@ -202,6 +202,7 @@ public final class TestCase extends MatrixItem
 			}
 			if (table != null && position >= 0)
 			{
+				row.put(Context.timeColumn, 		ret.getTime());
 				row.put(Context.resultColumn, 		res);
 				row.put(Context.errorColumn, 		ret.getError());
 				table.updateValue(position, row);
@@ -211,6 +212,7 @@ public final class TestCase extends MatrixItem
 		{
 			if (table != null && table.size() >= 0)
 			{
+				row.put(Context.timeColumn, 		ret.getTime());
 				row.put(Context.resultColumn, 		res);
 				row.put(Context.errorColumn, 		new MatrixError(e.getMessage(), ErrorKind.EXCEPTION, this));
 				table.updateValue(position, row);
