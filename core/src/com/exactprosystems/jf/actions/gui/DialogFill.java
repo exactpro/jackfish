@@ -231,31 +231,38 @@ public class DialogFill extends AbstractAction
 					else 
 					{
 						allReportErrors += message(id, window, run, control, "" + res.getValue());
-					} 
+					}
 				}
 			}
 			catch (ServerException e) // TODO disgusting code. we need to redo it any way.
 			{
+				//Todo i think, that all exception from remote side need be instance of JFRemoteException
 				RemoteException t = (RemoteException)e.getCause();
 				String mes = message(id, window, run, control, t.getMessage());
-				
-				if (t instanceof ElementNotFoundException)
+				if (!this.stopOnFail)
 				{
-					super.setError(mes, ErrorKind.ELEMENT_NOT_FOUND);
-					return;
+					allReportErrors += mes;
 				}
-				else if (t instanceof OperationNotAllowedException)
+				else
 				{
-					super.setError(mes, ErrorKind.OPERATION_NOT_ALLOWED);
-					return;
+					if (t instanceof ElementNotFoundException)
+					{
+						super.setError(mes, ErrorKind.ELEMENT_NOT_FOUND);
+						return;
+					}
+					else if (t instanceof OperationNotAllowedException)
+					{
+						super.setError(mes, ErrorKind.OPERATION_NOT_ALLOWED);
+						return;
+					}
+					else if (t instanceof NullParameterException)
+					{
+						super.setError(mes, ErrorKind.EMPTY_PARAMETER);
+						return;
+					}
 				}
-				else if (t instanceof NullParameterException)
-				{
-					super.setError(mes, ErrorKind.EMPTY_PARAMETER);
-					return;
-				}
-				
-				throw t;
+				//can't throw exception. use setError and return
+//				throw t;
 			}
 			catch (Exception e)
 			{

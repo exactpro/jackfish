@@ -869,6 +869,7 @@ public enum OperationKind
 		}
 		if (needException && !result)
 		{
+			//TODO throw one of JFRemoteException
 			throw new RemoteException(isRegexp 
 					? String.format("actual value '%s' does not match regexp %s", componentText, what) 
 					: String.format("actual value '%s' not equals expected value '%s'", componentText, what));
