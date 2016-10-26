@@ -52,17 +52,7 @@ public class DataBasePool
 				ResultSet.TYPE_FORWARD_ONLY, 
 				ResultSet.CONCUR_READ_ONLY);
 
-		int index = 1;
-		int limit = query.getParameterMetaData().getParameterCount();
-		for (Object obj : objs)
-		{
-			if (index <= limit)
-			{
-				
-				query.setObject(index, obj);
-			}
-			index++;
-		}
+		fillParameters(objs, query);
 
 		ResultSet result = query.executeQuery();
 		
@@ -79,18 +69,33 @@ public class DataBasePool
 		PreparedStatement query = connection.getConnection().prepareStatement(text, 
 				ResultSet.TYPE_FORWARD_ONLY, 
 				ResultSet.CONCUR_READ_ONLY);
-		int index = 1;
-		int limit = query.getParameterMetaData().getParameterCount();
-		for (Object obj : objs)
+		fillParameters(objs, query);
+
+		return query.execute();
+	}
+
+	public List<Integer> insert(SqlConnection connection, String text, Object[] objs) throws Exception
+	{
+		if (connection.isClosed())
 		{
-			if (index <= limit)
-			{
-				query.setObject(index, obj);
-			}
-			index++;
+			throw new Exception(connection.toString() + " is not established." );
 		}
 		
-		return query.execute();
+		PreparedStatement query = connection.getConnection().prepareStatement(text, 
+				Statement.RETURN_GENERATED_KEYS);
+		fillParameters(objs, query);
+
+		query.execute();
+		
+		List<Integer> indexes = new ArrayList<Integer>();
+		ResultSet set = query.getGeneratedKeys();
+		int i = 1;
+		while (set.next())
+		{
+			indexes.add(set.getInt(i++));
+		}
+		
+		return indexes;
 	}
 
 	public void disconnect(SqlConnection connection) throws Exception
@@ -150,6 +155,21 @@ public class DataBasePool
 		return driver;
 	}
 	
+	private void fillParameters(Object[] objs, PreparedStatement query) throws SQLException
+	{
+		int index = 1;
+		int limit = query.getParameterMetaData().getParameterCount();
+		for (Object obj : objs)
+		{
+			if (index <= limit)
+			{
+				query.setObject(index, obj);
+			}
+			index++;
+		}
+	}
+
+
 	private DocumentFactory factory = null;
 	
 	private Map<String, Driver> drivers = null;

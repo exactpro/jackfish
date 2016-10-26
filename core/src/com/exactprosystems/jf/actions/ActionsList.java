@@ -82,6 +82,7 @@ public class ActionsList
 		        SQLdisconnect.class,
 		        SQLexecute.class,
 		        SQLselect.class,
+		        SQLinsert.class,
 		        SQLtableUpload.class,
 		        TableAddColumns.class,
 		        TableAddValue.class,
