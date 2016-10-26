@@ -260,6 +260,8 @@ public class DialogFill extends AbstractAction
 						super.setError(mes, ErrorKind.EMPTY_PARAMETER);
 						return;
 					}
+					super.setError(t.getMessage(), ErrorKind.EXCEPTION);
+					return;
 				}
 				//can't throw exception. use setError and return
 //				throw t;

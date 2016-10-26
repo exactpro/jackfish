@@ -11,6 +11,7 @@ package com.exactprosystems.jf.actions;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
+import com.exactprosystems.jf.common.evaluator.Variables;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.common.report.ReportTable;
 import com.exactprosystems.jf.documents.config.Context;
@@ -33,6 +34,8 @@ import javax.lang.model.type.NullType;
 import java.lang.reflect.Field;
 import java.util.*;
 import java.util.Map.Entry;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 public abstract class AbstractAction implements Cloneable
 {
@@ -158,20 +161,6 @@ public abstract class AbstractAction implements Cloneable
                     String str = "Action " + this.getClass() + " works incorrectly.";
                     throw new Exception(str);
                 }
-                
-                if (id != null && !id.isEmpty())
-                {
-                    if (owner.isGlobal())
-                    {
-                        // set variable into global name space
-                        evaluator.getGlobals().set(id, this.action);
-                    }
-                    else
-                    {
-                        // set variable into local name space
-                        evaluator.getLocals().set(id, this.action);
-                    }
-                }
             }
             else
             {
@@ -227,6 +216,12 @@ public abstract class AbstractAction implements Cloneable
         }
 
         evaluator.getLocals().delete(Tokens.This.get());
+		if (!Str.IsNullOrEmpty(id))
+		{
+			Supplier<Variables> variables = owner.isGlobal() ? evaluator::getGlobals : evaluator::getLocals;
+			Consumer<String> consumer = str -> variables.get().set(str, this.action);
+			consumer.accept(id);
+		}
         return this.action.Result;
     }
 
