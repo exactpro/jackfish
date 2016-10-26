@@ -170,7 +170,8 @@ public class HelperFx
 
 	private SimpleField getStringsSimpleField(Field field)
 	{
-		if (!Modifier.toString(field.getModifiers()).contains("public static final"))
+		String modifiers = Modifier.toString(field.getModifiers());
+		if (!modifiers.contains("public"))
 		{
 			return null;
 		}
