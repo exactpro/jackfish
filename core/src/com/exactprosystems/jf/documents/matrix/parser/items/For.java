@@ -265,7 +265,7 @@ public final class For extends MatrixItem
 				}
 			}
 
-			return new ReturnAndResult(start, result == Result.Continue ? Result.Passed : result, ret.getOut());
+			return new ReturnAndResult(start, result == null || result == Result.Continue ? Result.Passed : result, ret == null ? null : ret.getOut());
 		} 
 		catch (Exception e)
 		{
