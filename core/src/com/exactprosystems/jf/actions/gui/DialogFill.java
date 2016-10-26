@@ -23,6 +23,7 @@ import com.exactprosystems.jf.documents.guidic.controls.AbstractControl;
 import com.exactprosystems.jf.documents.matrix.parser.Parameter;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.documents.matrix.parser.items.ActionItem.HelpKind;
+import com.exactprosystems.jf.documents.matrix.parser.items.MatrixError;
 import com.exactprosystems.jf.documents.matrix.parser.items.TypeMandatory;
 import com.exactprosystems.jf.functions.Table;
 
@@ -177,6 +178,7 @@ public class DialogFill extends AbstractAction
 		}
 
 		Map<String, Object> outValue = new LinkedHashMap<>();
+		Map<String, MatrixError> errorsValue = new LinkedHashMap<>();
 
 		SectionKind run = SectionKind.Run;
 		logger.debug("Perform " + run);
@@ -198,13 +200,19 @@ public class DialogFill extends AbstractAction
 			}
 			if (control == null)
 			{
-				super.setError(message(id, window, run, control, "is not allowed"), ErrorKind.LOCATOR_NOT_FOUND);
+				String message = message(id, window, run, control, "is not allowed");
+				errorsValue.put(name, new MatrixError(message, ErrorKind.LOCATOR_NOT_FOUND, this.owner));
+				super.setErrors(errorsValue);
+				super.setError(message, ErrorKind.LOCATOR_NOT_FOUND);
 				return;
 			}
-			
+
 			if (checkControl(supportedControls, control))
 			{
-				super.setError(message(id, window, run, control, "is not allowed"), ErrorKind.OPERATION_NOT_ALLOWED);
+				String message = message(id, window, run, control, "is not allowed");
+				errorsValue.put(name, new MatrixError(message, ErrorKind.LOCATOR_NOT_FOUND, this.owner));
+				super.setErrors(errorsValue);
+				super.setError(message, ErrorKind.LOCATOR_NOT_FOUND);
 				return;
 			}
 
@@ -216,67 +224,80 @@ public class DialogFill extends AbstractAction
 					Object value = res.getValue();
 					if (value instanceof String[][])
 					{
-						value = new Table((String[][])value, evaluator);
-						
+						value = new Table((String[][]) value, evaluator);
+
 					}
 					outValue.put(name, value);
 				}
-				else 
+				else
 				{
-					if(this.stopOnFail)
+					String message = message(id, window, run, control, "" + res.getValue());
+					errorsValue.put(name, new MatrixError(message, ErrorKind.LOCATOR_NOT_FOUND, this.owner));
+					if (this.stopOnFail)
 					{
-						super.setError(message(id, window, run, control, "" + res.getValue()), ErrorKind.OPERATION_FAILED);
+						super.setErrors(errorsValue);
+						super.setError(message, ErrorKind.OPERATION_FAILED);
 						return;
 					}
-					else 
+					else
 					{
-						allReportErrors += message(id, window, run, control, "" + res.getValue());
+						allReportErrors += message;
 					}
 				}
 			}
 			catch (ServerException e) // TODO disgusting code. we need to redo it any way.
 			{
 				//Todo i think, that all exception from remote side need be instance of JFRemoteException
-				RemoteException t = (RemoteException)e.getCause();
+				RemoteException t = (RemoteException) e.getCause();
 				String mes = message(id, window, run, control, t.getMessage());
+
 				if (!this.stopOnFail)
 				{
+					//TODO which error kind we need place here?
+					errorsValue.put(name, new MatrixError(mes, ErrorKind.EXCEPTION, this.owner));
 					allReportErrors += mes;
 				}
 				else
 				{
+					ErrorKind errorKind = ErrorKind.EXCEPTION;
 					if (t instanceof ElementNotFoundException)
 					{
-						super.setError(mes, ErrorKind.ELEMENT_NOT_FOUND);
-						return;
+						errorKind = ErrorKind.ELEMENT_NOT_FOUND;
 					}
 					else if (t instanceof OperationNotAllowedException)
 					{
-						super.setError(mes, ErrorKind.OPERATION_NOT_ALLOWED);
-						return;
+						errorKind = ErrorKind.OPERATION_NOT_ALLOWED;
 					}
 					else if (t instanceof NullParameterException)
 					{
-						super.setError(mes, ErrorKind.EMPTY_PARAMETER);
-						return;
+						errorKind = ErrorKind.EMPTY_PARAMETER;
 					}
-					super.setError(t.getMessage(), ErrorKind.EXCEPTION);
+					errorsValue.put(name, new MatrixError(t.getMessage(), errorKind, owner));
+					super.setErrors(errorsValue);
+					super.setError(t.getMessage(), errorKind);
 					return;
 				}
 				//can't throw exception. use setError and return
-//				throw t;
+				//				throw t;
 			}
 			catch (Exception e)
 			{
 				if (this.stopOnFail)
 				{
-					super.setError(message(id, window, run, control, e.getMessage()), ErrorKind.EXCEPTION);
+
+					String message = message(id, window, run, control, e.getMessage());
+					errorsValue.put(name, new MatrixError(message, ErrorKind.EXCEPTION, owner));
+					super.setErrors(errorsValue);
+					super.setError(message, ErrorKind.EXCEPTION);
 					return;
 				}
-				else 
+				else
 				{
-					allReportErrors += message(id, window, run, control, e.getMessage());
-				} 
+
+					String message = message(id, window, run, control, e.getMessage());
+					errorsValue.put(name, new MatrixError(message, ErrorKind.EXCEPTION, owner));
+					allReportErrors += message;
+				}
 			}
 		}
 
@@ -302,11 +323,14 @@ public class DialogFill extends AbstractAction
 		}
 
 		super.setResult(outValue);
-		
-		if(!Str.IsNullOrEmpty(allReportErrors))
+		if (!errorsValue.isEmpty())
+		{
+			super.setErrors(errorsValue);
+		}
+		if (!Str.IsNullOrEmpty(allReportErrors))
 		{
 			super.setError(allReportErrors, ErrorKind.MANY_ERRORS);
-		}	
+		}
 	}
 
 	private boolean checkControl(Set<ControlKind> supportedControls, IControl control) throws Exception

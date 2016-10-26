@@ -21,6 +21,7 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.documents.matrix.parser.Result;
 import com.exactprosystems.jf.documents.matrix.parser.Tokens;
 import com.exactprosystems.jf.documents.matrix.parser.items.ActionItem;
+import com.exactprosystems.jf.documents.matrix.parser.items.MatrixError;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 import com.exactprosystems.jf.documents.matrix.parser.items.TypeMandatory;
 import com.exactprosystems.jf.documents.matrix.parser.items.ActionItem.HelpKind;
@@ -365,6 +366,11 @@ public abstract class AbstractAction implements Cloneable
         this.action.Kind = kind;
     }
 
+    protected final void setErrors(Map<String, MatrixError> errors)
+	{
+		this.action.Errors = errors;
+	}
+
     protected static final Logger logger = Logger.getLogger(AbstractAction.class);
 
 
@@ -687,6 +693,7 @@ public abstract class AbstractAction implements Cloneable
             clone.Reason = "";
             clone.Kind = null;
             clone.Result = null;
+			clone.Errors = null;
             return clone;
         }
 
@@ -702,6 +709,7 @@ public abstract class AbstractAction implements Cloneable
             this.Result = null;
             this.Reason = "";
             this.Kind = null;
+			this.Errors = null;
         }
     	
     	public Object Out;
@@ -713,6 +721,8 @@ public abstract class AbstractAction implements Cloneable
     	public ErrorKind Kind;
     	
     	public Result Result;
+
+		public Map<String, MatrixError> Errors;
     }
     
     private Action action;
