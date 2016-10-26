@@ -77,6 +77,11 @@ public class ApplicationConnector
 		listener().ifPresent(lis -> lis.update(ApplicationStatus.Disconnected, null, null));
 	}
 
+	public void setAppConnection(AppConnection appConnection)
+	{
+		this.appConnection = appConnection;
+	}
+
 	public AppConnection getAppConnection()
 	{
 		return appConnection;

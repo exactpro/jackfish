@@ -38,11 +38,12 @@ import javafx.scene.paint.Color;
 
 import java.net.URL;
 import java.util.Collection;
+import java.util.LinkedHashMap;
 import java.util.ResourceBundle;
 
 public class DictionaryFxController implements Initializable, ContainingParent
 {
-	public enum Result 
+	public enum Result
 	{ 
 		PASSED (Color.GREEN), FAILED (Color.RED), NOT_ALLOWED (Color.DARKGRAY);
 		
@@ -182,6 +183,11 @@ public class DictionaryFxController implements Initializable, ContainingParent
 	public void displayActionControl(Collection<String> entries, String entry, String title)
 	{
 		this.actionsController.displayActionControl(entries, entry, title);
+	}
+
+	public void displayStoreActionControl(LinkedHashMap<String, Object> storeMap, String entry)
+	{
+		this.actionsController.displayStoreActionControl(storeMap, entry);
 	}
 
 	public void showInfo(String info)

@@ -2,5 +2,5 @@ package com.exactprosystems.jf.tool.dictionary;
 
 public enum ApplicationStatus
 {
-	Disconnected, Connecting, Connected
+	Disconnected, Connecting, Connected, ConnectingFromStore
 }

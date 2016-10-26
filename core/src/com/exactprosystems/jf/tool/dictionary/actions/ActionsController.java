@@ -8,6 +8,7 @@
 
 package com.exactprosystems.jf.tool.dictionary.actions;
 
+import com.exactprosystems.jf.api.app.AppConnection;
 import com.exactprosystems.jf.api.app.ImageWrapper;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.tool.Common;
@@ -37,9 +38,7 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.net.URL;
-import java.util.Collection;
-import java.util.Optional;
-import java.util.ResourceBundle;
+import java.util.*;
 
 import static com.exactprosystems.jf.tool.Common.logger;
 import static com.exactprosystems.jf.tool.Common.tryCatch;
@@ -50,6 +49,7 @@ public class ActionsController implements Initializable, ContainingParent
 	public GridPane					elementActionsGrid;
 	
 	public ComboBox<String>			comboBoxApps;
+	public ComboBox<String>         comboBoxAppsStore;
 	public Button					btnStartApplication;
 	public Button					btnConnectApplication;
 	public Button					btnStop;
@@ -79,12 +79,14 @@ public class ActionsController implements Initializable, ContainingParent
 		assert tfSendKeys != null : "fx:id=\"tfSendKeys\" was not injected: check your FXML file 'Actions.fxml'.";
 		assert elementActionsGrid != null : "fx:id=\"elementActionsGrid\" was not injected: check your FXML file 'Actions.fxml'.";
 		assert comboBoxApps != null : "fx:id=\"comboBoxApps\" was not injected: check your FXML file 'Actions.fxml'.";
+		assert comboBoxAppsStore != null : "fx:id=\"comboBoxAppsEntries\" was not injected: check your FXML file 'Actions.fxml'.";
 		assert btnStartApplication != null : "fx:id=\"btnStartApplication\" was not injected: check your FXML file 'Actions.fxml'.";
 		assert btnConnectApplication != null : "fx:id=\"btnConnectApplication\" was not injected: check your FXML file 'Actions.fxml'.";
 		assert imageArea != null : "fx:id=\"labelArea\" was not injected: check your FXML file 'Actions.fxml'.";
 		String imageText = Images.class.getResource("texture.png").toExternalForm();
 		imageArea.setStyle("-fx-background-image:url('" + imageText + "');\n" + "    -fx-background-repeat: repeat;");
 		comboBoxWindows.setOnShowing(event -> tryCatch(() -> this.model.displayTitles(), "Error on update titles"));
+		comboBoxAppsStore.setOnShowing(event -> tryCatch(() -> this.model.displayStores(), "Error on update titles"));
 		Platform.runLater(() -> {
 			btnStartApplication.setTooltip(new Tooltip("Start application"));
 			btnStop.setTooltip(new Tooltip("Stop application"));
@@ -114,7 +116,16 @@ public class ActionsController implements Initializable, ContainingParent
 		{
 			this.model.setCurrentAdapter(newValue);
 			this.info.setAppName(newValue);
-		}); 
+		});
+
+		this.comboBoxAppsStore.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) ->
+		{
+			if(newValue != null)
+			{
+				this.model.setCurrentAdapterStore(newValue);
+				this.connectApplicationFromStore();
+			}
+		});
 
 		gridPane.add(this.pane, 0, 1);
 		GridPane.setColumnSpan(this.pane, 2);
@@ -174,6 +185,11 @@ public class ActionsController implements Initializable, ContainingParent
 		tryCatch(() -> this.model.connectToApplication(currentApp()), "Error on connect application");
 	}
 
+	public void connectApplicationFromStore()
+	{
+		tryCatch(() -> this.model.connectToApplicationFromStore(currentAppStore()), "Error on connect application");
+	}
+
 	public void stopConnection(ActionEvent actionEvent)
 	{
 		tryCatch(() -> this.model.stopApplication(), "Error on stop application");
@@ -213,6 +229,7 @@ public class ActionsController implements Initializable, ContainingParent
 				{
 					case Disconnected:
 						this.comboBoxApps.setDisable(false);
+						this.comboBoxAppsStore.setDisable(false);
 						this.btnStartApplication.setDisable(false);
 						this.btnConnectApplication.setDisable(false);
 						this.btnStop.setDisable(true);
@@ -220,6 +237,7 @@ public class ActionsController implements Initializable, ContainingParent
 		
 					case Connecting:
 						this.comboBoxApps.setDisable(true);
+						this.comboBoxAppsStore.setDisable(true);
 						this.btnStartApplication.setDisable(true);
 						this.btnConnectApplication.setDisable(true);
 						this.btnStop.setDisable(true);
@@ -227,9 +245,16 @@ public class ActionsController implements Initializable, ContainingParent
 		
 					case Connected:
 						this.comboBoxApps.setDisable(true);
+						this.comboBoxAppsStore.setDisable(true);
 						this.btnStartApplication.setDisable(true);
 						this.btnConnectApplication.setDisable(true);
 						this.btnStop.setDisable(false);
+						break;
+					case ConnectingFromStore:
+						this.comboBoxApps.setDisable(true);
+						this.btnStartApplication.setDisable(true);
+						this.btnConnectApplication.setDisable(true);
+						this.btnStop.setDisable(true);
 						break;
 				}
 			}
@@ -250,6 +275,25 @@ public class ActionsController implements Initializable, ContainingParent
 		{
 			this.comboBoxWindows.getItems().setAll(FXCollections.observableArrayList());
 		}
+	}
+
+	public void displayStoreActionControl(LinkedHashMap<String, Object> storeMap, String lastSelectedStore)
+	{
+		Platform.runLater(() ->
+		{
+			if (!storeMap.isEmpty())
+			{
+				this.comboBoxAppsStore.getItems().setAll("");
+				storeMap.forEach((s, o) ->
+				{
+					if(o instanceof AppConnection)
+					{
+						this.comboBoxAppsStore.getItems().addAll(s);
+					}
+				});
+			}
+			this.comboBoxAppsStore.getSelectionModel().select(lastSelectedStore);
+		});
 	}
 
 	public void displayActionControl(Collection<String> entries, String entry, String title)
@@ -284,6 +328,11 @@ public class ActionsController implements Initializable, ContainingParent
 	private String currentApp()
 	{
 		return this.comboBoxApps.getSelectionModel().getSelectedItem();
+	}
+
+	private String currentAppStore()
+	{
+		return this.comboBoxAppsStore.getSelectionModel().getSelectedItem();
 	}
 
 	private String currentWindow()

@@ -44,7 +44,8 @@ public class DictionaryFx extends GuiDictionary
 	private static AbstractControl copyControl;
 	private static Window copyWindow;
 	private boolean isControllerInit = false;
-
+	private LinkedHashMap<String, Object> storeMap;
+	private String currentAdapterStore;
 	private String currentAdapter;
 	private DictionaryFxController controller;
 	private AbstractEvaluator evaluator;
@@ -152,6 +153,12 @@ public class DictionaryFx extends GuiDictionary
 	}
 
 	//------------------------------------------------------------------------------------------------------------------
+	public void displayStores() throws Exception
+	{
+		storeMap = (LinkedHashMap<String, Object>) getFactory().getConfiguration().getStoreMap();
+		this.controller.displayStoreActionControl(storeMap, this.currentAdapterStore);
+	}
+
 	public void displayTitles() throws Exception
 	{
 		Collection<String> titles = null;
@@ -165,6 +172,11 @@ public class DictionaryFx extends GuiDictionary
 	public void setCurrentAdapter(String adapter)
 	{
 		this.currentAdapter = adapter;
+	}
+
+	public void setCurrentAdapterStore(String currentAdapterStore)
+	{
+		this.currentAdapterStore = currentAdapterStore;
 	}
 
 	public void startGrabbing() throws Exception
@@ -748,6 +760,23 @@ public class DictionaryFx extends GuiDictionary
 	{
 		this.applicationConnector.setIdAppEntry(idAppEntry);
 		this.applicationConnector.connectApplication();
+	}
+
+	public void connectToApplicationFromStore(String idAppStore) throws Exception
+	{
+		if(idAppStore.isEmpty() || idAppStore == null)
+		{
+			this.applicationConnector.setIdAppEntry(null);
+			this.applicationConnector.setAppConnection(null);
+			this.controller.displayApplicationStatus(ApplicationStatus.Disconnected, null, null);
+		}
+		else
+		{
+			AppConnection appConnection = (AppConnection) storeMap.get(idAppStore);
+			this.applicationConnector.setIdAppEntry(appConnection.getId());
+			this.applicationConnector.setAppConnection(appConnection);
+			this.controller.displayApplicationStatus(ApplicationStatus.ConnectingFromStore, null, appConnection);
+		}
 	}
 
 	public void stopApplication() throws Exception
