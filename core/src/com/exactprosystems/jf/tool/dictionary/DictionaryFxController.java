@@ -183,9 +183,9 @@ public class DictionaryFxController implements Initializable, ContainingParent
 		this.actionsController.displayActionControl(entries, entry, title);
 	}
 
-	public void displayStoreActionControl(LinkedHashMap<String, Object> storeMap, String entry)
+	public void displayStoreActionControl(Collection<String> stories, String lastSelectedStore)
 	{
-		this.actionsController.displayStoreActionControl(storeMap, entry);
+		this.actionsController.displayStoreActionControl(stories, lastSelectedStore);
 	}
 
 	public void showInfo(String info)

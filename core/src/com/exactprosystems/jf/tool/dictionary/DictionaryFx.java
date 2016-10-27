@@ -155,8 +155,21 @@ public class DictionaryFx extends GuiDictionary
 	//------------------------------------------------------------------------------------------------------------------
 	public void displayStores() throws Exception
 	{
-		storeMap = (LinkedHashMap<String, Object>) getFactory().getConfiguration().getStoreMap();
-		this.controller.displayStoreActionControl(storeMap, this.currentAdapterStore);
+        storeMap = (LinkedHashMap<String, Object>) getFactory().getConfiguration().getStoreMap();
+        Collection<String> stories = new ArrayList<>();
+        if (!storeMap.isEmpty())
+        {
+            stories.add("");
+            storeMap.forEach((s, o) ->
+            {
+                if(o instanceof AppConnection)
+                {
+                    stories.add(s);
+                }
+            });
+        }
+
+		this.controller.displayStoreActionControl(stories, this.currentAdapterStore);
 	}
 
 	public void displayTitles() throws Exception

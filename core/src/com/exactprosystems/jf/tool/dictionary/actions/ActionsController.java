@@ -277,20 +277,13 @@ public class ActionsController implements Initializable, ContainingParent
 		}
 	}
 
-	public void displayStoreActionControl(LinkedHashMap<String, Object> storeMap, String lastSelectedStore)
+	public void displayStoreActionControl(Collection<String> stories, String lastSelectedStore)
 	{
 		Platform.runLater(() ->
 		{
-			if (!storeMap.isEmpty())
+			if (stories!=null)
 			{
-				this.comboBoxAppsStore.getItems().setAll("");
-				storeMap.forEach((s, o) ->
-				{
-					if(o instanceof AppConnection)
-					{
-						this.comboBoxAppsStore.getItems().addAll(s);
-					}
-				});
+				this.comboBoxAppsStore.getItems().setAll(stories);
 			}
 			this.comboBoxAppsStore.getSelectionModel().select(lastSelectedStore);
 		});
