@@ -44,7 +44,6 @@ public class DictionaryFx extends GuiDictionary
 	private static AbstractControl copyControl;
 	private static Window copyWindow;
 	private boolean isControllerInit = false;
-	private LinkedHashMap<String, Object> storeMap;
 	private String currentAdapterStore;
 	private String currentAdapter;
 	private DictionaryFxController controller;
@@ -155,7 +154,7 @@ public class DictionaryFx extends GuiDictionary
 	//------------------------------------------------------------------------------------------------------------------
 	public void displayStores() throws Exception
 	{
-        storeMap = (LinkedHashMap<String, Object>) getFactory().getConfiguration().getStoreMap();
+		Map<String, Object> storeMap = getFactory().getConfiguration().getStoreMap();
         Collection<String> stories = new ArrayList<>();
         if (!storeMap.isEmpty())
         {
@@ -785,7 +784,7 @@ public class DictionaryFx extends GuiDictionary
 		}
 		else
 		{
-			AppConnection appConnection = (AppConnection) storeMap.get(idAppStore);
+			AppConnection appConnection = (AppConnection) getFactory().getConfiguration().getStoreMap().get(idAppStore);
 			this.applicationConnector.setIdAppEntry(appConnection.getId());
 			this.applicationConnector.setAppConnection(appConnection);
 			this.controller.displayApplicationStatus(ApplicationStatus.ConnectingFromStore, null, appConnection);
