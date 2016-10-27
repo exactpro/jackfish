@@ -973,10 +973,10 @@ public class DictionaryFx extends GuiDictionary
 			row = window.getRowsControl(control);
 			header = window.getHeaderControl(control);
 		}
-		this.controller.displayElementInfo(control, owners, owner, rows, row, header);
+		this.controller.displayElementInfo(window, control, owners, owner, rows, row, header);
 	}
 
-	private void displayElement(IWindow window, IWindow.SectionKind sectionKind, IControl control) throws Exception
+	public void displayElement(IWindow window, IWindow.SectionKind sectionKind, IControl control) throws Exception
 	{
     	Collection<IControl> controls = null;
     	Collection<IControl> owners = null;
@@ -994,7 +994,17 @@ public class DictionaryFx extends GuiDictionary
     		header = window.getHeaderControl(control);
     	}
 		this.controller.displaySection(sectionKind);
-		this.controller.displayElement(controls, control, owners, owner, rows, row, header);
+		this.controller.displayElement(controls, control);
+		this.controller.displayElementInfo(window, control, owners, owner, rows, row, header);
+	}
+
+	public void displayElementWithoutInfo(IWindow window, IWindow.SectionKind sectionKind, IControl control) throws Exception {
+		Collection<IControl> controls = null;
+		if (window != null)
+		{
+			controls = window.getControls(sectionKind);
+		}
+		this.controller.displayElement(controls, control);
 	}
 
 	private Collection<IControl> controlsWithId(IWindow window, IWindow.SectionKind sectionKind)

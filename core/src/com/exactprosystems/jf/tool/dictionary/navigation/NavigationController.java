@@ -255,6 +255,14 @@ public class NavigationController implements Initializable, ContainingParent
 		this.model.parameterSet(currentWindow(), currentSection(), control, parameter, value);
 	}
 
+	public void displayElementWithoutInfo(IWindow window) throws Exception
+	{
+		if(window==currentWindow())
+		{
+			this.model.displayElementWithoutInfo(window, currentSection(), currentElement());
+		}
+	}
+
 	public void sendKeys(String text) throws Exception
 	{
 		this.model.sendKeys(text, currentElement(), currentWindow());

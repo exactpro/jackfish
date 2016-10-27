@@ -152,16 +152,14 @@ public class DictionaryFxController implements Initializable, ContainingParent
 		this.navigationController.displaySection(sectionKind);
 	}
 
-	public void displayElement(Collection<IControl> controls, IControl control, Collection<IControl> owners, IControl owner, 
-			Collection<IControl> rows, IControl row, IControl header)
+	public void displayElement(Collection<IControl> controls, IControl control)
 	{
 		this.navigationController.displayElement(control, controls);
-		this.displayElementInfo(control, owners, owner, rows, row, header);
 	}
 
-	public void displayElementInfo(IControl control, Collection<IControl> owners, IControl owner, Collection<IControl> rows, IControl row, IControl header)
+	public void displayElementInfo(IWindow window, IControl control, Collection<IControl> owners, IControl owner, Collection<IControl> rows, IControl row, IControl header)
 	{
-		this.elementInfoController.displayInfo(control, owners, owner, rows, row, header);
+		this.elementInfoController.displayInfo(window, control, owners, owner, rows, row, header);
 	}
 
 	public void displayImage(ImageWrapper imageWrapper) throws Exception

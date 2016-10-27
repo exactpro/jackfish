@@ -8,10 +8,7 @@
 
 package com.exactprosystems.jf.tool.dictionary.element;
 
-import com.exactprosystems.jf.api.app.Addition;
-import com.exactprosystems.jf.api.app.ControlKind;
-import com.exactprosystems.jf.api.app.IControl;
-import com.exactprosystems.jf.api.app.Visibility;
+import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.documents.guidic.controls.AbstractControl;
@@ -79,6 +76,7 @@ public class ElementInfoController implements Initializable, ContainingParent
 	private Configuration configuration;
 	private ObservableList<ControlKind> controls;
 	private IControl currentControl;
+	private IWindow window;
 
 	@Override
 	public void setParent(Parent parent)
@@ -213,7 +211,7 @@ public class ElementInfoController implements Initializable, ContainingParent
 	// ------------------------------------------------------------------------------------------------------------------
 	// display* methods
 	// ------------------------------------------------------------------------------------------------------------------
-	public void displayInfo(IControl control, Collection<IControl> owners, IControl owner, Collection<IControl> rows, IControl row, IControl header)
+	public void displayInfo(IWindow window, IControl control, Collection<IControl> owners, IControl owner, Collection<IControl> rows, IControl row, IControl header)
 	{
     	Platform.runLater(() ->
 		{
@@ -292,6 +290,7 @@ public class ElementInfoController implements Initializable, ContainingParent
 			this.checkBoxAbsoluteXpath.setSelected(control != null && control.useAbsoluteXpath());
 			this.previousValue = "";
 			this.currentControl = control;
+			this.window = window;
 		});
 	}
 
@@ -317,12 +316,17 @@ public class ElementInfoController implements Initializable, ContainingParent
 		this.checkBoxAbsoluteXpath.selectedProperty().addListener((obs, prev, next) -> changeBoolean(this.checkBoxAbsoluteXpath, next));
 	}
 
+	private void refreshElement()
+	{
+		tryCatch(() -> this.navigation.displayElementWithoutInfo(this.window), "Error on displaying element");
+	}
+
 	private void changeText(TextField source, String value)
 	{
 		tryCatch(() -> {
 			if (!Str.areEqual(value, previousValue))
 			{
-				this.navigation.parameterSet(source.getId(), value, currentControl);
+				this.navigation.parameterSet(source.getId(), value, this.currentControl);
 				previousValue = value;
 			}
 		}, "Error on changing " + source.getId());
@@ -345,7 +349,7 @@ public class ElementInfoController implements Initializable, ContainingParent
 		tryCatch(() -> {
 			if (!Str.areEqual(value, previousValue))
 			{
-				this.navigation.parameterSet(source.getId(), Integer.parseInt(value));
+				this.navigation.parameterSet(source.getId(), Integer.parseInt(value), this.currentControl);
 				previousValue = value;
 			}
 		}, "Error on changing " + source.getId());
@@ -424,6 +428,7 @@ public class ElementInfoController implements Initializable, ContainingParent
 			{
 				Common.tryCatch(() -> this.navigation.checkNewId(tf.getText()), "");
 				changeText(tf, tf.getText());
+				refreshElement();
 			}
 		});
 	}
