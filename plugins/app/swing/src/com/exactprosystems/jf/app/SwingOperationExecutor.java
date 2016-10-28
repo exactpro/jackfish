@@ -1377,27 +1377,37 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 	{
 		JTable table = fixture.target;
 		Object valueAt = table.getValueAt(row, column);
-		Component rendererComponent = table.getCellRenderer(row, column).getTableCellRendererComponent(table, valueAt, true, true, row, column);
-		if (rendererComponent instanceof JLabel)
+
+		if(valueAt != null)
 		{
-			JLabel label = (JLabel) rendererComponent;
-			StringBuffer result = new StringBuffer();
-			result.append(label.getText());
-			if(!label.getText().isEmpty() && label.getIcon() != null)
+			if (valueAt instanceof Boolean)
 			{
-				result.append(" | ");
+				return valueAt.toString();
 			}
-			if(label.getIcon() != null)
+
+			Component rendererComponent = table.getCellRenderer(row, column).getTableCellRendererComponent(table, valueAt, true, true, row, column);
+			if (rendererComponent instanceof JLabel)
 			{
-				result.append(label.getIcon());
+				JLabel label = (JLabel) rendererComponent;
+				StringBuffer result = new StringBuffer();
+				result.append(label.getText());
+				if (!label.getText().isEmpty() && label.getIcon() != null)
+				{
+					result.append(" | ");
+				}
+				if (label.getIcon() != null)
+				{
+					result.append(label.getIcon());
+				}
+				return result;
 			}
-			return result;
+			else
+			{
+				valueAt = fixture.valueAt(TableCell.row(row).column(column));
+				return valueAt;
+			}
 		}
-		else
-		{
-			valueAt = fixture.valueAt(TableCell.row(row).column(column));
-			return valueAt;
-		}
+		return "";
 	}
 	
 	private String getValue(Component currentComponent) throws RemoteException
