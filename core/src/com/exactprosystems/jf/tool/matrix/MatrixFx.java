@@ -103,8 +103,6 @@ public class MatrixFx extends Matrix
 	{
 		super.save(fileName);
 
-		getFactory().getConfiguration().matrixChanged(getName(), this);
-
 		if (this.controller != null)
 		{
 			this.controller.saved(getName());

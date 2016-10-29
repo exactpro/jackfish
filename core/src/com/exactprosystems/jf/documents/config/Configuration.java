@@ -252,7 +252,7 @@ public class Configuration extends AbstractDocument
 		this.databases 					= new DataBasePool(factory);
 
 		this.libs 						= new HashMap<String, Matrix>();
-		this.libActuality 				= new HashMap<String, Date>();
+		this.documentsActuality 				= new HashMap<String, Date>();
 		this.systemVars					= new HashSet<SystemVars>();
 	}
 
@@ -362,34 +362,6 @@ public class Configuration extends AbstractDocument
 		}
 	}
 	
-	public void dictionaryChanged(String name, IGuiDictionary dictionary)
-	{
-		for (AppEntry entry : this.appEntriesValue)
-		{
-			
-			try
-			{
-				String dicName = entry.get(appDicPath);
-				String id = entry.get(entryName);
-				
-				if (dicName != null && dicName.equals(name))
-				{
-					IApplicationFactory factory = getApplicationPool().loadApplicationFactory(id);
-					factory.init(dictionary);
-				}
-			}
-			catch (Exception e)
-			{ 
-				// nothing to do
-			}
-		}
-	}
-	
-	public void matrixChanged(String name, Matrix matrix)
-	{
-//		refreshLibs(); 
-	}
-
 	public AbstractEvaluator createEvaluator() throws Exception
 	{
 		if (Str.IsNullOrEmpty(this.evaluatorValue))
@@ -441,7 +413,7 @@ public class Configuration extends AbstractDocument
 				for (File libFile : libFiles)
 				{
 					Date currentTime  = new Date(libFile.lastModified());
-					Date previousTime = this.libActuality.put(libFile.getAbsolutePath(), currentTime);
+					Date previousTime = this.documentsActuality.put(libFile.getAbsolutePath(), currentTime);
 					
 					if (previousTime != null && !currentTime.after(previousTime))
 					{
@@ -501,7 +473,41 @@ public class Configuration extends AbstractDocument
 	{}
 	
 	public void refreshAppDictionaries()  
-	{}
+	{
+		for (AppEntry entry : this.appEntriesValue)
+		{
+			String name = entry.entryNameValue;
+			String dicPath = entry.appDicPathValue;
+			if (Str.IsNullOrEmpty(dicPath))
+			{
+				continue;
+			}
+			
+			File dicFile = new File(dicPath);
+			Date currentTime  = new Date(dicFile.lastModified());
+			Date previousTime = this.documentsActuality.get(dicFile.getAbsolutePath());
+			
+			if (previousTime != null && !currentTime.after(previousTime))
+			{
+				continue;
+			}
+			
+			try
+			{
+				if (this.applications.isLoaded(name))
+				{
+					IApplicationFactory factory = this.applications.loadApplicationFactory(name);
+					IGuiDictionary dictionary = this.applications.getDictionary(entry);
+					factory.init(dictionary);
+					this.documentsActuality.put(dicFile.getAbsolutePath(), currentTime);
+				}
+			} 
+			catch (Exception e)
+			{
+				logger.error(e.getMessage(), e);
+			}
+		}
+	}
 	
 	public void refreshClientDictionaries() 
 	{}
@@ -917,7 +923,7 @@ public class Configuration extends AbstractDocument
 	protected boolean 				changed;
 	protected ReportFactory			reportFactoryObj;
 	protected Map<String, Matrix>	libs;
-	protected Map<String, Date>		libActuality;
+	protected Map<String, Date>		documentsActuality;
 	protected Map<String, Object>	globals; 
 	protected Set<SystemVars>		systemVars; 
 

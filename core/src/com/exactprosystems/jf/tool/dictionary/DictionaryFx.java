@@ -105,15 +105,6 @@ public class DictionaryFx extends GuiDictionary
 		super.save(fileName);
 		this.controller.saved(getName());
 		displayTitle(getName());
-		
-		if (this.currentAdapter != null)
-		{
-			IApplicationFactory factory = getFactory().getConfiguration().getApplicationPool().loadApplicationFactory(this.currentAdapter);
-			factory.init(this);
-		}
-		{
-			getFactory().getConfiguration().dictionaryChanged(getName(), this);
-		}
 	}
 
 	@Override

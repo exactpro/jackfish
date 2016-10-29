@@ -125,6 +125,12 @@ public class ApplicationPool implements IApplicationPool
 	}	
 
 	@Override
+	public boolean isLoaded(String id)
+	{
+		return this.appFactories.containsKey(id);
+	}
+
+	@Override
 	public IApplicationFactory loadApplicationFactory(String id) throws Exception
 	{
 		IApplicationFactory applicationFactory = loadFactory(id);
@@ -164,7 +170,7 @@ public class ApplicationPool implements IApplicationPool
 
 			int pid = application.connect(port, jarPath, work, remoteClassName, driverParameters, parameters);
 
-			return new AppConnection(application, id, port, applicationFactory.getDictionary(), pid);
+			return new AppConnection(application, id, port, applicationFactory, pid);
 		}
 		catch (InterruptedException e)
 		{
@@ -206,7 +212,7 @@ public class ApplicationPool implements IApplicationPool
 			String work = MainRunner.makeDirWithSubstitutions(entry.get(Configuration.appWorkDir));
 			
 			int pid = application.start(port, jarPath, work, remoteClassName, driverParameters, parameters);
-			AppConnection connection = new AppConnection(application, id, port, applicationFactory.getDictionary(), pid);
+			AppConnection connection = new AppConnection(application, id, port, applicationFactory, pid);
 			this.connections.add(connection);
 			
 			return connection;
@@ -336,7 +342,7 @@ public class ApplicationPool implements IApplicationPool
 		return port;
 	}
 	
-	private GuiDictionary getDictionary(AppEntry entry) throws Exception
+	public GuiDictionary getDictionary(AppEntry entry) throws Exception
 	{
 		String dictionaryName = entry.get(Configuration.appDicPath);
 		GuiDictionary dictionary = null;

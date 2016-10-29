@@ -19,6 +19,7 @@ public interface IApplicationPool extends IPool
 	
 	ControlKind[]		supportedControlKinds(String id) throws Exception;
 	
+	boolean 			isLoaded(String id);
 	IApplicationFactory	loadApplicationFactory(String id) throws Exception;
 	AppConnection 		connectToApplication(String id, Map<String, String> args) throws Exception;
 	AppConnection 		startApplication(String id, Map<String, String> params) throws Exception;
