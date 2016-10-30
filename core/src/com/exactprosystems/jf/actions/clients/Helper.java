@@ -92,10 +92,17 @@ class Helper
 		IMessageDictionary dic = factory.getDictionary();
 		for(IMessage message : dic.getMessages())
 		{
-			IAttribute attr = message.getAttribute("MessageType");
-			if (attr != null)
+			IAttribute attrMessageType = message.getAttribute("MessageType");
+			if (attrMessageType != null)
 			{
-				String quoted = evaluator.createString(attr.getValue());
+				String quoted = evaluator.createString(attrMessageType.getValue());
+				list.add(new ReadableValue(quoted, message.getName()));
+			}
+			
+			IAttribute attrEntityType = message.getAttribute("entity_type");
+			if (attrEntityType != null && "Component".equals(attrEntityType.getValue()))
+			{
+				String quoted = evaluator.createString(message.getName());
 				list.add(new ReadableValue(quoted, message.getName()));
 			}
 		}
