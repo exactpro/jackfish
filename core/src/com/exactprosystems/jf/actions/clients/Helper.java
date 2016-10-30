@@ -98,12 +98,14 @@ class Helper
 				String quoted = evaluator.createString(attrMessageType.getValue());
 				list.add(new ReadableValue(quoted, message.getName()));
 			}
-			
-			IAttribute attrEntityType = message.getAttribute("entity_type");
-			if (attrEntityType != null && "Component".equals(attrEntityType.getValue()))
+		}
+		for(IField field : dic.getFields())
+		{
+			IAttribute attrFixType = field.getAttribute("fixtype");
+			if (attrFixType != null && "NUMINGROUP".equals(attrFixType.getValue()))
 			{
-				String quoted = evaluator.createString(message.getName());
-				list.add(new ReadableValue(quoted, message.getName()));
+				String quoted = evaluator.createString(field.getName());
+				list.add(new ReadableValue(quoted, field.getName()));
 			}
 		}
 	}
