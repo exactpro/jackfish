@@ -159,8 +159,9 @@ public abstract class Common
 
 	public static void sizeTextField(javafx.scene.control.TextField field)
 	{
-		field.setMinWidth(60);
-		field.setPrefWidth(field.getText() == null ? 60 : (field.getText().equals("") ? 60 : (field.getText().length() * 8 + 20)));
+		int width = 80;
+		field.setMinWidth(width);
+		field.setPrefWidth(field.getText() == null ? width : (field.getText().equals("") ? width : (field.getText().length() * 8 + 20)));
 	}
 
 	public static void sizeButtons(int px, Button... buttons)

@@ -529,11 +529,17 @@ public class MainController implements Initializable, ContainingParent
 			}
 			else if (SettingsPanel.match(settings, keyEvent, SettingsPanel.UNDO))
 			{
-				undo(null);
+				if (!(keyEvent.getTarget() instanceof TextInputControl))
+				{
+					undo(null);
+				}
 			}
 			else if (SettingsPanel.match(settings, keyEvent, SettingsPanel.REDO))
 			{
-				redo(null);
+				if (!(keyEvent.getTarget() instanceof TextInputControl))
+				{
+					redo(null);
+				}
 			}
 		}, "Error on set Shortcuts"));
 	}
