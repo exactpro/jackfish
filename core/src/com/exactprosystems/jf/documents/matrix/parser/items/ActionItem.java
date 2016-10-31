@@ -9,26 +9,14 @@
 package com.exactprosystems.jf.documents.matrix.parser.items;
 
 import com.csvreader.CsvWriter;
-import com.exactprosystems.jf.actions.AbstractAction;
-import com.exactprosystems.jf.actions.ActionAttribute;
-import com.exactprosystems.jf.actions.ActionGroups;
-import com.exactprosystems.jf.actions.ActionsList;
-import com.exactprosystems.jf.actions.ReadableValue;
+import com.exactprosystems.jf.actions.*;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
-import com.exactprosystems.jf.documents.matrix.parser.DisplayDriver;
-import com.exactprosystems.jf.documents.matrix.parser.MatrixException;
-import com.exactprosystems.jf.documents.matrix.parser.Parameter;
-import com.exactprosystems.jf.documents.matrix.parser.Parameters;
-import com.exactprosystems.jf.documents.matrix.parser.Result;
-import com.exactprosystems.jf.documents.matrix.parser.ReturnAndResult;
-import com.exactprosystems.jf.documents.matrix.parser.SearchHelper;
-import com.exactprosystems.jf.documents.matrix.parser.Tokens;
+import com.exactprosystems.jf.documents.matrix.parser.*;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -82,18 +70,18 @@ public final class ActionItem extends MatrixItem
 		Object layout = driver.createLayout(this, 4);
 		driver.showComment(this, layout, 0, 0, getComments());
 		driver.showTextBox(this, layout, 1, 0, this.id::set, this.id::get, () -> this.id.get() + ".Out");
-		driver.showTitle(this, layout, 1, 1, Tokens.Action.get(), context.getFactory().getSettings());
-		driver.showTitle(this, layout, 1, 2, getActionName(), context.getFactory().getSettings());
-		driver.showParameters(this, layout, 1, 3, this.parameters, () -> this.id.get() + ".In.", false);
-		driver.showCheckBox(this, layout, 2, 0, "Global", this.global, this.global);
-		driver.showCheckBox(this, layout, 2, 1, "Ignore", this.ignoreErr, this.ignoreErr);
-		driver.showToggleButton(this, layout, 2, 2, "Asserts", b ->
+//		driver.showTitle(this, layout, 1, 1, Tokens.Action.get(), context.getFactory().getSettings());
+		driver.showTitle(this, layout, 1, 1, getActionName(), context.getFactory().getSettings());
+		driver.showParameters(this, layout, 1, 2, this.parameters, () -> this.id.get() + ".In.", false);
+		driver.showCheckBox(this, layout, 2, 0, "G", this.global, this.global);
+		driver.showCheckBox(this, layout, 2, 0, "I", this.ignoreErr, this.ignoreErr);
+		driver.showToggleButton(this, layout, 2, 1, "Asserts", b ->
 		{
 			driver.hide(this, layout, 3, b);
 			return null;
 		}, !(this.assertBool.isExpressionNullOrEmpty()));
-		driver.showLabel(this, layout, 3, 2, Tokens.Assert.get());
-		driver.showExpressionField(this, layout, 3, 3, Tokens.Assert.get(), this.assertBool, this.assertBool, null, null, null, null);
+		driver.showLabel(this, layout, 3, 0, Tokens.Assert.get());
+		driver.showExpressionField(this, layout, 3, 1, Tokens.Assert.get(), this.assertBool, this.assertBool, null, null, null, null);
 		driver.hide(this, layout, 3, this.assertBool.isExpressionNullOrEmpty());
 		return layout;
 	}

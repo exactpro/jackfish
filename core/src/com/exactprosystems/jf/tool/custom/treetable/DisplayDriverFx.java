@@ -38,15 +38,15 @@ import com.exactprosystems.jf.tool.settings.SettingsPanel;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Region;
+import javafx.scene.layout.*;
 
 import java.io.FileReader;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -110,7 +110,7 @@ public class DisplayDriverFx implements DisplayDriver
 		{
 			label.getStyleClass().add(CssVariables.BOLD_LABEL);
 		}
-		label.setMinWidth(name.length() * 8 + 20);
+//		label.setMinWidth(name.length() * 8 + 20);
 		label.getStyleClass().add(CssVariables.OBLIQUE_LABEL);
 		label.setOnMouseClicked(mouseEvent -> pane.getChildren().stream().filter(c -> {
 			Integer rowIndex = GridPane.getRowIndex(c);
@@ -188,7 +188,8 @@ public class DisplayDriverFx implements DisplayDriver
 			};
 			item.getMatrix().addCommand(undo, redo);
 		});
-		pane.add(checkBox, column, row);
+		addToLayout(checkBox, column, row, pane);
+//		pane.add(checkBox, column, row);
 		GridPane.setMargin(checkBox, INSETS);
 	}
 
@@ -329,9 +330,8 @@ public class DisplayDriverFx implements DisplayDriver
 		}
 		GridPane temp = new GridPane();
 		temp.add(field, 0, 0);
-		pane.add(temp, column, row);
+		pane.add(temp, column, row, Integer.MAX_VALUE, 1);
 		GridPane.setMargin(field, INSETS);
-//		Common.setFocused(field);
 	}
 
 	@Override
@@ -371,6 +371,7 @@ public class DisplayDriverFx implements DisplayDriver
 		GridPane pane = (GridPane) layout;
 
 		CommentsLabel label = new CommentsLabel();
+		label.setPrefWidth(Double.MAX_VALUE);
 		label.setContextMenu(this.rowContextMenu);
 		label.getStyleClass().addAll(CssVariables.UNFOCUSED_TEXT_AREA);
 		label.setText(fromList(comments));
@@ -545,6 +546,44 @@ public class DisplayDriverFx implements DisplayDriver
 		Optional.ofNullable(value).ifPresent(v -> label.setStyle("-fx-text-fill : " + v.getValue()));
 	}
 
+	private void addToLayout(Node node, int column, int row, GridPane layout)
+	{
+		Optional<Node> first = layout.getChildren()
+				.stream()
+				.filter(Objects::nonNull)
+				.filter(n -> {
+					Integer columnIndex = GridPane.getColumnIndex(n);
+					Integer rowIndex = GridPane.getRowIndex(n);
+					return columnIndex != null && rowIndex != null && columnIndex == column && rowIndex == row;
+				})
+				.findFirst();
+
+		if (first.isPresent())
+		{
+			Node get = first.get();
+			if (get instanceof Pane)
+			{
+				Pane pane = (Pane) get;
+				pane.getChildren().add(node);
+			}
+			else
+			{
+				layout.getChildren().remove(get);
+
+				HBox hBox = new HBox();
+				hBox.setAlignment(Pos.CENTER_LEFT);
+				hBox.getChildren().addAll(get, node);
+				hBox.setSpacing(5);
+				GridPane.setMargin(hBox, INSETS);
+
+				layout.add(hBox, column, row);
+			}
+		}
+		else
+		{
+			layout.add(node, column, row);
+		}
+	}
 
 	private void stretchIfCan(TextField tf)
 	{
