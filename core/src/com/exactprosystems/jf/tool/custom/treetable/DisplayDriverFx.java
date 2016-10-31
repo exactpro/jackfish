@@ -106,11 +106,7 @@ public class DisplayDriverFx implements DisplayDriver
 		GridPane pane = (GridPane) layout;
 
 		final Label label = new Label(name);
-		if (Tokens.contains(name))
-		{
-			label.getStyleClass().add(CssVariables.BOLD_LABEL);
-		}
-//		label.setMinWidth(name.length() * 8 + 20);
+		label.getStyleClass().add(CssVariables.BOLD_LABEL);
 		label.getStyleClass().add(CssVariables.OBLIQUE_LABEL);
 		label.setOnMouseClicked(mouseEvent -> pane.getChildren().stream().filter(c -> {
 			Integer rowIndex = GridPane.getRowIndex(c);
