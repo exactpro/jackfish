@@ -8,13 +8,7 @@
 
 package com.exactprosystems.jf.actions.tables;
 
-import java.util.List;
-
-import com.exactprosystems.jf.actions.AbstractAction;
-import com.exactprosystems.jf.actions.ActionAttribute;
-import com.exactprosystems.jf.actions.ActionFieldAttribute;
-import com.exactprosystems.jf.actions.ActionGroups;
-import com.exactprosystems.jf.actions.ReadableValue;
+import com.exactprosystems.jf.actions.*;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
@@ -22,6 +16,8 @@ import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.documents.matrix.parser.items.ActionItem.HelpKind;
 import com.exactprosystems.jf.functions.Table;
+
+import java.util.List;
 
 @ActionAttribute(
 		group					= ActionGroups.Tables,
@@ -57,7 +53,7 @@ public class TableCompareTwo extends AbstractAction
 	public void initDefaultValues() 
 	{
 		exclude = new String[]{};
-		ignoreRowsOrder = true;
+		ignoreRowsOrder = false;
 	}
 	
 	@Override
