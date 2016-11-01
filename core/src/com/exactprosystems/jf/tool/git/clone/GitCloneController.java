@@ -184,7 +184,7 @@ public class GitCloneController implements Initializable, ContainingParent
 			{
 				this.projectExist.setValue(true);
 				File folderLocation = new File(pathToLocation);
-				Optional.ofNullable(folderLocation.list()).ifPresent(list -> Arrays.asList(list).stream().filter(this.tfProjectName.getText()::equals).findFirst().ifPresent(s -> {
+				Optional.ofNullable(folderLocation.list()).ifPresent(list -> Arrays.stream(list).filter(this.tfProjectName.getText()::equals).findFirst().ifPresent(s -> {
 					this.tfProjectName.getStyleClass().add(CssVariables.INCORRECT_FIELD);
 					this.projectExist.setValue(false);
 				}));
@@ -198,7 +198,7 @@ public class GitCloneController implements Initializable, ContainingParent
 
 	private void initDialog()
 	{
-		this.dialog = DialogsHelper.createGitDialog("Clone project", this.parent);
+		this.dialog = DialogsHelper.createGitDialog("Clone Project", this.parent);
 		displayStatus(false);
 	}
 
