@@ -27,10 +27,7 @@ import javafx.geometry.HPos;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
@@ -49,6 +46,7 @@ public class SettingsPanelController implements Initializable, ContainingParent
 	public TreeView<NameAndColor> treeViewColors;
 	public BorderPane colorsPane;
 	public GridPane gridGit;
+	public GridPane numberGrid;
 
 	private Pane pane;
 
@@ -120,8 +118,8 @@ public class SettingsPanelController implements Initializable, ContainingParent
 			this.ntfMaxLastMatrixCount.setId(Main.MAX_FILES_COUNT);
 			this.ntfTimeNotification = new NumberTextField(0);
 			this.ntfTimeNotification.setId(Main.TIME_NOTIFICATION);
-			this.mainGrid.add(this.ntfMaxLastMatrixCount, 1, 0);
-			this.mainGrid.add(this.ntfTimeNotification, 1, 2);
+			this.numberGrid.add(this.ntfMaxLastMatrixCount, 1, 0, 2, 1);
+			this.numberGrid.add(this.ntfTimeNotification, 1, 1);
 
 			this.comboBoxTheme.setId(Main.THEME);
 			this.useFullScreen.setId(Main.USE_FULL_SCREEN);
@@ -256,7 +254,9 @@ public class SettingsPanelController implements Initializable, ContainingParent
 	public void display(String title)
 	{
 		this.dialog = new Dialog<>();
-		this.dialog.getDialogPane().getButtonTypes().addAll(new ButtonType("Save", ButtonBar.ButtonData.OK_DONE), ButtonType.CANCEL);
+		ButtonType save = new ButtonType("Save", ButtonBar.ButtonData.OK_DONE);
+		this.dialog.getDialogPane().getButtonTypes().addAll(save, ButtonType.CANCEL);
+		ButtonBar.setButtonData(this.dialog.getDialogPane().lookupButton(save), ButtonBar.ButtonData.OTHER);
 		this.dialog.setResizable(true);
 		DialogPane dialogPane = this.dialog.getDialogPane();
 		dialogPane.setContent(this.pane);
@@ -574,7 +574,7 @@ public class SettingsPanelController implements Initializable, ContainingParent
 		this.ntfTimeNotification.focusedProperty().addListener((observable, oldValue, newValue) -> model.updateSettingsValue(ntfTimeNotification.getId(), SettingsPanel.SETTINGS, String.valueOf(ntfTimeNotification.getValue())));
 
 		comboBoxTheme.getSelectionModel().selectedItemProperty().addListener((observableValue, theme, theme2) -> {
-			Platform.runLater(() -> useFullScreen.getScene().getStylesheets().setAll(theme2.getPath()));
+//			Platform.runLater(() -> useFullScreen.getScene().getStylesheets().setAll(theme2.getPath()));
 			model.updateSettingsValue(comboBoxTheme.getId(), SettingsPanel.SETTINGS, comboBoxTheme.getSelectionModel().getSelectedItem().toString());
 		});
 

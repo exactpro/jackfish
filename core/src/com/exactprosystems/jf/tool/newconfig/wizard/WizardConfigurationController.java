@@ -119,7 +119,7 @@ public class WizardConfigurationController implements Initializable, ContainingP
 		dialog.setResultConverter(param -> {
 			this.model.setFolderDir(new File(this.cfChooseFolder.getText()));
 			this.model.setNewProjectName(this.tfProjectName.getText());
-			return param.getButtonData().equals(ButtonBar.ButtonData.OK_DONE);
+			return !param.getButtonData().equals(ButtonBar.ButtonData.CANCEL_CLOSE);
 		});
 
 		ButtonType buttonCreate = new ButtonType("Create", ButtonBar.ButtonData.OK_DONE);
