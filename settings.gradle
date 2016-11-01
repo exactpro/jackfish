@@ -1,0 +1,20 @@
+include	'ActionsLibrary',
+		'API',				//api
+							//app plugins
+		'AppWeb',
+		'NetXfixed',
+		'AppSwing',
+		'AppWinGui',
+		//'UIAdapter',
+
+							//clients
+		'ClientDTS',
+		'ClientTest',
+		'ClientFIX',
+		'ClientLSE',
+		'ClientSola',
+
+							//services
+		'ServiceSailfish',
+		'ServiceMatrix'
+

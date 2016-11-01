@@ -1,0 +1,161 @@
+import java.nio.file.Files
+import java.nio.file.Paths
+
+apply plugin : 'java'
+
+def version = '4.3.0'
+def revision = System.getProperty("revision") ?: 'local_build'
+println 'Current version : ' + version+'.'+revision
+
+rootProject.ext {
+	rev			= revision
+	ver			= version
+	jfSourceDir	= 'JackFish'
+	appsDir		= jfSourceDir + '/apps';
+	clientsDir	= jfSourceDir + '/clients';
+	docsDir		= jfSourceDir + '/docs';
+	examplesDir	= jfSourceDir + '/examples';
+	servicesDir = jfSourceDir + '/services';
+	sqlDir		= jfSourceDir + '/sql';
+	reportsDir	= jfSourceDir + '/reports';
+	copyTo		= { Project proj, String dest ->
+		def s = Paths.get(proj.buildDir.path + '/libs/' + proj.name + '.jar')
+		def d = Paths.get(dest + '/' + proj.ext.jarName)
+		Files.copy(s, d)
+	}
+
+	copyAllFiles = { File src, File dest ->
+		copyFolder(src,dest);
+	}
+
+
+
+	copyFolder = {File src, File dest ->
+		if(src.isDirectory()){
+			//if directory not exists, create it
+			if(!dest.exists()){
+				dest.mkdir();
+			}
+
+			//list all the directory contents
+			String[] files = src.list();
+
+			for (String file : files) {
+				//construct the src and dest file structure
+				File srcFile = new File(src, file);
+				File destFile = new File(dest, file);
+				//recursive copy
+				copyFolder(srcFile,destFile);
+			}
+
+		}else{
+			//if file, then copy it
+			//Use bytes stream to support all file types
+			InputStream inS = new FileInputStream(src);
+			OutputStream out = new FileOutputStream(dest);
+
+			byte[] buffer = new byte[1024];
+
+			int length;
+			//copy the file content in bytes
+			while ((length = inS.read(buffer)) > 0){
+				out.write(buffer, 0, length);
+			}
+
+			inS.close();
+			out.close();
+		}
+	}
+}
+
+subprojects {
+	apply plugin : 'java'
+
+	def rootProjectLocation = getRootProject().getRootDir().getAbsolutePath();
+	def projectName = getProject().getName();
+
+	def dir = {String s -> rootProjectLocation + '/' + projectName + s};
+
+	def releaseDir = dir('/release');
+	def buildDir = dir('/build');
+
+	repositories {
+		mavenCentral()
+	}
+
+	clean {
+		new File(releaseDir).deleteDir()
+	}
+
+	sourceSets {
+		main {
+			java {
+				srcDir('src')
+			}
+			resources {
+				srcDir('src') // TODO move resources to resources dir
+			}
+		}
+	}
+
+	compileJava {
+		options.warnings = false;
+		options.deprecation = false;
+	}
+
+	/*//copy jar file to release dir. Think, it not needed
+	jar.doLast {
+		def oldName =  baseName + '.' + extension
+		def oldPath = destinationDir.path +'/'+baseName + '.' + extension
+		copy {
+			from oldPath
+			into releaseDir
+			rename(oldName, project.ext.jarName)
+		}
+	}*/
+
+	task distribute() { // TODO implement distribute.doLast for all plugins which need it
+		dependsOn clean, jar
+	}
+}
+
+task replaceVersion {
+	dependsOn clean
+	//TODO think about it. We need remove all none .java file from src dir
+	def versionFile = new File(rootProject.rootDir.path+'/ActionsLibrary/src/com/exactprosystems/jf/common/version/version.properties')
+	versionFile.text = 'VERSION = ' + version + "." + revision
+}
+
+task createMock {
+
+}
+
+task makeTool() {
+	subprojects.each {
+		dependsOn("${it.path}:distribute")
+	}
+
+	def jfProject = new File(jfSourceDir);
+	jfProject.deleteDir();
+	jfProject.mkdir();
+
+	def mkdir = {String s -> new File(s).mkdir()}
+
+	mkdir(appsDir)
+	mkdir(clientsDir)
+	mkdir(reportsDir)
+	mkdir(docsDir)
+	mkdir(examplesDir)
+	mkdir(servicesDir)
+	mkdir(sqlDir)
+
+	copyAllFiles(new File(project(":ActionsLibrary").projectDir.path + '/sql/'), new File(sqlDir))
+}
+
+task createTool(type: Zip) {
+	dependsOn makeTool
+	from jfSourceDir
+	destinationDir new File('.')
+	include '**/*'
+	archiveName = 'gradle_update_' + revision + '.zip'
+}
