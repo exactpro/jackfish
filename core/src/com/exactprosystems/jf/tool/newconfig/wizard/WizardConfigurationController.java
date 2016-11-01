@@ -15,6 +15,7 @@ import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 
@@ -112,8 +113,8 @@ public class WizardConfigurationController implements Initializable, ContainingP
 		Dialog<Boolean> dialog = new Dialog<>();
 		dialog.setResizable(true);
 		dialog.getDialogPane().getStylesheets().addAll(Common.currentTheme().getPath());
-		dialog.setTitle("New project");
-		dialog.getDialogPane().setHeader(new Label());
+		dialog.setTitle("New Project");
+//		dialog.getDialogPane().setHeader(new Label());
 		dialog.getDialogPane().setContent(this.parent);
 		dialog.setResultConverter(param -> {
 			this.model.setFolderDir(new File(this.cfChooseFolder.getText()));
@@ -123,8 +124,10 @@ public class WizardConfigurationController implements Initializable, ContainingP
 
 		ButtonType buttonCreate = new ButtonType("Create", ButtonBar.ButtonData.OK_DONE);
 		ButtonType buttonClose = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
-		dialog.getDialogPane().getButtonTypes().setAll(buttonCreate, buttonClose);
-		dialog.getDialogPane().lookupButton(buttonCreate).disableProperty().bind(folderExist.not().or(validFile.not()));
+		dialog.getDialogPane().getButtonTypes().addAll(buttonCreate, buttonClose);
+		Node btnCreate = dialog.getDialogPane().lookupButton(buttonCreate);
+		ButtonBar.setButtonData(btnCreate, ButtonBar.ButtonData.OTHER);
+		btnCreate.disableProperty().bind(folderExist.not().or(validFile.not()));
 
 		return dialog.showAndWait().orElse(false);
 	}

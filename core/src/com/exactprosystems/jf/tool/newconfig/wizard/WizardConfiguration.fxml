@@ -6,87 +6,50 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="198.0" prefWidth="519.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.exactprosystems.jf.tool.newconfig.wizard.WizardConfigurationController">
-   <left>
-      <VBox prefHeight="284.0" prefWidth="117.0">
-         <children>
-            <Label text="Project location">
-               <HBox.margin>
-                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-               </HBox.margin>
-               <VBox.margin>
-                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-               </VBox.margin>
-            </Label>
-            <CheckBox fx:id="cbMatrixFolder" mnemonicParsing="false" selected="true" text="Matrix">
-               <VBox.margin>
-                  <Insets bottom="5.0" left="15.0" right="5.0" top="5.0" />
-               </VBox.margin>
-            </CheckBox>
-            <CheckBox fx:id="cbLibraryFolder" mnemonicParsing="false" selected="true" text="Library">
-               <VBox.margin>
-                  <Insets bottom="5.0" left="15.0" right="5.0" top="5.0" />
-               </VBox.margin>
-            </CheckBox>
-            <CheckBox fx:id="cbAppFolder" mnemonicParsing="false" selected="true" text="App dic">
-               <VBox.margin>
-                  <Insets bottom="5.0" left="15.0" right="5.0" top="5.0" />
-               </VBox.margin>
-            </CheckBox>
-            <CheckBox fx:id="cbClientFolder" mnemonicParsing="false" selected="true" text="Client dic">
-               <VBox.margin>
-                  <Insets bottom="5.0" left="15.0" right="5.0" top="5.0" />
-               </VBox.margin>
-            </CheckBox>
-            <CheckBox fx:id="cbVariablesFolder" mnemonicParsing="false" selected="true" text="Variables">
-               <VBox.margin>
-                  <Insets bottom="5.0" left="15.0" right="5.0" top="5.0" />
-               </VBox.margin>
-            </CheckBox>
-            <CheckBox fx:id="cbReportFolder" mnemonicParsing="false" selected="true" text="Report">
-               <VBox.margin>
-                  <Insets bottom="5.0" left="15.0" right="5.0" top="5.0" />
-               </VBox.margin>
-            </CheckBox>
-         </children>
-      </VBox>
-   </left>
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="197.0" prefWidth="446.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.exactprosystems.jf.tool.newconfig.wizard.WizardConfigurationController">
    <center>
-      <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
+      <GridPane hgap="20.0" BorderPane.alignment="CENTER">
+        <columnConstraints>
+          <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="10.0" percentWidth="35.0" prefWidth="100.0" />
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        </rowConstraints>
          <children>
-            <BorderPane prefHeight="90.0" prefWidth="402.0">
-               <VBox.margin>
-                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-               </VBox.margin>
-               <left>
-                  <Label text="Choose folder" BorderPane.alignment="CENTER">
-                     <BorderPane.margin>
-                        <Insets left="5.0" right="5.0" />
-                     </BorderPane.margin>
-                  </Label>
-               </left>
-               <center>
-                  <CustomFieldWithButton fx:id="cfChooseFolder" BorderPane.alignment="CENTER" />
-               </center>
-            </BorderPane>
-            <BorderPane prefHeight="90.0" prefWidth="402.0">
-               <left>
-                  <Label text="Project name" BorderPane.alignment="CENTER">
-                     <BorderPane.margin>
-                        <Insets left="5.0" right="5.0" />
-                     </BorderPane.margin>
-                  </Label>
-               </left>
-               <center>
-                  <TextField fx:id="tfProjectName" BorderPane.alignment="CENTER">
-                     <BorderPane.margin>
-                        <Insets left="5.0" right="5.0" />
-                     </BorderPane.margin>
-                  </TextField>
-               </center>
-            </BorderPane>
+            <Label text="Project name :" GridPane.rowIndex="1" />
+            <TextField fx:id="tfProjectName" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <Label text="Project location :" />
+            <CustomFieldWithButton fx:id="cfChooseFolder" GridPane.columnIndex="1" />
          </children>
-      </VBox>
+         <BorderPane.margin>
+            <Insets left="15.0" right="15.0" top="15.0" />
+         </BorderPane.margin>
+      </GridPane>
    </center>
+   <bottom>
+      <GridPane BorderPane.alignment="CENTER">
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <CheckBox fx:id="cbMatrixFolder" mnemonicParsing="false" selected="true" text="Matrix" />
+            <CheckBox fx:id="cbLibraryFolder" mnemonicParsing="false" selected="true" text="Library" GridPane.rowIndex="1" />
+            <CheckBox fx:id="cbAppFolder" mnemonicParsing="false" selected="true" text="App dic" GridPane.columnIndex="1" />
+            <CheckBox fx:id="cbClientFolder" mnemonicParsing="false" selected="true" text="Client dic" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <CheckBox fx:id="cbVariablesFolder" mnemonicParsing="false" selected="true" text="Variables" GridPane.columnIndex="2" />
+            <CheckBox fx:id="cbReportFolder" mnemonicParsing="false" selected="true" text="Report" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+         </children>
+         <BorderPane.margin>
+            <Insets bottom="15.0" left="15.0" right="15.0" />
+         </BorderPane.margin>
+      </GridPane>
+   </bottom>
 </BorderPane>
