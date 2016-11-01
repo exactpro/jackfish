@@ -326,7 +326,7 @@ public class DisplayDriverFx implements DisplayDriver
 		}
 		GridPane temp = new GridPane();
 		temp.add(field, 0, 0);
-		pane.add(temp, column, row, Integer.MAX_VALUE, 1);
+		pane.add(temp, column, row);
 		GridPane.setMargin(field, INSETS);
 	}
 
