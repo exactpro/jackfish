@@ -337,7 +337,7 @@ public class ElementInfoController implements Initializable, ContainingParent
 		tryCatch(() -> {
 					Arrays.asList(
 							this.tfUID, this.tfClass,this.tfText,
-							this.tfName, this.tfTooltip, this.tfColumns, this.tfAction,
+							this.tfName, this.tfTooltip, this.tfAction,
 							this.tfTitle).forEach(tf -> tf.setDisable(value));
 					this.navigation.parameterSet(source.getId(), value);
 				}, "Error on changing " + source.getId()
