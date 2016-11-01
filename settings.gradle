@@ -11,8 +11,8 @@ include	'ActionsLibrary',
 		'ClientDTS',
 		'ClientTest',
 		'ClientFIX',
-		'ClientLSE',
-		'ClientSola',
+		//'ClientLSE',
+		//'ClientSola',
 
 							//services
 		'ServiceSailfish',
