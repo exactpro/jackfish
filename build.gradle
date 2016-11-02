@@ -10,11 +10,12 @@ println 'Current version : ' + version+'.'+revision
 rootProject.ext {
 	rev			= revision
 	ver			= version
-	jfSourceDir	= 'JackFish'
+	jfSourceDir	= 'BuildProject'
 	appsDir		= jfSourceDir + '/apps';
 	clientsDir	= jfSourceDir + '/clients';
 	docsDir		= jfSourceDir + '/docs';
 	examplesDir	= jfSourceDir + '/examples';
+	uservarsDir	= jfSourceDir + '/uservars';
 	servicesDir = jfSourceDir + '/services';
 	sqlDir		= jfSourceDir + '/sql';
 	reportsDir	= jfSourceDir + '/reports';
@@ -27,8 +28,6 @@ rootProject.ext {
 	copyAllFiles = { File src, File dest ->
 		copyFolder(src,dest);
 	}
-
-
 
 	copyFolder = {File src, File dest ->
 		if(src.isDirectory()){
@@ -136,7 +135,9 @@ task makeTool() {
 	}
 
 	def jfProject = new File(jfSourceDir);
-	jfProject.deleteDir();
+	if (jfProject.exists()) {
+		jfProject.deleteDir();
+	}
 	jfProject.mkdir();
 
 	def mkdir = {String s -> new File(s).mkdir()}
@@ -146,10 +147,19 @@ task makeTool() {
 	mkdir(reportsDir)
 	mkdir(docsDir)
 	mkdir(examplesDir)
+	mkdir(uservarsDir)
 	mkdir(servicesDir)
 	mkdir(sqlDir)
 
 	copyAllFiles(new File(project(":ActionsLibrary").projectDir.path + '/sql/'), new File(sqlDir))
+	copyAllFiles(new File(project(":ActionsLibrary").projectDir.path + '/examples/'), new File(examplesDir))
+	copyAllFiles(new File(project(":ActionsLibrary").projectDir.path + '/uservars/'), new File(uservarsDir))
+	copyAllFiles(new File(project(":ActionsLibrary").projectDir.path + '/docs/'), new File(docsDir))
+
+	Files.copy(Paths.get(project(":ActionsLibrary").projectDir.path + '/config.xml'), Paths.get(jfSourceDir + '/config.xml'))
+	Files.copy(Paths.get(project(":ActionsLibrary").projectDir.path + '/run.bat'), Paths.get(jfSourceDir + '/run.bat'))
+	Files.copy(Paths.get(project(":ActionsLibrary").projectDir.path + '/run.sh'), Paths.get(jfSourceDir + '/run.sh'))
+	Files.copy(Paths.get(project(":ActionsLibrary").projectDir.path + '/vars.ini'), Paths.get(jfSourceDir + '/vars.ini'))
 }
 
 task createTool(type: Zip) {
@@ -157,5 +167,5 @@ task createTool(type: Zip) {
 	from jfSourceDir
 	destinationDir new File('.')
 	include '**/*'
-	archiveName = 'gradle_update_' + revision + '.zip'
+	archiveName = 'gradle_build_' + revision + '.zip'
 }
