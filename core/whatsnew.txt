@@ -1,22 +1,6 @@
-since 1024 you may set firefox profile for web plugin.
-Need click button "Add all" on necessary app entries and fill the parameter FirefoxProfileDirectory.
-This link to help to fill this parameters https://support.mozilla.org/en-US/kb/profiles-where-firefox-stores-user-data
 
-since 578 you need to remove following sections in your config:
+build 1425
+23.08.2016
 
-    <JVMparameters>
-    <JVMclasspath>
-    <JREpath>
-    <serverLog>
-    <serverLogLevel>
-    <serverLogPattern>
-    
-since 643 logs were separated to several files according their packages. 
-now logs are put into 'logs' directory. remove old main.log file in current directory.   
-
-
-since 713 api was upgraded to 2.0
-we have addded layout testing
-
-since 886 add new action : DialogAlert
-for understand this action see help
+API was extended: the method selectByIndex() was added to OperationExecuter. 
+new API version 2.21   

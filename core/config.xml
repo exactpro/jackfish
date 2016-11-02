@@ -12,7 +12,7 @@
     <formats>HH:mm:ss Z</formats>
     <formats>HH:mm:ss:SSS</formats>
     <reports>reports</reports>
-    <git />
+    <git></git>
     <import>com.exactprosystems.jf.common.parser</import>
     <import>java.math</import>
     <import>java.util.regex</import>
@@ -24,25 +24,22 @@
     <import>java.lang</import>
     <import>com.exactprosystems.jf.api.app</import>
     <import>com.exactprosystems.jf.api.conditions</import>
-    <import>com.exactprosystems.jf.function</import>
+    <import>com.exactprosystems.jf.functions</import>
     <import>java.io</import>
     <import>org.mvel2</import>
+    <import>com.exactprosystems.jf.api.client</import>
+    <import>com.exactprosystems.jf.api.error</import>
     <vars>vars.ini</vars>
-    <userVars>uservars/myvars.ini</userVars>
     <matrix>examples</matrix>
+    <matrix>matrices</matrix>
     <appDict>dic/gui</appDict>
     <clientDict></clientDict>
-    <library>matrices/libs</library>
+    <clientDict>/home/valery.florov/workspace/JF/ActionsLibrary/clientdic</clientDict>
     <library>libjf</library>
     <sqlEntry>
         <name>MySql</name>
         <sqlJar>${JF}/sql/mysql-connector.jar</sqlJar>
         <sqlConnection>jdbc:mysql://${SERVER}/${BASE}?generateSimpleParameterMetadata=true</sqlConnection>
-    </sqlEntry>
-    <sqlEntry>
-        <name>PostgreSql</name>
-        <sqlJar>${JF}/sql/postgresql-9.0-801.jdbc4.jar</sqlJar>
-        <sqlConnection>jdbc:postgresql://${SERVER}/${BASE}</sqlConnection>
     </sqlEntry>
     <clientEntry>
         <name>DTS</name>
@@ -54,7 +51,7 @@
         <name>FIX</name>
         <parameters>
             <key>UseHeartBeats</key>
-            <value>true</value>
+            <value>false</value>
         </parameters>
         <parameters>
             <key>HeartBeatTimeout</key>
@@ -62,32 +59,23 @@
         </parameters>
         <clientJar>${JF}/clients/fix.jar</clientJar>
         <clientLimit>0</clientLimit>
-        <clientDictionary>dic/clients/FIX50.GTI.xml</clientDictionary>
-    </clientEntry>
-    <clientEntry>
-        <name>TestClient</name>
-        <clientJar>${JF}/clients/test.jar</clientJar>
-        <clientLimit>0</clientLimit>
-        <clientDictionary>dic/clients/test.xml</clientDictionary>
+        <clientDictionary>dic/clients/FIX50.xml</clientDictionary>
     </clientEntry>
     <serviceEntry>
         <name>SF</name>
         <serviceDescription>Saifish service.</serviceDescription>
         <serviceJar>${JF}/services/sf.jar</serviceJar>
     </serviceEntry>
+    <serviceEntry>
+        <name>TEST</name>
+        <serviceDescription>It is a matrix run service</serviceDescription>
+        <serviceJar>services/test.jar</serviceJar>
+    </serviceEntry>
     <appEntry>
-        <name>WIN</name>
-        <appDescription>Window's UIAutomation plugin</appDescription>
-        <appDicPath>dic/gui/calc.xml</appDicPath>
-        <appJar>${JF}/apps/win.jar</appJar>
-        <appWorkDir>${JF}/apps/</appWorkDir>
-        <appStartPort>9000</appStartPort>
-    </appEntry>
-    <appEntry>
-        <name>EXACTPRO</name>
+        <name>LT</name>
         <parameters>
             <key>ChromeDriverPath</key>
-            <value>${JF}/apps/unix/chromedirver_64</value>
+            <value>unix/chromedriver_64</value>
         </parameters>
         <parameters>
             <key>IEDriverPath</key>
@@ -98,21 +86,29 @@
             <value></value>
         </parameters>
         <parameters>
+            <key>jreExec</key>
+            <value></value>
+        </parameters>
+        <parameters>
+            <key>jreArgs</key>
+            <value></value>
+        </parameters>
+        <parameters>
+            <key>SafariDriverPath</key>
+            <value></value>
+        </parameters>
+        <parameters>
             <key>FirefoxProfileDirectory</key>
             <value></value>
         </parameters>
-        <appDescription>Exactpro example</appDescription>
-        <appDicPath>dic/gui/exactpro_dic.xml</appDicPath>
+        <parameters>
+            <key>UsePrivateMode</key>
+            <value></value>
+        </parameters>
+        <appDescription>Layout testing</appDescription>
+        <appDicPath>dic/gui/LayoutTesting.xml</appDicPath>
         <appJar>${JF}/apps/web.jar</appJar>
-        <appWorkDir>${JF}/apps/</appWorkDir>
-        <appStartPort>10000</appStartPort>
-    </appEntry>
-    <appEntry>
-        <name>SWING</name>
-        <appDescription>Adapter for testing SWING applications standalone and web start.</appDescription>
-        <appDicPath>dic/gui/swing.xml</appDicPath>
-        <appJar>${JF}/apps/swing.jar</appJar>
-        <appWorkDir>${JF}/apps/</appWorkDir>
-        <appStartPort>11000</appStartPort>
+        <appWorkDir>${JF}/apps</appWorkDir>
+        <appStartPort>7000</appStartPort>
     </appEntry>
 </configuration>

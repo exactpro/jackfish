@@ -73,7 +73,9 @@
 			<zipfileset src="${api.dir}/release/api.jar"/>
 			<zipfileset src="${lib.dir}/commons-cli-1.2.jar"/>
 			<zipfileset src="${lib.dir}/commons-exec-1.1.jar"/>
+			<zipfileset src="${lib.dir}/hamcrest-core-1.3.jar"/>
 			<zipfileset src="${lib.dir}/javacsv.jar"/>
+			<zipfileset src="${lib.dir}/jsch-0.1.53.jar"/>
 			<zipfileset src="${lib.dir}/log4j-1.2.17.jar"/>
 			<zipfileset src="${lib.dir}/mvel2-2.2.7.Final.jar"/>
 			<zipfileset src="${lib.dir}/org.eclipse.jgit-4.3.1.201605051710-r.jar">
@@ -83,6 +85,8 @@
 			<zipfileset src="${lib.dir}/slf4j-api-1.7.21.jar"/>
 			<zipfileset src="${lib.dir}/slf4j-nop-1.7.21.jar"/>
 			<zipfileset src="${lib.dir}/jsch-0.1.53.jar"/>
+			<zipfileset src="${lib.dir}/slf4j-api-1.7.21.jar"/>
+			<zipfileset src="${lib.dir}/slf4j-nop-1.7.21.jar"/>
 		</jar>
 	</target>
 
