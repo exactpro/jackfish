@@ -169,3 +169,6 @@ task createTool(type: Zip) {
 	include '**/*'
 	archiveName = 'gradle_build_' + revision + '.zip'
 }
+createTool.doLast {
+	new File(jfSourceDir).deleteDir()
+}
