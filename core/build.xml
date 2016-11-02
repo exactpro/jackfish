@@ -13,8 +13,6 @@
 	<property name="src.dir" location="src"/>
 	<property name="test.dir" location="testsrc"/>
 	<property name="build.dir" location="build"/>
-	<property name="buildtest.dir" location="buildtest"/>
-	<property name="testdata.dir" location="testdata"/>
 	<property name="lib.dir" location="libs"/>
 	<property name="version" value="4.3.0"/>
     <property name="revision" value="local_build"/>
@@ -103,8 +101,6 @@
 		<mkdir dir="clients"/>
 		<ant antfile="../ClientDTS/build.xml" target="distribute" dir="../ClientDTS"/>
 		<ant antfile="../ClientFIX/build.xml" target="distribute" dir="../ClientFIX"/>
-		<ant antfile="../ClientLSE/build.xml" target="distribute" dir="../ClientLSE"/>
-		<!--<ant antfile="../ClientSola/build.xml" target="distribute" dir="../ClientSola"/>-->
 
 		<!--	services -->
 		<delete dir="services"/>
@@ -113,53 +109,7 @@
 		<ant antfile="../ServiceMatrix/build.xml" target="distribute" dir="../ServiceMatrix"/>
 	</target>
 
-	<target name="createMock">
-		<echo>create mock app</echo>
-		<jar destfile="${testdata.dir}/resources/mock/mockapp.jar" basedir="${buildtest.dir}" includes="**/MockApp*">
-			<manifest>
-				<attribute name="Main-Class" value="com.exactprosystems.jf.MockApp"/>
-				<attribute name="Class-Path" value="."/>
-			</manifest>
-		</jar>
-	</target>
-
-	<target name="junit" depends="buildAll">
-		<echo>junit tests...</echo>
-		<delete dir="${buildtest.dir}"/>
-		<mkdir dir="${buildtest.dir}"/>
-		<delete dir="${testdata.dir}/reports"/>
-		<mkdir dir="${testdata.dir}/reports"/>
-		
-		<javac srcdir="${test.dir}" destdir="${buildtest.dir}" debug="on">
-			<classpath>
-				<path refid="project.classpath"/>
-				<path path="${build.dir}"/>
-			</classpath>
-		</javac>
-		
-		<copy todir="${buildtest.dir}">
-			<fileset dir="${test.dir}">
-				<exclude name="**/*.java"/>
-			</fileset>
-		</copy>
-		<antcall target="createMock"/>
-		<junit printsummary="yes" haltonfailure="yes" showoutput="true" dir=".">
-			<classpath>
-				<path refid="project.classpath"/>
-				<path path="${build.dir}"/>
-				<path path="${buildtest.dir}"/>
-			</classpath>
-			<formatter type="plain"/>
-
-			<batchtest fork="yes" todir="${testdata.dir}/reports" >
-				<fileset dir="${test.dir}">
-					<include name="**/Auto*.java"/>
-				</fileset>
-			</batchtest>
-		</junit>
-	</target>
-
-	<target name="createTool" depends="junit">
+	<target name="createTool" depends="buildAll">
 		<delete dir="${tool}"/>
 		<mkdir dir="${tool}"/>
 
@@ -170,9 +120,8 @@
 		<copy todir="${tool}/sql"><fileset dir="sql"/></copy>
 		<copy todir="${tool}/dic"><fileset dir="dic"/></copy>
 		<copy todir="${tool}/docs"><fileset dir="docs"/></copy>
-		<copy todir="${tool}/examples"><fileset dir="examples"/></copy>
+		<copy todir="${tool}/matrices"><fileset dir="matrices"/></copy>
 		
-		<copy file="uservars/myvars.ini" todir="${tool}/uservars"/>
 		<copy file="jackfish.jar" todir="${tool}"/>
 		<copy file="config.xml" todir="${tool}"/>
 		<copy file="vars.ini" todir="${tool}"/>
