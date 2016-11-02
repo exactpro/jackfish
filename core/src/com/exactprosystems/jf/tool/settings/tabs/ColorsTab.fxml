@@ -1,0 +1,3 @@
+<?import javafx.scene.layout.BorderPane?>
+<BorderPane fx:id="colorsPane" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.exactprosystems.jf.tool.settings.tabs.ColorsTabController">
+</BorderPane>

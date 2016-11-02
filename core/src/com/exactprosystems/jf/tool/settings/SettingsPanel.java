@@ -103,10 +103,9 @@ public class SettingsPanel
 
 	private void displayMain()
 	{
-		Collection<SettingsValue> values = settings.getValues(Settings.GLOBAL_NS, SETTINGS);
-		Map<String, String> res = new LinkedHashMap<>();
-		values.forEach(value -> res.put(value.getKey(), value.getValue()));
-		this.controller.displayMain(res);
+		this.controller.displayMain(settings.getValues(Settings.GLOBAL_NS, SETTINGS)
+				.stream()
+				.collect(Collectors.toMap(SettingsValue::getKey, SettingsValue::getValue)));
 	}
 
 	private void displayLogs()
