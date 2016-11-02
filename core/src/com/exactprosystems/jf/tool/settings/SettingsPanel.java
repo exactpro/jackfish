@@ -17,8 +17,7 @@ import javafx.scene.input.KeyEvent;
 
 import java.io.IOException;
 import java.util.*;
-import java.util.function.BiPredicate;
-import java.util.stream.Collector;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class SettingsPanel
@@ -36,12 +35,14 @@ public class SettingsPanel
 	public static final List<String> otherList = createList(SHOW_ALL_TABS);
 
 	//document shortcuts
-	public static final String SAVE_DOCUMENT    = "SaveDocument";
+	public static final String SAVE_DOCUMENT	= "SaveDocument";
+	public static final String SAVE_DOCUMENT_AS	= "SaveDocumentAs";
 	public static final String UNDO				= "Undo";
 	public static final String REDO				= "Redo";
 
 	public static final List<String> docsList = createList(
 			SAVE_DOCUMENT,
+			SAVE_DOCUMENT_AS,
 			UNDO,
 			REDO
 	);
@@ -159,15 +160,20 @@ public class SettingsPanel
 
 	private void displayShortcuts()
 	{
-		Collection<SettingsValue> values = settings.getValues(Settings.GLOBAL_NS, SHORTCUTS_NAME);
+		List<SettingsValue> values = settings.getValues(Settings.GLOBAL_NS, SHORTCUTS_NAME);
 
-		Collector<SettingsValue, ?, Map<String, String>> collector = Collectors.toMap(SettingsValue::getKey, SettingsValue::getValue);
-		BiPredicate<List<String>, SettingsValue> contains = (list, sv) -> list.contains(sv.getKey());
+		Function<String, String> get = (key) -> values.stream()
+				.filter(sv -> sv.getKey().equals(key))
+				.map(SettingsValue::getValue)
+				.findFirst()
+				.orElse(Common.EMPTY);
 
-		Map<String, String> docs = values.stream().filter(sv -> contains.test(docsList, sv)).collect(collector);
-		Map<String, String> matrixNav = values.stream().filter(sv -> contains.test(matrixNavigationList, sv)).collect(collector);
-		Map<String, String> matrixAct = values.stream().filter(sv -> contains.test(matrixActionsList, sv)).collect(collector);
-		Map<String, String> other = values.stream().filter(sv -> contains.test(otherList, sv)).collect(collector);
+		Function<List<String>, Map<String, String>> mapFunction = list -> list.stream().collect(Collectors.toMap(k -> k, get));
+
+		Map<String, String> docs = mapFunction.apply(docsList);
+		Map<String, String> matrixNav = mapFunction.apply(matrixNavigationList);
+		Map<String, String> matrixAct = mapFunction.apply(matrixActionsList);
+		Map<String, String> other = mapFunction.apply(otherList);
 		this.controller.displayShortcuts(docs, matrixNav, matrixAct, other);
 	}
 
@@ -192,9 +198,12 @@ public class SettingsPanel
 
 	public String nameOtherShortcut(String value, String currentKey)
 	{
-		List<SettingsValue> values = settings.getValues(Settings.GLOBAL_NS, SHORTCUTS_NAME);
-		Optional<SettingsValue> first = values.stream().filter(sv -> sv.getValue().equals(value) && !sv.getKey().equals(currentKey)).findFirst();
-		return first.isPresent() ? first.get().getKey() : null;
+		return this.settings.getValues(Settings.GLOBAL_NS, SHORTCUTS_NAME).stream()
+				.filter(sv -> sv.getValue().equals(value))
+				.map(SettingsValue::getKey)
+				.filter(key -> !key.equals(currentKey))
+				.findFirst()
+				.orElse(null);
 	}
 
 	public void removeAll(String dialog)

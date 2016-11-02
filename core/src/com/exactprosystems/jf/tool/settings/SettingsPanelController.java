@@ -162,9 +162,7 @@ public class SettingsPanelController implements Initializable, ContainingParent
 		ButtonType save = new ButtonType("Save", ButtonBar.ButtonData.OK_DONE);
 		this.dialog.getDialogPane().getButtonTypes().addAll(save, ButtonType.CANCEL);
 		ButtonBar.setButtonData(this.dialog.getDialogPane().lookupButton(save), ButtonBar.ButtonData.OTHER);
-		this.dialog.setResizable(true);
-		DialogPane dialogPane = this.dialog.getDialogPane();
-		dialogPane.setContent(this.pane);
+		this.dialog.getDialogPane().setContent(this.pane);
 		this.dialog.setTitle(title);
 		this.dialog.getDialogPane().getStylesheets().addAll(Common.currentTheme().getPath());
 		this.dialog.heightProperty().addListener((observable, oldValue, newValue) ->

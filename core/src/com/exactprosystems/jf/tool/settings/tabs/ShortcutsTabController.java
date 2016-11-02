@@ -1,6 +1,9 @@
 package com.exactprosystems.jf.tool.settings.tabs;
 
+import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
+import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.settings.SettingsPanel;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -9,6 +12,10 @@ import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 
@@ -18,7 +25,6 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
 
-//TODO need review
 public class ShortcutsTabController implements Initializable, ContainingParent, ITabHeight
 {
 	private enum ShortcutType
@@ -32,7 +38,6 @@ public class ShortcutsTabController implements Initializable, ContainingParent, 
 	public Parent parent;
 
 	public ComboBox<ShortcutType> cbShortcutsName;
-	public GridPane documentGrid;
 	public Button btnAccept;
 	public Button btnDefault;
 	public Button btnDelete;
@@ -45,6 +50,8 @@ public class ShortcutsTabController implements Initializable, ContainingParent, 
 	private Map<String, String> matrixActions = new LinkedHashMap<>();
 	private Map<String, String> other = new LinkedHashMap<>();
 
+	private EditableCell currentEditableCell = null;
+
 	//region Initializable
 	@Override
 	public void initialize(URL location, ResourceBundle resources)
@@ -54,6 +61,17 @@ public class ShortcutsTabController implements Initializable, ContainingParent, 
 		this.treeView.setRoot(new TreeItem<>());
 		this.treeView.setCellFactory(e -> new CustomTreeCell());
 		this.gridPane.add(this.treeView, 0, 1, 2, 1);
+
+		this.treeView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) ->
+		{
+			if (this.currentEditableCell != null)
+			{
+				this.currentEditableCell.hideTextField();
+				this.currentEditableCell = null;
+			}
+			this.btnDefault.setDisable(newValue != null && !newValue.getChildren().isEmpty());
+			this.btnDelete.setDisable(newValue != null && !newValue.getChildren().isEmpty());
+		});
 
 		this.cbShortcutsName.getItems().addAll(ShortcutType.values());
 		this.cbShortcutsName.getSelectionModel().selectFirst();
@@ -109,7 +127,12 @@ public class ShortcutsTabController implements Initializable, ContainingParent, 
 	//region actions methods
 	public void acceptShortCuts(ActionEvent actionEvent)
 	{
-		//TODO implement
+		if (this.currentEditableCell != null)
+		{
+			this.currentEditableCell.acceptValue();
+			updateShortcut(this.currentEditableCell.lblValue.getText(), this.currentEditableCell);
+			this.currentEditableCell = null;
+		}
 	}
 
 	public void defaultShortCuts(ActionEvent actionEvent)
@@ -119,26 +142,74 @@ public class ShortcutsTabController implements Initializable, ContainingParent, 
 
 	public void deleteShortcuts(ActionEvent actionEvent)
 	{
-		//TODO implement
+		TreeItem<GridPane> selectedItem = this.treeView.getSelectionModel().getSelectedItem();
+		EditableCell cell = (EditableCell) selectedItem.getValue();
+		updateShortcut(Common.EMPTY, cell);
+	}
+
+	private void updateShortcut(String newValue, EditableCell editableCell)
+	{
+		ShortcutType currentType = this.cbShortcutsName.getSelectionModel().getSelectedItem();
+		switch (currentType)
+		{
+			case Document:
+				this.documents.replace(editableCell.lblName.getText(), newValue);
+				break;
+			case Matrix:
+				this.matrixActions.replace(editableCell.lblName.getText(), newValue);
+				this.matrixNavigation.replace(editableCell.lblName.getText(), newValue);
+				break;
+			case Other:
+				this.other.replace(editableCell.lblName.getText(), newValue);
+				break;
+		}
+		this.displayShortcuts(currentType);
+		this.treeView.getSelectionModel().select(find(this.treeView.getRoot(), editableCell));
+	}
+
+	private TreeItem<GridPane> find(TreeItem<GridPane> root, GridPane item)
+	{
+		if (root.getValue() != null && root.getValue().equals(item))
+		{
+			return root;
+		}
+		for (TreeItem<GridPane> grid : root.getChildren())
+		{
+			TreeItem<GridPane> gridItem = find(grid, item);
+			if (gridItem != null)
+			{
+				return gridItem;
+			}
+		}
+		return null;
 	}
 	//endregion
 
+	//region private methods
 	private void displayShortcuts(ShortcutType type)
 	{
+		this.btnDefault.setDisable(true);
+		this.btnDelete.setDisable(true);
 		switch (type)
 		{
-			case Document:	displayDocsShortcuts(); break;
-			case Matrix:	displayMatrixShortcuts(); break;
-			case Other:		displayOtherShortcuts(); break;
+			case Document:
+				displayDocsShortcuts();
+				break;
+			case Matrix:
+				displayMatrixShortcuts();
+				break;
+			case Other:
+				displayOtherShortcuts();
+				break;
 		}
+		this.treeView.getSelectionModel().selectFirst();
 	}
 
-	//region private methods
 	private void displayDocsShortcuts()
 	{
 		ObservableList<TreeItem<GridPane>> children = this.treeView.getRoot().getChildren();
 		children.clear();
-		this.documents.entrySet().forEach(e -> children.add(new TreeItem<>(createGridPane(e.getKey(), e.getValue()))));
+		this.documents.entrySet().forEach(e -> children.add(new TreeItem<>(new EditableCell(e.getKey(), e.getValue()))));
 	}
 
 	private void displayMatrixShortcuts()
@@ -150,42 +221,15 @@ public class ShortcutsTabController implements Initializable, ContainingParent, 
 
 		this.treeView.getRoot().getChildren().addAll(treeItemNavigation, treeItemActions);
 
-		this.matrixNavigation.entrySet().forEach(e -> treeItemNavigation.getChildren().add(new TreeItem<>(createGridPane(e.getKey(), e.getValue()))));
-		this.matrixActions.entrySet().forEach(e -> treeItemActions.getChildren().add(new TreeItem<>(createGridPane(e.getKey(), e.getValue()))));
+		this.matrixNavigation.entrySet().forEach(e -> treeItemNavigation.getChildren().add(new TreeItem<>(new EditableCell(e.getKey(), e.getValue()))));
+		this.matrixActions.entrySet().forEach(e -> treeItemActions.getChildren().add(new TreeItem<>(new EditableCell(e.getKey(), e.getValue()))));
 	}
 
 	private void displayOtherShortcuts()
 	{
 		ObservableList<TreeItem<GridPane>> children = this.treeView.getRoot().getChildren();
 		children.clear();
-		this.other.entrySet().forEach(e -> children.add(new TreeItem<>(createGridPane(e.getKey(), e.getValue()))));
-	}
-
-	private GridPane createGridPane(String first, String second)
-	{
-		GridPane gridPane = new GridPane();
-		ColumnConstraints c0 = new ColumnConstraints();
-		c0.setHalignment(HPos.RIGHT);
-		c0.setPercentWidth(50);
-		ColumnConstraints c1 = new ColumnConstraints();
-		c1.setHalignment(HPos.LEFT);
-		c1.setPercentWidth(50);
-		gridPane.getColumnConstraints().addAll(c0,c1);
-		gridPane.setHgap(10);
-
-		Label name = new Label(first);
-
-		//TODO
-		Label value = new Label(second);
-		GridPane.setMargin(name, new Insets(0, 10, 0, 0));
-		GridPane.setHalignment(name, HPos.RIGHT);
-		GridPane.setMargin(value, new Insets(0, 0, 0, 10));
-		GridPane.setHalignment(value, HPos.LEFT);
-
-		gridPane.add(name, 0, 0);
-		gridPane.add(value, 1, 0);
-
-		return gridPane;
+		this.other.entrySet().forEach(e -> children.add(new TreeItem<>(new EditableCell(e.getKey(), e.getValue()))));
 	}
 
 	private GridPane createGridPane(String lbl)
@@ -197,6 +241,7 @@ public class ShortcutsTabController implements Initializable, ContainingParent, 
 	}
 	//endregion
 
+	//region private classes
 	private class CustomTreeCell extends TreeCell<GridPane>
 	{
 		@Override
@@ -216,4 +261,191 @@ public class ShortcutsTabController implements Initializable, ContainingParent, 
 			}
 		}
 	}
+
+	private class EditableCell extends GridPane
+	{
+		private TextField textField;
+
+		private Label lblName;
+		private Label lblValue;
+
+		public EditableCell(String first, String second)
+		{
+			ColumnConstraints c0 = new ColumnConstraints();
+			c0.setHalignment(HPos.RIGHT);
+			c0.setPercentWidth(50);
+			ColumnConstraints c1 = new ColumnConstraints();
+			c1.setFillWidth(true);
+			c1.setHalignment(HPos.LEFT);
+			c1.setPercentWidth(50);
+			c1.setMaxWidth(150);
+			c1.setMinWidth(150);
+			c1.setPrefWidth(150);
+			this.getColumnConstraints().addAll(c0, c1);
+
+			this.setHgap(10);
+
+			this.lblName = new Label(first);
+			this.lblValue = new Label(second);
+			this.lblValue.setMaxWidth(Double.MAX_VALUE);
+			GridPane.setMargin(this.lblName, new Insets(0, 10, 0, 0));
+			GridPane.setHalignment(this.lblName, HPos.RIGHT);
+			GridPane.setMargin(this.lblValue, new Insets(0, 0, 0, 10));
+			GridPane.setHalignment(this.lblValue, HPos.LEFT);
+
+			this.lblValue.setOnMouseClicked(e ->
+			{
+				if (e.getClickCount() == 2)
+				{
+					if (currentEditableCell != null)
+					{
+						currentEditableCell.hideTextField();
+						currentEditableCell = null;
+					}
+					currentEditableCell = this;
+					btnAccept.setDisable(false);
+					btnDefault.setDisable(true);
+					btnDelete.setDisable(true);
+					displayTextField();
+				}
+			});
+
+			this.add(this.lblName, 0, 0);
+			this.add(this.lblValue, 1, 0);
+		}
+
+		private String previousValue;
+
+		private void displayTextField()
+		{
+			this.textField = new TextField(Common.EMPTY.equals(this.lblValue.getText()) ? "" : this.lblValue.getText());
+			Common.setFocused(this.textField);
+
+			this.textField.setOnKeyPressed(keyEvent ->
+			{
+				if (keyEvent.getCode() == KeyCode.ESCAPE)
+				{
+					hideTextField();
+				}
+				else if (validHotKey(keyEvent.getCode()))
+				{
+					KeyCombination keyCombination = createShortCut(keyEvent);
+					this.previousValue = keyCombination.getName();
+				}
+			});
+
+			this.textField.setOnKeyReleased(keyEvent -> {
+				String value = this.previousValue;
+				if (!Common.EMPTY.equals(value))
+				{
+					this.textField.setText(value);
+					String otherShortcut = model.nameOtherShortcut(value, this.lblName.getText());
+					if (otherShortcut != null)
+					{
+						btnAccept.setDisable(true);
+						if (!this.textField.getStyleClass().contains(CssVariables.INCORRECT_FIELD))
+						{
+							this.textField.getStyleClass().add(CssVariables.INCORRECT_FIELD);
+						}
+						this.textField.setTooltip(new Tooltip("This shortcut used " + otherShortcut));
+					}
+					else
+					{
+						this.textField.getStyleClass().remove(CssVariables.INCORRECT_FIELD);
+						this.textField.setTooltip(null);
+					}
+				}
+			});
+			GridPane.setMargin(this.textField, new Insets(0, 0, 0, 10));
+			this.add(this.textField, 1, 0);
+		}
+
+		private void hideTextField()
+		{
+			this.getChildren().remove(this.textField);
+			btnAccept.setDisable(true);
+			btnDefault.setDisable(false);
+			btnDelete.setDisable(false);
+		}
+
+		private void acceptValue()
+		{
+			if (this.textField != null)
+			{
+				String text = this.textField.getText();
+				this.lblValue.setText(Str.IsNullOrEmpty(text) ? Common.EMPTY : text);
+				hideTextField();
+			}
+		}
+
+		@Override
+		public boolean equals(Object o)
+		{
+			if (this == o)
+				return true;
+			if (o == null || getClass() != o.getClass())
+				return false;
+
+			EditableCell that = (EditableCell) o;
+
+			return this.lblName.getText() != null ? this.lblName.getText().equals(that.lblName.getText()) : that.lblName.getText() == null;
+
+		}
+
+		@Override
+		public int hashCode()
+		{
+			return this.lblName.getText() != null ? this.lblName.getText().hashCode() : 0;
+		}
+
+		boolean validHotKey(KeyCode code)
+		{
+			switch (code)
+			{
+				case Q: case W: case E: case R: case T: case Y: case U: case I: case O: case P:
+				case A: case S: case D: case F: case G: case H: case J: case K: case L:
+				case Z: case X: case C: case V: case B: case N: case M:
+
+				case DIGIT1: case DIGIT2: case DIGIT3:
+				case DIGIT4: case DIGIT5: case DIGIT6:
+				case DIGIT7: case DIGIT8: case DIGIT9:
+				case DIGIT0:
+
+//				case INSERT: case ENTER: case ESCAPE: case SPACE:
+
+				case UP: case DOWN: case LEFT: case RIGHT:
+
+				case F1 : case F2:  case F3:
+				case F4 : case F5:  case F6:
+				case F7	: case F8:  case F9:
+				case F10: case F11: case F12:
+
+				case MINUS: case PLUS: case EQUALS: case DELETE:
+				return true;
+
+				default:
+					return false;
+			}
+		}
+
+		KeyCombination createShortCut(KeyEvent keyEvent)
+		{
+			String combination = "";
+			if (keyEvent.isShiftDown())
+			{
+				combination+= KeyCodeCombination.SHIFT_DOWN + "+";
+			}
+			if (keyEvent.isAltDown())
+			{
+				combination+=KeyCodeCombination.ALT_DOWN + "+";
+			}
+			if (keyEvent.isControlDown())
+			{
+				combination+=KeyCodeCombination.CONTROL_DOWN + "+";
+			}
+			combination+=keyEvent.getCode();
+			return KeyCodeCombination.valueOf(combination);
+		}
+	}
+	//endregion
 }

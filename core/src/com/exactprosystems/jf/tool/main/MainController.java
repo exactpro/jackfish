@@ -527,18 +527,25 @@ public class MainController implements Initializable, ContainingParent
 			{
 				saveDocument(null);
 			}
-			else if (SettingsPanel.match(settings, keyEvent, SettingsPanel.UNDO))
+			else if (SettingsPanel.match(settings, keyEvent, SettingsPanel.SAVE_DOCUMENT_AS))
 			{
-				if (!(keyEvent.getTarget() instanceof TextInputControl))
-				{
-					undo(null);
-				}
+				saveAsDocument(null);
 			}
-			else if (SettingsPanel.match(settings, keyEvent, SettingsPanel.REDO))
+			else
 			{
-				if (!(keyEvent.getTarget() instanceof TextInputControl))
+				if (SettingsPanel.match(settings, keyEvent, SettingsPanel.UNDO))
 				{
-					redo(null);
+					if (!(keyEvent.getTarget() instanceof TextInputControl))
+					{
+						undo(null);
+					}
+				}
+				else if (SettingsPanel.match(settings, keyEvent, SettingsPanel.REDO))
+				{
+					if (!(keyEvent.getTarget() instanceof TextInputControl))
+					{
+						redo(null);
+					}
 				}
 			}
 		}, "Error on set Shortcuts"));
