@@ -1,127 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<GridPane prefHeight="630.0" prefWidth="570.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.exactprosystems.jf.tool.settings.tabs.ShortcutsTabController">
+
+<GridPane fx:id="gridPane" maxHeight="500.0" minHeight="500.0" prefHeight="500.0" prefWidth="570.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.exactprosystems.jf.tool.settings.tabs.ShortcutsTabController">
 	<columnConstraints>
-		<!--<ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="150.0" minWidth="10.0" prefWidth="100.0" />-->
+		<ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="150.0" minWidth="10.0" prefWidth="100.0" />
 		<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-		<!--<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />-->
+		<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
 	</columnConstraints>
 	<rowConstraints>
 		<RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-		<!--<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />-->
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
 	</rowConstraints>
 	<children>
-		<Accordion GridPane.columnSpan="2" GridPane.rowIndex="1">
-			<panes>
-				<TitledPane text="Document">
-					<content>
-						<GridPane fx:id="documentGrid">
-							<columnConstraints>
-								<ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-							</columnConstraints>
-							<rowConstraints>
-								<RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
-								<RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
-								<RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
-								<RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
-								<RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
-								<RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
-								<RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
-								<RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
-								<RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
-							</rowConstraints>
-							<children>
-							</children>
-						</GridPane>
-					</content>
-				</TitledPane>
-				<TitledPane text="Matrix">
-					<content>
-						<Accordion>
-							<panes>
-								<TitledPane text="Navigation">
-									<content>
-										<GridPane fx:id="matrixNavigationGrid">
-											<columnConstraints>
-												<ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-											</columnConstraints>
-											<rowConstraints>
-												<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-												<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-												<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-												<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-												<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-												<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-												<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-												<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-												<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-												<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-												<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-												<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-												<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-												<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-												<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-												<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-											</rowConstraints>
-											<children>
-											</children>
-										</GridPane>
-									</content>
-								</TitledPane>
-								<TitledPane prefHeight="200.0" prefWidth="200.0" text="Actions">
-									<content>
-										<GridPane fx:id="matrixActionGrid">
-											<columnConstraints>
-												<ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-											</columnConstraints>
-											<rowConstraints>
-												<RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
-												<RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
-												<RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
-												<RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
-												<RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
-												<RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
-												<RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
-											</rowConstraints>
-											<children>
-											</children>
-										</GridPane>
-									</content>
-								</TitledPane>
-							</panes>
-						</Accordion>
-					</content>
-				</TitledPane>
-				<TitledPane prefHeight="200.0" prefWidth="200.0" text="Other">
-					<content>
-						<GridPane fx:id="otherGrid">
-							<columnConstraints>
-								<ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-							</columnConstraints>
-							<rowConstraints>
-								<RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
-								<RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
-								<RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
-								<RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
-								<RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
-							</rowConstraints>
-							<children>
-							</children>
-						</GridPane>
-					</content>
-				</TitledPane>
-			</panes>
-		</Accordion>
-		<!--<Label text="ShortCuts for :"/>-->
-		<!--<ComboBox fx:id="cbShortcutsName" prefWidth="150.0" GridPane.columnIndex="1"/>-->
-		<!--<VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" spacing="10.0" GridPane.columnIndex="2" GridPane.rowIndex="1">-->
-			<!--<children>-->
-				<!--<Button fx:id="btnAccept" mnemonicParsing="false" prefWidth="150.0" text="Accept" />-->
-				<!--<Button fx:id="btnDefault" mnemonicParsing="false" prefWidth="150.0" text="Default" />-->
-				<!--<Button fx:id="btnDelete" mnemonicParsing="false" prefWidth="150.0" text="Delete" />-->
-			<!--</children>-->
-		<!--</VBox>-->
+		<Label text="ShortCuts for :">
+         <GridPane.margin>
+            <Insets right="7.0" />
+         </GridPane.margin></Label>
+		<ComboBox fx:id="cbShortcutsName" prefWidth="150.0" GridPane.columnIndex="1">
+         <GridPane.margin>
+            <Insets left="7.0" />
+         </GridPane.margin></ComboBox>
+		<VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" spacing="10.0" GridPane.columnIndex="2" GridPane.rowIndex="1">
+			<children>
+				<Button fx:id="btnAccept" mnemonicParsing="false" prefWidth="150.0" text="Accept" />
+				<Button fx:id="btnDefault" mnemonicParsing="false" prefWidth="150.0" text="Default" />
+				<Button fx:id="btnDelete" mnemonicParsing="false" prefWidth="150.0" text="Delete" />
+			</children>
+		</VBox>
 	</children>
 	<padding>
 		<Insets bottom="7.0" left="7.0" right="7.0" top="7.0" />

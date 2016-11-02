@@ -2,76 +2,62 @@ package com.exactprosystems.jf.tool.settings.tabs;
 
 import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.settings.SettingsPanel;
-import com.exactprosystems.jf.tool.settings.ShortcutRow;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.geometry.HPos;
+import javafx.geometry.Insets;
 import javafx.scene.Parent;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Tab;
+import javafx.scene.control.*;
+import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 
 import java.net.URL;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.function.Consumer;
 
 //TODO need review
 public class ShortcutsTabController implements Initializable, ContainingParent, ITabHeight
 {
-	public Parent parent;
-	private SettingsPanel model;
+	private enum ShortcutType
+	{
+		Document,
+		Matrix,
+		Other;
+	}
 
-	public ComboBox<String> cbShortcutsName;
+	public GridPane gridPane;
+	public Parent parent;
+
+	public ComboBox<ShortcutType> cbShortcutsName;
 	public GridPane documentGrid;
 	public Button btnAccept;
 	public Button btnDefault;
 	public Button btnDelete;
 
-	private Map<String, ShortcutRow> documentShortcuts = new HashMap<>();
+	private TreeView<GridPane> treeView;
 
-	public GridPane matrixNavigationGrid;
-	private Map<String, ShortcutRow> matrixNavigationShortcuts = new HashMap<>();
-
-	public GridPane matrixActionGrid;
-	private Map<String, ShortcutRow> matrixActionShortcuts = new HashMap<>();
-
-	public GridPane otherGrid;
-	private Map<String, ShortcutRow> otherShortcuts = new HashMap<>();
-
-	private ShortcutRow.EditShortcut edit;
+	private SettingsPanel model;
+	private Map<String, String> documents = new LinkedHashMap<>();
+	private Map<String, String> matrixNavigation = new LinkedHashMap<>();
+	private Map<String, String> matrixActions = new LinkedHashMap<>();
+	private Map<String, String> other = new LinkedHashMap<>();
 
 	//region Initializable
 	@Override
 	public void initialize(URL location, ResourceBundle resources)
 	{
-		this.edit = new ShortcutRow.EditShortcut()
-		{
-			@Override
-			public void edit(String key, String newShortcut)
-			{
-				ShortcutsTabController.this.model.updateSettingsValue(key, SettingsPanel.SHORTCUTS_NAME, newShortcut);
-			}
+		this.treeView = new TreeView<>();
+		this.treeView.setShowRoot(false);
+		this.treeView.setRoot(new TreeItem<>());
+		this.treeView.setCellFactory(e -> new CustomTreeCell());
+		this.gridPane.add(this.treeView, 0, 1, 2, 1);
 
-			@Override
-			public String nameOtherShortcut(String value, String currentKey)
-			{
-				return ShortcutsTabController.this.model.nameOtherShortcut(value, currentKey);
-			}
-		};
-//		this.cbShortcutsName.getItems().addAll("Document", "Matrix", "Other");
-//		this.cbShortcutsName.getSelectionModel().selectFirst();
-
-		createMatrixActionShortcuts();
-		createDocumentShortcuts();
-		createMatrixNavigationShortcuts();
-
-		createOtherShortcuts();
-
-//		this.cbShortcutsName.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-//			TODO implement
-//		});
+		this.cbShortcutsName.getItems().addAll(ShortcutType.values());
+		this.cbShortcutsName.getSelectionModel().selectFirst();
+		this.cbShortcutsName.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> displayShortcuts(newValue));
 	}
 	//endregion
 
@@ -88,40 +74,14 @@ public class ShortcutsTabController implements Initializable, ContainingParent, 
 		this.model = model;
 	}
 
-	public void displayInfo(Map<String, String> res)
+	public void displayInfo(Map<String, String> documents, Map<String, String> matrixNavigation, Map<String, String> matrixActions, Map<String, String> other)
 	{
-		for (Map.Entry<String, String> entry : res.entrySet())
-		{
-			ShortcutRow documentRow = documentShortcuts.get(entry.getKey());
-			if (documentRow != null)
-			{
-				documentRow.setShortcut(entry.getValue());
-			}
-			else
-			{
-				ShortcutRow shortcutRow = otherShortcuts.get(entry.getKey());
-				if (shortcutRow != null)
-				{
-					shortcutRow.setShortcut(entry.getValue());
-				}
-				else
-				{
-					ShortcutRow matrixNavigationRow = matrixNavigationShortcuts.get(entry.getKey());
-					if (matrixNavigationRow != null)
-					{
-						matrixNavigationRow.setShortcut(entry.getValue());
-					}
-					else
-					{
-						ShortcutRow matrixActionRow = matrixActionShortcuts.get(entry.getKey());
-						if (matrixActionRow != null)
-						{
-							matrixActionRow.setShortcut(entry.getValue());
-						}
-					}
-				}
-			}
-		}
+		this.documents = documents;
+		this.matrixNavigation = matrixNavigation;
+		this.matrixActions = matrixActions;
+		this.other = other;
+
+		displayShortcuts(ShortcutType.Document);
 	}
 
 	public void displayInto(Tab tab)
@@ -133,13 +93,17 @@ public class ShortcutsTabController implements Initializable, ContainingParent, 
 	@Override
 	public double getHeight()
 	{
-		//TODO implement
 		return -1;
 	}
 
 	public void save()
 	{
+		Consumer<Map.Entry<String, String>> consumer = e -> this.model.updateSettingsValue(e.getKey(), SettingsPanel.SHORTCUTS_NAME, e.getValue());
 
+		this.documents.entrySet().forEach(consumer);
+		this.matrixNavigation.entrySet().forEach(consumer);
+		this.matrixActions.entrySet().forEach(consumer);
+		this.other.entrySet().forEach(consumer);
 	}
 
 	//region actions methods
@@ -159,90 +123,97 @@ public class ShortcutsTabController implements Initializable, ContainingParent, 
 	}
 	//endregion
 
+	private void displayShortcuts(ShortcutType type)
+	{
+		switch (type)
+		{
+			case Document:	displayDocsShortcuts(); break;
+			case Matrix:	displayMatrixShortcuts(); break;
+			case Other:		displayOtherShortcuts(); break;
+		}
+	}
+
 	//region private methods
-	private void createMatrixActionShortcuts()
+	private void displayDocsShortcuts()
 	{
-		ShortcutRow rowStartMatrix = new ShortcutRow(SettingsPanel.START_MATRIX, edit);
-		ShortcutRow rowStopMatrix = new ShortcutRow(SettingsPanel.STOP_MATRIX, edit);
-		ShortcutRow rowPauseMatrix = new ShortcutRow(SettingsPanel.PAUSE_MATRIX, edit);
-		ShortcutRow rowShowResult = new ShortcutRow(SettingsPanel.SHOW_RESULT, edit);
-		ShortcutRow rowShowWatch = new ShortcutRow(SettingsPanel.SHOW_WATCH, edit);
-		ShortcutRow rowTracing = new ShortcutRow(SettingsPanel.TRACING, edit);
-		ShortcutRow rowFindOnMatrix = new ShortcutRow(SettingsPanel.FIND_ON_MATRIX, edit);
-
-		createOneShortcut(rowStartMatrix, matrixActionShortcuts, 0, matrixActionGrid);
-		createOneShortcut(rowStopMatrix, matrixActionShortcuts, 1, matrixActionGrid);
-		createOneShortcut(rowPauseMatrix, matrixActionShortcuts, 2, matrixActionGrid);
-		createOneShortcut(rowShowResult, matrixActionShortcuts, 3, matrixActionGrid);
-		createOneShortcut(rowShowWatch, matrixActionShortcuts, 4, matrixActionGrid);
-		createOneShortcut(rowTracing, matrixActionShortcuts, 5, matrixActionGrid);
-		createOneShortcut(rowFindOnMatrix, matrixActionShortcuts, 6, matrixActionGrid);
-
+		ObservableList<TreeItem<GridPane>> children = this.treeView.getRoot().getChildren();
+		children.clear();
+		this.documents.entrySet().forEach(e -> children.add(new TreeItem<>(createGridPane(e.getKey(), e.getValue()))));
 	}
 
-	private void createOneShortcut(ShortcutRow row, Map<String, ShortcutRow> map, int index, GridPane grid)
+	private void displayMatrixShortcuts()
 	{
-		map.put(row.getId(), row);
-		grid.add(row, 0, index);
-		GridPane.setHalignment(row, HPos.CENTER);
+		this.treeView.getRoot().getChildren().clear();
+
+		TreeItem<GridPane> treeItemNavigation = new TreeItem<>(createGridPane("Navigation"));
+		TreeItem<GridPane> treeItemActions = new TreeItem<>(createGridPane("Actions"));
+
+		this.treeView.getRoot().getChildren().addAll(treeItemNavigation, treeItemActions);
+
+		this.matrixNavigation.entrySet().forEach(e -> treeItemNavigation.getChildren().add(new TreeItem<>(createGridPane(e.getKey(), e.getValue()))));
+		this.matrixActions.entrySet().forEach(e -> treeItemActions.getChildren().add(new TreeItem<>(createGridPane(e.getKey(), e.getValue()))));
 	}
 
-	private void createMatrixNavigationShortcuts()
+	private void displayOtherShortcuts()
 	{
-		ShortcutRow rowAddChild = new ShortcutRow(SettingsPanel.ADD_CHILD, edit);
-		ShortcutRow rowAddBefore = new ShortcutRow(SettingsPanel.ADD_BEFORE, edit);
-		ShortcutRow rowAddAfter = new ShortcutRow(SettingsPanel.ADD_AFTER, edit);
-		ShortcutRow rowBreakPoint = new ShortcutRow(SettingsPanel.BREAK_POINT, edit);
-		ShortcutRow rowAddParameter = new ShortcutRow(SettingsPanel.ADD_PARAMETER, edit);
-		ShortcutRow rowHelp = new ShortcutRow(SettingsPanel.HELP, edit);
-		ShortcutRow rowGoToLine = new ShortcutRow(SettingsPanel.GO_TO_LINE, edit);
-		ShortcutRow rowShowAll = new ShortcutRow(SettingsPanel.SHOW_ALL, edit);
-		ShortcutRow rowPasteItemsAfter = new ShortcutRow(SettingsPanel.PASTE_ITEMS_AFTER, edit);
-		ShortcutRow rowPasteItemsChild = new ShortcutRow(SettingsPanel.PASTE_ITEMS_CHILD, edit);
-		ShortcutRow rowPasteItemsBefore = new ShortcutRow(SettingsPanel.PASTE_ITEMS_BEFORE, edit);
-		ShortcutRow rowCopyItems = new ShortcutRow(SettingsPanel.COPY_ITEMS, edit);
-		ShortcutRow rowDeleteItem = new ShortcutRow(SettingsPanel.DELETE_ITEM, edit);
-		ShortcutRow rowCollapseAll = new ShortcutRow(SettingsPanel.COLLAPSE_ALL, edit);
-		ShortcutRow rowExpandOne = new ShortcutRow(SettingsPanel.EXPAND_ONE, edit);
-		ShortcutRow rowCollapseOne = new ShortcutRow(SettingsPanel.COLLAPSE_ONE, edit);
-		ShortcutRow rowExpandAll = new ShortcutRow(SettingsPanel.EXPAND_ALL, edit);
-
-		int count = 0;
-		createOneShortcut(rowAddChild, matrixNavigationShortcuts, count++, matrixNavigationGrid);
-		createOneShortcut(rowAddBefore, matrixNavigationShortcuts, count++, matrixNavigationGrid);
-		createOneShortcut(rowAddAfter, matrixNavigationShortcuts, count++, matrixNavigationGrid);
-		createOneShortcut(rowBreakPoint, matrixNavigationShortcuts, count++, matrixNavigationGrid);
-		createOneShortcut(rowAddParameter, matrixNavigationShortcuts, count++, matrixNavigationGrid);
-		createOneShortcut(rowHelp, matrixNavigationShortcuts, count++, matrixNavigationGrid);
-		createOneShortcut(rowGoToLine, matrixNavigationShortcuts, count++, matrixNavigationGrid);
-		createOneShortcut(rowShowAll, matrixNavigationShortcuts, count++, matrixNavigationGrid);
-		createOneShortcut(rowPasteItemsAfter, matrixNavigationShortcuts, count++, matrixNavigationGrid);
-		createOneShortcut(rowPasteItemsChild, matrixNavigationShortcuts, count++, matrixNavigationGrid);
-		createOneShortcut(rowPasteItemsBefore, matrixNavigationShortcuts, count++, matrixNavigationGrid);
-		createOneShortcut(rowCopyItems, matrixNavigationShortcuts, count++, matrixNavigationGrid);
-		createOneShortcut(rowDeleteItem, matrixNavigationShortcuts, count++, matrixNavigationGrid);
-		createOneShortcut(rowCollapseAll, matrixNavigationShortcuts, count++, matrixNavigationGrid);
-		createOneShortcut(rowExpandOne, matrixNavigationShortcuts, count++, matrixNavigationGrid);
-		createOneShortcut(rowCollapseOne, matrixNavigationShortcuts, count++, matrixNavigationGrid);
-		createOneShortcut(rowExpandAll, matrixNavigationShortcuts, count++, matrixNavigationGrid);
+		ObservableList<TreeItem<GridPane>> children = this.treeView.getRoot().getChildren();
+		children.clear();
+		this.other.entrySet().forEach(e -> children.add(new TreeItem<>(createGridPane(e.getKey(), e.getValue()))));
 	}
 
-	private void createDocumentShortcuts()
+	private GridPane createGridPane(String first, String second)
 	{
-		ShortcutRow rowUndo = new ShortcutRow(SettingsPanel.UNDO, edit);
-		ShortcutRow rowRedo = new ShortcutRow(SettingsPanel.REDO, edit);
-		ShortcutRow rowSaveDocument = new ShortcutRow(SettingsPanel.SAVE_DOCUMENT, edit);
+		GridPane gridPane = new GridPane();
+		ColumnConstraints c0 = new ColumnConstraints();
+		c0.setHalignment(HPos.RIGHT);
+		c0.setPercentWidth(50);
+		ColumnConstraints c1 = new ColumnConstraints();
+		c1.setHalignment(HPos.LEFT);
+		c1.setPercentWidth(50);
+		gridPane.getColumnConstraints().addAll(c0,c1);
+		gridPane.setHgap(10);
 
-		createOneShortcut(rowSaveDocument, documentShortcuts, 1, documentGrid);
-		createOneShortcut(rowUndo, documentShortcuts, 2, documentGrid);
-		createOneShortcut(rowRedo, documentShortcuts, 3, documentGrid);
+		Label name = new Label(first);
+
+		//TODO
+		Label value = new Label(second);
+		GridPane.setMargin(name, new Insets(0, 10, 0, 0));
+		GridPane.setHalignment(name, HPos.RIGHT);
+		GridPane.setMargin(value, new Insets(0, 0, 0, 10));
+		GridPane.setHalignment(value, HPos.LEFT);
+
+		gridPane.add(name, 0, 0);
+		gridPane.add(value, 1, 0);
+
+		return gridPane;
 	}
 
-	private void createOtherShortcuts()
+	private GridPane createGridPane(String lbl)
 	{
-		ShortcutRow rowShowAllTabs = new ShortcutRow(SettingsPanel.SHOW_ALL_TABS, edit);
-
-		createOneShortcut(rowShowAllTabs, otherShortcuts, 1, otherGrid);
+		GridPane pane = new GridPane();
+		Label label = new Label(lbl);
+		pane.add(label, 0, 0);
+		return pane;
 	}
 	//endregion
+
+	private class CustomTreeCell extends TreeCell<GridPane>
+	{
+		@Override
+		protected void updateItem(GridPane item, boolean empty)
+		{
+			//TODO set styleclass instead of style
+			this.setStyle("");
+			super.updateItem(item, empty);
+			if (item != null && !empty)
+			{
+				this.setStyle("-fx-border-color:black; -fx-border-width : 0 0 1 0");
+				this.setGraphic(item);
+			}
+			else
+			{
+				this.setGraphic(null);
+			}
+		}
+	}
 }

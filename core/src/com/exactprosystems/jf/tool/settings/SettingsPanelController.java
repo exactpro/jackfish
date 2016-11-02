@@ -149,9 +149,9 @@ public class SettingsPanelController implements Initializable, ContainingParent
 		this.logTabController.displayInto(this.logTab);
 	}
 
-	public void displayShortcuts(Map<String, String> res)
+	public void displayShortcuts(Map<String, String> documents, Map<String, String> matrixNavigation, Map<String, String> matrixActions, Map<String, String> other)
 	{
-		this.shortcutsTabController.displayInfo(res);
+		this.shortcutsTabController.displayInfo(documents, matrixNavigation, matrixActions, other);
 		this.shortcutsTabController.displayInto(this.shortCutsTab);
 	}
 	//endregion

@@ -17,6 +17,8 @@ import javafx.scene.input.KeyEvent;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.function.BiPredicate;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 public class SettingsPanel
@@ -31,17 +33,25 @@ public class SettingsPanel
 	//other shortcuts
 	public static final String SHOW_ALL_TABS	= "ShowAllTabs";
 
+	public static final List<String> otherList = createList(SHOW_ALL_TABS);
+
 	//document shortcuts
 	public static final String SAVE_DOCUMENT    = "SaveDocument";
 	public static final String UNDO				= "Undo";
 	public static final String REDO				= "Redo";
+
+	public static final List<String> docsList = createList(
+			SAVE_DOCUMENT,
+			UNDO,
+			REDO
+	);
 
 	//matrix navigation shortcuts
 	public static final String ADD_CHILD		= "AddChild";
 	public static final String ADD_BEFORE		= "AddBefore";
 	public static final String ADD_AFTER		= "AddAfter";
 	public static final String BREAK_POINT		= "BreakPoint";
-	public static final String ADD_PARAMETER = "AddParameter";
+	public static final String ADD_PARAMETER	= "AddParameter";
 	public static final String HELP				= "Help";
 	public static final String GO_TO_LINE		= "GoToLine";
 	public static final String SHOW_ALL			= "ShowAll";
@@ -55,6 +65,26 @@ public class SettingsPanel
 	public static final String EXPAND_ALL		= "ExpandAll";
 	public static final String EXPAND_ONE		= "ExpandOne";
 
+	public static final List<String> matrixNavigationList = createList(
+			ADD_CHILD,
+			ADD_BEFORE,
+			ADD_AFTER,
+			BREAK_POINT,
+			ADD_PARAMETER,
+			HELP,
+			GO_TO_LINE,
+			SHOW_ALL,
+			DELETE_ITEM,
+			COPY_ITEMS,
+			PASTE_ITEMS_CHILD,
+			PASTE_ITEMS_AFTER,
+			PASTE_ITEMS_BEFORE,
+			COLLAPSE_ALL,
+			COLLAPSE_ONE,
+			EXPAND_ALL,
+			EXPAND_ONE
+	);
+
 	//matrix actions shortcuts
 	public static final String START_MATRIX		= "StartMatrix";
 	public static final String STOP_MATRIX		= "StopMatrix";
@@ -63,6 +93,16 @@ public class SettingsPanel
 	public static final String SHOW_WATCH		= "ShowWatch";
 	public static final String TRACING			= "Tracing";
 	public static final String FIND_ON_MATRIX	= "FindOnMatrix";
+
+	public static final List<String> matrixActionsList = createList(
+			START_MATRIX,
+			STOP_MATRIX,
+			PAUSE_MATRIX,
+			SHOW_RESULT,
+			SHOW_WATCH,
+			TRACING,
+			FIND_ON_MATRIX
+	);
 
 	//git
 	public static final String GIT_SSH_IDENTITY	= "gitSshIdentity";
@@ -120,9 +160,15 @@ public class SettingsPanel
 	private void displayShortcuts()
 	{
 		Collection<SettingsValue> values = settings.getValues(Settings.GLOBAL_NS, SHORTCUTS_NAME);
-		Map<String, String> res = new LinkedHashMap<>();
-		values.forEach(value -> res.put(value.getKey(), value.getValue()));
-		this.controller.displayShortcuts(res);
+
+		Collector<SettingsValue, ?, Map<String, String>> collector = Collectors.toMap(SettingsValue::getKey, SettingsValue::getValue);
+		BiPredicate<List<String>, SettingsValue> contains = (list, sv) -> list.contains(sv.getKey());
+
+		Map<String, String> docs = values.stream().filter(sv -> contains.test(docsList, sv)).collect(collector);
+		Map<String, String> matrixNav = values.stream().filter(sv -> contains.test(matrixNavigationList, sv)).collect(collector);
+		Map<String, String> matrixAct = values.stream().filter(sv -> contains.test(matrixActionsList, sv)).collect(collector);
+		Map<String, String> other = values.stream().filter(sv -> contains.test(otherList, sv)).collect(collector);
+		this.controller.displayShortcuts(docs, matrixNav, matrixAct, other);
 	}
 
 	public void updateSettingsValue(String key, String dialog, String newValue)
@@ -171,5 +217,12 @@ public class SettingsPanel
 			return "";
 		}
 		return " <" + value.getValue() + ">";
+	}
+
+	private static List<String> createList(String... args)
+	{
+		List<String> list = new ArrayList<>();
+		Arrays.stream(args).forEach(list::add);
+		return list;
 	}
 }
