@@ -31,3 +31,7 @@ apache-tomcat*
 
 #build info file
 buildinfo.htm
+
+core/src/com/exactprosystems/jf/common/version/version.properties
+.gradle/
+*.zip
