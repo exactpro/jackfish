@@ -1,0 +1,18 @@
+#TestCase
+Preparation
+    #Id;#Global;#Action;#ServiceId
+    SRVLD2;1;ServiceLoad;'TEST'
+
+    #Id;#Action;#ServiceConnection;#Port;#OnConnected
+    SRVSTRT1;ServiceStart;SRVLD2.Out;1251;'matrices/Socket.jf'
+
+
+#TestCase
+Cleanup
+    #Action;#Time
+    Wait;30000
+
+    #Id;#Action;#ServiceConnection
+    SRVSTP1;ServiceStop;SRVLD2.Out
+
+

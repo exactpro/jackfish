@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<dictionary>
+    <window name="Main">
+        <self>
+            <panel id="body" xpath=".//body" useAbsoluteXpath="true"/>
+        </self>
+        <onOpen/>
+        <run>
+            <panel id="content" uid="content" class="" title="" text=""/>
+            <panel id="side-panel" uid="side-panel" class="" title="" text=""/>
+            <panel id="footer" uid="footer" class="" title="" text=""/>
+        </run>
+        <onClose/>
+        <close/>
+    </window>
+    <window name="Menu">
+        <self>
+            <panel id="MenuPanel" uid="menu"/>
+        </self>
+        <onOpen/>
+        <run>
+            <button id="Item1" uid="" owner="MenuPanel" class="" name="" title="" text="Item 1"/>
+            <button id="Item2" uid="" owner="MenuPanel" class="" name="" title="" text="Item 2"/>
+            <button id="Item3" uid="" owner="MenuPanel" class="" name="" title="" text="Item 3"/>
+            <button id="Item4" uid="" owner="MenuPanel" class="" name="" title="" text="Item 4"/>
+        </run>
+        <onClose/>
+        <close/>
+    </window>
+</dictionary>
