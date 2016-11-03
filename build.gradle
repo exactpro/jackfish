@@ -79,7 +79,11 @@ subprojects {
 	def buildDir = dir('/build');
 
 	repositories {
-		mavenCentral()
+		maven {
+			name "ExactproArtifactory"
+			url "http://arti.exactpro.com/libs-release/"
+		}
+//		mavenCentral()
 	}
 
 	clean {
@@ -102,17 +106,6 @@ subprojects {
 		options.deprecation = false;
 	}
 
-	/*//copy jar file to release dir. Think, it not needed
-	jar.doLast {
-		def oldName =  baseName + '.' + extension
-		def oldPath = destinationDir.path +'/'+baseName + '.' + extension
-		copy {
-			from oldPath
-			into releaseDir
-			rename(oldName, project.ext.jarName)
-		}
-	}*/
-
 	task distribute() { // TODO implement distribute.doLast for all plugins which need it
 		dependsOn clean, jar
 	}
@@ -121,7 +114,7 @@ subprojects {
 task replaceVersion {
 	dependsOn clean
 	//TODO think about it. We need remove all none .java file from src dir
-	def versionFile = new File(rootProject.rootDir.path+'/ActionsLibrary/src/com/exactprosystems/jf/common/version/version.properties')
+	def versionFile = new File(rootProject.rootDir.path+'/core/src/com/exactprosystems/jf/common/version/version.properties')
 	versionFile.text = 'VERSION = ' + version + "." + revision
 }
 
@@ -150,16 +143,17 @@ task makeTool() {
 	mkdir(uservarsDir)
 	mkdir(servicesDir)
 	mkdir(sqlDir)
+/*
+	copyAllFiles(new File(project(":core").projectDir.path + '/sql/'), new File(sqlDir))
+	copyAllFiles(new File(project(":core").projectDir.path + '/examples/'), new File(examplesDir))
+	copyAllFiles(new File(project(":core").projectDir.path + '/uservars/'), new File(uservarsDir))
+	copyAllFiles(new File(project(":core").projectDir.path + '/docs/'), new File(docsDir))
 
-	copyAllFiles(new File(project(":ActionsLibrary").projectDir.path + '/sql/'), new File(sqlDir))
-	copyAllFiles(new File(project(":ActionsLibrary").projectDir.path + '/examples/'), new File(examplesDir))
-	copyAllFiles(new File(project(":ActionsLibrary").projectDir.path + '/uservars/'), new File(uservarsDir))
-	copyAllFiles(new File(project(":ActionsLibrary").projectDir.path + '/docs/'), new File(docsDir))
-
-	Files.copy(Paths.get(project(":ActionsLibrary").projectDir.path + '/config.xml'), Paths.get(jfSourceDir + '/config.xml'))
-	Files.copy(Paths.get(project(":ActionsLibrary").projectDir.path + '/run.bat'), Paths.get(jfSourceDir + '/run.bat'))
-	Files.copy(Paths.get(project(":ActionsLibrary").projectDir.path + '/run.sh'), Paths.get(jfSourceDir + '/run.sh'))
-	Files.copy(Paths.get(project(":ActionsLibrary").projectDir.path + '/vars.ini'), Paths.get(jfSourceDir + '/vars.ini'))
+	Files.copy(Paths.get(project(":core").projectDir.path + '/config.xml'), Paths.get(jfSourceDir + '/config.xml'))
+	Files.copy(Paths.get(project(":core").projectDir.path + '/run.bat'), Paths.get(jfSourceDir + '/run.bat'))
+	Files.copy(Paths.get(project(":core").projectDir.path + '/run.sh'), Paths.get(jfSourceDir + '/run.sh'))
+	Files.copy(Paths.get(project(":core").projectDir.path + '/vars.ini'), Paths.get(jfSourceDir + '/vars.ini'))
+*/
 }
 
 task createTool(type: Zip) {
@@ -170,5 +164,5 @@ task createTool(type: Zip) {
 	archiveName = 'gradle_build_' + revision + '.zip'
 }
 createTool.doLast {
-	new File(jfSourceDir).deleteDir()
+	//new File(jfSourceDir).deleteDir()
 }

@@ -3,8 +3,8 @@ ext.jarName = "swing.jar"
 ext.javaVersion = 1.7;
 
 dependencies {
-	compile project(':API')
-	compile project(':NetXfixed')
+	compile project(':api')
+	compile project(':plugins:app:swing:netx')
 
 	compile group: 'org.easytesting', name: 'fest-swing', version: '1.2.1'
 	compile group: 'log4j', name: 'log4j', version: '1.2.17'

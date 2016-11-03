@@ -5,7 +5,7 @@ ext.javaVersion = 1.8
 def drivers = 'drivers'
 
 dependencies {
-	compile project(':API')
+	compile project(':api')
 	compile ('org.seleniumhq.selenium:selenium-java:3.0.1') {
 		exclude group: 'xerces'
 	}
@@ -35,5 +35,5 @@ jar {
 
 distribute.doLast {
 	copyTo(project, rootProject.appsDir)
-	copyAllFiles(new File(project.projectDir.path+'/'+drivers), new File(rootProject.appsDir))
+//TODO	copyAllFiles(new File(project.projectDir.path+'/'+drivers), new File(rootProject.appsDir))
 }

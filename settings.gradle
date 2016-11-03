@@ -1,18 +1,17 @@
-include	'ActionsLibrary',
-		'API',				//api
+include	'core',
+		'api',				//api
 							//app plugins
-		'AppWeb',
-		'NetXfixed',
-		'AppSwing',
-		'AppWinGui',
+		'plugins:app:web',
+		'plugins:app:swing:netx',
+		'plugins:app:swing',
+		'plugins:app:win',
 		//'UIAdapter',
 
 							//clients
-		'ClientDTS',
-		'ClientTest',
-		'ClientFIX',
+		'plugins:client:dts',
+//		'plugins:client:fix',
 
 							//services
-		'ServiceSailfish',
-		'ServiceMatrix'
+		'plugins:service:matrix',
+		'plugins:service:sailfish'
 
