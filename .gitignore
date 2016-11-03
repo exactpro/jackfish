@@ -1,0 +1,33 @@
+#elcipse files
+.metadata
+.recommenders
+.settings
+.classpath
+.project
+RemoteSystemsTempFiles
+Servers
+
+build
+srcgen
+shared
+gen
+bin
+
+#temp files
+.*.swp
+.~*.*#
+
+#test files
+derby.log
+
+#IntelliJ IDEA files
+*.iml
+*.iws
+.idea
+out
+
+#tomcat files
+apache-tomcat*
+
+#build info file
+buildinfo.htm
