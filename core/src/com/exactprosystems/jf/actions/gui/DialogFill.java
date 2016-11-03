@@ -282,6 +282,7 @@ public class DialogFill extends AbstractAction
 			}
 			catch (Exception e)
 			{
+				logger.error(e.getMessage(), e);
 				if (this.stopOnFail)
 				{
 
