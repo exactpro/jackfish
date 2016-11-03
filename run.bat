@@ -1,0 +1,1 @@
+java -jar jackfish.jar -config=config.xml
