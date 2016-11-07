@@ -207,3 +207,6 @@ task createTool(type: Zip) {
 	}
 }
 
+task wrapper(type: Wrapper) {
+    gradleVersion = '3.0' //we want gradle 3.0 to run this project
+}
