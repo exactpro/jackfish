@@ -187,7 +187,7 @@ task createTool(type: Zip) {
 	dependsOn makeTool
 
 	destinationDir new File('.')
-	archiveName = 'gradle_build_' + revision + '.zip'
+	archiveName = 'build_' + revision + '.zip'
 
 	into ('/') {
 		from jfSourceDir
