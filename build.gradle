@@ -7,18 +7,49 @@ def version = '4.3.0'
 def revision = System.getProperty("revision") ?: 'local_build'
 println 'Current version : ' + version+'.'+revision
 
+configurations {
+    sqlData
+    unixDriver
+    winDriver
+    macDriver
+}
+
+repositories {
+	maven {
+		name "ExactproArtifactory"
+		url "http://arti.exactpro.com/libs-release/"
+	}
+}
+
+dependencies {
+    sqlData(group: 'mysql', name: 'mysql-connector-java', version: '5.1.26')
+    sqlData(group: 'com.oracle', name: 'ojdbc7', version: '12.1.0.1')
+    sqlData(group: 'org.postgresql', name: 'postgresql', version: '9.0-801.jdbc4')
+    unixDriver(group: 'com.googleapis.storage.chromedriver', name: 'chromedriver-linux', version: 'x86.2.24', classifier: 'elf', ext: 'bin')
+    unixDriver(group: 'com.googleapis.storage.chromedriver', name: 'chromedriver-linux', version: 'x64.2.24', classifier: 'elf', ext: 'bin')
+    unixDriver(group: 'org.mozilla.geckodriver', name: 'geckodriver-linux', version: 'x86.0.11.1', classifier: 'elf', ext: 'bin')
+    unixDriver(group: 'org.mozilla.geckodriver', name: 'geckodriver-linux', version: 'x64.0.11.1', classifier: 'elf', ext: 'bin')
+    winDriver(group: 'com.googleapis.storage.chromedriver', name: 'chromedriver-win', version: 'x86.2.24', classifier: 'exe', ext: 'exe')
+    winDriver(group: 'org.mozilla.geckodriver', name: 'geckodriver-win', version: 'x86.0.11.1', classifier: 'exe', ext: 'exe')
+    winDriver(group: 'org.mozilla.geckodriver', name: 'geckodriver-win', version: 'x64.0.11.1', classifier: 'exe', ext: 'exe')
+    winDriver(group: 'org.seleniumhq.iedriverserver', name: 'iedriverserver', version: 'x86.2.53.1', classifier: 'exe', ext: 'exe')
+    winDriver(group: 'org.seleniumhq.iedriverserver', name: 'iedriverserver', version: 'x64.2.53.1', classifier: 'exe', ext: 'exe')
+    macDriver(group: 'com.googleapis.storage.chromedriver', name: 'chromedriver-mac', version: 'x64.2.24', classifier: 'mach-o', ext: 'bin')
+    macDriver(group: 'org.mozilla.geckodriver', name: 'geckodriver-macos', version: '0.11.1', classifier: 'mach-o', ext: 'bin')
+}
+
 rootProject.ext {
-	rev			= revision
-	ver			= version
+	rev		= revision
+	ver		= version
 	jfSourceDir	= 'BuildProject'
 	appsDir		= jfSourceDir + '/apps';
 	clientsDir	= jfSourceDir + '/clients';
 	docsDir		= jfSourceDir + '/docs';
-	examplesDir	= jfSourceDir + '/examples';
-	uservarsDir	= jfSourceDir + '/uservars';
-	servicesDir = jfSourceDir + '/services';
+	matricesDir	= jfSourceDir + '/matrices';
+	servicesDir     = jfSourceDir + '/services';
 	sqlDir		= jfSourceDir + '/sql';
 	reportsDir	= jfSourceDir + '/reports';
+
 	copyTo		= { Project proj, String dest ->
 		def s = Paths.get(proj.buildDir.path + '/libs/' + proj.name + '.jar')
 		def d = Paths.get(dest + '/' + proj.ext.jarName)
@@ -139,30 +170,40 @@ task makeTool() {
 	mkdir(clientsDir)
 	mkdir(reportsDir)
 	mkdir(docsDir)
-	mkdir(examplesDir)
-	mkdir(uservarsDir)
+	mkdir(matricesDir)
 	mkdir(servicesDir)
 	mkdir(sqlDir)
-/*
-	copyAllFiles(new File(project(":core").projectDir.path + '/sql/'), new File(sqlDir))
-	copyAllFiles(new File(project(":core").projectDir.path + '/examples/'), new File(examplesDir))
-	copyAllFiles(new File(project(":core").projectDir.path + '/uservars/'), new File(uservarsDir))
+
+	copyAllFiles(new File(project(":core").projectDir.path + '/matrices/'), new File(matricesDir))
 	copyAllFiles(new File(project(":core").projectDir.path + '/docs/'), new File(docsDir))
 
 	Files.copy(Paths.get(project(":core").projectDir.path + '/config.xml'), Paths.get(jfSourceDir + '/config.xml'))
 	Files.copy(Paths.get(project(":core").projectDir.path + '/run.bat'), Paths.get(jfSourceDir + '/run.bat'))
 	Files.copy(Paths.get(project(":core").projectDir.path + '/run.sh'), Paths.get(jfSourceDir + '/run.sh'))
 	Files.copy(Paths.get(project(":core").projectDir.path + '/vars.ini'), Paths.get(jfSourceDir + '/vars.ini'))
-*/
 }
 
 task createTool(type: Zip) {
 	dependsOn makeTool
-	from jfSourceDir
+
 	destinationDir new File('.')
-	include '**/*'
 	archiveName = 'gradle_build_' + revision + '.zip'
+
+	into ('/') {
+		from jfSourceDir
+	}
+
+	into ('sql') {
+		from configurations.sqlData
+	}
+	into ('/apps/unix') {
+		from configurations.unixDriver
+	}
+	into ('/apps/win') {
+		from configurations.winDriver
+	}
+	into ('/apps/mac') {
+		from configurations.macDriver
+	}
 }
-createTool.doLast {
-	//new File(jfSourceDir).deleteDir()
-}
+

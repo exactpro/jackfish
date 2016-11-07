@@ -9,7 +9,7 @@ include	'core',
 
 							//clients
 		'plugins:client:dts',
-//		'plugins:client:fix',
+		'plugins:client:fix',
 
 							//services
 		'plugins:service:matrix',
