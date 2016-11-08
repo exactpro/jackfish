@@ -33,12 +33,11 @@
     <matrix>examples</matrix>
     <matrix>matrices</matrix>
     <appDict>dic/gui</appDict>
-    <clientDict></clientDict>
-    <clientDict>/home/valery.florov/workspace/JF/ActionsLibrary/clientdic</clientDict>
+    <clientDict>dic/clients</clientDict>
     <library>libjf</library>
     <sqlEntry>
         <name>MySql</name>
-        <sqlJar>${JF}/sql/mysql-connector.jar</sqlJar>
+        <sqlJar>${JF}/sql/mysql-connector-java-5.1.26.jar</sqlJar>
         <sqlConnection>jdbc:mysql://${SERVER}/${BASE}?generateSimpleParameterMetadata=true</sqlConnection>
     </sqlEntry>
     <clientEntry>

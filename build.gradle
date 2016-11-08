@@ -32,6 +32,7 @@ dependencies {
     winDriver(group: 'org.seleniumhq.iedriverserver', name: 'iedriverserver', version: 'x64.2.53.1', classifier: 'exe', ext: 'exe')
     macDriver(group: 'com.googleapis.storage.chromedriver', name: 'chromedriver-mac', version: 'x64.2.24', classifier: 'mach-o', ext: 'bin')
     macDriver(group: 'org.mozilla.geckodriver', name: 'geckodriver-macos', version: '0.11.1', classifier: 'mach-o', ext: 'bin')
+
 }
 
 rootProject.ext {
@@ -43,6 +44,7 @@ rootProject.ext {
 	clientsDir	= jfSourceDir + '/clients';
 	docsDir		= jfSourceDir + '/docs';
 	libjfDir	= jfSourceDir + '/libjf';
+	dicDir	        = jfSourceDir + '/dic';
 	matricesDir	= jfSourceDir + '/matrices';
 	servicesDir     = jfSourceDir + '/services';
 	sqlDir		= jfSourceDir + '/sql';
@@ -147,14 +149,15 @@ task replaceVersion {
 	versionFile.text = 'VERSION = ' + version
 }
 
-task createMock {
-
-}
-
 task makeTool() {
 	subprojects.each {
 		dependsOn("${it.path}:distribute")
 	}
+
+        delete fileTree('.') {
+               include 'build_*.zip'
+        }
+
 
 	def jfProject = new File(jfSourceDir);
 	if (jfProject.exists()) {
@@ -169,6 +172,7 @@ task makeTool() {
 	mkdir(reportsDir)
 	mkdir(docsDir)
         mkdir(libjfDir)
+        mkdir(dicDir)
 	mkdir(matricesDir)
 	mkdir(servicesDir)
 	mkdir(sqlDir)
@@ -176,12 +180,14 @@ task makeTool() {
 	copyAllFiles(new File(project(":core").projectDir.path + '/matrices/'), new File(matricesDir))
 	copyAllFiles(new File(project(":core").projectDir.path + '/docs/'), new File(docsDir))
 	copyAllFiles(new File(project(":core").projectDir.path + '/libjf/'), new File(libjfDir))
+	copyAllFiles(new File(project(":core").projectDir.path + '/dic/'), new File(dicDir))
 
 	Files.copy(Paths.get(project(":core").projectDir.path + '/config.xml'), Paths.get(jfSourceDir + '/config.xml'))
 	Files.copy(Paths.get(project(":core").projectDir.path + '/run.bat'), Paths.get(jfSourceDir + '/run.bat'))
 	Files.copy(Paths.get(project(":core").projectDir.path + '/run.sh'), Paths.get(jfSourceDir + '/run.sh'))
 	Files.copy(Paths.get(project(":core").projectDir.path + '/vars.ini'), Paths.get(jfSourceDir + '/vars.ini'))
 }
+
 
 task createTool(type: Zip) {
 	dependsOn makeTool
@@ -192,7 +198,6 @@ task createTool(type: Zip) {
 	into ('/') {
 		from jfSourceDir
 	}
-
 	into ('sql') {
 		from configurations.sqlData
 	}
@@ -209,4 +214,7 @@ task createTool(type: Zip) {
 
 task wrapper(type: Wrapper) {
     gradleVersion = '3.0' //we want gradle 3.0 to run this project
+}
+
+clean {
 }
