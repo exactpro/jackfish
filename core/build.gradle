@@ -19,7 +19,7 @@ jar {
 		attributes(
 			'Main-class' : 'com.exactprosystems.jf.common.MainRunner',
 			'Class-Path' : '.',
-			'Version' : rootProject.ext.ver + '.' + rootProject.ext.rev
+			'Version' : rootProject.ext.version
 		)
 	}
 	from { 

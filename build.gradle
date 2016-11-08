@@ -3,10 +3,6 @@ import java.nio.file.Paths
 
 apply plugin : 'java'
 
-def version = '4.3.0'
-def revision = System.getProperty("revision") ?: 'local_build'
-println 'Current version : ' + version+'.'+revision
-
 configurations {
     sqlData
     unixDriver
@@ -39,8 +35,9 @@ dependencies {
 }
 
 rootProject.ext {
-	rev		= revision
-	ver		= version
+        version = '4.3.0.' + (System.getProperty('revision') ?: 'local_build')
+        println version
+
 	jfSourceDir	= 'BuildProject'
 	appsDir		= jfSourceDir + '/apps';
 	clientsDir	= jfSourceDir + '/clients';
@@ -146,7 +143,7 @@ task replaceVersion {
 	dependsOn clean
 	//TODO think about it. We need remove all none .java file from src dir
 	def versionFile = new File(rootProject.rootDir.path+'/core/src/com/exactprosystems/jf/common/version/version.properties')
-	versionFile.text = 'VERSION = ' + version + "." + revision
+	versionFile.text = 'VERSION = ' + version
 }
 
 task createMock {
@@ -187,7 +184,7 @@ task createTool(type: Zip) {
 	dependsOn makeTool
 
 	destinationDir new File('.')
-	archiveName = 'build_' + revision + '.zip'
+	archiveName = 'build_' + rootProject.ext.version + '.zip'
 
 	into ('/') {
 		from jfSourceDir
