@@ -42,6 +42,7 @@ rootProject.ext {
 	appsDir		= jfSourceDir + '/apps';
 	clientsDir	= jfSourceDir + '/clients';
 	docsDir		= jfSourceDir + '/docs';
+	libjfDir	= jfSourceDir + '/libjf';
 	matricesDir	= jfSourceDir + '/matrices';
 	servicesDir     = jfSourceDir + '/services';
 	sqlDir		= jfSourceDir + '/sql';
@@ -167,12 +168,14 @@ task makeTool() {
 	mkdir(clientsDir)
 	mkdir(reportsDir)
 	mkdir(docsDir)
+        mkdir(libjfDir)
 	mkdir(matricesDir)
 	mkdir(servicesDir)
 	mkdir(sqlDir)
 
 	copyAllFiles(new File(project(":core").projectDir.path + '/matrices/'), new File(matricesDir))
 	copyAllFiles(new File(project(":core").projectDir.path + '/docs/'), new File(docsDir))
+	copyAllFiles(new File(project(":core").projectDir.path + '/libjf/'), new File(libjfDir))
 
 	Files.copy(Paths.get(project(":core").projectDir.path + '/config.xml'), Paths.get(jfSourceDir + '/config.xml'))
 	Files.copy(Paths.get(project(":core").projectDir.path + '/run.bat'), Paths.get(jfSourceDir + '/run.bat'))

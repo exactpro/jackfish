@@ -1,0 +1,28 @@
+#Id;#NameSpace
+LIB;Standart libraries
+    #Id;#SubCase;#a;#b
+    Test;Calculate to variables;;null
+        #Return
+        a+b
+
+    #EndSubCase
+
+    #Id;#SubCase
+    test2;test2
+        #Action;#
+        Print;'test2'
+
+        #Id;#Call
+        CALL_1;test
+
+    #EndSubCase
+
+    #Id;#SubCase
+    test;test
+        #Action;#
+        Print;'test'
+
+    #EndSubCase
+
+#EndNameSpace
+
