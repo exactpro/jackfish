@@ -184,6 +184,8 @@ task makeTool() {
 	copyAllFiles(new File(project(":core").projectDir.path + '/libjf/'), new File(libjfDir))
 	copyAllFiles(new File(project(":core").projectDir.path + '/dic/'), new File(dicDir))
 
+
+
 	Files.copy(Paths.get(project(":core").projectDir.path + '/config.xml'), Paths.get(jfSourceDir + '/config.xml'))
 	Files.copy(Paths.get(project(":core").projectDir.path + '/run.bat'), Paths.get(jfSourceDir + '/run.bat'))
 	Files.copy(Paths.get(project(":core").projectDir.path + '/run.sh'), Paths.get(jfSourceDir + '/run.sh'))
@@ -219,6 +221,10 @@ task createTool(type: Zip) {
 	}
         rename '^(.*)\\.elf$', '$1.'
         fileMode 0755
+
+	into ('/') {
+		from 'whatsnew.txt'
+	}
 }
 
 task wrapper(type: Wrapper) {
