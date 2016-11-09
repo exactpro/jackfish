@@ -21,18 +21,20 @@ dependencies {
     sqlData(group: 'mysql', name: 'mysql-connector-java', version: '5.1.26')
     sqlData(group: 'com.oracle', name: 'ojdbc7', version: '12.1.0.1')
     sqlData(group: 'org.postgresql', name: 'postgresql', version: '9.0-801.jdbc4')
-    unixDriver(group: 'com.googleapis.storage.chromedriver', name: 'chromedriver-linux', version: 'x86.2.24', classifier: 'elf', ext: 'bin')
-    unixDriver(group: 'com.googleapis.storage.chromedriver', name: 'chromedriver-linux', version: 'x64.2.24', classifier: 'elf', ext: 'bin')
-    unixDriver(group: 'org.mozilla.geckodriver', name: 'geckodriver-linux', version: 'x86.0.11.1', classifier: 'elf', ext: 'bin')
-    unixDriver(group: 'org.mozilla.geckodriver', name: 'geckodriver-linux', version: 'x64.0.11.1', classifier: 'elf', ext: 'bin')
-    winDriver(group: 'com.googleapis.storage.chromedriver', name: 'chromedriver-win', version: 'x86.2.24', classifier: 'exe', ext: 'exe')
-    winDriver(group: 'org.mozilla.geckodriver', name: 'geckodriver-win', version: 'x86.0.11.1', classifier: 'exe', ext: 'exe')
-    winDriver(group: 'org.mozilla.geckodriver', name: 'geckodriver-win', version: 'x64.0.11.1', classifier: 'exe', ext: 'exe')
-    winDriver(group: 'org.seleniumhq.iedriverserver', name: 'iedriverserver', version: 'x86.2.53.1', classifier: 'exe', ext: 'exe')
-    winDriver(group: 'org.seleniumhq.iedriverserver', name: 'iedriverserver', version: 'x64.2.53.1', classifier: 'exe', ext: 'exe')
-    macDriver(group: 'com.googleapis.storage.chromedriver', name: 'chromedriver-mac', version: 'x64.2.24', classifier: 'mach-o', ext: 'bin')
-    macDriver(group: 'org.mozilla.geckodriver', name: 'geckodriver-macos', version: '0.11.1', classifier: 'mach-o', ext: 'bin')
 
+    unixDriver(group: 'com.googleapis.storage.chromedriver', name: 'chromedriver-linux', version: '2.25', classifier: 'x86', ext: 'elf')
+    unixDriver(group: 'com.googleapis.storage.chromedriver', name: 'chromedriver-linux', version: '2.25', classifier: 'x64', ext: 'elf')
+    unixDriver(group: 'org.mozilla.geckodriver', name: 'geckodriver-linux', version: '0.11.1', classifier: 'x86', ext: 'elf')
+    unixDriver(group: 'org.mozilla.geckodriver', name: 'geckodriver-linux', version: '0.11.1', classifier: 'x64', ext: 'elf')
+    /*
+    winDriver(group: 'com.googleapis.storage.chromedriver', name: 'chromedriver-win', version: '2.24', classifier: 'x86', ext: 'exe')
+    winDriver(group: 'org.mozilla.geckodriver', name: 'geckodriver-win', version: '0.11.1', classifier: 'x86', ext: 'exe')
+    winDriver(group: 'org.mozilla.geckodriver', name: 'geckodriver-win', version: '0.11.1', classifier: 'x64', ext: 'exe')
+    winDriver(group: 'org.seleniumhq.iedriverserver', name: 'iedriverserver', version: '2.53.1', classifier: 'x86', ext: 'exe')
+    winDriver(group: 'org.seleniumhq.iedriverserver', name: 'iedriverserver', version: '2.53.1', classifier: 'x64', ext: 'exe')
+    macDriver(group: 'com.googleapis.storage.chromedriver', name: 'chromedriver-mac', version: '2.24', classifier: 'x64', ext: 'elf')
+    macDriver(group: 'org.mozilla.geckodriver', name: 'geckodriver-macos', version: '0.11.1', classifier: 'x64', ext: 'elf')
+      */
 }
 
 rootProject.ext {
@@ -201,15 +203,22 @@ task createTool(type: Zip) {
 	into ('sql') {
 		from configurations.sqlData
 	}
+
 	into ('/apps/unix') {
 		from configurations.unixDriver
 	}
+        rename '^(.*)\\.elf$', '$1.'
+        fileMode 0755
+
 	into ('/apps/win') {
 		from configurations.winDriver
 	}
+
 	into ('/apps/mac') {
 		from configurations.macDriver
 	}
+        rename '^(.*)\\.elf$', '$1.'
+        fileMode 0755
 }
 
 task wrapper(type: Wrapper) {

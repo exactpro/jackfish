@@ -71,10 +71,10 @@
         <serviceJar>services/test.jar</serviceJar>
     </serviceEntry>
     <appEntry>
-        <name>LT</name>
+        <name>WEB</name>
         <parameters>
             <key>ChromeDriverPath</key>
-            <value>unix/chromedriver_64</value>
+            <value>unix/chromedriver-linux-2.25-x64.</value>
         </parameters>
         <parameters>
             <key>IEDriverPath</key>
@@ -104,7 +104,11 @@
             <key>UsePrivateMode</key>
             <value></value>
         </parameters>
-        <appDescription>Layout testing</appDescription>
+        <parameters>
+            <key>GeckoDriverPath</key>
+            <value>unix/geckodriver-linux-0.11.1-x64.</value>
+        </parameters>
+        <appDescription>Web applications</appDescription>
         <appDicPath>dic/gui/LayoutTesting.xml</appDicPath>
         <appJar>${JF}/apps/web.jar</appJar>
         <appWorkDir>${JF}/apps</appWorkDir>

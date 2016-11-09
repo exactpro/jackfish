@@ -11,10 +11,7 @@ INIT;Test case
     ResultTableUserValue;
 
     #Id;#Global;#Action;#AppId;#Browser;#URL
-    APPSTR1;1;ApplicationStart;'LT';'Chrome';'http://samples.galenframework.com/tutorial1/tutorial1.html'
-
-    #Action;#Table;#Title
-    TableReport;;
+    APPSTR1;1;ApplicationStart;'WEB';'Chrome';'http://samples.galenframework.com/tutorial1/tutorial1.html'
 
 
 #TestCase

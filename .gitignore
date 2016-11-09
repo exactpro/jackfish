@@ -12,6 +12,11 @@ srcgen
 shared
 gen
 bin
+apps
+clients
+services
+sql
+
 
 #temp files
 .*.swp

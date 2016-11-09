@@ -1,0 +1,10 @@
+--------------------------------------------------------------------------------
+09.11.2016  4.3.0.1622
+
+#38176 Migration from svn to git
+
+Pay your attention to fact that names of all web drivers in the folder apps
+were changed. Correct them in your project's config file.
+
+--------------------------------------------------------------------------------
+
