@@ -7,16 +7,21 @@
 RemoteSystemsTempFiles
 Servers
 
+#Java files
 build
 srcgen
 shared
 gen
 bin
+
+#JF files
 apps
 clients
 services
 sql
-
+logs
+.log.xml
+.settings.xml
 
 #temp files
 .*.swp

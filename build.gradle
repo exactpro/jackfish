@@ -1,6 +1,8 @@
 import java.nio.file.Files
 import java.nio.file.Paths
 
+defaultTasks 'createTool'
+
 apply plugin : 'java'
 
 configurations {
@@ -18,23 +20,23 @@ repositories {
 }
 
 dependencies {
-    sqlData(group: 'mysql', name: 'mysql-connector-java', version: '5.1.26')
-    sqlData(group: 'com.oracle', name: 'ojdbc7', version: '12.1.0.1')
-    sqlData(group: 'org.postgresql', name: 'postgresql', version: '9.0-801.jdbc4')
+    sqlData(group:    'mysql',                                    name: 'mysql-connector-java',  version: '5.1.26')
+    sqlData(group:    'com.oracle',                               name: 'ojdbc7',                version: '12.1.0.1')
+    sqlData(group:    'org.postgresql',                           name: 'postgresql',            version: '9.0-801.jdbc4')
 
-    unixDriver(group: 'com.googleapis.storage.chromedriver', name: 'chromedriver-linux', version: '2.25', classifier: 'x86', ext: 'elf')
-    unixDriver(group: 'com.googleapis.storage.chromedriver', name: 'chromedriver-linux', version: '2.25', classifier: 'x64', ext: 'elf')
-    unixDriver(group: 'org.mozilla.geckodriver', name: 'geckodriver-linux', version: '0.11.1', classifier: 'x86', ext: 'elf')
-    unixDriver(group: 'org.mozilla.geckodriver', name: 'geckodriver-linux', version: '0.11.1', classifier: 'x64', ext: 'elf')
-    /*
-    winDriver(group: 'com.googleapis.storage.chromedriver', name: 'chromedriver-win', version: '2.24', classifier: 'x86', ext: 'exe')
-    winDriver(group: 'org.mozilla.geckodriver', name: 'geckodriver-win', version: '0.11.1', classifier: 'x86', ext: 'exe')
-    winDriver(group: 'org.mozilla.geckodriver', name: 'geckodriver-win', version: '0.11.1', classifier: 'x64', ext: 'exe')
-    winDriver(group: 'org.seleniumhq.iedriverserver', name: 'iedriverserver', version: '2.53.1', classifier: 'x86', ext: 'exe')
-    winDriver(group: 'org.seleniumhq.iedriverserver', name: 'iedriverserver', version: '2.53.1', classifier: 'x64', ext: 'exe')
-    macDriver(group: 'com.googleapis.storage.chromedriver', name: 'chromedriver-mac', version: '2.24', classifier: 'x64', ext: 'elf')
-    macDriver(group: 'org.mozilla.geckodriver', name: 'geckodriver-macos', version: '0.11.1', classifier: 'x64', ext: 'elf')
-      */
+    unixDriver(group: 'com.googleapis.storage.chromedriver',      name: 'chromedriver-linux',    version: '2.25',   classifier: 'x86', ext: 'elf')
+    unixDriver(group: 'com.googleapis.storage.chromedriver',      name: 'chromedriver-linux',    version: '2.25',   classifier: 'x64', ext: 'elf')
+    unixDriver(group: 'org.mozilla.geckodriver',                  name: 'geckodriver-linux',     version: '0.11.1', classifier: 'x86', ext: 'elf')
+    unixDriver(group: 'org.mozilla.geckodriver',                  name: 'geckodriver-linux',     version: '0.11.1', classifier: 'x64', ext: 'elf')
+
+    winDriver(group: 'com.googleapis.storage.chromedriver',       name: 'chromedriver-win',      version: '2.25',   classifier: 'x86', ext: 'exe')
+    winDriver(group: 'org.mozilla.geckodriver',                   name: 'geckodriver-win',       version: '0.11.1', classifier: 'x86', ext: 'exe')
+    winDriver(group: 'org.mozilla.geckodriver',                   name: 'geckodriver-win',       version: '0.11.1', classifier: 'x64', ext: 'exe')
+    winDriver(group: 'org.seleniumhq.iedriverserver',             name: 'iedriverserver',        version: '2.53.1', classifier: 'x86', ext: 'exe')
+    winDriver(group: 'org.seleniumhq.iedriverserver',             name: 'iedriverserver',        version: '2.53.1', classifier: 'x64', ext: 'exe')
+
+    macDriver(group: 'com.googleapis.storage.chromedriver',       name: 'chromedriver-mac',      version: '2.25',   classifier: 'x64', ext: 'bin')
+    macDriver(group: 'org.mozilla.geckodriver',                   name: 'geckodriver-mac',       version: '0.11.1', classifier: 'x64', ext: 'bin')
 }
 
 rootProject.ext {
@@ -51,6 +53,7 @@ rootProject.ext {
 	servicesDir     = jfSourceDir + '/services';
 	sqlDir		= jfSourceDir + '/sql';
 	reportsDir	= jfSourceDir + '/reports';
+        coreProject     = 'core';
 
 	copyTo		= { Project proj, String dest ->
 		def s = Paths.get(proj.buildDir.path + '/libs/' + proj.name + '.jar')
@@ -183,13 +186,6 @@ task makeTool() {
 	copyAllFiles(new File(project(":core").projectDir.path + '/docs/'), new File(docsDir))
 	copyAllFiles(new File(project(":core").projectDir.path + '/libjf/'), new File(libjfDir))
 	copyAllFiles(new File(project(":core").projectDir.path + '/dic/'), new File(dicDir))
-
-
-
-	Files.copy(Paths.get(project(":core").projectDir.path + '/config.xml'), Paths.get(jfSourceDir + '/config.xml'))
-	Files.copy(Paths.get(project(":core").projectDir.path + '/run.bat'), Paths.get(jfSourceDir + '/run.bat'))
-	Files.copy(Paths.get(project(":core").projectDir.path + '/run.sh'), Paths.get(jfSourceDir + '/run.sh'))
-	Files.copy(Paths.get(project(":core").projectDir.path + '/vars.ini'), Paths.get(jfSourceDir + '/vars.ini'))
 }
 
 
@@ -199,32 +195,33 @@ task createTool(type: Zip) {
 	destinationDir new File('.')
 	archiveName = 'build_' + rootProject.ext.version + '.zip'
 
-	into ('/') {
-		from jfSourceDir
-	}
+	from jfSourceDir
+	from "whatsnew.txt"
+	from "$coreProject/config.xml"
+	from "$coreProject/run.bat"
+	from "$coreProject/run.sh"
+	from "$coreProject/vars.ini"
+
 	into ('sql') {
 		from configurations.sqlData
 	}
 
-	into ('/apps/unix') {
+	into ('apps/unix') {
 		from configurations.unixDriver
 	}
         rename '^(.*)\\.elf$', '$1.'
         fileMode 0755
 
-	into ('/apps/win') {
+	into ('apps/win') {
 		from configurations.winDriver
 	}
 
-	into ('/apps/mac') {
+	into ('apps/mac') {
 		from configurations.macDriver
 	}
-        rename '^(.*)\\.elf$', '$1.'
+        rename '^(.*)\\.bin$', '$1.'
         fileMode 0755
 
-	into ('/') {
-		from 'whatsnew.txt'
-	}
 }
 
 task wrapper(type: Wrapper) {
