@@ -90,6 +90,19 @@ public class Context implements IContext, AutoCloseable, Cloneable
 		this.resultTable =  new Table(headers, this.evaluator);
 	}
 
+	public void setHandler(HandlerKind handlerKind, SubCase subCase)
+	{
+	    if (handlerKind != null)
+	    {
+	        this.handlers.put(handlerKind, subCase);
+	    }
+	}
+	
+	public SubCase getHandler(HandlerKind handlerKind)
+	{
+	    return this.handlers.get(handlerKind);
+	}
+	
 	public Context setOut(PrintStream out)
 	{
 		this.outStream = out;
@@ -324,7 +337,7 @@ public class Context implements IContext, AutoCloseable, Cloneable
 
 	//TODO need to remove it, cause this the same as Configuration.libs
 	private Map<String, Matrix> libs = new HashMap<>();
-
+	private Map<HandlerKind, SubCase> handlers = new HashMap<>();
 	private static final Logger logger = Logger.getLogger(Context.class);
 
 
