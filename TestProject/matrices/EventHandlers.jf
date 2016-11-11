@@ -1,0 +1,9 @@
+#TestCase
+Test case
+
+#TestCase
+Other testcase
+    #Fail
+    'Other reason'
+
+

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<configuration>
+    <time>HH:mm:ss.SSS</time>
+    <date>dd.MM.yyyy</date>
+    <dateTime>dd.MM.yyyy HH:mm:ss.SSS</dateTime>
+    <formats>dd.MM.yyyy HH:mm:ss</formats>
+    <formats>yyyy/MM/dd HH:mm:ss.SSS</formats>
+    <formats>yyyyMMdd-HH:mm:ss.SSS</formats>
+    <formats>dd/MM/yyyy</formats>
+    <formats>HH.mm</formats>
+    <formats>HH:mm:ss</formats>
+    <formats>HH:mm:ss Z</formats>
+    <formats>HH:mm:ss:SSS</formats>
+    <reports>reports</reports>
+    <git></git>
+    <import>java.math</import>
+    <import>java.util.regex</import>
+    <import>java.util</import>
+    <import>java.util.List</import>
+    <import>java.util.Map</import>
+    <import>java.lang</import>
+    <import>com.exactprosystems.jf.api.app</import>
+    <import>com.exactprosystems.jf.api.conditions</import>
+    <import>com.exactprosystems.jf.functions</import>
+    <import>java.io</import>
+    <import>org.mvel2</import>
+    <vars>vars.ini</vars>
+    <userVars>myVars/myVars.ini</userVars>
+    <matrix>matrices</matrix>
+    <appDict>appDic</appDict>
+    <clientDict>clientDic</clientDict>
+    <library>libs</library>
+</configuration>

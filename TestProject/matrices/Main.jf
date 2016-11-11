@@ -1,0 +1,33 @@
+#Id;#TestCase
+INIT;Setup
+    #Id;#Global;#Action;#Decoraded
+    RESTBL1;1;ResultTable;true
+
+
+#Id;#TestCase
+TESTS;All tests
+    #Id;#Action;#Matrix
+    MXRN1;MatrixRun;'matrices/EventHandlers.jf'
+
+    #Id;#Action;#Matrix
+    MXWT1;MatrixWait;MXRN1.Out
+
+    #Id;#Action;#Decoraded;#Matrix
+    RESTBL2;ResultTable;true;MXRN1.Out
+
+    #Action;#UnitedTable;#MainTable
+    TableUnion;RESTBL2.Out;RESTBL1.Out
+
+
+#TestCase
+Cleanup
+    #Action;#Table;#Title;#BeforeTestCase
+    TableReport;RESTBL1.Out;'All tests';'INIT'
+
+    #Id;#Action;#Table;#Result
+    TBLSLCT1;TableSelect;RESTBL1.Out;new RegexpCondition('Result', '^.*Failed.*$')
+
+    #Assert;#Message
+    TBLSLCT1.Out.size() == 0;'There are fails in the tests'
+
+
