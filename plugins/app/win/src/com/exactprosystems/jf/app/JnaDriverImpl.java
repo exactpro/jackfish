@@ -93,6 +93,15 @@ public class JnaDriverImpl
 		checkCSharpTimes();
 		checkError();
 	}
+
+	public void createLogger(String logLevel) throws Exception
+	{
+		long start = System.currentTimeMillis();
+		this.driver.createLogger(logLevel);
+		this.logger.info(String.format("createLogLevel(%s), time : (ms) : %d", logLevel, System.currentTimeMillis() - start));
+		checkCSharpTimes();
+		checkError();
+	}
 	//endregion
 
 	//region application methods
@@ -288,7 +297,7 @@ public class JnaDriverImpl
 	{
 		long start = System.currentTimeMillis();
 		int result = this.driver.getImage(arr, arr.length, element.getIdString());
-		this.logger.info(String.format("getImage(%s,%d,%s) = %s, time (ms) : %d", Arrays.toString(arr), arr.length, element.getIdString(), result, 
+		this.logger.info(String.format("getImage(%d,%s) = %s, time (ms) : %d", arr.length, element.getIdString(), result,
 				System.currentTimeMillis() - start));
 		checkCSharpTimes();
 		checkError();
@@ -423,12 +432,12 @@ public class JnaDriverImpl
 		String methodTime = this.driver.methodTime();
 		if (methodTime != null)
 		{
-			this.logger.info("method time {" + methodTime + "}");
+			//this.logger.info("method time {" + methodTime + "}");
 		}
 		String uiAutomationTIme = this.driver.uiAutomationTime();
 		if (uiAutomationTIme != null)
 		{
-			this.logger.info("uiAutomation time : {" + uiAutomationTIme + "}");
+			//this.logger.info("uiAutomation time : {" + uiAutomationTIme + "}");
 		}
 	}
 	//endregion

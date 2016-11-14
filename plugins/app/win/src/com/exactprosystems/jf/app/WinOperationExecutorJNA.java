@@ -31,6 +31,8 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 	private static final String SEPARATOR_CELL = "###";
 	private static final String SEPARATOR_ROWS = ";;;";
 	private static final String EMPTY_CELL = "EMPTY_CELL_EMPTY";
+	private static final String EMPTY_HEADER_CELL = "EMPTY_HEADER_CELL_EMPTY";
+
 	private Logger logger;
 	private JnaDriverImpl driver;
 

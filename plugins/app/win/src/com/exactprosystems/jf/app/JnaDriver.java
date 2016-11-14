@@ -4,13 +4,20 @@ import com.sun.jna.Library;
 
 public interface JnaDriver extends Library {
 	//region util methods
+	@Deprecated
 	String lastError();
 
 	int lastErrorNumber();
+
+	@Deprecated
 	String methodTime();
+
+	@Deprecated
 	String uiAutomationTime();
 	String getFrameworkId();
 	void maxTimeout(int timeout);
+
+	void createLogger(String logLevel);
 	//endregion
 
 	//region application methods
