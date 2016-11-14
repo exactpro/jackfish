@@ -151,7 +151,7 @@ task replaceVersion {
 	dependsOn clean
 	//TODO think about it. We need remove all none .java file from src dir
 	def versionFile = new File(rootProject.rootDir.path+'/core/src/com/exactprosystems/jf/common/version/version.properties')
-	versionFile.text = 'VERSION = ' + version
+	versionFile.text = 'VERSION = ' + rootProject.ext.version
 }
 
 task makeTool() {
