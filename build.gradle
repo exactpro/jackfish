@@ -43,7 +43,7 @@ rootProject.ext {
         version = '4.3.0.' + (System.getProperty('revision') ?: 'local_build')
         println version
 
-	jfSourceDir	= 'BuildProject'
+	jfSourceDir	= rootProject.rootDir.path + '/BuildProject'
 	appsDir		= jfSourceDir + '/apps';
 	clientsDir	= jfSourceDir + '/clients';
 	docsDir		= jfSourceDir + '/docs';

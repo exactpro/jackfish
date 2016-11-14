@@ -14,6 +14,11 @@ shared
 gen
 bin
 
+#CShart files
+packages
+*.suo
+obj
+
 #JF files
 apps
 clients
