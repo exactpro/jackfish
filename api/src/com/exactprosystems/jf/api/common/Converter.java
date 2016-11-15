@@ -204,8 +204,56 @@ public class Converter
 		}
 			
 		throw new ParseException("Can not parse date from " + date, 0);
-	}	
-	
+	}
+
+	/**
+	 * Added index to duplicate columns
+	 * @param headers columns names.
+	 * @return for these columns
+	 * 		A B A C B A
+	 * 	returned
+	 * 		A~0 B~0 A~1 C B~1 A~2
+	 */
+	public static List<String> convertColumns(List<String> headers)
+	{
+		List<String> result = new ArrayList<>();
+		List<String> tempList = new ArrayList<>();
+		HashMap<String, Integer> indexes = new HashMap<>();
+
+		for (String column : headers)
+		{
+			indexes.put(column, null);
+		}
+
+		for (String word : headers)
+		{
+			boolean contains = tempList.contains(word);
+			tempList.add(word);
+			if (contains)
+			{
+				Integer index = indexes.get(word);
+				if (index == null)
+				{
+					index = 0;
+				}
+				indexes.put(word, index + 1);
+			}
+		}
+		HashMap<String, Integer> maxValues = new HashMap<>(indexes);
+		for (String tmp : tempList)
+		{
+			Integer counter = indexes.get(tmp);
+			String newValue = tmp;
+			if (counter != null)
+			{
+				newValue += "~" + (maxValues.get(tmp) - counter);
+				indexes.replace(tmp, --counter);
+			}
+			result.add(newValue);
+		}
+		return result;
+	}
+
 	private static List<DateFormat> additionFormats = new ArrayList<DateFormat>();
 	
 }
