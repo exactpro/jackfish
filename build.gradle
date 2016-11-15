@@ -1,15 +1,16 @@
 import java.nio.file.Files
 import java.nio.file.Paths
+import java.nio.file.StandardCopyOption
 
 defaultTasks 'createTool'
 
 apply plugin : 'java'
 
 configurations {
-    sqlData
-    unixDriver
-    winDriver
-    macDriver
+	sqlData
+	unixDriver
+	winDriver
+	macDriver
 }
 
 repositories {
@@ -20,45 +21,45 @@ repositories {
 }
 
 dependencies {
-    sqlData(group:    'mysql',                                    name: 'mysql-connector-java',  version: '5.1.26')
-    sqlData(group:    'com.oracle',                               name: 'ojdbc7',                version: '12.1.0.1')
-    sqlData(group:    'org.postgresql',                           name: 'postgresql',            version: '9.0-801.jdbc4')
+	sqlData(group:	'mysql',									name: 'mysql-connector-java',  version: '5.1.26')
+	sqlData(group:	'com.oracle',								name: 'ojdbc7',				version: '12.1.0.1')
+	sqlData(group:	'org.postgresql',							name: 'postgresql',			version: '9.0-801.jdbc4')
 
-    unixDriver(group: 'com.googleapis.storage.chromedriver',      name: 'chromedriver-linux',    version: '2.25',   classifier: 'x86', ext: 'elf')
-    unixDriver(group: 'com.googleapis.storage.chromedriver',      name: 'chromedriver-linux',    version: '2.25',   classifier: 'x64', ext: 'elf')
-    unixDriver(group: 'org.mozilla.geckodriver',                  name: 'geckodriver-linux',     version: '0.11.1', classifier: 'x86', ext: 'elf')
-    unixDriver(group: 'org.mozilla.geckodriver',                  name: 'geckodriver-linux',     version: '0.11.1', classifier: 'x64', ext: 'elf')
+	unixDriver(group: 'com.googleapis.storage.chromedriver',	  name: 'chromedriver-linux',	version: '2.25',	classifier: 'x86', ext: 'elf')
+	unixDriver(group: 'com.googleapis.storage.chromedriver',	  name: 'chromedriver-linux',	version: '2.25',	classifier: 'x64', ext: 'elf')
+	unixDriver(group: 'org.mozilla.geckodriver',				  name: 'geckodriver-linux',	 version: '0.11.1', classifier: 'x86', ext: 'elf')
+	unixDriver(group: 'org.mozilla.geckodriver',				  name: 'geckodriver-linux',	 version: '0.11.1', classifier: 'x64', ext: 'elf')
 
-    winDriver(group: 'com.googleapis.storage.chromedriver',       name: 'chromedriver-win',      version: '2.25',   classifier: 'x86', ext: 'exe')
-    winDriver(group: 'org.mozilla.geckodriver',                   name: 'geckodriver-win',       version: '0.11.1', classifier: 'x86', ext: 'exe')
-    winDriver(group: 'org.mozilla.geckodriver',                   name: 'geckodriver-win',       version: '0.11.1', classifier: 'x64', ext: 'exe')
-    winDriver(group: 'org.seleniumhq.iedriverserver',             name: 'iedriverserver',        version: '2.53.1', classifier: 'x86', ext: 'exe')
-    winDriver(group: 'org.seleniumhq.iedriverserver',             name: 'iedriverserver',        version: '2.53.1', classifier: 'x64', ext: 'exe')
+	winDriver(group: 'com.googleapis.storage.chromedriver',		name: 'chromedriver-win',	  version: '2.25',	classifier: 'x86', ext: 'exe')
+	winDriver(group: 'org.mozilla.geckodriver',					name: 'geckodriver-win',		version: '0.11.1', classifier: 'x86', ext: 'exe')
+	winDriver(group: 'org.mozilla.geckodriver',					name: 'geckodriver-win',		version: '0.11.1', classifier: 'x64', ext: 'exe')
+	winDriver(group: 'org.seleniumhq.iedriverserver',			 name: 'iedriverserver',		version: '2.53.1', classifier: 'x86', ext: 'exe')
+	winDriver(group: 'org.seleniumhq.iedriverserver',			 name: 'iedriverserver',		version: '2.53.1', classifier: 'x64', ext: 'exe')
 
-    macDriver(group: 'com.googleapis.storage.chromedriver',       name: 'chromedriver-mac',      version: '2.25',   classifier: 'x64', ext: 'bin')
-    macDriver(group: 'org.mozilla.geckodriver',                   name: 'geckodriver-mac',       version: '0.11.1', classifier: 'x64', ext: 'bin')
+	macDriver(group: 'com.googleapis.storage.chromedriver',		name: 'chromedriver-mac',	  version: '2.25',	classifier: 'x64', ext: 'bin')
+	macDriver(group: 'org.mozilla.geckodriver',					name: 'geckodriver-mac',		version: '0.11.1', classifier: 'x64', ext: 'bin')
 }
 
 rootProject.ext {
-        version = '4.3.0.' + (System.getProperty('revision') ?: 'local_build')
-        println version
+		version = '4.3.0.' + (System.getProperty('revision') ?: 'local_build')
+		println version
 
-	jfSourceDir	= rootProject.rootDir.path + '/BuildProject'
+	jfSourceDir	= rootProject.rootDir.path + '/core'
 	appsDir		= jfSourceDir + '/apps';
 	clientsDir	= jfSourceDir + '/clients';
 	docsDir		= jfSourceDir + '/docs';
 	libjfDir	= jfSourceDir + '/libjf';
-	dicDir	        = jfSourceDir + '/dic';
+	dicDir		= jfSourceDir + '/dic';
 	matricesDir	= jfSourceDir + '/matrices';
-	servicesDir     = jfSourceDir + '/services';
+	servicesDir	= jfSourceDir + '/services';
 	sqlDir		= jfSourceDir + '/sql';
 	reportsDir	= jfSourceDir + '/reports';
-        coreProject     = 'core';
+	coreProject	= 'core';
 
 	copyTo		= { Project proj, String dest ->
 		def s = Paths.get(proj.buildDir.path + '/libs/' + proj.name + '.jar')
 		def d = Paths.get(dest + '/' + proj.ext.jarName)
-		Files.copy(s, d)
+		Files.copy(s, d, StandardCopyOption.REPLACE_EXISTING)
 	}
 
 	copyAllFiles = { File src, File dest ->
@@ -159,38 +160,39 @@ task makeTool() {
 		dependsOn("${it.path}:distribute")
 	}
 
-        delete fileTree('.') {
-               include 'build_*.zip'
-        }
-
-
-	def jfProject = new File(jfSourceDir);
-	if (jfProject.exists()) {
-		jfProject.deleteDir();
+	delete fileTree('.') {
+		include 'build_*.zip'
 	}
-	jfProject.mkdir();
+}
 
-	def mkdir = {String s -> new File(s).mkdir()}
+task copyData(type: Copy) {
+	dependsOn makeTool;
+	destinationDir = project(':core').projectDir;
 
-	mkdir(appsDir)
-	mkdir(clientsDir)
-	mkdir(reportsDir)
-	mkdir(docsDir)
-        mkdir(libjfDir)
-        mkdir(dicDir)
-	mkdir(matricesDir)
-	mkdir(servicesDir)
-	mkdir(sqlDir)
+	into ('sql') {
+		from configurations.sqlData
+	}
 
-	copyAllFiles(new File(project(":core").projectDir.path + '/matrices/'), new File(matricesDir))
-	copyAllFiles(new File(project(":core").projectDir.path + '/docs/'), new File(docsDir))
-	copyAllFiles(new File(project(":core").projectDir.path + '/libjf/'), new File(libjfDir))
-	copyAllFiles(new File(project(":core").projectDir.path + '/dic/'), new File(dicDir))
+	into ('apps/unix') {
+		from configurations.unixDriver
+	}
+	rename '^(.*)\\.elf$', '$1'
+	fileMode 0755
+
+	into ('apps/win') {
+		from configurations.winDriver
+	}
+
+	into ('apps/mac') {
+		from configurations.macDriver
+	}
+	rename '^(.*)\\.bin$', '$1'
+	fileMode 0755
 }
 
 
 task createTool(type: Zip) {
-	dependsOn makeTool
+	dependsOn copyData
 
 	destinationDir new File('.')
 	archiveName = 'build_' + rootProject.ext.version + '.zip'
@@ -209,8 +211,8 @@ task createTool(type: Zip) {
 	into ('apps/unix') {
 		from configurations.unixDriver
 	}
-        rename '^(.*)\\.elf$', '$1.'
-        fileMode 0755
+		rename '^(.*)\\.elf$', '$1.'
+		fileMode 0755
 
 	into ('apps/win') {
 		from configurations.winDriver
@@ -219,13 +221,13 @@ task createTool(type: Zip) {
 	into ('apps/mac') {
 		from configurations.macDriver
 	}
-        rename '^(.*)\\.bin$', '$1.'
-        fileMode 0755
+		rename '^(.*)\\.bin$', '$1.'
+		fileMode 0755
 
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '3.0' //we want gradle 3.0 to run this project
+	gradleVersion = '3.0' //we want gradle 3.0 to run this project
 }
 
 clean {

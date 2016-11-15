@@ -14,6 +14,17 @@ dependencies {
 	compile group: 'org.eclipse.jgit', name: 'org.eclipse.jgit', version: '4.5.0.201609210915-r'
 }
 
+clean.doFirst {
+	def delDir = {String s ->
+		new File(s).deleteDir()
+		new File(s).mkdir()
+	}
+	delDir(appsDir)
+	delDir(clientsDir)
+	delDir(servicesDir)
+	delDir(sqlDir)
+}
+
 jar {
 	manifest {
 		attributes(
