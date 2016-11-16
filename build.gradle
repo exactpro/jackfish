@@ -176,7 +176,7 @@ task copyData(type: Copy) {
 	into ('apps/unix') {
 		from configurations.unixDriver
 	}
-	rename '^(.*)\\.elf$', '$1'
+	rename '^(.*)\\.elf$', '$1.'
 	fileMode 0755
 
 	into ('apps/win') {
@@ -186,7 +186,7 @@ task copyData(type: Copy) {
 	into ('apps/mac') {
 		from configurations.macDriver
 	}
-	rename '^(.*)\\.bin$', '$1'
+	rename '^(.*)\\.bin$', '$1.'
 	fileMode 0755
 }
 
@@ -197,33 +197,14 @@ task createTool(type: Zip) {
 	destinationDir new File('.')
 	archiveName = 'build_' + rootProject.ext.version + '.zip'
 
-	from jfSourceDir
-	from "whatsnew.txt"
-	from "$coreProject/config.xml"
-	from "$coreProject/run.bat"
-	from "$coreProject/run.sh"
-	from "$coreProject/vars.ini"
-
-	into ('sql') {
-		from configurations.sqlData
+	from (jfSourceDir) {
+		exclude("build*")
+		exclude(".*")
+		exclude("src")
+		exclude("reports/*")
+		exclude("logs")
+		exclude("remote_out.txt")
 	}
-
-	into ('apps/unix') {
-		from configurations.unixDriver
-	}
-		rename '^(.*)\\.elf$', '$1.'
-		fileMode 0755
-
-	into ('apps/win') {
-		from configurations.winDriver
-	}
-
-	into ('apps/mac') {
-		from configurations.macDriver
-	}
-		rename '^(.*)\\.bin$', '$1.'
-		fileMode 0755
-
 }
 
 task wrapper(type: Wrapper) {
