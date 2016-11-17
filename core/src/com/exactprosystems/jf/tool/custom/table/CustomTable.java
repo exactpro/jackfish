@@ -85,6 +85,11 @@ public class CustomTable<T> extends TableView<T>
 		onEditCommitColumn(thirdColumn, editCommit);
 	}
 
+	public void setSortable(boolean flag)
+	{
+		this.getColumns().forEach(col -> col.setSortable(flag));
+	}
+
 	public void update()
 	{
 		this.getColumns().forEach(column -> Platform.runLater(() -> {

@@ -122,6 +122,7 @@ public class SystemVarsFxController implements Initializable, ContainingParent
 		this.tableView.onFinishEditFirstColumn((par, value) -> { this.model.updateNameRow(current(), value); });
 		this.tableView.onFinishEditSecondColumn((par, value) -> { this.model.updateExpressionRow(current(), value); });
 		this.tableView.setRowFactory((v) -> new ColorRow());
+		this.tableView.setSortable(false);
 	}
 	
 	private int current()
