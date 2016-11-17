@@ -10,6 +10,7 @@ package com.exactprosystems.jf.app;
 
 import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.client.ICondition;
+import com.exactprosystems.jf.api.common.Converter;
 import com.exactprosystems.jf.api.error.app.ElementNotFoundException;
 import com.exactprosystems.jf.api.error.app.FeatureNotSupportedException;
 import com.exactprosystems.jf.api.error.app.OperationNotAllowedException;
@@ -1348,18 +1349,18 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 
 	private Map<String, Integer> getTableHeaders(final JTable table, String[] columns)
 	{
-		Map<String, Integer> result = new LinkedHashMap<String, Integer>();
+		List<String> headers = new ArrayList<>();
+		Map<String, Integer> result = new LinkedHashMap<>();
 		String realName = "";
-
 		for (int i = 0; i < table.getColumnModel().getColumnCount(); i++)
 		{
 			if(columns == null)
 			{
-                realName = table.getColumnModel().getColumn(i).getHeaderValue().toString();
-                if(realName.equals("-"))
-                {
-                    realName = "";
-                }
+				realName = table.getColumnModel().getColumn(i).getHeaderValue().toString();
+				if(realName.equals("-"))
+				{
+					realName = "";
+				}
 			}
 			else
 			{
@@ -1367,9 +1368,14 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 			}
 
 			String underscopedName = realName.replace(' ', '_');
-			result.put(underscopedName, i);
+			headers.add(underscopedName);
 		}
-
+		List<String> newColumns = Converter.convertColumns(headers);
+		int count = 0;
+		for (String newColumn : newColumns)
+		{
+			result.put(newColumn, count++);
+		}
 		return result;
 	}
 
