@@ -6,9 +6,9 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="197.0" prefWidth="446.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.exactprosystems.jf.tool.newconfig.wizard.WizardConfigurationController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="197.0" prefWidth="416.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.exactprosystems.jf.tool.newconfig.wizard.WizardConfigurationController">
    <center>
-      <GridPane hgap="20.0" BorderPane.alignment="CENTER">
+      <GridPane hgap="8.0" BorderPane.alignment="CENTER">
         <columnConstraints>
           <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="10.0" percentWidth="35.0" prefWidth="100.0" />
           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -31,9 +31,9 @@
    <bottom>
       <GridPane BorderPane.alignment="CENTER">
         <columnConstraints>
-          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="128.0" minWidth="128.0" prefWidth="128.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="128.0" minWidth="128.0" prefWidth="128.0" />
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="128.0" minWidth="128.0" prefWidth="128.0" />
         </columnConstraints>
         <rowConstraints>
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -48,8 +48,11 @@
             <CheckBox fx:id="cbReportFolder" mnemonicParsing="false" selected="true" text="Report" GridPane.columnIndex="2" GridPane.rowIndex="1" />
          </children>
          <BorderPane.margin>
-            <Insets bottom="15.0" left="15.0" right="15.0" />
+            <Insets left="16.0" right="16.0" />
          </BorderPane.margin>
       </GridPane>
    </bottom>
+   <padding>
+      <Insets bottom="64.0" />
+   </padding>
 </BorderPane>
