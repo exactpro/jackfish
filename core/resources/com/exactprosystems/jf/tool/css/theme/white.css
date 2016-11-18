@@ -119,6 +119,7 @@
 /*Custom classes*/
 .transparentBackground {
 	-fx-background-color : transparent;
+	-fx-padding : 4px;
 
 }
 .delayShutter:selected {
