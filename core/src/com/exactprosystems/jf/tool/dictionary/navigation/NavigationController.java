@@ -16,12 +16,12 @@ import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.custom.BorderWrapper;
-import com.exactprosystems.jf.tool.dictionary.FindListView;
 import com.exactprosystems.jf.tool.custom.shutter.DelayShutterButton;
 import com.exactprosystems.jf.tool.custom.tab.CustomTab;
 import com.exactprosystems.jf.tool.custom.xpath.XpathViewer;
 import com.exactprosystems.jf.tool.dictionary.DictionaryFx;
 import com.exactprosystems.jf.tool.dictionary.DictionaryFxController;
+import com.exactprosystems.jf.tool.dictionary.FindListView;
 import com.exactprosystems.jf.tool.main.Main;
 import com.exactprosystems.jf.tool.settings.SettingsPanel;
 import com.exactprosystems.jf.tool.settings.Theme;
@@ -125,9 +125,10 @@ public class NavigationController implements Initializable, ContainingParent
 			scrollPaneWindow.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
 			scrollPaneWindow.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
 			Node dialog = BorderWrapper.wrap(this.paneWindow).title("Dialog").color(Common.currentTheme().getReverseColor()).build();
-			((Region) dialog).setMinWidth(400.0);
-			((Region) dialog).setMaxWidth(400.0);
-			((Region) dialog).setPrefWidth(400.0);
+			double width = 385.0;
+			((Region) dialog).setMinWidth(width);
+			((Region) dialog).setMaxWidth(width);
+			((Region) dialog).setPrefWidth(width);
 			((HBox)this.pane).getChildren().add(0,dialog);
 
 			ScrollPane scrollPaneElement = new ScrollPane(this.paneElement);
@@ -136,9 +137,9 @@ public class NavigationController implements Initializable, ContainingParent
 			scrollPaneElement.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
 			scrollPaneElement.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
 			Node element = BorderWrapper.wrap(this.paneElement).title("Element").color(Common.currentTheme().getReverseColor()).build();
-			((Region) element).setMinWidth(400.0);
-			((Region) element).setMaxWidth(400.0);
-			((Region) element).setPrefWidth(400.0);
+			((Region) element).setMinWidth(width);
+			((Region) element).setMaxWidth(width);
+			((Region) element).setPrefWidth(width);
 			((HBox)this.pane).getChildren().add(element);
 
 			Common.customizeLabeled(this.btnNewDialog, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.DICTIONARY_NEW);

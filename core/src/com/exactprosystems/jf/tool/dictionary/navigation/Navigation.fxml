@@ -8,6 +8,7 @@
    information which is the property of Exactpro Systems, LLC or its licensors.
   -->
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import java.lang.Double?>
@@ -45,7 +46,7 @@
 				</HBox>
 			</bottom>
 		</BorderPane>
-		<VBox alignment="CENTER_LEFT" GridPane.columnIndex="1" GridPane.valignment="CENTER" minWidth="$w" maxWidth="$w" prefWidth="$w" spacing="5">
+		<VBox alignment="CENTER_LEFT" GridPane.columnIndex="1" GridPane.valignment="CENTER" minWidth="$w" maxWidth="$w" prefWidth="$w" spacing="4">
 			<children>
 				<RadioButton id="Self" mnemonicParsing="false" onAction="#changeSection" text="Self">
 					<toggleGroup>
@@ -57,6 +58,9 @@
 				<RadioButton id="OnClose" mnemonicParsing="false" onAction="#changeSection" text="On close" toggleGroup="$groupSection"/>
 				<RadioButton id="Close" mnemonicParsing="false" onAction="#changeSection" text="Close" toggleGroup="$groupSection"/>
 			</children>
+			<HBox.margin>
+				<Insets left="16" top="16" right="16" bottom="16"/>
+			</HBox.margin>
 		</VBox >
 		<BorderPane fx:id="paneElement" GridPane.columnIndex="2">
 			<bottom>
