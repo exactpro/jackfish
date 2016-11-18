@@ -23,6 +23,8 @@ import java.util.function.Consumer;
 
 public abstract class TreeNode
 {
+	private boolean isExpanded;
+
 	public Optional<ContextMenu> contextMenu()
 	{
 		return Optional.empty();
@@ -31,6 +33,17 @@ public abstract class TreeNode
 	public abstract Node getView();
 
 	public abstract Optional<Image> icon();
+
+	//TODO think about it. We need implement all icons from css, not from code.
+	public void setExpanded(boolean isExpanded)
+	{
+		this.isExpanded = isExpanded;
+	}
+
+	protected boolean isExpanded()
+	{
+		return isExpanded;
+	}
 
 	public List<TablePair> getParameters()
 	{
