@@ -20,8 +20,8 @@ import java.util.List;
 
 public final class BorderWrapper
 {
-	private final double outerPad = 10;
-	private final double innerPad = 15;
+	private final double outerPad = 16;
+	private final double innerPad = 16;
 	private final double radius = 5;
 	private final double thick = 1;
 	private BorderStrokeStyle strokeStyle = BorderStrokeStyle.SOLID;
