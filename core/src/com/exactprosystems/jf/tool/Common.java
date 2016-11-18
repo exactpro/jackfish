@@ -65,7 +65,7 @@ public abstract class Common
 	public final static int		MIN_HEIGHT				= PREF_HEIGHT - 1;
 	public final static int		MAX_HEIGHT				= PREF_HEIGHT + 1;
 	public final static int		PREF_WIDTH_LABEL		= 170;
-	public final static int		BUTTON_SIZE_WITH_ICON	= 42;
+	public final static int		BUTTON_SIZE_WITH_ICON	= 32;
 	public final static String	UINT_REGEXP				= "^\\d+$";
 	public final static String	INT_REGEXP				= "^-?\\d+$";
 	public final static String	EMPTY					= "<none>";
