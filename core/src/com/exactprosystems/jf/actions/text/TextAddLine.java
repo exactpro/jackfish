@@ -21,17 +21,17 @@ import com.exactprosystems.jf.functions.Text;
 @ActionAttribute(
 		group					= ActionGroups.Text,
 		generalDescription 		=
- "The purpose of the action is to add a line to the object type Text. "
-+ "Object type Text is a text-based pattern which consists of lines. "
+ "The purpose of the action is to add a line to the object type {{$Text$}}. "
++ "Object type {{$Text$}} is a text-based pattern which consists of lines. "
 + "The action can work for object creation Text line-by-line from different sources.",
 		additionFieldsAllowed 	= true,
 		examples =
-"#Id;#Action;#Content\n"
-+ "TXT1;TextCreate;'Text'\n"
+"{{##Id;#Action;#Content\n"
++ "TXT1;TextCreate;'Text'#}}\n"
 + "\n"
 + "\n"
-+ "#Action;#Line;#Text\n"
-+ "TextAddLine;'New line';TXT1.Out\n"
++ "{{##Action;#Line;#Text\n"
++ "TextAddLine;'New line';TXT1.Out#}}\n"
 	)
 public class TextAddLine extends AbstractAction 
 {

@@ -21,17 +21,17 @@ import com.exactprosystems.jf.functions.Text;
 @ActionAttribute(
 		group					= ActionGroups.Text,
 		generalDescription 		=
- "The purpose of the action is to display the object content Text in the report on the matrix run. "
-+ "The object type Text is the text-based pattern which consists of lines. "
-+ "It is applied when it is necessary to examine the content of the object Text.",
+ "The purpose of the action is to display the object content {{$Text$}} in the report on the matrix run. "
++ "The object type {{$Text$}} is the text-based pattern which consists of lines. "
++ "It is applied when it is necessary to examine the content of the object {{$Text$}}.",
 		additionFieldsAllowed 	= false,
 		examples =
- "#Id;#Action;#Content\n"
-+ "TXT1;TextCreate;'Text'\n"
+ "{{##Id;#Action;#Content\n"
++ "TXT1;TextCreate;'Text'#}}\n"
 + "\n"
 + "\n"
-+ "#Action;#Title;#Text\n"
-+ "TextReport;’My text’;TXT1.Out\n"
++ "{{##Action;#Title;#Text\n"
++ "TextReport;’My text’;TXT1.Out#}}\n"
 	)
 public class TextReport extends AbstractAction 
 {

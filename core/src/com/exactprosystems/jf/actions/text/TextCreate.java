@@ -25,23 +25,24 @@ import java.io.StringReader;
 		group					= ActionGroups.Text,
 		suffix					= "TXT",
 		generalDescription 		=
- "The purpose of the action is to create the object type Text. "
-+ "The object type Text is the text-based pattern which consists of lines. "
-+ "Object type Text is used as the input object in many actions, see: "
-+ "MatrixRunFromText, TextSaveToFile, TextLoadFromFile, TextReport, TextAddLine, TextPerform, TextSetValue. "
-+ "Also the object type Text can be converted into the line object "
-+ "which can contain many lines (Text.Out.toString()) divided by the line break symbol (\\n) and "
-+ "transferred to any action which accepts the line as the parameter or parameters, for example in action SQLExecute.",
+ "The purpose of the action is to create the object type {{$Text$}}. "
++ "The object type {{$Text$}} is the text-based pattern which consists of lines. "
++ "Object type {{$Text$}} is used as the input object in many actions, see: "
++ "{{$MatrixRunFromText$}}, {{$TextSaveToFile$}}, {{$TextLoadFromFile$}}, {{$TextReport$}}, "
++ "{{$TextAddLine$}}, {{$TextPerform$}}, {{$TextSetValue$}}. "
++ "Also the object type {{$Text$}} can be converted into the line object "
++ "which can contain many lines {{$Text.Out.toString()$}} divided by the line break symbol (\\n) and "
++ "transferred to any action which accepts the line as the parameter or parameters, for example in action {{$SQLExecute$}}.",
 		additionFieldsAllowed 	= true,
 		outputDescription 		= "The object type Text is the text-based pattern which consists of lines.",
 		outputType				= Text.class,
 		examples =
- "#Id;#Action;#Content\n"
-+ "TXT1;TextCreate;'Text'\n"
+ "{{##Id;#Action;#Content\n"
++ "TXT1;TextCreate;'Text'#}}\n"
 + "\n"
 + "\n"
-+ "#Assert;#Message\n"
-+ "TXT1.Out.toString() == 'Text';\n"
++ "{{##Assert;#Message\n"
++ "TXT1.Out.toString() == 'Text';#}}\n"
 	)
 public class TextCreate extends AbstractAction 
 {
