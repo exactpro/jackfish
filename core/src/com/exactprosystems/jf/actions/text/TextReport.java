@@ -20,8 +20,18 @@ import com.exactprosystems.jf.functions.Text;
 
 @ActionAttribute(
 		group					= ActionGroups.Text,
-		generalDescription 		= "Reports the text to the report.",
-		additionFieldsAllowed 	= false
+		generalDescription 		=
+ "The purpose of the action is to display the object content Text in the report on the matrix run. "
++ "The object type Text is the text-based pattern which consists of lines. "
++ "It is applied when it is necessary to examine the content of the object Text.",
+		additionFieldsAllowed 	= false,
+		examples =
+ "#Id;#Action;#Content\n"
++ "TXT1;TextCreate;'Text'\n"
++ "\n"
++ "\n"
++ "#Action;#Title;#Text\n"
++ "TextReport;’My text’;TXT1.Out\n"
 	)
 public class TextReport extends AbstractAction 
 {
@@ -29,13 +39,14 @@ public class TextReport extends AbstractAction
 	public final static String beforeTestCaseName = "BeforeTestCase";
 	public final static String titleName = "Title";
 
-	@ActionFieldAttribute(name = textName, mandatory = true, description = "The text object.")
+	@ActionFieldAttribute(name = textName, mandatory = true, description = "Text(Text) - object Text, which is required to output.")
 	protected Text 	text 	= null;
 
-	@ActionFieldAttribute(name = beforeTestCaseName, mandatory = false, description = "The name of Testcase before witch the text will be put.")
+	@ActionFieldAttribute(name = beforeTestCaseName, mandatory = false, description = "BeforeTestCase(String) -it" +
+			" accepts id test case before which the text will be displayed in the report.")
 	protected String 	beforeTestCase 	= null;
 
-	@ActionFieldAttribute(name = titleName, mandatory = true, description = "Title.")
+	@ActionFieldAttribute(name = titleName, mandatory = true, description = "Title(String) — the title of the text.")
 	protected String 	title 	= null;
 
 	

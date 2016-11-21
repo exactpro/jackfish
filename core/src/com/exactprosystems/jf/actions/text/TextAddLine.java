@@ -20,18 +20,28 @@ import com.exactprosystems.jf.functions.Text;
 
 @ActionAttribute(
 		group					= ActionGroups.Text,
-		generalDescription 		= "Adds new line into the text.",
-		additionFieldsAllowed 	= true
+		generalDescription 		=
+ "The purpose of the action is to add a line to the object type Text. "
++ "Object type Text is a text-based pattern which consists of lines. "
++ "The action can work for object creation Text line-by-line from different sources.",
+		additionFieldsAllowed 	= true,
+		examples =
+"#Id;#Action;#Content\n"
++ "TXT1;TextCreate;'Text'\n"
++ "\n"
++ "\n"
++ "#Action;#Line;#Text\n"
++ "TextAddLine;'New line';TXT1.Out\n"
 	)
 public class TextAddLine extends AbstractAction 
 {
 	public final static String textName = "Text";
 	public final static String lineName = "Line";
 
-	@ActionFieldAttribute(name = textName, mandatory = true, description = "The text object.")
+	@ActionFieldAttribute(name = textName, mandatory = true, description = "Text(Text) - object Text.")
 	protected Text 	text 	= null;
 
-	@ActionFieldAttribute(name = lineName, mandatory = true, description = "The line will be added to the text.")
+	@ActionFieldAttribute(name = lineName, mandatory = true, description = "Line(String) — the line that should be added.")
 	protected String	line 	= null;
 
 	public TextAddLine()

@@ -22,16 +22,26 @@ import com.exactprosystems.jf.functions.Text;
 @ActionAttribute(
 		group					= ActionGroups.Text,
 		suffix					= "TXT",
-		generalDescription 		= "Load text from a file as text.",
+		generalDescription 		=
+ "The purpose of the action is to create the object type Text from the file. "
++ "The object type Text is the text-based pattern which consists of lines. "
++ "Any file which contains plain-text can be used as a source file.",
 		additionFieldsAllowed 	= false,
-		outputDescription 		= "Text object.",
-		outputType				= Text.class
+		outputDescription 		= "The object type Text is the text-based pattern which consists of lines.",
+		outputType				= Text.class,
+		examples =
+ "#Id;#Action;#File\n"
++ "TXT1;TextLoadFromFile;’path/text.txt’\n"
++ "\n"
++ "\n"
++ "#Assert;#Message\n"
++ "TXT1.Out != null;\n"
 	)
 public class TextLoadFromFile extends AbstractAction 
 {
 	public final static String fileName 		= "File";
 
-	@ActionFieldAttribute(name = fileName, mandatory = true, description = "File name.")
+	@ActionFieldAttribute(name = fileName, mandatory = true, description = "File(String) —  a text file,  the text of which is required to type")
 	protected String 	file 	= null;
 
 	public TextLoadFromFile()
