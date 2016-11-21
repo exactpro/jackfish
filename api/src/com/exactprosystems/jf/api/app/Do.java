@@ -157,6 +157,13 @@ public class Do
 		return new Operation().getValue();
 	}
 
+	static final String getList= "Return values from all items of this list";
+	@DescriptionAttribute(text = Do.getList)
+	public static Operation getList()
+	{
+		return new Operation().getList();
+	}
+
 	static final String getRectangle= "Return rectangle in which current component is placed.";
 	@DescriptionAttribute(text = Do.getRectangle)
 	public static Operation getRectangle()

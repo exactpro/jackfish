@@ -1393,6 +1393,11 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 		throw real;
 	}
 
+	@Override
+	public List<String> getList(WebElement component) throws Exception {
+		return null;
+	}
+
 	//region private methods
 	private String getElementString(WebElement element)
 	{

@@ -36,6 +36,7 @@ public interface JnaDriver extends Library {
 	//endregion
 
 	String elementAttribute(String elementId, int partId);
+	String getList(String elementId);
 	void sendKey(String key);
 
 	void upAndDown(String key, boolean isDown);

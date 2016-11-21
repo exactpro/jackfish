@@ -294,6 +294,61 @@ namespace UIAdapter
         #endregion
 
         #region find methods
+        [DllExport("getList", CallingConvention.Cdecl)]
+        public static string getList(string elementId)
+        {
+            try
+            {
+                long startMethod = getMilis();
+                string result = "";
+
+                // find element, with type == list, under owner
+                string propertyName = "list";
+                AutomationProperty automationProperty = AutomationElement.LocalizedControlTypeProperty;
+                PropertyCondition condition = new PropertyCondition(automationProperty, propertyName);
+                TreeScope scope = TreeScope.Descendants;
+
+                AutomationElement owner = findOwner(elementId);
+                AutomationElement list = owner.FindFirst(scope, condition);
+                if (list == null)
+                {
+                    list = handler.FindFirst(scope, condition);
+                    if (list == null)
+                    {
+                        logger.All("method ListAll doesn't have any list elements" , getMilis() - startMethod);
+                        return null;
+                    }
+                }
+
+                // find all children in list
+                TreeWalker tw = TreeWalker.ControlViewWalker;
+                AutomationElement child = tw.GetFirstChild(list);
+                while (child != null)
+                {
+                    if (child.Current.Name != "")
+                    {
+                        if (result == "")
+                        {
+                            result += child.Current.Name;
+                        }
+                        else
+                        {
+                            result += SEPARATOR_COMMA + child.Current.Name;
+                        }
+                    }
+                    child = tw.GetNextSibling(child);
+                }
+
+                logger.All("method ListAll", getMilis() - startMethod);
+                return result;
+            }
+            catch (Exception e)
+            {
+                MakeError(e);
+            }
+            return null;
+        }
+
         [DllExport("listAll", CallingConvention.Cdecl)]
         public static string ListAll(string OwnerId, int controlkindId, string Uid, string Xpath, string Clazz, string Name, string Title, string Text, Boolean many)
         {
@@ -2138,6 +2193,7 @@ namespace UIAdapter
 
         public static readonly string SEPARATOR_CELL = "###";
         public static readonly string SEPARATOR_ROWS = ";;;";
+        public static readonly string SEPARATOR_COMMA = ",";
         public static readonly string EMPTY_CELL = "EMPTY_CELL_EMPTY";
 
         private static Dictionary<int[], AutomationElement> cacheRuntimeId = new Dictionary<int[], AutomationElement>(new DictionaryMatcher());

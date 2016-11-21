@@ -805,6 +805,11 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 	}
 
 	@Override
+	public List<String> getList(ComponentFixture<Component> component) throws Exception {
+		return null;
+	}
+
+	@Override
 	public String get(ComponentFixture<Component> component) throws Exception
 	{
 		try

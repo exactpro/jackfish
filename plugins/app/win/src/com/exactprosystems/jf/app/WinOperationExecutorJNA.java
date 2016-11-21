@@ -30,6 +30,7 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 	static final String RECTANGLE_PATTERN = "(-?\\d+),(-?\\d+),(\\d+),(\\d+)";
 	private static final String SEPARATOR_CELL = "###";
 	private static final String SEPARATOR_ROWS = ";;;";
+	private static final String SEPARATOR_COMMA = ",";
 	private static final String EMPTY_CELL = "EMPTY_CELL_EMPTY";
 	private static final String EMPTY_HEADER_CELL = "EMPTY_HEADER_CELL_EMPTY";
 
@@ -526,6 +527,31 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 	}
 
 	@Override
+	public List<String> getList(UIProxyJNA component) throws Exception
+    {
+        try
+        {
+            String result = this.driver.getList(component);
+            List<String> returnedList = new ArrayList<>();
+            if(result != null) {
+				String[] resultArray = result.split(SEPARATOR_COMMA);
+				Collections.addAll(returnedList, resultArray);
+			}
+            return returnedList;
+        }
+        catch (RemoteException e)
+        {
+            throw e;
+        }
+        catch (Exception e)
+        {
+            this.logger.error(String.format("getRowIndexes(%s)", component));
+            this.logger.error(e.getMessage(), e);
+            throw e;
+        }
+	}
+
+	@Override
 	public String getValue(UIProxyJNA component) throws Exception
 	{
 		try
@@ -633,16 +659,16 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 			{
 				throw new OperationNotAllowedException("Unsupported attribute value. Can use only : " + Arrays.toString(AttributeKind.values()));
 			}
-			
+
 			AttributeKind kind = AttributeKind.valueOf(name.toUpperCase());
-			
+
 			if(kind == AttributeKind.ITEMS)
 			{
 				Rectangle rect = getRectangle(component);
 				int[] xy = {rect.x + 20, rect.y + rect.height + 1};
 				return this.driver.elementAttribute(new UIProxyJNA(xy), kind);
 			}
-			
+
 			return this.driver.elementAttribute(component, kind);
 		}
 		catch (RemoteException e)

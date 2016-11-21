@@ -358,6 +358,16 @@ public class JnaDriverImpl
 		return res;
 	}
 
+	public String getList(UIProxyJNA element) throws Exception
+	{
+		long start = System.currentTimeMillis();
+		String result = this.driver.getList(element.getIdString());
+		this.logger.info(String.format("getList(%s) = %s, time (ms) : %d", element, result, System.currentTimeMillis() - start));
+		checkCSharpTimes();
+		checkError();
+		return result;
+	}
+
 	public String getRowIndexes(UIProxyJNA table, boolean useNumericHeader, ICondition condition, String columns) throws Exception
 	{
 		long start = System.currentTimeMillis();
@@ -368,7 +378,6 @@ public class JnaDriverImpl
 		checkCSharpTimes();
 		checkError();
 		return res;
-
 	}
 
 	public String getRowByIndex(UIProxyJNA table, boolean useNumericHeader, int index) throws Exception
