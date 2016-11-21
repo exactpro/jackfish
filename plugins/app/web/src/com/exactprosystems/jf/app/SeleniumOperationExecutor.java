@@ -10,6 +10,7 @@ package com.exactprosystems.jf.app;
 
 import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.client.ICondition;
+import com.exactprosystems.jf.api.common.Converter;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.error.app.ElementNotFoundException;
 import com.exactprosystems.jf.api.error.app.TooManyElementsException;
@@ -22,7 +23,6 @@ import org.openqa.selenium.*;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.Point;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeDriverService;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.safari.SafariDriver;
 import org.openqa.selenium.support.ui.Select;
@@ -1421,14 +1421,14 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 			}
 			headerElements = firstTr.children();
 			columnsIsRow.set(true);
-			return convertColumnsToHeaders(headerElements, columns, new IText<Element>()
+			return Converter.convertColumns(convertColumnsToHeaders(headerElements, columns, new IText<Element>()
 			{
 				@Override
 				public String getText(Element element)
 				{
 					return element.text();
 				}
-			});
+			}));
 		}
 
 		Elements theadChildren = lastThead.children();
@@ -1454,14 +1454,14 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 		{
 			result.add(element.text());
 		}
-		return convertColumnsToHeaders(result, columns, new IText<String>()
+		return Converter.convertColumns(convertColumnsToHeaders(result, columns, new IText<String>()
 		{
 			@Override
 			public String getText(String s)
 			{
 				return s;
 			}
-		});
+		}));
 	}
 
 	private Map<String, String> getRowValues(WebElement row, List<String> headers) throws Exception
@@ -1566,14 +1566,14 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 				{
 					case tag_tr: webHeader = lastThead.findElement(By.xpath("child::tr[last()]"));
 				}
-				return convertColumnsToHeaders(webHeader.findElements(By.xpath("child::*")), columns, new IText<WebElement>()
+				return Converter.convertColumns(convertColumnsToHeaders(webHeader.findElements(By.xpath("child::*")), columns, new IText<WebElement>()
 				{
 					@Override
 					public String getText(WebElement webElement)
 					{
 						return webElement.getText();
 					}
-				});
+				}));
 			}
 			catch (StaleElementReferenceException e)
 			{
@@ -1648,14 +1648,14 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 		{
 			cells = firstRow.findElements(By.tagName(tag_td));
 		}
-		return convertColumnsToHeaders(cells, columns, new IText<WebElement>()
+		return Converter.convertColumns(convertColumnsToHeaders(cells, columns, new IText<WebElement>()
 		{
 			@Override
 			public String getText(WebElement webElement)
 			{
 				return webElement.getText();
 			}
-		});
+		}));
 	}
 
 	/**
