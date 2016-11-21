@@ -20,8 +20,20 @@ import com.exactprosystems.jf.functions.Text;
 
 @ActionAttribute(
 		group					= ActionGroups.Text,
-		generalDescription 		= "Sets line of the text.",
-		additionFieldsAllowed 	= false
+		generalDescription 		=
+ "The purpose of the action is to change the definite line in the object Text. "
++ "The object type Text is the text-based pattern which consists of lines. "
++ "It can be used when it is required to make changes in the object, which has a "
++ "sufficiently large volume or when there is no access to the source "
++ "from which it was obtained.",
+		additionFieldsAllowed 	= false,
+		examples =
+ "#Id;#Action;#Content\n"
++ "TXT1;TextCreate;'Text'\n"
++ "\n"
++ "\n"
++ "#Action;#Line;#Text;#Index\n"
++ "TextSetValue;‘string successfully set’;TXT1.Out;2"
 	)
 public class TextSetValue extends AbstractAction 
 {
@@ -29,13 +41,15 @@ public class TextSetValue extends AbstractAction
 	public final static String lineName = "Line";
 	public final static String indexName = "Index";
 
-	@ActionFieldAttribute(name = textName, mandatory = true, description = "The text object.")
+	@ActionFieldAttribute(name = textName, mandatory = true, description = "Text(Text) - object Text, in which" +
+			" it is necessary to change the line.")
 	protected Text 	text 	= null;
 
-	@ActionFieldAttribute(name = lineName, mandatory = true, description = "Contains of line.")
+	@ActionFieldAttribute(name = lineName, mandatory = true, description = "Line(String) - input line.")
 	protected String	line 	= null;
 
-	@ActionFieldAttribute(name = indexName, mandatory = true, description = "Index of line.")
+	@ActionFieldAttribute(name = indexName, mandatory = true, description = "Index(Integer) - line index," +
+			" which is required to change. ")
 	protected Integer	index 	= 0;
 
 	public TextSetValue()
