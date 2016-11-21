@@ -125,6 +125,10 @@ public class Context implements IContext, AutoCloseable, Cloneable
                }
                
            }
+           else
+           {
+               handler.setRealParameters(new Parameters());
+           }
            
            return handler.execute(this, this.matrixListener, this.evaluator, report);
        }
