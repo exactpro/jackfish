@@ -491,15 +491,16 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 		}
 		logger.debug("Rows size : " + rows.size());
 		String[][] res = new String[rows.size() + 1][headers.size()];
-		for (int i = 0; i < res[0].length; i++)
+		String[] cols = res[0];
+		for (int i = 0; i < cols.length; i++)
 		{
-			res[0][i] = headers.get(i);
+			cols[i] = headers.get(i);
 		}
 		for (int i = 1; i < res.length; i++)
 		{
 			Element row = rows.get(i - 1);
 			Elements cells = row.children();
-			for (int j = 0; j < cells.size(); j++)
+			for (int j = 0; j < cols.length; j++)
 			{
 				res[i][j] = cells.get(j).text();
 			}
