@@ -22,22 +22,22 @@ import com.exactprosystems.jf.functions.Text;
 @ActionAttribute(
 		group					= ActionGroups.Text,
 		generalDescription 		=
- "The purpose of the action is to save object Text to a file. "
+ "The purpose of the action is to save object {{$Text$}} to a file. "
 + "The object type Text is the text-based pattern which consists of lines.",
 		additionFieldsAllowed 	= false,
 		outputDescription 		= "True if saving is successfull.",
 		outputType				= Boolean.class,
 		examples =
-"#Id;#Action;#Content\n"
-+"TXT1;TextCreate;'Text'\n"
+"{{##Id;#Action;#Content\n"
++"TXT1;TextCreate;'Text'#}}\n"
 + "\n"
 + "\n"
-+ "#Id;#Action;#Text;#File\n"
-+ "TXT2;TextSaveToFile;TXT1.Out;’path/file.txt’\n"
++ "{{##Id;#Action;#Text;#File\n"
++ "TXT2;TextSaveToFile;TXT1.Out;’path/file.txt’#}}\n"
 + "\n"
 + "\n"
-+ "#Assert;#Message\n"
-+ "TXT2.Out;\n",
++ "{{##Assert;#Message\n"
++ "TXT2.Out;#}}\n",
 		seeAlso = "{{@TextSaveToFile@}},"
 	)
 public class TextSaveToFile extends AbstractAction 
