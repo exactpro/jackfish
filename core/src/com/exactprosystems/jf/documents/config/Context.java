@@ -12,12 +12,18 @@ import com.exactprosystems.jf.actions.ReadableValue;
 import com.exactprosystems.jf.api.common.IContext;
 import com.exactprosystems.jf.common.MatrixRunner;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
+import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.DocumentFactory;
 import com.exactprosystems.jf.documents.matrix.Matrix;
+import com.exactprosystems.jf.documents.matrix.parser.Parameter;
+import com.exactprosystems.jf.documents.matrix.parser.Parameters;
+import com.exactprosystems.jf.documents.matrix.parser.ReturnAndResult;
+import com.exactprosystems.jf.documents.matrix.parser.items.MatrixError;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixRoot;
 import com.exactprosystems.jf.documents.matrix.parser.items.NameSpace;
 import com.exactprosystems.jf.documents.matrix.parser.items.SubCase;
+import com.exactprosystems.jf.documents.matrix.parser.items.TypeMandatory;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
 import com.exactprosystems.jf.functions.Table;
 import org.apache.log4j.Logger;
@@ -98,10 +104,32 @@ public class Context implements IContext, AutoCloseable, Cloneable
 	    }
 	}
 	
-	public SubCase getHandler(HandlerKind handlerKind)
-	{
-	    return this.handlers.get(handlerKind);
-	}
+   public ReturnAndResult  runHandler(HandlerKind handlerKind, ReportBuilder report, MatrixError err) 
+    {
+       if (handlerKind == null)
+       {
+           return null;
+       }
+       
+       SubCase handler = this.handlers.get(handlerKind);
+       if (handler != null)
+       {
+           if (handlerKind == HandlerKind.OnTestCaseError || handlerKind == HandlerKind.OnStepError)
+           {
+               Parameters parameters = handler.getParameters();
+               if (parameters.size() > 0)
+               {
+                   Parameter par = parameters.getByIndex(0); 
+                   par.setValue(err);
+                   handler.setRealParameters(parameters);
+               }
+               
+           }
+           
+           return handler.execute(this, this.matrixListener, this.evaluator, report);
+       }
+       return null;
+    }
 	
 	public Context setOut(PrintStream out)
 	{
