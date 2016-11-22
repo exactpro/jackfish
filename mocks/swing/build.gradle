@@ -7,10 +7,25 @@ dependencies {
 }
 
 jar {
+    baseName = 'mock-swing'
 	manifest {
 		attributes(
 				'Main-Class' : 'com.exactprosystems.jf.MockApp',
 				'Class-Path' : '.'
 		)
 	}
+    from {
+        configurations.runtime.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+    from('META-INF') {
+        into 'META-INF'
+        include 'services/*.*'
+    }
+}
+
+distribute.doLast {
+    copy {
+        from 'build\\libs\\' + jar.baseName + '.jar'
+        into projectDir
+    }
 }
