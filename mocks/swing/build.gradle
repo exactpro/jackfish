@@ -25,7 +25,7 @@ jar {
 
 distribute.doLast {
     copy {
-        from 'build\\libs\\' + jar.baseName + '.jar'
+        from 'build/libs/' + jar.baseName + '.jar'
         into projectDir
     }
 }
