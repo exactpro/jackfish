@@ -89,6 +89,12 @@ public class Context implements IContext, AutoCloseable, Cloneable
 			throw new InternalError();
 		}
 	}
+	
+    public void reset() throws Exception
+    {
+        this.handlers.clear();
+        this.evaluator.reset();
+    }
 
 	public void createResultTable()
 	{

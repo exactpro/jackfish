@@ -337,7 +337,7 @@ public class MatrixRunner implements IMatrixRunner, AutoCloseable
 		{
 			try
 			{
-				this.context.getEvaluator().reset();
+				this.context.reset();
 			}
 			catch (Exception e)
 			{

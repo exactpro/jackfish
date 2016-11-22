@@ -194,9 +194,12 @@ public final class TestCase extends MatrixItem
 			
 			if (res == Result.Failed)
 			{
-			    ret = context.runHandler(HandlerKind.OnTestCaseError, report, ret.getError());
-	            if (ret != null)
+			    MatrixError error = ret.getError();
+			    
+			    ReturnAndResult errorRet = context.runHandler(HandlerKind.OnTestCaseError, report, error);
+	            if (errorRet != null)
 	            {
+	                ret = errorRet;
 	                res = ret.getResult();
 	            }
 	            else
@@ -204,7 +207,7 @@ public final class TestCase extends MatrixItem
         		    MatrixItem branchOnError = super.find(false, OnError.class, null);
         			if (branchOnError != null && branchOnError instanceof OnError)
         			{
-        				((OnError)branchOnError).setError(ret.getError());
+        				((OnError)branchOnError).setError(error);
         				
         				ret = branchOnError.execute(context, listener, evaluator, report);
         				res = ret.getResult();
