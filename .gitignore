@@ -54,6 +54,6 @@ apache-tomcat*
 
 #build info file
 buildinfo.htm
-
+BuildProject
 .gradle/
 *.zip

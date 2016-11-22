@@ -55,6 +55,8 @@ public enum Tokens
 	EndNameSpace,
 	Let,
 	EndStep,
+	SetHandler,
+	Kind,
 	;
 
 	public String get()

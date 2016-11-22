@@ -15,6 +15,7 @@ import com.exactprosystems.jf.common.evaluator.Variables;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.common.report.ReportTable;
 import com.exactprosystems.jf.documents.config.Context;
+import com.exactprosystems.jf.documents.config.HandlerKind;
 import com.exactprosystems.jf.documents.matrix.parser.*;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
 import com.exactprosystems.jf.functions.RowTable;
@@ -185,21 +186,36 @@ public final class TestCase extends MatrixItem
 			}
 			
 			this.locals = evaluator.createLocals();
+			
+			context.runHandler(HandlerKind.OnTestCaseStart, report, null);
 
 			ret = executeChildren(start, context, listener, evaluator, report, new Class<?>[] { OnError.class }, this.locals);
 			res = ret.getResult();
 			
 			if (res == Result.Failed)
 			{
-				MatrixItem branchOnError = super.find(false, OnError.class, null);
-				if (branchOnError != null && branchOnError instanceof OnError)
-				{
-					((OnError)branchOnError).setError(ret.getError());
-					
-					ret = branchOnError.execute(context, listener, evaluator, report);
-					res = ret.getResult();
-				}
+			    MatrixError error = ret.getError();
+			    
+			    ReturnAndResult errorRet = context.runHandler(HandlerKind.OnTestCaseError, report, error);
+	            if (errorRet != null)
+	            {
+	                ret = errorRet;
+	                res = ret.getResult();
+	            }
+	            else
+	            {
+        		    MatrixItem branchOnError = super.find(false, OnError.class, null);
+        			if (branchOnError != null && branchOnError instanceof OnError)
+        			{
+        				((OnError)branchOnError).setError(error);
+        				
+        				ret = branchOnError.execute(context, listener, evaluator, report);
+        				res = ret.getResult();
+        			}
+	            }
 			}
+	        context.runHandler(HandlerKind.OnTestCaseFinish, report, null);
+			
 			if (table != null && position >= 0)
 			{
 				row.put(Context.timeColumn, 		ret.getTime());
@@ -218,6 +234,7 @@ public final class TestCase extends MatrixItem
 				table.updateValue(position, row);
 			}
 		}
+
 		return ret;
 	}
 
