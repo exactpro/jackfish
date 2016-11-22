@@ -1,3 +1,10 @@
+21.11.2016 4.3.0.1634
+Fixed :
+Task #38281 implement for web plugin
+Task #38246 iterate was over cells, now, iterate over columns
+Task #38281 implement for swing plugin
+Task #38281 implement for win plugin
+
 --------------------------------------------------------------------------------
 14.11.2016  4.3.0.1630
 Fixed #37710

@@ -1407,13 +1407,10 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 				}
 				return result;
 			}
-			else
-			{
-				valueAt = fixture.valueAt(TableCell.row(row).column(column));
-				return valueAt;
-			}
 		}
-		return "";
+
+		valueAt = fixture.valueAt(TableCell.row(row).column(column));
+		return valueAt;
 	}
 	
 	private String getValue(Component currentComponent) throws RemoteException

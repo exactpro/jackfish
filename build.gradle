@@ -133,7 +133,7 @@ subprojects {
 				srcDir('src')
 			}
 			resources {
-				srcDir('src') // TODO move resources to resources dir
+				srcDir('resources')
 			}
 		}
 	}
@@ -150,8 +150,7 @@ subprojects {
 
 task replaceVersion {
 	dependsOn clean
-	//TODO think about it. We need remove all none .java file from src dir
-	def versionFile = new File(rootProject.rootDir.path+'/core/src/com/exactprosystems/jf/common/version/version.properties')
+	def versionFile = new File(rootProject.rootDir.path+'/core/resources/com/exactprosystems/jf/common/version/version.properties')
 	versionFile.text = 'VERSION = ' + rootProject.ext.version
 }
 

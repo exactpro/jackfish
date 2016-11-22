@@ -5,12 +5,12 @@ include	'core',
 		'plugins:app:swing:netx',
 		'plugins:app:swing',
 		'plugins:app:win',
-		//'UIAdapter',
-
+							//app mocks
+		'mocks:swing',
+							//UIAdapter
 							//clients
 		'plugins:client:dts',
 		'plugins:client:fix',
-
 							//services
 		'plugins:service:matrix',
 		'plugins:service:sailfish'
