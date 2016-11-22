@@ -25,6 +25,7 @@ import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.matrix.MatrixFx;
 import com.exactprosystems.jf.tool.matrix.schedule.RunnerScheduler;
 import com.exactprosystems.jf.tool.settings.SettingsPanel;
+import com.exactprosystems.jf.tool.settings.Theme;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
@@ -222,8 +223,7 @@ public class MainController implements Initializable, ContainingParent
 	public void display()
 	{
 		Scene scene = new Scene(this.pane, PANE_WIDTH, PANE_HEIGHT);
-
-		scene.getStylesheets().addAll(Common.currentTheme().getPath());
+		scene.getStylesheets().addAll(Common.currentTheme().getPath(), Theme.SPACER.getPath());
 		this.stage.setScene(scene);
 		SettingsValue value = settings.getValueOrDefault(Settings.GLOBAL_NS, SettingsPanel.SETTINGS, Main.USE_FULL_SCREEN, "false");
 		this.stage.setFullScreen(Boolean.parseBoolean(value.getValue()));

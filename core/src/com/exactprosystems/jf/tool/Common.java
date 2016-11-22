@@ -137,6 +137,35 @@ public abstract class Common
 				.orElse(null);
 	}
 
+	public enum SpacerEnum {
+		VerticalMin(CssVariables.VERTICAL4),
+		VerticalPref(CssVariables.VERTICAL8),
+		VerticalMax(CssVariables.VERTICAL16),
+
+		HorizontalMin(CssVariables.HORIZONTAL4),
+		HorizontalPref(CssVariables.HORIZONTAL8),
+		HorizontalMax(CssVariables.HORIZONTAL16);
+
+		private String style;
+
+		SpacerEnum(String style)
+		{
+			this.style = style;
+		}
+
+		public String getStyle()
+		{
+			return style;
+		}
+	}
+
+	public static Label createSpacer(SpacerEnum spacerEnum)
+	{
+		Label lbl = new Label();
+		lbl.getStyleClass().add(spacerEnum.getStyle());
+		return lbl;
+	}
+
 	public static String getRelativePath(String filePath)
 	{
 		File currentDir = new File(".");

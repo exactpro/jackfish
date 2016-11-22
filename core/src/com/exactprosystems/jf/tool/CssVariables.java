@@ -194,6 +194,14 @@ public class CssVariables
 	public static final String	SPINNER_BUTTON_UP			= "spinnerButtonUp";
 	public static final String	SPINNER_BUTTON_DOWN			= "spinnerButtonDown";
 
+	public static final String VERTICAL4					= "vertical4";
+	public static final String VERTICAL8					= "vertical8";
+	public static final String VERTICAL16					= "vertical16";
+
+	public static final String HORIZONTAL4					= "horizontal4";
+	public static final String HORIZONTAL8					= "horizontal8";
+	public static final String HORIZONTAL16					= "horizontal16";
+
 	public static class Icons
 	{
 		private static final String	IMAGES_DIR				= "com/exactprosystems/jf/tool/css/images";

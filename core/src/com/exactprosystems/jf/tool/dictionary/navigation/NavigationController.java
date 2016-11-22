@@ -35,10 +35,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.*;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Region;
+import javafx.scene.layout.*;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import org.w3c.dom.Document;
@@ -63,9 +60,12 @@ public class NavigationController implements Initializable, ContainingParent
 
 	public ToggleGroup groupSection;
 	public HBox hBoxElement;
-	public BorderPane paneWindow;
-	public BorderPane paneElement;
+	//	public BorderPane paneWindow;
+	public VBox vBoxWindow;
+//	public BorderPane paneElement;
+	public VBox vBoxElement;
 	public Button btnRenameWindow;
+
 	public Button btnNewElement;
 	public Button btnDeleteElement;
 	public Button btnCopyElement;
@@ -107,7 +107,7 @@ public class NavigationController implements Initializable, ContainingParent
 				IWindow::getName,
 				(d,i) ->Common.tryCatch(() -> this.model.dialogMove(d,currentSection(), i), "Error on move")
 		));
-		this.paneWindow.setCenter(this.listViewWindow);
+		this.vBoxWindow.getChildren().add(0, this.listViewWindow);
 		this.listViewElement = new FindListView<>((e, s) -> (!Str.IsNullOrEmpty(e.control.getID()) && e.control.getID().toUpperCase().contains(s.toUpperCase()) || (e.control.getBindedClass().getClazz().toUpperCase()
 				.contains(s.toUpperCase()))),
 				false);
@@ -116,27 +116,27 @@ public class NavigationController implements Initializable, ContainingParent
 				e -> e.control.toString(),
 				(w, i) -> Common.tryCatch(() -> this.model.elementMove(currentWindow(), currentSection(), w.control,i), "Error on move element")
 		));
-		this.paneElement.setCenter(this.listViewElement);
+		this.vBoxElement.getChildren().add(0, this.listViewElement);
 		Platform.runLater(() -> {
 
-			ScrollPane scrollPaneWindow = new ScrollPane(this.paneWindow);
+			ScrollPane scrollPaneWindow = new ScrollPane(this.vBoxWindow);
 			scrollPaneWindow.setFitToWidth(true);
 			scrollPaneWindow.setFitToHeight(true);
 			scrollPaneWindow.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
 			scrollPaneWindow.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
-			Node dialog = BorderWrapper.wrap(this.paneWindow).title("Dialog").color(Common.currentTheme().getReverseColor()).build();
+			Node dialog = BorderWrapper.wrap(this.vBoxWindow).title("Dialog").color(Common.currentTheme().getReverseColor()).build();
 			double width = 385.0;
 			((Region) dialog).setMinWidth(width);
 			((Region) dialog).setMaxWidth(width);
 			((Region) dialog).setPrefWidth(width);
 			((HBox)this.pane).getChildren().add(0,dialog);
 
-			ScrollPane scrollPaneElement = new ScrollPane(this.paneElement);
+			ScrollPane scrollPaneElement = new ScrollPane(this.vBoxElement);
 			scrollPaneElement.setFitToWidth(true);
 			scrollPaneElement.setFitToHeight(true);
 			scrollPaneElement.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
 			scrollPaneElement.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
-			Node element = BorderWrapper.wrap(this.paneElement).title("Element").color(Common.currentTheme().getReverseColor()).build();
+			Node element = BorderWrapper.wrap(this.vBoxElement).title("Element").color(Common.currentTheme().getReverseColor()).build();
 			((Region) element).setMinWidth(width);
 			((Region) element).setMaxWidth(width);
 			((Region) element).setPrefWidth(width);
