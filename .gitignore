@@ -34,7 +34,7 @@ version.properties
 #all from resources don't ignore
 !/*/resources/**/*
 !/plugins/app/win/resources/com/exactprosystems/jf/app/bin/
-/core/resources/com/exactprosystems/jf/common/version/version.properties
+version.properties
 
 #temp files
 .*.swp
