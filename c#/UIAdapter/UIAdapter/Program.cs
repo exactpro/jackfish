@@ -301,28 +301,10 @@ namespace UIAdapter
             {
                 long startMethod = getMilis();
                 string result = "";
-
-                // find element, with type == list, under owner
-                string propertyName = "list";
-                AutomationProperty automationProperty = AutomationElement.LocalizedControlTypeProperty;
-                PropertyCondition condition = new PropertyCondition(automationProperty, propertyName);
-                TreeScope scope = TreeScope.Descendants;
-
                 AutomationElement owner = findOwner(elementId);
-                AutomationElement list = owner.FindFirst(scope, condition);
-                if (list == null)
-                {
-                    list = handler.FindFirst(scope, condition);
-                    if (list == null)
-                    {
-                        logger.All("method ListAll doesn't have any list elements" , getMilis() - startMethod);
-                        return null;
-                    }
-                }
 
-                // find all children in list
-                TreeWalker tw = TreeWalker.ControlViewWalker;
-                AutomationElement child = tw.GetFirstChild(list);
+                TreeWalker tw = TreeWalker.ContentViewWalker;
+                AutomationElement child = tw.GetFirstChild(owner);
                 while (child != null)
                 {
                     if (child.Current.Name != "")
