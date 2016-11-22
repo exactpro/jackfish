@@ -1,0 +1,230 @@
+<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+<!--  Copyright (c) 2009-2015, Exactpro Systems, LLC -->
+<!--  Quality Assurance & Related Development for Innovative Trading Systems. -->
+<!--  All rights reserved. -->
+<!--  This is unpublished, licensed software, confidential and proprietary -->
+<!--  information which is the property of Exactpro Systems, LLC or its licensors. -->
+<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+<!--
+	func
+	1 - onclick
+	2 - ondblclick
+	3 - move
+	4 - key down
+	5 - key up
+	6 - key press
+-->
+<meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+<meta content="utf-8" http-equiv="encoding">
+<html>
+<title>Mock html</title>
+<head>
+	<script src="mock.js"></script>
+	<link rel="stylesheet" href="mock.css"/>
+	<script src="mock.js"></script>
+	<script src="jquery.js"></script>
+	<script src="jquery_ui.js"></script>
+	<script>
+	$(function() {
+		$("#slider").slider();
+		$("#slider").slider({
+			change : function(event, ui) {
+				console.log(event);
+				if (ui.value === 30) {
+					document.getElementById('centralLabel').textContent = 'Slider_' + ui.value;
+				} else {
+					document.getElementById('centralLabel').textContent = 'Slider_click';
+				}
+			}
+		})
+		$('#toggleButton').click(function(){
+			var $button = $(this).toggleClass("down");
+			var className = $button[0].className;
+			document.getElementById("centralLabel").textContent = className.indexOf("down") == -1 ? "Up" : "Down";
+		});
+	});
+	var textBoxKeyUp = function(e, tb) {
+		console.log(e);
+		if (e.ctrlKey) {
+			centralLabel.textContent = "TextBox_up_Control";
+		} if (e.keyIdentifier === "Control" || e.key === "Control") {
+			centralLabel.textContent = "TextBox_up_Control";
+		} else if (e.keyIdentifier === "U+001B" || e.key==="Escape" || e.keyCode == 27) {
+			centralLabel.textContent = "TextBox_press_Escape";
+		} else if (tb.value.match(/^[a-zA-Z!]+$/)) {
+			document.getElementById('centralLabel').textContent = 'TextBox_' + tb.value;
+		}
+	};
+
+	var textBoxKeyDown = function(e, tb) {
+		console.log(e);
+		if (e.ctrlKey) {
+			centralLabel.textContent = "TextBox_down_Control";
+		} else if (e.keyIdentifier === "Control" || e.key === "Control") {
+			centralLabel.textContent = "TextBox_down_Control";
+		} else if (e.keyIdentifier === "Shift" || e.key === "Shift") {
+			centralLabel.textContent = "TextBox_down_Shift";
+		}
+	};
+
+	document.addEventListener('DOMContentLoaded', function () {
+		document.querySelector('#checkbox').addEventListener('change', function(e) {console.log(e)});
+	});
+	</script>
+</head>
+<body onload="addAllListeners()">
+<div id="divLabel">
+	<table>
+		<tbody>
+			<tr>
+				<td width="200px"><label id="centralLabel" class="add_listener" kindname="Label" func="123456" name="centralLabel">Central label</label></td>
+				<td width="200px"><label id="moveLabel">Move label</label></td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+<div id="divButton">
+	<button id="button" class="add_listener" kindname="Button" func="123456" name="Button">Button</button>
+</div>
+
+<div id="divInput">
+	<input id="input" class="add_listener" onkeyup="textBoxKeyUp(event,this)" onkeydown="textBoxKeyDown(event,this)" kindname="TextBox" func="123" name="TextBox"/>
+</div>
+
+<div id="divTable" >
+	<table id="table" border="1px" class="add_listener" kindname="Table" func="456" name="Table">
+		<thead>
+			<tr>
+				<th>Head1</th>
+				<th>Head2</th>
+				<th>Head3</th>
+			</tr>
+		</thead>
+		<tbody>
+		<tr>
+			<td class="add_listener" kindname="Table" func="123456"><label>tr_1_td_1</label></td>
+			<td class="add_listener" kindname="Table" func="123456"><label>tr_1_td_2</label></td>
+			<td class="add_listener" kindname="Table" func="123456"><label>tr_1_td_3</label></td>
+		</tr>
+		<tr style="margin:5px">
+			<td class="add_listener" kindname="Table" func="123456"><label>tr_2_td_1</label></td>
+			<td class="add_listener" kindname="Table" func="123456"><label>tr_2_td_2</label></td>
+			<td class="add_listener" kindname="Table" func="123456"><label>tr_2_td_3</label></td>
+		</tr>
+		<tr style="margin:5px">
+			<td class="add_listener" kindname="Table" func="123456"><label>tr_3_td_1</label></td>
+			<td class="add_listener" kindname="Table" func="123456"><label>tr_3_td_2</label></td>
+			<td class="add_listener" kindname="Table" func="123456"><label>tr_3_td_3</label></td>
+		</tr>
+		</tbody>
+	</table>
+</div>
+
+<div id="divTable1" >
+	<label id="labelTable1"></label>
+	<table id="table1" border="1px" name="Table">
+		<thead>
+		<tr>
+			<th>Head1</th>
+			<th>Head2</th>
+			<th>Head3</th>
+		</tr>
+		</thead>
+		<tbody>
+		<tr>
+			<td class="add_listener" kindname="Table" func="123456"><label>tr_1_td_1</label></td>
+			<td class="add_listener" kindname="Table" func="123456"><label>tr_1_td_2</label></td>
+			<td class="add_listener" kindname="Table" func="123456"><label>tr_1_td_3</label></td>
+		</tr>
+		<tr style="margin:5px">
+			<td class="add_listener" kindname="Table" func="123456"><label>tr_2_td_1</label></td>
+			<td class="add_listener" kindname="Table" func="123456"><label>tr_2_td_2</label></td>
+			<td class="add_listener" kindname="Table" func="123456"><label>tr_2_td_3</label></td>
+		</tr>
+		<tr style="margin:5px">
+			<td class="add_listener" kindname="Table" func="123456"><label>tr_3_td_1</label></td>
+			<td class="add_listener" kindname="Table" func="123456"><label>tr_3_td_2</label></td>
+			<td class="add_listener" kindname="Table" func="123456"><label>tr_3_td_3</label></td>
+		</tr>
+		</tbody>
+	</table>
+</div>
+
+<div id="divTable2">
+	<table id="tableDuplicateColumns">
+		<thead>
+			<tr>
+				<th>A</th>
+				<th>B</th>
+				<th>A</th>
+				<th>C</th>
+				<th>B</th>
+				<th>A</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>1</td>
+				<td>2</td>
+				<td>3</td>
+				<td>4</td>
+				<td>5</td>
+				<td>6</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+
+<div id="divCheckbox">
+	<label>CheckBox
+		<input id ="checkbox" type="checkbox" name="CheckBox" class="checkBoxUnChecked add_listener" func="123456" kindname="CheckBox" checked/>
+	</label>
+</div>
+
+<div id="divSlider">
+	<div id="slider" name="Slider" class="ui-slider ui-slider-horizontal ui-widget ui-widget-content ui-corner-all add_listener" func="23456" kindname="Slider">
+		<span class="ui-slider-handle ui-state-default ui-corner-all" tabindex="0" style="left: 0%;"></span>
+	</div>
+</div>
+
+<div id="divRadiogroup">
+	<input type="radio" class="add_listener" id="radioButton" name="RadioButton" kindname="RadioButton" func="123456" value="Green">Green<br>
+	<input type="radio" id="radioButton1" onclick="changeSelected(this)" name="RadioButton" kindname="RadioButton" value="Yellow">Yellow<br>
+	<input type="radio" name="RadioButton" value="Orange">Orange<br>
+	<input type="radio" name="RadioButton" value="Blue">Blue<br>
+	<label id="labelRadioGroup"></label>
+</div>
+
+<div id="divProgress">
+	<progress value="10" max="100" name="ProgressBar" id="ProgressBar" kindname="ProgressBar" func="123456" class="add_listener"></progress>
+</div>
+
+<div id="divCombobox">
+	<select onchange="changeCombobox(this)">
+		<option value="Green">Green</option>
+		<option value="Yellow">Yellow</option>
+		<option value="Orange">Orange</option>
+		<option value="Blue">Blue</option>
+	</select>
+
+	<label id="labelCombobox"></label>
+</div>
+
+
+
+<div id="divToggleButton">
+	<a id="toggleButton" class="toggleButton" name="ToggleButton" kindname="ToggleButton" func="23456" title="button">Press Me</a><br>
+</div>
+<div id="divAny">
+	<button id="any" class="add_listener" kindname="Any" name="Any" func="123456">Any</button>
+</div>
+
+<div id="divButtonsMany">
+	<button class="manyButton">ButtonMany0</button>
+	<button class="manyButton">ButtonMany1</button>
+	<button class="manyButton">ButtonMany2</button>
+</div>
+<iframe id="myIframe"
+		src="iframe.html"></iframe>
+</body>
+</html>

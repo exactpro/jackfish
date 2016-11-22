@@ -1,0 +1,67 @@
+div {
+	margin : 10px
+}
+.ui-widget-content {
+	border: 1px solid #aaaaaa;
+	background: #ffffff;
+	color: #222222;
+}
+.ui-widget {
+	font-family: Verdana,Arial,sans-serif;
+	font-size: 1.1em;
+}
+.ui-slider-horizontal {
+	height: .8em;
+}
+.ui-slider {
+	position: relative;
+	text-align: left;
+}
+.ui-state-default,
+.ui-widget-content .ui-state-default,
+.ui-widget-header .ui-state-default {
+	border: 1px solid #d3d3d3;
+	background: #e6e6e6;
+	font-weight: normal;
+	color: #555555;
+}
+ui-slider-horizontal .ui-slider-handle {
+	top: -.3em;
+	margin-left: -.6em;
+}
+.ui-slider .ui-slider-handle {
+	border : 2px solid green;
+	position: absolute;
+	z-index: 2;
+	width: 0.8em;
+	height: 0.8em;
+	cursor: default;
+	-ms-touch-action: none;
+	touch-action: none;
+}
+.ui-slider .ui-slider-range {
+	position: absolute;
+	z-index: 1;
+	font-size: .7em;
+	display: block;
+	border: 0;
+	background-position: 0 0;
+}
+
+a {
+    background: #ccc;
+    cursor: pointer;
+    border-top: solid 2px #eaeaea;
+    border-left: solid 2px #eaeaea;
+    border-bottom: solid 2px #777;
+    border-right: solid 2px #777;
+    padding: 5px 5px;
+    }
+
+a.down {
+    background: #bbb;
+    border-top: solid 2px #777;
+    border-left: solid 2px #777;
+    border-bottom:solid 2px  #eaeaea;
+    border-right: solid 2px #eaeaea;
+    }
