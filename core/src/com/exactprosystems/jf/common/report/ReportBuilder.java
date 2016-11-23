@@ -25,11 +25,16 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.sql.Blob;
+import java.sql.SQLException;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
+
+import javax.sql.rowset.serial.SerialBlob;
+import javax.sql.rowset.serial.SerialException;
 
 public abstract class ReportBuilder 
 {
@@ -89,7 +94,7 @@ public abstract class ReportBuilder
 		return this.imageDir;
 	}
 
-    public final Object reportAsArchieve() throws IOException
+    public final Object reportAsArchieve() throws Exception
     {
         List<String> list = new ArrayList<>();
         list.add(this.reportName);
@@ -116,7 +121,9 @@ public abstract class ReportBuilder
             }
             outputStream = baos;
         }
-        return outputStream.toByteArray();
+        
+        Blob blob = new SerialBlob(outputStream.toByteArray());
+        return blob;
     }
 
     

@@ -123,7 +123,7 @@ public class MatrixRunner implements IMatrixRunner, AutoCloseable
 	}
 
 	
-	public Object reportAsArchieve() throws IOException
+	public Object reportAsArchieve() throws Exception
 	{
 	    return this.report.reportAsArchieve();
 	}
