@@ -19,14 +19,14 @@ T1;T1
     onStepError;OnStepError
 
     #Step
-    S1
+    'S1'
         #Id;#Global;#Let
         s;1;1
 
     #EndStep
 
     #Step
-    S2
+    'S2'
         #Id;#Global;#Let
         s;1;2
 
@@ -44,7 +44,7 @@ T1;T1
     ;OnStepError
 
     #Step
-    S3
+    'S3'
         #Id;#Global;#Let
         s;1;3
 
