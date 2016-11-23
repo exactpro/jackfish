@@ -88,16 +88,6 @@ public final class Call extends MatrixItem
 		return layout;
 	}
 
-    //==============================================================================================
-	// Getters / setters
-	//==============================================================================================
-	@Deprecated
-	public String getName()
-	{
-		return this.name.get();
-	}
-	
-	
 	//==============================================================================================
 	// Interface Mutable
 	//==============================================================================================
@@ -166,12 +156,6 @@ public final class Call extends MatrixItem
 	{
 		updateReference(context, this.name.get());
 		
-		if (this.id != null && !this.id.isNullOrEmpty() && ids.contains(this.id.get()))
-		{
-			listener.error(this.owner, getNumber(), this, "id '" + this.id + "' has already defined.");
-		}
-		ids.add(this.id.get());
-
 		if (this.ref == null)
 		{
 			listener.error(this.owner, this.getNumber(), this, "Subcase with id '" + this.name + "' is not found.");

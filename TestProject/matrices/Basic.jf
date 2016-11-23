@@ -1,0 +1,16 @@
+#TestCase
+Two Calls can have similar Id.
+    #Id;#Call
+    CALL_1;SUB_1
+
+    #Id;#Call
+    CALL_1;SUB_1
+
+    #Id;#SubCase
+    SUB_1;
+        #Return
+        1
+
+    #EndSubCase
+
+

@@ -5,7 +5,7 @@ INIT;Setup
 
 
 #Id;#TestCase
-TESTS;All tests
+HANDLERS;Event hanlers
     #Id;#Action;#Matrix
     MXRN1;MatrixRun;'matrices/EventHandlers.jf'
 
@@ -18,6 +18,19 @@ TESTS;All tests
     #Action;#UnitedTable;#MainTable
     TableUnion;RESTBL2.Out;RESTBL1.Out
 
+#Id;#TestCase
+BASIC;Basic functionality
+    #Id;#Action;#Matrix
+    MXRN1;MatrixRun;'matrices/Basic.jf'
+
+    #Id;#Action;#Matrix
+    MXWT1;MatrixWait;MXRN1.Out
+
+    #Id;#Action;#Decoraded;#Matrix
+    RESTBL2;ResultTable;true;MXRN1.Out
+
+    #Action;#UnitedTable;#MainTable
+    TableUnion;RESTBL2.Out;RESTBL1.Out
 
 #TestCase
 Cleanup
