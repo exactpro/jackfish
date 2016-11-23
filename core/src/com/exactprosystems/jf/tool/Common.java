@@ -162,7 +162,7 @@ public abstract class Common
 	public static Label createSpacer(SpacerEnum spacerEnum)
 	{
 		Label lbl = new Label();
-		lbl.getStyleClass().add(spacerEnum.getStyle());
+		lbl.setId(spacerEnum.getStyle());
 		return lbl;
 	}
 
