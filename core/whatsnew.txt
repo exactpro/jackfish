@@ -1,6 +1,0 @@
-
-build 1425
-23.08.2016
-
-API was extended: the method selectByIndex() was added to OperationExecuter. 
-new API version 2.21   

@@ -1,3 +1,7 @@
+23.11.2016 4.3.0.1653
+#38515 feature: get the opportunity save all report with images into BLOB as archieve
+
+--------------------------------------------------------------------------------
 23.11.2016 4.3.0.1652
 #38463 fixed: Name of action "CALL"
 
