@@ -9,9 +9,6 @@ public enum Tokens
 	Id,
 	Action,
 	IgnoreErr,
-	Out,
-	Result,
-	Reason,
 	TestCase,
 	Assert,
 	Message,
@@ -55,6 +52,8 @@ public enum Tokens
 	EndNameSpace,
 	Let,
 	EndStep,
+	SetHandler,
+	Kind,
 	;
 
 	public String get()

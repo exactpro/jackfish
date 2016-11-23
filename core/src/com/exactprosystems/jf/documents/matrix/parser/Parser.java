@@ -79,6 +79,7 @@ public class Parser
 				EndRawText.class,
 				Let.class,
 				Assert.class,
+				SetHandler.class,
 			};
 
 	public static void main(String[] args)

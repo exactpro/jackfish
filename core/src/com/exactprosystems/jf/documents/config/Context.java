@@ -12,12 +12,18 @@ import com.exactprosystems.jf.actions.ReadableValue;
 import com.exactprosystems.jf.api.common.IContext;
 import com.exactprosystems.jf.common.MatrixRunner;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
+import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.DocumentFactory;
 import com.exactprosystems.jf.documents.matrix.Matrix;
+import com.exactprosystems.jf.documents.matrix.parser.Parameter;
+import com.exactprosystems.jf.documents.matrix.parser.Parameters;
+import com.exactprosystems.jf.documents.matrix.parser.ReturnAndResult;
+import com.exactprosystems.jf.documents.matrix.parser.items.MatrixError;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixRoot;
 import com.exactprosystems.jf.documents.matrix.parser.items.NameSpace;
 import com.exactprosystems.jf.documents.matrix.parser.items.SubCase;
+import com.exactprosystems.jf.documents.matrix.parser.items.TypeMandatory;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
 import com.exactprosystems.jf.functions.Table;
 import org.apache.log4j.Logger;
@@ -83,6 +89,12 @@ public class Context implements IContext, AutoCloseable, Cloneable
 			throw new InternalError();
 		}
 	}
+	
+    public void reset() throws Exception
+    {
+        this.handlers.clear();
+        this.evaluator.reset();
+    }
 
 	public void createResultTable()
 	{
@@ -90,6 +102,45 @@ public class Context implements IContext, AutoCloseable, Cloneable
 		this.resultTable =  new Table(headers, this.evaluator);
 	}
 
+	public void setHandler(HandlerKind handlerKind, SubCase subCase)
+	{
+	    if (handlerKind != null)
+	    {
+	        this.handlers.put(handlerKind, subCase);
+	    }
+	}
+	
+   public ReturnAndResult  runHandler(HandlerKind handlerKind, ReportBuilder report, MatrixError err) 
+    {
+       if (handlerKind == null)
+       {
+           return null;
+       }
+       
+       SubCase handler = this.handlers.get(handlerKind);
+       if (handler != null)
+       {
+           if (handlerKind == HandlerKind.OnTestCaseError || handlerKind == HandlerKind.OnStepError)
+           {
+               Parameters parameters = handler.getParameters();
+               if (parameters.size() > 0)
+               {
+                   Parameter par = parameters.getByIndex(0); 
+                   par.setValue(err);
+                   handler.setRealParameters(parameters);
+               }
+               
+           }
+           else
+           {
+               handler.setRealParameters(new Parameters());
+           }
+           
+           return handler.execute(this, this.matrixListener, this.evaluator, report);
+       }
+       return null;
+    }
+	
 	public Context setOut(PrintStream out)
 	{
 		this.outStream = out;
@@ -324,7 +375,7 @@ public class Context implements IContext, AutoCloseable, Cloneable
 
 	//TODO need to remove it, cause this the same as Configuration.libs
 	private Map<String, Matrix> libs = new HashMap<>();
-
+	private Map<HandlerKind, SubCase> handlers = new HashMap<>();
 	private static final Logger logger = Logger.getLogger(Context.class);
 
 

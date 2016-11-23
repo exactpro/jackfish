@@ -91,6 +91,7 @@ public final class Call extends MatrixItem
     //==============================================================================================
 	// Getters / setters
 	//==============================================================================================
+	@Deprecated
 	public String getName()
 	{
 		return this.name.get();
@@ -154,7 +155,9 @@ public final class Call extends MatrixItem
 	@Override
 	protected boolean matchesDerived(String what, boolean caseSensitive, boolean wholeWord)
 	{
-		return SearchHelper.matches(this.name.get(), what, caseSensitive, wholeWord) ||
+		return 
+                SearchHelper.matches(Tokens.Call.get(), what, caseSensitive, wholeWord) ||
+		        SearchHelper.matches(this.name.get(), what, caseSensitive, wholeWord) ||
 				getParameters().matches(what, caseSensitive, wholeWord);
 	}
 

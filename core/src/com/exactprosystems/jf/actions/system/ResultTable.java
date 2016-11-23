@@ -92,7 +92,13 @@ public class ResultTable extends AbstractAction
 	public void doRealAction(Context context, ReportBuilder report,
 			Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
-		Table result = this.matrix == null ? context.getTable() : this.matrix.getTable();
+        Map<String, Object> map = new HashMap<String, Object>();
+        if (this.matrix == null)
+        {
+            map.put(Context.resultColumn, Result.Passed);
+        }
+        
+        Table result = this.matrix == null ? context.getTable() : this.matrix.getTable();
 		if (result == null)
 		{
 			super.setError("The result table is null", ErrorKind.EMPTY_PARAMETER);
@@ -100,8 +106,6 @@ public class ResultTable extends AbstractAction
 		}
 		
 		Table copy = result.clone();
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put(Context.resultColumn, Result.Passed);
 		copy.setValue(copy.size() - 1, map);
 		if (this.decorated)
 		{
