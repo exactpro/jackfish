@@ -1,3 +1,7 @@
+23.11.2016 4.3.0.1648
+Fixed #38498 : add Operation setValue to Spinner
+
+--------------------------------------------------------------------------------
 22.11.2016 4.3.0.1641
 
 #38204 New feature: The new action SetHandler was added.
