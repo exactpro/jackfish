@@ -58,3 +58,6 @@ BuildProject
 .gradle/
 *.zip
 /mocks/swing/mock-swing.jar
+/core/reports/
+/core/jackfish.jar
+/core/remote_out.txt
