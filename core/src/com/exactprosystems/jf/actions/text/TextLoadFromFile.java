@@ -23,19 +23,19 @@ import com.exactprosystems.jf.functions.Text;
 		group					= ActionGroups.Text,
 		suffix					= "TXT",
 		generalDescription 		=
- "The purpose of the action is to create the object type Text from the file. "
-+ "The object type Text is the text-based pattern which consists of lines. "
+ "The purpose of the action is to create the object type {{$Text$}} from the file. "
++ "The object type {{$Text$}} is the text-based pattern which consists of lines. "
 + "Any file which contains plain-text can be used as a source file.",
 		additionFieldsAllowed 	= false,
-		outputDescription 		= "The object type Text is the text-based pattern which consists of lines.",
+		outputDescription 		= "The object type {{$Text$}} is the text-based pattern which consists of lines.",
 		outputType				= Text.class,
 		examples =
- "#Id;#Action;#File\n"
-+ "TXT1;TextLoadFromFile;’path/text.txt’\n"
+ "{{##Id;#Action;#File\n"
++ "TXT1;TextLoadFromFile;’path/text.txt’#}}\n"
 + "\n"
 + "\n"
-+ "#Assert;#Message\n"
-+ "TXT1.Out != null;\n"
++ "{{##Assert;#Message\n"
++ "TXT1.Out != null;#}}\n"
 	)
 public class TextLoadFromFile extends AbstractAction 
 {
