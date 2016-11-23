@@ -57,3 +57,4 @@ buildinfo.htm
 BuildProject
 .gradle/
 *.zip
+/mocks/swing/mock-swing.jar
