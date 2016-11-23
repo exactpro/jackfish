@@ -690,7 +690,7 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 				{
 					List<WebElement> rows = findRows(additional, tableComp);
 					WebElement row1 = rows.get(y);
-					List<WebElement> cells1 = row1.findElements(By.tagName(tag_td));
+					List<WebElement> cells1 = row1.findElements(By.xpath("child::" + tag_td));
 					return cells1.get(x);
 				}
 			}
@@ -1474,7 +1474,7 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 			try
 			{
 				Map<String, String> result = new LinkedHashMap<>();
-				List<WebElement> cells = row.findElements(By.tagName(tag_td));
+				List<WebElement> cells = row.findElements(By.xpath("child::"+tag_td));
 				this.logger.debug("Found cells : " + cells.size());
 				for (int i = 0; i < (headers.size() > cells.size() ? cells.size() : headers.size()); i++)
 				{
@@ -1591,16 +1591,6 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 		String getText(T t);
 	}
 
-	private List<WebElement> cellsFromHeader(WebElement header)
-	{
-		List<WebElement> cells = header.findElements(By.tagName(tag_th));
-		if (cells.isEmpty())
-		{
-			header.findElements(By.tagName(tag_tr));
-		}
-		return cells;
-	}
-
 	private <T> List<String> convertColumnsToHeaders(Iterable<T> headers, String[] columns, IText<T> func)
 	{
 		List<String> res = new ArrayList<>();
@@ -1637,17 +1627,17 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 
 	private List<String> getHeadersFromBody(WebElement grid, String[] columns) throws RemoteException
 	{
-		List<WebElement> rows = grid.findElements(By.tagName(tag_tr));
+		List<WebElement> rows = grid.findElement(By.xpath("child::" + tag_tbody)).findElements(By.xpath("child::" + tag_tr));
 		if (rows.isEmpty())
 		{
 			throw new RemoteException("Table is empty");
 		}
 		WebElement firstRow = rows.get(0);
 		markRowIsHeader(firstRow, true);
-		List<WebElement> cells = firstRow.findElements(By.tagName(tag_th));;
+		List<WebElement> cells = firstRow.findElements(By.xpath("child::" + tag_th));;
 		if (cells.isEmpty())
 		{
-			cells = firstRow.findElements(By.tagName(tag_td));
+			cells = firstRow.findElements(By.xpath("child::" + tag_td));
 		}
 		return Converter.convertColumns(convertColumnsToHeaders(cells, columns, new IText<WebElement>()
 		{
@@ -1692,13 +1682,14 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 				if (additional != null)
 				{
 					MatcherSelenium by = new MatcherSelenium(ControlKind.Row, additional);
-					List<WebElement> elements = table.findElement(By.tagName(tag_tbody)).findElements(by);
+					List<WebElement> elements = table.findElement(By.xpath("child::" + tag_tbody)).findElements(by);
 					unmarkRowIsHeader(table);
 					return elements;
 				}
 				else
 				{
-					List<WebElement> elements = table.findElement(By.tagName(tag_tbody)).findElements(this.selectRowsWithoutHeader());
+
+					List<WebElement> elements = table.findElement(By.xpath("child::" + tag_tbody)).findElements(this.selectRowsWithoutHeader());
 					unmarkRowIsHeader(table);
 					return elements;
 				}
@@ -1723,7 +1714,7 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 			{
 				Map<String, ValueAndColor> res = new LinkedHashMap<String, ValueAndColor>();
 
-				List<WebElement> cells = row.findElements(By.tagName(tag_td));
+				List<WebElement> cells = row.findElements(By.xpath("child::" + tag_td));
 				for (int i = 0; i < cells.size(); i++)
 				{
 					WebElement cell = cells.get(i);
@@ -1754,7 +1745,7 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 		{
 			try
 			{
-				List<WebElement> cells = row.findElements(By.tagName(tag_td));
+				List<WebElement> cells = row.findElements(By.xpath("child::" + tag_td));
 				Map<String, Object> map = new LinkedHashMap<>();
 				for (int i = 0; i < cells.size(); i++)
 				{
@@ -1809,12 +1800,12 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 
 	private By selectRowsWithoutHeader()
 	{
-		return By.xpath(String.format(".//%s[not(@%s)]", tag_tr, markAttribute));
+		return By.xpath(String.format("child::%s[not(@%s)]", tag_tr, markAttribute));
 	}
 
 	private By selectRowLikeHeader()
 	{
-		return By.xpath(String.format(".//%s[@%s]", tag_tr, markAttribute));
+		return By.xpath(String.format("child::%s[@%s]", tag_tr, markAttribute));
 	}
 
 	private void markRowIsHeader(WebElement row, boolean isSet)
