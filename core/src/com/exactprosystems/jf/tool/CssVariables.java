@@ -194,13 +194,25 @@ public class CssVariables
 	public static final String	SPINNER_BUTTON_UP			= "spinnerButtonUp";
 	public static final String	SPINNER_BUTTON_DOWN			= "spinnerButtonDown";
 
-	public static final String VERTICAL4					= "vertical4";
-	public static final String VERTICAL8					= "vertical8";
-	public static final String VERTICAL16					= "vertical16";
+	//region Spacer
+	public static final String	VERTICAL_MIN					= "verticalMin";
+	public static final String	VERTICAL_MID					= "verticalMid";
+	public static final String	VERTICAL_MAX					= "verticalMax";
 
-	public static final String HORIZONTAL4					= "horizontal4";
-	public static final String HORIZONTAL8					= "horizontal8";
-	public static final String HORIZONTAL16					= "horizontal16";
+	public static final String	HORIZONTAL_MIN				= "horizontalMin";
+	public static final String	HORIZONTAL_MID				= "horizontalMid";
+	public static final String	HORIZONTAL_MAX				= "horizontalMax";
+	
+	public static final String	HGAP_MIN					= "hgapMin";
+	public static final String	HGAP_MID					= "hgapMid";
+	public static final String	HGAP_MAX					= "hgapMax";
+
+	public static final String	VGAP_MIN					= "vgapMin";
+	public static final String	VGAP_MID					= "vgapMid";
+	public static final String	VGAP_MAX					= "vgapMax";
+	//endregion
+	
+	
 
 	public static class Icons
 	{

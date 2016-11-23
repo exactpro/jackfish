@@ -1,13 +1,13 @@
 .root {
-	size4 : 4px;
-	size8 : 8px;
-	size16 : 16px;
+	sizeMin : 4px;
+	sizeMid : 8px;
+	sizeMax : 16px;
 }
 
-#vertical4 {
-	-fx-min-height : size4;
-	-fx-max-height : size4;
-	-fx-pref-height : size4;
+#verticalMin {
+	-fx-min-height : sizeMin;
+	-fx-max-height : sizeMin;
+	-fx-pref-height : sizeMin;
 	
 	-fx-min-width : 0px;
 	-fx-max-width : 0px;
@@ -15,10 +15,10 @@
 
 	visibility : hidden;
 }
-#vertical8 {
-	-fx-min-height : size8;
-	-fx-max-height : size8;
-	-fx-pref-height : size8;
+#verticalMid {
+	-fx-min-height : sizeMid;
+	-fx-max-height : sizeMid;
+	-fx-pref-height : sizeMid;
 	
 	-fx-min-width : 0px;
 	-fx-max-width : 0px;
@@ -26,10 +26,10 @@
 	
 	visibility : hidden;
 }
-#vertical16 {
-	-fx-min-height : size16;
-	-fx-max-height : size16;
-	-fx-pref-height : size16;
+#verticalMax {
+	-fx-min-height : sizeMax;
+	-fx-max-height : sizeMax;
+	-fx-pref-height : sizeMax;
 	
 	-fx-min-width : 0px;
 	-fx-max-width : 0px;
@@ -38,10 +38,10 @@
 	visibility : hidden;
 }
 
-#horizontal4 {
-	-fx-min-width : size4;
-	-fx-max-width : size4;
-	-fx-pref-width : size4;
+#horizontalMin {
+	-fx-min-width : sizeMin;
+	-fx-max-width : sizeMin;
+	-fx-pref-width : sizeMin;
 	
 	-fx-min-height : 0px;
 	-fx-max-height : 0px;
@@ -49,10 +49,10 @@
 	
 	visibility : hidden;
 }
-#horizontal8 {
-	-fx-min-width : size8;
-	-fx-max-width : size8;
-	-fx-pref-width : size8;
+#horizontalMid {
+	-fx-min-width : sizeMid;
+	-fx-max-width : sizeMid;
+	-fx-pref-width : sizeMid;
 	
 	-fx-min-height : 0px;
 	-fx-max-height : 0px;
@@ -60,14 +60,40 @@
 	
 	visibility : hidden;
 }
-#horizontal16 {
-	-fx-min-width : size16;
-	-fx-max-width : size16;
-	-fx-pref-width : size16;
+#horizontal1Max {
+	-fx-min-width : sizeMax;
+	-fx-max-width : sizeMax;
+	-fx-pref-width : sizeMax;
 	
 	-fx-min-height : 0px;
 	-fx-max-height : 0px;
 	-fx-pref-height : 0px;
 	
 	visibility : hidden;
+}
+
+.hgapMin {
+	-fx-hgap : sizeMin;
+	
+}
+.hgapMid {
+	-fx-hgap : sizeMid;
+	
+}
+.hgapMax {
+	-fx-hgap : sizeMax;
+	
+}
+
+.vgapMin {
+	-fx-vgap : sizeMin;
+	
+}
+.vgapMid {
+	-fx-vgap : sizeMid;
+	
+}
+.vgapMax {
+	-fx-vgap : sizeMax;
+	
 }

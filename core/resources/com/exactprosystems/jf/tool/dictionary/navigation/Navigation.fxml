@@ -13,13 +13,13 @@
 <?import javafx.scene.layout.*?>
 <HBox prefHeight="87.0" prefWidth="1453.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.exactprosystems.jf.tool.dictionary.navigation.NavigationController">
 	<fx:define>
-		<CssVariables fx:id="verMin" fx:constant="VERTICAL4"/>
-		<CssVariables fx:id="verMid" fx:constant="VERTICAL8"/>
-		<CssVariables fx:id="verMax" fx:constant="VERTICAL16"/>
+		<CssVariables fx:id="verMin" fx:constant="VERTICAL_MIN"/>
+		<CssVariables fx:id="verMid" fx:constant="VERTICAL_MID"/>
+		<CssVariables fx:id="verMax" fx:constant="VERTICAL_MAX"/>
 
-		<CssVariables fx:id="horMin" fx:constant="HORIZONTAL4"/>
-		<CssVariables fx:id="horMid" fx:constant="HORIZONTAL8"/>
-		<CssVariables fx:id="horMax" fx:constant="HORIZONTAL16"/>
+		<CssVariables fx:id="horMin" fx:constant="HORIZONTAL_MIN"/>
+		<CssVariables fx:id="horMid" fx:constant="HORIZONTAL_MID"/>
+		<CssVariables fx:id="horMax" fx:constant="HORIZONTAL_MAX"/>
 	</fx:define>
 	<children>
 		<VBox prefHeight="200.0" prefWidth="100.0" fx:id="vBoxWindow">
@@ -54,7 +54,7 @@
 				</HBox>
 			</children>
 		</VBox>
-		<Label id="$verMid"/>
+		<Label id="$verMax"/>
 		<VBox alignment="CENTER_LEFT" maxWidth="100" minWidth="100" prefWidth="100" GridPane.columnIndex="1" GridPane.valignment="CENTER">
 			<children>
 				<RadioButton id="Self" mnemonicParsing="false" onAction="#changeSection" text="Self">

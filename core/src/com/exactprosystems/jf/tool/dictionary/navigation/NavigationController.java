@@ -130,6 +130,7 @@ public class NavigationController implements Initializable, ContainingParent
 			((Region) dialog).setMaxWidth(width);
 			((Region) dialog).setPrefWidth(width);
 			((HBox)this.pane).getChildren().add(0,dialog);
+			HBox.setHgrow(dialog, Priority.ALWAYS);
 
 			ScrollPane scrollPaneElement = new ScrollPane(this.vBoxElement);
 			scrollPaneElement.setFitToWidth(true);
@@ -141,6 +142,7 @@ public class NavigationController implements Initializable, ContainingParent
 			((Region) element).setMaxWidth(width);
 			((Region) element).setPrefWidth(width);
 			((HBox)this.pane).getChildren().add(element);
+			HBox.setHgrow(element, Priority.ALWAYS);
 
 			Common.customizeLabeled(this.btnNewDialog, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.DICTIONARY_NEW);
 			Common.customizeLabeled(this.btnDeleteDialog, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.DICTIONARY_DELETE);
@@ -424,8 +426,11 @@ public class NavigationController implements Initializable, ContainingParent
 		renewButton.setToggleGroup(group);
 
 		hBox.getChildren().add(0, recOneButton);
-		hBox.getChildren().add(1, recManyButton);
-		hBox.getChildren().add(2, renewButton);
+		hBox.getChildren().add(1, Common.createSpacer(Common.SpacerEnum.HorizontalMin));
+		hBox.getChildren().add(2, recManyButton);
+		hBox.getChildren().add(3, Common.createSpacer(Common.SpacerEnum.HorizontalMin));
+		hBox.getChildren().add(4, renewButton);
+		hBox.getChildren().add(5, Common.createSpacer(Common.SpacerEnum.HorizontalMin));
 		Scene scene = Common.getTabPane().getScene();
 		pressHandler = keyEvent -> {
 			if (keyEvent.getCode() == KeyCode.CONTROL && owner != null && owner.isSelected())
