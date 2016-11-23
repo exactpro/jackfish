@@ -21,6 +21,7 @@ import org.apache.log4j.Logger;
 
 import java.io.File;
 import java.io.FileReader;
+import java.io.IOException;
 import java.io.Reader;
 import java.util.Date;
 
@@ -121,6 +122,12 @@ public class MatrixRunner implements IMatrixRunner, AutoCloseable
 		return 	this.matrix.countResult(Result.Failed); 
 	}
 
+	
+	public Object reportAsArchieve() throws IOException
+	{
+	    return this.report.reportAsArchieve();
+	}
+	
 	public void setStartTime(Date startTime)
 	{
 		this.startTime = startTime == null ? new Date() : startTime;

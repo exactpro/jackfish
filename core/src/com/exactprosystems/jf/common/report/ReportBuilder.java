@@ -17,14 +17,19 @@ import com.exactprosystems.jf.documents.matrix.parser.items.TestCase;
 import org.apache.log4j.Logger;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.CharArrayReader;
 import java.io.File;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 public abstract class ReportBuilder 
 {
@@ -83,12 +88,45 @@ public abstract class ReportBuilder
 	{
 		return this.imageDir;
 	}
-	
+
+    public final Object reportAsArchieve() throws IOException
+    {
+        List<String> list = new ArrayList<>();
+        list.add(this.reportName);
+        File dir = new File(this.reportDir);
+        if (dir.exists() && dir.isDirectory())
+        {
+            Arrays.stream(dir.list()).forEach(a -> list.add(this.reportDir + File.separator + a));;
+        }
+        
+        ByteArrayOutputStream outputStream = null;
+
+        try (ByteArrayOutputStream baos = new ByteArrayOutputStream();
+             ZipOutputStream zos = new ZipOutputStream(baos))
+        {
+            for (String filename : list)
+            {
+                Path path = Paths.get(filename);
+                byte[] data = Files.readAllBytes(path);
+                ZipEntry entry = new ZipEntry(filename);
+                entry.setSize(data.length);
+                zos.putNextEntry(entry);
+                zos.write(data);
+                zos.closeEntry();
+            }
+            outputStream = baos;
+        }
+        return outputStream.toByteArray();
+    }
+
+    
+	@Deprecated
 	public final void reportSwitch(boolean on)
 	{
 		this.reportIsOn = on;
 	}
 
+	@Deprecated
 	public final boolean reportIsOn()
 	{
 		return this.reportIsOn;
