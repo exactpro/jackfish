@@ -51,3 +51,4 @@ BuildProject
 core/src/com/exactprosystems/jf/common/version/version.properties
 .gradle/
 *.zip
+/mocks/swing/mock-swing.jar
