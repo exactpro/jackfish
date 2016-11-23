@@ -4,7 +4,7 @@
 	size16 : 16px;
 }
 
-.vertical4 {
+#vertical4 {
 	-fx-min-height : size4;
 	-fx-max-height : size4;
 	-fx-pref-height : size4;
@@ -12,10 +12,10 @@
 	-fx-min-width : 0px;
 	-fx-max-width : 0px;
 	-fx-pref-width : 0px;
-	
+
 	visibility : hidden;
 }
-.vertical8 {
+#vertical8 {
 	-fx-min-height : size8;
 	-fx-max-height : size8;
 	-fx-pref-height : size8;
@@ -26,7 +26,7 @@
 	
 	visibility : hidden;
 }
-.vertical16 {
+#vertical16 {
 	-fx-min-height : size16;
 	-fx-max-height : size16;
 	-fx-pref-height : size16;
@@ -38,7 +38,7 @@
 	visibility : hidden;
 }
 
-.horizontal4 {
+#horizontal4 {
 	-fx-min-width : size4;
 	-fx-max-width : size4;
 	-fx-pref-width : size4;
@@ -49,7 +49,7 @@
 	
 	visibility : hidden;
 }
-.horizontal8 {
+#horizontal8 {
 	-fx-min-width : size8;
 	-fx-max-width : size8;
 	-fx-pref-width : size8;
@@ -60,7 +60,7 @@
 	
 	visibility : hidden;
 }
-.horizontal16 {
+#horizontal16 {
 	-fx-min-width : size16;
 	-fx-max-width : size16;
 	-fx-pref-width : size16;
