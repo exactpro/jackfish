@@ -21,7 +21,7 @@ import java.util.List;
 @MatrixItemAttribute(
 		description 	= "Executed if condition is false.", 
 		shouldContain 	= { Tokens.Else },
-		mayContain 		= { Tokens.Off }, 
+		mayContain 		= { Tokens.Off, Tokens.RepOff }, 
         real			= true,
 		hasValue 		= false, 
 		hasParameters 	= false,

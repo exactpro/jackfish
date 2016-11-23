@@ -26,7 +26,7 @@ import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
 @MatrixItemAttribute(
 		description = "Switches on output of the report.", 
 		shouldContain 	= { Tokens.ReportOn },
-		mayContain 		= { Tokens.Off }, 
+		mayContain 		= { Tokens.Off, Tokens.RepOff }, 
 		real			= true,
 		hasValue 		= false, 
 		hasParameters 	= false, 

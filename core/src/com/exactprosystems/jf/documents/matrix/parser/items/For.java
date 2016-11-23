@@ -32,7 +32,7 @@ import java.util.Set;
 @MatrixItemAttribute(
 		description 	= "Loop from start value to end value with step.", 
 		shouldContain 	= { Tokens.For, Tokens.From, Tokens.To },
-		mayContain 		= { Tokens.Step, Tokens.Off }, 
+		mayContain 		= { Tokens.Step, Tokens.Off, Tokens.RepOff }, 
 		real			= true,
 		hasValue 		= true, 
 		hasParameters 	= false,

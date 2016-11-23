@@ -26,7 +26,7 @@ import java.util.List;
 @MatrixItemAttribute(
 		description 	= "Break chain of execution into loops or blocks.", 
 		shouldContain 	= { Tokens.Continue },
-		mayContain 		= { Tokens.Off }, 
+		mayContain 		= { Tokens.Off, Tokens.RepOff }, 
 		real			= true,
 		hasValue 		= false, 
 		hasParameters 	= false,

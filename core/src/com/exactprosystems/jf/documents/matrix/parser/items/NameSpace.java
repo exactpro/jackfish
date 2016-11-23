@@ -32,7 +32,7 @@ import java.util.Set;
 @MatrixItemAttribute(
         description 	= "Namespace.",
         shouldContain 	= { Tokens.NameSpace },
-        mayContain 		= { Tokens.Id, Tokens.Off },
+        mayContain 		= { Tokens.Id, Tokens.Off, Tokens.RepOff },
         real			= true,
         hasValue 		= true,
         hasParameters 	= false,

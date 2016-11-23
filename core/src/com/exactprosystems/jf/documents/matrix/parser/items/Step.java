@@ -33,7 +33,7 @@ import java.util.Set;
 @MatrixItemAttribute(
 		description 	= "Elementary step in the script", 
 		shouldContain 	= { Tokens.Step },
-		mayContain 		= { Tokens.Off },
+		mayContain 		= { Tokens.Off, Tokens.RepOff },
 		real			= true,
 		hasValue 		= true, 
 		hasParameters 	= false,

@@ -31,7 +31,7 @@ import java.util.Set;
 @MatrixItemAttribute(
 		description 	= "Returns value from SubCase.", 
 		shouldContain 	= { Tokens.Return },
-		mayContain 		= { Tokens.Off }, 
+		mayContain 		= { Tokens.Off, Tokens.RepOff }, 
 		real			= true,
 		hasValue 		= true, 
 		hasParameters 	= false,

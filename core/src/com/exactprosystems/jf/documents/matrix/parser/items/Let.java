@@ -33,7 +33,7 @@ import java.util.Set;
 @MatrixItemAttribute(
 		description 	= "Assigns value to a variable.", 
 		shouldContain 	= { Tokens.Let },
-		mayContain 		= { Tokens.Id, Tokens.Off, Tokens.Global }, 
+		mayContain 		= { Tokens.Id, Tokens.Off, Tokens.RepOff, Tokens.Global }, 
 		real			= true,
 		hasValue 		= true, 
 		hasParameters 	= false,

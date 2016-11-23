@@ -30,7 +30,7 @@ import java.util.Set;
 @MatrixItemAttribute(
 		description 	= "Loop while condition is true.", 
 		shouldContain 	= { Tokens.While },
-		mayContain 		= { Tokens.Off },
+		mayContain 		= { Tokens.Off, Tokens.RepOff },
 		real			= true,
 		hasValue 		= true, 
 		hasParameters 	= false,

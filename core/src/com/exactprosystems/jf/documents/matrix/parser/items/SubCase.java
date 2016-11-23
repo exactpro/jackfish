@@ -33,7 +33,7 @@ import java.util.Set;
 @MatrixItemAttribute(
         description 	= "Subroutine.",
         shouldContain 	= { Tokens.SubCase },
-        mayContain 		= { Tokens.Id, Tokens.Off },
+        mayContain 		= { Tokens.Id, Tokens.Off, Tokens.RepOff },
         real			= true,
         hasValue 		= true,
         hasParameters 	= true,

@@ -29,7 +29,7 @@ import java.util.Set;
 @MatrixItemAttribute(
 		description 	= "Test case.", 
 		shouldContain 	= { Tokens.TestCase },
-		mayContain 		= { Tokens.Id, Tokens.Off },
+		mayContain 		= { Tokens.Id, Tokens.Off, Tokens.RepOff },
 		closes			= MatrixRoot.class,
         real			= true,
 		hasValue 		= true, 

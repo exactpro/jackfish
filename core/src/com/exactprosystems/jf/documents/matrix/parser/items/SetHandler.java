@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
 @MatrixItemAttribute(
 		description 	= "Sets up an event handler for all TestCases or Steps.", 
 		shouldContain 	= { Tokens.SetHandler },
-		mayContain 		= { Tokens.Off, Tokens.Kind },
+		mayContain 		= { Tokens.Off, Tokens.RepOff, Tokens.Kind },
 		real			= true,
 		hasValue 		= true, 
 		hasParameters 	= false,
