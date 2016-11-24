@@ -30,6 +30,7 @@
     <import>com.exactprosystems.jf.api.client</import>
     <import>com.exactprosystems.jf.api.error</import>
     <vars>vars.ini</vars>
+    <userVars>personal.ini</userVars>
     <matrix>examples</matrix>
     <matrix>matrices</matrix>
     <appDict>dic/gui</appDict>
