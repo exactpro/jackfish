@@ -28,7 +28,6 @@ import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.main.Main;
 import com.exactprosystems.jf.tool.settings.SettingsPanel;
 import com.exactprosystems.jf.tool.settings.Theme;
-
 import javafx.application.Platform;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
@@ -38,7 +37,6 @@ import javafx.scene.paint.Color;
 
 import java.net.URL;
 import java.util.Collection;
-import java.util.LinkedHashMap;
 import java.util.ResourceBundle;
 
 public class DictionaryFxController implements Initializable, ContainingParent
@@ -77,12 +75,12 @@ public class DictionaryFxController implements Initializable, ContainingParent
 	@Override
 	public void initialize(URL url, ResourceBundle resourceBundle)
 	{
-		listView = new CustomListView<>(true);
-		splitPane.getItems().add(listView);
-		listView.setPrefHeight(150);
-		listView.setMaxHeight(400);
-		listView.setMinHeight(100);
-		splitPane.setDividerPosition(1, 0.85);
+		this.listView = new CustomListView<>(true);
+		this.splitPane.getItems().add(listView);
+		this.listView.setPrefHeight(150);
+		this.listView.setMaxHeight(400);
+		this.listView.setMinHeight(100);
+		this.splitPane.setDividerPosition(1, 0.85);
 	}
 
 	public void saved(String name)
