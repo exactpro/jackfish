@@ -202,14 +202,22 @@ public class Xml
 		return new Xml(res);
 	}
 	
-	public Xml createOneByXpath(String xpath) throws Exception
+	public Xml createOneByXpath(String nodeName, String xpath) throws Exception
 	{
+
+        Document doc = getDocument();
+        if (doc == null)
+        {
+            return null;
+        }
+        Element res = doc.createElement(nodeName);
+
 		XPath xPath = XPathFactory.newInstance().newXPath();
-		Node res = (Node) xPath.evaluate(xpath, this.node, XPathConstants.NODE);
+		Node foundNode = (Node) xPath.evaluate(xpath, this.node, XPathConstants.NODE);
 		
 		if (res != null)
 		{
-			return new Xml(res);
+            return new Xml(res.appendChild(foundNode));
 		}
 		
 		return null;
