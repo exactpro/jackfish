@@ -116,6 +116,11 @@ public class Parameter implements Mutable, Cloneable, Setter<String>, Getter<Str
 		return this.value;
 	}
 
+    public void setValue(Object value)
+    {
+        this.value = value;
+    }
+
 	public String getValueAsString()
 	{
 		return this.valueAsString;

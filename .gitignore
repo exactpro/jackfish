@@ -28,6 +28,14 @@ logs
 .log.xml
 .settings.xml
 
+version.properties
+#all from src don't ignore
+!/*/src/**/*/
+#all from resources don't ignore
+!/*/resources/**/*
+!/plugins/app/win/resources/com/exactprosystems/jf/app/bin/
+version.properties
+
 #temp files
 .*.swp
 .~*.*#
@@ -47,8 +55,9 @@ apache-tomcat*
 #build info file
 buildinfo.htm
 BuildProject
-
-core/src/com/exactprosystems/jf/common/version/version.properties
 .gradle/
 *.zip
 /mocks/swing/mock-swing.jar
+/core/reports/
+/core/jackfish.jar
+/core/remote_out.txt

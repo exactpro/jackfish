@@ -169,7 +169,8 @@ public class ColorsTabController implements Initializable, ContainingParent, ITa
 				createItem(new NameAndColor(Tokens.Assert.name())),
 				createItem(new NameAndColor(Tokens.RawTable.name())),
 				createItem(new NameAndColor(Tokens.RawText.name())),
-				createItem(new NameAndColor(Tokens.RawMessage.name()))
+				createItem(new NameAndColor(Tokens.RawMessage.name())),
+				createItem(new NameAndColor(Tokens.SetHandler.name()))
 		);
 
 		Map<ActionGroups, TreeItem<NameAndColor>> map = new HashMap<>();

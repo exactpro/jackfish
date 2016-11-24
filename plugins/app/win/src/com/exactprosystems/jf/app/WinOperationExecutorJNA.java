@@ -9,6 +9,7 @@ package com.exactprosystems.jf.app;
 
 import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.client.ICondition;
+import com.exactprosystems.jf.api.common.Converter;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.conditions.Condition;
 import com.exactprosystems.jf.api.error.app.ElementNotFoundException;
@@ -762,7 +763,8 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 			Map<String, String> map = new LinkedHashMap<>();
 			String[] headerCells = headerRow.split(SEPARATOR_CELL);
 			String[] rowCell = row.split(SEPARATOR_CELL);
-			for (int i = 0; i < headerCells.length; i++)
+			List<String> newHeaders = Converter.convertColumns(Arrays.asList(headerCells));
+			for (int i = 0; i < newHeaders.size(); i++)
 			{
 				String value = rowCell[i];
 				map.put(headerCells[i], value.equals(EMPTY_CELL) ? "" : value);
@@ -816,7 +818,8 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 			Map<String, String> map = new LinkedHashMap<>();
 			String[] headerCells = convertColumns(headerRow.split(SEPARATOR_CELL), columns);
 			String[] rowCell = row.split(SEPARATOR_CELL);
-			for (int j = 0; j < headerCells.length; j++)
+			List<String> newColumns = Converter.convertColumns(Arrays.asList(headerCells));
+			for (int j = 0; j < newColumns.size(); j++)
 			{
 				String value = rowCell[j];
 				map.put(headerCells[j], value.equals(EMPTY_CELL) ? "" : value);
@@ -847,8 +850,9 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 			String[] split = res.split(SEPARATOR_ROWS);
 			String headerRow = split[0];
 			String[] headerCells = convertColumns(headerRow.split(SEPARATOR_CELL), columns);
-			String[][] table = new String[split.length][headerCells.length];
-			System.arraycopy(headerCells, 0, table[0], 0, headerCells.length);
+			List<String> newHeader = Converter.convertColumns(Arrays.asList(headerCells));
+			String[][] table = new String[split.length][newHeader.size()];
+			System.arraycopy(newHeader.toArray(new String[newHeader.size()]), 0, table[0], 0, newHeader.size());
 			for (int i = 1; i < split.length; i++)
 			{
 				String row = split[i];
@@ -860,7 +864,7 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 						rowCells[j] = "";
 					}
 				}
-				System.arraycopy(rowCells, 0, table[i], 0, Math.min(rowCells.length, headerCells.length));
+				System.arraycopy(rowCells, 0, table[i], 0, Math.min(rowCells.length, newHeader.size()));
 			}
 			return table;
 		}

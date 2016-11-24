@@ -32,7 +32,7 @@ public class ChartReport extends AbstractAction
 	public final static String 	titleName 			= "Title";
 	public final static String 	tableName 			= "Table";
 	public final static String	beforeTestCaseName	= "BeforeTestCase";
-	public final static String	kindName			= "Kind";
+	public final static String	typeName			= "Type";
 
 	@ActionFieldAttribute(name = titleName, mandatory = true, description = "Title.")
 	protected String 	title 	= null;
@@ -40,8 +40,8 @@ public class ChartReport extends AbstractAction
 	@ActionFieldAttribute(name = tableName, mandatory = true, description = "The table.")
 	protected Table 	table 	= null;
 
-	@ActionFieldAttribute(name = kindName, mandatory = true, description = "Kind of the chart")
-	protected ChartKind			chartKind 			=  null;
+	@ActionFieldAttribute(name = typeName, mandatory = true, description = "Type of the chart")
+	protected ChartKind			chartType 			=  null;
 
 	@ActionFieldAttribute(name = beforeTestCaseName, mandatory = false, description = "The name of Testcase before witch the table will be put.")
 	protected String			beforeTestCase		= null;
@@ -60,7 +60,7 @@ public class ChartReport extends AbstractAction
 	public void helpToAddParametersDerived(List<ReadableValue> list, Context context, Parameters parameters) throws Exception
 	{
 		parameters.evaluateAll(context.getEvaluator());
-		Object kindObj 	= parameters.get(kindName);
+		Object kindObj 	= parameters.get(typeName);
 		Object tabObj 	= parameters.get(tableName);
 
 		ChartKind kind 	= null;
@@ -72,7 +72,7 @@ public class ChartReport extends AbstractAction
 		}
 		else
 		{
-			throw new NullParameterException(kindName);
+			throw new NullParameterException(typeName);
 		}
 
 		if (tabObj instanceof Table)
@@ -90,7 +90,7 @@ public class ChartReport extends AbstractAction
 	{
 		switch (fieldName)
 		{
-			case kindName:
+			case typeName:
 				return HelpKind.ChooseFromList;
 		}
 		
@@ -103,7 +103,7 @@ public class ChartReport extends AbstractAction
 	{
 		switch (parameterToFill)
 		{
-			case kindName:
+			case typeName:
 				for (ChartKind kind : ChartKind.values())
 				{
 					list.add(new ReadableValue(ChartKind.class.getSimpleName() + "." + kind.name(), kind.getDescription()));
@@ -117,7 +117,7 @@ public class ChartReport extends AbstractAction
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
-		ChartBuilder chartBuilder = ChartFactory.createChartBuilder(this.chartKind, this.table, parameters.select(TypeMandatory.Extra));
+		ChartBuilder chartBuilder = ChartFactory.createChartBuilder(this.chartType, this.table, parameters.select(TypeMandatory.Extra));
 		report.reportChart(this.title, this.beforeTestCase, chartBuilder);
 
 		super.setResult(null);

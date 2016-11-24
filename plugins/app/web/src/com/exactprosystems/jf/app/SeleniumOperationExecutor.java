@@ -10,6 +10,7 @@ package com.exactprosystems.jf.app;
 
 import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.client.ICondition;
+import com.exactprosystems.jf.api.common.Converter;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.error.app.ElementNotFoundException;
 import com.exactprosystems.jf.api.error.app.TooManyElementsException;
@@ -22,7 +23,6 @@ import org.openqa.selenium.*;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.Point;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeDriverService;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.safari.SafariDriver;
 import org.openqa.selenium.support.ui.Select;
@@ -491,15 +491,16 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 		}
 		logger.debug("Rows size : " + rows.size());
 		String[][] res = new String[rows.size() + 1][headers.size()];
-		for (int i = 0; i < res[0].length; i++)
+		String[] cols = res[0];
+		for (int i = 0; i < cols.length; i++)
 		{
-			res[0][i] = headers.get(i);
+			cols[i] = headers.get(i);
 		}
 		for (int i = 1; i < res.length; i++)
 		{
 			Element row = rows.get(i - 1);
 			Elements cells = row.children();
-			for (int j = 0; j < cells.size(); j++)
+			for (int j = 0; j < cols.length; j++)
 			{
 				res[i][j] = cells.get(j).text();
 			}
@@ -689,7 +690,7 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 				{
 					List<WebElement> rows = findRows(additional, tableComp);
 					WebElement row1 = rows.get(y);
-					List<WebElement> cells1 = row1.findElements(By.tagName(tag_td));
+					List<WebElement> cells1 = row1.findElements(By.xpath("child::" + tag_td));
 					return cells1.get(x);
 				}
 			}
@@ -1426,14 +1427,14 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 			}
 			headerElements = firstTr.children();
 			columnsIsRow.set(true);
-			return convertColumnsToHeaders(headerElements, columns, new IText<Element>()
+			return Converter.convertColumns(convertColumnsToHeaders(headerElements, columns, new IText<Element>()
 			{
 				@Override
 				public String getText(Element element)
 				{
 					return element.text();
 				}
-			});
+			}));
 		}
 
 		Elements theadChildren = lastThead.children();
@@ -1459,14 +1460,14 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 		{
 			result.add(element.text());
 		}
-		return convertColumnsToHeaders(result, columns, new IText<String>()
+		return Converter.convertColumns(convertColumnsToHeaders(result, columns, new IText<String>()
 		{
 			@Override
 			public String getText(String s)
 			{
 				return s;
 			}
-		});
+		}));
 	}
 
 	private Map<String, String> getRowValues(WebElement row, List<String> headers) throws Exception
@@ -1478,7 +1479,7 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 			try
 			{
 				Map<String, String> result = new LinkedHashMap<>();
-				List<WebElement> cells = row.findElements(By.tagName(tag_td));
+				List<WebElement> cells = row.findElements(By.xpath("child::"+tag_td));
 				this.logger.debug("Found cells : " + cells.size());
 				for (int i = 0; i < (headers.size() > cells.size() ? cells.size() : headers.size()); i++)
 				{
@@ -1571,14 +1572,14 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 				{
 					case tag_tr: webHeader = lastThead.findElement(By.xpath("child::tr[last()]"));
 				}
-				return convertColumnsToHeaders(webHeader.findElements(By.xpath("child::*")), columns, new IText<WebElement>()
+				return Converter.convertColumns(convertColumnsToHeaders(webHeader.findElements(By.xpath("child::*")), columns, new IText<WebElement>()
 				{
 					@Override
 					public String getText(WebElement webElement)
 					{
 						return webElement.getText();
 					}
-				});
+				}));
 			}
 			catch (StaleElementReferenceException e)
 			{
@@ -1593,16 +1594,6 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 	interface IText<T>
 	{
 		String getText(T t);
-	}
-
-	private List<WebElement> cellsFromHeader(WebElement header)
-	{
-		List<WebElement> cells = header.findElements(By.tagName(tag_th));
-		if (cells.isEmpty())
-		{
-			header.findElements(By.tagName(tag_tr));
-		}
-		return cells;
 	}
 
 	private <T> List<String> convertColumnsToHeaders(Iterable<T> headers, String[] columns, IText<T> func)
@@ -1641,26 +1632,26 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 
 	private List<String> getHeadersFromBody(WebElement grid, String[] columns) throws RemoteException
 	{
-		List<WebElement> rows = grid.findElements(By.tagName(tag_tr));
+		List<WebElement> rows = grid.findElement(By.xpath("child::" + tag_tbody)).findElements(By.xpath("child::" + tag_tr));
 		if (rows.isEmpty())
 		{
 			throw new RemoteException("Table is empty");
 		}
 		WebElement firstRow = rows.get(0);
 		markRowIsHeader(firstRow, true);
-		List<WebElement> cells = firstRow.findElements(By.tagName(tag_th));;
+		List<WebElement> cells = firstRow.findElements(By.xpath("child::" + tag_th));;
 		if (cells.isEmpty())
 		{
-			cells = firstRow.findElements(By.tagName(tag_td));
+			cells = firstRow.findElements(By.xpath("child::" + tag_td));
 		}
-		return convertColumnsToHeaders(cells, columns, new IText<WebElement>()
+		return Converter.convertColumns(convertColumnsToHeaders(cells, columns, new IText<WebElement>()
 		{
 			@Override
 			public String getText(WebElement webElement)
 			{
 				return webElement.getText();
 			}
-		});
+		}));
 	}
 
 	/**
@@ -1696,13 +1687,14 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 				if (additional != null)
 				{
 					MatcherSelenium by = new MatcherSelenium(ControlKind.Row, additional);
-					List<WebElement> elements = table.findElement(By.tagName(tag_tbody)).findElements(by);
+					List<WebElement> elements = table.findElement(By.xpath("child::" + tag_tbody)).findElements(by);
 					unmarkRowIsHeader(table);
 					return elements;
 				}
 				else
 				{
-					List<WebElement> elements = table.findElement(By.tagName(tag_tbody)).findElements(this.selectRowsWithoutHeader());
+
+					List<WebElement> elements = table.findElement(By.xpath("child::" + tag_tbody)).findElements(this.selectRowsWithoutHeader());
 					unmarkRowIsHeader(table);
 					return elements;
 				}
@@ -1727,7 +1719,7 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 			{
 				Map<String, ValueAndColor> res = new LinkedHashMap<String, ValueAndColor>();
 
-				List<WebElement> cells = row.findElements(By.tagName(tag_td));
+				List<WebElement> cells = row.findElements(By.xpath("child::" + tag_td));
 				for (int i = 0; i < cells.size(); i++)
 				{
 					WebElement cell = cells.get(i);
@@ -1758,7 +1750,7 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 		{
 			try
 			{
-				List<WebElement> cells = row.findElements(By.tagName(tag_td));
+				List<WebElement> cells = row.findElements(By.xpath("child::" + tag_td));
 				Map<String, Object> map = new LinkedHashMap<>();
 				for (int i = 0; i < cells.size(); i++)
 				{
@@ -1813,12 +1805,12 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 
 	private By selectRowsWithoutHeader()
 	{
-		return By.xpath(String.format(".//%s[not(@%s)]", tag_tr, markAttribute));
+		return By.xpath(String.format("child::%s[not(@%s)]", tag_tr, markAttribute));
 	}
 
 	private By selectRowLikeHeader()
 	{
-		return By.xpath(String.format(".//%s[@%s]", tag_tr, markAttribute));
+		return By.xpath(String.format("child::%s[@%s]", tag_tr, markAttribute));
 	}
 
 	private void markRowIsHeader(WebElement row, boolean isSet)
