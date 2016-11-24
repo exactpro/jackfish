@@ -44,6 +44,7 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 	private static final String tag_th 		= "th";
 	private static final String css_prefix	= "css:";
 	private static final String row_span	= "rowspan";
+	private static final String col_span	= "colspan";
 
 
 	private final int repeatLimit = 4;
@@ -500,7 +501,7 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 		{
 			Element row = rows.get(i - 1);
 			Elements cells = row.children();
-			for (int j = 0; j < cols.length; j++)
+			for (int j = 0; j < Math.min(cols.length, cells.size()); j++)
 			{
 				res[i][j] = cells.get(j).text();
 			}
@@ -1426,15 +1427,35 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 				throw new RemoteException("Headers not found. Check your header locator or table locator");
 			}
 			headerElements = firstTr.children();
-			columnsIsRow.set(true);
-			return Converter.convertColumns(convertColumnsToHeaders(headerElements, columns, new IText<Element>()
+			ArrayList<Element> newHeaders = new ArrayList<>();
+			for (Element headerElement : headerElements)
 			{
-				@Override
-				public String getText(Element element)
+				/**
+				 * If header has attribute colspan we need add empty columns
+				 */
+				if (headerElement.hasAttr(col_span))
 				{
-					return element.text();
+					String colspan = headerElement.attr(col_span);
+					try
+					{
+						int colSpanInt = Integer.parseInt(colspan);
+						for(int i = 0; i < colSpanInt; i++)
+						{
+							newHeaders.add(null);
+						}
+					}
+					catch (Exception e)
+					{
+						//nothing do if failing
+					}
 				}
-			}));
+				else
+				{
+					newHeaders.add(headerElement);
+				}
+			}
+			columnsIsRow.set(true);
+			return Converter.convertColumns(convertColumnsToHeaders(newHeaders, columns, new JsoupElementText()));
 		}
 
 		Elements theadChildren = lastThead.children();
@@ -1458,16 +1479,28 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 		}
 		for (Element element : header.children())
 		{
-			result.add(element.text());
-		}
-		return Converter.convertColumns(convertColumnsToHeaders(result, columns, new IText<String>()
-		{
-			@Override
-			public String getText(String s)
+			if (element.hasAttr(col_span))
 			{
-				return s;
+				String attr = element.attr(col_span);
+				try
+				{
+					int colSpanInt = Integer.parseInt(attr);
+					for(int i = 0; i < colSpanInt; i++)
+					{
+						result.add(null);
+					}
+				}
+				catch (Exception e)
+				{
+					//nothing do if failing
+				}
 			}
-		}));
+			else
+			{
+				result.add(element.text());
+			}
+		}
+		return Converter.convertColumns(convertColumnsToHeaders(result, columns, new StringText()));
 	}
 
 	private Map<String, String> getRowValues(WebElement row, List<String> headers) throws Exception
@@ -1572,14 +1605,32 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 				{
 					case tag_tr: webHeader = lastThead.findElement(By.xpath("child::tr[last()]"));
 				}
-				return Converter.convertColumns(convertColumnsToHeaders(webHeader.findElements(By.xpath("child::*")), columns, new IText<WebElement>()
+				List<WebElement> elements = webHeader.findElements(By.xpath("child::*"));
+				List<WebElement> newHeaders = new ArrayList<>();
+				for (WebElement element : elements)
 				{
-					@Override
-					public String getText(WebElement webElement)
+					String colspan = element.getAttribute(col_span);
+					if (!Str.IsNullOrEmpty(colspan))
 					{
-						return webElement.getText();
+						try
+						{
+							int colSpanInt = Integer.parseInt(colspan);
+							for(int i = 0; i < colSpanInt; i++)
+							{
+								newHeaders.add(null);
+							}
+						}
+						catch (Exception e)
+						{
+							//nothing do if failing
+						}
 					}
-				}));
+					else
+					{
+						newHeaders.add(element);
+					}
+				}
+				return Converter.convertColumns(convertColumnsToHeaders(elements, columns, new WebElementText()));
 			}
 			catch (StaleElementReferenceException e)
 			{
@@ -1594,6 +1645,33 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 	interface IText<T>
 	{
 		String getText(T t);
+	}
+
+	private class WebElementText implements IText<WebElement>
+	{
+		@Override
+		public String getText(WebElement webElement)
+		{
+			return webElement == null ? "" : webElement.getText();
+		}
+	}
+
+	private class JsoupElementText implements IText<Element>
+	{
+		@Override
+		public String getText(Element element)
+		{
+			return element == null ? "" : element.text();
+		}
+	}
+
+	private class StringText implements IText<String>
+	{
+		@Override
+		public String getText(String s)
+		{
+			return s == null ? "" : s;
+		}
 	}
 
 	private <T> List<String> convertColumnsToHeaders(Iterable<T> headers, String[] columns, IText<T> func)
@@ -1644,14 +1722,31 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 		{
 			cells = firstRow.findElements(By.xpath("child::" + tag_td));
 		}
-		return Converter.convertColumns(convertColumnsToHeaders(cells, columns, new IText<WebElement>()
+		ArrayList<WebElement> newHeaders = new ArrayList<>();
+		for (WebElement cell : cells)
 		{
-			@Override
-			public String getText(WebElement webElement)
+			String attr = cell.getAttribute(col_span);
+			if (!Str.IsNullOrEmpty(attr))
 			{
-				return webElement.getText();
+				try
+				{
+					int colSpanInt = Integer.parseInt(attr);
+					for(int i = 0; i < colSpanInt; i++)
+					{
+						newHeaders.add(null);
+					}
+				}
+				catch (Exception e)
+				{
+					//nothing do if failing
+				}
 			}
-		}));
+			else
+			{
+				newHeaders.add(cell);
+			}
+		}
+		return Converter.convertColumns(convertColumnsToHeaders(newHeaders, columns, new WebElementText()));
 	}
 
 	/**
