@@ -20,26 +20,35 @@ var createPieChart = function(diagramId, data) {
 	var arc = d3.svg
 		.arc()
 		.outerRadius(r)
-	
+	var radius = Math.min(w, h) / 2;
+
+	var labelArc = d3.svg.arc()
+		.outerRadius(radius - 40)
+		.innerRadius(radius - 40);
+
 	// select paths, use arc generator to draw
 	var arcs = vis.selectAll("g.slice")
 		.data(pie)
 		.enter()
 		.append("svg:g")
 		.attr("class", "slice");
-	
+
 	arcs.append("svg:path")
 		.attr("fill", function(d, i){ return color(i)})
 		.attr("d", function (d) { return arc(d)});
-	
+
 	// add the text
 	arcs.append("svg:text")
+		.attr("transform", function(d) {
+			return "translate(" + labelArc.centroid(d) + ")";
+		})
+/*		//rotate label
 		.attr("transform", function(d){
 			d.innerRadius = 0;
 			d.outerRadius = r;
 			var midAngle = d.endAngle < Math.PI ? d.startAngle/2 + d.endAngle/2 : d.startAngle/2  + d.endAngle/2 + Math.PI ;
 			return "translate(" + arc.centroid(d)[0] + "," + arc.centroid(d)[1] + ") rotate(-90) rotate(" + (midAngle * 180/Math.PI) + ")";
-		})
+		})*/
 		.attr("text-anchor", "middle").text( function(d, i) {
 			return data[i].label
 		}
