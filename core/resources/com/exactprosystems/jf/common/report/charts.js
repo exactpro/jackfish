@@ -243,11 +243,15 @@ var createLineChart = function(diagramId, data, yAxisDescription) {
 		})
 	);
 	y.domain([
+	//TODO workaround. Think about it
+		/*
 		d3.min(lines, function(c) {
 			return d3.min(c.values, function(v) {
 				return v.value;
 			});
 		}),
+		*/
+		0,
 		d3.max(lines, function(c) {
 			return d3.max(c.values, function(v) {
 				return v.value;
