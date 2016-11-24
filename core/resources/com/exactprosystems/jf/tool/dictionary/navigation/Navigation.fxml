@@ -22,7 +22,7 @@
 		<CssVariables fx:id="horMax" fx:constant="HORIZONTAL_MAX"/>
 	</fx:define>
 	<children>
-		<VBox prefHeight="200.0" prefWidth="100.0" fx:id="vBoxWindow">
+		<VBox HBox.hgrow="ALWAYS" prefHeight="200.0" prefWidth="100.0" fx:id="vBoxWindow">
 			<children>
 				<Label id="$verMid"/>
 				<HBox alignment="CENTER_LEFT">
@@ -54,8 +54,8 @@
 				</HBox>
 			</children>
 		</VBox>
-		<Label id="$verMax"/>
-		<VBox alignment="CENTER_LEFT" maxWidth="100" minWidth="100" prefWidth="100" GridPane.columnIndex="1" GridPane.valignment="CENTER">
+		<Label id="$horMax"/>
+		<VBox HBox.hgrow="ALWAYS" alignment="CENTER_LEFT" maxWidth="100" minWidth="100" prefWidth="100">
 			<children>
 				<RadioButton id="Self" mnemonicParsing="false" onAction="#changeSection" text="Self">
 					<toggleGroup>
@@ -72,8 +72,8 @@
 				<RadioButton id="Close" mnemonicParsing="false" onAction="#changeSection" text="Close" toggleGroup="$groupSection"/>
 			</children>
 		</VBox>
-		<Label id="$verMax"/>
-		<VBox prefHeight="200.0" prefWidth="100.0" fx:id="vBoxElement" GridPane.columnIndex="2">
+		<Label id="$horMax"/>
+		<VBox HBox.hgrow="ALWAYS" prefHeight="200.0" prefWidth="100.0" fx:id="vBoxElement" GridPane.columnIndex="2">
 			<children>
 				<Label id="$verMid"/>
 				<HBox fx:id="hBoxElement">
