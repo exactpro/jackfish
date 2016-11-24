@@ -27,28 +27,30 @@ import java.io.StringReader;
 		generalDescription 		=
  "The purpose of the action is to create the object type {{$Text$}}. "
 + "The object type {{$Text$}} is the text-based pattern which consists of lines. "
-+ "Object type {{$Text$}} is used as the input object in many actions, see: "
-+ "{{$MatrixRunFromText$}}, {{$TextSaveToFile$}}, {{$TextLoadFromFile$}}, {{$TextReport$}}, "
-+ "{{$TextAddLine$}}, {{$TextPerform$}}, {{$TextSetValue$}}. "
++ "Object type {{$Text$}} is used as the input object in many text actions. "
 + "Also the object type {{$Text$}} can be converted into the line object "
 + "which can contain many lines {{$Text.Out.toString()$}} divided by the line break symbol (\\n) and "
-+ "transferred to any action which accepts the line as the parameter or parameters, for example in action {{$SQLExecute$}}.",
-		additionFieldsAllowed 	= true,
-		outputDescription 		= "The object type Text is the text-based pattern which consists of lines.",
++ "transferred to any action which accepts the line as the parameter or parameters, for example in action {{@SQLExecute@}}.",
+		additionFieldsAllowed 	= false,
+		outputDescription 		= "The object type {{$Text$}} is the text-based pattern which consists of lines.",
 		outputType				= Text.class,
 		examples =
- "{{##Id;#Action;#Content\n"
+ "Создание объекта {{$Text$}} посредством экшена {{@TextCreate@}}."
++ "{{##Id;#Action;#Content\n"
 + "TXT1;TextCreate;'Text'#}}\n"
 + "\n"
 + "\n"
++ "Проверка того, что все прошло успешно и объект {{$Text$}} создался."
 + "{{##Assert;#Message\n"
-+ "TXT1.Out.toString() == 'Text';#}}\n"
++ "TXT1.Out.toString() == 'Text';#}}\n",
+		seeAlso = "{{@TextReport@}}, {{@TextAddLine@}}, {{@TextLoadFromFile@}}, {{@TextPerform@}}, {{@TextSaveToFile@}}," +
+				" {{@TextSetValue@}}"
 	)
 public class TextCreate extends AbstractAction 
 {
 	public final static String contentName = "Content";
 
-	@ActionFieldAttribute(name = contentName, mandatory = true, description = "Content(String) — the text which is required to type.")
+	@ActionFieldAttribute(name = contentName, mandatory = true, description = "The text which is required to type.")
 	protected String 	content 	= null;
 
 	public TextCreate()
