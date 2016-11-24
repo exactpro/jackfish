@@ -1,0 +1,30 @@
+#Id;#TestCase
+Step 1;This matrix always passed
+    #Action;#Text;#Notifier
+    Show;'EE1002 Always passed';Notifier.Success
+
+    #Action;#Text;#Notifier
+    Show;'Step 1';Notifier.Info
+
+    #Action;#Time
+    Wait;1000
+
+
+#Id;#TestCase
+Step 2;Working
+    #Action;#Text;#Notifier
+    Show;'Step 2';Notifier.Info
+
+    #Action;#Time
+    Wait;1000
+
+
+#Id;#TestCase
+Step 2;Working
+    #Action;#Text;#Notifier
+    Show;'Step 3';Notifier.Info
+
+    #Action;#Time
+    Wait;1000
+
+

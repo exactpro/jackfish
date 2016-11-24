@@ -1,0 +1,36 @@
+#Id;#TestCase
+Step 1;This matrix always failed
+    #Action;#Text;#Notifier
+    Show;'EE1003 Always failed';Notifier.Success
+
+    #Action;#Text;#Notifier
+    Show;'Step 1';Notifier.Info
+
+    #Action;#Time
+    Wait;1000
+
+
+#Id;#TestCase
+Step 2;Working
+    #Action;#Text;#Notifier
+    Show;'Step 2';Notifier.Info
+
+    #Action;#Time
+    Wait;1000
+
+    #Action;#Text;#Notifier
+    Show;'Step 2 failed';Notifier.Error
+
+    #Fail
+    'Some very important reason to fail'
+
+
+#Id;#TestCase
+Step 2;Working
+    #Action;#Text;#Notifier
+    Show;'Step 3';Notifier.Info
+
+    #Action;#Time
+    Wait;1000
+
+
