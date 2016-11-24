@@ -300,26 +300,11 @@ namespace UIAdapter
             try
             {
                 long startMethod = getMilis();
-                string result = "";
-                AutomationElement owner = findOwner(elementId);
 
-                TreeWalker tw = TreeWalker.RawViewWalker;
-                AutomationElement child = tw.GetFirstChild(owner);
-                while (child != null)
-                {
-                    if (child.Current.Name != "")
-                    {
-                        if (result == "")
-                        {
-                            result += child.Current.Name;
-                        }
-                        else
-                        {
-                            result += SEPARATOR_COMMA + child.Current.Name;
-                        }
-                    }
-                    child = tw.GetNextSibling(child);
-                }
+                AutomationElement owner = findOwner(elementId);
+                List<AutomationElement> listItems = getListItems(owner);
+                List<string> namesList = getNamesOfListItems(listItems);
+                string result = string.Join(SEPARATOR_COMMA, namesList);
 
                 logger.All("method ListAll", getMilis() - startMethod);
                 return result;
@@ -329,7 +314,6 @@ namespace UIAdapter
                 MakeError(e);
             }
             return null;
-
         }
 
         [DllExport("listAll", CallingConvention.Cdecl)]
@@ -1883,6 +1867,41 @@ namespace UIAdapter
         #endregion
 
         #region private methods
+
+        private static List<AutomationElement> getListItems(AutomationElement element)
+        {
+            TreeWalker walkerContent = TreeWalker.ContentViewWalker;
+            AutomationElement child = walkerContent.GetFirstChild(element);
+            List<AutomationElement> listItems = new List<AutomationElement>();
+            while (child != null)
+            {
+                if (child.Current.ControlType == ControlType.ListItem)
+                {
+                    listItems.Add(child);
+                }
+                child = walkerContent.GetNextSibling(child);
+            }
+            return listItems;
+        }
+
+        private static List<string> getNamesOfListItems(List<AutomationElement> listItems)
+        {
+            List<string> resultList = new List<string>();
+            TreeWalker walkerRaw = TreeWalker.RawViewWalker;
+            foreach (AutomationElement listItem in listItems)
+            {
+                AutomationElement childOfListItem = walkerRaw.GetFirstChild(listItem);
+                if (childOfListItem == null)
+                {
+                    resultList.Add(listItem.Current.Name);
+                }
+                else
+                {
+                    resultList.Add(childOfListItem.Current.Name);
+                }
+            }
+            return resultList;
+        }
 
         private static void SetTextToElement(AutomationElement element, string text)
         {

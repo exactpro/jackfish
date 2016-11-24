@@ -532,12 +532,9 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
         try
         {
             String result = this.driver.getList(component);
-            List<String> returnedList = new ArrayList<>();
             if(result != null) {
-				String[] resultArray = result.split(SEPARATOR_COMMA);
-				Collections.addAll(returnedList, resultArray);
+				return Arrays.asList(result.split(SEPARATOR_COMMA));
 			}
-            return returnedList;
         }
         catch (RemoteException e)
         {
@@ -549,6 +546,7 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
             this.logger.error(e.getMessage(), e);
             throw e;
         }
+        return null;
 	}
 
 	@Override
