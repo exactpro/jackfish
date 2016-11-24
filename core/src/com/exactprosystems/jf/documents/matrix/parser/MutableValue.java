@@ -62,7 +62,7 @@ public class MutableValue<T> implements Mutable, Getter<T>, Setter<T>, Cloneable
 	@Override
 	public String toString()
 	{
-		return "" + this.value;
+		return "" + (this.value == null ? "" : this.value.toString());
 	}
 	
 	public boolean isNullOrEmpty()

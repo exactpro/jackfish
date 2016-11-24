@@ -14,6 +14,7 @@ import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.common.report.ReportTable;
 import com.exactprosystems.jf.documents.config.Context;
+import com.exactprosystems.jf.documents.config.HandlerKind;
 import com.exactprosystems.jf.documents.matrix.parser.DisplayDriver;
 import com.exactprosystems.jf.documents.matrix.parser.Parameter;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
@@ -187,20 +188,34 @@ public class Step extends MatrixItem
 			
 			report.outLine(this, null, String.format("Step %s", identifyValue), null);
 
+            context.runHandler(HandlerKind.OnStepStart, report, null);
+			
 			ret = executeChildren(start, context, listener, evaluator, report, new Class<?>[] { OnError.class }, null);
 			res = ret.getResult();
 
-			
-			if (res == Result.Failed)
-			{
-				MatrixItem branchOnError = super.find(false, OnError.class, null);
-				if (branchOnError != null && branchOnError instanceof OnError)
-				{
-					((OnError)branchOnError).setError(ret.getError());
-					ret = branchOnError.execute(context, listener, evaluator, report);
-					res = ret.getResult();
-				}
-			}
+            if (res == Result.Failed)
+            {
+                MatrixError error = ret.getError();
+                
+                ReturnAndResult errorRet = context.runHandler(HandlerKind.OnStepError, report, error);
+                if (errorRet != null)
+                {
+                    ret = errorRet;
+                    res = ret.getResult();
+                }
+                else
+                {
+                    MatrixItem branchOnError = super.find(false, OnError.class, null);
+                    if (branchOnError != null && branchOnError instanceof OnError)
+                    {
+                        ((OnError)branchOnError).setError(error);
+                        
+                        ret = branchOnError.execute(context, listener, evaluator, report);
+                        res = ret.getResult();
+                    }
+                }
+            }
+            context.runHandler(HandlerKind.OnStepFinish, report, null);
 
 			if (table != null && position >= 0)
 			{

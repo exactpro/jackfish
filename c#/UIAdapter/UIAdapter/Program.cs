@@ -294,6 +294,28 @@ namespace UIAdapter
         #endregion
 
         #region find methods
+        [DllExport("getList", CallingConvention.Cdecl)]
+        public static string getList(string elementId)
+        {
+            try
+            {
+                long startMethod = getMilis();
+
+                AutomationElement owner = findOwner(elementId);
+                List<AutomationElement> listItems = getListItems(owner);
+                List<string> namesList = getNamesOfListItems(listItems);
+                string result = string.Join(SEPARATOR_COMMA, namesList);
+
+                logger.All("method ListAll", getMilis() - startMethod);
+                return result;
+            }
+            catch (Exception e)
+            {
+                MakeError(e);
+            }
+            return null;
+        }
+
         [DllExport("listAll", CallingConvention.Cdecl)]
         public static string ListAll(string OwnerId, int controlkindId, string Uid, string Xpath, string Clazz, string Name, string Title, string Text, Boolean many)
         {
@@ -894,7 +916,6 @@ namespace UIAdapter
                 {
                     TextPattern textPattern = element.GetCurrentPattern(TextPattern.Pattern) as TextPattern;
                     TextPatternRange textVizRange = textPattern.GetVisibleRanges().FirstOrDefault();
-                    logger.All(" method getProperty", getMilis() - startMethod);
                     return textVizRange.GetText(Int32.MaxValue);
                 }
 
@@ -909,7 +930,6 @@ namespace UIAdapter
                     object[] a = (object[])ret;
                     if (a.Length == 0)
                     {
-                        logger.All("method getProperty", getMilis() - startMethod);
                         return null;
                     }
                     object o1 = a[0];
@@ -1839,6 +1859,41 @@ namespace UIAdapter
 
         #region private methods
 
+        private static List<AutomationElement> getListItems(AutomationElement element)
+        {
+            TreeWalker walkerContent = TreeWalker.ContentViewWalker;
+            AutomationElement child = walkerContent.GetFirstChild(element);
+            List<AutomationElement> listItems = new List<AutomationElement>();
+            while (child != null)
+            {
+                if (child.Current.ControlType == ControlType.ListItem)
+                {
+                    listItems.Add(child);
+                }
+                child = walkerContent.GetNextSibling(child);
+            }
+            return listItems;
+        }
+
+        private static List<string> getNamesOfListItems(List<AutomationElement> listItems)
+        {
+            List<string> resultList = new List<string>();
+            TreeWalker walkerRaw = TreeWalker.RawViewWalker;
+            foreach (AutomationElement listItem in listItems)
+            {
+                AutomationElement childOfListItem = walkerRaw.GetFirstChild(listItem);
+                if (childOfListItem == null)
+                {
+                    resultList.Add(listItem.Current.Name);
+                }
+                else
+                {
+                    resultList.Add(childOfListItem.Current.Name);
+                }
+            }
+            return resultList;
+        }
+
         private static void SetTextToElement(AutomationElement element, string text)
         {
             int windowHandle = (int)element.GetCurrentPropertyValue(AutomationElement.NativeWindowHandleProperty);
@@ -2138,6 +2193,7 @@ namespace UIAdapter
 
         public static readonly string SEPARATOR_CELL = "###";
         public static readonly string SEPARATOR_ROWS = ";;;";
+        public static readonly string SEPARATOR_COMMA = ",";
         public static readonly string EMPTY_CELL = "EMPTY_CELL_EMPTY";
 
         private static Dictionary<int[], AutomationElement> cacheRuntimeId = new Dictionary<int[], AutomationElement>(new DictionaryMatcher());

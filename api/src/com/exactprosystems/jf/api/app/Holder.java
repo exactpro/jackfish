@@ -68,7 +68,22 @@ class Holder<T>
 
 		return this.list.get(this.index);
 	}
-	
+
+	public T getList() throws Exception
+	{
+		if (isEmpty())
+		{
+			throw new ElementNotFoundException(locators.get(LocatorKind.Element));
+		}
+
+		if (index >= this.list.size() || index < 0)
+		{
+			throw new Exception("Wrong index in 'use(" + index + ")' cause size is " +  this.list.size() + " for locator " + locators.get(LocatorKind.Element));
+		}
+
+		return this.list.get(this.index);
+	}
+
 	public boolean isEmpty()
 	{
 		return this.list.isEmpty();

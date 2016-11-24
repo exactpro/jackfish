@@ -162,6 +162,13 @@ public class Operation implements Iterable<Part>, Serializable
 		return this;
 	}
 
+    @DescriptionAttribute(text = Do.getList)
+    public Operation getList()
+    {
+        this.list.add(new Part(OperationKind.GET_LIST));
+        return this;
+    }
+
 	@DescriptionAttribute(text = Do.getRectangle)
 	public Operation getRectangle()
 	{

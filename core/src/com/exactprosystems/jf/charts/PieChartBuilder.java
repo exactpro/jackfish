@@ -10,7 +10,6 @@ package com.exactprosystems.jf.charts;
 
 import com.exactprosystems.jf.actions.ReadableValue;
 import com.exactprosystems.jf.api.error.JFException;
-import com.exactprosystems.jf.api.error.common.ChartException;
 import com.exactprosystems.jf.api.error.common.NullParameterException;
 import com.exactprosystems.jf.common.report.ReportWriter;
 import com.exactprosystems.jf.documents.config.Context;
@@ -19,9 +18,7 @@ import com.exactprosystems.jf.functions.Table;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 public class PieChartBuilder extends ChartBuilder
 {
@@ -62,7 +59,7 @@ public class PieChartBuilder extends ChartBuilder
 //		{
 //			throw new ChartException(String.format("All values from column %s must be a number", valueColumnName));
 //		}
-//		Object labelColumn = params.get(labelsColumnName);
+
 //		if (labelColumn == null)
 //		{
 //			this.labelColumnName = IntStream.range(0, headerSize)
@@ -73,10 +70,11 @@ public class PieChartBuilder extends ChartBuilder
 //		}
 //		else
 //		{
-//			this.labelColumnName = "" + labelColumn;
+
 //		}
 
-		
+		Object labelColumn = params.get(labelsColumnName);
+		this.labelColumnName = "" + labelColumn;
 		String chartId = "chart_" + id;
 		writer.fwrite("<div id='%s' class=container></div>", chartId);
 		String data = "[" + this.table.stream().map(rt -> String.format("{'value' : %s, 'label' : '%s'}", rt.get(valueColumnName), rt.get(labelColumnName))).collect(Collectors.joining(",")) + "]";

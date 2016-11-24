@@ -44,6 +44,7 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 	private static final String tag_th 		= "th";
 	private static final String css_prefix	= "css:";
 	private static final String row_span	= "rowspan";
+	private static final String col_span	= "colspan";
 
 
 	private final int repeatLimit = 4;
@@ -500,7 +501,7 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 		{
 			Element row = rows.get(i - 1);
 			Elements cells = row.children();
-			for (int j = 0; j < cols.length; j++)
+			for (int j = 0; j < Math.min(cols.length, cells.size()); j++)
 			{
 				res[i][j] = cells.get(j).text();
 			}
@@ -690,7 +691,7 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 				{
 					List<WebElement> rows = findRows(additional, tableComp);
 					WebElement row1 = rows.get(y);
-					List<WebElement> cells1 = row1.findElements(By.tagName(tag_td));
+					List<WebElement> cells1 = row1.findElements(By.xpath("child::" + tag_td));
 					return cells1.get(x);
 				}
 			}
@@ -1394,6 +1395,11 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 		throw real;
 	}
 
+	@Override
+	public List<String> getList(WebElement component) throws Exception {
+		return null;
+	}
+
 	//region private methods
 	private String getElementString(WebElement element)
 	{
@@ -1421,15 +1427,35 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 				throw new RemoteException("Headers not found. Check your header locator or table locator");
 			}
 			headerElements = firstTr.children();
-			columnsIsRow.set(true);
-			return Converter.convertColumns(convertColumnsToHeaders(headerElements, columns, new IText<Element>()
+			ArrayList<Element> newHeaders = new ArrayList<>();
+			for (Element headerElement : headerElements)
 			{
-				@Override
-				public String getText(Element element)
+				/**
+				 * If header has attribute colspan we need add empty columns
+				 */
+				if (headerElement.hasAttr(col_span))
 				{
-					return element.text();
+					String colspan = headerElement.attr(col_span);
+					try
+					{
+						int colSpanInt = Integer.parseInt(colspan);
+						for(int i = 0; i < colSpanInt; i++)
+						{
+							newHeaders.add(null);
+						}
+					}
+					catch (Exception e)
+					{
+						//nothing do if failing
+					}
 				}
-			}));
+				else
+				{
+					newHeaders.add(headerElement);
+				}
+			}
+			columnsIsRow.set(true);
+			return Converter.convertColumns(convertColumnsToHeaders(newHeaders, columns, new JsoupElementText()));
 		}
 
 		Elements theadChildren = lastThead.children();
@@ -1453,16 +1479,28 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 		}
 		for (Element element : header.children())
 		{
-			result.add(element.text());
-		}
-		return Converter.convertColumns(convertColumnsToHeaders(result, columns, new IText<String>()
-		{
-			@Override
-			public String getText(String s)
+			if (element.hasAttr(col_span))
 			{
-				return s;
+				String attr = element.attr(col_span);
+				try
+				{
+					int colSpanInt = Integer.parseInt(attr);
+					for(int i = 0; i < colSpanInt; i++)
+					{
+						result.add(null);
+					}
+				}
+				catch (Exception e)
+				{
+					//nothing do if failing
+				}
 			}
-		}));
+			else
+			{
+				result.add(element.text());
+			}
+		}
+		return Converter.convertColumns(convertColumnsToHeaders(result, columns, new StringText()));
 	}
 
 	private Map<String, String> getRowValues(WebElement row, List<String> headers) throws Exception
@@ -1474,7 +1512,7 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 			try
 			{
 				Map<String, String> result = new LinkedHashMap<>();
-				List<WebElement> cells = row.findElements(By.tagName(tag_td));
+				List<WebElement> cells = row.findElements(By.xpath("child::"+tag_td));
 				this.logger.debug("Found cells : " + cells.size());
 				for (int i = 0; i < (headers.size() > cells.size() ? cells.size() : headers.size()); i++)
 				{
@@ -1567,14 +1605,32 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 				{
 					case tag_tr: webHeader = lastThead.findElement(By.xpath("child::tr[last()]"));
 				}
-				return Converter.convertColumns(convertColumnsToHeaders(webHeader.findElements(By.xpath("child::*")), columns, new IText<WebElement>()
+				List<WebElement> elements = webHeader.findElements(By.xpath("child::*"));
+				List<WebElement> newHeaders = new ArrayList<>();
+				for (WebElement element : elements)
 				{
-					@Override
-					public String getText(WebElement webElement)
+					String colspan = element.getAttribute(col_span);
+					if (!Str.IsNullOrEmpty(colspan))
 					{
-						return webElement.getText();
+						try
+						{
+							int colSpanInt = Integer.parseInt(colspan);
+							for(int i = 0; i < colSpanInt; i++)
+							{
+								newHeaders.add(null);
+							}
+						}
+						catch (Exception e)
+						{
+							//nothing do if failing
+						}
 					}
-				}));
+					else
+					{
+						newHeaders.add(element);
+					}
+				}
+				return Converter.convertColumns(convertColumnsToHeaders(elements, columns, new WebElementText()));
 			}
 			catch (StaleElementReferenceException e)
 			{
@@ -1591,14 +1647,31 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 		String getText(T t);
 	}
 
-	private List<WebElement> cellsFromHeader(WebElement header)
+	private class WebElementText implements IText<WebElement>
 	{
-		List<WebElement> cells = header.findElements(By.tagName(tag_th));
-		if (cells.isEmpty())
+		@Override
+		public String getText(WebElement webElement)
 		{
-			header.findElements(By.tagName(tag_tr));
+			return webElement == null ? "" : webElement.getText();
 		}
-		return cells;
+	}
+
+	private class JsoupElementText implements IText<Element>
+	{
+		@Override
+		public String getText(Element element)
+		{
+			return element == null ? "" : element.text();
+		}
+	}
+
+	private class StringText implements IText<String>
+	{
+		@Override
+		public String getText(String s)
+		{
+			return s == null ? "" : s;
+		}
 	}
 
 	private <T> List<String> convertColumnsToHeaders(Iterable<T> headers, String[] columns, IText<T> func)
@@ -1637,26 +1710,43 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 
 	private List<String> getHeadersFromBody(WebElement grid, String[] columns) throws RemoteException
 	{
-		List<WebElement> rows = grid.findElements(By.tagName(tag_tr));
+		List<WebElement> rows = grid.findElement(By.xpath("child::" + tag_tbody)).findElements(By.xpath("child::" + tag_tr));
 		if (rows.isEmpty())
 		{
 			throw new RemoteException("Table is empty");
 		}
 		WebElement firstRow = rows.get(0);
 		markRowIsHeader(firstRow, true);
-		List<WebElement> cells = firstRow.findElements(By.tagName(tag_th));;
+		List<WebElement> cells = firstRow.findElements(By.xpath("child::" + tag_th));;
 		if (cells.isEmpty())
 		{
-			cells = firstRow.findElements(By.tagName(tag_td));
+			cells = firstRow.findElements(By.xpath("child::" + tag_td));
 		}
-		return Converter.convertColumns(convertColumnsToHeaders(cells, columns, new IText<WebElement>()
+		ArrayList<WebElement> newHeaders = new ArrayList<>();
+		for (WebElement cell : cells)
 		{
-			@Override
-			public String getText(WebElement webElement)
+			String attr = cell.getAttribute(col_span);
+			if (!Str.IsNullOrEmpty(attr))
 			{
-				return webElement.getText();
+				try
+				{
+					int colSpanInt = Integer.parseInt(attr);
+					for(int i = 0; i < colSpanInt; i++)
+					{
+						newHeaders.add(null);
+					}
+				}
+				catch (Exception e)
+				{
+					//nothing do if failing
+				}
 			}
-		}));
+			else
+			{
+				newHeaders.add(cell);
+			}
+		}
+		return Converter.convertColumns(convertColumnsToHeaders(newHeaders, columns, new WebElementText()));
 	}
 
 	/**
@@ -1692,13 +1782,14 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 				if (additional != null)
 				{
 					MatcherSelenium by = new MatcherSelenium(ControlKind.Row, additional);
-					List<WebElement> elements = table.findElement(By.tagName(tag_tbody)).findElements(by);
+					List<WebElement> elements = table.findElement(By.xpath("child::" + tag_tbody)).findElements(by);
 					unmarkRowIsHeader(table);
 					return elements;
 				}
 				else
 				{
-					List<WebElement> elements = table.findElement(By.tagName(tag_tbody)).findElements(this.selectRowsWithoutHeader());
+
+					List<WebElement> elements = table.findElement(By.xpath("child::" + tag_tbody)).findElements(this.selectRowsWithoutHeader());
 					unmarkRowIsHeader(table);
 					return elements;
 				}
@@ -1723,7 +1814,7 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 			{
 				Map<String, ValueAndColor> res = new LinkedHashMap<String, ValueAndColor>();
 
-				List<WebElement> cells = row.findElements(By.tagName(tag_td));
+				List<WebElement> cells = row.findElements(By.xpath("child::" + tag_td));
 				for (int i = 0; i < cells.size(); i++)
 				{
 					WebElement cell = cells.get(i);
@@ -1754,7 +1845,7 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 		{
 			try
 			{
-				List<WebElement> cells = row.findElements(By.tagName(tag_td));
+				List<WebElement> cells = row.findElements(By.xpath("child::" + tag_td));
 				Map<String, Object> map = new LinkedHashMap<>();
 				for (int i = 0; i < cells.size(); i++)
 				{
@@ -1809,12 +1900,12 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 
 	private By selectRowsWithoutHeader()
 	{
-		return By.xpath(String.format(".//%s[not(@%s)]", tag_tr, markAttribute));
+		return By.xpath(String.format("child::%s[not(@%s)]", tag_tr, markAttribute));
 	}
 
 	private By selectRowLikeHeader()
 	{
-		return By.xpath(String.format(".//%s[@%s]", tag_tr, markAttribute));
+		return By.xpath(String.format("child::%s[@%s]", tag_tr, markAttribute));
 	}
 
 	private void markRowIsHeader(WebElement row, boolean isSet)

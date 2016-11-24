@@ -158,6 +158,7 @@ namespace UIAdapter
                 case ControlKind.Tooltip: return new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.ToolTip);
                 case ControlKind.Image: return new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.Image);
                 case ControlKind.Splitter: return null;
+                case ControlKind.Spinner: return new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.Spinner);
                 case ControlKind.ProgressBar: return new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.ProgressBar);
                 case ControlKind.ScrollBar: return new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.ScrollBar);
                 case ControlKind.Slider: return new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.Slider);
