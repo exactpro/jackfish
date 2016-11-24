@@ -31,6 +31,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -58,6 +60,7 @@ public class ActionsController implements Initializable, ContainingParent
 	public ComboBox<String>			comboBoxWindows;
 
 	public GridPane					mainGrid;
+	public HBox						hBoxDoIt;
 	private ExpressionField			expressionField;
 	private Parent					pane;
 
@@ -110,7 +113,9 @@ public class ActionsController implements Initializable, ContainingParent
 		this.info = info;
 
 		this.expressionField = new ExpressionField(evaluator);
-		this.elementActionsGrid.add(this.expressionField, 0, 3, 2, 1);
+//		this.elementActionsGrid.add(this.expressionField, 0, 3, 2, 1);
+		this.hBoxDoIt.getChildren().add(0, this.expressionField);
+		HBox.setHgrow(this.expressionField, Priority.ALWAYS);
 		this.expressionField.setHelperForExpressionField(null, null);
 
 		this.comboBoxApps.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> 
