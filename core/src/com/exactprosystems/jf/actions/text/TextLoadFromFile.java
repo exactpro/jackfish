@@ -30,18 +30,22 @@ import com.exactprosystems.jf.functions.Text;
 		outputDescription 		= "The object type {{$Text$}} is the text-based pattern which consists of lines.",
 		outputType				= Text.class,
 		examples =
- "{{##Id;#Action;#File\n"
+ "Загрузка текста из файла ‘text1.txt’ и создание объекта {{$Text$}}, содержащего загруженный текст."
++ "{{##Id;#Action;#File\n"
 + "TXT1;TextLoadFromFile;’path/text.txt’#}}\n"
 + "\n"
 + "\n"
++ "Проверка того, что все прошло успешно и объект {{$Text$}} существует."
 + "{{##Assert;#Message\n"
-+ "TXT1.Out != null;#}}\n"
++ "TXT1.Out != null;#}}\n",
+		seeAlso = "{{@TextReport@}}, {{@TextAddLine@}}, {{@TextPerform@}}, {{@TextCreate@}}, {{@TextSaveToFile@}}," +
+				" {{@TextSetValue@}}"
 	)
 public class TextLoadFromFile extends AbstractAction 
 {
 	public final static String fileName 		= "File";
 
-	@ActionFieldAttribute(name = fileName, mandatory = true, description = "File(String) —  a text file,  the text of which is required to type")
+	@ActionFieldAttribute(name = fileName, mandatory = true, description = "A text file, the text of which is required to type")
 	protected String 	file 	= null;
 
 	public TextLoadFromFile()

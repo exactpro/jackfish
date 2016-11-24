@@ -22,18 +22,22 @@ import com.exactprosystems.jf.functions.Text;
 		group					= ActionGroups.Text,
 		generalDescription 		=
  "The purpose of the action is to change the definite line in the object {{$Text$}}. "
-+ "The object type Text is the text-based pattern which consists of lines. "
++ "The object type {{$Text$}} is the text-based pattern which consists of lines. "
 + "It can be used when it is required to make changes in the object, which has a "
 + "sufficiently large volume or when there is no access to the source "
 + "from which it was obtained.",
 		additionFieldsAllowed 	= false,
 		examples =
- "{{##Id;#Action;#Content\n"
+ "Создание объекта {{$Text$}} посредством экшена {{@TextCreate@}}."
++ "{{##Id;#Action;#Content\n"
 + "TXT1;TextCreate;'Text'#}}\n"
 + "\n"
 + "\n"
++ "Меняем строку с индексом 2 на строку с содержимым 'string successfully set'."
 + "{{##Action;#Line;#Text;#Index\n"
-+ "TextSetValue;‘string successfully set’;TXT1.Out;2#}}"
++ "TextSetValue;‘string successfully set’;TXT1.Out;2#}}",
+		seeAlso = "{{@TextReport@}}, {{@TextAddLine@}}, {{@TextLoadFromFile@}}, {{@TextCreate@}}, {{@TextSaveToFile@}}," +
+				" {{@TextPerform@}}"
 	)
 public class TextSetValue extends AbstractAction 
 {
@@ -41,15 +45,14 @@ public class TextSetValue extends AbstractAction
 	public final static String lineName = "Line";
 	public final static String indexName = "Index";
 
-	@ActionFieldAttribute(name = textName, mandatory = true, description = "Text(Text) - object {{$Text$}}, in which" +
+	@ActionFieldAttribute(name = textName, mandatory = true, description = "Object {{$Text$}}, in which" +
 			" it is necessary to change the line.")
 	protected Text 	text 	= null;
 
-	@ActionFieldAttribute(name = lineName, mandatory = true, description = "Line(String) - input line.")
+	@ActionFieldAttribute(name = lineName, mandatory = true, description = "Input line.")
 	protected String	line 	= null;
 
-	@ActionFieldAttribute(name = indexName, mandatory = true, description = "Index(Integer) - line index," +
-			" which is required to change. ")
+	@ActionFieldAttribute(name = indexName, mandatory = true, description = "Line index, which is required to change. ")
 	protected Integer	index 	= 0;
 
 	public TextSetValue()
