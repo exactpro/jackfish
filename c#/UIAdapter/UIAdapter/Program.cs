@@ -916,34 +916,25 @@ namespace UIAdapter
                 {
                     TextPattern textPattern = element.GetCurrentPattern(TextPattern.Pattern) as TextPattern;
                     TextPatternRange textVizRange = textPattern.GetVisibleRanges().FirstOrDefault();
-                    logger.All(" method getProperty-0", getMilis() - startMethod);
-                    logger.All(" propertyId = " + propertyId);
                     return textVizRange.GetText(Int32.MaxValue);
                 }
 
                 object ret = element.GetCurrentPropertyValue(property);
                 if (ret == null)
                 {
-                    logger.All(" method getProperty-001", getMilis() - startMethod);
                     return null;
                 }
                 Type type = ret.GetType();
-                logger.All(" method getProperty-002", getMilis() - startMethod);
-                logger.All(" type = " + type);
                 if (type.IsArray)
                 {
                     object[] a = (object[])ret;
                     if (a.Length == 0)
                     {
-                        logger.All("method getProperty-1", getMilis() - startMethod);
-                        logger.All("a.lenght = " + a.Length);
                         return null;
                     }
                     object o1 = a[0];
                     if (o1.GetType().IsAssignableFrom(typeof(AutomationElement)))
                     {
-                        logger.All("method getProperty-101", getMilis() - startMethod);
-                        logger.All("a.lenght = " + a.Length);
                         string[] rr = new string[a.Length];
                         for (int i = 0; i < a.Length; i++)
                         {
@@ -965,13 +956,13 @@ namespace UIAdapter
                                 rr[i] = s;
                             }
                         }
-                        logger.All("method getProperty-2", getMilis() - startMethod);
+                        logger.All("method getProperty", getMilis() - startMethod);
                         return string.Join(",", rr);
                     }
-                    logger.All("method getProperty-3", getMilis() - startMethod);
+                    logger.All("method getProperty", getMilis() - startMethod);
                     return string.Join(",", a);
                 }
-                logger.All("method getProperty-4", getMilis() - startMethod);
+                logger.All("method getProperty", getMilis() - startMethod);
                 return ret.ToString();
             }
             catch (Exception e)
