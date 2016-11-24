@@ -26,12 +26,16 @@ import com.exactprosystems.jf.functions.Text;
 + "It is applied when it is necessary to examine the content of the object {{$Text$}}.",
 		additionFieldsAllowed 	= false,
 		examples =
- "{{##Id;#Action;#Content\n"
+ "Создание объекта {{$Text$}} посредством экшена {{@TextCreate@}}."
++ "{{##Id;#Action;#Content\n"
 + "TXT1;TextCreate;'Text'#}}\n"
 + "\n"
 + "\n"
++ "Вывод содержимого объекта {{$Text$}} в репорт с заголовком 'My text'."
 + "{{##Action;#Title;#Text\n"
-+ "TextReport;’My text’;TXT1.Out#}}\n"
++ "TextReport;’My text’;TXT1.Out#}}\n",
+		seeAlso = "{{@TextPerform@}}, {{@TextAddLine@}}, {{@TextLoadFromFile@}}, {{@TextCreate@}}, {{@TextSaveToFile@}}," +
+				" {{@TextSetValue@}}"
 	)
 public class TextReport extends AbstractAction 
 {
@@ -39,14 +43,14 @@ public class TextReport extends AbstractAction
 	public final static String beforeTestCaseName = "BeforeTestCase";
 	public final static String titleName = "Title";
 
-	@ActionFieldAttribute(name = textName, mandatory = true, description = "Text(Text) - object Text, which is required to output.")
+	@ActionFieldAttribute(name = textName, mandatory = true, description = "Object {{$Text$}}, which is required to output.")
 	protected Text 	text 	= null;
 
-	@ActionFieldAttribute(name = beforeTestCaseName, mandatory = false, description = "BeforeTestCase(String) -it" +
-			" accepts id test case before which the text will be displayed in the report.")
+	@ActionFieldAttribute(name = beforeTestCaseName, mandatory = false, description = "It accepts id test case before " +
+			"which the text will be displayed in the report.")
 	protected String 	beforeTestCase 	= null;
 
-	@ActionFieldAttribute(name = titleName, mandatory = true, description = "Title(String) — the title of the text.")
+	@ActionFieldAttribute(name = titleName, mandatory = true, description = "The title of the text.")
 	protected String 	title 	= null;
 
 	

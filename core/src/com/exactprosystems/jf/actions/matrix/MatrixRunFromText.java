@@ -27,10 +27,24 @@ import java.util.Date;
 @ActionAttribute(
 		group					= ActionGroups.Matrix,
 		suffix					= "MXRN",
-		generalDescription 		= "Starts new matrix at the desired time.",
+		generalDescription 		= "The purpose of this action is to run the matrix from the text. "
+				+ "An execution context is created for the run matrix, so as matrices do not cross under run. "
+				+ "The run matrix creates its own status report.",
 		additionFieldsAllowed 	= false,
-		outputDescription 		= "Special object that is connected with run matrix.",
-		outputType				= MatrixRunner.class
+		outputDescription 		= "A special object which identifies the started matrix. "
+				+ "This object is required for {{@MatrixWait@}} action to wait when the started matrix stops."
+				+ "With the help of this object property one can access information about the number of"
+				+ " successfully run and failed test cases of the started matrix. ",
+		outputType				= MatrixRunner.class,
+		examples = "Запуск матрицы из объекта {{$Text$}}" +
+				"{{##Id;#Action;#Text\n" +
+				"MXRN1;MatrixRunFromText;Text#}}\n" +
+				"\n" +
+				"\n" +
+				"Проверка того, что все прошло успешно и матрица запущена.\n" +
+				"{{##Assert;#Message\n" +
+				"MXRN1.Out.isRunning();'MatrixRun is failed'#}}",
+		seeAlso = "{{@MatrixRun@}}, {{@MatrixWait@}}"
 	)
 public class MatrixRunFromText extends AbstractAction 
 {
@@ -38,13 +52,17 @@ public class MatrixRunFromText extends AbstractAction
 	public final static String textName = "Text";
 	public final static String parameterName = "Parameter";
 
-	@ActionFieldAttribute(name = textName, mandatory = true, description = "Text object.")
+	@ActionFieldAttribute(name = textName, mandatory = true, description = "{{$Text$}} object related to the execution matrix.")
 	protected Text text	= null;
 
-	@ActionFieldAttribute(name = atName, mandatory = false, description = "Time to start the matrix.")
+	@ActionFieldAttribute(name = atName, mandatory = false, description = "Is used to state the time when the matrix"
+			+ " is started. If the specified time is not yet, the launched matrix goes the halted state before the"
+			+ " start time, otherwise, the matrix starts straightaway.")
 	protected Date at;
 
-	@ActionFieldAttribute(name = parameterName, mandatory = false, description = "Parameter for the matrix.")
+	@ActionFieldAttribute(name = parameterName, mandatory = false, description = "Is used to pass parameters to"
+			+ " the started matrix. As a call – by – reference mechanism is used, be careful – the started"
+			+ " matrix could modify the object passed.")
 	protected Object parameter;
 	
 	@Override

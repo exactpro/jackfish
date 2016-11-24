@@ -20,39 +20,47 @@ import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 
 @ActionAttribute(
-		group					= ActionGroups.Matrix,
-		suffix					= "MXWT",
-		generalDescription 		= "Waits when the matrix stops.",
-		additionFieldsAllowed 	= false
-	)
-public class MatrixWait extends AbstractAction 
-{
-	public final static String matrixName = "Matrix";
-	public final static String timeName = "Time";
+        group = ActionGroups.Matrix,
+        suffix = "MXWT",
+        generalDescription = "The purpose of this action is to wait until the executed matrix stops. "
+                + "If the matrix doesn’t stop during the specified timeout, an action is failed.",
+        additionFieldsAllowed = false,
+        seeAlso = "{{@MatrixRunFromText@}}, {{@MatrixRun@}}",
+        examples = "Запуск матрицы из файла Matrix.jf лежащего в директории matrices." +
+                "{{##Id;#Action;#Matrix\n" +
+                "MXRN1;MatrixRun;'matrices/Matrix.jf'#}}\n" +
+                "\n" +
+                "\n" +
+                "Остановка только что запущенной матрицы на 5 секунд." +
+                "{{##Id;#Action;#Time;#Matrix\n" +
+                "MXWT1;MatrixWait;5000;MXRN1.Out#}}"
+)
+public class MatrixWait extends AbstractAction {
+    public final static String matrixName = "Matrix";
+    public final static String timeName = "Time";
 
-	@ActionFieldAttribute(name = matrixName, mandatory = true, description = "Special object that is connected with run matrix.")
-	protected MatrixRunner matrix	= null;
+    @ActionFieldAttribute(name = matrixName, mandatory = true, description = "A special object that connects to the"
+            + " matrix which is run.")
+    protected MatrixRunner matrix = null;
 
-	@ActionFieldAttribute(name = timeName, mandatory = false, description = "Timeout.")
-	protected long time;
+    @ActionFieldAttribute(name = timeName, mandatory = false, description = "Matrix timeout per millisecond."
+            + "If the matrix doesn’t stop during the specified timeout, an action is failed."
+            + "If the value is 0 – there will be pending before the matrix stops with no time limit."
+            + "Be careful with such a value, if the started matrix is cycled, the current matrix will hang up in latency.")
+    protected long time;
 
-	@Override
-	public void initDefaultValues() 
-	{
-		time	= 0L;
-	}
-	
-	@Override
-	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception 
-	{
-		if (this.matrix == null)
-		{
-			super.setError("The matrix object is null", ErrorKind.EMPTY_PARAMETER);
-		}
-		else
-		{
-			this.matrix.join(this.time);
-			super.setResult(null);
-		}
-	}
+    @Override
+    public void initDefaultValues() {
+        time = 0L;
+    }
+
+    @Override
+    public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception {
+        if (this.matrix == null) {
+            super.setError("The matrix object is null", ErrorKind.EMPTY_PARAMETER);
+        } else {
+            this.matrix.join(this.time);
+            super.setResult(null);
+        }
+    }
 }
