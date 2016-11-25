@@ -24,7 +24,6 @@ import com.exactprosystems.jf.tool.dictionary.DictionaryFxController;
 import com.exactprosystems.jf.tool.dictionary.FindListView;
 import com.exactprosystems.jf.tool.main.Main;
 import com.exactprosystems.jf.tool.settings.SettingsPanel;
-import com.exactprosystems.jf.tool.settings.Theme;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.event.ActionEvent;
@@ -43,6 +42,7 @@ import org.w3c.dom.Document;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
@@ -80,7 +80,7 @@ public class NavigationController implements Initializable, ContainingParent
 
 	private DictionaryFx model;
 	private boolean fullScreen = false;
-	private String themePath;
+	private List<String> themePaths;
 	private AppConnection appConnection;
 	
 	public void setAppConnection(AppConnection appConnection)
@@ -159,10 +159,8 @@ public class NavigationController implements Initializable, ContainingParent
 	public void init(DictionaryFx model, GridPane gridPane, Settings settings, CustomTab owner)
 	{
 		this.model = model;
+		//TODO this need move from here to model
 		this.fullScreen = Boolean.parseBoolean(settings.getValueOrDefault(Settings.GLOBAL_NS, SettingsPanel.SETTINGS, "useFullScreenXpath", "false").getValue());
-		Settings.SettingsValue theme = settings.getValueOrDefault(Settings.GLOBAL_NS, SettingsPanel.SETTINGS, Main.THEME, Theme.WHITE.name());
-		this.themePath = Theme.valueOf(theme.getValue()).getPath();
-		
 		boolean compactMode = Boolean.parseBoolean(settings.getValueOrDefault(Settings.GLOBAL_NS, SettingsPanel.SETTINGS, Main.USE_SMALL_WINDOW, "false").getValue());
 		setChoiseBoxListeners();
 		createShutters(this.hBoxElement, owner, compactMode);
@@ -316,7 +314,7 @@ public class NavigationController implements Initializable, ContainingParent
 				XpathViewer viewer = new XpathViewer(owner, document, service);
 				String id = currentElement().getID();
 	
-				String result = viewer.show(xpath, "Xpath for " + (id == null ? "empty" : id), this.themePath, this.fullScreen);
+				String result = viewer.show(xpath, "Xpath for " + (id == null ? "empty" : id), Common.currentThemesPaths(), this.fullScreen);
 				this.model.parameterSetXpath(currentWindow(), currentSection(), currentElement(), result);
 			}
 		}

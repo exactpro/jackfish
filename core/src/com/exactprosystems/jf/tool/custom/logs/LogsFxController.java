@@ -66,7 +66,7 @@ public class LogsFxController implements Initializable, ContainingParent
 		this.dialog.getDialogPane().setPrefHeight(600);
 		this.dialog.setHeaderText("Main.log");
 		this.dialog.getDialogPane().setContent(parent);
-		this.dialog.getDialogPane().getStylesheets().addAll(Common.currentTheme().getPath());
+		this.dialog.getDialogPane().getStylesheets().addAll(Common.currentThemesPaths());
 	}
 
 	public void init(LogsFx model)

@@ -106,7 +106,7 @@ public class WatcherFxController implements Initializable, ContainingParent
 	{
 		if (!isShow())
 		{
-			this.dialog.getDialogPane().getStylesheets().addAll(Common.currentTheme().getPath());
+			this.dialog.getDialogPane().getStylesheets().addAll(Common.currentThemesPaths());
 			this.dialog.setHeaderText("Watcher for " + text);
 			Optional<ButtonType> buttonType = this.dialog.showAndWait();
 			buttonType.filter(bt -> bt.getButtonData().equals(ButtonBar.ButtonData.OK_DONE)).ifPresent(bt -> Common.tryCatch(this.model::saveData, "Error on close watcher"));

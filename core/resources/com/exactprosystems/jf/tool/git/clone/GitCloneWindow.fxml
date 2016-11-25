@@ -1,74 +1,80 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import com.exactprosystems.jf.tool.custom.controls.field.*?>
-<?import java.lang.*?>
+<?import com.exactprosystems.jf.tool.*?>
 <?import com.exactprosystems.jf.tool.custom.controls.field.CustomFieldWithButton?>
-<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.text.Text?>
+<VBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.exactprosystems.jf.tool.git.clone.GitCloneController">
+	<fx:define>
+		<CssVariables fx:id="verMin" fx:constant="VERTICAL_MIN"/>
+		<CssVariables fx:id="verMid" fx:constant="VERTICAL_MID"/>
+		<CssVariables fx:id="verMax" fx:constant="VERTICAL_MAX"/>
 
-<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="335.0" prefWidth="602.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.exactprosystems.jf.tool.git.clone.GitCloneController">
-	<columnConstraints>
-		<ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="10.0" percentWidth="30.0" prefWidth="100.0" />
-		<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-	</columnConstraints>
-	<rowConstraints>
-		<RowConstraints minHeight="10.0" percentHeight="15.0" prefHeight="30.0" vgrow="SOMETIMES" />
-		<RowConstraints minHeight="10.0" percentHeight="15.0" prefHeight="30.0" vgrow="SOMETIMES" />
-		<RowConstraints minHeight="10.0" percentHeight="15.0" prefHeight="30.0" vgrow="SOMETIMES" />
-		<RowConstraints maxHeight="128.0" minHeight="128.0" prefHeight="128.0" vgrow="SOMETIMES" />
-		<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-	</rowConstraints>
+		<CssVariables fx:id="horMin" fx:constant="HORIZONTAL_MIN"/>
+		<CssVariables fx:id="horMid" fx:constant="HORIZONTAL_MID"/>
+		<CssVariables fx:id="horMax" fx:constant="HORIZONTAL_MAX"/>
+	</fx:define>
 	<children>
-		<Label text="Location to clone :" GridPane.rowIndex="2">
-			<GridPane.margin>
-				<Insets right="8.0" />
-			</GridPane.margin>
-		</Label>
-		<Label text="URI :">
-			<GridPane.margin>
-				<Insets right="8.0" />
-			</GridPane.margin>
-		</Label>
-		<Label text="Project Name :" GridPane.rowIndex="1">
-			<GridPane.margin>
-				<Insets right="8.0" />
-			</GridPane.margin>
-		</Label>
-		<CustomFieldWithButton fx:id="cfLocation" GridPane.columnIndex="1" GridPane.rowIndex="2">
-			<GridPane.margin>
-				<Insets />
-			</GridPane.margin>
-		</CustomFieldWithButton>
-		<TextField fx:id="tfURI" GridPane.columnIndex="1">
-			<GridPane.margin>
-				<Insets />
-			</GridPane.margin>
-		</TextField>
-		<TextField fx:id="tfProjectName" GridPane.columnIndex="1" GridPane.rowIndex="1">
-			<GridPane.margin>
-				<Insets />
-			</GridPane.margin>
-		</TextField>
-		<HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" spacing="16.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
+		<Label id="$verMax"/>
+		<HBox>
 			<children>
-      		<CheckBox fx:id="cbOpenProject" text="Open project" />
-				<Button fx:id="btnClone" mnemonicParsing="false" onAction="#cloneProject" text="Clone" />
-				<Button fx:id="btnCancel" mnemonicParsing="false" onAction="#cancel" text="Cancel" />
+				<Label id="$horMax"/>
+				<GridPane fx:id="gridPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="600.0">
+					<styleClass>
+						<CssVariables fx:constant="VGAP_MID"/>
+					</styleClass>
+					<columnConstraints>
+						<ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="10.0" percentWidth="30.0" prefWidth="100.0"/>
+						<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+					</columnConstraints>
+					<rowConstraints>
+						<RowConstraints minHeight="10.0" percentHeight="15.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+						<RowConstraints minHeight="10.0" percentHeight="15.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+						<RowConstraints minHeight="10.0" percentHeight="15.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+						<RowConstraints minHeight="10.0" percentHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+						<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+					</rowConstraints>
+					<children>
+						<HBox alignment="CENTER_RIGHT" GridPane.rowIndex="2">
+							<children>
+								<Label text="Location to clone :" GridPane.rowIndex="2"/>
+								<Label id="$horMid"/>
+							</children>
+						</HBox>
+						<HBox alignment="CENTER_RIGHT">
+							<children>
+								<Label text="URI :"/>
+								<Label id="$horMid"/>
+							</children>
+						</HBox>
+						<HBox alignment="CENTER_RIGHT" GridPane.rowIndex="1">
+							<children>
+								<Label text="Project Name :" GridPane.rowIndex="1"/>
+								<Label id="$horMid"/>
+							</children>
+						</HBox>
+						<CustomFieldWithButton fx:id="cfLocation" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+						<TextField fx:id="tfURI" GridPane.columnIndex="1"/>
+						<TextField fx:id="tfProjectName" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+						<HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
+							<children>
+								<CheckBox fx:id="cbOpenProject" text="Open project"/>
+								<Label id="$horMid"/>
+								<Button fx:id="btnClone" mnemonicParsing="false" onAction="#cloneProject" text="Clone"/>
+								<Label id="$horMid"/>
+								<Button fx:id="btnCancel" mnemonicParsing="false" onAction="#cancel" text="Cancel"/>
+							</children>
+						</HBox>
+						<ScrollPane fx:id="scrollPane" prefHeight="200.0" prefWidth="200.0" GridPane.columnSpan="2" GridPane.fillHeight="true" GridPane.fillWidth="true" GridPane.rowIndex="3">
+							<content>
+								<VBox fx:id="vBox"/>
+							</content>
+						</ScrollPane>
+					</children>
+				</GridPane>
+				<Label id="$horMax"/>
 			</children>
-			<GridPane.margin>
-				<Insets top="16.0" />
-			</GridPane.margin>
 		</HBox>
-		<ScrollPane fx:id="scrollPane" prefHeight="200.0" prefWidth="200.0" GridPane.columnSpan="2" GridPane.fillHeight="true" GridPane.fillWidth="true" GridPane.rowIndex="3">
-			<content>
-				<VBox fx:id="vBox">
-				</VBox>
-			</content>
-		</ScrollPane>
+		<Label id="$verMax"/>
 	</children>
-   <padding>
-      <Insets bottom="16.0" left="16.0" right="16.0" top="16.0" />
-   </padding>
-</GridPane>
+</VBox>

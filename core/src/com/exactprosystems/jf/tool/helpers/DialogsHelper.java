@@ -86,7 +86,7 @@ public abstract class DialogsHelper
 		ListView<ExpressionFieldsPane> listView = new ListView<>();
 		dialog.getDialogPane().setContent(listView);
 		parameters.entrySet().forEach(entry -> listView.getItems().addAll(new ExpressionFieldsPane(entry.getKey(), entry.getValue(), evaluator)));
-		dialog.getDialogPane().getStylesheets().addAll(Common.currentTheme().getPath());
+		dialog.getDialogPane().getStylesheets().addAll(Common.currentThemesPaths());
 		Optional<ButtonType> buttonType = dialog.showAndWait();
 		if (buttonType.isPresent())
 		{
@@ -103,7 +103,7 @@ public abstract class DialogsHelper
 		dialog.setTitle("Warning");
 		dialog.getDialogPane().setHeaderText("File " + fileName + " was changed by another process");
 		dialog.getDialogPane().setContentText("Reload it?");
-		dialog.getDialogPane().getStylesheets().addAll(Common.currentTheme().getPath());
+		dialog.getDialogPane().getStylesheets().addAll(Common.currentThemesPaths());
 		Optional<ButtonType> buttonType = dialog.showAndWait();
 		if (buttonType.isPresent())
 		{
@@ -121,7 +121,7 @@ public abstract class DialogsHelper
 		alert.getDialogPane().setContent(popupContent);
 		alert.setTitle("Select date");
 		alert.setHeaderText("Choose date");
-		alert.getDialogPane().getStylesheets().add(Common.currentTheme().getPath());
+		alert.getDialogPane().getStylesheets().addAll(Common.currentThemesPaths());
 		Optional<ButtonType> buttonType = alert.showAndWait();
 		Optional<ButtonType> btnOk = buttonType.filter(bt -> bt.getButtonData().equals(ButtonBar.ButtonData.OK_DONE));
 		if (btnOk.isPresent())
@@ -138,7 +138,7 @@ public abstract class DialogsHelper
 		dialog.setTitle("Warning");
 		dialog.getDialogPane().setHeaderText(header);
 		dialog.getDialogPane().setContentText(body);
-		dialog.getDialogPane().getStylesheets().addAll(Common.currentTheme().getPath());
+		dialog.getDialogPane().getStylesheets().addAll(Common.currentThemesPaths());
 		Optional<ButtonType> buttonType = dialog.showAndWait();
 		if (buttonType.isPresent())
 		{
@@ -154,7 +154,7 @@ public abstract class DialogsHelper
 		dialog.getDialogPane().setHeaderText("File " + fileName + " was changed.");
 		dialog.getDialogPane().setContentText("Do you want to save?");
 		dialog.getDialogPane().getButtonTypes().addAll(ButtonType.YES, ButtonType.NO, ButtonType.CANCEL);
-		dialog.getDialogPane().getStylesheets().addAll(Common.currentTheme().getPath());
+		dialog.getDialogPane().getStylesheets().addAll(Common.currentThemesPaths());
 		Optional<ButtonType> res = dialog.showAndWait();
 		if (res.isPresent())
 		{
@@ -229,7 +229,7 @@ public abstract class DialogsHelper
 				listView.getFocusModel().focus(0);
 			}
 		});
-		dialog.getDialogPane().getStylesheets().addAll(Common.currentTheme().getPath());
+		dialog.getDialogPane().getStylesheets().addAll(Common.currentThemesPaths());
 		Optional<ButtonType> optional = dialog.showAndWait();
 		optional.ifPresent(o -> {
 			if (o.getButtonData().equals(ButtonBar.ButtonData.OK_DONE))
@@ -307,7 +307,7 @@ public abstract class DialogsHelper
 			}
 		});
 		Platform.runLater(tf::requestFocus);
-		dialog.getDialogPane().getStylesheets().addAll(Common.currentTheme().getPath());
+		dialog.getDialogPane().getStylesheets().addAll(Common.currentThemesPaths());
 		Optional<ButtonType> buttonType = dialog.showAndWait();
 		if (buttonType.isPresent())
 		{
@@ -455,7 +455,7 @@ public abstract class DialogsHelper
 				"All rights reserved.\n" +
 				"This is unpublished, licensed software, confidential and proprietary\n" +
 				"information which is the property of Exactpro Systems, LLC or its licensors.");
-		dialog.getDialogPane().getStylesheets().addAll(Common.currentTheme().getPath());
+		dialog.getDialogPane().getStylesheets().addAll(Common.currentThemesPaths());
 		dialog.show();
 	}
 
@@ -544,7 +544,7 @@ public abstract class DialogsHelper
 		dialog.initModality(Modality.NONE);
 		dialog.getDialogPane().setHeader(new Label());
 		dialog.setTitle("Help");
-		dialog.getDialogPane().getStylesheets().addAll(Common.currentTheme().getPath());
+		dialog.getDialogPane().getStylesheets().addAll(Common.currentThemesPaths());
 		dialog.show();
 	}
 
@@ -581,7 +581,7 @@ public abstract class DialogsHelper
 				}
 			}
 			dialog.setHeaderText("Report for " + matrName[0]);
-			dialog.getDialogPane().getStylesheets().addAll(Common.currentTheme().getPath());
+			dialog.getDialogPane().getStylesheets().addAll(Common.currentThemesPaths());
 			Optional<ButtonType> buttonType = dialog.showAndWait();
 			buttonType.filter(bt -> bt.getButtonData().equals(ButtonBar.ButtonData.OTHER)).ifPresent(type -> Common.tryCatch(() -> {
 				String name = reportBrowser.getMatrix();
@@ -611,9 +611,13 @@ public abstract class DialogsHelper
 		Alert dialog = new Alert(Alert.AlertType.INFORMATION);
 		dialog.setResult(new ButtonType("", ButtonBar.ButtonData.CANCEL_CLOSE));
 		dialog.setResizable(true);
-		dialog.getDialogPane().getStylesheets().addAll(Common.currentTheme().getPath());
+		dialog.getDialogPane().getStylesheets().addAll(Common.currentThemesPaths());
 		dialog.setTitle(title);
-		dialog.getDialogPane().setHeader(new Label());
+		Label header = new Label();
+		header.setMinHeight(0.0);
+		header.setPrefHeight(0.0);
+		header.setMaxHeight(0.0);
+		dialog.getDialogPane().setHeader(header);
 		dialog.getDialogPane().setContent(parent);
 		ButtonType buttonCreate = new ButtonType("", ButtonBar.ButtonData.OTHER);
 		dialog.getButtonTypes().setAll(buttonCreate);
@@ -652,7 +656,7 @@ public abstract class DialogsHelper
 		dialog.getDialogPane().setContent(borderPane);
 		dialog.getDialogPane().setPrefWidth(1024);
 		dialog.getDialogPane().setPrefHeight(768);
-		dialog.getDialogPane().getStylesheets().addAll(Common.currentTheme().getPath());
+		dialog.getDialogPane().getStylesheets().addAll(Common.currentThemesPaths());
 		dialog.initModality(Modality.NONE);
 		dialog.show();
 	}

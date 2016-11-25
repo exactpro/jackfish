@@ -1019,7 +1019,7 @@ public class ConfigurationFx extends Configuration
 		dialog.getDialogPane().setContent(listView);
 		dialog.getDialogPane().setPrefWidth(500);
 		dialog.getDialogPane().setPrefHeight(300);
-		dialog.getDialogPane().getStylesheets().addAll(Common.currentTheme().getPath());
+		dialog.getDialogPane().getStylesheets().addAll(Common.currentThemesPaths());
 		dialog.show();
 	}
 

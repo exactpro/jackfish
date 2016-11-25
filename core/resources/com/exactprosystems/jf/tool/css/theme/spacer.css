@@ -60,7 +60,7 @@
 	
 	visibility : hidden;
 }
-#horizontal1Max {
+#horizontalMax {
 	-fx-min-width : sizeMax;
 	-fx-max-width : sizeMax;
 	-fx-pref-width : sizeMax;
