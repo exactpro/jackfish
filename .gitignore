@@ -34,7 +34,6 @@ version.properties
 #all from resources don't ignore
 !/*/resources/**/*
 !/plugins/app/win/resources/com/exactprosystems/jf/app/bin/
-version.properties
 
 #temp files
 .*.swp
@@ -58,6 +57,7 @@ BuildProject
 .gradle/
 *.zip
 /mocks/swing/mock-swing.jar
+/mocks/silverlight/SilverLightMock.Web/ClientBin/SilverLightMock.xap
 /core/reports/
 /core/jackfish.jar
 /core/remote_out.txt
