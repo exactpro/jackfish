@@ -10,5 +10,5 @@ package com.exactprosystems.jf.api.app;
 
 public enum LocatorKind
 {
-	Element, Owner, Rows, Header
+	Element, Owner, Rows, Header, Dropped
 }

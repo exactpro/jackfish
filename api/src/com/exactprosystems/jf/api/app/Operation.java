@@ -468,6 +468,30 @@ public class Operation implements Iterable<Part>, Serializable
 		return this;
 	}
 
+	public Operation dragNdrop(int x1, int y1, String another, int x2, int y2)
+	{
+		this.list.add(new Part(OperationKind.USE_LOCATOR).setLocatorId(another).setLocatorKind(LocatorKind.Dropped));
+		this.list.add(new Part(OperationKind.DRAG_N_DROP)
+				.setX(x1)
+				.setY(y1)
+				.setX2(x2)
+				.setY2(y2)
+		);
+		return this;
+	}
+
+	public Operation dragNdrop(int x1, int y1, Locator another, int x2, int y2)
+	{
+		this.list.add(new Part(OperationKind.USE_LOCATOR).setLocator(another).setLocatorKind(LocatorKind.Dropped));
+		this.list.add(new Part(OperationKind.DRAG_N_DROP)
+				.setX(x1)
+				.setY(y1)
+				.setX2(x2)
+				.setY2(y2)
+		);
+		return this;
+	}
+
 	@DescriptionAttribute(text = Do.delay)
 	public Operation delay(int ms)
 	{
@@ -496,9 +520,5 @@ public class Operation implements Iterable<Part>, Serializable
 		return this;
 	}
 
-
-	
-	
-	
 	protected List<Part> list;
 }

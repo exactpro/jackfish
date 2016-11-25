@@ -103,6 +103,18 @@ public class Part implements Serializable
 		this.y = y;
 		return this;
 	}
+
+	public Part setX2(int x2)
+	{
+		this.x2 = x2;
+		return this;
+	}
+
+	public Part setY2(int y2)
+	{
+		this.y2 = y2;
+		return this;
+	}
 	
 	public Part setStr(String str)
 	{
@@ -182,6 +194,8 @@ public class Part implements Serializable
 	protected int i;
 	protected int x;
 	protected int y;
+	protected int x2;
+	protected int y2;
 	protected double d;
 	protected boolean b;
 	protected String str;
