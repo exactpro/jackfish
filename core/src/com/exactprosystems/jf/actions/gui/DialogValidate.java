@@ -165,34 +165,34 @@ public class DialogValidate extends AbstractAction
 		logger.debug("Perform " + run);
 		ISection sectionRun = window.getSection(run);
 		
-		for (IControl control : sectionRun.getControls()) 
-		{
-			String name = control.getName();
+		
+        for (Parameter parameter : parameters.select(TypeMandatory.Extra)) 
+        {
+            IControl control  = sectionRun.getControlById(parameter.getName());
+            if (control == null)
+            {
+                super.setError(message(id, window, run, control, "is not found in the dictionary"), ErrorKind.LOCATOR_NOT_FOUND);
+                return;
+            }
 
-			int expectedSize = 1;
-			Parameter parameter = parameters.getByName(name);
-			if (parameter != null)
-			{
-				expectedSize = ((Number)parameter.getValue()).intValue();
-			}
+            int expectedSize = ((Number)parameter.getValue()).intValue();
+            if (expectedSize >= 0)
+            {
+                IControl owner = window.getOwnerControl(control);
+                Locator ownerLocator = owner == null? null : owner.locator();
+                Locator controlLocator = control.locator();
+                
+                Collection<String> found = service.findAll(ownerLocator, controlLocator);
+                int actualSize = found.size();
+                
+                if (expectedSize != actualSize)
+                {
+                    totalResult = false;
+                }
 
-			if (expectedSize >= 0)
-			{
-				IControl owner = window.getOwnerControl(control);
-				Locator ownerLocator = owner == null? null : owner.locator();
-				Locator controlLocator = control.locator();
-				
-				Collection<String> found = service.findAll(ownerLocator, controlLocator);
-				int actualSize = found.size();
-				
-				if (expectedSize != actualSize)
-				{
-					totalResult = false;
-				}
-
-				table.addValues(name, expectedSize == actualSize ? "Ok" : "Error");
-			}
-		}
+                table.addValues(parameter.getName(), expectedSize == actualSize ? "Ok" : "Error");
+            }
+        }
 
 		if (!totalResult)
 		{
