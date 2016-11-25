@@ -40,12 +40,10 @@ import com.exactprosystems.jf.functions.Text;
         outputDescription 		= "The object type {{$Text$}} is the text-based pattern which consists of lines. ",
         outputType				= Text.class,
         examples                =
- "Создание объекта {{$Text$}} посредством экшена {{@TextCreate@}}."
-+ "{{##Id;#Action;#Content\n"
+ "{{##Id;#Action;#Content\n"
 + "TXT1;TextCreate;'My taxes in 2016 is @{amount * 0.13} rub'#}}\n"
 + "\n"
 + "\n"
-+ "Присвоение переменной amount значения \"1\"."
 + "{{##Id;#Let\n"
 + "amount;100#}}\n"
 + "\n"
@@ -54,7 +52,6 @@ import com.exactprosystems.jf.functions.Text;
 + "TXT2;TextPerform;TXT1.Out#}}\n"
 + "\n"
 + "\n"
-+ "Проверяем, что макрос подстановки выполнился успешно."
 + "{{##Assert;#Message\n"
 + "TXT2.Out.toString() == 'My taxes in 2016 is 13 rub\\n';'Assert failed'#}}\n",
         seeAlso = "{{@TextReport@}}, {{@TextAddLine@}}, {{@TextLoadFromFile@}}, {{@TextCreate@}}, {{@TextSaveToFile@}}," +

@@ -35,12 +35,10 @@ import java.io.StringReader;
 		outputDescription 		= "The object type {{$Text$}} is the text-based pattern which consists of lines.",
 		outputType				= Text.class,
 		examples =
- "Создание объекта {{$Text$}} посредством экшена {{@TextCreate@}}."
-+ "{{##Id;#Action;#Content\n"
+ "{{##Id;#Action;#Content\n"
 + "TXT1;TextCreate;'Text'#}}\n"
 + "\n"
 + "\n"
-+ "Проверка того, что все прошло успешно и объект {{$Text$}} создался."
 + "{{##Assert;#Message\n"
 + "TXT1.Out.toString() == 'Text';#}}\n",
 		seeAlso = "{{@TextReport@}}, {{@TextAddLine@}}, {{@TextLoadFromFile@}}, {{@TextPerform@}}, {{@TextSaveToFile@}}," +

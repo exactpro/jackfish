@@ -25,13 +25,10 @@ import com.exactprosystems.jf.functions.Text;
                         + "Object type {{$Text$}} is a text-based pattern which consists of lines. "
                         + "The action can work for object creation {{$Text$}} line-by-line from different sources.",
         additionFieldsAllowed = false,
-        examples =
-                "Создание объекта {{$Text$}} посредством экшена {{@TextCreate@}}."
-                        + "{{##Id;#Action;#Content\n"
+        examples =        "{{##Id;#Action;#Content\n"
                         + "TXT1;TextCreate;'Text'#}}\n"
                         + "\n"
                         + "\n"
-                        + " Добавление в него новой строки с содержимым 'New line'."
                         + "{{##Action;#Line;#Text\n"
                         + "TextAddLine;'New line';TXT1.Out#}}\n",
         seeAlso = "{{@TextReport@}}, {{@TextPerform@}}, {{@TextLoadFromFile@}}, {{@TextCreate@}}, {{@TextSaveToFile@}}," +

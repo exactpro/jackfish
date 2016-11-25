@@ -28,12 +28,10 @@ import com.exactprosystems.jf.functions.Text;
 + "from which it was obtained.",
 		additionFieldsAllowed 	= false,
 		examples =
- "Создание объекта {{$Text$}} посредством экшена {{@TextCreate@}}."
-+ "{{##Id;#Action;#Content\n"
+ "{{##Id;#Action;#Content\n"
 + "TXT1;TextCreate;'Text'#}}\n"
 + "\n"
 + "\n"
-+ "Меняем строку с индексом 2 на строку с содержимым 'string successfully set'."
 + "{{##Action;#Line;#Text;#Index\n"
 + "TextSetValue;‘string successfully set’;TXT1.Out;2#}}",
 		seeAlso = "{{@TextReport@}}, {{@TextAddLine@}}, {{@TextLoadFromFile@}}, {{@TextCreate@}}, {{@TextSaveToFile@}}," +

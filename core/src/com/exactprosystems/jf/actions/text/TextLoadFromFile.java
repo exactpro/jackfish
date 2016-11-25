@@ -30,12 +30,10 @@ import com.exactprosystems.jf.functions.Text;
 		outputDescription 		= "The object type {{$Text$}} is the text-based pattern which consists of lines.",
 		outputType				= Text.class,
 		examples =
- "Загрузка текста из файла ‘text1.txt’ и создание объекта {{$Text$}}, содержащего загруженный текст."
-+ "{{##Id;#Action;#File\n"
+ "{{##Id;#Action;#File\n"
 + "TXT1;TextLoadFromFile;’path/text.txt’#}}\n"
 + "\n"
 + "\n"
-+ "Проверка того, что все прошло успешно и объект {{$Text$}} существует."
 + "{{##Assert;#Message\n"
 + "TXT1.Out != null;#}}\n",
 		seeAlso = "{{@TextReport@}}, {{@TextAddLine@}}, {{@TextPerform@}}, {{@TextCreate@}}, {{@TextSaveToFile@}}," +
