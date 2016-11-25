@@ -97,3 +97,8 @@
 	-fx-vgap : sizeMax;
 	
 }
+
+.dialog-pane > .button-bar > .container {
+	-fx-spacing : sizeMax;
+
+}
