@@ -1,3 +1,7 @@
+25.11.2016 4.3.0.1667
+#38551 fixed: Action Dialog Validate works with whole dialog instead of selected elements
+
+--------------------------------------------------------------------------------
 24.11.2016 4.3.0.1661
 #38539 Feature: Regression Framework
 See the library with namespace RF. It should help with building regression set.
