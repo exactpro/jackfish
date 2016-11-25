@@ -155,6 +155,22 @@ public enum OperationKind
 		}
 	},
 
+	GET_LIST("getList")
+	{
+		@Override
+		protected String formulaTemplate(Part part)
+		{
+			return ".getList()";
+		}
+
+		@Override
+		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, Holder<T> holder, OperationResult result) throws Exception
+		{
+			result.setList(executor.getList(holder.getList()));
+			return true;
+		}
+	},
+
 	GET_RECTANGLE("getRectangle")
 	{
 		@Override

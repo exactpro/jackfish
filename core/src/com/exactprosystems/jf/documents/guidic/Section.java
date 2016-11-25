@@ -52,6 +52,7 @@ public class Section implements ISection, Mutable
 		@XmlElement(name="wait", 			type=Wait.class),
 		@XmlElement(name="image",			type=Image.class),
 		@XmlElement(name="splitter",		type=Splitter.class),
+		@XmlElement(name="spinner",			type=Spinner.class),
 		@XmlElement(name="progressBar",		type=ProgressBar.class),
 		@XmlElement(name="scrollBar",		type=ScrollBar.class),
 		@XmlElement(name="slider",			type=Slider.class),

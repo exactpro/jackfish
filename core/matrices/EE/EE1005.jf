@@ -1,0 +1,59 @@
+#Id;#TestCase
+Step 1;This matrix failed to pass
+    #Action;#Text;#Notifier
+    Show;'EE1005 failded to passed';Notifier.Success
+
+    #Action;#Text;#Notifier
+    Show;'Step 1';Notifier.Info
+
+    #Action;#Time
+    Wait;1000
+
+
+#Id;#TestCase
+Step 2;Working
+    #Action;#Text;#Notifier
+    Show;'Step 2';Notifier.Info
+
+    #Action;#Time
+    Wait;1000
+
+    #Id;#Action;#Name
+    RST;Restore;'counter'
+
+    #Id;#Let
+    counter;RST.Out
+
+    #If
+    counter == null
+        #Id;#Let
+        counter;0
+
+    #EndIf
+
+    #Id;#Let
+    counter;counter + 1
+
+    #Action;#Value;#Name
+    Store;counter;'counter'
+
+    #If
+    counter < 5
+        #Action;#Text;#Notifier
+        Show;'Step 2 failed';Notifier.Error
+
+        #Fail
+        'Time to fail'
+
+    #EndIf
+
+
+#Id;#TestCase
+Step 2;Working
+    #Action;#Text;#Notifier
+    Show;'Step 3';Notifier.Info
+
+    #Action;#Time
+    Wait;1000
+
+
