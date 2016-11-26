@@ -5,10 +5,10 @@
 // This is unpublished, licensed software, confidential and proprietary
 // information which is the property of Exactpro Systems, LLC or its licensors.
 // ==============================================
-#TestCase
-Test case
+#Id;#TestCase
+INIT;Test case
     #Call;#type;#host;#base;#user;#password;#scriptsDir
-    RF.SetVars;'MySql';'127.0.0.1';'regression';'root';'';'matrices/EE/'
+    RF.SetVars;'MySql';'127.0.0.1';'regression';'root';dbPassword;'matrices/EE/'
 
     #Id;#RawTable
     table;Table
@@ -24,5 +24,17 @@ Test case
 
     #Id;#Call;#table
     CALL_2;RF.RunAll;table
+
+
+#TestCase
+Summary
+    #Id;#Call
+    table;RF.LastSummary
+
+    #Action;#Table;#scenario;#date;#time;#result;#performer;#env
+    TableColumnRename;table;'Matrix Name';'Execution Date';'Execution Time';'Execution Status';'Executed By';'Execution Machine'
+
+    #Action;#Table;#Title;#BeforeTestCase;#Numbers;#Columns
+    TableReport;table;'Consolidated Umbrella Report: ';'INIT';false;{'Matrix Name', 'Execution Status', 'Execution Date', 'Execution Time', 'Executed By', 'Execution Machine'}
 
 

@@ -74,6 +74,9 @@ RF;RegressionFramework
         successCount;0
 
         #Id;#Let
+        failedCount;0
+
+        #Id;#Let
         begin;System.currentTimeMillis()
 
         // // Main loop
@@ -100,7 +103,7 @@ RF;RegressionFramework
             #If
             !manual
                 #Action;#Str
-                Print;'Starting: ' + scripts + row.Scenario + '.jf' 
+                Print;'Starting: ' + scripts + row.Scenario + '.jf'
 
                 #Id;#Action;#Matrix;#Parameter
                 MXRN;MatrixRun;scripts + row.Scenario + '.jf';row.Env
@@ -108,14 +111,20 @@ RF;RegressionFramework
                 #Action;#Matrix
                 MatrixWait;MXRN.Out
 
-                #Id;#Let
-                successCount;MXRN.Out.failed() == 0 ? 1 : 0
-
                 #Action;#Connection;#Query;#Passed;#Failed;#Report;#ScenarioId
                 SQLexecute;SQL;'UPDATE scenarios SET passed = ?, failed = ?, report = ?, done = 1 WHERE id = ?';MXRN.Out.passed();MXRN.Out.failed();MXRN.Out.reportAsArchieve();scenarioId
 
                 #Id;#Action;#Decoraded;#Matrix
                 resultTab;ResultTable;false;MXRN.Out
+
+                #Action;#Passed;#Failed
+                Print;MXRN.Out.passed();MXRN.Out.failed()
+
+                #Id;#Let
+                successCount;successCount + (MXRN.Out.failed() == 0 ? 1 : 0)
+
+                #Id;#Let
+                failedCount;failedCount + (MXRN.Out.failed() > 0 ? 1 : 0)
 
                 #ForEach;#In
                 details;resultTab.Out
@@ -133,19 +142,17 @@ RF;RegressionFramework
 
         #EndForEach
 
+        #Action;#Total matrixes;#Passed
+        Print;totalCount;successCount
+
         #Action;#Connection;#Query;#Duration;#RunId
         SQLexecute;SQL;'UPDATE runs SET duration = ? WHERE id = ?';(int)(System.currentTimeMillis() - begin);runId
 
         #Action;#Connection
         SQLdisconnect;SQL
 
-        #OnError
-            #Assert;#Message
-            ifdef SQL;'SQL connection is not established'
-
-            #Action;#Connection
-            SQLdisconnect;SQL
-
+        #Assert;#Message
+        failedCount == 0;'Regression failed'
 
     #EndSubCase
 
@@ -192,6 +199,22 @@ RF;RegressionFramework
 
         #Id;#Action;#Connection;#Query
         select;SQLselect;SQL;'SELECT s.id, s.scenario, s.manual, s.start_time, s.passed, s.failed, s.description FROM scenarios AS s WHERE s.run_id = (SELECT MAX(r.id) FROM runs AS r)'
+
+        #Return
+        select.Out
+
+    #EndSubCase
+
+    // //==============================================
+    // // Collects results of all scenarios of last regression in readable form
+    // //==============================================
+    #Id;#SubCase
+    LastSummary;Returns table of last summary
+        #Id;#Call
+        SQL;RF.Connect
+
+        #Id;#Action;#Connection;#Query
+        select;SQLselect;SQL;'SELECT s.scenario, s.manual, DATE(s.start_time) AS date, TIME(s.start_time) AS time, IF(s.failed = 0, "Passed", "Failed") AS result, s.performer, s.env FROM scenarios AS s WHERE s.run_id = (SELECT MAX(r.id) FROM runs AS r)'
 
         #Return
         select.Out

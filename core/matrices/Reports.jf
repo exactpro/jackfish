@@ -1,7 +1,7 @@
 #Id;#TestCase
 INIT;Test case
     #Id;#Call;#type;#host;#base;#user;#password;#scriptsDir
-    CALL_1;RF.SetVars;'MySql';'127.0.0.1';'regression';'root';'';'matrices/EE/'
+    CALL_1;RF.SetVars;'MySql';'127.0.0.1';'regression';'root';dbPassword;'matrices/EE/'
 
 
 #Off;#TestCase
@@ -16,6 +16,18 @@ INIT;Test case
     TableReport;table;'Table';'INIT';false
 
 
+#TestCase
+Summary
+    #Id;#Call
+    table;RF.LastSummary
+
+    #Action;#Table;#scenario;#date;#time;#result;#performer;#env
+    TableColumnRename;table;'Matrix Name';'Execution Date';'Execution Time';'Execution Status';'Executed By';'Execution Machine'
+
+    #Action;#Table;#Title;#BeforeTestCase;#Numbers;#Columns
+    TableReport;table;'Consolidated Umbrella Report: ';'INIT';false;{'Matrix Name', 'Execution Status', 'Execution Date', 'Execution Time', 'Executed By', 'Execution Machine'}
+
+
 #Off;#TestCase
 1;Regression progress
     #Id;#Call
@@ -28,8 +40,8 @@ INIT;Test case
     TableReport;table;'Table';'INIT';false
 
 
-#TestCase
-Detailed report
+#Off;#TestCase
+1;Detailed report
     #Id;#Call
     table;RF.LastScenariosTable
 
