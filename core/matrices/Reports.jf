@@ -16,8 +16,8 @@ INIT;Test case
     TableReport;table;'Table';'INIT';false
 
 
-#TestCase
-Summary
+#Off;#TestCase
+1;Summary
     #Id;#Call
     table;RF.LastSummary
 
@@ -43,16 +43,15 @@ Summary
 #Off;#TestCase
 1;Detailed report
     #Id;#Call
-    table;RF.LastScenariosTable
+    table;RF.LastAllDetails
 
-    #ForEach;#In
-    row;table
-        #Action;#BeforeTestCase;#Str
-        Report;'INIT';'{{3 Scenario: 3}}' + row.scenario + '{{` Is manual:' + (row.manual == 1) + ' Passed: ' + row.passed + ' Failed: ' + row.failed + ' Comment: ' + (row.description == null ? '' : row.description)  + '`}}'
+    #Action;#Replace;#Table;#Columns;#MatchCell;#Search
+    TableReplace;'';table;{ 'step', 'error'};true;'null'
 
-        #Id;#Off;#Call
-        details;1;
+    #Action;#Table;#scenario;#date;#time;#result;#performer;#env;#testcase;#step;#time;#error
+    TableColumnRename;table;'Matrix Name';'Execution Date';'Execution Time';'Execution Status';'Executed By';'Execution Machine';'Testcase';'Step';'Duration';'Error'
 
-    #EndForEach
+    #Action;#Table;#Title;#BeforeTestCase;#Numbers
+    TableReport;table;'Detailed report';'INIT';false
 
 

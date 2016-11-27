@@ -91,9 +91,6 @@ RF;RegressionFramework
             #Id;#Let
             manual;!(new File(scripts + row.Scenario + '.jf').exists())
 
-            #Id;#Let
-            totalCount;totalCount + 1
-
             #Id;#Action;#Connection;#Query;#RunId;#Scenario;#Performer;#Priority;#Env;#Manual;#StartTime
             selectScenarioId;SQLinsert;SQL;'INSERT INTO scenarios (run_id, scenario, performer, priority, env, manual, start_time) VALUES (?, ?, ?, ?, ?, ?, ?)';runId;row.Scenario;row.Performer;row.Priority;row.Env;manual ? 1 : 0;DateTime.current()
 
@@ -102,6 +99,9 @@ RF;RegressionFramework
 
             #If
             !manual
+                #Id;#Let
+                totalCount;totalCount + 1
+
                 #Action;#Str
                 Print;'Starting: ' + scripts + row.Scenario + '.jf'
 
@@ -214,7 +214,23 @@ RF;RegressionFramework
         SQL;RF.Connect
 
         #Id;#Action;#Connection;#Query
-        select;SQLselect;SQL;'SELECT s.scenario, s.manual, DATE(s.start_time) AS date, TIME(s.start_time) AS time, IF(s.failed = 0, "Passed", "Failed") AS result, s.performer, s.env FROM scenarios AS s WHERE s.run_id = (SELECT MAX(r.id) FROM runs AS r)'
+        select;SQLselect;SQL;'SELECT s.scenario, s.manual, DATE(s.start_time) AS date, TIME(s.start_time) AS time, IF(s.failed = 0, "Passed", "Failed") AS result, s.performer, s.env FROM scenarios AS s WHERE s.manual = 0 AND s.run_id = (SELECT MAX(r.id) FROM runs AS r)'
+
+        #Return
+        select.Out
+
+    #EndSubCase
+
+    // //==============================================
+    // // Collects  all details of all scenarios of last regression in readable form
+    // //==============================================
+    #Id;#SubCase
+    LastAllDetails;Returns table of last details
+        #Id;#Call
+        SQL;RF.Connect
+
+        #Id;#Action;#Connection;#Query
+        select;SQLselect;SQL;'SELECT s.scenario, DATE(s.start_time) AS date, TIME(s.start_time) AS time, s.performer, s.env, d.testcase, d.step, d.time, d.result, d.error FROM scenarios AS s LEFT JOIN details AS d ON d.scenario_id = s.id WHERE s.manual = 0 AND s.run_id = (SELECT MAX(r.id) FROM runs AS r)'
 
         #Return
         select.Out
