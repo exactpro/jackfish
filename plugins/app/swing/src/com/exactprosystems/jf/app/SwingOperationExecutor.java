@@ -1165,10 +1165,13 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 						try
 						{
 							Component tableCellRendererComponent = table.getCellRenderer(row, column).getTableCellRendererComponent(table, null, true, true, row, column);
-							if (tableCellRendererComponent instanceof JLabel)
-							{
-								value = String.valueOf(((JLabel) tableCellRendererComponent).getIcon());
-							}
+							value = getValue(tableCellRendererComponent);
+//							if (tableCellRendererComponent instanceof JLabel)
+//							{
+//								Icon icon = ((JLabel) tableCellRendererComponent).getIcon();
+//								//if we don't have icon, put empty value
+//								value = icon != null ? String.valueOf(icon) : "";
+//							}
 						}
 						catch (Exception e)
 						{
@@ -1455,7 +1458,17 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 		}
 		else if (currentComponent instanceof JLabel)
 		{
-			return ((JLabel) currentComponent).getText();
+			Icon icon = ((JLabel) currentComponent).getIcon();
+			if (icon != null)
+			{
+				return String.valueOf(icon);
+			}
+			String text = ((JLabel) currentComponent).getText();
+			if (text != null)
+			{
+				return text;
+			}
+			return "";
 		}
 		else if (currentComponent instanceof JTextComponent)
 		{
