@@ -31,6 +31,12 @@ Summary
     #Id;#Call
     table;RF.LastSummary
 
+    #Action;#Replace;#Table;#Columns;#Search;#MatchCell
+    TableReplace;'<div class=\"Passed\">Passed</div>';table;{ 'result' };'Passed';true
+
+    #Action;#Replace;#Table;#Columns;#Search;#MatchCell
+    TableReplace;'<div class=\"Failed\">Failed</div>';table;{ 'result' };'Failed';true
+
     #Action;#Table;#scenario;#date;#time;#result;#performer;#env
     TableColumnRename;table;'Matrix Name';'Execution Date';'Execution Time';'Execution Status';'Executed By';'Execution Machine'
 
