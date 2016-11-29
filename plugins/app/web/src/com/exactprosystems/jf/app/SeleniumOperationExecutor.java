@@ -201,6 +201,42 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 		throw real;
 	}
 
+	@Override
+	public boolean dragNdrop(WebElement drag, WebElement drop, int x, int y) throws Exception
+	{
+		Exception real = null;
+		int repeat = 1;
+		do
+		{
+			try
+			{
+				Actions actions = new Actions(this.driver).clickAndHold(drag);
+				if (drop == null)
+				{
+					actions.moveByOffset(x, y);
+				}
+				else
+				{
+					actions.moveToElement(drop, x, y);
+				}
+				actions.release().perform();
+				return true;
+			}
+			catch (StaleElementReferenceException e)
+			{
+				real = e;
+				logger.debug("Element is no longer attached to the DOM. Try in SeleniumOperationExecutor : " + repeat);
+			}
+			catch (Exception e)
+			{
+				logger.error(e.getMessage(), e);
+				throw new RemoteException("Error on drag and drop");
+			}
+		}
+		while (++repeat < repeatLimit);
+		throw real;
+	}
+
 	//region public table methods
 	/*
 	we need parse another tables

@@ -689,6 +689,12 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 	}
 
 	@Override
+	public boolean dragNdrop(UIProxyJNA drag, UIProxyJNA drop, int x, int y) throws Exception
+	{
+		return false;
+	}
+
+	@Override
 	public boolean mouseTable(UIProxyJNA component, int column, int row, MouseAction action) throws Exception
 	{
 		try

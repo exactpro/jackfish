@@ -12,7 +12,6 @@ import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.error.app.ElementNotFoundException;
 import com.exactprosystems.jf.api.error.app.OperationNotAllowedException;
 
-import java.awt.*;
 import java.rmi.RemoteException;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
@@ -574,29 +573,14 @@ public enum OperationKind
 		@Override
 		protected <T> boolean operateDerived(Part part, OperationExecutor<T> executor, Holder<T> holder, OperationResult result) throws Exception
 		{
-			Locator whereDrop = holder.get(LocatorKind.Dropped);
 			T value = holder.getValue();
-			Rectangle rectangle = executor.getRectangle(value);
-			System.err.println("Rectangle : " + rectangle);
-			if (whereDrop == null)
-			{
-				//TODO implement this behavior
-				//just move to desktop
-			}
-			else
-			{
 
-			}
-			for (LocatorKind lk : LocatorKind.values())
-			{
-				Locator locator = holder.get(lk);
-				if (locator != null)
-				{
-					System.err.println("Holder for lk " + lk + " is : " + locator);
-				}
-			}
-			//TODO add implementation
-			return true;
+			Locator whereDrop = holder.get(LocatorKind.Dropped);
+			Locator whereDropOwner = holder.get(LocatorKind.DroppedOwner);
+
+			T whereDropValue = whereDrop != null ? executor.find(whereDropOwner, whereDrop) : null;
+
+			return executor.dragNdrop(value, whereDropValue, part.x, part.y);
 		}
 	},
 	

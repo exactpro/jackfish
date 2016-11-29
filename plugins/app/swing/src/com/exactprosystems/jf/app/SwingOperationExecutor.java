@@ -18,6 +18,7 @@ import com.exactprosystems.jf.api.error.app.WrongParameterException;
 import org.apache.log4j.Logger;
 import org.fest.swing.awt.AWT;
 import org.fest.swing.core.ComponentMatcher;
+import org.fest.swing.core.MouseButton;
 import org.fest.swing.core.Robot;
 import org.fest.swing.core.Scrolling;
 import org.fest.swing.data.TableCell;
@@ -868,6 +869,23 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 	public String script(ComponentFixture<Component> component, String script) throws Exception
 	{
 		throw new FeatureNotSupportedException("script");
+	}
+
+	@Override
+	public boolean dragNdrop(ComponentFixture<Component> drag, ComponentFixture<Component> drop, int x, int y) throws Exception
+	{
+		this.waitForIdle();
+		//TODO think, how we can replace robot to events.
+		Rectangle rectangle = getRectangle(drag);
+		this.currentRobot.pressMouse(new Point(rectangle.x + rectangle.width / 2, rectangle.y + rectangle.height / 2), MouseButton.LEFT_BUTTON);
+		Thread.sleep(100);
+		this.currentRobot.moveMouse(drop.component(),new Point(x, y));
+		Thread.sleep(100);
+		this.currentRobot.releaseMouse(MouseButton.LEFT_BUTTON);
+		Thread.sleep(100);
+		this.waitForIdle();
+
+		return true;
 	}
 
 	@Override

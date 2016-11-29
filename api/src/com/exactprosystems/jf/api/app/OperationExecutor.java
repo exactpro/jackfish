@@ -45,6 +45,8 @@ public interface OperationExecutor<T>
 	String						getAttr			(T component, String name																								) throws Exception;
 	String						script			(T component, String script																								) throws Exception;
 
+	boolean						dragNdrop		(T drag, T drop, int x, int y																							) throws Exception;
+
 	boolean 					mouseTable		(T component, int column, int row, MouseAction action																	) throws Exception;
 	boolean						textTableCell	(T component, int column, int row, String text																			) throws Exception;
 	String						getValueTableCell(T component, int column, int row																						) throws Exception;

@@ -359,15 +359,16 @@ public class Do
 	}
 
 	//TODO add description
-	public static Operation dragNdrop(int x1, int y1, String another, int x2, int y2)
+	public static Operation dragNdrop(String another, int x2, int y2)
 	{
-		return new Operation().dragNdrop(x1, y1, another, x2, y2);
+		return new Operation().dragNdrop(another, x2, y2);
 	}
 
-	public static Operation dragNdrop(int x1, int y1, Locator another, int x2, int y2)
-	{
-		return new Operation().dragNdrop(x1, y1, another, x2, y2);
-	}
+//	public static Operation dragNdrop(int x1, int y1, Locator another, int x2, int y2)
+//	{
+//		return new Operation().dragNdrop(x1, y1, another, x2, y2);
+//	}
+
 	//endregion
 
 	//region Operations with locators
