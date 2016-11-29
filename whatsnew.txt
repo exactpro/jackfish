@@ -1,3 +1,13 @@
+25.11.2016 4.3.0.1674
+Feature #38552 Add an action for realization drag-and-drop added.
+
+For use this, you need use operation Do.dragNdrop('another', x,y)
+where
+'another' - id of another element on which we need dropped current element. If this value is null, dropped will use absolute coordinates
+x - x offest (int)
+y - y offest (int)
+--------------------------------------------------------------------------------
+
 25.11.2016 4.3.0.1667
 #38551 fixed: Action Dialog Validate works with whole dialog instead of selected elements
 
