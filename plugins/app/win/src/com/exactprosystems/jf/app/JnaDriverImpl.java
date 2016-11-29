@@ -66,7 +66,6 @@ public class JnaDriverImpl
 		if (new File(dll).exists())
 		{
 			this.driver = (JnaDriver) Native.loadLibrary(dll, JnaDriver.class);
-			//this.driver = (JnaDriver) Native.loadLibrary("C:\\jackfish\\AppWinGui\\src\\com\\exactprosystems\\jf\\app\\bin\\UIAdapter.dll", JnaDriver.class);
 		}
 		else
 		{
@@ -241,6 +240,15 @@ public class JnaDriverImpl
 		this.driver.mouse(element.getIdString(), action.getId(), x, y);
 		this.logger.info(String.format("mouse(%s,%s,%d,%d), time (ms) : %d", element, action, x, y, 
 				System.currentTimeMillis() - start));
+		checkCSharpTimes();
+		checkError();
+	}
+
+	public void dragNdrop(int x1, int y1, int x2, int y2) throws Exception
+	{
+		long start = System.currentTimeMillis();
+		this.driver.dragNdrop(x1, y1, x2, y2);
+		this.logger.info(String.format("dragNdrop(%d,%d,%d,%d), time (ms) : %d", x1, y1, x2, y2,System.currentTimeMillis() - start));
 		checkCSharpTimes();
 		checkError();
 	}

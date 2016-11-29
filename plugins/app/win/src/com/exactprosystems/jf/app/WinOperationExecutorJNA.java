@@ -691,7 +691,32 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 	@Override
 	public boolean dragNdrop(UIProxyJNA drag, UIProxyJNA drop, int x, int y) throws Exception
 	{
-		return false;
+		try
+		{
+			Rectangle rectangle = this.getRectangle(drag);
+			int x1 = rectangle.x + rectangle.width / 2;
+			int y1 = rectangle.y + rectangle.height / 2;
+			int x2 = x;
+			int y2 = y;
+			if (drop != null)
+			{
+				Rectangle rDrop = this.getRectangle(drop);
+				x2 = rDrop.x + x;
+				y2 = rDrop.y + y;
+			}
+			this.driver.dragNdrop(x1, y1, x2, y2);
+			return true;
+		}
+		catch (RemoteException e)
+		{
+			throw e;
+		}
+		catch (Exception e)
+		{
+			this.logger.error(String.format("dragNdrop(%s,%s,%d,%d)", drag, drop, x, y));
+			this.logger.error(e.getMessage(), e);
+			throw e;
+		}
 	}
 
 	@Override

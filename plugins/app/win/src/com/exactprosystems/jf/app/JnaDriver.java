@@ -42,6 +42,8 @@ public interface JnaDriver extends Library {
 	void upAndDown(String key, boolean isDown);
 	void mouse(String elementId, int actionId, int x, int y);
 
+	void dragNdrop(int x1, int y1, int x2, int y2);
+
 	/**
 	 * if @param c == -1 -> arg is null;
 	 * if @param c == 0 -> arg is array of string with separator %
