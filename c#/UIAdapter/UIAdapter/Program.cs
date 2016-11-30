@@ -781,6 +781,23 @@ namespace UIAdapter
             }
         }
 
+        [DllExport("dragNdrop", CallingConvention.Cdecl)]
+        public static void DragNDrop(int x1, int y1, int x2, int y2)
+        {
+            try
+            {
+                Cursor.Position = new System.Drawing.Point(x1, y1);
+                Win32.SafeNativeMethods.mouse_event(MouseConstants.MOUSEEVENTF_LEFTDOWN, 0,0,0,0);
+                Thread.Sleep(100);
+                Cursor.Position = new System.Drawing.Point(x2, y2);
+                Win32.SafeNativeMethods.mouse_event(MouseConstants.MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
+            }
+            catch (Exception e)
+            {
+                MakeError(e);
+            }
+        }
+
         [DllExport("doPatternCall", CallingConvention.Cdecl)]
         public static string DoPatternCall(String inid, int patternId, string method, string arg, int c)
         {

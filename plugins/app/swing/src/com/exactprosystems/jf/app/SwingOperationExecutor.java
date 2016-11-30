@@ -18,6 +18,7 @@ import com.exactprosystems.jf.api.error.app.WrongParameterException;
 import org.apache.log4j.Logger;
 import org.fest.swing.awt.AWT;
 import org.fest.swing.core.ComponentMatcher;
+import org.fest.swing.core.MouseButton;
 import org.fest.swing.core.Robot;
 import org.fest.swing.core.Scrolling;
 import org.fest.swing.data.TableCell;
@@ -871,6 +872,23 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 	}
 
 	@Override
+	public boolean dragNdrop(ComponentFixture<Component> drag, ComponentFixture<Component> drop, int x, int y) throws Exception
+	{
+		this.waitForIdle();
+		//TODO think, how we can replace robot to events.
+		Rectangle rectangle = getRectangle(drag);
+		this.currentRobot.pressMouse(new Point(rectangle.x + rectangle.width / 2, rectangle.y + rectangle.height / 2), MouseButton.LEFT_BUTTON);
+		Thread.sleep(100);
+		this.currentRobot.moveMouse(drop.component(),new Point(x, y));
+		Thread.sleep(100);
+		this.currentRobot.releaseMouse(MouseButton.LEFT_BUTTON);
+		Thread.sleep(100);
+		this.waitForIdle();
+
+		return true;
+	}
+
+	@Override
 	public boolean tableIsContainer()
 	{
 		return false;
@@ -1165,10 +1183,13 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 						try
 						{
 							Component tableCellRendererComponent = table.getCellRenderer(row, column).getTableCellRendererComponent(table, null, true, true, row, column);
-							if (tableCellRendererComponent instanceof JLabel)
-							{
-								value = String.valueOf(((JLabel) tableCellRendererComponent).getIcon());
-							}
+							value = getValue(tableCellRendererComponent);
+//							if (tableCellRendererComponent instanceof JLabel)
+//							{
+//								Icon icon = ((JLabel) tableCellRendererComponent).getIcon();
+//								//if we don't have icon, put empty value
+//								value = icon != null ? String.valueOf(icon) : "";
+//							}
 						}
 						catch (Exception e)
 						{
@@ -1455,7 +1476,17 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 		}
 		else if (currentComponent instanceof JLabel)
 		{
-			return ((JLabel) currentComponent).getText();
+			Icon icon = ((JLabel) currentComponent).getIcon();
+			if (icon != null)
+			{
+				return String.valueOf(icon);
+			}
+			String text = ((JLabel) currentComponent).getText();
+			if (text != null)
+			{
+				return text;
+			}
+			return "";
 		}
 		else if (currentComponent instanceof JTextComponent)
 		{

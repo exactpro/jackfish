@@ -1,3 +1,29 @@
+30.11.2016 4.3.0.1676
+Bug #38584 fixed. Now, we can use name of action into action assert
+
+--------------------------------------------------------------------------------
+25.11.2016 4.3.0.1674
+Feature #38552 Add an action for realization drag-and-drop added.
+
+For use this, you need use operation Do.dragNdrop('another', x,y)
+where
+'another' - id of another element on which we need dropped current element. If this value is null, dropped will use absolute coordinates
+x - x offest (int)
+y - y offest (int)
+--------------------------------------------------------------------------------
+
+28.11.2016 4.3.0 1671
+#38570 fixed : If icon and text of JLabel is null, return empty string
+--------------------------------------------------------------------------------
+25.11.2016 4.3.0.1667
+#38551 fixed: Action Dialog Validate works with whole dialog instead of selected elements
+
+--------------------------------------------------------------------------------
+24.11.2016 4.3.0.1661
+#38539 Feature: Regression Framework
+See the library with namespace RF. It should help with building regression set.
+
+--------------------------------------------------------------------------------
 24.11.2016 4.3.0.1661
 Fixed Bug #38516
 

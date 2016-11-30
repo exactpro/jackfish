@@ -26,12 +26,10 @@ import com.exactprosystems.jf.functions.Text;
 + "It is applied when it is necessary to examine the content of the object {{$Text$}}.",
 		additionFieldsAllowed 	= false,
 		examples =
- "Создание объекта {{$Text$}} посредством экшена {{@TextCreate@}}."
-+ "{{##Id;#Action;#Content\n"
+ "{{##Id;#Action;#Content\n"
 + "TXT1;TextCreate;'Text'#}}\n"
 + "\n"
 + "\n"
-+ "Вывод содержимого объекта {{$Text$}} в репорт с заголовком 'My text'."
 + "{{##Action;#Title;#Text\n"
 + "TextReport;’My text’;TXT1.Out#}}\n",
 		seeAlso = "{{@TextPerform@}}, {{@TextAddLine@}}, {{@TextLoadFromFile@}}, {{@TextCreate@}}, {{@TextSaveToFile@}}," +

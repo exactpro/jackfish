@@ -36,12 +36,10 @@ import java.util.Date;
 				+ "With the help of this object property one can access information about the number of"
 				+ " successfully run and failed test cases of the started matrix. ",
 		outputType				= MatrixRunner.class,
-		examples = "Запуск матрицы из объекта {{$Text$}}" +
-				"{{##Id;#Action;#Text\n" +
+		examples = "{{##Id;#Action;#Text\n" +
 				"MXRN1;MatrixRunFromText;Text#}}\n" +
 				"\n" +
 				"\n" +
-				"Проверка того, что все прошло успешно и матрица запущена.\n" +
 				"{{##Assert;#Message\n" +
 				"MXRN1.Out.isRunning();'MatrixRun is failed'#}}",
 		seeAlso = "{{@MatrixRun@}}, {{@MatrixWait@}}"

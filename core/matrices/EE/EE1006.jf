@@ -1,0 +1,40 @@
+#Id;#TestCase
+Step 1;This matrix randomly failed
+    #Action;#Text;#Notifier
+    Show;'EE1006 randomly failed';Notifier.Success
+
+    #Action;#Text;#Notifier
+    Show;'Step 1';Notifier.Info
+
+    #Action;#Time
+    Wait;1000
+
+
+#Id;#TestCase
+Step 2;Working
+    #Action;#Text;#Notifier
+    Show;'Step 2';Notifier.Info
+
+    #Action;#Time
+    Wait;1000
+
+    #If
+    Rnd.rnd(0, 9) % 2 == 0
+        #Action;#Text;#Notifier
+        Show;'Error by occasion';Notifier.Error
+
+        #Fail
+        'Error by occasion'
+
+    #EndIf
+
+
+#Id;#TestCase
+Step 2;Working
+    #Action;#Text;#Notifier
+    Show;'Step 3';Notifier.Info
+
+    #Action;#Time
+    Wait;1000
+
+

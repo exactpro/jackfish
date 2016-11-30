@@ -11,6 +11,14 @@ compileJava {
 	options.warnings = false
 }
 
+sourceSets {
+	main {
+		resources {
+			srcDir('src')
+		}
+	}
+}
+
 jar {
 	manifest {
 		attributes(

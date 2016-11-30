@@ -567,6 +567,22 @@ public enum OperationKind
 			return true;
 		}
 	},
+
+	DRAG_N_DROP("dragNDrop")
+	{
+		@Override
+		protected <T> boolean operateDerived(Part part, OperationExecutor<T> executor, Holder<T> holder, OperationResult result) throws Exception
+		{
+			T value = holder.getValue();
+
+			Locator whereDrop = holder.get(LocatorKind.Dropped);
+			Locator whereDropOwner = holder.get(LocatorKind.DroppedOwner);
+
+			T whereDropValue = whereDrop != null ? executor.find(whereDropOwner, whereDrop) : null;
+
+			return executor.dragNdrop(value, whereDropValue, part.x, part.y);
+		}
+	},
 	
 	DELAY("delay")
 	{

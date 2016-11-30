@@ -1,0 +1,270 @@
+// //==============================================
+// //  Copyright (c) 2009-2015, Exactpro Systems, LLC
+// //  Quality Assurance & Related Development for Innovative Trading Systems.
+// //  All rights reserved.
+// //  This is unpublished, licensed software, confidential and proprietary
+// //  information which is the property of Exactpro Systems, LLC or its licensors.
+// //==============================================
+// // Regression Framework v 1.0
+// //==============================================
+#Id;#NameSpace
+RF;RegressionFramework
+    // //==============================================
+    // // Sets the variables that are needed for futher work with DataBase.
+    // //==============================================
+    #Id;#SubCase;#type;#host;#base;#user;#password;#scriptsDir
+    SetVars;Set vars;;;;;;
+        #Id;#Global;#Let
+        sqlType;1;type
+
+        #Id;#Global;#Let
+        sqlHost;1;host
+
+        #Id;#Global;#Let
+        sqlBase;1;base
+
+        #Id;#Global;#Let
+        sqlUser;1;user
+
+        #Id;#Global;#Let
+        sqlPassword;1;password
+
+        #Id;#Global;#Let
+        scripts;1;scriptsDir
+
+    #EndSubCase
+
+    // //==============================================
+    // // Runs all matrixes which names are enumerated in the column  Name
+    // // of the table and puts results into database
+    // //==============================================
+    #Id;#SubCase;#table
+    RunAll;Run all matrixes from table;
+        #Assert;#Message
+        table != null && table instanceof Table;'The parameter table should be Table'
+
+        #Assert;#Message
+        table.columnIsPresent('Off');'Table shoud contain the column Off'
+
+        #Assert;#Message
+        table.columnIsPresent('Scenario');'Table shoud contain the column Scenario'
+
+        #Assert;#Message
+        table.columnIsPresent('Performer');'Table shoud contain the column Performer'
+
+        #Assert;#Message
+        table.columnIsPresent('Env');'Table shoud contain the column Env'
+
+        #Assert;#Message
+        table.columnIsPresent('Priority');'Table shoud contain the column Priority'
+
+        #Id;#Call
+        SQL;Connect
+
+        #Id;#Action;#Connection;#Query;#CreateTime
+        selectRunId;SQLinsert;SQL;'INSERT INTO runs (create_time, duration) VALUES (?, -1)\u003b';DateTime.currentTime()
+
+        #Id;#Let
+        runId;selectRunId.Out[0]
+
+        #Id;#Let
+        totalCount;0
+
+        #Id;#Let
+        successCount;0
+
+        #Id;#Let
+        failedCount;0
+
+        #Id;#Let
+        begin;System.currentTimeMillis()
+
+        // // Main loop
+        #ForEach;#In
+        row;table
+            #If
+            !Str.IsNullOrEmpty(row.Off)
+                #Continue
+
+            #EndIf
+
+            #Id;#Let
+            manual;!(new File(scripts + row.Scenario + '.jf').exists())
+
+            #Id;#Action;#Connection;#Query;#RunId;#Scenario;#Performer;#Priority;#Env;#Manual;#StartTime
+            selectScenarioId;SQLinsert;SQL;'INSERT INTO scenarios (run_id, scenario, performer, priority, env, manual, start_time) VALUES (?, ?, ?, ?, ?, ?, ?)';runId;row.Scenario;row.Performer;row.Priority;row.Env;manual ? 1 : 0;DateTime.current()
+
+            #Id;#Let
+            scenarioId;selectScenarioId.Out[0]
+
+            #If
+            !manual
+                #Id;#Let
+                totalCount;totalCount + 1
+
+                #Action;#Str
+                Print;'Starting: ' + scripts + row.Scenario + '.jf'
+
+                #Id;#Action;#Matrix;#Parameter
+                MXRN;MatrixRun;scripts + row.Scenario + '.jf';row.Env
+
+                #Action;#Matrix
+                MatrixWait;MXRN.Out
+
+                #Action;#Connection;#Query;#Passed;#Failed;#Report;#ScenarioId
+                SQLexecute;SQL;'UPDATE scenarios SET passed = ?, failed = ?, report = ?, done = 1 WHERE id = ?';MXRN.Out.passed();MXRN.Out.failed();MXRN.Out.reportAsArchieve();scenarioId
+
+                #Id;#Action;#Decoraded;#Matrix
+                resultTab;ResultTable;false;MXRN.Out
+
+                #Action;#Passed;#Failed
+                Print;MXRN.Out.passed();MXRN.Out.failed()
+
+                #Id;#Let
+                successCount;successCount + (MXRN.Out.failed() == 0 ? 1 : 0)
+
+                #Id;#Let
+                failedCount;failedCount + (MXRN.Out.failed() > 0 ? 1 : 0)
+
+                #ForEach;#In
+                details;resultTab.Out
+                    #Action;#Connection;#Query;#ScenarioId;#Testcase;#Stepp;#Time;#Result;#Error
+                    SQLinsert;SQL;'INSERT INTO details (scenario_id, testcase, step, time, result, error) VALUES (?, ?, ?, ?, ?, ?)';scenarioId;'' + details.TestCase;'' + details.Step;details.Time;'' + details.Result;'' + details.Error
+
+                #EndForEach
+
+            #EndIf
+
+            #OnError
+                #Action;#Error
+                Print;error
+
+
+        #EndForEach
+
+        #Action;#Total matrixes;#Passed
+        Print;totalCount;successCount
+
+        #Action;#Connection;#Query;#Duration;#RunId
+        SQLexecute;SQL;'UPDATE runs SET duration = ? WHERE id = ?';(int)(System.currentTimeMillis() - begin);runId
+
+        #Action;#Connection
+        SQLdisconnect;SQL
+
+        #Assert;#Message
+        failedCount == 0;'Regression failed'
+
+    #EndSubCase
+
+    // //==============================================
+    // // Collects all scenarios from the last run of regression and returns
+    // // it as a table
+    // //==============================================
+    #Id;#SubCase
+    TotalTable;Returns table of totals for the last run
+        #Id;#Call
+        SQL;RF.Connect
+
+        #Id;#Action;#Connection;#Query
+        select;SQLselect;SQL;'SELECT "PASSED" AS `Kind`, COUNT(*) AS `Values` FROM scenarios WHERE failed = 0 AND run_id = (SELECT MAX(id) FROM runs) UNION SELECT "FAILED", COUNT(*) FROM scenarios WHERE failed <> 0 AND run_id = (SELECT MAX(id) FROM runs)'
+
+        #Return
+        select.Out
+
+    #EndSubCase
+
+    // //==============================================
+    // // Collects history of all runs and evaluate average factor of success.
+    // //==============================================
+    #Id;#SubCase
+    ProgressTable;Returns table of regression progress
+        #Id;#Call
+        SQL;RF.Connect
+
+        #Id;#Action;#Connection;#Query
+        select;SQLselect;SQL;'SELECT r.id AS `Period`, AVG(s.passed / (s.passed + s.failed)) AS `Average` FROM runs AS r LEFT JOIN scenarios AS s ON s.run_id = r.id GROUP BY r.id'
+
+        #Return
+        select.Out
+
+    #EndSubCase
+
+    // //==============================================
+    // // Collects results of all scenarios of last regression
+    // //==============================================
+    #Id;#SubCase
+    LastScenariosTable;Returns table of last scenarious
+        #Id;#Call
+        SQL;RF.Connect
+
+        #Id;#Action;#Connection;#Query
+        select;SQLselect;SQL;'SELECT s.id, s.scenario, s.manual, s.start_time, s.passed, s.failed, s.description FROM scenarios AS s WHERE s.run_id = (SELECT MAX(r.id) FROM runs AS r)'
+
+        #Return
+        select.Out
+
+    #EndSubCase
+
+    // //==============================================
+    // // Collects results of all scenarios of last regression in readable form
+    // //==============================================
+    #Id;#SubCase
+    LastSummary;Returns table of last summary
+        #Id;#Call
+        SQL;RF.Connect
+
+        #Id;#Action;#Connection;#Query
+        select;SQLselect;SQL;'SELECT s.scenario, s.manual, DATE(s.start_time) AS date, TIME(s.start_time) AS time, IF(s.failed = 0, "Passed", "Failed") AS result, s.performer, s.env FROM scenarios AS s WHERE s.manual = 0 AND s.run_id = (SELECT MAX(r.id) FROM runs AS r)'
+
+        #Return
+        select.Out
+
+    #EndSubCase
+
+    // //==============================================
+    // // Collects  all details of all scenarios of last regression in readable form
+    // //==============================================
+    #Id;#SubCase
+    LastAllDetails;Returns table of last details
+        #Id;#Call
+        SQL;RF.Connect
+
+        #Id;#Action;#Connection;#Query
+        select;SQLselect;SQL;'SELECT s.scenario, DATE(s.start_time) AS date, TIME(s.start_time) AS time, s.performer, s.env, d.testcase, d.step, d.time, d.result, d.error FROM scenarios AS s LEFT JOIN details AS d ON d.scenario_id = s.id WHERE s.manual = 0 AND s.run_id = (SELECT MAX(r.id) FROM runs AS r)'
+
+        #Return
+        select.Out
+
+    #EndSubCase
+
+    // //==============================================
+    // // Perform connection to SQL server using variable set that is set
+    // // by RF.SetVar
+    // //==============================================
+    #Id;#SubCase
+    Connect;Connect to SQL
+        #Assert;#Message
+        isdef sqlType && sqlType != null;'The variable sqlType is null or undefinded'
+
+        #Assert;#Message
+        isdef sqlHost && sqlHost != null;'The variable sqlHost is null or undefinded'
+
+        #Assert;#Message
+        isdef sqlBase && sqlBase != null;'The variable sqlBase is null or undefinded'
+
+        #Assert;#Message
+        isdef sqlUser && sqlUser != null;'The variable sqlUser is null or undefinded'
+
+        #Assert;#Message
+        isdef sqlPassword && sqlPassword != null;'The variable sqlPassword is null or undefinded'
+
+        #Id;#Action;#User;#Server;#Base;#Sql;#Password
+        SQLCNT;SQLconnect;sqlUser;sqlHost;sqlBase;sqlType;sqlPassword
+
+        #Return
+        SQLCNT.Out
+
+    #EndSubCase
+
+#EndNameSpace
+

@@ -194,7 +194,8 @@ var createLineChart = function(diagramId, data, yAxisDescription) {
 	
 	var xAxis = d3.svg.axis()
 		.scale(x)
-		.ticks(Math.min(data.length, 10))
+		//TODO think about, why we do -1
+		.ticks(Math.min(data.length - 1, 10))
 		.tickFormat(function(d,i) {
 			return data[i].label
 		})

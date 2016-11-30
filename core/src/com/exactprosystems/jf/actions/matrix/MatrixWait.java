@@ -26,12 +26,10 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
                 + "If the matrix doesn’t stop during the specified timeout, an action is failed.",
         additionFieldsAllowed = false,
         seeAlso = "{{@MatrixRunFromText@}}, {{@MatrixRun@}}",
-        examples = "Запуск матрицы из файла Matrix.jf лежащего в директории matrices." +
-                "{{##Id;#Action;#Matrix\n" +
+        examples = "{{##Id;#Action;#Matrix\n" +
                 "MXRN1;MatrixRun;'matrices/Matrix.jf'#}}\n" +
                 "\n" +
                 "\n" +
-                "Остановка только что запущенной матрицы на 5 секунд." +
                 "{{##Id;#Action;#Time;#Matrix\n" +
                 "MXWT1;MatrixWait;5000;MXRN1.Out#}}"
 )

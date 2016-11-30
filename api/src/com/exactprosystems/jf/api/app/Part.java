@@ -63,6 +63,7 @@ public class Part implements Serializable
 						break;
 
 					case Owner:
+					case DroppedOwner:
 						control = window.getOwnerControl(control);
 						break;
 
@@ -103,7 +104,7 @@ public class Part implements Serializable
 		this.y = y;
 		return this;
 	}
-	
+
 	public Part setStr(String str)
 	{
 		this.str = str;

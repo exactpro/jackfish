@@ -1,0 +1,66 @@
+#Id;#TestCase
+INIT;Test case
+    #Id;#Call;#type;#host;#base;#user;#password;#scriptsDir
+    CALL_1;RF.SetVars;'MySql';'127.0.0.1';'regression';'root';dbPassword;'matrices/EE/'
+
+
+#TestCase
+Overall
+    #Id;#Call
+    table;RF.TotalTable
+
+    #Action;#Type;#Table;#Title;#BeforeTestCase;#Labels;#Values
+    ChartReport;ChartKind.Pie;table;'{{4 Overall 4}}';'INIT';'Kind';'Values'
+
+    #Action;#Table;#Title;#BeforeTestCase;#Numbers
+    TableReport;table;'Table';'INIT';false
+
+
+#TestCase
+Summary
+    #Id;#Call
+    table;RF.LastSummary
+
+    #Action;#Replace;#Table;#Columns;#Search;#MatchCell
+    TableReplace;'<div class=\"Passed\">Passed</div>';table;{ 'result' };'Passed';true
+
+    #Action;#Replace;#Table;#Columns;#Search;#MatchCell
+    TableReplace;'<div class=\"Failed\">Failed</div>';table;{ 'result' };'Failed';true
+
+    #Action;#Table;#scenario;#date;#time;#result;#performer;#env
+    TableColumnRename;table;'Matrix Name';'Execution Date';'Execution Time';'Execution Status';'Executed By';'Execution Machine'
+
+    #Action;#Table;#Title;#BeforeTestCase;#Numbers;#Columns
+    TableReport;table;'Consolidated Umbrella Report: ';'INIT';false;{'Matrix Name', 'Execution Status', 'Execution Date', 'Execution Time', 'Executed By', 'Execution Machine'}
+
+
+#TestCase
+Regression progress
+    #Id;#Call
+    table;RF.ProgressTable
+
+    #Action;#Type;#Table;#Title;#BeforeTestCase;#Labels;#Values
+    ChartReport;ChartKind.Line;table;'{{4 Regression progress 4}}';'INIT';'id';'Average'
+
+
+#TestCase
+Detailed report
+    #Id;#Call
+    table;RF.LastAllDetails
+
+    #Action;#Replace;#Table;#Columns;#MatchCell;#Search
+    TableReplace;'';table;{ 'step', 'error'};true;'null'
+
+    #Action;#Replace;#Table;#Columns;#Search;#MatchCell
+    TableReplace;'<div class=\"Passed\">Passed</div>';table;{ 'result' };'Passed';true
+
+    #Action;#Replace;#Table;#Columns;#Search;#MatchCell
+    TableReplace;'<div class=\"Failed\">Failed</div>';table;{ 'result' };'Failed';true
+
+    #Action;#Table;#scenario;#date;#time;#result;#performer;#env;#testcase;#step;#time;#error
+    TableColumnRename;table;'Matrix Name';'Execution Date';'Execution Time';'Execution Status';'Executed By';'Execution Machine';'Testcase';'Step';'Duration';'Error'
+
+    #Action;#Table;#Title;#BeforeTestCase;#Numbers
+    TableReport;table;'{{4 Detailed report 4}}';'INIT';false
+
+

@@ -31,9 +31,16 @@ public class XmlSelectFirst extends AbstractAction
 {
 	public final static String xmlName = "Xml";
 	public final static String xpathName = "Xpath";
+	public final static String nodeNameName = "NodeName";
+
 
 	@ActionFieldAttribute(name = xmlName, mandatory = true, description = "XML object.")
 	protected Xml 	xml 	= null;
+
+
+	@ActionFieldAttribute(name = nodeNameName, mandatory = true, description = "Name of new node.")
+	protected String 	nodeName 	= null;
+
 
 	@ActionFieldAttribute(name = xpathName, mandatory = true, description = "Xpath.")
 	protected String 	xpath 	= null;
@@ -51,7 +58,7 @@ public class XmlSelectFirst extends AbstractAction
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
-		super.setResult(xml.createOneByXpath(this.xpath));
+		super.setResult(xml.createOneByXpath(this.nodeName,this.xpath));
 	}
 
 	@Override

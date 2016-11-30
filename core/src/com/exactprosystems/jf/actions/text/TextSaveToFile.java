@@ -28,17 +28,14 @@ import com.exactprosystems.jf.functions.Text;
 		outputDescription 		= "True if saving is successful.",
 		outputType				= Boolean.class,
 		examples =
-"Создание объекта {{$Text$}} посредством экшена {{@TextCreate@}}."
-+ "{{##Id;#Action;#Content\n"
+ "{{##Id;#Action;#Content\n"
 +"TXT1;TextCreate;'Text'#}}\n"
 + "\n"
 + "\n"
-+ "Сохранение переданного объекта {{$Text$}} в файл с имненем 'file.txt' находящегося в директории path."
 + "{{##Id;#Action;#Text;#File\n"
 + "TXT2;TextSaveToFile;TXT1.Out;’path/file.txt’#}}\n"
 + "\n"
 + "\n"
-+ "Проверка того, что все прошло успешно и объект {{$Text$}} сохранился."
 + "{{##Assert;#Message\n"
 + "TXT2.Out;#}}\n",
 		seeAlso = "{{@TextReport@}}, {{@TextAddLine@}}, {{@TextLoadFromFile@}}, {{@TextCreate@}}, {{@TextPerform@}}," +
