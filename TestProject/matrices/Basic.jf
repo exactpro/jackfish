@@ -14,3 +14,20 @@ Two Calls can have similar Id.
     #EndSubCase
 
 
+#TestCase
+RM38584 use name on assert
+    #Id;#RawTable
+    DATA1;Table
+    @;col1
+    0;val1
+    1;val2
+    2;val3
+    #EndRawTable
+
+    #Action;#Assert;#Table;#col1
+    TableSelect;This.Out.size() == 1;DATA1;'val2'
+
+    #Id;#Action;#Assert;#Table;#col1
+    tableSelect;TableSelect;tableSelect.Out.size() == 1;DATA1;'val2'
+
+
