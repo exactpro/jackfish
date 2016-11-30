@@ -28,7 +28,6 @@ import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.main.Main;
 import com.exactprosystems.jf.tool.settings.SettingsPanel;
 import com.exactprosystems.jf.tool.settings.Theme;
-
 import javafx.application.Platform;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
@@ -38,7 +37,6 @@ import javafx.scene.paint.Color;
 
 import java.net.URL;
 import java.util.Collection;
-import java.util.LinkedHashMap;
 import java.util.ResourceBundle;
 
 public class DictionaryFxController implements Initializable, ContainingParent
