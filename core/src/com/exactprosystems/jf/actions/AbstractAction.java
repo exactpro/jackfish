@@ -21,17 +21,15 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.documents.matrix.parser.Result;
 import com.exactprosystems.jf.documents.matrix.parser.Tokens;
 import com.exactprosystems.jf.documents.matrix.parser.items.ActionItem;
+import com.exactprosystems.jf.documents.matrix.parser.items.ActionItem.HelpKind;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixError;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 import com.exactprosystems.jf.documents.matrix.parser.items.TypeMandatory;
-import com.exactprosystems.jf.documents.matrix.parser.items.ActionItem.HelpKind;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
 import com.exactprosystems.jf.exceptions.ParametersException;
-
 import org.apache.log4j.Logger;
 
 import javax.lang.model.type.NullType;
-
 import java.lang.reflect.Field;
 import java.util.*;
 import java.util.Map.Entry;
@@ -139,6 +137,12 @@ public abstract class AbstractAction implements Cloneable
             clearResults();
             this.action.In = parameters;
             evaluator.getLocals().set(Tokens.This.get(), this.action);
+			if (!Str.IsNullOrEmpty(id))
+			{
+				Supplier<Variables> variables = owner.isGlobal() ? evaluator::getGlobals : evaluator::getLocals;
+				Consumer<String> consumer = str -> variables.get().set(str, this.action);
+				consumer.accept(id);
+			}
 
     		boolean parametersAreCorrect = parameters.evaluateAll(evaluator);
     		parametersAreCorrect = parametersAreCorrect && injectParameters(parameters);
@@ -217,12 +221,6 @@ public abstract class AbstractAction implements Cloneable
         }
 
         evaluator.getLocals().delete(Tokens.This.get());
-		if (!Str.IsNullOrEmpty(id))
-		{
-			Supplier<Variables> variables = owner.isGlobal() ? evaluator::getGlobals : evaluator::getLocals;
-			Consumer<String> consumer = str -> variables.get().set(str, this.action);
-			consumer.accept(id);
-		}
         return this.action.Result;
     }
 
