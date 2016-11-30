@@ -15,12 +15,12 @@ import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.custom.tab.CustomTab;
 import com.exactprosystems.jf.tool.custom.table.CustomTable;
-
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableRow;
 import javafx.scene.layout.GridPane;
 
@@ -56,8 +56,10 @@ public class SystemVarsFxController implements Initializable, ContainingParent
 	public void initialize(URL url, ResourceBundle resourceBundle)
 	{
 		this.tableView = new CustomTable<>(true);
+		MenuItem itemAdd = new MenuItem("Add new variable");
+		itemAdd.setOnAction(this::addNewVar);
+		this.tableView.getContextMenu().getItems().add(0,itemAdd);
 		this.grid.add(this.tableView, 0, 0);
-		GridPane.setColumnSpan(this.tableView, 2);
 	}
 
 	//----------------------------------------------------------------------------------------------

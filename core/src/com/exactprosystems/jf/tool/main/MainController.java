@@ -108,7 +108,7 @@ public class MainController implements Initializable, ContainingParent
 
 	public Menu					menuView;
 	public MenuItem				viewLogs;
-	public MenuItem				viewSettings;
+	public MenuItem editSettings;
 	public MenuItem				viewStore;
 	public MenuItem				viewAllTabs;
 
@@ -207,7 +207,7 @@ public class MainController implements Initializable, ContainingParent
 			editRedo.setGraphic(new ImageView(new Image(CssVariables.Icons.REDO_ICON_SMALL)));
 			matrixSchedule.setGraphic(new ImageView(new Image(CssVariables.Icons.SCHEDULER_MATRIX_ICON)));
 
-			viewSettings.setGraphic(new ImageView(new Image(CssVariables.Icons.SHOW_SETTINGS_ICON)));
+			editSettings.setGraphic(new ImageView(new Image(CssVariables.Icons.SHOW_SETTINGS_ICON)));
 			helpActionsHelp.setGraphic(new ImageView(new Image(CssVariables.Icons.ACTIONS_HELP_ICON)));
 			helpAboutProgram.setGraphic(new ImageView(new Image(CssVariables.Icons.ABOUT_PROGRAM_ICON)));
 		}, "Error on set tooltips or images"));

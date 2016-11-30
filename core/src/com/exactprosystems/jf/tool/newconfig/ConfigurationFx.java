@@ -29,6 +29,7 @@ import com.exactprosystems.jf.documents.matrix.parser.listeners.RunnerListener;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.SupportedEntry;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
+import com.exactprosystems.jf.tool.main.DocumentKind;
 import com.exactprosystems.jf.tool.main.Main;
 import javafx.concurrent.Task;
 import javafx.scene.control.Alert;
@@ -47,7 +48,7 @@ import java.util.stream.Collectors;
 public class ConfigurationFx extends Configuration
 {
 	//region fields
-	private Main mainModel;
+	private Main model;
 	private ConfigurationFxController controller;
 	private BorderPane pane;
 
@@ -66,7 +67,7 @@ public class ConfigurationFx extends Configuration
 		this(null, null, null, null);
 	}
 
-	public ConfigurationFx(DocumentFactory factory, String fileName, RunnerListener runnerListener, Main mainModel) throws Exception
+	public ConfigurationFx(DocumentFactory factory, String fileName, RunnerListener runnerListener, Main model) throws Exception
 	{
 		super(fileName, factory);
 
@@ -79,19 +80,19 @@ public class ConfigurationFx extends Configuration
 			super.runnerListener = runnerListener;
 		}
 
-		this.mainModel = mainModel;
+		this.model = model;
 	}
 	//endregion
 
 	//region Getters/Setters
-	
+
 	public void setPane(BorderPane pane)
 	{
 		this.pane = pane;
 	}
 
 	//endregion
-	
+
 	//region Utilities methods toString
 	public String matrixToString()
 	{
@@ -156,7 +157,7 @@ public class ConfigurationFx extends Configuration
 	{
 		super.load(reader);
 
-//		this.getServiceEntries().forEach(entry -> this.startedServices.put(entry.toString(), ConnectionStatus.NotStarted));
+		//		this.getServiceEntries().forEach(entry -> this.startedServices.put(entry.toString(), ConnectionStatus.NotStarted));
 	}
 
 	@Override
@@ -197,9 +198,9 @@ public class ConfigurationFx extends Configuration
 	{
 		super.close(settings);
 
-		if (this.mainModel != null)
+		if (this.model != null)
 		{
-			this.mainModel.setConfiguration(null);
+			this.model.setConfiguration(null);
 		}
 
 		// TODO
@@ -209,17 +210,17 @@ public class ConfigurationFx extends Configuration
 	@Override
 	protected void afterRedoUndo()
 	{
-//		// This need to refresh table items
-//		int selectedItem = this.treeView.getSelectionModel().getSelectedIndex();
-//		if (selectedItem == 0)
-//		{
-//			this.treeView.getSelectionModel().select(1);
-//		}
-//		else
-//		{
-//			this.treeView.getSelectionModel().selectFirst();
-//		}
-//		this.treeView.getSelectionModel().select(selectedItem);
+		//		// This need to refresh table items
+		//		int selectedItem = this.treeView.getSelectionModel().getSelectedIndex();
+		//		if (selectedItem == 0)
+		//		{
+		//			this.treeView.getSelectionModel().select(1);
+		//		}
+		//		else
+		//		{
+		//			this.treeView.getSelectionModel().selectFirst();
+		//		}
+		//		this.treeView.getSelectionModel().select(selectedItem);
 	}
 	//endregion
 
@@ -230,6 +231,33 @@ public class ConfigurationFx extends Configuration
 
 	public void updateProject() throws Exception
 	{
+	}
+
+	public void newDocument(DocumentKind kind) throws Exception
+	{
+		switch (kind)
+		{
+			case MATRIX:
+				this.model.newMatrix();
+				break;
+			case GUI_DICTIONARY:
+				this.model.newDictionary();
+				break;
+			case SYSTEM_VARS:
+				this.model.newSystemVars();
+				break;
+			case PLAIN_TEXT:
+				this.model.newPlainText();
+				break;
+			case CSV:
+				this.model.newCsv();
+				break;
+		}
+	}
+
+	public void newLibrary() throws Exception
+	{
+		this.model.newLibrary();
 	}
 	//endregion
 
@@ -297,7 +325,7 @@ public class ConfigurationFx extends Configuration
 
 	public void openMatrix(File file) throws Exception
 	{
-		this.mainModel.loadMatrix(path(file));
+		this.model.loadMatrix(path(file));
 	}
 
 	public void addNewMatrix(File parentFolder, String fileName) throws Exception
@@ -335,12 +363,12 @@ public class ConfigurationFx extends Configuration
 
 	public void openLibrary(File file) throws Exception
 	{
-		this.mainModel.loadMatrix(path(file));
+		this.model.loadMatrix(path(file));
 	}
 
 	public void addNewLibrary(File parentFolder, String fileName) throws Exception
 	{
-		this.mainModel.newLibrary(checkNameExtention(parentFolder.getAbsolutePath() + File.separator + fileName, Configuration.matrixExt));
+		this.model.newLibrary(checkNameExtention(parentFolder.getAbsolutePath() + File.separator + fileName, Configuration.matrixExt));
 		displayLibrary();
 	}
 
@@ -358,7 +386,7 @@ public class ConfigurationFx extends Configuration
 	//region variable
 	public void openVariableFile(File file) throws Exception
 	{
-		this.mainModel.loadSystemVars(path(file));
+		this.model.loadSystemVars(path(file));
 	}
 
 	public void excludeVarsFile(String file)
@@ -392,7 +420,7 @@ public class ConfigurationFx extends Configuration
 
 	public void openReport(File file) throws Exception
 	{
-		this.mainModel.openReport(file);
+		this.model.openReport(file);
 	}
 
 	public void removeReport(File file) throws Exception
@@ -637,12 +665,12 @@ public class ConfigurationFx extends Configuration
 
 	public void openAppsDictionary(File file) throws Exception
 	{
-		this.mainModel.loadDictionary(path(file), null);
+		this.model.loadDictionary(path(file), null);
 	}
 
 	public void openAppsDictionary(File file, String adapter) throws Exception
 	{
-		this.mainModel.loadDictionary(path(file), adapter);
+		this.model.loadDictionary(path(file), adapter);
 	}
 
 	public void showAppHelp(AppEntry entry) throws Exception

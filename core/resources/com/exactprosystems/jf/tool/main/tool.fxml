@@ -63,19 +63,20 @@
 										<MenuItem fx:id="fileRunFromFile" mnemonicParsing="false" onAction="#runFromFile" text="Run from file" />
 										<MenuItem fx:id="fileOpenReport" mnemonicParsing="false" onAction="#openReport" text="Open report" />
 										<SeparatorMenuItem mnemonicParsing="false" />
-										<MenuItem fx:id="fileClose" mnemonicParsing="false" onAction="#closeApplication" text="Close" />
+										<MenuItem fx:id="fileClose" mnemonicParsing="false" onAction="#closeApplication" text="Exit" />
 									</items>
 								</Menu>
 								<Menu fx:id="menuEdit" mnemonicParsing="false" text="Edit">
 									<items>
 										<MenuItem fx:id="editUndo" mnemonicParsing="false" onAction="#undo" text="Undo" />
 										<MenuItem fx:id="editRedo" mnemonicParsing="false" onAction="#redo" text="Redo" />
+										<SeparatorMenuItem/>
+										<MenuItem fx:id="editSettings" mnemonicParsing="false" onAction="#showSettingsPanel" text="Settings" />
 									</items>
 								</Menu>
 								<Menu fx:id="menuView" mnemonicParsing="false" text="View">
 									<items>
 										<MenuItem fx:id="viewLogs" mnemonicParsing="false" onAction="#openMainLog" text="Logs" />
-										<MenuItem fx:id="viewSettings" mnemonicParsing="false" onAction="#showSettingsPanel" text="Settings" />
 										<MenuItem fx:id="viewStore" mnemonicParsing="false" onAction="#showStore" text="Store" />
 										<SeparatorMenuItem />
 										<MenuItem fx:id="viewAllTabs" mnemonicParsing="false" onAction="#showAllTabs" text="Show tabs" />
