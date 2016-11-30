@@ -1,3 +1,15 @@
+30.11.2016 4.3.0.1678
+Fix #37959.
+downgraded selenium for v2.53.1
+Testing Ubuntu:
+         Chrome 54.0.2840.100 (64-bit) work
+         Firefox 46.0 work
+Testing Windows7
+         Chrome 54.0.2840.99 m (64-bit) work
+         Firefox 46.0 work
+         InternetExplorer 11.0.9600.18349 work
+
+--------------------------------------------------------------------------------
 30.11.2016 4.3.0.1676
 Bug #38584 fixed. Now, we can use name of action into action assert
 
