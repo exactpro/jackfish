@@ -190,13 +190,15 @@ public class DialogValidate extends AbstractAction
                     totalResult = false;
                 }
 
-                table.addValues(parameter.getName(), expectedSize == actualSize ? "Ok" : "Error");
+                table.addValues(parameter.getName(), expectedSize == actualSize 
+                        ? "Passed" 
+                        : ("Failed expected: " + expectedSize + " actual: " + actualSize));
             }
         }
 
 		if (!totalResult)
 		{
-			super.setError(message(id, window, run, null, "Dialog verifing failed."), ErrorKind.NOT_EQUAL);
+			super.setError(message(id, window, run, null, "Dialog verifing failed."), ErrorKind.FAIL);
 			return;
 		}
 

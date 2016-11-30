@@ -1,3 +1,16 @@
+--------------------------------------------------------------------------------
+30.11.2016 4.3.0.1680
+
+#38653 feature: need a DesktopScreenshot action
+
+some example
+
+#Id;#Action;#Description
+DSK1;DesktopScreenshot;'The full screenshot'
+#Id;#Action;#Image
+IMGRPT1;ImageReport;DSK1.Out
+
+--------------------------------------------------------------------------------
 30.11.2016 4.3.0.1678
 Fix #37959.
 downgraded selenium for v2.53.1

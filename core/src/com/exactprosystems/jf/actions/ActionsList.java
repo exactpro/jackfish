@@ -53,6 +53,7 @@ public class ActionsList
 		        ServiceStart.class,
 		        ServiceStop.class,
 		        Check.class,
+		        DesktopScreenshot.class,
 		        DialogCheckLayout.class,
 		        DialogClose.class,
 		        DialogFill.class,
