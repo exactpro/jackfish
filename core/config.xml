@@ -109,6 +109,10 @@
             <key>GeckoDriverPath</key>
             <value>unix/geckodriver-linux-0.11.1-x64.</value>
         </parameters>
+        <parameters>
+            <key>LogLevel</key>
+            <value>ERROR</value>
+        </parameters>
         <appDescription>Web applications</appDescription>
         <appDicPath>dic/gui/LayoutTesting.xml</appDicPath>
         <appJar>${JF}/apps/web.jar</appJar>
