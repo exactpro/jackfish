@@ -8,10 +8,7 @@
 
 package com.exactprosystems.jf.app;
 
-import com.exactprosystems.jf.api.app.ControlKind;
-import com.exactprosystems.jf.api.app.IApplication;
-import com.exactprosystems.jf.api.app.IApplicationFactory;
-import com.exactprosystems.jf.api.app.IGuiDictionary;
+import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.common.ParametersKind;
 
 import java.util.Scanner;
@@ -19,18 +16,19 @@ import java.util.Scanner;
 public class WinAppFactory implements IApplicationFactory
 {
 	private static final int		requiredMajorVersion	= 2;
-	private static final int		requiredMinorVersion	= 24;
+	private static final int		requiredMinorVersion	= 25;
 
-	public final static String		jreExecName				= "jreExec";
-	public final static String		jreArgsName				= "jreArgs";
-	public static final String maxTimeout = "MaxTimeout";
+	public static final String		logLevel				= "LogLevel";
+	public static final String		jreExecName				= "jreExec";
+	public static final String		jreArgsName				= "jreArgs";
+	public static final String		maxTimeout				= "MaxTimeout";
 
 	public static final String		mainWindowName			= "MainWindow";
 	public static final String		mainWindowHeight		= "Height";
 	public static final String		mainWindowWidth			= "Width";
 	public static final String		pidName					= "PID";
 	public static final String		controlKindName			= "ControlKind";
-	public static final String connectionTimeout = "Timeout";
+	public static final String		connectionTimeout		= "Timeout";
 
 	public static final String		execName				= "Exec";
 	public static final String		workDirName				= "WorkDir";
@@ -57,7 +55,7 @@ public class WinAppFactory implements IApplicationFactory
 	{
 		switch (kind)
 		{
-			case LOAD:		return new String[] { jreExecName, jreArgsName, maxTimeout};
+			case LOAD:		return new String[] { jreExecName, jreArgsName, maxTimeout, logLevel};
 			case START:		return new String[] { execName, workDirName, argsName };
 			case CONNECT:
 				return new String[]{mainWindowName, mainWindowHeight, mainWindowWidth, pidName, controlKindName, connectionTimeout};

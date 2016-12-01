@@ -56,6 +56,12 @@ public class ProxyWebApp extends ProxyApplication
 			driverParameters.put(ProxyApplication.JVMparametersName, jreArgs);
 		}
 
+		String logLevel = driverParameters.get(WebAppFactory.logLevel);
+		if (!Str.IsNullOrEmpty(logLevel))
+		{
+			driverParameters.put(ProxyApplication.remoteLogLevelName, logLevel);
+		}
+
 		String safariDriverPath 	= driverParameters.get(WebAppFactory.safariDriverPathName);
 		if (safariDriverPath != null && !safariDriverPath.isEmpty())
 		{
@@ -94,7 +100,6 @@ public class ProxyWebApp extends ProxyApplication
 		if (!Str.IsNullOrEmpty(usePrivateMode))
 		{
 			parameters.put(WebAppFactory.usePrivateMode, Boolean.valueOf(usePrivateMode).toString());
-
 		}
 	}
 }
