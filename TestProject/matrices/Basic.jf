@@ -115,6 +115,6 @@ RM37970 fail into loops works incorrectly
         #EndForEach
 
     #EndSubCase
->>>>>>> refs/remotes/origin/RM37970_fail_error_in_loops
+
 
 
