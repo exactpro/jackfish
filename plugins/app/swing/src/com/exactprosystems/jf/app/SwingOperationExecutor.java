@@ -37,9 +37,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 import java.awt.*;
-import java.awt.event.InputEvent;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.rmi.RemoteException;
@@ -254,13 +252,12 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 			{
 				point = scrollToRow(((JTree) component.target), y);
 			}
-			final ArrayList<MouseEvent> events = new ArrayList<>();
-
 			int modifiers = createModifiers();
 
+			final ArrayList<AWTEvent> events = new ArrayList<>();
+			events.add(new FocusEvent(component.target, FocusEvent.FOCUS_GAINED));
 			events.add(new MouseEvent(component.target, MouseEvent.MOUSE_ENTERED, System.currentTimeMillis(), modifiers, point.x, point.y, 0, true, MouseEvent.NOBUTTON));
 			events.add(new MouseEvent(component.target, MouseEvent.MOUSE_MOVED, System.currentTimeMillis(), modifiers, point.x, point.y, 0, true, MouseEvent.NOBUTTON));
-
 
 			switch (action)
 			{
@@ -300,7 +297,7 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 				@Override
 				public void run()
 				{
-					for (MouseEvent event : events)
+					for (AWTEvent event : events)
 					{
 						logger.debug("event : "  + event.toString());
 						target.dispatchEvent(event);
@@ -478,7 +475,7 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 							comboBox.setSelectedIndex(index);
 						}
 					});
-					
+
 					return true;
 				}
 				return false;
@@ -550,7 +547,7 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 								comboBox.setSelectedIndex(index);
 							}
 						});
-						
+
 						return true;
 					}
 				}
@@ -930,10 +927,12 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 			final JTable table = component.targetCastedTo(JTable.class);
 			JTableLocation jTableLocation = new JTableLocation();
 			Point point = jTableLocation.pointAt(table, row, column);
-			final ArrayList<MouseEvent> events = new ArrayList<>();
 			int modifiers = createModifiers();
-			events.add(new MouseEvent(component.target, MouseEvent.MOUSE_ENTERED, System.currentTimeMillis(), modifiers, point.x, point.y, 0, true, MouseEvent.NOBUTTON));
-			events.add(new MouseEvent(component.target, MouseEvent.MOUSE_MOVED, System.currentTimeMillis(), modifiers, point.x, point.y, 0, true, MouseEvent.NOBUTTON));
+
+			final ArrayList<AWTEvent> events = new ArrayList<>();
+			events.add(new FocusEvent(table, FocusEvent.FOCUS_GAINED));
+			events.add(new MouseEvent(table, MouseEvent.MOUSE_ENTERED, System.currentTimeMillis(), modifiers, point.x, point.y, 0, true, MouseEvent.NOBUTTON));
+			events.add(new MouseEvent(table, MouseEvent.MOUSE_MOVED, System.currentTimeMillis(), modifiers, point.x, point.y, 0, true, MouseEvent.NOBUTTON));
 			switch (action)
 			{
 				case LeftClick:
@@ -974,7 +973,7 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 				@Override
 				public void run()
 				{
-					for (MouseEvent event : events)
+					for (AWTEvent event : events)
 					{
 						logger.debug("event : "  + event.toString());
 						table.dispatchEvent(event);
