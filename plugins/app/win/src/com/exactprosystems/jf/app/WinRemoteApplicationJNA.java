@@ -142,8 +142,7 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 			logger.info(String.format("connectionDerived(%s, %d, %d, %d, %s, $d)", title, height, width, pid, controlKind, timeout));
 			logger.info("All parameters : " + args.toString());
 			this.driver = new JnaDriverImpl(this.logger);
-			//TODO throw via parameters
-			setLogger(this.driver, CSharpLogLevel.All.logLevel());
+			setLogger(this.driver, args.get(logLevel));
 			setMaxTimeout(this.driver, args.get(maxTimeout));
 			this.operationExecutor = new WinOperationExecutorJNA(this.logger, this.driver);
 			return this.driver.connect(title, height, width, pid, controlKind, timeout);
@@ -180,8 +179,7 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 			this.logger.info("##########################################################################################################");
 			this.logger.info("runDerived(" + args + ")");
 			this.driver = new JnaDriverImpl(this.logger);
-			//TODO throw via parameters
-			setLogger(this.driver, CSharpLogLevel.All.logLevel());
+			setLogger(this.driver, args.get(logLevel));
 			setMaxTimeout(this.driver, args.get(maxTimeout));
 			this.operationExecutor = new WinOperationExecutorJNA(this.logger, this.driver);
 			return this.driver.run(exec, workDir, parameters);

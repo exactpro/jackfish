@@ -5,12 +5,11 @@ import com.exactprosystems.jf.api.error.app.InternalErrorException;
 public enum CSharpLogLevel
 {
 	All("All"),
-	Error("Error"),
-	None("None");
+	Error("Error");
 
 	private String name;
 
-	private CSharpLogLevel(String name)
+	CSharpLogLevel(String name)
 	{
 		this.name = name;
 	}
@@ -28,7 +27,8 @@ public enum CSharpLogLevel
 				return All;
 			case "ERROR":
 				return Error;
+			default:
+				return All;
 		}
-		throw new InternalErrorException("Unknown log level : " + str);
 	}
 }

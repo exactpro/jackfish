@@ -9,6 +9,7 @@
 package com.exactprosystems.jf.app;
 
 import com.exactprosystems.jf.api.app.ProxyApplication;
+import com.exactprosystems.jf.api.common.Str;
 
 import java.util.Arrays;
 import java.util.Map;
@@ -65,6 +66,13 @@ public class ProxyWinGuiApp extends ProxyApplication
 		{
 			System.out.println(WinAppFactory.maxTimeout + " = " + maxTimeout);
 			parameters.put(WinAppFactory.maxTimeout, maxTimeout);
+		}
+		String logLevel = driverParameters.get(WinAppFactory.logLevel);
+		if (!Str.IsNullOrEmpty(logLevel))
+		{
+			System.out.println(WinAppFactory.logLevel + "=" + logLevel);
+			driverParameters.put(ProxyApplication.remoteLogLevelName, logLevel);
+			parameters.put(WinAppFactory.logLevel, logLevel);
 		}
 	}
 
