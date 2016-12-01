@@ -19,8 +19,9 @@ import java.util.Scanner;
 public class SwingAppFactory implements IApplicationFactory
 {
 	private static final int requiredMajorVersion = 2;
-	private static final int requiredMinorVersion = 24;
+	private static final int requiredMinorVersion = 25;
 
+	public static final String		logLevel				= "LogLevel";
 	public final static String jreExecName 		= "jreExec";
 	public final static String jreArgsName 		= "jreArgs";
 	public final static String mainClassName 	= "MainClass";
@@ -50,7 +51,7 @@ public class SwingAppFactory implements IApplicationFactory
 	{
 		switch (kind)
 		{
-			case LOAD:		return new String[] { jreExecName, jreArgsName };
+			case LOAD:		return new String[] { jreExecName, jreArgsName, logLevel };
 			case START:		return new String[] { jarName, argsName, mainClassName };
 			case CONNECT:	return new String[] { urlName };
 			default:		return empty;	

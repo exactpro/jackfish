@@ -19,8 +19,9 @@ import java.util.Scanner;
 public class WebAppFactory implements IApplicationFactory
 {
 	private static final int requiredMajorVersion = 2;
-	private static final int requiredMinorVersion = 24;
+	private static final int requiredMinorVersion = 25;
 
+	public static final String logLevel				= "LogLevel";
 	public final static String jreExecName 			= "jreExec";
 	public final static String jreArgsName 			= "jreArgs";
 
@@ -62,7 +63,7 @@ public class WebAppFactory implements IApplicationFactory
 		switch (kind)
 		{
 			case LOAD:		return new String[] { jreExecName, jreArgsName, safariDriverPathName, chromeDriverPathName, geckoDriverPathName, ieDriverPathName, chromeDriverBinary, firefoxProfileDir,
-					usePrivateMode };
+					usePrivateMode, logLevel };
 			case START:		return new String[] { browserName, urlName };
 			case PROPERTY:	return new String[] { propertyUrlName, propertyTitle };
 			default:		return empty;	

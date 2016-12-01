@@ -8,10 +8,11 @@
 
 package com.exactprosystems.jf.app;
 
+import com.exactprosystems.jf.api.app.ProxyApplication;
+import com.exactprosystems.jf.api.common.Str;
+
 import java.util.Arrays;
 import java.util.Map;
-
-import com.exactprosystems.jf.api.app.ProxyApplication;
 
 public class ProxySwingApp extends ProxyApplication
 {
@@ -51,6 +52,12 @@ public class ProxySwingApp extends ProxyApplication
 		{
 			System.out.println(SwingAppFactory.jreArgsName + "=" + jreArgs);
 			driverParameters.put(ProxyApplication.JVMparametersName, jreArgs);
+		}
+		String logLevel = driverParameters.get(SwingAppFactory.logLevel);
+		if (!Str.IsNullOrEmpty(logLevel))
+		{
+			System.out.println(SwingAppFactory.logLevel + "=" + logLevel);
+			driverParameters.put(ProxyApplication.remoteLogLevelName, logLevel);
 		}
 	}
 }
