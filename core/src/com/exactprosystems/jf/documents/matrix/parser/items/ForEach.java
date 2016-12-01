@@ -30,6 +30,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 
 @MatrixItemAttribute(
 	description 	= "Loop from start value to end value with step.", 
@@ -173,18 +175,14 @@ public final class ForEach extends MatrixItem
 
 			Iterator<?> iterator = ((Iterable<?>)inValue).iterator(); 
 			int count = 0;
+            AtomicReference<Object> current = new AtomicReference<>(null);
 
-			while (iterator.hasNext())
+			while (checkCondition(iterator, current, evaluator))
 			{
-				Object currentValue = iterator.next();
-				evaluator.getLocals().set(this.var.get(), currentValue);
-
-				report.outLine(this, null, String.format("loop %s = %s", this.var, Str.asString(currentValue)), count++);
+				report.outLine(this, null, String.format("loop %s = %s", this.var, Str.asString(current.get())), count++);
 
 				ret = executeChildren(start, context, listener, evaluator, report, new Class<?>[] { OnError.class }, null);
 				result = ret.getResult();
-
-				evaluator.getLocals().set(this.var.get(), currentValue);
 
 				if (result == Result.Failed)
 				{
@@ -201,26 +199,26 @@ public final class ForEach extends MatrixItem
 						return ret;
 					}
 				}
+				
+                if(result == Result.Break)
+                {
+                    break;
+                }
+                if (result == Result.Failed)
+                {
+                    return new ReturnAndResult(start, ret.getError(), Result.Failed);
+                }
+                if (result == Result.Stopped || result == Result.Return)
+                {
+                    return new ReturnAndResult(start, result, ret.getOut());
+                }
+                if (result == Result.Continue)
+                {
+                    continue;
+                }
+            }
 
-				
-				if(result == Result.Break)
-				{
-					result = Result.Passed;
-					break;
-				}
-				
-				if (result == Result.Failed || result == Result.Stopped || result == Result.Return)
-				{
-					break;
-				}
-				
-				if (result == Result.Continue)
-				{
-					continue;
-				}
-			}
-
-			return new ReturnAndResult(start, result == null || result == Result.Continue ? Result.Passed : result, ret == null ? null : ret.getOut());
+            return new ReturnAndResult(start, Result.Passed, null);
 		}
 		catch (Exception e)
 		{
@@ -228,6 +226,20 @@ public final class ForEach extends MatrixItem
 			listener.error(this.owner, getNumber(), this, e.getMessage());
 			return new ReturnAndResult(start, Result.Failed, e.getMessage(), ErrorKind.EXCEPTION, this);
 		}
+	}
+	
+	private boolean checkCondition(Iterator<?> iterator, AtomicReference<Object> current, AbstractEvaluator evaluator)
+	{
+	    boolean ret = iterator.hasNext();
+	    
+	    if (ret)
+	    {
+            Object currentValue = iterator.next();
+            current.set(currentValue);
+            evaluator.getLocals().set(this.var.get(), currentValue);
+	    }
+	    
+	    return ret;
 	}
 
 	private MutableValue<String>	var;

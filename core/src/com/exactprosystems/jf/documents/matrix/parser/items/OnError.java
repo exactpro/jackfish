@@ -46,11 +46,6 @@ public final class OnError extends MatrixItem
 		this.matrixError = error;
 	}
 
-	public void setError(String error, ErrorKind errorKind, MatrixItem where)
-	{
-		this.matrixError = new MatrixError(error, errorKind, where);
-	}
-	
 	@Override
 	protected Object displayYourself(DisplayDriver driver, Context context)
 	{

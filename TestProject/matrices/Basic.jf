@@ -30,4 +30,91 @@ RM38584 use name on assert
     #Id;#Action;#Assert;#Table;#col1
     tableSelect;TableSelect;tableSelect.Out.size() == 1;DATA1;'val2'
 
+#TestCase
+RM37970 fail into loops works incorrectly
+    #Step
+    'while'
+        #Id;#Call
+        CALL_1;SUB_1
+
+        #OnError
+            #Assert;#Message
+            err.Message == 'some error';'Wrong ' + err.Message
+
+
+    #EndStep
+
+    #Step
+    'for'
+        #Id;#Call
+        CALL_1;SUB_2
+
+        #OnError
+            #Assert;#Message
+            err.Message == 'some error';'Wrong ' + err.Message
+
+
+    #EndStep
+
+    #Step
+    'foreach'
+        #Id;#Call
+        CALL_1;SUB_3
+
+        #OnError
+            #Assert;#Message
+            err.Message == 'some error';'Wrong ' + err.Message
+
+
+    #EndStep
+
+    #Id;#SubCase
+    SUB_1;while
+        #While
+        true
+            #Fail
+            'some error'
+
+            #OnError
+                #Fail
+                err
+
+
+        #EndWhile
+
+    #EndSubCase
+
+    #Id;#SubCase
+    SUB_2;for
+        #For;#From;#To;#Step
+        i;1;2;1
+            #Fail
+            'some error'
+
+            #OnError
+                #Fail
+                err
+
+
+        #EndFor
+
+    #EndSubCase
+
+    #Id;#SubCase
+    SUB_3;foreach
+        #ForEach;#In
+        a;[1,3]
+            #Fail
+            'some error'
+
+            #OnError
+                #Fail
+                err
+
+
+        #EndForEach
+
+    #EndSubCase
+>>>>>>> refs/remotes/origin/RM37970_fail_error_in_loops
+
 

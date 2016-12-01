@@ -145,66 +145,47 @@ public class While extends MatrixItem
 
 			this.loops = 0;
 			
-			this.condition.evaluate(evaluator);
-			if (!this.condition.isValid())
+			while(conditonResult(evaluator))
 			{
-				throw new Exception("Error in expression #While");
-			}
-			
-			Object bool = this.condition.getValue();
-			if (bool instanceof Boolean)
-			{
-				while((Boolean)bool)
+				report.outLine(this, null, "loop", this.loops);
+
+				ret = executeChildren(start, context, listener, evaluator, report, new Class<?>[] { OnError.class }, null);
+				result = ret.getResult();
+
+				if (result == Result.Failed)
 				{
-					report.outLine(this, null, "loop", this.loops);
-
-					ret = executeChildren(start, context, listener, evaluator, report, new Class<?>[] { OnError.class }, null);
-					result = ret.getResult();
-
-					this.loops++;
-					this.condition.evaluate(evaluator);
-					if (!this.condition.isValid())
+					MatrixItem branchOnError = super.find(false, OnError.class, null);
+					if (branchOnError != null && branchOnError instanceof OnError)
 					{
-						throw new Exception("Error in expression #While");
+						((OnError)branchOnError).setError(ret.getError());
+						ret = branchOnError.execute(context, listener, evaluator, report);
+						result = ret.getResult();
 					}
-					bool = this.condition.getValue();
-					
-					if (result == Result.Failed)
+					else
 					{
-						MatrixItem branchOnError = super.find(false, OnError.class, null);
-						if (branchOnError != null && branchOnError instanceof OnError)
-						{
-							((OnError)branchOnError).setError(ret.getError());
-							ret = branchOnError.execute(context, listener, evaluator, report);
-							result = ret.getResult();
-						}
-						else
-						{
-							return ret;
-						}
-					}
-
-					if(result == Result.Break)
-					{
-						result = Result.Passed;
-						break;
-					}
-					
-					if (result == Result.Failed || result == Result.Stopped || result == Result.Return)
-					{
-						break;
-					}
-					
-					if (result == Result.Continue)
-					{
-						continue;
+						return ret;
 					}
 				}
 
-				return new ReturnAndResult(start, result == null || result == Result.Continue ? Result.Passed : result, ret == null ? null : ret.getOut());
+				if(result == Result.Break)
+				{
+					break;
+				}
+                if (result == Result.Failed)
+                {
+                    return new ReturnAndResult(start, ret.getError(), Result.Failed);
+                }
+				if (result == Result.Stopped || result == Result.Return)
+				{
+		            return new ReturnAndResult(start, result, ret.getOut());
+				}
+				if (result == Result.Continue)
+				{
+					continue;
+				}
 			}
-					
-			throw new Exception("result is not type of Boolean");
+
+			return new ReturnAndResult(start, Result.Passed, null);
 		} 
 		catch (Exception e)
 		{
@@ -214,6 +195,24 @@ public class While extends MatrixItem
 		}
 	}
 
+    private boolean conditonResult(AbstractEvaluator evaluator) throws Exception
+    {
+        this.loops++;
+
+        this.condition.evaluate(evaluator);
+        if (!this.condition.isValid())
+        {
+            throw new Exception("Error in expression #While");
+        }
+        
+        Object bool = this.condition.getValue();
+        if (! (bool instanceof Boolean))
+        {
+            throw new Exception("result is not type of Boolean");
+        }
+        return (Boolean)bool;
+    }
+    
 	private Parameter condition;
 	
 	private int loops = 0;

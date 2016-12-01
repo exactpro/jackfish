@@ -394,7 +394,13 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 
 		report.itemIntermediate(this);
 		
+		// TODO handling exceptions should be here
+		
 		this.result = executeItSelf(start, context, listener, evaluator, report, this.parameters);
+		
+		
+		
+		
 		long duration = this.result.getTime();
 		
 		if (this.result.getResult() == Result.Failed && isTrue(this.ignoreErr.get()))
