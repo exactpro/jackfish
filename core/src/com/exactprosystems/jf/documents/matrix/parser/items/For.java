@@ -28,6 +28,7 @@ import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicReference;
 
 @MatrixItemAttribute(
 		description 	= "Loop from start value to end value with step.", 
@@ -217,20 +218,14 @@ public final class For extends MatrixItem
 			}
 			
 			// start value
-			Number currentValue = (Number)fromValue;
-			evaluator.getLocals().set(this.var.get(), currentValue);
-			boolean condition = checkCondition(toValue, stepValue, currentValue);
-
-			while(condition)
+			AtomicReference<Number> current = new AtomicReference<>((Number)fromValue);
+			
+			while(checkCondition(current, toValue, stepValue, evaluator))
 			{
-				report.outLine(this, null, String.format("loop %s = %s", this.var, currentValue), currentValue.intValue());
+				report.outLine(this, null, String.format("loop %s = %s", this.var, current.get()), current.get().intValue());
 				
 				ret = executeChildren(start, context, listener, evaluator, report, new Class<?>[] { OnError.class }, null);
 				result = ret.getResult();
-				
-				currentValue = currentValue.intValue() + ((Number)stepValue).intValue(); 
-				condition = checkCondition(toValue, stepValue, currentValue);
-				evaluator.getLocals().set(this.var.get(), currentValue);
 				
 				if (result == Result.Failed)
 				{
@@ -248,24 +243,25 @@ public final class For extends MatrixItem
 					}
 				}
 
-				if(result == Result.Break)
-				{
-					result = Result.Passed;
-					break;
-				}
-				
-				if (result == Result.Failed || result == Result.Stopped || result == Result.Return)
-				{
-					break;
-				}
-				
-				if (result == Result.Continue)
-				{
-					continue;
-				}
-			}
+                if(result == Result.Break)
+                {
+                    break;
+                }
+                if (result == Result.Failed)
+                {
+                    return new ReturnAndResult(start, ret.getError(), Result.Failed);
+                }
+                if (result == Result.Stopped || result == Result.Return)
+                {
+                    return new ReturnAndResult(start, result, ret.getOut());
+                }
+                if (result == Result.Continue)
+                {
+                    continue;
+                }
+            }
 
-			return new ReturnAndResult(start, result == null || result == Result.Continue ? Result.Passed : result, ret == null ? null : ret.getOut());
+            return new ReturnAndResult(start, Result.Passed, null);
 		} 
 		catch (Exception e)
 		{
@@ -275,8 +271,15 @@ public final class For extends MatrixItem
 		}
 	}
 
-	private boolean checkCondition(Object toValue, Object stepValue, Number currentValue)
+	private boolean checkCondition(AtomicReference<Number> current, Object toValue, Object stepValue, AbstractEvaluator evaluator)
 	{
+	    Number currentValue = current.get();
+	    
+        evaluator.getLocals().set(this.var.get(), currentValue);
+        currentValue = currentValue.intValue() + ((Number)stepValue).intValue();
+        current.set(currentValue);
+        evaluator.getLocals().set(this.var.get(), currentValue);
+	    
 		return ((Number)stepValue).intValue() > 0 
 				? ((Number)currentValue).intValue() <= ((Number)toValue).intValue()
 				: ((Number)currentValue).intValue() >= ((Number)toValue).intValue();
