@@ -7,6 +7,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.exactprosystems.jf.tool.newconfig.nodes;
 
+import com.exactprosystems.jf.api.common.SerializablePair;
 import com.exactprosystems.jf.documents.config.ClientEntry;
 import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.tool.Common;
@@ -17,10 +18,8 @@ import com.exactprosystems.jf.tool.newconfig.ConfigurationTreeView;
 import com.exactprosystems.jf.tool.newconfig.TablePair;
 import javafx.scene.Node;
 import javafx.scene.control.ContextMenu;
-import javafx.scene.control.MenuItem;
 import javafx.scene.control.TreeItem;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
 
 import java.io.File;
@@ -35,6 +34,15 @@ public class ClientTreeNode extends TreeNode
 	private TreeItem<TreeNode>			treeItem;
 	private TreeItem<TreeNode>			clientTreeItem;
 	private ClientDictionaryTreeNode	clientDictionaryTreeNode;
+
+	private static final SerializablePair<String, String> ADD_NEW_CLIENT = new SerializablePair<>("Add new client", CssVariables.Icons.ADD_PARAMETER_ICON);
+	private static final SerializablePair<String, String> TEST_VERSION = new SerializablePair<>("Test versions", null);
+	private static final SerializablePair<String, String> REFRESH = new SerializablePair<>("Refresh", CssVariables.Icons.REFRESH);
+	private static final SerializablePair<String, String> EXCLUDE_CLIENT_DIC_FOLDER = new SerializablePair<>("Exclude client dictionary folder", CssVariables.Icons.REMOVE_PARAMETER_ICON);
+	private static final SerializablePair<String, String> OPEN_DICTIONARY = new SerializablePair<>("Open dictionary", CssVariables.Icons.APP_DICTIONARY_ICON);
+	private static final SerializablePair<String, String> REMOVE = new SerializablePair<>("Remove", CssVariables.Icons.REMOVE_PARAMETER_ICON);
+	private static final SerializablePair<String, String> SHOW_POSSIBILITIES = new SerializablePair<>("Possibilities", null);
+	private static final SerializablePair<String, String> ADD_ALL_KNOWN_PARAMETERS = new SerializablePair<>("Add all known parameters", CssVariables.Icons.HELP_ICON);
 
 	public ClientTreeNode(ConfigurationFx model, TreeItem<TreeNode> treeItem)
 	{
@@ -52,9 +60,16 @@ public class ClientTreeNode extends TreeNode
 				"Add client",
 				e -> ConfigurationTreeView.showInputDialog("Enter new client name").ifPresent(
 						res -> Common.tryCatch(() -> this.model.addNewClientEntry(res), "Error on add new client")));
-		MenuItem itemTestVersion = new MenuItem("Test versions");
-		itemTestVersion.setOnAction(e -> Common.tryCatch(() -> this.model.testClientVersion(), "Error on test client version"));
-		menu.getItems().add(itemTestVersion);
+		menu.getItems().addAll(
+				ConfigurationTreeView.createItem(TEST_VERSION, () -> this.model.testAppVersion(), "Error on test app version"),
+				ConfigurationTreeView.createDisabledItem(REFRESH),
+				ConfigurationTreeView.createDisabledItem(EXCLUDE_CLIENT_DIC_FOLDER),
+				ConfigurationTreeView.createDisabledItem(OPEN_DICTIONARY),
+				ConfigurationTreeView.createDisabledItem(REMOVE),
+				ConfigurationTreeView.createDisabledItem(SHOW_POSSIBILITIES),
+				ConfigurationTreeView.createDisabledItem(ADD_ALL_KNOWN_PARAMETERS),
+				ConfigurationTreeView.createDisabledItem("Git", null)
+		);
 		return Optional.of(menu);
 	}
 
@@ -92,18 +107,17 @@ public class ClientTreeNode extends TreeNode
 		public Optional<ContextMenu> contextMenu()
 		{
 			ContextMenu menu = new ContextMenu();
-			MenuItem itemRemove = new MenuItem("Remove", new ImageView(new Image(CssVariables.Icons.REMOVE_PARAMETER_ICON)));
-			itemRemove.setOnAction(e -> Common.tryCatch(() -> model.removeClientEntry(getEntry()),
-					String.format("Error on remove entry '%s'", getEntry().toString())));
-
-			MenuItem itemPossibilities = new MenuItem("Possibilities");
-			itemPossibilities.setOnAction(e -> Common.tryCatch(() -> model.showPossibilities(getEntry()),
-					String.format("Error on show possibilities for entry '%s'", getEntry().toString())));
-
-			MenuItem itemAddAll = new MenuItem("Add all known params");
-			itemAddAll.setOnAction(e -> Common.tryCatch(() -> model.addAllClientParams(getEntry()),
-					String.format("Error on add all parameters for entry '%s'", getEntry())));
-			menu.getItems().addAll(itemRemove, itemPossibilities, itemAddAll);
+			menu.getItems().addAll(
+					ConfigurationTreeView.createDisabledItem(ADD_NEW_CLIENT),
+					ConfigurationTreeView.createDisabledItem(TEST_VERSION),
+					ConfigurationTreeView.createDisabledItem(REFRESH),
+					ConfigurationTreeView.createDisabledItem(EXCLUDE_CLIENT_DIC_FOLDER),
+					ConfigurationTreeView.createDisabledItem(OPEN_DICTIONARY),
+					ConfigurationTreeView.createItem(REMOVE, () -> model.removeClientEntry(getEntry()), String.format("Error on remove entry '%s'", getEntry().toString())),
+					ConfigurationTreeView.createItem(SHOW_POSSIBILITIES, () -> model.showPossibilities(getEntry()), String.format("Error on show possibilities for entry '%s'", getEntry().toString())),
+					ConfigurationTreeView.createItem(ADD_ALL_KNOWN_PARAMETERS, () -> model.addAllClientParams(getEntry()),String.format("Error on add all parameters for entry '%s'", getEntry())),
+					ConfigurationTreeView.createDisabledItem("Git", null)
+			);
 			return Optional.of(menu);
 		}
 
@@ -200,13 +214,19 @@ public class ClientTreeNode extends TreeNode
 		@Override
 		public Optional<ContextMenu> contextMenu()
 		{
-			Optional<ContextMenu> contextMenu = super.contextMenu();
-
-			MenuItem refresh = new MenuItem("Refresh", new ImageView(new Image(CssVariables.Icons.REFRESH)));
-			refresh.setOnAction(e -> Common.tryCatch(() -> this.model.refreshClientDictionaries(), "Error on refresh client dictionaries"));
-			ContextMenu ret = contextMenu.orElse(new ContextMenu());
-			ret.getItems().add(0, refresh);
-
+			Optional<ContextMenu> menu = super.contextMenu();
+			ContextMenu ret = menu.orElse(new ContextMenu());
+			ret.getItems().addAll(
+					ConfigurationTreeView.createDisabledItem(ADD_NEW_CLIENT),
+					ConfigurationTreeView.createDisabledItem(TEST_VERSION),
+					ConfigurationTreeView.createItem(REFRESH, () -> this.model.refreshClientDictionaries(), "Error on refresh client dictionaries"),
+					ConfigurationTreeView.createDisabledItem(EXCLUDE_CLIENT_DIC_FOLDER),
+					ConfigurationTreeView.createDisabledItem(OPEN_DICTIONARY),
+					ConfigurationTreeView.createDisabledItem(REMOVE),
+					ConfigurationTreeView.createDisabledItem(SHOW_POSSIBILITIES),
+					ConfigurationTreeView.createDisabledItem(ADD_ALL_KNOWN_PARAMETERS),
+					ConfigurationTreeView.createDisabledItem("Git", null)
+			);
 			return Optional.of(ret);
 		}
 
@@ -216,17 +236,31 @@ public class ClientTreeNode extends TreeNode
 			Function<File, ContextMenu> topFolderFunc = file ->
 			{
 				ContextMenu menu = new ContextMenu();
-				MenuItem itemRemove = new MenuItem("Exclude client dictionary dir", new ImageView(new Image(CssVariables.Icons.REMOVE_PARAMETER_ICON)));
-				itemRemove.setOnAction(e -> Common.tryCatch(() -> model.excludeClientDictionaryFolder(file.getName()), "Error on excluded matrix directory"));
-				menu.getItems().addAll(itemRemove);
+				menu.getItems().addAll(
+						ConfigurationTreeView.createDisabledItem(ADD_NEW_CLIENT),
+						ConfigurationTreeView.createDisabledItem(TEST_VERSION),
+						ConfigurationTreeView.createDisabledItem(REFRESH),
+						ConfigurationTreeView.createItem(EXCLUDE_CLIENT_DIC_FOLDER, () -> model.excludeClientDictionaryFolder(file.getName()), "Error on excluded matrix directory"),
+						ConfigurationTreeView.createDisabledItem(OPEN_DICTIONARY),
+						ConfigurationTreeView.createDisabledItem(REMOVE),
+						ConfigurationTreeView.createDisabledItem(SHOW_POSSIBILITIES),
+						ConfigurationTreeView.createDisabledItem(ADD_ALL_KNOWN_PARAMETERS)
+				);
 				return menu;
 			};
 			Function<File, ContextMenu> filesFunc = file ->
 			{
 				ContextMenu menu = new ContextMenu();
-				MenuItem itemOpedDic = new MenuItem("Open dictionary", new ImageView(new Image(CssVariables.Icons.CLIENT_DICTIONARY_ICON)));
-				itemOpedDic.setOnAction(e -> Common.tryCatch(() -> this.model.openClientDictionary(file), "Error on open client dictionary"));
-				menu.getItems().addAll(itemOpedDic);
+				menu.getItems().addAll(
+						ConfigurationTreeView.createDisabledItem(ADD_NEW_CLIENT),
+						ConfigurationTreeView.createDisabledItem(TEST_VERSION),
+						ConfigurationTreeView.createDisabledItem(REFRESH),
+						ConfigurationTreeView.createDisabledItem(EXCLUDE_CLIENT_DIC_FOLDER),
+						ConfigurationTreeView.createItem(OPEN_DICTIONARY, () -> this.model.openClientDictionary(file), "Error on open client dictionary"),
+						ConfigurationTreeView.createDisabledItem(REMOVE),
+						ConfigurationTreeView.createDisabledItem(SHOW_POSSIBILITIES),
+						ConfigurationTreeView.createDisabledItem(ADD_ALL_KNOWN_PARAMETERS)
+				);
 				return menu;
 			};
 			listClientDictionaries.forEach(file -> new BuildTree(file, this.treeItem)

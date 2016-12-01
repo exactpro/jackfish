@@ -125,7 +125,7 @@ public class NavigationController implements Initializable, ContainingParent
 			scrollPaneWindow.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
 			scrollPaneWindow.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
 			Node dialog = BorderWrapper.wrap(this.vBoxWindow).title("Dialog").color(Common.currentTheme().getReverseColor()).build();
-			double width = 385.0;
+			double width = 375.0;
 			((Region) dialog).setMinWidth(width);
 			((Region) dialog).setMaxWidth(width);
 			((Region) dialog).setPrefWidth(width);

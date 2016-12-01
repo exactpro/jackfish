@@ -7,17 +7,15 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.exactprosystems.jf.tool.newconfig.nodes;
 
-import com.exactprosystems.jf.tool.Common;
+import com.exactprosystems.jf.api.common.SerializablePair;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.newconfig.ConfigurationFx;
 import com.exactprosystems.jf.tool.newconfig.ConfigurationTreeView;
-
 import javafx.scene.Node;
 import javafx.scene.control.ContextMenu;
-import javafx.scene.control.MenuItem;
+import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.TreeItem;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
 
 import java.io.File;
@@ -29,7 +27,11 @@ public class ReportTreeNode extends TreeNode
 {
 	private ConfigurationFx model;
 	private TreeItem<TreeNode> treeItem;
-	private ContextMenu contextMenu;
+
+	private static final SerializablePair<String, String> CLEAR_FOLDER = new SerializablePair<>("Clear folder", CssVariables.Icons.REMOVE_PARAMETER_ICON);
+	private static final SerializablePair<String, String> REFRESH = new SerializablePair<>("Refresh", CssVariables.Icons.REFRESH);
+	private static final SerializablePair<String, String> OPER_REPORT = new SerializablePair<>("Open report", CssVariables.Icons.REPORT_ICON);
+	private static final SerializablePair<String, String> REMOVE_REPORT = new SerializablePair<>("Remove report", CssVariables.Icons.REMOVE_PARAMETER_ICON);
 
 	public ReportTreeNode(ConfigurationFx model, TreeItem<TreeNode> treeItem)
 	{
@@ -42,14 +44,14 @@ public class ReportTreeNode extends TreeNode
 	{
 		ContextMenu menu = new ContextMenu();
 
-		MenuItem itemClear = new MenuItem("Clear folder", new ImageView(new Image(CssVariables.Icons.REMOVE_PARAMETER_ICON)));
-		itemClear.setOnAction(e -> Common.tryCatch(() -> this.model.clearReportFolder(), "Error on clear folder"));
-
-		MenuItem refresh = new MenuItem("Refresh", new ImageView(new Image(CssVariables.Icons.REFRESH)));
-		refresh.setOnAction(e -> Common.tryCatch(() -> this.model.refreshReport(), "Error on refresh report folder"));
-
-		menu.getItems().addAll(refresh, itemClear);
-
+		menu.getItems().addAll(
+				ConfigurationTreeView.createDisabledItem(OPER_REPORT),
+				ConfigurationTreeView.createDisabledItem(REMOVE_REPORT),
+				ConfigurationTreeView.createItem(CLEAR_FOLDER, () -> this.model.clearReportFolder(), "Error on clear folder"),
+				ConfigurationTreeView.createItem(REFRESH, () -> this.model.refreshReport(), "Error on refresh report folder"),
+				new SeparatorMenuItem(),
+				ConfigurationTreeView.createDisabledItem("Git", null)
+		);
 		return Optional.of(menu);
 	}
 
@@ -74,13 +76,12 @@ public class ReportTreeNode extends TreeNode
 			Function<File, ContextMenu> menuFiles = file -> {
 				ContextMenu menu = new ContextMenu();
 
-				MenuItem openReport = new MenuItem("Open report", new ImageView(new Image(CssVariables.Icons.REPORT_ICON)));
-				openReport.setOnAction(e -> Common.tryCatch(() -> this.model.openReport(file), "Error on open report"));
-
-				MenuItem removeReport = new MenuItem("Remove report", new ImageView(new Image(CssVariables.Icons.REMOVE_PARAMETER_ICON)));
-				removeReport.setOnAction(e -> Common.tryCatch(() -> this.model.removeReport(file), "Error on remove report"));
-
-				menu.getItems().addAll(openReport, removeReport);
+				menu.getItems().addAll(
+						ConfigurationTreeView.createItem(OPER_REPORT, () -> this.model.openReport(file), "Error on open report"),
+						ConfigurationTreeView.createItem(REMOVE_REPORT, () -> this.model.removeReport(file), "Error on remove report"),
+						ConfigurationTreeView.createDisabledItem(CLEAR_FOLDER),
+						ConfigurationTreeView.createDisabledItem(REFRESH)
+				);
 				return menu;
 			};
 			Arrays.stream(files)

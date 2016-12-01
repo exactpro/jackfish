@@ -157,7 +157,10 @@ public class ConfigurationTreeView extends TreeView<TreeNode>
 		MenuItem itemReset = new MenuItem("Reset");
 		itemReset.setOnAction(e -> System.out.println(String.format("file %s Reset", file)));
 
-		menu.getItems().addAll(itemClone, itemPull, itemCommit, itemPush, itemReset);
+		MenuItem itemIgnore = new MenuItem("Ignore");
+		itemIgnore.setOnAction(e -> System.out.println(String.format("file %s Ignore", file)));
+
+		menu.getItems().addAll(itemClone, itemPull, itemCommit, itemPush, itemReset, itemIgnore);
 		contextMenu.getItems().add(menu);
 		return contextMenu;
 	}
