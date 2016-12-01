@@ -18,6 +18,7 @@ HANDLERS;Event hanlers
     #Action;#UnitedTable;#MainTable
     TableUnion;RESTBL2.Out;RESTBL1.Out
 
+
 #Id;#TestCase
 BASIC;Basic functionality
     #Id;#Action;#Matrix
@@ -32,12 +33,13 @@ BASIC;Basic functionality
     #Action;#UnitedTable;#MainTable
     TableUnion;RESTBL2.Out;RESTBL1.Out
 
+
 #TestCase
 Cleanup
     #Action;#Table;#Title;#BeforeTestCase
     TableReport;RESTBL1.Out;'All tests';'INIT'
 
-    // // #38487 (impossible to use Result as a field) solved for this case
+    // RM38487 (impossible to use Result as a field) solved for this case
     #Id;#Action;#Table;#Result
     TBLSLCT1;TableSelect;RESTBL1.Out;new RegexpCondition('Result', '^.*Failed.*$')
 
