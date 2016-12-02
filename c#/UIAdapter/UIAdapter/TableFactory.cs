@@ -412,7 +412,7 @@ namespace UIAdapter.Tables
         {
             TreeWalker walker = TreeWalker.RawViewWalker;
             this.logger.All("Row : " + row.Current.Name + " and controlType : " + row.Current.ControlType.ProgrammaticName);
-            buildDom(row);
+            //buildDom(row);
             AutomationElement firstCell = this.FindFirstCellFromRow(row);
             StringBuilder builder = new StringBuilder();
             string sep = "";
@@ -760,7 +760,7 @@ namespace UIAdapter.Tables
 
         protected override AutomationElement FindFirstCellFromRow(AutomationElement row)
         {
-            buildDom(row);
+            //buildDom(row);
             return base.FindFirstCellFromRow(row);
         }
 
