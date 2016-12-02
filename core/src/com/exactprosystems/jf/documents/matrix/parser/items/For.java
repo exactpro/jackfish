@@ -220,7 +220,10 @@ public final class For extends MatrixItem
 			// start value
 			AtomicReference<Number> current = new AtomicReference<>((Number)fromValue);
 			
-			while(checkCondition(current, toValue, stepValue, evaluator))
+			for (setCurrent(current, evaluator);
+			     checkCondition(current, toValue, stepValue, evaluator);
+			     changeCurrent(current, stepValue, evaluator)
+			     )
 			{
 				report.outLine(this, null, String.format("loop %s = %s", this.var, current.get()), current.get().intValue());
 				
@@ -271,21 +274,32 @@ public final class For extends MatrixItem
 		}
 	}
 
-	private boolean checkCondition(AtomicReference<Number> current, Object toValue, Object stepValue, AbstractEvaluator evaluator)
+    private void setCurrent(AtomicReference<Number> current, AbstractEvaluator evaluator)
+    {
+        Number currentValue = current.get();
+        evaluator.getLocals().set(this.var.get(), currentValue);
+    }
+
+    private boolean checkCondition(AtomicReference<Number> current, Object toValue, Object stepValue, AbstractEvaluator evaluator)
 	{
 	    Number currentValue = current.get();
-	    
-        evaluator.getLocals().set(this.var.get(), currentValue);
-        currentValue = currentValue.intValue() + ((Number)stepValue).intValue();
-        current.set(currentValue);
-        evaluator.getLocals().set(this.var.get(), currentValue);
 	    
 		return ((Number)stepValue).intValue() > 0 
 				? ((Number)currentValue).intValue() <= ((Number)toValue).intValue()
 				: ((Number)currentValue).intValue() >= ((Number)toValue).intValue();
 	}
 
-	private MutableValue<String> var; 
+    private void changeCurrent(AtomicReference<Number> current, Object stepValue, AbstractEvaluator evaluator)
+    {
+        Number currentValue = current.get();
+        currentValue = currentValue.intValue() + ((Number)stepValue).intValue();
+        current.set(currentValue);
+        
+        setCurrent(current, evaluator);
+    }
+
+
+    private MutableValue<String> var; 
 	private Parameter from; 
 	private Parameter to; 
 	private Parameter step;
