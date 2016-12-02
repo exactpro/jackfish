@@ -21,15 +21,17 @@ import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
 import com.exactprosystems.jf.functions.RowTable;
 import com.exactprosystems.jf.functions.Table;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @MatrixItemAttribute(
 		description 	= "Test case.", 
 		shouldContain 	= { Tokens.TestCase },
-		mayContain 		= { Tokens.Id, Tokens.Off },
+		mayContain 		= { Tokens.Id, Tokens.Off, Tokens.Kind },
 		closes			= MatrixRoot.class,
         real			= true,
 		hasValue 		= true, 
@@ -42,12 +44,14 @@ public final class TestCase extends MatrixItem
 	{
 		super();
 		this.name = new MutableValue<String>();
+        this.kind = new MutableValue<String>();
 	}
 
     public TestCase(String name)
 	{
     	this();
 		this.name.set(name);
+        this.kind.set(ScreenshotKind.Never.name());
 	}
 
 
@@ -55,7 +59,8 @@ public final class TestCase extends MatrixItem
 	public MatrixItem clone() throws CloneNotSupportedException
 	{
 		TestCase clone = (TestCase) super.clone();
-		clone.name = name.clone();
+		clone.name = this.name.clone();
+        clone.kind = this.kind.clone();
 		return clone;
 	}
 
@@ -71,7 +76,7 @@ public final class TestCase extends MatrixItem
     @Override
     public boolean isChanged()
     {
-    	if (this.name.isChanged())
+    	if (this.name.isChanged() || this.kind.isChanged())
     	{
     		return true;
     	}
@@ -83,6 +88,7 @@ public final class TestCase extends MatrixItem
     {
     	super.saved();
     	this.name.saved();
+        this.kind.saved();
     }
 
 	//==============================================================================================
@@ -95,6 +101,11 @@ public final class TestCase extends MatrixItem
 		driver.showTextBox(this, layout, 1, 0, this.id, this.id, () -> this.id.get());
 		driver.showTitle(this, layout, 1, 1, Tokens.TestCase.get(), context.getFactory().getSettings());
 		driver.showTextBox(this, layout, 1, 2, this.name, this.name, null);
+        driver.showLabel(this, layout, 1, 3, "Screenshot");
+        driver.showComboBox(this, layout, 1, 4, this.kind, this.kind, v ->
+        {
+            return Arrays.stream(ScreenshotKind.values()).map(k -> k.toString()).collect(Collectors.toList());
+        });
 
 		return layout;
 	}
@@ -107,26 +118,30 @@ public final class TestCase extends MatrixItem
 	@Override
 	public String getItemName()
 	{
-		return super.getItemName() + "  " + (this.name == null ? "" : "(" + this.name + ")");
+		return super.getItemName() + "  " + (this.name == null ? "" : "(" + this.name + ")")
+		        +  (this.kind == null ? "" : " Screenshot: " + this.kind + "");
 	}
 
 	@Override
 	protected void initItSelf(Map<Tokens, String> systemParameters)
 	{
 		this.name.set(systemParameters.get(Tokens.TestCase)); 
+        this.kind.set(systemParameters.get(Tokens.Kind)); 
 	}
 
 	@Override
 	protected void writePrefixItSelf(CsvWriter writer, List<String> firstLine, List<String> secondLine)
 	{
 		addParameter(firstLine, secondLine, Tokens.TestCase.get(), this.name.get());
+        addParameter(firstLine, secondLine, Tokens.Kind.get(), this.kind.get());
 	}
 
 	@Override
 	protected boolean matchesDerived(String what, boolean caseSensitive, boolean wholeWord)
 	{
-		return SearchHelper.matches(Tokens.TestCase.get(), what, caseSensitive, wholeWord) ||
-				SearchHelper.matches(this.name.get(), what, caseSensitive, wholeWord);
+		return SearchHelper.matches(Tokens.TestCase.get(), what, caseSensitive, wholeWord) 
+		        || SearchHelper.matches(this.name.get(), what, caseSensitive, wholeWord)
+		        || SearchHelper.matches(this.kind.get(), what, caseSensitive, wholeWord);
 	}
 	
 	@Override
@@ -174,7 +189,9 @@ public final class TestCase extends MatrixItem
 		
 		try
 		{
-			if (table != null)
+	        ScreenshotKind screenshotKind = ScreenshotKind.valueByName(this.kind.get());
+
+	        if (table != null)
 			{
 				position = table.size();
 
@@ -246,6 +263,6 @@ public final class TestCase extends MatrixItem
 
 	
 	private Variables locals = null;
-	
 	private MutableValue<String> name;
+    private MutableValue<String> kind;
 }

@@ -16,6 +16,7 @@ import com.exactprosystems.jf.common.report.ReportTable;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.config.HandlerKind;
 import com.exactprosystems.jf.documents.matrix.parser.DisplayDriver;
+import com.exactprosystems.jf.documents.matrix.parser.MutableValue;
 import com.exactprosystems.jf.documents.matrix.parser.Parameter;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.documents.matrix.parser.Result;
@@ -33,7 +34,7 @@ import java.util.Set;
 @MatrixItemAttribute(
 		description 	= "Elementary step in the script", 
 		shouldContain 	= { Tokens.Step },
-		mayContain 		= { Tokens.Off },
+		mayContain 		= { Tokens.Off, Tokens.Kind },
 		real			= true,
 		hasValue 		= true, 
 		hasParameters 	= false,
@@ -244,4 +245,5 @@ public class Step extends MatrixItem
 	}
 
 	private Parameter identify;
+    private MutableValue<String> kind;
 }
