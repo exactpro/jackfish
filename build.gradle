@@ -24,6 +24,7 @@ dependencies {
 	sqlData(group:	'mysql',									name: 'mysql-connector-java',  version: '5.1.26')
 	sqlData(group:	'com.oracle',								name: 'ojdbc7',				version: '12.1.0.1')
 	sqlData(group:	'org.postgresql',							name: 'postgresql',			version: '9.0-801.jdbc4')
+	sqlData(group:	'com.microsoft.sqlserver',					name: 'mssql-jdbc',			version: '6.1.0.jre8', transitive : false)
 
 	unixDriver(group: 'com.googleapis.storage.chromedriver',	  name: 'chromedriver-linux',	version: '2.25',	classifier: 'x86', ext: 'elf')
 	unixDriver(group: 'com.googleapis.storage.chromedriver',	  name: 'chromedriver-linux',	version: '2.25',	classifier: 'x64', ext: 'elf')
