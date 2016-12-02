@@ -41,6 +41,11 @@
         <sqlJar>${JF}/sql/mysql-connector-java-5.1.26.jar</sqlJar>
         <sqlConnection>jdbc:mysql://${SERVER}/${BASE}?generateSimpleParameterMetadata=true</sqlConnection>
     </sqlEntry>
+    <sqlEntry>
+        <name>MsSql</name>
+        <sqlJar>${JF}/sql/mssql-jdbc-6.1.0.jre8.jar</sqlJar>
+        <sqlConnection>jdbc:sqlserver://${SERVER};databaseName=${BASE};integratedSecurity=true;</sqlConnection>
+    </sqlEntry>
     <clientEntry>
         <name>DTS</name>
         <clientJar>${JF}/clients/dts.jar</clientJar>

@@ -135,13 +135,10 @@ public class DataBasePool
 			
 			ServiceLoader<Driver> loader = ServiceLoader.load(Driver.class, classLoader);
 			Iterator<Driver> iterator = loader.iterator();
-			while(iterator.hasNext())
+			
+			if (iterator.hasNext())
 			{
-				Driver next = iterator.next();
-				if (next.getClass().getSimpleName().startsWith("Driver"))
-				{
-					driver = next;
-				}
+				driver = iterator.next();
 			}
 			
 			if (driver == null)
