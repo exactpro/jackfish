@@ -273,13 +273,16 @@ public class Xml
 		{
 			return;
 		}
+
 		Element child = doc.createElement(nodeName);
+		child.setTextContent(content);
+
+		this.node.appendChild(child);
+
 		for (Entry<String, Object> entry : attr.entrySet())
 		{
 			child.setAttribute(entry.getKey(), String.valueOf(entry.getValue()));
 		}
-		child.setTextContent(content);
-		this.node.appendChild(child);
 	}
 	
 	public Document getDocument()
