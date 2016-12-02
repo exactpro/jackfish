@@ -137,8 +137,8 @@ public class DataBasePool
 			Iterator<Driver> iterator = loader.iterator();
 			while(iterator.hasNext())
 			{
-				Driver next = iterator.next();								// for oracle jdbc driver
-				if (next.getClass().getSimpleName().startsWith("Driver") || next.getClass().getSimpleName().startsWith("OracleDriver"))
+				Driver next = iterator.next();
+				if (next.getClass().getSimpleName().startsWith("Driver"))
 				{
 					driver = next;
 				}

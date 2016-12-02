@@ -116,5 +116,22 @@ RM37970 fail into loops works incorrectly
 
     #EndSubCase
 
+#Id;#TestCase
+38699;RM 38699 Action For starts calculating since 1
+    #Id;#Let
+    str;''
+
+    #For;#From;#To;#Step
+    i;0;2;1
+        #Id;#Let
+        str;str + i
+
+    #EndFor
+
+    #Assert;#Message
+    str == '012';'wrong ' + str
+
+
+
 
 
