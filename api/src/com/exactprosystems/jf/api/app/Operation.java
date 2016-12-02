@@ -468,26 +468,41 @@ public class Operation implements Iterable<Part>, Serializable
 		return this;
 	}
 
-	public Operation dragNdrop(String another, int x, int y)
+	@DescriptionAttribute(text = Do.dragNdrop)
+	public Operation dragNdrop(int x1, int y1, String another, int x2, int y2)
 	{
 		this.list.add(new Part(OperationKind.USE_LOCATOR).setLocatorId(another).setLocatorKind(LocatorKind.Dropped));
 		this.list.add(new Part(OperationKind.USE_LOCATOR).setLocatorId(another).setLocatorKind(LocatorKind.DroppedOwner));
 		this.list.add(new Part(OperationKind.DRAG_N_DROP)
-				.setX(x)
-				.setY(y)
+				.setX(x1)
+				.setY(y1)
+				.setX2(x2)
+				.setY2(y2)
 		);
 		return this;
 	}
 
-	public Operation dragNdrop(Locator another, int x, int y)
+	@DescriptionAttribute(text = Do.dragNdropFromCenterOfElement)
+	public Operation dragNdropFromCenterOfElement(String another, int x2, int y2)
 	{
-		this.list.add(new Part(OperationKind.USE_LOCATOR).setLocator(another).setLocatorKind(LocatorKind.Dropped));
+		this.list.add(new Part(OperationKind.USE_LOCATOR).setLocatorId(another).setLocatorKind(LocatorKind.Dropped));
+		this.list.add(new Part(OperationKind.USE_LOCATOR).setLocatorId(another).setLocatorKind(LocatorKind.DroppedOwner));
 		this.list.add(new Part(OperationKind.DRAG_N_DROP)
-				.setX(x)
-				.setY(y)
+				.setX2(x2)
+				.setY2(y2)
 		);
 		return this;
 	}
+
+//	public Operation dragNdrop(Locator another, int x, int y)
+//	{
+//		this.list.add(new Part(OperationKind.USE_LOCATOR).setLocator(another).setLocatorKind(LocatorKind.Dropped));
+//		this.list.add(new Part(OperationKind.DRAG_N_DROP)
+//				.setX(x)
+//				.setY(y)
+//		);
+//		return this;
+//	}
 
 	@DescriptionAttribute(text = Do.delay)
 	public Operation delay(int ms)

@@ -201,8 +201,7 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 		throw real;
 	}
 
-	@Override
-	public boolean dragNdrop(WebElement drag, WebElement drop, int x, int y) throws Exception
+	private boolean dragNdropFromCenterOfElement(WebElement drag, WebElement drop, int x, int y) throws Exception
 	{
 		Exception real = null;
 		int repeat = 1;
@@ -235,6 +234,24 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 		}
 		while (++repeat < repeatLimit);
 		throw real;
+	}
+
+	private boolean dragNdropWithStartingCoords(WebElement drag, WebElement drop, int x1, int y1, int x2, int y2) throws Exception
+	{
+		return true;
+	}
+
+	@Override
+	public boolean dragNdrop(WebElement drag, WebElement drop, int x1, int y1, int x2, int y2) throws Exception
+	{
+		if (x1 == Integer.MIN_VALUE || y1 == Integer.MIN_VALUE)
+		{
+			return dragNdropFromCenterOfElement(drag, drop, x2, y2);
+		}
+		else
+		{
+			return dragNdropWithStartingCoords(drag, drop, x1, y1, x2, y2);
+		}
 	}
 
 	//region public table methods

@@ -688,8 +688,7 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 		throw new FeatureNotSupportedException("script");
 	}
 
-	@Override
-	public boolean dragNdrop(UIProxyJNA drag, UIProxyJNA drop, int x, int y) throws Exception
+	private boolean dragNdropFromCenterOfElement(UIProxyJNA drag, UIProxyJNA drop, int x, int y) throws Exception
 	{
 		try
 		{
@@ -716,6 +715,24 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 			this.logger.error(String.format("dragNdrop(%s,%s,%d,%d)", drag, drop, x, y));
 			this.logger.error(e.getMessage(), e);
 			throw e;
+		}
+	}
+
+	public boolean dragNdropWithStartingCoords(UIProxyJNA drag, UIProxyJNA drop, int x1, int y1, int x2, int y2)
+	{
+		return true;
+	}
+
+	@Override
+	public boolean dragNdrop(UIProxyJNA drag, UIProxyJNA drop, int x1, int y1, int x2, int y2) throws Exception
+	{
+		if (x1 == Integer.MIN_VALUE || y1 == Integer.MIN_VALUE)
+		{
+			return dragNdropFromCenterOfElement(drag, drop, x2, y2);
+		}
+		else
+		{
+			return dragNdropWithStartingCoords(drag, drop, x1, y1, x2, y2);
 		}
 	}
 
