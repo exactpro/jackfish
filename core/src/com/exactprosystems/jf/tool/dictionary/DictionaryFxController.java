@@ -21,6 +21,7 @@ import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.custom.console.ConsoleText;
 import com.exactprosystems.jf.tool.custom.console.CustomListView;
 import com.exactprosystems.jf.tool.custom.tab.CustomTab;
+import com.exactprosystems.jf.tool.custom.tab.CustomTabPane;
 import com.exactprosystems.jf.tool.dictionary.actions.ActionsController;
 import com.exactprosystems.jf.tool.dictionary.element.ElementInfoController;
 import com.exactprosystems.jf.tool.dictionary.navigation.NavigationController;
@@ -104,7 +105,7 @@ public class DictionaryFxController implements Initializable, ContainingParent
 	public void init(final DictionaryFx model, Settings settings, Configuration configuration, AbstractEvaluator evaluator) throws Exception
 	{
 		this.settings = settings;
-		this.tab = new CustomTab(model, this.settings);
+		this.tab = CustomTabPane.getInstance().createTab(model);
 		this.tab.setContent(pane);
 
 		this.navigationController = Common.loadController(NavigationController.class.getResource("Navigation.fxml"));
@@ -117,8 +118,8 @@ public class DictionaryFxController implements Initializable, ContainingParent
 		this.actionsController = Common.loadController(ActionsController.class.getResource("Actions.fxml"));
 		this.actionsController.init(model, this.mainGridPane, evaluator, this.navigationController, this.elementInfoController);
 
-		Common.getTabPane().getTabs().add(this.tab);
-		Common.getTabPane().getSelectionModel().select(this.tab);
+		CustomTabPane.getInstance().addTab(this.tab);
+		CustomTabPane.getInstance().selectTab(this.tab);
 	}
 
 	public void println(String str)

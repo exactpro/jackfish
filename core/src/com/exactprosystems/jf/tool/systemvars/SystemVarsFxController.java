@@ -14,6 +14,7 @@ import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.custom.tab.CustomTab;
+import com.exactprosystems.jf.tool.custom.tab.CustomTabPane;
 import com.exactprosystems.jf.tool.custom.table.CustomTable;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -77,15 +78,12 @@ public class SystemVarsFxController implements Initializable, ContainingParent
 	public void init(SystemVarsFx model, Settings settings)
 	{
 		this.model = model;
-		this.tab = new CustomTab(model, settings);
+		this.tab = CustomTabPane.getInstance().createTab(model);
 		this.tab.setContent(this.pane);
 		this.tableView.setListener(this.model::removeParameters);
 		createTable();
-		Platform.runLater(() -> 
-		{
-			Common.getTabPane().getTabs().add(SystemVarsFxController.this.tab);
-			Common.getTabPane().getSelectionModel().select(this.tab);
-		});
+		CustomTabPane.getInstance().addTab(this.tab);
+		CustomTabPane.getInstance().selectTab(this.tab);
 	}
 	
 	public void saved(String name)

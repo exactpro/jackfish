@@ -170,7 +170,6 @@
 								<BorderPane fx:id="projectPane" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" />
 							</children>
 						</GridPane>
-						<TabPane id="documentsPane" fx:id="documentsPane" minHeight="200.0" prefHeight="629.0" prefWidth="1280.0" BorderPane.alignment="CENTER" />
 					</items>
 				</SplitPane>
 			</center>
