@@ -412,7 +412,7 @@ namespace UIAdapter.Tables
         {
             TreeWalker walker = TreeWalker.RawViewWalker;
             this.logger.All("Row : " + row.Current.Name + " and controlType : " + row.Current.ControlType.ProgrammaticName);
-            buildDom(row);
+            //buildDom(row);
             AutomationElement firstCell = this.FindFirstCellFromRow(row);
             StringBuilder builder = new StringBuilder();
             string sep = "";
@@ -566,7 +566,11 @@ namespace UIAdapter.Tables
             string value = "" + element.GetCurrentPropertyValue(Program.VALUE_PROPERTY);
             if (String.IsNullOrEmpty(value))
             {
-                return EMPTY_CELL;
+                value = element.Current.Name;
+                if (String.IsNullOrEmpty(value))
+                {
+                    return EMPTY_CELL;
+                }
             }
             return value;
         }
@@ -576,7 +580,11 @@ namespace UIAdapter.Tables
             string value = "" + headerCell.GetCurrentPropertyValue(Program.VALUE_PROPERTY);
             if (String.IsNullOrEmpty(value))
             {
-                return EMPTY_HEADER_CELL;
+                value = headerCell.Current.Name;
+                if (String.IsNullOrEmpty(value))
+                {
+                    return EMPTY_HEADER_CELL;
+                }
             }
             return value;
         }
@@ -589,8 +597,8 @@ namespace UIAdapter.Tables
 
         protected override bool HeaderCellIsGood(AutomationElement headerCell)
         {
-            return headerCell.Current.ControlType.Equals(ControlType.Header)
-                && !headerCell.Current.Name.ToUpper().Contains("TOP LEFT HEADER CELL");
+            return (headerCell.Current.ControlType.Equals(ControlType.Header)               // for event viewer
+                && !headerCell.Current.Name.ToUpper().Contains("TOP LEFT HEADER CELL")) || headerCell.Current.ControlType.Equals(ControlType.HeaderItem);
         }
 
         protected override bool RowCellIsGood(AutomationElement rowCell)
@@ -599,8 +607,8 @@ namespace UIAdapter.Tables
         }
 
         protected override bool HeaderIsGood(AutomationElement header)
-        {
-            return header.Current.Name.ToUpper().Equals("TOP ROW");
+        {                                                               // for event viewer
+            return header.Current.Name.ToUpper().Equals("TOP ROW") || header.Current.ControlType.Equals(ControlType.Header);
         }
     }
 
@@ -752,7 +760,7 @@ namespace UIAdapter.Tables
 
         protected override AutomationElement FindFirstCellFromRow(AutomationElement row)
         {
-            buildDom(row);
+            //buildDom(row);
             return base.FindFirstCellFromRow(row);
         }
 
