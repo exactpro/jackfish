@@ -243,7 +243,7 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 				Scrolling.scrollToVisible(this.currentRobot, ((JComponent) target));
 			}
 			Point point = new Point(x, y);
-			if (x == Integer.MIN_VALUE || y == Integer.MIN_VALUE)
+			if (isCoordsDidNotIntroduce(x,y))
 			{
 				point = AWT.visibleCenterOf(target);
 			}
@@ -817,9 +817,9 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 		throw new FeatureNotSupportedException("script");
 	}
 
-	private boolean isEnteredStartingCoords(int x1, int y1)
+	private boolean isCoordsDidNotIntroduce(int x, int y)
 	{
-		return !(x1 == Integer.MIN_VALUE || y1 == Integer.MIN_VALUE);
+		return (x == Integer.MIN_VALUE || y == Integer.MIN_VALUE);
 	}
 
 	private void waitUntilAnotherActionsCompleted()
@@ -829,8 +829,15 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 
 	private ArrayList<AWTEvent> createEventsList(MouseAction action, Component component, int x, int y)
 	{
+		final int NO_CLICK = 0;
+		final int ONE_CLICK = 1;
+		final int TWO_CLICK = 2;
+		final boolean SHOW_POPUP = true;
+		final boolean NOT_SHOW_POPUP = false;
+
 		final ArrayList<AWTEvent> events = new ArrayList<>();
 		final int ALT_CTRL_SHIFT = getModifierKeysArePressed();
+
 		events.add(new FocusEvent(component, FocusEvent.FOCUS_GAINED));
 		events.add(new MouseEvent(component, MouseEvent.MOUSE_ENTERED, System.currentTimeMillis(), ALT_CTRL_SHIFT, x, y, NO_CLICK, NOT_SHOW_POPUP, MouseEvent.NOBUTTON));
 		events.add(new MouseEvent(component, MouseEvent.MOUSE_MOVED, System.currentTimeMillis(), ALT_CTRL_SHIFT, x, y, NO_CLICK, NOT_SHOW_POPUP, MouseEvent.NOBUTTON));
@@ -899,11 +906,25 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 		executeEventsList(component, events);
 	}
 
-	private final int NO_CLICK = 0;
-	private final int ONE_CLICK = 1;
-	private final int TWO_CLICK = 2;
-	private final boolean SHOW_POPUP = true;
-	private final boolean NOT_SHOW_POPUP = false;
+	private Point getCoordsAbsolute(Component component, int x2, int y2)
+	{
+		int x = component.getX() + x2;
+		int y = component.getY() + y2;
+		return new Point(x,y);
+	}
+
+	private Point getCoordsRelativeComponent(Component component, Point point)
+	{
+		int x = (int)point.getX() - component.getX();
+		int y = (int)point.getY() - component.getY();
+		return new Point(x,y);
+	}
+
+	private Point convertOneToAnotherCoords(Component one, int x, int y, Component another)
+	{
+		Point coordsAbsolute = getCoordsAbsolute(one, x, y);
+		return getCoordsRelativeComponent(another, coordsAbsolute);
+	}
 
 	@Override
 	public boolean dragNdrop(ComponentFixture<Component> drag, ComponentFixture<Component> drop, int x1, int y1, int x2, int y2) throws Exception
@@ -911,18 +932,14 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 		try
 		{
 			Component dragComp = drag.target;
-			Component dropComp;
-
 			if(drop != null)
 			{
-				dropComp = drop.target;
-			}
-			else
-			{
-				dropComp = dragComp;
+				Point point = convertOneToAnotherCoords(drop.target, x2, y2, drag.target);
+				x2 = point.x;
+				y2 = point.y;
 			}
 
-			if (!isEnteredStartingCoords(x1,y1))
+			if (isCoordsDidNotIntroduce(x1,y1))
 			{
 				Point point = AWT.visibleCenterOf(dragComp);
 				x1 = point.x;
@@ -930,13 +947,14 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 			}
 
 			executeAction(MouseAction.Press, dragComp, x1, y1);
-			executeAction(MouseAction.Drop, dropComp, x2, y2);
+			executeAction(MouseAction.Drop, dragComp, x2, y2);
 
 			return true;
 		}
 		catch (Exception e)
 		{
-			logger.error(e.getMessage(), e);
+            this.logger.error(String.format("dragNdrop(%s,%s,%d,%d,%d,%d)", drag.target.getName(), drop.target.getName(), x1, y1, x2, y2));
+			this.logger.error(e.getMessage(), e);
 			throw e;
 		}
 	}
