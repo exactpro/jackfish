@@ -30,6 +30,7 @@ RM38584 use name on assert
     #Id;#Action;#Assert;#Table;#col1
     tableSelect;TableSelect;tableSelect.Out.size() == 1;DATA1;'val2'
 
+
 #TestCase
 RM37970 fail into loops works incorrectly
     #Step
@@ -116,6 +117,7 @@ RM37970 fail into loops works incorrectly
 
     #EndSubCase
 
+
 #Id;#TestCase
 38699;RM 38699 Action For starts calculating since 1
     #Id;#Let
@@ -132,6 +134,15 @@ RM37970 fail into loops works incorrectly
     str == '012';'wrong ' + str
 
 
+#TestCase
+RM38720 TableLoadFromDir return table when directory doesn't exists
+    #Id;#Let
+    path;'/directoryThatDoesNotExists'
 
+    #Id;#Action;#Assert;#Dir
+    TBLD1;TableLoadFromDir;This.Reason.equals('Directory \'' + path + '\' doesn\'t exists.');path
+
+    #Id;#Action;#Assert;#Dir
+    TBLD2;TableLoadFromDir;TBLD2.Out.getHeader(0) == 'Name' && TBLD2.Out.getHeader(4) == 'Hidden' ;'.'
 
 
