@@ -50,6 +50,8 @@ public class Step extends MatrixItem
 		super();
         this.kind = new MutableValue<String>();
 		this.identify = new Parameter(Tokens.Step.get(),	null); 
+		
+        this.kind.set(ScreenshotKind.Never.name());
 	}
 
 	@Override
