@@ -40,7 +40,7 @@ namespace UIAdapter
                             }
                             String msg = String.Format("Element not found\ncontrolKind {0}\nuid {1}\nxpath{2}\nclazz{3}\nname{4}\ntitle{5}\ntext{6}", controlKind, Uid, Xpath, Clazz, Name, Title, Text);
                             Program.logger.All(msg, 0);
-                            throw new Exception(msg);
+                            throw new Exception("Element not found");
                         }
                         ret = new AutomationElement[1];
                         ret[0] = firstElement;
