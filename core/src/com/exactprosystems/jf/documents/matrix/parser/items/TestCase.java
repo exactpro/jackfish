@@ -201,6 +201,7 @@ public final class TestCase extends MatrixItem
 				
 				table.add(row);
 			}
+            doSreenshot(ScreenshotKind.OnStart, screenshotKind, report, row);
 			
 			this.locals = evaluator.createLocals();
 			
@@ -211,7 +212,9 @@ public final class TestCase extends MatrixItem
 			
 			if (res == Result.Failed)
 			{
-			    MatrixError error = ret.getError();
+	            doSreenshot(ScreenshotKind.OnError, screenshotKind, report, row);
+
+	            MatrixError error = ret.getError();
 			    
 			    ReturnAndResult errorRet = context.runHandler(HandlerKind.OnTestCaseError, report, error);
 	            if (errorRet != null)
@@ -233,13 +236,15 @@ public final class TestCase extends MatrixItem
 			}
 	        context.runHandler(HandlerKind.OnTestCaseFinish, report, null);
 			
-			if (table != null && position >= 0)
+            if (table != null && position >= 0)
 			{
 				row.put(Context.timeColumn, 		ret.getTime());
 				row.put(Context.resultColumn, 		res);
 				row.put(Context.errorColumn, 		ret.getError());
 				table.updateValue(position, row);
 			}
+            
+            doSreenshot(ScreenshotKind.OnFinish, screenshotKind, report, row);
 		} 
 		catch (Exception e)
 		{
@@ -255,7 +260,7 @@ public final class TestCase extends MatrixItem
 		return ret;
 	}
 
-	@Override
+    @Override
 	protected void afterReport(ReportBuilder report)
 	{
 		report.reportSwitch(true);

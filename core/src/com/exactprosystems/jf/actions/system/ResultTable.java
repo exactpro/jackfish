@@ -25,6 +25,7 @@ import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
 import com.exactprosystems.jf.actions.ReadableValue;
+import com.exactprosystems.jf.api.app.ImageWrapper;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.MatrixRunner;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
@@ -145,6 +146,9 @@ public class ResultTable extends AbstractAction
 				{
 					replace(row, Context.errorColumn, 		e -> passed);
 				}
+				
+                replace(row, Context.screenshotColumn,       e -> spaceIfNull(((ImageWrapper)e).getDescription()) );
+				
 				
 				for (Entry<String, Object> entry : row.entrySet())
 				{

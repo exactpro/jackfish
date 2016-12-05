@@ -8,6 +8,8 @@
 
 package com.exactprosystems.jf.documents.matrix.parser;
 
+import com.exactprosystems.jf.api.common.Str;
+
 public enum ScreenshotKind
 {
     Never,
@@ -15,8 +17,13 @@ public enum ScreenshotKind
     OnFinish,
     OnError;
     
-    public static ScreenshotKind valueByName(String name)
+    public static ScreenshotKind valueByName(String name) throws Exception
     {
+        if (Str.IsNullOrEmpty(name))
+        {
+            return Never;
+        }
+
         for (ScreenshotKind a : values())
         {
             if(a.name().equals(name))
@@ -24,7 +31,6 @@ public enum ScreenshotKind
                 return a;
             }
         }
-        
-        return Never;
+        throw new Exception("Unknown name: " + name);
     }
 }
