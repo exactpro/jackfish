@@ -8,6 +8,7 @@
 
 package com.exactprosystems.jf.actions.system;
 
+import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
@@ -146,9 +147,26 @@ public class ResultTable extends AbstractAction
 				{
 					replace(row, Context.errorColumn, 		e -> passed);
 				}
-				
-                replace(row, Context.screenshotColumn,       e -> spaceIfNull(((ImageWrapper)e).getDescription()) );
-				
+
+                Object wrapper = row.get(Context.screenshotColumn);
+                if (wrapper instanceof ImageWrapper)
+                {
+                    ImageWrapper iw = (ImageWrapper)wrapper;
+                    
+                    String description = iw.getDescription() == null ? iw.toString() : iw.getDescription();
+                    if (iw.getFileName() == null)
+                    {
+                        iw.saveToDir(report.getReportDir());
+                    }
+                    
+                    String file = new File(iw.getFileName()).getName();
+                    String imageStr = report.decorateLink(description, report.getImageDir() + File.separator + file);
+                    replace(row, Context.screenshotColumn,       e -> imageStr);
+                }
+                else
+                {
+                    replace(row, Context.screenshotColumn,       this::spaceIfNull);
+                }
 				
 				for (Entry<String, Object> entry : row.entrySet())
 				{

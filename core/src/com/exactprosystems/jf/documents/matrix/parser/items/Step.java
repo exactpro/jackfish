@@ -50,8 +50,6 @@ public class Step extends MatrixItem
 		super();
         this.kind = new MutableValue<String>();
 		this.identify = new Parameter(Tokens.Step.get(),	null); 
-		
-        this.kind.set(ScreenshotKind.Never.name());
 	}
 
 	@Override
@@ -73,6 +71,7 @@ public class Step extends MatrixItem
 	protected void initItSelf(Map<Tokens, String> systemParameters)
 	{
 		this.identify.setExpression(systemParameters.get(Tokens.Step));
+        this.kind.set(systemParameters.get(Tokens.Kind)); 
 	}
 
 	@Override
@@ -91,8 +90,9 @@ public class Step extends MatrixItem
 	@Override
 	protected boolean matchesDerived(String what, boolean caseSensitive, boolean wholeWord)
 	{
-		return SearchHelper.matches(Tokens.Step.get(), what, caseSensitive, wholeWord) ||
-				SearchHelper.matches(this.identify.getExpression(), what, caseSensitive, wholeWord);
+		return SearchHelper.matches(Tokens.Step.get(), what, caseSensitive, wholeWord) 
+                || SearchHelper.matches(this.kind.get(), what, caseSensitive, wholeWord)
+		        || SearchHelper.matches(this.identify.getExpression(), what, caseSensitive, wholeWord);
 	}
 
 	//==============================================================================================

@@ -892,7 +892,7 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 	}
 
 	
-   protected final void doSreenshot(ScreenshotKind when, ScreenshotKind screenshotKind, ReportBuilder report, RowTable row) throws Exception
+    protected final void doSreenshot(ScreenshotKind when, ScreenshotKind screenshotKind, ReportBuilder report, RowTable row) throws Exception
     {
         if (screenshotKind == when)
         {
@@ -903,7 +903,7 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
             imageWrapper.setDescription(screenshotKind.toString());
             
             File file = imageWrapper.saveToDir(report.getReportDir());
-            report.outImage(this, null, file.getName(), screenshotKind.toString());
+            report.outImage(this, null, file.getName(), imageWrapper.getDescription());
             
             if (row != null)
             {
