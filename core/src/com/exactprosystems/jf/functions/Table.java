@@ -1366,6 +1366,10 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 	{
 		try
 		{
+			if (!new File(dirName).exists()) {
+				throw new Exception("Directory '" +dirName+ "' does not exists.");
+			}
+
 			File directory = new File(dirName);
 			if (directory.isDirectory())
 			{

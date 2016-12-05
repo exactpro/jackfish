@@ -1,3 +1,6 @@
+05.12.2016 4.3.0.1691
+#38720 fixed. Now tableLoadFromDir is not created Table if directory doesn't exists.
+--------------------------------------------------------------------------------
 02.12.2016 4.3.0.1689
 #38644 fixed. Now XmlAddNode sets attributes correctly
 --------------------------------------------------------------------------------

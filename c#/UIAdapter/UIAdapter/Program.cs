@@ -2107,7 +2107,7 @@ namespace UIAdapter
 
         private static void MakeError(Exception e, string info)
         {
-            lastError = info + "Exception type : " + e.GetType() + "\n" + e.Message + "\n" + e.StackTrace + "\n" + "inner exception : " + e.InnerException;
+            lastError = info + "Exception : " + e.Message;
             logger.Error(info, e);
         }
         private static void MakeError(Exception e)

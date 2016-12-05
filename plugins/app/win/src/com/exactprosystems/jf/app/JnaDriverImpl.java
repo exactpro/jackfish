@@ -29,7 +29,7 @@ public class JnaDriverImpl
 	public static void main(String[] args) throws Exception
 	{
 		JnaDriverImpl driver = new JnaDriverImpl(Logger.getLogger(JnaDriverImpl.class));
-		driver.connect("", 351, 425, Integer.MIN_VALUE, ControlKind.Panel, 5000);
+		driver.connect("Calc", Integer.MIN_VALUE, Integer.MIN_VALUE, Integer.MIN_VALUE, null, 5000);
 		System.out.println("title : " + driver.title());
 		int l = 100 * 100;
 		int a[] = new int[l];
@@ -427,6 +427,7 @@ public class JnaDriverImpl
 	{
 		String error = this.driver.lastError();
 		int errorNumber = this.driver.lastErrorNumber();
+		this.logger.error(error);
 		if (error != null)
 		{
 			switch (errorNumber)
