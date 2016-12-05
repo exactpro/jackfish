@@ -203,7 +203,7 @@ public class ClientTreeNode extends TreeNode
 			Optional<ContextMenu> contextMenu = super.contextMenu();
 
 			MenuItem refresh = new MenuItem("Refresh", new ImageView(new Image(CssVariables.Icons.REFRESH)));
-			refresh.setOnAction(e -> Common.tryCatch(() -> this.model.refreshClientDictionaries(), "Error on refresh client dictionaries"));
+			refresh.setOnAction(e -> Common.tryCatch(() -> this.model.updateClientDictionaries(), "Error on refresh client dictionaries"));
 			ContextMenu ret = contextMenu.orElse(new ContextMenu());
 			ret.getItems().add(0, refresh);
 

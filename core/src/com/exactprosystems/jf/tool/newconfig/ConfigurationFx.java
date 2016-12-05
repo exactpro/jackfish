@@ -315,9 +315,10 @@ public class ConfigurationFx extends Configuration
 		removeFileFromFileSystem(matrixFile, this::displayMatrix);
 	}
 
-	public void refreshMatrices()
+	public void updateMatrices()
 	{
 		super.refreshMatrices();
+		this.displayMatrix();
 	}
 
 	//endregion
@@ -352,6 +353,7 @@ public class ConfigurationFx extends Configuration
 	public void updateLibraries() throws Exception
 	{
 		refreshLibs();
+		displayLibrary();
 	}
 	//endregion
 
@@ -406,11 +408,10 @@ public class ConfigurationFx extends Configuration
 		Optional.ofNullable(reportFolder.listFiles()).ifPresent(files -> removeFilesFromFileSystem(Arrays.asList(files), this::displayReport));
 	}
 
-	public void refreshReport()
+	public void updateReport()
 	{
 		super.refreshReport();
-		//TODO think about it
-//		this.displayReport();
+		this.displayReport();
 	}
 	//endregion
 
@@ -489,11 +490,11 @@ public class ConfigurationFx extends Configuration
 		System.out.println(String.format("CLIENT DICTIONARY PATH '%s' ARE OPENED", path(file)));
 	}
 
-	public void refreshClientDictionaries()
+	public void updateClientDictionaries()
 	{
 		super.refreshClientDictionaries();
+		this.displayClient();
 	}
-
 	//endregion
 
 	//region services
@@ -662,11 +663,11 @@ public class ConfigurationFx extends Configuration
 		this.addFile(file, super.appDictionariesValue, this::displayApp);
 	}
 
-	public void refreshAppDictionaries()
+	public void updateAppDictionaries()
 	{
 		super.refreshAppDictionaries();
+		this.displayApp();
 	}
-
 	//endregion
 
 	//region file system

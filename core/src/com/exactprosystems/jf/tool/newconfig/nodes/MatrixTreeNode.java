@@ -58,7 +58,7 @@ public class MatrixTreeNode extends TreeNode
 		menu.getItems().add(new MenuItem("Git"));
 
 		MenuItem refresh = new MenuItem("Refresh", new ImageView(new Image(CssVariables.Icons.REFRESH)));
-		refresh.setOnAction(e -> Common.tryCatch(() -> this.model.refreshMatrices(), "Error on refresh matrices"));
+		refresh.setOnAction(e -> Common.tryCatch(() -> this.model.updateMatrices(), "Error on refresh matrices"));
 		menu.getItems().add(0, refresh);
 		return Optional.of(menu);
 	}
