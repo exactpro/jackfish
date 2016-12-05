@@ -44,7 +44,7 @@
     <sqlEntry>
         <name>MsSql</name>
         <sqlJar>${JF}/sql/mssql-jdbc-6.1.0.jre8.jar</sqlJar>
-        <sqlConnection>jdbc:sqlserver://${SERVER};databaseName=${BASE};integratedSecurity=true;</sqlConnection>
+        <sqlConnection>jdbc:sqlserver://${SERVER}\SQLEXPRESS;databaseName=${BASE};</sqlConnection>
     </sqlEntry>
     <clientEntry>
         <name>DTS</name>
