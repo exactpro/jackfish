@@ -9,6 +9,7 @@
 package com.exactprosystems.jf.documents.matrix.parser.items;
 
 import com.csvreader.CsvWriter;
+import com.exactprosystems.jf.api.app.ImageWrapper;
 import com.exactprosystems.jf.api.app.Mutable;
 import com.exactprosystems.jf.api.common.Converter;
 import com.exactprosystems.jf.api.common.IMatrixItem;
@@ -26,12 +27,18 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.documents.matrix.parser.Parser;
 import com.exactprosystems.jf.documents.matrix.parser.Result;
 import com.exactprosystems.jf.documents.matrix.parser.ReturnAndResult;
+import com.exactprosystems.jf.documents.matrix.parser.ScreenshotKind;
 import com.exactprosystems.jf.documents.matrix.parser.SearchHelper;
 import com.exactprosystems.jf.documents.matrix.parser.Tokens;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
+import com.exactprosystems.jf.functions.RowTable;
 
 import org.apache.log4j.Logger;
 
+import java.awt.Rectangle;
+import java.awt.Toolkit;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -883,6 +890,28 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 	{
 		return value != null && value.booleanValue();
 	}
+
+	
+   protected final void doSreenshot(ScreenshotKind when, ScreenshotKind screenshotKind, ReportBuilder report, RowTable row) throws Exception
+    {
+        if (screenshotKind == when)
+        {
+            Rectangle desktopRect = new Rectangle(Toolkit.getDefaultToolkit().getScreenSize());
+            BufferedImage image = new java.awt.Robot().createScreenCapture(desktopRect);
+
+            ImageWrapper imageWrapper =  new ImageWrapper(image);
+            imageWrapper.setDescription(screenshotKind.toString());
+            
+            File file = imageWrapper.saveToDir(report.getReportDir());
+            report.outImage(this, null, file.getName(), screenshotKind.toString());
+            
+            if (row != null)
+            {
+                row.put(Context.screenshotColumn,    imageWrapper);
+            }
+        }
+    }
+
 
 	protected static final Logger logger = Logger.getLogger(MatrixItem.class);
 
