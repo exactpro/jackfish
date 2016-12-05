@@ -503,8 +503,9 @@ public class Main extends Application
 		doc.addCopyright(text);
 		if (new File(fullPath).exists())
 		{
-			doc.save(fullPath);
+			new File(fullPath).createNewFile();
 		}
+		doc.save(fullPath);
 		doc.display();
 	}
 
