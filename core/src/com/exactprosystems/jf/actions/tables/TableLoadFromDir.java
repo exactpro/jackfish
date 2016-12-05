@@ -12,12 +12,14 @@ import com.exactprosystems.jf.actions.AbstractAction;
 import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
+import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.documents.matrix.parser.items.ActionItem.HelpKind;
 import com.exactprosystems.jf.functions.Table;
+import java.io.File;
 
 @ActionAttribute(
         group = ActionGroups.Tables,
@@ -43,7 +45,14 @@ public class TableLoadFromDir extends AbstractAction
     @Override
     public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
     {
-        super.setResult(new Table(directory,evaluator));
+        File dir = new File(directory);
+
+        if (dir.exists() && dir.isDirectory()) {
+            super.setResult(new Table(directory,evaluator));
+        }else{
+            super.setError("Directory '" + directory + "' doesn't exists.", ErrorKind.WRONG_PARAMETERS);
+        }
+
     }
 
 	@Override

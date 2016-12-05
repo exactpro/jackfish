@@ -1372,13 +1372,8 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 	{
 		try
 		{
-			if (!new File(dirName).exists()) {
-				throw new Exception("Directory '" +dirName+ "' does not exists.");
-			}
-
 			File directory = new File(dirName);
-			if (directory.isDirectory())
-			{
+
 				this.headers = null;
 				addColumns("Name", "Size", "Date", "Is directory", "Hidden");
 				this.considerAsString("Name");
@@ -1396,7 +1391,7 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 					line.put(headers[4], file.isHidden());
 					this.innerList.add(line);
 				}
-			}
+
 		}
 		catch (Exception e)
 		{
