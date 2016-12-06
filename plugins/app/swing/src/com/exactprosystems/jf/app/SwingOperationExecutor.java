@@ -753,8 +753,30 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 	}
 
 	@Override
-	public List<String> getList(ComponentFixture<Component> component) throws Exception {
-		return null;
+	public List<String> getList(ComponentFixture<Component> fixture) throws Exception {
+			ListModel model = getListModelFromComponentOrError(fixture.target);
+			return getListOfNamesFromListItems(model);
+	}
+
+	private List<String> getListOfNamesFromListItems(ListModel model) {
+		ArrayList<String> resultList = new ArrayList<>();
+		for (int i = 0; i < model.getSize(); i++)
+		{
+			resultList.add(model.getElementAt(i).toString());
+		}
+		return resultList;
+	}
+
+	private ListModel getListModelFromComponentOrError(Component component) {
+		switch (component.getClass().getSimpleName())
+		{
+			case "JComboBox":
+				return ((JComboBox) component).getModel();
+			case "JList":
+				return ((JList) component).getModel();
+			default:
+				throw new Error("Element " + component.getName() + " does not have list model. Please try another element.");
+		}
 	}
 
 	@Override
@@ -953,7 +975,7 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 		}
 		catch (Exception e)
 		{
-            this.logger.error(String.format("dragNdrop(%s,%s,%d,%d,%d,%d)", drag.target.getName(), drop.target.getName(), x1, y1, x2, y2));
+            this.logger.error(String.format("dragNdrop(%s,%d,%d,%s,%d,%d)", drag.target.getName(), x1, y1, drag.target.getName(), x2, y2));
 			this.logger.error(e.getMessage(), e);
 			throw e;
 		}
