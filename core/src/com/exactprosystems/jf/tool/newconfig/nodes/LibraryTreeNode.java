@@ -129,7 +129,10 @@ public class LibraryTreeNode extends TreeNode
 			MenuItem itemOpen = new MenuItem("Open library", new ImageView(new Image(CssVariables.Icons.LIBRARY_ICON)));
 			itemOpen.setOnAction(e -> Common.tryCatch(() -> model.openLibrary(this.fullPath), "Error on open library file"));
 
-			menu.getItems().addAll(itemOpen);
+			MenuItem itemRemove = new MenuItem("Remove library", new ImageView(new Image(CssVariables.Icons.REMOVE_PARAMETER_ICON)));
+			itemRemove.setOnAction(e -> Common.tryCatch(() -> model.removeLibrary(this.namespace), "Error on remove library"));
+
+			menu.getItems().addAll(itemOpen, itemRemove);
 			return Optional.of(menu);
 		}
 

@@ -1,3 +1,8 @@
+--------------------------------------------------------------------------------
+06.12.2016 4.3.0.1697
+#38727 delete library from gui : implemented necessary behaviour
+
+--------------------------------------------------------------------------------
 05.12.2016 4.3.0.1695
 #38653 feature: it is possible to make desktop screenshots directly from Testcases and Steps
 
