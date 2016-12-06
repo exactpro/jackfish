@@ -1,6 +1,24 @@
+06.12.2016 4.3.0.1698
+#38740 resolved. Now Do.getList() is available for web plugin
+
 --------------------------------------------------------------------------------
 06.12.2016 4.3.0.1697
 #38727 delete library from gui : implemented necessary behaviour
+
+--------------------------------------------------------------------------------
+06.12.2016 4.3.0.1696
+1 - #38552 feature: appeared second version of dragNdrop. Now you can specify starting
+coords.
+
+For example:
+You have two elements with ID-s 'elementDrag' and 'elementDrop'. On the 'elementDrag'
+you write Do.dragNdrop(10, 10, 'elementDrop', 20, 20). Where 10,10 this are coords of
+'elementDrag' (start coords) and 20,20 this are coords of 'elementDrop' (end coords)
+
+2 - How define coords inside element?
+- Open Xpath builder in dictionary
+- Select element, which you need (rectangle must appeared around of element)
+- And hover mouse on element in preview frame
 
 --------------------------------------------------------------------------------
 05.12.2016 4.3.0.1695
