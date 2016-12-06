@@ -31,6 +31,7 @@ import com.exactprosystems.jf.tool.custom.grideditor.TableDataProvider;
 import com.exactprosystems.jf.tool.custom.label.CommentsLabel;
 import com.exactprosystems.jf.tool.custom.layout.wizard.LayoutWizard;
 import com.exactprosystems.jf.tool.custom.tab.CustomTab;
+import com.exactprosystems.jf.tool.custom.tab.CustomTabPane;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.matrix.MatrixFx;
 import com.exactprosystems.jf.tool.matrix.params.ParametersPane;
@@ -375,7 +376,7 @@ public class DisplayDriverFx implements DisplayDriver
 		{
 			Common.sizeHeightComments(label, 0, 1, 2);
 		}
-		label.prefWidthProperty().bind(Common.getTabPane().getScene().getWindow().widthProperty().subtract(20 + 15));
+		label.prefWidthProperty().bind(CustomTabPane.getInstance().getScene().getWindow().widthProperty().subtract(20 + 15));
 		label.setPrefHeight(Common.setHeightComments(label.getText()));
 		label.setListener(() -> {
 			String lastValue = fromList(comments);

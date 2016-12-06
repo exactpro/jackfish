@@ -7,6 +7,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.exactprosystems.jf.tool.newconfig;
 
+import com.exactprosystems.jf.api.common.SerializablePair;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.newconfig.nodes.ConfigurationTreeNode;
@@ -78,6 +79,7 @@ public class ConfigurationTreeView extends TreeView<TreeNode>
 					{
 						HBox pane = new HBox();
 						pane.setSpacing(5);
+						item.setExpanded(this.getTreeItem().isExpanded());
 						item.icon().map(ImageView::new).ifPresent(pane.getChildren()::add);
 						pane.getChildren().add(view);
 						setGraphic(pane);
@@ -155,8 +157,43 @@ public class ConfigurationTreeView extends TreeView<TreeNode>
 		MenuItem itemReset = new MenuItem("Reset");
 		itemReset.setOnAction(e -> System.out.println(String.format("file %s Reset", file)));
 
-		menu.getItems().addAll(itemClone, itemPull, itemCommit, itemPush, itemReset);
+		MenuItem itemIgnore = new MenuItem("Ignore");
+		itemIgnore.setOnAction(e -> System.out.println(String.format("file %s Ignore", file)));
+
+		menu.getItems().addAll(itemClone, itemPull, itemCommit, itemPush, itemReset, itemIgnore);
 		contextMenu.getItems().add(menu);
 		return contextMenu;
+	}
+
+	public static MenuItem createItem(String name, String image, Common.Function fn, String error)
+	{
+		return createItem(name, image, fn, error, false);
+	}
+
+	public static MenuItem createItem(SerializablePair<String, String> pair, Common.Function fn, String error)
+	{
+		return createItem(pair.getKey(), pair.getValue(), fn, error);
+	}
+
+	public static MenuItem createDisabledItem(String name, String image)
+	{
+		return createItem(name, image, null, null, true);
+	}
+
+	public static MenuItem createDisabledItem(SerializablePair<String, String> pair)
+	{
+		return createItem(pair.getKey(), pair.getValue(), null, null, true);
+	}
+
+	private static MenuItem createItem(String name, String image, Common.Function fn, String error, boolean isDisabled)
+	{
+		MenuItem menuItem = new MenuItem(name);
+		if (image != null)
+		{
+			menuItem.setGraphic(new ImageView(new Image(image)));
+		}
+		menuItem.setOnAction(e -> Common.tryCatch(fn, error));
+		menuItem.setDisable(isDisabled);
+		return menuItem;
 	}
 }

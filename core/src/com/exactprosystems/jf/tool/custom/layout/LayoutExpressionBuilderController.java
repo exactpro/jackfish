@@ -395,7 +395,7 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 		Button okButton = (Button) alert.getDialogPane().lookupButton(ButtonType.OK);
 		okButton.setDefaultButton(false);
 
-		alert.getDialogPane().getStylesheets().add(Common.currentTheme().getPath());
+		alert.getDialogPane().getStylesheets().addAll(Common.currentThemesPaths());
 		alert.setTitle(title);
 		alert.setResizable(true);
 		alert.initModality(Modality.APPLICATION_MODAL);

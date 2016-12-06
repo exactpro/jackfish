@@ -119,6 +119,7 @@
 /*Custom classes*/
 .transparentBackground {
 	-fx-background-color : transparent;
+	-fx-padding : 4px;
 
 }
 .delayShutter:selected {
@@ -834,5 +835,11 @@ CellView > .text-input.text-field{
 }
 .gitMergeTheirConflict .content {
 	-fx-background-color : rgba(0,0,255,0.3);
+
+}
+
+.customTabPane{
+	-fx-open-tab-animation: NONE;
+	-fx-close-tab-animation: NONE;
 
 }

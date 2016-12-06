@@ -48,6 +48,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -65,7 +66,7 @@ public abstract class Common
 	public final static int		MIN_HEIGHT				= PREF_HEIGHT - 1;
 	public final static int		MAX_HEIGHT				= PREF_HEIGHT + 1;
 	public final static int		PREF_WIDTH_LABEL		= 170;
-	public final static int		BUTTON_SIZE_WITH_ICON	= 42;
+	public final static int		BUTTON_SIZE_WITH_ICON	= 32;
 	public final static String	UINT_REGEXP				= "^\\d+$";
 	public final static String	INT_REGEXP				= "^-?\\d+$";
 	public final static String	EMPTY					= "<none>";
@@ -121,6 +122,15 @@ public abstract class Common
 		Common.theme = theme;
 	}
 
+	public static List<String> currentThemesPaths()
+	{
+		List<String> list = new ArrayList<>();
+		list.add(Common.theme.getPath());
+		//TODO add path to icon css in future
+		list.add(Theme.SPACER.getPath());
+		return list;
+	}
+
 	public static Theme currentTheme()
 	{
 		return Common.theme;
@@ -135,6 +145,35 @@ public abstract class Common
 				.filter(tab -> tab.getDocument().equals(doc))
 				.findFirst()
 				.orElse(null);
+	}
+
+	public enum SpacerEnum {
+		VerticalMin(CssVariables.VERTICAL_MIN),
+		VerticalPref(CssVariables.VERTICAL_MID),
+		VerticalMax(CssVariables.VERTICAL_MAX),
+
+		HorizontalMin(CssVariables.HORIZONTAL_MIN),
+		HorizontalPref(CssVariables.HORIZONTAL_MID),
+		HorizontalMax(CssVariables.HORIZONTAL_MAX);
+
+		private String style;
+
+		SpacerEnum(String style)
+		{
+			this.style = style;
+		}
+
+		public String getStyle()
+		{
+			return style;
+		}
+	}
+
+	public static Label createSpacer(SpacerEnum spacerEnum)
+	{
+		Label lbl = new Label();
+		lbl.setId(spacerEnum.getStyle());
+		return lbl;
 	}
 
 	public static String getRelativePath(String filePath)
@@ -214,16 +253,6 @@ public abstract class Common
 	public static void setProgressBar(ProgressBar bar)
 	{
 		progressBar = bar;
-	}
-
-	public static void setTabPane(TabPane tab)
-	{
-		tabPane = tab;
-	}
-
-	public static TabPane getTabPane()
-	{
-		return tabPane;
 	}
 
 	public static int setHeightComments(String text)

@@ -100,6 +100,7 @@ Text {
 .transparentBackground {
 	-fx-background-color : transparent;
 	-fx-border-width : 0px;
+	-fx-padding : 4px;
 }
 
 /*DateTimePicker*/
@@ -800,5 +801,11 @@ CellView > .text-input.text-field{
 }
 .fullPathLabel:hover {
 	-fx-opacity : 1.0
+
+}
+
+.customTabPane{
+	-fx-open-tab-animation: NONE;
+	-fx-close-tab-animation: NONE;
 
 }

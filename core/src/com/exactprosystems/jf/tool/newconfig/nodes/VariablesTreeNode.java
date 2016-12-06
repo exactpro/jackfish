@@ -7,16 +7,16 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.exactprosystems.jf.tool.newconfig.nodes;
 
+import com.exactprosystems.jf.api.common.SerializablePair;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.newconfig.ConfigurationFx;
+import com.exactprosystems.jf.tool.newconfig.ConfigurationTreeView;
 import com.exactprosystems.jf.tool.newconfig.TablePair;
 import javafx.scene.Node;
 import javafx.scene.control.ContextMenu;
-import javafx.scene.control.MenuItem;
 import javafx.scene.control.TreeItem;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
 
 import java.io.File;
@@ -29,10 +29,26 @@ public class VariablesTreeNode extends TreeNode
 	private ConfigurationFx		model;
 	private TreeItem<TreeNode>	variablesTreeNode;
 
+	private static final SerializablePair<String, String> REMOVE_VARS_FILE = new SerializablePair<>("Refresh", CssVariables.Icons.REMOVE_PARAMETER_ICON);
+	private static final SerializablePair<String, String> OPEN_VARS_FILE = new SerializablePair<>("Open matrix", CssVariables.Icons.VARS_ICON);
+
+
 	public VariablesTreeNode(ConfigurationFx model, TreeItem<TreeNode> variablesTreeNode)
 	{
 		this.model = model;
 		this.variablesTreeNode = variablesTreeNode;
+	}
+
+	@Override
+	public Optional<ContextMenu> contextMenu()
+	{
+		ContextMenu menu = new ContextMenu();
+		menu.getItems().addAll(
+				ConfigurationTreeView.createDisabledItem(REMOVE_VARS_FILE),
+				ConfigurationTreeView.createDisabledItem(OPEN_VARS_FILE),
+				ConfigurationTreeView.createDisabledItem("Git", null)
+		);
+		return Optional.of(menu);
 	}
 
 	@Override
@@ -56,13 +72,10 @@ public class VariablesTreeNode extends TreeNode
 			public Optional<ContextMenu> contextMenu()
 			{
 				ContextMenu menu = new ContextMenu();
-
-				MenuItem itemRemoveVars = new MenuItem("Remove vars file", new ImageView(new Image(CssVariables.Icons.REMOVE_PARAMETER_ICON)));
-				itemRemoveVars.setOnAction(e -> Common.tryCatch(() -> model.excludeVarsFile(file), "Error on remove vars file"));
-
-				MenuItem itemOpenVars = new MenuItem("Open vars file", new ImageView(new Image(CssVariables.Icons.VARS_ICON)));
-				itemOpenVars.setOnAction(event -> Common.tryCatch(() -> model.openVariableFile(new File(file)), "Error on load system variable"));
-				menu.getItems().addAll(itemRemoveVars, itemOpenVars);
+				menu.getItems().addAll(
+						ConfigurationTreeView.createItem(REMOVE_VARS_FILE, () -> model.excludeVarsFile(file), "Error on remove vars file"),
+						ConfigurationTreeView.createItem(OPEN_VARS_FILE, () -> model.openVariableFile(new File(file)), "Error on load system variable")
+				);
 				menu.getItems().addAll(super.contextMenu().orElse(new ContextMenu()).getItems());
 				return Optional.of(menu);
 			}
@@ -76,7 +89,7 @@ public class VariablesTreeNode extends TreeNode
 			@Override
 			public List<TablePair> getParameters()
 			{
-				List<TablePair> list = new ArrayList<TablePair>();
+				List<TablePair> list = new ArrayList<>();
 				list.add(TablePair.TablePairBuilder.create("path", ConfigurationFx.path(file)).edit(false).build());
 				return list;
 			}

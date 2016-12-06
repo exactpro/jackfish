@@ -8,34 +8,43 @@
    information which is the property of Exactpro Systems, LLC or its licensors.
   -->
 
+<?import com.exactprosystems.jf.tool.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import java.lang.Double?>
-<HBox prefHeight="87.0" prefWidth="1453.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
-	  fx:controller="com.exactprosystems.jf.tool.dictionary.navigation.NavigationController">
+<HBox prefHeight="87.0" prefWidth="1453.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.exactprosystems.jf.tool.dictionary.navigation.NavigationController">
+	<fx:define>
+		<CssVariables fx:id="verMin" fx:constant="VERTICAL_MIN"/>
+		<CssVariables fx:id="verMid" fx:constant="VERTICAL_MID"/>
+		<CssVariables fx:id="verMax" fx:constant="VERTICAL_MAX"/>
+
+		<CssVariables fx:id="horMin" fx:constant="HORIZONTAL_MIN"/>
+		<CssVariables fx:id="horMid" fx:constant="HORIZONTAL_MID"/>
+		<CssVariables fx:id="horMax" fx:constant="HORIZONTAL_MAX"/>
+	</fx:define>
 	<children>
-		<fx:define>
-			<Double fx:id="w" fx:value="100"/>
-		</fx:define>
-		<BorderPane fx:id="paneWindow">
-			<bottom>
-				<HBox alignment="CENTER_LEFT" BorderPane.alignment="BOTTOM_LEFT">
+		<VBox HBox.hgrow="ALWAYS" prefHeight="200.0" prefWidth="100.0" fx:id="vBoxWindow">
+			<children>
+				<Label id="$verMid"/>
+				<HBox alignment="CENTER_LEFT">
 					<children>
 						<Button fx:id="btnNewDialog" alignment="CENTER" mnemonicParsing="false" onAction="#newWindow">
 							<tooltip>
 								<Tooltip text="Create new window"/>
 							</tooltip>
 						</Button>
+						<Label id="$horMin"/>
 						<Button fx:id="btnDeleteDialog" alignment="CENTER" mnemonicParsing="false" onAction="#deleteWindow">
 							<tooltip>
 								<Tooltip text="Delete selected window"/>
 							</tooltip>
 						</Button>
+						<Label id="$horMin"/>
 						<Button fx:id="btnCopyDialog" mnemonicParsing="false" onAction="#copyDialog">
 							<tooltip>
 								<Tooltip text="Copy current dialog with all elements"/>
 							</tooltip>
 						</Button>
+						<Label id="$horMin"/>
 						<Button fx:id="btnPasteDialog" mnemonicParsing="false" onAction="#pasteDialog">
 							<tooltip>
 								<Tooltip text="Paste copied dialog"/>
@@ -43,57 +52,64 @@
 						</Button>
 					</children>
 				</HBox>
-			</bottom>
-		</BorderPane>
-		<VBox alignment="CENTER_LEFT" GridPane.columnIndex="1" GridPane.valignment="CENTER" minWidth="$w" maxWidth="$w" prefWidth="$w" spacing="5">
+			</children>
+		</VBox>
+		<Label id="$horMax"/>
+		<VBox HBox.hgrow="ALWAYS" alignment="CENTER_LEFT" maxWidth="100" minWidth="100" prefWidth="100">
 			<children>
 				<RadioButton id="Self" mnemonicParsing="false" onAction="#changeSection" text="Self">
 					<toggleGroup>
 						<ToggleGroup fx:id="groupSection"/>
 					</toggleGroup>
 				</RadioButton>
+				<Label id="$verMin"/>
 				<RadioButton id="OnOpen" mnemonicParsing="false" onAction="#changeSection" text="On open" toggleGroup="$groupSection"/>
+				<Label id="$verMin"/>
 				<RadioButton id="Run" mnemonicParsing="false" onAction="#changeSection" text="Run" toggleGroup="$groupSection"/>
+				<Label id="$verMin"/>
 				<RadioButton id="OnClose" mnemonicParsing="false" onAction="#changeSection" text="On close" toggleGroup="$groupSection"/>
+				<Label id="$verMin"/>
 				<RadioButton id="Close" mnemonicParsing="false" onAction="#changeSection" text="Close" toggleGroup="$groupSection"/>
 			</children>
-		</VBox >
-		<BorderPane fx:id="paneElement" GridPane.columnIndex="2">
-			<bottom>
-				<VBox spacing="5">
+		</VBox>
+		<Label id="$horMax"/>
+		<VBox HBox.hgrow="ALWAYS" prefHeight="200.0" prefWidth="100.0" fx:id="vBoxElement" GridPane.columnIndex="2">
+			<children>
+				<Label id="$verMid"/>
+				<HBox fx:id="hBoxElement">
 					<children>
-						<HBox fx:id="hBoxElement" alignment="TOP_LEFT" spacing="2">
-							<children>
-								<Button fx:id="btnNewElement" mnemonicParsing="false" onAction="#newElement">
-									<tooltip>
-										<Tooltip text="Create new Element"/>
-									</tooltip>
-								</Button>
-								<Button fx:id="btnDeleteElement" mnemonicParsing="false" onAction="#deleteElement">
-									<tooltip>
-										<Tooltip text="Delete current element"/>
-									</tooltip>
-								</Button>
-								<Button fx:id="btnCopyElement" mnemonicParsing="false" onAction="#copyElement">
-									<tooltip>
-										<Tooltip text="Copy current element"/>
-									</tooltip>
-								</Button>
-								<Button fx:id="btnPasteElement" mnemonicParsing="false" onAction="#pasteElement">
-									<tooltip>
-										<Tooltip text="Paste copied element"/>
-									</tooltip>
-								</Button>
-								<Button fx:id="btnTestWindow" mnemonicParsing="false" onAction="#testingDialog">
-									<tooltip>
-										<Tooltip text="Test all controls"/>
-									</tooltip>
-								</Button>
-							</children>
-						</HBox>
+						<Button fx:id="btnNewElement" mnemonicParsing="false" onAction="#newElement">
+							<tooltip>
+								<Tooltip text="Create new Element"/>
+							</tooltip>
+						</Button>
+						<Label id="$horMin"/>
+						<Button fx:id="btnDeleteElement" mnemonicParsing="false" onAction="#deleteElement">
+							<tooltip>
+								<Tooltip text="Delete current element"/>
+							</tooltip>
+						</Button>
+						<Label id="$horMin"/>
+						<Button fx:id="btnCopyElement" mnemonicParsing="false" onAction="#copyElement">
+							<tooltip>
+								<Tooltip text="Copy current element"/>
+							</tooltip>
+						</Button>
+						<Label id="$horMin"/>
+						<Button fx:id="btnPasteElement" mnemonicParsing="false" onAction="#pasteElement">
+							<tooltip>
+								<Tooltip text="Paste copied element"/>
+							</tooltip>
+						</Button>
+						<Label id="$horMin"/>
+						<Button fx:id="btnTestWindow" mnemonicParsing="false" onAction="#testingDialog">
+							<tooltip>
+								<Tooltip text="Test all controls"/>
+							</tooltip>
+						</Button>
 					</children>
-				</VBox>
-			</bottom>
-		</BorderPane>
+				</HBox>
+			</children>
+		</VBox>
 	</children>
 </HBox>

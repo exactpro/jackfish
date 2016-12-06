@@ -32,7 +32,6 @@ import com.exactprosystems.jf.tool.custom.xpath.XpathViewer;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper.OpenSaveMode;
 import com.exactprosystems.jf.tool.matrix.MatrixFx;
-
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -50,10 +49,7 @@ import javafx.util.Pair;
 
 import java.io.File;
 import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class ParametersPane extends CustomScrollPane
@@ -271,7 +267,7 @@ public class ParametersPane extends CustomScrollPane
 				{ }
 
 				AbstractEvaluator evaluator = this.context.getEvaluator();
-				String themePath = Common.currentTheme().getPath();
+				List<String> themePaths = Common.currentThemesPaths();
 				
 				if (howHelp != null ) 
 				{
@@ -377,7 +373,7 @@ public class ParametersPane extends CustomScrollPane
 										Object value = evaluator.tryEvaluate(par.getExpression());
 										String initial = value == null ? null : String.valueOf(value);
 										XpathViewer viewer = new XpathViewer(null, xml.getDocument(), null);
-										String res = viewer.show(initial, "Xpath for " + par.getName(), themePath, false);
+										String res = viewer.show(initial, "Xpath for " + par.getName(), themePaths, false);
 										if (res != null)
 										{
 											res = evaluator.createString(res);

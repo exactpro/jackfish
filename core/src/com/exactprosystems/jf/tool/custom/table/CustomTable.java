@@ -28,6 +28,7 @@ public class CustomTable<T> extends TableView<T>
 	private CustomTableColumn thirdColumn;
 	private boolean mayChanged;
 	private ContextMenuListener<T> listener;
+	private ContextMenu contextMenu;
 
 	public CustomTable(boolean isChanged)
 	{
@@ -45,6 +46,9 @@ public class CustomTable<T> extends TableView<T>
 		this.listener = listener;
 		this.mayChanged = true;
 		this.setEditable(true);
+		this.contextMenu = new ContextMenu();
+		this.setContextMenu(this.contextMenu);
+		addItemsToContextMenu();
 	}
 
 	public void setListener(ContextMenuListener<T> listener)
@@ -98,6 +102,41 @@ public class CustomTable<T> extends TableView<T>
 		}));
 	}
 
+	private void addItemsToContextMenu()
+	{
+		MenuItem removeSelected = new MenuItem("Remove selected");
+		removeSelected.setGraphic(new ImageView(new Image(CssVariables.Icons.DELETE_ICON)));
+		MenuItem removeAll = new MenuItem("Remove all");
+		if (this.mayChanged)
+		{
+			ContextMenu contextMenu = new ContextMenu();
+			contextMenu.getItems().addAll(removeSelected, removeAll);
+			setContextMenu(contextMenu);
+		}
+
+		removeSelected.setOnAction(event -> deleteItems());
+		removeAll.setOnAction(event -> deleteAllItems());
+	}
+
+	private void deleteItems()
+	{
+		List<T> selectedItems = FXCollections.observableArrayList(this.getSelectionModel().getSelectedItems());
+		List<T> list = new ArrayList<>();
+		for (int i = selectedItems.size() - 1; i >= 0; i--)
+		{
+			T t = selectedItems.get(i);
+			list.add(t);
+			this.getItems().remove(t);
+		}
+		onDeleteItems(list);
+	}
+
+	private void deleteAllItems()
+	{
+		onDeleteItems(this.getItems());
+		this.getItems().clear();
+	}
+
 	private void onEditCommitColumn(CustomTableColumn c, final EditCommit<T> editCommit)
 	{
 		c.setOnEditCommit(t -> {
@@ -116,7 +155,7 @@ public class CustomTable<T> extends TableView<T>
 		column.setCellValueFactory(new PropertyValueFactory<>(valueFactory));
 		column.setEditable(editable);
 		column.setNeedTooltip(needTooltip);
-		column.setCellFactory(tsTableColumn -> new CustomTableCell(mayChanged));
+		column.setCellFactory(tsTableColumn -> new CustomTableCell());
 	}
 
 	private void showColumn(CustomTableColumn c, int index)
@@ -135,18 +174,8 @@ public class CustomTable<T> extends TableView<T>
 	{
 		private TextField textField;
 
-		public CustomTableCell(boolean mayChanged)
+		public CustomTableCell()
 		{
-			MenuItem removeSelected = new MenuItem("Remove selected");
-			removeSelected.setGraphic(new ImageView(new Image(CssVariables.Icons.DELETE_ICON)));
-			MenuItem removeAll = new MenuItem("Remove all");
-			if (mayChanged)
-			{
-				ContextMenu contextMenu = new ContextMenu();
-				contextMenu.getItems().addAll(removeSelected, removeAll);
-				setContextMenu(contextMenu);
-			}
-
 			Platform.runLater(() -> {
 				getTableView().getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 				getTableView().setOnKeyPressed(keyEvent -> {
@@ -160,28 +189,6 @@ public class CustomTable<T> extends TableView<T>
 					}
 				});
 			});
-
-			removeSelected.setOnAction(event -> deleteItems());
-			removeAll.setOnAction(event -> deleteAllItems());
-		}
-
-		private void deleteItems()
-		{
-			List<T> selectedItems = FXCollections.observableArrayList(getTableView().getSelectionModel().getSelectedItems());
-			List<T> list = new ArrayList<>();
-			for (int i = selectedItems.size() - 1; i >= 0; i--)
-			{
-				T t = selectedItems.get(i);
-				list.add(t);
-				getTableView().getItems().remove(t);
-			}
-			onDeleteItems(list);
-		}
-
-		private void deleteAllItems()
-		{
-			onDeleteItems(getTableView().getItems());
-			getTableView().getItems().clear();
 		}
 
 		@Override
@@ -297,7 +304,7 @@ public class CustomTable<T> extends TableView<T>
 		}
 	}
 
-	void onDeleteItems(List<T> items)
+	private void onDeleteItems(List<T> items)
 	{
 		Optional.ofNullable(this.listener).ifPresent(l -> l.onDeleteItems(items));
 	}

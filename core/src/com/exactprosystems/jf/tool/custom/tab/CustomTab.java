@@ -14,19 +14,28 @@ import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import javafx.application.Platform;
+import javafx.geometry.Bounds;
 import javafx.geometry.Pos;
+import javafx.scene.SnapshotParameters;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Tab;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.image.WritableImage;
+import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseButton;
+import javafx.scene.input.TransferMode;
 import javafx.scene.layout.HBox;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 
 import java.io.FileReader;
 import java.io.Reader;
 import java.util.concurrent.atomic.AtomicBoolean;
+
+import static com.exactprosystems.jf.tool.custom.tab.CustomTabPane.TAB_DRAG_KEY;
 
 public class CustomTab extends Tab implements AutoCloseable
 {
@@ -38,6 +47,15 @@ public class CustomTab extends Tab implements AutoCloseable
 	private Settings			settings;
 	private final AtomicBoolean		warningIsShow;
 
+	private CustomTabPane tabPane;
+	private HBox view;
+
+	public CustomTab(Document document, Settings settings, CustomTabPane tabPane)
+	{
+		this(document, settings);
+		this.tabPane = tabPane;
+	}
+
 	public CustomTab(Document document, Settings settings)
 	{
 		super();
@@ -47,8 +65,8 @@ public class CustomTab extends Tab implements AutoCloseable
 		this.setClosable(false);
 		this.document = document;
 
-		HBox box = new HBox();
-		box.setAlignment(Pos.CENTER);
+		this.view = new HBox();
+		this.view.setAlignment(Pos.CENTER);
 
 		this.crossButton = new Hyperlink();
 		Image image = new Image(CssVariables.Icons.CLOSE_BUTTON_ICON);
@@ -64,8 +82,38 @@ public class CustomTab extends Tab implements AutoCloseable
 				Common.tryCatch(this::close, "");
 			}
 		});
-		box.getChildren().addAll(this.text, this.crossButton);
-		this.setGraphic(box);
+		this.view.getChildren().addAll(this.text, this.crossButton);
+		this.view.setOnDragDetected(e -> {
+			this.tabPane.getTabsMap().clear();
+			this.getTabPane().getTabs().stream()
+					.map(t -> (CustomTab) t)
+					.forEach(t -> {
+						HBox view = t.view;
+						Bounds bounds = view.getBoundsInLocal();
+						Bounds screenBounds = view.localToScreen(bounds);
+						int x = (int) screenBounds.getMinX();
+						int y = (int) screenBounds.getMinY();
+						int width = (int) screenBounds.getWidth();
+						int height = (int) screenBounds.getHeight();
+						Rectangle rec = new Rectangle(x, y, width, height);
+						this.tabPane.getTabsMap().put(t, rec);
+					});
+
+			Dragboard dragboard = this.view.startDragAndDrop(TransferMode.MOVE);
+			ClipboardContent clipboardContent = new ClipboardContent();
+			clipboardContent.putString(TAB_DRAG_KEY);
+			dragboard.setContent(clipboardContent);
+			WritableImage snapshot = this.view.snapshot(new SnapshotParameters(), null);
+			dragboard.setDragView(snapshot);
+			//save current tab
+			this.tabPane.draggingTabProperty().set(this);
+
+			e.consume();
+		});
+		this.view.setOnDragExited(e -> {
+			//TODO implement
+		});
+		this.setGraphic(this.view);
 
 		this.watcher = new FileWatcher()
 		{
@@ -179,5 +227,10 @@ public class CustomTab extends Tab implements AutoCloseable
 	public void setTitle(String text)
 	{
 		this.text.setText(Common.getSimpleTitle(text));
+	}
+
+	HBox getView()
+	{
+		return view;
 	}
 }

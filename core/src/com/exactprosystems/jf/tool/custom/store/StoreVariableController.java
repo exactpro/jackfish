@@ -80,7 +80,7 @@ public class StoreVariableController implements Initializable, ContainingParent
 		alert.setResizable(true);
 		alert.setTitle("Store");
 		alert.setHeaderText("Edit store variable");
-		alert.getDialogPane().getStylesheets().add(Common.currentTheme().getPath());
+		alert.getDialogPane().getStylesheets().addAll(Common.currentThemesPaths());
 		alert.getDialogPane().setContent(this.parent);
 		Optional<ButtonType> buttonType = alert.showAndWait();
 		if (buttonType.isPresent() && buttonType.get().getButtonData().equals(ButtonBar.ButtonData.OK_DONE))

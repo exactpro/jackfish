@@ -202,7 +202,7 @@ public class MatrixContextMenu extends ContextMenu
 	private void gotoLine(MatrixTreeView tree)
 	{
 		TextInputDialog dialog = new TextInputDialog();
-		dialog.getDialogPane().getStylesheets().add(Common.currentTheme().getPath());
+		dialog.getDialogPane().getStylesheets().addAll(Common.currentThemesPaths());
 		dialog.getDialogPane().setHeader(new Pane());
 		dialog.setTitle("Enter line number");
 		dialog.getEditor().textProperty().addListener((observable, oldValue, newValue) -> {
@@ -288,7 +288,7 @@ public class MatrixContextMenu extends ContextMenu
 					dialog.setResizable(true);
 					dialog.setHeaderText("Help for " + item.getItemName());
 					dialog.setTitle("HELP");
-					dialog.getDialogPane().getStylesheets().addAll(Common.currentTheme().getPath());
+					dialog.getDialogPane().getStylesheets().addAll(Common.currentThemesPaths());
 					dialog.show();
 				}
 			}, "Error on show result");

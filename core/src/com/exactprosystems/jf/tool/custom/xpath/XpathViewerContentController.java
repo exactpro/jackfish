@@ -203,9 +203,9 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 		this.cfMainExpression.setText(initial);
 	}
 
-	public String show(String title, String themePath, boolean fullScreen)
+	public String show(String title, List<String> themePaths, boolean fullScreen)
 	{
-		Alert dialog = createAlert(title, themePath);
+		Alert dialog = createAlert(title, themePaths);
 		Button okButton = (Button) dialog.getDialogPane().lookupButton(ButtonType.OK);
 		okButton.setDefaultButton(false);
 
@@ -220,7 +220,7 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 		{
 			dialog.setOnShown(event -> ((Stage) dialog.getDialogPane().getScene().getWindow()).setFullScreen(true));
 		}
-		dialog.getDialogPane().getStylesheets().addAll(Common.currentTheme().getPath());
+		dialog.getDialogPane().getStylesheets().addAll(Common.currentThemesPaths());
 		Optional<ButtonType> optional = dialog.showAndWait();
 		if (optional.isPresent())
 		{
@@ -482,10 +482,10 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 		root.getChildren().forEach(child -> selectItems(child, nodes, items));
 	}
 
-	private Alert createAlert(String title, String themePath)
+	private Alert createAlert(String title, List<String> themePaths)
 	{
 		Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-		alert.getDialogPane().getStylesheets().add(themePath);
+		alert.getDialogPane().getStylesheets().addAll(themePaths);
 		alert.setTitle(title);
 		alert.setResizable(true);
 		alert.initModality(Modality.APPLICATION_MODAL);

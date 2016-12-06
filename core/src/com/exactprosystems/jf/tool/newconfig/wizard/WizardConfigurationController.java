@@ -112,7 +112,7 @@ public class WizardConfigurationController implements Initializable, ContainingP
 	{
 		Dialog<Boolean> dialog = new Dialog<>();
 		dialog.setResizable(true);
-		dialog.getDialogPane().getStylesheets().addAll(Common.currentTheme().getPath());
+		dialog.getDialogPane().getStylesheets().addAll(Common.currentThemesPaths());
 		dialog.setTitle("New Project");
 //		dialog.getDialogPane().setHeader(new Label());
 		dialog.getDialogPane().setContent(this.parent);

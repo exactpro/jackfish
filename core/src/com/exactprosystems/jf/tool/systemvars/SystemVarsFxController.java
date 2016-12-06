@@ -10,17 +10,17 @@ package com.exactprosystems.jf.tool.systemvars;
 
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.documents.matrix.parser.Parameter;
-import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.custom.tab.CustomTab;
+import com.exactprosystems.jf.tool.custom.tab.CustomTabPane;
 import com.exactprosystems.jf.tool.custom.table.CustomTable;
-
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableRow;
 import javafx.scene.layout.GridPane;
 
@@ -56,8 +56,10 @@ public class SystemVarsFxController implements Initializable, ContainingParent
 	public void initialize(URL url, ResourceBundle resourceBundle)
 	{
 		this.tableView = new CustomTable<>(true);
+		MenuItem itemAdd = new MenuItem("Add new variable");
+		itemAdd.setOnAction(this::addNewVar);
+		this.tableView.getContextMenu().getItems().add(0,itemAdd);
 		this.grid.add(this.tableView, 0, 0);
-		GridPane.setColumnSpan(this.tableView, 2);
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -75,15 +77,12 @@ public class SystemVarsFxController implements Initializable, ContainingParent
 	public void init(SystemVarsFx model, Settings settings)
 	{
 		this.model = model;
-		this.tab = new CustomTab(model, settings);
+		this.tab = CustomTabPane.getInstance().createTab(model);
 		this.tab.setContent(this.pane);
 		this.tableView.setListener(this.model::removeParameters);
 		createTable();
-		Platform.runLater(() -> 
-		{
-			Common.getTabPane().getTabs().add(SystemVarsFxController.this.tab);
-			Common.getTabPane().getSelectionModel().select(this.tab);
-		});
+		CustomTabPane.getInstance().addTab(this.tab);
+		CustomTabPane.getInstance().selectTab(this.tab);
 	}
 	
 	public void saved(String name)
@@ -94,7 +93,7 @@ public class SystemVarsFxController implements Initializable, ContainingParent
 	public void close() throws Exception
 	{
 		this.tab.close();
-		Common.getTabPane().getTabs().remove(this.tab);
+		CustomTabPane.getInstance().removeTab(this.tab);
 	}
 
 	// ------------------------------------------------------------------------------------------------------------------
