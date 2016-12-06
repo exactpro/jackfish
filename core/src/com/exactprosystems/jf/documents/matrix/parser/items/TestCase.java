@@ -118,8 +118,8 @@ public final class TestCase extends MatrixItem
 	@Override
 	public String getItemName()
 	{
-		return super.getItemName() + "  " + (this.name == null ? "" : "(" + this.name + ")")
-		        +  (this.kind == null ? "" : " Screenshot: " + this.kind + "");
+		return super.getItemName() + "  " + (this.name.get() == null ? "" : "(" + this.name + ")")
+		        +  (this.kind.get() == null ? "" : (" Screenshot: " + this.kind + "") );
 	}
 
 	@Override
