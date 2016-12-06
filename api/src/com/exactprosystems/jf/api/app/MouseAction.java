@@ -16,7 +16,10 @@ public enum MouseAction  implements Serializable
 	LeftClick(1),
 	RightClick(2),
 	LeftDoubleClick(3),
-	RightDoubleClick(4);
+	RightDoubleClick(4),
+	DragNDrop(5),
+	Press(6),
+	Drop(7);
 	
 	private MouseAction(int id)
 	{

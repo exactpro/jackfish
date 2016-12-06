@@ -157,6 +157,13 @@ public class Do
 		return new Operation().getValue();
 	}
 
+	static final String getValueWithCoor = "If current component is table and x and y >= 0, then get text of table from @x column and @y row";
+	@DescriptionAttribute(text = Do.getValueWithCoor)
+	public static Operation getValue(int x, int y)
+	{
+		return new Operation().getValue(x, y);
+	}
+
 	static final String getList= "Return values from all items of this list";
 	@DescriptionAttribute(text = Do.getList)
 	public static Operation getList()
@@ -211,13 +218,6 @@ public class Do
 	public static Operation getAttr(String name)
 	{
 		return new Operation().getAttr(name);
-	}
-
-	static final String getValueWithCoor = "If current component is table and x and y >= 0, then get text of table from @x column and @y row";
-	@DescriptionAttribute(text = Do.getValueWithCoor)
-	public static Operation getValue(int x, int y)
-	{
-		return new Operation().getValue(x, y);
 	}
 
 	static final String getTable = "Get table of current table component. See @Table";
@@ -358,17 +358,19 @@ public class Do
 		return new Operation().script(script);
 	}
 
-	//TODO add description
-	public static Operation dragNdrop(String another, int x2, int y2)
+	static final String dragNdrop = "DragNdrop method, where starting coordinates are x1 and x2 inside current element and  ending coordinates are x2 and y2 inside another element";
+	@DescriptionAttribute(text = Do.dragNdrop)
+	public static Operation dragNdrop(int x1, int y1, String another, int x2, int y2)
 	{
-		return new Operation().dragNdrop(another, x2, y2);
+		return new Operation().dragNdrop(x1, y1, another, x2, y2);
 	}
 
-//	public static Operation dragNdrop(int x1, int y1, Locator another, int x2, int y2)
-//	{
-//		return new Operation().dragNdrop(x1, y1, another, x2, y2);
-//	}
-
+	static final String dragNdropFromCenterOfElement = "DragNdrop method, where starting coordinates is a center of current element and ending coordinates are x2 and y2 inside another element";
+	@DescriptionAttribute(text = Do.dragNdropFromCenterOfElement)
+	public static Operation dragNdrop(String another, int x2, int y2)
+	{
+		return new Operation().dragNdropFromCenterOfElement(another, x2, y2);
+	}
 	//endregion
 
 	//region Operations with locators

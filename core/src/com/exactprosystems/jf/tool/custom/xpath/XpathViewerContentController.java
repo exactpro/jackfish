@@ -28,6 +28,7 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
@@ -377,17 +378,15 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 	// ============================================================
 	// private methods
 	// ============================================================
-	private void displayInspectRectangle(Rectangle rectangle, String tooltipText)
+	private void displayInspectRectangle(Rectangle rectangle)
 	{
 		this.inspectRectangle.updateRectangle(rectangle, this.scale);
 		this.inspectRectangle.setVisible(true);
-		this.lblInspectRectangle.setText(tooltipText);
 	}
 
 	private void hideInspectRectangle()
 	{
 		this.inspectRectangle.setVisible(false);
-		this.lblInspectRectangle.setText("");
 	}
 
 	private void correctMap(int offsetX, int offsetY, TreeItem<XpathItem> item)
@@ -585,7 +584,7 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 		TreeItem<XpathItem> item = findOnScreen(x, y);
 		if (item != null)
 		{
-			displayInspectRectangle(item.getValue().getRectangle(), "");
+			displayInspectRectangle(item.getValue().getRectangle());
 		}
 	}
 
@@ -596,7 +595,6 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 		{
 			this.treeView.getSelectionModel().select(item);
 			scrollToElement(item);
-
 		}
 		this.btnInspect.setSelected(false);
 	}
@@ -630,9 +628,42 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 		return rec.width * rec.height;
 	}
 
+	private Point getMouseRelativeCoords(double absoluteX, double absoluteY, Rectangle rect)
+    {
+        int x = (int)absoluteX - rect.x;
+        int y = (int)absoluteY - rect.y;
+        return new Point(x, y);
+    }
+
+	private Point getMouseCoords(MouseEvent event)
+	{
+		int x = 0;
+		int y = 0;
+		Rectangle rect = this.rectangle.getRectangle();
+		if(this.rectangle.isVisible())
+		{
+			Point mouseRelativeCoords = getMouseRelativeCoords(event.getX(), event.getY(), rect);
+			x = mouseRelativeCoords.x;
+			y = mouseRelativeCoords.y;
+		}
+		else
+		{
+			x = (int) event.getX();
+			y = (int) event.getY();
+		}
+		return new Point(x,y);
+	}
+
+    private void printMouseCoords(MouseEvent event)
+    {
+        Point point = getMouseCoords(event);
+        this.lblInspectRectangle.setText("X=" + point.x + " Y=" + point.y);
+    }
+
 	private void listeners()
 	{
 		this.group.setOnMouseMoved(event -> {
+		    this.printMouseCoords(event);
 			if (needInspect)
 			{
 				moveOnImage(event.getX(), event.getY());
