@@ -52,6 +52,8 @@ public class ReportOn extends MatrixItem
 	@Override
 	protected void beforeReport(ReportBuilder report)
 	{
+	    super.beforeReport(report);
+	    
 		report.reportSwitch(true);
 	}
 

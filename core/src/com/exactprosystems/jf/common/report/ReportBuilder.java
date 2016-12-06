@@ -131,7 +131,6 @@ public abstract class ReportBuilder
 		this.reportIsOn = on;
 	}
 
-	@Deprecated
 	public final boolean reportIsOn()
 	{
 		return this.reportIsOn;

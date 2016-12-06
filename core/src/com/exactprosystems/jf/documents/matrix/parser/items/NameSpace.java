@@ -141,6 +141,7 @@ public final class NameSpace extends MatrixItem
 	@Override
 	protected void beforeReport(ReportBuilder report)
 	{
+	    super.beforeReport(report);;
 	}
 
 	@Override
@@ -196,6 +197,7 @@ public final class NameSpace extends MatrixItem
 	@Override
 	protected void afterReport(ReportBuilder report)
 	{
+	    super.afterReport(report);
 	}
 
 	// ==============================================================================================

@@ -140,6 +140,7 @@ public final class TestCase extends MatrixItem
 	@Override
 	protected void beforeReport(ReportBuilder report)
 	{
+	    super.beforeReport(report);
 		try
 		{
 			report.putMark(this.id.get());
@@ -240,6 +241,7 @@ public final class TestCase extends MatrixItem
 	@Override
 	protected void afterReport(ReportBuilder report)
 	{
+	    super.afterReport(report);
 	}
 
 	

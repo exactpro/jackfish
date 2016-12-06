@@ -401,6 +401,14 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 			return new ReturnAndResult(start, Result.Stopped);
 		}
 
+		boolean prev = report.reportIsOn();
+		System.out.println(" >>> " + prev + " " + this.getItemName() );
+		if (isTrue(this.repOff.get()) && !prev)
+        {
+	        System.out.println(" >>>        false" );
+            report.reportSwitch(false);
+        }
+
 		beforeReport(report);
 
 		this.changeState(MatrixItemState.Executing);
@@ -421,6 +429,8 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 		listener.finished(this.owner, this, this.result.getResult());
 		this.changeState(this.isBreakPoint() ? MatrixItemState.BreakPoint : MatrixItemState.None);
 		afterReport(report);
+        report.reportSwitch(prev);
+		
 
 		return this.result;
 	}
@@ -775,10 +785,6 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 
 	protected void beforeReport(ReportBuilder report)
 	{
-	    if (this.repOff.get())
-	    {
-	        report.reportSwitch(false);
-	    }
 	}
 
 	protected ReturnAndResult executeItSelf(long start, Context context, IMatrixListener listener, AbstractEvaluator evaluator, ReportBuilder report, Parameters parameters)
@@ -788,7 +794,6 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 
 	protected void afterReport(ReportBuilder report)
 	{
-        report.reportSwitch(true);
 	}
 
 	//==========================================================================================================================
