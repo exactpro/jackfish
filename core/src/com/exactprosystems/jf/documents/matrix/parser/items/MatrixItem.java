@@ -775,6 +775,10 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 
 	protected void beforeReport(ReportBuilder report)
 	{
+	    if (this.repOff.get())
+	    {
+	        report.reportSwitch(false);
+	    }
 	}
 
 	protected ReturnAndResult executeItSelf(long start, Context context, IMatrixListener listener, AbstractEvaluator evaluator, ReportBuilder report, Parameters parameters)
@@ -784,6 +788,7 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 
 	protected void afterReport(ReportBuilder report)
 	{
+        report.reportSwitch(true);
 	}
 
 	//==========================================================================================================================

@@ -143,7 +143,6 @@ public final class TestCase extends MatrixItem
 		try
 		{
 			report.putMark(this.id.get());
-			report.reportSwitch(true);
 		}
 		catch (Exception e)
 		{
@@ -241,7 +240,6 @@ public final class TestCase extends MatrixItem
 	@Override
 	protected void afterReport(ReportBuilder report)
 	{
-		report.reportSwitch(true);
 	}
 
 	

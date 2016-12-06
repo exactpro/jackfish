@@ -126,8 +126,6 @@ public abstract class ReportBuilder
         return blob;
     }
 
-    
-	@Deprecated
 	public final void reportSwitch(boolean on)
 	{
 		this.reportIsOn = on;

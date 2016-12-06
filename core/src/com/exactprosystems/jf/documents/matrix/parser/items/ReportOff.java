@@ -77,6 +77,7 @@ public class ReportOff extends MatrixItem
 	@Override
 	protected ReturnAndResult executeItSelf(long start, Context context, IMatrixListener listener, AbstractEvaluator evaluator, ReportBuilder report, Parameters parameters)
 	{
+	    context.getOut().println("ReportOff is deprecated. Use #RepOff attribute instead.");
 		return new ReturnAndResult(start, Result.Passed); 
 	}
 }
