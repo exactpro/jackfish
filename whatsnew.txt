@@ -1,3 +1,7 @@
+06.12.2016 4.3.0.1699
+Now Do.getList() is available for swing plugin
+
+--------------------------------------------------------------------------------
 06.12.2016 4.3.0.1698
 #38740 resolved. Now Do.getList() is available for web plugin
 
