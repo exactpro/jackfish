@@ -402,10 +402,8 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 		}
 
 		boolean prev = report.reportIsOn();
-		System.out.println(" >>> " + prev + " " + this.getItemName() );
-		if (isTrue(this.repOff.get()) && !prev)
+		if (isTrue(this.repOff.get()) && prev)
         {
-	        System.out.println(" >>>        false" );
             report.reportSwitch(false);
         }
 
@@ -430,7 +428,12 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 		this.changeState(this.isBreakPoint() ? MatrixItemState.BreakPoint : MatrixItemState.None);
 		afterReport(report);
         report.reportSwitch(prev);
-		
+
+		if (isTrue(this.repOff.get()) && prev)
+        {
+            report.reportSwitch(true);
+        }
+        
 
 		return this.result;
 	}

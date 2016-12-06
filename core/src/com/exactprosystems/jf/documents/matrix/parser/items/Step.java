@@ -168,8 +168,8 @@ public class Step extends MatrixItem
 				position = table.size();
 				
 				row.put(Context.matrixColumn, 			this.owner.getName());
-				TestCase parent = (TestCase)findParent(TestCase.class);
-				if (parent != null)
+				MatrixItem parent = findParent(TestCase.class);
+				if (parent instanceof TestCase)
 				{
 					row.put(Context.testCaseIdColumn, 	parent.getId());
 					row.put(Context.testCaseColumn, 	parent);
