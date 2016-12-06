@@ -345,12 +345,35 @@ public class ConfigurationFx extends Configuration
 		displayLibrary();
 	}
 
-	public void removeLibrary(File libraryFile) throws Exception
+	public void removeLibrary(String namespace) throws Exception
 	{
-		removeFileFromFileSystem(libraryFile, this::displayLibrary);
+		Map<String, Matrix> libs = super.libs;
+		Matrix matrix = libs.get(namespace);
+		File file = new File(matrix.getName());
+		List<String> collect = libs.entrySet()
+				.stream()
+				.filter(e -> new File(e.getValue().getName()).getAbsolutePath().equals(file.getAbsolutePath()))
+				.map(Map.Entry::getKey)
+				.collect(Collectors.toList());
+		boolean needRemove = true;
+		if (collect.size() > 1)
+		{
+			ButtonType buttonType = DialogsHelper.showQuestionDialog("Current library contains many namespaces : "
+							+ collect
+							.stream()
+							.collect(Collectors.joining(",", "[", "]"))
+					, "Remove it anyway?");
+			needRemove = buttonType.equals(ButtonType.OK);
+		}
+		if (needRemove)
+		{
+			File removeFile = new File(libs.get(collect.get(0)).getName());
+			collect.forEach(super.libs::remove);
+			removeFileFromFileSystem(removeFile, this::updateLibraries);
+		}
 	}
 
-	public void updateLibraries() throws Exception
+	public void updateLibraries()
 	{
 		refreshLibs();
 		displayLibrary();
