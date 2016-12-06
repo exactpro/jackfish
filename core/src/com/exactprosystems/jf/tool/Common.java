@@ -255,18 +255,6 @@ public abstract class Common
 		progressBar = bar;
 	}
 
-	@Deprecated
-	public static void setTabPane(TabPane tab)
-	{
-		tabPane = tab;
-	}
-
-	@Deprecated
-	public static TabPane getTabPane()
-	{
-		return tabPane;
-	}
-
 	public static int setHeightComments(String text)
 	{
 		if (text.trim().length() == 0)

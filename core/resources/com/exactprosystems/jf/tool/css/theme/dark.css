@@ -803,3 +803,9 @@ CellView > .text-input.text-field{
 	-fx-opacity : 1.0
 
 }
+
+.customTabPane{
+	-fx-open-tab-animation: NONE;
+	-fx-close-tab-animation: NONE;
+
+}

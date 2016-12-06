@@ -351,7 +351,7 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 		tryCatch(() ->
 		{
 			this.tab.close();
-			getTabPane().getTabs().remove(this.tab);
+			CustomTabPane.getInstance().removeTab(this.tab);
 			Optional.ofNullable(watcher).ifPresent(WatcherFx::close);
 		}, "Error on closing matrix");
 	}

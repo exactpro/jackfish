@@ -837,3 +837,9 @@ CellView > .text-input.text-field{
 	-fx-background-color : rgba(0,0,255,0.3);
 
 }
+
+.customTabPane{
+	-fx-open-tab-animation: NONE;
+	-fx-close-tab-animation: NONE;
+
+}

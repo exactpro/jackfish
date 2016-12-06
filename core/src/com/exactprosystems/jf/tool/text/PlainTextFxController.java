@@ -82,7 +82,7 @@ public class PlainTextFxController implements Initializable, ContainingParent
 	public void close() throws Exception
 	{
 		this.tab.close();
-		Common.getTabPane().getTabs().remove(this.tab);
+		CustomTabPane.getInstance().removeTab(this.tab);
 	}
 
 	// ------------------------------------------------------------------------------------------------------------------

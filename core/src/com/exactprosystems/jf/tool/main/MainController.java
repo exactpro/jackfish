@@ -169,7 +169,6 @@ public class MainController implements Initializable, ContainingParent
 		this.customTabPane.setPrefWidth(1280.0);
 		this.splitPane.getItems().add(this.customTabPane);
 
-		Common.setTabPane(this.customTabPane);
 		Common.setProgressBar(progressBar);
 
 		Common.customizeLabeled(this.btnReloadConfig, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.REFRESH);
@@ -646,14 +645,17 @@ public class MainController implements Initializable, ContainingParent
 			}
 			else
 			{
-				CustomTab newCustomTab = (CustomTab) newValue;
-				this.model.changeDocument(newCustomTab.getDocument());
-				if (newCustomTab.getDocument() instanceof MatrixFx)
+				if (newValue instanceof CustomTab)
 				{
-					Node lookup = newCustomTab.getContent().lookup("."+CssVariables.CUSTOM_TREE_TABLE_VIEW);
-					if (lookup instanceof MatrixTreeView)
+					CustomTab newCustomTab = (CustomTab) newValue;
+					this.model.changeDocument(newCustomTab.getDocument());
+					if (newCustomTab.getDocument() instanceof MatrixFx)
 					{
-						Common.setFocused(lookup);
+						Node lookup = newCustomTab.getContent().lookup("."+CssVariables.CUSTOM_TREE_TABLE_VIEW);
+						if (lookup instanceof MatrixTreeView)
+						{
+							Common.setFocused(lookup);
+						}
 					}
 				}
 			}

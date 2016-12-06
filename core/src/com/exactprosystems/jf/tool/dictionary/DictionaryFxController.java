@@ -93,7 +93,7 @@ public class DictionaryFxController implements Initializable, ContainingParent
 	{
 		this.tab.close();
 		this.navigationController.close();
-		Common.getTabPane().getTabs().remove(this.tab);
+		CustomTabPane.getInstance().removeTab(this.tab);
 	}
 
 	@Override

@@ -18,6 +18,7 @@ import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.custom.BorderWrapper;
 import com.exactprosystems.jf.tool.custom.shutter.DelayShutterButton;
 import com.exactprosystems.jf.tool.custom.tab.CustomTab;
+import com.exactprosystems.jf.tool.custom.tab.CustomTabPane;
 import com.exactprosystems.jf.tool.custom.xpath.XpathViewer;
 import com.exactprosystems.jf.tool.dictionary.DictionaryFx;
 import com.exactprosystems.jf.tool.dictionary.DictionaryFxController;
@@ -408,7 +409,7 @@ public class NavigationController implements Initializable, ContainingParent
 
 	public void close()
 	{
-		Scene scene = Common.getTabPane().getScene();
+		Scene scene = CustomTabPane.getInstance().getScene();
 		scene.removeEventFilter(KeyEvent.KEY_PRESSED, pressHandler);
 		scene.removeEventFilter(KeyEvent.KEY_RELEASED, releaseHandler);
 	}
@@ -429,7 +430,7 @@ public class NavigationController implements Initializable, ContainingParent
 		hBox.getChildren().add(3, Common.createSpacer(Common.SpacerEnum.HorizontalMin));
 		hBox.getChildren().add(4, renewButton);
 		hBox.getChildren().add(5, Common.createSpacer(Common.SpacerEnum.HorizontalMin));
-		Scene scene = Common.getTabPane().getScene();
+		Scene scene = CustomTabPane.getInstance().getScene();
 		pressHandler = keyEvent -> {
 			if (keyEvent.getCode() == KeyCode.CONTROL && owner != null && owner.isSelected())
 			{

@@ -211,7 +211,8 @@ public class CssVariables
 	public static final String	VGAP_MID					= "vgapMid";
 	public static final String	VGAP_MAX					= "vgapMax";
 	//endregion
-	
+
+	public static final String	CUSTOM_TAB_PANE				= "customTabPane";
 	
 
 	public static class Icons
