@@ -38,7 +38,7 @@ import java.util.stream.Collectors;
 @MatrixItemAttribute(
 description 	= "Raw data in message form.", 
 shouldContain 	= { Tokens.RawMessage, Tokens.Client }, 
-mayContain 		= { Tokens.Id, Tokens.Off, Tokens.Global }, 
+mayContain 		= { Tokens.Id, Tokens.Off, Tokens.RepOff, Tokens.Global }, 
 real 			= true, 
 hasValue 		= true, 
 hasParameters 	= false, 

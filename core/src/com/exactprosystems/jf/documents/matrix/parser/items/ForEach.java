@@ -36,7 +36,7 @@ import java.util.concurrent.atomic.AtomicReference;
 @MatrixItemAttribute(
 	description 	= "Loop from start value to end value with step.", 
 	shouldContain 	= { Tokens.ForEach, Tokens.In },
-	mayContain 		= { Tokens.Off }, 
+	mayContain 		= { Tokens.Off, Tokens.RepOff }, 
 	real			= true,
 	hasValue 		= true, 
 	hasParameters 	= false,

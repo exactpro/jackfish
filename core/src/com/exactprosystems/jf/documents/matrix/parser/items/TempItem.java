@@ -34,7 +34,7 @@ public class TempItem extends MatrixItem
 		list.addAll(Arrays.asList(Tokens.TestCase.get(), Tokens.SubCase.get(), Tokens.Return.get(), Tokens.Call.get(), 
 				Tokens.If.get(), Tokens.Else.get(), Tokens.For.get(), Tokens.ForEach.get(), Tokens.While.get(), 
 				Tokens.Continue.get(), Tokens.Break.get(), Tokens.OnError.get(), Tokens.Switch.get(), Tokens.Case.get(), 
-				Tokens.Default.get(), Tokens.ReportOff.get(), Tokens.ReportOn.get(), Tokens.Fail.get(), Tokens.RawTable.get(), 
+				Tokens.Default.get(), Tokens.Fail.get(), Tokens.RawTable.get(), 
 				Tokens.RawMessage.get(), Tokens.RawText.get(), Tokens.NameSpace.get(), Tokens.Let.get(), Tokens.Step.get(),
 				Tokens.Assert.get(), Tokens.SetHandler.get() ));
 	}

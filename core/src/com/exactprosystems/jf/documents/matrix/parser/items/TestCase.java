@@ -31,7 +31,7 @@ import java.util.stream.Collectors;
 @MatrixItemAttribute(
 		description 	= "Test case.", 
 		shouldContain 	= { Tokens.TestCase },
-		mayContain 		= { Tokens.Id, Tokens.Off, Tokens.Kind },
+		mayContain 		= { Tokens.Id, Tokens.Off, Tokens.Kind, Tokens.RepOff },
 		closes			= MatrixRoot.class,
         real			= true,
 		hasValue 		= true, 

@@ -37,7 +37,7 @@ import java.util.stream.Collectors;
 @MatrixItemAttribute(
 		description 	= "Elementary step in the script", 
 		shouldContain 	= { Tokens.Step },
-		mayContain 		= { Tokens.Off, Tokens.Kind },
+		mayContain 		= { Tokens.Off, Tokens.Kind, Tokens.RepOff },
 		real			= true,
 		hasValue 		= true, 
 		hasParameters 	= false,

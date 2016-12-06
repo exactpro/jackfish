@@ -50,6 +50,7 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 		this.parameters = new Parameters();
 		this.id 		= new MutableValue<String>();
 		this.off		= new MutableValue<Boolean>();
+        this.repOff     = new MutableValue<Boolean>();
 		this.global		= new MutableValue<Boolean>();
 		this.ignoreErr	= new MutableValue<Boolean>();
 		this.comments 	= new MutableArrayList<CommentString>();
@@ -70,6 +71,7 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 			clone.number 	= 0;
 			clone.id 		= this.id.clone();
 			clone.off 		= this.off.clone();
+            clone.repOff    = this.repOff.clone();
 			clone.global 	= this.global.clone();
 			clone.ignoreErr = this.ignoreErr.clone();
 
@@ -153,6 +155,7 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
     {
     	if (	this.id.isChanged()
     		||	this.off.isChanged()
+            ||  this.repOff.isChanged()
     		||	this.global.isChanged()
     		||	this.ignoreErr.isChanged()
     		||	this.comments.isChanged()
@@ -169,6 +172,7 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
     {
     	this.id.saved();
     	this.off.saved();
+        this.repOff.saved();
     	this.global.saved();
     	this.ignoreErr.saved();
     	this.comments.saved();
@@ -228,6 +232,11 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 		return isTrue(this.off.get());
 	}
 
+    public final boolean isRepOff()
+    {
+        return isTrue(this.repOff.get());
+    }
+
 	public final boolean isGlobal()
 	{
 		return isTrue(this.global.get());
@@ -273,6 +282,11 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 		this.off.set(off);
 	}
 
+    public void setRepOff(boolean off)
+    {
+        this.repOff.set(off);
+    }
+
 	public MatrixItemState getItemState()
 	{
 		return this.matrixItemState;
@@ -307,6 +321,7 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 
 		this.id.set(systemParameters.get(Tokens.Id));
 		this.off.set(isTrue(hasValue, systemParameters, Tokens.Off));
+        this.repOff.set(isTrue(hasValue, systemParameters, Tokens.RepOff));
 		this.global.set(isTrue(hasValue, systemParameters, Tokens.Global));
 		this.ignoreErr.set(isTrue(hasValue, systemParameters, Tokens.IgnoreErr));
 
@@ -393,6 +408,12 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 			return new ReturnAndResult(start, Result.Stopped);
 		}
 
+		boolean prev = report.reportIsOn();
+		if (isTrue(this.repOff.get()) && prev)
+        {
+            report.reportSwitch(false);
+        }
+
 		beforeReport(report);
 
 		this.changeState(MatrixItemState.Executing);
@@ -419,6 +440,13 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 		listener.finished(this.owner, this, this.result.getResult());
 		this.changeState(this.isBreakPoint() ? MatrixItemState.BreakPoint : MatrixItemState.None);
 		afterReport(report);
+        report.reportSwitch(prev);
+
+		if (isTrue(this.repOff.get()) && prev)
+        {
+            report.reportSwitch(true);
+        }
+        
 
 		return this.result;
 	}
@@ -454,6 +482,7 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 		MatrixItemAttribute annotation = getClass().getAnnotation(MatrixItemAttribute.class);
 		boolean hasValue = annotation.hasValue();
 		writeBoolean(hasValue, firstLine, secondLine, this.off, Tokens.Off);
+        writeBoolean(hasValue, firstLine, secondLine, this.repOff, Tokens.RepOff);
 		writeBoolean(hasValue, firstLine, secondLine, this.ignoreErr, Tokens.IgnoreErr);
 		writeBoolean(hasValue, firstLine, secondLine, this.global, Tokens.Global);
 		writePrefixItSelf(writer, firstLine, secondLine);
@@ -921,6 +950,7 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 	// define state of this item
 	protected MutableValue<String> 		id;
 	protected MutableValue<Boolean> 	off;
+    protected MutableValue<Boolean>     repOff;
 	protected MutableValue<Boolean>  	global;
 	protected MutableValue<Boolean>  	ignoreErr;
 	protected MutableArrayList<CommentString> comments;
