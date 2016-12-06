@@ -1431,9 +1431,20 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 		throw real;
 	}
 
+	private List<String> getListOfNamesFromListItems(List<WebElement> list)
+	{
+		ArrayList<String> resultList = new ArrayList<>();
+		for (WebElement element : list)
+		{
+			resultList.add(element.getText());
+		}
+		return resultList;
+	}
+
 	@Override
 	public List<String> getList(WebElement component) throws Exception {
-		return null;
+		scrollToElement(component);
+		return getListOfNamesFromListItems(new Select(component).getOptions());
 	}
 
 	//region private methods
