@@ -202,7 +202,7 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 	}
 
 	@Override
-	public boolean dragNdrop(WebElement drag, WebElement drop, int x, int y) throws Exception
+	public boolean dragNdrop(WebElement drag, WebElement drop, int x1, int y1, int x2, int y2) throws Exception
 	{
 		Exception real = null;
 		int repeat = 1;
@@ -213,11 +213,11 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 				Actions actions = new Actions(this.driver).clickAndHold(drag);
 				if (drop == null)
 				{
-					actions.moveByOffset(x, y);
+					actions.moveByOffset(x2, y2);
 				}
 				else
 				{
-					actions.moveToElement(drop, x, y);
+					actions.moveToElement(drop, x2, y2);
 				}
 				actions.release().perform();
 				return true;

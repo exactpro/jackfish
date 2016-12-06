@@ -688,22 +688,48 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 		throw new FeatureNotSupportedException("script");
 	}
 
+	private boolean isCoordsDidNotIntroduce(int x, int y)
+	{
+		return (x == Integer.MIN_VALUE || y == Integer.MIN_VALUE);
+	}
+
+	private Point getCenterOf(Rectangle rectangle)
+	{
+		int x = rectangle.x + rectangle.width / 2;
+		int y = rectangle.y + rectangle.height / 2;
+		return new Point(x, y);
+	}
+
 	@Override
-	public boolean dragNdrop(UIProxyJNA drag, UIProxyJNA drop, int x, int y) throws Exception
+	public boolean dragNdrop(UIProxyJNA drag, UIProxyJNA drop, int x1, int y1, int x2, int y2) throws Exception
 	{
 		try
 		{
-			Rectangle rectangle = this.getRectangle(drag);
-			int x1 = rectangle.x + rectangle.width / 2;
-			int y1 = rectangle.y + rectangle.height / 2;
-			int x2 = x;
-			int y2 = y;
-			if (drop != null)
+			Rectangle dragRect = this.getRectangle(drag);
+			if (isCoordsDidNotIntroduce(x1,y1))
+			{
+				Point point = getCenterOf(dragRect);
+				x1 = point.x;
+				y1 = point.y;
+			}
+			else
+			{
+				x1 += dragRect.x;
+				y1 += dragRect.y;
+			}
+
+			if (drop == null)
+			{
+				x2 += x1;
+				y2 += y1;
+			}
+			else
 			{
 				Rectangle rDrop = this.getRectangle(drop);
-				x2 = rDrop.x + x;
-				y2 = rDrop.y + y;
+				x2 += rDrop.x;
+				y2 += rDrop.y;
 			}
+
 			this.driver.dragNdrop(x1, y1, x2, y2);
 			return true;
 		}
@@ -713,7 +739,7 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 		}
 		catch (Exception e)
 		{
-			this.logger.error(String.format("dragNdrop(%s,%s,%d,%d)", drag, drop, x, y));
+			this.logger.error(String.format("dragNdrop(%s,%s,%d,%d,%d,%d)", drag, drop, x1, y1, x2, y2));
 			this.logger.error(e.getMessage(), e);
 			throw e;
 		}

@@ -16,24 +16,28 @@ import com.exactprosystems.jf.common.report.ReportTable;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.config.HandlerKind;
 import com.exactprosystems.jf.documents.matrix.parser.DisplayDriver;
+import com.exactprosystems.jf.documents.matrix.parser.MutableValue;
 import com.exactprosystems.jf.documents.matrix.parser.Parameter;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.documents.matrix.parser.Result;
 import com.exactprosystems.jf.documents.matrix.parser.ReturnAndResult;
+import com.exactprosystems.jf.documents.matrix.parser.ScreenshotKind;
 import com.exactprosystems.jf.documents.matrix.parser.SearchHelper;
 import com.exactprosystems.jf.documents.matrix.parser.Tokens;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
 import com.exactprosystems.jf.functions.RowTable;
 import com.exactprosystems.jf.functions.Table;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @MatrixItemAttribute(
 		description 	= "Elementary step in the script", 
 		shouldContain 	= { Tokens.Step },
-		mayContain 		= { Tokens.Off },
+		mayContain 		= { Tokens.Off, Tokens.Kind },
 		real			= true,
 		hasValue 		= true, 
 		hasParameters 	= false,
@@ -44,6 +48,7 @@ public class Step extends MatrixItem
 	public Step()
 	{
 		super();
+        this.kind = new MutableValue<String>();
 		this.identify = new Parameter(Tokens.Step.get(),	null); 
 	}
 
@@ -57,7 +62,8 @@ public class Step extends MatrixItem
 	public MatrixItem clone() throws CloneNotSupportedException
 	{
 		Step clone = (Step) super.clone();
-		clone.identify = identify;
+		clone.kind = this.kind;
+		clone.identify = this.identify;
 		return clone;
 	}
 
@@ -65,12 +71,14 @@ public class Step extends MatrixItem
 	protected void initItSelf(Map<Tokens, String> systemParameters)
 	{
 		this.identify.setExpression(systemParameters.get(Tokens.Step));
+        this.kind.set(systemParameters.get(Tokens.Kind)); 
 	}
 
 	@Override
 	protected void writePrefixItSelf(CsvWriter writer, List<String> firstLine, List<String> secondLine)
 	{
 		super.addParameter(firstLine, secondLine, Tokens.Step.get(), 	this.identify.getExpression());
+        super.addParameter(firstLine, secondLine, Tokens.Kind.get(),    this.kind.get());
 	}
 
 	@Override
@@ -82,8 +90,9 @@ public class Step extends MatrixItem
 	@Override
 	protected boolean matchesDerived(String what, boolean caseSensitive, boolean wholeWord)
 	{
-		return SearchHelper.matches(Tokens.Step.get(), what, caseSensitive, wholeWord) ||
-				SearchHelper.matches(this.identify.getExpression(), what, caseSensitive, wholeWord);
+		return SearchHelper.matches(Tokens.Step.get(), what, caseSensitive, wholeWord) 
+                || SearchHelper.matches(this.kind.get(), what, caseSensitive, wholeWord)
+		        || SearchHelper.matches(this.identify.getExpression(), what, caseSensitive, wholeWord);
 	}
 
 	//==============================================================================================
@@ -92,7 +101,7 @@ public class Step extends MatrixItem
     @Override
     public boolean isChanged()
     {
-    	if (this.identify.isChanged())
+    	if (this.identify.isChanged() || this.kind.isChanged())
     	{
     		return true;
     	}
@@ -104,6 +113,7 @@ public class Step extends MatrixItem
     {
     	super.saved();
     	this.identify.saved();
+    	this.kind.saved();
     }
 
 	//==============================================================================================
@@ -113,9 +123,14 @@ public class Step extends MatrixItem
 		Object layout = driver.createLayout(this, 2);
 		driver.showComment(this, layout, 0, 0, getComments());
 		driver.showTitle(this, layout, 1, 0, Tokens.Step.get(), context.getFactory().getSettings());
-		driver.showExpressionField(this, layout, 1, 1, Tokens.Step.get(), this.identify, this.identify, null, null, null, null);
+        driver.showExpressionField(this, layout, 1, 1, Tokens.Step.get(), this.identify, this.identify, null, null, null, null);
+        driver.showLabel(this, layout, 1, 2, "Screenshot");
+        driver.showComboBox(this, layout, 1, 3, this.kind, this.kind, v ->
+        {
+            return Arrays.stream(ScreenshotKind.values()).map(k -> k.toString()).collect(Collectors.toList());
+        });
 
-		return layout;
+        return layout;
 	}
 
 	public String getIdentify()
@@ -160,7 +175,9 @@ public class Step extends MatrixItem
 
 		try
 		{
-			this.identify.evaluate(evaluator);
+            ScreenshotKind screenshotKind = ScreenshotKind.valueByName(this.kind.get());
+
+            this.identify.evaluate(evaluator);
 			Object identifyValue = this.identify.getValue();
 			
 			if (table != null)
@@ -180,6 +197,7 @@ public class Step extends MatrixItem
 				
 				table.add(row);
 			}
+            doSreenshot(ScreenshotKind.OnStart, screenshotKind, report, row);
 			
 			
 			
@@ -195,6 +213,8 @@ public class Step extends MatrixItem
 
             if (res == Result.Failed)
             {
+                doSreenshot(ScreenshotKind.OnError, screenshotKind, report, row);
+                
                 MatrixError error = ret.getError();
                 
                 ReturnAndResult errorRet = context.runHandler(HandlerKind.OnStepError, report, error);
@@ -224,6 +244,7 @@ public class Step extends MatrixItem
 				row.put(Context.errorColumn, 		ret.getError());
 				table.updateValue(position, row);
 			}
+            doSreenshot(ScreenshotKind.OnFinish, screenshotKind, report, row);
 		} 
 		catch (Exception e)
 		{
@@ -244,4 +265,5 @@ public class Step extends MatrixItem
 	}
 
 	private Parameter identify;
+    private MutableValue<String> kind;
 }

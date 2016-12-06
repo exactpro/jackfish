@@ -720,9 +720,15 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 					Object v = row.get(header);
 					if (v instanceof ImageWrapper)
 					{
-						ImageWrapper iw = (ImageWrapper)v;
-						String description = iw.getDescription() == null ? iw.toString() : iw.getDescription();
-						String file = iw.getFileName() == null ? iw.saveToDir(report.getReportDir()).getName() : iw.getFileName();
+	                    ImageWrapper iw = (ImageWrapper)v;
+                        
+                        String description = iw.getDescription() == null ? iw.toString() : iw.getDescription();
+                        if (iw.getFileName() == null)
+                        {
+                            iw.saveToDir(report.getReportDir());
+                        }
+                        
+						String file = new File(iw.getFileName()).getName();
 						v = report.decorateLink(description, report.getImageDir() + File.separator + file);
 					}
 					value[i] = v;
@@ -1366,13 +1372,8 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 	{
 		try
 		{
-			if (!new File(dirName).exists()) {
-				throw new Exception("Directory '" +dirName+ "' does not exists.");
-			}
-
 			File directory = new File(dirName);
-			if (directory.isDirectory())
-			{
+
 				this.headers = null;
 				addColumns("Name", "Size", "Date", "Is directory", "Hidden");
 				this.considerAsString("Name");
@@ -1390,7 +1391,7 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 					line.put(headers[4], file.isHidden());
 					this.innerList.add(line);
 				}
-			}
+
 		}
 		catch (Exception e)
 		{

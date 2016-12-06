@@ -30,6 +30,8 @@ public class Part implements Serializable
 		this.b = false;
 		this.x = Integer.MIN_VALUE;
 		this.y = Integer.MIN_VALUE;
+		this.x2 = Integer.MIN_VALUE;
+		this.y2 = Integer.MIN_VALUE;
 		this.str = null;
 		this.text = null;
 		this.key = null;
@@ -102,6 +104,16 @@ public class Part implements Serializable
 	public Part setY(int y)
 	{
 		this.y = y;
+		return this;
+	}
+
+	public Part setX2(int x2) {
+		this.x2 = x2;
+		return this;
+	}
+
+	public Part setY2(int y2) {
+		this.y2 = y2;
 		return this;
 	}
 
@@ -183,6 +195,8 @@ public class Part implements Serializable
 	protected int i;
 	protected int x;
 	protected int y;
+	protected int x2;
+	protected int y2;
 	protected double d;
 	protected boolean b;
 	protected String str;
