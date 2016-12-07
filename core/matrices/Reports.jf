@@ -1,11 +1,11 @@
-#Id;#TestCase;#Kind
-INIT;Test case;
+#Id;#TestCase;#Kind;#For
+INIT;Init;Never;
     #Id;#Call;#type;#host;#base;#user;#password;#scriptsDir
     CALL_1;RF.SetVars;'MySql';'127.0.0.1';'regression';'root';dbPassword;'matrices/EE/'
 
 
-#TestCase;#Kind
-Overall;
+#TestCase;#Kind;#For
+Overall;Never;
     #Id;#Call
     table;RF.TotalTable
 
@@ -16,8 +16,8 @@ Overall;
     TableReport;table;'Table';'INIT';false
 
 
-#TestCase;#Kind
-Summary;
+#TestCase;#Kind;#For
+Summary;Never;
     #Id;#Call
     table;RF.LastSummary
 
@@ -34,8 +34,8 @@ Summary;
     TableReport;table;'Consolidated Umbrella Report: ';'INIT';false;{'Matrix Name', 'Execution Status', 'Execution Date', 'Execution Time', 'Executed By', 'Execution Machine'}
 
 
-#TestCase;#Kind
-Regression progress;
+#TestCase;#Kind;#For
+Progress;Never;
     #Id;#Call
     table;RF.ProgressTable
 
@@ -43,8 +43,8 @@ Regression progress;
     ChartReport;ChartKind.Line;table;'{{4 Regression progress 4}}';'INIT';'id';'Average'
 
 
-#TestCase;#Kind
-Detailed report;
+#TestCase;#Kind;#For
+Details;Never;
     #Id;#Call
     table;RF.LastAllDetails
 

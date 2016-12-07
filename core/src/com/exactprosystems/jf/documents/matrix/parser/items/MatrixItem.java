@@ -9,6 +9,7 @@
 package com.exactprosystems.jf.documents.matrix.parser.items;
 
 import com.csvreader.CsvWriter;
+import com.exactprosystems.jf.api.app.AppConnection;
 import com.exactprosystems.jf.api.app.ImageWrapper;
 import com.exactprosystems.jf.api.app.Mutable;
 import com.exactprosystems.jf.api.common.Converter;
@@ -921,19 +922,35 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 	}
 
 	
-    protected final void doSreenshot(ScreenshotKind when, ScreenshotKind screenshotKind, ReportBuilder report, RowTable row) throws Exception
+    protected final void doSreenshot(ReportBuilder report, RowTable row, AppConnection connection, ScreenshotKind screenshotKind, ScreenshotKind ... when) throws Exception
     {
-        if (screenshotKind == when)
+        if (Arrays.stream(when).anyMatch(a -> screenshotKind == a))
         {
-            Rectangle desktopRect = new Rectangle(Toolkit.getDefaultToolkit().getScreenSize());
-            BufferedImage image = new java.awt.Robot().createScreenCapture(desktopRect);
-
-            ImageWrapper imageWrapper =  new ImageWrapper(image);
-            imageWrapper.setDescription(screenshotKind.toString());
+            ImageWrapper imageWrapper = null;  
+                    
+            if (connection != null && screenshotKind != ScreenshotKind.OnError)
+            {
+                try
+                {
+                    imageWrapper = connection.getApplication().service().getImage(null, null);
+                }
+                catch (Exception e)
+                {
+                    logger.error(e.getMessage(), e);
+                }
+            }
             
+            if (imageWrapper == null)
+            {
+                Rectangle desktopRect = new Rectangle(Toolkit.getDefaultToolkit().getScreenSize());
+                BufferedImage image = new java.awt.Robot().createScreenCapture(desktopRect);
+                imageWrapper =  new ImageWrapper(image);
+            }
+            
+            imageWrapper.setDescription(screenshotKind.toString());
             File file = imageWrapper.saveToDir(report.getReportDir());
             report.outImage(this, null, file.getName(), imageWrapper.getDescription());
-            
+
             if (row != null)
             {
                 row.put(Context.screenshotColumn,    imageWrapper);

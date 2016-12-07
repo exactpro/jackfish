@@ -1,5 +1,5 @@
-#Id;#TestCase
-Step 1;This matrix randomly failed
+#Id;#TestCase;#Kind;#For
+Step 1;This matrix randomly failed;OnFinish;
     #Action;#Text;#Notifier
     Show;'EE1006 randomly failed';Notifier.Success
 
@@ -9,11 +9,17 @@ Step 1;This matrix randomly failed
     #Action;#Time
     Wait;1000
 
+    #Id;#Global;#Action;#AppId;#Browser;#URL
+    APPSTR1;1;ApplicationStart;'WEB';'Chrome';'http://samples.galenframework.com/tutorial1/tutorial1.html'
 
-#Id;#TestCase
-Step 2;Working
+
+#Id;#TestCase;#Kind;#For
+Step 2;Working;OnFinishOrError;APPSTR1.Out
     #Action;#Text;#Notifier
     Show;'Step 2';Notifier.Info
+
+    #Id;#Action;#AppConnection;#Width;#Height
+    APPSZ1;ApplicationResize;APPSTR1.Out;400;400
 
     #Action;#Time
     Wait;1000
@@ -29,12 +35,12 @@ Step 2;Working
     #EndIf
 
 
-#Id;#TestCase
-Step 2;Working
+#Id;#TestCase;#Kind;#For
+Step 2;Working;;
     #Action;#Text;#Notifier
     Show;'Step 3';Notifier.Info
 
-    #Action;#Time
-    Wait;1000
+    #Id;#Action;#AppConnection
+    APPSTP1;ApplicationStop;APPSTR1.Out
 
 

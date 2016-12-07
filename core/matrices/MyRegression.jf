@@ -5,8 +5,8 @@
 // This is unpublished, licensed software, confidential and proprietary
 // information which is the property of Exactpro Systems, LLC or its licensors.
 // ==============================================
-#Id;#TestCase;#Kind
-INIT;Test case;
+#Id;#TestCase;#Kind;#For
+INIT;Test case;;
     #Call;#type;#host;#base;#user;#password;#scriptsDir
     RF.SetVars;'MySql';'127.0.0.1';'regression';'root';dbPassword;'matrices/EE/'
 
@@ -14,10 +14,10 @@ INIT;Test case;
     table;Table
     @;Off;Scenario;Performer;Env;Priority
     0;x;EE1001;VF;dev;0
-    1;;EE1002;VF;dev;1
-    2;;EE1003;;dev;1
-    3;;EE1004;;dev;1
-    4;;EE1005;VF;dev;1
+    1;x;EE1002;VF;dev;1
+    2;x;EE1003;;dev;1
+    3;x;EE1004;;dev;1
+    4;x;EE1005;VF;dev;1
     5;;EE1006;;dev;2
     6;x;EE1007;VF;dev;3
     #EndRawTable
@@ -26,8 +26,8 @@ INIT;Test case;
     CALL_2;RF.RunAll;table
 
 
-#TestCase;#Kind
-Summary;
+#TestCase;#Kind;#For
+Summary;;
     #Id;#Call
     table;RF.LastSummary
 
