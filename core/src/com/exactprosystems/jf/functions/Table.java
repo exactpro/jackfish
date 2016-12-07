@@ -684,10 +684,10 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 	{
 		String[] columns = Arrays.stream(this.headers).map(h -> h.name).toArray(num -> new String[num]);
 		
-		report(report, title, beforeTestcase, withNumbers, reportValues, columns);
+		report(report, title, beforeTestcase, withNumbers, reportValues, null, columns);
 	}
 
-	public void report(ReportBuilder report, String title, String beforeTestcase, boolean withNumbers, boolean reportValues, String... columns) throws Exception
+	public void report(ReportBuilder report, String title, String beforeTestcase, boolean withNumbers, boolean reportValues, Map<String, String> columnMap, String ... columns) throws Exception
 	{
 		int[] columnsIndexes = getIndexes(columns);
 
@@ -711,8 +711,26 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 		{
 			headers[col++ + addition] = this.headers[index].name;
 		}
-
-		ReportTable table = report.addTable(title, beforeTestcase, true, 0, new int[]{}, headers);
+		List<String> newHeaders = new ArrayList<>();
+		if (columnMap == null)
+		{
+			newHeaders.addAll(Arrays.asList(headers));
+		}
+		else
+		{
+			for (String header : headers)
+			{
+				if (columnMap.containsKey(header))
+				{
+					newHeaders.add(columnMap.get(header));
+				}
+				else
+				{
+					newHeaders.add(header);
+				}
+			}
+		}
+		ReportTable table = report.addTable(title, beforeTestcase, true, 0, new int[]{}, newHeaders.toArray(new String[newHeaders.size()]));
 
 		int count = 0;
 		for (Map<Header, Object> row : this.innerList)

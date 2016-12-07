@@ -1,3 +1,7 @@
+07.12.2016 4.3.0.1707
+RM38805 implemented. Added new not mandatory field into TableReport
+
+--------------------------------------------------------------------------------
 07.12.2016 4.3.0.1705
 #38518 feature: add #RepOff tag for the each item instead ReportOn & ReportOff items
 
