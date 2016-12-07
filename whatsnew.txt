@@ -1,3 +1,10 @@
+06.12.2016 4.3.0.1705
+#38518 feature: add #RepOff tag for the each item instead ReportOn & ReportOff items
+
+now each action / items in matrix have new flag RepOff. It swiches off the technical report
+for itself and for all subsidiary  items.
+
+--------------------------------------------------------------------------------
 06.12.2016 4.3.0.1699
 Now Do.getList() is available for swing plugin
 
