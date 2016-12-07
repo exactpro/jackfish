@@ -221,6 +221,36 @@ public class MatrixTreeView extends TreeTableView<MatrixItem>
 		gridColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getValue()));
 		gridColumn.setCellFactory(param -> new MatrixItemCell());
 
+		TreeTableColumn<MatrixItem, MatrixItem> reportOffColumn = new TreeTableColumn<>();
+		reportOffColumn.setSortable(false);
+		reportOffColumn.setMinWidth(25);
+		reportOffColumn.setMaxWidth(26);
+		reportOffColumn.setPrefWidth(25);
+		reportOffColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getValue()));
+		reportOffColumn.setCellFactory(p -> new TreeTableCell<MatrixItem, MatrixItem>()
+		{
+			private CheckBox box = new CheckBox();
+
+			@Override
+			protected void updateItem(MatrixItem item, boolean empty)
+			{
+				super.updateItem(item, empty);
+				if (item != null)
+				{
+					box.setSelected(item.isRepOff());
+					box.setOnAction(event -> {
+						item.setRepOff(box.isSelected());
+						refresh();
+					});
+					setGraphic(box);
+				}
+				else
+				{
+					setGraphic(null);
+				}
+			}
+		});
+
 		TreeTableColumn<MatrixItem, MatrixItem> offColumn = new TreeTableColumn<>();
 		offColumn.setSortable(false);
 		offColumn.setMinWidth(25);
@@ -254,6 +284,7 @@ public class MatrixTreeView extends TreeTableView<MatrixItem>
 
 		this.treeColumnProperty().set(gridColumn);
 		this.getColumns().add(numberColumn);
+		this.getColumns().add(reportOffColumn);
 		this.getColumns().add(offColumn);
 		this.getColumns().add(iconColumn);
 		this.getColumns().add(gridColumn);

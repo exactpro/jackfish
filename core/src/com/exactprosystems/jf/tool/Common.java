@@ -15,6 +15,7 @@ import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.documents.Document;
 import com.exactprosystems.jf.tool.custom.label.CommentsLabel;
 import com.exactprosystems.jf.tool.custom.tab.CustomTab;
+import com.exactprosystems.jf.tool.custom.tab.CustomTabPane;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.settings.SettingsPanel;
 import com.exactprosystems.jf.tool.settings.Theme;
@@ -56,8 +57,6 @@ public abstract class Common
 {
 	public static ProgressBar progressBar;
 	
-	// TODO move it to CustomTab
-	private static TabPane		tabPane;
 	// TODO move it to Main
 	public static Stage			node;
 
@@ -139,7 +138,7 @@ public abstract class Common
 	// TODO move it to CustomTab
 	public static CustomTab checkDocument(Document doc)
 	{
-		return tabPane.getTabs()
+		return CustomTabPane.getInstance().getTabs()
 				.stream()
 				.map(t -> (CustomTab) t)
 				.filter(tab -> tab.getDocument().equals(doc))
