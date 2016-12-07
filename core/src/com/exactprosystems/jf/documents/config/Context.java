@@ -44,7 +44,7 @@ public class Context implements IContext, AutoCloseable, Cloneable
 	public static final String timeColumn 				= "Time";
 	public static final String resultColumn 			= "Result";
 	public static final String errorColumn 				= "Error";
-    public static final String screenshotColumn          = "Sreenshot";
+    public static final String screenshotColumn         = "Screenshot";
 	public static final String[] resultColumns = new String[]
 			{
 				matrixColumn, testCaseIdColumn, testCaseColumn, stepIdentityColumn, stepColumn, timeColumn, 

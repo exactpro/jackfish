@@ -91,8 +91,8 @@ RF;RegressionFramework
             #Id;#Let
             manual;!(new File(scripts + row.Scenario + '.jf').exists())
 
-            #Id;#Action;#Connection;#Query;#RunId;#Scenario;#Performer;#Priority;#Env;#Manual;#StartTime
-            selectScenarioId;SQLinsert;SQL;'INSERT INTO scenarios (run_id, scenario, performer, priority, env, manual, start_time) VALUES (?, ?, ?, ?, ?, ?, ?)';runId;row.Scenario;row.Performer;row.Priority;row.Env;manual ? 1 : 0;DateTime.current()
+            #Id;#Action;#Connection;#Query;#RunId;#Scenario;#Performer;#Priority;#Env;#Manual;#StartTime;#Host;#User
+            selectScenarioId;SQLinsert;SQL;'INSERT INTO scenarios (run_id, scenario, performer, priority, env, manual, start_time, host, user) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';runId;row.Scenario;row.Performer;row.Priority;row.Env;manual ? 1 : 0;DateTime.current();Sys.hostName();Sys.userName()
 
             #Id;#Let
             scenarioId;selectScenarioId.Out[0]
@@ -128,8 +128,8 @@ RF;RegressionFramework
 
                 #ForEach;#In
                 details;resultTab.Out
-                    #Action;#Connection;#Query;#ScenarioId;#Testcase;#Stepp;#Time;#Result;#Error
-                    SQLinsert;SQL;'INSERT INTO details (scenario_id, testcase, step, time, result, error) VALUES (?, ?, ?, ?, ?, ?)';scenarioId;'' + details.TestCase;'' + details.Step;details.Time;'' + details.Result;'' + details.Error
+                    #Action;#Connection;#Query;#ScenarioId;#Testcase;#Stepp;#Time;#Result;#Error;#Screenshot
+                    SQLinsert;SQL;'INSERT INTO details (scenario_id, testcase, step, time, result, error, screenshot) VALUES (?, ?, ?, ?, ?, ?, ?)';scenarioId;'' + details.TestCase;'' + details.Step;details.Time;'' + details.Result;'' + details.Error;Converter.imageToBlob(details.Screenshot)
 
                 #EndForEach
 
@@ -198,7 +198,7 @@ RF;RegressionFramework
         SQL;RF.Connect
 
         #Id;#Action;#Connection;#Query
-        select;SQLselect;SQL;'SELECT s.id, s.scenario, s.manual, s.start_time, s.passed, s.failed, s.description FROM scenarios AS s WHERE s.run_id = (SELECT MAX(r.id) FROM runs AS r)'
+        select;SQLselect;SQL;'SELECT s.id, s.scenario, s.manual, s.host, s.user, s.start_time, s.passed, s.failed, s.description FROM scenarios AS s WHERE s.run_id = (SELECT MAX(r.id) FROM runs AS r)'
 
         #Return
         select.Out
@@ -214,7 +214,7 @@ RF;RegressionFramework
         SQL;RF.Connect
 
         #Id;#Action;#Connection;#Query
-        select;SQLselect;SQL;'SELECT s.scenario, s.manual, DATE(s.start_time) AS date, TIME(s.start_time) AS time, IF(s.failed = 0, "Passed", "Failed") AS result, s.performer, s.env FROM scenarios AS s WHERE s.manual = 0 AND s.run_id = (SELECT MAX(r.id) FROM runs AS r)'
+        select;SQLselect;SQL;'SELECT s.scenario, s.manual, DATE(s.start_time) AS date, TIME(s.start_time) AS time, IF(s.failed = 0, "Passed", "Failed") AS result, s.performer AS performer, s.env AS env,  s.host AS host, s.user AS user FROM scenarios AS s WHERE s.manual = 0 AND s.run_id = (SELECT MAX(r.id) FROM runs AS r)'
 
         #Return
         select.Out
@@ -230,7 +230,7 @@ RF;RegressionFramework
         SQL;RF.Connect
 
         #Id;#Action;#Connection;#Query
-        select;SQLselect;SQL;'SELECT s.scenario, DATE(s.start_time) AS date, TIME(s.start_time) AS time, s.performer, s.env, d.testcase, d.step, d.time, d.result, d.error FROM scenarios AS s LEFT JOIN details AS d ON d.scenario_id = s.id WHERE s.manual = 0 AND s.run_id = (SELECT MAX(r.id) FROM runs AS r)'
+        select;SQLselect;SQL;'SELECT s.scenario, DATE(s.start_time) AS date, TIME(s.start_time) AS time, s.performer, s.env, s.host, s.user, d.testcase, d.step, d.time, d.result, d.error, d.screenshot FROM scenarios AS s LEFT JOIN details AS d ON d.scenario_id = s.id WHERE s.manual = 0 AND s.run_id = (SELECT MAX(r.id) FROM runs AS r)'
 
         #Return
         select.Out

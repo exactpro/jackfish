@@ -25,10 +25,12 @@ import com.exactprosystems.jf.sql.SqlConnection;
 import org.apache.log4j.Logger;
 
 import java.io.*;
+import java.sql.Blob;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Types;
 import java.util.*;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
@@ -103,7 +105,20 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 
 				for (int i = 0; i < headers.length; i++)
 				{
-					line.put(headers[i], set.getObject(i + 1));
+				    int type = set.getMetaData().getColumnType(i + 1);
+				    
+				    Object value = null;
+				    if (type == Types.LONGVARBINARY || type == Types.BLOB)
+				    {
+				        value = set.getBlob(i + 1);
+	                    value = Converter.blobToObject((Blob)value);
+				    }
+				    else
+				    {
+				        value = set.getObject(i + 1);
+				    }
+				    
+					line.put(headers[i], value);
 				}
 
 				this.innerList.add(line);

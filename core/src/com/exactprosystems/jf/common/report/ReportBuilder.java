@@ -8,6 +8,7 @@
 
 package com.exactprosystems.jf.common.report;
 
+import com.exactprosystems.jf.api.common.Converter;
 import com.exactprosystems.jf.charts.ChartBuilder;
 import com.exactprosystems.jf.documents.matrix.Matrix;
 import com.exactprosystems.jf.documents.matrix.parser.Result;
@@ -16,24 +17,14 @@ import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 import org.apache.log4j.Logger;
 
 import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
 import java.io.CharArrayReader;
 import java.io.File;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.sql.Blob;
-import java.sql.SQLException;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
-
-import javax.sql.rowset.serial.SerialBlob;
-import javax.sql.rowset.serial.SerialException;
 
 public abstract class ReportBuilder 
 {
@@ -103,26 +94,7 @@ public abstract class ReportBuilder
             Arrays.stream(dir.list()).forEach(a -> list.add(this.reportDir + File.separator + a));;
         }
         
-        ByteArrayOutputStream outputStream = null;
-
-        try (ByteArrayOutputStream baos = new ByteArrayOutputStream();
-             ZipOutputStream zos = new ZipOutputStream(baos))
-        {
-            for (String filename : list)
-            {
-                Path path = Paths.get(filename);
-                byte[] data = Files.readAllBytes(path);
-                ZipEntry entry = new ZipEntry(filename);
-                entry.setSize(data.length);
-                zos.putNextEntry(entry);
-                zos.write(data);
-                zos.closeEntry();
-            }
-            outputStream = baos;
-        }
-        
-        Blob blob = new SerialBlob(outputStream.toByteArray());
-        return blob;
+        return Converter.filesToBlob(list);
     }
 
 	public final void reportSwitch(boolean on)

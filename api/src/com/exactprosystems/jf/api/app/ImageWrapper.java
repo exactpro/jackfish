@@ -86,6 +86,10 @@ public class ImageWrapper implements Serializable
 		return this.fileName;
 	}
 
+    public void clearFile()
+    {
+        this.fileName = null;
+    }
 
 	public String getDescription()
 	{
@@ -107,4 +111,5 @@ public class ImageWrapper implements Serializable
 	
 	private String	fileName	= null;
 	private String 	description	= null;
+
 }

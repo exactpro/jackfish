@@ -1,11 +1,11 @@
-#Id;#TestCase
-INIT;Test case
+#Id;#TestCase;#Kind
+INIT;Test case;
     #Id;#Call;#type;#host;#base;#user;#password;#scriptsDir
     CALL_1;RF.SetVars;'MySql';'127.0.0.1';'regression';'root';dbPassword;'matrices/EE/'
 
 
-#TestCase
-Overall
+#TestCase;#Kind
+Overall;
     #Id;#Call
     table;RF.TotalTable
 
@@ -16,8 +16,8 @@ Overall
     TableReport;table;'Table';'INIT';false
 
 
-#TestCase
-Summary
+#TestCase;#Kind
+Summary;
     #Id;#Call
     table;RF.LastSummary
 
@@ -34,8 +34,8 @@ Summary
     TableReport;table;'Consolidated Umbrella Report: ';'INIT';false;{'Matrix Name', 'Execution Status', 'Execution Date', 'Execution Time', 'Executed By', 'Execution Machine'}
 
 
-#TestCase
-Regression progress
+#TestCase;#Kind
+Regression progress;
     #Id;#Call
     table;RF.ProgressTable
 
@@ -43,13 +43,16 @@ Regression progress
     ChartReport;ChartKind.Line;table;'{{4 Regression progress 4}}';'INIT';'id';'Average'
 
 
-#TestCase
-Detailed report
+#TestCase;#Kind
+Detailed report;
     #Id;#Call
     table;RF.LastAllDetails
 
-    #Action;#Replace;#Table;#Columns;#MatchCell;#Search
-    TableReplace;'';table;{ 'step', 'error'};true;'null'
+    #Action;#Table;#Columns;#MatchCell;#Search;#Replace
+    TableReplace;table;{ 'step', 'error' };true;'null';''
+
+    #Action;#Table;#Columns;#MatchCell;#Search;#Replace
+    TableReplace;table;{ 'screenshot'};true;null;''
 
     #Action;#Replace;#Table;#Columns;#Search;#MatchCell
     TableReplace;'<div class=\"Passed\">Passed</div>';table;{ 'result' };'Passed';true
