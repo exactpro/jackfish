@@ -16,15 +16,15 @@ import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.custom.BorderWrapper;
-import com.exactprosystems.jf.tool.dictionary.FindListView;
 import com.exactprosystems.jf.tool.custom.shutter.DelayShutterButton;
 import com.exactprosystems.jf.tool.custom.tab.CustomTab;
+import com.exactprosystems.jf.tool.custom.tab.CustomTabPane;
 import com.exactprosystems.jf.tool.custom.xpath.XpathViewer;
 import com.exactprosystems.jf.tool.dictionary.DictionaryFx;
 import com.exactprosystems.jf.tool.dictionary.DictionaryFxController;
+import com.exactprosystems.jf.tool.dictionary.FindListView;
 import com.exactprosystems.jf.tool.main.Main;
 import com.exactprosystems.jf.tool.settings.SettingsPanel;
-import com.exactprosystems.jf.tool.settings.Theme;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.event.ActionEvent;
@@ -35,10 +35,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.*;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Region;
+import javafx.scene.layout.*;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import org.w3c.dom.Document;
@@ -46,6 +43,7 @@ import org.w3c.dom.Document;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
@@ -63,9 +61,12 @@ public class NavigationController implements Initializable, ContainingParent
 
 	public ToggleGroup groupSection;
 	public HBox hBoxElement;
-	public BorderPane paneWindow;
-	public BorderPane paneElement;
+	//	public BorderPane paneWindow;
+	public VBox vBoxWindow;
+//	public BorderPane paneElement;
+	public VBox vBoxElement;
 	public Button btnRenameWindow;
+
 	public Button btnNewElement;
 	public Button btnDeleteElement;
 	public Button btnCopyElement;
@@ -80,7 +81,7 @@ public class NavigationController implements Initializable, ContainingParent
 
 	private DictionaryFx model;
 	private boolean fullScreen = false;
-	private String themePath;
+	private List<String> themePaths;
 	private AppConnection appConnection;
 	
 	public void setAppConnection(AppConnection appConnection)
@@ -107,7 +108,7 @@ public class NavigationController implements Initializable, ContainingParent
 				IWindow::getName,
 				(d,i) ->Common.tryCatch(() -> this.model.dialogMove(d,currentSection(), i), "Error on move")
 		));
-		this.paneWindow.setCenter(this.listViewWindow);
+		this.vBoxWindow.getChildren().add(0, this.listViewWindow);
 		this.listViewElement = new FindListView<>((e, s) -> (!Str.IsNullOrEmpty(e.control.getID()) && e.control.getID().toUpperCase().contains(s.toUpperCase()) || (e.control.getBindedClass().getClazz().toUpperCase()
 				.contains(s.toUpperCase()))),
 				false);
@@ -116,30 +117,33 @@ public class NavigationController implements Initializable, ContainingParent
 				e -> e.control.toString(),
 				(w, i) -> Common.tryCatch(() -> this.model.elementMove(currentWindow(), currentSection(), w.control,i), "Error on move element")
 		));
-		this.paneElement.setCenter(this.listViewElement);
+		this.vBoxElement.getChildren().add(0, this.listViewElement);
 		Platform.runLater(() -> {
 
-			ScrollPane scrollPaneWindow = new ScrollPane(this.paneWindow);
+			ScrollPane scrollPaneWindow = new ScrollPane(this.vBoxWindow);
 			scrollPaneWindow.setFitToWidth(true);
 			scrollPaneWindow.setFitToHeight(true);
 			scrollPaneWindow.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
 			scrollPaneWindow.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
-			Node dialog = BorderWrapper.wrap(this.paneWindow).title("Dialog").color(Common.currentTheme().getReverseColor()).build();
-			((Region) dialog).setMinWidth(400.0);
-			((Region) dialog).setMaxWidth(400.0);
-			((Region) dialog).setPrefWidth(400.0);
+			Node dialog = BorderWrapper.wrap(this.vBoxWindow).title("Dialog").color(Common.currentTheme().getReverseColor()).build();
+			double width = 375.0;
+			((Region) dialog).setMinWidth(width);
+			((Region) dialog).setMaxWidth(width);
+			((Region) dialog).setPrefWidth(width);
 			((HBox)this.pane).getChildren().add(0,dialog);
+			HBox.setHgrow(dialog, Priority.ALWAYS);
 
-			ScrollPane scrollPaneElement = new ScrollPane(this.paneElement);
+			ScrollPane scrollPaneElement = new ScrollPane(this.vBoxElement);
 			scrollPaneElement.setFitToWidth(true);
 			scrollPaneElement.setFitToHeight(true);
 			scrollPaneElement.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
 			scrollPaneElement.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
-			Node element = BorderWrapper.wrap(this.paneElement).title("Element").color(Common.currentTheme().getReverseColor()).build();
-			((Region) element).setMinWidth(400.0);
-			((Region) element).setMaxWidth(400.0);
-			((Region) element).setPrefWidth(400.0);
+			Node element = BorderWrapper.wrap(this.vBoxElement).title("Element").color(Common.currentTheme().getReverseColor()).build();
+			((Region) element).setMinWidth(width);
+			((Region) element).setMaxWidth(width);
+			((Region) element).setPrefWidth(width);
 			((HBox)this.pane).getChildren().add(element);
+			HBox.setHgrow(element, Priority.ALWAYS);
 
 			Common.customizeLabeled(this.btnNewDialog, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.DICTIONARY_NEW);
 			Common.customizeLabeled(this.btnDeleteDialog, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.DICTIONARY_DELETE);
@@ -156,10 +160,8 @@ public class NavigationController implements Initializable, ContainingParent
 	public void init(DictionaryFx model, GridPane gridPane, Settings settings, CustomTab owner)
 	{
 		this.model = model;
+		//TODO this need move from here to model
 		this.fullScreen = Boolean.parseBoolean(settings.getValueOrDefault(Settings.GLOBAL_NS, SettingsPanel.SETTINGS, "useFullScreenXpath", "false").getValue());
-		Settings.SettingsValue theme = settings.getValueOrDefault(Settings.GLOBAL_NS, SettingsPanel.SETTINGS, Main.THEME, Theme.WHITE.name());
-		this.themePath = Theme.valueOf(theme.getValue()).getPath();
-		
 		boolean compactMode = Boolean.parseBoolean(settings.getValueOrDefault(Settings.GLOBAL_NS, SettingsPanel.SETTINGS, Main.USE_SMALL_WINDOW, "false").getValue());
 		setChoiseBoxListeners();
 		createShutters(this.hBoxElement, owner, compactMode);
@@ -313,7 +315,7 @@ public class NavigationController implements Initializable, ContainingParent
 				XpathViewer viewer = new XpathViewer(owner, document, service);
 				String id = currentElement().getID();
 	
-				String result = viewer.show(xpath, "Xpath for " + (id == null ? "empty" : id), this.themePath, this.fullScreen);
+				String result = viewer.show(xpath, "Xpath for " + (id == null ? "empty" : id), Common.currentThemesPaths(), this.fullScreen);
 				this.model.parameterSetXpath(currentWindow(), currentSection(), currentElement(), result);
 			}
 		}
@@ -407,7 +409,7 @@ public class NavigationController implements Initializable, ContainingParent
 
 	public void close()
 	{
-		Scene scene = Common.getTabPane().getScene();
+		Scene scene = CustomTabPane.getInstance().getScene();
 		scene.removeEventFilter(KeyEvent.KEY_PRESSED, pressHandler);
 		scene.removeEventFilter(KeyEvent.KEY_RELEASED, releaseHandler);
 	}
@@ -423,9 +425,12 @@ public class NavigationController implements Initializable, ContainingParent
 		renewButton.setToggleGroup(group);
 
 		hBox.getChildren().add(0, recOneButton);
-		hBox.getChildren().add(1, recManyButton);
-		hBox.getChildren().add(2, renewButton);
-		Scene scene = Common.getTabPane().getScene();
+		hBox.getChildren().add(1, Common.createSpacer(Common.SpacerEnum.HorizontalMin));
+		hBox.getChildren().add(2, recManyButton);
+		hBox.getChildren().add(3, Common.createSpacer(Common.SpacerEnum.HorizontalMin));
+		hBox.getChildren().add(4, renewButton);
+		hBox.getChildren().add(5, Common.createSpacer(Common.SpacerEnum.HorizontalMin));
+		Scene scene = CustomTabPane.getInstance().getScene();
 		pressHandler = keyEvent -> {
 			if (keyEvent.getCode() == KeyCode.CONTROL && owner != null && owner.isSelected())
 			{

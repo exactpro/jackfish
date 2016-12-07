@@ -67,7 +67,7 @@ public class GitStatusController implements Initializable, ContainingParent
 	{
 		Dialog<ButtonType> dialog = new Alert(Alert.AlertType.INFORMATION);
 		dialog.setResizable(true);
-		dialog.getDialogPane().getStylesheets().addAll(Common.currentTheme().getPath());
+		dialog.getDialogPane().getStylesheets().addAll(Common.currentThemesPaths());
 		dialog.setTitle("Git status");
 		Text headerLabel = new Text(state);
 		if (list.isEmpty())

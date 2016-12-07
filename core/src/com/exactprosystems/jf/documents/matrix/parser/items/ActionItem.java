@@ -24,7 +24,7 @@ import java.util.Set;
 @MatrixItemAttribute(
 		description 		= "Adds new action into matrix",
 		shouldContain 		= { Tokens.Action},
-		mayContain 			= { Tokens.Id, Tokens.Off, Tokens.Global, Tokens.IgnoreErr, Tokens.Assert },
+		mayContain 			= { Tokens.Id, Tokens.Off, Tokens.RepOff, Tokens.Global, Tokens.IgnoreErr, Tokens.Assert },
 		real				= true,
 		hasValue 			= true,
 		hasParameters 		= true,

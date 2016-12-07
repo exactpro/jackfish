@@ -344,12 +344,12 @@ public class LayoutWizardController implements Initializable, ContainingParent, 
 	private void initDialog()
 	{
 		this.dialog = new Alert(Alert.AlertType.INFORMATION);
-		this.dialog.getDialogPane().getStylesheets().add(Common.currentTheme().getPath());
+		this.dialog.getDialogPane().getStylesheets().addAll(Common.currentThemesPaths());
 		this.dialog.getDialogPane().setPrefHeight(1000);
 		this.dialog.getDialogPane().setPrefWidth(1000);
 		this.dialog.setResult(new ButtonType("", ButtonBar.ButtonData.CANCEL_CLOSE));
 		this.dialog.setResizable(true);
-		this.dialog.getDialogPane().getStylesheets().addAll(Common.currentTheme().getPath());
+		this.dialog.getDialogPane().getStylesheets().addAll(Common.currentThemesPaths());
 		this.dialog.setTitle("Layout wizard");
 		this.dialog.getDialogPane().setHeader(new Label());
 		this.dialog.getDialogPane().setContent(parent);

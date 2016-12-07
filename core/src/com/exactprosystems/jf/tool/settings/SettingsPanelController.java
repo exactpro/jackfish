@@ -164,7 +164,7 @@ public class SettingsPanelController implements Initializable, ContainingParent
 		ButtonBar.setButtonData(this.dialog.getDialogPane().lookupButton(save), ButtonBar.ButtonData.OTHER);
 		this.dialog.getDialogPane().setContent(this.pane);
 		this.dialog.setTitle(title);
-		this.dialog.getDialogPane().getStylesheets().addAll(Common.currentTheme().getPath());
+		this.dialog.getDialogPane().getStylesheets().addAll(Common.currentThemesPaths());
 		this.dialog.heightProperty().addListener((observable, oldValue, newValue) ->
 		{
 			if (newValue.doubleValue() > this.defaultHeight)

@@ -26,7 +26,7 @@ import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
 @MatrixItemAttribute(
 		description 	= "Switches off output of the report.", 
 		shouldContain 	= { Tokens.ReportOff },
-		mayContain 		= { Tokens.Off }, 
+		mayContain 		= { Tokens.Off, Tokens.RepOff }, 
 		real			= true,
 		hasValue 		= false, 
 		hasParameters 	= false, 
@@ -77,6 +77,7 @@ public class ReportOff extends MatrixItem
 	@Override
 	protected ReturnAndResult executeItSelf(long start, Context context, IMatrixListener listener, AbstractEvaluator evaluator, ReportBuilder report, Parameters parameters)
 	{
+	    context.getOut().println("ReportOff is deprecated. Use #RepOff attribute instead.");
 		return new ReturnAndResult(start, Result.Passed); 
 	}
 }

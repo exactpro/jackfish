@@ -31,7 +31,7 @@ import java.util.Set;
 @MatrixItemAttribute(
 		description 		= "Make this TestCase failed.", 
 		shouldContain 		= { Tokens.Fail }, 
-		mayContain 			= { Tokens.Off }, 
+		mayContain 			= { Tokens.Off, Tokens.RepOff }, 
 		real				= true,
 		hasValue 			= true, 
 		hasParameters 		= false, 

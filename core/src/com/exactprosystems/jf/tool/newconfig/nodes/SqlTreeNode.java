@@ -7,6 +7,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.exactprosystems.jf.tool.newconfig.nodes;
 
+import com.exactprosystems.jf.api.common.SerializablePair;
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.documents.config.SqlEntry;
@@ -17,13 +18,10 @@ import com.exactprosystems.jf.tool.newconfig.ConfigurationFx;
 import com.exactprosystems.jf.tool.newconfig.ConfigurationTreeView;
 import com.exactprosystems.jf.tool.newconfig.TablePair;
 import com.exactprosystems.jf.tool.newconfig.testing.TestingConnectionFxController;
-
 import javafx.scene.Node;
 import javafx.scene.control.ContextMenu;
-import javafx.scene.control.MenuItem;
 import javafx.scene.control.TreeItem;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
 
 import java.util.ArrayList;
@@ -36,6 +34,10 @@ public class SqlTreeNode extends TreeNode
 	private ConfigurationFx model;
 	private TestingConnectionFxController	testSqlController;
 
+	private static final SerializablePair<String, String> ADD_NEW_SQL = new SerializablePair<>("Add new sql", CssVariables.Icons.ADD_PARAMETER_ICON);
+	private static final SerializablePair<String, String> REMOVE_SQL = new SerializablePair<>("Remove", CssVariables.Icons.REMOVE_PARAMETER_ICON);
+	private static final SerializablePair<String, String> TEST = new SerializablePair<>("Test", null);
+
 	public SqlTreeNode(ConfigurationFx model, TreeItem<TreeNode> treeItem)
 	{
 		this.treeItem = treeItem;
@@ -45,10 +47,15 @@ public class SqlTreeNode extends TreeNode
 	@Override
 	public Optional<ContextMenu> contextMenu()
 	{
-		return Optional.of(ConfigurationTreeView.add("Add new sql", e ->
-				ConfigurationTreeView.showInputDialog("Enter new sql name")
-						.ifPresent(res -> Common.tryCatch(() -> this.model.addNewSqlEntry(res), "Error on add new import"))
-		));
+		ContextMenu menu = ConfigurationTreeView.add("Add new sql",
+				e -> ConfigurationTreeView.showInputDialog("Enter new sql name").ifPresent(
+						res -> Common.tryCatch(() -> this.model.addNewSqlEntry(res), "Error on add new import"))
+		);
+		menu.getItems().addAll(
+				ConfigurationTreeView.createDisabledItem(REMOVE_SQL),
+				ConfigurationTreeView.createDisabledItem(TEST)
+		);
+		return Optional.of(menu);
 	}
 
 	@Override
@@ -102,11 +109,11 @@ public class SqlTreeNode extends TreeNode
 		public Optional<ContextMenu> contextMenu()
 		{
 			ContextMenu menu = new ContextMenu();
-			MenuItem removeItem = new MenuItem("Remove", new ImageView(new Image(CssVariables.Icons.REMOVE_PARAMETER_ICON)));
-			removeItem.setOnAction(e -> Common.tryCatch(() -> model.removeSqlEntry(getEntry()), "Error on remove sql entry"));
-			MenuItem testItem = new MenuItem("Test");
-			testItem.setOnAction(e -> Common.tryCatch(() -> testSqlEntry(getEntry()), "Error on test sql entry"));
-			menu.getItems().addAll(removeItem, testItem);
+			menu.getItems().addAll(
+					ConfigurationTreeView.createDisabledItem(ADD_NEW_SQL),
+					ConfigurationTreeView.createItem(REMOVE_SQL, () -> model.removeSqlEntry(getEntry()), "Error on remove sql entry"),
+					ConfigurationTreeView.createItem(TEST, () -> testSqlEntry(getEntry()), "Error on test sql entry")
+			);
 			return Optional.of(menu);
 		}
 

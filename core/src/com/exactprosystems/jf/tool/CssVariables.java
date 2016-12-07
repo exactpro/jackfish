@@ -194,6 +194,27 @@ public class CssVariables
 	public static final String	SPINNER_BUTTON_UP			= "spinnerButtonUp";
 	public static final String	SPINNER_BUTTON_DOWN			= "spinnerButtonDown";
 
+	//region Spacer
+	public static final String	VERTICAL_MIN					= "verticalMin";
+	public static final String	VERTICAL_MID					= "verticalMid";
+	public static final String	VERTICAL_MAX					= "verticalMax";
+
+	public static final String	HORIZONTAL_MIN				= "horizontalMin";
+	public static final String	HORIZONTAL_MID				= "horizontalMid";
+	public static final String	HORIZONTAL_MAX				= "horizontalMax";
+	
+	public static final String	HGAP_MIN					= "hgapMin";
+	public static final String	HGAP_MID					= "hgapMid";
+	public static final String	HGAP_MAX					= "hgapMax";
+
+	public static final String	VGAP_MIN					= "vgapMin";
+	public static final String	VGAP_MID					= "vgapMid";
+	public static final String	VGAP_MAX					= "vgapMax";
+	//endregion
+
+	public static final String	CUSTOM_TAB_PANE				= "customTabPane";
+	
+
 	public static class Icons
 	{
 		private static final String	IMAGES_DIR				= "com/exactprosystems/jf/tool/css/images";
@@ -269,6 +290,7 @@ public class CssVariables
 		public static final String	MATRIX_ICON					= IMAGES_DIR + "/matrixIcon.png";
 		public static final String	LIBRARY_ICON				= IMAGES_DIR + "/libraryIcon.png";
 		public static final String	FOLDER_ICON					= IMAGES_DIR + "/folderIcon.png";
+		public static final String	FOLDER_ICON_OPENED			= IMAGES_DIR + "/folderIconOpened.png";
 		public static final String	VARS_ICON					= IMAGES_DIR + "/varsIcon.png";
 		public static final String	SQL_ICON					= IMAGES_DIR + "/sqlIcon.png";
 		public static final String	CLIENT_ICON					= IMAGES_DIR + "/clientIcon.png";

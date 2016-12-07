@@ -1,3 +1,6 @@
+07.12.2016 4.3.0 1705
+Description for App actions was added
+________________________________________________________________________________
 06.12.2016 4.3.0.1699
 Now Do.getList() is available for swing plugin
 

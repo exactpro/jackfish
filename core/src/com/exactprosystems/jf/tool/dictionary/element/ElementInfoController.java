@@ -49,7 +49,7 @@ public class ElementInfoController implements Initializable, ContainingParent
 	public ChoiceBox<IControl> choiceBoxRows;
 	public ChoiceBox<IControl> choiceBoxOwner;
 	public CheckBox checkBoxWeak;
-	public CheckBox checkBoxUseNumericHeader;
+	public CheckBox checkBoxUseNumericHeader = new CheckBox();
 	public CustomFieldWithButton tfID;
 	public CustomFieldWithButton tfUID;
 	public CustomFieldWithButton tfXpath;

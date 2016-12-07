@@ -50,7 +50,7 @@ public class XpathViewer
 		public int offsetY;
 	}
 
-	public String show(String initial, String title, String themePath, boolean fullScreen)
+	public String show(String initial, String title, List<String> themePaths, boolean fullScreen)
 	{
 		this.controller = Common.loadController(XpathViewer.class.getResource("XpathViewerContent.fxml"));
 		this.controller.init(this, initial);
@@ -84,7 +84,7 @@ public class XpathViewer
 		{
 			Common.tryCatch(() -> this.controller.displayImage(null, 0, 0), "Error on display image");
 		}
-		String result = this.controller.show(title, themePath, fullScreen);
+		String result = this.controller.show(title, themePaths, fullScreen);
 		return result == null ? initial : result;
 	}
 

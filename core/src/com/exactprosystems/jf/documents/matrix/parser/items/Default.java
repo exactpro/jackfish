@@ -13,7 +13,7 @@ import java.util.List;
 @MatrixItemAttribute(
 		description 	= "Executed if all cases are not suitable.", 
 		shouldContain 	= { Tokens.Default },
-		mayContain 		= { Tokens.Off }, 
+		mayContain 		= { Tokens.Off, Tokens.RepOff }, 
         closes			= Switch.class,
         real 			= true,
 		hasValue 		= false, 

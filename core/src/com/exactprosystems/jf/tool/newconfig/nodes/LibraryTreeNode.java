@@ -7,6 +7,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.exactprosystems.jf.tool.newconfig.nodes;
 
+import com.exactprosystems.jf.api.common.SerializablePair;
 import com.exactprosystems.jf.common.MutableString;
 import com.exactprosystems.jf.documents.matrix.Matrix;
 import com.exactprosystems.jf.tool.Common;
@@ -14,7 +15,6 @@ import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.newconfig.ConfigurationFx;
 import com.exactprosystems.jf.tool.newconfig.ConfigurationTreeView;
 import com.exactprosystems.jf.tool.newconfig.TablePair;
-
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -32,6 +32,14 @@ public class LibraryTreeNode extends TreeNode
 {
 	private ConfigurationFx model;
 	private TreeItem<TreeNode> treeItem;
+
+	private static final SerializablePair<String, String> REFRESH_LIBRARY = new SerializablePair<>("Refresh", CssVariables.Icons.REFRESH);
+
+	private static final SerializablePair<String, String> ADD_NEW_LIBRARY = new SerializablePair<>("Add new library to", CssVariables.Icons.ADD_PARAMETER_ICON);
+	private static final SerializablePair<String, String> EXCLUDE_LIB_FOLDER = new SerializablePair<>("Exclude library folder", CssVariables.Icons.REMOVE_PARAMETER_ICON);
+	private static final SerializablePair<String, String> OPEN_LIBRARY = new SerializablePair<>("Open library", CssVariables.Icons.LIBRARY_ICON);
+	private static final SerializablePair<String, String> REMOVE_LIBRARY = new SerializablePair<>("Remove library", CssVariables.Icons.REMOVE_PARAMETER_ICON);
+
 
 	public LibraryTreeNode(ConfigurationFx configuration, TreeItem<TreeNode> treeItem)
 	{
@@ -56,24 +64,48 @@ public class LibraryTreeNode extends TreeNode
 	{
 		ContextMenu menu = new ContextMenu();
 
-		MenuItem refreshLibs = new MenuItem("Refresh", new ImageView(new Image(CssVariables.Icons.REFRESH)));
-		refreshLibs.setOnAction(e -> Common.tryCatch(() -> this.model.updateLibraries(), "Error on refresh libs"));
+		menu.getItems().addAll(
+				ConfigurationTreeView.createDisabledItem(OPEN_LIBRARY),
+				ConfigurationTreeView.createDisabledItem(REMOVE_LIBRARY),
+				ConfigurationTreeView.createItem(REFRESH_LIBRARY, () -> this.model.updateLibraries(), "Error on refresh libs")
+		);
 
 		boolean isLibEmpty = this.model.getLibrariesValue().isEmpty();
 		if (!isLibEmpty)
 		{
 			Menu addLibrary = new Menu("Add new library to", new ImageView(new Image(CssVariables.Icons.ADD_PARAMETER_ICON)));
-			this.model.getLibrariesValue().stream().map(MutableString::get).map(Common::getRelativePath).map(MenuItem::new).peek(item -> item.setOnAction(e -> ConfigurationTreeView.showInputDialog("Enter new name").ifPresent(name -> Common.tryCatch(() -> this.model.addNewLibrary(new File(item.getText()), name), "Error on create new library")))).forEach(addLibrary.getItems()::add);
+			this.model.getLibrariesValue()
+					.stream()
+					.map(MutableString::get)
+					.map(Common::getRelativePath)
+					.map(MenuItem::new)
+					.peek(item -> item.setOnAction(
+							e -> ConfigurationTreeView.showInputDialog("Enter new name")
+									.ifPresent(name -> Common.tryCatch(() -> this.model.addNewLibrary(new File(item.getText()), name),
+											"Error on create new library")
+									)
+							)
+					).forEach(addLibrary.getItems()::add);
 
 			Menu excludeLibrary = new Menu("Exclude library folder", new ImageView(new Image(CssVariables.Icons.REMOVE_PARAMETER_ICON)));
-			this.model.getLibrariesValue().stream().map(MutableString::get).map(Common::getRelativePath).map(MenuItem::new).peek(item -> item.setOnAction(e -> Common.tryCatch(() -> this.model.excludeLibraryDirectory(item.getText()), "Error on exclude library folder"))).forEach(excludeLibrary.getItems()::add);
+			this.model.getLibrariesValue()
+					.stream()
+					.map(MutableString::get)
+					.map(Common::getRelativePath)
+					.map(MenuItem::new)
+					.peek(item -> item.setOnAction(
+							e -> Common.tryCatch(() -> this.model.excludeLibraryDirectory(item.getText()), "Error on exclude library folder")
+						)
+					).forEach(excludeLibrary.getItems()::add);
 
 			menu.getItems().addAll(addLibrary, excludeLibrary);
 		}
 
-		menu.getItems().add(0, refreshLibs);
-		//TODO think about implementation this method
-		menu.getItems().add(new MenuItem("Git"));
+		menu.getItems().addAll(
+				new SeparatorMenuItem(),
+				ConfigurationTreeView.createDisabledItem("Git", null)
+		);
+
 		return Optional.of(menu);
 	}
 
@@ -126,13 +158,17 @@ public class LibraryTreeNode extends TreeNode
 		public Optional<ContextMenu> contextMenu()
 		{
 			ContextMenu menu = new ContextMenu();
-			MenuItem itemOpen = new MenuItem("Open library", new ImageView(new Image(CssVariables.Icons.LIBRARY_ICON)));
-			itemOpen.setOnAction(e -> Common.tryCatch(() -> model.openLibrary(this.fullPath), "Error on open library file"));
-
+			menu.getItems().addAll(
+					ConfigurationTreeView.createItem(OPEN_LIBRARY, () -> model.openLibrary(this.fullPath), "Error on open library file"),
+					ConfigurationTreeView.createItem(REMOVE_LIBRARY, () -> model.removeLibrary(this.namespace), "Error on remove library"),
+					ConfigurationTreeView.createDisabledItem(ADD_NEW_LIBRARY),
+					ConfigurationTreeView.createDisabledItem(EXCLUDE_LIB_FOLDER),
+					ConfigurationTreeView.createDisabledItem(REFRESH_LIBRARY),
+					new SeparatorMenuItem(),
+					ConfigurationTreeView.createDisabledItem("Git", null)
+			);
 			MenuItem itemRemove = new MenuItem("Remove library", new ImageView(new Image(CssVariables.Icons.REMOVE_PARAMETER_ICON)));
 			itemRemove.setOnAction(e -> Common.tryCatch(() -> model.removeLibrary(this.namespace), "Error on remove library"));
-
-			menu.getItems().addAll(itemOpen, itemRemove);
 			return Optional.of(menu);
 		}
 

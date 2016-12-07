@@ -16,6 +16,7 @@ import com.exactprosystems.jf.tool.custom.grideditor.DataProvider;
 import com.exactprosystems.jf.tool.custom.grideditor.SpreadsheetView;
 import com.exactprosystems.jf.tool.custom.tab.CustomTab;
 
+import com.exactprosystems.jf.tool.custom.tab.CustomTabPane;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
@@ -92,14 +93,10 @@ public class CsvFxController implements Initializable, ContainingParent
 	{
 		this.model = model;
 
-		this.tab = new CustomTab(model, settings);
+		this.tab = CustomTabPane.getInstance().createTab(model);
 		this.tab.setContent(this.pane);
-
-		Platform.runLater(() ->
-		{
-			Common.getTabPane().getTabs().add(this.tab);
-			Common.getTabPane().getSelectionModel().select(this.tab);
-		});
+		CustomTabPane.getInstance().addTab(tab);
+		CustomTabPane.getInstance().selectTab(tab);
 	}
 
 	public void saved(String name)
@@ -110,7 +107,7 @@ public class CsvFxController implements Initializable, ContainingParent
 	public void close() throws Exception
 	{
 		this.tab.close();
-		Common.getTabPane().getTabs().remove(this.tab);
+		CustomTabPane.getInstance().removeTab(this.tab);
 	}
 
 	// ------------------------------------------------------------------------------------------------------------------

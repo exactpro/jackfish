@@ -12,6 +12,7 @@ import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.newconfig.ConfigurationFx;
 import com.exactprosystems.jf.tool.newconfig.ConfigurationTreeView;
 import com.exactprosystems.jf.tool.newconfig.TablePair;
+import com.exactprosystems.jf.tool.main.DocumentKind;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -40,6 +41,20 @@ public class ConfigurationTreeNode extends TreeNode
 
 		MenuItem refresh = new MenuItem("Refresh", new ImageView(new Image(CssVariables.Icons.REFRESH)));
 		refresh.setOnAction(e -> Common.tryCatch(() -> model.refresh(), "Error on refresh configuration"));
+
+		Menu menuNew = new Menu("New");
+		menuNew.getItems().addAll(
+				createNewDocumentMenuItem("Dictionary", DocumentKind.GUI_DICTIONARY),
+				createNewDocumentMenuItem("System variables", DocumentKind.SYSTEM_VARS),
+				createNewDocumentMenuItem("Matrix", DocumentKind.MATRIX),
+				createNewDocumentMenuItem("Library", () -> this.model.newLibrary()),
+				createNewDocumentMenuItem("Plain text", DocumentKind.PLAIN_TEXT),
+				createNewDocumentMenuItem("CSV", DocumentKind.CSV)
+		);
+		MenuItem newDictionary = new MenuItem("Dictionary");
+		newDictionary.setOnAction(e -> Common.tryCatch(() -> this.model.newDocument(DocumentKind.GUI_DICTIONARY), "Error on create new dictionary"));
+
+		menu.getItems().add(menuNew);
 
 		menu.getItems().addAll(refresh, new SeparatorMenuItem());
 		menu.getItems().addAll(ConfigurationTreeView.gitContextMenu(new File(".")).getItems());
@@ -84,4 +99,17 @@ public class ConfigurationTreeNode extends TreeNode
 		return Optional.of(new Image(CssVariables.Icons.CONFIGURATION_ICON));
 	}
 
+	private MenuItem createNewDocumentMenuItem(String name, DocumentKind kind)
+	{
+		MenuItem menuItem = new MenuItem(name);
+		menuItem.setOnAction(e -> Common.tryCatch(() -> this.model.newDocument(kind), "Error on create new " + name.toLowerCase()));
+		return menuItem;
+	}
+
+	private MenuItem createNewDocumentMenuItem(String name, Common.Function fn)
+	{
+		MenuItem menuItem = new MenuItem(name);
+		menuItem.setOnAction(e -> Common.tryCatch(fn, "Error on create new " + name.toLowerCase()));
+		return menuItem;
+	}
 }

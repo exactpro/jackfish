@@ -31,7 +31,7 @@ import java.util.Set;
 @MatrixItemAttribute(
 		description 	= "Check the assertion.", 
 		shouldContain 	= { Tokens.Assert },
-		mayContain 		= { Tokens.Off, Tokens.Message }, 
+		mayContain 		= { Tokens.Off, Tokens.RepOff, Tokens.Message }, 
 		real			= true,
 		hasValue 		= true, 
 		hasParameters 	= false,
