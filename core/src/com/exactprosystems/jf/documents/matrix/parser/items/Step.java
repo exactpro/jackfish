@@ -37,7 +37,7 @@ import java.util.stream.Collectors;
 @MatrixItemAttribute(
 		description 	= "Elementary step in the script", 
 		shouldContain 	= { Tokens.Step },
-		mayContain 		= { Tokens.Off, Tokens.Kind },
+		mayContain 		= { Tokens.Off, Tokens.Kind, Tokens.RepOff },
 		real			= true,
 		hasValue 		= true, 
 		hasParameters 	= false,
@@ -185,8 +185,8 @@ public class Step extends MatrixItem
 				position = table.size();
 				
 				row.put(Context.matrixColumn, 			this.owner.getName());
-				TestCase parent = (TestCase)findParent(TestCase.class);
-				if (parent != null)
+				MatrixItem parent = findParent(TestCase.class);
+				if (parent instanceof TestCase)
 				{
 					row.put(Context.testCaseIdColumn, 	parent.getId());
 					row.put(Context.testCaseColumn, 	parent);

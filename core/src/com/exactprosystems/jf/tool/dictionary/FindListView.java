@@ -8,20 +8,21 @@
 package com.exactprosystems.jf.tool.dictionary;
 
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.custom.controls.field.CustomFieldWithButton;
 import javafx.beans.value.ChangeListener;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Tooltip;
 import javafx.scene.input.KeyCode;
-import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.VBox;
 import javafx.util.Callback;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiPredicate;
 
-public class FindListView<T> extends BorderPane
+public class FindListView<T> extends VBox
 {
 	private ListView<T> listView;
 	private List<T> data;
@@ -35,8 +36,9 @@ public class FindListView<T> extends BorderPane
 		this.listView.setTooltip(new Tooltip("Use drag-n-drop to reorder elements in this list"));
 		this.cfbFind = new CustomFieldWithButton();
 		this.cfbFind.setPromptText("find");
-		this.setTop(this.cfbFind);
-		this.setCenter(this.listView);
+		this.getChildren().add(this.cfbFind);
+		this.getChildren().add(Common.createSpacer(Common.SpacerEnum.VerticalMin));
+		this.getChildren().add(this.listView);
 		this.listView.setEditable(isEditable);
 		listeners();
 	}

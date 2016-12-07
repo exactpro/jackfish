@@ -21,11 +21,10 @@
 					<content>
 						<GridPane fx:id="mainGridPane" alignment="CENTER">
 							<fx:define>
-								<Double fx:id="widthNavigation" fx:value="900.0"/>
-								<Double fx:id="heightNavigation" fx:value="900.0"/>
+								<Double fx:id="widthNavigation" fx:value="870.0"/>
 								<Double fx:id="widthInfo" fx:value="600.0"/>
-								<Double fx:id="height" fx:value="350.0"/>
-								<Double fx:id="heightActions" fx:value="250.0"/>
+								<Double fx:id="height" fx:value="400.0"/>
+								<Double fx:id="heightActions" fx:value="300.0"/>
 							</fx:define>
 							<columnConstraints>
 								<ColumnConstraints hgrow="SOMETIMES" minWidth="$widthNavigation" prefWidth="$widthNavigation" maxWidth="$widthNavigation"/>
@@ -37,9 +36,6 @@
 							</rowConstraints>
 							<children>
 							</children>
-							<padding>
-								<Insets bottom="2.0" left="2.0" right="2.0" top="2.0"/>
-							</padding>
 						</GridPane>
 					</content>
 				</ScrollPane>

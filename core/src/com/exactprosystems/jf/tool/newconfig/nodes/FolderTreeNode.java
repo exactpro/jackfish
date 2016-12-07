@@ -24,6 +24,6 @@ public class FolderTreeNode extends FileTreeNode
 	@Override
 	public Optional<Image> icon()
 	{
-		return Optional.of(new Image(CssVariables.Icons.FOLDER_ICON));
+		return Optional.of(new Image(super.isExpanded() ? CssVariables.Icons.FOLDER_ICON_OPENED : CssVariables.Icons.FOLDER_ICON));
 	}
 }

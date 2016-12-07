@@ -187,7 +187,7 @@ public class ScheduleController implements Initializable, ContainingParent
 		this.dialog.getDialogPane().setPrefWidth(600);
 		this.dialog.getDialogPane().setPrefHeight(600);
 		this.dialog.setTitle("Monitoring");
-		this.dialog.getDialogPane().getStylesheets().addAll(Common.currentTheme().getPath());
+		this.dialog.getDialogPane().getStylesheets().addAll(Common.currentThemesPaths());
 		this.dialog.showAndWait();
 	}
 

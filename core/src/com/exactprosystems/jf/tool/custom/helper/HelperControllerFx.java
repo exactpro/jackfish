@@ -129,7 +129,7 @@ public class HelperControllerFx implements Initializable, ContainingParent
 	public String showAndWait(String expression)
 	{
 		this.taInput.setText(expression);
-		this.dialog.getDialogPane().getScene().getStylesheets().addAll(Common.currentTheme().getPath());
+		this.dialog.getDialogPane().getScene().getStylesheets().addAll(Common.currentThemesPaths());
 		Optional<ButtonType> buttonType = this.dialog.showAndWait();
 		return buttonType.isPresent() && buttonType.get().equals(ButtonType.OK) ?  taInput.getText() : expression;
 	}
@@ -343,7 +343,7 @@ public class HelperControllerFx implements Initializable, ContainingParent
 					}
 				}, "Error on key pressed");
 			});
-			dialog.getDialogPane().getStylesheets().addAll(Common.currentTheme().getPath());
+			dialog.getDialogPane().getStylesheets().addAll(Common.currentThemesPaths());
 			Optional<ButtonType> optional = dialog.showAndWait();
 			optional.filter(buttonType -> buttonType.getButtonData().equals(ButtonBar.ButtonData.OK_DONE)).ifPresent(
 					type -> Optional.ofNullable(tableView.getSelectionModel().getSelectedItem()).ifPresent(i -> name = i.getName()));

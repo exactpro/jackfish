@@ -31,7 +31,7 @@ import java.util.stream.Collectors;
 @MatrixItemAttribute(
 		description 	= "Test case.", 
 		shouldContain 	= { Tokens.TestCase },
-		mayContain 		= { Tokens.Id, Tokens.Off, Tokens.Kind },
+		mayContain 		= { Tokens.Id, Tokens.Off, Tokens.Kind, Tokens.RepOff },
 		closes			= MatrixRoot.class,
         real			= true,
 		hasValue 		= true, 
@@ -118,8 +118,8 @@ public final class TestCase extends MatrixItem
 	@Override
 	public String getItemName()
 	{
-		return super.getItemName() + "  " + (this.name == null ? "" : "(" + this.name + ")")
-		        +  (this.kind == null ? "" : " Screenshot: " + this.kind + "");
+		return super.getItemName() + "  " + (this.name.get() == null ? "" : "(" + this.name + ")")
+		        +  (this.kind.get() == null ? "" : (" Screenshot: " + this.kind + "") );
 	}
 
 	@Override

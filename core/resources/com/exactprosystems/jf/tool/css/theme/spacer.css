@@ -1,0 +1,104 @@
+.root {
+	sizeMin : 4px;
+	sizeMid : 8px;
+	sizeMax : 16px;
+}
+
+#verticalMin {
+	-fx-min-height : sizeMin;
+	-fx-max-height : sizeMin;
+	-fx-pref-height : sizeMin;
+	
+	-fx-min-width : 0px;
+	-fx-max-width : 0px;
+	-fx-pref-width : 0px;
+
+	visibility : hidden;
+}
+#verticalMid {
+	-fx-min-height : sizeMid;
+	-fx-max-height : sizeMid;
+	-fx-pref-height : sizeMid;
+	
+	-fx-min-width : 0px;
+	-fx-max-width : 0px;
+	-fx-pref-width : 0px;
+	
+	visibility : hidden;
+}
+#verticalMax {
+	-fx-min-height : sizeMax;
+	-fx-max-height : sizeMax;
+	-fx-pref-height : sizeMax;
+	
+	-fx-min-width : 0px;
+	-fx-max-width : 0px;
+	-fx-pref-width : 0px;
+	
+	visibility : hidden;
+}
+
+#horizontalMin {
+	-fx-min-width : sizeMin;
+	-fx-max-width : sizeMin;
+	-fx-pref-width : sizeMin;
+	
+	-fx-min-height : 0px;
+	-fx-max-height : 0px;
+	-fx-pref-height : 0px;
+	
+	visibility : hidden;
+}
+#horizontalMid {
+	-fx-min-width : sizeMid;
+	-fx-max-width : sizeMid;
+	-fx-pref-width : sizeMid;
+	
+	-fx-min-height : 0px;
+	-fx-max-height : 0px;
+	-fx-pref-height : 0px;
+	
+	visibility : hidden;
+}
+#horizontalMax {
+	-fx-min-width : sizeMax;
+	-fx-max-width : sizeMax;
+	-fx-pref-width : sizeMax;
+	
+	-fx-min-height : 0px;
+	-fx-max-height : 0px;
+	-fx-pref-height : 0px;
+	
+	visibility : hidden;
+}
+
+.hgapMin {
+	-fx-hgap : sizeMin;
+	
+}
+.hgapMid {
+	-fx-hgap : sizeMid;
+	
+}
+.hgapMax {
+	-fx-hgap : sizeMax;
+	
+}
+
+.vgapMin {
+	-fx-vgap : sizeMin;
+	
+}
+.vgapMid {
+	-fx-vgap : sizeMid;
+	
+}
+.vgapMax {
+	-fx-vgap : sizeMax;
+	
+}
+
+.dialog-pane > .button-bar > .container {
+	-fx-spacing : sizeMax;
+
+}

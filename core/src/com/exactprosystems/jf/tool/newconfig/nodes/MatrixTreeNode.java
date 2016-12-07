@@ -7,6 +7,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.exactprosystems.jf.tool.newconfig.nodes;
 
+import com.exactprosystems.jf.api.common.SerializablePair;
 import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
@@ -14,10 +15,9 @@ import com.exactprosystems.jf.tool.newconfig.ConfigurationFx;
 import com.exactprosystems.jf.tool.newconfig.ConfigurationTreeView;
 import javafx.scene.Node;
 import javafx.scene.control.ContextMenu;
-import javafx.scene.control.MenuItem;
+import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.TreeItem;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
 
 import java.io.File;
@@ -30,6 +30,15 @@ public class MatrixTreeNode extends TreeNode
 {
 	private ConfigurationFx		model;
 	private TreeItem<TreeNode>	treeItem;
+
+	private static final SerializablePair<String, String> REFRESH_MATRIX = new SerializablePair<>("Refresh", CssVariables.Icons.REFRESH);
+
+	private static final SerializablePair<String, String> OPEN_MATRIX = new SerializablePair<>("Open matrix", CssVariables.Icons.MATRIX_ICON);
+	private static final SerializablePair<String, String> ADD_NEW_MATRIX = new SerializablePair<>("Add new matrix", CssVariables.Icons.ADD_PARAMETER_ICON);
+	private static final SerializablePair<String, String> REMOVE_MATRIX = new SerializablePair<>("Remove matrix", CssVariables.Icons.REMOVE_PARAMETER_ICON);
+
+	private static final SerializablePair<String, String> REMOVE_MATRIX_FOLDER = new SerializablePair<>("Remove folder", CssVariables.Icons.REMOVE_PARAMETER_ICON);
+	private static final SerializablePair<String, String> EXCLUDE_MATRIX_FOLDER = new SerializablePair<>("Exclude matrix dir", CssVariables.Icons.REMOVE_PARAMETER_ICON);
 
 	public MatrixTreeNode(ConfigurationFx model, TreeItem<TreeNode> treeItem)
 	{
@@ -54,12 +63,16 @@ public class MatrixTreeNode extends TreeNode
 	public Optional<ContextMenu> contextMenu()
 	{
 		ContextMenu menu = new ContextMenu();
-		// TODO think about implementation this method
-		menu.getItems().add(new MenuItem("Git"));
-
-		MenuItem refresh = new MenuItem("Refresh", new ImageView(new Image(CssVariables.Icons.REFRESH)));
-		refresh.setOnAction(e -> Common.tryCatch(() -> this.model.updateMatrices(), "Error on refresh matrices"));
-		menu.getItems().add(0, refresh);
+		menu.getItems().addAll(
+				ConfigurationTreeView.createDisabledItem(OPEN_MATRIX),
+				ConfigurationTreeView.createDisabledItem(ADD_NEW_MATRIX),
+				ConfigurationTreeView.createDisabledItem(REMOVE_MATRIX),
+				ConfigurationTreeView.createDisabledItem(REMOVE_MATRIX_FOLDER),
+				ConfigurationTreeView.createDisabledItem(EXCLUDE_MATRIX_FOLDER),
+				ConfigurationTreeView.createItem(REFRESH_MATRIX, () -> this.model.refreshMatrices(), "Error on refresh matrices"),
+				new SeparatorMenuItem(),
+				ConfigurationTreeView.createDisabledItem("Git", null)
+		);
 		return Optional.of(menu);
 	}
 
@@ -69,41 +82,40 @@ public class MatrixTreeNode extends TreeNode
 		Function<File, ContextMenu> topFolderMenu = file ->
 		{
 			ContextMenu menu = new ContextMenu();
-			MenuItem itemRemove = new MenuItem("Exclude matrix dir", new ImageView(new Image(CssVariables.Icons.REMOVE_PARAMETER_ICON)));
-			itemRemove.setOnAction(e -> Common.tryCatch(() -> model.excludeMatrixDirectory(file.getName()), "Error on remove matrix directory"));
-			menu.getItems().addAll(itemRemove);
+			menu.getItems().addAll(
+					ConfigurationTreeView.createDisabledItem(OPEN_MATRIX),
+					ConfigurationTreeView.createDisabledItem(REMOVE_MATRIX),
+					ConfigurationTreeView.createItem(EXCLUDE_MATRIX_FOLDER, () -> model.excludeMatrixDirectory(file.getName()), "Error on remove matrix directory"),
+					ConfigurationTreeView.createDisabledItem(REFRESH_MATRIX)
+			);
 			return menu;
 		};
 		Function<File, ContextMenu> menuFiles = file ->
 		{
 			ContextMenu menu = new ContextMenu();
-
-			MenuItem itemOpenMatrix = new MenuItem("Open matrix", new ImageView(new Image(CssVariables.Icons.MATRIX_ICON)));
-			itemOpenMatrix.setOnAction(e -> Common.tryCatch(() -> this.model.openMatrix(file), "Error on on open matrix"));
-
-			MenuItem addNewMatrix = new MenuItem("Add new matrix", new ImageView(new Image(CssVariables.Icons.ADD_PARAMETER_ICON)));
-			addNewMatrix.setOnAction(e -> Common.tryCatch(
-					() -> ConfigurationTreeView.showInputDialog("Enter new name").ifPresent(
-							name -> Common.tryCatch(() -> this.model.addNewMatrix(file, name), "Error on create new matrix")), "Error on add new matrix"));
-
-			MenuItem removeMatrix = new MenuItem("Remove matrix", new ImageView(new Image(CssVariables.Icons.REMOVE_PARAMETER_ICON)));
-			removeMatrix.setOnAction(e -> Common.tryCatch(() -> this.model.removeMatrix(file), "Error on remove matrix"));
-
-			menu.getItems().addAll(itemOpenMatrix, addNewMatrix, removeMatrix);
+			menu.getItems().addAll(
+					ConfigurationTreeView.createItem(OPEN_MATRIX,() -> this.model.openMatrix(file), "Error on on open matrix"),
+					ConfigurationTreeView.createItem(ADD_NEW_MATRIX, () -> ConfigurationTreeView.showInputDialog("Enter new name").ifPresent(
+							name -> Common.tryCatch(() -> this.model.addNewMatrix(file, name), "Error on create new matrix")), "Error on add new matrix"),
+					ConfigurationTreeView.createItem(REMOVE_MATRIX, () -> this.model.removeMatrix(file), "Error on remove matrix"),
+					ConfigurationTreeView.createDisabledItem(REMOVE_MATRIX_FOLDER),
+					ConfigurationTreeView.createDisabledItem(EXCLUDE_MATRIX_FOLDER),
+					ConfigurationTreeView.createDisabledItem(REFRESH_MATRIX)
+			);
 			return menu;
 		};
 		Function<File, ContextMenu> menuFolders = file ->
 		{
 			ContextMenu menu = new ContextMenu();
-			MenuItem addNewMatrix = new MenuItem("Add new matrix", new ImageView(new Image(CssVariables.Icons.ADD_PARAMETER_ICON)));
-			addNewMatrix.setOnAction(e -> Common.tryCatch(
-					() -> ConfigurationTreeView.showInputDialog("Enter new name").ifPresent(
-							name -> Common.tryCatch(() -> this.model.addNewMatrix(file, name), "Error on create new matrix")), "Error on add new matrix"));
-
-			MenuItem removeFolder = new MenuItem("Remove folder", new ImageView(new Image(CssVariables.Icons.REMOVE_PARAMETER_ICON)));
-			removeFolder.setOnAction(e -> Common.tryCatch(() -> this.model.removeMatrix(file), "Error on remove folder"));
-
-			menu.getItems().addAll(addNewMatrix, removeFolder);
+			menu.getItems().addAll(
+					ConfigurationTreeView.createDisabledItem(OPEN_MATRIX),
+					ConfigurationTreeView.createItem(ADD_NEW_MATRIX, () -> ConfigurationTreeView.showInputDialog("Enter new name").ifPresent(
+							name -> Common.tryCatch(() -> this.model.addNewMatrix(file, name), "Error on create new matrix")), "Error on add new matrix"),
+					ConfigurationTreeView.createDisabledItem(REMOVE_MATRIX),
+					ConfigurationTreeView.createItem(REMOVE_MATRIX_FOLDER, () -> this.model.removeMatrix(file), "Error on remove folder"),
+					ConfigurationTreeView.createDisabledItem(EXCLUDE_MATRIX_FOLDER),
+					ConfigurationTreeView.createDisabledItem(REFRESH_MATRIX)
+			);
 			return menu;
 		};
 		matricesValue.forEach(file -> new BuildTree(new File(file), this.treeItem)

@@ -44,9 +44,10 @@ public class GitCloneController implements Initializable, ContainingParent
 
 	public ScrollPane scrollPane;
 	public VBox vBox;
+	public GridPane gridPane;
 
 	private GitClone model;
-	private GridPane parent;
+	private Parent parent;
 	private BooleanProperty folderExist = new SimpleBooleanProperty(false);
 	private BooleanProperty projectExist = new SimpleBooleanProperty(false);
 
@@ -62,7 +63,7 @@ public class GitCloneController implements Initializable, ContainingParent
 	@Override
 	public void setParent(Parent parent)
 	{
-		this.parent = (GridPane) parent;
+		this.parent = parent;
 	}
 	//endregion
 
@@ -209,7 +210,7 @@ public class GitCloneController implements Initializable, ContainingParent
 			this.monitor.clear();
 		}
 		this.scrollPane.setVisible(flag);
-		RowConstraints rowStatus = this.parent.getRowConstraints().get(4);
+		RowConstraints rowStatus = this.gridPane.getRowConstraints().get(4);
 
 		rowStatus.setMaxHeight(flag ? 100 : 0);
 		rowStatus.setMinHeight(flag ? 10 : 0);

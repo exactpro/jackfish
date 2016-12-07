@@ -8,7 +8,6 @@
 
 package com.exactprosystems.jf.tool.dictionary.actions;
 
-import com.exactprosystems.jf.api.app.AppConnection;
 import com.exactprosystems.jf.api.app.ImageWrapper;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.tool.Common;
@@ -32,13 +31,17 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.net.URL;
-import java.util.*;
+import java.util.Collection;
+import java.util.Optional;
+import java.util.ResourceBundle;
 
 import static com.exactprosystems.jf.tool.Common.logger;
 import static com.exactprosystems.jf.tool.Common.tryCatch;
@@ -57,6 +60,7 @@ public class ActionsController implements Initializable, ContainingParent
 	public ComboBox<String>			comboBoxWindows;
 
 	public GridPane					mainGrid;
+	public HBox						hBoxDoIt;
 	private ExpressionField			expressionField;
 	private Parent					pane;
 
@@ -109,7 +113,9 @@ public class ActionsController implements Initializable, ContainingParent
 		this.info = info;
 
 		this.expressionField = new ExpressionField(evaluator);
-		this.elementActionsGrid.add(this.expressionField, 1, 4, 2, 1);
+//		this.elementActionsGrid.add(this.expressionField, 0, 3, 2, 1);
+		this.hBoxDoIt.getChildren().add(0, this.expressionField);
+		HBox.setHgrow(this.expressionField, Priority.ALWAYS);
 		this.expressionField.setHelperForExpressionField(null, null);
 
 		this.comboBoxApps.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> 

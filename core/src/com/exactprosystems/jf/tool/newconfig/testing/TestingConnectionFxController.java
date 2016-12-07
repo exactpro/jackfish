@@ -86,7 +86,7 @@ public class TestingConnectionFxController implements Initializable, ContainingP
 		Dialog dialog = new Alert(Alert.AlertType.INFORMATION);
 		dialog.getDialogPane().setContent(this.parent);
 		dialog.setHeaderText("Test connection for " + this.name);
-		dialog.getDialogPane().getStylesheets().addAll(Common.currentTheme().getPath());
+		dialog.getDialogPane().getStylesheets().addAll(Common.currentThemesPaths());
 		dialog.show();
 	}
 

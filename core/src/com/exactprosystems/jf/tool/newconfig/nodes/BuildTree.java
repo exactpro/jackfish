@@ -10,7 +10,6 @@ package com.exactprosystems.jf.tool.newconfig.nodes;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.newconfig.ConfigurationFx;
 import com.exactprosystems.jf.tool.newconfig.ConfigurationTreeView;
-
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
@@ -102,8 +101,8 @@ public class BuildTree
 				public Optional<ContextMenu> contextMenu()
 				{
 					List<MenuItem> items = new ArrayList<>();
-					Optional.ofNullable(menuFolder).map(menu -> menu.apply(rootFile)).ifPresent(menu -> items.addAll(menu.getItems()));
-					Optional.ofNullable(topFolderMenu).map(menu -> menu.apply(rootFile)).ifPresent(menu -> items.addAll(menu.getItems()));
+					Optional.ofNullable(menuFolder).map(menu -> menu.apply(rootFile)).ifPresent(menu -> addAll(menu, items));
+					Optional.ofNullable(topFolderMenu).map(menu -> menu.apply(rootFile)).ifPresent(menu -> addAll(menu, items));
 					super.contextMenu().ifPresent(cm -> {
 						if (!items.isEmpty())
 						{
@@ -148,6 +147,14 @@ public class BuildTree
 			});
 			rootNode.getChildren().add(fileNode);
 		}
+	}
+
+	private static void addAll(ContextMenu menu, List<MenuItem> items)
+	{
+		menu.getItems()
+				.stream()
+				.filter(item -> items.stream().noneMatch(i -> i.getText().equals(item.getText())))
+				.forEach(items::add);
 	}
 
 	public static void addListenerToExpandChild(TreeItem<TreeNode> rootItem)

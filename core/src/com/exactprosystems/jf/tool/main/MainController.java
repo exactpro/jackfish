@@ -20,6 +20,7 @@ import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.custom.logs.LogsFx;
 import com.exactprosystems.jf.tool.custom.tab.CustomTab;
+import com.exactprosystems.jf.tool.custom.tab.CustomTabPane;
 import com.exactprosystems.jf.tool.custom.treetable.MatrixTreeView;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.matrix.MatrixFx;
@@ -59,7 +60,8 @@ public class MainController implements Initializable, ContainingParent
 
 	private static final Logger	logger		= Logger.getLogger(MainController.class);
 
-	public TabPane				documentsPane;
+//	public TabPane				documentsPane;
+	public CustomTabPane		customTabPane;
 	public BorderPane			projectPane;
 
 	public ProgressBar			progressBar;
@@ -108,7 +110,7 @@ public class MainController implements Initializable, ContainingParent
 
 	public Menu					menuView;
 	public MenuItem				viewLogs;
-	public MenuItem				viewSettings;
+	public MenuItem editSettings;
 	public MenuItem				viewStore;
 	public MenuItem				viewAllTabs;
 
@@ -161,9 +163,12 @@ public class MainController implements Initializable, ContainingParent
 		progressBar.setProgress(ProgressIndicator.INDETERMINATE_PROGRESS);
 		progressBar.setVisible(false);
 		SplitPane.setResizableWithParent(this.projectGridPane, false);
-		listeners();
+		this.customTabPane = CustomTabPane.getInstance();
+		this.customTabPane.setMinHeight(200.0);
+		this.customTabPane.setPrefHeight(629.0);
+		this.customTabPane.setPrefWidth(1280.0);
+		this.splitPane.getItems().add(this.customTabPane);
 
-		Common.setTabPane(documentsPane);
 		Common.setProgressBar(progressBar);
 
 		Common.customizeLabeled(this.btnReloadConfig, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.REFRESH);
@@ -173,6 +178,7 @@ public class MainController implements Initializable, ContainingParent
 		Common.customizeLabeled(this.btnSaveConfig, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.CONFIGURATION_SAVE_ICON);
 		this.btnSaveConfig.setOnAction(e -> Common.tryCatch(() -> this.model.saveConfig(), "Error on save config"));
 
+		listeners();
 	}
 
 	public void close()
@@ -207,7 +213,7 @@ public class MainController implements Initializable, ContainingParent
 			editRedo.setGraphic(new ImageView(new Image(CssVariables.Icons.REDO_ICON_SMALL)));
 			matrixSchedule.setGraphic(new ImageView(new Image(CssVariables.Icons.SCHEDULER_MATRIX_ICON)));
 
-			viewSettings.setGraphic(new ImageView(new Image(CssVariables.Icons.SHOW_SETTINGS_ICON)));
+			editSettings.setGraphic(new ImageView(new Image(CssVariables.Icons.SHOW_SETTINGS_ICON)));
 			helpActionsHelp.setGraphic(new ImageView(new Image(CssVariables.Icons.ACTIONS_HELP_ICON)));
 			helpAboutProgram.setGraphic(new ImageView(new Image(CssVariables.Icons.ABOUT_PROGRAM_ICON)));
 		}, "Error on set tooltips or images"));
@@ -222,8 +228,7 @@ public class MainController implements Initializable, ContainingParent
 	public void display()
 	{
 		Scene scene = new Scene(this.pane, PANE_WIDTH, PANE_HEIGHT);
-
-		scene.getStylesheets().addAll(Common.currentTheme().getPath());
+		scene.getStylesheets().addAll(Common.currentThemesPaths());
 		this.stage.setScene(scene);
 		SettingsValue value = settings.getValueOrDefault(Settings.GLOBAL_NS, SettingsPanel.SETTINGS, Main.USE_FULL_SCREEN, "false");
 		this.stage.setFullScreen(Boolean.parseBoolean(value.getValue()));
@@ -238,6 +243,7 @@ public class MainController implements Initializable, ContainingParent
 		this.settings = settings;
 		this.stage = stage;
 		this.runnerScheduler = (RunnerScheduler) factory.getRunnerListener();
+		CustomTabPane.getInstance().setSettings(this.settings);
 		this.stage.setOnCloseRequest(windowEvent ->
 		{
 			if (!this.model.closeApplication())
@@ -259,7 +265,7 @@ public class MainController implements Initializable, ContainingParent
 
 	public Document currentDocument()
 	{
-		Tab selectedTab = this.documentsPane.getSelectionModel().getSelectedItem();
+		Tab selectedTab = this.customTabPane.getSelectionModel().getSelectedItem();
 
 		if (selectedTab instanceof CustomTab)
 		{
@@ -337,7 +343,7 @@ public class MainController implements Initializable, ContainingParent
 
 	public void matrixSchedule(ActionEvent event)
 	{
-		Common.tryCatch(() -> this.runnerScheduler.show(this.documentsPane.getScene().getWindow()), "Error on schedule");
+		Common.tryCatch(() -> this.runnerScheduler.show(this.customTabPane.getScene().getWindow()), "Error on schedule");
 	}
 
 	public void runFromFile(ActionEvent actionEvent)
@@ -619,19 +625,19 @@ public class MainController implements Initializable, ContainingParent
 		{
 			return false;
 		}
-		Optional<Tab> first = this.documentsPane.getTabs().stream().filter(f ->
+		Optional<Tab> first = this.customTabPane.getTabs().stream().filter(f ->
 		{
 			Document document = ((CustomTab) f).getDocument();
 			return Str.areEqual(new File(document.getName()).getAbsolutePath(), file.getAbsolutePath());
 		}).findFirst();
-		first.ifPresent(this.documentsPane.getSelectionModel()::select);
+		first.ifPresent(this.customTabPane.getSelectionModel()::select);
 		return first.isPresent();
 	}
 
 	//region Private methods
 	private void listeners()
 	{
-		this.documentsPane.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) ->
+		this.customTabPane.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) ->
 		{
 			if (newValue == null)
 			{
@@ -639,14 +645,17 @@ public class MainController implements Initializable, ContainingParent
 			}
 			else
 			{
-				CustomTab newCustomTab = (CustomTab) newValue;
-				this.model.changeDocument(newCustomTab.getDocument());
-				if (newCustomTab.getDocument() instanceof MatrixFx)
+				if (newValue instanceof CustomTab)
 				{
-					Node lookup = newCustomTab.getContent().lookup("."+CssVariables.CUSTOM_TREE_TABLE_VIEW);
-					if (lookup instanceof MatrixTreeView)
+					CustomTab newCustomTab = (CustomTab) newValue;
+					this.model.changeDocument(newCustomTab.getDocument());
+					if (newCustomTab.getDocument() instanceof MatrixFx)
 					{
-						Common.setFocused(lookup);
+						Node lookup = newCustomTab.getContent().lookup("."+CssVariables.CUSTOM_TREE_TABLE_VIEW);
+						if (lookup instanceof MatrixTreeView)
+						{
+							Common.setFocused(lookup);
+						}
 					}
 				}
 			}
@@ -682,7 +691,7 @@ public class MainController implements Initializable, ContainingParent
 	private void showAllTabs()
 	{
 		ListView<String> listView = new ListView<>();
-		listView.getItems().addAll(documentsPane.getTabs().stream().map(tab -> ((CustomTab) tab).getTitle()).collect(Collectors.toList()));
+		listView.getItems().addAll(this.customTabPane.getTabs().stream().map(tab -> ((CustomTab) tab).getTitle()).collect(Collectors.toList()));
 		Dialog<ButtonType> dialog = new Alert(Alert.AlertType.CONFIRMATION);
 		dialog.getDialogPane().setContent(listView);
 		dialog.getDialogPane().setPrefHeight(500);
@@ -704,7 +713,7 @@ public class MainController implements Initializable, ContainingParent
 				selectAndHide(listView, dialog);
 			}
 		});
-		dialog.getDialogPane().getStylesheets().addAll(Common.currentTheme().getPath());
+		dialog.getDialogPane().getStylesheets().addAll(Common.currentThemesPaths());
 		Optional<ButtonType> buttonType = dialog.showAndWait();
 		buttonType.filter(bt -> bt.getButtonData().equals(ButtonBar.ButtonData.OK_DONE)).ifPresent(type -> selectAndHide(listView, dialog));
 	}
@@ -712,8 +721,8 @@ public class MainController implements Initializable, ContainingParent
 	private void selectAndHide(ListView<String> listView, Dialog<?> dialog)
 	{
 		String selectedItem = listView.getSelectionModel().getSelectedItem();
-		documentsPane.getTabs().stream().filter(tab -> ((CustomTab) tab).getTitle().equals(selectedItem)).findFirst()
-				.ifPresent(documentsPane.getSelectionModel()::select);
+		this.customTabPane.getTabs().stream().filter(tab -> ((CustomTab) tab).getTitle().equals(selectedItem)).findFirst()
+				.ifPresent(this.customTabPane.getSelectionModel()::select);
 		dialog.hide();
 	}
 

@@ -1,82 +1,122 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import java.lang.*?>
-<?import javafx.scene.layout.*?>
-
-
+<?import com.exactprosystems.jf.tool.*?>
 <?import com.exactprosystems.jf.tool.custom.controls.field.CustomFieldWithButton?>
-<BorderPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="com.exactprosystems.jf.tool.dictionary.actions.ActionsController">
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<BorderPane prefHeight="513.0" prefWidth="1105.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+			fx:controller="com.exactprosystems.jf.tool.dictionary.actions.ActionsController">
+	<fx:define>
+		<CssVariables fx:id="verMin" fx:constant="VERTICAL_MIN"/>
+		<CssVariables fx:id="verMid" fx:constant="VERTICAL_MID"/>
+		<CssVariables fx:id="verMax" fx:constant="VERTICAL_MAX"/>
+
+		<CssVariables fx:id="horMin" fx:constant="HORIZONTAL_MIN"/>
+		<CssVariables fx:id="horMid" fx:constant="HORIZONTAL_MID"/>
+		<CssVariables fx:id="horMax" fx:constant="HORIZONTAL_MAX"/>
+	</fx:define>
 	<center>
 		<GridPane fx:id="mainGrid">
+			<styleClass>
+				<CssVariables fx:constant="HGAP_MAX"/>
+			</styleClass>
 			<columnConstraints>
-				<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-				<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="66.0" prefWidth="100.0" />
+				<ColumnConstraints hgrow="SOMETIMES" maxWidth="350.0" minWidth="350.0" prefWidth="350.0"/>
+				<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
 			</columnConstraints>
 			<rowConstraints>
-				<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+				<RowConstraints minHeight="250.0" prefHeight="250.0" vgrow="SOMETIMES"/>
 			</rowConstraints>
 			<children>
-				<GridPane fx:id="elementActionsGrid">
-					<columnConstraints>
-						<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" percentWidth="33.3"/>
-						<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" percentWidth="33.3"/>
-						<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" percentWidth="33.4"/>
-					</columnConstraints>
-					<rowConstraints>
-						<RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
-						<RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
-						<RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
-						<RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
-						<RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
-						<RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
-						<RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
-					</rowConstraints>
+				<VBox GridPane.halignment="CENTER" alignment="CENTER">
 					<children>
-						<ComboBox fx:id="comboBoxApps" maxWidth="1.7976931348623157E308" GridPane.columnIndex="0" GridPane.columnSpan="2" />
-						<ComboBox fx:id="comboBoxAppsStore" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.columnSpan="3" />
-						<HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20.0" GridPane.columnSpan="2" GridPane.rowIndex="1">
-							<children>
-								<Button fx:id="btnStartApplication" onAction="#startApplication" mnemonicParsing="false" text="Start" />
-								<Button fx:id="btnConnectApplication" onAction="#connectApplication" mnemonicParsing="false" text="Connect" />
-								<Button fx:id="btnStop" onAction="#stopConnection" mnemonicParsing="false" text="Stop" />
-							</children>
-						</HBox>
-						<Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Send keys" onAction="#sendKeysAction" GridPane.rowIndex="2" />
-						<CustomFieldWithButton fx:id="tfSendKeys" GridPane.columnIndex="1" GridPane.columnSpan="2" onAction="#sendKeysAction" GridPane.rowIndex="2" />
-						<Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Click" onAction="#clickAction" GridPane.rowIndex="3" />
-						<Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Find" onAction="#findAction" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-						<Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Refresh" onAction="#refresh" GridPane.columnIndex="2" GridPane.rowIndex="3" />
-						<Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Do it" onAction="#doIt" GridPane.rowIndex="4" />
-						<Label text="Switch to" GridPane.halignment="CENTER" GridPane.rowIndex="5" />
-						<ComboBox fx:id="comboBoxWindows" onAction="#changeWindow" maxWidth="1.7976931348623157E308" prefWidth="150.0" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="5" />
-						<GridPane GridPane.columnSpan="3" GridPane.rowIndex="6">
+						<Label id="$verMax"/>
+						<GridPane fx:id="elementActionsGrid" VBox.vgrow="ALWAYS">
 							<columnConstraints>
-								<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-								<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+								<ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+								<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
 							</columnConstraints>
 							<rowConstraints>
-								<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+								<RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+								<RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+								<RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+								<RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+								<RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+								<RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+								<RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES"/>
 							</rowConstraints>
 							<children>
-								<Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Switch to current" onAction="#switchToCurrent"/>
-								<Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Switch to parent" onAction="#switchToParent" GridPane.columnIndex="1" />
+								<HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.columnSpan="2">
+									<children>
+										<ComboBox fx:id="comboBoxApps" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS"/>
+										<Label id="$horMid"/>
+										<Button fx:id="btnStartApplication" mnemonicParsing="false" onAction="#startApplication"/>
+										<Label id="$horMin"/>
+										<Button fx:id="btnConnectApplication" mnemonicParsing="false" onAction="#connectApplication"/>
+										<Label id="$horMin"/>
+										<Button fx:id="btnStop" mnemonicParsing="false" onAction="#stopConnection"/>
+									</children>
+								</HBox>
+								<Label text="Stored connection:" GridPane.rowIndex="1"/>
+								<ComboBox fx:id="comboBoxAppsStore" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1"/>
+								<HBox fx:id="hBoxDoIt" alignment="CENTER" prefHeight="100.0" prefWidth="200.0" GridPane.columnSpan="2" GridPane.rowIndex="3">
+									<children>
+										<Label id="$horMin"/>
+									</children>
+								</HBox>
+								<HBox alignment="CENTER" GridPane.columnSpan="2" GridPane.rowIndex="2">
+									<children>
+										<CustomFieldWithButton fx:id="tfSendKeys" onAction="#sendKeysAction" GridPane.columnSpan="2" GridPane.rowIndex="2" HBox.hgrow="ALWAYS"/>
+										<Label id="$horMin"/>
+									</children>
+								</HBox>
+								<Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#sendKeysAction" text="Send keys" GridPane.columnIndex="2" GridPane.rowIndex="2"/>
+								<Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#doIt" text="Do it" GridPane.columnIndex="2" GridPane.rowIndex="3"/>
+								<HBox alignment="CENTER" GridPane.rowIndex="4">
+									<children>
+										<Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#clickAction" text="Click" GridPane.rowIndex="4" HBox.hgrow="ALWAYS"/>
+										<Label id="$horMin"/>
+									</children>
+								</HBox>
+								<HBox alignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="4">
+									<children>
+										<Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#findAction" text="Find" GridPane.columnIndex="1" GridPane.rowIndex="4"
+												HBox.hgrow="ALWAYS"/>
+										<Label id="$horMin"/>
+									</children>
+								</HBox>
+								<Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#refresh" text="Refresh" GridPane.columnIndex="2" GridPane.rowIndex="4"/>
+								<HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" GridPane.columnSpan="3" GridPane.rowIndex="5">
+									<children>
+										<Label text="Switch to:"/>
+										<Label/>
+										<ComboBox fx:id="comboBoxWindows" maxWidth="1.7976931348623157E308" onAction="#changeWindow" prefWidth="150.0" HBox.hgrow="ALWAYS"/>
+									</children>
+								</HBox>
+								<HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" GridPane.columnSpan="3" GridPane.rowIndex="6">
+									<children>
+										<Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#switchToCurrent" text="Switch to current" HBox.hgrow="ALWAYS"/>
+										<Label id="$horMid"/>
+										<Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#switchToParent" text="Switch to parent" HBox.hgrow="ALWAYS"/>
+									</children>
+								</HBox>
+								<Label text="Application plugin:"/>
 							</children>
-						</GridPane>
+						</GridPane >
+						<Label id="$verMax"/>
 					</children>
-					<GridPane.margin>
-						<Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-					</GridPane.margin>
-				</GridPane>
-				<ScrollPane fitToHeight="true" fitToWidth="true" GridPane.halignment="CENTER" GridPane.columnIndex="1" prefViewportHeight="397.0" prefViewportWidth="1103.0">
-					<content>
-						<Label fx:id="imageArea" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" contentDisplay="GRAPHIC_ONLY"/>
-					</content>
-					<GridPane.margin>
-						<Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-					</GridPane.margin>
-				</ScrollPane>
+				</VBox>
+				<VBox GridPane.columnIndex="1" GridPane.halignment="CENTER" alignment="CENTER">
+					<children>
+						<Label id="$verMax"/>
+						<ScrollPane fitToHeight="true" fitToWidth="true" prefViewportHeight="397.0" prefViewportWidth="1103.0" HBox.hgrow="ALWAYS">
+							<content>
+								<Label fx:id="imageArea" contentDisplay="GRAPHIC_ONLY" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"/>
+							</content>
+						</ScrollPane>
+						<Label id="$verMax"/>
+					</children>
+				</VBox>
 			</children>
 		</GridPane>
 	</center>

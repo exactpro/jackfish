@@ -32,7 +32,7 @@ import java.util.Set;
 @MatrixItemAttribute(
         description 	= "Namespace.",
         shouldContain 	= { Tokens.NameSpace },
-        mayContain 		= { Tokens.Id, Tokens.Off },
+        mayContain 		= { Tokens.Id, Tokens.Off, Tokens.RepOff },
         real			= true,
         hasValue 		= true,
         hasParameters 	= false,
@@ -141,6 +141,7 @@ public final class NameSpace extends MatrixItem
 	@Override
 	protected void beforeReport(ReportBuilder report)
 	{
+	    super.beforeReport(report);;
 	}
 
 	@Override
@@ -196,6 +197,7 @@ public final class NameSpace extends MatrixItem
 	@Override
 	protected void afterReport(ReportBuilder report)
 	{
+	    super.afterReport(report);
 	}
 
 	// ==============================================================================================

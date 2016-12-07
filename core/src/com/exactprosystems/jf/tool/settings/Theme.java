@@ -16,7 +16,8 @@ public enum Theme
 	DEFAULT					("com/exactprosystems/jf/tool/css/theme/default.css"			, false	, null, null),
 	WHITE					("com/exactprosystems/jf/tool/css/theme/white.css"				, true	, Color.WHITE, Color.BLACK),
 	DARK					("com/exactprosystems/jf/tool/css/theme/dark.css"				, true	, Color.BLACK, Color.web("#eeeeee")),
-	NUMBER_SPINNER			("com/exactprosystems/jf/tool/css/theme/number_spinner.css"		, false	, null, null);
+	NUMBER_SPINNER			("com/exactprosystems/jf/tool/css/theme/number_spinner.css"		, false	, null, null),
+	SPACER					("com/exactprosystems/jf/tool/css/theme/spacer.css"				, false	, null, null);
 
 	private String path;
 	private boolean visible;

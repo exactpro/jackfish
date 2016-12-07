@@ -31,7 +31,7 @@ import java.util.Set;
 @MatrixItemAttribute(
         description 	= "Condition executing.",
         shouldContain 	= { Tokens.If },
-        mayContain 		= { Tokens.Off },
+        mayContain 		= { Tokens.Off, Tokens.RepOff },
         real			= true,
         hasValue 		= true,
         hasParameters 	= false,

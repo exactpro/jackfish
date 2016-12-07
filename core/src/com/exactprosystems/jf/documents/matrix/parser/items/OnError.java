@@ -28,7 +28,7 @@ import java.util.List;
 @MatrixItemAttribute(
 		description 	= "On error.", 
 		shouldContain 	= { Tokens.OnError },
-		mayContain 		= { Tokens.Off },
+		mayContain 		= { Tokens.Off, Tokens.RepOff },
 		real			= true,
 		hasValue 		= false, 
 		hasParameters 	= false,
@@ -65,7 +65,7 @@ public final class OnError extends MatrixItem
 	@Override
 	protected boolean matchesDerived(String what, boolean caseSensitive, boolean wholeWord)
 	{
-		return SearchHelper.matches(Tokens.Off.get(), what, caseSensitive, wholeWord);
+		return SearchHelper.matches(Tokens.OnError.get(), what, caseSensitive, wholeWord);
 	}
 
 	@Override

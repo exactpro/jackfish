@@ -9,9 +9,6 @@ import javafx.scene.image.ImageView;
 
 public class IconCell extends TreeTableCell<MatrixItem, MatrixItemState>
 {
-	private static final ImageView BREAK_POINT_IMAGE_VIEW = new ImageView(new Image(CssVariables.Icons.BREAK_POINT_ICON));
-	private static final ImageView EXECUTING_IMAGE_VIEW = new ImageView(new Image(CssVariables.Icons.EXECUTING_ITEM_ICON));
-
 	public IconCell()
 	{
 	}
@@ -24,8 +21,8 @@ public class IconCell extends TreeTableCell<MatrixItem, MatrixItemState>
 		{
 			switch (state)
 			{
-				case BreakPoint:	setGraphic(BREAK_POINT_IMAGE_VIEW); return;
-				case Executing:		setGraphic(EXECUTING_IMAGE_VIEW); return;
+				case BreakPoint:	setGraphic(new ImageView(new Image(CssVariables.Icons.BREAK_POINT_ICON))); return;
+				case Executing:		setGraphic(new ImageView(new Image(CssVariables.Icons.EXECUTING_ITEM_ICON))); return;
 			}
 		}
 		else

@@ -12,7 +12,6 @@ import com.exactprosystems.jf.charts.ChartBuilder;
 import com.exactprosystems.jf.documents.matrix.Matrix;
 import com.exactprosystems.jf.documents.matrix.parser.Result;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
-import com.exactprosystems.jf.documents.matrix.parser.items.TestCase;
 
 import org.apache.log4j.Logger;
 
@@ -126,14 +125,11 @@ public abstract class ReportBuilder
         return blob;
     }
 
-    
-	@Deprecated
 	public final void reportSwitch(boolean on)
 	{
 		this.reportIsOn = on;
 	}
 
-	@Deprecated
 	public final boolean reportIsOn()
 	{
 		return this.reportIsOn;
@@ -180,7 +176,7 @@ public abstract class ReportBuilder
 
 		try
 		{
-			if (this.reportIsOn || matrixItem instanceof TestCase)
+			if (this.reportIsOn)
 			{
 				reportItemHeader(this.writer, matrixItem, newUniq);
 			}
@@ -198,7 +194,7 @@ public abstract class ReportBuilder
 			Integer uniq = this.uniques.peek();
 			logger.trace(String.format("itemIntermediate(%s) current = %s", matrixItem.getItemName(), uniq));
 			 
-			if (this.reportIsOn || matrixItem instanceof TestCase)
+			if (this.reportIsOn)
 			{
 				outAllTables(this.reportData.get(uniq), writer);
 			}
@@ -263,7 +259,7 @@ public abstract class ReportBuilder
 			Integer uniq = this.uniques.peek();
 			logger.trace(String.format("itemFinished(%s) current = %s", matrixItem.getItemName(), uniq));
 			 
-			if (this.reportIsOn || matrixItem instanceof TestCase)
+			if (this.reportIsOn)
 			{
 				outAllTables(this.reportData.get(uniq), writer);
 				reportItemFooter(this.writer, matrixItem, uniq, time);
