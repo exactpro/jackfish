@@ -1,3 +1,14 @@
+#TestCase;#Kind
+RM38805 rename columns in action TableReport;Never
+    #Id;#RawTable
+    DATA1;Table
+    @;a;b;c
+    0;newR;z;asd
+    #EndRawTable
+
+    #Action;#Table;#Title;#ColumnMap
+    TableReport;DATA1;'title';{'a' : 'newA', 'c' : 'newC'}
+
 #TestCase
 Two Calls can have similar Id.
     #Id;#Call
