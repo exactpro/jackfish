@@ -23,14 +23,22 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 @ActionAttribute(
 		group					= ActionGroups.App,
 		suffix					= "APPR",
-		generalDescription 		= "Refresh window / browser.",
-		additionFieldsAllowed 	= false
+		generalDescription 		= "Plug-in dependent action. The purpose of the action is to refresh the application "
+				+ "window. It should be used only with web plug-in.",
+		additionFieldsAllowed 	= false,
+		examples = "{{##Action;#AppConnection\n" +
+				"ApplicationRefresh;app\n#}}",
+		seeAlso					=
+				"{{@ApplicationStart@}}, {{@ApplicationConnectTo@}}"
 	)
 public class ApplicationRefresh extends AbstractAction
 {
 	public static final String connectionName = "AppConnection";
 
-	@ActionFieldAttribute(name = connectionName, mandatory = true, description = "The application connection." )
+	@ActionFieldAttribute(name = connectionName, mandatory = true, description = "A special object which identifies the"
+			+ " started application session. This object is required in many other actions to specify the session"
+			+ " of the application the indicated action belongs to. It is the output value of such actions"
+			+ " as {{@ApplicationStart@}}, {{@ApplicationConnectTo@}}.")
 	protected AppConnection	connection	= null;
 
 

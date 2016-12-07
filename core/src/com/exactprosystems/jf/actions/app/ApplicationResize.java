@@ -23,8 +23,18 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 @ActionAttribute(
 		group					= ActionGroups.App,
 		suffix					= "APPSZ",
-		generalDescription 		= "Resize the main window of application",
-		additionFieldsAllowed 	= false
+		generalDescription 		= "The purpose of the action is to change the window size of the application under test.",
+		additionFieldsAllowed 	= false,
+		examples = "Example №1.\n" +
+				"{{##Action;#AppConnection;#Width;#Height\n" +
+				"ApplicationResize;app;1000;1000#}}\n" +
+				"\n" +
+				"\n" +
+				"Example №2.\n" +
+				"{{##Action;#Maximize;#AppConnection\n" +
+				"ApplicationResize;true;app#}}\n",
+		seeAlso					=
+				"{{@ApplicationStart@}}, {{@ApplicationConnectTo@}}"
 	)
 public class ApplicationResize extends AbstractAction
 {
@@ -34,19 +44,22 @@ public class ApplicationResize extends AbstractAction
 	public final static String minimizeName 	= "Minimize";
 	public final static String maximizeName 	= "Maximize";
 	
-	@ActionFieldAttribute(name = connectionName, mandatory = true, description = "The application connection." )
+	@ActionFieldAttribute(name = connectionName, mandatory = true, description = "A special object which identifies the"
+			+ " started application session. This object is required in many other actions to specify the session"
+			+ " of the application the indicated action belongs to. It is the output value of such actions"
+			+ " as {{@ApplicationStart@}}, {{@ApplicationConnectTo@}}." )
 	protected AppConnection	connection	= null;
 
-	@ActionFieldAttribute(name = heightName, mandatory = false, description = "The hight that will be set for the main window of application." )
+	@ActionFieldAttribute(name = heightName, mandatory = false, description = "The window height is changed to the specified height." )
 	protected Integer height;
 
-	@ActionFieldAttribute(name = widthName, mandatory = false, description = "The width that will be set for the main window of application." )
+	@ActionFieldAttribute(name = widthName, mandatory = false, description = "The window width is changed to the specified width." )
 	protected Integer width;
 
-	@ActionFieldAttribute(name = minimizeName, mandatory = false, description = "The main window of application will be minimized." )
+	@ActionFieldAttribute(name = minimizeName, mandatory = false, description = "If the parameter value is true, it sets the minimum size of the window." )
 	protected Boolean minimize;
 
-	@ActionFieldAttribute(name = maximizeName, mandatory = false, description = "The main window of application will be maximized." )
+	@ActionFieldAttribute(name = maximizeName, mandatory = false, description = "If the parameter value is true, it sets the maximum size of the window." )
 	protected Boolean maximize;
 
 	public ApplicationResize()

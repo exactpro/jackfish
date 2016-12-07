@@ -29,14 +29,14 @@ import com.exactprosystems.jf.functions.Text;
 		outputType				= Boolean.class,
 		examples =
  "{{##Id;#Action;#Content\n"
-+"TXT1;TextCreate;'Text'#}}\n"
++"TXT1;TextCreate;'Text'\n"
 + "\n"
 + "\n"
-+ "{{##Id;#Action;#Text;#File\n"
-+ "TXT2;TextSaveToFile;TXT1.Out;’path/file.txt’#}}\n"
++ "#Id;#Action;#Text;#File\n"
++ "TXT2;TextSaveToFile;TXT1.Out;’path/file.txt’\n"
 + "\n"
 + "\n"
-+ "{{##Assert;#Message\n"
++ "#Assert;#Message\n"
 + "TXT2.Out;#}}\n",
 		seeAlso = "{{@TextReport@}}, {{@TextAddLine@}}, {{@TextLoadFromFile@}}, {{@TextCreate@}}, {{@TextPerform@}}," +
 				" {{@TextSetValue@}}"

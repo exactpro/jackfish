@@ -26,10 +26,10 @@ import com.exactprosystems.jf.functions.Text;
                         + "The action can work for object creation {{$Text$}} line-by-line from different sources.",
         additionFieldsAllowed = false,
         examples =        "{{##Id;#Action;#Content\n"
-                        + "TXT1;TextCreate;'Text'#}}\n"
+                        + "TXT1;TextCreate;'Text'\n"
                         + "\n"
                         + "\n"
-                        + "{{##Action;#Line;#Text\n"
+                        + "#Action;#Line;#Text\n"
                         + "TextAddLine;'New line';TXT1.Out#}}\n",
         seeAlso = "{{@TextReport@}}, {{@TextPerform@}}, {{@TextLoadFromFile@}}, {{@TextCreate@}}, {{@TextSaveToFile@}}," +
                 " {{@TextSetValue@}}"

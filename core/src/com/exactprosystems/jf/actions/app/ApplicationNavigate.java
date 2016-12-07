@@ -15,17 +15,29 @@ import java.util.List;
 		group = ActionGroups.App,
 		suffix = "APPPNVG",
 		generalDescription = "Navigate inside application.",
-		additionFieldsAllowed = false
+		additionFieldsAllowed = true,
+		additionalDescription = "The parameters are determined by the chosen plug-in. {{`For example, an additional"
+				+ " parameter {{$Navigate$}} is available for web plug-in. It has two values {{$BACK$}} and {{$FORWARD$}} which help"
+				+ " to move within the browser back and forward respectively.`}} The parameters can be chosen in the"
+				+ " dialogue window opened with the context menu of this action in {{$“All parameters”$}} option.",
+		examples =
+				"{{##Action;#Navigate;#Navigate;#AppConnection\n" +
+				"ApplicationNavigate;NavigateKind.BACK;NavigateKind.FORWARD;app#}}\n",
+		seeAlso				  =
+				"{{@ApplicationStart@}}, {{@ApplicationConnectTo@}}"
 )
 public class ApplicationNavigate extends AbstractAction
 {
 	public static final String connectionName = "AppConnection";
 	public static final String navigateKindName = "Navigate";
 
-	@ActionFieldAttribute(name = connectionName, mandatory = true, description = "The application connection.")
+	@ActionFieldAttribute(name = connectionName, mandatory = true, description = "A special object which identifies"
+			+ " the started application session. This object is required in many other actions to specify the "
+			+ "session of the application the indicated action belongs to. It is the output value of such actions"
+			+ " as {{@ApplicationStart@}}, {{@ApplicationConnectTo@}}.")
 	protected AppConnection connection = null;
 
-	@ActionFieldAttribute(name = navigateKindName, mandatory = true, description = "Where navigate. See NavigateKind")
+	@ActionFieldAttribute(name = navigateKindName, mandatory = true, description = "Where navigate. See additional field description")
 	protected NavigateKind kind = null;
 
 	@Override
