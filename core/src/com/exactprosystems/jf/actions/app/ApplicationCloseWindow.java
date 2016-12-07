@@ -23,16 +23,30 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 @ActionAttribute(
 		group					= ActionGroups.App,
 		suffix					= "APPCW",
-		generalDescription		= "Close current window on application",
+		generalDescription		=
+				"Plug-in dependent action. The purpose of the action is to close the currently active window of the"
+				+ " application. When the application is a browser, the action closes the currently active tab.",
 		additionFieldsAllowed	= false,
-		outputDescription		= "Name of closed window",
-		outputType				= String.class
+		outputDescription		= "Returns the title bar of the window which was closed.",
+		outputType				= String.class,
+		examples 				=
+				"{{##Id;#Action;#AppConnection\n"
+				+ "ACW;ApplicationCloseWindow;app\n"
+				+ "\n"
+				+ "\n"
+				+ "#Assert;#Message\n"
+				+ "!Str.IsNullOrEmpty(ACW.Out);'String is null or empty'#}}\n",
+		seeAlso					=
+				"{{@ApplicationStart@}}, {{@ApplicationConnectTo@}}"
 )
 public class ApplicationCloseWindow extends AbstractAction
 {
 	public final static String connectionName = "AppConnection";
 
-	@ActionFieldAttribute(name = connectionName, mandatory = true, description = "The application connection")
+	@ActionFieldAttribute(name = connectionName, mandatory = true, description = "A special object which identifies"
+			+ " the started application session. This object is required in many other actions to specify the session"
+			+ " of the application the indicated action belongs to.It is the output value of such actions as "
+			+ "{{@ApplicationStart@}}, {{@ApplicationConnectTo@}}.")
 	protected AppConnection connection = null;
 
 	public ApplicationCloseWindow()

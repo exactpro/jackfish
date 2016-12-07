@@ -23,14 +23,24 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 @ActionAttribute(
 		group					= ActionGroups.App,
 		suffix					= "APPSTP",
-		generalDescription 		= "Stops the application under tests.",
-		additionFieldsAllowed 	= false
+		generalDescription 		= "The purpose of the action is to close the application under test. As a rule,"
+				+ " ApplicationStop is placed in one of the last TestCases to stop the application initialized in"
+				+ " {{@ApplicationStart@}} or {{@ApplicationConnectTo@}}. The flag {{$“Global”$}} (indicated with letter “G”)"
+				+ " should be set in actions {{@ApplicationStart@}} or {{@ApplicationConnectTo@}}.",
+		additionFieldsAllowed 	= false,
+		examples = "{{##Action;#AppConnection\n" +
+				"ApplicationStop;app\n#}}",
+		seeAlso					=
+				"{{@ApplicationConnectTo@}}, {{@ApplicationStart@}}"
 	)
 public class ApplicationStop extends AbstractAction 
 {
 	public static final String connectionName = "AppConnection";
 
-	@ActionFieldAttribute(name = connectionName, mandatory = true, description = "The application connection." )
+	@ActionFieldAttribute(name = connectionName, mandatory = true, description = "A special object which identifies the"
+			+ " started application session. This object is required in many other actions to specify the session"
+			+ " of the application the indicated action belongs to. It is the output value of such actions"
+			+ " as {{@ApplicationStart@}}, {{@ApplicationConnectTo@}}.")
 	protected AppConnection	connection	= null;
 	
 	public ApplicationStop()

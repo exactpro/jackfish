@@ -33,14 +33,30 @@ import com.exactprosystems.jf.documents.matrix.parser.items.ActionItem.HelpKind;
 @ActionAttribute(
 		group 				= ActionGroups.App, 
 		suffix 				= "APPPAR", 
-		generalDescription 	= "Gets specific properties from the connection.", 
-		additionFieldsAllowed = true
+		generalDescription 	= "Plug-in dependent action. The purpose of the action is to get certain properties"
+				+ " from the available connection.",
+		additionFieldsAllowed = true,
+		additionalDescription = "The parameters are determined by the chosen plug-in. {{`For example, additional "
+				+ "parameters {{$Title$}} and {{$URL$}} are available for web plug-in. They are necessary to get the information"
+				+ " about the title bar and the address respectively.`}} The parameters can be chosen in the dialogue"
+				+ " window opened with the context menu of this action in {{$“All parameters”$}} option.",
+		examples = "{{##Id;#Action;#URL;#AppConnection\n" +
+				"AGP1;ApplicationGetProperties;;app\n" +
+				"\n" +
+				"\n" +
+				"#Assert;#Message\n" +
+				"!Str.IsNullOrEmpty(AGP1.Out.URL);'String is null or empty'#}} \n",
+		seeAlso					=
+				"{{@ApplicationStart@}}, {{@ApplicationConnectTo@}}"
 )
 public class ApplicationGetProperties extends AbstractAction
 {
 	public static final String	connectionName	= "AppConnection";
 
-	@ActionFieldAttribute(name = connectionName, mandatory = true, description = "The application connection.")
+	@ActionFieldAttribute(name = connectionName, mandatory = true, description = "A special object which identifies"
+			+ " the started application session. This object is required in many other actions to specify the session"
+			+ " of the application the indicated action belongs to."
+			+ "It is the output value of such actions as {{@ApplicationStart@}}, {{@ApplicationConnectTo@}}.")
 	protected AppConnection		connection		= null;
 
 	public ApplicationGetProperties()

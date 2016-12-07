@@ -23,10 +23,19 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 @ActionAttribute(
 		group					= ActionGroups.App,
 		suffix					= "APPSW",
-		generalDescription 		= "Switch main focus to decired window",
+		generalDescription 		= "Plug-in dependent action. The purpose of the action is to switch the focus among "
+				+ "windows/tabs of the web application.",
 		additionFieldsAllowed 	= false,
-		outputDescription 		= "Name of window that got focus.",
-		outputType				= String.class
+		outputDescription 		= "It returns the title bar of the window which gained the focus.",
+		outputType				= String.class,
+		examples = "{{##Id;#Action;#Title;#AppConnection\n" +
+				"AST;ApplicationSwitchTo;'Title';app\n" +
+				"\n" +
+				"\n" +
+				"#Assert;#Message\n" +
+				"Str.IsNullOrEmpty(AST.Out);'Title is null'#}}",
+		seeAlso					=
+				"{{@ApplicationStart@}}, {{@ApplicationConnectTo@}}"
 	)
 public class ApplicationSwitchTo extends AbstractAction
 {
@@ -34,13 +43,19 @@ public class ApplicationSwitchTo extends AbstractAction
 	public final static String titleName = "Title";
 	public final static String softConditionName = "SoftCondition";
 
-	@ActionFieldAttribute(name = connectionName, mandatory = true, description = "The application connection." )
+	@ActionFieldAttribute(name = connectionName, mandatory = true, description = "A special object which identifies the"
+			+ " started application session. This object is required in many other actions to specify the session"
+			+ " of the application the indicated action belongs to. It is the output value of such actions"
+			+ " as {{@ApplicationStart@}}, {{@ApplicationConnectTo@}}.")
 	protected AppConnection	connection	= null;
 
-	@ActionFieldAttribute(name = titleName, mandatory = true, description = "A title of window.")
+	@ActionFieldAttribute(name = titleName, mandatory = true, description = "It contains a string which will be used"
+			+ " for searching in the title bar of the window required to be in focus. By default, the working principle is “contains”.")
 	protected String 				title	= null;
 
-	@ActionFieldAttribute(name = softConditionName, mandatory = false, description = "Compare window titles and title parameter via contains().")
+	@ActionFieldAttribute(name = softConditionName, mandatory = false, description = "If the parameter value is true,"
+			+ " the string in Title will be compared to the window title bar using the “contains” principle."
+			+ " The window title bar is allowed to have the value of Title field and not to be the same.")
 	protected Boolean 				softCondition;
 
 	public ApplicationSwitchTo()

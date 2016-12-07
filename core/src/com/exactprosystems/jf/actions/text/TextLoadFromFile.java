@@ -31,10 +31,10 @@ import com.exactprosystems.jf.functions.Text;
 		outputType				= Text.class,
 		examples =
  "{{##Id;#Action;#File\n"
-+ "TXT1;TextLoadFromFile;’path/text.txt’#}}\n"
++ "TXT1;TextLoadFromFile;’path/text.txt’\n"
 + "\n"
 + "\n"
-+ "{{##Assert;#Message\n"
++ "#Assert;#Message\n"
 + "TXT1.Out != null;#}}\n",
 		seeAlso = "{{@TextReport@}}, {{@TextAddLine@}}, {{@TextPerform@}}, {{@TextCreate@}}, {{@TextSaveToFile@}}," +
 				" {{@TextSetValue@}}"

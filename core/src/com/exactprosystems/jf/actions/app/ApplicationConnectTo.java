@@ -34,17 +34,37 @@ import java.util.Map;
 @ActionAttribute(
 		group					= ActionGroups.App,
 		suffix					= "APPSTR",
-		generalDescription 		= "Connects to the application under tests.",
+		generalDescription 		= "Plug-in dependent action. The purpose of the action is connect to the running application."
+				+ "The action requires some additional parameters which depend on the type of the plug-in used.",
 		additionFieldsAllowed 	= true,
-		outputDescription 		= "Connection to the application.",
-		outputType				= AppConnection.class
+		additionalDescription = "The parameters are determined by the chosen plug-in."
+				+ "For example, the available parameters for win.jar are the following:"
+				+ "{{` {{$Main window$}} - a text string to search for the window of the application to connect to.`}}"
+				+ "{{` {{$Height$}} - the height of the window.`}} {{` {{$Width$}} - the width of the window.`}} The parameters can be chosen"
+				+ " in the dialogue window opened with the context menu of this action in {{$“All parameters”$}} option.",
+		outputDescription 		= "A special object which identifies the started application session."
+				+ "This object is required in many other actions to specify the session of the application the"
+				+ " indicated action belongs to. Should be created with an active {{$“Global”$}} flag.",
+		outputType				= AppConnection.class,
+		seeAlso					= "{{@ApplicationStop@}}, {{@ApplicationStart@}}, {{@ApplicationGetProperties@}},"
+				+ " {{@ApplicationNewInstance@}}, {{@ApplicationRefresh@}}, {{@ApplicationResize@}}, "
+				+ "{{@ApplicationSwitchTo@}}, {{@DialogAlert@}}, {{@DialogCheckLayout@}}, {{@DialogClose@}}, "
+				+ "{{@DialogFill@}}, {{@DialogSwitchToWindow@}}",
+		examples = "{{##Id;#Global;#Action;#Browser;#URL;#AppId\n" +
+				"app;1;ApplicationStart;'Chrome';'http://google.com';'WEB'\n" +
+				"\n" +
+				"\n" +
+				"#Assert;#Message\n" +
+				"app.Out.IsGood();'Connection is not established'#}}\n"
 	)
 public class ApplicationConnectTo extends AbstractAction 
 {
 	public static final String idName 			= "AppId";
 
 
-	@ActionFieldAttribute(name = idName, mandatory = true, description = "The application id." )
+	@ActionFieldAttribute(name = idName, mandatory = true, description = "Adapter key, one of those described in the"
+			+ " {{$App entries$}} branch of the configuration, will be used to start the corresponding plug-in and to select"
+			+ " the dictionary.")
 	protected String 		id	= null;
 
 	public ApplicationConnectTo()
