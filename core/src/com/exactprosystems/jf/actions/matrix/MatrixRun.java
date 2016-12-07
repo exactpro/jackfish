@@ -42,10 +42,10 @@ import java.util.Date;
 		outputType				= MatrixRunner.class,
 		examples =
 				"{{##Id;#Action;#Matrix\n" +
-				"MXRN1;MatrixRun;'matrices/Matrix.jf'#}}\n" +
+				"MXRN1;MatrixRun;'matrices/Matrix.jf'\n" +
 				"\n" +
 				"\n" +
-				"{{##Assert;#Message\n" +
+				"#Assert;#Message\n" +
 				"MXRN1.Out.isRunning();'MatrixRun is failed'#}}",
 		seeAlso = "{{@MatrixRunFromText@}}, {{@MatrixWait@}}"
 	)

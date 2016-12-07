@@ -37,10 +37,10 @@ import java.util.Date;
 				+ " successfully run and failed test cases of the started matrix. ",
 		outputType				= MatrixRunner.class,
 		examples = "{{##Id;#Action;#Text\n" +
-				"MXRN1;MatrixRunFromText;Text#}}\n" +
+				"MXRN1;MatrixRunFromText;Text\n" +
 				"\n" +
 				"\n" +
-				"{{##Assert;#Message\n" +
+				"#Assert;#Message\n" +
 				"MXRN1.Out.isRunning();'MatrixRun is failed'#}}",
 		seeAlso = "{{@MatrixRun@}}, {{@MatrixWait@}}"
 	)

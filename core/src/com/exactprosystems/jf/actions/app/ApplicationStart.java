@@ -56,7 +56,7 @@ outputDescription 		=
   "A special object which identifies the started application session. "
 + "This object is required in many other actions to specify the session of the application "
 + "the indicated action belongs to. For example, in order to shut down the application under test and to free "
-+ "its resources via the {{$ApplicationStop$}} action the user must pass a valid object to this action, "
++ "its resources via the {{@ApplicationStop@}} action the user must pass a valid object to this action, "
 + "which was received from {{$ApplicationStart$}} action.",
 
 seeAlso					= 
@@ -68,7 +68,6 @@ examples				=
   "As a rule, {{$ApplicationStart$}} is placed in one of the initial TestCases where initialization is performed. "
 + "Therefore it requires that the {{$Global$}} flag be set, as access to the output value is necessary within "
 + "the whole matrix rather than just within the {{$TestCase$}} containing the action."
-+ "{{4 Example 4}}"
 + "{{##Id;#Global;#Action;#AppId;#Browser;#URL\n"
 + "APPSTR1;1;ApplicationStart;'WEB';Browser;Env1 #}}"
 + "It is a standart using this action with web.jar plugin."
