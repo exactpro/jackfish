@@ -107,6 +107,7 @@ public class JnaDriverImpl
 	public int connect(String title, int height, int width, int pid, ControlKind controlKind, int timeout) throws Exception
 	{
 		long start = System.currentTimeMillis();
+		title = FormatString.replaceNonASCIIToUnicode(title);
 		int ret = this.driver.connect(title, height, width, pid, controlKind == null ? Integer.MIN_VALUE : controlKind.ordinal(), timeout);
 		this.logger.info(String.format("connect(%s), time (ms) : %d", title, System.currentTimeMillis() - start));
 		checkCSharpTimes();
@@ -147,7 +148,7 @@ public class JnaDriverImpl
 	public String title() throws Exception
 	{
 		long start = System.currentTimeMillis();
-		String title = this.driver.title();
+		String title = FormatString.replaceUnicodeToChar(this.driver.title());
 		this.logger.info(String.format("title() = %s, time (ms) : %d", title, System.currentTimeMillis() - start));
 		checkCSharpTimes();
 		checkError();
@@ -161,6 +162,11 @@ public class JnaDriverImpl
 	public String listAll(UIProxyJNA owner, ControlKind kind, String uid, String xpath, String clazz, String name, String title, String text, boolean many) throws Exception
 	{
 		long start = System.currentTimeMillis();
+		xpath = FormatString.replaceNonASCIIToUnicode(xpath);
+		name = FormatString.replaceNonASCIIToUnicode(name);
+		title = FormatString.replaceNonASCIIToUnicode(title);
+		text = FormatString.replaceNonASCIIToUnicode(text);
+
 		String result = this.driver.listAll(owner.getIdString(), kind.ordinal(), uid, xpath, clazz, name, title, text, many);
 		this.logger.info(String.format("listAll(%s,%s,%s,%s,%s,%s,%s,%s,%b), time (ms) : %d", owner, kind, uid, xpath, clazz, name, title, text, many, 
 				System.currentTimeMillis() - start));
@@ -172,6 +178,11 @@ public class JnaDriverImpl
 	public int findAllForLocator(int[] arr, UIProxyJNA owner, ControlKind kind, String uid, String xpath, String clazz, String name, String title, String text, boolean many) throws Exception
 	{
 		long start = System.currentTimeMillis();
+		xpath = FormatString.replaceNonASCIIToUnicode(xpath);
+		name = FormatString.replaceNonASCIIToUnicode(name);
+		title = FormatString.replaceNonASCIIToUnicode(title);
+		text = FormatString.replaceNonASCIIToUnicode(text);
+
 		int result = this.driver.findAllForLocator(arr, arr.length, owner.getIdString(), kind.ordinal(), uid, xpath, clazz, name, title, text, many);
 		this.logger.info(String.format("findAllForLocator(%s,%d,%s,%s,%s,%s,%s,%s,%s,%s,%b) = %d, time (ms) : %d", Arrays.toString(arr), arr.length, owner, kind, uid, xpath, clazz, name, title, text, many, result, 
 				System.currentTimeMillis() - start));
@@ -183,6 +194,8 @@ public class JnaDriverImpl
 	public int findAll(int[] arr, UIProxyJNA owner, WindowTreeScope scope, WindowProperty property, String value) throws Exception
 	{
 		long start = System.currentTimeMillis();
+		value = FormatString.replaceNonASCIIToUnicode(value);
+
 		int result = this.driver.findAll(arr, arr.length, owner.getIdString(), scope.getValue(), property.getId(), value);
 		this.logger.info(String.format("findAll(%s,%d,%s,%s,%s,%s) = %s, time (ms) : %d", Arrays.toString(arr), arr.length, owner, scope, property, value, result, 
 				System.currentTimeMillis() - start));
@@ -273,6 +286,9 @@ public class JnaDriverImpl
 	public void setText(UIProxyJNA element, String text) throws Exception
 	{
 		long start = System.currentTimeMillis();
+
+		text = FormatString.replaceNonASCIIToUnicode(text);
+
 		this.driver.setText(element.getIdString(), text);
 		this.logger.info(String.format("setText(%s,%s)", element, text));
 		checkCSharpTimes();

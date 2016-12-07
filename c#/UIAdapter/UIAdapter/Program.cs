@@ -106,6 +106,8 @@ namespace UIAdapter
         {
             Task<int> task = Task<int>.Factory.StartNew(() =>
             {
+                title = FormatString.replaceUnicodeSubStringToChar(title);
+
                 int runningTime = 0;
                 int TIMEWAIT = 100;
                 bool flag = true;
@@ -282,7 +284,7 @@ namespace UIAdapter
                 UpdateHandler();
                 var res = handler.Current.Name;
                 logger.All("method Title", getMilis() - startMethod);
-                return res;
+                return FormatString.replaceNonASCIIToUnicode(res);
             }
             catch (Exception e)
             {
@@ -322,6 +324,11 @@ namespace UIAdapter
             try
             {
                 long startMethod = getMilis();
+                Xpath = FormatString.replaceUnicodeSubStringToChar(Xpath);
+                Name = FormatString.replaceUnicodeSubStringToChar(Name);
+                Title = FormatString.replaceUnicodeSubStringToChar(Title);
+                Text = FormatString.replaceUnicodeSubStringToChar(Text);
+
                 AutomationElement window = findOwner(OwnerId);
                 ControlKind controlKind = (ControlKind)controlkindId;
                 logger.All("Start get all components");
@@ -383,8 +390,12 @@ namespace UIAdapter
             try
             {
                 long startMethod = getMilis();
-                AutomationElement owner = findOwner(oId);
+                Xpath = FormatString.replaceUnicodeSubStringToChar(Xpath);
+                Name = FormatString.replaceUnicodeSubStringToChar(Name);
+                Title = FormatString.replaceUnicodeSubStringToChar(Title);
+                Text = FormatString.replaceUnicodeSubStringToChar(Text);
 
+                AutomationElement owner = findOwner(oId);
                 ControlKind controlKind = (ControlKind)controlkindId;
                 AutomationElement[] found = null;
                 try
@@ -442,6 +453,7 @@ namespace UIAdapter
             try
             {
                 long startMethod = getMilis();
+                value = FormatString.replaceUnicodeSubStringToChar(value);
                 AutomationElement owner = findOwner(ownerid);
                 TreeScope treeScope = (TreeScope)scopeId;
                 Condition condition;
@@ -905,6 +917,7 @@ namespace UIAdapter
         {
             try
             {
+                text = FormatString.replaceUnicodeSubStringToChar(text);
                 //see this reference https://msdn.microsoft.com/ru-ru/library/ms750582(v=vs.110).aspx
                 long startMethod = getMilis();
                 int[] id = stringToIntArray(inid);
