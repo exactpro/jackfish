@@ -1,3 +1,7 @@
+07.12.2016 4.3.0.1707
+RM38805 implemented. Added new not mandatory field into TableReport
+
+--------------------------------------------------------------------------------
 06.12.2016 4.3.0.1699
 Now Do.getList() is available for swing plugin
 
