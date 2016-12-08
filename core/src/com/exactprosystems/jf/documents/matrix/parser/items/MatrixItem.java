@@ -949,7 +949,7 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
             
             imageWrapper.setDescription(screenshotKind.toString());
             File file = imageWrapper.saveToDir(report.getReportDir());
-            report.outImage(this, null, file.getName(), imageWrapper.getDescription());
+//            report.outImage(this, null, file.getName(), imageWrapper.getDescription());
 
             if (row != null)
             {

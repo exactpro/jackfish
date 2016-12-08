@@ -1,5 +1,5 @@
 #Id;#TestCase;#Kind;#For
-Step 1;This matrix randomly failed;OnFinish;
+Step1;This matrix randomly failed;OnFinish;
     #Action;#Text;#Notifier
     Show;'EE1006 randomly failed';Notifier.Success
 
@@ -42,5 +42,14 @@ Step 2;Working;;
 
     #Id;#Action;#AppConnection
     APPSTP1;ApplicationStop;APPSTR1.Out
+
+    #Id;#Action;#Decoraded
+    RESTBL1;ResultTable;true
+
+    #Action;#Table;#Title;#Numbers;#BeforeTestCase
+    TableReport;RESTBL1.Out;'Results';false;'Step1'
+
+    #Action;#Table;#Title;#Numbers
+    TableReport;RESTBL1.Out;'Results';false
 
 
