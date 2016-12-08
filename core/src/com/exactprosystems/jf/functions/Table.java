@@ -759,15 +759,8 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 					if (v instanceof ImageWrapper)
 					{
 						ImageWrapper iw = (ImageWrapper)v;
-
 						String description = iw.getDescription() == null ? iw.toString() : iw.getDescription();
-						if (iw.getFileName() == null)
-						{
-							iw.saveToDir(report.getReportDir());
-						}
-
-						String file = new File(iw.getFileName()).getName();
-						v = report.decorateLink(description, report.getImageDir() + File.separator + file);
+						v = report.decorateLink(description, report.getImageDir() + File.separator + iw.getName(report.getReportDir()));
 					}
 					value[i] = v;
 				}

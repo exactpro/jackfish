@@ -22,6 +22,7 @@ import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
 import com.exactprosystems.jf.functions.RowTable;
 import com.exactprosystems.jf.functions.Table;
 
+import java.io.File;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -164,6 +165,7 @@ public final class TestCase extends MatrixItem
 	@Override
 	protected void beforeReport(ReportBuilder report)
 	{
+	    super.beforeReport(report);
 		try
 		{
 			report.putMark(this.id.get());
@@ -201,14 +203,6 @@ public final class TestCase extends MatrixItem
 	        ScreenshotKind screenshotKind = ScreenshotKind.valueByName(this.kind.get());
             this.plugin.evaluate(evaluator);
             AppConnection appConnection = (AppConnection) this.plugin.getValue();
-//            if (appConnection == null || appConnection instanceof AppConnection)
-//            {
-//                
-//            }
-//            else
-//            {
-//            }
-                
 
 	        if (table != null)
 			{
@@ -221,7 +215,7 @@ public final class TestCase extends MatrixItem
 				table.add(row);
 			}
 
-	        doSreenshot(report, row, appConnection, screenshotKind, ScreenshotKind.OnStart, ScreenshotKind.OnStartOrError);
+	        doSreenshot(row, appConnection, screenshotKind, ScreenshotKind.OnStart, ScreenshotKind.OnStartOrError);
 			
 			this.locals = evaluator.createLocals();
 			
@@ -232,7 +226,7 @@ public final class TestCase extends MatrixItem
 			
 			if (res == Result.Failed)
 			{
-	            doSreenshot(report, row, appConnection, screenshotKind, ScreenshotKind.OnError, ScreenshotKind.OnStartOrError, ScreenshotKind.OnFinishOrError);
+	            doSreenshot(row, appConnection, screenshotKind, ScreenshotKind.OnError, ScreenshotKind.OnStartOrError, ScreenshotKind.OnFinishOrError);
 
 	            MatrixError error = ret.getError();
 			    
@@ -256,6 +250,7 @@ public final class TestCase extends MatrixItem
 			}
 	        context.runHandler(HandlerKind.OnTestCaseFinish, report, null);
 			
+            doSreenshot(row, appConnection, screenshotKind, ScreenshotKind.OnFinish, ScreenshotKind.OnFinishOrError);
             if (table != null && position >= 0)
 			{
 				row.put(Context.timeColumn, 		ret.getTime());
@@ -263,8 +258,8 @@ public final class TestCase extends MatrixItem
 				row.put(Context.errorColumn, 		ret.getError());
 				table.updateValue(position, row);
 			}
-            
-            doSreenshot(report, row, appConnection, screenshotKind, ScreenshotKind.OnFinish, ScreenshotKind.OnFinishOrError);
+
+            outScreenshot(report, row);
 		} 
 		catch (Exception e)
 		{
@@ -283,7 +278,7 @@ public final class TestCase extends MatrixItem
     @Override
 	protected void afterReport(ReportBuilder report)
 	{
-		report.reportSwitch(true);
+        super.afterReport(report);
 	}
 
 	

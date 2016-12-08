@@ -9,6 +9,7 @@
 package com.exactprosystems.jf.common.report;
 
 import com.exactprosystems.jf.api.app.ControlKind;
+import com.exactprosystems.jf.api.app.ImageWrapper;
 import com.exactprosystems.jf.api.app.OperationKind;
 import com.exactprosystems.jf.charts.ChartBuilder;
 import com.exactprosystems.jf.common.ControlsAttributes;
@@ -251,7 +252,7 @@ public class HelpBuilder extends ReportBuilder
 	}
 	
 	@Override
-	protected void reportItemFooter(ReportWriter writer, MatrixItem item, Integer id, long time) throws IOException
+	protected void reportItemFooter(ReportWriter writer, MatrixItem item, Integer id, long time, ImageWrapper screenshot) throws IOException
 	{
 		Result result = item.getResult() == null ? Result.NotExecuted : item.getResult().getResult();
 		
