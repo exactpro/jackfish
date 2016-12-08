@@ -8,6 +8,7 @@
 
 package com.exactprosystems.jf.common.report;
 
+import com.exactprosystems.jf.api.app.ImageWrapper;
 import com.exactprosystems.jf.charts.ChartBuilder;
 import com.exactprosystems.jf.common.version.VersionInfo;
 import com.exactprosystems.jf.documents.config.Configuration;
@@ -233,13 +234,15 @@ public class HTMLReportBuilder extends ReportBuilder
 				"<td width='100px'><span class='Identity'>%s</span>" +
 				"<td><a href='javascript:void(0)' class='showBody'>%s:</a>" +
 				"<td width='200px'><span id='hs_%s'>Loading...</span>"+
-				"<td width='100px'><span class='Time'>Time:</span>\n" +
-				"<td class='ExecutionTime'><span id='time_%s'></span>\n",
+				"<td width='100px'><span class='Time'>Time:</span>" +
+				"<td class='ExecutionTime'><span id='time_%s'></span>" +
+                "<td class='Screenshot' width='200px'><span id='scr_%s'></span>\n",
 				item.getNumber(),
 				itemId,
 				item.getItemName(),
 				id,
-				id );
+				id,
+				id);
 
 		writer.fwrite(
 				"</table>\n"); 
@@ -283,7 +286,7 @@ public class HTMLReportBuilder extends ReportBuilder
 	}
 	
 	@Override
-	protected void reportItemFooter(ReportWriter writer, MatrixItem item, Integer id, long time) throws IOException
+	protected void reportItemFooter(ReportWriter writer, MatrixItem item, Integer id, long time, ImageWrapper screenshot) throws IOException
 	{
 		Result result = item.getResult() == null ? Result.NotExecuted : item.getResult().getResult();
 		
@@ -300,6 +303,20 @@ public class HTMLReportBuilder extends ReportBuilder
 		writer.fwrite("document.getElementById('time_%s').innerHTML = '<span>%s ms</span>';\n",
 				id,
 				time <= 1 ? "< 1" : time);
+		
+		if (screenshot != null)
+		{
+            if (screenshot.getFileName() == null)
+            {
+                screenshot.saveToDir(getReportDir());
+            }
+            String file = new File(screenshot.getFileName()).getName();
+            String link = decorateLink(screenshot.getDescription(), getImageDir() + File.separator + file);
+		    
+		    writer.fwrite("document.getElementById('scr_%s').innerHTML = '%s';\n",
+	                id,
+	                link);
+		}
 
 		writer.fwrite("document.getElementById('%s').title = '%s';\n", 
 			    id,

@@ -26,6 +26,11 @@ a:visited {
 	width: 100px;
 	text-align: right;
 }
+.Screenshot {
+	width: 200px;
+	text-align: right;
+}
+
 .Identity {
 	font-weight: bold;
 }				

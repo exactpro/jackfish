@@ -8,6 +8,7 @@
 
 package com.exactprosystems.jf.common.report;
 
+import com.exactprosystems.jf.api.app.ImageWrapper;
 import com.exactprosystems.jf.api.common.Converter;
 import com.exactprosystems.jf.charts.ChartBuilder;
 import com.exactprosystems.jf.documents.matrix.Matrix;
@@ -224,7 +225,7 @@ public abstract class ReportBuilder
 		}
 	}
 	
-	public final void itemFinished(MatrixItem matrixItem, long time)
+	public final void itemFinished(MatrixItem matrixItem, long time, ImageWrapper screenshot)
 	{
 		try
 		{
@@ -234,7 +235,7 @@ public abstract class ReportBuilder
 			if (this.reportIsOn)
 			{
 				outAllTables(this.reportData.get(uniq), writer);
-				reportItemFooter(this.writer, matrixItem, uniq, time);
+				reportItemFooter(this.writer, matrixItem, uniq, time, screenshot);
 			}
 			this.uniques.pop();
 		} 
@@ -355,7 +356,7 @@ public abstract class ReportBuilder
 
 	protected abstract void reportImage(ReportWriter writer, MatrixItem item, String beforeTestcase, String fileName, String title) throws IOException;
 
-	protected abstract void reportItemFooter(ReportWriter writer, MatrixItem entry, Integer id, long time) throws IOException;
+	protected abstract void reportItemFooter(ReportWriter writer, MatrixItem entry, Integer id, long time, ImageWrapper screenshot) throws IOException;
 	
 	protected abstract void tableHeader(ReportWriter writer, ReportTable table, String tableTitle, String[] columns, int[] percents) throws IOException;
 
