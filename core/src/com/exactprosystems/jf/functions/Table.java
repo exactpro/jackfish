@@ -21,18 +21,14 @@ import com.exactprosystems.jf.common.report.ReportHelper;
 import com.exactprosystems.jf.common.report.ReportTable;
 import com.exactprosystems.jf.exceptions.ColumnIsPresentException;
 import com.exactprosystems.jf.sql.SqlConnection;
-
 import org.apache.log4j.Logger;
 
 import java.io.*;
-import java.sql.Blob;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.sql.Types;
+import java.sql.*;
 import java.util.*;
+import java.util.Date;
 import java.util.Map.Entry;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -687,6 +683,26 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 		report(report, title, beforeTestcase, withNumbers, reportValues, null, columns);
 	}
 
+	private String[] convertHeaders(Map<String, String> map, String[] headers, boolean withNumbers)
+	{
+		if (map == null)
+		{
+			return headers;
+		}
+		List<String> list = new ArrayList<>();
+		if (withNumbers)
+		{
+			list.add("#");
+		}
+		list.addAll(
+				Arrays.stream(headers)
+				.map(map::get)
+				.filter(Objects::nonNull)
+				.collect(Collectors.toList())
+		);
+		return list.toArray(new String[list.size()]);
+	}
+
 	public void report(ReportBuilder report, String title, String beforeTestcase, boolean withNumbers, boolean reportValues, Map<String, String> columnMap, String ... columns) throws Exception
 	{
 		int[] columnsIndexes = getIndexes(columns);
@@ -711,26 +727,15 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 		{
 			headers[col++ + addition] = this.headers[index].name;
 		}
-		List<String> newHeaders = new ArrayList<>();
-		if (columnMap == null)
-		{
-			newHeaders.addAll(Arrays.asList(headers));
-		}
-		else
-		{
-			for (String header : headers)
-			{
-				if (columnMap.containsKey(header))
-				{
-					newHeaders.add(columnMap.get(header));
-				}
-				else
-				{
-					newHeaders.add(header);
-				}
-			}
-		}
-		ReportTable table = report.addTable(title, beforeTestcase, true, 0, new int[]{}, newHeaders.toArray(new String[newHeaders.size()]));
+		headers = convertHeaders(columnMap, headers, withNumbers);
+		ReportTable table = report.addTable(title, beforeTestcase, true, 0, new int[]{}, headers);
+
+		Function<String, String> func = name -> columnMap == null ? name : columnMap.entrySet()
+					.stream()
+					.filter(e -> name.equals(e.getValue()))
+					.findFirst()
+					.map(Entry::getKey)
+					.orElse(name);
 
 		int count = 0;
 		for (Map<Header, Object> row : this.innerList)
@@ -743,7 +748,7 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 
 			for (int i = addition; i < headers.length; i++)
 			{
-				Header header = headerByName(headers[i]);
+				Header header = headerByName(func.apply(headers[i]));
 				if (reportValues)
 				{
 					value[i] = convertCell(header, row.get(header));
@@ -753,14 +758,14 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 					Object v = row.get(header);
 					if (v instanceof ImageWrapper)
 					{
-	                    ImageWrapper iw = (ImageWrapper)v;
-                        
-                        String description = iw.getDescription() == null ? iw.toString() : iw.getDescription();
-                        if (iw.getFileName() == null)
-                        {
-                            iw.saveToDir(report.getReportDir());
-                        }
-                        
+						ImageWrapper iw = (ImageWrapper)v;
+
+						String description = iw.getDescription() == null ? iw.toString() : iw.getDescription();
+						if (iw.getFileName() == null)
+						{
+							iw.saveToDir(report.getReportDir());
+						}
+
 						String file = new File(iw.getFileName()).getName();
 						v = report.decorateLink(description, report.getImageDir() + File.separator + file);
 					}
