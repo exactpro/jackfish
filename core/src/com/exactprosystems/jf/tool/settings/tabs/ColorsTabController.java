@@ -34,7 +34,7 @@ public class ColorsTabController implements Initializable, ContainingParent, ITa
 
 	private SettingsPanel model;
 	private TreeView<TreeCellBean> treeViewColors;
-	private Map<String, Color> colorMatrixMap = new HashMap<>();
+	private Map<String, Color> colorsMap = new HashMap<>();
 
 	//region Initializable
 	@Override
@@ -52,12 +52,16 @@ public class ColorsTabController implements Initializable, ContainingParent, ITa
 				this.colorPicker.setDisable(!isChangeable);
 				if (isChangeable)
 				{
-					this.colorPicker.setValue(this.colorMatrixMap.get(newValue.getValue().name));
+					this.colorPicker.setValue(this.colorsMap.get(newValue.getValue().name));
 				}
 			}
 		});
 		this.colorPicker.setOnAction(event ->  {
-
+			TreeItem<TreeCellBean> selectedItem = this.treeViewColors.getSelectionModel().getSelectedItem();
+			if (selectedItem != null)
+			{
+				this.colorsMap.put(selectedItem.getValue().name, this.colorPicker.getValue());
+			}
 		});
 
 		initialColorItems();
@@ -80,10 +84,10 @@ public class ColorsTabController implements Initializable, ContainingParent, ITa
 	//region display methods
 	public void displayInfo(Map<String, String> knownColors)
 	{
-		this.colorMatrixMap.putAll(knownColors.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, entry -> Common.stringToColor(entry.getValue()))));
+		this.colorsMap.putAll(knownColors.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, entry -> Common.stringToColor(entry.getValue()))));
 		workWithTree(this.treeViewColors.getRoot(), treeItem -> {
 			String name = treeItem.getValue().name;
-			this.colorMatrixMap.putIfAbsent(name, Color.TRANSPARENT);
+			this.colorsMap.putIfAbsent(name, Color.TRANSPARENT);
 		});
 	}
 
@@ -103,7 +107,7 @@ public class ColorsTabController implements Initializable, ContainingParent, ITa
 	public void save()
 	{
 		this.model.removeAll(SettingsPanel.MATRIX_COLORS);
-		this.colorMatrixMap.entrySet()
+		this.colorsMap.entrySet()
 				.stream()
 				.filter(e -> !e.getValue().equals(Color.TRANSPARENT))
 				.forEach(entry -> this.model.updateSettingsValue(entry.getKey(), SettingsPanel.MATRIX_COLORS, Common.colorToString(entry.getValue())));
@@ -116,7 +120,7 @@ public class ColorsTabController implements Initializable, ContainingParent, ITa
 		if (selectedItem != null)
 		{
 			String name = selectedItem.getValue().name;
-			this.colorMatrixMap.replace(name, Color.TRANSPARENT);
+			this.colorsMap.replace(name, Color.TRANSPARENT);
 			updateTree();
 		}
 	}
@@ -133,7 +137,7 @@ public class ColorsTabController implements Initializable, ContainingParent, ITa
 
 	public void clearAll(ActionEvent actionEvent)
 	{
-		this.colorMatrixMap.replaceAll((s, color) -> Color.TRANSPARENT);
+		this.colorsMap.replaceAll((s, color) -> Color.TRANSPARENT);
 		updateTree();
 	}
 
@@ -204,7 +208,7 @@ public class ColorsTabController implements Initializable, ContainingParent, ITa
 //			value.setColor(Color.TRANSPARENT);
 //			item.setValue(null);
 //			item.setValue(value);
-//			colorMatrixMap.clear();
+//			colorsMap.clear();
 //		}));
 //		bar.getChildren().addAll(expandAll, collapseAll, clearAll);
 		this.treeViewColors.getSelectionModel().selectFirst();
@@ -250,17 +254,17 @@ public class ColorsTabController implements Initializable, ContainingParent, ITa
 //					ColorPicker color = new ColorPicker(item.color);
 //					color.setOnAction(e -> {
 //						item.color = e instanceof ClearAction ? Color.TRANSPARENT : color.getValue();
-//						colorMatrixMap.remove(item.name);
+//						colorsMap.remove(item.name);
 //						if (!item.color.equals(Color.TRANSPARENT))
 //						{
-//							colorMatrixMap.put(item.name, item.color);
+//							colorsMap.put(item.name, item.color);
 //						}
 //						Optional.ofNullable(this.getTreeItem().getChildren()).ifPresent(child -> child.forEach(c -> {
 //							TreeCellBean value1 = c.getValue();
 //							value1.color = item.color;
 //							c.setValue(null);
 //							c.setValue(value1);
-//							colorMatrixMap.put(value1.name, item.color);
+//							colorsMap.put(value1.name, item.color);
 //						}));
 //						this.updateItem(item, false);
 //					});
