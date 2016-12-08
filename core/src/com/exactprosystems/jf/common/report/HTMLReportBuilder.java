@@ -307,7 +307,6 @@ public class HTMLReportBuilder extends ReportBuilder
 		if (screenshot != null)
 		{
             String link = decorateLink(screenshot.getDescription(), getImageDir() + File.separator + screenshot.getName(getReportDir()));
-		    
 		    writer.fwrite("document.getElementById('scr_%s').innerHTML = '%s';\n",
 	                id,
 	                link);
