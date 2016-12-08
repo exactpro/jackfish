@@ -17,10 +17,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 
 import java.net.URL;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -191,26 +188,10 @@ public class ColorsTabController implements Initializable, ContainingParent, ITa
 			map.put(group, item);
 		});
 		Arrays.asList(ActionsList.actions).forEach(clazz -> {
-			TreeCellBean nameAndColor = new TreeCellBean(clazz.getSimpleName());
+			TreeCellBean bean = new TreeCellBean(clazz.getSimpleName());
 			ActionGroups aClazz = clazz.getAnnotation(ActionAttribute.class).group();
-			map.get(aClazz).getChildren().add(new TreeItem<>(nameAndColor));
+			map.get(aClazz).getChildren().add(new TreeItem<>(bean));
 		});
-
-//		HBox bar = new HBox();
-//		bar.setSpacing(20);
-//		Button expandAll = new Button("Expand all");
-//		Button collapseAll = new Button("Collapse all");
-//		Button clearAll = new Button("Clear all");
-//		expandAll.setOnAction(e -> workWithTree(actionItem, item -> item.setExpanded(true)));
-//		collapseAll.setOnAction(e -> workWithTree(actionItem, item -> item.setExpanded(false)));
-//		clearAll.setOnAction(e -> workWithTree(this.treeViewColors.getRoot(), item -> {
-//			TreeCellBean value = item.getValue();
-//			value.setColor(Color.TRANSPARENT);
-//			item.setValue(null);
-//			item.setValue(value);
-//			colorsMap.clear();
-//		}));
-//		bar.getChildren().addAll(expandAll, collapseAll, clearAll);
 		this.treeViewColors.getSelectionModel().selectFirst();
 		this.borderView.setCenter(this.treeViewColors);
 	}

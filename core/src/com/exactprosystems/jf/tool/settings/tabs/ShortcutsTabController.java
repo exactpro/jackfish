@@ -137,6 +137,7 @@ public class ShortcutsTabController implements Initializable, ContainingParent, 
 
 	public void defaultShortCuts(ActionEvent actionEvent)
 	{
+
 		//TODO implement
 	}
 

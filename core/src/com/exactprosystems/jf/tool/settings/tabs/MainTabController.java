@@ -97,7 +97,6 @@ public class MainTabController implements Initializable, ContainingParent, ITabH
 	@Override
 	public double getHeight()
 	{
-		//TODO implement
 		return -1;
 	}
 

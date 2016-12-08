@@ -172,8 +172,6 @@ public class SettingsPanelController implements Initializable, ContainingParent
 				this.defaultHeight = newValue.doubleValue();
 			}
 		});
-		//TODO remove this line
-		this.colorsTab.getTabPane().getSelectionModel().select(this.colorsTab);
 		Optional<ButtonType> optional = this.dialog.showAndWait();
 		optional.filter(bt -> bt.getButtonData().equals(ButtonBar.ButtonData.OK_DONE)).ifPresent(bt ->
 		{
@@ -188,7 +186,6 @@ public class SettingsPanelController implements Initializable, ContainingParent
 		});
 	}
 
-	//TODO think about it
 	private boolean save()
 	{
 		try
