@@ -76,7 +76,6 @@ public class Parser
 				EndRawMessage.class,
 				RawText.class,
 				EndRawText.class,
-				EndRawText.class,
 				Let.class,
 				Assert.class,
 				SetHandler.class,

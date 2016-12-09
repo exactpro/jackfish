@@ -1,3 +1,14 @@
+09.12.2016 4.3.0.1716
+RM38830 Can't select time in ByTime parameter in Wait action - fixed.
+________________________________________________________________________________
+09.12.2016 4.3.0.1715
+Feature #38856 implemented - added textArea for editing RawText item
+
+--------------------------------------------------------------------------------
+08.12.2016 4.3.0.1711
+RM38838 fixed.
+
+--------------------------------------------------------------------------------
 07.12.2016 4.3.0.1707
 RM38805 implemented. Added new not mandatory field into TableReport
 

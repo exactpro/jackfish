@@ -62,19 +62,8 @@ public class ImageReport extends AbstractAction
 		{
 			throw new Exception("Image can't be null");
 		}
-		String outPath = this.image.getFileName();
-		if (this.image.getFileName() == null)
-		{
-			File file = this.image.saveToDir(report.getReportDir());
-			outPath = file.getPath();
-			report.outImage(super.owner, this.beforeTestCase, file.getName(), this.title);
-		}
-		else
-		{
-			report.outImage(super.owner, this.beforeTestCase, this.image.getFileName(), this.title); 
-		}
-		
-		super.setResult(outPath);
+        report.outImage(super.owner, this.beforeTestCase, this.image.getName(report.getReportDir()), this.title); 
+		super.setResult(this.image.getFileName());
 	}
 
 }

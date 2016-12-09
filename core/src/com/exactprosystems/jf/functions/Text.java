@@ -19,8 +19,11 @@ import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.apache.log4j.Logger;
 
@@ -29,7 +32,7 @@ import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.common.report.ReportTable;
 
-public class Text implements List<String>, Mutable
+public class Text implements List<String>, Mutable, Cloneable
 {
 	public Text()
 	{
@@ -66,6 +69,20 @@ public class Text implements List<String>, Mutable
 	{
 		this.changed = false;
 	}
+
+	//==============================================================================================
+    // Interface Cloneable
+    //==============================================================================================
+    @Override
+    public Text clone() throws CloneNotSupportedException
+    {
+        Text clone = (Text)super.clone();
+        
+        clone.list = new ArrayList<String>();
+        clone.list.addAll(this.list);
+        
+        return clone;
+    }
 
 	//==============================================================================================
 	

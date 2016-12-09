@@ -8,6 +8,7 @@
 
 package com.exactprosystems.jf.common.report;
 
+import com.exactprosystems.jf.api.app.ImageWrapper;
 import com.exactprosystems.jf.charts.ChartBuilder;
 import com.exactprosystems.jf.documents.matrix.Matrix;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
@@ -127,7 +128,7 @@ public class DummyReportBuilder extends ReportBuilder
 
 	@Override
 	protected void reportItemFooter(ReportWriter writer, MatrixItem entry,
-			Integer id, long time) throws IOException
+			Integer id, long time, ImageWrapper screenshot) throws IOException
 	{
 	}
 

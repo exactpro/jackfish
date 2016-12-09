@@ -19,6 +19,7 @@ import com.exactprosystems.jf.documents.matrix.parser.items.ActionItem;
 import com.exactprosystems.jf.documents.matrix.parser.items.CommentString;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 import com.exactprosystems.jf.functions.Table;
+import com.exactprosystems.jf.functions.Text;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.DragDetector;
@@ -329,6 +330,25 @@ public class DisplayDriverFx implements DisplayDriver
 		temp.add(field, 0, 0);
 		pane.add(temp, column, row);
 		GridPane.setMargin(field, INSETS);
+	}
+
+	@Override
+	public void showTextArea(MatrixItem item, Object layout, int row, int column, Text text, Consumer<List<String>> consumer)
+	{
+		GridPane pane = (GridPane) layout;
+		TextArea textArea = new TextArea();
+		textArea.setPrefWidth(Double.MAX_VALUE);
+		DragResizer.makeResizable(textArea, textArea::setPrefHeight);
+		for (String s : text)
+		{
+			textArea.appendText(s + "\n");
+		}
+		textArea.textProperty().addListener((observable, oldValue, newValue) -> {
+			String[] split = newValue.split("\n");
+			consumer.accept(Arrays.asList(split));
+		});
+		pane.add(textArea, column, row, Integer.MAX_VALUE, 1);
+
 	}
 
 	@Override

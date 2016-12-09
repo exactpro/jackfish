@@ -43,4 +43,10 @@ Step 2;Working;;
     #Id;#Action;#AppConnection
     APPSTP1;ApplicationStop;APPSTR1.Out
 
+    #Id;#Action;#Decoraded
+    RESTBL1;ResultTable;true
+
+    #Action;#Table;#Title;#Numbers;#BeforeTestCase
+    TableReport;RESTBL1.Out;'Results';false;'Step 1'
+
 
