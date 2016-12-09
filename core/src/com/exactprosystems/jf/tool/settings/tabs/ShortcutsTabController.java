@@ -1,6 +1,7 @@
 package com.exactprosystems.jf.tool.settings.tabs;
 
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.CssVariables;
@@ -24,6 +25,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
+
+import static com.exactprosystems.jf.common.Settings.GLOBAL_NS;
 
 public class ShortcutsTabController implements Initializable, ContainingParent, ITabHeight
 {
@@ -137,7 +140,14 @@ public class ShortcutsTabController implements Initializable, ContainingParent, 
 
 	public void defaultShortCuts(ActionEvent actionEvent)
 	{
-		//TODO implement
+		TreeItem<GridPane> selectedItem = this.treeView.getSelectionModel().getSelectedItem();
+		if (selectedItem != null)
+		{
+			EditableCell editableCell = (EditableCell) selectedItem.getValue();
+			String key = editableCell.lblName.getText();
+			Settings.SettingsValue valueOrDefault = Settings.defaultSettings().getValueOrDefault(GLOBAL_NS, SettingsPanel.SHORTCUTS_NAME, key, Common.EMPTY);
+			updateShortcut(valueOrDefault.getValue(), editableCell);
+		}
 	}
 
 	public void deleteShortcuts(ActionEvent actionEvent)

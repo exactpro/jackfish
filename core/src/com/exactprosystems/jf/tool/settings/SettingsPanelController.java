@@ -186,7 +186,6 @@ public class SettingsPanelController implements Initializable, ContainingParent
 		});
 	}
 
-	//TODO think about it
 	private boolean save()
 	{
 		try
