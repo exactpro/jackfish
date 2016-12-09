@@ -147,7 +147,7 @@ public class RawText extends MatrixItem
 		{
 		    for (String str : this.text)
 		    {
-		        writer.writeRecord(new String[] { indent + str }, true);
+		        writer.writeRecord(new String[] { indent + "\"" + str.replace("\"", "\"\"")  + "\""}, true);
 		    }
 		}
 		catch (IOException e)
