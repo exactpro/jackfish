@@ -197,8 +197,24 @@ RF;RegressionFramework
         #Id;#Call
         SQL;RF.Connect
 
+        #Id;#RawText
+        TEXT3;Text
+        "SELECT "
+        "  s.id, "
+        "  s.scenario, "
+        "  s.manual, "
+        "  s.host, "
+        "  s.user, "
+        "  s.start_time, "
+        "  s.passed, "
+        "  s.failed, "
+        "  s.description "
+        "FROM scenarios AS s "
+        "WHERE s.run_id = (SELECT MAX(r.id) FROM runs AS r) "
+        #EndRawText
+
         #Id;#Action;#Connection;#Query
-        select;SQLselect;SQL;'SELECT s.id, s.scenario, s.manual, s.host, s.user, s.start_time, s.passed, s.failed, s.description FROM scenarios AS s WHERE s.run_id = (SELECT MAX(r.id) FROM runs AS r)'
+        select;SQLselect;SQL;TEXT3.toString()
 
         #Return
         select.Out
@@ -213,8 +229,24 @@ RF;RegressionFramework
         #Id;#Call
         SQL;RF.Connect
 
+        #Id;#RawText
+        TEXT2;Text
+        "SELECT "
+        "  s.scenario, "
+        "  s.manual, "
+        "  DATE(s.start_time) AS date, "
+        "  TIME(s.start_time) AS time, "
+        "  IF(s.failed = 0, ""Passed"", ""Failed"") AS result, "
+        "  s.performer AS performer, "
+        "  s.env AS env,  "
+        "  s.host AS host, "
+        "  s.user AS user "
+        "FROM scenarios AS s "
+        "WHERE s.manual = 0 AND s.run_id = (SELECT MAX(r.id) FROM runs AS r)"
+        #EndRawText
+
         #Id;#Action;#Connection;#Query
-        select;SQLselect;SQL;'SELECT s.scenario, s.manual, DATE(s.start_time) AS date, TIME(s.start_time) AS time, IF(s.failed = 0, "Passed", "Failed") AS result, s.performer AS performer, s.env AS env,  s.host AS host, s.user AS user FROM scenarios AS s WHERE s.manual = 0 AND s.run_id = (SELECT MAX(r.id) FROM runs AS r)'
+        select;SQLselect;SQL;TEXT2.toString()
 
         #Return
         select.Out
@@ -227,10 +259,31 @@ RF;RegressionFramework
     #Id;#SubCase
     LastAllDetails;Returns table of last details
         #Id;#Call
-        SQL;RF.Connect
+        SQL;Connect
+
+        #Id;#RawText
+        TEXT1;Text
+        "SELECT "
+        "  s.scenario, "
+        "  DATE(s.start_time) AS date, "
+        "  TIME(s.start_time) AS time, "
+        "  s.performer, "
+        "  s.env, "
+        "  s.host, "
+        "  s.user, "
+        "  d.testcase, "
+        "  d.step, "
+        "  d.time, "
+        "  d.result, "
+        "  d.error, "
+        "  d.screenshot "
+        "FROM scenarios AS s "
+        "LEFT JOIN details AS d ON d.scenario_id = s.id "
+        "WHERE s.manual = 0 AND s.run_id = (SELECT MAX(r.id) FROM runs AS r) "
+        #EndRawText
 
         #Id;#Action;#Connection;#Query
-        select;SQLselect;SQL;'SELECT s.scenario, DATE(s.start_time) AS date, TIME(s.start_time) AS time, s.performer, s.env, s.host, s.user, d.testcase, d.step, d.time, d.result, d.error, d.screenshot FROM scenarios AS s LEFT JOIN details AS d ON d.scenario_id = s.id WHERE s.manual = 0 AND s.run_id = (SELECT MAX(r.id) FROM runs AS r)'
+        select;SQLselect;SQL;TEXT1.toString()
 
         #Return
         select.Out
@@ -240,6 +293,7 @@ RF;RegressionFramework
     // //==============================================
     // // Perform connection to SQL server using variable set that is set
     // // by RF.SetVar
+    // // This subcase checks that all needed tables exist. If not it creates them.
     // //==============================================
     #Id;#SubCase
     Connect;Connect to SQL
@@ -260,6 +314,95 @@ RF;RegressionFramework
 
         #Id;#Action;#User;#Server;#Base;#Sql;#Password
         SQLCNT;SQLconnect;sqlUser;sqlHost;sqlBase;sqlType;sqlPassword
+
+        #Id;#Action;#Query;#Connection
+        chck1;SQLselect;'check table runs fast';SQLCNT.Out
+
+        #Id;#Action;#Query;#Connection
+        chck2;SQLselect;'check table scenarios fast';SQLCNT.Out
+
+        #Id;#Action;#Query;#Connection
+        chck3;SQLselect;'check table details fast';SQLCNT.Out
+
+        #Id;#Action;#Query;#Connection
+        chck4;SQLselect;'check table user_details fast';SQLCNT.Out
+
+        #If
+        !(chck1.Out[0].Msg_text == 'OK' && chck2.Out[0].Msg_text == 'OK' && chck3.Out[0].Msg_text == 'OK' && chck4.Out[0].Msg_text == 'OK')
+            #Action;#Text;#Notifier
+            Show;'Creating tables';Notifier.Info
+
+            #Id;#RawText
+            query1;create
+            "CREATE TABLE IF NOT EXISTS `runs` ("
+            "  `id` int(11) NOT NULL AUTO_INCREMENT,"
+            "  `create_time` datetime DEFAULT NULL,"
+            "  `duration` int(11) DEFAULT NULL,"
+            "  PRIMARY KEY (`id`)"
+            ") ENGINE=InnoDB AUTO_INCREMENT=94 DEFAULT CHARSET=utf8;"
+            #EndRawText
+
+            #Id;#Action;#Query;#Connection
+            SQLEXEC1;SQLexecute;query1.toString();SQLCNT.Out
+
+            #Id;#RawText
+            query2;create
+            "CREATE TABLE IF NOT EXISTS `scenarios` ("
+            "  `id` int(11) NOT NULL AUTO_INCREMENT,"
+            "  `run_id` int(11) NOT NULL,"
+            "  `scenario` varchar(100) NOT NULL,"
+            "  `performer` varchar(100) DEFAULT NULL,"
+            "  `priority` int(1) DEFAULT NULL,"
+            "  `env` varchar(100) DEFAULT NULL,"
+            "  `manual` int(1) DEFAULT NULL,"
+            "  `start_time` datetime DEFAULT NULL,"
+            "  `host` varchar(45) DEFAULT NULL,"
+            "  `user` varchar(45) DEFAULT NULL,"
+            "  `passed` int(11) DEFAULT '0',"
+            "  `failed` int(11) DEFAULT '0',"
+            "  `report` longblob,"
+            "  `done` int(1) DEFAULT NULL,"
+            "  `description` varchar(255) DEFAULT NULL,"
+            "  PRIMARY KEY (`id`)"
+            ") ENGINE=InnoDB AUTO_INCREMENT=278 DEFAULT CHARSET=utf8;"
+            #EndRawText
+
+            #Id;#Action;#Query;#Connection
+            SQLEXEC1;SQLexecute;query2.toString();SQLCNT.Out
+
+            #Id;#RawText
+            query3;create
+            "CREATE TABLE IF NOT EXISTS `details` ("
+            "  `id` int(11) NOT NULL AUTO_INCREMENT,"
+            "  `scenario_id` int(11) NOT NULL,"
+            "  `testcase` varchar(256) DEFAULT NULL,"
+            "  `step` varchar(256) DEFAULT NULL,"
+            "  `time` int(11) DEFAULT NULL,"
+            "  `result` varchar(45) DEFAULT NULL,"
+            "  `error` varchar(256) DEFAULT NULL,"
+            "  `screenshot` longblob,"
+            "  PRIMARY KEY (`id`)"
+            ") ENGINE=InnoDB AUTO_INCREMENT=567 DEFAULT CHARSET=utf8;"
+            #EndRawText
+
+            #Id;#Action;#Query;#Connection
+            SQLEXEC1;SQLexecute;query3.toString();SQLCNT.Out
+
+            #Id;#RawText
+            query4;create
+            "CREATE TABLE IF NOT EXISTS `user_details` ("
+            "  `id` int(11) NOT NULL AUTO_INCREMENT,"
+            "  `details_id` int(11) NOT NULL,"
+            "  `name` varchar(100) NOT NULL,"
+            "  `value` varchar(256) DEFAULT NULL,"
+            "  PRIMARY KEY (`id`)"
+            ") ENGINE=InnoDB DEFAULT CHARSET=utf8;"
+            #EndRawText
+
+            #Id;#Action;#Query;#Connection
+            SQLEXEC1;SQLexecute;query4.toString();SQLCNT.Out
+
+        #EndIf
 
         #Return
         SQLCNT.Out

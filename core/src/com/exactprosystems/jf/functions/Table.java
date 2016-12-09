@@ -19,6 +19,7 @@ import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.common.report.ReportHelper;
 import com.exactprosystems.jf.common.report.ReportTable;
+import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.exceptions.ColumnIsPresentException;
 import com.exactprosystems.jf.sql.SqlConnection;
 import org.apache.log4j.Logger;
@@ -683,9 +684,9 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 		report(report, title, beforeTestcase, withNumbers, reportValues, null, columns);
 	}
 
-	private String[] convertHeaders(Map<String, String> map, String[] headers, boolean withNumbers)
+	private String[] convertHeaders(Parameters parameters, String[] headers, boolean withNumbers)
 	{
-		if (map == null)
+		if (parameters == null)
 		{
 			return headers;
 		}
@@ -694,16 +695,16 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 		{
 			list.add("#");
 		}
-		list.addAll(
-				Arrays.stream(headers)
-				.map(map::get)
-				.filter(Objects::nonNull)
-				.collect(Collectors.toList())
+		list.addAll(parameters.values()
+			.stream()
+			.map(String::valueOf)
+			.collect(Collectors.toList())
 		);
+
 		return list.toArray(new String[list.size()]);
 	}
 
-	public void report(ReportBuilder report, String title, String beforeTestcase, boolean withNumbers, boolean reportValues, Map<String, String> columnMap, String ... columns) throws Exception
+	public void report(ReportBuilder report, String title, String beforeTestcase, boolean withNumbers, boolean reportValues, Parameters newColumns, String ... columns) throws Exception
 	{
 		int[] columnsIndexes = getIndexes(columns);
 
@@ -727,12 +728,12 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 		{
 			headers[col++ + addition] = this.headers[index].name;
 		}
-		headers = convertHeaders(columnMap, headers, withNumbers);
+		headers = convertHeaders(newColumns, headers, withNumbers);
 		ReportTable table = report.addTable(title, beforeTestcase, true, 0, new int[]{}, headers);
 
-		Function<String, String> func = name -> columnMap == null ? name : columnMap.entrySet()
+		Function<String, String> func = name -> newColumns == null ? name : newColumns.entrySet()
 					.stream()
-					.filter(e -> name.equals(e.getValue()))
+					.filter(e -> name.equals(String.valueOf(e.getValue())))
 					.findFirst()
 					.map(Entry::getKey)
 					.orElse(name);

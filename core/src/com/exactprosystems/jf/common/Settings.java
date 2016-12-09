@@ -11,12 +11,12 @@ package com.exactprosystems.jf.common;
 import com.exactprosystems.jf.api.app.Mutable;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.documents.matrix.parser.items.MutableArrayList;
-
 import org.apache.log4j.Logger;
 
-import javax.xml.bind.*;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.Marshaller;
+import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.*;
-
 import java.io.*;
 import java.util.*;
 import java.util.Map.Entry;
@@ -28,22 +28,17 @@ public class Settings
 {
 	public final static String SettingsPath	= ".settings.xml";
 
+	private static final Class<?>[] jaxbContextClasses = { Settings.class, SettingsValue.class };
+
 	static
 	{
 		if (!new File(SettingsPath).exists())
 		{
-			try (	BufferedReader reader = new BufferedReader(new InputStreamReader(Settings.class.getResourceAsStream(SettingsPath)));
-					 BufferedWriter writer = new BufferedWriter(new FileWriter(SettingsPath)))
+			try
 			{
-				String line = null;
-
-				while ((line = reader.readLine()) != null)
-				{
-					writer.append(line);
-					writer.newLine();
-				}
+				defaultSettings().save(SettingsPath);
 			}
-			catch (IOException e)
+			catch (Exception e)
 			{
 				e.printStackTrace();
 				System.exit(1);
@@ -209,6 +204,52 @@ public class Settings
 		}
 
 		settings.fileName = fileName;
+		return settings;
+	}
+
+	public static Settings defaultSettings()
+	{
+		Settings settings = new Settings();
+		settings.setMapValues(GLOBAL_NS, "Logs", mapOf(
+				"ALL", "0x000000ff",
+				"DEBUG", "0x334db3ff",
+				"ERROR", "0xcc3333ff",
+				"FATAL", "0xcc3333ff",
+				"INFO", "0x336633ff",
+				"TRACE", "0x8066ccff",
+				"WARN", "0xe64d4dff"
+		));
+		settings.setMapValues(GLOBAL_NS, "Main", mapOf(
+				"maxFilesNumber","10",
+				"maxFilesCount","10",
+				"useDefaultBrowser","false",
+				"useFullScreen","false",
+				"useCompactMode","false",
+				"timeNotification","5",
+				"theme","WHITE",
+				"copyright","//==============================================\\n//  Copyright (c) 2009-2016, Exactpro Systems, LLC\\n//  Quality Assurance &amp; Related Development for Innovative " +
+						"Trading Systems.\\n//  All rights reserved.\\n//  This is unpublished, licensed software, confidential and proprietary\\n//  information which is the property of Exactpro Systems, LLC or its licensors.\\n//==============================================",
+				"useFullScreenXpath","false"
+		));
+		settings.setValue(GLOBAL_NS, "Main", "Font", "System$13");
+		settings.setMapValues(GLOBAL_NS, "Shortcuts", mapOf(
+				"FindOnMatrix","Ctrl+F",
+				"ShowLog","Ctrl+O",
+				"OpenMatrix","Ctrl+Alt+M",
+				"ShowAllTabs","Ctrl+E",
+				"SaveDocument","Ctrl+S",
+				"SaveDocumentAs","Shift+Ctrl+S",
+				"BreakPoint","Ctrl+B",
+				"DeleteItem","Delete",
+				"ExpandOne","Ctrl+Equals",
+				"CollapseAll","Shift+Ctrl+Minus",
+				"CollapseOne","Ctrl+Minus",
+				"ExpandAll","Shift+Ctrl+Equals",
+				"ShowAll","Ctrl+Q",
+				"GoToLine","Ctrl+G",
+				"Undo","Ctrl+Z",
+				"Redo","Shift+Ctrl+Z"
+		));
 		return settings;
 	}
 
@@ -381,12 +422,30 @@ public class Settings
 				.collect(Collectors.toCollection(MutableArrayList::new));
 	}
 
+	private static Map<String, String> mapOf(String... args)
+	{
+		Map<String, String> map = new LinkedHashMap<>();
+		Iterator<String> iterator = Arrays.asList(args).iterator();
+		while (iterator.hasNext())
+		{
+			String key = iterator.next();
+			if (iterator.hasNext())
+			{
+				String value = iterator.next();
+				map.put(key, value);
+			}
+			else
+			{
+				break;
+			}
+		}
+		return map;
+	}
+
 	public synchronized void clear()
 	{
 		this.values.clear();
 	}
-
-	private static final Class<?>[] jaxbContextClasses = { Settings.class, SettingsValue.class };
 
 	private final static Logger logger = Logger.getLogger(Settings.class);
 
