@@ -695,13 +695,12 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 		{
 			list.add("#");
 		}
-		list.addAll(
-				Arrays.stream(headers)
-				.map(parameters::get)
-				.filter(Objects::nonNull)
-				.map(String::valueOf)
-				.collect(Collectors.toList())
+		list.addAll(parameters.values()
+			.stream()
+			.map(String::valueOf)
+			.collect(Collectors.toList())
 		);
+
 		return list.toArray(new String[list.size()]);
 	}
 

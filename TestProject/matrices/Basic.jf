@@ -2,14 +2,14 @@
 RM38805 rename columns in action TableReport;Never;
     #Id;#RawTable
     DATA1;Table
-    @;a;b;c
-    0;newR;z;asd
-    1;o;p;p
-    2;j;k;l
+    @;scenario;manual;date;time;result;performer;env;host;user
+    0;newR;z;asd;1;2;3;4;5;6
+    1;o;p;p;1;4;6;sasd;a;a
+    2;j;k;l;a;czxc;zx;a;1;a
     #EndRawTable
 
-    #Action;#Table;#Title;#a;#c
-    TableReport;DATA1;'title';'newA';'newC'
+    #Action;#Table;#Title;#Numbers;#scenario;#result;#date;#time;#user;#host
+    TableReport;table;'Consolidated Umbrella Report: ';false;'Matrix Name';'Execution Status';'Execution Date';'Execution Time';'Exectuted By';'Execution Machine'
 
 
 #TestCase;#Kind;#For
