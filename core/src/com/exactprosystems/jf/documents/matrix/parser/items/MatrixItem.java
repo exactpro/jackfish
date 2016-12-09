@@ -922,7 +922,7 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 	}
 
 	
-    protected final void doSreenshot(RowTable row, AppConnection connection, ScreenshotKind screenshotKind, ScreenshotKind ... when) throws Exception
+    protected final void doSreenshot(RowTable row, Object connection, ScreenshotKind screenshotKind, ScreenshotKind ... when) throws Exception
     {
         boolean isErrorStage = Arrays.stream(when).anyMatch(a -> ScreenshotKind.OnError == a);
         if (row != null && row.get(Context.screenshotColumn) != null && !isErrorStage)
@@ -933,12 +933,12 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
         if (Arrays.stream(when).anyMatch(a -> screenshotKind == a))
         {
             ImageWrapper imageWrapper = null;  
-                    
-            if (connection != null && !isErrorStage)
+            
+            if (connection instanceof AppConnection && !isErrorStage)
             {
                 try
                 {
-                    imageWrapper = connection.getApplication().service().getImage(null, null);
+                    imageWrapper = ((AppConnection)connection).getApplication().service().getImage(null, null);
                 }
                 catch (Exception e)
                 {

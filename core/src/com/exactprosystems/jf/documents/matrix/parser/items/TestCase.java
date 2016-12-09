@@ -201,8 +201,6 @@ public final class TestCase extends MatrixItem
 		try
 		{
 	        ScreenshotKind screenshotKind = ScreenshotKind.valueByName(this.kind.get());
-            this.plugin.evaluate(evaluator);
-            AppConnection appConnection = (AppConnection) this.plugin.getValue();
 
 	        if (table != null)
 			{
@@ -215,7 +213,8 @@ public final class TestCase extends MatrixItem
 				table.add(row);
 			}
 
-	        doSreenshot(row, appConnection, screenshotKind, ScreenshotKind.OnStart, ScreenshotKind.OnStartOrError);
+            this.plugin.evaluate(evaluator);
+	        doSreenshot(row, this.plugin.getValue(), screenshotKind, ScreenshotKind.OnStart, ScreenshotKind.OnStartOrError);
 			
 			this.locals = evaluator.createLocals();
 			
@@ -226,7 +225,8 @@ public final class TestCase extends MatrixItem
 			
 			if (res == Result.Failed)
 			{
-	            doSreenshot(row, appConnection, screenshotKind, ScreenshotKind.OnError, ScreenshotKind.OnStartOrError, ScreenshotKind.OnFinishOrError);
+	            this.plugin.evaluate(evaluator);
+	            doSreenshot(row, this.plugin.getValue(), screenshotKind, ScreenshotKind.OnError, ScreenshotKind.OnStartOrError, ScreenshotKind.OnFinishOrError);
 
 	            MatrixError error = ret.getError();
 			    
@@ -250,7 +250,8 @@ public final class TestCase extends MatrixItem
 			}
 	        context.runHandler(HandlerKind.OnTestCaseFinish, report, null);
 			
-            doSreenshot(row, appConnection, screenshotKind, ScreenshotKind.OnFinish, ScreenshotKind.OnFinishOrError);
+            this.plugin.evaluate(evaluator);
+            doSreenshot(row, this.plugin.getValue(), screenshotKind, ScreenshotKind.OnFinish, ScreenshotKind.OnFinishOrError);
             if (table != null && position >= 0)
 			{
 				row.put(Context.timeColumn, 		ret.getTime());
@@ -263,6 +264,8 @@ public final class TestCase extends MatrixItem
 		} 
 		catch (Exception e)
 		{
+		    logger.error(e.getMessage(), e);
+		    
 			if (table != null && table.size() >= 0)
 			{
 				row.put(Context.timeColumn, 		ret.getTime());

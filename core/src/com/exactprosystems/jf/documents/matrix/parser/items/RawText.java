@@ -25,7 +25,7 @@ import java.util.Map;
 import java.util.Set;
 
 @MatrixItemAttribute(
-		description 	= "Raw data.", 
+		description 	= "Raw text.", 
 		shouldContain 	= { Tokens.RawText }, 
 		mayContain 		= { Tokens.Id, Tokens.Off, Tokens.RepOff, Tokens.Global }, 
 		real 			= true, 
@@ -187,8 +187,6 @@ public class RawText extends MatrixItem
 	@Override
 	protected ReturnAndResult executeItSelf(long start, Context context, IMatrixListener listener, AbstractEvaluator evaluator, ReportBuilder report, Parameters parameters)
 	{
-	    System.err.println(this.text);
-	    
 		try
 		{
 			this.text.report(report, null, this.description.get());
