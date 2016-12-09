@@ -14,7 +14,7 @@ import com.exactprosystems.jf.documents.matrix.parser.Tokens;
 description 	= "Closes the statement Text.", 
 shouldContain 	= { Tokens.EndRawText},
 mayContain 		= { }, 
-closes			= RawTable.class,
+closes			= RawText.class,
 real			= false,
 hasValue 		= false, 
 hasParameters 	= false,

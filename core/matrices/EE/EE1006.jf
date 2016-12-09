@@ -1,5 +1,5 @@
 #Id;#TestCase;#Kind;#For
-Step 1;This matrix randomly failed;OnFinish;
+Step 1;This matrix randomly failed;OnFinish;APPSTR1.Out
     #Action;#Text;#Notifier
     Show;'EE1006 randomly failed';Notifier.Success
 
