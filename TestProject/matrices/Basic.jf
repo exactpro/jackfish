@@ -8,8 +8,8 @@ RM38805 rename columns in action TableReport;Never;
     2;j;k;l
     #EndRawTable
 
-    #Action;#Table;#Title;#ColumnMap
-    TableReport;DATA1;'title';{'a' : 'newA', 'c' : 'newC'}
+    #Action;#Table;#Title;#a;#c
+    TableReport;DATA1;'title';'newA';'newC'
 
 
 #TestCase;#Kind;#For

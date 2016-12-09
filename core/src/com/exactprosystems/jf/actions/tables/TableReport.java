@@ -15,10 +15,10 @@ import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.documents.matrix.parser.items.ActionItem.HelpKind;
+import com.exactprosystems.jf.documents.matrix.parser.items.TypeMandatory;
 import com.exactprosystems.jf.functions.Table;
 
 import java.util.List;
-import java.util.Map;
 
 @ActionAttribute(
 		group					= ActionGroups.Tables,
@@ -32,7 +32,6 @@ public class TableReport extends AbstractAction
 	public final static String titleName = "Title";
 	public final static String numbersName = "Numbers";
 	public final static String columnsName = "Columns";
-	public static final String columnMapname = "ColumnMap";
 	public final static String reportValuesName = "ReportValues";
 
 	@ActionFieldAttribute(name = tableName, mandatory = true, description = "The table.")
@@ -50,9 +49,6 @@ public class TableReport extends AbstractAction
 	@ActionFieldAttribute(name = columnsName, mandatory = false, description = "Columns printed in the report.")
 	protected String[]	columns;
 
-	@ActionFieldAttribute(name = columnMapname, mandatory = false, description = "Renaming columns")
-	protected Map<String, String> columnMap;
-
 	@ActionFieldAttribute(name = reportValuesName, mandatory = false, description = "Report values instead expressions.")
 	protected Boolean	reportValues;
 
@@ -67,7 +63,6 @@ public class TableReport extends AbstractAction
 		this.withNumbers 	= true;
 		this.columns 		= new String[] {};
 		this.reportValues 	= false;
-		this.columnMap = null;
 	}
 	
 	@Override
@@ -106,7 +101,12 @@ public class TableReport extends AbstractAction
 			super.setError("Table is null", ErrorKind.EMPTY_PARAMETER);
 			return;
 		}
-		this.table.report(report, this.title, this.beforeTestCase, this.withNumbers, this.reportValues, this.columnMap, this.columns);
+		Parameters columns = parameters.select(TypeMandatory.Extra);
+		if (columns.isEmpty())
+		{
+			columns = null;
+		}
+		this.table.report(report, this.title, this.beforeTestCase, this.withNumbers, this.reportValues, columns, this.columns);
 		
 		super.setResult(null);
 	}
