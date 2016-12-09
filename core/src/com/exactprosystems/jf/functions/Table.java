@@ -19,18 +19,17 @@ import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.common.report.ReportHelper;
 import com.exactprosystems.jf.common.report.ReportTable;
+import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.exceptions.ColumnIsPresentException;
 import com.exactprosystems.jf.sql.SqlConnection;
-
 import org.apache.log4j.Logger;
 
 import java.io.*;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.*;
+import java.util.Date;
 import java.util.Map.Entry;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -103,7 +102,20 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 
 				for (int i = 0; i < headers.length; i++)
 				{
-					line.put(headers[i], set.getObject(i + 1));
+				    int type = set.getMetaData().getColumnType(i + 1);
+				    
+				    Object value = null;
+				    if (type == Types.LONGVARBINARY || type == Types.BLOB)
+				    {
+				        value = set.getBlob(i + 1);
+	                    value = Converter.blobToObject((Blob)value);
+				    }
+				    else
+				    {
+				        value = set.getObject(i + 1);
+				    }
+				    
+					line.put(headers[i], value);
 				}
 
 				this.innerList.add(line);
@@ -669,10 +681,30 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 	{
 		String[] columns = Arrays.stream(this.headers).map(h -> h.name).toArray(num -> new String[num]);
 		
-		report(report, title, beforeTestcase, withNumbers, reportValues, columns);
+		report(report, title, beforeTestcase, withNumbers, reportValues, null, columns);
 	}
 
-	public void report(ReportBuilder report, String title, String beforeTestcase, boolean withNumbers, boolean reportValues, String... columns) throws Exception
+	private String[] convertHeaders(Parameters parameters, String[] headers, boolean withNumbers)
+	{
+		if (parameters == null)
+		{
+			return headers;
+		}
+		List<String> list = new ArrayList<>();
+		if (withNumbers)
+		{
+			list.add("#");
+		}
+		list.addAll(parameters.values()
+			.stream()
+			.map(String::valueOf)
+			.collect(Collectors.toList())
+		);
+
+		return list.toArray(new String[list.size()]);
+	}
+
+	public void report(ReportBuilder report, String title, String beforeTestcase, boolean withNumbers, boolean reportValues, Parameters newColumns, String ... columns) throws Exception
 	{
 		int[] columnsIndexes = getIndexes(columns);
 
@@ -696,8 +728,15 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 		{
 			headers[col++ + addition] = this.headers[index].name;
 		}
-
+		headers = convertHeaders(newColumns, headers, withNumbers);
 		ReportTable table = report.addTable(title, beforeTestcase, true, 0, new int[]{}, headers);
+
+		Function<String, String> func = name -> newColumns == null ? name : newColumns.entrySet()
+					.stream()
+					.filter(e -> name.equals(String.valueOf(e.getValue())))
+					.findFirst()
+					.map(Entry::getKey)
+					.orElse(name);
 
 		int count = 0;
 		for (Map<Header, Object> row : this.innerList)
@@ -710,7 +749,7 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 
 			for (int i = addition; i < headers.length; i++)
 			{
-				Header header = headerByName(headers[i]);
+				Header header = headerByName(func.apply(headers[i]));
 				if (reportValues)
 				{
 					value[i] = convertCell(header, row.get(header));
@@ -720,16 +759,9 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 					Object v = row.get(header);
 					if (v instanceof ImageWrapper)
 					{
-	                    ImageWrapper iw = (ImageWrapper)v;
-                        
-                        String description = iw.getDescription() == null ? iw.toString() : iw.getDescription();
-                        if (iw.getFileName() == null)
-                        {
-                            iw.saveToDir(report.getReportDir());
-                        }
-                        
-						String file = new File(iw.getFileName()).getName();
-						v = report.decorateLink(description, report.getImageDir() + File.separator + file);
+						ImageWrapper iw = (ImageWrapper)v;
+						String description = iw.getDescription() == null ? iw.toString() : iw.getDescription();
+						v = report.decorateLink(description, report.getImageDir() + File.separator + iw.getName(report.getReportDir()));
 					}
 					value[i] = v;
 				}

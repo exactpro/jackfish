@@ -17,14 +17,8 @@
       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
 	</rowConstraints>
 	<children>
-		<Label text="ShortCuts for :">
-         <GridPane.margin>
-            <Insets />
-         </GridPane.margin></Label>
-		<ComboBox fx:id="cbShortcutsName" prefWidth="150.0" GridPane.columnIndex="1">
-         <GridPane.margin>
-            <Insets />
-         </GridPane.margin></ComboBox>
+		<Label text="ShortCuts for :"/>
+		<ComboBox fx:id="cbShortcutsName" prefWidth="150.0" GridPane.columnIndex="1"/>
 		<VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" spacing="8.0" GridPane.columnIndex="2" GridPane.rowIndex="1">
 			<children>
 				<Button fx:id="btnAccept" disable="true" mnemonicParsing="false" onAction="#acceptShortCuts" prefWidth="150.0" text="Accept" />

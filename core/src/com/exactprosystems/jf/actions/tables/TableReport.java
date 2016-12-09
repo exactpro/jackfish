@@ -8,17 +8,14 @@
 
 package com.exactprosystems.jf.actions.tables;
 
-import com.exactprosystems.jf.actions.AbstractAction;
-import com.exactprosystems.jf.actions.ActionAttribute;
-import com.exactprosystems.jf.actions.ActionFieldAttribute;
-import com.exactprosystems.jf.actions.ActionGroups;
-import com.exactprosystems.jf.actions.ReadableValue;
+import com.exactprosystems.jf.actions.*;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.documents.matrix.parser.items.ActionItem.HelpKind;
+import com.exactprosystems.jf.documents.matrix.parser.items.TypeMandatory;
 import com.exactprosystems.jf.functions.Table;
 
 import java.util.List;
@@ -104,7 +101,12 @@ public class TableReport extends AbstractAction
 			super.setError("Table is null", ErrorKind.EMPTY_PARAMETER);
 			return;
 		}
-		this.table.report(report, this.title, this.beforeTestCase, this.withNumbers, this.reportValues, this.columns);
+		Parameters columns = parameters.select(TypeMandatory.Extra);
+		if (columns.isEmpty())
+		{
+			columns = null;
+		}
+		this.table.report(report, this.title, this.beforeTestCase, this.withNumbers, this.reportValues, columns, this.columns);
 		
 		super.setResult(null);
 	}

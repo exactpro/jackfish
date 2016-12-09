@@ -13,6 +13,7 @@ import com.exactprosystems.jf.api.app.DoSpec;
 import com.exactprosystems.jf.api.common.DateTime;
 import com.exactprosystems.jf.api.common.Rnd;
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.api.common.Sys;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.CssVariables;
@@ -71,6 +72,7 @@ public class HelperControllerFx implements Initializable, ContainingParent
 				new MenuItem(DateTime.class.getSimpleName()),
 				new MenuItem(Rnd.class.getSimpleName()),
 				new MenuItem(Str.class.getSimpleName()),
+                new MenuItem(Sys.class.getSimpleName()),
 				new MenuItem(Do.class.getSimpleName()),
 				new MenuItem(DoSpec.class.getSimpleName())
 		);

@@ -133,11 +133,6 @@ public class Step extends MatrixItem
         return layout;
 	}
 
-	public String getIdentify()
-	{
-		return this.identify.get();
-	}
-
     @Override
 	public String getItemName()
 	{
@@ -197,7 +192,7 @@ public class Step extends MatrixItem
 				
 				table.add(row);
 			}
-            doSreenshot(ScreenshotKind.OnStart, screenshotKind, report, row);
+            doSreenshot(row, null, screenshotKind, ScreenshotKind.OnStart);
 			
 			
 			
@@ -213,7 +208,7 @@ public class Step extends MatrixItem
 
             if (res == Result.Failed)
             {
-                doSreenshot(ScreenshotKind.OnError, screenshotKind, report, row);
+                doSreenshot(row, null, screenshotKind, ScreenshotKind.OnError);
                 
                 MatrixError error = ret.getError();
                 
@@ -237,6 +232,7 @@ public class Step extends MatrixItem
             }
             context.runHandler(HandlerKind.OnStepFinish, report, null);
 
+            doSreenshot(row, null, screenshotKind, ScreenshotKind.OnFinish);
 			if (table != null && position >= 0)
 			{
 				row.put(Context.timeColumn, 		ret.getTime());
@@ -244,7 +240,8 @@ public class Step extends MatrixItem
 				row.put(Context.errorColumn, 		ret.getError());
 				table.updateValue(position, row);
 			}
-            doSreenshot(ScreenshotKind.OnFinish, screenshotKind, report, row);
+
+            outScreenshot(report, row);
 		} 
 		catch (Exception e)
 		{

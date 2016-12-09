@@ -409,8 +409,8 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 			try
 			{
 				List<String> result = new ArrayList<>();
-				List<WebElement> rows = findRows(additional, table);
 				List<String> headers = getHeaders(table, useNumericHeader, header, columns);
+				List<WebElement> rows = findRows(additional, table);
 				for (int i = 0; i < rows.size(); i++)
 				{
 					WebElement row = rows.get(i);
@@ -1969,7 +1969,7 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 
 	private void unmarkRowIsHeader(WebElement grid)
 	{
-		List<WebElement> elements = grid.findElements(selectRowLikeHeader());
+		List<WebElement> elements = grid.findElement(By.xpath("child::"+tag_tbody)).findElements(selectRowLikeHeader());
 		if (!elements.isEmpty())
 		{
 			markRowIsHeader(elements.get(0), false);

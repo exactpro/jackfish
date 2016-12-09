@@ -15,7 +15,10 @@ public enum ScreenshotKind
     Never,
     OnStart,
     OnFinish,
-    OnError;
+    OnError,
+    OnStartOrError,
+    OnFinishOrError,
+    ;
     
     public static ScreenshotKind valueByName(String name) throws Exception
     {

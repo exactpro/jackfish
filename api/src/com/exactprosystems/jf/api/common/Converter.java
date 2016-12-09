@@ -8,9 +8,20 @@
 
 package com.exactprosystems.jf.api.common;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutput;
+import java.io.ObjectOutputStream;
 import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.sql.Blob;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -21,9 +32,75 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
+
+import javax.sql.rowset.serial.SerialBlob;
+
+import com.exactprosystems.jf.api.app.ImageWrapper;
 
 public class Converter
 {
+    public static Blob filesToBlob(List<String> list) throws Exception
+    {
+        ByteArrayOutputStream outputStream = null;
+
+        try (ByteArrayOutputStream baos = new ByteArrayOutputStream();
+             ZipOutputStream zos = new ZipOutputStream(baos))
+        {
+            for (String filename : list)
+            {
+                Path path = Paths.get(filename);
+                byte[] data = Files.readAllBytes(path);
+                ZipEntry entry = new ZipEntry(filename);
+                entry.setSize(data.length);
+                zos.putNextEntry(entry);
+                zos.write(data);
+                zos.closeEntry();
+            }
+            outputStream = baos;
+        }
+        
+        Blob blob = new SerialBlob(outputStream.toByteArray());
+        return blob;
+    }
+    
+    public static Blob imageToBlob(ImageWrapper wrapper) throws Exception
+    {
+        if (wrapper == null)
+        {
+            return null;
+        }
+        wrapper.clearFile();
+        
+        ByteArrayOutputStream outputStream = null;
+        try (ByteArrayOutputStream bos = new ByteArrayOutputStream(); 
+                ObjectOutput out = new ObjectOutputStream(bos))
+        {
+            out.writeObject(wrapper);
+            out.flush();
+            outputStream = bos;
+        }
+        
+        return new SerialBlob(outputStream.toByteArray());
+    }
+
+    public static Object blobToObject(Blob blob) throws Exception
+    {
+        if (blob == null)
+        {
+            return null;
+        }
+        
+        try (ByteArrayInputStream bis = new ByteArrayInputStream(blob.getBytes(1, (int) blob.length()));
+                ObjectInput in = new ObjectInputStream(bis))
+        {
+            Object a = in.readObject();
+            System.out.println(((ImageWrapper)a).getFileName());
+            return a;
+        }
+    }
+    
 	public static void setFormats(Collection<String> formats)
 	{
 		if (formats != null)

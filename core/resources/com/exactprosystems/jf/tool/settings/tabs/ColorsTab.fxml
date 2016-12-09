@@ -1,3 +1,60 @@
-<?import javafx.scene.layout.BorderPane?>
-<BorderPane fx:id="colorsPane" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.exactprosystems.jf.tool.settings.tabs.ColorsTabController">
-</BorderPane>
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import com.exactprosystems.jf.tool.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<GridPane fx:id="colorsPane" maxHeight="1.7976931348623157E308" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="570.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.exactprosystems.jf.tool.settings.tabs.ColorsTabController">
+	<fx:define>
+		<CssVariables fx:id="verMin" fx:constant="VERTICAL_MIN"/>
+		<CssVariables fx:id="verMid" fx:constant="VERTICAL_MID"/>
+		<CssVariables fx:id="verMax" fx:constant="VERTICAL_MAX"/>
+
+		<CssVariables fx:id="horMin" fx:constant="HORIZONTAL_MIN"/>
+		<CssVariables fx:id="horMid" fx:constant="HORIZONTAL_MID"/>
+		<CssVariables fx:id="horMax" fx:constant="HORIZONTAL_MAX"/>
+	</fx:define>
+	<columnConstraints>
+		<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+		<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="31.0" prefWidth="100.0" />
+	</columnConstraints>
+	<rowConstraints>
+		<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+	</rowConstraints>
+	<children>
+		<HBox prefWidth="100.0" GridPane.columnIndex="1">
+			<children>
+				<VBox prefHeight="200.0" HBox.hgrow="SOMETIMES">
+					<children>
+						<Label id="$verMid" />
+						<ColorPicker fx:id="colorPicker" maxWidth="150.0" />
+						<Label id="$verMin" />
+						<Button fx:id="btnDefault" maxWidth="150.0" mnemonicParsing="false" onAction="#defaultColor" text="Default" />
+						<Label id="$verMax" />
+						<Button maxWidth="150.0" mnemonicParsing="false" onAction="#expandAll" text="Expand all" />
+						<Label id="$verMin" />
+						<Button maxWidth="150.0" mnemonicParsing="false" onAction="#collapseAll" text="Collapse all" />
+						<Label id="$verMin" />
+						<Button maxWidth="150.0" mnemonicParsing="false" onAction="#clearAll" text="Clear all" />
+					</children>
+				</VBox>
+				<Label id="$horMax" />
+			</children>
+		</HBox>
+		<BorderPane fx:id="borderView" prefHeight="200.0" prefWidth="200.0">
+			<top>
+				<Label id="$verMid" BorderPane.alignment="CENTER" />
+			</top>
+			<left>
+				<Label id="$horMax" BorderPane.alignment="CENTER" />
+			</left>
+			<right>
+				<Label id="$horMax" BorderPane.alignment="CENTER" />
+			</right>
+			<bottom>
+				<Label id="$verMax" BorderPane.alignment="CENTER" />
+			</bottom>
+		</BorderPane>
+	</children>
+</GridPane>

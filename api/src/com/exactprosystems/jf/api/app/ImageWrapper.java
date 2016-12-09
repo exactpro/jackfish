@@ -9,9 +9,11 @@
 package com.exactprosystems.jf.api.app;
 
 import javax.imageio.ImageIO;
+
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.OutputStream;
 import java.io.Serializable;
 
@@ -60,7 +62,7 @@ public class ImageWrapper implements Serializable
 		}
 	}
 
-	public File saveToDir(String dirName) throws Exception
+	public File saveToDir(String dirName) throws IOException
 	{
 		File file = new File(dirName);
 		File temp = null;
@@ -81,11 +83,24 @@ public class ImageWrapper implements Serializable
 		return temp;
 	}
 
-	public String getFileName()
+    public String getFileName()
 	{
 		return this.fileName;
 	}
 
+    public void clearFile()
+    {
+        this.fileName = null;
+    }
+
+    public String getName(String reportDir) throws IOException
+    {
+        if (getFileName() == null)
+        {
+            saveToDir(reportDir);
+        }
+        return new File(getFileName()).getName();
+    }
 
 	public String getDescription()
 	{

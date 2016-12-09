@@ -1,11 +1,11 @@
-#Id;#TestCase
-INIT;Test case
+#Id;#TestCase;#Kind;#For
+INIT;Init;Never;
     #Id;#Call;#type;#host;#base;#user;#password;#scriptsDir
     CALL_1;RF.SetVars;'MySql';'127.0.0.1';'regression';'root';dbPassword;'matrices/EE/'
 
 
-#TestCase
-Overall
+#Off;#TestCase;#Kind;#For
+1;Overall;Never;
     #Id;#Call
     table;RF.TotalTable
 
@@ -16,26 +16,14 @@ Overall
     TableReport;table;'Table';'INIT';false
 
 
-#TestCase
-Summary
-    #Id;#Call
-    table;RF.LastSummary
-
-    #Action;#Replace;#Table;#Columns;#Search;#MatchCell
-    TableReplace;'<div class=\"Passed\">Passed</div>';table;{ 'result' };'Passed';true
-
-    #Action;#Replace;#Table;#Columns;#Search;#MatchCell
-    TableReplace;'<div class=\"Failed\">Failed</div>';table;{ 'result' };'Failed';true
-
-    #Action;#Table;#scenario;#date;#time;#result;#performer;#env
-    TableColumnRename;table;'Matrix Name';'Execution Date';'Execution Time';'Execution Status';'Executed By';'Execution Machine'
-
-    #Action;#Table;#Title;#BeforeTestCase;#Numbers;#Columns
-    TableReport;table;'Consolidated Umbrella Report: ';'INIT';false;{'Matrix Name', 'Execution Status', 'Execution Date', 'Execution Time', 'Executed By', 'Execution Machine'}
+#TestCase;#Kind;#For
+Summary;Never;
+    #Id;#Call;#beforeTestCase
+    table;REP.TotalReport;'INIT'
 
 
-#TestCase
-Regression progress
+#Off;#TestCase;#Kind;#For
+1;Progress;Never;
     #Id;#Call
     table;RF.ProgressTable
 
@@ -43,13 +31,16 @@ Regression progress
     ChartReport;ChartKind.Line;table;'{{4 Regression progress 4}}';'INIT';'id';'Average'
 
 
-#TestCase
-Detailed report
+#Off;#TestCase;#Kind;#For
+1;Details;Never;
     #Id;#Call
     table;RF.LastAllDetails
 
-    #Action;#Replace;#Table;#Columns;#MatchCell;#Search
-    TableReplace;'';table;{ 'step', 'error'};true;'null'
+    #Action;#Table;#Columns;#MatchCell;#Search;#Replace
+    TableReplace;table;{ 'step', 'error' };true;'null';''
+
+    #Action;#Table;#Columns;#MatchCell;#Search;#Replace
+    TableReplace;table;{ 'screenshot'};true;null;''
 
     #Action;#Replace;#Table;#Columns;#Search;#MatchCell
     TableReplace;'<div class=\"Passed\">Passed</div>';table;{ 'result' };'Passed';true
@@ -57,10 +48,7 @@ Detailed report
     #Action;#Replace;#Table;#Columns;#Search;#MatchCell
     TableReplace;'<div class=\"Failed\">Failed</div>';table;{ 'result' };'Failed';true
 
-    #Action;#Table;#scenario;#date;#time;#result;#performer;#env;#testcase;#step;#time;#error
-    TableColumnRename;table;'Matrix Name';'Execution Date';'Execution Time';'Execution Status';'Executed By';'Execution Machine';'Testcase';'Step';'Duration';'Error'
-
-    #Action;#Table;#Title;#BeforeTestCase;#Numbers
-    TableReport;table;'{{4 Detailed report 4}}';'INIT';false
+    #Action;#Table;#Title;#BeforeTestCase;#Numbers;#ColumnMap
+    TableReport;table;'{{4 Detailed report 4}}';'INIT';false;{ 'scenario' : 'Matrix Name', 'date' : 'Execution Date', 'time' : 'Execution Time', 'result' : 'Execution Status', 'user' : 'Executed By', 'host' : 'Execution Machine', 'screenshot' : 'Screenshot'}
 
 

@@ -7,7 +7,7 @@ $(document).ready(function(){
 
 	$("div.movable").each(function(index) {
 		var me = $(this);
-        $("#TC_" + me.data("moveto"))[0].appendChild(me[0]);
+        $("#TC_" + me.data("moveto").replace(" ", "\\ "))[0].appendChild(me[0]);
 		me.attr('class','moved');
 	})
 

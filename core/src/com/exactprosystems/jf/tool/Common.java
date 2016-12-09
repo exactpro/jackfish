@@ -48,7 +48,9 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -276,12 +278,12 @@ public abstract class Common
 
 	public static LocalDateTime convert(Date date)
 	{
-		return LocalDateTime.of(DateTime.getYears(date), DateTime.getMonths(date), DateTime.getDays(date), DateTime.getHours(date), DateTime.getMinutes(date), DateTime.getSeconds(date));
+		return date.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
 	}
 
-	public static Date convert(LocalDateTime dateTime)
-	{
-		return DateTime.date(dateTime.getYear(), dateTime.getMonthValue(), dateTime.getDayOfMonth(), dateTime.getHour(), dateTime.getMinute(), dateTime.getSecond());
+	public static Date convert(LocalDateTime dateTime) {
+		Instant instant = dateTime.atZone(ZoneId.systemDefault()).toInstant();
+		return Date.from(instant);
 	}
 
 	// --------------------------------------------------------------------------------------------------------------------------

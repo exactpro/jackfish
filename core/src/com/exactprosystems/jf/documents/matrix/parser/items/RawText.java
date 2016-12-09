@@ -15,15 +15,9 @@ import com.exactprosystems.jf.common.evaluator.Variables;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.common.report.ReportTable;
 import com.exactprosystems.jf.documents.config.Context;
-import com.exactprosystems.jf.documents.matrix.parser.DisplayDriver;
-import com.exactprosystems.jf.documents.matrix.parser.MutableValue;
-import com.exactprosystems.jf.documents.matrix.parser.Parameters;
-import com.exactprosystems.jf.documents.matrix.parser.Result;
-import com.exactprosystems.jf.documents.matrix.parser.ReturnAndResult;
-import com.exactprosystems.jf.documents.matrix.parser.SearchHelper;
-import com.exactprosystems.jf.documents.matrix.parser.Tokens;
+import com.exactprosystems.jf.documents.matrix.parser.*;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
-import com.exactprosystems.jf.functions.Table;
+import com.exactprosystems.jf.functions.Text;
 
 import java.io.IOException;
 import java.util.List;
@@ -31,7 +25,7 @@ import java.util.Map;
 import java.util.Set;
 
 @MatrixItemAttribute(
-		description 	= "Raw data.", 
+		description 	= "Raw text.", 
 		shouldContain 	= { Tokens.RawText }, 
 		mayContain 		= { Tokens.Id, Tokens.Off, Tokens.RepOff, Tokens.Global }, 
 		real 			= true, 
@@ -45,15 +39,16 @@ public class RawText extends MatrixItem
 	public RawText()
 	{
 		super();
-		this.typeName = new MutableValue<String>();
-		this.table = new Table(new String[] { "" }, null);
+		this.text = new Text();
+		this.description = new MutableValue<>();
 	}
 
 	@Override
 	public MatrixItem clone() throws CloneNotSupportedException
 	{
 		RawText data = ((RawText) super.clone());
-		data.typeName = this.typeName.clone();
+		data.text = this.text.clone();
+		data.description = this.description.clone();
 		return data;
 	}
 
@@ -64,25 +59,23 @@ public class RawText extends MatrixItem
 		driver.showComment(this, layout, 0, 0, getComments());
 		driver.showTextBox(this, layout, 1, 0, this.id, this.id, () -> this.id.get());
 		driver.showTitle(this, layout, 1, 1, Tokens.RawText.get(), context.getFactory().getSettings());
-		driver.showLabel(this, layout, 1, 2, this.typeName.get());
+		driver.showTextBox(this, layout, 1, 2, this.description, this.description, () -> this.description.get());
 		driver.showCheckBox(this, layout, 1, 3, "Global", this.global, this.global);
-		driver.showGrid(this, layout, 2, 0, this.table);
-		driver.showToggleButton(this, layout, 1, 4, "Hide", b ->
-		{
+		driver.showTextArea(this, layout, 2, 0, this.text, list -> {
+			this.text.clear();
+			this.text.addAll(list);
+		});
+		driver.showToggleButton(this, layout, 1, 4, "Hide", b -> {
 			driver.hide(this, layout, 2, b);
 			return null;
-		}, this.table.size() != 0);
-		driver.hide(this, layout, 2, this.table.size() == 0);
+		}, this.text.size() == 0);
+
 		return layout;
 	}
 
 	// ==============================================================================================
 	// Getters / setters
 	// ==============================================================================================
-	public String getType()
-	{
-		return this.typeName.get();
-	}
 
 	// ==============================================================================================
 	// Interface Mutable
@@ -90,7 +83,7 @@ public class RawText extends MatrixItem
 	@Override
 	public boolean isChanged()
 	{
-		if (this.typeName.isChanged() || this.table.isChanged())
+		if (this.text.isChanged() || this.description.isChanged())
 		{
 			return true;
 		}
@@ -101,8 +94,8 @@ public class RawText extends MatrixItem
 	public void saved()
 	{
 		super.saved();
-		this.typeName.saved();
-		this.table.saved();
+		this.text.saved();
+		this.description.saved();
 	}
 
 	// ==============================================================================================
@@ -113,36 +106,38 @@ public class RawText extends MatrixItem
 	{
 		if (this.firstUsing)
 		{
-			this.table = new Table(str, null);
+			this.text = new Text();
 			this.firstUsing = false;
+		    this.text.add(str[0]);
+
 			return;
 		}
 
-		this.table.addValue(str);
+		this.text.add(str[0]);
 	}
 
 	@Override
 	public String getItemName()
 	{
-		return super.getItemName() + " " + this.typeName;
+		return super.getItemName() + " " + this.description.get();
 	}
 
 	@Override
 	protected void initItSelf(Map<Tokens, String> systemParameters)
 	{
-		this.typeName.set(systemParameters.get(Tokens.RawText));
+        this.description.set(systemParameters.get(Tokens.RawText));
 	}
 
 	@Override
 	protected String itemSuffixSelf()
 	{
-		return "DATA";
+		return "TEXT";
 	}
 
 	@Override
 	protected void writePrefixItSelf(CsvWriter writer, List<String> firstLine, List<String> secondLine)
 	{
-		addParameter(firstLine, secondLine, Tokens.RawText.get(), this.typeName.get());
+		addParameter(firstLine, secondLine, Tokens.RawText.get(), this.description.get()); 
 	}
 
 	@Override
@@ -150,7 +145,10 @@ public class RawText extends MatrixItem
 	{
 		try
 		{
-			this.table.save(writer, indent, false, true);
+		    for (String str : this.text)
+		    {
+		        writer.writeRecord(new String[] { indent + "\"" + str.replace("\"", "\"\"")  + "\""}, true);
+		    }
 		}
 		catch (IOException e)
 		{
@@ -163,7 +161,8 @@ public class RawText extends MatrixItem
 	@Override
 	protected boolean matchesDerived(String what, boolean caseSensitive, boolean wholeWord)
 	{
-		return SearchHelper.matches(this.typeName.get(), what, caseSensitive, wholeWord);
+		return SearchHelper.matches(this.text.toString(), what, caseSensitive, wholeWord)
+		        || SearchHelper.matches(this.description.get(), what, caseSensitive, wholeWord);
 	}
 
 	@Override
@@ -182,7 +181,7 @@ public class RawText extends MatrixItem
 		ReportTable table;
 		table = report.addTable("", null, true, 100, new int[] { 30, 70 }, new String[] { "Chapter", "Description" });
 
-		table.addValues("Destination", "To describe block of data");
+		table.addValues("Destination", "To describe block of text");
 	}
 
 	@Override
@@ -190,11 +189,10 @@ public class RawText extends MatrixItem
 	{
 		try
 		{
-			this.table.report(report, null, Tokens.RawText.get(), false, false);
-
+			this.text.report(report, null, this.description.get());
 			Variables vars = isGlobal() ? evaluator.getGlobals() : evaluator.getLocals();
-
-			ReturnAndResult ret = new ReturnAndResult(start, Result.Passed, this.table);
+			
+			ReturnAndResult ret = new ReturnAndResult(start, Result.Passed, this.text);
 
 			if (super.getId() != null && !super.getId().isEmpty())
 			{
@@ -215,8 +213,8 @@ public class RawText extends MatrixItem
 	// ==============================================================================================
 	// Private members
 	// ==============================================================================================
-	private MutableValue<String>	typeName;
-	private Table					table;
+    private MutableValue<String>    description;
+    private Text                    text;
 
 	private boolean					firstUsing	= true;
 }

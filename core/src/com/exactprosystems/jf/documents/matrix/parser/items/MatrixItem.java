@@ -9,6 +9,7 @@
 package com.exactprosystems.jf.documents.matrix.parser.items;
 
 import com.csvreader.CsvWriter;
+import com.exactprosystems.jf.api.app.AppConnection;
 import com.exactprosystems.jf.api.app.ImageWrapper;
 import com.exactprosystems.jf.api.app.Mutable;
 import com.exactprosystems.jf.api.common.Converter;
@@ -376,7 +377,7 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 		report.itemStarted(this);
 		report.itemIntermediate(this);
 		docItSelf(context, report);
-		report.itemFinished(this, 0);
+		report.itemFinished(this, 0, null);
 	}
 
 	public final void documentation(Context context, ReportBuilder report)
@@ -389,7 +390,7 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 		{
 			item.documentation(context, report);
 		}
-		report.itemFinished(this, 0);
+		report.itemFinished(this, 0, null);
 	}
 
 	public final ReturnAndResult execute(Context context, IMatrixListener listener, AbstractEvaluator evaluator, ReportBuilder report)
@@ -436,7 +437,7 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 			this.result = new ReturnAndResult(start, this.result.getError(), Result.Ignored);
 		}
 		
-		report.itemFinished(this, duration);
+		report.itemFinished(this, duration, this.screenshot);
 		listener.finished(this.owner, this, this.result.getResult());
 		this.changeState(this.isBreakPoint() ? MatrixItemState.BreakPoint : MatrixItemState.None);
 		afterReport(report);
@@ -921,23 +922,57 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 	}
 
 	
-    protected final void doSreenshot(ScreenshotKind when, ScreenshotKind screenshotKind, ReportBuilder report, RowTable row) throws Exception
+    protected final void doSreenshot(RowTable row, Object connection, ScreenshotKind screenshotKind, ScreenshotKind ... when) throws Exception
     {
-        if (screenshotKind == when)
+        boolean isErrorStage = Arrays.stream(when).anyMatch(a -> ScreenshotKind.OnError == a);
+        if (row != null && row.get(Context.screenshotColumn) != null && !isErrorStage)
         {
-            Rectangle desktopRect = new Rectangle(Toolkit.getDefaultToolkit().getScreenSize());
-            BufferedImage image = new java.awt.Robot().createScreenCapture(desktopRect);
-
-            ImageWrapper imageWrapper =  new ImageWrapper(image);
-            imageWrapper.setDescription(screenshotKind.toString());
+            return;
+        }
+        
+        if (Arrays.stream(when).anyMatch(a -> screenshotKind == a))
+        {
+            ImageWrapper imageWrapper = null;  
             
-            File file = imageWrapper.saveToDir(report.getReportDir());
-            report.outImage(this, null, file.getName(), imageWrapper.getDescription());
+            if (connection instanceof AppConnection && !isErrorStage)
+            {
+                try
+                {
+                    imageWrapper = ((AppConnection)connection).getApplication().service().getImage(null, null);
+                }
+                catch (Exception e)
+                {
+                    logger.error(e.getMessage(), e);
+                }
+            }
             
+            if (imageWrapper == null)
+            {
+                Rectangle desktopRect = new Rectangle(Toolkit.getDefaultToolkit().getScreenSize());
+                BufferedImage image = new java.awt.Robot().createScreenCapture(desktopRect);
+                imageWrapper =  new ImageWrapper(image);
+            }
+            
+            imageWrapper.setDescription("" + when[0]);
             if (row != null)
             {
                 row.put(Context.screenshotColumn,    imageWrapper);
             }
+        }
+    }
+
+    protected final void outScreenshot(ReportBuilder report, RowTable row) throws Exception
+    {
+        if (row == null)
+        {
+            return;
+        }
+        
+        this.screenshot = (ImageWrapper)row.get(Context.screenshotColumn);
+        
+        if (this.screenshot != null)
+        {
+            report.outImage(this, null, this.screenshot.getName(report.getReportDir()), this.screenshot.getDescription());
         }
     }
 
@@ -965,4 +1000,5 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 	protected ReturnAndResult result;
 	protected boolean breakPoint;
 	protected MatrixItemState matrixItemState = MatrixItemState.None;
+	protected ImageWrapper screenshot = null;
 }

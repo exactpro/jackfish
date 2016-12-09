@@ -1,3 +1,35 @@
+09.12.2016 4.3.0.1723
+RM38880_get_indexes fixed
+________________________________________________________________________________
+09.12.2016 4.3.0.1719
+RM38883 implemented
+________________________________________________________________________________
+09.12.2016 4.3.0.1716
+RM38830 Can't select time in ByTime parameter in Wait action - fixed.
+________________________________________________________________________________
+09.12.2016 4.3.0.1715
+Feature #38856 implemented - added textArea for editing RawText item
+
+--------------------------------------------------------------------------------
+08.12.2016 4.3.0.1711
+RM38838 fixed.
+
+--------------------------------------------------------------------------------
+07.12.2016 4.3.0.1707
+RM38805 implemented. Added new not mandatory field into TableReport
+
+--------------------------------------------------------------------------------
+07.12.2016 4.3.0.1705
+#38518 feature: add #RepOff tag for the each item instead ReportOn & ReportOff items
+
+now each action / items in matrix have new flag RepOff. It swiches off the technical report
+for itself and for all subsidiary  items.
+
+--------------------------------------------------------------------------------
+07.12.2016 4.3.0 1705
+Description for App actions was added
+
+--------------------------------------------------------------------------------
 06.12.2016 4.3.0.1699
 Now Do.getList() is available for swing plugin
 

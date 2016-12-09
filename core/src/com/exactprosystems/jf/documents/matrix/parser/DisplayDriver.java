@@ -13,6 +13,7 @@ import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.items.CommentString;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 import com.exactprosystems.jf.functions.Table;
+import com.exactprosystems.jf.functions.Text;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -22,14 +23,14 @@ public interface DisplayDriver
 {
 	Object 		createLayout		(MatrixItem item, int lines);
 
-	void		showTitle(MatrixItem item, Object layout, int row, int column, String name, Settings settings);
+	void		showTitle			(MatrixItem item, Object layout, int row, int column, String name, Settings settings);
 	void 		showLabel			(MatrixItem item, Object layout, int row, int column, String name);
 	void 		showCheckBox		(MatrixItem item, Object layout, int row, int column, String name, Setter<Boolean> set, Getter<Boolean> get);
 	void 		showComboBox		(MatrixItem item, Object layout, int row, int column, Setter<String> set, Getter<String> get, Function<Void, List<String>> handler);
 	void 		showTextBox			(MatrixItem item, Object layout, int row, int column, Setter<String> set, Getter<String> get, FormulaGenerator generator);
 	void 		showExpressionField	(MatrixItem item, Object layout, int row, int column, String name, Setter<String> set, Getter<String> get,
 										Function<String, String> firstHandler, Function<String, String> secondHandler, Character first, Character second);
-
+	void 		showTextArea		(MatrixItem item, Object layout, int row, int column, Text text, Consumer<List<String>> consumer);
 	void		showAutoCompleteBox	(MatrixItem item, Object layout, int row, int column, List<String> words, Consumer<String> supplier);
 	void 		showComment			(MatrixItem item, Object layout, int row, int column, List<CommentString> lines);
 	void 		showButton			(MatrixItem item, Object layout, int row, int column, String name, Function<MatrixItem, Void> action);
