@@ -1,5 +1,8 @@
 #Id;#TestCase;#Kind;#For
 Step 1;This matrix randomly failed;OnFinish;APPSTR1.Out
+    #Action;#Description;#Expected
+    ResultTableUserValue;'Start application and declaration of variables';'Start browser'
+
     #Action;#Text;#Notifier
     Show;'EE1006 randomly failed';Notifier.Success
 
@@ -15,6 +18,9 @@ Step 1;This matrix randomly failed;OnFinish;APPSTR1.Out
 
 #Id;#TestCase;#Kind;#For
 Step 2;Working;OnFinishOrError;APPSTR1.Out
+    #Action;#Description;#Expected
+    ResultTableUserValue;'Resize browser';'Browser resized'
+
     #Action;#Text;#Notifier
     Show;'Step 2';Notifier.Info
 
@@ -37,6 +43,9 @@ Step 2;Working;OnFinishOrError;APPSTR1.Out
 
 #Id;#TestCase;#Kind;#For
 Step 2;Working;;
+    #Action;#Description;#Expected
+    ResultTableUserValue;'Logout. Close application';'Closing the browser'
+
     #Action;#Text;#Notifier
     Show;'Step 3';Notifier.Info
 
@@ -46,7 +55,7 @@ Step 2;Working;;
     #Id;#Action;#Decoraded
     RESTBL1;ResultTable;true
 
-    #Action;#Table;#Title;#Numbers;#BeforeTestCase
-    TableReport;RESTBL1.Out;'Results';false;'Step 1'
+    #Action;#Table;#Title;#Numbers;#BeforeTestCase;#TestCaseId;#Result;#Description;#Expected;#Error;#Screenshot
+    TableReport;RESTBL1.Out;'Results';false;'Step 1';'Step Name';'Status';'Description';'Expected Result';'Actual Result';'Screenshots'
 
 

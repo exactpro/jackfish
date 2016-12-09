@@ -31,8 +31,8 @@ Summary;Never;
     ChartReport;ChartKind.Line;table;'{{4 Regression progress 4}}';'INIT';'id';'Average'
 
 
-#Off;#TestCase;#Kind;#For
-1;Details;Never;
+#TestCase;#Kind;#For
+Details;Never;
     #Id;#Call
     table;RF.LastAllDetails
 
@@ -48,7 +48,7 @@ Summary;Never;
     #Action;#Replace;#Table;#Columns;#Search;#MatchCell
     TableReplace;'<div class=\"Failed\">Failed</div>';table;{ 'result' };'Failed';true
 
-    #Action;#Table;#Title;#BeforeTestCase;#Numbers;#ColumnMap
-    TableReport;table;'{{4 Detailed report 4}}';'INIT';false;{ 'scenario' : 'Matrix Name', 'date' : 'Execution Date', 'time' : 'Execution Time', 'result' : 'Execution Status', 'user' : 'Executed By', 'host' : 'Execution Machine', 'screenshot' : 'Screenshot'}
+    #Action;#Table;#Title;#BeforeTestCase;#Numbers;#scenario;#testcase;#result;#description;#expected;#error;#screenshot
+    TableReport;table;'{{4 Detailed report 4}}';'INIT';false;'Matrix';'Step Name';'Status';'Description';'Expected Result';'Actual Result';'Screenshots'
 
 
