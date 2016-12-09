@@ -10,6 +10,7 @@ package com.exactprosystems.jf.tool.matrix.params;
 
 import com.exactprosystems.jf.actions.ReadableValue;
 import com.exactprosystems.jf.actions.gui.DialogFill;
+import com.exactprosystems.jf.api.common.DateTime;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.FormulaGenerator;
@@ -304,7 +305,21 @@ public class ParametersPane extends CustomScrollPane
 							expressionField.setNameFirst("D");
 							expressionField.setFirstActionListener(str -> 
 							{
-								Date res = DialogsHelper.showDateTimePicker(null);
+								Date date = null;
+								if (expressionField.getText() != null)
+								{
+									try
+									{
+										date = (Date) evaluator.evaluate(expressionField.getText());
+									}
+									catch (Exception e)
+									{
+										date = DateTime.current();
+									}
+								}
+
+
+								Date res = DialogsHelper.showDateTimePicker(date);
 								if (res != null)
 								{
 									LocalDateTime ldt = Common.convert(res);

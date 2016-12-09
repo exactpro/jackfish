@@ -20,14 +20,15 @@ public class DateTimePicker extends DatePicker{
 	{
 		super();
 		this.dateTimeValue = new SimpleObjectProperty<>();
-		setValue(LocalDate.now());
 		if (initial != null)
 		{
 			dateTimeValueProperty().setValue(Common.convert(initial));
+			this.setValue(Common.convert(initial).toLocalDate());
 		}
 		else
 		{
 			dateTimeValueProperty().setValue(LocalDateTime.now());
+			this.setValue(LocalDate.now());
 		}
 		setConverter(new StringConverter<LocalDate>()
 		{
