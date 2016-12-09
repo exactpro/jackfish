@@ -15,19 +15,11 @@ import com.exactprosystems.jf.common.evaluator.Variables;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.common.report.ReportTable;
 import com.exactprosystems.jf.documents.config.Context;
-import com.exactprosystems.jf.documents.matrix.parser.DisplayDriver;
-import com.exactprosystems.jf.documents.matrix.parser.MutableValue;
-import com.exactprosystems.jf.documents.matrix.parser.Parameters;
-import com.exactprosystems.jf.documents.matrix.parser.Result;
-import com.exactprosystems.jf.documents.matrix.parser.ReturnAndResult;
-import com.exactprosystems.jf.documents.matrix.parser.SearchHelper;
-import com.exactprosystems.jf.documents.matrix.parser.Tokens;
+import com.exactprosystems.jf.documents.matrix.parser.*;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
-import com.exactprosystems.jf.functions.Table;
 import com.exactprosystems.jf.functions.Text;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -69,8 +61,14 @@ public class RawText extends MatrixItem
 		driver.showTitle(this, layout, 1, 1, Tokens.RawText.get(), context.getFactory().getSettings());
 		driver.showTextBox(this, layout, 1, 2, this.description, this.description, () -> this.description.get());
 		driver.showCheckBox(this, layout, 1, 3, "Global", this.global, this.global);
-		
-//		driver.showTextArea(this, layout, 2, 0, this.text); // TODO: RM38856
+		driver.showTextArea(this, layout, 2, 0, this.text, list -> {
+			this.text.clear();
+			this.text.addAll(list);
+		});
+		driver.showToggleButton(this, layout, 1, 4, "Hide", b -> {
+			driver.hide(this, layout, 2, b);
+			return null;
+		}, this.text.size() == 0);
 
 		return layout;
 	}
