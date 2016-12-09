@@ -26,6 +26,7 @@ import com.exactprosystems.jf.documents.matrix.parser.Parser;
 import com.exactprosystems.jf.documents.matrix.parser.Tokens;
 import com.exactprosystems.jf.documents.matrix.parser.items.*;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
+import com.exactprosystems.jf.functions.Text;
 import com.exactprosystems.jf.tool.ApplicationConnector;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
@@ -235,6 +236,10 @@ public class MatrixFx extends Matrix
 				else if (newItemName.equalsIgnoreCase(Tokens.RawMessage.get()))
 				{
 					newItem = Parser.createItem(Tokens.RawMessage.get(), "none");
+				}
+				else if (newItemName.equalsIgnoreCase(Tokens.RawText.get()))
+				{
+					newItem = Parser.createItem(Tokens.RawText.get(), Text.class.getSimpleName());
 				}
 				else
 				{
