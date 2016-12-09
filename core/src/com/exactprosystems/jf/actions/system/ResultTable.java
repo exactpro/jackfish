@@ -154,13 +154,13 @@ public class ResultTable extends AbstractAction
                     ImageWrapper iw = (ImageWrapper)wrapper;
                     
                     String description = iw.getDescription() == null ? iw.toString() : iw.getDescription();
-                    if (iw.getFileName() == null)
-                    {
-                        iw.saveToDir(report.getReportDir());
-                    }
-                    
-                    String file = new File(iw.getFileName()).getName();
-                    String imageStr = report.decorateLink(description, report.getImageDir() + File.separator + file);
+//                    if (iw.getFileName() == null)
+//                    {
+//                        iw.saveToDir(report.getReportDir());
+//                    }
+//                    
+//                    String file = new File(iw.getFileName()).getName();
+                    String imageStr = report.decorateLink(description, report.getImageDir() + File.separator + iw.getName(report.getReportDir()));
                     replace(row, Context.screenshotColumn,       e -> imageStr);
                 }
                 else

@@ -17,8 +17,8 @@ INIT;Test case;;
     1;x;EE1002;VF;dev;1
     2;x;EE1003;;dev;1
     3;x;EE1004;;dev;1
-    4;x;EE1005;VF;dev;1
-    5;;EE1006;;dev;2
+    4;;EE1005;VF;dev;1
+    5;x;EE1006;;dev;2
     6;x;EE1007;VF;dev;3
     #EndRawTable
 
@@ -37,10 +37,7 @@ Summary;;
     #Action;#Replace;#Table;#Columns;#Search;#MatchCell
     TableReplace;'<div class=\"Failed\">Failed</div>';table;{ 'result' };'Failed';true
 
-    #Action;#Table;#scenario;#date;#time;#result;#performer;#env
-    TableColumnRename;table;'Matrix Name';'Execution Date';'Execution Time';'Execution Status';'Executed By';'Execution Machine'
-
-    #Action;#Table;#Title;#BeforeTestCase;#Numbers;#Columns
-    TableReport;table;'Consolidated Umbrella Report: ';'INIT';false;{'Matrix Name', 'Execution Status', 'Execution Date', 'Execution Time', 'Executed By', 'Execution Machine' }
+    #Action;#Table;#Title;#BeforeTestCase;#Numbers;#ColumnMap
+    TableReport;table;'Consolidated Umbrella Report: ';'INIT';false;{'scenario':'Matrix Name',  'result':'Execution Status', 'date':'Execution Date', 'time':'Execution Time', 'user':'Executed By', 'host':'Execution Machine' }
 
 
