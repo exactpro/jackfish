@@ -8,7 +8,6 @@ import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.csv.Csv;
 import com.exactprosystems.jf.documents.guidic.GuiDictionary;
 import com.exactprosystems.jf.documents.matrix.Matrix;
-import com.exactprosystems.jf.documents.matrix.parser.items.ActionItem;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.ConsoleErrorMatrixListener;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.ConsoleMatrixListener;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.DummyRunnerListener;
@@ -18,6 +17,7 @@ import com.exactprosystems.jf.documents.matrix.parser.listeners.RunnerListener;
 import com.exactprosystems.jf.documents.msgdic.MessageDictionary;
 import com.exactprosystems.jf.documents.text.PlainText;
 import com.exactprosystems.jf.documents.vars.SystemVars;
+import com.exactprosystems.jf.functions.HelpKind;
 import com.exactprosystems.jf.functions.Notifier;
 
 import java.util.Collection;
@@ -125,10 +125,8 @@ public class ConsoleDocumentFactory extends DocumentFactory
 	}
 
 	@Override
-	public Object input(AbstractEvaluator evaluator, String title, Object defaultValue, Integer timeout, ActionItem.HelpKind helpKind, Collection<?> dataSource)
+	public Object input(AbstractEvaluator evaluator, String title, Object defaultValue, Integer timeout, HelpKind helpKind, Collection<?> dataSource)
 	{
-		//TODO implement timeout
-		System.out.println(title + " : ");
 		return defaultValue;
 	}
 

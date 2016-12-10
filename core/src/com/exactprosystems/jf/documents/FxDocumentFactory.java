@@ -8,13 +8,13 @@ import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.csv.Csv;
 import com.exactprosystems.jf.documents.guidic.GuiDictionary;
 import com.exactprosystems.jf.documents.matrix.Matrix;
-import com.exactprosystems.jf.documents.matrix.parser.items.ActionItem;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixError;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.RunnerListener;
 import com.exactprosystems.jf.documents.msgdic.MessageDictionary;
 import com.exactprosystems.jf.documents.text.PlainText;
 import com.exactprosystems.jf.documents.vars.SystemVars;
+import com.exactprosystems.jf.functions.HelpKind;
 import com.exactprosystems.jf.functions.Notifier;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.csv.CsvFx;
@@ -125,9 +125,9 @@ public class FxDocumentFactory extends DocumentFactory
 	}
 
 	@Override
-	public Object input(AbstractEvaluator evaluator, String title, Object defaultValue, Integer timeout, ActionItem.HelpKind helpKind, Collection<?> dataSource)
+	public Object input(AbstractEvaluator evaluator, String title, Object defaultValue, Integer timeout, HelpKind helpKind, Collection<?> dataSource)
 	{
-		String result = DialogsHelper.showUserInput(evaluator, title, defaultValue, timeout, helpKind, dataSource);
+		String result = DialogsHelper.showUserInput(evaluator, title, defaultValue, helpKind, dataSource);
 		Object value;
 		try
 		{
@@ -135,7 +135,6 @@ public class FxDocumentFactory extends DocumentFactory
 		}
 		catch (Exception e)
 		{
-			e.printStackTrace();
 			value = new MatrixError(e.getMessage(), ErrorKind.EXPRESSION_ERROR, null);
 		}
 		return value;

@@ -18,7 +18,7 @@ import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
-import com.exactprosystems.jf.documents.matrix.parser.items.ActionItem;
+import com.exactprosystems.jf.functions.HelpKind;
 
 import java.rmi.RemoteException;
 import java.util.List;
@@ -53,12 +53,12 @@ public class DialogAlert extends AbstractAction
 	}
 	
 	@Override
-	protected ActionItem.HelpKind howHelpWithParameterDerived(Context context, Parameters parameters, String fieldName) throws Exception
+	protected HelpKind howHelpWithParameterDerived(Context context, Parameters parameters, String fieldName) throws Exception
 	{
 		switch (fieldName)
 		{
 			case performName:
-				return ActionItem.HelpKind.ChooseFromList;
+				return HelpKind.ChooseFromList;
 		}
 		return super.howHelpWithParameterDerived(context, parameters, fieldName);
 	}

@@ -3,8 +3,9 @@ package com.exactprosystems.jf.tool.custom;
 import com.exactprosystems.jf.actions.ReadableValue;
 import com.exactprosystems.jf.api.common.DateTime;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
-import com.exactprosystems.jf.documents.matrix.parser.items.ActionItem;
+import com.exactprosystems.jf.functions.HelpKind;
 import com.exactprosystems.jf.tool.Common;
+import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.custom.expfield.ExpressionField;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import javafx.application.Platform;
@@ -23,11 +24,17 @@ public class UserInputDialog extends Dialog<String>
 {
 	private final GridPane grid;
 	private final ExpressionField expressionField;
+	private final Label expressionLabel;
+	private AbstractEvaluator evaluator;
 
-	public UserInputDialog(String defaultValue, AbstractEvaluator evaluator, ActionItem.HelpKind helpKind, Collection<?> dataSource)
+	public UserInputDialog(String defaultValue, AbstractEvaluator evaluator, HelpKind helpKind, Collection<?> dataSource)
 	{
 		final DialogPane dialogPane = getDialogPane();
+		this.setResizable(true);
+		dialogPane.getStylesheets().addAll(Common.currentThemesPaths());
+		this.evaluator = evaluator;
 		this.expressionField = new ExpressionField(evaluator, defaultValue);
+		this.expressionLabel = new Label();
 		this.expressionField.setHelperForExpressionField("Title", null);
 		if (helpKind != null )
 		{
@@ -117,6 +124,9 @@ public class UserInputDialog extends Dialog<String>
 		GridPane.setHgrow(expressionField, Priority.ALWAYS);
 		GridPane.setFillWidth(expressionField, true);
 
+		GridPane.setHgrow(expressionLabel, Priority.ALWAYS);
+		GridPane.setFillWidth(expressionLabel, true);
+
 		this.grid = new GridPane();
 		this.grid.setHgap(10);
 		this.grid.setMaxWidth(Double.MAX_VALUE);
@@ -124,11 +134,15 @@ public class UserInputDialog extends Dialog<String>
 
 		dialogPane.contentTextProperty().addListener(o -> updateGrid());
 		dialogPane.getButtonTypes().addAll(ButtonType.OK);
-		dialogPane.setPrefWidth(200);
-		dialogPane.setMaxWidth(200);
-		dialogPane.setMinWidth(200);
+		dialogPane.setPrefWidth(300);
+		dialogPane.setMaxWidth(300);
+		dialogPane.setMinWidth(300);
 
 		updateGrid();
+		updateExpressionLabel(defaultValue);
+		this.expressionField.textProperty().addListener((observable, oldValue, newValue) -> {
+			updateExpressionLabel(newValue);
+		});
 
 		setResultConverter((dialogButton) ->
 		{
@@ -137,11 +151,26 @@ public class UserInputDialog extends Dialog<String>
 		});
 	}
 
+	private void updateExpressionLabel(String value)
+	{
+		this.expressionLabel.getStyleClass().remove(CssVariables.INCORRECT_FIELD);
+		try
+		{
+			this.expressionLabel.setText(String.valueOf(evaluator.evaluate(value)));
+		}
+		catch (Exception e)
+		{
+			this.expressionLabel.getStyleClass().add(CssVariables.INCORRECT_FIELD);
+			this.expressionLabel.setText(e.getMessage());
+		}
+	}
+
 	private void updateGrid()
 	{
 		grid.getChildren().clear();
 
-		grid.add(expressionField, 1, 0);
+		grid.add(expressionField, 0, 0);
+		grid.add(expressionLabel, 0, 1);
 		getDialogPane().setContent(grid);
 
 		Platform.runLater(expressionField::requestFocus);

@@ -16,6 +16,7 @@ import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.*;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
+import com.exactprosystems.jf.functions.HelpKind;
 
 import java.util.List;
 import java.util.Map;
@@ -32,9 +33,8 @@ import java.util.Set;
 	)
 public final class ActionItem extends MatrixItem
 {
-	public enum HelpKind { ChooseSaveFile, ChooseOpenFile, ChooseFolder, ChooseDateTime, ChooseFromList, BuildQuery, BuildXPath, BuildLayoutExpression}
-	
-	
+
+
 	public ActionItem()
 	{
 		super();

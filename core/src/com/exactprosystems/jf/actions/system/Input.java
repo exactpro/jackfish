@@ -14,8 +14,8 @@ import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
-import com.exactprosystems.jf.documents.matrix.parser.items.ActionItem;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixError;
+import com.exactprosystems.jf.functions.HelpKind;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -50,7 +50,7 @@ public class Input extends AbstractAction
     protected Collection<?> dataSource; 
 
     @ActionFieldAttribute(name = helpKindName, mandatory = false, description = "How to help user enter or choose a value.")
-    protected ActionItem.HelpKind helpKind; 
+    protected HelpKind helpKind;
 
     
     public Input()
@@ -67,12 +67,12 @@ public class Input extends AbstractAction
 	}
 	
     @Override
-    protected ActionItem.HelpKind howHelpWithParameterDerived(Context context, Parameters parameters, String fieldName) throws Exception
+    protected HelpKind howHelpWithParameterDerived(Context context, Parameters parameters, String fieldName) throws Exception
     {
         switch (fieldName)
         {
             case helpKindName:
-                return ActionItem.HelpKind.ChooseFromList;
+                return HelpKind.ChooseFromList;
         }
         return null;
     }
@@ -83,7 +83,7 @@ public class Input extends AbstractAction
         switch (parameterToFill)
         {
             case helpKindName:
-				Arrays.stream(ActionItem.HelpKind.values()).forEach(a -> list.add(new ReadableValue(ActionItem.HelpKind.class.getSimpleName() + "." + a.name())));;
+				Arrays.stream(HelpKind.values()).forEach(a -> list.add(new ReadableValue(HelpKind.class.getSimpleName() + "." + a.name())));;
                 break;
         }
     }
