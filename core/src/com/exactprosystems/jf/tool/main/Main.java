@@ -631,12 +631,19 @@ public class Main extends Application
 		Optional<File> optional = chooseFile(Matrix.class, null, DialogsHelper.OpenSaveMode.OpenFile);
 		if (optional.isPresent())
 		{
-			try (Context context = this.factory.createContext(); 
-				 MatrixRunner runner = new MatrixRunner(context, optional.get(), null, null)
-			)
-			{
-				runner.start();
-			}
+			Context context = this.factory.createContext();
+			MatrixRunner runner = new MatrixRunner(context, optional.get(), null, null);
+			runner.setOnFinished(mr -> {
+				try
+				{
+					runner.close();
+				}
+				catch (Exception e)
+				{
+					e.printStackTrace();
+				}
+			});
+			runner.start();
 		}
 	}
 
