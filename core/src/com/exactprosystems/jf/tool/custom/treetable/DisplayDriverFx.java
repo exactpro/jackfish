@@ -444,6 +444,10 @@ public class DisplayDriverFx implements DisplayDriver
 			selectCurrentRow(((MatrixTreeRow) pane.getParent().getParent()));
 			action.apply(!toggleButton.isSelected());
 		});
+		if (!initialValue)
+		{
+			action.apply(true);
+		}
 		pane.add(toggleButton, column, row);
 		GridPane.setMargin(toggleButton, INSETS);
 	}
