@@ -485,6 +485,10 @@ public abstract class Common
 			DateTime date = (DateTime) value;
 			return String.format("DateTime.date(%d,%d,%d,%d,%d,%d)", date.years(), date.months(), date.days(), date.hours(), date.minutes(), date.seconds());
 		}
+		if (value instanceof File)
+		{
+			return evaluator.createString(((File) value).getPath());
+		}
 		return String.valueOf(value);
 	}
 }

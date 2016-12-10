@@ -83,19 +83,6 @@ public class UserInputDialog extends Dialog<String>
 					});
 					break;
 
-				case ChooseSaveFile:
-					expressionField.setNameFirst("…");
-					expressionField.setFirstActionListener(str ->
-					{
-						File file = DialogsHelper.showOpenSaveDialog("Choose file to save", "All files", "*.*", DialogsHelper.OpenSaveMode.SaveFile);
-						if (file != null)
-						{
-							return evaluator.createString(Common.getRelativePath(file.getAbsolutePath()));
-						}
-						return str;
-					});
-					break;
-
 				case ChooseFolder:
 					expressionField.setNameFirst("…");
 					expressionField.setFirstActionListener(str ->
