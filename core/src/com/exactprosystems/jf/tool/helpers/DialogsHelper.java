@@ -559,7 +559,7 @@ public abstract class DialogsHelper
 				actionItem.init(matrix);
 				chapter.insert(chapter.count(), actionItem);
 			}
-			ReportBuilder report = new HelpFactory().createBuilder(null, null, new Date());
+			ReportBuilder report = new HelpFactory().createReportBuilder(null, null, new Date());
 			matrix.documentation(context, report);
 			displayHelp(report.getContent());
 		}

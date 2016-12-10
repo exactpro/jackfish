@@ -272,7 +272,7 @@ public class MatrixContextMenu extends ContextMenu
 				MatrixItem item = this.tree.currentItem();
 				if (item != null)
 				{
-					ReportBuilder report = new ContextHelpFactory().createBuilder(null, null, new Date());
+					ReportBuilder report = new ContextHelpFactory().createReportBuilder(null, null, new Date());
 
 					item.documentationOnlyThis(this.context, report);
 

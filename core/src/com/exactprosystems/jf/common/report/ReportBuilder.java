@@ -33,13 +33,13 @@ public abstract class ReportBuilder
 	public final static String OM		= "{{";
 	public final static String CM		= "}}";
 	
-	public ReportBuilder(String outputPath, File matrix, Date currentTime) throws IOException
+	public ReportBuilder(String outputPath, String matrixName, Date currentTime) throws IOException
 	{
 		this.reportIsOn = true;
 		
-		if(outputPath != null && matrix != null)
+		if(outputPath != null && matrixName != null)
 		{
-			this.reportName = generateReportName(outputPath, matrix.getName(), SUFFIX, currentTime);
+			this.reportName = generateReportName(outputPath, matrixName, SUFFIX, currentTime);
 			File file = new File(this.reportName);
 			File parent = file.getParentFile();
 			if (parent != null)
@@ -47,7 +47,7 @@ public abstract class ReportBuilder
 				parent.mkdirs();
 			}
 
-			this.imageDir = generateReportDir(matrix.getName(), currentTime);
+			this.imageDir = generateReportDir(matrixName, currentTime);
 			this.reportDir = outputPath + File.separator + this.imageDir; 
 		}
 	}
