@@ -41,9 +41,8 @@ public class ReportName extends AbstractAction
 	}
 
 	@Override
-	public void initDefaultValues() {
-		// TODO Auto-generated method stub
-		
+	public void initDefaultValues() 
+	{
 	}
 }
 

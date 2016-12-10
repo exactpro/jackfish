@@ -8,6 +8,10 @@
 
 package com.exactprosystems.jf.documents.matrix.parser;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import com.exactprosystems.jf.api.common.Str;
 
 public enum ScreenshotKind
@@ -35,5 +39,10 @@ public enum ScreenshotKind
             }
         }
         throw new Exception("Unknown name: " + name);
+    }
+    
+    public static List<String> names()
+    {
+        return Arrays.stream(values()).map(k -> k.name()).collect(Collectors.toList()) ;
     }
 }

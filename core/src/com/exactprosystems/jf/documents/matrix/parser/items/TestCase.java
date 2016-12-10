@@ -10,6 +10,7 @@ package com.exactprosystems.jf.documents.matrix.parser.items;
 
 import com.csvreader.CsvWriter;
 import com.exactprosystems.jf.api.app.AppConnection;
+import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.evaluator.Variables;
@@ -33,7 +34,7 @@ import java.util.stream.Collectors;
 @MatrixItemAttribute(
 		description 	= "Test case.", 
 		shouldContain 	= { Tokens.TestCase },
-		mayContain 		= { Tokens.Id, Tokens.RepOff, Tokens.Off, Tokens.Kind, Tokens.For },
+		mayContain 		= { Tokens.Id, Tokens.RepOff, Tokens.Off, Tokens.Kind, Tokens.For, Tokens.Depends },
 		closes			= MatrixRoot.class,
         real			= true,
 		hasValue 		= true, 
@@ -45,9 +46,10 @@ public final class TestCase extends MatrixItem
 	public TestCase()
 	{
 		super();
-        this.plugin = new Parameter(Tokens.For.get(),    null);  
-		this.name = new MutableValue<String>();
+        this.plugin = new Parameter(Tokens.For.get(), null);
+        this.name = new MutableValue<String>();
         this.kind = new MutableValue<String>();
+        this.depends = new MutableValue<String>();
 	}
 
     public TestCase(String name)
@@ -65,6 +67,7 @@ public final class TestCase extends MatrixItem
 		clone.plugin = this.plugin.clone();
 		clone.name = this.name.clone();
         clone.kind = this.kind.clone();
+        clone.depends = this.depends.clone();
 		return clone;
 	}
 
@@ -80,7 +83,7 @@ public final class TestCase extends MatrixItem
     @Override
     public boolean isChanged()
     {
-    	if (this.plugin.isChanged() || this.name.isChanged() || this.kind.isChanged())
+    	if (this.plugin.isChanged() || this.name.isChanged() || this.kind.isChanged() || this.depends.isChanged())
     	{
     		return true;
     	}
@@ -94,6 +97,7 @@ public final class TestCase extends MatrixItem
     	this.plugin.saved();
     	this.name.saved();
         this.kind.saved();
+        this.depends.saved();
     }
 
 	//==============================================================================================
@@ -106,13 +110,18 @@ public final class TestCase extends MatrixItem
 		driver.showTextBox(this, layout, 1, 0, this.id, this.id, () -> this.id.get());
 		driver.showTitle(this, layout, 1, 1, Tokens.TestCase.get(), context.getFactory().getSettings());
 		driver.showTextBox(this, layout, 1, 2, this.name, this.name, null);
-        driver.showLabel(this, layout, 1, 3, "Screenshot");
-        driver.showComboBox(this, layout, 1, 4, this.kind, this.kind, v ->
+        driver.showToggleButton(this, layout, 1, 3, "Show additional", b ->
         {
-            return Arrays.stream(ScreenshotKind.values()).map(k -> k.toString()).collect(Collectors.toList());
-        });
-        driver.showLabel(this, layout, 1, 5, "Plugin");
-        driver.showExpressionField(this, layout, 1, 6, Tokens.For.get(), this.plugin, this.plugin, null, null, null, null);
+            driver.hide(this, layout, 2, b);
+            return null;
+        }, !(this.kind.isNullOrEmpty() && this.depends.isNullOrEmpty() && this.plugin.isExpressionNullOrEmpty()));
+
+        driver.showLabel(this, layout, 2, 0, "Screenshot:");
+        driver.showComboBox(this, layout, 2, 1, this.kind, this.kind, v -> ScreenshotKind.names() );
+        driver.showLabel(this, layout, 2, 2, "Plugin:");
+        driver.showLabel(this, layout, 2, 3, Tokens.Depends.get() + ":");
+        driver.showComboBox(this, layout, 2, 4, this.depends, this.depends, v -> this.owner.listOfIds(TestCase.class));
+        driver.showExpressionField(this, layout, 2, 5, Tokens.For.get(), this.plugin, this.plugin, null, null, null, null);
 
 		return layout;
 	}
@@ -135,6 +144,7 @@ public final class TestCase extends MatrixItem
         this.plugin.setExpression(systemParameters.get(Tokens.For));
 		this.name.set(systemParameters.get(Tokens.TestCase)); 
         this.kind.set(systemParameters.get(Tokens.Kind)); 
+        this.depends.set(systemParameters.get(Tokens.Depends)); 
 	}
 
 	@Override
@@ -142,6 +152,7 @@ public final class TestCase extends MatrixItem
 	{
 		addParameter(firstLine, secondLine, Tokens.TestCase.get(),  this.name.get());
         addParameter(firstLine, secondLine, Tokens.Kind.get(),      this.kind.get());
+        addParameter(firstLine, secondLine, Tokens.Depends.get(),   this.depends.get());
         super.addParameter(firstLine, secondLine, Tokens.For.get(), this.plugin.getExpression());
 	}
 
@@ -151,7 +162,9 @@ public final class TestCase extends MatrixItem
 		return SearchHelper.matches(Tokens.TestCase.get(), what, caseSensitive, wholeWord) 
                 || SearchHelper.matches(this.plugin.getExpression(), what, caseSensitive, wholeWord)
 		        || SearchHelper.matches(this.name.get(), what, caseSensitive, wholeWord)
-		        || SearchHelper.matches(this.kind.get(), what, caseSensitive, wholeWord);
+		        || SearchHelper.matches(this.kind.get(), what, caseSensitive, wholeWord)
+                || SearchHelper.matches(this.depends.get(), what, caseSensitive, wholeWord)
+		        ;
 	}
 	
 	@Override
@@ -201,6 +214,7 @@ public final class TestCase extends MatrixItem
 		try
 		{
 	        ScreenshotKind screenshotKind = ScreenshotKind.valueByName(this.kind.get());
+	        String dependsOnTestCase = this.depends.get();
 
 	        if (table != null)
 			{
@@ -213,6 +227,11 @@ public final class TestCase extends MatrixItem
 				table.add(row);
 			}
 
+	        if (!Str.IsNullOrEmpty(depends.get()))
+	        {
+//	            this.owner.
+	        }
+	        
             this.plugin.evaluate(evaluator);
 	        doSreenshot(row, this.plugin.getValue(), screenshotKind, ScreenshotKind.OnStart, ScreenshotKind.OnStartOrError);
 			
@@ -289,4 +308,5 @@ public final class TestCase extends MatrixItem
     private Parameter plugin;
 	private MutableValue<String> name;
     private MutableValue<String> kind;
+    private MutableValue<String> depends;
 }

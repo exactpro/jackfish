@@ -12,6 +12,7 @@ import com.exactprosystems.jf.actions.AbstractAction;
 import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
+import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.common.report.ReportTable;
@@ -27,11 +28,19 @@ import com.exactprosystems.jf.documents.matrix.parser.items.TypeMandatory;
 	)
 public class ReportFinish extends AbstractAction 
 {
-	public final static String strName = "Str";
+    public final static String passedName = "Passed";
+    public final static String failedName = "Failde";
+    public final static String reportName = "Report";
 
-	@ActionFieldAttribute(name = strName, mandatory = false, description = "Reports given string and parameters to the report.")
-	protected String message; 
-	
+    @ActionFieldAttribute(name = reportName, mandatory = true, description = "The report object.")
+    protected ReportBuilder    report;
+
+    @ActionFieldAttribute(name = passedName, mandatory = true, description = "How many steps passed.")
+    protected Integer          passed;
+
+    @ActionFieldAttribute(name = failedName, mandatory = true, description = "How many steps failed.")
+    protected Integer          failed;
+
 	public ReportFinish()
 	{
 	}
@@ -44,7 +53,15 @@ public class ReportFinish extends AbstractAction
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
+	    
+	    if (this.report == null)
+	    {
+	        super.setError(reportName, ErrorKind.EMPTY_PARAMETER);
+	        return;
+	    }
 		
+	    this.report.reportFinished(this.failed, this.passed);
+	    
 		super.setResult(null);
 	}
 }

@@ -12,6 +12,7 @@ import com.exactprosystems.jf.api.app.AppConnection;
 import com.exactprosystems.jf.api.app.IApplicationFactory;
 import com.exactprosystems.jf.api.client.IClientFactory;
 import com.exactprosystems.jf.api.common.IMatrix;
+import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.AbstractDocument;
@@ -260,21 +261,21 @@ public class Matrix extends AbstractDocument implements IMatrix, Cloneable
 		return this.root;
 	}
 	
-	public List<String> nameSpaces()
+	public List<String> listOfIds(Class<? extends MatrixItem> clazz)
 	{
 		final List<String> res = new ArrayList<>();
 
 		this.getRoot().bypass(item ->
 		{
-			if (item instanceof NameSpace)
+			if (item.getClass() == clazz && !Str.IsNullOrEmpty(item.getId()))
 			{
-				res.add(((NameSpace)item).getId());
+				res.add(item.getId());
 			}
 		});
 
 		return res;
 	}
-
+    
 	public int count(MatrixItem item)
 	{
 		if (item == null)

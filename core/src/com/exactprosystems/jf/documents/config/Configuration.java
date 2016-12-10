@@ -31,6 +31,7 @@ import com.exactprosystems.jf.documents.DocumentFactory;
 import com.exactprosystems.jf.documents.DocumentInfo;
 import com.exactprosystems.jf.documents.matrix.Matrix;
 import com.exactprosystems.jf.documents.matrix.parser.items.MutableArrayList;
+import com.exactprosystems.jf.documents.matrix.parser.items.NameSpace;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.DummyRunnerListener;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.MatrixListener;
@@ -429,7 +430,7 @@ public class Configuration extends AbstractDocument
 							continue;
 						}
 						matrix.load(reader);
-						List<String> namespaces = matrix.nameSpaces();
+						List<String> namespaces = matrix.listOfIds(NameSpace.class);
 						if (namespaces.isEmpty())
 						{
 							matrix.close(this.getFactory().getSettings());

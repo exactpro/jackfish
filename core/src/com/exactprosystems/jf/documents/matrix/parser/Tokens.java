@@ -55,6 +55,7 @@ public enum Tokens
 	EndStep,
 	SetHandler,
 	Kind,
+	Depends,
 	;
 
 	public String get()
