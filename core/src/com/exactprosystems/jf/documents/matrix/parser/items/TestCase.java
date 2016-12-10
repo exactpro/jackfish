@@ -228,8 +228,11 @@ public final class TestCase extends MatrixItem
 
 	        if (!Str.IsNullOrEmpty(this.depends.get()))
 	        {
-//	            MatrixItem f = this.owner.getRoot().find(true, TestCase.class, this.depends.get());
-//	            MatrixItemState state = f.result
+	            MatrixItem testcase = this.owner.getRoot().find(true, TestCase.class, this.depends.get());
+	            if (testcase == null || testcase.result == null || testcase.result.getResult() != Result.Failed)
+	            {
+	                return new ReturnAndResult(start, Result.Failed, "Fail due the TestCase " + this.depends.get() + " is failed", ErrorKind.FAIL, this);
+	            }
 	        }
 	        
             this.plugin.evaluate(evaluator);
