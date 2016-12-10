@@ -16,14 +16,14 @@ import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.Matrix;
 import com.exactprosystems.jf.documents.matrix.parser.Result;
 import com.exactprosystems.jf.functions.Table;
-
 import org.apache.log4j.Logger;
 
 import java.io.File;
 import java.io.FileReader;
-import java.io.IOException;
 import java.io.Reader;
 import java.util.Date;
+import java.util.Optional;
+import java.util.function.Consumer;
 
 public class MatrixRunner implements IMatrixRunner, AutoCloseable
 {
@@ -86,6 +86,12 @@ public class MatrixRunner implements IMatrixRunner, AutoCloseable
 		{
 			loadFromReader(context, reader);
 		}
+	}
+
+	public void setOnFinished(Consumer<MatrixRunner> consumer)
+	{
+		//TODO Valery, think about it
+		this.consumer = consumer;
 	}
 
 	public Boolean process (FourParameterFunction<Matrix, Context, ReportBuilder, Date, Boolean> fn) throws Exception
@@ -210,6 +216,7 @@ public class MatrixRunner implements IMatrixRunner, AutoCloseable
 			changeState(State.Running);
 			MatrixRunner.this.matrix.start(context, evaluator, report);
 			changeState(State.Finished);
+			Optional.ofNullable(this.consumer).ifPresent(c -> c.accept(this));
 		});
 		this.thread.setName("Start matrix thread, thread id : " + thread.getId());
 		this.context.prepareMonitor();
@@ -360,6 +367,8 @@ public class MatrixRunner implements IMatrixRunner, AutoCloseable
 	
 	private File matrixFile = null;
 	private Thread thread = null;
+
+	private Consumer<MatrixRunner> consumer;
 	
 	private static final Logger logger = Logger.getLogger(MainRunner.class);
 }
