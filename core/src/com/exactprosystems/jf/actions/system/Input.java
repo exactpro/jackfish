@@ -26,6 +26,7 @@ import java.util.List;
 		generalDescription 		= "Input a value via interaction with a user",
 		additionFieldsAllowed 	= false,
         outputDescription       = "Result of choosing a value by user, or default value if the timeout expired",
+		suffix					= "INP",
         outputType              = Object.class
 		
 	)
