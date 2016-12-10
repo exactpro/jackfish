@@ -107,17 +107,17 @@ public final class TestCase extends MatrixItem
 		driver.showTitle(this, layout, 1, 1, Tokens.TestCase.get(), context.getFactory().getSettings());
 		driver.showTextBox(this, layout, 1, 2, this.name, this.name, null);
 
-        driver.showLabel(this, layout, 2, 0, "Screenshot:");
-        driver.showComboBox(this, layout, 2, 1, this.kind, this.kind, v -> ScreenshotKind.names() );
-        driver.showLabel(this, layout, 2, 2, "Plugin:");
-        driver.showLabel(this, layout, 2, 3, Tokens.Depends.get() + ":");
-        driver.showComboBox(this, layout, 2, 4, this.depends, this.depends, v -> this.owner.listOfIds(TestCase.class));
+        driver.showLabel(this, layout, 2, 0, Tokens.Depends.get() + ":");
+        driver.showComboBox(this, layout, 2, 1, this.depends, this.depends, v -> this.owner.listOfIds(TestCase.class));
+        driver.showLabel(this, layout, 2, 2, "Screenshot:");
+        driver.showComboBox(this, layout, 2, 3, this.kind, this.kind, v -> ScreenshotKind.names() );
+        driver.showLabel(this, layout, 2, 4, "Plugin:");
         driver.showExpressionField(this, layout, 2, 5, Tokens.For.get(), this.plugin, this.plugin, null, null, null, null);
 		driver.showToggleButton(this, layout, 1, 3, "Show additional", b ->
 		{
 			driver.hide(this, layout, 2, b);
 			return null;
-		}, !(this.kind.isNullOrEmpty() && this.depends.isNullOrEmpty() && this.plugin.isExpressionNullOrEmpty()));
+		}, !((this.kind.isNullOrEmpty() || this.kind.get().equals(ScreenshotKind.Never.name())) && this.depends.isNullOrEmpty() && this.plugin.isExpressionNullOrEmpty()));
 
 		return layout;
 	}
@@ -210,7 +210,6 @@ public final class TestCase extends MatrixItem
 		try
 		{
 	        ScreenshotKind screenshotKind = ScreenshotKind.valueByName(this.kind.get());
-	        String dependsOnTestCase = this.depends.get();
 
 	        if (table != null)
 			{
@@ -223,9 +222,10 @@ public final class TestCase extends MatrixItem
 				table.add(row);
 			}
 
-	        if (!Str.IsNullOrEmpty(depends.get()))
+	        if (!Str.IsNullOrEmpty(this.depends.get()))
 	        {
-//	            this.owner.
+//	            MatrixItem f = this.owner.getRoot().find(true, TestCase.class, this.depends.get());
+//	            MatrixItemState state = f.result
 	        }
 	        
             this.plugin.evaluate(evaluator);
