@@ -686,10 +686,11 @@ public class Main extends Application
 		}
 	}
 
-	public void removeFromToolbar(String fullPath)
+	public void removeFromToolbar(String fullPath) throws Exception
 	{
 		this.toolbarMatrices.remove(fullPath);
-		this.settings.remove(MAIN_NS, DocumentKind.MATRIX.name(), fullPath);
+		this.settings.remove(MAIN_NS, MATRIX_TOOLBAR, fullPath);
+		this.settings.saveIfNeeded();
 	}
 
 	//endregion
@@ -849,10 +850,6 @@ public class Main extends Application
 			if (kind == DocumentKind.MATRIX)
 			{
 				this.controller.updateFileLastMatrix(this.settings.getValues(MAIN_NS, kind.toString()));
-			}
-			if (doc instanceof MatrixFx)
-			{
-				((MatrixFx) doc).setMainModel(this);
 			}
 			return doc;
 		}

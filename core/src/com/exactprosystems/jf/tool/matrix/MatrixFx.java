@@ -300,16 +300,6 @@ public class MatrixFx extends Matrix
 		return this.applicationConnector == null ? null : this.applicationConnector.getAppConnection();
 	}
 
-	public void setMainModel(Main mainModel)
-	{
-		this.mainModel = mainModel;
-	}
-
-	public void addToToolbar() throws Exception
-	{
-		this.mainModel.addToToolbar(new File(this.getName()).getAbsolutePath());
-	}
-
 	private static class Temp
 	{
 		private MatrixItem parent;
@@ -960,8 +950,6 @@ public class MatrixFx extends Matrix
 	private ApplicationConnector applicationConnector;
 	private String defaultAppId = EMPTY_STRING;
 	private String defaultClientId = EMPTY_STRING;
-
-	private Main mainModel;
 
 	private static final Logger	logger	= Logger.getLogger(MatrixFx.class);
 }

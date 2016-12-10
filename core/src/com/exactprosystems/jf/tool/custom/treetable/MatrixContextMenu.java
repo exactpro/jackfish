@@ -93,9 +93,7 @@ public class MatrixContextMenu extends ContextMenu
 		parAdd.setGraphic(new ImageView(new Image(CssVariables.Icons.ADD_PARAMETER_ICON)));
 		parAdd.setOnAction(event -> addParameter(matrix, tree));
 
-		MenuItem addToToolbar = new MenuItem("Add to toolbar");
-		addToToolbar.setOnAction(e -> Common.tryCatch(matrix::addToToolbar, "Error on add matrix"));
-		getItems().addAll(breakPoint, new SeparatorMenuItem(), parAdd, new SeparatorMenuItem(), copy, pasteBefore, pasteChild, pasteAfter, new SeparatorMenuItem(), addBefore, addChild, addAfter, deleteItem, gotoItem, new SeparatorMenuItem(), help, new SeparatorMenuItem(), addToToolbar);
+		getItems().addAll(breakPoint, new SeparatorMenuItem(), parAdd, new SeparatorMenuItem(), copy, pasteBefore, pasteChild, pasteAfter, new SeparatorMenuItem(), addBefore, addChild, addAfter, deleteItem, gotoItem, new SeparatorMenuItem(), help);
 	}
 
 	public void initShortcuts(Settings settings, MatrixTreeView treeView, MatrixFx matrix, Context context)

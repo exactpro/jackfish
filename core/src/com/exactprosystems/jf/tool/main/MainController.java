@@ -367,7 +367,7 @@ public class MainController implements Initializable, ContainingParent
 
 		MenuItem remove = new MenuItem("Remove");
 		remove.setOnAction(e -> {
-			this.model.removeFromToolbar(fullPath);
+			Common.tryCatch(() -> this.model.removeFromToolbar(fullPath), "Error on remove from toolbar");
 			this.mainToolbar.getItems().remove(menuButton);
 		});
 
