@@ -32,7 +32,6 @@ import java.util.List;
 public class Input extends AbstractAction 
 {
     public final static String defaultValueName = "DefaultValue";
-    public final static String timeoutName      = "Timeout";
     public final static String dataSourceName   = "DataSource";
     public final static String helpKindName     = "HelpKind";
     public static final String titleName		= "Title";
@@ -43,9 +42,6 @@ public class Input extends AbstractAction
 	@ActionFieldAttribute(name = defaultValueName, mandatory = true, description = "Default value if the timout expiered.")
 	protected Object defaultValue; 
 	
-    @ActionFieldAttribute(name = timeoutName, mandatory = true, description = "Timeout im milliseconds.")
-    protected Integer timeout; 
-
     @ActionFieldAttribute(name = dataSourceName, mandatory = false, description = "Collection to choice value.")
     protected Collection<?> dataSource; 
 
@@ -62,7 +58,6 @@ public class Input extends AbstractAction
 	{
 		this.helpKind = null;
 		this.dataSource = null;
-		this.timeout = null;
 		this.defaultValue = null;
 	}
 	
@@ -101,23 +96,12 @@ public class Input extends AbstractAction
 			super.setError("Default value is null", ErrorKind.EMPTY_PARAMETER);
 			return;
 		}
-		if (this.timeout == null)
-		{
-			super.setError("Timeout must be not null", ErrorKind.EMPTY_PARAMETER);
-			return;
-		}
-		Object input = context.getFactory().input(context.getEvaluator(), this.title, this.defaultValue, this.timeout, this.helpKind, this.dataSource);
+		Object input = context.getFactory().input(context.getEvaluator(), this.title, this.defaultValue, this.helpKind, this.dataSource);
 		if (input instanceof MatrixError)
 		{
 			super.setError(((MatrixError) input).Message, ((MatrixError) input).Kind);
 			return;
 		}
 		super.setResult(input);
-	}
-
-	@Override
-	protected boolean reportAllDetail()
-	{
-		return false;
 	}
 }

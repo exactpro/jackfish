@@ -196,7 +196,7 @@ public abstract class DocumentFactory
 	
 	public abstract void 					popup(String message, Notifier notifier);
 
-	public abstract Object					input(AbstractEvaluator evaluator, String title, Object defaultValue, Integer timeout, HelpKind helpKind, Collection<?> dataSource);
+	public abstract Object					input(AbstractEvaluator evaluator, String title, Object defaultValue, HelpKind helpKind, Collection<?> dataSource);
 
 	protected abstract Context 				createContext(Configuration configuration, IMatrixListener matrixListener) throws Exception;
 

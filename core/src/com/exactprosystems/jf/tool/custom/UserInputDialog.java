@@ -129,6 +129,7 @@ public class UserInputDialog extends Dialog<String>
 
 		this.grid = new GridPane();
 		this.grid.setHgap(10);
+		this.grid.setVgap(10);
 		this.grid.setMaxWidth(Double.MAX_VALUE);
 		this.grid.setAlignment(Pos.CENTER_LEFT);
 
@@ -153,10 +154,11 @@ public class UserInputDialog extends Dialog<String>
 
 	private void updateExpressionLabel(String value)
 	{
-		this.expressionLabel.getStyleClass().remove(CssVariables.INCORRECT_FIELD);
+		this.expressionLabel.getStyleClass().removeAll(CssVariables.INCORRECT_FIELD, CssVariables.EVALUATE_SUCCESS);
 		try
 		{
 			this.expressionLabel.setText(String.valueOf(evaluator.evaluate(value)));
+			this.expressionLabel.getStyleClass().add(CssVariables.EVALUATE_SUCCESS);
 		}
 		catch (Exception e)
 		{

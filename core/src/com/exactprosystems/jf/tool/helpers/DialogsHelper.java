@@ -440,8 +440,8 @@ public abstract class DialogsHelper
 			{
 				String literal = Common.createLiteral(defaultValue, evaluator);
 				UserInputDialog dialog = new UserInputDialog(literal, evaluator, helpKind, dataSource);
-				dialog.setTitle("Input");
-				dialog.setHeaderText(title);
+				dialog.setTitle(title);
+				dialog.getDialogPane().setHeader(null);
 				Optional<String> s = dialog.showAndWait();
 				return s.orElse(literal);
 			}
