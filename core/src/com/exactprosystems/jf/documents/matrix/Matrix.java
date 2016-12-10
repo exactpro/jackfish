@@ -396,7 +396,7 @@ public class Matrix extends AbstractDocument implements IMatrix, Cloneable
 
 		try
 		{
-			report.reportFinished(this);
+			report.reportFinished(0, 0);
 		}
 		catch (Exception e)
 		{
@@ -455,7 +455,7 @@ public class Matrix extends AbstractDocument implements IMatrix, Cloneable
 
 		try
 		{
-			report.reportFinished(this);
+			report.reportFinished(getRoot().count(Result.Failed), getRoot().count(Result.Passed));
 		}
 		catch (Exception e)
 		{

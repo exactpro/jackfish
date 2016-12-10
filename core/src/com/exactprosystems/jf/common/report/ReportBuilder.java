@@ -29,9 +29,9 @@ import java.util.regex.Pattern;
 
 public abstract class ReportBuilder 
 {
-	public final static String suffix 	= "_RUNNING";
-	public final static String passed 	= "_PASSED";
-	public final static String failed 	= "_FAILED";
+	public final static String SUFFIX 	= "_RUNNING";
+	public final static String PASSED 	= "_PASSED";
+	public final static String FAILED 	= "_FAILED";
 	public final static String OM		= "{{";
 	public final static String CM		= "}}";
 	
@@ -42,7 +42,7 @@ public abstract class ReportBuilder
 		
 		if(outputPath != null && matrix != null)
 		{
-			this.reportName = generateReportName(outputPath, matrix.getName(), suffix, currentTime);
+			this.reportName = generateReportName(outputPath, matrix.getName(), SUFFIX, currentTime);
 			File file = new File(this.reportName);
 			File parent = file.getParentFile();
 			if (parent != null)
@@ -245,25 +245,22 @@ public abstract class ReportBuilder
 		}
 	}
 	
-	public final void reportFinished(Matrix matrix) throws Exception 
+	public final void reportFinished(int failed, int passed) throws Exception 
 	{
-		logger.trace(String.format("reportFinished(%s)", matrix));
-
-
 		String fullName = writer.fileName();
 		String postSuffix = this.name == null ? "" : " " + this.name;
-		String replacement = (matrix.getRoot().count(Result.Failed) > 0 ? failed : passed) + postSuffix;
+		String replacement = (failed > 0 ? FAILED : PASSED) + postSuffix;
 		if (fullName != null)
         {
-			this.reportName = fullName.replace(suffix, replacement);
+			this.reportName = fullName.replace(SUFFIX, replacement);
 		}
 
-		reportFooter(writer, matrix.getRoot(), new Date(), this.name, this.reportName);
+		reportFooter(writer, failed, passed, new Date(), this.name, this.reportName);
 		writer.close();
 
 		if (fullName != null)
 		{
-			Files.move(Paths.get(fullName), Paths.get(fullName.replace(suffix, replacement)));
+			Files.move(Paths.get(fullName), Paths.get(fullName.replace(SUFFIX, replacement)));
 		}
 	}
 
@@ -348,7 +345,7 @@ public abstract class ReportBuilder
 	
 	protected abstract void reportHeaderTotal(ReportWriter writer, Matrix context, Date date) throws IOException;
 
-	protected abstract void reportFooter(ReportWriter writer, MatrixItem entry, Date date, String name, String reportName) throws IOException;
+	protected abstract void reportFooter(ReportWriter writer, int failed, int passed, Date date, String name, String reportName) throws IOException;
 
 	protected abstract void reportItemHeader(ReportWriter writer, MatrixItem entry, Integer id) throws IOException;
 	

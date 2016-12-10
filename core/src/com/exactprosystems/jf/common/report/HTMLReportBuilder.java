@@ -323,7 +323,7 @@ public class HTMLReportBuilder extends ReportBuilder
 	}
 
 	@Override
-	protected void reportFooter(ReportWriter writer, MatrixItem item, Date date, String name, String reportName) throws IOException
+	protected void reportFooter(ReportWriter writer, int failed, int passed, Date date, String name, String reportName) throws IOException
 	{
 		writer.fwrite("<script type='text/javascript'>\n" +
 		    "<!--\n" +
@@ -335,9 +335,9 @@ public class HTMLReportBuilder extends ReportBuilder
 		    "document.getElementById('reportName').innerHTML = '<span>%s</span>'\n" +
 		    "-->\n" +
 		    "</script>\n",
-		    	item.count(Result.Passed) + item.count(Result.Failed),
-		    	item.count(Result.Passed),
-		    	item.count(Result.Failed),
+		        passed + failed,
+		        passed,
+		        failed,
 		    	date, date, 
 		    	(name == null ? "" : name),
 				reportName
