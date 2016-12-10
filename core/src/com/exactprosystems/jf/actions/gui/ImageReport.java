@@ -18,7 +18,7 @@ import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 
-import java.io.File;
+import java.util.function.Supplier;
 
 
 @ActionAttribute(
@@ -34,7 +34,12 @@ public class ImageReport extends AbstractAction
 	public final static String	imageName	= "Image";
 	public final static String beforeTestCaseName = "BeforeTestCase";
 	public final static String	titleName	= "Title";
-	
+
+	public final static String	toReportName		= "ToReport";
+
+	@ActionFieldAttribute(name=toReportName, mandatory = false, description = "Rerouting report")
+	protected ReportBuilder toReport;
+
 	@ActionFieldAttribute(name = imageName, mandatory = true, description = "Image to report.")
 	protected ImageWrapper		image		= null;
 
@@ -53,6 +58,7 @@ public class ImageReport extends AbstractAction
 	{
 		this.beforeTestCase	= null;
 		this.title			= null;
+		this.toReport = null;
 	}
     
 	@Override
@@ -62,7 +68,8 @@ public class ImageReport extends AbstractAction
 		{
 			throw new Exception("Image can't be null");
 		}
-        report.outImage(super.owner, this.beforeTestCase, this.image.getName(report.getReportDir()), this.title); 
+		Supplier<ReportBuilder> currentReport = () -> this.toReport == null ? report : this.toReport;
+		currentReport.get().outImage(super.owner, this.beforeTestCase, this.image.getName(report.getReportDir()), this.title);
 		super.setResult(this.image.getFileName());
 	}
 

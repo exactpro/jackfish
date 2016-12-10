@@ -14,11 +14,12 @@ import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
-import com.exactprosystems.jf.common.report.ReportTable;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Parameter;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.documents.matrix.parser.items.TypeMandatory;
+
+import java.util.function.Supplier;
 
 @ActionAttribute(
 		group					= ActionGroups.Report,
@@ -29,6 +30,11 @@ public class Report extends AbstractAction
 {
 	public final static String beforeTestCaseName = "BeforeTestCase";
 	public final static String strName = "Str";
+
+	public final static String	toReportName		= "ToReport";
+
+	@ActionFieldAttribute(name=toReportName, mandatory = false, description = "Rerouting report")
+	protected ReportBuilder toReport;
 
 	@ActionFieldAttribute(name = beforeTestCaseName, mandatory = false, description = "The name of Testcase before witch the table will be put.")
 	protected String 	beforeTestCase 	= null;
@@ -45,6 +51,7 @@ public class Report extends AbstractAction
 	{
 		this.message 		= "";
 		this.beforeTestCase = null;
+		this.toReport = null;
 	}
 	
 	@Override
@@ -66,12 +73,13 @@ public class Report extends AbstractAction
 		}
 		
 		boolean on = report.reportIsOn();
-		report.reportSwitch(true);
-		report.outLine(this.owner, this.beforeTestCase, sb.toString(), null);
+		Supplier<ReportBuilder> currentReport = () -> this.toReport == null ? report : this.toReport;
+		currentReport.get().reportSwitch(true);
+		currentReport.get().outLine(this.owner, this.beforeTestCase, sb.toString(), null);
 //		
 //		ReportTable info = report.addTable(sb.toString(), this.beforeTestCase, true, 0, new int[] {});
 //		info.addValues("");
-		report.reportSwitch(on);
+		currentReport.get().reportSwitch(on);
 		
 		
 		super.setResult(null);

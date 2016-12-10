@@ -19,6 +19,7 @@ import com.exactprosystems.jf.documents.matrix.parser.items.TypeMandatory;
 import com.exactprosystems.jf.functions.Table;
 
 import java.util.List;
+import java.util.function.Supplier;
 
 @ActionAttribute(
 		group					= ActionGroups.Tables,
@@ -33,6 +34,10 @@ public class TableReport extends AbstractAction
 	public final static String numbersName = "Numbers";
 	public final static String columnsName = "Columns";
 	public final static String reportValuesName = "ReportValues";
+	public final static String	toReportName		= "ToReport";
+
+	@ActionFieldAttribute(name=toReportName, mandatory = false, description = "Rerouting report")
+	protected ReportBuilder toReport;
 
 	@ActionFieldAttribute(name = tableName, mandatory = true, description = "The table.")
 	protected Table 	table 	= null;
@@ -63,6 +68,7 @@ public class TableReport extends AbstractAction
 		this.withNumbers 	= true;
 		this.columns 		= new String[] {};
 		this.reportValues 	= false;
+		this.toReport = null;
 	}
 	
 	@Override
@@ -106,7 +112,8 @@ public class TableReport extends AbstractAction
 		{
 			columns = null;
 		}
-		this.table.report(report, this.title, this.beforeTestCase, this.withNumbers, this.reportValues, columns, this.columns);
+		Supplier<ReportBuilder> currentReport = () -> this.toReport == null ? report : this.toReport;
+		this.table.report(currentReport.get(), this.title, this.beforeTestCase, this.withNumbers, this.reportValues, columns, this.columns);
 		
 		super.setResult(null);
 	}

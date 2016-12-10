@@ -18,6 +18,8 @@ import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.functions.Text;
 
+import java.util.function.Supplier;
+
 @ActionAttribute(
 		group					= ActionGroups.Text,
 		generalDescription 		=
@@ -40,6 +42,10 @@ public class TextReport extends AbstractAction
 	public final static String textName = "Text";
 	public final static String beforeTestCaseName = "BeforeTestCase";
 	public final static String titleName = "Title";
+	public final static String	toReportName		= "ToReport";
+
+	@ActionFieldAttribute(name=toReportName, mandatory = false, description = "Rerouting report")
+	protected ReportBuilder toReport;
 
 	@ActionFieldAttribute(name = textName, mandatory = true, description = "Object {{$Text$}}, which is required to output.")
 	protected Text 	text 	= null;
@@ -60,12 +66,14 @@ public class TextReport extends AbstractAction
 	public void initDefaultValues() 
 	{
 		this.beforeTestCase = null;
+		this.toReport = null;
 	}
 
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
-		text.report(report, this.beforeTestCase, this.title);
+		Supplier<ReportBuilder> currentReport = () -> this.toReport == null ? report : this.toReport;
+		this.text.report(currentReport.get(), this.beforeTestCase, this.title);
 		
 		super.setResult(null);
 	}

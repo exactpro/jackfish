@@ -18,6 +18,8 @@ import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.functions.Xml;
 
+import java.util.function.Supplier;
+
 @ActionAttribute(
 		group					= ActionGroups.XML,
 		generalDescription 		= "Reports XML object to the report.",
@@ -28,6 +30,10 @@ public class XmlReport extends AbstractAction
 	public final static String xmlName 	= "Xml";
 	public final static String beforeTestCaseName = "BeforeTestCase";
 	public final static String titleName = "Title";
+	public final static String	toReportName		= "ToReport";
+
+	@ActionFieldAttribute(name=toReportName, mandatory = false, description = "Rerouting report")
+	protected ReportBuilder toReport;
 
 	@ActionFieldAttribute(name = xmlName, mandatory = true, description = "XML object.")
 	protected Xml 	xml 	= null;
@@ -46,12 +52,14 @@ public class XmlReport extends AbstractAction
 	public void initDefaultValues() 
 	{
 		this.beforeTestCase = null;
+		this.toReport = null;
 	}
 	
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
-		this.xml.report(report, this.beforeTestCase, this.title);
+		Supplier<ReportBuilder> currentReport = () -> this.toReport == null ? report : this.toReport;
+		this.xml.report(currentReport.get(), this.beforeTestCase, this.title);
 		
 		super.setResult(null);
 	}

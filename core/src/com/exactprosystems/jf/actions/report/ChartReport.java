@@ -17,11 +17,12 @@ import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
-import com.exactprosystems.jf.functions.HelpKind;
 import com.exactprosystems.jf.documents.matrix.parser.items.TypeMandatory;
+import com.exactprosystems.jf.functions.HelpKind;
 import com.exactprosystems.jf.functions.Table;
 
 import java.util.List;
+import java.util.function.Supplier;
 
 @ActionAttribute(
 		group = ActionGroups.Report, 
@@ -33,6 +34,10 @@ public class ChartReport extends AbstractAction
 	public final static String 	tableName 			= "Table";
 	public final static String	beforeTestCaseName	= "BeforeTestCase";
 	public final static String	typeName			= "Type";
+	public final static String	toReportName		= "ToReport";
+
+	@ActionFieldAttribute(name=toReportName, mandatory = false, description = "Rerouting report")
+	protected ReportBuilder toReport;
 
 	@ActionFieldAttribute(name = titleName, mandatory = true, description = "Title.")
 	protected String 	title 	= null;
@@ -54,6 +59,7 @@ public class ChartReport extends AbstractAction
 	public void initDefaultValues()
 	{
 		this.beforeTestCase = null;
+		this.toReport = null;
 	}
 
 	@Override
@@ -118,7 +124,8 @@ public class ChartReport extends AbstractAction
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
 		ChartBuilder chartBuilder = ChartFactory.createChartBuilder(this.chartType, this.table, parameters.select(TypeMandatory.Extra));
-		report.reportChart(this.title, this.beforeTestCase, chartBuilder);
+		Supplier<ReportBuilder> currentReport = () -> this.toReport == null ? report : this.toReport;
+		currentReport.get().reportChart(this.title, this.beforeTestCase, chartBuilder);
 
 		super.setResult(null);
 	}
