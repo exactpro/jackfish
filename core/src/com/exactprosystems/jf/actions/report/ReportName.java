@@ -18,7 +18,7 @@ import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 
 @ActionAttribute(
-		group					= ActionGroups.System,
+		group					= ActionGroups.Report,
 		generalDescription 		= "Sets the report's name.",
 		additionFieldsAllowed 	= false
 	)

@@ -18,68 +18,47 @@ import com.exactprosystems.jf.common.report.ReportTable;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Parameter;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
+import com.exactprosystems.jf.documents.matrix.parser.items.ActionItem;
 import com.exactprosystems.jf.documents.matrix.parser.items.TypeMandatory;
 
 @ActionAttribute(
 		group					= ActionGroups.Report,
-		generalDescription 		= "Reports given string and parameters to the report.",
-		additionFieldsAllowed 	= true
+		generalDescription 		= "Shows either currnent matrix report or pointed report.",
+		additionFieldsAllowed 	= false
 	)
-public class Report extends AbstractAction 
+public class ReportShow extends AbstractAction 
 {
-	public final static String beforeTestCaseName = "BeforeTestCase";
-	public final static String strName = "Str";
+	public final static String reportName = "Report";
 
-	@ActionFieldAttribute(name = beforeTestCaseName, mandatory = false, description = "The name of Testcase before witch the table will be put.")
-	protected String 	beforeTestCase 	= null;
+	@ActionFieldAttribute(name = reportName, mandatory = true, description = "Report that need to show in report window. "
+	        + "If omitted the current matrix report will be shown.")
+	protected String 	report 	= null;
 
-	@ActionFieldAttribute(name = strName, mandatory = false, description = "Reports given string and parameters to the report.")
-	protected String message; 
-	
-	public Report()
+	public ReportShow()
 	{
 	}
+	
+    @Override
+    protected ActionItem.HelpKind howHelpWithParameterDerived(Context context, Parameters parameters, String fieldName) throws Exception
+    {
+        switch (fieldName)
+        {
+            case reportName:
+                return ActionItem.HelpKind.ChooseOpenFile;
+        }
+        return null;
+    }
 	
 	@Override
 	public void initDefaultValues() 
 	{
-		this.message 		= "";
-		this.beforeTestCase = null;
 	}
 	
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
-		StringBuilder sb 	= new StringBuilder();
-		if (!message.isEmpty())
-		{
-			sb.append(message);
-			sb.append('\t');
-		}
-		
-		for (Parameter param : parameters.select(TypeMandatory.Extra))
-		{
-			sb.append(param.getName());
-			sb.append(" = ");
-			sb.append(param.getValue());
-			sb.append('\t');
-		}
-		
-		boolean on = report.reportIsOn();
-		report.reportSwitch(true);
-		report.outLine(this.owner, this.beforeTestCase, sb.toString(), null);
-//		
-//		ReportTable info = report.addTable(sb.toString(), this.beforeTestCase, true, 0, new int[] {});
-//		info.addValues("");
-		report.reportSwitch(on);
-		
+	    context.showReport(this.report);
 		
 		super.setResult(null);
-	}
-
-	@Override
-	protected boolean reportAllDetail()
-	{
-		return false;
 	}
 }

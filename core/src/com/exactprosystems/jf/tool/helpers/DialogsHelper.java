@@ -550,49 +550,51 @@ public abstract class DialogsHelper
 
 	public static void displayReport(File file, String matrixName, DocumentFactory factory)
 	{
-		
-		final String[] matrName = {matrixName};
-		tryCatch(() -> {
-			Configuration configuration = factory.getConfiguration();
-			boolean addButton = configuration != null;
-			ReportBrowser reportBrowser = new ReportBrowser(file);
-			Dialog<ButtonType> dialog = new Dialog<>();
-			if (addButton)
-			{
-				dialog.getDialogPane().getButtonTypes().add(new ButtonType("Open", ButtonBar.ButtonData.OTHER));
-			}
-			dialog.getDialogPane().getButtonTypes().add(new ButtonType("Close", ButtonBar.ButtonData.CANCEL_CLOSE));
-			dialog.setResizable(true);
-			dialog.getDialogPane().setPrefWidth(1024);
-			dialog.getDialogPane().setPrefHeight(768);
-			dialog.getDialogPane().setContent(reportBrowser);
-			dialog.initModality(Modality.NONE);
-			dialog.setTitle("Report");
-			if (matrName[0] == null)
-			{
-				Matcher matcher = Pattern.compile("\\d+_\\d+_(.+?)_(FAILED|PASSED|RUNNING)\\.html").matcher(file.getAbsolutePath());
-				if (matcher.find())
-				{
-					matrName[0] = matcher.group(1);
-				}
-				else
-				{
-					matrName[0] = "Unknown matrix";
-				}
-			}
-			dialog.setHeaderText("Report for " + matrName[0]);
-			dialog.getDialogPane().getStylesheets().addAll(Common.currentThemesPaths());
-			Optional<ButtonType> buttonType = dialog.showAndWait();
-			buttonType.filter(bt -> bt.getButtonData().equals(ButtonBar.ButtonData.OTHER)).ifPresent(type -> Common.tryCatch(() -> {
-				String name = reportBrowser.getMatrix();
-				if (name != null && !name.isEmpty())
-				{
-					Matrix matrix = factory.createMatrix(matrName[0]);
-					matrix.load(new StringReader(name));
-					matrix.display();
-				}
-			}, "Error on open matrix from report"));
-		}, "Error on show report");
+	    Platform.runLater(() -> 
+	    {
+    		final String[] matrName = {matrixName};
+    		tryCatch(() -> {
+    			Configuration configuration = factory.getConfiguration();
+    			boolean addButton = configuration != null;
+    			ReportBrowser reportBrowser = new ReportBrowser(file);
+    			Dialog<ButtonType> dialog = new Dialog<>();
+    			if (addButton)
+    			{
+    				dialog.getDialogPane().getButtonTypes().add(new ButtonType("Open", ButtonBar.ButtonData.OTHER));
+    			}
+    			dialog.getDialogPane().getButtonTypes().add(new ButtonType("Close", ButtonBar.ButtonData.CANCEL_CLOSE));
+    			dialog.setResizable(true);
+    			dialog.getDialogPane().setPrefWidth(1024);
+    			dialog.getDialogPane().setPrefHeight(768);
+    			dialog.getDialogPane().setContent(reportBrowser);
+    			dialog.initModality(Modality.NONE);
+    			dialog.setTitle("Report");
+    			if (matrName[0] == null)
+    			{
+    				Matcher matcher = Pattern.compile("\\d+_\\d+_(.+?)_(FAILED|PASSED|RUNNING)\\.html").matcher(file.getAbsolutePath());
+    				if (matcher.find())
+    				{
+    					matrName[0] = matcher.group(1);
+    				}
+    				else
+    				{
+    					matrName[0] = "Unknown matrix";
+    				}
+    			}
+    			dialog.setHeaderText("Report for " + matrName[0]);
+    			dialog.getDialogPane().getStylesheets().addAll(Common.currentThemesPaths());
+    			Optional<ButtonType> buttonType = dialog.showAndWait();
+    			buttonType.filter(bt -> bt.getButtonData().equals(ButtonBar.ButtonData.OTHER)).ifPresent(type -> Common.tryCatch(() -> {
+    				String name = reportBrowser.getMatrix();
+    				if (name != null && !name.isEmpty())
+    				{
+    					Matrix matrix = factory.createMatrix(matrName[0]);
+    					matrix.load(new StringReader(name));
+    					matrix.display();
+    				}
+    			}, "Error on open matrix from report"));
+    		}, "Error on show report");
+	    } );
 	}
 
 	public static void showNotifier(final String message, final Notifier notifier)

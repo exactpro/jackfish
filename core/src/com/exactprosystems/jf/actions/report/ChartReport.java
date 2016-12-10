@@ -24,7 +24,7 @@ import com.exactprosystems.jf.functions.Table;
 import java.util.List;
 
 @ActionAttribute(
-		group = ActionGroups.System, 
+		group = ActionGroups.Report, 
 		generalDescription = "Reports a chart to the report.", 
 		additionFieldsAllowed = true)
 public class ChartReport extends AbstractAction

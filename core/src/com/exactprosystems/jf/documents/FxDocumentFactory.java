@@ -1,5 +1,7 @@
 package com.exactprosystems.jf.documents;
 
+import java.io.File;
+
 import org.apache.log4j.Logger;
 
 import com.exactprosystems.jf.common.Settings;
@@ -14,6 +16,7 @@ import com.exactprosystems.jf.documents.msgdic.MessageDictionary;
 import com.exactprosystems.jf.documents.text.PlainText;
 import com.exactprosystems.jf.documents.vars.SystemVars;
 import com.exactprosystems.jf.functions.Notifier;
+import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.csv.CsvFx;
 import com.exactprosystems.jf.tool.dictionary.DictionaryFx;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
@@ -39,7 +42,8 @@ public class FxDocumentFactory extends DocumentFactory
 	@Override
 	protected Context createContext(Configuration configuration, IMatrixListener matrixListener) throws Exception
 	{
-		return new Context(this, matrixListener, System.out);
+		return new Context(this, matrixListener, System.out, name ->
+	        Common.tryCatch(() -> this.mainModel.openReport(new File(name)), "Error on show report") );  
 	}
 
 	@Override

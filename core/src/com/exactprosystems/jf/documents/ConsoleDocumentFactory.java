@@ -30,7 +30,7 @@ public class ConsoleDocumentFactory extends DocumentFactory
 	@Override
 	protected Context createContext(Configuration configuration, IMatrixListener matrixListener) throws Exception
 	{
-		return new Context(this, matrixListener, System.out);
+		return new Context(this, matrixListener, System.out, rep -> {});
 	}
 	
 	@Override

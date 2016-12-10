@@ -21,11 +21,11 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.documents.matrix.parser.items.TypeMandatory;
 
 @ActionAttribute(
-		group					= ActionGroups.System,
+		group					= ActionGroups.Report,
 		generalDescription 		= "Reports given string and parameters to the report.",
 		additionFieldsAllowed 	= true
 	)
-public class StartReport extends AbstractAction 
+public class ReportStart extends AbstractAction 
 {
 	public final static String beforeTestCaseName = "BeforeTestCase";
 	public final static String strName = "Str";
@@ -36,7 +36,7 @@ public class StartReport extends AbstractAction
 	@ActionFieldAttribute(name = strName, mandatory = false, description = "Reports given string and parameters to the report.")
 	protected String message; 
 	
-	public StartReport()
+	public ReportStart()
 	{
 	}
 	
