@@ -9,7 +9,6 @@
 package com.exactprosystems.jf.documents.matrix.parser.items;
 
 import com.csvreader.CsvWriter;
-import com.exactprosystems.jf.api.app.AppConnection;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
@@ -23,13 +22,10 @@ import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
 import com.exactprosystems.jf.functions.RowTable;
 import com.exactprosystems.jf.functions.Table;
 
-import java.io.File;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @MatrixItemAttribute(
 		description 	= "Test case.", 
@@ -110,11 +106,6 @@ public final class TestCase extends MatrixItem
 		driver.showTextBox(this, layout, 1, 0, this.id, this.id, () -> this.id.get());
 		driver.showTitle(this, layout, 1, 1, Tokens.TestCase.get(), context.getFactory().getSettings());
 		driver.showTextBox(this, layout, 1, 2, this.name, this.name, null);
-        driver.showToggleButton(this, layout, 1, 3, "Show additional", b ->
-        {
-            driver.hide(this, layout, 2, b);
-            return null;
-        }, !(this.kind.isNullOrEmpty() && this.depends.isNullOrEmpty() && this.plugin.isExpressionNullOrEmpty()));
 
         driver.showLabel(this, layout, 2, 0, "Screenshot:");
         driver.showComboBox(this, layout, 2, 1, this.kind, this.kind, v -> ScreenshotKind.names() );
@@ -122,6 +113,11 @@ public final class TestCase extends MatrixItem
         driver.showLabel(this, layout, 2, 3, Tokens.Depends.get() + ":");
         driver.showComboBox(this, layout, 2, 4, this.depends, this.depends, v -> this.owner.listOfIds(TestCase.class));
         driver.showExpressionField(this, layout, 2, 5, Tokens.For.get(), this.plugin, this.plugin, null, null, null, null);
+		driver.showToggleButton(this, layout, 1, 3, "Show additional", b ->
+		{
+			driver.hide(this, layout, 2, b);
+			return null;
+		}, !(this.kind.isNullOrEmpty() && this.depends.isNullOrEmpty() && this.plugin.isExpressionNullOrEmpty()));
 
 		return layout;
 	}
