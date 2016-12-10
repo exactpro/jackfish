@@ -20,7 +20,6 @@ import com.exactprosystems.jf.tool.custom.tab.CustomTabPane;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.settings.SettingsPanel;
 import com.exactprosystems.jf.tool.settings.Theme;
-import com.sun.org.apache.xpath.internal.operations.Number;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.fxml.FXMLLoader;
