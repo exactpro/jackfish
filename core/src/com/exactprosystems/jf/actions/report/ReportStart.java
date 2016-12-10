@@ -8,10 +8,14 @@
 
 package com.exactprosystems.jf.actions.report;
 
+import java.util.Date;
+
 import com.exactprosystems.jf.actions.AbstractAction;
 import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
+import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
@@ -21,15 +25,16 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 		group					= ActionGroups.Report,
 		generalDescription 		= "Starts a new report.",
 		additionFieldsAllowed 	= false,
-        outputDescription       = "Created report.",
+		suffix                  = "REP",
+		outputDescription       = "Created report.",
         outputType              = ReportBuilder.class
 	)
 public class ReportStart extends AbstractAction 
 {
-	public final static String strName = "Str";
+	public final static String reportNameName = "ReportName";
 
-	@ActionFieldAttribute(name = strName, mandatory = false, description = "Reports given string and parameters to the report.")
-	protected String message; 
+	@ActionFieldAttribute(name = reportNameName, mandatory = true, description = "Reports given string and parameters to the report.")
+	protected String reportName; 
 	
 	public ReportStart()
 	{
@@ -43,10 +48,13 @@ public class ReportStart extends AbstractAction
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
-	    report.getReportDir();
+	    if (Str.IsNullOrEmpty(this.reportName))
+	    {
+	        super.setError(reportNameName, ErrorKind.EMPTY_PARAMETER);
+	        return;
+	    }
 	    
-	    ReportBuilder newReport = null;
-	    
+	    ReportBuilder newReport = context.getConfiguration().getReportFactory().createReportBuilder(report.getReportDir(), this.reportName, new Date());
 		super.setResult(newReport);
 	}
 }
