@@ -32,8 +32,7 @@ import java.util.Set;
 	)
 public final class ActionItem extends MatrixItem
 {
-	public enum HelpKind { ChooseSaveFile, ChooseOpenFile, ChooseFolder, ChooseDateTime, ChooseFromList, BuildQuery, BuildXPath, BuildLayoutExpression, 
-	    Expression, Value }
+	public enum HelpKind { ChooseSaveFile, ChooseOpenFile, ChooseFolder, ChooseDateTime, ChooseFromList, BuildQuery, BuildXPath, BuildLayoutExpression}
 	
 	
 	public ActionItem()

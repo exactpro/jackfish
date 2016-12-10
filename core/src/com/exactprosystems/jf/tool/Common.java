@@ -12,6 +12,7 @@ import com.exactprosystems.jf.api.app.IControl;
 import com.exactprosystems.jf.api.common.DateTime;
 import com.exactprosystems.jf.api.error.app.ProxyException;
 import com.exactprosystems.jf.common.Settings;
+import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.documents.Document;
 import com.exactprosystems.jf.tool.custom.label.CommentsLabel;
 import com.exactprosystems.jf.tool.custom.tab.CustomTab;
@@ -19,6 +20,7 @@ import com.exactprosystems.jf.tool.custom.tab.CustomTabPane;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.settings.SettingsPanel;
 import com.exactprosystems.jf.tool.settings.Theme;
+import com.sun.org.apache.xpath.internal.operations.Number;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.fxml.FXMLLoader;
@@ -27,7 +29,8 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.*;
+import javafx.scene.control.Labeled;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
@@ -466,5 +469,23 @@ public abstract class Common
 		{
 			lines.forEach(writer::println);
 		}
+	}
+
+	public static String createLiteral(Object value, AbstractEvaluator evaluator)
+	{
+		if (value instanceof String)
+		{
+			return evaluator.createString((String) value);
+		}
+		if (value instanceof Number)
+		{
+			return String.valueOf(value);
+		}
+		if (value instanceof Date)
+		{
+			DateTime date = (DateTime) value;
+			return String.format("DateTime.date(%d,%d,%d,%d,%d,%d)", date.years(), date.months(), date.days(), date.hours(), date.minutes(), date.seconds());
+		}
+		return String.valueOf(value);
 	}
 }

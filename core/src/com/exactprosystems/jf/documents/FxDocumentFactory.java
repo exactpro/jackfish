@@ -1,15 +1,15 @@
 package com.exactprosystems.jf.documents;
 
-import java.io.File;
-
-import org.apache.log4j.Logger;
-
+import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.Settings;
+import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.csv.Csv;
 import com.exactprosystems.jf.documents.guidic.GuiDictionary;
 import com.exactprosystems.jf.documents.matrix.Matrix;
+import com.exactprosystems.jf.documents.matrix.parser.items.ActionItem;
+import com.exactprosystems.jf.documents.matrix.parser.items.MatrixError;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.RunnerListener;
 import com.exactprosystems.jf.documents.msgdic.MessageDictionary;
@@ -28,6 +28,10 @@ import com.exactprosystems.jf.tool.msgdictionary.MessageDictionaryFx;
 import com.exactprosystems.jf.tool.newconfig.ConfigurationFx;
 import com.exactprosystems.jf.tool.systemvars.SystemVarsFx;
 import com.exactprosystems.jf.tool.text.PlainTextFx;
+import org.apache.log4j.Logger;
+
+import java.io.File;
+import java.util.Collection;
 
 public class FxDocumentFactory extends DocumentFactory
 {
@@ -43,7 +47,7 @@ public class FxDocumentFactory extends DocumentFactory
 	protected Context createContext(Configuration configuration, IMatrixListener matrixListener) throws Exception
 	{
 		return new Context(this, matrixListener, System.out, name ->
-	        Common.tryCatch(() -> this.mainModel.openReport(new File(name)), "Error on show report") );  
+	        Common.tryCatch(() -> this.mainModel.openReport(new File(name)), "Error on show report") );
 	}
 
 	@Override
@@ -118,6 +122,23 @@ public class FxDocumentFactory extends DocumentFactory
 	public void 				popup(String message, Notifier notifier)
 	{
 		DialogsHelper.showNotifier(message, notifier);
+	}
+
+	@Override
+	public Object input(AbstractEvaluator evaluator, String title, Object defaultValue, Integer timeout, ActionItem.HelpKind helpKind, Collection<?> dataSource)
+	{
+		String result = DialogsHelper.showUserInput(evaluator, title, defaultValue, timeout, helpKind, dataSource);
+		Object value;
+		try
+		{
+			value = evaluator.evaluate(result);
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			value = new MatrixError(e.getMessage(), ErrorKind.EXPRESSION_ERROR, null);
+		}
+		return value;
 	}
 
 	@Override

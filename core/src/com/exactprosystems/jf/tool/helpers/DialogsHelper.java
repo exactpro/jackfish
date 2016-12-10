@@ -26,6 +26,7 @@ import com.exactprosystems.jf.documents.matrix.parser.items.*;
 import com.exactprosystems.jf.functions.Notifier;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.custom.Notifications;
+import com.exactprosystems.jf.tool.custom.UserInputDialog;
 import com.exactprosystems.jf.tool.custom.browser.ReportBrowser;
 import com.exactprosystems.jf.tool.custom.date.DateTimePicker;
 import com.exactprosystems.jf.tool.custom.date.DateTimePickerSkin;
@@ -33,6 +34,7 @@ import com.exactprosystems.jf.tool.custom.helper.HelperFx;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -55,6 +57,7 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -414,6 +417,36 @@ public abstract class DialogsHelper
 			showError(e.getMessage());
 		}
 		return value;
+	}
+
+	public static String showUserInput(AbstractEvaluator evaluator, String title, Object defaultValue, Integer timeout, ActionItem.HelpKind helpKind, Collection<?> dataSource)
+	{
+		final Dialog<String>[] dialog = new Dialog[1];
+		Task<String> task = new Task<String>()
+		{
+			@Override
+			protected String call() throws Exception
+			{
+				String literal = Common.createLiteral(defaultValue, evaluator);
+				dialog[0] = new UserInputDialog(literal, evaluator, helpKind, dataSource);
+				dialog[0].setTitle("Input");
+				dialog[0].setHeaderText(title);
+				Optional<String> s = dialog[0].showAndWait();
+				return s.orElse(literal);
+			}
+		};
+		task.setOnCancelled(e -> dialog[0].hide());
+		Platform.runLater(task);
+		String res = Common.createLiteral(defaultValue, evaluator);
+		try
+		{
+			res = task.get(timeout, TimeUnit.MILLISECONDS);
+		}
+		catch (Exception e)
+		{
+			task.cancel();
+		}
+		return res;
 	}
 
 	public static void setTimeNotification(int timeNotification)

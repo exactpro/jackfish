@@ -2,11 +2,13 @@ package com.exactprosystems.jf.documents;
 
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.common.VerboseLevel;
+import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.csv.Csv;
 import com.exactprosystems.jf.documents.guidic.GuiDictionary;
 import com.exactprosystems.jf.documents.matrix.Matrix;
+import com.exactprosystems.jf.documents.matrix.parser.items.ActionItem;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.ConsoleErrorMatrixListener;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.ConsoleMatrixListener;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.DummyRunnerListener;
@@ -17,6 +19,8 @@ import com.exactprosystems.jf.documents.msgdic.MessageDictionary;
 import com.exactprosystems.jf.documents.text.PlainText;
 import com.exactprosystems.jf.documents.vars.SystemVars;
 import com.exactprosystems.jf.functions.Notifier;
+
+import java.util.Collection;
 
 public class ConsoleDocumentFactory extends DocumentFactory
 {
@@ -118,6 +122,14 @@ public class ConsoleDocumentFactory extends DocumentFactory
 	public void 				popup(String message, Notifier notifier)
 	{
 		System.out.printf("[%s] %s %n", notifier, message);
+	}
+
+	@Override
+	public Object input(AbstractEvaluator evaluator, String title, Object defaultValue, Integer timeout, ActionItem.HelpKind helpKind, Collection<?> dataSource)
+	{
+		//TODO implement timeout
+		System.out.println(title + " : ");
+		return defaultValue;
 	}
 
 	@Override

@@ -8,25 +8,18 @@
 
 package com.exactprosystems.jf.actions.system;
 
+import com.exactprosystems.jf.actions.*;
+import com.exactprosystems.jf.api.error.ErrorKind;
+import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
+import com.exactprosystems.jf.common.report.ReportBuilder;
+import com.exactprosystems.jf.documents.config.Context;
+import com.exactprosystems.jf.documents.matrix.parser.Parameters;
+import com.exactprosystems.jf.documents.matrix.parser.items.ActionItem;
+import com.exactprosystems.jf.documents.matrix.parser.items.MatrixError;
+
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-
-import com.exactprosystems.jf.actions.AbstractAction;
-import com.exactprosystems.jf.actions.ActionAttribute;
-import com.exactprosystems.jf.actions.ActionFieldAttribute;
-import com.exactprosystems.jf.actions.ActionGroups;
-import com.exactprosystems.jf.actions.ExecuteResult;
-import com.exactprosystems.jf.actions.ReadableValue;
-import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
-import com.exactprosystems.jf.common.report.ReportBuilder;
-import com.exactprosystems.jf.common.report.ReportTable;
-import com.exactprosystems.jf.documents.config.Context;
-import com.exactprosystems.jf.documents.matrix.parser.Parameter;
-import com.exactprosystems.jf.documents.matrix.parser.Parameters;
-import com.exactprosystems.jf.documents.matrix.parser.items.ActionItem;
-import com.exactprosystems.jf.documents.matrix.parser.items.TypeMandatory;
-import com.exactprosystems.jf.documents.matrix.parser.items.ActionItem.HelpKind;
 
 @ActionAttribute(
 		group					= ActionGroups.System,
@@ -42,17 +35,21 @@ public class Input extends AbstractAction
     public final static String timeoutName      = "Timeout";
     public final static String dataSourceName   = "DataSource";
     public final static String helpKindName     = "HelpKind";
-    
+    public static final String titleName		= "Title";
+
+    @ActionFieldAttribute(name=titleName, mandatory = true, description = "Title of user input")
+    protected String title;
+
 	@ActionFieldAttribute(name = defaultValueName, mandatory = true, description = "Default value if the timout expiered.")
 	protected Object defaultValue; 
 	
     @ActionFieldAttribute(name = timeoutName, mandatory = true, description = "Timeout im milliseconds.")
     protected Integer timeout; 
 
-    @ActionFieldAttribute(name = timeoutName, mandatory = true, description = "Collection to choice value.")
+    @ActionFieldAttribute(name = dataSourceName, mandatory = false, description = "Collection to choice value.")
     protected Collection<?> dataSource; 
 
-    @ActionFieldAttribute(name = helpKindName, mandatory = true, description = "How to help user enter or choose a value.")
+    @ActionFieldAttribute(name = helpKindName, mandatory = false, description = "How to help user enter or choose a value.")
     protected ActionItem.HelpKind helpKind; 
 
     
@@ -63,7 +60,10 @@ public class Input extends AbstractAction
 	@Override
 	public void initDefaultValues() 
 	{
-		this.helpKind = HelpKind.Expression;
+		this.helpKind = null;
+		this.dataSource = null;
+		this.timeout = null;
+		this.defaultValue = null;
 	}
 	
     @Override
@@ -83,7 +83,7 @@ public class Input extends AbstractAction
         switch (parameterToFill)
         {
             case helpKindName:
-                Arrays.stream(ActionItem.HelpKind.values()).forEach(a -> list.add(new ReadableValue(a.name())));;
+				Arrays.stream(ActionItem.HelpKind.values()).forEach(a -> list.add(new ReadableValue(ActionItem.HelpKind.class.getSimpleName() + "." + a.name())));;
                 break;
         }
     }
@@ -91,9 +91,28 @@ public class Input extends AbstractAction
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
-		// TODO implement logic here
-		
-		super.setResult(null);
+		if (this.title == null)
+		{
+			super.setError("Title is null", ErrorKind.EMPTY_PARAMETER);
+			return;
+		}
+		if (this.defaultValue == null)
+		{
+			super.setError("Default value is null", ErrorKind.EMPTY_PARAMETER);
+			return;
+		}
+		if (this.timeout == null)
+		{
+			super.setError("Timeout must be not null", ErrorKind.EMPTY_PARAMETER);
+			return;
+		}
+		Object input = context.getFactory().input(context.getEvaluator(), this.title, this.defaultValue, this.timeout, this.helpKind, this.dataSource);
+		if (input instanceof MatrixError)
+		{
+			super.setError(((MatrixError) input).Message, ((MatrixError) input).Kind);
+			return;
+		}
+		super.setResult(input);
 	}
 
 	@Override
