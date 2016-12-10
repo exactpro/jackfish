@@ -20,7 +20,7 @@ public class HTMLReportFactory extends ReportFactory
 	public ReportBuilder createBuilder(String outputPath, File matrix, Date currentTime) throws IOException
 	{
 		ReportBuilder result = new HTMLReportBuilder(outputPath, matrix, currentTime);
-		result.init(new FileReportWriter(result.generateReportName(outputPath, matrix.getName(), ReportBuilder.suffix, currentTime)));
+		result.init(new FileReportWriter(result.generateReportName(outputPath, matrix.getName(), ReportBuilder.SUFFIX, currentTime)));
 		return result;
 	}
 }

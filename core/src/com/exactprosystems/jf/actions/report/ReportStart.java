@@ -22,16 +22,14 @@ import com.exactprosystems.jf.documents.matrix.parser.items.TypeMandatory;
 
 @ActionAttribute(
 		group					= ActionGroups.Report,
-		generalDescription 		= "Reports given string and parameters to the report.",
-		additionFieldsAllowed 	= true
+		generalDescription 		= "Starts a new report.",
+		additionFieldsAllowed 	= false,
+        outputDescription       = "Created report.",
+        outputType              = ReportBuilder.class
 	)
 public class ReportStart extends AbstractAction 
 {
-	public final static String beforeTestCaseName = "BeforeTestCase";
 	public final static String strName = "Str";
-
-	@ActionFieldAttribute(name = beforeTestCaseName, mandatory = false, description = "The name of Testcase before witch the table will be put.")
-	protected String 	beforeTestCase 	= null;
 
 	@ActionFieldAttribute(name = strName, mandatory = false, description = "Reports given string and parameters to the report.")
 	protected String message; 
@@ -43,43 +41,12 @@ public class ReportStart extends AbstractAction
 	@Override
 	public void initDefaultValues() 
 	{
-		this.message 		= "";
-		this.beforeTestCase = null;
 	}
 	
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
-		StringBuilder sb 	= new StringBuilder();
-		if (!message.isEmpty())
-		{
-			sb.append(message);
-			sb.append('\t');
-		}
-		
-		for (Parameter param : parameters.select(TypeMandatory.Extra))
-		{
-			sb.append(param.getName());
-			sb.append(" = ");
-			sb.append(param.getValue());
-			sb.append('\t');
-		}
-		
-		boolean on = report.reportIsOn();
-		report.reportSwitch(true);
-		report.outLine(this.owner, this.beforeTestCase, sb.toString(), null);
-//		
-//		ReportTable info = report.addTable(sb.toString(), this.beforeTestCase, true, 0, new int[] {});
-//		info.addValues("");
-		report.reportSwitch(on);
-		
 		
 		super.setResult(null);
-	}
-
-	@Override
-	protected boolean reportAllDetail()
-	{
-		return false;
 	}
 }
