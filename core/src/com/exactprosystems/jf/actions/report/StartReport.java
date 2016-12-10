@@ -6,7 +6,7 @@
 //  information which is the property of Exactpro Systems, LLC or its licensors.
 ////////////////////////////////////////////////////////////////////////////////
 
-package com.exactprosystems.jf.actions.system;
+package com.exactprosystems.jf.actions.report;
 
 import com.exactprosystems.jf.actions.AbstractAction;
 import com.exactprosystems.jf.actions.ActionAttribute;
@@ -25,7 +25,7 @@ import com.exactprosystems.jf.documents.matrix.parser.items.TypeMandatory;
 		generalDescription 		= "Reports given string and parameters to the report.",
 		additionFieldsAllowed 	= true
 	)
-public class FinishReport extends AbstractAction 
+public class StartReport extends AbstractAction 
 {
 	public final static String beforeTestCaseName = "BeforeTestCase";
 	public final static String strName = "Str";
@@ -36,7 +36,7 @@ public class FinishReport extends AbstractAction
 	@ActionFieldAttribute(name = strName, mandatory = false, description = "Reports given string and parameters to the report.")
 	protected String message; 
 	
-	public FinishReport()
+	public StartReport()
 	{
 	}
 	
