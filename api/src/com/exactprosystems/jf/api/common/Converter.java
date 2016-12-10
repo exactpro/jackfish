@@ -95,9 +95,7 @@ public class Converter
         try (ByteArrayInputStream bis = new ByteArrayInputStream(blob.getBytes(1, (int) blob.length()));
                 ObjectInput in = new ObjectInputStream(bis))
         {
-            Object a = in.readObject();
-            System.out.println(((ImageWrapper)a).getFileName());
-            return a;
+            return in.readObject();
         }
     }
     

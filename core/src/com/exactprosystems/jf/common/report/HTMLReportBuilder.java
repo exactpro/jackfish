@@ -12,7 +12,6 @@ import com.exactprosystems.jf.api.app.ImageWrapper;
 import com.exactprosystems.jf.charts.ChartBuilder;
 import com.exactprosystems.jf.common.version.VersionInfo;
 import com.exactprosystems.jf.documents.config.Configuration;
-import com.exactprosystems.jf.documents.matrix.Matrix;
 import com.exactprosystems.jf.documents.matrix.parser.Result;
 import com.exactprosystems.jf.documents.matrix.parser.items.CommentString;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
@@ -21,14 +20,10 @@ import java.io.File;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Collections;
 import java.util.Date;
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class HTMLReportBuilder extends ReportBuilder 
 {
-	private static Integer diagramCount = 0;
 	private static Integer chartCount = 0;
 	private static final String reportExt = ".html";
 	private static final DateFormat dateTimeFormatter = new SimpleDateFormat("yyyyMMdd_HHmmss_");
@@ -112,7 +107,7 @@ public class HTMLReportBuilder extends ReportBuilder
 
 
 	@Override
-	protected void reportHeader(ReportWriter writer, Matrix context, Date date) throws IOException
+	protected void reportHeader(ReportWriter writer, Date date) throws IOException
 	{
 		writer.fwrite(
 				"<html>\n" +
@@ -192,7 +187,7 @@ public class HTMLReportBuilder extends ReportBuilder
 	}
 	
 	@Override
-	protected void reportHeaderTotal(ReportWriter writer, Matrix context, Date date) throws IOException
+	protected void reportHeaderTotal(ReportWriter writer, Date date) throws IOException
 	{
 		writer.fwrite("<tr><td><a href='#' class='filterTotal'> Executed: </a><td> <span id='exec'>0</span>\n");
 		writer.fwrite("<tr><td><a href='#' class='filterPassed'>Passed:   </a><td> <span id='pass'>0</span>\n");

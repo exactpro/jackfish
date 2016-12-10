@@ -10,7 +10,6 @@ package com.exactprosystems.jf.common.report;
 
 import com.exactprosystems.jf.api.app.ImageWrapper;
 import com.exactprosystems.jf.charts.ChartBuilder;
-import com.exactprosystems.jf.documents.matrix.Matrix;
 import com.exactprosystems.jf.documents.matrix.parser.items.ActionItem;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 
@@ -74,7 +73,7 @@ public class ContextHelpBuilder extends ReportBuilder
 	}
 	
     @Override
-    protected void reportHeader(ReportWriter writer, Matrix context, Date date) throws IOException
+    protected void reportHeader(ReportWriter writer, Date date) throws IOException
     {
         writer.fwrite(
                 "<html>\n" +
@@ -113,7 +112,7 @@ public class ContextHelpBuilder extends ReportBuilder
 
 
     @Override
-    protected void reportHeaderTotal(ReportWriter writer, Matrix context, Date date) throws IOException
+    protected void reportHeaderTotal(ReportWriter writer, Date date) throws IOException
     {
     }
 

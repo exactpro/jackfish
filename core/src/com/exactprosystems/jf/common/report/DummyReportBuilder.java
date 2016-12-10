@@ -10,7 +10,6 @@ package com.exactprosystems.jf.common.report;
 
 import com.exactprosystems.jf.api.app.ImageWrapper;
 import com.exactprosystems.jf.charts.ChartBuilder;
-import com.exactprosystems.jf.documents.matrix.Matrix;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 
 import java.io.IOException;
@@ -74,7 +73,7 @@ public class DummyReportBuilder extends ReportBuilder
 	}
 	
 	@Override
-	protected void reportHeader(ReportWriter writer, Matrix context, Date date)
+	protected void reportHeader(ReportWriter writer, Date date)
 			throws IOException
 	{
 	}
@@ -97,7 +96,7 @@ public class DummyReportBuilder extends ReportBuilder
 	}
 
 	@Override
-	protected void reportHeaderTotal(ReportWriter writer, Matrix context, Date date)
+	protected void reportHeaderTotal(ReportWriter writer, Date date)
 			throws IOException
 	{
 	}

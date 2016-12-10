@@ -23,7 +23,6 @@ import com.exactprosystems.jf.documents.matrix.parser.Parser;
 import com.exactprosystems.jf.documents.matrix.parser.Result;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixRoot;
-import com.exactprosystems.jf.documents.matrix.parser.items.NameSpace;
 import com.exactprosystems.jf.documents.matrix.parser.items.TestCase;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
 import org.apache.log4j.Logger;
@@ -372,7 +371,7 @@ public class Matrix extends AbstractDocument implements IMatrix, Cloneable
 	{
 		try
 		{
-			report.reportStarted(this);
+			report.reportStarted(null);
 		}
 		catch (Exception e)
 		{
@@ -431,7 +430,7 @@ public class Matrix extends AbstractDocument implements IMatrix, Cloneable
 
 		try
 		{
-			report.reportStarted(this);
+			report.reportStarted(getMatrixBuffer());
 		}
 		catch (Exception e)
 		{

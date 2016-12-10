@@ -15,7 +15,6 @@ import com.exactprosystems.jf.charts.ChartBuilder;
 import com.exactprosystems.jf.common.ControlsAttributes;
 import com.exactprosystems.jf.common.version.VersionInfo;
 import com.exactprosystems.jf.documents.guidic.controls.AbstractControl;
-import com.exactprosystems.jf.documents.matrix.Matrix;
 import com.exactprosystems.jf.documents.matrix.parser.Result;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 
@@ -79,7 +78,7 @@ public class HelpBuilder extends ReportBuilder
 	}
 
     @Override
-    protected void reportHeader(ReportWriter writer, Matrix context, Date date) throws IOException
+    protected void reportHeader(ReportWriter writer, Date date) throws IOException
     {
         writer.fwrite(
                 "<html>\n" +
@@ -129,7 +128,7 @@ public class HelpBuilder extends ReportBuilder
 
 
 	@Override
-    protected void reportHeaderTotal(ReportWriter writer, Matrix context, Date date) throws IOException
+    protected void reportHeaderTotal(ReportWriter writer, Date date) throws IOException
     {
         makeChapter(writer, "MVEL syntax", "mvel.html");
 		makeAllControls(writer);

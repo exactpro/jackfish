@@ -11,8 +11,6 @@ package com.exactprosystems.jf.common.report;
 import com.exactprosystems.jf.api.app.ImageWrapper;
 import com.exactprosystems.jf.api.common.Converter;
 import com.exactprosystems.jf.charts.ChartBuilder;
-import com.exactprosystems.jf.documents.matrix.Matrix;
-import com.exactprosystems.jf.documents.matrix.parser.Result;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 
 import org.apache.log4j.Logger;
@@ -37,7 +35,6 @@ public abstract class ReportBuilder
 	
 	public ReportBuilder(String outputPath, File matrix, Date currentTime) throws IOException
 	{
-		logger.trace(String.format("ReportBuilder(%s, %s)", outputPath, matrix));
 		this.reportIsOn = true;
 		
 		if(outputPath != null && matrix != null)
@@ -110,32 +107,26 @@ public abstract class ReportBuilder
 
 	public final void putMark(String str) throws Exception 
 	{
-		logger.trace(String.format("putMark(%s)", str));
 		putMark(this.writer, str);
 	}
 
 	public final ReportTable addTable(String title, String beforeTestcase, boolean decoraded, int quotedSince, int[] widths, String ... columns)
 	{
 		Integer uniq = this.uniques.peek();
-		logger.trace(String.format("addTable(%s) current = %s", title, uniq));
-		
 		ReportTable info = new ReportTable(title, beforeTestcase, decoraded, quotedSince, widths, columns);
-		
 		this.reportData.get(uniq).add(info); // TODO deal with it
 		
 		return info;
 	}
 
-	public final void reportStarted(Matrix matrix) throws Exception 
+	public final void reportStarted(char[] matrixBuffer) throws Exception 
 	{
-		logger.trace(String.format("reportStarted(%s)", matrix));
 		Date startTime = new Date();
 
 		this.reportData.clear();
-		reportHeader(this.writer, matrix, startTime);
-		char[] matrixBuffer = matrix.getMatrixBuffer();
+		reportHeader(this.writer, startTime);
 		reportMatrix(this.writer, matrixBuffer == null ? null : new BufferedReader(new CharArrayReader(matrixBuffer)));
-		reportHeaderTotal(this.writer, matrix, startTime);
+		reportHeaderTotal(this.writer, startTime);
 	}
 	
 	public final void itemStarted(MatrixItem matrixItem)
@@ -143,8 +134,6 @@ public abstract class ReportBuilder
 		Integer newUniq = generateNewUnique();
 		this.uniques.push(newUniq);
 		
-		logger.trace(String.format("itemStarted(%s) current = %s", matrixItem.getItemName(), newUniq));
-
 		this.reportData.put(newUniq, new ArrayList<ReportTable>());
 
 		try
@@ -165,8 +154,6 @@ public abstract class ReportBuilder
 		try
 		{
 			Integer uniq = this.uniques.peek();
-			logger.trace(String.format("itemIntermediate(%s) current = %s", matrixItem.getItemName(), uniq));
-			 
 			if (this.reportIsOn)
 			{
 				outAllTables(this.reportData.get(uniq), writer);
@@ -181,7 +168,6 @@ public abstract class ReportBuilder
 	
 	public final void outImage(MatrixItem item, String beforeTestcase, String fileName, String title)
 	{
-		logger.trace(String.format("outImage(%s, %s, %s)", item, fileName, title));
 		try
 		{
 			File dir = new File(this.reportDir);
@@ -230,8 +216,6 @@ public abstract class ReportBuilder
 		try
 		{
 			Integer uniq = this.uniques.peek();
-			logger.trace(String.format("itemFinished(%s) current = %s", matrixItem.getItemName(), uniq));
-			 
 			if (this.reportIsOn)
 			{
 				outAllTables(this.reportData.get(uniq), writer);
@@ -266,7 +250,6 @@ public abstract class ReportBuilder
 
 	public void reportChart(String title, String beforeTestCase, ChartBuilder chartBuilder) throws IOException
 	{
-		logger.trace("reportChar");
 		reportChart(this.writer, title, beforeTestCase, chartBuilder);
 	}
 
@@ -335,7 +318,7 @@ public abstract class ReportBuilder
 
 	protected abstract void putMark(ReportWriter writer, String mark) throws IOException;
 
-	protected abstract void reportHeader(ReportWriter writer, Matrix context, Date date) throws IOException;
+	protected abstract void reportHeader(ReportWriter writer, Date date) throws IOException;
 
 	protected abstract void reportMatrixHeader(ReportWriter writer, String matrix) throws IOException;
 
@@ -343,7 +326,7 @@ public abstract class ReportBuilder
 
 	protected abstract void reportMatrixFooter(ReportWriter writer) throws IOException;
 	
-	protected abstract void reportHeaderTotal(ReportWriter writer, Matrix context, Date date) throws IOException;
+	protected abstract void reportHeaderTotal(ReportWriter writer, Date date) throws IOException;
 
 	protected abstract void reportFooter(ReportWriter writer, int failed, int passed, Date date, String name, String reportName) throws IOException;
 
@@ -367,8 +350,6 @@ public abstract class ReportBuilder
 	
 	private void reportMatrix(ReportWriter writer, BufferedReader reader) throws IOException
 	{
-		logger.trace(String.format("reportMatrix(%s)", writer));
-
         if (reader == null)
         {
             return;
@@ -397,7 +378,6 @@ public abstract class ReportBuilder
 
 	private void outAllTables(List<ReportTable> list, ReportWriter writer) throws IOException
 	{
-		logger.trace(String.format("outAllTables(%s)", list));
 		if (list != null)
     	{
     		for (ReportTable table : list)
