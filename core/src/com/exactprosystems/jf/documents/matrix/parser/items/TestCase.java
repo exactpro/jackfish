@@ -108,7 +108,12 @@ public final class TestCase extends MatrixItem
 		driver.showTextBox(this, layout, 1, 2, this.name, this.name, null);
 
         driver.showLabel(this, layout, 2, 0, Tokens.Depends.get() + ":");
-        driver.showComboBox(this, layout, 2, 1, this.depends, this.depends, v -> this.owner.listOfIds(TestCase.class));
+        driver.showComboBox(this, layout, 2, 1, this.depends, this.depends, v -> 
+        {
+            List<String> list = this.owner.listOfIds(TestCase.class);
+            list.add(0, "");
+            return list;
+        });
         driver.showLabel(this, layout, 2, 2, "Screenshot:");
         driver.showComboBox(this, layout, 2, 3, this.kind, this.kind, v -> ScreenshotKind.names() );
         driver.showLabel(this, layout, 2, 4, "Plugin:");
@@ -225,9 +230,19 @@ public final class TestCase extends MatrixItem
 	        if (!Str.IsNullOrEmpty(this.depends.get()))
 	        {
 	            MatrixItem testcase = this.owner.getRoot().find(true, TestCase.class, this.depends.get());
-	            if (testcase == null || testcase.result == null || testcase.result.getResult() != Result.Failed)
+	            if (testcase != null && testcase.result != null && testcase.result.getResult() == Result.Failed)
 	            {
-	                return new ReturnAndResult(start, Result.Failed, "Fail due the TestCase " + this.depends.get() + " is failed", ErrorKind.FAIL, this);
+	                ret = new ReturnAndResult(start, Result.Failed, "Fail due the TestCase " + this.depends.get() + " is failed", ErrorKind.FAIL, this);
+	                res = ret.getResult();
+	                
+	                if (table != null && table.size() >= 0)
+	                {
+	                    row.put(Context.timeColumn,         ret.getTime());
+	                    row.put(Context.resultColumn,       res);
+	                    row.put(Context.errorColumn,        ret.getError());
+	                    table.updateValue(position, row);
+	                }
+	                return ret;
 	            }
 	        }
 	        
