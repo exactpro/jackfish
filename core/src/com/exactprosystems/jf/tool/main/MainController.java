@@ -72,6 +72,7 @@ public class MainController implements Initializable, ContainingParent
 	public Label				projectLabel;
 	public SplitPane			splitPane;
 	public GridPane				projectGridPane;
+	public ToolBar				mainToolbar;
 	private LogsFx				log;
 
 	public Menu					menuFile;
@@ -354,6 +355,27 @@ public class MainController implements Initializable, ContainingParent
 	public void openReport(ActionEvent actionEvent)
 	{
 		Common.tryCatch(this.model::openReport, "Error on open report");
+	}
+
+	public void addToToolbar(String fullPath)
+	{
+		SplitMenuButton menuButton = new SplitMenuButton();
+		menuButton.setTooltip(new Tooltip(fullPath));
+		Common.customizeLabeled(menuButton, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.START_MATRIX_ICON);
+
+		menuButton.setOnAction(e -> Common.tryCatch(() -> this.model.runMatrixFromFile(new File(fullPath)), "Error on start matrix"));
+
+		MenuItem remove = new MenuItem("Remove");
+		remove.setOnAction(e -> {
+			this.model.removeFromToolbar(fullPath);
+			this.mainToolbar.getItems().remove(menuButton);
+		});
+
+		MenuItem open = new MenuItem("Open");
+		open.setOnAction(e -> Common.tryCatch(() -> this.model.loadMatrix(fullPath), "Error on open matrix"));
+
+		menuButton.getItems().addAll(remove, open);
+		this.mainToolbar.getItems().add(menuButton);
 	}
 	//endregion
 

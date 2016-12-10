@@ -62,6 +62,7 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -82,6 +83,7 @@ public class Main extends Application
 	public static final String	USE_SMALL_WINDOW	= "useSmallWindow";
 	public static final String 	OPENED 				= "OPENED";
 	public static final String 	MAIN_NS 			= "MAIN";
+	public static final String	MATRIX_TOOLBAR		= "MATRIX_TOOLBAR";
 
 	public static final String	DEFAULT_MAX_FILES_COUNT		= "3";
 
@@ -97,6 +99,8 @@ public class Main extends Application
 
 	private String username;
 	private String password;
+
+	private List<String> toolbarMatrices = new ArrayList<>();
 
 	public static String getConfigName()
 	{
@@ -210,6 +214,10 @@ public class Main extends Application
 			controller.initShortcuts();
 			try
 			{
+				for (SettingsValue item : settings.getValues(MAIN_NS, MATRIX_TOOLBAR))
+				{
+					this.addToToolbar(item.getKey());
+				}
 				for (SettingsValue item : settings.getValues(MAIN_NS, OPENED))
 				{
 					DocumentKind kind = DocumentKind.valueOf(item.getValue());
@@ -631,20 +639,25 @@ public class Main extends Application
 		Optional<File> optional = chooseFile(Matrix.class, null, DialogsHelper.OpenSaveMode.OpenFile);
 		if (optional.isPresent())
 		{
-			Context context = this.factory.createContext();
-			MatrixRunner runner = new MatrixRunner(context, optional.get(), null, null);
-			runner.setOnFinished(mr -> {
-				try
-				{
-					runner.close();
-				}
-				catch (Exception e)
-				{
-					e.printStackTrace();
-				}
-			});
-			runner.start();
+			runMatrixFromFile(optional.get());
 		}
+	}
+
+	public void runMatrixFromFile(File file) throws Exception
+	{
+		Context context = this.factory.createContext();
+		MatrixRunner runner = new MatrixRunner(context, file, null, null);
+		runner.setOnFinished(mr -> {
+			try
+			{
+				runner.close();
+			}
+			catch (Exception e)
+			{
+				e.printStackTrace();
+			}
+		});
+		runner.start();
 	}
 
 	public void stopMatrix(Document document) throws Exception
@@ -662,6 +675,23 @@ public class Main extends Application
 			((MatrixFx) document).startMatrix();
 		}
 	}
+
+	public void addToToolbar(String fullPath) throws Exception
+	{
+		if (!this.toolbarMatrices.contains(fullPath))
+		{
+			this.controller.addToToolbar(fullPath);
+			this.settings.setValue(MAIN_NS, MATRIX_TOOLBAR, new File(fullPath).getAbsolutePath(), new File(fullPath).getAbsolutePath());
+			this.settings.saveIfNeeded();
+		}
+	}
+
+	public void removeFromToolbar(String fullPath)
+	{
+		this.toolbarMatrices.remove(fullPath);
+		this.settings.remove(MAIN_NS, DocumentKind.MATRIX.name(), fullPath);
+	}
+
 	//endregion
 
 	public void clearFileLastOpenMatrix() throws Exception
@@ -819,6 +849,10 @@ public class Main extends Application
 			if (kind == DocumentKind.MATRIX)
 			{
 				this.controller.updateFileLastMatrix(this.settings.getValues(MAIN_NS, kind.toString()));
+			}
+			if (doc instanceof MatrixFx)
+			{
+				((MatrixFx) doc).setMainModel(this);
 			}
 			return doc;
 		}

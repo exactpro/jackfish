@@ -113,7 +113,7 @@
 								</Menu>
 							</menus>
 						</MenuBar>
-						<ToolBar fx:id="tbMain" minHeight="30.0" prefHeight="40.0" prefWidth="200.0">
+						<ToolBar fx:id="mainToolbar" minHeight="30.0" prefHeight="40.0" prefWidth="200.0">
 							<items>
 								<Button id="btnOpenMatrix" fx:id="btnOpenMatrix" mnemonicParsing="false" onAction="#loadMatrix" />
 								<Button id="btnNewMatrix" fx:id="btnNewMatrix" mnemonicParsing="false" onAction="#newMatrix" />
