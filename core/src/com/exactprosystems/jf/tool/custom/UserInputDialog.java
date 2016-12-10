@@ -135,9 +135,12 @@ public class UserInputDialog extends Dialog<String>
 
 		dialogPane.contentTextProperty().addListener(o -> updateGrid());
 		dialogPane.getButtonTypes().addAll(ButtonType.OK);
-		dialogPane.setPrefWidth(300);
-		dialogPane.setMaxWidth(300);
-		dialogPane.setMinWidth(300);
+		dialogPane.setPrefWidth(550);
+		dialogPane.setMaxWidth(550);
+		dialogPane.setMinWidth(550);
+		dialogPane.setPrefHeight(200);
+		dialogPane.setMinHeight(200);
+		dialogPane.setMaxHeight(200);
 
 		updateGrid();
 		updateExpressionLabel(defaultValue);
