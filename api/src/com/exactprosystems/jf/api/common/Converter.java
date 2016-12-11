@@ -9,11 +9,10 @@
 package com.exactprosystems.jf.api.common;
 
 import com.exactprosystems.jf.api.app.ImageWrapper;
-import com.sun.xml.internal.messaging.saaj.util.ByteInputStream;
-import com.sun.xml.internal.messaging.saaj.util.ByteOutputStream;
 
 import javax.imageio.ImageIO;
 import javax.sql.rowset.serial.SerialBlob;
+import java.awt.image.BufferedImage;
 import java.io.*;
 import java.lang.reflect.Array;
 import java.math.BigDecimal;
@@ -73,7 +72,7 @@ public class Converter
 			{
 				out.write(buff, 0, len);
 			}
-			bais = new ByteInputStream(out.toByteArray(), out.size());
+			bais = new ByteArrayInputStream(out.toByteArray(), 0, out.size());
 		}
 
 		if (!destFolder.exists())
@@ -104,6 +103,7 @@ public class Converter
 			}
 			zis.closeEntry();
 		}
+		bais.close();
 		return list;
 	}
 
@@ -120,9 +120,7 @@ public class Converter
 		}
 		ByteArrayOutputStream outputStream = null;
 
-		try (ByteArrayOutputStream baos = new ByteArrayOutputStream();
-			 ZipOutputStream zos = new ZipOutputStream(baos);
-			 ByteArrayOutputStream temp = new ByteArrayOutputStream())
+		try (ByteArrayOutputStream baos = new ByteArrayOutputStream(); ZipOutputStream zos = new ZipOutputStream(baos); ByteArrayOutputStream temp = new ByteArrayOutputStream())
 		{
 			ImageIO.write(wrapper.getImage(), "jpg", temp);
 			byte[] data = temp.toByteArray();
@@ -145,7 +143,7 @@ public class Converter
 		}
 		byte[] blobBytes = blob.getBytes(1, (int) blob.length());
 
-		ByteOutputStream fos = new ByteOutputStream();
+		ByteArrayOutputStream fos = new ByteArrayOutputStream();
 		try (ByteArrayInputStream bais = new ByteArrayInputStream(blobBytes))
 		{
 			byte[] buff = new byte[4096];
@@ -156,15 +154,17 @@ public class Converter
 			}
 		}
 
-		boolean isZipped = new ZipInputStream(fos.newInputStream()).getNextEntry() != null;
+		ByteArrayInputStream in = new ByteArrayInputStream(fos.toByteArray());
+		boolean isZipped = new ZipInputStream(in).getNextEntry() != null;
+		fos.close();
 		if (isZipped)
 		{
-			try (ZipInputStream zis = new ZipInputStream(fos.newInputStream()))
+			try (ZipInputStream zis = new ZipInputStream(in))
 			{
 				ZipEntry ze = zis.getNextEntry();
 				if (ze != null)
 				{
-					ByteOutputStream os = new ByteOutputStream();
+					ByteArrayOutputStream os = new ByteArrayOutputStream();
 					byte[] buffer = new byte[1024];
 					int len1;
 					while ((len1 = zis.read(buffer)) > 0)
@@ -172,11 +172,14 @@ public class Converter
 						os.write(buffer, 0, len1);
 					}
 					zis.closeEntry();
-					return new ImageWrapper(ImageIO.read(os.newInputStream()));
+					BufferedImage read = ImageIO.read(new ByteArrayInputStream(os.toByteArray()));
+					os.close();
+					return new ImageWrapper(read);
 				}
 				zis.closeEntry();
 			}
 		}
+		in.close();
 		return null;
 	}
 
@@ -444,5 +447,4 @@ public class Converter
 	}
 
 	private static List<DateFormat> additionFormats = new ArrayList<DateFormat>();
-
 }
