@@ -34,7 +34,13 @@ var createPieChart = function(diagramId, data, colors) {
 		.attr("class", "slice");
 
 	arcs.append("svg:path")
-		.attr("fill", function(d, i){ return color(i)})
+		.attr("fill", function(d, i){
+		    var myColor = colors[d.data.label]
+		    if (myColor != undefined) {
+		        return myColor;
+		    }
+			return color(i)
+		})
 		.attr("d", function (d) { return arc(d)});
 
 	// add the text

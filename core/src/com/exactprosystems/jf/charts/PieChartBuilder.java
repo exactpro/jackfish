@@ -67,7 +67,6 @@ public class PieChartBuilder extends ChartBuilder
 		String chartId = "chart_" + id;
 		writer.fwrite("<div id='%s' class=container></div>", chartId);
 		String data = createData();
-		//TODO THINK ABOUT IT
 		String colors = createColors();
 		writer.fwrite("<script>createPieChart('%s',%s, %s)</script>", chartId, data, colors);
 	}
