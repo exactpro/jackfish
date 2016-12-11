@@ -19,16 +19,12 @@ import java.awt.*;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 public class PieChartBuilder extends ChartBuilder
 {
-	private Map<String, Color> colors;
-
 	public PieChartBuilder(Table table, Parameters params, Map<String, Color> colors) throws JFException
 	{
-		super(table, params);
-		this.colors = colors;
+		super(table, params, colors);
 	}
 
 	@Override
@@ -71,22 +67,6 @@ public class PieChartBuilder extends ChartBuilder
 		writer.fwrite("<script>createPieChart('%s',%s, %s)</script>", chartId, data, colors);
 	}
 
-	private String createColors()
-	{
-		if (this.colors == null)
-		{
-			return "undefined";
-		}
-		StringBuilder sbColors = new StringBuilder("{");
-		String colors = this.colors.entrySet()
-				.stream()
-				.map(e -> String.format("'%s' : '%s'", e.getKey(), getHTMLColorString(e.getValue())))
-				.collect(Collectors.joining(","));
-		sbColors.append(colors);
-		sbColors.append("}");
-		return sbColors.toString();
-	}
-
 	private String createData()
 	{
 		StringBuilder sb = new StringBuilder();
@@ -106,16 +86,5 @@ public class PieChartBuilder extends ChartBuilder
 	@Override
 	public void helpToAddParameters(List<ReadableValue> list, Context context) throws Exception
 	{
-	}
-
-	private static String getHTMLColorString(Color color) {
-		String red = Integer.toHexString(color.getRed());
-		String green = Integer.toHexString(color.getGreen());
-		String blue = Integer.toHexString(color.getBlue());
-
-		return "#" +
-				(red.length() == 1? "0" + red : red) +
-				(green.length() == 1? "0" + green : green) +
-				(blue.length() == 1? "0" + blue : blue);
 	}
 }

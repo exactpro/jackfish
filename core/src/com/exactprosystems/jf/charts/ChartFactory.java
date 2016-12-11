@@ -27,11 +27,11 @@ public class ChartFactory
 		switch (chartKind)
 		{
 		case Bar:
-			chart = new BarChartBuilder(table, params);
+			chart = new BarChartBuilder(table, params, colors);
 			break;
 			
 		case Line:
-			chart = new LineChartBuilder(table, params);
+			chart = new LineChartBuilder(table, params, colors);
 			break;
 			
 		case Pie:
@@ -39,7 +39,7 @@ public class ChartFactory
 			break;
 			
 		case Gannt:
-			chart = new GanntChartBuilder(table, params);
+			chart = new GanntChartBuilder(table, params, colors);
 			break;
 
 		default:
