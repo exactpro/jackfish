@@ -115,7 +115,7 @@ public abstract class ReportBuilder
 	{
 		Integer uniq = this.uniques.peek();
 		ReportTable info = new ReportTable(title, beforeTestcase, decoraded, quotedSince, widths, columns);
-		this.reportData.get(uniq).add(info); // TODO deal with it
+		this.reportData.get(uniq).add(info);
 		
 		return info;
 	}
@@ -419,6 +419,7 @@ public abstract class ReportBuilder
 		        	tableFooter(writer, table);
     			}
     		}
+//    		list.clear();
     	}
 	}
 
