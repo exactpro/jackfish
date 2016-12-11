@@ -8,14 +8,14 @@
 
 package com.exactprosystems.jf.charts;
 
-import java.awt.Color;
-import java.util.Map;
-
 import com.exactprosystems.jf.api.app.ChartKind;
 import com.exactprosystems.jf.api.error.JFException;
 import com.exactprosystems.jf.api.error.common.UnknownChartKindException;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.functions.Table;
+
+import java.awt.*;
+import java.util.Map;
 
 public class ChartFactory
 {
@@ -35,7 +35,7 @@ public class ChartFactory
 			break;
 			
 		case Pie:
-			chart = new PieChartBuilder(table, params);
+			chart = new PieChartBuilder(table, params, colors);
 			break;
 			
 		case Gannt:

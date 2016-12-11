@@ -1,4 +1,4 @@
-var createPieChart = function(diagramId, data) {
+var createPieChart = function(diagramId, data, colors) {
 	var w = 300;
 	var h = 300;
 	var r = h/2;
