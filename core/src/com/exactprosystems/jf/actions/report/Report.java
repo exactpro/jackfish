@@ -27,12 +27,13 @@ import com.exactprosystems.jf.documents.matrix.parser.items.TypeMandatory;
 	)
 public class Report extends AbstractAction 
 {
-	public final static String beforeTestCaseName = "BeforeTestCase";
-	public final static String strName = "Str";
+    public final static String beforeTestCaseName = "BeforeTestCase";
+    public final static String strName            = "Str";
+    public final static String toReportName       = "ToReport";
 
-	public final static String	toReportName		= "ToReport";
-
-	@ActionFieldAttribute(name=toReportName, mandatory = false, description = "Rerouting report")
+	@ActionFieldAttribute(name=toReportName, mandatory = false, description = 
+            "This parameter is used for directing the output from the given object to the external report "
+          + "created by the {{$ReportStart$}} action.")
 	protected ReportBuilder toReport;
 
 	@ActionFieldAttribute(name = beforeTestCaseName, mandatory = false, description = "The name of Testcase before witch the table will be put.")

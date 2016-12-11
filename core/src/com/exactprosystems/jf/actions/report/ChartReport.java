@@ -10,6 +10,8 @@ package com.exactprosystems.jf.actions.report;
 
 import com.exactprosystems.jf.actions.*;
 import com.exactprosystems.jf.api.app.ChartKind;
+import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.api.error.common.NullParameterException;
 import com.exactprosystems.jf.charts.ChartBuilder;
 import com.exactprosystems.jf.charts.ChartFactory;
@@ -22,7 +24,6 @@ import com.exactprosystems.jf.functions.HelpKind;
 import com.exactprosystems.jf.functions.Table;
 
 import java.util.List;
-import java.util.function.Supplier;
 
 @ActionAttribute(
 		group = ActionGroups.Report, 
@@ -36,7 +37,9 @@ public class ChartReport extends AbstractAction
 	public final static String	typeName			= "Type";
 	public final static String	toReportName		= "ToReport";
 
-	@ActionFieldAttribute(name=toReportName, mandatory = false, description = "Rerouting report")
+	@ActionFieldAttribute(name=toReportName, mandatory = false, description = 
+            "This parameter is used for directing the output from the given object to the external report "
+          + "created by the {{$ReportStart$}} action.")
 	protected ReportBuilder toReport;
 
 	@ActionFieldAttribute(name = titleName, mandatory = true, description = "Title.")
@@ -123,9 +126,20 @@ public class ChartReport extends AbstractAction
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
+        if (this.table == null)
+        {
+            super.setError(tableName, ErrorKind.EMPTY_PARAMETER);
+            return;
+        }
+        if (this.chartType == null)
+        {
+            super.setError(typeName, ErrorKind.EMPTY_PARAMETER);
+            return;
+        }
+	    
 		ChartBuilder chartBuilder = ChartFactory.createChartBuilder(this.chartType, this.table, parameters.select(TypeMandatory.Extra));
-		Supplier<ReportBuilder> currentReport = () -> this.toReport == null ? report : this.toReport;
-		currentReport.get().reportChart(this.title, this.beforeTestCase, chartBuilder);
+		report = this.toReport == null ? report : this.toReport;
+		report.reportChart(Str.asString(this.title), this.beforeTestCase, chartBuilder);
 
 		super.setResult(null);
 	}

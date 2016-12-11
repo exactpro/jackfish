@@ -27,12 +27,14 @@ import com.exactprosystems.jf.functions.Xml;
 	)
 public class XmlReport extends AbstractAction 
 {
-	public final static String xmlName 	= "Xml";
-	public final static String beforeTestCaseName = "BeforeTestCase";
-	public final static String titleName = "Title";
-	public final static String	toReportName		= "ToReport";
+    public final static String xmlName            = "Xml";
+    public final static String beforeTestCaseName = "BeforeTestCase";
+    public final static String titleName          = "Title";
+    public final static String toReportName       = "ToReport";
 
-	@ActionFieldAttribute(name=toReportName, mandatory = false, description = "Rerouting report")
+	@ActionFieldAttribute(name=toReportName, mandatory = false, description = 
+            "This parameter is used for directing the output from the given object to the external report "
+          + "created by the {{$ReportStart$}} action.")
 	protected ReportBuilder toReport;
 
 	@ActionFieldAttribute(name = xmlName, mandatory = true, description = "XML object.")

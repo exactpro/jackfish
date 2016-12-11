@@ -28,15 +28,17 @@ import java.util.List;
 	)
 public class TableReport extends AbstractAction 
 {
-	public final static String tableName = "Table";
-	public final static String beforeTestCaseName = "BeforeTestCase";
-	public final static String titleName = "Title";
-	public final static String numbersName = "Numbers";
-	public final static String columnsName = "Columns";
-	public final static String reportValuesName = "ReportValues";
-	public final static String	toReportName		= "ToReport";
+    public final static String tableName          = "Table";
+    public final static String beforeTestCaseName = "BeforeTestCase";
+    public final static String titleName          = "Title";
+    public final static String numbersName        = "Numbers";
+    public final static String columnsName        = "Columns";
+    public final static String reportValuesName   = "ReportValues";
+    public final static String toReportName       = "ToReport";
 
-	@ActionFieldAttribute(name=toReportName, mandatory = false, description = "Rerouting report")
+	@ActionFieldAttribute(name=toReportName, mandatory = false, description = 
+            "This parameter is used for directing the output from the given object to the external report "
+          + "created by the {{@ReportStart@}} action.")
 	protected ReportBuilder toReport;
 
 	@ActionFieldAttribute(name = tableName, mandatory = true, description = "The table.")
