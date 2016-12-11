@@ -8,6 +8,9 @@
 
 package com.exactprosystems.jf.charts;
 
+import java.awt.Color;
+import java.util.Map;
+
 import com.exactprosystems.jf.api.app.ChartKind;
 import com.exactprosystems.jf.api.error.JFException;
 import com.exactprosystems.jf.api.error.common.UnknownChartKindException;
@@ -18,7 +21,7 @@ public class ChartFactory
 {
 	private ChartFactory() {}
 	
-	public static ChartBuilder createChartBuilder(ChartKind chartKind, Table table, Parameters params) throws JFException
+	public static ChartBuilder createChartBuilder(ChartKind chartKind, Table table, Map<String, Color> colors, Parameters params) throws JFException
 	{
 		ChartBuilder chart = null;
 		switch (chartKind)
