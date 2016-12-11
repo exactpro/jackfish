@@ -211,10 +211,7 @@ public abstract class AbstractAction implements Cloneable
             }
         }
 
-        if (this.action.Result != Result.Passed)
-        {
-            reportResults(report, assertBool);
-        }
+        reportResults(report, assertBool);
 
         evaluator.getLocals().delete(Tokens.This.get());
         return this.action.Result;

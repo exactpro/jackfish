@@ -419,7 +419,7 @@ public abstract class ReportBuilder
 		        	tableFooter(writer, table);
     			}
     		}
-//    		list.clear();
+    		list.clear();
     	}
 	}
 
