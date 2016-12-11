@@ -9,6 +9,7 @@
 package com.exactprosystems.jf.actions.tables;
 
 import com.exactprosystems.jf.actions.*;
+import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
@@ -19,7 +20,6 @@ import com.exactprosystems.jf.documents.matrix.parser.items.TypeMandatory;
 import com.exactprosystems.jf.functions.Table;
 
 import java.util.List;
-import java.util.function.Supplier;
 
 @ActionAttribute(
 		group					= ActionGroups.Tables,
@@ -104,7 +104,7 @@ public class TableReport extends AbstractAction
 	{
 		if (this.table == null)
 		{
-			super.setError("Table is null", ErrorKind.EMPTY_PARAMETER);
+			super.setError(tableName, ErrorKind.EMPTY_PARAMETER);
 			return;
 		}
 		Parameters columns = parameters.select(TypeMandatory.Extra);
@@ -112,16 +112,10 @@ public class TableReport extends AbstractAction
 		{
 			columns = null;
 		}
-		Supplier<ReportBuilder> currentReport = () -> this.toReport == null ? report : this.toReport;
-		this.table.report(currentReport.get(), this.title, this.beforeTestCase, this.withNumbers, this.reportValues, columns, this.columns);
+		report = this.toReport == null ? report : this.toReport;
+		this.table.report(report, Str.asString(this.title), this.beforeTestCase, this.withNumbers, this.reportValues, columns, this.columns);
 		
 		super.setResult(null);
-	}
-
-	@Override
-	protected boolean reportAllDetail()
-	{
-		return false;
 	}
 }
 

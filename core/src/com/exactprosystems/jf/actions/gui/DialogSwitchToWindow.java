@@ -23,7 +23,6 @@ import java.util.List;
 
 @ActionAttribute(
 		group = ActionGroups.GUI, 
-		suffix = "DLG", 
 		generalDescription = "Switch to desired frame", 
 		additionFieldsAllowed = false 
 	)

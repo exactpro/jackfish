@@ -18,6 +18,7 @@ import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
+import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 
@@ -54,7 +55,11 @@ public class ReportStart extends AbstractAction
 	        return;
 	    }
 	    
-	    ReportBuilder newReport = context.getConfiguration().getReportFactory().createReportBuilder(report.getReportDir(), this.reportName, new Date());
+	    Configuration config = context.getConfiguration();
+	    ReportBuilder newReport = config.getReportFactory().createReportBuilder(config.getReports().get(), this.reportName, new Date());
+	    newReport.reportStarted(null);
+	    newReport.itemStarted(this.owner.getMatrix().getRoot());
+	    
 		super.setResult(newReport);
 	}
 }

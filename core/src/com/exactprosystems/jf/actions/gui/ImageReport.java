@@ -13,12 +13,12 @@ import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
 import com.exactprosystems.jf.api.app.ImageWrapper;
+import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
-
-import java.util.function.Supplier;
 
 
 @ActionAttribute(
@@ -64,12 +64,14 @@ public class ImageReport extends AbstractAction
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception 
 	{
-		if (image == null)
+		if (this.image == null)
 		{
-			throw new Exception("Image can't be null");
+		    super.setError(imageName, ErrorKind.EMPTY_PARAMETER);
+			return;
 		}
-		Supplier<ReportBuilder> currentReport = () -> this.toReport == null ? report : this.toReport;
-		currentReport.get().outImage(super.owner, this.beforeTestCase, this.image.getName(report.getReportDir()), this.title);
+		
+		report = this.toReport == null ? report : this.toReport;
+		report.outImage(super.owner, this.beforeTestCase, this.image.getName(report.getReportDir()), Str.asString(this.title));
 		super.setResult(this.image.getFileName());
 	}
 

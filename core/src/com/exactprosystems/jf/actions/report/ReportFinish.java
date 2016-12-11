@@ -57,6 +57,7 @@ public class ReportFinish extends AbstractAction
 	        return;
 	    }
 		
+	    this.report.itemFinished(this.owner.getMatrix().getRoot(), 0, null);
 	    this.report.reportFinished(this.failed, this.passed);
 	    
 		super.setResult(null);

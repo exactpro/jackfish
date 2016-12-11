@@ -146,11 +146,7 @@ public abstract class AbstractAction implements Cloneable
 
     		boolean parametersAreCorrect = parameters.evaluateAll(evaluator);
     		parametersAreCorrect = parametersAreCorrect && injectParameters(parameters);
-            
-            if (reportAllDetail())
-            {
-                reportParameters(report, parameters);
-            }
+            reportParameters(report, parameters);
 
             if (parametersAreCorrect)
             {
@@ -215,7 +211,7 @@ public abstract class AbstractAction implements Cloneable
             }
         }
 
-        if (reportAllDetail() || this.action.Result != Result.Passed)
+        if (this.action.Result != Result.Passed)
         {
             reportResults(report, assertBool);
         }
@@ -326,11 +322,6 @@ public abstract class AbstractAction implements Cloneable
 	protected void helpToAddParametersDerived(List<ReadableValue> list, Context context, Parameters parameters)  throws Exception
 	{
 	}
-
-	protected boolean reportAllDetail()
-    {
-        return true;
-    }
 
     protected void doRealDocumetation(Context context, ReportBuilder report)
     {
@@ -646,21 +637,6 @@ public abstract class AbstractAction implements Cloneable
                 logger.error(e.getMessage(), e);
             }
         }
-    }
-
-    private static boolean areObjectsEqual(Object o1, Object o2)
-    {
-        if (o1 == null || o2 == null)
-        {
-            return o1 == o2;
-        }
-
-        if (o1.getClass() == o2.getClass())
-        {
-            return o1.equals(o2);
-        }
-
-        return o1.toString().equals(o2.toString());
     }
 
     private void clearResults()

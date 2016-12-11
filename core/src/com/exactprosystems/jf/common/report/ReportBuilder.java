@@ -12,6 +12,7 @@ import com.exactprosystems.jf.api.app.ImageWrapper;
 import com.exactprosystems.jf.api.common.Converter;
 import com.exactprosystems.jf.charts.ChartBuilder;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
+import com.exactprosystems.jf.documents.matrix.parser.items.MatrixRoot;
 
 import org.apache.log4j.Logger;
 
@@ -133,12 +134,12 @@ public abstract class ReportBuilder
 	{
 		Integer newUniq = generateNewUnique();
 		this.uniques.push(newUniq);
-		
+		  
 		this.reportData.put(newUniq, new ArrayList<ReportTable>());
 
 		try
 		{
-			if (this.reportIsOn)
+			if (this.reportIsOn && !(matrixItem instanceof MatrixRoot))
 			{
 				reportItemHeader(this.writer, matrixItem, newUniq);
 			}
@@ -154,7 +155,7 @@ public abstract class ReportBuilder
 		try
 		{
 			Integer uniq = this.uniques.peek();
-			if (this.reportIsOn)
+			if (this.reportIsOn && !(matrixItem instanceof MatrixRoot))
 			{
 				outAllTables(this.reportData.get(uniq), writer);
 			}
@@ -206,7 +207,7 @@ public abstract class ReportBuilder
 			}
 		} 
 		catch (IOException e)
-		{
+		{ 
 			logger.error(e.getMessage(), e);
 		}
 	}
@@ -219,7 +220,10 @@ public abstract class ReportBuilder
 			if (this.reportIsOn)
 			{
 				outAllTables(this.reportData.get(uniq), writer);
-				reportItemFooter(this.writer, matrixItem, uniq, time, screenshot);
+				if (!(matrixItem instanceof MatrixRoot))
+				{
+				    reportItemFooter(this.writer, matrixItem, uniq, time, screenshot);
+				}
 			}
 			this.uniques.pop();
 		} 

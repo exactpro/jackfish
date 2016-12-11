@@ -12,13 +12,13 @@ import com.exactprosystems.jf.actions.AbstractAction;
 import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
+import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.functions.Text;
-
-import java.util.function.Supplier;
 
 @ActionAttribute(
 		group					= ActionGroups.Text,
@@ -72,16 +72,16 @@ public class TextReport extends AbstractAction
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
-		Supplier<ReportBuilder> currentReport = () -> this.toReport == null ? report : this.toReport;
-		this.text.report(currentReport.get(), this.beforeTestCase, this.title);
+        if (this.text == null)
+        {
+            super.setError(textName, ErrorKind.EMPTY_PARAMETER);
+            return;
+        }
+	    
+	    report = this.toReport == null ? report : this.toReport;
+		this.text.report(report, this.beforeTestCase, Str.asString(this.title));
 		
 		super.setResult(null);
-	}
-
-	@Override
-	protected boolean reportAllDetail()
-	{
-		return false;
 	}
 }
 

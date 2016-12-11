@@ -14,12 +14,11 @@ import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
+import com.exactprosystems.jf.common.report.ReportTable;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Parameter;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.documents.matrix.parser.items.TypeMandatory;
-
-import java.util.function.Supplier;
 
 @ActionAttribute(
 		group					= ActionGroups.Report,
@@ -72,22 +71,13 @@ public class Report extends AbstractAction
 			sb.append('\t');
 		}
 		
-		boolean on = report.reportIsOn();
-		Supplier<ReportBuilder> currentReport = () -> this.toReport == null ? report : this.toReport;
-		currentReport.get().reportSwitch(true);
-		currentReport.get().outLine(this.owner, this.beforeTestCase, sb.toString(), null);
-//		
-//		ReportTable info = report.addTable(sb.toString(), this.beforeTestCase, true, 0, new int[] {});
-//		info.addValues("");
-		currentReport.get().reportSwitch(on);
+		report = this.toReport == null ? report : this.toReport;
+//		report.outLine(this.owner, this.beforeTestCase, sb.toString(), null);
+		
+		ReportTable info = report.addTable(sb.toString(), this.beforeTestCase, true, 0, new int[] {});
+		info.addValues("");
 		
 		
 		super.setResult(null);
-	}
-
-	@Override
-	protected boolean reportAllDetail()
-	{
-		return false;
 	}
 }

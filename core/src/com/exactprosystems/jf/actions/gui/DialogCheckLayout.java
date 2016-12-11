@@ -28,7 +28,6 @@ import static com.exactprosystems.jf.actions.gui.Helper.message;
 
 @ActionAttribute(
 		group 					= ActionGroups.GUI, 
-		suffix					= "DLG",
 		generalDescription 		= "Finds or opens dialog window and checks dialog layout.", 
 		additionFieldsAllowed 	= true 
 	)

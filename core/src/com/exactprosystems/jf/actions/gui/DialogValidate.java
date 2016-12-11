@@ -32,7 +32,6 @@ import static com.exactprosystems.jf.actions.gui.Helper.message;
 
 @ActionAttribute(
 		group = ActionGroups.GUI, 
-		suffix = "DLG", 
 		generalDescription = "Finds or opens dialog window and checks access to all elements.", 
 		additionFieldsAllowed = true
 	)
