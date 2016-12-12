@@ -8,10 +8,7 @@
 
 package com.exactprosystems.jf.actions.gui;
 
-import com.exactprosystems.jf.actions.AbstractAction;
-import com.exactprosystems.jf.actions.ActionAttribute;
-import com.exactprosystems.jf.actions.ActionFieldAttribute;
-import com.exactprosystems.jf.actions.ActionGroups;
+import com.exactprosystems.jf.actions.*;
 import com.exactprosystems.jf.api.app.ImageWrapper;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.error.ErrorKind;
@@ -19,6 +16,9 @@ import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
+import com.exactprosystems.jf.functions.HelpKind;
+
+import java.util.List;
 
 
 @ActionAttribute(
@@ -73,6 +73,30 @@ public class ImageReport extends AbstractAction
 		report = this.toReport == null ? report : this.toReport;
 		report.outImage(super.owner, this.beforeTestCase, this.image.getName(report.getReportDir()), Str.asString(this.title));
 		super.setResult(this.image.getFileName());
+	}
+
+	@Override
+	protected HelpKind howHelpWithParameterDerived(Context context, Parameters parameters, String fieldName) throws Exception
+	{
+		switch (fieldName)
+		{
+			case beforeTestCaseName:
+				return HelpKind.ChooseFromList;
+		}
+
+		return null;
+	}
+
+	@Override
+	protected void listToFillParameterDerived(List<ReadableValue> list, Context context, String parameterToFill, Parameters parameters) throws Exception
+	{
+		switch (parameterToFill)
+		{
+			case beforeTestCaseName:
+				ActionsReportHelper.fillListForParameter(super.owner.getMatrix(),  list);
+				break;
+			default:
+		}
 	}
 
 }
