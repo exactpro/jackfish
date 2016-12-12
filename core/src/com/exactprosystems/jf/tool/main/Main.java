@@ -39,6 +39,7 @@ import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper.OpenSaveMode;
 import com.exactprosystems.jf.tool.matrix.MatrixFx;
 import com.exactprosystems.jf.tool.newconfig.ConfigurationFx;
+import com.exactprosystems.jf.tool.newconfig.ConfigurationTreeView;
 import com.exactprosystems.jf.tool.newconfig.wizard.WizardConfiguration;
 import com.exactprosystems.jf.tool.settings.SettingsPanel;
 import com.exactprosystems.jf.tool.settings.Theme;
@@ -62,10 +63,7 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
@@ -610,6 +608,14 @@ public class Main extends Application
 	{
 		StringBuilder sb = new StringBuilder(Configuration.projectName);
 		sb.append(" ").append(VersionInfo.getVersion());
+		try
+		{
+			sb.append(" " + this.config.getName());
+		}
+		catch (Exception ex)
+		{
+
+		}
 		if (document != null)
 		{
 			File file = new File(document.getName());
