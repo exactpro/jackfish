@@ -456,22 +456,7 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 		}
 		
 		this.headers = list.toArray(new Header[0]);
-	}
-
-	public boolean columnIsPresent(String columnName)
-	{
-		if (this.headers == null || this.headers.length == 0)
-		{
-			return false;
-		}
-		for (Header header : this.headers)
-		{
-			if (header != null && Str.areEqual(columnName, header.name))
-			{
-				return true;
-			}
-		}
-		return false;
+		addEmptyStringToAllLinesInNewColumn();
 	}
 
 	public void addColumns(int index, String... columns)
@@ -491,8 +476,32 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 		List<Header> newHeaders = new ArrayList<>(Arrays.asList(this.headers));
 		newHeaders.addAll(index, Arrays.stream(columns).map(s -> new Header(s, null)).collect(Collectors.toList()));
 		this.headers = newHeaders.toArray(new Header[newHeaders.size()]);
-		//update all lines
-		this.innerList.stream().forEach(e -> Arrays.stream(this.headers).filter(h -> !e.containsKey(h)).forEach(h -> e.put(h, "")));
+		addEmptyStringToAllLinesInNewColumn();
+	}
+
+	private void addEmptyStringToAllLinesInNewColumn()
+	{
+		final String EMPTY_STRING = "";
+		this.innerList.forEach(e ->
+				Arrays.stream(this.headers).filter(h ->
+						!e.containsKey(h)).forEach(h ->
+						e.put(h, EMPTY_STRING)));
+	}
+
+	public boolean columnIsPresent(String columnName)
+	{
+		if (this.headers == null || this.headers.length == 0)
+		{
+			return false;
+		}
+		for (Header header : this.headers)
+		{
+			if (header != null && Str.areEqual(columnName, header.name))
+			{
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public void removeColumns(String... columns)
