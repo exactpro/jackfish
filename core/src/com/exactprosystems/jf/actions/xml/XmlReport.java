@@ -8,17 +8,18 @@
 
 package com.exactprosystems.jf.actions.xml;
 
-import com.exactprosystems.jf.actions.AbstractAction;
-import com.exactprosystems.jf.actions.ActionAttribute;
-import com.exactprosystems.jf.actions.ActionFieldAttribute;
-import com.exactprosystems.jf.actions.ActionGroups;
+import com.exactprosystems.jf.actions.*;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
+import com.exactprosystems.jf.functions.HelpKind;
 import com.exactprosystems.jf.functions.Xml;
+import com.exactprosystems.jf.actions.ActionsReportHelper;
+
+import java.util.List;
 
 @ActionAttribute(
 		group					= ActionGroups.XML,
@@ -70,6 +71,30 @@ public class XmlReport extends AbstractAction
 		this.xml.report(report, this.beforeTestCase, Str.asString(this.title));
 		
 		super.setResult(null);
+	}
+
+	@Override
+	protected HelpKind howHelpWithParameterDerived(Context context, Parameters parameters, String fieldName) throws Exception
+	{
+		switch (fieldName)
+		{
+			case beforeTestCaseName:
+				return HelpKind.ChooseFromList;
+		}
+
+		return null;
+	}
+
+	@Override
+	protected void listToFillParameterDerived(List<ReadableValue> list, Context context, String parameterToFill, Parameters parameters) throws Exception
+	{
+		switch (parameterToFill)
+		{
+			case beforeTestCaseName:
+				ActionsReportHelper.fillListForParameter(super.owner.getMatrix(),  list);
+				break;
+			default:
+		}
 	}
 }
 
