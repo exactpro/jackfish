@@ -272,13 +272,13 @@ public class ParametersPane extends CustomScrollPane
 				
 				if (howHelp != null ) 
 				{
+                    expressionField.setNameFirst(howHelp.getLabel());
 					switch (howHelp)
 					{
 						case BuildQuery:
 							break;
 							
 						case BuildLayoutExpression:
-							expressionField.setNameFirst("↔");
 							expressionField.setFirstActionListener(str -> 
 							{
 								String expression = this.parameters.getExpression(DialogFill.dialogName);
@@ -302,7 +302,6 @@ public class ParametersPane extends CustomScrollPane
 							break;
 							
 						case ChooseDateTime:
-							expressionField.setNameFirst("D");
 							expressionField.setFirstActionListener(str -> 
 							{
 								Date date = null;
@@ -332,7 +331,6 @@ public class ParametersPane extends CustomScrollPane
 							break;
 							
 						case ChooseOpenFile:
-							expressionField.setNameFirst("…");
 							expressionField.setFirstActionListener(str -> 
 								{
 									File file = DialogsHelper.showOpenSaveDialog("Choose file to open", "All files", "*.*", OpenSaveMode.OpenFile);
@@ -345,7 +343,6 @@ public class ParametersPane extends CustomScrollPane
 							break;
 							
 						case ChooseSaveFile:
-							expressionField.setNameFirst("…");
 							expressionField.setFirstActionListener(str -> 
 								{
 									File file = DialogsHelper.showOpenSaveDialog("Choose file to save", "All files", "*.*", OpenSaveMode.SaveFile);
@@ -358,7 +355,6 @@ public class ParametersPane extends CustomScrollPane
 							break;
 							
 						case ChooseFolder:
-							expressionField.setNameFirst("…");
 							expressionField.setFirstActionListener(str -> 
 								{
 									File file = DialogsHelper.showDirChooseDialog("Choose directory");
@@ -375,7 +371,6 @@ public class ParametersPane extends CustomScrollPane
 							break;
 							
 						case BuildXPath:
-							expressionField.setNameFirst("X");
 							expressionField.setFirstActionListener(str -> 
 							{
 								for (int i = 0; i < this.parameters.size(); i++)

@@ -28,7 +28,10 @@ INIT;Test case;;;
 
 #TestCase;#Kind;#Depends;#For
 Summary report;;;
-    #Id;#Call
-    CALL_1;REP.TotalReport
+    #Call
+    RF.repSummary
+
+    #Call;#fileName
+    RF.repCsvExport;'reports/export.csv'
 
 

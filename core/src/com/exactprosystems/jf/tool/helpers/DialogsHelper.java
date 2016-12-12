@@ -11,6 +11,7 @@ package com.exactprosystems.jf.tool.helpers;
 import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
 import com.exactprosystems.jf.actions.ActionsList;
+import com.exactprosystems.jf.actions.ReadableValue;
 import com.exactprosystems.jf.api.common.ApiVersionInfo;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.HelpFactory;
@@ -431,7 +432,7 @@ public abstract class DialogsHelper
 		return value;
 	}
 
-	public static String showUserInput(AbstractEvaluator evaluator, String title, Object defaultValue, HelpKind helpKind, Collection<?> dataSource)
+	public static String showUserInput(AbstractEvaluator evaluator, String title, Object defaultValue, HelpKind helpKind, List<ReadableValue> dataSource)
 	{
 		Task<String> task = new Task<String>()
 		{

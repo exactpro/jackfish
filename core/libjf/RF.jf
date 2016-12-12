@@ -157,6 +157,164 @@ RF;RegressionFramework
     #EndSubCase
 
     // //==============================================
+    // // Shows the overall report
+    // //==============================================
+    #Id;#SubCase
+    repOverall;Overall progress
+        #Id;#Call
+        table;RF.TotalTable
+
+        #Id;#Action;#ReportName
+        REP1;ReportStart;'Overall'
+
+        #Action;#Type;#Table;#ToReport;#Title;#Colors
+        ChartReport;ChartKind.Pie;table;REP1.Out;'{{4 Overall 4}}';{ 'Passed' : Color.GREEN, 'Failed' : Color.RED }
+
+        #Action;#Table;#Title;#Numbers;#ToReport
+        TableReport;table;'Table';false;REP1.Out
+
+        #Action;#Report;#Passed;#Failed
+        ReportFinish;REP1.Out;1;1
+
+        #Action;#Report
+        ReportShow;REP1.Out.getReportName()
+
+    #EndSubCase
+
+    // //==============================================
+    // // Shows the summary report
+    // //==============================================
+    #Id;#SubCase
+    repSummary;Summary report
+        #Id;#Call
+        table;RF.LastSummary
+
+        #Id;#Action;#Table;#result
+        passed;TableSelect;table;'Passed'
+
+        #Id;#Action;#Table;#result
+        failed;TableSelect;table;'Failed'
+
+        #Action;#Replace;#Table;#Columns;#Search;#MatchCell
+        TableReplace;'<div class=\"Passed\">Passed</div>';table;{ 'result' };'Passed';true
+
+        #Action;#Replace;#Table;#Columns;#Search;#MatchCell
+        TableReplace;'<div class=\"Failed\">Failed</div>';table;{ 'result' };'Failed';true
+
+        #Id;#Action;#ReportName
+        REP1;ReportStart;'Summary'
+
+        #Action;#Table;#Title;#ToReport;#Numbers;#scenario;#result;#date;#time;#user;#host;#report
+        TableReport;table;'Consolidated Umbrella Report: ';REP1.Out;false;'Matrix Name';'Execution Status';'Execution Date';'Execution Time';'Exectuted By';'Execution Machine';'Report Link'
+
+        #Action;#Passed;#Failed;#Report
+        ReportFinish;passed.Out.size();failed.Out.size();REP1.Out
+
+        #Action;#Report
+        ReportShow;REP1.Out.getReportName()
+
+    #EndSubCase
+
+    // //==============================================
+    // // Export the last regression set to csv file for import into QC
+    // //==============================================
+    #Id;#SubCase;#fileName
+    repCsvExport;Export to CSV file;
+        #Id;#Call
+        SQL;Connect
+
+        #Id;#Let
+        countSteps;0
+
+        #Id;#Action;#TestName;#ExecutionStatus;#ExecutionTime;#ExecutedBy;#ExecutionMashine
+        createTable;TableCreate;;;;;
+
+        #Id;#Let
+        resultTable;createTable.Out
+
+        #Id;#RawText
+        TEXT5;Text
+        "SELECT "
+        "  s.id, s.scenario, "
+        "  IF(s.failed > 0, ""Failed"", ""Passed"") AS status, "
+        "  s.host, "
+        "  s.user, "
+        "  DATE(s.start_time) AS date, "
+        "  TIME(s.start_time) AS time "
+        "FROM scenarios AS s"
+        "WHERE s.manual = 0 AND s.run_id = (SELECT MAX(r.id) FROM runs AS r); "
+        #EndRawText
+
+        #Id;#Action;#Connection;#Query
+        query;SQLselect;SQL;TEXT5.toString()
+
+        #Id;#Let
+        scenarios;query.Out
+
+        #For;#From;#To;#Step
+        rowScenarios;0;(int)scenarios.size - 1;1
+            #Id;#Action;#Connection;#Query;#scenario_id
+            selectFromTable;SQLselect;SQL;'SELECT d.scenario_id, d.error FROM details AS d WHERE scenario_id = ?\u003b';scenarios[rowScenarios].id
+
+            #Id;#Let
+            selectSteps;selectFromTable.Out
+
+            #Action;#Table;#TestName;#ExecutionStatus;#ExecutionTime;#ExecutedBy;#ExecutionMashine
+            TableAddValue;resultTable;scenarios[rowScenarios].scenario;scenarios[rowScenarios].status;scenarios[rowScenarios].time;scenarios[rowScenarios].user;scenarios[rowScenarios].host
+
+            #For;#From;#To;#Step
+            rowSteps;0;(int)selectSteps.size - 1;1
+                #If
+                rowSteps >= countSteps
+                    #Id;#Let
+                    countSteps;countSteps + 1
+
+                    #Action;#Table;#Columns
+                    TableAddColumns;resultTable;'Step' + countSteps
+
+                #EndIf
+
+                #Id;#Let
+                step;'Step' + (rowSteps + 1)
+
+                #If
+                selectSteps[rowSteps].error.equals('null')
+                    #Id;#Let
+                    stepResult;'Passed'
+
+                #Else
+                    #Id;#Let
+                    stepResult;selectSteps[rowSteps].error
+
+
+                #EndIf
+
+                #Let
+                resultTable[rowScenarios].put(step, stepResult)
+
+            #EndFor
+
+        #EndFor
+
+        #Id;#Let
+        stepHeaders;new ArrayList()
+
+        #For;#From;#To;#Step
+        i;1;countSteps;1
+            #Let
+            stepHeaders.add('Step' + i)
+
+        #EndFor
+
+        #Action;#Replace;#Table;#Search;#Columns
+        TableReplace;'';resultTable;null;stepHeaders.toArray()
+
+        #Action;#Table;#File
+        TableSaveToFile;resultTable;fileName
+
+    #EndSubCase
+
+    // //==============================================
     // // Collects all scenarios from the last run of regression and returns
     // // it as a table
     // //==============================================
@@ -249,8 +407,7 @@ RF;RegressionFramework
         "  s.performer AS performer, "
         "  s.env AS env,  "
         "  s.host AS host, "
-        "  s.user AS user,"
-        "  s.report AS report  "
+        "  s.user AS user"
         "FROM scenarios AS s "
         "WHERE s.manual = 0 AND s.run_id = (SELECT MAX(r.id) FROM runs AS r)"
         #EndRawText

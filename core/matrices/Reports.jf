@@ -1,25 +1,35 @@
-#Id;#TestCase;#Kind;#Depends;#For
-INIT;Init;Never;;
+#TestCase;#Kind;#Depends;#For
+Init;Never;;
     #Id;#Call;#type;#host;#base;#user;#password;#scriptsDir
     CALL_1;RF.SetVars;'MySql';'127.0.0.1';'regression';'root';dbPassword;'matrices/EE/'
 
+    #Id;#Action;#DefaultValue;#Title;#HelpKind;#DataSource
+    INP1;Input;1;'Choose the report:';HelpKind.ChooseFromList;{ 1: 'Overall', 2 : 'Summary', 3 : 'Export to CSV' }
 
-#Off;#TestCase;#Kind;#Depends;#For
-1;Overall;Never;;
-    #Id;#Call
-    table;RF.TotalTable
-
-    #Action;#Type;#Table;#Title;#BeforeTestCase;#Colors
-    ChartReport;ChartKind.Pie;table;'{{4 Overall 4}}';'INIT';{ 'Passed' : Color.GREEN, 'Failed' : Color.RED }
-
-    #Action;#Table;#Title;#BeforeTestCase;#Numbers
-    TableReport;table;'Table';'INIT';false
+    #Switch
+    INP1.Out
+        #Case
+        1
+            #Call
+            RF.repOverall
 
 
-#Off;#TestCase;#Kind;#Depends;#For
-1;Summary;Never;;
-    #Id;#Call
-    table;REP.TotalReport
+        #Case
+        2
+            #Call
+            RF.repSummary
+
+
+        #Case
+        3
+            #Id;#Action;#DefaultValue;#HelpKind;#Title
+            name;Input;'reports/export.csv';HelpKind.ChooseSaveFile;'Choose the file name'
+
+            #Call;#fileName
+            RF.repCsvExport;name.Out
+
+
+    #EndSwitch
 
 
 #Off;#TestCase;#Kind;#Depends;#For
@@ -73,8 +83,8 @@ INIT;Init;Never;;
     SQLDCNT1;SQLdisconnect;SQL
 
 
-#TestCase;#Kind;#Depends;#For
-;;;
+#Off;#TestCase;#Kind;#Depends;#For
+1;;;;
     #Id;#Call
     CALL_2;RF.Connect
 

@@ -1,5 +1,6 @@
 package com.exactprosystems.jf.documents;
 
+import com.exactprosystems.jf.actions.ReadableValue;
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.common.VerboseLevel;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
@@ -21,6 +22,7 @@ import com.exactprosystems.jf.functions.HelpKind;
 import com.exactprosystems.jf.functions.Notifier;
 
 import java.util.Collection;
+import java.util.List;
 
 public class ConsoleDocumentFactory extends DocumentFactory
 {
@@ -125,7 +127,7 @@ public class ConsoleDocumentFactory extends DocumentFactory
 	}
 
 	@Override
-	public Object input(AbstractEvaluator evaluator, String title, Object defaultValue, HelpKind helpKind, Collection<?> dataSource)
+	public Object input(AbstractEvaluator evaluator, String title, Object defaultValue, HelpKind helpKind, List<ReadableValue> dataSource)
 	{
 		return defaultValue;
 	}

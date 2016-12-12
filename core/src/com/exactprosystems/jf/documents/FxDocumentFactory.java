@@ -1,5 +1,6 @@
 package com.exactprosystems.jf.documents;
 
+import com.exactprosystems.jf.actions.ReadableValue;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
@@ -32,6 +33,7 @@ import org.apache.log4j.Logger;
 
 import java.io.File;
 import java.util.Collection;
+import java.util.List;
 
 public class FxDocumentFactory extends DocumentFactory
 {
@@ -125,7 +127,7 @@ public class FxDocumentFactory extends DocumentFactory
 	}
 
 	@Override
-	public Object input(AbstractEvaluator evaluator, String title, Object defaultValue, HelpKind helpKind, Collection<?> dataSource)
+	public Object input(AbstractEvaluator evaluator, String title, Object defaultValue, HelpKind helpKind, List<ReadableValue> dataSource)
 	{
 		String result = DialogsHelper.showUserInput(evaluator, title, defaultValue, helpKind, dataSource);
 		Object value;

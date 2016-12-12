@@ -9,6 +9,7 @@
 package com.exactprosystems.jf.actions.system;
 
 import com.exactprosystems.jf.actions.*;
+import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
@@ -17,9 +18,11 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixError;
 import com.exactprosystems.jf.functions.HelpKind;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 @ActionAttribute(
 		group					= ActionGroups.System,
@@ -43,10 +46,10 @@ public class Input extends AbstractAction
 	@ActionFieldAttribute(name = defaultValueName, mandatory = true, description = "Default value if the timout expiered.")
 	protected Object defaultValue; 
 	
-    @ActionFieldAttribute(name = dataSourceName, mandatory = false, description = "Collection to choice value.")
-    protected Collection<?> dataSource; 
+    @ActionFieldAttribute(name = dataSourceName, mandatory = false, description = "Collection (a list or a map) to choice value.")
+    protected Object dataSource; 
 
-    @ActionFieldAttribute(name = helpKindName, mandatory = false, description = "How to help user enter or choose a value.")
+    @ActionFieldAttribute(name = helpKindName, mandatory = true, description = "How to help user enter or choose a value.")
     protected HelpKind helpKind;
 
     
@@ -57,9 +60,7 @@ public class Input extends AbstractAction
 	@Override
 	public void initDefaultValues() 
 	{
-		this.helpKind = null;
 		this.dataSource = null;
-		this.defaultValue = null;
 	}
 	
     @Override
@@ -97,7 +98,29 @@ public class Input extends AbstractAction
 			super.setError("Default value is null", ErrorKind.EMPTY_PARAMETER);
 			return;
 		}
-		Object input = context.getFactory().input(context.getEvaluator(), this.title, this.defaultValue, this.helpKind, this.dataSource);
+		
+		List<ReadableValue> list = new ArrayList<>();
+		
+		if (this.dataSource == null)
+		{}
+		else if (this.dataSource.getClass().isArray())
+		{
+		    Arrays.stream((Object[])this.dataSource).forEach(o -> list.add(new ReadableValue(Str.asString(o))));
+		}
+		else if (this.dataSource instanceof List<?>)
+		{
+		    ((List<?>)this.dataSource).stream().forEach(o -> list.add(new ReadableValue(Str.asString(o))));
+		}
+        else if (this.dataSource instanceof Map<?,?>)
+        {
+            ((Map<?,?>)this.dataSource).entrySet().stream().forEach(o -> list.add(new ReadableValue(Str.asString(o.getKey()), Str.asString(o.getValue()))));
+        }
+        else
+        {
+            list.add(new ReadableValue(Str.asString(this.dataSource)));
+        }
+		
+		Object input = context.getFactory().input(context.getEvaluator(), this.title, this.defaultValue, this.helpKind, list);
 		if (input instanceof MatrixError)
 		{
 			super.setError(((MatrixError) input).Message, ((MatrixError) input).Kind);

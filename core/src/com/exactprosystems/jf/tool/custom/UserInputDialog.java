@@ -18,6 +18,7 @@ import java.io.File;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class UserInputDialog extends Dialog<String>
@@ -27,7 +28,7 @@ public class UserInputDialog extends Dialog<String>
 	private final Label expressionLabel;
 	private AbstractEvaluator evaluator;
 
-	public UserInputDialog(String defaultValue, AbstractEvaluator evaluator, HelpKind helpKind, Collection<?> dataSource)
+	public UserInputDialog(String defaultValue, AbstractEvaluator evaluator, HelpKind helpKind, List<ReadableValue> dataSource)
 	{
 		final DialogPane dialogPane = getDialogPane();
 		this.setResizable(true);
@@ -38,10 +39,10 @@ public class UserInputDialog extends Dialog<String>
 		this.expressionField.setHelperForExpressionField("Title", null);
 		if (helpKind != null )
 		{
+		    expressionField.setNameFirst(helpKind.getLabel());
 			switch (helpKind)
 			{
 				case ChooseDateTime:
-					expressionField.setNameFirst("D");
 					expressionField.setFirstActionListener(str ->
 					{
 						Date date = null;
@@ -71,7 +72,6 @@ public class UserInputDialog extends Dialog<String>
 					break;
 
 				case ChooseOpenFile:
-					expressionField.setNameFirst("…");
 					expressionField.setFirstActionListener(str ->
 					{
 						File file = DialogsHelper.showOpenSaveDialog("Choose file to open", "All files", "*.*", DialogsHelper.OpenSaveMode.OpenFile);
@@ -84,7 +84,6 @@ public class UserInputDialog extends Dialog<String>
 					break;
 
 				case ChooseFolder:
-					expressionField.setNameFirst("…");
 					expressionField.setFirstActionListener(str ->
 					{
 						File file = DialogsHelper.showDirChooseDialog("Choose directory");
@@ -97,10 +96,7 @@ public class UserInputDialog extends Dialog<String>
 					break;
 
 				case ChooseFromList:
-					expressionField.setChooserForExpressionField("Choose", () ->
-							dataSource.stream()
-									.map(ds -> new ReadableValue(Common.createLiteral(ds, evaluator)))
-									.collect(Collectors.toList()));
+					expressionField.setChooserForExpressionField("Choose", () -> dataSource);
 					break;
 
 				default:

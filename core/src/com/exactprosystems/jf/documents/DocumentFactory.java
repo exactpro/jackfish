@@ -8,6 +8,7 @@
 
 package com.exactprosystems.jf.documents;
 
+import com.exactprosystems.jf.actions.ReadableValue;
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.documents.config.Configuration;
@@ -23,7 +24,7 @@ import com.exactprosystems.jf.documents.vars.SystemVars;
 import com.exactprosystems.jf.functions.HelpKind;
 import com.exactprosystems.jf.functions.Notifier;
 
-import java.util.Collection;
+import java.util.List;
 
 public abstract class DocumentFactory
 {
@@ -196,7 +197,7 @@ public abstract class DocumentFactory
 	
 	public abstract void 					popup(String message, Notifier notifier);
 
-	public abstract Object					input(AbstractEvaluator evaluator, String title, Object defaultValue, HelpKind helpKind, Collection<?> dataSource);
+	public abstract Object					input(AbstractEvaluator evaluator, String title, Object defaultValue, HelpKind helpKind, List<ReadableValue> dataSource);
 
 	protected abstract Context 				createContext(Configuration configuration, IMatrixListener matrixListener) throws Exception;
 
