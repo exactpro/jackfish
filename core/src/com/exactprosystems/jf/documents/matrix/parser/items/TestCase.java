@@ -216,7 +216,7 @@ public final class TestCase extends MatrixItem
 		{
 	        ScreenshotKind screenshotKind = ScreenshotKind.valueByName(this.kind.get());
 
-	        if (table != null)
+	        if (table != null && !isTrue(super.isRepOff()))
 			{
 				position = table.size();
 
@@ -235,7 +235,7 @@ public final class TestCase extends MatrixItem
 	                ret = new ReturnAndResult(start, Result.Failed, "Fail due the TestCase " + this.depends.get() + " is failed", ErrorKind.FAIL, this);
 	                res = ret.getResult();
 	                
-	                if (table != null && table.size() >= 0)
+	                if (table != null && table.size() >= 0  && !isTrue(super.isRepOff()))
 	                {
 	                    row.put(Context.timeColumn,         ret.getTime());
 	                    row.put(Context.resultColumn,       res);
@@ -285,7 +285,7 @@ public final class TestCase extends MatrixItem
 			
             this.plugin.evaluate(evaluator);
             doSreenshot(row, this.plugin.getValue(), screenshotKind, ScreenshotKind.OnFinish, ScreenshotKind.OnFinishOrError);
-            if (table != null && position >= 0)
+            if (table != null && position >= 0 && !isTrue(super.isRepOff()))
 			{
 				row.put(Context.timeColumn, 		ret.getTime());
 				row.put(Context.resultColumn, 		res);
@@ -299,7 +299,7 @@ public final class TestCase extends MatrixItem
 		{
 		    logger.error(e.getMessage(), e);
 		    
-			if (table != null && table.size() >= 0)
+			if (table != null && table.size() >= 0  && !isTrue(super.isRepOff()))
 			{
 				row.put(Context.timeColumn, 		ret.getTime());
 				row.put(Context.resultColumn, 		res);

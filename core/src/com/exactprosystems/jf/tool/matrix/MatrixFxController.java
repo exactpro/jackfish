@@ -194,7 +194,7 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 	{
 		Platform.runLater(() ->
 		{
-			String format = String.format("Matrix '%s' finished.	  PASSED: %d FAILED: %d", matrix.getName(), passed, failed);
+			String format = String.format("Matrix '%s' finished.", matrix.getName());
 			if (listView != null)
 			{
 				listView.getItems().add(ConsoleText.defaultText(format));
