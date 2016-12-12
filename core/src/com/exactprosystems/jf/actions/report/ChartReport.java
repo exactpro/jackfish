@@ -105,6 +105,7 @@ public class ChartReport extends AbstractAction
 	{
 		switch (fieldName)
 		{
+			case beforeTestCaseName:
 			case typeName:
 				return HelpKind.ChooseFromList;
 		}
@@ -123,6 +124,9 @@ public class ChartReport extends AbstractAction
 				{
 					list.add(new ReadableValue(ChartKind.class.getSimpleName() + "." + kind.name(), kind.getDescription()));
 				}
+				break;
+			case beforeTestCaseName:
+				ActionsReportHelper.fillListForParameter(super.owner.getMatrix(),  list);
 				break;
 				
 			default:

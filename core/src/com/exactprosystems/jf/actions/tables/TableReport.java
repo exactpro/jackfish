@@ -78,6 +78,7 @@ public class TableReport extends AbstractAction
 	{
 		switch (fieldName)
 		{
+			case beforeTestCaseName:
 			case numbersName:
 			case reportValuesName:
 				return HelpKind.ChooseFromList;
@@ -96,6 +97,9 @@ public class TableReport extends AbstractAction
 			case reportValuesName:
 				list.add(ReadableValue.TRUE);
 				list.add(ReadableValue.FALSE);
+				break;
+			case beforeTestCaseName:
+				ActionsReportHelper.fillListForParameter(super.owner.getMatrix(),  list);
 				break;
 			default:
 		}
