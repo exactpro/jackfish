@@ -170,7 +170,7 @@ public class Main extends Application
 				controller = Common.loadController(Main.class.getResource("tool.fxml"));
 				controller.init(factory, Main.this, settings, stage);
 				controller.disableMenu(true);
-				boolean isGit = new File(".git").exists();
+				boolean isGit = GitUtil.isGitRepository();
 				controller.isGit(isGit);
 
 				final List<String> args = getParameters().getRaw();
