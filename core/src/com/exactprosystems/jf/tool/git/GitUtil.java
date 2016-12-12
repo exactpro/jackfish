@@ -51,6 +51,20 @@ public class GitUtil
 
 	}
 
+	public static boolean isGitRepository() throws Exception
+	{
+		try
+		{
+			Repository build = new FileRepositoryBuilder().findGitDir(new File(new File(".").getAbsolutePath())).build();
+			return build != null;
+		}
+		catch (IllegalArgumentException e)
+		{
+			//we catch the exception, if git repository not found
+		}
+		return false;
+	}
+
 	//region Clone
 	public static void gitClone(String remotePath, File projectFolder, CredentialBean credentials, ProgressMonitor monitor) throws Exception
 	{
