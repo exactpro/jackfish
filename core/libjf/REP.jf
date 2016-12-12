@@ -7,10 +7,16 @@
 // //==============================================
 #Id;#NameSpace
 REP;Prepared reports
-    #Id;#SubCase;#beforeTestCase
-    TotalReport;TotalReport;
+    #Id;#SubCase
+    TotalReport;TotalReport
         #Id;#Call
         table;RF.LastSummary
+
+        #Id;#Action;#Table;#result
+        passed;TableSelect;table;'Passed'
+
+        #Id;#Action;#Table;#result
+        failed;TableSelect;table;'Failed'
 
         #Action;#Replace;#Table;#Columns;#Search;#MatchCell
         TableReplace;'<div class=\"Passed\">Passed</div>';table;{ 'result' };'Passed';true
@@ -18,8 +24,17 @@ REP;Prepared reports
         #Action;#Replace;#Table;#Columns;#Search;#MatchCell
         TableReplace;'<div class=\"Failed\">Failed</div>';table;{ 'result' };'Failed';true
 
-        #Action;#Table;#Title;#BeforeTestCase;#Numbers;#scenario;#result;#date;#time;#user;#host;#details
-        TableReport;table;'Consolidated Umbrella Report: ';beforeTestCase;false;'Matrix Name';'Execution Status';'Execution Date';'Execution Time';'Exectuted By';'Execution Machine';'Report Link'
+        #Id;#Action;#ReportName
+        REP1;ReportStart;'Summary'
+
+        #Action;#Table;#Title;#ToReport;#Numbers;#scenario;#result;#date;#time;#user;#host;#report
+        TableReport;table;'Consolidated Umbrella Report: ';REP1.Out;false;'Matrix Name';'Execution Status';'Execution Date';'Execution Time';'Exectuted By';'Execution Machine';'Report Link'
+
+        #Action;#Passed;#Failed;#Report
+        ReportFinish;passed.Out.size();failed.Out.size();REP1.Out
+
+        #Action;#Report
+        ReportShow;REP1.Out.getReportName()
 
     #EndSubCase
 

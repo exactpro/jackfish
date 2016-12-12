@@ -209,7 +209,8 @@ public class Converter
 			return null;
 		}
 
-		try (ByteArrayInputStream bis = new ByteArrayInputStream(blob.getBytes(1, (int) blob.length())); ObjectInput in = new ObjectInputStream(bis))
+		try (ByteArrayInputStream bis = new ByteArrayInputStream(blob.getBytes(1, (int) blob.length())); 
+		        ObjectInput in = new ObjectInputStream(bis))
 		{
 			return in.readObject();
 		}

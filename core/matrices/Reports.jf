@@ -4,8 +4,8 @@ INIT;Init;Never;;
     CALL_1;RF.SetVars;'MySql';'127.0.0.1';'regression';'root';dbPassword;'matrices/EE/'
 
 
-#TestCase;#Kind;#Depends;#For
-Overall;Never;;
+#Off;#TestCase;#Kind;#Depends;#For
+1;Overall;Never;;
     #Id;#Call
     table;RF.TotalTable
 
@@ -18,8 +18,8 @@ Overall;Never;;
 
 #Off;#TestCase;#Kind;#Depends;#For
 1;Summary;Never;;
-    #Id;#Call;#beforeTestCase
-    table;REP.TotalReport;'INIT'
+    #Id;#Call
+    table;REP.TotalReport
 
 
 #Off;#TestCase;#Kind;#Depends;#For
@@ -71,5 +71,17 @@ Overall;Never;;
 
     #Id;#Action;#Connection
     SQLDCNT1;SQLdisconnect;SQL
+
+
+#TestCase;#Kind;#Depends;#For
+;;;
+    #Id;#Call
+    CALL_2;RF.Connect
+
+    #Id;#Action;#Query;#Connection
+    SQLSLCT1;SQLselect;'SELECT report FROM scenarios WHERE id = 285\u003b';CALL_2
+
+    #Action;#Table;#Title;#BeforeTestCase
+    TableReport;SQLSLCT1.Out;'table';'INIT'
 
 

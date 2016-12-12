@@ -28,7 +28,7 @@ INIT;Test case;;;
 
 #TestCase;#Kind;#Depends;#For
 Summary report;;;
-    #Id;#Call;#beforeTestCase
-    CALL_1;REP.TotalReport;'INIT'
+    #Id;#Call
+    CALL_1;REP.TotalReport
 
 

@@ -249,7 +249,8 @@ RF;RegressionFramework
         "  s.performer AS performer, "
         "  s.env AS env,  "
         "  s.host AS host, "
-        "  s.user AS user "
+        "  s.user AS user,"
+        "  s.report AS report  "
         "FROM scenarios AS s "
         "WHERE s.manual = 0 AND s.run_id = (SELECT MAX(r.id) FROM runs AS r)"
         #EndRawText

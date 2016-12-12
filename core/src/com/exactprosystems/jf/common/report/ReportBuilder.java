@@ -20,15 +20,18 @@ import java.io.BufferedReader;
 import java.io.CharArrayReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public abstract class ReportBuilder 
+public abstract class ReportBuilder implements Serializable
 {
-	public final static String SUFFIX 	= "_RUNNING";
+    private static final long serialVersionUID = -4301681183671789970L;
+
+    public final static String SUFFIX 	= "_RUNNING";
 	public final static String PASSED 	= "_PASSED";
 	public final static String FAILED 	= "_FAILED";
 	public final static String OM		= "{{";

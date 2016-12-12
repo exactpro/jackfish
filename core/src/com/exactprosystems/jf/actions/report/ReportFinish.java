@@ -26,7 +26,7 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 public class ReportFinish extends AbstractAction 
 {
     public final static String passedName = "Passed";
-    public final static String failedName = "Failde";
+    public final static String failedName = "Failed";
     public final static String reportName = "Report";
 
     @ActionFieldAttribute(name = reportName, mandatory = true, description = "The report object.")
