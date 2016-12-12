@@ -76,6 +76,10 @@ public class HTMLReportBuilder extends ReportBuilder
 	@Override
 	protected String generateReportName(String outputPath, String matrixName, String suffix, Date date) 
 	{
+		if (2 > 1)
+		{
+			return "asd.html";
+		}
 		if (matrixName.toLowerCase().endsWith(Configuration.matrixExt))
 		{
 			matrixName = matrixName.substring(0, matrixName.length()-Configuration.matrixExt.length());
@@ -144,10 +148,10 @@ public class HTMLReportBuilder extends ReportBuilder
 				"</head>\n" +
 				"<body>\n" +
 				"<h1>EXECUTION REPORT</h1>\n" +
-				"<table border='0' cellspacing='5'>\n"); 
+				"<table class='table'>\n");
 
 		writer.fwrite("<tr><td><span id='name'></span>\n");
-		writer.fwrite("<tr><td width='200'><h0>Version <td>%s</h0>\n", VersionInfo.getVersion());
+		writer.fwrite("<tr><td>Version <td>%s\n", VersionInfo.getVersion());
 		writer.fwrite("<tr><td>Start time: <td><span>%tF %tT</span>\n", date, date);
 		writer.fwrite("<tr><td>Finish time: <td><span id='finishTime'>Calculating...</span>\n");
 	}
@@ -155,11 +159,11 @@ public class HTMLReportBuilder extends ReportBuilder
 	@Override
 	protected void reportMatrixHeader(ReportWriter writer, String matrixName) throws IOException
 	{
-		writer.fwrite("<tr><td width='200'><a href='#' class='showSource'>Matrix:  </a><td><span id='reportName'>%s</span>\n", matrixName);
+		writer.fwrite("<tr><td width='200'><a href='#' class='showSource'>Matrix <span class='caret'></span>  </a><td><span id='reportName'>%s</span>\n", matrixName);
 		writer.fwrite("<tr class='matrixSource'><td colspan='2'>\n");
-		writer.fwrite("<button onclick=\"copyToClipboard(document.getElementsByTagName('pre')[0].innerHTML)\">Copy matrix</button>\n");
 		writer.fwrite("<script>\n");
 		writer.fwrite("function copyToClipboard(text) {\n" +
+				"	console.log('TEXT : ' + text);\n"+
 				"	var w = document.createElement('textArea');\n" +
 				"	w.value = text;\n" +
 				"	w.setSelectionRange(0, text.length);\n" +
@@ -171,7 +175,8 @@ public class HTMLReportBuilder extends ReportBuilder
 				"	document.body.removeChild(w);\n" +
 				"  }");
 		writer.fwrite("</script>\n");
-		writer.fwrite("<pre>\n");
+		writer.fwrite("<pre id='matrixSource'>");
+		writer.fwrite("<button onclick=\"copyToClipboard(document.getElementById('matrixSource').innerHTML)\" class='btn btn-default copyMatrix'>Copy</button>\n");
 	}
 	
 	@Override
