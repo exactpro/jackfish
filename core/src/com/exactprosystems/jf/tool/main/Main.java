@@ -608,14 +608,11 @@ public class Main extends Application
 	{
 		StringBuilder sb = new StringBuilder(Configuration.projectName);
 		sb.append(" ").append(VersionInfo.getVersion());
-		try
-		{
-			sb.append(" " + this.config.getName());
-		}
-		catch (Exception ex)
-		{
+		if (this.config != null)
+        {
+            sb.append(" [ ").append(this.config.getName().replace(".xml", "")).append(" ]");
+        }
 
-		}
 		if (document != null)
 		{
 			File file = new File(document.getName());
