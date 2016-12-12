@@ -35,6 +35,9 @@ var createPieChart = function(diagramId, data, colors) {
 
 	arcs.append("svg:path")
 		.attr("fill", function(d, i){
+			if (colors == undefined) {
+				return color(i);
+			}
 		    var myColor = colors[d.data.label]
 		    if (myColor != undefined) {
 		        return myColor;
@@ -139,6 +142,9 @@ var createBarChart = function(diagramId, data, yAxisDescription, colors) {
 		.attr("value", function(d){return d.name;})
 		.attr("height", function(d) { return height - y(d.value); })
 		.style("fill", function(d) {
+			if (colors == undefined) {
+				return color(d.name);
+			}
 		    var myColor = colors[d.name]
 		    if (myColor != undefined) {
 		        return myColor;
@@ -173,6 +179,9 @@ var createBarChart = function(diagramId, data, yAxisDescription, colors) {
 		.attr("width", 18)
 		.attr("height", 18)
 		.style("fill", function(d) {
+			if (colors == undefined) {
+				return color(d);
+			}
 		    var myColor = colors[d];
 		    if (myColor !== undefined) {
 		        return myColor;
@@ -300,6 +309,9 @@ var createLineChart = function(diagramId, data, yAxisDescription, colors) {
 			return line(d.values)
 		})
 		.style("stroke", function(d) {
+			if (colors == undefined) {
+				return color(d.name);
+			}
 			var myColor = colors[d.name]
 		    if (myColor != undefined) {
 		        return myColor;

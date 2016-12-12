@@ -69,6 +69,7 @@ public class ChartReport extends AbstractAction
 	{
 		this.beforeTestCase = null;
 		this.toReport = null;
+		this.colors = null;
 	}
 
 	@Override
