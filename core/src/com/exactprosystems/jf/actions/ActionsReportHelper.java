@@ -9,7 +9,8 @@ public class ActionsReportHelper {
     public static void fillListForParameter(Matrix matrix, List<ReadableValue> list) throws Exception
     {
         List<String> l = matrix.listOfIds(TestCase.class);
-        if (!l.isEmpty()){
+        if (!l.isEmpty())
+        {
             //empty string for reset value
             list.add(0, new ReadableValue(""));
             l.forEach(s-> list.add(new ReadableValue(s)));
