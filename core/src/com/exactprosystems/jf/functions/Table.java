@@ -93,7 +93,7 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 
 			for (int column = 0; column < meta.getColumnCount(); column++)
 			{
-				this.headers[column] = new Header(meta.getColumnName(column + 1), Header.HeaderType.forName(meta.getColumnClassName(column + 1)));
+				this.headers[column] = new Header(meta.getColumnLabel(column + 1), Header.HeaderType.forName(meta.getColumnClassName(column + 1)));
 			}
 
 			while (set.next())

@@ -1,29 +1,29 @@
-#Id;#TestCase;#Kind;#For
-INIT;Init;Never;
+#Id;#TestCase;#Kind;#Depends;#For
+INIT;Init;Never;;
     #Id;#Call;#type;#host;#base;#user;#password;#scriptsDir
     CALL_1;RF.SetVars;'MySql';'127.0.0.1';'regression';'root';dbPassword;'matrices/EE/'
 
 
-#Off;#TestCase;#Kind;#For
-1;Overall;Never;
+#TestCase;#Kind;#Depends;#For
+Overall;Never;;
     #Id;#Call
     table;RF.TotalTable
 
-    #Action;#Type;#Table;#Title;#BeforeTestCase;#Labels;#Values
-    ChartReport;ChartKind.Pie;table;'{{4 Overall 4}}';'INIT';'Kind';'Values'
+    #Action;#Type;#Table;#Title;#BeforeTestCase;#Colors
+    ChartReport;ChartKind.Pie;table;'{{4 Overall 4}}';'INIT';{ 'Passed' : Color.GREEN, 'Failed' : Color.RED }
 
     #Action;#Table;#Title;#BeforeTestCase;#Numbers
     TableReport;table;'Table';'INIT';false
 
 
-#TestCase;#Kind;#For
-Summary;Never;
+#Off;#TestCase;#Kind;#Depends;#For
+1;Summary;Never;;
     #Id;#Call;#beforeTestCase
     table;REP.TotalReport;'INIT'
 
 
-#Off;#TestCase;#Kind;#For
-1;Progress;Never;
+#Off;#TestCase;#Kind;#Depends;#For
+1;Progress;Never;;
     #Id;#Call
     table;RF.ProgressTable
 
@@ -31,8 +31,8 @@ Summary;Never;
     ChartReport;ChartKind.Line;table;'{{4 Regression progress 4}}';'INIT';'id';'Average'
 
 
-#TestCase;#Kind;#For
-Details;Never;
+#Off;#TestCase;#Kind;#Depends;#For
+1;Details;Never;;
     #Id;#Call
     table;RF.LastAllDetails
 
@@ -50,5 +50,26 @@ Details;Never;
 
     #Action;#Table;#Title;#BeforeTestCase;#Numbers;#scenario;#testcase;#result;#description;#expected;#error;#screenshot
     TableReport;table;'{{4 Detailed report 4}}';'INIT';false;'Matrix';'Step Name';'Status';'Description';'Expected Result';'Actual Result';'Screenshots'
+
+
+#Off;#TestCase;#Kind;#Depends;#For
+1;;;;
+    #Id;#Call
+    SQL;RF.Connect
+
+    #Id;#Action;#Query;#Connection
+    SQLSLCT1;SQLselect;'SELECT s.id, s.scenario, IF(s.failed > 0, "Failed", "Passed") AS status, s.host, s.user, DATE(s.start_time) AS date, TIME(s.start_time) AS time FROM scenarios AS s\u003b';SQL
+
+    #Action;#Table;#File
+    TableSaveToFile;SQLSLCT1.Out;'scenario.csv'
+
+    #Id;#Action;#Query;#Connection
+    SQLSLCT2;SQLselect;'SELECT d.id, d.scenario_id, d.error FROM details AS d\u003b';SQL
+
+    #Action;#Table;#File
+    TableSaveToFile;SQLSLCT2.Out;'steps.csv'
+
+    #Id;#Action;#Connection
+    SQLDCNT1;SQLdisconnect;SQL
 
 

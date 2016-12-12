@@ -165,8 +165,17 @@ RF;RegressionFramework
         #Id;#Call
         SQL;RF.Connect
 
+        #Id;#RawText
+        TEXT4;Text
+        "SELECT  "
+        "	sp.count AS `Passed`, "
+        "	sf.count AS `Failed`"
+        "FROM (SELECT COUNT(id) AS count FROM scenarios WHERE failed = 0 AND run_id = (SELECT MAX(id) FROM runs) ) AS sp "
+        "LEFT JOIN (SELECT COUNT(id) AS count FROM scenarios WHERE failed <> 0 AND run_id = (SELECT MAX(id) FROM runs) ) AS sf ON true "
+        #EndRawText
+
         #Id;#Action;#Connection;#Query
-        select;SQLselect;SQL;'SELECT "PASSED" AS `Kind`, COUNT(*) AS `Values` FROM scenarios WHERE failed = 0 AND run_id = (SELECT MAX(id) FROM runs) UNION SELECT "FAILED", COUNT(*) FROM scenarios WHERE failed <> 0 AND run_id = (SELECT MAX(id) FROM runs)'
+        select;SQLselect;SQL;TEXT4.toString()
 
         #Return
         select.Out
