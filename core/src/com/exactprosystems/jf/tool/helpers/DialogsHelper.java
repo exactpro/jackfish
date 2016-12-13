@@ -129,9 +129,14 @@ public abstract class DialogsHelper
 		alert.getDialogPane().getStylesheets().addAll(Common.currentThemesPaths());
 		Optional<ButtonType> buttonType = alert.showAndWait();
 		Optional<ButtonType> btnOk = buttonType.filter(bt -> bt.getButtonData().equals(ButtonBar.ButtonData.OK_DONE));
+		Optional<ButtonType> btnCancel = buttonType.filter(bt -> bt.getButtonData().equals(ButtonBar.ButtonData.CANCEL_CLOSE));
 		if (btnOk.isPresent())
 		{
 			return picker.getDate();
+		}
+		if (btnCancel.isPresent())
+		{
+			return null;
 		}
 		return initialValue;
 	}
