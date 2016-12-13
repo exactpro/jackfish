@@ -169,17 +169,18 @@ public class HTMLReportBuilder extends ReportBuilder
 
 		writer.fwrite("<table class='table repLog table-bordered'>\n");
 		writer.fwrite(createColgroup());
-		writer.fwrite("<thead>\n" +
-				"<tr>\n" +
-				"<th>#</th>"+
-				"<th>id</th>"+
-				"<th>Name</th>"+
-				"<th>Status</th>"+
-				"<th>Time</th>"+
-				"<th>Screenshot</th>"+
-				"</tr>\n"+
-				"</thead>\n"
-		);
+		//TODO uncoment, if u want to display header
+//		writer.fwrite("<thead>\n" +
+//				"<tr>\n" +
+//				"<th>#</th>"+
+//				"<th>id</th>"+
+//				"<th>Name</th>"+
+//				"<th>Status</th>"+
+//				"<th>Time</th>"+
+//				"<th>Screenshot</th>"+
+//				"</tr>\n"+
+//				"</thead>\n"
+//		);
 		writer.fwrite("<tbody>");
 	}
 
@@ -265,7 +266,7 @@ public class HTMLReportBuilder extends ReportBuilder
 		if (!collect.isEmpty())
 		{
 			writer.fwrite(
-					"<tr>\n"+
+					"<tr class='comment'>\n"+
 						"<td colspan='6'>\n" +
 							collect +"\n"+
 						"</td>\n" +

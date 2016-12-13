@@ -1,8 +1,36 @@
 $(document).ready(function(){
+	var hideComment = function(arr) {
+		for(var i =0; i < arr.size(); i++) {
+			var q = $(arr[i]);
+			if (q.hasClass('comment')) {
+				q.hide();
+			}
+		}
+	}
+
+	var showComment = function(arr) {
+		for(var i =0; i < arr.size(); i++) {
+			var q = $(arr[i]);
+			if (q.hasClass('comment')) {
+				q.show();
+			}
+		}
+	}
+
+	var hideTable = function() {
+		$(".repLog > tbody > tr.danger").hide();
+		$(".repLog > tbody > tr.success").hide();
+
+		hideComment($(".repLog > tbody > tr.danger").prev())
+		hideComment($(".repLog > tbody > tr.success").prev())
+	}
+
+
 	$("tr.matrixSource").hide();
 
 	//hide main table
-	$("body > table[class*='repLog']").hide();
+	hideTable();
+//	$("body > table[class*='repLog']").hide();
 
     // hide all inner actions
     $("a.showBody").parent().parent().next().hide();
@@ -14,6 +42,8 @@ $(document).ready(function(){
         $("#TC_" + me.data("moveto").replace(" ", "\\ "))[0].appendChild(me[0]);
 		me.attr('class','moved');
 	})
+
+
 
 	//show matrix source
 	$("a.showSource").toggle(
@@ -29,10 +59,11 @@ $(document).ready(function(){
 
 	$("button.filterTotal").click(
 		function(event) {
-			$("table.repLog").show();
-
 			$(".repLog > tbody > tr.danger").show();
 			$(".repLog > tbody > tr.success").show();
+
+			showComment($(".repLog > tbody > tr.danger").prev())
+			showComment($(".repLog > tbody > tr.success").prev())
 
 			$('.filterPassed, .filterFailed').removeClass('active');
 
@@ -45,10 +76,11 @@ $(document).ready(function(){
 	);
 	$("button.filterPassed").click(
 		function(event) {
-			$("table.repLog").show();
-
 			$(".repLog > tbody > tr.danger").hide();
+			hideComment($(".repLog > tbody > tr.danger").prev());
+
 			$(".repLog > tbody > tr.success").show();
+			showComment($(".repLog > tbody > tr.success").prev());
 
 			$('.filterFailed').removeClass('active');
 			$(".filterPassed").addClass('active');
@@ -62,10 +94,12 @@ $(document).ready(function(){
 	);
 	$("button.filterFailed").click(
 		function(event) {
-			$(".repLog").show();
-
 			$(".repLog > tbody > tr.danger").show();
+			showComment($(".repLog > tbody > tr.danger").prev());
+
 			$(".repLog > tbody > tr.success").hide();
+			hideComment($(".repLog > tbody > tr.success").prev());
+
 
 			$('html, body').animate({
 				scrollTop: $("table.repLog").offset().top
@@ -79,15 +113,13 @@ $(document).ready(function(){
 	);
 
 	$("button.filterExpandAllFailed").click(function(event) {
-		$(".repLog").show();
-
 		var failedTr = $("tr.danger");
 		failedTr.show();
 		failedTr.parent().show();
 		failedTr.next().show();
 	});
 	$("button.filterCollapseAll").click(function(event) {
-		$("table.repLog").hide();
+		hideTable();
 
 	});
 
