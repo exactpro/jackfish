@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.stream.Collectors;
 
 public class HTMLReportBuilder extends ReportBuilder 
 {
@@ -76,10 +77,6 @@ public class HTMLReportBuilder extends ReportBuilder
 	@Override
 	protected String generateReportName(String outputPath, String matrixName, String suffix, Date date) 
 	{
-		if (2 > 1)
-		{
-			return "asd.html";
-		}
 		if (matrixName.toLowerCase().endsWith(Configuration.matrixExt))
 		{
 			matrixName = matrixName.substring(0, matrixName.length()-Configuration.matrixExt.length());
@@ -109,7 +106,7 @@ public class HTMLReportBuilder extends ReportBuilder
 		}
 	}
 
-
+	//region Global report
 	@Override
 	protected void reportHeader(ReportWriter writer, Date date) throws IOException
 	{
@@ -157,6 +154,65 @@ public class HTMLReportBuilder extends ReportBuilder
 	}
 
 	@Override
+	protected void reportHeaderTotal(ReportWriter writer, Date date) throws IOException
+	{
+		writer.fwrite("<tr>");
+		writer.fwrite("<td colspan='2'>");
+		writer.fwrite("<button class='btn btn-info filterTotal' type='button'>Executed : <span id='exec' class='badge'>0</span></button>");
+		writer.fwrite("<button class='btn btn-success filterPassed' type='button'>Passed : <span id='pass' class='badge'>0</span></button>");
+		writer.fwrite("<button class='btn btn-danger filterFailed' type='button'>Failed : <span id='fail' class='badge'>0</span></button>");
+		writer.fwrite("<button class='btn btn-default filterExpandAllFailed' type='button'><span class='text-danger'>Expand all failed</span></button>");
+		writer.fwrite("<button class='btn btn-default filterCollapseAll' type='button'>Collapse all</button>");
+		writer.fwrite("</td>");
+		writer.fwrite("</tr>");
+		writer.fwrite("</table>\n");
+
+		writer.fwrite("<table class='table repLog table-bordered'>\n");
+		writer.fwrite(createColgroup());
+		writer.fwrite("<thead>\n" +
+				"<tr>\n" +
+				"<th>#</th>"+
+				"<th>id</th>"+
+				"<th>Name</th>"+
+				"<th>Status</th>"+
+				"<th>Time</th>"+
+				"<th>Screenshot</th>"+
+				"</tr>\n"+
+				"</thead>\n"
+		);
+		writer.fwrite("<tbody>");
+	}
+
+	@Override
+	protected void reportFooter(ReportWriter writer, int failed, int passed, Date date, String name, String reportName) throws IOException
+	{
+		writer.fwrite("</tbody>");
+		writer.fwrite("</table>");
+		writer.fwrite("<script type='text/javascript'>\n" +
+						"<!--\n" +
+						"document.getElementById('exec').innerHTML = '<span> %d </span>'\n" +
+						"document.getElementById('pass').innerHTML = '<span> %d </span>'\n" +
+						"document.getElementById('fail').innerHTML = '<span> %d </span>'\n" +
+						"document.getElementById('finishTime').innerHTML = '<span>%tF %tT</span>'\n" +
+						"document.getElementById('name').innerHTML = '<span>%s</span>'\n" +
+						"document.getElementById('reportName').innerHTML = '<span>%s</span>'\n" +
+						"-->\n" +
+						"</script>\n",
+				passed + failed,
+				passed,
+				failed,
+				date, date,
+				(name == null ? "" : name),
+				reportName
+		);
+
+		writer.fwrite("</body>\n");
+		writer.fwrite("</html>");
+	}
+	//endregion
+
+	//region display executed matrix
+	@Override
 	protected void reportMatrixHeader(ReportWriter writer, String matrixName) throws IOException
 	{
 		writer.fwrite("<tr><td width='200'><a href='#' class='showSource'>Matrix <span class='caret'></span>  </a><td><span id='reportName'>%s</span>\n", matrixName);
@@ -178,78 +234,96 @@ public class HTMLReportBuilder extends ReportBuilder
 		writer.fwrite("<pre id='matrixSource'>");
 		writer.fwrite("<button onclick=\"copyToClipboard(document.getElementById('matrixSource').innerHTML)\" class='btn btn-default copyMatrix'>Copy</button>\n");
 	}
-	
-	@Override
-	protected void reportMatrixRow(ReportWriter writer, int count, String line) throws IOException
-	{
-		writer.fwrite("%s\n", line);
-	}
 
 	@Override
 	protected void reportMatrixFooter(ReportWriter writer) throws IOException
 	{
 		writer.fwrite("</pre>\n");
 	}
-	
+
 	@Override
-	protected void reportHeaderTotal(ReportWriter writer, Date date) throws IOException
+	protected void reportMatrixRow(ReportWriter writer, int count, String line) throws IOException
 	{
-		writer.fwrite("<tr><td><a href='#' class='filterTotal'> Executed: </a><td> <span id='exec'>0</span>\n");
-		writer.fwrite("<tr><td><a href='#' class='filterPassed'>Passed:   </a><td> <span id='pass'>0</span>\n");
-		writer.fwrite("<tr><td><a href='#' class='filterFailed'>Failed:   </a><td> <span id='fail'>0</span>\n");
-		writer.fwrite("<tr><td><a href='#' class='filterExpandAllFailed'>Show all failed</a><td>\n");
-		writer.fwrite("<tr><td><a href='#' class='filterCollapseAll'>Collapse all</a><td>\n");
-		writer.fwrite("</table>\n");
+		writer.fwrite("%s\n", line);
 	}
+
+	//endregion
 
 	@Override
 	protected void reportItemHeader(ReportWriter writer, MatrixItem item, Integer id) throws IOException
 	{
-        String itemId = item.getId();
+		String itemId = item.getId();
 
         if (itemId == null)
 		{
             itemId = "";
-        }					
+        }
 
-		writer.fwrite(	
-				"<div class='tree' id='%s'>\n",
-				id);
+		//region display header
 
-		writer.fwrite(
-				"<table border='0' cellspacing='0' width='50%%' >\n ");
-
-		for (CommentString comment : item.getComments())
+		String collect = item.getComments().stream().map(CommentString::toString).collect(Collectors.joining("<br>"));
+		if (!collect.isEmpty())
 		{
 			writer.fwrite(
-					"<tr><td><td>%s</tr>\n",
-					"" + comment); 
+					"<tr>\n"+
+						"<td colspan='6'>\n" +
+							collect +"\n"+
+						"</td>\n" +
+					"</tr>\n"
+			);
 		}
-		writer.fwrite("</table>\n");
+		writer.fwrite("<tr id='tr_%s'>", id);
+		writer.fwrite("<th scope='row'>%03d</th>", item.getNumber());
+		writer.fwrite("<td>%s</td>", itemId);
+		writer.fwrite("<td><a href='javascript:void(0)' class='showBody'>%s</a></td>", item.getItemName());
+		writer.fwrite("<td id='hs_%s'></td>", id);
+		writer.fwrite("<td id='time_%s'></td>", id);
+		writer.fwrite("<td id='src_%s'></td>", id);
+		writer.fwrite("</tr>");
+		//endregion
 
-		writer.fwrite(
-				"<table border='0' cellspacing='0' width='50%%' >\n " +
-				"<tr>" +
-				"<td width='40px'>[%03d]" +
-				"<td width='100px'><span class='Identity'>%s</span>" +
-				"<td><a href='javascript:void(0)' class='showBody'>%s:</a>" +
-				"<td width='200px'><span id='hs_%s'>Loading...</span>"+
-				"<td width='100px'><span class='Time'>Time:</span>" +
-				"<td class='ExecutionTime'><span id='time_%s'></span>" +
-                "<td class='Screenshot' width='200px'><span id='scr_%s'></span>\n",
-				item.getNumber(),
-				itemId,
-				item.getItemName(),
-				id,
-				id,
-				id);
+		writer.fwrite("<tr>");
+		writer.fwrite("<td colspan='6' class='parTd'>");
+		writer.fwrite("<table class='table table-bordered innerTable'>");
+		writer.fwrite(createColgroup());
+		writer.fwrite("<tbody>");
+	}
 
-		writer.fwrite(
-				"</table>\n"); 
+	private String createColgroup()
+	{
+		return "<colgroup>\n" +
+				"<col width='5%'>\n" +
+				"<col width='10%'>\n" +
+				"<col width='40%'>\n" +
+				"<col width='15%'>\n" +
+				"<col width='15%'>\n" +
+				"<col width='15%'>\n" +
+				"</colgroup>\n";
+	}
 
-		
-		writer.fwrite(
-				"<div class='body'>\n");
+	@Override
+	protected void reportItemFooter(ReportWriter writer, MatrixItem item, Integer id, long time, ImageWrapper screenshot) throws IOException
+	{
+		Result result = item.getResult() == null ? Result.NotExecuted : item.getResult().getResult();
+			String styleClass = result == Result.Failed ? "danger" : "success";
+			writer.fwrite("</tbody>");
+			writer.fwrite("</table>");
+
+		//region javascript insert
+		writer.fwrite("<script type='text/javascript'>\n");
+			writer.fwrite("$('#tr_%s').addClass('%s');\n", id, styleClass);
+			writer.fwrite("$('#hs_%s').html('<strong class=\"text-%s\">%s</strong>');\n", id, styleClass, result);
+			writer.fwrite("$('#time_%s').html('%s ms');\n", id, time <= 1 ? "< 1" : time);
+			if (screenshot != null)
+			{
+				String link = decorateLink(screenshot.getDescription(), getImageDir() + File.separator + screenshot.getName(getReportDir()));
+				writer.fwrite("$('#scr_%s').innerHTML = '%s';\n",id,link);
+			}
+			writer.fwrite("</script>\n");
+		//endregion
+
+			writer.fwrite("</td>");
+			writer.fwrite("</tr>");
 	}
 
 	@Override
@@ -264,14 +338,14 @@ public class HTMLReportBuilder extends ReportBuilder
 		writer.fwrite(
 				"<span class='tableTitle'>%s</span><br>",
 				this.postProcess(title));
-		
+
 		writer.fwrite("<img src='%s' class='img'/><br>", fileName);
 		if (beforeTestcase != null)
 		{
 			writer.fwrite("</div>\n");
 		}
 	}
-	
+
 	@Override
 	protected void reportItemLine(ReportWriter writer, MatrixItem item, String beforeTestcase, String string, String labelId) throws IOException
 	{
@@ -281,104 +355,40 @@ public class HTMLReportBuilder extends ReportBuilder
 		}
 		else
 		{
-			writer.fwrite("<a href='javascript:void(0)' class='label' id='%s'>%s</a><br>", labelId, string);
+			writer.fwrite("<tr><td colspan='6'><span class='label' id='%s'>%s</span></td></tr>", labelId, string);
 		}
 	}
-	
-	@Override
-	protected void reportItemFooter(ReportWriter writer, MatrixItem item, Integer id, long time, ImageWrapper screenshot) throws IOException
-	{
-		Result result = item.getResult() == null ? Result.NotExecuted : item.getResult().getResult();
-		
-		writer.fwrite(
-				"</div>\n");
-
-		writer.fwrite("<script type='text/javascript'>\n" +
-			    "<!--\n" );
-
-		writer.fwrite("document.getElementById('hs_%s').innerHTML = '<span class=%s>%S</span>';\n", 
-			    id,
-			    result,
-			    result );
-		writer.fwrite("document.getElementById('time_%s').innerHTML = '<span>%s ms</span>';\n",
-				id,
-				time <= 1 ? "< 1" : time);
-		
-		if (screenshot != null)
-		{
-            String link = decorateLink(screenshot.getDescription(), getImageDir() + File.separator + screenshot.getName(getReportDir()));
-		    writer.fwrite("document.getElementById('scr_%s').innerHTML = '%s';\n",
-	                id,
-	                link);
-		}
-
-		writer.fwrite("document.getElementById('%s').title = '%s';\n", 
-			    id,
-			    result );
-
-		writer.fwrite("-->\n" +
-			    "</script>\n");
-		
-		writer.fwrite("</div>\n");
-	}
-
-	@Override
-	protected void reportFooter(ReportWriter writer, int failed, int passed, Date date, String name, String reportName) throws IOException
-	{
-		writer.fwrite("<script type='text/javascript'>\n" +
-		    "<!--\n" +
-		    "document.getElementById('exec').innerHTML = '<span> %d </span>'\n" + 
-		    "document.getElementById('pass').innerHTML = '<span> %d </span>'\n" +
-		    "document.getElementById('fail').innerHTML = '<span> %d </span>'\n" +
-		    "document.getElementById('finishTime').innerHTML = '<span>%tF %tT</span>'\n" + 
-		    "document.getElementById('name').innerHTML = '<span>%s</span>'\n" + 
-		    "document.getElementById('reportName').innerHTML = '<span>%s</span>'\n" +
-		    "-->\n" +
-		    "</script>\n",
-		        passed + failed,
-		        passed,
-		        failed,
-		    	date, date, 
-		    	(name == null ? "" : name),
-				reportName
-				);
-		
-		writer.fwrite("</body>\n");
-		writer.fwrite("</html>");
-	}
-	
 
 	@Override
 	protected void tableHeader(ReportWriter writer, ReportTable table, String tableTitle, String[] columns, int[] percents) throws IOException
 	{
+		writer.fwrite("<tr>\n");
+		writer.fwrite("<td>\n");
 		if (table.getBeforeTestcase() != null)
 		{
-			writer.fwrite(
-					"<div class='movable' data-moveto='%s' >\n",
-					table.getBeforeTestcase());
+			writer.fwrite("<div class='movable' data-moveto='%s' >\n",table.getBeforeTestcase());
 		}
-		
-		writer.fwrite(
-				"<span class='tableTitle'>%s</span><br>",
-				this.postProcess(tableTitle));
+		writer.fwrite("<h4 class='tableTitle'>%s</h4>",this.postProcess(tableTitle));
+		writer.fwrite("<table width='100%%' class='table table-bordered'>\n");
 
-        writer.fwrite(
-        		"<table width='100%%' border='1' bordercolor='#000000' cellpadding='3' cellspacing='0'>\n" +
-        		"<tr style='font-weight: bold;'>\n");
-
+		//region display headers
+		writer.fwrite("<thead>\n");
         for (int i = 0; i < columns.length; i++)
         {
         	if (percents == null || percents.length < i || percents[i] <= 0)
         	{
-        		writer.fwrite("<td>%s", columns[i]);
+        		writer.fwrite("<th>%s</th>", columns[i]);
         	}
         	else
         	{
-        		writer.fwrite("<td width='%d%%'>%s", percents[i], columns[i]);
+        		writer.fwrite("<th width='%d%%'>%s</th>", percents[i], columns[i]);
         	}
         }
+        writer.fwrite("</thead>\n");
+		//endregion
 
-        writer.fwrite("\n");
+		writer.fwrite("<tbody>\n");
+
 	}
 	
 	@Override
@@ -390,9 +400,10 @@ public class HTMLReportBuilder extends ReportBuilder
 			int count = 0;
 			for (Object obj : value)
 			{
-				writer.fwrite("<td>%s", ReportHelper.objToString(obj, count >= quotes));
+				writer.fwrite("<td>%s</td>", ReportHelper.objToString(obj, count >= quotes));
 				count++;
 			}
+			writer.fwrite("</tr>");
             writer.fwrite("\n");
         }
 	}
@@ -400,11 +411,14 @@ public class HTMLReportBuilder extends ReportBuilder
 	@Override
 	protected void tableFooter(ReportWriter writer, ReportTable table) throws IOException
 	{
-        writer.fwrite("</table>\n");
+		writer.fwrite("</tbody>\n");
+		writer.fwrite("</table>\n");
 		if (table.getBeforeTestcase() != null)
 		{
 			writer.fwrite("</div>\n");
 		}
+		writer.fwrite("</td>");
+		writer.fwrite("</tr>");
 	}
 
 	@Override
