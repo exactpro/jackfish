@@ -3,11 +3,11 @@ Init;Never;;
     #Id;#Call;#type;#host;#base;#user;#password;#scriptsDir
     CALL_1;RF.SetVars;'MySql';'127.0.0.1';'regression';'root';dbPassword;'matrices/EE/'
 
-    #Id;#Action;#DefaultValue;#Title;#HelpKind;#DataSource
-    INP1;Input;1;'Choose the report:';HelpKind.ChooseFromList;{ 1: 'Overall', 2 : 'Summary', 3 : 'Export to CSV' }
+    #Id;#Off;#Action;#DefaultValue;#Title;#HelpKind;#DataSource
+    INP1;1;Input;1;'Choose the report:';HelpKind.ChooseFromList;{ 1: 'Overall', 2 : 'Summary', 3 : 'Export to CSV', 4 : 'Total detailed' }
 
-    #Switch
-    INP1.Out
+    #Off;#Switch
+    1;INP1.Out
         #Case
         1
             #Call
@@ -29,6 +29,12 @@ Init;Never;;
             RF.repCsvExport;name.Out
 
 
+        #Case
+        4
+            #Call
+            RF.repLastAllDetails
+
+
     #EndSwitch
 
 
@@ -44,22 +50,7 @@ Init;Never;;
 #Off;#TestCase;#Kind;#Depends;#For
 1;Details;Never;;
     #Id;#Call
-    table;RF.LastAllDetails
-
-    #Action;#Table;#Columns;#MatchCell;#Search;#Replace
-    TableReplace;table;{ 'step', 'error' };true;'null';''
-
-    #Action;#Table;#Columns;#MatchCell;#Search;#Replace
-    TableReplace;table;{ 'screenshot'};true;null;''
-
-    #Action;#Replace;#Table;#Columns;#Search;#MatchCell
-    TableReplace;'<div class=\"Passed\">Passed</div>';table;{ 'result' };'Passed';true
-
-    #Action;#Replace;#Table;#Columns;#Search;#MatchCell
-    TableReplace;'<div class=\"Failed\">Failed</div>';table;{ 'result' };'Failed';true
-
-    #Action;#Table;#Title;#BeforeTestCase;#Numbers;#scenario;#testcase;#result;#description;#expected;#error;#screenshot
-    TableReport;table;'{{4 Detailed report 4}}';'INIT';false;'Matrix';'Step Name';'Status';'Description';'Expected Result';'Actual Result';'Screenshots'
+    table;RF.repLastAllDetails
 
 
 #Off;#TestCase;#Kind;#Depends;#For
@@ -93,5 +84,11 @@ Init;Never;;
 
     #Action;#Table;#Title;#BeforeTestCase
     TableReport;SQLSLCT1.Out;'table';'INIT'
+
+
+#TestCase;#Kind;#Depends;#For
+;;;
+    #Call
+    RF.repSummary
 
 

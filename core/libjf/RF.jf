@@ -187,7 +187,30 @@ RF;RegressionFramework
     #Id;#SubCase
     repSummary;Summary report
         #Id;#Call
-        table;RF.LastSummary
+        SQL;RF.Connect
+
+        #Id;#RawText
+        TEXT2;Text
+        "SELECT "
+        "  s.scenario, "
+        "  s.manual, "
+        "  DATE(s.start_time) AS date, "
+        "  TIME(s.start_time) AS time, "
+        "  IF(s.failed = 0, ""Passed"", ""Failed"") AS result, "
+        "  s.performer AS performer, "
+        "  s.env AS env,  "
+        "  s.host AS host, "
+        "  s.user AS user,"
+        "  s.report AS report"
+        "FROM scenarios AS s "
+        "WHERE s.manual = 0 AND s.run_id = (SELECT MAX(r.id) FROM runs AS r)"
+        #EndRawText
+
+        #Id;#Action;#Connection;#Query
+        select;SQLselect;SQL;TEXT2.toString()
+
+        #Id;#Let
+        table;select.Out
 
         #Id;#Action;#Table;#result
         passed;TableSelect;table;'Passed'
@@ -315,6 +338,67 @@ RF;RegressionFramework
     #EndSubCase
 
     // //==============================================
+    // // Collects  all details of all scenarios of last regression in readable form
+    // //==============================================
+    #Id;#SubCase
+    repLastAllDetails;Shows a report of last details
+        #Id;#Call
+        SQL;Connect
+
+        #Id;#RawText
+        TEXT1;Text
+        "SELECT "
+        "  s.scenario, "
+        "  DATE(s.start_time) AS date, "
+        "  TIME(s.start_time) AS time, "
+        "  s.performer, "
+        "  s.env, "
+        "  s.host, "
+        "  s.user, "
+        "  d.testcase, "
+        "  d.step, "
+        "  d.time, "
+        "  d.result, "
+        "  d.error, "
+        "  d.screenshot "
+        "FROM scenarios AS s "
+        "LEFT JOIN details AS d ON d.scenario_id = s.id "
+        "WHERE s.manual = 0 AND s.run_id = (SELECT MAX(r.id) FROM runs AS r) "
+        #EndRawText
+
+        #Id;#Action;#Connection;#Query
+        select;SQLselect;SQL;TEXT1.toString()
+
+        #Id;#Let
+        table;select.Out
+
+        #Action;#Table;#Columns;#MatchCell;#Search;#Replace
+        TableReplace;table;{ 'step', 'error' };true;'null';''
+
+        #Action;#Table;#Columns;#MatchCell;#Search;#Replace
+        TableReplace;table;{ 'screenshot'};true;null;''
+
+        #Action;#Replace;#Table;#Columns;#Search;#MatchCell
+        TableReplace;'<div class=\"Passed\">Passed</div>';table;{ 'result' };'Passed';true
+
+        #Action;#Replace;#Table;#Columns;#Search;#MatchCell
+        TableReplace;'<div class=\"Failed\">Failed</div>';table;{ 'result' };'Failed';true
+
+        #Id;#Action;#ReportName
+        report;ReportStart;'Details'
+
+        #Action;#Table;#Title;#ToReport;#Numbers;#scenario;#testcase;#result;#description;#expected;#error;#screenshot
+        TableReport;table;'{{4 Detailed report 4}}';report.Out;false;'Matrix';'Step Name';'Status';'Description';'Expected Result';'Actual Result';'Screenshots'
+
+        #Action;#Report;#Passed;#Failed
+        ReportFinish;report.Out;0;0
+
+        #Action;#Report
+        ReportShow;report.Out.getReportName()
+
+    #EndSubCase
+
+    // //==============================================
     // // Collects all scenarios from the last run of regression and returns
     // // it as a table
     // //==============================================
@@ -382,75 +466,6 @@ RF;RegressionFramework
 
         #Id;#Action;#Connection;#Query
         select;SQLselect;SQL;TEXT3.toString()
-
-        #Return
-        select.Out
-
-    #EndSubCase
-
-    // //==============================================
-    // // Collects results of all scenarios of last regression in readable form
-    // //==============================================
-    #Id;#SubCase
-    LastSummary;Returns table of last summary
-        #Id;#Call
-        SQL;RF.Connect
-
-        #Id;#RawText
-        TEXT2;Text
-        "SELECT "
-        "  s.scenario, "
-        "  s.manual, "
-        "  DATE(s.start_time) AS date, "
-        "  TIME(s.start_time) AS time, "
-        "  IF(s.failed = 0, ""Passed"", ""Failed"") AS result, "
-        "  s.performer AS performer, "
-        "  s.env AS env,  "
-        "  s.host AS host, "
-        "  s.user AS user"
-        "FROM scenarios AS s "
-        "WHERE s.manual = 0 AND s.run_id = (SELECT MAX(r.id) FROM runs AS r)"
-        #EndRawText
-
-        #Id;#Action;#Connection;#Query
-        select;SQLselect;SQL;TEXT2.toString()
-
-        #Return
-        select.Out
-
-    #EndSubCase
-
-    // //==============================================
-    // // Collects  all details of all scenarios of last regression in readable form
-    // //==============================================
-    #Id;#SubCase
-    LastAllDetails;Returns table of last details
-        #Id;#Call
-        SQL;Connect
-
-        #Id;#RawText
-        TEXT1;Text
-        "SELECT "
-        "  s.scenario, "
-        "  DATE(s.start_time) AS date, "
-        "  TIME(s.start_time) AS time, "
-        "  s.performer, "
-        "  s.env, "
-        "  s.host, "
-        "  s.user, "
-        "  d.testcase, "
-        "  d.step, "
-        "  d.time, "
-        "  d.result, "
-        "  d.error, "
-        "  d.screenshot "
-        "FROM scenarios AS s "
-        "LEFT JOIN details AS d ON d.scenario_id = s.id "
-        "WHERE s.manual = 0 AND s.run_id = (SELECT MAX(r.id) FROM runs AS r) "
-        #EndRawText
-
-        #Id;#Action;#Connection;#Query
-        select;SQLselect;SQL;TEXT1.toString()
 
         #Return
         select.Out
