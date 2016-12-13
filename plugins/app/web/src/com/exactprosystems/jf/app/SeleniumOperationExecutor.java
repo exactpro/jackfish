@@ -1826,6 +1826,8 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 		{
 			try
 			{
+				//mark headers row, if it needed
+				getHeaders(table, false, null, null);
 				if (additional != null)
 				{
 					MatcherSelenium by = new MatcherSelenium(ControlKind.Row, additional);
@@ -1835,7 +1837,6 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 				}
 				else
 				{
-
 					List<WebElement> elements = table.findElement(By.xpath("child::" + tag_tbody)).findElements(this.selectRowsWithoutHeader());
 					unmarkRowIsHeader(table);
 					return elements;
