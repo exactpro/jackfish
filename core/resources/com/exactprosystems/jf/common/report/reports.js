@@ -1,36 +1,48 @@
 $(document).ready(function(){
-	var hideComment = function(arr) {
-		for(var i =0; i < arr.size(); i++) {
-			var q = $(arr[i]);
-			if (q.hasClass('comment')) {
-				q.hide();
-			}
-		}
+	var comment = function(arr, func) {
+		arr.map(function(index, element) {
+			return $(element)
+		})
+		.filter(function(index, element) {
+			return element.hasClass('comment')
+		})
+		.each(function(index, element) {
+			func(element);
+		})
 	}
-
+	var hideComment = function(arr) {
+		comment(arr, function(e) {
+			e.hide();
+		})
+	}
 	var showComment = function(arr) {
-		for(var i =0; i < arr.size(); i++) {
-			var q = $(arr[i]);
-			if (q.hasClass('comment')) {
-				q.show();
-			}
-		}
+		comment(arr, function(e) {
+			e.show();
+		})
 	}
 
 	var hideTable = function() {
 		$(".repLog > tbody > tr.danger").hide();
 		$(".repLog > tbody > tr.success").hide();
 
+		$(".repLog tr[style*='table-row']").hide();
+
 		hideComment($(".repLog > tbody > tr.danger").prev())
 		hideComment($(".repLog > tbody > tr.success").prev())
 	}
 
+	var animateScrollTo = function() {
+		if (!$("table.repLog").is(":visible")) {
+			$('html, body').animate({
+				scrollTop: $("table.repLog").offset().top
+			}, 500);
+		}
+	}
 
 	$("tr.matrixSource").hide();
 
 	//hide main table
 	hideTable();
-//	$("body > table[class*='repLog']").hide();
 
     // hide all inner actions
     $("a.showBody").parent().parent().next().hide();
@@ -42,8 +54,6 @@ $(document).ready(function(){
         $("#TC_" + me.data("moveto").replace(" ", "\\ "))[0].appendChild(me[0]);
 		me.attr('class','moved');
 	})
-
-
 
 	//show matrix source
 	$("a.showSource").toggle(
@@ -59,6 +69,7 @@ $(document).ready(function(){
 
 	$("button.filterTotal").click(
 		function(event) {
+			hideTable();
 			$(".repLog > tbody > tr.danger").show();
 			$(".repLog > tbody > tr.success").show();
 
@@ -67,17 +78,14 @@ $(document).ready(function(){
 
 			$('.filterPassed, .filterFailed').removeClass('active');
 
-			$('html, body').animate({
-				scrollTop: $("table.repLog").offset().top
-			}, 1000);
+			animateScrollTo();
 
 			event.preventDefault();
 		}
 	);
 	$("button.filterPassed").click(
 		function(event) {
-			$(".repLog > tbody > tr.danger").hide();
-			hideComment($(".repLog > tbody > tr.danger").prev());
+			hideTable();
 
 			$(".repLog > tbody > tr.success").show();
 			showComment($(".repLog > tbody > tr.success").prev());
@@ -85,25 +93,19 @@ $(document).ready(function(){
 			$('.filterFailed').removeClass('active');
 			$(".filterPassed").addClass('active');
 
-			$('html, body').animate({
-				scrollTop: $("table.repLog").offset().top
-			}, 1000);
+			animateScrollTo();
 
 			event.preventDefault();
 		}
 	);
 	$("button.filterFailed").click(
 		function(event) {
+			hideTable();
+
 			$(".repLog > tbody > tr.danger").show();
 			showComment($(".repLog > tbody > tr.danger").prev());
 
-			$(".repLog > tbody > tr.success").hide();
-			hideComment($(".repLog > tbody > tr.success").prev());
-
-
-			$('html, body').animate({
-				scrollTop: $("table.repLog").offset().top
-			}, 1000);
+			animateScrollTo();
 
 			$('.filterPassed').removeClass('active');
 			$(".filterFailed").addClass('active');
@@ -120,7 +122,6 @@ $(document).ready(function(){
 	});
 	$("button.filterCollapseAll").click(function(event) {
 		hideTable();
-
 	});
 
 	$("a.showBody").click(function(event) {
