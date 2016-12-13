@@ -3,11 +3,11 @@ Init;Never;;
     #Id;#Call;#type;#host;#base;#user;#password;#scriptsDir
     CALL_1;RF.SetVars;'MySql';'127.0.0.1';'regression';'root';dbPassword;'matrices/EE/'
 
-    #Id;#Off;#Action;#DefaultValue;#Title;#HelpKind;#DataSource
-    INP1;1;Input;1;'Choose the report:';HelpKind.ChooseFromList;{ 1: 'Overall', 2 : 'Summary', 3 : 'Export to CSV', 4 : 'Total detailed' }
+    #Id;#Action;#DefaultValue;#Title;#HelpKind;#DataSource
+    INP1;Input;1;'Choose the report:';HelpKind.ChooseFromList;{ 1: 'Overall', 2 : 'Summary', 3 : 'Export to CSV', 4 : 'Total detailed' }
 
-    #Off;#Switch
-    1;INP1.Out
+    #Switch
+    INP1.Out
         #Case
         1
             #Call
@@ -36,59 +36,5 @@ Init;Never;;
 
 
     #EndSwitch
-
-
-#Off;#TestCase;#Kind;#Depends;#For
-1;Progress;Never;;
-    #Id;#Call
-    table;RF.ProgressTable
-
-    #Action;#Type;#Table;#Title;#BeforeTestCase;#Labels;#Values
-    ChartReport;ChartKind.Line;table;'{{4 Regression progress 4}}';'INIT';'id';'Average'
-
-
-#Off;#TestCase;#Kind;#Depends;#For
-1;Details;Never;;
-    #Id;#Call
-    table;RF.repLastAllDetails
-
-
-#Off;#TestCase;#Kind;#Depends;#For
-1;;;;
-    #Id;#Call
-    SQL;RF.Connect
-
-    #Id;#Action;#Query;#Connection
-    SQLSLCT1;SQLselect;'SELECT s.id, s.scenario, IF(s.failed > 0, "Failed", "Passed") AS status, s.host, s.user, DATE(s.start_time) AS date, TIME(s.start_time) AS time FROM scenarios AS s\u003b';SQL
-
-    #Action;#Table;#File
-    TableSaveToFile;SQLSLCT1.Out;'scenario.csv'
-
-    #Id;#Action;#Query;#Connection
-    SQLSLCT2;SQLselect;'SELECT d.id, d.scenario_id, d.error FROM details AS d\u003b';SQL
-
-    #Action;#Table;#File
-    TableSaveToFile;SQLSLCT2.Out;'steps.csv'
-
-    #Id;#Action;#Connection
-    SQLDCNT1;SQLdisconnect;SQL
-
-
-#Off;#TestCase;#Kind;#Depends;#For
-1;;;;
-    #Id;#Call
-    CALL_2;RF.Connect
-
-    #Id;#Action;#Query;#Connection
-    SQLSLCT1;SQLselect;'SELECT report FROM scenarios WHERE id = 285\u003b';CALL_2
-
-    #Action;#Table;#Title;#BeforeTestCase
-    TableReport;SQLSLCT1.Out;'table';'INIT'
-
-
-#TestCase;#Kind;#Depends;#For
-;;;
-    #Call
-    RF.repSummary
 
 

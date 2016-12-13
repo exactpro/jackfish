@@ -62,7 +62,7 @@ RF;RegressionFramework
         SQL;Connect
 
         #Id;#Action;#Connection;#Query;#CreateTime
-        selectRunId;SQLinsert;SQL;'INSERT INTO runs (create_time, duration) VALUES (?, -1)\u003b';DateTime.currentTime()
+        selectRunId;SQLinsert;SQL;'INSERT INTO runs (create_time, duration) VALUES (?, -1)\u003b';DateTime.current()
 
         #Id;#Let
         runId;selectRunId.Out[0]
@@ -78,6 +78,9 @@ RF;RegressionFramework
 
         #Id;#Let
         begin;System.currentTimeMillis()
+
+        #Id;#Action;#Decoraded
+        standartResult;ResultTable;false
 
         // // Main loop
         #ForEach;#In
@@ -128,8 +131,20 @@ RF;RegressionFramework
 
                 #ForEach;#In
                 details;resultTab.Out
-                    #Action;#Connection;#Query;#ScenarioId;#Testcase;#Stepp;#Time;#Result;#Error;#Screenshot
-                    SQLinsert;SQL;'INSERT INTO details (scenario_id, testcase, step, time, result, error, screenshot) VALUES (?, ?, ?, ?, ?, ?, ?)';scenarioId;'' + details.TestCase;'' + details.Step;details.Time;'' + details.Result;'' + details.Error;Converter.imageToBlob(details.Screenshot)
+                    #Id;#Action;#Connection;#Query;#ScenarioId;#Testcase;#Stepp;#Time;#Result;#Error;#Screenshot
+                    selectDetails;SQLinsert;SQL;'INSERT INTO details (scenario_id, testcase, step, time, result, error, screenshot) VALUES (?, ?, ?, ?, ?, ?, ?)';scenarioId;'' + details.TestCase;'' + details.Step;details.Time;'' + details.Result;'' + details.Error;Converter.imageToBlob(details.Screenshot)
+
+                    #For;#From;#To;#Step
+                    i;standartResult.Out.getHeaderSize();resultTab.Out.getHeaderSize() - 1;1
+                        #Id;#RawText
+                        TEXT6;Text
+                        "INSERT INTO user_details (details_id, name, value) VALUES (?, ?, ?);"
+                        #EndRawText
+
+                        #Action;#Connection;#Query;#detailsId;#name;#value
+                        SQLinsert;SQL;TEXT6.toString();selectDetails.Out[0];resultTab.Out.getHeader(i);details[resultTab.Out.getHeader(i)]
+
+                    #EndFor
 
                 #EndForEach
 
@@ -473,7 +488,46 @@ RF;RegressionFramework
     #EndSubCase
 
     // //==============================================
-    // // Perform connection to SQL server using variable set that is set
+    // // Collects all run dates and returns them as a list
+    // //==============================================
+    #Id;#SubCase
+    listOfDates;List of run dates 
+        #Id;#Call
+        SQL;RF.Connect
+
+        #Id;#Action;#Query;#Connection
+        query;SQLselect;'select create_time from runs';SQL
+
+        #Id;#Let
+        reportDataList;new ArrayList()
+
+        #ForEach;#In
+        row;query.Out
+            #Id;#Let
+            dateTimeItem;new Date(row.create_time.getTime())
+
+            #Let
+            reportDataList.add(('\'' + dateTimeItem + '\''))
+
+        #EndForEach
+
+        #Off;#For;#From;#To;#Step
+        1;i;0;(int)reports.size() - 1;1
+            #Id;#Let
+            dateTimeItem;new Date(query.Out[i].create_time.getTime())
+
+            #Let
+            reportDataList.add(('\'' + dateTimeItem + '\''))
+
+        #EndFor
+
+        #Return
+        reportDataList
+
+    #EndSubCase
+
+    // //==============================================
+    // // Esteblishes connection to SQL server using variable set that is set
     // // by RF.SetVar
     // // This subcase checks that all needed tables exist. If not it creates them.
     // //==============================================
