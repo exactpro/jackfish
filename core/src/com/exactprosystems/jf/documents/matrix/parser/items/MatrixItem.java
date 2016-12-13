@@ -399,7 +399,7 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 
 		this.result = null;
 
-		if (isTrue(this.off.get()))
+		if (isOff())
 		{
 			return new ReturnAndResult(start, Result.Off);
 		}
@@ -410,7 +410,7 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 		}
 
 		boolean prev = report.reportIsOn();
-		if (isTrue(this.repOff.get()) && prev)
+		if (isRepOff() && prev)
         {
             report.reportSwitch(false);
         }
@@ -432,7 +432,7 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 		
 		long duration = this.result.getTime();
 		
-		if (this.result.getResult() == Result.Failed && isTrue(this.ignoreErr.get()))
+		if (this.result.getResult() == Result.Failed && isIgnoreErr())
 		{
 			this.result = new ReturnAndResult(start, this.result.getError(), Result.Ignored);
 		}
@@ -443,7 +443,7 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 		afterReport(report);
         report.reportSwitch(prev);
 
-		if (isTrue(this.repOff.get()) && prev)
+		if (isRepOff() && prev)
         {
             report.reportSwitch(true);
         }
@@ -552,7 +552,7 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 		int count = 0;
 		for(MatrixItem item : this.children)
 		{
-			if (item.result != null && item.result.getResult() == result)
+			if (!item.isRepOff() && item.result != null && item.result.getResult() == result)
 			{
 				count++;
 			}

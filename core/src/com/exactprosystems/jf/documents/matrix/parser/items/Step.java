@@ -175,7 +175,7 @@ public class Step extends MatrixItem
             this.identify.evaluate(evaluator);
 			Object identifyValue = this.identify.getValue();
 			
-			if (table != null)
+            if (table != null && !isRepOff())
 			{
 				position = table.size();
 				
@@ -233,7 +233,7 @@ public class Step extends MatrixItem
             context.runHandler(HandlerKind.OnStepFinish, report, null);
 
             doSreenshot(row, null, screenshotKind, ScreenshotKind.OnFinish);
-			if (table != null && position >= 0)
+            if (table != null && position >= 0 && !isRepOff())
 			{
 				row.put(Context.timeColumn, 		ret.getTime());
 				row.put(Context.resultColumn, 		res);
@@ -248,7 +248,7 @@ public class Step extends MatrixItem
 			logger.error(e.getMessage(), e);
 			listener.error(this.owner, getNumber(), this, e.getMessage());
 
-			if (table != null && position >= 0)
+            if (table != null && table.size() >= 0  && !isRepOff())
 			{
 				row.put(Context.timeColumn, 		ret.getTime());
 				row.put(Context.resultColumn, 		res);

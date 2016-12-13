@@ -99,7 +99,7 @@ public class TableReport extends AbstractAction
 				list.add(ReadableValue.FALSE);
 				break;
 			case beforeTestCaseName:
-				ActionsReportHelper.fillListForParameter(super.owner.getMatrix(),  list);
+				ActionsReportHelper.fillListForParameter(super.owner.getMatrix(),  list, context.getEvaluator());
 				break;
 			default:
 		}
