@@ -106,7 +106,7 @@ namespace UIAdapter
         {
             Task<int> task = Task<int>.Factory.StartNew(() =>
             {
-                title = FormatString.replaceUnicodeSubStringToChar(title);
+                title = ConvertString.replaceUnicodeSubStringToChar(title);
 
                 int runningTime = 0;
                 int TIMEWAIT = 100;
@@ -284,7 +284,7 @@ namespace UIAdapter
                 UpdateHandler();
                 var res = handler.Current.Name;
                 logger.All("method Title", getMilis() - startMethod);
-                return FormatString.replaceNonASCIIToUnicode(res);
+                return ConvertString.replaceNonASCIIToUnicode(res);
             }
             catch (Exception e)
             {
@@ -309,7 +309,7 @@ namespace UIAdapter
                 string result = string.Join(SEPARATOR_COMMA, namesList);
 
                 logger.All("method ListAll", getMilis() - startMethod);
-                return result;
+                return ConvertString.replaceNonASCIIToUnicode(result);
             }
             catch (Exception e)
             {
@@ -324,10 +324,10 @@ namespace UIAdapter
             try
             {
                 long startMethod = getMilis();
-                Xpath = FormatString.replaceUnicodeSubStringToChar(Xpath);
-                Name = FormatString.replaceUnicodeSubStringToChar(Name);
-                Title = FormatString.replaceUnicodeSubStringToChar(Title);
-                Text = FormatString.replaceUnicodeSubStringToChar(Text);
+                Xpath = ConvertString.replaceUnicodeSubStringToChar(Xpath);
+                Name = ConvertString.replaceUnicodeSubStringToChar(Name);
+                Title = ConvertString.replaceUnicodeSubStringToChar(Title);
+                Text = ConvertString.replaceUnicodeSubStringToChar(Text);
 
                 AutomationElement window = findOwner(OwnerId);
                 ControlKind controlKind = (ControlKind)controlkindId;
@@ -390,10 +390,10 @@ namespace UIAdapter
             try
             {
                 long startMethod = getMilis();
-                Xpath = FormatString.replaceUnicodeSubStringToChar(Xpath);
-                Name = FormatString.replaceUnicodeSubStringToChar(Name);
-                Title = FormatString.replaceUnicodeSubStringToChar(Title);
-                Text = FormatString.replaceUnicodeSubStringToChar(Text);
+                Xpath = ConvertString.replaceUnicodeSubStringToChar(Xpath);
+                Name = ConvertString.replaceUnicodeSubStringToChar(Name);
+                Title = ConvertString.replaceUnicodeSubStringToChar(Title);
+                Text = ConvertString.replaceUnicodeSubStringToChar(Text);
 
                 AutomationElement owner = findOwner(oId);
                 ControlKind controlKind = (ControlKind)controlkindId;
@@ -453,7 +453,7 @@ namespace UIAdapter
             try
             {
                 long startMethod = getMilis();
-                value = FormatString.replaceUnicodeSubStringToChar(value);
+                value = ConvertString.replaceUnicodeSubStringToChar(value);
                 AutomationElement owner = findOwner(ownerid);
                 TreeScope treeScope = (TreeScope)scopeId;
                 Condition condition;
@@ -694,7 +694,7 @@ namespace UIAdapter
                     }
                 }
                 logger.All("method Element attribute", getMilis() - startMethod);
-                return str;
+                return ConvertString.replaceNonASCIIToUnicode(str);
             }
             catch (Exception e)
             {
@@ -917,7 +917,7 @@ namespace UIAdapter
         {
             try
             {
-                text = FormatString.replaceUnicodeSubStringToChar(text);
+                text = ConvertString.replaceUnicodeSubStringToChar(text);
                 //see this reference https://msdn.microsoft.com/ru-ru/library/ms750582(v=vs.110).aspx
                 long startMethod = getMilis();
                 int[] id = stringToIntArray(inid);
@@ -946,7 +946,7 @@ namespace UIAdapter
                 {
                     TextPattern textPattern = element.GetCurrentPattern(TextPattern.Pattern) as TextPattern;
                     TextPatternRange textVizRange = textPattern.GetVisibleRanges().FirstOrDefault();
-                    return textVizRange.GetText(Int32.MaxValue);
+                    return ConvertString.replaceNonASCIIToUnicode(textVizRange.GetText(Int32.MaxValue));
                 }
 
                 object ret = element.GetCurrentPropertyValue(property);
@@ -987,13 +987,13 @@ namespace UIAdapter
                             }
                         }
                         logger.All("method getProperty", getMilis() - startMethod);
-                        return string.Join(",", rr);
+                        return ConvertString.replaceNonASCIIToUnicode(string.Join(",", rr));
                     }
                     logger.All("method getProperty", getMilis() - startMethod);
-                    return string.Join(",", a);
+                    return ConvertString.replaceNonASCIIToUnicode(string.Join(",", a));
                 }
                 logger.All("method getProperty", getMilis() - startMethod);
-                return ret.ToString();
+                return ConvertString.replaceNonASCIIToUnicode(ret.ToString());
             }
             catch (Exception e)
             {
@@ -1114,7 +1114,7 @@ namespace UIAdapter
                 int[] tableRuntimeId = stringToIntArray(tableId);
                 AutomationElement table = FindByRuntimeId(tableRuntimeId);
                 AbstractTable abstractTable = TableFactory.createTable(table);
-                return abstractTable.GetValueRowCell(abstractTable.FindCell(column, row));
+                return ConvertString.replaceNonASCIIToUnicode(abstractTable.GetValueRowCell(abstractTable.FindCell(column, row)));
                 //var cell = findCell(table, column, row);
                 //bool isWin32 = cell.Current.FrameworkId.ToUpper().Equals("WIN32");
                 //return isSilverlightApp(table) || isWin32 ? cell.Current.Name : "" + cell.GetCurrentPropertyValue(VALUE_PROPERTY);
@@ -1148,6 +1148,8 @@ namespace UIAdapter
         {
             try
             {
+                text = ConvertString.replaceUnicodeSubStringToChar(text);
+
                 int[] tableRuntimeId = stringToIntArray(tableId);
                 AutomationElement table = FindByRuntimeId(tableRuntimeId);
                 //var cell = findCell(table, column, row);
@@ -1170,7 +1172,7 @@ namespace UIAdapter
             {
                 int[] tableRuntimeId = stringToIntArray(tableId);
                 AutomationElement table = FindByRuntimeId(tableRuntimeId);
-                return TableFactory.createTable(table).GetRowByIndex(index);
+                return ConvertString.replaceNonASCIIToUnicode(TableFactory.createTable(table).GetRowByIndex(index));
                 //TreeWalker walker = TreeWalker.RawViewWalker;
                 //AutomationElement findRow = walker.GetFirstChild(table);
                 //int rows = -1;
@@ -1272,10 +1274,11 @@ namespace UIAdapter
         {
             try
             {
+                columns = ConvertString.replaceUnicodeSubStringToChar(columns);
                 long start = getMilis();
                 int[] tableRuntimeId = stringToIntArray(tableId);
                 AutomationElement table = FindByRuntimeId(tableRuntimeId);
-                return TableFactory.createTable(table).GetRow(condition, columns);
+                return ConvertString.replaceNonASCIIToUnicode(TableFactory.createTable(table).GetRow(condition, columns));
 
                 //long t1 = getMilis();
                 //AutomationElement header = findHeader(table);
@@ -1362,10 +1365,11 @@ namespace UIAdapter
         {
             try
             {
+                columns = ConvertString.replaceUnicodeSubStringToChar(columns);
                 long start = getMilis();
                 int[] tableRuntimeId = stringToIntArray(tableId);
                 AutomationElement table = FindByRuntimeId(tableRuntimeId);
-                return TableFactory.createTable(table).GetRowIndexes(condition, columns);
+                return ConvertString.replaceNonASCIIToUnicode(TableFactory.createTable(table).GetRowIndexes(condition, columns));
 
                 //AutomationElement header = findHeader(table);
                 //String headerToStr = headerToString(header, useNumericHeader, columns);
@@ -1451,7 +1455,7 @@ namespace UIAdapter
             {
                 int[] tableRuntimeId = stringToIntArray(tableId);
                 AutomationElement table = FindByRuntimeId(tableRuntimeId);
-                return TableFactory.createTable(table).GetTable();
+                return ConvertString.replaceNonASCIIToUnicode(TableFactory.createTable(table).GetTable());
 
                 //AutomationElement header = findHeader(table);
                 //StringBuilder builder = new StringBuilder();

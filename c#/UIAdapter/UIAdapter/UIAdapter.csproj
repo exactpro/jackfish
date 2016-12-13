@@ -71,7 +71,7 @@
   <ItemGroup>
     <Compile Include="Conditions.cs" />
     <Compile Include="ElementHighLighter.cs" />
-    <Compile Include="FormatString.cs" />
+    <Compile Include="ConvertString.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

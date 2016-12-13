@@ -3,7 +3,7 @@ using System.Text;
 
 namespace UIAdapter
 {
-    class FormatString
+    class ConvertString
     {
         public static string replaceNonASCIIToUnicode(string entryString)
         {
@@ -18,7 +18,7 @@ namespace UIAdapter
                 {
                     if (ch > 127)
                     {
-                        sb.Append("\\u").Append(String.Format("{0:X}", Convert.ToInt32(ch)));
+                        sb.Append("\\u").Append(String.Format("{0:X}", Convert.ToInt32(ch)).PadLeft(4, '0'));
                     }
                     else
                     {

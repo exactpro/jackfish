@@ -3,9 +3,9 @@ package com.exactprosystems.jf.app;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class FormatString
+public class ConvertString
 {
-    public static String replaceNonASCIIToUnicode(String entryString)
+    public static String replaceNonASCIISymbolsToUnicodeSubString(String entryString)
     {
         if(entryString == null)
         {
@@ -17,7 +17,7 @@ public class FormatString
             for (char ch : entryString.toCharArray()) {
                 if (ch > 127)
                 {
-                    sb.append("\\u").append(Integer.toHexString(ch));
+                    sb.append("\\u").append(String.format("%04x", (int)ch));
                 }
                 else
                 {
@@ -28,7 +28,7 @@ public class FormatString
         }
     }
 
-    public static String replaceUnicodeToChar(String entryString)
+    public static String replaceUnicodeSubStringsToCharSymbols(String entryString)
     {
         if(entryString == null) {
             return null;
