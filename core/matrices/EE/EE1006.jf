@@ -1,5 +1,5 @@
-#Id;#TestCase;#Kind;#For
-Step 1;This matrix randomly failed;OnFinish;APPSTR1.Out
+#Id;#TestCase;#Kind;#Depends;#For
+Step 1;This matrix randomly failed;OnFinish;;APPSTR1.Out
     #Action;#Description;#Expected
     ResultTableUserValue;'Start application and declaration of variables';'Start browser'
 
@@ -13,11 +13,11 @@ Step 1;This matrix randomly failed;OnFinish;APPSTR1.Out
     Wait;1000
 
     #Id;#Global;#Action;#AppId;#Browser;#URL
-    APPSTR1;1;ApplicationStart;'WEB';'Chrome';'http://samples.galenframework.com/tutorial1/tutorial1.html'
+    APPSTR1;1;ApplicationStart;Sys.osName().startsWith('Win') ? 'WEB_WIN' : 'WEB';'Chrome';'http://samples.galenframework.com/tutorial1/tutorial1.html'
 
 
-#Id;#TestCase;#Kind;#For
-Step 2;Working;OnFinishOrError;APPSTR1.Out
+#Id;#TestCase;#Kind;#Depends;#For
+Step 2;Working;OnFinishOrError;Step 1;APPSTR1.Out
     #Action;#Description;#Expected
     ResultTableUserValue;'Resize browser';'Browser resized'
 
@@ -41,8 +41,8 @@ Step 2;Working;OnFinishOrError;APPSTR1.Out
     #EndIf
 
 
-#Id;#TestCase;#Kind;#For
-Step 2;Working;;
+#Id;#TestCase;#Kind;#Depends;#For
+Step 2;Working;;;
     #Action;#Description;#Expected
     ResultTableUserValue;'Logout. Close application';'Closing the browser'
 

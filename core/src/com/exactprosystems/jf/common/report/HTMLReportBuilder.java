@@ -25,6 +25,8 @@ import java.util.stream.Collectors;
 
 public class HTMLReportBuilder extends ReportBuilder 
 {
+	private static final long serialVersionUID = 8277698425881479782L;
+	
 	private static Integer chartCount = 0;
 	private static final String reportExt = ".html";
 	private static final DateFormat dateTimeFormatter = new SimpleDateFormat("yyyyMMdd_HHmmss_");

@@ -37,4 +37,10 @@ public class Sys
         return System.getProperty("user.name");
     }
 
+    
+    @DescriptionAttribute(text = "Returns OS name")
+    public static String osName()
+    {
+    	return System.getProperty("os.name");
+    }
 }

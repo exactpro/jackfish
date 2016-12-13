@@ -26,8 +26,8 @@ INIT;Test case;;;
     CALL_2;RF.RunAll;table
 
 
-#TestCase;#Kind;#Depends;#For
-Summary report;;;
+#Off;#TestCase;#Kind;#Depends;#For
+1;Summary report;;;
     #Call
     RF.repSummary
 

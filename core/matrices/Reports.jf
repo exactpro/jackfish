@@ -4,30 +4,47 @@ Init;Never;;
     CALL_1;RF.SetVars;'MySql';'127.0.0.1';'regression';'root';dbPassword;'matrices/EE/'
 
     #Id;#Let
-    list;[ 'Overall', 'Summary', 'Export to CSV', 'Total detailed' ]
+    Overall;'Overall'
+
+    #Id;#Let
+    Progress;'Progress'
+
+    #Id;#Let
+    Summary;'Summary'
+
+    #Id;#Let
+    Export;'Export'
+
+    #Id;#Let
+    Detailed;'Detailed'
 
     #Id;#Action;#DefaultValue;#Title;#HelpKind;#DataSource
-    INP1;Input;list[0];'Choose the report:';HelpKind.ChooseFromList;list
+    INP1;Input;Overall;'Choose the report:';HelpKind.ChooseFromList;[ Overall, Progress, Summary, Export, Detailed ]
 
     #Switch
     INP1.Out
-        // Overall
         #Case
-        list[0]
+        Overall
             #Call
             RF.repOverall
 
 
-        // Summary
         #Case
-        list[1]
+        Progress
+            #Call
+            RF.repProgress
+
+
+        // 
+        #Case
+        Summary
             #Call
             RF.repSummary
 
 
-        // Export
+        // 
         #Case
-        list[2]
+        Export
             #Id;#Action;#DefaultValue;#HelpKind;#Title
             name;Input;'reports/export.csv';HelpKind.ChooseSaveFile;'Choose the file name'
 
@@ -35,13 +52,21 @@ Init;Never;;
             RF.repCsvExport;name.Out
 
 
-        // Details
+        // 
         #Case
-        list[3]
+        Detailed
             #Call
             RF.repLastAllDetails
 
 
     #EndSwitch
+
+    #OnError
+        #Action;#Text;#Notifier
+        Show;error;Notifier.Error
+
+        #Fail
+        err
+
 
 

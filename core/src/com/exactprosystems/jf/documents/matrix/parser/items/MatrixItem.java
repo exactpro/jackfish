@@ -8,6 +8,20 @@
 
 package com.exactprosystems.jf.documents.matrix.parser.items;
 
+import java.awt.Rectangle;
+import java.awt.Toolkit;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import org.apache.log4j.Logger;
+
 import com.csvreader.CsvWriter;
 import com.exactprosystems.jf.api.app.AppConnection;
 import com.exactprosystems.jf.api.app.ImageWrapper;
@@ -33,16 +47,6 @@ import com.exactprosystems.jf.documents.matrix.parser.SearchHelper;
 import com.exactprosystems.jf.documents.matrix.parser.Tokens;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
 import com.exactprosystems.jf.functions.RowTable;
-
-import org.apache.log4j.Logger;
-
-import java.awt.Rectangle;
-import java.awt.Toolkit;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.util.*;
-import java.util.stream.Collectors;
 
 public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 {
@@ -959,21 +963,6 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
                 row.put(Context.screenshotColumn,    imageWrapper);
             }
         }
-    }
-
-    protected final void outScreenshot(ReportBuilder report, RowTable row) throws Exception
-    {
-//        if (row == null)
-//        {
-//            return;
-//        }
-//        
-//        this.screenshot = (ImageWrapper)row.get(Context.screenshotColumn);
-//        
-//        if (this.screenshot != null)
-//        {
-//            report.outImage(this, null, this.screenshot.getName(report.getReportDir()), this.screenshot.getDescription());
-//        }
     }
 
 

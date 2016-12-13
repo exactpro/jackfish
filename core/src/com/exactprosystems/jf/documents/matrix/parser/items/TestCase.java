@@ -291,8 +291,6 @@ public final class TestCase extends MatrixItem
 				row.put(Context.errorColumn, 		ret.getError());
 				table.updateValue(position, row);
 			}
-
-            outScreenshot(report, row);
 		} 
 		catch (Exception e)
 		{
