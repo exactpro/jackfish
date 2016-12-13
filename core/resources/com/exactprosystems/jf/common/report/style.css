@@ -527,7 +527,6 @@ strong {
     border-top: 0!important;
 }
 
-/*
 .hidden {
 	display: none;
 }
@@ -588,8 +587,7 @@ a:visited {
 	
 	width: 80%
 }
-*/
-/*
+
 div.tree {
 	border: solid 1px black;
 	 margin-top: 1em;
@@ -636,4 +634,3 @@ div.movable{
 div.moved {
 	display: inherit;
 }
-*/
