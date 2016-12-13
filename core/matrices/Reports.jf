@@ -3,25 +3,31 @@ Init;Never;;
     #Id;#Call;#type;#host;#base;#user;#password;#scriptsDir
     CALL_1;RF.SetVars;'MySql';'127.0.0.1';'regression';'root';dbPassword;'matrices/EE/'
 
+    #Id;#Let
+    list;[ 'Overall', 'Summary', 'Export to CSV', 'Total detailed' ]
+
     #Id;#Action;#DefaultValue;#Title;#HelpKind;#DataSource
-    INP1;Input;1;'Choose the report:';HelpKind.ChooseFromList;{ 1: 'Overall', 2 : 'Summary', 3 : 'Export to CSV', 4 : 'Total detailed' }
+    INP1;Input;list[0];'Choose the report:';HelpKind.ChooseFromList;list
 
     #Switch
     INP1.Out
+        // Overall
         #Case
-        1
+        list[0]
             #Call
             RF.repOverall
 
 
+        // Summary
         #Case
-        2
+        list[1]
             #Call
             RF.repSummary
 
 
+        // Export
         #Case
-        3
+        list[2]
             #Id;#Action;#DefaultValue;#HelpKind;#Title
             name;Input;'reports/export.csv';HelpKind.ChooseSaveFile;'Choose the file name'
 
@@ -29,8 +35,9 @@ Init;Never;;
             RF.repCsvExport;name.Out
 
 
+        // Details
         #Case
-        4
+        list[3]
             #Call
             RF.repLastAllDetails
 

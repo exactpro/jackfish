@@ -963,17 +963,17 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 
     protected final void outScreenshot(ReportBuilder report, RowTable row) throws Exception
     {
-        if (row == null)
-        {
-            return;
-        }
-        
-        this.screenshot = (ImageWrapper)row.get(Context.screenshotColumn);
-        
-        if (this.screenshot != null)
-        {
-            report.outImage(this, null, this.screenshot.getName(report.getReportDir()), this.screenshot.getDescription());
-        }
+//        if (row == null)
+//        {
+//            return;
+//        }
+//        
+//        this.screenshot = (ImageWrapper)row.get(Context.screenshotColumn);
+//        
+//        if (this.screenshot != null)
+//        {
+//            report.outImage(this, null, this.screenshot.getName(report.getReportDir()), this.screenshot.getDescription());
+//        }
     }
 
 

@@ -109,7 +109,7 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 				    {
 				        value = set.getBlob(i + 1);
 	                    value = Converter.blobToObject((Blob)value);
-				    }
+	                }
 				    else
 				    {
 				        value = set.getObject(i + 1);
