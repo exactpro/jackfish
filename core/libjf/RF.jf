@@ -441,8 +441,8 @@ RF;RegressionFramework
         #Id;#Action;#ReportName
         report;ReportStart;title
 
-        #Action;#Table;#Title;#ToReport;#Numbers;#scenario;#testcase;#result;#description;#expected;#error;#screenshot
-        TableReport;table;'{{4' + title + '4}}';report.Out;false;'Matrix';'Step Name';'Status';'Description';'Expected Result';'Actual Result';'Screenshots'
+        #Action;#Table;#Title;#ToReport;#Numbers;#scenario;#testcase;#result;#error;#screenshot
+        TableReport;table;'{{4' + title + '4}}';report.Out;false;'Matrix';'Step Name';'Status';'Result';'Screenshots'
 
         #Action;#Report;#Passed;#Failed
         ReportFinish;report.Out;passed.Out.size();failed.Out.size()
