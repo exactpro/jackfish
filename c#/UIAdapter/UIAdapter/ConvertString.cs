@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace UIAdapter
 {
@@ -37,7 +38,10 @@ namespace UIAdapter
             }
             else
             {
-                return System.Text.RegularExpressions.Regex.Unescape(entryString);
+                return Regex.Replace(entryString, @"\\u(?<Value>[a-zA-Z0-9]{4})", m =>
+                {
+                    return ((char)int.Parse(m.Groups["Value"].Value, System.Globalization.NumberStyles.HexNumber)).ToString();
+                });
             }
         }
     }
