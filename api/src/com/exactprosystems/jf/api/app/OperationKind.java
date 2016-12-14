@@ -680,7 +680,7 @@ public enum OperationKind
 
 			T whereDropValue = whereDrop != null ? executor.find(whereDropOwner, whereDrop) : null;
 
-			return executor.dragNdrop(value, whereDropValue, part.x, part.y, part.x2, part.y2);
+			return executor.dragNdrop(value, part.x, part.y, whereDropValue, part.x2, part.y2, part.b);
 		}
 	},
 

@@ -360,16 +360,26 @@ public class Do
 
 	static final String dragNdrop = "DragNdrop method, where starting coordinates are x1 and x2 inside current element and  ending coordinates are x2 and y2 inside another element";
 	@DescriptionAttribute(text = Do.dragNdrop)
+	public static Operation dragNdrop(int x1, int y1, String another, int x2, int y2, boolean moveCursor)
+	{
+		return new Operation().dragNdrop(x1, y1, another, x2, y2, moveCursor);
+	}
+
 	public static Operation dragNdrop(int x1, int y1, String another, int x2, int y2)
 	{
-		return new Operation().dragNdrop(x1, y1, another, x2, y2);
+		return dragNdrop(x1, y1, another, x2, y2, false);
 	}
 
 	static final String dragNdropFromCenterOfElement = "DragNdrop method, where starting coordinates is a center of current element and ending coordinates are x2 and y2 inside another element";
 	@DescriptionAttribute(text = Do.dragNdropFromCenterOfElement)
+	public static Operation dragNdrop(String another, int x2, int y2, boolean moveCursor)
+	{
+		return new Operation().dragNdropFromCenterOfElement(another, x2, y2, moveCursor);
+	}
+
 	public static Operation dragNdrop(String another, int x2, int y2)
 	{
-		return new Operation().dragNdropFromCenterOfElement(another, x2, y2);
+		return dragNdrop(another, x2, y2, false);
 	}
 	//endregion
 

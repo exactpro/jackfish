@@ -202,7 +202,7 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 	}
 
 	@Override
-	public boolean dragNdrop(WebElement drag, WebElement drop, int x1, int y1, int x2, int y2) throws Exception
+	public boolean dragNdrop(WebElement drag, int x1, int y1, WebElement drop, int x2, int y2, boolean moveCursor) throws Exception
 	{
 		Exception real = null;
 		int repeat = 1;

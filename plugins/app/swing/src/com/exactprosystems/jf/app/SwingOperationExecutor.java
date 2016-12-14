@@ -949,14 +949,16 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 	}
 
 	@Override
-	public boolean dragNdrop(ComponentFixture<Component> drag, ComponentFixture<Component> drop, int x1, int y1, int x2, int y2) throws Exception
+	public boolean dragNdrop(ComponentFixture<Component> drag, int x1, int y1, ComponentFixture<Component> drop, int x2, int y2, boolean moveCursor) throws Exception
 	{
 		try
 		{
 			Component dragComp = drag.target;
+			Component dropComp = dragComp;
 			if(drop != null)
 			{
-				Point point = convertOneToAnotherCoords(drop.target, x2, y2, drag.target);
+				dropComp = drop.target;
+				Point point = convertOneToAnotherCoords(dropComp, x2, y2, dragComp);
 				x2 = point.x;
 				y2 = point.y;
 			}
@@ -969,7 +971,7 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 			}
 
 			executeAction(MouseAction.Press, dragComp, x1, y1);
-			executeAction(MouseAction.Drop, dragComp, x2, y2);
+			executeAction(MouseAction.Drop, dropComp, x2, y2);
 
 			return true;
 		}
