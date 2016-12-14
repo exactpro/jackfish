@@ -28,8 +28,8 @@ INIT;Test case;;;
 
 #TestCase;#Kind;#Depends;#For
 Summary report;;;
-    #Call
-    RF.repSummary
+    #Call;#date
+    RF.repSummary;
 
     #Call;#fileName;#date
     RF.repCsvExport;'reports/export.csv';
