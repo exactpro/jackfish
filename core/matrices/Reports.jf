@@ -3,25 +3,48 @@ Init;Never;;
     #Id;#Call;#type;#host;#base;#user;#password;#scriptsDir
     CALL_1;RF.SetVars;'MySql';'127.0.0.1';'regression';'root';dbPassword;'matrices/EE/'
 
+    #Id;#Let
+    Overall;'Overall'
+
+    #Id;#Let
+    Progress;'Progress'
+
+    #Id;#Let
+    Summary;'Summary'
+
+    #Id;#Let
+    Export;'Export'
+
+    #Id;#Let
+    Detailed;'Detailed'
+
     #Id;#Action;#DefaultValue;#Title;#HelpKind;#DataSource
-    INP1;Input;1;'Choose the report:';HelpKind.ChooseFromList;{ 1: 'Overall', 2 : 'Summary', 3 : 'Export to CSV' }
+    INP1;Input;Overall;'Choose the report:';HelpKind.ChooseFromList;[ Overall, Progress, Summary, Export, Detailed ]
 
     #Switch
     INP1.Out
         #Case
-        1
+        Overall
             #Call
             RF.repOverall
 
 
         #Case
-        2
+        Progress
+            #Call
+            RF.repProgress
+
+
+        // 
+        #Case
+        Summary
             #Call
             RF.repSummary
 
 
+        // 
         #Case
-        3
+        Export
             #Id;#Action;#DefaultValue;#HelpKind;#Title
             name;Input;'reports/export.csv';HelpKind.ChooseSaveFile;'Choose the file name'
 
@@ -29,69 +52,21 @@ Init;Never;;
             RF.repCsvExport;name.Out
 
 
+        // 
+        #Case
+        Detailed
+            #Call
+            RF.repLastAllDetails
+
+
     #EndSwitch
 
+    #OnError
+        #Action;#Text;#Notifier
+        Show;error;Notifier.Error
 
-#Off;#TestCase;#Kind;#Depends;#For
-1;Progress;Never;;
-    #Id;#Call
-    table;RF.ProgressTable
+        #Fail
+        err
 
-    #Action;#Type;#Table;#Title;#BeforeTestCase;#Labels;#Values
-    ChartReport;ChartKind.Line;table;'{{4 Regression progress 4}}';'INIT';'id';'Average'
-
-
-#Off;#TestCase;#Kind;#Depends;#For
-1;Details;Never;;
-    #Id;#Call
-    table;RF.LastAllDetails
-
-    #Action;#Table;#Columns;#MatchCell;#Search;#Replace
-    TableReplace;table;{ 'step', 'error' };true;'null';''
-
-    #Action;#Table;#Columns;#MatchCell;#Search;#Replace
-    TableReplace;table;{ 'screenshot'};true;null;''
-
-    #Action;#Replace;#Table;#Columns;#Search;#MatchCell
-    TableReplace;'<div class=\"Passed\">Passed</div>';table;{ 'result' };'Passed';true
-
-    #Action;#Replace;#Table;#Columns;#Search;#MatchCell
-    TableReplace;'<div class=\"Failed\">Failed</div>';table;{ 'result' };'Failed';true
-
-    #Action;#Table;#Title;#BeforeTestCase;#Numbers;#scenario;#testcase;#result;#description;#expected;#error;#screenshot
-    TableReport;table;'{{4 Detailed report 4}}';'INIT';false;'Matrix';'Step Name';'Status';'Description';'Expected Result';'Actual Result';'Screenshots'
-
-
-#Off;#TestCase;#Kind;#Depends;#For
-1;;;;
-    #Id;#Call
-    SQL;RF.Connect
-
-    #Id;#Action;#Query;#Connection
-    SQLSLCT1;SQLselect;'SELECT s.id, s.scenario, IF(s.failed > 0, "Failed", "Passed") AS status, s.host, s.user, DATE(s.start_time) AS date, TIME(s.start_time) AS time FROM scenarios AS s\u003b';SQL
-
-    #Action;#Table;#File
-    TableSaveToFile;SQLSLCT1.Out;'scenario.csv'
-
-    #Id;#Action;#Query;#Connection
-    SQLSLCT2;SQLselect;'SELECT d.id, d.scenario_id, d.error FROM details AS d\u003b';SQL
-
-    #Action;#Table;#File
-    TableSaveToFile;SQLSLCT2.Out;'steps.csv'
-
-    #Id;#Action;#Connection
-    SQLDCNT1;SQLdisconnect;SQL
-
-
-#Off;#TestCase;#Kind;#Depends;#For
-1;;;;
-    #Id;#Call
-    CALL_2;RF.Connect
-
-    #Id;#Action;#Query;#Connection
-    SQLSLCT1;SQLselect;'SELECT report FROM scenarios WHERE id = 285\u003b';CALL_2
-
-    #Action;#Table;#Title;#BeforeTestCase
-    TableReport;SQLSLCT1.Out;'table';'INIT'
 
 

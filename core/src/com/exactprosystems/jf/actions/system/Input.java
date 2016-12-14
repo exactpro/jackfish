@@ -17,6 +17,7 @@ import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixError;
 import com.exactprosystems.jf.functions.HelpKind;
+import com.exactprosystems.jf.tool.Common;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -105,15 +106,15 @@ public class Input extends AbstractAction
 		{}
 		else if (this.dataSource.getClass().isArray())
 		{
-		    Arrays.stream((Object[])this.dataSource).forEach(o -> list.add(new ReadableValue(Str.asString(o))));
+		    Arrays.stream((Object[])this.dataSource).forEach(o -> list.add(new ReadableValue(Common.createLiteral(o, evaluator))));
 		}
 		else if (this.dataSource instanceof List<?>)
 		{
-		    ((List<?>)this.dataSource).stream().forEach(o -> list.add(new ReadableValue(Str.asString(o))));
+		    ((List<?>)this.dataSource).stream().forEach(o -> list.add(new ReadableValue(Common.createLiteral(o, evaluator))));
 		}
         else if (this.dataSource instanceof Map<?,?>)
         {
-            ((Map<?,?>)this.dataSource).entrySet().stream().forEach(o -> list.add(new ReadableValue(Str.asString(o.getKey()), Str.asString(o.getValue()))));
+            ((Map<?,?>)this.dataSource).entrySet().stream().forEach(o -> list.add(new ReadableValue(Common.createLiteral(o, evaluator), Str.asString(o.getValue()))));
         }
         else
         {

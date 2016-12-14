@@ -8,6 +8,39 @@
 
 package com.exactprosystems.jf.functions;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Reader;
+import java.io.Writer;
+import java.sql.Blob;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Types;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
+import org.apache.log4j.Logger;
+
 import com.csvreader.CsvReader;
 import com.csvreader.CsvWriter;
 import com.exactprosystems.jf.api.app.ImageWrapper;
@@ -22,16 +55,6 @@ import com.exactprosystems.jf.common.report.ReportTable;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.exceptions.ColumnIsPresentException;
 import com.exactprosystems.jf.sql.SqlConnection;
-import org.apache.log4j.Logger;
-
-import java.io.*;
-import java.sql.*;
-import java.util.*;
-import java.util.Date;
-import java.util.Map.Entry;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 public class Table implements List<RowTable>, Mutable, Cloneable
 {
@@ -109,7 +132,7 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 				    {
 				        value = set.getBlob(i + 1);
 	                    value = Converter.blobToObject((Blob)value);
-				    }
+	                }
 				    else
 				    {
 				        value = set.getObject(i + 1);

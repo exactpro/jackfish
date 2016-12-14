@@ -127,7 +127,7 @@ public class ChartReport extends AbstractAction
 				}
 				break;
 			case beforeTestCaseName:
-				ActionsReportHelper.fillListForParameter(super.owner.getMatrix(),  list);
+				ActionsReportHelper.fillListForParameter(super.owner.getMatrix(),  list, context.getEvaluator());
 				break;
 				
 			default:

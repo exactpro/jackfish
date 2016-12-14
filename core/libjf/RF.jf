@@ -62,7 +62,7 @@ RF;RegressionFramework
         SQL;Connect
 
         #Id;#Action;#Connection;#Query;#CreateTime
-        selectRunId;SQLinsert;SQL;'INSERT INTO runs (create_time, duration) VALUES (?, -1)\u003b';DateTime.currentTime()
+        selectRunId;SQLinsert;SQL;'INSERT INTO runs (create_time, duration) VALUES (?, -1)\u003b';DateTime.current()
 
         #Id;#Let
         runId;selectRunId.Out[0]
@@ -78,6 +78,9 @@ RF;RegressionFramework
 
         #Id;#Let
         begin;System.currentTimeMillis()
+
+        #Id;#Action;#Decoraded
+        standartResult;ResultTable;false
 
         // // Main loop
         #ForEach;#In
@@ -128,8 +131,20 @@ RF;RegressionFramework
 
                 #ForEach;#In
                 details;resultTab.Out
-                    #Action;#Connection;#Query;#ScenarioId;#Testcase;#Stepp;#Time;#Result;#Error;#Screenshot
-                    SQLinsert;SQL;'INSERT INTO details (scenario_id, testcase, step, time, result, error, screenshot) VALUES (?, ?, ?, ?, ?, ?, ?)';scenarioId;'' + details.TestCase;'' + details.Step;details.Time;'' + details.Result;'' + details.Error;Converter.imageToBlob(details.Screenshot)
+                    #Id;#Action;#Connection;#Query;#ScenarioId;#Testcase;#Stepp;#Time;#Result;#Error;#Screenshot
+                    selectDetails;SQLinsert;SQL;'INSERT INTO details (scenario_id, testcase, step, time, result, error, screenshot) VALUES (?, ?, ?, ?, ?, ?, ?)';scenarioId;'' + details.TestCase;'' + details.Step;details.Time;'' + details.Result;'' + details.Error;Converter.imageToBlob(details.Screenshot)
+
+                    #For;#From;#To;#Step
+                    i;standartResult.Out.getHeaderSize();resultTab.Out.getHeaderSize() - 1;1
+                        #Id;#RawText
+                        TEXT6;Text
+                        "INSERT INTO user_details (details_id, name, value) VALUES (?, ?, ?);"
+                        #EndRawText
+
+                        #Action;#Connection;#Query;#detailsId;#name;#value
+                        SQLinsert;SQL;TEXT6.toString();selectDetails.Out[0];resultTab.Out.getHeader(i);details[resultTab.Out.getHeader(i)]
+
+                    #EndFor
 
                 #EndForEach
 
@@ -162,19 +177,31 @@ RF;RegressionFramework
     #Id;#SubCase
     repOverall;Overall progress
         #Id;#Call
-        table;RF.TotalTable
+        SQL;RF.Connect
+
+        #Id;#RawText
+        TEXT4;Text
+        "SELECT  "
+        "	sp.count AS `Passed`, "
+        "	sf.count AS `Failed`"
+        "FROM (SELECT COUNT(id) AS count FROM scenarios WHERE failed = 0 AND run_id = (SELECT MAX(id) FROM runs) ) AS sp "
+        "LEFT JOIN (SELECT COUNT(id) AS count FROM scenarios WHERE failed <> 0 AND run_id = (SELECT MAX(id) FROM runs) ) AS sf ON true "
+        #EndRawText
+
+        #Id;#Action;#Connection;#Query
+        select;SQLselect;SQL;TEXT4.toString()
 
         #Id;#Action;#ReportName
         REP1;ReportStart;'Overall'
 
         #Action;#Type;#Table;#ToReport;#Title;#Colors
-        ChartReport;ChartKind.Pie;table;REP1.Out;'{{4 Overall 4}}';{ 'Passed' : Color.GREEN, 'Failed' : Color.RED }
+        ChartReport;ChartKind.Pie;select.Out;REP1.Out;'{{4 Overall 4}}';{ 'Passed' : Color.GREEN, 'Failed' : Color.RED }
 
         #Action;#Table;#Title;#Numbers;#ToReport
-        TableReport;table;'Table';false;REP1.Out
+        TableReport;select.Out;'Table';false;REP1.Out
 
         #Action;#Report;#Passed;#Failed
-        ReportFinish;REP1.Out;1;1
+        ReportFinish;REP1.Out;(int)select.Out[0].Passed;(int)select.Out[0].Failed
 
         #Action;#Report
         ReportShow;REP1.Out.getReportName()
@@ -187,7 +214,30 @@ RF;RegressionFramework
     #Id;#SubCase
     repSummary;Summary report
         #Id;#Call
-        table;RF.LastSummary
+        SQL;RF.Connect
+
+        #Id;#RawText
+        TEXT2;Text
+        "SELECT "
+        "  s.scenario, "
+        "  s.manual, "
+        "  DATE(s.start_time) AS date, "
+        "  TIME(s.start_time) AS time, "
+        "  IF(s.failed = 0, ""Passed"", ""Failed"") AS result, "
+        "  s.performer AS performer, "
+        "  s.env AS env,  "
+        "  s.host AS host, "
+        "  s.user AS user,"
+        "  s.report AS report"
+        "FROM scenarios AS s "
+        "WHERE s.manual = 0 AND s.run_id = (SELECT MAX(r.id) FROM runs AS r)"
+        #EndRawText
+
+        #Id;#Action;#Connection;#Query
+        select;SQLselect;SQL;TEXT2.toString()
+
+        #Id;#Let
+        table;select.Out
 
         #Id;#Action;#Table;#result
         passed;TableSelect;table;'Passed'
@@ -280,7 +330,7 @@ RF;RegressionFramework
                 #If
                 selectSteps[rowSteps].error.equals('null')
                     #Id;#Let
-                    stepResult;'Passed'
+                    stepResult;''
 
                 #Else
                     #Id;#Let
@@ -315,116 +365,10 @@ RF;RegressionFramework
     #EndSubCase
 
     // //==============================================
-    // // Collects all scenarios from the last run of regression and returns
-    // // it as a table
-    // //==============================================
-    #Id;#SubCase
-    TotalTable;Returns table of totals for the last run
-        #Id;#Call
-        SQL;RF.Connect
-
-        #Id;#RawText
-        TEXT4;Text
-        "SELECT  "
-        "	sp.count AS `Passed`, "
-        "	sf.count AS `Failed`"
-        "FROM (SELECT COUNT(id) AS count FROM scenarios WHERE failed = 0 AND run_id = (SELECT MAX(id) FROM runs) ) AS sp "
-        "LEFT JOIN (SELECT COUNT(id) AS count FROM scenarios WHERE failed <> 0 AND run_id = (SELECT MAX(id) FROM runs) ) AS sf ON true "
-        #EndRawText
-
-        #Id;#Action;#Connection;#Query
-        select;SQLselect;SQL;TEXT4.toString()
-
-        #Return
-        select.Out
-
-    #EndSubCase
-
-    // //==============================================
-    // // Collects history of all runs and evaluate average factor of success.
-    // //==============================================
-    #Id;#SubCase
-    ProgressTable;Returns table of regression progress
-        #Id;#Call
-        SQL;RF.Connect
-
-        #Id;#Action;#Connection;#Query
-        select;SQLselect;SQL;'SELECT r.id AS `Period`, AVG(s.passed / (s.passed + s.failed)) AS `Average` FROM runs AS r LEFT JOIN scenarios AS s ON s.run_id = r.id GROUP BY r.id'
-
-        #Return
-        select.Out
-
-    #EndSubCase
-
-    // //==============================================
-    // // Collects results of all scenarios of last regression
-    // //==============================================
-    #Id;#SubCase
-    LastScenariosTable;Returns table of last scenarious
-        #Id;#Call
-        SQL;RF.Connect
-
-        #Id;#RawText
-        TEXT3;Text
-        "SELECT "
-        "  s.id, "
-        "  s.scenario, "
-        "  s.manual, "
-        "  s.host, "
-        "  s.user, "
-        "  s.start_time, "
-        "  s.passed, "
-        "  s.failed, "
-        "  s.description "
-        "FROM scenarios AS s "
-        "WHERE s.run_id = (SELECT MAX(r.id) FROM runs AS r) "
-        #EndRawText
-
-        #Id;#Action;#Connection;#Query
-        select;SQLselect;SQL;TEXT3.toString()
-
-        #Return
-        select.Out
-
-    #EndSubCase
-
-    // //==============================================
-    // // Collects results of all scenarios of last regression in readable form
-    // //==============================================
-    #Id;#SubCase
-    LastSummary;Returns table of last summary
-        #Id;#Call
-        SQL;RF.Connect
-
-        #Id;#RawText
-        TEXT2;Text
-        "SELECT "
-        "  s.scenario, "
-        "  s.manual, "
-        "  DATE(s.start_time) AS date, "
-        "  TIME(s.start_time) AS time, "
-        "  IF(s.failed = 0, ""Passed"", ""Failed"") AS result, "
-        "  s.performer AS performer, "
-        "  s.env AS env,  "
-        "  s.host AS host, "
-        "  s.user AS user"
-        "FROM scenarios AS s "
-        "WHERE s.manual = 0 AND s.run_id = (SELECT MAX(r.id) FROM runs AS r)"
-        #EndRawText
-
-        #Id;#Action;#Connection;#Query
-        select;SQLselect;SQL;TEXT2.toString()
-
-        #Return
-        select.Out
-
-    #EndSubCase
-
-    // //==============================================
     // // Collects  all details of all scenarios of last regression in readable form
     // //==============================================
     #Id;#SubCase
-    LastAllDetails;Returns table of last details
+    repLastAllDetails;Shows a report of last details
         #Id;#Call
         SQL;Connect
 
@@ -452,13 +396,97 @@ RF;RegressionFramework
         #Id;#Action;#Connection;#Query
         select;SQLselect;SQL;TEXT1.toString()
 
-        #Return
-        select.Out
+        #Id;#Let
+        table;select.Out
+
+        #Id;#Action;#Table;#result
+        passed;TableSelect;table;'Passed'
+
+        #Id;#Action;#Table;#result
+        failed;TableSelect;table;'Failed'
+
+        #Action;#Table;#Columns;#MatchCell;#Search;#Replace
+        TableReplace;table;{ 'step', 'error' };true;'null';''
+
+        #Action;#Table;#Columns;#MatchCell;#Search;#Replace
+        TableReplace;table;{ 'screenshot'};true;null;''
+
+        #Action;#Replace;#Table;#Columns;#Search;#MatchCell
+        TableReplace;'<div class=\"Passed\">Passed</div>';table;{ 'result' };'Passed';true
+
+        #Action;#Replace;#Table;#Columns;#Search;#MatchCell
+        TableReplace;'<div class=\"Failed\">Failed</div>';table;{ 'result' };'Failed';true
+
+        #Id;#Action;#ReportName
+        report;ReportStart;'Details'
+
+        #Action;#Table;#Title;#ToReport;#Numbers;#scenario;#testcase;#result;#description;#expected;#error;#screenshot
+        TableReport;table;'{{4 Detailed report 4}}';report.Out;false;'Matrix';'Step Name';'Status';'Description';'Expected Result';'Actual Result';'Screenshots'
+
+        #Action;#Report;#Passed;#Failed
+        ReportFinish;report.Out;passed.Out.size();failed.Out.size()
+
+        #Action;#Report
+        ReportShow;report.Out.getReportName()
 
     #EndSubCase
 
     // //==============================================
-    // // Perform connection to SQL server using variable set that is set
+    // // Collects history of all runs and evaluate average factor of success.
+    // //==============================================
+    #Id;#SubCase
+    repProgress;Shows progress during whole period
+        #Id;#Call
+        SQL;RF.Connect
+
+        #Id;#Action;#Connection;#Query
+        select;SQLselect;SQL;'SELECT DATE(r.create_time) AS `Period`, AVG(s.passed / (s.passed + s.failed)) AS `Average` FROM runs AS r LEFT JOIN scenarios AS s ON s.run_id = r.id GROUP BY r.id'
+
+        #Id;#Action;#ReportName
+        REP2;ReportStart;'Progress'
+
+        #Action;#Type;#Table;#Title;#Labels;#ToReport
+        ChartReport;ChartKind.Line;select.Out;'{{4 Progress 4}}';'Period';REP2.Out
+
+        #Action;#Report;#Passed;#Failed
+        ReportFinish;REP2.Out;0;0
+
+        #Action;#Report
+        ReportShow;REP2.Out.getReportName()
+
+    #EndSubCase
+
+    // //==============================================
+    // // Collects all run dates and returns them as a list
+    // //==============================================
+    #Id;#SubCase
+    listOfDates;List of run dates
+        #Id;#Call
+        SQL;RF.Connect
+
+        #Id;#Action;#Query;#Connection
+        query;SQLselect;'select create_time from runs';SQL
+
+        #Id;#Let
+        reportDataList;new ArrayList()
+
+        #ForEach;#In
+        row;query.Out
+            #Id;#Let
+            dateTimeItem;new Date(row.create_time.getTime())
+
+            #Let
+            reportDataList.add((dateTimeItem))
+
+        #EndForEach
+
+        #Return
+        reportDataList
+
+    #EndSubCase
+
+    // //==============================================
+    // // Esteblishes connection to SQL server using variable set that is set
     // // by RF.SetVar
     // // This subcase checks that all needed tables exist. If not it creates them.
     // //==============================================
@@ -509,8 +537,8 @@ RF;RegressionFramework
             ") ENGINE=InnoDB AUTO_INCREMENT=94 DEFAULT CHARSET=utf8;"
             #EndRawText
 
-            #Id;#Action;#Query;#Connection
-            SQLEXEC1;SQLexecute;query1.toString();SQLCNT.Out
+            #Action;#Query;#Connection
+            SQLexecute;query1.toString();SQLCNT.Out
 
             #Id;#RawText
             query2;create
@@ -534,8 +562,8 @@ RF;RegressionFramework
             ") ENGINE=InnoDB AUTO_INCREMENT=278 DEFAULT CHARSET=utf8;"
             #EndRawText
 
-            #Id;#Action;#Query;#Connection
-            SQLEXEC1;SQLexecute;query2.toString();SQLCNT.Out
+            #Action;#Query;#Connection
+            SQLexecute;query2.toString();SQLCNT.Out
 
             #Id;#RawText
             query3;create
@@ -552,8 +580,8 @@ RF;RegressionFramework
             ") ENGINE=InnoDB AUTO_INCREMENT=567 DEFAULT CHARSET=utf8;"
             #EndRawText
 
-            #Id;#Action;#Query;#Connection
-            SQLEXEC1;SQLexecute;query3.toString();SQLCNT.Out
+            #Action;#Query;#Connection
+            SQLexecute;query3.toString();SQLCNT.Out
 
             #Id;#RawText
             query4;create
@@ -566,8 +594,8 @@ RF;RegressionFramework
             ") ENGINE=InnoDB DEFAULT CHARSET=utf8;"
             #EndRawText
 
-            #Id;#Action;#Query;#Connection
-            SQLEXEC1;SQLexecute;query4.toString();SQLCNT.Out
+            #Action;#Query;#Connection
+            SQLexecute;query4.toString();SQLCNT.Out
 
         #EndIf
 

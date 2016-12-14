@@ -10,6 +10,7 @@ package com.exactprosystems.jf.tool;
 
 import com.exactprosystems.jf.api.app.IControl;
 import com.exactprosystems.jf.api.common.DateTime;
+import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.error.app.ProxyException;
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
@@ -482,13 +483,13 @@ public abstract class Common
 		}
 		if (value instanceof Date)
 		{
-			DateTime date = (DateTime) value;
+			DateTime date = new DateTime((Date)value);
 			return String.format("DateTime.date(%d,%d,%d,%d,%d,%d)", date.years(), date.months(), date.days(), date.hours(), date.minutes(), date.seconds());
 		}
 		if (value instanceof File)
 		{
 			return evaluator.createString(((File) value).getPath());
 		}
-		return String.valueOf(value);
+		return Str.asString(value);
 	}
 }
