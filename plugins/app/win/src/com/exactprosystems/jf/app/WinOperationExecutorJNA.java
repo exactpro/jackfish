@@ -96,14 +96,12 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 			int[] result = new int[length];
 			boolean many = locator.getAddition() != null && locator.getAddition() == Addition.Many;
 			UIProxyJNA owner = window == null ? new UIProxyJNA(null) : window;
-			int count = this.driver.findAllForLocator(result, owner, controlKind, locator.getUid(), locator.getXpath(), locator
-					.getClazz(), locator.getName(), locator.getTitle(), locator.getText(), many);
+			int count = this.driver.findAllForLocator(result, owner, controlKind, locator.getUid(),	locator.getXpath(),	locator.getClazz(),	locator.getName(), locator.getTitle(), locator.getText(), many);
 			if (count > length)
 			{
 				length = count;
 				result = new int[length];
-				this.driver.findAllForLocator(result, owner, locator.getControlKind(), locator.getUid(), locator.getXpath(), locator
-						.getClazz(), locator.getName(), locator.getTitle(), locator.getText(), many);
+				this.driver.findAllForLocator(result, owner, locator.getControlKind(), locator.getUid(), locator.getXpath(), locator.getClazz(), locator.getName(), locator.getTitle(), locator.getText(), many);
 			}
 			int foundElementCount = result[0];
 			List<UIProxyJNA> returnedList = new ArrayList<>();
@@ -154,14 +152,14 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 			boolean many = element.getAddition() != null && element.getAddition() == Addition.Many;
 			int length = 100;
 			int[] result = new int[length];
-			int count = this.driver.findAllForLocator(result, ownerElement, element.getControlKind(), element.getUid(), element
-					.getXpath(), element.getClazz(), element.getName(), element.getTitle(), element.getText(), many);
+			int count = this.driver.findAllForLocator(result, ownerElement, element.getControlKind(), element.getUid(),
+					element.getXpath(), element.getClazz(), element.getName(), element.getTitle(), element.getText(), many);
 			if (count > length)
 			{
 				length = count;
 				result = new int[length];
-				this.driver.findAllForLocator(result, ownerElement, element.getControlKind(), element.getUid(), element.getXpath(), element
-						.getClazz(), element.getName(), element.getTitle(), element.getText(), many);
+				this.driver.findAllForLocator(result, ownerElement, element.getControlKind(), element.getUid(),
+						element.getXpath(), element.getClazz(), element.getName(), element.getTitle(), element.getText(), many);
 			}
 			int foundElementCount = result[0];
 			List<UIProxyJNA> returnedList = new ArrayList<>();
@@ -592,7 +590,7 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 			String result;
 			if (isSelectionPatternPresent)
 			{
-				//				result = this.driver.doPatternCall(component, WindowPattern.SelectionPattern, "GetSelection", null, -1);
+				// result = this.driver.doPatternCall(component, WindowPattern.SelectionPattern, "GetSelection", null, -1);
 				result = this.driver.getProperty(component, WindowProperty.SelectionProperty);
 			}
 			else if (isSelectionItemPatternPresent)
@@ -903,7 +901,6 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 		try
 		{
 			String res = this.driver.getTable(component, useNumericHeader);
-
 			String[] split = res.split(SEPARATOR_ROWS);
 			String headerRow = split[0];
 			String[] headerCells = convertColumns(headerRow.split(SEPARATOR_CELL), columns);
