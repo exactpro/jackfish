@@ -342,7 +342,7 @@ public class JnaDriverImpl
 	public String getValueTableCell(UIProxyJNA table, int column, int row) throws Exception
 	{
 		long start = System.currentTimeMillis();
-		String result = this.jnaDriver.getValueTableCell(table.getIdString(), column, row);
+		String result = ConvertString.replaceUnicodeSubStringsToCharSymbols(this.jnaDriver.getValueTableCell(table.getIdString(), column, row));
 		this.logger.info(String.format("getValueTableCell(%s,%d,%d) time(ms) : %d", table, column, row, 
 				System.currentTimeMillis() - start));
 		checkCSharpTimes();
@@ -363,9 +363,9 @@ public class JnaDriverImpl
 	public void textTableCell(UIProxyJNA table, int column, int row, String text) throws Exception
 	{
 		long start = System.currentTimeMillis();
+		text = ConvertString.replaceNonASCIISymbolsToUnicodeSubString(text);
 		this.jnaDriver.textTableCell(table.getIdString(), column, row, text);
-		this.logger.info(String.format("textTableCell(%s,%d,%d, %s) time(ms) : %d", table, column, row, text, 
-				System.currentTimeMillis() - start));
+		this.logger.info(String.format("textTableCell(%s,%d,%d, %s) time(ms) : %d", table, column, row, text, System.currentTimeMillis() - start));
 		checkCSharpTimes();
 		checkError();
 	}
@@ -373,8 +373,9 @@ public class JnaDriverImpl
 	public String getRowByConditions(UIProxyJNA table, boolean useNumericHeader, Condition condition, String columns) throws Exception
 	{
 		long start = System.currentTimeMillis();
+		columns = ConvertString.replaceNonASCIISymbolsToUnicodeSubString(columns);
 		String stringCondition = condition.serialize();
-		String res = this.jnaDriver.getRowByCondition(table.getIdString(), useNumericHeader, stringCondition, columns);
+		String res = ConvertString.replaceUnicodeSubStringsToCharSymbols(this.jnaDriver.getRowByCondition(table.getIdString(), useNumericHeader, stringCondition, columns));
 		this.logger.info(String.format("getRowByConditions(%s,%b,%s) : %s, time(ms) : %d", table, useNumericHeader, stringCondition, res, 
 				System.currentTimeMillis() - start));
 		checkCSharpTimes();
@@ -385,7 +386,7 @@ public class JnaDriverImpl
 	public String getList(UIProxyJNA element) throws Exception
 	{
 		long start = System.currentTimeMillis();
-		String result = this.jnaDriver.getList(element.getIdString());
+		String result = ConvertString.replaceUnicodeSubStringsToCharSymbols(this.jnaDriver.getList(element.getIdString()));
 		this.logger.info(String.format("getList(%s) = %s, time (ms) : %d", element, result, System.currentTimeMillis() - start));
 		checkCSharpTimes();
 		checkError();
@@ -395,8 +396,9 @@ public class JnaDriverImpl
 	public String getRowIndexes(UIProxyJNA table, boolean useNumericHeader, ICondition condition, String columns) throws Exception
 	{
 		long start = System.currentTimeMillis();
+		columns = ConvertString.replaceNonASCIISymbolsToUnicodeSubString(columns);
 		String stringCondition = condition.serialize();
-		String res = this.jnaDriver.getRowIndexes(table.getIdString(), useNumericHeader, stringCondition, columns);
+		String res = ConvertString.replaceUnicodeSubStringsToCharSymbols(this.jnaDriver.getRowIndexes(table.getIdString(), useNumericHeader, stringCondition, columns));
 		this.logger.info(String.format("getRowIndexes(%s,%b,%s) : %s, time(ms) : %d", table, useNumericHeader, stringCondition, res, 
 				System.currentTimeMillis() - start));
 		checkCSharpTimes();
@@ -407,7 +409,7 @@ public class JnaDriverImpl
 	public String getRowByIndex(UIProxyJNA table, boolean useNumericHeader, int index) throws Exception
 	{
 		long start = System.currentTimeMillis();
-		String res = this.jnaDriver.getRowByIndex(table.getIdString(), useNumericHeader, index);
+		String res = ConvertString.replaceUnicodeSubStringsToCharSymbols(this.jnaDriver.getRowByIndex(table.getIdString(), useNumericHeader, index));
 		this.logger.info(String.format("getRowByIndex(%s,%b,%s) : %s, time(ms) : %d", table, useNumericHeader, index, res, System.currentTimeMillis() - start));
 		checkCSharpTimes();
 		checkError();
@@ -417,7 +419,7 @@ public class JnaDriverImpl
 	public String getTable(UIProxyJNA table, boolean useNumericHeader) throws Exception
 	{
 		long start = System.currentTimeMillis();
-		String res = this.jnaDriver.getTable(table.getIdString(), useNumericHeader);
+		String res = ConvertString.replaceUnicodeSubStringsToCharSymbols(this.jnaDriver.getTable(table.getIdString(), useNumericHeader));
 		this.logger.info(String.format("getTable(%s,%b) : %s, time(ms) : %d", table, useNumericHeader, res, System.currentTimeMillis() - start));
 		checkCSharpTimes();
 		checkError();

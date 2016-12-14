@@ -530,7 +530,7 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
     {
         try
         {
-            String result = ConvertString.replaceUnicodeSubStringsToCharSymbols(this.driver.getList(component));
+            String result = this.driver.getList(component);
             if(result != null) {
 				return Arrays.asList(result.split(SEPARATOR_COMMA));
 			}
@@ -768,7 +768,6 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 	{
 		try
 		{
-			text = ConvertString.replaceNonASCIISymbolsToUnicodeSubString(text);
 			this.driver.textTableCell(component, column, row, text);
 			return true;
 		}
@@ -789,7 +788,7 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 	{
 		try
 		{
-			return ConvertString.replaceUnicodeSubStringsToCharSymbols(this.driver.getValueTableCell(component, column, row));
+			return this.driver.getValueTableCell(component, column, row);
 		}
 		catch (RemoteException e)
 		{
@@ -808,8 +807,7 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 	{
 		try
 		{
-			String columnsStr = ConvertString.replaceNonASCIISymbolsToUnicodeSubString(columnsToString(columns));
-			String result = ConvertString.replaceUnicodeSubStringsToCharSymbols(this.driver.getRowByConditions(component, useNumericHeader, (Condition) valueCondition, columnsStr));
+			String result = this.driver.getRowByConditions(component, useNumericHeader, (Condition) valueCondition, columnsToString(columns));
 			String[] split = result.split(SEPARATOR_ROWS);
 			if (split.length < 2)
 			{
@@ -845,8 +843,7 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 	{
 		try
 		{
-			String columnsStr = ConvertString.replaceNonASCIISymbolsToUnicodeSubString(columnsToString(columns));
-			String result = ConvertString.replaceUnicodeSubStringsToCharSymbols(this.driver.getRowIndexes(component, useNumericHeader, valueCondition, columnsStr));
+			String result = this.driver.getRowIndexes(component, useNumericHeader, valueCondition, columnsToString(columns));
 			List<String> returnedList = new ArrayList<>();
 			String[] indexes = result.split(SEPARATOR_CELL);
 			Collections.addAll(returnedList, indexes);
@@ -869,7 +866,7 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 	{
 		try
 		{
-			String result = ConvertString.replaceUnicodeSubStringsToCharSymbols(this.driver.getRowByIndex(component, useNumericHeader, i));
+			String result = this.driver.getRowByIndex(component, useNumericHeader, i);
 			String[] split = result.split(SEPARATOR_ROWS);
 			String headerRow = split[0];
 			String row = split[1];
@@ -903,8 +900,7 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 	{
 		try
 		{
-			String res = ConvertString.replaceUnicodeSubStringsToCharSymbols(this.driver.getTable(component, useNumericHeader));
-
+			String res = this.driver.getTable(component, useNumericHeader);
 			String[] split = res.split(SEPARATOR_ROWS);
 			String headerRow = split[0];
 			String[] headerCells = convertColumns(headerRow.split(SEPARATOR_CELL), columns);
