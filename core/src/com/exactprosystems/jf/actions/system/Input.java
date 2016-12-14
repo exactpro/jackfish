@@ -114,7 +114,7 @@ public class Input extends AbstractAction
 		}
         else if (this.dataSource instanceof Map<?,?>)
         {
-            ((Map<?,?>)this.dataSource).entrySet().stream().forEach(o -> list.add(new ReadableValue(Common.createLiteral(o, evaluator), Str.asString(o.getValue()))));
+            ((Map<?,?>)this.dataSource).entrySet().stream().forEach(o -> list.add(new ReadableValue(Common.createLiteral(o.getKey(), evaluator), Str.asString(o.getValue()))));
         }
         else
         {

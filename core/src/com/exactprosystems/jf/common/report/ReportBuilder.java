@@ -8,6 +8,7 @@
 
 package com.exactprosystems.jf.common.report;
 
+import com.exactprosystems.jf.api.app.AppConnection;
 import com.exactprosystems.jf.api.app.ImageWrapper;
 import com.exactprosystems.jf.api.common.Converter;
 import com.exactprosystems.jf.charts.ChartBuilder;
@@ -55,6 +56,12 @@ public abstract class ReportBuilder implements Serializable
 			this.reportDir = outputPath + File.separator + this.imageDir; 
 		}
 	}
+
+   @Override
+    public String toString()
+    {
+        return ReportBuilder.class.getSimpleName() + "{" + getReportName() + ":" + hashCode() + "}";
+    }
 
 	public final void init(ReportWriter writer) throws IOException
 	{

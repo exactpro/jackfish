@@ -1,7 +1,16 @@
 #TestCase;#Kind;#Depends;#For
 Init;Never;;
-    #Id;#Call;#type;#host;#base;#user;#password;#scriptsDir
-    CALL_1;RF.SetVars;'MySql';'127.0.0.1';'regression';'root';dbPassword;'matrices/EE/'
+    #Call;#type;#host;#base;#user;#password;#scriptsDir
+    RF.SetVars;'MySql';'127.0.0.1';'regression';'root';dbPassword;'matrices/EE/'
+
+    #Id;#Call
+    allDates;RF.listOfDates
+
+    #Id;#Action;#DefaultValue;#HelpKind;#Title;#DataSource
+    inputDate;Input;'';HelpKind.ChooseFromList;'Choose the regression run. Leave empty if all';allDates
+
+    #Id;#Let
+    date;inputDate.Out == '' ? null : inputDate.Out
 
     #Id;#Let
     Overall;'Overall'
@@ -25,8 +34,8 @@ Init;Never;;
     INP1.Out
         #Case
         Overall
-            #Call
-            RF.repOverall
+            #Call;#date
+            RF.repOverall;date
 
 
         #Case
@@ -38,8 +47,8 @@ Init;Never;;
         // 
         #Case
         Summary
-            #Call
-            RF.repSummary
+            #Call;#date
+            RF.repSummary;date
 
 
         // 
@@ -48,15 +57,15 @@ Init;Never;;
             #Id;#Action;#DefaultValue;#HelpKind;#Title
             name;Input;'reports/export.csv';HelpKind.ChooseSaveFile;'Choose the file name'
 
-            #Call;#fileName
-            RF.repCsvExport;name.Out
+            #Call;#fileName;#date
+            RF.repCsvExport;name.Out;date
 
 
         // 
         #Case
         Detailed
-            #Call
-            RF.repLastAllDetails
+            #Call;#date
+            RF.repLastAllDetails;date
 
 
     #EndSwitch

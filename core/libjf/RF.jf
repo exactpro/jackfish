@@ -38,8 +38,8 @@ RF;RegressionFramework
     // // Runs all matrixes which names are enumerated in the column  Name
     // // of the table and puts results into database
     // //==============================================
-    #Id;#SubCase;#table
-    RunAll;Run all matrixes from table;
+    #Id;#SubCase;#table;#testSet
+    RunAll;Run all matrixes from table;;
         #Assert;#Message
         table != null && table instanceof Table;'The parameter table should be Table'
 
@@ -61,8 +61,8 @@ RF;RegressionFramework
         #Id;#Call
         SQL;Connect
 
-        #Id;#Action;#Connection;#Query;#CreateTime
-        selectRunId;SQLinsert;SQL;'INSERT INTO runs (create_time, duration) VALUES (?, -1)\u003b';DateTime.current()
+        #Id;#Action;#Connection;#Query;#CreateTime;#TestSet
+        selectRunId;SQLinsert;SQL;'INSERT INTO runs (create_time, duration, test_set) VALUES (?, -1, ?)\u003b';DateTime.current();testSet
 
         #Id;#Let
         runId;selectRunId.Out[0]
@@ -132,7 +132,7 @@ RF;RegressionFramework
                 #ForEach;#In
                 details;resultTab.Out
                     #Id;#Action;#Connection;#Query;#ScenarioId;#Testcase;#Stepp;#Time;#Result;#Error;#Screenshot
-                    selectDetails;SQLinsert;SQL;'INSERT INTO details (scenario_id, testcase, step, time, result, error, screenshot) VALUES (?, ?, ?, ?, ?, ?, ?)';scenarioId;'' + details.TestCase;'' + details.Step;details.Time;'' + details.Result;'' + details.Error;Converter.imageToBlob(details.Screenshot)
+                    selectDetails;SQLinsert;SQL;'INSERT INTO details (scenario_id, testcase, step, time, result, error, screenshot) VALUES (?, ?, ?, ?, ?, ?, ?)';scenarioId;'' + details.TestCase;'' + details.Step;details.Time;'' + details.Result;'' + details.Error;Converter.imageToZipBlob(details.Screenshot)
 
                     #For;#From;#To;#Step
                     i;standartResult.Out.getHeaderSize();resultTab.Out.getHeaderSize() - 1;1
@@ -174,28 +174,34 @@ RF;RegressionFramework
     // //==============================================
     // // Shows the overall report
     // //==============================================
-    #Id;#SubCase
-    repOverall;Overall progress
+    #Id;#SubCase;#date
+    repOverall;Overall progress;
         #Id;#Call
         SQL;RF.Connect
+
+        #Id;#Call;#sql;#date
+        runId;runIdFromDate;SQL;date
+
+        #Id;#Let
+        title;'Overall' + (date == null ? '' : (' on ' +DateTime.strDate(date)))
 
         #Id;#RawText
         TEXT4;Text
         "SELECT  "
         "	sp.count AS `Passed`, "
         "	sf.count AS `Failed`"
-        "FROM (SELECT COUNT(id) AS count FROM scenarios WHERE failed = 0 AND run_id = (SELECT MAX(id) FROM runs) ) AS sp "
-        "LEFT JOIN (SELECT COUNT(id) AS count FROM scenarios WHERE failed <> 0 AND run_id = (SELECT MAX(id) FROM runs) ) AS sf ON true "
+        "FROM (SELECT COUNT(id) AS count FROM scenarios WHERE failed = 0 AND run_id = ? ) AS sp "
+        "LEFT JOIN (SELECT COUNT(id) AS count FROM scenarios WHERE failed <> 0 AND run_id = ? ) AS sf ON true "
         #EndRawText
 
-        #Id;#Action;#Connection;#Query
-        select;SQLselect;SQL;TEXT4.toString()
+        #Id;#Action;#Connection;#Query;#runId;#runId
+        select;SQLselect;SQL;TEXT4.toString();runId;runId
 
         #Id;#Action;#ReportName
-        REP1;ReportStart;'Overall'
+        REP1;ReportStart;title
 
         #Action;#Type;#Table;#ToReport;#Title;#Colors
-        ChartReport;ChartKind.Pie;select.Out;REP1.Out;'{{4 Overall 4}}';{ 'Passed' : Color.GREEN, 'Failed' : Color.RED }
+        ChartReport;ChartKind.Pie;select.Out;REP1.Out;'{{4 ' + title + ' 4}}';{ 'Passed' : Color.GREEN, 'Failed' : Color.RED }
 
         #Action;#Table;#Title;#Numbers;#ToReport
         TableReport;select.Out;'Table';false;REP1.Out
@@ -211,10 +217,16 @@ RF;RegressionFramework
     // //==============================================
     // // Shows the summary report
     // //==============================================
-    #Id;#SubCase
-    repSummary;Summary report
+    #Id;#SubCase;#date
+    repSummary;Summary report;
         #Id;#Call
         SQL;RF.Connect
+
+        #Id;#Let
+        title;'Summary' + (date == null ? '' : (' on ' +DateTime.strDate(date)))
+
+        #Id;#Call;#sql;#date
+        runId;runIdFromDate;SQL;date
 
         #Id;#RawText
         TEXT2;Text
@@ -230,11 +242,11 @@ RF;RegressionFramework
         "  s.user AS user,"
         "  s.report AS report"
         "FROM scenarios AS s "
-        "WHERE s.manual = 0 AND s.run_id = (SELECT MAX(r.id) FROM runs AS r)"
+        "WHERE s.manual = 0 AND s.run_id = ?"
         #EndRawText
 
-        #Id;#Action;#Connection;#Query
-        select;SQLselect;SQL;TEXT2.toString()
+        #Id;#Action;#Connection;#Query;#runId
+        select;SQLselect;SQL;TEXT2.toString();runId
 
         #Id;#Let
         table;select.Out
@@ -252,10 +264,10 @@ RF;RegressionFramework
         TableReplace;'<div class=\"Failed\">Failed</div>';table;{ 'result' };'Failed';true
 
         #Id;#Action;#ReportName
-        REP1;ReportStart;'Summary'
+        REP1;ReportStart;title
 
         #Action;#Table;#Title;#ToReport;#Numbers;#scenario;#result;#date;#time;#user;#host;#report
-        TableReport;table;'Consolidated Umbrella Report: ';REP1.Out;false;'Matrix Name';'Execution Status';'Execution Date';'Execution Time';'Exectuted By';'Execution Machine';'Report Link'
+        TableReport;table;'{{4' + title + '4}}';REP1.Out;false;'Matrix Name';'Execution Status';'Execution Date';'Execution Time';'Exectuted By';'Execution Machine';'Report Link'
 
         #Action;#Passed;#Failed;#Report
         ReportFinish;passed.Out.size();failed.Out.size();REP1.Out
@@ -268,10 +280,13 @@ RF;RegressionFramework
     // //==============================================
     // // Export the last regression set to csv file for import into QC
     // //==============================================
-    #Id;#SubCase;#fileName
-    repCsvExport;Export to CSV file;
+    #Id;#SubCase;#date;#fileName
+    repCsvExport;Export to CSV file;;
         #Id;#Call
         SQL;Connect
+
+        #Id;#Call;#sql;#date
+        runId;runIdFromDate;SQL;date
 
         #Id;#Let
         countSteps;0
@@ -292,11 +307,11 @@ RF;RegressionFramework
         "  DATE(s.start_time) AS date, "
         "  TIME(s.start_time) AS time "
         "FROM scenarios AS s"
-        "WHERE s.manual = 0 AND s.run_id = (SELECT MAX(r.id) FROM runs AS r); "
+        "WHERE s.manual = 0 AND s.run_id = ?; "
         #EndRawText
 
-        #Id;#Action;#Connection;#Query
-        query;SQLselect;SQL;TEXT5.toString()
+        #Id;#Action;#Connection;#Query;#runId
+        query;SQLselect;SQL;TEXT5.toString();runId
 
         #Id;#Let
         scenarios;query.Out
@@ -367,10 +382,16 @@ RF;RegressionFramework
     // //==============================================
     // // Collects  all details of all scenarios of last regression in readable form
     // //==============================================
-    #Id;#SubCase
-    repLastAllDetails;Shows a report of last details
+    #Id;#SubCase;#date
+    repLastAllDetails;Shows a report of last details;
         #Id;#Call
         SQL;Connect
+
+        #Id;#Call;#sql;#date
+        runId;runIdFromDate;SQL;date
+
+        #Id;#Let
+        title;'Details' + (date == null ? '' : (' on ' +DateTime.strDate(date)))
 
         #Id;#RawText
         TEXT1;Text
@@ -390,11 +411,11 @@ RF;RegressionFramework
         "  d.screenshot "
         "FROM scenarios AS s "
         "LEFT JOIN details AS d ON d.scenario_id = s.id "
-        "WHERE s.manual = 0 AND s.run_id = (SELECT MAX(r.id) FROM runs AS r) "
+        "WHERE s.manual = 0 AND s.run_id = ?"
         #EndRawText
 
-        #Id;#Action;#Connection;#Query
-        select;SQLselect;SQL;TEXT1.toString()
+        #Id;#Action;#Connection;#Query;#runId
+        select;SQLselect;SQL;TEXT1.toString();runId
 
         #Id;#Let
         table;select.Out
@@ -418,10 +439,10 @@ RF;RegressionFramework
         TableReplace;'<div class=\"Failed\">Failed</div>';table;{ 'result' };'Failed';true
 
         #Id;#Action;#ReportName
-        report;ReportStart;'Details'
+        report;ReportStart;title
 
         #Action;#Table;#Title;#ToReport;#Numbers;#scenario;#testcase;#result;#description;#expected;#error;#screenshot
-        TableReport;table;'{{4 Detailed report 4}}';report.Out;false;'Matrix';'Step Name';'Status';'Description';'Expected Result';'Actual Result';'Screenshots'
+        TableReport;table;'{{4' + title + '4}}';report.Out;false;'Matrix';'Step Name';'Status';'Description';'Expected Result';'Actual Result';'Screenshots'
 
         #Action;#Report;#Passed;#Failed
         ReportFinish;report.Out;passed.Out.size();failed.Out.size()
@@ -462,13 +483,13 @@ RF;RegressionFramework
     #Id;#SubCase
     listOfDates;List of run dates
         #Id;#Call
-        SQL;RF.Connect
+        SQL;Connect
 
-        #Id;#Action;#Query;#Connection
-        query;SQLselect;'select create_time from runs';SQL
+        #Id;#Action;#Connection;#Query
+        query;SQLselect;SQL;'select create_time, test_set from runs'
 
         #Id;#Let
-        reportDataList;new ArrayList()
+        reportDataList;new LinkedHashMap()
 
         #ForEach;#In
         row;query.Out
@@ -476,12 +497,48 @@ RF;RegressionFramework
             dateTimeItem;new Date(row.create_time.getTime())
 
             #Let
-            reportDataList.add((dateTimeItem))
+            reportDataList.put(dateTimeItem, row.test_set)
 
         #EndForEach
 
         #Return
         reportDataList
+
+    #EndSubCase
+
+    // //==============================================
+    // // For empty date returns the last runs.id, for non-empty - the last id, which
+    // // create_date not less than desired
+    // //==============================================
+    #Id;#SubCase;#sql;#date
+    runIdFromDate;Gets runs.id for desired date;;
+        #Assert;#Message
+        sql != null;'SQL connection is NULL'
+
+        #If
+        date == null
+            #Id;#Action;#Connection;#Query
+            select1;SQLselect;sql;'SELECT MAX(id) AS id FROM runs'
+
+            #Return
+            select1.Out.size() > 0 ? select1.Out[0].id : -1
+
+        #EndIf
+
+        #Id;#RawText
+        query;Text
+        "SELECT id "
+        "FROM runs "
+        "WHERE create_time <= ? "
+        "ORDER BY create_time DESC "
+        "LIMIT 1 "
+        #EndRawText
+
+        #Id;#Action;#Connection;#Query;#CreateTime
+        select2;SQLselect;sql;query.toString();date
+
+        #Return
+        select2.Out.size() > 0 ? select2.Out[0].id : -1
 
     #EndSubCase
 
@@ -533,6 +590,7 @@ RF;RegressionFramework
             "  `id` int(11) NOT NULL AUTO_INCREMENT,"
             "  `create_time` datetime DEFAULT NULL,"
             "  `duration` int(11) DEFAULT NULL,"
+            "  `test_set` VARCHAR(100) NULL,"
             "  PRIMARY KEY (`id`)"
             ") ENGINE=InnoDB AUTO_INCREMENT=94 DEFAULT CHARSET=utf8;"
             #EndRawText

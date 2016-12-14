@@ -131,7 +131,7 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 				    if (type == Types.LONGVARBINARY || type == Types.BLOB)
 				    {
 				        value = set.getBlob(i + 1);
-	                    value = Converter.blobToObject((Blob)value);
+//	                    value = Converter.blobToObject((Blob)value);
 	                }
 				    else
 				    {

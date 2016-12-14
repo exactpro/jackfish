@@ -444,8 +444,10 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 		report.itemFinished(this, duration, this.screenshot);
 		listener.finished(this.owner, this, this.result.getResult());
 		this.changeState(this.isBreakPoint() ? MatrixItemState.BreakPoint : MatrixItemState.None);
+		
 		afterReport(report);
-        report.reportSwitch(prev);
+        
+		report.reportSwitch(prev);
 
 		if (isRepOff() && prev)
         {

@@ -22,16 +22,16 @@ INIT;Test case;;;
     6;x;EE1007;VF;dev;3
     #EndRawTable
 
-    #Id;#Call;#table
-    CALL_2;RF.RunAll;table
+    #Call;#table;#testSet
+    RF.RunAll;table;'Chrome'
 
 
-#Off;#TestCase;#Kind;#Depends;#For
-1;Summary report;;;
+#TestCase;#Kind;#Depends;#For
+Summary report;;;
     #Call
     RF.repSummary
 
-    #Call;#fileName
-    RF.repCsvExport;'reports/export.csv'
+    #Call;#fileName;#date
+    RF.repCsvExport;'reports/export.csv';
 
 
