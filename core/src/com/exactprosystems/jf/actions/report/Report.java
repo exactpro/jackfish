@@ -74,7 +74,7 @@ public class Report extends AbstractAction
 		
 		report = this.toReport == null ? report : this.toReport;
 		
-		ReportTable info = report.addTable(sb.toString(), this.beforeTestCase, true, 0, new int[] {});
+        ReportTable info = report.addExplicitTable(sb.toString(), this.beforeTestCase, true, 0, new int[] {});
 		info.addValues("");
 		
 		

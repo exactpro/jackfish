@@ -150,6 +150,7 @@ public class ChartReport extends AbstractAction
 	    
 		ChartBuilder chartBuilder = ChartFactory.createChartBuilder(this.chartType, this.table, this.colors, parameters.select(TypeMandatory.Extra));
 		report = this.toReport == null ? report : this.toReport;
+		// TODO perform explicit report chart
 		report.reportChart(Str.asString(this.title), this.beforeTestCase, chartBuilder);
 
 		super.setResult(null);

@@ -497,7 +497,7 @@ public abstract class AbstractAction implements Cloneable
                     // this field is marked with ActionFieldAttribute
 
                 	parameter.correctType(description.field.getType());
-                	if (parameter.isValid())
+                	if (parameter.isValid()) // why allCorrect isn't changed if parameter is invalid?
                 	{
 	                    injectValue(name, description, parameter.getValue());
                 	}

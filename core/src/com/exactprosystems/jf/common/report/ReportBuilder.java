@@ -121,11 +121,23 @@ public abstract class ReportBuilder implements Serializable
 		putMark(this.writer, str);
 	}
 
+    public final ReportTable addExplicitTable(String title, String beforeTestcase, boolean decoraded, int quotedSince, int[] widths, String ... columns)
+    {
+        Integer uniq = this.uniques.peek();
+        ReportTable info = new ReportTable(title, beforeTestcase, decoraded, quotedSince, widths, columns);
+        this.reportData.get(uniq).add(info);
+        
+        return info;
+    }
+
 	public final ReportTable addTable(String title, String beforeTestcase, boolean decoraded, int quotedSince, int[] widths, String ... columns)
 	{
 		Integer uniq = this.uniques.peek();
 		ReportTable info = new ReportTable(title, beforeTestcase, decoraded, quotedSince, widths, columns);
-		this.reportData.get(uniq).add(info);
+		if (this.reportIsOn())
+		{
+		    this.reportData.get(uniq).add(info);
+		}
 		
 		return info;
 	}
@@ -227,9 +239,9 @@ public abstract class ReportBuilder implements Serializable
 		try
 		{
 			Integer uniq = this.uniques.peek();
+            outAllTables(this.reportData.get(uniq), writer);
 			if (this.reportIsOn)
 			{
-				outAllTables(this.reportData.get(uniq), writer);
 				if (!(matrixItem instanceof MatrixRoot))
 				{
 				    reportItemFooter(this.writer, matrixItem, uniq, time, screenshot);

@@ -738,7 +738,7 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 			headers[col++ + addition] = this.headers[index].name;
 		}
 		headers = convertHeaders(newColumns, headers, withNumbers);
-		ReportTable table = report.addTable(title, beforeTestcase, true, 0, new int[]{}, headers);
+		ReportTable table = report.addExplicitTable(title, beforeTestcase, true, 0, new int[]{}, headers);
 
 		Function<String, String> func = name -> newColumns == null ? name : newColumns.entrySet()
 					.stream()

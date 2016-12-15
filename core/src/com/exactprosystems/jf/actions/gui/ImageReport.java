@@ -71,6 +71,7 @@ public class ImageReport extends AbstractAction
 		}
 		
 		report = this.toReport == null ? report : this.toReport;
+		// TODO perform explicit out image
 		report.outImage(super.owner, this.beforeTestCase, this.image.getName(report.getReportDir()), Str.asString(this.title));
 		super.setResult(this.image.getFileName());
 	}
