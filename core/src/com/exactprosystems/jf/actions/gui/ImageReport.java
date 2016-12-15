@@ -37,7 +37,7 @@ public class ImageReport extends AbstractAction
 	public final static String	titleName	= "Title";
 
 	public final static String	toReportName		= "ToReport";
-	public final static String	asLinkName		= "Save image";
+	public final static String	asLinkName		= "asLink";
 
 	@ActionFieldAttribute(name=toReportName, mandatory = false, description = "Rerouting report")
 	protected ReportBuilder toReport;
@@ -52,7 +52,7 @@ public class ImageReport extends AbstractAction
 	protected String			title;
 
 	@ActionFieldAttribute(name = asLinkName, mandatory = false, description = "Save image.")
-	protected boolean			asLink;
+	protected Boolean			asLink;
 
     public ImageReport()
 	{
@@ -77,21 +77,21 @@ public class ImageReport extends AbstractAction
 		}
 		
 		report = this.toReport == null ? report : this.toReport;
-		System.out.println(this.asLink);
 
 		if (this.asLink)
 		{
-			String dirName = report.getReportDir() + File.separator + imageName;
-			System.out.println(dirName);
-			//this.image.saveToDir(dirName);
-			//report.decorateLink(this.image.getImage(), dirName)
+			String dirName = report.getReportDir();
+			String filename = this.image.saveToDir(dirName).getName();
+			String link = report.decorateLink(new File("Result"),  new File(dirName).getName() + File.separator + filename);
+			report.outLine(this.owner, this.beforeTestCase, link, null);
+			report.outLine(this.owner, this.beforeTestCase, "   ", null);
+
 		}
 		else
 		{
-			System.out.println("else");
+			report.outImage(super.owner, this.beforeTestCase, this.image.getName(report.getReportDir()), Str.asString(this.title));
 		}
 
-		report.outImage(super.owner, this.beforeTestCase, this.image.getName(report.getReportDir()), Str.asString(this.title));
 		super.setResult(this.image.getFileName());
 	}
 
@@ -118,8 +118,8 @@ public class ImageReport extends AbstractAction
 				ActionsReportHelper.fillListForParameter(super.owner.getMatrix(),  list);
 				break;
 			case asLinkName:
-				list.add(new ReadableValue("true"));
-				list.add(new ReadableValue("false"));
+				list.add(ReadableValue.TRUE);
+				list.add(ReadableValue.FALSE);
 				break;
 			default:
 		}
