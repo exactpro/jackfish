@@ -301,7 +301,7 @@ public class Converter
 	private static void addFileToList(ZipInputStream zis, ZipEntry zipEntry, List<String> list, File destFolder, byte[] startBuffer, int len) throws Exception
 	{
 		String fileName = zipEntry.getName();
-		File newFile = new File(destFolder.getAbsolutePath() + File.separator + fileName);
+		File newFile = new File(fileName);
 		List<String> parents = new ArrayList<>();
 		File tmp = newFile;
 		while (!tmp.getParentFile().exists())
@@ -332,7 +332,7 @@ public class Converter
 
 		fos.close();
 		zis.closeEntry();
-		list.add(newFile.getAbsolutePath());
+		list.add(newFile.getPath());
 	}
 
 	public static Object blobToObject(Blob blob) throws Exception

@@ -788,7 +788,12 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 						if (first.isPresent())
 						{
 							String pathname = first.get();
-							v = report.decorateLink(new File(pathname).getName(), pathname);
+							File reportFile = new File(pathname);
+							if (new File(reportFile.getParent()).getAbsolutePath().equals(new File(report.getReportName()).getParentFile().getAbsolutePath()))
+							{
+								pathname = reportFile.getName();
+							}
+							v = report.decorateLink(reportFile.getName(), pathname);
 						}
 					}
 					value[i] = v;
