@@ -40,7 +40,6 @@ public class HTMLReportBuilder extends ReportBuilder
 	protected String postProcess(String result)
 	{
 		return super.postProcess(result);
-//		return super.postProcess(HTMLhelper.htmlescape(result));
 	}
 
 	@Override
@@ -171,18 +170,6 @@ public class HTMLReportBuilder extends ReportBuilder
 
 		writer.fwrite("<table class='table repLog table-bordered'>\n");
 		writer.fwrite(createColgroup());
-		//TODO uncoment, if u want to display header
-//		writer.fwrite("<thead>\n" +
-//				"<tr>\n" +
-//				"<th>#</th>"+
-//				"<th>id</th>"+
-//				"<th>Name</th>"+
-//				"<th>Status</th>"+
-//				"<th>Time</th>"+
-//				"<th>Screenshot</th>"+
-//				"</tr>\n"+
-//				"</thead>\n"
-//		);
 		writer.fwrite("<tbody>");
 	}
 
@@ -255,7 +242,7 @@ public class HTMLReportBuilder extends ReportBuilder
 	@Override
 	protected void reportItemHeader(ReportWriter writer, MatrixItem item, Integer id) throws IOException
 	{
-		String itemId = item.getId();
+        String itemId = item.getId();
 
         if (itemId == null)
 		{
@@ -414,7 +401,7 @@ public class HTMLReportBuilder extends ReportBuilder
 	@Override
 	protected void tableFooter(ReportWriter writer, ReportTable table) throws IOException
 	{
-		writer.fwrite("</tbody>\n");
+        writer.fwrite("</tbody>\n");
 		writer.fwrite("</table>\n");
 		if (table.getBeforeTestcase() != null)
 		{
