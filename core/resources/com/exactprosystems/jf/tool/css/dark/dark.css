@@ -561,19 +561,6 @@ Text {
 	-fx-graphic: null;
 
 }
-.alert.information.dialog-pane {
-	-fx-graphic: url("dialog-information.png");
-
-}
-.alert.error.dialog-pane {
-	-fx-graphic: url("dialog-error.png");
-
-}
-.alert.warning.dialog-pane {
-	-fx-graphic: url("dialog-warning.png");
-
-}
-
 /*Resizable region*/
 .resizableRegion {
 	-fx-border-width : 0 0 2 0;

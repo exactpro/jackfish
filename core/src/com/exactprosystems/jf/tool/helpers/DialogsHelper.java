@@ -693,6 +693,7 @@ public abstract class DialogsHelper
 		BorderPane borderPane = new BorderPane();
 		borderPane.setCenter(browser);
 		Dialog<ButtonType> dialog = new Alert(Alert.AlertType.INFORMATION);
+		dialog.getDialogPane().setHeader(new Label());
 		dialog.setHeaderText("Help");
 		GridPane grid = (GridPane) dialog.getDialogPane().lookup(".header-panel");
 		grid.setStyle("-fx-font-size: 30;");
