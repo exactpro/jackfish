@@ -84,6 +84,7 @@ public class ImageReport extends AbstractAction
 			String dirName = report.getReportDir() + File.separator + imageName;
 			System.out.println(dirName);
 			//this.image.saveToDir(dirName);
+			//report.decorateLink(this.image.getImage(), dirName)
 		}
 		else
 		{
