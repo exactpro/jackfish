@@ -18,6 +18,7 @@ import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.functions.HelpKind;
 
+import java.io.File;
 import java.util.List;
 
 
@@ -36,6 +37,7 @@ public class ImageReport extends AbstractAction
 	public final static String	titleName	= "Title";
 
 	public final static String	toReportName		= "ToReport";
+	public final static String	asLinkName		= "Save image";
 
 	@ActionFieldAttribute(name=toReportName, mandatory = false, description = "Rerouting report")
 	protected ReportBuilder toReport;
@@ -49,6 +51,9 @@ public class ImageReport extends AbstractAction
 	@ActionFieldAttribute(name = titleName, mandatory = false, description = "Title for picture.")
 	protected String			title;
 
+	@ActionFieldAttribute(name = asLinkName, mandatory = false, description = "Save image.")
+	protected boolean			asLink;
+
     public ImageReport()
 	{
 	}
@@ -59,6 +64,7 @@ public class ImageReport extends AbstractAction
 		this.beforeTestCase	= null;
 		this.title			= null;
 		this.toReport = null;
+		this.asLink = false;
 	}
     
 	@Override
@@ -71,6 +77,19 @@ public class ImageReport extends AbstractAction
 		}
 		
 		report = this.toReport == null ? report : this.toReport;
+		System.out.println(this.asLink);
+
+		if (this.asLink)
+		{
+			String dirName = report.getReportDir() + File.separator + imageName;
+			System.out.println(dirName);
+			//this.image.saveToDir(dirName);
+		}
+		else
+		{
+			System.out.println("else");
+		}
+
 		report.outImage(super.owner, this.beforeTestCase, this.image.getName(report.getReportDir()), Str.asString(this.title));
 		super.setResult(this.image.getFileName());
 	}
@@ -81,6 +100,8 @@ public class ImageReport extends AbstractAction
 		switch (fieldName)
 		{
 			case beforeTestCaseName:
+				return HelpKind.ChooseFromList;
+			case asLinkName:
 				return HelpKind.ChooseFromList;
 		}
 
@@ -94,6 +115,10 @@ public class ImageReport extends AbstractAction
 		{
 			case beforeTestCaseName:
 				ActionsReportHelper.fillListForParameter(super.owner.getMatrix(),  list);
+				break;
+			case asLinkName:
+				list.add(new ReadableValue("true"));
+				list.add(new ReadableValue("false"));
 				break;
 			default:
 		}
