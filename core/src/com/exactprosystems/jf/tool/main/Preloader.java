@@ -30,7 +30,7 @@ public class Preloader extends Stage
 		this.getIcons().add(new Image(CssVariables.Icons.LOADING_ICON));
 		borderPane.getStyleClass().addAll(CssVariables.PRELOADER_GRID);
 		Scene scene = new Scene(borderPane, 250, 110);
-		scene.getStylesheets().add(Theme.PRELOADER.getPath());
+		scene.getStylesheets().add(Theme.GENERAL.getPath());
 
 		Text textJackFish = new Text("JackFish");
 		textJackFish.getStyleClass().addAll(CssVariables.PRELOADER_JASK_FISH_TEXT);

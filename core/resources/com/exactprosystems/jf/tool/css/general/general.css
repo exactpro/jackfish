@@ -1,3 +1,4 @@
+/*Spacer*/
 .root {
 	sizeMin : 4px;
 	sizeMid : 8px;
@@ -8,7 +9,7 @@
 	-fx-min-height : sizeMin;
 	-fx-max-height : sizeMin;
 	-fx-pref-height : sizeMin;
-	
+
 	-fx-min-width : 0px;
 	-fx-max-width : 0px;
 	-fx-pref-width : 0px;
@@ -19,22 +20,22 @@
 	-fx-min-height : sizeMid;
 	-fx-max-height : sizeMid;
 	-fx-pref-height : sizeMid;
-	
+
 	-fx-min-width : 0px;
 	-fx-max-width : 0px;
 	-fx-pref-width : 0px;
-	
+
 	visibility : hidden;
 }
 #verticalMax {
 	-fx-min-height : sizeMax;
 	-fx-max-height : sizeMax;
 	-fx-pref-height : sizeMax;
-	
+
 	-fx-min-width : 0px;
 	-fx-max-width : 0px;
 	-fx-pref-width : 0px;
-	
+
 	visibility : hidden;
 }
 
@@ -42,63 +43,113 @@
 	-fx-min-width : sizeMin;
 	-fx-max-width : sizeMin;
 	-fx-pref-width : sizeMin;
-	
+
 	-fx-min-height : 0px;
 	-fx-max-height : 0px;
 	-fx-pref-height : 0px;
-	
+
 	visibility : hidden;
 }
 #horizontalMid {
 	-fx-min-width : sizeMid;
 	-fx-max-width : sizeMid;
 	-fx-pref-width : sizeMid;
-	
+
 	-fx-min-height : 0px;
 	-fx-max-height : 0px;
 	-fx-pref-height : 0px;
-	
+
 	visibility : hidden;
 }
 #horizontalMax {
 	-fx-min-width : sizeMax;
 	-fx-max-width : sizeMax;
 	-fx-pref-width : sizeMax;
-	
+
 	-fx-min-height : 0px;
 	-fx-max-height : 0px;
 	-fx-pref-height : 0px;
-	
+
 	visibility : hidden;
 }
 
 .hgapMin {
 	-fx-hgap : sizeMin;
-	
+
 }
 .hgapMid {
 	-fx-hgap : sizeMid;
-	
+
 }
 .hgapMax {
 	-fx-hgap : sizeMax;
-	
+
 }
 
 .vgapMin {
 	-fx-vgap : sizeMin;
-	
+
 }
 .vgapMid {
 	-fx-vgap : sizeMid;
-	
+
 }
 .vgapMax {
 	-fx-vgap : sizeMax;
-	
+
 }
 
 .dialog-pane > .button-bar > .container {
 	-fx-spacing : sizeMax;
+
+}
+
+/*Number spinner*/
+.numberField {
+    -fx-border-width: 1;
+    -fx-border-color: lightgray;
+    -fx-background-insets:1;
+    -fx-border-radius:3 0 0 3;
+    -fx-border-radius:0 0 0 0;
+}
+.numberSpinnerArrow {
+    -fx-fill: gray;
+    -fx-stroke: gray;
+    -fx-effect: innershadow( gaussian , black , 2 , 0.6 , 1 , 1 )
+}
+.buttonsBox {
+    -fx-border-color:lightgray;
+    -fx-border-width: 1 1 1 0;
+    -fx-border-radius: 0 3 3 0;
+    -fx-border-radius: 0 0 0 0;
+}
+.spinnerButtonUp {
+    -fx-background-insets: 0;
+    -fx-background-radius:0 3 0 0;
+    -fx-background-radius:0;
+}
+.spinnerButtonDown {
+    -fx-background-insets: 0;
+    -fx-background-radius:0 0 3 0;
+    -fx-background-radius:0;
+}
+
+/*Preloader*/
+.preloaderExactprosystemsText {
+    -fx-font : 50px Arial;
+    -fx-stroke: black;
+    -fx-stroke-width: 1;
+}
+.preloaderJackFishText {
+    -fx-font : 50px Arial;
+    -fx-stroke: black;
+    -fx-stroke-width: 1;
+}
+.preloaderLoadingText {
+    -fx-font : 25px Arial;
+
+}
+.preloaderGrid {
+    -fx-background-color : linear-gradient(from 0% 0% to 100% 100%, repeat, aqua 0%, aquamarine 50%);
 
 }

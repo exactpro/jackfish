@@ -131,7 +131,7 @@ public abstract class Common
 		List<String> list = new ArrayList<>();
 		list.add(Common.theme.getPath());
 		//TODO add path to icon css in future
-		list.add(Theme.SPACER.getPath());
+		list.add(Theme.GENERAL.getPath());
 		return list;
 	}
 
