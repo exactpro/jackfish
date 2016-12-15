@@ -153,3 +153,9 @@
     -fx-background-color : linear-gradient(from 0% 0% to 100% 100%, repeat, aqua 0%, aquamarine 50%);
 
 }
+
+/*Actions controller*/
+.imageArea {
+	-fx-background-image : url("icons/texture.png");
+	-fx-background-repeat : repeat;
+}

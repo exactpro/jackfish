@@ -13,7 +13,6 @@ import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.CssVariables;
-import com.exactprosystems.jf.tool.css.images.Images;
 import com.exactprosystems.jf.tool.custom.BorderWrapper;
 import com.exactprosystems.jf.tool.custom.expfield.ExpressionField;
 import com.exactprosystems.jf.tool.dictionary.ApplicationStatus;
@@ -87,8 +86,7 @@ public class ActionsController implements Initializable, ContainingParent
 		assert btnStartApplication != null : "fx:id=\"btnStartApplication\" was not injected: check your FXML file 'Actions.fxml'.";
 		assert btnConnectApplication != null : "fx:id=\"btnConnectApplication\" was not injected: check your FXML file 'Actions.fxml'.";
 		assert imageArea != null : "fx:id=\"labelArea\" was not injected: check your FXML file 'Actions.fxml'.";
-		String imageText = Images.class.getResource("texture.png").toExternalForm();
-		imageArea.setStyle("-fx-background-image:url('" + imageText + "');\n" + "    -fx-background-repeat: repeat;");
+		imageArea.getStyleClass().add(CssVariables.IMAGE_AREA);
 		comboBoxWindows.setOnShowing(event -> tryCatch(() -> this.model.displayTitles(), "Error on update titles"));
 		comboBoxAppsStore.setOnShowing(event -> tryCatch(() -> this.model.displayStores(), "Error on update titles"));
 		Platform.runLater(() -> {
