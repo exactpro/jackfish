@@ -33,8 +33,9 @@ import java.util.zip.ZipOutputStream;
 //TODO think about it converter
 public class Converter
 {
-	private static final byte REPORTS = 99;
-	private static final byte IMAGES = 98;
+
+	private static final byte REPORTS = 1;
+	private static final byte IMAGES = 2;
 
 	public static Blob filesToBlob(List<String> list) throws Exception
 	{
