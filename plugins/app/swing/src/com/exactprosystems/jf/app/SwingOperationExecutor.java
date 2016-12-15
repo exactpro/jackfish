@@ -1902,6 +1902,9 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 			case M:
 				id = KeyEvent.VK_M;
 				break;
+			case DOT:
+				id = KeyEvent.VK_PERIOD;
+				break;
 			case UP:
 				id = KeyEvent.VK_UP;
 				break;

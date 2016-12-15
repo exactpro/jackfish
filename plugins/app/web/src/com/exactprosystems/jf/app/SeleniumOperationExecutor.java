@@ -1264,6 +1264,9 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 					case M:
 						this.customAction.sendKeys("m").perform();
 						break;
+					case DOT:
+						this.customAction.sendKeys(Keys.DECIMAL).perform();
+						break;
 					case UP:
 						this.customAction.sendKeys(Keys.UP).perform();
 						break;
