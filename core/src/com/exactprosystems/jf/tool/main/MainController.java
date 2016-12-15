@@ -60,15 +60,11 @@ public class MainController implements Initializable, ContainingParent
 
 	private static final Logger	logger		= Logger.getLogger(MainController.class);
 
-//	public TabPane				documentsPane;
-	public CustomTabPane		customTabPane;
-	public BorderPane			projectPane;
+	private CustomTabPane		customTabPane;
 
+	public BorderPane			projectPane;
 	public ProgressBar			progressBar;
 	public Label				progressLabel;
-	public Button btnReloadConfig;
-	public Button				btnSaveConfig;
-	public BorderPane			mainPanel;
 	public Label				projectLabel;
 	public SplitPane			splitPane;
 	public GridPane				projectGridPane;
@@ -76,24 +72,10 @@ public class MainController implements Initializable, ContainingParent
 	private LogsFx				log;
 
 	public Menu					menuFile;
-	public MenuItem				fileProjectOpen;
-	public MenuItem				fileProjectCreate;
-	public MenuItem				fileProjectFromGit;
 
 	public Menu					fileLoad;
-	public MenuItem				fileLoadDictionary;
-	public MenuItem				fileLoadSystemVars;
-	public MenuItem				fileLoadMatrix;
-	public MenuItem				fileLoadPlainText;
-	public MenuItem				fileLoadCsv;
 
 	public Menu					fileNew;
-	public MenuItem				fileNewDictionary;
-	public MenuItem				fileNewSystemVars;
-	public MenuItem				fileNewMatrix;
-	public MenuItem				fileNewLibrary;
-	public MenuItem				fileNewPlainText;
-	public MenuItem				fileNewCsv;
 
 	public MenuItem				fileSave;
 	public MenuItem				fileSaveAs;
@@ -101,27 +83,16 @@ public class MainController implements Initializable, ContainingParent
 
 	public Menu					fileLastOpenMatrix;
 	public MenuItem				fileRunFromFile;
-	public MenuItem				fileOpenReport;
-
-	public MenuItem				fileClose;
-
 	public Menu					menuEdit;
 	public MenuItem				editUndo;
 	public MenuItem				editRedo;
 
-	public Menu					menuView;
-	public MenuItem				viewLogs;
 	public MenuItem editSettings;
 	public MenuItem				viewStore;
-	public MenuItem				viewAllTabs;
 
 	public Menu					menuMatrix;
-	public MenuItem				matrixStart;
-	public MenuItem				matrixStop;
 	public MenuItem				matrixSchedule;
 
-	public Menu					menuGit;
-	public MenuItem				gitClone;
 	public MenuItem				gitCommit;
 	public MenuItem				gitPull;
 	public MenuItem				gitReset;
@@ -129,7 +100,6 @@ public class MainController implements Initializable, ContainingParent
 	public MenuItem				gitMerge;
 	public MenuItem				gitChangeCredential;
 
-	public Menu					menuHelp;
 	public MenuItem				helpActionsHelp;
 
 	public MenuItem				helpAboutProgram;
@@ -172,15 +142,20 @@ public class MainController implements Initializable, ContainingParent
 
 		Common.setProgressBar(progressBar);
 
-		Common.customizeLabeled(this.btnReloadConfig, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.REFRESH);
-		this.btnReloadConfig.setTooltip(new Tooltip("Reload configuration"));
-		this.btnReloadConfig.setOnAction(e -> Common.tryCatch(() -> this.model.refreshConfig(), "Error on refresh configuration"));
-
-		Common.customizeLabeled(this.btnSaveConfig, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.CONFIGURATION_SAVE_ICON);
-		this.btnSaveConfig.setOnAction(e -> Common.tryCatch(() -> this.model.saveConfig(), "Error on save config"));
-
 		listeners();
 	}
+
+	//region Action events
+	public void reloadConfiguration(ActionEvent event)
+	{
+		Common.tryCatch(() -> this.model.refreshConfig(), "Error on refresh configuration");
+	}
+
+	public void saveConfiguration(ActionEvent event)
+	{
+		Common.tryCatch(() -> this.model.saveConfig(), "Error on save config");
+	}
+	//endregion
 
 	public void close()
 	{
@@ -192,31 +167,23 @@ public class MainController implements Initializable, ContainingParent
 	{
 		Platform.runLater(() -> Common.tryCatch(() ->
 		{
-			btnSaveAsDocument.setTooltip(new Tooltip("Save as"));
-			btnSaveDocument.setTooltip(new Tooltip("Save"));
-			btnOpenMatrix.setTooltip(new Tooltip("Open matrix"));
-			btnNewMatrix.setTooltip(new Tooltip("New matrix"));
-			btnOpenMainLog.setTooltip(new Tooltip("Show log"));
-			btnShowCalculator.setTooltip(new Tooltip("Show calculator\n"));
-			btnUndo.setTooltip(new Tooltip("Undo\n" + Common.getShortcutTooltip(settings, SettingsPanel.UNDO)));
-			btnRedo.setTooltip(new Tooltip("Redo\n" + Common.getShortcutTooltip(settings, SettingsPanel.REDO)));
+			//TODO add shortcut for tooltip
+			this.btnSaveAsDocument.setTooltip(new Tooltip("Save as"));
+			this.btnSaveDocument.setTooltip(new Tooltip("Save"));
+			this.btnOpenMatrix.setTooltip(new Tooltip("Open matrix"));
+			this.btnNewMatrix.setTooltip(new Tooltip("New matrix"));
+			this.btnOpenMainLog.setTooltip(new Tooltip("Show log"));
+			this.btnShowCalculator.setTooltip(new Tooltip("Show calculator\n"));
+			this.btnUndo.setTooltip(new Tooltip("Undo\n" + Common.getShortcutTooltip(settings, SettingsPanel.UNDO)));
+			this.btnRedo.setTooltip(new Tooltip("Redo\n" + Common.getShortcutTooltip(settings, SettingsPanel.REDO)));
 
-			Common.customizeLabeled(btnSaveAsDocument, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.DOCUMENT_SAVE_AS_ICON);
-			Common.customizeLabeled(btnSaveDocument, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.DOCUMENT_SAVE_ICON);
-			Common.customizeLabeled(btnOpenMatrix, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.LOAD_MATRIX_ICON);
-			Common.customizeLabeled(btnNewMatrix, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.NEW_MATRIX_ICON);
-			Common.customizeLabeled(btnOpenMainLog, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.LOG);
-			Common.customizeLabeled(btnShowCalculator, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.CALCULATOR_ICON);
-			Common.customizeLabeled(btnUndo, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.UNDO_ICON);
-			Common.customizeLabeled(btnRedo, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.REDO_ICON);
+			this.editUndo.setGraphic(new ImageView(new Image(CssVariables.Icons.UNDO_ICON_SMALL)));
+			this.editRedo.setGraphic(new ImageView(new Image(CssVariables.Icons.REDO_ICON_SMALL)));
+			this.matrixSchedule.setGraphic(new ImageView(new Image(CssVariables.Icons.SCHEDULER_MATRIX_ICON)));
 
-			editUndo.setGraphic(new ImageView(new Image(CssVariables.Icons.UNDO_ICON_SMALL)));
-			editRedo.setGraphic(new ImageView(new Image(CssVariables.Icons.REDO_ICON_SMALL)));
-			matrixSchedule.setGraphic(new ImageView(new Image(CssVariables.Icons.SCHEDULER_MATRIX_ICON)));
-
-			editSettings.setGraphic(new ImageView(new Image(CssVariables.Icons.SHOW_SETTINGS_ICON)));
-			helpActionsHelp.setGraphic(new ImageView(new Image(CssVariables.Icons.ACTIONS_HELP_ICON)));
-			helpAboutProgram.setGraphic(new ImageView(new Image(CssVariables.Icons.ABOUT_PROGRAM_ICON)));
+			this.editSettings.setGraphic(new ImageView(new Image(CssVariables.Icons.SHOW_SETTINGS_ICON)));
+			this.helpActionsHelp.setGraphic(new ImageView(new Image(CssVariables.Icons.ACTIONS_HELP_ICON)));
+			this.helpAboutProgram.setGraphic(new ImageView(new Image(CssVariables.Icons.ABOUT_PROGRAM_ICON)));
 		}, "Error on set tooltips or images"));
 	}
 
@@ -361,7 +328,8 @@ public class MainController implements Initializable, ContainingParent
 	{
 		SplitMenuButton menuButton = new SplitMenuButton();
 		menuButton.setTooltip(new Tooltip(fullPath));
-		Common.customizeLabeled(menuButton, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.START_MATRIX_ICON);
+		menuButton.setId("splitMenuButtonToolbar");
+		menuButton.getStyleClass().addAll(CssVariables.TRANSPARENT_BACKGROUND);
 
 		menuButton.setOnAction(e -> Common.tryCatch(() -> this.model.runMatrixFromFile(new File(fullPath)), "Error on start matrix"));
 

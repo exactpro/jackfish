@@ -54,7 +54,7 @@ import java.nio.file.Paths;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -128,11 +128,7 @@ public abstract class Common
 
 	public static List<String> currentThemesPaths()
 	{
-		List<String> list = new ArrayList<>();
-		list.add(Common.theme.getPath());
-		//TODO add path to icon css in future
-		list.add(Theme.GENERAL.getPath());
-		return list;
+		return Arrays.asList(Theme.GENERAL.getPath(), Common.theme.getPath());
 	}
 
 	public static Theme currentTheme()

@@ -190,7 +190,6 @@ public class CssVariables
 	 */
 	public static final String	ARROW						= "numberSpinnerArrow";
 	public static final String	NUMBER_FIELD				= "numberField";
-	public static final String	NUMBER_SPINNER				= "numberSpinner";
 	public static final String	SPINNER_BUTTON_UP			= "spinnerButtonUp";
 	public static final String	SPINNER_BUTTON_DOWN			= "spinnerButtonDown";
 
