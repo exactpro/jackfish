@@ -115,7 +115,7 @@ public class ImageReport extends AbstractAction
 		switch (parameterToFill)
 		{
 			case beforeTestCaseName:
-				ActionsReportHelper.fillListForParameter(super.owner.getMatrix(),  list);
+				ActionsReportHelper.fillListForParameter(super.owner.getMatrix(),  list, context.getEvaluator());
 				break;
 			case asLinkName:
 				list.add(ReadableValue.TRUE);
