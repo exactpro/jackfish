@@ -18,6 +18,7 @@ import com.exactprosystems.jf.api.error.app.WrongParameterException;
 import org.apache.log4j.Logger;
 import org.fest.swing.awt.AWT;
 import org.fest.swing.core.ComponentMatcher;
+import org.fest.swing.core.MouseButton;
 import org.fest.swing.core.Robot;
 import org.fest.swing.core.Scrolling;
 import org.fest.swing.data.TableCell;
@@ -928,10 +929,11 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 		executeEventsList(component, events);
 	}
 
-	private Point getPointInCurrentWindow(Component component, int x, int y)
+	private Point getPointLocation(Component component, int x, int y)
 	{
-		x += component.getX();
-		y += component.getY();
+		Point point = AWT.locationOnScreenOf(component);
+		x += point.getX();
+		y += point.getY();
 		return new Point(x,y);
 	}
 
@@ -954,10 +956,10 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 		{
 			Component dropComp = drop.target;
 
-			Point pointOne = getPointInCurrentWindow(dragComp, x1, y1);
-			Point pointTwo = getPointInCurrentWindow(dropComp, x2, y2);
-			int x3 = dragComp.getX() + (pointTwo.x - pointOne.x);
-			int y3 = dragComp.getY() + (pointTwo.y - pointOne.y);
+			Point pointOne = getPointLocation(dragComp, x1, y1);
+			Point pointTwo = getPointLocation(dropComp, x2, y2);
+			int x3 = x1 + (pointTwo.x - pointOne.x);
+			int y3 = y1 + (pointTwo.y - pointOne.y);
 
 			executeAction(MouseAction.Press, dragComp, x1, y1);
 			executeAction(MouseAction.Drop, dragComp, x3, y3);
@@ -965,8 +967,41 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 		return true;
 	}
 
-	private boolean dragNdropThrowRobot(ComponentFixture<Component> drag, int x1, int y1, ComponentFixture<Component> drop, int x2, int y2)
-	{
+	private boolean dragNdropThrowRobot(ComponentFixture<Component> drag, int x1, int y1, ComponentFixture<Component> drop, int x2, int y2) throws InterruptedException {
+
+		Component dragComp = drag.target;
+		if (isCoordsDidNotIntroduce(x1,y1))
+		{
+			Point point = AWT.visibleCenterOf(dragComp);
+			x1 = point.x;
+			y1 = point.y;
+		}
+
+		if(drop == null)
+		{
+			this.currentRobot.pressMouse(dragComp, new Point(x1, y1), MouseButton.LEFT_BUTTON);
+			Thread.sleep(100);
+			this.currentRobot.moveMouse(dragComp, new Point(x2, y2));
+			Thread.sleep(100);
+			this.currentRobot.releaseMouse(MouseButton.LEFT_BUTTON);
+			Thread.sleep(100);
+		}
+		else
+		{
+			Component dropComp = drop.target;
+			Point pointOne = getPointLocation(dragComp, x1, y1);
+			Point pointTwo = getPointLocation(dropComp, x2, y2);
+			int x3 = x1 + (pointTwo.x - pointOne.x);
+			int y3 = y1 + (pointTwo.y - pointOne.y);
+
+			this.currentRobot.pressMouse(dragComp, new Point(x1, y1), MouseButton.LEFT_BUTTON);
+			Thread.sleep(100);
+			this.currentRobot.moveMouse(dragComp, new Point(x3, y3));
+			Thread.sleep(100);
+			this.currentRobot.releaseMouse(MouseButton.LEFT_BUTTON);
+			Thread.sleep(100);
+		}
+
 		return true;
 	}
 
