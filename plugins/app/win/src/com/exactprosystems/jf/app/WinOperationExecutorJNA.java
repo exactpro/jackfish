@@ -706,7 +706,7 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 	}
 
 	@Override
-	public boolean dragNdrop(UIProxyJNA drag, UIProxyJNA drop, int x1, int y1, int x2, int y2) throws Exception
+	public boolean dragNdrop(UIProxyJNA drag, int x1, int y1, UIProxyJNA drop, int x2, int y2, boolean moveCursor) throws Exception
 	{
 		try
 		{
