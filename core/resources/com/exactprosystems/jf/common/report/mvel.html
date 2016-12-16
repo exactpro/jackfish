@@ -6,10 +6,8 @@
   ~  information which is the property of Exactpro Systems, LLC or its licensors.
   -->
 
-<div class='tree'>
-
-	<a href='#' class='showChapter'>Basic Syntax</a>
-	<div>
+<div id="BasicSyntax">
+	<h2>Basic Syntax</h2>
 		<p>MVEL is an expression language based on Java-syntax, with some
 			marked differences specific to MVEL.&nbsp; Unlike Java however, MVEL
 			is dynamically typed (with optional typing), meaning type
@@ -66,9 +64,8 @@ user.name == 'John Doe'
 
 		</div>
 	</div>
-	<br> <a href='#' class='showChapter'>MVEL 2.0 Operators</a>
-	<div>
-
+<div id="MVELOperators">
+	<h2>MVEL 2.0 Operators</h2>
 		<p>The following chart is a complete list and description of all
 			operators present in MVEL.</p>
 
@@ -570,10 +567,8 @@ user.name == 'John Doe'
 			</div>
 		</div>
 	</div>
-	<br> <a href='#' class='showChapter'>Inline List, Maps and
-		Arrays</a>
-	<div>
-
+<div id="InlineListMapsAndArrays">
+	<h2>Inline List, Maps and Arrays</h2>
 		<p>MVEL allows you to express Lists, Maps and Arrays using simple
 			elegant syntax. Consider the following example:</p>
 
@@ -733,10 +728,8 @@ foo.someMethod({1,2,3,4});
 			</div>
 		</div>
 	</div>
-	<br> <a href='#' class='showChapter'>MVEL 2.0 Property
-		Navigation</a>
-	<div>
-
+<div id="MVELPropertyNavigation">
+	<h2>MVEL 2.0 Property Navigation</h2>
 		<p>MVEL property navigation follows well-established conventions
 			found in other bean property expressions found in other languages
 			such as Groovy, OGNL, EL, etc.</p>
@@ -937,9 +930,9 @@ foo[0]; // returns 'M'
 			</div>
 		</div>
 	</div>
-	<br> <a href='#' class='showChapter'>MVEL 2.0 Literals</a>
-	<div>
-		<p>A literal is used to represent a fixed-value in the source of a
+<div id="MVELLiterals">
+	<h2>MVEL 2.0 Literals</h2>
+	<p>A literal is used to represent a fixed-value in the source of a
 			particular script.</p>
 
 		<div class="section_2">
@@ -1111,9 +1104,8 @@ foo[0]; // returns 'M'
 			</p>
 		</div>
 	</div>
-	<br> <a href='#' class='showChapter'>MVEL 2.0 Projections and
-		Folds</a>
-	<div>
+<div id="MVELProjectionsAndFolds">
+	<h2>MVEL 2.0 Projections and Folds</h2>
 		<p>
 			Put simply, projections (also known as <em>list comprehensions</em>)
 			are a way of representing collections. Using a very simple syntax,
@@ -1307,9 +1299,8 @@ quicksort(list);
 			</div>
 		</div>
 	</div>
-	<br> <a href='#' class='showChapter'>Lambda Expressions</a>
-	<div>
-
+<div id="LambdaExpressions">
+	<h2>Lambda Expressions</h2>
 		<p>MVEL allows the definition of lambda functions.</p>
 
 		<div class="section_2">
@@ -1344,7 +1335,4 @@ threshold = def (x) { x &gt;= 10 ? x : 0 }; result = cost + threshold(lowerBound
 			</ul>
 		</div>
 	</div>
-	<br>
-
-</div>
 
