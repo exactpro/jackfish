@@ -928,24 +928,46 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 		executeEventsList(component, events);
 	}
 
-	private Point getCoordsAbsolute(Component component, int x2, int y2)
+	private Point getPointInCurrentWindow(Component component, int x, int y)
 	{
-		int x = component.getX() + x2;
-		int y = component.getY() + y2;
+		x += component.getX();
+		y += component.getY();
 		return new Point(x,y);
 	}
 
-	private Point getCoordsRelativeComponent(Component component, Point point)
+	private boolean dragNdropThrowEvents(ComponentFixture<Component> drag, int x1, int y1, ComponentFixture<Component> drop, int x2, int y2)
 	{
-		int x = (int)point.getX() - component.getX();
-		int y = (int)point.getY() - component.getY();
-		return new Point(x,y);
+		Component dragComp = drag.target;
+		if (isCoordsDidNotIntroduce(x1,y1))
+		{
+			Point point = AWT.visibleCenterOf(dragComp);
+			x1 = point.x;
+			y1 = point.y;
+		}
+
+		if(drop == null)
+		{
+			executeAction(MouseAction.Press, dragComp, x1, y1);
+			executeAction(MouseAction.Drop, dragComp, x2, y2);
+		}
+		else
+		{
+			Component dropComp = drop.target;
+
+			Point pointOne = getPointInCurrentWindow(dragComp, x1, y1);
+			Point pointTwo = getPointInCurrentWindow(dropComp, x2, y2);
+			int x3 = dragComp.getX() + (pointTwo.x - pointOne.x);
+			int y3 = dragComp.getY() + (pointTwo.y - pointOne.y);
+
+			executeAction(MouseAction.Press, dragComp, x1, y1);
+			executeAction(MouseAction.Drop, dragComp, x3, y3);
+		}
+		return true;
 	}
 
-	private Point convertOneToAnotherCoords(Component one, int x, int y, Component another)
+	private boolean dragNdropThrowRobot(ComponentFixture<Component> drag, int x1, int y1, ComponentFixture<Component> drop, int x2, int y2)
 	{
-		Point coordsAbsolute = getCoordsAbsolute(one, x, y);
-		return getCoordsRelativeComponent(another, coordsAbsolute);
+		return true;
 	}
 
 	@Override
@@ -953,26 +975,12 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 	{
 		try
 		{
-			Component dragComp = drag.target;
-			Component dropComp = dragComp;
-			if(drop != null)
-			{
-				dropComp = drop.target;
-				Point point = convertOneToAnotherCoords(dropComp, x2, y2, dragComp);
-				x2 = point.x;
-				y2 = point.y;
+			if(moveCursor) {
+				dragNdropThrowRobot(drag, x1, y1, drop, x2, y2);
 			}
-
-			if (isCoordsDidNotIntroduce(x1,y1))
-			{
-				Point point = AWT.visibleCenterOf(dragComp);
-				x1 = point.x;
-				y1 = point.y;
+			else {
+				dragNdropThrowEvents(drag, x1, y1, drop, x2, y2);
 			}
-
-			executeAction(MouseAction.Press, dragComp, x1, y1);
-			executeAction(MouseAction.Drop, dropComp, x2, y2);
-
 			return true;
 		}
 		catch (Exception e)
