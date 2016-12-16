@@ -12,12 +12,10 @@ import javafx.scene.paint.Color;
 
 public enum Theme
 {
-	PRELOADER				("com/exactprosystems/jf/tool/css/theme/preloader.css"			, false	, null, null),
-	DEFAULT					("com/exactprosystems/jf/tool/css/theme/default.css"			, false	, null, null),
-	WHITE					("com/exactprosystems/jf/tool/css/theme/white.css"				, true	, Color.WHITE, Color.BLACK),
-	DARK					("com/exactprosystems/jf/tool/css/theme/dark.css"				, true	, Color.BLACK, Color.web("#eeeeee")),
-	NUMBER_SPINNER			("com/exactprosystems/jf/tool/css/theme/number_spinner.css"		, false	, null, null),
-	SPACER					("com/exactprosystems/jf/tool/css/theme/spacer.css"				, false	, null, null);
+	GENERAL					("com/exactprosystems/jf/tool/css/general/general.css", false,null,null),
+
+	WHITE					("com/exactprosystems/jf/tool/css/white/white.css"				, true	, Color.WHITE, Color.BLACK),
+	DARK					("com/exactprosystems/jf/tool/css/dark/dark.css"				, true	, Color.BLACK, Color.web("#eeeeee"));
 
 	private String path;
 	private boolean visible;
