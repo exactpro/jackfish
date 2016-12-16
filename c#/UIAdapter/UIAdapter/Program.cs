@@ -941,12 +941,17 @@ namespace UIAdapter
                 UpdateHandler();
                 AutomationElement element = FindByRuntimeId(id);
                 AutomationProperty property = AutomationProperty.LookupById((int)propertyId);
-
                 if (property == AutomationElement.IsTextPatternAvailableProperty)
                 {
                     TextPattern textPattern = element.GetCurrentPattern(TextPattern.Pattern) as TextPattern;
                     TextPatternRange textVizRange = textPattern.GetVisibleRanges().FirstOrDefault();
                     return ConvertString.replaceNonASCIIToUnicode(textVizRange.GetText(Int32.MaxValue));
+                }
+                if (property == AutomationElement.IsRangeValuePatternAvailableProperty)
+                {
+                    RangeValuePattern rangePattern = element.GetCurrentPattern(RangeValuePattern.Pattern) as RangeValuePattern;
+                    var currentValue = rangePattern.Current.Value;
+                    return ConvertString.replaceNonASCIIToUnicode("" + currentValue);
                 }
 
                 object ret = element.GetCurrentPropertyValue(property);
