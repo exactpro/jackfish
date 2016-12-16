@@ -11,6 +11,10 @@ ul.nav > ul > li > a {
     padding-left: 45px !important;
 }
 
+.deepNav > ul > li > a {
+    padding-left: 60px !important;
+}
+
 .navChild {
     display: none;
 }

@@ -99,6 +99,7 @@ public class HelpBuilder extends ReportBuilder
 	@Override
 	protected void reportHeader(ReportWriter writer, Date date) throws IOException
 	{
+		writer.fwrite("<!DOCTYPE html>");
 		writer.fwrite("<html>\n" + "<head>\n" + "<title>Help</title>\n" + "<meta http-equiv='Content-Type' content='text/html; charset=utf-8'>\n");
 
 		writer.fwrite("<script type='text/javascript'>\n<!--\n");
@@ -135,7 +136,6 @@ public class HelpBuilder extends ReportBuilder
 	{
 		addMvelHelp();
 		addAllControls();
-//		makeAllControls(writer);
 	}
 
 	@Override
@@ -144,10 +144,6 @@ public class HelpBuilder extends ReportBuilder
 		this.menuWriter.fwrite("</ul>\n</div>\n");
 		this.menuWriter.fwrite("</div>\n");
 		this.actionWriter.fwrite("</div>\n");
-
-		//		System.out.println(this.menuWriter.toString());
-		//		System.out.println("########");
-		//		System.out.println(this.actionWriter.toString());
 
 		writer.fwrite(this.menuWriter.toString());
 		writer.fwrite(this.actionWriter.toString());
@@ -212,9 +208,7 @@ public class HelpBuilder extends ReportBuilder
 		this.actionWriter.fwrite("</tbody>\n");
 		this.actionWriter.fwrite("</table>\n");
 		this.actionWriter.fwrite("</div>\n");
-		this.actionWriter.fwrite("</div>\n");
 		//endregion
-
 
 		//region Second column
 		this.actionWriter.fwrite("<div class='co-2'>\n");
@@ -228,7 +222,7 @@ public class HelpBuilder extends ReportBuilder
 		{
 			this.actionWriter.fwrite("<th>%s</th>", kind.toString());
 		}
-		this.actionWriter.fwrite("</tr\n");
+		this.actionWriter.fwrite("</tr>\n");
 		this.actionWriter.fwrite("</thead>\n");
 		this.actionWriter.fwrite("<tbody>\n");
 		for (ControlKind k : ControlKind.values())
@@ -267,65 +261,14 @@ public class HelpBuilder extends ReportBuilder
 		this.actionWriter.fwrite("</tbody>\n");
 		this.actionWriter.fwrite("</table>\n");
 		this.actionWriter.fwrite("</div>\n");
+		this.actionWriter.fwrite("</div>\n");
 		//endregion
 
 		this.actionWriter.fwrite("</div>\n");
+		this.actionWriter.fwrite("<div class='clearfix'></div>");
 	}
 
 	//endregion
-
-	private void makeAllControls(ReportWriter writer) throws IOException
-	{
-		writer.fwrite("<div class='tree'>\n" +
-				"<table border='0' cellspacing='0' width='50%%' > \n " +
-				"<tr>" +
-				"<td><a href='#' class='showBody'>All Controls:</a>" +
-				"<td width='200px'>" +
-				"<span class=PASSED></span>\n" +
-				"</table>\n");
-		writer.fwrite("<div class='tree'>");
-		writer.fwrite("<table border='1px'>\n");
-		writer.fwrite("<thead><tr>\n");
-		writer.fwrite("<th>Control name</th>");
-		for (OperationKind kind : OperationKind.values())
-		{
-			writer.fwrite("<th>%s</th>", kind.toString());
-		}
-		writer.fwrite("</tr></thead>");
-		writer.fwrite("<tbody>");
-		for (ControlKind k : ControlKind.values())
-		{
-			try
-			{
-				writer.fwrite("<tr>");
-				Class<?> controlClass = Class.forName(AbstractControl.class.getPackage().getName() +"."+ k.getClazz());
-				writer.fwrite("<td>%s</td>", controlClass.getSimpleName());
-				ControlsAttributes annotation = controlClass.getAnnotation(ControlsAttributes.class);
-				OperationKind defaultOperation = annotation.bindedClass().defaultOperation();
-				for (OperationKind kind : OperationKind.values())
-				{
-					writer.fwrite("<td>");
-					if (annotation.bindedClass().isAllowed(kind))
-					{
-						writer.fwrite("<label");
-						if (kind == defaultOperation)
-						{
-							writer.fwrite(" class='defaultOperation'");
-						}
-						writer.fwrite(">+</label>");
-					}
-					writer.fwrite("</td>");
-				}
-				writer.fwrite("</tr>");
-			}
-			catch (Exception e)
-			{
-				e.printStackTrace();
-			}
-		}
-		writer.fwrite("</tbody></table>");
-		writer.fwrite("</div></div>");
-	}
 
 	private boolean remove = true;
 
@@ -333,59 +276,47 @@ public class HelpBuilder extends ReportBuilder
 	@Override
     protected void reportItemHeader(ReportWriter writer, MatrixItem item, Integer id) throws IOException
     {
-    	if (remove)
+		boolean hasChildren = item.count() > 0;
+		String itemName = item.getItemName();
+		String idOfItem = itemName.replace(" ", "");
+		if (hasChildren)
 		{
-			return;
+
+			this.menuWriter.fwrite("<li role='presentation' class='mParent' id='%s'>\n", idOfItem);
+			this.menuWriter.fwrite("<a href='#'>%s<span class='caret'></span></a>\n", itemName);
+			this.menuWriter.fwrite("</li>\n");
+			this.menuWriter.fwrite("<ul class='nav nav-pills nav-stacked deepNav navChild' id='%s_child'>",idOfItem);
 		}
-        String name = item.getItemName();
-        writer.fwrite(
-                "<div class='tree' id='%s'>\n",
-                id);
+		else
+		{
+			this.menuWriter.fwrite("<li role='presentation'>\n");
+			this.menuWriter.fwrite("<a href='#%s'>%s</a>\n", idOfItem, itemName);
+			this.menuWriter.fwrite("</li>\n");
 
-        writer.fwrite(
-                "<table border='0' cellspacing='0' width='50%%' >\n " +
-                "<tr>" +
-                        "<td><a href='#' class='showBody'>%s:</a>" +
-                        "<td width='200px'><span id='hs_%s'>Loading...</span>",
-                name,
-                id );
-
-        writer.fwrite(
-                "</table>\n");
-
-
-        writer.fwrite(
-                "<div class='body'>\n");
-    }
+			this.actionWriter.fwrite("<div id='%s'>\n", idOfItem);
+			this.actionWriter.fwrite("<h2>%s</h2>\n", itemName);
+		}
+	}
 
 	@Override
 	protected void reportItemLine(ReportWriter writer, MatrixItem item, String beforeTestcase, String string, String labelId) throws IOException
 	{
-		if (remove)
-		{
-			return;
-		}
 
-		if (labelId == null)
-		{
-			writer.fwrite(string);
-		}
-		else
-		{
-			writer.fwrite("<a href='#' class='label' id='%s'>%s</a><br>", labelId, string);
-		}
 	}
 	
 	@Override
 	protected void reportItemFooter(ReportWriter writer, MatrixItem item, Integer id, long time, ImageWrapper screenshot) throws IOException
 	{
-		if (remove)
+		boolean hasChildren = item.count() > 0;
+		if (hasChildren)
 		{
-			return;
+			this.menuWriter.fwrite("</ul>");
 		}
-
-		writer.fwrite("</div>\n");
-		writer.fwrite("</div>\n");
+		else
+		{
+			this.actionWriter.fwrite("</div>");
+		}
+		return;
 	}
 	//endregion
 
@@ -393,61 +324,38 @@ public class HelpBuilder extends ReportBuilder
 	@Override
 	protected void tableHeader(ReportWriter writer, ReportTable table, String tableTitle, String[] columns, int[] percents) throws IOException
 	{
-		if (remove)
+		this.actionWriter.fwrite("<table class='table table-bordered'>\n");
+		this.actionWriter.fwrite("<thead>\n");
+		this.actionWriter.fwrite("<tr>\n");
+		for (String column : columns)
 		{
-			return;
+			this.actionWriter.fwrite("<th>%s</th>", column);
 		}
-		writer.fwrite(
-				"<span class='tableTitle'>%s</span><br>",
-				this.postProcess(tableTitle));
-
-        writer.fwrite(
-        		"<table width='100%%' border='1' bordercolor='#000000' cellpadding='3' cellspacing='0'>\n" +
-        		"<tr style='font-weight: bold;'>\n");
-
-        for (int i = 0; i < columns.length; i++)
-        {
-        	if (percents == null || percents.length < i || percents[i] <= 0)
-        	{
-        		writer.fwrite("<td>%s", columns[i]);
-        	}
-        	else
-        	{
-        		writer.fwrite("<td width='%d%%'>%s", percents[i], columns[i]);
-        	}
-        }
-
-        writer.fwrite("\n");
+		this.actionWriter.fwrite("</tr>\n");
+		this.actionWriter.fwrite("</thead>\n");
 	}
 	
 	@Override
 	protected void tableRow(ReportWriter writer, ReportTable table, int quotes, Object ... value) throws IOException
 	{
-		if (remove)
-		{
-			return;
-		}
 		if (value != null)
         {
-			writer.fwrite("<tr>");
+			this.actionWriter.fwrite("<tr>");
 			int count = 0;
 			for (Object obj : value)
 			{
-				writer.fwrite("<td>%s", ReportHelper.objToString(obj, count >= quotes));
+				this.actionWriter.fwrite("<td>%s</td>", ReportHelper.objToString(obj, count >= quotes));
 				count++;
 			}
-            writer.fwrite("\n");
+			this.actionWriter.fwrite("</tr>");
+			this.actionWriter.fwrite("\n");
         }
 	}
 
 	@Override
 	protected void tableFooter(ReportWriter writer, ReportTable table) throws IOException
 	{
-		if (remove)
-		{
-			return;
-		}
-        writer.fwrite("</table>\n");
+		this.actionWriter.fwrite("</table>");
 	}
 	//endregion
 

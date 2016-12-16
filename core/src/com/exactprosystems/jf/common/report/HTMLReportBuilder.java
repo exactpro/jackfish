@@ -120,6 +120,7 @@ public class HTMLReportBuilder extends ReportBuilder
 		writer.fwrite(
 				"<script type='text/javascript'>\n" +
 				"<!--\n");
+		//TODO replace to new jquery
 		writer.include(getClass().getResourceAsStream("jquery-1.8.3.min.js"));
 		writer.include(getClass().getResourceAsStream("reports.js"));
 		writer.fwrite(
