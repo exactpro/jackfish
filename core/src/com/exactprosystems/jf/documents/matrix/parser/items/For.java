@@ -34,6 +34,8 @@ import java.util.concurrent.atomic.AtomicReference;
 		description 	= "Loop from start value to end value with step.", 
 		shouldContain 	= { Tokens.For, Tokens.From, Tokens.To },
 		mayContain 		= { Tokens.Step, Tokens.Off, Tokens.RepOff }, 
+		parents			= { Case.class, Else.class, For.class, ForEach.class, If.class,
+							OnError.class, Step.class, SubCase.class, TestCase.class, While.class },
 		real			= true,
 		hasValue 		= true, 
 		hasParameters 	= false,

@@ -34,6 +34,7 @@ import java.util.Set;
         description 	= "Subroutine.",
         shouldContain 	= { Tokens.SubCase },
         mayContain 		= { Tokens.Id, Tokens.Off, Tokens.RepOff },
+        parents			= { TestCase.class, NameSpace.class },
         real			= true,
         hasValue 		= true,
         hasParameters 	= true,

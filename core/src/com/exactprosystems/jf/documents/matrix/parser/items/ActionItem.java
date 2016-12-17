@@ -26,6 +26,8 @@ import java.util.Set;
 		description 		= "Adds new action into matrix",
 		shouldContain 		= { Tokens.Action},
 		mayContain 			= { Tokens.Id, Tokens.Off, Tokens.RepOff, Tokens.Global, Tokens.IgnoreErr, Tokens.Assert },
+		parents				= { Case.class, Else.class, For.class, ForEach.class, If.class,
+	    						OnError.class, Step.class, SubCase.class, TestCase.class, While.class },
 		real				= true,
 		hasValue 			= true,
 		hasParameters 		= true,

@@ -24,6 +24,7 @@ public @interface MatrixItemAttribute
 	String description();
 	Tokens[] shouldContain();
 	Tokens[] mayContain();
+	Class<?>[] parents() default {};
 	Class<?> closes() default NullType.class;
 	boolean real();
 	boolean hasValue();

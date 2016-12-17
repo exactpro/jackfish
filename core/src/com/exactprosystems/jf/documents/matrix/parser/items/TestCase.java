@@ -31,6 +31,7 @@ import java.util.Set;
 		description 	= "Test case.", 
 		shouldContain 	= { Tokens.TestCase },
 		mayContain 		= { Tokens.Id, Tokens.RepOff, Tokens.Off, Tokens.Kind, Tokens.For, Tokens.Depends },
+		parents			= { MatrixRoot.class },
 		closes			= MatrixRoot.class,
         real			= true,
 		hasValue 		= true, 

@@ -30,6 +30,7 @@ import java.util.Set;
 		shouldContain 	= { Tokens.Case },
 		mayContain 		= { Tokens.Off, Tokens.RepOff }, 
         closes			= Switch.class,
+		parents			= { Switch.class },
         real			= true,
 		hasValue 		= true, 
 		hasParameters 	= false,

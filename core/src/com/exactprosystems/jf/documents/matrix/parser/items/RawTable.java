@@ -31,15 +31,17 @@ import java.util.Map;
 import java.util.Set;
 
 @MatrixItemAttribute(
-description 	= "Raw data.", 
-shouldContain 	= { Tokens.RawTable }, 
-mayContain 		= { Tokens.Id, Tokens.Off, Tokens.RepOff, Tokens.Global }, 
-real 			= true, 
-hasValue 		= true, 
-hasParameters 	= false, 
-hasChildren 	= true,
-raw 			= true
-)
+		description 	= "Raw data.", 
+		shouldContain 	= { Tokens.RawTable }, 
+		mayContain 		= { Tokens.Id, Tokens.Off, Tokens.RepOff, Tokens.Global }, 
+		parents			= { Case.class, Else.class, For.class, ForEach.class, If.class,
+							OnError.class, Step.class, SubCase.class, TestCase.class, While.class },
+		real 			= true, 
+		hasValue 		= true, 
+		hasParameters 	= false, 
+		hasChildren 	= true,
+		raw 			= true
+	)
 public class RawTable extends MatrixItem
 {
 	public RawTable()

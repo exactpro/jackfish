@@ -38,6 +38,8 @@ import java.util.stream.Collectors;
 		description 	= "Elementary step in the script", 
 		shouldContain 	= { Tokens.Step },
 		mayContain 		= { Tokens.Off, Tokens.Kind, Tokens.RepOff },
+		parents			= { Case.class, Else.class, For.class, ForEach.class, If.class,
+							OnError.class, Step.class, SubCase.class, TestCase.class, While.class },
 		real			= true,
 		hasValue 		= true, 
 		hasParameters 	= false,

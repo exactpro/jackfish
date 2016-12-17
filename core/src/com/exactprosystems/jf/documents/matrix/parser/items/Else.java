@@ -22,6 +22,7 @@ import java.util.List;
 		description 	= "Executed if condition is false.", 
 		shouldContain 	= { Tokens.Else },
 		mayContain 		= { Tokens.Off, Tokens.RepOff }, 
+		parents			= { If.class }, 
         real			= true,
 		hasValue 		= false, 
 		hasParameters 	= false,

@@ -28,6 +28,8 @@ import java.util.Set;
 		description 	= "Raw text.", 
 		shouldContain 	= { Tokens.RawText }, 
 		mayContain 		= { Tokens.Id, Tokens.Off, Tokens.RepOff, Tokens.Global }, 
+		parents			= { Case.class, Else.class, For.class, ForEach.class, If.class,
+							OnError.class, Step.class, SubCase.class, TestCase.class, While.class },
 		real 			= true, 
 		hasValue 		= true, 
 		hasParameters 	= false, 
