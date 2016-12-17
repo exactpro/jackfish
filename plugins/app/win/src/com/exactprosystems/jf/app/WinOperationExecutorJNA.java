@@ -567,6 +567,7 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 			boolean isSelectionItemPatternPresent = false;
 			boolean isTogglePattern = false;
 			boolean isTextPattern = false;
+			boolean isRangeValuePattern = false;
 
 			for (int p : arr)
 			{
@@ -585,6 +586,10 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 				if (WindowPattern.TextPattern.getId() == p)
 				{
 					isTextPattern = true;
+				}
+				if (WindowPattern.RangeValuePattern.getId() == p)
+				{
+					isRangeValuePattern = true;
 				}
 			}
 			String result;
@@ -605,11 +610,13 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 			{
 				result = this.driver.getProperty(component, WindowProperty.IsTextPatternAvailableProperty);
 			}
-			else
+			else if (isRangeValuePattern)
 			{
+				result = this.driver.getProperty(component, WindowProperty.IsRangeValuePatternAvailableProperty);
+			}
+			else {
 				result = this.driver.getProperty(component, WindowProperty.ValueProperty);
-				if (Str.IsNullOrEmpty(result))
-				{
+				if (Str.IsNullOrEmpty(result)) {
 					result = this.driver.getProperty(component, WindowProperty.NameProperty);
 				}
 			}
@@ -699,7 +706,7 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 	}
 
 	@Override
-	public boolean dragNdrop(UIProxyJNA drag, UIProxyJNA drop, int x1, int y1, int x2, int y2) throws Exception
+	public boolean dragNdrop(UIProxyJNA drag, int x1, int y1, UIProxyJNA drop, int x2, int y2, boolean moveCursor) throws Exception
 	{
 		try
 		{

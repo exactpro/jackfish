@@ -139,6 +139,7 @@ namespace UIAdapter
         public static readonly KeyboardNew END = new KeyboardNew("{END}");
         public static readonly KeyboardNew PAGE_DOWN = new KeyboardNew("{PGDN}");
         public static readonly KeyboardNew ENTER = new KeyboardNew("{ENTER}");
+        public static readonly KeyboardNew DOT = new KeyboardNew(".");
 
         public static readonly KeyboardNew SPACE = new KeyboardNew(" ");
         public static readonly KeyboardNew SLASH = new KeyboardNew("/");

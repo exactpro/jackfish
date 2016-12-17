@@ -17,7 +17,7 @@ public enum Keyboard implements Serializable
 	DIG1, DIG2, DIG3, DIG4, DIG5, DIG6, DIG7, DIG8, DIG9, DIG0,BACK_SPACE,		INSERT, HOME, PAGE_UP,
 	TAB,		Q, W, E, R, T, Y, U, I, O, P,SLASH, BACK_SLASH,					DELETE, END, PAGE_DOWN,
 	CAPS_LOCK,	A, S, D, F, G, H, J, K, L, SEMICOLON, QUOTE, DOUBLE_QUOTE, ENTER,
-	SHIFT,		Z, X, C, V, B, N, M,							 					UP,
+	SHIFT,		Z, X, C, V, B, N, M,						DOT,	 					UP,
 	CONTROL,	ALT, SPACE,														LEFT,DOWN,RIGHT,
 
 	PLUS, MINUS,

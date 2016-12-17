@@ -27,7 +27,6 @@ public interface OperationExecutor<T>
 	T 							find			(Locator owner, Locator element																							) throws Exception;
 	T							lookAtTable		(T table, Locator additional, Locator header, int x, int y																) throws Exception;
 	boolean						tableIsContainer();
-	
 	boolean 					mouse			(T component, int x, int y, MouseAction action																			) throws Exception;
 	boolean						press			(T component, Keyboard key																								) throws Exception;
 	boolean						upAndDown		(T component, Keyboard key, boolean b																					) throws Exception;
@@ -44,9 +43,7 @@ public interface OperationExecutor<T>
 	String						get				(T component																											) throws Exception;
 	String						getAttr			(T component, String name																								) throws Exception;
 	String						script			(T component, String script																								) throws Exception;
-
-	boolean						dragNdrop		(T drag, T drop, int x1, int y1, int x2, int y2 																		) throws Exception;
-
+	boolean						dragNdrop		(T drag, int x1, int y1, T drop, int x2, int y2, boolean moveCursor														) throws Exception;
 	boolean 					mouseTable		(T component, int column, int row, MouseAction action																	) throws Exception;
 	boolean						textTableCell	(T component, int column, int row, String text																			) throws Exception;
 	String						getValueTableCell(T component, int column, int row																						) throws Exception;
