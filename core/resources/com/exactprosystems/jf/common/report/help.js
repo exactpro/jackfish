@@ -23,6 +23,22 @@ $(document).ready(function () {
     });
     mame.width($('.menuCont').width());
     mame.height($(window).height());
+
+    $("a[href^='#']").click(function(event) {
+
+    });
+
+    $.each($("a[href^='#']"),function(i,val) {
+        var hr = $(val).attr('href');
+        var id = hr.substring(1);
+        if (id !== "") {
+			$(val).click(function(event) {
+				$('html, body').animate({
+					scrollTop: $(document.getElementById($(val).attr("href").substring(1))).offset().top
+				}, 500);
+			})
+        }
+    })
 });
 $(window).resize(function () {
     mame.width($('.menuCont').width());
