@@ -18,6 +18,7 @@ import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.service.IServicesPool;
 import com.exactprosystems.jf.app.ApplicationPool;
 import com.exactprosystems.jf.client.ClientsPool;
+import com.exactprosystems.jf.common.MainRunner;
 import com.exactprosystems.jf.common.MutableString;
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
@@ -406,7 +407,7 @@ public class Configuration extends AbstractDocument
 
 		for (MutableString folder : this.librariesValue)
 		{
-			File folderFile = new File(folder.get());
+			File folderFile = new File(MainRunner.makeDirWithSubstitutions(folder.get()));
 			if (folderFile.exists() && folderFile.isDirectory())
 			{
 				File[] libFiles = folderFile.listFiles((dir, name) -> name != null && name.endsWith(matrixExt));
@@ -484,7 +485,7 @@ public class Configuration extends AbstractDocument
 				continue;
 			}
 			
-			File dicFile = new File(dicPath);
+			File dicFile = new File(MainRunner.makeDirWithSubstitutions(dicPath));
 			Date currentTime  = new Date(dicFile.lastModified());
 			Date previousTime = this.documentsActuality.get(dicFile.getAbsolutePath());
 			
@@ -810,7 +811,7 @@ public class Configuration extends AbstractDocument
 	
 	public static List<String> toStringList(MutableArrayList<MutableString> str)
 	{
-		return str.stream().map(MutableString::get).collect(Collectors.toList());
+		return str.stream().map(a -> MainRunner.makeDirWithSubstitutions(a.get())).collect(Collectors.toList());
 	}
 
 	public List<Document> getSubordinates()
@@ -873,7 +874,7 @@ public class Configuration extends AbstractDocument
 			return;
 		}
 		
-		final File file = new File(userVariablesFileName);
+		final File file = new File(MainRunner.makeDirWithSubstitutions(userVariablesFileName));
 		if (file.exists())
 		{
 			try (Reader reader = new FileReader(file))
