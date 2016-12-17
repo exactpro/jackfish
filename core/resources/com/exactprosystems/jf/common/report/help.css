@@ -1,0 +1,78 @@
+body {
+    display: block;
+    margin-top: 16px;
+}
+
+ul.nav > ul > li > a {
+    padding-left: 30px;
+}
+
+.deepNav > li > a {
+    padding-left: 45px !important;
+}
+
+.deepNav > ul > li > a {
+    padding-left: 60px !important;
+}
+
+.navChild {
+    display: none;
+}
+
+.activeChild {
+    text-decoration: none;
+    background-color: #eee;
+}
+
+.mainMenu {
+    position: fixed;
+    width: 100%;
+    overflow: auto;
+}
+
+.mActive > a {
+    padding-left: 18px;
+    font-weight: 700;
+    border-radius: 0px !important;
+    background-color: transparent;
+    border-left: 2px solid #337ab7;
+}
+
+.bigTable {
+    width: 100%;
+    overflow: auto;
+}
+
+.bigTable tr > th:first-child {
+    border-left: 0;
+}
+
+.co-1, .co-2 {
+    position: relative;
+    float: left;
+    min-height: 1px;
+}
+
+.co-2 {
+    width: 83.33333333%;
+}
+
+.co-1 {
+    width: 16.66666667%;
+
+}
+
+.table-striped > tbody > tr:nth-of-type(odd) {
+    background-color: #ececec !important;
+}
+
+#doublescroll {
+    overflow: auto;
+    overflow-y: hidden;
+}
+
+#doublescroll table {
+    margin: 0;
+    padding: 1em;
+    white-space: nowrap;
+}
