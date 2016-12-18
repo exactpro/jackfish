@@ -8,6 +8,7 @@
 
 package com.exactprosystems.jf.common;
 
+import com.exactprosystems.jf.api.common.Converter;
 import com.exactprosystems.jf.api.common.IMatrixRunner;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
@@ -21,6 +22,7 @@ import org.apache.log4j.Logger;
 import java.io.File;
 import java.io.FileReader;
 import java.io.Reader;
+import java.sql.Blob;
 import java.util.Date;
 import java.util.Optional;
 import java.util.function.Consumer;
@@ -129,9 +131,9 @@ public class MatrixRunner implements IMatrixRunner, AutoCloseable
 	}
 
 	
-	public Object reportAsArchieve() throws Exception
+	public Blob reportAsBlob() throws Exception
 	{
-	    return this.report.reportAsArchieve();
+	    return Converter.storableToBlob(this.report);
 	}
 	
 	public void setStartTime(Date startTime)

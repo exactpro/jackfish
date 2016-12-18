@@ -8,18 +8,11 @@
 
 package com.exactprosystems.jf.api.common;
 
-import com.exactprosystems.jf.api.app.ImageWrapper;
-
-import javax.imageio.ImageIO;
 import javax.sql.rowset.serial.SerialBlob;
-import java.awt.image.BufferedImage;
 import java.io.*;
 import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.sql.Blob;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -30,325 +23,104 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
-//TODO think about it converter
 public class Converter
 {
+	private static final String CLASS_NAME = "class.name";
 
-	private static final byte REPORTS = 1;
-	private static final byte IMAGES = 2;
-
-	public static Blob filesToBlob(List<String> list) throws Exception
+	public static Blob storableToBlob(Storable object) throws Exception
 	{
+		List<String> list = object.getFileList();
 		ByteArrayOutputStream outputStream = null;
-
-		try (ByteArrayOutputStream baos = new ByteArrayOutputStream(); ZipOutputStream zos = new ZipOutputStream(baos))
+		
+		try (ByteArrayOutputStream baos = new ByteArrayOutputStream(); 
+				ZipOutputStream zos = new ZipOutputStream(baos))
 		{
-			boolean isFirst = true;
+			{
+				byte[] data = object.getClass().getName().getBytes();
+				ZipEntry entry = new ZipEntry(CLASS_NAME);
+				entry.setSize(data.length);
+				zos.putNextEntry(entry);
+				zos.write(data);
+				zos.closeEntry();
+			}
+			
 			for (String filename : list)
 			{
-				Path path = Paths.get(filename);
-				byte[] data = Files.readAllBytes(path);
+				byte[] data = object.getData(filename);
 				ZipEntry entry = new ZipEntry(filename);
-				byte[] newData = data;
-				//set first byte only on first file
-				if (isFirst)
-				{
-					newData = new byte[data.length + 1];
-					System.arraycopy(data, 0, newData, 1, data.length);
-					newData[0] = REPORTS;
-					isFirst = false;
-				}
-
-				entry.setSize(newData.length);
+				entry.setSize(data.length);
 				zos.putNextEntry(entry);
-				zos.write(newData);
+				zos.write(data);
 				zos.closeEntry();
 			}
 			outputStream = baos;
 		}
+		catch (Exception e)
+		{ 
+			e.printStackTrace();
+		}
 
 		return new SerialBlob(outputStream.toByteArray());
 	}
-
-	public static List<String> blobToFiles(Blob blob, File destFolder) throws Exception
+	
+	public static Storable blobToStorable(Blob blob) throws Exception
 	{
 		if (blob == null)
 		{
 			return null;
 		}
 
-		ByteArrayInputStream bais = null;
-
-		try (InputStream in = blob.getBinaryStream(); ByteArrayOutputStream out = new ByteArrayOutputStream();)
+		Storable retValue = null;
+		try (InputStream in = blob.getBinaryStream(); 
+				ZipInputStream zis = new ZipInputStream(in))
 		{
-			byte[] buff = new byte[4096];
-			int len = 0;
-
-			while ((len = in.read(buff)) != -1)
+			ZipEntry nextEntry = null;
+			while((nextEntry = zis.getNextEntry()) != null)
 			{
-				out.write(buff, 0, len);
-			}
-			bais = new ByteArrayInputStream(out.toByteArray(), 0, out.size());
-		}
-
-		if (!destFolder.exists())
-		{
-			destFolder.mkdir();
-		}
-		List<String> list = new ArrayList<>();
-		try (ZipInputStream zis = new ZipInputStream(bais))
-		{
-			ZipEntry ze = zis.getNextEntry();
-			while (ze != null)
-			{
-
-				String fileName = ze.getName();
-				File newFile = new File(destFolder.getAbsolutePath() + File.separator + fileName);
-
-				FileOutputStream fos = new FileOutputStream(newFile);
-				byte[] buffer = new byte[1024];
-				int len1;
-				while ((len1 = zis.read(buffer)) > 0)
+				String name = nextEntry.getName();
+				if (retValue == null)
 				{
-					fos.write(buffer, 0, len1);
+					if (name.equals(CLASS_NAME))
+					{
+						byte[] buf = readAll(zis);
+						Class<?> clazz = Class.forName(new String(buf));
+						retValue = (Storable) clazz.newInstance();
+						zis.closeEntry();
+						continue;
+					}
+					else
+					{
+						throw new Exception("Wrong structure");
+					}
 				}
-
-				fos.close();
-				ze = zis.getNextEntry();
-				list.add(newFile.getAbsolutePath());
-			}
-			zis.closeEntry();
-		}
-		bais.close();
-		return list;
-	}
-
-	public static Blob imageToZipBlob(ImageWrapper wrapper) throws Exception
-	{
-		if (wrapper == null)
-		{
-			return null;
-		}
-		String fileName = wrapper.getFileName();
-		if (Str.IsNullOrEmpty(fileName))
-		{
-			fileName = "temp";
-		}
-		ByteArrayOutputStream outputStream = null;
-
-		try (ByteArrayOutputStream baos = new ByteArrayOutputStream(); ZipOutputStream zos = new ZipOutputStream(baos); ByteArrayOutputStream temp = new ByteArrayOutputStream())
-		{
-			ImageIO.write(wrapper.getImage(), "jpg", temp);
-			byte[] data = temp.toByteArray();
-
-			byte[] newData = new byte[data.length + 1];
-			System.arraycopy(data, 0, newData, 1, data.length);
-			newData[0] = IMAGES;
-
-			ZipEntry entry = new ZipEntry(fileName);
-			entry.setSize(newData.length);
-			zos.putNextEntry(entry);
-			zos.write(newData);
-			zos.closeEntry();
-			outputStream = baos;
-		}
-
-		return new SerialBlob(outputStream.toByteArray());
-	}
-
-	public static ImageWrapper zipBlobToImage(Blob blob) throws Exception
-	{
-		if (blob == null)
-		{
-			return null;
-		}
-		byte[] blobBytes = blob.getBytes(1, (int) blob.length());
-
-		ByteArrayOutputStream fos = new ByteArrayOutputStream();
-		try (ByteArrayInputStream bais = new ByteArrayInputStream(blobBytes))
-		{
-			byte[] buff = new byte[4096];
-			int len = 0;
-			while ((len = bais.read(buff)) != -1)
-			{
-				fos.write(buff, 0, len);
+				
+				retValue.addFile(name, readAll(zis));
+				zis.closeEntry();
 			}
 		}
-
-		ByteArrayInputStream in = new ByteArrayInputStream(fos.toByteArray());
-		boolean isZipped = new ZipInputStream(in).getNextEntry() != null;
-		fos.close();
-		if (isZipped)
-		{
-			try (ZipInputStream zis = new ZipInputStream(in))
-			{
-				ZipEntry ze = zis.getNextEntry();
-				if (ze != null)
-				{
-					ByteArrayOutputStream os = new ByteArrayOutputStream();
-					byte[] buffer = new byte[1024];
-					int len1;
-					while ((len1 = zis.read(buffer)) > 0)
-					{
-						os.write(buffer, 0, len1);
-					}
-					zis.closeEntry();
-					BufferedImage read = ImageIO.read(new ByteArrayInputStream(os.toByteArray()));
-					os.close();
-					return new ImageWrapper(read);
-				}
-			}
+		catch (Exception e)
+		{ 
+			e.printStackTrace();
 		}
-		in.close();
-		return null;
-	}
-
-	public static Blob imageToBlob(ImageWrapper wrapper) throws Exception
-	{
-		if (wrapper == null)
-		{
-			return null;
-		}
-		wrapper.clearFile();
-
-		ByteArrayOutputStream outputStream = null;
-		try (ByteArrayOutputStream bos = new ByteArrayOutputStream(); ObjectOutput out = new ObjectOutputStream(bos))
-		{
-			out.writeObject(wrapper);
-			out.flush();
-			outputStream = bos;
-		}
-
-		return new SerialBlob(outputStream.toByteArray());
-	}
-
-	public static Object zipBlobToObject(Blob blob) throws Exception
-	{
-		if (blob == null)
-		{
-			return null;
-		}
-
-		ByteArrayInputStream bais = null;
-
-		try (InputStream in = blob.getBinaryStream(); ByteArrayOutputStream out = new ByteArrayOutputStream();)
-		{
-			byte[] buff = new byte[4096];
-			int len = 0;
-
-			while ((len = in.read(buff)) != -1)
-			{
-				out.write(buff, 0, len);
-			}
-			bais = new ByteArrayInputStream(out.toByteArray(), 0, out.size());
-		}
-		byte swByte = -1;
-		Object retValue = null;
-		try (ZipInputStream zis = new ZipInputStream(bais))
-		{
-			ZipEntry nextEntry = zis.getNextEntry();
-			byte[] buffer = new byte[1024];
-			int readBuffer = -1;
-			if (nextEntry != null)
-			{
-				readBuffer = zis.read(buffer);
-				swByte = buffer[0];
-			}
-			//now we understand, which type of entry we have
-			switch (swByte)
-			{
-				case REPORTS:
-					List<String> fileList = new ArrayList<>();
-					File destFolder = new File(".");
-					addFileToList(zis, nextEntry, fileList, destFolder, buffer, readBuffer);
-					ZipEntry newEntry = zis.getNextEntry();
-					while (newEntry != null)
-					{
-						addFileToList(zis, newEntry, fileList, destFolder, null, -1);
-						newEntry = zis.getNextEntry();
-					}
-
-					retValue = fileList;
-					break;
-
-				case IMAGES:
-					ByteArrayOutputStream os = new ByteArrayOutputStream();
-					int len1;
-					os.write(buffer, 0, readBuffer);
-					byte[] nb = new byte[1024];
-					while ((len1 = zis.read(nb)) > 0)
-					{
-						os.write(nb, 0, len1);
-					}
-					zis.closeEntry();
-					ByteArrayInputStream input = new ByteArrayInputStream(os.toByteArray());
-					long skip = input.skip(1);
-					BufferedImage read = ImageIO.read(input);
-					os.close();
-					retValue = new ImageWrapper(read);
-					break;
-			}
-		}
-		bais.close();
+		
 		return retValue;
-
 	}
 
-	public static void main(String[] args)
+
+	private static byte[] readAll(InputStream is) throws IOException
 	{
-		new File("aaa/bbb/ccc/ddd").mkdirs();
+		ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+		int nRead;
+		byte[] data = new byte[16384];
+
+		while ((nRead = is.read(data, 0, data.length)) != -1) 
+		{
+			buffer.write(data, 0, nRead);
+		}
+		buffer.flush();
+		return buffer.toByteArray();
 	}
-
-	private static void addFileToList(ZipInputStream zis, ZipEntry zipEntry, List<String> list, File destFolder, byte[] startBuffer, int len) throws Exception
-	{
-		String fileName = zipEntry.getName();
-		File newFile = new File(fileName);
-		List<String> parents = new ArrayList<>();
-		File tmp = newFile;
-		while (!tmp.getParentFile().exists())
-		{
-			parents.add(tmp.getParent());
-			tmp = tmp.getParentFile();
-		}
-		Collections.reverse(parents);
-		for (String parent : parents)
-		{
-			new File(parent).mkdir();
-		}
-		if (!newFile.exists())
-		{
-			Files.createFile(Paths.get(newFile.getAbsolutePath()));
-		}
-		FileOutputStream fos = new FileOutputStream(newFile);
-		if (startBuffer != null)
-		{
-			fos.write(startBuffer, 0, len);
-		}
-		byte[] buffer = new byte[1024];
-		int len1;
-		while ((len1 = zis.read(buffer)) > 0)
-		{
-			fos.write(buffer, 0, len1);
-		}
-
-		fos.close();
-		zis.closeEntry();
-		list.add(newFile.getPath());
-	}
-
-	public static Object blobToObject(Blob blob) throws Exception
-	{
-		if (blob == null)
-		{
-			return null;
-		}
-
-		try (ByteArrayInputStream bis = new ByteArrayInputStream(blob.getBytes(1, (int) blob.length())); 
-		        ObjectInput in = new ObjectInputStream(bis))
-		{
-			return in.readObject();
-		}
-	}
+	
 
 	public static void setFormats(Collection<String> formats)
 	{

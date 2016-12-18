@@ -8,9 +8,8 @@
 
 package com.exactprosystems.jf.common.report;
 
-import com.exactprosystems.jf.api.app.AppConnection;
 import com.exactprosystems.jf.api.app.ImageWrapper;
-import com.exactprosystems.jf.api.common.Converter;
+import com.exactprosystems.jf.api.common.Storable;
 import com.exactprosystems.jf.charts.ChartBuilder;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixRoot;
@@ -18,17 +17,25 @@ import com.exactprosystems.jf.documents.matrix.parser.items.MatrixRoot;
 import org.apache.log4j.Logger;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.CharArrayReader;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.Serializable;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Stack;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public abstract class ReportBuilder implements Serializable
+public abstract class ReportBuilder implements Storable
 {
     private static final long serialVersionUID = -4301681183671789970L;
 
@@ -37,6 +44,11 @@ public abstract class ReportBuilder implements Serializable
 	public final static String FAILED 	= "_FAILED";
 	public final static String OM		= "{{";
 	public final static String CM		= "}}";
+	
+	public ReportBuilder()
+	{
+		this.reportIsOn = true;
+	}
 	
 	public ReportBuilder(String outputPath, String matrixName, Date currentTime) throws IOException
 	{
@@ -56,11 +68,64 @@ public abstract class ReportBuilder implements Serializable
 			this.reportDir = outputPath + File.separator + this.imageDir; 
 		}
 	}
+	
+	@Override
+	public String getName() 
+	{
+		if (this.reportName == null)
+		{
+			return "";
+		}
+		return new File(this.reportName).getName();
+	}
 
-   @Override
+	@Override
+	public List<String> getFileList() 
+	{
+		List<String> list = new ArrayList<>();
+		list.add(this.reportName);
+		File dir = new File(this.reportDir);
+		if (dir.exists() && dir.isDirectory()) 
+		{
+			Arrays.stream(dir.list()).forEach(a -> list.add(this.reportDir + File.separator + a));
+		}
+		return list;
+	}
+
+	@Override
+	public byte[] getData(String file) throws IOException 
+	{
+		Path path = Paths.get(file);
+		return Files.readAllBytes(path);
+	}
+
+	@Override
+	public void addFile(String file, byte[] data) throws Exception 
+	{
+		File f = new File(file);
+		f.getParentFile().mkdirs();
+
+		if (file.endsWith(".html"))
+		{
+			this.reportName = file;
+		}
+
+		try (ByteArrayInputStream bais = new ByteArrayInputStream(data);
+				FileOutputStream fos = new FileOutputStream(file) )
+		{
+			byte[] buffer = new byte[1024];
+			int len;
+			while ((len = bais.read(buffer)) > 0)
+			{
+				fos.write(buffer, 0, len);
+			}
+		}
+	}
+
+	@Override
     public String toString()
     {
-        return ReportBuilder.class.getSimpleName() + "{" + getReportName() + ":" + hashCode() + "}";
+        return getClass().getSimpleName() + "{" + getReportName() + ":" + hashCode() + "}";
     }
 
 	public final void init(ReportWriter writer) throws IOException
@@ -80,7 +145,11 @@ public abstract class ReportBuilder implements Serializable
 
 	public final String getReportName()
 	{
-		return this.reportName;
+		if (this.reportName == null)
+		{
+			return "";
+		}
+		return new File(this.reportName).getName();
 	}
 	
 	public final String getReportDir()
@@ -92,19 +161,6 @@ public abstract class ReportBuilder implements Serializable
 	{
 		return this.imageDir;
 	}
-
-    public final Object reportAsArchieve() throws Exception
-    {
-        List<String> list = new ArrayList<>();
-        list.add(this.reportName);
-        File dir = new File(this.reportDir);
-        if (dir.exists() && dir.isDirectory())
-        {
-            Arrays.stream(dir.list()).forEach(a -> list.add(this.reportDir + File.separator + a));;
-        }
-        
-        return Converter.filesToBlob(list);
-    }
 
 	public final void reportSwitch(boolean on)
 	{

@@ -115,7 +115,7 @@ RF;RegressionFramework
                 MatrixWait;MXRN.Out
 
                 #Action;#Connection;#Query;#Passed;#Failed;#Report;#ScenarioId
-                SQLexecute;SQL;'UPDATE scenarios SET passed = ?, failed = ?, report = ?, done = 1 WHERE id = ?';MXRN.Out.passed();MXRN.Out.failed();MXRN.Out.reportAsArchieve();scenarioId
+                SQLexecute;SQL;'UPDATE scenarios SET passed = ?, failed = ?, report = ?, done = 1 WHERE id = ?';MXRN.Out.passed();MXRN.Out.failed();MXRN.Out.reportAsBlob();scenarioId
 
                 #Id;#Action;#Decoraded;#Matrix
                 resultTab;ResultTable;false;MXRN.Out
@@ -132,7 +132,7 @@ RF;RegressionFramework
                 #ForEach;#In
                 details;resultTab.Out
                     #Id;#Action;#Connection;#Query;#ScenarioId;#Testcase;#Stepp;#Time;#Result;#Error;#Screenshot
-                    selectDetails;SQLinsert;SQL;'INSERT INTO details (scenario_id, testcase, step, time, result, error, screenshot) VALUES (?, ?, ?, ?, ?, ?, ?)';scenarioId;'' + details.TestCase;'' + details.Step;details.Time;'' + details.Result;'' + details.Error;Converter.imageToZipBlob(details.Screenshot)
+                    selectDetails;SQLinsert;SQL;'INSERT INTO details (scenario_id, testcase, step, time, result, error, screenshot) VALUES (?, ?, ?, ?, ?, ?, ?)';scenarioId;'' + details.TestCase;'' + details.Step;details.Time;'' + details.Result;'' + details.Error;Converter.storableToBlob(details.Screenshot)
 
                     #For;#From;#To;#Step
                     i;standartResult.Out.getHeaderSize();resultTab.Out.getHeaderSize() - 1;1

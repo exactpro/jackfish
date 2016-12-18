@@ -31,6 +31,11 @@ public class HTMLReportBuilder extends ReportBuilder
 	private static final String reportExt = ".html";
 	private static final DateFormat dateTimeFormatter = new SimpleDateFormat("yyyyMMdd_HHmmss_");
 	
+	public HTMLReportBuilder() 
+	{
+		super();
+	}
+	
 	public HTMLReportBuilder(String outputPath, String matrixName, Date currentTime) throws IOException
 	{
 		super(outputPath, matrixName, currentTime);

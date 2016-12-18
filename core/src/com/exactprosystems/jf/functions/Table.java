@@ -108,7 +108,7 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 				    if (type == Types.LONGVARBINARY || type == Types.BLOB)
 				    {
 				        value = set.getBlob(i + 1);
-	                    value = Converter.zipBlobToObject((Blob)value);
+	                    value = Converter.blobToStorable((Blob)value);
 				    }
 				    else
 				    {
@@ -772,29 +772,12 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 						String description = iw.getDescription() == null ? iw.toString() : iw.getDescription();
 						v = report.decorateLink(description, report.getImageDir() + File.separator + iw.getName(report.getReportDir()));
 					}
-					//TODO pls, don't kill me for this code
-					else if (v instanceof Collection)
+					else if (v instanceof ReportBuilder)
 					{
-						Collection v1 = (Collection) v;
-						List<String> tmpList = new ArrayList<>();
-						for (Object o : v1)
-						{
-							if (o instanceof String)
-							{
-								tmpList.add((String) o);
-							}
-						}
-						Optional<String> first = tmpList.stream().filter(s -> s.endsWith(".html")).findFirst();
-						if (first.isPresent())
-						{
-							String pathname = first.get();
-							File reportFile = new File(pathname);
-							if (new File(reportFile.getParent()).getAbsolutePath().equals(new File(report.getReportName()).getParentFile().getAbsolutePath()))
-							{
-								pathname = reportFile.getName();
-							}
-							v = report.decorateLink(reportFile.getName(), pathname);
-						}
+						ReportBuilder rb = (ReportBuilder)v;
+						String name = rb.getName();
+						
+						v = report.decorateLink(name, name);
 					}
 					value[i] = v;
 				}
