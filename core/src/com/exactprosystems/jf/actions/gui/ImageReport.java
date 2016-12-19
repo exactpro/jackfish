@@ -37,7 +37,7 @@ public class ImageReport extends AbstractAction
 	public final static String	titleName	= "Title";
 
 	public final static String	toReportName		= "ToReport";
-	public final static String	asLinkName		= "asLink";
+	public final static String	asLinkName		= "AsLink";
 
 	@ActionFieldAttribute(name=toReportName, mandatory = false, description = "Rerouting report")
 	protected ReportBuilder toReport;
