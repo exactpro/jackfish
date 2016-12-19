@@ -145,11 +145,7 @@ public abstract class ReportBuilder implements Storable
 
 	public final String getReportName()
 	{
-		if (this.reportName == null)
-		{
-			return "";
-		}
-		return new File(this.reportName).getName();
+		return this.reportName;
 	}
 	
 	public final String getReportDir()
