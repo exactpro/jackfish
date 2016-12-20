@@ -14,7 +14,6 @@ import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 
 import java.io.IOException;
 import java.util.Date;
-import java.util.List;
 
 public class DummyReportBuilder extends ReportBuilder
 {
