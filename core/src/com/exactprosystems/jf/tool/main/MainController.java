@@ -48,9 +48,11 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.net.URL;
 import java.util.Collection;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class MainController implements Initializable, ContainingParent
 {
@@ -91,9 +93,12 @@ public class MainController implements Initializable, ContainingParent
 
 	public MenuItem editSettings;
 	public MenuItem				viewStore;
+	public MenuItem viewShowTabs;
 
 	public Menu					menuMatrix;
 	public MenuItem				matrixSchedule;
+	public MenuItem matrixStart;
+	public MenuItem matrixStop;
 
 	public MenuItem				gitCommit;
 	public MenuItem				gitPull;
@@ -169,24 +174,44 @@ public class MainController implements Initializable, ContainingParent
 	{
 		Platform.runLater(() -> Common.tryCatch(() ->
 		{
-			//TODO add shortcut for tooltip
-			this.btnSaveAsDocument.setTooltip(new Tooltip("Save as"));
-			this.btnSaveDocument.setTooltip(new Tooltip("Save"));
+			this.btnSaveAsDocument.setTooltip(new Tooltip("Save as\n"+shortcutsName(Settings.SAVE_DOCUMENT_AS)));
+			this.btnSaveDocument.setTooltip(new Tooltip("Save\n"+shortcutsName(Settings.SAVE_DOCUMENT)));
 			this.btnOpenMatrix.setTooltip(new Tooltip("Open matrix"));
 			this.btnNewMatrix.setTooltip(new Tooltip("New matrix"));
 			this.btnOpenMainLog.setTooltip(new Tooltip("Show log"));
 			this.btnShowCalculator.setTooltip(new Tooltip("Show calculator\n"));
-			this.btnUndo.setTooltip(new Tooltip("Undo\n" + Common.getShortcutTooltip(settings, Settings.UNDO)));
-			this.btnRedo.setTooltip(new Tooltip("Redo\n" + Common.getShortcutTooltip(settings, Settings.REDO)));
+			this.btnUndo.setTooltip(new Tooltip("Undo\n" + shortcutsName(Settings.UNDO)));
+			this.btnRedo.setTooltip(new Tooltip("Redo\n" + shortcutsName(Settings.REDO)));
 
 			this.editUndo.setGraphic(new ImageView(new Image(CssVariables.Icons.UNDO_ICON_SMALL)));
+			this.editUndo.setAccelerator(Common.getShortcut(settings, Settings.UNDO));
+
 			this.editRedo.setGraphic(new ImageView(new Image(CssVariables.Icons.REDO_ICON_SMALL)));
+			this.editRedo.setAccelerator(Common.getShortcut(settings, Settings.REDO));
+
 			this.matrixSchedule.setGraphic(new ImageView(new Image(CssVariables.Icons.SCHEDULER_MATRIX_ICON)));
 
 			this.editSettings.setGraphic(new ImageView(new Image(CssVariables.Icons.SHOW_SETTINGS_ICON)));
 			this.helpActionsHelp.setGraphic(new ImageView(new Image(CssVariables.Icons.ACTIONS_HELP_ICON)));
 			this.helpAboutProgram.setGraphic(new ImageView(new Image(CssVariables.Icons.ABOUT_PROGRAM_ICON)));
+
+			this.fileSave.setAccelerator(Common.getShortcut(settings, Settings.SAVE_DOCUMENT));
+			this.fileSaveAs.setAccelerator(Common.getShortcut(settings, Settings.SAVE_DOCUMENT_AS));
+
+			this.viewShowTabs.setAccelerator(Common.getShortcut(settings, Settings.SHOW_ALL_TABS));
+
+			this.matrixStart.setAccelerator(Common.getShortcut(settings, Settings.START_MATRIX));
+			this.matrixStop.setAccelerator(Common.getShortcut(settings, Settings.STOP_MATRIX));
 		}, "Error on set tooltips or images"));
+	}
+
+	private String shortcutsName(String shortName)
+	{
+		return Stream.of(Common.getShortcut(settings, shortName))
+				.filter(Objects::nonNull)
+				.map(KeyCombination::toString)
+				.findFirst()
+				.orElse("");
 	}
 
 	@Override
@@ -399,12 +424,12 @@ public class MainController implements Initializable, ContainingParent
 
 	public void undo(ActionEvent actionEvent)
 	{
-		Common.tryCatch(() -> this.model.undo(currentDocument()), "Error on save document");
+		Common.tryCatch(() -> this.model.undo(currentDocument()), "Error on undo document");
 	}
 
 	public void redo(ActionEvent actionEvent)
 	{
-		Common.tryCatch(() -> this.model.redo(currentDocument()), "Error on save document");
+		Common.tryCatch(() -> this.model.redo(currentDocument()), "Error on redo document");
 	}
 	//endregion
 
@@ -592,16 +617,16 @@ public class MainController implements Initializable, ContainingParent
 
 	public void disableMenu(boolean flag)
 	{
-		fileLoad.setDisable(flag);
-		fileNew.setDisable(flag);
-		fileSave.setDisable(flag);
-		fileSaveAs.setDisable(flag);
-		fileSaveAll.setDisable(flag);
-		fileLastOpenMatrix.setDisable(flag);
-		viewStore.setDisable(flag);
-		menuEdit.setDisable(flag);
-		menuMatrix.setDisable(flag);
-		fileRunFromFile.setDisable(flag);
+		this.fileLoad.setDisable(flag);
+		this.fileNew.setDisable(flag);
+		this.fileSave.setDisable(flag);
+		this.fileSaveAs.setDisable(flag);
+		this.fileSaveAll.setDisable(flag);
+		this.fileLastOpenMatrix.setDisable(flag);
+		this.viewStore.setDisable(flag);
+		this.menuEdit.setDisable(flag);
+		this.menuMatrix.setDisable(flag);
+		this.fileRunFromFile.setDisable(flag);
 	}
 
 	public void isGit(boolean flag)

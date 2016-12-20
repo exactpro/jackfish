@@ -72,13 +72,10 @@ public class Main extends Application
 
 	private static final Logger logger = Logger.getLogger(Main.class);
 
-	public static final String	DEFAULT_MAX_FILES_COUNT		= "3";
-
 	private static String configName = null;
 
 	private Preloader preloader;
 	private MainController controller;
-//	private RunnerScheduler runnerListener;
 
 	private Configuration config;
 	private Settings settings;
@@ -585,12 +582,18 @@ public class Main extends Application
 
 	public void undo(Document document) throws Exception
 	{
-		document.undo();
+		if (document != null)
+		{
+			document.undo();
+		}
 	}
 
 	public void redo(Document document) throws Exception
 	{
-		document.redo();
+		if (document != null)
+		{
+			document.redo();
+		}
 	}
 
 	public void changeDocument(Document document)
@@ -835,7 +838,7 @@ public class Main extends Application
 
 			doc.display();
 			doc.saved();
-			SettingsValue maxSettings = this.settings.getValueOrDefault(Settings.GLOBAL_NS, Settings.SETTINGS, Settings.MAX_LAST_COUNT, DEFAULT_MAX_FILES_COUNT);
+			SettingsValue maxSettings = this.settings.getValueOrDefault(Settings.GLOBAL_NS, Settings.SETTINGS, Settings.MAX_LAST_COUNT, "3");
 			int max = Integer.parseInt(maxSettings.getValue());
 			this.settings.setValue(Settings.MAIN_NS, kind.toString(), new File(doc.getName()).getName(), max, doc.getName());
 			this.settings.saveIfNeeded();

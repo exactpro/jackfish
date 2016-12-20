@@ -288,6 +288,7 @@ public class Settings
 
 	public static Settings defaultSettings()
 	{
+		//TODO add all default shortcuts and other settings.
 		Settings settings = new Settings();
 		settings.setMapValues(GLOBAL_NS, "Logs", mapOf(
 				ALL, "0x000000ff",
