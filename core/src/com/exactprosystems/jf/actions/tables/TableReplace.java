@@ -12,8 +12,24 @@ import com.exactprosystems.jf.functions.Table;
 
 @ActionAttribute(
 		group					= ActionGroups.Tables,
-		generalDescription 		= "Replaces all values in table using regular expression or just one value to the given.",
-		additionFieldsAllowed 	= false
+		generalDescription 		= "This action is used to replace cell values if the value is equal to the given "
+				+ "one or complies with a regular expression.",
+		additionFieldsAllowed 	= false,
+		examples = "{{`1. Create a table with columns Name and Age. Add four lines with data about Mike, Anna, John, Bruce.`}}"
+				+ "{{`2. Replace all that comply with Regexp with 'passed'.`}}"
+				+ "{{`3. Verify if everything was correct.`}}" +
+				"{{##Id;#RawTable\n" +
+				"TC;Table\n" +
+				"@;Name;Mail\n" +
+				"0;John;c0nst@money.simply.net\n" +
+				"1;Mike;somebody@dev.com.ua\n" +
+				"2;Bruce;Name.Sur_name@gmail.com\n" +
+				"3;Anna;user33@somewhere.in.the.net\n" +
+				"#EndRawTable\n" +
+				"#Action;#Regexp;#Replace;#Table;#Columns\n" +
+				"TableReplace;'[a-zA-Z]{1}[a-zA-Z\\\\d\\\\.\\\\_]+@([a-zA-Z]+\\\\.){1,2}((net)|(com)|(org))';'passed';TC;'Mail'\n" +
+				"#Assert;#Message\n" +
+				"TC.get(0).get('Mail') == 'passed'&& TC.get(2).get('Mail') == 'passed';'Replacement was not made'#}}"
 	)
 public class TableReplace extends AbstractAction 
 {
@@ -24,23 +40,26 @@ public class TableReplace extends AbstractAction
 	public final static String regexpName 		= "Regexp";
 	public final static String matchCellname 	= "MatchCell";
 
-	@ActionFieldAttribute(name = tableName, mandatory = true, description = "The table.")
+	@ActionFieldAttribute(name = tableName, mandatory = true, description = "Table where it is needed to replace values.")
 	protected Table 	table 	= null;
 
-	@ActionFieldAttribute(name = colunmsName, mandatory = true, description = "Array of columns.")
+	@ActionFieldAttribute(name = colunmsName, mandatory = true, description = "Array of column titles where it is needed to change values.")
 	protected String[]	columns = new String[] {};
 
-	@ActionFieldAttribute(name = replaceName, mandatory = true, description = "Value that will be put into.")
+	@ActionFieldAttribute(name = replaceName, mandatory = true, description = "Value which replaces.")
 	protected Object 	replace = null;
 	
-	@ActionFieldAttribute(name = searchName, mandatory = false, description = "If value of cell or part of cell equals this value then it will be changed to Replace.")
+	@ActionFieldAttribute(name = searchName, mandatory = false, description = "If a cell value or a part of a cell is "
+			+ "equal to this value, cell will be replaced. It is ignored if you set Regexp. ")
 	protected Object 	search;
 
-	@ActionFieldAttribute(name = regexpName, mandatory = false, description = "If value of cell matches this regexp then it will be changed to Replace.")
+	@ActionFieldAttribute(name = regexpName, mandatory = false, description = "If a cell value complies with this"
+			+ " regular expression it will be replaced.")
 	protected String 	regexp;
 
-	@ActionFieldAttribute(name = matchCellname, mandatory = false, description = "If true, whole cell will be replaced, otherwise only matching part will be replaced."
-			+ "Doesn't matter if you point Regexp.")
+	@ActionFieldAttribute(name = matchCellname, mandatory = false, description = "if the value is true, the cell will be"
+			+ " replaced, otherwise only the one that complies. It is used only when setting Search parameter and is "
+			+ "ignored when setting Regexp.")
 	protected Boolean	matchCell;
 
 	public TableReplace()

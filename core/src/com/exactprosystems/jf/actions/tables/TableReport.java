@@ -22,8 +22,20 @@ import java.util.List;
 
 @ActionAttribute(
 		group					= ActionGroups.Tables,
-		generalDescription 		= "Reports the table to the report.",
-		additionFieldsAllowed 	= true
+		generalDescription 		= "This action is used to output the table to report.",
+		additionFieldsAllowed 	= true,
+		examples = "{{` 1. Create a test case with id Test.`}}"
+				+ "{{` 2. Create a table with columns Name and Age. Add values to the first line of the table.`}}"
+				+ "{{` 3. Output the table into the report only with the column Age, before the test case with id Test.`}}" +
+				"{{##Id;#TestCase\n" +
+				"Test;\n" +
+				"    #Id;#RawTable\n" +
+				"    TC;Table\n" +
+				"    @;Name;Age\n" +
+				"    0;Mike;25\n" +
+				"    #EndRawTable\n" +
+				"    #Action;#BeforeTestCase;#Table;#Title;#Columns\n" +
+				"    TableReport;'Test';TC;'Table title';{'Age'}#}}"
 	)
 public class TableReport extends AbstractAction 
 {
@@ -34,22 +46,24 @@ public class TableReport extends AbstractAction
 	public final static String columnsName = "Columns";
 	public final static String reportValuesName = "ReportValues";
 
-	@ActionFieldAttribute(name = tableName, mandatory = true, description = "The table.")
+	@ActionFieldAttribute(name = tableName, mandatory = true, description = "A table which is needed to to be output into the report.")
 	protected Table 	table 	= null;
 
-	@ActionFieldAttribute(name = beforeTestCaseName, mandatory = false, description = "The name of Testcase before witch the table will be put.")
+	@ActionFieldAttribute(name = beforeTestCaseName, mandatory = false, description = "Enables to output the table on the highest level of the report.")
 	protected String 	beforeTestCase 	= null;
 
-	@ActionFieldAttribute(name = titleName, mandatory = true, description = "Title.")
+	@ActionFieldAttribute(name = titleName, mandatory = true, description = "The title of the output table.")
 	protected String 	title 	= null;
 
-	@ActionFieldAttribute(name = numbersName, mandatory = false, description = "If true then outputs row numbers.")
+	@ActionFieldAttribute(name = numbersName, mandatory = false, description = "If the value is true the column with the lines numbers is output.")
 	protected Boolean withNumbers;
 
-	@ActionFieldAttribute(name = columnsName, mandatory = false, description = "Columns printed in the report.")
+	@ActionFieldAttribute(name = columnsName, mandatory = false, description = "Array of column titles which is needed to be output into the report.")
 	protected String[]	columns;
 
-	@ActionFieldAttribute(name = reportValuesName, mandatory = false, description = "Report values instead expressions.")
+	@ActionFieldAttribute(name = reportValuesName, mandatory = false, description = "If the value is false, the value"
+			+ " from the cell is output, if the value is true the expression result is output. "
+			+ "Applicable for the cells of Expression type, see {{@TableConsiderColumnAs@}}.")
 	protected Boolean	reportValues;
 
 	public TableReport()

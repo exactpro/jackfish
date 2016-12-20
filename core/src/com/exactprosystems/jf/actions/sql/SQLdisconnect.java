@@ -24,14 +24,28 @@ import com.exactprosystems.jf.sql.SqlConnection;
 @ActionAttribute(
 		group					= ActionGroups.SQL,
 		suffix					= "SQLDCNT",
-		generalDescription 		= "Disconnects from connected DB.",
-		additionFieldsAllowed 	= false
+		generalDescription 		= "The following action is needed to close a database connection.",
+		additionFieldsAllowed 	= false,
+		examples = "{{` 1. Establish a database connection setting all mandatory parameters. `}}" +
+				"{{` 2. Close the database connection. `}}" +
+				"{{` 3. Confirm that the database connection is closed. `}}" +
+				"\n" +
+				"{{# #Id;#Action;#User;#Server;#Base;#Sql;#Password\n" +
+				"SQLCNT1;SQLconnect;'username';'127.0.0.1:3306';'myDatabase';'MySQL';'userpassword'\n" +
+				"\n" +
+				"#Id;#Action;#Connection\n" +
+				"SQLDCNT1;SQLdisconnect;SQLCNT1.Out\n" +
+				"\n" +
+				"\n" +
+				"#Assert;#Message\n" +
+				"SQLCNT1.Out.isClosed();'connection is not closed'. #}}",
+		seeAlso = "{{@ SQLexecute @}}, {{@ SQLinsert @}}, {{@ SQLselect @}}, {{@ SQLtableUpload @}}, {{@ SQLconnect @}}."
 	)
 public class SQLdisconnect extends AbstractAction
 {
 	public final static  String connectionName = "Connection";
 
-	@ActionFieldAttribute(name = connectionName, mandatory = true, description = "Connection that was given in SQLConnect.")
+	@ActionFieldAttribute(name = connectionName, mandatory = true, description = "Database connection established by the SQLconnect action.")
 	protected SqlConnection connection 		= null;
 
 	@Override

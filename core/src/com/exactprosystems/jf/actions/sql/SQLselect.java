@@ -27,20 +27,58 @@ import com.exactprosystems.jf.sql.SqlConnection;
 @ActionAttribute(
 		group					= ActionGroups.SQL,
 		suffix					= "SQLSLCT",
-		generalDescription 		= "Select data from connected database.",
+		generalDescription 		= "The following action is needed to execute the Select SQLquery.",
 		additionFieldsAllowed 	= true,
-		outputDescription 		= "Table object.",
-		outputType				= Table.class
+		additionalDescription = "The additional parameter is defined by the data that will be used in completed SQL"
+				+ " query instead of placeholders -'?'. The parameter name is not used during the execution and in"
+				+ " this case can serve as a comment for the user. For example you can use it as an object "
+				+ "description set as a parameter value. {{$ Attention! You should mind the order of additional parameters. $}}",
+		outputDescription 		= "Select SQL query returns a Table object. The returned Table column names coincide"
+				+ " with the Table column names we get as a result of a query.",
+		outputType				= Table.class,
+		seeAlso = "{{@ SQLdisconnect@}}, {{@ SQLexecute @}}, {{@ SQLinsert @}}, {{@ SQLtableUpload @}}, {{@ SQLconnect @}}.",
+		examples = "{{` 1. Create a connection to a database. `}}" +
+				"{{` 2. Execute the query to create Users table `}}" +
+				"{{` 3.-4. Define and initialize Name and Age variables `}}" +
+				"{{` 5. Execute the query to fill in the Users table using placeholders in additional parameters `}}" +
+				"{{` 6. Execute SQLselect action using placeholders in additional parameters `}}" +
+				"{{` 7. Add the table to the report using the Table Report action `}}\n" +
+				"{{##Id;#Action;#User;#Server;#Base;#Sql;#Password\n" +
+				"SQLCNT1;SQLconnect;'username';'127.0.0.1:3306';'myDatabase';'MySQL';'userpassword'\n" +
+				"\n" +
+				"#Id;#Action;#Query;#Connection\n" +
+				"SQLEXEC1;SQLexecute;'CREATE TABLE users (id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,name VARCHAR(30) NOT NULL,age int NOT NULL)';SQLCNT1.Out\n" +
+				"\n" +
+				"\n" +
+				"#Id;#Let\n" +
+				"name;'mike'\n" +
+				"\n" +
+				"\n" +
+				"#Id;#Let\n" +
+				"age;23\n" +
+				"\n" +
+				"\n" +
+				"#Id;#Action;#Query;#Connection;#User name we get earlier ;#User age we get earlier\n" +
+				"SQLEXEC3;SQLexecute;'insert into users (name, age) values (?, ?)';SQLCNT1.Out;name;age\n" +
+				"\n" +
+				"\n" +
+				"#Id;#Action;#Query;#Connection;#User name we get earlier ;#User age we get earlier\n" +
+				"SQLSLCT1;SQLselect;'select name, age from test.users where name = ? and age = ?';SQLCNT1.Out;name;age\n" +
+				"\n" +
+				"\n" +
+				"#Action;#Table;#Title\n" +
+				"TableReport;SQLSLCT1.Out;'Report title'#}}"
 	)
 public class SQLselect extends AbstractAction
 {
 	public final static String connectionName 	= "Connection";
 	public final static String queryName 		= "Query";
 
-	@ActionFieldAttribute(name = connectionName, mandatory = true, description = "Connection that was given in SQLConnect.")
+	@ActionFieldAttribute(name = connectionName, mandatory = true, description = "Connection to the database, output "
+			+ "value of the SQLconnect action.")
 	protected SqlConnection connection 		= null;
 
-	@ActionFieldAttribute(name = queryName, mandatory = true, description = "SQL query.")
+	@ActionFieldAttribute(name = queryName, mandatory = true, description = "The SQL database query.")
 	protected String query 	= "";
 
 	@Override

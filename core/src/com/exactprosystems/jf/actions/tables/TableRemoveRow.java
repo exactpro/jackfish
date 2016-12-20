@@ -13,19 +13,34 @@ import com.exactprosystems.jf.functions.Table;
 @ActionAttribute(
 		group = ActionGroups.Tables,
 		suffix = "TBLRR",
-		generalDescription = "Remove row by index from table",
+		generalDescription = "This action is used to delete a selected line in a table given.",
 		additionFieldsAllowed = false,
 		outputDescription = "True if removing is successful",
-		outputType = Boolean.class)
+		outputType = Boolean.class,
+		examples = "{{` 1. Create a table with columns Name and Age. Add two lines with data to the table. `}}"
+				+ "{{` 2. Delete the first line in the table, the line with the index 0. `}}"
+				+ "{{` 3. Verify that the first line was deleted and was replaced with the line containing data about Anna. `}}" +
+				"{{##Id;#RawTable\n" +
+				"TC;Table\n" +
+				"@;Name;Age\n" +
+				"0;Mike;25\n" +
+				"1;Anna;20\n" +
+				"#EndRawTable\n" +
+				"#Id;#Action;#Table;#Index\n" +
+				"TBLRR1;TableRemoveRow;TC;0\n" +
+				"#Assert;#Message\n" +
+				"TC.get(0).get('Name') == 'Anna';'Table is not correct'#}}"
+)
 public class TableRemoveRow extends AbstractAction
 {
 	public final static String tableName = "Table";
 	public static final String rowIndex = "Index";
 
-	@ActionFieldAttribute(name = tableName, mandatory = true, description = "The table.")
+	@ActionFieldAttribute(name = tableName, mandatory = true, description = "A table where a line needs to be deleted.")
 	protected Table table = null;
 
-	@ActionFieldAttribute(name = rowIndex, mandatory = true, description = "Row index")
+	@ActionFieldAttribute(name = rowIndex, mandatory = true, description = "A deletable line number. In case of a"
+			+ " negative value the last line will be deleted. Numeration starts with 0.")
 	protected Integer row = null;
 
 	public TableRemoveRow()

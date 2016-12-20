@@ -24,8 +24,32 @@ import com.exactprosystems.jf.sql.SqlConnection;
 
 @ActionAttribute(
 		group					= ActionGroups.SQL,
-		generalDescription 		= "Upload data to desire table of connected database.",
-		additionFieldsAllowed 	= false
+		generalDescription 		= "The following action is needed to upload the data from the {{$Table$}} object to the"
+				+ " database. The data is added using the Union principle (adding to the end of the database)",
+		additionFieldsAllowed 	= false,
+		seeAlso = "{{@ SQLdisconnect@}}, {{@ SQLexecute @}}, {{@ SQLinsert @}}, {{@ SQLselect @}}, {{@ SQLconnect @}}.",
+		examples = "{{` 1. Create a table. `}}" +
+				"{{` 2. Create a connection to a database. `}}" +
+				"{{` 3. Execute a query to create the Users table. `}}" +
+				"{{` 4. Upload data from the Table object to Users table of the current database. `}}\n" +
+				"{{##Id;#RawTable\n" +
+				"DATA1;Table\n" +
+				"@;Name;Age\n" +
+				"0;Mike;25\n" +
+				"1;Anna;24\n" +
+				"#EndRawTable\n" +
+				"\n" +
+				"\n" +
+				"#Id;#Action;#User;#Server;#Base;#Sql;#Password\n" +
+				"SQLCNT1;SQLconnect;'username';'127.0.0.1:3306';'myDatabase';'MySQL';'userpassword'\n" +
+				"\n" +
+				"\n" +
+				"#Id;#Action;#Query;#Connection\n" +
+				"SQLEXEC1;SQLexecute;'CREATE TABLE users (id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,name VARCHAR(30) NOT NULL,age int NOT NULL)';SQLCNT1.Out\n" +
+				"\n" +
+				"\n" +
+				"#Action;#Table;#Connection;#Data\n" +
+				"SQLtableUpload;'users';SQLCNT1.Out;DATA1#}}"
 	)
 public class SQLtableUpload extends AbstractAction
 {
@@ -33,13 +57,13 @@ public class SQLtableUpload extends AbstractAction
 	public final static String tableName 		= "Table";
 	public final static String dataName 		= "Data";
 
-	@ActionFieldAttribute(name = connectionName, mandatory = true, description = "Connection that was given in SQLConnect.")
+	@ActionFieldAttribute(name = connectionName, mandatory = true, description = "Connection to the database, output value of the SQLconnect action.")
 	protected SqlConnection connection 		= null;
 
-	@ActionFieldAttribute(name = tableName, mandatory = true, description = "SQL query.")
+	@ActionFieldAttribute(name = tableName, mandatory = true, description = "The name of the database table which you need to fill in with data.")
 	protected String table 	= "";
 
-	@ActionFieldAttribute(name = dataName, mandatory = true, description = "Table object which can be got from csv-file for example.")
+	@ActionFieldAttribute(name = dataName, mandatory = true, description = "The Table, from which you take the data to add to the database.")
 	protected Table data 	= null;
 
 	@Override

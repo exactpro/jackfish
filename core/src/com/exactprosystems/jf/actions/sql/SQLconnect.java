@@ -29,10 +29,22 @@ import java.util.List;
 @ActionAttribute(
 		group					= ActionGroups.SQL,
 		suffix					= "SQLCNT",
-		generalDescription 		= "Connects to desired DB.",
+		generalDescription 		= "The following action is needed to establish a database connection which is used in"
+				+ " {{@ SQLexecute @}}, {{@ SQLinsert @}}, {{@ SQLselect @}}, {{@ SQLtableUpload @}}, {{@ SQLdisconnect @}} actions.",
 		additionFieldsAllowed 	= false,
-		outputDescription 		= "Connection than will be needed in SqlExecute or SqlSelect.",
-		outputType				= SqlConnection.class
+		outputDescription 		= "Connection to the SQL server.",
+		outputType				= SqlConnection.class,
+		examples =
+				"{{` 1. Establish a database connection setting all mandatory parameters. `}}" +
+				"{{` 2. Check that the connection is created and open. `}}" +
+				"\n" +
+				"{{##Id;#Action;#User;#Server;#Base;#Sql;#Password\n" +
+				"SQLCNT1;SQLconnect;'username';'127.0.0.1:3306';'myDatabase';'MySQL';'userpassword'\n" +
+				"\n" +
+				"\n" +
+				"#Assert;#Message\n" +
+				"!(SQL.Out.isClosed());'connection is not established'#}}",
+		seeAlso = "{{@ SQLexecute @}}, {{@ SQLinsert @}}, {{@ SQLselect @}}, {{@ SQLtableUpload @}}, {{@ SQLdisconnect @}}."
 	)
 public class SQLconnect  extends AbstractAction
 {
@@ -44,19 +56,21 @@ public class SQLconnect  extends AbstractAction
 
 
 
-	@ActionFieldAttribute(name = sqlName, mandatory = true, description = "Type of SQL server.")
+	@ActionFieldAttribute(name = sqlName, mandatory = true, description = "SQL Entry name.")
 	protected String sql 		= "";
 
-	@ActionFieldAttribute(name = serverName, mandatory = true, description = "Server location.")
+	@ActionFieldAttribute(name = serverName, mandatory = true, description = "Database ip address. The value of this "
+			+ "parameter replaces ${SERVER} in the sqlConnection line in the selected SQL entry parameters.")
 	protected String server 	= "";
 
-	@ActionFieldAttribute(name = baseName, mandatory = true, description = "Data Base name.")
+	@ActionFieldAttribute(name = baseName, mandatory = true, description = "Database name. The value of this parameter "
+			+ "replaces ${BASE} in the sqlConnection line in the selected SQL entry parameters.")
 	protected String base 		= "";
 
-	@ActionFieldAttribute(name = userName, mandatory = true, description = "Data Base user name.")
+	@ActionFieldAttribute(name = userName, mandatory = true, description = "Database user name.")
 	protected String user 		= "";
 
-	@ActionFieldAttribute(name = passwordName, mandatory = true, description = "Data Base user password.")
+	@ActionFieldAttribute(name = passwordName, mandatory = true, description = "Database password.")
 	protected String password 	= "";
 
 	public SQLconnect()

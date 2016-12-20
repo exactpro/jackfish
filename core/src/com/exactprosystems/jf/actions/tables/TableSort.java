@@ -17,24 +17,40 @@ import com.exactprosystems.jf.functions.Table;
 @ActionAttribute(
 		group = ActionGroups.Tables,
 		suffix = "TBLS",
-		generalDescription = "Sorting presented table",
+		generalDescription = "This action is used to sorting the table by the column given.",
 		additionFieldsAllowed = true,
-		outputDescription = "Sorted table",
-		outputType = Table.class)
+		outputDescription = "Restores the original but sorted table.",
+		outputType = Table.class,
+		examples = "{{` 1 Create a table with columns Name and Age. Complete the table with 3 lines.`}}" +
+				"{{`2. Do top-down sorting in  Age.`}}" +
+				"{{`3.Output the sorted table to report.`}}" +
+				"{{##Id;#RawTable\n" +
+				"TC;Table\n" +
+				"@;Name;Age\n" +
+				"0;Mike;42\n" +
+				"1;John;57\n" +
+				"2;Anna;21\n" +
+				"#EndRawTable\n" +
+				"#Action;#Ascending;#ColumnName;#Table\n" +
+				"TableSort;false;'Age';TC\n" +
+				"#Action;#Table;#Title\n" +
+				"TableReport;TC;'Table title'#}}"
+)
 
 public class TableSort extends AbstractAction
 {
 	public static final String tableName = "Table";
 	public static final String columnName = "ColumnName";
-	public static final String ascendingName = "Ascending"; // po vozrastaniu
+	public static final String ascendingName = "Ascending";
 
-	@ActionFieldAttribute(name = tableName, mandatory = true, description = "The table.")
+	@ActionFieldAttribute(name = tableName, mandatory = true, description = "Sorted table.")
 	protected Table table = null;
 
-	@ActionFieldAttribute(name = columnName, mandatory = true, description = "Column sorting name")
+	@ActionFieldAttribute(name = columnName, mandatory = true, description = "Column title that defines the table sorting.")
 	protected String columnIndex = null;
 
-	@ActionFieldAttribute(name = ascendingName, mandatory = false, description = "Sorting policy (true, if ascending, and false, if descending")
+	@ActionFieldAttribute(name = ascendingName, mandatory = false, description = "Sorting type: true – ascending sorting,"
+			+ " false – descending sorting. By default is true.")
 	protected Boolean ascending;
 
 	public TableSort()
