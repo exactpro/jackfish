@@ -121,6 +121,10 @@ public class MvelEvaluator extends AbstractEvaluator
 	@Override
 	public void addImports(Collection<String> imports)
 	{
+		// JeckFish and MVEL could be loaded by different ClassLoaders (for example, by SF class-loader).
+		// Specify proper classloader to load imports from this JAR
+		this.context.getParserConfiguration().setClassLoader(this.getClass().getClassLoader());
+		
 		this.context.addPackageImport("java.util");
 		this.context.addPackageImport(Condition.class.getPackage().getName());
 		this.context.addPackageImport(Unique.class.getPackage().getName());
