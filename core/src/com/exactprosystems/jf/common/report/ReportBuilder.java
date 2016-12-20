@@ -170,7 +170,7 @@ public abstract class ReportBuilder implements Serializable
 		}
 	}
 	
-	public final void outImage(MatrixItem item, String beforeTestcase, String fileName, String title)
+	public final void outImage(MatrixItem item, String beforeTestcase, String fileName, String title, Boolean asLink)
 	{
 		try
 		{
@@ -180,7 +180,7 @@ public abstract class ReportBuilder implements Serializable
 				dir.mkdir();
 			}
 			
-			reportImage(this.writer, item, beforeTestcase, this.imageDir + File.separator + fileName, postProcess(title));
+			reportImage(this.writer, item, beforeTestcase, this.imageDir + File.separator + fileName, postProcess(title), asLink);
 		} 
 		catch (IOException e)
 		{
@@ -341,7 +341,7 @@ public abstract class ReportBuilder implements Serializable
 	
 	protected abstract void reportItemLine(ReportWriter writer, MatrixItem item, String beforeTestcase, String string, String labelId) throws IOException;
 
-	protected abstract void reportImage(ReportWriter writer, MatrixItem item, String beforeTestcase, String fileName, String title) throws IOException;
+	protected abstract void reportImage(ReportWriter writer, MatrixItem item, String beforeTestcase, String fileName, String title, Boolean asLink) throws IOException;
 
 	protected abstract void reportItemFooter(ReportWriter writer, MatrixItem entry, Integer id, long time, ImageWrapper screenshot) throws IOException;
 	

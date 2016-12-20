@@ -78,20 +78,7 @@ public class ImageReport extends AbstractAction
 		
 		report = this.toReport == null ? report : this.toReport;
 
-		if (this.asLink)
-		{
-			String dirName = report.getReportDir();
-			String filename = this.image.saveToDir(dirName).getName();
-			String link = report.decorateLink(new File("Image"),  new File(dirName).getName() + File.separator + filename);
-			report.outLine(this.owner, this.beforeTestCase, link, null);
-			report.outLine(null, null, "<br>", null);
-
-		}
-		else
-		{
-			report.outImage(super.owner, this.beforeTestCase, this.image.getName(report.getReportDir()), Str.asString(this.title));
-		}
-
+		report.outImage(super.owner, this.beforeTestCase, this.image.getName(report.getReportDir()), Str.asString(this.title), this.asLink);
 		super.setResult(this.image.getFileName());
 	}
 

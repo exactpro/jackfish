@@ -972,7 +972,7 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
         
         if (this.screenshot != null)
         {
-            report.outImage(this, null, this.screenshot.getName(report.getReportDir()), this.screenshot.getDescription());
+            report.outImage(this, null, this.screenshot.getName(report.getReportDir()), this.screenshot.getDescription(), false);
         }
     }
 

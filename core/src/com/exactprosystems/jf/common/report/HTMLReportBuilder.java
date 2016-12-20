@@ -248,7 +248,7 @@ public class HTMLReportBuilder extends ReportBuilder
 	}
 
 	@Override
-	protected void reportImage(ReportWriter writer, MatrixItem item, String beforeTestcase, String fileName, String title) throws IOException
+	protected void reportImage(ReportWriter writer, MatrixItem item, String beforeTestcase, String fileName, String title, Boolean asLink) throws IOException
 	{
 		if (beforeTestcase != null)
 		{
@@ -259,8 +259,16 @@ public class HTMLReportBuilder extends ReportBuilder
 		writer.fwrite(
 				"<span class='tableTitle'>%s</span><br>",
 				this.postProcess(title));
-		
-		writer.fwrite("<img src='%s' class='img'/><br>", fileName);
+
+		if (asLink)
+		{
+			writer.fwrite("<a href=" + fileName+ ">Image</a><br>");
+		}
+		else
+		{
+			writer.fwrite("<img src='%s' class='img'/><br>", fileName);
+		}
+
 		if (beforeTestcase != null)
 		{
 			writer.fwrite("</div>\n");
