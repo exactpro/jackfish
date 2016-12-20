@@ -105,7 +105,8 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 				    int type = set.getMetaData().getColumnType(i + 1);
 				    
 				    Object value = null;
-				    if (type == Types.LONGVARBINARY || type == Types.BLOB)
+					System.out.println("Type : " + type);
+					if (type == Types.LONGVARBINARY || type == Types.BLOB || type == Types.VARBINARY)
 				    {
 				        value = set.getBlob(i + 1);
 	                    value = Converter.blobToStorable((Blob)value);
