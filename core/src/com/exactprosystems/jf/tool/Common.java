@@ -19,7 +19,6 @@ import com.exactprosystems.jf.tool.custom.label.CommentsLabel;
 import com.exactprosystems.jf.tool.custom.tab.CustomTab;
 import com.exactprosystems.jf.tool.custom.tab.CustomTabPane;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
-import com.exactprosystems.jf.tool.settings.SettingsPanel;
 import com.exactprosystems.jf.tool.settings.Theme;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
@@ -33,6 +32,7 @@ import javafx.scene.control.Labeled;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCombination;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
@@ -236,12 +236,22 @@ public abstract class Common
 
 	public static String getShortcutTooltip(Settings settings, String nameShortcut) throws Exception
 	{
-		Settings.SettingsValue value = settings.getValue(Settings.GLOBAL_NS, SettingsPanel.SHORTCUTS_NAME, nameShortcut);
+		Settings.SettingsValue value = settings.getValue(Settings.GLOBAL_NS, Settings.SHORTCUTS_NAME, nameShortcut);
 		if (value != null)
 		{
 			return value.getValue().equals(EMPTY) ? "" : "(" + value.getValue() + ")";
 		}
 		return "";
+	}
+
+	public static KeyCombination getShortcut(Settings settings, String shortcutName)
+	{
+		Settings.SettingsValue value = settings.getValue(Settings.GLOBAL_NS, Settings.SHORTCUTS_NAME, shortcutName);
+		if (value != null && !value.getValue().equals(EMPTY))
+		{
+			return KeyCombination.valueOf(value.getValue());
+		}
+		return null;
 	}
 
 	public static void customizeLabeled(Labeled n, String cssVariable, String icon)

@@ -24,7 +24,6 @@ import com.exactprosystems.jf.tool.dictionary.DictionaryFx;
 import com.exactprosystems.jf.tool.dictionary.DictionaryFxController;
 import com.exactprosystems.jf.tool.dictionary.FindListView;
 import com.exactprosystems.jf.tool.main.Main;
-import com.exactprosystems.jf.tool.settings.SettingsPanel;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.event.ActionEvent;
@@ -161,8 +160,8 @@ public class NavigationController implements Initializable, ContainingParent
 	{
 		this.model = model;
 		//TODO this need move from here to model
-		this.fullScreen = Boolean.parseBoolean(settings.getValueOrDefault(Settings.GLOBAL_NS, SettingsPanel.SETTINGS, "useFullScreenXpath", "false").getValue());
-		boolean compactMode = Boolean.parseBoolean(settings.getValueOrDefault(Settings.GLOBAL_NS, SettingsPanel.SETTINGS, Main.USE_SMALL_WINDOW, "false").getValue());
+		this.fullScreen = Boolean.parseBoolean(settings.getValueOrDefault(Settings.GLOBAL_NS, Settings.SETTINGS, "useFullScreenXpath", "false").getValue());
+		boolean compactMode = Boolean.parseBoolean(settings.getValueOrDefault(Settings.GLOBAL_NS, Settings.SETTINGS, Settings.USE_COMPACT_MODE, "false").getValue());
 		setChoiseBoxListeners();
 		createShutters(this.hBoxElement, owner, compactMode);
 

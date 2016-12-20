@@ -81,13 +81,13 @@
 										<MenuItem mnemonicParsing="false" onAction="#openMainLog" text="Logs"/>
 										<MenuItem fx:id="viewStore" mnemonicParsing="false" onAction="#showStore" text="Store"/>
 										<SeparatorMenuItem/>
-										<MenuItem mnemonicParsing="false" onAction="#showAllTabs" text="Show tabs"/>
+										<MenuItem fx:id="viewShowTabs" mnemonicParsing="false" onAction="#showAllTabs" text="Show tabs"/>
 									</items>
 								</Menu>
 								<Menu fx:id="menuMatrix" mnemonicParsing="false" text="Matrix">
 									<items>
-										<MenuItem mnemonicParsing="false" onAction="#startMatrix" text="Start"/>
-										<MenuItem mnemonicParsing="false" onAction="#stopMatrix" text="Stop"/>
+										<MenuItem fx:id="matrixStart" mnemonicParsing="false" onAction="#startMatrix" text="Start"/>
+										<MenuItem fx:id="matrixStop" mnemonicParsing="false" onAction="#stopMatrix" text="Stop"/>
 										<SeparatorMenuItem mnemonicParsing="false"/>
 										<MenuItem fx:id="matrixSchedule" id="matrixSchedule" mnemonicParsing="false" onAction="#matrixSchedule" text="Matrix schedule"/>
 									</items>

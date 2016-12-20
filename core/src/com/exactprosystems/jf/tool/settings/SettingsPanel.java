@@ -11,7 +11,6 @@ package com.exactprosystems.jf.tool.settings;
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.common.Settings.SettingsValue;
 import com.exactprosystems.jf.tool.Common;
-import com.exactprosystems.jf.tool.main.Main;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyEvent;
 
@@ -19,95 +18,49 @@ import java.io.IOException;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class SettingsPanel
 {
-	public static final String	FONT			= "Font";
-	public final static String	SETTINGS 		= "Main";
-	public static final String	LOGS_NAME		= "Logs";
-	public static final String	SHORTCUTS_NAME	= "Shortcuts";
-	public static final String	MATRIX_COLORS	= "MatrixColors";
-	public static final String	GIT				= "Git";
 
-	//other shortcuts
-	public static final String SHOW_ALL_TABS	= "ShowAllTabs";
+	public static final List<String> otherList = Stream.of(Settings.SHOW_ALL_TABS).collect(Collectors.toList());
 
-	public static final List<String> otherList = createList(SHOW_ALL_TABS);
+	public static final List<String> docsList = Stream.of(
+			Settings.SAVE_DOCUMENT,
+			Settings.SAVE_DOCUMENT_AS,
+			Settings.UNDO,
+			Settings.REDO
+	).collect(Collectors.toList());
 
-	//document shortcuts
-	public static final String SAVE_DOCUMENT	= "SaveDocument";
-	public static final String SAVE_DOCUMENT_AS	= "SaveDocumentAs";
-	public static final String UNDO				= "Undo";
-	public static final String REDO				= "Redo";
+	public static final List<String> matrixNavigationList = Stream.of(
+			Settings.ADD_CHILD,
+			Settings.ADD_BEFORE,
+			Settings.ADD_AFTER,
+			Settings.BREAK_POINT,
+			Settings.ADD_PARAMETER,
+			Settings.HELP,
+			Settings.GO_TO_LINE,
+			Settings.SHOW_ALL,
+			Settings.DELETE_ITEM,
+			Settings.COPY_ITEMS,
+			Settings.PASTE_ITEMS_CHILD,
+			Settings.PASTE_ITEMS_AFTER,
+			Settings.PASTE_ITEMS_BEFORE,
+			Settings.COLLAPSE_ALL,
+			Settings.COLLAPSE_ONE,
+			Settings.EXPAND_ALL,
+			Settings.EXPAND_ONE
+	).collect(Collectors.toList());
 
-	public static final List<String> docsList = createList(
-			SAVE_DOCUMENT,
-			SAVE_DOCUMENT_AS,
-			UNDO,
-			REDO
-	);
-
-	//matrix navigation shortcuts
-	public static final String ADD_CHILD		= "AddChild";
-	public static final String ADD_BEFORE		= "AddBefore";
-	public static final String ADD_AFTER		= "AddAfter";
-	public static final String BREAK_POINT		= "BreakPoint";
-	public static final String ADD_PARAMETER	= "AddParameter";
-	public static final String HELP				= "Help";
-	public static final String GO_TO_LINE		= "GoToLine";
-	public static final String SHOW_ALL			= "ShowAll";
-	public static final String DELETE_ITEM		= "DeleteItem";
-	public static final String COPY_ITEMS		= "CopyItems";
-	public static final String PASTE_ITEMS_CHILD = "PasteItemsToChild";
-	public static final String PASTE_ITEMS_AFTER = "PasteItemsAfter";
-	public static final String PASTE_ITEMS_BEFORE = "PasteItemsBefore";
-	public static final String COLLAPSE_ALL		= "CollapseAll";
-	public static final String COLLAPSE_ONE		= "CollapseOne";
-	public static final String EXPAND_ALL		= "ExpandAll";
-	public static final String EXPAND_ONE		= "ExpandOne";
-
-	public static final List<String> matrixNavigationList = createList(
-			ADD_CHILD,
-			ADD_BEFORE,
-			ADD_AFTER,
-			BREAK_POINT,
-			ADD_PARAMETER,
-			HELP,
-			GO_TO_LINE,
-			SHOW_ALL,
-			DELETE_ITEM,
-			COPY_ITEMS,
-			PASTE_ITEMS_CHILD,
-			PASTE_ITEMS_AFTER,
-			PASTE_ITEMS_BEFORE,
-			COLLAPSE_ALL,
-			COLLAPSE_ONE,
-			EXPAND_ALL,
-			EXPAND_ONE
-	);
-
-	//matrix actions shortcuts
-	public static final String START_MATRIX		= "StartMatrix";
-	public static final String STOP_MATRIX		= "StopMatrix";
-	public static final String PAUSE_MATRIX		= "PauseMatrix";
-	public static final String SHOW_RESULT		= "ShowResult";
-	public static final String SHOW_WATCH		= "ShowWatch";
-	public static final String TRACING			= "Tracing";
-	public static final String FIND_ON_MATRIX	= "FindOnMatrix";
-
-	public static final List<String> matrixActionsList = createList(
-			START_MATRIX,
-			STOP_MATRIX,
-			PAUSE_MATRIX,
-			SHOW_RESULT,
-			SHOW_WATCH,
-			TRACING,
-			FIND_ON_MATRIX
-	);
-
-	//git
-	public static final String GIT_SSH_IDENTITY	= "gitSshIdentity";
-	public static final String GIT_KNOWN_HOST	= "gitKnownHost";
+	public static final List<String> matrixActionsList = Stream.of(
+			Settings.START_MATRIX,
+			Settings.STOP_MATRIX,
+			Settings.PAUSE_MATRIX,
+			Settings.SHOW_RESULT,
+			Settings.SHOW_WATCH,
+			Settings.TRACING,
+			Settings.FIND_ON_MATRIX
+	).collect(Collectors.toList());
 
 
 	private Settings settings;
@@ -132,26 +85,26 @@ public class SettingsPanel
 
 	private void displayGit()
 	{
-		List<SettingsValue> values = this.settings.getValues(Settings.GLOBAL_NS, GIT);
+		List<SettingsValue> values = this.settings.getValues(Settings.GLOBAL_NS, Settings.GIT);
 		this.controller.displayGit(values.stream().collect(Collectors.toMap(SettingsValue::getKey, SettingsValue::getValue)));
 	}
 
 	private void displayColors()
 	{
-		List<SettingsValue> values = this.settings.getValues(Settings.GLOBAL_NS, MATRIX_COLORS);
+		List<SettingsValue> values = this.settings.getValues(Settings.GLOBAL_NS, Settings.MATRIX_COLORS);
 		this.controller.displayColors(values.stream().collect(Collectors.toMap(SettingsValue::getKey, SettingsValue::getValue)));
 	}
 
 	private void displayMain()
 	{
-		this.controller.displayMain(settings.getValues(Settings.GLOBAL_NS, SETTINGS)
+		this.controller.displayMain(settings.getValues(Settings.GLOBAL_NS, Settings.SETTINGS)
 				.stream()
 				.collect(Collectors.toMap(SettingsValue::getKey, SettingsValue::getValue)));
 	}
 
 	private void displayLogs()
 	{
-		Collection<SettingsValue> values = settings.getValues(Settings.GLOBAL_NS, LOGS_NAME);
+		Collection<SettingsValue> values = settings.getValues(Settings.GLOBAL_NS, Settings.LOGS_NAME);
 		Map<String, String> res = new LinkedHashMap<>();
 		values.forEach(value -> res.put(value.getKey(), value.getValue()));
 		this.controller.displayLogs(res);
@@ -160,7 +113,7 @@ public class SettingsPanel
 
 	private void displayShortcuts()
 	{
-		List<SettingsValue> values = settings.getValues(Settings.GLOBAL_NS, SHORTCUTS_NAME);
+		List<SettingsValue> values = settings.getValues(Settings.GLOBAL_NS, Settings.SHORTCUTS_NAME);
 
 		Function<String, String> get = (key) -> values.stream()
 				.filter(sv -> sv.getKey().equals(key))
@@ -192,13 +145,13 @@ public class SettingsPanel
 	public void save() throws Exception
 	{
 		this.settings.saveIfNeeded();
-		Settings.SettingsValue theme = this.settings.getValueOrDefault(Settings.GLOBAL_NS, SETTINGS, Main.THEME, Theme.WHITE.name());
+		Settings.SettingsValue theme = this.settings.getValueOrDefault(Settings.GLOBAL_NS, Settings.SETTINGS, Settings.THEME, Theme.WHITE.name());
 		Common.setTheme(Theme.valueOf(theme.getValue().toUpperCase()));
 	}
 
 	public String nameOtherShortcut(String value, String currentKey)
 	{
-		return this.settings.getValues(Settings.GLOBAL_NS, SHORTCUTS_NAME).stream()
+		return this.settings.getValues(Settings.GLOBAL_NS, Settings.SHORTCUTS_NAME).stream()
 				.filter(sv -> sv.getValue().equals(value))
 				.map(SettingsValue::getKey)
 				.filter(key -> !key.equals(currentKey))
@@ -213,14 +166,14 @@ public class SettingsPanel
 
 	public static boolean match(Settings settings, KeyEvent event, String shortcutName)
 	{
-		List<SettingsValue> values = settings.getValues(Settings.GLOBAL_NS, SHORTCUTS_NAME);
+		List<SettingsValue> values = settings.getValues(Settings.GLOBAL_NS, Settings.SHORTCUTS_NAME);
 		Optional<SettingsValue> first = values.stream().filter(value -> value.getKey().equals(shortcutName)).findFirst();
 		return first.isPresent() && KeyCodeCombination.valueOf(first.get().getValue()).match(event);
 	}
 
 	public static String getShortcutName(Settings settings, String shortcutName)
 	{
-		SettingsValue value = settings.getValue(Settings.GLOBAL_NS, SHORTCUTS_NAME, shortcutName);
+		SettingsValue value = settings.getValue(Settings.GLOBAL_NS, Settings.SHORTCUTS_NAME, shortcutName);
 		if (value == null)
 		{
 			return "";

@@ -27,6 +27,7 @@ import com.exactprosystems.jf.tool.matrix.MatrixFx;
 import com.exactprosystems.jf.tool.matrix.schedule.RunnerScheduler;
 import com.exactprosystems.jf.tool.settings.SettingsPanel;
 import javafx.application.Platform;
+import javafx.collections.MapChangeListener;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
@@ -36,6 +37,7 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
@@ -46,9 +48,11 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.net.URL;
 import java.util.Collection;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class MainController implements Initializable, ContainingParent
 {
@@ -89,9 +93,12 @@ public class MainController implements Initializable, ContainingParent
 
 	public MenuItem editSettings;
 	public MenuItem				viewStore;
+	public MenuItem viewShowTabs;
 
 	public Menu					menuMatrix;
 	public MenuItem				matrixSchedule;
+	public MenuItem matrixStart;
+	public MenuItem matrixStop;
 
 	public MenuItem				gitCommit;
 	public MenuItem				gitPull;
@@ -167,24 +174,44 @@ public class MainController implements Initializable, ContainingParent
 	{
 		Platform.runLater(() -> Common.tryCatch(() ->
 		{
-			//TODO add shortcut for tooltip
-			this.btnSaveAsDocument.setTooltip(new Tooltip("Save as"));
-			this.btnSaveDocument.setTooltip(new Tooltip("Save"));
+			this.btnSaveAsDocument.setTooltip(new Tooltip("Save as\n"+shortcutsName(Settings.SAVE_DOCUMENT_AS)));
+			this.btnSaveDocument.setTooltip(new Tooltip("Save\n"+shortcutsName(Settings.SAVE_DOCUMENT)));
 			this.btnOpenMatrix.setTooltip(new Tooltip("Open matrix"));
 			this.btnNewMatrix.setTooltip(new Tooltip("New matrix"));
 			this.btnOpenMainLog.setTooltip(new Tooltip("Show log"));
 			this.btnShowCalculator.setTooltip(new Tooltip("Show calculator\n"));
-			this.btnUndo.setTooltip(new Tooltip("Undo\n" + Common.getShortcutTooltip(settings, SettingsPanel.UNDO)));
-			this.btnRedo.setTooltip(new Tooltip("Redo\n" + Common.getShortcutTooltip(settings, SettingsPanel.REDO)));
+			this.btnUndo.setTooltip(new Tooltip("Undo\n" + shortcutsName(Settings.UNDO)));
+			this.btnRedo.setTooltip(new Tooltip("Redo\n" + shortcutsName(Settings.REDO)));
 
 			this.editUndo.setGraphic(new ImageView(new Image(CssVariables.Icons.UNDO_ICON_SMALL)));
+			this.editUndo.setAccelerator(Common.getShortcut(settings, Settings.UNDO));
+
 			this.editRedo.setGraphic(new ImageView(new Image(CssVariables.Icons.REDO_ICON_SMALL)));
+			this.editRedo.setAccelerator(Common.getShortcut(settings, Settings.REDO));
+
 			this.matrixSchedule.setGraphic(new ImageView(new Image(CssVariables.Icons.SCHEDULER_MATRIX_ICON)));
 
 			this.editSettings.setGraphic(new ImageView(new Image(CssVariables.Icons.SHOW_SETTINGS_ICON)));
 			this.helpActionsHelp.setGraphic(new ImageView(new Image(CssVariables.Icons.ACTIONS_HELP_ICON)));
 			this.helpAboutProgram.setGraphic(new ImageView(new Image(CssVariables.Icons.ABOUT_PROGRAM_ICON)));
+
+			this.fileSave.setAccelerator(Common.getShortcut(settings, Settings.SAVE_DOCUMENT));
+			this.fileSaveAs.setAccelerator(Common.getShortcut(settings, Settings.SAVE_DOCUMENT_AS));
+
+			this.viewShowTabs.setAccelerator(Common.getShortcut(settings, Settings.SHOW_ALL_TABS));
+
+			this.matrixStart.setAccelerator(Common.getShortcut(settings, Settings.START_MATRIX));
+			this.matrixStop.setAccelerator(Common.getShortcut(settings, Settings.STOP_MATRIX));
 		}, "Error on set tooltips or images"));
+	}
+
+	private String shortcutsName(String shortName)
+	{
+		return Stream.of(Common.getShortcut(settings, shortName))
+				.filter(Objects::nonNull)
+				.map(KeyCombination::toString)
+				.findFirst()
+				.orElse("");
 	}
 
 	@Override
@@ -196,9 +223,17 @@ public class MainController implements Initializable, ContainingParent
 	public void display()
 	{
 		Scene scene = new Scene(this.pane, PANE_WIDTH, PANE_HEIGHT);
+		scene.getAccelerators().addListener((MapChangeListener<KeyCombination, Runnable>) change ->
+		{
+			this.settings.getRemovedShortcuts()
+					.stream()
+					.filter(key -> change.getKey().equals(key))
+					.findFirst()
+					.ifPresent(scene.getAccelerators()::remove);
+		});
 		scene.getStylesheets().addAll(Common.currentThemesPaths());
 		this.stage.setScene(scene);
-		SettingsValue value = settings.getValueOrDefault(Settings.GLOBAL_NS, SettingsPanel.SETTINGS, Main.USE_FULL_SCREEN, "false");
+		SettingsValue value = settings.getValueOrDefault(Settings.GLOBAL_NS, Settings.SETTINGS, Settings.USE_FULL_SCREEN, "false");
 		this.stage.setFullScreen(Boolean.parseBoolean(value.getValue()));
 		this.model.changeDocument(null);
 		this.stage.show();
@@ -389,12 +424,12 @@ public class MainController implements Initializable, ContainingParent
 
 	public void undo(ActionEvent actionEvent)
 	{
-		Common.tryCatch(() -> this.model.undo(currentDocument()), "Error on save document");
+		Common.tryCatch(() -> this.model.undo(currentDocument()), "Error on undo document");
 	}
 
 	public void redo(ActionEvent actionEvent)
 	{
-		Common.tryCatch(() -> this.model.redo(currentDocument()), "Error on save document");
+		Common.tryCatch(() -> this.model.redo(currentDocument()), "Error on redo document");
 	}
 	//endregion
 
@@ -515,28 +550,28 @@ public class MainController implements Initializable, ContainingParent
 			{
 				return;
 			}
-			else if (SettingsPanel.match(settings, keyEvent, SettingsPanel.SHOW_ALL_TABS))
+			else if (SettingsPanel.match(settings, keyEvent, Settings.SHOW_ALL_TABS))
 			{
 				showAllTabs();
 			}
-			else if (SettingsPanel.match(settings, keyEvent, SettingsPanel.SAVE_DOCUMENT))
+			else if (SettingsPanel.match(settings, keyEvent, Settings.SAVE_DOCUMENT))
 			{
 				saveDocument(null);
 			}
-			else if (SettingsPanel.match(settings, keyEvent, SettingsPanel.SAVE_DOCUMENT_AS))
+			else if (SettingsPanel.match(settings, keyEvent, Settings.SAVE_DOCUMENT_AS))
 			{
 				saveAsDocument(null);
 			}
 			else
 			{
-				if (SettingsPanel.match(settings, keyEvent, SettingsPanel.UNDO))
+				if (SettingsPanel.match(settings, keyEvent, Settings.UNDO))
 				{
 					if (!(keyEvent.getTarget() instanceof TextInputControl))
 					{
 						undo(null);
 					}
 				}
-				else if (SettingsPanel.match(settings, keyEvent, SettingsPanel.REDO))
+				else if (SettingsPanel.match(settings, keyEvent, Settings.REDO))
 				{
 					if (!(keyEvent.getTarget() instanceof TextInputControl))
 					{
@@ -582,16 +617,16 @@ public class MainController implements Initializable, ContainingParent
 
 	public void disableMenu(boolean flag)
 	{
-		fileLoad.setDisable(flag);
-		fileNew.setDisable(flag);
-		fileSave.setDisable(flag);
-		fileSaveAs.setDisable(flag);
-		fileSaveAll.setDisable(flag);
-		fileLastOpenMatrix.setDisable(flag);
-		viewStore.setDisable(flag);
-		menuEdit.setDisable(flag);
-		menuMatrix.setDisable(flag);
-		fileRunFromFile.setDisable(flag);
+		this.fileLoad.setDisable(flag);
+		this.fileNew.setDisable(flag);
+		this.fileSave.setDisable(flag);
+		this.fileSaveAs.setDisable(flag);
+		this.fileSaveAll.setDisable(flag);
+		this.fileLastOpenMatrix.setDisable(flag);
+		this.viewStore.setDisable(flag);
+		this.menuEdit.setDisable(flag);
+		this.menuMatrix.setDisable(flag);
+		this.fileRunFromFile.setDisable(flag);
 	}
 
 	public void isGit(boolean flag)

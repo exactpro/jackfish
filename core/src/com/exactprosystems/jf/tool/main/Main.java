@@ -39,9 +39,7 @@ import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper.OpenSaveMode;
 import com.exactprosystems.jf.tool.matrix.MatrixFx;
 import com.exactprosystems.jf.tool.newconfig.ConfigurationFx;
-import com.exactprosystems.jf.tool.newconfig.ConfigurationTreeView;
 import com.exactprosystems.jf.tool.newconfig.wizard.WizardConfiguration;
-import com.exactprosystems.jf.tool.settings.SettingsPanel;
 import com.exactprosystems.jf.tool.settings.Theme;
 import com.exactprosystems.jf.tool.text.PlainTextFx;
 import com.jcraft.jsch.JSch;
@@ -74,22 +72,10 @@ public class Main extends Application
 
 	private static final Logger logger = Logger.getLogger(Main.class);
 
-	public static final String	MAX_FILES_COUNT		= "maxFilesCount";
-	public static final String	TIME_NOTIFICATION	= "timeNotification";
-	public static final String	USE_FULL_SCREEN		= "useFullScreen";
-	public static final String	THEME				= "theme";
-	public static final String	USE_SMALL_WINDOW	= "useSmallWindow";
-	public static final String 	OPENED 				= "OPENED";
-	public static final String 	MAIN_NS 			= "MAIN";
-	public static final String	MATRIX_TOOLBAR		= "MATRIX_TOOLBAR";
-
-	public static final String	DEFAULT_MAX_FILES_COUNT		= "3";
-
 	private static String configName = null;
 
 	private Preloader preloader;
 	private MainController controller;
-//	private RunnerScheduler runnerListener;
 
 	private Configuration config;
 	private Settings settings;
@@ -145,7 +131,7 @@ public class Main extends Application
 		{
 			this.factory = new FxDocumentFactory(Main.this);
 			this.settings = this.factory.getSettings();
-			DialogsHelper.setTimeNotification(Integer.parseInt(this.settings.getValueOrDefault(Settings.GLOBAL_NS, SettingsPanel.SETTINGS, Main.TIME_NOTIFICATION, "5").getValue()));
+			DialogsHelper.setTimeNotification(Integer.parseInt(this.settings.getValueOrDefault(Settings.GLOBAL_NS, Settings.SETTINGS, Settings.TIME_NOTIFICATION, "5").getValue()));
 		}
 		catch (Exception e)
 		{
@@ -155,7 +141,7 @@ public class Main extends Application
 		}
 
 		Common.node = stage;
-		Settings.SettingsValue theme = this.settings.getValueOrDefault(Settings.GLOBAL_NS, SettingsPanel.SETTINGS, Main.THEME, Theme.WHITE.name());
+		Settings.SettingsValue theme = this.settings.getValueOrDefault(Settings.GLOBAL_NS, Settings.SETTINGS, Settings.THEME, Theme.WHITE.name());
 		Common.setTheme(Theme.valueOf(theme.getValue().toUpperCase()));
 		this.preloader = new Preloader();
 		this.preloader.show();
@@ -182,7 +168,7 @@ public class Main extends Application
 
 					controller.clearLastMatrixMenu();
 
-					Collection<SettingsValue> list = settings.getValues(MAIN_NS, DocumentKind.MATRIX.toString());
+					Collection<SettingsValue> list = settings.getValues(Settings.MAIN_NS, DocumentKind.MATRIX.toString());
 					controller.updateFileLastMatrix(list);
 				}
 				return null;
@@ -212,11 +198,11 @@ public class Main extends Application
 			controller.initShortcuts();
 			try
 			{
-				for (SettingsValue item : settings.getValues(MAIN_NS, MATRIX_TOOLBAR))
+				for (SettingsValue item : settings.getValues(Settings.MAIN_NS, Settings.MATRIX_TOOLBAR))
 				{
 					this.addToToolbar(item.getKey());
 				}
-				for (SettingsValue item : settings.getValues(MAIN_NS, OPENED))
+				for (SettingsValue item : settings.getValues(Settings.MAIN_NS, Settings.OPENED))
 				{
 					DocumentKind kind = DocumentKind.valueOf(item.getValue());
 					if (kind != null)
@@ -253,7 +239,7 @@ public class Main extends Application
 						}
 						catch (FileNotFoundException e)
 						{
-							settings.remove(MAIN_NS, OPENED, file.getAbsolutePath());
+							settings.remove(Settings.MAIN_NS, Settings.OPENED, file.getAbsolutePath());
 							settings.saveIfNeeded();
 						}
 					}
@@ -370,8 +356,8 @@ public class Main extends Application
 	public CredentialBean getCredential()
 	{
 		checkCredential();
-		SettingsValue idRsa = this.settings.getValueOrDefault("GLOBAL", SettingsPanel.GIT, SettingsPanel.GIT_SSH_IDENTITY, "");
-		SettingsValue knownHosts = this.settings.getValueOrDefault("GLOBAL", SettingsPanel.GIT, SettingsPanel.GIT_KNOWN_HOST, "");
+		SettingsValue idRsa = this.settings.getValueOrDefault("GLOBAL", Settings.GIT, Settings.GIT_SSH_IDENTITY, "");
+		SettingsValue knownHosts = this.settings.getValueOrDefault("GLOBAL", Settings.GIT, Settings.GIT_KNOWN_HOST, "");
 		return new CredentialBean(this.username, this.password, idRsa.getValue(), knownHosts.getValue());
 	}
 
@@ -558,10 +544,10 @@ public class Main extends Application
 			DialogsHelper.showInfo(document.getName() + " is saved successfully.");
 			if (document instanceof Matrix)
 			{
-				this.settings.remove(MAIN_NS, DocumentKind.MATRIX.name(), new File(lastName).getName());
-				this.settings.setValue(MAIN_NS, DocumentKind.MATRIX.name(), new File(document.getName()).getName(), newName);
+				this.settings.remove(Settings.MAIN_NS, DocumentKind.MATRIX.name(), new File(lastName).getName());
+				this.settings.setValue(Settings.MAIN_NS, DocumentKind.MATRIX.name(), new File(document.getName()).getName(), newName);
 				this.settings.saveIfNeeded();
-				this.controller.updateFileLastMatrix(this.settings.getValues(MAIN_NS, DocumentKind.MATRIX.name()));
+				this.controller.updateFileLastMatrix(this.settings.getValues(Settings.MAIN_NS, DocumentKind.MATRIX.name()));
 			}
 		}
 	}
@@ -596,12 +582,18 @@ public class Main extends Application
 
 	public void undo(Document document) throws Exception
 	{
-		document.undo();
+		if (document != null)
+		{
+			document.undo();
+		}
 	}
 
 	public void redo(Document document) throws Exception
 	{
-		document.redo();
+		if (document != null)
+		{
+			document.redo();
+		}
 	}
 
 	public void changeDocument(Document document)
@@ -684,7 +676,7 @@ public class Main extends Application
 		if (!this.toolbarMatrices.contains(fullPath))
 		{
 			this.controller.addToToolbar(fullPath);
-			this.settings.setValue(MAIN_NS, MATRIX_TOOLBAR, new File(fullPath).getAbsolutePath(), new File(fullPath).getAbsolutePath());
+			this.settings.setValue(Settings.MAIN_NS, Settings.MATRIX_TOOLBAR, new File(fullPath).getAbsolutePath(), new File(fullPath).getAbsolutePath());
 			this.settings.saveIfNeeded();
 		}
 	}
@@ -692,7 +684,7 @@ public class Main extends Application
 	public void removeFromToolbar(String fullPath) throws Exception
 	{
 		this.toolbarMatrices.remove(fullPath);
-		this.settings.remove(MAIN_NS, MATRIX_TOOLBAR, fullPath);
+		this.settings.remove(Settings.MAIN_NS, Settings.MATRIX_TOOLBAR, fullPath);
 		this.settings.saveIfNeeded();
 	}
 
@@ -700,7 +692,7 @@ public class Main extends Application
 
 	public void clearFileLastOpenMatrix() throws Exception
 	{
-		this.settings.removeAll(MAIN_NS, DocumentKind.MATRIX.toString());
+		this.settings.removeAll(Settings.MAIN_NS, DocumentKind.MATRIX.toString());
 		this.settings.saveIfNeeded();
 
 		this.controller.clearLastMatrixMenu();
@@ -846,13 +838,13 @@ public class Main extends Application
 
 			doc.display();
 			doc.saved();
-			SettingsValue maxSettings = this.settings.getValueOrDefault(Settings.GLOBAL_NS, SettingsPanel.SETTINGS, MAX_FILES_COUNT, DEFAULT_MAX_FILES_COUNT);
+			SettingsValue maxSettings = this.settings.getValueOrDefault(Settings.GLOBAL_NS, Settings.SETTINGS, Settings.MAX_LAST_COUNT, "3");
 			int max = Integer.parseInt(maxSettings.getValue());
-			this.settings.setValue(MAIN_NS, kind.toString(), new File(doc.getName()).getName(), max, doc.getName());
+			this.settings.setValue(Settings.MAIN_NS, kind.toString(), new File(doc.getName()).getName(), max, doc.getName());
 			this.settings.saveIfNeeded();
 			if (kind == DocumentKind.MATRIX)
 			{
-				this.controller.updateFileLastMatrix(this.settings.getValues(MAIN_NS, kind.toString()));
+				this.controller.updateFileLastMatrix(this.settings.getValues(Settings.MAIN_NS, kind.toString()));
 			}
 			return doc;
 		}
@@ -867,9 +859,9 @@ public class Main extends Application
 
 	public void removeMatrixFromSettings(String key) throws Exception
 	{
-		this.settings.remove(MAIN_NS, DocumentKind.MATRIX.name(), key);
+		this.settings.remove(Settings.MAIN_NS, DocumentKind.MATRIX.name(), key);
 		this.settings.saveIfNeeded();
-		this.controller.updateFileLastMatrix(this.settings.getValues(MAIN_NS, DocumentKind.MATRIX.name()));
+		this.controller.updateFileLastMatrix(this.settings.getValues(Settings.MAIN_NS, DocumentKind.MATRIX.name()));
 	}
 
 	private void createDocument(Document doc) throws Exception
@@ -956,8 +948,8 @@ public class Main extends Application
 		public CustomJschConfigSessionFactory(Settings settings)
 		{
 			this.settings = settings;
-			SettingsValue idRsa = this.settings.getValue("GLOBAL", SettingsPanel.GIT, SettingsPanel.GIT_SSH_IDENTITY);
-			SettingsValue knownHosts = this.settings.getValue("GLOBAL", SettingsPanel.GIT, SettingsPanel.GIT_KNOWN_HOST);
+			SettingsValue idRsa = this.settings.getValue("GLOBAL", Settings.GIT, Settings.GIT_SSH_IDENTITY);
+			SettingsValue knownHosts = this.settings.getValue("GLOBAL", Settings.GIT, Settings.GIT_KNOWN_HOST);
 			this.isValid = idRsa != null && knownHosts != null;
 			if (this.isValid)
 			{

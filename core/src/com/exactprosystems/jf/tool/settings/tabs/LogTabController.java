@@ -1,5 +1,6 @@
 package com.exactprosystems.jf.tool.settings.tabs;
 
+import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.settings.SettingsPanel;
 import javafx.fxml.Initializable;
@@ -75,6 +76,6 @@ public class LogTabController implements Initializable, ContainingParent, ITabHe
 
 	public void save()
 	{
-		this.colorLogsMap.entrySet().forEach(entry -> this.model.updateSettingsValue(entry.getKey(), SettingsPanel.LOGS_NAME, entry.getValue().getValue().toString()));
+		this.colorLogsMap.entrySet().forEach(entry -> this.model.updateSettingsValue(entry.getKey(), Settings.LOGS_NAME, entry.getValue().getValue().toString()));
 	}
 }
