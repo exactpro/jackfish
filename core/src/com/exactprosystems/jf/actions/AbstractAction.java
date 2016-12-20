@@ -128,7 +128,7 @@ public abstract class AbstractAction implements Cloneable
     }
 
     public final Result doAction(Context context, AbstractEvaluator evaluator,
-                                 ReportBuilder report, Parameters parameters, String id, Parameter assertBool)
+                                 ReportBuilder report, Parameters parameters, String actionId, Parameter assertBool)
     {
         try
         {
@@ -137,11 +137,11 @@ public abstract class AbstractAction implements Cloneable
             clearResults();
             this.action.In = parameters;
             evaluator.getLocals().set(Tokens.This.get(), this.action);
-			if (!Str.IsNullOrEmpty(id))
+			if (!Str.IsNullOrEmpty(actionId))
 			{
 				Supplier<Variables> variables = owner.isGlobal() ? evaluator::getGlobals : evaluator::getLocals;
 				Consumer<String> consumer = str -> variables.get().set(str, this.action);
-				consumer.accept(id);
+				consumer.accept(actionId);
 			}
 
     		boolean parametersAreCorrect = parameters.evaluateAll(evaluator);
