@@ -11,6 +11,8 @@ package com.exactprosystems.jf.common;
 import com.exactprosystems.jf.api.app.Mutable;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.documents.matrix.parser.items.MutableArrayList;
+import com.exactprosystems.jf.tool.Common;
+import javafx.scene.input.KeyCombination;
 import org.apache.log4j.Logger;
 
 import javax.xml.bind.JAXBContext;
@@ -21,12 +23,89 @@ import java.io.*;
 import java.util.*;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @XmlRootElement(name = "settings")
 @XmlAccessorType(XmlAccessType.NONE)
 public class Settings
 {
 	public final static String SettingsPath	= ".settings.xml";
+
+	public static final String	FONT			= "Font";
+	public static final String	SETTINGS 		= "Main";
+	public static final String	LOGS_NAME		= "Logs";
+	public static final String	SHORTCUTS_NAME	= "Shortcuts";
+	public static final String	MATRIX_COLORS	= "MatrixColors";
+	public static final String	GIT				= "Git";
+
+	//region Shortcuts
+	//other shortcuts
+	public static final String SHOW_ALL_TABS	= "ShowAllTabs";
+
+	//document shortcuts
+	public static final String SAVE_DOCUMENT	= "SaveDocument";
+	public static final String SAVE_DOCUMENT_AS	= "SaveDocumentAs";
+	public static final String UNDO				= "Undo";
+	public static final String REDO				= "Redo";
+
+	//matrix navigation shortcuts
+	public static final String ADD_CHILD		= "AddChild";
+	public static final String ADD_BEFORE		= "AddBefore";
+	public static final String ADD_AFTER		= "AddAfter";
+	public static final String BREAK_POINT		= "BreakPoint";
+	public static final String ADD_PARAMETER	= "AddParameter";
+	public static final String HELP				= "Help";
+	public static final String GO_TO_LINE		= "GoToLine";
+	public static final String SHOW_ALL			= "ShowAll";
+	public static final String DELETE_ITEM		= "DeleteItem";
+	public static final String COPY_ITEMS		= "CopyItems";
+	public static final String PASTE_ITEMS_CHILD = "PasteItemsToChild";
+	public static final String PASTE_ITEMS_AFTER = "PasteItemsAfter";
+	public static final String PASTE_ITEMS_BEFORE = "PasteItemsBefore";
+	public static final String COLLAPSE_ALL		= "CollapseAll";
+	public static final String COLLAPSE_ONE		= "CollapseOne";
+	public static final String EXPAND_ALL		= "ExpandAll";
+	public static final String EXPAND_ONE		= "ExpandOne";
+
+	//matrix actions shortcuts
+	public static final String START_MATRIX		= "StartMatrix";
+	public static final String STOP_MATRIX		= "StopMatrix";
+	public static final String PAUSE_MATRIX		= "PauseMatrix";
+	public static final String SHOW_RESULT		= "ShowResult";
+	public static final String SHOW_WATCH		= "ShowWatch";
+	public static final String TRACING			= "Tracing";
+	public static final String FIND_ON_MATRIX	= "FindOnMatrix";
+	//endregion
+
+	//region Main
+	public static final String	MAX_LAST_COUNT = "maxFilesCount";
+	public static final String	TIME_NOTIFICATION = "timeNotification";
+	public static final String	THEME = "theme";
+	public static final String	USE_FULL_SCREEN	= "useFullScreen";
+	public static final String	USE_COMPACT_MODE = "useCompactMode";
+	public static final String	USE_FULLSCREEN_XPATH = "useFullScreenXpath";
+	public static final String	COPYRIGHT = "copyright";
+	//endregion
+
+	//region Logs
+	public static final String	ALL = "ALL";
+	public static final String	DEBUG = "DEBUG";
+	public static final String	ERROR = "ERROR";
+	public static final String	FATAL = "FATAL";
+	public static final String	INFO = "INFO";
+	public static final String	TRACE = "TRACE";
+	public static final String	WARN = "WARN";
+	//endregion
+
+	//region Git
+	//git
+	public static final String GIT_SSH_IDENTITY	= "gitSshIdentity";
+	public static final String GIT_KNOWN_HOST	= "gitKnownHost";
+	//endregion
+
+	public static final String 	OPENED 				= "OPENED";
+	public static final String 	MAIN_NS 			= "MAIN";
+	public static final String	MATRIX_TOOLBAR		= "MATRIX_TOOLBAR";
 
 	private static final Class<?>[] jaxbContextClasses = { Settings.class, SettingsValue.class };
 
@@ -211,44 +290,40 @@ public class Settings
 	{
 		Settings settings = new Settings();
 		settings.setMapValues(GLOBAL_NS, "Logs", mapOf(
-				"ALL", "0x000000ff",
-				"DEBUG", "0x334db3ff",
-				"ERROR", "0xcc3333ff",
-				"FATAL", "0xcc3333ff",
-				"INFO", "0x336633ff",
-				"TRACE", "0x8066ccff",
-				"WARN", "0xe64d4dff"
+				ALL, "0x000000ff",
+				DEBUG, "0x334db3ff",
+				ERROR, "0xcc3333ff",
+				FATAL, "0xcc3333ff",
+				INFO, "0x336633ff",
+				TRACE, "0x8066ccff",
+				WARN, "0xe64d4dff"
 		));
 		settings.setMapValues(GLOBAL_NS, "Main", mapOf(
-				"maxFilesNumber","10",
-				"maxFilesCount","10",
-				"useDefaultBrowser","false",
-				"useFullScreen","false",
-				"useCompactMode","false",
-				"timeNotification","5",
-				"theme","WHITE",
-				"copyright","//==============================================\\n//  Copyright (c) 2009-2016, Exactpro Systems, LLC\\n//  Quality Assurance &amp; Related Development for Innovative " +
+				MAX_LAST_COUNT,"10",
+				USE_FULL_SCREEN,"false",
+				USE_COMPACT_MODE,"false",
+				TIME_NOTIFICATION,"5",
+				THEME,"WHITE",
+				COPYRIGHT,"//==============================================\\n//  Copyright (c) 2009-2016, Exactpro Systems, LLC\\n//  Quality Assurance &amp; Related Development for Innovative " +
 						"Trading Systems.\\n//  All rights reserved.\\n//  This is unpublished, licensed software, confidential and proprietary\\n//  information which is the property of Exactpro Systems, LLC or its licensors.\\n//==============================================",
-				"useFullScreenXpath","false"
+				USE_FULLSCREEN_XPATH,"false"
 		));
-		settings.setValue(GLOBAL_NS, "Main", "Font", "System$13");
+		settings.setValue(GLOBAL_NS, "Main", FONT, "System$13");
 		settings.setMapValues(GLOBAL_NS, "Shortcuts", mapOf(
-				"FindOnMatrix","Ctrl+F",
-				"ShowLog","Ctrl+O",
-				"OpenMatrix","Ctrl+Alt+M",
-				"ShowAllTabs","Ctrl+E",
-				"SaveDocument","Ctrl+S",
-				"SaveDocumentAs","Shift+Ctrl+S",
-				"BreakPoint","Ctrl+B",
-				"DeleteItem","Delete",
-				"ExpandOne","Ctrl+Equals",
-				"CollapseAll","Shift+Ctrl+Minus",
-				"CollapseOne","Ctrl+Minus",
-				"ExpandAll","Shift+Ctrl+Equals",
-				"ShowAll","Ctrl+Q",
-				"GoToLine","Ctrl+G",
-				"Undo","Ctrl+Z",
-				"Redo","Shift+Ctrl+Z"
+				FIND_ON_MATRIX,"Ctrl+F",
+				SHOW_ALL_TABS,"Ctrl+E",
+				SAVE_DOCUMENT,"Ctrl+S",
+				SAVE_DOCUMENT_AS,"Shift+Ctrl+S",
+				BREAK_POINT,"Ctrl+B",
+				DELETE_ITEM,"Delete",
+				EXPAND_ONE,"Ctrl+Equals",
+				COLLAPSE_ALL,"Shift+Ctrl+Minus",
+				COLLAPSE_ONE,"Ctrl+Minus",
+				EXPAND_ALL,"Shift+Ctrl+Equals",
+				SHOW_ALL,"Ctrl+Q",
+				GO_TO_LINE,"Ctrl+G",
+				UNDO,"Ctrl+Z",
+				REDO,"Shift+Ctrl+Z"
 		));
 		return settings;
 	}
@@ -445,6 +520,39 @@ public class Settings
 	public synchronized void clear()
 	{
 		this.values.clear();
+	}
+
+	public synchronized List<KeyCombination> getRemovedShortcuts()
+	{
+		return Stream.of(
+				ADD_CHILD,
+				ADD_BEFORE,
+				ADD_AFTER,
+				BREAK_POINT,
+				ADD_PARAMETER,
+				HELP,
+				GO_TO_LINE,
+				SHOW_ALL,
+				DELETE_ITEM,
+				COPY_ITEMS,
+				PASTE_ITEMS_CHILD,
+				PASTE_ITEMS_AFTER,
+				PASTE_ITEMS_BEFORE,
+				COLLAPSE_ALL,
+				COLLAPSE_ONE,
+				EXPAND_ALL,
+				EXPAND_ONE,
+				START_MATRIX,
+				STOP_MATRIX,
+				PAUSE_MATRIX,
+				SHOW_RESULT,
+				SHOW_WATCH,
+				TRACING,
+				FIND_ON_MATRIX
+		)
+				.map(s -> Common.getShortcut(this, s))
+				.filter(Objects::nonNull)
+				.collect(Collectors.toList());
 	}
 
 	private final static Logger logger = Logger.getLogger(Settings.class);

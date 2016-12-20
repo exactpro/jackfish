@@ -1,5 +1,6 @@
 package com.exactprosystems.jf.tool.settings.tabs;
 
+import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.custom.controls.field.CustomFieldWithButton;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
@@ -62,8 +63,8 @@ public class GitTabController implements Initializable, ContainingParent, ITabHe
 
 	public void displayInfo(Map<String, String> collect)
 	{
-		this.cfKnownHost.setText(collect.getOrDefault(SettingsPanel.GIT_KNOWN_HOST, ""));
-		this.cfSSHIdentity.setText(collect.getOrDefault(SettingsPanel.GIT_SSH_IDENTITY, ""));
+		this.cfKnownHost.setText(collect.getOrDefault(Settings.GIT_KNOWN_HOST, ""));
+		this.cfSSHIdentity.setText(collect.getOrDefault(Settings.GIT_SSH_IDENTITY, ""));
 	}
 
 	public void displayInto(Tab tab)
@@ -82,7 +83,7 @@ public class GitTabController implements Initializable, ContainingParent, ITabHe
 
 	public void save()
 	{
-		this.model.updateSettingsValue(SettingsPanel.GIT_KNOWN_HOST, SettingsPanel.GIT, this.cfKnownHost.getText());
-		this.model.updateSettingsValue(SettingsPanel.GIT_SSH_IDENTITY, SettingsPanel.GIT, this.cfSSHIdentity.getText());
+		this.model.updateSettingsValue(Settings.GIT_KNOWN_HOST, Settings.GIT, this.cfKnownHost.getText());
+		this.model.updateSettingsValue(Settings.GIT_SSH_IDENTITY, Settings.GIT, this.cfSSHIdentity.getText());
 	}
 }

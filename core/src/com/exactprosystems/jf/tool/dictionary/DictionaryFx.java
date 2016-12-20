@@ -23,7 +23,6 @@ import com.exactprosystems.jf.tool.ApplicationConnector;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.dictionary.DictionaryFxController.Result;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
-import com.exactprosystems.jf.tool.main.Main;
 
 import javafx.concurrent.Task;
 import javafx.scene.control.ButtonType;
@@ -1079,11 +1078,11 @@ public class DictionaryFx extends GuiDictionary
 		String idAppEntry = this.currentAdapter;
 		if (!Str.IsNullOrEmpty(idAppEntry))
 		{
-			settings.setValue(Main.MAIN_NS, DIALOG_DICTIONARY_SETTINGS, absolutePath, idAppEntry);
+			settings.setValue(Settings.MAIN_NS, DIALOG_DICTIONARY_SETTINGS, absolutePath, idAppEntry);
 		}
 		else
 		{
-			settings.remove(Main.MAIN_NS, DIALOG_DICTIONARY_SETTINGS, absolutePath);
+			settings.remove(Settings.MAIN_NS, DIALOG_DICTIONARY_SETTINGS, absolutePath);
 		}
 		settings.saveIfNeeded();
 	}
@@ -1091,7 +1090,7 @@ public class DictionaryFx extends GuiDictionary
 	private void restoreSettings(Settings settings)
 	{
 		String absolutePath = new File(this.getName()).getAbsolutePath();
-		Settings.SettingsValue value = settings.getValue(Main.MAIN_NS, DIALOG_DICTIONARY_SETTINGS, absolutePath);
+		Settings.SettingsValue value = settings.getValue(Settings.MAIN_NS, DIALOG_DICTIONARY_SETTINGS, absolutePath);
 		Optional.ofNullable(value).ifPresent(s -> {
 			String idApp = s.getValue();
 			this.applicationConnector.setIdAppEntry(idApp);

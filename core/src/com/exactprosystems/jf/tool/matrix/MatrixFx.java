@@ -30,7 +30,6 @@ import com.exactprosystems.jf.functions.Text;
 import com.exactprosystems.jf.tool.ApplicationConnector;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
-import com.exactprosystems.jf.tool.main.Main;
 import javafx.scene.control.ButtonType;
 import javafx.util.Pair;
 import org.apache.log4j.Logger;
@@ -832,27 +831,27 @@ public class MatrixFx extends Matrix
 		if (breakPoints.isEmpty())
 		{
 			//if matrix was present and don't have breakpoint - remove it;
-			settings.remove(Main.MAIN_NS, DIALOG_BREAKPOINT, absolutePathMatrix);
+			settings.remove(Settings.MAIN_NS, DIALOG_BREAKPOINT, absolutePathMatrix);
 		}
 		else
 		{
-			settings.setValue(Main.MAIN_NS, DIALOG_BREAKPOINT, absolutePathMatrix, breakPoints.stream().map(Object::toString).collect(Collectors.joining(DELIMITER)));
+			settings.setValue(Settings.MAIN_NS, DIALOG_BREAKPOINT, absolutePathMatrix, breakPoints.stream().map(Object::toString).collect(Collectors.joining(DELIMITER)));
 		}
 
 		if (Str.areEqual(this.defaultAppId, EMPTY_STRING) && Str.areEqual(this.defaultClientId, EMPTY_STRING))
 		{
-			settings.remove(Main.MAIN_NS, DIALOG_DEFAULTS, absolutePathMatrix);
+			settings.remove(Settings.MAIN_NS, DIALOG_DEFAULTS, absolutePathMatrix);
 		}
 		else
 		{
-			settings.setValue(Main.MAIN_NS, DIALOG_DEFAULTS, absolutePathMatrix, this.defaultAppId + DELIMITER + this.defaultClientId);
+			settings.setValue(Settings.MAIN_NS, DIALOG_DEFAULTS, absolutePathMatrix, this.defaultAppId + DELIMITER + this.defaultClientId);
 		}
 		settings.saveIfNeeded();
 	}
 
 	private void restoreSettings(Settings settings)
 	{
-		Settings.SettingsValue breakPoints = settings.getValue(Main.MAIN_NS, DIALOG_BREAKPOINT, new File(this.getName()).getAbsolutePath());
+		Settings.SettingsValue breakPoints = settings.getValue(Settings.MAIN_NS, DIALOG_BREAKPOINT, new File(this.getName()).getAbsolutePath());
 		Optional.ofNullable(breakPoints).ifPresent(setting -> {
 			List<Integer> list = Arrays.stream(setting.getValue().split(DELIMITER)).mapToInt(Integer::valueOf).mapToObj(i -> i).collect(Collectors.toList());
 
@@ -864,7 +863,7 @@ public class MatrixFx extends Matrix
 			});
 		});
 
-		Settings.SettingsValue defaults = settings.getValue(Main.MAIN_NS, DIALOG_DEFAULTS, new File(this.getName()).getAbsolutePath());
+		Settings.SettingsValue defaults = settings.getValue(Settings.MAIN_NS, DIALOG_DEFAULTS, new File(this.getName()).getAbsolutePath());
 		if (Objects.isNull(defaults))
 		{
 			this.controller.setDefaultApp(this.defaultAppId);

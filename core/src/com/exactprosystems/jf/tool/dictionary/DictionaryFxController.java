@@ -26,8 +26,6 @@ import com.exactprosystems.jf.tool.dictionary.actions.ActionsController;
 import com.exactprosystems.jf.tool.dictionary.element.ElementInfoController;
 import com.exactprosystems.jf.tool.dictionary.navigation.NavigationController;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
-import com.exactprosystems.jf.tool.main.Main;
-import com.exactprosystems.jf.tool.settings.SettingsPanel;
 import com.exactprosystems.jf.tool.settings.Theme;
 import javafx.application.Platform;
 import javafx.fxml.Initializable;
@@ -111,7 +109,7 @@ public class DictionaryFxController implements Initializable, ContainingParent
 		this.navigationController = Common.loadController(NavigationController.class.getResource("Navigation.fxml"));
 		this.navigationController.init(model, this.mainGridPane, this.settings, this.tab);
 
-		Settings.SettingsValue themePath = this.settings.getValueOrDefault(Settings.GLOBAL_NS, SettingsPanel.SETTINGS, Main.THEME, Theme.WHITE.name());
+		Settings.SettingsValue themePath = this.settings.getValueOrDefault(Settings.GLOBAL_NS, Settings.SETTINGS, Settings.THEME, Theme.WHITE.name());
 		this.elementInfoController = Common.loadController(ElementInfoController.class.getResource("ElementInfo.fxml"));
 		this.elementInfoController.init(model, configuration, this.mainGridPane, this.navigationController, Theme.valueOf(themePath.getValue()).getPath());
 

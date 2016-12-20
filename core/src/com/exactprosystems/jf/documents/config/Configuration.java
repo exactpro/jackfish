@@ -41,7 +41,6 @@ import com.exactprosystems.jf.documents.vars.SystemVars;
 import com.exactprosystems.jf.service.ServicePool;
 import com.exactprosystems.jf.sql.DataBasePool;
 import com.exactprosystems.jf.tool.main.DocumentKind;
-import com.exactprosystems.jf.tool.main.Main;
 import org.apache.log4j.Logger;
 
 import javax.xml.XMLConstants;
@@ -599,7 +598,7 @@ public class Configuration extends AbstractDocument
 		}
 		
 		// save list of all opened documents ...
-		settings.removeAll(Main.MAIN_NS, Main.OPENED);
+		settings.removeAll(Settings.MAIN_NS, Settings.OPENED);
 		settings.saveIfNeeded();
 
 		for (Document doc : copy)
@@ -609,7 +608,7 @@ public class Configuration extends AbstractDocument
 				DocumentKind kind = DocumentKind.byDocument(doc);
 				if (doc.hasName())
 				{
-					settings.setValue(Main.MAIN_NS, Main.OPENED, doc.getName(), kind.toString());
+					settings.setValue(Settings.MAIN_NS, Settings.OPENED, doc.getName(), kind.toString());
 				}
 				doc.close(settings);
 			}

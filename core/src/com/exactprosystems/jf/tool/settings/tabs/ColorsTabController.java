@@ -3,6 +3,7 @@ package com.exactprosystems.jf.tool.settings.tabs;
 import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
 import com.exactprosystems.jf.actions.ActionsList;
+import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.documents.matrix.parser.Tokens;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
@@ -103,11 +104,11 @@ public class ColorsTabController implements Initializable, ContainingParent, ITa
 
 	public void save()
 	{
-		this.model.removeAll(SettingsPanel.MATRIX_COLORS);
+		this.model.removeAll(Settings.MATRIX_COLORS);
 		this.colorsMap.entrySet()
 				.stream()
 				.filter(e -> !e.getValue().equals(Color.TRANSPARENT))
-				.forEach(entry -> this.model.updateSettingsValue(entry.getKey(), SettingsPanel.MATRIX_COLORS, Common.colorToString(entry.getValue())));
+				.forEach(entry -> this.model.updateSettingsValue(entry.getKey(), Settings.MATRIX_COLORS, Common.colorToString(entry.getValue())));
 	}
 
 	//region event methods

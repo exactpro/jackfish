@@ -27,6 +27,7 @@ import com.exactprosystems.jf.tool.matrix.MatrixFx;
 import com.exactprosystems.jf.tool.matrix.schedule.RunnerScheduler;
 import com.exactprosystems.jf.tool.settings.SettingsPanel;
 import javafx.application.Platform;
+import javafx.collections.MapChangeListener;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
@@ -36,6 +37,7 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
@@ -174,8 +176,8 @@ public class MainController implements Initializable, ContainingParent
 			this.btnNewMatrix.setTooltip(new Tooltip("New matrix"));
 			this.btnOpenMainLog.setTooltip(new Tooltip("Show log"));
 			this.btnShowCalculator.setTooltip(new Tooltip("Show calculator\n"));
-			this.btnUndo.setTooltip(new Tooltip("Undo\n" + Common.getShortcutTooltip(settings, SettingsPanel.UNDO)));
-			this.btnRedo.setTooltip(new Tooltip("Redo\n" + Common.getShortcutTooltip(settings, SettingsPanel.REDO)));
+			this.btnUndo.setTooltip(new Tooltip("Undo\n" + Common.getShortcutTooltip(settings, Settings.UNDO)));
+			this.btnRedo.setTooltip(new Tooltip("Redo\n" + Common.getShortcutTooltip(settings, Settings.REDO)));
 
 			this.editUndo.setGraphic(new ImageView(new Image(CssVariables.Icons.UNDO_ICON_SMALL)));
 			this.editRedo.setGraphic(new ImageView(new Image(CssVariables.Icons.REDO_ICON_SMALL)));
@@ -196,9 +198,17 @@ public class MainController implements Initializable, ContainingParent
 	public void display()
 	{
 		Scene scene = new Scene(this.pane, PANE_WIDTH, PANE_HEIGHT);
+		scene.getAccelerators().addListener((MapChangeListener<KeyCombination, Runnable>) change ->
+		{
+			this.settings.getRemovedShortcuts()
+					.stream()
+					.filter(key -> change.getKey().equals(key))
+					.findFirst()
+					.ifPresent(scene.getAccelerators()::remove);
+		});
 		scene.getStylesheets().addAll(Common.currentThemesPaths());
 		this.stage.setScene(scene);
-		SettingsValue value = settings.getValueOrDefault(Settings.GLOBAL_NS, SettingsPanel.SETTINGS, Main.USE_FULL_SCREEN, "false");
+		SettingsValue value = settings.getValueOrDefault(Settings.GLOBAL_NS, Settings.SETTINGS, Settings.USE_FULL_SCREEN, "false");
 		this.stage.setFullScreen(Boolean.parseBoolean(value.getValue()));
 		this.model.changeDocument(null);
 		this.stage.show();
@@ -515,28 +525,28 @@ public class MainController implements Initializable, ContainingParent
 			{
 				return;
 			}
-			else if (SettingsPanel.match(settings, keyEvent, SettingsPanel.SHOW_ALL_TABS))
+			else if (SettingsPanel.match(settings, keyEvent, Settings.SHOW_ALL_TABS))
 			{
 				showAllTabs();
 			}
-			else if (SettingsPanel.match(settings, keyEvent, SettingsPanel.SAVE_DOCUMENT))
+			else if (SettingsPanel.match(settings, keyEvent, Settings.SAVE_DOCUMENT))
 			{
 				saveDocument(null);
 			}
-			else if (SettingsPanel.match(settings, keyEvent, SettingsPanel.SAVE_DOCUMENT_AS))
+			else if (SettingsPanel.match(settings, keyEvent, Settings.SAVE_DOCUMENT_AS))
 			{
 				saveAsDocument(null);
 			}
 			else
 			{
-				if (SettingsPanel.match(settings, keyEvent, SettingsPanel.UNDO))
+				if (SettingsPanel.match(settings, keyEvent, Settings.UNDO))
 				{
 					if (!(keyEvent.getTarget() instanceof TextInputControl))
 					{
 						undo(null);
 					}
 				}
-				else if (SettingsPanel.match(settings, keyEvent, SettingsPanel.REDO))
+				else if (SettingsPanel.match(settings, keyEvent, Settings.REDO))
 				{
 					if (!(keyEvent.getTarget() instanceof TextInputControl))
 					{
