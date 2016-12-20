@@ -77,7 +77,7 @@ public class ImageReport extends AbstractAction
 		}
 		
 		report = this.toReport == null ? report : this.toReport;
-
+		this.beforeTestCase = ActionsReportHelper.getBeforeTestCase(this.beforeTestCase, this.owner.getMatrix());
 		if (this.asLink)
 		{
 			String dirName = report.getReportDir();
