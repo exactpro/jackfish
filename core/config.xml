@@ -31,6 +31,7 @@
     <import>com.exactprosystems.jf.api.error</import>
     <vars>${JF}/vars.ini</vars>
     <userVars>personal.ini</userVars>
+    <userVars>uservars/rf.ini</userVars>
     <matrix>${JF}/matrices</matrix>
     <appDict>dic/gui</appDict>
     <clientDict>dic/clients</clientDict>

@@ -7,9 +7,6 @@
 // ==============================================
 #Id;#TestCase;#Kind;#Depends;#For
 INIT;Test case;;;
-    #Call;#type;#host;#base;#user;#password;#scriptsDir
-    RF.SetVars;'MySql';'127.0.0.1';'regression';'root';dbPassword;'matrices/EE/'
-
     #Id;#RawTable
     table;Table
     @;Off;Scenario;Performer;Env;Priority
