@@ -1529,30 +1529,30 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 		}
 		for (Element element : header.children())
 		{
-			if (element.hasAttr(col_span))
-			{
-				String attr = element.attr(col_span);
-				try
-				{
-					int colSpanInt = Integer.parseInt(attr);
-					if (colSpanInt == 1)
-					{
-						result.add(element.text());
-					}
-					else
-					{
-						for(int i = 0; i < colSpanInt; i++)
-						{
-							result.add(null);
-						}
-					}
-				}
-				catch (Exception e)
-				{
-					//nothing do if failing
-				}
-			}
-			else
+//			if (element.hasAttr(col_span))
+//			{
+//				String attr = element.attr(col_span);
+//				try
+//				{
+//					int colSpanInt = Integer.parseInt(attr);
+//					if (colSpanInt == 1)
+//					{
+//						result.add(element.text());
+//					}
+//					else
+//					{
+//						for(int i = 0; i < colSpanInt; i++)
+//						{
+//							result.add(null);
+//						}
+//					}
+//				}
+//				catch (Exception e)
+//				{
+//					//nothing do if failing
+//				}
+//			}
+//			else
 			{
 				result.add(element.text());
 			}
