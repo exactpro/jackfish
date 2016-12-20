@@ -114,7 +114,7 @@ public class DummyReportBuilder extends ReportBuilder
 	}
 
 	@Override
-	protected void reportImage(ReportWriter writer, MatrixItem item, String beforeTestcase, String fileName, String title) throws IOException
+	protected void reportImage(ReportWriter writer, MatrixItem item, String beforeTestcase, String fileName, String title, Boolean asLink) throws IOException
 	{
 		
 	}

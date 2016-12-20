@@ -13,8 +13,8 @@ Test case;Never;;
     #Id;#Action;#AppConnection
     IMGGET1;ImageGet;APPSTR1.Out
 
-    #Id;#Action;#asLink;#Image
-    IMGRPT1;ImageReport;true;IMGGET1.Out
+    #Id;#Action;#Image;#AsLink
+    IMGRPT1;ImageReport;IMGGET1.Out;true
 
     #Id;#Action;#AppConnection
     APPSTP1;ApplicationStop;APPSTR1.Out

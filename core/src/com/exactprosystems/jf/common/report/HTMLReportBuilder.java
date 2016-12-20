@@ -26,16 +26,16 @@ import java.util.stream.Collectors;
 public class HTMLReportBuilder extends ReportBuilder 
 {
 	private static final long serialVersionUID = 8277698425881479782L;
-	
+
 	private static Integer chartCount = 0;
 	private static final String reportExt = ".html";
 	private static final DateFormat dateTimeFormatter = new SimpleDateFormat("yyyyMMdd_HHmmss_");
 	
-	public HTMLReportBuilder() 
+	public HTMLReportBuilder()
 	{
 		super();
 	}
-	
+
 	public HTMLReportBuilder(String outputPath, String matrixName, Date currentTime) throws IOException
 	{
 		super(outputPath, matrixName, currentTime);
@@ -323,7 +323,7 @@ public class HTMLReportBuilder extends ReportBuilder
 	}
 
 	@Override
-	protected void reportImage(ReportWriter writer, MatrixItem item, String beforeTestcase, String fileName, String title) throws IOException
+	protected void reportImage(ReportWriter writer, MatrixItem item, String beforeTestcase, String fileName, String title, Boolean asLink) throws IOException
 	{
 		if (beforeTestcase != null)
 		{
@@ -335,7 +335,15 @@ public class HTMLReportBuilder extends ReportBuilder
 				"<span class='tableTitle'>%s</span><br>",
 				this.postProcess(title));
 
-		writer.fwrite("<img src='%s' class='img'/><br>", fileName);
+		if (asLink)
+		{
+			writer.fwrite("<a href=" + fileName+ ">Image</a><br>");
+		}
+		else
+		{
+			writer.fwrite("<img src='%s' class='img'/><br>", fileName);
+		}
+
 		if (beforeTestcase != null)
 		{
 			writer.fwrite("</div>\n");
