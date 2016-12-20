@@ -68,6 +68,7 @@ public class XmlReport extends AbstractAction
 	    }
 	    
 	    report = this.toReport == null ? report : this.toReport;
+		this.beforeTestCase = ActionsReportHelper.getBeforeTestCase(this.beforeTestCase, this.owner.getMatrix());
 		this.xml.report(report, this.beforeTestCase, Str.asString(this.title));
 		
 		super.setResult(null);

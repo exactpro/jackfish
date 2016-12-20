@@ -73,8 +73,8 @@ public class Report extends AbstractAction
 		}
 		
 		report = this.toReport == null ? report : this.toReport;
-		
-        ReportTable info = report.addExplicitTable(sb.toString(), this.beforeTestCase, true, 0, new int[] {});
+		this.beforeTestCase = ActionsReportHelper.getBeforeTestCase(this.beforeTestCase, this.owner.getMatrix());
+		ReportTable info = report.addExplicitTable(sb.toString(), this.beforeTestCase, true, 0, new int[] {});
 		info.addValues("");
 		
 		
