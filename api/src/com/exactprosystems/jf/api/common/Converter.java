@@ -29,6 +29,10 @@ public class Converter
 
 	public static Blob storableToBlob(Storable object) throws Exception
 	{
+		if (object == null)
+		{
+			return null;
+		}
 		List<String> list = object.getFileList();
 		ByteArrayOutputStream outputStream = null;
 		
