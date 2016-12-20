@@ -213,3 +213,151 @@
 	-fx-background-repeat : repeat;
 }
 
+/*Notifier*/
+.notificationBar {
+	error : #f2dede;
+	info : #d9edf7;
+	success : #dff0d8;
+
+	errorText : #b84442;
+	infoText : #31708f;
+	successText : #3c763d;
+
+	errorBorder : #ebccd1;
+	infoBorder : #bce8f1;
+	successBorder : #d6e9c6;
+}
+.notificationBar > .notificationPane {
+	-fx-border-width : 3px;
+    -fx-padding: 7 7 7 7;
+
+    -fx-background-insets: 0, 1, 2;
+}
+
+.notificationBar > .notificationPane.error {
+	-fx-background-color : error;
+	-fx-border-color : errorBorder;
+
+}
+.notificationBar > .notificationPane.info {
+	-fx-background-color : info;
+	-fx-border-color : infoBorder;
+
+}
+.notificationBar > .notificationPane.success {
+	-fx-background-color : success;
+	-fx-border-color : successBorder;
+
+}
+
+.notificationBar > .notificationPane .notificationTitle {
+    -fx-font-size: 1.166667em;
+    -fx-font-weight: bold;
+}
+.notificationBar > .notificationPane.error .notificationTitle {
+	-fx-text-fill : errorText;
+
+}
+.notificationBar > .notificationPane.info .notificationTitle {
+	-fx-text-fill : infoText;
+
+}
+.notificationBar > .notificationPane.success .notificationTitle {
+	-fx-text-fill : successText;
+
+}
+
+.notificationBar > .notificationPane .notificationMsg {
+	-fx-background-color : transparent;
+    -fx-font-size: 1.166667em;
+    -fx-alignment: top-left;
+}
+.notificationBar > .notificationPane.error .notificationMsg {
+	-fx-text-fill: errorText;
+
+}
+.notificationBar > .notificationPane.info .notificationMsg {
+	-fx-text-fill: infoText;
+
+}
+.notificationBar > .notificationPane.success .notificationMsg {
+	-fx-text-fill: successText;
+
+}
+
+.notificationBar > .notificationPane .notificationMsg.error .content{
+	-fx-background-color : errorText;
+
+}
+.notificationBar > .notificationPane .notificationMsg.info .content{
+	-fx-background-color : infoText;
+
+}
+.notificationBar > .notificationPane .notificationMsg.success .content{
+	-fx-background-color : successText;
+
+}
+
+.notificationBar > .notificationPane.error .notificationCopyButton {
+	-fx-text-fill : errorText;
+
+}
+.notificationBar > .notificationPane.info .notificationCopyButton {
+	-fx-text-fill : infoText;
+
+}
+.notificationBar > .notificationPane.success .notificationCopyButton {
+	-fx-text-fill : successText;
+
+}
+
+.notificationBar > .notificationPane .notificationCopyButton:hover {
+	-fx-text-fill : -fx-company-color-dark;
+
+}
+.notificationBar > .notificationPane .notificationCopyButton:pressed {
+	-fx-text-fill : derived(-fx-company-color-light, 50%)
+
+}
+
+.notificationBar > .notificationPane .notificationCloseButton,
+.notificationBar > .notificationPane .notificationPinButton {
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+    -fx-background-radius: 2;
+    -fx-padding: 0 0 0 0;
+    -fx-alignment: center;
+}
+.notificationBar > .notificationPane .notificationPinButton:
+.notificationBar > .notificationPane .notificationCloseButton:pressed {
+    -fx-background-color: linear-gradient(#a3a3a3, #8b8b8b 34%, #777777 36%, #777777 63%, #8b8b8b 65%, #adadad);
+
+}
+.notificationBar > .notificationPane .notificationCloseButton:hover > .graphic {
+    -fx-background-color: -fx-company-color-light;
+
+}
+.notificationBar > .notificationPane .notificationCloseButton:pressed > .graphic {
+    -fx-background-color: #cfcfcf;
+
+}
+.notificationBar > .notificationPane .notificationCloseButton > .graphic {
+    -fx-background-color: -fx-company-color-dark;
+    -fx-scale-shape: false;
+    -fx-padding: 4.5 4.5 4.5 4.5; /* Graphic is 9x9 px */
+    -fx-shape: "M395.992,296.758l1.794-1.794l7.292,7.292l-1.795,1.794 L395.992,296.758z M403.256,294.992l1.794,1.794l-7.292,7.292l-1.794-1.795 L403.256,294.992z";
+
+}
+.notificationBar > .notificationPane.error .notificationCloseButton > .graphic {
+	-fx-background-color: errorText;
+
+}
+.notificationBar > .notificationPane.info .notificationCloseButton > .graphic {
+	-fx-background-color: infoText;
+
+}
+.notificationBar > .notificationPane.success .notificationCloseButton > .graphic {
+	-fx-background-color: successText;
+
+}
+
