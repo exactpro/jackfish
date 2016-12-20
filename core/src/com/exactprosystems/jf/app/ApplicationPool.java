@@ -345,6 +345,8 @@ public class ApplicationPool implements IApplicationPool
 	public GuiDictionary getDictionary(AppEntry entry) throws Exception
 	{
 		String dictionaryName = entry.get(Configuration.appDicPath);
+		dictionaryName	= MainRunner.makeDirWithSubstitutions(dictionaryName);
+		
 		GuiDictionary dictionary = null;
 		if (!Str.IsNullOrEmpty(dictionaryName))
 		{
