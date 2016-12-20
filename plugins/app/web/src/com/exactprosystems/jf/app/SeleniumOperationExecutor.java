@@ -1535,9 +1535,16 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 				try
 				{
 					int colSpanInt = Integer.parseInt(attr);
-					for(int i = 0; i < colSpanInt; i++)
+					if (colSpanInt == 1)
 					{
-						result.add(null);
+						result.add(element.text());
+					}
+					else
+					{
+						for(int i = 0; i < colSpanInt; i++)
+						{
+							result.add(null);
+						}
 					}
 				}
 				catch (Exception e)
