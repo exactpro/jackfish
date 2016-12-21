@@ -8,6 +8,7 @@
 
 package com.exactprosystems.jf.common;
 
+import com.exactprosystems.jf.api.common.Converter;
 import com.exactprosystems.jf.api.common.IMatrixRunner;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
@@ -16,14 +17,15 @@ import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.Matrix;
 import com.exactprosystems.jf.documents.matrix.parser.Result;
 import com.exactprosystems.jf.functions.Table;
-
 import org.apache.log4j.Logger;
 
 import java.io.File;
 import java.io.FileReader;
-import java.io.IOException;
 import java.io.Reader;
+import java.sql.Blob;
 import java.util.Date;
+import java.util.Optional;
+import java.util.function.Consumer;
 
 public class MatrixRunner implements IMatrixRunner, AutoCloseable
 {
@@ -88,6 +90,12 @@ public class MatrixRunner implements IMatrixRunner, AutoCloseable
 		}
 	}
 
+	public void setOnFinished(Consumer<MatrixRunner> consumer)
+	{
+		//TODO Valery, think about it
+		this.consumer = consumer;
+	}
+
 	public Boolean process (FourParameterFunction<Matrix, Context, ReportBuilder, Date, Boolean> fn) throws Exception
 	{
 		Boolean res = fn.apply(this.matrix, this.context, this.report, this.startTime);
@@ -123,9 +131,9 @@ public class MatrixRunner implements IMatrixRunner, AutoCloseable
 	}
 
 	
-	public Object reportAsArchieve() throws Exception
+	public Blob reportAsBlob() throws Exception
 	{
-	    return this.report.reportAsArchieve();
+	    return Converter.storableToBlob(this.report);
 	}
 	
 	public void setStartTime(Date startTime)
@@ -186,7 +194,7 @@ public class MatrixRunner implements IMatrixRunner, AutoCloseable
 		
 		Configuration configuration = this.context.getConfiguration();
         final AbstractEvaluator evaluator = this.context.getEvaluator();
-		this.report = configuration.getReportFactory().createBuilder(configuration.getReports().get(), this.matrixFile, new Date());
+		this.report = configuration.getReportFactory().createReportBuilder(configuration.getReports().get(), this.matrixFile.getName(), new Date());
 		StringBuilder errorMsg = new StringBuilder();
 		if (!this.matrix.checkMatrix(this.context, evaluator, errorMsg))
 		{
@@ -210,6 +218,7 @@ public class MatrixRunner implements IMatrixRunner, AutoCloseable
 			changeState(State.Running);
 			MatrixRunner.this.matrix.start(context, evaluator, report);
 			changeState(State.Finished);
+			Optional.ofNullable(this.consumer).ifPresent(c -> c.accept(this));
 		});
 		this.thread.setName("Start matrix thread, thread id : " + thread.getId());
 		this.context.prepareMonitor();
@@ -360,6 +369,8 @@ public class MatrixRunner implements IMatrixRunner, AutoCloseable
 	
 	private File matrixFile = null;
 	private Thread thread = null;
+
+	private Consumer<MatrixRunner> consumer;
 	
 	private static final Logger logger = Logger.getLogger(MainRunner.class);
 }

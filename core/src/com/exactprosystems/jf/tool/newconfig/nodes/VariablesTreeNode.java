@@ -8,6 +8,7 @@
 package com.exactprosystems.jf.tool.newconfig.nodes;
 
 import com.exactprosystems.jf.api.common.SerializablePair;
+import com.exactprosystems.jf.common.MainRunner;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.newconfig.ConfigurationFx;
@@ -66,7 +67,7 @@ public class VariablesTreeNode extends TreeNode
 	public void display(List<String> files)
 	{
 		this.variablesTreeNode.getChildren().clear();
-		files.stream().sorted(String::compareTo).map(file -> new FileTreeNode(new File(file))
+		files.stream().sorted(String::compareTo).map(f -> MainRunner.makeDirWithSubstitutions(f)).map(file -> new FileTreeNode(new File(file))
 		{
 			@Override
 			public Optional<ContextMenu> contextMenu()

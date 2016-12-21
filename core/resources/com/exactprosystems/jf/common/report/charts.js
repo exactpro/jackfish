@@ -1,4 +1,4 @@
-var createPieChart = function(diagramId, data) {
+var createPieChart = function(diagramId, data, colors) {
 	var w = 300;
 	var h = 300;
 	var r = h/2;
@@ -34,7 +34,16 @@ var createPieChart = function(diagramId, data) {
 		.attr("class", "slice");
 
 	arcs.append("svg:path")
-		.attr("fill", function(d, i){ return color(i)})
+		.attr("fill", function(d, i){
+			if (colors == undefined) {
+				return color(i);
+			}
+		    var myColor = colors[d.data.label]
+		    if (myColor != undefined) {
+		        return myColor;
+		    }
+			return color(i)
+		})
 		.attr("d", function (d) { return arc(d)});
 
 	// add the text
@@ -55,12 +64,10 @@ var createPieChart = function(diagramId, data) {
 	);
 }
 
-var createBarChart = function(diagramId, data, yAxisDescription) {
+var createBarChart = function(diagramId, data, yAxisDescription, colors) {
 	var margin = {top: 20, right: 30, bottom: 30, left: 40},
 		width = 960 - margin.left - margin.right,
 		height = 500 - margin.top - margin.bottom;
-
-	console.log(data)
 
 	var x0 = d3.scale.ordinal().rangeRoundBands([0, width], .1);
 	var x1 = d3.scale.ordinal();
@@ -134,7 +141,16 @@ var createBarChart = function(diagramId, data, yAxisDescription) {
 		.attr("y", function(d) { return y(d.value); })
 		.attr("value", function(d){return d.name;})
 		.attr("height", function(d) { return height - y(d.value); })
-		.style("fill", function(d) { return color(d.name); });
+		.style("fill", function(d) {
+			if (colors == undefined) {
+				return color(d.name);
+			}
+		    var myColor = colors[d.name]
+		    if (myColor != undefined) {
+		        return myColor;
+		    }
+			return color(d.name);
+		});
 
 	bar.on("mousemove", function(d){
 			divTooltip.style("left", d3.event.pageX+10+"px");
@@ -162,7 +178,16 @@ var createBarChart = function(diagramId, data, yAxisDescription) {
 		.attr("x", width - 18)
 		.attr("width", 18)
 		.attr("height", 18)
-		.style("fill", color);
+		.style("fill", function(d) {
+			if (colors == undefined) {
+				return color(d);
+			}
+		    var myColor = colors[d];
+		    if (myColor !== undefined) {
+		        return myColor;
+		    }
+			return color(d);
+		});
 
 	legend.append("text")
 		.attr("x", width - 24)
@@ -173,7 +198,7 @@ var createBarChart = function(diagramId, data, yAxisDescription) {
 
 }
 
-var createLineChart = function(diagramId, data, yAxisDescription) {
+var createLineChart = function(diagramId, data, yAxisDescription, colors) {
 
 	var margin = {top: 20, right: 80, bottom: 30, left: 50},
 		width = 900 - margin.left - margin.right,
@@ -228,7 +253,6 @@ var createLineChart = function(diagramId, data, yAxisDescription) {
 	}))
 	
 	var lines = color.domain().map(function(name) {
-		console.log(name)
 		return {
 			name: name,
 			values: data.map(function(d) {
@@ -285,6 +309,13 @@ var createLineChart = function(diagramId, data, yAxisDescription) {
 			return line(d.values)
 		})
 		.style("stroke", function(d) {
+			if (colors == undefined) {
+				return color(d.name);
+			}
+			var myColor = colors[d.name]
+		    if (myColor != undefined) {
+		        return myColor;
+		    }
 			return color(d.name);
 		});
 	

@@ -93,7 +93,7 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 
 			for (int column = 0; column < meta.getColumnCount(); column++)
 			{
-				this.headers[column] = new Header(meta.getColumnName(column + 1), Header.HeaderType.forName(meta.getColumnClassName(column + 1)));
+				this.headers[column] = new Header(meta.getColumnLabel(column + 1), Header.HeaderType.forName(meta.getColumnClassName(column + 1)));
 			}
 
 			while (set.next())
@@ -105,10 +105,11 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 				    int type = set.getMetaData().getColumnType(i + 1);
 				    
 				    Object value = null;
-				    if (type == Types.LONGVARBINARY || type == Types.BLOB)
+					System.out.println("Type : " + type);
+					if (type == Types.LONGVARBINARY || type == Types.BLOB || type == Types.VARBINARY)
 				    {
 				        value = set.getBlob(i + 1);
-	                    value = Converter.blobToObject((Blob)value);
+	                    value = Converter.blobToStorable((Blob)value);
 				    }
 				    else
 				    {
@@ -456,22 +457,7 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 		}
 		
 		this.headers = list.toArray(new Header[0]);
-	}
-
-	public boolean columnIsPresent(String columnName)
-	{
-		if (this.headers == null || this.headers.length == 0)
-		{
-			return false;
-		}
-		for (Header header : this.headers)
-		{
-			if (header != null && Str.areEqual(columnName, header.name))
-			{
-				return true;
-			}
-		}
-		return false;
+		addEmptyStringToAllLinesInNewColumn();
 	}
 
 	public void addColumns(int index, String... columns)
@@ -491,8 +477,32 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 		List<Header> newHeaders = new ArrayList<>(Arrays.asList(this.headers));
 		newHeaders.addAll(index, Arrays.stream(columns).map(s -> new Header(s, null)).collect(Collectors.toList()));
 		this.headers = newHeaders.toArray(new Header[newHeaders.size()]);
-		//update all lines
-		this.innerList.stream().forEach(e -> Arrays.stream(this.headers).filter(h -> !e.containsKey(h)).forEach(h -> e.put(h, "")));
+		addEmptyStringToAllLinesInNewColumn();
+	}
+
+	private void addEmptyStringToAllLinesInNewColumn()
+	{
+		final String EMPTY_STRING = "";
+		this.innerList.forEach(e ->
+				Arrays.stream(this.headers).filter(h ->
+						!e.containsKey(h)).forEach(h ->
+						e.put(h, EMPTY_STRING)));
+	}
+
+	public boolean columnIsPresent(String columnName)
+	{
+		if (this.headers == null || this.headers.length == 0)
+		{
+			return false;
+		}
+		for (Header header : this.headers)
+		{
+			if (header != null && Str.areEqual(columnName, header.name))
+			{
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public void removeColumns(String... columns)
@@ -729,7 +739,7 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 			headers[col++ + addition] = this.headers[index].name;
 		}
 		headers = convertHeaders(newColumns, headers, withNumbers);
-		ReportTable table = report.addTable(title, beforeTestcase, true, 0, new int[]{}, headers);
+		ReportTable table = report.addExplicitTable(title, beforeTestcase, true, 0, new int[]{}, headers);
 
 		Function<String, String> func = name -> newColumns == null ? name : newColumns.entrySet()
 					.stream()
@@ -762,6 +772,13 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 						ImageWrapper iw = (ImageWrapper)v;
 						String description = iw.getDescription() == null ? iw.toString() : iw.getDescription();
 						v = report.decorateLink(description, report.getImageDir() + File.separator + iw.getName(report.getReportDir()));
+					}
+					else if (v instanceof ReportBuilder)
+					{
+						ReportBuilder rb = (ReportBuilder)v;
+						String name = rb.getName();
+						
+						v = report.decorateLink(name, name);
 					}
 					value[i] = v;
 				}

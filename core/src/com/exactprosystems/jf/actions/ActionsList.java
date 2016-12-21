@@ -13,6 +13,7 @@ import com.exactprosystems.jf.actions.clients.*;
 import com.exactprosystems.jf.actions.gui.*;
 import com.exactprosystems.jf.actions.matrix.*;
 import com.exactprosystems.jf.actions.message.*;
+import com.exactprosystems.jf.actions.report.*;
 import com.exactprosystems.jf.actions.services.*;
 import com.exactprosystems.jf.actions.sql.*;
 import com.exactprosystems.jf.actions.system.*;
@@ -64,6 +65,10 @@ public class ActionsList
 		        MessageCompareTwo.class,
 		        MessageCreate.class,
 		        Execute.class,
+		        Input.class,
+		        ReportStart.class,
+		        ReportFinish.class,
+		        ReportShow.class,
 		        ImageGet.class,
 		        ImageSave.class,
 		        ImageReport.class,

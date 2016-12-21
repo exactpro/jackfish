@@ -202,7 +202,7 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 	}
 
 	@Override
-	public boolean dragNdrop(WebElement drag, WebElement drop, int x1, int y1, int x2, int y2) throws Exception
+	public boolean dragNdrop(WebElement drag, int x1, int y1, WebElement drop, int x2, int y2, boolean moveCursor) throws Exception
 	{
 		Exception real = null;
 		int repeat = 1;
@@ -1264,6 +1264,9 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 					case M:
 						this.customAction.sendKeys("m").perform();
 						break;
+					case DOT:
+						this.customAction.sendKeys(Keys.DECIMAL).perform();
+						break;
 					case UP:
 						this.customAction.sendKeys(Keys.UP).perform();
 						break;
@@ -1526,23 +1529,30 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 		}
 		for (Element element : header.children())
 		{
-			if (element.hasAttr(col_span))
-			{
-				String attr = element.attr(col_span);
-				try
-				{
-					int colSpanInt = Integer.parseInt(attr);
-					for(int i = 0; i < colSpanInt; i++)
-					{
-						result.add(null);
-					}
-				}
-				catch (Exception e)
-				{
-					//nothing do if failing
-				}
-			}
-			else
+//			if (element.hasAttr(col_span))
+//			{
+//				String attr = element.attr(col_span);
+//				try
+//				{
+//					int colSpanInt = Integer.parseInt(attr);
+//					if (colSpanInt == 1)
+//					{
+//						result.add(element.text());
+//					}
+//					else
+//					{
+//						for(int i = 0; i < colSpanInt; i++)
+//						{
+//							result.add(null);
+//						}
+//					}
+//				}
+//				catch (Exception e)
+//				{
+//					//nothing do if failing
+//				}
+//			}
+//			else
 			{
 				result.add(element.text());
 			}
@@ -1826,6 +1836,8 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 		{
 			try
 			{
+				//mark headers row, if it needed
+				getHeaders(table, false, null, null);
 				if (additional != null)
 				{
 					MatcherSelenium by = new MatcherSelenium(ControlKind.Row, additional);
@@ -1835,7 +1847,6 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 				}
 				else
 				{
-
 					List<WebElement> elements = table.findElement(By.xpath("child::" + tag_tbody)).findElements(this.selectRowsWithoutHeader());
 					unmarkRowIsHeader(table);
 					return elements;

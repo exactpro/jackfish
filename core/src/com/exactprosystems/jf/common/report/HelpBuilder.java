@@ -15,26 +15,26 @@ import com.exactprosystems.jf.charts.ChartBuilder;
 import com.exactprosystems.jf.common.ControlsAttributes;
 import com.exactprosystems.jf.common.version.VersionInfo;
 import com.exactprosystems.jf.documents.guidic.controls.AbstractControl;
-import com.exactprosystems.jf.documents.matrix.Matrix;
-import com.exactprosystems.jf.documents.matrix.parser.Result;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 
 import java.io.IOException;
 import java.util.Date;
-import java.util.List;
 
 public class HelpBuilder extends ReportBuilder
 {
-    public HelpBuilder(Date currentTime) throws IOException
-    {
-        super(null, null, currentTime);
-    }
-    
+	private StringWriter menuWriter = new StringWriter();
+	private StringWriter actionWriter = new StringWriter();
+
+	public HelpBuilder(Date currentTime) throws IOException
+	{
+		super(null, null, currentTime);
+	}
+
 	@Override
 	protected String postProcess(String result)
 	{
 		return super.postProcess(result);
-//		return super.postProcess(HTMLhelper.htmlescape(result));
+		//		return super.postProcess(HTMLhelper.htmlescape(result));
 	}
 
 	@Override
@@ -61,11 +61,11 @@ public class HelpBuilder extends ReportBuilder
 		return HTMLhelper.htmlMarker(marker);
 	}
 
-    @Override
-    protected String generateReportName(String outputPath, String matrixName, String suffix, Date date)
-    {
-        return "";
-    }
+	@Override
+	protected String generateReportName(String outputPath, String matrixName, String suffix, Date date)
+	{
+		return "";
+	}
 
 	@Override
 	protected String generateReportDir(String matrixName, Date date) throws IOException
@@ -78,240 +78,261 @@ public class HelpBuilder extends ReportBuilder
 	{
 	}
 
-    @Override
-    protected void reportHeader(ReportWriter writer, Matrix context, Date date) throws IOException
-    {
-        writer.fwrite(
-                "<html>\n" +
-                "<head>\n" +
-                "<title>Help</title>\n" +
-                "<meta http-equiv='Content-Type' content='text/html; charset=utf-8'>\n");
-
-        writer.fwrite(
-                "<script type='text/javascript'>\n" +
-                "<!--\n");
-        writer.include(getClass().getResourceAsStream("jquery-1.8.3.min.js"));
-        writer.include(getClass().getResourceAsStream("reports.js"));
-        writer.fwrite(
-                "-->\n" +
-                "</script>\n");
-
-        writer.fwrite(
-                "<style>\n" +
-                "<!--\n");
-        writer.include(getClass().getResourceAsStream("style.css"));
-        writer.fwrite(
-                "-->\n" +
-                "</style>\n");
-
-
-        writer.fwrite(
-                "</head>\n" +
-                "<body>\n" +
-                "<h0>Version <td>%s</h0>\n",
-                VersionInfo.getVersion());
-    }
-
-    @Override
-    protected void reportMatrixHeader(ReportWriter writer, String matrixName) throws IOException
-    {
-    }
-
-    @Override
-    protected void reportMatrixRow(ReportWriter writer, int count, String line) throws IOException
-    {
-    }
-
-    @Override
-    protected void reportMatrixFooter(ReportWriter writer) throws IOException
-    {
-    }
-
+	//region Matrix
+	@Override
+	protected void reportMatrixHeader(ReportWriter writer, String matrixName) throws IOException
+	{
+	}
 
 	@Override
-    protected void reportHeaderTotal(ReportWriter writer, Matrix context, Date date) throws IOException
-    {
-        makeChapter(writer, "MVEL syntax", "mvel.html");
-		makeAllControls(writer);
-    }
-
-	private void makeAllControls(ReportWriter writer) throws IOException
+	protected void reportMatrixRow(ReportWriter writer, int count, String line) throws IOException
 	{
-		writer.fwrite("<div class='tree'>\n" +
-				"<table border='0' cellspacing='0' width='50%%' > \n " +
-				"<tr>" +
-				"<td><a href='#' class='showBody'>All Controls:</a>" +
-				"<td width='200px'>" +
-				"<span class=PASSED></span>\n" +
-				"</table>\n");
-		writer.fwrite("<div class='tree'>");
-		writer.fwrite("<table border='1px'>\n");
-		writer.fwrite("<thead><tr>\n");
-		writer.fwrite("<th>Control name</th>");
-		for (OperationKind kind : OperationKind.values())
-		{
-			writer.fwrite("<th>%s</th>", kind.toString());
-		}
-		writer.fwrite("</tr></thead>");
-		writer.fwrite("<tbody>");
-		for (ControlKind k : ControlKind.values())
+	}
+
+	@Override
+	protected void reportMatrixFooter(ReportWriter writer) throws IOException
+	{
+	}
+	//endregion
+
+	//region Header
+	@Override
+	protected void reportHeader(ReportWriter writer, Date date) throws IOException
+	{
+		writer.fwrite("<!DOCTYPE html>");
+		writer.fwrite("<html>\n" + "<head>\n" + "<title>Help</title>\n" + "<meta http-equiv='Content-Type' content='text/html; charset=utf-8'>\n");
+
+		writer.fwrite("<script type='text/javascript'>\n<!--\n");
+		writer.include(getClass().getResourceAsStream("jquery-3.1.1.min.js"));
+		writer.fwrite("-->\n</script>\n");
+
+		writer.fwrite("<script type='text/javascript'>\n<!--\n");
+		writer.include(getClass().getResourceAsStream("bootstrap.min.js"));
+		writer.fwrite("-->\n</script>\n");
+
+		writer.fwrite("<style>\n" + "<!--\n");
+		writer.include(getClass().getResourceAsStream("bootstrap.min.css"));
+		writer.fwrite("-->\n" + "</style>\n");
+
+		writer.fwrite("<style>\n" + "<!--\n");
+		writer.include(getClass().getResourceAsStream("help.css"));
+		writer.fwrite("-->\n" + "</style>\n");
+
+		writer.fwrite("</head>\n" + "<body>\n" + "<h0>Version <td>%s</h0>\n", VersionInfo.getVersion());
+
+		writer.fwrite("<div class='container-fluid'>\n");
+		writer.fwrite("<div class='row'>\n");
+
+		this.menuWriter.fwrite("<div class='col-sm-3 menuCont'>\n");
+		this.menuWriter.fwrite("<div class='mainMenu'>\n");
+		this.menuWriter.fwrite("<ul class='nav nav-pills nav-stacked'>\n");
+
+		this.actionWriter.fwrite("<div class='col-sm-9 helpViewer'>\n");
+
+	}
+
+	@Override
+	protected void reportHeaderTotal(ReportWriter writer, Date date) throws IOException
+	{
+		addMvelHelp();
+		addAllControls();
+	}
+
+	@Override
+	protected void reportFooter(ReportWriter writer, int failed, int passed, Date date, String name, String reportName) throws IOException
+	{
+		this.menuWriter.fwrite("</ul>\n</div>\n");
+		this.menuWriter.fwrite("</div>\n");
+		this.actionWriter.fwrite("</div>\n");
+
+		writer.fwrite(this.menuWriter.toString());
+		writer.fwrite(this.actionWriter.toString());
+
+		writer.fwrite("</div>\n");
+		writer.fwrite("</div>\n");
+		writer.fwrite("<script type='text/javascript'>\n<!--\n");
+		writer.include(getClass().getResourceAsStream("help.js"));
+		writer.fwrite("-->\n</script>\n");
+		writer.fwrite("</body>\n");
+		writer.fwrite("</html>");
+	}
+
+	private void addMvelHelp() throws IOException
+	{
+		this.menuWriter.fwrite("<li role='presentation' class='mParent' id='MVELsyntax'>\n");
+		this.menuWriter.fwrite("<a href='#'>MVEL syntax<span class='caret'></span></a>\n");
+		this.menuWriter.fwrite("</li>\n");
+		this.menuWriter.fwrite("<ul class='nav nav-pills nav-stacked navChild' id='MVELsyntax_child'>");
+		this.menuWriter.fwrite("<li role='presentation'><a href='#BasicSyntax'>Basic syntax</a></li>\n");
+		this.menuWriter.fwrite("<li role='presentation'><a href='#MVELOperators'>MVEL 2.0 Operators</a></li>\n");
+		this.menuWriter.fwrite("<li role='presentation'><a href='#InlineListMapsAndArrays'>Inline List,Maps and Arrays</a></li>\n");
+		this.menuWriter.fwrite("<li role='presentation'><a href='#MVELPropertyNavigation'>MVEL 2.0 Property navigation</a></li>\n");
+		this.menuWriter.fwrite("<li role='presentation'><a href='#MVELLiterals'>MVEL 2.0 Literals</a></li>\n");
+		this.menuWriter.fwrite("<li role='presentation'><a href='#MVELProjectionsAndFolds'>MVEL 2.0 Projections and Folds</a></li>\n");
+		this.menuWriter.fwrite("<li role='presentation'><a href='#LambdaExpressions'>Lambda Expressions</a></li>\n");
+		this.menuWriter.fwrite("</ul>\n");
+
+		this.actionWriter.include(getClass().getResourceAsStream("mvel.html"));
+	}
+
+	private void addAllControls() throws IOException
+	{
+		this.menuWriter.fwrite("<li role='presentation'>\n");
+		this.menuWriter.fwrite("<a href='#AllControls'>All controls</a>\n");
+		this.menuWriter.fwrite("</li>\n");
+
+		this.actionWriter.fwrite("<div id='AllControls'>\n");
+		this.actionWriter.fwrite("<h2>All Controls</h2>\n");
+
+		//region First column
+		this.actionWriter.fwrite("<div class='co-1'>\n");
+		this.actionWriter.fwrite("<div id='co-1Table'></div>\n");
+
+		this.actionWriter.fwrite("<table class='table table-bordered table-condensed table-striped'>\n");
+		this.actionWriter.fwrite("<thead>\n");
+		this.actionWriter.fwrite("<tr>\n<th>#</th>\n</tr>\n");
+		this.actionWriter.fwrite("</thead>\n");
+		this.actionWriter.fwrite("<tbody>\n");
+		for (ControlKind controlKind : ControlKind.values())
 		{
 			try
 			{
-				writer.fwrite("<tr>");
-				Class<?> controlClass = Class.forName(AbstractControl.class.getPackage().getName() +"."+ k.getClazz());
-				writer.fwrite("<td>%s</td>", controlClass.getSimpleName());
-				ControlsAttributes annotation = controlClass.getAnnotation(ControlsAttributes.class);
-				OperationKind defaultOperation = annotation.bindedClass().defaultOperation();
-				for (OperationKind kind : OperationKind.values())
-				{
-					writer.fwrite("<td>");
-					if (annotation.bindedClass().isAllowed(kind))
-					{
-						writer.fwrite("<label");
-						if (kind == defaultOperation)
-						{
-							writer.fwrite(" class='defaultOperation'");
-						}
-						writer.fwrite(">+</label>");
-					}
-					writer.fwrite("</td>");
-				}
-				writer.fwrite("</tr>");
+				Class<?> controlClass = Class.forName(AbstractControl.class.getPackage().getName() + "." + controlKind.getClazz());
+				this.actionWriter.fwrite("<tr>\n<th>%s</th>\n</tr>\n", controlClass.getSimpleName());
 			}
 			catch (Exception e)
 			{
 				e.printStackTrace();
 			}
 		}
-		writer.fwrite("</tbody></table>");
-		writer.fwrite("</div></div>");
+		this.actionWriter.fwrite("</tbody>\n");
+		this.actionWriter.fwrite("</table>\n");
+		this.actionWriter.fwrite("</div>\n");
+		//endregion
+
+		//region Second column
+		this.actionWriter.fwrite("<div class='co-2'>\n");
+
+		this.actionWriter.fwrite("<div class='bigTable' id='doublescroll'>\n");
+
+		this.actionWriter.fwrite("<table class='table table-bordered table-condensed table-striped bigTable-hover'>\n");
+		this.actionWriter.fwrite("<thead>\n");
+		this.actionWriter.fwrite("<tr>\n");
+		for (OperationKind kind : OperationKind.values())
+		{
+			this.actionWriter.fwrite("<th>%s</th>", kind.toString());
+		}
+		this.actionWriter.fwrite("</tr>\n");
+		this.actionWriter.fwrite("</thead>\n");
+		this.actionWriter.fwrite("<tbody>\n");
+		for (ControlKind k : ControlKind.values())
+		{
+			try
+			{
+				this.actionWriter.fwrite("<tr>");
+				Class<?> controlClass = Class.forName(AbstractControl.class.getPackage().getName() +"."+ k.getClazz());
+				ControlsAttributes annotation = controlClass.getAnnotation(ControlsAttributes.class);
+				OperationKind defaultOperation = annotation.bindedClass().defaultOperation();
+				for (OperationKind kind : OperationKind.values())
+				{
+					this.actionWriter.fwrite("<td>");
+					if (annotation.bindedClass().isAllowed(kind))
+					{
+						boolean isDefaultOperation = kind == defaultOperation;
+						if (isDefaultOperation)
+						{
+							this.actionWriter.fwrite("<font color='#ff0000'>");
+						}
+						this.actionWriter.fwrite("+");
+						if (isDefaultOperation)
+						{
+							this.actionWriter.fwrite("</font>");
+						}
+					}
+					this.actionWriter.fwrite("</td>\n");
+				}
+				this.actionWriter.fwrite("</tr>\n");
+			}
+			catch (Exception e)
+			{
+				e.printStackTrace();
+			}
+		}
+		this.actionWriter.fwrite("</tbody>\n");
+		this.actionWriter.fwrite("</table>\n");
+		this.actionWriter.fwrite("</div>\n");
+		this.actionWriter.fwrite("</div>\n");
+		//endregion
+
+		this.actionWriter.fwrite("</div>\n");
+		this.actionWriter.fwrite("<div class='clearfix'></div>");
 	}
 
-	private void makeChapter(ReportWriter writer, String chapterName, String fileName) throws IOException
-    {
-        writer.fwrite(
-        		"<div class='tree'>\n" +
-                "<table border='0' cellspacing='0' width='50%%' >\n " +
-                "<tr>" +
-                "<td><a href='#' class='showBody'>%s:</a>" +
-                "<td width='200px'>" +
-                "<span class=PASSED></span>\n",
-                chapterName);
+	//endregion
 
-        writer.fwrite(
-                "</table>\n");
-    	
-        writer.include(getClass().getResourceAsStream(fileName));
-        
-		writer.fwrite("</div>\n");
-        
-    }
-    
-    @Override
+	private boolean remove = true;
+
+	//region Items
+	@Override
     protected void reportItemHeader(ReportWriter writer, MatrixItem item, Integer id) throws IOException
     {
-        String name = item.getItemName();
-        writer.fwrite(
-                "<div class='tree' id='%s'>\n",
-                id);
+		boolean hasChildren = item.count() > 0;
+		String itemName = item.getItemName();
+		String idOfItem = itemName.replace(" ", "");
+		if (hasChildren)
+		{
 
-        writer.fwrite(
-                "<table border='0' cellspacing='0' width='50%%' >\n " +
-                "<tr>" +
-                        "<td><a href='#' class='showBody'>%s:</a>" +
-                        "<td width='200px'><span id='hs_%s'>Loading...</span>",
-                name,
-                id );
+			this.menuWriter.fwrite("<li role='presentation' class='mParent' id='%s'>\n", idOfItem);
+			this.menuWriter.fwrite("<a href='#'>%s<span class='caret'></span></a>\n", itemName);
+			this.menuWriter.fwrite("</li>\n");
+			this.menuWriter.fwrite("<ul class='nav nav-pills nav-stacked deepNav navChild' id='%s_child'>",idOfItem);
+		}
+		else
+		{
+			this.menuWriter.fwrite("<li role='presentation'>\n");
+			this.menuWriter.fwrite("<a href='#%s'>%s</a>\n", idOfItem, itemName);
+			this.menuWriter.fwrite("</li>\n");
 
-        writer.fwrite(
-                "</table>\n");
-
-
-        writer.fwrite(
-                "<div class='body'>\n");
-    }
-
-	@Override
-	protected void reportImage(ReportWriter writer, MatrixItem item, String beforeTestcase, String fileName, String title) throws IOException
-	{
+			this.actionWriter.fwrite("<div id='%s'>\n", idOfItem);
+			this.actionWriter.fwrite("<h2>%s</h2>\n", itemName);
+		}
 	}
-
 
 	@Override
 	protected void reportItemLine(ReportWriter writer, MatrixItem item, String beforeTestcase, String string, String labelId) throws IOException
 	{
-		if (labelId == null)
-		{
-			writer.fwrite(string);
-		}
-		else
-		{
-			writer.fwrite("<a href='#' class='label' id='%s'>%s</a><br>", labelId, string);
-		}
+
 	}
 	
 	@Override
 	protected void reportItemFooter(ReportWriter writer, MatrixItem item, Integer id, long time, ImageWrapper screenshot) throws IOException
 	{
-		Result result = item.getResult() == null ? Result.NotExecuted : item.getResult().getResult();
-		
-		writer.fwrite(
-				"</div>\n");
-
-		writer.fwrite("<script type='text/javascript'>\n" +
-			    "<!--\n" );
-		
-		writer.fwrite("document.getElementById('hs_%s').innerHTML = '<span class=%s></span>';\n", 
-			    id,
-			    result);
-
-        writer.fwrite("document.getElementById('time_%s').innerHTML = '<span>Execution time : %sms</span>';\n",
-                id,
-                time <= 1 ? "< 1" : time);
-
-		writer.fwrite("document.getElementById('%s').title = '%s';\n", 
-			    id,
-			    result );
-
-		writer.fwrite("-->\n" +
-			    "</script>\n");
-		
-		writer.fwrite("</div>\n");
+		boolean hasChildren = item.count() > 0;
+		if (hasChildren)
+		{
+			this.menuWriter.fwrite("</ul>");
+		}
+		else
+		{
+			this.actionWriter.fwrite("</div>");
+		}
+		return;
 	}
+	//endregion
 
-	@Override
-	protected void reportFooter(ReportWriter writer, MatrixItem item, Date date, String name, String reportName) throws IOException
-	{
-		writer.fwrite("</body>\n");
-		writer.fwrite("</html>");
-	}
-	
-
+	//region Tables
 	@Override
 	protected void tableHeader(ReportWriter writer, ReportTable table, String tableTitle, String[] columns, int[] percents) throws IOException
 	{
-		writer.fwrite(
-				"<span class='tableTitle'>%s</span><br>",
-				this.postProcess(tableTitle));
-
-        writer.fwrite(
-        		"<table width='100%%' border='1' bordercolor='#000000' cellpadding='3' cellspacing='0'>\n" +
-        		"<tr style='font-weight: bold;'>\n");
-
-        for (int i = 0; i < columns.length; i++)
-        {
-        	if (percents == null || percents.length < i || percents[i] <= 0)
-        	{
-        		writer.fwrite("<td>%s", columns[i]);
-        	}
-        	else
-        	{
-        		writer.fwrite("<td width='%d%%'>%s", percents[i], columns[i]);
-        	}
-        }
-
-        writer.fwrite("\n");
+		this.actionWriter.fwrite("<table class='table table-bordered'>\n");
+		this.actionWriter.fwrite("<thead>\n");
+		this.actionWriter.fwrite("<tr>\n");
+		for (String column : columns)
+		{
+			this.actionWriter.fwrite("<th>%s</th>", column);
+		}
+		this.actionWriter.fwrite("</tr>\n");
+		this.actionWriter.fwrite("</thead>\n");
 	}
 	
 	@Override
@@ -319,26 +340,36 @@ public class HelpBuilder extends ReportBuilder
 	{
 		if (value != null)
         {
-			writer.fwrite("<tr>");
+			this.actionWriter.fwrite("<tr>");
 			int count = 0;
 			for (Object obj : value)
 			{
-				writer.fwrite("<td>%s", ReportHelper.objToString(obj, count >= quotes));
+				this.actionWriter.fwrite("<td>%s</td>", ReportHelper.objToString(obj, count >= quotes));
 				count++;
 			}
-            writer.fwrite("\n");
+			this.actionWriter.fwrite("</tr>");
+			this.actionWriter.fwrite("\n");
         }
 	}
 
 	@Override
 	protected void tableFooter(ReportWriter writer, ReportTable table) throws IOException
 	{
-        writer.fwrite("</table>\n");
+		this.actionWriter.fwrite("</table>");
 	}
+	//endregion
 
+	//region Images and charts
 	@Override
 	protected void reportChart(ReportWriter writer, String title, String beforeTestCase, ChartBuilder chartBuilder) throws IOException
 	{
 		
 	}
+
+	@Override
+	protected void reportImage(ReportWriter writer, MatrixItem item, String beforeTestcase, String fileName, String title, Boolean asLink) throws IOException
+	{
+	}
+	//endregion
+
 }

@@ -11,6 +11,7 @@ package com.exactprosystems.jf.tool.helpers;
 import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
 import com.exactprosystems.jf.actions.ActionsList;
+import com.exactprosystems.jf.actions.ReadableValue;
 import com.exactprosystems.jf.api.common.ApiVersionInfo;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.HelpFactory;
@@ -23,9 +24,11 @@ import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.Matrix;
 import com.exactprosystems.jf.documents.matrix.parser.items.*;
+import com.exactprosystems.jf.functions.HelpKind;
 import com.exactprosystems.jf.functions.Notifier;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.custom.Notifications;
+import com.exactprosystems.jf.tool.custom.UserInputDialog;
 import com.exactprosystems.jf.tool.custom.browser.ReportBrowser;
 import com.exactprosystems.jf.tool.custom.date.DateTimePicker;
 import com.exactprosystems.jf.tool.custom.date.DateTimePickerSkin;
@@ -33,6 +36,7 @@ import com.exactprosystems.jf.tool.custom.helper.HelperFx;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -72,9 +76,10 @@ public abstract class DialogsHelper
 
 	public enum OpenSaveMode
 	{
-		OpenFile, SaveFile
+		OpenFile,
+		SaveFile
 	}
-	
+
 	public static ButtonType showParametersDialog(String title, final Map<String, String> parameters, AbstractEvaluator evaluator)
 	{
 		Dialog<ButtonType> dialog = new Dialog<>();
@@ -124,14 +129,19 @@ public abstract class DialogsHelper
 		alert.getDialogPane().getStylesheets().addAll(Common.currentThemesPaths());
 		Optional<ButtonType> buttonType = alert.showAndWait();
 		Optional<ButtonType> btnOk = buttonType.filter(bt -> bt.getButtonData().equals(ButtonBar.ButtonData.OK_DONE));
+		Optional<ButtonType> btnCancel = buttonType.filter(bt -> bt.getButtonData().equals(ButtonBar.ButtonData.CANCEL_CLOSE));
 		if (btnOk.isPresent())
 		{
 			return picker.getDate();
 		}
+		if (btnCancel.isPresent())
+		{
+			return null;
+		}
 		return initialValue;
 	}
 
-	
+
 	public static ButtonType showQuestionDialog(String header, String body)
 	{
 		Dialog<ButtonType> dialog = new Alert(Alert.AlertType.CONFIRMATION);
@@ -189,7 +199,8 @@ public abstract class DialogsHelper
 		dialog.getDialogPane().setContent(pane);
 		dialog.setResizable(true);
 		dialog.getDialogPane().getContent().autosize();
-		listView.setOnMouseClicked(mouseEvent -> {
+		listView.setOnMouseClicked(mouseEvent ->
+		{
 			if (mouseEvent.getClickCount() == 2)
 			{
 				T selectedItem = listView.getSelectionModel().getSelectedItem();
@@ -198,17 +209,20 @@ public abstract class DialogsHelper
 			}
 		});
 
-		listView.setOnKeyPressed(keyEvent -> {
+		listView.setOnKeyPressed(keyEvent ->
+		{
 			if (keyEvent.getCode() == KeyCode.ENTER)
 			{
-				Optional.ofNullable(listView.getSelectionModel().getSelectedItem()).ifPresent(t -> {
+				Optional.ofNullable(listView.getSelectionModel().getSelectedItem()).ifPresent(t ->
+				{
 					listener.select(t);
 					dialog.close();
 				});
 			}
 		});
 
-		tf.textProperty().addListener((observableValue, s, t1) -> {
+		tf.textProperty().addListener((observableValue, s, t1) ->
+		{
 			if (t1.isEmpty())
 			{
 				listView.getItems().addAll(list);
@@ -217,7 +231,8 @@ public abstract class DialogsHelper
 			list.stream().filter(t -> t.toString().toUpperCase().contains(t1.toUpperCase())).forEach(listView.getItems()::add);
 		});
 
-		tf.setOnKeyPressed(keyEvent -> {
+		tf.setOnKeyPressed(keyEvent ->
+		{
 			if (keyEvent.getCode() == KeyCode.ENTER && listView.getItems().size() == 1)
 			{
 				listener.select(listView.getItems().get(0));
@@ -231,7 +246,8 @@ public abstract class DialogsHelper
 		});
 		dialog.getDialogPane().getStylesheets().addAll(Common.currentThemesPaths());
 		Optional<ButtonType> optional = dialog.showAndWait();
-		optional.ifPresent(o -> {
+		optional.ifPresent(o ->
+		{
 			if (o.getButtonData().equals(ButtonBar.ButtonData.OK_DONE))
 			{
 				Optional.ofNullable(listView.getSelectionModel().getSelectedItem()).ifPresent(listener::select);
@@ -242,7 +258,7 @@ public abstract class DialogsHelper
 	public static <T> T selectFromList(String title, T initValue, final List<T> list)
 	{
 		@SuppressWarnings("unchecked")
-		T[] result = (T[]) new Object[] { initValue };
+		T[] result = (T[]) new Object[]{initValue};
 
 		if (list == null || list.isEmpty())
 		{
@@ -266,7 +282,8 @@ public abstract class DialogsHelper
 		dialog.setResizable(true);
 		dialog.getDialogPane().getContent().autosize();
 
-		listView.setOnMouseClicked(mouseEvent -> {
+		listView.setOnMouseClicked(mouseEvent ->
+		{
 			if (mouseEvent.getClickCount() == 2)
 			{
 				T selectedItem = listView.getSelectionModel().getSelectedItem();
@@ -275,17 +292,20 @@ public abstract class DialogsHelper
 			}
 		});
 
-		listView.setOnKeyPressed(keyEvent -> {
+		listView.setOnKeyPressed(keyEvent ->
+		{
 			if (keyEvent.getCode() == KeyCode.ENTER)
 			{
-				Optional.ofNullable(listView.getSelectionModel().getSelectedItem()).ifPresent(t -> {
+				Optional.ofNullable(listView.getSelectionModel().getSelectedItem()).ifPresent(t ->
+				{
 					result[0] = t;
 					dialog.close();
 				});
 			}
 		});
 
-		tf.textProperty().addListener((observableValue, s, t1) -> {
+		tf.textProperty().addListener((observableValue, s, t1) ->
+		{
 			if (t1.isEmpty())
 			{
 				listView.getItems().addAll(list);
@@ -294,7 +314,8 @@ public abstract class DialogsHelper
 			list.stream().filter(t -> t.toString().toUpperCase().contains(t1.toUpperCase())).forEach(t -> listView.getItems().add(t));
 		});
 
-		tf.setOnKeyPressed(keyEvent -> {
+		tf.setOnKeyPressed(keyEvent ->
+		{
 			if (keyEvent.getCode() == KeyCode.ENTER && listView.getItems().size() == 1)
 			{
 				result[0] = listView.getItems().get(0);
@@ -386,7 +407,7 @@ public abstract class DialogsHelper
 			throw new Exception("Unknown type of document: " + docClass);
 		}
 		String title = "Save " + docClass.getSimpleName().toLowerCase();
-		String filter = annotation.extentioin() + " files(*."+annotation.extentioin()+")";
+		String filter = annotation.extentioin() + " files(*." + annotation.extentioin() + ")";
 		String extension = "*." + annotation.extentioin();
 		String ext = "." + annotation.extentioin();
 		File file = showOpenSaveDialog(title, filter, extension, OpenSaveMode.SaveFile);
@@ -416,6 +437,36 @@ public abstract class DialogsHelper
 		return value;
 	}
 
+	public static String showUserInput(AbstractEvaluator evaluator, String title, Object defaultValue, HelpKind helpKind, List<ReadableValue> dataSource)
+	{
+		Task<String> task = new Task<String>()
+		{
+			@Override
+			protected String call() throws Exception
+			{
+				String literal = Common.createLiteral(defaultValue, evaluator);
+				UserInputDialog dialog = new UserInputDialog(literal, evaluator, helpKind, dataSource);
+				dialog.setTitle(title);
+				dialog.getDialogPane().setHeader(null);
+				Optional<String> s = dialog.showAndWait();
+				return s.orElse(literal);
+			}
+		};
+
+		final String[] res = {Common.createLiteral(defaultValue, evaluator)};
+		task.setOnSucceeded(e -> res[0] = ((String) e.getSource().getValue()));
+		Platform.runLater(task);
+		try
+		{
+			res[0] = task.get();
+		}
+		catch (Exception e)
+		{
+			task.cancel();
+		}
+		return res[0];
+	}
+
 	public static void setTimeNotification(int timeNotification)
 	{
 		DialogsHelper.timeNotification = timeNotification;
@@ -430,7 +481,7 @@ public abstract class DialogsHelper
 	{
 		showNotifier(message, Notifier.Success);
 	}
-	
+
 	public static void showInfo(final String message)
 	{
 		showNotifier(message, Notifier.Info);
@@ -450,18 +501,14 @@ public abstract class DialogsHelper
 		text.setFont(javafx.scene.text.Font.font(15));
 		box.getChildren().addAll(text, new Button("Copy version"));
 		dialog.getDialogPane().setHeaderText(format);
-		dialog.getDialogPane().setContentText("Copyright (c) 2009-2015, Exactpro Systems, LLC\n" +
-				"Quality Assurance & Related Development for Innovative Trading Systems.\n" +
-				"All rights reserved.\n" +
-				"This is unpublished, licensed software, confidential and proprietary\n" +
-				"information which is the property of Exactpro Systems, LLC or its licensors.");
+		dialog.getDialogPane().setContentText("Copyright (c) 2009-2015, Exactpro Systems, LLC\n" + "Quality Assurance & Related Development for Innovative Trading Systems.\n" + "All rights reserved.\n" + "This is unpublished, licensed software, confidential and proprietary\n" + "information which is the property of Exactpro Systems, LLC or its licensors.");
 		dialog.getDialogPane().getStylesheets().addAll(Common.currentThemesPaths());
 		dialog.show();
 	}
 
 	public static void showActionsHelp(DocumentFactory factory)
 	{
-		try(Context context = factory.createContext())
+		try (Context context = factory.createContext())
 		{
 			Matrix matrix = factory.createMatrix("helpMatrix");
 
@@ -518,7 +565,7 @@ public abstract class DialogsHelper
 				actionItem.init(matrix);
 				chapter.insert(chapter.count(), actionItem);
 			}
-			ReportBuilder report = new HelpFactory().createBuilder(null, null, new Date());
+			ReportBuilder report = new HelpFactory().createReportBuilder(null, null, new Date());
 			matrix.documentation(context, report);
 			displayHelp(report.getContent());
 		}
@@ -550,60 +597,58 @@ public abstract class DialogsHelper
 
 	public static void displayReport(File file, String matrixName, DocumentFactory factory)
 	{
-		
-		final String[] matrName = {matrixName};
-		tryCatch(() -> {
-			Configuration configuration = factory.getConfiguration();
-			boolean addButton = configuration != null;
-			ReportBrowser reportBrowser = new ReportBrowser(file);
-			Dialog<ButtonType> dialog = new Dialog<>();
-			if (addButton)
+		Platform.runLater(() ->
+		{
+			final String[] matrName = {matrixName};
+			tryCatch(() ->
 			{
-				dialog.getDialogPane().getButtonTypes().add(new ButtonType("Open", ButtonBar.ButtonData.OTHER));
-			}
-			dialog.getDialogPane().getButtonTypes().add(new ButtonType("Close", ButtonBar.ButtonData.CANCEL_CLOSE));
-			dialog.setResizable(true);
-			dialog.getDialogPane().setPrefWidth(1024);
-			dialog.getDialogPane().setPrefHeight(768);
-			dialog.getDialogPane().setContent(reportBrowser);
-			dialog.initModality(Modality.NONE);
-			dialog.setTitle("Report");
-			if (matrName[0] == null)
-			{
-				Matcher matcher = Pattern.compile("\\d+_\\d+_(.+?)_(FAILED|PASSED|RUNNING)\\.html").matcher(file.getAbsolutePath());
-				if (matcher.find())
+				Configuration configuration = factory.getConfiguration();
+				boolean addButton = configuration != null;
+				ReportBrowser reportBrowser = new ReportBrowser(file);
+				Dialog<ButtonType> dialog = new Dialog<>();
+				if (addButton)
 				{
-					matrName[0] = matcher.group(1);
+					dialog.getDialogPane().getButtonTypes().add(new ButtonType("Open", ButtonBar.ButtonData.OTHER));
 				}
-				else
+				dialog.getDialogPane().getButtonTypes().add(new ButtonType("Close", ButtonBar.ButtonData.CANCEL_CLOSE));
+				dialog.setResizable(true);
+				dialog.getDialogPane().setPrefWidth(1024);
+				dialog.getDialogPane().setPrefHeight(768);
+				dialog.getDialogPane().setContent(reportBrowser);
+				dialog.initModality(Modality.NONE);
+				dialog.setTitle("Report");
+				if (matrName[0] == null)
 				{
-					matrName[0] = "Unknown matrix";
+					Matcher matcher = Pattern.compile("\\d+_\\d+_(.+?)_(FAILED|PASSED|RUNNING)\\.html").matcher(file.getAbsolutePath());
+					if (matcher.find())
+					{
+						matrName[0] = matcher.group(1);
+					}
+					else
+					{
+						matrName[0] = "Unknown matrix";
+					}
 				}
-			}
-			dialog.setHeaderText("Report for " + matrName[0]);
-			dialog.getDialogPane().getStylesheets().addAll(Common.currentThemesPaths());
-			Optional<ButtonType> buttonType = dialog.showAndWait();
-			buttonType.filter(bt -> bt.getButtonData().equals(ButtonBar.ButtonData.OTHER)).ifPresent(type -> Common.tryCatch(() -> {
-				String name = reportBrowser.getMatrix();
-				if (name != null && !name.isEmpty())
+				dialog.setHeaderText("Report for " + matrName[0]);
+				dialog.getDialogPane().getStylesheets().addAll(Common.currentThemesPaths());
+				Optional<ButtonType> buttonType = dialog.showAndWait();
+				buttonType.filter(bt -> bt.getButtonData().equals(ButtonBar.ButtonData.OTHER)).ifPresent(type -> Common.tryCatch(() ->
 				{
-					Matrix matrix = factory.createMatrix(matrName[0]);
-					matrix.load(new StringReader(name));
-					matrix.display();
-				}
-			}, "Error on open matrix from report"));
-		}, "Error on show report");
+					String name = reportBrowser.getMatrix();
+					if (name != null && !name.isEmpty())
+					{
+						Matrix matrix = factory.createMatrix(matrName[0]);
+						matrix.load(new StringReader(name));
+						matrix.display();
+					}
+				}, "Error on open matrix from report"));
+			}, "Error on show report");
+		});
 	}
 
 	public static void showNotifier(final String message, final Notifier notifier)
 	{
-		Platform.runLater(() -> Notifications
-				.create()
-				.msg(message)
-				.hideAfter(Duration.seconds(timeNotification))
-				.state(notifier)
-				.title(notifier.name())
-				.show());
+		Platform.runLater(() -> Notifications.create().msg(message).hideAfter(Duration.seconds(timeNotification)).state(notifier).title(notifier.name()).show());
 	}
 
 	public static Alert createGitDialog(String title, Parent parent)
@@ -648,8 +693,9 @@ public abstract class DialogsHelper
 		BorderPane borderPane = new BorderPane();
 		borderPane.setCenter(browser);
 		Dialog<ButtonType> dialog = new Alert(Alert.AlertType.INFORMATION);
+		dialog.getDialogPane().setHeader(new Label());
 		dialog.setHeaderText("Help");
-		GridPane grid = (GridPane)dialog.getDialogPane().lookup(".header-panel");
+		GridPane grid = (GridPane) dialog.getDialogPane().lookup(".header-panel");
 		grid.setStyle("-fx-font-size: 30;");
 		dialog.setTitle("Actions help");
 		dialog.setResizable(true);

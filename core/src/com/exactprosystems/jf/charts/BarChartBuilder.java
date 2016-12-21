@@ -10,16 +10,16 @@ package com.exactprosystems.jf.charts;
 
 import com.exactprosystems.jf.actions.ReadableValue;
 import com.exactprosystems.jf.api.error.JFException;
-import com.exactprosystems.jf.api.error.common.ChartException;
 import com.exactprosystems.jf.api.error.common.NullParameterException;
 import com.exactprosystems.jf.common.report.ReportWriter;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.functions.Table;
 
+import java.awt.*;
 import java.io.IOException;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -31,9 +31,9 @@ public class BarChartBuilder extends ChartBuilder
 	private String yAxisDescription = "";
 	private String labelColumn;
 
-	public BarChartBuilder(Table table, Parameters params) throws JFException
+	public BarChartBuilder(Table table, Parameters params, Map<String, Color> colorMap) throws JFException
 	{
-		super(table, params);
+		super(table, params, colorMap);
 		Object yAxisDesc = params.get(yAxisDescriptionName);
 		if (yAxisDesc != null)
 		{
@@ -82,7 +82,7 @@ public class BarChartBuilder extends ChartBuilder
 
 		writer.fwrite("<div id='%s' class=container></div>", chartId);
 		String data = generateData();
-		writer.fwrite("<script>createBarChart('%s', %s, '%s')</script>", chartId, data, this.yAxisDescription);
+		writer.fwrite("<script>createBarChart('%s', %s, '%s', %s)</script>", chartId, data, this.yAxisDescription, createColors());
 
 	}
 

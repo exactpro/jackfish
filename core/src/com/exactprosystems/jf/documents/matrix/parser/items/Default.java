@@ -14,6 +14,7 @@ import java.util.List;
 		description 	= "Executed if all cases are not suitable.", 
 		shouldContain 	= { Tokens.Default },
 		mayContain 		= { Tokens.Off, Tokens.RepOff }, 
+		parents			= { Switch.class },
         closes			= Switch.class,
         real 			= true,
 		hasValue 		= false, 

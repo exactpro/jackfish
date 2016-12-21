@@ -390,9 +390,9 @@ public class Notifications
 			this.label.getStyleClass().addAll(CssVariables.NOTIFICATION_MSG, stateClass);
 			int length = msg.split(System.lineSeparator()).length + 2;
 			length = Math.min(length, 10);
-			this.label.setPrefSize(400, length * 20);
+            this.label.setPrefSize(400, length * 20);
 			this.label.setMinSize(400, length * 20);
-			this.label.setMaxSize(400, length * 20);
+			this.label.setMaxSize(400, Screen.getPrimary().getVisualBounds().getHeight() / 4);
 			this.label.setWrapText(true);
 			GridPane.setVgrow(this.label, Priority.ALWAYS);
 			GridPane.setHgrow(this.label, Priority.ALWAYS);

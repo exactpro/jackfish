@@ -10,13 +10,11 @@ package com.exactprosystems.jf.common.report;
 
 import com.exactprosystems.jf.api.app.ImageWrapper;
 import com.exactprosystems.jf.charts.ChartBuilder;
-import com.exactprosystems.jf.documents.matrix.Matrix;
 import com.exactprosystems.jf.documents.matrix.parser.items.ActionItem;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 
 import java.io.IOException;
 import java.util.Date;
-import java.util.List;
 
 public class ContextHelpBuilder extends ReportBuilder
 {
@@ -74,7 +72,7 @@ public class ContextHelpBuilder extends ReportBuilder
 	}
 	
     @Override
-    protected void reportHeader(ReportWriter writer, Matrix context, Date date) throws IOException
+    protected void reportHeader(ReportWriter writer, Date date) throws IOException
     {
         writer.fwrite(
                 "<html>\n" +
@@ -113,7 +111,7 @@ public class ContextHelpBuilder extends ReportBuilder
 
 
     @Override
-    protected void reportHeaderTotal(ReportWriter writer, Matrix context, Date date) throws IOException
+    protected void reportHeaderTotal(ReportWriter writer, Date date) throws IOException
     {
     }
 
@@ -132,7 +130,7 @@ public class ContextHelpBuilder extends ReportBuilder
     }
 
 	@Override
-	protected void reportImage(ReportWriter writer, MatrixItem item, String beforeTestcase, String fileName, String title) throws IOException
+	protected void reportImage(ReportWriter writer, MatrixItem item, String beforeTestcase, String fileName, String title, Boolean asLink) throws IOException
 	{
 		
 	}
@@ -148,7 +146,7 @@ public class ContextHelpBuilder extends ReportBuilder
 	}
 
 	@Override
-	protected void reportFooter(ReportWriter writer, MatrixItem item, Date date, String name, String reportName) throws IOException
+	protected void reportFooter(ReportWriter writer, int failed, int passed, Date date, String name, String reportName) throws IOException
 	{
 		writer.fwrite("</body>\n");
 		writer.fwrite("</html>");

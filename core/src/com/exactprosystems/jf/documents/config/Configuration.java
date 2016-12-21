@@ -18,6 +18,7 @@ import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.service.IServicesPool;
 import com.exactprosystems.jf.app.ApplicationPool;
 import com.exactprosystems.jf.client.ClientsPool;
+import com.exactprosystems.jf.common.MainRunner;
 import com.exactprosystems.jf.common.MutableString;
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
@@ -31,6 +32,7 @@ import com.exactprosystems.jf.documents.DocumentFactory;
 import com.exactprosystems.jf.documents.DocumentInfo;
 import com.exactprosystems.jf.documents.matrix.Matrix;
 import com.exactprosystems.jf.documents.matrix.parser.items.MutableArrayList;
+import com.exactprosystems.jf.documents.matrix.parser.items.NameSpace;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.DummyRunnerListener;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.MatrixListener;
@@ -39,7 +41,6 @@ import com.exactprosystems.jf.documents.vars.SystemVars;
 import com.exactprosystems.jf.service.ServicePool;
 import com.exactprosystems.jf.sql.DataBasePool;
 import com.exactprosystems.jf.tool.main.DocumentKind;
-import com.exactprosystems.jf.tool.main.Main;
 import org.apache.log4j.Logger;
 
 import javax.xml.XMLConstants;
@@ -405,7 +406,7 @@ public class Configuration extends AbstractDocument
 
 		for (MutableString folder : this.librariesValue)
 		{
-			File folderFile = new File(folder.get());
+			File folderFile = new File(MainRunner.makeDirWithSubstitutions(folder.get()));
 			if (folderFile.exists() && folderFile.isDirectory())
 			{
 				File[] libFiles = folderFile.listFiles((dir, name) -> name != null && name.endsWith(matrixExt));
@@ -429,7 +430,7 @@ public class Configuration extends AbstractDocument
 							continue;
 						}
 						matrix.load(reader);
-						List<String> namespaces = matrix.nameSpaces();
+						List<String> namespaces = matrix.listOfIds(NameSpace.class);
 						if (namespaces.isEmpty())
 						{
 							matrix.close(this.getFactory().getSettings());
@@ -483,7 +484,7 @@ public class Configuration extends AbstractDocument
 				continue;
 			}
 			
-			File dicFile = new File(dicPath);
+			File dicFile = new File(MainRunner.makeDirWithSubstitutions(dicPath));
 			Date currentTime  = new Date(dicFile.lastModified());
 			Date previousTime = this.documentsActuality.get(dicFile.getAbsolutePath());
 			
@@ -597,7 +598,7 @@ public class Configuration extends AbstractDocument
 		}
 		
 		// save list of all opened documents ...
-		settings.removeAll(Main.MAIN_NS, Main.OPENED);
+		settings.removeAll(Settings.MAIN_NS, Settings.OPENED);
 		settings.saveIfNeeded();
 
 		for (Document doc : copy)
@@ -607,7 +608,7 @@ public class Configuration extends AbstractDocument
 				DocumentKind kind = DocumentKind.byDocument(doc);
 				if (doc.hasName())
 				{
-					settings.setValue(Main.MAIN_NS, Main.OPENED, doc.getName(), kind.toString());
+					settings.setValue(Settings.MAIN_NS, Settings.OPENED, doc.getName(), kind.toString());
 				}
 				doc.close(settings);
 			}
@@ -809,7 +810,7 @@ public class Configuration extends AbstractDocument
 	
 	public static List<String> toStringList(MutableArrayList<MutableString> str)
 	{
-		return str.stream().map(MutableString::get).collect(Collectors.toList());
+		return str.stream().map(a -> MainRunner.makeDirWithSubstitutions(a.get())).collect(Collectors.toList());
 	}
 
 	public List<Document> getSubordinates()
@@ -872,7 +873,7 @@ public class Configuration extends AbstractDocument
 			return;
 		}
 		
-		final File file = new File(userVariablesFileName);
+		final File file = new File(MainRunner.makeDirWithSubstitutions(userVariablesFileName));
 		if (file.exists())
 		{
 			try (Reader reader = new FileReader(file))

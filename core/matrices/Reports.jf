@@ -1,54 +1,78 @@
-#Id;#TestCase;#Kind;#For
-INIT;Init;Never;
-    #Id;#Call;#type;#host;#base;#user;#password;#scriptsDir
-    CALL_1;RF.SetVars;'MySql';'127.0.0.1';'regression';'root';dbPassword;'matrices/EE/'
-
-
-#Off;#TestCase;#Kind;#For
-1;Overall;Never;
+#TestCase;#Kind;#Depends;#For
+Init;Never;;
     #Id;#Call
-    table;RF.TotalTable
+    allDates;RF.listOfDates
 
-    #Action;#Type;#Table;#Title;#BeforeTestCase;#Labels;#Values
-    ChartReport;ChartKind.Pie;table;'{{4 Overall 4}}';'INIT';'Kind';'Values'
+    #Id;#Action;#DefaultValue;#HelpKind;#Title;#DataSource
+    inputDate;Input;'';HelpKind.ChooseFromList;'Choose the regression run. Leave empty if all';allDates
 
-    #Action;#Table;#Title;#BeforeTestCase;#Numbers
-    TableReport;table;'Table';'INIT';false
+    #Id;#Let
+    date;inputDate.Out == '' ? null : inputDate.Out
+
+    #Id;#Let
+    Overall;'Overall'
+
+    #Id;#Let
+    Progress;'Progress'
+
+    #Id;#Let
+    Summary;'Summary'
+
+    #Id;#Let
+    Export;'Export'
+
+    #Id;#Let
+    Detailed;'Detailed'
+
+    #Id;#Action;#DefaultValue;#Title;#HelpKind;#DataSource
+    INP1;Input;Overall;'Choose the report:';HelpKind.ChooseFromList;[ Overall, Progress, Summary, Export, Detailed ]
+
+    #Switch
+    INP1.Out
+        #Case
+        Overall
+            #Call;#date
+            RF.repOverall;date
 
 
-#TestCase;#Kind;#For
-Summary;Never;
-    #Id;#Call;#beforeTestCase
-    table;REP.TotalReport;'INIT'
+        #Case
+        Progress
+            #Call
+            RF.repProgress
 
 
-#Off;#TestCase;#Kind;#For
-1;Progress;Never;
-    #Id;#Call
-    table;RF.ProgressTable
-
-    #Action;#Type;#Table;#Title;#BeforeTestCase;#Labels;#Values
-    ChartReport;ChartKind.Line;table;'{{4 Regression progress 4}}';'INIT';'id';'Average'
+        // 
+        #Case
+        Summary
+            #Call;#date
+            RF.repSummary;date
 
 
-#Off;#TestCase;#Kind;#For
-1;Details;Never;
-    #Id;#Call
-    table;RF.LastAllDetails
+        // 
+        #Case
+        Export
+            #Id;#Action;#DefaultValue;#HelpKind;#Title
+            name;Input;'reports/export.csv';HelpKind.ChooseSaveFile;'Choose the file name'
 
-    #Action;#Table;#Columns;#MatchCell;#Search;#Replace
-    TableReplace;table;{ 'step', 'error' };true;'null';''
+            #Call;#fileName;#date
+            RF.repCsvExport;name.Out;date
 
-    #Action;#Table;#Columns;#MatchCell;#Search;#Replace
-    TableReplace;table;{ 'screenshot'};true;null;''
 
-    #Action;#Replace;#Table;#Columns;#Search;#MatchCell
-    TableReplace;'<div class=\"Passed\">Passed</div>';table;{ 'result' };'Passed';true
+        // 
+        #Case
+        Detailed
+            #Call;#date
+            RF.repLastAllDetails;date
 
-    #Action;#Replace;#Table;#Columns;#Search;#MatchCell
-    TableReplace;'<div class=\"Failed\">Failed</div>';table;{ 'result' };'Failed';true
 
-    #Action;#Table;#Title;#BeforeTestCase;#Numbers;#ColumnMap
-    TableReport;table;'{{4 Detailed report 4}}';'INIT';false;{ 'scenario' : 'Matrix Name', 'date' : 'Execution Date', 'time' : 'Execution Time', 'result' : 'Execution Status', 'user' : 'Executed By', 'host' : 'Execution Machine', 'screenshot' : 'Screenshot'}
+    #EndSwitch
+
+    #OnError
+        #Action;#Text;#Notifier
+        Show;error;Notifier.Error
+
+        #Fail
+        err
+
 
 

@@ -8,9 +8,6 @@
 
 package com.exactprosystems.jf.charts;
 
-import java.io.IOException;
-import java.util.List;
-
 import com.exactprosystems.jf.actions.ReadableValue;
 import com.exactprosystems.jf.api.error.JFException;
 import com.exactprosystems.jf.common.report.ReportWriter;
@@ -18,11 +15,16 @@ import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.functions.Table;
 
+import java.awt.*;
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
+
 public class GanntChartBuilder extends ChartBuilder
 {
-	public GanntChartBuilder(Table table, Parameters params) throws JFException
+	public GanntChartBuilder(Table table, Parameters params, Map<String, Color> colorMap) throws JFException
 	{
-		super(table, params);
+		super(table, params, colorMap);
 
 		// TODO Auto-generated constructor stub
 	}

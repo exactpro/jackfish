@@ -9,7 +9,7 @@ RM38805 rename columns in action TableReport;Never;
     #EndRawTable
 
     #Action;#Table;#Title;#Numbers;#scenario;#result;#date;#time;#user;#host
-    TableReport;table;'Consolidated Umbrella Report: ';false;'Matrix Name';'Execution Status';'Execution Date';'Execution Time';'Exectuted By';'Execution Machine'
+    TableReport;DATA1;'Consolidated Umbrella Report: ';false;'Matrix Name';'Execution Status';'Execution Date';'Execution Time';'Exectuted By';'Execution Machine'
 
 
 #TestCase;#Kind;#For

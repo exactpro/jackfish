@@ -21,7 +21,7 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.documents.matrix.parser.Result;
 import com.exactprosystems.jf.documents.matrix.parser.Tokens;
 import com.exactprosystems.jf.documents.matrix.parser.items.ActionItem;
-import com.exactprosystems.jf.documents.matrix.parser.items.ActionItem.HelpKind;
+import com.exactprosystems.jf.functions.HelpKind;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixError;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 import com.exactprosystems.jf.documents.matrix.parser.items.TypeMandatory;
@@ -146,11 +146,7 @@ public abstract class AbstractAction implements Cloneable
 
     		boolean parametersAreCorrect = parameters.evaluateAll(evaluator);
     		parametersAreCorrect = parametersAreCorrect && injectParameters(parameters);
-            
-            if (reportAllDetail())
-            {
-                reportParameters(report, parameters);
-            }
+            reportParameters(report, parameters);
 
             if (parametersAreCorrect)
             {
@@ -215,10 +211,7 @@ public abstract class AbstractAction implements Cloneable
             }
         }
 
-        if (reportAllDetail() || this.action.Result != Result.Passed)
-        {
-            reportResults(report, assertBool);
-        }
+        reportResults(report, assertBool);
 
         evaluator.getLocals().delete(Tokens.This.get());
         return this.action.Result;
@@ -326,11 +319,6 @@ public abstract class AbstractAction implements Cloneable
 	protected void helpToAddParametersDerived(List<ReadableValue> list, Context context, Parameters parameters)  throws Exception
 	{
 	}
-
-	protected boolean reportAllDetail()
-    {
-        return true;
-    }
 
     protected void doRealDocumetation(Context context, ReportBuilder report)
     {
@@ -509,7 +497,7 @@ public abstract class AbstractAction implements Cloneable
                     // this field is marked with ActionFieldAttribute
 
                 	parameter.correctType(description.field.getType());
-                	if (parameter.isValid())
+                	if (parameter.isValid()) // why allCorrect isn't changed if parameter is invalid?
                 	{
 	                    injectValue(name, description, parameter.getValue());
                 	}
@@ -646,21 +634,6 @@ public abstract class AbstractAction implements Cloneable
                 logger.error(e.getMessage(), e);
             }
         }
-    }
-
-    private static boolean areObjectsEqual(Object o1, Object o2)
-    {
-        if (o1 == null || o2 == null)
-        {
-            return o1 == o2;
-        }
-
-        if (o1.getClass() == o2.getClass())
-        {
-            return o1.equals(o2);
-        }
-
-        return o1.toString().equals(o2.toString());
     }
 
     private void clearResults()

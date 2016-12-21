@@ -6,7 +6,7 @@
 //  information which is the property of Exactpro Systems, LLC or its licensors.
 ////////////////////////////////////////////////////////////////////////////////
 
-package com.exactprosystems.jf.actions.system;
+package com.exactprosystems.jf.actions.report;
 
 import com.exactprosystems.jf.actions.AbstractAction;
 import com.exactprosystems.jf.actions.ActionAttribute;
@@ -18,7 +18,7 @@ import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 
 @ActionAttribute(
-		group					= ActionGroups.System,
+		group					= ActionGroups.Report,
 		generalDescription 		= "Sets the report's name.",
 		additionFieldsAllowed 	= false
 	)
@@ -41,9 +41,8 @@ public class ReportName extends AbstractAction
 	}
 
 	@Override
-	public void initDefaultValues() {
-		// TODO Auto-generated method stub
-		
+	public void initDefaultValues() 
+	{
 	}
 }
 

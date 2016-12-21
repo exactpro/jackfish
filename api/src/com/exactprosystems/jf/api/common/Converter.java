@@ -8,99 +8,124 @@
 
 package com.exactprosystems.jf.api.common;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutput;
-import java.io.ObjectOutputStream;
+import javax.sql.rowset.serial.SerialBlob;
+import java.io.*;
 import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.sql.Blob;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
-
-import javax.sql.rowset.serial.SerialBlob;
-
-import com.exactprosystems.jf.api.app.ImageWrapper;
 
 public class Converter
 {
-    public static Blob filesToBlob(List<String> list) throws Exception
-    {
-        ByteArrayOutputStream outputStream = null;
+	private static final String CLASS_NAME = "class.name";
 
-        try (ByteArrayOutputStream baos = new ByteArrayOutputStream();
-             ZipOutputStream zos = new ZipOutputStream(baos))
-        {
-            for (String filename : list)
-            {
-                Path path = Paths.get(filename);
-                byte[] data = Files.readAllBytes(path);
-                ZipEntry entry = new ZipEntry(filename);
-                entry.setSize(data.length);
-                zos.putNextEntry(entry);
-                zos.write(data);
-                zos.closeEntry();
-            }
-            outputStream = baos;
-        }
-        
-        Blob blob = new SerialBlob(outputStream.toByteArray());
-        return blob;
-    }
-    
-    public static Blob imageToBlob(ImageWrapper wrapper) throws Exception
-    {
-        if (wrapper == null)
-        {
-            return null;
-        }
-        wrapper.clearFile();
-        
-        ByteArrayOutputStream outputStream = null;
-        try (ByteArrayOutputStream bos = new ByteArrayOutputStream(); 
-                ObjectOutput out = new ObjectOutputStream(bos))
-        {
-            out.writeObject(wrapper);
-            out.flush();
-            outputStream = bos;
-        }
-        
-        return new SerialBlob(outputStream.toByteArray());
-    }
+	public static Blob storableToBlob(Storable object) throws Exception
+	{
+		if (object == null)
+		{
+			return null;
+		}
+		List<String> list = object.getFileList();
+		ByteArrayOutputStream outputStream = null;
+		
+		try (ByteArrayOutputStream baos = new ByteArrayOutputStream(); 
+				ZipOutputStream zos = new ZipOutputStream(baos))
+		{
+			{
+				byte[] data = object.getClass().getName().getBytes();
+				ZipEntry entry = new ZipEntry(CLASS_NAME);
+				entry.setSize(data.length);
+				zos.putNextEntry(entry);
+				zos.write(data);
+				zos.closeEntry();
+			}
+			
+			for (String filename : list)
+			{
+				byte[] data = object.getData(filename);
+				ZipEntry entry = new ZipEntry(filename);
+				entry.setSize(data.length);
+				zos.putNextEntry(entry);
+				zos.write(data);
+				zos.closeEntry();
+			}
+			outputStream = baos;
+		}
+		catch (Exception e)
+		{ 
+			e.printStackTrace();
+		}
 
-    public static Object blobToObject(Blob blob) throws Exception
-    {
-        if (blob == null)
-        {
-            return null;
-        }
-        
-        try (ByteArrayInputStream bis = new ByteArrayInputStream(blob.getBytes(1, (int) blob.length()));
-                ObjectInput in = new ObjectInputStream(bis))
-        {
-            Object a = in.readObject();
-            System.out.println(((ImageWrapper)a).getFileName());
-            return a;
-        }
-    }
-    
+		return new SerialBlob(outputStream.toByteArray());
+	}
+	
+	public static Storable blobToStorable(Blob blob) throws Exception
+	{
+		if (blob == null)
+		{
+			return null;
+		}
+
+		Storable retValue = null;
+		try (InputStream in = blob.getBinaryStream(); 
+				ZipInputStream zis = new ZipInputStream(in))
+		{
+			ZipEntry nextEntry = null;
+			while((nextEntry = zis.getNextEntry()) != null)
+			{
+				String name = nextEntry.getName();
+				if (retValue == null)
+				{
+					if (name.equals(CLASS_NAME))
+					{
+						byte[] buf = readAll(zis);
+						Class<?> clazz = Class.forName(new String(buf));
+						retValue = (Storable) clazz.newInstance();
+						zis.closeEntry();
+						continue;
+					}
+					else
+					{
+						throw new Exception("Wrong structure");
+					}
+				}
+				
+				retValue.addFile(name, readAll(zis));
+				zis.closeEntry();
+			}
+		}
+		catch (Exception e)
+		{ 
+			e.printStackTrace();
+		}
+		
+		return retValue;
+	}
+
+
+	private static byte[] readAll(InputStream is) throws IOException
+	{
+		ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+		int nRead;
+		byte[] data = new byte[16384];
+
+		while ((nRead = is.read(data, 0, data.length)) != -1) 
+		{
+			buffer.write(data, 0, nRead);
+		}
+		buffer.flush();
+		return buffer.toByteArray();
+	}
+	
+
 	public static void setFormats(Collection<String> formats)
 	{
 		if (formats != null)
@@ -115,18 +140,18 @@ public class Converter
 		{
 			return null;
 		}
-		Object[] array = (Object[])object; 
-		
+		Object[] array = (Object[]) object;
+
 		byte[] ret = new byte[array.length];
 		for (int i = 0; i < array.length; i++)
 		{
 			ret[i] = (byte) array[i];
 		}
-		
-		
+
+
 		return ret;
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public static <T> T[] convertByteArray(Class<T> clazz, Object object) throws Exception
 	{
@@ -134,18 +159,18 @@ public class Converter
 		{
 			return null;
 		}
-		byte[] array = (byte[])object; 
-		
-		T[] ret = (T[])Array.newInstance(clazz, array.length);
+		byte[] array = (byte[]) object;
+
+		T[] ret = (T[]) Array.newInstance(clazz, array.length);
 		for (int i = 0; i < array.length; i++)
 		{
-			ret[i] = (T)convertToType(array[i], clazz);
+			ret[i] = (T) convertToType(array[i], clazz);
 		}
-		
-		
+
+
 		return ret;
 	}
-	
+
 
 	@SuppressWarnings("unchecked")
 	public static <T> T[] convertArray(Class<T> clazz, Object object)
@@ -154,28 +179,28 @@ public class Converter
 		{
 			return null;
 		}
-		Object[] array = (Object[])object; 
-		
-		T[] ret = (T[])Array.newInstance(clazz, array.length);
+		Object[] array = (Object[]) object;
+
+		T[] ret = (T[]) Array.newInstance(clazz, array.length);
 		for (int i = 0; i < array.length; i++)
 		{
 			ret[i] = (T) array[i];
 		}
-		
-		
+
+
 		return ret;
 	}
-	
+
 	public static Map<String, String> toStringMap(Map<String, Object> map)
 	{
 		Map<String, String> ret = new HashMap<String, String>(map.size());
-		for(Entry<String, Object> entry : map.entrySet())
+		for (Entry<String, Object> entry : map.entrySet())
 		{
 			ret.put(entry.getKey(), "" + entry.getValue());
 		}
 		return ret;
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public static <T> T convertToType(Object object, Class<T> type) throws Exception
 	{
@@ -183,88 +208,88 @@ public class Converter
 		{
 			return null;
 		}
-		
+
 		if (type.isAssignableFrom(object.getClass()))
 		{
-			return (T)object;
+			return (T) object;
 		}
-		
+
 		if (type.isAssignableFrom(Character.class))
 		{
-			return (T)new Character(String.valueOf(object).charAt(0));
+			return (T) new Character(String.valueOf(object).charAt(0));
 		}
 		else if (type.isAssignableFrom(String.class))
 		{
-			return (T)String.valueOf(object);
+			return (T) String.valueOf(object);
 		}
 		else if (type.isAssignableFrom(Date.class))
 		{
-			return (T)parseDate(String.valueOf(object));
+			return (T) parseDate(String.valueOf(object));
 		}
 		else if (type.isAssignableFrom(Boolean.class))
 		{
 			if (object instanceof String)
 			{
-				return (T)new Boolean(Boolean.parseBoolean(String.valueOf(object)));
+				return (T) new Boolean(Boolean.parseBoolean(String.valueOf(object)));
 			}
 			else if (object instanceof Boolean)
 			{
-				return (T)(Boolean)object;
+				return (T) (Boolean) object;
 			}
 		}
 		else if (type.isAssignableFrom(Integer.class))
 		{
 			if (object instanceof String)
 			{
-				return (T)new Integer(Integer.parseInt(String.valueOf(object)));
+				return (T) new Integer(Integer.parseInt(String.valueOf(object)));
 			}
 			else if (object instanceof Number)
 			{
-				return (T)new Integer(((Number)object).intValue());
+				return (T) new Integer(((Number) object).intValue());
 			}
 		}
 		else if (type.isAssignableFrom(Double.class))
 		{
 			if (object instanceof String)
 			{
-				return (T)new Double(Double.parseDouble(String.valueOf(object)));
+				return (T) new Double(Double.parseDouble(String.valueOf(object)));
 			}
 			else if (object instanceof Number)
 			{
-				return (T)new Double(((Number)object).doubleValue());
+				return (T) new Double(((Number) object).doubleValue());
 			}
 		}
 		else if (type.isAssignableFrom(BigInteger.class))
 		{
 			if (object instanceof String)
 			{
-				return (T)new BigInteger(String.valueOf(object).trim());
+				return (T) new BigInteger(String.valueOf(object).trim());
 			}
 			else if (object instanceof Number)
 			{
-				return (T)new BigInteger(String.valueOf(((Number)object).intValue()));
+				return (T) new BigInteger(String.valueOf(((Number) object).intValue()));
 			}
 		}
 		else if (type.isAssignableFrom(BigDecimal.class))
 		{
 			if (object instanceof String)
 			{
-				return (T)new BigDecimal(String.valueOf(object).trim());
+				return (T) new BigDecimal(String.valueOf(object).trim());
 			}
 			else if (object instanceof Number)
 			{
-				return (T)new BigDecimal(String.valueOf(((Number)object).intValue()));
+				return (T) new BigDecimal(String.valueOf(((Number) object).intValue()));
 			}
 		}
 
 		throw new Exception("Can not convert " + object + " to type " + type);
 	}
-	
+
 	public static Date parseDate(String date) throws ParseException
 	{
 		Date ret = null;
 
-		for (DateFormat formatter :  additionFormats)
+		for (DateFormat formatter : additionFormats)
 		{
 			try
 			{
@@ -279,17 +304,18 @@ public class Converter
 				// in real nothing to do 
 			}
 		}
-			
+
 		throw new ParseException("Can not parse date from " + date, 0);
 	}
 
 	/**
 	 * Added index to duplicate columns
+	 *
 	 * @param headers columns names.
 	 * @return for these columns
-	 * 		A B A C B A
-	 * 	returned
-	 * 		A~0 B~0 A~1 C B~1 A~2
+	 * A B A C B A
+	 * returned
+	 * A~0 B~0 A~1 C B~1 A~2
 	 */
 	public static List<String> convertColumns(List<String> headers)
 	{
@@ -332,5 +358,4 @@ public class Converter
 	}
 
 	private static List<DateFormat> additionFormats = new ArrayList<DateFormat>();
-	
 }

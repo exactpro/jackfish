@@ -180,7 +180,7 @@ public class MatrixTreeView extends TreeTableView<MatrixItem>
 					layout.getChildren().stream().filter(n -> n instanceof GridPane).findFirst().ifPresent(p -> Common.setFocused(((GridPane) p).getChildren().get(0)));
 				}
 			}
-			else if (SettingsPanel.match(settings, keyEvent, SettingsPanel.SHOW_ALL))
+			else if (SettingsPanel.match(settings, keyEvent, Settings.SHOW_ALL))
 			{
 				row.showExpressionsResults();
 			}
@@ -191,7 +191,7 @@ public class MatrixTreeView extends TreeTableView<MatrixItem>
 		}, "Error on do actions by shortcuts"));
 
 		setOnKeyReleased(keyEvent -> Common.tryCatch(() -> {
-			if (SettingsPanel.match(settings, keyEvent, SettingsPanel.SHOW_ALL))
+			if (SettingsPanel.match(settings, keyEvent, Settings.SHOW_ALL))
 			{
 				row.hideExpressionsResults();
 			}

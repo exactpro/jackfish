@@ -349,6 +349,11 @@ public class ConfigurationFx extends Configuration
 		this.displayMatrix();
 	}
 
+	public void addToToolbar(String fullPath) throws Exception
+	{
+		this.model.addToToolbar(fullPath);
+	}
+
 	//endregion
 
 	//region library

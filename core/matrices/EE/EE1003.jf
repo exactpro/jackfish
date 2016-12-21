@@ -1,5 +1,5 @@
-#Id;#TestCase;#Kind
-Step 1;This matrix always failed;OnStart
+#Id;#TestCase;#Kind;#Depends;#For
+Step 1;This matrix always failed;Never;;
     #Action;#Text;#Notifier
     Show;'EE1003 Always failed';Notifier.Success
 
@@ -10,8 +10,8 @@ Step 1;This matrix always failed;OnStart
     Wait;1000
 
 
-#Id;#TestCase;#Kind
-Step 2;Working;OnError
+#Id;#TestCase;#Kind;#Depends;#For
+Step 2;Working;Never;Step 1;
     #Action;#Text;#Notifier
     Show;'Step 2';Notifier.Info
 
@@ -25,8 +25,8 @@ Step 2;Working;OnError
     'Some very important reason to fail'
 
 
-#Id;#TestCase;#Kind
-Step 2;Working;Never
+#Id;#TestCase;#Kind;#Depends;#For
+Step 2;Working;Never;;
     #Action;#Text;#Notifier
     Show;'Step 3';Notifier.Info
 

@@ -38,6 +38,8 @@ import java.util.stream.Collectors;
 		description 	= "Elementary step in the script", 
 		shouldContain 	= { Tokens.Step },
 		mayContain 		= { Tokens.Off, Tokens.Kind, Tokens.RepOff },
+		parents			= { Case.class, Else.class, For.class, ForEach.class, If.class,
+							OnError.class, Step.class, SubCase.class, TestCase.class, While.class },
 		real			= true,
 		hasValue 		= true, 
 		hasParameters 	= false,
@@ -175,7 +177,7 @@ public class Step extends MatrixItem
             this.identify.evaluate(evaluator);
 			Object identifyValue = this.identify.getValue();
 			
-			if (table != null)
+            if (table != null && !isRepOff())
 			{
 				position = table.size();
 				
@@ -233,22 +235,20 @@ public class Step extends MatrixItem
             context.runHandler(HandlerKind.OnStepFinish, report, null);
 
             doSreenshot(row, null, screenshotKind, ScreenshotKind.OnFinish);
-			if (table != null && position >= 0)
+            if (table != null && position >= 0 && !isRepOff())
 			{
 				row.put(Context.timeColumn, 		ret.getTime());
 				row.put(Context.resultColumn, 		res);
 				row.put(Context.errorColumn, 		ret.getError());
 				table.updateValue(position, row);
 			}
-
-            outScreenshot(report, row);
 		} 
 		catch (Exception e)
 		{
 			logger.error(e.getMessage(), e);
 			listener.error(this.owner, getNumber(), this, e.getMessage());
 
-			if (table != null && position >= 0)
+            if (table != null && table.size() >= 0  && !isRepOff())
 			{
 				row.put(Context.timeColumn, 		ret.getTime());
 				row.put(Context.resultColumn, 		res);

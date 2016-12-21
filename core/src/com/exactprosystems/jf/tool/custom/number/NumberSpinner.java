@@ -40,7 +40,7 @@ public class NumberSpinner extends HBox
 	public NumberSpinner(NumberTextField numberField, int step)
 	{
 		super();
-		this.getStylesheets().add(Theme.NUMBER_SPINNER.getPath());
+		this.getStylesheets().add(Theme.GENERAL.getPath());
 		this.numberField = numberField;
 		this.step = step;
 		numberField.getStyleClass().add(CssVariables.NUMBER_FIELD);

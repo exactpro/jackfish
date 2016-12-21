@@ -14,29 +14,32 @@ import com.exactprosystems.jf.api.error.common.UnknownChartKindException;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.functions.Table;
 
+import java.awt.*;
+import java.util.Map;
+
 public class ChartFactory
 {
 	private ChartFactory() {}
 	
-	public static ChartBuilder createChartBuilder(ChartKind chartKind, Table table, Parameters params) throws JFException
+	public static ChartBuilder createChartBuilder(ChartKind chartKind, Table table, Map<String, Color> colors, Parameters params) throws JFException
 	{
 		ChartBuilder chart = null;
 		switch (chartKind)
 		{
 		case Bar:
-			chart = new BarChartBuilder(table, params);
+			chart = new BarChartBuilder(table, params, colors);
 			break;
 			
 		case Line:
-			chart = new LineChartBuilder(table, params);
+			chart = new LineChartBuilder(table, params, colors);
 			break;
 			
 		case Pie:
-			chart = new PieChartBuilder(table, params);
+			chart = new PieChartBuilder(table, params, colors);
 			break;
 			
 		case Gannt:
-			chart = new GanntChartBuilder(table, params);
+			chart = new GanntChartBuilder(table, params, colors);
 			break;
 
 		default:

@@ -10,14 +10,15 @@ package com.exactprosystems.jf.tool;
 
 import com.exactprosystems.jf.api.app.IControl;
 import com.exactprosystems.jf.api.common.DateTime;
+import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.error.app.ProxyException;
 import com.exactprosystems.jf.common.Settings;
+import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.documents.Document;
 import com.exactprosystems.jf.tool.custom.label.CommentsLabel;
 import com.exactprosystems.jf.tool.custom.tab.CustomTab;
 import com.exactprosystems.jf.tool.custom.tab.CustomTabPane;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
-import com.exactprosystems.jf.tool.settings.SettingsPanel;
 import com.exactprosystems.jf.tool.settings.Theme;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
@@ -27,9 +28,11 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.*;
+import javafx.scene.control.Labeled;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCombination;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
@@ -51,7 +54,7 @@ import java.nio.file.Paths;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -125,11 +128,7 @@ public abstract class Common
 
 	public static List<String> currentThemesPaths()
 	{
-		List<String> list = new ArrayList<>();
-		list.add(Common.theme.getPath());
-		//TODO add path to icon css in future
-		list.add(Theme.SPACER.getPath());
-		return list;
+		return Arrays.asList(Theme.GENERAL.getPath(), Common.theme.getPath());
 	}
 
 	public static Theme currentTheme()
@@ -237,12 +236,22 @@ public abstract class Common
 
 	public static String getShortcutTooltip(Settings settings, String nameShortcut) throws Exception
 	{
-		Settings.SettingsValue value = settings.getValue(Settings.GLOBAL_NS, SettingsPanel.SHORTCUTS_NAME, nameShortcut);
+		Settings.SettingsValue value = settings.getValue(Settings.GLOBAL_NS, Settings.SHORTCUTS_NAME, nameShortcut);
 		if (value != null)
 		{
 			return value.getValue().equals(EMPTY) ? "" : "(" + value.getValue() + ")";
 		}
 		return "";
+	}
+
+	public static KeyCombination getShortcut(Settings settings, String shortcutName)
+	{
+		Settings.SettingsValue value = settings.getValue(Settings.GLOBAL_NS, Settings.SHORTCUTS_NAME, shortcutName);
+		if (value != null && !value.getValue().equals(EMPTY))
+		{
+			return KeyCombination.valueOf(value.getValue());
+		}
+		return null;
 	}
 
 	public static void customizeLabeled(Labeled n, String cssVariable, String icon)
@@ -466,5 +475,27 @@ public abstract class Common
 		{
 			lines.forEach(writer::println);
 		}
+	}
+
+	public static String createLiteral(Object value, AbstractEvaluator evaluator)
+	{
+		if (value instanceof String)
+		{
+			return evaluator.createString((String) value);
+		}
+		if (value instanceof Number)
+		{
+			return String.valueOf(value);
+		}
+		if (value instanceof Date)
+		{
+			DateTime date = new DateTime((Date)value);
+			return String.format("DateTime.date(%d,%d,%d,%d,%d,%d)", date.years(), date.months(), date.days(), date.hours(), date.minutes(), date.seconds());
+		}
+		if (value instanceof File)
+		{
+			return evaluator.createString(((File) value).getPath());
+		}
+		return Str.asString(value);
 	}
 }

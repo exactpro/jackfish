@@ -32,6 +32,8 @@ import java.util.Set;
 		description 	= "Check the assertion.", 
 		shouldContain 	= { Tokens.Assert },
 		mayContain 		= { Tokens.Off, Tokens.RepOff, Tokens.Message }, 
+		parents			= { Case.class, Else.class, For.class, ForEach.class, If.class,
+							OnError.class, Step.class, SubCase.class, TestCase.class, While.class },
 		real			= true,
 		hasValue 		= true, 
 		hasParameters 	= false,

@@ -29,6 +29,7 @@ import java.util.List;
 		description 	= "On error.", 
 		shouldContain 	= { Tokens.OnError },
 		mayContain 		= { Tokens.Off, Tokens.RepOff },
+		parents			= { For.class, ForEach.class, OnError.class, Step.class, SubCase.class, TestCase.class },
 		real			= true,
 		hasValue 		= false, 
 		hasParameters 	= false,

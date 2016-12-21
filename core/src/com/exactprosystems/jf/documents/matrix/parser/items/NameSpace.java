@@ -33,6 +33,7 @@ import java.util.Set;
         description 	= "Namespace.",
         shouldContain 	= { Tokens.NameSpace },
         mayContain 		= { Tokens.Id, Tokens.Off, Tokens.RepOff },
+        parents			= { MatrixRoot.class },
         real			= true,
         hasValue 		= true,
         hasParameters 	= false,

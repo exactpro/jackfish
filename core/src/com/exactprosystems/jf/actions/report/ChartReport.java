@@ -6,10 +6,12 @@
 //information which is the property of Exactpro Systems, LLC or its licensors.
 ////////////////////////////////////////////////////////////////////////////////
 
-package com.exactprosystems.jf.actions.system;
+package com.exactprosystems.jf.actions.report;
 
 import com.exactprosystems.jf.actions.*;
 import com.exactprosystems.jf.api.app.ChartKind;
+import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.api.error.common.NullParameterException;
 import com.exactprosystems.jf.charts.ChartBuilder;
 import com.exactprosystems.jf.charts.ChartFactory;
@@ -17,14 +19,16 @@ import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
-import com.exactprosystems.jf.documents.matrix.parser.items.ActionItem.HelpKind;
 import com.exactprosystems.jf.documents.matrix.parser.items.TypeMandatory;
+import com.exactprosystems.jf.functions.HelpKind;
 import com.exactprosystems.jf.functions.Table;
 
+import java.awt.Color;
 import java.util.List;
+import java.util.Map;
 
 @ActionAttribute(
-		group = ActionGroups.System, 
+		group = ActionGroups.Report, 
 		generalDescription = "Reports a chart to the report.", 
 		additionFieldsAllowed = true)
 public class ChartReport extends AbstractAction
@@ -33,6 +37,13 @@ public class ChartReport extends AbstractAction
 	public final static String 	tableName 			= "Table";
 	public final static String	beforeTestCaseName	= "BeforeTestCase";
 	public final static String	typeName			= "Type";
+    public final static String  colorsName          = "Colors";
+	public final static String	toReportName		= "ToReport";
+
+	@ActionFieldAttribute(name=toReportName, mandatory = false, description = 
+            "This parameter is used for directing the output from the given object to the external report "
+          + "created by the {{$ReportStart$}} action.")
+	protected ReportBuilder toReport;
 
 	@ActionFieldAttribute(name = titleName, mandatory = true, description = "Title.")
 	protected String 	title 	= null;
@@ -41,7 +52,10 @@ public class ChartReport extends AbstractAction
 	protected Table 	table 	= null;
 
 	@ActionFieldAttribute(name = typeName, mandatory = true, description = "Type of the chart")
-	protected ChartKind			chartType 			=  null;
+	protected ChartKind			 chartType 			=  null;
+
+    @ActionFieldAttribute(name = colorsName, mandatory = false, description = "Color map")
+    protected Map<String, Color>    colors           =  null;
 
 	@ActionFieldAttribute(name = beforeTestCaseName, mandatory = false, description = "The name of Testcase before witch the table will be put.")
 	protected String			beforeTestCase		= null;
@@ -54,6 +68,8 @@ public class ChartReport extends AbstractAction
 	public void initDefaultValues()
 	{
 		this.beforeTestCase = null;
+		this.toReport = null;
+		this.colors = null;
 	}
 
 	@Override
@@ -80,7 +96,7 @@ public class ChartReport extends AbstractAction
 			tab = (Table) tabObj;
 		}
 		
-		ChartBuilder chartBuilder = ChartFactory.createChartBuilder(kind, tab, parameters.select(TypeMandatory.Extra));
+		ChartBuilder chartBuilder = ChartFactory.createChartBuilder(kind, tab, null, parameters.select(TypeMandatory.Extra));
 		chartBuilder.helpToAddParameters(list, context);
 	}
 
@@ -90,6 +106,7 @@ public class ChartReport extends AbstractAction
 	{
 		switch (fieldName)
 		{
+			case beforeTestCaseName:
 			case typeName:
 				return HelpKind.ChooseFromList;
 		}
@@ -109,6 +126,9 @@ public class ChartReport extends AbstractAction
 					list.add(new ReadableValue(ChartKind.class.getSimpleName() + "." + kind.name(), kind.getDescription()));
 				}
 				break;
+			case beforeTestCaseName:
+				ActionsReportHelper.fillListForParameter(super.owner.getMatrix(),  list, context.getEvaluator());
+				break;
 				
 			default:
 		}
@@ -117,8 +137,22 @@ public class ChartReport extends AbstractAction
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
-		ChartBuilder chartBuilder = ChartFactory.createChartBuilder(this.chartType, this.table, parameters.select(TypeMandatory.Extra));
-		report.reportChart(this.title, this.beforeTestCase, chartBuilder);
+        if (this.table == null)
+        {
+            super.setError(tableName, ErrorKind.EMPTY_PARAMETER);
+            return;
+        }
+        if (this.chartType == null)
+        {
+            super.setError(typeName, ErrorKind.EMPTY_PARAMETER);
+            return;
+        }
+	    
+		ChartBuilder chartBuilder = ChartFactory.createChartBuilder(this.chartType, this.table, this.colors, parameters.select(TypeMandatory.Extra));
+		report = this.toReport == null ? report : this.toReport;
+		// TODO perform explicit report chart
+		this.beforeTestCase = ActionsReportHelper.getBeforeTestCase(this.beforeTestCase, this.owner.getMatrix());
+		report.reportChart(Str.asString(this.title), this.beforeTestCase, chartBuilder);
 
 		super.setResult(null);
 	}

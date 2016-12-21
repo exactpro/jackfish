@@ -12,6 +12,7 @@ import com.exactprosystems.jf.api.app.AppConnection;
 import com.exactprosystems.jf.api.app.IApplicationFactory;
 import com.exactprosystems.jf.api.client.IClientFactory;
 import com.exactprosystems.jf.api.common.IMatrix;
+import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.AbstractDocument;
@@ -22,7 +23,6 @@ import com.exactprosystems.jf.documents.matrix.parser.Parser;
 import com.exactprosystems.jf.documents.matrix.parser.Result;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixRoot;
-import com.exactprosystems.jf.documents.matrix.parser.items.NameSpace;
 import com.exactprosystems.jf.documents.matrix.parser.items.TestCase;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
 import org.apache.log4j.Logger;
@@ -260,21 +260,21 @@ public class Matrix extends AbstractDocument implements IMatrix, Cloneable
 		return this.root;
 	}
 	
-	public List<String> nameSpaces()
+	public List<String> listOfIds(Class<? extends MatrixItem> clazz)
 	{
 		final List<String> res = new ArrayList<>();
 
 		this.getRoot().bypass(item ->
 		{
-			if (item instanceof NameSpace)
+			if (item.getClass() == clazz && !Str.IsNullOrEmpty(item.getId()))
 			{
-				res.add(((NameSpace)item).getId());
+				res.add(item.getId());
 			}
 		});
 
 		return res;
 	}
-
+    
 	public int count(MatrixItem item)
 	{
 		if (item == null)
@@ -371,7 +371,7 @@ public class Matrix extends AbstractDocument implements IMatrix, Cloneable
 	{
 		try
 		{
-			report.reportStarted(this);
+			report.reportStarted(null);
 		}
 		catch (Exception e)
 		{
@@ -396,7 +396,7 @@ public class Matrix extends AbstractDocument implements IMatrix, Cloneable
 
 		try
 		{
-			report.reportFinished(this);
+			report.reportFinished(0, 0);
 		}
 		catch (Exception e)
 		{
@@ -430,7 +430,7 @@ public class Matrix extends AbstractDocument implements IMatrix, Cloneable
 
 		try
 		{
-			report.reportStarted(this);
+			report.reportStarted(getMatrixBuffer());
 		}
 		catch (Exception e)
 		{
@@ -455,7 +455,7 @@ public class Matrix extends AbstractDocument implements IMatrix, Cloneable
 
 		try
 		{
-			report.reportFinished(this);
+			report.reportFinished(getRoot().count(Result.Failed), getRoot().count(Result.Passed));
 		}
 		catch (Exception e)
 		{

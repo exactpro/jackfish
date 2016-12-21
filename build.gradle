@@ -108,6 +108,8 @@ rootProject.ext {
 subprojects {
 	apply plugin : 'java'
 
+	defaultTasks 'distribute'
+
 	def rootProjectLocation = getRootProject().getRootDir().getAbsolutePath();
 	def projectName = getProject().getName();
 

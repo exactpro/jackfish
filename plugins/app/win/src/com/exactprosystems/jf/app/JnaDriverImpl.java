@@ -65,7 +65,7 @@ public class JnaDriverImpl
 
 		if (new File(dll).exists())
 		{
-			this.driver = (JnaDriver) Native.loadLibrary(dll, JnaDriver.class);
+			this.jnaDriver = (JnaDriver) Native.loadLibrary(dll, JnaDriver.class);
 		}
 		else
 		{
@@ -77,7 +77,7 @@ public class JnaDriverImpl
 	public Framework getFrameworkId() throws Exception
 	{
 		long start = System.currentTimeMillis();
-		String frameworkId = this.driver.getFrameworkId();
+		String frameworkId = this.jnaDriver.getFrameworkId();
 		this.logger.info(String.format("getFrameworkId() = %s, time (ms) : %d", frameworkId, System.currentTimeMillis() - start));
 		checkCSharpTimes();
 		checkError();
@@ -87,7 +87,7 @@ public class JnaDriverImpl
 	public void maxTimeout(int timeout) throws Exception
 	{
 		long start = System.currentTimeMillis();
-		this.driver.maxTimeout(timeout);
+		this.jnaDriver.maxTimeout(timeout);
 		this.logger.info(String.format("maxTimeout(%d), time (ms) : %d", timeout, System.currentTimeMillis() - start));
 		checkCSharpTimes();
 		checkError();
@@ -96,7 +96,7 @@ public class JnaDriverImpl
 	public void createLogger(String logLevel) throws Exception
 	{
 		long start = System.currentTimeMillis();
-		this.driver.createLogger(logLevel);
+		this.jnaDriver.createLogger(logLevel);
 		this.logger.info(String.format("createLogLevel(%s), time : (ms) : %d", logLevel, System.currentTimeMillis() - start));
 		checkCSharpTimes();
 		checkError();
@@ -107,7 +107,8 @@ public class JnaDriverImpl
 	public int connect(String title, int height, int width, int pid, ControlKind controlKind, int timeout) throws Exception
 	{
 		long start = System.currentTimeMillis();
-		int ret = this.driver.connect(title, height, width, pid, controlKind == null ? Integer.MIN_VALUE : controlKind.ordinal(), timeout);
+		title = ConvertString.replaceNonASCIISymbolsToUnicodeSubString(title);
+		int ret = this.jnaDriver.connect(title, height, width, pid, controlKind == null ? Integer.MIN_VALUE : controlKind.ordinal(), timeout);
 		this.logger.info(String.format("connect(%s), time (ms) : %d", title, System.currentTimeMillis() - start));
 		checkCSharpTimes();
 		checkError();
@@ -118,7 +119,7 @@ public class JnaDriverImpl
 	public int run(String exec, String workDir, String param) throws Exception
 	{
 		long start = System.currentTimeMillis();
-		int ret = this.driver.run(exec, workDir, param);
+		int ret = this.jnaDriver.run(exec, workDir, param);
 		this.logger.info(String.format("start(%s,%s,%s), time (ms) : %d", exec, workDir, param, System.currentTimeMillis() - start));
 		checkCSharpTimes();
 		checkError();
@@ -129,7 +130,7 @@ public class JnaDriverImpl
 	public void stop() throws Exception
 	{
 		long start = System.currentTimeMillis();
-		this.driver.stop();
+		this.jnaDriver.stop();
 		this.logger.info(String.format("stop(), time (ms) : %d", System.currentTimeMillis() - start));
 		checkCSharpTimes();
 		checkError();
@@ -138,7 +139,7 @@ public class JnaDriverImpl
 	public void refresh() throws Exception
 	{
 		long start = System.currentTimeMillis();
-		this.driver.refresh();
+		this.jnaDriver.refresh();
 		this.logger.info(String.format("refresh(), time (ms) : %d", System.currentTimeMillis() - start));
 		checkCSharpTimes();
 		checkError();
@@ -147,7 +148,7 @@ public class JnaDriverImpl
 	public String title() throws Exception
 	{
 		long start = System.currentTimeMillis();
-		String title = this.driver.title();
+		String title = ConvertString.replaceUnicodeSubStringsToCharSymbols(this.jnaDriver.title());
 		this.logger.info(String.format("title() = %s, time (ms) : %d", title, System.currentTimeMillis() - start));
 		checkCSharpTimes();
 		checkError();
@@ -161,7 +162,12 @@ public class JnaDriverImpl
 	public String listAll(UIProxyJNA owner, ControlKind kind, String uid, String xpath, String clazz, String name, String title, String text, boolean many) throws Exception
 	{
 		long start = System.currentTimeMillis();
-		String result = this.driver.listAll(owner.getIdString(), kind.ordinal(), uid, xpath, clazz, name, title, text, many);
+		xpath = ConvertString.replaceNonASCIISymbolsToUnicodeSubString(xpath);
+		name = ConvertString.replaceNonASCIISymbolsToUnicodeSubString(name);
+		title = ConvertString.replaceNonASCIISymbolsToUnicodeSubString(title);
+		text = ConvertString.replaceNonASCIISymbolsToUnicodeSubString(text);
+
+		String result = this.jnaDriver.listAll(owner.getIdString(), kind.ordinal(), uid, xpath, clazz, name, title, text, many);
 		this.logger.info(String.format("listAll(%s,%s,%s,%s,%s,%s,%s,%s,%b), time (ms) : %d", owner, kind, uid, xpath, clazz, name, title, text, many, 
 				System.currentTimeMillis() - start));
 		checkCSharpTimes();
@@ -172,7 +178,12 @@ public class JnaDriverImpl
 	public int findAllForLocator(int[] arr, UIProxyJNA owner, ControlKind kind, String uid, String xpath, String clazz, String name, String title, String text, boolean many) throws Exception
 	{
 		long start = System.currentTimeMillis();
-		int result = this.driver.findAllForLocator(arr, arr.length, owner.getIdString(), kind.ordinal(), uid, xpath, clazz, name, title, text, many);
+		xpath = ConvertString.replaceNonASCIISymbolsToUnicodeSubString(xpath);
+		name = ConvertString.replaceNonASCIISymbolsToUnicodeSubString(name);
+		title = ConvertString.replaceNonASCIISymbolsToUnicodeSubString(title);
+		text = ConvertString.replaceNonASCIISymbolsToUnicodeSubString(text);
+
+		int result = this.jnaDriver.findAllForLocator(arr, arr.length, owner.getIdString(), kind.ordinal(), uid, xpath, clazz, name, title, text, many);
 		this.logger.info(String.format("findAllForLocator(%s,%d,%s,%s,%s,%s,%s,%s,%s,%s,%b) = %d, time (ms) : %d", Arrays.toString(arr), arr.length, owner, kind, uid, xpath, clazz, name, title, text, many, result, 
 				System.currentTimeMillis() - start));
 		checkCSharpTimes();
@@ -183,7 +194,9 @@ public class JnaDriverImpl
 	public int findAll(int[] arr, UIProxyJNA owner, WindowTreeScope scope, WindowProperty property, String value) throws Exception
 	{
 		long start = System.currentTimeMillis();
-		int result = this.driver.findAll(arr, arr.length, owner.getIdString(), scope.getValue(), property.getId(), value);
+		value = ConvertString.replaceNonASCIISymbolsToUnicodeSubString(value);
+
+		int result = this.jnaDriver.findAll(arr, arr.length, owner.getIdString(), scope.getValue(), property.getId(), value);
 		this.logger.info(String.format("findAll(%s,%d,%s,%s,%s,%s) = %s, time (ms) : %d", Arrays.toString(arr), arr.length, owner, scope, property, value, result, 
 				System.currentTimeMillis() - start));
 		checkCSharpTimes();
@@ -194,7 +207,7 @@ public class JnaDriverImpl
 	public int elementByCoords(int[] resultId, ControlKind kind, int x, int y) throws Exception
 	{
 		long start = System.currentTimeMillis();
-		int result = this.driver.elementByCoords(resultId, resultId.length, kind.ordinal(), x, y);
+		int result = this.jnaDriver.elementByCoords(resultId, resultId.length, kind.ordinal(), x, y);
 		this.logger.info(String.format("elementByCoords(%s,%s,%d,%d) = %d, time (ms) : %d", Arrays.toString(resultId), kind, x, y, result, 
 				System.currentTimeMillis() - start));
 		checkCSharpTimes();
@@ -207,7 +220,7 @@ public class JnaDriverImpl
 	public String elementAttribute(UIProxyJNA element, AttributeKind kind) throws Exception
 	{
 		long start = System.currentTimeMillis();
-		String result = this.driver.elementAttribute(element.getIdString(), kind.ordinal());
+		String result = ConvertString.replaceUnicodeSubStringsToCharSymbols(this.jnaDriver.elementAttribute(element.getIdString(), kind.ordinal()));
 		this.logger.info(String.format("elementAttribute(%s,%s) = %s, time (ms) : %d", element, kind, result, 
 				System.currentTimeMillis() - start));
 		checkCSharpTimes();
@@ -218,7 +231,7 @@ public class JnaDriverImpl
 	public void sendKeys(String key) throws Exception
 	{
 		long start = System.currentTimeMillis();
-		this.driver.sendKey(key);
+		this.jnaDriver.sendKey(key);
 		this.logger.info(String.format("key(%s), time (ms) : %d", key, 
 				System.currentTimeMillis() - start));
 		checkCSharpTimes();
@@ -228,7 +241,7 @@ public class JnaDriverImpl
 	public void upAndDown(String key, boolean isDown) throws Exception
 	{
 		long start = System.currentTimeMillis();
-		this.driver.upAndDown(key, isDown);
+		this.jnaDriver.upAndDown(key, isDown);
 		this.logger.info(String.format("upAndDown (%s, %b), time (ms) : %d", key, isDown, System.currentTimeMillis() - start));
 		checkCSharpTimes();
 		checkError();
@@ -237,7 +250,7 @@ public class JnaDriverImpl
 	public void mouse(UIProxyJNA element, MouseAction action, int x, int y) throws Exception
 	{
 		long start = System.currentTimeMillis();
-		this.driver.mouse(element.getIdString(), action.getId(), x, y);
+		this.jnaDriver.mouse(element.getIdString(), action.getId(), x, y);
 		this.logger.info(String.format("mouse(%s,%s,%d,%d), time (ms) : %d", element, action, x, y, 
 				System.currentTimeMillis() - start));
 		checkCSharpTimes();
@@ -247,7 +260,7 @@ public class JnaDriverImpl
 	public void dragNdrop(int x1, int y1, int x2, int y2) throws Exception
 	{
 		long start = System.currentTimeMillis();
-		this.driver.dragNdrop(x1, y1, x2, y2);
+		this.jnaDriver.dragNdrop(x1, y1, x2, y2);
 		this.logger.info(String.format("dragNdrop(%d,%d,%d,%d), time (ms) : %d", x1, y1, x2, y2,System.currentTimeMillis() - start));
 		checkCSharpTimes();
 		checkError();
@@ -262,7 +275,7 @@ public class JnaDriverImpl
 	public String doPatternCall(UIProxyJNA element, WindowPattern pattern, String method, String args, int c) throws Exception
 	{
 		long start = System.currentTimeMillis();
-		String result = this.driver.doPatternCall(element.getIdString(), pattern.getId(), method, args, c);
+		String result = this.jnaDriver.doPatternCall(element.getIdString(), pattern.getId(), method, args, c);
 		this.logger.info(String.format("doPatternCall(%s,%s,%s,%s,%d) = %s, time (ms) : %d", element, pattern, method, args, c, result, 
 				System.currentTimeMillis() - start));
 		checkCSharpTimes();
@@ -273,7 +286,10 @@ public class JnaDriverImpl
 	public void setText(UIProxyJNA element, String text) throws Exception
 	{
 		long start = System.currentTimeMillis();
-		this.driver.setText(element.getIdString(), text);
+
+		text = ConvertString.replaceNonASCIISymbolsToUnicodeSubString(text);
+
+		this.jnaDriver.setText(element.getIdString(), text);
 		this.logger.info(String.format("setText(%s,%s)", element, text));
 		checkCSharpTimes();
 		checkError();
@@ -282,7 +298,7 @@ public class JnaDriverImpl
 	public String getProperty(UIProxyJNA element, WindowProperty property) throws Exception
 	{
 		long start = System.currentTimeMillis();
-		String result = this.driver.getProperty(element.getIdString(), property.getId());
+		String result = ConvertString.replaceUnicodeSubStringsToCharSymbols(this.jnaDriver.getProperty(element.getIdString(), property.getId()));
 		this.logger.info(String.format("getProperty(%s,%s) = %s, time (ms) : %d", element, property, result, 
 				System.currentTimeMillis() - start));
 		checkCSharpTimes();
@@ -293,7 +309,7 @@ public class JnaDriverImpl
 	public int getPatterns(int[] arr, UIProxyJNA element) throws Exception
 	{
 		long start = System.currentTimeMillis();
-		int result = this.driver.getPatterns(arr, arr.length, element.getIdString());
+		int result = this.jnaDriver.getPatterns(arr, arr.length, element.getIdString());
 		this.logger.info(String.format("getPatterns(%s,%s,%s) = %d, time (ms) : %d", Arrays.toString(arr), arr.length, element, result, 
 				System.currentTimeMillis() - start));
 		checkCSharpTimes();
@@ -304,7 +320,7 @@ public class JnaDriverImpl
 	public int getImage(int[] arr, UIProxyJNA element) throws Exception
 	{
 		long start = System.currentTimeMillis();
-		int result = this.driver.getImage(arr, arr.length, element.getIdString());
+		int result = this.jnaDriver.getImage(arr, arr.length, element.getIdString());
 		this.logger.info(String.format("getImage(%d,%s) = %s, time (ms) : %d", arr.length, element.getIdString(), result,
 				System.currentTimeMillis() - start));
 		checkCSharpTimes();
@@ -315,7 +331,7 @@ public class JnaDriverImpl
 	public void clearCache() throws Exception
 	{
 		long start = System.currentTimeMillis();
-		this.driver.clearCache();
+		this.jnaDriver.clearCache();
 		this.logger.info(String.format("clearCache, time (ms) : %d", 
 				System.currentTimeMillis() - start));
 		checkCSharpTimes();
@@ -326,7 +342,7 @@ public class JnaDriverImpl
 	public String getValueTableCell(UIProxyJNA table, int column, int row) throws Exception
 	{
 		long start = System.currentTimeMillis();
-		String result = this.driver.getValueTableCell(table.getIdString(), column, row);
+		String result = ConvertString.replaceUnicodeSubStringsToCharSymbols(this.jnaDriver.getValueTableCell(table.getIdString(), column, row));
 		this.logger.info(String.format("getValueTableCell(%s,%d,%d) time(ms) : %d", table, column, row, 
 				System.currentTimeMillis() - start));
 		checkCSharpTimes();
@@ -337,7 +353,7 @@ public class JnaDriverImpl
 	public void mouseTableCell(UIProxyJNA table, int column, int row, MouseAction mouseAction) throws Exception
 	{
 		long start = System.currentTimeMillis();
-		this.driver.mouseTableCell(table.getIdString(), column, row, mouseAction.getId());
+		this.jnaDriver.mouseTableCell(table.getIdString(), column, row, mouseAction.getId());
 		this.logger.info(String.format("mouseTableCell(%s,%d,%d, %s) time(ms) : %d", table, column, row, mouseAction, 
 				System.currentTimeMillis() - start));
 		checkCSharpTimes();
@@ -347,9 +363,9 @@ public class JnaDriverImpl
 	public void textTableCell(UIProxyJNA table, int column, int row, String text) throws Exception
 	{
 		long start = System.currentTimeMillis();
-		this.driver.textTableCell(table.getIdString(), column, row, text);
-		this.logger.info(String.format("textTableCell(%s,%d,%d, %s) time(ms) : %d", table, column, row, text, 
-				System.currentTimeMillis() - start));
+		text = ConvertString.replaceNonASCIISymbolsToUnicodeSubString(text);
+		this.jnaDriver.textTableCell(table.getIdString(), column, row, text);
+		this.logger.info(String.format("textTableCell(%s,%d,%d, %s) time(ms) : %d", table, column, row, text, System.currentTimeMillis() - start));
 		checkCSharpTimes();
 		checkError();
 	}
@@ -357,8 +373,9 @@ public class JnaDriverImpl
 	public String getRowByConditions(UIProxyJNA table, boolean useNumericHeader, Condition condition, String columns) throws Exception
 	{
 		long start = System.currentTimeMillis();
+		columns = ConvertString.replaceNonASCIISymbolsToUnicodeSubString(columns);
 		String stringCondition = condition.serialize();
-		String res = this.driver.getRowByCondition(table.getIdString(), useNumericHeader, stringCondition, columns);
+		String res = ConvertString.replaceUnicodeSubStringsToCharSymbols(this.jnaDriver.getRowByCondition(table.getIdString(), useNumericHeader, stringCondition, columns));
 		this.logger.info(String.format("getRowByConditions(%s,%b,%s) : %s, time(ms) : %d", table, useNumericHeader, stringCondition, res, 
 				System.currentTimeMillis() - start));
 		checkCSharpTimes();
@@ -369,7 +386,7 @@ public class JnaDriverImpl
 	public String getList(UIProxyJNA element) throws Exception
 	{
 		long start = System.currentTimeMillis();
-		String result = this.driver.getList(element.getIdString());
+		String result = ConvertString.replaceUnicodeSubStringsToCharSymbols(this.jnaDriver.getList(element.getIdString()));
 		this.logger.info(String.format("getList(%s) = %s, time (ms) : %d", element, result, System.currentTimeMillis() - start));
 		checkCSharpTimes();
 		checkError();
@@ -379,8 +396,9 @@ public class JnaDriverImpl
 	public String getRowIndexes(UIProxyJNA table, boolean useNumericHeader, ICondition condition, String columns) throws Exception
 	{
 		long start = System.currentTimeMillis();
+		columns = ConvertString.replaceNonASCIISymbolsToUnicodeSubString(columns);
 		String stringCondition = condition.serialize();
-		String res = this.driver.getRowIndexes(table.getIdString(), useNumericHeader, stringCondition, columns);
+		String res = ConvertString.replaceUnicodeSubStringsToCharSymbols(this.jnaDriver.getRowIndexes(table.getIdString(), useNumericHeader, stringCondition, columns));
 		this.logger.info(String.format("getRowIndexes(%s,%b,%s) : %s, time(ms) : %d", table, useNumericHeader, stringCondition, res, 
 				System.currentTimeMillis() - start));
 		checkCSharpTimes();
@@ -391,7 +409,7 @@ public class JnaDriverImpl
 	public String getRowByIndex(UIProxyJNA table, boolean useNumericHeader, int index) throws Exception
 	{
 		long start = System.currentTimeMillis();
-		String res = this.driver.getRowByIndex(table.getIdString(), useNumericHeader, index);
+		String res = ConvertString.replaceUnicodeSubStringsToCharSymbols(this.jnaDriver.getRowByIndex(table.getIdString(), useNumericHeader, index));
 		this.logger.info(String.format("getRowByIndex(%s,%b,%s) : %s, time(ms) : %d", table, useNumericHeader, index, res, System.currentTimeMillis() - start));
 		checkCSharpTimes();
 		checkError();
@@ -401,7 +419,7 @@ public class JnaDriverImpl
 	public String getTable(UIProxyJNA table, boolean useNumericHeader) throws Exception
 	{
 		long start = System.currentTimeMillis();
-		String res = this.driver.getTable(table.getIdString(), useNumericHeader);
+		String res = ConvertString.replaceUnicodeSubStringsToCharSymbols(this.jnaDriver.getTable(table.getIdString(), useNumericHeader));
 		this.logger.info(String.format("getTable(%s,%b) : %s, time(ms) : %d", table, useNumericHeader, res, System.currentTimeMillis() - start));
 		checkCSharpTimes();
 		checkError();
@@ -411,7 +429,7 @@ public class JnaDriverImpl
 	public int getTableSize(UIProxyJNA table) throws Exception
 	{
 		long start = System.currentTimeMillis();
-		int res = this.driver.getTableSize(table.getIdString());
+		int res = this.jnaDriver.getTableSize(table.getIdString());
 		this.logger.info(String.format("getTableSize(%s) : %d, time(ms) : %d", table, res, System.currentTimeMillis() - start));
 		checkCSharpTimes();
 		checkError();
@@ -425,8 +443,8 @@ public class JnaDriverImpl
 //
 	private void checkError() throws RemoteException
 	{
-		String error = this.driver.lastError();
-		int errorNumber = this.driver.lastErrorNumber();
+		String error = this.jnaDriver.lastError();
+		int errorNumber = this.jnaDriver.lastErrorNumber();
 		this.logger.error(error);
 		if (error != null)
 		{
@@ -447,12 +465,12 @@ public class JnaDriverImpl
 	
 	private void checkCSharpTimes()
 	{
-		String methodTime = this.driver.methodTime();
+		String methodTime = this.jnaDriver.methodTime();
 		if (methodTime != null)
 		{
 			//this.logger.info("method time {" + methodTime + "}");
 		}
-		String uiAutomationTIme = this.driver.uiAutomationTime();
+		String uiAutomationTIme = this.jnaDriver.uiAutomationTime();
 		if (uiAutomationTIme != null)
 		{
 			//this.logger.info("uiAutomation time : {" + uiAutomationTIme + "}");
@@ -460,6 +478,5 @@ public class JnaDriverImpl
 	}
 	//endregion
 
-	private JnaDriver driver;
-
+	private JnaDriver jnaDriver;
 }

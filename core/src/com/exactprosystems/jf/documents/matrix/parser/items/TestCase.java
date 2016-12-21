@@ -9,7 +9,7 @@
 package com.exactprosystems.jf.documents.matrix.parser.items;
 
 import com.csvreader.CsvWriter;
-import com.exactprosystems.jf.api.app.AppConnection;
+import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.evaluator.Variables;
@@ -22,18 +22,16 @@ import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
 import com.exactprosystems.jf.functions.RowTable;
 import com.exactprosystems.jf.functions.Table;
 
-import java.io.File;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @MatrixItemAttribute(
 		description 	= "Test case.", 
 		shouldContain 	= { Tokens.TestCase },
-		mayContain 		= { Tokens.Id, Tokens.RepOff, Tokens.Off, Tokens.Kind, Tokens.For },
+		mayContain 		= { Tokens.Id, Tokens.RepOff, Tokens.Off, Tokens.Kind, Tokens.For, Tokens.Depends },
+		parents			= { MatrixRoot.class },
 		closes			= MatrixRoot.class,
         real			= true,
 		hasValue 		= true, 
@@ -45,9 +43,10 @@ public final class TestCase extends MatrixItem
 	public TestCase()
 	{
 		super();
-        this.plugin = new Parameter(Tokens.For.get(),    null);  
-		this.name = new MutableValue<String>();
+        this.plugin = new Parameter(Tokens.For.get(), null);
+        this.name = new MutableValue<String>();
         this.kind = new MutableValue<String>();
+        this.depends = new MutableValue<String>();
 	}
 
     public TestCase(String name)
@@ -65,6 +64,7 @@ public final class TestCase extends MatrixItem
 		clone.plugin = this.plugin.clone();
 		clone.name = this.name.clone();
         clone.kind = this.kind.clone();
+        clone.depends = this.depends.clone();
 		return clone;
 	}
 
@@ -80,7 +80,7 @@ public final class TestCase extends MatrixItem
     @Override
     public boolean isChanged()
     {
-    	if (this.plugin.isChanged() || this.name.isChanged() || this.kind.isChanged())
+    	if (this.plugin.isChanged() || this.name.isChanged() || this.kind.isChanged() || this.depends.isChanged())
     	{
     		return true;
     	}
@@ -94,6 +94,7 @@ public final class TestCase extends MatrixItem
     	this.plugin.saved();
     	this.name.saved();
         this.kind.saved();
+        this.depends.saved();
     }
 
 	//==============================================================================================
@@ -106,13 +107,23 @@ public final class TestCase extends MatrixItem
 		driver.showTextBox(this, layout, 1, 0, this.id, this.id, () -> this.id.get());
 		driver.showTitle(this, layout, 1, 1, Tokens.TestCase.get(), context.getFactory().getSettings());
 		driver.showTextBox(this, layout, 1, 2, this.name, this.name, null);
-        driver.showLabel(this, layout, 1, 3, "Screenshot");
-        driver.showComboBox(this, layout, 1, 4, this.kind, this.kind, v ->
+
+        driver.showLabel(this, layout, 2, 0, Tokens.Depends.get() + ":");
+        driver.showComboBox(this, layout, 2, 1, this.depends, this.depends, v -> 
         {
-            return Arrays.stream(ScreenshotKind.values()).map(k -> k.toString()).collect(Collectors.toList());
+            List<String> list = this.owner.listOfIds(TestCase.class);
+            list.add(0, "");
+            return list;
         });
-        driver.showLabel(this, layout, 1, 5, "Plugin");
-        driver.showExpressionField(this, layout, 1, 6, Tokens.For.get(), this.plugin, this.plugin, null, null, null, null);
+        driver.showLabel(this, layout, 2, 2, "Screenshot:");
+        driver.showComboBox(this, layout, 2, 3, this.kind, this.kind, v -> ScreenshotKind.names() );
+        driver.showLabel(this, layout, 2, 4, "Plugin:");
+        driver.showExpressionField(this, layout, 2, 5, Tokens.For.get(), this.plugin, this.plugin, null, null, null, null);
+		driver.showToggleButton(this, layout, 1, 3, "Show additional", b ->
+		{
+			driver.hide(this, layout, 2, b);
+			return null;
+		}, !((this.kind.isNullOrEmpty() || this.kind.get().equals(ScreenshotKind.Never.name())) && this.depends.isNullOrEmpty() && this.plugin.isExpressionNullOrEmpty()));
 
 		return layout;
 	}
@@ -135,6 +146,7 @@ public final class TestCase extends MatrixItem
         this.plugin.setExpression(systemParameters.get(Tokens.For));
 		this.name.set(systemParameters.get(Tokens.TestCase)); 
         this.kind.set(systemParameters.get(Tokens.Kind)); 
+        this.depends.set(systemParameters.get(Tokens.Depends)); 
 	}
 
 	@Override
@@ -142,6 +154,7 @@ public final class TestCase extends MatrixItem
 	{
 		addParameter(firstLine, secondLine, Tokens.TestCase.get(),  this.name.get());
         addParameter(firstLine, secondLine, Tokens.Kind.get(),      this.kind.get());
+        addParameter(firstLine, secondLine, Tokens.Depends.get(),   this.depends.get());
         super.addParameter(firstLine, secondLine, Tokens.For.get(), this.plugin.getExpression());
 	}
 
@@ -151,7 +164,9 @@ public final class TestCase extends MatrixItem
 		return SearchHelper.matches(Tokens.TestCase.get(), what, caseSensitive, wholeWord) 
                 || SearchHelper.matches(this.plugin.getExpression(), what, caseSensitive, wholeWord)
 		        || SearchHelper.matches(this.name.get(), what, caseSensitive, wholeWord)
-		        || SearchHelper.matches(this.kind.get(), what, caseSensitive, wholeWord);
+		        || SearchHelper.matches(this.kind.get(), what, caseSensitive, wholeWord)
+                || SearchHelper.matches(this.depends.get(), what, caseSensitive, wholeWord)
+		        ;
 	}
 	
 	@Override
@@ -169,7 +184,6 @@ public final class TestCase extends MatrixItem
 		try
 		{
 			report.putMark(this.id.get());
-			report.reportSwitch(true);
 		}
 		catch (Exception e)
 		{
@@ -202,7 +216,7 @@ public final class TestCase extends MatrixItem
 		{
 	        ScreenshotKind screenshotKind = ScreenshotKind.valueByName(this.kind.get());
 
-	        if (table != null)
+	        if (table != null && !isRepOff())
 			{
 				position = table.size();
 
@@ -213,6 +227,25 @@ public final class TestCase extends MatrixItem
 				table.add(row);
 			}
 
+	        if (!Str.IsNullOrEmpty(this.depends.get()))
+	        {
+	            MatrixItem testcase = this.owner.getRoot().find(true, TestCase.class, this.depends.get());
+	            if (testcase != null && testcase.result != null && testcase.result.getResult() == Result.Failed)
+	            {
+	                ret = new ReturnAndResult(start, Result.Failed, "Fail due the TestCase " + this.depends.get() + " is failed", ErrorKind.FAIL, this);
+	                res = ret.getResult();
+	                
+	                if (table != null && table.size() >= 0  && !isRepOff())
+	                {
+	                    row.put(Context.timeColumn,         ret.getTime());
+	                    row.put(Context.resultColumn,       res);
+	                    row.put(Context.errorColumn,        ret.getError());
+	                    table.updateValue(position, row);
+	                }
+	                return ret;
+	            }
+	        }
+	        
             this.plugin.evaluate(evaluator);
 	        doSreenshot(row, this.plugin.getValue(), screenshotKind, ScreenshotKind.OnStart, ScreenshotKind.OnStartOrError);
 			
@@ -252,21 +285,19 @@ public final class TestCase extends MatrixItem
 			
             this.plugin.evaluate(evaluator);
             doSreenshot(row, this.plugin.getValue(), screenshotKind, ScreenshotKind.OnFinish, ScreenshotKind.OnFinishOrError);
-            if (table != null && position >= 0)
+            if (table != null && position >= 0 && !isRepOff())
 			{
 				row.put(Context.timeColumn, 		ret.getTime());
 				row.put(Context.resultColumn, 		res);
 				row.put(Context.errorColumn, 		ret.getError());
 				table.updateValue(position, row);
 			}
-
-            outScreenshot(report, row);
 		} 
 		catch (Exception e)
 		{
 		    logger.error(e.getMessage(), e);
 		    
-			if (table != null && table.size() >= 0)
+			if (table != null && table.size() >= 0  && !isRepOff())
 			{
 				row.put(Context.timeColumn, 		ret.getTime());
 				row.put(Context.resultColumn, 		res);
@@ -289,4 +320,5 @@ public final class TestCase extends MatrixItem
     private Parameter plugin;
 	private MutableValue<String> name;
     private MutableValue<String> kind;
+    private MutableValue<String> depends;
 }

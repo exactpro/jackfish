@@ -8,17 +8,17 @@
 
 package com.exactprosystems.jf.actions.gui;
 
-import com.exactprosystems.jf.actions.AbstractAction;
-import com.exactprosystems.jf.actions.ActionAttribute;
-import com.exactprosystems.jf.actions.ActionFieldAttribute;
-import com.exactprosystems.jf.actions.ActionGroups;
+import com.exactprosystems.jf.actions.*;
 import com.exactprosystems.jf.api.app.ImageWrapper;
+import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
+import com.exactprosystems.jf.functions.HelpKind;
 
-import java.io.File;
+import java.util.List;
 
 
 @ActionAttribute(
@@ -34,7 +34,13 @@ public class ImageReport extends AbstractAction
 	public final static String	imageName	= "Image";
 	public final static String beforeTestCaseName = "BeforeTestCase";
 	public final static String	titleName	= "Title";
-	
+
+	public final static String	toReportName		= "ToReport";
+	public final static String	asLinkName		= "AsLink";
+
+	@ActionFieldAttribute(name=toReportName, mandatory = false, description = "Rerouting report")
+	protected ReportBuilder toReport;
+
 	@ActionFieldAttribute(name = imageName, mandatory = true, description = "Image to report.")
 	protected ImageWrapper		image		= null;
 
@@ -43,6 +49,9 @@ public class ImageReport extends AbstractAction
 
 	@ActionFieldAttribute(name = titleName, mandatory = false, description = "Title for picture.")
 	protected String			title;
+
+	@ActionFieldAttribute(name = asLinkName, mandatory = false, description = "Save image.")
+	protected Boolean			asLink;
 
     public ImageReport()
 	{
@@ -53,17 +62,53 @@ public class ImageReport extends AbstractAction
 	{
 		this.beforeTestCase	= null;
 		this.title			= null;
+		this.toReport = null;
+		this.asLink = false;
 	}
     
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception 
 	{
-		if (image == null)
+		if (this.image == null)
 		{
-			throw new Exception("Image can't be null");
+		    super.setError(imageName, ErrorKind.EMPTY_PARAMETER);
+			return;
 		}
-        report.outImage(super.owner, this.beforeTestCase, this.image.getName(report.getReportDir()), this.title); 
+		
+		report = this.toReport == null ? report : this.toReport;
+		this.beforeTestCase = ActionsReportHelper.getBeforeTestCase(this.beforeTestCase, this.owner.getMatrix());
+		report.outImage(super.owner, this.beforeTestCase, this.image.getName(report.getReportDir()), Str.asString(this.title), this.asLink);
 		super.setResult(this.image.getFileName());
+	}
+
+	@Override
+	protected HelpKind howHelpWithParameterDerived(Context context, Parameters parameters, String fieldName) throws Exception
+	{
+		switch (fieldName)
+		{
+			case beforeTestCaseName:
+				return HelpKind.ChooseFromList;
+			case asLinkName:
+				return HelpKind.ChooseFromList;
+		}
+
+		return null;
+	}
+
+	@Override
+	protected void listToFillParameterDerived(List<ReadableValue> list, Context context, String parameterToFill, Parameters parameters) throws Exception
+	{
+		switch (parameterToFill)
+		{
+			case beforeTestCaseName:
+				ActionsReportHelper.fillListForParameter(super.owner.getMatrix(),  list, context.getEvaluator());
+				break;
+			case asLinkName:
+				list.add(ReadableValue.TRUE);
+				list.add(ReadableValue.FALSE);
+				break;
+			default:
+		}
 	}
 
 }

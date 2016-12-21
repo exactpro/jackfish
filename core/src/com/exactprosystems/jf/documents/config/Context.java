@@ -53,12 +53,13 @@ public class Context implements IContext, AutoCloseable, Cloneable
 
 	private Monitor monitor = new Monitor();
 	
-	public Context(DocumentFactory factory, IMatrixListener matrixListener, PrintStream out) throws Exception
+	public Context(DocumentFactory factory, IMatrixListener matrixListener, PrintStream out, Presenter presenter) throws Exception
 	{
 		this.factory = factory;
 		this.matrixListener = matrixListener;
 		this.outStream = out;
 		this.evaluator = factory.createEvaluator();
+		this.presenter = presenter;
 
 		createResultTable();
 	}
@@ -82,6 +83,7 @@ public class Context implements IContext, AutoCloseable, Cloneable
 			clone.evaluator 		= this.factory.createEvaluator();
 			clone.libs 				= new HashMap<String, Matrix>();
 			clone.resultTable		= this.resultTable.clone();
+			clone.presenter         = this.presenter;
 
 			return clone;
 		}
@@ -112,7 +114,7 @@ public class Context implements IContext, AutoCloseable, Cloneable
 	    }
 	}
 	
-   public ReturnAndResult  runHandler(HandlerKind handlerKind, ReportBuilder report, MatrixError err) 
+	public ReturnAndResult  runHandler(HandlerKind handlerKind, ReportBuilder report, MatrixError err) 
     {
        if (handlerKind == null)
        {
@@ -143,6 +145,14 @@ public class Context implements IContext, AutoCloseable, Cloneable
        return null;
     }
 	
+    public void showReport(String reportName)
+    {
+        if (this.presenter != null)
+        {
+            this.presenter.show(reportName);
+        }
+    }
+
 	public Context setOut(PrintStream out)
 	{
 		this.outStream = out;
@@ -374,6 +384,7 @@ public class Context implements IContext, AutoCloseable, Cloneable
 	private IMatrixListener matrixListener;
 	private AbstractEvaluator evaluator;
 	private Table resultTable;
+	private Presenter presenter;
 
 	//TODO need to remove it, cause this the same as Configuration.libs
 	private Map<String, Matrix> libs = new HashMap<>();

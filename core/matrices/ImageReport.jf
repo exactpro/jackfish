@@ -1,0 +1,22 @@
+// //==============================================
+// //  Copyright (c) 2009-2016, Exactpro Systems, LLC
+// //  Quality Assurance &amp
+// //  All rights reserved.
+// //  This is unpublished, licensed software, confidential and proprietary
+// //  information which is the property of Exactpro Systems, LLC or its licensors.
+// //==============================================
+#TestCase;#Kind;#Depends;#For
+Test case;Never;;
+    #Id;#Action;#Browser;#URL;#AppId
+    APPSTR1;ApplicationStart;'Chrome';'https://ya.ru';'WEB'
+
+    #Id;#Action;#AppConnection
+    IMGGET1;ImageGet;APPSTR1.Out
+
+    #Id;#Action;#Image;#AsLink
+    IMGRPT1;ImageReport;IMGGET1.Out;true
+
+    #Id;#Action;#AppConnection
+    APPSTP1;ApplicationStop;APPSTR1.Out
+
+

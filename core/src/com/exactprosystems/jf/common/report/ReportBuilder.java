@@ -9,40 +9,54 @@
 package com.exactprosystems.jf.common.report;
 
 import com.exactprosystems.jf.api.app.ImageWrapper;
-import com.exactprosystems.jf.api.common.Converter;
+import com.exactprosystems.jf.api.common.Storable;
 import com.exactprosystems.jf.charts.ChartBuilder;
-import com.exactprosystems.jf.documents.matrix.Matrix;
-import com.exactprosystems.jf.documents.matrix.parser.Result;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
+import com.exactprosystems.jf.documents.matrix.parser.items.MatrixRoot;
 
 import org.apache.log4j.Logger;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.CharArrayReader;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Stack;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public abstract class ReportBuilder 
+public abstract class ReportBuilder implements Storable
 {
-	public final static String suffix 	= "_RUNNING";
-	public final static String passed 	= "_PASSED";
-	public final static String failed 	= "_FAILED";
+    private static final long serialVersionUID = -4301681183671789970L;
+
+    public final static String SUFFIX 	= "_RUNNING";
+	public final static String PASSED 	= "_PASSED";
+	public final static String FAILED 	= "_FAILED";
 	public final static String OM		= "{{";
 	public final static String CM		= "}}";
 	
-	public ReportBuilder(String outputPath, File matrix, Date currentTime) throws IOException
+	public ReportBuilder()
 	{
-		logger.trace(String.format("ReportBuilder(%s, %s)", outputPath, matrix));
+		this.reportIsOn = true;
+	}
+	
+	public ReportBuilder(String outputPath, String matrixName, Date currentTime) throws IOException
+	{
 		this.reportIsOn = true;
 		
-		if(outputPath != null && matrix != null)
+		if(outputPath != null && matrixName != null)
 		{
-			this.reportName = generateReportName(outputPath, matrix.getName(), suffix, currentTime);
+			this.reportName = generateReportName(outputPath, matrixName, SUFFIX, currentTime);
 			File file = new File(this.reportName);
 			File parent = file.getParentFile();
 			if (parent != null)
@@ -50,10 +64,69 @@ public abstract class ReportBuilder
 				parent.mkdirs();
 			}
 
-			this.imageDir = generateReportDir(matrix.getName(), currentTime);
+			this.imageDir = generateReportDir(matrixName, currentTime);
 			this.reportDir = outputPath + File.separator + this.imageDir; 
 		}
 	}
+	
+	@Override
+	public String getName() 
+	{
+		if (this.reportName == null)
+		{
+			return "";
+		}
+		return new File(this.reportName).getName();
+	}
+
+	@Override
+	public List<String> getFileList() 
+	{
+		List<String> list = new ArrayList<>();
+		list.add(this.reportName);
+		File dir = new File(this.reportDir);
+		if (dir.exists() && dir.isDirectory()) 
+		{
+			Arrays.stream(dir.list()).forEach(a -> list.add(this.reportDir + File.separator + a));
+		}
+		return list;
+	}
+
+	@Override
+	public byte[] getData(String file) throws IOException 
+	{
+		Path path = Paths.get(file);
+		return Files.readAllBytes(path);
+	}
+
+	@Override
+	public void addFile(String file, byte[] data) throws Exception 
+	{
+		File f = new File(file);
+		f.getParentFile().mkdirs();
+
+		if (file.endsWith(".html"))
+		{
+			this.reportName = file;
+		}
+
+		try (ByteArrayInputStream bais = new ByteArrayInputStream(data);
+				FileOutputStream fos = new FileOutputStream(file) )
+		{
+			byte[] buffer = new byte[1024];
+			int len;
+			while ((len = bais.read(buffer)) > 0)
+			{
+				fos.write(buffer, 0, len);
+			}
+		}
+	}
+
+	@Override
+    public String toString()
+    {
+        return getClass().getSimpleName() + "{" + getReportName() + ":" + hashCode() + "}";
+    }
 
 	public final void init(ReportWriter writer) throws IOException
 	{
@@ -85,19 +158,6 @@ public abstract class ReportBuilder
 		return this.imageDir;
 	}
 
-    public final Object reportAsArchieve() throws Exception
-    {
-        List<String> list = new ArrayList<>();
-        list.add(this.reportName);
-        File dir = new File(this.reportDir);
-        if (dir.exists() && dir.isDirectory())
-        {
-            Arrays.stream(dir.list()).forEach(a -> list.add(this.reportDir + File.separator + a));;
-        }
-        
-        return Converter.filesToBlob(list);
-    }
-
 	public final void reportSwitch(boolean on)
 	{
 		this.reportIsOn = on;
@@ -110,46 +170,50 @@ public abstract class ReportBuilder
 
 	public final void putMark(String str) throws Exception 
 	{
-		logger.trace(String.format("putMark(%s)", str));
 		putMark(this.writer, str);
 	}
+
+    public final ReportTable addExplicitTable(String title, String beforeTestcase, boolean decoraded, int quotedSince, int[] widths, String ... columns)
+    {
+        Integer uniq = this.uniques.peek();
+        ReportTable info = new ReportTable(title, beforeTestcase, decoraded, quotedSince, widths, columns);
+        this.reportData.get(uniq).add(info);
+        
+        return info;
+    }
 
 	public final ReportTable addTable(String title, String beforeTestcase, boolean decoraded, int quotedSince, int[] widths, String ... columns)
 	{
 		Integer uniq = this.uniques.peek();
-		logger.trace(String.format("addTable(%s) current = %s", title, uniq));
-		
 		ReportTable info = new ReportTable(title, beforeTestcase, decoraded, quotedSince, widths, columns);
-		
-		this.reportData.get(uniq).add(info); // TODO deal with it
+		if (this.reportIsOn())
+		{
+		    this.reportData.get(uniq).add(info);
+		}
 		
 		return info;
 	}
 
-	public final void reportStarted(Matrix matrix) throws Exception 
+	public final void reportStarted(char[] matrixBuffer) throws Exception 
 	{
-		logger.trace(String.format("reportStarted(%s)", matrix));
 		Date startTime = new Date();
 
 		this.reportData.clear();
-		reportHeader(this.writer, matrix, startTime);
-		char[] matrixBuffer = matrix.getMatrixBuffer();
+		reportHeader(this.writer, startTime);
 		reportMatrix(this.writer, matrixBuffer == null ? null : new BufferedReader(new CharArrayReader(matrixBuffer)));
-		reportHeaderTotal(this.writer, matrix, startTime);
+		reportHeaderTotal(this.writer, startTime);
 	}
 	
 	public final void itemStarted(MatrixItem matrixItem)
 	{
 		Integer newUniq = generateNewUnique();
 		this.uniques.push(newUniq);
-		
-		logger.trace(String.format("itemStarted(%s) current = %s", matrixItem.getItemName(), newUniq));
-
+		  
 		this.reportData.put(newUniq, new ArrayList<ReportTable>());
 
 		try
 		{
-			if (this.reportIsOn)
+			if (this.reportIsOn && !(matrixItem instanceof MatrixRoot))
 			{
 				reportItemHeader(this.writer, matrixItem, newUniq);
 			}
@@ -165,9 +229,7 @@ public abstract class ReportBuilder
 		try
 		{
 			Integer uniq = this.uniques.peek();
-			logger.trace(String.format("itemIntermediate(%s) current = %s", matrixItem.getItemName(), uniq));
-			 
-			if (this.reportIsOn)
+			if (this.reportIsOn && !(matrixItem instanceof MatrixRoot))
 			{
 				outAllTables(this.reportData.get(uniq), writer);
 			}
@@ -179,9 +241,8 @@ public abstract class ReportBuilder
 		}
 	}
 	
-	public final void outImage(MatrixItem item, String beforeTestcase, String fileName, String title)
+	public final void outImage(MatrixItem item, String beforeTestcase, String fileName, String title, Boolean asLink)
 	{
-		logger.trace(String.format("outImage(%s, %s, %s)", item, fileName, title));
 		try
 		{
 			File dir = new File(this.reportDir);
@@ -190,7 +251,7 @@ public abstract class ReportBuilder
 				dir.mkdir();
 			}
 			
-			reportImage(this.writer, item, beforeTestcase, this.imageDir + File.separator + fileName, postProcess(title));
+			reportImage(this.writer, item, beforeTestcase, this.imageDir + File.separator + fileName, postProcess(title), asLink);
 		} 
 		catch (IOException e)
 		{
@@ -220,7 +281,7 @@ public abstract class ReportBuilder
 			}
 		} 
 		catch (IOException e)
-		{
+		{ 
 			logger.error(e.getMessage(), e);
 		}
 	}
@@ -230,12 +291,13 @@ public abstract class ReportBuilder
 		try
 		{
 			Integer uniq = this.uniques.peek();
-			logger.trace(String.format("itemFinished(%s) current = %s", matrixItem.getItemName(), uniq));
-			 
+            outAllTables(this.reportData.get(uniq), writer);
 			if (this.reportIsOn)
 			{
-				outAllTables(this.reportData.get(uniq), writer);
-				reportItemFooter(this.writer, matrixItem, uniq, time, screenshot);
+				if (!(matrixItem instanceof MatrixRoot))
+				{
+				    reportItemFooter(this.writer, matrixItem, uniq, time, screenshot);
+				}
 			}
 			this.uniques.pop();
 		} 
@@ -245,31 +307,27 @@ public abstract class ReportBuilder
 		}
 	}
 	
-	public final void reportFinished(Matrix matrix) throws Exception 
+	public final void reportFinished(int failed, int passed) throws Exception 
 	{
-		logger.trace(String.format("reportFinished(%s)", matrix));
-
-
 		String fullName = writer.fileName();
 		String postSuffix = this.name == null ? "" : " " + this.name;
-		String replacement = (matrix.getRoot().count(Result.Failed) > 0 ? failed : passed) + postSuffix;
+		String replacement = (failed > 0 ? FAILED : PASSED) + postSuffix;
 		if (fullName != null)
         {
-			this.reportName = fullName.replace(suffix, replacement);
+			this.reportName = fullName.replace(SUFFIX, replacement);
 		}
 
-		reportFooter(writer, matrix.getRoot(), new Date(), this.name, this.reportName);
+		reportFooter(writer, failed, passed, new Date(), this.name, this.reportName);
 		writer.close();
 
 		if (fullName != null)
 		{
-			Files.move(Paths.get(fullName), Paths.get(fullName.replace(suffix, replacement)));
+			Files.move(Paths.get(fullName), Paths.get(fullName.replace(SUFFIX, replacement)));
 		}
 	}
 
 	public void reportChart(String title, String beforeTestCase, ChartBuilder chartBuilder) throws IOException
 	{
-		logger.trace("reportChar");
 		reportChart(this.writer, title, beforeTestCase, chartBuilder);
 	}
 
@@ -338,7 +396,7 @@ public abstract class ReportBuilder
 
 	protected abstract void putMark(ReportWriter writer, String mark) throws IOException;
 
-	protected abstract void reportHeader(ReportWriter writer, Matrix context, Date date) throws IOException;
+	protected abstract void reportHeader(ReportWriter writer, Date date) throws IOException;
 
 	protected abstract void reportMatrixHeader(ReportWriter writer, String matrix) throws IOException;
 
@@ -346,15 +404,15 @@ public abstract class ReportBuilder
 
 	protected abstract void reportMatrixFooter(ReportWriter writer) throws IOException;
 	
-	protected abstract void reportHeaderTotal(ReportWriter writer, Matrix context, Date date) throws IOException;
+	protected abstract void reportHeaderTotal(ReportWriter writer, Date date) throws IOException;
 
-	protected abstract void reportFooter(ReportWriter writer, MatrixItem entry, Date date, String name, String reportName) throws IOException;
+	protected abstract void reportFooter(ReportWriter writer, int failed, int passed, Date date, String name, String reportName) throws IOException;
 
 	protected abstract void reportItemHeader(ReportWriter writer, MatrixItem entry, Integer id) throws IOException;
 	
 	protected abstract void reportItemLine(ReportWriter writer, MatrixItem item, String beforeTestcase, String string, String labelId) throws IOException;
 
-	protected abstract void reportImage(ReportWriter writer, MatrixItem item, String beforeTestcase, String fileName, String title) throws IOException;
+	protected abstract void reportImage(ReportWriter writer, MatrixItem item, String beforeTestcase, String fileName, String title, Boolean asLink) throws IOException;
 
 	protected abstract void reportItemFooter(ReportWriter writer, MatrixItem entry, Integer id, long time, ImageWrapper screenshot) throws IOException;
 	
@@ -370,8 +428,6 @@ public abstract class ReportBuilder
 	
 	private void reportMatrix(ReportWriter writer, BufferedReader reader) throws IOException
 	{
-		logger.trace(String.format("reportMatrix(%s)", writer));
-
         if (reader == null)
         {
             return;
@@ -400,7 +456,6 @@ public abstract class ReportBuilder
 
 	private void outAllTables(List<ReportTable> list, ReportWriter writer) throws IOException
 	{
-		logger.trace(String.format("outAllTables(%s)", list));
 		if (list != null)
     	{
     		for (ReportTable table : list)
@@ -438,6 +493,7 @@ public abstract class ReportBuilder
 		        	tableFooter(writer, table);
     			}
     		}
+    		list.clear();
     	}
 	}
 

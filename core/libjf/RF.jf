@@ -10,36 +10,11 @@
 #Id;#NameSpace
 RF;RegressionFramework
     // //==============================================
-    // // Sets the variables that are needed for futher work with DataBase.
-    // //==============================================
-    #Id;#SubCase;#type;#host;#base;#user;#password;#scriptsDir
-    SetVars;Set vars;;;;;;
-        #Id;#Global;#Let
-        sqlType;1;type
-
-        #Id;#Global;#Let
-        sqlHost;1;host
-
-        #Id;#Global;#Let
-        sqlBase;1;base
-
-        #Id;#Global;#Let
-        sqlUser;1;user
-
-        #Id;#Global;#Let
-        sqlPassword;1;password
-
-        #Id;#Global;#Let
-        scripts;1;scriptsDir
-
-    #EndSubCase
-
-    // //==============================================
     // // Runs all matrixes which names are enumerated in the column  Name
     // // of the table and puts results into database
     // //==============================================
-    #Id;#SubCase;#table
-    RunAll;Run all matrixes from table;
+    #Id;#SubCase;#table;#testSet
+    RunAll;Run all matrixes from table;;
         #Assert;#Message
         table != null && table instanceof Table;'The parameter table should be Table'
 
@@ -61,8 +36,8 @@ RF;RegressionFramework
         #Id;#Call
         SQL;Connect
 
-        #Id;#Action;#Connection;#Query;#CreateTime
-        selectRunId;SQLinsert;SQL;'INSERT INTO runs (create_time, duration) VALUES (?, -1)\u003b';DateTime.currentTime()
+        #Id;#Action;#Connection;#Query;#CreateTime;#TestSet
+        selectRunId;SQLinsert;SQL;'INSERT INTO runs (create_time, duration, test_set) VALUES (?, -1, ?)\u003b';DateTime.current();testSet
 
         #Id;#Let
         runId;selectRunId.Out[0]
@@ -79,6 +54,9 @@ RF;RegressionFramework
         #Id;#Let
         begin;System.currentTimeMillis()
 
+        #Id;#Action;#Decoraded
+        standartResult;ResultTable;false
+
         // // Main loop
         #ForEach;#In
         row;table
@@ -89,7 +67,7 @@ RF;RegressionFramework
             #EndIf
 
             #Id;#Let
-            manual;!(new File(scripts + row.Scenario + '.jf').exists())
+            manual;!(new File(_rf_scriptsDir+ row.Scenario + '.jf').exists())
 
             #Id;#Action;#Connection;#Query;#RunId;#Scenario;#Performer;#Priority;#Env;#Manual;#StartTime;#Host;#User
             selectScenarioId;SQLinsert;SQL;'INSERT INTO scenarios (run_id, scenario, performer, priority, env, manual, start_time, host, user) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';runId;row.Scenario;row.Performer;row.Priority;row.Env;manual ? 1 : 0;DateTime.current();Sys.hostName();Sys.userName()
@@ -103,16 +81,16 @@ RF;RegressionFramework
                 totalCount;totalCount + 1
 
                 #Action;#Str
-                Print;'Starting: ' + scripts + row.Scenario + '.jf'
+                Print;'Starting: ' + _rf_scriptsDir + row.Scenario + '.jf'
 
                 #Id;#Action;#Matrix;#Parameter
-                MXRN;MatrixRun;scripts + row.Scenario + '.jf';row.Env
+                MXRN;MatrixRun;_rf_scriptsDir+ row.Scenario + '.jf';row.Env
 
                 #Action;#Matrix
                 MatrixWait;MXRN.Out
 
                 #Action;#Connection;#Query;#Passed;#Failed;#Report;#ScenarioId
-                SQLexecute;SQL;'UPDATE scenarios SET passed = ?, failed = ?, report = ?, done = 1 WHERE id = ?';MXRN.Out.passed();MXRN.Out.failed();MXRN.Out.reportAsArchieve();scenarioId
+                SQLexecute;SQL;'UPDATE scenarios SET passed = ?, failed = ?, report = ?, done = 1 WHERE id = ?';MXRN.Out.passed();MXRN.Out.failed();MXRN.Out.reportAsBlob();scenarioId
 
                 #Id;#Action;#Decoraded;#Matrix
                 resultTab;ResultTable;false;MXRN.Out
@@ -128,8 +106,20 @@ RF;RegressionFramework
 
                 #ForEach;#In
                 details;resultTab.Out
-                    #Action;#Connection;#Query;#ScenarioId;#Testcase;#Stepp;#Time;#Result;#Error;#Screenshot
-                    SQLinsert;SQL;'INSERT INTO details (scenario_id, testcase, step, time, result, error, screenshot) VALUES (?, ?, ?, ?, ?, ?, ?)';scenarioId;'' + details.TestCase;'' + details.Step;details.Time;'' + details.Result;'' + details.Error;Converter.imageToBlob(details.Screenshot)
+                    #Id;#Action;#Connection;#Query;#ScenarioId;#Testcase;#Stepp;#Time;#Result;#Error;#Screenshot
+                    selectDetails;SQLinsert;SQL;'INSERT INTO details (scenario_id, testcase, step, time, result, error, screenshot) VALUES (?, ?, ?, ?, ?, ?, ?)';scenarioId;'' + details.TestCase;'' + details.Step;details.Time;'' + details.Result;'' + details.Error;Converter.storableToBlob(details.Screenshot)
+
+                    #For;#From;#To;#Step
+                    i;standartResult.Out.getHeaderSize();resultTab.Out.getHeaderSize() - 1;1
+                        #Id;#RawText
+                        TEXT6;Text
+                        "INSERT INTO user_details (details_id, name, value) VALUES (?, ?, ?);"
+                        #EndRawText
+
+                        #Action;#Connection;#Query;#detailsId;#name;#value
+                        SQLinsert;SQL;TEXT6.toString();selectDetails.Out[0];resultTab.Out.getHeader(i);details[resultTab.Out.getHeader(i)]
+
+                    #EndFor
 
                 #EndForEach
 
@@ -157,77 +147,61 @@ RF;RegressionFramework
     #EndSubCase
 
     // //==============================================
-    // // Collects all scenarios from the last run of regression and returns
-    // // it as a table
+    // // Shows the overall report
     // //==============================================
-    #Id;#SubCase
-    TotalTable;Returns table of totals for the last run
+    #Id;#SubCase;#date
+    repOverall;Overall progress;
         #Id;#Call
         SQL;RF.Connect
 
-        #Id;#Action;#Connection;#Query
-        select;SQLselect;SQL;'SELECT "PASSED" AS `Kind`, COUNT(*) AS `Values` FROM scenarios WHERE failed = 0 AND run_id = (SELECT MAX(id) FROM runs) UNION SELECT "FAILED", COUNT(*) FROM scenarios WHERE failed <> 0 AND run_id = (SELECT MAX(id) FROM runs)'
+        #Id;#Call;#sql;#date
+        runId;runIdFromDate;SQL;date
 
-        #Return
-        select.Out
-
-    #EndSubCase
-
-    // //==============================================
-    // // Collects history of all runs and evaluate average factor of success.
-    // //==============================================
-    #Id;#SubCase
-    ProgressTable;Returns table of regression progress
-        #Id;#Call
-        SQL;RF.Connect
-
-        #Id;#Action;#Connection;#Query
-        select;SQLselect;SQL;'SELECT r.id AS `Period`, AVG(s.passed / (s.passed + s.failed)) AS `Average` FROM runs AS r LEFT JOIN scenarios AS s ON s.run_id = r.id GROUP BY r.id'
-
-        #Return
-        select.Out
-
-    #EndSubCase
-
-    // //==============================================
-    // // Collects results of all scenarios of last regression
-    // //==============================================
-    #Id;#SubCase
-    LastScenariosTable;Returns table of last scenarious
-        #Id;#Call
-        SQL;RF.Connect
+        #Id;#Let
+        title;'Overall' + (date == null ? '' : (' on ' +DateTime.strDate(date)))
 
         #Id;#RawText
-        TEXT3;Text
-        "SELECT "
-        "  s.id, "
-        "  s.scenario, "
-        "  s.manual, "
-        "  s.host, "
-        "  s.user, "
-        "  s.start_time, "
-        "  s.passed, "
-        "  s.failed, "
-        "  s.description "
-        "FROM scenarios AS s "
-        "WHERE s.run_id = (SELECT MAX(r.id) FROM runs AS r) "
+        TEXT4;Text
+        "SELECT  "
+        "	sp.count AS `Passed`, "
+        "	sf.count AS `Failed`"
+        "FROM (SELECT COUNT(id) AS count FROM scenarios WHERE failed = 0 AND run_id = ? ) AS sp "
+        "LEFT JOIN (SELECT COUNT(id) AS count FROM scenarios WHERE failed <> 0 AND run_id = ? ) AS sf ON true "
         #EndRawText
 
-        #Id;#Action;#Connection;#Query
-        select;SQLselect;SQL;TEXT3.toString()
+        #Id;#Action;#Connection;#Query;#runId;#runId
+        select;SQLselect;SQL;TEXT4.toString();runId;runId
 
-        #Return
-        select.Out
+        #Id;#Action;#ReportName
+        REP1;ReportStart;title
+
+        #Action;#Type;#Table;#ToReport;#Title;#Colors
+        ChartReport;ChartKind.Pie;select.Out;REP1.Out;'{{4 ' + title + ' 4}}';{ 'Passed' : Color.GREEN, 'Failed' : Color.RED }
+
+        #Action;#Table;#Title;#Numbers;#ToReport
+        TableReport;select.Out;'Table';false;REP1.Out
+
+        #Action;#Report;#Passed;#Failed
+        ReportFinish;REP1.Out;(int)select.Out[0].Passed;(int)select.Out[0].Failed
+
+        #Action;#Report
+        ReportShow;REP1.Out.getReportName()
 
     #EndSubCase
 
     // //==============================================
-    // // Collects results of all scenarios of last regression in readable form
+    // // Shows the summary report
     // //==============================================
-    #Id;#SubCase
-    LastSummary;Returns table of last summary
+    #Id;#SubCase;#date
+    repSummary;Summary report;
         #Id;#Call
         SQL;RF.Connect
+
+        #Id;#Let
+        title;'Summary' + (date == null ? '' : (' on ' +DateTime.strDate(date)))
+
+        #Id;#Call;#sql;#date
+        runId;runIdFromDate;SQL;date
 
         #Id;#RawText
         TEXT2;Text
@@ -240,26 +214,159 @@ RF;RegressionFramework
         "  s.performer AS performer, "
         "  s.env AS env,  "
         "  s.host AS host, "
-        "  s.user AS user "
+        "  s.user AS user,"
+        "  s.report AS report"
         "FROM scenarios AS s "
-        "WHERE s.manual = 0 AND s.run_id = (SELECT MAX(r.id) FROM runs AS r)"
+        "WHERE s.manual = 0 AND s.run_id = ?"
         #EndRawText
 
-        #Id;#Action;#Connection;#Query
-        select;SQLselect;SQL;TEXT2.toString()
+        #Id;#Action;#Connection;#Query;#runId
+        select;SQLselect;SQL;TEXT2.toString();runId
 
-        #Return
-        select.Out
+        #Id;#Let
+        table;select.Out
+
+        #Id;#Action;#Table;#result
+        passed;TableSelect;table;'Passed'
+
+        #Id;#Action;#Table;#result
+        failed;TableSelect;table;'Failed'
+
+        #Action;#Replace;#Table;#Columns;#Search;#MatchCell
+        TableReplace;'<div class=\"Passed\">Passed</div>';table;{ 'result' };'Passed';true
+
+        #Action;#Replace;#Table;#Columns;#Search;#MatchCell
+        TableReplace;'<div class=\"Failed\">Failed</div>';table;{ 'result' };'Failed';true
+
+        #Id;#Action;#ReportName
+        REP1;ReportStart;title
+
+        #Action;#Table;#Title;#ToReport;#Numbers;#scenario;#result;#date;#time;#user;#host;#report
+        TableReport;table;'{{4' + title + '4}}';REP1.Out;false;'Matrix Name';'Execution Status';'Execution Date';'Execution Time';'Exectuted By';'Execution Machine';'Report Link'
+
+        #Action;#Passed;#Failed;#Report
+        ReportFinish;passed.Out.size();failed.Out.size();REP1.Out
+
+        #Action;#Report
+        ReportShow;REP1.Out.getReportName()
+
+    #EndSubCase
+
+    // //==============================================
+    // // Export the last regression set to csv file for import into QC
+    // //==============================================
+    #Id;#SubCase;#date;#fileName
+    repCsvExport;Export to CSV file;;
+        #Id;#Call
+        SQL;Connect
+
+        #Id;#Call;#sql;#date
+        runId;runIdFromDate;SQL;date
+
+        #Id;#Let
+        countSteps;0
+
+        #Id;#Action;#TestName;#ExecutionStatus;#ExecutionTime;#ExecutedBy;#ExecutionMashine
+        createTable;TableCreate;;;;;
+
+        #Id;#Let
+        resultTable;createTable.Out
+
+        #Id;#RawText
+        TEXT5;Text
+        "SELECT "
+        "  s.id, s.scenario, "
+        "  IF(s.failed > 0, ""Failed"", ""Passed"") AS status, "
+        "  s.host, "
+        "  s.user, "
+        "  DATE(s.start_time) AS date, "
+        "  TIME(s.start_time) AS time "
+        "FROM scenarios AS s"
+        "WHERE s.manual = 0 AND s.run_id = ?; "
+        #EndRawText
+
+        #Id;#Action;#Connection;#Query;#runId
+        query;SQLselect;SQL;TEXT5.toString();runId
+
+        #Id;#Let
+        scenarios;query.Out
+
+        #For;#From;#To;#Step
+        rowScenarios;0;(int)scenarios.size - 1;1
+            #Id;#Action;#Connection;#Query;#scenario_id
+            selectFromTable;SQLselect;SQL;'SELECT d.scenario_id, d.error FROM details AS d WHERE scenario_id = ?\u003b';scenarios[rowScenarios].id
+
+            #Id;#Let
+            selectSteps;selectFromTable.Out
+
+            #Action;#Table;#TestName;#ExecutionStatus;#ExecutionTime;#ExecutedBy;#ExecutionMashine
+            TableAddValue;resultTable;scenarios[rowScenarios].scenario;scenarios[rowScenarios].status;scenarios[rowScenarios].time;scenarios[rowScenarios].user;scenarios[rowScenarios].host
+
+            #For;#From;#To;#Step
+            rowSteps;0;(int)selectSteps.size - 1;1
+                #If
+                rowSteps >= countSteps
+                    #Id;#Let
+                    countSteps;countSteps + 1
+
+                    #Action;#Table;#Columns
+                    TableAddColumns;resultTable;'Step' + countSteps
+
+                #EndIf
+
+                #Id;#Let
+                step;'Step' + (rowSteps + 1)
+
+                #If
+                selectSteps[rowSteps].error.equals('null')
+                    #Id;#Let
+                    stepResult;''
+
+                #Else
+                    #Id;#Let
+                    stepResult;selectSteps[rowSteps].error
+
+
+                #EndIf
+
+                #Let
+                resultTable[rowScenarios].put(step, stepResult)
+
+            #EndFor
+
+        #EndFor
+
+        #Id;#Let
+        stepHeaders;new ArrayList()
+
+        #For;#From;#To;#Step
+        i;1;countSteps;1
+            #Let
+            stepHeaders.add('Step' + i)
+
+        #EndFor
+
+        #Action;#Replace;#Table;#Search;#Columns
+        TableReplace;'';resultTable;null;stepHeaders.toArray()
+
+        #Action;#Table;#File
+        TableSaveToFile;resultTable;fileName
 
     #EndSubCase
 
     // //==============================================
     // // Collects  all details of all scenarios of last regression in readable form
     // //==============================================
-    #Id;#SubCase
-    LastAllDetails;Returns table of last details
+    #Id;#SubCase;#date
+    repLastAllDetails;Shows a report of last details;
         #Id;#Call
         SQL;Connect
+
+        #Id;#Call;#sql;#date
+        runId;runIdFromDate;SQL;date
+
+        #Id;#Let
+        title;'Details' + (date == null ? '' : (' on ' +DateTime.strDate(date)))
 
         #Id;#RawText
         TEXT1;Text
@@ -279,128 +386,358 @@ RF;RegressionFramework
         "  d.screenshot "
         "FROM scenarios AS s "
         "LEFT JOIN details AS d ON d.scenario_id = s.id "
-        "WHERE s.manual = 0 AND s.run_id = (SELECT MAX(r.id) FROM runs AS r) "
+        "WHERE s.manual = 0 AND s.run_id = ?"
         #EndRawText
 
-        #Id;#Action;#Connection;#Query
-        select;SQLselect;SQL;TEXT1.toString()
+        #Id;#Action;#Connection;#Query;#runId
+        select;SQLselect;SQL;TEXT1.toString();runId
 
-        #Return
-        select.Out
+        #Id;#Let
+        table;select.Out
+
+        #Id;#Action;#Table;#result
+        passed;TableSelect;table;'Passed'
+
+        #Id;#Action;#Table;#result
+        failed;TableSelect;table;'Failed'
+
+        #Action;#Table;#Columns;#MatchCell;#Search;#Replace
+        TableReplace;table;{ 'step', 'error' };true;'null';''
+
+        #Action;#Table;#Columns;#MatchCell;#Search;#Replace
+        TableReplace;table;{ 'screenshot'};true;null;''
+
+        #Action;#Replace;#Table;#Columns;#Search;#MatchCell
+        TableReplace;'<div class=\"Passed\">Passed</div>';table;{ 'result' };'Passed';true
+
+        #Action;#Replace;#Table;#Columns;#Search;#MatchCell
+        TableReplace;'<div class=\"Failed\">Failed</div>';table;{ 'result' };'Failed';true
+
+        #Id;#Action;#ReportName
+        report;ReportStart;title
+
+        #Action;#Table;#Title;#ToReport;#Numbers;#scenario;#testcase;#result;#error;#screenshot
+        TableReport;table;'{{4' + title + '4}}';report.Out;false;'Matrix';'Step Name';'Status';'Result';'Screenshots'
+
+        #Action;#Report;#Passed;#Failed
+        ReportFinish;report.Out;passed.Out.size();failed.Out.size()
+
+        #Action;#Report
+        ReportShow;report.Out.getReportName()
 
     #EndSubCase
 
     // //==============================================
-    // // Perform connection to SQL server using variable set that is set
+    // // Collects history of all runs and evaluate average factor of success.
+    // //==============================================
+    #Id;#SubCase
+    repProgress;Shows progress during whole period
+        #Id;#Call
+        SQL;RF.Connect
+
+        #Id;#Action;#Connection;#Query
+        select;SQLselect;SQL;'SELECT DATE(r.create_time) AS `Period`, AVG(s.passed / (s.passed + s.failed)) AS `Average` FROM runs AS r LEFT JOIN scenarios AS s ON s.run_id = r.id GROUP BY r.id'
+
+        #Id;#Action;#ReportName
+        REP2;ReportStart;'Progress'
+
+        #Action;#Type;#Table;#Title;#Labels;#ToReport
+        ChartReport;ChartKind.Line;select.Out;'{{4 Progress 4}}';'Period';REP2.Out
+
+        #Action;#Report;#Passed;#Failed
+        ReportFinish;REP2.Out;0;0
+
+        #Action;#Report
+        ReportShow;REP2.Out.getReportName()
+
+    #EndSubCase
+
+    // //==============================================
+    // // Collects all run dates and returns them as a list
+    // //==============================================
+    #Id;#SubCase
+    listOfDates;List of run dates
+        #Id;#Call
+        SQL;Connect
+
+        #Id;#Action;#Connection;#Query
+        query;SQLselect;SQL;'select create_time, test_set from runs'
+
+        #Id;#Let
+        reportDataList;new LinkedHashMap()
+
+        #ForEach;#In
+        row;query.Out
+            #Id;#Let
+            dateTimeItem;new Date(row.create_time.getTime())
+
+            #Let
+            reportDataList.put(dateTimeItem, row.test_set)
+
+        #EndForEach
+
+        #Return
+        reportDataList
+
+    #EndSubCase
+
+    // //==============================================
+    // // For empty date returns the last runs.id, for non-empty - the last id, which
+    // // create_date not less than desired
+    // //==============================================
+    #Id;#SubCase;#sql;#date
+    runIdFromDate;Gets runs.id for desired date;;
+        #Assert;#Message
+        sql != null;'SQL connection is NULL'
+
+        #If
+        date == null
+            #Id;#Action;#Connection;#Query
+            select1;SQLselect;sql;'SELECT MAX(id) AS id FROM runs'
+
+            #Return
+            select1.Out.size() > 0 ? select1.Out[0].id : -1
+
+        #EndIf
+
+        #Id;#RawText
+        query;Text
+        "SELECT id "
+        "FROM runs "
+        "WHERE create_time <= ? "
+        "ORDER BY create_time DESC "
+        "LIMIT 1 "
+        #EndRawText
+
+        #Id;#Action;#Connection;#Query;#CreateTime
+        select2;SQLselect;sql;query.toString();date
+
+        #Return
+        select2.Out.size() > 0 ? select2.Out[0].id : -1
+
+    #EndSubCase
+
+    // //==============================================
+    // // Esteblishes connection to SQL server using variable set that is set
     // // by RF.SetVar
     // // This subcase checks that all needed tables exist. If not it creates them.
     // //==============================================
     #Id;#SubCase
     Connect;Connect to SQL
         #Assert;#Message
-        isdef sqlType && sqlType != null;'The variable sqlType is null or undefinded'
+        isdef _rf_dialect && _rf_dialect != null;'The variable _rf_dialect is null or undefinded'
 
         #Assert;#Message
-        isdef sqlHost && sqlHost != null;'The variable sqlHost is null or undefinded'
+        isdef _rf_type && _rf_type != null;'The variable _rf_ype is null or undefinded'
 
         #Assert;#Message
-        isdef sqlBase && sqlBase != null;'The variable sqlBase is null or undefinded'
+        isdef _rf_host && _rf_host != null;'The variable _rf_host is null or undefinded'
 
         #Assert;#Message
-        isdef sqlUser && sqlUser != null;'The variable sqlUser is null or undefinded'
+        isdef _rf_base && _rf_base != null;'The variable _rf_base is null or undefinded'
 
         #Assert;#Message
-        isdef sqlPassword && sqlPassword != null;'The variable sqlPassword is null or undefinded'
+        isdef _rf_user && _rf_user != null;'The variable _rf_user is null or undefinded'
+
+        #Assert;#Message
+        isdef _rf_password && _rf_password != null;'The variable _rf_password is null or undefinded'
 
         #Id;#Action;#User;#Server;#Base;#Sql;#Password
-        SQLCNT;SQLconnect;sqlUser;sqlHost;sqlBase;sqlType;sqlPassword
+        SQLCNT;SQLconnect;_rf_user;_rf_host;_rf_base;_rf_type;_rf_password
 
-        #Id;#Action;#Query;#Connection
-        chck1;SQLselect;'check table runs fast';SQLCNT.Out
+        #Switch
+        _rf_dialect
+            #Case
+            'MYSQL'
+                #Id;#Action;#Query;#Connection
+                chck1;SQLselect;'check table runs fast';SQLCNT.Out
 
-        #Id;#Action;#Query;#Connection
-        chck2;SQLselect;'check table scenarios fast';SQLCNT.Out
+                #Id;#Action;#Query;#Connection
+                chck2;SQLselect;'check table scenarios fast';SQLCNT.Out
 
-        #Id;#Action;#Query;#Connection
-        chck3;SQLselect;'check table details fast';SQLCNT.Out
+                #Id;#Action;#Query;#Connection
+                chck3;SQLselect;'check table details fast';SQLCNT.Out
 
-        #Id;#Action;#Query;#Connection
-        chck4;SQLselect;'check table user_details fast';SQLCNT.Out
+                #Id;#Action;#Query;#Connection
+                chck4;SQLselect;'check table user_details fast';SQLCNT.Out
+
+
+            #Case
+            'MSSQL'
+                #Id;#Action;#Query;#Connection
+                chck1;SQLselect;'DBCC CHECKTABLE (\'runs\')';SQLCNT.Out
+
+                #Id;#Action;#Query;#Connection
+                chck2;SQLselect;'DBCC CHECKTABLE (\'scenarios \')';SQLCNT.Out
+
+                #Id;#Action;#Query;#Connection
+                chck3;SQLselect;'DBCC CHECKTABLE (\'check \')';SQLCNT.Out
+
+                #Id;#Action;#Query;#Connection
+                chck4;SQLselect;'DBCC CHECKTABLE (\'user_details \')';SQLCNT.Out
+
+
+            #Default
+                #Fail
+                'Unknown SQL dialect: ' + _rf_dialect
+
+
+        #EndSwitch
 
         #If
         !(chck1.Out[0].Msg_text == 'OK' && chck2.Out[0].Msg_text == 'OK' && chck3.Out[0].Msg_text == 'OK' && chck4.Out[0].Msg_text == 'OK')
             #Action;#Text;#Notifier
             Show;'Creating tables';Notifier.Info
 
-            #Id;#RawText
-            query1;create
-            "CREATE TABLE IF NOT EXISTS `runs` ("
-            "  `id` int(11) NOT NULL AUTO_INCREMENT,"
-            "  `create_time` datetime DEFAULT NULL,"
-            "  `duration` int(11) DEFAULT NULL,"
-            "  PRIMARY KEY (`id`)"
-            ") ENGINE=InnoDB AUTO_INCREMENT=94 DEFAULT CHARSET=utf8;"
-            #EndRawText
+            #Switch
+            _rf_dialect
+                #Case
+                'MYSQL'
+                    #Id;#RawText
+                    query1;create
+                    "CREATE TABLE IF NOT EXISTS `runs` ("
+                    "  `id` int(11) NOT NULL AUTO_INCREMENT,"
+                    "  `create_time` datetime DEFAULT NULL,"
+                    "  `duration` int(11) DEFAULT NULL,"
+                    "  `test_set` VARCHAR(100) NULL,"
+                    "  PRIMARY KEY (`id`)"
+                    ") ENGINE=InnoDB AUTO_INCREMENT=94 DEFAULT CHARSET=utf8;"
+                    #EndRawText
 
-            #Id;#Action;#Query;#Connection
-            SQLEXEC1;SQLexecute;query1.toString();SQLCNT.Out
+                    #Id;#RawText
+                    query2;create
+                    "CREATE TABLE IF NOT EXISTS `scenarios` ("
+                    "  `id` int(11) NOT NULL AUTO_INCREMENT,"
+                    "  `run_id` int(11) NOT NULL,"
+                    "  `scenario` varchar(100) NOT NULL,"
+                    "  `performer` varchar(100) DEFAULT NULL,"
+                    "  `priority` int(1) DEFAULT NULL,"
+                    "  `env` varchar(100) DEFAULT NULL,"
+                    "  `manual` int(1) DEFAULT NULL,"
+                    "  `start_time` datetime DEFAULT NULL,"
+                    "  `host` varchar(45) DEFAULT NULL,"
+                    "  `user` varchar(45) DEFAULT NULL,"
+                    "  `passed` int(11) DEFAULT '0',"
+                    "  `failed` int(11) DEFAULT '0',"
+                    "  `report` longblob,"
+                    "  `done` int(1) DEFAULT NULL,"
+                    "  `description` varchar(255) DEFAULT NULL,"
+                    "  PRIMARY KEY (`id`)"
+                    ") ENGINE=InnoDB AUTO_INCREMENT=278 DEFAULT CHARSET=utf8;"
+                    #EndRawText
 
-            #Id;#RawText
-            query2;create
-            "CREATE TABLE IF NOT EXISTS `scenarios` ("
-            "  `id` int(11) NOT NULL AUTO_INCREMENT,"
-            "  `run_id` int(11) NOT NULL,"
-            "  `scenario` varchar(100) NOT NULL,"
-            "  `performer` varchar(100) DEFAULT NULL,"
-            "  `priority` int(1) DEFAULT NULL,"
-            "  `env` varchar(100) DEFAULT NULL,"
-            "  `manual` int(1) DEFAULT NULL,"
-            "  `start_time` datetime DEFAULT NULL,"
-            "  `host` varchar(45) DEFAULT NULL,"
-            "  `user` varchar(45) DEFAULT NULL,"
-            "  `passed` int(11) DEFAULT '0',"
-            "  `failed` int(11) DEFAULT '0',"
-            "  `report` longblob,"
-            "  `done` int(1) DEFAULT NULL,"
-            "  `description` varchar(255) DEFAULT NULL,"
-            "  PRIMARY KEY (`id`)"
-            ") ENGINE=InnoDB AUTO_INCREMENT=278 DEFAULT CHARSET=utf8;"
-            #EndRawText
+                    #Id;#RawText
+                    query3;create
+                    "CREATE TABLE IF NOT EXISTS `details` ("
+                    "  `id` int(11) NOT NULL AUTO_INCREMENT,"
+                    "  `scenario_id` int(11) NOT NULL,"
+                    "  `testcase` varchar(256) DEFAULT NULL,"
+                    "  `step` varchar(256) DEFAULT NULL,"
+                    "  `time` int(11) DEFAULT NULL,"
+                    "  `result` varchar(45) DEFAULT NULL,"
+                    "  `error` varchar(256) DEFAULT NULL,"
+                    "  `screenshot` longblob,"
+                    "  PRIMARY KEY (`id`)"
+                    ") ENGINE=InnoDB AUTO_INCREMENT=567 DEFAULT CHARSET=utf8;"
+                    #EndRawText
 
-            #Id;#Action;#Query;#Connection
-            SQLEXEC1;SQLexecute;query2.toString();SQLCNT.Out
+                    #Id;#RawText
+                    query4;create
+                    "CREATE TABLE IF NOT EXISTS `user_details` ("
+                    "  `id` int(11) NOT NULL AUTO_INCREMENT,"
+                    "  `details_id` int(11) NOT NULL,"
+                    "  `name` varchar(100) NOT NULL,"
+                    "  `value` varchar(256) DEFAULT NULL,"
+                    "  PRIMARY KEY (`id`)"
+                    ") ENGINE=InnoDB DEFAULT CHARSET=utf8;"
+                    #EndRawText
 
-            #Id;#RawText
-            query3;create
-            "CREATE TABLE IF NOT EXISTS `details` ("
-            "  `id` int(11) NOT NULL AUTO_INCREMENT,"
-            "  `scenario_id` int(11) NOT NULL,"
-            "  `testcase` varchar(256) DEFAULT NULL,"
-            "  `step` varchar(256) DEFAULT NULL,"
-            "  `time` int(11) DEFAULT NULL,"
-            "  `result` varchar(45) DEFAULT NULL,"
-            "  `error` varchar(256) DEFAULT NULL,"
-            "  `screenshot` longblob,"
-            "  PRIMARY KEY (`id`)"
-            ") ENGINE=InnoDB AUTO_INCREMENT=567 DEFAULT CHARSET=utf8;"
-            #EndRawText
 
-            #Id;#Action;#Query;#Connection
-            SQLEXEC1;SQLexecute;query3.toString();SQLCNT.Out
+                #Case
+                'MSSQL'
+                    #Id;#RawText
+                    query1;create
+                    "IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE table_name = 'runs') "
+                    "CREATE TABLE dbo.runs "
+                    "("
+                    "  id int IDENTITY(1,1) PRIMARY KEY NOT NULL ,  "
+                    "  create_time datetime DEFAULT NULL,  "
+                    "  duration int DEFAULT NULL,"
+                    "  `test_set` VARCHAR(100) NULL"
+                    ") ;"
+                    #EndRawText
 
-            #Id;#RawText
-            query4;create
-            "CREATE TABLE IF NOT EXISTS `user_details` ("
-            "  `id` int(11) NOT NULL AUTO_INCREMENT,"
-            "  `details_id` int(11) NOT NULL,"
-            "  `name` varchar(100) NOT NULL,"
-            "  `value` varchar(256) DEFAULT NULL,"
-            "  PRIMARY KEY (`id`)"
-            ") ENGINE=InnoDB DEFAULT CHARSET=utf8;"
-            #EndRawText
+                    #Id;#RawText
+                    query2;create
+                    "IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE table_name = 'scenarios') "
+                    "CREATE TABLE  dbo.scenarios  "
+                    "("
+                    "  `id` int(11) IDENTITY(1,1) PRIMARY KEY NOT NULL,"
+                    "  `run_id` int(11) NOT NULL,"
+                    "  `scenario` varchar(100) NOT NULL,"
+                    "  `performer` varchar(100) DEFAULT NULL,"
+                    "  `priority` int(1) DEFAULT NULL,"
+                    "  `env` varchar(100) DEFAULT NULL,"
+                    "  `manual` int(1) DEFAULT NULL,"
+                    "  `start_time` datetime DEFAULT NULL,"
+                    "  `host` varchar(45) DEFAULT NULL,"
+                    "  `user` varchar(45) DEFAULT NULL,"
+                    "  `passed` int(11) DEFAULT '0',"
+                    "  `failed` int(11) DEFAULT '0',"
+                    "  `report` longblob,"
+                    "  `done` int(1) DEFAULT NULL,"
+                    "  `description` varchar(255) DEFAULT NULL"
+                    ");"
+                    " "
+                    #EndRawText
 
-            #Id;#Action;#Query;#Connection
-            SQLEXEC1;SQLexecute;query4.toString();SQLCNT.Out
+                    #Id;#RawText
+                    query3;create
+                    "IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE table_name = 'details') "
+                    "CREATE TABLE dbo.details "
+                    "("
+                    "  `id` int(11)  IDENTITY(1,1) PRIMARY KEY NOT NULL,"
+                    "  `scenario_id` int(11) NOT NULL,"
+                    "  `testcase` varchar(256) DEFAULT NULL,"
+                    "  `step` varchar(256) DEFAULT NULL,"
+                    "  `time` int(11) DEFAULT NULL,"
+                    "  `result` varchar(45) DEFAULT NULL,"
+                    "  `error` varchar(256) DEFAULT NULL,"
+                    "  `screenshot` longblob"
+                    " );"
+                    #EndRawText
+
+                    #Id;#RawText
+                    query4;create
+                    "IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE table_name = 'user_details')"
+                    "CREATE TABLE dbo.user_details "
+                    "("
+                    "  `id` int(11) IDENTITY(1,1) PRIMARY KEY NOT NULL,"
+                    "  `details_id` int(11) NOT NULL,"
+                    "  `name` varchar(100) NOT NULL,"
+                    "  `value` varchar(256) DEFAULT NULL"
+                    ");"
+                    #EndRawText
+
+
+                #Default
+                    #Fail
+                    'Unknown SQL dialect: ' + _rf_dialect
+
+
+            #EndSwitch
+
+            #Action;#Query;#Connection
+            SQLexecute;query1.toString();SQLCNT.Out
+
+            #Action;#Query;#Connection
+            SQLexecute;query2.toString();SQLCNT.Out
+
+            #Action;#Query;#Connection
+            SQLexecute;query3.toString();SQLCNT.Out
+
+            #Action;#Query;#Connection
+            SQLexecute;query4.toString();SQLCNT.Out
 
         #EndIf
 

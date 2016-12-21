@@ -194,7 +194,7 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 	{
 		Platform.runLater(() ->
 		{
-			String format = String.format("Matrix '%s' finished.	  PASSED: %d FAILED: %d", matrix.getName(), passed, failed);
+			String format = String.format("Matrix '%s' finished.", matrix.getName());
 			if (listView != null)
 			{
 				listView.getItems().add(ConsoleText.defaultText(format));
@@ -592,31 +592,31 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 		{
 			if (tab.isSelected())
 			{
-				if (SettingsPanel.match(settings, keyEvent, SettingsPanel.START_MATRIX))
+				if (SettingsPanel.match(settings, keyEvent, Settings.START_MATRIX))
 				{
 					model.startMatrix();
 				}
-				else if (SettingsPanel.match(settings, keyEvent, SettingsPanel.STOP_MATRIX))
+				else if (SettingsPanel.match(settings, keyEvent, Settings.STOP_MATRIX))
 				{
 					model.stopMatrix();
 				}
-				else if (SettingsPanel.match(settings, keyEvent, SettingsPanel.PAUSE_MATRIX))
+				else if (SettingsPanel.match(settings, keyEvent, Settings.PAUSE_MATRIX))
 				{
 					model.pauseMatrix();
 				}
-				else if (SettingsPanel.match(settings, keyEvent, SettingsPanel.SHOW_RESULT))
+				else if (SettingsPanel.match(settings, keyEvent, Settings.SHOW_RESULT))
 				{
 					model.showResult();
 				}
-				else if (SettingsPanel.match(settings, keyEvent, SettingsPanel.SHOW_WATCH))
+				else if (SettingsPanel.match(settings, keyEvent, Settings.SHOW_WATCH))
 				{
 					model.showWatch();
 				}
-				else if (SettingsPanel.match(settings, keyEvent, SettingsPanel.TRACING))
+				else if (SettingsPanel.match(settings, keyEvent, Settings.TRACING))
 				{
 					this.context.setTracing(true);
 				}
-				else if (SettingsPanel.match(settings, keyEvent, SettingsPanel.FIND_ON_MATRIX))
+				else if (SettingsPanel.match(settings, keyEvent, Settings.FIND_ON_MATRIX))
 				{
 					showFindPanel(null);
 				}
@@ -629,15 +629,15 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 	{
 		Platform.runLater(() -> tryCatch(() ->
 		{
-			btnStartMatrix.setTooltip(new Tooltip("Start\n" + getShortcutTooltip(settings, SettingsPanel.START_MATRIX)));
-			btnStopMatrix.setTooltip(new Tooltip("Stop\n" + getShortcutTooltip(settings, SettingsPanel.STOP_MATRIX)));
-			btnPauseMatrix.setTooltip(new Tooltip("Pause\n" + getShortcutTooltip(settings, SettingsPanel.PAUSE_MATRIX)));
+			btnStartMatrix.setTooltip(new Tooltip("Start\n" + getShortcutTooltip(settings, Settings.START_MATRIX)));
+			btnStopMatrix.setTooltip(new Tooltip("Stop\n" + getShortcutTooltip(settings, Settings.STOP_MATRIX)));
+			btnPauseMatrix.setTooltip(new Tooltip("Pause\n" + getShortcutTooltip(settings, Settings.PAUSE_MATRIX)));
 			btnWatch.setTooltip(new Tooltip("Watch"));
 			btnStepMatrix.setTooltip(new Tooltip("Step"));
 			btnShowResult.setTooltip(new Tooltip("Show result"));
 			toggleTracing.setTooltip(new Tooltip("Color off"));
 			toggleTracing.getStyleClass().add(CssVariables.TOGGLE_BUTTON_WITHOUT_BORDER);
-			btnFind.setTooltip(new Tooltip("Find\n" + getShortcutTooltip(settings, SettingsPanel.FIND_ON_MATRIX)));
+			btnFind.setTooltip(new Tooltip("Find\n" + getShortcutTooltip(settings, Settings.FIND_ON_MATRIX)));
 			btnStartDefaultApplication.setTooltip(new Tooltip("Start default application"));
 			btnConnectDefaultApplication.setTooltip(new Tooltip("Connect default application"));
 			btnStopDefaultApplication.setTooltip(new Tooltip("Stop default application"));

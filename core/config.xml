@@ -29,13 +29,13 @@
     <import>org.mvel2</import>
     <import>com.exactprosystems.jf.api.client</import>
     <import>com.exactprosystems.jf.api.error</import>
-    <vars>vars.ini</vars>
+    <vars>${JF}/vars.ini</vars>
     <userVars>personal.ini</userVars>
-    <matrix>examples</matrix>
-    <matrix>matrices</matrix>
+    <userVars>uservars/rf.ini</userVars>
+    <matrix>${JF}/matrices</matrix>
     <appDict>dic/gui</appDict>
     <clientDict>dic/clients</clientDict>
-    <library>libjf</library>
+    <library>${JF}/libjf</library>
     <sqlEntry>
         <name>MySql</name>
         <sqlJar>${JF}/sql/mysql-connector-java-5.1.26.jar</sqlJar>
@@ -96,7 +96,7 @@
         </parameters>
         <parameters>
             <key>jreArgs</key>
-            <value></value>
+            <value>-Xms128m -Xmx1G</value>
         </parameters>
         <parameters>
             <key>SafariDriverPath</key>
@@ -123,5 +123,53 @@
         <appJar>${JF}/apps/web.jar</appJar>
         <appWorkDir>${JF}/apps</appWorkDir>
         <appStartPort>7000</appStartPort>
+    </appEntry>
+    <appEntry>
+        <name>WEB_WIN</name>
+        <parameters>
+            <key>ChromeDriverPath</key>
+            <value>win/chromedriver-win-2.25-x86.exe</value>
+        </parameters>
+        <parameters>
+            <key>IEDriverPath</key>
+            <value></value>
+        </parameters>
+        <parameters>
+            <key>ChromeDriverBinary</key>
+            <value></value>
+        </parameters>
+        <parameters>
+            <key>jreExec</key>
+            <value></value>
+        </parameters>
+        <parameters>
+            <key>jreArgs</key>
+            <value>-Xms128m -Xmx1G</value>
+        </parameters>
+        <parameters>
+            <key>SafariDriverPath</key>
+            <value></value>
+        </parameters>
+        <parameters>
+            <key>FirefoxProfileDirectory</key>
+            <value></value>
+        </parameters>
+        <parameters>
+            <key>UsePrivateMode</key>
+            <value></value>
+        </parameters>
+        <parameters>
+            <key>GeckoDriverPath</key>
+            <value>win/geckodriver-win-0.11.1-x86.exe</value>
+        </parameters>
+        <parameters>
+            <key>LogLevel</key>
+            <value>ERROR</value>
+        </parameters>
+        <appDescription>Web applications win</appDescription>
+        <appDicPath>dic/gui/LayoutTesting.xml</appDicPath>
+        <appJar>${JF}/apps/web.jar</appJar>
+        <appWorkDir>${JF}/apps</appWorkDir>
+        <appStartPort>8000</appStartPort>
     </appEntry>
 </configuration>

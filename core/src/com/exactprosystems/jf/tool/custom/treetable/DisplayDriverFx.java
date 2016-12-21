@@ -36,7 +36,6 @@ import com.exactprosystems.jf.tool.custom.tab.CustomTabPane;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.matrix.MatrixFx;
 import com.exactprosystems.jf.tool.matrix.params.ParametersPane;
-import com.exactprosystems.jf.tool.settings.SettingsPanel;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
@@ -121,7 +120,7 @@ public class DisplayDriverFx implements DisplayDriver
 		{
 			ActionItem actionItem = (ActionItem) item;
 			String actionName = actionItem.getActionName();
-			Settings.SettingsValue value = settings.getValue(Settings.GLOBAL_NS, SettingsPanel.MATRIX_COLORS, actionName);
+			Settings.SettingsValue value = settings.getValue(Settings.GLOBAL_NS, Settings.MATRIX_COLORS, actionName);
 			if (value != null)
 			{
 				label.setStyle("-fx-text-fill : " + value.getValue());
@@ -444,6 +443,10 @@ public class DisplayDriverFx implements DisplayDriver
 			selectCurrentRow(((MatrixTreeRow) pane.getParent().getParent()));
 			action.apply(!toggleButton.isSelected());
 		});
+		if (!initialValue)
+		{
+			action.apply(true);
+		}
 		pane.add(toggleButton, column, row);
 		GridPane.setMargin(toggleButton, INSETS);
 	}
@@ -559,7 +562,7 @@ public class DisplayDriverFx implements DisplayDriver
 
 	private void updateStyle(String key, Settings settings, Label label)
 	{
-		Settings.SettingsValue value = settings.getValue(Settings.GLOBAL_NS, SettingsPanel.MATRIX_COLORS, key);
+		Settings.SettingsValue value = settings.getValue(Settings.GLOBAL_NS, Settings.MATRIX_COLORS, key);
 		Optional.ofNullable(value).ifPresent(v -> label.setStyle("-fx-text-fill : " + v.getValue()));
 	}
 

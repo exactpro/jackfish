@@ -36,15 +36,17 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 @MatrixItemAttribute(
-description 	= "Raw data in message form.", 
-shouldContain 	= { Tokens.RawMessage, Tokens.Client }, 
-mayContain 		= { Tokens.Id, Tokens.Off, Tokens.RepOff, Tokens.Global }, 
-real 			= true, 
-hasValue 		= true, 
-hasParameters 	= false, 
-hasChildren 	= true,
-raw 			= true
-)
+		description 	= "Raw data in message form.", 
+		shouldContain 	= { Tokens.RawMessage, Tokens.Client }, 
+		mayContain 		= { Tokens.Id, Tokens.Off, Tokens.RepOff, Tokens.Global }, 
+		parents			= { Case.class, Else.class, For.class, ForEach.class, If.class,
+							OnError.class, Step.class, SubCase.class, TestCase.class, While.class },
+		real 			= true, 
+		hasValue 		= true, 
+		hasParameters 	= false, 
+		hasChildren 	= true,
+		raw 			= true
+	)
 public class RawMessage extends MatrixItem
 {
 	public RawMessage()

@@ -8,7 +8,6 @@
 
 package com.exactprosystems.jf.common.report;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.Date;
 
@@ -17,10 +16,10 @@ public class HTMLReportFactory extends ReportFactory
 {
 
 	@Override
-	public ReportBuilder createBuilder(String outputPath, File matrix, Date currentTime) throws IOException
+	public ReportBuilder createReportBuilder(String outputPath, String matrixName, Date currentTime) throws IOException
 	{
-		ReportBuilder result = new HTMLReportBuilder(outputPath, matrix, currentTime);
-		result.init(new FileReportWriter(result.generateReportName(outputPath, matrix.getName(), ReportBuilder.suffix, currentTime)));
+		ReportBuilder result = new HTMLReportBuilder(outputPath, matrixName, currentTime);
+		result.init(new FileReportWriter(result.generateReportName(outputPath, matrixName, ReportBuilder.SUFFIX, currentTime)));
 		return result;
 	}
 }

@@ -6,12 +6,9 @@
 //  information which is the property of Exactpro Systems, LLC or its licensors.
 ////////////////////////////////////////////////////////////////////////////////
 
-package com.exactprosystems.jf.actions.system;
+package com.exactprosystems.jf.actions.report;
 
-import com.exactprosystems.jf.actions.AbstractAction;
-import com.exactprosystems.jf.actions.ActionAttribute;
-import com.exactprosystems.jf.actions.ActionFieldAttribute;
-import com.exactprosystems.jf.actions.ActionGroups;
+import com.exactprosystems.jf.actions.*;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.common.report.ReportTable;
@@ -19,16 +16,25 @@ import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Parameter;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.documents.matrix.parser.items.TypeMandatory;
+import com.exactprosystems.jf.functions.HelpKind;
+
+import java.util.List;
 
 @ActionAttribute(
-		group					= ActionGroups.System,
+		group					= ActionGroups.Report,
 		generalDescription 		= "Reports given string and parameters to the report.",
 		additionFieldsAllowed 	= true
 	)
 public class Report extends AbstractAction 
 {
-	public final static String beforeTestCaseName = "BeforeTestCase";
-	public final static String strName = "Str";
+    public final static String beforeTestCaseName = "BeforeTestCase";
+    public final static String strName            = "Str";
+    public final static String toReportName       = "ToReport";
+
+	@ActionFieldAttribute(name=toReportName, mandatory = false, description = 
+            "This parameter is used for directing the output from the given object to the external report "
+          + "created by the {{$ReportStart$}} action.")
+	protected ReportBuilder toReport;
 
 	@ActionFieldAttribute(name = beforeTestCaseName, mandatory = false, description = "The name of Testcase before witch the table will be put.")
 	protected String 	beforeTestCase 	= null;
@@ -45,6 +51,7 @@ public class Report extends AbstractAction
 	{
 		this.message 		= "";
 		this.beforeTestCase = null;
+		this.toReport = null;
 	}
 	
 	@Override
@@ -65,21 +72,36 @@ public class Report extends AbstractAction
 			sb.append('\t');
 		}
 		
-		boolean on = report.reportIsOn();
-		report.reportSwitch(true);
-		report.outLine(this.owner, this.beforeTestCase, sb.toString(), null);
-//		
-//		ReportTable info = report.addTable(sb.toString(), this.beforeTestCase, true, 0, new int[] {});
-//		info.addValues("");
-		report.reportSwitch(on);
+		report = this.toReport == null ? report : this.toReport;
+		this.beforeTestCase = ActionsReportHelper.getBeforeTestCase(this.beforeTestCase, this.owner.getMatrix());
+		ReportTable info = report.addExplicitTable(sb.toString(), this.beforeTestCase, true, 0, new int[] {});
+		info.addValues("");
 		
 		
 		super.setResult(null);
 	}
 
 	@Override
-	protected boolean reportAllDetail()
+	protected HelpKind howHelpWithParameterDerived(Context context, Parameters parameters, String fieldName) throws Exception
 	{
-		return false;
+		switch (fieldName)
+		{
+			case beforeTestCaseName:
+				return HelpKind.ChooseFromList;
+		}
+
+		return null;
+	}
+
+	@Override
+	protected void listToFillParameterDerived(List<ReadableValue> list, Context context, String parameterToFill, Parameters parameters) throws Exception
+	{
+		switch (parameterToFill)
+		{
+			case beforeTestCaseName:
+				ActionsReportHelper.fillListForParameter(super.owner.getMatrix(),  list, context.getEvaluator());
+				break;
+			default:
+		}
 	}
 }

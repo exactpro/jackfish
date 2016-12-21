@@ -9,12 +9,13 @@
 package com.exactprosystems.jf.actions.tables;
 
 import com.exactprosystems.jf.actions.*;
+import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
-import com.exactprosystems.jf.documents.matrix.parser.items.ActionItem.HelpKind;
+import com.exactprosystems.jf.functions.HelpKind;
 import com.exactprosystems.jf.documents.matrix.parser.items.TypeMandatory;
 import com.exactprosystems.jf.functions.Table;
 
@@ -39,12 +40,18 @@ import java.util.List;
 	)
 public class TableReport extends AbstractAction 
 {
-	public final static String tableName = "Table";
-	public final static String beforeTestCaseName = "BeforeTestCase";
-	public final static String titleName = "Title";
-	public final static String numbersName = "Numbers";
-	public final static String columnsName = "Columns";
-	public final static String reportValuesName = "ReportValues";
+    public final static String tableName          = "Table";
+    public final static String beforeTestCaseName = "BeforeTestCase";
+    public final static String titleName          = "Title";
+    public final static String numbersName        = "Numbers";
+    public final static String columnsName        = "Columns";
+    public final static String reportValuesName   = "ReportValues";
+    public final static String toReportName       = "ToReport";
+
+	@ActionFieldAttribute(name=toReportName, mandatory = false, description = 
+            "This parameter is used for directing the output from the given object to the external report "
+          + "created by the {{@ReportStart@}} action.")
+	protected ReportBuilder toReport;
 
 	@ActionFieldAttribute(name = tableName, mandatory = true, description = "A table which is needed to to be output into the report.")
 	protected Table 	table 	= null;
@@ -77,6 +84,7 @@ public class TableReport extends AbstractAction
 		this.withNumbers 	= true;
 		this.columns 		= new String[] {};
 		this.reportValues 	= false;
+		this.toReport = null;
 	}
 	
 	@Override
@@ -84,6 +92,7 @@ public class TableReport extends AbstractAction
 	{
 		switch (fieldName)
 		{
+			case beforeTestCaseName:
 			case numbersName:
 			case reportValuesName:
 				return HelpKind.ChooseFromList;
@@ -103,6 +112,9 @@ public class TableReport extends AbstractAction
 				list.add(ReadableValue.TRUE);
 				list.add(ReadableValue.FALSE);
 				break;
+			case beforeTestCaseName:
+				ActionsReportHelper.fillListForParameter(super.owner.getMatrix(),  list, context.getEvaluator());
+				break;
 			default:
 		}
 	}
@@ -112,7 +124,7 @@ public class TableReport extends AbstractAction
 	{
 		if (this.table == null)
 		{
-			super.setError("Table is null", ErrorKind.EMPTY_PARAMETER);
+			super.setError(tableName, ErrorKind.EMPTY_PARAMETER);
 			return;
 		}
 		Parameters columns = parameters.select(TypeMandatory.Extra);
@@ -120,15 +132,11 @@ public class TableReport extends AbstractAction
 		{
 			columns = null;
 		}
-		this.table.report(report, this.title, this.beforeTestCase, this.withNumbers, this.reportValues, columns, this.columns);
+		report = this.toReport == null ? report : this.toReport;
+		this.beforeTestCase = ActionsReportHelper.getBeforeTestCase(this.beforeTestCase, this.owner.getMatrix());
+		this.table.report(report, Str.asString(this.title), this.beforeTestCase, this.withNumbers, this.reportValues, columns, this.columns);
 		
 		super.setResult(null);
-	}
-
-	@Override
-	protected boolean reportAllDetail()
-	{
-		return false;
 	}
 }
 

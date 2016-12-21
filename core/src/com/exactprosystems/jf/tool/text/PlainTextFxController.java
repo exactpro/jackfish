@@ -14,7 +14,6 @@ import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.custom.tab.CustomTab;
 import com.exactprosystems.jf.tool.custom.tab.CustomTabPane;
-import com.exactprosystems.jf.tool.settings.SettingsPanel;
 
 import javafx.application.Platform;
 import javafx.beans.property.StringProperty;
@@ -66,7 +65,7 @@ public class PlainTextFxController implements Initializable, ContainingParent
 	public void init(PlainTextFx model, Settings settings)
 	{
 		this.model = model;
-		SettingsValue value = settings.getValueOrDefault(Settings.GLOBAL_NS, SettingsPanel.SETTINGS, SettingsPanel.FONT, "Monospaced$16");
+		SettingsValue value = settings.getValueOrDefault(Settings.GLOBAL_NS, Settings.SETTINGS, Settings.FONT, "Monospaced$16");
 		this.textArea.setFont(Common.fontFromString(value.getValue()));
 		this.tab = CustomTabPane.getInstance().createTab(model);
 		this.tab.setContent(this.pane);

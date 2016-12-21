@@ -190,7 +190,6 @@ public class CssVariables
 	 */
 	public static final String	ARROW						= "numberSpinnerArrow";
 	public static final String	NUMBER_FIELD				= "numberField";
-	public static final String	NUMBER_SPINNER				= "numberSpinner";
 	public static final String	SPINNER_BUTTON_UP			= "spinnerButtonUp";
 	public static final String	SPINNER_BUTTON_DOWN			= "spinnerButtonDown";
 
@@ -214,10 +213,15 @@ public class CssVariables
 
 	public static final String	CUSTOM_TAB_PANE				= "customTabPane";
 	
+	public static final String	IMAGE_AREA					= "imageArea";
 
 	public static class Icons
 	{
-		private static final String	IMAGES_DIR				= "com/exactprosystems/jf/tool/css/images";
+		//TODO think about it
+		private static final String	IMAGES_DIR				= "com/exactprosystems/jf/tool/css/general/icons";
+
+		public static final String	MAIN_ICON				= IMAGES_DIR + "/ide.png";
+		public static final String	LOADING_ICON			= IMAGES_DIR + "/loading.png";
 
 		public static final String	LOAD_MATRIX_ICON		= IMAGES_DIR + "/loadMatrix.png";
 		public static final String	NEW_MATRIX_ICON			= IMAGES_DIR + "/matrixNew.png";
@@ -261,7 +265,6 @@ public class CssVariables
 		public static final String	FIND_PREVIOUS			= IMAGES_DIR + "/previous.png";
 		public static final String	LOG						= IMAGES_DIR + "/log.png";
 		public static final String	REFRESH					= IMAGES_DIR + "/refresh.png";
-		public static final String	MAIN_ICON				= IMAGES_DIR + "/ide.png";
 		public static final String	INSPECT_ICON			= IMAGES_DIR + "/inspect.png";
 
 		public static final String	SHOW_SETTINGS_ICON		= IMAGES_DIR + "/showSettings.png";
@@ -282,7 +285,6 @@ public class CssVariables
 		public static final String	EXECUTING_ITEM_ICON 	= IMAGES_DIR + "/executingItem.png";
 		public static final String	MOVE_LEFT_ICON			= IMAGES_DIR + "/move_left.png";
 		public static final String	MOVE_RIGHT_ICON			= IMAGES_DIR + "/move_right.png";
-		public static final String	LOADING_ICON			= IMAGES_DIR + "/loading.png";
 		public static final String	GO_TO_LINE_ICON			= IMAGES_DIR + "/goToLine.png";
 
 		public static final String	EVALUATOR_ICON				= IMAGES_DIR + "/evaluatorIcon.png";

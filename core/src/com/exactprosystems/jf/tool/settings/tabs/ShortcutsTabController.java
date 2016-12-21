@@ -119,7 +119,7 @@ public class ShortcutsTabController implements Initializable, ContainingParent, 
 
 	public void save()
 	{
-		Consumer<Map.Entry<String, String>> consumer = e -> this.model.updateSettingsValue(e.getKey(), SettingsPanel.SHORTCUTS_NAME, e.getValue());
+		Consumer<Map.Entry<String, String>> consumer = e -> this.model.updateSettingsValue(e.getKey(), Settings.SHORTCUTS_NAME, e.getValue());
 
 		this.documents.entrySet().forEach(consumer);
 		this.matrixNavigation.entrySet().forEach(consumer);
@@ -145,7 +145,7 @@ public class ShortcutsTabController implements Initializable, ContainingParent, 
 		{
 			EditableCell editableCell = (EditableCell) selectedItem.getValue();
 			String key = editableCell.lblName.getText();
-			Settings.SettingsValue valueOrDefault = Settings.defaultSettings().getValueOrDefault(GLOBAL_NS, SettingsPanel.SHORTCUTS_NAME, key, Common.EMPTY);
+			Settings.SettingsValue valueOrDefault = Settings.defaultSettings().getValueOrDefault(GLOBAL_NS, Settings.SHORTCUTS_NAME, key, Common.EMPTY);
 			updateShortcut(valueOrDefault.getValue(), editableCell);
 		}
 	}
