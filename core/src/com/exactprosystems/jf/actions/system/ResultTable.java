@@ -106,7 +106,10 @@ public class ResultTable extends AbstractAction
 		}
 		
 		Table copy = result.clone();
-//		copy.setValue(copy.size() - 1, map);		TODO zzz
+		if (report.reportIsOn()) {		//TODO zzz
+			copy.setValue(copy.size() - 1, map);
+		}
+
 		if (this.decorated)
 		{
 			String passed = report.decorateStyle(Result.Passed.name(), Result.Passed.getStyle());
