@@ -2103,20 +2103,47 @@ namespace UIAdapter
                 int runningTime = 0;
                 int MAXTIME = 20000; // wait 20 second before throw exception
                 int TIMEWAIT = 100;
-                while (process.MainWindowHandle.Equals(IntPtr.Zero))
+                IntPtr mainWindowHandle = process.MainWindowHandle;
+                while (mainWindowHandle.Equals(IntPtr.Zero))
                 {
                     if (runningTime > MAXTIME)
                     {
                         throw new Exception("Could not find window still 20 seconds");
                     }
+                    List<Process> children = GetChildProcesses(process);
+                    bool isExit = false;
+                    foreach (Process p in children)
+                    {
+                        if (!p.MainWindowHandle.Equals(IntPtr.Zero))
+                        {
+                            isExit = true;
+                            mainWindowHandle = p.MainWindowHandle;
+                            break;
+                        }
+                    }
+                    if (isExit)
+                    {
+                        break;
+                    }
                     Thread.Sleep(TIMEWAIT);
                     runningTime += TIMEWAIT;
-
                     bool idle = process.WaitForInputIdle();
                     process.Refresh();
                 }
-                handler = AutomationElement.FromHandle(process.MainWindowHandle);
+                handler = AutomationElement.FromHandle(mainWindowHandle);
             }
+        }
+
+        public static List<Process> GetChildProcesses(Process process)
+        {
+            List<Process> children = new List<Process>();
+            System.Management.ManagementObjectSearcher mos = new System.Management.ManagementObjectSearcher(String.Format("Select * From Win32_Process Where ParentProcessID={0}", process.Id));
+
+            foreach (System.Management.ManagementObject mo in mos.Get())
+            {
+                children.Add(Process.GetProcessById(Convert.ToInt32(mo["ProcessID"])));
+            }
+            return children;
         }
 
         private static void CopyArray(int[] from, int[] to, int lenTo)
