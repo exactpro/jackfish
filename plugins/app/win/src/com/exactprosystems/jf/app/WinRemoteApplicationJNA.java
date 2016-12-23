@@ -199,10 +199,7 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 	private void setLogger(JnaDriverImpl driver, String logLevel) throws Exception
 	{
 		this.logger.debug("Set log level : " + logLevel);
-		if (!Str.IsNullOrEmpty(logLevel))
-		{
-			driver.createLogger(CSharpLogLevel.logLevelFromStr(logLevel).logLevel());
-		}
+		driver.createLogger(CSharpLogLevel.logLevelFromStr(logLevel).logLevel());
 	}
 
 	private void setMaxTimeout(JnaDriverImpl driver, String maxTimeout) throws Exception

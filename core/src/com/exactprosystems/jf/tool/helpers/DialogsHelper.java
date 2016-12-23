@@ -13,6 +13,7 @@ import com.exactprosystems.jf.actions.ActionGroups;
 import com.exactprosystems.jf.actions.ActionsList;
 import com.exactprosystems.jf.actions.ReadableValue;
 import com.exactprosystems.jf.api.common.ApiVersionInfo;
+import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.HelpFactory;
 import com.exactprosystems.jf.common.report.ReportBuilder;
@@ -58,6 +59,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
 import java.nio.file.Paths;
+import java.sql.Driver;
+import java.sql.DriverManager;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -95,8 +98,11 @@ public abstract class DialogsHelper
 		Optional<ButtonType> buttonType = dialog.showAndWait();
 		if (buttonType.isPresent())
 		{
+			parameters.clear();
 			ObservableList<ExpressionFieldsPane> items = listView.getItems();
-			items.forEach(item -> parameters.put(item.getKey().getText(), item.getValue().getText()));
+			items.stream()
+					.filter(item -> !Str.IsNullOrEmpty(item.getValue().getText()))
+					.forEach(item -> parameters.put(item.getKey().getText(), Str.IsNullOrEmpty(item.getValue().getText()) ? null : item.getValue().getText()));
 			return buttonType.get();
 		}
 		return ButtonType.CANCEL;

@@ -21,6 +21,10 @@ public enum CSharpLogLevel
 
 	public static CSharpLogLevel logLevelFromStr(String str) throws InternalErrorException
 	{
+		if (str == null)
+		{
+			return All;
+		}
 		switch (str.toUpperCase())
 		{
 			case "ALL":

@@ -125,51 +125,26 @@
         <appStartPort>7000</appStartPort>
     </appEntry>
     <appEntry>
-        <name>WEB_WIN</name>
-        <parameters>
-            <key>ChromeDriverPath</key>
-            <value>win/chromedriver-win-2.25-x86.exe</value>
-        </parameters>
-        <parameters>
-            <key>IEDriverPath</key>
-            <value></value>
-        </parameters>
-        <parameters>
-            <key>ChromeDriverBinary</key>
-            <value></value>
-        </parameters>
+        <name>win</name>
         <parameters>
             <key>jreExec</key>
             <value></value>
         </parameters>
         <parameters>
             <key>jreArgs</key>
-            <value>-Xms128m -Xmx1G</value>
-        </parameters>
-        <parameters>
-            <key>SafariDriverPath</key>
             <value></value>
         </parameters>
         <parameters>
-            <key>FirefoxProfileDirectory</key>
+            <key>MaxTimeout</key>
             <value></value>
-        </parameters>
-        <parameters>
-            <key>UsePrivateMode</key>
-            <value></value>
-        </parameters>
-        <parameters>
-            <key>GeckoDriverPath</key>
-            <value>win/geckodriver-win-0.11.1-x86.exe</value>
         </parameters>
         <parameters>
             <key>LogLevel</key>
-            <value>ERROR</value>
+            <value>ALL</value>
         </parameters>
-        <appDescription>Web applications win</appDescription>
         <appDicPath>dic/gui/LayoutTesting.xml</appDicPath>
-        <appJar>${JF}/apps/web.jar</appJar>
-        <appWorkDir>${JF}/apps</appWorkDir>
-        <appStartPort>8000</appStartPort>
+        <appJar>C:\JF\Jf\core\apps\win.jar</appJar>
+        <appWorkDir>C:\JF\Jf\core\apps\</appWorkDir>
+        <appStartPort>12000</appStartPort>
     </appEntry>
 </configuration>
