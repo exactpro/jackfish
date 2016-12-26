@@ -143,8 +143,8 @@
             <value>ALL</value>
         </parameters>
         <appDicPath>dic/gui/LayoutTesting.xml</appDicPath>
-        <appJar>C:\JF\Jf\core\apps\win.jar</appJar>
-        <appWorkDir>C:\JF\Jf\core\apps\</appWorkDir>
+        <appJar>${JF}/apps/win.jar</appJar>
+        <appWorkDir>${JF}/apps/</appWorkDir>
         <appStartPort>12000</appStartPort>
     </appEntry>
 </configuration>
