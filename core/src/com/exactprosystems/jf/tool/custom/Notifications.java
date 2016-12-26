@@ -25,10 +25,7 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.Region;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.*;
 import javafx.stage.Popup;
 import javafx.stage.Screen;
 import javafx.stage.Window;
@@ -128,7 +125,7 @@ public class Notifications
 		}
 
 		private final Map<Pos, List<Popup>> popupsMap = new HashMap<>();
-		private final double padding = 30;
+		private final double padding = 10;
 
 		private ParallelTransition parallelTransition = new ParallelTransition(new FadeTransition());
 
@@ -282,11 +279,11 @@ public class Notifications
 
 				if (i == popups.size() - 1)
 				{
-					sum = changedPopup.getAnchorY() - popupHeight;
+					sum = changedPopup.getAnchorY() - popupHeight - padding;
 				}
 				else
 				{
-					sum -= popupHeight;
+					sum -= popupHeight + padding;
 				}
 
 				targetAnchors[i] = sum;
