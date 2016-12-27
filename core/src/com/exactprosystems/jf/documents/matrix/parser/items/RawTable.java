@@ -69,10 +69,11 @@ public class RawTable extends MatrixItem
 		driver.showLabel(this, layout, 1, 2, this.typeName.get());
 		driver.showCheckBox(this, layout, 1, 3, "Global", this.global, this.global);
 		driver.showGrid(this, layout, 2, 0, this.table);
-		driver.showToggleButton(this, layout, 1, 4, "Hide", b -> {
+		driver.showToggleButton(this, layout, 1, 4, "Hide", b ->
+		{
 			driver.hide(this, layout, 2, b);
 			return null;
-		}, this.table.size() != 0);
+		}, b -> b ? "Hide" : "Show", this.table.size() != 0);
 		driver.hide(this, layout, 2, this.table.size() == 0);
 		driver.showButton(this, layout, 1, 5, "Layout wizard",(item) -> {
 			driver.layoutWizard(item, table, context);

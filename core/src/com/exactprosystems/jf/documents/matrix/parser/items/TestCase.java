@@ -123,7 +123,9 @@ public final class TestCase extends MatrixItem
 		{
 			driver.hide(this, layout, 2, b);
 			return null;
-		}, !((this.kind.isNullOrEmpty() || this.kind.get().equals(ScreenshotKind.Never.name())) && this.depends.isNullOrEmpty() && this.plugin.isExpressionNullOrEmpty()));
+		},
+				b -> (b ? "Hide" : "Show") + " additional",
+				!((this.kind.isNullOrEmpty() || this.kind.get().equals(ScreenshotKind.Never.name())) && this.depends.isNullOrEmpty() && this.plugin.isExpressionNullOrEmpty()));
 
 		return layout;
 	}

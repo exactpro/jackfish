@@ -17,9 +17,9 @@ import com.exactprosystems.jf.documents.matrix.parser.FormulaGenerator;
 import com.exactprosystems.jf.documents.matrix.parser.Parameter;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.documents.matrix.parser.items.ActionItem;
-import com.exactprosystems.jf.functions.HelpKind;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 import com.exactprosystems.jf.documents.matrix.parser.items.TypeMandatory;
+import com.exactprosystems.jf.functions.HelpKind;
 import com.exactprosystems.jf.functions.Xml;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
@@ -55,42 +55,41 @@ import java.util.stream.Collectors;
 
 public class ParametersPane extends CustomScrollPane
 {
-    private static final int oneLineHeight = 34;
-    private static final int twoLineHeight = 67;
+	private static final int oneLineHeight = 34;
+	private static final int twoLineHeight = 67;
 
-	private GridPane	mainGridPane;
-	private Context		context;
-	private Parameters	parameters;
-	private MatrixItem	matrixItem;
-	private boolean 	oneLine;
+	private GridPane mainGridPane;
+	private Context context;
+	private Parameters parameters;
+	private MatrixItem matrixItem;
+	private boolean oneLine;
 	private FormulaGenerator generator;
 	private EventHandler<ContextMenuEvent> contextMenuHandler;
 	private Common.Function fnc;
 	private static ContextMenu empty = new ContextMenu();
 
-	public ParametersPane(MatrixItem matrixItem, Context context, boolean oneLine, Parameters parameters, FormulaGenerator generator,
-						  MatrixContextMenu rowContextMenu, MatrixParametersContextMenu parametersContextMenu, Common.Function fnc)
+	public ParametersPane(MatrixItem matrixItem, Context context, boolean oneLine, Parameters parameters, FormulaGenerator generator, MatrixContextMenu rowContextMenu, MatrixParametersContextMenu parametersContextMenu, Common.Function fnc)
 	{
-        super(oneLine ? oneLineHeight : twoLineHeight);
+		super(oneLine ? oneLineHeight : twoLineHeight);
 
 		this.mainGridPane = new GridPane();
 		this.mainGridPane.getStyleClass().add(CssVariables.PARAMETERS_PANE);
 
-        RowConstraints r0 = new RowConstraints();
-        r0.setMaxHeight(29);
-        r0.setPrefHeight(29);
-        r0.setMinHeight(29);
-        this.mainGridPane.getRowConstraints().add(r0);
-        if (!oneLine)
-        {
-            RowConstraints r1 = new RowConstraints();
-            r1.setMaxHeight(34);
-            r1.setPrefHeight(34);
-            r1.setMinHeight(34);
-            this.mainGridPane.getRowConstraints().add(r1);
-        }
+		RowConstraints r0 = new RowConstraints();
+		r0.setMaxHeight(29);
+		r0.setPrefHeight(29);
+		r0.setMinHeight(29);
+		this.mainGridPane.getRowConstraints().add(r0);
+		if (!oneLine)
+		{
+			RowConstraints r1 = new RowConstraints();
+			r1.setMaxHeight(34);
+			r1.setPrefHeight(34);
+			r1.setMinHeight(34);
+			this.mainGridPane.getRowConstraints().add(r1);
+		}
 
-        this.fnc = fnc;
+		this.fnc = fnc;
 		this.setContent(this.mainGridPane);
 		this.matrixItem = matrixItem;
 		this.context = context;
@@ -108,7 +107,7 @@ public class ParametersPane extends CustomScrollPane
 	{
 		ObservableList<Node> children = FXCollections.observableArrayList(this.mainGridPane.getChildren());
 		this.mainGridPane.getChildren().clear();
-		
+
 		for (int i = 0; i < this.parameters.size(); i++)
 		{
 			Parameter par = this.parameters.getByIndex(i);
@@ -124,34 +123,36 @@ public class ParametersPane extends CustomScrollPane
 				exist.focusParameter();
 			}
 
-            this.mainGridPane.add(exist, i + 1, 0, 1, this.oneLine ? 1 : 2);
+			this.mainGridPane.add(exist, i + 1, 0, 1, this.oneLine ? 1 : 2);
 		}
 		this.mainGridPane.add(emptyBox(FXCollections.observableArrayList(this.mainGridPane.getChildren()), this.contextMenuHandler), 0, 0, 1, 2);
 
-        if(!oneLine)
-        {
-            for (Node child : children) {
-                if (child instanceof ParameterGridPane) {
-                    ((ParameterGridPane) child).getExpressionField().clearlListener();
-                }
-            }
-        }
+		if (!oneLine)
+		{
+			for (Node child : children)
+			{
+				if (child instanceof ParameterGridPane)
+				{
+					((ParameterGridPane) child).getExpressionField().clearlListener();
+				}
+			}
+		}
 	}
-	
+
 	private ParameterGridPane findAndRemovePane(ObservableList<Node> children, Parameter par)
 	{
 		Iterator<Node> iter = children.iterator();
-		while(iter.hasNext())
+		while (iter.hasNext())
 		{
 			Node node = iter.next();
-			if(node instanceof ParameterGridPane)
+			if (node instanceof ParameterGridPane)
 			{
 				if (((ParameterGridPane) node).getParameter() == par)
 				{
 					iter.remove();
-					return (ParameterGridPane)node;
+					return (ParameterGridPane) node;
 				}
-			} 
+			}
 		}
 		return null;
 	}
@@ -163,9 +164,9 @@ public class ParametersPane extends CustomScrollPane
 
 		Label emptyLabel = new Label();
 		emptyLabel.getStyleClass().add(CssVariables.INVISIBLE_FIELD);
-		emptyLabel.setPrefWidth(15);
-		emptyLabel.setMaxWidth(15);
-		emptyLabel.setMinWidth(15);
+		emptyLabel.setPrefWidth(12);
+		emptyLabel.setMaxWidth(12);
+		emptyLabel.setMinWidth(12);
 		GridPane.setMargin(pane, new Insets(0, 5, 0, 0));
 		pane.add(emptyLabel, 0, 0);
 
@@ -182,15 +183,9 @@ public class ParametersPane extends CustomScrollPane
 				pane.getStyleClass().add(CssVariables.EMPTY_GRID);
 			}
 		});
-		
-		pane.setOnDragDetected(new DragDetector(() -> Arrays.toString(children.stream()
-				.filter(node -> node instanceof ParameterGridPane)
-				.map(node -> ((ParameterGridPane)node).getParameter())
-				.filter(Objects::nonNull)
-				.map(Parameter::getName)
-				.collect(Collectors.toList())
-				.toArray()))::onDragDetected);
-		
+
+		pane.setOnDragDetected(new DragDetector(() -> Arrays.toString(children.stream().filter(node -> node instanceof ParameterGridPane).map(node -> ((ParameterGridPane) node).getParameter()).filter(Objects::nonNull).map(Parameter::getName).collect(Collectors.toList()).toArray()))::onDragDetected);
+
 		pane.setOnDragDropped(event ->
 		{
 			Dragboard dragboard = event.getDragboard();
@@ -201,12 +196,9 @@ public class ParametersPane extends CustomScrollPane
 				if (str != null && str.startsWith("[") && str.endsWith("]"))
 				{
 					String[] fields = str.substring(1, str.length() - 1).split(",");
-					Common.tryCatch(() -> getMatrix().parameterInsert(this.matrixItem, -1,
-							Arrays.stream(fields)
-							.map(i -> new Pair<>(new ReadableValue(i.trim()), TypeMandatory.Extra))
-							.collect(Collectors.toList())), "Error on change parameters");
+					Common.tryCatch(() -> getMatrix().parameterInsert(this.matrixItem, -1, Arrays.stream(fields).map(i -> new Pair<>(new ReadableValue(i.trim()), TypeMandatory.Extra)).collect(Collectors.toList())), "Error on change parameters");
 				}
-				
+
 				b = true;
 			}
 			event.setDropCompleted(b);
@@ -223,7 +215,7 @@ public class ParametersPane extends CustomScrollPane
 		});
 
 		pane.setOnContextMenuRequested(contextMenuHandler);
-		
+
 		return pane;
 	}
 
@@ -233,7 +225,7 @@ public class ParametersPane extends CustomScrollPane
 		Control key = new TextField(par.getName());
 		((TextField) key).setPromptText("Key");
 		Common.sizeTextField((TextField) key);
-//		key.focusedProperty().addListener(createKeyChangeListener(par, finalKey, parameters.getIndex(par)));
+		//		key.focusedProperty().addListener(createKeyChangeListener(par, finalKey, parameters.getIndex(par)));
 		switch (par.getType())
 		{
 			case Mandatory:
@@ -242,46 +234,47 @@ public class ParametersPane extends CustomScrollPane
 				Common.sizeLabel((Label) key);
 		}
 		tempGrid.setKey(key);
-		tempGrid.setKeyListener(this.fnc, (index,text) -> getMatrix().parameterSetName(this.matrixItem, index, text));
+		tempGrid.setKeyListener(this.fnc, (index, text) -> getMatrix().parameterSetName(this.matrixItem, index, text));
 		key.setContextMenu(empty);
 		key.setOnContextMenuRequested(contextMenuHandler);
 		GridPane.setMargin(key, Common.INSETS_NODE);
 		focusedParent(key);
 		key.setStyle(Common.FONT_SIZE);
-		
+
 		if (this.generator != null)
 		{
 			key.setOnDragDetected(new DragDetector(() -> this.generator.generate() + par.getName())::onDragDetected);
 		}
-		
+
 		if (!this.oneLine)
 		{
 			ExpressionField expressionField = new ExpressionField(this.context.getEvaluator(), par.getExpression());
 			if (this.matrixItem instanceof ActionItem)
 			{
 				ActionItem actionItem = (ActionItem) this.matrixItem;
-				HelpKind howHelp = null; 
-						
+				HelpKind howHelp = null;
+
 				try
 				{
 					howHelp = actionItem.howHelpWithParameter(this.context, par.getName());
 				}
 				catch (Exception e)
-				{ }
+				{
+				}
 
 				AbstractEvaluator evaluator = this.context.getEvaluator();
 				List<String> themePaths = Common.currentThemesPaths();
-				
-				if (howHelp != null ) 
+
+				if (howHelp != null)
 				{
-                    expressionField.setNameFirst(howHelp.getLabel());
+					expressionField.setNameFirst(howHelp.getLabel());
 					switch (howHelp)
 					{
 						case BuildQuery:
 							break;
-							
+
 						case BuildLayoutExpression:
-							expressionField.setFirstActionListener(str -> 
+							expressionField.setFirstActionListener(str ->
 							{
 								String expression = this.parameters.getExpression(DialogFill.dialogName);
 								String dialogName = null;
@@ -289,7 +282,9 @@ public class ParametersPane extends CustomScrollPane
 								{
 									dialogName = String.valueOf(evaluator.evaluate(expression));
 								}
-								catch (Exception e) {}
+								catch (Exception e)
+								{
+								}
 								try
 								{
 									LayoutExpressionBuilder viewer = new LayoutExpressionBuilder(par.getName(), expressionField.getText(), this.matrixItem.getParent().getMatrix().getDefaultApplicationConnection(), dialogName, evaluator);
@@ -299,12 +294,12 @@ public class ParametersPane extends CustomScrollPane
 								{
 									DialogsHelper.showError(e.getMessage());
 								}
-								return  expressionField.getText();
+								return expressionField.getText();
 							});
 							break;
-							
+
 						case ChooseDateTime:
-							expressionField.setFirstActionListener(str -> 
+							expressionField.setFirstActionListener(str ->
 							{
 								Date date = null;
 								if (expressionField.getText() != null)
@@ -331,49 +326,49 @@ public class ParametersPane extends CustomScrollPane
 								return expressionField.getText();
 							});
 							break;
-							
+
 						case ChooseOpenFile:
-							expressionField.setFirstActionListener(str -> 
+							expressionField.setFirstActionListener(str ->
+							{
+								File file = DialogsHelper.showOpenSaveDialog("Choose file to open", "All files", "*.*", OpenSaveMode.OpenFile);
+								if (file != null)
 								{
-									File file = DialogsHelper.showOpenSaveDialog("Choose file to open", "All files", "*.*", OpenSaveMode.OpenFile);
-									if (file != null)
-									{
-										return this.context.getEvaluator().createString(Common.getRelativePath(file.getAbsolutePath()));
-									}
-									return str;
-								});
+									return this.context.getEvaluator().createString(Common.getRelativePath(file.getAbsolutePath()));
+								}
+								return str;
+							});
 							break;
-							
+
 						case ChooseSaveFile:
-							expressionField.setFirstActionListener(str -> 
+							expressionField.setFirstActionListener(str ->
+							{
+								File file = DialogsHelper.showOpenSaveDialog("Choose file to save", "All files", "*.*", OpenSaveMode.SaveFile);
+								if (file != null)
 								{
-									File file = DialogsHelper.showOpenSaveDialog("Choose file to save", "All files", "*.*", OpenSaveMode.SaveFile);
-									if (file != null)
-									{
-										return this.context.getEvaluator().createString(Common.getRelativePath(file.getAbsolutePath()));
-									}
-									return str;
-								});
+									return this.context.getEvaluator().createString(Common.getRelativePath(file.getAbsolutePath()));
+								}
+								return str;
+							});
 							break;
-							
+
 						case ChooseFolder:
-							expressionField.setFirstActionListener(str -> 
+							expressionField.setFirstActionListener(str ->
+							{
+								File file = DialogsHelper.showDirChooseDialog("Choose directory");
+								if (file != null)
 								{
-									File file = DialogsHelper.showDirChooseDialog("Choose directory");
-									if (file != null)
-									{
-										return this.context.getEvaluator().createString(Common.getRelativePath(file.getAbsolutePath()));
-									}
-									return str;
-								});
+									return this.context.getEvaluator().createString(Common.getRelativePath(file.getAbsolutePath()));
+								}
+								return str;
+							});
 							break;
-							
+
 						case ChooseFromList:
 							expressionField.setChooserForExpressionField(par.getName(), () -> actionItem.listToFillParameter(this.context, par.getName()));
 							break;
-							
+
 						case BuildXPath:
-							expressionField.setFirstActionListener(str -> 
+							expressionField.setFirstActionListener(str ->
 							{
 								for (int i = 0; i < this.parameters.size(); i++)
 								{
@@ -381,7 +376,7 @@ public class ParametersPane extends CustomScrollPane
 									Object obj = evaluator.tryEvaluate(next.getExpression());
 									if (obj instanceof Xml)
 									{
-										Xml xml = (Xml)obj;
+										Xml xml = (Xml) obj;
 										Object value = evaluator.tryEvaluate(par.getExpression());
 										String initial = value == null ? null : String.valueOf(value);
 										XpathViewer viewer = new XpathViewer(null, xml.getDocument(), null);
@@ -390,14 +385,14 @@ public class ParametersPane extends CustomScrollPane
 										{
 											res = evaluator.createString(res);
 										}
-										
+
 										return res;
 									}
 								}
 								return str;
 							});
 							break;
-							
+
 						default:
 							break;
 					}
@@ -413,7 +408,7 @@ public class ParametersPane extends CustomScrollPane
 			focusedParent(expressionField);
 		}
 		tempGrid.setOnContextMenuRequested(contextMenuHandler);
-		
+
 		return tempGrid;
 	}
 

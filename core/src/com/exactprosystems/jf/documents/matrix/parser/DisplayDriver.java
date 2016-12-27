@@ -34,7 +34,7 @@ public interface DisplayDriver
 	void		showAutoCompleteBox	(MatrixItem item, Object layout, int row, int column, List<String> words, Consumer<String> supplier);
 	void 		showComment			(MatrixItem item, Object layout, int row, int column, List<CommentString> lines);
 	void 		showButton			(MatrixItem item, Object layout, int row, int column, String name, Function<MatrixItem, Void> action);
-	void 		showToggleButton	(MatrixItem item, Object layout, int row, int column, String name, Function<Boolean, Void> action, boolean initialValue);
+	void 		showToggleButton	(MatrixItem item, Object layout, int row, int column, String name, Function<Boolean, Void> action, Function<Boolean, String> changeName, boolean initialValue);
 	void 		showParameters		(MatrixItem item, Object layout, int row, int column, Parameters parameters, FormulaGenerator generator, boolean oneLine);
 	void 		showGrid			(MatrixItem item, Object layout, int row, int column, Table table);
 	void 		hide				(MatrixItem item, Object layout, int row, boolean hide);

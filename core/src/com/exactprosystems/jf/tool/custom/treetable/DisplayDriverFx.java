@@ -434,14 +434,16 @@ public class DisplayDriverFx implements DisplayDriver
 	}
 
 	@Override
-	public void showToggleButton(MatrixItem item, Object layout, int row, int column, String name, Function<Boolean, Void> action, boolean initialValue)
+	public void showToggleButton(MatrixItem item, Object layout, int row, int column, String name, Function<Boolean, Void> action, Function<Boolean, String> changeName, boolean initialValue)
 	{
 		GridPane pane = (GridPane) layout;
 		ToggleButton toggleButton = new ToggleButton(name);
 		toggleButton.setSelected(initialValue);
 		toggleButton.setOnAction(e -> {
 			selectCurrentRow(((MatrixTreeRow) pane.getParent().getParent()));
-			action.apply(!toggleButton.isSelected());
+			boolean isNotSelected = !toggleButton.isSelected();
+			action.apply(isNotSelected);
+			toggleButton.setText(changeName.apply(!isNotSelected));
 		});
 		if (!initialValue)
 		{
