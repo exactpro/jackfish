@@ -231,6 +231,11 @@ public class MatrixTreeView extends TreeTableView<MatrixItem>
 		{
 			private CheckBox box = new CheckBox();
 
+			private void updateTooltip()
+			{
+				this.box.setTooltip(new Tooltip("Set report " + (this.box.isSelected() ? "on" : "off") + " item"));
+			}
+
 			@Override
 			protected void updateItem(MatrixItem item, boolean empty)
 			{
@@ -238,8 +243,10 @@ public class MatrixTreeView extends TreeTableView<MatrixItem>
 				if (item != null)
 				{
 					box.setSelected(item.isRepOff());
+					updateTooltip();
 					box.setOnAction(event -> {
 						item.setRepOff(box.isSelected());
+						updateTooltip();
 						refresh();
 					});
 					setGraphic(box);
@@ -261,6 +268,11 @@ public class MatrixTreeView extends TreeTableView<MatrixItem>
 		{
 			private CheckBox box = new CheckBox();
 
+			private void updateTooltip()
+			{
+				this.box.setTooltip(new Tooltip("Set item " + (this.box.isSelected() ? "on" : "off")));
+			}
+
 			@Override
 			protected void updateItem(MatrixItem item, boolean empty)
 			{
@@ -268,8 +280,10 @@ public class MatrixTreeView extends TreeTableView<MatrixItem>
 				if (item != null)
 				{
 					box.setSelected(item.isOff());
+					updateTooltip();
 					box.setOnAction(event -> {
 						matrix.setOff(item.getNumber(), box.isSelected());
+						updateTooltip();
 						refresh();
 					});
 					setGraphic(box);
