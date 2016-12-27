@@ -7,10 +7,12 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.exactprosystems.jf.tool.newconfig.nodes;
 
+import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.newconfig.ConfigurationTreeView;
 
 import javafx.scene.Node;
 import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
 import javafx.scene.image.Image;
 import javafx.scene.text.Text;
 
@@ -29,7 +31,13 @@ public class FileTreeNode extends TreeNode
 	@Override
 	public Optional<ContextMenu> contextMenu()
 	{
-		return Optional.of(ConfigurationTreeView.gitContextMenu(getFile()));
+		ContextMenu value = ConfigurationTreeView.gitContextMenu(getFile());
+
+		MenuItem copyName = new MenuItem("Copy name");
+		copyName.setOnAction(e -> Common.saveToClipboard(this.file.getName()));
+		value.getItems().add(0, copyName);
+
+		return Optional.of(value);
 	}
 
 	@Override
