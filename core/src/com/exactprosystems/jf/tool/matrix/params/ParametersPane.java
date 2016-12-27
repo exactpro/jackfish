@@ -72,7 +72,9 @@ public class ParametersPane extends CustomScrollPane
 						  MatrixContextMenu rowContextMenu, MatrixParametersContextMenu parametersContextMenu, Common.Function fnc)
 	{
         super(oneLine ? oneLineHeight : twoLineHeight);
+
 		this.mainGridPane = new GridPane();
+		this.mainGridPane.getStyleClass().add(CssVariables.PARAMETERS_PANE);
 
         RowConstraints r0 = new RowConstraints();
         r0.setMaxHeight(29);

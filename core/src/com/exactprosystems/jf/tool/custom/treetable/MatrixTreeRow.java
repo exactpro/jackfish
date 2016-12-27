@@ -13,6 +13,8 @@ import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.custom.expfield.ExpressionField;
 import com.exactprosystems.jf.tool.matrix.params.ParametersPane;
 
+import com.sun.javafx.css.PseudoClassState;
+import javafx.css.PseudoClass;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.TreeTableRow;
 import javafx.scene.layout.GridPane;
@@ -24,9 +26,16 @@ import java.util.stream.Collectors;
 
 public class MatrixTreeRow extends TreeTableRow<MatrixItem>
 {
+	private final PseudoClass customSelected = PseudoClassState.getPseudoClass("customSelectedState");
+	private final PseudoClass selected = PseudoClassState.getPseudoClass("selected");
+
 	public MatrixTreeRow(ContextMenu contextMenu) throws Exception
 	{
 		setContextMenu(contextMenu);
+		this.selectedProperty().addListener((observable, oldValue, newValue) -> {
+			this.pseudoClassStateChanged(customSelected, newValue);
+			this.pseudoClassStateChanged(selected, false); // remove selected pseudostate, cause this state change text color
+		});
 	}
 
 	@Override

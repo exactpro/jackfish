@@ -303,7 +303,7 @@ public class MatrixTreeView extends TreeTableView<MatrixItem>
 		this.getColumns().add(iconColumn);
 		this.getColumns().add(gridColumn);
 		gridColumn.setMaxWidth(Double.MAX_VALUE);
-		gridColumn.prefWidthProperty().bind(this.widthProperty().subtract(numberColumn.getWidth() + iconColumn.getWidth() + offColumn.getWidth()).subtract(2));
+		gridColumn.prefWidthProperty().bind(this.widthProperty().subtract(numberColumn.getWidth() + iconColumn.getWidth() + offColumn.getWidth() + reportOffColumn.getWidth()).subtract(2));
 	}
 
 	private void expand(TreeItem<MatrixItem> rootItem, boolean flag)
