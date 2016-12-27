@@ -304,12 +304,71 @@ namespace UIAdapter
                 long startMethod = getMilis();
 
                 AutomationElement owner = findOwner(elementId);
+                logger.All("Fount element runtimeId : " + string.Join(",",owner.GetRuntimeId()));
                 List<AutomationElement> listItems = getListItems(owner);
                 List<string> namesList = getNamesOfListItems(listItems);
-                string result = string.Join(SEPARATOR_COMMA, namesList);
+                //TODO check if we have comboBox with checkboxes
+                bool isCheckboxes = true;
+                string firstElement = namesList[0];
+                for (int i = 1; i < namesList.Count; i++)
+                {
+                    if (!namesList[i].Equals(firstElement))
+                    {
+                        isCheckboxes = false;
+                        break;
+                    }
+                }
+                //TODO this code is unbelievable
+                if (isCheckboxes)
+                {
+                    System.Windows.Point point;
+                    AutomationElement node = null;
+                    Rect rect = owner.Current.BoundingRectangle;
+                    double x = rect.X + rect.Width/2;
+                    double y = rect.Y + rect.Height + 1;
+                    for (int i = 0; i < 100; i++)
+                    {
+                        point = new System.Windows.Point(x, y + i);
+                        node = AutomationElement.FromPoint(point);
+                        logger.All("Node " + i + ": " + node.Current.LocalizedControlType);
+                        if (node.Current.ControlType.Equals(ControlType.CheckBox) || node.Current.ControlType.Equals(ControlType.List))
+                        {
+                            break;
+                        }
+                    }
+                    logger.All("Found checkBox : " + node.Current.Name);
+                    AutomationElementCollection checkboxes;
+                    TogglePattern togglePattern;
+                    TreeWalker treeWalker = TreeWalker.RawViewWalker;
+                    do
+                    {
+                        if (node == null || node.Current.ControlType.Equals(ControlType.List))
+                        {
+                            break;
+                        }
+                        node = treeWalker.GetParent(node);
+                        logger.All("ControlType node : " + node.Current.LocalizedControlType);
 
-                logger.All("method ListAll", getMilis() - startMethod);
-                return ConvertString.replaceNonASCIIToUnicode(result);
+                    } while (true);
+
+                    checkboxes = node.FindAll(TreeScope.Descendants, new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.CheckBox));
+                    String result = "";
+                    foreach (AutomationElement item in checkboxes)
+                    {
+                        string toggleString = "";
+                        togglePattern = (TogglePattern)item.GetCurrentPattern(TogglePattern.Pattern);
+                        toggleString = togglePattern.Current.ToggleState == ToggleState.On ? "+" : "-";
+                        result += toggleString + item.Current.Name + SEPARATOR_COMMA;
+                    }
+                    logger.All("method GetList", getMilis() - startMethod);
+                    return ConvertString.replaceNonASCIIToUnicode(result);
+                }
+                else
+                {
+                    string result = string.Join(SEPARATOR_COMMA, namesList);
+                    logger.All("method GetList", getMilis() - startMethod);
+                    return ConvertString.replaceNonASCIIToUnicode(result);
+                }
             }
             catch (Exception e)
             {
@@ -595,7 +654,7 @@ namespace UIAdapter
 
                 AutomationElement element = null;
                 string str = "";
-
+                logger.All("Coordinates : " + string.Join(",", id));
                 if (part == AttributeKind.ITEMS)
                 {
                     // get value from combobox with checkboxes for Prime
@@ -605,31 +664,30 @@ namespace UIAdapter
                     {
                         point = new System.Windows.Point(id[0], id[1] + i);
                         node = AutomationElement.FromPoint(point);
-                        if (node.Current.LocalizedControlType == "checkbox")
+                        logger.All("Node "+i +": " + node.Current.LocalizedControlType);
+                        if (node.Current.ControlType.Equals(ControlType.CheckBox) || node.Current.ControlType.Equals(ControlType.List))
                         {
                             break;
                         }
                     }
-
+                    logger.All("Found checkBox : " + node.Current.Name);
                     AutomationElementCollection checkboxes;
                     TogglePattern togglePattern;
                     TreeWalker treeWalker = TreeWalker.RawViewWalker;
                     do
                     {
-                        if (node == null || treeWalker.GetParent(node).Current.Name.Equals("Silverlight Control"))
+                        if (node == null || node.Current.ControlType.Equals(ControlType.List))
                         {
                             break;
                         }
-                        else
-                        {
-                            node = treeWalker.GetParent(node);
-                        }
+                        node = treeWalker.GetParent(node);
+                        logger.All("ControlType node : " + node.Current.LocalizedControlType);
                     } while (true);
 
                     string toggleString = "";
                     string nameString = "";
 
-                    checkboxes = node.FindAll(TreeScope.Descendants, new PropertyCondition(AutomationElement.LocalizedControlTypeProperty, "checkbox"));
+                    checkboxes = node.FindAll(TreeScope.Descendants, new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.CheckBox));
                     foreach (AutomationElement item in checkboxes)
                     {
                         togglePattern = (TogglePattern)item.GetCurrentPattern(TogglePattern.Pattern);
