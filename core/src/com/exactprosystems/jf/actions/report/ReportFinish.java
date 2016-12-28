@@ -8,6 +8,8 @@
 
 package com.exactprosystems.jf.actions.report;
 
+import java.util.Date;
+
 import com.exactprosystems.jf.actions.AbstractAction;
 import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionFieldAttribute;
@@ -28,6 +30,8 @@ public class ReportFinish extends AbstractAction
     public final static String passedName = "Passed";
     public final static String failedName = "Failed";
     public final static String reportName = "Report";
+	public final static String startTimeName 	= "StartTime";
+	public final static String finishTimeName 	= "FinishTime";
 
     @ActionFieldAttribute(name = reportName, mandatory = true, description = "The report object.")
     protected ReportBuilder    report;
@@ -38,6 +42,12 @@ public class ReportFinish extends AbstractAction
     @ActionFieldAttribute(name = failedName, mandatory = true, description = "How many steps failed.")
     protected Integer          failed;
 
+	@ActionFieldAttribute(name = startTimeName, mandatory = false, description = "Reports given start time to the report. If null or absent - current time will be used.")
+	protected Date startTime; 
+
+	@ActionFieldAttribute(name = finishTimeName, mandatory = false, description = "Reports given start time to the report. If null or absent - current time will be used.")
+	protected Date finishTime; 
+
 	public ReportFinish()
 	{
 	}
@@ -45,6 +55,8 @@ public class ReportFinish extends AbstractAction
 	@Override
 	public void initDefaultValues() 
 	{
+		this.startTime = null;
+		this.finishTime = null;
 	}
 	
 	@Override
@@ -58,7 +70,7 @@ public class ReportFinish extends AbstractAction
 	    }
 		
 	    this.report.itemFinished(this.owner.getMatrix().getRoot(), 0, null);
-	    this.report.reportFinished(this.failed, this.passed);
+	    this.report.reportFinished(this.failed, this.passed, this.startTime, this.finishTime);
 	    
 		super.setResult(null);
 	}

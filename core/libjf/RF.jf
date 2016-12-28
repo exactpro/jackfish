@@ -203,6 +203,9 @@ RF;RegressionFramework
         #Id;#Call;#sql;#date
         runId;runIdFromDate;SQL;date
 
+        #Id;#Call;#sql;#date
+        times;timesFromDate;SQL;date
+
         #Id;#RawText
         TEXT2;Text
         "SELECT "
@@ -244,8 +247,8 @@ RF;RegressionFramework
         #Action;#Table;#Title;#ToReport;#Numbers;#scenario;#result;#date;#time;#user;#host;#report
         TableReport;table;'{{4' + title + '4}}';REP1.Out;false;'Matrix Name';'Execution Status';'Execution Date';'Execution Time';'Exectuted By';'Execution Machine';'Report Link'
 
-        #Action;#Passed;#Failed;#Report
-        ReportFinish;passed.Out.size();failed.Out.size();REP1.Out
+        #Action;#Passed;#Failed;#Report;#StartTime;#FinishTime
+        ReportFinish;passed.Out.size();failed.Out.size();REP1.Out;times.startTime;times.finishTime
 
         #Action;#Report
         ReportShow;REP1.Out.getReportName()
@@ -514,6 +517,44 @@ RF;RegressionFramework
 
         #Return
         select2.Out.size() > 0 ? select2.Out[0].id : -1
+
+    #EndSubCase
+
+    // //==============================================
+    // // For empty date returns the last runs.id, for non-empty - the last id, which
+    // // create_date not less than desired
+    // //==============================================
+    #Id;#SubCase;#sql;#date
+    timesFromDate;Gets runs.create_time & duration for desired date;;
+        #Assert;#Message
+        sql != null;'SQL connection is NULL'
+
+        #If
+        date == null
+            #Id;#Action;#Connection;#Query
+            select1;SQLselect;sql;'SELECT r.create_time, r.duration FROM runs AS r WHERE r.id = (SELECT MAX(id) AS id FROM runs)'
+
+            #Return
+            select1.Out.size() > 0 ? { 'startTime' : select1.Out[0].create_time, 'finishTime' :  DateTime.add(select1.Out[0].create_time, 0, 0, select1.Out[0].duration /1000)}  : {}
+
+        #EndIf
+
+        #Id;#RawText
+        query;Text
+        "SELECT r.create_time, r.duration "
+        "FROM runs AS r "
+        "WHERE r.id = (SELECT id  "
+        "FROM runs "
+        "WHERE create_time <= ?  "
+        "ORDER BY create_time DESC "
+        "LIMIT 1 )"
+        #EndRawText
+
+        #Id;#Action;#Connection;#Query;#CreateTime
+        select2;SQLselect;sql;query.toString();date
+
+        #Return
+        select2.Out.size() > 0 ? { 'startTime' : select2.Out[0].create_time, 'finishTime' :  DateTime.add(select2.Out[0].create_time, 0, 0, select2.Out[0].duration /1000)}  : {}
 
     #EndSubCase
 

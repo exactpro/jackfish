@@ -139,7 +139,7 @@ public class HelpBuilder extends ReportBuilder
 	}
 
 	@Override
-	protected void reportFooter(ReportWriter writer, int failed, int passed, Date date, String name, String reportName) throws IOException
+	protected void reportFooter(ReportWriter writer, int failed, int passed, Date startTime, Date finishTime, String name, String reportName) throws IOException
 	{
 		this.menuWriter.fwrite("</ul>\n</div>\n");
 		this.menuWriter.fwrite("</div>\n");
