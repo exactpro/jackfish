@@ -146,7 +146,7 @@ public class ContextHelpBuilder extends ReportBuilder
 	}
 
 	@Override
-	protected void reportFooter(ReportWriter writer, int failed, int passed, Date date, String name, String reportName) throws IOException
+	protected void reportFooter(ReportWriter writer, int failed, int passed, Date startTime, Date finishTime, String name, String reportName) throws IOException
 	{
 		writer.fwrite("</body>\n");
 		writer.fwrite("</html>");

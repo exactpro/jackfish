@@ -307,7 +307,7 @@ public abstract class ReportBuilder implements Storable
 		}
 	}
 	
-	public final void reportFinished(int failed, int passed) throws Exception 
+	public final void reportFinished(int failed, int passed, Date startTime, Date finishTime) throws Exception 
 	{
 		String fullName = writer.fileName();
 		String postSuffix = this.name == null ? "" : " " + this.name;
@@ -317,7 +317,8 @@ public abstract class ReportBuilder implements Storable
 			this.reportName = fullName.replace(SUFFIX, replacement);
 		}
 
-		reportFooter(writer, failed, passed, new Date(), this.name, this.reportName);
+		reportFooter(writer, failed, passed, startTime == null ? new Date() : startTime, 
+				finishTime == null ? new Date() : finishTime, this.name, this.reportName);
 		writer.close();
 
 		if (fullName != null)
@@ -406,7 +407,7 @@ public abstract class ReportBuilder implements Storable
 	
 	protected abstract void reportHeaderTotal(ReportWriter writer, Date date) throws IOException;
 
-	protected abstract void reportFooter(ReportWriter writer, int failed, int passed, Date date, String name, String reportName) throws IOException;
+	protected abstract void reportFooter(ReportWriter writer, int failed, int passed, Date startTime, Date finishTime, String name, String reportName) throws IOException;
 
 	protected abstract void reportItemHeader(ReportWriter writer, MatrixItem entry, Integer id) throws IOException;
 	

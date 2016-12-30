@@ -32,11 +32,11 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 	)
 public class ReportStart extends AbstractAction 
 {
-	public final static String reportNameName = "ReportName";
+	public final static String reportNameName 	= "ReportName";
 
 	@ActionFieldAttribute(name = reportNameName, mandatory = true, description = "Reports given string and parameters to the report.")
 	protected String reportName; 
-	
+
 	public ReportStart()
 	{
 	}

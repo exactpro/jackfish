@@ -29,6 +29,7 @@ import org.apache.log4j.Logger;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -396,7 +397,7 @@ public class Matrix extends AbstractDocument implements IMatrix, Cloneable
 
 		try
 		{
-			report.reportFinished(0, 0);
+			report.reportFinished(0, 0, null, null);
 		}
 		catch (Exception e)
 		{
@@ -425,6 +426,7 @@ public class Matrix extends AbstractDocument implements IMatrix, Cloneable
 		assert (context != null);
 		assert (evaluator != null);
 		assert (report != null);
+		Date startTime = new Date();
 
 		this.matrixListener.matrixStarted(this);
 
@@ -453,9 +455,10 @@ public class Matrix extends AbstractDocument implements IMatrix, Cloneable
 			logger.error(e.getMessage(), e);
 		}
 
+		Date finishTime = new Date();
 		try
 		{
-			report.reportFinished(getRoot().count(Result.Failed), getRoot().count(Result.Passed));
+			report.reportFinished(getRoot().count(Result.Failed), getRoot().count(Result.Passed), startTime, finishTime);
 		}
 		catch (Exception e)
 		{

@@ -156,7 +156,7 @@ public class HTMLReportBuilder extends ReportBuilder
 
 		writer.fwrite("<tr><td><span id='name'></span>\n");
 		writer.fwrite("<tr><td>Version <td>%s\n", VersionInfo.getVersion());
-		writer.fwrite("<tr><td>Start time: <td><span>%tF %tT</span>\n", date, date);
+		writer.fwrite("<tr><td>Start time: <td><span id='startTime'>Calculating...</span>\n");
 		writer.fwrite("<tr><td>Finish time: <td><span id='finishTime'>Calculating...</span>\n");
 	}
 
@@ -180,7 +180,7 @@ public class HTMLReportBuilder extends ReportBuilder
 	}
 
 	@Override
-	protected void reportFooter(ReportWriter writer, int failed, int passed, Date date, String name, String reportName) throws IOException
+	protected void reportFooter(ReportWriter writer, int failed, int passed, Date startTime, Date finishTime, String name, String reportName) throws IOException
 	{
 		writer.fwrite("</tbody>");
 		writer.fwrite("</table>");
@@ -189,6 +189,7 @@ public class HTMLReportBuilder extends ReportBuilder
 						"document.getElementById('exec').innerHTML = '<span> %d </span>'\n" +
 						"document.getElementById('pass').innerHTML = '<span> %d </span>'\n" +
 						"document.getElementById('fail').innerHTML = '<span> %d </span>'\n" +
+						"document.getElementById('startTime').innerHTML = '<span>%tF %tT</span>'\n" +
 						"document.getElementById('finishTime').innerHTML = '<span>%tF %tT</span>'\n" +
 						"document.getElementById('name').innerHTML = '<span>%s</span>'\n" +
 						"document.getElementById('reportName').innerHTML = '<span>%s</span>'\n" +
@@ -197,7 +198,8 @@ public class HTMLReportBuilder extends ReportBuilder
 				passed + failed,
 				passed,
 				failed,
-				date, date,
+				startTime, startTime, 
+				finishTime, finishTime,
 				(name == null ? "" : name),
 				reportName
 		);
