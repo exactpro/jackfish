@@ -1504,7 +1504,13 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 					newHeaders.add(headerElement);
 				}
 			}
-			columnsIsRow.set(true);
+			if (columns != null && doc.select(tag_th).first() == null )
+			{
+				columnsIsRow.set(false);
+			}else
+			{
+				columnsIsRow.set(true);
+			}
 			return Converter.convertColumns(convertColumnsToHeaders(newHeaders, columns, new JsoupElementText()));
 		}
 
@@ -1837,7 +1843,15 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 			try
 			{
 				//mark headers row, if it needed
-				getHeaders(table, false, null, null);
+				List<WebElement> rows = table.findElement(By.xpath("child::" + tag_tbody)).findElements(By.xpath("child::" + tag_tr));
+				List<WebElement> cells = rows.get(0).findElements(By.xpath("child::" + tag_th));
+				boolean empty = cells.isEmpty();
+
+				if (empty)
+				{
+					getHeaders(table, false, null, null);
+				}
+
 				if (additional != null)
 				{
 					MatcherSelenium by = new MatcherSelenium(ControlKind.Row, additional);
@@ -1847,9 +1861,11 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 				}
 				else
 				{
-					List<WebElement> elements = table.findElement(By.xpath("child::" + tag_tbody)).findElements(this.selectRowsWithoutHeader());
-					unmarkRowIsHeader(table);
-					return elements;
+					if (empty)
+					{
+						unmarkRowIsHeader(table);
+					}
+					return table.findElement(By.xpath("child::" + tag_tbody)).findElements(this.selectRowsWithoutHeader());
 				}
 			}
 			catch (StaleElementReferenceException e)
