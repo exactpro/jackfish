@@ -34,6 +34,7 @@ public class SettingsPanelController implements Initializable, ContainingParent
 	public Tab logTab;
 	public Tab colorsTab;
 	public Tab gitTab;
+	public Tab matrixTab;
 	public TabPane tabPane;
 
 	private SettingsPanel model;
@@ -45,6 +46,7 @@ public class SettingsPanelController implements Initializable, ContainingParent
 	private LogTabController logTabController;
 	private ColorsTabController colorsTabController;
 	private GitTabController gitTabController;
+	private MatrixTabController matrixTabController;
 
 	double defaultHeight = -1;
 	private final Timeline resizer = new Timeline();
@@ -121,6 +123,9 @@ public class SettingsPanelController implements Initializable, ContainingParent
 		this.gitTabController = Common.loadController(this.getClass().getResource("tabs/GitTab.fxml"));
 		this.gitTabController.init(model);
 
+		this.matrixTabController = Common.loadController(this.getClass().getResource("tabs/MatrixTab.fxml"));
+		this.matrixTabController.init(model);
+
 		this.model = model;
 	}
 
@@ -153,6 +158,12 @@ public class SettingsPanelController implements Initializable, ContainingParent
 	{
 		this.shortcutsTabController.displayInfo(documents, matrixNavigation, matrixActions, other);
 		this.shortcutsTabController.displayInto(this.shortCutsTab);
+	}
+
+	public void displayMatrix(Map<String, String> res)
+	{
+		this.matrixTabController.displayInfo(res);
+		this.matrixTabController.displayInto(this.matrixTab);
 	}
 	//endregion
 
@@ -195,6 +206,7 @@ public class SettingsPanelController implements Initializable, ContainingParent
 			this.logTabController.save();
 			this.colorsTabController.save();
 			this.gitTabController.save();
+			this.matrixTabController.save();
 			this.model.save();
 			return true;
 		}

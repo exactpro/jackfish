@@ -10,6 +10,7 @@ package com.exactprosystems.jf.common;
 
 import com.exactprosystems.jf.api.app.Mutable;
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.documents.matrix.parser.ScreenshotKind;
 import com.exactprosystems.jf.documents.matrix.parser.items.MutableArrayList;
 import com.exactprosystems.jf.tool.Common;
 import javafx.scene.input.KeyCombination;
@@ -37,6 +38,7 @@ public class Settings
 	public static final String	SHORTCUTS_NAME	= "Shortcuts";
 	public static final String	MATRIX_COLORS	= "MatrixColors";
 	public static final String	GIT				= "Git";
+	public static final String	MATRIX_NAME		= "Matrix";
 
 	//region Shortcuts
 	//other shortcuts
@@ -101,6 +103,10 @@ public class Settings
 	//git
 	public static final String GIT_SSH_IDENTITY	= "gitSshIdentity";
 	public static final String GIT_KNOWN_HOST	= "gitKnownHost";
+	//endregion
+
+	//region Matrix
+	public static final String	MATRIX_DEFAULT_SCREENSHOT = "matrixDefaultScreenshot";
 	//endregion
 
 	public static final String 	OPENED 				= "OPENED";
@@ -290,7 +296,7 @@ public class Settings
 	{
 		//TODO add all default shortcuts and other settings.
 		Settings settings = new Settings();
-		settings.setMapValues(GLOBAL_NS, "Logs", mapOf(
+		settings.setMapValues(GLOBAL_NS, LOGS_NAME, mapOf(
 				ALL, "0x000000ff",
 				DEBUG, "0x334db3ff",
 				ERROR, "0xcc3333ff",
@@ -299,7 +305,7 @@ public class Settings
 				TRACE, "0x8066ccff",
 				WARN, "0xe64d4dff"
 		));
-		settings.setMapValues(GLOBAL_NS, "Main", mapOf(
+		settings.setMapValues(GLOBAL_NS, MAIN_NS, mapOf(
 				MAX_LAST_COUNT,"10",
 				USE_FULL_SCREEN,"false",
 				USE_COMPACT_MODE,"false",
@@ -309,8 +315,8 @@ public class Settings
 						"Trading Systems.\\n//  All rights reserved.\\n//  This is unpublished, licensed software, confidential and proprietary\\n//  information which is the property of Exactpro Systems, LLC or its licensors.\\n//==============================================",
 				USE_FULLSCREEN_XPATH,"false"
 		));
-		settings.setValue(GLOBAL_NS, "Main", FONT, "System$13");
-		settings.setMapValues(GLOBAL_NS, "Shortcuts", mapOf(
+		settings.setValue(GLOBAL_NS, MAIN_NS, FONT, "System$13");
+		settings.setMapValues(GLOBAL_NS, SHORTCUTS_NAME, mapOf(
 				FIND_ON_MATRIX,"Ctrl+F",
 				SHOW_ALL_TABS,"Ctrl+E",
 				SAVE_DOCUMENT,"Ctrl+S",
@@ -325,6 +331,10 @@ public class Settings
 				GO_TO_LINE,"Ctrl+G",
 				UNDO,"Ctrl+Z",
 				REDO,"Shift+Ctrl+Z"
+		));
+
+		settings.setMapValues(GLOBAL_NS, MATRIX_NAME, mapOf(
+				MATRIX_DEFAULT_SCREENSHOT, ScreenshotKind.Never.name()
 		));
 		return settings;
 	}

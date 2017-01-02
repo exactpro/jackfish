@@ -76,6 +76,7 @@ public class SettingsPanel
 	public void show()
 	{
 		displayGit();
+		displayMatrix();
 		displayColors();
 		displayLogs();
 		displayShortcuts();
@@ -100,6 +101,15 @@ public class SettingsPanel
 		this.controller.displayMain(settings.getValues(Settings.GLOBAL_NS, Settings.SETTINGS)
 				.stream()
 				.collect(Collectors.toMap(SettingsValue::getKey, SettingsValue::getValue)));
+	}
+
+	private void displayMatrix()
+	{
+		this.controller.displayMatrix(
+				settings.getValues(Settings.GLOBAL_NS, Settings.MATRIX_NAME)
+						.stream()
+						.collect(Collectors.toMap(SettingsValue::getKey, SettingsValue::getValue))
+		);
 	}
 
 	private void displayLogs()
