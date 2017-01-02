@@ -30,8 +30,8 @@ public class VariablesTreeNode extends TreeNode
 	private ConfigurationFx		model;
 	private TreeItem<TreeNode>	variablesTreeNode;
 
-	private static final SerializablePair<String, String> REMOVE_VARS_FILE = new SerializablePair<>("Refresh", CssVariables.Icons.REMOVE_PARAMETER_ICON);
-	private static final SerializablePair<String, String> OPEN_VARS_FILE = new SerializablePair<>("Open matrix", CssVariables.Icons.VARS_ICON);
+	private static final SerializablePair<String, String> REMOVE_VARS_FILE = new SerializablePair<>("Remove vars file", CssVariables.Icons.REMOVE_PARAMETER_ICON);
+	private static final SerializablePair<String, String> OPEN_VARS_FILE = new SerializablePair<>("Open vars file", CssVariables.Icons.VARS_ICON);
 
 
 	public VariablesTreeNode(ConfigurationFx model, TreeItem<TreeNode> variablesTreeNode)

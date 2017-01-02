@@ -7,6 +7,8 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.exactprosystems.jf.tool.newconfig.nodes;
 
+import com.exactprosystems.jf.documents.DocumentInfo;
+import com.exactprosystems.jf.documents.vars.SystemVars;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.newconfig.ConfigurationFx;
@@ -90,11 +92,27 @@ public class FileSystemTreeNode extends TreeNode
 				menu.getItems().addAll(itemAddAsMatrix, itemAddAsLibrary, itemAddAsAppDic, itemAddAsClientDic, itemSetReportDir);
 				return menu;
 			};
+
+			Function<File, ContextMenu> menuFiles = f ->
+			{
+				ContextMenu menu = new ContextMenu();
+
+				if (f.getName().toLowerCase().endsWith("." + SystemVars.class.getAnnotation(DocumentInfo.class).extentioin()))
+				{
+					MenuItem addCsv = new MenuItem("Add as user variables");
+					addCsv.setOnAction(e-> Common.tryCatch(() -> this.model.addUserVarsFile(f), "Error on add csv"));
+					menu.getItems().add(addCsv);
+				}
+
+				return menu;
+			};
 			Arrays.stream(initialFiles)
 					.sorted(ConfigurationTreeView.comparator)
 					.forEach(
 							file -> new BuildTree(file, this.treeItem)
-									.ignoredFiles(ignoreFiles.stream().map(ConfigurationFx::path).collect(Collectors.toList())).menuTopFolder(menuTopFolder)
+									.ignoredFiles(ignoreFiles.stream().map(ConfigurationFx::path).collect(Collectors.toList()))
+									.menuTopFolder(menuTopFolder)
+									.menuFiles(menuFiles)
 									.byPass());
 		}
 	}
