@@ -27,6 +27,7 @@
 				<Tab closable="false" fx:id="logTab" text="Log"/>
 				<Tab closable="false" fx:id="colorsTab" text="Colors"/>
 				<Tab closable="false" fx:id="gitTab" text="Git"/>
+				<Tab closable="false" fx:id="matrixTab" text="Matrix"/>
 			</tabs>
 		</TabPane>
 	</children>
