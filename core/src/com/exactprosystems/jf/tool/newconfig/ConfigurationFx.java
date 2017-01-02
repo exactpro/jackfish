@@ -1185,6 +1185,7 @@ public class ConfigurationFx extends Configuration
 		ignoreFiles.addAll(toStringList(super.matricesValue));
 		ignoreFiles.addAll(toStringList(super.librariesValue));
 		ignoreFiles.add(super.varsValue.get());
+		ignoreFiles.addAll(toStringList(super.userVarsValue));
 		ignoreFiles.add(super.reportsValue.get());
 
 		this.controller.displayFileSystem(ignoreFiles);
