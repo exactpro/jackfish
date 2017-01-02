@@ -104,6 +104,7 @@ public class CssVariables
 	public static final String	NOT_CHANGEABLE_ROW			= "notChangeableRow";
 
 	/*ParametersPane*/
+	public static final String	COMMENTS_AREA				= "commentsArea";
 	public static final String CUSTOM_SCROLL_PANE 			= "customScrollPane";
 	public static final String	PARAMETERS_PANE				= "parametersPane";
 
@@ -121,10 +122,6 @@ public class CssVariables
 	public static final String	CELL_SPREADSHEET			= "cell-spreadsheet";
 	public static final String	SPREADSHEET_CELL			= "spreadsheet-cell";
 	public static final String	SELECTION_RECTANGLE			= "selection-rectangle";
-
-	/*Supported/Unsupported entries*/
-	public static final String	SUPPORTED_ENTRY				= "supportedEntry";
-	public static final String	UNSUPPORTED_ENTRY			= "unsupportedEntry";
 
 	/*Custom Text Fields*/
 	public static final String	CUSTOM_TEXT_FIELD			= "custom-text-field";

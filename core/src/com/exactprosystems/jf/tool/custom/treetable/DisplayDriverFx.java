@@ -35,7 +35,7 @@ import com.exactprosystems.jf.tool.custom.tab.CustomTab;
 import com.exactprosystems.jf.tool.custom.tab.CustomTabPane;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.matrix.MatrixFx;
-import com.exactprosystems.jf.tool.matrix.params.ParametersPane;
+import com.exactprosystems.jf.tool.matrix.params.table.ParametersTable;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
@@ -458,7 +458,7 @@ public class DisplayDriverFx implements DisplayDriver
 	{
 		GridPane pane = (GridPane) layout;
 
-		ParametersPane paramsPane = new ParametersPane(item, this.context, oneLine, parameters, generator, this.rowContextMenu, this.parametersContextMenu, 
+		ParametersTable paramsPane = new ParametersTable(item, this.context, oneLine, parameters, generator, this.rowContextMenu, this.parametersContextMenu,
 				() -> selectCurrentRow(((MatrixTreeRow) pane.getParent().getParent())));
 		GridPane.setMargin(paramsPane, new Insets(column, 10, column, 10));
 		pane.add(paramsPane, column, row, Integer.MAX_VALUE, 2);

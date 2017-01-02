@@ -9,6 +9,7 @@
 package com.exactprosystems.jf.tool.custom.label;
 
 import com.exactprosystems.jf.tool.Common;
+import com.exactprosystems.jf.tool.CssVariables;
 import javafx.application.Platform;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
@@ -53,6 +54,7 @@ public class CommentsLabel extends Label
 	{
 		Common.sizeHeightComments(this, Common.setHeightComments(this.getText()) == 0 ? 45 : Common.setHeightComments(this.getText()));
 		textArea = new TextArea();
+		this.textArea.getStyleClass().add(CssVariables.COMMENTS_AREA);
 		textArea.setText(this.getText());
 		this.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
 		this.setGraphic(textArea);
