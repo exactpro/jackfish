@@ -9,7 +9,9 @@
 package com.exactprosystems.jf.documents.matrix.parser.items;
 
 import com.csvreader.CsvWriter;
+import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.error.ErrorKind;
+import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.common.report.ReportTable;
@@ -129,7 +131,9 @@ public class Step extends MatrixItem
         driver.showLabel(this, layout, 1, 2, "Screenshot");
         driver.showComboBox(this, layout, 1, 3, this.kind, this.kind, v ->
         {
-            return Arrays.stream(ScreenshotKind.values()).map(k -> k.toString()).collect(Collectors.toList());
+        	List<String> list = ScreenshotKind.names();
+        	list.add(0, "");
+        	return list;
         });
 
         return layout;
@@ -172,7 +176,13 @@ public class Step extends MatrixItem
 
 		try
 		{
-            ScreenshotKind screenshotKind = ScreenshotKind.valueByName(this.kind.get());
+			String kindStr = this.kind.get();
+			if (Str.IsNullOrEmpty(kindStr))
+			{
+				Settings settings = getMatrix().getFactory().getSettings();
+		        kindStr = settings.getValueOrDefault(Settings.GLOBAL_NS, Settings.MATRIX_NAME, Settings.MATRIX_DEFAULT_SCREENSHOT, ScreenshotKind.Never.name()).getValue();	        		
+			}
+	        ScreenshotKind screenshotKind = ScreenshotKind.valueByName(kindStr);
 
             this.identify.evaluate(evaluator);
 			Object identifyValue = this.identify.getValue();

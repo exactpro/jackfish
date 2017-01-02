@@ -8,7 +8,8 @@
 
 package com.exactprosystems.jf.documents;
 
-import com.exactprosystems.jf.common.*;
+import com.exactprosystems.jf.common.ChangeListener;
+import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.common.undoredo.ActionTrackProvider;
 import com.exactprosystems.jf.common.undoredo.Command;
 import java.io.File;

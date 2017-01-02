@@ -11,6 +11,8 @@ package com.exactprosystems.jf.documents.matrix.parser.items;
 import com.csvreader.CsvWriter;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.error.ErrorKind;
+import com.exactprosystems.jf.common.Settings;
+import com.exactprosystems.jf.common.Settings.SettingsValue;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.evaluator.Variables;
 import com.exactprosystems.jf.common.report.ReportBuilder;
@@ -116,7 +118,12 @@ public final class TestCase extends MatrixItem
             return list;
         });
         driver.showLabel(this, layout, 2, 2, "Screenshot:");
-        driver.showComboBox(this, layout, 2, 3, this.kind, this.kind, v -> ScreenshotKind.names() );
+        driver.showComboBox(this, layout, 2, 3, this.kind, this.kind, v -> 
+        {
+        	List<String> list = ScreenshotKind.names();
+        	list.add(0, "");
+        	return list;
+        });
         driver.showLabel(this, layout, 2, 4, "Plugin:");
         driver.showExpressionField(this, layout, 2, 5, Tokens.For.get(), this.plugin, this.plugin, null, null, null, null);
 		driver.showToggleButton(this, layout, 1, 3, "Show additional", b ->
@@ -214,7 +221,13 @@ public final class TestCase extends MatrixItem
 		
 		try
 		{
-	        ScreenshotKind screenshotKind = ScreenshotKind.valueByName(this.kind.get());
+			String kindStr = this.kind.get();
+			if (Str.IsNullOrEmpty(kindStr))
+			{
+				Settings settings = getMatrix().getFactory().getSettings();
+		        kindStr = settings.getValueOrDefault(Settings.GLOBAL_NS, Settings.MATRIX_NAME, Settings.MATRIX_DEFAULT_SCREENSHOT, ScreenshotKind.Never.name()).getValue();	        		
+			}
+	        ScreenshotKind screenshotKind = ScreenshotKind.valueByName(kindStr);
 
 	        if (table != null && !isRepOff())
 			{
