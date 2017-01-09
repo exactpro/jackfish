@@ -714,16 +714,39 @@ RF;RegressionFramework
 
         #EndIf
 
-        #Id;#RawText
-        query;Text
-        "SELECT r.create_time, r.duration "
-        "FROM runs AS r "
-        "WHERE r.id = (SELECT id  "
-        "FROM runs "
-        "WHERE create_time <= ?  "
-        "ORDER BY create_time DESC "
-        "LIMIT 1 )"
-        #EndRawText
+        #Switch
+        _rf_dialect
+            #Case
+            'MYSQL'
+                #Id;#RawText
+                "SELECT r.create_time, r.duration "
+                "FROM runs AS r "
+                "WHERE r.id = (SELECT id  "
+                "FROM runs "
+                "WHERE create_time <= ?  "
+                "ORDER BY create_time DESC "
+                "LIMIT 1 )"
+                #EndRawText
+
+            #Case
+            'MSSQL'
+                #Id;#RawText
+                query;Text
+                "SELECT r.create_time, r.duration "
+                "FROM runs AS r "
+                "WHERE r.id = (SELECT TOP 1 id "
+                "FROM runs "
+                "WHERE create_time <= ?  "
+                "ORDER BY create_time DESC)"
+                #EndRawText
+
+
+            #Default
+                #Fail
+                'Unknown SQL dialect: ' + _rf_dialect
+
+
+        #EndSwitch
 
         #Id;#Action;#Connection;#Query;#CreateTime
         select2;SQLselect;sql;query.toString();date
