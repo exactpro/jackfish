@@ -1447,7 +1447,15 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 	@Override
 	public List<String> getList(WebElement component) throws Exception {
 		scrollToElement(component);
-		return getListOfNamesFromListItems(new Select(component).getOptions());
+		switch (component.getTagName())
+		{
+			case "ul":
+				return getListOfNamesFromListItems(new Select(component).getOptions());
+			case "select":
+				return getListOfNamesFromListItems(new Select(component).getOptions());
+			default:
+				return null;
+		}
 	}
 
 	//region private methods

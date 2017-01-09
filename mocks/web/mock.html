@@ -200,17 +200,28 @@
 </div>
 
 <div id="divCombobox">
+	<label id="labelCombobox">Combobox example</label>
 	<select onchange="changeCombobox(this)">
 		<option value="Green">Green</option>
 		<option value="Yellow">Yellow</option>
 		<option value="Orange">Orange</option>
 		<option value="Blue">Blue</option>
 	</select>
-
-	<label id="labelCombobox"></label>
 </div>
 
-
+<div id="divUL">
+	<label id="labelUL">List UL Example</label>
+	<ul id="listUL">
+		<li>Coffee</li>
+		<li>Tea
+			<ul id="nested_listUL">
+				<li>Black tea</li>
+				<li>Green tea</li>
+			</ul>
+		</li>
+		<li>Milk</li>
+	</ul>
+</div>
 
 <div id="divToggleButton">
 	<a id="toggleButton" class="toggleButton" name="ToggleButton" kindname="ToggleButton" func="23456" title="button">Press Me</a><br>

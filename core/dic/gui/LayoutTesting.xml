@@ -27,4 +27,14 @@
         <onClose/>
         <close/>
     </window>
+    <window name="NewWindow">
+        <self/>
+        <onOpen/>
+        <run>
+            <listView id="listUL" uid="listUL"/>
+            <listView id="nested_listUL" uid="nested_listUL"/>
+        </run>
+        <onClose/>
+        <close/>
+    </window>
 </dictionary>
