@@ -36,8 +36,14 @@ RF;RegressionFramework
         #Id;#Call
         SQL;Connect
 
+        #Id;#Let
+        curD;DateTime.current()
+
+        #Id;#Let
+        needD;DateTime.date(curD.years(),curD.months(),curD.days(),curD.hours(),curD.minutes(),curD.seconds())
+
         #Id;#Action;#Connection;#Query;#CreateTime;#TestSet
-        selectRunId;SQLinsert;SQL;'INSERT INTO runs (create_time, duration, test_set) VALUES (?, -1, ?)\u003b';DateTime.current();testSet
+        selectRunId;SQLinsert;SQL;'INSERT INTO runs (create_time, duration, test_set) VALUES (?, -1, ?)\u003b';needD;testSet
 
         #Id;#Let
         runId;selectRunId.Out[0]
@@ -69,8 +75,8 @@ RF;RegressionFramework
             #Id;#Let
             manual;!(new File(_rf_scriptsDir+ row.Scenario + '.jf').exists())
 
-            #Id;#Action;#Connection;#Query;#RunId;#Scenario;#Performer;#Priority;#Env;#Manual;#StartTime;#Host;#User
-            selectScenarioId;SQLinsert;SQL;'INSERT INTO scenarios (run_id, scenario, performer, priority, env, manual, start_time, host, user) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';runId;row.Scenario;row.Performer;row.Priority;row.Env;manual ? 1 : 0;DateTime.current();Sys.hostName();Sys.userName()
+            #Id;#Action;#Connection;#Query;#RunId;#Scenario;#Performer;#Priority;#Env;#Manual;#StartTime;#Host;#User;#TestSet
+            selectScenarioId;SQLinsert;SQL;'INSERT INTO scenarios (run_id, scenario, performer, priority, env, manual, start_time, host, username, test_set) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';runId;row.Scenario;row.Performer;row.Priority;row.Env;manual ? 1 : 0;DateTime.current();Sys.hostName();Sys.userName();testSet
 
             #Id;#Let
             scenarioId;selectScenarioId.Out[0]
@@ -107,7 +113,7 @@ RF;RegressionFramework
                 #ForEach;#In
                 details;resultTab.Out
                     #Id;#Action;#Connection;#Query;#ScenarioId;#Testcase;#Stepp;#Time;#Result;#Error;#Screenshot
-                    selectDetails;SQLinsert;SQL;'INSERT INTO details (scenario_id, testcase, step, time, result, error, screenshot) VALUES (?, ?, ?, ?, ?, ?, ?)';scenarioId;'' + details.TestCase;'' + details.Step;details.Time;'' + details.Result;'' + details.Error;Converter.storableToBlob(details.Screenshot)
+                    selectDetails;SQLinsert;SQL;'INSERT INTO details (scenario_id, testcase, step, time, result, error, screenshot) VALUES (?, ?, ?, ?, ?, ?, CONVERT(VARBINARY(MAX),?))';scenarioId;'' + details.TestCase;'' + details.Step;details.Time;'' + details.Result;'' + details.Error;Converter.storableToBlob(details.Screenshot)
 
                     #For;#From;#To;#Step
                     i;standartResult.Out.getHeaderSize();resultTab.Out.getHeaderSize() - 1;1
@@ -160,14 +166,38 @@ RF;RegressionFramework
         #Id;#Let
         title;'Overall' + (date == null ? '' : (' on ' +DateTime.strDate(date)))
 
-        #Id;#RawText
-        TEXT4;Text
-        "SELECT  "
-        "	sp.count AS `Passed`, "
-        "	sf.count AS `Failed`"
-        "FROM (SELECT COUNT(id) AS count FROM scenarios WHERE failed = 0 AND run_id = ? ) AS sp "
-        "LEFT JOIN (SELECT COUNT(id) AS count FROM scenarios WHERE failed <> 0 AND run_id = ? ) AS sf ON true "
-        #EndRawText
+        #Switch
+        _rf_dialect
+            #Case
+            'MYSQL'
+                #Id;#RawText
+                TEXT4;Text
+                "SELECT  "
+                "	sp.count AS `Passed`, "
+                "	sf.count AS `Failed`"
+                "FROM (SELECT COUNT(id) AS count FROM scenarios WHERE failed = 0 AND run_id = ? ) AS sp "
+                "LEFT JOIN (SELECT COUNT(id) AS count FROM scenarios WHERE failed <> 0 AND run_id = ? ) AS sf ON true "
+                #EndRawText
+
+
+            #Case
+            'MSSQL'
+                #Id;#RawText
+                TEXT4;Text
+                "SELECT  "
+                "	sp.count AS ""Passed"", "
+                "	sf.count AS ""Failed"""
+                "FROM (SELECT COUNT(id) AS count FROM scenarios WHERE failed = 0 AND run_id = ? ) AS sp "
+                "LEFT JOIN (SELECT COUNT(id) AS count FROM scenarios WHERE failed <> 0 AND run_id = ? ) AS sf ON 1=1"
+                #EndRawText
+
+
+            #Default
+                #Fail
+                'Unknown SQL dialect: ' + _rf_dialect
+
+
+        #EndSwitch
 
         #Id;#Action;#Connection;#Query;#runId;#runId
         select;SQLselect;SQL;TEXT4.toString();runId;runId
@@ -206,22 +236,55 @@ RF;RegressionFramework
         #Id;#Call;#sql;#date
         times;timesFromDate;SQL;date
 
-        #Id;#RawText
-        TEXT2;Text
-        "SELECT "
-        "  s.scenario, "
-        "  s.manual, "
-        "  DATE(s.start_time) AS date, "
-        "  TIME(s.start_time) AS time, "
-        "  IF(s.failed = 0, ""Passed"", ""Failed"") AS result, "
-        "  s.performer AS performer, "
-        "  s.env AS env,  "
-        "  s.host AS host, "
-        "  s.user AS user,"
-        "  s.report AS report"
-        "FROM scenarios AS s "
-        "WHERE s.manual = 0 AND s.run_id = ?"
-        #EndRawText
+        #Switch
+        _rf_dialect
+            #Case
+            'MYSQL'
+                #Id;#RawText
+                TEXT2;Text
+                "SELECT "
+                "  s.scenario, "
+                "  s.manual, "
+                "  DATE(s.start_time) AS date, "
+                "  TIME(s.start_time) AS time, "
+                "  IF(s.failed = 0, ""Passed"", ""Failed"") AS result, "
+                "  s.performer AS performer, "
+                "  s.env AS env,  "
+                "  s.host AS host, "
+                "  s.username AS username,"
+                "  s.report AS report"
+                "FROM scenarios AS s "
+                "WHERE s.manual = 0 AND s.run_id = ?"
+                #EndRawText
+
+
+            #Case
+            'MSSQL'
+                #Id;#RawText
+                TEXT2;Text
+                "SELECT "
+                "  s.scenario, "
+                "  s.manual, "
+                "  CONVERT(DATE, s.start_time) AS date,"
+                "  CONVERT(TIME, s.start_time) AS time, "
+                "  case s.failed when 0 then 'Passed' else 'Failed' end as result,"
+                "  s.performer AS performer, "
+                "  s.test_set AS testSet, "
+                "  s.env AS env,  "
+                "  s.host AS host, "
+                "  s.username AS username,"
+                "  s.report AS report"
+                "FROM scenarios AS s "
+                "WHERE s.manual = 0 AND s.run_id = ?"
+                #EndRawText
+
+
+            #Default
+                #Fail
+                'Unknown SQL dialect: ' + _rf_dialect
+
+
+        #EndSwitch
 
         #Id;#Action;#Connection;#Query;#runId
         select;SQLselect;SQL;TEXT2.toString();runId
@@ -244,8 +307,8 @@ RF;RegressionFramework
         #Id;#Action;#ReportName
         REP1;ReportStart;title
 
-        #Action;#Table;#Title;#ToReport;#Numbers;#scenario;#result;#date;#time;#user;#host;#report
-        TableReport;table;'{{4' + title + '4}}';REP1.Out;false;'Matrix Name';'Execution Status';'Execution Date';'Execution Time';'Exectuted By';'Execution Machine';'Report Link'
+        #Action;#Table;#Title;#ToReport;#Numbers;#testSet;#scenario;#result;#date;#time;#username;#host;#report
+        TableReport;table;'{{4' + title + '4}}';REP1.Out;false;'Test set';'Matrix Name';'Execution Status';'Execution Date';'Execution Time';'Exectuted By';'Execution Machine';'Report link'
 
         #Action;#Passed;#Failed;#Report;#StartTime;#FinishTime
         ReportFinish;passed.Out.size();failed.Out.size();REP1.Out;times.startTime;times.finishTime
@@ -269,24 +332,52 @@ RF;RegressionFramework
         #Id;#Let
         countSteps;0
 
-        #Id;#Action;#TestName;#ExecutionStatus;#ExecutionTime;#ExecutedBy;#ExecutionMashine
-        createTable;TableCreate;;;;;
+        #Id;#Action;#Test Name;#Execution Status;#Execution Date;#Execution Time;#Executed By;#Execution Mashine
+        createTable;TableCreate;;;;;;
 
         #Id;#Let
         resultTable;createTable.Out
 
-        #Id;#RawText
-        TEXT5;Text
-        "SELECT "
-        "  s.id, s.scenario, "
-        "  IF(s.failed > 0, ""Failed"", ""Passed"") AS status, "
-        "  s.host, "
-        "  s.user, "
-        "  DATE(s.start_time) AS date, "
-        "  TIME(s.start_time) AS time "
-        "FROM scenarios AS s"
-        "WHERE s.manual = 0 AND s.run_id = ?; "
-        #EndRawText
+        #Switch
+        _rf_dialect
+            #Case
+            'MYSQL'
+                #Id;#RawText
+                TEXT5;Text
+                "SELECT "
+                "  s.id, s.scenario, "
+                "  IF(s.failed > 0, ""Failed"", ""Passed"") AS status, "
+                "  s.host, "
+                "  s.username, "
+                "  DATE(s.start_time) AS date, "
+                "  TIME(s.start_time) AS time "
+                "FROM scenarios AS s"
+                "WHERE s.manual = 0 AND s.run_id = ?; "
+                #EndRawText
+
+
+            #Case
+            'MSSQL'
+                #Id;#RawText
+                TEXT5;Text
+                "SELECT "
+                "  s.id, s.scenario, "
+                "  CASE WHEN s.failed <> 0 THEN  0 ELSE 1 END AS status, "
+                "  s.host, "
+                "  s.username, "
+                "  CONVERT(DATE, s.start_time) AS date, "
+                "  CONVERT(TIME, s.start_time) AS time "
+                "FROM scenarios AS s"
+                "WHERE s.manual = 0 AND s.run_id = ?; "
+                #EndRawText
+
+
+            #Default
+                #Fail
+                'Unknown SQL dialect: ' + _rf_dialect
+
+
+        #EndSwitch
 
         #Id;#Action;#Connection;#Query;#runId
         query;SQLselect;SQL;TEXT5.toString();runId
@@ -302,8 +393,8 @@ RF;RegressionFramework
             #Id;#Let
             selectSteps;selectFromTable.Out
 
-            #Action;#Table;#TestName;#ExecutionStatus;#ExecutionTime;#ExecutedBy;#ExecutionMashine
-            TableAddValue;resultTable;scenarios[rowScenarios].scenario;scenarios[rowScenarios].status;scenarios[rowScenarios].time;scenarios[rowScenarios].user;scenarios[rowScenarios].host
+            #Action;#Table;#Test Name;#Execution Status;#Execution Date;#Execution Time;#Executed By;#Execution Mashine
+            TableAddValue;resultTable;scenarios[rowScenarios].scenario;scenarios[rowScenarios].status;scenarios[rowScenarios].date;scenarios[rowScenarios].time;scenarios[rowScenarios].username;scenarios[rowScenarios].host
 
             #For;#From;#To;#Step
             rowSteps;0;(int)selectSteps.size - 1;1
@@ -352,10 +443,17 @@ RF;RegressionFramework
         #Action;#Replace;#Table;#Search;#Columns
         TableReplace;'';resultTable;null;stepHeaders.toArray()
 
-        #Action;#Table;#File
-        TableSaveToFile;resultTable;fileName
+        #Action;#Replace;#Table;#Columns;#MatchCell;#Search
+        TableReplace;'Failed';resultTable;{'Execution Status'};true;0
+
+        #Action;#Replace;#Table;#Columns;#MatchCell;#Search
+        TableReplace;'Passed';resultTable;{'Execution Status'};true;1
+
+        #Action;#Table;#File;#Delimiter
+        TableSaveToFile;resultTable;fileName;','
 
     #EndSubCase
+
 
     // //==============================================
     // // Collects  all details of all scenarios of last regression in readable form
@@ -371,26 +469,62 @@ RF;RegressionFramework
         #Id;#Let
         title;'Details' + (date == null ? '' : (' on ' +DateTime.strDate(date)))
 
-        #Id;#RawText
-        TEXT1;Text
-        "SELECT "
-        "  s.scenario, "
-        "  DATE(s.start_time) AS date, "
-        "  TIME(s.start_time) AS time, "
-        "  s.performer, "
-        "  s.env, "
-        "  s.host, "
-        "  s.user, "
-        "  d.testcase, "
-        "  d.step, "
-        "  d.time, "
-        "  d.result, "
-        "  d.error, "
-        "  d.screenshot "
-        "FROM scenarios AS s "
-        "LEFT JOIN details AS d ON d.scenario_id = s.id "
-        "WHERE s.manual = 0 AND s.run_id = ?"
-        #EndRawText
+        #Switch
+        _rf_dialect
+            #Case
+            'MYSQL'
+                #Id;#RawText
+                TEXT1;Text
+                "SELECT "
+                "  s.scenario, "
+                "  DATE(s.start_time) AS date, "
+                "  TIME(s.start_time) AS time, "
+                "  s.performer, "
+                "  s.env, "
+                "  s.host, "
+                "  s.username, "
+                "  d.testcase, "
+                "  d.step, "
+                "  d.time, "
+                "  d.result, "
+                "  d.error, "
+                "  d.screenshot "
+                "FROM scenarios AS s "
+                "LEFT JOIN details AS d ON d.scenario_id = s.id "
+                "WHERE s.manual = 0 AND s.run_id = ?"
+                #EndRawText
+
+
+            #Case
+            'MSSQL'
+                #Id;#RawText
+                TEXT1;Text
+                "SELECT "
+                "  s.scenario, "
+                "  CONVERT(date,s.start_time) AS date, "
+                "  CONVERT(time, s.start_time) AS time, "
+                "  s.performer, "
+                "  s.env, "
+                "  s.host, "
+                "  s.username, "
+                "  d.testcase, "
+                "  d.step, "
+                "  d.time, "
+                "  d.result, "
+                "  d.error, "
+                "  d.screenshot "
+                "FROM scenarios AS s "
+                "LEFT JOIN details AS d ON d.scenario_id = s.id "
+                "WHERE s.manual = 0 AND s.run_id = ?"
+                #EndRawText
+
+
+            #Default
+                #Fail
+                'Unknown SQL dialect: ' + _rf_dialect
+
+
+        #EndSwitch
 
         #Id;#Action;#Connection;#Query;#runId
         select;SQLselect;SQL;TEXT1.toString();runId
@@ -438,8 +572,26 @@ RF;RegressionFramework
         #Id;#Call
         SQL;RF.Connect
 
-        #Id;#Action;#Connection;#Query
-        select;SQLselect;SQL;'SELECT DATE(r.create_time) AS `Period`, AVG(s.passed / (s.passed + s.failed)) AS `Average` FROM runs AS r LEFT JOIN scenarios AS s ON s.run_id = r.id GROUP BY r.id'
+        #Switch
+        _rf_dialect
+            #Case
+            'MYSQL'
+                #Id;#Action;#Connection;#Query
+                select;SQLselect;SQL;'SELECT DATE(r.create_time) AS `Period`, AVG(s.passed / (s.passed + s.failed)) AS `Average` FROM runs AS r LEFT JOIN scenarios AS s ON s.run_id = r.id GROUP BY r.id'
+
+
+            #Case
+            'MSSQL'
+                #Id;#Action;#Connection;#Query
+                select;SQLselect;SQL;'SELECT MAX(CONVERT(date,r.create_time)) AS "Period", AVG(s.passed / (s.passed + s.failed)) AS "Average" FROM runs AS r LEFT JOIN scenarios AS s ON s.run_id = r.id GROUP BY r.id'
+
+
+            #Default
+                #Fail
+                'Unknown SQL dialect: ' + _rf_dialect
+
+
+        #EndSwitch
 
         #Id;#Action;#ReportName
         REP2;ReportStart;'Progress'
@@ -503,14 +655,37 @@ RF;RegressionFramework
 
         #EndIf
 
-        #Id;#RawText
-        query;Text
-        "SELECT id "
-        "FROM runs "
-        "WHERE create_time <= ? "
-        "ORDER BY create_time DESC "
-        "LIMIT 1 "
-        #EndRawText
+        #Switch
+        _rf_dialect
+            #Case
+            'MYSQL'
+                #Id;#RawText
+                query;Text
+                "SELECT id "
+                "FROM runs "
+                "WHERE create_time <= ? "
+                "ORDER BY create_time DESC "
+                "LIMIT 1 "
+                #EndRawText
+
+
+            #Case
+            'MSSQL'
+                #Id;#RawText
+                query;Text
+                "SELECT TOP 1 id "
+                "FROM runs "
+                "WHERE create_time <= ? "
+                "ORDER BY create_time DESC  "
+                #EndRawText
+
+
+            #Default
+                #Fail
+                'Unknown SQL dialect: ' + _rf_dialect
+
+
+        #EndSwitch
 
         #Id;#Action;#Connection;#Query;#CreateTime
         select2;SQLselect;sql;query.toString();date
@@ -586,6 +761,9 @@ RF;RegressionFramework
         #Id;#Action;#User;#Server;#Base;#Sql;#Password
         SQLCNT;SQLconnect;_rf_user;_rf_host;_rf_base;_rf_type;_rf_password
 
+        #Id;#Let
+        tablesAreNotExists;true
+
         #Switch
         _rf_dialect
             #Case
@@ -602,20 +780,26 @@ RF;RegressionFramework
                 #Id;#Action;#Query;#Connection
                 chck4;SQLselect;'check table user_details fast';SQLCNT.Out
 
+                #Id;#Let
+                tablesAreNotExists;!(chck1.Out[0].Msg_text == 'OK' && chck2.Out[0].Msg_text == 'OK' && chck3.Out[0].Msg_text == 'OK' && chck4.Out[0].Msg_text == 'OK')
+
 
             #Case
             'MSSQL'
                 #Id;#Action;#Query;#Connection
-                chck1;SQLselect;'DBCC CHECKTABLE (\'runs\')';SQLCNT.Out
+                chck1;SQLselect;'SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME =\'runs\'';SQLCNT.Out
 
                 #Id;#Action;#Query;#Connection
-                chck2;SQLselect;'DBCC CHECKTABLE (\'scenarios \')';SQLCNT.Out
+                chck2;SQLselect;'SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME =\'scenarios\'';SQLCNT.Out
 
                 #Id;#Action;#Query;#Connection
-                chck3;SQLselect;'DBCC CHECKTABLE (\'check \')';SQLCNT.Out
+                chck3;SQLselect;'SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME =\'check\'';SQLCNT.Out
 
                 #Id;#Action;#Query;#Connection
-                chck4;SQLselect;'DBCC CHECKTABLE (\'user_details \')';SQLCNT.Out
+                chck4;SQLselect;'SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME =\'user_details\'';SQLCNT.Out
+
+                #Id;#Let
+                tablesAreNotExists;chck1.Out.isEmpty() || chck2.Out.isEmpty() || chck3.Out.isEmpty() || chck4.Out.isEmpty()
 
 
             #Default
@@ -626,7 +810,7 @@ RF;RegressionFramework
         #EndSwitch
 
         #If
-        !(chck1.Out[0].Msg_text == 'OK' && chck2.Out[0].Msg_text == 'OK' && chck3.Out[0].Msg_text == 'OK' && chck4.Out[0].Msg_text == 'OK')
+        tablesAreNotExists
             #Action;#Text;#Notifier
             Show;'Creating tables';Notifier.Info
 
@@ -657,7 +841,8 @@ RF;RegressionFramework
                     "  `manual` int(1) DEFAULT NULL,"
                     "  `start_time` datetime DEFAULT NULL,"
                     "  `host` varchar(45) DEFAULT NULL,"
-                    "  `user` varchar(45) DEFAULT NULL,"
+                    "  `username` varchar(45) DEFAULT NULL,"
+                    "  `test_set` VARCHAR(100) NULL,"
                     "  `passed` int(11) DEFAULT '0',"
                     "  `failed` int(11) DEFAULT '0',"
                     "  `report` longblob,"
@@ -704,7 +889,7 @@ RF;RegressionFramework
                     "  id int IDENTITY(1,1) PRIMARY KEY NOT NULL ,  "
                     "  create_time datetime DEFAULT NULL,  "
                     "  duration int DEFAULT NULL,"
-                    "  `test_set` VARCHAR(100) NULL"
+                    "  test_set VARCHAR(100) NULL"
                     ") ;"
                     #EndRawText
 
@@ -713,21 +898,22 @@ RF;RegressionFramework
                     "IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE table_name = 'scenarios') "
                     "CREATE TABLE  dbo.scenarios  "
                     "("
-                    "  `id` int(11) IDENTITY(1,1) PRIMARY KEY NOT NULL,"
-                    "  `run_id` int(11) NOT NULL,"
-                    "  `scenario` varchar(100) NOT NULL,"
-                    "  `performer` varchar(100) DEFAULT NULL,"
-                    "  `priority` int(1) DEFAULT NULL,"
-                    "  `env` varchar(100) DEFAULT NULL,"
-                    "  `manual` int(1) DEFAULT NULL,"
-                    "  `start_time` datetime DEFAULT NULL,"
-                    "  `host` varchar(45) DEFAULT NULL,"
-                    "  `user` varchar(45) DEFAULT NULL,"
-                    "  `passed` int(11) DEFAULT '0',"
-                    "  `failed` int(11) DEFAULT '0',"
-                    "  `report` longblob,"
-                    "  `done` int(1) DEFAULT NULL,"
-                    "  `description` varchar(255) DEFAULT NULL"
+                    "  id int IDENTITY(1,1) PRIMARY KEY NOT NULL,"
+                    "  run_id int NOT NULL,"
+                    "  scenario varchar(100) NOT NULL,"
+                    "  performer varchar(100) DEFAULT NULL,"
+                    "  priority int DEFAULT NULL,"
+                    "  env varchar(100) DEFAULT NULL,"
+                    "  manual int DEFAULT NULL,"
+                    "  start_time datetime DEFAULT NULL,"
+                    "  host varchar(45) DEFAULT NULL,"
+                    "  username varchar(45) DEFAULT NULL,"
+                    "  test_set varchar(100) DEFAULT NULL,"
+                    "  passed int DEFAULT '0',"
+                    "  failed int DEFAULT '0',"
+                    "  report VARBINARY(MAX),"
+                    "  done int DEFAULT NULL,"
+                    "  description varchar(255) DEFAULT NULL"
                     ");"
                     " "
                     #EndRawText
@@ -737,14 +923,14 @@ RF;RegressionFramework
                     "IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE table_name = 'details') "
                     "CREATE TABLE dbo.details "
                     "("
-                    "  `id` int(11)  IDENTITY(1,1) PRIMARY KEY NOT NULL,"
-                    "  `scenario_id` int(11) NOT NULL,"
-                    "  `testcase` varchar(256) DEFAULT NULL,"
-                    "  `step` varchar(256) DEFAULT NULL,"
-                    "  `time` int(11) DEFAULT NULL,"
-                    "  `result` varchar(45) DEFAULT NULL,"
-                    "  `error` varchar(256) DEFAULT NULL,"
-                    "  `screenshot` longblob"
+                    "  id int  IDENTITY(1,1) PRIMARY KEY NOT NULL,"
+                    "  scenario_id int NOT NULL,"
+                    "  testcase varchar(256) DEFAULT NULL,"
+                    "  step varchar(256) DEFAULT NULL,"
+                    "  time int DEFAULT NULL,"
+                    "  result varchar(45) DEFAULT NULL,"
+                    "  error varchar(256) DEFAULT NULL,"
+                    "  screenshot VARBINARY(MAX)"
                     " );"
                     #EndRawText
 
@@ -753,10 +939,10 @@ RF;RegressionFramework
                     "IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE table_name = 'user_details')"
                     "CREATE TABLE dbo.user_details "
                     "("
-                    "  `id` int(11) IDENTITY(1,1) PRIMARY KEY NOT NULL,"
-                    "  `details_id` int(11) NOT NULL,"
-                    "  `name` varchar(100) NOT NULL,"
-                    "  `value` varchar(256) DEFAULT NULL"
+                    "  id int IDENTITY(1,1) PRIMARY KEY NOT NULL,"
+                    "  details_id int NOT NULL,"
+                    "  name varchar(100) NOT NULL,"
+                    "  value varchar(256) DEFAULT NULL"
                     ");"
                     #EndRawText
 
