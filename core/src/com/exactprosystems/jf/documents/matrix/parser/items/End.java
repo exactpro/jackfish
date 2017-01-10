@@ -26,7 +26,7 @@ public class End extends MatrixItem
 	protected Object displayYourself(DisplayDriver driver, Context context)
 	{
 		Object layout = driver.createLayout(this, -1);
-		driver.showLabel(this, layout, 0, 0, "End " + this.parent.getClass().getSimpleName(), 10);
+		driver.showLabel(this, layout, 0, 0, "End " + this.parent.getClass().getSimpleName());
 		return layout;
 	}
 }

@@ -43,6 +43,7 @@ import java.util.stream.IntStream;
 
 public class MatrixFx extends Matrix
 {
+	@Deprecated
 	public enum PlaceToInsert
 	{
 		@Deprecated  After, Before, @Deprecated Child
@@ -552,6 +553,27 @@ public class MatrixFx extends Matrix
 		Common.saveToClipboard(string);
 	}
 
+//	public void paste(MatrixItem where) throws Exception
+//	{
+//		String string = Common.getFromClipboard();
+//		Parser parser = new Parser();
+//		MatrixItem[] items = parser.stringToItems(string);
+//
+//		if (where != null && items != null)
+//		{
+//			MatrixItem parent = where.getParent();
+//			int index = parent.index(where);
+//			for (MatrixItem item : items)
+//			{
+//				item.init(this);
+//				insert(parent, index++, item);
+//			}
+//		}
+//		enumerate();
+//		this.controller.refresh();
+//		super.changed(true);
+//	}
+
 	public void paste(MatrixItem where) throws Exception
 	{
 		String string = Common.getFromClipboard();
@@ -560,39 +582,16 @@ public class MatrixFx extends Matrix
 
 		if (where != null && items != null)
 		{
-			MatrixItem parent = where.getParent();
-			int index = parent.index(where);
-			for (MatrixItem item : items)
-			{
-				item.init(this);
-				insert(parent, index++, item);
-			}
-		}
-		enumerate();
-		this.controller.refresh();
-		super.changed(true);
-	}
-
-	public void paste(PlaceToInsert place, MatrixItem where) throws Exception
-	{
-		long t1 = System.currentTimeMillis();
-		String string = Common.getFromClipboard();
-//		System.out.println("Get from clipboard : " + (System.currentTimeMillis() - t1));
-		Parser parser = new Parser();
-		MatrixItem[] items = parser.stringToItems(string);
-
-		if (where != null && items != null)
-		{
-			insert(place, where, items);
+			insert(where, items);
 		}
 	}
 
-	public void insertNew(MatrixItem item, PlaceToInsert place, String kind, String value) throws Exception
+	public void insertNew(MatrixItem item, String kind, String value) throws Exception
 	{
 		MatrixItem newItem = Parser.createItem(kind, value);
 		newItem.init(this);
 		newItem.createId();
-		insert(place, item, new MatrixItem[]{newItem});
+		insert(item, new MatrixItem[]{newItem});
 	}
 
 	public void move(MatrixItem from, MatrixItem to) throws Exception
@@ -785,33 +784,15 @@ public class MatrixFx extends Matrix
 		void call(Parameters parameters) throws Exception;
 	}
 
-	private void insert(PlaceToInsert place, MatrixItem where, MatrixItem[] items) throws Exception
+	private void insert(MatrixItem where, MatrixItem[] items) throws Exception
 	{
-		MatrixItemAttribute annotation = where.getClass().getAnnotation(MatrixItemAttribute.class);
-		if (annotation != null && !annotation.hasChildren() && place == PlaceToInsert.Child)
-		{
-			place = PlaceToInsert.After;
-		}
 		MatrixItem parent = where.getParent();
 		int index = parent.index(where);
 		for (int i = 0; i < items.length; i++)
 		{
 			MatrixItem item = items[i];
 			item.init(this);
-			switch (place)
-			{
-				case Before:
-					insert(parent, index + i, item);
-					break;
-
-				case After:
-					insert(parent, index + 1 + i, item);
-					break;
-
-				case Child:
-					insert(where, i, item);
-					break;
-			}
+			insert(parent, index + i, item);
 		}
 		enumerate();
 		this.controller.refresh();

@@ -17,6 +17,7 @@ import com.exactprosystems.jf.documents.matrix.Matrix;
 import com.exactprosystems.jf.documents.matrix.parser.*;
 import com.exactprosystems.jf.documents.matrix.parser.items.ActionItem;
 import com.exactprosystems.jf.documents.matrix.parser.items.CommentString;
+import com.exactprosystems.jf.documents.matrix.parser.items.End;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 import com.exactprosystems.jf.functions.Table;
 import com.exactprosystems.jf.functions.Text;
@@ -147,21 +148,23 @@ public class DisplayDriverFx implements DisplayDriver
 	}
 
 	@Override
-	public void showLabel(MatrixItem item, Object layout, int row, int column, String name, int fontSize)
+	public void showLabel(MatrixItem item, Object layout, int row, int column, String name)
 	{
 		GridPane pane = (GridPane) layout;
 		Label label = new Label(name);
-		if (fontSize != -1)
+		if (item instanceof End)
 		{
-			label.setFont(javafx.scene.text.Font.font(fontSize));
+			label.setFont(javafx.scene.text.Font.font(10));
+			label.getStyleClass().add(CssVariables.BOLD_LABEL);
+		}
+		else
+		{
+			Common.sizeLabel(label);
 		}
 		if (Tokens.contains(name))
 		{
 			label.getStyleClass().add(CssVariables.BOLD_LABEL);
 		}
-		//		label.setPrefWidth(getPrefWidth(name));
-		Common.sizeLabel(label);
-		GridPane.setMargin(label, new Insets(0, 0, 0, 5));
 		Platform.runLater(() -> label.setTooltip(new Tooltip(name)));
 		pane.add(label, column, row);
 		GridPane.setMargin(label, INSETS);
@@ -388,7 +391,7 @@ public class DisplayDriverFx implements DisplayDriver
 		List<String> tempList = words.stream().map(String::toLowerCase).collect(Collectors.toList());
 		field.textProperty().addListener((observable1, oldValue1, newValue1) ->
 		{
-			boolean present = tempList.stream().filter(s -> s.contains(newValue1.toLowerCase())).findFirst().isPresent();
+			boolean present = tempList.stream().anyMatch(s -> s.contains(newValue1.toLowerCase()));
 			if (present)
 			{
 				field.setStyle("-fx-text-fill : green");
@@ -661,7 +664,7 @@ public class DisplayDriverFx implements DisplayDriver
 	private List<CommentString> fromStr(String str)
 	{
 		// because TextArea from javafx split line via \n, not via System.lineSeparator()
-		return Arrays.asList(str.split("\n")).stream().map(CommentString::new).collect(Collectors.toList());
+		return Arrays.stream(str.split("\n")).map(CommentString::new).collect(Collectors.toList());
 	}
 
 	private String fromList(List<CommentString> list)

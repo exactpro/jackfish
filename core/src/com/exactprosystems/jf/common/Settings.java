@@ -49,9 +49,7 @@ public class Settings
 	public static final String REDO				= "Redo";
 
 	//matrix navigation shortcuts
-	public static final String ADD_CHILD		= "AddChild";
-	public static final String ADD_BEFORE		= "AddBefore";
-	public static final String ADD_AFTER		= "AddAfter";
+	public static final String ADD_ITEMS		= "Add";
 	public static final String BREAK_POINT		= "BreakPoint";
 	public static final String ADD_PARAMETER	= "AddParameter";
 	public static final String HELP				= "Help";
@@ -59,9 +57,7 @@ public class Settings
 	public static final String SHOW_ALL			= "ShowAll";
 	public static final String DELETE_ITEM		= "DeleteItem";
 	public static final String COPY_ITEMS		= "CopyItems";
-	public static final String PASTE_ITEMS_CHILD = "PasteItemsToChild";
-	public static final String PASTE_ITEMS_AFTER = "PasteItemsAfter";
-	public static final String PASTE_ITEMS_BEFORE = "PasteItemsBefore";
+	public static final String PASTE_ITEMS		= "PasteItems";
 	public static final String COLLAPSE_ALL		= "CollapseAll";
 	public static final String COLLAPSE_ONE		= "CollapseOne";
 	public static final String EXPAND_ALL		= "ExpandAll";
@@ -526,9 +522,7 @@ public class Settings
 	public synchronized List<KeyCombination> getRemovedShortcuts()
 	{
 		return Stream.of(
-				ADD_CHILD,
-				ADD_BEFORE,
-				ADD_AFTER,
+				ADD_ITEMS,
 				BREAK_POINT,
 				ADD_PARAMETER,
 				HELP,
@@ -536,9 +530,7 @@ public class Settings
 				SHOW_ALL,
 				DELETE_ITEM,
 				COPY_ITEMS,
-				PASTE_ITEMS_CHILD,
-				PASTE_ITEMS_AFTER,
-				PASTE_ITEMS_BEFORE,
+				PASTE_ITEMS,
 				COLLAPSE_ALL,
 				COLLAPSE_ONE,
 				EXPAND_ALL,

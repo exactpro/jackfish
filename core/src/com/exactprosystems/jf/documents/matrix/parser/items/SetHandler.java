@@ -71,7 +71,7 @@ public final class SetHandler extends MatrixItem
 				return str;
 			}, null, 'G' );
 		
-		driver.showLabel(this, layout, 1, 2, Tokens.Kind.get(), -1);
+		driver.showLabel(this, layout, 1, 2, Tokens.Kind.get());
         driver.showComboBox(this, layout, 1, 3, this.kind, this.kind, v ->
         {
             return Arrays.stream(HandlerKind.values()).map(k -> k.toString()).collect(Collectors.toList());

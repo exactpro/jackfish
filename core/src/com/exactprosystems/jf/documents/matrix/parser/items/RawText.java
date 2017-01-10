@@ -33,7 +33,7 @@ import java.util.Set;
 		real 			= true, 
 		hasValue 		= true, 
 		hasParameters 	= false, 
-		hasChildren 	= true, 
+		hasChildren 	= false,
 		raw 			= true
 	)
 public class RawText extends MatrixItem
