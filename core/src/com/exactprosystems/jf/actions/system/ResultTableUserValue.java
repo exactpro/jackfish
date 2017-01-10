@@ -29,14 +29,42 @@ import com.exactprosystems.jf.functions.Table;
 @ActionAttribute(
 		group 					= ActionGroups.System, 
 		suffix 					= "", 
-		generalDescription 		= "Sets the only additional fields into current record of result table", 
-		additionFieldsAllowed 	= true 
+		generalDescription 		= "The following action is needed to add extra columns and values to the system table "
+				+ "that can be acquired by action {{@ResultTable@}}.\n"
+				+ "Changes values for the current row (current test case or step).",
+		additionFieldsAllowed 	= true,
+		additionalDescription = "Names of additional columns are specified in the value of the additional parameter, "
+				+ "in the value of the parameter – values are indicated, that will be added to the row that corresponds "
+				+ "to that test case or step, where the following action is. {{`If names match, additional columns do not "
+				+ "replace columns of the system table: Matrix, TestCaseId, TestCase, StepIdentity, Step, Time, Result, Error, Screenshot.`}}",
+		examples 				= "{{##Id;#TestCase;#Kind;#For\n"
+				+ "First;;;\n"
+				+ "#Id;#Action;#Content\n"
+				+ "TXT1;TextCreate;'#TestCase;#Kind;#For\\n;;\\n    #Action;#Time\\n  Wait;1\\n\\n    #Fail \\n  "
+				+ " \\'Failed\\'\\n\\n #TestCase;#Kind;#For\\n;;\\n    #Action;#Time\\n    Wait;1'\n"
+				+ "\n"
+				+ "    #Id;#Action;#Text\n"
+				+ "    MXRN1;MatrixRunFromText;TXT1.Out\n"
+				+ "\n"
+				+ "    #Id;#Action;#Matrix\n"
+				+ "    MXWT1;MatrixWait;MXRN1.Out\n"
+				+ "\n"
+				+ "    #Action;#Matrix\n"
+				+ "    ResultTableUserValue;MXRN1.Out\n"
+				+ "\n"
+				+ "    #Id;#Action;#Matrix;#Decoraded\n"
+				+ "    RESTBL1;ResultTable;MXRN1.Out;true\n"
+				+ "\n"
+				+ "    #Action;#BeforeTestCase;#Table;#Title\n"
+				+ "    TableReport;'First';RESTBL1.Out;'Result table'#}}",
+		seeAlso = "{{@ResultTable@}}"
 )
 public class ResultTableUserValue extends AbstractAction
 {
 	public final static String	matrixName		= "Matrix";
 
-	@ActionFieldAttribute(name = matrixName, mandatory = false, description = "If it is used then the result table for the matrix will be used.")
+	@ActionFieldAttribute(name = matrixName, mandatory = false, description = "Object MatrixRunner is indicated (that "
+			+ "is an output value of actions {{@MatrixRun@}} and {{@MatrixRunFromText@}}). This action will be used in the summary table. ")
 	protected MatrixRunner		matrix			= null;
 
 	@Override

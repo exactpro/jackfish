@@ -22,8 +22,26 @@ import java.util.List;
 
 @ActionAttribute(
 		group					= ActionGroups.Report,
-		generalDescription 		= "Reports given string and parameters to the report.",
-		additionFieldsAllowed 	= true
+		generalDescription 		= "The following action is needed to output values to the report.",
+		additionFieldsAllowed 	= true,
+		additionalDescription   = "The name and the value that will be shown in the report.",
+		examples 				= "This example will add the following row ”String for printing: name = value” to "
+				+ "the report that was created by action {{@ReportStart@}} \n"
+				+ "{{##Id;#Action;#ReportName\n"
+				+ "REP1;ReportStart;'My Report'\n"
+				+ "\n"
+				+ "\n"
+				+ "#Action;#ToReport;#Str;#name\n"
+				+ "Report;REP1.Out;'String for printing:';'value'\n"
+				+ "\n"
+				+ "\n"
+				+ "ReportFinish;0;REP1.Out;0\n"
+				+ "\n"
+				+ "#Action;#Passed;#Report;#Failed\n"
+				+ "\n"
+				+ "\n"
+				+ "#Action;#Report\n"
+				+ "ReportShow;REP1.Out.getReportName()#}}"
 	)
 public class Report extends AbstractAction 
 {
@@ -33,13 +51,13 @@ public class Report extends AbstractAction
 
 	@ActionFieldAttribute(name=toReportName, mandatory = false, description = 
             "This parameter is used for directing the output from the given object to the external report "
-          + "created by the {{$ReportStart$}} action.")
+          + "created by the {{@ReportStart@}} action.")
 	protected ReportBuilder toReport;
 
-	@ActionFieldAttribute(name = beforeTestCaseName, mandatory = false, description = "The name of Testcase before witch the table will be put.")
+	@ActionFieldAttribute(name = beforeTestCaseName, mandatory = false, description = "Allows to output a table at the top of the report.")
 	protected String 	beforeTestCase 	= null;
 
-	@ActionFieldAttribute(name = strName, mandatory = false, description = "Reports given string and parameters to the report.")
+	@ActionFieldAttribute(name = strName, mandatory = false, description = "Output row.")
 	protected String message; 
 	
 	public Report()

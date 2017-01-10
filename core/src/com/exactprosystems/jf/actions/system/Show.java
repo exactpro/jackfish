@@ -25,18 +25,24 @@ import com.exactprosystems.jf.functions.Notifier;
 
 @ActionAttribute(
 		group					= ActionGroups.System,
-		generalDescription 		= "Shows the given text in popup message.",
-		additionFieldsAllowed 	= false
+		generalDescription 		= "The following action is needed to output values in the pop-up notification that appears above all windows.",
+		additionFieldsAllowed 	= false,
+		examples 				= "Output the following row \"Current time is: current_time\" in the pop-up window, "
+				+ "with notification type Info.\n"
+				+ "\n"
+				+ "{{##Action;#Text;#Notifier\n"
+				+ "Show;'Current time is: ' + DateTime.currentTime();Notifier.Info#}}",
+		seeAlso = "{{@Print@}}"
 	)
 public class Show extends AbstractAction 
 {
 	public final static String notifierName = "Notifier";
 	public final static String textName = "Text";
 
-	@ActionFieldAttribute(name = notifierName, mandatory = true, description = "Notifier kind")
+	@ActionFieldAttribute(name = notifierName, mandatory = true, description = "Set a type of notification: Info – blue color, Success – green, Error – red.")
 	protected Notifier notifier; 
 
-	@ActionFieldAttribute(name = textName, mandatory = true, description = "Text that will be shown")
+	@ActionFieldAttribute(name = textName, mandatory = true, description = "Output row.")
 	protected String text; 
 	
 	public Show()

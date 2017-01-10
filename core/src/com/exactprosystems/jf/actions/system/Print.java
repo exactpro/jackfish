@@ -21,18 +21,20 @@ import com.exactprosystems.jf.documents.matrix.parser.items.TypeMandatory;
 
 @ActionAttribute(
 		group					= ActionGroups.System,
-		generalDescription 		= "<b>Prints</b> given string and parameters to the console.<p>"
-								+ "Example: <p>"
-								+ "<code>#Action;#Str;#Param1</code> <p>"
-								+ "<code>Print;'This is a title';1235</code>"
-								+ "",
-		additionFieldsAllowed 	= true
+		generalDescription 		= "The following action is needed to output values to the console of the current matrix.",
+		additionFieldsAllowed 	= true,
+		additionalDescription 	= "The name of the output object is indicated in the name of the additional parameter,"
+				+ " the output object is indicated in the value of the parameter.",
+		examples = "The following example will output the following row to the console: “Comment for a string:  Name = Value”\n"
+				+ "{{##Action;#Str;#Name\n"
+				+ "Print;'Comment for a string: ';'Value'#}}",
+		seeAlso = "{{@Show@}}"
 	)
 public class Print extends AbstractAction 
 {
 	public final static String strName = "Str";
 
-	@ActionFieldAttribute(name = strName, mandatory = false, description = "Title for this action.")
+	@ActionFieldAttribute(name = strName, mandatory = false, description = "Comments to the output row.")
 	protected String message; 
 	
 	public Print()

@@ -20,10 +20,17 @@ import java.util.Map.Entry;
 
 @ActionAttribute(
 		group = ActionGroups.System,
-		generalDescription = "Restore value of global object.",
+		generalDescription 		= "The following action is needed to get the value that was previously saved in global Store (see action {{@Store@}}).\n"
+				+ "One can restore only those objects that are in global Store (View -> Store).\n"
+				+ "All objects from the global Store are saved only during current session.",
 		additionFieldsAllowed = false,
-		outputDescription 		= "Value of global object with the name.",
-		outputType				= Object.class
+		outputDescription 		= "A value that will be required. Otherwise, null, if a non-existent value was required.",
+		outputType				= Object.class,
+		examples 				= "Restore value with name Current time that was stored by action Store. Assign it to "
+				+ "the local variable “create date”.\n"
+				+ "{{##Action;#AsVar;#Name\n"
+				+ "Restore;'create date';'Current time'#}}",
+		seeAlso = "{{@Store@}}"
 )
 
 public class Restore extends AbstractAction
@@ -31,10 +38,11 @@ public class Restore extends AbstractAction
 	public final static String nameName = "Name";
 	public final static String asVarName = "AsVar";
 
-	@ActionFieldAttribute(name = nameName, mandatory = true, description = "Name of a global storage object.")
+	@ActionFieldAttribute(name = nameName, mandatory = true, description = "The name of the object which value will be restored.")
 	protected String name = null;
 
-	@ActionFieldAttribute(name = asVarName, mandatory = false, description = "Create variable in global or local variables.")
+	@ActionFieldAttribute(name = asVarName, mandatory = false, description = "the name of the variable that will be "
+			+ "given the value of the restored object. A variable will be global if an action is tagged “G”, otherwise, variable will be local.")
 	protected String asVar;
 
 	@Override

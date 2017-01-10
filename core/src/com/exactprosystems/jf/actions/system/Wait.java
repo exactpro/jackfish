@@ -23,18 +23,24 @@ import java.util.Date;
 
 @ActionAttribute(
 		group					= ActionGroups.System,
-		generalDescription 		= "Wait for given number of milliseconds.",
-		additionFieldsAllowed 	= false
+		generalDescription 		= "The following action is needed to stop running a matrix for a while. To execute this"
+				+ " action correctly, it is needed to specify at least one optional parameter.",
+		additionFieldsAllowed 	= false,
+		examples 				= "Stop running a matrix for 5 seconds.\n"
+				+ "\n"
+				+ "{{##Action;#Time\n"
+				+ "Wait;5000#}}"
 	)
 public class Wait extends AbstractAction 
 {
 	public final static String timeName = "Time";
 	public final static String byTimeName = "ByTime";
 
-	@ActionFieldAttribute(name = timeName, mandatory = false, description = "Time in milliseconds.")
+	@ActionFieldAttribute(name = timeName, mandatory = false, description = "Time in milliseconds, during this time running of a matrix will be stopped.")
 	protected Integer timeout;
 
-	@ActionFieldAttribute(name = byTimeName, mandatory = false, description = "Time until that it is needed to wait.")
+	@ActionFieldAttribute(name = byTimeName, mandatory = false, description = "Time before which running a matrix will"
+			+ " be stopped. It is ignored when parameter “Time” is specified.")
 	protected Date byTime;
 
 	@Override

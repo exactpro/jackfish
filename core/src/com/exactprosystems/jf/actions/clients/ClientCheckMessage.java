@@ -33,7 +33,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 @ActionAttribute(
-		group					= ActionGroups.Messages,
+		group					= ActionGroups.Clients,
 		suffix					= "CLMSGCHK",
 		generalDescription 		= "Compares the given message to a set of name-value pairs.",
 		additionFieldsAllowed 	= true

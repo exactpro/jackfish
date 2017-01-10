@@ -29,10 +29,22 @@ import java.util.List;
 @ActionAttribute(
 		group					= ActionGroups.System,
 		suffix					= "EXEC",
-		generalDescription 		= "Executes system command.",
+		generalDescription 		= "The following action is needed to run external processes via command line of the operating system.\n"
+				+ "Depends on the operating system which is used, different commands can be used for the same actions in different systems.\n"
+				+ "Using this action one can unpack an archive or download a file from FTP server.",
 		additionFieldsAllowed 	= false,
-		outputDescription 		= "Result of output given command. You can get the text over Out.Text and can get exit code over Out.ExitCode",
-		outputType				= ExecuteResult.class
+		outputDescription 		= "Result of the standard output of the running process to the console.\n"
+				+ "Available if stated true in parameter wait.\n"
+				+ "One can get a text using Out.Text, to get ExitCode use Out.ExitCode, get PID use Out.PID.",
+		outputType				= ExecuteResult.class,
+		examples = "{{`1. Run system command “help”`}}"
+				+ "2. Check if you get an answer in the form of text when executing the current command.\n"
+				+ "{{##Id;#Action;#Command\n"
+				+ "EXEC1;Execute;'help'\n"
+				+ "\n"
+				+ "\n"
+				+ "#Assert;#Message\n"
+				+ "Str.IsNullOrEmpty(EXEC1.Out.Text);'Command wasn't executed'#}}"
 	)
 public class Execute extends AbstractAction 
 {
@@ -40,13 +52,15 @@ public class Execute extends AbstractAction
 	public final static String waitName = "Wait";
 	public final static String workDirName = "WorkDir";
 
-	@ActionFieldAttribute(name = commandName, mandatory = true, description = "System command that will be executed.")
+	@ActionFieldAttribute(name = commandName, mandatory = true, description = "A system command that will be executed.")
 	protected String command 	= "";
 
-	@ActionFieldAttribute(name = waitName, mandatory = false, description = "Wait while process will finish.")
+	@ActionFieldAttribute(name = waitName, mandatory = false, description = "waiting for the command to terminate. "
+			+ "If true - execution of the matrix is stopped until the command is executed. By default – true.")
 	protected Boolean wait; 
 	
-	@ActionFieldAttribute(name = workDirName, mandatory = false, description = "Working directory for this command.")
+	@ActionFieldAttribute(name = workDirName, mandatory = false, description = "A task of the working directory for the"
+			+ " current command.")
 	protected String workDir;
 
 	@Override

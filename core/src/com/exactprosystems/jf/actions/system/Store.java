@@ -19,8 +19,15 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 
 @ActionAttribute(
 		group = ActionGroups.System,
-		generalDescription = "Store value of global object. That object can be accessed from any matrixes.",
-		additionFieldsAllowed = false
+		generalDescription = "The following action is needed to store values of the object from any matrix in global {{$Store$}}.\n"
+				+ "Later, this object is available by action {{@Restore@}}.\n"
+				+ "All objects from global {{$Store$}} are stored only during the current session.",
+		additionFieldsAllowed = false,
+		examples 			= "Save object DateTime that contains current date and time when doing this action.\n"
+				+ "\n"
+				+ "{{##Action;#Value;#Name\n"
+				+ "Store;DateTime.current();'Current time'#}}",
+		seeAlso = "{{@Restore@}}"
 )
 
 public class Store extends AbstractAction
@@ -28,10 +35,10 @@ public class Store extends AbstractAction
 	public final static String nameName = "Name";
 	public final static String valueName = "Value";
 
-	@ActionFieldAttribute(name = nameName, mandatory = true, description = "Name of a global storage object.")
+	@ActionFieldAttribute(name = nameName, mandatory = true, description = "The name of the saved object.")
 	protected String name = null;
 
-	@ActionFieldAttribute(name = valueName, mandatory = true, description = "Value of a global storage object.")
+	@ActionFieldAttribute(name = valueName, mandatory = true, description = "The object that needs to be stored.")
 	protected Object value = null;
 
 	@Override

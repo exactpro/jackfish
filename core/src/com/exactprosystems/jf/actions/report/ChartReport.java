@@ -29,8 +29,41 @@ import java.util.Map;
 
 @ActionAttribute(
 		group = ActionGroups.Report, 
-		generalDescription = "Reports a chart to the report.", 
-		additionFieldsAllowed = true)
+		generalDescription = "The following action is needed to display graphs and diagrams in reports based on data from the tables.",
+		additionFieldsAllowed = true,
+		additionalDescription = "Depend on the type of the graph/diagram. {{` {{$Labels$}} – it is needed to name a column, "
+				+ "which values will be used for creating a diagram.`}} {{` {{$YAxisDescription$}} – it is needed to specify the "
+				+ "name that will be assigned to Z-axis.`}} {{` {{$Values$}} – the name of the column, which values will be used "
+				+ "for creating Pie type diagram.`}}",
+		examples = "1. Make a table\n"
+				+ "2. Create a report by ReportStart action\n"
+				+ "3. Create a graph based on the table. Specify a newly created report in parameter Report.\n"
+				+ "4-5. Display a report.\n"
+				+ "{{##Id;#TestCase;#Kind;#Depends;#For\n"
+				+ "Chart;;;;\n"
+				+ "    #Id;#RawTable\n"
+				+ "    DATA1;Table\n"
+				+ "    @;Labels;Mike salary;John Salary\n"
+				+ "    0;2001;1;2\n"
+				+ "    1;2002;2;3\n"
+				+ "    2;2003;3;4\n"
+				+ "    3;2004;3;4\n"
+				+ "    4;2005;3;5\n"
+				+ "    5;2006;4;5\n"
+				+ "    #EndRawTable\n"
+				+ "\n"
+				+ "    #Id;#Action;#ReportName\n"
+				+ "    REP1;ReportStart;'My report'\n"
+				+ "\n"
+				+ "    #Action;#ToReport;#Type;#Table;#Title;#Labels\n"
+				+ "    ChartReport;REP1.Out;ChartKind.Line;DATA1;'Chart title';'Labels'\n"
+				+ "\n"
+				+ "    #Action;#Passed;#Report;#Failed\n"
+				+ "    ReportFinish;0;REP1.Out;0\n"
+				+ "\n"
+				+ "    #Action;#Report\n"
+				+ "    ReportShow;REP1.Out.getReportName()#}}"
+)
 public class ChartReport extends AbstractAction
 {
 	public final static String 	titleName 			= "Title";
@@ -48,16 +81,16 @@ public class ChartReport extends AbstractAction
 	@ActionFieldAttribute(name = titleName, mandatory = true, description = "Title.")
 	protected String 	title 	= null;
 
-	@ActionFieldAttribute(name = tableName, mandatory = true, description = "The table.")
+	@ActionFieldAttribute(name = tableName, mandatory = true, description = "Table that contains data for a graph.")
 	protected Table 	table 	= null;
 
-	@ActionFieldAttribute(name = typeName, mandatory = true, description = "Type of the chart")
+	@ActionFieldAttribute(name = typeName, mandatory = true, description = "Type of graph.")
 	protected ChartKind			 chartType 			=  null;
 
-    @ActionFieldAttribute(name = colorsName, mandatory = false, description = "Color map")
+    @ActionFieldAttribute(name = colorsName, mandatory = false, description = "Color map.")
     protected Map<String, Color>    colors           =  null;
 
-	@ActionFieldAttribute(name = beforeTestCaseName, mandatory = false, description = "The name of Testcase before witch the table will be put.")
+	@ActionFieldAttribute(name = beforeTestCaseName, mandatory = false, description = "Allows to display a graph at the top of the report.")
 	protected String			beforeTestCase		= null;
 
 	public ChartReport()

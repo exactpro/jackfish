@@ -42,20 +42,53 @@ import com.exactprosystems.jf.functions.Table;
 @ActionAttribute(
 		group 					= ActionGroups.System, 
 		suffix 					= "RESTBL", 
-		generalDescription 		= "Returns the result table.", 
+		generalDescription 		= "This action is needed to get a copy of the system table that contains information about running current matrix. \n"
+				+ "This table is made during running a matrix, each row of the table contains information about one {{@TestCase@}} or {{@Step@}}.\n"
+				+ "Amendments made to the table do not influence the system table. To add columns and values there is action {{@ResultTableUserValue@}}.\n"
+				+ "It is needed to use an optional parameter if applying to another matrix.",
 		additionFieldsAllowed 	= false, 
-		outputDescription 		= "Copy of Table which contains rows correspond to each performed TestCase.", 
-		outputType 				= Table.class
+		outputDescription 		= "A copy if the system table that has columns Matrix, TestCaseId, TestCase, StepIdentity, Step, Time, Result, Error, Screenshot.",
+		outputType 				= Table.class,
+		examples 				= "{{##Id;#TestCase;#Kind\n"
+				+ "First;;\n"
+				+ "    #Action;#name\n"
+				+ "    Print;'value'\n"
+				+ "\n"
+				+ "    #Action;#Time\n"
+				+ "    Wait;1000\n"
+				+ "\n"
+				+ "\n"
+				+ "\n"
+				+ "#Id;#TestCase;#Kind\n"
+				+ "Second;;\n"
+				+ "    #Action;#Text;#Notifier\n"
+				+ "    Show;'Some text for print';Notifier.Info\n"
+				+ "\n"
+				+ "    #Fail\n"
+				+ "    'Fail'\n"
+				+ "\n"
+				+ "\n"
+				+ "\n"
+				+ "#Id;#TestCase;#Kind\n"
+				+ "Third;;\n"
+				+ "    #Id;#Action;#Decoraded\n"
+				+ "    RESTBL1;ResultTable;true\n"
+				+ "\n"
+				+ "    #Action;#BeforeTestCase;#Table;#Title\n"
+				+ "    TableReport;'First';RESTBL1.Out;'Result table'#}}",
+		seeAlso = "{{@ResultTableUserValue@}}"
 )
 public class ResultTable extends AbstractAction
 {
 	public final static String decoratedName = "Decoraded";
 	public final static String matrixName = "Matrix";
 
-	@ActionFieldAttribute(name = decoratedName, mandatory = true, description = "If true, returns a table with decorated columns")
+	@ActionFieldAttribute(name = decoratedName, mandatory = true, description = "If you set true, a table has a"
+			+ " human-readable kind. When indicating false, values that are in the table will be objects  which can be used later.")
 	protected Boolean decorated;
 
-	@ActionFieldAttribute(name = matrixName, mandatory = false, description = "If it is used then the result table for the matrix will be returned.")
+	@ActionFieldAttribute(name = matrixName, mandatory = false, description = "Object MatrixRunner is indicated "
+			+ "(that is an output value of actions {{@MatrixRun@}} and {{@MatrixRunFromText@}}). This action will be used in the summary table.")
 	protected MatrixRunner matrix = null;
 
 	@Override

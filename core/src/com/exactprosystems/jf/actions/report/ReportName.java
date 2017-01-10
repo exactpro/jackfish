@@ -19,15 +19,19 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 
 @ActionAttribute(
 		group					= ActionGroups.Report,
-		generalDescription 		= "Sets the report's name.",
-		additionFieldsAllowed 	= false
+		generalDescription 		= "The following action is needed to add text to the name of the created report.",
+		additionFieldsAllowed 	= false,
+		examples 				= "If to execute the following example the name of the report file will be given – “Date and time of"
+				+ " running matrix”_”Matrix name”_ “PASSED” Chrome.html\n"
+				+ "{{##Action;#Name\n"
+				+ "ReportName;'Chrome'#}}"
 	)
 public class ReportName extends AbstractAction 
 {
 	public final static String nameName = "Name";
 
-	@ActionFieldAttribute(name = nameName, mandatory = true, description = "Name of report.")
-	protected String name 		= ""; 
+	@ActionFieldAttribute(name = nameName, mandatory = true, description = "Text that will be added to the name of the report.")
+	protected String name 		= "";
 	
 	public ReportName()
 	{
