@@ -1450,7 +1450,8 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 		switch (component.getTagName())
 		{
 			case "ul":
-				return getListOfNamesFromListItems(new Select(component).getOptions());
+			case "ol":
+				return getListOfNamesFromListItems(component.findElements(By.xpath("li")));
 			case "select":
 				return getListOfNamesFromListItems(new Select(component).getOptions());
 			default:
