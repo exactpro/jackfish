@@ -58,7 +58,7 @@ public class Spec implements Iterable<Piece>, Serializable
 		
 		for (Piece check : this.list)
 		{
-			check.kind.perform(check, executor, self, result);
+			check.kind.perform(check, executor, self, locator, result);
 		}
 		
 		return result;
