@@ -46,7 +46,7 @@ public class MatrixTreeView extends TreeTableView<MatrixItem>
 		this.setSkin(new MatrixTreeViewSkin(this));
 		this.setShowRoot(false);
 		this.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-		this.getStyleClass().add(CssVariables.CUSTOM_TREE_TABLE_VIEW);
+		this.getStyleClass().addAll(CssVariables.EMPTY_HEADER_COLUMN, CssVariables.CUSTOM_TREE_TABLE_VIEW);
 		initTable();
 	}
 

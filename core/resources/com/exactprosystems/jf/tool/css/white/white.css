@@ -131,9 +131,11 @@
 }
 .customTreeTableView .tree-table-row-cell:customSelectedState .customScrollPane > .viewport {
 	-fx-background-color: #f2f2f2;
+
 }
 .customTreeTableView .tree-table-row-cell:customSelectedState .customScrollPane .parametersPane {
 	-fx-background-color: #e0e0e0;
+
 }
 
 .simpleItem {
@@ -330,10 +332,9 @@
 
 
 .focusedField {
-	-fx-border-color : black;
-	-fx-border-size  : 5px;
-	-fx-background-color : -fx-company-color-light;
-
+	-fx-border-color : #2687fb;
+	-fx-border-size  : 1px;
+	-fx-border-radius : 4px;
 }
 .unfocusedGrid {
 	-fx-border-color : transparent;

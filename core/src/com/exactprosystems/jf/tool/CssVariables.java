@@ -114,6 +114,10 @@ public class CssVariables
 	public static final String	FOCUSED_EMPTY_GRID			= "focusedEmptyGrid";
 	public static final String	EMPTY_GRID					= "emptyGrid";
 
+	public static final String	EMPTY_HEADER_COLUMN			= "emptyHeaderColumn";
+	public static final String	PARAMETERS_TABLE			= "parametersTable";
+	public static final String	NOT_EDITABLE_PARAMETER		= "notEditableParameter";
+	public static final String	EDITABLE_PARAMETER			= "editableParameter";
 	/*Resizable region*/
 	public static final String	RESIZABLE_REGION			= "resizableRegion";
 	public static final String	RESIZABLE_REGION_HOVER		= "resizableRegionHover";

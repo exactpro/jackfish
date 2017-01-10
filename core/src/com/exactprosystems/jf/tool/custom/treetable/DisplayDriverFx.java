@@ -35,7 +35,7 @@ import com.exactprosystems.jf.tool.custom.tab.CustomTab;
 import com.exactprosystems.jf.tool.custom.tab.CustomTabPane;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.matrix.MatrixFx;
-import com.exactprosystems.jf.tool.matrix.params.table.ParametersTable;
+import com.exactprosystems.jf.tool.matrix.params.ParametersPane;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
@@ -114,6 +114,7 @@ public class DisplayDriverFx implements DisplayDriver
 			Integer columnIndex = GridPane.getColumnIndex(c);
 			return rowIndex != null && columnIndex != null && rowIndex == 0 && columnIndex == 0;
 		}).findFirst().ifPresent(Node::requestFocus));
+		label.setMinWidth(name.length() * 9);
 		pane.add(label, column, row);
 		GridPane.setMargin(label, INSETS);
 		if (item instanceof ActionItem)
@@ -458,7 +459,7 @@ public class DisplayDriverFx implements DisplayDriver
 	{
 		GridPane pane = (GridPane) layout;
 
-		ParametersTable paramsPane = new ParametersTable(item, this.context, oneLine, parameters, generator, this.rowContextMenu, this.parametersContextMenu,
+		ParametersPane paramsPane = new ParametersPane(item, this.context, oneLine, parameters, generator, this.rowContextMenu, this.parametersContextMenu,
 				() -> selectCurrentRow(((MatrixTreeRow) pane.getParent().getParent())));
 		GridPane.setMargin(paramsPane, new Insets(column, 10, column, 10));
 		pane.add(paramsPane, column, row, Integer.MAX_VALUE, 2);

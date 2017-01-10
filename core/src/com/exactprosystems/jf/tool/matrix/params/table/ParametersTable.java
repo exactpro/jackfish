@@ -26,15 +26,22 @@ import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.matrix.MatrixFx;
 import com.exactprosystems.jf.tool.matrix.params.EmptyParameterGridPane;
 import com.exactprosystems.jf.tool.matrix.params.ParameterGridPane;
+import com.sun.javafx.css.PseudoClassState;
 import com.sun.javafx.scene.control.skin.TableViewSkin;
 import com.sun.javafx.scene.control.skin.VirtualFlow;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.DoubleBinding;
-import javafx.beans.property.*;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.css.PseudoClass;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.input.ContextMenuEvent;
@@ -42,6 +49,7 @@ import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
+import javafx.util.Callback;
 import javafx.util.Pair;
 
 import java.io.File;
@@ -76,78 +84,18 @@ public class ParametersTable extends CustomScrollPane
 		this.mainGridPane.setMaxWidth(Double.MAX_VALUE);
 
 		this.tableView = new MyTableView();
-		this.tableView.visibleRowCountProperty().set(2);
+		this.tableView.visibleRowCountProperty().set(oneLine ? 1 : 2);
 		this.tableView.setMaxWidth(Double.MAX_VALUE);
-		this.tableView.getStyleClass().add("asd");
+		this.tableView.getStyleClass().addAll(CssVariables.EMPTY_HEADER_COLUMN, CssVariables.PARAMETERS_TABLE);
 		this.tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-		this.tableView.setFixedCellSize(twoLineHeight/2 - 3);
+		this.tableView.setFixedCellSize((oneLine ? oneLineHeight : twoLineHeight)/2 - 3);
 		DoubleBinding multiply = Bindings.size(this.tableView.getItems()).multiply(this.tableView.getFixedCellSize()).add(2);
+
 		this.tableView.prefHeightProperty().bind(multiply);
 		this.tableView.maxHeightProperty().bind(multiply);
 		this.tableView.minHeightProperty().bind(multiply);
+		this.tableView.setRowFactory(param -> new RowFactory());
 
-		Data colData = new Data();
-		Data valData = new Data();
-		for (int i = 0; i < parameters.size(); i++)
-		{
-			Parameter byIndex = parameters.getByIndex(i);
-
-			Top top = new Top();
-			top.isEditable = byIndex.getType() == TypeMandatory.Extra;
-			top.columnName = byIndex.getName();
-			top.value = byIndex.getName();
-			colData.list.add(top);
-
-			Down down = new Down();
-			down.value = byIndex.getExpression();
-			down.columnName = byIndex.getName();
-			valData.list.add(down);
-
-			TableColumn<Data, Col> column = new TableColumn<>(byIndex.getName());
-			this.tableView.getColumns().add(column);
-			column.setPrefWidth(75);
-			column.setMaxWidth(500);
-			column.setMinWidth(75);
-			column.setCellValueFactory(param ->
-			{
-				SimpleObjectProperty<Col> property = new SimpleObjectProperty<>();
-				Optional<Col> c = param.getValue().list
-						.stream()
-						.filter(col -> col.columnName.equals(param.getTableColumn().getText()))
-						.findFirst();
-				c.ifPresent(property::set);
-				return property;
-			});
-			column.setCellFactory(p -> new TableCell<Data, Col>(){
-
-				@Override
-				protected void updateItem(Col item, boolean empty)
-				{
-					super.updateItem(item, empty);
-					if (item != null && !empty)
-					{
-						this.getStyleClass().add("q");
-						this.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
-						if (item.isEditable())
-						{
-							TextField value = new TextField(item.toString());
-							value.getStyleClass().setAll("w");
-							setGraphic(value);
-						}
-						else
-						{
-							setGraphic(new Label(item.toString()));
-						}
-					}
-					else
-					{
-						setGraphic(null);
-					}
-				}
-			});
-
-		}
-		this.tableView.getItems().setAll(colData, valData);
 		this.tableView.prefWidthProperty().bind(Bindings.size(this.tableView.getColumns()).multiply(150));
 		this.fnc = fnc;
 		this.mainGridPane.add(this.tableView, 0, 0);
@@ -167,6 +115,43 @@ public class ParametersTable extends CustomScrollPane
 
 	public void refreshParameters(int selectedIndex)
 	{
+		this.tableView.getItems().clear();
+		this.tableView.getColumns().clear();
+		this.mainGridPane.getChildren().clear();
+		Data colData = new Data();
+		Data valData = new Data();
+		for (int i = 0; i < parameters.size(); i++)
+		{
+			Parameter byIndex = parameters.getByIndex(i);
+
+			TopCell topCell = new TopCell();
+			topCell.isEditable = byIndex.getType() == TypeMandatory.Extra;
+			topCell.columnName = byIndex.getName();
+			topCell.value = byIndex.getName();
+			colData.list.add(topCell);
+
+			BottomCell bottomCell = new BottomCell();
+			bottomCell.value = byIndex.getExpression();
+			bottomCell.columnName = byIndex.getName();
+			valData.list.add(bottomCell);
+
+			TableColumn<Data, Col> column = new TableColumn<>(byIndex.getName());
+			this.tableView.getColumns().add(column);
+			column.setPrefWidth(75);
+			column.setMaxWidth(500);
+			column.setMinWidth(75);
+
+			column.setCellValueFactory(new ColumnValueFactory());
+			column.setCellFactory(p -> new CellFactory(byIndex));
+			if (selectedIndex == i)
+			{
+
+			}
+		}
+		this.tableView.getItems().setAll(colData, valData);
+		this.mainGridPane.add(this.tableView, 1, 0);
+		this.mainGridPane.add(emptyBox(FXCollections.observableArrayList(), this.contextMenuHandler), 0, 0);
+
 //		ObservableList<Node> children = FXCollections.observableArrayList(this.mainGridPane.getChildren());
 //		this.mainGridPane.getChildren().clear();
 //
@@ -310,156 +295,7 @@ public class ParametersTable extends CustomScrollPane
 
 		if (!this.oneLine)
 		{
-			ExpressionField expressionField = new ExpressionField(this.context.getEvaluator(), par.getExpression());
-			if (this.matrixItem instanceof ActionItem)
-			{
-				ActionItem actionItem = (ActionItem) this.matrixItem;
-				HelpKind howHelp = null;
-
-				try
-				{
-					howHelp = actionItem.howHelpWithParameter(this.context, par.getName());
-				}
-				catch (Exception e)
-				{
-				}
-
-				AbstractEvaluator evaluator = this.context.getEvaluator();
-				List<String> themePaths = Common.currentThemesPaths();
-
-				if (howHelp != null)
-				{
-					expressionField.setNameFirst(howHelp.getLabel());
-					switch (howHelp)
-					{
-						case BuildQuery:
-							break;
-
-						case BuildLayoutExpression:
-							expressionField.setFirstActionListener(str ->
-							{
-								String expression = this.parameters.getExpression(DialogFill.dialogName);
-								String dialogName = null;
-								try
-								{
-									dialogName = String.valueOf(evaluator.evaluate(expression));
-								}
-								catch (Exception e)
-								{
-								}
-								try
-								{
-									LayoutExpressionBuilder viewer = new LayoutExpressionBuilder(par.getName(), expressionField.getText(), this.matrixItem.getParent().getMatrix().getDefaultApplicationConnection(), dialogName, evaluator);
-									return viewer.show("Layout expression for " + par.getName(), false);
-								}
-								catch (Exception e)
-								{
-									DialogsHelper.showError(e.getMessage());
-								}
-								return expressionField.getText();
-							});
-							break;
-
-						case ChooseDateTime:
-							expressionField.setFirstActionListener(str ->
-							{
-								Date date = null;
-								if (expressionField.getText() != null)
-								{
-									try
-									{
-										date = (Date) evaluator.evaluate(expressionField.getText());
-									}
-									catch (Exception e)
-									{
-										date = DateTime.current();
-									}
-								}
-
-
-								Date res = DialogsHelper.showDateTimePicker(date);
-								if (res != null)
-								{
-									LocalDateTime ldt = Common.convert(res);
-									return String.format("DateTime.date(%d, %d, %d,  %d, %d, %d)",
-											//				because localDateTime begin month from 1, not 0
-											ldt.getYear(), ldt.getMonthValue() - 1, ldt.getDayOfMonth(), ldt.getHour(), ldt.getMinute(), ldt.getSecond());
-								}
-								return expressionField.getText();
-							});
-							break;
-
-						case ChooseOpenFile:
-							expressionField.setFirstActionListener(str ->
-							{
-								File file = DialogsHelper.showOpenSaveDialog("Choose file to open", "All files", "*.*", DialogsHelper.OpenSaveMode.OpenFile);
-								if (file != null)
-								{
-									return this.context.getEvaluator().createString(Common.getRelativePath(file.getAbsolutePath()));
-								}
-								return str;
-							});
-							break;
-
-						case ChooseSaveFile:
-							expressionField.setFirstActionListener(str ->
-							{
-								File file = DialogsHelper.showOpenSaveDialog("Choose file to save", "All files", "*.*", DialogsHelper.OpenSaveMode.SaveFile);
-								if (file != null)
-								{
-									return this.context.getEvaluator().createString(Common.getRelativePath(file.getAbsolutePath()));
-								}
-								return str;
-							});
-							break;
-
-						case ChooseFolder:
-							expressionField.setFirstActionListener(str ->
-							{
-								File file = DialogsHelper.showDirChooseDialog("Choose directory");
-								if (file != null)
-								{
-									return this.context.getEvaluator().createString(Common.getRelativePath(file.getAbsolutePath()));
-								}
-								return str;
-							});
-							break;
-
-						case ChooseFromList:
-							expressionField.setChooserForExpressionField(par.getName(), () -> actionItem.listToFillParameter(this.context, par.getName()));
-							break;
-
-						case BuildXPath:
-							expressionField.setFirstActionListener(str ->
-							{
-								for (int i = 0; i < this.parameters.size(); i++)
-								{
-									Parameter next = this.parameters.getByIndex(i);
-									Object obj = evaluator.tryEvaluate(next.getExpression());
-									if (obj instanceof Xml)
-									{
-										Xml xml = (Xml) obj;
-										Object value = evaluator.tryEvaluate(par.getExpression());
-										String initial = value == null ? null : String.valueOf(value);
-										XpathViewer viewer = new XpathViewer(null, xml.getDocument(), null);
-										String res = viewer.show(initial, "Xpath for " + par.getName(), themePaths, false);
-										if (res != null)
-										{
-											res = evaluator.createString(res);
-										}
-
-										return res;
-									}
-								}
-								return str;
-							});
-							break;
-
-						default:
-							break;
-					}
-				}
-			}
+			ExpressionField expressionField = createExpressionField(par);
 			expressionField.setContextMenu(empty);
 			expressionField.setOnContextMenuRequested(contextMenuHandler);
 			expressionField.setNotifierForErrorHandler();
@@ -472,6 +308,159 @@ public class ParametersTable extends CustomScrollPane
 		tempGrid.setOnContextMenuRequested(contextMenuHandler);
 
 		return tempGrid;
+	}
+
+	private ExpressionField createExpressionField(Parameter par)
+	{
+		ExpressionField expressionField = new ExpressionField(this.context.getEvaluator(), par.getExpression());
+		if (this.matrixItem instanceof ActionItem)
+		{
+			ActionItem actionItem = (ActionItem) this.matrixItem;
+			HelpKind howHelp = null;
+
+			try
+			{
+				howHelp = actionItem.howHelpWithParameter(this.context, par.getName());
+			}
+			catch (Exception e)
+			{
+			}
+
+			AbstractEvaluator evaluator = this.context.getEvaluator();
+			if (howHelp != null)
+			{
+				expressionField.setNameFirst(howHelp.getLabel());
+				switch (howHelp)
+				{
+					case BuildQuery:
+						break;
+
+					case BuildLayoutExpression:
+						expressionField.setFirstActionListener(str ->
+						{
+							String expression = this.parameters.getExpression(DialogFill.dialogName);
+							String dialogName = null;
+							try
+							{
+								dialogName = String.valueOf(evaluator.evaluate(expression));
+							}
+							catch (Exception e)
+							{
+							}
+							try
+							{
+								LayoutExpressionBuilder viewer = new LayoutExpressionBuilder(par.getName(), expressionField.getText(), this.matrixItem.getParent().getMatrix().getDefaultApplicationConnection(), dialogName, evaluator);
+								return viewer.show("Layout expression for " + par.getName(), false);
+							}
+							catch (Exception e)
+							{
+								DialogsHelper.showError(e.getMessage());
+							}
+							return expressionField.getText();
+						});
+						break;
+
+					case ChooseDateTime:
+						expressionField.setFirstActionListener(str ->
+						{
+							Date date = null;
+							if (expressionField.getText() != null)
+							{
+								try
+								{
+									date = (Date) evaluator.evaluate(expressionField.getText());
+								}
+								catch (Exception e)
+								{
+									date = DateTime.current();
+								}
+							}
+
+
+							Date res = DialogsHelper.showDateTimePicker(date);
+							if (res != null)
+							{
+								LocalDateTime ldt = Common.convert(res);
+								return String.format("DateTime.date(%d, %d, %d,  %d, %d, %d)",
+										//				because localDateTime begin month from 1, not 0
+										ldt.getYear(), ldt.getMonthValue() - 1, ldt.getDayOfMonth(), ldt.getHour(), ldt.getMinute(), ldt.getSecond());
+							}
+							return expressionField.getText();
+						});
+						break;
+
+					case ChooseOpenFile:
+						expressionField.setFirstActionListener(str ->
+						{
+							File file = DialogsHelper.showOpenSaveDialog("Choose file to open", "All files", "*.*", DialogsHelper.OpenSaveMode.OpenFile);
+							if (file != null)
+							{
+								return this.context.getEvaluator().createString(Common.getRelativePath(file.getAbsolutePath()));
+							}
+							return str;
+						});
+						break;
+
+					case ChooseSaveFile:
+						expressionField.setFirstActionListener(str ->
+						{
+							File file = DialogsHelper.showOpenSaveDialog("Choose file to save", "All files", "*.*", DialogsHelper.OpenSaveMode.SaveFile);
+							if (file != null)
+							{
+								return this.context.getEvaluator().createString(Common.getRelativePath(file.getAbsolutePath()));
+							}
+							return str;
+						});
+						break;
+
+					case ChooseFolder:
+						expressionField.setFirstActionListener(str ->
+						{
+							File file = DialogsHelper.showDirChooseDialog("Choose directory");
+							if (file != null)
+							{
+								return this.context.getEvaluator().createString(Common.getRelativePath(file.getAbsolutePath()));
+							}
+							return str;
+						});
+						break;
+
+					case ChooseFromList:
+						expressionField.setChooserForExpressionField(par.getName(), () -> actionItem.listToFillParameter(this.context, par.getName()));
+						break;
+
+					case BuildXPath:
+						expressionField.setFirstActionListener(str ->
+						{
+							for (int i = 0; i < this.parameters.size(); i++)
+							{
+								Parameter next = this.parameters.getByIndex(i);
+								Object obj = evaluator.tryEvaluate(next.getExpression());
+								if (obj instanceof Xml)
+								{
+									Xml xml = (Xml) obj;
+									Object value = evaluator.tryEvaluate(par.getExpression());
+									String initial = value == null ? null : String.valueOf(value);
+									XpathViewer viewer = new XpathViewer(null, xml.getDocument(), null);
+									String res = viewer.show(initial, "Xpath for " + par.getName(), Common.currentThemesPaths(), false);
+									if (res != null)
+									{
+										res = evaluator.createString(res);
+									}
+
+									return res;
+								}
+							}
+							return str;
+						});
+						break;
+
+					default:
+						break;
+				}
+			}
+		}
+		return expressionField;
 	}
 
 	private void focusedParent(final Node node)
@@ -527,7 +516,7 @@ public class ParametersTable extends CustomScrollPane
 		}
 	}
 
-	private class Top extends Col
+	private class TopCell extends Col
 	{
 		boolean isEditable;
 
@@ -538,7 +527,7 @@ public class ParametersTable extends CustomScrollPane
 		}
 	}
 
-	private class Down extends Col
+	private class BottomCell extends Col
 	{
 
 		@Override
@@ -550,7 +539,7 @@ public class ParametersTable extends CustomScrollPane
 
 	private class MyTableView extends TableView<Data>
 	{
-		private IntegerProperty visibleRowCount = new SimpleIntegerProperty(this, "visibleRowCount", 10);
+		private IntegerProperty visibleRowCount = new SimpleIntegerProperty(this, "visibleRowCount", 2);
 
 
 		public IntegerProperty visibleRowCountProperty() {
@@ -661,6 +650,81 @@ public class ParametersTable extends CustomScrollPane
 
 			}
 
+		}
+	}
+
+	private class CellFactory extends TableCell<Data, Col>
+	{
+		private Parameter parameter;
+
+		public CellFactory(Parameter par)
+		{
+			this.parameter = par;
+		}
+
+		@Override
+		protected void updateItem(Col item, boolean empty)
+		{
+			super.updateItem(item, empty);
+			this.setAlignment(Pos.CENTER_LEFT);
+			if (item != null && !empty)
+			{
+				this.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
+				if (item.isEditable())
+				{
+					if (item instanceof TopCell)
+					{
+						TextField value = new TextField(item.toString());
+						value.getStyleClass().setAll(CssVariables.EDITABLE_PARAMETER);
+						setGraphic(value);
+					}
+					else
+					{
+						ExpressionField expressionField = createExpressionField(this.parameter);
+						expressionField.setContextMenu(ParametersTable.empty);
+						expressionField.setOnContextMenuRequested(contextMenuHandler);
+						expressionField.setNotifierForErrorHandler();
+						expressionField.setHelperForExpressionField(item.columnName, ParametersTable.this.matrixItem.getMatrix());
+						setGraphic(expressionField);
+					}
+				}
+				else
+				{
+					Label value = new Label(item.toString());
+					value.getStyleClass().addAll(CssVariables.NOT_EDITABLE_PARAMETER);
+					setGraphic(value);
+				}
+			}
+			else
+			{
+				setGraphic(null);
+			}
+		}
+	}
+
+	private class ColumnValueFactory implements Callback<TableColumn.CellDataFeatures<Data, Col>, ObservableValue<Col>>
+	{
+		@Override
+		public ObservableValue<Col> call(TableColumn.CellDataFeatures<Data, Col> param)
+		{
+			SimpleObjectProperty<Col> property = new SimpleObjectProperty<>();
+			Optional<Col> c = param.getValue().list.stream().filter(col -> col.columnName.equals(param.getTableColumn().getText())).findFirst();
+			c.ifPresent(property::set);
+			return property;
+		}
+	}
+
+	private class RowFactory extends TableRow<Data>
+	{
+		private final PseudoClass customSelected = PseudoClassState.getPseudoClass("customSelectedState");
+		private final PseudoClass selected = PseudoClassState.getPseudoClass("selected");
+
+		public RowFactory()
+		{
+			this.selectedProperty().addListener((observable, oldValue, newValue) -> {
+				this.pseudoClassStateChanged(customSelected, newValue);
+				this.pseudoClassStateChanged(selected, false); // remove selected pseudostate, cause this state change text color
+			});
 		}
 	}
 }

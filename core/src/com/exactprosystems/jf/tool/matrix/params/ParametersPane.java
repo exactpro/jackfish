@@ -37,7 +37,6 @@ import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
-import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.input.ContextMenuEvent;
@@ -55,8 +54,9 @@ import java.util.stream.Collectors;
 
 public class ParametersPane extends CustomScrollPane
 {
-	private static final int oneLineHeight = 34;
-	private static final int twoLineHeight = 67;
+	private static final int oneLineHeight = 40;
+	private static final int rowHeight = 24;
+	private static final int twoLineHeight = 63;
 
 	private GridPane mainGridPane;
 	private Context context;
@@ -74,20 +74,15 @@ public class ParametersPane extends CustomScrollPane
 
 		this.mainGridPane = new GridPane();
 		this.mainGridPane.getStyleClass().add(CssVariables.PARAMETERS_PANE);
-
-		RowConstraints r0 = new RowConstraints();
-		r0.setMaxHeight(29);
-		r0.setPrefHeight(29);
-		r0.setMinHeight(29);
-		this.mainGridPane.getRowConstraints().add(r0);
+		this.mainGridPane.setGridLinesVisible(true);
+		this.mainGridPane.getRowConstraints().add(createRow(4));
+		this.mainGridPane.getRowConstraints().add(createRow(rowHeight));
 		if (!oneLine)
 		{
-			RowConstraints r1 = new RowConstraints();
-			r1.setMaxHeight(34);
-			r1.setPrefHeight(34);
-			r1.setMinHeight(34);
-			this.mainGridPane.getRowConstraints().add(r1);
+			this.mainGridPane.getRowConstraints().add(createRow(rowHeight));
 		}
+
+		this.mainGridPane.getRowConstraints().add(createRow(4));
 
 		this.fnc = fnc;
 		this.setContent(this.mainGridPane);
@@ -101,6 +96,15 @@ public class ParametersPane extends CustomScrollPane
 
 		super.setContextMenu(rowContextMenu);
 		refreshParameters(-1);
+	}
+
+	private RowConstraints createRow(int height)
+	{
+		RowConstraints row = new RowConstraints();
+		row.setMaxHeight(height);
+		row.setPrefHeight(height);
+		row.setMinHeight(height);
+		return row;
 	}
 
 	public void refreshParameters(int selectedIndex)
@@ -123,9 +127,13 @@ public class ParametersPane extends CustomScrollPane
 				exist.focusParameter();
 			}
 
-			this.mainGridPane.add(exist, i + 1, 0, 1, this.oneLine ? 1 : 2);
+			this.mainGridPane.add(exist, i + 3, 1, 1, this.oneLine ? 1 : 2);
 		}
-		this.mainGridPane.add(emptyBox(FXCollections.observableArrayList(this.mainGridPane.getChildren()), this.contextMenuHandler), 0, 0, 1, 2);
+		this.mainGridPane.add(Common.createSpacer(Common.SpacerEnum.HorizontalMid), 0, 0, 1, 2);
+		this.mainGridPane.add(emptyBox(FXCollections.observableArrayList(this.mainGridPane.getChildren()), this.contextMenuHandler), 1, 1, 1, oneLine ? 1 : 2);
+		this.mainGridPane.add(Common.createSpacer(Common.SpacerEnum.HorizontalMin), 2, 0, 1, 2);
+		this.mainGridPane.add(Common.createSpacer(Common.SpacerEnum.VerticalMin), 0, 3);
+		this.mainGridPane.add(Common.createSpacer(Common.SpacerEnum.VerticalMin), 0, 0);
 
 		if (!oneLine)
 		{
@@ -167,7 +175,6 @@ public class ParametersPane extends CustomScrollPane
 		emptyLabel.setPrefWidth(12);
 		emptyLabel.setMaxWidth(12);
 		emptyLabel.setMinWidth(12);
-		GridPane.setMargin(pane, new Insets(0, 5, 0, 0));
 		pane.add(emptyLabel, 0, 0);
 
 		pane.focusedProperty().addListener((observableValue, aBoolean, aBoolean2) ->
@@ -225,7 +232,6 @@ public class ParametersPane extends CustomScrollPane
 		Control key = new TextField(par.getName());
 		((TextField) key).setPromptText("Key");
 		Common.sizeTextField((TextField) key);
-		//		key.focusedProperty().addListener(createKeyChangeListener(par, finalKey, parameters.getIndex(par)));
 		switch (par.getType())
 		{
 			case Mandatory:
@@ -237,7 +243,6 @@ public class ParametersPane extends CustomScrollPane
 		tempGrid.setKeyListener(this.fnc, (index, text) -> getMatrix().parameterSetName(this.matrixItem, index, text));
 		key.setContextMenu(empty);
 		key.setOnContextMenuRequested(contextMenuHandler);
-		GridPane.setMargin(key, Common.INSETS_NODE);
 		focusedParent(key);
 		key.setStyle(Common.FONT_SIZE);
 
@@ -404,7 +409,6 @@ public class ParametersPane extends CustomScrollPane
 			expressionField.setHelperForExpressionField(par.getName(), this.matrixItem.getMatrix());
 			tempGrid.setValue(expressionField);
 			tempGrid.setValueListener(this.fnc, (index, text) -> getMatrix().parameterSetValue(this.matrixItem, index, text));
-			GridPane.setMargin(expressionField, Common.INSETS_NODE);
 			focusedParent(expressionField);
 		}
 		tempGrid.setOnContextMenuRequested(contextMenuHandler);
@@ -420,10 +424,6 @@ public class ParametersPane extends CustomScrollPane
 			if (!aBoolean)
 			{
 				node.getParent().getStyleClass().add(CssVariables.FOCUSED_FIELD);
-			}
-			if (!aBoolean2)
-			{
-				node.getParent().getStyleClass().add(CssVariables.UNFOCUSED_GRID);
 			}
 		};
 		if (node instanceof ExpressionField)
