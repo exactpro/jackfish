@@ -8,20 +8,6 @@
 
 package com.exactprosystems.jf.documents.matrix.parser.items;
 
-import java.awt.Rectangle;
-import java.awt.Toolkit;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
-
-import org.apache.log4j.Logger;
-
 import com.csvreader.CsvWriter;
 import com.exactprosystems.jf.api.app.AppConnection;
 import com.exactprosystems.jf.api.app.ImageWrapper;
@@ -35,18 +21,17 @@ import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.Matrix;
-import com.exactprosystems.jf.documents.matrix.parser.DisplayDriver;
-import com.exactprosystems.jf.documents.matrix.parser.MatrixException;
-import com.exactprosystems.jf.documents.matrix.parser.MutableValue;
-import com.exactprosystems.jf.documents.matrix.parser.Parameters;
-import com.exactprosystems.jf.documents.matrix.parser.Parser;
-import com.exactprosystems.jf.documents.matrix.parser.Result;
-import com.exactprosystems.jf.documents.matrix.parser.ReturnAndResult;
-import com.exactprosystems.jf.documents.matrix.parser.ScreenshotKind;
-import com.exactprosystems.jf.documents.matrix.parser.SearchHelper;
-import com.exactprosystems.jf.documents.matrix.parser.Tokens;
+import com.exactprosystems.jf.documents.matrix.parser.*;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
 import com.exactprosystems.jf.functions.RowTable;
+import org.apache.log4j.Logger;
+
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.util.*;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 {
@@ -123,6 +108,11 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 		for (MatrixItem item : this.children)
 		{
 			item.display(driver, context);
+		}
+		MatrixItemAttribute attribute = this.getClass().getAnnotation(MatrixItemAttribute.class);
+		if (attribute != null && attribute.hasChildren())
+		{
+			new End(this).display(driver, context);
 		}
 	}
 	
@@ -603,7 +593,7 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 			}
 			index++;
 		}
-		return -1;
+		return this.children.size();
 	}
 
 	public final MatrixItem get(int index)

@@ -96,7 +96,14 @@ public class DisplayDriverFx implements DisplayDriver
 				}
 			}
 			TreeItem<MatrixItem> newTreeItem = new TreeItem<>(item);
-			treeItem.getChildren().add(insertIndex, newTreeItem);
+			if (lines == -1)
+			{
+				treeItem.getChildren().add(newTreeItem);
+			}
+			else
+			{
+				treeItem.getChildren().add(insertIndex, newTreeItem);
+			}
 		}
 		return pane;
 	}
@@ -109,7 +116,8 @@ public class DisplayDriverFx implements DisplayDriver
 		final Label label = new Label(name);
 		label.getStyleClass().add(CssVariables.BOLD_LABEL);
 		label.getStyleClass().add(CssVariables.OBLIQUE_LABEL);
-		label.setOnMouseClicked(mouseEvent -> pane.getChildren().stream().filter(c -> {
+		label.setOnMouseClicked(mouseEvent -> pane.getChildren().stream().filter(c ->
+		{
 			Integer rowIndex = GridPane.getRowIndex(c);
 			Integer columnIndex = GridPane.getColumnIndex(c);
 			return rowIndex != null && columnIndex != null && rowIndex == 0 && columnIndex == 0;
@@ -162,13 +170,15 @@ public class DisplayDriverFx implements DisplayDriver
 		CheckBox checkBox = new CheckBox(name);
 		checkBox.setMinWidth(name.length() * 8 + 20);
 		checkBox.setSelected(get.get());
-		checkBox.focusedProperty().addListener((observable, oldValue, newValue) -> {
+		checkBox.focusedProperty().addListener((observable, oldValue, newValue) ->
+		{
 			if (!oldValue && newValue)
 			{
 				selectCurrentRow(((MatrixTreeRow) pane.getParent().getParent()));
 			}
 		});
-		checkBox.setOnAction(e -> {
+		checkBox.setOnAction(e ->
+		{
 			Boolean lastValue = get.get();
 			Boolean value = checkBox.isSelected();
 			if (lastValue == value)
@@ -176,18 +186,20 @@ public class DisplayDriverFx implements DisplayDriver
 				return;
 			}
 
-			Command undo = () -> {
+			Command undo = () ->
+			{
 				set.set(lastValue);
 				checkBox.setSelected(lastValue);
 			};
-			Command redo = () -> {
+			Command redo = () ->
+			{
 				set.set(value);
 				checkBox.setSelected(value);
 			};
 			item.getMatrix().addCommand(undo, redo);
 		});
 		addToLayout(checkBox, column, row, pane);
-//		pane.add(checkBox, column, row);
+		//		pane.add(checkBox, column, row);
 		GridPane.setMargin(checkBox, INSETS);
 	}
 
@@ -197,7 +209,8 @@ public class DisplayDriverFx implements DisplayDriver
 		GridPane pane = (GridPane) layout;
 		ComboBox<String> comboBox = new ComboBox<>();
 		comboBox.setValue(get.get());
-		comboBox.setOnAction(e -> {
+		comboBox.setOnAction(e ->
+		{
 			String lastValue = get.get();
 			String value = comboBox.getValue();
 			if (Str.areEqual(lastValue, value))
@@ -205,11 +218,13 @@ public class DisplayDriverFx implements DisplayDriver
 				return;
 			}
 
-			Command undo = () -> {
+			Command undo = () ->
+			{
 				set.set(lastValue);
 				comboBox.setValue(lastValue);
 			};
-			Command redo = () -> {
+			Command redo = () ->
+			{
 				set.set(value);
 				comboBox.setValue(value);
 			};
@@ -217,7 +232,8 @@ public class DisplayDriverFx implements DisplayDriver
 		});
 		if (handler != null)
 		{
-			comboBox.showingProperty().addListener((observable, oldValue, newValue) -> {
+			comboBox.showingProperty().addListener((observable, oldValue, newValue) ->
+			{
 				if (!oldValue && newValue)
 				{
 					List<String> list = handler.apply(null);
@@ -240,7 +256,8 @@ public class DisplayDriverFx implements DisplayDriver
 		textBox.setStyle(Common.FONT_SIZE);
 		textBox.setText(get.get());
 		Common.sizeTextField(textBox);
-		textBox.focusedProperty().addListener((observable, oldValue, newValue) -> {
+		textBox.focusedProperty().addListener((observable, oldValue, newValue) ->
+		{
 			if (!oldValue && newValue)
 			{
 				selectCurrentRow(((MatrixTreeRow) pane.getParent().getParent()));
@@ -254,12 +271,14 @@ public class DisplayDriverFx implements DisplayDriver
 					return;
 				}
 
-				Command undo = () -> {
+				Command undo = () ->
+				{
 					set.set(lastValue);
 					textBox.setText(lastValue);
 					stretchIfCan(textBox);
 				};
-				Command redo = () -> {
+				Command redo = () ->
+				{
 					set.set(value);
 					textBox.setText(value);
 					stretchIfCan(textBox);
@@ -277,7 +296,7 @@ public class DisplayDriverFx implements DisplayDriver
 		gridPane.add(textBox, 0, 0);
 		pane.add(gridPane, column, row);
 		GridPane.setMargin(textBox, INSETS);
-//		Common.setFocused(textBox);
+		//		Common.setFocused(textBox);
 	}
 
 	@Override
@@ -289,7 +308,8 @@ public class DisplayDriverFx implements DisplayDriver
 		field.setContextMenu(this.rowContextMenu);
 		field.setFirstActionListener(firstHandler);
 		field.setSecondActionListener(secondHandler);
-		field.setChangingValueListener((observable, oldValue, newValue) -> {
+		field.setChangingValueListener((observable, oldValue, newValue) ->
+		{
 			if (!oldValue && newValue)
 			{
 				selectCurrentRow(((MatrixTreeRow) pane.getParent().getParent()));
@@ -303,11 +323,13 @@ public class DisplayDriverFx implements DisplayDriver
 					return;
 				}
 
-				Command undo = () -> {
+				Command undo = () ->
+				{
 					set.set(lastValue);
 					field.setText(lastValue);
 				};
-				Command redo = () -> {
+				Command redo = () ->
+				{
 					set.set(value);
 					field.setText(value);
 				};
@@ -343,7 +365,8 @@ public class DisplayDriverFx implements DisplayDriver
 		{
 			textArea.appendText(s + "\n");
 		}
-		textArea.textProperty().addListener((observable, oldValue, newValue) -> {
+		textArea.textProperty().addListener((observable, oldValue, newValue) ->
+		{
 			String[] split = newValue.split("\n");
 			consumer.accept(Arrays.asList(split));
 		});
@@ -359,7 +382,8 @@ public class DisplayDriverFx implements DisplayDriver
 		AutoCompletionTextFieldBinding<String> binding = new AutoCompletionTextFieldBinding<>(field, SuggestionProvider.create(words));
 		binding.setOnAutoCompleted(e -> accept(words, supplier, field));
 		List<String> tempList = words.stream().map(String::toLowerCase).collect(Collectors.toList());
-		field.textProperty().addListener((observable1, oldValue1, newValue1) -> {
+		field.textProperty().addListener((observable1, oldValue1, newValue1) ->
+		{
 			boolean present = tempList.stream().filter(s -> s.contains(newValue1.toLowerCase())).findFirst().isPresent();
 			if (present)
 			{
@@ -371,7 +395,8 @@ public class DisplayDriverFx implements DisplayDriver
 			}
 		});
 		field.setOnAction(e -> accept(words, supplier, field));
-		field.focusedProperty().addListener((observable, oldValue, newValue) -> {
+		field.focusedProperty().addListener((observable, oldValue, newValue) ->
+		{
 			if (!newValue && oldValue)
 			{
 				accept(words, supplier, field);
@@ -398,7 +423,8 @@ public class DisplayDriverFx implements DisplayDriver
 		}
 		label.prefWidthProperty().bind(CustomTabPane.getInstance().getScene().getWindow().widthProperty().subtract(20 + 15));
 		label.setPrefHeight(Common.setHeightComments(label.getText()));
-		label.setListener(() -> {
+		label.setListener(() ->
+		{
 			String lastValue = fromList(comments);
 			String value = label.getText();
 			if (Str.areEqual(lastValue, value))
@@ -406,13 +432,15 @@ public class DisplayDriverFx implements DisplayDriver
 				return;
 			}
 
-			Command undo = () -> {
+			Command undo = () ->
+			{
 				comments.clear();
 				comments.addAll(fromStr(lastValue));
 				label.setText(lastValue);
 				label.setPrefHeight(Common.setHeightComments(lastValue));
 			};
-			Command redo = () -> {
+			Command redo = () ->
+			{
 				comments.clear();
 				comments.addAll(fromStr(value));
 				label.setText(value);
@@ -440,7 +468,8 @@ public class DisplayDriverFx implements DisplayDriver
 		GridPane pane = (GridPane) layout;
 		ToggleButton toggleButton = new ToggleButton(name);
 		toggleButton.setSelected(initialValue);
-		toggleButton.setOnAction(e -> {
+		toggleButton.setOnAction(e ->
+		{
 			selectCurrentRow(((MatrixTreeRow) pane.getParent().getParent()));
 			boolean isNotSelected = !toggleButton.isSelected();
 			action.apply(isNotSelected);
@@ -459,8 +488,7 @@ public class DisplayDriverFx implements DisplayDriver
 	{
 		GridPane pane = (GridPane) layout;
 
-		ParametersPane paramsPane = new ParametersPane(item, this.context, oneLine, parameters, generator, this.rowContextMenu, this.parametersContextMenu,
-				() -> selectCurrentRow(((MatrixTreeRow) pane.getParent().getParent())));
+		ParametersPane paramsPane = new ParametersPane(item, this.context, oneLine, parameters, generator, this.rowContextMenu, this.parametersContextMenu, () -> selectCurrentRow(((MatrixTreeRow) pane.getParent().getParent())));
 		GridPane.setMargin(paramsPane, new Insets(column, 10, column, 10));
 		pane.add(paramsPane, column, row, Integer.MAX_VALUE, 2);
 	}
@@ -486,7 +514,8 @@ public class DisplayDriverFx implements DisplayDriver
 	public void hide(MatrixItem item, Object layout, int row, boolean hide)
 	{
 		GridPane pane = (GridPane) layout;
-		pane.getChildren().stream().filter(child -> GridPane.getRowIndex(child) != null && GridPane.getRowIndex(child) == row).forEach(c -> {
+		pane.getChildren().stream().filter(child -> GridPane.getRowIndex(child) != null && GridPane.getRowIndex(child) == row).forEach(c ->
+		{
 			((Region) c).setPrefHeight(hide ? 0 : Control.USE_COMPUTED_SIZE);
 			((Region) c).setMaxHeight(hide ? 0 : Control.USE_COMPUTED_SIZE);
 			((Region) c).setMinHeight(hide ? 0 : Control.USE_COMPUTED_SIZE);
@@ -531,7 +560,7 @@ public class DisplayDriverFx implements DisplayDriver
 		}
 		if (matrixFx != null)
 		{
-			((MatrixFx)matrixFx).setCurrent(item);
+			((MatrixFx) matrixFx).setCurrent(item);
 		}
 	}
 
@@ -571,15 +600,12 @@ public class DisplayDriverFx implements DisplayDriver
 
 	private void addToLayout(Node node, int column, int row, GridPane layout)
 	{
-		Optional<Node> first = layout.getChildren()
-				.stream()
-				.filter(Objects::nonNull)
-				.filter(n -> {
-					Integer columnIndex = GridPane.getColumnIndex(n);
-					Integer rowIndex = GridPane.getRowIndex(n);
-					return columnIndex != null && rowIndex != null && columnIndex == column && rowIndex == row;
-				})
-				.findFirst();
+		Optional<Node> first = layout.getChildren().stream().filter(Objects::nonNull).filter(n ->
+		{
+			Integer columnIndex = GridPane.getColumnIndex(n);
+			Integer rowIndex = GridPane.getRowIndex(n);
+			return columnIndex != null && rowIndex != null && columnIndex == column && rowIndex == row;
+		}).findFirst();
 
 		if (first.isPresent())
 		{
@@ -629,8 +655,8 @@ public class DisplayDriverFx implements DisplayDriver
 	}
 
 	private List<CommentString> fromStr(String str)
-    {
-                                // because TextArea from javafx split line via \n, not via System.lineSeparator()
+	{
+		// because TextArea from javafx split line via \n, not via System.lineSeparator()
 		return Arrays.asList(str.split("\n")).stream().map(CommentString::new).collect(Collectors.toList());
 	}
 

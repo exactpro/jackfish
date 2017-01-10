@@ -9,6 +9,7 @@
 package com.exactprosystems.jf.tool.custom.treetable;
 
 import com.exactprosystems.jf.common.Settings;
+import com.exactprosystems.jf.documents.matrix.parser.items.End;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItemState;
 import com.exactprosystems.jf.tool.Common;
@@ -207,6 +208,21 @@ public class MatrixTreeView extends TreeTableView<MatrixItem>
 		numberColumn.setPrefWidth(40);
 		numberColumn.setMaxWidth(41);
 		numberColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getValue().getNumber()));
+		numberColumn.setCellFactory(p -> new TreeTableCell<MatrixItem, Integer>(){
+			@Override
+			protected void updateItem(Integer item, boolean empty)
+			{
+				super.updateItem(item, empty);
+				if (item != null && item != -1 && !empty)
+				{
+					setText("" + item);
+				}
+				else
+				{
+					setText(null);
+				}
+			}
+		});
 
 		TreeTableColumn<MatrixItem, MatrixItemState> iconColumn = new TreeTableColumn<>();
 		iconColumn.setSortable(false);
@@ -240,7 +256,7 @@ public class MatrixTreeView extends TreeTableView<MatrixItem>
 			protected void updateItem(MatrixItem item, boolean empty)
 			{
 				super.updateItem(item, empty);
-				if (item != null)
+				if (item != null && !(item instanceof End))
 				{
 					box.setSelected(item.isRepOff());
 					updateTooltip();
@@ -277,7 +293,7 @@ public class MatrixTreeView extends TreeTableView<MatrixItem>
 			protected void updateItem(MatrixItem item, boolean empty)
 			{
 				super.updateItem(item, empty);
-				if (item != null)
+				if (item != null && !(item instanceof End))
 				{
 					box.setSelected(item.isOff());
 					updateTooltip();

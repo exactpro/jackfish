@@ -467,10 +467,10 @@ public class ParametersTable extends CustomScrollPane
 	{
 		ChangeListener<Boolean> changeListener = (observableValue, aBoolean, aBoolean2) ->
 		{
-			node.getParent().getStyleClass().removeAll(CssVariables.UNFOCUSED_GRID, CssVariables.FOCUSED_FIELD);
+			node.getParent().getStyleClass().removeAll(CssVariables.UNFOCUSED_GRID, CssVariables.FOCUSED_PARAMETER_GRID_PANE);
 			if (!aBoolean)
 			{
-				node.getParent().getStyleClass().add(CssVariables.FOCUSED_FIELD);
+				node.getParent().getStyleClass().add(CssVariables.FOCUSED_PARAMETER_GRID_PANE);
 			}
 			if (!aBoolean2)
 			{

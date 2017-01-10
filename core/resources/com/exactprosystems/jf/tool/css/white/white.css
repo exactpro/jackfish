@@ -331,21 +331,10 @@
 /*ParametersPane*/
 
 
-.focusedField {
+.focusedParameterGridPane {
 	-fx-border-color : #2687fb;
-	-fx-border-size  : 1px;
-	-fx-border-radius : 4px;
 }
-.unfocusedGrid {
-	-fx-border-color : transparent;
-	-fx-background-color : transparent;
 
-}
-.invisibleField {
-	-fx-background-color : transparent;
-	-fx-border-color : transparent;
-
-}
 .focusedEmptyGrid {
 	-fx-background-color : gold;
 

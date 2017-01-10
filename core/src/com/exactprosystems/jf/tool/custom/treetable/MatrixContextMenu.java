@@ -13,6 +13,7 @@ import com.exactprosystems.jf.common.report.ContextHelpFactory;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Tokens;
+import com.exactprosystems.jf.documents.matrix.parser.items.End;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
@@ -92,7 +93,19 @@ public class MatrixContextMenu extends ContextMenu
 		parAdd.setAccelerator(Common.getShortcut(settings, Settings.ADD_PARAMETER));
 		parAdd.setOnAction(event -> addParameter(matrix, tree));
 
-		getItems().addAll(breakPoint, new SeparatorMenuItem(), parAdd, new SeparatorMenuItem(), copy, pasteBefore, pasteChild, pasteAfter, new SeparatorMenuItem(), addBefore, addChild, addAfter, deleteItem, gotoItem, new SeparatorMenuItem(), help);
+		getItems().addAll(breakPoint, new SeparatorMenuItem(), parAdd, new SeparatorMenuItem(), copy, pasteBefore,/* pasteChild, pasteAfter,*/ new SeparatorMenuItem(), addBefore/*, addChild, addAfter*/, deleteItem, gotoItem, new SeparatorMenuItem(), help);
+		this.setOnShown(event -> {
+			TreeItem<MatrixItem> selectedItem = tree.getSelectionModel().getSelectedItem();
+			if (selectedItem != null)
+			{
+				boolean b = selectedItem.getValue() instanceof End;
+				breakPoint.setDisable(b);
+				parAdd.setDisable(b);
+				copy.setDisable(b);
+				deleteItem.setDisable(b);
+				help.setDisable(b);
+			}
+		});
 	}
 
 	public void initShortcuts(Settings settings, MatrixTreeView treeView, MatrixFx matrix, Context context)
