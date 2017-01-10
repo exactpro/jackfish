@@ -126,7 +126,7 @@ public class Step extends MatrixItem
 		driver.showComment(this, layout, 0, 0, getComments());
 		driver.showTitle(this, layout, 1, 0, Tokens.Step.get(), context.getFactory().getSettings());
         driver.showExpressionField(this, layout, 1, 1, Tokens.Step.get(), this.identify, this.identify, null, null, null, null);
-        driver.showLabel(this, layout, 1, 2, "Screenshot");
+        driver.showLabel(this, layout, 1, 2, "Screenshot", -1);
         driver.showComboBox(this, layout, 1, 3, this.kind, this.kind, v ->
         {
             return Arrays.stream(ScreenshotKind.values()).map(k -> k.toString()).collect(Collectors.toList());

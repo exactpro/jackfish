@@ -82,7 +82,7 @@ public final class ActionItem extends MatrixItem
 			driver.hide(this, layout, 3, b);
 			return null;
 		}, b -> "Asserts", !(this.assertBool.isExpressionNullOrEmpty()));
-		driver.showLabel(this, layout, 3, 0, Tokens.Assert.get());
+		driver.showLabel(this, layout, 3, 0, Tokens.Assert.get(), -1);
 		driver.showExpressionField(this, layout, 3, 1, Tokens.Assert.get(), this.assertBool, this.assertBool, null, null, null, null);
 		driver.hide(this, layout, 3, this.assertBool.isExpressionNullOrEmpty());
 		return layout;

@@ -45,7 +45,7 @@ public class MatrixFx extends Matrix
 {
 	public enum PlaceToInsert
 	{
-		After, Before, Child
+		@Deprecated  After, Before, @Deprecated Child
 	}
 
 	private static final String DELIMITER = ",";
@@ -341,7 +341,7 @@ public class MatrixFx extends Matrix
 			List<Temp> collect = items.stream().map(item -> new Temp(item.getParent(), item, super.getIndex(item))).collect(Collectors.toList());
 			Command undo = () ->
 			{
-				collect.sort((t1,t2) -> Integer.compare(t1.getIndex(), t2.getIndex()));
+				collect.sort(Comparator.comparingInt(Temp::getIndex));
 				collect.forEach(temp -> {
 					super.insert(temp.getParent(), temp.getIndex(), temp.getItem());
 					this.controller.display(temp.getItem());

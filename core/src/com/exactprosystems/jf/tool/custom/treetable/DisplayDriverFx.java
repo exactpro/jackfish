@@ -147,10 +147,14 @@ public class DisplayDriverFx implements DisplayDriver
 	}
 
 	@Override
-	public void showLabel(MatrixItem item, Object layout, int row, int column, String name)
+	public void showLabel(MatrixItem item, Object layout, int row, int column, String name, int fontSize)
 	{
 		GridPane pane = (GridPane) layout;
 		Label label = new Label(name);
+		if (fontSize != -1)
+		{
+			label.setFont(javafx.scene.text.Font.font(fontSize));
+		}
 		if (Tokens.contains(name))
 		{
 			label.getStyleClass().add(CssVariables.BOLD_LABEL);

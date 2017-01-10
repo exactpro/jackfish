@@ -23,19 +23,18 @@ import com.exactprosystems.jf.tool.matrix.MatrixFx.PlaceToInsert;
 import com.exactprosystems.jf.tool.settings.SettingsPanel;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
-import javafx.scene.text.Text;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 
 import java.util.Date;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class MatrixContextMenu extends ContextMenu
 {
@@ -49,17 +48,17 @@ public class MatrixContextMenu extends ContextMenu
 		breakPoint.setAccelerator(Common.getShortcut(settings, Settings.BREAK_POINT));
 		breakPoint.setOnAction(event -> breakPoint(matrix, tree));
 
-		MenuItem addBefore = new MenuItem("Add before >>", new ImageView(new Image(CssVariables.Icons.ADD_BEFORE_ICON)));
+		MenuItem addBefore = new MenuItem("Add", new ImageView(new Image(CssVariables.Icons.ADD_BEFORE_ICON)));
 		addBefore.setAccelerator(Common.getShortcut(settings, Settings.ADD_BEFORE));
 		addBefore.setOnAction(event -> addBefore(tree, matrix));
 
-		MenuItem addAfter = new MenuItem("Add after >>", new ImageView(new Image(CssVariables.Icons.ADD_AFTER_ICON)));
-		addAfter.setAccelerator(Common.getShortcut(settings, Settings.ADD_AFTER));
-		addAfter.setOnAction(event -> addAfter(matrix, tree));
+//		MenuItem addAfter = new MenuItem("Add after >>", new ImageView(new Image(CssVariables.Icons.ADD_AFTER_ICON)));
+//		addAfter.setAccelerator(Common.getShortcut(settings, Settings.ADD_AFTER));
+//		addAfter.setOnAction(event -> addAfter(matrix, tree));
 
-		MenuItem addChild = new MenuItem("Add child >>", new ImageView(new Image(CssVariables.Icons.ADD_CHILD_ICON)));
-		addChild.setAccelerator(Common.getShortcut(settings, Settings.ADD_CHILD));
-		addChild.setOnAction(event -> Common.tryCatch(() -> matrix.insertNew(tree.currentItem(), PlaceToInsert.Child, Tokens.TempItem.get(), null), "Error on add child"));
+//		MenuItem addChild = new MenuItem("Add child >>", new ImageView(new Image(CssVariables.Icons.ADD_CHILD_ICON)));
+//		addChild.setAccelerator(Common.getShortcut(settings, Settings.ADD_CHILD));
+//		addChild.setOnAction(event -> Common.tryCatch(() -> matrix.insertNew(tree.currentItem(), PlaceToInsert.Child, Tokens.TempItem.get(), null), "Error on add child"));
 
 		MenuItem deleteItem = new MenuItem("Delete", new ImageView(new Image(CssVariables.Icons.DELETE_ICON)));
 		deleteItem.setAccelerator(Common.getShortcut(settings, Settings.DELETE_ITEM));
@@ -69,15 +68,15 @@ public class MatrixContextMenu extends ContextMenu
 		copy.setAccelerator(Common.getShortcut(settings, Settings.COPY_ITEMS));
 		copy.setOnAction(event -> copyItems(matrix, tree));
 
-		MenuItem pasteAfter = new MenuItem("Paste after",new ImageView(new Image(CssVariables.Icons.PASTE_ICON)));
-		pasteAfter.setAccelerator(Common.getShortcut(settings, Settings.PASTE_ITEMS_AFTER));
-		pasteAfter.setOnAction(event -> pasteItems(PlaceToInsert.After, matrix, tree));
+//		MenuItem pasteAfter = new MenuItem("Paste after",new ImageView(new Image(CssVariables.Icons.PASTE_ICON)));
+//		pasteAfter.setAccelerator(Common.getShortcut(settings, Settings.PASTE_ITEMS_AFTER));
+//		pasteAfter.setOnAction(event -> pasteItems(PlaceToInsert.After, matrix, tree));
 
-		MenuItem pasteChild = new MenuItem("Paste child", new ImageView(new Image(CssVariables.Icons.PASTE_ICON)));
-		pasteChild.setAccelerator(Common.getShortcut(settings, Settings.PASTE_ITEMS_CHILD));
-		pasteChild.setOnAction(event -> pasteItems(PlaceToInsert.Child, matrix, tree));
+//		MenuItem pasteChild = new MenuItem("Paste child", new ImageView(new Image(CssVariables.Icons.PASTE_ICON)));
+//		pasteChild.setAccelerator(Common.getShortcut(settings, Settings.PASTE_ITEMS_CHILD));
+//		pasteChild.setOnAction(event -> pasteItems(PlaceToInsert.Child, matrix, tree));
 
-		MenuItem pasteBefore = new MenuItem("Paste before", new ImageView(new Image(CssVariables.Icons.PASTE_ICON)));
+		MenuItem pasteBefore = new MenuItem("Paste", new ImageView(new Image(CssVariables.Icons.PASTE_ICON)));
 		pasteBefore.setAccelerator(Common.getShortcut(settings, Settings.PASTE_ITEMS_BEFORE));
 		pasteBefore.setOnAction(event -> pasteItems(PlaceToInsert.Before, matrix, tree));
 
@@ -127,14 +126,6 @@ public class MatrixContextMenu extends ContextMenu
 			{
 				addBefore(treeView, matrix);
 			}
-			else if (SettingsPanel.match(settings, keyEvent, Settings.ADD_AFTER))
-			{
-				addAfter(matrix, treeView);
-			}
-			else if (SettingsPanel.match(settings, keyEvent, Settings.ADD_CHILD))
-			{
-				addChild(treeView, matrix);
-			}
 			else if (SettingsPanel.match(settings, keyEvent, Settings.DELETE_ITEM))
 			{
 				deleteCurrentItems(matrix, treeView);
@@ -143,17 +134,9 @@ public class MatrixContextMenu extends ContextMenu
 			{
 				copyItems(matrix, treeView);
 			}
-			else if (SettingsPanel.match(settings, keyEvent, Settings.PASTE_ITEMS_AFTER))
-			{
-				pasteItems(PlaceToInsert.After, matrix, treeView);
-			}
 			else if (SettingsPanel.match(settings, keyEvent, Settings.PASTE_ITEMS_BEFORE))
 			{
 				pasteItems(PlaceToInsert.Before, matrix, treeView);
-			}
-			else if (SettingsPanel.match(settings, keyEvent, Settings.PASTE_ITEMS_CHILD))
-			{
-				pasteItems(PlaceToInsert.Child, matrix, treeView);
 			}
 			else if (SettingsPanel.match(settings, keyEvent, Settings.GO_TO_LINE))
 			{
@@ -192,12 +175,20 @@ public class MatrixContextMenu extends ContextMenu
 
 	private void breakPoint(MatrixFx matrix, MatrixTreeView tree)
 	{
-		Common.tryCatch(() -> matrix.breakPoint(tree.currentItems()), "Error on breakpoint");
+		Common.tryCatch(() -> matrix.breakPoint(tree.currentItems()
+				.stream()
+				.filter(item -> !item.getClass().equals(End.class))
+				.collect(Collectors.toList())
+		), "Error on breakpoint");
 	}
 
 	private void deleteCurrentItems(MatrixFx matrix, MatrixTreeView tree)
 	{
-		Common.tryCatch(() -> matrix.remove(tree.currentItems()), "Error on delete item");
+		Common.tryCatch(() -> matrix.remove(tree.currentItems()
+				.stream()
+				.filter(item -> !item.getClass().equals(End.class))
+				.collect(Collectors.toList())
+		), "Error on delete item");
 	}
 
 	private void copyItems(MatrixFx matrix, MatrixTreeView tree)
@@ -253,16 +244,11 @@ public class MatrixContextMenu extends ContextMenu
 	{
 		Common.tryCatch(() -> {
 			MatrixItem value = tree.getSelectionModel().getSelectedItem().getValue();
-			matrix.parameterInsert(value, value.getParameters().size() - 1);
+			if (!(value instanceof End))
+			{
+				matrix.parameterInsert(value, value.getParameters().size() - 1);
+			}
 		}, "Error on add new parameter");
-	}
-
-	private Node createShortcut(String shortcutName, Settings settings)
-	{
-		String shortcut = SettingsPanel.getShortcutName(settings, shortcutName);
-		Text text = new Text(shortcut);
-		text.setOpacity(0.5);
-		return text;
 	}
 
 	private class ActionHelp implements EventHandler<ActionEvent>
@@ -281,7 +267,7 @@ public class MatrixContextMenu extends ContextMenu
 		{
 			Common.tryCatch(() -> {
 				MatrixItem item = this.tree.currentItem();
-				if (item != null)
+				if (item != null && !(item instanceof End))
 				{
 					ReportBuilder report = new ContextHelpFactory().createReportBuilder(null, null, new Date());
 

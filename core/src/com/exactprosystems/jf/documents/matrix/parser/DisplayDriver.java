@@ -24,7 +24,7 @@ public interface DisplayDriver
 	Object 		createLayout		(MatrixItem item, int lines);
 
 	void		showTitle			(MatrixItem item, Object layout, int row, int column, String name, Settings settings);
-	void 		showLabel			(MatrixItem item, Object layout, int row, int column, String name);
+	void 		showLabel			(MatrixItem item, Object layout, int row, int column, String name, int fontSize);
 	void 		showCheckBox		(MatrixItem item, Object layout, int row, int column, String name, Setter<Boolean> set, Getter<Boolean> get);
 	void 		showComboBox		(MatrixItem item, Object layout, int row, int column, Setter<String> set, Getter<String> get, Function<Void, List<String>> handler);
 	void 		showTextBox			(MatrixItem item, Object layout, int row, int column, Setter<String> set, Getter<String> get, FormulaGenerator generator);

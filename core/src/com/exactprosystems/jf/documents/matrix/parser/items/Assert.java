@@ -86,7 +86,7 @@ public class Assert extends MatrixItem
 		driver.showComment			(this, layout, 0, 0, getComments());
 		driver.showTitle			(this, layout, 1, 0, Tokens.Assert.get(), context.getFactory().getSettings());
 		driver.showExpressionField	(this, layout, 1, 1, Tokens.Assert.get(), this.assertion, this.assertion, null, null, null, null);
-		driver.showLabel			(this, layout, 1, 2, Tokens.Message.get());
+		driver.showLabel			(this, layout, 1, 2, Tokens.Message.get(), -1);
 		driver.showExpressionField	(this, layout, 1, 3, Tokens.Message.get(), this.message, this.message, null, null, null, null);
 
 		return layout;
