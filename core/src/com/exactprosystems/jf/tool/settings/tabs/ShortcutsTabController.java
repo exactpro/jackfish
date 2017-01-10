@@ -421,7 +421,7 @@ public class ShortcutsTabController implements Initializable, ContainingParent, 
 				case DIGIT7: case DIGIT8: case DIGIT9:
 				case DIGIT0:
 
-//				case INSERT: case ENTER: case ESCAPE: case SPACE:
+				case INSERT: case ENTER: case ESCAPE: case SPACE:
 
 				case UP: case DOWN: case LEFT: case RIGHT:
 
