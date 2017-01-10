@@ -112,8 +112,26 @@ RF;RegressionFramework
 
                 #ForEach;#In
                 details;resultTab.Out
-                    #Id;#Action;#Connection;#Query;#ScenarioId;#Testcase;#Stepp;#Time;#Result;#Error;#Screenshot
-                    selectDetails;SQLinsert;SQL;'INSERT INTO details (scenario_id, testcase, step, time, result, error, screenshot) VALUES (?, ?, ?, ?, ?, ?, CONVERT(VARBINARY(MAX),?))';scenarioId;'' + details.TestCase;'' + details.Step;details.Time;'' + details.Result;'' + details.Error;Converter.storableToBlob(details.Screenshot)
+                    #Switch
+                    _rf_dialect
+                        #Case
+                        'MYSQL'
+                            #Id;#Action;#Connection;#Query;#ScenarioId;#Testcase;#Stepp;#Time;#Result;#Error;#Screenshot
+                            selectDetails;SQLinsert;SQL;'INSERT INTO details (scenario_id, testcase, step, time, result, error, screenshot) VALUES (?, ?, ?, ?, ?, ?, ?)';scenarioId;'' + details.TestCase;'' + details.Step;details.Time;'' + details.Result;'' + details.Error;Converter.storableToBlob(details.Screenshot)
+
+
+                        #Case
+                        'MSSQL'
+                            #Id;#Action;#Connection;#Query;#ScenarioId;#Testcase;#Stepp;#Time;#Result;#Error;#Screenshot
+                            selectDetails;SQLinsert;SQL;'INSERT INTO details (scenario_id, testcase, step, time, result, error, screenshot) VALUES (?, ?, ?, ?, ?, ?, CONVERT(VARBINARY(MAX),?))';scenarioId;'' + details.TestCase;'' + details.Step;details.Time;'' + details.Result;'' + details.Error;Converter.storableToBlob(details.Screenshot)
+
+
+                        #Default
+                            #Fail
+                            'Unknown SQL dialect: ' + _rf_dialect
+
+
+                    #EndSwitch
 
                     #For;#From;#To;#Step
                     i;standartResult.Out.getHeaderSize();resultTab.Out.getHeaderSize() - 1;1
@@ -454,7 +472,6 @@ RF;RegressionFramework
 
     #EndSubCase
 
-
     // //==============================================
     // // Collects  all details of all scenarios of last regression in readable form
     // //==============================================
@@ -719,6 +736,7 @@ RF;RegressionFramework
             #Case
             'MYSQL'
                 #Id;#RawText
+                query;Text
                 "SELECT r.create_time, r.duration "
                 "FROM runs AS r "
                 "WHERE r.id = (SELECT id  "
@@ -727,6 +745,7 @@ RF;RegressionFramework
                 "ORDER BY create_time DESC "
                 "LIMIT 1 )"
                 #EndRawText
+
 
             #Case
             'MSSQL'
