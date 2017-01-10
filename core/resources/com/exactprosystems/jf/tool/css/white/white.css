@@ -79,11 +79,6 @@
 	-fx-rotate: 90;
 
 }
-.tree-table-row-cell:selected {
-	-fx-background-color: -fx-company-color-dark;
-	-fx-text-fill: -fx-selection-bar-text;
-
-}
 .tree-cell {
 	-fx-indent : 20;
 
@@ -129,11 +124,33 @@
 }
 
 /*Matrix tree view*/
-.customTreeTableView > .column-header-background {
-	visibility: hidden;
-	-fx-padding: -1em;
+
+.customTreeTableView .tree-table-row-cell:customSelectedState {
+	-fx-background-color: #f2f2f2;
+	-fx-border-color : #2687fb;
+}
+.customTreeTableView .tree-table-row-cell:customSelectedState .customScrollPane > .viewport {
+	-fx-background-color: #f2f2f2;
 
 }
+.customTreeTableView .tree-table-row-cell:customSelectedState .customScrollPane .parametersPane {
+	-fx-background-color: #e0e0e0;
+
+}
+
+.simpleItem {
+	-fx-border-color : lightgray;
+	-fx-border-width : 1 0 1 0;
+}
+.trueOffItem {
+	-fx-background-color : #d0d0d0;
+
+}
+.falseOffItem {
+	-fx-background-color : transparent;
+
+}
+
 
 /*Custom Table*/
 .correctRow {
@@ -241,18 +258,6 @@
 	-fx-background-color : derived(red, 90%);
 
 }
-.simpleItem {
-	-fx-border-color : lightgray;
-	-fx-border-width : 1 0 1 0;
-}
-.trueOffItem {
-	-fx-background-color : darkgray;
-
-}
-.falseOffItem {
-	-fx-background-color : transparent;
-
-}
 
 .boldLabel {
 	-fx-font-weight : bold;
@@ -324,50 +329,14 @@
 }
 
 /*ParametersPane*/
-.customScrollPane {
-	-fx-background-color: transparent;
-	-fx-background-insets: 0,0,0,0;
-	-fx-padding: 0;
 
-}
-.customScrollPane .scroll-bar:horizontal .increment-button,
-.customScrollPane .scroll-bar:horizontal .decrement-button {
-	-fx-opacity : 0;
-	-fx-pref-width : 0px;
 
-}
-.customScrollPane .scroll-bar:horizontal .track {
-	-fx-opacity : 0;
-	-fx-pref-width : 20px;
-}
-.customScrollPane .scroll-bar:horizontal .thumb {
-	-fx-background-color : -fx-company-color-light;
-
+.focusedParameterGridPane {
+	-fx-border-color : #2687fb;
 }
 
-.focusedField {
-	-fx-border-color : black;
-	-fx-border-size  : 5px;
-	-fx-background-color : -fx-company-color-light;
-
-}
-.unfocusedGrid {
-	-fx-border-color : transparent;
-	-fx-background-color : transparent;
-
-}
-.invisibleField {
-	-fx-background-color : transparent;
-	-fx-border-color : transparent;
-
-}
 .focusedEmptyGrid {
 	-fx-background-color : gold;
-
-}
-.emptyGrid {
-	-fx-border-color : grey;
-	-fx-border-size : 2px;
 
 }
 

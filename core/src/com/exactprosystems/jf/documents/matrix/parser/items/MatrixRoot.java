@@ -13,6 +13,15 @@ import com.exactprosystems.jf.documents.matrix.parser.DisplayDriver;
 
 import java.io.File;
 
+@MatrixItemAttribute(
+		description 	= "Root element.",
+		shouldContain 	= { },
+		mayContain 		= { },
+		real			= true,
+		hasValue 		= false,
+		hasParameters 	= false,
+		hasChildren 	= true
+)
 public class MatrixRoot extends MatrixItem
 {
 	public MatrixRoot(String matrixName)

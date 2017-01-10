@@ -9,6 +9,7 @@
 package com.exactprosystems.jf.tool.custom.treetable;
 
 import com.exactprosystems.jf.common.Settings;
+import com.exactprosystems.jf.documents.matrix.parser.items.End;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItemState;
 import com.exactprosystems.jf.tool.Common;
@@ -46,7 +47,7 @@ public class MatrixTreeView extends TreeTableView<MatrixItem>
 		this.setSkin(new MatrixTreeViewSkin(this));
 		this.setShowRoot(false);
 		this.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-		this.getStyleClass().add(CssVariables.CUSTOM_TREE_TABLE_VIEW);
+		this.getStyleClass().addAll(CssVariables.EMPTY_HEADER_COLUMN, CssVariables.CUSTOM_TREE_TABLE_VIEW);
 		initTable();
 	}
 
@@ -88,6 +89,7 @@ public class MatrixTreeView extends TreeTableView<MatrixItem>
 				getSelectionModel().clearAndSelect(row);
 				tryCatch(() -> Thread.sleep(100), "Error sleep");
 				scrollTo(row);
+				treeItem.setExpanded(true);
 			});
 		}
 	}
@@ -207,6 +209,21 @@ public class MatrixTreeView extends TreeTableView<MatrixItem>
 		numberColumn.setPrefWidth(40);
 		numberColumn.setMaxWidth(41);
 		numberColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getValue().getNumber()));
+		numberColumn.setCellFactory(p -> new TreeTableCell<MatrixItem, Integer>(){
+			@Override
+			protected void updateItem(Integer item, boolean empty)
+			{
+				super.updateItem(item, empty);
+				if (item != null && item != -1 && !empty)
+				{
+					setText("" + item);
+				}
+				else
+				{
+					setText(null);
+				}
+			}
+		});
 
 		TreeTableColumn<MatrixItem, MatrixItemState> iconColumn = new TreeTableColumn<>();
 		iconColumn.setSortable(false);
@@ -231,15 +248,22 @@ public class MatrixTreeView extends TreeTableView<MatrixItem>
 		{
 			private CheckBox box = new CheckBox();
 
+			private void updateTooltip()
+			{
+				this.box.setTooltip(new Tooltip("Set report " + (this.box.isSelected() ? "on" : "off") + " item"));
+			}
+
 			@Override
 			protected void updateItem(MatrixItem item, boolean empty)
 			{
 				super.updateItem(item, empty);
-				if (item != null)
+				if (item != null && !(item instanceof End))
 				{
 					box.setSelected(item.isRepOff());
+					updateTooltip();
 					box.setOnAction(event -> {
 						item.setRepOff(box.isSelected());
+						updateTooltip();
 						refresh();
 					});
 					setGraphic(box);
@@ -261,15 +285,22 @@ public class MatrixTreeView extends TreeTableView<MatrixItem>
 		{
 			private CheckBox box = new CheckBox();
 
+			private void updateTooltip()
+			{
+				this.box.setTooltip(new Tooltip("Set item " + (this.box.isSelected() ? "on" : "off")));
+			}
+
 			@Override
 			protected void updateItem(MatrixItem item, boolean empty)
 			{
 				super.updateItem(item, empty);
-				if (item != null)
+				if (item != null && !(item instanceof End))
 				{
 					box.setSelected(item.isOff());
+					updateTooltip();
 					box.setOnAction(event -> {
 						matrix.setOff(item.getNumber(), box.isSelected());
+						updateTooltip();
 						refresh();
 					});
 					setGraphic(box);
@@ -289,7 +320,7 @@ public class MatrixTreeView extends TreeTableView<MatrixItem>
 		this.getColumns().add(iconColumn);
 		this.getColumns().add(gridColumn);
 		gridColumn.setMaxWidth(Double.MAX_VALUE);
-		gridColumn.prefWidthProperty().bind(this.widthProperty().subtract(numberColumn.getWidth() + iconColumn.getWidth() + offColumn.getWidth()).subtract(2));
+		gridColumn.prefWidthProperty().bind(this.widthProperty().subtract(numberColumn.getWidth() + iconColumn.getWidth() + offColumn.getWidth() + reportOffColumn.getWidth()).subtract(2));
 	}
 
 	private void expand(TreeItem<MatrixItem> rootItem, boolean flag)

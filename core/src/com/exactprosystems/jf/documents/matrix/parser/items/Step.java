@@ -9,9 +9,7 @@
 package com.exactprosystems.jf.documents.matrix.parser.items;
 
 import com.csvreader.CsvWriter;
-import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.error.ErrorKind;
-import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.common.report.ReportTable;
@@ -129,12 +127,7 @@ public class Step extends MatrixItem
 		driver.showTitle(this, layout, 1, 0, Tokens.Step.get(), context.getFactory().getSettings());
         driver.showExpressionField(this, layout, 1, 1, Tokens.Step.get(), this.identify, this.identify, null, null, null, null);
         driver.showLabel(this, layout, 1, 2, "Screenshot");
-        driver.showComboBox(this, layout, 1, 3, this.kind, this.kind, v ->
-        {
-        	List<String> list = ScreenshotKind.names();
-        	list.add(0, "");
-        	return list;
-        });
+        driver.showComboBox(this, layout, 1, 3, this.kind, this.kind, v -> Arrays.stream(ScreenshotKind.values()).map(Enum::toString).collect(Collectors.toList()));
 
         return layout;
 	}
@@ -176,13 +169,7 @@ public class Step extends MatrixItem
 
 		try
 		{
-			String kindStr = this.kind.get();
-			if (Str.IsNullOrEmpty(kindStr))
-			{
-				Settings settings = getMatrix().getFactory().getSettings();
-		        kindStr = settings.getValueOrDefault(Settings.GLOBAL_NS, Settings.MATRIX_NAME, Settings.MATRIX_DEFAULT_SCREENSHOT, ScreenshotKind.Never.name()).getValue();	        		
-			}
-	        ScreenshotKind screenshotKind = ScreenshotKind.valueByName(kindStr);
+            ScreenshotKind screenshotKind = ScreenshotKind.valueByName(this.kind.get());
 
             this.identify.evaluate(evaluator);
 			Object identifyValue = this.identify.getValue();

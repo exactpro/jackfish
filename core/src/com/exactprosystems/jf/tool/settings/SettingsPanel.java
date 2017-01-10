@@ -33,9 +33,7 @@ public class SettingsPanel
 	).collect(Collectors.toList());
 
 	public static final List<String> matrixNavigationList = Stream.of(
-			Settings.ADD_CHILD,
-			Settings.ADD_BEFORE,
-			Settings.ADD_AFTER,
+			Settings.ADD_ITEMS,
 			Settings.BREAK_POINT,
 			Settings.ADD_PARAMETER,
 			Settings.HELP,
@@ -43,9 +41,7 @@ public class SettingsPanel
 			Settings.SHOW_ALL,
 			Settings.DELETE_ITEM,
 			Settings.COPY_ITEMS,
-			Settings.PASTE_ITEMS_CHILD,
-			Settings.PASTE_ITEMS_AFTER,
-			Settings.PASTE_ITEMS_BEFORE,
+			Settings.PASTE_ITEMS,
 			Settings.COLLAPSE_ALL,
 			Settings.COLLAPSE_ONE,
 			Settings.EXPAND_ALL,

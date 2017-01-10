@@ -33,7 +33,7 @@ import java.util.Set;
 		real 			= true, 
 		hasValue 		= true, 
 		hasParameters 	= false, 
-		hasChildren 	= true, 
+		hasChildren 	= false,
 		raw 			= true
 	)
 public class RawText extends MatrixItem
@@ -67,10 +67,11 @@ public class RawText extends MatrixItem
 			this.text.clear();
 			this.text.addAll(list);
 		});
-		driver.showToggleButton(this, layout, 1, 4, "Hide", b -> {
+		driver.showToggleButton(this, layout, 1, 4, "Hide", b ->
+		{
 			driver.hide(this, layout, 2, b);
 			return null;
-		}, this.text.size() == 0);
+		}, b -> b ? "Hide" : "Show", this.text.size() == 0);
 
 		return layout;
 	}

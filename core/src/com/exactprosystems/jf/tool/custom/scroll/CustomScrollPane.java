@@ -16,7 +16,7 @@ import javafx.scene.control.Skin;
 
 public class CustomScrollPane extends ScrollPane
 {
-    private static final int heightHorizontalScroll = 16;
+    private static final int heightHorizontalScroll = 8;
 
 	public CustomScrollPane()
 	{
@@ -38,20 +38,18 @@ public class CustomScrollPane extends ScrollPane
 	{
 		CustomScrollPaneSkin skin = new CustomScrollPaneSkin(this);
 		ScrollBar hsb = skin.getHsb();
-		hsb.visibleProperty().addListener((observable, oldValue, newValue) -> {
-				Platform.runLater(() -> {
+		hsb.visibleProperty().addListener((observable, oldValue, newValue) -> Platform.runLater(() ->
+		{
+			if (oldValue && !newValue)
+			{
+				this.setPrefHeight(this.getPrefHeight() - heightHorizontalScroll);
+			}
 
-                    if(oldValue && !newValue)
-                    {
-                        this.setPrefHeight(this.getPrefHeight() - heightHorizontalScroll);
-                    }
-
-                    if(!oldValue && newValue)
-                    {
-                        this.setPrefHeight(this.getPrefHeight() + heightHorizontalScroll);
-                    }
-				});
-		});
+			if (!oldValue && newValue)
+			{
+				this.setPrefHeight(this.getPrefHeight() + heightHorizontalScroll);
+			}
+		}));
 		return skin;
 	}
 

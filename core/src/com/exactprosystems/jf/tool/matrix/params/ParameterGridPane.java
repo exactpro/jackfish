@@ -54,7 +54,7 @@ public class ParameterGridPane extends GridPane
 			ChangeListener<Boolean> keyListener = (observable, oldValue, newValue) -> {
 				if (!oldValue && newValue)
 				{
-					Common.tryCatch(selectRow::call, "Error on select current row");
+					Common.tryCatch(selectRow, "Error on select current row");
 				}
 				String oldText = this.parameter.getName();
 				String newText = ((TextField) this.key).getText();
@@ -79,7 +79,7 @@ public class ParameterGridPane extends GridPane
 			ChangeListener<Boolean> valueListener = (observable, oldValue, newValue) -> {
 				if (newValue && !oldValue)
 				{
-					Common.tryCatch(selectRow::call, "Error on select current row");
+					Common.tryCatch(selectRow, "Error on select current row");
 				}
 				String oldText = this.parameter.getExpression();
 				String newText = this.value.getText();

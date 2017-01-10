@@ -8,11 +8,13 @@
 
 package com.exactprosystems.jf.tool.custom.treetable;
 
+import com.exactprosystems.jf.documents.matrix.parser.items.End;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.custom.expfield.ExpressionField;
 import com.exactprosystems.jf.tool.matrix.params.ParametersPane;
-
+import com.sun.javafx.css.PseudoClassState;
+import javafx.css.PseudoClass;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.TreeTableRow;
 import javafx.scene.layout.GridPane;
@@ -24,9 +26,16 @@ import java.util.stream.Collectors;
 
 public class MatrixTreeRow extends TreeTableRow<MatrixItem>
 {
+	private final PseudoClass customSelected = PseudoClassState.getPseudoClass("customSelectedState");
+	private final PseudoClass selected = PseudoClassState.getPseudoClass("selected");
+
 	public MatrixTreeRow(ContextMenu contextMenu) throws Exception
 	{
 		setContextMenu(contextMenu);
+		this.selectedProperty().addListener((observable, oldValue, newValue) -> {
+			this.pseudoClassStateChanged(customSelected, newValue);
+			this.pseudoClassStateChanged(selected, false); // remove selected pseudostate, cause this state change text color
+		});
 	}
 
 	@Override
@@ -36,6 +45,21 @@ public class MatrixTreeRow extends TreeTableRow<MatrixItem>
 		this.getStyleClass().removeAll(CssVariables.SIMPLE_ITEM, CssVariables.ITEM_OFF_TRUE);
 		if (item != null)
 		{
+			if (item instanceof End)
+			{
+				this.setPrefHeight(18);
+				this.setMaxHeight(18);
+				this.setMinHeight(18);
+				((GridPane)item.getLayout()).setPrefHeight(10);
+				((GridPane)item.getLayout()).setMaxHeight(10);
+				((GridPane)item.getLayout()).setMinHeight(10);
+			}
+			else
+			{
+				this.setPrefHeight(-1);
+				this.setMaxHeight(-1);
+				this.setMinHeight(-1);
+			}
 			this.getStyleClass().add(CssVariables.SIMPLE_ITEM);
 			if (!item.canExecute())
 			{
@@ -48,7 +72,7 @@ public class MatrixTreeRow extends TreeTableRow<MatrixItem>
 	{
 		List<ExpressionField> list = new ArrayList<>();
 		find((GridPane) this.getTreeTableView().getSelectionModel().getSelectedItem().getValue().getLayout(), list);
-		list.stream().forEach(ExpressionField::showShadowText);
+		list.forEach(ExpressionField::showShadowText);
 	}
 
 	public void hideExpressionsResults()

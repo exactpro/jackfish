@@ -104,14 +104,20 @@ public class CssVariables
 	public static final String	NOT_CHANGEABLE_ROW			= "notChangeableRow";
 
 	/*ParametersPane*/
+	public static final String	COMMENTS_AREA				= "commentsArea";
 	public static final String CUSTOM_SCROLL_PANE 			= "customScrollPane";
+	public static final String	PARAMETERS_PANE				= "parametersPane";
 
-	public static final String	FOCUSED_FIELD				= "focusedField";
+	public static final String	FOCUSED_PARAMETER_GRID_PANE = "focusedParameterGridPane";
 	public static final String	UNFOCUSED_GRID				= "unfocusedGrid";
 	public static final String	INVISIBLE_FIELD				= "invisibleField";
 	public static final String	FOCUSED_EMPTY_GRID			= "focusedEmptyGrid";
 	public static final String	EMPTY_GRID					= "emptyGrid";
 
+	public static final String	EMPTY_HEADER_COLUMN			= "emptyHeaderColumn";
+	public static final String	PARAMETERS_TABLE			= "parametersTable";
+	public static final String	NOT_EDITABLE_PARAMETER		= "notEditableParameter";
+	public static final String	EDITABLE_PARAMETER			= "editableParameter";
 	/*Resizable region*/
 	public static final String	RESIZABLE_REGION			= "resizableRegion";
 	public static final String	RESIZABLE_REGION_HOVER		= "resizableRegionHover";
@@ -120,10 +126,6 @@ public class CssVariables
 	public static final String	CELL_SPREADSHEET			= "cell-spreadsheet";
 	public static final String	SPREADSHEET_CELL			= "spreadsheet-cell";
 	public static final String	SELECTION_RECTANGLE			= "selection-rectangle";
-
-	/*Supported/Unsupported entries*/
-	public static final String	SUPPORTED_ENTRY				= "supportedEntry";
-	public static final String	UNSUPPORTED_ENTRY			= "unsupportedEntry";
 
 	/*Custom Text Fields*/
 	public static final String	CUSTOM_TEXT_FIELD			= "custom-text-field";

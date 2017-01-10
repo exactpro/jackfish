@@ -294,7 +294,7 @@ public class Parser
 		newItem.init(matrix, comments, systemParameters, userParameters);
 		currentItem.insert(currentItem.count(), newItem);
 
-		if(itemAttr.attribute.hasChildren())
+		if(itemAttr.attribute.hasChildren() || itemAttr.attribute.raw())
 		{
 			return newItem; 
 		}

@@ -149,11 +149,11 @@ public abstract class Common
 
 	public enum SpacerEnum {
 		VerticalMin(CssVariables.VERTICAL_MIN),
-		VerticalPref(CssVariables.VERTICAL_MID),
+		VerticalMid(CssVariables.VERTICAL_MID),
 		VerticalMax(CssVariables.VERTICAL_MAX),
 
 		HorizontalMin(CssVariables.HORIZONTAL_MIN),
-		HorizontalPref(CssVariables.HORIZONTAL_MID),
+		HorizontalMid(CssVariables.HORIZONTAL_MID),
 		HorizontalMax(CssVariables.HORIZONTAL_MAX);
 
 		private String style;
