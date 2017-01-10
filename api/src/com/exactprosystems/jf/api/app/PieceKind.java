@@ -888,11 +888,11 @@ public enum PieceKind implements Measure
 		return true;
 	}
 
-	public <T> void perform(Piece piece, OperationExecutor<T> executor, List<T> self, CheckingLayoutResult result)  throws Exception
+	public <T> void perform(Piece piece, OperationExecutor<T> executor, List<T> self, Locator locator, CheckingLayoutResult result)  throws Exception
 	{
 		if (selfNeedOne() && self.size() != 1 )
 		{
-			result.error(piece, "Count of elements should be 1 instead " + self.size());
+			result.error(piece, "Element '" + locator.getId() + "' does not found");
 			return;
 		}
 
@@ -904,12 +904,12 @@ public enum PieceKind implements Measure
 		}
 		if (otherNeedOne() && others.size() != 1 )
 		{
-			result.error(piece, "Count of relative elements should be 1 instead " + others.size());
+			result.error(piece, "Count of relative elements " + piece.locator.getId() + " should be 1, but was found " + others.size());
 			return;
 		}
 		if (others.size() == 0 )
 		{
-			result.error(piece, "Element '" + piece.locator.getId() + "' does not found");
+			result.error(piece, "Relative element '" + piece.locator.getId() + "' does not found");
 			return;
 		}
 
