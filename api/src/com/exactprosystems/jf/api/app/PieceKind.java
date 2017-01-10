@@ -907,6 +907,11 @@ public enum PieceKind implements Measure
 			result.error(piece, "Count of relative elements should be 1 instead " + others.size());
 			return;
 		}
+		if (others.size() == 0 )
+		{
+			result.error(piece, "Element '" + piece.locator.getId() + "' does not found");
+			return;
+		}
 
 		performDerived(piece, executor, self, others, result);
 	}
