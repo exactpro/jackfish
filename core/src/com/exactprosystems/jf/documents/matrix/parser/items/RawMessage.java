@@ -44,7 +44,7 @@ import java.util.stream.Collectors;
 		real 			= true, 
 		hasValue 		= true, 
 		hasParameters 	= false, 
-		hasChildren 	= true,
+		hasChildren 	= false,
 		raw 			= true
 	)
 public class RawMessage extends MatrixItem
