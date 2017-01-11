@@ -56,6 +56,7 @@ public final class ActionItem extends MatrixItem
 
 		clone.assertBool = this.assertBool.clone();
 		clone.action = action.clone();
+		clone.action.setOwner(clone);
 
 		return clone;
 	}

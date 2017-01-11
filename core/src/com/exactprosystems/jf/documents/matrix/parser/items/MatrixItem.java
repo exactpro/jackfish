@@ -77,6 +77,7 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 			}
 			clone.result 	= null;
 			clone.parameters = this.parameters.clone();
+
 			return clone;
 		}
 		catch (Exception e)
