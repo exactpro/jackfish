@@ -223,7 +223,6 @@ public final class Call extends MatrixItem
 
 				if (super.getId() != null && !super.getId().isEmpty())
 				{
-					// set variable into local name space
 					vars.set(super.getId(), ret.getOut());
 				}
 
@@ -269,7 +268,7 @@ public final class Call extends MatrixItem
 
 	private void updateReference(Context context, String name)
 	{
-		this.ref = context.referenceToSubcase(name, this);
+	    this.ref = context.referenceToSubcase(name, this);
 	}
 	
 	//==============================================================================================

@@ -214,22 +214,32 @@ public class Context implements IContext, AutoCloseable, Cloneable
 		String ns = parts[0];
 		String id = parts[1];
 
-		Matrix matrix = getConfiguration().getLibs().get(ns);
+		Matrix matrix = this.libs.get(ns);
+		
 		if (matrix == null)
 		{
-			return null;
-		}
-		try
-		{
-			matrix = matrix.clone();
-		}
-		catch (CloneNotSupportedException e)
-		{
-			logger.error(e.getMessage(), e);
+            matrix = getConfiguration().getLibs().get(ns);
+            if (matrix == null)
+            {
+                return null;
+            }
+            
+	        try
+	        {
+	            matrix = matrix.clone();
+	            matrix.getRoot().init(item.getMatrix());
+	            this.libs.put(ns, matrix);
+	            
+	        }
+	        catch (Exception e)
+	        {
+	            logger.error(e.getMessage(), e);
+	        }
 		}
 
 		MatrixItem mitem = matrix.getRoot().find(false, NameSpace.class, ns);
-		if(mitem == null) {
+		if(mitem == null) 
+		{
 			return null;
 		}
 
@@ -386,10 +396,8 @@ public class Context implements IContext, AutoCloseable, Cloneable
 	private Table resultTable;
 	private Presenter presenter;
 
-	//TODO need to remove it, cause this the same as Configuration.libs
 	private Map<String, Matrix> libs = new HashMap<>();
 	private Map<HandlerKind, SubCase> handlers = new HashMap<>();
+	
 	private static final Logger logger = Logger.getLogger(Context.class);
-
-
 }

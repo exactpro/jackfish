@@ -132,6 +132,7 @@ public class TableReport extends AbstractAction
 		{
 			columns = null;
 		}
+		
 		report = this.toReport == null ? report : this.toReport;
 		this.beforeTestCase = ActionsReportHelper.getBeforeTestCase(this.beforeTestCase, this.owner.getMatrix());
 		this.table.report(report, Str.asString(this.title), this.beforeTestCase, this.withNumbers, this.reportValues, columns, this.columns);
