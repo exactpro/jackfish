@@ -83,7 +83,7 @@ public class Matrix extends AbstractDocument implements IMatrix, Cloneable
 	@Override
 	public void setDefaultApp(String id)
 	{
-		if (id.equals(EMPTY_STRING))
+		if (id == null || id.equals(EMPTY_STRING))
 		{
 			this.defaultApp = null;
 			return;
@@ -107,7 +107,7 @@ public class Matrix extends AbstractDocument implements IMatrix, Cloneable
 	@Override
 	public void setDefaultClient(String id)
 	{
-		if (id.equals(EMPTY_STRING))
+		if (id == null || id.equals(EMPTY_STRING))
 		{
 			this.defaultClient = null;
 			return;
