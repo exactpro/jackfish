@@ -1,4 +1,8 @@
 --------------------------------------------------------------------------------
+12.01.2017 4.3.0.1778
+#39540 fixed : MatrixRun.Out always return matrix name is 'new'
+
+--------------------------------------------------------------------------------
 11.01.2017 4.3.0.1778
 #39489 fixed : Report table not display in case of use action "TableReport" from lib
 

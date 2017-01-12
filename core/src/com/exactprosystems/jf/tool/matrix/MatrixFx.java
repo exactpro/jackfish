@@ -43,12 +43,6 @@ import java.util.stream.IntStream;
 
 public class MatrixFx extends Matrix
 {
-	@Deprecated
-	public enum PlaceToInsert
-	{
-		@Deprecated  After, Before, @Deprecated Child
-	}
-
 	private static final String DELIMITER = ",";
 
 	public static final String Dialog = "Matrix";

@@ -13,5 +13,5 @@ import java.util.Date;
 
 public interface IContext
 {
-	IMatrixRunner createRunner(Reader reader, Date startTime, Object parameter) throws Exception;
+	IMatrixRunner createRunner(String name, Reader reader, Date startTime, Object parameter) throws Exception;
 }

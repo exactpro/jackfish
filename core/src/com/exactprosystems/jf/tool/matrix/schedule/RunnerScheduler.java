@@ -25,6 +25,8 @@ import javafx.stage.Window;
 import org.apache.log4j.Logger;
 
 import java.io.File;
+import java.io.FileReader;
+import java.io.Reader;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -102,15 +104,19 @@ public class RunnerScheduler implements RunnerListener
 	public void loadSeveral()
 	{
 		List<File> files = DialogsHelper.showMultipleDialog("Choose matrices", "jf files (*.jf)", "*.jf");
-		Optional.ofNullable(files)
-			.ifPresent(list -> list.stream()
-			.filter(Objects::nonNull)
+		if (files != null)
+		{
+			files.stream().filter(Objects::nonNull)
 			.forEach(file -> Common.tryCatch(() ->
 			{
-				Context context = this.factory.createContext();
-				MatrixRunner runner = new MatrixRunner(context, file, null, null);
-				this.map.put(runner, Boolean.TRUE);
-			}, "Error on create new runner")));
+		        try(    Reader reader = new FileReader(file);
+		                Context context = this.factory.createContext();
+		                MatrixRunner runner = context.createRunner(file.getPath(), reader, null, null) )
+		        {
+	                this.map.put(runner, Boolean.TRUE);
+		        }
+			}, "Error on create new runner"));
+		}
 	}
 
 	public void showSelected(List<MatrixRunner> collect)
