@@ -22,7 +22,7 @@ $(document).ready(function () {
         doLoad($(val));
     });
     mame.width($('.menuCont').width());
-    mame.height($(window).height());
+    mame.height($(window).height() - mame[0].getBoundingClientRect().top);
 
     $("a[href^='#']").click(function(event) {
 
@@ -43,7 +43,7 @@ $(document).ready(function () {
 $(window).resize(function () {
     mame.width($('.menuCont').width());
     $('.menuCont').height(mame.height());
-    mame.height($(window).height());
+    mame.height($(window).height() - mame[0].getBoundingClientRect().top);
 });
 
 function DoubleScroll(element) {
