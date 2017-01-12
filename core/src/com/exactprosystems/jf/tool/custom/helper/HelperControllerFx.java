@@ -18,6 +18,7 @@ import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.custom.helper.HelperFx.IToString;
+import com.exactprosystems.jf.tool.dictionary.FindListView;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -26,6 +27,7 @@ import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Font;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
@@ -36,6 +38,8 @@ import java.util.ResourceBundle;
 
 public class HelperControllerFx implements Initializable, ContainingParent
 {
+	public BorderPane					borderPane;
+	public TextArea						taDescription;
 	private Class<?>					clazz;
 
 	private Dialog<ButtonType>			dialog;
@@ -46,8 +50,7 @@ public class HelperControllerFx implements Initializable, ContainingParent
 	public TextArea						taInput;
 	public SplitMenuButton				smbClass;
 
-	public ListView<HelperFx.IToString>	listMembers;
-
+	private FindListView<IToString>		listMembers;
 	public TextArea						taResult;
 	public WebView						viewClassName;
 	public ToggleButton					btnSorting;
@@ -66,9 +69,9 @@ public class HelperControllerFx implements Initializable, ContainingParent
 		this.taResult.setFont(Font.font("Monospaced", 14));
 		this.taInput.setWrapText(true);
 
-		engine = viewClassName.getEngine();
-		viewClassName.setContextMenuEnabled(false);
-		smbClass.getItems().addAll(
+		this.engine = viewClassName.getEngine();
+		this.viewClassName.setContextMenuEnabled(false);
+		this.smbClass.getItems().addAll(
 				new MenuItem(DateTime.class.getSimpleName()),
 				new MenuItem(Rnd.class.getSimpleName()),
 				new MenuItem(Str.class.getSimpleName()),
@@ -76,7 +79,7 @@ public class HelperControllerFx implements Initializable, ContainingParent
 				new MenuItem(Do.class.getSimpleName()),
 				new MenuItem(DoSpec.class.getSimpleName())
 		);
-		smbClass.getItems().forEach(item -> item.setOnAction(event -> this.taInput.appendText(item.getText())));
+		this.smbClass.getItems().forEach(item -> item.setOnAction(event -> this.taInput.appendText(item.getText())));
 	}
 
 	@Override
@@ -84,8 +87,8 @@ public class HelperControllerFx implements Initializable, ContainingParent
 	{
 		this.dialog = new Alert(Alert.AlertType.CONFIRMATION);
 		DialogPane dialogPane = this.dialog.getDialogPane();
-		dialogPane.setPrefHeight(500);
-		dialogPane.setPrefWidth(500);
+		dialogPane.setPrefHeight(800);
+		dialogPane.setPrefWidth(1000);
 		dialogPane.setContent(parent);
 		this.dialog.setResizable(true);
 		this.dialog.setTitle("Formula interpreter");
@@ -100,6 +103,8 @@ public class HelperControllerFx implements Initializable, ContainingParent
 		this.model = model;
 		this.clazz = clazz;
 		this.taInput.setEditable(editable);
+		this.listMembers = new FindListView<>((iToString, s) -> iToString.getName().contains(s), false);
+		this.borderPane.setCenter(this.listMembers);
 
 		this.listMembers.setCellFactory(list -> new ListCell<IToString>()
 		{
@@ -115,15 +120,21 @@ public class HelperControllerFx implements Initializable, ContainingParent
 				else
 				{
 					setText(item.toString());
-					Optional.ofNullable(item.getDescription()).ifPresent(desc -> {
-						Tooltip tooltip = new Tooltip();
-						tooltip.setText(item.getDescription());
-						setTooltip(tooltip);
-					});
 				}
 			}
 		});
-		
+		this.listMembers.addChangeListener((observable, oldValue, newValue) ->
+		{
+			if (newValue != null)
+			{
+				String description = newValue.getDescription();
+				taDescription.setText(description == null ? "" : description);
+			}
+			else
+			{
+				taDescription.setText("");
+			}
+		});
 		this.dialog.setHeaderText("Parameters name = " + (title == null ? "<none>" : title));
 		listeners();
 	}
@@ -180,8 +191,7 @@ public class HelperControllerFx implements Initializable, ContainingParent
 
 	public void displayMethods(ObservableList<HelperFx.IToString> list)
 	{
-		listMembers.getItems().clear();
-		listMembers.setItems(list);
+		this.listMembers.setData(list, true);
 	}
 
 	// ============================================================
@@ -251,7 +261,7 @@ public class HelperControllerFx implements Initializable, ContainingParent
 		{
 			if (mouseEvent.getClickCount() == 2)
 			{
-				IToString selectedMember = listMembers.getSelectionModel().getSelectedItem();
+				IToString selectedMember = listMembers.getSelectedItem();
 
 				if (selectedMember != null)
 				{

@@ -20,8 +20,7 @@
 				<ToolBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
 					<items>
 						<ToggleButton fx:id="btnVoid" mnemonicParsing="false" onAction="#voidVisible" text="void f()"/>
-						<ToggleButton fx:id="btnStatic" mnemonicParsing="false" onAction="#staticVisible"
-									  text="static"/>
+						<ToggleButton fx:id="btnStatic" mnemonicParsing="false" onAction="#staticVisible" text="static"/>
 						<ToggleButton fx:id="btnSorting" mnemonicParsing="false" onAction="#sorting" text="A..Z"/>
 						<Button fx:id="btnAllVars" mnemonicParsing="false" onAction="#showAllVars" text="vars"/>
 						<SplitMenuButton fx:id="smbClass" mnemonicParsing="false" text="Class"/>
@@ -29,28 +28,23 @@
 				</ToolBar>
 			</top>
 			<center>
-				<TextArea fx:id="taInput" maxHeight="300.0" maxWidth="1.7976931348623157E308" prefHeight="200.0"
-						  prefWidth="200.0" BorderPane.alignment="CENTER"/>
+				<TextArea fx:id="taInput" maxHeight="300.0" maxWidth="1.7976931348623157E308" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER"/>
 			</center>
 		</BorderPane>
 	</top>
 	<center>
-		<SplitPane dividerPositions="0.5" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
-				   BorderPane.alignment="CENTER">
+		<SplitPane dividerPositions="0.5" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" BorderPane.alignment="CENTER">
 			<items>
-				<BorderPane prefHeight="200.0" prefWidth="200.0">
+				<BorderPane prefHeight="200.0" prefWidth="200.0" fx:id="borderPane">
 					<top>
-						<WebView fx:id="viewClassName" prefHeight="39.0" prefWidth="295.0"
-								 BorderPane.alignment="CENTER"/>
+						<WebView fx:id="viewClassName" prefHeight="39.0" prefWidth="295.0" BorderPane.alignment="CENTER"/>
 					</top>
-					<center>
-						<ListView fx:id="listMembers" prefHeight="200.0" prefWidth="200.0"
-								  BorderPane.alignment="CENTER"/>
-					</center>
 				</BorderPane>
-				<TextArea fx:id="taResult" editable="false" prefHeight="200.0" prefWidth="200.0"
-						  GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="2"/>
+				<TextArea fx:id="taResult" editable="false" prefHeight="200.0" prefWidth="200.0"/>
 			</items>
 		</SplitPane>
 	</center>
+	<bottom>
+		<TextArea fx:id="taDescription" maxHeight="70" minHeight="70" editable="false"/>
+	</bottom>
 </BorderPane>

@@ -15,6 +15,7 @@ import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Tooltip;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.util.Callback;
 
@@ -40,6 +41,7 @@ public class FindListView<T> extends VBox
 		this.getChildren().add(Common.createSpacer(Common.SpacerEnum.VerticalMin));
 		this.getChildren().add(this.listView);
 		this.listView.setEditable(isEditable);
+		VBox.setVgrow(this.listView, Priority.ALWAYS);
 		listeners();
 	}
 
