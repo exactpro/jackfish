@@ -22,6 +22,7 @@ import com.exactprosystems.jf.documents.guidic.controls.AbstractControl;
 import com.exactprosystems.jf.tool.ApplicationConnector;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.dictionary.DictionaryFxController.Result;
+import com.exactprosystems.jf.tool.dictionary.dialog.DialogWizard;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 
 import javafx.concurrent.Task;
@@ -423,6 +424,11 @@ public class DictionaryFx extends GuiDictionary
 			displayElement(window, section, window.getFirstControl(section));
 		}, "");
 		addCommand(undo, redo);
+	}
+
+	public void openDialogWizard(IWindow window) throws Exception
+	{
+		new DialogWizard(this, window).show();
 	}
 
 	//------------------------------------------------------------------------------------------------------------------

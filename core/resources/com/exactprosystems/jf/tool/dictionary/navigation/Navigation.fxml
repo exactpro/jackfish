@@ -50,6 +50,11 @@
 								<Tooltip text="Paste copied dialog"/>
 							</tooltip>
 						</Button>
+						<Button fx:id="btnShowWizard" mnemonicParsing="false" onAction="#openWizard" text="Wizard">
+							<tooltip>
+								<Tooltip text="Open dialog wizard"/>
+							</tooltip>
+						</Button>
 					</children>
 				</HBox>
 			</children>

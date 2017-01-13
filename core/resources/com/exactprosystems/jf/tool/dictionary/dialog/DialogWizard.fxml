@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.exactprosystems.jf.tool.custom.scale.*?>
+<?import java.lang.*?>
+<?import javafx.scene.*?>
+<?import com.exactprosystems.jf.tool.custom.scale.ScalePane?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.Group?>
+<?import javafx.scene.layout.*?>
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1000.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.exactprosystems.jf.tool.dictionary.dialog.DialogWizardController">
+	<children>
+		<Label />
+		<HBox prefHeight="100.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+			<children>
+				<Label />
+				<BorderPane fx:id="borderPane" prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS">
+					<center>
+						<SplitPane fx:id="horSplitPane" dividerPositions="0.5" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0" BorderPane.alignment="CENTER">
+							<items>
+								<SplitPane fx:id="verSplitPane" dividerPositions="0.5" prefHeight="200.0" prefWidth="200.0">
+									<items>
+										<ScrollPane fx:id="scrollPaneImage" fitToHeight="true" fitToWidth="true" prefHeight="200.0" prefWidth="200.0">
+											<content>
+												<BorderPane prefHeight="200.0" prefWidth="200.0">
+													<center>
+														<AnchorPane fx:id="anchorPaneImage" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+															<children>
+																<Group fx:id="group" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+															</children>
+														</AnchorPane>
+													</center>
+													<top>
+														<HBox alignment="CENTER_LEFT" prefHeight="39.0" prefWidth="353.0" BorderPane.alignment="CENTER">
+															<children>
+																<ScalePane />
+																<Label />
+																<ToggleButton mnemonicParsing="false" />
+																<Label />
+															</children>
+														</HBox>
+													</top>
+												</BorderPane>
+											</content>
+										</ScrollPane>
+										<BorderPane prefHeight="200.0" prefWidth="200.0">
+											<center>
+												<TableView fx:id="tableView" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
+											</center>
+											<bottom>
+												<ToolBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+													<items>
+														<Button mnemonicParsing="false" text="Button" />
+														<Button mnemonicParsing="false" text="Button" />
+														<Button mnemonicParsing="false" text="Button" />
+													</items>
+												</ToolBar>
+											</bottom>
+										</BorderPane>
+									</items>
+								</SplitPane>
+								<AnchorPane fx:id="anchorPaneTree" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="200.0" prefWidth="200.0">
+									<children>
+										<TreeView fx:id="treeView" layoutY="-2.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+									</children>
+								</AnchorPane>
+							</items>
+						</SplitPane>
+					</center>
+					<top>
+						<VBox>
+							<children>
+								<GridPane BorderPane.alignment="CENTER">
+									<columnConstraints>
+										<ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" percentWidth="10.0" prefWidth="100.0" />
+										<ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" percentWidth="30.0" prefWidth="100.0" />
+										<ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" percentWidth="10.0" prefWidth="100.0" />
+										<ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" percentWidth="20.0" prefWidth="100.0" />
+										<ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" percentWidth="20.0" prefWidth="100.0" />
+										<ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" minWidth="10.0" percentWidth="10.0" prefWidth="100.0" />
+									</columnConstraints>
+									<rowConstraints>
+										<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+									</rowConstraints>
+									<children>
+										<Label text="Dialog" />
+										<TextField fx:id="tfDialogName" GridPane.columnIndex="1" />
+										<Label text="Self" GridPane.columnIndex="2" />
+										<ComboBox fx:id="cbControl" prefWidth="150.0" GridPane.columnIndex="3" />
+										<TextField fx:id="tfOwnerId" GridPane.columnIndex="4" />
+										<Button mnemonicParsing="false" onAction="#editOwner" text="Edit" GridPane.columnIndex="5" />
+									</children>
+								</GridPane>
+								<Label />
+							</children>
+						</VBox>
+					</top>
+				</BorderPane>
+				<Label />
+			</children>
+		</HBox>
+		<Label />
+      <HBox alignment="CENTER_RIGHT" prefHeight="25.0" prefWidth="715.0">
+         <children>
+            <Button mnemonicParsing="false" onAction="#cancel" text="Cancel" />
+            <Label />
+            <Button mnemonicParsing="false" onAction="#accept" text="Ok" />
+            <Label />
+         </children>
+      </HBox>
+      <Label />
+	</children>
+</VBox>
