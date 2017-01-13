@@ -30,18 +30,18 @@ import com.exactprosystems.jf.functions.Table;
 		additionFieldsAllowed 	= false,
 		outputDescription 		= "True if saved successfully.",
 		outputType				= Boolean.class,
-		examples = "{{` 1. Create a table with columns Name and Age. `}}" +
-				"{{` 2 Add values to the first line of the table. `}}" +
-				"{{` 3 Save the table into the file dest.csv. `}}" +
-				"{{##Id;#RawTable\n" +
-				"TC;Table\n" +
-				"@;Name;Age\n" +
-				"0;Mike;25\n" +
-				"#EndRawTable\n" +
-				"#Id;#Action;#Table;#File\n" +
-				"TSTF;TableSaveToFile;TC;’Path/dest.csv'\n" +
-				"#Assert;#Message\n" +
-				"TSTF.Out;'Table was not saved'#}}"
+		examples = "{{` 1. Create a table with columns Name and Age. `}}"
+				+ "{{` 2. Add values to the first line of the table. `}}"
+				+ "{{` 3. Save the table into the file dest.csv. `}}"
+				+ "{{##Id;#RawTable\n"
+				+ "TC;Table\n"
+				+ "@;Name;Age\n"
+				+ "0;Mike;25\n"
+				+ "#EndRawTable\n"
+				+ "#Id;#Action;#Table;#File\n"
+				+ "TSTF;TableSaveToFile;TC;’Path/dest.csv'\n"
+				+ "#Assert;#Message\n"
+				+ "TSTF.Out;'Table was not saved'#}}"
 	)
 public class TableSaveToFile extends AbstractAction 
 {

@@ -19,18 +19,36 @@ import com.exactprosystems.jf.functions.Table;
 
 @ActionAttribute(
 		group = ActionGroups.Tables,
-		generalDescription = "Remove columns from thi table",
-		additionFieldsAllowed = false
+		generalDescription 	  = "This action is determined  to delete columns in a table given. (Object type Table)."
+				+ "Can be used to correct the table.",
+		additionFieldsAllowed = false,
+		examples 			  =
+				"{{`1. Create a table with columns Name,Age,Gender,Salary`}}"
+				+ "{{`2. Delete columns Name, Age, Gender  in a table  given.`}}"
+				+ "{{`3.Verify that headings are deleted.`}}"
+				+ "{{##Id;#RawTable\n"
+				+ "TC;Table\n"
+				+ "@;Name;Age;Gender;Salary\n"
+				+ "0;;;;\n"
+				+ "#EndRawTable\n"
+				+ "\n"
+				+ "\n"
+				+ "#Action;#Table;#Columns\n"
+				+ "TableRemoveColumns;TC;{'Name','Age','Gender'}\n"
+				+ "\n"
+				+ "\n"
+				+ "#Assert;#Message\n"
+				+ "TC.getHeader(0) == 'Salary';#}}"
 )
 public class TableRemoveColumns extends AbstractAction
 {
 	public static final String tableName = "Table";
 	public static final String columnsName = "Columns";
 
-	@ActionFieldAttribute(name = tableName, mandatory = true, description = "The table.")
+	@ActionFieldAttribute(name = tableName, mandatory = true, description = "Table, where columns are to be deleted.")
 	protected Table table = null;
 
-	@ActionFieldAttribute(name = columnsName, mandatory = true, description = "Array of removed columns.")
+	@ActionFieldAttribute(name = columnsName, mandatory = true, description = "An array of column names to delete.")
 	protected String[] columns = new String[] {};
 
 	public TableRemoveColumns()

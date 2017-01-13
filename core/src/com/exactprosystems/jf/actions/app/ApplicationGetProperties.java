@@ -45,7 +45,7 @@ import com.exactprosystems.jf.functions.HelpKind;
 				"\n" +
 				"\n" +
 				"#Assert;#Message\n" +
-				"!Str.IsNullOrEmpty(AGP1.Out.URL);'String is null or empty'#}} \n",
+				"!Str.IsNullOrEmpty(AGP1.Out.URL);'String is null or empty'#}}",
 		seeAlso					=
 				"{{@ApplicationStart@}}, {{@ApplicationConnectTo@}}"
 )

@@ -22,18 +22,26 @@ import com.exactprosystems.jf.functions.Table;
 import java.io.File;
 
 @ActionAttribute(
-        group = ActionGroups.Tables,
-        suffix = "TBLD",
-        generalDescription = "Loads information about all files in a directory into a table",
+        group                 = ActionGroups.Tables,
+        suffix                = "TBLD",
+        generalDescription    = "This action is determined to get directory structure as an object Table."
+                + "Can be used to check required files in  this directory.",
         additionFieldsAllowed = false,
-        outputDescription = "Table object",
-        outputType = Table.class
+        outputDescription     = "Table which consists columns Name, Size, Date, Is directory, Hidden. Each table row contains"
+                + " data corresponding a file/folder in this directory. If it is directed to a null directory or file,"
+                + " an object Table is created without any columns or rows. If it is directed to an empty directory, a"
+                + " table is created with column titles and 0 rows.",
+        outputType = Table.class,
+        seeAlso 			  = "{{@RawTable@}}, {{@TableCreate@}}, {{@TableLoadFromFile@}}, {{@TableSelect@}}",
+        examples              ="{{`1. Create a table with information about files/folders in directory Home.`}}"
+                + "{{##Id;#Action;#Dir\n"
+                + "TBLD1;TableLoadFromDir;System.getProperty('user.home')#}}"
 )
 public class TableLoadFromDir extends AbstractAction
 {
     public final static String dirName = "Dir";
 
-    @ActionFieldAttribute(name = dirName,description = "Path to a directory",mandatory = true)
+    @ActionFieldAttribute(name = dirName,description = "Path to directory. It’s not permitted to use ways with metacharacters (wildcard).",mandatory = true)
     protected String directory = null;
 
     @Override

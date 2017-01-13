@@ -13,23 +13,25 @@ import com.exactprosystems.jf.functions.Table;
 @ActionAttribute(
 		group = ActionGroups.Tables,
 		suffix = "TBLRR",
-		generalDescription = "This action is used to delete a selected line in a table given.",
-		additionFieldsAllowed = false,
-		outputDescription = "True if removing is successful",
-		outputType = Boolean.class,
-		examples = "{{` 1. Create a table with columns Name and Age. Add two lines with data to the table. `}}"
+		generalDescription 		= "This action is used to delete a selected line in a table given.",
+		additionFieldsAllowed 	= false,
+		outputDescription 		= "True if removing is successful",
+		outputType 				= Boolean.class,
+		seeAlso 				= "{{@TableReplace@}}, {{@TableAddColumns@}}, {{@TableConsiderColumnAs@}}, {{@TableColumnRename@}}",
+		examples 				=
+				"{{` 1. Create a table with columns Name and Age. Add two lines with data to the table. `}}"
 				+ "{{` 2. Delete the first line in the table, the line with the index 0. `}}"
-				+ "{{` 3. Verify that the first line was deleted and was replaced with the line containing data about Anna. `}}" +
-				"{{##Id;#RawTable\n" +
-				"TC;Table\n" +
-				"@;Name;Age\n" +
-				"0;Mike;25\n" +
-				"1;Anna;20\n" +
-				"#EndRawTable\n" +
-				"#Id;#Action;#Table;#Index\n" +
-				"TBLRR1;TableRemoveRow;TC;0\n" +
-				"#Assert;#Message\n" +
-				"TC.get(0).get('Name') == 'Anna';'Table is not correct'#}}"
+				+ "{{` 3. Verify that the first line was deleted and was replaced with the line containing data about Anna. `}}"
+				+ "{{##Id;#RawTable\n"
+				+ "TC;Table\n"
+				+ "@;Name;Age\n"
+				+ "0;Mike;25\n"
+				+ "1;Anna;20\n"
+				+ "#EndRawTable\n"
+				+ "#Id;#Action;#Table;#Index\n"
+				+ "TBLRR1;TableRemoveRow;TC;0\n"
+				+ "#Assert;#Message\n"
+				+ "TC.get(0).get('Name') == 'Anna';'Table is not correct'#}}"
 )
 public class TableRemoveRow extends AbstractAction
 {

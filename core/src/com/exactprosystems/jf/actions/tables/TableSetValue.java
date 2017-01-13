@@ -23,20 +23,21 @@ import com.exactprosystems.jf.functions.Table;
 		group					= ActionGroups.Tables,
 		generalDescription 		= "This action is used to set values in the cells of a table given.",
 		additionFieldsAllowed 	= true,
-		additionalDescription = "Set values for all cells in the line given. Each parameter name sets the column"
+		additionalDescription 	= "Set values for all cells in the line given. Each parameter name sets the column"
 				+ " title, where the value is set. The value if a corresponding parameter sets the value of the column.",
-		examples = "{{`1. Create a table with columns Name and Age. Add values to the first line of the table.`}}" +
-				"{{`2. Set the value for the columns Name and Age 'John' and '42' in the first line.`}}" +
-				"{{`3.Verify that the new values were inserted correctly.`}}" +
-				"{{##Id;#RawTable\n" +
-				"TC;Table\n" +
-				"@;Name;Age\n" +
-				"0;Mike;25\n" +
-				"#EndRawTable\n" +
-				"#Action;#Table;#Index;#Name;#Age\n" +
-				"TableSetValue;TC;0;'John';'42'\n" +
-				"#Assert;#Message\n" +
-				"TC.get(0).get('Name') == 'John'&& TC.get(0).get('Age') == '42';#}}"
+		seeAlso = "{{@TableReplace@}}, {{@TableAddColumns@}}, {{@TableConsiderColumnAs@}}, {{@TableColumnRename@}}",
+		examples = "{{`1. Create a table with columns Name and Age. Add values to the first line of the table.`}}"
+				+ "{{`2. Set the value for the columns Name and Age 'John' and '42' in the first line.`}}"
+				+ "{{`3. Verify that the new values were inserted correctly.`}}"
+				+ "{{##Id;#RawTable\n"
+				+ "TC;Table\n"
+				+ "@;Name;Age\n"
+				+ "0;Mike;25\n"
+				+ "#EndRawTable\n"
+				+ "#Action;#Table;#Index;#Name;#Age\n"
+				+ "TableSetValue;TC;0;'John';'42'\n"
+				+ "#Assert;#Message\n"
+				+ "TC.get(0).get('Name') == 'John'&& TC.get(0).get('Age') == '42';#}}"
 	)
 public class TableSetValue extends AbstractAction 
 {

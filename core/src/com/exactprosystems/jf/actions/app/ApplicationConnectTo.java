@@ -55,7 +55,7 @@ import java.util.Map;
 				"\n" +
 				"\n" +
 				"#Assert;#Message\n" +
-				"app.Out.IsGood();'Connection is not established'#}}\n"
+				"app.Out.IsGood();'Connection is not established'#}}"
 	)
 public class ApplicationConnectTo extends AbstractAction 
 {

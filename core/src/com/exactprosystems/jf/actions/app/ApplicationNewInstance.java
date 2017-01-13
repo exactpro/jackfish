@@ -38,8 +38,8 @@ import java.util.Map;
 				+ " parameters for win.jar are the following: {{` {{$URL$}} – string. It defines the URL.`}} {{` "
 				+ "{{$Browser$}} - string. It defines which browser should be launched.`}} The parameters can be chosen in the dialogue"
 				+ " window opened with the context menu of this action in {{$“All parameters”$}} option.",
-		examples = "{{# #Id;#Action;#Browser;#URL;#AppConnection\n" +
-				"APPNI1;ApplicationNewInstance;'Chrome';'http://google.com';app\n #}}",
+		examples = "{{##Id;#Action;#Browser;#URL;#AppConnection\n" +
+				"APPNI1;ApplicationNewInstance;'Chrome';'http://google.com';app#}}",
 		seeAlso					=
 				"{{@ApplicationStart@}}, {{@ApplicationConnectTo@}}"
 )

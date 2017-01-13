@@ -35,7 +35,7 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 				+ "\n"
 				+ "\n"
 				+ "#Assert;#Message\n"
-				+ "!Str.IsNullOrEmpty(ACW.Out);'String is null or empty'#}}\n",
+				+ "!Str.IsNullOrEmpty(ACW.Out);'String is null or empty'#}}",
 		seeAlso					=
 				"{{@ApplicationStart@}}, {{@ApplicationConnectTo@}}"
 )
