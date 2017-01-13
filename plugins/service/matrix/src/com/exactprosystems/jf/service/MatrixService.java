@@ -50,7 +50,7 @@ public class MatrixService  extends AbstractTcpServer
 
 		try (	Reader matrixReader 	= new FileReader(this.onConnected) )
 		{
-			IMatrixRunner runner = context.createRunner(matrixReader, new Date(), connection);
+			IMatrixRunner runner = context.createRunner(this.onConnected, matrixReader, new Date(), connection);
 			
 			runner.start();
 			runner.join(0);

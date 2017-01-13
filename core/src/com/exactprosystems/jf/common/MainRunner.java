@@ -402,8 +402,9 @@ public class MainRunner
 		{
 			logger.info(String.format("Processing '%s' start at '%s'", matrix.getName(), startAt.toString()));
 
-			try( Context	context = factory.createContext();
-				MatrixRunner runner = new MatrixRunner(context, matrix, startAt, null))
+			try(    Reader reader = new FileReader(matrix);
+			        Context	context = factory.createContext();
+			        MatrixRunner runner = context.createRunner(matrix.getPath(), reader, startAt, null) )
 			{
 				runner.start();
 				runner.join(0);

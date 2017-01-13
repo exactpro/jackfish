@@ -20,7 +20,6 @@ import com.exactprosystems.jf.functions.Table;
 import org.apache.log4j.Logger;
 
 import java.io.File;
-import java.io.FileReader;
 import java.io.Reader;
 import java.sql.Blob;
 import java.util.Date;
@@ -44,21 +43,20 @@ public class MatrixRunner implements IMatrixRunner, AutoCloseable
         Destroyed
     }
 
-	private MatrixRunner(Context context, Date startTime, File matrixFile, Object parameter) throws Exception
+	private MatrixRunner(Context context, String name, Date startTime, Object parameter) throws Exception
 	{
 		this.startTime = startTime == null ? new Date() : startTime;
 		this.context = context;
-		this.matrixFile = matrixFile;
+		this.matrixFile = new File(name);
 		
 		setGlobalVariable(parameterName, parameter);
 	}
 	
 	public MatrixRunner(Context context, Matrix matrix, Date startTime, Object parameter) throws Exception
 	{
-		this(context, startTime, new File(matrix.getName()), parameter);
+		this(context, matrix.getName(), startTime, parameter);
 		
 		this.matrix = matrix;
-		this.matrixFile = new File(this.matrix.getName());
 		this.context.getConfiguration().getRunnerListener().subscribe(this);
 		if (context.getMatrixListener().isOk())
 		{
@@ -73,21 +71,11 @@ public class MatrixRunner implements IMatrixRunner, AutoCloseable
 		}
 	}
 
-	public MatrixRunner(Context context, Reader reader, Date startTime, Object parameter) throws Exception
+	public MatrixRunner(Context context, String name, Reader reader, Date startTime, Object parameter) throws Exception
 	{
-		//TODO please review this.
-		this(context, startTime, new File("new"), parameter);
+		this(context, name, startTime, parameter);
 		
 		loadFromReader(context, reader);
-	}
-
-	public MatrixRunner(Context context, File matrixFile, Date startTime, Object parameter) throws Exception
-	{
-		this(context, startTime, matrixFile, parameter);
-		try (Reader reader = new FileReader(matrixFile))
-		{
-			loadFromReader(context, reader);
-		}
 	}
 
 	public void setOnFinished(Consumer<MatrixRunner> consumer)
@@ -157,11 +145,6 @@ public class MatrixRunner implements IMatrixRunner, AutoCloseable
 		return this.report == null ? null : report.getReportName();
 	}
 
-	public void setMatrixFile(File file)
-	{
-		this.matrixFile = file;
-	}
-	
 	@Override
 	public void close() throws Exception
 	{
