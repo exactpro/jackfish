@@ -66,6 +66,27 @@ ul.nav > ul > li > a {
     background-color: #ececec !important;
 }
 
+.searchDiv {
+	position: fixed;
+	float: right;
+	right: 16px;
+	top : 16px;
+	z-index : 999;
+	background-color : white;
+	padding : 5px;
+}
+.searchInput {
+	border-color : #2687fb;
+	display:inline-block;
+}
+.searchLabel {
+	width:100px;
+	position : absolute;
+}
+.foundElement {
+	background-color : gold;
+}
+
 #doublescroll {
     overflow: auto;
     overflow-y: hidden;
