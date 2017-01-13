@@ -1,0 +1,35 @@
+// //==============================================
+// //  Copyright (c) 2009-2015, Exactpro Systems, LLC
+// //  Quality Assurance & Related Development for Innovative Trading Systems.
+// //  All rights reserved.
+// //  This is unpublished, licensed software, confidential and proprietary
+// //  information which is the property of Exactpro Systems, LLC or its licensors.
+// //==============================================
+#TestCase
+Test case
+	#Global;#Id;#Action;#AppId;#Jar;#Args;#MainClass
+	1;APPSTR1;ApplicationStart;'MOCK_SWING';'mockapp.jar';;'com.exactprosystems.jf.MockApp'
+
+	#Id;#Action;#Metric;#AppConnection
+	HST1;HistogramCreate;HistogramMetric.Click;APPSTR1.Out
+
+	#Action;#Histogram
+	HistogramStart;HST1.Out
+
+	#For;#From;#To;#Step
+	i;0;20;1
+		#Id;#Action;#Dialog;#AppConnection;#Button
+		DLGFLL1;DialogFill;'Main';APPSTR1.Out;Do.click()
+
+	#EndFor
+
+	#Action;#Histogram;#Title
+	HistogramReport;HST1.Out;'Click'
+
+
+#TestCase
+null
+	#Id;#Action;#AppConnection
+	APPSTP1;ApplicationStop;APPSTR1.Out
+
+

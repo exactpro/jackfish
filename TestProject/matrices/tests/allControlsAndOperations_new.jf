@@ -1,0 +1,261 @@
+// //==============================================
+// //  Copyright (c) 2009-2015, Exactpro Systems, LLC
+// //  Quality Assurance & Related Development for Innovative Trading Systems.
+// //  All rights reserved.
+// //  This is unpublished, licensed software, confidential and proprietary
+// //  information which is the property of Exactpro Systems, LLC or its licensors.
+// //==============================================
+#TestCase
+Prepare
+    #Id;#Action;#File
+    TBL1;TableLoadFromFile;'./resources/allControlsAndOperations_new.csv'
+
+    #Id;#Action;#Content
+    TXT1;TextCreate;''
+
+    // see help.txt
+    #Global;#Action;#operationParameter;#where;#template;#needName;#notAllowed;#adapterLetter;#mask;#controlName;#offName;#notWrite
+    1;Vars;'$p';'$w';'$t';'$n';'-';'N';'mask';'Name';'Off';'N'
+
+    // adapter may be SWING or WEB ( in future will need add adapter for WinApp)
+    #Global;#Action;#headerText;#headerTextAssert;#table;#matrixText;#adapter;#delay;#pattern
+    1;Vars;'\t#Action\u003b#Dialog\u003b#AppConnection\u003b#';'\t#Action\u003b#Dialog\u003b#Assert\u003b#AppConnection\u003b#';TBL1.Out;TXT1.Out;'SWING';'.delay(500)';def(pattern, str) {Matcher matcher = Pattern.compile(pattern).matcher(str)\u003bif (matcher.find()) {return matcher.group(1)\u003b}return ''\u003b}
+
+    #Global;#Action;#operationPattern;#templatePattern;#wherePattern;#prepareOperationPattern;#reasonPattern;#isNotNeedName;#avaliableAdapter
+    1;Vars;def (x) { return pattern("\\$p=#(.+?)#", x)};def (x) { return pattern("\\$t=#(.+?)#", x)};def (x) { return pattern("\\$w=#(\\w)#", x)};def (x) {return pattern("\\$b=#(.+?)#", x)};def (x) { return pattern("\\$f=#(.+?)#", x)};def(x) {return x.contains(needName)};def(x) { if (x.indexOf('$') != -1) {return x.substring(0,x.indexOf('$'))\u003b}return x\u003b}
+
+
+#TestCase
+Add start adapter action
+    #Action;#Line;#Text
+    TextAddLine;'#TestCase\nstart application';matrixText
+
+    #Global;#Action;#projectDirectory
+    1;Vars;new File(".").getAbsolutePath()
+
+    #Switch
+    adapter
+        #Case
+        'SWING'
+            #Action;#Line;#Text
+            TextAddLine;'\t#Id\u003b#Action\u003b#AppId\u003b#Jar\u003b#Args\u003b#MainClass\n\tAPPSTR1\u003bApplicationStart\u003b\'MOCK_SWING\'\u003b\'mockapp.jar\'\u003b\u003b\'com.exactprosystems.jf.MockApp\'';matrixText
+
+            #Action;#Line;#Text
+            TextAddLine;'\t#Global\u003b#Action\u003b#appConnection\n\t1\u003bVars\u003bAPPSTR1.Out';matrixText
+
+            #Global;#Action;#adapterLetter
+            1;Vars;'S'
+
+
+        #Case
+        'WEB'
+            #Action;#Line;#Text
+            TextAddLine;String.format('\t#Id\u003b#Action\u003b#AppId\u003b#Browser\u003b#URL\n\tAPPSTR1\u003bApplicationStart\u003b\'MOCK_WEB\'\u003b\'Firefox\'\u003b\'file://%s/resources/mock/mock.html\'',projectDirectory);matrixText
+
+            #Action;#Line;#Text
+            TextAddLine;'\t#Global\u003b#Action\u003b#appConnection\n\t1\u003bVars\u003bAPPSTR1.Out';matrixText
+
+            #Global;#Action;#adapterLetter
+            1;Vars;'W'
+
+
+    #EndSwitch
+
+
+#TestCase
+Generate
+    #ReportOff
+
+    #Action;#maskMap
+    Vars;table.get(0)
+
+    #Action;#maskOff;#maskName
+    Vars;maskMap.remove(offName);maskMap.remove(controlName)
+
+    #For;#From;#To;#Step
+    i;1;table.size()-1;1
+        #Action;#currentLine
+        Vars;table.get(i)
+
+        #Action;#name;#needOff;#entrySet
+        Vars;currentLine.remove(controlName);currentLine.remove(offName);currentLine.entrySet()
+
+        // if off not empty, we will skip this line
+        #If
+        needOff != null && !needOff.trim().isEmpty()
+            #Continue
+
+        #EndIf
+
+        #Action;#operationsArray;#valueArray
+        Vars;new ArrayList(currentLine.keySet());new ArrayList(currentLine.values())
+
+        #Action;#Line;#Text
+        TextAddLine;'#TestCase\ncontrol ' + name;matrixText
+
+        #For;#From;#To;#Step
+        j;0;operationsArray.size() - 1;1
+            #Global;#Action;#currentValue;#currentOperation
+            1;Vars;valueArray.get(j);operationsArray.get(j)
+
+            #Action;#currentMask
+            Vars;maskMap.get(currentOperation)
+
+            #If
+            currentValue != null && currentValue.equals(notWrite)
+                #Continue
+
+            #EndIf
+
+            #Global;#Action;#checkedValue;#whereCheck;#parameterValue
+            1;Vars;templatePattern(currentMask);wherePattern(currentMask);operationPattern(currentMask)
+
+            // replace default value
+            #If
+            checkedValue.isEmpty()
+                #Global;#Action;#checkedValue
+                1;Vars;templatePattern(currentValue)
+
+            #EndIf
+
+            // replace default operation value
+            #If
+            !operationPattern(currentValue).isEmpty()
+                #Global;#Action;#currentOperation
+                1;Vars;currentOperation.replace(operationParameter, operationPattern(currentValue))
+
+            #Else
+                #If
+                !parameterValue.isEmpty()
+                    // set default operation value
+                    #Global;#Action;#currentOperation
+                    1;Vars;currentOperation.replace(operationParameter, parameterValue)
+
+                #EndIf
+
+
+            #EndIf
+
+            // add control name to checked value
+            #If
+            !isNotNeedName(currentMask)
+                #Global;#Action;#checkedValue
+                1;Vars;name+'_'+checkedValue
+
+            #EndIf
+
+            #If
+            !avaliableAdapter(currentValue).contains(adapterLetter)
+                #Global;#Action;#reason
+                1;Vars;reasonPattern(currentValue)
+
+                #If
+                reason.isEmpty()
+                    #Global;#Action;#reason
+                    1;Vars;'is not allowed'
+
+                #EndIf
+
+                #Action;#Line;#Text
+                TextAddLine;headerTextAssert + name+'\n\tDialogFill\u003b\'Main\'\u003bThis.Result==Result.Failed && This.Reason.contains(\''+reason+'\')\u003bappConnection\u003b'+currentOperation+'\n';matrixText
+
+            #Else
+                #Action;#prepareOperation
+                Vars;prepareOperationPattern(currentValue)
+
+                #If
+                !prepareOperation.isEmpty()
+                    #Action;#Line;#Text
+                    TextAddLine;headerText+name+'\n\tDialogFill\u003b\'Main\'\u003bappConnection\u003b'+prepareOperation+'\n';matrixText
+
+                #EndIf
+
+                #Global;#Action;#currentOperation;#checkLabel
+                1;Vars;currentOperation+delay;''
+
+                #Switch
+                whereCheck
+                    #Case
+                    's'
+                        #Action;#Line;#Text
+                        TextAddLine;headerTextAssert+name+'\n\tDialogFill\u003b\'Main\'\u003bThis.Out.'+name+'.equals(\''+checkedValue+'\')\u003bappConnection\u003b'+currentOperation+'\n';matrixText
+
+
+                    #Case
+                    'm'
+                        #Action;#Line;#Text
+                        TextAddLine;headerText+name+'\n\tDialogFill\u003b\'Main\'\u003bappConnection\u003b'+currentOperation;matrixText
+
+                        #Global;#Action;#checkLabel
+                        1;Vars;'moveLabel'
+
+
+                    #Case
+                    'c'
+                        #Action;#Line;#Text
+                        TextAddLine;headerText+name+'\n\tDialogFill\u003b\'Main\'\u003bappConnection\u003b'+currentOperation;matrixText
+
+                        #Global;#Action;#checkLabel
+                        1;Vars;'centralLabel'
+
+
+                    #Default
+                        #Action;#Line;#Text
+                        TextAddLine;headerText+name+'\n\tDialogFill\u003b\'Main\'\u003bappConnection\u003b'+currentOperation+'\n';matrixText
+
+
+                #EndSwitch
+
+                #If
+                !checkLabel.isEmpty()
+                    #Action;#Line;#Text
+                    TextAddLine;headerText+checkLabel+'\u003b#Assert\n\tDialogFill\u003b\'Main\'\u003bappConnection\u003bDo.get()\u003bThis.Out.'+checkLabel+'.equals(\''+checkedValue+'\')\n';matrixText
+
+                #EndIf
+
+
+            #EndIf
+
+        #EndFor
+
+    #EndFor
+
+    #ReportOn
+
+
+#TestCase
+Add close adapter action
+    #Action;#Line;#Text
+    TextAddLine;'#TestCase\nstop application';matrixText
+
+    #Action;#Line;#Text
+    TextAddLine;'\t#Action\u003b#AppConnection\n\tApplicationStop\u003bappConnection';matrixText
+
+
+#TestCase
+Save to matrix
+    #Action;#Title;#Text
+    TextReport;'matrix';matrixText
+
+    #Action;#Text;#File
+    TextSaveToFile;matrixText;'./resources/result_new.jf'
+
+
+#TestCase
+Execute
+    #Id;#Action;#Text
+    MXRN1;MatrixRunFromText;matrixText
+
+    #Id;#Action;#Assert;#Matrix;#Time
+    MXWT1;MatrixWait;MXRN1.Out.failed() == 0;MXRN1.Out;100000
+
+    #Id;#Action;#matrix;#passed;#failed;#report
+    resTab;TableCreate;;;;
+
+    #Action;#Table;#matrix;#passed;#failed;#report
+    TableAddValue;resTab.Out;MXRN1.Out.getMatrixName();'<font color="LawnGreen">'+MXRN1.Out.passed()+'</font>';'<font color="Red">'+MXRN1.Out.failed()+'</font>';'<a href="../'+MXRN1.Out.getReportName()+'">'+MXRN1.Out.getMatrixName()+'</a>'
+
+    #Action;#Table;#Title
+    TableReport;resTab.Out;''
+
+

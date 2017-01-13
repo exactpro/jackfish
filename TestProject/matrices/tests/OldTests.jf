@@ -1,0 +1,21 @@
+#TestCase;#Kind;#Depends;#For
+Check Web mock App;Never;;
+    #Id;#Action;#AppId;#Browser;#URL
+    APPSTR1;ApplicationStart;'WEB_Windows';'Chrome';File.getAbsolutePath()
+
+    #Action;#Time
+    Wait;3000
+
+    #Id;#Action;#AppConnection
+    APPSTP1;ApplicationStop;APPSTR1.Out
+
+
+#Off;#TestCase;#Kind;#Depends;#For
+1;;;;
+    #Id;#Action;#AppId;#Jar;#Args;#MainClass
+    APPSTR1;ApplicationStart;'WEB_Windows';mockSwingJar;'';'com.exactprosystems.jf.MockApp'
+
+    #Id;#Action;#Dialog;#AppConnection;#TextBox
+    DLGFLL1;DialogFill;'Main';APPSTR1.Out;'someText'
+
+

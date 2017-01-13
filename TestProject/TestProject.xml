@@ -13,9 +13,12 @@
     <formats>HH:mm:ss:SSS</formats>
     <reports>reports</reports>
     <git></git>
+    <import>com.exactprosystems.jf.common.parser</import>
     <import>java.math</import>
     <import>java.util.regex</import>
     <import>java.util</import>
+    <import>java.awt</import>
+    <import>java.awt.event</import>
     <import>java.util.List</import>
     <import>java.util.Map</import>
     <import>java.lang</import>
@@ -24,10 +27,103 @@
     <import>com.exactprosystems.jf.functions</import>
     <import>java.io</import>
     <import>org.mvel2</import>
+    <import>com.exactprosystems.jf.api.client</import>
+    <import>com.exactprosystems.jf.api.error</import>
     <vars>vars.ini</vars>
     <userVars>myVars/myVars.ini</userVars>
     <matrix>matrices</matrix>
-    <appDict>appDic</appDict>
-    <clientDict>clientDic</clientDict>
-    <library>libs</library>
+    <appDict>dic</appDict>
+    <library>libtp</library>
+    <appEntry>
+        <name>WEB_Windows</name>
+        <parameters>
+            <key>ChromeDriverPath</key>
+            <value>win/chromedriver-win-2.25-x86.exe</value>
+        </parameters>
+        <parameters>
+            <key>IEDriverPath</key>
+            <value></value>
+        </parameters>
+        <parameters>
+            <key>ChromeDriverBinary</key>
+            <value></value>
+        </parameters>
+        <parameters>
+            <key>jreExec</key>
+            <value></value>
+        </parameters>
+        <parameters>
+            <key>jreArgs</key>
+            <value>-agentlib:jdwp=transport=dt_socket,server=n,address=admini-PC:5005,suspend=n,onuncaught=n</value>
+        </parameters>
+        <parameters>
+            <key>SafariDriverPath</key>
+            <value></value>
+        </parameters>
+        <parameters>
+            <key>FirefoxProfileDirectory</key>
+            <value></value>
+        </parameters>
+        <parameters>
+            <key>UsePrivateMode</key>
+            <value></value>
+        </parameters>
+        <parameters>
+            <key>GeckoDriverPath</key>
+            <value>win/geckodriver-win-0.11.1-x64.exe</value>
+        </parameters>
+        <appDescription>Web applications</appDescription>
+        <appDicPath>dic/mock_web_dic.xml</appDicPath>
+        <appJar>C:/Users/user_adm/workspace - git/JackFish/../JackFish/core/apps/web.jar</appJar>
+        <appWorkDir>C:/Users/user_adm/workspace - git/JackFish/core/apps/</appWorkDir>
+        <appStartPort>10000</appStartPort>
+    </appEntry>
+    <appEntry>
+        <name>WEB</name>
+        <parameters>
+            <key>ChromeDriverPath</key>
+            <value>unix/chromedriver-linux-2.25-x64.</value>
+        </parameters>
+        <parameters>
+            <key>IEDriverPath</key>
+            <value></value>
+        </parameters>
+        <parameters>
+            <key>ChromeDriverBinary</key>
+            <value></value>
+        </parameters>
+        <parameters>
+            <key>jreExec</key>
+            <value></value>
+        </parameters>
+        <parameters>
+            <key>jreArgs</key>
+            <value>-Xms128m -Xmx1G</value>
+        </parameters>
+        <parameters>
+            <key>SafariDriverPath</key>
+            <value></value>
+        </parameters>
+        <parameters>
+            <key>FirefoxProfileDirectory</key>
+            <value></value>
+        </parameters>
+        <parameters>
+            <key>UsePrivateMode</key>
+            <value></value>
+        </parameters>
+        <parameters>
+            <key>GeckoDriverPath</key>
+            <value>unix/geckodriver-linux-0.11.1-x64.</value>
+        </parameters>
+        <parameters>
+            <key>LogLevel</key>
+            <value>ERROR</value>
+        </parameters>
+        <appDescription>Web applications</appDescription>
+        <appDicPath>dic/gui/LayoutTesting.xml</appDicPath>
+        <appJar>${JF}/../core/apps/web.jar</appJar>
+        <appWorkDir>${JF}/../core/apps</appWorkDir>
+        <appStartPort>7000</appStartPort>
+    </appEntry>
 </configuration>
