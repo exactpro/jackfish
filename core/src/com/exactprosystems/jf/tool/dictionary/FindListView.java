@@ -109,6 +109,10 @@ public class FindListView<T> extends VBox
 		return this.listView.getItems();
 	}
 
+	public ListView<T> getListView() {
+		return listView;
+	}
+
 	private void listeners()
 	{
 		this.cfbFind.textProperty().addListener((observable, oldValue, newValue) -> {

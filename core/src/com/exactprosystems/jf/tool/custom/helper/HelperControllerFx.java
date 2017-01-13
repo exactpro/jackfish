@@ -257,7 +257,7 @@ public class HelperControllerFx implements Initializable, ContainingParent
 
 		this.taInput.textProperty().addListener((observableValue, before, after) -> Common.tryCatch(() -> evaluate(after), "Error on evaluate"));
 
-		this.listMembers.setOnMouseClicked(mouseEvent -> Common.tryCatch(() ->
+		this.listMembers.getListView().setOnMouseClicked(mouseEvent -> Common.tryCatch(() ->
 		{
 			if (mouseEvent.getClickCount() == 2)
 			{
