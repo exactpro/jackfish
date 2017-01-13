@@ -15,26 +15,26 @@ import com.exactprosystems.jf.functions.HelpKind;
 import com.exactprosystems.jf.functions.Table;
 
 @ActionAttribute(
-		group = ActionGroups.Tables,
-		suffix = "TBLS",
-		generalDescription = "This action is used to sorting the table by the column given.",
+		group 				  = ActionGroups.Tables,
+		suffix 				  = "TBLS",
+		generalDescription 	  = "This action is used to sorting the table by the column given.",
 		additionFieldsAllowed = true,
-		outputDescription = "Restores the original but sorted table.",
-		outputType = Table.class,
-		examples = "{{` 1 Create a table with columns Name and Age. Complete the table with 3 lines.`}}" +
-				"{{`2. Do top-down sorting in  Age.`}}" +
-				"{{`3.Output the sorted table to report.`}}" +
-				"{{##Id;#RawTable\n" +
-				"TC;Table\n" +
-				"@;Name;Age\n" +
-				"0;Mike;42\n" +
-				"1;John;57\n" +
-				"2;Anna;21\n" +
-				"#EndRawTable\n" +
-				"#Action;#Ascending;#ColumnName;#Table\n" +
-				"TableSort;false;'Age';TC\n" +
-				"#Action;#Table;#Title\n" +
-				"TableReport;TC;'Table title'#}}"
+		outputDescription 	  = "Restores the original but sorted table.",
+		outputType 			  = Table.class,
+		examples = "{{` 1. Create a table with columns Name and Age. Complete the table with 3 lines.`}}"
+				+ "{{`2. Do top-down sorting in  Age.`}}"
+				+ "{{`3. Output the sorted table to report.`}}"
+				+ "{{##Id;#RawTable\n"
+				+ "TC;Table\n"
+				+ "@;Name;Age\n"
+				+ "0;Mike;42\n"
+				+ "1;John;57\n"
+				+ "2;Anna;21\n"
+				+ "#EndRawTable\n"
+				+ "#Action;#Ascending;#ColumnName;#Table\n"
+				+ "TableSort;false;'Age';TC\n"
+				+ "#Action;#Table;#Title\n"
+				+ "TableReport;TC;'Table title'#}}"
 )
 
 public class TableSort extends AbstractAction

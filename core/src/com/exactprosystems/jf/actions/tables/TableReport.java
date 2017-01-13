@@ -25,18 +25,19 @@ import java.util.List;
 		group					= ActionGroups.Tables,
 		generalDescription 		= "This action is used to output the table to report.",
 		additionFieldsAllowed 	= true,
-		examples = "{{` 1. Create a test case with id Test.`}}"
+		examples 				=
+				"{{` 1. Create a test case with id Test.`}}"
 				+ "{{` 2. Create a table with columns Name and Age. Add values to the first line of the table.`}}"
-				+ "{{` 3. Output the table into the report only with the column Age, before the test case with id Test.`}}" +
-				"{{##Id;#TestCase\n" +
-				"Test;\n" +
-				"    #Id;#RawTable\n" +
-				"    TC;Table\n" +
-				"    @;Name;Age\n" +
-				"    0;Mike;25\n" +
-				"    #EndRawTable\n" +
-				"    #Action;#BeforeTestCase;#Table;#Title;#Columns\n" +
-				"    TableReport;'Test';TC;'Table title';{'Age'}#}}"
+				+ "{{` 3. Output the table into the report only with the column Age, before the test case with id Test.`}}"
+				+ "{{##Id;#TestCase\n"
+				+ "Test;\n"
+				+ "    #Id;#RawTable\n"
+				+ "    TC;Table\n"
+				+ "    @;Name;Age\n"
+				+ "    0;Mike;25\n"
+				+ "    #EndRawTable\n"
+				+ "    #Action;#BeforeTestCase;#Table;#Title;#Columns\n"
+				+ "    TableReport;'Test';TC;'Table title';{'Age'}#}}"
 	)
 public class TableReport extends AbstractAction 
 {

@@ -26,27 +26,27 @@ import com.exactprosystems.jf.functions.Table;
 				+ "with more columns extra ones will be ignored. In case of adding the table with not enough columns"
 				+ " from the main one, the values in such columns will be null.",
 		additionFieldsAllowed 	= false,
-		examples = "Example:\n" +
-				"{{`1. Create a table with columns Name,  Age and Gender. Complete the table with 2 lines.`}}" +
-				"{{`2. Create a table with columns Name and Age. Complete the table with 2 lines.`}}" +
-				"{{`3.Add the lines from the second table to the end of the first one.`}}" +
-				"{{`4. Verify that the table size is equal to 4.`}}" +
-				"{{##Id;#RawTable\n" +
-				"TC;Table\n" +
-				"@;Name;Age;Gender\n" +
-				"0;Mike;42;Male\n" +
-				"1;Anna;21;Female\n" +
-				"#EndRawTable\n" +
-				"#Id;#RawTable\n" +
-				"TC1;Table\n" +
-				"@;Name;Age\n" +
-				"0;Mike;42\n" +
-				"1;Anna;21\n" +
-				"#EndRawTable\n" +
-				"#Action;#UnitedTable;#MainTable\n" +
-				"TableUnion;TC1;TC\n" +
-				"#Assert;#Message\n" +
-				"TC.size() == 4;#}}"
+		examples 				=
+				"{{`1. Create a table with columns Name,  Age and Gender. Complete the table with 2 lines.`}}"
+				+ "{{`2. Create a table with columns Name and Age. Complete the table with 2 lines.`}}"
+				+ "{{`3. Add the lines from the second table to the end of the first one.`}}"
+				+ "{{`4. Verify that the table size is equal to 4.`}}"
+				+ "{{##Id;#RawTable\n"
+				+ "TC;Table\n"
+				+ "@;Name;Age;Gender\n"
+				+ "0;Mike;42;Male\n"
+				+ "1;Anna;21;Female\n"
+				+ "#EndRawTable\n"
+				+ "#Id;#RawTable\n"
+				+ "TC1;Table\n"
+				+ "@;Name;Age\n"
+				+ "0;Mike;42\n"
+				+ "1;Anna;21\n"
+				+ "#EndRawTable\n"
+				+ "#Action;#UnitedTable;#MainTable\n"
+				+ "TableUnion;TC1;TC\n"
+				+ "#Assert;#Message\n"
+				+ "TC.size() == 4;#}}"
 )
 public class TableUnion extends AbstractAction
 {

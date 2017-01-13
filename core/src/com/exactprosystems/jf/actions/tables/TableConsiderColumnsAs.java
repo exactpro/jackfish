@@ -20,8 +20,44 @@ import com.exactprosystems.jf.functions.Table;
 
 @ActionAttribute(
 		group					= ActionGroups.Tables,
-		generalDescription 		= "Consider pointed columns as columns with type.",
-		additionFieldsAllowed 	= false
+		generalDescription 		= "This action is determined  to take string values stored in a table to a certain data type. \n"
+				+ "Objects Table are filled with string values by default. It is used in case when it is needed to "
+				+ "perform an action with data stored in a table not as a line but as a one type of data given: "
+				+ "{{$Integer$}}, {{$String$}}, {{$Boolean$}}, {{$Double$}}, {{$BigDecimal$}}, {{$Date$}}, and also {{$Expression$}}"
+				+ " which is used to name cells which include expressions in mvel language. These expressions s will be "
+				+ "calculated  when actions TableReport (if parameter ReportValues is used), TableSaveToFile (if parameter"
+				+ " SaveValues is used), TableCompareTwo are performed.",
+		additionFieldsAllowed 	= false,
+		seeAlso = "{{@TableReplace@}}, {{@TableAddColumns@}}, {{@TableColumnRename@}}, {{@TableAddValue@}}",
+		examples 				=
+				"{{`1. Create a table with columns Name and Age, SalaryPerYear and populate it with values.`}}"
+				+ "{{`2. Set data type  Integer for column  Age.`}}"
+				+ "{{`3. Using action TableSelect select all rows with value more than 25(int) in column Age.`}}"
+				+ "{{`4. Verify that TableConsiderColumnsAs is correct.`}}"
+				+ "{{##Id;#RawTable\n"
+				+ "TC;Table\n"
+				+ "@;Name;Age;SalaryPerYear\n"
+				+ "0;Mike;42;12000 * 12\n"
+				+ "1;John;32;25000*12\n"
+				+ "2;Fred;21;7000*12\n"
+				+ "#EndRawTable\n"
+				+ "\n"
+				+ "\n"
+				+ "#Action;#Table;#Integer\n"
+				+ "TableConsiderColumnsAs;TC;'Age'\n"
+				+ "\n"
+				+ "\n"
+				+ "#Id;#Action;#Table;#Age\n"
+				+ "TS;TableSelect;TC;new NumberCondition('Age','>',25)\n"
+				+ "\n"
+				+ "\n"
+				+ "#Action;#Expression;#Table\n"
+				+ "TableConsiderColumnsAs;'SalaryPerYear';TS.Out\n"
+				+ "\n"
+				+ "\n"
+				+ "#Assert;#Message\n"
+				+ "TS.Out.size() == 2 && TS.Out.get(0).get('SalaryPerYear') == '144000'#}}"
+
 	)
 public class TableConsiderColumnsAs extends AbstractAction 
 {
@@ -34,28 +70,28 @@ public class TableConsiderColumnsAs extends AbstractAction
 	public final static String asDateName = "Date";
 	public final static String asExpressionName = "Expression";
 
-	@ActionFieldAttribute(name = tableName, mandatory = true, description = "The table.")
+	@ActionFieldAttribute(name = tableName, mandatory = true, description = "A table is needed to be performed.\n")
 	protected Table 	table 	= null;
 
-	@ActionFieldAttribute(name = asStringName, mandatory = false, description = "Array of columns.")
+	@ActionFieldAttribute(name = asStringName, mandatory = false, description = "Is specified as an array of column names, where it is needed to set data type - String.")
 	protected String[]	asString;
 
-	@ActionFieldAttribute(name = asBooleanName, mandatory = false, description = "Array of columns.")
+	@ActionFieldAttribute(name = asBooleanName, mandatory = false, description = "Is specified as an array of column names, where it is needed to set data type - Boolean.")
 	protected String[]	asBoolean;
 
-	@ActionFieldAttribute(name = asIntegerName, mandatory = false, description = "Array of columns.")
+	@ActionFieldAttribute(name = asIntegerName, mandatory = false, description = "Is specified as an array of column names, where it is needed to set data type - Integer.")
 	protected String[]	asInteger;
 
-	@ActionFieldAttribute(name = asDoubleName, mandatory = false, description = "Array of columns.")
+	@ActionFieldAttribute(name = asDoubleName, mandatory = false, description = "Is specified as an array of column names, where it is needed to set data type - Double.")
 	protected String[]	asDouble;
 
-	@ActionFieldAttribute(name = asBigDecimalName, mandatory = false, description = "Array of columns.")
+	@ActionFieldAttribute(name = asBigDecimalName, mandatory = false, description = "Is specified as an array of column names, where it is needed to set data type - BigDecimal.")
 	protected String[]	asBigDecimal;
 
-	@ActionFieldAttribute(name = asDateName, mandatory = false, description = "Array of columns.")
+	@ActionFieldAttribute(name = asDateName, mandatory = false, description = "Is specified as an array of column names, where it is needed to set data type - Date.")
 	protected String[]	asDate;
 
-	@ActionFieldAttribute(name = asExpressionName, mandatory = false, description = "Array of columns.")
+	@ActionFieldAttribute(name = asExpressionName, mandatory = false, description = "Is specified as an array of column names, where it is needed to set data type - Expression.")
 	protected String[]	asExpression;
 	
 	public TableConsiderColumnsAs()

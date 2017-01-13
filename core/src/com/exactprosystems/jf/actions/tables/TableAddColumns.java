@@ -20,8 +20,27 @@ import com.exactprosystems.jf.functions.Table;
 
 @ActionAttribute(
 		group					= ActionGroups.Tables,
-		generalDescription 		= "Adds new columns into the table.",
-		additionFieldsAllowed 	= false
+		generalDescription 		= "This action is determined to add columns to the table given. It can be used if a "
+				+ "table is created from different sources or if new columns are added to the table given.",
+		additionFieldsAllowed 	= false,
+		seeAlso = "{{@TableReplace@}}, {{@TableColumnRename@}}, {{@AddValue@}}, {{@TableConsiderColumnsAs@}}",
+		examples 				=
+				"{{`1. Create a table with columns Name and Age.`}}"
+				+ "{{`2. Add to the table created columns Gender and Salary (to the line number 0).`}}"
+				+ "{{`3. Verify that the table has columns  Gender, Salary, Name and Age.`}}"
+				+ "{{##Id;#RawTable\n"
+				+ "TC;Table\n"
+				+ "@;Name;Age\n"
+				+ "0;;\n"
+				+ "#EndRawTable\n"
+				+ "\n"
+				+ "\n"
+				+ "#Action;#Index;#Table;#Columns\n"
+				+ "TableAddColumns;0;TC;{'Gender','Salary'}\n"
+				+ "\n"
+				+ "\n"
+				+ "#Assert;#Message\n"
+				+ "TC.getHeader(0) == 'Gender' && TC.getHeader(1) == 'Salary' && TC.getHeader(2) == 'Name' && TC.getHeader(3) == 'Age';'Table is not correct'#}}"
 	)
 public class TableAddColumns extends AbstractAction 
 {
@@ -29,13 +48,14 @@ public class TableAddColumns extends AbstractAction
 	public final static String columnsName = "Columns";
 	public static final String indexName = "Index";
 
-	@ActionFieldAttribute(name = tableName, mandatory = true, description = "The table.")
+	@ActionFieldAttribute(name = tableName, mandatory = true, description = "A table which is needed to add columns. ")
 	protected Table 	table 	= null;
 
-	@ActionFieldAttribute(name = columnsName, mandatory = true, description = "Array of new columns.")
+	@ActionFieldAttribute(name = columnsName, mandatory = true, description = "Array of column titles’ names.")
 	protected String[]	columns 	= new String[] {};
 
-	@ActionFieldAttribute(name = indexName, mandatory = false, description = "Index in the table")
+	@ActionFieldAttribute(name = indexName, mandatory = false, description = "Line number  where it is needed to insert."
+			+ "Numeration starts with 0. By default it will be inserted at end of the table.")
 	protected Integer	index;
 	
 	public TableAddColumns()

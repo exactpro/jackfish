@@ -25,20 +25,28 @@ import com.exactprosystems.jf.functions.Table;
 @ActionAttribute(
 		group					= ActionGroups.Tables,
 		suffix					= "TBL",
-		generalDescription 		= "Load data from a file as a table.",
+		generalDescription 		= "This action is determined to create a table from file csv."
+				+ "{{`{{$CSV$}} (Comma-Separated Values) — a text format, which is determined to display table data."
+				+ "Specification: Each file row is a table row. The first row contains column titles.`}}",
 		additionFieldsAllowed 	= false,
-		outputDescription 		= "Table structure.",
-		outputType				= Table.class
+		outputDescription 		= "If file is not found, object Table is not created.",
+		outputType				= Table.class,
+		seeAlso 				= "{{@RawTable@}}, {{@TableLoadFromDir@}}, {{@TableCreate@}}, {{@TableSelect@}}",
+		examples 				=
+				"{{`1. Get table downloaded from file testTable.csv divided internally with '|'. Verify that table is downloaded correctly.`}}"
+				+ "{{##Id;#Action;#Assert;#File;#Delimiter\n"
+				+ "TLFF;TableLoadFromFile;TLFF.Out.size() > 0;'PathToFile/testTable.csv';'|'#}}"
 	)
 public class TableLoadFromFile extends AbstractAction 
 {
 	public final static String fileName 		= "File";
 	public final static String delimiterName 	= "Delimiter";
 
-	@ActionFieldAttribute(name = fileName, mandatory = true, description = "File name.")
+	@ActionFieldAttribute(name = fileName, mandatory = true, description = "Path to file")
 	protected String 	file 	= null;
 
-	@ActionFieldAttribute(name = delimiterName, mandatory = false, description = "Delimiter of fields in the file.")
+	@ActionFieldAttribute(name = delimiterName, mandatory = false, description = "Any symbol, which divides values in"
+			+ " file. By default ',' . is accepted.")
 	protected String	delimiter;
 
 	@Override

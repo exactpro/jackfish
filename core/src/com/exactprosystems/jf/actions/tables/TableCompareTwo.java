@@ -22,8 +22,36 @@ import java.util.List;
 @ActionAttribute(
 		group					= ActionGroups.Tables,
 		suffix					= "TBLCMP",
-		generalDescription 		= "Compares the given tables. It will fail if the tables are not equal.",
-		additionFieldsAllowed 	= false
+		generalDescription 		= "This action is determined to compare two tables.",
+		additionFieldsAllowed 	= false,
+		outputDescription 		= "There is no output. The information about Actual and Expected tables match is reported. "
+				+ "If compared tables are not equal the detailed information about distinctions is displayed. ",
+		examples 				=
+				"{{`1 Create a table with columns Name and Age. The first table line is applied with values Mike and 42 accordingly.`}}"
+				+ "{{`2. Create a table similar to the previous. The first table line is applied with values Mike and 42 accordingly.`}}"
+				+ "{{`3. Compare two tables.`}}"
+				+ "Information about distinctions ( line number and columns titles which values do not match) is reported as a result of this action in form of:"
+				+ "{{`Diffirents`}}"
+				+ "{{`# Expected Actual`}}"
+				+ "{{`0 [ Name : Mike, Age : 42 ] [ Name : Mike, Age : 41 ]`}}"
+				+ "{{`Age 42 41`}}"
+				+ "{{`If tables have different columns numbers, distinctions in cells will be ignored and information about all columns titles is displayed.`}} "
+				+ "{{##Id;#RawTable\n"
+				+ "TC;Table\n"
+				+ "@;Name;Age\n"
+				+ "0;Mike;42\n"
+				+ "#EndRawTable\n"
+				+ "\n"
+				+ "\n"
+				+ "#Id;#RawTable\n"
+				+ "TC1;Table\n"
+				+ "@;Name;Age\n"
+				+ "0;Mike;41\n"
+				+ "#EndRawTable\n"
+				+ "\n"
+				+ "\n"
+				+ "#Action;#Expected;#Actual\n"
+				+ "TableCompareTwo;TC;TC1#}}"
 	)
 public class TableCompareTwo extends AbstractAction 
 {
@@ -32,16 +60,16 @@ public class TableCompareTwo extends AbstractAction
 	public final static String excludeName = "ExcludeColumns";
 	public final static String ignoreRowsOrderName = "IgnoreRowsOrder";
 
-	@ActionFieldAttribute(name = actualName, mandatory = true, description = "One message, got from any source.")
+	@ActionFieldAttribute(name = actualName, mandatory = true, description = "A table which is to be compared. .")
 	protected Table actual = null;
 
-	@ActionFieldAttribute(name = expectedName, mandatory = true, description = "Another message, got from any source.")
+	@ActionFieldAttribute(name = expectedName, mandatory = true, description = "A table which is to be compared with.")
 	protected Table expected = null;
 
-	@ActionFieldAttribute(name = excludeName, mandatory = false, description = "Fields that will not be compare.")
+	@ActionFieldAttribute(name = excludeName, mandatory = false, description = "An array of column names, which are excluded out of comparison.")
 	protected String[] exclude;
 
-	@ActionFieldAttribute(name = ignoreRowsOrderName, mandatory = false, description = "Rows order will be ignored in comparison.")
+	@ActionFieldAttribute(name = ignoreRowsOrderName, mandatory = false, description = "Ignore row order.")
 	protected Boolean ignoreRowsOrder;
 
 
