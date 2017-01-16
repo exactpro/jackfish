@@ -212,7 +212,7 @@ public class GitUtil
 		}
 	}
 
-	public static List<Chunk> getConflictsNew(CredentialBean bean, String fileName) throws Exception
+	public static List<Chunk> getConflicts(CredentialBean bean, String fileName) throws Exception
 	{
 		try (Git git = git(bean))
 		{
@@ -265,83 +265,6 @@ public class GitUtil
 			return lines;
 		}
 	}
-
-	/*@Deprecated
-	public static List<Chunk> getConflicts(CredentialBean bean, String fileName) throws Exception
-	{
-		try (Git git = git(bean))
-		{
-			Repository repo = git.getRepository();
-			ThreeWayMerger merger = new StrategyResolve().newMerger(repo, true);
-			merger.merge(repo.resolve(Constants.HEAD), repo.resolve(Constants.FETCH_HEAD));
-			ResolveMerger resolveMerger = (ResolveMerger) merger;
-
-			Map<String, org.eclipse.jgit.merge.MergeResult<?>> mergeResults = resolveMerger.getMergeResults();
-
-			org.eclipse.jgit.merge.MergeResult<?> mergeChunks = mergeResults.get(fileName);
-			if (mergeChunks == null)
-			{
-				return null;
-			}
-			if (!mergeChunks.containsConflicts())
-			{
-				return null;
-			}
-			List<Chunk> lines = new ArrayList<>();
-			Chunk curCh = null;
-
-			for (MergeChunk mergeChunk : mergeChunks)
-			{
-				MergeChunk.ConflictState conflictState = mergeChunk.getConflictState();
-				switch (conflictState)
-				{
-					case NO_CONFLICT: break;
-					case FIRST_CONFLICTING_RANGE:
-						curCh = new Chunk(mergeChunk.getBegin(), mergeChunk.getEnd());
-						lines.add(curCh);
-						break;
-					case NEXT_CONFLICTING_RANGE:
-						curCh.setSecondStart(mergeChunk.getBegin());
-						curCh.setSecondEnd(mergeChunk.getEnd());
-						break;
-				}
-			}
-
-//			int currentConflict = -1;
-//
-//
-//			int[][] ret = new int[nrOfConflicts][3];
-//			for (MergeChunk mergeChunk : mergeChunks)
-//			{
-//				// to store the end of this chunk (end of the last conflicting range)
-//				int endOfChunk = 0;
-//				if (mergeChunk.getConflictState().equals(MergeChunk.ConflictState.FIRST_CONFLICTING_RANGE))
-//				{
-//					if (currentConflict > -1)
-//					{
-//						// there was a previous conflicting range for which the end
-//						// is not set yet - set it!
-//						ret[currentConflict][2] = endOfChunk;
-//					}
-//					currentConflict++;
-//					endOfChunk = mergeChunk.getEnd();
-//					ret[currentConflict][mergeChunk.getSequenceIndex()] = mergeChunk.getBegin();
-//				}
-//				if (mergeChunk.getConflictState().equals(MergeChunk.ConflictState.NEXT_CONFLICTING_RANGE))
-//				{
-//					if (mergeChunk.getEnd() > endOfChunk)
-//					{
-//						endOfChunk = mergeChunk.getEnd();
-//					}
-//					ret[currentConflict][mergeChunk.getSequenceIndex()] = mergeChunk.getBegin();
-//				}
-//			}
-//
-//			String asd = "asd";
-//			return null;
-			return lines;
-		}
-	}*/
 	//endregion
 
 	//region Reset
@@ -557,7 +480,7 @@ public class GitUtil
 
 			remoteBrahcnes.stream()
 					.map(Ref::getName)
-					.map(name -> name.replace("refs/heads/", ""))
+//					.map(name -> name.replace("refs/heads/", ""))
 					.map(name -> new Branch(false, false, name))
 					.forEach(list::add);
 
@@ -608,11 +531,33 @@ public class GitUtil
 		}
 	}
 
-	public static void deleteBranch(CredentialBean bean, String branchName) throws Exception
+	public static void deleteBranch(CredentialBean bean, Branch branch) throws Exception
 	{
 		try (Git git = git(bean))
 		{
-			git.branchDelete().setBranchNames(branchName).call();
+			if (branch.isLocal())
+			{
+				git.branchDelete().setBranchNames(branch.getName()).setForce(true).call();
+			}
+			else
+			{
+				git.push().setCredentialsProvider(getCredentialsProvider(bean)).setRefSpecs(new RefSpec(":refs/heads/" + branch.getName().replace("refs/remotes/origin/", ""))).call();
+			}
+
+//			git.push().add(":"+branchName).setCredentialsProvider(getCredentialsProvider(bean)).call();
+			//git.push().setCredentialsProvider(getCredentialsProvider(bean)).setRefSpecs(new RefSpec().setSource(null).setDestination("refs/heads/6")).call()
+		}
+	}
+
+	public static void main(String[] args) throws Exception
+	{
+		CredentialBean bean = new CredentialBean("AndrewBystrov", "Andrew17051993", "", "");
+		try (Git git = git(bean))
+		{
+			Map<String, Ref> allRefs = git.getRepository().getAllRefs();
+			git.fetch().setRemoveDeletedRefs(true).call();
+
+			String asd = "asd";
 		}
 	}
 

@@ -65,12 +65,12 @@ public class GitBranch
 		this.controller.updateBranches(GitUtil.getBranches(this.credentialBean));
 	}
 
-	void deleteBranch(String branchName) throws Exception
+	void deleteBranch(GitUtil.Branch branch) throws Exception
 	{
 		boolean flag = DialogsHelper.showYesNoDialog("Are you sure, that you want to delete the branch?", "Delete branch");
 		if (flag)
 		{
-			GitUtil.deleteBranch(this.credentialBean, branchName);
+			GitUtil.deleteBranch(this.credentialBean, branch);
 			this.controller.updateBranches(GitUtil.getBranches(this.credentialBean));
 		}
 	}

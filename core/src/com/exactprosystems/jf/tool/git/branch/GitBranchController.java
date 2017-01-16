@@ -184,7 +184,7 @@ public class GitBranchController implements Initializable, ContainingParent
 	{
 		TreeItem<GitUtil.Branch> selectedItem = this.treeView.getSelectionModel().getSelectedItem();
 		GitUtil.Branch branch = selectedItem.getValue();
-		Common.tryCatch(() -> this.model.deleteBranch(branch.getName()), "Error on delete branch");
+		Common.tryCatch(() -> this.model.deleteBranch(branch), "Error on delete branch");
 	}
 
 	private void initTree()
