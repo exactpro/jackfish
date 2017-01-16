@@ -1,7 +1,0 @@
-// 
-#TestCase;#Kind;#Depends;#For
-Test case;Never;;
-    #Id;#Call
-    CALL_1;
-
-
