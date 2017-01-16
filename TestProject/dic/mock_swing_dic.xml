@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<dictionary>
+    <window name="Main">
+        <self/>
+        <onOpen/>
+        <run>
+            <button id="Button" class="javax.swing.JButton" name="Button" action="Button" text="Button" addition="Many"/>
+            <textBox id="TextBox" class="javax.swing.JTextField" name="TextBox" text=""/>
+            <table id="Table" class="javax.swing.JTable" name="Table" text="" addition="Many"/>
+            <table id="Table1" class="javax.swing.JTable" name="Table1" text="" addition="Many"/>
+            <checkBox id="CheckBox" class="javax.swing.JCheckBox" action="CheckBox" text="CheckBox" addition="Many"/>
+            <slider id="Slider" class="javax.swing.JSlider" addition="Many"/>
+            <scrollBar id="ScrollBar" class="javax.swing.JScrollBar" addition="Many"/>
+            <comboBox id="ComboBox" class="javax.swing.JComboBox" name="ComboBox" action="comboBoxChanged" addition="Many"/>
+            <radioButton id="RadioButton" class="javax.swing.JRadioButton" action="Green" text="Green" addition="Many"/>
+            <tree id="Tree" class="javax.swing.JTree" addition="Many"/>
+            <tabPanel id="TabPanel" class="javax.swing.JTabbedPane" addition="Many"/>
+            <label id="centralLabel" class="javax.swing.JLabel" name="centralLabel" text="" addition="Many"/>
+            <toggleButton id="ToggleButton" class="javax.swing.JToggleButton" name="ToggleButton" addition="Many"/>
+            <frame id="Frame" class="javax.swing.JFrame" name="frame0" title="Mock app" addition="Many"/>
+            <label id="Label" class="javax.swing.JLabel" name="centralLabel" text="" addition="Many"/>
+            <progressBar id="ProgressBar" class="javax.swing.JProgressBar" name="ProgressBar" addition="Many"/>
+            <panel id="Panel" class="javax.swing.JPanel" name="Panel" addition="Many"/>
+            <dialog id="DialogD" title="Dialog" addition="Many"/>
+            <listView id="ListView" class="javax.swing.JList" addition="Many"/>
+            <menu id="Menu" class="javax.swing.JMenu" name="Menu" action="Menu" text="Menu" addition="Many"/>
+            <menuItem id="MenuItem" class="javax.swing.JMenuItem" name="MenuItem" action="MenuItem" text="MenuItem" addition="Many"/>
+            <menu id="Menu" class="javax.swing.JMenu" action="Menu1" text="Menu1" addition="Many"/>
+            <menu id="Menu1" class="javax.swing.JMenu" action="JMenu 1" text="JMenu 1"/>
+            <image id="Image"/>
+            <row id="Row"/>
+            <treeItem id="TreeItem"/>
+            <splitter id="Splitter" class="javax.swing.JSplitPane" name="Splitter" addition="Many"/>
+            <radioButton id="RadioButton1" class="javax.swing.JRadioButton" action="Yellow" text="Yellow" addition="Many"/>
+            <toolTip id="ToolTip" text="ToolTip" addition="Many"/>
+            <menu id="Menu2" class="javax.swing.JMenu" action="Menu1" text="Menu1"/>
+            <any id="Any" class="javax.swing.JButton" name="Any" action="Any" text="Any" addition="Many"/>
+            <wait id="Wait"/>
+            <label id="moveLabel" class="javax.swing.JLabel" name="moveLabel" text=""/>
+            <button id="Button1" class="javax.swing.JButton" name="ButtonMany" addition="Many"/>
+        </run>
+        <onClose/>
+        <close/>
+    </window>
+</dictionary>

@@ -82,4 +82,52 @@
         <appWorkDir>${JF}/apps</appWorkDir>
         <appStartPort>7000</appStartPort>
     </appEntry>
+    <appEntry>
+        <name>SWING</name>
+        <parameters>
+            <key>ChromeDriverPath</key>
+            <value></value>
+        </parameters>
+        <parameters>
+            <key>IEDriverPath</key>
+            <value></value>
+        </parameters>
+        <parameters>
+            <key>ChromeDriverBinary</key>
+            <value></value>
+        </parameters>
+        <parameters>
+            <key>jreExec</key>
+            <value></value>
+        </parameters>
+        <parameters>
+            <key>jreArgs</key>
+            <value></value>
+        </parameters>
+        <parameters>
+            <key>SafariDriverPath</key>
+            <value></value>
+        </parameters>
+        <parameters>
+            <key>FirefoxProfileDirectory</key>
+            <value></value>
+        </parameters>
+        <parameters>
+            <key>UsePrivateMode</key>
+            <value></value>
+        </parameters>
+        <parameters>
+            <key>GeckoDriverPath</key>
+            <value></value>
+        </parameters>
+        <parameters>
+            <key>LogLevel</key>
+            <value>ERROR</value>
+        </parameters>
+        <appDescription>Swing applications</appDescription>
+        <appDicPath>dic/mock_swing_dic.xml</appDicPath>
+        <appJar>${JF}/apps/swing.jar</appJar>
+        <appWorkDir>${JF}/apps</appWorkDir>
+        <appStartPort>7000</appStartPort>
+    </appEntry>
 </configuration>

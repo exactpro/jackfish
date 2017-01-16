@@ -4,21 +4,34 @@ INIT;Setup;;;
     RESTBL1;1;ResultTable;true
 
 
+// 
 #Id;#TestCase;#Kind;#Depends;#For
-RunAllTests;run all tests;;;
-    #Id;#Let
-    Tests;['EventHandlers','Basic','CheckMockWeb']
-
-    #ForEach;#In
-    testName;Tests
-        #Call;#path
-        runTest;matrixTestsPath + testName +  '.jf'
-
-    #EndForEach
+Test;EventHandlers;;;
+    #Call;#testName
+    runMatrix;'EventHandlers'
 
 
-#TestCase;#Kind;#Depends;#For
-Cleanup;;;
+#Id;#TestCase;#Kind;#Depends;#For
+Test;Basic;;;
+    #Call;#testName
+    runMatrix;'Basic'
+
+
+#Id;#TestCase;#Kind;#Depends;#For
+Test;CheckMockWeb;;;
+    #Call;#testName
+    runMatrix;'CheckMockWeb'
+
+
+#Id;#TestCase;#Kind;#Depends;#For
+Test;CheckMockSwing;;;
+    #Call;#testName
+    runMatrix;'CheckMockSwing'
+
+
+// 
+#Id;#TestCase;#Kind;#Depends;#For
+REPORT;Cleanup;;;
     #Action;#Table;#Title;#BeforeTestCase
     TableReport;RESTBL1.Out;'All tests';'INIT'
 
@@ -29,10 +42,10 @@ Cleanup;;;
     #Assert;#Message
     TBLSLCT1.Out.size() == 0;'There are fails in the tests'
 
-    #Id;#SubCase;#path
-    runTest;Running test;matrixTestsPath + testName +  '.jf'
+    #Id;#SubCase;#testName
+    runMatrix;Running test;'CheckMockSwing'
         #Id;#Action;#Matrix
-        MXRN1;MatrixRun;path
+        MXRN1;MatrixRun;matrixTestsPath + testName +  '.jf'
 
         #Id;#Action;#Matrix
         MXWT1;MatrixWait;MXRN1.Out
