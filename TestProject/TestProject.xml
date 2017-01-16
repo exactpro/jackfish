@@ -121,7 +121,7 @@
             <value>ERROR</value>
         </parameters>
         <appDescription>Web applications</appDescription>
-        <appDicPath>dic/gui/LayoutTesting.xml</appDicPath>
+        <appDicPath>dic/mock_web_dic.xml</appDicPath>
         <appJar>${JF}/../core/apps/web.jar</appJar>
         <appWorkDir>${JF}/../core/apps</appWorkDir>
         <appStartPort>7000</appStartPort>
