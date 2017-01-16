@@ -265,7 +265,7 @@ RF;RegressionFramework
         SQL;RF.Connect
 
         #Id;#Let
-        title;'Summary' + (date == null ? '' : (' on ' +DateTime.strDate(date)))
+        title;'Consolidated Umbrella Report' + (date == null ? '' : (' on ' +DateTime.strDate(date)))
 
         #Id;#Call;#sql;#date
         runId;runIdFromDate;SQL;date
@@ -867,7 +867,7 @@ RF;RegressionFramework
                 chck2;SQLselect;'SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME =\'scenarios\'';SQLCNT.Out
 
                 #Id;#Action;#Query;#Connection
-                chck3;SQLselect;'SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME =\'check\'';SQLCNT.Out
+                chck3;SQLselect;'SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME =\'details\'';SQLCNT.Out
 
                 #Id;#Action;#Query;#Connection
                 chck4;SQLselect;'SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME =\'user_details\'';SQLCNT.Out
