@@ -1,0 +1,25 @@
+// //==============================================
+// //  Copyright (c) 2009-2015, Exactpro Systems, LLC
+// //  Quality Assurance & Related Development for Innovative Trading Systems.
+// //  All rights reserved.
+// //  This is unpublished, licensed software, confidential and proprietary
+// //  information which is the property of Exactpro Systems, LLC or its licensors.
+// //==============================================
+#TestCase;#Kind;#Depends;#For
+Test case;;;
+    #Id;#Action;#AppId;#Jar;#Args;#MainClass
+    APPSTR1;ApplicationStart;'MOCK_SWING';mockSwingJar;'';'com.exactprosystems.jf.MockApp'
+
+    #Id;#Action;#File
+    TXT1;TextLoadFromFile;'run.bat'
+
+    #Id;#Action;#Dialog;#AppConnection;#TextBox
+    DLGFLL1;DialogFill;'Main';APPSTR1.Out;TXT1.Out
+
+    #Action;#Time
+    Wait;3000
+
+    #Id;#Action;#AppConnection
+    APPSTP1;ApplicationStop;APPSTR1.Out
+
+

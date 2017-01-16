@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<dictionary>
+    <window name="Main">
+        <self>
+            <any id="" uid="" xpath="//body" useAbsoluteXpath="true" class="" title="" text=""/>
+        </self>
+        <onOpen/>
+        <run>
+            <button id="Button" uid="button"/>
+            <textBox id="TextBox" uid="input"/>
+            <label id="Label" uid="centralLabel"/>
+            <label id="centralLabel" uid="centralLabel"/>
+            <any id="Any" uid="any" addition="Many"/>
+            <label id="moveLabel" uid="moveLabel"/>
+            <button id="Button1" class="manyButton" addition="Many"/>
+            <wait id="Wait"/>
+            <checkBox id="CheckBox" uid="checkbox" addition="Many"/>
+            <table id="Table" uid="table" addition="Many"/>
+            <table id="Table1" uid="table1" addition="Many"/>
+            <slider id="Slider" uid="slider" addition="Many"/>
+            <radioButton id="RadioButton" uid="radioButton" addition="Many"/>
+            <radioButton id="RadioButton1" uid="radioButton1" addition="Many"/>
+            <progressBar id="ProgressBar" uid="ProgressBar" addition="Many"/>
+        </run>
+        <onClose/>
+        <close>
+            <button id="Button" uid="button" expression="Do.click()"/>
+        </close>
+    </window>
+    <window name="FrameDialog">
+        <self/>
+        <onOpen/>
+        <run>
+            <button id="buttonInFrame" uid="myId"/>
+            <frame id="frameRun" uid="myIframe"/>
+        </run>
+        <onClose/>
+        <close/>
+    </window>
+</dictionary>

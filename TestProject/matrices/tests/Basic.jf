@@ -1,5 +1,5 @@
-#TestCase;#Kind;#For
-RM38805 rename columns in action TableReport;Never;
+#TestCase;#Kind;#Depends;#For
+RM38805 rename columns in action TableReport;Never;;
     #Id;#RawTable
     DATA1;Table
     @;scenario;manual;date;time;result;performer;env;host;user
@@ -12,8 +12,8 @@ RM38805 rename columns in action TableReport;Never;
     TableReport;DATA1;'Consolidated Umbrella Report: ';false;'Matrix Name';'Execution Status';'Execution Date';'Execution Time';'Exectuted By';'Execution Machine'
 
 
-#TestCase;#Kind;#For
-Two Calls can have similar Id.;;
+#TestCase;#Kind;#Depends;#For
+Two Calls can have similar Id.;;;
     #Id;#Call
     CALL_1;SUB_1
 
@@ -28,8 +28,8 @@ Two Calls can have similar Id.;;
     #EndSubCase
 
 
-#TestCase;#Kind;#For
-RM38584 use name on assert;;
+#TestCase;#Kind;#Depends;#For
+RM38584 use name on assert;;;
     #Id;#RawTable
     DATA1;Table
     @;col1
@@ -45,8 +45,8 @@ RM38584 use name on assert;;
     tableSelect;TableSelect;tableSelect.Out.size() == 1;DATA1;'val2'
 
 
-#TestCase;#Kind;#For
-RM37970 fail into loops works incorrectly;;
+#TestCase;#Kind;#Depends;#For
+RM37970 fail into loops works incorrectly;;;
     #Step;#Kind
     'while';
         #Id;#Call
@@ -132,8 +132,8 @@ RM37970 fail into loops works incorrectly;;
     #EndSubCase
 
 
-#Id;#TestCase;#Kind;#For
-38699;RM 38699 Action For starts calculating since 1;;
+#Id;#TestCase;#Kind;#Depends;#For
+38699;RM 38699 Action For starts calculating since 1;;;
     #Id;#Let
     str;''
 
@@ -148,8 +148,8 @@ RM37970 fail into loops works incorrectly;;
     str == '012';'wrong ' + str
 
 
-#TestCase;#Kind;#For
-RM38720 TableLoadFromDir return table when directory doesn't exists;;
+#TestCase;#Kind;#Depends;#For
+RM38720 TableLoadFromDir return table when directory doesn't exists;;;
     #Id;#Let
     path;'/directoryThatDoesNotExists'
 

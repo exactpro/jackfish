@@ -1,41 +1,24 @@
-#Id;#TestCase
-INIT;Setup
+#Id;#TestCase;#Kind;#Depends;#For
+INIT;Setup;;;
     #Id;#Global;#Action;#Decoraded
     RESTBL1;1;ResultTable;true
 
 
-#Id;#TestCase
-HANDLERS;Event hanlers
-    #Id;#Action;#Matrix
-    MXRN1;MatrixRun;'matrices/EventHandlers.jf'
+#Id;#TestCase;#Kind;#Depends;#For
+RunAllTests;run all tests;;;
+    #Id;#Let
+    Tests;['EventHandlers','Basic','OldTests']
 
-    #Id;#Action;#Matrix
-    MXWT1;MatrixWait;MXRN1.Out
+    #ForEach;#In
+    testName;Tests
+        #Call;#path
+        runTest;matrixTestsPath + testName +  '.jf'
 
-    #Id;#Action;#Decoraded;#Matrix
-    RESTBL2;ResultTable;true;MXRN1.Out
-
-    #Action;#UnitedTable;#MainTable
-    TableUnion;RESTBL2.Out;RESTBL1.Out
+    #EndForEach
 
 
-#Id;#TestCase
-BASIC;Basic functionality
-    #Id;#Action;#Matrix
-    MXRN1;MatrixRun;'matrices/Basic.jf'
-
-    #Id;#Action;#Matrix
-    MXWT1;MatrixWait;MXRN1.Out
-
-    #Id;#Action;#Decoraded;#Matrix
-    RESTBL2;ResultTable;true;MXRN1.Out
-
-    #Action;#UnitedTable;#MainTable
-    TableUnion;RESTBL2.Out;RESTBL1.Out
-
-
-#TestCase
-Cleanup
+#TestCase;#Kind;#Depends;#For
+Cleanup;;;
     #Action;#Table;#Title;#BeforeTestCase
     TableReport;RESTBL1.Out;'All tests';'INIT'
 
@@ -46,4 +29,20 @@ Cleanup
     #Assert;#Message
     TBLSLCT1.Out.size() == 0;'There are fails in the tests'
 
+
+#Id;#SubCase;#path
+runTest;Running test;matrixTestsPath + testName +  '.jf'
+    #Id;#Action;#Matrix
+    MXRN1;MatrixRun;path
+
+    #Id;#Action;#Matrix
+    MXWT1;MatrixWait;MXRN1.Out
+
+    #Id;#Action;#Decoraded;#Matrix
+    RESTBL2;ResultTable;true;MXRN1.Out
+
+    #Action;#UnitedTable;#MainTable
+    TableUnion;RESTBL2.Out;RESTBL1.Out
+
+#EndSubCase
 
