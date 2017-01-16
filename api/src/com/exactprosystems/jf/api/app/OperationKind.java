@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-//  Copyright (c) 2009-2015, Exactpro Systems, LLC
+//  Copyright (c) 2009-2016, Exactpro Systems, LLC
 //  Quality Assurance & Related Development for Innovative Trading Systems.
 //  All rights reserved.
 //  This is unpublished, licensed software, confidential and proprietary
@@ -385,7 +385,7 @@ public enum OperationKind
 		@Override
 		protected String formulaTemplate(Part part)
 		{
-			return ".click(%11$s)";
+			return ".click()";
 		}
 
 		@Override
@@ -480,7 +480,7 @@ public enum OperationKind
 		@Override
 		protected String formulaTemplate(Part part)
 		{
-			return ".select('%2$d')";
+			return ".select(%2$d)";
 		}
 
 		@Override
@@ -751,12 +751,12 @@ public enum OperationKind
 		}
 	},
 
-	GET_ROW_WITH_COLOR("getRowWithoutColor")
+	GET_ROW_WITH_COLOR("getRowWithColor")
 	{
 		@Override
 		protected String formulaTemplate(Part part)
 		{
-			return ".getRowWithoutColor(%2$d)";
+			return ".getRowWithColor(%2$d)";
 		}
 
 		@Override
