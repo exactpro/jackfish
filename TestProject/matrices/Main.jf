@@ -7,7 +7,7 @@ INIT;Setup;;;
 #Id;#TestCase;#Kind;#Depends;#For
 RunAllTests;run all tests;;;
     #Id;#Let
-    Tests;['EventHandlers','Basic','OldTests']
+    Tests;['EventHandlers','Basic','CheckMockWeb']
 
     #ForEach;#In
     testName;Tests
