@@ -89,8 +89,11 @@ RF;RegressionFramework
                 #Id;#Let
                 manual;!(new File(row.Scenario + '.jf').exists())
 
+                #Id;#Let
+                scenario;new File(row.Scenario).getName()
+
                 #Id;#Action;#Connection;#Query;#RunId;#Scenario;#Counter;#Performer;#Priority;#Manual;#StartTime;#Host;#User;#TestSet
-                selectScenarioId;SQLinsert;SQL;'INSERT INTO scenarios (run_id, scenario, counter, performer, priority, manual, start_time, host, username, test_set) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';runId;row.Scenario;counter;row.Performer;row.Priority;manual ? 1 : 0;DateTime.current();Sys.hostName();Sys.userName();row.TestSet
+                selectScenarioId;SQLinsert;SQL;'INSERT INTO scenarios (run_id, scenario, counter, performer, priority, manual, start_time, host, username, test_set) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';runId;scenario;counter;row.Performer;row.Priority;manual ? 1 : 0;DateTime.current();Sys.hostName();Sys.userName();row.TestSet
 
                 #Id;#Let
                 scenarioId;selectScenarioId.Out[0]
@@ -326,7 +329,7 @@ RF;RegressionFramework
         #EndSwitch
 
         #Id;#Action;#Connection;#Query;#runId;#runId
-        select;SQLselect;SQL;TEXT2.toString();runId;runId
+        select;SQLselect;SQL;TEXT2.toString();runId.id;runId.id
 
         #Id;#Let
         table;select.Out
@@ -419,7 +422,7 @@ RF;RegressionFramework
         #EndSwitch
 
         #Id;#Action;#Connection;#Query;#runId
-        query;SQLselect;SQL;TEXT5.toString();runId
+        query;SQLselect;SQL;TEXT5.toString();runId.id
 
         #Id;#Let
         scenarios;query.Out
@@ -563,7 +566,7 @@ RF;RegressionFramework
         #EndSwitch
 
         #Id;#Action;#Connection;#Query;#runId
-        select;SQLselect;SQL;TEXT1.toString();runId
+        select;SQLselect;SQL;TEXT1.toString();runId.id
 
         #Id;#Let
         table;select.Out
