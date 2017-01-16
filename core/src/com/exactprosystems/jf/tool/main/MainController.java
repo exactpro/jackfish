@@ -483,7 +483,12 @@ public class MainController implements Initializable, ContainingParent
 
 	public void gitMerge(ActionEvent event)
 	{
-		Common.tryCatch(this.model::gitMerge, "Error on show status");
+		Common.tryCatch(this.model::gitMerge, "Error on merge");
+	}
+
+	public void gitBranches(ActionEvent event)
+	{
+		Common.tryCatch(this.model::gitBranches, "Error on show branches");
 	}
 
 	public void gitChangeCredential(ActionEvent event)

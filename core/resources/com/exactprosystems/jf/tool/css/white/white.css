@@ -680,6 +680,10 @@ CellView > .text-input.text-field{
 	-fx-background-color : rgba(0,0,255,0.3);
 
 }
+.gitCurrentBranch {
+	-fx-background-color : lightgreen;
+
+}
 
 .customTabPane{
 	-fx-open-tab-animation: NONE;

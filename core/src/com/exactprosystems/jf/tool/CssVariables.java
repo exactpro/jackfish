@@ -180,6 +180,7 @@ public class CssVariables
 	public static final String	GIT_UNTRACKED_FILE			= "gitUntrackedFile";
 	public static final String	GIT_UNSTAGED_FILE			= "gitUnstagedFile";
 	public static final String	CHANGES_LINE				= "changesLine";
+	public static final String	GIT_CURRENT_BRANCH			= "gitCurrentBranch";
 
 	public static final String GIT_MERGE_NO_CONFLICT		= "gitMergeNoConflict";
 	public static final String GIT_MERGE_YOUR_CONFLICT		= "gitMergeYourConflict";

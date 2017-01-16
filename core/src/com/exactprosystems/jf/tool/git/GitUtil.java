@@ -538,6 +538,133 @@ public class GitUtil
 	}
 	//endregion
 
+	//region Branch
+	public static List<Branch> getBranches(CredentialBean bean) throws Exception
+	{
+		try (Git git = git(bean))
+		{
+			String currentBranch = git.getRepository().getBranch();
+			List<Ref> localBranches = git.branchList().call();
+			List<Ref> remoteBrahcnes = git.branchList().setListMode(ListBranchCommand.ListMode.REMOTE).call();
+			List<Branch> list = new ArrayList<>();
+
+			localBranches.stream()
+					.map(Ref::getName)
+					.map(name -> name.replace("refs/heads/", ""))
+					.map(name -> new Branch(true, false, name))
+					.peek(b -> b.isCurrent = b.name.equals(currentBranch))
+					.forEach(list::add);
+
+			remoteBrahcnes.stream()
+					.map(Ref::getName)
+					.map(name -> name.replace("refs/heads/", ""))
+					.map(name -> new Branch(false, false, name))
+					.forEach(list::add);
+
+			return list;
+		}
+	}
+
+	public static void createNewBranch(CredentialBean bean, String newName) throws Exception
+	{
+		try (Git git = git(bean))
+		{
+			Ref	ref = git.branchCreate()
+					.setName(newName)
+					//think how to set upstream correctly
+					.setUpstreamMode(CreateBranchCommand.SetupUpstreamMode.SET_UPSTREAM)
+					.call();
+
+			Iterable<PushResult> call = git.push().setCredentialsProvider(getCredentialsProvider(bean)).add(ref).call();
+		}
+	}
+
+	public static String checkout(CredentialBean bean, String branchName, String localBranchName) throws Exception
+	{
+		try (Git git = git(bean))
+		{
+			CheckoutCommand checkoutCommand = git.checkout()
+					.setStartPoint(branchName)
+					.setCreateBranch(false)
+					.setName(branchName);
+
+			if (localBranchName != null)
+			{
+				checkoutCommand
+						.setName(localBranchName)
+						.setUpstreamMode(CreateBranchCommand.SetupUpstreamMode.TRACK)
+						.setCreateBranch(true);
+			}
+			Ref ref = checkoutCommand.call();
+			return ref.getName();
+		}
+	}
+
+	public static void rename(CredentialBean bean, String oldName, String newName) throws Exception
+	{
+		try (Git git = git(bean))
+		{
+			git.branchRename().setNewName(newName).setOldName(oldName).call();
+		}
+	}
+
+	public static void deleteBranch(CredentialBean bean, String branchName) throws Exception
+	{
+		try (Git git = git(bean))
+		{
+			git.branchDelete().setBranchNames(branchName).call();
+		}
+	}
+
+	public static class Branch
+	{
+		private boolean isLocal;
+		private boolean isCurrent;
+		private String name;
+
+		public Branch(boolean isLocal, boolean isCurrent, String name)
+		{
+			this.isLocal = isLocal;
+			this.isCurrent = isCurrent;
+			this.name = name;
+		}
+
+		public boolean isLocal()
+		{
+			return isLocal;
+		}
+
+		public boolean isCurrent()
+		{
+			return isCurrent;
+		}
+
+		public String getName()
+		{
+			return name;
+		}
+
+		@Override
+		public boolean equals(Object o)
+		{
+			if (this == o)
+				return true;
+			if (o == null || getClass() != o.getClass())
+				return false;
+
+			Branch branch = (Branch) o;
+
+			return name.equals(branch.name);
+		}
+
+		@Override
+		public int hashCode()
+		{
+			return name.hashCode();
+		}
+	}
+	//endregion
+
 
 	public static void gitDummy(Object... objects) throws Exception
 	{

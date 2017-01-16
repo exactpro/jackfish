@@ -101,7 +101,7 @@
 										<MenuItem fx:id="gitReset" mnemonicParsing="false" onAction="#gitReset" text="Reset"/>
 										<MenuItem fx:id="gitStatus" mnemonicParsing="false" onAction="#gitStatus" text="Status"/>
 										<MenuItem fx:id="gitMerge" mnemonicParsing="false" onAction="#gitMerge" text="Resolve conflict"/>
-
+										<MenuItem fx:id="gitBranches" mnemonicParsing="false" onAction="#gitBranches" text="Branches"/>
 										<SeparatorMenuItem/>
 										<MenuItem fx:id="gitChangeCredential" mnemonicParsing="false" onAction="#gitChangeCredential" text="Change credential"/>
 									</items>

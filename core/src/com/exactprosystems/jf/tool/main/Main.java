@@ -28,6 +28,7 @@ import com.exactprosystems.jf.tool.git.CredentialBean;
 import com.exactprosystems.jf.tool.git.CredentialDialog;
 import com.exactprosystems.jf.tool.git.GitBean;
 import com.exactprosystems.jf.tool.git.GitUtil;
+import com.exactprosystems.jf.tool.git.branch.GitBranch;
 import com.exactprosystems.jf.tool.git.clone.GitClone;
 import com.exactprosystems.jf.tool.git.commit.GitCommit;
 import com.exactprosystems.jf.tool.git.merge.GitMerge;
@@ -391,6 +392,11 @@ public class Main extends Application
 		GitMerge gitMerge = new GitMerge(this, collect);
 		gitMerge.display();
 		return gitMerge.getMergedFiles();
+	}
+
+	public void gitBranches() throws Exception
+	{
+		new GitBranch(this).display();
 	}
 
 	public void gitPull() throws Exception
