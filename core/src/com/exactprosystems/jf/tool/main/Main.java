@@ -36,6 +36,7 @@ import com.exactprosystems.jf.tool.git.merge.GitMergeBean;
 import com.exactprosystems.jf.tool.git.pull.GitPull;
 import com.exactprosystems.jf.tool.git.reset.GitReset;
 import com.exactprosystems.jf.tool.git.status.GitStatus;
+import com.exactprosystems.jf.tool.git.tag.GitTag;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper.OpenSaveMode;
 import com.exactprosystems.jf.tool.matrix.MatrixFx;
@@ -397,6 +398,11 @@ public class Main extends Application
 	public void gitBranches() throws Exception
 	{
 		new GitBranch(this).display();
+	}
+
+	public void gitTags() throws Exception
+	{
+		new GitTag(this).display();
 	}
 
 	public void gitPull() throws Exception

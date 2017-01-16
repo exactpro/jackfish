@@ -9,6 +9,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
+import javafx.scene.layout.VBox;
 
 import java.net.URL;
 import java.util.Arrays;
@@ -22,10 +23,13 @@ public class GitBranchController implements Initializable, ContainingParent
 	private static final String REMOTE = "Remote";
 	public Parent parent;
 	public TreeView<GitUtil.Branch> treeView;
+	public Button btnNewBranch;
 	public Button btnRenameBranch;
 	public Button btnCheckoutBranch;
 	public Button btnMergeBranch;
 	public Button btnDeleteBranch;
+	public VBox vBox;
+	public Button btnClose;
 
 	private GitBranch model;
 	private Alert dialog;
@@ -76,6 +80,19 @@ public class GitBranchController implements Initializable, ContainingParent
 				remote.getChildren().add(new TreeItem<>(b));
 			}
 		});
+	}
+
+	void setDisable(boolean flag)
+	{
+		this.treeView.setDisable(flag);
+		this.vBox.getChildren().forEach(n -> n.setDisable(flag));
+		this.btnClose.setDisable(flag);
+		if (!flag)
+		{
+			this.btnNewBranch.setDisable(false);
+			this.treeView.getSelectionModel().clearSelection();
+			this.treeView.getSelectionModel().select(local);
+		}
 	}
 
 	public void hide(ActionEvent event)

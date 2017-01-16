@@ -3,7 +3,7 @@
 <?import com.exactprosystems.jf.tool.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.exactprosystems.jf.tool.git.branch.GitBranchController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.exactprosystems.jf.tool.git.tag.GitTagController">
 	<fx:define>
 		<CssVariables fx:id="verMin" fx:constant="VERTICAL_MIN"/>
 		<CssVariables fx:id="verMid" fx:constant="VERTICAL_MID"/>
@@ -20,27 +20,23 @@
 				<Label id="$horMid" />
 				<BorderPane prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS">
 					<right>
-						<HBox prefHeight="330.0" prefWidth="115.0">
+						<HBox prefHeight="330.0" prefWidth="140.0">
 							<children>
 								<Label id="$horMid" />
-								<VBox fx:id="vBox" alignment="TOP_CENTER" prefHeight="370.0" prefWidth="178.0" BorderPane.alignment="CENTER" HBox.hgrow="ALWAYS">
+								<VBox alignment="TOP_CENTER" prefHeight="370.0" prefWidth="178.0" BorderPane.alignment="CENTER" HBox.hgrow="ALWAYS">
 									<children>
-										<Button fx:id="btnNewBranch" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#newBranch" text="New" VBox.vgrow="ALWAYS" />
+										<Button fx:id="btnNewTag" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#newTag" text="New tag" VBox.vgrow="ALWAYS" />
 										<Label id="$verMid" />
-										<Button fx:id="btnRenameBranch" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#renameBranch" text="Rename" />
-										<Label id="$verMid" />
-										<Button fx:id="btnCheckoutBranch" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#checkoutBranch" text="Checkout" />
-										<Label id="$verMid" />
-										<Button fx:id="btnMergeBranch" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#mergeBranch" text="Merge" />
+										<Button fx:id="btnPushTags" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#pushTag" text="Push all tags" VBox.vgrow="ALWAYS" />
 										<Label id="$verMax" />
-										<Button fx:id="btnDeleteBranch" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#deleteBranch" text="Delete" />
+										<Button fx:id="btnDeleteTag" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#deleteTag" text="Delete tag" />
 									</children>
 								</VBox>
 							</children>
 						</HBox>
 					</right>
 					<center>
-						<TreeView fx:id="treeView" prefHeight="370.0" prefWidth="259.0" BorderPane.alignment="CENTER" />
+						<ListView fx:id="listView" prefHeight="370.0" prefWidth="259.0" BorderPane.alignment="CENTER" />
 					</center>
 				</BorderPane>
 				<Label id="$horMid" />

@@ -105,6 +105,8 @@ public class MainController implements Initializable, ContainingParent
 	public MenuItem				gitReset;
 	public MenuItem				gitStatus;
 	public MenuItem				gitMerge;
+	public MenuItem				gitBranches;
+	public MenuItem gitTags;
 	public MenuItem				gitChangeCredential;
 
 	public MenuItem				helpActionsHelp;
@@ -491,6 +493,11 @@ public class MainController implements Initializable, ContainingParent
 		Common.tryCatch(this.model::gitBranches, "Error on show branches");
 	}
 
+	public void gitTags(ActionEvent event)
+	{
+		Common.tryCatch(this.model::gitTags, "Error on show tags");
+	}
+
 	public void gitChangeCredential(ActionEvent event)
 	{
 		Common.tryCatch(this.model::changeCredential, "Error on show status");
@@ -641,6 +648,8 @@ public class MainController implements Initializable, ContainingParent
 		gitReset.setDisable(!flag);
 		gitStatus.setDisable(!flag);
 		gitMerge.setDisable(!flag);
+		gitTags.setDisable(!flag);
+		gitBranches.setDisable(!flag);
 		gitChangeCredential.setDisable(!flag);
 	}
 

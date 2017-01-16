@@ -5,6 +5,7 @@ import com.exactprosystems.jf.tool.git.CredentialBean;
 import com.exactprosystems.jf.tool.git.GitUtil;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.main.Main;
+import javafx.concurrent.Task;
 
 public class GitBranch
 {
@@ -28,8 +29,27 @@ public class GitBranch
 
 	void newBranch(String newName) throws Exception
 	{
-		GitUtil.createNewBranch(this.credentialBean, newName);
-		this.controller.updateBranches(GitUtil.getBranches(this.credentialBean));
+		DialogsHelper.showInfo("Start creating branch");
+		this.controller.setDisable(true);
+		Task<Void> task = new Task<Void>()
+		{
+			@Override
+			protected Void call() throws Exception
+			{
+				GitUtil.createNewBranch(credentialBean, newName);
+				return null;
+			}
+		};
+		task.setOnFailed(e -> {
+			this.controller.setDisable(false);
+			DialogsHelper.showError("Error on create new branch");
+		});
+		task.setOnSucceeded(e -> {
+			this.controller.setDisable(false);
+			DialogsHelper.showSuccess("New branch was created");
+			Common.tryCatch(() -> this.controller.updateBranches(GitUtil.getBranches(this.credentialBean)), "Error on create new branch");
+		});
+		new Thread(task).start();
 	}
 
 	void renameBranch(String oldName, String newName) throws Exception

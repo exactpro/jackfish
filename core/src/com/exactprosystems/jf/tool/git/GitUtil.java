@@ -665,6 +665,60 @@ public class GitUtil
 	}
 	//endregion
 
+	public static List<Tag> getTags(CredentialBean bean) throws Exception
+	{
+		try (Git git = git(bean))
+		{
+			List<Ref> call = git.tagList().call();
+			return call.stream().map(Ref::getName).map(Tag::new).collect(Collectors.toList());
+		}
+	}
+
+	public static void deleteTag(CredentialBean bean, String tagName) throws Exception
+	{
+		try (Git git = git(bean))
+		{
+			git.tagDelete().setTags(tagName).call();
+		}
+	}
+
+	public static void newTag(CredentialBean bean, String message, String version) throws Exception
+	{
+		try (Git git = git(bean))
+		{
+			git.tag().setMessage(message).setName(version).call();
+		}
+	}
+
+	public static void pushTag(CredentialBean bean) throws Exception
+	{
+		try (Git git = git(bean))
+		{
+			git.push().setPushTags().setCredentialsProvider(getCredentialsProvider(bean)).call();
+		}
+	}
+
+	public static class Tag
+	{
+		private String name;
+		private String fullname;
+
+		public Tag(String fullname)
+		{
+			this.fullname = fullname;
+			this.name = this.fullname.replace("refs/tags/", "");
+		}
+
+		public String getName()
+		{
+			return name;
+		}
+
+		public String getFullname()
+		{
+			return fullname;
+		}
+	}
 
 	public static void gitDummy(Object... objects) throws Exception
 	{
