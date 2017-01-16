@@ -8,13 +8,18 @@
 
 package com.exactprosystems.jf.documents.config;
 
+import com.exactprosystems.jf.api.app.Do;
 import com.exactprosystems.jf.api.app.IApplicationFactory;
 import com.exactprosystems.jf.api.app.IApplicationPool;
 import com.exactprosystems.jf.api.app.IGuiDictionary;
+import com.exactprosystems.jf.api.client.AbstractClient;
 import com.exactprosystems.jf.api.client.IClientsPool;
 import com.exactprosystems.jf.api.common.Converter;
 import com.exactprosystems.jf.api.common.DateTime;
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.api.common.Sys;
+import com.exactprosystems.jf.api.conditions.Condition;
+import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.api.service.IServicesPool;
 import com.exactprosystems.jf.app.ApplicationPool;
 import com.exactprosystems.jf.client.ClientsPool;
@@ -25,6 +30,7 @@ import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.evaluator.MvelEvaluator;
 import com.exactprosystems.jf.common.report.HTMLReportFactory;
 import com.exactprosystems.jf.common.report.ReportFactory;
+import com.exactprosystems.jf.common.version.VersionInfo;
 import com.exactprosystems.jf.common.xml.schema.Xsd;
 import com.exactprosystems.jf.documents.AbstractDocument;
 import com.exactprosystems.jf.documents.Document;
@@ -38,6 +44,7 @@ import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.MatrixListener;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.RunnerListener;
 import com.exactprosystems.jf.documents.vars.SystemVars;
+import com.exactprosystems.jf.functions.Table;
 import com.exactprosystems.jf.service.ServicePool;
 import com.exactprosystems.jf.sql.DataBasePool;
 import com.exactprosystems.jf.tool.main.DocumentKind;
@@ -53,8 +60,13 @@ import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
+
+import java.awt.Color;
+import java.awt.event.ActionEvent;
 import java.io.*;
+import java.math.MathContext;
 import java.util.*;
+import java.util.regex.Matcher;
 import java.util.stream.Collectors;
 
 @XmlRootElement(name="configuration")
@@ -130,17 +142,26 @@ public class Configuration extends AbstractDocument
 	public static final MutableArrayList<MutableString> DEFAULT_IMPORTS = new MutableArrayList<>();
 	static
 	{
-		DEFAULT_IMPORTS.add(new MutableString("java.math"));
-		DEFAULT_IMPORTS.add(new MutableString("java.util.regex"));
-		DEFAULT_IMPORTS.add(new MutableString("java.util"));
-		DEFAULT_IMPORTS.add(new MutableString("java.util.List"));
-		DEFAULT_IMPORTS.add(new MutableString("java.util.Map"));
-		DEFAULT_IMPORTS.add(new MutableString("java.lang"));
-		DEFAULT_IMPORTS.add(new MutableString("com.exactprosystems.jf.api.app"));
-		DEFAULT_IMPORTS.add(new MutableString("com.exactprosystems.jf.api.conditions"));
-		DEFAULT_IMPORTS.add(new MutableString("com.exactprosystems.jf.functions"));
-		DEFAULT_IMPORTS.add(new MutableString("java.io"));
-		DEFAULT_IMPORTS.add(new MutableString("org.mvel2"));
+        DEFAULT_IMPORTS.add(new MutableString(List.class.getCanonicalName()));
+        DEFAULT_IMPORTS.add(new MutableString(Map.class.getCanonicalName()));
+        DEFAULT_IMPORTS.add(new MutableString(VersionInfo.class.getPackage().getName()));
+
+        DEFAULT_IMPORTS.add(new MutableString(MathContext.class.getPackage().getName()));
+        DEFAULT_IMPORTS.add(new MutableString(List.class.getPackage().getName()));
+		DEFAULT_IMPORTS.add(new MutableString(Matcher.class.getPackage().getName()));
+        DEFAULT_IMPORTS.add(new MutableString(File.class.getPackage().getName()));
+		DEFAULT_IMPORTS.add(new MutableString(String.class.getPackage().getName()));
+        DEFAULT_IMPORTS.add(new MutableString(Color.class.getPackage().getName()));
+        DEFAULT_IMPORTS.add(new MutableString(ActionEvent.class.getPackage().getName()));
+        
+        DEFAULT_IMPORTS.add(new MutableString(Table.class.getPackage().getName()));
+        DEFAULT_IMPORTS.add(new MutableString(Do.class.getPackage().getName()));
+		DEFAULT_IMPORTS.add(new MutableString(Condition.class.getPackage().getName()));
+        DEFAULT_IMPORTS.add(new MutableString(AbstractClient.class.getPackage().getName()));
+        DEFAULT_IMPORTS.add(new MutableString(ErrorKind.class.getPackage().getName()));
+        DEFAULT_IMPORTS.add(new MutableString(Sys.class.getPackage().getName()));
+
+		DEFAULT_IMPORTS.add(new MutableString(org.mvel2.MVEL.class.getPackage().getName()));
 	}
 
 	public static final MutableArrayList<MutableString> DEFAULT_FORMATS = new MutableArrayList<>();
@@ -155,16 +176,6 @@ public class Configuration extends AbstractDocument
 		DEFAULT_FORMATS.add(new MutableString("HH:mm:ss Z"));
 		DEFAULT_FORMATS.add(new MutableString("HH:mm:ss:SSS"));
 	}
-	public static final MutableString DEFAULT_SYSTEM_VARS = new MutableString(
-			"TRUE=true\n" +
-			"FALSE=false\n" +
-			"min=def (a, b) java.lang.Math.min(a, b)\n"+
-			"max=def (a, b) java.lang.Math.max(a, b)\n" +
-			"less=def (a) DoSpec.less(a)\n" +
-			"great=def (a) DoSpec.great(a)\n" +
-			"about=def (a) DoSpec.about(a)\n" +
-			"between=def (a, b) DoSpec.between(a, b)"
-	);
 	public static final MutableString DEFAULT_TIME = new MutableString("HH:mm:ss.SSS");
 	public static final MutableString DEFAULT_DATE = new MutableString("dd.MM.yyyy");
 	public static final MutableString DEFAULT_DATE_TIME = new MutableString("dd.MM.yyyy HH:mm:ss.SSS");
@@ -371,6 +382,7 @@ public class Configuration extends AbstractDocument
 		}
 		
 		AbstractEvaluator evaluator	= objectFromClassName(this.evaluatorValue, AbstractEvaluator.class);
+		evaluator.addImports(toStringList(DEFAULT_IMPORTS));
 		evaluator.addImports(toStringList(this.importsValue));
 
 		for (SystemVars vars : this.systemVars)

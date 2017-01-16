@@ -931,5 +931,4 @@ public enum OperationKind
 	}
 
 	private String	name;
-	private String 	template;
 }

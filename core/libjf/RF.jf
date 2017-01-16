@@ -13,8 +13,8 @@ RF;RegressionFramework
     // // Runs all matrixes which names are enumerated in the column  Name
     // // of the table and puts results into database
     // //==============================================
-    #Id;#SubCase;#table;#testSet
-    RunAll;Run all matrixes from table;;
+    #Id;#SubCase;#table
+    RunAll;Run all matrixes from table;
         #Assert;#Message
         table != null && table instanceof Table;'The parameter table should be Table'
 
@@ -25,10 +25,16 @@ RF;RegressionFramework
         table.columnIsPresent('Scenario');'Table shoud contain the column Scenario'
 
         #Assert;#Message
-        table.columnIsPresent('Performer');'Table shoud contain the column Performer'
+        table.columnIsPresent('TestSet');'Table shoud contain the column TestSet'
 
         #Assert;#Message
-        table.columnIsPresent('Env');'Table shoud contain the column Env'
+        table.columnIsPresent('Start');'Table shoud contain the column Start'
+
+        #Assert;#Message
+        table.columnIsPresent('Finish');'Table shoud contain the column Finish'
+
+        #Assert;#Message
+        table.columnIsPresent('Performer');'Table shoud contain the column Performer'
 
         #Assert;#Message
         table.columnIsPresent('Priority');'Table shoud contain the column Priority'
@@ -42,8 +48,8 @@ RF;RegressionFramework
         #Id;#Let
         needD;DateTime.date(curD.years(),curD.months(),curD.days(),curD.hours(),curD.minutes(),curD.seconds())
 
-        #Id;#Action;#Connection;#Query;#CreateTime;#TestSet
-        selectRunId;SQLinsert;SQL;'INSERT INTO runs (create_time, duration, test_set) VALUES (?, -1, ?)\u003b';needD;testSet
+        #Id;#Action;#Connection;#Query;#CreateTime;#ToolVersion;#AppVersion
+        selectRunId;SQLinsert;SQL;'INSERT INTO runs (create_time, duration, tool_version, app_version) VALUES (?, -1, ?, ?)\u003b';needD;VersionInfo.getVersion();_rf_app_version
 
         #Id;#Let
         runId;selectRunId.Out[0]
@@ -73,81 +79,91 @@ RF;RegressionFramework
             #EndIf
 
             #Id;#Let
-            manual;!(new File(_rf_scriptsDir+ row.Scenario + '.jf').exists())
-
-            #Id;#Action;#Connection;#Query;#RunId;#Scenario;#Performer;#Priority;#Env;#Manual;#StartTime;#Host;#User;#TestSet
-            selectScenarioId;SQLinsert;SQL;'INSERT INTO scenarios (run_id, scenario, performer, priority, env, manual, start_time, host, username, test_set) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';runId;row.Scenario;row.Performer;row.Priority;row.Env;manual ? 1 : 0;DateTime.current();Sys.hostName();Sys.userName();testSet
+            start;Str.IsNullOrEmpty(row.Start) ? 0 : Integer.parseInt(row.Start)
 
             #Id;#Let
-            scenarioId;selectScenarioId.Out[0]
+            finish;Str.IsNullOrEmpty(row.Finish) ? 0 : Integer.parseInt(row.Finish)
 
-            #If
-            !manual
+            #For;#From;#To;#Step
+            counter;start;finish;1
                 #Id;#Let
-                totalCount;totalCount + 1
+                manual;!(new File(row.Scenario + '.jf').exists())
 
-                #Action;#Str
-                Print;'Starting: ' + _rf_scriptsDir + row.Scenario + '.jf'
-
-                #Id;#Action;#Matrix;#Parameter
-                MXRN;MatrixRun;_rf_scriptsDir+ row.Scenario + '.jf';row.Env
-
-                #Action;#Matrix
-                MatrixWait;MXRN.Out
-
-                #Action;#Connection;#Query;#Passed;#Failed;#Report;#ScenarioId
-                SQLexecute;SQL;'UPDATE scenarios SET passed = ?, failed = ?, report = ?, done = 1 WHERE id = ?';MXRN.Out.passed();MXRN.Out.failed();MXRN.Out.reportAsBlob();scenarioId
-
-                #Id;#Action;#Decoraded;#Matrix
-                resultTab;ResultTable;false;MXRN.Out
-
-                #Action;#Passed;#Failed
-                Print;MXRN.Out.passed();MXRN.Out.failed()
+                #Id;#Action;#Connection;#Query;#RunId;#Scenario;#Counter;#Performer;#Priority;#Manual;#StartTime;#Host;#User;#TestSet
+                selectScenarioId;SQLinsert;SQL;'INSERT INTO scenarios (run_id, scenario, counter, performer, priority, manual, start_time, host, username, test_set) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';runId;row.Scenario;counter;row.Performer;row.Priority;manual ? 1 : 0;DateTime.current();Sys.hostName();Sys.userName();row.TestSet
 
                 #Id;#Let
-                successCount;successCount + (MXRN.Out.failed() == 0 ? 1 : 0)
+                scenarioId;selectScenarioId.Out[0]
 
-                #Id;#Let
-                failedCount;failedCount + (MXRN.Out.failed() > 0 ? 1 : 0)
+                #If
+                !manual
+                    #Id;#Let
+                    totalCount;totalCount + 1
 
-                #ForEach;#In
-                details;resultTab.Out
-                    #Switch
-                    _rf_dialect
-                        #Case
-                        'MYSQL'
-                            #Id;#Action;#Connection;#Query;#ScenarioId;#Testcase;#Stepp;#Time;#Result;#Error;#Screenshot
-                            selectDetails;SQLinsert;SQL;'INSERT INTO details (scenario_id, testcase, step, time, result, error, screenshot) VALUES (?, ?, ?, ?, ?, ?, ?)';scenarioId;'' + details.TestCase;'' + details.Step;details.Time;'' + details.Result;'' + details.Error;Converter.storableToBlob(details.Screenshot)
+                    #Action;#Str
+                    Print;'Starting: ' + row.Scenario + '.jf'
+
+                    #Id;#Action;#Matrix;#Parameter
+                    MXRN;MatrixRun;row.Scenario + '.jf';counter
+
+                    #Action;#Matrix
+                    MatrixWait;MXRN.Out
+
+                    #Action;#Connection;#Query;#Passed;#Failed;#Report;#ScenarioId
+                    SQLexecute;SQL;'UPDATE scenarios SET passed = ?, failed = ?, report = ?, done = 1 WHERE id = ?';MXRN.Out.passed();MXRN.Out.failed();MXRN.Out.reportAsBlob();scenarioId
+
+                    #Id;#Action;#Decoraded;#Matrix
+                    resultTab;ResultTable;false;MXRN.Out
+
+                    #Action;#Passed;#Failed
+                    Print;MXRN.Out.passed();MXRN.Out.failed()
+
+                    #Id;#Let
+                    successCount;successCount + (MXRN.Out.failed() == 0 ? 1 : 0)
+
+                    #Id;#Let
+                    failedCount;failedCount + (MXRN.Out.failed() > 0 ? 1 : 0)
+
+                    #ForEach;#In
+                    details;resultTab.Out
+                        #Switch
+                        _rf_dialect
+                            #Case
+                            'MYSQL'
+                                #Id;#Action;#Connection;#Query;#ScenarioId;#Testcase;#Stepp;#Time;#Result;#Error;#Screenshot
+                                selectDetails;SQLinsert;SQL;'INSERT INTO details (scenario_id, testcase, step, time, result, error, screenshot) VALUES (?, ?, ?, ?, ?, ?, ?)';scenarioId;'' + details.TestCase;'' + details.Step;details.Time;'' + details.Result;'' + details.Error;Converter.storableToBlob(details.Screenshot)
 
 
-                        #Case
-                        'MSSQL'
-                            #Id;#Action;#Connection;#Query;#ScenarioId;#Testcase;#Stepp;#Time;#Result;#Error;#Screenshot
-                            selectDetails;SQLinsert;SQL;'INSERT INTO details (scenario_id, testcase, step, time, result, error, screenshot) VALUES (?, ?, ?, ?, ?, ?, CONVERT(VARBINARY(MAX),?))';scenarioId;'' + details.TestCase;'' + details.Step;details.Time;'' + details.Result;'' + details.Error;Converter.storableToBlob(details.Screenshot)
+                            #Case
+                            'MSSQL'
+                                #Id;#Action;#Connection;#Query;#ScenarioId;#Testcase;#Stepp;#Time;#Result;#Error;#Screenshot
+                                selectDetails;SQLinsert;SQL;'INSERT INTO details (scenario_id, testcase, step, time, result, error, screenshot) VALUES (?, ?, ?, ?, ?, ?, CONVERT(VARBINARY(MAX),?))';scenarioId;'' + details.TestCase;'' + details.Step;details.Time;'' + details.Result;'' + details.Error;Converter.storableToBlob(details.Screenshot)
 
 
-                        #Default
-                            #Fail
-                            'Unknown SQL dialect: ' + _rf_dialect
+                            #Default
+                                #Fail
+                                'Unknown SQL dialect: ' + _rf_dialect
 
 
-                    #EndSwitch
+                        #EndSwitch
 
-                    #For;#From;#To;#Step
-                    i;standartResult.Out.getHeaderSize();resultTab.Out.getHeaderSize() - 1;1
-                        #Id;#RawText
-                        TEXT6;Text
-                        "INSERT INTO user_details (details_id, name, value) VALUES (?, ?, ?);"
-                        #EndRawText
+                        #For;#From;#To;#Step
+                        i;standartResult.Out.getHeaderSize();resultTab.Out.getHeaderSize() - 1;1
+                            #Id;#RawText
+                            TEXT6;Text
+                            "INSERT INTO user_details (details_id, name, value) VALUES (?, ?, ?);"
+                            #EndRawText
 
-                        #Action;#Connection;#Query;#detailsId;#name;#value
-                        SQLinsert;SQL;TEXT6.toString();selectDetails.Out[0];resultTab.Out.getHeader(i);details[resultTab.Out.getHeader(i)]
+                            #Action;#Connection;#Query;#detailsId;#name;#value
+                            SQLinsert;SQL;TEXT6.toString();selectDetails.Out[0];resultTab.Out.getHeader(i);details[resultTab.Out.getHeader(i)]
 
-                    #EndFor
+                        #EndFor
 
-                #EndForEach
+                    #EndForEach
 
-            #EndIf
+                #EndIf
+
+            #EndFor
 
             #OnError
                 #Action;#Error
@@ -267,7 +283,7 @@ RF;RegressionFramework
                 "  TIME(s.start_time) AS time, "
                 "  IF(s.failed = 0, ""Passed"", ""Failed"") AS result, "
                 "  s.performer AS performer, "
-                "  s.env AS env,  "
+                "  s.test_set AS testSet, "
                 "  s.host AS host, "
                 "  s.username AS username,"
                 "  s.report AS report"
@@ -288,7 +304,6 @@ RF;RegressionFramework
                 "  case s.failed when 0 then 'Passed' else 'Failed' end as result,"
                 "  s.performer AS performer, "
                 "  s.test_set AS testSet, "
-                "  s.env AS env,  "
                 "  s.host AS host, "
                 "  s.username AS username,"
                 "  s.report AS report"
@@ -497,7 +512,6 @@ RF;RegressionFramework
                 "  DATE(s.start_time) AS date, "
                 "  TIME(s.start_time) AS time, "
                 "  s.performer, "
-                "  s.env, "
                 "  s.host, "
                 "  s.username, "
                 "  d.testcase, "
@@ -521,7 +535,6 @@ RF;RegressionFramework
                 "  CONVERT(date,s.start_time) AS date, "
                 "  CONVERT(time, s.start_time) AS time, "
                 "  s.performer, "
-                "  s.env, "
                 "  s.host, "
                 "  s.username, "
                 "  d.testcase, "
@@ -633,10 +646,10 @@ RF;RegressionFramework
         SQL;Connect
 
         #Id;#Action;#Connection;#Query
-        query;SQLselect;SQL;'select create_time, test_set from runs'
+        query;SQLselect;SQL;'select create_time from runs'
 
         #Id;#Let
-        reportDataList;new LinkedHashMap()
+        reportDataList;new ArrayList()
 
         #ForEach;#In
         row;query.Out
@@ -644,7 +657,7 @@ RF;RegressionFramework
             dateTimeItem;new Date(row.create_time.getTime())
 
             #Let
-            reportDataList.put(dateTimeItem, row.test_set)
+            reportDataList.add(dateTimeItem)
 
         #EndForEach
 
@@ -866,7 +879,8 @@ RF;RegressionFramework
                     "  `id` int(11) NOT NULL AUTO_INCREMENT,"
                     "  `create_time` datetime DEFAULT NULL,"
                     "  `duration` int(11) DEFAULT NULL,"
-                    "  `test_set` VARCHAR(100) NULL,"
+                    "  `tool_version` VARCHAR(100) NULL,"
+                    "  `app_version` VARCHAR(100) NULL,"
                     "  PRIMARY KEY (`id`)"
                     ") ENGINE=InnoDB AUTO_INCREMENT=94 DEFAULT CHARSET=utf8;"
                     #EndRawText
@@ -877,14 +891,14 @@ RF;RegressionFramework
                     "  `id` int(11) NOT NULL AUTO_INCREMENT,"
                     "  `run_id` int(11) NOT NULL,"
                     "  `scenario` varchar(100) NOT NULL,"
+                    "  `test_set` VARCHAR(100) NULL,"
+                    "  `counter` int(3) DEFAULT NULL,"
                     "  `performer` varchar(100) DEFAULT NULL,"
                     "  `priority` int(1) DEFAULT NULL,"
-                    "  `env` varchar(100) DEFAULT NULL,"
                     "  `manual` int(1) DEFAULT NULL,"
                     "  `start_time` datetime DEFAULT NULL,"
                     "  `host` varchar(45) DEFAULT NULL,"
                     "  `username` varchar(45) DEFAULT NULL,"
-                    "  `test_set` VARCHAR(100) NULL,"
                     "  `passed` int(11) DEFAULT '0',"
                     "  `failed` int(11) DEFAULT '0',"
                     "  `report` longblob,"
@@ -931,7 +945,8 @@ RF;RegressionFramework
                     "  id int IDENTITY(1,1) PRIMARY KEY NOT NULL ,  "
                     "  create_time datetime DEFAULT NULL,  "
                     "  duration int DEFAULT NULL,"
-                    "  test_set VARCHAR(100) NULL"
+                    "  tool_version VARCHAR(100) NULL,"
+                    "  app_version VARCHAR(100) NULL"
                     ") ;"
                     #EndRawText
 
@@ -943,6 +958,8 @@ RF;RegressionFramework
                     "  id int IDENTITY(1,1) PRIMARY KEY NOT NULL,"
                     "  run_id int NOT NULL,"
                     "  scenario varchar(100) NOT NULL,"
+                    "  test_set varchar(100) DEFAULT NULL,"
+                    "  counter int DEFAULT '0',"
                     "  performer varchar(100) DEFAULT NULL,"
                     "  priority int DEFAULT NULL,"
                     "  env varchar(100) DEFAULT NULL,"
@@ -950,7 +967,6 @@ RF;RegressionFramework
                     "  start_time datetime DEFAULT NULL,"
                     "  host varchar(45) DEFAULT NULL,"
                     "  username varchar(45) DEFAULT NULL,"
-                    "  test_set varchar(100) DEFAULT NULL,"
                     "  passed int DEFAULT '0',"
                     "  failed int DEFAULT '0',"
                     "  report VARBINARY(MAX),"

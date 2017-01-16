@@ -51,7 +51,6 @@ public class WizardConfiguration
 				this.model.createFolder(folder, Configuration.USER_VARS_FOLDER);
 				this.model.createFile(new File(folder + File.separator + Configuration.USER_VARS_FOLDER), Configuration.USER_VARS_FILE);
 			}
-			this.model.copyVarsFile(folder);
 			if (createReportDir) this.model.createFolder(folder, Configuration.REPORTS_FOLDER);
 
 			return this.folderDir.getAbsolutePath() + File.separator + this.newProjectName;

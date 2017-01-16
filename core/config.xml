@@ -13,7 +13,6 @@
     <formats>HH:mm:ss:SSS</formats>
     <reports>reports</reports>
     <git></git>
-    <import>com.exactprosystems.jf.common.parser</import>
     <import>java.math</import>
     <import>java.util.regex</import>
     <import>java.util</import>
@@ -22,13 +21,8 @@
     <import>java.util.List</import>
     <import>java.util.Map</import>
     <import>java.lang</import>
-    <import>com.exactprosystems.jf.api.app</import>
-    <import>com.exactprosystems.jf.api.conditions</import>
-    <import>com.exactprosystems.jf.functions</import>
     <import>java.io</import>
     <import>org.mvel2</import>
-    <import>com.exactprosystems.jf.api.client</import>
-    <import>com.exactprosystems.jf.api.error</import>
     <vars>${JF}/vars.ini</vars>
     <userVars>personal.ini</userVars>
     <userVars>uservars/rf.ini</userVars>

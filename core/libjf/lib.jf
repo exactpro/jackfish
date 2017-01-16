@@ -1,26 +1,12 @@
 #Id;#NameSpace
 LIB;Standart libraries
-    #Id;#SubCase;#a;#b
-    Test;Calculate to variables;;null
-        #Return
-        a+b
-
-    #EndSubCase
-
     #Id;#SubCase
-    test2;test2
-        #Action;#
-        Print;'test2'
+    SUB_1;
+        #Id;#Action;#Decoraded
+        RESTBL1;ResultTable;true
 
-        #Id;#Call
-        CALL_1;test
-
-    #EndSubCase
-
-    #Id;#SubCase
-    test;test
-        #Action;#
-        Print;'test'
+        #Action;#Table;#BeforeTestCase;#Numbers;#Title;#TestCaseId;#Result;#Description;#Expected Result;#Error;#Screenshot
+        TableReport;RESTBL1.Out;'Setup';false;'Total Report: ';'Step';'Status';'Description';'Expected Result';'Actual Result';'Screenshot'
 
     #EndSubCase
 

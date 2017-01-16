@@ -1,26 +1,20 @@
-// //==============================================
-// Copyright (c) 2009-2015, Exactpro Systems, LLC
-// Quality Assurance & Related Development for Innovative Trading Systems.
-// All rights reserved.
-// This is unpublished, licensed software, confidential and proprietary
-// information which is the property of Exactpro Systems, LLC or its licensors.
-// ==============================================
+// 
 #Id;#TestCase;#Kind;#Depends;#For
 INIT;Test case;;;
     #Id;#RawTable
     table;Table
-    @;Off;Scenario;Performer;Env;Priority
-    0;x;EE1001;VF;dev;0
-    1;;EE1002;VF;dev;1
-    2;;EE1003;;dev;1
-    3;;EE1004;;dev;1
-    4;;EE1005;VF;dev;1
-    5;;EE1006;;dev;2
-    6;x;EE1007;VF;dev;3
+    @;Off;Scenario;TestSet;Start;Finish;Performer;Priority
+    0;x;matrices/EE/EE1001;Chrome;;;;0
+    1;;matrices/EE/EE1002;Chrome;3;5;;1
+    2;;matrices/EE/EE1003;Chrome;;;;1
+    3;;matrices/EE/EE1004;Chrome;;;;1
+    4;;matrices/EE/EE1005;Chrome;;;;1
+    5;;matrices/EE/EE1006;FireFox;;;;2
+    6;x;matrices/EE/EE1007;FireFox;;;;3
     #EndRawTable
 
-    #Call;#table;#testSet
-    RF.RunAll;table;'Chrome'
+    #Call;#table
+    RF.RunAll;table
 
 
 #TestCase;#Kind;#Depends;#For
