@@ -1,13 +1,28 @@
 #TestCase;#Kind;#Depends;#For
 Check Web mock App;Never;;
-    #Id;#Action;#AppId;#Browser;#URL
-    APPSTR1;ApplicationStart;'WEB_Windows';'Chrome';File.getAbsolutePath()
+    #Id;#Let
+    expectedTextBoxValueTrue;'123'
+
+    #Id;#Let
+    expectedTextBoxValueFalse;'124'
+
+    #Id;#Global;#Action;#AppId;#Browser;#URL
+    APPSTR1;1;ApplicationStart;mockWebApp;mockWebBrowser;mockWebURL
+
+    #Action;#Dialog;#AppConnection;#TextBox
+    DialogFill;'Main';APPSTR1.Out;Do.text('123')
+
+    #Id;#Action;#Dialog;#AppConnection;#TextBox
+    fill2;DialogFill;'Main';APPSTR1.Out;Do.getValue()
+
+    #Assert;#Message
+    fill2.Out.TextBox == expectedTextBoxValueTrue;'Text was not enter 1'
+
+    #Assert;#Message
+    fill2.Out.TextBox != expectedTextBoxValueFalse;'Text was not enter 2'
 
     #Action;#Time
     Wait;3000
-
-    #Id;#Action;#AppConnection
-    APPSTP1;ApplicationStop;APPSTR1.Out
 
 
 #Off;#TestCase;#Kind;#Depends;#For
@@ -17,5 +32,11 @@ Check Web mock App;Never;;
 
     #Id;#Action;#Dialog;#AppConnection;#TextBox
     DLGFLL1;DialogFill;'Main';APPSTR1.Out;'someText'
+
+
+#TestCase;#Kind;#Depends;#For
+CloseConnection;;;
+    #Id;#Action;#AppConnection
+    APPCW1;ApplicationCloseWindow;APPSTR1.Out
 
 

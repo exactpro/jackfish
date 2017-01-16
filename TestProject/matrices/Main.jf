@@ -3,15 +3,6 @@ INIT;Setup;;;
     #Id;#Global;#Action;#Decoraded
     RESTBL1;1;ResultTable;true
 
-    #Id;#Global;#Let
-    rootPath;1;'C:/Users/user_adm/workspace - git/JackFish/'
-
-    #Id;#Global;#Let
-    matrixPath;1;rootPath + 'TestProject/matrices/'
-
-    #Id;#Global;#Let
-    mockSwingJar;1;rootPath + 'mocks/swing/mock-swing.jar'
-
 
 #Id;#TestCase;#Kind;#Depends;#For
 RunAllTests;run all tests;;;
@@ -21,7 +12,7 @@ RunAllTests;run all tests;;;
     #ForEach;#In
     testName;Tests
         #Call;#path
-        runTest;matrixPath + testName +  '.jf'
+        runTest;matrixTestsPath + testName +  '.jf'
 
     #EndForEach
 
@@ -38,20 +29,20 @@ Cleanup;;;
     #Assert;#Message
     TBLSLCT1.Out.size() == 0;'There are fails in the tests'
 
-    #Id;#SubCase;#path
-    runTest;Running test;matrixPath + testName +  '.jf'
-        #Id;#Action;#Matrix
-        MXRN1;MatrixRun;path
 
-        #Id;#Action;#Matrix
-        MXWT1;MatrixWait;MXRN1.Out
+#Id;#SubCase;#path
+runTest;Running test;matrixTestsPath + testName +  '.jf'
+    #Id;#Action;#Matrix
+    MXRN1;MatrixRun;path
 
-        #Id;#Action;#Decoraded;#Matrix
-        RESTBL2;ResultTable;true;MXRN1.Out
+    #Id;#Action;#Matrix
+    MXWT1;MatrixWait;MXRN1.Out
 
-        #Action;#UnitedTable;#MainTable
-        TableUnion;RESTBL2.Out;RESTBL1.Out
+    #Id;#Action;#Decoraded;#Matrix
+    RESTBL2;ResultTable;true;MXRN1.Out
 
-    #EndSubCase
+    #Action;#UnitedTable;#MainTable
+    TableUnion;RESTBL2.Out;RESTBL1.Out
 
+#EndSubCase
 

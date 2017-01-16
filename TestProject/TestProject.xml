@@ -54,7 +54,7 @@
         </parameters>
         <parameters>
             <key>jreArgs</key>
-            <value>-agentlib:jdwp=transport=dt_socket,server=n,address=admini-PC:5005,suspend=n,onuncaught=n</value>
+            <value></value>
         </parameters>
         <parameters>
             <key>SafariDriverPath</key>

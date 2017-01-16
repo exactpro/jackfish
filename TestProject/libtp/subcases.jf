@@ -1,0 +1,13 @@
+// 
+#NameSpace
+
+    #Id;#SubCase
+    SUB_1;sub_1
+    #EndSubCase
+
+    #Id;#SubCase
+    SUB_2;sub_2
+    #EndSubCase
+
+#EndNameSpace
+
