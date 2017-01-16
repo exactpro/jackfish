@@ -9,6 +9,7 @@
 package com.exactprosystems.jf.common.report;
 
 import com.exactprosystems.jf.api.app.ImageWrapper;
+import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.charts.ChartBuilder;
 import com.exactprosystems.jf.common.version.VersionInfo;
 import com.exactprosystems.jf.documents.config.Configuration;
@@ -114,7 +115,7 @@ public class HTMLReportBuilder extends ReportBuilder
 
 	//region Global report
 	@Override
-	protected void reportHeader(ReportWriter writer, Date date) throws IOException
+	protected void reportHeader(ReportWriter writer, Date date, String version) throws IOException
 	{
 		writer.fwrite(
 				"<html>\n" +
@@ -155,7 +156,7 @@ public class HTMLReportBuilder extends ReportBuilder
 				"<table class='table'>\n");
 
 		writer.fwrite("<tr><td><span id='name'></span>\n");
-		writer.fwrite("<tr><td>Version <td>%s\n", VersionInfo.getVersion());
+		writer.fwrite("<tr><td>Version <td>%s\n", Str.asString(version));
 		writer.fwrite("<tr><td>Start time: <td><span id='startTime'>Calculating...</span>\n");
 		writer.fwrite("<tr><td>Finish time: <td><span id='finishTime'>Calculating...</span>\n");
 	}
@@ -200,7 +201,7 @@ public class HTMLReportBuilder extends ReportBuilder
 				failed,
 				startTime, startTime, 
 				finishTime, finishTime,
-				(name == null ? "" : name),
+				Str.asString(name),
 				reportName
 		);
 

@@ -640,23 +640,21 @@ public class Main extends Application
 
 	public void runMatrixFromFile(File file) throws Exception
 	{
-        try(    Reader reader = new FileReader(file);
-                Context context = this.factory.createContext();
-                MatrixRunner runner = context.createRunner(file.getPath(), reader, null, null) )
+        Reader reader = new FileReader(file);
+        Context context = this.factory.createContext();
+        MatrixRunner runner = context.createRunner(file.getPath(), reader, null, null);
+        runner.setOnFinished(mr -> 
         {
-            runner.setOnFinished(mr -> 
+            try
             {
-                try
-                {
-                    runner.close();
-                }
-                catch (Exception e)
-                {
-                    logger.error(e.getMessage(), e);
-                }
-            });
-            runner.start();
-        }
+                runner.close();
+            }
+            catch (Exception e)
+            {
+                logger.error(e.getMessage(), e);
+            }
+        });
+        runner.start();
 	}
 
 	public void stopMatrix(Document document) throws Exception

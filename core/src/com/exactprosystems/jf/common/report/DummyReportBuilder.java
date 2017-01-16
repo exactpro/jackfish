@@ -72,7 +72,7 @@ public class DummyReportBuilder extends ReportBuilder
 	}
 	
 	@Override
-	protected void reportHeader(ReportWriter writer, Date date)
+	protected void reportHeader(ReportWriter writer, Date date, String version)
 			throws IOException
 	{
 	}

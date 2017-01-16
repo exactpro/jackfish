@@ -234,10 +234,10 @@ RF;RegressionFramework
         #EndSwitch
 
         #Id;#Action;#Connection;#Query;#runId;#runId
-        select;SQLselect;SQL;TEXT4.toString();runId;runId
+        select;SQLselect;SQL;TEXT4.toString();runId.id;runId.id
 
-        #Id;#Action;#ReportName
-        REP1;ReportStart;title
+        #Id;#Action;#ReportName;#Version
+        REP1;ReportStart;title;'JF: ' + runId.tool_version + '  APP: ' + runId.app_version
 
         #Action;#Type;#Table;#ToReport;#Title;#Colors
         ChartReport;ChartKind.Pie;select.Out;REP1.Out;'{{4 ' + title + ' 4}}';{ 'Passed' : Color.GREEN, 'Failed' : Color.RED }
@@ -277,6 +277,8 @@ RF;RegressionFramework
                 #Id;#RawText
                 TEXT2;Text
                 "SELECT "
+                "  r.tool_version,"
+                "  r.app_version,"
                 "  s.scenario, "
                 "  s.manual, "
                 "  DATE(s.start_time) AS date, "
@@ -288,6 +290,7 @@ RF;RegressionFramework
                 "  s.username AS username,"
                 "  s.report AS report"
                 "FROM scenarios AS s "
+                "LEFT JOIN runs AS r ON r.id = ?"
                 "WHERE s.manual = 0 AND s.run_id = ?"
                 #EndRawText
 
@@ -297,6 +300,8 @@ RF;RegressionFramework
                 #Id;#RawText
                 TEXT2;Text
                 "SELECT "
+                "  r.tool_version,"
+                "  r.app_version,"
                 "  s.scenario, "
                 "  s.manual, "
                 "  CONVERT(DATE, s.start_time) AS date,"
@@ -308,6 +313,7 @@ RF;RegressionFramework
                 "  s.username AS username,"
                 "  s.report AS report"
                 "FROM scenarios AS s "
+                "LEFT JOIN runs AS r ON r.id = ?"
                 "WHERE s.manual = 0 AND s.run_id = ?"
                 #EndRawText
 
@@ -319,8 +325,8 @@ RF;RegressionFramework
 
         #EndSwitch
 
-        #Id;#Action;#Connection;#Query;#runId
-        select;SQLselect;SQL;TEXT2.toString();runId
+        #Id;#Action;#Connection;#Query;#runId;#runId
+        select;SQLselect;SQL;TEXT2.toString();runId;runId
 
         #Id;#Let
         table;select.Out
@@ -337,8 +343,8 @@ RF;RegressionFramework
         #Action;#Replace;#Table;#Columns;#Search;#MatchCell
         TableReplace;'<div class=\"Failed\">Failed</div>';table;{ 'result' };'Failed';true
 
-        #Id;#Action;#ReportName
-        REP1;ReportStart;title
+        #Id;#Action;#ReportName;#Version
+        REP1;ReportStart;title;'JF: ' + runId.tool_version + '  APP: ' + runId.app_version
 
         #Action;#Table;#Title;#ToReport;#Numbers;#testSet;#scenario;#result;#date;#time;#username;#host;#report
         TableReport;table;'{{4' + title + '4}}';REP1.Out;false;'Test set';'Matrix Name';'Execution Status';'Execution Date';'Execution Time';'Exectuted By';'Execution Machine';'Report link'
@@ -580,8 +586,8 @@ RF;RegressionFramework
         #Action;#Replace;#Table;#Columns;#Search;#MatchCell
         TableReplace;'<div class=\"Failed\">Failed</div>';table;{ 'result' };'Failed';true
 
-        #Id;#Action;#ReportName
-        report;ReportStart;title
+        #Id;#Action;#ReportName;#Version
+        report;ReportStart;title;'JF: ' + runId.tool_version + '  APP: ' + runId.app_version
 
         #Action;#Table;#Title;#ToReport;#Numbers;#scenario;#testcase;#result;#error;#screenshot
         TableReport;table;'{{4' + title + '4}}';report.Out;false;'Matrix';'Step Name';'Status';'Result';'Screenshots'
@@ -677,11 +683,21 @@ RF;RegressionFramework
 
         #If
         date == null
+            #Id;#RawText
+            query;Text
+            "SELECT "
+            "  r.tool_version,"
+            "  r.app_version,"
+            "  r.id"
+            "FROM runs AS r"
+            "WHERE r.id = (SELECT MAX(id) AS id FROM runs)"
+            #EndRawText
+
             #Id;#Action;#Connection;#Query
-            select1;SQLselect;sql;'SELECT MAX(id) AS id FROM runs'
+            select1;SQLselect;sql;query.toString()
 
             #Return
-            select1.Out.size() > 0 ? select1.Out[0].id : -1
+            select1.Out.size() > 0 ? { 'id' : select1.Out[0].id, 'tool_version' : select1.Out[0].tool_version, 'app_version' : select1.Out[0].app_version }: { '' : null }
 
         #EndIf
 
@@ -691,7 +707,7 @@ RF;RegressionFramework
             'MYSQL'
                 #Id;#RawText
                 query;Text
-                "SELECT id "
+                "SELECT id, tool_version, app_version "
                 "FROM runs "
                 "WHERE create_time <= ? "
                 "ORDER BY create_time DESC "
@@ -703,7 +719,7 @@ RF;RegressionFramework
             'MSSQL'
                 #Id;#RawText
                 query;Text
-                "SELECT TOP 1 id "
+                "SELECT TOP 1 id, tool_version, app_version "
                 "FROM runs "
                 "WHERE create_time <= ? "
                 "ORDER BY create_time DESC  "
@@ -721,7 +737,7 @@ RF;RegressionFramework
         select2;SQLselect;sql;query.toString();date
 
         #Return
-        select2.Out.size() > 0 ? select2.Out[0].id : -1
+        select2.Out.size() > 0 ? { 'id' : select2.Out[0].id, 'tool_version' : select2.Out[0].tool_version, 'app_version' : select2.Out[0].app_version }: { '' : null }
 
     #EndSubCase
 

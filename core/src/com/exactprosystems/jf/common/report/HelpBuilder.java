@@ -97,7 +97,7 @@ public class HelpBuilder extends ReportBuilder
 
 	//region Header
 	@Override
-	protected void reportHeader(ReportWriter writer, Date date) throws IOException
+	protected void reportHeader(ReportWriter writer, Date date, String version) throws IOException
 	{
 		writer.fwrite("<!DOCTYPE html>");
 		writer.fwrite("<html>\n" + "<head>\n" + "<title>Help</title>\n" + "<meta http-equiv='Content-Type' content='text/html; charset=utf-8'>\n");

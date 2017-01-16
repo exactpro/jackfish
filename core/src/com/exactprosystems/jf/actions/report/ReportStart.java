@@ -32,10 +32,14 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 	)
 public class ReportStart extends AbstractAction 
 {
-	public final static String reportNameName 	= "ReportName";
+	public final static String reportNameName  = "ReportName";
+	public final static String versionName     = "Version";
 
 	@ActionFieldAttribute(name = reportNameName, mandatory = true, description = "Reports given string and parameters to the report.")
 	protected String reportName; 
+
+    @ActionFieldAttribute(name = versionName, mandatory = false, description = "Report this string as a version to the report.")
+    protected String version; 
 
 	public ReportStart()
 	{
@@ -44,6 +48,7 @@ public class ReportStart extends AbstractAction
 	@Override
 	public void initDefaultValues() 
 	{
+	    this.version = null;
 	}
 	
 	@Override
@@ -57,7 +62,7 @@ public class ReportStart extends AbstractAction
 	    
 	    Configuration config = context.getConfiguration();
 	    ReportBuilder newReport = config.getReportFactory().createReportBuilder(config.getReports().get(), this.reportName, new Date());
-	    newReport.reportStarted(null);
+	    newReport.reportStarted(null, this.version);
 	    newReport.itemStarted(this.owner.getMatrix().getRoot());
 	    
 		super.setResult(newReport);

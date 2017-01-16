@@ -15,6 +15,7 @@ import com.exactprosystems.jf.api.common.IMatrix;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
+import com.exactprosystems.jf.common.version.VersionInfo;
 import com.exactprosystems.jf.documents.AbstractDocument;
 import com.exactprosystems.jf.documents.DocumentFactory;
 import com.exactprosystems.jf.documents.DocumentInfo;
@@ -372,7 +373,7 @@ public class Matrix extends AbstractDocument implements IMatrix, Cloneable
 	{
 		try
 		{
-			report.reportStarted(null);
+			report.reportStarted(null, null);
 		}
 		catch (Exception e)
 		{
@@ -432,7 +433,7 @@ public class Matrix extends AbstractDocument implements IMatrix, Cloneable
 
 		try
 		{
-			report.reportStarted(getMatrixBuffer());
+			report.reportStarted(getMatrixBuffer(), VersionInfo.getVersion());
 		}
 		catch (Exception e)
 		{

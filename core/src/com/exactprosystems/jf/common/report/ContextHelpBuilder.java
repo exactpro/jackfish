@@ -72,7 +72,7 @@ public class ContextHelpBuilder extends ReportBuilder
 	}
 	
     @Override
-    protected void reportHeader(ReportWriter writer, Date date) throws IOException
+    protected void reportHeader(ReportWriter writer, Date date, String version) throws IOException
     {
         writer.fwrite(
                 "<html>\n" +

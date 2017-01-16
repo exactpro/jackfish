@@ -194,12 +194,12 @@ public abstract class ReportBuilder implements Storable
 		return info;
 	}
 
-	public final void reportStarted(char[] matrixBuffer) throws Exception 
+	public final void reportStarted(char[] matrixBuffer, String version) throws Exception 
 	{
 		Date startTime = new Date();
 
 		this.reportData.clear();
-		reportHeader(this.writer, startTime);
+		reportHeader(this.writer, startTime, version);
 		reportMatrix(this.writer, matrixBuffer == null ? null : new BufferedReader(new CharArrayReader(matrixBuffer)));
 		reportHeaderTotal(this.writer, startTime);
 	}
@@ -397,7 +397,7 @@ public abstract class ReportBuilder implements Storable
 
 	protected abstract void putMark(ReportWriter writer, String mark) throws IOException;
 
-	protected abstract void reportHeader(ReportWriter writer, Date date) throws IOException;
+	protected abstract void reportHeader(ReportWriter writer, Date date, String version) throws IOException;
 
 	protected abstract void reportMatrixHeader(ReportWriter writer, String matrix) throws IOException;
 
