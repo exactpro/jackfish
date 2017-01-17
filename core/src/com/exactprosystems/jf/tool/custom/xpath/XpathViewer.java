@@ -182,7 +182,7 @@ public class XpathViewer
 		{
 			if (!fromRoot)
 			{
-				return "/" + xpath(node.getParentNode(), node, useText, parameters);
+				return "./" + xpath(node.getParentNode(), node, useText, parameters);
 			}
 			return xpath(null, node, useText, parameters);
 		}
