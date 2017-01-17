@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-//  Copyright (c) 2009-2015, Exactpro Systems, LLC
+//  Copyright (c) 2009-2016, Exactpro Systems, LLC
 //  Quality Assurance & Related Development for Innovative Trading Systems.
 //  All rights reserved.
 //  This is unpublished, licensed software, confidential and proprietary
@@ -616,31 +616,38 @@ public class MainRunner
 	private static int 		magicNumber = 7;
 	
 	private static final Logger logger = Logger.getLogger(MainRunner.class);
-
+	
+	
 	static String logFileName = ".log.xml";
 	static
 	{
-		if (!new File(logFileName).exists())
+		// http://stackoverflow.com/a/19053462
+		// non-configured log4j doesn't have Appenders
+		boolean loggerConfigured = Logger.getRootLogger().getAllAppenders().hasMoreElements();
+		
+		if (!loggerConfigured)
 		{
-			try (	BufferedReader reader = new BufferedReader(new InputStreamReader(MainRunner.class.getResourceAsStream(logFileName)));
-					BufferedWriter writer = new BufferedWriter(new FileWriter(logFileName)))
+			if (!new File(logFileName).exists())
 			{
-				String line = null;
-
-				while ((line = reader.readLine()) != null)
+				try (	BufferedReader reader = new BufferedReader(new InputStreamReader(MainRunner.class.getResourceAsStream(logFileName)));
+						BufferedWriter writer = new BufferedWriter(new FileWriter(logFileName)))
 				{
-					writer.append(line);
-					writer.newLine();
+					String line = null;
+	
+					while ((line = reader.readLine()) != null)
+					{
+						writer.append(line);
+						writer.newLine();
+					}
+				}
+				catch (IOException e)
+				{
+					e.printStackTrace();
+					System.exit(1);
 				}
 			}
-			catch (IOException e)
-			{
-				e.printStackTrace();
-				System.exit(1);
-			}
-		}
-
-		DOMConfigurator.configure(logFileName);
-	}
 	
+			DOMConfigurator.configure(logFileName);
+		}
+	}
 }
