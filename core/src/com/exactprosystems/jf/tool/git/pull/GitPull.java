@@ -17,6 +17,7 @@ import javafx.concurrent.Task;
 import org.eclipse.jgit.lib.ProgressMonitor;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.exactprosystems.jf.tool.Common.logger;
 
@@ -27,11 +28,18 @@ public class GitPull
 	private Service<List<GitPullBean>> service;
 	private GitPullController controller;
 
-	public GitPull(Main model)
+	public GitPull(Main model) throws Exception
 	{
 		this.model = model;
 		this.controller = Common.loadController(this.getClass().getResource("GitPull.fxml"));
 		this.controller.init(this, this.model.getCredential());
+		List<String> list = GitUtil.getBranches(this.model.getCredential())
+				.stream()
+				.filter(b -> !b.isLocal())
+				.map(GitUtil.Branch::getSimpleName)
+				.collect(Collectors.toList());
+		String remoteBranch = GitUtil.getRemoteBranch(this.model.getCredential(), GitUtil.currentBranch(this.model.getCredential()));
+		this.controller.displayBranches(list, remoteBranch);
 	}
 
 	public void close() throws Exception
@@ -47,7 +55,7 @@ public class GitPull
 		}
 	}
 
-	public void pull(ProgressMonitor monitor) throws Exception
+	public void pull(ProgressMonitor monitor, String remoteBranchName) throws Exception
 	{
 		this.controller.startPulling();
 		CredentialBean credential = this.model.getCredential();
@@ -62,7 +70,7 @@ public class GitPull
 					protected List<GitPullBean> call() throws Exception
 					{
 						DialogsHelper.showInfo("Start pulling");
-						return GitUtil.gitPull(credential, monitor);
+						return GitUtil.gitPull(credential, monitor, remoteBranchName);
 					}
 				};
 			}

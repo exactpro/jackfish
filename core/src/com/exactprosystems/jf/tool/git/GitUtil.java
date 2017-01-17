@@ -20,8 +20,6 @@ import com.jcraft.jsch.Session;
 import org.eclipse.jgit.api.*;
 import org.eclipse.jgit.api.errors.CheckoutConflictException;
 import org.eclipse.jgit.diff.DiffEntry;
-import org.eclipse.jgit.diff.DiffFormatter;
-import org.eclipse.jgit.diff.RawTextComparator;
 import org.eclipse.jgit.errors.UnsupportedCredentialItem;
 import org.eclipse.jgit.lib.*;
 import org.eclipse.jgit.merge.MergeChunk;
@@ -37,12 +35,10 @@ import org.eclipse.jgit.treewalk.CanonicalTreeParser;
 import org.eclipse.jgit.treewalk.TreeWalk;
 import org.eclipse.jgit.treewalk.filter.PathFilter;
 import org.eclipse.jgit.util.FS;
-import org.eclipse.jgit.util.io.DisabledOutputStream;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
-import java.text.MessageFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -152,7 +148,7 @@ public class GitUtil
 	//endregion
 
 	//region Pull
-	public static List<GitPullBean> gitPull(CredentialBean bean, ProgressMonitor monitor) throws Exception
+	public static List<GitPullBean> gitPull(CredentialBean bean, ProgressMonitor monitor, String remoteBranchName) throws Exception
 	{
 		try (Git git = git(bean))
 		{
@@ -161,7 +157,11 @@ public class GitUtil
 			List<GitPullBean> list = new ArrayList<>();
 			try
 			{
-				PullResult pullResult = git.pull().setCredentialsProvider(getCredentialsProvider(bean)).setProgressMonitor(monitor).call();
+				PullResult pullResult = git.pull().
+						setCredentialsProvider(getCredentialsProvider(bean))
+						.setProgressMonitor(monitor)
+						.setRemoteBranchName(remoteBranchName)
+						.call();
 
 				MergeResult m = pullResult.getMergeResult();
 				if (m != null)
@@ -170,17 +170,6 @@ public class GitUtil
 					if (allConflicts != null)
 					{
 						list.addAll(allConflicts.keySet().stream().map(path -> new GitPullBean(path, true)).collect(Collectors.toList()));
-						//							int[][] c = allConflicts.get(path);
-						//							System.out.println("Conflicts in file " + path);
-						//							for (int i = 0; i < c.length; i++)
-						//							{
-						//								System.out.println("  Conflict #" + i);
-						//								for (int j = 0; j < c[i].length - 1; j++)
-						//								{
-						//									if (c[i][j] >= 0)
-						//										System.out.println("    Chunk for " + m.getMergedCommits()[j] + " starts on line #" + c[i][j]);
-						//								}
-						//							}
 					}
 				}
 			}
