@@ -1,6 +1,10 @@
+apply plugin: 'artifactory'
+
 description = 'Plugin for testing win based application'
 ext.jarName = 'win.jar'
 ext.javaVersion = 1.7;
+
+archivesBaseName = 'jackfish-app-win'
 
 dependencies {
 	compile project(':api')

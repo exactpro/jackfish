@@ -1,6 +1,10 @@
+apply plugin: 'artifactory'
+
 description = "Plugin for swing applications"
 ext.jarName = "swing.jar"
 ext.javaVersion = 1.7;
+
+archivesBaseName = 'jackfish-app-swing'
 
 dependencies {
 	compile project(':api')
