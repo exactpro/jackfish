@@ -120,7 +120,7 @@ public class GitBranchController implements Initializable, ContainingParent
 	{
 		return children.stream()
 				.map(TreeItem::getValue)
-				.map(GitUtil.Branch::getName)
+				.map(GitUtil.Branch::getSimpleName)
 				.anyMatch(newValue::equals);
 	}
 
@@ -128,7 +128,7 @@ public class GitBranchController implements Initializable, ContainingParent
 	{
 		TreeItem<GitUtil.Branch> selectedItem = this.treeView.getSelectionModel().getSelectedItem();
 		GitUtil.Branch value = selectedItem.getValue();
-		String oldName = value.getName();
+		String oldName = value.getFullName();
 
 		TextInputDialog inputDialog = new TextInputDialog();
 		inputDialog.setTitle("Enter new name");
@@ -172,7 +172,7 @@ public class GitBranchController implements Initializable, ContainingParent
 			}
 		}
 		String finalBranchName = branchName;
-		Common.tryCatch(() -> this.model.checkout(branch.getName(), finalBranchName), "Error on checkout");
+		Common.tryCatch(() -> this.model.checkout(branch.getFullName(), finalBranchName), "Error on checkout");
 	}
 
 	public void mergeBranch(ActionEvent actionEvent)
@@ -197,7 +197,7 @@ public class GitBranchController implements Initializable, ContainingParent
 				if (item != null && !empty)
 				{
 					String pre = item.isCurrent() ? "* " : "  ";
-					setText(pre + item.getName());
+					setText(pre + item.getSimpleName());
 				}
 				else
 				{
@@ -214,7 +214,7 @@ public class GitBranchController implements Initializable, ContainingParent
 			{
 				GitUtil.Branch branch = newValue.getValue();
 				Arrays.asList(this.btnCheckoutBranch, this.btnRenameBranch, this.btnMergeBranch, this.btnDeleteBranch).forEach(b -> {
-					b.setDisable(branch.isCurrent() || (branch.getName().equals(REMOTE) || branch.getName().equals(LOCAL)));
+					b.setDisable(branch.isCurrent() || (branch.getSimpleName().equals(REMOTE) || branch.getSimpleName().equals(LOCAL)));
 				});
 				if (!branch.isLocal())
 				{

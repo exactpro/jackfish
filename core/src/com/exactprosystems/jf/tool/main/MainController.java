@@ -101,6 +101,7 @@ public class MainController implements Initializable, ContainingParent
 	public MenuItem matrixStop;
 
 	public MenuItem				gitCommit;
+	public MenuItem				gitPush;
 	public MenuItem				gitPull;
 	public MenuItem				gitReset;
 	public MenuItem				gitStatus;
@@ -510,7 +511,12 @@ public class MainController implements Initializable, ContainingParent
 
 	public void gitCommit(ActionEvent event)
 	{
-		Common.tryCatch(this.model::gitCommit, "Error on commit or push");
+		Common.tryCatch(this.model::gitCommit, "Error on commit");
+	}
+
+	public void gitPush(ActionEvent event)
+	{
+		Common.tryCatch(this.model::gitPush, "Error on push");
 	}
 
 	public void gitPull(ActionEvent event)
@@ -644,6 +650,7 @@ public class MainController implements Initializable, ContainingParent
 	public void isGit(boolean flag)
 	{
 		gitCommit.setDisable(!flag);
+		gitPush.setDisable(!flag);
 		gitPull.setDisable(!flag);
 		gitReset.setDisable(!flag);
 		gitStatus.setDisable(!flag);

@@ -34,6 +34,7 @@ import com.exactprosystems.jf.tool.git.commit.GitCommit;
 import com.exactprosystems.jf.tool.git.merge.GitMerge;
 import com.exactprosystems.jf.tool.git.merge.GitMergeBean;
 import com.exactprosystems.jf.tool.git.pull.GitPull;
+import com.exactprosystems.jf.tool.git.push.GitPush;
 import com.exactprosystems.jf.tool.git.reset.GitReset;
 import com.exactprosystems.jf.tool.git.status.GitStatus;
 import com.exactprosystems.jf.tool.git.tag.GitTag;
@@ -400,6 +401,11 @@ public class Main extends Application
 		new GitBranch(this).display();
 	}
 
+	public void gitPush() throws Exception
+	{
+		new GitPush(this).display();
+	}
+
 	public void gitTags() throws Exception
 	{
 		new GitTag(this).display();
@@ -413,7 +419,7 @@ public class Main extends Application
 	public void gitCommit() throws Exception
 	{
 		CredentialBean credential = getCredential();
-		new GitCommit(this, GitUtil.gitStatus(credential), GitUtil.gitUnpushingCommits(credential)).display();
+		new GitCommit(this, GitUtil.gitStatus(credential)).display();
 	}
 
 	public void gitReset() throws Exception

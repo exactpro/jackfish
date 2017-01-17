@@ -29,11 +29,11 @@ public class GitCommit
 
 	private Service<Void> service;
 
-	public GitCommit(Main model, List<GitBean> list, List<String> unpushedCommits) throws Exception
+	public GitCommit(Main model, List<GitBean> list) throws Exception
 	{
 		this.model = model;
 		this.controller = Common.loadController(this.getClass().getResource("GitCommit.fxml"));
-		this.controller.init(this, list, unpushedCommits);
+		this.controller.init(this, list);
 	}
 
 	public void close() throws Exception
@@ -61,7 +61,6 @@ public class GitCommit
 
 	private void commitOrPush(String msg, List<GitBean> list, boolean isCommit, boolean isAmend) throws Exception
 	{
-		String notification = isCommit ? "commit" : "push";
 		this.controller.setDisable(true);
 		CredentialBean credential = model.getCredential();
 		this.service = new Service<Void>()
@@ -74,15 +73,8 @@ public class GitCommit
 					@Override
 					protected Void call() throws Exception
 					{
-						DialogsHelper.showInfo("Start " + notification + "ing");
-						if (isCommit)
-						{
-							GitUtil.gitCommit(credential, list.stream().map(GitBean::getFile).collect(Collectors.toList()), msg, isAmend);
-						}
-						else
-						{
-							GitUtil.gitPush(credential, list.stream().map(GitBean::getFile).collect(Collectors.toList()), msg, isAmend);
-						}
+						DialogsHelper.showInfo("Start commitinging");
+						GitUtil.gitCommit(credential, list.stream().map(GitBean::getFile).collect(Collectors.toList()), msg, isAmend);
 						return null;
 					}
 				};
@@ -91,17 +83,22 @@ public class GitCommit
 		service.start();
 		service.setOnSucceeded(e -> {
 			this.controller.setDisable(false);
-			DialogsHelper.showSuccess("Successful " + notification+"ing");
+			DialogsHelper.showSuccess("Successful commiting");
 			this.controller.hide();
+			if (!isCommit)
+			{
+				Common.tryCatch(this.model::gitPush, "Error on push");
+			}
 		});
 		service.setOnCancelled(e -> {
 			DialogsHelper.showInfo("Task canceled by user");
 			this.controller.setDisable(false);
 		});
-		service.setOnFailed(e -> {
+		service.setOnFailed(e ->
+		{
 			Throwable exception = e.getSource().getException();
 			logger.error(exception.getMessage(), exception);
-			DialogsHelper.showError("Error on " + notification + "\n" + exception.getMessage());
+			DialogsHelper.showError("Error on commiting\n" + exception.getMessage());
 			this.controller.setDisable(false);
 		});
 	}

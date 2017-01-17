@@ -96,7 +96,10 @@
 									<items>
 										<MenuItem mnemonicParsing="false" onAction="#gitClone" text="Clone"/>
 										<SeparatorMenuItem/>
-										<MenuItem fx:id="gitCommit" mnemonicParsing="false" onAction="#gitCommit" text="Commit"/>
+										<Menu text="Publishing">
+											<MenuItem fx:id="gitCommit" mnemonicParsing="false" onAction="#gitCommit" text="Commit"/>
+											<MenuItem fx:id="gitPush" mnemonicParsing="false" onAction="#gitPush" text="Push"/>
+										</Menu>
 										<MenuItem fx:id="gitPull" mnemonicParsing="false" onAction="#gitPull" text="Pull"/>
 										<MenuItem fx:id="gitReset" mnemonicParsing="false" onAction="#gitReset" text="Reset"/>
 										<MenuItem fx:id="gitStatus" mnemonicParsing="false" onAction="#gitStatus" text="Status"/>
