@@ -35,6 +35,7 @@ public class GitPullController implements Initializable, ContainingParent
 	public VBox vbox;
 	public Button btnCancel;
 	public TableView<GitPullBean> tableView;
+	public ComboBox<String> cbBranches;
 
 	private Alert dialog;
 	private GitPull model;
@@ -66,6 +67,17 @@ public class GitPullController implements Initializable, ContainingParent
 		initTable();
 	}
 
+	void displayBranches(List<String> list, String remoteBranch)
+	{
+		this.cbBranches.getItems().setAll(list);
+		if (remoteBranch != null)
+		{
+			int index = this.cbBranches.getItems().indexOf(remoteBranch);
+			this.cbBranches.getSelectionModel().select(index == -1 ? 0 : index);
+		}
+
+	}
+
 	//region actions events
 
 	public void close(ActionEvent actionEvent)
@@ -82,8 +94,12 @@ public class GitPullController implements Initializable, ContainingParent
 
 	public void show()
 	{
-		this.dialog.setOnShown(event -> Common.tryCatch(() -> this.model.pull(this.progressMonitor), "Error on pulling"));
-		this.dialog.showAndWait();
+		this.dialog.show();
+	}
+
+	public void pull(ActionEvent actionEvent)
+	{
+		Common.tryCatch(() -> this.model.pull(this.progressMonitor, this.cbBranches.getSelectionModel().getSelectedItem()), "Error on pulling");
 	}
 
 	public void startPulling()
@@ -94,6 +110,7 @@ public class GitPullController implements Initializable, ContainingParent
 
 	public void endPulling(String text)
 	{
+		this.vbox.getChildren().clear();
 		Platform.runLater(() -> {
 			Text e = new Text(text);
 			e.setFill(Color.GREEN);
@@ -179,6 +196,5 @@ public class GitPullController implements Initializable, ContainingParent
 		}));
 
 	}
-
 	//endregion
 }

@@ -18,7 +18,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.BorderPane;
 
 import java.net.URL;
 import java.util.Arrays;
@@ -31,11 +30,8 @@ public class GitCommitController implements Initializable, ContainingParent
 	public Parent parent;
 	public TableView<GitBean> tableView;
 	public TextArea taMessage;
-	public Button btnCommit;
-	public Button btnPush;
+	public SplitMenuButton btnCommit;
 	public Button btnClose;
-	public ListView<String> listView;
-	public BorderPane unpushingPane;
 
 	private BooleanBinding binding;
 	private GitCommit model;
@@ -46,18 +42,16 @@ public class GitCommitController implements Initializable, ContainingParent
 	public void initialize(URL location, ResourceBundle resources)
 	{
 		this.binding = this.taMessage.textProperty().isEmpty();
-		this.btnPush.disableProperty().bind(this.binding);
 		this.btnCommit.disableProperty().bind(this.binding);
 	}
 	//endregion
 
-	public void init(GitCommit model, List<GitBean> list, List<String> commits)
+	public void init(GitCommit model, List<GitBean> list)
 	{
 		this.model = model;
 		initDialog();
 		initTable();
 		this.tableView.getItems().setAll(list);
-		this.listView.getItems().setAll(commits);
 	}
 
 	//region ContainingParent
@@ -71,6 +65,11 @@ public class GitCommitController implements Initializable, ContainingParent
 	//region event methods
 	public void commitSelected(ActionEvent actionEvent)
 	{
+		if (this.tableView.getItems().stream().filter(GitBean::isChecked).count() == 0)
+		{
+			DialogsHelper.showInfo("Need select one or more files to commit");
+			return;
+		}
 		Common.tryCatch(() -> this.model.commit(this.taMessage.getText(), this.tableView.getItems().stream().filter(GitBean::isChecked).collect(Collectors.toList()), false), "Error on commit");
 	}
 
@@ -87,7 +86,7 @@ public class GitCommitController implements Initializable, ContainingParent
 
 	public void show()
 	{
-		this.dialog.showAndWait();
+		this.dialog.show();
 	}
 
 	public void hide()
@@ -100,18 +99,12 @@ public class GitCommitController implements Initializable, ContainingParent
 		this.btnClose.setText(flag ? "Cancel" : "Close");
 		if (flag)
 		{
-			this.btnPush.disableProperty().unbind();
 			this.btnCommit.disableProperty().unbind();
-
-			this.btnPush.setDisable(true);
 			this.btnCommit.setDisable(true);
 		}
 		else
 		{
-			this.btnPush.setDisable(this.binding.getValue());
 			this.btnCommit.setDisable(this.binding.getValue());
-
-			this.btnPush.disableProperty().bind(this.binding);
 			this.btnCommit.disableProperty().bind(this.binding);
 
 			String oldMsg = this.taMessage.getText();
@@ -202,7 +195,7 @@ public class GitCommitController implements Initializable, ContainingParent
 		protected void updateItem(GitBean item, boolean empty)
 		{
 			super.updateItem(item, empty);
-			this.getStyleClass().removeAll(Arrays.asList(GitBean.Status.values()).stream().map(GitBean.Status::getStyleClass).collect(Collectors.toList()));
+			this.getStyleClass().removeAll(Arrays.stream(GitBean.Status.values()).map(GitBean.Status::getStyleClass).collect(Collectors.toList()));
 			if (item != null && !empty)
 			{
 				this.getStyleClass().add(item.getStatus().getStyleClass());

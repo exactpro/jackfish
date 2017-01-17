@@ -37,7 +37,7 @@ public class MergeEditor
 
 		this.yourLines = GitUtil.getYours(this.model.getCredential(), filePath);
 		this.theirLines = GitUtil.getTheirs(this.model.getCredential(), filePath);
-		this.conflicts = GitUtil.getConflictsNew(this.model.getCredential(), this.filePath);
+		this.conflicts = GitUtil.getConflicts(this.model.getCredential(), this.filePath);
 
 		evaluate();
 	}

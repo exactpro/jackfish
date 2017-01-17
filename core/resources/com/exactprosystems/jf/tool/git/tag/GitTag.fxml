@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.exactprosystems.jf.tool.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.exactprosystems.jf.tool.git.tag.GitTagController">
+	<fx:define>
+		<CssVariables fx:id="verMin" fx:constant="VERTICAL_MIN"/>
+		<CssVariables fx:id="verMid" fx:constant="VERTICAL_MID"/>
+		<CssVariables fx:id="verMax" fx:constant="VERTICAL_MAX"/>
+
+		<CssVariables fx:id="horMin" fx:constant="HORIZONTAL_MIN"/>
+		<CssVariables fx:id="horMid" fx:constant="HORIZONTAL_MID"/>
+		<CssVariables fx:id="horMax" fx:constant="HORIZONTAL_MAX"/>
+	</fx:define>
+	<children>
+		<Label id="$verMid"/>
+		<HBox prefHeight="100.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+			<children>
+				<Label id="$horMid" />
+				<BorderPane prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS">
+					<right>
+						<HBox prefHeight="330.0" prefWidth="140.0">
+							<children>
+								<Label id="$horMid" />
+								<VBox alignment="TOP_CENTER" prefHeight="370.0" prefWidth="178.0" BorderPane.alignment="CENTER" HBox.hgrow="ALWAYS">
+									<children>
+										<Button fx:id="btnNewTag" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#newTag" text="New tag" VBox.vgrow="ALWAYS" />
+										<Label id="$verMid" />
+										<Button fx:id="btnPushTags" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#pushTag" text="Push all tags" VBox.vgrow="ALWAYS" />
+										<Label id="$verMax" />
+										<Button fx:id="btnDeleteTag" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#deleteTag" text="Delete tag" />
+									</children>
+								</VBox>
+							</children>
+						</HBox>
+					</right>
+					<center>
+						<ListView fx:id="listView" prefHeight="370.0" prefWidth="259.0" BorderPane.alignment="CENTER" />
+					</center>
+				</BorderPane>
+				<Label id="$horMid" />
+			</children>
+		</HBox>
+		<Label id="$verMid" />
+		<HBox alignment="CENTER_RIGHT" prefHeight="25.0" prefWidth="200.0">
+			<children>
+				<Button fx:id="btnClose" mnemonicParsing="false" text="Close" onAction="#hide" />
+				<Label id="$horMid" />
+			</children>
+		</HBox>
+	</children>
+</VBox>

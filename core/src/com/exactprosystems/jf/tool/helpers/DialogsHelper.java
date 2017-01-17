@@ -59,8 +59,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
 import java.nio.file.Paths;
-import java.sql.Driver;
-import java.sql.DriverManager;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -687,6 +685,7 @@ public abstract class DialogsHelper
 		dialog.getDialogPane().setPrefWidth(1000);
 		dialog.setContentText(message);
 		((Button) dialog.getDialogPane().lookupButton(ButtonType.CANCEL)).setText("No");
+		((Button) dialog.getDialogPane().lookupButton(ButtonType.OK)).setText("Yes");
 		return dialog.showAndWait().filter(bt -> bt.getButtonData().equals(ButtonBar.ButtonData.OK_DONE)).isPresent();
 	}
 

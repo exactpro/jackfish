@@ -88,15 +88,15 @@ public class GitUtil
 		}
 	}
 
-	public static void gitPush(CredentialBean bean, List<File> files, String msg, boolean isAmend) throws Exception
+	public static void gitPush(CredentialBean bean, String remoteBranchName) throws Exception
 	{
-		if (!files.isEmpty())
-		{
-			gitCommit(bean, files, msg, isAmend);
-		}
 		try (Git git = git(bean))
 		{
-			Iterable<PushResult> call = git.push().setPushAll().setCredentialsProvider(getCredentialsProvider(bean)).call();
+			Iterable<PushResult> call = git.push()
+					.setRefSpecs(new RefSpec(git.getRepository().getFullBranch()+":" + remoteBranchName))
+					.setAtomic(true)
+					.setCredentialsProvider(getCredentialsProvider(bean))
+					.call();
 			for (PushResult pushResult : call)
 			{
 				for (RemoteRefUpdate update : pushResult.getRemoteUpdates())
@@ -128,19 +128,19 @@ public class GitUtil
 		}
 	}
 
-	public static List<String> gitUnpushingCommits(CredentialBean credentialBean) throws Exception
+	public static List<GitResetBean> gitUnpushingCommits(CredentialBean credentialBean) throws Exception
 	{
 		try (Git git = git(credentialBean))
 		{
-			List<String> list = new ArrayList<>();
-
 			LogCommand log = git.log();
 			Repository repo = git.getRepository();
 			log.addRange(repo.exactRef(R_REMOTES + DEFAULT_REMOTE_NAME + "/" + MASTER).getObjectId(), repo.exactRef(Constants.HEAD).getObjectId());
 			Iterable<RevCommit> call = log.call();
-			for (RevCommit aCall : call)
+
+			List<GitResetBean> list = new ArrayList<>();
+			for (RevCommit revCommit : call)
 			{
-				list.add(aCall.getName());
+				list.add(new GitResetBean(revCommit, credentialBean));
 			}
 			return list;
 		}
@@ -148,7 +148,7 @@ public class GitUtil
 	//endregion
 
 	//region Pull
-	public static List<GitPullBean> gitPull(CredentialBean bean, ProgressMonitor monitor) throws Exception
+	public static List<GitPullBean> gitPull(CredentialBean bean, ProgressMonitor monitor, String remoteBranchName) throws Exception
 	{
 		try (Git git = git(bean))
 		{
@@ -157,7 +157,11 @@ public class GitUtil
 			List<GitPullBean> list = new ArrayList<>();
 			try
 			{
-				PullResult pullResult = git.pull().setCredentialsProvider(getCredentialsProvider(bean)).setProgressMonitor(monitor).call();
+				PullResult pullResult = git.pull().
+						setCredentialsProvider(getCredentialsProvider(bean))
+						.setProgressMonitor(monitor)
+						.setRemoteBranchName(remoteBranchName)
+						.call();
 
 				MergeResult m = pullResult.getMergeResult();
 				if (m != null)
@@ -166,17 +170,6 @@ public class GitUtil
 					if (allConflicts != null)
 					{
 						list.addAll(allConflicts.keySet().stream().map(path -> new GitPullBean(path, true)).collect(Collectors.toList()));
-						//							int[][] c = allConflicts.get(path);
-						//							System.out.println("Conflicts in file " + path);
-						//							for (int i = 0; i < c.length; i++)
-						//							{
-						//								System.out.println("  Conflict #" + i);
-						//								for (int j = 0; j < c[i].length - 1; j++)
-						//								{
-						//									if (c[i][j] >= 0)
-						//										System.out.println("    Chunk for " + m.getMergedCommits()[j] + " starts on line #" + c[i][j]);
-						//								}
-						//							}
 					}
 				}
 			}
@@ -212,7 +205,7 @@ public class GitUtil
 		}
 	}
 
-	public static List<Chunk> getConflictsNew(CredentialBean bean, String fileName) throws Exception
+	public static List<Chunk> getConflicts(CredentialBean bean, String fileName) throws Exception
 	{
 		try (Git git = git(bean))
 		{
@@ -265,83 +258,6 @@ public class GitUtil
 			return lines;
 		}
 	}
-
-	/*@Deprecated
-	public static List<Chunk> getConflicts(CredentialBean bean, String fileName) throws Exception
-	{
-		try (Git git = git(bean))
-		{
-			Repository repo = git.getRepository();
-			ThreeWayMerger merger = new StrategyResolve().newMerger(repo, true);
-			merger.merge(repo.resolve(Constants.HEAD), repo.resolve(Constants.FETCH_HEAD));
-			ResolveMerger resolveMerger = (ResolveMerger) merger;
-
-			Map<String, org.eclipse.jgit.merge.MergeResult<?>> mergeResults = resolveMerger.getMergeResults();
-
-			org.eclipse.jgit.merge.MergeResult<?> mergeChunks = mergeResults.get(fileName);
-			if (mergeChunks == null)
-			{
-				return null;
-			}
-			if (!mergeChunks.containsConflicts())
-			{
-				return null;
-			}
-			List<Chunk> lines = new ArrayList<>();
-			Chunk curCh = null;
-
-			for (MergeChunk mergeChunk : mergeChunks)
-			{
-				MergeChunk.ConflictState conflictState = mergeChunk.getConflictState();
-				switch (conflictState)
-				{
-					case NO_CONFLICT: break;
-					case FIRST_CONFLICTING_RANGE:
-						curCh = new Chunk(mergeChunk.getBegin(), mergeChunk.getEnd());
-						lines.add(curCh);
-						break;
-					case NEXT_CONFLICTING_RANGE:
-						curCh.setSecondStart(mergeChunk.getBegin());
-						curCh.setSecondEnd(mergeChunk.getEnd());
-						break;
-				}
-			}
-
-//			int currentConflict = -1;
-//
-//
-//			int[][] ret = new int[nrOfConflicts][3];
-//			for (MergeChunk mergeChunk : mergeChunks)
-//			{
-//				// to store the end of this chunk (end of the last conflicting range)
-//				int endOfChunk = 0;
-//				if (mergeChunk.getConflictState().equals(MergeChunk.ConflictState.FIRST_CONFLICTING_RANGE))
-//				{
-//					if (currentConflict > -1)
-//					{
-//						// there was a previous conflicting range for which the end
-//						// is not set yet - set it!
-//						ret[currentConflict][2] = endOfChunk;
-//					}
-//					currentConflict++;
-//					endOfChunk = mergeChunk.getEnd();
-//					ret[currentConflict][mergeChunk.getSequenceIndex()] = mergeChunk.getBegin();
-//				}
-//				if (mergeChunk.getConflictState().equals(MergeChunk.ConflictState.NEXT_CONFLICTING_RANGE))
-//				{
-//					if (mergeChunk.getEnd() > endOfChunk)
-//					{
-//						endOfChunk = mergeChunk.getEnd();
-//					}
-//					ret[currentConflict][mergeChunk.getSequenceIndex()] = mergeChunk.getBegin();
-//				}
-//			}
-//
-//			String asd = "asd";
-//			return null;
-			return lines;
-		}
-	}*/
 	//endregion
 
 	//region Reset
@@ -538,6 +454,216 @@ public class GitUtil
 	}
 	//endregion
 
+	//region Branch
+	public static String currentBranch(CredentialBean bean) throws Exception
+	{
+		try (Git git = git(bean))
+		{
+			return git.getRepository().getBranch();
+		}
+	}
+
+	public static List<Branch> getBranches(CredentialBean bean) throws Exception
+	{
+		try (Git git = git(bean))
+		{
+			String currentBranch = git.getRepository().getFullBranch();
+			List<Ref> localBranches = git.branchList().call();
+			List<Ref> remoteBrahcnes = git.branchList().setListMode(ListBranchCommand.ListMode.REMOTE).call();
+			List<Branch> list = new ArrayList<>();
+
+			localBranches.stream()
+					.filter(r -> !r.isSymbolic())
+					.map(Ref::getName)
+					.map(name -> new Branch(true, false, name))
+					.peek(b -> b.isCurrent = b.name.equals(currentBranch))
+					.forEach(list::add);
+
+			remoteBrahcnes.stream()
+					.filter(r -> !r.isSymbolic())
+					.map(Ref::getName)
+					.map(name -> new Branch(false, false, name))
+					.forEach(list::add);
+
+			return list;
+		}
+	}
+
+	public static String getRemoteBranch(CredentialBean bean, String localBranch) throws Exception
+	{
+		try (Git git = git(bean))
+		{
+			String string = git.getRepository().getConfig().getString("branch", localBranch, "merge");
+			return string == null ? localBranch : string.replace("refs/heads/", "");
+		}
+	}
+
+	public static void createNewBranch(CredentialBean bean, String newName) throws Exception
+	{
+		try (Git git = git(bean))
+		{
+			Ref	ref = git.branchCreate()
+					.setName(newName)
+					//think how to set upstream correctly
+					.setUpstreamMode(CreateBranchCommand.SetupUpstreamMode.SET_UPSTREAM)
+					.call();
+
+			Iterable<PushResult> call = git.push().setCredentialsProvider(getCredentialsProvider(bean)).add(ref).call();
+		}
+	}
+
+	public static String checkout(CredentialBean bean, String branchName, String localBranchName) throws Exception
+	{
+		try (Git git = git(bean))
+		{
+			CheckoutCommand checkoutCommand = git.checkout()
+					.setStartPoint(branchName)
+					.setCreateBranch(false)
+					.setName(branchName);
+
+			if (localBranchName != null)
+			{
+				checkoutCommand
+						.setName(localBranchName)
+						.setUpstreamMode(CreateBranchCommand.SetupUpstreamMode.TRACK)
+						.setCreateBranch(true);
+			}
+			Ref ref = checkoutCommand.call();
+			return ref.getName();
+		}
+	}
+
+	public static void rename(CredentialBean bean, String oldName, String newName) throws Exception
+	{
+		try (Git git = git(bean))
+		{
+			git.branchRename().setNewName(newName).setOldName(oldName).call();
+		}
+	}
+
+	public static void deleteBranch(CredentialBean bean, Branch branch) throws Exception
+	{
+		try (Git git = git(bean))
+		{
+			if (branch.isLocal())
+			{
+				git.branchDelete().setBranchNames(branch.getFullName()).setForce(true).call();
+			}
+			else
+			{
+				git.push().setCredentialsProvider(getCredentialsProvider(bean)).setRefSpecs(new RefSpec(":refs/heads/" + branch.getSimpleName())).call();
+			}
+		}
+	}
+
+	public static class Branch
+	{
+		private boolean isLocal;
+		private boolean isCurrent;
+		private String name;
+
+		public Branch(boolean isLocal, boolean isCurrent, String name)
+		{
+			this.isLocal = isLocal;
+			this.isCurrent = isCurrent;
+			this.name = name;
+		}
+
+		public String getFullName()
+		{
+			return this.name;
+		}
+
+		public boolean isLocal()
+		{
+			return isLocal;
+		}
+
+		public boolean isCurrent()
+		{
+			return isCurrent;
+		}
+
+		public String getSimpleName()
+		{
+			return this.name.substring(this.name.lastIndexOf("/") + 1);
+		}
+
+		@Override
+		public boolean equals(Object o)
+		{
+			if (this == o)
+				return true;
+			if (o == null || getClass() != o.getClass())
+				return false;
+
+			Branch branch = (Branch) o;
+
+			return name.equals(branch.name);
+		}
+
+		@Override
+		public int hashCode()
+		{
+			return name.hashCode();
+		}
+	}
+	//endregion
+
+	public static List<Tag> getTags(CredentialBean bean) throws Exception
+	{
+		try (Git git = git(bean))
+		{
+			List<Ref> call = git.tagList().call();
+			return call.stream().map(Ref::getName).map(Tag::new).collect(Collectors.toList());
+		}
+	}
+
+	public static void deleteTag(CredentialBean bean, String tagName) throws Exception
+	{
+		try (Git git = git(bean))
+		{
+			git.tagDelete().setTags(tagName).call();
+		}
+	}
+
+	public static void newTag(CredentialBean bean, String message, String version) throws Exception
+	{
+		try (Git git = git(bean))
+		{
+			git.tag().setMessage(message).setName(version).call();
+		}
+	}
+
+	public static void pushTag(CredentialBean bean) throws Exception
+	{
+		try (Git git = git(bean))
+		{
+			git.push().setPushTags().setCredentialsProvider(getCredentialsProvider(bean)).call();
+		}
+	}
+
+	public static class Tag
+	{
+		private String name;
+		private String fullname;
+
+		public Tag(String fullname)
+		{
+			this.fullname = fullname;
+			this.name = this.fullname.replace("refs/tags/", "");
+		}
+
+		public String getName()
+		{
+			return name;
+		}
+
+		public String getFullname()
+		{
+			return fullname;
+		}
+	}
 
 	public static void gitDummy(Object... objects) throws Exception
 	{

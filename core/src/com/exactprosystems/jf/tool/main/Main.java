@@ -28,13 +28,16 @@ import com.exactprosystems.jf.tool.git.CredentialBean;
 import com.exactprosystems.jf.tool.git.CredentialDialog;
 import com.exactprosystems.jf.tool.git.GitBean;
 import com.exactprosystems.jf.tool.git.GitUtil;
+import com.exactprosystems.jf.tool.git.branch.GitBranch;
 import com.exactprosystems.jf.tool.git.clone.GitClone;
 import com.exactprosystems.jf.tool.git.commit.GitCommit;
 import com.exactprosystems.jf.tool.git.merge.GitMerge;
 import com.exactprosystems.jf.tool.git.merge.GitMergeBean;
 import com.exactprosystems.jf.tool.git.pull.GitPull;
+import com.exactprosystems.jf.tool.git.push.GitPush;
 import com.exactprosystems.jf.tool.git.reset.GitReset;
 import com.exactprosystems.jf.tool.git.status.GitStatus;
+import com.exactprosystems.jf.tool.git.tag.GitTag;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper.OpenSaveMode;
 import com.exactprosystems.jf.tool.matrix.MatrixFx;
@@ -393,6 +396,21 @@ public class Main extends Application
 		return gitMerge.getMergedFiles();
 	}
 
+	public void gitBranches() throws Exception
+	{
+		new GitBranch(this).display();
+	}
+
+	public void gitPush() throws Exception
+	{
+		new GitPush(this).display();
+	}
+
+	public void gitTags() throws Exception
+	{
+		new GitTag(this).display();
+	}
+
 	public void gitPull() throws Exception
 	{
 		new GitPull(this).display();
@@ -401,7 +419,7 @@ public class Main extends Application
 	public void gitCommit() throws Exception
 	{
 		CredentialBean credential = getCredential();
-		new GitCommit(this, GitUtil.gitStatus(credential), GitUtil.gitUnpushingCommits(credential)).display();
+		new GitCommit(this, GitUtil.gitStatus(credential)).display();
 	}
 
 	public void gitReset() throws Exception
