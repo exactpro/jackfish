@@ -34,7 +34,7 @@ $(document).ready(function () {
 		if (id !== "") {
 			$(val).click(function(event) {
 				$('html, body').animate({
-					scrollTop: $(document.getElementById($(val).attr("href").substring(1))).offset().top
+					scrollTop: $(document.getElementById($(val).attr("href").substring(1))).offset().top-50
 				}, 500);
 			})
 		}
@@ -47,7 +47,7 @@ $(document).ready(function () {
 
 		var scrollToDiv = function(div) {
 			$('html, body').animate({
-				scrollTop: $(div).offset().top
+				scrollTop: $(div).offset().top-50
 			}, 500);
 		}
 
@@ -85,33 +85,50 @@ $(document).ready(function () {
 						newDivs.push(current);
 					}
 				}
+
 				foundDivs = newDivs;
-				$(".searchLabel").text("Found " + foundDivs.length);
-			}
+				$(".searchLabel").text(foundDivs.length + " matches");
+			        }
+
 			$(foundDivs).each(function(index, e) {
+
 				$(e).addClass('foundElement');
 			});
+
 		});
 
+
 		$("#btnNext").click(function(e) {
+
 			if (foundDivs.length !== 0) {
 				currentIndex++;
 				if (currentIndex === foundDivs.length) {
 					currentIndex = 0;
 				}
+				$(foundDivs[currentIndex-1]).removeClass('currentFoundElement');
+				$(".searchLabel").text(currentIndex +1 + "        of " + foundDivs.length);
+				$(foundDivs[currentIndex]).addClass('currentFoundElement');
 				scrollToDiv(foundDivs[currentIndex]);
 			}
+
 		});
 
+
 		$("#btnPrev").click(function(e) {
+
 			if (foundDivs.length !== 0) {
 				currentIndex--;
 				if (currentIndex < 0) {
 					currentIndex = foundDivs.length -1;
 				}
+				$(".searchLabel").text(currentIndex +1 + "     of     " + foundDivs.length);
+				$(foundDivs[currentIndex]).addClass('currentFoundElement');
 				scrollToDiv(foundDivs[currentIndex]);
+				$(foundDivs[currentIndex+1]).removeClass('currentFoundElement');
 			}
+
 		});
+
 	};
 	f();
 });
