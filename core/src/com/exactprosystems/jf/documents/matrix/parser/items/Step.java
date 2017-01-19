@@ -191,7 +191,7 @@ public class Step extends MatrixItem
 				
 				table.add(row);
 			}
-            doSreenshot(row, null, screenshotKind, ScreenshotKind.OnStart);
+            doSreenshot(row, null, screenshotKind, ScreenshotKind.OnStart, ScreenshotKind.OnStartOrError);
 			
 			
 			
@@ -207,7 +207,7 @@ public class Step extends MatrixItem
 
             if (res == Result.Failed)
             {
-                doSreenshot(row, null, screenshotKind, ScreenshotKind.OnError);
+                doSreenshot(row, null, screenshotKind, ScreenshotKind.OnError, ScreenshotKind.OnStartOrError, ScreenshotKind.OnFinishOrError);
                 
                 MatrixError error = ret.getError();
                 
@@ -231,7 +231,7 @@ public class Step extends MatrixItem
             }
             context.runHandler(HandlerKind.OnStepFinish, report, null);
 
-            doSreenshot(row, null, screenshotKind, ScreenshotKind.OnFinish);
+            doSreenshot(row, null, screenshotKind, ScreenshotKind.OnFinish, ScreenshotKind.OnFinishOrError);
             if (table != null && position >= 0 && !isRepOff())
 			{
 				row.put(Context.timeColumn, 		ret.getTime());
