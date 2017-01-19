@@ -8,6 +8,7 @@
 
 package com.exactprosystems.jf.documents.config;
 
+import com.exactprosystems.jf.actions.ReadableValue;
 import com.exactprosystems.jf.api.app.Do;
 import com.exactprosystems.jf.api.app.IApplicationFactory;
 import com.exactprosystems.jf.api.app.IApplicationPool;
@@ -37,8 +38,10 @@ import com.exactprosystems.jf.documents.Document;
 import com.exactprosystems.jf.documents.DocumentFactory;
 import com.exactprosystems.jf.documents.DocumentInfo;
 import com.exactprosystems.jf.documents.matrix.Matrix;
+import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 import com.exactprosystems.jf.documents.matrix.parser.items.MutableArrayList;
 import com.exactprosystems.jf.documents.matrix.parser.items.NameSpace;
+import com.exactprosystems.jf.documents.matrix.parser.items.SubCase;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.DummyRunnerListener;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.MatrixListener;
@@ -51,7 +54,10 @@ import com.exactprosystems.jf.tool.main.DocumentKind;
 import org.apache.log4j.Logger;
 
 import javax.xml.XMLConstants;
-import javax.xml.bind.*;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.Marshaller;
+import javax.xml.bind.UnmarshalException;
+import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -60,12 +66,12 @@ import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
-
-import java.awt.Color;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.*;
 import java.math.MathContext;
 import java.util.*;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.stream.Collectors;
 
@@ -102,6 +108,17 @@ public class Configuration extends AbstractDocument
 	public static final String library 				= "library";
 	public static final String userVars 			= "userVars";
 	public static final String git 					= "git";
+
+	//region Global handlers
+	public static final String globalHandler		= "globalHandler";
+	public static final String globalHandlerEnable	= "enable";
+	public static final String onTestCaseStart		= "onTestCaseStart";
+	public static final String onTestCaseFinish		= "onTestCaseFinish";
+	public static final String onTestCaseError		= "onTestCaseError";
+	public static final String onStepStart			= "onStepStart";
+	public static final String onStepFinish			= "onStepFinish";
+	public static final String onStepError			= "onStepError";
+	//endregion
 
 	public static final String entryName			= "name";
 	
@@ -220,7 +237,10 @@ public class Configuration extends AbstractDocument
 
 	@XmlElement(name = library)
 	protected MutableArrayList<MutableString> librariesValue;
-	
+
+	@XmlElement(name = globalHandler)
+	public GlobalHandler globalHandlerValue;
+
 	@XmlElement(name = sqlEntry)
 	public MutableArrayList<SqlEntry> sqlEntriesValue;
 
@@ -245,6 +265,9 @@ public class Configuration extends AbstractDocument
 		this.formatsValue				= new MutableArrayList<MutableString>();
 		this.reportsValue				= new MutableString();
 		this.gitValue					= new MutableString();
+		
+		this.globalHandlerValue			= new GlobalHandler();
+
 		this.sqlEntriesValue 			= new MutableArrayList<SqlEntry>();
 		this.clientEntriesValue			= new MutableArrayList<ClientEntry>();
 		this.serviceEntriesValue		= new MutableArrayList<ServiceEntry>();
@@ -321,6 +344,35 @@ public class Configuration extends AbstractDocument
 	public MutableString getVars()
 	{
 		return this.varsValue;
+	}
+
+	public GlobalHandler getGlobalHandler()
+	{
+		return globalHandlerValue;
+	}
+
+	public void addSubcaseFromLibs(List<ReadableValue> list)
+	{
+		for (Map.Entry<String, Matrix> entry : getLibs().entrySet())
+		{
+			final String name = entry.getKey();
+			Matrix lib = entry.getValue();
+
+			if (lib != null)
+			{
+				MatrixItem mitem = lib.getRoot().find(false, NameSpace.class, name);
+				if(mitem != null)
+				{
+					mitem.bypass(it ->
+					{
+						if (it instanceof SubCase)
+						{
+							list.add(new ReadableValue(name + "." + it.getId(), ((SubCase) it).getName()));
+						}
+					});
+				}
+			}
+		}
 	}
 
 	public MutableArrayList<MutableString> getAppDictionariesValue()
@@ -551,16 +603,12 @@ public class Configuration extends AbstractDocument
 	        Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
 	
 	        unmarshaller.setSchema(schema);
-	        unmarshaller.setEventHandler(new ValidationEventHandler()
-	        {
-	            @Override
-	            public boolean handleEvent(ValidationEvent event)
-	            {
-	                System.out.println("Error in configuration : " + event);
-	
-	                return false;
-	            }
-	        });
+	        unmarshaller.setEventHandler(event ->
+			{
+				System.out.println("Error in configuration : " + event);
+
+				return false;
+			});
 	
 	        Configuration config = (Configuration) unmarshaller.unmarshal(reader);
 	        config.factory = getFactory();
@@ -904,6 +952,7 @@ public class Configuration extends AbstractDocument
 		this.dateTimeValue.set(config.dateTimeValue);
 		this.formatsValue.from(config.formatsValue);
 		this.gitValue.set(config.gitValue);
+		this.globalHandlerValue.setValue(config.globalHandlerValue);
 		this.reportsValue.set(config.reportsValue);
 		this.appEntriesValue.from(config.appEntriesValue);
 		this.clientEntriesValue.from(config.clientEntriesValue);
@@ -927,6 +976,7 @@ public class Configuration extends AbstractDocument
 			ClientEntry.class,
 			ServiceEntry.class,
 			AppEntry.class,
+			GlobalHandler.class,
 		};
 
 	protected String 				reportFactoryValue = HTMLReportFactory.class.getSimpleName();

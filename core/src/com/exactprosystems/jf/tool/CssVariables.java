@@ -291,6 +291,7 @@ public class CssVariables
 		public static final String	GO_TO_LINE_ICON			= IMAGES_DIR + "/goToLine.png";
 
 		public static final String	EVALUATOR_ICON				= IMAGES_DIR + "/evaluatorIcon.png";
+		public static final String	GLOBAL_HANDLER_ICON			= IMAGES_DIR + "/globalHandlerIcon.png";
 		public static final String	FORMAT_ICON					= IMAGES_DIR + "/formatIcon.png";
 		public static final String	MATRIX_ICON					= IMAGES_DIR + "/matrixIcon.png";
 		public static final String	LIBRARY_ICON				= IMAGES_DIR + "/libraryIcon.png";

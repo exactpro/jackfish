@@ -16,10 +16,8 @@ import javafx.scene.layout.Priority;
 
 import java.io.File;
 import java.time.LocalDateTime;
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class UserInputDialog extends Dialog<String>
 {
@@ -27,9 +25,11 @@ public class UserInputDialog extends Dialog<String>
 	private final ExpressionField expressionField;
 	private final Label expressionLabel;
 	private AbstractEvaluator evaluator;
+	private boolean visible = true;
 
-	public UserInputDialog(String defaultValue, AbstractEvaluator evaluator, HelpKind helpKind, List<ReadableValue> dataSource)
+	public UserInputDialog(String defaultValue, AbstractEvaluator evaluator, HelpKind helpKind, List<ReadableValue> dataSource, boolean showLabel)
 	{
+		this.visible = showLabel;
 		final DialogPane dialogPane = getDialogPane();
 		this.setResizable(true);
 		dialogPane.getStylesheets().addAll(Common.currentThemesPaths());
@@ -158,7 +158,10 @@ public class UserInputDialog extends Dialog<String>
 		grid.getChildren().clear();
 
 		grid.add(expressionField, 0, 0);
-		grid.add(expressionLabel, 0, 1);
+		if (this.visible)
+		{
+			grid.add(expressionLabel, 0, 1);
+		}
 		getDialogPane().setContent(grid);
 
 		Platform.runLater(expressionField::requestFocus);

@@ -449,7 +449,7 @@ public abstract class DialogsHelper
 			protected String call() throws Exception
 			{
 				String literal = Common.createLiteral(defaultValue, evaluator);
-				UserInputDialog dialog = new UserInputDialog(literal, evaluator, helpKind, dataSource);
+				UserInputDialog dialog = new UserInputDialog(literal, evaluator, helpKind, dataSource, true);
 				dialog.setTitle(title);
 				dialog.getDialogPane().setHeader(null);
 				Optional<String> s = dialog.showAndWait();
