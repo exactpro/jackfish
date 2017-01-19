@@ -1,0 +1,20 @@
+#Id;#TestCase;#Kind;#Depends;#For
+1;Test case;;;
+    #Step;#Kind
+    '1';OnFinishOrError
+    #EndStep
+
+    #Step;#Kind
+    '2';OnFinishOrError
+    #EndStep
+
+
+#Id;#TestCase;#Kind;#Depends;#For
+cl;cl;;;
+    #Id;#Action;#Decoraded
+    RESTBL1;ResultTable;true
+
+    #Action;#BeforeTestCase;#Table;#Title
+    TableReport;'1';RESTBL1.Out;'1'
+
+
