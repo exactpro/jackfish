@@ -118,14 +118,16 @@ public class HelpBuilder extends ReportBuilder
 		writer.include(getClass().getResourceAsStream("help.css"));
 		writer.fwrite("-->\n" + "</style>\n");
 
-		writer.fwrite("</head>\n" + "<body>\n" + "<h0>Version <td>%s</h0>\n", VersionInfo.getVersion());
-		writer.fwrite("<div class='searchDiv'>\n"
-			+ "<button id='btnPrev'><</button>\n"
+		writer.fwrite("</head>\n" + "<body>\n"
+			+ "<div class='searchDiv'>\n"
+			+ "<span class='searchControls'>\n"
 			+ "<input class='searchInput' type='text' placeholder='Search'/\n>"
-			+ "<button id='btnNext'>></button>\n"
-			+ "<label class='searchLabel'></label\n>"
-			+ "</div>"
-		);
+			+ "<button id='btnPrev'>&#923;</button>\n"
+			+ "<button id='btnNext'>V</button>\n"
+			+ "</span>\n"
+			+ "<label class='searchLabel'></label\n>");
+		writer.fwrite("<td><h0>Version <td>%s</h0></td>\n", VersionInfo.getVersion());
+		writer.fwrite("</div>");
 
 		writer.fwrite("<div class='container-fluid'>\n");
 		writer.fwrite("<div class='row'>\n");
