@@ -27,18 +27,21 @@ public class GlobalHandlerNode extends TreeNode
 	private ConfigurationFx model;
 	private TreeItem<TreeNode> globalHandlerTreeItem;
 
+	private final Text view;
 	private final SerializablePair<String, String> CHANGE_HANDLER	= new SerializablePair<>("Change handler", null);
 
 	public GlobalHandlerNode(ConfigurationFx model, TreeItem<TreeNode> globalHandlerTreeItem)
 	{
+		this.view = new Text("Global handlers");
 		this.model = model;
 		this.globalHandlerTreeItem = globalHandlerTreeItem;
+		this.view.setOpacity(isEnable() ? 1.0 : 0.5);
 	}
 
 	@Override
 	public Node getView()
 	{
-		return new Text("Global handlers");
+		return this.view;
 	}
 
 	@Override
@@ -56,6 +59,7 @@ public class GlobalHandlerNode extends TreeNode
 		changeEnable.setOnAction(e -> {
 			Boolean enabled = this.model.getGlobalHandler().getEnabled();
 			this.model.getGlobalHandler().setEnabled(!enabled);
+			this.view.setOpacity(isEnable() ? 1.0 : 0.5);
 		});
 		menu.getItems().addAll(changeEnable, ConfigurationTreeView.createDisabledItem(CHANGE_HANDLER));
 		return Optional.of(menu);
@@ -63,7 +67,12 @@ public class GlobalHandlerNode extends TreeNode
 
 	private MenuItem getChangeEnableMenuItem()
 	{
-		return new MenuItem("Set " + (this.model.getGlobalHandler().getEnabled() ? "dis" : "en") + "able");
+		return new MenuItem("Set " + (isEnable() ? "dis" : "en") + "able");
+	}
+
+	private boolean isEnable()
+	{
+		return this.model.getGlobalHandler().getEnabled();
 	}
 
 	public void display(Map<HandlerKind, String> map)
