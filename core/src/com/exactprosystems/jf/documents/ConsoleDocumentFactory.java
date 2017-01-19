@@ -20,9 +20,11 @@ import com.exactprosystems.jf.documents.text.PlainText;
 import com.exactprosystems.jf.documents.vars.SystemVars;
 import com.exactprosystems.jf.functions.HelpKind;
 import com.exactprosystems.jf.functions.Notifier;
+import com.exactprosystems.jf.functions.Table;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 public class ConsoleDocumentFactory extends DocumentFactory
 {
@@ -125,6 +127,12 @@ public class ConsoleDocumentFactory extends DocumentFactory
 	{
 		System.out.printf("[%s] %s %n", notifier, message);
 	}
+	
+    @Override
+    public boolean editTable(AbstractEvaluator evaluator, String title, Table table, Map<String, Boolean> columns)
+    {
+        return true;
+    }
 
 	@Override
 	public Object input(AbstractEvaluator evaluator, String title, Object defaultValue, HelpKind helpKind, List<ReadableValue> dataSource)

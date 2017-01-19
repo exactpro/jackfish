@@ -1,3 +1,11 @@
+////////////////////////////////////////////////////////////////////////////////
+//  Copyright (c) 2009-2016, Exactpro Systems, LLC
+//  Quality Assurance & Related Development for Innovative Trading Systems.
+//  All rights reserved.
+//  This is unpublished, licensed software, confidential and proprietary
+//  information which is the property of Exactpro Systems, LLC or its licensors.
+////////////////////////////////////////////////////////////////////////////////
+
 package com.exactprosystems.jf.tool.custom;
 
 import com.exactprosystems.jf.actions.ReadableValue;
@@ -16,10 +24,8 @@ import javafx.scene.layout.Priority;
 
 import java.io.File;
 import java.time.LocalDateTime;
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class UserInputDialog extends Dialog<String>
 {

@@ -18,6 +18,7 @@ import com.exactprosystems.jf.documents.text.PlainText;
 import com.exactprosystems.jf.documents.vars.SystemVars;
 import com.exactprosystems.jf.functions.HelpKind;
 import com.exactprosystems.jf.functions.Notifier;
+import com.exactprosystems.jf.functions.Table;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.csv.CsvFx;
 import com.exactprosystems.jf.tool.dictionary.DictionaryFx;
@@ -35,6 +36,7 @@ import org.apache.log4j.Logger;
 import java.io.File;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 public class FxDocumentFactory extends DocumentFactory
 {
@@ -126,6 +128,14 @@ public class FxDocumentFactory extends DocumentFactory
 	{
 		DialogsHelper.showNotifier(message, notifier);
 	}
+
+    @Override
+    public boolean editTable(AbstractEvaluator evaluator, String title, Table table, Map<String, Boolean> columns)
+    {
+        Boolean result = DialogsHelper.showUserTable(evaluator, title, table, columns);
+        return result;
+    }
+
 
 	@Override
 	public Object input(AbstractEvaluator evaluator, String title, Object defaultValue, HelpKind helpKind, List<ReadableValue> dataSource)

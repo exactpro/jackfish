@@ -96,6 +96,7 @@ public class ActionsList
 		        TableCompareTwo.class,
 		        TableConsiderColumnsAs.class,
 		        TableCreate.class,
+		        TableEdit.class,
 		        TableLeftJoin.class,
 				TableRemoveColumns.class,
 		        TableLoadFromFile.class,
