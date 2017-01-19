@@ -8,15 +8,12 @@
 
 package com.exactprosystems.jf.tool.custom;
 
-import com.exactprosystems.jf.api.common.Str;
-import com.exactprosystems.jf.common.evaluator.Variables;
 import com.exactprosystems.jf.functions.RowTable;
 import com.exactprosystems.jf.functions.Table;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
-import com.exactprosystems.jf.tool.custom.helper.SimpleVariable;
-
 import javafx.application.Platform;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
@@ -25,19 +22,15 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.DialogPane;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
-//import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 
-import java.util.Arrays;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Map.Entry;
-import java.util.stream.Collectors;
 
 public class UserEditTableDialog extends Dialog<Boolean>
 {
@@ -91,22 +84,44 @@ public class UserEditTableDialog extends Dialog<Boolean>
         
         for (Entry<String, Boolean> entry : columns.entrySet())
         {
-            String name = entry.getKey();
-            Boolean editable = entry.getValue();
+            final String name = entry.getKey();
+            final Boolean editable = entry.getValue();
 
             if (table.columnIsPresent(name))
             {
-                final TableColumn<RowTable, ?> column = new TableColumn<>();
+                final TableColumn<RowTable, String> column = new TableColumn<>();
                 column.setText(name);
-                column.setCellValueFactory(new PropertyValueFactory<>(name));
-                column.setEditable(editable);
+                column.setCellValueFactory(p -> new SimpleObjectProperty<>("" + p.getValue().get(name)));
+
+                if (editable)
+                {
+                    column.setEditable(true);
+                    column.setCellFactory(p -> new TableCell<RowTable, String>()
+                    {
+                        @Override
+                        protected void updateItem(String item, boolean empty)
+                        {
+                            super.updateItem(item, empty);
+                            if (item != null && !empty)
+                            {
+                                TextField value = new TextField(item.toString());
+                                value.textProperty().addListener((observable, oldValue, newValue) -> 
+                                {
+                                    ((RowTable) getTableRow().getItem()).put(name,newValue);
+                                });
+                                value.getStyleClass().setAll(CssVariables.EDITABLE_PARAMETER);
+                                setGraphic(value);
+                            }
+                            else
+                            {
+                                setText(null);
+                            }
+                        }
+                    });
+                }
                 tableView.getColumns().add(column);
             }
         }
-
-//        tableView.setRowFactory(tableView1 -> new ColorRow(clazz));
-
-        
         
         ObservableList<RowTable> data = FXCollections.observableArrayList();
 
@@ -120,18 +135,6 @@ public class UserEditTableDialog extends Dialog<Boolean>
         return tableView;
     }
 
-//    public void fillVariables(final ObservableList<SimpleVariable> data)
-//    {
-//        Variables localVars = this.evaluator.getLocals();
-//        localVars.getVars().entrySet()
-//                .forEach((entry) -> data.add(new SimpleVariable(entry.getKey(), entry.getValue())));
-//
-//        Variables globalVars = this.evaluator.getGlobals();
-//        data.addAll(globalVars.getVars().entrySet().stream()
-//                .map(entry -> new SimpleVariable(entry.getKey(), entry.getValue()))
-//                .filter(simpleVariable -> !data.contains(simpleVariable)).collect(Collectors.toList()));
-//    }
-//	
     private void updateGrid()
 	{
 		grid.getChildren().clear();
@@ -143,28 +146,4 @@ public class UserEditTableDialog extends Dialog<Boolean>
 		Platform.runLater(tableView::requestFocus);
 	}
     
-    private class ColorRow extends TableRow<RowTable>
-    {
-//        private Class<?>    expectedClazz;
-//
-//        public ColorRow(Class<?> expectedClazz)
-//        {
-//            this.expectedClazz = expectedClazz;
-//        }
-
-        @Override
-        protected void updateItem(RowTable e, boolean b)
-        {
-            super.updateItem(e, b);
-            if (e == null)
-            {
-                return;
-            }
-//            if (expectedClazz != null && e.getClazz() != null && e.getClazz().equals(expectedClazz.getSimpleName()))
-//            {
-//                this.getStyleClass().addAll(CssVariables.EXPECTED_CLASS);
-//            }
-        }
-    }
-
 }
