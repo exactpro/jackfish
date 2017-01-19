@@ -18,12 +18,7 @@ import com.exactprosystems.jf.documents.matrix.Matrix;
 import com.exactprosystems.jf.documents.matrix.parser.Parameter;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.documents.matrix.parser.ReturnAndResult;
-import com.exactprosystems.jf.documents.matrix.parser.items.MatrixError;
-import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
-import com.exactprosystems.jf.documents.matrix.parser.items.MatrixRoot;
-import com.exactprosystems.jf.documents.matrix.parser.items.NameSpace;
-import com.exactprosystems.jf.documents.matrix.parser.items.SubCase;
-import com.exactprosystems.jf.documents.matrix.parser.items.TypeMandatory;
+import com.exactprosystems.jf.documents.matrix.parser.items.*;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
 import com.exactprosystems.jf.functions.Table;
 import org.apache.log4j.Logger;
@@ -31,7 +26,6 @@ import org.apache.log4j.Logger;
 import java.io.PrintStream;
 import java.io.Reader;
 import java.util.*;
-import java.util.Map.Entry;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Context implements IContext, AutoCloseable, Cloneable
@@ -259,27 +253,7 @@ public class Context implements IContext, AutoCloseable, Cloneable
 				res.add(new ReadableValue(it.getId(), ((SubCase) it).getName()));
 			}
 		});
-		for (Entry<String, Matrix> entry : getConfiguration().getLibs().entrySet())
-		{
-			final String name = entry.getKey();
-			Matrix lib = entry.getValue();
-
-			if (lib != null)
-			{
-				MatrixItem mitem = lib.getRoot().find(false, NameSpace.class, name);
-				if(mitem != null)
-				{
-					mitem.bypass(it ->
-					{
-						if (it instanceof SubCase)
-						{
-							res.add(new ReadableValue(name + "." + it.getId(), ((SubCase) it).getName()));
-						}
-					});
-				}
-			}
-		}
-
+		this.getConfiguration().addSubcaseFromLibs(res);
 		return res;
 	}
 

@@ -2,10 +2,7 @@ package com.exactprosystems.jf.tool.newconfig;
 
 import com.exactprosystems.jf.api.service.ServiceStatus;
 import com.exactprosystems.jf.common.MutableString;
-import com.exactprosystems.jf.documents.config.AppEntry;
-import com.exactprosystems.jf.documents.config.ClientEntry;
-import com.exactprosystems.jf.documents.config.ServiceEntry;
-import com.exactprosystems.jf.documents.config.SqlEntry;
+import com.exactprosystems.jf.documents.config.*;
 import com.exactprosystems.jf.documents.matrix.Matrix;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
@@ -38,6 +35,7 @@ public class ConfigurationFxController implements Initializable, ContainingParen
 	private LibraryTreeNode					libTreeNode;
 	private VariablesTreeNode				varsTreeNode;
 	private SqlTreeNode						sqlTreeNode;
+	private GlobalHandlerNode				globalHandlerNode;
 	private ClientTreeNode					clientTreeNode;
 	private ServiceTreeNode					serviceTreeNode;
 	private AppTreeNode						appTreeNode;
@@ -104,6 +102,11 @@ public class ConfigurationFxController implements Initializable, ContainingParen
 	public void displaySql(List<SqlEntry> sqlEntries) 
 	{
 		Common.tryCatch(() -> this.sqlTreeNode.display(sqlEntries), "Error on display sql entries");
+	}
+
+	public void displayGlobalHandler(Map<HandlerKind, String> map)
+	{
+		Common.tryCatch(() -> this.globalHandlerNode.display(map), "Error on display sql entries");
 	}
 
 	public void displayClient(List<ClientEntry> clientEntries)
@@ -174,6 +177,10 @@ public class ConfigurationFxController implements Initializable, ContainingParen
 		this.reportTreeNode = new ReportTreeNode(this.model, reportTreeItem);
 		reportTreeItem.setValue(reportTreeNode);
 
+		TreeItem<TreeNode> globalHandlerTreeItem = new TreeItem<>();
+		this.globalHandlerNode = new GlobalHandlerNode(model, globalHandlerTreeItem);
+		globalHandlerTreeItem.setValue(this.globalHandlerNode);
+
 		TreeItem<TreeNode> sqlTreeItem = new TreeItem<>();
 		this.sqlTreeNode = new SqlTreeNode(this.model, sqlTreeItem);
 		sqlTreeItem.setValue(sqlTreeNode);
@@ -204,6 +211,7 @@ public class ConfigurationFxController implements Initializable, ContainingParen
 					libraryTreeItem,
 					varsTreeItem,
 					reportTreeItem,
+					globalHandlerTreeItem,
 					sqlTreeItem,
 					clientTreeItem,
 					serviceTreeItem,

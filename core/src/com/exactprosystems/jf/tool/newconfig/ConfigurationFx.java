@@ -139,6 +139,7 @@ public class ConfigurationFx extends Configuration
 		displayLibrary();
 		displayVars();
 		displayReport();
+		displayGlobalHandler();
 		displaySql();
 		displayClient();
 		displayService();
@@ -744,6 +745,12 @@ public class ConfigurationFx extends Configuration
 	}
 	//endregion
 
+	public void updateHandlerValue(HandlerKind kind, String newValue) throws Exception
+	{
+		this.getGlobalHandler().setHandler(kind, newValue);
+		this.displayGlobalHandler();
+	}
+
 	public void changeEntry(Entry entry, String key, Object newValue) throws Exception
 	{
 		String lastValue = entry.get(key);
@@ -1160,6 +1167,11 @@ public class ConfigurationFx extends Configuration
 	private void displaySql()
 	{
 		this.controller.displaySql(getSqlEntries());
+	}
+
+	private void displayGlobalHandler()
+	{
+		this.controller.displayGlobalHandler(getGlobalHandler().getMap());
 	}
 
 	private void displayClient()

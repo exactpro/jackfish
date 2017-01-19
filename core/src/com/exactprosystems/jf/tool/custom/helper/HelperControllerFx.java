@@ -192,6 +192,8 @@ public class HelperControllerFx implements Initializable, ContainingParent
 	public void displayMethods(ObservableList<HelperFx.IToString> list)
 	{
 		this.listMembers.setData(list, true);
+		this.listMembers.getItems().clear();
+		this.listMembers.getItems().addAll(list);
 	}
 
 	// ============================================================
