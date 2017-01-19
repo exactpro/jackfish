@@ -368,16 +368,13 @@
 .spreadsheet-cell:filled:selected,
 .spreadsheet-cell:filled:focused:selected,
 .spreadsheet-cell:filled:focused:selected:hover {
-	-fx-background-color: -fx-company-color-light;
-	-fx-border-color: #a9a9a9;
-	-fx-border-width : 0.5px;
+	-fx-background-color: #FFFFFF;
 	-fx-text-fill: -fx-selection-bar-text;
 
 }
 .spreadsheet-cell:hover,
 .spreadsheet-cell:filled:focused {
-	-fx-background-color: -fx-company-color-dark;
-	-fx-text-fill: white;
+	-fx-background-color: #e5e5e5;
 	-fx-background-insets: 0, 0 0 1 0;
 }
 .spreadsheet-cell{
@@ -395,32 +392,37 @@ VerticalHeader > Label {
 	-fx-alignment: center;
 	-fx-font-style : normal;
 }
-VerticalHeader > Label.selected{
-	-fx-background-color: -fx-company-color-light, -fx-company-color-light,  linear-gradient(to right, derive(-fx-company-color-light,-10%) ,derive(-fx-company-color-light,10%));
+VerticalHeader > Label.selected {
+	-fx-background-color: #2687fb;
 	-fx-background-insets: 0, 0 1 1 0, 1 2 2 1;
 	-fx-font-weight: bold;
 	-fx-size: 2em;
-	-fx-text-fill: -fx-selection-bar-text;
+	-fx-text-fill: white;
 	-fx-alignment: center;
-	-fx-border-color : black;
 }
 HorizontalHeaderColumn > TableColumnHeader.column-header.table-column.selected{
-	-fx-background-color: -fx-company-color-light, -fx-company-color-light,  linear-gradient(to bottom, derive(-fx-company-color-light,-10%) ,derive(-fx-company-color-light,10%));
+	-fx-background-color: #2687fb;
 	-fx-background-insets: 0, 0 1 1 0, 1 2 2 1;
 	-fx-font-weight: bold;
 	-fx-size: 2em;
-	-fx-text-fill: -fx-selection-bar-text;
+	-fx-text-fill: white;
 	-fx-alignment: center;
-	-fx-border-color : black;
 }
-.column-header-background.invisible { visibility: hidden; -fx-padding: -1em; }
+HorizontalHeaderColumn > TableColumnHeader.column-header.table-column.selected > .label {
+	-fx-text-fill : white;
+
+}
+.column-header-background.invisible {
+	visibility: hidden;
+	-fx-padding: -1em;
+}
 CellView > .text-input.text-field{
 	-fx-padding : 0 0 0 -0.2em;
 	-fx-background-color: transparent;
 }
 .selection-rectangle{
 	-fx-fill : transparent;
-	-fx-stroke : black;
+	-fx-stroke : #2687fb;
 	-fx-stroke-width : 2;
 }
 .startCell {

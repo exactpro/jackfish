@@ -78,10 +78,9 @@ public class ConfigurationTreeView extends TreeView<TreeNode>
 					else
 					{
 						HBox pane = new HBox();
-						pane.setSpacing(5);
 						item.setExpanded(this.getTreeItem().isExpanded());
 						item.icon().map(ImageView::new).ifPresent(pane.getChildren()::add);
-						pane.getChildren().add(view);
+						pane.getChildren().addAll(Common.createSpacer(Common.SpacerEnum.HorizontalMin), view);
 						setGraphic(pane);
 					}
 				}
