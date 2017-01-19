@@ -27,8 +27,10 @@ import com.exactprosystems.jf.documents.matrix.Matrix;
 import com.exactprosystems.jf.documents.matrix.parser.items.*;
 import com.exactprosystems.jf.functions.HelpKind;
 import com.exactprosystems.jf.functions.Notifier;
+import com.exactprosystems.jf.functions.Table;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.custom.Notifications;
+import com.exactprosystems.jf.tool.custom.UserEditTableDialog;
 import com.exactprosystems.jf.tool.custom.UserInputDialog;
 import com.exactprosystems.jf.tool.custom.browser.ReportBrowser;
 import com.exactprosystems.jf.tool.custom.date.DateTimePicker;
@@ -441,6 +443,35 @@ public abstract class DialogsHelper
 		return value;
 	}
 
+    public static Boolean showUserTable(AbstractEvaluator evaluator, String title, Table table, Map<String, Boolean> columns)
+    {
+        Task<Boolean> task = new Task<Boolean>()
+        {
+            @Override
+            protected Boolean call() throws Exception
+            {
+                UserEditTableDialog dialog = new UserEditTableDialog(title, table, columns);
+                dialog.setTitle(title);
+                dialog.getDialogPane().setHeader(null);
+                Optional<Boolean> s = dialog.showAndWait();
+                return s.orElse(false);
+            }
+        };
+
+        final Boolean[] res = { Boolean.FALSE };
+        task.setOnSucceeded(e -> res[0] = ((Boolean) e.getSource().getValue()));
+        Platform.runLater(task);
+        try
+        {
+            res[0] = task.get();
+        }
+        catch (Exception e)
+        {
+            task.cancel();
+        }
+        return res[0];
+    }
+	
 	public static String showUserInput(AbstractEvaluator evaluator, String title, Object defaultValue, HelpKind helpKind, List<ReadableValue> dataSource)
 	{
 		Task<String> task = new Task<String>()
@@ -505,7 +536,7 @@ public abstract class DialogsHelper
 		text.setFont(javafx.scene.text.Font.font(15));
 		box.getChildren().addAll(text, new Button("Copy version"));
 		dialog.getDialogPane().setHeaderText(format);
-		dialog.getDialogPane().setContentText("Copyright (c) 2009-2015, Exactpro Systems, LLC\n" + "Quality Assurance & Related Development for Innovative Trading Systems.\n" + "All rights reserved.\n" + "This is unpublished, licensed software, confidential and proprietary\n" + "information which is the property of Exactpro Systems, LLC or its licensors.");
+		dialog.getDialogPane().setContentText("Copyright (c) 2009-2017, Exactpro Systems, LLC\n" + "Quality Assurance & Related Development for Innovative Trading Systems.\n" + "All rights reserved.\n" + "This is unpublished, licensed software, confidential and proprietary\n" + "information which is the property of Exactpro Systems, LLC or its licensors.");
 		dialog.getDialogPane().getStylesheets().addAll(Common.currentThemesPaths());
 		dialog.show();
 	}
