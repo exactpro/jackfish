@@ -1,16 +1,21 @@
 package com.exactprosystems.jf.tool.dictionary.dialog;
 
-import com.exactprosystems.jf.api.app.IWindow;
+import com.exactprosystems.jf.api.app.ControlKind;
+import com.exactprosystems.jf.api.app.IControl;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
+import com.exactprosystems.jf.tool.custom.ImageViewWithScale;
+import com.exactprosystems.jf.tool.custom.TreeViewWithRectangles;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
-import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
+import org.w3c.dom.Document;
 
+import java.awt.image.BufferedImage;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -20,21 +25,30 @@ public class DialogWizardController implements Initializable, ContainingParent
 	public BorderPane borderPane;
 	public SplitPane horSplitPane;
 	public SplitPane verSplitPane;
-	public ScrollPane scrollPaneImage;
-	public AnchorPane anchorPaneImage;
-	public Group group;
 	public TableView tableView;
-	public AnchorPane anchorPaneTree;
-	public TreeView treeView;
+	public TextField tfDialogName;
+	public ComboBox<ControlKind> cbControl;
+	public TextField tfOwnerId;
 
 	private DialogWizard model;
-	private IWindow window;
 	private Alert dialog;
+
+	private String windowName;
+
+	private ImageViewWithScale imageViewWithScale;
+	private TreeViewWithRectangles treeViewWithRectangles;
 
 	//region Initializable
 	@Override
 	public void initialize(URL location, ResourceBundle resources)
 	{
+		this.cbControl.getItems().addAll(ControlKind.values());
+
+		this.imageViewWithScale = new ImageViewWithScale();
+		this.verSplitPane.getItems().add(0, this.imageViewWithScale.getContent());
+
+		this.treeViewWithRectangles = new TreeViewWithRectangles();
+		this.horSplitPane.getItems().add(this.treeViewWithRectangles.getContent());
 
 	}
 	//endregion
@@ -47,16 +61,67 @@ public class DialogWizardController implements Initializable, ContainingParent
 	}
 	//endregion
 
-	void init(DialogWizard model, IWindow window)
+	void init(DialogWizard model, String windowName)
 	{
+		this.windowName = windowName;
 		this.model = model;
-		this.window = window;
+		this.tfDialogName.setText(windowName);
 		initDialog();
+		this.tfDialogName.textProperty().addListener((observable, oldValue, newValue) -> this.model.changeDialogName(newValue));
 	}
 
 	void show()
 	{
+		this.dialog.setOnShowing(e -> this.model.displayImageAndTree());
 		this.dialog.show();
+	}
+
+	void displaySelf(IControl self)
+	{
+		if (self != null)
+		{
+			this.tfOwnerId.setText(self.getID());
+			this.cbControl.getSelectionModel().select(self.getBindedClass());
+		}
+	}
+
+	void displayApplicationNotRun()
+	{
+		Text textApplicationNotRunning = new Text("Application not starting.\nStart application before call this wizard");
+		this.imageViewWithScale.replaceWaitingPane(textApplicationNotRunning);
+		this.treeViewWithRectangles.replaceWaitingPane(new Label());
+	}
+
+	void displayTree(Document document)
+	{
+		if (document != null)
+		{
+			this.treeViewWithRectangles.displayDocument(document);
+		}
+	}
+
+	void displayImage(BufferedImage image, int offsetX, int offsetY)
+	{
+		if (image != null)
+		{
+			this.imageViewWithScale.displayImage(image);
+		}
+	}
+
+	void displayImageFailing(String message)
+	{
+		Text node = new Text();
+		node.setText("Exception :\n" + message);
+		node.setFill(Color.RED);
+		this.imageViewWithScale.replaceWaitingPane(node);
+	}
+
+	void displayDocumentFailing(String message)
+	{
+		Text node = new Text();
+		node.setText("Exception :\n" + message);
+		node.setFill(Color.RED);
+		this.treeViewWithRectangles.replaceWaitingPane(node);
 	}
 
 	public void editOwner(ActionEvent actionEvent)
@@ -76,12 +141,12 @@ public class DialogWizardController implements Initializable, ContainingParent
 
 	private void initDialog()
 	{
-		this.dialog = new Alert(Alert.AlertType.INFORMATION);
+		this.dialog = new Alert(Alert.AlertType.CONFIRMATION);
 		this.dialog.setResult(new ButtonType("", ButtonBar.ButtonData.CANCEL_CLOSE));
 		this.dialog.setResizable(true);
 		this.dialog.getDialogPane().getStylesheets().addAll(Common.currentThemesPaths());
-		this.dialog.setTitle("Dialog wizard " + (this.window == null ? "" : " for " + this.window.getName()));
-		this.dialog.setWidth(1000.0);
+		this.dialog.setTitle("Dialog wizard " + this.windowName);
+		this.dialog.setWidth(1500.0);
 		this.dialog.setHeight(1000.0);
 		Label header = new Label();
 		header.setMinHeight(0.0);

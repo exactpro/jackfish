@@ -428,7 +428,7 @@ public class DictionaryFx extends GuiDictionary
 
 	public void openDialogWizard(IWindow window) throws Exception
 	{
-		new DialogWizard(this, window).show();
+		new DialogWizard(this, window, this.applicationConnector.getAppConnection()).show();
 	}
 
 	//------------------------------------------------------------------------------------------------------------------
@@ -922,13 +922,13 @@ public class DictionaryFx extends GuiDictionary
 		}
 	}
 
-	//------------------------------------------------------------------------------------------------------------------
-	// private methods
-	//------------------------------------------------------------------------------------------------------------------
-	private boolean isApplicationRun()
+	public boolean isApplicationRun()
 	{
 		return this.applicationConnector != null && this.applicationConnector.getAppConnection() != null && this.applicationConnector.getAppConnection().isGood();
 	}
+	//------------------------------------------------------------------------------------------------------------------
+	// private methods
+	//------------------------------------------------------------------------------------------------------------------
 
 	private Optional<OperationResult> operate(Operation operation, IWindow window, IControl control) throws Exception
 	{
