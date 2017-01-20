@@ -92,8 +92,11 @@ RF;RegressionFramework
                 #Id;#Let
                 scenario;new File(row.Scenario).getName()
 
+                #Id;#Let
+                scenarioName;row.containsKey('Name') && !Str.IsNullOrEmpty(row.Name) ? row.Name : scenario
+
                 #Id;#Action;#Connection;#Query;#RunId;#Scenario;#Counter;#Performer;#Priority;#Manual;#StartTime;#Host;#User;#TestSet
-                selectScenarioId;SQLinsert;SQL;'INSERT INTO scenarios (run_id, scenario, counter, performer, priority, manual, start_time, host, username, test_set) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';runId;scenario;counter;row.Performer;row.Priority;manual ? 1 : 0;DateTime.current();Sys.hostName();Sys.userName();row.TestSet
+                selectScenarioId;SQLinsert;SQL;'INSERT INTO scenarios (run_id, scenario, counter, performer, priority, manual, start_time, host, username, test_set) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';runId;scenarioName;counter;row.Performer;row.Priority;manual ? 1 : 0;DateTime.current();Sys.hostName();Sys.userName();row.TestSet
 
                 #Id;#Let
                 scenarioId;selectScenarioId.Out[0]
@@ -166,8 +169,8 @@ RF;RegressionFramework
 
                     #If
                     (MXRN.Out.failed() > 0) && (isdef _rf_default_handler) && (!(Str.IsNullOrEmpty(_rf_default_handler)))
-                        #Id;#Action;#Matrix
-                        ERRMX;MatrixRun;_rf_default_handler
+                        #Id;#Action;#Matrix;#Parameter
+                        ERRMX;MatrixRun;_rf_default_handler;scenario
 
                         #Id;#Action;#Matrix
                         MXWT1;MatrixWait;ERRMX.Out
