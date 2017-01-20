@@ -109,7 +109,7 @@ rootProject.ext {
 subprojects {
 	apply plugin : 'java'
 	apply plugin: 'maven'
-//	apply plugin: 'artifactory'
+	apply plugin: 'artifactory'
 	
 	group = 'com.exactprosystems.jf'
 	version = rootProject.ext.version
