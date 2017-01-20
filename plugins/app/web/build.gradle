@@ -1,6 +1,10 @@
+apply plugin: 'artifactory'
+
 description = 'Plugin for WEB application'
 ext.jarName = 'web.jar'
 ext.javaVersion = 1.7
+
+archivesBaseName = 'jackfish-app-web'
 
 dependencies {
 	compile project(':api')

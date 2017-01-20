@@ -871,16 +871,16 @@ RF;RegressionFramework
             #Case
             'MSSQL'
                 #Id;#Action;#Query;#Connection
-                chck1;SQLselect;'SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME =\'runs\'';SQLCNT.Out
+                chck1;SQLselect;'SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME =\'runs\' and TABLE_SCHEMA=SCHEMA_NAME()';SQLCNT.Out
 
                 #Id;#Action;#Query;#Connection
-                chck2;SQLselect;'SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME =\'scenarios\'';SQLCNT.Out
+                chck2;SQLselect;'SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME =\'scenarios\' and TABLE_SCHEMA=SCHEMA_NAME()';SQLCNT.Out
 
                 #Id;#Action;#Query;#Connection
-                chck3;SQLselect;'SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME =\'details\'';SQLCNT.Out
+                chck3;SQLselect;'SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME =\'details\' and TABLE_SCHEMA=SCHEMA_NAME()';SQLCNT.Out
 
                 #Id;#Action;#Query;#Connection
-                chck4;SQLselect;'SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME =\'user_details\'';SQLCNT.Out
+                chck4;SQLselect;'SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME =\'user_details\' and TABLE_SCHEMA=SCHEMA_NAME()';SQLCNT.Out
 
                 #Id;#Let
                 tablesAreNotExists;chck1.Out.isEmpty() || chck2.Out.isEmpty() || chck3.Out.isEmpty() || chck4.Out.isEmpty()
@@ -968,8 +968,8 @@ RF;RegressionFramework
                 'MSSQL'
                     #Id;#RawText
                     query1;create
-                    "IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE table_name = 'runs') "
-                    "CREATE TABLE dbo.runs "
+                    "IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE table_name = 'runs' and TABLE_SCHEMA=SCHEMA_NAME()) "
+                    "CREATE TABLE runs "
                     "("
                     "  id int IDENTITY(1,1) PRIMARY KEY NOT NULL ,  "
                     "  create_time datetime DEFAULT NULL,  "
@@ -981,8 +981,8 @@ RF;RegressionFramework
 
                     #Id;#RawText
                     query2;create
-                    "IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE table_name = 'scenarios') "
-                    "CREATE TABLE  dbo.scenarios  "
+                    "IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE table_name = 'scenarios' and TABLE_SCHEMA=SCHEMA_NAME()) "
+                    "CREATE TABLE  scenarios  "
                     "("
                     "  id int IDENTITY(1,1) PRIMARY KEY NOT NULL,"
                     "  run_id int NOT NULL,"
@@ -1007,8 +1007,8 @@ RF;RegressionFramework
 
                     #Id;#RawText
                     query3;create
-                    "IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE table_name = 'details') "
-                    "CREATE TABLE dbo.details "
+                    "IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE table_name = 'details' and TABLE_SCHEMA=SCHEMA_NAME()) "
+                    "CREATE TABLE details "
                     "("
                     "  id int  IDENTITY(1,1) PRIMARY KEY NOT NULL,"
                     "  scenario_id int NOT NULL,"
@@ -1023,8 +1023,8 @@ RF;RegressionFramework
 
                     #Id;#RawText
                     query4;create
-                    "IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE table_name = 'user_details')"
-                    "CREATE TABLE dbo.user_details "
+                    "IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE table_name = 'user_details' and TABLE_SCHEMA=SCHEMA_NAME())"
+                    "CREATE TABLE user_details "
                     "("
                     "  id int IDENTITY(1,1) PRIMARY KEY NOT NULL,"
                     "  details_id int NOT NULL,"

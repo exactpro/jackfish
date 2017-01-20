@@ -1,6 +1,10 @@
+apply plugin: 'artifactory'
+
 description = "Core of JackFish"
 ext.jarName = "jackfish.jar"
 ext.javaVersion = 1.8;
+
+archivesBaseName = 'jackfish-core'
 
 dependencies {
 	compile project(':api');
@@ -42,5 +46,5 @@ jar {
 
 }
 distribute.doLast {
-	rootProject.copyTo(project,rootProject.jfSourceDir)
+	rootProject.copyTo(project, rootProject.jfSourceDir)
 }
