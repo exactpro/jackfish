@@ -165,7 +165,7 @@ RF;RegressionFramework
                     #EndForEach
 
                     #If
-                    MXRN.Out.failed() > 0 && _rf_default_handler isdef && !(Str.IsNullOrEmpty(_rf_default_handler))
+                    (MXRN.Out.failed() > 0) && (isdef _rf_default_handler) && (!(Str.IsNullOrEmpty(_rf_default_handler)))
                         #Id;#Action;#Matrix
                         ERRMX;MatrixRun;_rf_default_handler
 
