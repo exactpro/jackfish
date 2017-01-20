@@ -1,5 +1,3 @@
-apply plugin: 'artifactory'
-
 description = "Core of JackFish"
 ext.jarName = "jackfish.jar"
 ext.javaVersion = 1.8;

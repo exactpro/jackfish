@@ -1,5 +1,3 @@
-apply plugin: 'artifactory'
-
 description = "The shared API for plugins and code"
 ext {
 	jarName = "api.jar"

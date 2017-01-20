@@ -1,10 +1,14 @@
+plugins {
+	id 'java'
+	id 'maven'
+	id "com.jfrog.artifactory" version "2.2.5"
+}
+
 import java.nio.file.Files
 import java.nio.file.Paths
 import java.nio.file.StandardCopyOption
 
 defaultTasks 'createTool'
-
-apply plugin : 'java'
 
 configurations {
 	sqlData
@@ -107,10 +111,9 @@ rootProject.ext {
 }
 
 subprojects {
-	apply plugin : 'java'
 	apply plugin: 'maven'
-//	apply plugin: 'artifactory'
-	
+	apply plugin: 'java'
+
 	group = 'com.exactprosystems.jf'
 	version = rootProject.ext.version
 
@@ -133,21 +136,6 @@ subprojects {
 	}
 	
 	buildscript { // artifacrory plugin
-	    repositories {
-			maven {
-				name 'MavenLocal' // for local builds only
-				url sharedDir
-			}
-			maven { // for gradle fast plugin
-				name 'Artifactory'
-				url 'http://arti.exactpro.com/libs-snapshot'
-			}
-	        maven { url 'http://arti.exactpro.com/libs-release' }
-	    }
-        dependencies {
-            classpath(group: 'org.jfrog.buildinfo',             name: 'build-info-extractor-gradle',        version: '2.2.+')
-	    }
-
 	    configurations.all {
 	       resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
 	    }

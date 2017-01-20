@@ -1,3 +1,13 @@
+pluginRepositories {
+	maven {
+		url 'shared'
+	}
+	maven { // for gradle fast plugin
+		url 'http://arti.exactpro.com/libs-snapshot'
+	}
+	gradlePluginPortal()
+}
+
 include	'core',
 		'api',				//api
 							//app plugins
