@@ -1,11 +1,13 @@
 package com.exactprosystems.jf.tool.custom;
 
+import com.exactprosystems.jf.api.app.IRemoteApplication;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.custom.xpath.XpathCell;
 import com.exactprosystems.jf.tool.custom.xpath.XpathItem;
 import com.exactprosystems.jf.tool.custom.xpath.XpathViewer;
+import com.sun.javafx.scene.control.skin.TreeViewSkin;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.MenuItem;
@@ -30,10 +32,13 @@ public class TreeViewWithRectangles
 
 	private Consumer<XpathItem> consumer;
 
+	private Map<Rectangle, TreeItem<XpathItem>> map = new HashMap<>();
+
 	public TreeViewWithRectangles()
 	{
 		this.anchorPane = new AnchorPane();
 		this.treeView = new TreeView<>();
+		this.treeView.setSkin(new MyCustomSkin(this.treeView));
 
 		AnchorPane.setTopAnchor(this.treeView, 0.0);
 		AnchorPane.setLeftAnchor(this.treeView, 0.0);
@@ -69,12 +74,12 @@ public class TreeViewWithRectangles
 		return this.anchorPane;
 	}
 
-	public void displayDocument(Document document)
+	public void displayDocument(Document document, int xOffset, int yOffset)
 	{
 		this.anchorPane.getChildren().remove(this.waitingNode);
 
 		this.treeView.setRoot(new TreeItem<>());
-		this.displayTree(document, this.treeView.getRoot());
+		this.displayTree(document, this.treeView.getRoot(), xOffset, yOffset);
 		expand(this.treeView.getRoot());
 	}
 
@@ -103,24 +108,19 @@ public class TreeViewWithRectangles
 		return map;
 	}
 
-	private void passTree(Rectangle keyRectangle, Set<Rectangle> set, TreeItem<XpathItem> item)
-	{
-		XpathItem xpath = item.getValue();
-		if (xpath != null)
-		{
-			Rectangle rec = xpath.getRectangle();
-
-			if (rec != null && rec.intersects(keyRectangle))
-			{
-				set.add(rec);
-			}
-		}
-		item.getChildren().forEach(child -> passTree(keyRectangle, set, child));
-	}
-
 	public void setTreeViewConsumer(Consumer<XpathItem> consumer)
 	{
 		this.consumer = consumer;
+	}
+
+	public void selectItem(Rectangle rectangle)
+	{
+		TreeItem<XpathItem> treeItem = this.map.get(rectangle);
+		if (treeItem != null)
+		{
+			this.treeView.getSelectionModel().select(treeItem);
+			this.scrollToElement(treeItem);
+		}
 	}
 	//endregion
 
@@ -142,7 +142,7 @@ public class TreeViewWithRectangles
 		item.getChildren().forEach(this::expand);
 	}
 
-	private void displayTree(org.w3c.dom.Node node, TreeItem<XpathItem> parent)
+	private void displayTree(org.w3c.dom.Node node, TreeItem<XpathItem> parent, int xOffset, int yOffset)
 	{
 		boolean isDocument = node.getNodeType() == org.w3c.dom.Node.DOCUMENT_NODE;
 
@@ -150,10 +150,18 @@ public class TreeViewWithRectangles
 		IntStream.range(0, node.getChildNodes().getLength())
 				.mapToObj(node.getChildNodes()::item)
 				.filter(item -> item.getNodeType() == org.w3c.dom.Node.ELEMENT_NODE)
-				.forEach(item -> displayTree(item, treeItem));
+				.forEach(item -> displayTree(item, treeItem, xOffset, yOffset));
 		if (!isDocument)
 		{
 			treeItem.setValue(new XpathItem(stringNode(node, XpathViewer.text(node)), node));
+			Rectangle rec = (Rectangle) node.getUserData(IRemoteApplication.rectangleName);
+			if (rec != null)
+			{
+				rec.x -= xOffset;
+				rec.y -= yOffset;
+
+			}
+			this.map.put(rec, treeItem);
 			parent.getChildren().add(treeItem);
 		}
 	}
@@ -214,5 +222,51 @@ public class TreeViewWithRectangles
 		t.getStyleClass().add(cssClass);
 		return t;
 	}
+
+	private void scrollToElement(TreeItem<XpathItem> xpathItemTreeItem)
+	{
+		MyCustomSkin skin = (MyCustomSkin) treeView.getSkin();
+		int row = treeView.getRow(xpathItemTreeItem);
+		if (!skin.isIndexVisible(row))
+		{
+			skin.show(row);
+		}
+	}
+
+	private void passTree(Rectangle keyRectangle, Set<Rectangle> set, TreeItem<XpathItem> item)
+	{
+		XpathItem xpath = item.getValue();
+		if (xpath != null)
+		{
+			Rectangle rec = xpath.getRectangle();
+
+			if (rec != null && rec.intersects(keyRectangle))
+			{
+				set.add(rec);
+			}
+		}
+		item.getChildren().forEach(child -> passTree(keyRectangle, set, child));
+	}
 	//endregion
+
+	private class MyCustomSkin extends TreeViewSkin<XpathItem>
+	{
+		public MyCustomSkin(TreeView treeView)
+		{
+			super(treeView);
+		}
+
+		public void show(int index)
+		{
+			flow.show(index);
+		}
+
+		public boolean isIndexVisible(int index)
+		{
+			return flow.getFirstVisibleCell() != null &&
+					flow.getLastVisibleCell() != null &&
+					flow.getFirstVisibleCell().getIndex() <= index - 1 &&
+					flow.getLastVisibleCell().getIndex() >= index + 1;
+		}
+	}
 }

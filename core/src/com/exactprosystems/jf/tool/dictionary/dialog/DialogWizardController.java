@@ -54,6 +54,13 @@ public class DialogWizardController implements Initializable, ContainingParent
 		this.treeViewWithRectangles = new TreeViewWithRectangles();
 		this.horSplitPane.getItems().add(this.treeViewWithRectangles.getContent());
 
+		this.imageViewWithScale.setClickConsumer(this.treeViewWithRectangles::selectItem);
+		this.treeViewWithRectangles.setTreeViewConsumer(xpathItem -> {
+			if (xpathItem != null)
+			{
+				this.imageViewWithScale.displayRectangle(xpathItem.getRectangle());
+			}
+		});
 	}
 	//endregion
 
@@ -96,11 +103,11 @@ public class DialogWizardController implements Initializable, ContainingParent
 		this.treeViewWithRectangles.replaceWaitingPane(new Label());
 	}
 
-	void displayTree(Document document)
+	void displayTree(Document document, int xOffset, int yOffset)
 	{
 		if (document != null)
 		{
-			this.treeViewWithRectangles.displayDocument(document);
+			this.treeViewWithRectangles.displayDocument(document, xOffset, yOffset);
 			BufferedImage image = this.imageViewWithScale.getImage();
 			this.imageViewWithScale.setListRectangles(this.treeViewWithRectangles.buildMap(image.getWidth(), image.getHeight(), new Dimension(image.getWidth() / 16, image.getHeight() / 16)));
 		}

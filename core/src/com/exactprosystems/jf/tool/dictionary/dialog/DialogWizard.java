@@ -27,6 +27,10 @@ public class DialogWizard
 	private Service<Document> documentService;
 	private Service<ImageAndOffset> imageService;
 
+	private int xOffset = 0;
+	private int yOffset = 0;
+
+
 	public DialogWizard(DictionaryFx dictionary, IWindow window, AppConnection appConnection) throws Exception
 	{
 		this.dictionary = dictionary;
@@ -107,9 +111,11 @@ public class DialogWizard
 			this.documentService.setExecutor(executor);
 			this.imageService.setExecutor(executor);
 
-			this.documentService.setOnSucceeded(event -> this.controller.displayTree(((Document) event.getSource().getValue())));
+			this.documentService.setOnSucceeded(event -> this.controller.displayTree(((Document) event.getSource().getValue()), xOffset, yOffset));
 			this.imageService.setOnSucceeded(event -> {
 				ImageAndOffset imageAndOffset = (ImageAndOffset) event.getSource().getValue();
+				xOffset = imageAndOffset.offsetX;
+				yOffset = imageAndOffset.offsetY;
 				this.controller.displayImage(imageAndOffset.image);
 			});
 

@@ -29,6 +29,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.*;
+import java.util.function.Consumer;
 
 public class ImageViewWithScale implements IScaleListener
 {
@@ -54,7 +55,9 @@ public class ImageViewWithScale implements IScaleListener
 	private Dimension initial;
 	private BufferedImage image;
 
-	private Map<Rectangle, Set<Rectangle>> rectanglesMap = new LinkedHashMap<>();
+	private Map<Rectangle, Set<Rectangle>> rectanglesMap = new HashMap<>();
+
+	private Consumer<Rectangle> clickConsumer;
 
 	public ImageViewWithScale()
 	{
@@ -145,6 +148,24 @@ public class ImageViewWithScale implements IScaleListener
 	{
 		this.rectanglesMap = rectanglesMap;
 	}
+
+	public void setClickConsumer(Consumer<Rectangle> consumer)
+	{
+		this.clickConsumer = consumer;
+	}
+
+	public void displayRectangle(Rectangle rectangle)
+	{
+		if (rectangle == null || isRectEmpty(rectangle))
+		{
+			hideRectangle();
+		}
+		else if (this.rectangle != null)
+		{
+			this.rectangle.updateRectangle(rectangle, this.scale);
+			this.rectangle.setVisible(true);
+		}
+	}
 	//endregion
 
 	@Override
@@ -214,7 +235,7 @@ public class ImageViewWithScale implements IScaleListener
 		this.group.setOnMouseClicked(event -> {
 			if (needInspect)
 			{
-//				clickOnImage(event.getX(), event.getY());
+				clickOnImage(event.getX(), event.getY());
 			}
 		});
 
@@ -225,11 +246,17 @@ public class ImageViewWithScale implements IScaleListener
 			{
 				hideInspectRectangle();
 			}
-			if (newValue)
-			{
-				//				startInspect();
-			}
 		});
+	}
+
+	private void clickOnImage(double x, double y)
+	{
+		Rectangle rectangle = findRectangle(x, y);
+		if (rectangle != null)
+		{
+			Optional.ofNullable(this.clickConsumer).ifPresent(c -> c.accept(rectangle));
+		}
+		this.btnInspect.setSelected(false);
 	}
 
 	private void moveOnImage(double x, double y)
@@ -308,6 +335,11 @@ public class ImageViewWithScale implements IScaleListener
 		int x = (int)absoluteX - rect.x;
 		int y = (int)absoluteY - rect.y;
 		return new Point(x, y);
+	}
+
+	private boolean isRectEmpty(Rectangle rect)
+	{
+		return rect.height <= 0 && rect.width <= 0;
 	}
 	//endregion
 
