@@ -26,10 +26,19 @@
     <vars>${JF}/vars.ini</vars>
     <userVars>personal.ini</userVars>
     <userVars>uservars/rf.ini</userVars>
+    <userVars>uservars/nodal.ini</userVars>
     <matrix>${JF}/matrices</matrix>
     <appDict>dic/gui</appDict>
     <clientDict>dic/clients</clientDict>
     <library>${JF}/libjf</library>
+    <globalHandler enable="true">
+        <onTestCaseStart></onTestCaseStart>
+        <onTestCaseFinish></onTestCaseFinish>
+        <onTestCaseError></onTestCaseError>
+        <onStepStart></onStepStart>
+        <onStepFinish></onStepFinish>
+        <onStepError></onStepError>
+    </globalHandler>
     <sqlEntry>
         <name>MySql</name>
         <sqlJar>${JF}/sql/mysql-connector-java-5.1.26.jar</sqlJar>
@@ -113,7 +122,7 @@
             <value>ERROR</value>
         </parameters>
         <appDescription>Web applications</appDescription>
-        <appDicPath>dic/gui/LayoutTesting.xml</appDicPath>
+        <appDicPath>dic/gui/nodal.xml</appDicPath>
         <appJar>${JF}/apps/web.jar</appJar>
         <appWorkDir>${JF}/apps</appWorkDir>
         <appStartPort>7000</appStartPort>

@@ -5,11 +5,11 @@ INIT;Test case;;;
     table;Table
     @;Off;Scenario;TestSet;Start;Finish;Performer;Priority
     0;x;matrices/EE/EE1001;Chrome;;;;0
-    1;;matrices/EE/EE1002;Chrome;3;5;;1
+    1;x;matrices/EE/EE1002;Chrome;3;5;;1
     2;;matrices/EE/EE1003;Chrome;;;;1
-    3;;matrices/EE/EE1004;Chrome;;;;1
-    4;;matrices/EE/EE1005;Chrome;;;;1
-    5;;matrices/EE/EE1006;FireFox;;;;2
+    3;x;matrices/EE/EE1004;Chrome;;;;1
+    4;x;matrices/EE/EE1005;Chrome;;;;1
+    5;x;matrices/EE/EE1006;FireFox;;;;2
     6;x;matrices/EE/EE1007;FireFox;;;;3
     #EndRawTable
 
