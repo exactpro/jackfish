@@ -9,6 +9,7 @@
 package com.exactprosystems.jf.documents.matrix.parser.items;
 
 import com.csvreader.CsvWriter;
+import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
@@ -169,7 +170,16 @@ public class Step extends MatrixItem
 
 		try
 		{
-            ScreenshotKind screenshotKind = ScreenshotKind.valueByName(this.kind.get());
+			ScreenshotKind screenshotKind;
+
+			if (Str.IsNullOrEmpty(this.kind.get()))
+			{
+				String name = this.owner.getFactory().getSettings().getValue("GLOBAL", "Matrix", "matrixDefaultScreenshot").getValue();
+				screenshotKind = ScreenshotKind.valueByName(name);
+			} else
+			{
+				screenshotKind = ScreenshotKind.valueByName(this.kind.get());
+			}
 
             this.identify.evaluate(evaluator);
 			Object identifyValue = this.identify.getValue();
