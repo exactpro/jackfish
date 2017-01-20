@@ -17,7 +17,8 @@ import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 
 import java.awt.*;
-import java.util.Optional;
+import java.util.*;
+import java.util.function.Consumer;
 import java.util.stream.IntStream;
 
 public class TreeViewWithRectangles
@@ -26,6 +27,8 @@ public class TreeViewWithRectangles
 	private final TreeView<XpathItem> treeView;
 
 	private Node waitingNode;
+
+	private Consumer<XpathItem> consumer;
 
 	public TreeViewWithRectangles()
 	{
@@ -44,6 +47,10 @@ public class TreeViewWithRectangles
 		this.treeView.setCellFactory(p -> new XpathCell());
 		this.treeView.getStyleClass().add(CssVariables.XPATH_TREE_VIEW);
 		this.treeView.setShowRoot(false);
+
+		this.treeView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) ->
+				Optional.ofNullable(consumer).ifPresent(c -> c.accept(newValue == null ? null : newValue.getValue()))
+		);
 	}
 
 	//region public methods
@@ -69,6 +76,51 @@ public class TreeViewWithRectangles
 		this.treeView.setRoot(new TreeItem<>());
 		this.displayTree(document, this.treeView.getRoot());
 		expand(this.treeView.getRoot());
+	}
+
+	public Map<Rectangle, Set<Rectangle>> buildMap(int width, int height, Dimension cellSize)
+	{
+		Map<Rectangle, Set<Rectangle>> map = new HashMap<>();
+
+		int x = 0;
+		while (x < width)
+		{
+			int y = 0;
+			while (y < height)
+			{
+				Rectangle key = new Rectangle(new Point(x, y), cellSize);
+				Set<Rectangle> set = new HashSet<>();
+				passTree(key, set, this.treeView.getRoot());
+				if (set.size() > 0)
+				{
+					map.put(key, set);
+				}
+
+				y += cellSize.height;
+			}
+			x += cellSize.width;
+		}
+		return map;
+	}
+
+	private void passTree(Rectangle keyRectangle, Set<Rectangle> set, TreeItem<XpathItem> item)
+	{
+		XpathItem xpath = item.getValue();
+		if (xpath != null)
+		{
+			Rectangle rec = xpath.getRectangle();
+
+			if (rec != null && rec.intersects(keyRectangle))
+			{
+				set.add(rec);
+			}
+		}
+		item.getChildren().forEach(child -> passTree(keyRectangle, set, child));
+	}
+
+	public void setTreeViewConsumer(Consumer<XpathItem> consumer)
+	{
+		this.consumer = consumer;
 	}
 	//endregion
 

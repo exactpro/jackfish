@@ -16,7 +16,7 @@ import java.util.concurrent.Executors;
 
 public class DialogWizard
 {
-	private static ExecutorService executor = Executors.newFixedThreadPool(2);
+	private static ExecutorService executor = Executors.newFixedThreadPool(1);
 	private DictionaryFx dictionary;
 	private IWindow window;
 	private IControl selfControl;
@@ -60,8 +60,14 @@ public class DialogWizard
 		}
 		else
 		{
-			this.documentService.cancel();
-			this.imageService.cancel();
+			if (documentService != null)
+			{
+				this.documentService.cancel();
+			}
+			if (imageService != null)
+			{
+				this.imageService.cancel();
+			}
 			this.documentService = new Service<Document>()
 			{
 				@Override
@@ -104,7 +110,7 @@ public class DialogWizard
 			this.documentService.setOnSucceeded(event -> this.controller.displayTree(((Document) event.getSource().getValue())));
 			this.imageService.setOnSucceeded(event -> {
 				ImageAndOffset imageAndOffset = (ImageAndOffset) event.getSource().getValue();
-				this.controller.displayImage(imageAndOffset.image, imageAndOffset.offsetX, imageAndOffset.offsetY);
+				this.controller.displayImage(imageAndOffset.image);
 			});
 
 			this.imageService.setOnFailed(event -> {
@@ -126,8 +132,8 @@ public class DialogWizard
 				}
 				this.controller.displayDocumentFailing(message);
 			});
-			this.documentService.start();
 			this.imageService.start();
+			this.documentService.start();
 		}
 	}
 

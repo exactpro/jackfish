@@ -10,11 +10,15 @@ import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import org.w3c.dom.Document;
 
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -97,10 +101,12 @@ public class DialogWizardController implements Initializable, ContainingParent
 		if (document != null)
 		{
 			this.treeViewWithRectangles.displayDocument(document);
+			BufferedImage image = this.imageViewWithScale.getImage();
+			this.imageViewWithScale.setListRectangles(this.treeViewWithRectangles.buildMap(image.getWidth(), image.getHeight(), new Dimension(image.getWidth() / 16, image.getHeight() / 16)));
 		}
 	}
 
-	void displayImage(BufferedImage image, int offsetX, int offsetY)
+	void displayImage(BufferedImage image)
 	{
 		if (image != null)
 		{

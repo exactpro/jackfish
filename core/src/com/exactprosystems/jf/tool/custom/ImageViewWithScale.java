@@ -28,6 +28,7 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.*;
 
 public class ImageViewWithScale implements IScaleListener
 {
@@ -51,6 +52,9 @@ public class ImageViewWithScale implements IScaleListener
 	private double scale = 1.0;
 
 	private Dimension initial;
+	private BufferedImage image;
+
+	private Map<Rectangle, Set<Rectangle>> rectanglesMap = new LinkedHashMap<>();
 
 	public ImageViewWithScale()
 	{
@@ -111,6 +115,7 @@ public class ImageViewWithScale implements IScaleListener
 	public void displayImage(BufferedImage image)
 	{
 		Platform.runLater(() -> {
+			this.image = image;
 			this.hBox.getChildren().forEach(node ->  node.setDisable(false));
 			this.anchorPane.getChildren().remove(this.waitingNode);
 
@@ -121,6 +126,11 @@ public class ImageViewWithScale implements IScaleListener
 		});
 	}
 
+	public BufferedImage getImage()
+	{
+		return this.image;
+	}
+
 	public void replaceWaitingPane(Node node)
 	{
 		AnchorPane.setTopAnchor(node, 50.0);
@@ -129,6 +139,11 @@ public class ImageViewWithScale implements IScaleListener
 		this.anchorPane.getChildren().remove(this.waitingNode);
 		this.waitingNode = node;
 		this.anchorPane.getChildren().add(this.waitingNode);
+	}
+
+	public void setListRectangles(Map<Rectangle, Set<Rectangle>> rectanglesMap)
+	{
+		this.rectanglesMap = rectanglesMap;
 	}
 	//endregion
 
@@ -192,7 +207,7 @@ public class ImageViewWithScale implements IScaleListener
 			this.printMouseCoords(event);
 			if (needInspect)
 			{
-//				moveOnImage(event.getX(), event.getY());
+				moveOnImage(event.getX(), event.getY());
 			}
 		});
 
@@ -217,6 +232,53 @@ public class ImageViewWithScale implements IScaleListener
 		});
 	}
 
+	private void moveOnImage(double x, double y)
+	{
+		Rectangle rectangle = findRectangle(x, y);
+		if (rectangle != null)
+		{
+			displayInspectRectangle(rectangle);
+		}
+	}
+
+	private void displayInspectRectangle(Rectangle rectangle)
+	{
+		this.inspectRectangle.updateRectangle(rectangle, this.scale);
+		this.inspectRectangle.setVisible(true);
+	}
+
+	private Rectangle findRectangle(double x, double y)
+	{
+		int intX = (int) (x / this.scale);
+		int intY = (int) (y / this.scale);
+
+		int sizeX = this.initial.getSize().width / 16;
+		int sizeY = this.initial.getSize().height / 16;
+		Rectangle key = new Rectangle((intX / sizeX) * sizeX, (intY / sizeY) * sizeY, sizeX, sizeY);
+		Set<Rectangle> set = this.rectanglesMap.get(key);
+		if (set == null)
+		{
+			return null;
+		}
+		Point mousePoint = new Point(intX, intY);
+
+		Optional<Rectangle> inspected = set.stream()
+				.filter(item -> item.contains(mousePoint))
+				.sorted(Comparator.comparingDouble(ImageViewWithScale::square))
+				.findFirst();
+
+		return inspected.isPresent() ? inspected.get() : null;
+	}
+
+	private static double square(Rectangle rec)
+	{
+		if (rec == null)
+		{
+			return 0.0;
+		}
+		return rec.width * rec.height;
+	}
+
 	private void printMouseCoords(MouseEvent event)
 	{
 		Point point = getMouseCoords(event);
@@ -225,8 +287,7 @@ public class ImageViewWithScale implements IScaleListener
 
 	private Point getMouseCoords(MouseEvent event)
 	{
-		int x = 0;
-		int y = 0;
+		int x, y;
 		Rectangle rect = this.rectangle.getRectangle();
 		if(this.rectangle.isVisible())
 		{
