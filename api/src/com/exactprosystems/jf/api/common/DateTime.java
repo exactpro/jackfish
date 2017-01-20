@@ -119,7 +119,15 @@ public class DateTime extends Date
 		return calendar.get(Calendar.MONTH);
 	}
 
-	@DescriptionAttribute(text = "Return current day")
+    @DescriptionAttribute(text = "Return current day of week")
+    public int dayOfWeek()
+    {
+        Calendar calendar = new GregorianCalendar();
+        calendar.setTime(this);
+        return calendar.get(Calendar.DAY_OF_WEEK);
+    }
+
+    @DescriptionAttribute(text = "Return current day")
 	public int days()
 	{
 		Calendar calendar = new GregorianCalendar();
@@ -332,6 +340,12 @@ public class DateTime extends Date
 	{
 		return new DateTime(date).months();
 	}
+
+    @DescriptionAttribute(text = "Get day of week from @date")
+    public static int getDayOfWeek(Date date)
+    {
+        return new DateTime(date).dayOfWeek();
+    }
 
 	@DescriptionAttribute(text = "Get days from @date")
 	public static int getDays(Date date)
