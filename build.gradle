@@ -4,6 +4,8 @@ plugins {
 	id "com.jfrog.artifactory" version "2.2.5"
 }
 
+artifactoryPublish.skip = true 
+
 import java.nio.file.Files
 import java.nio.file.Paths
 import java.nio.file.StandardCopyOption
@@ -46,8 +48,9 @@ dependencies {
 }
 
 rootProject.ext {
-		version = '4.3.0.' + (System.getProperty('revision') ?: 'local_build') + '-SNAPSHOT'
-		println version
+	jfVersion = '4.3.0'
+	version = jfVersion + '.' + (System.getProperty('revision') ?: 'local_build')
+	println version
 
 	jfSourceDir	= rootProject.rootDir.path + '/core'
 	appsDir		= jfSourceDir + '/apps';
@@ -63,7 +66,7 @@ rootProject.ext {
 	sharedDir = file("${project.rootDir}/shared");
 
 	copyTo		= { Project proj, String dest ->
-		def s = Paths.get(proj.buildDir.path + '/libs/' + proj.archivesBaseName + '-' + version + '.jar')
+		def s = Paths.get(proj.buildDir.path + '/libs/' + proj.archivesBaseName + '-' + proj.version + '.jar')
 		def d = Paths.get(dest + '/' + proj.ext.jarName)
 		Files.copy(s, d, StandardCopyOption.REPLACE_EXISTING)
 	}
@@ -115,7 +118,7 @@ subprojects {
 	apply plugin: 'java'
 
 	group = 'com.exactprosystems.jf'
-	version = rootProject.ext.version
+	version = rootProject.ext.jfVersion + '-SNAPSHOT'
 
 	defaultTasks 'distribute'
 
