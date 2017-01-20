@@ -4,7 +4,7 @@ plugins {
 	id "com.jfrog.artifactory" version "2.2.5"
 }
 
-artifactoryPublish.skip = true 
+artifactoryPublish.skip = true
 
 import java.nio.file.Files
 import java.nio.file.Paths
@@ -116,6 +116,7 @@ rootProject.ext {
 subprojects {
 	apply plugin: 'maven'
 	apply plugin: 'java'
+	apply plugin: 'artifactory'
 
 	group = 'com.exactprosystems.jf'
 	version = rootProject.ext.jfVersion + '-SNAPSHOT'
