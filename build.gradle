@@ -113,6 +113,22 @@ rootProject.ext {
 	}
 }
 
+
+allprojects {
+	ext {
+		// Set defaults
+		if (!project.hasProperty("revision")) {
+			revision = '00000' // mark local builds
+		}
+		if (!project.hasProperty('build_number')) {
+	    	build_number = '0000' // mark local builds
+		}
+		if (!project.hasProperty('git_hash')) {
+	        git_hash = 'local_build'
+	    }
+	}
+}
+
 subprojects {
 	apply plugin: 'maven'
 	apply plugin: 'java'
@@ -169,6 +185,15 @@ subprojects {
 		dependsOn clean, jar
 	}
 	
+	jar {
+    	manifest {
+        	attributes('Implementation-Version': "${revision}")
+			attributes('Build_Name': "${archivesBaseName}")
+        	attributes('Build_Number': "${build_number}")
+        	attributes('Git_Hash': "${git_hash}")
+        }
+    }
+
 	uploadArchives {
 	    repositories.mavenDeployer {
 	        uniqueVersion = false // publish non unique snapshots to local repository
