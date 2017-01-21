@@ -33,7 +33,7 @@ import com.exactprosystems.jf.functions.Text;
 + "\n"
 + "\n"
 + "#Action;#Line;#Text;#Index\n"
-+ "TextSetValue;‘string successfully set’;TXT1.Out;2#}}",
++ "TextSetValue;'string successfully set';TXT1.Out;2#}}",
 		seeAlso = "{{@TextReport@}}, {{@TextAddLine@}}, {{@TextLoadFromFile@}}, {{@TextCreate@}}, {{@TextSaveToFile@}}," +
 				" {{@TextPerform@}}"
 	)

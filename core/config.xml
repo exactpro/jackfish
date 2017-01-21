@@ -122,7 +122,55 @@
             <value>ERROR</value>
         </parameters>
         <appDescription>Web applications</appDescription>
-        <appDicPath>dic/gui/nodal.xml</appDicPath>
+        <appDicPath>dic/gui/LayoutTesting.xml</appDicPath>
+        <appJar>${JF}/apps/web.jar</appJar>
+        <appWorkDir>${JF}/apps</appWorkDir>
+        <appStartPort>7000</appStartPort>
+    </appEntry>
+    <appEntry>
+        <name>WEB_WIN</name>
+        <parameters>
+            <key>ChromeDriverPath</key>
+            <value>win/chromedriver-win-2.25-x86.exe</value>
+        </parameters>
+        <parameters>
+            <key>IEDriverPath</key>
+            <value></value>
+        </parameters>
+        <parameters>
+            <key>ChromeDriverBinary</key>
+            <value></value>
+        </parameters>
+        <parameters>
+            <key>jreExec</key>
+            <value></value>
+        </parameters>
+        <parameters>
+            <key>jreArgs</key>
+            <value>-Xms128m -Xmx1G</value>
+        </parameters>
+        <parameters>
+            <key>SafariDriverPath</key>
+            <value></value>
+        </parameters>
+        <parameters>
+            <key>FirefoxProfileDirectory</key>
+            <value></value>
+        </parameters>
+        <parameters>
+            <key>UsePrivateMode</key>
+            <value></value>
+        </parameters>
+        <parameters>
+            <key>GeckoDriverPath</key>
+            <value>win/geckodriver-linux-0.11.1-x64.exe</value>
+        </parameters>
+        <parameters>
+            <key>LogLevel</key>
+            <value>ERROR</value>
+        </parameters>
+        <appDescription>Web applications</appDescription>
+        <appDicPath>dic/gui/LayoutTesting.xml</appDicPath>
         <appJar>${JF}/apps/web.jar</appJar>
         <appWorkDir>${JF}/apps</appWorkDir>
         <appStartPort>7000</appStartPort>
