@@ -137,23 +137,34 @@
 }
 
 /*Preloader*/
-.preloaderExactprosystemsText {
-    -fx-font : 50px Arial;
-    -fx-stroke: black;
-    -fx-stroke-width: 1;
+#preloaderPane {
+	-fx-background-image : url('icons/preloaderBackground.png');
+	-fx-border-radius : 4px;
 }
-.preloaderJackFishText {
-    -fx-font : 50px Arial;
-    -fx-stroke: black;
-    -fx-stroke-width: 1;
-}
-.preloaderLoadingText {
-    -fx-font : 25px Arial;
+#exLogo {
+	-fx-image : url('icons/ex_logo.png')
 
 }
-.preloaderGrid {
-    -fx-background-color : linear-gradient(from 0% 0% to 100% 100%, repeat, aqua 0%, aquamarine 50%);
+#jfLogo {
+	-fx-image : url('icons/jf_logo.png')
 
+}
+#textLogo {
+	-fx-font : 10px Arial;
+	-fx-fill : #FFFFFF;
+}
+.preloaderProgressBar > .bar {
+	-fx-background-color: linear-gradient(
+		from 0px .75em to .75em 0px,
+		repeat,
+		#337e9f 0%,
+		#337e9f 49%,
+		derive(#337e9f, 30%) 50%,
+		derive(#337e9f, 30%) 99%
+	);
+	-fx-padding: 0px;
+	-fx-background-insets: 0 0 0 0;
+	-fx-background-radius: 0;
 }
 
 /*Custom classes*/

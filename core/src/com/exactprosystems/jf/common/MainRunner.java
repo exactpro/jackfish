@@ -19,7 +19,8 @@ import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.guidic.GuiDictionary;
 import com.exactprosystems.jf.documents.msgdic.MessageDictionary;
 import com.exactprosystems.jf.tool.main.Main;
-import javafx.application.Application;
+import com.exactprosystems.jf.tool.main.Preloader;
+import com.sun.javafx.application.LauncherImpl;
 import org.apache.commons.cli.*;
 import org.apache.log4j.Logger;
 import org.apache.log4j.xml.DOMConfigurator;
@@ -362,7 +363,7 @@ public class MainRunner
 		String passwordValue = line.getOptionValue(password.getOpt());
 		String usernameValue = line.getOptionValue(username.getOpt());
 		String[] guiArgs = configString != null ? new String[]{ configString, usernameValue, passwordValue } : new String[]{};
-		Application.launch(Main.class, guiArgs);
+		LauncherImpl.launchApplication(Main.class, Preloader.class, guiArgs);
 		String config = Main.getConfigName();
 		if (config != null)
 		{
