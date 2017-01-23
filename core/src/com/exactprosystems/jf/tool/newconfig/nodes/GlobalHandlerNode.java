@@ -57,7 +57,7 @@ public class GlobalHandlerNode extends TreeNode
 
 		MenuItem changeEnable = getChangeEnableMenuItem();
 		changeEnable.setOnAction(e -> {
-			Boolean enabled = this.model.getGlobalHandler().getEnabled();
+			Boolean enabled = this.model.getGlobalHandler().isEnabled();
 			this.model.getGlobalHandler().setEnabled(!enabled);
 			this.view.setOpacity(isEnable() ? 1.0 : 0.5);
 		});
@@ -72,7 +72,7 @@ public class GlobalHandlerNode extends TreeNode
 
 	private boolean isEnable()
 	{
-		return this.model.getGlobalHandler().getEnabled();
+		return this.model.getGlobalHandler().isEnabled();
 	}
 
 	public void display(Map<HandlerKind, String> map)

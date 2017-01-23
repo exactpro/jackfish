@@ -38,6 +38,7 @@ import com.exactprosystems.jf.documents.Document;
 import com.exactprosystems.jf.documents.DocumentFactory;
 import com.exactprosystems.jf.documents.DocumentInfo;
 import com.exactprosystems.jf.documents.matrix.Matrix;
+import com.exactprosystems.jf.documents.matrix.parser.Result;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 import com.exactprosystems.jf.documents.matrix.parser.items.MutableArrayList;
 import com.exactprosystems.jf.documents.matrix.parser.items.NameSpace;
@@ -176,6 +177,7 @@ public class Configuration extends AbstractDocument
 		DEFAULT_IMPORTS.add(new MutableString(Condition.class.getPackage().getName()));
         DEFAULT_IMPORTS.add(new MutableString(AbstractClient.class.getPackage().getName()));
         DEFAULT_IMPORTS.add(new MutableString(ErrorKind.class.getPackage().getName()));
+        DEFAULT_IMPORTS.add(new MutableString(Result.class.getPackage().getName()));
         DEFAULT_IMPORTS.add(new MutableString(Sys.class.getPackage().getName()));
 
 		DEFAULT_IMPORTS.add(new MutableString(org.mvel2.MVEL.class.getPackage().getName()));
