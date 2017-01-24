@@ -30,8 +30,6 @@ public class Preloader extends javafx.application.Preloader
 	public Preloader()
 	{
 		this.progressBar = new ProgressBar();
-		Scene scene = getScene();
-
 	}
 
 	private Scene getScene()
@@ -91,16 +89,11 @@ public class Preloader extends javafx.application.Preloader
 	}
 
 	@Override
-	public void handleProgressNotification(ProgressNotification info)
-	{
-		this.progressBar.setProgress(info.getProgress());
-	}
-
-	@Override
 	public void handleApplicationNotification(PreloaderNotification info)
 	{
 		if (info instanceof ProgressNotification) {
-			double v = ((ProgressNotification) info).getProgress();
+			ProgressNotification progressNotification = (ProgressNotification) info;
+			double v = progressNotification.getProgress() / 100;
 			this.progressBar.setProgress(v);
 		} else if (info instanceof StateChangeNotification) {
 			preloaderStage.hide();
