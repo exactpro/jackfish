@@ -37,11 +37,6 @@ public class GlobalHandler implements Mutable
 	@XmlAttribute(name = globalHandlerEnable)
 	protected Boolean enabled;
 
-	public static void main(String[] args)
-	{
-		System.out.println(Arrays.toString("03032018".split("(?!^)")));
-	}
-
 	public GlobalHandler()
 	{
 		this.onTestCaseStartValue = new MutableString();
@@ -87,6 +82,8 @@ public class GlobalHandler implements Mutable
 		this.onStepStartValue.set(handler.onStepStartValue);
 		this.onStepFinishValue.set(handler.onStepFinishValue);
 		this.onStepErrorValue.set(handler.onStepErrorValue);
+		
+		this.enabled = handler.enabled;
 	}
 
 	public void setHandler(HandlerKind kind, String newValue)
@@ -117,12 +114,12 @@ public class GlobalHandler implements Mutable
 		}
 	}
 
-	public Boolean getEnabled()
+	public boolean isEnabled()
 	{
-		return enabled;
+		return this.enabled == null? false : this.enabled.booleanValue();
 	}
 
-	public void setEnabled(Boolean enabled)
+	public void setEnabled(boolean enabled)
 	{
 		this.enabled = enabled;
 		this.changed = true;

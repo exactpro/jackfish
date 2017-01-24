@@ -10,5 +10,19 @@ LIB;Standart libraries
 
     #EndSubCase
 
+    #Id;#SubCase
+    TCStart;OnTestCaseStart
+        #Action;#
+        Print;'TestCase started'
+
+    #EndSubCase
+
+    #Id;#SubCase
+    TCFinish;OnTestCaseFinish
+        #Action;#
+        Print;'TestCase finished'
+
+    #EndSubCase
+
 #EndNameSpace
 

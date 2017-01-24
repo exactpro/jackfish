@@ -10,6 +10,8 @@ package com.exactprosystems.jf.documents.config;
 
 import com.exactprosystems.jf.actions.ReadableValue;
 import com.exactprosystems.jf.api.common.IContext;
+import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.api.error.common.WrongSubcaseNameException;
 import com.exactprosystems.jf.common.MatrixRunner;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
@@ -93,48 +95,81 @@ public class Context implements IContext, AutoCloseable, Cloneable
         this.handlers.clear();
         this.evaluator.reset();
     }
-
+    
 	public void createResultTable()
 	{
 		String headers[] = resultColumns;
 		this.resultTable =  new Table(headers, this.evaluator);
 	}
 
-	public void setHandler(HandlerKind handlerKind, SubCase subCase)
-	{
-	    if (handlerKind != null)
-	    {
-	        this.handlers.put(handlerKind, subCase);
-	    }
-	}
+    public void setHandler(HandlerKind handlerKind, String name, MatrixItem item) throws Exception
+    {
+        if (handlerKind != null)
+        {
+            if (Str.IsNullOrEmpty(name))
+            {
+                this.handlers.put(handlerKind, null);
+            }
+            else
+            {
+                SubCase subCase = referenceToSubcase(name, item);
+                if (subCase != null)
+                {
+                    this.handlers.put(handlerKind, name);
+                }
+                else
+                {
+                    throw new WrongSubcaseNameException(name);
+                }
+            }
+        }
+    }
 	
-	public ReturnAndResult  runHandler(HandlerKind handlerKind, ReportBuilder report, MatrixError err) 
+	public ReturnAndResult  runHandler(MatrixItem item, HandlerKind handlerKind, ReportBuilder report, MatrixError err) throws WrongSubcaseNameException 
     {
        if (handlerKind == null)
        {
            return null;
        }
        
-       SubCase handler = this.handlers.get(handlerKind);
-       if (handler != null)
+       String name = this.handlers.get(handlerKind);
+       
+       if (name == null)
        {
-           if (handlerKind == HandlerKind.OnTestCaseError || handlerKind == HandlerKind.OnStepError)
+           GlobalHandler globalHandler = this.getConfiguration().getGlobalHandler(); 
+           if (globalHandler != null && globalHandler.isEnabled())
            {
-               Parameters parameters = handler.getParameters();
-               if (parameters.size() > 0)
+               name = globalHandler.getGlobalHandler(handlerKind).get();
+           }
+       }
+       
+       if (name != null)
+       {
+           SubCase handler = referenceToSubcase(name, item);
+           if (handler != null)
+           {
+               if (handlerKind == HandlerKind.OnTestCaseError || handlerKind == HandlerKind.OnStepError)
                {
-                   Parameter par = parameters.getByIndex(0); 
-                   par.setValue(err);
-                   handler.setRealParameters(parameters);
+                   Parameters parameters = handler.getParameters();
+                   if (parameters.size() > 0)
+                   {
+                       Parameter par = parameters.getByIndex(0); 
+                       par.setValue(err);
+                       handler.setRealParameters(parameters);
+                   }
+                   
+               }
+               else
+               {
+                   handler.setRealParameters(new Parameters());
                }
                
+               return handler.execute(this, this.matrixListener, this.evaluator, report);
            }
            else
            {
-               handler.setRealParameters(new Parameters());
+               throw new WrongSubcaseNameException(name);
            }
-           
-           return handler.execute(this, this.matrixListener, this.evaluator, report);
        }
        return null;
     }
@@ -190,12 +225,16 @@ public class Context implements IContext, AutoCloseable, Cloneable
 
 	public SubCase referenceToSubcase(String name, MatrixItem item)
 	{
-		MatrixItem ref = item.findParent(MatrixRoot.class).find(true, SubCase.class, name);
-
-		if (ref != null && ref instanceof SubCase)
-		{
-			return (SubCase) ref;
-		}
+	    if (item != null)
+	    {
+    		MatrixItem ref = item.findParent(MatrixRoot.class).find(true, SubCase.class, name);
+    
+    		if (ref != null && ref instanceof SubCase)
+    		{
+    			return (SubCase) ref;
+    		}
+	    }
+	    
 		if (name == null)
 		{
 			return null;
@@ -221,7 +260,10 @@ public class Context implements IContext, AutoCloseable, Cloneable
 	        try
 	        {
 	            matrix = matrix.clone();
-	            matrix.getRoot().init(item.getMatrix());
+	            if (item != null)
+	            {
+	                matrix.getRoot().init(item.getMatrix());
+	            }
 	            this.libs.put(ns, matrix);
 	            
 	        }
@@ -239,7 +281,7 @@ public class Context implements IContext, AutoCloseable, Cloneable
 
 		return (SubCase) mitem.find(true, SubCase.class, id);
 	}
-
+	
 	public List<ReadableValue> subcases(MatrixItem item)
 	{
 		final List<ReadableValue> res = new ArrayList<ReadableValue>();
@@ -371,7 +413,7 @@ public class Context implements IContext, AutoCloseable, Cloneable
 	private Presenter presenter;
 
 	private Map<String, Matrix> libs = new HashMap<>();
-	private Map<HandlerKind, SubCase> handlers = new HashMap<>();
+	private Map<HandlerKind, String> handlers = new HashMap<>();
 	
 	private static final Logger logger = Logger.getLogger(Context.class);
 }

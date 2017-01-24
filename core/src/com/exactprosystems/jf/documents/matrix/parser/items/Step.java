@@ -210,7 +210,7 @@ public class Step extends MatrixItem
 			
 			report.outLine(this, null, String.format("Step %s", identifyValue), null);
 
-            context.runHandler(HandlerKind.OnStepStart, report, null);
+            context.runHandler(this, HandlerKind.OnStepStart, report, null);
 			
 			ret = executeChildren(start, context, listener, evaluator, report, new Class<?>[] { OnError.class }, null);
 			res = ret.getResult();
@@ -221,7 +221,7 @@ public class Step extends MatrixItem
                 
                 MatrixError error = ret.getError();
                 
-                ReturnAndResult errorRet = context.runHandler(HandlerKind.OnStepError, report, error);
+                ReturnAndResult errorRet = context.runHandler(this, HandlerKind.OnStepError, report, error);
                 if (errorRet != null)
                 {
                     ret = errorRet;
@@ -239,7 +239,7 @@ public class Step extends MatrixItem
                     }
                 }
             }
-            context.runHandler(HandlerKind.OnStepFinish, report, null);
+            context.runHandler(this, HandlerKind.OnStepFinish, report, null);
 
             doSreenshot(row, null, screenshotKind, ScreenshotKind.OnFinish, ScreenshotKind.OnFinishOrError);
             if (table != null && position >= 0 && !isRepOff())

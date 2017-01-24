@@ -266,7 +266,7 @@ public final class TestCase extends MatrixItem
 			
 			this.locals = evaluator.createLocals();
 			
-			context.runHandler(HandlerKind.OnTestCaseStart, report, null);
+			context.runHandler(this, HandlerKind.OnTestCaseStart, report, null);
 
 			ret = executeChildren(start, context, listener, evaluator, report, new Class<?>[] { OnError.class }, this.locals);
 			res = ret.getResult();
@@ -278,7 +278,7 @@ public final class TestCase extends MatrixItem
 
 	            MatrixError error = ret.getError();
 			    
-			    ReturnAndResult errorRet = context.runHandler(HandlerKind.OnTestCaseError, report, error);
+			    ReturnAndResult errorRet = context.runHandler(this, HandlerKind.OnTestCaseError, report, error);
 	            if (errorRet != null)
 	            {
 	                ret = errorRet;
@@ -296,7 +296,7 @@ public final class TestCase extends MatrixItem
         			}
 	            }
 			}
-	        context.runHandler(HandlerKind.OnTestCaseFinish, report, null);
+	        context.runHandler(this, HandlerKind.OnTestCaseFinish, report, null);
 			
             this.plugin.evaluate(evaluator);
             doSreenshot(row, this.plugin.getValue(), screenshotKind, ScreenshotKind.OnFinish, ScreenshotKind.OnFinishOrError);

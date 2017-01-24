@@ -23,6 +23,7 @@
     <import>java.lang</import>
     <import>java.io</import>
     <import>org.mvel2</import>
+    <import>com.exactprosystems.jf.documents.matrix.parser</import>
     <vars>${JF}/vars.ini</vars>
     <userVars>personal.ini</userVars>
     <userVars>uservars/rf.ini</userVars>
@@ -31,9 +32,9 @@
     <appDict>dic/gui</appDict>
     <clientDict>dic/clients</clientDict>
     <library>${JF}/libjf</library>
-    <globalHandler enable="true">
-        <onTestCaseStart></onTestCaseStart>
-        <onTestCaseFinish></onTestCaseFinish>
+    <globalHandler enable="false">
+        <onTestCaseStart>LIB.TCStart</onTestCaseStart>
+        <onTestCaseFinish>LIB.TCFinish</onTestCaseFinish>
         <onTestCaseError></onTestCaseError>
         <onStepStart></onStepStart>
         <onStepFinish></onStepFinish>

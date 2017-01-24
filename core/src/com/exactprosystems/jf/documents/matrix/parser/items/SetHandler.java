@@ -156,9 +156,8 @@ public final class SetHandler extends MatrixItem
 	{
 		try
 		{
-		    SubCase subCase = context.referenceToSubcase(this.name.get(), this);
 		    HandlerKind handlerKind = HandlerKind.valueOf(this.kind.get());
-		    context.setHandler(handlerKind, subCase);
+		    context.setHandler(handlerKind, this.name.get(), this);
 
 			return new ReturnAndResult(start, Result.Passed, null);
 		}
