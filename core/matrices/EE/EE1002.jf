@@ -1,29 +1,17 @@
 #Id;#TestCase;#Kind;#Depends;#For
 Step 1;This matrix always passed;;;
-    #Action;#Text;#Notifier
-    Show;'EE1002 count=' + parameter+' Always passed';Notifier.Success
-
-    #Action;#Text;#Notifier
-    Show;'Step 1';Notifier.Info
-
     #Action;#Time
     Wait;200
 
 
 #Id;#TestCase;#Kind;#Depends;#For
 Step 2;Working;;;
-    #Action;#Text;#Notifier
-    Show;'Step 2';Notifier.Info
-
     #Action;#Time
     Wait;200
 
 
 #Id;#TestCase;#Kind;#Depends;#For
 Step 2;Working;;;
-    #Action;#Text;#Notifier
-    Show;'Step 3';Notifier.Info
-
     #Action;#Time
     Wait;200
 

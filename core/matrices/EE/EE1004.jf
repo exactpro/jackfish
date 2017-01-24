@@ -1,20 +1,11 @@
-#Id;#TestCase
-Step 1;This matrix passed to failed
-    #Action;#Text;#Notifier
-    Show;'EE1004 passed to failed';Notifier.Success
-
-    #Action;#Text;#Notifier
-    Show;'Step 1';Notifier.Info
-
+#Id;#TestCase;#Kind;#Depends;#For
+Step 1;This matrix passed to failed;;;
     #Action;#Time
     Wait;1000
 
 
-#Id;#TestCase
-Step 2;Working
-    #Action;#Text;#Notifier
-    Show;'Step 2';Notifier.Info
-
+#Id;#TestCase;#Kind;#Depends;#For
+Step 2;Working;;;
     #Action;#Time
     Wait;1000
 
@@ -37,22 +28,12 @@ Step 2;Working
     #Action;#Value;#Name
     Store;counter;'counter'
 
-    #If
-    counter > 4
-        #Action;#Text;#Notifier
-        Show;'Step 2 failed';Notifier.Error
-
-        #Fail
-        'Time to fail'
-
-    #EndIf
+    #Assert;#Message
+    counter <= 4;'Time to fail'
 
 
-#Id;#TestCase
-Step 2;Working
-    #Action;#Text;#Notifier
-    Show;'Step 3';Notifier.Info
-
+#Id;#TestCase;#Kind;#Depends;#For
+Step 2;Working;;;
     #Action;#Time
     Wait;1000
 
