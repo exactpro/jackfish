@@ -72,7 +72,7 @@ public class MatrixTreeNode extends TreeNode
 				ConfigurationTreeView.createDisabledItem(ADD_TO_TOOLBAR),
 				ConfigurationTreeView.createDisabledItem(REMOVE_MATRIX_FOLDER),
 				ConfigurationTreeView.createDisabledItem(EXCLUDE_MATRIX_FOLDER),
-				ConfigurationTreeView.createItem(REFRESH_MATRIX, () -> this.model.refreshMatrices(), "Error on refresh matrices"),
+				ConfigurationTreeView.createItem(REFRESH_MATRIX, () -> this.model.updateMatrices(), "Error on refresh matrices"),
 				new SeparatorMenuItem(),
 				ConfigurationTreeView.createDisabledItem("Git", null)
 		);

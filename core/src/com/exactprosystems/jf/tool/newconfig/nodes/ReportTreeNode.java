@@ -48,7 +48,7 @@ public class ReportTreeNode extends TreeNode
 				ConfigurationTreeView.createDisabledItem(OPER_REPORT),
 				ConfigurationTreeView.createDisabledItem(REMOVE_REPORT),
 				ConfigurationTreeView.createItem(CLEAR_FOLDER, () -> this.model.clearReportFolder(), "Error on clear folder"),
-				ConfigurationTreeView.createItem(REFRESH, () -> this.model.refreshReport(), "Error on refresh report folder"),
+				ConfigurationTreeView.createItem(REFRESH, () -> this.model.updateReport(), "Error on refresh report folder"),
 				new SeparatorMenuItem(),
 				ConfigurationTreeView.createDisabledItem("Git", null)
 		);
