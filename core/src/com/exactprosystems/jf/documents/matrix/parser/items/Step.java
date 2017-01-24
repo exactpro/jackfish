@@ -38,7 +38,7 @@ import java.util.stream.Collectors;
 @MatrixItemAttribute(
 		description 	= "Elementary step in the script", 
 		shouldContain 	= { Tokens.Step },
-		mayContain 		= { Tokens.Off, Tokens.Kind, Tokens.RepOff },
+		mayContain 		= { Tokens.IgnoreErr, Tokens.Off, Tokens.Kind, Tokens.RepOff },
 		parents			= { Case.class, Else.class, For.class, ForEach.class, If.class,
 							OnError.class, Step.class, SubCase.class, TestCase.class, While.class },
 		real			= true,
@@ -127,8 +127,9 @@ public class Step extends MatrixItem
 		driver.showComment(this, layout, 0, 0, getComments());
 		driver.showTitle(this, layout, 1, 0, Tokens.Step.get(), context.getFactory().getSettings());
         driver.showExpressionField(this, layout, 1, 1, Tokens.Step.get(), this.identify, this.identify, null, null, null, null);
-        driver.showLabel(this, layout, 1, 2, "Screenshot");
-        driver.showComboBox(this, layout, 1, 3, this.kind, this.kind, v -> Arrays.stream(ScreenshotKind.values()).map(Enum::toString).collect(Collectors.toList()));
+        driver.showCheckBox(this, layout, 1, 2, Tokens.IgnoreErr.get(), this.ignoreErr, this.ignoreErr);
+        driver.showLabel(this, layout, 1, 3, "Screenshot");
+        driver.showComboBox(this, layout, 1, 4, this.kind, this.kind, v -> Arrays.stream(ScreenshotKind.values()).map(Enum::toString).collect(Collectors.toList()));
 
         return layout;
 	}

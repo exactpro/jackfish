@@ -15,12 +15,35 @@ LIB;Standart libraries
         #Action;#
         Print;'TestCase started'
 
+        #Action;#Value;#Name
+        Store;true;'good'
+
     #EndSubCase
 
     #Id;#SubCase
     TCFinish;OnTestCaseFinish
         #Action;#
         Print;'TestCase finished'
+
+    #EndSubCase
+
+    #Id;#SubCase
+    SStart;OnStepStart
+        #Id;#Action;#Name
+        RST;Restore;'good'
+
+        #Assert;#Message
+        RST.Out;'previous'
+
+        #Action;#Value;#Name
+        Store;false;'good'
+
+    #EndSubCase
+
+    #Id;#SubCase
+    SFinish;OnStepFinish
+        #Action;#Value;#Name
+        Store;true;'good'
 
     #EndSubCase
 
