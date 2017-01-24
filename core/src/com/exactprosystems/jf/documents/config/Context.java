@@ -143,7 +143,7 @@ public class Context implements IContext, AutoCloseable, Cloneable
            }
        }
        
-       if (name != null)
+       if (!Str.IsNullOrEmpty(name))
        {
            SubCase handler = referenceToSubcase(name, item);
            if (handler != null)
