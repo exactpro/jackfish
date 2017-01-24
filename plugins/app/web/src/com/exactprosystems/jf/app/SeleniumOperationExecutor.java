@@ -725,6 +725,7 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 				}
 				else
 				{
+					getHeaders(tableComp, false, null, null);
 					List<WebElement> rows = findRows(additional, tableComp);
 					WebElement row1 = rows.get(y);
 					List<WebElement> cells1 = row1.findElements(By.xpath("child::" + tag_td));
