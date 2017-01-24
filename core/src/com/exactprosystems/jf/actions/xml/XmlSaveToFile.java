@@ -21,20 +21,29 @@ import com.exactprosystems.jf.functions.Xml;
 
 @ActionAttribute(
 		group					= ActionGroups.XML,
-		generalDescription 		= "Save XML object to a file.",
+		generalDescription 		= "The purpose of this action is to keep (store) of the transferred Xml structure in the assigned file.",
 		additionFieldsAllowed 	= false,
-		outputDescription 		= "True if saving is successfull.",
-		outputType				= Boolean.class
+		outputDescription 		= "True, if saved successfully.",
+		outputType				= Boolean.class,
+		examples 				= "{{`1. Save the Xml object into the file filename.xml`}}"
+				+ "{{`2. Make sure that the check went well.`}}"
+				+ "{{##Id;#Action;#Xml;#File\n"
+				+ "XSTF;XmlSaveToFile;Xml1;’path/filename.xml’\n"
+				+ "\n"
+				+ "\n"
+				+ "#Assert;#Message\n"
+				+ "XSTF.Out;'File was not saved'#}}"
 	)
 public class XmlSaveToFile extends AbstractAction 
 {
 	public final static String xmlName = "Xml";
 	public final static String fileNameName = "File";
 
-	@ActionFieldAttribute(name = xmlName, mandatory = true, description = "XML object.")
+	@ActionFieldAttribute(name = xmlName, mandatory = true, description = "The Xml structure that needs to be kept (preserved).")
 	protected Xml 	xml 	= null;
 
-	@ActionFieldAttribute(name = fileNameName, mandatory = true, description = "File name.")
+	@ActionFieldAttribute(name = fileNameName, mandatory = true, description = "The path to the file. If the given path "
+			+ "already contains a file then it will be replaced.")
 	protected String 	fileName 	= null;
 
 	public XmlSaveToFile()

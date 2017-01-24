@@ -22,10 +22,42 @@ import com.exactprosystems.jf.functions.Xml;
 @ActionAttribute(
 		group					= ActionGroups.XML,
 		suffix					= "XML",
-		generalDescription 		= "Gets first suitable node of XML object by xpath",
+		generalDescription 		= "The purpose of the action is to return (restore) the Xml structure allocated using "
+				+ "Xpath parameter from Xml document. The first appropriate to the condition element and all its parts "
+				+ "will be returned. The output value is a separate Xml structure and is not connected to the structure "
+				+ "transferred in Xml parameter.",
 		additionFieldsAllowed 	= false,
-		outputDescription 		= "XML structure.",
-		outputType				= Xml.class
+		outputDescription 		= "Xml structure containing the result of a demand.",
+		outputType				= Xml.class,
+		examples 				= "{{`1. Create Xml object by downloading it from the file.`}}"
+				+ "{{`Contents of an xml file:`}}"
+				+ "{{#<note> \n"
+				+ "<to>\n"
+				+ "<friend>\n"
+				+ "<name id=\"first\">Tove</name>\n"
+				+ "</friend>\n"
+				+ "</to>\n"
+				+ "<from>\n"
+				+ "<friend>\n"
+				+ "<name id=\"second\">Jani</name>\n"
+				+ "</friend>\n"
+				+ "</from>\n"
+				+ "<heading>Reminder</heading>\n"
+				+ "<body>Don't forget me this weekend!</body>\n"
+				+ "</note>#}}"
+				+ "\n"
+				+ "{{`2. Find the first element from.`}}"
+				+ "{{`3. Check the outcome`}}"
+				+ "{{##Id;#Action;#File\n"
+				+ "XML2;XmlLoadFromFile;'/path/Xml.xml'\n"
+				+ "\n"
+				+ "\n"
+				+ "#Id;#Action;#Xpath;#Xml\n"
+				+ "XML2;XmlFindFirst;'//name';XML1.Out\n"
+				+ "\n"
+				+ "\n"
+				+ "#Assert;#Message\n"
+				+ "XML2.Out.getChild().getAttribute() == 'first';'No such attribute'#}}"
 	)
 public class XmlSelectFirst extends AbstractAction 
 {
@@ -34,15 +66,15 @@ public class XmlSelectFirst extends AbstractAction
 	public final static String nodeNameName = "NodeName";
 
 
-	@ActionFieldAttribute(name = xmlName, mandatory = true, description = "XML object.")
+	@ActionFieldAttribute(name = xmlName, mandatory = true, description = "An Xml structure in which an operation needs to be done.")
 	protected Xml 	xml 	= null;
 
 
-	@ActionFieldAttribute(name = nodeNameName, mandatory = true, description = "Name of new node.")
+	@ActionFieldAttribute(name = nodeNameName, mandatory = true, description = "Insert the selection result into assigned tag.")
 	protected String 	nodeName 	= null;
 
 
-	@ActionFieldAttribute(name = xpathName, mandatory = true, description = "Xpath.")
+	@ActionFieldAttribute(name = xpathName, mandatory = true, description = "The Xpath, the path to the element.")
 	protected String 	xpath 	= null;
 
 	public XmlSelectFirst()
