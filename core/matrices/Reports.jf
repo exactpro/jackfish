@@ -52,9 +52,9 @@ Init;Never;;
         #Case
         Export
             #Id;#Action;#DefaultValue;#HelpKind;#Title
-            name;Input;'reports/export.csv';HelpKind.ChooseSaveFile;'Choose the file name'
+            name;Input;'reports';HelpKind.ChooseSaveFile;'Choose the path to save export(s)'
 
-            #Call;#fileName;#date
+            #Call;#pathToSave;#date
             RF.repCsvExport;name.Out;date
 
 

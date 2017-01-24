@@ -307,7 +307,7 @@ RF;RegressionFramework
                 "  s.report AS report"
                 "FROM scenarios AS s "
                 "LEFT JOIN runs AS r ON r.id = ?"
-                "WHERE s.manual = 0 AND s.run_id = ?"
+                "WHERE s.test_set <> '' AND s.manual = 0 AND s.run_id = ?"
                 #EndRawText
 
 
@@ -330,7 +330,7 @@ RF;RegressionFramework
                 "  s.report AS report"
                 "FROM scenarios AS s "
                 "LEFT JOIN runs AS r ON r.id = ?"
-                "WHERE s.manual = 0 AND s.run_id = ?"
+                "WHERE s.test_set <> '' AND s.manual = 0 AND s.run_id = ?"
                 #EndRawText
 
 
@@ -376,7 +376,7 @@ RF;RegressionFramework
     // //==============================================
     // // Export the last regression set to csv file for import into QC
     // //==============================================
-    #Id;#SubCase;#date;#fileName
+    #Id;#SubCase;#date;#pathToSave
     repCsvExport;Export to CSV file;;
         #Id;#Call
         SQL;Connect
@@ -384,128 +384,147 @@ RF;RegressionFramework
         #Id;#Call;#sql;#date
         runId;runIdFromDate;SQL;date
 
-        #Id;#Let
-        countSteps;0
+        #Id;#RawText
+        testSetText;Text
+        "SELECT "
+        "  s.test_set "
+        "FROM regression.scenarios AS s "
+        "WHERE s.test_set <> '' AND s.manual = 0 AND s.run_id = ?"
+        "GROUP BY s.test_set; "
+        #EndRawText
 
-        #Id;#Action;#Test Name;#Execution Status;#Execution Date;#Execution Time;#Executed By;#Execution Mashine
-        createTable;TableCreate;;;;;;
+        #Id;#Action;#Query;#Connection;#runId
+        testSetQuery;SQLselect;testSetText.toString();SQL;runId.id
 
-        #Id;#Let
-        resultTable;createTable.Out
+        #ForEach;#In
+        testSet;testSetQuery.Out
+            #Id;#Let
+            countSteps;0
 
-        #Switch
-        _rf_dialect
-            #Case
-            'MYSQL'
-                #Id;#RawText
-                TEXT5;Text
-                "SELECT "
-                "  s.id, s.scenario, "
-                "  IF(s.failed > 0, ""Failed"", ""Passed"") AS status, "
-                "  s.host, "
-                "  s.username, "
-                "  DATE(s.start_time) AS date, "
-                "  TIME(s.start_time) AS time "
-                "FROM scenarios AS s"
-                "WHERE s.manual = 0 AND s.run_id = ?; "
-                #EndRawText
-
-
-            #Case
-            'MSSQL'
-                #Id;#RawText
-                TEXT5;Text
-                "SELECT "
-                "  s.id, s.scenario, "
-                "  CASE WHEN s.failed <> 0 THEN  0 ELSE 1 END AS status, "
-                "  s.host, "
-                "  s.username, "
-                "  CONVERT(DATE, s.start_time) AS date, "
-                "  CONVERT(TIME, s.start_time) AS time "
-                "FROM scenarios AS s"
-                "WHERE s.manual = 0 AND s.run_id = ?; "
-                #EndRawText
-
-
-            #Default
-                #Fail
-                'Unknown SQL dialect: ' + _rf_dialect
-
-
-        #EndSwitch
-
-        #Id;#Action;#Connection;#Query;#runId
-        query;SQLselect;SQL;TEXT5.toString();runId.id
-
-        #Id;#Let
-        scenarios;query.Out
-
-        #For;#From;#To;#Step
-        rowScenarios;0;(int)scenarios.size - 1;1
-            #Id;#Action;#Connection;#Query;#scenario_id
-            selectFromTable;SQLselect;SQL;'SELECT d.scenario_id, d.error FROM details AS d WHERE scenario_id = ?\u003b';scenarios[rowScenarios].id
+            #Id;#Action;#Test Name;#Execution Status;#Execution Date;#Execution Time;#Executed By;#Execution Mashine
+            createTable;TableCreate;;;;;;
 
             #Id;#Let
-            selectSteps;selectFromTable.Out
+            resultTable;createTable.Out
 
-            #Action;#Table;#Test Name;#Execution Status;#Execution Date;#Execution Time;#Executed By;#Execution Mashine
-            TableAddValue;resultTable;scenarios[rowScenarios].scenario;scenarios[rowScenarios].status;scenarios[rowScenarios].date;scenarios[rowScenarios].time;scenarios[rowScenarios].username;scenarios[rowScenarios].host
+            #Switch
+            _rf_dialect
+                #Case
+                'MYSQL'
+                    #Id;#RawText
+                    TEXT5;Text
+                    "SELECT "
+                    "  s.id, s.scenario, "
+                    "  IF(s.failed > 0, ""Failed"", ""Passed"") AS status, "
+                    "  s.host, "
+                    "  s.username, "
+                    "  DATE(s.start_time) AS date, "
+                    "  TIME(s.start_time) AS time "
+                    "FROM scenarios AS s"
+                    "WHERE s.manual = 0 AND s.run_id = ? AND s.test_set = ? ; "
+                    #EndRawText
+
+
+                #Case
+                'MSSQL'
+                    #Id;#RawText
+                    TEXT5;Text
+                    "SELECT "
+                    "  s.id, s.scenario, "
+                    "  CASE WHEN s.failed <> 0 THEN  0 ELSE 1 END AS status, "
+                    "  s.host, "
+                    "  s.username, "
+                    "  CONVERT(DATE, s.start_time) AS date, "
+                    "  CONVERT(TIME, s.start_time) AS time "
+                    "FROM scenarios AS s"
+                    "WHERE s.manual = 0 AND s.run_id = ? AND s.test_set = ? ; "
+                    #EndRawText
+
+
+                #Default
+                    #Fail
+                    'Unknown SQL dialect: ' + _rf_dialect
+
+
+            #EndSwitch
+
+            #Id;#Action;#Connection;#Query;#runId;#testSet
+            query;SQLselect;SQL;TEXT5.toString();runId.id;testSet.test_set
+
+            #Id;#Let
+            scenarios;query.Out
 
             #For;#From;#To;#Step
-            rowSteps;0;(int)selectSteps.size - 1;1
-                #If
-                rowSteps >= countSteps
-                    #Id;#Let
-                    countSteps;countSteps + 1
-
-                    #Action;#Table;#Columns
-                    TableAddColumns;resultTable;'Step' + countSteps
-
-                #EndIf
+            rowScenarios;0;(int)scenarios.size - 1;1
+                #Id;#Action;#Connection;#Query;#scenario_id
+                selectFromTable;SQLselect;SQL;'SELECT d.scenario_id, d.error FROM details AS d WHERE scenario_id = ?\u003b';scenarios[rowScenarios].id
 
                 #Id;#Let
-                step;'Step' + (rowSteps + 1)
+                selectSteps;selectFromTable.Out
 
-                #If
-                selectSteps[rowSteps].error.equals('null')
+                #Action;#Table;#Test Name;#Execution Status;#Execution Date;#Execution Time;#Executed By;#Execution Mashine
+                TableAddValue;resultTable;scenarios[rowScenarios].scenario;scenarios[rowScenarios].status;scenarios[rowScenarios].date;scenarios[rowScenarios].time;scenarios[rowScenarios].username;scenarios[rowScenarios].host
+
+                #For;#From;#To;#Step
+                rowSteps;0;(int)selectSteps.size - 1;1
+                    #If
+                    rowSteps >= countSteps
+                        #Id;#Let
+                        countSteps;countSteps + 1
+
+                        #Action;#Table;#Columns
+                        TableAddColumns;resultTable;'Step' + countSteps
+
+                    #EndIf
+
                     #Id;#Let
-                    stepResult;''
+                    step;'Step' + (rowSteps + 1)
 
-                #Else
-                    #Id;#Let
-                    stepResult;selectSteps[rowSteps].error
+                    #If
+                    selectSteps[rowSteps].error.equals('null')
+                        #Id;#Let
+                        stepResult;''
+
+                    #Else
+                        #Id;#Let
+                        stepResult;selectSteps[rowSteps].error
 
 
-                #EndIf
+                    #EndIf
 
-                #Let
-                resultTable[rowScenarios].put(step, stepResult)
+                    #Let
+                    resultTable[rowScenarios].put(step, stepResult)
+
+                #EndFor
 
             #EndFor
 
-        #EndFor
+            #Id;#Let
+            stepHeaders;new ArrayList()
 
-        #Id;#Let
-        stepHeaders;new ArrayList()
+            #For;#From;#To;#Step
+            i;1;countSteps;1
+                #Let
+                stepHeaders.add('Step' + i)
 
-        #For;#From;#To;#Step
-        i;1;countSteps;1
-            #Let
-            stepHeaders.add('Step' + i)
+            #EndFor
 
-        #EndFor
+            #Action;#Replace;#Table;#Search;#Columns
+            TableReplace;'';resultTable;null;stepHeaders.toArray()
 
-        #Action;#Replace;#Table;#Search;#Columns
-        TableReplace;'';resultTable;null;stepHeaders.toArray()
+            #Action;#Replace;#Table;#Columns;#MatchCell;#Search
+            TableReplace;'Failed';resultTable;{'Execution Status'};true;0
 
-        #Action;#Replace;#Table;#Columns;#MatchCell;#Search
-        TableReplace;'Failed';resultTable;{'Execution Status'};true;0
+            #Action;#Replace;#Table;#Columns;#MatchCell;#Search
+            TableReplace;'Passed';resultTable;{'Execution Status'};true;1
 
-        #Action;#Replace;#Table;#Columns;#MatchCell;#Search
-        TableReplace;'Passed';resultTable;{'Execution Status'};true;1
+            #Id;#Let
+            fileName;testSet.test_set + '_' + DateTime.strDate(runId.create_time, 'yyyyMMdd') + '.csv'
 
-        #Action;#Table;#File;#Delimiter
-        TableSaveToFile;resultTable;fileName;','
+            #Action;#Table;#File;#Delimiter
+            TableSaveToFile;resultTable;pathToSave + '/' +fileName;','
+
+        #EndForEach
 
     #EndSubCase
 
@@ -704,7 +723,8 @@ RF;RegressionFramework
             "SELECT "
             "  r.tool_version,"
             "  r.app_version,"
-            "  r.id"
+            "  r.id,"
+            "  r.create_time"
             "FROM runs AS r"
             "WHERE r.id = (SELECT MAX(id) AS id FROM runs)"
             #EndRawText
@@ -713,7 +733,7 @@ RF;RegressionFramework
             select1;SQLselect;sql;query.toString()
 
             #Return
-            select1.Out.size() > 0 ? { 'id' : select1.Out[0].id, 'tool_version' : select1.Out[0].tool_version, 'app_version' : select1.Out[0].app_version }: { '' : null }
+            select1.Out.size() > 0 ? { 'id' : select1.Out[0].id, 'tool_version' : select1.Out[0].tool_version, 'app_version' : select1.Out[0].app_version, 'create_time' : select1.Out[0].create_time }: { '' : null }
 
         #EndIf
 
@@ -723,7 +743,7 @@ RF;RegressionFramework
             'MYSQL'
                 #Id;#RawText
                 query;Text
-                "SELECT id, tool_version, app_version "
+                "SELECT id, tool_version, app_version, create_time  "
                 "FROM runs "
                 "WHERE create_time <= ? "
                 "ORDER BY create_time DESC "
@@ -735,7 +755,7 @@ RF;RegressionFramework
             'MSSQL'
                 #Id;#RawText
                 query;Text
-                "SELECT TOP 1 id, tool_version, app_version "
+                "SELECT TOP 1 id, tool_version, app_version, create_time  "
                 "FROM runs "
                 "WHERE create_time <= ? "
                 "ORDER BY create_time DESC  "
@@ -753,7 +773,7 @@ RF;RegressionFramework
         select2;SQLselect;sql;query.toString();date
 
         #Return
-        select2.Out.size() > 0 ? { 'id' : select2.Out[0].id, 'tool_version' : select2.Out[0].tool_version, 'app_version' : select2.Out[0].app_version }: { '' : null }
+        select2.Out.size() > 0 ? { 'id' : select2.Out[0].id, 'tool_version' : select2.Out[0].tool_version, 'app_version' : select2.Out[0].app_version, 'create_time' :  select2.Out[0].create_time}: { '' : null }
 
     #EndSubCase
 
