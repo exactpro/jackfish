@@ -103,6 +103,7 @@ public class Settings
 
 	//region Matrix
 	public static final String	MATRIX_DEFAULT_SCREENSHOT = "matrixDefaultScreenshot";
+	public static final String	MATRIX_POPUPS				= "matrixPopups";
 	//endregion
 
 	public static final String 	OPENED 				= "OPENED";
@@ -330,7 +331,8 @@ public class Settings
 		));
 
 		settings.setMapValues(GLOBAL_NS, MATRIX_NAME, mapOf(
-				MATRIX_DEFAULT_SCREENSHOT, ScreenshotKind.Never.name()
+				MATRIX_DEFAULT_SCREENSHOT, ScreenshotKind.Never.name(),
+				MATRIX_POPUPS, "false"
 		));
 		return settings;
 	}

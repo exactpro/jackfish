@@ -7,6 +7,7 @@ import com.exactprosystems.jf.tool.settings.SettingsPanel;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Tab;
 import javafx.scene.layout.AnchorPane;
@@ -20,6 +21,7 @@ public class MatrixTabController implements Initializable, ContainingParent, ITa
 {
 	public Parent parent;
 	public ComboBox<ScreenshotKind> cbScreenshot;
+	public CheckBox cbPopup;
 	private SettingsPanel model;
 
 	//region Initializable
@@ -47,6 +49,7 @@ public class MatrixTabController implements Initializable, ContainingParent, ITa
 	public void displayInfo(Map<String, String> collect)
 	{
 		this.cbScreenshot.getSelectionModel().select(ScreenshotKind.valueOf(collect.getOrDefault(Settings.MATRIX_DEFAULT_SCREENSHOT, ScreenshotKind.Never.name())));
+		this.cbPopup.setSelected(Boolean.valueOf(collect.getOrDefault(Settings.MATRIX_POPUPS, "false")));
 	}
 
 	public void displayInto(Tab tab)
@@ -66,5 +69,6 @@ public class MatrixTabController implements Initializable, ContainingParent, ITa
 	public void save()
 	{
 		this.model.updateSettingsValue(Settings.MATRIX_DEFAULT_SCREENSHOT, Settings.MATRIX_NAME, this.cbScreenshot.getSelectionModel().getSelectedItem().name());
+		this.model.updateSettingsValue(Settings.MATRIX_POPUPS, Settings.MATRIX_NAME, String.valueOf(this.cbPopup.isSelected()));
 	}
 }
