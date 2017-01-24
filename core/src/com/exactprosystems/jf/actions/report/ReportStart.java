@@ -24,21 +24,24 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 
 @ActionAttribute(
 		group					= ActionGroups.Report,
-		generalDescription 		= "Starts a new report.",
+		generalDescription 		= "This action is used to create an object of Report type. It is possible to set it as "
+				+ "ToReport parameter in the following actions: {{@TableReport@}}, {{@TextReport@}}, {{@XmlReport@}} and others to fill the created Report object",
 		additionFieldsAllowed 	= false,
 		suffix                  = "REP",
 		outputDescription       = "Created report.",
-        outputType              = ReportBuilder.class
+        outputType              = ReportBuilder.class,
+		examples 				= "{{##Id;#Action;#Version;#ReportName\n" +
+				"REP1;ReportStart;'3.141592';'MyReport'#}}"
 	)
 public class ReportStart extends AbstractAction 
 {
 	public final static String reportNameName  = "ReportName";
 	public final static String versionName     = "Version";
 
-	@ActionFieldAttribute(name = reportNameName, mandatory = true, description = "Reports given string and parameters to the report.")
+	@ActionFieldAttribute(name = reportNameName, mandatory = true, description = "Name of a created report.")
 	protected String reportName; 
 
-    @ActionFieldAttribute(name = versionName, mandatory = false, description = "Report this string as a version to the report.")
+    @ActionFieldAttribute(name = versionName, mandatory = false, description = "Version of the report. It will be displayed in report")
     protected String version; 
 
 	public ReportStart()
