@@ -20,6 +20,8 @@ public class HTMLhelper
 	static Object[][] entities = 
 		{
 			{ "#39", new Integer(39)}, // ' - apostrophe
+			{ "<", new Integer(60)}, // ' - < bracket
+			{ ">", new Integer(62)}, // ' - > bracket
 			{ "quot", new Integer(34) }, // " - double-quote
 			{ "amp", new Integer(38) }, // & - ampersand
 			{ "lt", new Integer(60) }, // < - less-than

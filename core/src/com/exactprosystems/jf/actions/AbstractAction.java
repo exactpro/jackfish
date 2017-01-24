@@ -12,6 +12,7 @@ import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.evaluator.Variables;
+import com.exactprosystems.jf.common.report.HTMLhelper;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.common.report.ReportTable;
 import com.exactprosystems.jf.documents.config.Context;
@@ -384,7 +385,7 @@ public abstract class AbstractAction implements Cloneable
         	table.addValues("Additional fields", "No");
         }
         table.addValues("See also", attr.seeAlso());
-        table.addValues("Examples", attr.examples());
+        table.addValues("Examples", HTMLhelper.htmlescape(attr.examples()));
 
 
         // Input

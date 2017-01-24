@@ -22,16 +22,40 @@ import com.exactprosystems.jf.functions.Xml;
 @ActionAttribute(
 		group					= ActionGroups.XML,
 		suffix					= "XML",
-		generalDescription 		= "Load data from a file as an XML object.",
+		generalDescription 		= "The purpose of this action is to download the XML structure from a file.",
 		additionFieldsAllowed 	= false,
 		outputDescription 		= "XML structure.",
-		outputType				= Xml.class
+		outputType				= Xml.class,
+		examples 				= "{{`1. Create Xml object by downloading it from the file.`}}"
+				+ "{{`Contents of an xml file:`}}"
+				+ "{{#<note> \n"
+				+ "<to>\n"
+				+ "<friend>\n"
+				+ "<name id=\"first\">Tove</name>\n"
+				+ "</friend>\n"
+				+ "</to>\n"
+				+ "<from>\n"
+				+ "<friend>\n"
+				+ "<name id=\"second\">Jani</name>\n"
+				+ "</friend>\n"
+				+ "</from>\n"
+				+ "<heading>Reminder</heading>\n"
+				+ "<body>Don't forget me this weekend!</body>\n"
+				+ "</note>#}}"
+				+ "\n"
+				+ "{{`2. Make sure that the object has been created and contains nodes.`}}"
+				+ "{{##Id;#Action;#File\n"
+				+ "XML1;XmlLoadFromFile;'/home/victor.krasnovid/Desktop/Xml.xml'\n"
+				+ "\n"
+				+ "\n"
+				+ "#Assert;#Message\n"
+				+ "XML1.Result.toString() == 'Passed';'No such attribute'#}}"
 	)
 public class XmlLoadFromFile extends AbstractAction 
 {
 	public final static String fileName 		= "File";
 
-	@ActionFieldAttribute(name = fileName, mandatory = true, description = "File name.")
+	@ActionFieldAttribute(name = fileName, mandatory = true, description = "The path to the file.")
 	protected String 	file 	= null;
 
 	public XmlLoadFromFile()
