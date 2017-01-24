@@ -8,11 +8,11 @@
 
 package com.exactprosystems.jf.api.app;
 
+import com.exactprosystems.jf.api.common.Str;
+
 import java.awt.*;
 import java.util.Collections;
 import java.util.List;
-
-import com.exactprosystems.jf.api.common.Str;
 
 public enum PieceKind implements Measure
 {
@@ -195,6 +195,12 @@ public enum PieceKind implements Measure
 		}
 
 		@Override
+		protected boolean othersNeed()
+		{
+			return false;
+		}
+
+		@Override
 		protected <T> void performDerived(Piece piece, OperationExecutor<T> executor, List<T> self, List<T> others, CheckingLayoutResult result) throws Exception
 		{
 			result.set(!self.isEmpty() && self.get(0) != null); 
@@ -229,6 +235,12 @@ public enum PieceKind implements Measure
 
 		@Override
 		protected boolean selfNeedOne()
+		{
+			return false;
+		}
+
+		@Override
+		protected boolean othersNeed()
 		{
 			return false;
 		}
@@ -907,7 +919,7 @@ public enum PieceKind implements Measure
 			result.error(piece, "Count of relative elements " + piece.locator.getId() + " should be 1, but was found " + others.size());
 			return;
 		}
-		if (others.size() == 0 )
+		if (othersNeed() && others.size() == 0 )
 		{
 			result.error(piece, "Relative element '" + piece.locator.getId() + "' does not found");
 			return;
@@ -949,6 +961,11 @@ public enum PieceKind implements Measure
 	protected boolean otherNeedOne()
 	{
 		return false;
+	}
+
+	protected boolean othersNeed()
+	{
+		return true;
 	}
 
 	protected String formulaTemplate()
