@@ -21,7 +21,6 @@ import com.exactprosystems.jf.documents.guidic.GuiDictionary;
 import com.exactprosystems.jf.documents.matrix.Matrix;
 import com.exactprosystems.jf.documents.vars.SystemVars;
 import com.exactprosystems.jf.tool.Common;
-import com.exactprosystems.jf.tool.DisplayableTask;
 import com.exactprosystems.jf.tool.csv.CsvFx;
 import com.exactprosystems.jf.tool.custom.store.StoreVariable;
 import com.exactprosystems.jf.tool.git.CredentialBean;
@@ -49,7 +48,6 @@ import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 import javafx.application.Application;
-import javafx.concurrent.Task;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import org.apache.log4j.Logger;
@@ -60,18 +58,19 @@ import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 import org.eclipse.jgit.transport.*;
 import org.eclipse.jgit.util.FS;
 
-import java.io.*;
-import java.nio.file.Files;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.Reader;
 import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.*;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class Main extends Application
 {
-	private static ExecutorService executorService = Executors.newSingleThreadExecutor();
 
 	private static final Logger logger = Logger.getLogger(Main.class);
 
@@ -88,6 +87,9 @@ public class Main extends Application
 	private String password;
 
 	private List<String> toolbarMatrices = new ArrayList<>();
+
+	private boolean isFromInit = true;
+	private List<Document> needDisplayDoc = new ArrayList<>();
 
 	public static String getConfigName()
 	{
@@ -106,30 +108,13 @@ public class Main extends Application
 			this.controller.disableMenu(this.config == null);
 		}
 	}
-
-	public <T> void displayableTask(DisplayableTask<T> task, String title, String error)
-	{
-		this.controller.startTask(title);
-		task.setExecutor(executorService);
-		task.setOnFailed(event -> {
-			Throwable exception = event.getSource().getException();
-			logger.error(exception.getMessage(), exception);
-			DialogsHelper.showError(exception.getMessage() + "\n" + error);
-			task.getOnFail().ifPresent(consumer -> consumer.accept(event.getSource().getException()));
-			this.controller.endTask();
-		});
-		task.setOnSucceeded(event -> {
-			task.getOnSuccess().ifPresent(t -> t.accept((T) event.getSource().getValue()));
-			this.controller.endTask();
-		});
-		task.start();
-	}
 	//endregion
 
 	//region Application
 	@Override
-	public void start(final Stage stage) throws Exception
+	public void init() throws Exception
 	{
+		notifyPreloader(new Preloader.ProgressNotification(0));
 		try
 		{
 			this.factory = new FxDocumentFactory(Main.this);
@@ -142,123 +127,123 @@ public class Main extends Application
 			DialogsHelper.showError("Settings are invalid. Using empty settings.");
 			this.settings = new Settings();
 		}
+		notifyPreloader(new Preloader.ProgressNotification(5));
 
-		Common.node = stage;
+		controller = Common.loadController(Main.class.getResource("tool.fxml"));
+
+		notifyPreloader(new Preloader.ProgressNotification(15));
+
+		controller.disableMenu(true);
+		boolean isGit = GitUtil.isGitRepository();
+		controller.isGit(isGit);
+
+		notifyPreloader(new Preloader.ProgressNotification(20));
+
+		final List<String> args = getParameters().getRaw();
+
+		if (args.size() > 0)
+		{
+			Main.this.username = args.size() > 1 ? args.get(1) : null;
+			Main.this.password = args.size() > 2 ? args.get(2) : null;
+
+			openProject(args.get(0), controller.projectPane); // TODO
+			notifyPreloader(new Preloader.ProgressNotification(30));
+			if (this.config instanceof ConfigurationFx)
+			{
+				this.needDisplayDoc.add(this.config);
+			}
+			controller.clearLastMatrixMenu();
+
+			Collection<SettingsValue> list = settings.getValues(Settings.MAIN_NS, DocumentKind.MATRIX.toString());
+			controller.updateFileLastMatrix(list);
+			notifyPreloader(new Preloader.ProgressNotification(35));
+		}
+		notifyPreloader(new Preloader.ProgressNotification(40));
+
 		Settings.SettingsValue theme = this.settings.getValueOrDefault(Settings.GLOBAL_NS, Settings.SETTINGS, Settings.THEME, Theme.WHITE.name());
 		Common.setTheme(Theme.valueOf(theme.getValue().toUpperCase()));
-		this.preloader = new Preloader();
-		this.preloader.show();
-//		this.runnerListener = new RunnerScheduler();
-		Task<Object> load = new Task<Object>()
+
+		notifyPreloader(new Preloader.ProgressNotification(50));
+		try
 		{
-			@Override
-			protected Object call() throws Exception
+			for (SettingsValue item : settings.getValues(Settings.MAIN_NS, Settings.MATRIX_TOOLBAR))
 			{
-				controller = Common.loadController(Main.class.getResource("tool.fxml"));
-				controller.init(factory, Main.this, settings, stage);
-				controller.disableMenu(true);
-				boolean isGit = GitUtil.isGitRepository();
-				controller.isGit(isGit);
-
-				final List<String> args = getParameters().getRaw();
-
-				if (args.size() > 0)
-				{
-					Main.this.username = args.size() > 1 ? args.get(1) : null;
-					Main.this.password = args.size() > 2 ? args.get(2) : null;
-
-					openProject(args.get(0), controller.projectPane); // TODO
-
-					controller.clearLastMatrixMenu();
-
-					Collection<SettingsValue> list = settings.getValues(Settings.MAIN_NS, DocumentKind.MATRIX.toString());
-					controller.updateFileLastMatrix(list);
-				}
-				return null;
+				this.addToToolbar(item.getKey());
 			}
-		};
+			notifyPreloader(new Preloader.ProgressNotification(55));
 
-		load.setOnFailed(event -> {
-			setConfiguration(null);
-			Throwable exception = event.getSource().getException();
-			logger.error("Error on load tool");
-			logger.error(exception.getMessage(), exception);
-			controller.display();
-			if (preloader != null)
+			List<SettingsValue> values = settings.getValues(Settings.MAIN_NS, Settings.OPENED);
+			double progressStep = 45 / values.size();
+			double currentProgress = 55;
+			for (SettingsValue item : values)
 			{
-				preloader.hide();
-			}
-			controller.initShortcuts();
-		});
-
-		load.setOnSucceeded(workerStateEvent -> Common.tryCatch(() -> 
-		{
-			controller.display();
-			if (preloader != null)
-			{
-				preloader.hide();
-			}
-			controller.initShortcuts();
-			try
-			{
-				for (SettingsValue item : settings.getValues(Settings.MAIN_NS, Settings.MATRIX_TOOLBAR))
+				DocumentKind kind = DocumentKind.valueOf(item.getValue());
+				if (kind != null)
 				{
-					this.addToToolbar(item.getKey());
-				}
-				for (SettingsValue item : settings.getValues(Settings.MAIN_NS, Settings.OPENED))
-				{
-					DocumentKind kind = DocumentKind.valueOf(item.getValue());
-					if (kind != null)
+					String filePath = item.getKey();
+					File file = new File(filePath);
+					try
 					{
-						String filePath = item.getKey();
-						File file = new File(filePath);
-						try
+						switch (kind)
 						{
-							switch (kind)
-							{
-								case MATRIX:
-									loadDocument(file, factory.createMatrix(filePath), kind);
-									break;
+							case MATRIX:
+								needDisplayDoc.add(loadDocument(file, factory.createMatrix(filePath), kind));
+								break;
 
-								case GUI_DICTIONARY:
-									loadDocument(file, factory.createAppDictionary(filePath), kind);
-									break;
+							case GUI_DICTIONARY:
+								needDisplayDoc.add(loadDocument(file, factory.createAppDictionary(filePath), kind));
+								break;
 
-								case SYSTEM_VARS:
-									loadDocument(file, factory.createVars(filePath), kind);
-									break;
+							case SYSTEM_VARS:
+								needDisplayDoc.add(loadDocument(file, factory.createVars(filePath), kind));
+								break;
 
-								case PLAIN_TEXT:
-									loadDocument(file, factory.createPlainText(filePath), kind);
-									break;
+							case PLAIN_TEXT:
+								needDisplayDoc.add(loadDocument(file, factory.createPlainText(filePath), kind));
+								break;
 
-								case CSV:
-									loadDocument(file, factory.createCsv(filePath), kind);
-									break;
+							case CSV:
+								needDisplayDoc.add(loadDocument(file, factory.createCsv(filePath), kind));
+								break;
 
-								default:
-									break;
-							}
-						}
-						catch (FileNotFoundException e)
-						{
-							settings.remove(Settings.MAIN_NS, Settings.OPENED, file.getAbsolutePath());
-							settings.saveIfNeeded();
+							default:
+								break;
 						}
 					}
+					catch (FileNotFoundException e)
+					{
+						settings.remove(Settings.MAIN_NS, Settings.OPENED, file.getAbsolutePath());
+						settings.saveIfNeeded();
+					}
 				}
+				currentProgress += progressStep;
+				notifyPreloader(new Preloader.ProgressNotification(currentProgress));
 			}
-			catch (Exception e)
-			{
-				logger.error("Error on restore opened documents");
-				logger.error(e.getMessage(), e);
-			}
-			//			this.controller.selectConfig();
-		}, "Error on task succeed on"));
+		}
+		catch (Exception e)
+		{
+			logger.error("Error on restore opened documents");
+			logger.error(e.getMessage(), e);
+		}
+		notifyPreloader(new Preloader.ProgressNotification(100));
+		notifyPreloader(new Preloader.StateChangeNotification(Preloader.StateChangeNotification.Type.BEFORE_START));
+	}
 
-		Thread thread = new Thread(load);
-		thread.setName("Load main gui" + thread.getId());
-		thread.start();
+	@Override
+	public void start(final Stage stage) throws Exception
+	{
+		controller.init(factory, Main.this, settings, stage);
+		Common.node = stage;
+		controller.display();
+		controller.initShortcuts();
+		this.isFromInit = false;
+		for (Document document : this.needDisplayDoc)
+		{
+			if (document != null)
+			{
+				document.display();
+			}
+		}
 	}
 	//endregion
 
@@ -838,8 +823,10 @@ public class Main extends Application
 					doc.load(reader);
 				}
 			}
-
-			doc.display();
+			if (!isFromInit)
+			{
+				doc.display();
+			}
 			doc.saved();
 			SettingsValue maxSettings = this.settings.getValueOrDefault(Settings.GLOBAL_NS, Settings.SETTINGS, Settings.MAX_LAST_COUNT, "3");
 			int max = Integer.parseInt(maxSettings.getValue());

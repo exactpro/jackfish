@@ -13,6 +13,7 @@ public class CssVariables
 	/**
 	 * preloader.css
 	 */
+	public static final String	PRELOADER_PROGRESS_BAR		= "preloaderProgressBar";
 	public static final String	PRELOADER_GRID				= "preloaderGrid";
 	public static final String	PRELOADER_JASK_FISH_TEXT	= "preloaderJackFishText";
 
