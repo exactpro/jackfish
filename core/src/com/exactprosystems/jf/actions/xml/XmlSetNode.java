@@ -21,18 +21,43 @@ import com.exactprosystems.jf.functions.Xml;
 
 @ActionAttribute(
 		group					= ActionGroups.XML,
-		generalDescription 		= "Sets value in the node of XML object.",
-		additionFieldsAllowed 	= true
+		generalDescription 		= "The purpose of the action is to transfer the content of the core element of the Xml structure.",
+		additionFieldsAllowed 	= true,
+		additionalDescription 	= "With the help of additional parameters attributes for the the core node can be transferred."
+				+ "Parameter is given the name of an attribute, the value of the parameter has the value of the attribute.",
+		examples 				= "{{`1. Create an Xml object by downloading it from the file.`}}"
+				+ "{{`2. Transfer to the core element content ‘Text for insert’`}}"
+				+ "{{`3. Contents of an xml file:`}}"
+				+ "{{#<note>"
+				+ "<to>\n"
+				+ "<friend>\n"
+				+ "<name id=\"first\">Tove</name>\n"
+				+ "</friend>\n"
+				+ "</to>\n"
+				+ "<from>\n"
+				+ "<friend>\n"
+				+ "<name id=\"second\">Jani</name>\n"
+				+ "</friend>\n"
+				+ "</from>\n"
+				+ "<heading>Reminder</heading>\n"
+				+ "<body>Don't forget me this weekend!</body>\n"
+				+ "</note>#}}"
+				+ "\n"
+				+ "{{##Id;#Action;#File\n"
+				+ "XML1;XmlLoadFromFile;'/path/Xml.xml'\n"
+				+ "\n"
+				+ "#Id;#Action;#Text;#Xml\n"
+				+ "XSN;XmlSetNode;'Text for insert';Xml#}}"
 	)
 public class XmlSetNode extends AbstractAction 
 {
 	public final static String xmlName = "Xml";
 	public final static String textName = "Text";
 
-	@ActionFieldAttribute(name = xmlName, mandatory = true, description = "XML object.")
+	@ActionFieldAttribute(name = xmlName, mandatory = true, description = "A type of Xml object to which an action needs to be applied.")
 	protected Xml 	xml 	= null;
 
-	@ActionFieldAttribute(name = textName, mandatory = false, description = "Text content to be set.")
+	@ActionFieldAttribute(name = textName, mandatory = false, description = "Content which has to be transferred to the element.")
 	protected String 	text;
 
 	public XmlSetNode()

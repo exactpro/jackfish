@@ -23,8 +23,33 @@ import java.util.List;
 
 @ActionAttribute(
 		group					= ActionGroups.XML,
-		generalDescription 		= "Reports XML object to the report.",
-		additionFieldsAllowed 	= false
+		generalDescription 		= "The purpose of this action is to map the content of the Xml object in the report of a matrix run."
+				+ "It is used when there is a need to go through the content of the Xml object.",
+		additionFieldsAllowed 	= false,
+		examples 				= "{{`1. Create an Xml object by downloading it from the file.`}}"
+				+ "{{`Contents of an xml file:`}}"
+				+ "{{#<note> \n"
+				+ "<to>\n"
+				+ "<friend>\n"
+				+ "<name id=\"first\">Tove</name>\n"
+				+ "</friend>\n"
+				+ "</to>\n"
+				+ "<from>\n"
+				+ "<friend>\n"
+				+ "<name id=\"second\">Jani</name>\n"
+				+ "</friend>\n"
+				+ "</from>\n"
+				+ "<heading>Reminder</heading>\n"
+				+ "<body>Don't forget me this weekend!</body>\n"
+				+ "</note>#}}"
+				+ "\n"
+				+ "{{`2. Reflect the content of the Xml object in the report.`}}"
+				+ "{{##Id;#Action;#File\n"
+				+ "XML1;XmlLoadFromFile;'/path/Xml.xml'\n"
+				+ "\n"
+				+ "\n"
+				+ "#Action;#Xml;#Title\n"
+				+ "XmlReport;Xml1;’Xml report’#}}"
 	)
 public class XmlReport extends AbstractAction 
 {
@@ -38,13 +63,13 @@ public class XmlReport extends AbstractAction
           + "created by the {{$ReportStart$}} action.")
 	protected ReportBuilder toReport;
 
-	@ActionFieldAttribute(name = xmlName, mandatory = true, description = "XML object.")
+	@ActionFieldAttribute(name = xmlName, mandatory = true, description = "The Xml structure that needs to be kept (preserved).")
 	protected Xml 	xml 	= null;
 
-	@ActionFieldAttribute(name = beforeTestCaseName, mandatory = false, description = "The name of Testcase before witch the xml will be put.")
+	@ActionFieldAttribute(name = beforeTestCaseName, mandatory = false, description = "Enables to output the table on the highest level of the report.")
 	protected String 	beforeTestCase 	= null;
 
-	@ActionFieldAttribute(name = titleName, mandatory = true, description = "Title.")
+	@ActionFieldAttribute(name = titleName, mandatory = true, description = "The heading of the output Xml structure.")
 	protected String 	title 	= null;
 
 	public XmlReport()

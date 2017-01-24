@@ -22,20 +22,39 @@ import com.exactprosystems.jf.functions.Xml;
 @ActionAttribute(
 		group					= ActionGroups.XML,
 		suffix					= "XMLCMP",
-		generalDescription 		= "Compares the given XMLs.",
+		generalDescription 		= "The purpose of the action is to compare two Xml structures.",
 		additionFieldsAllowed 	= false,
-		outputDescription 		= "True if XMLs are equal.",
-		outputType				= Boolean.class
+		outputDescription 		= "True, if Xml structures are equal.",
+		outputType				= Boolean.class,
+		examples 				= "{{`1. Create an Xml structure from a file.`}}"
+				+ "{{`2. Create two new Xml structures by choosing them using XPath from the uploaded Xml structure.`}}"
+				+ "{{`3. Compare two Xml structures.`}}"
+				+ "{{`4. Check the results of the comparison.`}}"
+				+ "\n"
+				+ "{{##Id;#Action;#File\n"
+				+ "XML1;XmlLoadFromFile;'/home/victor.krasnovid/Desktop/Xml.xml'\n"
+				+ "\n"
+				+ "\n"
+				+ "#Id;#Action;#Xpath;#NodeName;#Xml\n"
+				+ "XML2;XmlSelect;'//friend';'newParent';XML1.Out\n"
+				+ "\n"
+				+ "\n"
+				+ "#Id;#Action;#Expected;#Actual\n"
+				+ "XMLCMP1;XmlCompare;XML2.Out.getChildren().get(0);XML2.Out.getChildren().get(1)\n"
+				+ "\n"
+				+ "\n"
+				+ "#Assert;#Message\n"
+				+ "XMLCMP1.Out;'Xmls does not equals'#}}"
 	)
 public class XmlCompare extends AbstractAction 
 {
 	public final static String actualName = "Actual";
 	public final static String expectedName = "Expected";
 
-	@ActionFieldAttribute(name = actualName, mandatory = true, description = "One XML object, got from any source.")
+	@ActionFieldAttribute(name = actualName, mandatory = true, description = "An Xml structure is the one that has to undergo comparison.")
 	protected Xml actual = null;
 
-	@ActionFieldAttribute(name = expectedName, mandatory = true, description = "Another XML object, got from any source.")
+	@ActionFieldAttribute(name = expectedName, mandatory = true, description = "An Xml structure is the one that comparison has to be done to.")
 	protected Xml expected = null;
 
 	public XmlCompare()
