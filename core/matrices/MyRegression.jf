@@ -5,7 +5,7 @@ INIT;Test case;;;
     table;Table
     @;Off;Scenario;Name;TestSet;Start;Finish;Performer;Priority
     0;x;matrices/EE/EE1001;;Chrome;;;;0
-    1;x;matrices/EE/EE1002;;Chrome;3;5;;1
+    1;;matrices/EE/EE1002;;;3;4;;1
     2;;matrices/EE/EE1003;This is a special name;Chrome;;;;1
     3;;matrices/EE/EE1004;;Chrome;;;;1
     4;x;matrices/EE/EE1005;;Chrome;;;;1
@@ -23,6 +23,6 @@ Summary report;;;
     RF.repSummary;
 
     #Call;#fileName;#date
-    RF.repCsvExport;'reports/export.csv';
+    RF.repCsvExport;'reports';
 
 
