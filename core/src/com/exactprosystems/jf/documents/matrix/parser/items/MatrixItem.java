@@ -23,6 +23,7 @@ import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.Matrix;
 import com.exactprosystems.jf.documents.matrix.parser.*;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
+import com.exactprosystems.jf.functions.Notifier;
 import com.exactprosystems.jf.functions.RowTable;
 import org.apache.log4j.Logger;
 
@@ -918,7 +919,15 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 		return value != null && value.booleanValue();
 	}
 
-	
+    protected void doShowPopup(boolean showPopups, Context context, String message, Notifier notifier) 
+    {
+        if (showPopups)
+		{
+        	String str = this.getMatrix().getName() + "\n" + this.getItemName() + "\n" + message; 
+			context.getFactory().popup(str, notifier);
+		}
+	}
+
     protected final void doSreenshot(RowTable row, Object connection, ScreenshotKind screenshotKind, ScreenshotKind ... when) throws Exception
     {
         boolean isErrorStage = Arrays.stream(when).anyMatch(a -> ScreenshotKind.OnError == a);

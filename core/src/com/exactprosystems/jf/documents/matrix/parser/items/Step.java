@@ -11,6 +11,7 @@ package com.exactprosystems.jf.documents.matrix.parser.items;
 import com.csvreader.CsvWriter;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.error.ErrorKind;
+import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.common.report.ReportTable;
@@ -26,6 +27,7 @@ import com.exactprosystems.jf.documents.matrix.parser.ScreenshotKind;
 import com.exactprosystems.jf.documents.matrix.parser.SearchHelper;
 import com.exactprosystems.jf.documents.matrix.parser.Tokens;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
+import com.exactprosystems.jf.functions.Notifier;
 import com.exactprosystems.jf.functions.RowTable;
 import com.exactprosystems.jf.functions.Table;
 
@@ -171,16 +173,15 @@ public class Step extends MatrixItem
 
 		try
 		{
-			ScreenshotKind screenshotKind;
-
-			if (Str.IsNullOrEmpty(this.kind.get()))
+			Settings settings = getMatrix().getFactory().getSettings();
+			String kindStr = this.kind.get();
+			if (Str.IsNullOrEmpty(kindStr))
 			{
-				String name = this.owner.getFactory().getSettings().getValue("GLOBAL", "Matrix", "matrixDefaultScreenshot").getValue();
-				screenshotKind = ScreenshotKind.valueByName(name);
-			} else
-			{
-				screenshotKind = ScreenshotKind.valueByName(this.kind.get());
+		        kindStr = settings.getValueOrDefault(Settings.GLOBAL_NS, Settings.MATRIX_NAME, Settings.MATRIX_DEFAULT_SCREENSHOT, ScreenshotKind.Never.name()).getValue();	        		
 			}
+	        ScreenshotKind screenshotKind = ScreenshotKind.valueByName(kindStr);
+	        String str = settings.getValueOrDefault(Settings.GLOBAL_NS, Settings.MATRIX_NAME, Settings.MATRIX_POPUPS, "" + false).getValue();
+	        boolean showPopups = Boolean.parseBoolean(str);
 
             this.identify.evaluate(evaluator);
 			Object identifyValue = this.identify.getValue();
@@ -203,8 +204,7 @@ public class Step extends MatrixItem
 				table.add(row);
 			}
             doSreenshot(row, null, screenshotKind, ScreenshotKind.OnStart, ScreenshotKind.OnStartOrError);
-			
-			
+			doShowPopup(showPopups, context, "started", Notifier.Info);
 			
 			ret = new ReturnAndResult(start, Result.Passed);
 			res = ret.getResult();
@@ -221,6 +221,8 @@ public class Step extends MatrixItem
                 doSreenshot(row, null, screenshotKind, ScreenshotKind.OnError, ScreenshotKind.OnStartOrError, ScreenshotKind.OnFinishOrError);
                 
                 MatrixError error = ret.getError();
+                
+				doShowPopup(showPopups, context, "error: " + error, Notifier.Error);
                 
                 ReturnAndResult errorRet = context.runHandler(this, HandlerKind.OnStepError, report, error);
                 if (errorRet != null)
