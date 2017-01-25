@@ -37,6 +37,12 @@ public enum PieceKind implements Measure
 		}
 
 		@Override
+		protected boolean othersNeed()
+		{
+			return false;
+		}
+
+		@Override
 		protected String formulaTemplate()
 		{
 			return ".%1$s(%2$s)"; 
@@ -76,6 +82,12 @@ public enum PieceKind implements Measure
 		}
 
 		@Override
+		protected boolean othersNeed()
+		{
+			return false;
+		}
+
+		@Override
 		protected String formulaTemplate()
 		{
 			return ".%1$s(%5$s)";
@@ -109,6 +121,12 @@ public enum PieceKind implements Measure
 		}
 
 		@Override
+		protected boolean othersNeed()
+		{
+			return false;
+		}
+
+		@Override
 		protected String formulaTemplate()
 		{
 			return ".%1$s(%5$s)";
@@ -139,6 +157,12 @@ public enum PieceKind implements Measure
 		public Arrow arrow()
 		{
 			return null;
+		}
+
+		@Override
+		protected boolean othersNeed()
+		{
+			return false;
 		}
 
 		@Override
@@ -203,7 +227,13 @@ public enum PieceKind implements Measure
 		@Override
 		protected <T> void performDerived(Piece piece, OperationExecutor<T> executor, List<T> self, List<T> others, CheckingLayoutResult result) throws Exception
 		{
-			result.set(!self.isEmpty() && self.get(0) != null); 
+			boolean res = !self.isEmpty() && self.get(0) != null;
+			if (!res)
+			{
+				result.error(piece, "Element in not visible");
+				return;
+			}
+			result.set(true);
 		}
 	},
 
@@ -248,7 +278,13 @@ public enum PieceKind implements Measure
 		@Override
 		protected <T> void performDerived(Piece piece, OperationExecutor<T> executor, List<T> self, List<T> others, CheckingLayoutResult result) throws Exception
 		{
-			result.set(self.isEmpty() || self.get(0) == null);
+			boolean res = self.isEmpty() || self.get(0) == null;
+			if (!res)
+			{
+				result.error(piece, "Element in visible");
+				return;
+			}
+			result.set(true);
 		}
 	},
 
@@ -291,6 +327,12 @@ public enum PieceKind implements Measure
 		}
 
 		@Override
+		protected boolean othersNeed()
+		{
+			return false;
+		}
+
+		@Override
 		public int distance(Rectangle s, Rectangle o)
 		{
 			return 1;
@@ -324,6 +366,12 @@ public enum PieceKind implements Measure
 		protected String formulaTemplate()
 		{
 			return ".%1$s(%3$s)";
+		}
+
+		@Override
+		protected boolean othersNeed()
+		{
+			return false;
 		}
 
 		@Override
@@ -372,6 +420,12 @@ public enum PieceKind implements Measure
 		protected <T> void performDerived(Piece piece, OperationExecutor<T> executor, List<T> self, List<T> others, CheckingLayoutResult result) throws Exception
 		{
 			check(piece, executor, self, others, result, this);
+		}
+
+		@Override
+		protected boolean othersNeed()
+		{
+			return false;
 		}
 
 		@Override
