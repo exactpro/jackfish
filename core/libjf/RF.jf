@@ -456,8 +456,17 @@ RF;RegressionFramework
 
             #For;#From;#To;#Step
             rowScenarios;0;(int)scenarios.size - 1;1
-                #Id;#Action;#Connection;#Query;#scenario_id
-                selectFromTable;SQLselect;SQL;'SELECT d.scenario_id, d.error FROM details AS d WHERE scenario_id = ?\u003b';scenarios[rowScenarios].id
+                #Id;#RawText
+                selectFromTableText;Text
+                "SELECT d.scenario_id, d.error  FROM details AS d "
+                "WHERE scenario_id = ? "
+                "AND "
+                "	(NOT EXISTS (SELECT 1 FROM details WHERE scenario_id = ? AND step <> ""null"") OR step <> 'null')"
+                "  ;"
+                #EndRawText
+
+                #Id;#Action;#Connection;#Query;#scenario_id;#scenario_id
+                selectFromTable;SQLselect;SQL;selectFromTableText.toString();scenarios[rowScenarios].id;scenarios[rowScenarios].id
 
                 #Id;#Let
                 selectSteps;selectFromTable.Out
