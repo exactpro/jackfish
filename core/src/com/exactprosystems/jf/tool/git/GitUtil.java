@@ -94,7 +94,6 @@ public class GitUtil
 		{
 			Iterable<PushResult> call = git.push()
 					.setRefSpecs(new RefSpec(git.getRepository().getFullBranch()+":" + remoteBranchName))
-					.setAtomic(true)
 					.setCredentialsProvider(getCredentialsProvider(bean))
 					.call();
 			for (PushResult pushResult : call)
