@@ -306,7 +306,7 @@ public enum OperationKind
 		@Override
 		protected String formulaTemplate(Part part)
 		{
-			return ".checkRegexp('%7$s', '%8$s')";
+			return ".checkAttr('%7$s', '%8$s')";
 		}
 
 		@Override

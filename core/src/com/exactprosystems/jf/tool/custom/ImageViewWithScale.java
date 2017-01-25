@@ -16,10 +16,8 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Region;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 
 import javax.imageio.ImageIO;
@@ -41,6 +39,7 @@ public class ImageViewWithScale implements IScaleListener
 	private final HBox hBox;
 	private final ToggleButton btnInspect;
 	private final Label lblInspect;
+	private final Label lblColor;
 
 	private final Group group;
 
@@ -69,6 +68,8 @@ public class ImageViewWithScale implements IScaleListener
 		this.group = new Group();
 		this.btnInspect = new ToggleButton();
 		this.lblInspect = new Label();
+		this.lblColor = new Label();
+		Label lblColorName = new Label("Color of pixel : ");
 
 		this.scrollPane.setFitToHeight(true);
 		this.scrollPane.setFitToWidth(true);
@@ -93,6 +94,9 @@ public class ImageViewWithScale implements IScaleListener
 				, this.btnInspect
 				, Common.createSpacer(Common.SpacerEnum.HorizontalMid)
 				, this.lblInspect
+				, Common.createSpacer(Common.SpacerEnum.HorizontalMid)
+				, lblColorName
+				, this.lblColor
 		);
 
 		addWaitingPane();
@@ -226,6 +230,7 @@ public class ImageViewWithScale implements IScaleListener
 	{
 		this.group.setOnMouseMoved(event -> {
 			this.printMouseCoords(event);
+			this.printPixelColor(event);
 			if (needInspect)
 			{
 				moveOnImage(event.getX(), event.getY());
@@ -297,6 +302,24 @@ public class ImageViewWithScale implements IScaleListener
 		return inspected.isPresent() ? inspected.get() : null;
 	}
 
+	private javafx.scene.paint.Color getPixelColor(Point point)
+	{
+		try
+		{
+			point.setLocation(point.x / scale, point.y / scale);
+			int color = this.image.getRGB(point.x, point.y);
+			int red = (color & 0x00ff0000) >> 16;
+			int green = (color & 0x0000ff00) >> 8;
+			int blue = color & 0x000000ff;
+			return Color.rgb(red, green, blue);
+		}
+		catch (ArrayIndexOutOfBoundsException e)
+		{
+			return Color.TRANSPARENT;
+		}
+
+	}
+
 	private static double square(Rectangle rec)
 	{
 		if (rec == null)
@@ -310,6 +333,13 @@ public class ImageViewWithScale implements IScaleListener
 	{
 		Point point = getMouseCoords(event);
 		this.lblInspect.setText("X=" + point.x + " Y=" + point.y);
+	}
+
+	private void printPixelColor(MouseEvent event)
+	{
+		Color pixelColor = getPixelColor(getMouseCoords(event));
+		this.lblColor.setText(pixelColor.toString());
+		this.lblColor.setBackground(new Background(new BackgroundFill(pixelColor, null, null)));
 	}
 
 	private Point getMouseCoords(MouseEvent event)

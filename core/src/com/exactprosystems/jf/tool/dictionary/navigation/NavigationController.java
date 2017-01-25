@@ -74,6 +74,7 @@ public class NavigationController implements Initializable, ContainingParent
 	public Button btnCopyDialog;
 	public Button btnPasteDialog;
 	public Button btnTestWindow;
+	public Button btnShowWizard;
 
 	private Parent pane;
 
@@ -193,6 +194,11 @@ public class NavigationController implements Initializable, ContainingParent
 	public void openWizard(ActionEvent actionEvent)
 	{
 		tryCatch(() -> this.model.openDialogWizard(currentWindow()), "Error on open dialog wizard");
+	}
+
+	public void setDisableWizardButton(boolean flag)
+	{
+		this.btnShowWizard.setDisable(flag);
 	}
 	// ------------------------------------------------------------------------------------------------------------------
 

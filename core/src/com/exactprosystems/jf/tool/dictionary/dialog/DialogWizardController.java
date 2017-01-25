@@ -1,6 +1,5 @@
 package com.exactprosystems.jf.tool.dictionary.dialog;
 
-import com.exactprosystems.jf.api.app.ControlKind;
 import com.exactprosystems.jf.api.app.IControl;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
@@ -31,8 +30,7 @@ public class DialogWizardController implements Initializable, ContainingParent
 	public SplitPane verSplitPane;
 	public TableView tableView;
 	public TextField tfDialogName;
-	public ComboBox<ControlKind> cbControl;
-	public TextField tfOwnerId;
+	public Label lblSelfId;
 
 	private DialogWizard model;
 	private Alert dialog;
@@ -46,8 +44,6 @@ public class DialogWizardController implements Initializable, ContainingParent
 	@Override
 	public void initialize(URL location, ResourceBundle resources)
 	{
-		this.cbControl.getItems().addAll(ControlKind.values());
-
 		this.imageViewWithScale = new ImageViewWithScale();
 		this.verSplitPane.getItems().add(0, this.imageViewWithScale.getContent());
 
@@ -89,18 +85,7 @@ public class DialogWizardController implements Initializable, ContainingParent
 
 	void displaySelf(IControl self)
 	{
-		if (self != null)
-		{
-			this.tfOwnerId.setText(self.getID());
-			this.cbControl.getSelectionModel().select(self.getBindedClass());
-		}
-	}
-
-	void displayApplicationNotRun()
-	{
-		Text textApplicationNotRunning = new Text("Application not starting.\nStart application before call this wizard");
-		this.imageViewWithScale.replaceWaitingPane(textApplicationNotRunning);
-		this.treeViewWithRectangles.replaceWaitingPane(new Label());
+		this.lblSelfId.setText(self.getID());
 	}
 
 	void displayTree(Document document, int xOffset, int yOffset)
@@ -135,11 +120,6 @@ public class DialogWizardController implements Initializable, ContainingParent
 		node.setText("Exception :\n" + message);
 		node.setFill(Color.RED);
 		this.treeViewWithRectangles.replaceWaitingPane(node);
-	}
-
-	public void editOwner(ActionEvent actionEvent)
-	{
-
 	}
 
 	public void cancel(ActionEvent actionEvent)

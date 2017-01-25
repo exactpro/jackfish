@@ -38,12 +38,9 @@ public class DialogWizard
 		this.appConnection = appConnection;
 
 		this.controller = Common.loadController(DialogWizard.class.getResource("DialogWizard.fxml"));
-		if (this.window != null)
-		{
-			this.controller.init(this, this.window.getName());
-			this.selfControl = this.window.getSelfControl();
-			this.controller.displaySelf(selfControl);
-		}
+		this.controller.init(this, this.window.getName());
+		this.selfControl = this.window.getSelfControl();
+		this.controller.displaySelf(selfControl);
 	}
 
 	public void show()
@@ -58,89 +55,82 @@ public class DialogWizard
 
 	void displayImageAndTree()
 	{
-		if (!this.dictionary.isApplicationRun())
+		if (documentService != null)
 		{
-			this.controller.displayApplicationNotRun();
+			this.documentService.cancel();
 		}
-		else
+		if (imageService != null)
 		{
-			if (documentService != null)
-			{
-				this.documentService.cancel();
-			}
-			if (imageService != null)
-			{
-				this.imageService.cancel();
-			}
-			this.documentService = new Service<Document>()
-			{
-				@Override
-				protected Task<Document> createTask()
-				{
-					return new Task<Document>()
-					{
-						@Override
-						protected Document call() throws Exception
-						{
-							return service().getTree(getOwnerLocator());
-						}
-					};
-				}
-			};
-
-			this.imageService = new Service<ImageAndOffset>()
-			{
-				@Override
-				protected Task<ImageAndOffset> createTask()
-				{
-					return new Task<ImageAndOffset>()
-					{
-						@Override
-						protected ImageAndOffset call() throws Exception
-						{
-							int offsetX, offsetY;
-							Rectangle rectangle = service().getRectangle(null, getOwnerLocator());
-							offsetX = rectangle.x;
-							offsetY = rectangle.y;
-							BufferedImage image = service().getImage(null, getOwnerLocator()).getImage();
-							return new ImageAndOffset(image, offsetX, offsetY);
-						}
-					};
-				}
-			};
-			this.documentService.setExecutor(executor);
-			this.imageService.setExecutor(executor);
-
-			this.documentService.setOnSucceeded(event -> this.controller.displayTree(((Document) event.getSource().getValue()), xOffset, yOffset));
-			this.imageService.setOnSucceeded(event -> {
-				ImageAndOffset imageAndOffset = (ImageAndOffset) event.getSource().getValue();
-				xOffset = imageAndOffset.offsetX;
-				yOffset = imageAndOffset.offsetY;
-				this.controller.displayImage(imageAndOffset.image);
-			});
-
-			this.imageService.setOnFailed(event -> {
-				Throwable exception = event.getSource().getException();
-				String message = exception.getMessage();
-				if (exception.getCause() instanceof JFRemoteException)
-				{
-					message = ((JFRemoteException) exception.getCause()).getErrorKind().toString();
-				}
-				this.controller.displayImageFailing(message);
-			});
-
-			this.documentService.setOnFailed(event -> {
-				Throwable exception = event.getSource().getException();
-				String message = exception.getMessage();
-				if (exception.getCause() instanceof JFRemoteException)
-				{
-					message = ((JFRemoteException) exception.getCause()).getErrorKind().toString();
-				}
-				this.controller.displayDocumentFailing(message);
-			});
-			this.imageService.start();
-			this.documentService.start();
+			this.imageService.cancel();
 		}
+		this.documentService = new Service<Document>()
+		{
+			@Override
+			protected Task<Document> createTask()
+			{
+				return new Task<Document>()
+				{
+					@Override
+					protected Document call() throws Exception
+					{
+						return service().getTree(getOwnerLocator());
+					}
+				};
+			}
+		};
+
+		this.imageService = new Service<ImageAndOffset>()
+		{
+			@Override
+			protected Task<ImageAndOffset> createTask()
+			{
+				return new Task<ImageAndOffset>()
+				{
+					@Override
+					protected ImageAndOffset call() throws Exception
+					{
+						int offsetX, offsetY;
+						Rectangle rectangle = service().getRectangle(null, getOwnerLocator());
+						offsetX = rectangle.x;
+						offsetY = rectangle.y;
+						BufferedImage image = service().getImage(null, getOwnerLocator()).getImage();
+						return new ImageAndOffset(image, offsetX, offsetY);
+					}
+				};
+			}
+		};
+		this.documentService.setExecutor(executor);
+		this.imageService.setExecutor(executor);
+
+		this.documentService.setOnSucceeded(event -> this.controller.displayTree(((Document) event.getSource().getValue()), xOffset, yOffset));
+		this.imageService.setOnSucceeded(event -> {
+			ImageAndOffset imageAndOffset = (ImageAndOffset) event.getSource().getValue();
+			xOffset = imageAndOffset.offsetX;
+			yOffset = imageAndOffset.offsetY;
+			this.controller.displayImage(imageAndOffset.image);
+		});
+
+		this.imageService.setOnFailed(event -> {
+			Throwable exception = event.getSource().getException();
+			String message = exception.getMessage();
+			if (exception.getCause() instanceof JFRemoteException)
+			{
+				message = ((JFRemoteException) exception.getCause()).getErrorKind().toString();
+			}
+			this.controller.displayImageFailing(message);
+		});
+
+		this.documentService.setOnFailed(event -> {
+			Throwable exception = event.getSource().getException();
+			String message = exception.getMessage();
+			if (exception.getCause() instanceof JFRemoteException)
+			{
+				message = ((JFRemoteException) exception.getCause()).getErrorKind().toString();
+			}
+			this.controller.displayDocumentFailing(message);
+		});
+		this.imageService.start();
+		this.documentService.start();
 	}
 
 	private IRemoteApplication service()
