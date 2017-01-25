@@ -132,7 +132,7 @@ namespace UIAdapter
                             findType = dic.FirstOrDefault(x => x.Value.Equals(kind)).Key;
                         }
                         AutomationElementCollection collection = AutomationElement.RootElement.FindAll(TreeScope.Children, new PropertyCondition(AutomationElement.ControlTypeProperty, findType));
-                        logger.All("AutomationElement.RootElement.FindAll(TreeScope.Children, new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType." + findType.ProgrammaticName + "))", (getMilis() - startUIAutomation));
+                        logger.All("AutomationElement.RootElement.FindAll(TreeScope.Children, new PropertyCondition(AutomationElement.ControlTypeProperty, " + findType.ProgrammaticName + "))", (getMilis() - startUIAutomation));
 
                         foreach (AutomationElement e in collection)
                         {
@@ -142,6 +142,13 @@ namespace UIAdapter
                         bool sizeSet = height != Int32.MinValue && width != Int32.MinValue;
                         bool titleSet = !String.IsNullOrEmpty(title);
                         bool pidSet = pid != Int32.MinValue;
+
+                        logger.All("Size set : " + sizeSet);
+                        if (sizeSet) logger.All("H : " + height + " w : " + width);
+                        logger.All("Title set : " + titleSet);
+                        if (titleSet) logger.All("Title : " + title);
+                        logger.All("Pid set : " + pidSet);
+                        if (pidSet) logger.All("Pid : " + pid);
 
                         Predicate<AutomationElement> predicate = (e) =>
                         {
@@ -771,8 +778,8 @@ namespace UIAdapter
                 // https://msdn.microsoft.com/ru-ru/library/system.windows.forms.sendkeys.send(v=vs.110).aspx
                 UpdateHandler();
                 //toFront();
-                string keyPress = KeyboardNew.getKey(key.ToUpper());
-
+                string keyPress = addModifiers(KeyboardNew.getKey(key.ToUpper()));
+                logger.All("Send keys : " + keyPress);
                 SendKeys.SendWait(keyPress);
                 logger.All("method sendKeys", getMilis() - startMethod);
             }
