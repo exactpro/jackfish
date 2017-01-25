@@ -127,11 +127,6 @@ public class Context implements IContext, AutoCloseable, Cloneable
 	
 	public ReturnAndResult  runHandler(MatrixItem item, HandlerKind handlerKind, ReportBuilder report, MatrixError err) throws WrongSubcaseNameException 
     {
-       if (handlerKind == null)
-       {
-           return null;
-       }
-       
        String name = this.handlers.get(handlerKind);
        
        if (name == null)

@@ -12,7 +12,6 @@ import com.csvreader.CsvWriter;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.Settings;
-import com.exactprosystems.jf.common.Settings.SettingsValue;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.evaluator.Variables;
 import com.exactprosystems.jf.common.report.ReportBuilder;
@@ -21,6 +20,7 @@ import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.config.HandlerKind;
 import com.exactprosystems.jf.documents.matrix.parser.*;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
+import com.exactprosystems.jf.functions.Notifier;
 import com.exactprosystems.jf.functions.RowTable;
 import com.exactprosystems.jf.functions.Table;
 
@@ -223,14 +223,16 @@ public final class TestCase extends MatrixItem
 		
 		try
 		{
+			Settings settings = getMatrix().getFactory().getSettings();
 			String kindStr = this.kind.get();
 			if (Str.IsNullOrEmpty(kindStr))
 			{
-				Settings settings = getMatrix().getFactory().getSettings();
 		        kindStr = settings.getValueOrDefault(Settings.GLOBAL_NS, Settings.MATRIX_NAME, Settings.MATRIX_DEFAULT_SCREENSHOT, ScreenshotKind.Never.name()).getValue();	        		
 			}
 	        ScreenshotKind screenshotKind = ScreenshotKind.valueByName(kindStr);
-
+	        String str = settings.getValueOrDefault(Settings.GLOBAL_NS, Settings.MATRIX_NAME, Settings.MATRIX_POPUPS, "" + false).getValue();
+	        boolean showPopups = Boolean.parseBoolean(str);
+	        
 	        if (table != null && !isRepOff())
 			{
 				position = table.size();
@@ -263,7 +265,8 @@ public final class TestCase extends MatrixItem
 	        
             this.plugin.evaluate(evaluator);
 	        doSreenshot(row, this.plugin.getValue(), screenshotKind, ScreenshotKind.OnStart, ScreenshotKind.OnStartOrError);
-			
+			doShowPopup(showPopups, context, "started", Notifier.Info);
+	        
 			this.locals = evaluator.createLocals();
 			
 			context.runHandler(this, HandlerKind.OnTestCaseStart, report, null);
@@ -275,9 +278,10 @@ public final class TestCase extends MatrixItem
 			{
 	            this.plugin.evaluate(evaluator);
 	            doSreenshot(row, this.plugin.getValue(), screenshotKind, ScreenshotKind.OnError, ScreenshotKind.OnStartOrError, ScreenshotKind.OnFinishOrError);
-
 	            MatrixError error = ret.getError();
 			    
+				doShowPopup(showPopups, context, "error: " + error, Notifier.Error);
+
 			    ReturnAndResult errorRet = context.runHandler(this, HandlerKind.OnTestCaseError, report, error);
 	            if (errorRet != null)
 	            {
@@ -324,7 +328,7 @@ public final class TestCase extends MatrixItem
 		return ret;
 	}
 
-    @Override
+	@Override
 	protected void afterReport(ReportBuilder report)
 	{
         super.afterReport(report);

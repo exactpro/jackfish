@@ -388,7 +388,7 @@ RF;RegressionFramework
         testSetText;Text
         "SELECT "
         "  s.test_set "
-        "FROM regression.scenarios AS s "
+        "FROM scenarios AS s "
         "WHERE s.test_set <> '' AND s.manual = 0 AND s.run_id = ?"
         "GROUP BY s.test_set; "
         #EndRawText
@@ -519,7 +519,7 @@ RF;RegressionFramework
             TableReplace;'Passed';resultTable;{'Execution Status'};true;1
 
             #Id;#Let
-            fileName;testSet.test_set + '_' + DateTime.strDate(runId.create_time, 'yyyyMMdd') + '.csv'
+            fileName;testSet.test_set + DateTime.strDate(runId.create_time, '_yyyyMMdd_HHmmss') + '.csv'
 
             #Action;#Table;#File;#Delimiter
             TableSaveToFile;resultTable;pathToSave + '/' +fileName;','

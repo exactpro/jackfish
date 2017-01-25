@@ -1,11 +1,5 @@
 #Id;#TestCase;#Kind;#Depends;#For
 Step 1;This matrix randomly failed;OnFinish;;APPSTR1.Out
-    #Action;#Text;#Notifier
-    Show;'EE1006 randomly failed';Notifier.Success
-
-    #Action;#Text;#Notifier
-    Show;'Step 1';Notifier.Info
-
     #Action;#Time
     Wait;1000
 
@@ -15,31 +9,18 @@ Step 1;This matrix randomly failed;OnFinish;;APPSTR1.Out
 
 #Id;#TestCase;#Kind;#Depends;#For
 Step 2;Working;OnFinishOrError;Step 1;APPSTR1.Out
-    #Action;#Text;#Notifier
-    Show;'Step 2';Notifier.Info
-
     #Id;#Action;#AppConnection;#Width;#Height
     APPSZ1;ApplicationResize;APPSTR1.Out;400;400
 
     #Action;#Time
     Wait;1000
 
-    #If
-    Rnd.rnd(0, 9) % 2 == 0
-        #Action;#Text;#Notifier
-        Show;'Error by occasion';Notifier.Error
-
-        #Fail
-        'Error by occasion'
-
-    #EndIf
+    #Assert;#Message
+    Rnd.rnd(0, 9) % 2 == 0;'Error by occasion'
 
 
 #Id;#TestCase;#Kind;#Depends;#For
 Step 2;Working;;;
-    #Action;#Text;#Notifier
-    Show;'Step 3';Notifier.Info
-
     #Id;#Action;#AppConnection
     APPSTP1;ApplicationStop;APPSTR1.Out
 

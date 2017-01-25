@@ -11,6 +11,7 @@ package com.exactprosystems.jf.documents.matrix.parser.items;
 import com.csvreader.CsvWriter;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.error.ErrorKind;
+import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.common.report.ReportTable;
@@ -26,6 +27,7 @@ import com.exactprosystems.jf.documents.matrix.parser.ScreenshotKind;
 import com.exactprosystems.jf.documents.matrix.parser.SearchHelper;
 import com.exactprosystems.jf.documents.matrix.parser.Tokens;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
+import com.exactprosystems.jf.functions.Notifier;
 import com.exactprosystems.jf.functions.RowTable;
 import com.exactprosystems.jf.functions.Table;
 
@@ -38,7 +40,7 @@ import java.util.stream.Collectors;
 @MatrixItemAttribute(
 		description 	= "Elementary step in the script", 
 		shouldContain 	= { Tokens.Step },
-		mayContain 		= { Tokens.Off, Tokens.Kind, Tokens.RepOff },
+		mayContain 		= { Tokens.IgnoreErr, Tokens.Off, Tokens.Kind, Tokens.RepOff },
 		parents			= { Case.class, Else.class, For.class, ForEach.class, If.class,
 							OnError.class, Step.class, SubCase.class, TestCase.class, While.class },
 		real			= true,
@@ -127,8 +129,9 @@ public class Step extends MatrixItem
 		driver.showComment(this, layout, 0, 0, getComments());
 		driver.showTitle(this, layout, 1, 0, Tokens.Step.get(), context.getFactory().getSettings());
         driver.showExpressionField(this, layout, 1, 1, Tokens.Step.get(), this.identify, this.identify, null, null, null, null);
-        driver.showLabel(this, layout, 1, 2, "Screenshot");
-        driver.showComboBox(this, layout, 1, 3, this.kind, this.kind, v -> Arrays.stream(ScreenshotKind.values()).map(Enum::toString).collect(Collectors.toList()));
+        driver.showCheckBox(this, layout, 1, 2, Tokens.IgnoreErr.get(), this.ignoreErr, this.ignoreErr);
+        driver.showLabel(this, layout, 1, 3, "Screenshot");
+        driver.showComboBox(this, layout, 1, 4, this.kind, this.kind, v -> Arrays.stream(ScreenshotKind.values()).map(Enum::toString).collect(Collectors.toList()));
 
         return layout;
 	}
@@ -170,16 +173,15 @@ public class Step extends MatrixItem
 
 		try
 		{
-			ScreenshotKind screenshotKind;
-
-			if (Str.IsNullOrEmpty(this.kind.get()))
+			Settings settings = getMatrix().getFactory().getSettings();
+			String kindStr = this.kind.get();
+			if (Str.IsNullOrEmpty(kindStr))
 			{
-				String name = this.owner.getFactory().getSettings().getValue("GLOBAL", "Matrix", "matrixDefaultScreenshot").getValue();
-				screenshotKind = ScreenshotKind.valueByName(name);
-			} else
-			{
-				screenshotKind = ScreenshotKind.valueByName(this.kind.get());
+		        kindStr = settings.getValueOrDefault(Settings.GLOBAL_NS, Settings.MATRIX_NAME, Settings.MATRIX_DEFAULT_SCREENSHOT, ScreenshotKind.Never.name()).getValue();	        		
 			}
+	        ScreenshotKind screenshotKind = ScreenshotKind.valueByName(kindStr);
+	        String str = settings.getValueOrDefault(Settings.GLOBAL_NS, Settings.MATRIX_NAME, Settings.MATRIX_POPUPS, "" + false).getValue();
+	        boolean showPopups = Boolean.parseBoolean(str);
 
             this.identify.evaluate(evaluator);
 			Object identifyValue = this.identify.getValue();
@@ -202,8 +204,7 @@ public class Step extends MatrixItem
 				table.add(row);
 			}
             doSreenshot(row, null, screenshotKind, ScreenshotKind.OnStart, ScreenshotKind.OnStartOrError);
-			
-			
+			doShowPopup(showPopups, context, "started", Notifier.Info);
 			
 			ret = new ReturnAndResult(start, Result.Passed);
 			res = ret.getResult();
@@ -220,6 +221,8 @@ public class Step extends MatrixItem
                 doSreenshot(row, null, screenshotKind, ScreenshotKind.OnError, ScreenshotKind.OnStartOrError, ScreenshotKind.OnFinishOrError);
                 
                 MatrixError error = ret.getError();
+                
+				doShowPopup(showPopups, context, "error: " + error, Notifier.Error);
                 
                 ReturnAndResult errorRet = context.runHandler(this, HandlerKind.OnStepError, report, error);
                 if (errorRet != null)
