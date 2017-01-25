@@ -461,7 +461,7 @@ RF;RegressionFramework
                 "SELECT d.scenario_id, d.error  FROM details AS d "
                 "WHERE scenario_id = ? "
                 "AND "
-                "	(NOT EXISTS (SELECT 1 FROM details WHERE scenario_id = ? AND step <> ""null"") OR step <> 'null')"
+                "	(NOT EXISTS (SELECT 1 FROM details WHERE scenario_id = ? AND step <> 'null') OR step <> 'null')"
                 "  ;"
                 #EndRawText
 
