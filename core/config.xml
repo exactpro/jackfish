@@ -35,9 +35,9 @@
     <globalHandler enable="false">
         <onTestCaseStart>LIB.TCStart</onTestCaseStart>
         <onTestCaseFinish>LIB.TCFinish</onTestCaseFinish>
-        <onTestCaseError></onTestCaseError>
-        <onStepStart></onStepStart>
-        <onStepFinish></onStepFinish>
+        <onTestCaseError>LIB.TCError</onTestCaseError>
+        <onStepStart>LIB.SStart</onStepStart>
+        <onStepFinish>LIB.SFinish</onStepFinish>
         <onStepError></onStepError>
     </globalHandler>
     <sqlEntry>

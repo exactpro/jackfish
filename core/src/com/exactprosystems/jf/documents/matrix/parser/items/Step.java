@@ -166,7 +166,6 @@ public class Step extends MatrixItem
 	protected ReturnAndResult executeItSelf(long start, Context context, IMatrixListener listener, AbstractEvaluator evaluator, ReportBuilder report, Parameters parameters)
 	{
 		ReturnAndResult ret = null;
-		Result res = null;
 		Table table = context.getTable();
 		RowTable row = new RowTable();
 		int position = -1;
@@ -206,17 +205,16 @@ public class Step extends MatrixItem
             doSreenshot(row, null, screenshotKind, ScreenshotKind.OnStart, ScreenshotKind.OnStartOrError);
 			doShowPopup(showPopups, context, "started", Notifier.Info);
 			
-			ret = new ReturnAndResult(start, Result.Passed);
-			res = ret.getResult();
-			
 			report.outLine(this, null, String.format("Step %s", identifyValue), null);
 
-            context.runHandler(this, HandlerKind.OnStepStart, report, null);
+            ret = context.runHandler(start, context, listener, this, HandlerKind.OnStepStart, report, null, null);
 			
-			ret = executeChildren(start, context, listener, evaluator, report, new Class<?>[] { OnError.class }, null);
-			res = ret.getResult();
+            if (ret.getResult() != Result.Failed)
+            {
+                ret = executeChildren(start, context, listener, evaluator, report, new Class<?>[] { OnError.class }, null);
+            }
 
-            if (res == Result.Failed)
+            if (ret.getResult() == Result.Failed)
             {
                 doSreenshot(row, null, screenshotKind, ScreenshotKind.OnError, ScreenshotKind.OnStartOrError, ScreenshotKind.OnFinishOrError);
                 
@@ -224,31 +222,19 @@ public class Step extends MatrixItem
                 
 				doShowPopup(showPopups, context, "error: " + error, Notifier.Error);
                 
-                ReturnAndResult errorRet = context.runHandler(this, HandlerKind.OnStepError, report, error);
-                if (errorRet != null)
-                {
-                    ret = errorRet;
-                    res = ret.getResult();
-                }
-                else
-                {
-                    MatrixItem branchOnError = super.find(false, OnError.class, null);
-                    if (branchOnError != null && branchOnError instanceof OnError)
-                    {
-                        ((OnError)branchOnError).setError(error);
-                        
-                        ret = branchOnError.execute(context, listener, evaluator, report);
-                        res = ret.getResult();
-                    }
-                }
+                ret = context.runHandler(start, context, listener, this, HandlerKind.OnStepError, report, 
+                        error, super.find(false, OnError.class, null));
             }
-            context.runHandler(this, HandlerKind.OnStepFinish, report, null);
+            else
+            {
+                ret = context.runHandler(start, context, listener, this, HandlerKind.OnStepFinish, report, null, null);
+            }
 
             doSreenshot(row, null, screenshotKind, ScreenshotKind.OnFinish, ScreenshotKind.OnFinishOrError);
             if (table != null && position >= 0 && !isRepOff())
 			{
 				row.put(Context.timeColumn, 		ret.getTime());
-				row.put(Context.resultColumn, 		res);
+				row.put(Context.resultColumn, 		ret.getResult());
 				row.put(Context.errorColumn, 		ret.getError());
 				table.updateValue(position, row);
 			}
@@ -261,7 +247,7 @@ public class Step extends MatrixItem
             if (table != null && table.size() >= 0  && !isRepOff())
 			{
 				row.put(Context.timeColumn, 		ret.getTime());
-				row.put(Context.resultColumn, 		res);
+				row.put(Context.resultColumn, 		ret.getResult());
 				row.put(Context.errorColumn, 		new MatrixError(e.getMessage(), ErrorKind.EXCEPTION, this));
 				table.updateValue(position, row);
 			}
