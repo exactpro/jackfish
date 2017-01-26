@@ -22,6 +22,7 @@ using System.Windows.Automation.Text;
 using System.IO;
 using UIAdapter.Logger;
 using UIAdapter.Tables;
+using WindowsInput;
 
 namespace UIAdapter
 {
@@ -778,15 +779,114 @@ namespace UIAdapter
                 // https://msdn.microsoft.com/ru-ru/library/system.windows.forms.sendkeys.send(v=vs.110).aspx
                 UpdateHandler();
                 //toFront();
-                string keyPress = addModifiers(KeyboardNew.getKey(key.ToUpper()));
-                logger.All("Send keys : " + keyPress);
-                SendKeys.SendWait(keyPress);
-                logger.All("method sendKeys", getMilis() - startMethod);
+                //old implementtation. remote it if all works
+                /*
+                if (1 > 2) 
+                {
+                    string keyPress = addModifiers(KeyboardNew.getKey(key.ToUpper()));
+                    logger.All("Send keys : " + keyPress);
+                    try
+                    {
+                        SendKeys.Send(keyPress);
+                    }
+                    catch (InvalidOperationException e)
+                    {
+                        SendKeys.SendWait(keyPress);
+                    }
+                    
+                    logger.All("method sendKeys", getMilis() - startMethod);
+                }
+                 * */
+                //new implementation via WindowsInputSimulation
+                {
+                    VirtualKeyCode keyCode = KeyboardVirtual.getVirtualKeyCode(key);
+
+                    SimulateKeyPress(keyCode);
+                }
             }
             catch (Exception e)
             {
                 MakeError(e);
             }
+        }
+
+        private static void KeyDown(VirtualKeyCode keyCode)
+        {
+            var down = new INPUT();
+            down.Type = (UInt32)InputType.KEYBOARD;
+            down.Data.Keyboard = new KEYBDINPUT();
+            down.Data.Keyboard.Vk = (UInt16)keyCode;
+            // Scan Code here, was 0
+            down.Data.Keyboard.Scan = (ushort)Win32.UnsafeNativeMethods.MapVirtualKey((UInt16)keyCode, 0);
+            down.Data.Keyboard.Flags = 0;
+            down.Data.Keyboard.Time = 0;
+            down.Data.Keyboard.ExtraInfo = IntPtr.Zero;
+            INPUT[] inputList = new INPUT[1];
+            inputList[0] = down;
+
+            var numberOfSuccessfulSimulatedInputs = Win32.UnsafeNativeMethods.SendInput(1,inputList, Marshal.SizeOf(typeof(INPUT)));
+            if (numberOfSuccessfulSimulatedInputs == 0)
+                throw new Exception(string.Format("The key press simulation for {0} was not successful.",keyCode));
+        }
+
+        private static void KeyUp(VirtualKeyCode keyCode)
+        {
+            var up = new INPUT();
+            up.Type = (UInt32)InputType.KEYBOARD;
+            up.Data.Keyboard = new KEYBDINPUT();
+            up.Data.Keyboard.Vk = (UInt16)keyCode;
+            // Scan Code here, was 0
+            up.Data.Keyboard.Scan = (ushort)Win32.UnsafeNativeMethods.MapVirtualKey((UInt16)keyCode, 0);
+            up.Data.Keyboard.Flags = (UInt32)KeyboardFlag.KEYUP;
+            up.Data.Keyboard.Time = 0;
+            up.Data.Keyboard.ExtraInfo = IntPtr.Zero;
+
+            INPUT[] inputList = new INPUT[1];
+            inputList[0] = up;
+
+            var numberOfSuccessfulSimulatedInputs = Win32.UnsafeNativeMethods.SendInput(1,inputList, Marshal.SizeOf(typeof(INPUT)));
+            if (numberOfSuccessfulSimulatedInputs == 0)
+                throw new Exception(string.Format("The key press simulation for {0} was not successful.",keyCode));
+        }
+
+        private static void SimulateKeyPress(VirtualKeyCode keyCode)
+        {
+            KeyDown(keyCode);
+            KeyUp(keyCode);
+            /*
+            
+            var down = new INPUT();
+            down.Type = (UInt32)InputType.KEYBOARD;
+            down.Data.Keyboard = new KEYBDINPUT();
+            down.Data.Keyboard.Vk = (UInt16)keyCode;
+            // Scan Code here, was 0
+            down.Data.Keyboard.Scan = (ushort)Win32.UnsafeNativeMethods.MapVirtualKey((UInt16)keyCode, 0);
+            down.Data.Keyboard.Flags = 0;
+            down.Data.Keyboard.Time = 0;
+            down.Data.Keyboard.ExtraInfo = IntPtr.Zero;
+
+            var up = new INPUT();
+            up.Type = (UInt32)InputType.KEYBOARD;
+            up.Data.Keyboard = new KEYBDINPUT();
+            up.Data.Keyboard.Vk = (UInt16)keyCode;
+            // Scan Code here, was 0
+            up.Data.Keyboard.Scan = (ushort)Win32.UnsafeNativeMethods.MapVirtualKey((UInt16)keyCode, 0);
+            up.Data.Keyboard.Flags = (UInt32)KeyboardFlag.KEYUP;
+            up.Data.Keyboard.Time = 0;
+            up.Data.Keyboard.ExtraInfo = IntPtr.Zero;
+
+            INPUT[] inputList = new INPUT[2];
+            inputList[0] = down;
+            inputList[1] = up;
+
+            var numberOfSuccessfulSimulatedInputs = Win32.UnsafeNativeMethods.SendInput(2,
+                 inputList, Marshal.SizeOf(typeof(INPUT)));
+            if (numberOfSuccessfulSimulatedInputs == 0)
+                throw new Exception(
+                string.Format("The key press simulation for {0} was not successful.",
+                keyCode));
+             
+             */
         }
 
         [DllExport("upAndDown", CallingConvention.Cdecl)]
@@ -796,18 +896,30 @@ namespace UIAdapter
             {
                 long startMethod = getMilis();
                 UpdateHandler();
+                VirtualKeyCode keyCode = 0x00;
 
                 if (key.ToUpper().Equals("SHIFT"))
                 {
-                    isShiftDown = isDown;
+                    keyCode = VirtualKeyCode.SHIFT;
                 }
                 else if (key.ToUpper().Equals("CONTROL"))
                 {
-                    isControlDown = isDown;
+                    keyCode = VirtualKeyCode.CONTROL;
                 }
                 else if (key.ToUpper().Equals("ALT"))
                 {
-                    isAltDown = isDown;
+                    keyCode = VirtualKeyCode.MENU;
+                }
+                if (keyCode != 0x00)
+                {
+                    if (isDown)
+                    {
+                        KeyDown(keyCode);
+                    }
+                    else
+                    {
+                        KeyUp(keyCode);
+                    }
                 }
                 logger.All("method upAndDown", getMilis() - startMethod);
             }

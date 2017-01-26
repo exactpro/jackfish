@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Reflection;
 using System.Drawing;
+using WindowsInput;
 
 namespace UIAdapter
 {
@@ -153,6 +154,100 @@ namespace UIAdapter
         public static readonly KeyboardNew RIGHT = new KeyboardNew("{RIGHT}");
 
         public static readonly KeyboardNew UNDERSCORE = new KeyboardNew("_");
+    }
+
+    public class KeyboardVirtual
+    {
+        private string key;
+
+        private KeyboardVirtual(string key)
+        {
+            this.key = key;
+        }
+
+        public static VirtualKeyCode getVirtualKeyCode(string key)
+        {
+            switch (key.ToLower())
+            {
+                case "escape": return VirtualKeyCode.ESCAPE;
+                case "f1": return VirtualKeyCode.F1;
+                case "f2": return VirtualKeyCode.F2;
+                case "f3": return VirtualKeyCode.F3;
+                case "f4": return VirtualKeyCode.F4;
+                case "f5": return VirtualKeyCode.F5;
+                case "f6": return VirtualKeyCode.F6;
+                case "f7": return VirtualKeyCode.F7;
+                case "f8": return VirtualKeyCode.F8;
+                case "f9": return VirtualKeyCode.F9;
+                case "f10": return VirtualKeyCode.F10;
+                case "f11": return VirtualKeyCode.F11;
+                case "f12": return VirtualKeyCode.F12;
+                case "dig1": return VirtualKeyCode.VK_1;
+                case "dig2": return VirtualKeyCode.VK_2;
+                case "dig3": return VirtualKeyCode.VK_3;
+                case "dig4": return VirtualKeyCode.VK_4;
+                case "dig5": return VirtualKeyCode.VK_5;
+                case "dig6": return VirtualKeyCode.VK_6;
+                case "dig7": return VirtualKeyCode.VK_7;
+                case "dig8": return VirtualKeyCode.VK_8;
+                case "dig9": return VirtualKeyCode.VK_9;
+                case "dig0": return VirtualKeyCode.VK_0;
+                case "back_space": return VirtualKeyCode.BACK;
+                case "insert": return VirtualKeyCode.INSERT;
+                case "home": return VirtualKeyCode.HOME;
+                case "page_up": return VirtualKeyCode.PRIOR;
+                case "tab": return VirtualKeyCode.TAB;
+                case "q": return VirtualKeyCode.VK_Q;
+                case "w": return VirtualKeyCode.VK_W;
+                case "e": return VirtualKeyCode.VK_E;
+                case "r": return VirtualKeyCode.VK_R;
+                case "t": return VirtualKeyCode.VK_T;
+                case "y": return VirtualKeyCode.VK_Y;
+                case "u": return VirtualKeyCode.VK_U;
+                case "i": return VirtualKeyCode.VK_I;
+                case "o": return VirtualKeyCode.VK_O;
+                case "p": return VirtualKeyCode.VK_P;
+                case "slash": return VirtualKeyCode.OEM_2;
+                case "back_slash": return VirtualKeyCode.OEM_102;
+                case "delete": return VirtualKeyCode.DELETE;
+                case "end": return VirtualKeyCode.END;
+                case "page_down": return VirtualKeyCode.NEXT;
+                case "caps_lock": return VirtualKeyCode.CAPITAL;
+                case "a": return VirtualKeyCode.VK_A;
+                case "s": return VirtualKeyCode.VK_S;
+                case "d": return VirtualKeyCode.VK_D;
+                case "f": return VirtualKeyCode.VK_F;
+                case "g": return VirtualKeyCode.VK_G;
+                case "h": return VirtualKeyCode.VK_H;
+                case "j": return VirtualKeyCode.VK_J;
+                case "k": return VirtualKeyCode.VK_K;
+                case "l": return VirtualKeyCode.VK_L;
+                case "semicolon": return VirtualKeyCode.OEM_1;
+                case "quote": return VirtualKeyCode.OEM_7;
+                case "double_quote": return VirtualKeyCode.OEM_7; //todo
+                case "enter": return VirtualKeyCode.RETURN;
+                case "shift": return VirtualKeyCode.SHIFT;
+                case "z": return VirtualKeyCode.VK_Z;
+                case "x": return VirtualKeyCode.VK_X;
+                case "c": return VirtualKeyCode.VK_C;
+                case "v": return VirtualKeyCode.VK_V;
+                case "b": return VirtualKeyCode.VK_B;
+                case "n": return VirtualKeyCode.VK_N;
+                case "m": return VirtualKeyCode.VK_M;
+                case "dot": return VirtualKeyCode.OEM_PERIOD;
+                case "up": return VirtualKeyCode.UP;
+                case "control": return VirtualKeyCode.CONTROL;
+                case "alt": return VirtualKeyCode.MENU;
+                case "space": return VirtualKeyCode.SPACE;
+                case "left": return VirtualKeyCode.LEFT;
+                case "down": return VirtualKeyCode.DOWN;
+                case "right": return VirtualKeyCode.RIGHT;
+                case "plus": return VirtualKeyCode.OEM_PLUS;
+                case "minus": return VirtualKeyCode.OEM_MINUS;
+                case "underscore": return VirtualKeyCode.OEM_MINUS; //todo
+                default: return VirtualKeyCode.VK_Q;
+            }
+        }
     }
 
     #endregion
