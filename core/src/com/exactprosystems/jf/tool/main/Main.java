@@ -681,7 +681,7 @@ public class Main extends Application
 		if (!this.toolbarMatrices.contains(fullPath))
 		{
 			this.controller.addToToolbar(fullPath);
-			this.settings.setValue(Settings.MAIN_NS, Settings.MATRIX_TOOLBAR, new File(fullPath).getAbsolutePath(), new File(fullPath).getAbsolutePath());
+			this.settings.setValue(Settings.MAIN_NS, Settings.MATRIX_TOOLBAR, new File(fullPath).getPath(), new File(fullPath).getPath());
 			this.settings.saveIfNeeded();
 		}
 	}
