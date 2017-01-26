@@ -49,7 +49,7 @@ RF;RegressionFramework
         needD;DateTime.date(curD.years(),curD.months(),curD.days(),curD.hours(),curD.minutes(),curD.seconds())
 
         #Id;#Action;#Connection;#Query;#CreateTime;#ToolVersion;#AppVersion
-        selectRunId;SQLinsert;SQL;'INSERT INTO runs (create_time, duration, tool_version, app_version) VALUES (?, -1, ?, ?)\u003b';needD;VersionInfo.getVersion();_rf_app_version
+        selectRunId;SQLinsert;SQL;'INSERT INTO runs (create_time, duration, tool_version, app_version) VALUES (?, -1, ?, ?)\u003b';needD;VersionInfo.getVersion();config_version
 
         #Id;#Let
         runId;selectRunId.Out[0]
@@ -107,7 +107,7 @@ RF;RegressionFramework
                     totalCount;totalCount + 1
 
                     #Action;#Str
-                    Print;'Starting: ' + row.Scenario + '.jf'
+                    Print;'Starting: ' + scenarioName
 
                     #Id;#Action;#Matrix;#Parameter
                     MXRN;MatrixRun;row.Scenario + '.jf';counter
@@ -456,8 +456,17 @@ RF;RegressionFramework
 
             #For;#From;#To;#Step
             rowScenarios;0;(int)scenarios.size - 1;1
-                #Id;#Action;#Connection;#Query;#scenario_id
-                selectFromTable;SQLselect;SQL;'SELECT d.scenario_id, d.error FROM details AS d WHERE scenario_id = ?\u003b';scenarios[rowScenarios].id
+                #Id;#RawText
+                selectFromTableText;Text
+                "SELECT d.scenario_id, d.error  FROM details AS d "
+                "WHERE scenario_id = ? "
+                "AND "
+                "	(NOT EXISTS (SELECT 1 FROM details WHERE scenario_id = ? AND step <> 'null') OR step <> 'null')"
+                "  ;"
+                #EndRawText
+
+                #Id;#Action;#Connection;#Query;#scenario_id;#scenario_id
+                selectFromTable;SQLselect;SQL;selectFromTableText.toString();scenarios[rowScenarios].id;scenarios[rowScenarios].id
 
                 #Id;#Let
                 selectSteps;selectFromTable.Out

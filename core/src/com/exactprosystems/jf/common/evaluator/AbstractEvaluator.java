@@ -14,7 +14,8 @@ import java.util.Map;
 
 public abstract class AbstractEvaluator 
 {
-	public final static String EVALUATOR_NAME = "evaluator";
+	public final static String EVALUATOR_NAME   = "evaluator";
+    public final static String VERSION_NAME     = "config_version";
 	
 	public abstract void addImports(Collection<String> imports);
 	
@@ -33,13 +34,14 @@ public abstract class AbstractEvaluator
 		this.initVars.put(key, value);
 	}
 
-	public final void reset() throws Exception
+	public final void reset(String version) throws Exception
 	{
 		getLocals().getVars().clear();
 		getGlobals().getVars().clear();
 		
 		getGlobals().getVars().putAll(this.initVars);
 		getGlobals().set(EVALUATOR_NAME, this);
+        getGlobals().set(VERSION_NAME, version);
 	}
 
 	public final Object compile(String expression) throws Exception

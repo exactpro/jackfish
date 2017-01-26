@@ -83,6 +83,17 @@
     <Compile Include="TableFactory.cs" />
     <Compile Include="WinMatcher.cs" />
     <Compile Include="WinUtils.cs" />
+    <Compile Include="HARDWAREINPUT.cs" />
+    <Compile Include="INPUT.cs" />
+    <Compile Include="InputSimulator.cs" />
+    <Compile Include="InputType.cs" />
+    <Compile Include="KEYBDINPUT.cs" />
+    <Compile Include="KeyboardFlag.cs" />
+    <Compile Include="MouseFlag.cs" />
+    <Compile Include="MOUSEINPUT.cs" />
+    <Compile Include="MOUSEKEYBDHARDWAREINPUT.cs" />
+    <Compile Include="VirtualKeyCode.cs" />
+    <Compile Include="XButton.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

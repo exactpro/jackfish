@@ -400,7 +400,7 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 	}
 
 	@Override
-	protected ImageWrapper getImageDerived(Locator owner, Locator element) throws Exception
+	protected ImageWrapper getImageDerived(Locator owner, Locator element, int x1, int y1, int x2, int y2) throws Exception
 	{
 		try
 		{
@@ -421,12 +421,12 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 			}
 			int length = 100 * 100;
 			int[] arr = new int[length];
-			int count = this.driver.getImage(arr, uiProxyJNA);
+			int count = this.driver.getImage(arr, uiProxyJNA, x1, y1, x2, y2);
 			if (count > length)
 			{
 				length = count;
 				arr = new int[length];
-				this.driver.getImage(arr, uiProxyJNA);
+				this.driver.getImage(arr, uiProxyJNA, x1, y1, x2, y2);
 			}
 			int[] result = new int[arr.length - 2];
 			System.arraycopy(arr, 2, result, 0, arr.length - 2);

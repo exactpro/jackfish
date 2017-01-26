@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Runtime.InteropServices;
+using WindowsInput;
 
 
 namespace UIAdapter.Win32
@@ -15,6 +16,12 @@ namespace UIAdapter.Win32
     {
         [DllImport("user32.dll", CharSet = CharSet.Auto)]
         internal static extern IntPtr SendMessage(IntPtr hWnd, uint Msg, IntPtr wParam, string lParam);
+
+        [DllImport("user32.dll")]
+        internal static extern uint MapVirtualKey(uint uCode, uint uMapType);
+        [DllImport("user32.dll", SetLastError = true)]
+        internal static extern uint SendInput(uint numberOfInputs, INPUT[] inputs, int sizeOfInputStructure);
+
         [DllImport("user32.dll")]
         internal static extern int GetClassName(IntPtr hwnd, StringBuilder lpClassName, int nMaxCount);
         [DllImport("gdi32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]

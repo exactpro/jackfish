@@ -841,7 +841,7 @@ public class DictionaryFx extends GuiDictionary
 			{
 				this.controller.println(str);
 			}
-			ImageWrapper imageWrapper = service.getImage(owner, locator);
+			ImageWrapper imageWrapper = service.getImage(owner, locator, Integer.MIN_VALUE, Integer.MIN_VALUE, Integer.MIN_VALUE, Integer.MIN_VALUE);
 			displayImage(imageWrapper);
 		}
 	}

@@ -408,7 +408,7 @@ public class SwingRemoteApplication extends RemoteApplication
 	}
 
 	@Override
-	protected ImageWrapper getImageDerived(final Locator owner, final Locator element) throws Exception
+	protected ImageWrapper getImageDerived(final Locator owner, final Locator element, int x1, int y1, int x2, int y2) throws Exception
 	{
 		try
 		{

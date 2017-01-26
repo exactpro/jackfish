@@ -55,7 +55,7 @@ public interface JnaDriver extends Library {
 	void setText(String elementId, String text);
 	String getProperty(String elementId, int propertyId);
 	int getPatterns(int[] arr, int len, String elementId);
-	int getImage(int[] arr, int len, String id);
+	int getImage(int[] arr, int len, String id, int x1, int y1, int x2, int y2);
 
 	void clearCache();
 

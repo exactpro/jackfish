@@ -215,7 +215,6 @@ public final class TestCase extends MatrixItem
 	@Override
 	protected ReturnAndResult executeItSelf(long start, Context context, IMatrixListener listener, AbstractEvaluator evaluator, ReportBuilder report, Parameters parameters)
 	{
-		Result res = null;
 		ReturnAndResult ret = null;
 		Table table = context.getTable();
 		RowTable row = new RowTable();
@@ -250,12 +249,11 @@ public final class TestCase extends MatrixItem
 	            if (testcase != null && testcase.result != null && testcase.result.getResult() == Result.Failed)
 	            {
 	                ret = new ReturnAndResult(start, Result.Failed, "Fail due the TestCase " + this.depends.get() + " is failed", ErrorKind.FAIL, this);
-	                res = ret.getResult();
 	                
 	                if (table != null && table.size() >= 0  && !isRepOff())
 	                {
 	                    row.put(Context.timeColumn,         ret.getTime());
-	                    row.put(Context.resultColumn,       res);
+	                    row.put(Context.resultColumn,       ret.getResult());
 	                    row.put(Context.errorColumn,        ret.getError());
 	                    table.updateValue(position, row);
 	                }
@@ -269,12 +267,14 @@ public final class TestCase extends MatrixItem
 	        
 			this.locals = evaluator.createLocals();
 			
-			context.runHandler(this, HandlerKind.OnTestCaseStart, report, null);
+			ret = context.runHandler(start, context, listener, this, HandlerKind.OnTestCaseStart, report, null, null);
 
-			ret = executeChildren(start, context, listener, evaluator, report, new Class<?>[] { OnError.class }, this.locals);
-			res = ret.getResult();
+			if (ret.getResult() != Result.Failed)
+			{
+    			ret = executeChildren(start, context, listener, evaluator, report, new Class<?>[] { OnError.class }, this.locals);
+			}
 			
-			if (res == Result.Failed)
+			if (ret.getResult() == Result.Failed)
 			{
 	            this.plugin.evaluate(evaluator);
 	            doSreenshot(row, this.plugin.getValue(), screenshotKind, ScreenshotKind.OnError, ScreenshotKind.OnStartOrError, ScreenshotKind.OnFinishOrError);
@@ -282,32 +282,20 @@ public final class TestCase extends MatrixItem
 			    
 				doShowPopup(showPopups, context, "error: " + error, Notifier.Error);
 
-			    ReturnAndResult errorRet = context.runHandler(this, HandlerKind.OnTestCaseError, report, error);
-	            if (errorRet != null)
-	            {
-	                ret = errorRet;
-	                res = ret.getResult();
-	            }
-	            else
-	            {
-        		    MatrixItem branchOnError = super.find(false, OnError.class, null);
-        			if (branchOnError != null && branchOnError instanceof OnError)
-        			{
-        				((OnError)branchOnError).setError(error);
-        				
-        				ret = branchOnError.execute(context, listener, evaluator, report);
-        				res = ret.getResult();
-        			}
-	            }
+				ret = context.runHandler(start, context, listener, this, HandlerKind.OnTestCaseError, report, 
+			            error, super.find(false, OnError.class, null));
 			}
-	        context.runHandler(this, HandlerKind.OnTestCaseFinish, report, null);
+			else
+			{
+			    ret = context.runHandler(start, context, listener, this, HandlerKind.OnTestCaseFinish, report, null, null);
+			}
 			
             this.plugin.evaluate(evaluator);
             doSreenshot(row, this.plugin.getValue(), screenshotKind, ScreenshotKind.OnFinish, ScreenshotKind.OnFinishOrError);
             if (table != null && position >= 0 && !isRepOff())
 			{
 				row.put(Context.timeColumn, 		ret.getTime());
-				row.put(Context.resultColumn, 		res);
+				row.put(Context.resultColumn, 		ret.getResult());
 				row.put(Context.errorColumn, 		ret.getError());
 				table.updateValue(position, row);
 			}
@@ -319,7 +307,7 @@ public final class TestCase extends MatrixItem
 			if (table != null && table.size() >= 0  && !isRepOff())
 			{
 				row.put(Context.timeColumn, 		ret.getTime());
-				row.put(Context.resultColumn, 		res);
+				row.put(Context.resultColumn, 		ret.getResult());
 				row.put(Context.errorColumn, 		new MatrixError(e.getMessage(), ErrorKind.EXCEPTION, this));
 				table.updateValue(position, row);
 			}

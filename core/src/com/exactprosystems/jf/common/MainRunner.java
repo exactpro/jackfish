@@ -96,6 +96,7 @@ public class MainRunner
 					.withDescription("Specify the username which will be used when tool works with a git repository. ")
 					.create("username");
 
+            Option saveDocs     = new Option("docs",    "Save the documentation in rtf format." );
 			Option saveSchema 	= new Option("schema", 	"Save the config schema." );
 			Option help 		= new Option("help", 	"Print this message." );
 			Option versionOut 	= new Option("version", "Print version only.");
@@ -113,7 +114,8 @@ public class MainRunner
 			options.addOption(password);
 			options.addOption(username);
 			options.addOption(versionOut);
-			options.addOption(saveSchema);
+			options.addOption(saveDocs);
+            options.addOption(saveSchema);
 			options.addOption(help);
 			options.addOption(shortPaths);
             options.addOption(console);
@@ -152,7 +154,14 @@ public class MainRunner
 		    	System.exit(0);
 		    }
 
-		    if (line.hasOption(versionOut.getOpt()))
+            if (line.hasOption(saveDocs.getOpt()))
+            {
+                saveDocs();
+                
+                System.exit(0);
+            }
+
+            if (line.hasOption(versionOut.getOpt()))
 		    {
 				printVersion();
 				
@@ -531,6 +540,11 @@ public class MainRunner
 		}
 	}
 
+	
+    private static void saveDocs()
+    {
+        // TODO: implement savings of docs here
+    }
 	
 	private static void saveSchema(Class<?> clazz, final String fileName)
 	{

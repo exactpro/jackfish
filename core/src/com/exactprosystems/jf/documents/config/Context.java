@@ -11,6 +11,7 @@ package com.exactprosystems.jf.documents.config;
 import com.exactprosystems.jf.actions.ReadableValue;
 import com.exactprosystems.jf.api.common.IContext;
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.api.error.common.WrongSubcaseNameException;
 import com.exactprosystems.jf.common.MatrixRunner;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
@@ -19,6 +20,7 @@ import com.exactprosystems.jf.documents.DocumentFactory;
 import com.exactprosystems.jf.documents.matrix.Matrix;
 import com.exactprosystems.jf.documents.matrix.parser.Parameter;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
+import com.exactprosystems.jf.documents.matrix.parser.Result;
 import com.exactprosystems.jf.documents.matrix.parser.ReturnAndResult;
 import com.exactprosystems.jf.documents.matrix.parser.items.*;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
@@ -93,7 +95,7 @@ public class Context implements IContext, AutoCloseable, Cloneable
     public void reset() throws Exception
     {
         this.handlers.clear();
-        this.evaluator.reset();
+        this.evaluator.reset("" + getConfiguration().getVersion());
     }
     
 	public void createResultTable()
@@ -125,10 +127,17 @@ public class Context implements IContext, AutoCloseable, Cloneable
         }
     }
 	
-	public ReturnAndResult  runHandler(MatrixItem item, HandlerKind handlerKind, ReportBuilder report, MatrixError err) throws WrongSubcaseNameException 
+	public ReturnAndResult  runHandler(long start, Context context, IMatrixListener listener, 
+	        MatrixItem item, HandlerKind handlerKind, ReportBuilder report, MatrixError err, MatrixItem localHandler) 
     {
+        if (localHandler instanceof OnError)
+        {
+            ((OnError)localHandler).setError(err);
+            
+            return localHandler.execute(context, listener, evaluator, report);
+        }
+	    
        String name = this.handlers.get(handlerKind);
-       
        if (name == null)
        {
            GlobalHandler globalHandler = this.getConfiguration().getGlobalHandler(); 
@@ -163,10 +172,14 @@ public class Context implements IContext, AutoCloseable, Cloneable
            }
            else
            {
-               throw new WrongSubcaseNameException(name);
+               return new ReturnAndResult(start, Result.Failed, "Handler " + name + " is not found", ErrorKind.FAIL, item);
            }
        }
-       return null;
+       if (err != null)
+       {
+           return new ReturnAndResult(start, Result.Failed, err.Message, err.Kind, err.Where);
+       }
+       return new ReturnAndResult(start, Result.Passed, null);
     }
 	
     public void showReport(String reportName)
