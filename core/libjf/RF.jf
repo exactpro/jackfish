@@ -107,7 +107,7 @@ RF;RegressionFramework
                     totalCount;totalCount + 1
 
                     #Action;#Str
-                    Print;'Starting: ' + row.Scenario + '.jf'
+                    Print;'Starting: ' + scenarioName
 
                     #Id;#Action;#Matrix;#Parameter
                     MXRN;MatrixRun;row.Scenario + '.jf';counter

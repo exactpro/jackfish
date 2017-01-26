@@ -86,7 +86,7 @@ public class ConfigurationTreeNode extends TreeNode
 	public List<TablePair> getParameters()
 	{
 		List<TablePair> list = new ArrayList<>();
-        list.add(TablePair.TablePairBuilder.create(Configuration.version, this.model.getVersionStr()).edit(true).build());
+		list.add(TablePair.TablePairBuilder.create(Configuration.version, this.model.getVersionStr()).edit(true).build());
 		list.add(TablePair.TablePairBuilder.create(Configuration.matrix, this.model.matrixToString()).tooltipSeparator(ConfigurationFx.SEPARATOR).edit(false).build());
 		list.add(TablePair.TablePairBuilder.create(Configuration.library, this.model.libraryToString()).tooltipSeparator(ConfigurationFx.SEPARATOR).edit(false).build());
 		list.add(TablePair.TablePairBuilder.create("gitRemotePath", this.model.gitRemotePath()).edit(true).build());
