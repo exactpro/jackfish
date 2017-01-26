@@ -1,3 +1,6 @@
+23.01.2017 4.3.0.1863
+Added possible to specify coordinates for ImageGet action
+
 --------------------------------------------------------------------------------
 23.01.2017 4.3.0.1837
 #39811 bug:  Global Handler doesn't work 

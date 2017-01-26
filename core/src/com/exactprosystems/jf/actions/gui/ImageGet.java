@@ -38,7 +38,11 @@ public class ImageGet extends AbstractAction
 	public final static String	dialogName		= "Dialog";
 	public final static String	nameName		= "Name";
 	public final static String	descriptionName	= "Description";
-	
+	public final static String 	x_leftUp 	= "X_leftUp";
+	public final static String	y_leftUp	= "Y_leftUp";
+	public final static String	x_rightDown	= "X_rightDown";
+	public final static String	y_rightDown	= "Y_rightDown";
+
 	@ActionFieldAttribute(name = connectionName, mandatory = true, description = "The application connection.")
 	protected AppConnection		connection		= null;
 
@@ -50,6 +54,18 @@ public class ImageGet extends AbstractAction
 
 	@ActionFieldAttribute(name = descriptionName, mandatory = false, description = "A description of this image. In the report it become a tooltip.")
 	protected String			description;
+
+	@ActionFieldAttribute(name = x_leftUp, mandatory = false, description = "X coordinate is for left upper corner")
+	protected Integer			x1					= Integer.MIN_VALUE;
+
+	@ActionFieldAttribute(name = y_leftUp, mandatory = false, description = "Y coordinate is for left upper corner")
+	protected Integer			y1					= Integer.MIN_VALUE;
+
+	@ActionFieldAttribute(name = x_rightDown, mandatory = false, description = "X coordinate is for right bottom corner")
+	protected Integer			x2					= Integer.MIN_VALUE;
+
+	@ActionFieldAttribute(name = y_rightDown, mandatory = false, description = "Y coordinate is for right bottom corner")
+	protected Integer			y2					= Integer.MIN_VALUE;
 
 	public ImageGet()
 	{
@@ -90,10 +106,10 @@ public class ImageGet extends AbstractAction
 		String id = connection.getId();
 		IRemoteApplication service = app.service();
 		ImageWrapper imageWrapper = null;
-		
+
 		if (this.dialog == null)
 		{
-			imageWrapper = service.getImage(null, null);
+			imageWrapper = service.getImage(null, null, x1, y1, x2, y2);
 		}
 		else
 		{
@@ -106,7 +122,7 @@ public class ImageGet extends AbstractAction
 				for(IControl self : window.getControls(SectionKind.Self))
 				{
 					found = true;
-					imageWrapper = service.getImage(null, self.locator());
+					imageWrapper = service.getImage(null, self.locator(), x1, y1, x2, y2);
 					break;
 				}
 	
@@ -125,7 +141,7 @@ public class ImageGet extends AbstractAction
 				}
 				IControl owner = window.getOwnerControl(control);
 				
-				imageWrapper = service.getImage(owner == null ? null : owner.locator(), control.locator());
+				imageWrapper = service.getImage(owner == null ? null : owner.locator(), control.locator(), x1, y1, x2, y2);
 			}
 		}
 
