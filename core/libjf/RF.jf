@@ -49,7 +49,7 @@ RF;RegressionFramework
         needD;DateTime.date(curD.years(),curD.months(),curD.days(),curD.hours(),curD.minutes(),curD.seconds())
 
         #Id;#Action;#Connection;#Query;#CreateTime;#ToolVersion;#AppVersion
-        selectRunId;SQLinsert;SQL;'INSERT INTO runs (create_time, duration, tool_version, app_version) VALUES (?, -1, ?, ?)\u003b';needD;VersionInfo.getVersion();_rf_app_version
+        selectRunId;SQLinsert;SQL;'INSERT INTO runs (create_time, duration, tool_version, app_version) VALUES (?, -1, ?, ?)\u003b';needD;VersionInfo.getVersion();config_version
 
         #Id;#Let
         runId;selectRunId.Out[0]

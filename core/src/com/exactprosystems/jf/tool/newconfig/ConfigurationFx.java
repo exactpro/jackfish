@@ -104,10 +104,16 @@ public class ConfigurationFx extends Configuration
 		return super.librariesValue.stream().map(MutableString::get).collect(Collectors.joining(SEPARATOR));
 	}
 
+	@Deprecated
 	public String gitRemotePath()
 	{
 		return super.gitValue.get();
 	}
+
+    public String getVersionStr()
+    {
+        return super.versionValue.get();
+    }
 
 	public String getReportPath()
 	{

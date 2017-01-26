@@ -108,7 +108,9 @@ public class Configuration extends AbstractDocument
 	public static final String clientDict			= "clientDict";
 	public static final String library 				= "library";
 	public static final String userVars 			= "userVars";
+	@Deprecated
 	public static final String git 					= "git";
+    public static final String version              = "version";
 
 	//region Global handlers
 	public static final String globalHandler		= "globalHandler";
@@ -217,7 +219,11 @@ public class Configuration extends AbstractDocument
 	protected MutableString reportsValue;
 	
 	@XmlElement(name = git)
+	@Deprecated
 	protected MutableString gitValue;
+
+    @XmlElement(name = version)
+    protected MutableString versionValue;
 
 	@XmlElement(name = imports)
 	protected MutableArrayList<MutableString> importsValue;
@@ -267,6 +273,7 @@ public class Configuration extends AbstractDocument
 		this.formatsValue				= new MutableArrayList<MutableString>();
 		this.reportsValue				= new MutableString();
 		this.gitValue					= new MutableString();
+        this.versionValue               = new MutableString();
 		
 		this.globalHandlerValue			= new GlobalHandler();
 
@@ -342,6 +349,11 @@ public class Configuration extends AbstractDocument
 	{
 		return this.gitValue;
 	}
+
+    public MutableString getVersion()
+    {
+        return this.versionValue;
+    }
 
 	public MutableString getVars()
 	{
@@ -443,7 +455,7 @@ public class Configuration extends AbstractDocument
 		{
 			vars.injectVariables(evaluator);
 		}
-		evaluator.reset();
+		evaluator.reset("" + getVersion());
 		
 		return evaluator;
 	}
@@ -723,6 +735,7 @@ public class Configuration extends AbstractDocument
 				|| this.dateTimeValue.isChanged()
 				|| this.formatsValue.isChanged()
 				|| this.gitValue.isChanged()
+                || this.versionValue.isChanged()
 				|| this.reportsValue.isChanged()
 				|| this.sqlEntriesValue.isChanged()
 				|| this.clientEntriesValue.isChanged()
@@ -748,6 +761,7 @@ public class Configuration extends AbstractDocument
 		this.dateTimeValue.saved();
 		this.formatsValue.saved();
 		this.gitValue.saved();
+        this.versionValue.saved();
 		this.reportsValue.saved();
 		this.appEntriesValue.saved();
 		this.clientEntriesValue.saved();
@@ -954,6 +968,7 @@ public class Configuration extends AbstractDocument
 		this.dateTimeValue.set(config.dateTimeValue);
 		this.formatsValue.from(config.formatsValue);
 		this.gitValue.set(config.gitValue);
+        this.versionValue.set(config.versionValue);
 		this.globalHandlerValue.setValue(config.globalHandlerValue);
 		this.reportsValue.set(config.reportsValue);
 		this.appEntriesValue.from(config.appEntriesValue);

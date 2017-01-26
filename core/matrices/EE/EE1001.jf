@@ -1,0 +1,21 @@
+#Id;#TestCase;#Kind;#Depends;#For
+TestCase1;This matrix always passed;;;
+    #Action;#Time
+    Wait;200
+
+    #Step;#Kind
+    'Step 1';
+    #EndStep
+
+    #Step;#Kind
+    'Step 2';
+    #EndStep
+
+    #Step;#Kind
+    'Step 3';
+        #Fail
+        'Actual is not equal expected'
+
+    #EndStep
+
+

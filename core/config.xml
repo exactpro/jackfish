@@ -13,6 +13,7 @@
     <formats>HH:mm:ss:SSS</formats>
     <reports>reports</reports>
     <git></git>
+    <version>1.2.3.4</version>
     <import>java.math</import>
     <import>java.util.regex</import>
     <import>java.util</import>
