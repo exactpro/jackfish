@@ -1115,15 +1115,23 @@ namespace UIAdapter
         }
 
         [DllExport("getImage", CallingConvention.Cdecl)]
-        public static int GetImage([In, Out, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 1)] int[] arr, int len, String inid)
+        public static int GetImage([In, Out, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 1)] int[] arr, int len, String inid, int x1, int y1, int x2, int y2)
         {
             try
             {
                 long startMethod = getMilis();
                 int[] id = stringToIntArray(inid);
-                toFront();
+                toFront();                                
                 AutomationElement component = FindByRuntimeId(id);
                 var rect = component.Current.BoundingRectangle;
+                if (x1 != int.MinValue && y1 != int.MinValue && x2 != int.MinValue && y2 != int.MinValue)
+                {
+                    rect.X += x1;
+                    rect.Y += y1;
+                    rect.Height = y2 - y1;
+                    rect.Width = x2 - x1;
+                }
+
                 Bitmap bmp = new Bitmap((int)rect.Width, (int)rect.Height, PixelFormat.Format24bppRgb);
                 using (Graphics g = Graphics.FromImage(bmp))
                 {

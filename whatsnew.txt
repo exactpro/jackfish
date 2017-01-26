@@ -1,3 +1,6 @@
+23.01.2017 4.3.0.1863
+Added possible to specify coordinates for ImageGet action
+
 --------------------------------------------------------------------------------
 26.01.2017 4.3.0.1860
 #39905 feature: version for project  

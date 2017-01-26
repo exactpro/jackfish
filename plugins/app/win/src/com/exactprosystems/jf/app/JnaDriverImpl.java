@@ -317,10 +317,10 @@ public class JnaDriverImpl
 		return result;
 	}
 
-	public int getImage(int[] arr, UIProxyJNA element) throws Exception
+	public int getImage(int[] arr, UIProxyJNA element, int x1, int y1, int x2, int y2) throws Exception
 	{
 		long start = System.currentTimeMillis();
-		int result = this.jnaDriver.getImage(arr, arr.length, element.getIdString());
+		int result = this.jnaDriver.getImage(arr, arr.length, element.getIdString(), x1, y1, x2, y2);
 		this.logger.info(String.format("getImage(%d,%s) = %s, time (ms) : %d", arr.length, element.getIdString(), result,
 				System.currentTimeMillis() - start));
 		checkCSharpTimes();

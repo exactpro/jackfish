@@ -944,7 +944,7 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
             {
                 try
                 {
-                    imageWrapper = ((AppConnection)connection).getApplication().service().getImage(null, null);
+                    imageWrapper = ((AppConnection)connection).getApplication().service().getImage(null, null, Integer.MIN_VALUE, Integer.MIN_VALUE, Integer.MIN_VALUE, Integer.MIN_VALUE);
                 }
                 catch (Exception e)
                 {
