@@ -102,7 +102,7 @@ public class MatrixTreeNode extends TreeNode
 					ConfigurationTreeView.createItem(ADD_NEW_MATRIX, () -> ConfigurationTreeView.showInputDialog("Enter new name").ifPresent(
 							name -> Common.tryCatch(() -> this.model.addNewMatrix(file, name), "Error on create new matrix")), "Error on add new matrix"),
 					ConfigurationTreeView.createItem(REMOVE_MATRIX, () -> this.model.removeMatrix(file), "Error on remove matrix"),
-					ConfigurationTreeView.createItem(ADD_TO_TOOLBAR, () -> this.model.addToToolbar(file.getPath()), "Error on add matrix to toolbar"),
+					ConfigurationTreeView.createItem(ADD_TO_TOOLBAR, () -> this.model.addToToolbar(Common.getRelativePath(file.getPath())), "Error on add matrix to toolbar"),
 					ConfigurationTreeView.createDisabledItem(REMOVE_MATRIX_FOLDER),
 					ConfigurationTreeView.createDisabledItem(EXCLUDE_MATRIX_FOLDER),
 					ConfigurationTreeView.createDisabledItem(REFRESH_MATRIX)
