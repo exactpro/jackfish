@@ -2,6 +2,8 @@ package com.exactprosystems.jf.tool.dictionary.dialog;
 
 import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.error.JFRemoteException;
+import com.exactprosystems.jf.documents.guidic.Section;
+import com.exactprosystems.jf.documents.guidic.controls.AbstractControl;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.custom.xpath.ImageAndOffset;
 import com.exactprosystems.jf.tool.dictionary.DictionaryFx;
@@ -11,9 +13,10 @@ import org.w3c.dom.Document;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-
+import java.util.stream.Collectors;
 public class DialogWizard
 {
 	private static ExecutorService executor = Executors.newFixedThreadPool(1);
@@ -30,6 +33,7 @@ public class DialogWizard
 	private int xOffset = 0;
 	private int yOffset = 0;
 
+	private Map<Integer, AbstractControl> controlMap;
 
 	public DialogWizard(DictionaryFx dictionary, IWindow window, AppConnection appConnection) throws Exception
 	{
@@ -41,6 +45,23 @@ public class DialogWizard
 		this.controller.init(this, this.window.getName());
 		this.selfControl = this.window.getSelfControl();
 		this.controller.displaySelf(selfControl);
+		this.controlMap = this.window.getSection(IWindow.SectionKind.Run).getControls()
+				.stream()
+				.filter(c -> c instanceof AbstractControl)
+				.map(c ->
+				{
+					try
+					{
+						return AbstractControl.createCopy(c);
+					}
+					catch (Exception e)
+					{
+						return null;
+					}
+				})
+				.filter(Objects::nonNull)
+				.collect(Collectors.toMap(a -> count++, a -> a));
+		displayElements();
 	}
 
 	public void show()
@@ -73,7 +94,7 @@ public class DialogWizard
 					@Override
 					protected Document call() throws Exception
 					{
-						return service().getTree(getOwnerLocator());
+						return service().getTree(DialogWizard.this.selfControl.locator());
 					}
 				};
 			}
@@ -90,10 +111,10 @@ public class DialogWizard
 					protected ImageAndOffset call() throws Exception
 					{
 						int offsetX, offsetY;
-						Rectangle rectangle = service().getRectangle(null, getOwnerLocator());
+						Rectangle rectangle = service().getRectangle(null, DialogWizard.this.selfControl.locator());
 						offsetX = rectangle.x;
 						offsetY = rectangle.y;
-						BufferedImage image = service().getImage(null, getOwnerLocator()).getImage();
+						BufferedImage image = service().getImage(null, DialogWizard.this.selfControl.locator()).getImage();
 						return new ImageAndOffset(image, offsetX, offsetY);
 					}
 				};
@@ -133,13 +154,53 @@ public class DialogWizard
 		this.documentService.start();
 	}
 
+	void updateId(int number, String newId) throws Exception
+	{
+		this.controlMap.get(number).set(AbstractControl.idName, newId);
+	}
+
+	void updateControlKind(int number, ControlKind kind) throws Exception
+	{
+		AbstractControl oldControl = this.controlMap.get(number);
+		AbstractControl newControl = AbstractControl.createCopy(oldControl, kind);
+		this.controlMap.remove(number);
+		this.controlMap.put(number, newControl);
+	}
+
+	void close(boolean needAccept)
+	{
+		if (needAccept)
+		{
+			Section section = (Section) this.window.getSection(IWindow.SectionKind.Run);
+			section.getControls().forEach(section::removeControl);
+			this.controlMap.forEach((integer, abstractControl) -> Common.tryCatch(() -> section.addControl(abstractControl), "Error on add control"));
+		}
+		this.controller.close();
+	}
+
+	//region private methods
 	private IRemoteApplication service()
 	{
 		return this.appConnection.getApplication().service();
 	}
 
-	private Locator getOwnerLocator()
+	private void displayElements()
 	{
-		return this.selfControl == null ? null : this.selfControl.locator();
+		java.util.List<ElementWizardBean> list = this.controlMap.entrySet()
+				.stream()
+				.map(entry ->
+						new ElementWizardBean(
+								entry.getKey(),
+								entry.getValue().getID(),
+								entry.getValue().getBindedClass(),
+								(entry.getValue().useAbsoluteXpath() || (entry.getValue().getXpath() != null && !entry.getValue().getXpath().isEmpty())),
+								true,
+								0
+						)
+				).collect(Collectors.toList());
+		this.controller.displayElements(list);
 	}
+
+	private int count = 0;
+	//endregion
 }

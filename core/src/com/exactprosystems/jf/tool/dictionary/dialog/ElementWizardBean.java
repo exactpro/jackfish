@@ -4,23 +4,24 @@ import com.exactprosystems.jf.api.app.ControlKind;
 
 public class ElementWizardBean
 {
-	int number;
-	String id;
-	ControlKind controlKind;
-	boolean isXpath;
-	boolean isNew;
-	int count;
+	private int number;
+	private String id;
+	private ControlKind controlKind;
+	private boolean xpath;
+	private boolean isNew;
+	private int count;
+	private ElementWizardBean option = this;
 
 	public ElementWizardBean()
 	{
 	}
 
-	public ElementWizardBean(int number, String id, ControlKind controlKind, boolean isXpath, boolean isNew, int count)
+	public ElementWizardBean(int number, String id, ControlKind controlKind, boolean xpath, boolean isNew, int count)
 	{
 		this.number = number;
 		this.id = id;
 		this.controlKind = controlKind;
-		this.isXpath = isXpath;
+		this.xpath = xpath;
 		this.isNew = isNew;
 		this.count = count;
 	}
@@ -52,20 +53,20 @@ public class ElementWizardBean
 
 	public boolean isXpath()
 	{
-		return isXpath;
+		return xpath;
 	}
 
 	public void setXpath(boolean xpath)
 	{
-		isXpath = xpath;
+		this.xpath = xpath;
 	}
 
-	public boolean isNew()
+	public boolean getIsNew()
 	{
 		return isNew;
 	}
 
-	public void setNew(boolean aNew)
+	public void setIsNew(boolean aNew)
 	{
 		isNew = aNew;
 	}
@@ -78,5 +79,15 @@ public class ElementWizardBean
 	public void setCount(int count)
 	{
 		this.count = count;
+	}
+
+	public ElementWizardBean getOption()
+	{
+		return option;
+	}
+
+	public void setOption(ElementWizardBean option)
+	{
+		this.option = option;
 	}
 }

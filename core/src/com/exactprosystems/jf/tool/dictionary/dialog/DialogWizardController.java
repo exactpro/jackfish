@@ -6,14 +6,18 @@ import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.custom.ImageViewWithScale;
 import com.exactprosystems.jf.tool.custom.TreeViewWithRectangles;
-import javafx.event.ActionEvent;
+import javafx.collections.FXCollections;
+import javafx.event.*;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import org.w3c.dom.Document;
@@ -21,6 +25,7 @@ import org.w3c.dom.Document;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class DialogWizardController implements Initializable, ContainingParent
@@ -85,6 +90,11 @@ public class DialogWizardController implements Initializable, ContainingParent
 		this.dialog.show();
 	}
 
+	void close()
+	{
+		this.dialog.close();
+	}
+
 	void displaySelf(IControl self)
 	{
 		this.lblSelfId.setText(self.getID());
@@ -124,14 +134,19 @@ public class DialogWizardController implements Initializable, ContainingParent
 		this.treeViewWithRectangles.replaceWaitingPane(node);
 	}
 
+	void displayElements(List<ElementWizardBean> list)
+	{
+		this.tableView.getItems().setAll(list);
+	}
+
 	public void cancel(ActionEvent actionEvent)
 	{
-
+		this.model.close(false);
 	}
 
 	public void accept(ActionEvent actionEvent)
 	{
-
+		this.model.close(true);
 	}
 
 	private void initDialog()
@@ -160,26 +175,143 @@ public class DialogWizardController implements Initializable, ContainingParent
 
 	private void initTable()
 	{
+		this.tableView.setEditable(true);
 		TableColumn<ElementWizardBean, Integer> columnNumber = new TableColumn<>("#");
+		columnNumber.setCellValueFactory(new PropertyValueFactory<>("number"));
+		columnNumber.setCellFactory(e -> new TableCell<ElementWizardBean, Integer>(){
+			@Override
+			protected void updateItem(Integer item, boolean empty)
+			{
+				super.updateItem(item, empty);
+				if (item != null && !empty)
+				{
+					setText(String.valueOf(item));
+				}
+				else
+				{
+					setText(null);
+				}
+			}
+		});
 		columnNumber.setPrefWidth(35);
 		columnNumber.setMaxWidth(35);
 		columnNumber.setMinWidth(35);
 
 		TableColumn<ElementWizardBean, String> columnId = new TableColumn<>("Id");
+		columnId.setCellValueFactory(new PropertyValueFactory<>("id"));
+		columnId.setCellFactory(e -> new TableCell<ElementWizardBean, String>(){
+			private TextField tf;
+
+			@Override
+			protected void updateItem(String item, boolean empty)
+			{
+				super.updateItem(item, empty);
+				if (item != null && !empty)
+				{
+					if (this.tf == null)
+					{
+						this.tf = new TextField(item);
+						this.tf.focusedProperty().addListener((observable, oldValue, newValue) -> {
+							if (newValue)
+							{
+								getTableView().edit(getIndex(), columnId);
+								startEdit();
+							}
+							else
+							{
+								commitEdit(this.tf.getText());
+							}
+						});
+					}
+					this.setGraphic(this.tf);
+				}
+				else
+				{
+					setGraphic(null);
+				}
+			}
+
+			@Override
+			public void startEdit()
+			{
+				super.startEdit();
+				setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
+			}
+
+			@Override
+			public void commitEdit(String newValue)
+			{
+				final TableView<ElementWizardBean> table = getTableView();
+				if (table != null) {
+					TableColumn.CellEditEvent editEvent = new TableColumn.CellEditEvent(
+							table,
+							table.getEditingCell(),
+							TableColumn.editCommitEvent(),
+							newValue
+					);
+
+					javafx.event.Event.fireEvent(getTableColumn(), editEvent);
+					setEditable(false);
+					updateItem(newValue, false);
+				}
+			}
+		});
+		columnId.setOnEditCommit(e -> {
+			ElementWizardBean elementWizardBean = e.getRowValue();
+			if (elementWizardBean != null)
+			{
+				Common.tryCatch(() -> this.model.updateId(elementWizardBean.getNumber(), e.getNewValue()), "Error on update id");
+			}
+		});
 
 		TableColumn<ElementWizardBean, ControlKind> columnKind = new TableColumn<>("Kind");
+		columnKind.setCellValueFactory(new PropertyValueFactory<>("controlKind"));
+		columnKind.setOnEditCommit(e -> {
+			ElementWizardBean rowValue = e.getRowValue();
+			if (rowValue != null)
+			{
+				Common.tryCatch(() -> this.model.updateControlKind(rowValue.getNumber(),e.getNewValue()), "Error on update control kind");
+			}
+		});
 		columnKind.setCellFactory(e -> new TableCell<ElementWizardBean, ControlKind>(){
+			ComboBox<ControlKind> comboBox = new ComboBox<>(FXCollections.observableArrayList(ControlKind.values()));
+
 			@Override
 			protected void updateItem(ControlKind item, boolean empty)
 			{
 				super.updateItem(item, empty);
 				if (item != null && !empty)
 				{
-					setText(item.name());
+					this.comboBox.getSelectionModel().select(item);
+					this.comboBox.setOnShowing(e -> {
+						getTableView().edit(getIndex(), columnKind);
+						startEdit();
+					});
+					this.comboBox.setOnHidden(e -> cancelEdit());
+					this.comboBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> commitEdit(newValue));
+					setGraphic(this.comboBox);
 				}
 				else
 				{
-					setText(null);
+					setGraphic(null);
+				}
+			}
+
+			@Override
+			public void commitEdit(ControlKind newValue)
+			{
+				final TableView<ElementWizardBean> table = getTableView();
+				if (table != null) {
+					TableColumn.CellEditEvent editEvent = new TableColumn.CellEditEvent(
+							table,
+							table.getEditingCell(),
+							TableColumn.editCommitEvent(),
+							newValue
+					);
+
+					javafx.event.Event.fireEvent(getTableColumn(), editEvent);
+					setEditable(false);
+					updateItem(newValue, false);
 				}
 			}
 		});
@@ -190,6 +322,7 @@ public class DialogWizardController implements Initializable, ContainingParent
 		int value = 75;
 
 		TableColumn<ElementWizardBean, Boolean> columnIsXpath = new TableColumn<>("Xpath");
+		columnIsXpath.setCellValueFactory(new PropertyValueFactory<>("xpath"));
 		columnIsXpath.setCellFactory(e -> new TableCell<ElementWizardBean, Boolean>(){
 			@Override
 			protected void updateItem(Boolean item, boolean empty)
@@ -210,6 +343,7 @@ public class DialogWizardController implements Initializable, ContainingParent
 		columnIsXpath.setMinWidth(value);
 
 		TableColumn<ElementWizardBean, Boolean> columnIsNew = new TableColumn<>("New");
+		columnIsNew.setCellValueFactory(new PropertyValueFactory<>("isNew"));
 		columnIsNew.setCellFactory(e -> new TableCell<ElementWizardBean, Boolean>(){
 			@Override
 			protected void updateItem(Boolean item, boolean empty)
@@ -230,6 +364,7 @@ public class DialogWizardController implements Initializable, ContainingParent
 		columnIsNew.setMinWidth(value);
 
 		TableColumn<ElementWizardBean, Integer> columnCount = new TableColumn<>("Count");
+		columnCount.setCellValueFactory(new PropertyValueFactory<>("count"));
 		columnCount.setCellFactory(e -> new TableCell<ElementWizardBean, Integer>(){
 			@Override
 			protected void updateItem(Integer item, boolean empty)
@@ -251,11 +386,38 @@ public class DialogWizardController implements Initializable, ContainingParent
 		columnCount.setMinWidth(value);
 
 		TableColumn<ElementWizardBean, ElementWizardBean> columnOption = new TableColumn<>("Option");
+		columnOption.setCellValueFactory(new PropertyValueFactory<>("option"));
 		columnOption.setPrefWidth(value);
 		columnOption.setMaxWidth(value);
 		columnOption.setMinWidth(value);
+		columnOption.setCellFactory(e -> new TableCell<ElementWizardBean, ElementWizardBean>(){
+			@Override
+			protected void updateItem(ElementWizardBean item, boolean empty)
+			{
+				super.updateItem(item, empty);
+				if (item != null && !empty)
+				{
+					HBox box = new HBox();
+					box.setAlignment(Pos.CENTER);
+					Button btnEdit = new Button("E");
+					Button btnRemove = new Button("R");
+					btnEdit.setOnAction(e -> {
+						System.out.println("Edit control : " + item);
+					});
+					btnRemove.setOnAction(e -> {
+						System.out.println("Remove control : " + item);
+					});
+					box.getChildren().addAll(btnEdit, btnRemove);
+					setGraphic(box);
+				}
+				else
+				{
+					setGraphic(null);
+				}
+			}
+		});
 
-		columnId.prefWidthProperty().bind(this.tableView.widthProperty().subtract(35 + 135 + value * 4));
+		columnId.prefWidthProperty().bind(this.tableView.widthProperty().subtract(35 + 135 + value * 4 + 2));
 
 		this.tableView.getColumns().addAll(columnNumber, columnId, columnKind, columnIsXpath, columnIsNew, columnCount, columnOption);
 	}
