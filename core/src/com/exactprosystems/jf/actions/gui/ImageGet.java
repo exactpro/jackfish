@@ -38,10 +38,10 @@ public class ImageGet extends AbstractAction
 	public final static String	dialogName		= "Dialog";
 	public final static String	nameName		= "Name";
 	public final static String	descriptionName	= "Description";
-	public final static String 	x_leftUp 	= "X_leftUp";
-	public final static String	y_leftUp	= "Y_leftUp";
-	public final static String	x_rightDown	= "X_rightDown";
-	public final static String	y_rightDown	= "Y_rightDown";
+	public final static String 	x_leftUp 	= "X1";
+	public final static String	y_leftUp	= "Y1";
+	public final static String	x_rightDown	= "X2";
+	public final static String	y_rightDown	= "Y2";
 
 	@ActionFieldAttribute(name = connectionName, mandatory = true, description = "The application connection.")
 	protected AppConnection		connection		= null;
@@ -76,6 +76,10 @@ public class ImageGet extends AbstractAction
 	{
 		this.dialog = null;
 		this.name	= null;
+		this.x1 = Integer.MIN_VALUE;
+		this.y1 = Integer.MIN_VALUE;
+		this.x2 = Integer.MIN_VALUE;
+		this.y2 = Integer.MIN_VALUE;
 	}
 	
 	@Override

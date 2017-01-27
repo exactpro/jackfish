@@ -208,7 +208,7 @@ namespace UIAdapter
                 case "o": return VirtualKeyCode.VK_O;
                 case "p": return VirtualKeyCode.VK_P;
                 case "slash": return VirtualKeyCode.OEM_2;
-                case "back_slash": return VirtualKeyCode.OEM_102;
+                case "back_slash": return VirtualKeyCode.OEM_5;
                 case "delete": return VirtualKeyCode.DELETE;
                 case "end": return VirtualKeyCode.END;
                 case "page_down": return VirtualKeyCode.NEXT;
