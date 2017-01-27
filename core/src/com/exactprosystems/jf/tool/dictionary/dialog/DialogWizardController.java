@@ -22,10 +22,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.ColumnConstraints;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import org.w3c.dom.Document;
@@ -184,8 +181,12 @@ public class DialogWizardController implements Initializable, ContainingParent
 		c1.setHalignment(HPos.LEFT);
 		gridPane.getColumnConstraints().addAll(c0, c1);
 
-		int index = 0;
-		addToPane(gridPane, "Xpath : ",		abstractControl.getXpath(),		newId -> Common.tryCatch(() -> abstractControl.set(AbstractControl.xpathName, newId), "Error on set parameter"), index++);
+		int index = 1;
+		addXpathToPane(gridPane, abstractControl.getXpath(), abstractControl.useAbsoluteXpath(),
+				  newId -> Common.tryCatch(() -> abstractControl.set(AbstractControl.xpathName, newId), "Error on set parameter")
+				, newB -> Common.tryCatch(() -> abstractControl.set(AbstractControl.absoluteXpathName, newB), "Error on set parameter")
+		);
+//		addToPane(gridPane, "Xpath : ",		abstractControl.getXpath(),		newId -> Common.tryCatch(() -> abstractControl.set(AbstractControl.xpathName, newId), "Error on set parameter"), index++);
 		addToPane(gridPane, "UID : ",		abstractControl.getUID(), 		newId -> Common.tryCatch(() -> abstractControl.set(AbstractControl.uidName, newId), "Error on set parameter"), index++);
 		addToPane(gridPane, "Class : ",		abstractControl.getClazz(),		newId -> Common.tryCatch(() -> abstractControl.set(AbstractControl.clazzName, newId), "Error on set parameter"), index++);
 		addToPane(gridPane, "Name : ",	 	abstractControl.getName(), 		newId -> Common.tryCatch(() -> abstractControl.set(AbstractControl.nameName, newId), "Error on set parameter"), index++);
@@ -215,6 +216,26 @@ public class DialogWizardController implements Initializable, ContainingParent
 		GridPane.setFillWidth(tf, true);
 		pane.add(lbl, 0, index);
 		pane.add(tf, 1, index);
+	}
+
+	private void addXpathToPane(GridPane pane, String value, boolean isAbsolute, Consumer<String> consumer, Consumer<Boolean> absoluteConsumer)
+	{
+		Label lbl = new Label("Xpath");
+		HBox box = new HBox();
+		box.setAlignment(Pos.CENTER);
+
+		CheckBox cbIsAbsolute = new CheckBox("");
+		cbIsAbsolute.setSelected(isAbsolute);
+		cbIsAbsolute.selectedProperty().addListener((observable, oldValue, newValue) -> absoluteConsumer.accept(newValue));
+		cbIsAbsolute.setAlignment(Pos.CENTER);
+
+		CustomFieldWithButton tf = new CustomFieldWithButton(value);
+		tf.textProperty().addListener((observable, oldValue, newValue) -> consumer.accept(newValue));
+		HBox.setHgrow(tf, Priority.ALWAYS);
+		box.getChildren().addAll(cbIsAbsolute, tf);
+
+		pane.add(lbl, 0, 0);
+		pane.add(box, 1, 0);
 	}
 
 	public void cancel(ActionEvent actionEvent)

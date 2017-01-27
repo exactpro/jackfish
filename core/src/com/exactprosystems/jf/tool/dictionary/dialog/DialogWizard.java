@@ -214,19 +214,24 @@ public class DialogWizard
 	{
 		List<ElementWizardBean> list = this.controlMap.entrySet()
 				.stream()
-				.map(entry -> this.create(entry.getKey(), entry.getValue()))
+				.map(entry -> this.create(entry.getKey(), entry.getValue(), true))
 				.collect(Collectors.toList());
 		this.controller.displayElements(list);
 	}
 
 	private ElementWizardBean create(int number, AbstractControl control)
 	{
+		return create(number, control, false);
+	}
+
+	private ElementWizardBean create(int number, AbstractControl control, boolean isNew)
+	{
 		return new ElementWizardBean(
 				number,
 				control.getID(),
 				control.getBindedClass(),
-				(control.useAbsoluteXpath() || (control.getXpath() != null && !control.getXpath().isEmpty())),
-				true,
+				((control.getXpath() != null && !control.getXpath().isEmpty()) || control.useAbsoluteXpath()),
+				isNew,
 				0
 		);
 	}
