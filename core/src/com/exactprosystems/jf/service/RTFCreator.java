@@ -43,7 +43,7 @@ class RTFCreator {
     private final String pictureHeader = "file:///home/alexander.kruglov/IdeaProjects/Picture1.png";
     private final String pictureFooter = "file:///home/alexander.kruglov/IdeaProjects/Picture2.png";
     private final String description = "/home/alexander.kruglov/IdeaProjects/1.rtf";
-    private final String mvelDoc = "/home/alexander.kruglov/IdeaProjects/mvel.txt";
+    private final String mvelDoc = "/home/alexander.kruglov/IdeaProjects/mvel1.txt";
 
     private void writeItems() throws IOException
     {
@@ -110,21 +110,22 @@ class RTFCreator {
     {
         contents.add(p(fontSize(40, "Contents:")));
         contents.add(p());
-        contents.add(p(text("1. "), text (" "), hyperlink(link + "MVEL", p("MVEL"))));
-        contents.add(p("2. Actions: "));
+        contents.add(p(text("1. "), text (" "), hyperlink(link + "Introduction", p("Introduction"))));
+        contents.add(p(text("2. "), text (" "), hyperlink(link + "MVEL", p("MVEL"))));
+        contents.add(p("3. Actions: "));
         int count = 0;
         for(String name : actions)
         {
             count++;
-            contents.add(p(tab(), text(" 2." + count + " "), text (" "), hyperlink(link + name, p(name))));
+            contents.add(p(tab(), text(" 3." + count + " "), text (" "), hyperlink(link + name, p(name))));
         }
 
-        contents.add(p("3. Items: "));
+        contents.add(p("4. Items: "));
         count = 0;
         for(String name : items)
         {
             count++;
-            contents.add(p(tab(), text(" 3." + count + " "), text (" "), hyperlink(link + name, p(name))));
+            contents.add(p(tab(), text(" 4." + count + " "), text (" "), hyperlink(link + name, p(name))));
         }
         writeContents();
     }
@@ -399,7 +400,7 @@ class RTFCreator {
         deleteDocument(path);
         document.documentFormatting(RtfDocfmt.footnoteNumberingArabic());
         document.info(author("ExactProSystems"), subject("Contains info about classes which used in project"), title("JackFish manual"));
-        document.header(color(233, 157, 80), font("WriteFonts") );
+        document.header(color(233, 157, 80), font("WriteFonts"));
         document.section(
                 createFirstPageFormat(),
                 p(text("Title page")));
@@ -412,7 +413,7 @@ class RTFCreator {
         rtfParser.read(new FileInputStream(description), doc, 0);
         String text = doc.getText(0, doc.getLength());
 
-        document.section(createSectionFormat(), p(text(text)));
+        document.section(createSectionFormat(), p(tab(), tab(), tab(), tab(), fontSize(40, "Introduction" + trait), lineBreak()), p(text(text)));
     }
 
     void createContents() throws IOException
@@ -440,17 +441,17 @@ class RTFCreator {
     private String replaceChars (String s)
     {
         return s.replace("(?U)[\\pP\\s]", "")
-                .replace("{{&", "").replace("&}}", "")
-                .replace("{{*", "").replace("*}}", "")
-                .replace("{{=", "").replace("=}}", "")
-                .replace("{{-", "").replace("-}}", "")
-                .replace("{{$", "").replace("$}}", "")
-                .replace("{{#", "").replace("#}}", "");
+                .replace("{{&", "").replace("&}}", "")  //font2
+                .replace("{{*", "").replace("*}}", "")  //bolder
+                .replace("{{=", "").replace("=}}", "")  //row
+                .replace("{{-", "").replace("-}}", "")  //cell
+                .replace("{{$", "").replace("$}}", "")  //italic
+                .replace("{{#", "").replace("#}}", ""); //code
     }
 
     void mvelDocumentation() throws IOException
     {
-        mvels.add(p(tab(), bold("MVEL" + trait), lineBreak()));
+        mvels.add(p(tab(), tab(), tab(), tab(), fontSize(40, "MVEL" + trait), lineBreak()));
         BufferedReader br = new BufferedReader(new FileReader(mvelDoc));
         for(String line; (line = br.readLine()) != null; ) {
             String[] strs = line.split("\\s+");
@@ -499,12 +500,31 @@ class RTFCreator {
                     mvels.add(row(text.toArray(arr)));
                     text.clear();
                 }
+                else if (line.contains("{{#") && line.contains("#}}"))
+                {
+                    for (String s : strs)
+                    {
+                        sb.append(replaceChars(s) + " ");
+                    }
+                    if (sb.length() != 0){
+                        mvels.add(p(font(1, sb.toString())));
+                        sb.setLength(0);
+                    }
+                }
                 else
                 {
                     for (String s : strs)
                     {
-                        //System.out.println(s);
-                        if (s.startsWith("{{&"))
+                        if (s.contains("{{&") && s.contains("&}}")){
+                            if (sb.length() !=0){
+                                text.add(text(sb.toString()));
+                                text.add(text(" "));
+                                mvels.add(p(text(sb.toString())));
+                                sb.setLength(0);
+                            }
+                            mvels.add(p(font(2, replaceChars(s))));
+                        }
+                        else if (s.startsWith("{{&"))
                         {
                             sb.append(replaceChars(s) + " ");
                             header = true;
@@ -512,7 +532,7 @@ class RTFCreator {
                         else if (header && s.contains("&}}"))
                         {
                             sb.append(replaceChars(s));
-                            mvels.add(p(font(1, sb.toString())));
+                            mvels.add(p(font(2, sb.toString())));
                             sb.setLength(0);
                             header = false;
                         }
@@ -528,9 +548,6 @@ class RTFCreator {
                                 text.add(bold(replaceChars(s + " ")));
                                 sb.setLength(0);
                             }
-                        }
-                        else if (s.contains("{{&") && s.contains("&}}")){
-
                         }
                         else
                         {
@@ -550,6 +567,10 @@ class RTFCreator {
             {
                 if (strs[0].contains("{{&") && strs[0].contains("&}}"))
                 {
+                    mvels.add(p(font(2, replaceChars(strs[0]))));
+                }
+                else if (strs[0].contains("{{#") && strs[0].contains("#}}"))
+                {
                     mvels.add(p(font(1, replaceChars(strs[0]))));
                 }
                 else
@@ -563,6 +584,7 @@ class RTFCreator {
 
     void getAnnotationsForActions() throws IOException
     {
+        actions.add(p(tab(),tab(), tab(),tab(), fontSize(40, "Actions" + trait), lineBreak()));
         for (Class<?> clazz : ActionsList.actions)
         {
             ActionAttribute classAnnotation = null;
@@ -592,6 +614,7 @@ class RTFCreator {
 
     void getAnnotationsForItems() throws IOException
     {
+        items.add(p(tab(),tab(), tab(),tab(), fontSize(40, "Items" + trait), lineBreak()));
         for (Class<?> clazz : Parser.knownItems){
             MatrixItemAttribute classAnnotation = null;
 

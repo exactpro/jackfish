@@ -30,11 +30,11 @@ public class RtfGenerationService {
 
    public void createRTF() throws IOException, BadLocationException {
        creator.prepareDocument();
-       //creator.createDescription();
        creator.createContents();
+       creator.createDescription();
        creator.mvelDocumentation();
-       //creator.getAnnotationsForActions();
-       //creator.getAnnotationsForItems();
+       creator.getAnnotationsForActions();
+       creator.getAnnotationsForItems();
        creator.saveDocument();
    }
 }

@@ -26,7 +26,6 @@ public class BookmarksCreator extends FileWriter{
 
     @Override
     public Writer append(CharSequence csq) throws IOException {
-        //System.out.println(csq);
         String[] strs = csq.toString().split("\\s+");
         if (strs.length > 1){
             StringBuilder result = new StringBuilder();
@@ -49,11 +48,15 @@ public class BookmarksCreator extends FileWriter{
                 }
                 else if (s.contains("WriteFonts"))
                 {
-                    result.append(s.replace("WriteFonts", "Arial;}{\\f1\\fcharset1 Courier"));
+                    result.append(s.replace("WriteFonts", "Arial;}{\\f1\\fcharset1 Courier;}{\\f2\\fcharset2 FS Lola ExtraBold"));
                 }
                 else if (s.equals("\\par"))
                 {
                     result.append(s.replace("\\par", "\\par\\qd"));
+                }
+                else if (s.contains("\\{\\{*") && s.contains("*\\}\\}"))
+                {
+                    result.append(s.replace(s, "{\\b " + s.replace("\\{\\{*", "").replace("*\\}\\}", "") + '}'));
                 }
                 else
                 {
@@ -85,11 +88,15 @@ public class BookmarksCreator extends FileWriter{
             }
             else if (s.contains("WriteFonts"))
             {
-                return super.append(s.replace("WriteFonts", "Arial;}{\\f1\\fcharset1 Courier"));
+                return super.append(s.replace("WriteFonts", "Arial;}{\\f1\\fcharset1 Courier;}{\\f2\\fcharset2 FS Lola ExtraBold"));
             }
             else if (s.equals("\\par"))
             {
                 return super.append(s.replace("\\par", "\\par\\qd"));
+            }
+            else if (s.contains("\\{\\{*") && s.contains("*\\}\\}"))
+            {
+                return super.append(s.replace(s, "{\\b " + s.replace("\\{\\{*", "").replace("*\\}\\}", "") + '}'));
             }
             else
             {
