@@ -90,4 +90,23 @@ public class ElementWizardBean
 	{
 		this.option = option;
 	}
+
+	@Override
+	public boolean equals(Object o)
+	{
+		if (this == o)
+			return true;
+		if (o == null || getClass() != o.getClass())
+			return false;
+
+		ElementWizardBean that = (ElementWizardBean) o;
+
+		return number == that.number;
+	}
+
+	@Override
+	public int hashCode()
+	{
+		return number;
+	}
 }

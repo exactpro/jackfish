@@ -2,13 +2,18 @@ package com.exactprosystems.jf.tool.dictionary.dialog;
 
 import com.exactprosystems.jf.api.app.ControlKind;
 import com.exactprosystems.jf.api.app.IControl;
+import com.exactprosystems.jf.documents.guidic.controls.AbstractControl;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
+import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.custom.ImageViewWithScale;
 import com.exactprosystems.jf.tool.custom.TreeViewWithRectangles;
+import com.exactprosystems.jf.tool.custom.controls.field.CustomFieldWithButton;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
-import javafx.event.*;
+import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
+import javafx.geometry.HPos;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
@@ -16,7 +21,10 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
@@ -26,7 +34,9 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.net.URL;
 import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.function.Consumer;
 
 public class DialogWizardController implements Initializable, ContainingParent
 {
@@ -139,6 +149,74 @@ public class DialogWizardController implements Initializable, ContainingParent
 		this.tableView.getItems().setAll(list);
 	}
 
+	void displayElement(ElementWizardBean bean)
+	{
+		int index = this.tableView.getItems().indexOf(bean);
+		if (index == -1)
+		{
+			this.tableView.getItems().add(bean);
+		}
+		else
+		{
+			this.tableView.getItems().set(index, bean);
+		}
+	}
+
+	AbstractControl editElement(AbstractControl abstractControl)
+	{
+		Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+		alert.getDialogPane().getStylesheets().addAll(Common.currentThemesPaths());
+		alert.getDialogPane().setHeader(new Label());
+		alert.setTitle("Change element");
+		GridPane gridPane = new GridPane();
+		gridPane.setPrefWidth(400);
+		gridPane.setMaxWidth(Double.MAX_VALUE);
+		alert.getDialogPane().setContent(gridPane);
+		gridPane.getStyleClass().addAll(CssVariables.HGAP_MIN, CssVariables.VGAP_MIN);
+
+		ColumnConstraints c0 = new ColumnConstraints();
+		c0.setPercentWidth(30);
+		c0.setHalignment(HPos.RIGHT);
+
+		ColumnConstraints c1 = new ColumnConstraints();
+		c1.setFillWidth(true);
+		c1.setPercentWidth(70);
+		c1.setHalignment(HPos.LEFT);
+		gridPane.getColumnConstraints().addAll(c0, c1);
+
+		int index = 0;
+		addToPane(gridPane, "Xpath : ",		abstractControl.getXpath(),		newId -> Common.tryCatch(() -> abstractControl.set(AbstractControl.xpathName, newId), "Error on set parameter"), index++);
+		addToPane(gridPane, "UID : ",		abstractControl.getUID(), 		newId -> Common.tryCatch(() -> abstractControl.set(AbstractControl.uidName, newId), "Error on set parameter"), index++);
+		addToPane(gridPane, "Class : ",		abstractControl.getClazz(),		newId -> Common.tryCatch(() -> abstractControl.set(AbstractControl.clazzName, newId), "Error on set parameter"), index++);
+		addToPane(gridPane, "Name : ",	 	abstractControl.getName(), 		newId -> Common.tryCatch(() -> abstractControl.set(AbstractControl.nameName, newId), "Error on set parameter"), index++);
+		addToPane(gridPane, "Title : ",	 	abstractControl.getTitle(),		newId -> Common.tryCatch(() -> abstractControl.set(AbstractControl.titleName, newId), "Error on set parameter"), index++);
+		addToPane(gridPane, "Action : ", 	abstractControl.getAction(),	newId -> Common.tryCatch(() -> abstractControl.set(AbstractControl.actionName, newId), "Error on set parameter"), index++);
+		addToPane(gridPane, "Text : ",	 	abstractControl.getText(),		newId -> Common.tryCatch(() -> abstractControl.set(AbstractControl.textName, newId), "Error on set parameter"), index++);
+		addToPane(gridPane, "Tooltip : ", 	abstractControl.getTooltip(), 	newId -> Common.tryCatch(() -> abstractControl.set(AbstractControl.tooltipName, newId), "Error on set parameter"), index++);
+
+		Optional<ButtonType> buttonType = alert.showAndWait();
+		if (buttonType.isPresent())
+		{
+			ButtonType type = buttonType.get();
+			if (type == ButtonType.OK)
+			{
+				return abstractControl;
+			}
+		}
+		return null;
+	}
+
+	private void addToPane(GridPane pane, String id, String value, Consumer<String> consumer, int index)
+	{
+		Label lbl = new Label(id);
+		CustomFieldWithButton tf = new CustomFieldWithButton(value);
+		tf.setMaxWidth(Double.MAX_VALUE);
+		tf.textProperty().addListener((observable, oldValue, newValue) -> consumer.accept(newValue));
+		GridPane.setFillWidth(tf, true);
+		pane.add(lbl, 0, index);
+		pane.add(tf, 1, index);
+	}
+
 	public void cancel(ActionEvent actionEvent)
 	{
 		this.model.close(false);
@@ -199,6 +277,7 @@ public class DialogWizardController implements Initializable, ContainingParent
 
 		TableColumn<ElementWizardBean, String> columnId = new TableColumn<>("Id");
 		columnId.setCellValueFactory(new PropertyValueFactory<>("id"));
+		columnId.setEditable(true);
 		columnId.setCellFactory(e -> new TableCell<ElementWizardBean, String>(){
 			private TextField tf;
 
@@ -208,26 +287,13 @@ public class DialogWizardController implements Initializable, ContainingParent
 				super.updateItem(item, empty);
 				if (item != null && !empty)
 				{
-					if (this.tf == null)
-					{
-						this.tf = new TextField(item);
-						this.tf.focusedProperty().addListener((observable, oldValue, newValue) -> {
-							if (newValue)
-							{
-								getTableView().edit(getIndex(), columnId);
-								startEdit();
-							}
-							else
-							{
-								commitEdit(this.tf.getText());
-							}
-						});
-					}
-					this.setGraphic(this.tf);
+					setText(getString());
+					setContentDisplay(ContentDisplay.TEXT_ONLY);
 				}
 				else
 				{
 					setGraphic(null);
+					setText(null);
 				}
 			}
 
@@ -235,25 +301,52 @@ public class DialogWizardController implements Initializable, ContainingParent
 			public void startEdit()
 			{
 				super.startEdit();
+				createTextField();
+				this.tf.setText(getString());
+				setGraphic(this.tf);
 				setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
+				Platform.runLater(this.tf::requestFocus);
 			}
 
 			@Override
-			public void commitEdit(String newValue)
+			public void cancelEdit()
 			{
-				final TableView<ElementWizardBean> table = getTableView();
-				if (table != null) {
-					TableColumn.CellEditEvent editEvent = new TableColumn.CellEditEvent(
-							table,
-							table.getEditingCell(),
-							TableColumn.editCommitEvent(),
-							newValue
-					);
+				super.cancelEdit();
+				setText(getString());
+				setContentDisplay(ContentDisplay.TEXT_ONLY);
+			}
 
-					javafx.event.Event.fireEvent(getTableColumn(), editEvent);
-					setEditable(false);
-					updateItem(newValue, false);
+			private void createTextField()
+			{
+				if (this.tf == null)
+				{
+					this.tf = new TextField(getString());
+					this.tf.focusedProperty().addListener((observable, oldValue, newValue) -> {
+						if (!newValue && tf != null)
+						{
+							commitEdit(tf.getText());
+						}
+					});
+					this.tf.setOnKeyPressed(t -> {
+						if (t.getCode() == KeyCode.ENTER)
+						{
+							commitEdit(tf.getText());
+						}
+						else if (t.getCode() == KeyCode.ESCAPE)
+						{
+							cancelEdit();
+						}
+						else if (t.getCode() == KeyCode.TAB)
+						{
+							commitEdit(tf.getText());
+						}
+					});
 				}
+			}
+
+			private String getString()
+			{
+				return String.valueOf(getItem() == null ? "" : getItem());
 			}
 		});
 		columnId.setOnEditCommit(e -> {
@@ -274,7 +367,7 @@ public class DialogWizardController implements Initializable, ContainingParent
 			}
 		});
 		columnKind.setCellFactory(e -> new TableCell<ElementWizardBean, ControlKind>(){
-			ComboBox<ControlKind> comboBox = new ComboBox<>(FXCollections.observableArrayList(ControlKind.values()));
+			ChoiceBox<ControlKind> comboBox;
 
 			@Override
 			protected void updateItem(ControlKind item, boolean empty)
@@ -282,37 +375,55 @@ public class DialogWizardController implements Initializable, ContainingParent
 				super.updateItem(item, empty);
 				if (item != null && !empty)
 				{
-					this.comboBox.getSelectionModel().select(item);
-					this.comboBox.setOnShowing(e -> {
-						getTableView().edit(getIndex(), columnKind);
-						startEdit();
-					});
-					this.comboBox.setOnHidden(e -> cancelEdit());
-					this.comboBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> commitEdit(newValue));
-					setGraphic(this.comboBox);
+					setText(getString());
+					setContentDisplay(ContentDisplay.TEXT_ONLY);
 				}
 				else
 				{
 					setGraphic(null);
+					setText(null);
 				}
 			}
 
 			@Override
-			public void commitEdit(ControlKind newValue)
+			public void startEdit()
 			{
-				final TableView<ElementWizardBean> table = getTableView();
-				if (table != null) {
-					TableColumn.CellEditEvent editEvent = new TableColumn.CellEditEvent(
-							table,
-							table.getEditingCell(),
-							TableColumn.editCommitEvent(),
-							newValue
-					);
+				super.startEdit();
+				createCB();
+				setGraphic(this.comboBox);
+				setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
+				this.comboBox.show();
+			}
 
-					javafx.event.Event.fireEvent(getTableColumn(), editEvent);
-					setEditable(false);
-					updateItem(newValue, false);
+			@Override
+			public void cancelEdit()
+			{
+				super.cancelEdit();
+				setText(getString());
+				setContentDisplay(ContentDisplay.TEXT_ONLY);
+			}
+
+			private void createCB()
+			{
+				if (this.comboBox == null)
+				{
+					this.comboBox = new ChoiceBox<>(FXCollections.observableArrayList(ControlKind.values()));
+					//TODO think about it
+					this.comboBox.setStyle("-fx-background-color : gold");
+					this.comboBox.getSelectionModel().select(getItem());
+					this.comboBox.setOnAction(e -> commitEdit(this.comboBox.getSelectionModel().getSelectedItem()));
+					this.comboBox.showingProperty().addListener((observable, oldValue, newValue) -> {
+						if (!newValue)
+						{
+							cancelEdit();
+						}
+					});
 				}
+			}
+
+			private String getString()
+			{
+				return String.valueOf(getItem() == null ? "" : getItem().name());
 			}
 		});
 		columnKind.setPrefWidth(135);
@@ -401,13 +512,9 @@ public class DialogWizardController implements Initializable, ContainingParent
 					box.setAlignment(Pos.CENTER);
 					Button btnEdit = new Button("E");
 					Button btnRemove = new Button("R");
-					btnEdit.setOnAction(e -> {
-						System.out.println("Edit control : " + item);
-					});
-					btnRemove.setOnAction(e -> {
-						System.out.println("Remove control : " + item);
-					});
-					box.getChildren().addAll(btnEdit, btnRemove);
+					btnEdit.setOnAction(e -> Common.tryCatch(() -> model.changeElement(item), "Error on change element"));
+					btnRemove.setOnAction(e -> model.removeElement(item));
+					box.getChildren().addAll(btnEdit, Common.createSpacer(Common.SpacerEnum.HorizontalMid),btnRemove);
 					setGraphic(box);
 				}
 				else

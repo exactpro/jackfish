@@ -13,7 +13,9 @@ import org.w3c.dom.Document;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
@@ -157,6 +159,7 @@ public class DialogWizard
 	void updateId(int number, String newId) throws Exception
 	{
 		this.controlMap.get(number).set(AbstractControl.idName, newId);
+		this.controller.displayElement(create(number, this.controlMap.get(number)));
 	}
 
 	void updateControlKind(int number, ControlKind kind) throws Exception
@@ -165,6 +168,7 @@ public class DialogWizard
 		AbstractControl newControl = AbstractControl.createCopy(oldControl, kind);
 		this.controlMap.remove(number);
 		this.controlMap.put(number, newControl);
+		this.controller.displayElement(create(number, this.controlMap.get(number)));
 	}
 
 	void close(boolean needAccept)
@@ -178,6 +182,28 @@ public class DialogWizard
 		this.controller.close();
 	}
 
+	void changeElement(ElementWizardBean bean) throws Exception
+	{
+		AbstractControl newControl = this.controller.editElement(AbstractControl.createCopy(this.controlMap.get(bean.getNumber())));
+		if (newControl != null)
+		{
+			this.controlMap.remove(bean.getNumber());
+			this.controlMap.put(bean.getNumber(), newControl);
+
+			this.controller.displayElement(create(bean.getNumber(), newControl));
+		}
+	}
+
+	void removeElement(ElementWizardBean bean)
+	{
+
+	}
+
+	void countElement(ElementWizardBean bean)
+	{
+
+	}
+
 	//region private methods
 	private IRemoteApplication service()
 	{
@@ -186,19 +212,23 @@ public class DialogWizard
 
 	private void displayElements()
 	{
-		java.util.List<ElementWizardBean> list = this.controlMap.entrySet()
+		List<ElementWizardBean> list = this.controlMap.entrySet()
 				.stream()
-				.map(entry ->
-						new ElementWizardBean(
-								entry.getKey(),
-								entry.getValue().getID(),
-								entry.getValue().getBindedClass(),
-								(entry.getValue().useAbsoluteXpath() || (entry.getValue().getXpath() != null && !entry.getValue().getXpath().isEmpty())),
-								true,
-								0
-						)
-				).collect(Collectors.toList());
+				.map(entry -> this.create(entry.getKey(), entry.getValue()))
+				.collect(Collectors.toList());
 		this.controller.displayElements(list);
+	}
+
+	private ElementWizardBean create(int number, AbstractControl control)
+	{
+		return new ElementWizardBean(
+				number,
+				control.getID(),
+				control.getBindedClass(),
+				(control.useAbsoluteXpath() || (control.getXpath() != null && !control.getXpath().isEmpty())),
+				true,
+				0
+		);
 	}
 
 	private int count = 0;
