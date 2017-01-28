@@ -503,7 +503,7 @@ public class Configuration extends AbstractDocument
 					try (Reader reader = new FileReader(libFile))
 					{
 					    Context context = getFactory().createContext();
-					    MatrixRunner runner = context.createRunner(libFile.getName(), reader, new Date(), null);
+					    MatrixRunner runner = context.createRunner(libFile.getName(), null, new Date(), null);
 						Matrix matrix = getFactory().createLibrary(libFile.getAbsolutePath(), runner); 
 						if (!checker.isOk())
 						{

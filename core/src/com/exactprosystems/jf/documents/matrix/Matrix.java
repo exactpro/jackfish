@@ -45,12 +45,13 @@ public class Matrix extends AbstractDocument implements IMatrix
 
 	public Matrix(String matrixName, DocumentFactory factory, IMatrixRunner runner, IMatrixListener matrixListener, boolean isLibrary) throws Exception
 	{
-		super(matrixName, factory);
+		super(matrixName, factory); f // TODO shouldn't be compiled
 
 		this.runner = (MatrixRunner)runner;
 		this.isLibrary = isLibrary;
 		this.root = new MatrixRoot(matrixName);
 		this.buffer = new StringBuilder();
+        System.err.println(">> " + this.getClass().getSimpleName() + ":" + this.hashCode() + ":" + this.getName() + " " + matrixListener.getClass());
 		this.matrixListener = matrixListener;
 
 		if (getName() != null)
@@ -67,6 +68,8 @@ public class Matrix extends AbstractDocument implements IMatrix
 
 	public void setListener(IMatrixListener listener)
 	{
+        System.err.println(">> " + this.getClass().getSimpleName() + ":" + this.hashCode() + ":" + this.getName() + " " + matrixListener.getClass());
+	    
 		this.matrixListener = listener;
 	}
 
@@ -438,6 +441,7 @@ public class Matrix extends AbstractDocument implements IMatrix
 		Date startTime = new Date();
 
 		this.matrixListener.matrixStarted(this);
+        System.err.println(">> start " + this.getClass().getSimpleName() + ":" + this.hashCode() + ":" + this.getName() + " " + matrixListener.getClass());
 
 		try
 		{
@@ -473,6 +477,7 @@ public class Matrix extends AbstractDocument implements IMatrix
 		{
 			logger.error(e.getMessage(), e);
 		}
+        System.err.println(">> stop " + this.getClass().getSimpleName() + ":" + this.hashCode() + ":" + this.getName() + " " + matrixListener.getClass());
 		this.matrixListener.matrixFinished(this, countResult(Result.Passed), countResult(Result.Failed));
 	}
 
