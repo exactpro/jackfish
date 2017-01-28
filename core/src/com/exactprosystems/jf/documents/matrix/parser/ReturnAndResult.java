@@ -12,7 +12,7 @@ import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixError;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 
-public class ReturnAndResult implements Cloneable
+public class ReturnAndResult
 {
 	public ReturnAndResult(long start, MatrixError error, Result result)
 	{

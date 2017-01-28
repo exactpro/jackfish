@@ -1,6 +1,15 @@
+////////////////////////////////////////////////////////////////////////////////
+//  Copyright (c) 2009-2015, Exactpro Systems, LLC
+//  Quality Assurance & Related Development for Innovative Trading Systems.
+//  All rights reserved.
+//  This is unpublished, licensed software, confidential and proprietary
+//  information which is the property of Exactpro Systems, LLC or its licensors.
+////////////////////////////////////////////////////////////////////////////////
+
 package com.exactprosystems.jf.documents;
 
 import com.exactprosystems.jf.actions.ReadableValue;
+import com.exactprosystems.jf.api.common.IMatrixRunner;
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.common.VerboseLevel;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
@@ -22,7 +31,6 @@ import com.exactprosystems.jf.functions.HelpKind;
 import com.exactprosystems.jf.functions.Notifier;
 import com.exactprosystems.jf.functions.Table;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -48,15 +56,15 @@ public class ConsoleDocumentFactory extends DocumentFactory
 	}
 
 	@Override
-	protected Matrix createLibrary(String fileName, Configuration configuration, IMatrixListener matrixListener) throws Exception
+	protected Matrix createLibrary(String fileName, Configuration configuration, IMatrixRunner runner, IMatrixListener matrixListener) throws Exception
 	{
-		return new Matrix(fileName, this, matrixListener, true);
+		return new Matrix(fileName, this, runner, matrixListener, true);
 	}
 
 	@Override
-	protected Matrix createMatrix(String fileName, Configuration configuration, IMatrixListener matrixListener) throws Exception
+	protected Matrix createMatrix(String fileName, Configuration configuration, IMatrixRunner runner, IMatrixListener matrixListener) throws Exception
 	{
-		return new Matrix(fileName, this, matrixListener, false);
+		return new Matrix(fileName, this, runner, matrixListener, false);
 	}
 
 	@Override

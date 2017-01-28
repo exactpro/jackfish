@@ -574,6 +574,9 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 						this.btnStartDefaultApplication.setDisable(false);
 						this.btnConnectDefaultApplication.setDisable(false);
 						break;
+
+					default:
+                        break;
 				}
 			}
 		});

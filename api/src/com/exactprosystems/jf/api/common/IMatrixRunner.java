@@ -8,6 +8,8 @@
 
 package com.exactprosystems.jf.api.common;
 
+import java.util.Date;
+
 public interface IMatrixRunner
 {
 	void start() throws Exception;
@@ -15,6 +17,7 @@ public interface IMatrixRunner
 	void stop();
 	void pause();
 	void step();
+	
 	boolean resetAllBreakPoints();
 	boolean isRunning();
     String getMatrixName();
@@ -24,4 +27,7 @@ public interface IMatrixRunner
 	int failed();
 	String getReportName();
 	String getImagesDirPath();
+    void setStartTime(Date date);
+    IContext getContext();
+    Date getStartTime();
 }

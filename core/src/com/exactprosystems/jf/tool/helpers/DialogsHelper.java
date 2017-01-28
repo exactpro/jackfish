@@ -545,7 +545,7 @@ public abstract class DialogsHelper
 	{
 		try (Context context = factory.createContext())
 		{
-			Matrix matrix = factory.createMatrix("helpMatrix");
+			Matrix matrix = factory.createMatrix("helpMatrix", null); // TODO check if the help works
 
 			MatrixItem syntax = new HelpChapter("Matrix syntax");
 			syntax.init(matrix);
@@ -672,7 +672,7 @@ public abstract class DialogsHelper
 					String name = reportBrowser.getMatrix();
 					if (name != null && !name.isEmpty())
 					{
-						Matrix matrix = factory.createMatrix(matrName[0]);
+						Matrix matrix = factory.createMatrix(matrName[0], null); // TODO check if context help still works
 						matrix.load(new StringReader(name));
 						matrix.display();
 					}

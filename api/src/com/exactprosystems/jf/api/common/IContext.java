@@ -8,10 +8,13 @@
 
 package com.exactprosystems.jf.api.common;
 
+import java.io.PrintStream;
 import java.io.Reader;
 import java.util.Date;
 
 public interface IContext
 {
 	IMatrixRunner createRunner(String name, Reader reader, Date startTime, Object parameter) throws Exception;
+
+    IContext setOut(PrintStream console);
 }

@@ -10,6 +10,7 @@ package com.exactprosystems.jf.tool.custom.treetable;
 
 import com.exactprosystems.jf.api.app.AppConnection;
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.common.MatrixRunner;
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.common.undoredo.Command;
 import com.exactprosystems.jf.documents.config.Context;
@@ -47,6 +48,7 @@ import javafx.scene.layout.*;
 
 import java.io.FileReader;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -556,7 +558,8 @@ public class DisplayDriverFx implements DisplayDriver
 		{
 			try
 			{
-				matrixFx = context.getFactory().createMatrix(matrix.getName()); // TODO weird
+			    MatrixRunner runner = context.createRunner(matrix.getName(), null, new Date(), null); 
+				matrixFx = context.getFactory().createMatrix(matrix.getName(), runner);
 				matrixFx.load(new FileReader(matrix.getName()));
 				matrixFx.display();
 			}

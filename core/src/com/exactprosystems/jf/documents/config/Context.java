@@ -32,7 +32,7 @@ import java.io.Reader;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class Context implements IContext, AutoCloseable, Cloneable
+public class Context implements IContext, AutoCloseable
 {
 	public static final String matrixColumn 			= "Matrix";
 	public static final String testCaseIdColumn 		= "TestCaseId";
@@ -68,30 +68,6 @@ public class Context implements IContext, AutoCloseable, Cloneable
 		return new MatrixRunner(this, name, reader, startTime, parameter);
 	}
 
-	@Override
-	public Context clone() throws CloneNotSupportedException
-	{
-		try
-		{
-			Context clone = ((Context) super.clone());
-
-			clone.outStream 		= this.outStream;
-			clone.matrixListener 	= this.matrixListener == null ? null : this.matrixListener.clone();
-			clone.factory			= this.factory;
-			clone.evaluator 		= this.factory.createEvaluator();
-			clone.libs 				= new HashMap<String, Matrix>();
-			clone.resultTable		= this.resultTable.clone();
-			clone.presenter         = this.presenter;
-
-			return clone;
-		}
-		catch (Exception e)
-		{
-			logger.error(e.getMessage(), e);
-			throw new InternalError();
-		}
-	}
-	
     public void reset() throws Exception
     {
         this.handlers.clear();
@@ -190,7 +166,8 @@ public class Context implements IContext, AutoCloseable, Cloneable
         }
     }
 
-	public Context setOut(PrintStream out)
+    @Override
+	public IContext setOut(PrintStream out)
 	{
 		this.outStream = out;
 		return this;
@@ -267,7 +244,7 @@ public class Context implements IContext, AutoCloseable, Cloneable
             
 	        try
 	        {
-	            matrix = matrix.clone();
+	            matrix = matrix.makeCopy();
 	            if (item != null)
 	            {
 	                matrix.getRoot().init(item.getMatrix());

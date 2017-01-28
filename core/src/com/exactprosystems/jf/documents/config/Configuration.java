@@ -25,6 +25,7 @@ import com.exactprosystems.jf.api.service.IServicesPool;
 import com.exactprosystems.jf.app.ApplicationPool;
 import com.exactprosystems.jf.client.ClientsPool;
 import com.exactprosystems.jf.common.MainRunner;
+import com.exactprosystems.jf.common.MatrixRunner;
 import com.exactprosystems.jf.common.MutableString;
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
@@ -501,7 +502,9 @@ public class Configuration extends AbstractDocument
 					
 					try (Reader reader = new FileReader(libFile))
 					{
-						Matrix matrix = getFactory().createLibrary(libFile.getAbsolutePath()); 
+					    Context context = getFactory().createContext();
+					    MatrixRunner runner = context.createRunner(libFile.getName(), reader, new Date(), null);
+						Matrix matrix = getFactory().createLibrary(libFile.getAbsolutePath(), runner); 
 						if (!checker.isOk())
 						{
 							logger.error("Library load error: [" + libFile.getName() + "] " + checker.getExceptionMessage());

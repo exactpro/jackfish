@@ -8,12 +8,11 @@
 
 package com.exactprosystems.jf.tool.matrix.schedule;
 
+import com.exactprosystems.jf.api.common.IMatrixRunner;
+import com.exactprosystems.jf.api.common.MatrixState;
 import com.exactprosystems.jf.common.MatrixRunner;
 import com.exactprosystems.jf.documents.DocumentFactory;
-import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.documents.config.Context;
-import com.exactprosystems.jf.documents.matrix.Matrix;
-import com.exactprosystems.jf.documents.matrix.parser.listeners.MatrixListener;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.RunnerListener;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.custom.tab.CustomTab;
@@ -29,14 +28,13 @@ import java.io.FileReader;
 import java.io.Reader;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class RunnerScheduler implements RunnerListener
 {
 	private static final Logger logger = Logger.getLogger(RunnerScheduler.class);
 	private ScheduleController controller;
-	private ConcurrentHashMap<MatrixRunner, Boolean> map;
+	private ConcurrentHashMap<IMatrixRunner, Boolean> map;
 	private DocumentFactory factory;
 
 	public RunnerScheduler() throws Exception
@@ -55,7 +53,7 @@ public class RunnerScheduler implements RunnerListener
 	}
 
 	@Override
-	public void subscribe(MatrixRunner runner)
+	public void subscribe(IMatrixRunner runner)
 	{
 		if (this.map.containsKey(runner))
 		{
@@ -68,7 +66,7 @@ public class RunnerScheduler implements RunnerListener
 	}
 
 	@Override
-	public void unsubscribe(MatrixRunner runner)
+	public void unsubscribe(IMatrixRunner runner)
 	{
 		Boolean remove = this.map.remove(runner);
 		remove = remove == null ? true : remove;
@@ -77,7 +75,7 @@ public class RunnerScheduler implements RunnerListener
 	}
 
 	@Override
-	public void stateChange(MatrixRunner matrixRunner, MatrixRunner.State state, int done, int total)
+	public void stateChange(IMatrixRunner matrixRunner, MatrixState state, int done, int total)
 	{
 		this.controller.displayState(matrixRunner, state, done, total);
 	}
@@ -87,16 +85,16 @@ public class RunnerScheduler implements RunnerListener
 		this.factory = factory;
 	}
 
-	public void startSelected(List<MatrixRunner> collect)
+	public void startSelected(List<IMatrixRunner> collect)
 	{
-		long count = collect.stream().filter(MatrixRunner::isRunning).count();
+		long count = collect.stream().filter(IMatrixRunner::isRunning).count();
 		if (count == 0)
 		{
 			this.map.keySet().stream().filter(collect::contains).forEach(runner -> Common.tryCatch(runner::start, "Error on start runner"));
 		}
 	}
 
-	public void stopSelected(List<MatrixRunner> collect)
+	public void stopSelected(List<IMatrixRunner> collect)
 	{
 		this.map.keySet().stream().filter(collect::contains).forEach(runner -> Common.tryCatch(runner::stop, "Error on start runner"));
 	}
@@ -119,11 +117,11 @@ public class RunnerScheduler implements RunnerListener
 		}
 	}
 
-	public void showSelected(List<MatrixRunner> collect)
+	public void showSelected(List<IMatrixRunner> collect)
 	{
 		this.map.keySet().stream().filter(collect::contains).forEach(runner -> Common.tryCatch(() ->
 		{
-			runner.process((matrix, context, report, startTime) ->
+			((MatrixRunner)runner).process((matrix, context, report, startTime) ->
 			{
 				CustomTab tab = Common.checkDocument(matrix);
 				if (tab != null)
@@ -135,7 +133,7 @@ public class RunnerScheduler implements RunnerListener
 					try
 					{
 						unsubscribe(runner);
-						matrix = this.factory.createMatrix(matrix.getName()); // TODO something weird
+						matrix = this.factory.createMatrix(matrix.getName(), (MatrixRunner)runner); // TODO something weird
 						matrix.display();
 					}
 					catch (Exception e)
@@ -151,8 +149,8 @@ public class RunnerScheduler implements RunnerListener
 		}, "Error on start runner"));
 	}
 
-	public void destroySelected(List<MatrixRunner> collect)
+	public void destroySelected(List<IMatrixRunner> collect)
 	{
-		this.map.keySet().stream().filter(collect::contains).forEach(runner -> Common.tryCatch(runner::close, "Error on start runner"));
+		this.map.keySet().stream().filter(collect::contains).forEach(runner -> Common.tryCatch(((MatrixRunner)runner)::close, "Error on start runner"));
 	}
 }

@@ -8,6 +8,8 @@
 
 package com.exactprosystems.jf.tool.matrix.schedule;
 
+import com.exactprosystems.jf.api.common.IMatrixRunner;
+import com.exactprosystems.jf.api.common.MatrixState;
 import com.exactprosystems.jf.common.MatrixRunner;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
@@ -43,7 +45,7 @@ public class ScheduleController implements Initializable, ContainingParent
 
 	public TableColumn<RunnerWithState, String> columnMatrixName;
 	public TableColumn<RunnerWithState, Date> columnStartDate;
-	public TableColumn<RunnerWithState, MatrixRunner.State> columnState;
+	public TableColumn<RunnerWithState, MatrixState> columnState;
 	public TableColumn<RunnerWithState, RunnerWithState> columnCheckBox;
 	public TableColumn<RunnerWithState, String> columnDone;
 
@@ -90,7 +92,7 @@ public class ScheduleController implements Initializable, ContainingParent
 		columnMatrixName.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getRunner().getMatrixName()));
 		columnMatrixName.prefWidthProperty().bind(this.tableView.widthProperty().subtract(widthCheckBox + widthDate + widthState + widthDone + 2));
 
-		columnStartDate.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getRunner().startTime()));
+		columnStartDate.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getRunner().getStartTime()));
 		columnStartDate.prefWidthProperty().bind(new SimpleObjectProperty<>(widthDate));
 		columnStartDate.setEditable(true);
 		columnStartDate.setCellFactory(param -> new TableCell<RunnerWithState, Date>()
@@ -191,17 +193,17 @@ public class ScheduleController implements Initializable, ContainingParent
 		this.dialog.showAndWait();
 	}
 
-	public void displayRunner(MatrixRunner runner)
+	public void displayRunner(IMatrixRunner runner)
 	{
-		this.tableView.getItems().add(new RunnerWithState(runner));
+        this.tableView.getItems().add(new RunnerWithState(runner));
 	}
 
-	public void removeRunner(MatrixRunner runner)
+	public void removeRunner(IMatrixRunner runner)
 	{
-		this.tableView.getItems().remove(new RunnerWithState(runner));
+		this.tableView.getItems().removeIf(e -> e.runner == runner); 
 	}
 
-	public void displayState(MatrixRunner runner, MatrixRunner.State state, int done, int total)
+	public void displayState(IMatrixRunner runner, MatrixState state, int done, int total)
 	{
 		this.tableView.getItems().stream().filter(r -> r.getRunner().equals(runner)).findFirst().ifPresent(runnerWithState -> {
 			runnerWithState.setState(state);
@@ -249,7 +251,7 @@ public class ScheduleController implements Initializable, ContainingParent
 		Common.tryCatch(this.model::loadSeveral, "Error on load matrices");
 	}
 
-	private List<MatrixRunner> getSelected()
+	private List<IMatrixRunner> getSelected()
 	{
 		return this.tableView.getItems()
 				.stream()
@@ -261,25 +263,25 @@ public class ScheduleController implements Initializable, ContainingParent
 	private class RunnerWithState {
 		private String executed;
 		private boolean checked;
-		private MatrixRunner runner;
-		private MatrixRunner.State state;
+		private IMatrixRunner runner;
+		private MatrixState state;
 
-		public RunnerWithState(MatrixRunner runner)
+		public RunnerWithState(IMatrixRunner runner)
 		{
 			this.runner = runner;
 		}
 
-		public void setState(MatrixRunner.State state)
+		public void setState(MatrixState state)
 		{
 			this.state = state;
 		}
 
-		public MatrixRunner getRunner()
+		public IMatrixRunner getRunner()
 		{
 			return runner;
 		}
 
-		public MatrixRunner.State getState()
+		public MatrixState getState()
 		{
 			return state;
 		}
@@ -292,11 +294,6 @@ public class ScheduleController implements Initializable, ContainingParent
 		public void setChecked(boolean checked)
 		{
 			this.checked = checked;
-		}
-
-		public void setRunner(MatrixRunner runner)
-		{
-			this.runner = runner;
 		}
 
 		public String getExecuted()

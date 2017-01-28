@@ -8,19 +8,14 @@
 
 package com.exactprosystems.jf.api.common;
 
-import com.exactprosystems.jf.api.app.AppConnection;
-import com.exactprosystems.jf.api.app.IApplicationFactory;
-import com.exactprosystems.jf.api.client.IClientFactory;
-
-public interface IMatrix
+public enum MatrixState
 {
-	void 					setDefaultApp(String id);
-	IApplicationFactory 	getDefaultApp();
-	
-	void 					setDefaultClient(String id);
-	IClientFactory 			getDefaultClient();
-
-	AppConnection			getDefaultApplicationConnection();
-	
-	IMatrixRunner           getMatrixRunner();
+	Error,
+	Created,
+    Waiting,
+    Running,
+    Pausing,
+    Stopped,
+    Finished,
+    Destroyed
 }

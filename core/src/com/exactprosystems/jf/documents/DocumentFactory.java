@@ -9,6 +9,8 @@
 package com.exactprosystems.jf.documents;
 
 import com.exactprosystems.jf.actions.ReadableValue;
+import com.exactprosystems.jf.api.common.IMatrixRunner;
+import com.exactprosystems.jf.common.MatrixRunner;
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.documents.config.Configuration;
@@ -93,12 +95,12 @@ public abstract class DocumentFactory
 		return null;
 	}
 
-	public final Matrix 				createLibrary(String fileName)
+	public final Matrix 				createLibrary(String fileName, MatrixRunner runner)
 	{
 		try
 		{
 			checkConfiguration();
-			Matrix ret = createLibrary(fileName, this.configuration, createMatrixListener());
+			Matrix ret = createLibrary(fileName, this.configuration, runner, createMatrixListener());
 			
 			return ret;
 		}
@@ -109,12 +111,12 @@ public abstract class DocumentFactory
 		return null;
 	}
 
-	public final Matrix 				createMatrix(String fileName)
+	public final Matrix 				createMatrix(String fileName, MatrixRunner runner)
 	{
 		try
 		{
 			checkConfiguration();
-			Matrix ret = createMatrix(fileName, this.configuration, createMatrixListener());
+			Matrix ret = createMatrix(fileName, this.configuration, runner, createMatrixListener());
 			
 			return ret;
 		}
@@ -207,9 +209,9 @@ public abstract class DocumentFactory
 
 	protected abstract Configuration 		createConfig(String fileName, Settings settings) throws Exception;
 
-	protected abstract Matrix 				createLibrary(String fileName, Configuration configuration, IMatrixListener matrixListener) throws Exception;
+	protected abstract Matrix 				createLibrary(String fileName, Configuration configuration, IMatrixRunner runner, IMatrixListener matrixListener) throws Exception;
 
-	protected abstract Matrix 				createMatrix(String fileName, Configuration configuration, IMatrixListener matrixListener) throws Exception;
+	protected abstract Matrix 				createMatrix(String fileName, Configuration configuration, IMatrixRunner runner, IMatrixListener matrixListener) throws Exception;
 
 	protected abstract MessageDictionary 	createClientDictionary(String fileName, Configuration configuration) throws Exception;
 

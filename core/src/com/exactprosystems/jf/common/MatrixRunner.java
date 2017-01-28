@@ -10,6 +10,7 @@ package com.exactprosystems.jf.common;
 
 import com.exactprosystems.jf.api.common.Converter;
 import com.exactprosystems.jf.api.common.IMatrixRunner;
+import com.exactprosystems.jf.api.common.MatrixState;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Configuration;
@@ -30,19 +31,6 @@ public class MatrixRunner implements IMatrixRunner, AutoCloseable
 {
 	public static final String parameterName = "parameter";
 
-
-    public static enum State
-    {
-    	Error,
-    	Created,
-        Waiting,
-        Running,
-        Pausing,
-        Stopped,
-        Finished,
-        Destroyed
-    }
-
 	private MatrixRunner(Context context, String name, Date startTime, Object parameter) throws Exception
 	{
 		this.startTime = startTime == null ? new Date() : startTime;
@@ -50,25 +38,6 @@ public class MatrixRunner implements IMatrixRunner, AutoCloseable
 		this.matrixFile = new File(name);
 		
 		setGlobalVariable(parameterName, parameter);
-	}
-	
-	public MatrixRunner(Context context, Matrix matrix, Date startTime, Object parameter) throws Exception
-	{
-		this(context, matrix.getName(), startTime, parameter);
-		
-		this.matrix = matrix;
-		this.context.getConfiguration().getRunnerListener().subscribe(this);
-		if (context.getMatrixListener().isOk())
-		{
-			changeState(State.Created);
-		}
-		else 
-		{
-			String msg = context.getMatrixListener().getExceptionMessage();
-			logger.error(msg);
-			changeState(State.Error);
-			throw new Exception("Errors in matrix." + msg);
-		}
 	}
 
 	public MatrixRunner(Context context, String name, Reader reader, Date startTime, Object parameter) throws Exception
@@ -78,6 +47,11 @@ public class MatrixRunner implements IMatrixRunner, AutoCloseable
 		loadFromReader(context, reader);
 	}
 
+	public Context getContext()
+	{
+	    return this.context;
+	}
+	
 	public void setOnFinished(Consumer<MatrixRunner> consumer)
 	{
 		//TODO Valery, think about it
@@ -129,7 +103,7 @@ public class MatrixRunner implements IMatrixRunner, AutoCloseable
 		this.startTime = startTime == null ? new Date() : startTime;
 	}
 	
-	public Date startTime()
+	public Date getStartTime()
 	{
 		return this.startTime;
 	}
@@ -151,7 +125,7 @@ public class MatrixRunner implements IMatrixRunner, AutoCloseable
 		try
 		{
 			stop();
-			changeState(State.Destroyed);
+			changeState(MatrixState.Destroyed);
 			this.context.getConfiguration().getRunnerListener().unsubscribe(this);
 			this.context.close();
 		}
@@ -166,7 +140,7 @@ public class MatrixRunner implements IMatrixRunner, AutoCloseable
 	{
 		if (isRunning())
 		{
-			changeState(State.Running);
+			changeState(MatrixState.Running);
 			this.context.resume();
 			return;
 		}
@@ -184,7 +158,7 @@ public class MatrixRunner implements IMatrixRunner, AutoCloseable
 			throw new Exception("Matrix is incorrect. Errors : " + errorMsg.toString());
 		}
 		
-        changeState(State.Waiting);
+        changeState(MatrixState.Waiting);
 
 		this.thread = new Thread(() -> {
 			while(new Date().before(startTime))
@@ -198,9 +172,9 @@ public class MatrixRunner implements IMatrixRunner, AutoCloseable
 					logger.error(e.getMessage(), e);
 				}
 			}
-			changeState(State.Running);
+			changeState(MatrixState.Running);
 			MatrixRunner.this.matrix.start(context, evaluator, report);
-			changeState(State.Finished);
+			changeState(MatrixState.Finished);
 			Optional.ofNullable(this.consumer).ifPresent(c -> c.accept(this));
 		});
 		this.thread.setName("Start matrix thread, thread id : " + thread.getId());
@@ -236,7 +210,7 @@ public class MatrixRunner implements IMatrixRunner, AutoCloseable
 	public void stop()
 	{
 		this.context.stop();
-		changeState(State.Stopped);
+		changeState(MatrixState.Stopped);
 		if (this.thread != null)
 		{
 			try
@@ -258,15 +232,15 @@ public class MatrixRunner implements IMatrixRunner, AutoCloseable
 	public void pause()
 	{
 		this.context.pause();
-		changeState(State.Pausing);
+		changeState(MatrixState.Pausing);
 	}
 
 	@Override
 	public void step()
 	{
-		changeState(State.Running);
+		changeState(MatrixState.Running);
 		this.context.step();
-        changeState(State.Pausing);
+        changeState(MatrixState.Pausing);
 	}
 	
 	@Override
@@ -309,14 +283,17 @@ public class MatrixRunner implements IMatrixRunner, AutoCloseable
 
 	private void loadFromReader(Context context, Reader reader) throws Exception
 	{
-		this.matrix = context.getFactory().createMatrix(this.matrixFile.getName());
+		this.matrix = context.getFactory().createMatrix(this.matrixFile.getName(), this);
 		this.context.getConfiguration().getRunnerListener().subscribe(this);
-		changeState(State.Error);
-		this.matrix.load(reader);
+		changeState(MatrixState.Error);
+		if (reader != null)
+		{
+		    this.matrix.load(reader);
+		}
 
 		if (context.getMatrixListener().isOk())
 		{
-			changeState(State.Created);
+			changeState(MatrixState.Created);
 		}
 		else 
 		{
@@ -326,13 +303,13 @@ public class MatrixRunner implements IMatrixRunner, AutoCloseable
 		}
 	}
 
-	private void changeState(State newState)
+	private void changeState(MatrixState newState)
     {
 		int total = this.matrix.count(null); 
 		int done = this.matrix.currentItem();
 		this.context.getConfiguration().getRunnerListener().stateChange(this, newState, done, total);
 		
-		if (newState == State.Finished)
+		if (newState == MatrixState.Finished)
 		{
 			try
 			{

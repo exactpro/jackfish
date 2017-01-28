@@ -65,6 +65,7 @@ import java.io.Reader;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -76,7 +77,6 @@ public class Main extends Application
 
 	private static String configName = null;
 
-	private Preloader preloader;
 	private MainController controller;
 
 	private Configuration config;
@@ -187,7 +187,9 @@ public class Main extends Application
 						switch (kind)
 						{
 							case MATRIX:
-								needDisplayDoc.add(loadDocument(file, factory.createMatrix(filePath), kind));
+							    Context context = factory.createContext();
+							    MatrixRunner runner = context.createRunner(filePath, null, new Date(), null);
+								needDisplayDoc.add(loadDocument(file, factory.createMatrix(filePath, runner), kind));
 								break;
 
 							case GUI_DICTIONARY:
@@ -244,6 +246,7 @@ public class Main extends Application
 				document.display();
 			}
 		}
+		this.needDisplayDoc.clear();
 	}
 	//endregion
 
@@ -431,7 +434,10 @@ public class Main extends Application
 		Optional<File> optional = chooseFile(Matrix.class, filePath, DialogsHelper.OpenSaveMode.OpenFile);
 		if (optional.isPresent())
 		{
-			loadDocument(optional.get(), this.factory.createMatrix(optional.get().getPath()), DocumentKind.MATRIX);
+            Context context = factory.createContext();
+            Reader reader = new FileReader(optional.get());
+            MatrixRunner runner = context.createRunner(filePath, reader, new Date(), null);
+			loadDocument(optional.get(), this.factory.createMatrix(optional.get().getPath(), runner), DocumentKind.MATRIX);
 		}
 	}
 
@@ -476,7 +482,9 @@ public class Main extends Application
 	public void newMatrix() throws Exception
 	{
 		checkConfig();
-		Matrix doc = this.factory.createMatrix(newName(Matrix.class));
+        Context context = factory.createContext();
+        MatrixRunner runner = context.createRunner(newName(Matrix.class), null, new Date(), null);
+		Matrix doc = this.factory.createMatrix(newName(Matrix.class), runner);
 		doc.create();
 		Settings.SettingsValue copyright = settings.getValueOrDefault(Settings.GLOBAL_NS, "Main", "copyright", "");
 		String text = copyright.getValue().replaceAll("\\\\n", System.lineSeparator());
@@ -487,7 +495,9 @@ public class Main extends Application
 	public void newLibrary(String fullPath) throws Exception
 	{
 		checkConfig();
-		Matrix doc = this.factory.createMatrix(fullPath);
+        Context context = factory.createContext();
+        MatrixRunner runner = context.createRunner(newName(Matrix.class), null, new Date(), null);
+		Matrix doc = this.factory.createMatrix(fullPath, runner);
 		doc.create();
 		if (doc instanceof MatrixFx)
 		{

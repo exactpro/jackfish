@@ -94,10 +94,11 @@ public class MatrixRun extends AbstractAction
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception 
 	{
-		try(Context cloneContext = context.clone();
+        try(Context newContext = context.getFactory().createContext();
 			Reader reader = new FileReader(new File(this.matrix)))
 		{
-			MatrixRunner runner = cloneContext.createRunner(this.matrix, reader, this.at, this.parameter);
+            newContext.setOut(context.getOut());
+			MatrixRunner runner = newContext.createRunner(this.matrix, reader, this.at, this.parameter);
 			runner.start();
 			super.setResult(runner);
 		}

@@ -12,7 +12,10 @@ import com.exactprosystems.jf.api.app.AppConnection;
 import com.exactprosystems.jf.api.app.IApplicationFactory;
 import com.exactprosystems.jf.api.client.IClientFactory;
 import com.exactprosystems.jf.api.common.IMatrix;
+import com.exactprosystems.jf.api.common.IMatrixRunner;
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.common.MatrixRunner;
+import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.common.version.VersionInfo;
@@ -36,14 +39,15 @@ import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @DocumentInfo(newName = "NewMatrix", extentioin = "jf", description = "Matrix")
-public class Matrix extends AbstractDocument implements IMatrix, Cloneable
+public class Matrix extends AbstractDocument implements IMatrix
 {
 	public static final String EMPTY_STRING = "<empty>";
 
-	public Matrix(String matrixName, DocumentFactory factory, IMatrixListener matrixListener, boolean isLibrary) throws Exception
+	public Matrix(String matrixName, DocumentFactory factory, IMatrixRunner runner, IMatrixListener matrixListener, boolean isLibrary) throws Exception
 	{
 		super(matrixName, factory);
 
+		this.runner = (MatrixRunner)runner;
 		this.isLibrary = isLibrary;
 		this.root = new MatrixRoot(matrixName);
 		this.buffer = new StringBuilder();
@@ -77,6 +81,16 @@ public class Matrix extends AbstractDocument implements IMatrix, Cloneable
 	{
 		return getName();
 	}
+	
+     public Matrix makeCopy() throws Exception
+      {
+          Matrix copy = new Matrix(getName(), getFactory(), this.runner, this.matrixListener, this.isLibrary);
+          copy.root.init(copy);
+          copy.buffer = new StringBuilder(this.buffer);
+          copy.enumerate();
+          return copy;
+      }
+
 	
 	// ==============================================================================================================================
 	// interface IMatrix
@@ -135,6 +149,12 @@ public class Matrix extends AbstractDocument implements IMatrix, Cloneable
 		return null;
 	}
 
+	@Override
+	public IMatrixRunner getMatrixRunner()
+	{
+	    return this.runner;
+	}
+	
 	// ==============================================================================================================================
 	// AbstractDocument
 	// ==============================================================================================================================
@@ -175,6 +195,17 @@ public class Matrix extends AbstractDocument implements IMatrix, Cloneable
 	{
 		return true;
 	}
+	
+    @Override
+    public void close(Settings settings) throws Exception
+    {
+        super.close(settings);
+        
+        if (this.runner != null)
+        {
+            this.runner.close();
+        }
+    }
 
 	@Override
 	public void save(String fileName) throws Exception
@@ -185,29 +216,6 @@ public class Matrix extends AbstractDocument implements IMatrix, Cloneable
 		{
 			Parser parser = new Parser();
 			parser.saveMatrix(this.root, rawWriter);
-		}
-	}
-
-	// ==============================================================================================================================
-	// interface Cloneable
-	// ==============================================================================================================================
-	@Override
-	public Matrix clone() throws CloneNotSupportedException
-	{
-		try
-		{
-			Matrix clone = ((Matrix) super.clone());
-			clone.root = root.clone();
-			clone.root.init(clone);
-			clone.buffer = buffer;
-			clone.matrixListener = matrixListener;
-			clone.enumerate();
-			return clone;
-		}
-		catch (Exception e)
-		{
-			logger.error(e.getMessage(), e);
-			throw new InternalError();
 		}
 	}
 
@@ -476,6 +484,7 @@ public class Matrix extends AbstractDocument implements IMatrix, Cloneable
 	private MatrixItem			root	= null;
 	private StringBuilder		buffer;
 	private IMatrixListener		matrixListener;
+    private MatrixRunner        runner;
 
 	private static final Logger	logger	= Logger.getLogger(Matrix.class);
 }

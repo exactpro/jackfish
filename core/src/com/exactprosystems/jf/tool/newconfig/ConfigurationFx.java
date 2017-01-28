@@ -18,6 +18,7 @@ import com.exactprosystems.jf.api.service.IServicesPool;
 import com.exactprosystems.jf.api.service.ServiceConnection;
 import com.exactprosystems.jf.api.service.ServiceStatus;
 import com.exactprosystems.jf.app.ApplicationPool;
+import com.exactprosystems.jf.common.MatrixRunner;
 import com.exactprosystems.jf.common.MutableString;
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
@@ -337,8 +338,10 @@ public class ConfigurationFx extends Configuration
 
 	public void addNewMatrix(File parentFolder, String fileName) throws Exception
 	{
+        Context context = factory.createContext();
+        MatrixRunner runner = context.createRunner(fileName, null, new Date(), null);
 		File file = createNewFile(parentFolder, fileName, Configuration.matrixExt);
-		Matrix matrix = getFactory().createMatrix(path(file));
+		Matrix matrix = getFactory().createMatrix(path(file), runner);
 		matrix.create();
 		matrix.display();
 		matrix.save(path(file));

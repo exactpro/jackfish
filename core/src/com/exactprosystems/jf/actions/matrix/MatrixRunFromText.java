@@ -79,10 +79,11 @@ public class MatrixRunFromText extends AbstractAction
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception 
 	{
-		try (	Context contextClone =  context.clone();
+        try(Context newContext = context.getFactory().createContext();
 				Reader reader = new StringReader(this.text.toString())	)
 		{
-			MatrixRunner runner = contextClone.createRunner("new", reader, this.at, this.parameter);
+            newContext.setOut(context.getOut());
+			MatrixRunner runner = newContext.createRunner("new", reader, this.at, this.parameter);
 			runner.start();
 			
 			super.setResult(runner);
