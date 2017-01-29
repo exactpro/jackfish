@@ -43,8 +43,15 @@ public class MatrixRunner implements IMatrixRunner, AutoCloseable
 	public MatrixRunner(Context context, String name, Reader reader, Date startTime, Object parameter) throws Exception
 	{
 		this(context, name, startTime, parameter);
-		
-		loadFromReader(context, reader);
+		if (reader != null)
+		{
+			loadFromReader(context, reader);
+		}
+	}
+
+	public void setMatrix(Matrix matrix) 
+	{
+		this.matrix = matrix;
 	}
 
 	public Context getContext()
@@ -286,10 +293,7 @@ public class MatrixRunner implements IMatrixRunner, AutoCloseable
 		this.matrix = context.getFactory().createMatrix(this.matrixFile.getName(), this);
 		this.context.getConfiguration().getRunnerListener().subscribe(this);
 		changeState(MatrixState.Error);
-		if (reader != null)
-		{
-		    this.matrix.load(reader);
-		}
+	    this.matrix.load(reader);
 
 		if (context.getMatrixListener().isOk())
 		{
@@ -305,6 +309,10 @@ public class MatrixRunner implements IMatrixRunner, AutoCloseable
 
 	private void changeState(MatrixState newState)
     {
+		if (this.matrix == null)
+		{
+			return;
+		}
 		int total = this.matrix.count(null); 
 		int done = this.matrix.currentItem();
 		this.context.getConfiguration().getRunnerListener().stateChange(this, newState, done, total);

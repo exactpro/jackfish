@@ -97,7 +97,7 @@ public class MatrixRun extends AbstractAction
         try(Context newContext = context.getFactory().createContext();
 			Reader reader = new FileReader(new File(this.matrix)))
 		{
-            newContext.setOut(context.getOut());
+        	newContext.setOut(context.getOut());
 			MatrixRunner runner = newContext.createRunner(this.matrix, reader, this.at, this.parameter);
 			runner.start();
 			super.setResult(runner);

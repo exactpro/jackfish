@@ -435,8 +435,7 @@ public class Main extends Application
 		if (optional.isPresent())
 		{
             Context context = factory.createContext();
-            Reader reader = new FileReader(optional.get());
-            MatrixRunner runner = context.createRunner(filePath, reader, new Date(), null);
+            MatrixRunner runner = context.createRunner(filePath, null, new Date(), null);
 			loadDocument(optional.get(), this.factory.createMatrix(optional.get().getPath(), runner), DocumentKind.MATRIX);
 		}
 	}
