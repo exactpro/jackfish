@@ -440,6 +440,7 @@ public class DictionaryFx extends GuiDictionary
 			return;
 		}
 		DialogWizard wizard = new DialogWizard(this, window, this.applicationConnector.getAppConnection());
+		wizard.onHiding(e -> Common.tryCatch(() -> this.displayElement(window, SectionKind.Run, null), "Error on hiding wizard"));
 		Task<Integer> task = new Task<Integer>()
 		{
 			@Override
@@ -522,9 +523,9 @@ public class DictionaryFx extends GuiDictionary
 					}
 					else
 					{
-						ButtonType desision = DialogsHelper.showQuestionDialog("This element is the owner for other elements", "Remove it anyway?");
+						boolean needRemove = DialogsHelper.showQuestionDialog("This element is the owner for other elements", "Remove it anyway?");
 
-						if (desision == ButtonType.OK)
+						if (needRemove)
 						{
 							window.removeControl(control);
 							IControl anotherControl = window.getFirstControl(sectionKind);

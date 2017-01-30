@@ -365,7 +365,7 @@ public class NavigationController implements Initializable, ContainingParent
 
 	public void displayElement(IControl control, Collection<IControl> controls)
 	{
-		if (control == null)
+		if (controls == null)
 		{
 			controls = new ArrayList<>();
 		}

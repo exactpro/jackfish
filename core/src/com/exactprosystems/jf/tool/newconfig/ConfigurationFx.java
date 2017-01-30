@@ -391,12 +391,11 @@ public class ConfigurationFx extends Configuration
 		boolean needRemove = true;
 		if (collect.size() > 1)
 		{
-			ButtonType buttonType = DialogsHelper.showQuestionDialog("Current library contains many namespaces : "
+			needRemove = DialogsHelper.showQuestionDialog("Current library contains many namespaces : "
 							+ collect
 							.stream()
 							.collect(Collectors.joining(",", "[", "]"))
 					, "Remove it anyway?");
-			needRemove = buttonType.equals(ButtonType.OK);
 		}
 		if (needRemove)
 		{

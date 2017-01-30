@@ -81,6 +81,11 @@ public class DialogWizardController implements Initializable, ContainingParent
 	}
 	//endregion
 
+	void setOnHiding(Consumer<DialogEvent> consumer)
+	{
+		this.dialog.setOnHiding(consumer::accept);
+	}
+
 	void init(DialogWizard model, String windowName)
 	{
 		this.windowName = windowName;
@@ -112,6 +117,7 @@ public class DialogWizardController implements Initializable, ContainingParent
 		if (document != null)
 		{
 			this.treeViewWithRectangles.displayDocument(document, xOffset, yOffset);
+			this.model.findElements(this.tableView.getItems());
 			BufferedImage image = this.imageViewWithScale.getImage();
 			this.imageViewWithScale.setListRectangles(this.treeViewWithRectangles.buildMap(image.getWidth(), image.getHeight(), new Dimension(image.getWidth() / 16, image.getHeight() / 16)));
 		}
@@ -156,7 +162,17 @@ public class DialogWizardController implements Initializable, ContainingParent
 		else
 		{
 			this.tableView.getItems().set(index, bean);
+//			this.tableView.getColumns().forEach(column -> Platform.runLater(() -> {
+//				column.setVisible(false);
+//				column.setVisible(true);
+//			}));
 		}
+	}
+
+	List<ElementWizardBean> remove(ElementWizardBean bean)
+	{
+		this.tableView.getItems().remove(bean);
+		return this.tableView.getItems();
 	}
 
 	AbstractControl editElement(AbstractControl abstractControl)
@@ -186,7 +202,6 @@ public class DialogWizardController implements Initializable, ContainingParent
 				  newId -> Common.tryCatch(() -> abstractControl.set(AbstractControl.xpathName, newId), "Error on set parameter")
 				, newB -> Common.tryCatch(() -> abstractControl.set(AbstractControl.absoluteXpathName, newB), "Error on set parameter")
 		);
-//		addToPane(gridPane, "Xpath : ",		abstractControl.getXpath(),		newId -> Common.tryCatch(() -> abstractControl.set(AbstractControl.xpathName, newId), "Error on set parameter"), index++);
 		addToPane(gridPane, "UID : ",		abstractControl.getUID(), 		newId -> Common.tryCatch(() -> abstractControl.set(AbstractControl.uidName, newId), "Error on set parameter"), index++);
 		addToPane(gridPane, "Class : ",		abstractControl.getClazz(),		newId -> Common.tryCatch(() -> abstractControl.set(AbstractControl.clazzName, newId), "Error on set parameter"), index++);
 		addToPane(gridPane, "Name : ",	 	abstractControl.getName(), 		newId -> Common.tryCatch(() -> abstractControl.set(AbstractControl.nameName, newId), "Error on set parameter"), index++);
@@ -374,9 +389,10 @@ public class DialogWizardController implements Initializable, ContainingParent
 			ElementWizardBean elementWizardBean = e.getRowValue();
 			if (elementWizardBean != null)
 			{
-				Common.tryCatch(() -> this.model.updateId(elementWizardBean.getNumber(), e.getNewValue()), "Error on update id");
+				Common.tryCatch(() -> this.model.updateId(elementWizardBean, e.getNewValue()), "Error on update id");
 			}
 		});
+		columnId.setMinWidth(100.0);
 
 		TableColumn<ElementWizardBean, ControlKind> columnKind = new TableColumn<>("Kind");
 		columnKind.setCellValueFactory(new PropertyValueFactory<>("controlKind"));
@@ -384,7 +400,7 @@ public class DialogWizardController implements Initializable, ContainingParent
 			ElementWizardBean rowValue = e.getRowValue();
 			if (rowValue != null)
 			{
-				Common.tryCatch(() -> this.model.updateControlKind(rowValue.getNumber(),e.getNewValue()), "Error on update control kind");
+				Common.tryCatch(() -> this.model.updateControlKind(rowValue,e.getNewValue()), "Error on update control kind");
 			}
 		});
 		columnKind.setCellFactory(e -> new TableCell<ElementWizardBean, ControlKind>(){
@@ -429,8 +445,6 @@ public class DialogWizardController implements Initializable, ContainingParent
 				if (this.comboBox == null)
 				{
 					this.comboBox = new ChoiceBox<>(FXCollections.observableArrayList(ControlKind.values()));
-					//TODO think about it
-					this.comboBox.setStyle("-fx-background-color : gold");
 					this.comboBox.getSelectionModel().select(getItem());
 					this.comboBox.setOnAction(e -> commitEdit(this.comboBox.getSelectionModel().getSelectedItem()));
 					this.comboBox.showingProperty().addListener((observable, oldValue, newValue) -> {

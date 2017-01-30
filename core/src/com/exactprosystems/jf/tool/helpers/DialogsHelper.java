@@ -59,8 +59,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
 import java.nio.file.Paths;
-import java.sql.Driver;
-import java.sql.DriverManager;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -148,7 +146,7 @@ public abstract class DialogsHelper
 	}
 
 
-	public static ButtonType showQuestionDialog(String header, String body)
+	public static boolean showQuestionDialog(String header, String body)
 	{
 		Dialog<ButtonType> dialog = new Alert(Alert.AlertType.CONFIRMATION);
 		dialog.setTitle("Warning");
@@ -156,11 +154,7 @@ public abstract class DialogsHelper
 		dialog.getDialogPane().setContentText(body);
 		dialog.getDialogPane().getStylesheets().addAll(Common.currentThemesPaths());
 		Optional<ButtonType> buttonType = dialog.showAndWait();
-		if (buttonType.isPresent())
-		{
-			return buttonType.get();
-		}
-		return ButtonType.CANCEL;
+		return buttonType.map(buttonType1 -> buttonType1.getButtonData() == ButtonBar.ButtonData.OK_DONE).orElse(false);
 	}
 
 	public static ButtonType showSaveFileDialog(String fileName)

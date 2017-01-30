@@ -31,6 +31,11 @@ public class ElementWizardBean
 		return number;
 	}
 
+	public void setNumber(int number)
+	{
+		this.number = number;
+	}
+
 	public String getId()
 	{
 		return id;
