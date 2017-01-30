@@ -21,6 +21,7 @@ import com.exactprosystems.jf.functions.HelpKind;
 
 import java.io.File;
 import java.io.FileReader;
+import java.io.PrintStream;
 import java.io.Reader;
 import java.util.Date;
 
