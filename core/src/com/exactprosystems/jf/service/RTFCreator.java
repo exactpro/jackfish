@@ -3,6 +3,7 @@ package com.exactprosystems.jf.service;
 import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.actions.ActionsList;
+import com.exactprosystems.jf.common.RtfHelp.Help;
 import com.exactprosystems.jf.documents.matrix.parser.Parser;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItemAttribute;
 
@@ -32,6 +33,7 @@ class RTFCreator {
 
     private final String documentName = "JackFish.rtf";
     private static Rtf document = rtf();
+    private static Help rtfHelp = new Help();
     private List<RtfPara> items = new ArrayList<>();
     private List<RtfPara> actions = new ArrayList<>();
     private List<RtfPara> contents = new ArrayList<>();
@@ -40,10 +42,10 @@ class RTFCreator {
     private final String path =  workDir + File.separator + documentName;
     private final String link = "file:///" + path + "#";
     private final String trait = "123456789";
-    private final String pictureHeader = "file:///home/alexander.kruglov/IdeaProjects/Picture1.png";
-    private final String pictureFooter = "file:///home/alexander.kruglov/IdeaProjects/Picture2.png";
-    private final String description = "/home/alexander.kruglov/IdeaProjects/1.rtf";
-    private final String mvelDoc = "/home/alexander.kruglov/IdeaProjects/mvel1.txt";
+    private final URL pictureHeader = rtfHelp.header();
+    private final URL pictureFooter = rtfHelp.footer();
+    private final URL introduction = rtfHelp.introduction();
+    private final URL mvelDoc = rtfHelp.mvel();
 
     private void writeItems() throws IOException
     {
@@ -72,7 +74,7 @@ class RTFCreator {
     private RtfSectionFormatAndHeaderFooter createSectionFormat() throws MalformedURLException{
         return RtfSectionFormatAndHeaderFooter.sectionFormatting(
                 RtfSectionFormatAndHeaderFooter.headerForAllPages(p(
-                        picture(new URL(pictureHeader))
+                        picture(pictureHeader)
                                 .size(195, 45, RtfUnit.POINT)
                                 .type(RtfPicture.PictureType.PNG),
                         text("WriteLine")
@@ -89,7 +91,7 @@ class RTFCreator {
     private RtfSectionFormatAndHeaderFooter createFirstPageFormat() throws MalformedURLException{
         return RtfSectionFormatAndHeaderFooter.sectionFormatting(
                 RtfSectionFormatAndHeaderFooter.headerForAllPages(p(
-                        picture(new URL(pictureHeader))
+                        picture(pictureHeader)
                                 .size(200, 50, RtfUnit.POINT)
                                 .type(RtfPicture.PictureType.PNG),
                         text("WriteLine")
@@ -97,7 +99,7 @@ class RTFCreator {
                 RtfSectionFormatAndHeaderFooter.footerOnAllPages(p(
                         text("WriteTopLine"),
                         lineBreak(),
-                        picture(new URL(pictureFooter))
+                        picture(pictureFooter)
                                 .size(150, 45, RtfUnit.POINT)
                                 .type(RtfPicture.PictureType.PNG),
                         lineBreak(),
@@ -408,9 +410,10 @@ class RTFCreator {
 
     void createDescription() throws IOException, BadLocationException
     {
+        InputStream is = introduction.openStream();
         RTFEditorKit rtfParser = new RTFEditorKit();
         Document doc = rtfParser.createDefaultDocument();
-        rtfParser.read(new FileInputStream(description), doc, 0);
+        rtfParser.read(is, doc, 0);
         String text = doc.getText(0, doc.getLength());
 
         document.section(createSectionFormat(), p(tab(), tab(), tab(), tab(), fontSize(40, "Introduction" + trait), lineBreak()), p(text(text)));
@@ -452,7 +455,7 @@ class RTFCreator {
     void mvelDocumentation() throws IOException
     {
         mvels.add(p(tab(), tab(), tab(), tab(), fontSize(40, "MVEL" + trait), lineBreak()));
-        BufferedReader br = new BufferedReader(new FileReader(mvelDoc));
+        BufferedReader br = new BufferedReader(new FileReader( new File(mvelDoc.getFile())));
         for(String line; (line = br.readLine()) != null; ) {
             String[] strs = line.split("\\s+");
             ArrayList<RtfText> text = new ArrayList<>();
@@ -500,7 +503,7 @@ class RTFCreator {
                     mvels.add(row(text.toArray(arr)));
                     text.clear();
                 }
-                else if (line.contains("{{#") && line.contains("#}}"))
+                else if (line.contains("{{#") && line.contains("#}}")) //code
                 {
                     for (String s : strs)
                     {
