@@ -49,7 +49,7 @@ public class Sys
     }
 
     @DescriptionAttribute(text = "Save @text to clipboard")
-	public static void saveToClipboard(String text)
+	public static void copyToClipboard(String text)
 	{
 		StringSelection stringSelection = new StringSelection(text);
 		Toolkit.getDefaultToolkit().getSystemClipboard().setContents(stringSelection, null);
