@@ -1,9 +1,8 @@
-package com.exactprosystems.jf.service;
+package com.exactprosystems.jf.common.RtfHelp;
 
 import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.actions.ActionsList;
-import com.exactprosystems.jf.common.RtfHelp.Help;
 import com.exactprosystems.jf.documents.matrix.parser.Parser;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItemAttribute;
 

@@ -1,4 +1,4 @@
-package com.exactprosystems.jf.service;
+package com.exactprosystems.jf.common.RtfHelp;
 
 import java.io.*;
 
