@@ -23,14 +23,27 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 @ActionAttribute(
 		group					= ActionGroups.Services,
 		suffix					= "SRVSTP",
-		generalDescription 		= "Stops desired service. ",
-		additionFieldsAllowed 	= false
+		generalDescription 		= "The following action is needed to stop a service that was run by {{@ServiceStart@}}.",
+		additionFieldsAllowed 	= false,
+		examples 				= "{{`1. Load MatrixService.`}}"
+				+ "{{`2. Run a service with additional parameter Port, that was specified earlier.`}}"
+				+ "{{`3. Close a connection.`}}"
+				+ "{{##Id;#Action;#ServiceId\n"
+				+ "SRVLD1;ServiceLoad;'MatrixService'\n"
+				+ "\n"
+				+ "\n"
+				+ "#Id;#Action;#Port;#ServiceConnection\n"
+				+ "SRVSTRT1;ServiceStart;10565;SRVLD1.Out\n"
+				+ "\n"
+				+ "\n"
+				+ "#Id;#Action;#ServiceConnection\n"
+				+ "SRVSTP1;ServiceStop;SRVLD1.Out#}}"
 	)
 public class ServiceStop extends AbstractAction 
 {
 	public final static String connectionName = "ServiceConnection";
 
-	@ActionFieldAttribute(name = connectionName, mandatory = true, description = "The service connection." )
+	@ActionFieldAttribute(name = connectionName, mandatory = true, description = "A connection with a service is specified, that needed to be closed." )
 	protected ServiceConnection	connection	= null;
 
 	public ServiceStop()

@@ -14,6 +14,7 @@ import com.exactprosystems.jf.actions.ActionsList;
 import com.exactprosystems.jf.actions.ReadableValue;
 import com.exactprosystems.jf.api.common.ApiVersionInfo;
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.common.MatrixRunner;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.HelpFactory;
 import com.exactprosystems.jf.common.report.ReportBuilder;
@@ -545,7 +546,7 @@ public abstract class DialogsHelper
 	{
 		try (Context context = factory.createContext())
 		{
-			Matrix matrix = factory.createMatrix("helpMatrix", null); // TODO check if the help works
+			Matrix matrix = factory.createMatrix("helpMatrix", new MatrixRunner(context, "help", new StringReader(""), new Date(), null)); // TODO check if the help works
 
 			MatrixItem syntax = new HelpChapter("Matrix syntax");
 			syntax.init(matrix);

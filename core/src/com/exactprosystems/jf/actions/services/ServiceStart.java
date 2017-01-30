@@ -25,15 +25,23 @@ import java.util.List;
 @ActionAttribute(
 		group					= ActionGroups.Services,
 		suffix					= "SRVSTRT",
-		generalDescription 		= "Starts desired service. ",
+		generalDescription 		= "The following action is needed to run a service that was loaded earlier by {{@ServiceLoad@}}.",
 		additionFieldsAllowed 	= true,
-		outputDescription 		= "True, if service starts successful."
+		additionalDescription 	= "Additional parameters depend on the type of the running service.",
+		outputDescription 		= "True, if service running successful.",
+		examples 				= "{{`1. Load MatrixService`}}"
+				+ "{{`2. Load a service woth an additional parameter Port, that was loaded earlier.`}}"
+				+ "{{##Id;#Action;#ServiceId"
+				+ "SRVLD1;ServiceLoad;'MatrixService'\n"
+				+ "\n"
+				+ "#Id;#Action;#Port;#ServiceConnection\n"
+				+ "SRVSTRT1;ServiceStart;10565;SRVLD1.Out#}}"
 	)
 public class ServiceStart extends AbstractAction 
 {
 	public final static String connectionName = "ServiceConnection";
 
-	@ActionFieldAttribute(name = connectionName, mandatory = true, description = "The service connection." )
+	@ActionFieldAttribute(name = connectionName, mandatory = true, description = "A connection with a service is specified, that should be run. An output object of {{@ServiceLoad@}} action is indicated." )
 	protected ServiceConnection	connection	= null;
 
 	public ServiceStart()

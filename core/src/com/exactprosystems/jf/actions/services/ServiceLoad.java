@@ -28,16 +28,22 @@ import java.util.List;
 @ActionAttribute(
 		group					= ActionGroups.Services,
 		suffix					= "SRVLD",
-		generalDescription 		= "Loads desired service and inits it. ",
+		generalDescription 		= "The following action is needed to load a service, to initialize it and to connect to it."
+				+ "Services are things functioning as a server in a client-server relationship."
+				+ "A server listens to a definite port and allows installing TCP connection from the client side.",
 		additionFieldsAllowed 	= false,
-		outputDescription = "Connection to the service.", 
-		outputType = ServiceConnection.class
+		outputDescription = "Is a connection with a loaded server. It is used for further interaction with the loaded server.",
+		outputType 				= ServiceConnection.class,
+		examples 				= "{{##Id;#Action;#ServiceId\n"
+				+ "SRVLD1;ServiceLoad;'TEST'#}}"
 	)
 public class ServiceLoad extends AbstractAction 
 {
 	public final static String idName = "ServiceId";
 
-	@ActionFieldAttribute(name = idName, mandatory = true, description = "The service id." )
+	@ActionFieldAttribute(name = idName, mandatory = true, description = "A service ID that was described in Service "
+			+ "entries configuration, which will be used for booting a relevant service.If no entry is found in the "
+			+ "configuration at such ServiceId, an action finishes with an error." )
 	protected String 		id	= null;
 
 	public ServiceLoad()
