@@ -86,6 +86,7 @@ public class Matrix extends AbstractDocument implements IMatrix
      public Matrix makeCopy() throws Exception
       {
           Matrix copy = new Matrix(getName(), getFactory(), this.runner, this.matrixListener, this.isLibrary);
+          copy.root = this.root.clone();
           copy.root.init(copy);
           copy.buffer = new StringBuilder(this.buffer);
           copy.enumerate();

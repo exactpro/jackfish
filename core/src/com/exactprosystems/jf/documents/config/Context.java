@@ -241,8 +241,8 @@ public class Context implements IContext, AutoCloseable
             {
                 return null;
             }
-            
-	        try
+
+            try
 	        {
 	            matrix = matrix.makeCopy();
 	            if (item != null)
