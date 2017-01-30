@@ -66,7 +66,7 @@ public class XpathViewer
 					Rectangle rectangle = service.getRectangle(null, owner);
 					offsetX = rectangle.x;
 					offsetY = rectangle.y;
-					BufferedImage image = service.getImage(null, owner, Integer.MIN_VALUE, Integer.MIN_VALUE, Integer.MIN_VALUE, Integer.MIN_VALUE).getImage();
+					BufferedImage image = service.getImage(null, owner).getImage();
 					return new ImageAndOffset(image, offsetX, offsetY);
 				}
 			};

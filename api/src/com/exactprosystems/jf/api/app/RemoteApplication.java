@@ -358,11 +358,11 @@ public abstract class RemoteApplication implements IRemoteApplication
 	
 	
 	@Override
-	public final ImageWrapper getImage(Locator owner, Locator element, int x1, int y1, int x2, int y2) throws RemoteException
+	public final ImageWrapper getImage(Locator owner, Locator element) throws RemoteException
 	{
 		try 
 		{
-			return getImageDerived(owner, element, x1, y1, x2, y2);
+			return getImageDerived(owner, element);
 		}
 		catch (RemoteException e)
 		{
@@ -625,7 +625,7 @@ public abstract class RemoteApplication implements IRemoteApplication
 	
 	protected abstract Locator getLocatorDerived (Locator owner, ControlKind controlKind, int x, int y) throws Exception;
 
-	protected abstract ImageWrapper getImageDerived(Locator owner, Locator element, int x1, int y1, int x2, int y2) throws Exception;
+	protected abstract ImageWrapper getImageDerived(Locator owner, Locator element) throws Exception;
 
 	protected abstract Rectangle getRectangleDerived(Locator owner, Locator element) throws Exception;
 

@@ -177,7 +177,7 @@ public class LayoutWizard
 				BufferedImage image = null;
 				try
 				{
-					image = service().getImage(null, imageLocator, Integer.MIN_VALUE, Integer.MIN_VALUE, Integer.MIN_VALUE, Integer.MIN_VALUE).getImage();
+					image = service().getImage(null, imageLocator).getImage();
 				}
 				//TODO need catch ElementNotFoundException, not ServerException
 				catch (ServerException e)
