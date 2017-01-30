@@ -621,7 +621,7 @@ public class SeleniumRemoteApplication extends RemoteApplication
 	}
 
 	@Override
-	protected ImageWrapper getImageDerived(Locator owner, Locator element, int x1, int y1, int x2, int y2) throws Exception
+	protected ImageWrapper getImageDerived(Locator owner, Locator element) throws Exception
 	{
 		Exception real = null;
 		int repeat = 1;

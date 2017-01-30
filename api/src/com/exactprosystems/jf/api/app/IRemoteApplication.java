@@ -38,7 +38,7 @@ public interface IRemoteApplication extends Remote
 	String 						switchTo		(String title, boolean softCondition) throws RemoteException;
 	void 						switchToFrame	(Locator owner) throws RemoteException;
 	void 						resize			(int height, int width, boolean maximize, boolean minimize) throws RemoteException;
-	ImageWrapper 				getImage		(Locator owner, Locator element, int x1, int y1, int x2, int y2) throws RemoteException;
+	ImageWrapper 				getImage		(Locator owner, Locator element) throws RemoteException;
 	Rectangle 					getRectangle	(Locator owner, Locator element) throws RemoteException;
 	Collection<String> 			findAll			(Locator owner, Locator element) throws RemoteException;
 	Locator 					getLocator		(Locator owner, ControlKind controlKind, int x, int y) throws RemoteException;

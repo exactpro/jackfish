@@ -113,7 +113,7 @@ public class ImageGet extends AbstractAction
 
 		if (this.dialog == null)
 		{
-			imageWrapper = service.getImage(null, null, x1, y1, x2, y2);
+			imageWrapper = service.getImage(null, null);
 		}
 		else
 		{
@@ -126,7 +126,7 @@ public class ImageGet extends AbstractAction
 				for(IControl self : window.getControls(SectionKind.Self))
 				{
 					found = true;
-					imageWrapper = service.getImage(null, self.locator(), x1, y1, x2, y2);
+					imageWrapper = service.getImage(null, self.locator());
 					break;
 				}
 	
@@ -145,12 +145,16 @@ public class ImageGet extends AbstractAction
 				}
 				IControl owner = window.getOwnerControl(control);
 				
-				imageWrapper = service.getImage(owner == null ? null : owner.locator(), control.locator(), x1, y1, x2, y2);
+				imageWrapper = service.getImage(owner == null ? null : owner.locator(), control.locator());
 			}
 		}
 
 		if (imageWrapper != null)
 		{
+			if(x1 != Integer.MIN_VALUE && y1 != Integer.MIN_VALUE && x2 != Integer.MIN_VALUE && y2 != Integer.MIN_VALUE)
+			{
+				imageWrapper = imageWrapper.cutImage(x1, y1, x2, y2);
+			}
 			imageWrapper.setDescription(this.description);
 		}
         super.setResult(imageWrapper);

@@ -108,7 +108,7 @@ public class LayoutExpressionBuilder
 			@Override
 			protected BufferedImage call() throws Exception
 			{
-				BufferedImage image = service().getImage(null, imageLocator, Integer.MIN_VALUE, Integer.MIN_VALUE, Integer.MIN_VALUE, Integer.MIN_VALUE).getImage();
+				BufferedImage image = service().getImage(null, imageLocator).getImage();
 				IControl ownerSelf = currentWindow.getOwnerControl(imageControl);
 				Rectangle selfRectangle = service().getRectangle(ownerSelf == null ? null : ownerSelf.locator(), imageLocator);
 				xOffset = selfRectangle.getX();
