@@ -14,6 +14,7 @@ dependencies {
 	compile group: 'log4j', name: 'log4j', version: '1.2.17'
 	compile group: 'org.mvel', name: 'mvel2', version: '2.3.1.Final'
 	compile group: 'org.eclipse.jgit', name: 'org.eclipse.jgit', version: '4.5.0.201609210915-r'
+	compile group: 'com.tutego', name: 'jrtf', version: '0.7'
 }
 
 clean.doFirst {

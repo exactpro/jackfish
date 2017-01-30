@@ -38,7 +38,7 @@ public class Parser
 	public Parser()
 	{}
 	
-	private static Class<?> [] knownItems = new Class<?>[]
+	public static Class<?> [] knownItems = new Class<?>[]
 			{	
 				TempItem.class,
 				NameSpace.class,
