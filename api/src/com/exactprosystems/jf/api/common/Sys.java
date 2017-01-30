@@ -8,6 +8,10 @@
 
 package com.exactprosystems.jf.api.common;
 
+import java.awt.*;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.StringSelection;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
@@ -43,4 +47,27 @@ public class Sys
     {
     	return System.getProperty("os.name");
     }
+
+    @DescriptionAttribute(text = "Save @text to clipboard")
+	public static void saveToClipboard(String text)
+	{
+		StringSelection stringSelection = new StringSelection(text);
+		Toolkit.getDefaultToolkit().getSystemClipboard().setContents(stringSelection, null);
+	}
+
+	@DescriptionAttribute(text = "Return text from clipboard")
+	public static String getFromClipboard()
+	{
+		try
+		{
+			Toolkit defaultToolkit = Toolkit.getDefaultToolkit();
+			Clipboard systemClipboard = defaultToolkit.getSystemClipboard();
+			Object data = systemClipboard.getData(DataFlavor.stringFlavor);
+			return String.valueOf(data);
+		}
+		catch (Exception e)
+		{
+			return "";
+		}
+	}
 }
