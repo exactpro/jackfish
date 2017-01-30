@@ -10,11 +10,11 @@ package com.exactprosystems.jf.documents.matrix.parser;
 
 import com.csvreader.CsvReader;
 import com.csvreader.CsvWriter;
+import com.exactprosystems.jf.documents.DocumentFactory;
 import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.documents.matrix.Matrix;
 import com.exactprosystems.jf.documents.matrix.parser.items.*;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
-import com.exactprosystems.jf.documents.matrix.parser.listeners.SilenceMatrixListener;
 
 import org.apache.log4j.Logger;
 
@@ -99,105 +99,193 @@ public class Parser
 				});
 	}
 
-	public MatrixItem readMatrix(Matrix matrix, Reader rawReader, IMatrixListener checkListener) throws MatrixException
-	{
-		CsvReader reader = new CsvReader(rawReader);
-		reader.setSkipEmptyRecords(false);
-		reader.setDelimiter(Configuration.matrixDelimiter); 
-		
-		MatrixItem root = matrix.getRoot();
-		root.init(matrix); 
-		MatrixItem currentItem = root;
-		
-		int count = 0;
-		
-		List<String> comments 	= new ArrayList<String>();
-		String[] headers 		= null;
-		ItemTypeAndAttribute itemAttr = null;
-		String[] str;
-		boolean needFillValue = false;
-		
-		try
-		{
-			while(reader.readRecord())
-			{
-				count++;
-				str = reader.getValues();
+    public MatrixItem readMatrix(MatrixItem root, Reader rawReader)
+            throws MatrixException
+    {
+        CsvReader reader = new CsvReader(rawReader);
+        reader.setSkipEmptyRecords(false);
+        reader.setDelimiter(Configuration.matrixDelimiter);
 
-				if (arrayOfEmpties(str) && !needFillValue)
-				{	
-					// nothing to do
-					continue;
-				}
+        MatrixItem currentItem = root;
 
-				if (str[0].startsWith(commentPrefix))
-				{
-					// it is a comment
-					comments.add(removeCommentMark(str[0]));
-					continue;
-				}
+        int count = 0;
 
-				if (str[0].startsWith(systemPrefix))
-				{
-					// it is a header
-					headers = str;
-					
-					// determinate - what is it 
-					itemAttr = lookUp(count, headers);
+        List<String> comments = new ArrayList<String>();
+        String[] headers = null;
+        ItemTypeAndAttribute itemAttr = null;
+        String[] str;
+        boolean needFillValue = false;
 
-					if(needFillValue)
-					{
-						throw new MatrixException(count, null, "Not value for header in action.  Matrix name '" + matrix.getName() + "'");
-					}
-					else
-					{
-						needFillValue = itemAttr.attribute.hasValue();
-					}
+        try
+        {
+            while (reader.readRecord())
+            {
+                count++;
+                str = reader.getValues();
 
-					if (!needFillValue)
-					{
-						// no wait other line
-						currentItem = addNewMatrixItem(matrix, currentItem, itemAttr, headers, null, comments);
-						comments.clear();
-						
-						itemAttr = null;
-					}
-					continue;
-				}
-				
-				if (isRaw(currentItem))
-				{
-					currentItem.processRawData(str);
-				}
-				else
-				{
-					if (itemAttr == null)
-					{
-						throw new MatrixException(count, null, "No header for action.  Matrix name '" + matrix.getName() + "'");
-					}
+                if (arrayOfEmpties(str) && !needFillValue)
+                {
+                    // nothing to do
+                    continue;
+                }
 
-					needFillValue = false;
+                if (str[0].startsWith(commentPrefix))
+                {
+                    // it is a comment
+                    comments.add(removeCommentMark(str[0]));
+                    continue;
+                }
 
-					currentItem = addNewMatrixItem(matrix, currentItem, itemAttr, headers, str, comments);
-					comments.clear();
-				}
-			}
-		} 
-		catch (MatrixException e)
-		{
-			throw e;
-		}
-		catch (Exception e)
-		{
-			logger.error(e.getMessage(), e);
-			throw new MatrixException(count, currentItem, e);
-		}
-		
-		root.bypass(MatrixItem::correctParametersType);
-		matrix.enumerate();
-		root.saved();
-		return root;
-	}
+                if (str[0].startsWith(systemPrefix))
+                {
+                    // it is a header
+                    headers = str;
+
+                    // determinate - what is it
+                    itemAttr = lookUp(count, headers);
+
+                    if (needFillValue)
+                    {
+                        throw new MatrixException(count, null,
+                                "Not value for header in action.  Matrix name '" + root.getItemName() + "'");
+                    }
+                    else
+                    {
+                        needFillValue = itemAttr.attribute.hasValue();
+                    }
+
+                    if (!needFillValue)
+                    {
+                        // no wait other line
+                        currentItem = addNewMatrixItem(currentItem, itemAttr, headers, null, comments);
+                        comments.clear();
+
+                        itemAttr = null;
+                    }
+                    continue;
+                }
+
+                if (isRaw(currentItem))
+                {
+                    currentItem.processRawData(str);
+                }
+                else
+                {
+                    if (itemAttr == null)
+                    {
+                        throw new MatrixException(count, null,
+                                "No header for action.  Matrix name '" + root.getItemName() + "'");
+                    }
+
+                    needFillValue = false;
+
+                    currentItem = addNewMatrixItem(currentItem, itemAttr, headers, str, comments);
+                    comments.clear();
+                }
+            }
+        }
+        catch (MatrixException e)
+        {
+            throw e;
+        }
+        catch (Exception e)
+        {
+            logger.error(e.getMessage(), e);
+            throw new MatrixException(count, currentItem, e);
+        }
+
+        root.bypass(MatrixItem::correctParametersType);
+        root.saved();
+        return root;
+    }
+
+    private MatrixItem addNewMatrixItem(MatrixItem currentItem, ItemTypeAndAttribute itemAttr, String[] headers,
+            String[] str, List<String> comments) throws Exception
+    {
+        // unreal items have to close something and return parent of it
+        if (!itemAttr.attribute.real())
+        {
+            currentItem = currentItem.findParent(itemAttr.attribute.closes());
+            currentItem = currentItem.getParent() == null ? currentItem : currentItem.getParent();
+
+            return currentItem;
+        }
+
+        // if real items close then they make current it before
+        if (itemAttr.attribute.closes() != NullType.class)
+        {
+            currentItem = currentItem.findParent(itemAttr.attribute.closes());
+        }
+
+        Map<Tokens, String> systemParameters = new LinkedHashMap<Tokens, String>();
+        Parameters userParameters = new Parameters();
+
+        if (str == null)
+        {
+            for (String header : headers)
+            {
+                if (header.startsWith(commentPrefix))
+                {
+                    break;
+                }
+                if (header.startsWith(systemPrefix))
+                {
+                    String token = header.substring(systemPrefix.length());
+                    if (Tokens.contains(token))
+                    {
+                        systemParameters.put(Tokens.valueOf(token), null);
+                    }
+                }
+            }
+        }
+        else
+        {
+            for (int column = 0; column < Math.max(headers.length, str.length); column++)
+            {
+                String value = str.length > column ? str[column] : null;
+                String header = headers.length > column ? headers[column] : null;
+
+                if (value != null && value.startsWith(commentPrefix))
+                {
+                    break;
+                }
+
+                if (header != null && header.startsWith(commentPrefix))
+                {
+                    break;
+                }
+
+                if (header != null && header.startsWith(systemPrefix))
+                {
+                    String token = header.substring(systemPrefix.length());
+                    if (value != null)
+                    {
+                        value = value.replaceAll(Configuration.unicodeDelimiter,
+                                String.valueOf(Configuration.matrixDelimiter));
+                    }
+                    if (Tokens.contains(token))
+                    {
+                        systemParameters.put(Tokens.valueOf(token), value);
+                    }
+                    else
+                    {
+                        userParameters.add(token, value);
+                    }
+                }
+            }
+        }
+
+        MatrixItem newItem = (MatrixItem) itemAttr.itemType.newInstance();
+        newItem.init(null, comments, systemParameters, userParameters);
+        currentItem.insert(currentItem.count(), newItem);
+
+        if (itemAttr.attribute.hasChildren() || itemAttr.attribute.raw())
+        {
+            return newItem;
+        }
+
+        return currentItem;
+    }
 
 	private boolean isRaw(MatrixItem item)
 	{
@@ -215,93 +303,6 @@ public class Parser
 		return attribute.raw();
 	}
 	
-	private MatrixItem addNewMatrixItem(Matrix matrix, MatrixItem currentItem, ItemTypeAndAttribute itemAttr, 
-			String[] headers, String[] str, List<String> comments) throws Exception
-	{
-		// unreal items have to close something and return parent of it
-		if (!itemAttr.attribute.real())
-		{
-			currentItem = currentItem.findParent(itemAttr.attribute.closes());
-			currentItem = currentItem.getParent() == null ? currentItem : currentItem.getParent(); 
-			
-			return currentItem;
-		}
-				
-		// if real items close then they make current it before   
-		if (itemAttr.attribute.closes() != NullType.class)
-		{
-			currentItem = currentItem.findParent(itemAttr.attribute.closes());
-		}
-		
-		Map<Tokens, String> systemParameters 	= new LinkedHashMap<Tokens, String>();
-		Parameters userParameters 				= new Parameters();
-		
-		if (str == null)
-		{
-			for (String header : headers)
-			{
-				if (header.startsWith(commentPrefix))
-				{
-					break;
-				}
-				if (header.startsWith(systemPrefix))
-				{
-					String token = header.substring(systemPrefix.length());
-					if (Tokens.contains(token))
-					{
-						systemParameters.put(Tokens.valueOf(token), null);
-					}
-				}
-			}
-		}
-		else
-		{
-			for (int column = 0; column < Math.max(headers.length, str.length); column++)
-			{
-				String value 	= str.length     > column ? str[column]     : null;
-				String header 	= headers.length > column ? headers[column] : null;
-				
-				if (value != null && value.startsWith(commentPrefix))
-				{
-					break;
-				}
-				
-				if (header != null && header.startsWith(commentPrefix))
-				{
-					break;
-				}
-
-				if (header != null && header.startsWith(systemPrefix))
-				{
-					String token = header.substring(systemPrefix.length());
-					if (value != null)
-					{
-						value = value.replaceAll(Configuration.unicodeDelimiter, String.valueOf(Configuration.matrixDelimiter));
-					}
-					if (Tokens.contains(token))
-					{
-						systemParameters.put(Tokens.valueOf(token), value);
-					}
-					else
-					{
-						userParameters.add(token, value);
-					}
-				}
-			}
-		}
-
-		MatrixItem newItem = (MatrixItem)itemAttr.itemType.newInstance();
-		newItem.init(matrix, comments, systemParameters, userParameters);
-		currentItem.insert(currentItem.count(), newItem);
-
-		if(itemAttr.attribute.hasChildren() || itemAttr.attribute.raw())
-		{
-			return newItem; 
-		}
-
-		return currentItem;
-	}
-
 	public void saveMatrix(MatrixItem root, Writer rawWriter) throws Exception
 	{
 		CsvWriter writer = prepareCsvWriter(rawWriter);
@@ -328,12 +329,10 @@ public class Parser
 
 	public MatrixItem[] stringToItems(String string) throws MatrixException, Exception
 	{
-		Reader str = new StringReader(string);
-		IMatrixListener matrixListener = new SilenceMatrixListener();
+		Reader reader = new StringReader(string);
+		MatrixItem root = new MatrixRoot("root");
 		
-		Parser parser = new Parser();
-		// TODO possibly MatrixRunner == null is wrong
-		MatrixItem root = parser.readMatrix(new Matrix("noname", null, null, matrixListener, false), str, matrixListener);
+		root = readMatrix(root, reader);
 
 		if (root != null)
 		{

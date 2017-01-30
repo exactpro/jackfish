@@ -48,7 +48,10 @@ public class Matrix extends AbstractDocument implements IMatrix
 		super(matrixName, factory); 
         
 		this.runner = (MatrixRunner)runner;
-        this.runner.setMatrix(this);
+		if (this.runner != null)
+		{
+		    this.runner.setMatrix(this);
+		}
 		this.isLibrary = isLibrary;
 		this.root = new MatrixRoot(matrixName);
 		this.buffer = new StringBuilder();
@@ -173,10 +176,12 @@ public class Matrix extends AbstractDocument implements IMatrix
 			{
 				this.buffer.append(line).append('\n');
 			}
-			Reader str = new StringReader(this.buffer.toString());
+			Reader stringReader = new StringReader(this.buffer.toString());
 
 			Parser parser = new Parser();
-			this.root = parser.readMatrix(this, str, this.matrixListener);
+			this.root = parser.readMatrix(this.root, stringReader);
+			this.root.init(this);
+			enumerate();
 		}
 	}
 
