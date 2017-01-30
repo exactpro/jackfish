@@ -3,6 +3,7 @@ package com.exactprosystems.jf.common.RtfHelp;
 import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.actions.ActionsList;
+import com.exactprosystems.jf.common.version.VersionInfo;
 import com.exactprosystems.jf.documents.matrix.parser.Parser;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItemAttribute;
 
@@ -30,9 +31,9 @@ class RTFCreator {
     RTFCreator() {
     }
 
-    private final String documentName = "JackFish.rtf";
     private static Rtf document = rtf();
     private static Help rtfHelp = new Help();
+    private final String documentName = "JackFish " + VersionInfo.getVersion() + ".rtf";
     private List<RtfPara> items = new ArrayList<>();
     private List<RtfPara> actions = new ArrayList<>();
     private List<RtfPara> contents = new ArrayList<>();
@@ -45,6 +46,7 @@ class RTFCreator {
     private final URL pictureFooter = rtfHelp.footer();
     private final URL introduction = rtfHelp.introduction();
     private final URL mvelDoc = rtfHelp.mvel();
+    private final int fontSize = 20;
 
     private void writeItems() throws IOException
     {
@@ -102,7 +104,7 @@ class RTFCreator {
                                 .size(150, 45, RtfUnit.POINT)
                                 .type(RtfPicture.PictureType.PNG),
                         lineBreak(),
-                        fontSize(20, "London Stock Exchange Group plc. Registered in England & Wales No 5369106. Registered office 10 Paternoster Square, London EC4M 7LS")
+                        fontSize(fontSize, "London Stock Exchange Group plc. Registered in England & Wales No 5369106. Registered office 10 Paternoster Square, London EC4M 7LS")
                 ))
         );
     }
@@ -118,7 +120,7 @@ class RTFCreator {
         for(String name : actions)
         {
             count++;
-            contents.add(p(tab(), text(" 3." + count + " "), text (" "), hyperlink(link + name, p(name))));
+            contents.add(p(tab(), fontSize(fontSize, " 3." + count + " "), fontSize(fontSize, " "), hyperlink(link + name, p(fontSize(fontSize, name)))));
         }
 
         contents.add(p("4. Items: "));
@@ -126,7 +128,7 @@ class RTFCreator {
         for(String name : items)
         {
             count++;
-            contents.add(p(tab(), text(" 4." + count + " "), text (" "), hyperlink(link + name, p(name))));
+            contents.add(p(tab(), fontSize(fontSize, " 4." + count + " "), fontSize(fontSize, " "), hyperlink(link + name, p(fontSize(fontSize, name)))));
         }
         writeContents();
     }
@@ -143,11 +145,11 @@ class RTFCreator {
 
         if (classAnnotations.additionFieldsAllowed())
         {
-            actions.add(p(italic("Additional fields: "), text("Yes")));
+            actions.add(p(italic(fontSize(fontSize, "Additional fields: ")), fontSize(fontSize, "Yes")));
             if (!classAnnotations.additionalDescription().equals(""))
                 actions.add(p(findHyperlinks(classAnnotations.additionalDescription()).toArray()));
         } else {
-            actions.add(p(italic("Additional fields: "), text("No")));
+            actions.add(p(italic(fontSize(fontSize, "Additional fields: ")), fontSize(fontSize, "No")));
         }
         actions.add(p());
 
@@ -155,12 +157,12 @@ class RTFCreator {
         {
             String[] out = classAnnotations.outputType().getName().split("\\.");
             String outName = out[out.length - 1];
-            actions.add(p(italic("Output")));
+            actions.add(p(italic(fontSize(fontSize, "Output"))));
             actions.add(p(findHyperlinks(classAnnotations.outputDescription()).toArray()));
-            actions.add(p(text("Output type: " + outName)));
+            actions.add(p(fontSize(fontSize, "Output type: " + outName)));
         } else
         {
-            actions.add(p(italic("Output: "), text("Null")));
+            actions.add(p(italic(fontSize(fontSize, "Output: ")), fontSize(fontSize, "Null")));
         }
         actions.add(p());
 
@@ -170,11 +172,11 @@ class RTFCreator {
             String[] seeAlso = classAnnotations.seeAlso().split(",");
             Arrays.asList(seeAlso).forEach(r-> {
                         String q = r.replaceAll("(?U)[\\pP\\s]", "");
-                        seeAlsoText.add(hyperlink(link + q, p(q)));
-                        seeAlsoText.add(text(" "));
+                        seeAlsoText.add(hyperlink(link + q, p(fontSize(fontSize, q))));
+                        seeAlsoText.add(fontSize(fontSize, " "));
                     }
             );
-            actions.add(p(italic("See also:")));
+            actions.add(p(italic(fontSize(fontSize, "See also:"))));
             actions.add(p(seeAlsoText.toArray()));
             actions.add(p());
         }
@@ -185,16 +187,16 @@ class RTFCreator {
             fieldAnnotations.forEach((fName, attr) ->
                     {
                         List<RtfText> listParams = new ArrayList<>();
-                        actions.add(p(underline(attr.name())));
+                        actions.add(p(underline(fontSize(fontSize, attr.name()))));
                         if (attr.mandatory())
                         {
-                            actions.add(p(text("Mandatory: Yes")));
+                            actions.add(p(fontSize(fontSize, "Mandatory: Yes")));
                         }
                         else
                         {
-                            actions.add(p(text("Mandatory: No")));
+                            actions.add(p(fontSize(fontSize, "Mandatory: No")));
                         }
-                        actions.add(p(text("Description: ")));
+                        actions.add(p(fontSize(fontSize, "Description: ")));
                         findHyperlinks(attr.description()).forEach(el->
                                 listParams.add(el)
                         );
@@ -206,7 +208,7 @@ class RTFCreator {
 
         if (!classAnnotations.examples().equals(""))
         {
-            actions.add(p(italic("Examples")));
+            actions.add(p(italic(fontSize(fontSize, "Examples"))));
             actions.add(p(parseExamples(classAnnotations.examples()).toArray()));
             actions.add(p());
         }
@@ -225,11 +227,11 @@ class RTFCreator {
             List<RtfText> shouldContain = new ArrayList<>();
             Arrays.asList(classAnnotation.shouldContain()).forEach(t->
                     {
-                        shouldContain.add(text(t.get()));
-                        shouldContain.add(text(" "));
+                        shouldContain.add(fontSize(fontSize, t.get()));
+                        shouldContain.add(fontSize(fontSize, " "));
                     }
             );
-            items.add(p(italic("ShouldContain:")));
+            items.add(p(italic(fontSize(fontSize, "ShouldContain:"))));
             items.add(p(shouldContain.toArray()));
             items.add(p());
         }
@@ -239,11 +241,11 @@ class RTFCreator {
             List<RtfText> mayContain = new ArrayList<>();
             Arrays.asList(classAnnotation.mayContain()).forEach(t->
                     {
-                        mayContain.add(text(t.get()));
-                        mayContain.add(text(" "));
+                        mayContain.add(fontSize(fontSize, t.get()));
+                        mayContain.add(fontSize(fontSize, " "));
                     }
             );
-            items.add(p(italic("MayContain:")));
+            items.add(p(italic(fontSize(fontSize, "MayContain:"))));
             items.add(p(mayContain.toArray()));
             items.add(p());
         }
@@ -252,45 +254,43 @@ class RTFCreator {
         {
             String[] out = classAnnotation.closes().getName().split("\\.");
             String outName = out[out.length - 1];
-            items.add(p(italic("Closes: "), text(outName)));
+            items.add(p(italic(fontSize(fontSize, "Closes: ")), fontSize(fontSize, outName)));
             items.add(p());
         } else
         {
-            items.add(p(italic("Closes: "), text("Null")));
+            items.add(p(italic(fontSize(fontSize, "Closes: ")), fontSize(fontSize, "Null")));
             items.add(p());
         }
 
         if(classAnnotation.real())
         {
-            items.add(p(italic("Real: "), text("Yes")));
+            items.add(p(italic(fontSize(fontSize, "Real: ")), fontSize(fontSize, "Yes")));
             items.add(p());
         }
 
         if(classAnnotation.hasValue())
         {
-            items.add(p(italic("HasValue: "), text("Yes")));
+            items.add(p(italic(fontSize(fontSize, "HasValue: ")), fontSize(fontSize, "Yes")));
             items.add(p());
         }
 
         if(classAnnotation.hasParameters())
         {
-            items.add(p(italic("HasParameters: "), text("Yes")));
+            items.add(p(italic(fontSize(fontSize, "HasParameters: ")), fontSize(fontSize, "Yes")));
             items.add(p());
         }
 
         if(classAnnotation.hasChildren())
         {
-            items.add(p(italic("HasChildren: "), text("Yes")));
+            items.add(p(italic(fontSize(fontSize, "HasChildren: ")), fontSize(fontSize, "Yes")));
             items.add(p());
         }
 
         if(classAnnotation.raw())
         {
-            items.add(p(italic("Raw: "), text("Yes")));
+            items.add(p(italic(fontSize(fontSize, "Raw: ")), fontSize(fontSize, "Yes")));
             items.add(p());
         }
-
-        items.add(p(lineBreak()));
     }
 
     private List<RtfText> parseExamples(String examples)
@@ -305,23 +305,23 @@ class RTFCreator {
             if (s.contains("{{#") || s.contains("#}}") || code) {
                 if (s.contains("{{#") && s.contains("#}}"))
                 {
-                    result.add(text(sb.toString()));
+                    result.add(fontSize(fontSize, sb.toString()));
                     result.add(lineBreak());
                     sb.setLength(0);
-                    result.add(font(1, replaceChars(s)));
+                    result.add(font(1, fontSize(fontSize, replaceChars(s))));
                     result.add(lineBreak());
                 } else if (s.contains("{{#") && !s.contains("#}}")) {
-                    result.add(text(sb.toString()));
+                    result.add(fontSize(fontSize, sb.toString()));
                     result.add(lineBreak());
                     sb.setLength(0);
-                    result.add(font(1, replaceChars(s)));
+                    result.add(font(1, fontSize(fontSize, replaceChars(s))));
                     code = true;
                     lineSeparator = true;
                 } else if (s.contains("#}}") && code) {
                     if (lineSeparator) {
                         result.add(lineBreak());
                     }
-                    result.add(font(1, replaceChars(s)));
+                    result.add(font(1, fontSize(fontSize, replaceChars(s))));
                     result.add(lineBreak());
                     code = false;
                     lineSeparator = false;
@@ -332,20 +332,20 @@ class RTFCreator {
                     }
                     if (s.startsWith("#")) {
                         result.add(lineBreak());
-                        result.add(font(1, replaceChars(s) + " "));
+                        result.add(font(1, fontSize(fontSize, replaceChars(s) + " ")));
                         result.add(lineBreak());
                     }
                     else
                     {
-                        result.add(font(1, replaceChars(s) + " "));
+                        result.add(font(1, fontSize(fontSize, replaceChars(s) + " ")));
                     }
                 }
             }
             else if (s.contains("{{$") || s.contains("$}}"))
             {
-                result.add(text(sb.toString()));
+                result.add(fontSize(fontSize, sb.toString()));
                 sb.setLength(0);
-                result.add(italic(replaceChars(s) + " "));
+                result.add(italic(fontSize(fontSize, replaceChars(s) + " ")));
             }
             else {
                 sb.append(s + " ");
@@ -353,7 +353,7 @@ class RTFCreator {
         }
         if (sb.length() !=0)
         {
-            result.add(text(sb.toString()));
+            result.add(fontSize(fontSize, sb.toString()));
         }
         return result;
     }
@@ -366,18 +366,18 @@ class RTFCreator {
                 if (s.contains("{{@") || s.contains("@}}"))
                 {
                     String name = replaceChars(s);
-                    result.add(hyperlink(link + name, p(name)));
-                    result.add(text(" "));
+                    result.add(hyperlink(link + name, p(fontSize(fontSize, name))));
+                    result.add(fontSize(fontSize, " "));
                 }
                 else if (s.contains("{{$") || s.contains("$}}"))
                 {
-                    result.add(italic(replaceChars(s) + " "));
+                    result.add(italic(fontSize(fontSize, replaceChars(s) + " ")));
                 }
                 else
                 {
-                    result.add(text(replaceChars(s) + " "));
+                    result.add(fontSize(fontSize, replaceChars(s) + " "));
                 }
-                result.add(text(" "));
+                result.add(fontSize(fontSize, " "));
             }
 
         return result;
@@ -404,7 +404,7 @@ class RTFCreator {
         document.header(color(233, 157, 80), font("WriteFonts"));
         document.section(
                 createFirstPageFormat(),
-                p(text("Title page")));
+                p(fontSize(fontSize, "Title page " + VersionInfo.getVersion())));
     }
 
     void createDescription() throws IOException, BadLocationException
@@ -415,7 +415,7 @@ class RTFCreator {
         rtfParser.read(is, doc, 0);
         String text = doc.getText(0, doc.getLength());
 
-        document.section(createSectionFormat(), p(tab(), tab(), tab(), tab(), fontSize(40, "Introduction" + trait), lineBreak()), p(text(text)));
+        document.section(createSectionFormat(), p(tab(), tab(), tab(), tab(), fontSize(40, "Introduction" + trait), lineBreak()), p(fontSize(fontSize, text)));
     }
 
     void createContents() throws IOException
@@ -448,7 +448,8 @@ class RTFCreator {
                 .replace("{{=", "").replace("=}}", "")  //row
                 .replace("{{-", "").replace("-}}", "")  //cell
                 .replace("{{$", "").replace("$}}", "")  //italic
-                .replace("{{#", "").replace("#}}", ""); //code
+                .replace("{{#", "").replace("#}}", "")  //code
+                .replace("{{@", "").replace("@}}", ""); //link
     }
 
     void mvelDocumentation() throws IOException
@@ -471,11 +472,11 @@ class RTFCreator {
                     {
                         if (s.contains("{{*Operator*}}") || s.contains("{{*Description*}}") || s.contains("{{*Example*}}"))
                         {
-                            text.add(bold(replaceChars(s)));
+                            text.add(bold(fontSize(fontSize, replaceChars(s))));
                         }
                         else if (s.contains("{{-") && s.contains("-}}"))
                         {
-                            text.add(text(replaceChars(s)));
+                            text.add(fontSize(fontSize, replaceChars(s)));
                         }
                         else if (s.contains("{{-"))
                         {
@@ -486,7 +487,7 @@ class RTFCreator {
                         {
                             sb.append(replaceChars(s));
                             cell = false;
-                            text.add(text(sb.toString()));
+                            text.add(fontSize(fontSize, sb.toString()));
                             sb.setLength(0);
                         }
                         else if (cell)
@@ -509,7 +510,7 @@ class RTFCreator {
                         sb.append(replaceChars(s) + " ");
                     }
                     if (sb.length() != 0){
-                        mvels.add(p(font(1, sb.toString())));
+                        mvels.add(p(font(1, fontSize(fontSize, sb.toString()))));
                         sb.setLength(0);
                     }
                 }
@@ -519,12 +520,12 @@ class RTFCreator {
                     {
                         if (s.contains("{{&") && s.contains("&}}")){
                             if (sb.length() !=0){
-                                text.add(text(sb.toString()));
-                                text.add(text(" "));
-                                mvels.add(p(text(sb.toString())));
+                                text.add(fontSize(fontSize, sb.toString()));
+                                text.add(fontSize(fontSize, " "));
+                                mvels.add(p(fontSize(fontSize, sb.toString())));
                                 sb.setLength(0);
                             }
-                            mvels.add(p(font(2, replaceChars(s))));
+                            mvels.add(p(font(2, fontSize(fontSize, replaceChars(s)))));
                         }
                         else if (s.startsWith("{{&"))
                         {
@@ -534,7 +535,7 @@ class RTFCreator {
                         else if (header && s.contains("&}}"))
                         {
                             sb.append(replaceChars(s));
-                            mvels.add(p(font(2, sb.toString())));
+                            mvels.add(p(font(2, fontSize(fontSize, sb.toString()))));
                             sb.setLength(0);
                             header = false;
                         }
@@ -542,23 +543,14 @@ class RTFCreator {
                         {
                             sb.append(s + " ");
                         }
-                        else if (s.contains("{{*") && s.contains("*}}"))
-                        {
-                            if (sb.length() != 0){
-                                text.add(text(sb.toString()));
-                                text.add(text(" "));
-                                text.add(bold(replaceChars(s + " ")));
-                                sb.setLength(0);
-                            }
-                        }
                         else
                         {
                             sb.append(s + " ");
                         }
                     }
                     if (sb.length() != 0){
-                        text.add(text(sb.toString()));
-                        text.add(text(" "));
+                        text.add(fontSize(fontSize, sb.toString()));
+                        text.add(fontSize(fontSize, " "));
                         RtfText[] arr = new RtfText[text.size()];
                         mvels.add(p(text.toArray(arr)));
                         text.clear();
@@ -569,15 +561,15 @@ class RTFCreator {
             {
                 if (strs[0].contains("{{&") && strs[0].contains("&}}"))
                 {
-                    mvels.add(p(font(2, replaceChars(strs[0]))));
+                    mvels.add(p(font(2, fontSize(fontSize, replaceChars(strs[0])))));
                 }
                 else if (strs[0].contains("{{#") && strs[0].contains("#}}"))
                 {
-                    mvels.add(p(font(1, replaceChars(strs[0]))));
+                    mvels.add(p(font(1, fontSize(fontSize, replaceChars(strs[0])))));
                 }
                 else
                 {
-                    mvels.add(p(text(replaceChars(strs[0]))));
+                    mvels.add(p(fontSize(fontSize, replaceChars(strs[0]))));
                 }
             }
         }
