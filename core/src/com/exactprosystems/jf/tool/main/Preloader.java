@@ -14,6 +14,7 @@ import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.settings.Theme;
 import javafx.scene.Scene;
 import javafx.scene.control.ProgressBar;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
@@ -85,6 +86,7 @@ public class Preloader extends javafx.application.Preloader
 		this.preloaderStage.setScene(getScene());
 		this.preloaderStage.initStyle(StageStyle.UNDECORATED);
 		this.preloaderStage.setTitle("Loading...");
+		this.preloaderStage.getIcons().add(new Image(CssVariables.Icons.MAIN_ICON));
 		this.preloaderStage.show();
 	}
 
