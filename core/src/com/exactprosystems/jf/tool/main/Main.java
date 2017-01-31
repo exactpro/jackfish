@@ -72,7 +72,7 @@ import java.util.stream.Collectors;
 
 public class Main extends Application
 {
-
+	public static final boolean IS_LOCAL_BUILD = VersionInfo.getVersion().contains("local_build");
 	private static final Logger logger = Logger.getLogger(Main.class);
 
 	private static String configName = null;
