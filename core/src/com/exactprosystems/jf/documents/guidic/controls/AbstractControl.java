@@ -13,6 +13,9 @@ import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.common.ControlsAttributes;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.HTMLhelper;
+import com.exactprosystems.jf.documents.guidic.ExtraInfo;
+import com.exactprosystems.jf.documents.matrix.parser.items.MutableArrayList;
+
 import org.apache.log4j.Logger;
 
 import javax.xml.bind.annotation.*;
@@ -46,6 +49,7 @@ public abstract class AbstractControl implements IControl, Mutable
 	public static final String headerName 			= "header";
 	public static final String columnsName 			= "columns";
 	public static final String useNumericHeaderName = "useNumericHeader";
+	public static final String infoName 			= "info";
 
 	@XmlAttribute(name = idName)
 	protected String id;
@@ -107,6 +111,8 @@ public abstract class AbstractControl implements IControl, Mutable
 	@XmlAttribute(name = useNumericHeaderName)
 	protected Boolean useNumericHeader;
 
+	@XmlElement(name = infoName)
+	protected ExtraInfo info;
 
 	@XmlTransient
 	private Operation operationFromExpression;
@@ -121,6 +127,8 @@ public abstract class AbstractControl implements IControl, Mutable
 	{
 		this.changed = false;
 		this.section = null;
+		
+		this.info = null;
 	}
 	
     @Override
@@ -541,6 +549,8 @@ public abstract class AbstractControl implements IControl, Mutable
 	
 	public void correctAllXml()
 	{
+		this.info = null; // TODO
+		
 		this.id = xmlToText(this.id); 
 		this.uid= xmlToText(this.uid);
 		this.xpath = xmlToText(this.xpath);
@@ -557,6 +567,8 @@ public abstract class AbstractControl implements IControl, Mutable
 
 	public void correctAllText()
 	{
+		this.info = null; // TODO
+		
 		this.id = textToXml(this.id); 
 		this.uid= textToXml(this.uid);;
 		this.xpath = textToXml(this.xpath);
