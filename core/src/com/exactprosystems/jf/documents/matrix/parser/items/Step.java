@@ -40,7 +40,7 @@ import java.util.stream.Collectors;
 @MatrixItemAttribute(
 		description 	= "Elementary step in the script", 
 		shouldContain 	= { Tokens.Step },
-		mayContain 		= { Tokens.IgnoreErr, Tokens.Off, Tokens.Kind, Tokens.RepOff },
+		mayContain 		= { Tokens.IgnoreErr, Tokens.Off, Tokens.Kind, Tokens.For, Tokens.RepOff },
 		parents			= { Case.class, Else.class, For.class, ForEach.class, If.class,
 							OnError.class, Step.class, SubCase.class, TestCase.class, While.class },
 		real			= true,
@@ -54,7 +54,8 @@ public class Step extends MatrixItem
 	{
 		super();
         this.kind = new MutableValue<String>();
-		this.identify = new Parameter(Tokens.Step.get(),	null); 
+        this.plugin = new Parameter(Tokens.For.get(), null);
+		this.identify = new Parameter(Tokens.Step.get(), null); 
 	}
 
 	@Override
@@ -68,6 +69,7 @@ public class Step extends MatrixItem
 	{
 		Step clone = (Step) super.clone();
 		clone.kind = this.kind;
+        clone.plugin = this.plugin.clone();
 		clone.identify = this.identify;
 		return clone;
 	}
@@ -77,6 +79,7 @@ public class Step extends MatrixItem
 	{
 		this.identify.setExpression(systemParameters.get(Tokens.Step));
         this.kind.set(systemParameters.get(Tokens.Kind)); 
+        this.plugin.setExpression(systemParameters.get(Tokens.For));
 	}
 
 	@Override
@@ -84,6 +87,7 @@ public class Step extends MatrixItem
 	{
 		super.addParameter(firstLine, secondLine, Tokens.Step.get(), 	this.identify.getExpression());
         super.addParameter(firstLine, secondLine, Tokens.Kind.get(),    this.kind.get());
+        super.addParameter(firstLine, secondLine, Tokens.For.get(),     this.plugin.getExpression());
 	}
 
 	@Override
@@ -97,7 +101,8 @@ public class Step extends MatrixItem
 	{
 		return SearchHelper.matches(Tokens.Step.get(), what, caseSensitive, wholeWord) 
                 || SearchHelper.matches(this.kind.get(), what, caseSensitive, wholeWord)
-		        || SearchHelper.matches(this.identify.getExpression(), what, caseSensitive, wholeWord);
+                || SearchHelper.matches(this.plugin.getExpression(), what, caseSensitive, wholeWord)
+                || SearchHelper.matches(this.identify.getExpression(), what, caseSensitive, wholeWord);
 	}
 
 	//==============================================================================================
@@ -106,7 +111,7 @@ public class Step extends MatrixItem
     @Override
     public boolean isChanged()
     {
-    	if (this.identify.isChanged() || this.kind.isChanged())
+    	if (this.plugin.isChanged() || this.identify.isChanged() || this.kind.isChanged())
     	{
     		return true;
     	}
@@ -119,6 +124,7 @@ public class Step extends MatrixItem
     	super.saved();
     	this.identify.saved();
     	this.kind.saved();
+    	this.plugin.saved();
     }
 
 	//==============================================================================================
@@ -130,8 +136,10 @@ public class Step extends MatrixItem
 		driver.showTitle(this, layout, 1, 0, Tokens.Step.get(), context.getFactory().getSettings());
         driver.showExpressionField(this, layout, 1, 1, Tokens.Step.get(), this.identify, this.identify, null, null, null, null);
         driver.showCheckBox(this, layout, 1, 2, Tokens.IgnoreErr.get(), this.ignoreErr, this.ignoreErr);
-        driver.showLabel(this, layout, 1, 3, "Screenshot");
+        driver.showLabel(this, layout, 1, 3, " Screenshot:");
         driver.showComboBox(this, layout, 1, 4, this.kind, this.kind, v -> Arrays.stream(ScreenshotKind.values()).map(Enum::toString).collect(Collectors.toList()));
+        driver.showLabel(this, layout, 1, 5, " Plugin:");
+        driver.showExpressionField(this, layout, 1, 6, Tokens.For.get(), this.plugin, this.plugin, null, null, null, null);
 
         return layout;
 	}
@@ -202,7 +210,9 @@ public class Step extends MatrixItem
 				
 				table.add(row);
 			}
-            doSreenshot(row, null, screenshotKind, ScreenshotKind.OnStart, ScreenshotKind.OnStartOrError);
+            
+            this.plugin.evaluate(evaluator);
+            doSreenshot(row, this.plugin.getValue(), screenshotKind, ScreenshotKind.OnStart, ScreenshotKind.OnStartOrError);
 			doShowPopup(showPopups, context, "started", Notifier.Info);
 			
 			report.outLine(this, null, String.format("Step %s", identifyValue), null);
@@ -216,7 +226,8 @@ public class Step extends MatrixItem
 
             if (ret.getResult() == Result.Failed)
             {
-                doSreenshot(row, null, screenshotKind, ScreenshotKind.OnError, ScreenshotKind.OnStartOrError, ScreenshotKind.OnFinishOrError);
+                this.plugin.evaluate(evaluator);
+                doSreenshot(row, this.plugin.getValue(), screenshotKind, ScreenshotKind.OnError, ScreenshotKind.OnStartOrError, ScreenshotKind.OnFinishOrError);
                 
                 MatrixError error = ret.getError();
                 
@@ -230,7 +241,8 @@ public class Step extends MatrixItem
                 ret = context.runHandler(start, context, listener, this, HandlerKind.OnStepFinish, report, null, null);
             }
 
-            doSreenshot(row, null, screenshotKind, ScreenshotKind.OnFinish, ScreenshotKind.OnFinishOrError);
+            this.plugin.evaluate(evaluator);
+            doSreenshot(row, this.plugin.getValue(), screenshotKind, ScreenshotKind.OnFinish, ScreenshotKind.OnFinishOrError);
             if (table != null && position >= 0 && !isRepOff())
 			{
 				row.put(Context.timeColumn, 		ret.getTime());
@@ -259,4 +271,5 @@ public class Step extends MatrixItem
 
 	private Parameter identify;
     private MutableValue<String> kind;
+    private Parameter plugin;
 }
