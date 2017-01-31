@@ -75,6 +75,7 @@ public class NavigationController implements Initializable, ContainingParent
 	public Button btnCopyDialog;
 	public Button btnPasteDialog;
 	public Button btnTestWindow;
+	public Button btnShowWizard;
 
 	private Parent pane;
 
@@ -154,6 +155,11 @@ public class NavigationController implements Initializable, ContainingParent
 			Common.customizeLabeled(this.btnPasteDialog, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.DICTIONARY_PASTE);
 			Common.customizeLabeled(this.btnPasteElement, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.DICTIONARY_PASTE);
 		});
+
+		if (!Main.IS_LOCAL_BUILD)
+		{
+			this.btnShowWizard.setVisible(false);
+		}
 	}
 
 	public void init(DictionaryFx model, GridPane gridPane, Settings settings, CustomTab owner)
@@ -189,6 +195,16 @@ public class NavigationController implements Initializable, ContainingParent
 	public void pasteDialog(ActionEvent actionEvent)
 	{
 		tryCatch(() -> this.model.dialogPaste(currentSection()), "Error on paste dialog");
+	}
+
+	public void openWizard(ActionEvent actionEvent)
+	{
+		tryCatch(() -> this.model.openDialogWizard(currentWindow()), "Error on open dialog wizard");
+	}
+
+	public void setDisableWizardButton(boolean flag)
+	{
+		this.btnShowWizard.setDisable(flag);
 	}
 	// ------------------------------------------------------------------------------------------------------------------
 
@@ -355,7 +371,7 @@ public class NavigationController implements Initializable, ContainingParent
 
 	public void displayElement(IControl control, Collection<IControl> controls)
 	{
-		if (control == null)
+		if (controls == null)
 		{
 			controls = new ArrayList<>();
 		}
