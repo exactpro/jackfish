@@ -268,6 +268,16 @@ public class SpreadsheetView extends Control
 		}
 	}
 
+	public void switchColumn(boolean on, int columnIndex)
+	{
+		int rowCount = this.providerProperty().get().rowCount();
+		for (int i = 0; i < rowCount; i++)
+		{
+			this.providerProperty.get().setCellValue(columnIndex, i, on ? "" : "x");
+		}
+		this.setDataProvider(providerProperty.get());
+	}
+
 	public void addRowBefore(Integer row)
 	{
 		this.providerProperty().get().addRow(row);

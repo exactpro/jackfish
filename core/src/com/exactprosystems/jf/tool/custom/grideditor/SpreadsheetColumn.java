@@ -73,7 +73,15 @@ public final class SpreadsheetColumn {
 
 		MenuItem renameColumn = new MenuItem("Rename");
 		renameColumn.setOnAction(e -> startRenameColumn());
-		contextMenu.getItems().addAll(addColumnBefore,addColumnAfter, removeColumn, renameColumn);
+
+		MenuItem switchOffColumn = new MenuItem("Switch off");
+		switchOffColumn.setOnAction(e -> this.spreadsheetView.switchColumn(false, this.spreadsheetView.getColumns().indexOf(this)));
+
+		MenuItem switchOnColumn = new MenuItem("Switch on");
+		switchOnColumn.setOnAction(e -> this.spreadsheetView.switchColumn(true, this.spreadsheetView.getColumns().indexOf(this)));
+
+		System.out.println(this.getText());
+		contextMenu.getItems().addAll(addColumnBefore,addColumnAfter, removeColumn, renameColumn, switchOffColumn, switchOnColumn);
 		return contextMenu;
     }
 
