@@ -58,6 +58,10 @@ public class BookmarksCreator extends FileWriter{
                 {
                     result.append(s.replace(s, "{\\b " + s.replace("\\{\\{*", "").replace("*\\}\\}", "") + '}'));
                 }
+                else if(s.contains("\\{\\{`") || s.contains("`\\}\\}") || s.contains("`\\}\\}\\{\\{`"))
+                {
+                    result.append(s.replace("\\{\\{`", " \\par\\qd ").replace("`\\}\\}", " \\par\\qd ").replace("`\\}\\}\\{\\{`", " \\par\\qd "));
+                }
                 else
                 {
                     result.append(s);
@@ -97,6 +101,10 @@ public class BookmarksCreator extends FileWriter{
             else if (s.contains("\\{\\{*") && s.contains("*\\}\\}"))
             {
                 return super.append(s.replace(s, "{\\b " + s.replace("\\{\\{*", "").replace("*\\}\\}", "") + '}'));
+            }
+            else if(s.contains("\\{\\{`") || s.contains("`\\}\\}") || s.contains("`\\}\\}\\{\\{`"))
+            {
+                return super.append(s.replace("\\{\\{`", " \\par\\qd ").replace("`\\}\\}", " \\par\\qd ").replace("`\\}\\}\\{\\{`", " \\par\\qd "));
             }
             else
             {

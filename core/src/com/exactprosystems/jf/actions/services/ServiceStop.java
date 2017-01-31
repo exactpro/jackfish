@@ -27,7 +27,7 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 		additionFieldsAllowed 	= false,
 		examples 				= "{{`1. Load MatrixService.`}}"
 				+ "{{`2. Run a service with additional parameter Port, that was specified earlier.`}}"
-				+ "{{`3. Close a connection.`}}"
+				+ "{{`3. Close a connection.`}} "
 				+ "{{##Id;#Action;#ServiceId\n"
 				+ "SRVLD1;ServiceLoad;'MatrixService'\n"
 				+ "\n"

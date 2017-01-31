@@ -30,8 +30,8 @@ import java.util.List;
 		additionalDescription 	= "Additional parameters depend on the type of the running service.",
 		outputDescription 		= "True, if service running successful.",
 		examples 				= "{{`1. Load MatrixService`}}"
-				+ "{{`2. Load a service woth an additional parameter Port, that was loaded earlier.`}}"
-				+ "{{##Id;#Action;#ServiceId"
+				+ "{{`2. Load a service woth an additional parameter Port, that was loaded earlier.`}} "
+				+ "{{##Id;#Action;#ServiceId\n"
 				+ "SRVLD1;ServiceLoad;'MatrixService'\n"
 				+ "\n"
 				+ "#Id;#Action;#Port;#ServiceConnection\n"

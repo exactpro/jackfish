@@ -27,7 +27,7 @@ import java.util.List;
 				+ "It is used when there is a need to go through the content of the Xml object.",
 		additionFieldsAllowed 	= false,
 		examples 				= "{{`1. Create an Xml object by downloading it from the file.`}}"
-				+ "{{`Contents of an xml file:`}}"
+				+ "{{`Contents of an xml file:`}} "
 				+ "{{#<note> \n"
 				+ "<to>\n"
 				+ "<friend>\n"
@@ -43,7 +43,7 @@ import java.util.List;
 				+ "<body>Don't forget me this weekend!</body>\n"
 				+ "</note>#}}"
 				+ "\n"
-				+ "{{`2. Reflect the content of the Xml object in the report.`}}"
+				+ "{{`2. Reflect the content of the Xml object in the report.`}} "
 				+ "{{##Id;#Action;#File\n"
 				+ "XML1;XmlLoadFromFile;'/path/Xml.xml'\n"
 				+ "\n"

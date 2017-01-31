@@ -27,7 +27,7 @@ import com.exactprosystems.jf.functions.HelpKind;
 				+ "{{`2. Create an object of Table type.`}}"
 				+ "{{`3. Move the object Table using TableReport action to the report created in the first step.`}}"
 				+ "{{`4. Finish building Report object.`}}"
-				+ "{{`5. Display the report.`}}"
+				+ "{{`5. Display the report.`}} "
 				+ "{{##Id;#Action;#Version;#ReportName\n"
 				+ "REP1;ReportStart;'3.141592';'MyReport'\n"
 				+ "\n"

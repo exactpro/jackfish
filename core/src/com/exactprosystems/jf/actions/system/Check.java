@@ -38,7 +38,7 @@ import java.util.Map.Entry;
 				+ "mismatched values, is added to the report.",
 		additionalDescription = "Helps to pass values and their names that are needed to be compared.",
 		examples = "{{`1. Make a table with 2 rows and columns, add values.`}}"
-				+ "2. Compare values from the first row of the table with those ones that are specified in additional parameters of action Check."
+				+ "2. Compare values from the first row of the table with those ones that are specified in additional parameters of action Check. "
 				+ "{{##Id;#RawTable\n"
 				+ "DATA1;Table\n"
 				+ "@;Country;Capital\n"

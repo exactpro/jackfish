@@ -28,7 +28,7 @@ import java.util.List;
 		examples 				=
 				"{{` 1. Create a test case with id Test.`}}"
 				+ "{{` 2. Create a table with columns Name and Age. Add values to the first line of the table.`}}"
-				+ "{{` 3. Output the table into the report only with the column Age, before the test case with id Test.`}}"
+				+ "{{` 3. Output the table into the report only with the column Age, before the test case with id Test.`}} "
 				+ "{{##Id;#TestCase\n"
 				+ "Test;\n"
 				+ "    #Id;#RawTable\n"

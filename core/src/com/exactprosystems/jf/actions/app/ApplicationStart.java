@@ -67,9 +67,9 @@ seeAlso					=
 examples				=
   "As a rule, {{$ApplicationStart$}} is placed in one of the initial TestCases where initialization is performed. "
 + "Therefore it requires that the {{$Global$}} flag be set, as access to the output value is necessary within "
-+ "the whole matrix rather than just within the {{$TestCase$}} containing the action."
++ "the whole matrix rather than just within the {{$TestCase$}} containing the action. "
 + "{{##Id;#Global;#Action;#AppId;#Browser;#URL\n"
-+ "APPSTR1;1;ApplicationStart;'WEB';Browser;Env1 #}}"
++ "APPSTR1;1;ApplicationStart;'WEB';Browser;Env1 #}} "
 + "It is a standart using this action with web.jar plugin."
 )
 public class ApplicationStart extends AbstractAction 

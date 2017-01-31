@@ -23,24 +23,24 @@ import com.exactprosystems.jf.functions.Table;
 		suffix					= "TBL",
 		generalDescription 		= "This action is determined to create a table (object type {{$Table$}}). Object Table is set"
 				+ " as the two-dimensional structure consisting of rows and columns. Ordering of Rows starts with 0, columns are named. "
-				+ "Object Table can be created with  {{@RawTable@}}, with actions {{@TableCreate@}}, {{@TableLoadFromFile@}},"
-				+ " {{@TableLoadFromDir@}}, {{@TableSelect@}} and method {{@Do.getTable()@}}."
-				+ "{{`|header1|header2|`}}"
-				+ "{{`|value1 |value2 |`}}"
-				+ "{{`|value1 |value2 |`}}",
+				+ "Object Table can be created with  {{@RawTable@}}, with actions {{@TableCreate@}} , {{@TableLoadFromFile@}} ,"
+				+ " {{@TableLoadFromDir@}} , {{@TableSelect@}} and method {{@Do.getTable()@}}. "
+				+ "{{`|header1|header2|`}} "
+				+ "{{`|value1 |value2 |`}} "
+				+ "{{`|value1 |value2 |`}} ",
 		additionFieldsAllowed 	= true,
 		additionalDescription 	= "Additional parameters are used to assign column titles. The value field of parameter is left empty.",
 		outputDescription 		= "Table structure.",
 		outputType				= Table.class,
 		seeAlso 				= "{{@RawTable@}}, {{@TableLoadFromDir@}}, {{@TableLoadFromFile@}}, {{@TableSelect@}}",
 		examples 				= "{{`1.Create a table with columns Name and Age.`}}"
-				+ "{{`2. Verify that the created object has columns  set initially.`}}"
-				+ "#Id;#Action;#Name;#Age\n"
+				+ "{{`2. Verify that the created object has columns  set initially.`}}\n"
+				+ "{{##Id;#Action;#Name;#Age\n"
 				+ "TC;TableCreate;;\n"
 				+ "\n"
 				+ "\n"
-				+ "{{##Assert;#Message\n"
-				+ "TC.Out.getHeader(0) == 'Name' && TC.Out.getHeader(1) == 'Age';'Table is not correct'#}}n"
+				+ "#Assert;#Message\n"
+				+ "TC.Out.getHeader(0) == 'Name' && TC.Out.getHeader(1) == 'Age';'Table is not correct'#}}\n"
 	)
 public class TableCreate extends AbstractAction 
 {

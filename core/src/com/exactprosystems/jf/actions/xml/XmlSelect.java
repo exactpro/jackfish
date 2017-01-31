@@ -30,7 +30,7 @@ import com.exactprosystems.jf.functions.Xml;
 		outputDescription 		= "Xml structure that contains the result of the demand.",
 		outputType				= Xml.class,
 		examples 				= "{{`Create an Xml object by downloading it from the file.`}}"
-				+ "{{`Contents of an xml file:`}}"
+				+ "{{`Contents of an xml file:`}} "
 				+ "{{#<note> \n"
 				+ "<to>\n"
 				+ "<friend>\n"
@@ -48,7 +48,7 @@ import com.exactprosystems.jf.functions.Xml;
 				+ "</note>#}}"
 				+ " \n"
 				+ "{{`2. Find the element from.`}}"
-				+ "{{`3. Make sure that a new Xml structure has been created.`}}"
+				+ "{{`3. Make sure that a new Xml structure has been created.`}} "
 				+ "{{##Id;#Action;#File\n"
 				+ "XML1;XmlLoadFromFile;'/path/Xml.xml'\n"
 				+ "\n"

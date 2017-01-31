@@ -30,7 +30,7 @@ import com.exactprosystems.jf.functions.Table;
 				"{{`1. Create a table with columns Name,  Age and Gender. Complete the table with 2 lines.`}}"
 				+ "{{`2. Create a table with columns Name and Age. Complete the table with 2 lines.`}}"
 				+ "{{`3. Add the lines from the second table to the end of the first one.`}}"
-				+ "{{`4. Verify that the table size is equal to 4.`}}"
+				+ "{{`4. Verify that the table size is equal to 4. `}}"
 				+ "{{##Id;#RawTable\n"
 				+ "TC;Table\n"
 				+ "@;Name;Age;Gender\n"

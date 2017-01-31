@@ -27,7 +27,7 @@ import com.exactprosystems.jf.functions.Table;
 		seeAlso = "{{@TableReplace@}}, {{@TableAddColumns@}}, {{@TableConsiderColumnAs@}}, {{@TableColumnRename@}}",
 		examples 				=
 				"{{`1. Create a table with columns Name and Age. Add a value into 0 line to a column Name. A cell in a column Age leave empty.`}}"
-				+ "{{`2. Verify that a value in the first line of a column Name is equal 'Mike', Age is equal  null. Column Age is filled with a value null.`}}"
+				+ "{{`2. Verify that a value in the first line of a column Name is equal 'Mike', Age is equal  null. Column Age is filled with a value null. `}}"
 				+ "{{##Id;#RawTable\n"
 				+ "TC;Table\n"
 				+ "@;Name;Age\n"
