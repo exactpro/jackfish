@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.exactprosystems.jf.tool.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1000.0" prefWidth="1500.0" xmlns="http://javafx.com/javafx/8"
+	  xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.exactprosystems.jf.tool.dictionary.dialog.DialogWizardController">
+	<fx:define>
+		<CssVariables fx:id="verMin" fx:constant="VERTICAL_MIN"/>
+		<CssVariables fx:id="verMid" fx:constant="VERTICAL_MID"/>
+		<CssVariables fx:id="verMax" fx:constant="VERTICAL_MAX"/>
+
+		<CssVariables fx:id="horMin" fx:constant="HORIZONTAL_MIN"/>
+		<CssVariables fx:id="horMid" fx:constant="HORIZONTAL_MID"/>
+		<CssVariables fx:id="horMax" fx:constant="HORIZONTAL_MAX"/>
+	</fx:define>
+	<children>
+		<Label id="$verMid"/>
+		<HBox prefHeight="100.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+			<children>
+				<Label id="$horMid"/>
+				<BorderPane fx:id="borderPane" prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS">
+					<center>
+						<SplitPane fx:id="horSplitPane" dividerPositions="0.5" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0" BorderPane.alignment="CENTER">
+							<items>
+								<SplitPane fx:id="verSplitPane" prefHeight="200.0" prefWidth="200.0">
+									<items>
+										<BorderPane prefHeight="200.0" prefWidth="200.0">
+											<center>
+												<TableView fx:id="tableView" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER"/>
+											</center>
+										</BorderPane>
+									</items>
+								</SplitPane>
+								<BorderPane fx:id="paneTreeView" prefHeight="200.0" prefWidth="200.0">
+									<top>
+										<GridPane fx:id="smallTable" maxWidth="400.0" BorderPane.alignment="CENTER_LEFT">
+											<columnConstraints>
+												<ColumnConstraints halignment="CENTER" hgrow="ALWAYS" maxWidth="100.0" minWidth="10.0" prefWidth="100.0"/>
+												<ColumnConstraints halignment="CENTER" hgrow="ALWAYS" maxWidth="100.0" minWidth="10.0" prefWidth="100.0"/>
+												<ColumnConstraints halignment="CENTER" hgrow="ALWAYS" maxWidth="100.0" minWidth="10.0" prefWidth="100.0"/>
+												<ColumnConstraints halignment="CENTER" hgrow="ALWAYS" maxWidth="100.0" minWidth="10.0" prefWidth="100.0"/>
+											</columnConstraints>
+											<rowConstraints>
+												<RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="ALWAYS"/>
+												<RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="ALWAYS"/>
+											</rowConstraints>
+											<children>
+												<CheckBox id="cbMark" fx:id="cbMark" mnemonicParsing="false"/>
+												<CheckBox id="cbAdd" fx:id="cbAdd" mnemonicParsing="false" GridPane.columnIndex="1"/>
+												<CheckBox id="cbQuestion" fx:id="cbQuestion" mnemonicParsing="false" GridPane.columnIndex="2"/>
+												<CheckBox id="cbRemoved" fx:id="cbRemoved" mnemonicParsing="false" GridPane.columnIndex="3"/>
+												<Label fx:id="lblMark" GridPane.rowIndex="1"/>
+												<Label fx:id="lblAdd" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+												<Label fx:id="lblQuestion" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+												<Label fx:id="lblRemoved" GridPane.columnIndex="3" GridPane.rowIndex="1"/>
+											</children>
+										</GridPane>
+									</top>
+								</BorderPane>
+							</items>
+						</SplitPane>
+					</center>
+					<top>
+						<VBox>
+							<children>
+								<GridPane BorderPane.alignment="CENTER">
+									<columnConstraints>
+										<ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" percentWidth="10.0" prefWidth="100.0"/>
+										<ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" percentWidth="30.0" prefWidth="100.0"/>
+										<ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" percentWidth="10.0" prefWidth="100.0"/>
+										<ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" percentWidth="20.0" prefWidth="100.0"/>
+										<ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" percentWidth="20.0" prefWidth="100.0"/>
+										<ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" minWidth="10.0" percentWidth="10.0" prefWidth="100.0"/>
+									</columnConstraints>
+									<rowConstraints>
+										<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+									</rowConstraints>
+									<children>
+										<Label text="Dialog : " GridPane.halignment="RIGHT"/>
+										<TextField fx:id="tfDialogName" GridPane.columnIndex="1"/>
+										<Label text="Self id : " GridPane.columnIndex="2" GridPane.halignment="RIGHT"/>
+										<Label fx:id="lblSelfId" GridPane.columnIndex="3" GridPane.halignment="LEFT"/>
+									</children>
+								</GridPane>
+								<Label/>
+							</children>
+						</VBox>
+					</top>
+				</BorderPane>
+				<Label id="$horMid"/>
+			</children>
+		</HBox>
+		<Label id="$verMid"/>
+		<HBox alignment="CENTER_RIGHT" prefHeight="25.0" prefWidth="715.0">
+			<children>
+				<Button mnemonicParsing="false" onAction="#cancel" text="Cancel"/>
+				<Label id="$horMin"/>
+				<Button mnemonicParsing="false" onAction="#accept" text="Ok"/>
+				<Label id="$horMid"/>
+			</children>
+		</HBox>
+		<Label id="$verMid"/>
+	</children>
+</VBox>

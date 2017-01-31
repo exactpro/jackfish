@@ -23,7 +23,6 @@ import com.exactprosystems.jf.tool.custom.xpath.XpathViewer;
 import com.exactprosystems.jf.tool.dictionary.DictionaryFx;
 import com.exactprosystems.jf.tool.dictionary.DictionaryFxController;
 import com.exactprosystems.jf.tool.dictionary.FindListView;
-import com.exactprosystems.jf.tool.main.Main;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.event.ActionEvent;
@@ -75,6 +74,7 @@ public class NavigationController implements Initializable, ContainingParent
 	public Button btnCopyDialog;
 	public Button btnPasteDialog;
 	public Button btnTestWindow;
+	public Button btnShowWizard;
 
 	private Parent pane;
 
@@ -189,6 +189,16 @@ public class NavigationController implements Initializable, ContainingParent
 	public void pasteDialog(ActionEvent actionEvent)
 	{
 		tryCatch(() -> this.model.dialogPaste(currentSection()), "Error on paste dialog");
+	}
+
+	public void openWizard(ActionEvent actionEvent)
+	{
+		tryCatch(() -> this.model.openDialogWizard(currentWindow()), "Error on open dialog wizard");
+	}
+
+	public void setDisableWizardButton(boolean flag)
+	{
+		this.btnShowWizard.setDisable(flag);
 	}
 	// ------------------------------------------------------------------------------------------------------------------
 
@@ -355,7 +365,7 @@ public class NavigationController implements Initializable, ContainingParent
 
 	public void displayElement(IControl control, Collection<IControl> controls)
 	{
-		if (control == null)
+		if (controls == null)
 		{
 			controls = new ArrayList<>();
 		}

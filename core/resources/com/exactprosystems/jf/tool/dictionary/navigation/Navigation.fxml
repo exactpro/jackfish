@@ -20,6 +20,7 @@
 		<CssVariables fx:id="horMin" fx:constant="HORIZONTAL_MIN"/>
 		<CssVariables fx:id="horMid" fx:constant="HORIZONTAL_MID"/>
 		<CssVariables fx:id="horMax" fx:constant="HORIZONTAL_MAX"/>
+		<CssVariables fx:id="transparentBackground" fx:constant="TRANSPARENT_BACKGROUND"/>
 	</fx:define>
 	<children>
 		<VBox HBox.hgrow="ALWAYS" prefHeight="200.0" prefWidth="100.0" fx:id="vBoxWindow">
@@ -48,6 +49,11 @@
 						<Button fx:id="btnPasteDialog" mnemonicParsing="false" onAction="#pasteDialog">
 							<tooltip>
 								<Tooltip text="Paste copied dialog"/>
+							</tooltip>
+						</Button>
+						<Button id="btnWizard" fx:id="btnShowWizard" mnemonicParsing="false" onAction="#openWizard" styleClass="$transparentBackground">
+							<tooltip>
+								<Tooltip text="Open dialog wizard"/>
 							</tooltip>
 						</Button>
 					</children>

@@ -189,4 +189,9 @@ public class DictionaryFxController implements Initializable, ContainingParent
 	{
 		DialogsHelper.showInfo(info);
 	}
+
+	public void setDisableWizardButton(boolean flag)
+	{
+		this.navigationController.setDisableWizardButton(flag);
+	}
 }
