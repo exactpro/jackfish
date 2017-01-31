@@ -80,7 +80,6 @@ public final class SpreadsheetColumn {
 		MenuItem switchOnColumn = new MenuItem("Switch on");
 		switchOnColumn.setOnAction(e -> this.spreadsheetView.switchColumn(true, this.spreadsheetView.getColumns().indexOf(this)));
 
-		System.out.println(this.getText());
 		contextMenu.getItems().addAll(addColumnBefore,addColumnAfter, removeColumn, renameColumn, switchOffColumn, switchOnColumn);
 		return contextMenu;
     }
