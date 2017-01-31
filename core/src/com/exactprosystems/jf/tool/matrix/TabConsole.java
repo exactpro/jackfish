@@ -19,7 +19,7 @@ import java.io.PrintStream;
 
 public class TabConsole extends PrintStream
 {
-	private CustomListView<MatrixItem> listView;
+	public CustomListView<MatrixItem> listView; // TODO
 
 	public TabConsole(OutputStream out)
 	{
@@ -55,7 +55,6 @@ public class TabConsole extends PrintStream
         }
         else
         {
-//    	    System.err.println("## listView " + listView); TODO
     		Platform.runLater(() -> listView.getItems().add(ConsoleText.defaultText(x)));
         }
 	}
