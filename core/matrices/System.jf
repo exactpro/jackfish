@@ -1,5 +1,5 @@
-#TestCase
-Testbench
+#Off;#TestCase;#Kind;#Depends;#For
+1;Testbench;;;
     #Action;#key;#begin
     Vars;0;System.currentTimeMillis()
 
@@ -14,8 +14,8 @@ Testbench
     Print;System.currentTimeMillis() - begin
 
 
-#TestCase
-ActionFor
+#Off;#TestCase;#Kind;#Depends;#For
+1;ActionFor;;;
     #Global;#Action;#result
     1;Vars;0
 
@@ -33,8 +33,8 @@ ActionFor
     Print;result
 
 
-#TestCase
-CallFromLib
+#Off;#TestCase;#Kind;#Depends;#For
+1;CallFromLib;;;
     #Id;#Call;#a;#b
     callLib;LIB.Test;140;150
 
@@ -42,8 +42,8 @@ CallFromLib
     Print;callLib
 
 
-#TestCase
-Test matrix start
+#TestCase;#Kind;#Depends;#For
+Test matrix start;;;
     #Action;#Str
     Print;'starting Matrix1'
 
@@ -72,8 +72,8 @@ Test matrix start
     Print;'the End'
 
 
-#TestCase
-Test Store
+#Off;#TestCase;#Kind;#Depends;#For
+1;Test Store;;;
     #Action;#date
     Vars;new Date()
 
@@ -84,8 +84,8 @@ Test Store
     Print;date
 
 
-#TestCase
-test Restore
+#Off;#TestCase;#Kind;#Depends;#For
+1;test Restore;;;
     #Action;#Time
     Wait;3000
 
@@ -96,14 +96,14 @@ test Restore
     Print;restoreValue.Out;new Date()
 
 
-#TestCase
-test execute
+#Off;#TestCase;#Kind;#Depends;#For
+1;test execute;;;
     #Id;#Action;#Command;#Wait
     EXEC1;Execute;'ls';true
 
 
-#TestCase
-null
+#Off;#TestCase;#Kind;#Depends;#For
+1;null;;;
     #Id;#Action;#Content
     TXT1;TextCreate;'#TestCase\nfirst case\n#Action\u003B#s\nPrint\u003B222'
 

@@ -25,17 +25,39 @@ public class TabConsole extends PrintStream
 	{
 		super(out);
 	}
+	
+	public TabConsole makeCopy()
+	{
+	    TabConsole res = new TabConsole(this.out);
+	    res.listView = this.listView;
+	    return res;
+	}
 
 	@Override
 	public void print(final String s)
 	{
-		Platform.runLater(() -> listView.getItems().add(ConsoleText.defaultText(s)));
+	    if (this.listView == null)
+	    {
+	        super.print(s);
+	    }
+	    else
+	    {
+	        Platform.runLater(() -> listView.getItems().add(ConsoleText.defaultText(s)));
+	    }
 	}
 
 	@Override
 	public void println(final String x)
 	{
-		Platform.runLater(() -> listView.getItems().add(ConsoleText.defaultText(x)));
+        if (this.listView == null)
+        {
+            super.print(x);
+        }
+        else
+        {
+//    	    System.err.println("## listView " + listView); TODO
+    		Platform.runLater(() -> listView.getItems().add(ConsoleText.defaultText(x)));
+        }
 	}
 
 	public void setConsole(CustomListView<MatrixItem> listView)
