@@ -26,8 +26,8 @@ import com.exactprosystems.jf.functions.Xml;
 		additionFieldsAllowed 	= false,
 		outputDescription 		= "XML structure.",
 		outputType				= Xml.class,
-		examples 				= "{{`1. Create Xml object by downloading it from the file.`}}"
-				+ "{{`Contents of an xml file:`}}"
+		examples 				= "{{`1. Create Xml object by downloading it from the file.`}} "
+				+ "{{`Contents of an xml file:`}} "
 				+ "{{#<note> \n"
 				+ "<to>\n"
 				+ "<friend>\n"
@@ -43,7 +43,7 @@ import com.exactprosystems.jf.functions.Xml;
 				+ "<body>Don't forget me this weekend!</body>\n"
 				+ "</note>#}}"
 				+ "\n"
-				+ "{{`2. Make sure that the object has been created and contains nodes.`}}"
+				+ "{{`2. Make sure that the object has been created and contains nodes.`}} "
 				+ "{{##Id;#Action;#File\n"
 				+ "XML1;XmlLoadFromFile;'/home/victor.krasnovid/Desktop/Xml.xml'\n"
 				+ "\n"

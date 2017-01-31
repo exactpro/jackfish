@@ -3,6 +3,8 @@ package com.exactprosystems.jf.common.RtfHelp;
 import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.actions.ActionsList;
+import com.exactprosystems.jf.actions.report.ReportShow;
+import com.exactprosystems.jf.actions.xml.XmlAddNode;
 import com.exactprosystems.jf.common.version.VersionInfo;
 import com.exactprosystems.jf.documents.matrix.parser.Parser;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItemAttribute;
@@ -183,7 +185,7 @@ class RTFCreator {
 
         if (!fieldAnnotations.isEmpty())
         {
-            actions.add(p(italic("Fields:")));
+            actions.add(p(italic(fontSize(fontSize,"Fields:"))));
             fieldAnnotations.forEach((fName, attr) ->
                     {
                         List<RtfText> listParams = new ArrayList<>();

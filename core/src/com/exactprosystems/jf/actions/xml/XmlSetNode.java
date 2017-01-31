@@ -27,7 +27,7 @@ import com.exactprosystems.jf.functions.Xml;
 				+ "Parameter is given the name of an attribute, the value of the parameter has the value of the attribute.",
 		examples 				= "{{`1. Create an Xml object by downloading it from the file.`}}"
 				+ "{{`2. Transfer to the core element content ‘Text for insert’`}}"
-				+ "{{`3. Contents of an xml file:`}}"
+				+ "{{`3. Contents of an xml file:`}} "
 				+ "{{#<note>"
 				+ "<to>\n"
 				+ "<friend>\n"

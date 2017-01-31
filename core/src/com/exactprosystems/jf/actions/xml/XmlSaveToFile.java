@@ -26,7 +26,7 @@ import com.exactprosystems.jf.functions.Xml;
 		outputDescription 		= "True, if saved successfully.",
 		outputType				= Boolean.class,
 		examples 				= "{{`1. Save the Xml object into the file filename.xml`}}"
-				+ "{{`2. Make sure that the check went well.`}}"
+				+ "{{`2. Make sure that the check went well.`}} "
 				+ "{{##Id;#Action;#Xml;#File\n"
 				+ "XSTF;XmlSaveToFile;Xml1;’path/filename.xml’\n"
 				+ "\n"
