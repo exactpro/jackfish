@@ -40,6 +40,7 @@ public class ImageViewWithScale implements IScaleListener
 	private final ToggleButton btnInspect;
 	private final Label lblInspect;
 	private final Label lblColor;
+	private final javafx.scene.shape.Rectangle rectangleColor;
 
 	private final Group group;
 
@@ -69,7 +70,11 @@ public class ImageViewWithScale implements IScaleListener
 		this.btnInspect = new ToggleButton();
 		this.lblInspect = new Label();
 		this.lblColor = new Label();
-		Label lblColorName = new Label("Color of pixel : ");
+		this.rectangleColor = new javafx.scene.shape.Rectangle();
+		this.rectangleColor.setWidth(12.0);
+		this.rectangleColor.setHeight(12.0);
+
+		Label lblColorName = new Label("Pixel color :");
 
 		this.scrollPane.setFitToHeight(true);
 		this.scrollPane.setFitToWidth(true);
@@ -96,6 +101,7 @@ public class ImageViewWithScale implements IScaleListener
 				, this.lblInspect
 				, Common.createSpacer(Common.SpacerEnum.HorizontalMid)
 				, lblColorName
+				, this.rectangleColor
 				, this.lblColor
 		);
 
@@ -339,7 +345,7 @@ public class ImageViewWithScale implements IScaleListener
 	{
 		Color pixelColor = getPixelColor(getMouseCoords(event));
 		this.lblColor.setText(pixelColor.toString());
-		this.lblColor.setBackground(new Background(new BackgroundFill(pixelColor, null, null)));
+		this.rectangleColor.setFill(pixelColor);
 	}
 
 	private Point getMouseCoords(MouseEvent event)

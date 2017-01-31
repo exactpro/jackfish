@@ -173,7 +173,7 @@ public class Main extends Application
 			notifyPreloader(new Preloader.ProgressNotification(55));
 
 			List<SettingsValue> values = settings.getValues(Settings.MAIN_NS, Settings.OPENED);
-			double progressStep = 45 / values.size();
+			double progressStep = 45 / Math.max(1, values.size());
 			double currentProgress = 55;
 			for (SettingsValue item : values)
 			{
@@ -228,6 +228,7 @@ public class Main extends Application
 			logger.error(e.getMessage(), e);
 		}
 		notifyPreloader(new Preloader.ProgressNotification(100));
+		Thread.sleep(200);
 		notifyPreloader(new Preloader.StateChangeNotification(Preloader.StateChangeNotification.Type.BEFORE_START));
 	}
 

@@ -2,6 +2,7 @@ package com.exactprosystems.jf.tool.custom;
 
 import com.exactprosystems.jf.api.app.IRemoteApplication;
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.documents.matrix.parser.SearchHelper;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.custom.xpath.XpathCell;
@@ -9,6 +10,7 @@ import com.exactprosystems.jf.tool.custom.xpath.XpathItem;
 import com.exactprosystems.jf.tool.custom.xpath.XpathViewer;
 import com.sun.javafx.scene.control.skin.TreeTableViewSkin;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.MenuItem;
@@ -21,6 +23,7 @@ import org.w3c.dom.NamedNodeMap;
 
 import java.awt.*;
 import java.util.*;
+import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.IntStream;
 
@@ -59,14 +62,12 @@ public class TreeTableViewWithRectangles
 		c1.setCellValueFactory(p -> new SimpleObjectProperty<>(p.getValue().getValue()));
 
 		this.treeTableView.getColumns().addAll(c0, c1);
+		c1.setPrefWidth(5000.0);
 		this.treeTableView.setColumnResizePolicy(TreeTableView.CONSTRAINED_RESIZE_POLICY);
-//		c1.prefWidthProperty().bind(this.treeTableView.widthProperty().subtract(value + 2));
 		this.treeTableView.setTreeColumn(c1);
-
 
 		addWaitingPane();
 
-		//		this.treeTableView.setCellFactory(p -> new XpathCell());
 		this.treeTableView.getStyleClass().add(CssVariables.XPATH_TREE_VIEW);
 		this.treeTableView.setShowRoot(false);
 
@@ -138,6 +139,22 @@ public class TreeTableViewWithRectangles
 			this.scrollToElement(treeItem);
 		}
 	}
+
+	public void find(TreeItem<XpathItem> xpathItem)
+	{
+		this.treeTableView.getSelectionModel().clearSelection();
+		this.treeTableView.getSelectionModel().select(xpathItem);
+		scrollToElement(xpathItem);
+	}
+
+	public List<TreeItem<XpathItem>> findItem(String what, boolean matchCase, boolean wholeWord)
+	{
+		ArrayList<TreeItem<XpathItem>> res = new ArrayList<>();
+		TreeItem<XpathItem> root = this.treeTableView.getRoot();
+		addItems(res, root, what, matchCase, wholeWord);
+		return res;
+	}
+
 	//endregion
 
 	//region private methods
@@ -257,6 +274,22 @@ public class TreeTableViewWithRectangles
 		}
 		item.getChildren().forEach(child -> passTree(keyRectangle, set, child));
 	}
+
+	private void addItems(List<TreeItem<XpathItem>> list, TreeItem<XpathItem> current, String what, boolean matchCase, boolean wholeWord)
+	{
+		Optional.ofNullable(current.getValue()).ifPresent(value -> {
+			if (matches(value.getText(), what, matchCase, wholeWord))
+			{
+				list.add(current);
+			}
+		});
+		Optional.ofNullable(current.getChildren()).ifPresent(childer -> childer.forEach(item -> addItems(list, item, what, matchCase, wholeWord)));
+	}
+
+	private boolean matches(String text, String what, boolean matchCase, boolean wholeWord)
+	{
+		return Arrays.stream(what.split("\\s")).filter(s -> !SearchHelper.matches(text, s, matchCase, wholeWord)).count() == 0;
+	}
 	//endregion
 
 	private class MyCustomSkin extends TreeTableViewSkin<XpathItem>
@@ -283,6 +316,11 @@ public class TreeTableViewWithRectangles
 		public void resizeColumnToFitContent(TreeTableColumn<XpathItem, ?> tc, int maxRows)
 		{
 			super.resizeColumnToFitContent(tc, maxRows);
+			TreeTableColumn<XpathItem, ?> column = treeTableView.getColumns().get(1);
+			double width = column.getWidth();
+			column.setPrefWidth(width);
+			column.setMaxWidth(width);
+			column.setMinWidth(width);
 		}
 	}
 

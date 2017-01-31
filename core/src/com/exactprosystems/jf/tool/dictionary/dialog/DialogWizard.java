@@ -6,6 +6,7 @@ import com.exactprosystems.jf.documents.guidic.Section;
 import com.exactprosystems.jf.documents.guidic.controls.AbstractControl;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.custom.xpath.ImageAndOffset;
+import com.exactprosystems.jf.tool.custom.xpath.XpathViewer;
 import com.exactprosystems.jf.tool.dictionary.DictionaryFx;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import javafx.concurrent.Service;
@@ -214,6 +215,11 @@ public class DialogWizard
 		}
 	}
 
+	String showXpathViewer(String xpath)
+	{
+		return new XpathViewer(this.selfControl.locator(), this.document, service()).show(xpath, "Xpath builder", Common.currentThemesPaths(), false);
+	}
+
 	void removeElement(ElementWizardBean bean)
 	{
 		boolean needRemove = DialogsHelper.showQuestionDialog("Remove element", "Are you sure to remove this element?");
@@ -224,7 +230,9 @@ public class DialogWizard
 			for (int i = 0; i < remove.size(); i++)
 			{
 				ElementWizardBean bean1 = remove.get(i);
+				boolean isNew = bean1.getIsNew();
 				updateBean(this.controlList.get(i), bean1);
+				bean1.setIsNew(isNew);
 				bean1.setNumber(i);
 				this.controller.displayElement(bean1);
 			}
@@ -302,7 +310,7 @@ public class DialogWizard
 	{
 		bean.setControlKind(control.getBindedClass());
 		bean.setId(control.getID());
-		bean.setIsNew(false);
+		bean.setIsNew(true);
 		bean.setXpath((control.getXpath() != null && !control.getXpath().isEmpty()) || control.useAbsoluteXpath());
 	}
 	//endregion

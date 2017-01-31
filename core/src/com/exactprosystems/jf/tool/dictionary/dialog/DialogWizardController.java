@@ -9,6 +9,9 @@ import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.custom.ImageViewWithScale;
 import com.exactprosystems.jf.tool.custom.TreeTableViewWithRectangles;
 import com.exactprosystems.jf.tool.custom.controls.field.CustomFieldWithButton;
+import com.exactprosystems.jf.tool.custom.find.FindPanel;
+import com.exactprosystems.jf.tool.custom.find.IFind;
+import com.exactprosystems.jf.tool.custom.xpath.XpathItem;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
@@ -21,6 +24,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -51,11 +56,7 @@ public class DialogWizardController implements Initializable, ContainingParent
 	public CheckBox cbQuestion;
 	public CheckBox cbRemoved;
 
-	public Label lblMark;
-	public Label lblAdd;
-	public Label lblQuestion;
-	public Label lblRemoved;
-
+	public FindPanel<TreeItem<XpathItem>> findPanel;
 
 	private DialogWizard model;
 	private Alert dialog;
@@ -80,6 +81,22 @@ public class DialogWizardController implements Initializable, ContainingParent
 			if (xpathItem != null)
 			{
 				this.imageViewWithScale.displayRectangle(xpathItem.getRectangle());
+			}
+		});
+
+		this.findPanel.getStyleClass().remove(CssVariables.FIND_PANEL);
+		this.findPanel.setListener(new IFind<TreeItem<XpathItem>>()
+		{
+			@Override
+			public void find(TreeItem<XpathItem> xpathItemTreeItem)
+			{
+				treeViewWithRectangles.find(xpathItemTreeItem);
+			}
+
+			@Override
+			public List<TreeItem<XpathItem>> findItem(String what, boolean matchCase, boolean wholeWord)
+			{
+				return treeViewWithRectangles.findItem(what, matchCase, wholeWord);
 			}
 		});
 	}
@@ -259,8 +276,17 @@ public class DialogWizardController implements Initializable, ContainingParent
 		CustomFieldWithButton tf = new CustomFieldWithButton(value);
 		tf.textProperty().addListener((observable, oldValue, newValue) -> consumer.accept(newValue));
 		HBox.setHgrow(tf, Priority.ALWAYS);
-		box.getChildren().addAll(cbIsAbsolute, tf);
 
+		Button btnXpath = new Button();
+		Common.customizeLabeled(btnXpath, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.XPATH_TREE);
+		btnXpath.setOnAction(event -> {
+			String newXpath = this.model.showXpathViewer(tf.getText());
+			if (newXpath != null)
+			{
+				tf.setText(newXpath);
+			}
+		});
+		box.getChildren().addAll(cbIsAbsolute, tf, btnXpath);
 		pane.add(lbl, 0, 0);
 		pane.add(box, 1, 0);
 	}
@@ -273,6 +299,21 @@ public class DialogWizardController implements Initializable, ContainingParent
 	public void accept(ActionEvent actionEvent)
 	{
 		this.model.close(true);
+	}
+
+	public void nextMark(ActionEvent actionEvent)
+	{
+
+	}
+
+	public void prevMark(ActionEvent actionEvent)
+	{
+
+	}
+
+	public void magic(ActionEvent actionEvent)
+	{
+
 	}
 
 	private void initDialog()
@@ -312,6 +353,7 @@ public class DialogWizardController implements Initializable, ContainingParent
 				if (item != null && !empty)
 				{
 					setText(String.valueOf(item));
+					this.setAlignment(Pos.CENTER);
 				}
 				else
 				{
@@ -488,11 +530,12 @@ public class DialogWizardController implements Initializable, ContainingParent
 				super.updateItem(item, empty);
 				if (item != null && !empty)
 				{
-					setText(item.toString());
+					this.setAlignment(Pos.CENTER);
+					setGraphic(item ? new ImageView(new Image(CssVariables.Icons.MARK_ICON)) : null);
 				}
 				else
 				{
-					setText(null);
+					setGraphic(null);
 				}
 			}
 		});
@@ -509,11 +552,12 @@ public class DialogWizardController implements Initializable, ContainingParent
 				super.updateItem(item, empty);
 				if (item != null && !empty)
 				{
-					setText(item.toString());
+					this.setAlignment(Pos.CENTER);
+					setGraphic(item ? new ImageView(new Image(CssVariables.Icons.MARK_ICON)) : null);
 				}
 				else
 				{
-					setText(null);
+					setGraphic(null);
 				}
 			}
 		});
@@ -528,6 +572,7 @@ public class DialogWizardController implements Initializable, ContainingParent
 			protected void updateItem(Integer item, boolean empty)
 			{
 				super.updateItem(item, empty);
+				this.setAlignment(Pos.CENTER);
 				if (item != null && !empty)
 				{
 					setText(item.toString());
@@ -553,6 +598,7 @@ public class DialogWizardController implements Initializable, ContainingParent
 			protected void updateItem(ElementWizardBean item, boolean empty)
 			{
 				super.updateItem(item, empty);
+				this.setAlignment(Pos.CENTER);
 				if (item != null && !empty)
 				{
 					HBox box = new HBox();

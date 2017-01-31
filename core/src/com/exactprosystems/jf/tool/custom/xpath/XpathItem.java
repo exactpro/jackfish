@@ -1,13 +1,12 @@
 package com.exactprosystems.jf.tool.custom.xpath;
 
-import java.awt.Rectangle;
-
+import com.exactprosystems.jf.api.app.IRemoteApplication;
+import javafx.geometry.Pos;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
-
 import org.w3c.dom.Node;
 
-import com.exactprosystems.jf.api.app.IRemoteApplication;
+import java.awt.*;
 
 public class XpathItem
 {
@@ -18,6 +17,7 @@ public class XpathItem
 	public XpathItem(HBox box, Node node)
 	{
 		this.box = box;
+		this.box.setAlignment(Pos.CENTER_LEFT);
 		this.node = node;
 		this.rectangle = (Rectangle)node.getUserData(IRemoteApplication.rectangleName);
 	}
