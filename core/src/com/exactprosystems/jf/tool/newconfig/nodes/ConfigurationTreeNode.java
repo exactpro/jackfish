@@ -96,6 +96,15 @@ public class ConfigurationTreeNode extends TreeNode
 	}
 
 	@Override
+	public void updateParameter(String key, String value)
+	{
+		if (key.equals(Configuration.version))
+		{
+			this.model.getVersion().set(value);
+		}
+	}
+
+	@Override
 	public Optional<Image> icon()
 	{
 		return Optional.of(new Image(CssVariables.Icons.CONFIGURATION_ICON));
