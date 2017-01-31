@@ -23,7 +23,7 @@ import com.exactprosystems.jf.functions.Table;
 		outputType 			  = Table.class,
 		examples = "{{` 1. Create a table with columns Name and Age. Complete the table with 3 lines.`}}"
 				+ "{{`2. Do top-down sorting in  Age.`}}"
-				+ "{{`3. Output the sorted table to report.`}}"
+				+ "{{`3. Output the sorted table to report. `}}"
 				+ "{{##Id;#RawTable\n"
 				+ "TC;Table\n"
 				+ "@;Name;Age\n"

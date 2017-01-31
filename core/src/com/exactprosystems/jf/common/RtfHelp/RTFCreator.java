@@ -3,8 +3,6 @@ package com.exactprosystems.jf.common.RtfHelp;
 import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.actions.ActionsList;
-import com.exactprosystems.jf.actions.report.ReportShow;
-import com.exactprosystems.jf.actions.xml.XmlAddNode;
 import com.exactprosystems.jf.common.version.VersionInfo;
 import com.exactprosystems.jf.documents.matrix.parser.Parser;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItemAttribute;
@@ -211,7 +209,8 @@ class RTFCreator {
         if (!classAnnotations.examples().equals(""))
         {
             actions.add(p(italic(fontSize(fontSize, "Examples"))));
-            actions.add(p(parseExamples(classAnnotations.examples()).toArray()));
+            //actions.add(p(parseExamples(classAnnotations.examples()).toArray()));
+            actions.addAll(parseExample(classAnnotations.examples()));
             actions.add(p());
         }
     }
@@ -295,6 +294,75 @@ class RTFCreator {
         }
     }
 
+    private List<RtfPara> parseExample(String examples)
+    {
+        String[] lines = examples.split("\\n");
+        StringBuilder sb = new StringBuilder();
+        List<RtfPara> result = new ArrayList<>();
+        List<RtfText> newLine = new ArrayList<>();
+        boolean code = false;
+        for (String line : lines){
+            String[] words = line.split("\\s");
+            if (words.length != 0 )
+            {
+                for (String s : words)
+                {
+                    if (s.contains("{{#") || s.contains("#}}") || code) {
+                        if (s.contains("{{#") && s.contains("#}}")) {
+                            newLine.add(fontSize(fontSize, sb.toString()));
+                            newLine.add(lineBreak());
+                            sb.setLength(0);
+                            newLine.add(font(1, fontSize(fontSize, replaceChars(s))));
+                            newLine.add(lineBreak());
+                        } else if (s.contains("{{#") && !s.contains("#}}")) {
+                            newLine.add(fontSize(fontSize, sb.toString()));
+                            newLine.add(lineBreak());
+                            sb.setLength(0);
+                            newLine.add(font(1, fontSize(fontSize, replaceChars(s))));
+                            code = true;
+                        } else if (s.contains("#}}") && code) {
+                            newLine.add(font(1, fontSize(fontSize, replaceChars(s))));
+                            newLine.add(lineBreak());
+                            code = false;
+                        } else if (code) {
+                            if (s.startsWith("#")) {
+                                newLine.add(font(1, fontSize(fontSize, replaceChars(s) + " ")));
+                            } else {
+                                newLine.add(font(1, fontSize(fontSize, replaceChars(s) + " ")));
+                            }
+                        }
+                    }
+                    else if (s.contains("{{$") || s.contains("$}}"))
+                    {
+                        newLine.add(fontSize(fontSize, sb.toString()));
+                        sb.setLength(0);
+                        newLine.add(italic(fontSize(fontSize, replaceChars(s) + " ")));
+                    }
+                    else if (s.contains("{{@") || s.contains("@$}}"))
+                    {
+                        newLine.add(fontSize(fontSize, sb.toString()));
+                        sb.setLength(0);
+                        newLine.add(hyperlink(link + replaceChars(s), p(fontSize(fontSize, replaceChars(s)))));
+                    }
+                    else {
+                        sb.append(s + " ");
+                    }
+                }
+                if (sb.length() != 0){
+                    newLine.add(fontSize(fontSize, sb.toString()));
+                    sb.setLength(0);
+                }
+                result.add(p(newLine.toArray()));
+                newLine.clear();
+            }
+            else
+            {
+                //result.add(p());
+            }
+        }
+        return result;
+    }
+
     private List<RtfText> parseExamples(String examples)
     {
         String[] strs = examples.split("\\s+");
@@ -348,6 +416,12 @@ class RTFCreator {
                 result.add(fontSize(fontSize, sb.toString()));
                 sb.setLength(0);
                 result.add(italic(fontSize(fontSize, replaceChars(s) + " ")));
+            }
+            else if (s.contains("{{@") || s.contains("@$}}"))
+            {
+                result.add(fontSize(fontSize, sb.toString()));
+                sb.setLength(0);
+                result.add(hyperlink(link + replaceChars(s), p(fontSize(fontSize, replaceChars(s)))));
             }
             else {
                 sb.append(s + " ");
