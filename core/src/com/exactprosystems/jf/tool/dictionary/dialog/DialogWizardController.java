@@ -11,7 +11,7 @@ import com.exactprosystems.jf.tool.custom.TreeTableViewWithRectangles;
 import com.exactprosystems.jf.tool.custom.controls.field.CustomFieldWithButton;
 import com.exactprosystems.jf.tool.custom.find.FindPanel;
 import com.exactprosystems.jf.tool.custom.find.IFind;
-import com.exactprosystems.jf.tool.custom.xpath.XpathItem;
+import com.exactprosystems.jf.tool.custom.xpath.XpathTreeItem;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
@@ -56,7 +56,7 @@ public class DialogWizardController implements Initializable, ContainingParent
 	public CheckBox cbQuestion;
 	public CheckBox cbRemoved;
 
-	public FindPanel<TreeItem<XpathItem>> findPanel;
+	public FindPanel<TreeItem<XpathTreeItem>> findPanel;
 
 	private DialogWizard model;
 	private Alert dialog;
@@ -85,16 +85,16 @@ public class DialogWizardController implements Initializable, ContainingParent
 		});
 
 		this.findPanel.getStyleClass().remove(CssVariables.FIND_PANEL);
-		this.findPanel.setListener(new IFind<TreeItem<XpathItem>>()
+		this.findPanel.setListener(new IFind<TreeItem<XpathTreeItem>>()
 		{
 			@Override
-			public void find(TreeItem<XpathItem> xpathItemTreeItem)
+			public void find(TreeItem<XpathTreeItem> xpathItemTreeItem)
 			{
 				treeViewWithRectangles.find(xpathItemTreeItem);
 			}
 
 			@Override
-			public List<TreeItem<XpathItem>> findItem(String what, boolean matchCase, boolean wholeWord)
+			public List<TreeItem<XpathTreeItem>> findItem(String what, boolean matchCase, boolean wholeWord)
 			{
 				return treeViewWithRectangles.findItem(what, matchCase, wholeWord);
 			}
@@ -303,17 +303,17 @@ public class DialogWizardController implements Initializable, ContainingParent
 
 	public void nextMark(ActionEvent actionEvent)
 	{
-
+		this.treeViewWithRectangles.nextMark();
 	}
 
 	public void prevMark(ActionEvent actionEvent)
 	{
-
+		this.treeViewWithRectangles.prevMark();
 	}
 
 	public void magic(ActionEvent actionEvent)
 	{
-
+		System.out.println("<< Marked rows : " + this.treeViewWithRectangles.getMarkedRows());
 	}
 
 	private void initDialog()

@@ -3,17 +3,17 @@ package com.exactprosystems.jf.tool.custom;
 import com.exactprosystems.jf.api.app.IRemoteApplication;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.documents.matrix.parser.SearchHelper;
-import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
-import com.exactprosystems.jf.tool.custom.xpath.XpathCell;
-import com.exactprosystems.jf.tool.custom.xpath.XpathItem;
+import com.exactprosystems.jf.tool.custom.xpath.XpathTreeItem;
 import com.exactprosystems.jf.tool.custom.xpath.XpathViewer;
 import com.sun.javafx.scene.control.skin.TreeTableViewSkin;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.geometry.Pos;
+import javafx.event.EventTarget;
 import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.control.MenuItem;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
@@ -30,13 +30,15 @@ import java.util.stream.IntStream;
 public class TreeTableViewWithRectangles
 {
 	private final AnchorPane anchorPane;
-	private final TreeTableView<XpathItem> treeTableView;
+	private final TreeTableView<XpathTreeItem> treeTableView;
+
+	private int currentIndex = -1;
 
 	private Node waitingNode;
 
-	private Consumer<XpathItem> consumer;
+	private Consumer<XpathTreeItem> consumer;
 
-	private Map<Rectangle, TreeItem<XpathItem>> map = new HashMap<>();
+	private Map<Rectangle, TreeItem<XpathTreeItem>> map = new HashMap<>();
 
 	public TreeTableViewWithRectangles()
 	{
@@ -52,12 +54,15 @@ public class TreeTableViewWithRectangles
 
 		this.anchorPane.getChildren().add(this.treeTableView);
 
-		TreeTableColumn<XpathItem, String> c0 = new TreeTableColumn<>();
+		TreeTableColumn<XpathTreeItem, XpathTreeItem> c0 = new TreeTableColumn<>();
 		int value = 30;
 		c0.setPrefWidth(value);
 		c0.setMaxWidth(value);
 		c0.setMinWidth(value);
-		TreeTableColumn<XpathItem, XpathItem> c1 = new TreeTableColumn<>();
+		c0.setCellFactory(p -> new XpathIconCell());
+		c0.setCellValueFactory(p -> new SimpleObjectProperty<>(p.getValue().getValue()));
+
+		TreeTableColumn<XpathTreeItem, XpathTreeItem> c1 = new TreeTableColumn<>();
 		c1.setCellFactory(p -> new XpathTreeTableCell());
 		c1.setCellValueFactory(p -> new SimpleObjectProperty<>(p.getValue().getValue()));
 
@@ -70,6 +75,21 @@ public class TreeTableViewWithRectangles
 
 		this.treeTableView.getStyleClass().add(CssVariables.XPATH_TREE_VIEW);
 		this.treeTableView.setShowRoot(false);
+		this.treeTableView.setOnMouseClicked(e -> {
+			EventTarget target = e.getTarget();
+			if (target instanceof XpathIconCell)
+			{
+				XpathIconCell iconCell = (XpathIconCell) target;
+				TreeItem<XpathTreeItem> treeItem = iconCell.getTreeTableRow().getTreeItem();
+				if (treeItem != null)
+				{
+					XpathTreeItem xpathTreeItem = treeItem.getValue();
+					xpathTreeItem.setIcon(!xpathTreeItem.isIcon());
+					refresh();
+				}
+			}
+
+		});
 
 		this.treeTableView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> Optional.ofNullable(consumer).ifPresent(c -> c.accept(newValue == null ? null : newValue.getValue())));
 	}
@@ -125,14 +145,14 @@ public class TreeTableViewWithRectangles
 		return map;
 	}
 
-	public void setTreeViewConsumer(Consumer<XpathItem> consumer)
+	public void setTreeViewConsumer(Consumer<XpathTreeItem> consumer)
 	{
 		this.consumer = consumer;
 	}
 
 	public void selectItem(Rectangle rectangle)
 	{
-		TreeItem<XpathItem> treeItem = this.map.get(rectangle);
+		TreeItem<XpathTreeItem> treeItem = this.map.get(rectangle);
 		if (treeItem != null)
 		{
 			this.treeTableView.getSelectionModel().select(treeItem);
@@ -140,24 +160,93 @@ public class TreeTableViewWithRectangles
 		}
 	}
 
-	public void find(TreeItem<XpathItem> xpathItem)
+	public void find(TreeItem<XpathTreeItem> XpathTreeItem)
 	{
 		this.treeTableView.getSelectionModel().clearSelection();
-		this.treeTableView.getSelectionModel().select(xpathItem);
-		scrollToElement(xpathItem);
+		this.treeTableView.getSelectionModel().select(XpathTreeItem);
+		scrollToElement(XpathTreeItem);
 	}
 
-	public List<TreeItem<XpathItem>> findItem(String what, boolean matchCase, boolean wholeWord)
+	public List<TreeItem<XpathTreeItem>> findItem(String what, boolean matchCase, boolean wholeWord)
 	{
-		ArrayList<TreeItem<XpathItem>> res = new ArrayList<>();
-		TreeItem<XpathItem> root = this.treeTableView.getRoot();
+		ArrayList<TreeItem<XpathTreeItem>> res = new ArrayList<>();
+		TreeItem<XpathTreeItem> root = this.treeTableView.getRoot();
 		addItems(res, root, what, matchCase, wholeWord);
 		return res;
 	}
 
+	public List<TreeItem<XpathTreeItem>> getMarkedRows()
+	{
+		List<TreeItem<XpathTreeItem>> list = new ArrayList<>();
+		byPass(this.treeTableView.getRoot(), list);
+		return list;
+	}
+
+	public void nextMark()
+	{
+		List<TreeItem<XpathTreeItem>> markedRows = getMarkedRows();
+		if (markedRows.isEmpty())
+		{
+			return;
+		}
+		if (this.currentIndex == -1)
+		{
+			this.currentIndex = 0;
+		}
+		else
+		{
+			if (this.currentIndex >= markedRows.size() - 1)
+			{
+				this.currentIndex = 0;
+			}
+			else
+			{
+				this.currentIndex++;
+			}
+		}
+		TreeItem<XpathTreeItem> treeItem = markedRows.get(this.currentIndex);
+		scrollToElement(treeItem);
+		this.treeTableView.getSelectionModel().select(treeItem);
+	}
+
+	public void prevMark()
+	{
+		List<TreeItem<XpathTreeItem>> markedRows = getMarkedRows();
+		if (markedRows.isEmpty())
+		{
+			return;
+		}
+		if (this.currentIndex == -1)
+		{
+			this.currentIndex = markedRows.size() - 1;
+			scrollToElement(markedRows.get(this.currentIndex));
+		}
+		else
+		{
+			if (this.currentIndex <= 0)
+			{
+				this.currentIndex = markedRows.size() - 1;
+			}
+			else
+			{
+				this.currentIndex--;
+			}
+		}
+		TreeItem<XpathTreeItem> treeItem = markedRows.get(this.currentIndex);
+		scrollToElement(treeItem);
+		this.treeTableView.getSelectionModel().select(treeItem);
+	}
 	//endregion
 
 	//region private methods
+	private void refresh()
+	{
+		Platform.runLater(() -> {
+			this.treeTableView.getColumns().get(0).setVisible(false);
+			this.treeTableView.getColumns().get(0).setVisible(true);
+		});
+	}
+
 	private void addWaitingPane()
 	{
 		this.waitingNode = new BorderPane();
@@ -169,21 +258,21 @@ public class TreeTableViewWithRectangles
 		this.anchorPane.getChildren().add(this.waitingNode);
 	}
 
-	private void expand(TreeItem<XpathItem> item)
+	private void expand(TreeItem<XpathTreeItem> item)
 	{
 		item.setExpanded(true);
 		item.getChildren().forEach(this::expand);
 	}
 
-	private void displayTree(org.w3c.dom.Node node, TreeItem<XpathItem> parent, int xOffset, int yOffset)
+	private void displayTree(org.w3c.dom.Node node, TreeItem<XpathTreeItem> parent, int xOffset, int yOffset)
 	{
 		boolean isDocument = node.getNodeType() == org.w3c.dom.Node.DOCUMENT_NODE;
 
-		TreeItem<XpathItem> treeItem = isDocument ? parent : new TreeItem<>();
+		TreeItem<XpathTreeItem> treeItem = isDocument ? parent : new TreeItem<>();
 		IntStream.range(0, node.getChildNodes().getLength()).mapToObj(node.getChildNodes()::item).filter(item -> item.getNodeType() == org.w3c.dom.Node.ELEMENT_NODE).forEach(item -> displayTree(item, treeItem, xOffset, yOffset));
 		if (!isDocument)
 		{
-			treeItem.setValue(new XpathItem(stringNode(node, XpathViewer.text(node)), node));
+			treeItem.setValue(new XpathTreeItem(stringNode(node, XpathViewer.text(node)), node));
 			Rectangle rec = (Rectangle) node.getUserData(IRemoteApplication.rectangleName);
 			if (rec != null)
 			{
@@ -200,57 +289,41 @@ public class TreeTableViewWithRectangles
 	{
 		HBox box = new HBox();
 
-		box.getChildren().add(createText("<" + node.getNodeName() + " ", CssVariables.XPATH_NODE, true));
+		box.getChildren().add(createText("<" + node.getNodeName() + " ", CssVariables.XPATH_NODE));
 		NamedNodeMap attributes = node.getAttributes();
 		Optional.ofNullable(attributes).ifPresent(atrs ->
 		{
-			int length = atrs.getLength();
-			IntStream.range(0, length).mapToObj(atrs::item).forEach(item -> box.getChildren().addAll(createText(item.getNodeName(), CssVariables.XPATH_ATTRIBUTE_NAME, false), createText("=", CssVariables.XPATH_TEXT, false), createText("\"" + item.getNodeValue() + "\" ", CssVariables.XPATH_ATTRIBUTE_VALUE, true)));
+			IntStream.range(0, atrs.getLength())
+					.mapToObj(atrs::item)
+					.forEach(item -> box.getChildren().addAll(
+							createText(item.getNodeName(), CssVariables.XPATH_ATTRIBUTE_NAME)
+							, createText("=", CssVariables.XPATH_TEXT)
+							, createText("\"" + item.getNodeValue() + "\" ", CssVariables.XPATH_ATTRIBUTE_VALUE)
+					));
 		});
 		if (Str.IsNullOrEmpty(text))
 		{
-			box.getChildren().add(createText("/>", CssVariables.XPATH_NODE, true));
+			box.getChildren().add(createText("/>", CssVariables.XPATH_NODE));
 		}
 		else
 		{
-			box.getChildren().addAll(createText(">", CssVariables.XPATH_NODE, true), createText(text, CssVariables.XPATH_TEXT, true), createText("</" + node.getNodeName() + ">", CssVariables.XPATH_NODE, true));
+			box.getChildren().addAll(
+					createText(">", CssVariables.XPATH_NODE)
+					, createText(text, CssVariables.XPATH_TEXT)
+					, createText("</" + node.getNodeName() + ">", CssVariables.XPATH_NODE)
+			);
 		}
 		return box;
 	}
 
-	private Text createText(String text, String cssClass, boolean useContextMenu)
+	private Text createText(String text, String cssClass)
 	{
 		Text t = new Text(text);
-		if (useContextMenu && !text.isEmpty())
-		{
-			t.setOnContextMenuRequested(event ->
-			{
-
-				MenuItem item = new MenuItem("Copy " + text);
-				item.setOnAction(e -> Common.copyText(text));
-				if (t.getParent().getParent() instanceof XpathCell)
-				{
-					XpathCell parent = (XpathCell) t.getParent().getParent();
-					SeparatorMenuItem separator = new SeparatorMenuItem();
-					ContextMenu treeMenu = parent.getContextMenu();
-					treeMenu.getItems().add(0, item);
-					treeMenu.getItems().add(1, separator);
-					treeMenu.setOnHidden(e -> treeMenu.getItems().removeAll(item, separator));
-				}
-				else
-				{
-					ContextMenu menu = new ContextMenu();
-					menu.setAutoHide(true);
-					menu.getItems().add(item);
-					menu.show(t, MouseInfo.getPointerInfo().getLocation().getX(), MouseInfo.getPointerInfo().getLocation().getY());
-				}
-			});
-		}
 		t.getStyleClass().add(cssClass);
 		return t;
 	}
 
-	private void scrollToElement(TreeItem<XpathItem> xpathItemTreeItem)
+	private void scrollToElement(TreeItem<XpathTreeItem> xpathItemTreeItem)
 	{
 		MyCustomSkin skin = (MyCustomSkin) treeTableView.getSkin();
 		int row = treeTableView.getRow(xpathItemTreeItem);
@@ -260,9 +333,9 @@ public class TreeTableViewWithRectangles
 		}
 	}
 
-	private void passTree(Rectangle keyRectangle, Set<Rectangle> set, TreeItem<XpathItem> item)
+	private void passTree(Rectangle keyRectangle, Set<Rectangle> set, TreeItem<XpathTreeItem> item)
 	{
-		XpathItem xpath = item.getValue();
+		XpathTreeItem xpath = item.getValue();
 		if (xpath != null)
 		{
 			Rectangle rec = xpath.getRectangle();
@@ -275,7 +348,7 @@ public class TreeTableViewWithRectangles
 		item.getChildren().forEach(child -> passTree(keyRectangle, set, child));
 	}
 
-	private void addItems(List<TreeItem<XpathItem>> list, TreeItem<XpathItem> current, String what, boolean matchCase, boolean wholeWord)
+	private void addItems(List<TreeItem<XpathTreeItem>> list, TreeItem<XpathTreeItem> current, String what, boolean matchCase, boolean wholeWord)
 	{
 		Optional.ofNullable(current.getValue()).ifPresent(value -> {
 			if (matches(value.getText(), what, matchCase, wholeWord))
@@ -290,11 +363,21 @@ public class TreeTableViewWithRectangles
 	{
 		return Arrays.stream(what.split("\\s")).filter(s -> !SearchHelper.matches(text, s, matchCase, wholeWord)).count() == 0;
 	}
+
+	private void byPass(TreeItem<XpathTreeItem> treeItem, List<TreeItem<XpathTreeItem>> list)
+	{
+		XpathTreeItem value = treeItem.getValue();
+		if (value != null && value.isIcon())
+		{
+			list.add(treeItem);
+		}
+		treeItem.getChildren().forEach(child -> byPass(child, list));
+	}
 	//endregion
 
-	private class MyCustomSkin extends TreeTableViewSkin<XpathItem>
+	private class MyCustomSkin extends TreeTableViewSkin<XpathTreeItem>
 	{
-		public MyCustomSkin(TreeTableView<XpathItem> treeTableView)
+		public MyCustomSkin(TreeTableView<XpathTreeItem> treeTableView)
 		{
 			super(treeTableView);
 		}
@@ -313,10 +396,10 @@ public class TreeTableViewWithRectangles
 		}
 
 		@Override
-		public void resizeColumnToFitContent(TreeTableColumn<XpathItem, ?> tc, int maxRows)
+		public void resizeColumnToFitContent(TreeTableColumn<XpathTreeItem, ?> tc, int maxRows)
 		{
 			super.resizeColumnToFitContent(tc, maxRows);
-			TreeTableColumn<XpathItem, ?> column = treeTableView.getColumns().get(1);
+			TreeTableColumn<XpathTreeItem, ?> column = treeTableView.getColumns().get(1);
 			double width = column.getWidth();
 			column.setPrefWidth(width);
 			column.setMaxWidth(width);
@@ -324,19 +407,35 @@ public class TreeTableViewWithRectangles
 		}
 	}
 
-	private class XpathTreeTableCell extends TreeTableCell<XpathItem, XpathItem>
+	private class XpathTreeTableCell extends TreeTableCell<XpathTreeItem, XpathTreeItem>
 	{
-		public XpathTreeTableCell()
-		{
-		}
-
 		@Override
-		protected void updateItem(XpathItem item, boolean empty)
+		protected void updateItem(XpathTreeItem item, boolean empty)
 		{
 			super.updateItem(item, empty);
-			if (item != null)
+			if (item != null && !empty)
 			{
 				setGraphic(item.getBox());
+			}
+			else
+			{
+				setGraphic(null);
+			}
+		}
+	}
+
+	private class XpathIconCell extends TreeTableCell<XpathTreeItem, XpathTreeItem>
+	{
+		private ImageView imageView = new ImageView();
+
+		@Override
+		protected void updateItem(XpathTreeItem item, boolean empty)
+		{
+			super.updateItem(item, empty);
+			if (item != null && !empty)
+			{
+				this.imageView.setImage(item.isIcon() ? new Image(CssVariables.Icons.MARK_ICON) : null);
+				setGraphic(this.imageView);
 			}
 			else
 			{

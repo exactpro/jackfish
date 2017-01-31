@@ -7,6 +7,7 @@ import javafx.scene.text.Text;
 import org.w3c.dom.Node;
 
 import java.awt.*;
+import java.util.stream.Collectors;
 
 public class XpathItem
 {
@@ -39,9 +40,13 @@ public class XpathItem
 
 	public String getText()
 	{
-		StringBuilder builder = new StringBuilder();
-		this.box.getChildren().stream().filter(node -> node instanceof Text).forEach(text -> builder.append(((Text) text).getText()));
-		return builder.toString();
+		return this.box.getChildren().stream()
+				.filter(node -> node instanceof Text)
+				.map(text -> ((Text) text).getText())
+				.collect(Collectors.joining());
+//		StringBuilder builder = new StringBuilder();
+//		this.box.getChildren().stream().filter(node -> node instanceof Text).forEach(text -> builder.append(((Text) text).getText()));
+//		return builder.toString();
 	}
 
 	@Override
