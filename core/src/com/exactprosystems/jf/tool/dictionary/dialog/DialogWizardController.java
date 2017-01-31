@@ -7,7 +7,7 @@ import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.custom.ImageViewWithScale;
-import com.exactprosystems.jf.tool.custom.TreeViewWithRectangles;
+import com.exactprosystems.jf.tool.custom.TreeTableViewWithRectangles;
 import com.exactprosystems.jf.tool.custom.controls.field.CustomFieldWithButton;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -44,6 +44,18 @@ public class DialogWizardController implements Initializable, ContainingParent
 	public TableView<ElementWizardBean> tableView;
 	public TextField tfDialogName;
 	public Label lblSelfId;
+	public BorderPane paneTreeView;
+
+	public CheckBox cbMark;
+	public CheckBox cbAdd;
+	public CheckBox cbQuestion;
+	public CheckBox cbRemoved;
+
+	public Label lblMark;
+	public Label lblAdd;
+	public Label lblQuestion;
+	public Label lblRemoved;
+
 
 	private DialogWizard model;
 	private Alert dialog;
@@ -51,7 +63,7 @@ public class DialogWizardController implements Initializable, ContainingParent
 	private String windowName;
 
 	private ImageViewWithScale imageViewWithScale;
-	private TreeViewWithRectangles treeViewWithRectangles;
+	private TreeTableViewWithRectangles treeViewWithRectangles;
 
 	//region Initializable
 	@Override
@@ -60,8 +72,8 @@ public class DialogWizardController implements Initializable, ContainingParent
 		this.imageViewWithScale = new ImageViewWithScale();
 		this.verSplitPane.getItems().add(0, this.imageViewWithScale.getContent());
 
-		this.treeViewWithRectangles = new TreeViewWithRectangles();
-		this.horSplitPane.getItems().add(this.treeViewWithRectangles.getContent());
+		this.treeViewWithRectangles = new TreeTableViewWithRectangles();
+		this.paneTreeView.setCenter(this.treeViewWithRectangles.getContent());
 
 		this.imageViewWithScale.setClickConsumer(this.treeViewWithRectangles::selectItem);
 		this.treeViewWithRectangles.setTreeViewConsumer(xpathItem -> {
@@ -545,8 +557,12 @@ public class DialogWizardController implements Initializable, ContainingParent
 				{
 					HBox box = new HBox();
 					box.setAlignment(Pos.CENTER);
-					Button btnEdit = new Button("E");
-					Button btnRemove = new Button("R");
+					Button btnEdit = new Button();
+					btnEdit.setId("btnEdit");
+					btnEdit.getStyleClass().add(CssVariables.TRANSPARENT_BACKGROUND);
+					Button btnRemove = new Button();
+					btnRemove.setId("btnRemove");
+					btnRemove.getStyleClass().add(CssVariables.TRANSPARENT_BACKGROUND);
 					btnEdit.setOnAction(e -> Common.tryCatch(() -> model.changeElement(item), "Error on change element"));
 					btnRemove.setOnAction(e -> model.removeElement(item));
 					box.getChildren().addAll(btnEdit, Common.createSpacer(Common.SpacerEnum.HorizontalMid),btnRemove);

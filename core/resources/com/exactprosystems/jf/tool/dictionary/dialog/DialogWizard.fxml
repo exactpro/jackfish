@@ -21,7 +21,7 @@
 				<Label id="$horMid"/>
 				<BorderPane fx:id="borderPane" prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS">
 					<center>
-						<SplitPane fx:id="horSplitPane" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0" BorderPane.alignment="CENTER">
+						<SplitPane fx:id="horSplitPane" dividerPositions="0.5" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0" BorderPane.alignment="CENTER">
 							<items>
 								<SplitPane fx:id="verSplitPane" prefHeight="200.0" prefWidth="200.0">
 									<items>
@@ -29,16 +29,35 @@
 											<center>
 												<TableView fx:id="tableView" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER"/>
 											</center>
-											<bottom>
-												<ToolBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
-													<items>
-														<Button mnemonicParsing="false" text="ButtonA"/>
-													</items>
-												</ToolBar>
-											</bottom>
 										</BorderPane>
 									</items>
 								</SplitPane>
+								<BorderPane fx:id="paneTreeView" prefHeight="200.0" prefWidth="200.0">
+									<top>
+										<GridPane fx:id="smallTable" maxWidth="400.0" BorderPane.alignment="CENTER_LEFT">
+											<columnConstraints>
+												<ColumnConstraints halignment="CENTER" hgrow="ALWAYS" maxWidth="100.0" minWidth="10.0" prefWidth="100.0"/>
+												<ColumnConstraints halignment="CENTER" hgrow="ALWAYS" maxWidth="100.0" minWidth="10.0" prefWidth="100.0"/>
+												<ColumnConstraints halignment="CENTER" hgrow="ALWAYS" maxWidth="100.0" minWidth="10.0" prefWidth="100.0"/>
+												<ColumnConstraints halignment="CENTER" hgrow="ALWAYS" maxWidth="100.0" minWidth="10.0" prefWidth="100.0"/>
+											</columnConstraints>
+											<rowConstraints>
+												<RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="ALWAYS"/>
+												<RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="ALWAYS"/>
+											</rowConstraints>
+											<children>
+												<CheckBox id="cbMark" fx:id="cbMark" mnemonicParsing="false"/>
+												<CheckBox id="cbAdd" fx:id="cbAdd" mnemonicParsing="false" GridPane.columnIndex="1"/>
+												<CheckBox id="cbQuestion" fx:id="cbQuestion" mnemonicParsing="false" GridPane.columnIndex="2"/>
+												<CheckBox id="cbRemoved" fx:id="cbRemoved" mnemonicParsing="false" GridPane.columnIndex="3"/>
+												<Label fx:id="lblMark" GridPane.rowIndex="1"/>
+												<Label fx:id="lblAdd" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+												<Label fx:id="lblQuestion" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+												<Label fx:id="lblRemoved" GridPane.columnIndex="3" GridPane.rowIndex="1"/>
+											</children>
+										</GridPane>
+									</top>
+								</BorderPane>
 							</items>
 						</SplitPane>
 					</center>
