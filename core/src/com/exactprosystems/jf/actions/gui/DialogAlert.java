@@ -26,10 +26,19 @@ import java.util.List;
 @ActionAttribute(
 		group					= ActionGroups.GUI,
 		suffix					= "DLGALRT",
-		generalDescription		= "Switch to alert and set text ( if not null) and switch perform",
+		generalDescription		= "The purpose of this action is to process pop-up notifications.\n"
+				+ "It is a plug-in dependent action currently being used only with web plug-in.",
 		additionFieldsAllowed	= false,
-		outputDescription		= "Return text of alert",
-		outputType				= String.class
+		outputDescription		= "Output value is the notification heading.",
+		outputType				= String.class,
+		examples 				= "{{`1. Type 'hello' in the pop-up notification field`}}"
+				+ "{{`2. Ensure we have the notification heading as an output value.`}}"
+				+ "{{##Id;#Action;#Text;#Perform;#AppConnection\n"
+				+ "DLGALRT1;DialogAlert;'hello';PerformKind.Accept;APPSTR1.Out\n"
+				+ "\n"
+				+ "\n"
+				+ "#Assert;#Message\n"
+				+ "DLGALRT1.Out != null;#}}"
 	)
 public class DialogAlert extends AbstractAction
 {
@@ -37,13 +46,20 @@ public class DialogAlert extends AbstractAction
 	public static final String performName		= "Perform";
 	public static final String textName			= "Text";
 
-	@ActionFieldAttribute(name = connectionName, mandatory = true, description = "The application connect")
+	@ActionFieldAttribute(name = connectionName, mandatory = true, description = "A special object which identifies the"
+			+ " started application session. This object is required in many other actions to specify the session"
+			+ " of the application the indicated action belongs to. It is the output value of such actions"
+			+ " as {{@ApplicationStart@}}, {{@ApplicationConnectTo@}}.")
 	protected AppConnection connection = null;
 
-	@ActionFieldAttribute(name = performName, mandatory = true, description = "If perform equals Accept - just press Ok. If equals Dismiss - press Cancel. If equals Nothing - do nothing")
+	@ActionFieldAttribute(name = performName, mandatory = true, description = "The PerformKind type. The parameter "
+			+ "responsible for actions with alert.  There are 3 states to the parameter:\n"
+			+ "Nothing – ignore the notification.\n"
+			+ "Accept – click “OK”.\n"
+			+ "Dismiss – click “Cancel”.")
 	protected PerformKind perform = null;
 
-	@ActionFieldAttribute(name = textName, mandatory = false, description = "Text, which will be write in alert")
+	@ActionFieldAttribute(name = textName, mandatory = false, description = "Used to input text in the corresponding field of notification.")
 	protected String text;
 
 	@Override

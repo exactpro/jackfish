@@ -22,9 +22,23 @@ import com.exactprosystems.jf.functions.HelpKind;
 import java.util.List;
 
 @ActionAttribute(
-		group = ActionGroups.GUI, 
-		generalDescription = "Switch to desired frame", 
-		additionFieldsAllowed = false 
+		group 					= ActionGroups.GUI,
+		generalDescription 		= "The purpose of this action is to switch focus to another application.\n"
+				+ "Plug-in dependent action currently being used only with web plug-in.",
+		additionFieldsAllowed 	= false,
+		examples 				= "{{`1. Start the web application.`}}"
+				+ "{{`2. Connect to the desktop application, the window headed WinApp.`}}"
+				+ "{{`3. Switch focus back to the MainFrame of the web application, located in MyDialog.`}}"
+				+ "{{##Id;#Action;#Browser;#URL;#AppId\n"
+				+ "APPSTR1;ApplicationStart;'Chrome';'https://google.com';'WEB'\n"
+				+ "\n"
+				+ "\n"
+				+ "#Id;#Action;#AppId;#Main window\n"
+				+ "APPSTR2;ApplicationConnectTo;'WIN';'WinApp'\n"
+				+ "\n"
+				+ "\n"
+				+ "#Action;#Frame;#Dialog;#AppConnection\n"
+				+ "DialogSwitchToWindow;'MainFrame';'MyDialog';APPSTR1.Out#}}"
 	)
 public class DialogSwitchToWindow extends AbstractAction
 {
@@ -32,14 +46,17 @@ public class DialogSwitchToWindow extends AbstractAction
 	public static final String	dialogName		= "Dialog";
 	public static final String frameName = "Frame";
 
-	@ActionFieldAttribute(name = connectionName, mandatory = true, description = "The application connect")
+	@ActionFieldAttribute(name = connectionName, mandatory = true, description = "A special object which identifies the"
+			+ " started application session. This object is required in many other actions to specify the session"
+			+ " of the application the indicated action belongs to. It is the output value of such actions"
+			+ " as {{@ApplicationStart@}}, {{@ApplicationConnectTo@}}.")
 	protected AppConnection		connection		= null;
 
-	@ActionFieldAttribute(name = dialogName, mandatory = false, description = "Name of dialog in the dictionary on self element tool will switch to. "
+	@ActionFieldAttribute(name = dialogName, mandatory = false, description = "The name of the dialog containing the frame which needs to be connected to."
 			+ "If is absent tool will switch to the parent frame.")
 	protected String			dialog;
 
-	@ActionFieldAttribute(name = frameName, mandatory = false, description = "Name of locator in the dictionary on which the tool will be switch to.")
+	@ActionFieldAttribute(name = frameName, mandatory = false, description = "Frame name to which the focus will be set.")
 	protected String 			frame;
 
 	@Override

@@ -22,16 +22,20 @@ import java.awt.image.BufferedImage;
 @ActionAttribute(
 		group					= ActionGroups.GUI,
 		suffix					= "DSK",
-		generalDescription 		= "Get an image from the desktop",
+		generalDescription 		= "The purpose of the action is to capture the full screenshot along with the desktop.\n"
+				+ "This gives the user the advantage to see system notifications of third-party applications.  The disadvantage"
+				+ " is that the screenshot is captured on the ‘upper layer’, i.e the events/windows overlapped by other windows will not be seen. ",
 		additionFieldsAllowed 	= false,
 		outputDescription 		= "An image which is grabbed from the desktop.", 
-		outputType 				= ImageWrapper.class
+		outputType 				= ImageWrapper.class,
+		examples 				= "{{##Id;#Action;#Description\n"
+				+ "DSK1;DesktopScreenshot;'My desktop'#}}"
 	)
 public class DesktopScreenshot extends AbstractAction
 {
 	public final static String	descriptionName	= "Description";
 	
-	@ActionFieldAttribute(name = descriptionName, mandatory = false, description = "A description of this image. In the report it become a tooltip.")
+	@ActionFieldAttribute(name = descriptionName, mandatory = false, description = "The description of the image which will be displayed in tooltip.")
 	protected String			description;
 
 	public DesktopScreenshot()
