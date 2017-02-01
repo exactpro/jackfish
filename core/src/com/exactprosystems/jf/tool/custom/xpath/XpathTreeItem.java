@@ -1,24 +1,74 @@
 package com.exactprosystems.jf.tool.custom.xpath;
 
+import com.exactprosystems.jf.tool.CssVariables;
 import javafx.scene.layout.HBox;
+import javafx.scene.paint.Color;
 import org.w3c.dom.Node;
 
 public class XpathTreeItem extends XpathItem
 {
-	boolean isIcon;
+	public enum TreeItemState
+	{
+		ADD(CssVariables.Icons.ADD_16_ICON, Color.web("#2687fb")),
+		MARK(CssVariables.Icons.MARK_ICON, Color.GREEN),
+		QUESTION(CssVariables.Icons.QUESTION_ICON, Color.YELLOW);
+
+		private String iconPath;
+		private Color color;
+
+		TreeItemState(String iconPath, Color color)
+		{
+			this.iconPath = iconPath;
+			this.color = color;
+		}
+
+		public String getIconPath()
+		{
+			return iconPath;
+		}
+
+		public Color color()
+		{
+			return color;
+		}
+	}
+
+	private boolean markIsVisible = true;
+
+	private static TreeItemState[] states = new TreeItemState[]{TreeItemState.ADD, TreeItemState.MARK, TreeItemState.QUESTION};
+	private TreeItemState currentState;
+	private int currentIndex = -1;
 
 	public XpathTreeItem(HBox box, Node node)
 	{
 		super(box, node);
 	}
 
-	public boolean isIcon()
+	public void changeState()
 	{
-		return isIcon;
+		if (currentIndex >= states.length - 1)
+		{
+			currentState = null;
+			currentIndex = -1;
+		}
+		else
+		{
+			currentState = states[++currentIndex];
+		}
 	}
 
-	public void setIcon(boolean icon)
+	public TreeItemState getState()
 	{
-		isIcon = icon;
+		return currentState;
+	}
+
+	public boolean isMarkVisible()
+	{
+		return markIsVisible;
+	}
+
+	public void setMarkIsVisible(boolean markIsVisible)
+	{
+		this.markIsVisible = markIsVisible;
 	}
 }

@@ -61,19 +61,31 @@
 						</SplitPane>
 						<BorderPane fx:id="paneTreeView" prefHeight="200.0" prefWidth="200.0">
 							<top>
-								<HBox alignment="CENTER_LEFT" prefHeight="48.0" prefWidth="1498.0">
+								<HBox fx:id="hBoxToolbar" alignment="CENTER_LEFT" prefHeight="48.0" prefWidth="1498.0">
 									<children>
-										<FindPanel fx:id="findPanel" HBox.hgrow="ALWAYS"/>
+										<Button id="btnWizard" mnemonicParsing="false" onAction="#magic" styleClass="$transparentBackground"/>
 										<Separator orientation="VERTICAL" prefHeight="200.0"/>
-										<Button text="\\/" mnemonicParsing="false" onAction="#nextMark" styleClass="$transparentBackground"/>
-										<Button text="/\" mnemonicParsing="false" onAction="#prevMark" styleClass="$transparentBackground"/>
+										<Button id="btnNextMark" mnemonicParsing="false" onAction="#nextMark" styleClass="$transparentBackground" />
+										<Button id="btnPrevMark" mnemonicParsing="false" onAction="#prevMark" styleClass="$transparentBackground" />
 										<Separator orientation="VERTICAL" prefHeight="200.0"/>
-										<CheckBox selected="true" id="cbMark" fx:id="cbMark" maxWidth="75.0" minWidth="75.0" mnemonicParsing="false" prefWidth="75.0"/>
-										<CheckBox selected="true" id="cbAdd" fx:id="cbAdd" maxWidth="75.0" minWidth="75.0" mnemonicParsing="false" prefWidth="75.0"/>
-										<CheckBox selected="true" id="cbQuestion" fx:id="cbQuestion" maxWidth="75.0" minWidth="75.0" mnemonicParsing="false" prefWidth="75.0"/>
-										<CheckBox selected="true" id="cbRemoved" fx:id="cbRemoved" maxWidth="75.0" minWidth="75.0" mnemonicParsing="false" prefWidth="75.0"/>
+										<CheckBox id="cbAdd" fx:id="cbAdd" maxWidth="75.0" minWidth="75.0" mnemonicParsing="false" prefWidth="75.0" selected="true"/>
 										<Separator orientation="VERTICAL" prefHeight="200.0"/>
-										<Button id="btnWizard" mnemonicParsing="false" onAction="#magic"  styleClass="$transparentBackground"/>
+										<CheckBox id="cbMark" fx:id="cbMark" maxWidth="75.0" minWidth="75.0" mnemonicParsing="false" prefWidth="75.0" selected="true"/>
+										<Separator orientation="VERTICAL" prefHeight="200.0"/>
+										<CheckBox id="cbQuestion" fx:id="cbQuestion" maxWidth="75.0" minWidth="75.0" mnemonicParsing="false" prefWidth="75.0" selected="true"/>
+										<Separator orientation="VERTICAL" prefHeight="200.0"/>
+										<GridPane HBox.hgrow="ALWAYS">
+											<columnConstraints>
+												<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+												<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="65.0" prefWidth="100.0"/>
+											</columnConstraints>
+											<rowConstraints>
+												<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+											</rowConstraints>
+											<children>
+												<FindPanel fx:id="findPanel" GridPane.columnIndex="1"/>
+											</children>
+										</GridPane>
 									</children>
 								</HBox>
 							</top>

@@ -227,6 +227,8 @@ public class CssVariables
 		public static final String	MAIN_ICON				= IMAGES_DIR + "/ide.png";
 		public static final String	LOADING_ICON			= IMAGES_DIR + "/loading.png";
 		public static final String	MARK_ICON				= IMAGES_DIR + "/check.png";
+		public static final String	ADD_16_ICON				= IMAGES_DIR + "/add_16.png";
+		public static final String	QUESTION_ICON			= IMAGES_DIR + "/question_mark.png";
 
 		public static final String	LOAD_MATRIX_ICON		= IMAGES_DIR + "/loadMatrix.png";
 		public static final String	NEW_MATRIX_ICON			= IMAGES_DIR + "/matrixNew.png";

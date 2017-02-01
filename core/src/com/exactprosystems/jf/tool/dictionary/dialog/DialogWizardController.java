@@ -39,12 +39,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
 
 public class DialogWizardController implements Initializable, ContainingParent
 {
 	public Parent parent;
-	public BorderPane borderPane;
 	public SplitPane horSplitPane;
 	public SplitPane verSplitPane;
 	public TableView<ElementWizardBean> tableView;
@@ -55,9 +53,9 @@ public class DialogWizardController implements Initializable, ContainingParent
 	public CheckBox cbMark;
 	public CheckBox cbAdd;
 	public CheckBox cbQuestion;
-	public CheckBox cbRemoved;
 
 	public FindPanel<TreeItem<XpathTreeItem>> findPanel;
+	public HBox hBoxToolbar;
 
 	private DialogWizard model;
 	private Alert dialog;
@@ -84,6 +82,7 @@ public class DialogWizardController implements Initializable, ContainingParent
 				this.imageViewWithScale.displayRectangle(xpathItem.getRectangle());
 			}
 		});
+		this.treeViewWithRectangles.setDisplayMarkedRowsConsumer(list -> this.imageViewWithScale.displayMarkedRectangle(list));
 
 		this.findPanel.getStyleClass().remove(CssVariables.FIND_PANEL);
 		this.findPanel.setListener(new IFind<TreeItem<XpathTreeItem>>()
@@ -100,6 +99,10 @@ public class DialogWizardController implements Initializable, ContainingParent
 				return treeViewWithRectangles.findItem(what, matchCase, wholeWord);
 			}
 		});
+
+		this.cbAdd.selectedProperty().addListener((observable, oldValue, newValue) -> this.treeViewWithRectangles.setState(XpathTreeItem.TreeItemState.ADD, newValue));
+		this.cbMark.selectedProperty().addListener((observable, oldValue, newValue) -> this.treeViewWithRectangles.setState(XpathTreeItem.TreeItemState.MARK, newValue));
+		this.cbQuestion.selectedProperty().addListener((observable, oldValue, newValue) -> this.treeViewWithRectangles.setState(XpathTreeItem.TreeItemState.QUESTION, newValue));
 	}
 	//endregion
 
@@ -124,6 +127,7 @@ public class DialogWizardController implements Initializable, ContainingParent
 		initDialog();
 		initTable();
 		this.tfDialogName.textProperty().addListener((observable, oldValue, newValue) -> this.model.changeDialogName(newValue));
+		this.hBoxToolbar.getChildren().forEach(node -> node.setDisable(true));
 	}
 
 	void show()
@@ -150,6 +154,7 @@ public class DialogWizardController implements Initializable, ContainingParent
 			this.model.findElements(this.tableView.getItems());
 			BufferedImage image = this.imageViewWithScale.getImage();
 			this.imageViewWithScale.setListRectangles(this.treeViewWithRectangles.buildMap(image.getWidth(), image.getHeight(), new Dimension(image.getWidth() / 16, image.getHeight() / 16)));
+			this.hBoxToolbar.getChildren().forEach(node -> node.setDisable(false));
 		}
 	}
 
@@ -252,46 +257,7 @@ public class DialogWizardController implements Initializable, ContainingParent
 		return null;
 	}
 
-	private void addToPane(GridPane pane, String id, String value, Consumer<String> consumer, int index)
-	{
-		Label lbl = new Label(id);
-		CustomFieldWithButton tf = new CustomFieldWithButton(value);
-		tf.setMaxWidth(Double.MAX_VALUE);
-		tf.textProperty().addListener((observable, oldValue, newValue) -> consumer.accept(newValue));
-		GridPane.setFillWidth(tf, true);
-		pane.add(lbl, 0, index);
-		pane.add(tf, 1, index);
-	}
-
-	private void addXpathToPane(GridPane pane, String value, boolean isAbsolute, Consumer<String> consumer, Consumer<Boolean> absoluteConsumer)
-	{
-		Label lbl = new Label("Xpath");
-		HBox box = new HBox();
-		box.setAlignment(Pos.CENTER);
-
-		CheckBox cbIsAbsolute = new CheckBox("");
-		cbIsAbsolute.setSelected(isAbsolute);
-		cbIsAbsolute.selectedProperty().addListener((observable, oldValue, newValue) -> absoluteConsumer.accept(newValue));
-		cbIsAbsolute.setAlignment(Pos.CENTER);
-
-		CustomFieldWithButton tf = new CustomFieldWithButton(value);
-		tf.textProperty().addListener((observable, oldValue, newValue) -> consumer.accept(newValue));
-		HBox.setHgrow(tf, Priority.ALWAYS);
-
-		Button btnXpath = new Button();
-		Common.customizeLabeled(btnXpath, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.XPATH_TREE);
-		btnXpath.setOnAction(event -> {
-			String newXpath = this.model.showXpathViewer(tf.getText());
-			if (newXpath != null)
-			{
-				tf.setText(newXpath);
-			}
-		});
-		box.getChildren().addAll(cbIsAbsolute, tf, btnXpath);
-		pane.add(lbl, 0, 0);
-		pane.add(box, 1, 0);
-	}
-
+	//region Action methods
 	public void cancel(ActionEvent actionEvent)
 	{
 		this.model.close(false);
@@ -318,7 +284,9 @@ public class DialogWizardController implements Initializable, ContainingParent
 //		List<XpathTreeItem> list = this.treeViewWithRectangles.getMarkedRows().stream().map(e -> e.getValue()).collect(Collectors.toList());
 //		this.model.magic();
 	}
+	//endregion
 
+	//region private methods
 	private void initDialog()
 	{
 		this.dialog = new Alert(Alert.AlertType.CONFIRMATION);
@@ -628,4 +596,45 @@ public class DialogWizardController implements Initializable, ContainingParent
 
 		this.tableView.getColumns().addAll(columnNumber, columnId, columnKind, columnIsXpath, columnIsNew, columnCount, columnOption);
 	}
+
+	private void addToPane(GridPane pane, String id, String value, Consumer<String> consumer, int index)
+	{
+		Label lbl = new Label(id);
+		CustomFieldWithButton tf = new CustomFieldWithButton(value);
+		tf.setMaxWidth(Double.MAX_VALUE);
+		tf.textProperty().addListener((observable, oldValue, newValue) -> consumer.accept(newValue));
+		GridPane.setFillWidth(tf, true);
+		pane.add(lbl, 0, index);
+		pane.add(tf, 1, index);
+	}
+
+	private void addXpathToPane(GridPane pane, String value, boolean isAbsolute, Consumer<String> consumer, Consumer<Boolean> absoluteConsumer)
+	{
+		Label lbl = new Label("Xpath");
+		HBox box = new HBox();
+		box.setAlignment(Pos.CENTER);
+
+		CheckBox cbIsAbsolute = new CheckBox("");
+		cbIsAbsolute.setSelected(isAbsolute);
+		cbIsAbsolute.selectedProperty().addListener((observable, oldValue, newValue) -> absoluteConsumer.accept(newValue));
+		cbIsAbsolute.setAlignment(Pos.CENTER);
+
+		CustomFieldWithButton tf = new CustomFieldWithButton(value);
+		tf.textProperty().addListener((observable, oldValue, newValue) -> consumer.accept(newValue));
+		HBox.setHgrow(tf, Priority.ALWAYS);
+
+		Button btnXpath = new Button();
+		Common.customizeLabeled(btnXpath, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.XPATH_TREE);
+		btnXpath.setOnAction(event -> {
+			String newXpath = this.model.showXpathViewer(tf.getText());
+			if (newXpath != null)
+			{
+				tf.setText(newXpath);
+			}
+		});
+		box.getChildren().addAll(cbIsAbsolute, tf, btnXpath);
+		pane.add(lbl, 0, 0);
+		pane.add(box, 1, 0);
+	}
+	//endregion
 }

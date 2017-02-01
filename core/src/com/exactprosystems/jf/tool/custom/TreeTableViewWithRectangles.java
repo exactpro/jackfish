@@ -4,6 +4,8 @@ import com.exactprosystems.jf.api.app.IRemoteApplication;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.documents.matrix.parser.SearchHelper;
 import com.exactprosystems.jf.tool.CssVariables;
+import com.exactprosystems.jf.tool.custom.layout.CustomRectangle;
+import com.exactprosystems.jf.tool.custom.layout.LayoutExpressionBuilderController;
 import com.exactprosystems.jf.tool.custom.xpath.XpathTreeItem;
 import com.exactprosystems.jf.tool.custom.xpath.XpathViewer;
 import com.sun.javafx.scene.control.skin.TreeTableViewSkin;
@@ -25,6 +27,7 @@ import java.awt.*;
 import java.util.*;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class TreeTableViewWithRectangles
@@ -37,8 +40,15 @@ public class TreeTableViewWithRectangles
 	private Node waitingNode;
 
 	private Consumer<XpathTreeItem> consumer;
+	private Consumer<List<CustomRectangle>> markedRowsConsumer;
 
 	private Map<Rectangle, TreeItem<XpathTreeItem>> map = new HashMap<>();
+
+	private Map<XpathTreeItem.TreeItemState, Boolean> stateMap = new HashMap<XpathTreeItem.TreeItemState, Boolean>(){{
+		put(XpathTreeItem.TreeItemState.ADD, true);
+		put(XpathTreeItem.TreeItemState.MARK, true);
+		put(XpathTreeItem.TreeItemState.QUESTION, true);
+	}};
 
 	public TreeTableViewWithRectangles()
 	{
@@ -84,7 +94,8 @@ public class TreeTableViewWithRectangles
 				if (treeItem != null)
 				{
 					XpathTreeItem xpathTreeItem = treeItem.getValue();
-					xpathTreeItem.setIcon(!xpathTreeItem.isIcon());
+					xpathTreeItem.changeState();
+					this.displayMarkedRows();
 					refresh();
 				}
 			}
@@ -148,6 +159,11 @@ public class TreeTableViewWithRectangles
 	public void setTreeViewConsumer(Consumer<XpathTreeItem> consumer)
 	{
 		this.consumer = consumer;
+	}
+
+	public void setDisplayMarkedRowsConsumer(Consumer<List<CustomRectangle>> markedRowsConsumer)
+	{
+		this.markedRowsConsumer = markedRowsConsumer;
 	}
 
 	public void selectItem(Rectangle rectangle)
@@ -235,6 +251,13 @@ public class TreeTableViewWithRectangles
 		TreeItem<XpathTreeItem> treeItem = markedRows.get(this.currentIndex);
 		scrollToElement(treeItem);
 		this.treeTableView.getSelectionModel().select(treeItem);
+	}
+
+	public void setState(XpathTreeItem.TreeItemState state, boolean newValue)
+	{
+		this.stateMap.replace(state, newValue);
+		this.displayMarkedRows();
+		this.refresh();
 	}
 	//endregion
 
@@ -367,11 +390,34 @@ public class TreeTableViewWithRectangles
 	private void byPass(TreeItem<XpathTreeItem> treeItem, List<TreeItem<XpathTreeItem>> list)
 	{
 		XpathTreeItem value = treeItem.getValue();
-		if (value != null && value.isIcon())
+		if (value != null && value.getState() != null)
 		{
 			list.add(treeItem);
 		}
 		treeItem.getChildren().forEach(child -> byPass(child, list));
+	}
+
+	private void displayMarkedRows()
+	{
+		Optional.ofNullable(this.markedRowsConsumer).ifPresent(c -> {
+			List<CustomRectangle> list = this.getMarkedRows()
+					.stream()
+					.filter(r -> true)
+					.map(markedRow -> {
+						XpathTreeItem value = markedRow.getValue();
+						XpathTreeItem.TreeItemState state = value.getState();
+						value.setMarkIsVisible(state == null ? true : stateMap.get(state));
+						Rectangle rectangle = value.getRectangle();
+						CustomRectangle customRectangle = new CustomRectangle(rectangle, 1.0);
+						customRectangle.setWidthLine(LayoutExpressionBuilderController.BORDER_WIDTH);
+						customRectangle.setFill(value.getState().color());
+						customRectangle.setVisible(value.isMarkVisible());
+						return customRectangle;
+					})
+					.collect(Collectors.toList());
+
+			c.accept(list);
+		});
 	}
 	//endregion
 
@@ -434,7 +480,9 @@ public class TreeTableViewWithRectangles
 			super.updateItem(item, empty);
 			if (item != null && !empty)
 			{
-				this.imageView.setImage(item.isIcon() ? new Image(CssVariables.Icons.MARK_ICON) : null);
+				XpathTreeItem.TreeItemState icon = item.getState();
+				this.imageView.setImage(icon == null ? null : new Image(icon.getIconPath()));
+				this.imageView.setOpacity(item.isMarkVisible() ? 1.0 : 0.4);
 				setGraphic(this.imageView);
 			}
 			else

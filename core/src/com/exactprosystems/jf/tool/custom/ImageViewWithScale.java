@@ -27,6 +27,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.*;
+import java.util.List;
 import java.util.function.Consumer;
 
 public class ImageViewWithScale implements IScaleListener
@@ -48,6 +49,8 @@ public class ImageViewWithScale implements IScaleListener
 	private CustomRectangle rectangle;
 	private boolean needInspect = false;
 	private CustomRectangle inspectRectangle;
+
+	private List<CustomRectangle> markedList = new ArrayList<>();
 
 	private Node waitingNode;
 	private double scale = 1.0;
@@ -175,6 +178,20 @@ public class ImageViewWithScale implements IScaleListener
 			this.rectangle.updateRectangle(rectangle, this.scale);
 			this.rectangle.setVisible(true);
 		}
+	}
+
+	public void displayMarkedRectangle(List<CustomRectangle> list)
+	{
+		this.markedList.stream()
+				.peek(r -> r.setVisible(false))
+				.forEach(r -> r.removeGroup(this.group));
+		this.markedList.clear();
+		list.stream()
+				.peek(r -> {
+					r.setGroup(this.group);
+					r.update(this.scale);
+				})
+				.forEach(r -> this.markedList.add(r));
 	}
 	//endregion
 

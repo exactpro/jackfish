@@ -247,6 +247,14 @@
 	-fx-graphic : url('icons/wizard.png')
 
 }
+#btnNextMark {
+	-fx-graphic : url('icons/next.png')
+
+}
+#btnPrevMark {
+	-fx-graphic : url('icons/previous.png')
+
+}
 
 /*Actions controller*/
 .imageArea {

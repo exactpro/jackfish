@@ -142,6 +142,11 @@ public class CustomRectangle
 		group.getChildren().addAll(top, right, bot, left, outLine);
 	}
 
+	public void removeGroup(Group group)
+	{
+		group.getChildren().removeAll(top, right, bot, left, outLine);
+	}
+
 	public void setVisible(boolean flag)
 	{
 		this.isVisible = flag;
@@ -183,6 +188,14 @@ public class CustomRectangle
 		this.right.getStyleClass().add(styleClassRight);
 		this.bot.getStyleClass().add(styleClassBot);
 		this.left.getStyleClass().add(styleClassLeft);
+	}
+
+	public void setFill(Color color)
+	{
+		this.top.setStroke(color);
+		this.right.setStroke(color);
+		this.bot.setStroke(color);
+		this.left.setStroke(color);
 	}
 
 	public void addStyleClass(String styleClass, LinePosition position)
