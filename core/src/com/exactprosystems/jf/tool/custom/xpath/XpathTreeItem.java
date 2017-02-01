@@ -10,8 +10,8 @@ public class XpathTreeItem extends XpathItem
 	public enum TreeItemState
 	{
 		ADD(CssVariables.Icons.ADD_16_ICON, Color.web("#2687fb")),
-		MARK(CssVariables.Icons.MARK_ICON, Color.GREEN),
-		QUESTION(CssVariables.Icons.QUESTION_ICON, Color.YELLOW);
+		MARK(CssVariables.Icons.MARK_ICON, Color.web("#2a9635")),
+		QUESTION(CssVariables.Icons.QUESTION_ICON, Color.web("#f3c738"));
 
 		private String iconPath;
 		private Color color;
