@@ -64,7 +64,7 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 	}
 
 	@Override
-	protected int connectDerived(Map<String, String> args, MetricsCounter metricsCounter) throws Exception
+	protected int connectDerived(Map<String, String> args) throws Exception
 	{
 		try
 		{
@@ -160,7 +160,7 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 	}
 
 	@Override
-	protected int runDerived(Map<String, String> args, MetricsCounter metricsCounter) throws Exception
+	protected int runDerived(Map<String, String> args) throws Exception
 	{
 		try
 		{

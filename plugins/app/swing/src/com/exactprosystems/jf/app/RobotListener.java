@@ -7,8 +7,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.exactprosystems.jf.app;
 
-import com.exactprosystems.jf.api.app.HistogramMetric;
-import com.exactprosystems.jf.api.app.MetricsCounter;
 import org.fest.swing.core.*;
 import org.fest.swing.core.Robot;
 import org.fest.swing.hierarchy.ComponentHierarchy;
@@ -19,12 +17,10 @@ import java.awt.*;
 public class RobotListener implements Robot
 {
 	private Robot robot;
-	private MetricsCounter metricsCounter;
 
-	public RobotListener(Robot robot, MetricsCounter metricsCounter)
+	public RobotListener(Robot robot)
 	{
 		this.robot = robot;
-		this.metricsCounter = metricsCounter;
 	}
 
 	@Override
@@ -96,9 +92,7 @@ public class RobotListener implements Robot
 	@Override
 	public void click(Component c)
 	{
-		this.metricsCounter.before(HistogramMetric.Click);
 		this.robot.click(c);
-		this.metricsCounter.after(HistogramMetric.Click);
 	}
 
 	@Override
@@ -110,9 +104,7 @@ public class RobotListener implements Robot
 	@Override
 	public void click(Component c, MouseButton button)
 	{
-		this.metricsCounter.before(HistogramMetric.Click);
 		this.robot.click(c, button);
-		this.metricsCounter.after(HistogramMetric.Click);
 	}
 
 	@Override
@@ -124,33 +116,25 @@ public class RobotListener implements Robot
 	@Override
 	public void click(Component c, MouseButton button, int times)
 	{
-		this.metricsCounter.before(HistogramMetric.Click);
 		this.robot.click(c, button, times);
-		this.metricsCounter.after(HistogramMetric.Click);
 	}
 
 	@Override
 	public void click(Component c, Point where)
 	{
-		this.metricsCounter.before(HistogramMetric.Click);
 		this.robot.click(c, where);
-		this.metricsCounter.after(HistogramMetric.Click);
 	}
 
 	@Override
 	public void click(Component c, Point where, MouseButton button, int times)
 	{
-		this.metricsCounter.before(HistogramMetric.Click);
 		this.robot.click(c, where, button, times);
-		this.metricsCounter.after(HistogramMetric.Click);
 	}
 
 	@Override
 	public void click(Point where, MouseButton button, int times)
 	{
-		this.metricsCounter.before(HistogramMetric.Click);
 		this.robot.click(where, button, times);
-		this.metricsCounter.after(HistogramMetric.Click);
 	}
 
 	@Override

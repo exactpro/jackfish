@@ -16,7 +16,6 @@ import java.awt.*;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 
 public interface IRemoteApplication extends Remote
@@ -41,19 +40,17 @@ public interface IRemoteApplication extends Remote
 	ImageWrapper 				getImage		(Locator owner, Locator element) throws RemoteException;
 	Rectangle 					getRectangle	(Locator owner, Locator element) throws RemoteException;
 	Collection<String> 			findAll			(Locator owner, Locator element) throws RemoteException;
+    @Deprecated // due new wizard
 	Locator 					getLocator		(Locator owner, ControlKind controlKind, int x, int y) throws RemoteException;
 	OperationResult 			operate			(Locator owner, Locator element, Locator row, Locator header, Operation operation) throws RemoteException;
 	CheckingLayoutResult 		checkLayout		(Locator owner, Locator element, Spec spec) throws RemoteException;
 	int 						closeAll		(Locator element, Collection<LocatorAndOperation> operations) throws RemoteException;
 	String 						closeWindow		() throws RemoteException;
 	Document 					getTree			(Locator owner) throws RemoteException;
+    void                        startNewDialog  () throws RemoteException;
+
+	@Deprecated // due new wizard
 	void 						startGrabbing	() throws RemoteException;
+    @Deprecated // due new wizard
 	void 						endGrabbing		() throws RemoteException;
-
-	void startNewDialog() throws RemoteException;
-
-	// methods for histogram
-	void 						subscribe		(long id, HistogramMetric metric, int interval, int intervalCount) throws RemoteException;
-	void 						listening		(long id, boolean isStart) throws RemoteException;
-	List<Long> 					getMetrics		(long id) throws RemoteException;
 }

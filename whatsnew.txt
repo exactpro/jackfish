@@ -1,4 +1,9 @@
 --------------------------------------------------------------------------------
+01.02.2017 4.3.0.1893
+#40029 feature: Add opportunity the use of Map as Expected result for Check action
+#40030 feature: Add the comparison result as a table for Check action
+
+--------------------------------------------------------------------------------
 31.01.2017 4.3.0.1889
 #40022 feature: Steps- Add textbox with used plugin ( it's look like a Test Case)
 

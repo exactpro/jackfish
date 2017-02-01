@@ -12,6 +12,7 @@ import com.exactprosystems.jf.api.app.ControlKind;
 import com.exactprosystems.jf.api.app.IApplication;
 import com.exactprosystems.jf.api.app.IApplicationFactory;
 import com.exactprosystems.jf.api.app.IGuiDictionary;
+import com.exactprosystems.jf.api.app.PluginInfo;
 import com.exactprosystems.jf.api.common.ParametersKind;
 
 import java.util.Scanner;
@@ -19,7 +20,7 @@ import java.util.Scanner;
 public class SwingAppFactory implements IApplicationFactory
 {
 	private static final int requiredMajorVersion = 2;
-	private static final int requiredMinorVersion = 25;
+	private static final int requiredMinorVersion = 26;
 
 	public static final String		logLevel				= "LogLevel";
 	public final static String jreExecName 		= "jreExec";
@@ -124,7 +125,13 @@ public class SwingAppFactory implements IApplicationFactory
 		return this.dictionary;
 	}
 
-	//----------------------------------------------------------------------------------------------
+    @Override
+    public PluginInfo getInfo()
+    {
+        return null; // TODO 
+    }
+
+    //----------------------------------------------------------------------------------------------
 	// VersionSupported
 	//----------------------------------------------------------------------------------------------
 	@Override

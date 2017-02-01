@@ -165,14 +165,14 @@ public class SeleniumRemoteApplication extends RemoteApplication
 	}
 
 	@Override
-	protected int connectDerived(Map<String, String> args, MetricsCounter metricsCounter) throws Exception
+	protected int connectDerived(Map<String, String> args) throws Exception
 	{
 		logger.info("##########################################################################################################");
 		throw new FeatureNotSupportedException("Connect");
 	}
 
 	@Override
-	protected int runDerived(Map<String, String> args, MetricsCounter metricsCounter) throws Exception
+	protected int runDerived(Map<String, String> args) throws Exception
 	{
 		try
 		{
@@ -241,7 +241,7 @@ public class SeleniumRemoteApplication extends RemoteApplication
 				throw new NullParameterException(WebAppFactory.urlName);
 			}
 			Browser browser = Browser.valueOf(browserName.toUpperCase());
-			this.driver = new WebDriverListenerNew(browser.createDriver(chromeDriverBinary, firefoxProfileDirectory, usePrivateMode), metricsCounter);
+			this.driver = new WebDriverListenerNew(browser.createDriver(chromeDriverBinary, firefoxProfileDirectory, usePrivateMode));
 			this.jsInjection = JSInjectionFactory.getJSInjection(browser);
 			this.operationExecutor = new SeleniumOperationExecutor(this.driver, this.logger);
 			this.driver.get(url);

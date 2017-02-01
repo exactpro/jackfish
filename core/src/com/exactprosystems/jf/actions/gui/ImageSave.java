@@ -26,10 +26,24 @@ import java.io.File;
 @ActionAttribute(
 		group					= ActionGroups.GUI,
 		suffix					= "IMGSV",
-		generalDescription 		= "Get an image from screen",
+		generalDescription 		= "The purpose of this action is to save the image.",
 		additionFieldsAllowed 	= false,
 		outputDescription 		= "Full path to file", 
-		outputType 				= String.class
+		outputType 				= String.class,
+		examples 				= "{{`1. Connect to web application`}}"
+				+ "{{`2. Get the images of the whole application.`}}"
+				+ "{{`3. Save the file to the user’s home directory.`}}"
+				+ "\n"
+				+ "{{##Id;#Action;#Browser;#URL;#AppId\n"
+				+ "APPSTR1;ApplicationStart;'Chrome';'https://google.com';'WEB'\n"
+				+ "\n"
+				+ "\n"
+				+ "#Id;#Action;#AppConnection\n"
+				+ "IMGGET1;ImageGet;APPSTR1.Out\n"
+				+ "\n"
+				+ "\n"
+				+ "#Id;#Action;#Dir;#Image\n"
+				+ "IMGSV1;ImageSave;currentUser/home;IMGGET1.Out#}}"
 	)
 public class ImageSave extends AbstractAction
 {
@@ -37,13 +51,13 @@ public class ImageSave extends AbstractAction
 	public final static String	dirName		= "Dir";
 	public final static String	fileName	= "File";
 	
-	@ActionFieldAttribute(name = imageName, mandatory = true, description = "Image to save.")
+	@ActionFieldAttribute(name = imageName, mandatory = true, description = "The object of the Image type which needs to be saved.")
 	protected ImageWrapper		image		= null;
 
-	@ActionFieldAttribute(name = dirName, mandatory = false, description = "Directory to save this image. File name will be get automaticly.")
+	@ActionFieldAttribute(name = dirName, mandatory = false, description = "Directory where the file should be saved.  In this case the filename will be generated.")
 	protected String			dir;
 
-	@ActionFieldAttribute(name = fileName, mandatory = false, description = "File to save this image.")
+	@ActionFieldAttribute(name = fileName, mandatory = false, description = "The path to the file where the image will be saved.")
 	protected String			file;
 
 	public ImageSave()

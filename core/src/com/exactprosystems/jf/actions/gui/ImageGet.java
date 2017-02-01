@@ -27,10 +27,16 @@ import static com.exactprosystems.jf.actions.gui.Helper.message;
 @ActionAttribute(
 		group					= ActionGroups.GUI,
 		suffix					= "IMGGET",
-		generalDescription 		= "Get an image from screen",
+		generalDescription 		= "The purpose of this action is to get the screenshot of the started application."
+				+ "Without setting optional parameters the screenshot of the whole application is made. When setting the "
+				+ "Dialog parameter, the screenshot of the first element of ‘Self’ section is made. When setting the Dialog "
+				+ "and Name parameters, the screenshot of the element indicated in Name is made.",
 		additionFieldsAllowed 	= false,
 		outputDescription 		= "An image which is grabbed from the screen.", 
-		outputType 				= ImageWrapper.class
+		outputType 				= ImageWrapper.class,
+		examples 				= "{{`1. Make the screenshot of the logo element located in MyDialog.`}}"
+				+ "{{##Id;#Action;#Description;#Dialog;#Name;#AppConnection\n"
+				+ "IMGGET1;ImageGet;'Chrome screenshot';'MyDialog';'logo';App#}}"
 	)
 public class ImageGet extends AbstractAction
 {
@@ -43,16 +49,19 @@ public class ImageGet extends AbstractAction
 	public final static String	x_rightDown	= "X2";
 	public final static String	y_rightDown	= "Y2";
 
-	@ActionFieldAttribute(name = connectionName, mandatory = true, description = "The application connection.")
+	@ActionFieldAttribute(name = connectionName, mandatory = true, description = "A special object which identifies the"
+			+ " started application session. This object is required in many other actions to specify the session"
+			+ " of the application the indicated action belongs to. It is the output value of such actions"
+			+ " as {{@ApplicationStart@}}, {{@ApplicationConnectTo@}}.")
 	protected AppConnection		connection		= null;
 
-	@ActionFieldAttribute(name = dialogName, mandatory = false, description = "A name of the dialog. If omitted, then full screen will be grabbed.")
+	@ActionFieldAttribute(name = dialogName, mandatory = false, description = "The name of the dialog.")
 	protected String			dialog			= null;
 
-	@ActionFieldAttribute(name = nameName, mandatory = false, description = "A name of element of the dialog. If omitted, then full dialog will be grabbed.")
+	@ActionFieldAttribute(name = nameName, mandatory = false, description = "The name of the element.")
 	protected String			name;
 
-	@ActionFieldAttribute(name = descriptionName, mandatory = false, description = "A description of this image. In the report it become a tooltip.")
+	@ActionFieldAttribute(name = descriptionName, mandatory = false, description = "The description of the image which will be displayed in tooltip.")
 	protected String			description;
 
 	@ActionFieldAttribute(name = x_leftUp, mandatory = false, description = "X coordinate is for left upper corner")

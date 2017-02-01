@@ -8,21 +8,26 @@
 
 package com.exactprosystems.jf.api.app;
 
-import com.exactprosystems.jf.api.common.IFactory;
-import com.exactprosystems.jf.api.common.VersionSupported;
 
-public interface IApplicationFactory  extends VersionSupported, IFactory
+public class PluginInfo
 {
-	String helpFileName	=	"helpFile.html";
-	String				getHelp();
-	void				init(IGuiDictionary dictionary);
-	
-	ControlKind[]		supportedControlKinds();
-
-	IApplication 		createApplication() throws Exception;
-	String 				getRemoteClassName();
-	
-	IGuiDictionary 		getDictionary();
+    public PluginInfo()
+    {
+    }
     
-    PluginInfo          getInfo();      
+    public String[] nodeByControlKind(ControlKind kind)
+    {
+        return new String[] {};
+    }
+    
+    public ControlKind controlKindByString(String name)
+    {
+        return ControlKind.Any;
+    }
+    
+    public String nodeByLocatorKind (LocatorFieldKind kind)
+    {
+        return "";
+    }
+    
 }

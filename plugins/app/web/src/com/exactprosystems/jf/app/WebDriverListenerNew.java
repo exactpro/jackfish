@@ -7,8 +7,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.exactprosystems.jf.app;
 
-import com.exactprosystems.jf.api.app.HistogramMetric;
-import com.exactprosystems.jf.api.app.MetricsCounter;
 import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.*;
 import org.openqa.selenium.interactions.internal.Coordinates;
@@ -23,12 +21,10 @@ import java.util.Set;
 public class WebDriverListenerNew implements WebDriver, JavascriptExecutor, HasInputDevices, TakesScreenshot, WrapsDriver, HasTouchScreen
 {
 	private final WebDriver webDriver;
-	private MetricsCounter metricsCounter;
 
-	public WebDriverListenerNew(WebDriver webDriver, MetricsCounter metricsCounter)
+	public WebDriverListenerNew(WebDriver webDriver)
 	{
 		this.webDriver = webDriver;
-		this.metricsCounter = metricsCounter;
 	}
 
 	@Override
@@ -52,9 +48,7 @@ public class WebDriverListenerNew implements WebDriver, JavascriptExecutor, HasI
 	@Override
 	public List<WebElement> findElements(By by)
 	{
-		this.metricsCounter.before(HistogramMetric.Find);
 		List<WebElement> temp = this.webDriver.findElements(by);
-		this.metricsCounter.after(HistogramMetric.Find);
 		List<WebElement> result = new ArrayList<>(temp.size());
 		for (WebElement element : temp)
 		{
@@ -66,9 +60,7 @@ public class WebDriverListenerNew implements WebDriver, JavascriptExecutor, HasI
 	@Override
 	public WebElement findElement(By by)
 	{
-		this.metricsCounter.before(HistogramMetric.Find);
 		WebElement temp = this.webDriver.findElement(by);
-		this.metricsCounter.after(HistogramMetric.Find);
 		return createWebElement(temp);
 	}
 
@@ -145,7 +137,7 @@ public class WebDriverListenerNew implements WebDriver, JavascriptExecutor, HasI
 	{
 		if (this.webDriver instanceof HasInputDevices)
 		{
-			return new KeyboardListener(this.webDriver, this.metricsCounter);
+			return new KeyboardListener(this.webDriver);
 		}
 		throw new UnsupportedOperationException("Current driver does not implement advanced user interactions yet.");
 	}
@@ -155,7 +147,7 @@ public class WebDriverListenerNew implements WebDriver, JavascriptExecutor, HasI
 	{
 		if (this.webDriver instanceof HasInputDevices)
 		{
-			return new MouseListener(this.webDriver, this.metricsCounter);
+			return new MouseListener(this.webDriver);
 		}
 		throw new UnsupportedOperationException("Current driver does not implement advanced user interactions yet.");
 	}
@@ -194,26 +186,22 @@ public class WebDriverListenerNew implements WebDriver, JavascriptExecutor, HasI
 
 	private WebElement createWebElement(WebElement element)
 	{
-		return new WebElementListener(element, this.metricsCounter);
+		return new WebElementListener(element);
 	}
 
 	private class WebElementListener implements WebElement, WrapsDriver, WrapsElement, Locatable
 	{
 		private WebElement element;
-		private MetricsCounter metricsCounter;
 
-		public WebElementListener(WebElement element, MetricsCounter metricsCounter)
+		public WebElementListener(WebElement element)
 		{
 			this.element = element;
-			this.metricsCounter = metricsCounter;
 		}
 
 		@Override
 		public void click()
 		{
-			metricsCounter.before(HistogramMetric.Click);
 			this.element.click();
-			metricsCounter.after(HistogramMetric.Click);
 		}
 
 		@Override
@@ -225,9 +213,7 @@ public class WebDriverListenerNew implements WebDriver, JavascriptExecutor, HasI
 		@Override
 		public void sendKeys(CharSequence... keysToSend)
 		{
-			metricsCounter.before(HistogramMetric.Text);
 			this.element.sendKeys(keysToSend);
-			metricsCounter.after(HistogramMetric.Text);
 		}
 
 		@Override
@@ -269,9 +255,7 @@ public class WebDriverListenerNew implements WebDriver, JavascriptExecutor, HasI
 		@Override
 		public List<WebElement> findElements(By by)
 		{
-			this.metricsCounter.before(HistogramMetric.Find);
 			List<WebElement> temp = this.element.findElements(by);
-			this.metricsCounter.after(HistogramMetric.Find);
 			List<WebElement> result = new ArrayList<>(temp.size());
 			for (WebElement element : temp)
 			{
@@ -283,9 +267,7 @@ public class WebDriverListenerNew implements WebDriver, JavascriptExecutor, HasI
 		@Override
 		public WebElement findElement(By by)
 		{
-			this.metricsCounter.before(HistogramMetric.Find);
 			WebElement temp = this.element.findElement(by);
-			this.metricsCounter.after(HistogramMetric.Find);
 			return temp;
 		}
 
@@ -350,21 +332,17 @@ public class WebDriverListenerNew implements WebDriver, JavascriptExecutor, HasI
 
 	private class MouseListener implements Mouse
 	{
-		private final MetricsCounter metricsCounter;
 		private final Mouse mouse;
 
-		public MouseListener(WebDriver webDriver, MetricsCounter metricsCounter)
+		public MouseListener(WebDriver webDriver)
 		{
-			this.metricsCounter = metricsCounter;
 			this.mouse = ((HasInputDevices) webDriver).getMouse();
 		}
 
 		@Override
 		public void click(Coordinates where)
 		{
-			this.metricsCounter.before(HistogramMetric.Click);
 			this.mouse.click(where);
-			this.metricsCounter.after(HistogramMetric.Click);
 		}
 
 		@Override
@@ -388,17 +366,13 @@ public class WebDriverListenerNew implements WebDriver, JavascriptExecutor, HasI
 		@Override
 		public void mouseMove(Coordinates where)
 		{
-			this.metricsCounter.before(HistogramMetric.Move);
 			this.mouse.mouseMove(where);
-			this.metricsCounter.after(HistogramMetric.Move);
 		}
 
 		@Override
 		public void mouseMove(Coordinates where, long xOffset, long yOffset)
 		{
-			this.metricsCounter.before(HistogramMetric.Move);
 			this.mouse.mouseMove(where, xOffset, yOffset);
-			this.metricsCounter.after(HistogramMetric.Move);
 		}
 
 		@Override
@@ -411,11 +385,9 @@ public class WebDriverListenerNew implements WebDriver, JavascriptExecutor, HasI
 	private class KeyboardListener implements Keyboard
 	{
 		private final Keyboard keyboard;
-		private final MetricsCounter metricsCounter;
 
-		public KeyboardListener(WebDriver driver, MetricsCounter metricsCounter)
+		public KeyboardListener(WebDriver driver)
 		{
-			this.metricsCounter = metricsCounter;
 			this.keyboard = ((HasInputDevices) driver).getKeyboard();
 		}
 
