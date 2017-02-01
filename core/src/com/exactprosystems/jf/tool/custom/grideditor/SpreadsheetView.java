@@ -7,6 +7,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.exactprosystems.jf.tool.custom.grideditor;
 
+import com.exactprosystems.jf.api.common.Sys;
 import com.exactprosystems.jf.exceptions.ColumnIsPresentException;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
@@ -599,12 +600,12 @@ public class SpreadsheetView extends Control
 			copyString.append(rows.get(row).get(column).getText());
 			copyString.append("\t");
 		}
-		Common.saveToClipboard(copyString.toString());
+		Sys.copyToClipboard(copyString.toString());
 	}
 
 	private void paste(boolean withHeader)
 	{
-		String text = Common.getFromClipboard();
+		String text = Sys.getFromClipboard();
 		List<TablePosition> selectedCells = this.getSelectionModel().getSelectedCells();
 		if (selectedCells.size() != 1)
 		{
