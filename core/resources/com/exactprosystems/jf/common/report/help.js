@@ -3,7 +3,7 @@ var mame = $('.mainMenu');
 function doMenu(obj) {
 	var hashTag = obj.attr('id') + '_child';
 	obj.on('click', function () {
-		$('#' + hashTag).toggle();
+		$(document.getElementById(hashTag)).toggle();
 		return false;
 	});
 }

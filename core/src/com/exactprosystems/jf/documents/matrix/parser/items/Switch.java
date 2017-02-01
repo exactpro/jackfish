@@ -30,6 +30,8 @@ import java.util.Set;
 
 @MatrixItemAttribute(
         description 	= "Condition executing.",
+		examples 		= "#Switch",
+		seeAlso 		= "Case, Default",
         shouldContain 	= { Tokens.Switch },
         mayContain 		= { Tokens.Off, Tokens.RepOff },
 		parents			= { Case.class, Else.class, For.class, ForEach.class, If.class,
@@ -90,7 +92,7 @@ public class Switch extends MatrixItem
 	@Override
 	public String getItemName()
 	{
-		return super.getItemName() + " " + this.switcher;
+		return super.getItemName() + " " + (this.switcher.getExpression() == null ? "" :  ": " + this.switcher.getExpression());
 	}
 
 	@Override

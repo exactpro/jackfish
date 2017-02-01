@@ -364,7 +364,7 @@ public abstract class AbstractAction implements Cloneable
     //==============================================================================================
     // Private members
     //==============================================================================================
-    private void documentAction(ReportBuilder report)
+    public void documentAction(ReportBuilder report)
     {
         ReportTable table;
 

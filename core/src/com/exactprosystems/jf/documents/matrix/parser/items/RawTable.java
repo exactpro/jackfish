@@ -31,7 +31,9 @@ import java.util.Map;
 import java.util.Set;
 
 @MatrixItemAttribute(
-		description 	= "Raw data.", 
+		description 	= "Raw data. Need to describe block of data",
+		examples 		= "#RawTable",
+		seeAlso 		= "RawText",
 		shouldContain 	= { Tokens.RawTable }, 
 		mayContain 		= { Tokens.Id, Tokens.Off, Tokens.RepOff, Tokens.Global }, 
 		parents			= { Case.class, Else.class, For.class, ForEach.class, If.class,
@@ -183,16 +185,6 @@ public class RawTable extends MatrixItem
 			listener.error(this.owner, getNumber(), this, "id '" + this.id + "' has already defined.");
 		}
 		ids.add(this.id.get());
-	}
-
-	@Override
-	protected void docItSelf(Context context, ReportBuilder report)
-	{
-		ReportTable table;
-		table = report.addTable("", null, true, 100, new int[] { 30, 70 }, new String[] {
-				"Chapter", "Description" });
-
-		table.addValues("Destination", "To describe block of data");
 	}
 
 	@Override

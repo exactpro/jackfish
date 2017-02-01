@@ -31,7 +31,9 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 
 @MatrixItemAttribute(
-		description 	= "Loop from start value to end value with step.", 
+		description 	= "Loop from start value to end value with step. Need to organize a loop for counter from begin value to end value with step",
+		examples 		= "For",
+		seeAlso 		= "While, ForEach",
 		shouldContain 	= { Tokens.For, Tokens.From, Tokens.To },
 		mayContain 		= { Tokens.Step, Tokens.Off, Tokens.RepOff }, 
 		parents			= { Case.class, Else.class, For.class, ForEach.class, If.class,
@@ -114,7 +116,12 @@ public final class For extends MatrixItem
 	@Override
 	public String getItemName()
 	{
-		return super.getItemName() + " " + this.var + " = " + this.from + " to " + this.to + " step " + this.step;
+		return super.getItemName()
+				+ " "
+				+ (this.var.toString().equals("") ? this.var : this.var + " = ")
+				+ (this.from.getExpression() == null ? "" : this.from + " ")
+				+ (this.to.getExpression() == null ? "" : this.to + " ")
+				+ (this.step.getExpression() == null ? "" : this.step);
 	}
 	
 	@Override
@@ -160,19 +167,6 @@ public final class For extends MatrixItem
 		super.addParameter(line, Tokens.EndFor.get());
 	}
 
-
-    @Override
-	protected void docItSelf(Context context, ReportBuilder report)
-	{
-        ReportTable table;
-        table = report.addTable("", null, true, 100,
-                new int[] { 30, 70 }, new String[] { "Chapter", "Description"});
-
-        table.addValues("Destination", "To organize a loop for counter from begin value to end value with step");
-        table.addValues("Examples", "<code>#For;#From;#To;#Step<p>i;1;100;2</code>");
-        table.addValues("See also", "While, Break, Continue");
-	}
-	
     @Override
     protected void checkItSelf(Context context, AbstractEvaluator evaluator, IMatrixListener listener, Set<String> ids, Parameters parameters)
     {

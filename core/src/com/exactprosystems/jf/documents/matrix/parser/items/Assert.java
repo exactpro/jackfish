@@ -29,7 +29,8 @@ import java.util.Map;
 import java.util.Set;
 
 @MatrixItemAttribute(
-		description 	= "Check the assertion.", 
+		description 	= "Check the assertion and if it is false throws an Exception with Message",
+		examples 		= "{{##Assert;#Message<p>a == 10;'The value of ' + a + ' doesn match 10'#}}",
 		shouldContain 	= { Tokens.Assert },
 		mayContain 		= { Tokens.Off, Tokens.RepOff, Tokens.Message }, 
 		parents			= { Case.class, Else.class, For.class, ForEach.class, If.class,
@@ -95,7 +96,8 @@ public class Assert extends MatrixItem
     @Override
 	public String getItemName()
 	{
-		return super.getItemName() + " " + this.assertion + " " + this.message;
+		return super.getItemName() + " " + (this.assertion.getExpression() == null ? "" : ": " + this.assertion.getExpression())
+				+ " " + (this.message.getExpression() == null ? "" : this.message);
 	}
 
 	@Override
@@ -106,17 +108,6 @@ public class Assert extends MatrixItem
 		this.message.setExpression(systemParameters.get(Tokens.Message));
 	}
 
-	@Override
-	protected void docItSelf(Context context, ReportBuilder report)
-	{
-        ReportTable table;
-        table = report.addTable("", null, true, 100,
-                new int[] { 30, 70 }, new String[] { "Chapter", "Description"});
-
-        table.addValues("Destination", "Check the assertion and if it is false throws an Exception with Message");
-        table.addValues("Examples", "<code>#Assert;#Message<p>a == 10;'The value of ' + a + ' doesn match 10'</code>");
-        table.addValues("See also", "Action assert");
-	}
 
     @Override
     protected void checkItSelf(Context context, AbstractEvaluator evaluator, IMatrixListener listener, Set<String> ids, Parameters parameters)

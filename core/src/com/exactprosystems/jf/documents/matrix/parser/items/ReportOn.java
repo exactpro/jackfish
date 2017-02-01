@@ -24,7 +24,9 @@ import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
 
 @Deprecated
 @MatrixItemAttribute(
-		description = "Switches on output of the report.", 
+		description 	= "Switches on output of the report.",
+		examples 		= "#ReportOn",
+		seeAlso 		= "ReportOff",
 		shouldContain 	= { Tokens.ReportOn },
 		mayContain 		= { Tokens.Off, Tokens.RepOff }, 
 		real			= true,
@@ -63,17 +65,6 @@ public class ReportOn extends MatrixItem
 		super.addParameter(firstLine, Tokens.ReportOn.get());
 	}
 
-	@Override
-	protected void docItSelf(Context context, ReportBuilder report)
-	{
-        ReportTable table;
-        table = report.addTable("", null, true, 100,
-                new int[] { 30, 70 }, new String[] { "Chapter", "Description"});
-
-        table.addValues("Destination", "Swithces output to report on");
-        table.addValues("Examples", "<code>#ReportOn</code>");
-        table.addValues("See also", "ReportOff");
-	}
 
 	@Override
 	protected ReturnAndResult executeItSelf(long start, Context context, IMatrixListener listener, AbstractEvaluator evaluator, ReportBuilder report, Parameters parameters)

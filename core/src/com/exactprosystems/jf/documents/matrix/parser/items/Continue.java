@@ -24,7 +24,9 @@ import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
 import java.util.List;
 
 @MatrixItemAttribute(
-		description 	= "Break chain of execution into loops or blocks.", 
+		description 	= "Break chain of execution into loops or blocks.",
+		examples 		= "#Continue",
+		seeAlso 		= "For, While, Break",
 		shouldContain 	= { Tokens.Continue },
 		mayContain 		= { Tokens.Off, Tokens.RepOff }, 
 		parents			= { Case.class, Else.class, For.class, ForEach.class, If.class,
@@ -62,19 +64,6 @@ public class Continue extends MatrixItem
 	{
 		return SearchHelper.matches(Tokens.Continue.get(), what, caseSensitive, wholeWord);
 	}
-
-	@Override
-	protected void docItSelf(Context context, ReportBuilder report)
-	{
-        ReportTable table;
-        table = report.addTable("", null, true, 100,
-                new int[] { 30, 70 }, new String[] { "Chapter", "Description"});
-
-        table.addValues("Destination", "To begin next iteration of loop");
-        table.addValues("Examples", "<code>#Continue</code>");
-        table.addValues("See also", "For, While, Break");
-	}
-	
 
 	@Override
 	protected ReturnAndResult executeItSelf(long start, Context context, IMatrixListener listener, AbstractEvaluator evaluator, ReportBuilder report, Parameters parameters)

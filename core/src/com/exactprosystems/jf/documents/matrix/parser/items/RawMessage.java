@@ -36,7 +36,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 @MatrixItemAttribute(
-		description 	= "Raw data in message form.", 
+		description 	= "Raw data in message form.",
+		examples 		= "#RawMessage",
 		shouldContain 	= { Tokens.RawMessage, Tokens.Client }, 
 		mayContain 		= { Tokens.Id, Tokens.Off, Tokens.RepOff, Tokens.Global }, 
 		parents			= { Case.class, Else.class, For.class, ForEach.class, If.class,
@@ -158,7 +159,8 @@ public class RawMessage extends MatrixItem
 	@Override
 	public String getItemName()
 	{
-		return super.getItemName() + " Client:" + this.clientName + " Message type:" + this.typeName;
+		return super.getItemName() + (this.clientName.toString().equals("") ? "" : " Client:" + this.clientName)
+				+ (this.typeName.toString().equals("") ? "" : " Message type:" + this.typeName);
 	}
 
 	@Override
@@ -231,16 +233,6 @@ public class RawMessage extends MatrixItem
 			listener.error(this.owner, getNumber(), this, "id '" + this.id + "' has already defined.");
 		}
 		ids.add(this.id.get());
-	}
-
-	@Override
-	protected void docItSelf(Context context, ReportBuilder report)
-	{
-		ReportTable table;
-		table = report.addTable("", null, true, 100, new int[] { 30, 70 }, new String[] {
-				"Chapter", "Description" });
-
-		table.addValues("Destination", "To describe message");
 	}
 
 	@Override

@@ -8,6 +8,7 @@
 
 package com.exactprosystems.jf.common.report;
 
+import com.exactprosystems.jf.actions.*;
 import com.exactprosystems.jf.api.app.ControlKind;
 import com.exactprosystems.jf.api.app.ImageWrapper;
 import com.exactprosystems.jf.api.app.OperationKind;
@@ -15,10 +16,17 @@ import com.exactprosystems.jf.charts.ChartBuilder;
 import com.exactprosystems.jf.common.ControlsAttributes;
 import com.exactprosystems.jf.common.version.VersionInfo;
 import com.exactprosystems.jf.documents.guidic.controls.AbstractControl;
+import com.exactprosystems.jf.documents.matrix.parser.Parser;
+import com.exactprosystems.jf.documents.matrix.parser.items.ActionItem;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
+import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItemAttribute;
+import com.exactprosystems.jf.documents.matrix.parser.items.TempItem;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 public class HelpBuilder extends ReportBuilder
 {
@@ -171,7 +179,7 @@ public class HelpBuilder extends ReportBuilder
 		this.menuWriter.fwrite("<li role='presentation' class='mParent' id='MVELsyntax'>\n");
 		this.menuWriter.fwrite("<a href='#'>MVEL syntax<span class='caret'></span></a>\n");
 		this.menuWriter.fwrite("</li>\n");
-		this.menuWriter.fwrite("<ul class='nav nav-pills nav-stacked navChild' id='MVELsyntax_child'>");
+		this.menuWriter.fwrite("<ul class='nav nav-pills nav-stacked navChild' id='MVELsyntax_child'>\n");
 		this.menuWriter.fwrite("<li role='presentation'><a href='#BasicSyntax'>Basic syntax</a></li>\n");
 		this.menuWriter.fwrite("<li role='presentation'><a href='#MVELOperators'>MVEL 2.0 Operators</a></li>\n");
 		this.menuWriter.fwrite("<li role='presentation'><a href='#InlineListMapsAndArrays'>Inline List,Maps and Arrays</a></li>\n");
@@ -380,5 +388,137 @@ public class HelpBuilder extends ReportBuilder
 	{
 	}
 	//endregion
+
+	public void helpCreate(ReportBuilder report) throws Exception {
+
+		report.reportStarted(null,"");
+		chapterStart("Matrix syntax");
+		makeItemHelp(report);
+		chapterFinish();
+		chapterStart("All actions by groups");
+		helpForActions(report);
+		chapterFinish();
+		report.reportFinished(0,0,new Date(),new Date());
+	}
+
+
+	private void makeItemHelp(ReportBuilder report) throws IllegalAccessException, InstantiationException {
+
+		MatrixItem tmp;
+		for (Class<?> clazz : Parser.knownItems)
+		{
+
+			MatrixItemAttribute attribute = clazz.getAnnotation(MatrixItemAttribute.class);
+			if (attribute == null)
+			{
+				return;
+			}
+
+			if (!attribute.real() || clazz.equals(ActionItem.class) || clazz.equals(TempItem.class))
+			{
+				continue;
+			}
+
+			tmp = (MatrixItem) clazz.newInstance();
+			report.itemStarted(tmp);
+			report.itemIntermediate(tmp);
+			ReportTable table = report.addTable("", null, true, 100,
+					new int[]{30, 70});
+			table.addValues("Description", attribute.description());
+			table.addValues("Examples", attribute.examples());
+			if (!attribute.seeAlso().equals(""))
+			{
+				table.addValues("See also", attribute.seeAlso());
+			}
+			report.itemFinished(tmp, 0, null);
+		}
+	}
+
+	private void makeActionHelp(ReportBuilder report, Class<?> clazz) throws Exception {
+		ActionItem tmp;
+
+
+				tmp = new ActionItem(clazz.getSimpleName());
+				report.itemStarted(tmp);
+				report.itemIntermediate(tmp);
+				ReportTable table;
+
+
+				ActionAttribute attr = clazz.getAnnotation(ActionAttribute.class);
+
+				table = report.addTable("", null, true, 0,
+						new int[] { 30, 70 }, "Action item", clazz.getSimpleName());
+
+				table.addValues("Description", attr.generalDescription());
+				if (attr.additionFieldsAllowed())
+				{
+					table.addValues("Additional fields", "Yes");
+					table.addValues("Additional fields description", attr.additionalDescription());
+				}
+				else
+				{
+					table.addValues("Additional fields", "No");
+				}
+				table.addValues("See also", attr.seeAlso());
+				table.addValues("Examples", HTMLhelper.htmlescape(attr.examples()));
+
+
+				// Input
+				Field[] fields = clazz.getDeclaredFields();
+				table = report.addTable("Input:", null, true, 4,
+						new int[] {0, 0, 60, 0, 0}, "Field name", "Field type", "Description", "Mandatory");
+				table.addValues();
+				for (Field f : fields)
+				{
+					ActionFieldAttribute annotation = f.getAnnotation(ActionFieldAttribute.class);
+					if (annotation == null)
+					{
+						continue;
+					}
+					table.addValues(annotation.name(),f.getType().getSimpleName(),annotation.description(),annotation.mandatory() ? "Yes" : "No");
+				}
+
+
+				// Output
+				table = report.addTable("Output:", null, true, 100,
+						new int[] {20, 40}, "Output type", "Description");
+				table.addValues(attr.outputType().getSimpleName(),attr.outputDescription());
+
+				report.itemFinished(tmp, 0, null);
+
+	}
+
+	private void chapterStart(String chapter) throws IOException {
+		this.menuWriter.fwrite("<li role='presentation' class='mParent' id='%s'>\n", chapter);
+		this.menuWriter.fwrite("<a href='#'>%s<span class='caret'></span></a>\n", chapter);
+		this.menuWriter.fwrite("</li>\n");
+		this.menuWriter.fwrite("<ul class='nav nav-pills nav-stacked deepNav navChild' id='%s_child'>", chapter);
+	}
+
+	private void chapterFinish() throws IOException {
+		this.menuWriter.fwrite("</ul>\n");
+
+	}
+
+	private void helpForActions(ReportBuilder report) throws Exception {
+		Map<Class<?>, ActionGroups> map = new HashMap<>();
+		for (Class<?> action : ActionsList.actions)
+		{
+			map.put(action, action.getAnnotation(ActionAttribute.class).group());
+		}
+
+		for (ActionGroups groups : ActionGroups.values())
+		{
+			chapterStart(groups.toString());
+			for (Map.Entry<Class<?>, ActionGroups> entry : map.entrySet())
+			{
+				if (entry.getValue() == groups)
+				{
+					makeActionHelp(report, entry.getKey());
+				}
+			}
+			chapterFinish();
+		}
+	}
 
 }
