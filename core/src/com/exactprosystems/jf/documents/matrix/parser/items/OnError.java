@@ -26,7 +26,9 @@ import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
 import java.util.List;
 
 @MatrixItemAttribute(
-		description 	= "On error.", 
+		description 	= "On error.",
+		examples 		= "#OnError",
+		seeAlso 		= "Fail",
 		shouldContain 	= { Tokens.OnError },
 		mayContain 		= { Tokens.Off, Tokens.RepOff },
 		parents			= { For.class, ForEach.class, OnError.class, Step.class, SubCase.class, TestCase.class },
@@ -68,19 +70,6 @@ public final class OnError extends MatrixItem
 	{
 		return SearchHelper.matches(Tokens.OnError.get(), what, caseSensitive, wholeWord);
 	}
-
-	@Override
-	protected void docItSelf(Context context, ReportBuilder report)
-	{
-        ReportTable table;
-        table = report.addTable("", null, true, 100,
-                new int[] { 30, 70 }, new String[] { "Chapter", "Description"});
-
-        table.addValues("Destination", "To process an error that appear in a loop");
-        table.addValues("Examples", "<code>#OnError</code>");
-        table.addValues("See also", "For, While");
-	}
-	
 
 	@Override
 	protected ReturnAndResult executeItSelf(long start, Context context, IMatrixListener listener, AbstractEvaluator evaluator, ReportBuilder report, Parameters parameters)

@@ -27,8 +27,11 @@ import java.util.Map;
 import java.util.Set;
 
 @MatrixItemAttribute(
-		description 	= "Subroutine Test case.", 
+		description 	= "Subroutine Test case.",
+		examples 		= "#Call",
+		seeAlso 		= "SubCase, Return",
 		shouldContain 	= { Tokens.Call },
+
 		mayContain 		= { Tokens.Id, Tokens.Off, Tokens.RepOff },
 		parents			= { Case.class, Else.class, For.class, ForEach.class, If.class,
 							OnError.class, Step.class, SubCase.class, TestCase.class, While.class },
@@ -184,18 +187,6 @@ public final class Call extends MatrixItem
 		}
 	}
 
-	@Override
-	protected void docItSelf(Context context, ReportBuilder report)
-	{
-        ReportTable table;
-        table = report.addTable("", null, true, 100,
-                new int[] { 30, 70 }, new String[] { "Chapter", "Description"});
-
-        table.addValues("Destination", "To call subroutine");
-        table.addValues("Examples", "<code>#Call</code>");
-        table.addValues("See also", "SubCase, Return");
-	}
-	
 
 	@Override
 	protected ReturnAndResult executeItSelf(long start, Context context, IMatrixListener listener, AbstractEvaluator evaluator, ReportBuilder report, Parameters parameters)

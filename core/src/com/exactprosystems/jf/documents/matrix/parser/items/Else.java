@@ -19,7 +19,9 @@ import com.exactprosystems.jf.documents.matrix.parser.Tokens;
 import java.util.List;
 
 @MatrixItemAttribute(
-		description 	= "Executed if condition is false.", 
+		description 	= "Executed if condition is false.",
+		examples 		= "#Else",
+		seeAlso 		= "If",
 		shouldContain 	= { Tokens.Else },
 		mayContain 		= { Tokens.Off, Tokens.RepOff }, 
 		parents			= { If.class }, 
@@ -43,18 +45,6 @@ public class Else extends MatrixItem
 		driver.showTitle(this, layout, 1, 0, Tokens.Else.get(), context.getFactory().getSettings());
 
 		return layout;
-	}
-
-    @Override
-	protected void docItSelf(Context context, ReportBuilder report)
-	{
-        ReportTable table;
-        table = report.addTable("", null, true, 100,
-                new int[] { 30, 70 }, new String[] { "Chapter", "Description"});
-
-        table.addValues("Destination", "If's alternative branch");
-        table.addValues("Examples", "<code>#Else</code>");
-        table.addValues("See also", "If");
 	}
 
 	@Override

@@ -27,7 +27,9 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @MatrixItemAttribute(
-		description 	= "Sets up an event handler for all TestCases or Steps.", 
+		description 	= "Sets up an event handler for all TestCases or Steps.",
+		examples 		= "#SetHandler",
+		seeAlso 		= "SubCase, Step, TestCase",
 		shouldContain 	= { Tokens.SetHandler },
 		mayContain 		= { Tokens.Off, Tokens.RepOff, Tokens.Kind },
 		real			= true,
@@ -137,19 +139,6 @@ public final class SetHandler extends MatrixItem
 	protected void checkItSelf(Context context, AbstractEvaluator evaluator, IMatrixListener listener, Set<String> ids, Parameters parameters)
 	{
 	}
-
-	@Override
-	protected void docItSelf(Context context, ReportBuilder report)
-	{
-        ReportTable table;
-        table = report.addTable("", null, true, 100,
-                new int[] { 30, 70 }, new String[] { "Chapter", "Description"});
-
-        table.addValues("Destination", "To set event handler for testcases or steps");
-        table.addValues("Examples", "<code>#SetHandler</code>");
-        table.addValues("See also", "SubCase, TestCase, Step");
-	}
-	
 
 	@Override
 	protected ReturnAndResult executeItSelf(long start, Context context, IMatrixListener listener, AbstractEvaluator evaluator, ReportBuilder report, Parameters parameters)

@@ -34,7 +34,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
 @MatrixItemAttribute(
-	description 	= "Loop from start value to end value with step.", 
+	description 	= "Loop from start value to end value with step. Need to organize a loop over a collection",
+	examples 		= "#ForEach",
+	seeAlso 		= "For, While",
 	shouldContain 	= { Tokens.ForEach, Tokens.In },
 	mayContain 		= { Tokens.Off, Tokens.RepOff }, 
 	parents			= { Case.class, Else.class, For.class, ForEach.class, If.class,
@@ -104,7 +106,7 @@ public final class ForEach extends MatrixItem
 	@Override
 	public String getItemName()
 	{
-		return super.getItemName() + " " + this.var + " In " + this.in.getExpression();
+		return super.getItemName() + " " + this.var + (this.in.getExpression() == null ? "" : " In " + this.in.getExpression());
 	}
 
 	@Override
@@ -136,17 +138,6 @@ public final class ForEach extends MatrixItem
 	protected void writeSuffixItSelf(CsvWriter writer, List<String> line, String indent)
 	{
 		super.addParameter(line, Tokens.EndForEach.get());
-	}
-
-	@Override
-	protected void docItSelf(Context context, ReportBuilder report)
-	{
-		ReportTable table;
-		table = report.addTable("", null, true, 100, new int[] { 30, 70 }, new String[] { "Chapter", "Description" });
-
-		table.addValues("Destination", "To organize a loop over a collection");
-		table.addValues("Examples", "<code>#ForEach;#In<p>row;TAB</code>");
-		table.addValues("See also", "For, While, Break, Continue");
 	}
 
 	@Override

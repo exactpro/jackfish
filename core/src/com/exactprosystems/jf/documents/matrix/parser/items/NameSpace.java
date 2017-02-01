@@ -31,6 +31,8 @@ import java.util.Set;
 
 @MatrixItemAttribute(
         description 	= "Namespace.",
+		examples 		= "#Namespace",
+		seeAlso 		= "SubCase, Call",
         shouldContain 	= { Tokens.NameSpace },
         mayContain 		= { Tokens.Id, Tokens.Off, Tokens.RepOff },
         parents			= { MatrixRoot.class },
@@ -152,18 +154,6 @@ public final class NameSpace extends MatrixItem
 		ids = new HashSet<String>();
 		
 		super.checkItSelf(context, evaluator, listener, ids, parameters);
-	}
-
-	@Override
-	protected void docItSelf(Context context, ReportBuilder report)
-	{
-        ReportTable table;
-        table = report.addTable("", null, true, 100,
-                new int[] { 30, 70 }, new String[] { "Chapter", "Description"});
-
-        table.addValues("Destination", "NameSpace is needed to make a library.");
-        table.addValues("Examples", "<code>#Id;#NameSpace<p>NS;Description</code>");
-        table.addValues("See also", "<code>EndNameSpace, SubCase, Call</code>");
 	}
 
 	@Override

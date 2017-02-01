@@ -29,7 +29,9 @@ import java.util.Map;
 import java.util.Set;
 
 @MatrixItemAttribute(
-		description 	= "Returns value from SubCase.", 
+		description 	= "Returns value from SubCase.",
+		examples 		= "#Return",
+		seeAlso 		= "SubCase, Call",
 		shouldContain 	= { Tokens.Return },
 		mayContain 		= { Tokens.Off, Tokens.RepOff }, 
 		parents			= { Case.class, Else.class, For.class, ForEach.class, If.class,
@@ -90,7 +92,7 @@ public class Return extends MatrixItem
     @Override
 	public String getItemName()
 	{
-		return super.getItemName() + " " + this.returnValue;
+		return super.getItemName() + " " + (this.returnValue.getExpression() == null ? "" : ": " + this.returnValue.getExpression());
 	}
 
 	@Override
@@ -98,18 +100,6 @@ public class Return extends MatrixItem
 			throws MatrixException
 	{
 		this.returnValue.setExpression(systemParameters.get(Tokens.Return));
-	}
-
-	@Override
-	protected void docItSelf(Context context, ReportBuilder report)
-	{
-        ReportTable table;
-        table = report.addTable("", null, true, 100,
-                new int[] { 30, 70 }, new String[] { "Chapter", "Description"});
-
-        table.addValues("Destination", "Returns a value from SubCase to calling action");
-        table.addValues("Examples", "<code>#Return<p>123</code>");
-        table.addValues("See also", "SubCase");
 	}
 
     @Override
