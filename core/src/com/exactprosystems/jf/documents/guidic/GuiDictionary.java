@@ -274,6 +274,7 @@ public class GuiDictionary extends AbstractDocument implements IGuiDictionary
 		}
 	}
 
+	@Deprecated // TODO check it
 	public void addDescription(ReportTable info, Window.SectionKind kind)
 	{
 		for (Window window : this.windows)
@@ -295,6 +296,9 @@ public class GuiDictionary extends AbstractDocument implements IGuiDictionary
 			Window.class,
 			Section.class, 
 			AbstractControl.class, 
+			ExtraInfo.class,
+			Rectangle.class,
+			Attr.class,
 			Addition.class,
 		};
 }
