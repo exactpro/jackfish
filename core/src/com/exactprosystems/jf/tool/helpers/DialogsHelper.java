@@ -8,15 +8,10 @@
 
 package com.exactprosystems.jf.tool.helpers;
 
-import com.exactprosystems.jf.actions.ActionAttribute;
-import com.exactprosystems.jf.actions.ActionGroups;
-import com.exactprosystems.jf.actions.ActionsList;
 import com.exactprosystems.jf.actions.ReadableValue;
 import com.exactprosystems.jf.api.common.ApiVersionInfo;
 import com.exactprosystems.jf.api.common.Str;
-import com.exactprosystems.jf.common.MatrixRunner;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
-import com.exactprosystems.jf.common.report.ContextHelpBuilder;
 import com.exactprosystems.jf.common.report.HelpBuilder;
 import com.exactprosystems.jf.common.report.HelpFactory;
 import com.exactprosystems.jf.common.report.ReportBuilder;
@@ -25,9 +20,7 @@ import com.exactprosystems.jf.documents.Document;
 import com.exactprosystems.jf.documents.DocumentFactory;
 import com.exactprosystems.jf.documents.DocumentInfo;
 import com.exactprosystems.jf.documents.config.Configuration;
-import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.Matrix;
-import com.exactprosystems.jf.documents.matrix.parser.items.*;
 import com.exactprosystems.jf.functions.HelpKind;
 import com.exactprosystems.jf.functions.Notifier;
 import com.exactprosystems.jf.functions.Table;
@@ -61,7 +54,6 @@ import javafx.util.Duration;
 import org.apache.log4j.Logger;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.StringReader;
 import java.nio.file.Paths;
@@ -120,11 +112,7 @@ public abstract class DialogsHelper
 		dialog.getDialogPane().setContentText("Reload it?");
 		dialog.getDialogPane().getStylesheets().addAll(Common.currentThemesPaths());
 		Optional<ButtonType> buttonType = dialog.showAndWait();
-		if (buttonType.isPresent())
-		{
-			return buttonType.get();
-		}
-		return ButtonType.CANCEL;
+		return buttonType.orElse(ButtonType.CANCEL);
 	}
 
 	public static Date showDateTimePicker(Date initialValue)
@@ -139,16 +127,7 @@ public abstract class DialogsHelper
 		alert.getDialogPane().getStylesheets().addAll(Common.currentThemesPaths());
 		Optional<ButtonType> buttonType = alert.showAndWait();
 		Optional<ButtonType> btnOk = buttonType.filter(bt -> bt.getButtonData().equals(ButtonBar.ButtonData.OK_DONE));
-		Optional<ButtonType> btnCancel = buttonType.filter(bt -> bt.getButtonData().equals(ButtonBar.ButtonData.CANCEL_CLOSE));
-		if (btnOk.isPresent())
-		{
-			return picker.getDate();
-		}
-		if (btnCancel.isPresent())
-		{
-			return null;
-		}
-		return initialValue;
+		return btnOk.map(buttonType1 -> picker.getDate()).orElse(initialValue);
 	}
 
 

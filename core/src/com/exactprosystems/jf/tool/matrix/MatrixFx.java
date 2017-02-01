@@ -632,6 +632,7 @@ public class MatrixFx extends Matrix
 		{
 		    getMatrixRunner().stop();
 			this.controller.coloring();
+			this.controller.displayAfterStopped("Matrix stopped");
 		}
 	}
 

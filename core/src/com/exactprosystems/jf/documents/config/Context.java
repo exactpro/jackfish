@@ -366,6 +366,11 @@ public class Context implements IContext, AutoCloseable
 		this.monitor.leave();
 	}
 
+	public boolean isStop()
+	{
+		return this.stop;
+	}
+
 	public void pause()
 	{
 		this.pause = true;

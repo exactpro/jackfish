@@ -170,6 +170,11 @@ public class MatrixRunner implements IMatrixRunner, AutoCloseable
 		this.thread = new Thread(() -> {
 			while(new Date().before(startTime))
 			{
+				if (context.isStop())
+				{
+					Optional.ofNullable(this.consumer).ifPresent(c -> c.accept(this));
+					return;
+				}
 				try
 				{
 					Thread.sleep(1000);

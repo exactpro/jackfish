@@ -495,6 +495,11 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 		});
 	}
 
+	public void displayAfterStopped(String msg)
+	{
+		Platform.runLater(() -> this.listView.getItems().add(ConsoleText.defaultText(msg)));
+	}
+
 	public void refresh()
 	{
 		Platform.runLater(() -> this.tree.refresh() );
