@@ -12,9 +12,12 @@ import com.exactprosystems.jf.api.app.ControlKind;
 import com.exactprosystems.jf.api.app.IApplication;
 import com.exactprosystems.jf.api.app.IApplicationFactory;
 import com.exactprosystems.jf.api.app.IGuiDictionary;
+import com.exactprosystems.jf.api.app.LocatorFieldKind;
 import com.exactprosystems.jf.api.app.PluginInfo;
 import com.exactprosystems.jf.api.common.ParametersKind;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
 
 public class WebAppFactory implements IApplicationFactory
@@ -158,7 +161,7 @@ public class WebAppFactory implements IApplicationFactory
     @Override
     public PluginInfo getInfo()
     {
-        return null; // TODO 
+        return info; 
     }
 
     //----------------------------------------------------------------------------------------------
@@ -182,4 +185,57 @@ public class WebAppFactory implements IApplicationFactory
 		return (major * 1000 + minor) >= (requiredMajorVersion * 1000 + requiredMinorVersion);
 	}
 	//----------------------------------------------------------------------------------------------
+	
+    protected static PluginInfo info;
+    static 
+    {
+        Map<ControlKind, String[]>      controlMap = new HashMap<>();
+
+        add(controlMap, ControlKind.Any,           "*");
+        add(controlMap, ControlKind.Button,        "button", "input", "a", "img");
+        add(controlMap, ControlKind.CheckBox,      "button", "input");
+        add(controlMap, ControlKind.ComboBox,      "select", "input");
+        add(controlMap, ControlKind.Dialog,        "form");
+        add(controlMap, ControlKind.Frame,         "form", "body", "frame", "iframe");
+        add(controlMap, ControlKind.Image,         "img");
+        add(controlMap, ControlKind.Label,         "label", "span");
+        add(controlMap, ControlKind.MenuItem,      "li");
+        add(controlMap, ControlKind.Panel,         "div");
+        add(controlMap, ControlKind.ProgressBar,   "progress");
+        add(controlMap, ControlKind.RadioButton,   "input");
+        add(controlMap, ControlKind.Row,           "tr");
+        add(controlMap, ControlKind.ScrollBar,     "*");
+        add(controlMap, ControlKind.Slider,        "div"); 
+        add(controlMap, ControlKind.Splitter,      "*");
+        add(controlMap, ControlKind.Spinner,       "*");
+        add(controlMap, ControlKind.Table,         "table");
+        add(controlMap, ControlKind.TabPanel,      "button");
+        add(controlMap, ControlKind.TextBox,       "input", "textarea");
+        add(controlMap, ControlKind.ToggleButton,  "input");
+        add(controlMap, ControlKind.ListView,      "ul");
+        add(controlMap, ControlKind.Tree,          "");
+        add(controlMap, ControlKind.Wait,          "*");
+        add(controlMap, ControlKind.Tooltip,       "*");
+        add(controlMap, ControlKind.Menu,          "li");
+        add(controlMap, ControlKind.TreeItem,      "");
+        
+        Map<LocatorFieldKind, String>   fieldMap = new HashMap<>();
+        
+        fieldMap.put(LocatorFieldKind.ACTION,       "");
+        fieldMap.put(LocatorFieldKind.UID,          ""); 
+        fieldMap.put(LocatorFieldKind.CLAZZ,        "");
+        fieldMap.put(LocatorFieldKind.XPATH,        "");
+        fieldMap.put(LocatorFieldKind.NAME,         "");
+        fieldMap.put(LocatorFieldKind.TITLE,        "");
+        fieldMap.put(LocatorFieldKind.ACTION,       "");
+        fieldMap.put(LocatorFieldKind.TEXT,         "");
+        fieldMap.put(LocatorFieldKind.TOOLTIP,      "");
+        
+        info = new PluginInfo(controlMap, fieldMap);
+    }
+    
+    private static void add(Map<ControlKind, String[]> controlMap, ControlKind kind, String ... nodes)
+    {
+        controlMap.put(kind, nodes);
+    }
 }

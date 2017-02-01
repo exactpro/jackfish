@@ -17,8 +17,10 @@ public interface IControl
 
 	String 				getID();
 	String 				getOwnerID();
+    String              getRefID();
 	String 				getUID();
 	String 				getXpath();
+	@Deprecated
 	boolean				useAbsoluteXpath();
 	String 				getClazz();
 	String 				getName();
@@ -26,6 +28,7 @@ public interface IControl
 	String 				getAction();
 	String 				getText();
 	String 				getTooltip();
+	
 	String 				getExpression();
 	String 				getRowsId();
 	String 				getHeaderId();

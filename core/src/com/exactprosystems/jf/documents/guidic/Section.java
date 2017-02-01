@@ -96,9 +96,14 @@ public class Section implements ISection, Mutable
 			}
 			
 			String ownerId = ctrl.getOwnerID();
+            String refId  = ctrl.getRefID();
 			String rowsId  = ctrl.getRowsId();
+			String headerId = ctrl.getHeaderId();
 			
-			if (ownerId != null && ownerId.equals(control.getID()) || rowsId != null && rowsId.equals(control.getID()))
+			if (     ownerId != null && ownerId.equals(control.getID()) 
+			        || refId != null && refId.equals(control.getID())
+			        || headerId != null && headerId.equals(control.getID())
+			        || rowsId != null && rowsId.equals(control.getID()))
 			{
 				return true;
 			}
@@ -150,7 +155,7 @@ public class Section implements ISection, Mutable
 	}
 
 	@Override
-	public IControl getControlById(String name) throws Exception
+	public IControl getControlById(String name)
 	{
 		if (name == null)
 		{
@@ -169,7 +174,7 @@ public class Section implements ISection, Mutable
 	}
 
 	@Override
-	public IControl getControlByIdAndValue(String name, Object obj) throws Exception
+	public IControl getControlByIdAndValue(String name, Object obj) 
 	{
 		IControl result = getControlById(name);
 		if (result.getAddition() != null && result.getAddition() == Addition.SwitchByValue)

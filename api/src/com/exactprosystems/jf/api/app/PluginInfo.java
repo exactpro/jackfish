@@ -8,21 +8,32 @@
 
 package com.exactprosystems.jf.api.app;
 
+import java.util.Map;
 
 public class PluginInfo
 {
-    public PluginInfo()
+    public PluginInfo(Map<ControlKind, String[]> controlMap, Map<LocatorFieldKind, String> fieldMap)
     {
+        this.controlMap = controlMap;
+        this.fieldMap = fieldMap;
     }
     
     public String[] nodeByControlKind(ControlKind kind)
     {
-        return new String[] {};
+        if (this.controlMap == null)
+        {
+            return null;
+        }
+        return this.controlMap.get(kind);
     }
     
-    public ControlKind controlKindByString(String name)
+    public String controlKindByString(LocatorFieldKind kind)
     {
-        return ControlKind.Any;
+        if (this.fieldMap == null)
+        {
+            return null;
+        }
+        return this.fieldMap.get(kind);
     }
     
     public String nodeByLocatorKind (LocatorFieldKind kind)
@@ -30,4 +41,6 @@ public class PluginInfo
         return "";
     }
     
+    private Map<ControlKind, String[]>      controlMap;
+    private Map<LocatorFieldKind, String>   fieldMap;
 }

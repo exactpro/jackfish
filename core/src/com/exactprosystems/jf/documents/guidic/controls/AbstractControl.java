@@ -31,9 +31,11 @@ public abstract class AbstractControl implements IControl, Mutable
 
 	public static final String idName				= "id";
 	public static final String uidName				= "uid";
-	public static final String xpathName			= "xpath";
+	@Deprecated
 	public static final String absoluteXpathName	= "useAbsoluteXpath";
 	public static final String ownerIdName			= "owner";
+    public static final String refIdName            = "ref";
+    public static final String xpathName            = "xpath";
 	public static final String clazzName			= "class";
 	public static final String nameName 			= "name";
 	public static final String titleName			= "title";
@@ -60,12 +62,17 @@ public abstract class AbstractControl implements IControl, Mutable
 	@XmlAttribute(name = xpathName)
 	protected String xpath;
 
+	@Deprecated
 	@XmlAttribute(name = absoluteXpathName)
 	protected Boolean absoluteXpath;
 
 	@XmlAttribute(name = ownerIdName)
 	protected String ownerId;
 
+    @XmlAttribute(name = refIdName)
+    protected String refId;
+
+	
 	@XmlAttribute(name = clazzName)
 	protected String clazz;
 
@@ -203,31 +210,31 @@ public abstract class AbstractControl implements IControl, Mutable
 		return ((AbstractControl) clazz.newInstance());
 	}
 
-    public static AbstractControl create(Locator locator, String ownerId) throws Exception
-    {
-    	AbstractControl ret = create(locator.getControlKind());
-		ret.id = locator.getId();
-		ret.uid = locator.getUid();
-		ret.xpath = locator.getXpath();
-		ret.ownerId = ownerId;
-		ret.clazz = locator.getClazz();
-		ret.name = locator.getName();
-		ret.title = locator.getTitle();
-		ret.action = locator.getAction();
-		ret.text = locator.getText();
-		ret.tooltip = locator.getTooltip();
-		ret.expression = locator.getExpression();
-		ret.addition = locator.getAddition();
-		ret.visibility = locator.getVisibility();
-		ret.weak = locator.isWeak();
-		ret.timeout = 0; 
-		ret.useNumericHeader = locator.useNumericHeader();
-		ret.rows = "";
-		ret.header = "";
-		ret.columns = "";
-		ret.absoluteXpath = locator.useAbsoluteXpath();
-		return ret;
-    }
+//    public static AbstractControl create(Locator locator, String ownerId) throws Exception
+//    {
+//    	AbstractControl ret = create(locator.getControlKind());
+//		ret.id = locator.getId();
+//		ret.uid = locator.getUid();
+//		ret.xpath = locator.getXpath();
+//		ret.ownerId = ownerId;
+//		ret.clazz = locator.getClazz();
+//		ret.name = locator.getName();
+//		ret.title = locator.getTitle();
+//		ret.action = locator.getAction();
+//		ret.text = locator.getText();
+//		ret.tooltip = locator.getTooltip();
+//		ret.expression = locator.getExpression();
+//		ret.addition = locator.getAddition();
+//		ret.visibility = locator.getVisibility();
+//		ret.weak = locator.isWeak();
+//		ret.timeout = 0; 
+//		ret.useNumericHeader = locator.useNumericHeader();
+//		ret.rows = "";
+//		ret.header = "";
+//		ret.columns = "";
+//		ret.absoluteXpath = locator.useAbsoluteXpath();
+//		return ret;
+//    }
 
 	public static AbstractControl createDummy() throws Exception
 	{
@@ -310,6 +317,12 @@ public abstract class AbstractControl implements IControl, Mutable
 		return this.ownerId;
 	}
 
+	@Override
+	public String getRefID()
+	{
+	    return this.refId;
+	}
+	
 	@Override
 	public String getID() 
 	{
@@ -406,6 +419,7 @@ public abstract class AbstractControl implements IControl, Mutable
 		return this.header;
 	}
 
+	@Deprecated
 	@Override
 	public boolean useAbsoluteXpath()
 	{
@@ -421,7 +435,23 @@ public abstract class AbstractControl implements IControl, Mutable
 	@Override
 	public Locator locator()
 	{
-		return new Locator(this);
+	    Locator res = new Locator(this);
+	    if (this.section != null && this.refId != null)
+	    {
+	        IControl refControl = this.section.getControlById(this.refId);
+	        if (refControl != null)
+	        {
+                res.uid(refControl.getUID());
+                res.clazz(refControl.getClazz());
+                res.xpath(refControl.getXpath());
+                res.name(refControl.getName());
+                res.title(refControl.getTitle());
+                res.action(refControl.getAction());
+                res.text(refControl.getText());
+                res.tooltip(refControl.getTooltip());
+	        }
+	    }
+		return res;
 	}
 	
 	@Override
@@ -555,6 +585,7 @@ public abstract class AbstractControl implements IControl, Mutable
 		this.uid= xmlToText(this.uid);
 		this.xpath = xmlToText(this.xpath);
 		this.ownerId = xmlToText(this.ownerId);
+		this.refId = xmlToText(this.refId);
 		this.clazz = xmlToText(this.clazz);
 		this.name = xmlToText(this.name);
 		this.title = xmlToText(this.title);
@@ -573,6 +604,7 @@ public abstract class AbstractControl implements IControl, Mutable
 		this.uid= textToXml(this.uid);;
 		this.xpath = textToXml(this.xpath);
 		this.ownerId = textToXml(this.ownerId);
+		this.refId = textToXml(this.refId);
 		this.clazz = textToXml(this.clazz);
 		this.name = textToXml(this.name);
 		this.title = textToXml(this.title);

@@ -143,6 +143,7 @@
     <xs:attribute name="xpath" type="xs:string"/>
     <xs:attribute name="useAbsoluteXpath" type="xs:boolean"/>
     <xs:attribute name="owner" type="xs:string"/>
+    <xs:attribute name="ref" type="xs:string"/>
     <xs:attribute name="class" type="xs:string"/>
     <xs:attribute name="name" type="xs:string"/>
     <xs:attribute name="title" type="xs:string"/>

@@ -21,8 +21,8 @@ public interface ISection
 	void 					addControl(IControl control) throws Exception;
 	void 					addControl(int index, IControl control) throws Exception;
 	IControl 				getFirstControl();
-	IControl 				getControlById(String name) throws Exception;
-	IControl 				getControlByIdAndValue(String name, Object obj) throws Exception;
+	IControl 				getControlById(String name);
+	IControl 				getControlByIdAndValue(String name, Object obj);
 	List<String> 			getControlsNames();
 	void 					setSection(SectionKind kind);
 	IWindow.SectionKind 	getSectionKind();

@@ -154,7 +154,7 @@ public class MatcherSelenium extends By
 		return sb.toString();
 	}
 
-	public String filterForLocator(Locator locator)
+	private String filterForLocator(Locator locator)
 	{
 		StringBuilder sb = new StringBuilder();
 		String separator = "";

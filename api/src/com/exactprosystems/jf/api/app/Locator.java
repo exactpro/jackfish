@@ -206,6 +206,7 @@ public class Locator implements Serializable
 		return this.useNumericHeader!= null && this.useNumericHeader;
 	}
 
+	@Deprecated
 	public boolean useAbsoluteXpath()
 	{
 		return this.useAbsoluteXpath != null && this.useAbsoluteXpath;
@@ -323,6 +324,37 @@ public class Locator implements Serializable
 		return isDummy(this.id) && isDummy(this.uid) && isDummy(this.xpath) && isDummy(this.clazz) && isDummy(this.name);
 	}
 
+	public Object get(LocatorFieldKind kind)
+	{
+	    if (kind == null)
+	    {
+	        return null;
+	    }
+	    
+	    switch (kind)
+        {
+            case UID:                   return this.uid;
+            case CLAZZ:                 return this.clazz;
+            case XPATH:                 return this.xpath;
+            case NAME:                  return this.name;
+            case TITLE:                 return this.title;
+            case ACTION:                return this.action;
+            case TEXT:                  return this.text;
+            case TOOLTIP:               return this.tooltip;
+            
+            case EXPRESSION:            return this.expression;
+            case COLUMNS:               return this.columns;
+            case WEAK:                  return this.weak;
+            case ADDITION:              return this.addition;
+            case VISIBILITY:            return this.visibility;
+            case USE_NUMERIC_HEADER:    return this.useNumericHeader;
+            case USE_ABSOLUTE_XPATH:    return this.useAbsoluteXpath;
+        }
+
+	    return null;
+	}
+	
+	
 	private boolean isDummy(String str)
 	{
 		return str != null && str.equals(IControl.DUMMY);
@@ -342,34 +374,20 @@ public class Locator implements Serializable
 	private ControlKind controlKind; 
 	private String id;
 
-	@LocatorFieldAttribute (kind = LocatorFieldKind.UID)
 	private String uid;
-    @LocatorFieldAttribute (kind = LocatorFieldKind.CLAZZ)
 	private String clazz;
-    @LocatorFieldAttribute (kind = LocatorFieldKind.XPATH)
 	private String xpath;
-    @LocatorFieldAttribute (kind = LocatorFieldKind.NAME)
 	private String name;
-    @LocatorFieldAttribute (kind = LocatorFieldKind.TITLE)
 	private String title;
-    @LocatorFieldAttribute (kind = LocatorFieldKind.ACTION)
 	private String action;
-    @LocatorFieldAttribute (kind = LocatorFieldKind.TEXT)
 	private String text;
-    @LocatorFieldAttribute (kind = LocatorFieldKind.TOOLTIP)
 	private String tooltip;
-    @LocatorFieldAttribute (kind = LocatorFieldKind.EXPRESSION)
 	private String expression;
-    @LocatorFieldAttribute (kind = LocatorFieldKind.COLUMNS)
 	private String columns;
-    @LocatorFieldAttribute (kind = LocatorFieldKind.WEAK)
 	private Boolean weak;
-    @LocatorFieldAttribute (kind = LocatorFieldKind.ADDITION)
 	private Addition addition;
-    @LocatorFieldAttribute (kind = LocatorFieldKind.VISIBILITY)
 	private Visibility visibility;
-    @LocatorFieldAttribute (kind = LocatorFieldKind.USE_NUMERIC_HEADER)
 	private Boolean useNumericHeader;
-    @LocatorFieldAttribute (kind = LocatorFieldKind.USE_ABSOLUTE_XPATH)
+	@Deprecated
 	private Boolean useAbsoluteXpath;
 }
