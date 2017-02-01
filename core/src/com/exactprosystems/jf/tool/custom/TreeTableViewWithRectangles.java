@@ -200,11 +200,12 @@ public class TreeTableViewWithRectangles
 
 	public void nextMark()
 	{
-		List<TreeItem<XpathTreeItem>> markedRows = getMarkedRows();
+		List<TreeItem<XpathTreeItem>> markedRows = getTreeItems();
 		if (markedRows.isEmpty())
 		{
 			return;
 		}
+
 		if (this.currentIndex == -1)
 		{
 			this.currentIndex = 0;
@@ -227,7 +228,7 @@ public class TreeTableViewWithRectangles
 
 	public void prevMark()
 	{
-		List<TreeItem<XpathTreeItem>> markedRows = getMarkedRows();
+		List<TreeItem<XpathTreeItem>> markedRows = getTreeItems();
 		if (markedRows.isEmpty())
 		{
 			return;
@@ -235,7 +236,6 @@ public class TreeTableViewWithRectangles
 		if (this.currentIndex == -1)
 		{
 			this.currentIndex = markedRows.size() - 1;
-			scrollToElement(markedRows.get(this.currentIndex));
 		}
 		else
 		{
@@ -251,6 +251,14 @@ public class TreeTableViewWithRectangles
 		TreeItem<XpathTreeItem> treeItem = markedRows.get(this.currentIndex);
 		scrollToElement(treeItem);
 		this.treeTableView.getSelectionModel().select(treeItem);
+	}
+
+	private List<TreeItem<XpathTreeItem>> getTreeItems()
+	{
+		return getMarkedRows()
+					.stream()
+					.filter(treeItem -> treeItem.getValue().isMarkVisible())
+					.collect(Collectors.toList());
 	}
 
 	public void setState(XpathTreeItem.TreeItemState state, boolean newValue)
