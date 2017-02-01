@@ -32,6 +32,8 @@ import java.util.Set;
 
 @MatrixItemAttribute(
         description 	= "Subroutine.",
+		examples 		= "#SubCase",
+		seeAlso 		= "Call, Return",
         shouldContain 	= { Tokens.SubCase },
         mayContain 		= { Tokens.Id, Tokens.Off, Tokens.RepOff },
         parents			= { TestCase.class, NameSpace.class },
@@ -175,18 +177,6 @@ public final class SubCase extends MatrixItem
 		ids = new HashSet<String>();
 		
 		super.checkItSelf(context, evaluator, listener, ids, parameters);
-	}
-
-	@Override
-	protected void docItSelf(Context context, ReportBuilder report)
-	{
-        ReportTable table;
-        table = report.addTable("", null, true, 100,
-                new int[] { 30, 70 }, new String[] { "Chapter", "Description"});
-
-        table.addValues("Destination", "SubCase is needed to make script shorter.");
-        table.addValues("Examples", "<code>#Id;#SubCase<p>ID;Description</code>");
-        table.addValues("See also", "<code>EndSubCase, Return</code>");
 	}
 
 	@Override

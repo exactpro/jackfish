@@ -28,7 +28,9 @@ import java.util.Map;
 import java.util.Set;
 
 @MatrixItemAttribute(
-		description 	= "Loop while condition is true.", 
+		description 	= "Loop while condition is true.",
+		examples 		= "#While",
+		seeAlso 		= "For, ForEach",
 		shouldContain 	= { Tokens.While },
 		mayContain 		= { Tokens.Off, Tokens.RepOff },
 		parents			= { Case.class, Else.class, For.class, ForEach.class, If.class,
@@ -115,18 +117,6 @@ public class While extends MatrixItem
 	public String getItemName()
 	{
 		return super.getItemName() + " " + this.condition;
-	}
-
-    @Override
-	protected void docItSelf(Context context, ReportBuilder report)
-	{
-        ReportTable table;
-        table = report.addTable("", null, true, 100,
-                new int[] { 30, 70 }, new String[] { "Chapter", "Description"});
-
-        table.addValues("Destination", "To organize a loop with precondition");
-        table.addValues("Examples", "<code>#While<p>true</code>");
-        table.addValues("See also", "For, Break, Continue");
 	}
     
     @Override

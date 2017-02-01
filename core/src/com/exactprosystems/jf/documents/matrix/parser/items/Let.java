@@ -31,7 +31,8 @@ import java.util.Map;
 import java.util.Set;
 
 @MatrixItemAttribute(
-		description 	= "Assigns value to a variable.", 
+		description 	= "Need to assigns a value to a variable, or just evaluates an expression.",
+		examples 		= "#Let",
 		shouldContain 	= { Tokens.Let },
 		mayContain 		= { Tokens.Id, Tokens.Off, Tokens.RepOff, Tokens.Global }, 
 		parents			= { Case.class, Else.class, For.class, ForEach.class, If.class,
@@ -103,18 +104,6 @@ public class Let extends MatrixItem
 			throws MatrixException
 	{
 		this.value.setExpression(systemParameters.get(Tokens.Let));
-	}
-
-	@Override
-	protected void docItSelf(Context context, ReportBuilder report)
-	{
-        ReportTable table;
-        table = report.addTable("", null, true, 100,
-                new int[] { 30, 70 }, new String[] { "Chapter", "Description"});
-
-        table.addValues("Destination", "Assigns a value to a variable, or just evaluates an expression.");
-        table.addValues("Examples", "<code>#Id;#Let<p>a;123</code>");
-        table.addValues("See also", "Action vars");
 	}
 
     @Override

@@ -16,6 +16,8 @@ import com.exactprosystems.jf.api.common.ApiVersionInfo;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.common.MatrixRunner;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
+import com.exactprosystems.jf.common.report.ContextHelpBuilder;
+import com.exactprosystems.jf.common.report.HelpBuilder;
 import com.exactprosystems.jf.common.report.HelpFactory;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.common.version.VersionInfo;
@@ -59,6 +61,7 @@ import javafx.util.Duration;
 import org.apache.log4j.Logger;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.StringReader;
 import java.nio.file.Paths;
@@ -544,65 +547,10 @@ public abstract class DialogsHelper
 
 	public static void showActionsHelp(DocumentFactory factory)
 	{
-		try (Context context = factory.createContext())
+		try
 		{
-			Matrix matrix = factory.createMatrix("helpMatrix", new MatrixRunner(context, "help", new StringReader(""), new Date(), null)); // TODO check if the help works
-
-			MatrixItem syntax = new HelpChapter("Matrix syntax");
-			syntax.init(matrix);
-			int ch = 0;
-			matrix.insert(null, ch++, syntax);
-			int i = 0;
-			syntax.insert(i++, new NameSpace());
-			syntax.insert(i++, new TestCase());
-			syntax.insert(i++, new Step());
-			syntax.insert(i++, new Let());
-			syntax.insert(i++, new Assert());
-			syntax.insert(i++, new SubCase());
-			syntax.insert(i++, new Return());
-			syntax.insert(i++, new Call());
-			syntax.insert(i++, new If());
-			syntax.insert(i++, new Else());
-			syntax.insert(i++, new For());
-			syntax.insert(i++, new ForEach());
-			syntax.insert(i++, new While());
-			syntax.insert(i++, new Continue());
-			syntax.insert(i++, new Break());
-			syntax.insert(i++, new OnError());
-			syntax.insert(i++, new Switch());
-			syntax.insert(i++, new Case());
-			syntax.insert(i++, new Default());
-			syntax.insert(i++, new ReportOn());
-			syntax.insert(i++, new ReportOff());
-			syntax.insert(i++, new Fail());
-			syntax.insert(i++, new RawTable());
-			syntax.insert(i++, new RawMessage());
-			syntax.insert(i++, new RawText());
-
-			MatrixItem actions = new HelpChapter("All actions by groups");
-			matrix.insert(null, ch++, actions);
-
-			i = 0;
-			Map<ActionGroups, MatrixItem> map = new HashMap<>();
-			for (ActionGroups actionGroups : ActionGroups.values())
-			{
-				MatrixItem chapter = new HelpChapter(actionGroups.name());
-				chapter.init(matrix);
-				actions.insert(actions.count(), chapter);
-				map.put(actionGroups, chapter);
-			}
-
-			i = 0;
-			for (Class<?> action : ActionsList.actions)
-			{
-				ActionGroups actionGroups = action.getAnnotation(ActionAttribute.class).group();
-				MatrixItem chapter = map.get(actionGroups);
-				ActionItem actionItem = new ActionItem(action.getSimpleName());
-				actionItem.init(matrix);
-				chapter.insert(chapter.count(), actionItem);
-			}
 			ReportBuilder report = new HelpFactory().createReportBuilder(null, null, new Date());
-			matrix.documentation(context, report);
+			((HelpBuilder) report).helpCreate(report);
 			displayHelp(report.getContent());
 		}
 		catch (Exception e)

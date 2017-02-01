@@ -22,6 +22,8 @@ import com.exactprosystems.jf.documents.matrix.parser.Tokens;
 public @interface MatrixItemAttribute
 {
 	String description();
+	String seeAlso() default "";
+	String examples() default "";
 	Tokens[] shouldContain();
 	Tokens[] mayContain();
 	Class<?>[] parents() default {};

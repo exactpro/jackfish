@@ -24,13 +24,15 @@ import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
 import java.util.List;
 
 @MatrixItemAttribute(
-		description 	= "Break chain of execution into loops or blocks.", 
+		description 	= "Break chain of execution into loops or blocks.",
+		examples 		= "{{##Break#}}",
+		seeAlso 		= "For, While, {{@Continue@}}",
 		shouldContain 	= { Tokens.Break },
 		mayContain 		= { Tokens.Off, Tokens.RepOff },
 		parents			= { Case.class, Else.class, For.class, ForEach.class, If.class,
 							OnError.class, Step.class, SubCase.class, TestCase.class, While.class },
 		real			= true,
-		hasValue 		= false, 
+		hasValue 		= false,
 		hasParameters 	= false,
         hasChildren 	= false
 	)
@@ -51,23 +53,10 @@ public class Break extends MatrixItem
 		return layout;
 	}
 
-    @Override
-	protected void docItSelf(Context context, ReportBuilder report)
-	{
-        ReportTable table;
-        table = report.addTable("", null, true, 100,
-                new int[] { 30, 70 }, new String[] { "Chapter", "Description"});
-
-        table.addValues("Destination", "To break loops for and while");
-        table.addValues("Examples", "<code>#Break</code>");
-        table.addValues("See also", "For, While, Continue");
-	}
-	
-
 	@Override
 	protected ReturnAndResult executeItSelf(long start, Context context, IMatrixListener listener, AbstractEvaluator evaluator, ReportBuilder report, Parameters parameters)
 	{
-		return new ReturnAndResult(start, Result.Break); 
+		return new ReturnAndResult(start, Result.Break);
 	}
 
     @Override

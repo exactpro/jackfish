@@ -30,7 +30,9 @@ import java.util.Map;
 import java.util.Set;
 
 @MatrixItemAttribute(
-		description 	= "Test case.", 
+		description 	= "TestCase is needed to make script shorter.",
+		examples 		= "{{##Id;#TestCase<p>ID;Description#}}",
+		seeAlso 		= "Step",
 		shouldContain 	= { Tokens.TestCase },
 		mayContain 		= { Tokens.Id, Tokens.RepOff, Tokens.Off, Tokens.Kind, Tokens.For, Tokens.Depends },
 		parents			= { MatrixRoot.class },
@@ -200,18 +202,6 @@ public final class TestCase extends MatrixItem
 		}
 	}
 
-	@Override
-	protected void docItSelf(Context context, ReportBuilder report)
-	{
-        ReportTable table;
-        table = report.addTable("", null, true, 100,
-                new int[] { 30, 70 }, new String[] { "Chapter", "Description"});
-
-        table.addValues("Destination", "TestCase is needed to make script shorter.");
-        table.addValues("Examples", "<code>#Id;#TestCase<p>ID;Description</code>");
-        table.addValues("See also", "");
-	}
-	
 	@Override
 	protected ReturnAndResult executeItSelf(long start, Context context, IMatrixListener listener, AbstractEvaluator evaluator, ReportBuilder report, Parameters parameters)
 	{

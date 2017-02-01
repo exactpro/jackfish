@@ -11,7 +11,9 @@ import com.exactprosystems.jf.documents.matrix.parser.Tokens;
 import java.util.List;
 
 @MatrixItemAttribute(
-		description 	= "Executed if all cases are not suitable.", 
+		description 	= "Executed if all cases are not suitable.",
+		examples 		= "#Default",
+		seeAlso 		= "For, While, Break",
 		shouldContain 	= { Tokens.Default },
 		mayContain 		= { Tokens.Off, Tokens.RepOff }, 
 		parents			= { Switch.class },
@@ -36,18 +38,6 @@ public class Default extends MatrixItem
 		driver.showTitle(this, layout, 1, 0, Tokens.Default.get(), context.getFactory().getSettings());
 
 		return layout;
-	}
-
-    @Override
-	protected void docItSelf(Context context, ReportBuilder report)
-	{
-        ReportTable table;
-        table = report.addTable("", null, true, 100,
-                new int[] { 30, 70 }, new String[] { "Chapter", "Description"});
-
-        table.addValues("Destination", "Switch's alternative branch");
-        table.addValues("Examples", "<code>#Default</code>");
-        table.addValues("See also", "Switch");
 	}
 
 	@Override

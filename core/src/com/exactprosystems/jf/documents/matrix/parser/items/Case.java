@@ -26,7 +26,9 @@ import java.util.Map;
 import java.util.Set;
 
 @MatrixItemAttribute(
-		description 	= "Choices one variant in a switch.", 
+		description 	= "Choices one variant in a switch.",
+		examples 		= "#Case",
+		seeAlso 		= "Switch",
 		shouldContain 	= { Tokens.Case },
 		mayContain 		= { Tokens.Off, Tokens.RepOff }, 
         closes			= Switch.class,
@@ -107,18 +109,6 @@ public class Case extends MatrixItem
 	{
 		return SearchHelper.matches(Tokens.Case.get(), what, caseSensitive, wholeWord) ||
 				SearchHelper.matches(this.variant.getExpression(), what, caseSensitive, wholeWord);
-	}
-
-	@Override
-	protected void docItSelf(Context context, ReportBuilder report)
-	{
-        ReportTable table;
-        table = report.addTable("",  null, true, 100,
-                new int[] { 30, 70 }, new String[] { "Chapter", "Description"});
-
-        table.addValues("Destination", "Switch's branch");
-        table.addValues("Examples", "<code>#Case</code>");
-        table.addValues("See also", "Switch");
 	}
 
     @Override

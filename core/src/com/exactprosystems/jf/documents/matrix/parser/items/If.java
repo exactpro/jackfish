@@ -30,6 +30,8 @@ import java.util.Set;
 
 @MatrixItemAttribute(
         description 	= "Condition executing.",
+		examples 		= "#If",
+		seeAlso 		= "Else",
         shouldContain 	= { Tokens.If },
         mayContain 		= { Tokens.Off, Tokens.RepOff },
 		parents			= { Case.class, Else.class, For.class, ForEach.class, If.class,

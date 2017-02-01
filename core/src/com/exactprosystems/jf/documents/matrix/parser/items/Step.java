@@ -38,7 +38,9 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @MatrixItemAttribute(
-		description 	= "Elementary step in the script", 
+		description 	= "Elementary step in the script",
+		examples 		= "#Step",
+		seeAlso 		= "TestCase",
 		shouldContain 	= { Tokens.Step },
 		mayContain 		= { Tokens.IgnoreErr, Tokens.Off, Tokens.Kind, Tokens.RepOff },
 		parents			= { Case.class, Else.class, For.class, ForEach.class, If.class,
@@ -140,18 +142,6 @@ public class Step extends MatrixItem
 	public String getItemName()
 	{
 		return super.getItemName() + " " + this.identify.getExpression();
-	}
-
-    @Override
-	protected void docItSelf(Context context, ReportBuilder report)
-	{
-        ReportTable table;
-        table = report.addTable("", null, true, 100,
-                new int[] { 30, 70 }, new String[] { "Chapter", "Description"});
-
-        table.addValues("Destination", "To organize a loop with precondition");
-        table.addValues("Examples", "<code>#Step<p>1 + ' small step'</code>");
-        table.addValues("See also", "TestCase");
 	}
     
     @Override

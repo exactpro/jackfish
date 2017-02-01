@@ -29,7 +29,9 @@ import java.util.Map;
 import java.util.Set;
 
 @MatrixItemAttribute(
-		description 		= "Make this TestCase failed.", 
+		description 		= "Make this TestCase failed.",
+		examples 			= "#Fail",
+		seeAlso 			= "TestCase",
 		shouldContain 		= { Tokens.Fail }, 
 		mayContain 			= { Tokens.Off, Tokens.RepOff }, 
 		parents				= { Case.class, Else.class, For.class, ForEach.class, If.class,
@@ -91,17 +93,6 @@ public class Fail extends MatrixItem
 	protected void initItSelf(Map<Tokens, String> systemParameters) throws MatrixException
 	{
 		this.failValue.setExpression(systemParameters.get(Tokens.Fail));
-	}
-
-	@Override
-	protected void docItSelf(Context context, ReportBuilder report)
-	{
-		ReportTable table;
-		table = report.addTable("", null, true, 100, new int[] { 30, 70 }, new String[] { "Chapter", "Description" });
-
-		table.addValues("Destination", "Make this TestCase failed");
-		table.addValues("Examples", "<code>#Fail<p>'Error due the condition'</code>");
-		table.addValues("See also", "TesCase");
 	}
 
 	@Override
