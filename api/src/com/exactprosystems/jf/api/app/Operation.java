@@ -183,6 +183,21 @@ public class Operation implements Iterable<Part>, Serializable
 		return this;
 	}
 
+    @DescriptionAttribute(text = Do.sequence)
+    public Operation sequence(String text)
+    {
+        for (char ch : text.toCharArray())
+        {
+            ch = Character.toUpperCase(ch);
+            Keyboard key = Keyboard.byChar(ch);
+            if (key != null)
+            {
+                this.list.add(new Part(OperationKind.PRESS).setKey(key));
+            }
+        }
+        return this;
+    }
+
 	@DescriptionAttribute(text = Do.press)
 	public Operation press(Keyboard key)
 	{

@@ -12,17 +12,35 @@ import java.io.Serializable;
 
 public enum Keyboard implements Serializable
 {
-	ESCAPE, F1, F2, F3, F4, F5, F6, F7, F8, F9, F10, F11, F12,
+	ESCAPE(null), F1(null), F2(null), F3(null), F4(null), F5(null), F6(null), F7(null), F8(null), F9(null), F10(null), F11(null), F12(null),
+	DIG1('1'), DIG2('2'), DIG3('3'), DIG4('4'), DIG5('5'), DIG6('6'), DIG7('7'), DIG8('8'), DIG9('9'), DIG0('0'), BACK_SPACE(null),               INSERT(null), HOME(null), PAGE_UP(null),
+	TAB(null),		  Q('Q'), W('W'), E('E'), R('R'), T('T'), Y('Y'), U('U'), I('I'), O('O'), P('P'), SLASH('/'), BACK_SLASH('\\'),				  DELETE(null), END(null), PAGE_DOWN(null),
+	CAPS_LOCK(null),   A('A'), S('S'), D('D'), F('F'), G('G'), H('H'), J('J'), K('K'), L('L'), SEMICOLON('|'), QUOTE('\''), DOUBLE_QUOTE('"'), ENTER(null),
+	SHIFT(null),		Z('Z'), X('X'), C('C'), V('V'), B('B'), N('N'), M('M'),						DOT('.'),	 					UP(null),
+	CONTROL(null),	ALT(null), SPACE(' '),														LEFT(null),DOWN(null),RIGHT(null),
 
-	DIG1, DIG2, DIG3, DIG4, DIG5, DIG6, DIG7, DIG8, DIG9, DIG0,BACK_SPACE,		INSERT, HOME, PAGE_UP,
-	TAB,		Q, W, E, R, T, Y, U, I, O, P,SLASH, BACK_SLASH,					DELETE, END, PAGE_DOWN,
-	CAPS_LOCK,	A, S, D, F, G, H, J, K, L, SEMICOLON, QUOTE, DOUBLE_QUOTE, ENTER,
-	SHIFT,		Z, X, C, V, B, N, M,						DOT,	 					UP,
-	CONTROL,	ALT, SPACE,														LEFT,DOWN,RIGHT,
-
-	PLUS, MINUS,
-	UNDERSCORE
+	PLUS('+'), MINUS('-'),
+	UNDERSCORE('_')
 	;
+
+    private Keyboard(Character ch)
+    {
+        this.ch = ch;
+    }
+    
+    static Keyboard byChar(char ch)
+    {
+        for (Keyboard keyboard : values())
+        {
+            if (keyboard.ch != null && keyboard.ch == ch)
+            {
+                return keyboard;
+            }
+        }
+        return null;
+    }
+    
+    private Character ch; 
 
 	private static final long serialVersionUID = -1378685462384062328L;
 }

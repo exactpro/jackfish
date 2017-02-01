@@ -185,6 +185,13 @@ public class Do
 		return new Operation().push();
 	}
 
+	static final String sequence = "Converts @text to keypress sequence for current component";
+    @DescriptionAttribute(text = Do.sequence)
+    public static Operation sequence(String text)
+    {
+        return new Operation().sequence(text);
+    }
+	
 	static final String press = "Press @key on current component. See valid variant of @Keyboard";
 	@DescriptionAttribute(text = Do.press)
 	public static Operation press(Keyboard key)
