@@ -453,7 +453,7 @@ public abstract class Common
 		}
 		catch (Exception e)
 		{
-			e.printStackTrace();
+		    logger.error(e.getMessage(), e);
 			return "";
 		}
 	}
