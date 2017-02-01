@@ -342,19 +342,34 @@ public class Locator implements Serializable
 	private ControlKind controlKind; 
 	private String id;
 
+	@LocatorFieldAttribute (kind = LocatorFieldKind.UID)
 	private String uid;
+    @LocatorFieldAttribute (kind = LocatorFieldKind.CLAZZ)
 	private String clazz;
+    @LocatorFieldAttribute (kind = LocatorFieldKind.XPATH)
 	private String xpath;
+    @LocatorFieldAttribute (kind = LocatorFieldKind.NAME)
 	private String name;
+    @LocatorFieldAttribute (kind = LocatorFieldKind.TITLE)
 	private String title;
+    @LocatorFieldAttribute (kind = LocatorFieldKind.ACTION)
 	private String action;
+    @LocatorFieldAttribute (kind = LocatorFieldKind.TEXT)
 	private String text;
+    @LocatorFieldAttribute (kind = LocatorFieldKind.TOOLTIP)
 	private String tooltip;
+    @LocatorFieldAttribute (kind = LocatorFieldKind.EXPRESSION)
 	private String expression;
+    @LocatorFieldAttribute (kind = LocatorFieldKind.COLUMNS)
 	private String columns;
+    @LocatorFieldAttribute (kind = LocatorFieldKind.WEAK)
 	private Boolean weak;
+    @LocatorFieldAttribute (kind = LocatorFieldKind.ADDITION)
 	private Addition addition;
+    @LocatorFieldAttribute (kind = LocatorFieldKind.VISIBILITY)
 	private Visibility visibility;
+    @LocatorFieldAttribute (kind = LocatorFieldKind.USE_NUMERIC_HEADER)
 	private Boolean useNumericHeader;
+    @LocatorFieldAttribute (kind = LocatorFieldKind.USE_ABSOLUTE_XPATH)
 	private Boolean useAbsoluteXpath;
 }

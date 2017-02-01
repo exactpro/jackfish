@@ -95,7 +95,7 @@ public abstract class RemoteApplication implements IRemoteApplication
 		{
 			exceptionIfNull(args, "args", "run");
 
-			return connectDerived(args, this.metricsCounter);
+			return connectDerived(args);
 		}
 		catch (RemoteException e)
 		{
@@ -115,7 +115,7 @@ public abstract class RemoteApplication implements IRemoteApplication
 		{
 			exceptionIfNull(args, "args", "run");
 
-			return runDerived(args, this.metricsCounter);
+			return runDerived(args);
 		}
 		catch (RemoteException e)
 		{
@@ -546,62 +546,12 @@ public abstract class RemoteApplication implements IRemoteApplication
 		}
 	}
 
-	@Override
-	public void subscribe(long id, HistogramMetric metric, int interval, int intervalCount) throws RemoteException
-	{
-		try
-		{
-			this.metricsCounter.subscribe(id, metric, interval, intervalCount);
-		}
-		catch (Exception e)
-		{
-			String msg = String.format("Error on subscribe(%s, %s, %s, %s)", id, metric, interval, intervalCount);
-			throw new ProxyException(msg, e.getMessage(), e);
-		}
-	}
-
-	@Override
-	public void listening(long id, boolean isStart) throws RemoteException
-	{
-		try
-		{
-			this.metricsCounter.listening(id, isStart);
-		}
-		catch (RemoteException e)
-		{
-			throw e;
-		}
-		catch (Exception e)
-		{
-			String msg = String.format("Error on listening(%s, %s)", id, isStart);
-			throw new ProxyException(msg, e.getMessage(), e);
-		}
-	}
-
-	@Override
-	public List<Long> getMetrics(long id) throws RemoteException
-	{
-
-		try
-		{
-			return this.metricsCounter.getCopyDate(id);
-		}
-		catch (RemoteException e)
-		{
-			throw e;
-		}
-		catch (Exception e)
-		{
-			String msg = String.format("Error on getMetrics(%s)", id);
-			throw new ProxyException(msg, e.getMessage(), e);
-		}
-	}
 
 	protected abstract void createLoggerDerived(String logName, String serverLogLevel, String serverLogPattern) throws Exception;
 
-	protected abstract int connectDerived(Map<String, String> args, MetricsCounter metricsCounter) throws Exception;
+	protected abstract int connectDerived(Map<String, String> args) throws Exception;
 
-	protected abstract int runDerived(Map<String, String> args, MetricsCounter metricsCounter) throws Exception;
+	protected abstract int runDerived(Map<String, String> args) throws Exception;
 
 	protected abstract void stopDerived() throws Exception;
 	
@@ -687,8 +637,6 @@ public abstract class RemoteApplication implements IRemoteApplication
 			throw new NullPointerException("Parameter '" + message + "' is null in call '" + methodName + "'");
 		}
 	}
-
-	private MetricsCounter metricsCounter = new MetricsCounter();
 
 	private static List<IRemoteApplication> services = new ArrayList<IRemoteApplication>();
 
