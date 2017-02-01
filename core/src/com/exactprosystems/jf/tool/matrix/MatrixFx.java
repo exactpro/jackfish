@@ -12,6 +12,7 @@ import com.exactprosystems.jf.actions.ReadableValue;
 import com.exactprosystems.jf.api.app.AppConnection;
 import com.exactprosystems.jf.api.common.IMatrixRunner;
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.api.common.Sys;
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
@@ -536,33 +537,12 @@ public class MatrixFx extends Matrix
 	{
 		Parser parser = new Parser();
 		String string = parser.itemsToString(list.toArray(new MatrixItem[0]));
-		Common.saveToClipboard(string);
+		Sys.copyToClipboard(string);
 	}
-
-//	public void paste(MatrixItem where) throws Exception
-//	{
-//		String string = Common.getFromClipboard();
-//		Parser parser = new Parser();
-//		MatrixItem[] items = parser.stringToItems(string);
-//
-//		if (where != null && items != null)
-//		{
-//			MatrixItem parent = where.getParent();
-//			int index = parent.index(where);
-//			for (MatrixItem item : items)
-//			{
-//				item.init(this);
-//				insert(parent, index++, item);
-//			}
-//		}
-//		enumerate();
-//		this.controller.refresh();
-//		super.changed(true);
-//	}
 
 	public void paste(MatrixItem where) throws Exception
 	{
-		String string = Common.getFromClipboard();
+		String string = Sys.getFromClipboard();
 		Parser parser = new Parser();
 		MatrixItem[] items = parser.stringToItems(string);
 

@@ -116,7 +116,12 @@ public final class For extends MatrixItem
 	@Override
 	public String getItemName()
 	{
-		return super.getItemName() + " " + this.var + " = " + this.from + " to " + this.to + " step " + this.step;
+		return super.getItemName()
+				+ " "
+				+ (this.var.toString().equals("") ? this.var : this.var + " = ")
+				+ (this.from.getExpression() == null ? "" : this.from + " ")
+				+ (this.to.getExpression() == null ? "" : this.to + " ")
+				+ (this.step.getExpression() == null ? "" : this.step);
 	}
 	
 	@Override

@@ -33,7 +33,7 @@ import com.exactprosystems.jf.functions.Table;
 		outputType				= Table.class,
 		seeAlso 				= "{{@RawTable@}}, {{@TableLoadFromDir@}}, {{@TableCreate@}}, {{@TableSelect@}}",
 		examples 				=
-				"{{`1. Get table downloaded from file testTable.csv divided internally with '|'. Verify that table is downloaded correctly.`}}"
+				"{{`1. Get table downloaded from file testTable.csv divided internally with '|'. Verify that table is downloaded correctly.`}} "
 				+ "{{##Id;#Action;#Assert;#File;#Delimiter\n"
 				+ "TLFF;TableLoadFromFile;TLFF.Out.size() > 0;'PathToFile/testTable.csv';'|'#}}"
 	)

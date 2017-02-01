@@ -398,29 +398,27 @@ public class HelpBuilder extends ReportBuilder
 		helpForActions(report);
 		chapterFinish();
 		report.reportFinished(0,0,new Date(),new Date());
-
 	}
 
 
 	private void makeItemHelp(ReportBuilder report) throws IllegalAccessException, InstantiationException {
 
 		MatrixItem tmp;
-		for (Class clazz : Parser.knownItems)
+		for (Class<?> clazz : Parser.knownItems)
 		{
-			tmp = (MatrixItem) clazz.newInstance();
 
-
-			Class<?> type = clazz;
-			MatrixItemAttribute attribute = type.getAnnotation(MatrixItemAttribute.class);
-			if (attribute == null) {
+			MatrixItemAttribute attribute = clazz.getAnnotation(MatrixItemAttribute.class);
+			if (attribute == null)
+			{
 				return;
 			}
 
-			if (!attribute.real())
+			if (!attribute.real() || clazz.getSimpleName().equals("ActionItem") || clazz.getSimpleName().equals("TempItem"))
 			{
 				continue;
 			}
 
+			tmp = (MatrixItem) clazz.newInstance();
 			report.itemStarted(tmp);
 			report.itemIntermediate(tmp);
 			ReportTable table = report.addTable("", null, true, 100,
@@ -444,10 +442,10 @@ public class HelpBuilder extends ReportBuilder
 				report.itemIntermediate(tmp);
 				ReportTable table;
 
-				Class<?> type = clazz;
-				ActionAttribute attr = type.getAnnotation(ActionAttribute.class);
 
-				table = report.addTable("", null, true, 100,
+				ActionAttribute attr = clazz.getAnnotation(ActionAttribute.class);
+
+				table = report.addTable("", null, true, 0,
 						new int[] { 30, 70 }, getClass().getSimpleName(), "");
 
 				table.addValues("Description", attr.generalDescription());
@@ -465,7 +463,7 @@ public class HelpBuilder extends ReportBuilder
 
 
 				// Input
-				Field[] fields = type.getDeclaredFields();
+				Field[] fields = clazz.getDeclaredFields();
 				table = report.addTable("Input:", null, true, 4,
 						new int[] {0, 0, 60, 0, 0}, "Field name", "Field type", "Description", "Mandatory");
 				table.addValues();
@@ -490,10 +488,10 @@ public class HelpBuilder extends ReportBuilder
 	}
 
 	private void chapterStart(String chapter) throws IOException {
-		this.menuWriter.fwrite("<li role='presentation' class='mParent' id='%s'>\n", chapter.replaceAll("\\s+",""));
+		this.menuWriter.fwrite("<li role='presentation' class='mParent' id='%s'>\n", chapter);
 		this.menuWriter.fwrite("<a href='#'>%s<span class='caret'></span></a>\n", chapter);
 		this.menuWriter.fwrite("</li>\n");
-		this.menuWriter.fwrite("<ul class='nav nav-pills nav-stacked deepNav navChild' id='%s_child'>", chapter.replaceAll("\\s+", ""));
+		this.menuWriter.fwrite("<ul class='nav nav-pills nav-stacked deepNav navChild' id='%s_child'>", chapter);
 	}
 
 	private void chapterFinish() throws IOException {

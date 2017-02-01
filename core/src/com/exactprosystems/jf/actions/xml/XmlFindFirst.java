@@ -30,7 +30,7 @@ import com.exactprosystems.jf.functions.Xml;
 		outputDescription 		= "Link to Xml structure that contains the search result.",
 		outputType				= Xml.class,
 		examples 				= "{{`1. Create an object by downloading it from the file.`}}"
-				+ "{{`Contents of an xml file:`}}"
+				+ "{{`Contents of an xml file:`}} "
 				+ "{{#<note> \n"
 				+ "<to>\n"
 				+ "<friend>\n"
@@ -47,7 +47,7 @@ import com.exactprosystems.jf.functions.Xml;
 				+ "</note>#}}"
 				+ "\n"
 				+ "{{`2. Find the first element name.`}}"
-				+ "{{`3. Check the output.`}}"
+				+ "{{`3. Check the output.`}} "
 				+ "{{##Id;#Action;#File\n"
 				+ "XML2;XmlLoadFromFile;'/path/Xml.xml'\n"
 				+ "\n"

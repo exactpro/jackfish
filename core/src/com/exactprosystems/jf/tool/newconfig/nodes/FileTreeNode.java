@@ -7,6 +7,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.exactprosystems.jf.tool.newconfig.nodes;
 
+import com.exactprosystems.jf.api.common.Sys;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.newconfig.ConfigurationTreeView;
 
@@ -34,7 +35,7 @@ public class FileTreeNode extends TreeNode
 		ContextMenu value = ConfigurationTreeView.gitContextMenu(getFile());
 
 		MenuItem copyName = new MenuItem("Copy name");
-		copyName.setOnAction(e -> Common.saveToClipboard(this.file.getName()));
+		copyName.setOnAction(e -> Sys.copyToClipboard(this.file.getName()));
 		value.getItems().add(0, copyName);
 
 		return Optional.of(value);

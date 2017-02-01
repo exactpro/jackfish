@@ -54,6 +54,7 @@ public class ActionsList
 		        ServiceStart.class,
 		        ServiceStop.class,
 		        Check.class,
+		        Compare.class,
 		        DesktopScreenshot.class,
 		        DialogCheckLayout.class,
 		        DialogClose.class,

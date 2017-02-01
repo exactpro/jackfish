@@ -7,6 +7,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.exactprosystems.jf.tool.custom.grideditor;
 
+import com.exactprosystems.jf.api.common.Sys;
 import com.exactprosystems.jf.exceptions.ColumnIsPresentException;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
@@ -266,6 +267,16 @@ public class SpreadsheetView extends Control
 			DialogsHelper.showError(e.getMessage());
 			//this.providerProperty().get().setColumnName(this.columns.indexOf(column), oldValue);
 		}
+	}
+
+	public void switchColumn(boolean on, int columnIndex)
+	{
+		int rowCount = this.providerProperty().get().rowCount();
+		for (int i = 0; i < rowCount; i++)
+		{
+			this.providerProperty.get().setCellValue(columnIndex, i, on ? "" : "x");
+		}
+		this.setDataProvider(providerProperty.get());
 	}
 
 	public void addRowBefore(Integer row)
@@ -589,12 +600,12 @@ public class SpreadsheetView extends Control
 			copyString.append(rows.get(row).get(column).getText());
 			copyString.append("\t");
 		}
-		Common.saveToClipboard(copyString.toString());
+		Sys.copyToClipboard(copyString.toString());
 	}
 
 	private void paste(boolean withHeader)
 	{
-		String text = Common.getFromClipboard();
+		String text = Sys.getFromClipboard();
 		List<TablePosition> selectedCells = this.getSelectionModel().getSelectedCells();
 		if (selectedCells.size() != 1)
 		{

@@ -96,7 +96,7 @@ public class Let extends MatrixItem
     @Override
 	public String getItemName()
 	{
-		return super.getItemName() + " " + this.value.getExpression();
+		return super.getItemName() + " " + (this.value.getExpression() == null ? "" : this.value.getExpression());
 	}
 
 	@Override

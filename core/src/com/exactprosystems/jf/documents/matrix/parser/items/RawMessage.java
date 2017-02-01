@@ -159,7 +159,8 @@ public class RawMessage extends MatrixItem
 	@Override
 	public String getItemName()
 	{
-		return super.getItemName() + " Client:" + this.clientName + " Message type:" + this.typeName;
+		return super.getItemName() + (this.clientName.toString().equals("") ? "" : " Client:" + this.clientName)
+				+ (this.typeName.toString().equals("") ? "" : " Message type:" + this.typeName);
 	}
 
 	@Override

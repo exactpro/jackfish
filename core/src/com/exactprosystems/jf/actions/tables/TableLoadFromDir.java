@@ -33,7 +33,7 @@ import java.io.File;
                 + " table is created with column titles and 0 rows.",
         outputType = Table.class,
         seeAlso 			  = "{{@RawTable@}}, {{@TableCreate@}}, {{@TableLoadFromFile@}}, {{@TableSelect@}}",
-        examples              ="{{`1. Create a table with information about files/folders in directory Home.`}}"
+        examples              ="{{`1. Create a table with information about files/folders in directory Home.`}}\n"
                 + "{{##Id;#Action;#Dir\n"
                 + "TBLD1;TableLoadFromDir;System.getProperty('user.home')#}}"
 )

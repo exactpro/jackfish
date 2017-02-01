@@ -92,7 +92,7 @@ public class Switch extends MatrixItem
 	@Override
 	public String getItemName()
 	{
-		return super.getItemName() + " " + this.switcher;
+		return super.getItemName() + " " + (this.switcher.getExpression() == null ? "" :  ": " + this.switcher.getExpression());
 	}
 
 	@Override

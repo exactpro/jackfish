@@ -28,7 +28,7 @@ import com.exactprosystems.jf.functions.Table;
 		seeAlso = "{{@TableReplace@}}, {{@TableAddColumns@}}, {{@TableConsiderColumnAs@}}, {{@TableColumnRename@}}",
 		examples = "{{`1. Create a table with columns Name and Age. Add values to the first line of the table.`}}"
 				+ "{{`2. Set the value for the columns Name and Age 'John' and '42' in the first line.`}}"
-				+ "{{`3. Verify that the new values were inserted correctly.`}}"
+				+ "{{`3. Verify that the new values were inserted correctly. `}}"
 				+ "{{##Id;#RawTable\n"
 				+ "TC;Table\n"
 				+ "@;Name;Age\n"

@@ -92,7 +92,7 @@ public class If extends MatrixItem
 	@Override
 	public String getItemName()
 	{
-		return super.getItemName() + " " + this.condition;
+		return super.getItemName() + " " + (this.condition.getExpression() == null ? "" : this.condition);
 	}
 
 	@Override

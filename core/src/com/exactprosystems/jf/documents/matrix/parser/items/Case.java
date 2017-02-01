@@ -89,7 +89,7 @@ public class Case extends MatrixItem
 	@Override
 	public String getItemName()
 	{
-		return super.getItemName() + " " + this.variant;
+		return super.getItemName() + " " + (this.variant.getExpression() == null ? "" : ": " + this.variant.getExpression());
 	}
 	
 	@Override

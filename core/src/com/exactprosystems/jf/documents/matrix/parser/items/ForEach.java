@@ -106,7 +106,7 @@ public final class ForEach extends MatrixItem
 	@Override
 	public String getItemName()
 	{
-		return super.getItemName() + " " + this.var + " In " + this.in.getExpression();
+		return super.getItemName() + " " + this.var + (this.in.getExpression() == null ? "" : " In " + this.in.getExpression());
 	}
 
 	@Override

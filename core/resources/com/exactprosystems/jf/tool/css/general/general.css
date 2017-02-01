@@ -218,6 +218,36 @@
 
 }
 
+/*Dialog wizard*/
+#cbMark {
+	-fx-graphic : url('icons/check.png')
+
+}
+#cbAdd {
+	-fx-graphic : url('icons/add_16.png')
+
+}
+#cbQuestion{
+	-fx-graphic : url('icons/question_mark.png')
+
+}
+#cbRemoved {
+	-fx-graphic : url('icons/delete_16.png')
+
+}
+#btnEdit {
+	-fx-graphic : url('icons/edit_16.png')
+
+}
+#btnRemove {
+	-fx-graphic : url('icons/delete_16.png')
+
+}
+#btnWizard {
+	-fx-graphic : url('icons/wizard.png')
+
+}
+
 /*Actions controller*/
 .imageArea {
 	-fx-background-image : url("icons/texture.png");

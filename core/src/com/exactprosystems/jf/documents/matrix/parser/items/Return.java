@@ -92,7 +92,7 @@ public class Return extends MatrixItem
     @Override
 	public String getItemName()
 	{
-		return super.getItemName() + " " + this.returnValue;
+		return super.getItemName() + " " + (this.returnValue.getExpression() == null ? "" : ": " + this.returnValue.getExpression());
 	}
 
 	@Override

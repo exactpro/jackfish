@@ -22,6 +22,7 @@ import com.exactprosystems.jf.documents.guidic.controls.AbstractControl;
 import com.exactprosystems.jf.tool.ApplicationConnector;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.dictionary.DictionaryFxController.Result;
+import com.exactprosystems.jf.tool.dictionary.dialog.DialogWizard;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 
 import javafx.concurrent.Task;
@@ -425,6 +426,54 @@ public class DictionaryFx extends GuiDictionary
 		addCommand(undo, redo);
 	}
 
+	public void openDialogWizard(IWindow window) throws Exception
+	{
+		if (!isApplicationRun())
+		{
+			DialogsHelper.showError("Application not starting.\nStart application before call the wizard");
+			return;
+		}
+		IControl selfControl = window.getSelfControl();
+		if (selfControl == null)
+		{
+			DialogsHelper.showError("Self control is null.\nFill the self control before call the wizard");
+			return;
+		}
+		DialogWizard wizard = new DialogWizard(this, window, this.applicationConnector.getAppConnection());
+		wizard.onHiding(e -> Common.tryCatch(() -> this.displayElement(window, SectionKind.Run, null), "Error on hiding wizard"));
+		Task<Integer> task = new Task<Integer>()
+		{
+			@Override
+			protected Integer call() throws Exception
+			{
+				DialogsHelper.showInfo("Start found self control...\nPlease, wait");
+				controller.setDisableWizardButton(true);
+				Locator owner = getLocator(window.getOwnerControl(selfControl));
+				Locator locator = getLocator(selfControl);
+				IRemoteApplication service = applicationConnector.getAppConnection().getApplication().service();
+				Collection<String> all = service.findAll(owner, locator);
+				return all.size();
+			}
+		};
+		task.setOnSucceeded(e ->
+		{
+			controller.setDisableWizardButton(false);
+			Integer count = (Integer) e.getSource().getValue();
+			if (count == 0)
+			{
+				DialogsHelper.showError("Self control not found");
+				return;
+			}
+			if (count != 1)
+			{
+				DialogsHelper.showError("Found " + count + " instead of 1.");
+				return;
+			}
+			wizard.show();
+		});
+		new Thread(task).start();
+	}
+
 	//------------------------------------------------------------------------------------------------------------------
 	public void elementNew(IWindow window, IWindow.SectionKind sectionKind) throws Exception
 	{
@@ -474,9 +523,9 @@ public class DictionaryFx extends GuiDictionary
 					}
 					else
 					{
-						ButtonType desision = DialogsHelper.showQuestionDialog("This element is the owner for other elements", "Remove it anyway?");
+						boolean needRemove = DialogsHelper.showQuestionDialog("This element is the owner for other elements", "Remove it anyway?");
 
-						if (desision == ButtonType.OK)
+						if (needRemove)
 						{
 							window.removeControl(control);
 							IControl anotherControl = window.getFirstControl(sectionKind);

@@ -81,6 +81,32 @@ public abstract class Condition implements ICondition, Serializable
 		return new NotCondition(cond);
 	}
 
+	public static EmptyCondition empty(String name)
+	{
+	    return new EmptyCondition(name);
+	}
+	
+    public static RegexpCondition regexp(String name, String pattern)
+    {
+        return new RegexpCondition(name, pattern);
+    }
+	
+    public static StringCondition string(String name, String value, boolean ignoreCase)
+    {
+        return new StringCondition(name, value, ignoreCase);
+    }
+    
+    public static DateCondition date(String name, String ralationStr, Date value, String precision) throws Exception
+    {
+        return new DateCondition(name, ralationStr, value, precision);
+    }
+    
+    public static NumberCondition number(String name, String relationStr, Number value) throws Exception
+    {
+        return new NumberCondition(name, relationStr, value);
+    }
+    
+	
 	public Condition(String name)
 	{
 		this.name = name;

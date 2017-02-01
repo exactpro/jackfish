@@ -124,7 +124,7 @@ public class RawText extends MatrixItem
 	@Override
 	public String getItemName()
 	{
-		return super.getItemName() + " " + this.description.get();
+		return super.getItemName() + " " + (this.description.get() == null ? "" : this.description.get());
 	}
 
 	@Override

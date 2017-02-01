@@ -53,7 +53,7 @@ import com.exactprosystems.jf.functions.Text;
 + "\n"
 + "\n"
 + "#Assert;#Message\n"
-+ "TXT2.Out.toString() == 'My taxes in 2016 is 13 rub\\n';'Assert failed'#}}\n",
++ "TXT2.Out.toString() == 'My taxes in 2016 is 13 rub';'Assert failed'#}}\n",
         seeAlso = "{{@TextReport@}}, {{@TextAddLine@}}, {{@TextLoadFromFile@}}, {{@TextCreate@}}, {{@TextSaveToFile@}}," +
 				" {{@TextSetValue@}}"
 	)

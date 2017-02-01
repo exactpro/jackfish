@@ -33,7 +33,7 @@ import com.exactprosystems.jf.functions.Table;
 				"{{`1. Create a table with columns Name and Age, SalaryPerYear and populate it with values.`}}"
 				+ "{{`2. Set data type  Integer for column  Age.`}}"
 				+ "{{`3. Using action TableSelect select all rows with value more than 25(int) in column Age.`}}"
-				+ "{{`4. Verify that TableConsiderColumnsAs is correct.`}}"
+				+ "{{`4. Verify that TableConsiderColumnsAs is correct. `}}"
 				+ "{{##Id;#RawTable\n"
 				+ "TC;Table\n"
 				+ "@;Name;Age;SalaryPerYear\n"

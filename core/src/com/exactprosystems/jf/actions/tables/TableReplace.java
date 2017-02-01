@@ -19,7 +19,7 @@ import com.exactprosystems.jf.functions.Table;
 		examples 				=
 				"{{`1. Create a table with columns Name and Age. Add four lines with data about Mike, Anna, John, Bruce.`}}"
 				+ "{{`2. Replace all that comply with Regexp with 'passed'.`}}"
-				+ "{{`3. Verify if everything was correct.`}}"
+				+ "{{`3. Verify if everything was correct.`}} "
 				+ "{{##Id;#RawTable\n"
 				+ "TC;Table\n"
 				+ "@;Name;Mail\n"

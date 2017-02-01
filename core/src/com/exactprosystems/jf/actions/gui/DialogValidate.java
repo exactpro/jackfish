@@ -31,9 +31,19 @@ import java.util.Set;
 import static com.exactprosystems.jf.actions.gui.Helper.message;
 
 @ActionAttribute(
-		group = ActionGroups.GUI, 
-		generalDescription = "Finds or opens dialog window and checks access to all elements.", 
-		additionFieldsAllowed = true
+		group 				  = ActionGroups.GUI,
+		generalDescription 	  = "The purpose of this action is to check the accessibility of all the elements of the indicated dialog.",
+		additionFieldsAllowed = true,
+		additionalDescription = "The name of the additional parameter should contain the ID of the element. The value should contain the expected number of detected elements.",
+		examples 			  = "{{`1. Connect to the web application.`}}"
+				+ "{{`2. Check the accessibility of all elements described in MyDialog.`}}"
+				+ "\n"
+				+ "{{##Id;#Action;#Browser;#URL;#AppId\n"
+				+ "APPSTR1;ApplicationStart;'Chrome';'https://google.com';'WEB'\n"
+				+ "\n"
+				+ "\n"
+				+ "#Action;#Dialog;#AppConnection\n"
+				+ "DialogValidate;'MyDialog';APPSTR1.Out#}}"
 	)
 public class DialogValidate extends AbstractAction
 {
@@ -42,16 +52,19 @@ public class DialogValidate extends AbstractAction
 	public final static String	doNotOpenName	= "DoNotOpen";
 	public final static String	doNotCloseName	= "DoNotClose";
 
-	@ActionFieldAttribute(name = connectionName, mandatory = true, description = "The application connection.")
+	@ActionFieldAttribute(name = connectionName, mandatory = true, description = "A special object which identifies the"
+			+ " started application session. This object is required in many other actions to specify the session"
+			+ " of the application the indicated action belongs to. It is the output value of such actions"
+			+ " as {{@ApplicationStart@}}, {{@ApplicationConnectTo@}}.")
 	protected AppConnection		connection		= null;
 
-	@ActionFieldAttribute(name = dialogName, mandatory = true, description = "A name of the dialog.")
+	@ActionFieldAttribute(name = dialogName, mandatory = true, description = "The dialog whose elements need to be checked for accessibility.")
 	protected String			dialog			= null;
 
-	@ActionFieldAttribute(name = doNotOpenName, mandatory = false, description = "Do not open a new dialog.")
+	@ActionFieldAttribute(name = doNotOpenName, mandatory = false, description = " When true is set, the operations indicated in ‘On open’ section of the current dialog are performed.  False by default.")
 	protected Boolean			doNotOpen;
 
-	@ActionFieldAttribute(name = doNotCloseName, mandatory = false, description = "Do not close a dialog.")
+	@ActionFieldAttribute(name = doNotCloseName, mandatory = false, description = "When true is set, the operations indicated in ‘On close’ section of the current dialog are performed.  False by default.")
 	protected Boolean			doNotClose;
 
 	public DialogValidate()

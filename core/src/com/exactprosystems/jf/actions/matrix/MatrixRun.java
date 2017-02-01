@@ -18,6 +18,8 @@ import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.functions.HelpKind;
+import com.exactprosystems.jf.tool.custom.console.ConsoleText;
+import com.exactprosystems.jf.tool.matrix.TabConsole;
 
 import java.io.File;
 import java.io.FileReader;
@@ -98,9 +100,9 @@ public class MatrixRun extends AbstractAction
         try(Context newContext = context.getFactory().createContext();
 			Reader reader = new FileReader(new File(this.matrix)))
 		{
-        	newContext.setOut(context.getOut());
 			MatrixRunner runner = newContext.createRunner(this.matrix, reader, this.at, this.parameter);
-			runner.start();
+            newContext.setOut(context.getOut());
+            runner.start();
 			super.setResult(runner);
 		}
 	}

@@ -27,7 +27,7 @@ import com.exactprosystems.jf.functions.Table;
 		examples 				=
 				"{{`1. Create a table with columns Name and Age.`}}"
 				+ "{{`2. Add to the table created columns Gender and Salary (to the line number 0).`}}"
-				+ "{{`3. Verify that the table has columns  Gender, Salary, Name and Age.`}}"
+				+ "{{`3. Verify that the table has columns  Gender, Salary, Name and Age. `}}"
 				+ "{{##Id;#RawTable\n"
 				+ "TC;Table\n"
 				+ "@;Name;Age\n"

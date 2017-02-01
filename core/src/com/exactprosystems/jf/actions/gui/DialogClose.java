@@ -27,12 +27,28 @@ import java.util.List;
 import static com.exactprosystems.jf.actions.gui.Helper.message;
 
 @ActionAttribute(
-		group = ActionGroups.GUI,
-		suffix = "DLGCLS",
-		additionFieldsAllowed = false,
-		generalDescription = "Close dialogs on windows, that described on section close",
-		outputDescription 		= "How many dialogs of this kind were closed.", 
-		outputType 				= Integer.class
+		group 					= ActionGroups.GUI,
+		suffix 					= "DLGCLS",
+		additionFieldsAllowed 	= false,
+		generalDescription 		= "The purpose of the action is to close the dialogs.  The dialog to be closed needs to"
+				+ " be described in the Close section of the dictionary. When working with swing and win plug-ins, Dialogs"
+				+ " can be closed without being described in the Close section because there is a capability to programmatically"
+				+ " close the window. In web the elements can’t be closed programmatically and require direct handling.",
+		outputDescription 		= "The number of dialogs closed. ",
+		outputType 				= Integer.class,
+		examples 				= "{{`1. Start the web application.`}}"
+				+ "{{`2. Close all the elements described in the Close section of MyDialog.`}}"
+				+ "{{`3. Check the number of closed elements.`}}"
+				+ "{{##Id;#Action;#Browser;#URL;#AppId\n"
+				+ "APPSTR1;ApplicationStart;'Chrome';'https://google.com';'WEB'\n"
+				+ "\n"
+				+ "\n"
+				+ "#Id;#Action;#Dialog;#AppConnection\n"
+				+ "DLGCLS1;DialogClose;'MyDialog';APPSTR1.Out\n"
+				+ "\n"
+				+ "\n"
+				+ "#Assert;#Message\n"
+				+ "DLGCLS1.Out > 0;'0 elements was closed'#}}"
 )
 public class DialogClose extends AbstractAction
 {
@@ -41,10 +57,13 @@ public class DialogClose extends AbstractAction
 	public final static String	connectionName	= "AppConnection";
 	public final static String	dialogName		= "Dialog";
 
-	@ActionFieldAttribute(name = connectionName, mandatory = true, description = "The application connection.")
+	@ActionFieldAttribute(name = connectionName, mandatory = true, description = "A special object which identifies the"
+			+ " started application session. This object is required in many other actions to specify the session"
+			+ " of the application the indicated action belongs to. It is the output value of such actions"
+			+ " as {{@ApplicationStart@}}, {{@ApplicationConnectTo@}}.")
 	protected AppConnection connection		= null;
 
-	@ActionFieldAttribute(name = dialogName, mandatory = true, description = "A name of the dialog.")
+	@ActionFieldAttribute(name = dialogName, mandatory = true, description = "The name of the Dialog whose Close section has the descriptions of elements to be closed.")
 	protected String			dialog			= null;
 
 	@Override

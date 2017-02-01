@@ -96,7 +96,8 @@ public class Assert extends MatrixItem
     @Override
 	public String getItemName()
 	{
-		return super.getItemName() + " " + this.assertion + " " + this.message;
+		return super.getItemName() + " " + (this.assertion.getExpression() == null ? "" : ": " + this.assertion.getExpression())
+				+ " " + (this.message.getExpression() == null ? "" : this.message);
 	}
 
 	@Override

@@ -24,7 +24,7 @@ import com.exactprosystems.jf.functions.Xml;
 		generalDescription 		= "The purpose of this action is to delete all the elements appropriate for the given XPath.",
 		additionFieldsAllowed 	= false,
 		examples 				= "{{`1. Create an Xml object by downloading it from the file.`}}"
-				+ "{{`Contents of an xml file:`}}"
+				+ "{{`Contents of an xml file:`}} "
 				+ "{{#<note> \n"
 				+ "<to>\n"
 				+ "<friend>\n"
@@ -41,7 +41,7 @@ import com.exactprosystems.jf.functions.Xml;
 				+ "</note>#}}"
 				+ "\n"
 				+ "{{`2. Delete the element in transferring XPath.`}}"
-				+ "{{`3. Make sure that the element has been deleted and its content is not in the report.`}}"
+				+ "{{`3. Make sure that the element has been deleted and its content is not in the report.`}} "
 				+ "{{##Id;#Action;#File\n"
 				+ "XML1;XmlLoadFromFile;'/path/Xml.xml'\n"
 				+ "\n"

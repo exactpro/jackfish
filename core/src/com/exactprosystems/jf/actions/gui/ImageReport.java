@@ -24,10 +24,29 @@ import java.util.List;
 @ActionAttribute(
 		group					= ActionGroups.GUI,
 		suffix					= "IMGRPT",
-		generalDescription 		= "Get an image from screen",
+		generalDescription 		= "The purpose of this action Is to place the generated image in the report.",
 		additionFieldsAllowed 	= false,
 		outputDescription 		= "Path to image.",
-		outputType 				= String.class
+		outputType 				= String.class,
+		examples 				= "{{`1. Start the application.`}}"
+				+ "{{`2. Capture the whole application.`}}"
+				+ "{{`3. Create new report.`}}"
+				+ "{{`4. Send the generated image to the new report.`}}"
+				+ "\n"
+				+ "{{##Id;#Action;#Browser;#URL;#AppId\n"
+				+ "APPSTR1;ApplicationStart;'Chrome';'https://google.com';'WEB'\n"
+				+ "\n"
+				+ "\n"
+				+ "#Id;#Action;#AppConnection\n"
+				+ "IMGGET1;ImageGet;APPSTR1.Out\n"
+				+ "\n"
+				+ "\n"
+				+ "#Id;#Action;#ReportName\n"
+				+ "REP1;ReportStart;'New Report'\n"
+				+ "\n"
+				+ "\n"
+				+ "#Id;#Action;#Image\n"
+				+ "IMGRPT1;ImageReport;IMGGET1.Out#}}"
 	)
 public class ImageReport extends AbstractAction
 {
@@ -38,19 +57,20 @@ public class ImageReport extends AbstractAction
 	public final static String	toReportName		= "ToReport";
 	public final static String	asLinkName		= "AsLink";
 
-	@ActionFieldAttribute(name=toReportName, mandatory = false, description = "Rerouting report")
+	@ActionFieldAttribute(name=toReportName, mandatory = false, description = "The Report object which will include the indicated image is specified."
+			+ "  Report is an  an output value of the ReportStart action.")
 	protected ReportBuilder toReport;
 
-	@ActionFieldAttribute(name = imageName, mandatory = true, description = "Image to report.")
+	@ActionFieldAttribute(name = imageName, mandatory = true, description = "The image to be placed in the report.")
 	protected ImageWrapper		image		= null;
 
-	@ActionFieldAttribute(name = beforeTestCaseName, mandatory = false, description = "The name of Testcase before witch the picture will be put.")
+	@ActionFieldAttribute(name = beforeTestCaseName, mandatory = false, description = "Enables to output the table on the highest level of the report.")
 	protected String 	beforeTestCase 	= null;
 
-	@ActionFieldAttribute(name = titleName, mandatory = false, description = "Title for picture.")
+	@ActionFieldAttribute(name = titleName, mandatory = false, description = "The title of the image.")
 	protected String			title;
 
-	@ActionFieldAttribute(name = asLinkName, mandatory = false, description = "Save image.")
+	@ActionFieldAttribute(name = asLinkName, mandatory = false, description = "Instead of the image the link to it is generated in the report.")
 	protected Boolean			asLink;
 
     public ImageReport()

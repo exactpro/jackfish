@@ -426,38 +426,6 @@ public abstract class Common
 		return String.format("rgba(%s,%s,%s,%s)", ((int) (color.getRed() * 255)), ((int) (color.getGreen() * 255)), ((int) (color.getBlue() * 255)), color.getOpacity());
 	}
 
-	public static void saveToClipboard(String text)
-	{
-		StringSelection stringSelection = new StringSelection(text);
-		Toolkit.getDefaultToolkit().getSystemClipboard().setContents(stringSelection, null);
-	}
-	
-	public static String getFromClipboard()
-	{
-		try
-		{
-			long t1 = System.currentTimeMillis();
-			Toolkit defaultToolkit = Toolkit.getDefaultToolkit();
-//			System.out.println("def toolkit : " + (System.currentTimeMillis() - t1));
-			t1 = System.currentTimeMillis();
-			Clipboard systemClipboard = defaultToolkit.getSystemClipboard();
-//			System.out.println("clipboard : " + (System.currentTimeMillis() - t1));
-			t1 = System.currentTimeMillis();
-			Object data = systemClipboard.getData(DataFlavor.stringFlavor);
-//			System.out.println("get data" + (System.currentTimeMillis() - t1));
-			t1 = System.currentTimeMillis();
-			String s = String.valueOf(data);
-//			System.out.println("value of " + (System.currentTimeMillis() - t1));
-			return s;
-			//			return String.valueOf(Toolkit.getDefaultToolkit().getSystemClipboard().getData(DataFlavor.stringFlavor));
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-			return "";
-		}
-	}
-
 	public static List<String> readFile(File file, boolean needRemove) throws Exception
 	{
 		Path path = Paths.get(file.toURI());
