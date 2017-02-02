@@ -438,7 +438,7 @@ public abstract class AbstractControl implements IControl, Mutable
 	    Locator res = new Locator(this);
 	    if (this.section != null && this.refId != null)
 	    {
-	        IControl refControl = this.section.getControlById(this.refId);
+	        IControl refControl = this.section.getWindow().getControlForName(null, this.refId);
 	        if (refControl != null)
 	        {
                 res.uid(refControl.getUID());

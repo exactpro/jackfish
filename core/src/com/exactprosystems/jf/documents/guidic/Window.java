@@ -92,7 +92,7 @@ public class Window implements IWindow, Mutable
 	private void correctOne(SectionKind kind, Section section)
 	{
 		this.allSections.put(kind, section);
-		section.setSection(kind);
+		section.setSection(this, kind);
 	}
 
 	@Override
@@ -194,7 +194,7 @@ public class Window implements IWindow, Mutable
 			this.allSections.put(kind, section);
 		}
 		section.addControl(control);
-		section.setSection(kind);
+		section.setSection(this, kind);
 	}
 
 	@Override
@@ -235,7 +235,7 @@ public class Window implements IWindow, Mutable
 	}
 
 	@Override
-	public IControl getControlForName(SectionKind kind, String name) throws Exception
+	public IControl getControlForName(SectionKind kind, String name)
 	{
 		if (kind == null)
 		{

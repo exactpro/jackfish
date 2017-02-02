@@ -11,6 +11,7 @@ package com.exactprosystems.jf.documents.guidic;
 import com.exactprosystems.jf.api.app.Addition;
 import com.exactprosystems.jf.api.app.IControl;
 import com.exactprosystems.jf.api.app.ISection;
+import com.exactprosystems.jf.api.app.IWindow;
 import com.exactprosystems.jf.api.app.Mutable;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.documents.guidic.controls.*;
@@ -59,6 +60,12 @@ public class Section implements ISection, Mutable
 	})
 	private MutableArrayList<AbstractControl> controls;
 	
+    @XmlTransient
+    private Window.SectionKind sectionKind;
+	
+    @XmlTransient
+    private IWindow window;
+	
 	public Section()
 	{
 		this.controls = new MutableArrayList<>();
@@ -67,7 +74,7 @@ public class Section implements ISection, Mutable
 	public static Section createCopy(Section section) throws Exception
 	{
 		Section newSection = new Section();
-		newSection.setSection(section.getSectionKind());
+		newSection.setSection(section.window, section.getSectionKind());
 		newSection.controls = new MutableArrayList<>();
 		for (AbstractControl control : section.controls)
 		{
@@ -129,8 +136,9 @@ public class Section implements ISection, Mutable
 	}
 
 	@Override
-	public void setSection(Window.SectionKind sectionKind)
+	public void setSection(IWindow window, Window.SectionKind sectionKind)
 	{
+	    this.window = window;
 		this.sectionKind = sectionKind;
 		for (AbstractControl control : this.controls)
 		{
@@ -206,7 +214,12 @@ public class Section implements ISection, Mutable
 	{
 		return this.sectionKind;
 	}
-	
+
+    @Override
+    public IWindow getWindow()
+    {
+        return this.window;
+    }
 	
     //------------------------------------------------------------------------------------------------------------------
     // interface Mutable
@@ -272,9 +285,4 @@ public class Section implements ISection, Mutable
 	{
 		return getClass().getSimpleName() + " size=" + this.controls.size();
 	}
-
-	private Window.SectionKind sectionKind;
-
-
-
 }
