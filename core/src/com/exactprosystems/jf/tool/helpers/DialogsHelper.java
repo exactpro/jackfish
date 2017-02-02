@@ -101,9 +101,9 @@ public abstract class DialogsHelper
 		{
 			parameters.clear();
 			ObservableList<ExpressionFieldsPane> items = listView.getItems();
-			items.stream()
-					.filter(item -> !Str.IsNullOrEmpty(item.getValue().getText()))
-					.forEach(item -> parameters.put(item.getKey().getText(), Str.IsNullOrEmpty(item.getValue().getText()) ? null : item.getValue().getText()));
+			for (ExpressionFieldsPane item : items){
+				parameters.put(item.getKey().getText(), Str.IsNullOrEmpty(item.getValue().getText()) ? null : item.getValue().getText());
+			}
 			return buttonType.get();
 		}
 		return ButtonType.CANCEL;
