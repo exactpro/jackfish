@@ -13,7 +13,6 @@ import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.evaluator.Variables;
 import com.exactprosystems.jf.common.report.ReportBuilder;
-import com.exactprosystems.jf.common.report.ReportTable;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.*;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
@@ -22,6 +21,7 @@ import com.exactprosystems.jf.functions.Text;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 @MatrixItemAttribute(
@@ -44,6 +44,7 @@ public class RawText extends MatrixItem
 	{
 		super();
 		this.text = new Text();
+		this.text.setChangeListener(flag -> this.owner.changed(flag));
 		this.description = new MutableValue<>();
 	}
 
@@ -112,6 +113,7 @@ public class RawText extends MatrixItem
 		if (this.firstUsing)
 		{
 			this.text = new Text();
+			this.text.setChangeListener(flag -> Optional.ofNullable(this.owner).ifPresent(own -> own.changed(flag)));
 			this.firstUsing = false;
 		    this.text.add(str[0]);
 
