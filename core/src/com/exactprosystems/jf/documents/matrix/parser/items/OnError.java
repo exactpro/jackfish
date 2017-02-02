@@ -27,7 +27,7 @@ import java.util.List;
 
 @MatrixItemAttribute(
 		description 	= "On error.",
-		examples 		= "#OnError",
+		examples 		= "{{##OnError#}}",
 		seeAlso 		= "Fail",
 		shouldContain 	= { Tokens.OnError },
 		mayContain 		= { Tokens.Off, Tokens.RepOff },

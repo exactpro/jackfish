@@ -30,7 +30,7 @@ import java.util.Set;
 
 @MatrixItemAttribute(
         description 	= "Condition executing.",
-		examples 		= "#Switch",
+		examples 		= "{{##Switch#}}",
 		seeAlso 		= "Case, Default",
         shouldContain 	= { Tokens.Switch },
         mayContain 		= { Tokens.Off, Tokens.RepOff },

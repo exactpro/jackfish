@@ -30,7 +30,7 @@ import java.util.Set;
 
 @MatrixItemAttribute(
 		description 	= "Returns value from SubCase.",
-		examples 		= "#Return",
+		examples 		= "{{##Return#}}",
 		seeAlso 		= "SubCase, Call",
 		shouldContain 	= { Tokens.Return },
 		mayContain 		= { Tokens.Off, Tokens.RepOff }, 

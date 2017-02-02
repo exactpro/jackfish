@@ -32,7 +32,7 @@ import java.util.Set;
 
 @MatrixItemAttribute(
 		description 	= "Need to assigns a value to a variable, or just evaluates an expression.",
-		examples 		= "#Let",
+		examples 		= "{{##Let#}}",
 		shouldContain 	= { Tokens.Let },
 		mayContain 		= { Tokens.Id, Tokens.Off, Tokens.RepOff, Tokens.Global }, 
 		parents			= { Case.class, Else.class, For.class, ForEach.class, If.class,

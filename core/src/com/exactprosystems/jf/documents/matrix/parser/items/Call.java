@@ -28,7 +28,7 @@ import java.util.Set;
 
 @MatrixItemAttribute(
 		description 	= "Subroutine Test case.",
-		examples 		= "#Call",
+		examples 		= "{{##Call#}}",
 		seeAlso 		= "SubCase, Return",
 		shouldContain 	= { Tokens.Call },
 

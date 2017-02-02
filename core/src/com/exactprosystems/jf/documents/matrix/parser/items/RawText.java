@@ -26,7 +26,7 @@ import java.util.Set;
 
 @MatrixItemAttribute(
 		description 	= "Raw text.",
-		examples 		= "#RawText",
+		examples 		= "{{##RawText#}}",
 		seeAlso 		= "RawTable",
 		shouldContain 	= { Tokens.RawText }, 
 		mayContain 		= { Tokens.Id, Tokens.Off, Tokens.RepOff, Tokens.Global }, 

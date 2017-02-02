@@ -20,7 +20,7 @@ import java.util.List;
 
 @MatrixItemAttribute(
 		description 	= "Executed if condition is false.",
-		examples 		= "#Else",
+		examples 		= "{{##Else#}}",
 		seeAlso 		= "If",
 		shouldContain 	= { Tokens.Else },
 		mayContain 		= { Tokens.Off, Tokens.RepOff }, 

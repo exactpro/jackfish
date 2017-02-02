@@ -30,7 +30,7 @@ import java.util.Set;
 
 @MatrixItemAttribute(
         description 	= "Condition executing.",
-		examples 		= "#If",
+		examples 		= "{{##If#}}",
 		seeAlso 		= "Else",
         shouldContain 	= { Tokens.If },
         mayContain 		= { Tokens.Off, Tokens.RepOff },

@@ -29,7 +29,7 @@ import java.util.Set;
 
 @MatrixItemAttribute(
 		description 	= "Loop while condition is true.",
-		examples 		= "#While",
+		examples 		= "{{##While#}}",
 		seeAlso 		= "For, ForEach",
 		shouldContain 	= { Tokens.While },
 		mayContain 		= { Tokens.Off, Tokens.RepOff },

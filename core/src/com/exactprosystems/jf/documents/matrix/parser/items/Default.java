@@ -12,7 +12,7 @@ import java.util.List;
 
 @MatrixItemAttribute(
 		description 	= "Executed if all cases are not suitable.",
-		examples 		= "#Default",
+		examples 		= "{{##Default#}}",
 		seeAlso 		= "For, While, Break",
 		shouldContain 	= { Tokens.Default },
 		mayContain 		= { Tokens.Off, Tokens.RepOff }, 

@@ -25,7 +25,7 @@ import java.util.List;
 
 @MatrixItemAttribute(
 		description 	= "Break chain of execution into loops or blocks.",
-		examples 		= "#Continue",
+		examples 		= "{{##Continue#}}",
 		seeAlso 		= "For, While, Break",
 		shouldContain 	= { Tokens.Continue },
 		mayContain 		= { Tokens.Off, Tokens.RepOff }, 

@@ -209,7 +209,6 @@ class RTFCreator {
         if (!classAnnotations.examples().equals(""))
         {
             actions.add(p(italic(fontSize(fontSize, "Examples"))));
-            //actions.add(p(parseExamples(classAnnotations.examples()).toArray()));
             actions.addAll(parseExample(classAnnotations.examples()));
             actions.add(p());
         }
@@ -571,10 +570,6 @@ class RTFCreator {
                 if (an instanceof MatrixItemAttribute)
                 {
                     classAnnotation = (MatrixItemAttribute) an;
-                }
-                else
-                {
-                    System.out.println(an.annotationType());
                 }
             }
             createItemsManual(clazz.getName(), classAnnotation);

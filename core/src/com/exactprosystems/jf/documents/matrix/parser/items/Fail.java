@@ -30,7 +30,7 @@ import java.util.Set;
 
 @MatrixItemAttribute(
 		description 		= "Make this TestCase failed.",
-		examples 			= "#Fail",
+		examples 			= "{{##Fail#}}",
 		seeAlso 			= "TestCase",
 		shouldContain 		= { Tokens.Fail }, 
 		mayContain 			= { Tokens.Off, Tokens.RepOff }, 

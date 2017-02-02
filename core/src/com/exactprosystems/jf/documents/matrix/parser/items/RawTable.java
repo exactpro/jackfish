@@ -32,7 +32,7 @@ import java.util.Set;
 
 @MatrixItemAttribute(
 		description 	= "Raw data. Need to describe block of data",
-		examples 		= "#RawTable",
+		examples 		= "{{##RawTable#}}",
 		seeAlso 		= "RawText",
 		shouldContain 	= { Tokens.RawTable }, 
 		mayContain 		= { Tokens.Id, Tokens.Off, Tokens.RepOff, Tokens.Global }, 

@@ -27,7 +27,7 @@ import java.util.Set;
 
 @MatrixItemAttribute(
 		description 	= "Choices one variant in a switch.",
-		examples 		= "#Case",
+		examples 		= "{{##Case#}}",
 		seeAlso 		= "Switch",
 		shouldContain 	= { Tokens.Case },
 		mayContain 		= { Tokens.Off, Tokens.RepOff }, 

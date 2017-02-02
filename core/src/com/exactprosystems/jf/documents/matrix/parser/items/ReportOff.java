@@ -25,7 +25,7 @@ import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
 @Deprecated
 @MatrixItemAttribute(
 		description 	= "Switches off output of the report.",
-		examples 		= "ReportOff",
+		examples 		= "{{##ReportOff#}}",
 		seeAlso 		= "ReportOn",
 		shouldContain 	= { Tokens.ReportOff },
 		mayContain 		= { Tokens.Off, Tokens.RepOff }, 

@@ -30,7 +30,7 @@ import java.util.Set;
 
 @MatrixItemAttribute(
 		description 	= "Check the assertion and if it is false throws an Exception with Message",
-		examples 		= "{{##Assert;#Message<p>a == 10;'The value of ' + a + ' doesn match 10'#}}",
+		examples 		= "{{##Assert;#Message\n" + "a == 10;'The value of ' + a + ' doesn match 10'#}}",
 		shouldContain 	= { Tokens.Assert },
 		mayContain 		= { Tokens.Off, Tokens.RepOff, Tokens.Message }, 
 		parents			= { Case.class, Else.class, For.class, ForEach.class, If.class,

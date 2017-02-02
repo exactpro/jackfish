@@ -31,7 +31,7 @@ import java.util.Set;
 
 @MatrixItemAttribute(
         description 	= "Namespace.",
-		examples 		= "#Namespace",
+		examples 		= "{{##Namespace#}}",
 		seeAlso 		= "SubCase, Call",
         shouldContain 	= { Tokens.NameSpace },
         mayContain 		= { Tokens.Id, Tokens.Off, Tokens.RepOff },

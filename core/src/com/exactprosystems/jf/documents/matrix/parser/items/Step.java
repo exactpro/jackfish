@@ -39,7 +39,7 @@ import java.util.stream.Collectors;
 
 @MatrixItemAttribute(
 		description 	= "Elementary step in the script",
-		examples 		= "#Step",
+		examples 		= "{{##Step#}}",
 		seeAlso 		= "TestCase",
 		shouldContain 	= { Tokens.Step },
 		mayContain 		= { Tokens.IgnoreErr, Tokens.Off, Tokens.Kind, Tokens.For, Tokens.RepOff },

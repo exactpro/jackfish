@@ -31,7 +31,7 @@ import java.util.Set;
 
 @MatrixItemAttribute(
 		description 	= "TestCase is needed to make script shorter.",
-		examples 		= "{{##Id;#TestCase<p>ID;Description#}}",
+		examples 		= "{{##Id;#TestCase\n" + "ID;Description#}}",
 		seeAlso 		= "Step",
 		shouldContain 	= { Tokens.TestCase },
 		mayContain 		= { Tokens.Id, Tokens.RepOff, Tokens.Off, Tokens.Kind, Tokens.For, Tokens.Depends },
