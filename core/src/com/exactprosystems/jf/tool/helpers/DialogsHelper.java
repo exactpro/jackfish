@@ -524,8 +524,8 @@ public abstract class DialogsHelper
 	{
 		try
 		{
-			ReportBuilder report = new HelpFactory().createReportBuilder(null, null, new Date());
-			((HelpBuilder) report).helpCreate(report);
+		    HelpBuilder report = (HelpBuilder) new HelpFactory().createReportBuilder(null, null, new Date());
+			report.helpCreate(report);
 			displayHelp(report.getContent());
 		}
 		catch (Exception e)

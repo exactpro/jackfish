@@ -8,14 +8,10 @@
 
 package com.exactprosystems.jf.common.report;
 
-import com.exactprosystems.jf.actions.ActionAttribute;
-import com.exactprosystems.jf.actions.ActionsList;
 import com.exactprosystems.jf.api.app.ImageWrapper;
 import com.exactprosystems.jf.api.common.Storable;
 import com.exactprosystems.jf.charts.ChartBuilder;
-import com.exactprosystems.jf.documents.matrix.parser.Parser;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
-import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItemAttribute;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixRoot;
 
 import org.apache.log4j.Logger;
@@ -204,7 +200,10 @@ public abstract class ReportBuilder implements Storable
 
 		this.reportData.clear();
 		reportHeader(this.writer, startTime, version);
-		reportMatrix(this.writer, matrixBuffer == null ? null : new BufferedReader(new CharArrayReader(matrixBuffer)));
+		if (matrixBuffer != null)
+		{
+		    reportMatrix(this.writer, new BufferedReader(new CharArrayReader(matrixBuffer)));
+		}
 		reportHeaderTotal(this.writer, startTime);
 	}
 	
