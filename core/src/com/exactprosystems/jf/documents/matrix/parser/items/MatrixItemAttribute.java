@@ -33,6 +33,4 @@ public @interface MatrixItemAttribute
 	boolean hasParameters();
     boolean hasChildren();
     boolean raw() default false;
-	String seeAlso() default "";
-	String examples() default "";
 }
