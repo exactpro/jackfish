@@ -239,6 +239,11 @@ public class DialogWizard
 		}
 	}
 
+	void updateRelation(ElementWizardBean bean)
+	{
+		System.out.println("<< Add implementation for relation");
+	}
+
 	void findElements(List<ElementWizardBean> items)
 	{
 		for (ElementWizardBean item : items)

@@ -589,9 +589,9 @@ public class DialogWizardController implements Initializable, ContainingParent
 
 		TableColumn<ElementWizardBean, ElementWizardBean> columnOption = new TableColumn<>("Option");
 		columnOption.setCellValueFactory(new PropertyValueFactory<>("option"));
-		columnOption.setPrefWidth(value);
-		columnOption.setMaxWidth(value);
-		columnOption.setMinWidth(value);
+		columnOption.setPrefWidth(100);
+		columnOption.setMaxWidth(100);
+		columnOption.setMinWidth(100);
 		columnOption.setCellFactory(e -> new TableCell<ElementWizardBean, ElementWizardBean>(){
 			@Override
 			protected void updateItem(ElementWizardBean item, boolean empty)
@@ -602,15 +602,25 @@ public class DialogWizardController implements Initializable, ContainingParent
 				{
 					HBox box = new HBox();
 					box.setAlignment(Pos.CENTER);
+
 					Button btnEdit = new Button();
 					btnEdit.setId("btnEdit");
+					btnEdit.setTooltip(new Tooltip("Edit element"));
 					btnEdit.getStyleClass().add(CssVariables.TRANSPARENT_BACKGROUND);
+					btnEdit.setOnAction(e -> Common.tryCatch(() -> model.changeElement(item), "Error on change element"));
+
 					Button btnRemove = new Button();
 					btnRemove.setId("btnRemove");
+					btnRemove.setTooltip(new Tooltip("Remove element"));
 					btnRemove.getStyleClass().add(CssVariables.TRANSPARENT_BACKGROUND);
-					btnEdit.setOnAction(e -> Common.tryCatch(() -> model.changeElement(item), "Error on change element"));
 					btnRemove.setOnAction(e -> model.removeElement(item));
-					box.getChildren().addAll(btnEdit, Common.createSpacer(Common.SpacerEnum.HorizontalMid),btnRemove);
+
+					Button btnRelation = new Button();
+					btnRelation.setId("btnRelation");
+					btnRelation.setTooltip(new Tooltip("Set relation"));
+					btnRelation.getStyleClass().add(CssVariables.TRANSPARENT_BACKGROUND);
+					btnRelation.setOnAction(e -> model.updateRelation(item));
+					box.getChildren().addAll(btnEdit, Common.createSpacer(Common.SpacerEnum.HorizontalMid), btnRemove, Common.createSpacer(Common.SpacerEnum.HorizontalMid), btnRelation);
 					setGraphic(box);
 				}
 				else
@@ -620,7 +630,7 @@ public class DialogWizardController implements Initializable, ContainingParent
 			}
 		});
 
-		columnId.prefWidthProperty().bind(this.tableView.widthProperty().subtract(35 + 135 + value * 4 + 2 + 16));
+		columnId.prefWidthProperty().bind(this.tableView.widthProperty().subtract(35 + 135 + value * 3 + 100 + 2 + 16));
 
 		this.tableView.getColumns().addAll(columnNumber, columnId, columnKind, columnIsXpath, columnIsNew, columnCount, columnOption);
 	}

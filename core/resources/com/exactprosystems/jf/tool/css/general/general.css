@@ -243,6 +243,10 @@
 	-fx-graphic : url('icons/delete_16.png')
 
 }
+#btnRelation {
+	-fx-graphic : url('icons/add_16.png')
+
+}
 #btnWizard {
 	-fx-graphic : url('icons/wizard.png')
 
