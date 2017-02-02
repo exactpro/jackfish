@@ -24,6 +24,7 @@ public interface ISection
 	IControl 				getControlById(String name);
 	IControl 				getControlByIdAndValue(String name, Object obj);
 	List<String> 			getControlsNames();
-	void 					setSection(SectionKind kind);
+	void 					setSection(IWindow window, SectionKind kind);
 	IWindow.SectionKind 	getSectionKind();
+    IWindow                 getWindow();
 }

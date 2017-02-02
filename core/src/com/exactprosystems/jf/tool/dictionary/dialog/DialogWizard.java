@@ -239,6 +239,11 @@ public class DialogWizard
 		}
 	}
 
+	void updateRelation(ElementWizardBean bean)
+	{
+		System.out.println("<< Add implementation for relation");
+	}
+
 	void findElements(List<ElementWizardBean> items)
 	{
 		for (ElementWizardBean item : items)
@@ -267,6 +272,14 @@ public class DialogWizard
 				XPathExpression compile = xpath.compile(xpathStr);
 				NodeList nodeList = (NodeList) compile.evaluate(this.document.getDocumentElement(), XPathConstants.NODESET);
 				count = nodeList.getLength();
+				if (count == 1)
+				{
+					this.controller.foundGreat(nodeList.item(0), bean);
+				}
+				else if (count > 1)
+				{
+					this.controller.foundBad(nodeList, bean);
+				}
 			}
 			catch (XPathExpressionException e)
 			{

@@ -27,6 +27,7 @@ public class Csv extends AbstractDocument
 					new String[] { "<none>" }, 
 					new String[] { "" 		}, 
 				}, null);
+		this.table.setChangeListener(flag -> super.changed(flag));
 	}
 
 	// ==============================================================================================================================
@@ -38,6 +39,7 @@ public class Csv extends AbstractDocument
 		super.load(reader);
 
 		this.table = new Table(reader, tableDelimiter, null);
+		this.table.setChangeListener(flag -> super.changed(flag));
 	}
 
 	@Override

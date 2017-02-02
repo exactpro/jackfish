@@ -15,9 +15,11 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.StrokeLineCap;
+import javafx.scene.text.Text;
 
 import java.awt.*;
 import java.util.Arrays;
+import java.util.stream.Stream;
 
 public class CustomRectangle
 {
@@ -31,9 +33,7 @@ public class CustomRectangle
 
 	public static final Color DEFAULT_COLOR = Color.BLACK;
 
-	public Object data;
-	
-	private Rectangle rectangle;
+	final private Rectangle rectangle;
 
 	private Line top;
 	private Line left;
@@ -41,6 +41,8 @@ public class CustomRectangle
 	private Line bot;
 
 	private Line outLine;
+
+	private Text text;
 
 	private boolean isInit = false;
 	private boolean isVisible = false;
@@ -59,21 +61,12 @@ public class CustomRectangle
 		this.left = new Line();
 		this.right = new Line();
 		this.bot = new Line();
+		this.text = new Text();
 
 		this.outLine = new Line();
 		this.outLine.getStyleClass().add(CssVariables.RECTANGLE_OUTLINE);
 		this.outLine.setStrokeWidth(LayoutExpressionBuilderController.OFFSET);
 		this.outLine.getStrokeDashArray().addAll(5.0, 5.0);
-	}
-
-	public void setUserData(Object data)
-	{
-		this.data = data;
-	}
-
-	public Object getUserData()
-	{
-		return this.data;
 	}
 
 	public void update(double scaleFactor)
@@ -139,12 +132,29 @@ public class CustomRectangle
 
 	public void setGroup(Group group)
 	{
-		group.getChildren().addAll(top, right, bot, left, outLine);
+		group.getChildren().addAll(top, right, bot, left, outLine, this.text);
 	}
 
 	public void removeGroup(Group group)
 	{
-		group.getChildren().removeAll(top, right, bot, left, outLine);
+		group.getChildren().removeAll(top, right, bot, left, outLine, this.text);
+	}
+
+	public void setText(Text text)
+	{
+		this.text = text;
+	}
+
+	public void setText(String text)
+	{
+		this.text = new Text(text);
+	}
+
+	public void setTextVisible(boolean flag)
+	{
+		this.text.setVisible(flag);
+		this.text.setX(this.top.getStartX() + 5);
+		this.text.setY(this.top.getStartY() + 5);
 	}
 
 	public void setVisible(boolean flag)
@@ -333,6 +343,30 @@ public class CustomRectangle
 						&& this.top.getEndX() == other.top.getEndX()
 						&& this.left.getStartY() == other.left.getStartY()
 						&& this.left.getEndY() == other.left.getEndY();
+	}
+
+	public void setOpacity(double value)
+	{
+		Stream.of(top, left, bot, right, this.text, this.outLine).forEach(line -> line.setOpacity(value));
+	}
+
+	@Override
+	public boolean equals(Object o)
+	{
+		if (this == o)
+			return true;
+		if (o == null || getClass() != o.getClass())
+			return false;
+
+		CustomRectangle that = (CustomRectangle) o;
+
+		return rectangle.equals(that.rectangle);
+	}
+
+	@Override
+	public int hashCode()
+	{
+		return rectangle.hashCode();
 	}
 
 	//============================================================

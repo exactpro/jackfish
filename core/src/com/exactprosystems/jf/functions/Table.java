@@ -15,6 +15,7 @@ import com.exactprosystems.jf.api.app.Mutable;
 import com.exactprosystems.jf.api.common.Converter;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.conditions.Condition;
+import com.exactprosystems.jf.common.ChangeListener;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.common.report.ReportHelper;
@@ -228,13 +229,13 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 	public boolean removeRow(int index)
 	{
 		this.innerList.remove(index);
-		this.changed = true;
+		changed(true);
 		return true;
 	}
 
 	public Table sort(String colName, boolean az) throws Exception
 	{
-		this.changed = true;
+		changed(true);
 		for (int i = 0; i < this.headers.length; i++)
 		{
 			if (this.headers[i].name.equals(colName))
@@ -247,7 +248,7 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 
 	public Table sort(int colNumber, boolean az)
 	{
-		this.changed = true;
+		changed(true);
 		Header header = this.headers[colNumber];
 		this.innerList.sort((o1, o2) -> 
 		{
@@ -435,7 +436,7 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 
 	public void addColumns(String... columns)
 	{
-		this.changed = true;
+		changed(true);
 		List<Header> list = new ArrayList<Header>();
 		if (this.headers != null)
 		{
@@ -468,7 +469,7 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 				throw new ColumnIsPresentException(String.format("Column with name %s already present", column));
 			}
 		}
-		this.changed = true;
+		changed(true);
 		if (this.headers == null)
 		{
 			this.headers = new Header[]{};
@@ -510,7 +511,7 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 		{
 			return;
 		}
-		this.changed = true;
+		changed(true);
 		List<String> strings = Arrays.asList(columns);
 		List<Header> headers = new ArrayList<>(Arrays.asList(this.headers));
 		Iterator<Header> iterator = headers.iterator();
@@ -530,7 +531,7 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 
 	public void updateValue(int index, RowTable row)
 	{
-		this.changed = true;
+		changed(true);
 		Map<Header, Object> newMap = new LinkedHashMap<>();
 		Map<Header, Object> oldMap = this.innerList.get(index);
 		Arrays.stream(this.headers).forEach(h ->
@@ -547,13 +548,13 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 
 	public void setValue(int index, RowTable row)
 	{
-		this.changed = true;
+		changed(true);
 		this.innerList.set(index, convert(row));
 	}
 
 	public void setValue(int index, Map<String, Object> map)
 	{
-		this.changed = true;
+		changed(true);
 		Map<Header, Object> line = this.innerList.get(index);
 		for (Entry<String, Object> entry : map.entrySet())
 		{
@@ -579,7 +580,7 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 
 	public void addValue(int index, Map<String, Object> map)
 	{
-		this.changed = true;
+		changed(true);
 		if (this.headers != null)
 		{
 			Map<Header, Object> line = convert(map);
@@ -596,7 +597,7 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 
 	public void addValue(int index, Object[] arr)
 	{
-		this.changed = true;
+		changed(true);
 		if (this.headers != null)
 		{
 			Map<Header, Object> line = convert(arr);
@@ -606,7 +607,7 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 
 	public void addValue(Object[] arr)
 	{
-		this.changed = true;
+		changed(true);
 		if (this.headers != null)
 		{
 			if (this.useColumnNumber)
@@ -621,7 +622,7 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 
 	public void changeValue(String headerName, int indexRow, Object newValue)
 	{
-		this.changed = true;
+		changed(true);
 		if (this.headers != null)
 		{
 			Map<Header, Object> row = this.innerList.get(indexRow);
@@ -963,14 +964,14 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 	@Override
 	public boolean add(RowTable e)
 	{
-		this.changed = true;
+		changed(true);
 		return this.innerList.add(convert(e));
 	}
 
 	@Override
 	public boolean remove(Object o)
 	{
-		this.changed = true;
+		changed(true);
 		return this.innerList.remove(o);
 	}
 
@@ -983,35 +984,35 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 	@Override
 	public boolean addAll(Collection<? extends RowTable> c)
 	{
-		this.changed = true;
+		changed(true);
 		return this.innerList.addAll(convert(c));
 	}
 
 	@Override
 	public boolean addAll(int index, Collection<? extends RowTable> c)
 	{
-		this.changed = true;
+		changed(true);
 		return this.innerList.addAll(index, convert(c));
 	}
 
 	@Override
 	public boolean removeAll(Collection<?> c)
 	{
-		this.changed = true;
+		changed(true);
 		return this.innerList.removeAll(c);
 	}
 
 	@Override
 	public boolean retainAll(Collection<?> c)
 	{
-		this.changed = true;
+		changed(true);
 		return this.innerList.retainAll(c);
 	}
 
 	@Override
 	public void clear()
 	{
-		this.changed = true;
+		changed(true);
 		this.innerList.clear();
 	}
 
@@ -1024,7 +1025,7 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 	@Override
 	public RowTable set(int index, RowTable element)
 	{
-		this.changed = true;
+		changed(true);
 		Map<Header, Object> convert = convert(element);
 		Map<Header, Object> set = this.innerList.set(index, convert);
 		return convertToStr(set);
@@ -1033,14 +1034,20 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 	@Override
 	public void add(int index, RowTable element)
 	{
-		this.changed = true;
+		changed(true);
 		this.innerList.add(index, convert(element));
+	}
+
+	private void changed(boolean flag)
+	{
+		this.changed = flag;
+		Optional.ofNullable(this.changeListener).ifPresent(c -> c.change(this.changed));
 	}
 
 	@Override
 	public RowTable remove(int index)
 	{
-		this.changed = true;
+		changed(true);
 		Map<Header, Object> remove = this.innerList.remove(index);
 		return convertToStr(remove);
 	}
@@ -1082,7 +1089,12 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 	}
 
 	//==============================================================================================
-	
+
+	public void setChangeListener(ChangeListener changeListener)
+	{
+		this.changeListener = changeListener;
+	}
+
 	public int getHeaderSize()
 	{
 		return this.headers.length;
@@ -1108,7 +1120,7 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 		{
 			throw new ColumnIsPresentException(s);
 		}
-		this.changed = true;
+		changed(true);
 		this.headers[index].name = s.trim();
 	}
 
@@ -1178,7 +1190,7 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 
 	private void considerAs(Header.HeaderType type, String... columns) throws Exception
 	{
-		this.changed = true;
+		changed(true);
 
 		int[] columnsIndexes = getIndexes(columns);
 		for (int index : columnsIndexes)
@@ -1461,7 +1473,9 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 	private static final String ROW_INDEX_SYMBOL = "@";
 	private List<Map<Header, Object>> innerList = null;
 	private Header[] headers;
-	private AbstractEvaluator evaluator; 
+	private AbstractEvaluator evaluator;
+
+	private ChangeListener changeListener;
 
 	private String fileName;
 	static int index = 0;

@@ -31,11 +31,14 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.net.URL;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
@@ -90,7 +93,7 @@ public class DialogWizardController implements Initializable, ContainingParent
 			@Override
 			public void find(TreeItem<XpathTreeItem> xpathItemTreeItem)
 			{
-				treeViewWithRectangles.find(xpathItemTreeItem);
+				treeViewWithRectangles.selectAndScroll(xpathItemTreeItem);
 			}
 
 			@Override
@@ -255,6 +258,31 @@ public class DialogWizardController implements Initializable, ContainingParent
 			}
 		}
 		return null;
+	}
+
+	void foundGreat(Node node, ElementWizardBean bean)
+	{
+		TreeItem<XpathTreeItem> byNode = this.treeViewWithRectangles.findByNode(node);
+		XpathTreeItem value = byNode.getValue();
+		if (value != null)
+		{
+			value.setState(XpathTreeItem.TreeItemState.MARK);
+			value.addRelation(bean);
+			this.treeViewWithRectangles.setState(XpathTreeItem.TreeItemState.MARK, this.cbMark.isSelected());
+		}
+	}
+
+	void foundBad(NodeList list, ElementWizardBean bean)
+	{
+		List<TreeItem<XpathTreeItem>> byNodes = this.treeViewWithRectangles.findByNodes(list);
+		byNodes.stream()
+				.map(TreeItem::getValue)
+				.filter(Objects::nonNull)
+				.forEach(item -> {
+					item.setState(XpathTreeItem.TreeItemState.QUESTION);
+					item.addRelation(bean);
+				});
+		this.treeViewWithRectangles.setState(XpathTreeItem.TreeItemState.QUESTION, this.cbQuestion.isSelected());
 	}
 
 	//region Action methods
@@ -561,9 +589,9 @@ public class DialogWizardController implements Initializable, ContainingParent
 
 		TableColumn<ElementWizardBean, ElementWizardBean> columnOption = new TableColumn<>("Option");
 		columnOption.setCellValueFactory(new PropertyValueFactory<>("option"));
-		columnOption.setPrefWidth(value);
-		columnOption.setMaxWidth(value);
-		columnOption.setMinWidth(value);
+		columnOption.setPrefWidth(100);
+		columnOption.setMaxWidth(100);
+		columnOption.setMinWidth(100);
 		columnOption.setCellFactory(e -> new TableCell<ElementWizardBean, ElementWizardBean>(){
 			@Override
 			protected void updateItem(ElementWizardBean item, boolean empty)
@@ -574,15 +602,25 @@ public class DialogWizardController implements Initializable, ContainingParent
 				{
 					HBox box = new HBox();
 					box.setAlignment(Pos.CENTER);
+
 					Button btnEdit = new Button();
 					btnEdit.setId("btnEdit");
+					btnEdit.setTooltip(new Tooltip("Edit element"));
 					btnEdit.getStyleClass().add(CssVariables.TRANSPARENT_BACKGROUND);
+					btnEdit.setOnAction(e -> Common.tryCatch(() -> model.changeElement(item), "Error on change element"));
+
 					Button btnRemove = new Button();
 					btnRemove.setId("btnRemove");
+					btnRemove.setTooltip(new Tooltip("Remove element"));
 					btnRemove.getStyleClass().add(CssVariables.TRANSPARENT_BACKGROUND);
-					btnEdit.setOnAction(e -> Common.tryCatch(() -> model.changeElement(item), "Error on change element"));
 					btnRemove.setOnAction(e -> model.removeElement(item));
-					box.getChildren().addAll(btnEdit, Common.createSpacer(Common.SpacerEnum.HorizontalMid),btnRemove);
+
+					Button btnRelation = new Button();
+					btnRelation.setId("btnRelation");
+					btnRelation.setTooltip(new Tooltip("Set relation"));
+					btnRelation.getStyleClass().add(CssVariables.TRANSPARENT_BACKGROUND);
+					btnRelation.setOnAction(e -> model.updateRelation(item));
+					box.getChildren().addAll(btnEdit, Common.createSpacer(Common.SpacerEnum.HorizontalMid), btnRemove, Common.createSpacer(Common.SpacerEnum.HorizontalMid), btnRelation);
 					setGraphic(box);
 				}
 				else
@@ -592,7 +630,7 @@ public class DialogWizardController implements Initializable, ContainingParent
 			}
 		});
 
-		columnId.prefWidthProperty().bind(this.tableView.widthProperty().subtract(35 + 135 + value * 4 + 2));
+		columnId.prefWidthProperty().bind(this.tableView.widthProperty().subtract(35 + 135 + value * 3 + 100 + 2 + 16));
 
 		this.tableView.getColumns().addAll(columnNumber, columnId, columnKind, columnIsXpath, columnIsNew, columnCount, columnOption);
 	}

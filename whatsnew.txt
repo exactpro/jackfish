@@ -1,4 +1,8 @@
 --------------------------------------------------------------------------------
+02.02.2017 4.3.0.1904
+RM40047 bug : change RawText not display * on tab with matrix.
+Fixed for RawTable, RawText and Csv
+--------------------------------------------------------------------------------
 01.02.2017 4.3.0.1901
 #40053 feature: Add operation for parsing string into sequence of keypresses
 

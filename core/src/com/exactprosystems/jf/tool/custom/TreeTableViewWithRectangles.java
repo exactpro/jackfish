@@ -8,6 +8,7 @@ import com.exactprosystems.jf.tool.custom.layout.CustomRectangle;
 import com.exactprosystems.jf.tool.custom.layout.LayoutExpressionBuilderController;
 import com.exactprosystems.jf.tool.custom.xpath.XpathTreeItem;
 import com.exactprosystems.jf.tool.custom.xpath.XpathViewer;
+import com.exactprosystems.jf.tool.dictionary.dialog.ElementWizardBean;
 import com.sun.javafx.scene.control.skin.TreeTableViewSkin;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleObjectProperty;
@@ -22,16 +23,20 @@ import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.NodeList;
 
 import java.awt.*;
 import java.util.*;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class TreeTableViewWithRectangles
 {
+	public static final double TRANSPARENT_RECT = 0.25;
+
 	private final AnchorPane anchorPane;
 	private final TreeTableView<XpathTreeItem> treeTableView;
 
@@ -176,7 +181,7 @@ public class TreeTableViewWithRectangles
 		}
 	}
 
-	public void find(TreeItem<XpathTreeItem> XpathTreeItem)
+	public void selectAndScroll(TreeItem<XpathTreeItem> XpathTreeItem)
 	{
 		this.treeTableView.getSelectionModel().clearSelection();
 		this.treeTableView.getSelectionModel().select(XpathTreeItem);
@@ -253,29 +258,49 @@ public class TreeTableViewWithRectangles
 		this.treeTableView.getSelectionModel().select(treeItem);
 	}
 
-	private List<TreeItem<XpathTreeItem>> getTreeItems()
-	{
-		return getMarkedRows()
-					.stream()
-					.filter(treeItem -> treeItem.getValue().isMarkVisible())
-					.collect(Collectors.toList());
-	}
-
 	public void setState(XpathTreeItem.TreeItemState state, boolean newValue)
 	{
 		this.stateMap.replace(state, newValue);
 		this.displayMarkedRows();
 		this.refresh();
 	}
-	//endregion
 
-	//region private methods
-	private void refresh()
+	public TreeItem<XpathTreeItem> findByNode(org.w3c.dom.Node node)
+	{
+		TreeItem<XpathTreeItem> root = this.treeTableView.getRoot();
+		List<TreeItem<XpathTreeItem>> list = new ArrayList<>();
+		byPass(root, list, xpathTreeItem -> xpathTreeItem != null && xpathTreeItem.getNode() != null && xpathTreeItem.getNode().equals(node));
+		return list.get(0);
+	}
+
+	public List<TreeItem<XpathTreeItem>> findByNodes(NodeList nodeList)
+	{
+		TreeItem<XpathTreeItem> root = this.treeTableView.getRoot();
+		List<TreeItem<XpathTreeItem>> list = new ArrayList<>();
+		byPass(root, list, xpathTreeItem -> xpathTreeItem != null
+				&& xpathTreeItem.getNode() != null
+				&& IntStream.range(0, nodeList.getLength())
+					.anyMatch(i -> nodeList.item(i).equals(xpathTreeItem.getNode()))
+		);
+		return list;
+	}
+
+	public void refresh()
 	{
 		Platform.runLater(() -> {
 			this.treeTableView.getColumns().get(0).setVisible(false);
 			this.treeTableView.getColumns().get(0).setVisible(true);
 		});
+	}
+	//endregion
+
+	//region private methods
+	private List<TreeItem<XpathTreeItem>> getTreeItems()
+	{
+		return getMarkedRows()
+				.stream()
+				.filter(treeItem -> treeItem.getValue().isMarkVisible())
+				.collect(Collectors.toList());
 	}
 
 	private void addWaitingPane()
@@ -356,6 +381,12 @@ public class TreeTableViewWithRectangles
 
 	private void scrollToElement(TreeItem<XpathTreeItem> xpathItemTreeItem)
 	{
+		TreeItem<XpathTreeItem> parent = xpathItemTreeItem.getParent();
+		while (parent != null)
+		{
+			parent.setExpanded(true);
+			parent = parent.getParent();
+		}
 		MyCustomSkin skin = (MyCustomSkin) treeTableView.getSkin();
 		int row = treeTableView.getRow(xpathItemTreeItem);
 		if (!skin.isIndexVisible(row))
@@ -405,6 +436,16 @@ public class TreeTableViewWithRectangles
 		treeItem.getChildren().forEach(child -> byPass(child, list));
 	}
 
+	private void byPass(TreeItem<XpathTreeItem> treeItem, List<TreeItem<XpathTreeItem>> list, Predicate<XpathTreeItem> predicate)
+	{
+		XpathTreeItem value = treeItem.getValue();
+		if (predicate.test(value))
+		{
+			list.add(treeItem);
+		}
+		treeItem.getChildren().forEach(child -> byPass(child, list, predicate));
+	}
+
 	private void displayMarkedRows()
 	{
 		Optional.ofNullable(this.markedRowsConsumer).ifPresent(c -> {
@@ -415,11 +456,24 @@ public class TreeTableViewWithRectangles
 						XpathTreeItem value = markedRow.getValue();
 						XpathTreeItem.TreeItemState state = value.getState();
 						value.setMarkIsVisible(state == null ? true : stateMap.get(state));
+
 						Rectangle rectangle = value.getRectangle();
 						CustomRectangle customRectangle = new CustomRectangle(rectangle, 1.0);
+						customRectangle.setOpacity(TRANSPARENT_RECT);
 						customRectangle.setWidthLine(LayoutExpressionBuilderController.BORDER_WIDTH);
 						customRectangle.setFill(value.getState().color());
 						customRectangle.setVisible(value.isMarkVisible());
+
+						List<ElementWizardBean> relatedList = value.getList();
+						if (!relatedList.isEmpty())
+						{
+							Text text = new Text();
+							String collect = relatedList.stream().map(ElementWizardBean::getId).collect(Collectors.joining(","));
+							text.setText(collect);
+							text.setFill(value.getState().color());
+							customRectangle.setText(text);
+						}
+
 						return customRectangle;
 					})
 					.collect(Collectors.toList());
@@ -486,9 +540,18 @@ public class TreeTableViewWithRectangles
 		protected void updateItem(XpathTreeItem item, boolean empty)
 		{
 			super.updateItem(item, empty);
+			setTooltip(null);
 			if (item != null && !empty)
 			{
 				XpathTreeItem.TreeItemState icon = item.getState();
+				List<ElementWizardBean> list = item.getList();
+				if (!list.isEmpty())
+				{
+					String tooltip = list.stream()
+							.map(ElementWizardBean::getId)
+							.collect(Collectors.joining("\n", "Related to :\n", ""));
+					this.setTooltip(new Tooltip(tooltip));
+				}
 				this.imageView.setImage(icon == null ? null : new Image(icon.getIconPath()));
 				this.imageView.setOpacity(item.isMarkVisible() ? 1.0 : 0.4);
 				setGraphic(this.imageView);
