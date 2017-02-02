@@ -10,9 +10,6 @@ public class RtfGenerator
         RTFCreator creator = new RTFCreator();
 
         creator.prepareDocument();
-        creator.createContents();
-        creator.createDescription();
-        creator.mvelDocumentation();
         creator.getAnnotationsForActions();
         creator.getAnnotationsForItems();
         creator.saveDocument();

@@ -38,6 +38,8 @@ class RTFCreator {
     private List<RtfPara> actions = new ArrayList<>();
     private List<RtfPara> contents = new ArrayList<>();
     private List<RtfPara> mvels = new ArrayList<>();
+    private Map<String, List<RtfActionsHelper>> actionGroups = new HashMap<>();
+    private List<String> itemsName = new ArrayList<>();
     private static final String workDir = System.getProperty("user.dir");
     private final String path =  workDir + File.separator + documentName;
     private final String link = "file:///" + path + "#";
@@ -109,7 +111,7 @@ class RTFCreator {
         );
     }
 
-    private void createContents(List<String> actions, List<String> items) throws IOException
+    private void createContents() throws IOException
     {
         contents.add(p(fontSize(40, "Contents:")));
         contents.add(p());
@@ -117,15 +119,22 @@ class RTFCreator {
         contents.add(p(text("2. "), text (" "), hyperlink(link + "MVEL", p("MVEL"))));
         contents.add(p("3. Actions: "));
         int count = 0;
-        for(String name : actions)
+        int innerCount = 0;
+        for( Map.Entry<String, List<RtfActionsHelper>> entry  : actionGroups.entrySet())
         {
             count++;
-            contents.add(p(tab(), fontSize(fontSize, " 3." + count + " "), fontSize(fontSize, " "), hyperlink(link + name, p(fontSize(fontSize, name)))));
+            contents.add(p(tab(), fontSize(fontSize, " 3." + count + " "), fontSize(fontSize, " " + entry.getKey())));
+            for (RtfActionsHelper s : entry.getValue())
+            {
+                innerCount++;
+                contents.add(p(tab(), tab(), fontSize(fontSize, " 3." + count + "." + innerCount + " " ), fontSize(fontSize, " "), hyperlink(link + s.getName(), p(fontSize(fontSize, s.getName())))));
+            }
+            innerCount = 0;
         }
 
         contents.add(p("4. Items: "));
         count = 0;
-        for(String name : items)
+        for(String name : itemsName)
         {
             count++;
             contents.add(p(tab(), fontSize(fontSize, " 4." + count + " "), fontSize(fontSize, " "), hyperlink(link + name, p(fontSize(fontSize, name)))));
@@ -133,93 +142,101 @@ class RTFCreator {
         writeContents();
     }
 
-    private void createActionsManual(String className, ActionAttribute classAnnotations,
-                                    Map<String, ActionFieldAttribute> fieldAnnotations)
+    private void createActionsManual()
     {
-        String[] n = className.split("\\.");
-        String name = n[n.length - 1] + trait;
-
-        actions.add(p(tab(), bold(name), lineBreak()));
-        actions.add(p(findHyperlinks(classAnnotations.generalDescription()).toArray()));
-        actions.add(p());
-
-        if (classAnnotations.additionFieldsAllowed())
+        for( Map.Entry<String, List<RtfActionsHelper>> entry  : actionGroups.entrySet())
         {
-            actions.add(p(italic(fontSize(fontSize, "Additional fields: ")), fontSize(fontSize, "Yes")));
-            if (!classAnnotations.additionalDescription().equals(""))
-                actions.add(p(findHyperlinks(classAnnotations.additionalDescription()).toArray()));
-        } else {
-            actions.add(p(italic(fontSize(fontSize, "Additional fields: ")), fontSize(fontSize, "No")));
+            actions.add(p(bold(entry.getKey()), lineBreak()));
+
+            for (RtfActionsHelper rah : entry.getValue())
+            {
+                String name = rah.getName() + trait;
+                ActionAttribute classAnnotations = rah.getClassAnnotation();
+                Map<String, ActionFieldAttribute> fieldAnnotations = rah.getFieldAnnotations();
+
+                actions.add(p(bold(name), lineBreak()));
+                actions.add(p(findHyperlinks(classAnnotations.generalDescription()).toArray()));
+                actions.add(p());
+
+                if (classAnnotations.additionFieldsAllowed())
+                {
+                    actions.add(p(italic(fontSize(fontSize, "Additional fields: ")), fontSize(fontSize, "Yes")));
+                    if (!classAnnotations.additionalDescription().equals(""))
+                        actions.add(p(findHyperlinks(classAnnotations.additionalDescription()).toArray()));
+                } else {
+                    actions.add(p(italic(fontSize(fontSize, "Additional fields: ")), fontSize(fontSize, "No")));
+                }
+                actions.add(p());
+
+                if (classAnnotations.outputType() != NullType.class)
+                {
+                    String[] out = classAnnotations.outputType().getName().split("\\.");
+                    String outName = out[out.length - 1];
+                    actions.add(p(italic(fontSize(fontSize, "Output"))));
+                    actions.add(p(findHyperlinks(classAnnotations.outputDescription()).toArray()));
+                    actions.add(p(fontSize(fontSize, "Output type: " + outName)));
+                } else
+                {
+                    actions.add(p(italic(fontSize(fontSize, "Output: ")), fontSize(fontSize, "Null")));
+                }
+                actions.add(p());
+
+                if (!classAnnotations.seeAlso().equals(""))
+                {
+                    List<RtfText> seeAlsoText = new ArrayList<>();
+                    String[] seeAlso = classAnnotations.seeAlso().split(",");
+                    Arrays.asList(seeAlso).forEach(r-> {
+                                String q = r.replaceAll("(?U)[\\pP\\s]", "");
+                                seeAlsoText.add(hyperlink(link + q, p(fontSize(fontSize, q))));
+                                seeAlsoText.add(fontSize(fontSize, " "));
+                            }
+                    );
+                    actions.add(p(italic(fontSize(fontSize, "See also:"))));
+                    actions.add(p(seeAlsoText.toArray()));
+                    actions.add(p());
+                }
+
+                if (!fieldAnnotations.isEmpty())
+                {
+                    actions.add(p(italic(fontSize(fontSize,"Fields:"))));
+                    fieldAnnotations.forEach((fName, attr) ->
+                            {
+                                List<RtfText> listParams = new ArrayList<>();
+                                actions.add(p(underline(fontSize(fontSize, attr.name()))));
+                                for (RtfText el : findHyperlinks(attr.description())){
+                                    listParams.add(el);
+                                }
+                                actions.add(p(listParams.toArray()));
+                                if (attr.mandatory())
+                                {
+                                    actions.add(p(fontSize(fontSize, "Mandatory: Yes")));
+                                }
+                                else
+                                {
+                                    actions.add(p(fontSize(fontSize, "Mandatory: No")));
+                                }
+                                actions.add(p());
+                            }
+                    );
+                }
+
+                if (!classAnnotations.examples().equals(""))
+                {
+                    actions.add(p(italic(fontSize(fontSize, "Examples"))));
+                    actions.addAll(parseExample(classAnnotations.examples()));
+                    actions.add(p());
+                }
+            }
         }
-        actions.add(p());
 
-        if (classAnnotations.outputType() != NullType.class)
-        {
-            String[] out = classAnnotations.outputType().getName().split("\\.");
-            String outName = out[out.length - 1];
-            actions.add(p(italic(fontSize(fontSize, "Output"))));
-            actions.add(p(findHyperlinks(classAnnotations.outputDescription()).toArray()));
-            actions.add(p(fontSize(fontSize, "Output type: " + outName)));
-        } else
-        {
-            actions.add(p(italic(fontSize(fontSize, "Output: ")), fontSize(fontSize, "Null")));
-        }
-        actions.add(p());
-
-        if (!classAnnotations.seeAlso().equals(""))
-        {
-            List<RtfText> seeAlsoText = new ArrayList<>();
-            String[] seeAlso = classAnnotations.seeAlso().split(",");
-            Arrays.asList(seeAlso).forEach(r-> {
-                        String q = r.replaceAll("(?U)[\\pP\\s]", "");
-                        seeAlsoText.add(hyperlink(link + q, p(fontSize(fontSize, q))));
-                        seeAlsoText.add(fontSize(fontSize, " "));
-                    }
-            );
-            actions.add(p(italic(fontSize(fontSize, "See also:"))));
-            actions.add(p(seeAlsoText.toArray()));
-            actions.add(p());
-        }
-
-        if (!fieldAnnotations.isEmpty())
-        {
-            actions.add(p(italic(fontSize(fontSize,"Fields:"))));
-            fieldAnnotations.forEach((fName, attr) ->
-                    {
-                        List<RtfText> listParams = new ArrayList<>();
-                        actions.add(p(underline(fontSize(fontSize, attr.name()))));
-                        if (attr.mandatory())
-                        {
-                            actions.add(p(fontSize(fontSize, "Mandatory: Yes")));
-                        }
-                        else
-                        {
-                            actions.add(p(fontSize(fontSize, "Mandatory: No")));
-                        }
-                        actions.add(p(fontSize(fontSize, "Description: ")));
-                        for (RtfText el : findHyperlinks(attr.description())){
-                            listParams.add(el);
-                        }
-                        actions.add(p(listParams.toArray()));
-                        actions.add(p());
-                    }
-            );
-        }
-
-        if (!classAnnotations.examples().equals(""))
-        {
-            actions.add(p(italic(fontSize(fontSize, "Examples"))));
-            actions.addAll(parseExample(classAnnotations.examples()));
-            actions.add(p());
-        }
     }
+
 
     private void createItemsManual(String className, MatrixItemAttribute classAnnotation)
     {
-        String[] n = className.split("\\.");
-        String name = n[n.length - 1] + trait;
+        String name = className + trait;
 
-        items.add(p(tab(), bold(name), lineBreak()));
+        items.add(p(bold(name), lineBreak()));
         items.add(p(findHyperlinks(classAnnotation.description()).toArray()));
         items.add(p());
 
@@ -360,7 +377,7 @@ class RTFCreator {
                 p(fontSize(fontSize, "Title page " + VersionInfo.getVersion())));
     }
 
-    void createDescription() throws IOException, BadLocationException
+    private void createDescription() throws IOException, BadLocationException
     {
         InputStream is = introduction.openStream();
         RTFEditorKit rtfParser = new RTFEditorKit();
@@ -369,28 +386,6 @@ class RTFCreator {
         String text = doc.getText(0, doc.getLength());
 
         document.section(createSectionFormat(), p(tab(), tab(), tab(), tab(), fontSize(40, "Introduction" + trait), lineBreak()), p(fontSize(fontSize, text)));
-    }
-
-    void createContents() throws IOException
-    {
-        List<String> actions = new ArrayList<>();
-        List<String> items = new ArrayList<>();
-
-        for (Class<?> clazz : Parser.knownItems)
-        {
-            String[] n = clazz.getName().split("\\.");
-            String name = n[n.length - 1];
-            items.add(name);
-        }
-
-        for (Class<?> clazz : ActionsList.actions)
-        {
-            String[] n = clazz.getName().split("\\.");
-            String name = n[n.length - 1];
-            actions.add(name);
-        }
-
-        createContents(actions, items);
     }
 
     private String replaceChars (String s)
@@ -405,7 +400,7 @@ class RTFCreator {
                 .replace("{{@", "").replace("@}}", ""); //link
     }
 
-    void mvelDocumentation() throws IOException
+    private void mvelDocumentation() throws IOException
     {
         mvels.add(p(tab(), tab(), tab(), tab(), fontSize(40, "MVEL" + trait), lineBreak()));
         BufferedReader br = new BufferedReader(new FileReader( new File(mvelDoc.getFile())));
@@ -531,49 +526,138 @@ class RTFCreator {
 
     void getAnnotationsForActions() throws IOException
     {
+        List<RtfActionsHelper> gui = new ArrayList<>();
+        List<RtfActionsHelper> system = new ArrayList<>();
+        List<RtfActionsHelper> report = new ArrayList<>();
+        List<RtfActionsHelper> app = new ArrayList<>();
+        List<RtfActionsHelper> messages = new ArrayList<>();
+        List<RtfActionsHelper> clients = new ArrayList<>();
+        List<RtfActionsHelper> services = new ArrayList<>();
+        List<RtfActionsHelper> tables = new ArrayList<>();
+        List<RtfActionsHelper> text = new ArrayList<>();
+        List<RtfActionsHelper> xml = new ArrayList<>();
+        List<RtfActionsHelper> sql = new ArrayList<>();
+        List<RtfActionsHelper> matrix = new ArrayList<>();
+
         actions.add(p(tab(),tab(), tab(),tab(), fontSize(40, "Actions" + trait), lineBreak()));
         for (Class<?> clazz : ActionsList.actions)
         {
             ActionAttribute classAnnotation = null;
             Map<String, ActionFieldAttribute> fieldAnnotations = new HashMap<>();
+            boolean deprecated = false;
 
             Annotation[] ann = clazz.getAnnotations();
             for (Annotation an : ann){
-                if (an instanceof ActionAttribute)
+                if (an instanceof Deprecated)
+                {
+                    deprecated = true;
+                }
+                else if (an instanceof ActionAttribute)
                 {
                     classAnnotation = (ActionAttribute) an;
                 }
             }
 
-            Field[] fields =  clazz.getDeclaredFields();
-            for (Field f : fields)
+            if (!deprecated)
             {
-                Annotation[] fAnnotations = f.getDeclaredAnnotations();
-                Arrays.asList(fAnnotations).removeIf(fa -> !(fa instanceof ActionFieldAttribute));
-                for (Annotation an : fAnnotations){
-                    fieldAnnotations.put(f.getName(), (ActionFieldAttribute) an );
+                Field[] fields =  clazz.getDeclaredFields();
+                for (Field f : fields)
+                {
+                    Annotation[] fAnnotations = f.getDeclaredAnnotations();
+                    Arrays.asList(fAnnotations).removeIf(fa -> !(fa instanceof ActionFieldAttribute));
+                    for (Annotation an : fAnnotations){
+                        fieldAnnotations.put(f.getName(), (ActionFieldAttribute) an );
+                    }
+                }
+                String[] n = clazz.getName().split("\\.");
+                String name = n[n.length - 1];
+                RtfActionsHelper rah = new RtfActionsHelper(name, classAnnotation, fieldAnnotations);
+                switch (classAnnotation.group()) {
+                    case App:
+                        app.add(rah);
+                        break;
+                    case Clients:
+                        clients.add(rah);
+                        break;
+                    case GUI:
+                        gui.add(rah);
+                        break;
+                    case Matrix:
+                        matrix.add(rah);
+                        break;
+                    case Messages:
+                        messages.add(rah);
+                        break;
+                    case Report:
+                        report.add(rah);
+                        break;
+                    case Services:
+                        services.add(rah);
+                        break;
+                    case SQL:
+                        sql.add(rah);
+                        break;
+                    case System:
+                        system.add(rah);
+                        break;
+                    case Tables:
+                        tables.add(rah);
+                        break;
+                    case Text:
+                        text.add(rah);
+                        break;
+                    case XML:
+                        xml.add(rah);
+                        break;
                 }
             }
-            createActionsManual(clazz.getName(), classAnnotation, fieldAnnotations);
         }
-        writeActions();
+        actionGroups.put("App", app);
+        actionGroups.put("Clients", clients);
+        actionGroups.put("GUI", gui);
+        actionGroups.put("Matrix", matrix);
+        actionGroups.put("Messages", messages);
+        actionGroups.put("Report", report);
+        actionGroups.put("Services", services);
+        actionGroups.put("SQL", sql);
+        actionGroups.put("System", system);
+        actionGroups.put("Tables", tables);
+        actionGroups.put("Text", text);
+        actionGroups.put("XML", xml);
     }
 
-    void getAnnotationsForItems() throws IOException
+    void getAnnotationsForItems() throws IOException, BadLocationException
     {
         items.add(p(tab(),tab(), tab(),tab(), fontSize(40, "Items" + trait), lineBreak()));
         for (Class<?> clazz : Parser.knownItems){
             MatrixItemAttribute classAnnotation = null;
+            boolean deprecated = false;
 
             Annotation[] ann = clazz.getAnnotations();
             for (Annotation an : ann){
-                if (an instanceof MatrixItemAttribute)
+                if (an instanceof Deprecated)
+                {
+                    deprecated = true;
+                }
+                else if (an instanceof MatrixItemAttribute)
                 {
                     classAnnotation = (MatrixItemAttribute) an;
                 }
             }
-            createItemsManual(clazz.getName(), classAnnotation);
+
+            if (!deprecated)
+            {
+                String[] n = clazz.getName().split("\\.");
+                String name = n[n.length - 1];
+                createItemsManual(name, classAnnotation);
+                itemsName.add(name);
+            }
         }
+        createContents();
+        createDescription();
+        mvelDocumentation();
+        createActionsManual();
+        writeActions();
         writeItems();
     }
 
