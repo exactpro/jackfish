@@ -10,13 +10,15 @@ import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Node;
+import javafx.scene.control.*;
 import javafx.scene.control.Label;
-import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.control.ToggleButton;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.*;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 
@@ -42,6 +44,7 @@ public class ImageViewWithScale implements IScaleListener
 	private final Label lblInspect;
 	private final Label lblColor;
 	private final javafx.scene.shape.Rectangle rectangleColor;
+	private final CheckBox cbIds;
 
 	private final Group group;
 
@@ -76,6 +79,7 @@ public class ImageViewWithScale implements IScaleListener
 		this.rectangleColor = new javafx.scene.shape.Rectangle();
 		this.rectangleColor.setWidth(12.0);
 		this.rectangleColor.setHeight(12.0);
+		this.cbIds = new CheckBox("Id's");
 
 		Label lblColorName = new Label("Pixel color :");
 
@@ -100,6 +104,8 @@ public class ImageViewWithScale implements IScaleListener
 		this.hBox.getChildren().addAll(this.scalePane
 				, Common.createSpacer(Common.SpacerEnum.HorizontalMid)
 				, this.btnInspect
+				, Common.createSpacer(Common.SpacerEnum.HorizontalMid)
+				, this.cbIds
 				, Common.createSpacer(Common.SpacerEnum.HorizontalMid)
 				, this.lblInspect
 				, Common.createSpacer(Common.SpacerEnum.HorizontalMid)
@@ -169,14 +175,25 @@ public class ImageViewWithScale implements IScaleListener
 
 	public void displayRectangle(Rectangle rectangle)
 	{
+		this.markedList.forEach(r -> r.setOpacity(TreeTableViewWithRectangles.TRANSPARENT_RECT));
+		hideRectangle();
 		if (rectangle == null || isRectEmpty(rectangle))
 		{
-			hideRectangle();
+			//do nothing
 		}
-		else if (this.rectangle != null)
+		else if (this.markedList.contains(new CustomRectangle(rectangle, 1.0)))
 		{
-			this.rectangle.updateRectangle(rectangle, this.scale);
-			this.rectangle.setVisible(true);
+			CustomRectangle customRectangle = this.markedList.get(this.markedList.indexOf(new CustomRectangle(rectangle, 1.0)));
+			customRectangle.setOpacity(1.0);
+		}
+		else
+		{
+
+			if (this.rectangle != null)
+			{
+				this.rectangle.updateRectangle(rectangle, this.scale);
+				this.rectangle.setVisible(true);
+			}
 		}
 	}
 
@@ -190,6 +207,7 @@ public class ImageViewWithScale implements IScaleListener
 				.peek(r -> {
 					r.setGroup(this.group);
 					r.update(this.scale);
+					r.setTextVisible(r.isVisible() && this.cbIds.isSelected());
 				})
 				.forEach(r -> this.markedList.add(r));
 	}
@@ -251,6 +269,8 @@ public class ImageViewWithScale implements IScaleListener
 
 	private void listeners()
 	{
+		this.cbIds.selectedProperty().addListener((observable, oldValue, newValue) -> markedList.forEach(r -> r.setTextVisible(newValue)));
+
 		this.group.setOnMouseMoved(event -> {
 			this.printMouseCoords(event);
 			this.printPixelColor(event);

@@ -35,6 +35,8 @@ import java.util.stream.IntStream;
 
 public class TreeTableViewWithRectangles
 {
+	public static final double TRANSPARENT_RECT = 0.25;
+
 	private final AnchorPane anchorPane;
 	private final TreeTableView<XpathTreeItem> treeTableView;
 
@@ -454,11 +456,24 @@ public class TreeTableViewWithRectangles
 						XpathTreeItem value = markedRow.getValue();
 						XpathTreeItem.TreeItemState state = value.getState();
 						value.setMarkIsVisible(state == null ? true : stateMap.get(state));
+
 						Rectangle rectangle = value.getRectangle();
 						CustomRectangle customRectangle = new CustomRectangle(rectangle, 1.0);
+						customRectangle.setOpacity(TRANSPARENT_RECT);
 						customRectangle.setWidthLine(LayoutExpressionBuilderController.BORDER_WIDTH);
 						customRectangle.setFill(value.getState().color());
 						customRectangle.setVisible(value.isMarkVisible());
+
+						List<ElementWizardBean> relatedList = value.getList();
+						if (!relatedList.isEmpty())
+						{
+							Text text = new Text();
+							String collect = relatedList.stream().map(ElementWizardBean::getId).collect(Collectors.joining(","));
+							text.setText(collect);
+							text.setFill(value.getState().color());
+							customRectangle.setText(text);
+						}
+
 						return customRectangle;
 					})
 					.collect(Collectors.toList());
