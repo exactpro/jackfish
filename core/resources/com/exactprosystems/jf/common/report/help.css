@@ -175,15 +175,33 @@ ul.nav > ul > li > a {
 
 }
 
+
 .foundElement {
 
+
 	background-color : gold;
+
+
+}
+
+ins{
+	text-decoration: none;
+	background-color : gold;
+}
+
+
+ins .active{
+
+	background-color : #ff9632;
 
 }
 
 
+
 .currentFoundElement {
+
 	background-color : #ff9632;
+
 }
 
 

@@ -660,6 +660,7 @@ public abstract class DialogsHelper
 		dialog.setTitle("Actions help");
 		dialog.setResizable(true);
 		dialog.getDialogPane().setContent(borderPane);
+		dialog.getDialogPane().lookupButton(ButtonType.OK).setVisible(false);
 		dialog.getDialogPane().setPrefWidth(1024);
 		dialog.getDialogPane().setPrefHeight(768);
 		dialog.getDialogPane().getStylesheets().addAll(Common.currentThemesPaths());

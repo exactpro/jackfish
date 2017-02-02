@@ -1,4 +1,7 @@
 --------------------------------------------------------------------------------
+02.02.2017 4.3.0.1908
+Full text search in help added
+--------------------------------------------------------------------------------
 02.02.2017 4.3.0.1904
 RM40047 bug : change RawText not display * on tab with matrix.
 Fixed for RawTable, RawText and Csv
