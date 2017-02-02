@@ -12,7 +12,6 @@ import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.evaluator.Variables;
-import com.exactprosystems.jf.common.report.HTMLhelper;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.common.report.ReportTable;
 import com.exactprosystems.jf.documents.config.Context;
@@ -30,7 +29,6 @@ import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
 import com.exactprosystems.jf.exceptions.ParametersException;
 import org.apache.log4j.Logger;
 
-import javax.lang.model.type.NullType;
 import java.lang.reflect.Field;
 import java.util.*;
 import java.util.Map.Entry;
@@ -218,13 +216,6 @@ public abstract class AbstractAction implements Cloneable
         return this.action.Result;
     }
 
-    public final void doDocumentation(Context context, ReportBuilder report)
-    {
-        documentAction(report);
-
-        doRealDocumetation(context, report);
-    }
-
     public final String actionSuffix()
     {
         return this.getClass().getAnnotation(ActionAttribute.class).suffix();
@@ -321,9 +312,9 @@ public abstract class AbstractAction implements Cloneable
 	{
 	}
 
-    protected void doRealDocumetation(Context context, ReportBuilder report)
-    {
-    }
+//    protected void doRealDocumetation(Context context, ReportBuilder report)
+//    {
+//    }
 
     protected abstract void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception;
 
@@ -364,56 +355,56 @@ public abstract class AbstractAction implements Cloneable
     //==============================================================================================
     // Private members
     //==============================================================================================
-    public void documentAction(ReportBuilder report)
-    {
-        ReportTable table;
-
-        Class<?> type = getClass();
-        ActionAttribute attr = type.getAnnotation(ActionAttribute.class);
-
-        table = report.addTable("", null, true, 100,
-                new int[] { 30, 70 }, new String[] {getClass().getSimpleName(), ""});
-
-        table.addValues("Description", attr.generalDescription());
-        if (attr.additionFieldsAllowed())
-        {
-            table.addValues("Additional fields", "Yes");
-            table.addValues("Additiona fields description", attr.additionalDescription());
-        }
-        else
-        {
-        	table.addValues("Additional fields", "No");
-        }
-        table.addValues("See also", attr.seeAlso());
-        table.addValues("Examples", HTMLhelper.htmlescape(attr.examples()));
-
-
-        // Input
-        Map<String, FieldAndAttributes> fieldsAttr = getFieldsAttributes();
-
-        table = report.addTable("Input:", null, true, 4,
-                new int[] {0, 0, 60, 0, 0}, new String[] {"Field name", "Field type", "Description", "Mandatory", "Default value"});
-
-        for (Entry<String, FieldAndAttributes> entry : fieldsAttr.entrySet())
-        {
-            String name = entry.getKey();
-            Field field = entry.getValue().field;
-            ActionFieldAttribute fieldAttr = entry.getValue().attribute;
-
-            table.addValues(name,
-                    typeDescription(field.getType()),
-                    fieldAttr.description(),
-                    fieldAttr.mandatory() ? "Yes" : "No",
-                    fieldAttr.mandatory() ? "" : "");
-        }
-
-        // Output
-        table = report.addTable("Output:", null, true, 100,
-                new int[] {20, 40}, new String[] {"Output type", "Description"});
-
-        table.addValues(typeDescription(attr.outputType()),
-                attr.outputDescription());
-    }
+//    public void documentAction(ReportBuilder report)
+//    {
+//        ReportTable table;
+//
+//        Class<?> type = getClass();
+//        ActionAttribute attr = type.getAnnotation(ActionAttribute.class);
+//
+//        table = report.addTable("", null, true, 100,
+//                new int[] { 30, 70 }, new String[] {getClass().getSimpleName(), ""});
+//
+//        table.addValues("Description", attr.generalDescription());
+//        if (attr.additionFieldsAllowed())
+//        {
+//            table.addValues("Additional fields", "Yes");
+//            table.addValues("Additiona fields description", attr.additionalDescription());
+//        }
+//        else
+//        {
+//        	table.addValues("Additional fields", "No");
+//        }
+//        table.addValues("See also", attr.seeAlso());
+//        table.addValues("Examples", HTMLhelper.htmlescape(attr.examples()));
+//
+//
+//        // Input
+//        Map<String, FieldAndAttributes> fieldsAttr = getFieldsAttributes();
+//
+//        table = report.addTable("Input:", null, true, 4,
+//                new int[] {0, 0, 60, 0, 0}, new String[] {"Field name", "Field type", "Description", "Mandatory", "Default value"});
+//
+//        for (Entry<String, FieldAndAttributes> entry : fieldsAttr.entrySet())
+//        {
+//            String name = entry.getKey();
+//            Field field = entry.getValue().field;
+//            ActionFieldAttribute fieldAttr = entry.getValue().attribute;
+//
+//            table.addValues(name,
+//                    typeDescription(field.getType()),
+//                    fieldAttr.description(),
+//                    fieldAttr.mandatory() ? "Yes" : "No",
+//                    fieldAttr.mandatory() ? "" : "");
+//        }
+//
+//        // Output
+//        table = report.addTable("Output:", null, true, 100,
+//                new int[] {20, 40}, new String[] {"Output type", "Description"});
+//
+//        table.addValues(typeDescription(attr.outputType()),
+//                attr.outputDescription());
+//    }
 
     private void reportParameters(ReportBuilder report, Parameters parameters)
     {
@@ -463,22 +454,6 @@ public abstract class AbstractAction implements Cloneable
             table.addValues(title, expression, obj);
         }
     }
-
-    private String typeDescription(Class<?> type)
-    {
-        if (type == NullType.class)
-        {
-            return "none";
-        }
-
-        if (type.isArray())
-        {
-            return type.getComponentType().getSimpleName() + " or " + type.getSimpleName();
-        }
-
-        return type.getSimpleName();
-    }
-
 
     private boolean injectParameters(Parameters parameters) throws Exception
     {

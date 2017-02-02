@@ -390,44 +390,6 @@ public class Matrix extends AbstractDocument implements IMatrix
 		return 0;
 	}
 
-	public void documentation(Context services, ReportBuilder report)
-	{
-		try
-		{
-			report.reportStarted(null, null);
-		}
-		catch (Exception e)
-		{
-			logger.error(e.getMessage(), e);
-		}
-
-		try
-		{
-			if (this.root != null)
-			{
-				for (int i = 0; i < this.root.count(); i++)
-				{
-					MatrixItem item = this.root.get(i);
-					item.documentation(services, report);
-				}
-			}
-		}
-		catch (Exception e)
-		{
-			logger.error(e.getMessage(), e);
-		}
-
-		try
-		{
-			report.reportFinished(0, 0, null, null);
-		}
-		catch (Exception e)
-		{
-			logger.error(e.getMessage(), e);
-		}
-
-	}
-
 	public boolean checkMatrix(Context context, AbstractEvaluator evaluator, StringBuilder error)
 	{
 		this.matrixListener.reset(this);

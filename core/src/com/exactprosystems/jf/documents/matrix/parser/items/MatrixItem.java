@@ -18,7 +18,6 @@ import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.evaluator.Variables;
 import com.exactprosystems.jf.common.report.ReportBuilder;
-import com.exactprosystems.jf.common.report.ReportTable;
 import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.Matrix;
@@ -367,27 +366,6 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 	public final void check(Context context, AbstractEvaluator evaluator, IMatrixListener checkListener, Set<String> ids)
 	{
 		checkItSelf(context, evaluator, checkListener, ids, this.parameters);
-	}
-
-	public final void documentationOnlyThis(Context context, ReportBuilder report)
-	{
-		report.itemStarted(this);
-		report.itemIntermediate(this);
-		docItSelf(context, report);
-		report.itemFinished(this, 0, null);
-	}
-
-	public final void documentation(Context context, ReportBuilder report)
-	{
-		report.itemStarted(this);
-		report.itemIntermediate(this);
-		docItSelf(context, report);
-
-		for (MatrixItem item : this.children)
-		{
-			item.documentation(context, report);
-		}
-		report.itemFinished(this, 0, null);
 	}
 
 	public final ReturnAndResult execute(Context context, IMatrixListener listener, AbstractEvaluator evaluator, ReportBuilder report)
@@ -771,23 +749,23 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 	}
 
 
-	protected void docItSelf(Context context, ReportBuilder report)
-	{
-		Class<?> type = getClass();
-		MatrixItemAttribute attribute = type.getAnnotation(MatrixItemAttribute.class);
-		if (attribute == null) {
-			return;
-		}
-
-		ReportTable table = report.addTable("", null, true, 100,
-				new int[]{30, 70});
-		table.addValues("Description", attribute.description());
-		table.addValues("Examples", attribute.examples());
-		if (!attribute.seeAlso().equals(""))
-		{
-			table.addValues("See also", attribute.seeAlso());
-		}
-	}
+//	protected void docItSelf(Context context, ReportBuilder report)
+//	{
+//		Class<?> type = getClass();
+//		MatrixItemAttribute attribute = type.getAnnotation(MatrixItemAttribute.class);
+//		if (attribute == null) {
+//			return;
+//		}
+//
+//		ReportTable table = report.addTable("", null, true, 100,
+//				new int[]{30, 70});
+//		table.addValues("Description", attribute.description());
+//		table.addValues("Examples", attribute.examples());
+//		if (!attribute.seeAlso().equals(""))
+//		{
+//			table.addValues("See also", attribute.seeAlso());
+//		}
+//	}
 
 	protected void checkItSelf(Context context, AbstractEvaluator evaluator, IMatrixListener listener, Set<String> ids, Parameters parameters)
 	{

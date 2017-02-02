@@ -244,7 +244,8 @@ public class MatrixContextMenu extends ContextMenu
 				{
 					ReportBuilder report = new ContextHelpFactory().createReportBuilder(null, null, new Date());
 
-					item.documentationOnlyThis(this.context, report);
+					// TODO replace with another method
+//					item.documentationOnlyThis(this.context, report);
 
 					WebView browser = new WebView();
 					WebEngine engine = browser.getEngine();

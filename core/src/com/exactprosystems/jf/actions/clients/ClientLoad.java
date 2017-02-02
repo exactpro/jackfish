@@ -17,7 +17,6 @@ import com.exactprosystems.jf.api.client.ClientConnection;
 import com.exactprosystems.jf.api.client.IClientsPool;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
-import com.exactprosystems.jf.common.report.ReportTable;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.functions.HelpKind;
@@ -62,16 +61,6 @@ public class ClientLoad extends AbstractAction
 		}
 	}
 
-	@Override
-	public void doRealDocumetation(Context context, ReportBuilder report)
-	{
-		ReportTable info = report.addTable("Available clients", null, true, 100, new int[] { 100 }, "Client name");
-		for (String protocol : context.getConfiguration().getClientPool().clientNames())
-		{
-			info.addValues(protocol);
-		}
-	}
-	
 	@Override
 	public void initDefaultValues() 
 	{

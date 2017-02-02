@@ -73,7 +73,6 @@ public final class ActionItem extends MatrixItem
 		Object layout = driver.createLayout(this, 4);
 		driver.showComment(this, layout, 0, 0, getComments());
 		driver.showTextBox(this, layout, 1, 0, this.id::set, this.id::get, () -> this.id.get() + ".Out");
-//		driver.showTitle(this, layout, 1, 1, Tokens.Action.get(), context.getFactory().getSettings());
 		driver.showTitle(this, layout, 1, 1, getActionName(), context.getFactory().getSettings());
 		driver.showParameters(this, layout, 1, 2, this.parameters, () -> this.id.get() + ".In.", false);
 		driver.showCheckBox(this, layout, 2, 0, "G", this.global, this.global);
@@ -219,12 +218,6 @@ public final class ActionItem extends MatrixItem
 		{
 			super.addParameter(firstLine, secondLine, parameter.getName(), parameter.getExpression());
 		}
-	}
-
-	@Override
-	protected void docItSelf(Context context, ReportBuilder report)
-	{
-		this.action.doDocumentation(context, report);
 	}
 
 	@Override

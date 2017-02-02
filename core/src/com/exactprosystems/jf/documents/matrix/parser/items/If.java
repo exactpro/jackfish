@@ -120,18 +120,6 @@ public class If extends MatrixItem
 		super.addParameter(line, Tokens.EndIf.get());
 	}
 
-	@Override
-	protected void docItSelf(Context context, ReportBuilder report)
-	{
-        ReportTable table;
-        table = report.addTable("", null, true, 100,
-                new int[] { 30, 70 }, new String[] { "Chapter", "Description"});
-
-        table.addValues("Destination", "To check a condition and execute one or another branch of script");
-        table.addValues("Examples", "<code>#If</code>");
-        table.addValues("See also", "Else");
-	}
-	
     @Override
     protected void checkItSelf(Context context, AbstractEvaluator evaluator, IMatrixListener listener, Set<String> ids, Parameters parameters)
     {

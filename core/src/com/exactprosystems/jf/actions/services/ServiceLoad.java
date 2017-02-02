@@ -17,7 +17,6 @@ import com.exactprosystems.jf.api.service.IServicesPool;
 import com.exactprosystems.jf.api.service.ServiceConnection;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
-import com.exactprosystems.jf.common.report.ReportTable;
 import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
@@ -70,16 +69,6 @@ public class ServiceLoad extends AbstractAction
 		}
 	}
 
-	@Override
-	public void doRealDocumetation(Context context, ReportBuilder report)
-	{
-		ReportTable info = report.addTable("Available services", null, true, 100, new int[] { 100 }, "Service name");
-		for (String protocol : context.getConfiguration().getServicesPool().servicesNames())
-		{
-			info.addValues(protocol);
-		}
-	}
-	
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{

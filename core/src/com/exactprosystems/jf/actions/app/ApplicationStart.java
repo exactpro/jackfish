@@ -129,16 +129,6 @@ public class ApplicationStart extends AbstractAction
 	}
 
 	@Override
-	public void doRealDocumetation(Context context, ReportBuilder report)
-	{
-		ReportTable info = report.addTable("Available apps", null, true, 100, new int[] { 100 }, "App name");
-		for (String app : context.getConfiguration().getApplicationPool().appNames())
-		{
-			info.addValues(app);
-		}
-	}
-
-	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception 
 	{
 		IApplicationPool pool = context.getConfiguration().getApplicationPool();
