@@ -1,9 +1,14 @@
 package com.exactprosystems.jf.tool.custom.xpath;
 
 import com.exactprosystems.jf.tool.CssVariables;
+import com.exactprosystems.jf.tool.dictionary.dialog.ElementWizardBean;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import org.w3c.dom.Node;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class XpathTreeItem extends XpathItem
 {
@@ -35,6 +40,9 @@ public class XpathTreeItem extends XpathItem
 
 	private boolean markIsVisible = true;
 
+	private List<ElementWizardBean> list = new ArrayList<>();
+
+	@Deprecated
 	private static TreeItemState[] states = new TreeItemState[]{TreeItemState.ADD, TreeItemState.MARK, TreeItemState.QUESTION};
 	private TreeItemState currentState;
 	private int currentIndex = -1;
@@ -55,6 +63,22 @@ public class XpathTreeItem extends XpathItem
 		{
 			currentState = states[++currentIndex];
 		}
+	}
+
+	public void setState(TreeItemState state)
+	{
+		this.currentState = state;
+		this.currentIndex = Arrays.asList(states).indexOf(this.currentState);
+	}
+
+	public void addRelation(ElementWizardBean bean)
+	{
+		this.list.add(bean);
+	}
+
+	public List<ElementWizardBean> getList()
+	{
+		return list;
 	}
 
 	public TreeItemState getState()

@@ -31,11 +31,14 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.net.URL;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
@@ -90,7 +93,7 @@ public class DialogWizardController implements Initializable, ContainingParent
 			@Override
 			public void find(TreeItem<XpathTreeItem> xpathItemTreeItem)
 			{
-				treeViewWithRectangles.find(xpathItemTreeItem);
+				treeViewWithRectangles.selectAndScroll(xpathItemTreeItem);
 			}
 
 			@Override
@@ -255,6 +258,31 @@ public class DialogWizardController implements Initializable, ContainingParent
 			}
 		}
 		return null;
+	}
+
+	void foundGreat(Node node, ElementWizardBean bean)
+	{
+		TreeItem<XpathTreeItem> byNode = this.treeViewWithRectangles.findByNode(node);
+		XpathTreeItem value = byNode.getValue();
+		if (value != null)
+		{
+			value.setState(XpathTreeItem.TreeItemState.MARK);
+			value.addRelation(bean);
+			this.treeViewWithRectangles.setState(XpathTreeItem.TreeItemState.MARK, this.cbMark.isSelected());
+		}
+	}
+
+	void foundBad(NodeList list, ElementWizardBean bean)
+	{
+		List<TreeItem<XpathTreeItem>> byNodes = this.treeViewWithRectangles.findByNodes(list);
+		byNodes.stream()
+				.map(TreeItem::getValue)
+				.filter(Objects::nonNull)
+				.forEach(item -> {
+					item.setState(XpathTreeItem.TreeItemState.QUESTION);
+					item.addRelation(bean);
+				});
+		this.treeViewWithRectangles.setState(XpathTreeItem.TreeItemState.QUESTION, this.cbQuestion.isSelected());
 	}
 
 	//region Action methods
@@ -592,7 +620,7 @@ public class DialogWizardController implements Initializable, ContainingParent
 			}
 		});
 
-		columnId.prefWidthProperty().bind(this.tableView.widthProperty().subtract(35 + 135 + value * 4 + 2));
+		columnId.prefWidthProperty().bind(this.tableView.widthProperty().subtract(35 + 135 + value * 4 + 2 + 16));
 
 		this.tableView.getColumns().addAll(columnNumber, columnId, columnKind, columnIsXpath, columnIsNew, columnCount, columnOption);
 	}
