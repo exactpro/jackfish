@@ -401,7 +401,7 @@ RF;RegressionFramework
             #Id;#Let
             countSteps;0
 
-            #Id;#Action;#Test Name;#Execution Status;#Execution Date;#Execution Time;#Executed By;#Execution Mashine
+            #Id;#Action;#Test Name;#Execution Status;#Execution Date;#Execution Time;#Executed By;#Execution Machine
             createTable;TableCreate;;;;;;
 
             #Id;#Let
@@ -471,7 +471,7 @@ RF;RegressionFramework
                 #Id;#Let
                 selectSteps;selectFromTable.Out
 
-                #Action;#Table;#Test Name;#Execution Status;#Execution Date;#Execution Time;#Executed By;#Execution Mashine
+                #Action;#Table;#Test Name;#Execution Status;#Execution Date;#Execution Time;#Executed By;#Execution Machine
                 TableAddValue;resultTable;scenarios[rowScenarios].scenario;scenarios[rowScenarios].status;scenarios[rowScenarios].date;scenarios[rowScenarios].time;scenarios[rowScenarios].username;scenarios[rowScenarios].host
 
                 #For;#From;#To;#Step
