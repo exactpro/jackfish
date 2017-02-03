@@ -39,9 +39,9 @@ import com.exactprosystems.jf.functions.Table;
 public class TableColumnRename extends AbstractAction
 {
 
-	public static final String tableName = "A table where a column / columns are needed to rename. ";
+	public static final String tableName = "Table";
 
-	@ActionFieldAttribute(name = tableName, mandatory = true, description = "The table.")
+	@ActionFieldAttribute(name = tableName, mandatory = true, description = "A table where a column / columns are needed to rename.")
 	protected Table table = null;
 
 	@Override
