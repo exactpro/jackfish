@@ -9,14 +9,17 @@ Step 1;This matrix randomly failed;OnFinish;;APPSTR1.Out
 
 #Id;#TestCase;#Kind;#Depends;#For
 Step 2;Working;OnFinishOrError;Step 1;APPSTR1.Out
-    #Id;#Action;#AppConnection;#Width;#Height
-    APPSZ1;ApplicationResize;APPSTR1.Out;400;400
+    #Id;#Action;#Dialog;#AppConnection
+    DLGFLL1;DialogFill;'Menu';APPSTR1.Out
+
+    #Id;#Off;#Action;#AppConnection;#Width;#Height
+    APPSZ1;1;ApplicationResize;APPSTR1.Out;400;400
 
     #Action;#Time
     Wait;1000
 
-    #Assert;#Message
-    Rnd.rnd(0, 9) % 2 == 0;'Error by occasion'
+    #Off;#Assert;#Message
+    1;Rnd.rnd(0, 9) % 2 == 0;'Error by occasion'
 
 
 #Id;#TestCase;#Kind;#Depends;#For

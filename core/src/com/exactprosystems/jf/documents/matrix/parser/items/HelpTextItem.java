@@ -21,6 +21,7 @@ import com.exactprosystems.jf.documents.matrix.parser.Result;
 import com.exactprosystems.jf.documents.matrix.parser.ReturnAndResult;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
 
+
 public class HelpTextItem extends MatrixItem
 {
 	public HelpTextItem(String str, String resource)
