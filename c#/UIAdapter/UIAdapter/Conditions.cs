@@ -10,6 +10,7 @@ namespace UIAdapter.Cond
         public const char separator = '|';
         public const char start = '{';
         public const char finish = '}';
+        protected static readonly String EMPTY_CELL = "EMPTY_CELL_EMPTY";
 
         public Condition(string name)
         {
@@ -143,6 +144,7 @@ namespace UIAdapter.Cond
             { '&', typeof(AndCondition) },
             { '|', typeof(OrCondition) },
             { 'S', typeof(StringCondition) },
+            { 'E', typeof(EmptyCondition) },
         };
     }
 
@@ -235,6 +237,51 @@ namespace UIAdapter.Cond
         }
 
         private List<Condition> cond;
+    }
+
+    public class EmptyCondition : Condition
+    {
+        public EmptyCondition()
+            : base(null)
+        { }
+
+        public EmptyCondition(string name)
+            : base(name)
+        {
+        }
+
+        protected override void Init(params string[] args)
+        {
+            if (args.Length != 1)
+            {
+                throw new Exception("Wrong args nubmer: " + args.Length);
+            }
+            SetName(args[0]);
+        }
+
+        public override string ToString()
+        {
+            return GetType().Name + " [name=" + GetName() + ", value=" + this.Value + "]";
+        }
+
+        public override bool IsMatched(string otherName, object otherValue)
+        {
+            return otherValue == null || String.IsNullOrEmpty("" + otherValue) || String.Equals("" + otherValue, EMPTY_CELL);
+        }
+
+        public override bool IsMatched(Dictionary<string, object> dic)
+        {
+            string name = GetName();
+            if (String.IsNullOrEmpty(name))
+            {
+                return true;
+            }
+            Object value = dic[name];
+            return value == null || String.IsNullOrEmpty("" + value) || String.Equals("" + value, EMPTY_CELL);
+        }
+
+        public string Value { get; private set; }
+        public bool IgnoreCase { get; private set; }
     }
 
     public class StringCondition : Condition
