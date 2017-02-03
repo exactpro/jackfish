@@ -9,8 +9,9 @@
 package com.exactprosystems.jf.documents.matrix.parser.items;
 
 import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.File;
+import java.io.FileReader;
+import java.net.URL;
 
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
@@ -24,10 +25,10 @@ import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
 
 public class HelpTextItem extends MatrixItem
 {
-	public HelpTextItem(String str, String resource)
+	public HelpTextItem(String str, URL url)
 	{
 		this.str = str;
-        this.resource = resource;
+        this.url = url;
 	}
 
 	@Override
@@ -43,9 +44,8 @@ public class HelpTextItem extends MatrixItem
         {
             report.outLine(this, null, this.str, null);
 
-            InputStream in = getClass().getResourceAsStream(this.resource);
             StringBuilder sb = new StringBuilder();
-            try (BufferedReader reader = new BufferedReader(new InputStreamReader(in)))
+            try ( BufferedReader reader = new BufferedReader(new FileReader( new File(this.url.getFile()))) )
             {
                 String line;
                 while ((line = reader.readLine()) != null)
@@ -64,5 +64,5 @@ public class HelpTextItem extends MatrixItem
 	}
 
 	private String str = null;
-    private String resource = null;
+    private URL url = null;
 }
