@@ -5,13 +5,16 @@ INIT;Test case;;;
     table;Table
     @;Off;Scenario;Name;TestSet;Start;Finish;Performer;Priority
     0;;matrices/EE/EE1001;;Steps;;;;0
-    1;x;matrices/EE/EE1002;;;3;4;;1
+    1;;matrices/EE/EE1002;;;3;4;;1
     2;;matrices/EE/EE1003;This is a special name;Chrome;;;;1
-    3;x;matrices/EE/EE1004;;Chrome;;;;1
-    4;x;matrices/EE/EE1005;;Chrome;;;;1
-    5;x;matrices/EE/EE1006;;FireFox;;;;2
-    6;x;matrices/EE/EE1007;;FireFox;;;;3
+    3;;matrices/EE/EE1004;;Chrome;;;;1
+    4;;matrices/EE/EE1005;;Chrome;;;;1
+    5;;matrices/EE/EE1006;;FireFox;;;;2
+    6;;matrices/EE/EE1007;;FireFox;;;;3
     #EndRawTable
+
+    #Id;#Global;#Let
+    date;1;DateTime.current().shiftTime(0, 0, 1)
 
     #Call;#table
     RF.RunAll;table
@@ -20,9 +23,9 @@ INIT;Test case;;;
 #TestCase;#Kind;#Depends;#For
 Summary report;;;
     #Call;#date
-    RF.repSummary;
+    RF.repSummary;date
 
     #Call;#pathToSave;#date
-    RF.repCsvExport;'reports';
+    RF.repCsvExport;'reports';date
 
 
