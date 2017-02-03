@@ -26,7 +26,7 @@ using WindowsInput;
 
 namespace UIAdapter
 {
-    class Program
+    public class Program
     {
         #region util methods
 
@@ -105,6 +105,7 @@ namespace UIAdapter
         [DllExport("connect", CallingConvention.Cdecl)]
         public static int Connect(string title, int height, int width, int pid, int controlKind, int timeout)
         {
+            //logger.All("title=" + title + " height=" + height + " width=" + width + " pid=" + pid + " controlKind=" + controlKind + " timeout=" + timeout);
             Task<int> task = Task<int>.Factory.StartNew(() =>
             {
                 title = ConvertString.replaceUnicodeSubStringToChar(title);
@@ -454,6 +455,7 @@ namespace UIAdapter
         [DllExport("findAllForLocator", CallingConvention.Cdecl)]
         public static int FindAllForLocator([In, Out, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 1)] int[] arr, int len, String oId, int controlkindId, string Uid, string Xpath, string Clazz, string Name, string Title, string Text, Boolean many)
         {
+            //logger.All("len="+len+" oId="+" controlkindId="+" Uid="+Uid+" Xpath="+Xpath+" Clazz="+Clazz+" Name="+Name+" Title="+Title+" Text="+Text+" many="+many);
             try
             {
                 long startMethod = getMilis();
@@ -1456,6 +1458,7 @@ namespace UIAdapter
         {
             try
             {
+                //logger.All("tableId=" + tableId + " useNumericHeader=" + useNumericHeader + " condition=" + condition + " columns=" + columns);
                 columns = ConvertString.replaceUnicodeSubStringToChar(columns);
                 long start = getMilis();
                 int[] tableRuntimeId = stringToIntArray(tableId);
