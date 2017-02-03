@@ -52,7 +52,7 @@ public class FxDocumentFactory extends DocumentFactory
 		super();
 
 		this.mainModel = mainModel;
-		this.runnerListener = new RunnerScheduler();
+		this.runnerListener = new RunnerScheduler(this);
 	}
 	
 	@Override

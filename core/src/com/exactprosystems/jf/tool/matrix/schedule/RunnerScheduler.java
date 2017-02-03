@@ -12,6 +12,7 @@ import com.exactprosystems.jf.api.common.IMatrixRunner;
 import com.exactprosystems.jf.api.common.MatrixState;
 import com.exactprosystems.jf.common.MatrixRunner;
 import com.exactprosystems.jf.documents.DocumentFactory;
+import com.exactprosystems.jf.documents.FxDocumentFactory;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.RunnerListener;
 import com.exactprosystems.jf.tool.Common;
@@ -37,11 +38,12 @@ public class RunnerScheduler implements RunnerListener
 	private ConcurrentHashMap<IMatrixRunner, Boolean> map;
 	private DocumentFactory factory;
 
-	public RunnerScheduler() throws Exception
+	public RunnerScheduler(FxDocumentFactory fxDocumentFactory) throws Exception
 	{
 		this.map = new ConcurrentHashMap<>();
 		this.controller = Common.loadController(RunnerScheduler.class.getResource("Schedule.fxml"));
 		this.controller.init(this);
+		this.factory = fxDocumentFactory;
 	}
 
 	public void show(Window window)
@@ -80,11 +82,6 @@ public class RunnerScheduler implements RunnerListener
 		this.controller.displayState(matrixRunner, state, done, total);
 	}
 
-	public void setDocumentFactory(DocumentFactory factory)
-	{
-		this.factory = factory;
-	}
-
 	public void startSelected(List<IMatrixRunner> collect)
 	{
 		long count = collect.stream().filter(IMatrixRunner::isRunning).count();
@@ -107,11 +104,12 @@ public class RunnerScheduler implements RunnerListener
 			files.stream().filter(Objects::nonNull)
 			.forEach(file -> Common.tryCatch(() ->
 			{
-		        try(    Reader reader = new FileReader(file);
-		                Context context = this.factory.createContext();
-		                MatrixRunner runner = context.createRunner(file.getPath(), reader, null, null) )
+		        try(Reader reader = new FileReader(file))
 		        {
-	                this.map.put(runner, Boolean.TRUE);
+					Context context = this.factory.createContext();
+					MatrixRunner runner = context.createRunner(file.getPath(), reader, null, null);
+					//	                this.map.put(runner, Boolean.TRUE);
+					this.subscribe(runner);
 		        }
 			}, "Error on create new runner"));
 		}
