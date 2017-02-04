@@ -17,6 +17,7 @@ import com.exactprosystems.jf.documents.matrix.parser.Tokens;
 import com.exactprosystems.jf.documents.matrix.parser.items.ActionItem;
 import com.exactprosystems.jf.documents.matrix.parser.items.End;
 import com.exactprosystems.jf.documents.matrix.parser.items.HelpActionItem;
+import com.exactprosystems.jf.documents.matrix.parser.items.HelpChapterItem;
 import com.exactprosystems.jf.documents.matrix.parser.items.HelpItem;
 import com.exactprosystems.jf.documents.matrix.parser.items.HelpTextItem;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
@@ -258,6 +259,10 @@ public class MatrixContextMenu extends ContextMenu
 					{
 					    help = new HelpItem(item.getClass());
 					}
+					
+// TODO experiment
+//					MatrixItem text = new HelpChapterItem("{{1 chapter 1}}");
+//					help.insert(0, text);
 					
 					report.reportStarted(null, "");
 					help.execute(context, context.getMatrixListener(), context.getEvaluator(), report);

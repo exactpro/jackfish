@@ -27,7 +27,7 @@ public class HelpChapterItem extends MatrixItem
 	@Override
 	public String getItemName()
 	{
-		return this.str;
+		return ""; // this.str;
 	}
 	
 	@Override
@@ -42,7 +42,7 @@ public class HelpChapterItem extends MatrixItem
             logger.error(e.getMessage(), e);
             return new ReturnAndResult(start, Result.Failed, e.getMessage(), ErrorKind.EXCEPTION, this);
         }
-        return new ReturnAndResult(start, Result.Passed); 
+        return executeChildren(start, context, listener, evaluator, report, new Class<?>[] {  }, null);
 	}
 
 	private String str = null;
