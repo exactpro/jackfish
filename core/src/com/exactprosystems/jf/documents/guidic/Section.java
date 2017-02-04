@@ -244,7 +244,11 @@ public class Section implements ISection, Mutable
 			control.evaluate(evaluator);
 		}
 	}
-	
+
+	public void clearSection()
+	{
+		this.controls.clear();
+	}
 	
 	public int indexOf(AbstractControl control)
 	{
