@@ -32,13 +32,13 @@
 										<VBox BorderPane.alignment="CENTER">
 											<children>
 												<Label id="$verMid" />
-												<GridPane BorderPane.alignment="CENTER" VBox.vgrow="ALWAYS">
+												<GridPane VBox.vgrow="ALWAYS">
 													<columnConstraints>
 														<ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" percentWidth="15.0" prefWidth="100.0" />
 														<ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" percentWidth="25.0" prefWidth="100.0" />
 														<ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" percentWidth="10.0" prefWidth="100.0" />
-														<ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" percentWidth="20.0" prefWidth="100.0" />
-														<ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" percentWidth="20.0" prefWidth="100.0" />
+														<ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" percentWidth="15.0" prefWidth="100.0" />
+														<ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" percentWidth="35.0" prefWidth="100.0" />
 													</columnConstraints>
 													<rowConstraints>
 														<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -50,8 +50,9 @@
 														<Label fx:id="lblSelfId" GridPane.columnIndex="3" GridPane.halignment="LEFT" />
 														<HBox GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
 															<children>
-																<Button fx:id="btnGenerateOnOpen" onAction="#generateOnOpen" styleClass="$transparentBackground" text="O" />
-																<Button fx:id="btnGenerateOnClose" onAction="#generateOnClose" styleClass="$transparentBackground" text="C" />
+																<Button fx:id="btnGenerateOnOpen" onAction="#generateOnOpen" text="On open" />
+																<Label id="$horMid"/>
+																<Button fx:id="btnGenerateOnClose" onAction="#generateOnClose" text="On close" />
 															</children>
 														</HBox>
 													</children>
