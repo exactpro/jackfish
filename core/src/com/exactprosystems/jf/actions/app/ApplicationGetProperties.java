@@ -8,6 +8,7 @@
 
 package com.exactprosystems.jf.actions.app;
 
+import java.io.Serializable;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -99,7 +100,7 @@ public class ApplicationGetProperties extends AbstractAction
 			
 			for (Parameter parameter : parameters.select(TypeMandatory.Extra))
 			{
-				String value = service.getProperty(parameter.getName());
+				Serializable value = service.getProperty(parameter.getName());
 				outValue.put(parameter.getName(), value);
 			}
 

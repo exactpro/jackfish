@@ -332,7 +332,7 @@ namespace UIAdapter
                 {
                     System.Windows.Point point;
                     AutomationElement node = null;
-                    Rect rect = owner.Current.BoundingRectangle;
+                    System.Windows.Rect rect = owner.Current.BoundingRectangle;
                     double x = rect.X + rect.Width/2;
                     double y = rect.Y + rect.Height + 1;
                     for (int i = 0; i < 100; i++)
@@ -1058,7 +1058,27 @@ namespace UIAdapter
 
                     else if (elementPattern is TransformPattern)
                     {
-                        (element.GetCurrentPattern(WindowPattern.Pattern) as WindowPattern).SetWindowVisualState(WindowVisualState.Normal);
+                        //If window is minimize or maximize, we need to set normal state, cause we can change size only on NormalState
+                        object windowPattern;
+                        if (element.TryGetCurrentPattern(WindowPattern.Pattern, out windowPattern))
+                        {
+                            var windowP = windowPattern as WindowPattern;
+                            windowP.SetWindowVisualState(WindowVisualState.Normal);
+                        }
+                        //TODO set position via win api
+                        IntPtr hWnd = new IntPtr(handler.Current.NativeWindowHandle);
+                        logger.All("Window handle : " + hWnd);
+                        MyRect rect = new MyRect();
+                        bool f = Win32.UnsafeNativeMethods.GetWindowRect(hWnd, ref rect);
+                        logger.All("GetWindowRect : " + f);
+                        logger.All(String.Format("Window has left {0}, top {1}, right {2}, bottom {3}", rect.Left, rect.Top, rect.Right, rect.Bottom)); 
+                        bool f1 = Win32.UnsafeNativeMethods.MoveWindow(hWnd, rect.Left, rect.Top, (int) args[0], (int) args[1], false);
+                        logger.All("Move window : " + f1);
+                        bool f2 = Win32.UnsafeNativeMethods.GetWindowRect(hWnd, ref rect);
+                        logger.All("GetWindowRect : " + f2);
+                        logger.All(String.Format("Window has left {0}, top {1}, right {2}, bottom {3}", rect.Left, rect.Top, rect.Right, rect.Bottom)); 
+                        return null;
+
                     }
                     else if (elementPattern is WindowPattern)
                     {

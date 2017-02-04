@@ -33,7 +33,8 @@ public class WinAppFactory implements IApplicationFactory
 	public static final String		execName				= "Exec";
 	public static final String		workDirName				= "WorkDir";
 	public static final String		argsName				= "Args";
-	
+
+	public static final String      propertyWindowRectangle = "Rectangle";
 	private static String[] empty = {  };
 
 	private static ControlKind[] supportedControls = 
