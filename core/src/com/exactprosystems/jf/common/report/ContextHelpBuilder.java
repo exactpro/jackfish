@@ -10,7 +10,6 @@ package com.exactprosystems.jf.common.report;
 
 import com.exactprosystems.jf.api.app.ImageWrapper;
 import com.exactprosystems.jf.charts.ChartBuilder;
-import com.exactprosystems.jf.documents.matrix.parser.items.ActionItem;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 
 import java.io.IOException;
@@ -18,6 +17,8 @@ import java.util.Date;
 
 public class ContextHelpBuilder extends ReportBuilder
 {
+    private static final long serialVersionUID = -4131612316361245162L;
+
     public ContextHelpBuilder(Date currentTime) throws IOException
     {
         super(null, null, currentTime);
@@ -27,7 +28,6 @@ public class ContextHelpBuilder extends ReportBuilder
 	protected String postProcess(String result)
 	{
 		return super.postProcess(result);
-//		return super.postProcess(HTMLhelper.htmlescape(result));
 	}
 
 	@Override
@@ -80,15 +80,10 @@ public class ContextHelpBuilder extends ReportBuilder
                 "<title>Help</title>\n" +
                 "<meta http-equiv='Content-Type' content='text/html; charset=utf-8'>\n");
 
-        writer.fwrite(
-                "<style>\n" +
-                "<!--\n");
-        writer.include(getClass().getResourceAsStream("style.css"));
-        writer.fwrite(
-                "-->\n" +
-                "</style>\n");
-
-
+        writer.fwrite("<style>\n" + "<!--\n");
+        writer.include(getClass().getResourceAsStream("help.css"));
+        writer.fwrite("-->\n" + "</style>\n");
+        
         writer.fwrite(
                 "</head>\n" +
                 "<body>\n" );
@@ -119,14 +114,7 @@ public class ContextHelpBuilder extends ReportBuilder
     @Override
     protected void reportItemHeader(ReportWriter writer, MatrixItem item, Integer id) throws IOException
     {
-        String name = item.getClass().getSimpleName();
-    	if (item instanceof ActionItem)
-    	{
-    		name = item.getItemName();
-    	}
-
-        writer.fwrite("<h2>%s</h2>\n",
-                name);
+        writer.fwrite("<h2>%s</h2>\n", item.getItemName());
     }
 
 	@Override

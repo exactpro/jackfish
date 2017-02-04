@@ -9,11 +9,16 @@
 package com.exactprosystems.jf.tool.custom.treetable;
 
 import com.exactprosystems.jf.common.Settings;
+import com.exactprosystems.jf.common.RtfHelp.Help;
 import com.exactprosystems.jf.common.report.ContextHelpFactory;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Tokens;
+import com.exactprosystems.jf.documents.matrix.parser.items.ActionItem;
 import com.exactprosystems.jf.documents.matrix.parser.items.End;
+import com.exactprosystems.jf.documents.matrix.parser.items.HelpActionItem;
+import com.exactprosystems.jf.documents.matrix.parser.items.HelpItem;
+import com.exactprosystems.jf.documents.matrix.parser.items.HelpTextItem;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
@@ -243,9 +248,20 @@ public class MatrixContextMenu extends ContextMenu
 				if (item != null && !(item instanceof End))
 				{
 					ReportBuilder report = new ContextHelpFactory().createReportBuilder(null, null, new Date());
-
-					// TODO replace with another method
-//					item.documentationOnlyThis(this.context, report);
+					
+					MatrixItem help = null;
+					if (item instanceof ActionItem)
+					{
+					    help = new HelpActionItem( ((ActionItem)item).getActionClass() );
+					}
+					else
+					{
+					    help = new HelpItem(item.getClass());
+					}
+					
+					report.reportStarted(null, "");
+					help.execute(context, context.getMatrixListener(), context.getEvaluator(), report);
+					report.reportFinished(0, 0, null, null);
 
 					WebView browser = new WebView();
 					WebEngine engine = browser.getEngine();
@@ -257,8 +273,8 @@ public class MatrixContextMenu extends ContextMenu
 					dialog.getDialogPane().setPrefWidth(1024);
 					dialog.getDialogPane().setPrefHeight(768);
 					dialog.setResizable(true);
-					dialog.setHeaderText("Help for " + item.getItemName());
-					dialog.setTitle("HELP");
+					dialog.setTitle("Help for " + help.getItemName());
+					dialog.setHeaderText(null);
 					dialog.getDialogPane().getStylesheets().addAll(Common.currentThemesPaths());
 					dialog.show();
 				}
