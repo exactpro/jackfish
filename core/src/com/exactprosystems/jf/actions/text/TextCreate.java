@@ -38,7 +38,6 @@ import java.io.StringReader;
  "{{##Id;#Action;#Content\n"
 + "TXT1;TextCreate;'Text'\n"
 + "\n"
-+ "\n"
 + "#Assert;#Message\n"
 + "TXT1.Out.toString() == 'Text';#}}\n",
 		seeAlso = "{{@TextReport@}}, {{@TextAddLine@}}, {{@TextLoadFromFile@}}, {{@TextPerform@}}, {{@TextSaveToFile@}}," +

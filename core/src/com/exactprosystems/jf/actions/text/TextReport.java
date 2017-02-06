@@ -31,7 +31,6 @@ import java.util.List;
  "{{##Id;#Action;#Content\n"
 + "TXT1;TextCreate;'Text'\n"
 + "\n"
-+ "\n"
 + "#Action;#Title;#Text\n"
 + "TextReport;’My text’;TXT1.Out#}}\n",
 		seeAlso = "{{@TextPerform@}}, {{@TextAddLine@}}, {{@TextLoadFromFile@}}, {{@TextCreate@}}, {{@TextSaveToFile@}}," +

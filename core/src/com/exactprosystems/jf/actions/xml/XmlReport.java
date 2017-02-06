@@ -47,7 +47,6 @@ import java.util.List;
 				+ "{{##Id;#Action;#File\n"
 				+ "XML1;XmlLoadFromFile;'/path/Xml.xml'\n"
 				+ "\n"
-				+ "\n"
 				+ "#Action;#Xml;#Title\n"
 				+ "XmlReport;Xml1;’Xml report’#}}"
 	)

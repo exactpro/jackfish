@@ -28,7 +28,6 @@ import com.exactprosystems.jf.functions.Text;
         examples =        "{{##Id;#Action;#Content\n"
                         + "TXT1;TextCreate;'Text'\n"
                         + "\n"
-                        + "\n"
                         + "#Action;#Line;#Text\n"
                         + "TextAddLine;'New line';TXT1.Out#}}\n",
         seeAlso = "{{@TextReport@}}, {{@TextPerform@}}, {{@TextLoadFromFile@}}, {{@TextCreate@}}, {{@TextSaveToFile@}}," +

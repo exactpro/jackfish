@@ -31,10 +31,8 @@ import com.exactprosystems.jf.functions.Text;
  "{{##Id;#Action;#Content\n"
 +"TXT1;TextCreate;'Text'\n"
 + "\n"
-+ "\n"
 + "#Id;#Action;#Text;#File\n"
 + "TXT2;TextSaveToFile;TXT1.Out;’path/file.txt’\n"
-+ "\n"
 + "\n"
 + "#Assert;#Message\n"
 + "TXT2.Out;#}}\n",

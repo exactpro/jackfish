@@ -30,7 +30,6 @@ import com.exactprosystems.jf.functions.Xml;
 				+ "{{##Id;#Action;#Xml;#File\n"
 				+ "XSTF;XmlSaveToFile;Xml1;’path/filename.xml’\n"
 				+ "\n"
-				+ "\n"
 				+ "#Assert;#Message\n"
 				+ "XSTF.Out;'File was not saved'#}}"
 	)

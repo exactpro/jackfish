@@ -31,7 +31,6 @@ import com.exactprosystems.jf.functions.Text;
  "{{##Id;#Action;#Content\n"
 + "TXT1;TextCreate;'Text'\n"
 + "\n"
-+ "\n"
 + "#Action;#Line;#Text;#Index\n"
 + "TextSetValue;'string successfully set';TXT1.Out;2#}}",
 		seeAlso = "{{@TextReport@}}, {{@TextAddLine@}}, {{@TextLoadFromFile@}}, {{@TextCreate@}}, {{@TextSaveToFile@}}," +

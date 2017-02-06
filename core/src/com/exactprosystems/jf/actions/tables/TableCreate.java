@@ -38,7 +38,6 @@ import com.exactprosystems.jf.functions.Table;
 				+ "{{##Id;#Action;#Name;#Age\n"
 				+ "TC;TableCreate;;\n"
 				+ "\n"
-				+ "\n"
 				+ "#Assert;#Message\n"
 				+ "TC.Out.getHeader(0) == 'Name' && TC.Out.getHeader(1) == 'Age';'Table is not correct'#}}\n"
 	)

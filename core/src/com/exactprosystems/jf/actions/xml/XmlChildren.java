@@ -51,7 +51,6 @@ import com.exactprosystems.jf.functions.Xml;
 				+ "{{##Id;#Action;#File\n"
 				+ "XML1;XmlLoadFromFile;'Xml.xml'\n"
 				+ "\n"
-				+ "\n"
 				+ "#Id;#Action;#Xml\n"
 				+ "XML2;XmlChildren;XML1.Out#}}"
 	)

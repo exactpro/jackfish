@@ -36,7 +36,6 @@ import com.exactprosystems.jf.sql.SqlConnection;
 				"#Id;#Action;#Connection\n" +
 				"SQLDCNT1;SQLdisconnect;SQLCNT1.Out\n" +
 				"\n" +
-				"\n" +
 				"#Assert;#Message\n" +
 				"SQLCNT1.Out.isClosed();'connection is not closed'. #}}",
 		seeAlso = "{{@ SQLexecute @}}, {{@ SQLinsert @}}, {{@ SQLselect @}}, {{@ SQLtableUpload @}}, {{@ SQLconnect @}}."

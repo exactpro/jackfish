@@ -42,7 +42,6 @@ import java.util.List;
 				+ "{{##Id;#Action;#Command\n"
 				+ "EXEC1;Execute;'help'\n"
 				+ "\n"
-				+ "\n"
 				+ "#Assert;#Message\n"
 				+ "Str.IsNullOrEmpty(EXEC1.Out.Text);'Command wasn't executed'#}}"
 	)

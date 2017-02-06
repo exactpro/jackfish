@@ -47,7 +47,6 @@ import java.util.Date;
 				"{{##Id;#Action;#Matrix\n" +
 				"MXRN1;MatrixRun;'matrices/Matrix.jf'\n" +
 				"\n" +
-				"\n" +
 				"#Assert;#Message\n" +
 				"MXRN1.Out.isRunning();'MatrixRun is failed'#}}",
 		seeAlso = "{{@MatrixRunFromText@}}, {{@MatrixWait@}}"

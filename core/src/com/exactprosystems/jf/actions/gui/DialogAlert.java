@@ -36,7 +36,6 @@ import java.util.List;
 				+ "{{##Id;#Action;#Text;#Perform;#AppConnection\n"
 				+ "DLGALRT1;DialogAlert;'hello';PerformKind.Accept;APPSTR1.Out\n"
 				+ "\n"
-				+ "\n"
 				+ "#Assert;#Message\n"
 				+ "DLGALRT1.Out != null;#}}"
 	)

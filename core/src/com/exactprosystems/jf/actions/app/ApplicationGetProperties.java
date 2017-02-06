@@ -43,7 +43,6 @@ import com.exactprosystems.jf.functions.HelpKind;
 		examples = "{{##Id;#Action;#URL;#AppConnection\n" +
 				"AGP1;ApplicationGetProperties;;app\n" +
 				"\n" +
-				"\n" +
 				"#Assert;#Message\n" +
 				"!Str.IsNullOrEmpty(AGP1.Out.URL);'String is null or empty'#}}",
 		seeAlso					=

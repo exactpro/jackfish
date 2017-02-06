@@ -29,7 +29,6 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
         examples = "{{##Id;#Action;#Matrix\n" +
                 "MXRN1;MatrixRun;'matrices/Matrix.jf'\n" +
                 "\n" +
-                "\n" +
                 "#Id;#Action;#Time;#Matrix\n" +
                 "MXWT1;MatrixWait;5000;MXRN1.Out#}}"
 )

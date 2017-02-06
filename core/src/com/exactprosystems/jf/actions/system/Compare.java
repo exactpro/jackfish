@@ -47,7 +47,6 @@ import java.util.Map.Entry;
                 + "1;Germany;Berlin\n"
                 + "#EndRawTable\n"
                 + "\n"
-                + "\n"
                 + "#Action;#DoNotFail;#Actual;#Expected\n"
                 + "Compare;true;DATA1.get(0); { 'Country':'Russia', 'Capital':'Berlin' } #}}"
     )

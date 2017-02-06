@@ -41,7 +41,6 @@ import static com.exactprosystems.jf.actions.gui.Helper.message;
 				+ "{{##Id;#Action;#Browser;#URL;#AppId\n"
 				+ "APPSTR1;ApplicationStart;'Chrome';'https://google.com';'WEB'\n"
 				+ "\n"
-				+ "\n"
 				+ "#Action;#Dialog;#AppConnection\n"
 				+ "DialogValidate;'MyDialog';APPSTR1.Out#}}"
 	)

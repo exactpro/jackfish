@@ -29,7 +29,6 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 				"{{##Action;#AppConnection;#Width;#Height\n" +
 				"ApplicationResize;app;1000;1000#}}\n" +
 				"\n" +
-				"\n" +
 				"Example №2.\n" +
 				"{{##Action;#Maximize;#AppConnection\n" +
 				"ApplicationResize;true;app#}}\n",

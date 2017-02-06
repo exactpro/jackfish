@@ -46,18 +46,14 @@ import com.exactprosystems.jf.sql.SqlConnection;
 				"#Id;#Action;#Query;#Connection\n" +
 				"SQLEXEC1;SQLexecute;'CREATE TABLE users (id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,name VARCHAR(30) NOT NULL,age int NOT NULL)';SQLCNT1.Out\n" +
 				"\n" +
-				"\n" +
 				"#Id;#Let\n" +
 				"name;'mike'\n" +
-				"\n" +
 				"\n" +
 				"#Id;#Let\n" +
 				"age;23\n" +
 				"\n" +
-				"\n" +
 				"#Id;#Action;#Query;#Connection;#User name we get earlier;#User age we get earlier\n" +
 				"SQLINS1;SQLinsert;'insert into users (name, age) values (?, ?)';SQLCNT1.Out;name;age\n" +
-				"\n" +
 				"\n" +
 				"#Id;#Action;#Query;#Connection;#User new name;#User age we get earlier\n" +
 				"SQLEXEC2;SQLexecute;'update users set name=? where ? = 23';SQLCNT1.Out;'john';age#}}"

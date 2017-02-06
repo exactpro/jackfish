@@ -31,7 +31,6 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 		examples = "{{##Id;#Action;#Title;#AppConnection\n" +
 				"AST;ApplicationSwitchTo;'Title';app\n" +
 				"\n" +
-				"\n" +
 				"#Assert;#Message\n" +
 				"Str.IsNullOrEmpty(AST.Out);'Title is null'#}}",
 		seeAlso					=

@@ -39,14 +39,11 @@ import com.exactprosystems.jf.sql.SqlConnection;
 				"1;Anna;24\n" +
 				"#EndRawTable\n" +
 				"\n" +
-				"\n" +
 				"#Id;#Action;#User;#Server;#Base;#Sql;#Password\n" +
 				"SQLCNT1;SQLconnect;'username';'127.0.0.1:3306';'myDatabase';'MySQL';'userpassword'\n" +
 				"\n" +
-				"\n" +
 				"#Id;#Action;#Query;#Connection\n" +
 				"SQLEXEC1;SQLexecute;'CREATE TABLE users (id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,name VARCHAR(30) NOT NULL,age int NOT NULL)';SQLCNT1.Out\n" +
-				"\n" +
 				"\n" +
 				"#Action;#Table;#Connection;#Data\n" +
 				"SQLtableUpload;'users';SQLCNT1.Out;DATA1#}}"

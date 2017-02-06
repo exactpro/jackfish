@@ -45,22 +45,17 @@ import com.exactprosystems.jf.sql.SqlConnection;
 				"{{##Id;#Action;#User;#Server;#Base;#Sql;#Password\n" +
 				"SQLCNT1;SQLconnect;'username';'127.0.0.1:3306';'myDatabase';'MySQL';'userpassword'\n" +
 				"\n" +
-				"\n" +
 				"#Id;#Off;#Action;#Query;#Connection\n" +
 				"SQLEXEC1;1;SQLexecute;'CREATE TABLE users (id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,name VARCHAR(30) NOT NULL,age int NOT NULL)';SQLCNT1.Out\n" +
-				"\n" +
 				"\n" +
 				"#Id;#Let\n" +
 				"name;'mike'\n" +
 				"\n" +
-				"\n" +
 				"#Id;#Let\n" +
 				"age;23\n" +
 				"\n" +
-				"\n" +
 				"#Id;#Action;#Query;#Connection;#User name we get earlier ;#User age we get earlier\n" +
 				"SQLINS1;SQLinsert;'insert into users (name, age) values (?, ?)';SQLCNT1.Out;name;age\n" +
-				"\n" +
 				"\n" +
 				"#Assert;#Message\n" +
 				"SQLINS1.Out.size() > 0;#}}"

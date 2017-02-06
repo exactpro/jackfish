@@ -54,7 +54,6 @@ import com.exactprosystems.jf.functions.Xml;
 				+ "#Id;#Action;#Xpath;#Xml\n"
 				+ "XML2;XmlFindFirst;'//name';XML1.Out\n"
 				+ "\n"
-				+ "\n"
 				+ "#Assert;#Message\n"
 				+ "XML2.Out.getChild().getAttribute() == 'first';'No such attribute'#}}"
 	)
