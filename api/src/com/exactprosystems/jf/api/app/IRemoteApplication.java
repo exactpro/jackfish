@@ -13,6 +13,7 @@ import com.exactprosystems.jf.api.common.SerializablePair;
 import org.w3c.dom.Document;
 
 import java.awt.*;
+import java.io.Serializable;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.Collection;
@@ -22,7 +23,7 @@ public interface IRemoteApplication extends Remote
 {
 	String	rectangleName	= "rectangle";
 
-	String 						getProperty		(String name) throws RemoteException;
+	Serializable                getProperty		(String name) throws RemoteException;
 
 	void 						createLogger	(String logName, String serverLogLevel, String serverLogPattern) throws RemoteException;
 	int 						connect			(Map<String, String> args) throws RemoteException;

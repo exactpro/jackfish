@@ -181,6 +181,17 @@ public class TreeTableViewWithRectangles
 		}
 	}
 
+	public void selectItem(ElementWizardBean bean)
+	{
+		List<TreeItem<XpathTreeItem>> list = new ArrayList<>();
+		TreeItem<XpathTreeItem> root = this.treeTableView.getRoot();
+		byPass(root, list, xpathTreeItem -> xpathTreeItem != null && xpathTreeItem.getList().contains(bean));
+		if (list.size() == 1)
+		{
+			selectAndScroll(list.get(0));
+		}
+	}
+
 	public void selectAndScroll(TreeItem<XpathTreeItem> XpathTreeItem)
 	{
 		this.treeTableView.getSelectionModel().clearSelection();
@@ -548,8 +559,8 @@ public class TreeTableViewWithRectangles
 				if (!list.isEmpty())
 				{
 					String tooltip = list.stream()
-							.map(ElementWizardBean::getId)
-							.collect(Collectors.joining("\n", "Related to :\n", ""));
+							.map(bean -> bean.getId() + " ["+bean.getControlKind().name() + "]")
+							.collect(Collectors.joining("\n"));
 					this.setTooltip(new Tooltip(tooltip));
 				}
 				this.imageView.setImage(icon == null ? null : new Image(icon.getIconPath()));

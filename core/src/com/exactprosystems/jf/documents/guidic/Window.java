@@ -333,6 +333,17 @@ public class Window implements IWindow, Mutable
 	}
 
 	@Override
+	public IControl getReferenceControl(IControl control)
+	{
+		if (control != null && control.getRefID() != null && !control.getRefID().isEmpty())
+		{
+			return getControlForName(null, control.getRefID());
+		}
+
+		return null;
+	}
+
+	@Override
 	public IControl getRowsControl(IControl control) throws Exception
 	{
 		if (control != null && control.getRowsId() != null && !control.getRowsId().isEmpty())

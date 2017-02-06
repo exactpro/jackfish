@@ -402,91 +402,87 @@ public class HelpBuilder extends ReportBuilder
 	}
 
 
-	private void makeItemHelp(ReportBuilder report) throws IllegalAccessException, InstantiationException {
+    private void makeItemHelp(ReportBuilder report) throws IllegalAccessException, InstantiationException
+    {
 
-		MatrixItem tmp;
-		for (Class<?> clazz : Parser.knownItems)
-		{
+        MatrixItem tmp;
+        for (Class<?> clazz : Parser.knownItems)
+        {
 
-			MatrixItemAttribute attribute = clazz.getAnnotation(MatrixItemAttribute.class);
-			if (attribute == null)
-			{
-				return;
-			}
+            MatrixItemAttribute attribute = clazz.getAnnotation(MatrixItemAttribute.class);
+            if (attribute == null)
+            {
+                return;
+            }
 
-			if (!attribute.real() || clazz.equals(ActionItem.class) || clazz.equals(TempItem.class))
-			{
-				continue;
-			}
+            if (!attribute.real() || clazz.equals(ActionItem.class) || clazz.equals(TempItem.class))
+            {
+                continue;
+            }
 
-			tmp = (MatrixItem) clazz.newInstance();
-			report.itemStarted(tmp);
-			report.itemIntermediate(tmp);
-			ReportTable table = report.addTable("", null, true, 100,
-					new int[]{30, 70});
-			table.addValues("Description", attribute.description());
-			table.addValues("Examples", attribute.examples());
-			if (!attribute.seeAlso().equals(""))
-			{
-				table.addValues("See also", attribute.seeAlso());
-			}
-			report.itemFinished(tmp, 0, null);
-		}
-	}
+            tmp = (MatrixItem) clazz.newInstance();
+            report.itemStarted(tmp);
+            report.itemIntermediate(tmp);
+            ReportTable table = report.addTable("", null, true, 100, new int[] { 30, 70 });
+            table.addValues("Description", attribute.description());
+            table.addValues("Examples", attribute.examples());
+            if (!attribute.seeAlso().equals(""))
+            {
+                table.addValues("See also", attribute.seeAlso());
+            }
+            report.itemFinished(tmp, 0, null);
+        }
+    }
 
-	private void makeActionHelp(ReportBuilder report, Class<?> clazz) throws Exception {
-		ActionItem tmp;
+    private void makeActionHelp(ReportBuilder report, Class<?> clazz) throws Exception
+    {
+        ActionItem tmp;
 
+        tmp = new ActionItem(clazz.getSimpleName());
+        report.itemStarted(tmp);
+        report.itemIntermediate(tmp);
+        ReportTable table;
 
-				tmp = new ActionItem(clazz.getSimpleName());
-				report.itemStarted(tmp);
-				report.itemIntermediate(tmp);
-				ReportTable table;
+        ActionAttribute attr = clazz.getAnnotation(ActionAttribute.class);
 
+        table = report.addTable("", null, true, 0, new int[] { 30, 70 }, "Action item", clazz.getSimpleName());
 
-				ActionAttribute attr = clazz.getAnnotation(ActionAttribute.class);
+        table.addValues("Description", attr.generalDescription());
+        if (attr.additionFieldsAllowed())
+        {
+            table.addValues("Additional fields", "Yes");
+            table.addValues("Additional fields description", attr.additionalDescription());
+        }
+        else
+        {
+            table.addValues("Additional fields", "No");
+        }
+        table.addValues("See also", attr.seeAlso());
+        table.addValues("Examples", HTMLhelper.htmlescape(attr.examples()));
 
-				table = report.addTable("", null, true, 0,
-						new int[] { 30, 70 }, "Action item", clazz.getSimpleName());
+        // Input
+        Field[] fields = clazz.getDeclaredFields();
+        table = report.addTable("Input:", null, true, 4, new int[] { 0, 0, 60, 0, 0 }, "Field name", "Field type",
+                "Description", "Mandatory");
+        table.addValues();
+        for (Field f : fields)
+        {
+            ActionFieldAttribute annotation = f.getAnnotation(ActionFieldAttribute.class);
+            if (annotation == null)
+            {
+                continue;
+            }
+            table.addValues(annotation.name(), f.getType().getSimpleName(), annotation.description(),
+                    annotation.mandatory() ? "Yes" : "No");
+        }
 
-				table.addValues("Description", attr.generalDescription());
-				if (attr.additionFieldsAllowed())
-				{
-					table.addValues("Additional fields", "Yes");
-					table.addValues("Additional fields description", attr.additionalDescription());
-				}
-				else
-				{
-					table.addValues("Additional fields", "No");
-				}
-				table.addValues("See also", attr.seeAlso());
-				table.addValues("Examples", HTMLhelper.htmlescape(attr.examples()));
+        // Output
+        table = report.addTable("Output:", null, true, 100, new int[] { 20, 40 }, "Output type", "Description");
+        table.addValues(attr.outputType().getSimpleName(), attr.outputDescription());
 
+        report.itemFinished(tmp, 0, null);
 
-				// Input
-				Field[] fields = clazz.getDeclaredFields();
-				table = report.addTable("Input:", null, true, 4,
-						new int[] {0, 0, 60, 0, 0}, "Field name", "Field type", "Description", "Mandatory");
-				table.addValues();
-				for (Field f : fields)
-				{
-					ActionFieldAttribute annotation = f.getAnnotation(ActionFieldAttribute.class);
-					if (annotation == null)
-					{
-						continue;
-					}
-					table.addValues(annotation.name(),f.getType().getSimpleName(),annotation.description(),annotation.mandatory() ? "Yes" : "No");
-				}
-
-
-				// Output
-				table = report.addTable("Output:", null, true, 100,
-						new int[] {20, 40}, "Output type", "Description");
-				table.addValues(attr.outputType().getSimpleName(),attr.outputDescription());
-
-				report.itemFinished(tmp, 0, null);
-
-	}
+    }
 
 	private void chapterStart(String chapter) throws IOException {
 		this.menuWriter.fwrite("<li role='presentation' class='mParent' id='%s'>\n", chapter);

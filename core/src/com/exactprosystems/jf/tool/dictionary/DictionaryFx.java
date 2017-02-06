@@ -752,6 +752,32 @@ public class DictionaryFx extends GuiDictionary
 		}, "Cannot set field '" + AbstractControl.ownerIdName + "' to value '" + ownerId + "'");
 	}
 
+	public void parameterSetRef(IWindow window, SectionKind sectionKind, IControl control, String refId) throws Exception
+	{
+		tryCatchThrow(() ->
+		{
+			if (control != null && control instanceof AbstractControl)
+			{
+				AbstractControl copy = AbstractControl.createCopy(control);
+				String oldRefId = copy.getRefID();
+				Command undo = () -> Common.tryCatch(() ->
+				{
+					((AbstractControl) control).set(AbstractControl.refIdName, oldRefId);
+					displayElement(window, sectionKind, control);
+				}, "");
+				Command redo = () -> Common.tryCatch(() ->
+				{
+					((AbstractControl) control).set(AbstractControl.refIdName, refId);
+					displayElement(window, sectionKind, control);
+				}, "");
+				addCommand(undo, redo);
+
+				super.changed(true);
+			}
+		}, "Cannot set field '" + AbstractControl.refIdName + "' to value '" + refId + "'");
+	}
+
+
 	public void parameterSet(IWindow window, IWindow.SectionKind sectionKind, IControl control, String parameter, Object value) throws Exception
 	{
 		tryCatchThrow(() ->
@@ -1048,6 +1074,7 @@ public class DictionaryFx extends GuiDictionary
 		IControl owner = null;
 		IControl row = null;
 		IControl header = null;
+		IControl reference = null;
 		if (window != null)
 		{
 			owners = controlsWithId(window, null);
@@ -1055,8 +1082,9 @@ public class DictionaryFx extends GuiDictionary
 			rows = controlsWithId(window, null);
 			row = window.getRowsControl(control);
 			header = window.getHeaderControl(control);
+			reference = window.getReferenceControl(control);
 		}
-		this.controller.displayElementInfo(window, control, owners, owner, rows, row, header);
+		this.controller.displayElementInfo(window, control, owners, owner, rows, row, header, reference);
 	}
 
 	public void displayElement(IWindow window, IWindow.SectionKind sectionKind, IControl control) throws Exception
@@ -1067,6 +1095,7 @@ public class DictionaryFx extends GuiDictionary
 		IControl owner = null;
 		IControl row = null;
 		IControl header = null;
+		IControl reference = null;
 		if (window != null)
 		{
 			controls = window.getControls(sectionKind);
@@ -1075,17 +1104,18 @@ public class DictionaryFx extends GuiDictionary
 			rows = controlsWithId(window, null);
 			row = window.getRowsControl(control);
 			header = window.getHeaderControl(control);
+			reference = window.getReferenceControl(control);
 		}
 		this.controller.displaySection(sectionKind);
 		this.controller.displayElement(controls, control);
-		this.controller.displayElementInfo(window, control, owners, owner, rows, row, header);
+		this.controller.displayElementInfo(window, control, owners, owner, rows, row, header, reference);
 	}
 
 	public void clearElements(IWindow.SectionKind sectionKind)
 	{
 		this.controller.displaySection(sectionKind);
 		this.controller.displayElement(Collections.emptyList(), null);
-		this.controller.displayElementInfo(null, null, Collections.emptyList(), null, Collections.emptyList(), null, null);
+		this.controller.displayElementInfo(null, null, Collections.emptyList(), null, Collections.emptyList(), null, null, null);
 	}
 
 	public void displayElementWithoutInfo(IWindow window, IWindow.SectionKind sectionKind, IControl control) throws Exception {

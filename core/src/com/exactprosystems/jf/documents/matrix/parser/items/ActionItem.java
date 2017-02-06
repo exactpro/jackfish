@@ -48,6 +48,11 @@ public final class ActionItem extends MatrixItem
 		this();
 		this.action = actionByName(actionName);
 	}
+	
+	public Class<? extends AbstractAction> getActionClass()
+	{
+	    return this.action.getClass();
+	}
 
 	@Override
 	public MatrixItem clone() throws CloneNotSupportedException

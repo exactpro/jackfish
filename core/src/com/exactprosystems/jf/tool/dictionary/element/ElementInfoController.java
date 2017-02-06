@@ -48,6 +48,7 @@ public class ElementInfoController implements Initializable, ContainingParent
 	public ChoiceBox<IControl> choiceBoxHeader;
 	public ChoiceBox<IControl> choiceBoxRows;
 	public ChoiceBox<IControl> choiceBoxOwner;
+	public ChoiceBox<IControl> choiceBoxReference;
 	public CheckBox checkBoxWeak;
 	public CheckBox checkBoxUseNumericHeader = new CheckBox();
 	public CustomFieldWithButton tfID;
@@ -211,7 +212,7 @@ public class ElementInfoController implements Initializable, ContainingParent
 	// ------------------------------------------------------------------------------------------------------------------
 	// display* methods
 	// ------------------------------------------------------------------------------------------------------------------
-	public void displayInfo(IWindow window, IControl control, Collection<IControl> owners, IControl owner, Collection<IControl> rows, IControl row, IControl header)
+	public void displayInfo(IWindow window, IControl control, Collection<IControl> owners, IControl owner, Collection<IControl> rows, IControl row, IControl header, IControl reference)
 	{
     	Platform.runLater(() ->
 		{
@@ -230,6 +231,21 @@ public class ElementInfoController implements Initializable, ContainingParent
 					},
 					this.changeOwnerListener
 			);
+
+			update(
+					this.choiceBoxReference.getSelectionModel().selectedItemProperty(),
+					() -> {
+						this.choiceBoxReference.getItems().clear();
+						this.choiceBoxReference.getItems().add(null);
+						if (owners != null)
+						{
+							this.choiceBoxReference.getItems().addAll(owners);
+						}
+						this.choiceBoxReference.getSelectionModel().select(reference);
+					},
+					this.changeReferenceListener
+			);
+
 			update(
 					this.choiceBoxHeader.getSelectionModel().selectedItemProperty(),
 					() -> {
@@ -388,6 +404,9 @@ public class ElementInfoController implements Initializable, ContainingParent
 
 	private ChangeListener<IControl> changeOwnerListener = (observableValue, oldValue, newValue) ->
 			tryCatch(() -> navigation.parameterSetOwner(newValue == null ? null : newValue.getID()), "Error on changing owner");
+
+	private ChangeListener<IControl> changeReferenceListener = (observableValue, oldValue, newValue) ->
+			tryCatch(() -> navigation.parameterSetRef(newValue == null ? null : newValue.getID()), "Error on changing owner");
 
 	private ChangeListener<IControl> changeHeaderListener = ((observable, oldValue, newValue) ->
 			tryCatch(() -> this.navigation.parameterSet(AbstractControl.headerName, newValue == null ? null : newValue.getID()), "Error on changing header"));

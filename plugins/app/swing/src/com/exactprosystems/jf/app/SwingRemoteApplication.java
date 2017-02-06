@@ -29,6 +29,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
+import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -72,7 +73,7 @@ public class SwingRemoteApplication extends RemoteApplication
 	}
 
 	@Override
-	public String getProperty(String name) throws RemoteException
+	public Serializable getProperty(String name) throws RemoteException
 	{
 		throw new FeatureNotSupportedException("getProperty");
 	}

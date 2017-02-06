@@ -73,6 +73,7 @@ public class DialogWizard
 				.filter(Objects::nonNull)
 				.collect(Collectors.toList());
 		displayElements();
+		updateOnButtons();
 	}
 
 	public void show()
@@ -253,7 +254,42 @@ public class DialogWizard
 		}
 	}
 
+	void generateOnOpen() throws Exception
+	{
+		AbstractControl onOpen = generate(Addition.WaitToAppear);
+		Section section = (Section) this.window.getSection(IWindow.SectionKind.OnOpen);
+		section.clearSection();
+		section.addControl(onOpen);
+		updateOnButtons();
+	}
+
+	void generateOnClose() throws Exception
+	{
+		AbstractControl onClose = generate(Addition.WaitToDisappear);
+		Section section = (Section) this.window.getSection(IWindow.SectionKind.OnClose);
+		section.clearSection();
+		section.addControl(onClose);
+		updateOnButtons();
+	}
+
 	//region private methods
+	private void updateOnButtons()
+	{
+		boolean onOpenEmpty = this.window.getSection(IWindow.SectionKind.OnOpen).getControls().isEmpty();
+		boolean onCloseEmpty = this.window.getSection(IWindow.SectionKind.OnClose).getControls().isEmpty();
+		this.controller.displayOnButtons(onOpenEmpty, onCloseEmpty);
+	}
+
+	private AbstractControl generate(Addition addition) throws Exception
+	{
+		AbstractControl on = AbstractControl.create(ControlKind.Wait);
+		on.set(AbstractControl.refIdName, this.selfControl.getID());
+		on.set(AbstractControl.additionName, addition);
+		on.set(AbstractControl.timeoutName, 5000);
+		on.set(AbstractControl.idName, addition == Addition.WaitToAppear ? "waitOpen" : "waitClose");
+		return on;
+	}
+
 	private IRemoteApplication service()
 	{
 		return this.appConnection.getApplication().service();
@@ -261,7 +297,7 @@ public class DialogWizard
 
 	private void updateCountElement(ElementWizardBean bean)
 	{
-		int count = -1;
+		int count = 0;
 		if (bean.isXpath())
 		{
 			AbstractControl abstractControl = this.controlList.get(bean.getNumber());

@@ -12,6 +12,14 @@ using WindowsInput;
 
 namespace UIAdapter.Win32
 {
+    public struct MyRect
+    {
+        public int Left {get;set; }
+        public int Top {get;set; }
+        public int Right {get;set; }
+        public int Bottom { get; set; }
+    }
+
     internal static class UnsafeNativeMethods
     {
         [DllImport("user32.dll", CharSet = CharSet.Auto)]
@@ -24,6 +32,12 @@ namespace UIAdapter.Win32
 
         [DllImport("user32.dll")]
         internal static extern int GetClassName(IntPtr hwnd, StringBuilder lpClassName, int nMaxCount);
+
+        [DllImport("user32.dll", SetLastError = true)]
+        internal static extern bool MoveWindow(IntPtr hWnd, int X, int Y, int nWidth, int nHeight, bool bRepaint);
+        [DllImport("user32.dll")]
+        internal static extern bool GetWindowRect(IntPtr hWnd, ref MyRect rect);
+
         [DllImport("gdi32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
         internal static extern IntPtr GetCurrentObject(IntPtr hdc, uint objectType);
         [DllImport("user32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]

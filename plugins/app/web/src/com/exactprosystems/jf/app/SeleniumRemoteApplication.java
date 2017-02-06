@@ -35,6 +35,7 @@ import java.awt.Rectangle;
 import java.awt.event.InputEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.util.*;
 import java.util.List;
@@ -148,7 +149,7 @@ public class SeleniumRemoteApplication extends RemoteApplication
 	}
 
 	@Override
-	public String getProperty(String name) throws RemoteException
+	public Serializable getProperty(String name) throws RemoteException
 	{
 		if (this.driver != null)
 		{

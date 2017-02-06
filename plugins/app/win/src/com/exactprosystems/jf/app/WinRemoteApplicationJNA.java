@@ -22,6 +22,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.util.*;
 import java.util.List;
@@ -58,9 +59,26 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 	}
 
 	@Override
-	public String getProperty(String name) throws RemoteException
+	public Serializable getProperty(String name) throws RemoteException
 	{
-		throw new FeatureNotSupportedException("getProperty");
+		switch (name) {
+			case WinAppFactory.propertyWindowRectangle :
+				try
+				{
+					return this.getRectangleDerived(null, null);
+				}
+				catch (RemoteException e)
+				{
+					throw e;
+				}
+				catch (Exception e)
+				{
+					throw new RemoteException(e.getMessage(), e.getCause());
+				}
+
+
+		}
+		return null;
 	}
 
 	@Override

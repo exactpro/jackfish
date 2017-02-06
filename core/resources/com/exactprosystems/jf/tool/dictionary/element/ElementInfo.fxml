@@ -59,17 +59,23 @@
 						<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER"/>
 					</rowConstraints>
 					<children>
-						<Button fx:id="btnGoToOwner" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#goToOwner" text="Go to owner" GridPane.columnIndex="1" GridPane.halignment="CENTER"/>
-						<Label text="Owner:" GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.valignment="CENTER"/>
-						<Label text="ID:" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="CENTER"/>
-						<Label text="Control:" GridPane.halignment="RIGHT" GridPane.rowIndex="3" GridPane.valignment="CENTER"/>
-						<Label text="Addition:" GridPane.halignment="RIGHT" GridPane.rowIndex="4" GridPane.valignment="CENTER"/>
+						<Label text="Owner:" GridPane.halignment="RIGHT" GridPane.rowIndex="0" GridPane.valignment="CENTER"/>
+						<Label text="ID:" GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.valignment="CENTER"/>
+						<Label text="Control:" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="CENTER"/>
+						<Label text="Addition:" GridPane.halignment="RIGHT" GridPane.rowIndex="3" GridPane.valignment="CENTER"/>
+						<Label text="Ref:" GridPane.halignment="RIGHT" GridPane.rowIndex="4" GridPane.valignment="CENTER"/>
 						<Label text="Timeout:" GridPane.halignment="RIGHT" GridPane.rowIndex="5" GridPane.valignment="CENTER"/>
-						<ChoiceBox fx:id="choiceBoxOwner" maxWidth="1.7976931348623157E308" prefWidth="150.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1"/>
-						<CustomFieldWithButton id="id" fx:id="tfID" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2"/>
-						<ComboBox fx:id="comboBoxControl" maxWidth="1.7976931348623157E308" prefWidth="150.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="3"/>
-						<ChoiceBox fx:id="choiceBoxAddition" maxWidth="1.7976931348623157E308" prefWidth="150.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="4"/>
+						<HBox GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="0" alignment="CENTER_LEFT">
+							<children>
+								<ChoiceBox fx:id="choiceBoxOwner" maxWidth="1.7976931348623157E308" prefWidth="150.0" HBox.hgrow="ALWAYS"/>
+								<Button fx:id="btnGoToOwner" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#goToOwner" text="G"/>
+							</children>
+						</HBox>
+						<CustomFieldWithButton id="id" fx:id="tfID" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1"/>
+						<ComboBox fx:id="comboBoxControl" maxWidth="1.7976931348623157E308" prefWidth="150.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2"/>
+						<ChoiceBox fx:id="choiceBoxAddition" maxWidth="1.7976931348623157E308" prefWidth="150.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="3"/>
 						<NumberTextField id="timeout" fx:id="tfTimeout" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="5"/>
+						<ChoiceBox fx:id="choiceBoxReference" maxWidth="1.7976931348623157E308" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="4" GridPane.halignment="CENTER"/>
 						<Label text="Visibility:" GridPane.rowIndex="6"/>
 						<ChoiceBox fx:id="choiceBoxVisibility" maxWidth="1.7976931348623157E308" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="6"/>
 						<Label text="Header:" GridPane.rowIndex="7"/>

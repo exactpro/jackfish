@@ -17,11 +17,13 @@
         <self>
             <panel id="MenuPanel" uid="menu"/>
         </self>
-        <onOpen/>
+        <onOpen>
+            <wait id="00000" ref="MenuPanel" addition="WaitToAppear" timeout="5000"/>
+        </onOpen>
         <run>
-            <button id="Item1" uid="" owner="MenuPanel" class="" name="" title="" text="Item 1"/>
-            <button id="Item2" uid="" owner="MenuPanel" class="" name="" title="" text="Item 2"/>
-            <button id="Item3" uid="" owner="MenuPanel" class="" name="" title="" text="Item 3"/>
+            <button id="Item1" uid="" xpath=".//a[contains(text(), &amp;quot;Item 1&amp;quot;)]" useAbsoluteXpath="true" owner="MenuPanel" class="" name="" title="" text="Item 1"/>
+            <button id="Item2" uid="" xpath=".//a[contains(text(), &amp;quot;Item 2&amp;quot;)]" useAbsoluteXpath="true" owner="MenuPanel" class="" name="" title="" text="Item 2"/>
+            <button id="Item3" uid="" xpath=".//a[contains(text(), &amp;quot;Item 3&amp;quot;)]" useAbsoluteXpath="true" owner="MenuPanel" class="" name="" title="" text="Item 3"/>
             <button id="Item4" uid="" owner="MenuPanel" class="" name="" title="" text="Item 4"/>
         </run>
         <onClose/>

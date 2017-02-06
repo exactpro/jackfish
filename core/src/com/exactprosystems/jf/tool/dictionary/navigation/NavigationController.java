@@ -262,6 +262,11 @@ public class NavigationController implements Initializable, ContainingParent
 		this.model.parameterSetOwner(currentWindow(), currentSection(), currentElement(), ownerId);
 	}
 
+	public void parameterSetRef(String refId) throws Exception
+	{
+		this.model.parameterSetRef(currentWindow(), currentSection(), currentElement(), refId);
+	}
+
 	public void parameterSet(String parameter, Object value) throws Exception
 	{
 		this.model.parameterSet(currentWindow(), currentSection(), currentElement(), parameter, value);

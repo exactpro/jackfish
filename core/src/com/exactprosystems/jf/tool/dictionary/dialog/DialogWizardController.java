@@ -59,6 +59,8 @@ public class DialogWizardController implements Initializable, ContainingParent
 
 	public FindPanel<TreeItem<XpathTreeItem>> findPanel;
 	public HBox hBoxToolbar;
+	public Button btnGenerateOnOpen;
+	public Button btnGenerateOnClose;
 
 	private DialogWizard model;
 	private Alert dialog;
@@ -158,6 +160,12 @@ public class DialogWizardController implements Initializable, ContainingParent
 			BufferedImage image = this.imageViewWithScale.getImage();
 			this.imageViewWithScale.setListRectangles(this.treeViewWithRectangles.buildMap(image.getWidth(), image.getHeight(), new Dimension(image.getWidth() / 16, image.getHeight() / 16)));
 			this.hBoxToolbar.getChildren().forEach(node -> node.setDisable(false));
+			this.tableView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+				if (newValue != null)
+				{
+					this.treeViewWithRectangles.selectItem(newValue);
+				}
+			});
 		}
 	}
 
@@ -285,6 +293,13 @@ public class DialogWizardController implements Initializable, ContainingParent
 		this.treeViewWithRectangles.setState(XpathTreeItem.TreeItemState.QUESTION, this.cbQuestion.isSelected());
 	}
 
+	void displayOnButtons(boolean isOpenFilled, boolean isCloseFilled)
+	{
+		//TODO replace via style classes
+		this.btnGenerateOnOpen.setStyle("-fx-background-color : " + (!isOpenFilled ? "rgba(0,255,0, 0.1)" : "rgba(255,0,0, 0.1)"));
+		this.btnGenerateOnClose.setStyle("-fx-background-color : " + (!isCloseFilled ? "rgba(0,255,0, 0.1)" : "rgba(255,0,0, 0.1)"));
+	}
+
 	//region Action methods
 	public void cancel(ActionEvent actionEvent)
 	{
@@ -311,6 +326,16 @@ public class DialogWizardController implements Initializable, ContainingParent
 		System.out.println("<< Marked rows : " + this.treeViewWithRectangles.getMarkedRows());
 //		List<XpathTreeItem> list = this.treeViewWithRectangles.getMarkedRows().stream().map(e -> e.getValue()).collect(Collectors.toList());
 //		this.model.magic();
+	}
+
+	public void generateOnOpen(ActionEvent actionEvent)
+	{
+		Common.tryCatch(this.model::generateOnOpen, "Error on create onOpen");
+	}
+
+	public void generateOnClose(ActionEvent actionEvent)
+	{
+		Common.tryCatch(this.model::generateOnClose, "Error on create onClose");
 	}
 	//endregion
 
@@ -518,7 +543,7 @@ public class DialogWizardController implements Initializable, ContainingParent
 		columnKind.setMaxWidth(135);
 		columnKind.setMinWidth(135);
 
-		int value = 75;
+		int value = 50;
 
 		TableColumn<ElementWizardBean, Boolean> columnIsXpath = new TableColumn<>("Xpath");
 		columnIsXpath.setCellValueFactory(new PropertyValueFactory<>("xpath"));
@@ -620,7 +645,7 @@ public class DialogWizardController implements Initializable, ContainingParent
 					btnRelation.setTooltip(new Tooltip("Set relation"));
 					btnRelation.getStyleClass().add(CssVariables.TRANSPARENT_BACKGROUND);
 					btnRelation.setOnAction(e -> model.updateRelation(item));
-					box.getChildren().addAll(btnEdit, Common.createSpacer(Common.SpacerEnum.HorizontalMid), btnRemove, Common.createSpacer(Common.SpacerEnum.HorizontalMid), btnRelation);
+					box.getChildren().addAll(btnEdit, btnRemove, btnRelation);
 					setGraphic(box);
 				}
 				else

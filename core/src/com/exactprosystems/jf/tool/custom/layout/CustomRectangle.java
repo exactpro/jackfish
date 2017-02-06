@@ -154,7 +154,7 @@ public class CustomRectangle
 	{
 		this.text.setVisible(flag);
 		this.text.setX(this.top.getStartX() + 5);
-		this.text.setY(this.top.getStartY() + 5);
+		this.text.setY(this.top.getStartY() + this.text.getFont().getSize());
 	}
 
 	public void setVisible(boolean flag)

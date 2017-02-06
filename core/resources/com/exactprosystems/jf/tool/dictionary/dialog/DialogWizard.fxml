@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import com.exactprosystems.jf.tool.custom.find.*?>
+<?import java.lang.*?>
 <?import com.exactprosystems.jf.tool.*?>
 <?import com.exactprosystems.jf.tool.custom.find.FindPanel?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1000.0" prefWidth="1500.0" xmlns="http://javafx.com/javafx/8"
-	  xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.exactprosystems.jf.tool.dictionary.dialog.DialogWizardController">
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1000.0" prefWidth="1500.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.exactprosystems.jf.tool.dictionary.dialog.DialogWizardController">
 	<fx:define>
 		<CssVariables fx:id="transparentBackground" fx:constant="TRANSPARENT_BACKGROUND"/>
 		<CssVariables fx:id="verMin" fx:constant="VERTICAL_MIN"/>
@@ -17,73 +19,79 @@
 		<CssVariables fx:id="horMax" fx:constant="HORIZONTAL_MAX"/>
 	</fx:define>
 	<children>
-		<Label id="$verMid"/>
+		<Label id="$verMid" />
 		<HBox prefHeight="100.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
 			<children>
-				<Label id="$horMid"/>
+				<Label id="$horMid" />
 				<SplitPane fx:id="horSplitPane" dividerPositions="0.5" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0" HBox.hgrow="ALWAYS">
 					<items>
 						<SplitPane fx:id="verSplitPane" prefHeight="200.0" prefWidth="200.0">
 							<items>
-								<BorderPane prefHeight="200.0" prefWidth="200.0">
+								<BorderPane minWidth="538.0" prefHeight="200.0" prefWidth="200.0">
 									<top>
 										<VBox BorderPane.alignment="CENTER">
 											<children>
-												<Label id="$verMid"/>
-												<GridPane BorderPane.alignment="CENTER">
+												<Label id="$verMid" />
+												<GridPane VBox.vgrow="ALWAYS">
 													<columnConstraints>
-														<ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" percentWidth="10.0" prefWidth="100.0"/>
-														<ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" percentWidth="30.0" prefWidth="100.0"/>
-														<ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" percentWidth="10.0" prefWidth="100.0"/>
-														<ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" percentWidth="20.0" prefWidth="100.0"/>
-														<ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" percentWidth="20.0" prefWidth="100.0"/>
-														<ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" minWidth="10.0" percentWidth="10.0" prefWidth="100.0"/>
+														<ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" percentWidth="15.0" prefWidth="100.0" />
+														<ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" percentWidth="25.0" prefWidth="100.0" />
+														<ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" percentWidth="10.0" prefWidth="100.0" />
+														<ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" percentWidth="15.0" prefWidth="100.0" />
+														<ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" percentWidth="35.0" prefWidth="100.0" />
 													</columnConstraints>
 													<rowConstraints>
-														<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+														<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
 													</rowConstraints>
 													<children>
-														<Label text="Dialog : " GridPane.halignment="RIGHT"/>
-														<TextField fx:id="tfDialogName" GridPane.columnIndex="1"/>
-														<Label text="Self id : " GridPane.columnIndex="2" GridPane.halignment="RIGHT"/>
-														<Label fx:id="lblSelfId" GridPane.columnIndex="3" GridPane.halignment="LEFT"/>
+														<Label text="Dialog : " GridPane.halignment="RIGHT" />
+														<TextField fx:id="tfDialogName" GridPane.columnIndex="1" />
+														<Label text="Self id : " GridPane.columnIndex="2" GridPane.halignment="RIGHT" />
+														<Label fx:id="lblSelfId" GridPane.columnIndex="3" GridPane.halignment="LEFT" />
+														<HBox GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+															<children>
+																<Button fx:id="btnGenerateOnOpen" onAction="#generateOnOpen" text="On open" />
+																<Label id="$horMid"/>
+																<Button fx:id="btnGenerateOnClose" onAction="#generateOnClose" text="On close" />
+															</children>
+														</HBox>
 													</children>
 												</GridPane>
-												<Label id="$verMid"/>
+												<Label id="$verMid" />
 											</children>
 										</VBox>
 									</top>
 									<center>
-										<TableView fx:id="tableView" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER"/>
+										<TableView fx:id="tableView" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
 									</center>
 								</BorderPane>
 							</items>
 						</SplitPane>
 						<BorderPane fx:id="paneTreeView" prefHeight="200.0" prefWidth="200.0">
 							<top>
-								<HBox fx:id="hBoxToolbar" alignment="CENTER_LEFT" prefHeight="48.0" prefWidth="1498.0">
+								<HBox fx:id="hBoxToolbar" alignment="CENTER_LEFT" prefHeight="30.0" prefWidth="1498.0">
 									<children>
-										<Button id="btnWizard" mnemonicParsing="false" onAction="#magic" styleClass="$transparentBackground"/>
-										<Separator orientation="VERTICAL" prefHeight="200.0"/>
+										<Button id="btnWizard" mnemonicParsing="false" onAction="#magic" styleClass="$transparentBackground" />
+										<Separator orientation="VERTICAL" prefHeight="200.0" />
 										<Button id="btnNextMark" mnemonicParsing="false" onAction="#nextMark" styleClass="$transparentBackground" />
 										<Button id="btnPrevMark" mnemonicParsing="false" onAction="#prevMark" styleClass="$transparentBackground" />
-										<Separator orientation="VERTICAL" prefHeight="200.0"/>
-										<CheckBox id="cbAdd" fx:id="cbAdd" maxWidth="75.0" minWidth="75.0" mnemonicParsing="false" prefWidth="75.0" selected="true"/>
-										<Separator orientation="VERTICAL" prefHeight="200.0"/>
-										<CheckBox id="cbMark" fx:id="cbMark" maxWidth="75.0" minWidth="75.0" mnemonicParsing="false" prefWidth="75.0" selected="true"/>
-										<Separator orientation="VERTICAL" prefHeight="200.0"/>
-										<CheckBox id="cbQuestion" fx:id="cbQuestion" maxWidth="75.0" minWidth="75.0" mnemonicParsing="false" prefWidth="75.0" selected="true"/>
-										<Separator orientation="VERTICAL" prefHeight="200.0"/>
+										<Separator orientation="VERTICAL" prefHeight="200.0" />
+										<CheckBox id="cbAdd" fx:id="cbAdd" maxWidth="75.0" minWidth="75.0" mnemonicParsing="false" prefWidth="75.0" selected="true" />
+										<Separator orientation="VERTICAL" prefHeight="200.0" />
+										<CheckBox id="cbMark" fx:id="cbMark" maxWidth="75.0" minWidth="75.0" mnemonicParsing="false" prefWidth="75.0" selected="true" />
+										<Separator orientation="VERTICAL" prefHeight="200.0" />
+										<CheckBox id="cbQuestion" fx:id="cbQuestion" maxWidth="75.0" minWidth="75.0" mnemonicParsing="false" prefWidth="75.0" selected="true" />
+										<Separator orientation="VERTICAL" prefHeight="200.0" />
 										<GridPane HBox.hgrow="ALWAYS">
 											<columnConstraints>
-												<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
-												<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="65.0" prefWidth="100.0"/>
+												<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+												<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="65.0" prefWidth="100.0" />
 											</columnConstraints>
 											<rowConstraints>
-												<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+												<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
 											</rowConstraints>
 											<children>
-												<FindPanel fx:id="findPanel" GridPane.columnIndex="1"/>
+												<FindPanel fx:id="findPanel" GridPane.columnIndex="1" />
 											</children>
 										</GridPane>
 									</children>
@@ -92,18 +100,18 @@
 						</BorderPane>
 					</items>
 				</SplitPane>
-				<Label id="$horMid"/>
+				<Label id="$horMid" />
 			</children>
 		</HBox>
-		<Label id="$verMid"/>
+		<Label id="$verMid" />
 		<HBox alignment="CENTER_RIGHT" prefHeight="25.0" prefWidth="715.0">
 			<children>
-				<Button mnemonicParsing="false" onAction="#cancel" text="Cancel"/>
-				<Label id="$horMin"/>
-				<Button mnemonicParsing="false" onAction="#accept" text="Ok"/>
-				<Label id="$horMid"/>
+				<Button mnemonicParsing="false" onAction="#cancel" text="Cancel" />
+				<Label id="$horMin" />
+				<Button mnemonicParsing="false" onAction="#accept" text="Ok" />
+				<Label id="$horMid" />
 			</children>
 		</HBox>
-		<Label id="$verMid"/>
+		<Label id="$verMid" />
 	</children>
 </VBox>
