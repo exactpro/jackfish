@@ -302,7 +302,7 @@ public class Settings
 				TRACE, "0x8066ccff",
 				WARN, "0xe64d4dff"
 		));
-		settings.setMapValues(GLOBAL_NS, MAIN_NS, mapOf(
+		settings.setMapValues(GLOBAL_NS, SETTINGS, mapOf(
 				MAX_LAST_COUNT,"10",
 				USE_FULL_SCREEN,"false",
 				USE_COMPACT_MODE,"false",
@@ -312,7 +312,7 @@ public class Settings
 						"Trading Systems.\\n//  All rights reserved.\\n//  This is unpublished, licensed software, confidential and proprietary\\n//  information which is the property of Exactpro Systems, LLC or its licensors.\\n//==============================================",
 				USE_FULLSCREEN_XPATH,"false"
 		));
-		settings.setValue(GLOBAL_NS, MAIN_NS, FONT, "System$13");
+		settings.setValue(GLOBAL_NS, SETTINGS, FONT, "System$13");
 		settings.setMapValues(GLOBAL_NS, SHORTCUTS_NAME, mapOf(
 				FIND_ON_MATRIX,"Ctrl+F",
 				SHOW_ALL_TABS,"Ctrl+E",
