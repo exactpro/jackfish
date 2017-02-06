@@ -1,11 +1,17 @@
 package com.exactprosystems.jf.tool.dictionary.dialog;
 
 import com.exactprosystems.jf.api.app.*;
+import com.exactprosystems.jf.api.app.IWindow.SectionKind;
+import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.error.JFRemoteException;
+import com.exactprosystems.jf.documents.guidic.Attr;
+import com.exactprosystems.jf.documents.guidic.ExtraInfo;
 import com.exactprosystems.jf.documents.guidic.Section;
 import com.exactprosystems.jf.documents.guidic.controls.AbstractControl;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.custom.xpath.ImageAndOffset;
+import com.exactprosystems.jf.tool.custom.xpath.XpathTreeItem;
+import com.exactprosystems.jf.tool.custom.xpath.XpathTreeItem.TreeItemState;
 import com.exactprosystems.jf.tool.custom.xpath.XpathViewer;
 import com.exactprosystems.jf.tool.dictionary.DictionaryFx;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
@@ -13,18 +19,23 @@ import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.scene.control.DialogEvent;
 import org.w3c.dom.Document;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import javax.xml.xpath.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class DialogWizard
 {
@@ -76,6 +87,206 @@ public class DialogWizard
 		updateOnButtons();
 	}
 
+	//----------------------------------------------------------------------------------------------
+    // sophisticated functions
+    //----------------------------------------------------------------------------------------------
+    // TODO
+    public Node findBestIndex(ControlKind kind, ExtraInfo info, Rectangle rect, Document doc, WizardSettings setting)
+    {
+        if (kind == null || info == null || rect == null || doc == null)
+        {
+            return null;
+        }
+        Map<Double, Node> candidates = new HashMap<>();
+        
+        passTree(doc, node -> candidates.put(similarityFactor(node, rect, kind, info, setting), node));
+        Double maxKey = candidates.keySet().stream().max(Double::compare).get();
+        return maxKey != null && maxKey > setting.getThreshold() ? candidates.get(maxKey) : null;
+    }
+    
+    private void passTree(Node node, Consumer<Node> func)
+    {
+        IntStream.range(0, node.getChildNodes().getLength())
+            .mapToObj(node.getChildNodes()::item)
+            .filter(item -> item.getNodeType() == Node.ELEMENT_NODE)
+            .forEach(item -> passTree(item, func));
+    }
+    
+    private double similarityFactor(Node node, Rectangle rect, ControlKind kind, ExtraInfo info, WizardSettings settings)
+    {
+        Object obj = node.getNodeValue();
+        
+        return 0.4;
+    }
+    
+    //----------------------------------------------------------------------------------------------
+    public void arrangeAll(List<XpathTreeItem> list) throws Exception
+    {
+        for (XpathTreeItem mark : list)
+        {
+            TreeItemState state = mark.getState();
+            Node node = mark.getNode();
+            if (state != null)
+            {
+                switch (state)
+                {
+                    case ADD:
+                        String id = composeId(node);
+                        ControlKind kind = composeKind(node);
+                        Locator locator = compile(id, kind, this.document, node);
+                        // put locator into ...
+                        updateAllExtraInfo(this.window, mark);
+                        break;
+                        
+                    case MARK:
+                        // get id, kind from the table
+                        // compile ....
+                        // put into ...
+                        updateAllExtraInfo(this.window, mark);
+                        break;
+                        
+                    case QUESTION:
+                        break;
+                }
+            }
+            
+        }
+    }
+    
+    private void updateAllExtraInfo(IWindow window, XpathTreeItem mark) throws Exception
+    {
+        // TODO check the attr 
+        for (ElementWizardBean element : mark.getList())
+        {
+            AbstractControl control = (AbstractControl)window.getControlForName(SectionKind.Run, element.getId());
+            ExtraInfo info = new ExtraInfo();
+            
+            info.set(ExtraInfo.xpathName,       "/div/div/div[2]");
+            info.set(ExtraInfo.nodeName,        mark.getNode().getNodeName());
+            info.set(ExtraInfo.rectangleName,   mark.getRectangle());
+            for (int index = 0; index < mark.getNode().getAttributes().getLength(); index++)
+            {
+                Node attr = mark.getNode().getAttributes().item(index);
+                info.set(ExtraInfo.attrName, new Attr(attr.getNodeName(), attr.getNodeValue()));
+            }
+            control.set(AbstractControl.infoName, info);
+        }
+        
+    }
+
+    public Locator compile(String id, ControlKind kind, Document doc, Node node)
+    {
+        // try many methods here
+        Locator locator = null;
+        
+        locator = locatorById(id, kind, doc, node);
+        if (locator != null)
+        {
+            return locator;
+        }
+
+        locator = locatorByAttr(id, kind, doc, node);
+        if (tryLocator(locator, doc, node) == 1)
+        {
+            return locator.id(id).kind(kind);
+        }
+        
+        locator = locatorByXpath(id, kind, doc, node);
+        if (tryLocator(locator, doc, node) == 1)
+        {
+            return locator.id(id).kind(kind);
+        }
+        
+        return null; // can't compile the such locator
+    }
+    
+    private String composeId(Node node)
+    {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    private ControlKind composeKind(Node node)
+    {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    private Locator locatorById(String id, ControlKind kind, Document doc, Node node)
+    {
+        if (node.hasAttributes())
+        {
+            Node nodeId = node.getAttributes().getNamedItem("id");
+            String uid = nodeId.getNodeValue();
+            if (isStable(uid))
+            {
+                Locator locator = new Locator().kind(kind).id(id).uid(uid);
+                
+                if (tryLocator(locator, doc, node) == 1)
+                {
+                    return locator;
+                }
+            }
+        }
+        return null;
+    }
+
+    private Locator locatorByAttr(String id, ControlKind kind, Document doc, Node node)
+    {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    private Locator locatorByXpath(String id, ControlKind kind, Document doc, Node node)
+    {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    private int tryLocator(Locator locator, Document doc, Node node)
+    {
+        if (locator == null)
+        {
+            return 0;
+        }
+        
+        List<Node> list = findAll(locator, doc);
+        if (list.size() != 1)
+        {
+            return list.size();
+        }
+        
+        if (list.get(0) == node)
+        {
+            return 1;
+        }
+        
+        return 0;
+    }
+
+    private List<Node> findAll(Locator locator, Document doc)
+    {
+        return Collections.emptyList();
+    }
+    
+    private boolean isStable(String identifier)
+    {
+        if (Str.IsNullOrEmpty(identifier))
+        {
+            return false;
+        }
+        else if (identifier.matches(".*\\d+.*"))
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
+    }
+    //----------------------------------------------------------------------------------------------
+
+	
 	public void show()
 	{
 		this.controller.show();

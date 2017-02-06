@@ -38,6 +38,7 @@ public interface IControl
 	int					getTimeout();
 	Addition 			getAddition();
 	Visibility			getVisibility();
+	IExtraInfo          getInfo();
 
 	Locator				locator();
 	

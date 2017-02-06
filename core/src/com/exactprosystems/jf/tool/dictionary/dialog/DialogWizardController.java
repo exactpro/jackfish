@@ -42,6 +42,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 public class DialogWizardController implements Initializable, ContainingParent
 {
@@ -321,12 +322,12 @@ public class DialogWizardController implements Initializable, ContainingParent
 		this.treeViewWithRectangles.prevMark();
 	}
 
-	public void magic(ActionEvent actionEvent)
-	{
-		System.out.println("<< Marked rows : " + this.treeViewWithRectangles.getMarkedRows());
-//		List<XpathTreeItem> list = this.treeViewWithRectangles.getMarkedRows().stream().map(e -> e.getValue()).collect(Collectors.toList());
-//		this.model.magic();
-	}
+    public void magic(ActionEvent actionEvent)
+    {
+        final List<XpathTreeItem> list = this.treeViewWithRectangles.getMarkedRows().stream().map(e -> e.getValue())
+                .collect(Collectors.toList());
+        Common.tryCatch(() ->  this.model.arrangeAll(list), "Error on arrange all");
+    }
 
 	public void generateOnOpen(ActionEvent actionEvent)
 	{

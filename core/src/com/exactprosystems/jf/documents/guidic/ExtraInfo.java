@@ -20,7 +20,7 @@ import java.util.List;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.NONE)
-public class ExtraInfo implements Mutable
+public class ExtraInfo implements Mutable, IExtraInfo
 {
 	protected static final Logger logger = Logger.getLogger(ExtraInfo.class);
 

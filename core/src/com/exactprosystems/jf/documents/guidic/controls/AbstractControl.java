@@ -134,7 +134,6 @@ public abstract class AbstractControl implements IControl, Mutable
 	{
 		this.changed = false;
 		this.section = null;
-		
 		this.info = null;
 	}
 	
@@ -199,6 +198,7 @@ public abstract class AbstractControl implements IControl, Mutable
 		copy.set(headerName,			control.getHeaderId()		);
 		copy.set(columnsName,			control.getColumns()		);
 		copy.set(useNumericHeaderName,	control.useNumericHeader()	);
+        copy.set(infoName,              control.getInfo()           );
 		copy.set(absoluteXpathName,		control.useAbsoluteXpath()	);
 
         return copy;
@@ -209,32 +209,6 @@ public abstract class AbstractControl implements IControl, Mutable
 		Class<?> clazz = Class.forName(AbstractControl.class.getPackage().getName() + "." + kind.getClazz());
 		return ((AbstractControl) clazz.newInstance());
 	}
-
-//    public static AbstractControl create(Locator locator, String ownerId) throws Exception
-//    {
-//    	AbstractControl ret = create(locator.getControlKind());
-//		ret.id = locator.getId();
-//		ret.uid = locator.getUid();
-//		ret.xpath = locator.getXpath();
-//		ret.ownerId = ownerId;
-//		ret.clazz = locator.getClazz();
-//		ret.name = locator.getName();
-//		ret.title = locator.getTitle();
-//		ret.action = locator.getAction();
-//		ret.text = locator.getText();
-//		ret.tooltip = locator.getTooltip();
-//		ret.expression = locator.getExpression();
-//		ret.addition = locator.getAddition();
-//		ret.visibility = locator.getVisibility();
-//		ret.weak = locator.isWeak();
-//		ret.timeout = 0; 
-//		ret.useNumericHeader = locator.useNumericHeader();
-//		ret.rows = "";
-//		ret.header = "";
-//		ret.columns = "";
-//		ret.absoluteXpath = locator.useAbsoluteXpath();
-//		return ret;
-//    }
 
 	public static AbstractControl createDummy() throws Exception
 	{
@@ -419,6 +393,12 @@ public abstract class AbstractControl implements IControl, Mutable
 		return this.header;
 	}
 
+	@Override
+	public IExtraInfo getInfo()
+	{
+	    return this.info;
+	}
+
 	@Deprecated
 	@Override
 	public boolean useAbsoluteXpath()
@@ -579,7 +559,10 @@ public abstract class AbstractControl implements IControl, Mutable
 	
 	public void correctAllXml()
 	{
-		this.info = null; // TODO
+	    if (this.info != null)
+	    {
+	        this.info.correctAllXml();
+	    }
 		
 		this.id = xmlToText(this.id); 
 		this.uid= xmlToText(this.uid);
@@ -598,7 +581,10 @@ public abstract class AbstractControl implements IControl, Mutable
 
 	public void correctAllText()
 	{
-		this.info = null; // TODO
+        if (this.info != null)
+        {
+            this.info.correctAllText();
+        }
 		
 		this.id = textToXml(this.id); 
 		this.uid= textToXml(this.uid);;
@@ -654,14 +640,18 @@ public abstract class AbstractControl implements IControl, Mutable
 		Field[] fields = clazz.getDeclaredFields();
 		for (Field field : fields)
 		{
+		    XmlElement elem = field.getAnnotation(XmlElement.class);
+		    if (elem != null && elem.name().equals(name))
+		    {
+		        field.set(object, value);
+                continue;
+		    }
+		    
 			XmlAttribute attr = field.getAnnotation(XmlAttribute.class);
-			if (attr == null)
+			if (attr != null && attr.name().equals(name))
 			{
+		        field.set(object, value);
 				continue;
-			}
-			if (attr.name().equals(name))
-			{
-				field.set(object, value);
 			}
 		}
 	}
@@ -672,12 +662,14 @@ public abstract class AbstractControl implements IControl, Mutable
 
 		for (Field field : fields)
 		{
-			XmlAttribute attr = field.getAnnotation(XmlAttribute.class);
-			if (attr == null)
-			{
-				continue;
-			}
-			if (attr.name().equals(name))
+            XmlElement elem = field.getAnnotation(XmlElement.class);
+            if (elem != null && elem.name().equals(name))
+            {
+                return field.get(object);
+            }
+
+            XmlAttribute attr = field.getAnnotation(XmlAttribute.class);
+			if (attr != null && attr.name().equals(name))
 			{
 				return field.get(object);
 			}
