@@ -6,6 +6,7 @@ import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.error.JFRemoteException;
 import com.exactprosystems.jf.documents.guidic.Attr;
 import com.exactprosystems.jf.documents.guidic.ExtraInfo;
+import com.exactprosystems.jf.documents.guidic.Rect;
 import com.exactprosystems.jf.documents.guidic.Section;
 import com.exactprosystems.jf.documents.guidic.controls.AbstractControl;
 import com.exactprosystems.jf.tool.Common;
@@ -14,6 +15,7 @@ import com.exactprosystems.jf.tool.custom.xpath.XpathTreeItem;
 import com.exactprosystems.jf.tool.custom.xpath.XpathTreeItem.TreeItemState;
 import com.exactprosystems.jf.tool.custom.xpath.XpathViewer;
 import com.exactprosystems.jf.tool.dictionary.DictionaryFx;
+import com.exactprosystems.jf.tool.dictionary.dialog.WizardSettings.Kind;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
@@ -25,6 +27,7 @@ import org.w3c.dom.NodeList;
 import javax.xml.xpath.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -46,6 +49,8 @@ public class DialogWizard
 
 	private DialogWizardController controller;
 	private AppConnection appConnection;
+	private PluginInfo pluginInfo;
+	private WizardSettings wizardSettings;
 
 	private Service<Document> documentService;
 	private Service<ImageAndOffset> imageService;
@@ -62,6 +67,16 @@ public class DialogWizard
 		this.dictionary = dictionary;
 		this.window = window;
 		this.appConnection = appConnection;
+		this.pluginInfo = appConnection.getApplication().getFactory().getInfo();
+		// TODO replace it to settings from Settings
+		this.wizardSettings = new WizardSettings();
+		this.wizardSettings.setMax(Kind.TYPE,       1);
+        this.wizardSettings.setMin(Kind.TYPE,       -1);
+        this.wizardSettings.setMax(Kind.PATH,       1);
+        this.wizardSettings.setMin(Kind.PATH,       0);
+        this.wizardSettings.setMax(Kind.POSITION,   1);
+        this.wizardSettings.setMin(Kind.POSITION,   0);
+        this.wizardSettings.setThreshold(0.6);
 
 		this.controller = Common.loadController(DialogWizard.class.getResource("DialogWizard.fxml"));
 		this.controller.init(this, this.window.getName());
@@ -91,7 +106,7 @@ public class DialogWizard
     // sophisticated functions
     //----------------------------------------------------------------------------------------------
     // TODO
-    public Node findBestIndex(ControlKind kind, ExtraInfo info, Rectangle rect, Document doc, WizardSettings setting)
+    public Node findBestIndex(ControlKind kind, ExtraInfo info, Rectangle rect, Document doc)
     {
         if (kind == null || info == null || rect == null || doc == null)
         {
@@ -99,9 +114,9 @@ public class DialogWizard
         }
         Map<Double, Node> candidates = new HashMap<>();
         
-        passTree(doc, node -> candidates.put(similarityFactor(node, rect, kind, info, setting), node));
+        passTree(doc, node -> candidates.put(similarityFactor(node, rect, kind, info), node));
         Double maxKey = candidates.keySet().stream().max(Double::compare).get();
-        return maxKey != null && maxKey > setting.getThreshold() ? candidates.get(maxKey) : null;
+        return maxKey != null && maxKey > this.wizardSettings.getThreshold() ? candidates.get(maxKey) : null;
     }
     
     private void passTree(Node node, Consumer<Node> func)
@@ -112,9 +127,30 @@ public class DialogWizard
             .forEach(item -> passTree(item, func));
     }
     
-    private double similarityFactor(Node node, Rectangle rect, ControlKind kind, ExtraInfo info, WizardSettings settings)
+    private double similarityFactor(Node node, Rectangle rect, ControlKind kind, ExtraInfo info)
     {
-        Object obj = node.getNodeValue();
+        if (node == null || rect == null || kind == null || info == null)
+        {
+            return 0.0;
+        }
+        
+        try
+        {
+            Rectangle   actualRectangle     = (Rectangle)node.getUserData(IRemoteApplication.rectangleName);
+            String      actualName          = node.getNodeName();
+            String      actualPath          = XpathViewer.fullXpath("", this.document, node, false, null, true);
+            List<Attr>  actualAttr          = null;
+            
+            Rect rec = (Rect)info.get(ExtraInfo.rectangleName);
+            Rectangle   expectedRectangle   = new Rectangle(rec.getX1(), rec.getY1(), rec.getX2() - rec.getX1(), rec.getY2() - rec.getY1());
+            String      expectedName        = (String) info.get(ExtraInfo.nodeName);
+            String      expectedPath        = (String) info.get(ExtraInfo.xpathName);
+            List<Attr>  expectedAttr        = (List<Attr>) info.get(ExtraInfo.attrName);
+        }
+        catch (Exception e)
+        {
+            return 0.0;
+        }
         
         return 0.4;
     }
@@ -139,9 +175,6 @@ public class DialogWizard
                         break;
                         
                     case MARK:
-                        // get id, kind from the table
-                        // compile ....
-                        // put into ...
                         updateAllExtraInfo(this.window, mark);
                         break;
                         
@@ -158,20 +191,30 @@ public class DialogWizard
         // TODO check the attr 
         for (ElementWizardBean element : mark.getList())
         {
+            System.err.println(">> elementId " + element.getId());
+            
             AbstractControl control = (AbstractControl)window.getControlForName(SectionKind.Run, element.getId());
             ExtraInfo info = new ExtraInfo();
+            Node node = mark.getNode();
             
-            info.set(ExtraInfo.xpathName,       "/div/div/div[2]");
-            info.set(ExtraInfo.nodeName,        mark.getNode().getNodeName());
-            info.set(ExtraInfo.rectangleName,   mark.getRectangle());
-            for (int index = 0; index < mark.getNode().getAttributes().getLength(); index++)
+            Rectangle rec = mark.getRectangle();
+            Rect rectangle = new Rect(rec.x, rec.y, rec.x + rec.width, rec.y + rec.height);            
+            
+            info.set(ExtraInfo.xpathName,       XpathViewer.fullXpath("", this.document, node, false, null, true));
+            info.set(ExtraInfo.nodeName,        node.getNodeName());
+            info.set(ExtraInfo.rectangleName,   rectangle);
+            List<Attr> attributes = new ArrayList<>();
+            for (int index = 0; index < node.getAttributes().getLength(); index++)
             {
                 Node attr = mark.getNode().getAttributes().item(index);
-                info.set(ExtraInfo.attrName, new Attr(attr.getNodeName(), attr.getNodeValue()));
+                attributes.add(new Attr(attr.getNodeName(), attr.getNodeValue()));
+            }
+            if (!attributes.isEmpty())
+            {
+                info.set(ExtraInfo.attrName, attributes);
             }
             control.set(AbstractControl.infoName, info);
         }
-        
     }
 
     public Locator compile(String id, ControlKind kind, Document doc, Node node)

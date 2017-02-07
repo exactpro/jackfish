@@ -4,7 +4,9 @@
         <self>
             <panel id="body" xpath=".//body" useAbsoluteXpath="true"/>
         </self>
-        <onOpen/>
+        <onOpen>
+            <wait ref="body" addition="WaitToAppear" timeout="5000"/>
+        </onOpen>
         <run>
             <panel id="content" uid="content" class="" title="" text=""/>
             <panel id="side-panel" uid="side-panel" class="" title="" text=""/>
@@ -21,9 +23,30 @@
             <wait id="00000" ref="MenuPanel" addition="WaitToAppear" timeout="5000"/>
         </onOpen>
         <run>
-            <button id="Item1" uid="" xpath=".//a[contains(text(), &amp;quot;Item 1&amp;quot;)]" useAbsoluteXpath="true" owner="MenuPanel" class="" name="" title="" text="Item 1"/>
-            <button id="Item2" uid="" xpath=".//a[contains(text(), &amp;quot;Item 2&amp;quot;)]" useAbsoluteXpath="true" owner="MenuPanel" class="" name="" title="" text="Item 2"/>
-            <button id="Item3" uid="" xpath=".//a[contains(text(), &amp;quot;Item 3&amp;quot;)]" useAbsoluteXpath="true" owner="MenuPanel" class="" name="" title="" text="Item 3"/>
+            <button id="Item1" uid="" xpath=".//a[contains(text(), &amp;quot;Item 1&amp;quot;)]" useAbsoluteXpath="true" owner="MenuPanel" class="" name="" title="" text="Item 1">
+                <info>
+                    <xpath>/div/ul/li[1]/a</xpath>
+                    <rectangle x1="0" y1="0" x2="61" y2="50"/>
+                    <node>a</node>
+                    <attr name="href">#</attr>
+                </info>
+            </button>
+            <button id="Item2" uid="" xpath=".//a[contains(text(), &amp;quot;Item 2&amp;quot;)]" useAbsoluteXpath="true" owner="MenuPanel" class="" name="" title="" text="Item 2">
+                <info>
+                    <xpath>/div/ul/li[2]/a</xpath>
+                    <rectangle x1="65" y1="0" x2="126" y2="50"/>
+                    <node>a</node>
+                    <attr name="href">#</attr>
+                </info>
+            </button>
+            <button id="Item3" uid="" xpath=".//a[contains(text(), &amp;quot;Item 3&amp;quot;)]" useAbsoluteXpath="true" owner="MenuPanel" class="" name="" title="" text="Item 3">
+                <info>
+                    <xpath>/div/ul/li[3]/a</xpath>
+                    <rectangle x1="130" y1="0" x2="191" y2="50"/>
+                    <node>a</node>
+                    <attr name="href">#</attr>
+                </info>
+            </button>
             <button id="Item4" uid="" owner="MenuPanel" class="" name="" title="" text="Item 4"/>
         </run>
         <onClose/>

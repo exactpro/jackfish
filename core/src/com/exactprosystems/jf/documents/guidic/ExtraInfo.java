@@ -33,7 +33,7 @@ public class ExtraInfo implements Mutable, IExtraInfo
 	protected String xpath;
 
 	@XmlElement(name = rectangleName)
-	protected Rectangle rectangle;
+	protected Rect rectangle;
 
 	@XmlElement(name = nodeName)
 	protected String node;
@@ -48,13 +48,6 @@ public class ExtraInfo implements Mutable, IExtraInfo
 	public ExtraInfo() 
 	{
 		this.changed = false;
-		
-		this.xpath = "/div/div[2]/a";
-		this.rectangle = new Rectangle(10,10,100,25);
-		this.node = "a";
-		this.attributes = new ArrayList<>();
-		this.attributes.add(new Attr("id", "text123"));
-		this.attributes.add(new Attr("class", "visible-elements"));
 	}
 	
     @Override
@@ -112,7 +105,7 @@ public class ExtraInfo implements Mutable, IExtraInfo
 		Field[] fields = clazz.getDeclaredFields();
 		for (Field field : fields)
 		{
-			XmlAttribute attr = field.getAnnotation(XmlAttribute.class);
+		    XmlElement attr = field.getAnnotation(XmlElement.class);
 			if (attr == null)
 			{
 				continue;
@@ -130,7 +123,7 @@ public class ExtraInfo implements Mutable, IExtraInfo
 
 		for (Field field : fields)
 		{
-			XmlAttribute attr = field.getAnnotation(XmlAttribute.class);
+		    XmlElement attr = field.getAnnotation(XmlElement.class);
 			if (attr == null)
 			{
 				continue;

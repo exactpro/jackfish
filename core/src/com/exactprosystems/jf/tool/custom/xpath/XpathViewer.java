@@ -104,10 +104,10 @@ public class XpathViewer
 			relativeNode = nodes == null || nodes.isEmpty() ? null : nodes.get(0);
 		}
 		
-		String xpath1 = fullXpath(relativeNode, currentNode, false, 	null, 		true);
-		String xpath2 = fullXpath(relativeNode, currentNode, useText, 	parameters, true);
-		String xpath3 = fullXpath(relativeNode, currentNode, false, 	null, 		false);
-		String xpath4 = fullXpath(relativeNode,	currentNode, useText, 	parameters, false);
+		String xpath1 = fullXpath(this.relativeXpath, relativeNode, currentNode, false, 	null, 		true);
+		String xpath2 = fullXpath(this.relativeXpath, relativeNode, currentNode, useText, 	parameters, true);
+		String xpath3 = fullXpath(this.relativeXpath, relativeNode, currentNode, false, 	null, 		false);
+		String xpath4 = fullXpath(this.relativeXpath, relativeNode,	currentNode, useText, 	parameters, false);
 		
 		this.controller.displayXpaths(xpath1, xpath2, xpath3, xpath4);
 		this.controller.displayCounters(evaluate(xpath1), evaluate(xpath2), evaluate(xpath3), evaluate(xpath4));
@@ -134,6 +134,35 @@ public class XpathViewer
 		return sb.toString();
 	}
 
+    public static String fullXpath(String relativeXpath, Node relative, Node node, boolean useText, List<String> parameters, boolean fromRoot)
+    {
+        if (node == null)
+        {
+            return "//*";
+        }
+        
+        if (relative == null)
+        {
+            if (!fromRoot)
+            {
+                return "./" + xpath(node.getParentNode(), node, useText, parameters);
+            }
+            return xpath(null, node, useText, parameters);
+        }
+        else
+        {
+            Node common = commonAncestor(relative, node);
+            Node current = relative;
+            String backPath = "";
+            while(current != null && !current.equals(common))
+            {
+                current = current.getParentNode();
+                backPath += "/..";
+            }
+            return relativeXpath + backPath + xpath(common, node, useText, parameters);
+        }
+    }
+    
 	// ============================================================
 	// private methods
 	// ============================================================
@@ -157,36 +186,7 @@ public class XpathViewer
 		return null;
 	}
 
-	private String fullXpath(Node relative, Node node, boolean useText, List<String> parameters, boolean fromRoot)
-	{
-		if (node == null)
-		{
-			return "//*";
-		}
-		
-		if (relative == null)
-		{
-			if (!fromRoot)
-			{
-				return "./" + xpath(node.getParentNode(), node, useText, parameters);
-			}
-			return xpath(null, node, useText, parameters);
-		}
-		else
-		{
-			Node common = commonAncestor(relative, node);
-			Node current = relative;
-			String backPath = "";
-			while(current != null && !current.equals(common))
-			{
-				current = current.getParentNode();
-				backPath += "/..";
-			}
-			return this.relativeXpath + backPath + xpath(common, node, useText, parameters);
-		}
-	}
-	
-	private String xpath(Node parent, Node node, boolean useText, List<String> parameters)
+	private static String xpath(Node parent, Node node, boolean useText, List<String> parameters)
 	{
 		if (node instanceof Document)
 		{
@@ -206,7 +206,7 @@ public class XpathViewer
 					);
 	}
 	
-	private Node commonAncestor(Node node1, Node node2)
+	private static Node commonAncestor(Node node1, Node node2)
 	{
 		if (node1 == null || node2 == null)
 		{
@@ -228,7 +228,7 @@ public class XpathViewer
 		return res;
 	}
 	
-	private List<Node> ancestors(Node node)
+	private static List<Node> ancestors(Node node)
 	{
 		List<Node> res = new ArrayList<Node>();
 		Node current = node;
@@ -240,7 +240,7 @@ public class XpathViewer
 		return res;
 	}
 
-	private String getParameters(Node node, boolean useText, List<String> parameters)
+	private static String getParameters(Node node, boolean useText, List<String> parameters)
 	{
 		String res = "";
 		NamedNodeMap attr = node.getAttributes();
@@ -258,7 +258,7 @@ public class XpathViewer
 		return res;
 	}
 	
-	private int getIndexNode(Node node)
+	private static int getIndexNode(Node node)
 	{
 		int result = 0;
 		Node parentNode = node.getParentNode();
@@ -278,7 +278,7 @@ public class XpathViewer
 		return result;
 	}
 
-	private boolean hasSiblings(Node node)
+	private static boolean hasSiblings(Node node)
 	{
 		int res = 0;
 		Node parentNode = node.getParentNode();

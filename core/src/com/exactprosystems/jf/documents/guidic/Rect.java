@@ -13,9 +13,10 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
-@XmlRootElement
+@XmlRootElement(name = "rectangle")
 @XmlAccessorType(XmlAccessType.NONE)
-public class Rectangle {
+public class Rect 
+{
 	public static final String x1Name = "x1";
 	public static final String y1Name = "y1";
 	public static final String x2Name = "x2";
@@ -33,11 +34,11 @@ public class Rectangle {
 	@XmlAttribute(name = y2Name)
 	protected Integer y2;
 
-	public Rectangle() 
+	public Rect() 
 	{
 	}
 
-	public Rectangle(int x1, int y1, int x2, int y2) 
+	public Rect(int x1, int y1, int x2, int y2) 
 	{
 		this.x1 = x1;
 		this.y1 = y1;

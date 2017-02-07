@@ -228,6 +228,7 @@ public class DictionaryFx extends GuiDictionary
 
 	public void elementChanged(IWindow window, IWindow.SectionKind sectionKind, IControl control) throws Exception
 	{
+	    ((AbstractControl)control).correctAllText();
 		displayElementInfo(window, sectionKind, control);
 	}
 

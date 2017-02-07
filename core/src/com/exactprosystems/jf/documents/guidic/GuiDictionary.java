@@ -297,7 +297,7 @@ public class GuiDictionary extends AbstractDocument implements IGuiDictionary
 			Section.class, 
 			AbstractControl.class, 
 			ExtraInfo.class,
-			Rectangle.class,
+			Rect.class,
 			Attr.class,
 			Addition.class,
 		};
