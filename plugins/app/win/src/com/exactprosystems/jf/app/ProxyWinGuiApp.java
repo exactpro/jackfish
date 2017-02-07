@@ -41,10 +41,10 @@ public class ProxyWinGuiApp extends ProxyApplication
 	}
 
 	@Override
-	public void stop() throws Exception
+	public void stop(boolean needKill) throws Exception
 	{
 		System.out.println("WinGuiApp.stop()");
-		super.stop();
+		super.stop(needKill);
 	}
 
 	private void tune(Map<String, String> driverParameters, Map<String, String> parameters)

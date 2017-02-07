@@ -238,11 +238,11 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 	}
 
 	@Override
-	protected void stopDerived() throws Exception
+	protected void stopDerived(boolean needKill) throws Exception
 	{
 		try
 		{
-			this.driver.stop();
+			this.driver.stop(needKill);
 		}
 		catch (RemoteException e)
 		{

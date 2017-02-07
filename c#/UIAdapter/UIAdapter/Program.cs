@@ -250,11 +250,16 @@ namespace UIAdapter
         }
 
         [DllExport("stop", CallingConvention.Cdecl)]
-        public static void Stop()
+        public static void Stop(bool needStop)
         {
             try
             {
                 long startMethod = getMilis();
+                if (needStop && process == null)
+                {
+                    process = Process.GetProcessById(handler.Current.ProcessId);
+                }
+
                 if (process != null)
                 {
                     process.WaitForExit(2000);

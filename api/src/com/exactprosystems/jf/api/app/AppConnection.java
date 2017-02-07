@@ -24,7 +24,7 @@ public class AppConnection implements AutoCloseable
 	{
 		if (this.app != null)
 		{
-			this.app.stop();
+			this.app.stop(false);
 		}
 		this.app = null;
 	}

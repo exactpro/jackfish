@@ -37,10 +37,10 @@ public class ProxyWebApp extends ProxyApplication
 	}
 
 	@Override
-	public void stop() throws Exception
+	public void stop(boolean needKill) throws Exception
 	{
 		System.out.println("WebApp.stop()");
-		super.stop();
+		super.stop(needKill);
 	}
 	
 	private void tune(Map<String, String> driverParameters, Map<String, String> parameters)

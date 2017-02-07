@@ -240,7 +240,7 @@ public class ApplicationPool implements IApplicationPool
 			}
 			
 			IApplication app = connection.getApplication();
-			app.stop();
+			app.stop(false);
 			this.connections.remove(connection);
 		}
 		catch (Exception e)

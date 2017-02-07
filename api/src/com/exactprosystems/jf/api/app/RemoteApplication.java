@@ -129,11 +129,11 @@ public abstract class RemoteApplication implements IRemoteApplication
 	}
 
 	@Override
-	public final void stop() throws RemoteException
+	public final void stop(boolean needKill) throws RemoteException
 	{
 		try 
 		{
-			stopDerived();
+			stopDerived(needKill);
 		}
 		catch (RemoteException e)
 		{
@@ -553,7 +553,7 @@ public abstract class RemoteApplication implements IRemoteApplication
 
 	protected abstract int runDerived(Map<String, String> args) throws Exception;
 
-	protected abstract void stopDerived() throws Exception;
+	protected abstract void stopDerived(boolean needKill) throws Exception;
 	
 	protected abstract void refreshDerived() throws Exception;
 

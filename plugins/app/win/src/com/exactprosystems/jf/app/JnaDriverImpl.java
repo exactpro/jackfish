@@ -127,10 +127,10 @@ public class JnaDriverImpl
 		return ret;
 	}
 
-	public void stop() throws Exception
+	public void stop(boolean needKill) throws Exception
 	{
 		long start = System.currentTimeMillis();
-		this.jnaDriver.stop();
+		this.jnaDriver.stop(needKill);
 		this.logger.info(String.format("stop(), time (ms) : %d", System.currentTimeMillis() - start));
 		checkCSharpTimes();
 		checkError();

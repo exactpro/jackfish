@@ -173,7 +173,7 @@ public class SwingRemoteApplication extends RemoteApplication
 	}
 
 	@Override
-	protected void stopDerived() throws Exception
+	protected void stopDerived(boolean needKill) throws Exception
 	{
 		try
 		{

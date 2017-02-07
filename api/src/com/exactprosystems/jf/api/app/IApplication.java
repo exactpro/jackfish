@@ -18,7 +18,7 @@ public interface IApplication
 
 	int					connect(int port, String jar, String work, String remoteClassName, Map<String, String> driverParameters, Map<String, String> parameters) throws Exception;
 	int 				start(int port, String jar, String work, String remoteClassName, Map<String, String> driverParameters, Map<String, String> parameters) throws Exception;
-	void 				stop() throws Exception;
+	void 				stop(boolean needKill) throws Exception;
 
 	IRemoteApplication 	service();
 	IApplicationPool	getPool();

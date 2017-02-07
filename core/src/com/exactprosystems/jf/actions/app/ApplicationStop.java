@@ -36,16 +36,22 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 public class ApplicationStop extends AbstractAction 
 {
 	public static final String connectionName = "AppConnection";
+	public static final String needKillName = "Kill";
 
 	@ActionFieldAttribute(name = connectionName, mandatory = true, description = "A special object which identifies the"
 			+ " started application session. This object is required in many other actions to specify the session"
 			+ " of the application the indicated action belongs to. It is the output value of such actions"
 			+ " as {{@ApplicationStart@}}, {{@ApplicationConnectTo@}}.")
 	protected AppConnection	connection	= null;
-	
+
+	@ActionFieldAttribute(name=needKillName, mandatory = false, description = "If true, the process will killed")
+	protected Boolean needKill;
+
 	public ApplicationStop()
 	{
 	}
+
+
 
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception 
@@ -56,8 +62,9 @@ public class ApplicationStop extends AbstractAction
 		}
 		else
 		{
+			boolean kill = needKill.booleanValue();
 			IApplication app = connection.getApplication();
-			app.stop();
+			app.stop(kill);
 			
 			super.setResult(null);
 		}
@@ -65,7 +72,7 @@ public class ApplicationStop extends AbstractAction
 
 	@Override
 	public void initDefaultValues() {
-		// TODO Auto-generated method stub
+		needKill = false;
 		
 	}
 }

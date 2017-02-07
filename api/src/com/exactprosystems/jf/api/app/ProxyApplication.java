@@ -168,7 +168,7 @@ public abstract class ProxyApplication implements IApplication
 	    	{
 				try
 				{
-					stop();
+					stop(false);
 				}
 				catch (Exception e)
 				{
@@ -179,7 +179,7 @@ public abstract class ProxyApplication implements IApplication
 	    }
 	    else
 	    {
-	    	stop();
+	    	stop(false);
 	    	if (lastException != null)
 	    	{
 	    		throw lastException;
@@ -190,13 +190,13 @@ public abstract class ProxyApplication implements IApplication
 
 	
 	@Override
-	public void stop() throws Exception
+	public void stop(boolean needKill) throws Exception
 	{
 		if (this.service != null)
 		{
 			try
 			{
-				this.service.stop();
+				this.service.stop(needKill);
 			}
 			catch(RemoteException e)
 			{
