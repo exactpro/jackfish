@@ -337,10 +337,26 @@ public class SpreadsheetView extends Control
 					int progression = strings.size() == 1 ? 1 : getProgression(strings);
 					int skip = progression != minProgression ? 1 : size;
 					int currentProgression = progression != minProgression ? progression : 1;
+					String value = String.valueOf(this.providerProperty.get().getCellValue(j, range.getTop() + size - skip));
+					for (int i = range.getTop() + size - skip; i < range.getTop() + size; i++)
+					{
+						String a = String.valueOf(this.providerProperty.get().getCellValue(j,i));
+						if (a != null){
+							value = a;
+						}
+						else
+						{
+							break;
+						}
+
+					}
+					int newProgression = currentProgression;
 					for (int i = range.getTop() + size; i < range.getBottom() + 1; i++)
 					{
-						String value = String.valueOf(this.providerProperty.get().getCellValue(j, i - skip));
-						String evaluatedText = getEvaluatedText(value, currentProgression);
+						if (i != (range.getTop() + size)){
+							newProgression = newProgression + currentProgression;
+						}
+						String evaluatedText = getEvaluatedText(value, newProgression);
 						this.providerProperty.get().setCellValue(j, i, evaluatedText);
 
 					}
@@ -400,7 +416,16 @@ public class SpreadsheetView extends Control
 			}
 			catch (NumberFormatException e)
 			{
-				return progression;
+				try
+				{
+
+					int firstInt = Integer.parseInt(getSubstring(firstValue));
+					int secondInt = Integer.parseInt(getSubstring(secondValue));
+					list.add(secondInt - firstInt);
+				}
+				catch (Exception ex){
+					return progression;
+				}
 			}
 		}
 		if (list.stream().distinct().count() == 1)
@@ -408,6 +433,25 @@ public class SpreadsheetView extends Control
 			progression = list.get(0);
 		}
 		return progression;
+	}
+
+	private static String getSubstring(String s)
+	{
+		String res = null;
+		Pattern compile = Pattern.compile("^(-?\\d+)?(.*?)(-?\\d+)?$");
+		Matcher matcher = compile.matcher(s);
+		if (matcher.find())
+		{
+			res = matcher.group(3);
+		}
+		if (res != null)
+		{
+			return res;
+		}
+		else
+		{
+			return s;
+		}
 	}
 
 	private String getEvaluatedText(String s, int progression)
