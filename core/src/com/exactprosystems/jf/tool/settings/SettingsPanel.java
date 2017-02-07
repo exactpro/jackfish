@@ -77,6 +77,7 @@ public class SettingsPanel
 		displayLogs();
 		displayShortcuts();
 		displayMain();
+		displayWizard();
 		this.controller.display("Settings");
 	}
 
@@ -84,6 +85,12 @@ public class SettingsPanel
 	{
 		List<SettingsValue> values = this.settings.getValues(Settings.GLOBAL_NS, Settings.GIT);
 		this.controller.displayGit(values.stream().collect(Collectors.toMap(SettingsValue::getKey, SettingsValue::getValue)));
+	}
+
+	private void displayWizard()
+	{
+		List<SettingsValue> values = this.settings.getValues(Settings.GLOBAL_NS, Settings.WIZARD_NAME);
+		this.controller.displayWizard(values.stream().collect(Collectors.toMap(SettingsValue::getKey, SettingsValue::getValue)));
 	}
 
 	private void displayColors()

@@ -13,6 +13,7 @@ import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.documents.matrix.parser.ScreenshotKind;
 import com.exactprosystems.jf.documents.matrix.parser.items.MutableArrayList;
 import com.exactprosystems.jf.tool.Common;
+import com.exactprosystems.jf.tool.dictionary.dialog.WizardSettings;
 import javafx.scene.input.KeyCombination;
 import org.apache.log4j.Logger;
 
@@ -39,6 +40,7 @@ public class Settings
 	public static final String	MATRIX_COLORS	= "MatrixColors";
 	public static final String	GIT				= "Git";
 	public static final String	MATRIX_NAME		= "Matrix";
+	public static final String	WIZARD_NAME		= "Wizard";
 
 	//region Shortcuts
 	//other shortcuts
@@ -105,6 +107,10 @@ public class Settings
 	public static final String	MATRIX_DEFAULT_SCREENSHOT = "matrixDefaultScreenshot";
 	public static final String	MATRIX_POPUPS				= "matrixPopups";
 	//endregion
+
+	public static final String	THRESHOLD			= "threshold";
+	public static final String	MAX					= "_MAX";
+	public static final String	MIN					= "_MIN";
 
 	public static final String 	OPENED 				= "OPENED";
 	public static final String 	MAIN_NS 			= "MAIN";
@@ -333,6 +339,24 @@ public class Settings
 		settings.setMapValues(GLOBAL_NS, MATRIX_NAME, mapOf(
 				MATRIX_DEFAULT_SCREENSHOT, ScreenshotKind.Never.name(),
 				MATRIX_POPUPS, "false"
+		));
+		settings.setMapValues(GLOBAL_NS, WIZARD_NAME, mapOf(
+				WizardSettings.Kind.TYPE.name()+MAX, "1",
+				WizardSettings.Kind.TYPE.name()+MIN, "-1",
+
+				WizardSettings.Kind.PATH.name()+MAX, "1",
+				WizardSettings.Kind.PATH.name()+MIN, "-1",
+
+				WizardSettings.Kind.SIZE.name()+MAX, "1",
+				WizardSettings.Kind.SIZE.name()+MIN, "-1",
+
+				WizardSettings.Kind.POSITION.name()+MAX, "1",
+				WizardSettings.Kind.POSITION.name()+MIN, "-1",
+
+				WizardSettings.Kind.ATTR.name()+MAX, "1",
+				WizardSettings.Kind.ATTR.name()+MIN, "-1",
+
+				THRESHOLD, "-1"
 		));
 		return settings;
 	}
