@@ -77,7 +77,6 @@ public class WizardConfigurationController implements Initializable, ContainingP
 				folderExist.setValue(false);
 			}
 		});
-		this.tfProjectName.disableProperty().bind(this.cfChooseFolder.textProperty().isEmpty());
 		this.tfProjectName.textProperty().addListener((observable, oldValue, newValue) -> {
 			this.tfProjectName.getStyleClass().remove(CssVariables.INCORRECT_FIELD);
 			if (newValue != null && !newValue.isEmpty())
