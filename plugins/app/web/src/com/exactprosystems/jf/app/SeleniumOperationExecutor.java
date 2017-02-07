@@ -1010,7 +1010,7 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 				try
 				{
 					logger.debug("Wait to " + (toAppear ? "" : "Dis") + "appear for " + locator + " on time " + ms);
-					final By by = new MatcherSelenium(ControlKind.Wait, locator);
+					final By by = new MatcherSelenium(locator.getControlKind(), locator);
 
 					long time = System.currentTimeMillis();
 					while (System.currentTimeMillis() < time + ms)

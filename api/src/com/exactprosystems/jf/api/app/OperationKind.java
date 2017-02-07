@@ -593,7 +593,7 @@ public enum OperationKind
 		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, Holder<T> holder, OperationResult result) throws Exception
 		{
 			AtomicLong atomicLong = new AtomicLong();
-			boolean ok = executor.wait(holder.get(LocatorKind.Element), part.i , part.b, atomicLong);
+			boolean ok = executor.wait(holder.get(LocatorKind.Element), part.i , part.toAppear, atomicLong);
 			result.setText(String.valueOf(atomicLong.get()));
 			return ok;
 		}
