@@ -35,6 +35,7 @@ public class SettingsPanelController implements Initializable, ContainingParent
 	public Tab colorsTab;
 	public Tab gitTab;
 	public Tab matrixTab;
+	public Tab wizardTab;
 	public TabPane tabPane;
 
 	private SettingsPanel model;
@@ -46,6 +47,7 @@ public class SettingsPanelController implements Initializable, ContainingParent
 	private LogTabController logTabController;
 	private ColorsTabController colorsTabController;
 	private GitTabController gitTabController;
+	private WizardTabController wizardTabController;
 	private MatrixTabController matrixTabController;
 
 	double defaultHeight = -1;
@@ -123,6 +125,9 @@ public class SettingsPanelController implements Initializable, ContainingParent
 		this.gitTabController = Common.loadController(this.getClass().getResource("tabs/GitTab.fxml"));
 		this.gitTabController.init(model);
 
+		this.wizardTabController = Common.loadController(this.getClass().getResource("tabs/WizardTab.fxml"));
+		this.wizardTabController.init(model);
+
 		this.matrixTabController = Common.loadController(this.getClass().getResource("tabs/MatrixTab.fxml"));
 		this.matrixTabController.init(model);
 
@@ -136,7 +141,13 @@ public class SettingsPanelController implements Initializable, ContainingParent
 		this.colorsTabController.displayInto(this.colorsTab);
 	}
 
-	public void displayGit(Map<String, String> collect)
+	public void displayWizard(Map<String, String> collect)
+	{
+		this.wizardTabController.displayInfo(collect);
+		this.wizardTabController.displayInto(this.wizardTab);
+	}
+
+    public void displayGit(Map<String, String> collect)
 	{
 		this.gitTabController.displayInfo(collect);
 		this.gitTabController.displayInto(this.gitTab);
@@ -206,6 +217,7 @@ public class SettingsPanelController implements Initializable, ContainingParent
 			this.logTabController.save();
 			this.colorsTabController.save();
 			this.gitTabController.save();
+			this.wizardTabController.save();
 			this.matrixTabController.save();
 			this.model.save();
 			return true;
