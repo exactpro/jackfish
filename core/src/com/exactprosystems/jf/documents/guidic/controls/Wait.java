@@ -35,7 +35,7 @@ public class Wait extends AbstractControl
 		{
 			part.setLocator(locator());
 			part.setInt(getTimeout());
-			part.setBool(this.addition == Addition.WaitToAppear);
+			part.setToAppear(this.addition == Addition.WaitToAppear);
 		}
 		if (value instanceof String)
 		{
