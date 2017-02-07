@@ -421,6 +421,7 @@ public abstract class AbstractControl implements IControl, Mutable
 	        IControl refControl = this.section.getWindow().getControlForName(null, this.refId);
 	        if (refControl != null)
 	        {
+	        	res.kind(refControl.getBindedClass());
                 res.uid(refControl.getUID());
                 res.clazz(refControl.getClazz());
                 res.xpath(refControl.getXpath());

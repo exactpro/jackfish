@@ -20,7 +20,7 @@ public class Part implements Serializable
 	public Part(OperationKind kind)
 	{
 		this.kind = kind;
-		
+
 		this.locatorId = null;
 		this.operation = null;
 		this.valueCondition = null;
@@ -28,6 +28,7 @@ public class Part implements Serializable
 		this.i = -1;
 		this.d = Double.NaN;
 		this.b = false;
+		this.toAppear = false;
 		this.x = Integer.MIN_VALUE;
 		this.y = Integer.MIN_VALUE;
 		this.x2 = Integer.MIN_VALUE;
@@ -40,14 +41,14 @@ public class Part implements Serializable
 		this.locatorKind = null;
 		this.locator = null;
 	}
-	
+
 	public void tune(IWindow window) throws Exception
 	{
 		if (this.kind == OperationKind.REPEAT && this.operation != null)
 		{
 			this.operation.tune(window);
 		}
-		
+
 		if (this.locatorId != null && !this.locatorId.isEmpty() && this.locatorKind != null)
 		{
 			IControl control = window.getControlForName(SectionKind.Run, this.locatorId);
@@ -88,7 +89,7 @@ public class Part implements Serializable
 	{
 		return this.kind.toFormula(this);
 	}
-	
+
 	public Part setInt(int i)
 	{
 		this.i = i;
@@ -122,19 +123,24 @@ public class Part implements Serializable
 		this.str = str;
 		return this;
 	}
-	
+
 	public Part setText(String text)
 	{
 		this.text = text;
 		return this;
 	}
-	
+
 	public Part setBool(boolean bool)
 	{
 		this.b = bool;
 		return this;
 	}
-	
+
+	public Part setToAppear(boolean toAppear) {
+		this.toAppear = toAppear;
+		return this;
+	}
+
 	public Part setLocatorId(String locator)
 	{
 		this.locatorId = locator;
@@ -199,6 +205,7 @@ public class Part implements Serializable
 	protected int y2;
 	protected double d;
 	protected boolean b;
+	protected boolean toAppear;
 	protected String str;
 	protected String text;
 	protected ICondition valueCondition;
