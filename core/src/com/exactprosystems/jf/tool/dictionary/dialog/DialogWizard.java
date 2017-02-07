@@ -15,7 +15,6 @@ import com.exactprosystems.jf.tool.custom.xpath.XpathTreeItem;
 import com.exactprosystems.jf.tool.custom.xpath.XpathTreeItem.TreeItemState;
 import com.exactprosystems.jf.tool.custom.xpath.XpathViewer;
 import com.exactprosystems.jf.tool.dictionary.DictionaryFx;
-import com.exactprosystems.jf.tool.dictionary.dialog.WizardSettings.Kind;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
@@ -68,15 +67,7 @@ public class DialogWizard
 		this.window = window;
 		this.appConnection = appConnection;
 		this.pluginInfo = appConnection.getApplication().getFactory().getInfo();
-		// TODO replace it to settings from Settings
-		this.wizardSettings = new WizardSettings();
-		this.wizardSettings.setMax(Kind.TYPE,       1);
-        this.wizardSettings.setMin(Kind.TYPE,       -1);
-        this.wizardSettings.setMax(Kind.PATH,       1);
-        this.wizardSettings.setMin(Kind.PATH,       0);
-        this.wizardSettings.setMax(Kind.POSITION,   1);
-        this.wizardSettings.setMin(Kind.POSITION,   0);
-        this.wizardSettings.setThreshold(0.6);
+		this.wizardSettings = new WizardSettings(dictionary.getFactory().getSettings());
 
 		this.controller = Common.loadController(DialogWizard.class.getResource("DialogWizard.fxml"));
 		this.controller.init(this, this.window.getName());
@@ -146,13 +137,39 @@ public class DialogWizard
             String      expectedName        = (String) info.get(ExtraInfo.nodeName);
             String      expectedPath        = (String) info.get(ExtraInfo.xpathName);
             List<Attr>  expectedAttr        = (List<Attr>) info.get(ExtraInfo.attrName);
+            
+            double sum = 0.0;
+            // name
+            sum += normalize(Str.areEqual(actualName, expectedName) ? 1.0 : 0.0, WizardSettings.Kind.TYPE);
+            
+            // position
+            sum += 0.0;
+            
+            // size
+            sum += 0.0;
+            
+            // path
+            sum += 0.0;
+            
+            // attributes
+            sum += 0.0;
+            
+            sum /= 5;
+            
+            return sum;
         }
         catch (Exception e)
         {
             return 0.0;
         }
+    }
+    
+    private double normalize(double value, WizardSettings.Kind kind)
+    {
+        double min = this.wizardSettings.getMin(kind);
+        double max = this.wizardSettings.getMax(kind);
         
-        return 0.4;
+        return min + (max - min)*value;
     }
     
     //----------------------------------------------------------------------------------------------
@@ -188,11 +205,8 @@ public class DialogWizard
     
     private void updateAllExtraInfo(IWindow window, XpathTreeItem mark) throws Exception
     {
-        // TODO check the attr 
         for (ElementWizardBean element : mark.getList())
         {
-            System.err.println(">> elementId " + element.getId());
-            
             AbstractControl control = (AbstractControl)window.getControlForName(SectionKind.Run, element.getId());
             ExtraInfo info = new ExtraInfo();
             Node node = mark.getNode();

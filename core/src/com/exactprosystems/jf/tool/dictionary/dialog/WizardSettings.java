@@ -11,10 +11,23 @@ package com.exactprosystems.jf.tool.dictionary.dialog;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.exactprosystems.jf.common.Settings;
+import com.exactprosystems.jf.common.Settings.SettingsValue;
+
 public class WizardSettings 
 {
-    public WizardSettings() 
+    public WizardSettings(Settings settings) 
     {
+        for(Kind kind : Kind.values())
+        {
+            SettingsValue min = settings.getValueOrDefault(Settings.GLOBAL_NS, Settings.WIZARD_NAME, kind.name() + "MIN", "0.0");
+            SettingsValue max = settings.getValueOrDefault(Settings.GLOBAL_NS, Settings.WIZARD_NAME, kind.name() + "MAX", "0.0");
+            setMin(kind, Double.parseDouble(min.getValue()));
+            setMax(kind, Double.parseDouble(max.getValue()));
+        }
+        
+        SettingsValue threshold = settings.getValueOrDefault(Settings.GLOBAL_NS, Settings.WIZARD_NAME, Settings.THRESHOLD, "0.0");
+        setThreshold(Double.parseDouble(threshold.getValue()));
     }
     
     public enum Kind { TYPE, PATH, SIZE, POSITION, ATTR }
