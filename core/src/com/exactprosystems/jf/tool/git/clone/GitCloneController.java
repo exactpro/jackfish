@@ -209,13 +209,7 @@ public class GitCloneController implements Initializable, ContainingParent
 		{
 			this.monitor.clear();
 		}
-		this.scrollPane.setVisible(flag);
-		RowConstraints rowStatus = this.gridPane.getRowConstraints().get(4);
 
-		rowStatus.setMaxHeight(flag ? 100 : 0);
-		rowStatus.setMinHeight(flag ? 10 : 0);
-		rowStatus.setPrefHeight(flag ? 30 : 0);
-		rowStatus.setPercentHeight(flag ? 30 : 0);
 	}
 	//endregion
 
