@@ -16,7 +16,14 @@ import java.util.Map;
 
 public class ProxySwingApp extends ProxyApplication
 {
-	@Override
+    @Override
+    public int reconnect(Map<String, String> parameters) throws Exception
+    {
+        System.out.println("SwingApp.reconnect() params=" + Arrays.toString(parameters.values().toArray()));
+        return super.reconnect(parameters);
+    }
+
+    @Override
 	public int connect(int port, String jar, String work, String remoteClassName, Map<String, String> driverParameters, Map<String, String> parameters) throws Exception
 	{
 		System.out.println("SwingApp.connect() port=" + port + "  jar=" + jar + " work=" + work + " class=" + remoteClassName + " params=" + Arrays.toString(parameters.values().toArray()));

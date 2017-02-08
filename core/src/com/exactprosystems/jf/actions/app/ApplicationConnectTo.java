@@ -59,14 +59,19 @@ import java.util.Map;
 public class ApplicationConnectTo extends AbstractAction 
 {
 	public static final String idName 			= "AppId";
-
+    public static final String connectionName   = "AppConnection";
 
 	@ActionFieldAttribute(name = idName, mandatory = true, description = "Adapter key, one of those described in the"
 			+ " {{$App entries$}} branch of the configuration, will be used to start the corresponding plug-in and to select"
 			+ " the dictionary.")
 	protected String 		id	= null;
 
-	public ApplicationConnectTo()
+    @ActionFieldAttribute(name = connectionName, mandatory = false, description = "A special object which identifies the"
+            + " started application session. In case this parameter is not empty the reconnect is performed. "
+            + " It is the output value of such actions as {{@ApplicationStart@}}.")
+    protected AppConnection connection = null;
+
+    public ApplicationConnectTo()
 	{
 	}
 
@@ -85,6 +90,10 @@ public class ApplicationConnectTo extends AbstractAction
 			case idName:
 				res = true;
 				break;
+				
+			case connectionName:
+			    res = false;
+			    break;
 				
 			default:
 				res = Helper.canFillParameter(this.owner.getMatrix(), context, parameters, idName, null, fieldName);
@@ -109,7 +118,12 @@ public class ApplicationConnectTo extends AbstractAction
 		}
 	}
 
-	@Override
+    @Override
+    public void initDefaultValues() 
+    {
+    }
+
+    @Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception 
 	{
 		IApplicationPool pool = context.getConfiguration().getApplicationPool();
@@ -120,7 +134,17 @@ public class ApplicationConnectTo extends AbstractAction
 			args.put(parameter.getName(), Str.asString(parameter.getValue()));
 		}
 		
-		AppConnection connection = pool.connectToApplication(this.id, args);
+		AppConnection connection = null; 
+		if (this.connection == null)
+		{
+		    connection = pool.connectToApplication(this.id, args);
+		}
+		else
+		{
+		    connection = this.connection;
+		    pool.reconnectToApplication(connection, args);
+		}
+		
 		if (connection.isGood())
 		{
 			super.setResult(connection);
@@ -129,11 +153,5 @@ public class ApplicationConnectTo extends AbstractAction
 		{
 			super.setError("Application is not found.", ErrorKind.APPLICATION_ERROR);
 		}
-	}
-
-	@Override
-	public void initDefaultValues() {
-		// TODO Auto-generated method stub
-		
 	}
 }

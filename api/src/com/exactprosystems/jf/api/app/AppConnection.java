@@ -65,6 +65,11 @@ public class AppConnection implements AutoCloseable
 		return this.pid;
 	}
 
+    public void setProcessId(int pid)
+    {
+        this.pid = pid;
+    }
+
 	private IApplication app;
 
 	private String id;
