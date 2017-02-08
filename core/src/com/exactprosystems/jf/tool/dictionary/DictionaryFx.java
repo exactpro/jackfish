@@ -440,8 +440,16 @@ public class DictionaryFx extends GuiDictionary
 			DialogsHelper.showError("Self control is null.\nFill the self control before call the wizard");
 			return;
 		}
-		DialogWizard wizard = new DialogWizard(this, window, this.applicationConnector.getAppConnection());
-		wizard.onHiding(e -> Common.tryCatch(() -> this.displayElement(window, SectionKind.Run, null), "Error on hiding wizard"));
+		Window copyWindow = Window.createCopy(((Window) window));
+		copyWindow.setName(window.getName());
+		DialogWizard wizard = new DialogWizard(this, copyWindow, this.applicationConnector.getAppConnection());
+		wizard.onHiding(e -> Common.tryCatch(() -> {
+			int index = this.indexOf(window);
+			this.removeWindow(window);
+			this.addWindow(index, copyWindow);
+			this.displayElement(copyWindow, SectionKind.Run, copyWindow.getFirstControl(SectionKind.Run));
+
+		}, "Error on hiding wizard"));
 		Task<Integer> task = new Task<Integer>()
 		{
 			@Override
@@ -449,7 +457,7 @@ public class DictionaryFx extends GuiDictionary
 			{
 				DialogsHelper.showInfo("Start found self control...\nPlease, wait");
 				controller.setDisableWizardButton(true);
-				Locator owner = getLocator(window.getOwnerControl(selfControl));
+				Locator owner = getLocator(copyWindow.getOwnerControl(selfControl));
 				Locator locator = getLocator(selfControl);
 				IRemoteApplication service = applicationConnector.getAppConnection().getApplication().service();
 				Collection<String> all = service.findAll(owner, locator);

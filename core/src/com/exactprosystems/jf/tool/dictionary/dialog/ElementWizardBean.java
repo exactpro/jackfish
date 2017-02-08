@@ -1,6 +1,7 @@
 package com.exactprosystems.jf.tool.dictionary.dialog;
 
 import com.exactprosystems.jf.api.app.ControlKind;
+import com.exactprosystems.jf.documents.guidic.controls.AbstractControl;
 
 public class ElementWizardBean
 {
@@ -12,12 +13,15 @@ public class ElementWizardBean
 	private int count;
 	private ElementWizardBean option = this;
 
+	private AbstractControl abstractControl;
+
 	public ElementWizardBean()
 	{
 	}
 
-	public ElementWizardBean(int number, String id, ControlKind controlKind, boolean xpath, boolean isNew, int count)
+	public ElementWizardBean(AbstractControl abstractControl, int number, String id, ControlKind controlKind, boolean xpath, boolean isNew, int count)
 	{
+		this.abstractControl = abstractControl;
 		this.number = number;
 		this.id = id;
 		this.controlKind = controlKind;
@@ -94,6 +98,16 @@ public class ElementWizardBean
 	public void setOption(ElementWizardBean option)
 	{
 		this.option = option;
+	}
+
+	public AbstractControl getAbstractControl()
+	{
+		return abstractControl;
+	}
+
+	public void setAbstractControl(AbstractControl abstractControl)
+	{
+		this.abstractControl = abstractControl;
 	}
 
 	@Override

@@ -27,14 +27,8 @@ import javax.xml.xpath.*;
 import java.awt.*;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.function.Consumer;
@@ -61,8 +55,6 @@ public class DialogWizard
 	private int xOffset = 0;
 	private int yOffset = 0;
 
-	private List<AbstractControl> controlList;
-
 	private Document document;
 
 	public DialogWizard(DictionaryFx dictionary, IWindow window, AppConnection appConnection) throws Exception
@@ -77,22 +69,22 @@ public class DialogWizard
 		this.controller.init(this, this.window.getName());
 		this.selfControl = this.window.getSelfControl();
 		this.controller.displaySelf(selfControl);
-		this.controlList = this.window.getSection(IWindow.SectionKind.Run).getControls()
-				.stream()
-				.filter(c -> c instanceof AbstractControl)
-				.map(c ->
-				{
-					try
-					{
-						return AbstractControl.createCopy(c);
-					}
-					catch (Exception e)
-					{
-						return null;
-					}
-				})
-				.filter(Objects::nonNull)
-				.collect(Collectors.toList());
+//		this.controlList = this.window.getSection(IWindow.SectionKind.Run).getControls()
+//				.stream()
+//				.filter(c -> c instanceof AbstractControl)
+//				.map(c ->
+//				{
+//					try
+//					{
+//						return AbstractControl.createCopy(c);
+//					}
+//					catch (Exception e)
+//					{
+//						return null;
+//					}
+//				})
+//				.filter(Objects::nonNull)
+//				.collect(Collectors.toList());
 		displayElements();
 		updateOnButtons();
 	}
@@ -495,20 +487,22 @@ public class DialogWizard
 		this.documentService.start();
 	}
 
-	void close(boolean needAccept)
+	void close(boolean needAccept, List<ElementWizardBean> list)
 	{
 		if (needAccept)
 		{
 			Section section = (Section) this.window.getSection(IWindow.SectionKind.Run);
 			section.getControls().forEach(section::removeControl);
-			this.controlList.forEach(abstractControl -> Common.tryCatch(() -> section.addControl(abstractControl), "Error on add control"));
+			list.stream()
+					.map(ElementWizardBean::getAbstractControl)
+					.forEach(abstractControl -> Common.tryCatch(() -> section.addControl(abstractControl), "Error on add control"));
 		}
 		this.controller.close();
 	}
 
 	void updateId(ElementWizardBean bean, String newId) throws Exception
 	{
-		AbstractControl abstractControl = this.controlList.get(bean.getNumber());
+		AbstractControl abstractControl = bean.getAbstractControl();
 		abstractControl.set(AbstractControl.idName, newId);
 		updateBean(abstractControl, bean);
 		this.controller.displayElement(bean);
@@ -516,10 +510,9 @@ public class DialogWizard
 
 	void updateControlKind(ElementWizardBean bean, ControlKind kind) throws Exception
 	{
-		AbstractControl oldControl = this.controlList.get(bean.getNumber());
+		AbstractControl oldControl = bean.getAbstractControl();
 		AbstractControl newControl = AbstractControl.createCopy(oldControl, kind);
 
-		this.controlList.set(bean.getNumber(), newControl);
 		updateBean(newControl, bean);
 		updateCountElement(bean);
 		this.controller.displayElement(bean);
@@ -527,10 +520,9 @@ public class DialogWizard
 
 	void changeElement(ElementWizardBean bean) throws Exception
 	{
-		AbstractControl newControl = this.controller.editElement(AbstractControl.createCopy(this.controlList.get(bean.getNumber())));
+		AbstractControl newControl = this.controller.editElement(AbstractControl.createCopy(bean.getAbstractControl()));
 		if (newControl != null)
 		{
-			this.controlList.set(bean.getNumber(), newControl);
 			this.updateBean(newControl, bean);
 			this.updateCountElement(bean);
 			this.controller.displayElement(bean);
@@ -547,13 +539,13 @@ public class DialogWizard
 		boolean needRemove = DialogsHelper.showQuestionDialog("Remove element", "Are you sure to remove this element?");
 		if (needRemove)
 		{
-			this.controlList.remove(bean.getNumber());
+			this.window.removeControl(bean.getAbstractControl());
 			List<ElementWizardBean> remove = this.controller.remove(bean);
 			for (int i = 0; i < remove.size(); i++)
 			{
 				ElementWizardBean bean1 = remove.get(i);
 				boolean isNew = bean1.getIsNew();
-				updateBean(this.controlList.get(i), bean1);
+				updateBean(bean1.getAbstractControl(), bean1);
 				bean1.setIsNew(isNew);
 				bean1.setNumber(i);
 				this.controller.displayElement(bean1);
@@ -623,7 +615,7 @@ public class DialogWizard
 		int count = 0;
 		if (bean.isXpath())
 		{
-			AbstractControl abstractControl = this.controlList.get(bean.getNumber());
+			AbstractControl abstractControl = bean.getAbstractControl();
 			
 			
 			String xpathStr = abstractControl.getXpath();
@@ -656,13 +648,15 @@ public class DialogWizard
 
 	private void displayElements()
 	{
-		this.displayElements(entry -> this.create(this.controlList.indexOf(entry), entry, false));
+		int[] a = new int[]{0};
+		this.displayElements(entry -> this.create(a[0]++, entry, false));
 	}
 
 	private void displayElements(Function<AbstractControl, ElementWizardBean> mapFunction)
 	{
-		List<ElementWizardBean> list = this.controlList
+		List<ElementWizardBean> list = this.window.getSection(SectionKind.Run).getControls()
 				.stream()
+				.map(iC -> ((AbstractControl) iC))
 				.map(mapFunction)
 				.collect(Collectors.toList());
 		this.controller.displayElements(list);
@@ -671,6 +665,7 @@ public class DialogWizard
 	private ElementWizardBean create(int number, AbstractControl control, boolean isNew)
 	{
 		return new ElementWizardBean(
+				control,
 				number,
 				control.getID(),
 				control.getBindedClass(),
@@ -682,6 +677,7 @@ public class DialogWizard
 
 	private void updateBean(AbstractControl control, ElementWizardBean bean)
 	{
+		bean.setAbstractControl(control);
 		bean.setControlKind(control.getBindedClass());
 		bean.setId(control.getID());
 		bean.setIsNew(true);

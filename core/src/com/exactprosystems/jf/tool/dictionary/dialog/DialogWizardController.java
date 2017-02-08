@@ -304,12 +304,12 @@ public class DialogWizardController implements Initializable, ContainingParent
 	//region Action methods
 	public void cancel(ActionEvent actionEvent)
 	{
-		this.model.close(false);
+		this.model.close(false, this.tableView.getItems());
 	}
 
 	public void accept(ActionEvent actionEvent)
 	{
-		this.model.close(true);
+		this.model.close(true, this.tableView.getItems());
 	}
 
 	public void nextMark(ActionEvent actionEvent)
