@@ -197,37 +197,34 @@ public class DialogWizard
     
     //----------------------------------------------------------------------------------------------
     // TODO
-    public void arrangeAll(List<XpathTreeItem> list) throws Exception
-    {
-        for (XpathTreeItem mark : list)
-        {
-            TreeItemState state = mark.getState();
-            Node node = mark.getNode();
-            if (state != null)
-            {
-                switch (state)
-                {
-                    case ADD:
-                        String id = composeId(node);
-                        ControlKind kind = composeKind(node);
-                        Locator locator = compile(id, kind, this.document, node);
-                        // put locator into ...
-                        updateAllExtraInfo(this.window, mark);
-                        break;
-                        
-                    case MARK:
-                        updateAllExtraInfo(this.window, mark);
-                        break;
-                        
-                    case QUESTION:
-                        break;
-                }
-            }
-            
-        }
-    }
-    
-    private void updateAllExtraInfo(IWindow window, XpathTreeItem mark) throws Exception
+	public void arrangeOne(Node node, ElementWizardBean bean, TreeItemState state) throws Exception
+	{
+//		TreeItemState state = mark.getState();
+//		Node node = mark.getNode();
+//		if (state != null)
+//		{
+//			switch (state)
+//			{
+//				case ADD:
+//					String id = composeId(node);
+//					ControlKind kind = composeKind(node);
+//					Locator locator = compile(id, kind, this.document, node);
+//					// put locator into ...
+//					updateAllExtraInfo(this.window, mark);
+//					break;
+//
+//				case MARK:
+//					updateAllExtraInfo(this.window, mark);
+//					break;
+//
+//				case QUESTION:
+//					break;
+//			}
+//		}
+
+	}
+
+	private void updateAllExtraInfo(IWindow window, XpathTreeItem mark) throws Exception
     {
 		for (XpathTreeItem.BeanWithMark beanWithMark : mark.getList())
 		{

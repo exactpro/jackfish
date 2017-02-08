@@ -82,7 +82,8 @@ public class DialogWizardController implements Initializable, ContainingParent
 		this.paneTreeView.setCenter(this.treeViewWithRectangles.getContent());
 
 		this.imageViewWithScale.setClickConsumer(this.treeViewWithRectangles::selectItem);
-		this.treeViewWithRectangles.setTreeViewConsumer(xpathItem -> {
+		this.treeViewWithRectangles.setTreeViewConsumer(xpathItem ->
+		{
 			if (xpathItem != null)
 			{
 				this.imageViewWithScale.displayRectangle(xpathItem.getRectangle());
@@ -156,7 +157,8 @@ public class DialogWizardController implements Initializable, ContainingParent
 			BufferedImage image = this.imageViewWithScale.getImage();
 			this.imageViewWithScale.setListRectangles(this.treeViewWithRectangles.buildMap(image.getWidth(), image.getHeight(), new Dimension(image.getWidth() / 16, image.getHeight() / 16)));
 			this.hBoxToolbar.getChildren().forEach(node -> node.setDisable(false));
-			this.tableView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+			this.tableView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) ->
+			{
 				if (newValue != null)
 				{
 					this.treeViewWithRectangles.selectItem(newValue);
@@ -204,10 +206,10 @@ public class DialogWizardController implements Initializable, ContainingParent
 		else
 		{
 			this.tableView.getItems().set(index, bean);
-//			this.tableView.getColumns().forEach(column -> Platform.runLater(() -> {
-//				column.setVisible(false);
-//				column.setVisible(true);
-//			}));
+			//			this.tableView.getColumns().forEach(column -> Platform.runLater(() -> {
+			//				column.setVisible(false);
+			//				column.setVisible(true);
+			//			}));
 		}
 	}
 
@@ -240,17 +242,14 @@ public class DialogWizardController implements Initializable, ContainingParent
 		gridPane.getColumnConstraints().addAll(c0, c1);
 
 		int index = 1;
-		addXpathToPane(gridPane, abstractControl.getXpath(), abstractControl.useAbsoluteXpath(),
-				  newId -> Common.tryCatch(() -> abstractControl.set(AbstractControl.xpathName, newId), "Error on set parameter")
-				, newB -> Common.tryCatch(() -> abstractControl.set(AbstractControl.absoluteXpathName, newB), "Error on set parameter")
-		);
-		addToPane(gridPane, "UID : ",		abstractControl.getUID(), 		newId -> Common.tryCatch(() -> abstractControl.set(AbstractControl.uidName, newId), "Error on set parameter"), index++);
-		addToPane(gridPane, "Class : ",		abstractControl.getClazz(),		newId -> Common.tryCatch(() -> abstractControl.set(AbstractControl.clazzName, newId), "Error on set parameter"), index++);
-		addToPane(gridPane, "Name : ",	 	abstractControl.getName(), 		newId -> Common.tryCatch(() -> abstractControl.set(AbstractControl.nameName, newId), "Error on set parameter"), index++);
-		addToPane(gridPane, "Title : ",	 	abstractControl.getTitle(),		newId -> Common.tryCatch(() -> abstractControl.set(AbstractControl.titleName, newId), "Error on set parameter"), index++);
-		addToPane(gridPane, "Action : ", 	abstractControl.getAction(),	newId -> Common.tryCatch(() -> abstractControl.set(AbstractControl.actionName, newId), "Error on set parameter"), index++);
-		addToPane(gridPane, "Text : ",	 	abstractControl.getText(),		newId -> Common.tryCatch(() -> abstractControl.set(AbstractControl.textName, newId), "Error on set parameter"), index++);
-		addToPane(gridPane, "Tooltip : ", 	abstractControl.getTooltip(), 	newId -> Common.tryCatch(() -> abstractControl.set(AbstractControl.tooltipName, newId), "Error on set parameter"), index++);
+		addXpathToPane(gridPane, abstractControl.getXpath(), abstractControl.useAbsoluteXpath(), newId -> Common.tryCatch(() -> abstractControl.set(AbstractControl.xpathName, newId), "Error on set parameter"), newB -> Common.tryCatch(() -> abstractControl.set(AbstractControl.absoluteXpathName, newB), "Error on set parameter"));
+		addToPane(gridPane, "UID : ", abstractControl.getUID(), newId -> Common.tryCatch(() -> abstractControl.set(AbstractControl.uidName, newId), "Error on set parameter"), index++);
+		addToPane(gridPane, "Class : ", abstractControl.getClazz(), newId -> Common.tryCatch(() -> abstractControl.set(AbstractControl.clazzName, newId), "Error on set parameter"), index++);
+		addToPane(gridPane, "Name : ", abstractControl.getName(), newId -> Common.tryCatch(() -> abstractControl.set(AbstractControl.nameName, newId), "Error on set parameter"), index++);
+		addToPane(gridPane, "Title : ", abstractControl.getTitle(), newId -> Common.tryCatch(() -> abstractControl.set(AbstractControl.titleName, newId), "Error on set parameter"), index++);
+		addToPane(gridPane, "Action : ", abstractControl.getAction(), newId -> Common.tryCatch(() -> abstractControl.set(AbstractControl.actionName, newId), "Error on set parameter"), index++);
+		addToPane(gridPane, "Text : ", abstractControl.getText(), newId -> Common.tryCatch(() -> abstractControl.set(AbstractControl.textName, newId), "Error on set parameter"), index++);
+		addToPane(gridPane, "Tooltip : ", abstractControl.getTooltip(), newId -> Common.tryCatch(() -> abstractControl.set(AbstractControl.tooltipName, newId), "Error on set parameter"), index++);
 
 		Optional<ButtonType> buttonType = alert.showAndWait();
 		if (buttonType.isPresent())
@@ -279,13 +278,11 @@ public class DialogWizardController implements Initializable, ContainingParent
 	void foundBad(NodeList list, ElementWizardBean bean)
 	{
 		List<TreeItem<XpathTreeItem>> byNodes = this.treeViewWithRectangles.findByNodes(list);
-		byNodes.stream()
-				.map(TreeItem::getValue)
-				.filter(Objects::nonNull)
-				.forEach(item -> {
-					item.setState(XpathTreeItem.TreeItemState.QUESTION);
-					item.addRelation(bean, XpathTreeItem.TreeItemState.QUESTION);
-				});
+		byNodes.stream().map(TreeItem::getValue).filter(Objects::nonNull).forEach(item ->
+		{
+			item.setState(XpathTreeItem.TreeItemState.QUESTION);
+			item.addRelation(bean, XpathTreeItem.TreeItemState.QUESTION);
+		});
 		this.treeViewWithRectangles.setState(XpathTreeItem.TreeItemState.QUESTION, this.cbQuestion.isSelected());
 	}
 
@@ -317,12 +314,17 @@ public class DialogWizardController implements Initializable, ContainingParent
 		this.treeViewWithRectangles.prevMark();
 	}
 
-    public void magic(ActionEvent actionEvent)
-    {
-        final List<XpathTreeItem> list = this.treeViewWithRectangles.getMarkedRows().stream().map(e -> e.getValue())
-                .collect(Collectors.toList());
-        Common.tryCatch(() ->  this.model.arrangeAll(list), "Error on arrange all");
-    }
+	public void magic(ActionEvent actionEvent)
+	{
+		final List<XpathTreeItem> list = this.treeViewWithRectangles.getMarkedRows().stream().map(TreeItem::getValue).collect(Collectors.toList());
+		for (XpathTreeItem xpathTreeItem : list)
+		{
+			for (XpathTreeItem.BeanWithMark beanWithMark : xpathTreeItem.getList())
+			{
+				Common.tryCatch(() -> this.model.arrangeOne(xpathTreeItem.getNode(), beanWithMark.getBean(), beanWithMark.getState()), "Erron on arrange one");
+			}
+		}
+	}
 
 	public void generateOnOpen(ActionEvent actionEvent)
 	{
@@ -365,7 +367,8 @@ public class DialogWizardController implements Initializable, ContainingParent
 		this.tableView.setEditable(true);
 		TableColumn<ElementWizardBean, Integer> columnNumber = new TableColumn<>("#");
 		columnNumber.setCellValueFactory(new PropertyValueFactory<>("number"));
-		columnNumber.setCellFactory(e -> new TableCell<ElementWizardBean, Integer>(){
+		columnNumber.setCellFactory(e -> new TableCell<ElementWizardBean, Integer>()
+		{
 			@Override
 			protected void updateItem(Integer item, boolean empty)
 			{
@@ -388,7 +391,8 @@ public class DialogWizardController implements Initializable, ContainingParent
 		TableColumn<ElementWizardBean, String> columnId = new TableColumn<>("Id");
 		columnId.setCellValueFactory(new PropertyValueFactory<>("id"));
 		columnId.setEditable(true);
-		columnId.setCellFactory(e -> new TableCell<ElementWizardBean, String>(){
+		columnId.setCellFactory(e -> new TableCell<ElementWizardBean, String>()
+		{
 			private TextField tf;
 
 			@Override
@@ -431,13 +435,15 @@ public class DialogWizardController implements Initializable, ContainingParent
 				if (this.tf == null)
 				{
 					this.tf = new TextField(getString());
-					this.tf.focusedProperty().addListener((observable, oldValue, newValue) -> {
+					this.tf.focusedProperty().addListener((observable, oldValue, newValue) ->
+					{
 						if (!newValue && tf != null)
 						{
 							commitEdit(tf.getText());
 						}
 					});
-					this.tf.setOnKeyPressed(t -> {
+					this.tf.setOnKeyPressed(t ->
+					{
 						if (t.getCode() == KeyCode.ENTER)
 						{
 							commitEdit(tf.getText());
@@ -459,7 +465,8 @@ public class DialogWizardController implements Initializable, ContainingParent
 				return String.valueOf(getItem() == null ? "" : getItem());
 			}
 		});
-		columnId.setOnEditCommit(e -> {
+		columnId.setOnEditCommit(e ->
+		{
 			ElementWizardBean elementWizardBean = e.getRowValue();
 			if (elementWizardBean != null)
 			{
@@ -470,14 +477,16 @@ public class DialogWizardController implements Initializable, ContainingParent
 
 		TableColumn<ElementWizardBean, ControlKind> columnKind = new TableColumn<>("Kind");
 		columnKind.setCellValueFactory(new PropertyValueFactory<>("controlKind"));
-		columnKind.setOnEditCommit(e -> {
+		columnKind.setOnEditCommit(e ->
+		{
 			ElementWizardBean rowValue = e.getRowValue();
 			if (rowValue != null)
 			{
-				Common.tryCatch(() -> this.model.updateControlKind(rowValue,e.getNewValue()), "Error on update control kind");
+				Common.tryCatch(() -> this.model.updateControlKind(rowValue, e.getNewValue()), "Error on update control kind");
 			}
 		});
-		columnKind.setCellFactory(e -> new TableCell<ElementWizardBean, ControlKind>(){
+		columnKind.setCellFactory(e -> new TableCell<ElementWizardBean, ControlKind>()
+		{
 			ChoiceBox<ControlKind> comboBox;
 
 			@Override
@@ -521,7 +530,8 @@ public class DialogWizardController implements Initializable, ContainingParent
 					this.comboBox = new ChoiceBox<>(FXCollections.observableArrayList(ControlKind.values()));
 					this.comboBox.getSelectionModel().select(getItem());
 					this.comboBox.setOnAction(e -> commitEdit(this.comboBox.getSelectionModel().getSelectedItem()));
-					this.comboBox.showingProperty().addListener((observable, oldValue, newValue) -> {
+					this.comboBox.showingProperty().addListener((observable, oldValue, newValue) ->
+					{
 						if (!newValue)
 						{
 							cancelEdit();
@@ -543,7 +553,8 @@ public class DialogWizardController implements Initializable, ContainingParent
 
 		TableColumn<ElementWizardBean, Boolean> columnIsXpath = new TableColumn<>("Xpath");
 		columnIsXpath.setCellValueFactory(new PropertyValueFactory<>("xpath"));
-		columnIsXpath.setCellFactory(e -> new TableCell<ElementWizardBean, Boolean>(){
+		columnIsXpath.setCellFactory(e -> new TableCell<ElementWizardBean, Boolean>()
+		{
 			@Override
 			protected void updateItem(Boolean item, boolean empty)
 			{
@@ -565,7 +576,8 @@ public class DialogWizardController implements Initializable, ContainingParent
 
 		TableColumn<ElementWizardBean, Boolean> columnIsNew = new TableColumn<>("New");
 		columnIsNew.setCellValueFactory(new PropertyValueFactory<>("isNew"));
-		columnIsNew.setCellFactory(e -> new TableCell<ElementWizardBean, Boolean>(){
+		columnIsNew.setCellFactory(e -> new TableCell<ElementWizardBean, Boolean>()
+		{
 			@Override
 			protected void updateItem(Boolean item, boolean empty)
 			{
@@ -587,7 +599,8 @@ public class DialogWizardController implements Initializable, ContainingParent
 
 		TableColumn<ElementWizardBean, Integer> columnCount = new TableColumn<>("Count");
 		columnCount.setCellValueFactory(new PropertyValueFactory<>("count"));
-		columnCount.setCellFactory(e -> new TableCell<ElementWizardBean, Integer>(){
+		columnCount.setCellFactory(e -> new TableCell<ElementWizardBean, Integer>()
+		{
 			@Override
 			protected void updateItem(Integer item, boolean empty)
 			{
@@ -613,7 +626,8 @@ public class DialogWizardController implements Initializable, ContainingParent
 		columnOption.setPrefWidth(100);
 		columnOption.setMaxWidth(100);
 		columnOption.setMinWidth(100);
-		columnOption.setCellFactory(e -> new TableCell<ElementWizardBean, ElementWizardBean>(){
+		columnOption.setCellFactory(e -> new TableCell<ElementWizardBean, ElementWizardBean>()
+		{
 			@Override
 			protected void updateItem(ElementWizardBean item, boolean empty)
 			{
@@ -684,7 +698,8 @@ public class DialogWizardController implements Initializable, ContainingParent
 
 		Button btnXpath = new Button();
 		Common.customizeLabeled(btnXpath, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.XPATH_TREE);
-		btnXpath.setOnAction(event -> {
+		btnXpath.setOnAction(event ->
+		{
 			String newXpath = this.model.showXpathViewer(tf.getText());
 			if (newXpath != null)
 			{
