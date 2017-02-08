@@ -199,53 +199,45 @@ public class DialogWizard
     // TODO
 	public void arrangeOne(Node node, ElementWizardBean bean, TreeItemState state) throws Exception
 	{
-//		TreeItemState state = mark.getState();
-//		Node node = mark.getNode();
-//		if (state != null)
-//		{
-//			switch (state)
-//			{
-//				case ADD:
-//					String id = composeId(node);
-//					ControlKind kind = composeKind(node);
-//					Locator locator = compile(id, kind, this.document, node);
-//					// put locator into ...
-//					updateAllExtraInfo(this.window, mark);
-//					break;
-//
-//				case MARK:
-//					updateAllExtraInfo(this.window, mark);
-//					break;
-//
-//				case QUESTION:
-//					break;
-//			}
-//		}
+		switch (state)
+		{
+			case ADD:
+				String id = composeId(node);
+				ControlKind kind = composeKind(node);
+				Locator locator = compile(id, kind, node);
+				if (locator != null)
+				{
+				    AbstractControl control = AbstractControl.create(locator, this.selfControl.getID());
+                    updateExtraInfo(this.window, node, bean.getAbstractControl(), state);
+				    this.window.addControl(SectionKind.Run, control);
+				    // TODO how to make controller to update table?
+				}
+				break;
 
+			case MARK:
+				updateExtraInfo(this.window, node, bean.getAbstractControl(), state);
+				break;
+
+			case QUESTION:
+				break;
+		}
 	}
 
-	private void updateAllExtraInfo(IWindow window, XpathTreeItem mark) throws Exception
+	private void updateExtraInfo(IWindow window, Node node, AbstractControl control, TreeItemState state) throws Exception
     {
-		for (XpathTreeItem.BeanWithMark beanWithMark : mark.getList())
+		ExtraInfo info = new ExtraInfo();
+		Rectangle rec = (Rectangle)node.getUserData(IRemoteApplication.rectangleName);
+		Rect rectangle = relativeRect(this.dialogRectangle, rec);
+
+		info.set(ExtraInfo.xpathName, XpathViewer.fullXpath("", this.document, node, false, null, true));
+		info.set(ExtraInfo.nodeName, node.getNodeName());
+		info.set(ExtraInfo.rectangleName, rectangle);
+		List<Attr> attributes = extractAttributes(node);
+		if (!attributes.isEmpty())
 		{
-			ElementWizardBean element = beanWithMark.getBean();
-			AbstractControl control = (AbstractControl) window.getControlForName(SectionKind.Run, element.getId());
-			ExtraInfo info = new ExtraInfo();
-			Node node = mark.getNode();
-
-			Rectangle rec = mark.getRectangle();
-			Rect rectangle = relativeRect(this.dialogRectangle, rec);
-
-			info.set(ExtraInfo.xpathName, XpathViewer.fullXpath("", this.document, node, false, null, true));
-			info.set(ExtraInfo.nodeName, node.getNodeName());
-			info.set(ExtraInfo.rectangleName, rectangle);
-			List<Attr> attributes = extractAttributes(node);
-			if (!attributes.isEmpty())
-			{
-				info.set(ExtraInfo.attrName, attributes);
-			}
-			control.set(AbstractControl.infoName, info);
+			info.set(ExtraInfo.attrName, attributes);
 		}
+		control.set(AbstractControl.infoName, info);
     }
 
 	private List<Attr> extractAttributes(Node node)
@@ -259,25 +251,25 @@ public class DialogWizard
 		return attributes;
 	}
 
-	private Locator compile(String id, ControlKind kind, Document doc, Node node)
+	private Locator compile(String id, ControlKind kind, Node node)
 	{
 		// try many methods here
 		Locator locator = null;
 
-		locator = locatorById(id, kind, doc, node);
+		locator = locatorById(id, kind, node);
 		if (locator != null)
 		{
 			return locator;
 		}
 
-		locator = locatorByAttr(id, kind, doc, node);
-		if (tryLocator(locator, doc, node) == 1)
+		locator = locatorByAttr(id, kind,  node);
+		if (tryLocator(locator, node) == 1)
 		{
 			return locator.id(id).kind(kind);
 		}
 
-		locator = locatorByXpath(id, kind, doc, node);
-		if (tryLocator(locator, doc, node) == 1)
+		locator = locatorByXpath(id, kind,  node);
+		if (tryLocator(locator, node) == 1)
 		{
 			return locator.id(id).kind(kind);
 		}
@@ -297,7 +289,7 @@ public class DialogWizard
 		return null;
 	}
 
-	private Locator locatorById(String id, ControlKind kind, Document doc, Node node)
+	private Locator locatorById(String id, ControlKind kind, Node node)
 	{
 		if (node.hasAttributes())
 		{
@@ -307,7 +299,7 @@ public class DialogWizard
 			{
 				Locator locator = new Locator().kind(kind).id(id).uid(uid);
 
-				if (tryLocator(locator, doc, node) == 1)
+				if (tryLocator(locator, node) == 1)
 				{
 					return locator;
 				}
@@ -316,43 +308,57 @@ public class DialogWizard
 		return null;
 	}
 
-	private Locator locatorByAttr(String id, ControlKind kind, Document doc, Node node)
+	private Locator locatorByAttr(String id, ControlKind kind, Node node)
 	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	private Locator locatorByXpath(String id, ControlKind kind, Document doc, Node node)
+	private Locator locatorByXpath(String id, ControlKind kind, Node node)
 	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	private int tryLocator(Locator locator, Document doc, Node node)
+	private int tryLocator(Locator locator, Node node)
 	{
 		if (locator == null)
 		{
 			return 0;
 		}
 
-		List<Node> list = findAll(locator, doc);
-		if (list.size() != 1)
-		{
-			return list.size();
-		}
+		try
+        {
+            List<Node> list = findAll(locator);
+            if (list.size() != 1)
+            {
+            	return list.size();
+            }
 
-		if (list.get(0) == node)
-		{
-			return 1;
-		}
-
+            if (list.get(0) == node)
+            {
+            	return 1;
+            }
+        }
+        catch (Exception e)
+        {
+            // nothing to do
+        }
 		return 0;
 	}
 
-	private List<Node> findAll(Locator locator, Document doc)
-	{
-		return Collections.emptyList();
-	}
+    private List<Node> findAll(Locator locator) throws Exception
+    {
+        // this.document;
+        String xpathStr = locator.getXpath();
+        XPath xpath = XPathFactory.newInstance().newXPath();
+        XPathExpression compile = xpath.compile(xpathStr);
+        NodeList nodeList = (NodeList) compile.evaluate(this.document.getDocumentElement(), XPathConstants.NODESET);
+        
+
+        // TODO need to implement
+        return Collections.emptyList();
+    }
 
 	private boolean isStable(String identifier)
 	{
@@ -597,7 +603,7 @@ public class DialogWizard
 
 	private void updateCountElement(ElementWizardBean bean)
 	{
-
+	    // TODO replace this
 
 		int count = 0;
 		if (bean.isXpath())

@@ -210,6 +210,32 @@ public abstract class AbstractControl implements IControl, Mutable
 		return ((AbstractControl) clazz.newInstance());
 	}
 
+    public static AbstractControl create(Locator locator, String ownerId) throws Exception
+    {
+        AbstractControl ret = create(locator.getControlKind());
+        ret.id = locator.getId();
+        ret.uid = locator.getUid();
+        ret.xpath = locator.getXpath();
+        ret.ownerId = ownerId;
+        ret.clazz = locator.getClazz();
+        ret.name = locator.getName();
+        ret.title = locator.getTitle();
+        ret.action = locator.getAction();
+        ret.text = locator.getText();
+        ret.tooltip = locator.getTooltip();
+        ret.expression = locator.getExpression();
+        ret.addition = locator.getAddition();
+        ret.visibility = locator.getVisibility();
+        ret.weak = locator.isWeak();
+        ret.timeout = 0;
+        ret.useNumericHeader = locator.useNumericHeader();
+        ret.rows = "";
+        ret.header = "";
+        ret.columns = "";
+        ret.absoluteXpath = locator.useAbsoluteXpath();
+        return ret;
+    }	 
+
 	public static AbstractControl createDummy() throws Exception
 	{
 		AbstractControl ret = create(ControlKind.Any);
