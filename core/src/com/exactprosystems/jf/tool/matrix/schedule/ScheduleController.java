@@ -19,6 +19,7 @@ import javafx.application.Platform;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.stage.Modality;
@@ -184,11 +185,13 @@ public class ScheduleController implements Initializable, ContainingParent
 		this.dialog.setResizable(true);
 		this.dialog.initModality(Modality.NONE);
 		this.dialog.initOwner(window);
-		this.dialog.setHeaderText("Monitoring matrices");
+		this.dialog.setHeaderText("");
+		this.dialog.getDialogPane().setHeader(new Label());
+		this.dialog.setTitle("Monitoring matrices");
 		this.dialog.getDialogPane().setContent(this.parent);
 		this.dialog.getDialogPane().setPrefWidth(600);
 		this.dialog.getDialogPane().setPrefHeight(600);
-		this.dialog.setTitle("Monitoring");
+		this.dialog.getDialogPane().setPadding(new Insets(-15,0,0,0));
 		this.dialog.getDialogPane().getStylesheets().addAll(Common.currentThemesPaths());
 		this.dialog.showAndWait();
 	}

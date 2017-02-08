@@ -30,6 +30,7 @@ import javafx.application.Platform;
 import javafx.collections.MapChangeListener;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -740,9 +741,11 @@ public class MainController implements Initializable, ContainingParent
 		listView.getItems().addAll(this.customTabPane.getTabs().stream().map(tab -> ((CustomTab) tab).getTitle()).collect(Collectors.toList()));
 		Dialog<ButtonType> dialog = new Alert(Alert.AlertType.CONFIRMATION);
 		dialog.getDialogPane().setContent(listView);
-		dialog.getDialogPane().setPrefHeight(500);
-		dialog.getDialogPane().setPrefWidth(400);
-		dialog.setHeaderText("Choose tab");
+		dialog.getDialogPane().setPrefHeight(400);
+		dialog.getDialogPane().setPrefWidth(432);
+		dialog.getDialogPane().setPadding(new Insets(0,0,0,-11));
+		dialog.setHeaderText("");
+		dialog.setTitle("Choose tab");
 
 		listView.setOnMouseClicked(mouseEvent ->
 		{
