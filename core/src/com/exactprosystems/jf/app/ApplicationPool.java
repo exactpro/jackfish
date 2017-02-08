@@ -229,6 +229,29 @@ public class ApplicationPool implements IApplicationPool
 		}
 	}
 	
+
+    @Override
+    public void reconnectToApplication(AppConnection connection, Map<String, String> parameters) throws Exception
+    {
+        try
+        {
+            IApplication application = connection.getApplication(); 
+            int pid = application.reconnect(parameters);
+            connection.setProcessId(pid);
+        }
+        catch (InterruptedException e)
+        {
+            throw new InterruptedException(e.getMessage());
+        }
+        catch (Throwable t)
+        {
+            logger.error(String.format("Error in reConnectToApplication(%s)", connection));
+            logger.error(t.getMessage(), t);
+            throw new Exception(t.getMessage(), t);
+        }
+    }
+
+	
 	@Override
 	public synchronized void stopApplication(AppConnection connection) throws Exception
 	{

@@ -36,6 +36,14 @@ public abstract class ProxyApplication implements IApplication
 		this.factory = factory;
 	}
 
+   @Override
+    public int reconnect(Map<String, String> parameters) throws Exception
+    {
+        this.process = null;
+        int pid = this.service.connect(parameters);
+        return pid;
+    }
+
 	@Override
 	public int connect(int port, String jar, String work, String remoteClassName, Map<String, String> driverParameters, Map<String, String> parameters) throws Exception
 	{

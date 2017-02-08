@@ -112,114 +112,69 @@ $(document).ready(function () {
 
 		$(".searchInput").on("change paste", function(e) {
 
-            $(".searchLabel").text(e.keyCode);
+                    $(".searchLabel").text(e.keyCode);
+        			var str = $(this).val();
+        			if (str.length === 0) {
+        				foundDivs = [];
+        				$(".searchLabel").text("");
+        				$("#btnPrev").removeClass('activeBtn');
+        				$("#btnPrev").addClass('noNactiveBtn');
+        				$("#btnNext").removeClass('activeBtn');
+        				$("#btnNext").addClass('noNactiveBtn');
 
-			var str = $(this).val();
+        			} else {
+        				foundDivs = $('h2:Contains("'+str+'"), p:Contains("'+str+'"), td:Contains("'+str+'")');
+        				var newDivs = [];
+        				for(var i = 0; i < foundDivs.length; i++) {
+        					var current = foundDivs[i];
+        					var flag = true;
+        					for(var j = 0; j < foundDivs.length; j++) {
+        						if (i == j) {
+        							continue;
+        						}
+        						if ($(current).has($(foundDivs[j])).length === 1) {
+        							flag = false;
+        							break;
+        						}
+        					}
 
-			if (str.length === 0) {
+        					if (flag) {
+        						newDivs.push(current);
+        					}
+        				}
+        				foundDivs = newDivs;
+        			        }
+        				$('ins').contents().unwrap();
+        				currentIndex = 0;
+        				scrollToElem(foundDivs[0]);
+        			$(foundDivs).each(function() {
+        				var str = $('.searchInput').val();
+        				var re = new RegExp('(' + str + ')', 'ig');
+        				this.innerHTML = this.innerHTML.replace(re, '<ins>$1</ins>');
+        			});
+        			var allIns = $('ins');
+        				$(".searchLabel").text(allIns.length + " matches");
 
-				foundDivs = [];
-
-				$(".searchLabel").text("");
-
-
-
-
-			} else {
-
-				foundDivs = $('h2:Contains("'+str+'"), p:Contains("'+str+'"), td:Contains("'+str+'")');
-
-				var newDivs = [];
-
-				for(var i = 0; i < foundDivs.length; i++) {
-
-					var current = foundDivs[i];
-
-					var flag = true;
-
-					for(var j = 0; j < foundDivs.length; j++) {
-
-						if (i == j) {
-
-							continue;
-
-						}
-
-						if ($(current).has($(foundDivs[j])).length === 1) {
-
-							flag = false;
-
-							break;
-
-						}
-
-					}
-
-					if (flag) {
-
-						newDivs.push(current);
-
-					}
-
-				}
-
-
-				foundDivs = newDivs;
-
-
-			        }
-				$('ins').contents().unwrap();
-
-				currentIndex = 0;
-
-				scrollToElem(foundDivs[0]);
-
-
-
-
-			$(foundDivs).each(function() {
-
-				var str = $('.searchInput').val();
-
-				var re = new RegExp('(' + str + ')', 'ig');
-
-				this.innerHTML = this.innerHTML.replace(re, '<ins>$1</ins>');
-
-
-			});
-			var allIns = $('ins');
-				$(".searchLabel").text(allIns.length + " matches");
-				$(allIns[0]).addClass('currentFoundElement');
-				$(".searchLabel").text("1 of " + allIns.length);
-
-		});
-
-
+        				$("#btnPrev").removeClass('noNactiveBtn');
+        				$("#btnPrev").addClass('activeBtn');
+        				$("#btnNext").removeClass('noNactiveBtn');
+        				$("#btnNext").addClass('activeBtn');
+        				$(allIns[0]).addClass('currentFoundElement');
+        				$(".searchLabel").text("1 of " + allIns.length);
+        		});
 
 		$("#btnNext").click(function(e) {
-
 			var allIns = $('ins');
-
 			if (foundDivs.length !== 0) {
-
 				currentIndex++;
-
 				if (currentIndex === allIns.length) {
-
 					currentIndex = 0;
-
 				}
-
 					$(allIns).each(function(){
 						$(this).removeClass('currentFoundElement')});
-
-
 				$(allIns[currentIndex]).addClass('currentFoundElement');
-
-
 				$(".searchLabel").text(currentIndex+1 + "        of " + allIns.length);
 				scrollToElem(allIns[currentIndex]);
-
 			}
 
 
@@ -229,28 +184,18 @@ $(document).ready(function () {
 
 		$("#btnPrev").click(function(e) {
 			var allIns = $('ins');
-
 			if (foundDivs.length !== 0) {
-
 				currentIndex--;
-
 				if (currentIndex < 0) {
-
 					currentIndex = allIns.length -1;
-
 				}
-
 
 				$(allIns).each(function(){
 						$(this).removeClass('currentFoundElement')});
 
 				$(".searchLabel").text(currentIndex +1 + "     of     " + allIns.length);
-
 				$(allIns[currentIndex]).addClass('currentFoundElement');
-
-
 				$(".searchLabel").text(currentIndex +1 + "        of " + allIns.length);
-
 				scrollToElem(allIns[currentIndex]);
 
 			}

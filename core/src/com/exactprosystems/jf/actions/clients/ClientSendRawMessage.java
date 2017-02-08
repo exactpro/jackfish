@@ -29,15 +29,27 @@ import java.util.List;
 @ActionAttribute(
 		group					= ActionGroups.Clients,
 		suffix					= "CLSRM",
-		generalDescription 		= "Sends array of bytes over client's connection without any preprocessing. ",
-		additionFieldsAllowed 	= false
+		generalDescription 		= "The purpose of the action is to send an array of bytes through a made connection without any preprocessing."
+				+ "The start of the client is mandatory.",
+		additionFieldsAllowed 	= false,
+		examples 				= "{{`1. Load the client for FIX.`}}"
+				+ "{{`2. Connect to the port №10555.`}}"
+				+ "{{`3. Create and send the raw message."
+				+ "{{##Id;#Action;#ClientId\n"
+				+ "CLLD1;ClientLoad;'FIX'\n"
+				+ "\n"
+				+ "#Id;#Action;#ClientConnection;#Socket\n"
+				+ "CLCNCT1;ClientConnect;CLLD1.Out;10555\n"
+				+ "\n"
+				+ "#Id;#Action;#ClientConnection;#Data\n"
+				+ "CLSRM1;ClientSendRawMessage;CLLD1.Out;{0,1,0,1,0,1,0}#}}"
 	)
 public class ClientSendRawMessage extends AbstractAction
 {
 	public final static String connectionName = "ClientConnection";
 	public final static String dataName = "Data";
 
-	@ActionFieldAttribute(name = connectionName, mandatory = true, description = "The client connection." )
+	@ActionFieldAttribute(name = connectionName, mandatory = true, description = "The connection with the client, which is derived from the action ClientLoad." )
 	protected ClientConnection	connection	= null;
 
 	@ActionFieldAttribute(name = dataName, mandatory = true, description = "Array of bytes that will be sent 'as is'." )

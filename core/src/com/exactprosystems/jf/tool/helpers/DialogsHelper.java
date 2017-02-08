@@ -36,6 +36,7 @@ import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -54,6 +55,7 @@ import javafx.util.Duration;
 import org.apache.log4j.Logger;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.StringReader;
 import java.nio.file.Paths;
@@ -668,6 +670,7 @@ public abstract class DialogsHelper
 		dialog.getDialogPane().lookupButton(ButtonType.OK).setVisible(false);
 		dialog.getDialogPane().setPrefWidth(1024);
 		dialog.getDialogPane().setPrefHeight(768);
+		dialog.getDialogPane().setPadding(new Insets(-28,-10,-59,-10));
 		dialog.getDialogPane().getStylesheets().addAll(Common.currentThemesPaths());
 		dialog.initModality(Modality.NONE);
 		dialog.show();
