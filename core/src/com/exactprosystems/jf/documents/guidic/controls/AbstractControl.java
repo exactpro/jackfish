@@ -578,6 +578,14 @@ public abstract class AbstractControl implements IControl, Mutable
 		this.tooltip = xmlToText(this.tooltip);
 		this.expression = xmlToText(this.expression);
 		this.columns = xmlToText(this.columns);
+		
+		if (!Str.IsNullOrEmpty(this.ownerId) && !Str.IsNullOrEmpty(this.xpath))
+		{
+		    if (this.xpath.startsWith("//"))
+		    {
+		        this.xpath = "." + this.xpath;
+		    }
+		}
 	}
 
 	public void correctAllText()

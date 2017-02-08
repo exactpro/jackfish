@@ -618,10 +618,14 @@ public class DialogWizard
 
 	private void updateCountElement(ElementWizardBean bean)
 	{
+	    
+	    
 		int count = 0;
 		if (bean.isXpath())
 		{
 			AbstractControl abstractControl = this.controlList.get(bean.getNumber());
+			
+			
 			String xpathStr = abstractControl.getXpath();
 			XPath xpath = XPathFactory.newInstance().newXPath();
 			try
