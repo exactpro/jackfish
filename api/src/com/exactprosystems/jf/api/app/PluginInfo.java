@@ -8,7 +8,9 @@
 
 package com.exactprosystems.jf.api.app;
 
+import java.util.Arrays;
 import java.util.Map;
+import java.util.Optional;
 
 public class PluginInfo
 {
@@ -26,19 +28,29 @@ public class PluginInfo
         }
         return this.controlMap.get(kind);
     }
+
+    public ControlKind controlKindByNode (String node)
+    {
+        if (this.controlMap == null)
+        {
+            return ControlKind.Any;
+        }
+        Optional<ControlKind> optional = this.controlMap.entrySet()
+        		.stream()
+        		.filter(e -> Arrays.stream(e.getValue()).anyMatch(s -> s.equals(node)))
+        		.map(m -> m.getKey())
+        		.findFirst();
+        return optional.get();
+    }
     
-    public String controlKindByString(LocatorFieldKind kind)
+
+    public String attributeName(LocatorFieldKind kind)
     {
         if (this.fieldMap == null)
         {
             return null;
         }
         return this.fieldMap.get(kind);
-    }
-    
-    public String nodeByLocatorKind (LocatorFieldKind kind)
-    {
-        return "";
     }
     
     private Map<ControlKind, String[]>      controlMap;

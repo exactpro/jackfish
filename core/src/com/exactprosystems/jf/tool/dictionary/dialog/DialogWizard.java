@@ -202,16 +202,31 @@ public class DialogWizard
 		switch (state)
 		{
 			case ADD:
-				String id = composeId(node);
-				ControlKind kind = composeKind(node);
-				Locator locator = compile(id, kind, node);
-				if (locator != null)
+				if (bean == null)
 				{
-				    AbstractControl control = AbstractControl.create(locator, this.selfControl.getID());
-                    updateExtraInfo(this.window, node, bean.getAbstractControl(), state);
-				    this.window.addControl(SectionKind.Run, control);
-				    // TODO how to make controller to update table?
+					Locator locator = compile(composeId(node), composeKind(node), node);
+					if (locator != null)
+					{
+					    AbstractControl control = AbstractControl.create(locator, this.selfControl.getID());
+						ElementWizardBean newBean = create(0, control, true);
+	                    updateExtraInfo(this.window, node, control, state);
+	                	this.window.addControl(SectionKind.Run, control);
+	                	newBean.setAbstractControl(control);
+					}
 				}
+				else
+				{
+					Locator locator = compile(bean.getId(), bean.getControlKind(), node);
+					if (locator != null)
+					{
+					    AbstractControl control = AbstractControl.create(locator, this.selfControl.getID());
+	                    updateExtraInfo(this.window, node, bean.getAbstractControl(), state);
+	                    this.window.removeControl(bean.getAbstractControl());
+	                	this.window.addControl(SectionKind.Run, control);
+	                    bean.setAbstractControl(control);
+					}
+				}
+			    // TODO how to make controller to update table?
 				break;
 
 			case MARK:
@@ -229,9 +244,9 @@ public class DialogWizard
 		Rectangle rec = (Rectangle)node.getUserData(IRemoteApplication.rectangleName);
 		Rect rectangle = relativeRect(this.dialogRectangle, rec);
 
-		info.set(ExtraInfo.xpathName, XpathViewer.fullXpath("", this.document, node, false, null, true));
-		info.set(ExtraInfo.nodeName, node.getNodeName());
-		info.set(ExtraInfo.rectangleName, rectangle);
+		info.set(ExtraInfo.xpathName, 		XpathViewer.fullXpath("", this.document, node, false, null, true));
+		info.set(ExtraInfo.nodeName, 		node.getNodeName());
+		info.set(ExtraInfo.rectangleName, 	rectangle);
 		List<Attr> attributes = extractAttributes(node);
 		if (!attributes.isEmpty())
 		{
@@ -279,26 +294,35 @@ public class DialogWizard
 
 	private String composeId(Node node)
 	{
-		// TODO Auto-generated method stub
+		// TODO done it
+		if (node.hasAttributes())
+		{
+			String idName = this.pluginInfo.attributeName(LocatorFieldKind.UID);
+			String id = node.getAttributes().getNamedItem(idName).getNodeValue();
+			if (!Str.IsNullOrEmpty(id) && isStable(id))
+			{
+				return id;
+			}
+		}
 		return null;
 	}
 
 	private ControlKind composeKind(Node node)
 	{
-		// TODO Auto-generated method stub
-		return null;
+		String name = node.getNodeName();
+		return this.pluginInfo.controlKindByNode(name);
 	}
 
 	private Locator locatorById(String id, ControlKind kind, Node node)
 	{
 		if (node.hasAttributes())
 		{
-			Node nodeId = node.getAttributes().getNamedItem("id");
+			String idName = this.pluginInfo.attributeName(LocatorFieldKind.UID);
+			Node nodeId = node.getAttributes().getNamedItem(idName);
 			String uid = nodeId.getNodeValue();
 			if (isStable(uid))
 			{
 				Locator locator = new Locator().kind(kind).id(id).uid(uid);
-
 				if (tryLocator(locator, node) == 1)
 				{
 					return locator;
