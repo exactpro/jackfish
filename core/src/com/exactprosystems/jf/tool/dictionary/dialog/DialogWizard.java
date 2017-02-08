@@ -69,22 +69,7 @@ public class DialogWizard
 		this.controller.init(this, this.window.getName());
 		this.selfControl = this.window.getSelfControl();
 		this.controller.displaySelf(selfControl);
-//		this.controlList = this.window.getSection(IWindow.SectionKind.Run).getControls()
-//				.stream()
-//				.filter(c -> c instanceof AbstractControl)
-//				.map(c ->
-//				{
-//					try
-//					{
-//						return AbstractControl.createCopy(c);
-//					}
-//					catch (Exception e)
-//					{
-//						return null;
-//					}
-//				})
-//				.filter(Objects::nonNull)
-//				.collect(Collectors.toList());
+
 		displayElements();
 		updateOnButtons();
 	}
@@ -92,16 +77,18 @@ public class DialogWizard
 	//----------------------------------------------------------------------------------------------
     // sophisticated functions
     //----------------------------------------------------------------------------------------------
-    // TODO
-    public Node findBestIndex(ControlKind kind, ExtraInfo info, Document doc)
+    public Node findBestIndex(ElementWizardBean bean)
     {
-        if (kind == null || info == null || doc == null)
+        if (bean == null)
         {
             return null;
         }
+        ControlKind kind = bean.getControlKind(); 
+        ExtraInfo info = (ExtraInfo)bean.getAbstractControl().getInfo();
+        
         Map<Double, Node> candidates = new HashMap<>();
         
-        passTree(doc, node -> candidates.put(similarityFactor(node, kind, info), node));
+        passTree(this.document, node -> candidates.put(similarityFactor(node, kind, info), node));
         Double maxKey = candidates.keySet().stream().max(Double::compare).get();
         return maxKey != null && maxKey > this.wizardSettings.getThreshold() ? candidates.get(maxKey) : null;
     }
@@ -211,6 +198,7 @@ public class DialogWizard
     }
     
     //----------------------------------------------------------------------------------------------
+    // TODO
     public void arrangeAll(List<XpathTreeItem> list) throws Exception
     {
         for (XpathTreeItem mark : list)
@@ -250,7 +238,7 @@ public class DialogWizard
             Node node = mark.getNode();
             
             Rectangle rec = mark.getRectangle();
-            Rect rectangle = relativeRect(new Rectangle(200, 100), rec); // TODO we need the real Rectangle from image            
+            Rect rectangle = relativeRect(this.dialogRectangle, rec);            
             
             info.set(ExtraInfo.xpathName,       XpathViewer.fullXpath("", this.document, node, false, null, true));
             info.set(ExtraInfo.nodeName,        node.getNodeName());
