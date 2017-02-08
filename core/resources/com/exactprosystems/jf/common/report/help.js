@@ -127,7 +127,7 @@ $(document).ready(function () {
 
 			} else {
 
-				foundDivs = $('p:Contains("'+str+'"), td:Contains("'+str+'")');
+				foundDivs = $('h2:Contains("'+str+'"), p:Contains("'+str+'"), td:Contains("'+str+'")');
 
 				var newDivs = [];
 

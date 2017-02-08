@@ -19,6 +19,7 @@ import com.exactprosystems.jf.api.client.ClientConnection;
 import com.exactprosystems.jf.api.client.IClient;
 import com.exactprosystems.jf.api.common.ParametersKind;
 import com.exactprosystems.jf.api.error.ErrorKind;
+import com.exactprosystems.jf.common.RtfHelp.BookmarksCreator;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
@@ -29,15 +30,29 @@ import com.exactprosystems.jf.functions.HelpKind;
 @ActionAttribute(
 		group					= ActionGroups.Clients,
 		suffix					= "CLSTRT",
-		generalDescription 		= "Starts desired client. ",
+		generalDescription 		= "The purpose of the action is to start the client. It establishes the connection with "
+				+ "the remote service, by using the mentioned address and the port, receives messages and adds them in the queue. "
+				+ "If in the customer setting the parameter UseHeartBeat is shown as true, then in the queueing the client will "
+				+ "automatically send  the heart beat with the interval, which is also mentioned in the parameters of the client.",
 		additionFieldsAllowed 	= true,
-		outputDescription 		= "True, if client starts successful."
+		outputType 				= Boolean.class,
+		outputDescription 		= "True, if the client started successfully.",
+		additionalDescription 	= "As additional parameters, parameters with the names Address and Port are indicated, "
+				+ "in the value of which, correspondingly the address and the service port are indicated, with which the connection is required.",
+		examples 				= "{{`1. Load the client for FIX.`}}"
+				+ "{{`2. Start the client.`}}"
+				+ "{{##Id;#Action;#ClientId\n"
+				+ "CLLD1;ClientLoad;'FIX'\n"
+				+ "\n"
+				+ "\n"
+				+ "#Id;#Action;#ClientConnection\n"
+				+ "CLSTRT1;ClientStart;CLLD1.Out#}}"
 	)
 public class ClientStart extends AbstractAction 
 {
 	public final static String connectionName = "ClientConnection";
 
-	@ActionFieldAttribute(name = connectionName, mandatory = true, description = "The client connection." )
+	@ActionFieldAttribute(name = connectionName, mandatory = true, description = "The connection with the client, which is derived from the action ClientLoad" )
 	protected ClientConnection	connection	= null;
 
 	public ClientStart()

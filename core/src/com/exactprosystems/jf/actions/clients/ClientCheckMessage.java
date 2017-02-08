@@ -35,8 +35,26 @@ import java.util.Map.Entry;
 @ActionAttribute(
 		group					= ActionGroups.Clients,
 		suffix					= "CLMSGCHK",
-		generalDescription 		= "Compares the given message to a set of name-value pairs.",
-		additionFieldsAllowed 	= true
+		generalDescription 		= "The purpose of the action is to compare the message type MapMessage with the field set type key-value."
+				+ " MapMessage is the output value of actions: {{@ClientCreateMapMessage@}}, {{@ClientDecode@}}, {{@ClientGetMessage@}}, {{@ClientSendMessage@}}."
+				+ " In the report a chart will be formed with the headline the Mismatched fields: consisting of columns {{$Name$}} and {{$Expected$}} + {{$Actual$}}. "
+				+ "In the case of inequality in the compared fields the MapMessage action fails."
+				+ " Start of the client is not mandatory.",
+		additionFieldsAllowed 	= true,
+		additionalDescription   = "In additional parameters, the names and values which should be compared with MapMessage, which is passed in parameter {{$ActualMessage$}}, are pointed out.",
+		examples 				= "{{`1. Load the client for FIX`}}"
+				+ "{{`2. Create a message type FIX with a set key-value :FirstName:FirstValue.`}}"
+				+ "{{`3. Check the message.`}}"
+				+ "{{##Id;#Action;#ClientId\n"
+				+ "CLLD1;ClientLoad;'FIX'\n"
+				+ "\n"
+				+ "\n"
+				+ "#Id;#Action;#ClientConnection;#MessageType;#FirstName\n"
+				+ "CLCRMM1;ClientCreateMapMessage;CLLD1.Out;'35';'FirstValue'\n"
+				+ "\n"
+				+ "\n"
+				+ "#Id;#Action;#ActualMessage;#ExpectedMessageType;#ClientConnection;#FirstName\n"
+				+ "CLMSGCHK1;ClientCheckMessage;CLCRMM1.Out;'35';CLLD1.Out;'FirstValue'#}}"
 	)
 public class ClientCheckMessage extends AbstractAction 
 {
@@ -44,13 +62,13 @@ public class ClientCheckMessage extends AbstractAction
 	public final static String actualName = "ActualMessage";
 	public final static String expectedMessageTypeName 	= "ExpectedMessageType";
 
-	@ActionFieldAttribute(name = connectionName, mandatory = true, description = "The client connection." )
+	@ActionFieldAttribute(name = connectionName, mandatory = true, description = "The connection with the client, which is derived from the action ClientLoad." )
 	protected ClientConnection	connection	= null;
 
-	@ActionFieldAttribute(name = actualName, mandatory = true, description = "Actual value. It is Message object that was found by GetMessage action. For example FoundOrder.Out")
+	@ActionFieldAttribute(name = actualName, mandatory = true, description = "The message that is required to compare.")
 	protected MapMessage actual = null;
 
-	@ActionFieldAttribute(name = expectedMessageTypeName, mandatory = true, description = "Expected message type." )
+	@ActionFieldAttribute(name = expectedMessageTypeName, mandatory = true, description = "The message type that is expected." )
 	protected String	messageType	= null;
 
 	public ClientCheckMessage()

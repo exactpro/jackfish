@@ -30,8 +30,27 @@ import java.util.List;
 @ActionAttribute(
 		group					= ActionGroups.Clients,
 		suffix					= "CLSMM",
-		generalDescription 		= "Sends MapMessage over client's connection. ",
-		additionFieldsAllowed 	= false
+		generalDescription 		= "The purpose of the action is to send messages through a made connection."
+				+ "The start of the client is mandatory. It is targeted at converting messages for specified type and its sending.",
+		additionFieldsAllowed 	= false,
+		examples 				= "{{`1. Load the client for FIX.`}}"
+				+ "{{`2. Creat the message with the help of MessageCreate method.`}}"
+				+ "{{`3. Connect to the port №10555.`}}"
+				+ "{{`4. Send the created message, test it preliminarily with the indication of CHECK - true in the  parameter.`}}"
+				+ "{{##Id;#Action;#ClientId\n"
+				+ "CLLD1;ClientLoad;'FIX'\n"
+				+ "\n"
+				+ "\n"
+				+ "#Id;#Action;#Fields\n"
+				+ "MSGCR1;MessageCreate;{'First item' : 'First Value', 'Second Item' : 'Second Value'}\n"
+				+ "\n"
+				+ "#Id;#Action;#ClientConnection;#Socket\n"
+				+ "CLCNCT1;ClientConnect;CLLD1.Out;10555\n"
+				+ "\n"
+				+ "\n"
+				+ "\n"
+				+ "#Id;#Action;#Check;#Message;#ClientConnection\n"
+				+ "CLSMM1;ClientSendMapMessage;true;MSGCR1.Out;CLLD1.Out#}}"
 	)
 public class ClientSendMapMessage extends AbstractAction
 {
@@ -39,13 +58,13 @@ public class ClientSendMapMessage extends AbstractAction
 	public final static String messageName = "Message";
 	public final static String checkName = "Check";
 
-	@ActionFieldAttribute(name = connectionName, mandatory = true, description = "The client connection." )
+	@ActionFieldAttribute(name = connectionName, mandatory = true, description = "The connection with the client, which is derived from the action ClientLoad." )
 	protected ClientConnection	connection	= null;
 
-	@ActionFieldAttribute(name = messageName, mandatory = true, description = "The message that will be sent." )
+	@ActionFieldAttribute(name = messageName, mandatory = true, description = "Message that is required to send." )
 	protected MapMessage	message	= null;
 
-	@ActionFieldAttribute(name = checkName, mandatory = false, description = "Check the message before sending." )
+	@ActionFieldAttribute(name = checkName, mandatory = false, description = "Validation message check before sending. As a default true." )
 	protected boolean	check;
 
 

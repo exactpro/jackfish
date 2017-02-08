@@ -32,20 +32,30 @@ import com.exactprosystems.jf.functions.HelpKind;
 @ActionAttribute(
 		group					= ActionGroups.Clients,
 		suffix					= "CLCRMM",
-		generalDescription 		= "Composes Message over client's connection. ",
+		generalDescription 		= "The purpose of the action is to create a pair set type key-value in the message MapMessage of the specified type."
+				+ " Start of the client is not mandatory.",
 		additionFieldsAllowed 	= true,
-		outputDescription = "Converted message.", 
-		outputType = MapMessage.class
+		outputDescription 		= "MapMessage of the indicated type.",
+		outputType 				= MapMessage.class,
+		additionalDescription 	= "In additional parameters the set of names and values is pointed out which will be converted into MapMessage.",
+		examples 				= "{{`1. Load the client for FIX.`}}"
+				+ "{{`2. Create message type MapMessage.`}}"
+				+ "#Id;#Action;#ClientId\n"
+				+ "CLLD1;ClientLoad;'FIX'\n"
+				+ "\n"
+				+ "\n"
+				+ "{{##Id;#Action;#ClientConnection;#MessageType;#First;#Second\n"
+				+ "CLCRMM1;ClientCreateMapMessage;CLLD1.Out;'35';'Value';'Value'#}}"
 	)
 public class ClientCreateMapMessage extends AbstractAction
 {
 	public final static String connectionName 	= "ClientConnection";
 	public final static String messageTypeName 	= "MessageType";
 
-	@ActionFieldAttribute(name = connectionName, mandatory = true, description = "The client connection." )
+	@ActionFieldAttribute(name = connectionName, mandatory = true, description = "The connection with the client, which is derived from the action ClientLoad." )
 	protected ClientConnection	connection	= null;
 
-	@ActionFieldAttribute(name = messageTypeName, mandatory = true, description = "Message type." )
+	@ActionFieldAttribute(name = messageTypeName, mandatory = true, description = "Type of the created message." )
 	protected String	messageType	= null;
 
 	public ClientCreateMapMessage()

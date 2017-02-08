@@ -25,14 +25,22 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 @ActionAttribute(
 		group					= ActionGroups.Clients,
 		suffix					= "CLCLM",
-		generalDescription 		= "Remove all messages of this client.",
-		additionFieldsAllowed 	= false
+		generalDescription 		= "The purpose of the action is to clear the list of all accepted client messages."
+				+ " Start of the client is not mandatory.",
+		additionFieldsAllowed 	= false,
+		examples 				= "{{`1. Load the client for FIX.`}}"
+				+ "{{`2. Clear the list of the client messages.`}}"
+				+ "{{#CLLD1;ClientLoad;'FIX'\n"
+				+ "\n"
+				+ "\n"
+				+ "#Id;#Action;#ClientConnection\n"
+				+ "CLCLM1;ClientClearMessages;CLLD1.Out#}}"
 	)
 public class ClientClearMessages extends AbstractAction 
 {
 	public final static String connectionName = "ClientConnection";
 
-	@ActionFieldAttribute(name = connectionName, mandatory = true, description = "The client connection." )
+	@ActionFieldAttribute(name = connectionName, mandatory = true, description = "The connection with the client, which is derived from the action {{@ClientLoad@}}." )
 	protected ClientConnection	connection	= null;
 
 	public ClientClearMessages()

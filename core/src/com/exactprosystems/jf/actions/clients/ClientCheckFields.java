@@ -24,20 +24,34 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 @ActionAttribute(
 		group					= ActionGroups.Clients,
 		suffix					= "CLCHM",
-		generalDescription 		= "Checks the given message to match a dictionary.",
+		generalDescription 		= "The purpose of the action is to check message fields against the field set dictionary of the client."
+				+ " Start of the client is not mandatory.",
 		additionFieldsAllowed 	= false,
 		outputDescription 		= "True, if the message is correct.",
-		outputType				= Boolean.class
+		outputType				= Boolean.class,
+		examples 				= "{{`1.Load the client for FIX.`}}"
+				+ "{{`2.Create a message type FIX with a set key-value - FirstName:FirstValue.`}}"
+				+ "{{`3.Check the message.`}}"
+				+ "{{##Id;#Action;#ClientId\n"
+				+ "CLLD1;ClientLoad;'FIX'\n"
+				+ "\n"
+				+ "\n"
+				+ "#Id;#Action;#ClientConnection;#MessageType;#Name\n"
+				+ "CLCRMM1;ClientCreateMapMessage;CLLD1.Out;'35';'Value'\n"
+				+ "\n"
+				+ "\n"
+				+ "#Id;#Action;#Message;#ClientConnection\n"
+				+ "CLCHM1;ClientCheckFields;CLCRMM1.Out;CLLD1.Out#}}"
 	)
 public class ClientCheckFields extends AbstractAction
 {
 	public final static String connectionName 	= "ClientConnection";
 	public final static String messageName 		= "Message";
 
-	@ActionFieldAttribute(name = connectionName, mandatory = true, description = "The client connection." )
+	@ActionFieldAttribute(name = connectionName, mandatory = true, description = "The connection with the client, which is derived from the action ClientLoad." )
 	protected ClientConnection	connection	= null;
 
-	@ActionFieldAttribute(name = messageName, mandatory = true, description = "The message that will be checked." )
+	@ActionFieldAttribute(name = messageName, mandatory = true, description = "The message that is required to check." )
 	protected MapMessage	message	= null; 
 
 

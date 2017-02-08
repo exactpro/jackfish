@@ -32,10 +32,24 @@ import java.util.List;
 @ActionAttribute(
 		group					= ActionGroups.Clients,
 		suffix					= "CLSM",
-		generalDescription 		= "Composes and sends Message over client's connection. ",
+		generalDescription 		= "The purpose of the action is to create and send the message."
+				+ " The start of the client is mandatory.",
 		additionFieldsAllowed 	= true,
-		outputDescription = "Converted message, if parameter Show is set to true.", 
-		outputType = MapMessage.class
+		outputDescription = "The message which was created and sent.",
+		outputType = MapMessage.class,
+		additionalDescription 	= "In additional parameters name and values set is indicated which will be converted into the message type which is typical for the client.",
+		examples 				= "{{`1. Load the client for FIX.`}}"
+				+ "{{`2. Connect to the port №10555.`}}"
+				+ "{{`3. Create and send the message, check it beforehand with the indication of CHECK - true in the  parameter.`}}"
+				+ "{{#CLLD1;ClientLoad;'FIX'\n"
+				+ "\n"
+				+ "\n"
+				+ "#Id;#Action;#ClientConnection;#Socket\n"
+				+ "CLCNCT1;ClientConnect;CLLD1.Out;10555\n"
+				+ "\n"
+				+ "\n"
+				+ "#Id;#Action;#ClientConnection;#MessageType;#Name;#SecondName\n"
+				+ "CLSM1;ClientSendMessage;CLLD1.Out;'35';'Value';'SecondValue'#}}"
 	)
 public class ClientSendMessage extends AbstractAction
 {
@@ -44,13 +58,13 @@ public class ClientSendMessage extends AbstractAction
 	public final static String showName = "Show";
 	public final static String checkName = "Check";
 
-	@ActionFieldAttribute(name = connectionName, mandatory = true, description = "The client connection." )
+	@ActionFieldAttribute(name = connectionName, mandatory = true, description = "The connection with the client, which is derived from the action ClientLoad." )
 	protected ClientConnection	connection	= null;
 
-	@ActionFieldAttribute(name = messageTypeName, mandatory = true, description = "Message type." )
+	@ActionFieldAttribute(name = messageTypeName, mandatory = true, description = "The type of the created message." )
 	protected String	messageType	= null;
 
-	@ActionFieldAttribute(name = checkName, mandatory = false, description = "Check the message before sending." )
+	@ActionFieldAttribute(name = checkName, mandatory = false, description = "Checks the validation before the message sending. As a default true.")
 	protected boolean	check;
 
 	public ClientSendMessage()
