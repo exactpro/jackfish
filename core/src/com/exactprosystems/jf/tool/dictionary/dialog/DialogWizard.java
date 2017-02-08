@@ -25,13 +25,16 @@ import org.w3c.dom.NodeList;
 
 import javax.xml.xpath.*;
 import java.awt.*;
+import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.function.Consumer;
@@ -54,6 +57,7 @@ public class DialogWizard
 	private Service<Document> documentService;
 	private Service<ImageAndOffset> imageService;
 
+	private Rectangle dialogRectangle;
 	private int xOffset = 0;
 	private int yOffset = 0;
 
@@ -97,15 +101,15 @@ public class DialogWizard
     // sophisticated functions
     //----------------------------------------------------------------------------------------------
     // TODO
-    public Node findBestIndex(ControlKind kind, ExtraInfo info, Rectangle rect, Document doc)
+    public Node findBestIndex(ControlKind kind, ExtraInfo info, Document doc)
     {
-        if (kind == null || info == null || rect == null || doc == null)
+        if (kind == null || info == null || doc == null)
         {
             return null;
         }
         Map<Double, Node> candidates = new HashMap<>();
         
-        passTree(doc, node -> candidates.put(similarityFactor(node, rect, kind, info), node));
+        passTree(doc, node -> candidates.put(similarityFactor(node, kind, info), node));
         Double maxKey = candidates.keySet().stream().max(Double::compare).get();
         return maxKey != null && maxKey > this.wizardSettings.getThreshold() ? candidates.get(maxKey) : null;
     }
@@ -118,22 +122,22 @@ public class DialogWizard
             .forEach(item -> passTree(item, func));
     }
     
-    private double similarityFactor(Node node, Rectangle rect, ControlKind kind, ExtraInfo info)
+    @SuppressWarnings("unchecked")
+    private double similarityFactor(Node node, ControlKind kind, ExtraInfo info)
     {
-        if (node == null || rect == null || kind == null || info == null)
+        if (node == null || this.dialogRectangle == null || kind == null || info == null)
         {
             return 0.0;
         }
         
         try
         {
-            Rectangle   actualRectangle     = (Rectangle)node.getUserData(IRemoteApplication.rectangleName);
+            Rect        actualRectangle     = relativeRect(this.dialogRectangle, (Rectangle)node.getUserData(IRemoteApplication.rectangleName));
             String      actualName          = node.getNodeName();
             String      actualPath          = XpathViewer.fullXpath("", this.document, node, false, null, true);
-            List<Attr>  actualAttr          = null;
+            List<Attr>  actualAttr          = extractAttributes(node);
             
-            Rect rec = (Rect)info.get(ExtraInfo.rectangleName);
-            Rectangle   expectedRectangle   = new Rectangle(rec.getX1(), rec.getY1(), rec.getX2() - rec.getX1(), rec.getY2() - rec.getY1());
+            Rect        expectedRectangle   = (Rect)info.get(ExtraInfo.rectangleName);
             String      expectedName        = (String) info.get(ExtraInfo.nodeName);
             String      expectedPath        = (String) info.get(ExtraInfo.xpathName);
             List<Attr>  expectedAttr        = (List<Attr>) info.get(ExtraInfo.attrName);
@@ -143,20 +147,44 @@ public class DialogWizard
             sum += normalize(Str.areEqual(actualName, expectedName) ? 1.0 : 0.0, WizardSettings.Kind.TYPE);
             
             // position
-            sum += 0.0;
+            Point2D actualPos   = actualRectangle.center();
+            Point2D expectedPos = expectedRectangle.center();
+            double distance =  Math.sqrt( Math.pow(actualPos.getX() - expectedPos.getX(), 2) + Math.pow(actualPos.getY() - expectedPos.getY(), 2));  
+            sum += normalize(1 / (1 + Math.abs(distance)), WizardSettings.Kind.POSITION); 
             
             // size
-            sum += 0.0;
+            double different = actualRectangle.square() - expectedRectangle.square();
+            sum += normalize(1 / (1 + Math.abs(different)), WizardSettings.Kind.SIZE); 
             
             // path
-            sum += 0.0;
+            String[] actualPathDim = Str.asString(actualPath).split("/");
+            String[] expectedPathDim = Str.asString(expectedPath).split("/");
+            int count = 0;
+            for (int i = expectedPathDim.length - 1; i >= 0; i--)
+            {
+                int ind = actualPathDim.length - expectedPathDim.length + i;
+                if (ind < 0)
+                {
+                    break;
+                }
+                count += (Str.areEqual(expectedPathDim[i], actualPathDim[ind]) ? 1 : 0);
+            }
+            sum += normalize(count / expectedPathDim.length, WizardSettings.Kind.PATH);
             
             // attributes
-            sum += 0.0;
+            double attrFactor = 0.0;
+            if (actualAttr != null && expectedAttr != null && expectedAttr.size() > 0)
+            {
+                Set<Attr> s1 = new HashSet<>(actualAttr);
+                Set<Attr> s2 = new HashSet<>(expectedAttr);
+                s2.retainAll(s1);
+                
+                attrFactor = (double)s2.size() / (double)expectedAttr.size();
+            }
+            sum += normalize(attrFactor, WizardSettings.Kind.PATH);
             
-            sum /= 5;
             
-            return sum;
+            return sum * wizardSettings.scale();
         }
         catch (Exception e)
         {
@@ -164,6 +192,24 @@ public class DialogWizard
         }
     }
     
+    private Rect relativeRect(Rectangle relative, Rectangle rect)
+    {
+        if (relative == null || rect == null)
+        {
+            return new Rect();
+        }
+        
+        if (relative.height == 0 || relative.width == 0)
+        {
+            return new Rect();
+        }
+        
+        double scaleX = 1 / relative.getWidth();
+        double scaleY = 1 / relative.getHeight();
+        
+        return new Rect(rect.getX() * scaleX, rect.getY() * scaleY, (rect.getX() + rect.getWidth()) * scaleX, (rect.getY() + rect.getHeight()) * scaleY);
+    }
+
     private double normalize(double value, WizardSettings.Kind kind)
     {
         double min = this.wizardSettings.getMin(kind);
@@ -212,17 +258,12 @@ public class DialogWizard
             Node node = mark.getNode();
             
             Rectangle rec = mark.getRectangle();
-            Rect rectangle = new Rect(rec.x, rec.y, rec.x + rec.width, rec.y + rec.height);            
+            Rect rectangle = relativeRect(new Rectangle(200, 100), rec); // TODO we need the real Rectangle from image            
             
             info.set(ExtraInfo.xpathName,       XpathViewer.fullXpath("", this.document, node, false, null, true));
             info.set(ExtraInfo.nodeName,        node.getNodeName());
             info.set(ExtraInfo.rectangleName,   rectangle);
-            List<Attr> attributes = new ArrayList<>();
-            for (int index = 0; index < node.getAttributes().getLength(); index++)
-            {
-                Node attr = mark.getNode().getAttributes().item(index);
-                attributes.add(new Attr(attr.getNodeName(), attr.getNodeValue()));
-            }
+            List<Attr> attributes = extractAttributes(node);
             if (!attributes.isEmpty())
             {
                 info.set(ExtraInfo.attrName, attributes);
@@ -231,7 +272,18 @@ public class DialogWizard
         }
     }
 
-    public Locator compile(String id, ControlKind kind, Document doc, Node node)
+    private List<Attr> extractAttributes(Node node)
+    {
+        List<Attr> attributes = new ArrayList<>();
+        for (int index = 0; index < node.getAttributes().getLength(); index++)
+        {
+            Node attr = node.getAttributes().item(index);
+            attributes.add(new Attr(attr.getNodeName(), attr.getNodeValue()));
+        }
+        return attributes;
+    }
+
+    private Locator compile(String id, ControlKind kind, Document doc, Node node)
     {
         // try many methods here
         Locator locator = null;
@@ -396,7 +448,8 @@ public class DialogWizard
 					protected ImageAndOffset call() throws Exception
 					{
 						int offsetX, offsetY;
-						Rectangle rectangle = service().getRectangle(null, DialogWizard.this.selfControl.locator());
+						Rectangle rectangle = service().getRectangle(null, DialogWizard.this.selfControl.locator()); 
+						dialogRectangle = rectangle;
 						offsetX = rectangle.x;
 						offsetY = rectangle.y;
 						BufferedImage image = service().getImage(null, DialogWizard.this.selfControl.locator()).getImage();

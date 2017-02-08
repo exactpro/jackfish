@@ -35,7 +35,7 @@
 
   <xs:element name="radioButton" type="radioButton"/>
 
-  <xs:element name="rectangle" type="rectangle"/>
+  <xs:element name="rectangle" type="rect"/>
 
   <xs:element name="row" type="row"/>
 
@@ -170,12 +170,12 @@
     </xs:sequence>
   </xs:complexType>
 
-  <xs:complexType name="rectangle">
+  <xs:complexType name="rect">
     <xs:sequence/>
-    <xs:attribute name="x1" type="xs:int"/>
-    <xs:attribute name="y1" type="xs:int"/>
-    <xs:attribute name="x2" type="xs:int"/>
-    <xs:attribute name="y2" type="xs:int"/>
+    <xs:attribute name="x1" type="xs:double"/>
+    <xs:attribute name="y1" type="xs:double"/>
+    <xs:attribute name="x2" type="xs:double"/>
+    <xs:attribute name="y2" type="xs:double"/>
   </xs:complexType>
 
   <xs:complexType name="attr">

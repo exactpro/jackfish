@@ -32,6 +32,21 @@ public class WizardSettings
     
     public enum Kind { TYPE, PATH, SIZE, POSITION, ATTR }
     
+    public double scale()
+    {
+        if (this.scale == null)
+        {
+            this.scale = 0.0;
+            for (Kind kind : Kind.values())
+            {
+                this.scale += getMax(kind);
+            }
+            this.scale = 1/this.scale();
+        }
+        
+        return this.scale.doubleValue();
+    }
+    
     public double getMax(Kind kind)
     {
         Double d = this.maxs.get(kind);
@@ -47,6 +62,7 @@ public class WizardSettings
     public void setMax(Kind kind, double d)
     {
         this.maxs.put(kind, d);
+        this.scale = null;
     }
 
     public void setMin(Kind kind, double d)
@@ -67,4 +83,5 @@ public class WizardSettings
     private Map<Kind, Double> maxs = new HashMap<>();
     private Map<Kind, Double> mins = new HashMap<>();
     private double threshold = 0.0;
+    private Double scale = null;
 }
