@@ -443,10 +443,11 @@ public class DictionaryFx extends GuiDictionary
 		Window copyWindow = Window.createCopy(((Window) window));
 		copyWindow.setName(window.getName());
 		DialogWizard wizard = new DialogWizard(this, copyWindow, this.applicationConnector.getAppConnection());
-		wizard.onHiding(e -> Common.tryCatch(() -> {
+		wizard.setOnAccept(w -> Common.tryCatch(() -> {
 			int index = this.indexOf(window);
 			this.removeWindow(window);
 			this.addWindow(index, copyWindow);
+			this.displayDialog(copyWindow, getWindows());
 			this.displayElement(copyWindow, SectionKind.Run, copyWindow.getFirstControl(SectionKind.Run));
 
 		}, "Error on hiding wizard"));

@@ -475,11 +475,11 @@ public class TreeTableViewWithRectangles
 						customRectangle.setFill(value.getState().color());
 						customRectangle.setVisible(value.isMarkVisible());
 
-						List<ElementWizardBean> relatedList = value.getList();
+						List<XpathTreeItem.BeanWithMark> relatedList = value.getList();
 						if (!relatedList.isEmpty())
 						{
 							Text text = new Text();
-							String collect = relatedList.stream().map(ElementWizardBean::getId).collect(Collectors.joining(","));
+							String collect = relatedList.stream().map(XpathTreeItem.BeanWithMark::getBean).map(ElementWizardBean::getId).collect(Collectors.joining(","));
 							text.setText(collect);
 							text.setFill(value.getState().color());
 							customRectangle.setText(text);
@@ -555,11 +555,11 @@ public class TreeTableViewWithRectangles
 			if (item != null && !empty)
 			{
 				XpathTreeItem.TreeItemState icon = item.getState();
-				List<ElementWizardBean> list = item.getList();
+				List<XpathTreeItem.BeanWithMark> list = item.getList();
 				if (!list.isEmpty())
 				{
 					String tooltip = list.stream()
-							.map(bean -> bean.getId() + " ["+bean.getControlKind().name() + "]")
+							.map(bean -> bean.getBean().getId() + " ["+bean.getBean().getControlKind().name() + "]")
 							.collect(Collectors.joining("\n"));
 					this.setTooltip(new Tooltip(tooltip));
 				}

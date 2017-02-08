@@ -120,11 +120,6 @@ public class DialogWizardController implements Initializable, ContainingParent
 	}
 	//endregion
 
-	void setOnHiding(Consumer<DialogEvent> consumer)
-	{
-		this.dialog.setOnHiding(consumer::accept);
-	}
-
 	void init(DialogWizard model, String windowName)
 	{
 		this.windowName = windowName;
@@ -276,7 +271,7 @@ public class DialogWizardController implements Initializable, ContainingParent
 		if (value != null)
 		{
 			value.setState(XpathTreeItem.TreeItemState.MARK);
-			value.addRelation(bean);
+			value.addRelation(bean, XpathTreeItem.TreeItemState.MARK);
 			this.treeViewWithRectangles.setState(XpathTreeItem.TreeItemState.MARK, this.cbMark.isSelected());
 		}
 	}
@@ -289,7 +284,7 @@ public class DialogWizardController implements Initializable, ContainingParent
 				.filter(Objects::nonNull)
 				.forEach(item -> {
 					item.setState(XpathTreeItem.TreeItemState.QUESTION);
-					item.addRelation(bean);
+					item.addRelation(bean, XpathTreeItem.TreeItemState.QUESTION);
 				});
 		this.treeViewWithRectangles.setState(XpathTreeItem.TreeItemState.QUESTION, this.cbQuestion.isSelected());
 	}

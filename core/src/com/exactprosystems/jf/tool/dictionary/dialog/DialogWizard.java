@@ -4,10 +4,7 @@ import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.app.IWindow.SectionKind;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.error.JFRemoteException;
-import com.exactprosystems.jf.documents.guidic.Attr;
-import com.exactprosystems.jf.documents.guidic.ExtraInfo;
-import com.exactprosystems.jf.documents.guidic.Rect;
-import com.exactprosystems.jf.documents.guidic.Section;
+import com.exactprosystems.jf.documents.guidic.*;
 import com.exactprosystems.jf.documents.guidic.controls.AbstractControl;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.custom.xpath.ImageAndOffset;
@@ -18,7 +15,6 @@ import com.exactprosystems.jf.tool.dictionary.DictionaryFx;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
-import javafx.scene.control.DialogEvent;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -56,6 +52,8 @@ public class DialogWizard
 	private int yOffset = 0;
 
 	private Document document;
+
+	private Consumer<IWindow> consumer;
 
 	public DialogWizard(DictionaryFx dictionary, IWindow window, AppConnection appConnection) throws Exception
 	{
@@ -231,159 +229,160 @@ public class DialogWizard
     
     private void updateAllExtraInfo(IWindow window, XpathTreeItem mark) throws Exception
     {
-        for (ElementWizardBean element : mark.getList())
-        {
-            AbstractControl control = (AbstractControl)window.getControlForName(SectionKind.Run, element.getId());
-            ExtraInfo info = new ExtraInfo();
-            Node node = mark.getNode();
-            
-            Rectangle rec = mark.getRectangle();
-            Rect rectangle = relativeRect(this.dialogRectangle, rec);            
-            
-            info.set(ExtraInfo.xpathName,       XpathViewer.fullXpath("", this.document, node, false, null, true));
-            info.set(ExtraInfo.nodeName,        node.getNodeName());
-            info.set(ExtraInfo.rectangleName,   rectangle);
-            List<Attr> attributes = extractAttributes(node);
-            if (!attributes.isEmpty())
-            {
-                info.set(ExtraInfo.attrName, attributes);
-            }
-            control.set(AbstractControl.infoName, info);
-        }
+		for (XpathTreeItem.BeanWithMark beanWithMark : mark.getList())
+		{
+			ElementWizardBean element = beanWithMark.getBean();
+			AbstractControl control = (AbstractControl) window.getControlForName(SectionKind.Run, element.getId());
+			ExtraInfo info = new ExtraInfo();
+			Node node = mark.getNode();
+
+			Rectangle rec = mark.getRectangle();
+			Rect rectangle = relativeRect(this.dialogRectangle, rec);
+
+			info.set(ExtraInfo.xpathName, XpathViewer.fullXpath("", this.document, node, false, null, true));
+			info.set(ExtraInfo.nodeName, node.getNodeName());
+			info.set(ExtraInfo.rectangleName, rectangle);
+			List<Attr> attributes = extractAttributes(node);
+			if (!attributes.isEmpty())
+			{
+				info.set(ExtraInfo.attrName, attributes);
+			}
+			control.set(AbstractControl.infoName, info);
+		}
     }
 
-    private List<Attr> extractAttributes(Node node)
-    {
-        List<Attr> attributes = new ArrayList<>();
-        for (int index = 0; index < node.getAttributes().getLength(); index++)
-        {
-            Node attr = node.getAttributes().item(index);
-            attributes.add(new Attr(attr.getNodeName(), attr.getNodeValue()));
-        }
-        return attributes;
-    }
+	private List<Attr> extractAttributes(Node node)
+	{
+		List<Attr> attributes = new ArrayList<>();
+		for (int index = 0; index < node.getAttributes().getLength(); index++)
+		{
+			Node attr = node.getAttributes().item(index);
+			attributes.add(new Attr(attr.getNodeName(), attr.getNodeValue()));
+		}
+		return attributes;
+	}
 
-    private Locator compile(String id, ControlKind kind, Document doc, Node node)
-    {
-        // try many methods here
-        Locator locator = null;
-        
-        locator = locatorById(id, kind, doc, node);
-        if (locator != null)
-        {
-            return locator;
-        }
+	private Locator compile(String id, ControlKind kind, Document doc, Node node)
+	{
+		// try many methods here
+		Locator locator = null;
 
-        locator = locatorByAttr(id, kind, doc, node);
-        if (tryLocator(locator, doc, node) == 1)
-        {
-            return locator.id(id).kind(kind);
-        }
-        
-        locator = locatorByXpath(id, kind, doc, node);
-        if (tryLocator(locator, doc, node) == 1)
-        {
-            return locator.id(id).kind(kind);
-        }
-        
-        return null; // can't compile the such locator
-    }
-    
-    private String composeId(Node node)
-    {
-        // TODO Auto-generated method stub
-        return null;
-    }
+		locator = locatorById(id, kind, doc, node);
+		if (locator != null)
+		{
+			return locator;
+		}
 
-    private ControlKind composeKind(Node node)
-    {
-        // TODO Auto-generated method stub
-        return null;
-    }
+		locator = locatorByAttr(id, kind, doc, node);
+		if (tryLocator(locator, doc, node) == 1)
+		{
+			return locator.id(id).kind(kind);
+		}
 
-    private Locator locatorById(String id, ControlKind kind, Document doc, Node node)
-    {
-        if (node.hasAttributes())
-        {
-            Node nodeId = node.getAttributes().getNamedItem("id");
-            String uid = nodeId.getNodeValue();
-            if (isStable(uid))
-            {
-                Locator locator = new Locator().kind(kind).id(id).uid(uid);
-                
-                if (tryLocator(locator, doc, node) == 1)
-                {
-                    return locator;
-                }
-            }
-        }
-        return null;
-    }
+		locator = locatorByXpath(id, kind, doc, node);
+		if (tryLocator(locator, doc, node) == 1)
+		{
+			return locator.id(id).kind(kind);
+		}
 
-    private Locator locatorByAttr(String id, ControlKind kind, Document doc, Node node)
-    {
-        // TODO Auto-generated method stub
-        return null;
-    }
+		return null; // can't compile the such locator
+	}
 
-    private Locator locatorByXpath(String id, ControlKind kind, Document doc, Node node)
-    {
-        // TODO Auto-generated method stub
-        return null;
-    }
+	private String composeId(Node node)
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
 
-    private int tryLocator(Locator locator, Document doc, Node node)
-    {
-        if (locator == null)
-        {
-            return 0;
-        }
-        
-        List<Node> list = findAll(locator, doc);
-        if (list.size() != 1)
-        {
-            return list.size();
-        }
-        
-        if (list.get(0) == node)
-        {
-            return 1;
-        }
-        
-        return 0;
-    }
+	private ControlKind composeKind(Node node)
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
 
-    private List<Node> findAll(Locator locator, Document doc)
-    {
-        return Collections.emptyList();
-    }
-    
-    private boolean isStable(String identifier)
-    {
-        if (Str.IsNullOrEmpty(identifier))
-        {
-            return false;
-        }
-        else if (identifier.matches(".*\\d+.*"))
-        {
-            return false;
-        }
-        else
-        {
-            return true;
-        }
-    }
-    //----------------------------------------------------------------------------------------------
+	private Locator locatorById(String id, ControlKind kind, Document doc, Node node)
+	{
+		if (node.hasAttributes())
+		{
+			Node nodeId = node.getAttributes().getNamedItem("id");
+			String uid = nodeId.getNodeValue();
+			if (isStable(uid))
+			{
+				Locator locator = new Locator().kind(kind).id(id).uid(uid);
 
-	
+				if (tryLocator(locator, doc, node) == 1)
+				{
+					return locator;
+				}
+			}
+		}
+		return null;
+	}
+
+	private Locator locatorByAttr(String id, ControlKind kind, Document doc, Node node)
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	private Locator locatorByXpath(String id, ControlKind kind, Document doc, Node node)
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	private int tryLocator(Locator locator, Document doc, Node node)
+	{
+		if (locator == null)
+		{
+			return 0;
+		}
+
+		List<Node> list = findAll(locator, doc);
+		if (list.size() != 1)
+		{
+			return list.size();
+		}
+
+		if (list.get(0) == node)
+		{
+			return 1;
+		}
+
+		return 0;
+	}
+
+	private List<Node> findAll(Locator locator, Document doc)
+	{
+		return Collections.emptyList();
+	}
+
+	private boolean isStable(String identifier)
+	{
+		if (Str.IsNullOrEmpty(identifier))
+		{
+			return false;
+		}
+		else if (identifier.matches(".*\\d+.*"))
+		{
+			return false;
+		}
+		else
+		{
+			return true;
+		}
+	}
+	//----------------------------------------------------------------------------------------------
+
+
 	public void show()
 	{
 		this.controller.show();
 	}
 
-	public void onHiding(Consumer<DialogEvent> consumer)
+	public void setOnAccept(Consumer<IWindow> consumer)
 	{
-		this.controller.setOnHiding(consumer);
+		this.consumer = consumer;
 	}
 
 	void changeDialogName(String newName)
@@ -428,7 +427,7 @@ public class DialogWizard
 					protected ImageAndOffset call() throws Exception
 					{
 						int offsetX, offsetY;
-						Rectangle rectangle = service().getRectangle(null, DialogWizard.this.selfControl.locator()); 
+						Rectangle rectangle = service().getRectangle(null, DialogWizard.this.selfControl.locator());
 						dialogRectangle = rectangle;
 						offsetX = rectangle.x;
 						offsetY = rectangle.y;
@@ -441,18 +440,21 @@ public class DialogWizard
 		this.documentService.setExecutor(executor);
 		this.imageService.setExecutor(executor);
 
-		this.documentService.setOnSucceeded(event -> {
+		this.documentService.setOnSucceeded(event ->
+		{
 			this.document = (Document) event.getSource().getValue();
 			this.controller.displayTree(this.document, xOffset, yOffset);
 		});
-		this.imageService.setOnSucceeded(event -> {
+		this.imageService.setOnSucceeded(event ->
+		{
 			ImageAndOffset imageAndOffset = (ImageAndOffset) event.getSource().getValue();
 			xOffset = imageAndOffset.offsetX;
 			yOffset = imageAndOffset.offsetY;
 			this.controller.displayImage(imageAndOffset.image);
 		});
 
-		this.imageService.setOnFailed(event -> {
+		this.imageService.setOnFailed(event ->
+		{
 			Throwable exception = event.getSource().getException();
 			String message = exception.getMessage();
 			if (exception.getCause() instanceof JFRemoteException)
@@ -462,7 +464,8 @@ public class DialogWizard
 			this.controller.displayImageFailing(message);
 		});
 
-		this.documentService.setOnFailed(event -> {
+		this.documentService.setOnFailed(event ->
+		{
 			Throwable exception = event.getSource().getException();
 			String message = exception.getMessage();
 			if (exception.getCause() instanceof JFRemoteException)
@@ -481,9 +484,8 @@ public class DialogWizard
 		{
 			Section section = (Section) this.window.getSection(IWindow.SectionKind.Run);
 			section.getControls().forEach(section::removeControl);
-			list.stream()
-					.map(ElementWizardBean::getAbstractControl)
-					.forEach(abstractControl -> Common.tryCatch(() -> section.addControl(abstractControl), "Error on add control"));
+			list.stream().map(ElementWizardBean::getAbstractControl).forEach(abstractControl -> Common.tryCatch(() -> section.addControl(abstractControl), "Error on add control"));
+			Optional.ofNullable(this.consumer).ifPresent(c -> c.accept(this.window));
 		}
 		this.controller.close();
 	}
@@ -598,14 +600,14 @@ public class DialogWizard
 
 	private void updateCountElement(ElementWizardBean bean)
 	{
-	    
-	    
+
+
 		int count = 0;
 		if (bean.isXpath())
 		{
 			AbstractControl abstractControl = bean.getAbstractControl();
-			
-			
+
+
 			String xpathStr = abstractControl.getXpath();
 			XPath xpath = XPathFactory.newInstance().newXPath();
 			try
@@ -642,25 +644,13 @@ public class DialogWizard
 
 	private void displayElements(Function<AbstractControl, ElementWizardBean> mapFunction)
 	{
-		List<ElementWizardBean> list = this.window.getSection(SectionKind.Run).getControls()
-				.stream()
-				.map(iC -> ((AbstractControl) iC))
-				.map(mapFunction)
-				.collect(Collectors.toList());
+		List<ElementWizardBean> list = this.window.getSection(SectionKind.Run).getControls().stream().map(iC -> ((AbstractControl) iC)).map(mapFunction).collect(Collectors.toList());
 		this.controller.displayElements(list);
 	}
 
 	private ElementWizardBean create(int number, AbstractControl control, boolean isNew)
 	{
-		return new ElementWizardBean(
-				control,
-				number,
-				control.getID(),
-				control.getBindedClass(),
-				((control.getXpath() != null && !control.getXpath().isEmpty()) || control.useAbsoluteXpath()),
-				isNew,
-				0
-		);
+		return new ElementWizardBean(control, number, control.getID(), control.getBindedClass(), ((control.getXpath() != null && !control.getXpath().isEmpty()) || control.useAbsoluteXpath()), isNew, 0);
 	}
 
 	private void updateBean(AbstractControl control, ElementWizardBean bean)
