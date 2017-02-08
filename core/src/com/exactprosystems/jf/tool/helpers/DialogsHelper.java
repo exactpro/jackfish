@@ -626,10 +626,15 @@ public abstract class DialogsHelper
 		ButtonType buttonCreate = new ButtonType("", ButtonBar.ButtonData.OTHER);
 		dialog.getButtonTypes().setAll(buttonCreate);
 		Button button = (Button) dialog.getDialogPane().lookupButton(buttonCreate);
+		Control p = ((Control) dialog.getDialogPane().lookup(".button-bar"));
 		button.setPrefHeight(0.0);
 		button.setMaxHeight(0.0);
 		button.setMinHeight(0.0);
 		button.setVisible(false);
+		p.setPrefHeight(0.0);
+		p.setMaxHeight(0.0);
+		p.setMinHeight(0.0);
+		p.setVisible(false);
 		return dialog;
 	}
 
