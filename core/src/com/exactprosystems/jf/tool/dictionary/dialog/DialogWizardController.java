@@ -53,7 +53,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.ResourceBundle;
-import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.function.Consumer;
@@ -278,14 +277,26 @@ public class DialogWizardController implements Initializable, ContainingParent
 		return null;
 	}
 
-	void foundGreat(Node node, ElementWizardBean bean)
+	void foundGreat(Node node, ElementWizardBean bean, XpathTreeItem.TreeItemState state)
 	{
 		TreeItem<XpathTreeItem> byNode = this.treeViewWithRectangles.findByNode(node);
 		XpathTreeItem value = byNode.getValue();
 		if (value != null)
 		{
-			value.addRelation(bean, XpathTreeItem.TreeItemState.MARK);
-			this.treeViewWithRectangles.setState(XpathTreeItem.TreeItemState.MARK, this.cbMark.isSelected());
+			value.addRelation(bean, state);
+			switch (state)
+			{
+				case ADD:
+					this.treeViewWithRectangles.setState(state, this.cbAdd.isSelected());
+					break;
+				case MARK:
+					this.treeViewWithRectangles.setState(state, this.cbMark.isSelected());
+					break;
+				case QUESTION:
+					this.treeViewWithRectangles.setState(state, this.cbQuestion.isSelected());
+					break;
+			}
+//			this.treeViewWithRectangles.setState(state, this.cbMark.isSelected());
 		}
 	}
 

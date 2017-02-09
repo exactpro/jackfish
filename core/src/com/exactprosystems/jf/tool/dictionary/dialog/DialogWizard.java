@@ -15,8 +15,10 @@ import com.exactprosystems.jf.api.error.JFRemoteException;
 import com.exactprosystems.jf.documents.guidic.*;
 import com.exactprosystems.jf.documents.guidic.Window;
 import com.exactprosystems.jf.documents.guidic.controls.AbstractControl;
+import com.exactprosystems.jf.documents.guidic.controls.TreeItem;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.custom.xpath.ImageAndOffset;
+import com.exactprosystems.jf.tool.custom.xpath.XpathTreeItem;
 import com.exactprosystems.jf.tool.custom.xpath.XpathTreeItem.TreeItemState;
 import com.exactprosystems.jf.tool.custom.xpath.XpathViewer;
 import com.exactprosystems.jf.tool.dictionary.DictionaryFx;
@@ -638,28 +640,24 @@ public class DialogWizard
 
 	private void updateCountElement(ElementWizardBean bean)
 	{
-		int count = 0;
+		final int[] count = {0};
 		AbstractControl abstractControl = bean.getAbstractControl();
-		try
-		{
-		    Locator locator = abstractControl.locator();
-		    List<Node> nodeList = this.matcher.findAll(this.document, locator);
-		    count = nodeList.size();
-		    
-			if (count == 1)
+		Common.tryCatch(() -> {
+			Locator locator = abstractControl.locator();
+			List<Node> nodeList = this.matcher.findAll(this.document, locator);
+			count[0] = nodeList.size();
+
+			if (count[0] == 1)
 			{
-				this.controller.foundGreat(nodeList.get(0), bean);
+				this.controller.foundGreat(nodeList.get(0), bean, TreeItemState.MARK);
 			}
-			else if (count > 1)
+			else if (count[0] > 1)
 			{
-//				this.controller.foundBad(nodeList, bean); // where is this method?
+				Node bestIndex = findBestIndex(bean);
+				this.controller.foundGreat(bestIndex, bean, TreeItemState.QUESTION);
 			}
-		}
-		catch (Exception e)
-		{
-			DialogsHelper.showError("Xpath wrong. Double check it");
-		}
-		bean.setCount(count);
+		}, "Error on update count elements");
+		bean.setCount(count[0]);
 	}
 
 	private void displayElements()
