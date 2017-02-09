@@ -53,6 +53,7 @@ public class XpathTreeItem extends XpathItem
 		if (currentState == null)
 		{
 			this.currentState = TreeItemState.ADD;
+			this.addRelation(null, TreeItemState.ADD);
 		}
 		else if (currentState == TreeItemState.ADD)
 		{
