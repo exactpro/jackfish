@@ -532,7 +532,6 @@ public class Configuration extends AbstractDocument
 						logger.error(e.getMessage(), e);
 					}
 				}
-				this.libs.entrySet().removeIf(entry -> !nameSpaces.contains(entry.getKey()));
 			}
 			else
 			{
