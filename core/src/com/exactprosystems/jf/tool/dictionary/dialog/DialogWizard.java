@@ -1,3 +1,11 @@
+////////////////////////////////////////////////////////////////////////////////
+//  Copyright (c) 2009-2015, Exactpro Systems, LLC
+//  Quality Assurance & Related Development for Innovative Trading Systems.
+//  All rights reserved.
+//  This is unpublished, licensed software, confidential and proprietary
+//  information which is the property of Exactpro Systems, LLC or its licensors.
+////////////////////////////////////////////////////////////////////////////////
+
 package com.exactprosystems.jf.tool.dictionary.dialog;
 
 import com.exactprosystems.jf.api.app.*;
@@ -8,7 +16,6 @@ import com.exactprosystems.jf.documents.guidic.*;
 import com.exactprosystems.jf.documents.guidic.controls.AbstractControl;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.custom.xpath.ImageAndOffset;
-import com.exactprosystems.jf.tool.custom.xpath.XpathTreeItem;
 import com.exactprosystems.jf.tool.custom.xpath.XpathTreeItem.TreeItemState;
 import com.exactprosystems.jf.tool.custom.xpath.XpathViewer;
 import com.exactprosystems.jf.tool.dictionary.DictionaryFx;
@@ -17,9 +24,6 @@ import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-
-import javax.xml.xpath.*;
 import java.awt.*;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
@@ -34,26 +38,26 @@ import java.util.stream.IntStream;
 
 public class DialogWizard
 {
-	private static ExecutorService executor = Executors.newFixedThreadPool(1);
-	private DictionaryFx dictionary;
-	private IWindow window;
-	private IControl selfControl;
+    private static ExecutorService  executor = Executors.newFixedThreadPool(1);
+    private DictionaryFx            dictionary;
+    private IWindow                 window;
+    private IControl                selfControl;
 
-	private DialogWizardController controller;
-	private AppConnection appConnection;
-	private PluginInfo pluginInfo;
-	private WizardSettings wizardSettings;
+    private DialogWizardController  controller;
+    private AppConnection           appConnection;
+    private PluginInfo              pluginInfo;
+    private WizardSettings          wizardSettings;
+    private WizardMatcher           matcher;
+    private Document                document;
 
-	private Service<Document> documentService;
-	private Service<ImageAndOffset> imageService;
+    private Service<Document>       documentService;
+    private Service<ImageAndOffset> imageService;
 
-	private Rectangle dialogRectangle;
-	private int xOffset = 0;
-	private int yOffset = 0;
+    private Rectangle               dialogRectangle;
+    private int                     xOffset  = 0;
+    private int                     yOffset  = 0;
 
-	private Document document;
-
-	private Consumer<IWindow> consumer;
+    private Consumer<IWindow>       consumer;
 
 	public DialogWizard(DictionaryFx dictionary, IWindow window, AppConnection appConnection) throws Exception
 	{
@@ -62,6 +66,7 @@ public class DialogWizard
 		this.appConnection = appConnection;
 		this.pluginInfo = appConnection.getApplication().getFactory().getInfo();
 		this.wizardSettings = new WizardSettings(dictionary.getFactory().getSettings());
+		this.matcher = new WizardMatcher(this.pluginInfo);
 
 		this.controller = Common.loadController(DialogWizard.class.getResource("DialogWizard.fxml"));
 		this.controller.init(this, this.window.getName());
@@ -373,15 +378,7 @@ public class DialogWizard
 
     private List<Node> findAll(Locator locator) throws Exception
     {
-        // this.document;
-        String xpathStr = locator.getXpath();
-        XPath xpath = XPathFactory.newInstance().newXPath();
-        XPathExpression compile = xpath.compile(xpathStr);
-        NodeList nodeList = (NodeList) compile.evaluate(this.document.getDocumentElement(), XPathConstants.NODESET);
-        
-
-        // TODO need to implement
-        return Collections.emptyList();
+        return this.matcher.findAll(this.document, locator);
     }
 
 	private boolean isStable(String identifier)
@@ -627,38 +624,26 @@ public class DialogWizard
 
 	private void updateCountElement(ElementWizardBean bean)
 	{
-	    // TODO replace this
-
 		int count = 0;
-		if (bean.isXpath())
+		AbstractControl abstractControl = bean.getAbstractControl();
+		try
 		{
-			AbstractControl abstractControl = bean.getAbstractControl();
-
-
-			String xpathStr = abstractControl.getXpath();
-			XPath xpath = XPathFactory.newInstance().newXPath();
-			try
+		    Locator locator = abstractControl.locator();
+		    List<Node> nodeList = this.matcher.findAll(this.document, locator);
+		    count = nodeList.size();
+		    
+			if (count == 1)
 			{
-				XPathExpression compile = xpath.compile(xpathStr);
-				NodeList nodeList = (NodeList) compile.evaluate(this.document.getDocumentElement(), XPathConstants.NODESET);
-				count = nodeList.getLength();
-				if (count == 1)
-				{
-					this.controller.foundGreat(nodeList.item(0), bean);
-				}
-				else if (count > 1)
-				{
-					this.controller.foundBad(nodeList, bean);
-				}
+				this.controller.foundGreat(nodeList.get(0), bean);
 			}
-			catch (XPathExpressionException e)
+			else if (count > 1)
 			{
-				DialogsHelper.showError("Xpath wrong. Double check it");
+//				this.controller.foundBad(nodeList, bean); // where is this method?
 			}
 		}
-		else
+		catch (Exception e)
 		{
-			//TODO need some implementation for this
+			DialogsHelper.showError("Xpath wrong. Double check it");
 		}
 		bean.setCount(count);
 	}
