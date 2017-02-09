@@ -8,6 +8,7 @@ import org.w3c.dom.Node;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
 public class XpathTreeItem extends XpathItem
@@ -39,13 +40,8 @@ public class XpathTreeItem extends XpathItem
 	}
 
 	private boolean markIsVisible = true;
-
 	private List<BeanWithMark> list = new ArrayList<>();
-
-	@Deprecated
-	private static TreeItemState[] states = new TreeItemState[]{TreeItemState.ADD, TreeItemState.MARK, TreeItemState.QUESTION};
 	private TreeItemState currentState;
-	private int currentIndex = -1;
 
 	public XpathTreeItem(HBox box, Node node)
 	{
@@ -54,26 +50,37 @@ public class XpathTreeItem extends XpathItem
 
 	public void changeState()
 	{
-		if (currentIndex >= states.length - 1)
+		if (currentState == null)
 		{
-			currentState = null;
-			currentIndex = -1;
+			this.currentState = TreeItemState.ADD;
+		}
+		else if (currentState == TreeItemState.ADD)
+		{
+			this.currentState = null;
+			//remove all relation
+			this.list.clear();
 		}
 		else
 		{
-			currentState = states[++currentIndex];
+			this.currentState = TreeItemState.ADD;
 		}
 	}
 
-	public void setState(TreeItemState state)
+	public void addRelation(ElementWizardBean bean, TreeItemState state)
 	{
+		this.list.add(new BeanWithMark(bean, state));
 		this.currentState = state;
-		this.currentIndex = Arrays.asList(states).indexOf(this.currentState);
 	}
 
-	public void addRelation(ElementWizardBean bean, TreeItemState mark)
+	public void clearRelation(ElementWizardBean bean)
 	{
-		this.list.add(new BeanWithMark(bean, mark));
+		this.list.clear();
+		this.currentState = null;
+	}
+
+	public boolean contains(ElementWizardBean bean)
+	{
+		return this.list.stream().map(BeanWithMark::getBean).anyMatch(bean::equals);
 	}
 
 	public List<BeanWithMark> getList()

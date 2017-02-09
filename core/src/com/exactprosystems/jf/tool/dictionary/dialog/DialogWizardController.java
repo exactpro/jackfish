@@ -12,15 +12,19 @@ import com.exactprosystems.jf.tool.custom.controls.field.CustomFieldWithButton;
 import com.exactprosystems.jf.tool.custom.find.FindPanel;
 import com.exactprosystems.jf.tool.custom.find.IFind;
 import com.exactprosystems.jf.tool.custom.xpath.XpathTreeItem;
+import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
+import javafx.concurrent.Service;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
-import javafx.geometry.HPos;
-import javafx.geometry.Pos;
+import javafx.geometry.*;
+import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
+import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -41,6 +45,9 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -269,7 +276,6 @@ public class DialogWizardController implements Initializable, ContainingParent
 		XpathTreeItem value = byNode.getValue();
 		if (value != null)
 		{
-			value.setState(XpathTreeItem.TreeItemState.MARK);
 			value.addRelation(bean, XpathTreeItem.TreeItemState.MARK);
 			this.treeViewWithRectangles.setState(XpathTreeItem.TreeItemState.MARK, this.cbMark.isSelected());
 		}
@@ -280,7 +286,6 @@ public class DialogWizardController implements Initializable, ContainingParent
 		List<TreeItem<XpathTreeItem>> byNodes = this.treeViewWithRectangles.findByNodes(list);
 		byNodes.stream().map(TreeItem::getValue).filter(Objects::nonNull).forEach(item ->
 		{
-			item.setState(XpathTreeItem.TreeItemState.QUESTION);
 			item.addRelation(bean, XpathTreeItem.TreeItemState.QUESTION);
 		});
 		this.treeViewWithRectangles.setState(XpathTreeItem.TreeItemState.QUESTION, this.cbQuestion.isSelected());
@@ -291,6 +296,11 @@ public class DialogWizardController implements Initializable, ContainingParent
 		//TODO replace via style classes
 		this.btnGenerateOnOpen.setStyle("-fx-background-color : " + (!isOpenFilled ? "rgba(0,255,0, 0.1)" : "rgba(255,0,0, 0.1)"));
 		this.btnGenerateOnClose.setStyle("-fx-background-color : " + (!isCloseFilled ? "rgba(0,255,0, 0.1)" : "rgba(255,0,0, 0.1)"));
+	}
+
+	void clearAndAddRelation(ElementWizardBean bean)
+	{
+		this.treeViewWithRectangles.clearAndAddRelation(bean);
 	}
 
 	//region Action methods
@@ -316,14 +326,113 @@ public class DialogWizardController implements Initializable, ContainingParent
 
 	public void magic(ActionEvent actionEvent)
 	{
+		ExecutorService taskExecutor = Executors.newSingleThreadExecutor();
+
 		final List<XpathTreeItem> list = this.treeViewWithRectangles.getMarkedRows().stream().map(TreeItem::getValue).collect(Collectors.toList());
-		for (XpathTreeItem xpathTreeItem : list)
+		int sum = list.stream().mapToInt(x -> Math.max(1, x.getList().size())).sum();
+		if (sum == 0)
 		{
-			for (XpathTreeItem.BeanWithMark beanWithMark : xpathTreeItem.getList())
-			{
-				Common.tryCatch(() -> this.model.arrangeOne(xpathTreeItem.getNode(), beanWithMark.getBean(), beanWithMark.getState()), "Erron on arrange one");
-			}
+			DialogsHelper.showInfo("Nothing to update");
+			return;
 		}
+		Dialog<String> dialog = new Dialog<>();
+		dialog.setWidth(400.0);
+
+		BorderPane borderPane = new BorderPane();
+		borderPane.setPrefWidth(400.0);
+		Label lblInfo = new Label();
+		ProgressBar progressBar = new ProgressBar();
+		progressBar.setMaxWidth(Double.MAX_VALUE);
+		progressBar.setProgress(0);
+
+		Button btnStop = new Button("Stop");
+		btnStop.setOnAction(e -> {
+			dialog.setResult("");
+			taskExecutor.shutdownNow();
+			dialog.close();
+		});
+
+		borderPane.setTop(lblInfo);
+		borderPane.setCenter(progressBar);
+		borderPane.setBottom(btnStop);
+		BorderPane.setAlignment(btnStop, Pos.CENTER_RIGHT);
+		BorderPane.setMargin(btnStop, new Insets(8, 0, 0, 0));
+
+		dialog.getDialogPane().setContent(borderPane);
+		dialog.getDialogPane().setHeader(new Label());
+		dialog.setTitle("Updating elements");
+		dialog.show();
+
+		Service<Void> service = new Service<Void>()
+		{
+			@Override
+			protected Task<Void> createTask()
+			{
+				return new Task<Void>()
+				{
+					@Override
+					protected Void call() throws Exception
+					{
+						final int[] count = {0};
+						for (XpathTreeItem xpathTreeItem : list)
+						{
+							for (XpathTreeItem.BeanWithMark beanWithMark : xpathTreeItem.getList())
+							{
+								Thread.sleep(200);
+								Platform.runLater(() -> lblInfo.setText("Start updating item " + ++count[0] + " of " + sum));
+								Common.tryCatch(() -> model.arrangeOne(xpathTreeItem.getNode(), beanWithMark.getBean(), beanWithMark.getState()), "Error on arrange one");
+								Platform.runLater(() -> {
+									lblInfo.setText("End updating " + count[0] + " of " + sum);
+									progressBar.setProgress((double) count[0] / sum);
+								});
+							}
+						}
+						return null;
+					}
+				};
+			}
+		};
+		service.setExecutor(taskExecutor);
+		service.setOnSucceeded(e -> {
+			Common.tryCatch(() -> Thread.sleep(200), "");
+			System.out.println("set on successed");
+			dialog.setResult("");
+			dialog.close();
+		});
+		service.start();
+//		final int[] count = {0};
+//		for (XpathTreeItem xpathTreeItem : list)
+//		{
+//			for (XpathTreeItem.BeanWithMark beanWithMark : xpathTreeItem.getList())
+//			{
+//				Service<StringAndCount> service = new Service<StringAndCount>()
+//				{
+//					@Override
+//					protected Task<StringAndCount> createTask()
+//					{
+//						return new Task<StringAndCount>()
+//						{
+//							@Override
+//							protected StringAndCount call() throws Exception
+//							{
+//								model.arrangeOne(xpathTreeItem.getNode(), beanWithMark.getBean(), beanWithMark.getState());
+//								return new StringAndCount(++count[0], "My " + count[0]);
+//							}
+//						};
+//					}
+//				};
+//				service.setExecutor(taskExecutor);
+//				service.setOnSucceeded(e -> {
+//					StringAndCount stringAndCount = (StringAndCount) e.getSource().getValue();
+//					lblInfo.setText("Done " + stringAndCount.msg);
+//					progressBar.setProgress(((double) stringAndCount.count / sum));
+//				});
+//				service.setOnFailed(e -> {
+//
+//				});
+//				service.start();
+//			}
+//		}
 	}
 
 	public void generateOnOpen(ActionEvent actionEvent)

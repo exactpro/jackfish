@@ -185,7 +185,7 @@ public class TreeTableViewWithRectangles
 	{
 		List<TreeItem<XpathTreeItem>> list = new ArrayList<>();
 		TreeItem<XpathTreeItem> root = this.treeTableView.getRoot();
-		byPass(root, list, xpathTreeItem -> xpathTreeItem != null && xpathTreeItem.getList().contains(bean));
+		byPass(root, list, xpathTreeItem -> xpathTreeItem != null && xpathTreeItem.contains(bean));
 		if (list.size() == 1)
 		{
 			selectAndScroll(list.get(0));
@@ -302,6 +302,24 @@ public class TreeTableViewWithRectangles
 			this.treeTableView.getColumns().get(0).setVisible(false);
 			this.treeTableView.getColumns().get(0).setVisible(true);
 		});
+	}
+
+	public void clearAndAddRelation(ElementWizardBean bean)
+	{
+		List<TreeItem<XpathTreeItem>> list = new ArrayList<>();
+		byPass(this.treeTableView.getRoot(), list, x -> x != null && x.contains(bean));
+		list.forEach(item -> item.getValue().clearRelation(bean));
+
+		TreeItem<XpathTreeItem> selectedItem = this.treeTableView.getSelectionModel().getSelectedItem();
+		if (selectedItem == null)
+		{
+			this.treeTableView.getSelectionModel().selectFirst();
+		}
+		if (selectedItem != null)
+		{
+			selectedItem.getValue().addRelation(bean, XpathTreeItem.TreeItemState.ADD);
+		}
+		refresh();
 	}
 	//endregion
 
@@ -479,7 +497,7 @@ public class TreeTableViewWithRectangles
 						if (!relatedList.isEmpty())
 						{
 							Text text = new Text();
-							String collect = relatedList.stream().map(XpathTreeItem.BeanWithMark::getBean).map(ElementWizardBean::getId).collect(Collectors.joining(","));
+							String collect = relatedList.stream().map(XpathTreeItem.BeanWithMark::getBean).filter(Objects::nonNull).map(ElementWizardBean::getId).collect(Collectors.joining(","));
 							text.setText(collect);
 							text.setFill(value.getState().color());
 							customRectangle.setText(text);
@@ -559,6 +577,7 @@ public class TreeTableViewWithRectangles
 				if (!list.isEmpty())
 				{
 					String tooltip = list.stream()
+							.filter(beanWithMark -> beanWithMark.getBean() != null)
 							.map(bean -> bean.getBean().getId() + " ["+bean.getBean().getControlKind().name() + "]")
 							.collect(Collectors.joining("\n"));
 					this.setTooltip(new Tooltip(tooltip));

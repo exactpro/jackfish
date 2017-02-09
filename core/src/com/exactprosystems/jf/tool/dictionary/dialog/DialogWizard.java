@@ -572,7 +572,7 @@ public class DialogWizard
 
 	void updateRelation(ElementWizardBean bean)
 	{
-		System.out.println("<< Add implementation for relation");
+		this.controller.clearAndAddRelation(bean);
 	}
 
 	void findElements(List<ElementWizardBean> items)
