@@ -40,7 +40,7 @@ public class PluginInfo
         		.filter(e -> Arrays.stream(e.getValue()).anyMatch(s -> s.equals(node)))
         		.map(m -> m.getKey())
         		.findFirst();
-        return optional.get();
+        return optional.orElse(ControlKind.Any);
     }
     
 

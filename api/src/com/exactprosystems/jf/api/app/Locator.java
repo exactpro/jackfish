@@ -354,6 +354,33 @@ public class Locator implements Serializable
 	    return null;
 	}
 	
+	public void set(LocatorFieldKind kind, Object value)
+	{
+	    if (kind == null)
+	    {
+	        return;
+	    }
+	    
+	    switch (kind)
+        {
+            case UID:                   this.uid			= (String)value; return;
+            case CLAZZ:                 this.clazz			= (String)value; return;	
+            case XPATH:                 this.xpath			= (String)value; return;
+            case NAME:                  this.name			= (String)value; return;
+            case TITLE:                 this.title			= (String)value; return;
+            case ACTION:                this.action			= (String)value; return;
+            case TEXT:                  this.text			= (String)value; return;
+            case TOOLTIP:               this.tooltip		= (String)value; return;
+            
+            case EXPRESSION:            this.expression		= (String)value; return;
+            case COLUMNS:               this.columns		= (String)value; return;
+            case WEAK:                  this.weak			= (Boolean)value; return;
+            case ADDITION:              this.addition		= (Addition)value; return;
+            case VISIBILITY:            this.visibility		= (Visibility)value; return;
+            case USE_NUMERIC_HEADER:    this.useNumericHeader	= (Boolean)value; return;
+            case USE_ABSOLUTE_XPATH:    this.useAbsoluteXpath	= (Boolean)value; return;
+        }
+	}
 	
 	private boolean isDummy(String str)
 	{

@@ -284,15 +284,15 @@ public class DialogWizard
 		}
 
 		locator = locatorByAttr(id, kind,  node);
-		if (tryLocator(locator, node) == 1)
+		if (locator != null)
 		{
-			return locator.id(id).kind(kind);
+			return locator;
 		}
 
 		locator = locatorByXpath(id, kind,  node);
-		if (tryLocator(locator, node) == 1)
+		if (locator != null)
 		{
-			return locator.id(id).kind(kind);
+			return locator;
 		}
 
 		return null; // can't compile the such locator
@@ -318,10 +318,19 @@ public class DialogWizard
             return res;
         }
         String attrName = this.pluginInfo.attributeName(kind);
-        String attr = node.getAttributes().getNamedItem(attrName).getNodeValue();
-        if (!Str.IsNullOrEmpty(attr) && isStable(attr))
+        if (node.hasAttributes())
         {
-        	return attr;
+	        Node attrNode = node.getAttributes().getNamedItem(attrName);
+	        if (attrNode == null)
+	        {
+	        	return null;
+	        }
+	        		
+	        String attr = attrNode.getNodeValue();
+	        if (!Str.IsNullOrEmpty(attr) && isStable(attr))
+	        {
+	        	return attr;
+	        }
         }
         return null;
     }
@@ -356,14 +365,69 @@ public class DialogWizard
 
 	private Locator locatorByAttr(String id, ControlKind kind, Node node)
 	{
-		// TODO Auto-generated method stub
-		return null;
+        List<Pair> list = new ArrayList<>();
+		addAttr(list, node, LocatorFieldKind.UID);
+		addAttr(list, node, LocatorFieldKind.CLAZZ);
+		addAttr(list, node, LocatorFieldKind.NAME);
+		addAttr(list, node, LocatorFieldKind.TITLE);
+		addAttr(list, node, LocatorFieldKind.ACTION);
+		addAttr(list, node, LocatorFieldKind.TOOLTIP);
+		addAttr(list, node, LocatorFieldKind.TEXT);
+        
+        for (Pair pair : list)
+        {
+            Locator locator = new Locator().kind(kind).id(id);
+            locator.set(pair.kind, pair.value);
+            if (tryLocator(locator, node) == 1)
+            {
+                return locator;
+            }
+        }
+
+        return null;
+	}
+	
+	private static class Pair
+	{
+		public Pair(LocatorFieldKind kind, String value) 
+		{
+			this.kind = kind;
+			this.value = value;
+		}
+		
+		public LocatorFieldKind kind;
+		public String value;
+	}
+	
+	private void addAttr(List<Pair> list, Node node, LocatorFieldKind kind)
+	{
+		if (!node.hasAttributes())
+		{
+			return;
+		}
+		String attrName = this.pluginInfo.attributeName(kind);
+		Node attrNode = node.getAttributes().getNamedItem(attrName);
+		if (attrNode == null)
+		{
+			return;
+		}
+		String value = attrNode.getNodeValue();
+		if (isStable(value))
+		{
+			list.add(new Pair(kind, value));
+		}
 	}
 
 	private Locator locatorByXpath(String id, ControlKind kind, Node node)
 	{
-		// TODO Auto-generated method stub
-		return null;
+		String xpath = XpathViewer.fullXpath("", this.document, node, false, null, true);
+        Locator locator = new Locator().kind(kind).id(id).absoluteXpath(true).xpath(xpath);
+        if (tryLocator(locator, node) == 1)
+        {
+            return locator;
+        }
+
+        return null;
 	}
 
 	private int tryLocator(Locator locator, Node node)
