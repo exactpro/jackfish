@@ -60,8 +60,7 @@ public class GitBranch
 
 	void checkout(String branchName, String newBranchName) throws Exception
 	{
-		String newBranch = GitUtil.checkout(this.credentialBean, branchName, newBranchName);
-		System.out.println("Checkout to branch : " + newBranch);
+		GitUtil.checkout(this.credentialBean, branchName, newBranchName);
 		this.controller.updateBranches(GitUtil.getBranches(this.credentialBean));
 	}
 

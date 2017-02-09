@@ -109,7 +109,7 @@ public class GitBranchController implements Initializable, ContainingParent
 		inputDialog.getEditor().textProperty().addListener((observable, oldValue, newValue) -> {
 			if (newValue != null)
 			{
-				node.setDisable(anyMatch(local.getChildren(), newValue) || anyMatch(remote.getChildren(), newValue));
+				node.setDisable(anyMatch(local.getChildren(), newValue));
 			}
 		});
 		Optional<String> newName = inputDialog.showAndWait();
@@ -137,7 +137,7 @@ public class GitBranchController implements Initializable, ContainingParent
 		inputDialog.getEditor().textProperty().addListener((observable, oldValue, newValue) -> {
 			if (newValue != null)
 			{
-				node.setDisable(anyMatch(local.getChildren(), newValue) || anyMatch(remote.getChildren(), newValue));
+				node.setDisable(anyMatch(local.getChildren(), newValue));
 			}
 		});
 		Optional<String> newName = inputDialog.showAndWait();
@@ -153,12 +153,13 @@ public class GitBranchController implements Initializable, ContainingParent
 		{
 			TextInputDialog inputDialog = new TextInputDialog();
 			inputDialog.setTitle("Enter branch name");
+			inputDialog.getEditor().setText(selectedItem.getValue().getSimpleName());
 			inputDialog.getDialogPane().setHeader(new Label());
 			Node node = inputDialog.getDialogPane().lookupButton(ButtonType.OK);
 			inputDialog.getEditor().textProperty().addListener((observable, oldValue, newValue) -> {
 				if (newValue != null)
 				{
-					node.setDisable(anyMatch(local.getChildren(), newValue) || anyMatch(remote.getChildren(), newValue));
+					node.setDisable(anyMatch(local.getChildren(), newValue));
 				}
 			});
 			Optional<String> newName = inputDialog.showAndWait();
