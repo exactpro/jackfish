@@ -129,6 +129,10 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 			{
 				if (component.getTagName().equals("input"))
 				{
+					if(component.getAttribute("type").equals("checkbox"))
+					{
+						return component.getAttribute("name");
+					}
 					return component.getAttribute("value");
 				}
 				return component.getText();
@@ -1072,53 +1076,53 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 				switch (key)
 				{
 					case ESCAPE:
-						this.customAction.sendKeys( Keys.ESCAPE).perform();
+						this.customAction.sendKeys(Keys.ESCAPE).perform();
 						break;
 					case F1:
-						this.customAction.sendKeys( Keys.F1).perform();
+						this.customAction.sendKeys(Keys.F1).perform();
 						break;
 					case F2:
-						this.customAction.sendKeys( Keys.F2).perform();
+						this.customAction.sendKeys(Keys.F2).perform();
 						break;
 					case F3:
-						this.customAction.sendKeys( Keys.F3).perform();
+						this.customAction.sendKeys(Keys.F3).perform();
 						break;
 					case F4:
-						this.customAction.sendKeys( Keys.F4).perform();
+						this.customAction.sendKeys(Keys.F4).perform();
 						break;
 					case F5:
-						this.customAction.sendKeys( Keys.F5).perform();
+						this.customAction.sendKeys(Keys.F5).perform();
 						break;
 					case F6:
-						this.customAction.sendKeys( Keys.F6).perform();
+						this.customAction.sendKeys(Keys.F6).perform();
 						break;
 					case F7:
-						this.customAction.sendKeys( Keys.F7).perform();
+						this.customAction.sendKeys(Keys.F7).perform();
 						break;
 					case F8:
-						this.customAction.sendKeys( Keys.F8).perform();
+						this.customAction.sendKeys(Keys.F8).perform();
 						break;
 					case F9:
-						this.customAction.sendKeys( Keys.F9).perform();
+						this.customAction.sendKeys(Keys.F9).perform();
 						break;
 					case F10:
-						this.customAction.sendKeys( Keys.F10).perform();
+						this.customAction.sendKeys(Keys.F10).perform();
 						break;
 					case F11:
-						this.customAction.sendKeys( Keys.F11).perform();
+						this.customAction.sendKeys(Keys.F11).perform();
 						break;
 					case F12:
-						this.customAction.sendKeys( Keys.F12).perform();
+						this.customAction.sendKeys(Keys.F12).perform();
 						break;
 
 					case DIG1:
-						this.customAction.sendKeys( Keys.NUMPAD1).perform();
+						this.customAction.sendKeys(Keys.NUMPAD1).perform();
 						break;
 					case DIG2:
-						this.customAction.sendKeys( Keys.NUMPAD2).perform();
+						this.customAction.sendKeys(Keys.NUMPAD2).perform();
 						break;
 					case DIG3:
-						this.customAction.sendKeys( Keys.NUMPAD3).perform();
+						this.customAction.sendKeys(Keys.NUMPAD3).perform();
 						break;
 					case DIG4:
 						this.customAction.sendKeys(Keys.NUMPAD4).perform();
@@ -1417,6 +1421,10 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 			{
 				if (component.getTagName().equals("input"))
 				{
+					if(component.getAttribute("type").equals("checkbox"))
+					{
+						return String.valueOf(component.isSelected());
+					}
 					return component.getAttribute("value");
 				}
 				else if (component.getTagName().equals("select"))
