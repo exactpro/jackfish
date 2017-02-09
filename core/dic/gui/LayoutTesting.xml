@@ -5,7 +5,7 @@
             <panel id="body" xpath=".//body" useAbsoluteXpath="true"/>
         </self>
         <onOpen>
-            <wait ref="body" addition="WaitToAppear" timeout="5000"/>
+            <wait addition="WaitToAppear" timeout="5000"/>
         </onOpen>
         <run>
             <panel id="content" uid="content" class="" title="" text=""/>
@@ -20,13 +20,13 @@
             <panel id="MenuPanel" uid="menu"/>
         </self>
         <onOpen>
-            <wait id="00000" ref="MenuPanel" addition="WaitToAppear" timeout="5000"/>
+            <wait id="00000" addition="WaitToAppear" timeout="5000"/>
         </onOpen>
         <run>
             <button id="Item1" uid="" xpath=".//a[contains(text(), &amp;quot;Item 1&amp;quot;)]" useAbsoluteXpath="true" owner="MenuPanel" class="" name="" title="" text="Item 1">
                 <info>
                     <xpath>/div/ul/li[1]/a</xpath>
-                    <rectangle x1="0" y1="0" x2="61" y2="50"/>
+                    <rectangle x1="0.0" y1="0.0" x2="0.03288409703504044" y2="1.0"/>
                     <node>a</node>
                     <attr name="href">#</attr>
                 </info>
@@ -34,15 +34,15 @@
             <button id="Item2" uid="" xpath=".//a[contains(text(), &amp;quot;Item 2&amp;quot;)]" useAbsoluteXpath="true" owner="MenuPanel" class="" name="" title="" text="Item 2">
                 <info>
                     <xpath>/div/ul/li[2]/a</xpath>
-                    <rectangle x1="65" y1="0" x2="126" y2="50"/>
+                    <rectangle x1="0.03504043126684636" y1="0.0" x2="0.0679245283018868" y2="1.0"/>
                     <node>a</node>
                     <attr name="href">#</attr>
                 </info>
             </button>
-            <button id="Item3" uid="" xpath=".//a[contains(text(), &amp;quot;Item 3&amp;quot;)]" useAbsoluteXpath="true" owner="MenuPanel" class="" name="" title="" text="Item 3">
+            <button id="Item3" uid="" owner="MenuPanel" class="" name="" title="" text="Item 31">
                 <info>
                     <xpath>/div/ul/li[3]/a</xpath>
-                    <rectangle x1="130" y1="0" x2="191" y2="50"/>
+                    <rectangle x1="0.07008086253369272" y1="0.0" x2="0.10296495956873317" y2="1.0"/>
                     <node>a</node>
                     <attr name="href">#</attr>
                 </info>

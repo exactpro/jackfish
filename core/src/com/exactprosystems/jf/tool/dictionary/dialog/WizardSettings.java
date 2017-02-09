@@ -20,8 +20,8 @@ public class WizardSettings
     {
         for(Kind kind : Kind.values())
         {
-            SettingsValue min = settings.getValueOrDefault(Settings.GLOBAL_NS, Settings.WIZARD_NAME, kind.name() + "MIN", "0.0");
-            SettingsValue max = settings.getValueOrDefault(Settings.GLOBAL_NS, Settings.WIZARD_NAME, kind.name() + "MAX", "0.0");
+            SettingsValue min = settings.getValueOrDefault(Settings.GLOBAL_NS, Settings.WIZARD_NAME, kind.name() + "_MIN", "0.0");
+            SettingsValue max = settings.getValueOrDefault(Settings.GLOBAL_NS, Settings.WIZARD_NAME, kind.name() + "_MAX", "0.0");
             setMin(kind, Double.parseDouble(min.getValue()));
             setMax(kind, Double.parseDouble(max.getValue()));
         }
@@ -41,7 +41,8 @@ public class WizardSettings
             {
                 this.scale += getMax(kind);
             }
-            this.scale = 1/this.scale();
+            
+            this.scale = this.scale == 0.0 ? 1 : 1/this.scale();
         }
         
         return this.scale.doubleValue();

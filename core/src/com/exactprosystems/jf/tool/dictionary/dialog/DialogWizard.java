@@ -43,7 +43,7 @@ public class DialogWizard
 {
     private static ExecutorService  executor = Executors.newFixedThreadPool(1);
     private DictionaryFx            dictionary;
-    private Window                 window;
+    private Window                  window;
     private IControl                selfControl;
 
     private DialogWizardController  controller;
@@ -95,12 +95,13 @@ public class DialogWizard
         Map<Double, Node> candidates = new HashMap<>();
         
         passTree(this.document, node -> candidates.put(similarityFactor(node, kind, info), node));
-        Double maxKey = candidates.keySet().stream().max(Double::compare).get();
+        Double maxKey = candidates.keySet().stream().max(Double::compare).orElse(Double.MIN_VALUE);
         return maxKey != null && maxKey > this.wizardSettings.getThreshold() ? candidates.get(maxKey) : null;
     }
     
     private void passTree(Node node, Consumer<Node> func)
     {
+        func.accept(node);
         IntStream.range(0, node.getChildNodes().getLength())
             .mapToObj(node.getChildNodes()::item)
             .filter(item -> item.getNodeType() == Node.ELEMENT_NODE)
@@ -168,8 +169,9 @@ public class DialogWizard
             }
             sum += normalize(attrFactor, WizardSettings.Kind.PATH);
             
+            sum *= wizardSettings.scale();
             
-            return sum * wizardSettings.scale();
+            return sum; 
         }
         catch (Exception e)
         {
@@ -204,7 +206,6 @@ public class DialogWizard
     }
     
     //----------------------------------------------------------------------------------------------
-    // TODO
 	public void arrangeOne(Node node, ElementWizardBean bean, TreeItemState state) throws Exception
 	{
 		switch (state)
@@ -588,7 +589,7 @@ public class DialogWizard
 		this.controller.clearAndAddRelation(bean);
 	}
 
-	void findElements(List<ElementWizardBean> items)
+	void findElements(List<ElementWizardBean> items) throws Exception
 	{
 		for (ElementWizardBean item : items)
 		{
@@ -638,26 +639,34 @@ public class DialogWizard
 		return this.appConnection.getApplication().service();
 	}
 
-	private void updateCountElement(ElementWizardBean bean)
+	private void updateCountElement(ElementWizardBean bean) throws Exception
 	{
-		final int[] count = {0};
+		int count = 0;
+		Node found = null;
 		AbstractControl abstractControl = bean.getAbstractControl();
-		Common.tryCatch(() -> {
-			Locator locator = abstractControl.locator();
-			List<Node> nodeList = this.matcher.findAll(this.document, locator);
-			count[0] = nodeList.size();
+		Locator locator = abstractControl.locator();
+		List<Node> nodeList;
+        try
+        {
+            nodeList = this.matcher.findAll(this.document, locator);
+            count = nodeList.size();
+            found = count > 0 ? nodeList.get(0) : null;
+        }
+        catch (Exception e)
+        {
+            // nothing to do
+        }
 
-			if (count[0] == 1)
-			{
-				this.controller.foundGreat(nodeList.get(0), bean, TreeItemState.MARK);
-			}
-			else if (count[0] > 1)
-			{
-				Node bestIndex = findBestIndex(bean);
-				this.controller.foundGreat(bestIndex, bean, TreeItemState.QUESTION);
-			}
-		}, "Error on update count elements");
-		bean.setCount(count[0]);
+		if (count == 1)
+		{
+			this.controller.foundGreat(found, bean, TreeItemState.MARK);
+		}
+		else if (count > 1 || count == 0)
+		{
+			Node bestIndex = findBestIndex(bean);
+			this.controller.foundGreat(bestIndex, bean, TreeItemState.QUESTION);
+		}
+		bean.setCount(count);
 	}
 
 	private void displayElements()
@@ -683,7 +692,7 @@ public class DialogWizard
 		bean.setControlKind(control.getBindedClass());
 		bean.setId(control.getID());
 		bean.setIsNew(true);
-		bean.setXpath((control.getXpath() != null && !control.getXpath().isEmpty()) || control.useAbsoluteXpath());
+		bean.setXpath((control.getXpath() != null && !control.getXpath().isEmpty()));
 	}
 	//endregion
 }
