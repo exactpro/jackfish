@@ -73,8 +73,6 @@ public class Section implements ISection, Mutable
 
 	public static Section createCopy(Section section) throws Exception
 	{
-	    System.err.println("@@@@ Section.createCopy");
-	    
 		Section newSection = new Section();
 		newSection.setSection(section.window, section.getSectionKind());
 		newSection.controls = new MutableArrayList<>();

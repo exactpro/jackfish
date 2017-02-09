@@ -104,11 +104,6 @@ public class WizardMatcher
             sb.append(separator); separator = " and ";
             sb.append(String.format("@" + idName + "='%s'", locator.getUid()));
         }
-//        if (locator.getXpath() != null)
-//        {
-//            sb.append(separator); separator = " and ";
-//            sb.append(String.format("(%s)", locator.getXpath()));
-//        }
         if (locator.getClazz() != null)
         {
             for (String part : locator.getClazz().split(" "))

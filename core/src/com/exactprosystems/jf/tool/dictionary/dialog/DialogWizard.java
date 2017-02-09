@@ -13,6 +13,7 @@ import com.exactprosystems.jf.api.app.IWindow.SectionKind;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.error.JFRemoteException;
 import com.exactprosystems.jf.documents.guidic.*;
+import com.exactprosystems.jf.documents.guidic.Window;
 import com.exactprosystems.jf.documents.guidic.controls.AbstractControl;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.custom.xpath.ImageAndOffset;
@@ -40,7 +41,7 @@ public class DialogWizard
 {
     private static ExecutorService  executor = Executors.newFixedThreadPool(1);
     private DictionaryFx            dictionary;
-    private IWindow                 window;
+    private Window                 window;
     private IControl                selfControl;
 
     private DialogWizardController  controller;
@@ -62,7 +63,7 @@ public class DialogWizard
 	public DialogWizard(DictionaryFx dictionary, IWindow window, AppConnection appConnection) throws Exception
 	{
 		this.dictionary = dictionary;
-		this.window = window;
+		this.window = (Window)window;
 		this.appConnection = appConnection;
 		this.pluginInfo = appConnection.getApplication().getFactory().getInfo();
 		this.wizardSettings = new WizardSettings(dictionary.getFactory().getSettings());
@@ -213,10 +214,8 @@ public class DialogWizard
 					if (locator != null)
 					{
 					    AbstractControl control = AbstractControl.create(locator, this.selfControl.getID());
-						ElementWizardBean newBean = create(0, control, true);
-	                    updateExtraInfo(this.window, node, control, state);
+	                    updateExtraInfo(this.window, node, control);
 	                	this.window.addControl(SectionKind.Run, control);
-	                	newBean.setAbstractControl(control);
 					}
 				}
 				else
@@ -225,17 +224,16 @@ public class DialogWizard
 					if (locator != null)
 					{
 					    AbstractControl control = AbstractControl.create(locator, this.selfControl.getID());
-	                    updateExtraInfo(this.window, node, bean.getAbstractControl(), state);
-	                    this.window.removeControl(bean.getAbstractControl());
-	                	this.window.addControl(SectionKind.Run, control);
-	                    bean.setAbstractControl(control);
+	                    updateExtraInfo(this.window, node, bean.getAbstractControl());
+	                    Section section = (Section)this.window.getSection(SectionKind.Run);
+	                    section.replaceControl(bean.getAbstractControl(), control);
 					}
 				}
-			    // TODO how to make controller to update table?
+                displayElements();
 				break;
 
 			case MARK:
-				updateExtraInfo(this.window, node, bean.getAbstractControl(), state);
+				updateExtraInfo(this.window, node, bean.getAbstractControl());
 				break;
 
 			case QUESTION:
@@ -243,7 +241,7 @@ public class DialogWizard
 		}
 	}
 
-	private void updateExtraInfo(IWindow window, Node node, AbstractControl control, TreeItemState state) throws Exception
+	private void updateExtraInfo(IWindow window, Node node, AbstractControl control) throws Exception
     {
 		ExtraInfo info = new ExtraInfo();
 		Rectangle rec = (Rectangle)node.getUserData(IRemoteApplication.rectangleName);
@@ -299,18 +297,31 @@ public class DialogWizard
 
 	private String composeId(Node node)
 	{
-		// TODO done it
+        String res = null;
 		if (node.hasAttributes())
 		{
-			String idName = this.pluginInfo.attributeName(LocatorFieldKind.UID);
-			String id = node.getAttributes().getNamedItem(idName).getNodeValue();
-			if (!Str.IsNullOrEmpty(id) && isStable(id))
-			{
-				return id;
-			}
+	        res = composeFromAttr(res, node, LocatorFieldKind.UID);
+            res = composeFromAttr(res, node, LocatorFieldKind.NAME);
+            res = composeFromAttr(res, node, LocatorFieldKind.TITLE);
+            res = composeFromAttr(res, node, LocatorFieldKind.ACTION);
 		}
-		return null;
+		return res;
 	}
+
+    private String composeFromAttr(String res, Node node, LocatorFieldKind kind)
+    {
+        if (res != null)
+        {
+            return res;
+        }
+        String attrName = this.pluginInfo.attributeName(kind);
+        String attr = node.getAttributes().getNamedItem(attrName).getNodeValue();
+        if (!Str.IsNullOrEmpty(attr) && isStable(attr))
+        {
+        	return attr;
+        }
+        return null;
+    }
 
 	private ControlKind composeKind(Node node)
 	{
@@ -318,24 +329,27 @@ public class DialogWizard
 		return this.pluginInfo.controlKindByNode(name);
 	}
 
-	private Locator locatorById(String id, ControlKind kind, Node node)
-	{
-		if (node.hasAttributes())
-		{
-			String idName = this.pluginInfo.attributeName(LocatorFieldKind.UID);
-			Node nodeId = node.getAttributes().getNamedItem(idName);
-			String uid = nodeId.getNodeValue();
-			if (isStable(uid))
-			{
-				Locator locator = new Locator().kind(kind).id(id).uid(uid);
-				if (tryLocator(locator, node) == 1)
-				{
-					return locator;
-				}
-			}
-		}
-		return null;
-	}
+    private Locator locatorById(String id, ControlKind kind, Node node)
+    {
+        if (node.hasAttributes())
+        {
+            String idName = this.pluginInfo.attributeName(LocatorFieldKind.UID);
+            Node nodeId = node.getAttributes().getNamedItem(idName);
+            if (nodeId != null)
+            {
+                String uid = nodeId.getNodeValue();
+                if (isStable(uid))
+                {
+                    Locator locator = new Locator().kind(kind).id(id).uid(uid);
+                    if (tryLocator(locator, node) == 1)
+                    {
+                        return locator;
+                    }
+                }
+            }
+        }
+        return null;
+    }
 
 	private Locator locatorByAttr(String id, ControlKind kind, Node node)
 	{
