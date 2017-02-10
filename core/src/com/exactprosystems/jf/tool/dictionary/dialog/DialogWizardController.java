@@ -96,11 +96,17 @@ public class DialogWizardController implements Initializable, ContainingParent
 		this.paneTreeView.setCenter(this.treeViewWithRectangles.getContent());
 
 		this.imageViewWithScale.setClickConsumer(this.treeViewWithRectangles::selectItem);
-		this.treeViewWithRectangles.setTreeViewConsumer(xpathItem ->
+		this.treeViewWithRectangles.addSelectionConsumer(xpathItem ->
 		{
 			if (xpathItem != null)
 			{
 				this.imageViewWithScale.displayRectangle(xpathItem.getRectangle());
+			}
+		});
+		this.treeViewWithRectangles.addSelectionConsumer(xpathTreeItem -> {
+			if (xpathTreeItem != null)
+			{
+				//TODO which bean we need select into table?
 			}
 		});
 		this.treeViewWithRectangles.setDisplayMarkedRowsConsumer(list -> this.imageViewWithScale.displayMarkedRectangle(list));
@@ -421,7 +427,7 @@ public class DialogWizardController implements Initializable, ContainingParent
 		service.setExecutor(taskExecutor);
 		service.setOnSucceeded(e -> {
 			Common.tryCatch(() -> Thread.sleep(200), "");
-			System.out.println("set on successed");
+			Common.tryCatch(() -> model.findElements(this.tableView.getItems()), "Error on find elements");
 			dialog.setResult("");
 			dialog.close();
 		});
@@ -790,7 +796,7 @@ public class DialogWizardController implements Initializable, ContainingParent
 					btnRelation.setTooltip(new Tooltip("Set relation"));
 					btnRelation.getStyleClass().add(CssVariables.TRANSPARENT_BACKGROUND);
 					btnRelation.setOnAction(e -> model.updateRelation(item));
-					box.getChildren().addAll(btnEdit, btnRemove, btnRelation);
+					box.getChildren().addAll(btnEdit, btnRelation, btnRemove);
 					setGraphic(box);
 				}
 				else
