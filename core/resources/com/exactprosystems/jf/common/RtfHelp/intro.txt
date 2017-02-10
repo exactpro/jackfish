@@ -31,7 +31,7 @@ It is possible to edit scenarios in any text editor, but we find that built-in J
 
 A GUI dictionary is an xml file in that describes all dialogs (web pages) and GUI controls the users need. In test scenarios, the users refer to GUI controls from dictionaries using only their names. The dictionary allows separating the process of searching GUI elements from the business logic. The dictionary can be filled manually or by capturing the elements automatically from the application under tests.
 
-{{!System!}} {{!Requirements!}}
+{{!System Requirements!}}
 The configuration of JF is in a quite simple xml file where all needed entities are described. It includes plug-ins, dictionaries, routine user libraries, etc. 
 
 {{&The systems requirements are as follows:&}} 

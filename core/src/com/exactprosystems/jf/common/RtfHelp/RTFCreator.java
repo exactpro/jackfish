@@ -124,28 +124,30 @@ class RTFCreator {
         contents.add(p(fontSize(40, "Contents:")));
         contents.add(p());
         contents.add(p(text("1. "), text (" "), hyperlink(link + "Introduction", p("Introduction"))));
-        contents.add(p(text("2. "), text (" "), hyperlink(link + "MVEL", p("MVEL"))));
-        contents.add(p("3. Actions: "));
+        contents.add(p(text("2. "), text (" "), hyperlink(link + "Architecture", p("Architecture"))));
+        contents.add(p(text("3. "), text (" "), hyperlink(link + "Requirements", p("System Requirements"))));
+        contents.add(p(text("4. "), text (" "), hyperlink(link + "MVEL", p("MVEL"))));
+        contents.add(p("5. Actions: "));
         int count = 0;
         int innerCount = 0;
         for( Map.Entry<String, List<RtfActionsHelper>> entry  : actionGroups.entrySet())
         {
             count++;
-            contents.add(p(tab(), fontSize(fontSize, " 3." + count + " "), fontSize(fontSize, " " + entry.getKey())));
+            contents.add(p(tab(), fontSize(fontSize, " 5." + count + " "), fontSize(fontSize, " " + entry.getKey())));
             for (RtfActionsHelper s : entry.getValue())
             {
                 innerCount++;
-                contents.add(p(tab(), tab(), fontSize(fontSize, " 3." + count + "." + innerCount + " " ), fontSize(fontSize, " "), hyperlink(link + s.getName(), p(fontSize(fontSize, s.getName())))));
+                contents.add(p(tab(), tab(), fontSize(fontSize, " 5." + count + "." + innerCount + " " ), fontSize(fontSize, " "), hyperlink(link + s.getName(), p(fontSize(fontSize, s.getName())))));
             }
             innerCount = 0;
         }
 
-        contents.add(p("4. Items: "));
+        contents.add(p("6. Items: "));
         count = 0;
         for(String name : itemsName)
         {
             count++;
-            contents.add(p(tab(), fontSize(fontSize, " 4." + count + " "), fontSize(fontSize, " "), hyperlink(link + name, p(fontSize(fontSize, name)))));
+            contents.add(p(tab(), fontSize(fontSize, " 6." + count + " "), fontSize(fontSize, " "), hyperlink(link + name, p(fontSize(fontSize, name)))));
         }
         writeContents();
     }
@@ -194,9 +196,9 @@ class RTFCreator {
                     List<RtfText> seeAlsoText = new ArrayList<>();
                     String[] seeAlso = classAnnotations.seeAlso().split(",");
                     Arrays.asList(seeAlso).forEach(r-> {
-                                String q = r.replaceAll("(?U)[\\pP\\s]", "");
-                                seeAlsoText.add(hyperlink(link + q, p(fontSize(fontSize, q))));
-                                seeAlsoText.add(fontSize(fontSize, " "));
+                                String q = replaceChars(r);
+                                seeAlsoText.add(hyperlink(link + q, pard(fontSize(fontSize, q))));
+                                seeAlsoText.add(fontSize(fontSize, ", "));
                             }
                     );
                     actions.add(p(italic(fontSize(fontSize, "See also:"))));
@@ -238,7 +240,6 @@ class RTFCreator {
         }
 
     }
-
 
     private void createItemsManual(String className, MatrixItemAttribute classAnnotation)
     {
@@ -384,7 +385,7 @@ class RTFCreator {
                 createFirstPageFormat(),
                 p(),
                 p(font(2, fontSize(48, "JackFish")),  text("FirstPageLine")),
-                p(font(2, fontSize(36, "General Information"))),
+                p(font(2, fontSize(36, "User guide"))),
                 p(),
                 row("Version:", VersionInfo.getVersion()),
                 row(text("Release date:"), currentDate)
@@ -484,6 +485,19 @@ class RTFCreator {
                         sb.setLength(0);
                     }
                 }
+                else if (line.contains("{{!") && line.contains("!}}")) //code
+                {
+                    for (int i = 0; i < strs.length; i++){
+                        sb.append(replaceChars(strs[i]));
+                        if (i != strs.length -1){
+                            sb.append(" ");
+                        }
+                    }
+                    if (sb.length() != 0){
+                        list.add(p(tab(), tab(), tab(), tab(), font(2, fontSize(30, sb.toString()+trait)), lineBreak()));
+                        sb.setLength(0);
+                    }
+                }
                 else
                 {
                     for (String s : strs)
@@ -516,10 +530,6 @@ class RTFCreator {
                         else if (s.equals("PutIntroPictureHere"))
                         {
                             list.add(p(picture(pictureIntro).type(RtfPicture.PictureType.PNG)));
-                        }
-                        else if (s.contains("{{!") && s.contains("!}}"))
-                        {
-                            list.add(p(tab(), tab(), tab(), tab(), font(2, fontSize(30, replaceChars(s))), lineBreak()));
                         }
                         else
                         {
