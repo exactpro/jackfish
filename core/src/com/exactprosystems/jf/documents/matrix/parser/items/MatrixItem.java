@@ -931,13 +931,13 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
         
         if (Arrays.stream(when).anyMatch(a -> screenshotKind == a))
         {
-            ImageWrapper imageWrapper = null;  
+//            ImageWrapper screenshot = null;  
             
             if (connection instanceof AppConnection && !isErrorStage)
             {
                 try
                 {
-                    imageWrapper = ((AppConnection)connection).getApplication().service().getImage(null, null);
+                    screenshot = ((AppConnection)connection).getApplication().service().getImage(null, null);
                 }
                 catch (Exception e)
                 {
@@ -945,17 +945,17 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
                 }
             }
             
-            if (imageWrapper == null)
+            if (screenshot == null)
             {
                 Rectangle desktopRect = new Rectangle(Toolkit.getDefaultToolkit().getScreenSize());
                 BufferedImage image = new java.awt.Robot().createScreenCapture(desktopRect);
-                imageWrapper =  new ImageWrapper(image);
+                screenshot =  new ImageWrapper(image);
             }
             
-            imageWrapper.setDescription("" + when[0]);
+            screenshot.setDescription("" + when[0]);
             if (row != null)
             {
-                row.put(Context.screenshotColumn,    imageWrapper);
+                row.put(Context.screenshotColumn,    screenshot);
             }
         }
     }
