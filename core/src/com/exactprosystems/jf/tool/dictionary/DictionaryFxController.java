@@ -76,10 +76,6 @@ public class DictionaryFxController implements Initializable, ContainingParent
 	{
 		this.listView = new CustomListView<>(true);
 		this.splitPane.getItems().add(listView);
-		this.listView.setPrefHeight(150);
-		this.listView.setMaxHeight(400);
-		this.listView.setMinHeight(100);
-		this.splitPane.setDividerPosition(1, 0.85);
 	}
 
 	public void saved(String name)

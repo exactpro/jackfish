@@ -8,22 +8,21 @@
    information which is the property of Exactpro Systems, LLC or its licensors.
   -->
 
-<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.layout.*?>
 <?import java.lang.Double?>
 <BorderPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.exactprosystems.jf.tool.dictionary.DictionaryFxController">
 	<center>
-		<SplitPane fx:id="splitPane" dividerPositions="0.85" orientation="VERTICAL">
+		<SplitPane fx:id="splitPane"  orientation="VERTICAL" >
 			<items>
-				<ScrollPane fitToHeight="true" fitToWidth="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" pannable="true" prefHeight="878.0" prefWidth="1457.0">
+				<ScrollPane  SplitPane.resizableWithParent="false"  fitToHeight="true" fitToWidth="true" maxHeight="900" maxWidth="1.7976931348623157E308" pannable="true" minHeight="680"  prefHeight="700.0" prefWidth="1457.0">
 					<content>
-						<GridPane fx:id="mainGridPane" alignment="CENTER">
+						<GridPane fx:id="mainGridPane"  alignment="CENTER" >
 							<fx:define>
-								<Double fx:id="widthNavigation" fx:value="870.0"/>
+								<Double fx:id="widthNavigation" fx:value="767.0"/>
 								<Double fx:id="widthInfo" fx:value="600.0"/>
-								<Double fx:id="height" fx:value="400.0"/>
+								<Double fx:id="height" fx:value="375.0"/>
 								<Double fx:id="heightActions" fx:value="300.0"/>
 							</fx:define>
 							<columnConstraints>

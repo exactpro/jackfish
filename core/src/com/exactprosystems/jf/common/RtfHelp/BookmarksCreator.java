@@ -27,16 +27,24 @@ public class BookmarksCreator extends FileWriter{
     @Override
     public Writer append(CharSequence csq) throws IOException {
         String[] strs = csq.toString().split("\\s+");
+        boolean addSpace = true;
         if (strs.length > 1){
             StringBuilder result = new StringBuilder();
             for (int k = 0; k < strs.length; k++){
                 String s = strs[k];
+                addSpace = true;
                 if (s.contains("123456789"))
                 {
                     int indexOne = s.indexOf("1");
                     String sBookmark = s.substring(0, indexOne);
                     String r = s.replace(s, "{\\bkmkstart " +sBookmark+ "}{\\bkmkend " + sBookmark +"}" + s.replace("123456789", ""));
                     result.append(r);
+                }
+                else if (s.contains("987654321"))
+                {
+                    String r = s.replace("987654321", "");
+                    result.append(r);
+                    addSpace = false;
                 }
                 else if (s.contains("WriteLine"))
                 {
@@ -70,7 +78,7 @@ public class BookmarksCreator extends FileWriter{
                 {
                     result.append(s);
                 }
-                if (k != strs.length -1)
+                if ((k != strs.length -1) && addSpace)
                 {
                     result.append(" ");
                 }
@@ -113,6 +121,10 @@ public class BookmarksCreator extends FileWriter{
             else if(s.contains("\\{\\{`") || s.contains("`\\}\\}") || s.contains("`\\}\\}\\{\\{`"))
             {
                 return super.append(s.replace("\\{\\{`", " \\par\\qd ").replace("`\\}\\}", " \\par\\qd ").replace("`\\}\\}\\{\\{`", " \\par\\qd "));
+            }
+            else if (s.contains("987654321"))
+            {
+                return super.append(s.replace("987654321", ""));
             }
             else
             {

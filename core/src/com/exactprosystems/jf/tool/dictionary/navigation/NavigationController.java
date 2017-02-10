@@ -126,7 +126,7 @@ public class NavigationController implements Initializable, ContainingParent
 			scrollPaneWindow.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
 			scrollPaneWindow.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
 			Node dialog = BorderWrapper.wrap(this.vBoxWindow).title("Dialog").color(Common.currentTheme().getReverseColor()).build();
-			double width = 375.0;
+			double width = 350.0;
 			((Region) dialog).setMinWidth(width);
 			((Region) dialog).setMaxWidth(width);
 			((Region) dialog).setPrefWidth(width);
@@ -139,9 +139,10 @@ public class NavigationController implements Initializable, ContainingParent
 			scrollPaneElement.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
 			scrollPaneElement.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
 			Node element = BorderWrapper.wrap(this.vBoxElement).title("Element").color(Common.currentTheme().getReverseColor()).build();
-			((Region) element).setMinWidth(width);
-			((Region) element).setMaxWidth(width);
-			((Region) element).setPrefWidth(width);
+			double widthForElement = 316;
+			((Region) element).setMinWidth(widthForElement);
+			((Region) element).setMaxWidth(widthForElement);
+			((Region) element).setPrefWidth(widthForElement);
 			((HBox)this.pane).getChildren().add(element);
 			HBox.setHgrow(element, Priority.ALWAYS);
 
