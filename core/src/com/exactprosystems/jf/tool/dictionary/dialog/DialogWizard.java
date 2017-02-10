@@ -15,10 +15,8 @@ import com.exactprosystems.jf.api.error.JFRemoteException;
 import com.exactprosystems.jf.documents.guidic.*;
 import com.exactprosystems.jf.documents.guidic.Window;
 import com.exactprosystems.jf.documents.guidic.controls.AbstractControl;
-import com.exactprosystems.jf.documents.guidic.controls.TreeItem;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.custom.xpath.ImageAndOffset;
-import com.exactprosystems.jf.tool.custom.xpath.XpathTreeItem;
 import com.exactprosystems.jf.tool.custom.xpath.XpathTreeItem.TreeItemState;
 import com.exactprosystems.jf.tool.custom.xpath.XpathViewer;
 import com.exactprosystems.jf.tool.dictionary.DictionaryFx;
@@ -41,6 +39,8 @@ import java.util.stream.IntStream;
 
 public class DialogWizard
 {
+    private static final double     NEAREST_PARENT_FACTOR = 0.6;
+    
     private static ExecutorService  executor = Executors.newFixedThreadPool(1);
     private DictionaryFx            dictionary;
     private Window                  window;
@@ -420,7 +420,31 @@ public class DialogWizard
 
 	private Locator locatorByXpath(String id, ControlKind kind, Node node)
 	{
-		String xpath = XpathViewer.fullXpath("", this.document, node, false, null, true);
+        String xpath = XpathViewer.fullXpath("", this.document, node, false, null, true);
+        
+        String[] parts = xpath.split("/");
+        int stepLimit = Math.max(1, (int)(parts.length * NEAREST_PARENT_FACTOR));
+
+        List<String> parameters = new ArrayList<>();
+        parameters.add(this.pluginInfo.attributeName(LocatorFieldKind.UID));
+
+        Node parent = node; 
+        for (int level = 0; level < stepLimit; level++)
+        {
+            parent = parent.getParentNode();
+            String relativePath = XpathViewer.fullXpath("", null, parent, false, parameters, false);
+            Locator relativeLocator = new Locator().kind(kind).id(id).absoluteXpath(true).xpath(relativePath);
+            if (tryLocator(relativeLocator, parent) == 1)
+            {
+                String finalPath = XpathViewer.fullXpath(relativePath, parent, node, false, null, false);
+                Locator finalLocator = new Locator().kind(kind).id(id).absoluteXpath(true).xpath(finalPath);
+                if (tryLocator(finalLocator, node) == 1)
+                {
+                    return finalLocator;
+                }
+            }
+        }
+	    
         Locator locator = new Locator().kind(kind).id(id).absoluteXpath(true).xpath(xpath);
         if (tryLocator(locator, node) == 1)
         {
