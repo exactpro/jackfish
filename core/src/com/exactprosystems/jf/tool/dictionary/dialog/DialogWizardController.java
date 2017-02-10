@@ -166,18 +166,21 @@ public class DialogWizardController implements Initializable, ContainingParent
 	{
 		if (document != null)
 		{
-			this.treeViewWithRectangles.displayDocument(document, xOffset, yOffset);
-			this.model.findElements(this.tableView.getItems());
-			BufferedImage image = this.imageViewWithScale.getImage();
-			this.imageViewWithScale.setListRectangles(this.treeViewWithRectangles.buildMap(image.getWidth(), image.getHeight(), new Dimension(image.getWidth() / 16, image.getHeight() / 16)));
-			this.hBoxToolbar.getChildren().forEach(node -> node.setDisable(false));
-			this.tableView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) ->
-			{
-				if (newValue != null)
-				{
-					this.treeViewWithRectangles.selectItem(newValue);
-				}
-			});
+		    Common.tryCatch(() -> 
+		    {
+    			this.treeViewWithRectangles.displayDocument(document, xOffset, yOffset);
+    			this.model.findElements(this.tableView.getItems());
+    			BufferedImage image = this.imageViewWithScale.getImage();
+    			this.imageViewWithScale.setListRectangles(this.treeViewWithRectangles.buildMap(image.getWidth(), image.getHeight(), new Dimension(image.getWidth() / 16, image.getHeight() / 16)));
+    			this.hBoxToolbar.getChildren().forEach(node -> node.setDisable(false));
+    			this.tableView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) ->
+    			{
+    				if (newValue != null)
+    				{
+    					this.treeViewWithRectangles.selectItem(newValue);
+    				}
+    			});
+		    }, "Error on display tree");
 		}
 	}
 
@@ -279,6 +282,10 @@ public class DialogWizardController implements Initializable, ContainingParent
 
 	void foundGreat(Node node, ElementWizardBean bean, XpathTreeItem.TreeItemState state)
 	{
+	    if (node == null)
+	    {
+	        return;
+	    }
 		TreeItem<XpathTreeItem> byNode = this.treeViewWithRectangles.findByNode(node);
 		XpathTreeItem value = byNode.getValue();
 		if (value != null)

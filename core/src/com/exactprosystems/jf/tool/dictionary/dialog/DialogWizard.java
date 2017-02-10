@@ -43,7 +43,7 @@ public class DialogWizard
 {
     private static ExecutorService  executor = Executors.newFixedThreadPool(1);
     private DictionaryFx            dictionary;
-    private Window                 window;
+    private Window                  window;
     private IControl                selfControl;
 
     private DialogWizardController  controller;
@@ -95,12 +95,13 @@ public class DialogWizard
         Map<Double, Node> candidates = new HashMap<>();
         
         passTree(this.document, node -> candidates.put(similarityFactor(node, kind, info), node));
-        Double maxKey = candidates.keySet().stream().max(Double::compare).get();
+        Double maxKey = candidates.keySet().stream().max(Double::compare).orElse(Double.MIN_VALUE);
         return maxKey != null && maxKey > this.wizardSettings.getThreshold() ? candidates.get(maxKey) : null;
     }
     
     private void passTree(Node node, Consumer<Node> func)
     {
+        func.accept(node);
         IntStream.range(0, node.getChildNodes().getLength())
             .mapToObj(node.getChildNodes()::item)
             .filter(item -> item.getNodeType() == Node.ELEMENT_NODE)
@@ -168,8 +169,9 @@ public class DialogWizard
             }
             sum += normalize(attrFactor, WizardSettings.Kind.PATH);
             
+            sum *= wizardSettings.scale();
             
-            return sum * wizardSettings.scale();
+            return sum; 
         }
         catch (Exception e)
         {
@@ -204,7 +206,6 @@ public class DialogWizard
     }
     
     //----------------------------------------------------------------------------------------------
-    // TODO
 	public void arrangeOne(Node node, ElementWizardBean bean, TreeItemState state) throws Exception
 	{
 		switch (state)
@@ -283,15 +284,15 @@ public class DialogWizard
 		}
 
 		locator = locatorByAttr(id, kind,  node);
-		if (tryLocator(locator, node) == 1)
+		if (locator != null)
 		{
-			return locator.id(id).kind(kind);
+			return locator;
 		}
 
 		locator = locatorByXpath(id, kind,  node);
-		if (tryLocator(locator, node) == 1)
+		if (locator != null)
 		{
-			return locator.id(id).kind(kind);
+			return locator;
 		}
 
 		return null; // can't compile the such locator
@@ -317,10 +318,19 @@ public class DialogWizard
             return res;
         }
         String attrName = this.pluginInfo.attributeName(kind);
-        String attr = node.getAttributes().getNamedItem(attrName).getNodeValue();
-        if (!Str.IsNullOrEmpty(attr) && isStable(attr))
+        if (node.hasAttributes())
         {
-        	return attr;
+	        Node attrNode = node.getAttributes().getNamedItem(attrName);
+	        if (attrNode == null)
+	        {
+	        	return null;
+	        }
+	        		
+	        String attr = attrNode.getNodeValue();
+	        if (!Str.IsNullOrEmpty(attr) && isStable(attr))
+	        {
+	        	return attr;
+	        }
         }
         return null;
     }
@@ -355,14 +365,69 @@ public class DialogWizard
 
 	private Locator locatorByAttr(String id, ControlKind kind, Node node)
 	{
-		// TODO Auto-generated method stub
-		return null;
+        List<Pair> list = new ArrayList<>();
+		addAttr(list, node, LocatorFieldKind.UID);
+		addAttr(list, node, LocatorFieldKind.CLAZZ);
+		addAttr(list, node, LocatorFieldKind.NAME);
+		addAttr(list, node, LocatorFieldKind.TITLE);
+		addAttr(list, node, LocatorFieldKind.ACTION);
+		addAttr(list, node, LocatorFieldKind.TOOLTIP);
+		addAttr(list, node, LocatorFieldKind.TEXT);
+        
+        for (Pair pair : list)
+        {
+            Locator locator = new Locator().kind(kind).id(id);
+            locator.set(pair.kind, pair.value);
+            if (tryLocator(locator, node) == 1)
+            {
+                return locator;
+            }
+        }
+
+        return null;
+	}
+	
+	private static class Pair
+	{
+		public Pair(LocatorFieldKind kind, String value) 
+		{
+			this.kind = kind;
+			this.value = value;
+		}
+		
+		public LocatorFieldKind kind;
+		public String value;
+	}
+	
+	private void addAttr(List<Pair> list, Node node, LocatorFieldKind kind)
+	{
+		if (!node.hasAttributes())
+		{
+			return;
+		}
+		String attrName = this.pluginInfo.attributeName(kind);
+		Node attrNode = node.getAttributes().getNamedItem(attrName);
+		if (attrNode == null)
+		{
+			return;
+		}
+		String value = attrNode.getNodeValue();
+		if (isStable(value))
+		{
+			list.add(new Pair(kind, value));
+		}
 	}
 
 	private Locator locatorByXpath(String id, ControlKind kind, Node node)
 	{
-		// TODO Auto-generated method stub
-		return null;
+		String xpath = XpathViewer.fullXpath("", this.document, node, false, null, true);
+        Locator locator = new Locator().kind(kind).id(id).absoluteXpath(true).xpath(xpath);
+        if (tryLocator(locator, node) == 1)
+        {
+            return locator;
+        }
+
+        return null;
 	}
 
 	private int tryLocator(Locator locator, Node node)
@@ -588,7 +653,7 @@ public class DialogWizard
 		this.controller.clearAndAddRelation(bean);
 	}
 
-	void findElements(List<ElementWizardBean> items)
+	void findElements(List<ElementWizardBean> items) throws Exception
 	{
 		for (ElementWizardBean item : items)
 		{
@@ -638,26 +703,34 @@ public class DialogWizard
 		return this.appConnection.getApplication().service();
 	}
 
-	private void updateCountElement(ElementWizardBean bean)
+	private void updateCountElement(ElementWizardBean bean) throws Exception
 	{
-		final int[] count = {0};
+		int count = 0;
+		Node found = null;
 		AbstractControl abstractControl = bean.getAbstractControl();
-		Common.tryCatch(() -> {
-			Locator locator = abstractControl.locator();
-			List<Node> nodeList = this.matcher.findAll(this.document, locator);
-			count[0] = nodeList.size();
+		Locator locator = abstractControl.locator();
+		List<Node> nodeList;
+        try
+        {
+            nodeList = this.matcher.findAll(this.document, locator);
+            count = nodeList.size();
+            found = count > 0 ? nodeList.get(0) : null;
+        }
+        catch (Exception e)
+        {
+            // nothing to do
+        }
 
-			if (count[0] == 1)
-			{
-				this.controller.foundGreat(nodeList.get(0), bean, TreeItemState.MARK);
-			}
-			else if (count[0] > 1)
-			{
-				Node bestIndex = findBestIndex(bean);
-				this.controller.foundGreat(bestIndex, bean, TreeItemState.QUESTION);
-			}
-		}, "Error on update count elements");
-		bean.setCount(count[0]);
+		if (count == 1)
+		{
+			this.controller.foundGreat(found, bean, TreeItemState.MARK);
+		}
+		else if (count > 1 || count == 0)
+		{
+			Node bestIndex = findBestIndex(bean);
+			this.controller.foundGreat(bestIndex, bean, TreeItemState.QUESTION);
+		}
+		bean.setCount(count);
 	}
 
 	private void displayElements()
@@ -683,7 +756,7 @@ public class DialogWizard
 		bean.setControlKind(control.getBindedClass());
 		bean.setId(control.getID());
 		bean.setIsNew(true);
-		bean.setXpath((control.getXpath() != null && !control.getXpath().isEmpty()) || control.useAbsoluteXpath());
+		bean.setXpath((control.getXpath() != null && !control.getXpath().isEmpty()));
 	}
 	//endregion
 }

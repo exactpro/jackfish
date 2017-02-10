@@ -6,6 +6,7 @@ import com.exactprosystems.jf.actions.ActionsList;
 import com.exactprosystems.jf.common.version.VersionInfo;
 import com.exactprosystems.jf.documents.matrix.parser.Parser;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItemAttribute;
+import com.exactprosystems.jf.api.common.DateTime;
 
 import com.tutego.jrtf.*;
 import static com.tutego.jrtf.Rtf.rtf;
@@ -16,8 +17,6 @@ import static com.tutego.jrtf.RtfText.*;
 
 import javax.lang.model.type.NullType;
 import javax.swing.text.BadLocationException;
-import javax.swing.text.Document;
-import javax.swing.text.rtf.RTFEditorKit;
 
 import java.io.*;
 import java.lang.annotation.Annotation;
@@ -33,17 +32,20 @@ class RTFCreator {
 
     private static Rtf document = rtf();
     private static Help rtfHelp = new Help();
+    private static String currentDate = new DateTime().str("dd LLLL YYYY");
     private final String documentName = "JackFish " + VersionInfo.getVersion() + ".rtf";
     private List<RtfPara> items = new ArrayList<>();
     private List<RtfPara> actions = new ArrayList<>();
     private List<RtfPara> contents = new ArrayList<>();
     private List<RtfPara> mvels = new ArrayList<>();
+    private List<RtfPara> intro = new ArrayList<>();
     private Map<String, List<RtfActionsHelper>> actionGroups = new HashMap<>();
     private List<String> itemsName = new ArrayList<>();
     private static final String workDir = System.getProperty("user.dir");
     private final String path =  workDir + File.separator + documentName;
-    private final String link = "file:///" + path + "#";
+    private final String link = "#";
     private final String trait = "123456789";
+    private final URL pictureIntro = rtfHelp.introPicture();
     private final URL pictureHeader = rtfHelp.header();
     private final URL pictureFooter = rtfHelp.footer();
     private final URL introduction = rtfHelp.introduction();
@@ -72,6 +74,12 @@ class RTFCreator {
     {
         RtfPara[] arr = new RtfPara[contents.size()];
         document.section(createSectionFormat(), contents.toArray(arr));
+    }
+
+    private void writeIntro() throws IOException
+    {
+        RtfPara[] arr = new RtfPara[intro.size()];
+        document.section(createSectionFormat(), intro.toArray(arr));
     }
 
     private RtfSectionFormatAndHeaderFooter createSectionFormat() throws MalformedURLException{
@@ -374,18 +382,32 @@ class RTFCreator {
         document.header(color(233, 157, 80), font("WriteFonts"));
         document.section(
                 createFirstPageFormat(),
-                p(fontSize(fontSize, "Title page " + VersionInfo.getVersion())));
+                p(),
+                p(font(2, fontSize(48, "JackFish")),  text("FirstPageLine")),
+                p(font(2, fontSize(36, "General Information"))),
+                p(),
+                row("Version:", VersionInfo.getVersion()),
+                row(text("Release date:"), currentDate)
+        );
+        document.section(
+                createSectionFormat(),
+                p(font(2, fontSize(30, "Document Information"))),
+                p(),
+                row(bold("Date"), bold("Version"), bold("By"), bold("Comments")),
+                row(currentDate, VersionInfo.getVersion(), "Valery Florov", "Initial Draft"),
+                p(),
+                p(font(2, fontSize(30, "Abbreviations"))),
+                p(),
+                row(bold("Abbreviation"), bold("Meaning")),
+                row("JF", "JackFish")
+        );
     }
 
     private void createDescription() throws IOException, BadLocationException
     {
-        InputStream is = introduction.openStream();
-        RTFEditorKit rtfParser = new RTFEditorKit();
-        Document doc = rtfParser.createDefaultDocument();
-        rtfParser.read(is, doc, 0);
-        String text = doc.getText(0, doc.getLength());
-
-        document.section(createSectionFormat(), p(tab(), tab(), tab(), tab(), fontSize(40, "Introduction" + trait), lineBreak()), p(fontSize(fontSize, text)));
+        intro.add(p(tab(), tab(), tab(), tab(), font(2, fontSize(30, "Introduction" + trait)), lineBreak()));
+        createDocumentation(introduction, intro);
+        writeIntro();
     }
 
     private String replaceChars (String s)
@@ -397,13 +419,13 @@ class RTFCreator {
                 .replace("{{-", "").replace("-}}", "")  //cell
                 .replace("{{$", "").replace("$}}", "")  //italic
                 .replace("{{#", "").replace("#}}", "")  //code
+                .replace("{{!", "").replace("!}}", "")  //header
                 .replace("{{@", "").replace("@}}", ""); //link
     }
 
-    private void mvelDocumentation() throws IOException
+    private void createDocumentation(URL url, List<RtfPara> list) throws IOException
     {
-        mvels.add(p(tab(), tab(), tab(), tab(), fontSize(40, "MVEL" + trait), lineBreak()));
-        BufferedReader br = new BufferedReader(new FileReader( new File(mvelDoc.getFile())));
+        BufferedReader br = new BufferedReader(new FileReader( new File(url.getFile())));
         for(String line; (line = br.readLine()) != null; ) {
             String[] strs = line.split("\\s+");
             ArrayList<RtfText> text = new ArrayList<>();
@@ -444,11 +466,11 @@ class RTFCreator {
                         }
                         else
                         {
-                            System.out.println("mvelDocumentation! " + s);
+                            System.out.println("Documentation! " + s);
                         }
                     }
                     RtfText[] arr = new RtfText[text.size()];
-                    mvels.add(row(text.toArray(arr)));
+                    list.add(row(text.toArray(arr)));
                     text.clear();
                 }
                 else if (line.contains("{{#") && line.contains("#}}")) //code
@@ -458,7 +480,7 @@ class RTFCreator {
                         sb.append(replaceChars(s)).append(" ");
                     }
                     if (sb.length() != 0){
-                        mvels.add(p(font(1, fontSize(fontSize, sb.toString()))));
+                        list.add(p(font(1, fontSize(fontSize, sb.toString()))));
                         sb.setLength(0);
                     }
                 }
@@ -470,10 +492,10 @@ class RTFCreator {
                             if (sb.length() !=0){
                                 text.add(fontSize(fontSize, sb.toString()));
                                 text.add(fontSize(fontSize, " "));
-                                mvels.add(p(fontSize(fontSize, sb.toString())));
+                                list.add(p(fontSize(fontSize, sb.toString())));
                                 sb.setLength(0);
                             }
-                            mvels.add(p(font(2, fontSize(fontSize, replaceChars(s)))));
+                            list.add(p(font(2, fontSize(fontSize, replaceChars(s)))));
                         }
                         else if (s.startsWith("{{&"))
                         {
@@ -483,13 +505,21 @@ class RTFCreator {
                         else if (header && s.contains("&}}"))
                         {
                             sb.append(replaceChars(s));
-                            mvels.add(p(font(2, fontSize(fontSize, sb.toString()))));
+                            list.add(p(font(2, fontSize(fontSize, sb.toString()))));
                             sb.setLength(0);
                             header = false;
                         }
                         else if (header)
                         {
                             sb.append(s).append(" ");
+                        }
+                        else if (s.equals("PutIntroPictureHere"))
+                        {
+                            list.add(p(picture(pictureIntro).type(RtfPicture.PictureType.PNG)));
+                        }
+                        else if (s.contains("{{!") && s.contains("!}}"))
+                        {
+                            list.add(p(tab(), tab(), tab(), tab(), font(2, fontSize(30, replaceChars(s))), lineBreak()));
                         }
                         else
                         {
@@ -500,7 +530,7 @@ class RTFCreator {
                         text.add(fontSize(fontSize, sb.toString()));
                         text.add(fontSize(fontSize, " "));
                         RtfText[] arr = new RtfText[text.size()];
-                        mvels.add(p(text.toArray(arr)));
+                        list.add(p(text.toArray(arr)));
                         text.clear();
                     }
                 }
@@ -509,18 +539,28 @@ class RTFCreator {
             {
                 if (strs[0].contains("{{&") && strs[0].contains("&}}"))
                 {
-                    mvels.add(p(font(2, fontSize(fontSize, replaceChars(strs[0])))));
+                    list.add(p(font(2, fontSize(fontSize, replaceChars(strs[0])))));
                 }
                 else if (strs[0].contains("{{#") && strs[0].contains("#}}"))
                 {
-                    mvels.add(p(font(1, fontSize(fontSize, replaceChars(strs[0])))));
+                    list.add(p(font(1, fontSize(fontSize, replaceChars(strs[0])))));
+                }
+                else if (strs[0].equals("PutIntroPictureHere"))
+                {
+                    list.add(p(picture(pictureIntro).type(RtfPicture.PictureType.PNG)));
                 }
                 else
                 {
-                    mvels.add(p(fontSize(fontSize, replaceChars(strs[0]))));
+                    list.add(p(fontSize(fontSize, replaceChars(strs[0]))));
                 }
             }
         }
+    }
+
+    private void mvelDocumentation() throws IOException
+    {
+        mvels.add(p(tab(), tab(), tab(), tab(), font(2, fontSize(30, "MVEL" + trait)), lineBreak()));
+        createDocumentation(mvelDoc, mvels);
         writeMvel();
     }
 
@@ -539,7 +579,7 @@ class RTFCreator {
         List<RtfActionsHelper> sql = new ArrayList<>();
         List<RtfActionsHelper> matrix = new ArrayList<>();
 
-        actions.add(p(tab(),tab(), tab(),tab(), fontSize(40, "Actions" + trait), lineBreak()));
+        actions.add(p(tab(),tab(), tab(),tab(), font(2, fontSize(30, "Actions" + trait)), lineBreak()));
         for (Class<?> clazz : ActionsList.actions)
         {
             ActionAttribute classAnnotation = null;
@@ -628,7 +668,7 @@ class RTFCreator {
 
     void getAnnotationsForItems() throws IOException, BadLocationException
     {
-        items.add(p(tab(),tab(), tab(),tab(), fontSize(40, "Items" + trait), lineBreak()));
+        items.add(p(tab(),tab(), tab(),tab(), font(2, fontSize(30, "Items" + trait)), lineBreak()));
         for (Class<?> clazz : Parser.knownItems){
             MatrixItemAttribute classAnnotation = null;
             boolean deprecated = false;

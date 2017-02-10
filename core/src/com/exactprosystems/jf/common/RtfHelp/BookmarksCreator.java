@@ -46,6 +46,10 @@ public class BookmarksCreator extends FileWriter{
                 {
                     result.append(s.replace("WriteTopLine", "\\pard \\brdrt \\brdrs\\brdrw30\\brsp20\\brdrcf0 "));
                 }
+                else if (s.contains("FirstPageLine"))
+                {
+                    result.append(s.replace("FirstPageLine", "\\pard \\brdrb \\brdrs\\brdrw50\\brsp20\\brdrcf0 "));
+                }
                 else if (s.contains("WriteFonts"))
                 {
                     result.append(s.replace("WriteFonts", "Arial;}{\\f1\\fcharset1 Courier;}{\\f2\\fcharset2 FS Lola ExtraBold"));
@@ -93,6 +97,10 @@ public class BookmarksCreator extends FileWriter{
             else if (s.contains("WriteFonts"))
             {
                 return super.append(s.replace("WriteFonts", "Arial;}{\\f1\\fcharset1 Courier;}{\\f2\\fcharset2 FS Lola ExtraBold"));
+            }
+            else if (s.contains("FirstPageLine"))
+            {
+                return super.append(s.replace("FirstPageLine", "\\pard \\brdrb \\brdrs\\brdrw50\\brsp20\\brdrcf0 "));
             }
             else if (s.equals("\\par"))
             {
