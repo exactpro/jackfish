@@ -333,6 +333,14 @@ public class TreeTableViewWithRectangles
 		}
 		refresh();
 	}
+
+	public void removeBean(ElementWizardBean bean)
+	{
+		List<TreeItem<XpathTreeItem>> list = new ArrayList<>();
+		byPass(this.treeTableView.getRoot(), list, xpathTreeItem -> xpathTreeItem != null && xpathTreeItem.contains(bean));
+		list.forEach(e -> e.getValue().clearRelation(bean));
+		refresh();
+	}
 	//endregion
 
 	//region private methods

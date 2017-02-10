@@ -239,6 +239,7 @@ public class DialogWizardController implements Initializable, ContainingParent
 	List<ElementWizardBean> remove(ElementWizardBean bean)
 	{
 		this.tableView.getItems().remove(bean);
+		this.treeViewWithRectangles.removeBean(bean);
 		return this.tableView.getItems();
 	}
 
