@@ -36,10 +36,12 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 public class DialogWizard
 {
-    private static final double     NEAREST_PARENT_FACTOR = 0.6;
+    private static final double     NEAREST_PARENT_FACTOR = 0.5;
+    private static final int		MAX_TRIES = 128;
     
     private static ExecutorService  executor = Executors.newFixedThreadPool(1);
     private DictionaryFx            dictionary;
@@ -374,18 +376,38 @@ public class DialogWizard
 		addAttr(list, node, LocatorFieldKind.TOOLTIP);
 		addAttr(list, node, LocatorFieldKind.TEXT);
         
-        for (Pair pair : list)
-        {
-            Locator locator = new Locator().kind(kind).id(id);
-            locator.set(pair.kind, pair.value);
-            if (tryLocator(locator, node) == 1)
-            {
-                return locator;
-            }
-        }
-
+		List<List<Pair>> cases = IntStream.range(1, 1 << list.size())
+			.boxed()
+			.sorted((a,b) -> Integer.bitCount(a) - Integer.bitCount(b))
+			.limit(MAX_TRIES)
+			.map(e -> shuffle(e, list))
+			.collect(Collectors.toList());
+		
+		for (List<Pair> caze : cases) 
+		{
+			Locator locator = new Locator().kind(kind).id(id);
+			caze.forEach(p -> locator.set(p.kind, p.value));
+			if (tryLocator(locator, node) == 1) 
+			{
+				return locator;
+			}
+		}
+        
         return null;
 	}
+	
+	private static List<Pair> shuffle(int mask, List<Pair> source)
+	{
+		List<Pair> res = new ArrayList<>();
+		int oneBit = 0;
+		while((oneBit = Integer.lowestOneBit(mask)) != 0)
+		{
+			res.add(source.get(Integer.numberOfTrailingZeros(mask)));
+			mask ^= oneBit;
+		}
+		return res;
+	}
+	
 	
 	private static class Pair
 	{
