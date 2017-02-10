@@ -51,6 +51,7 @@
 								<Tooltip text="Paste copied dialog"/>
 							</tooltip>
 						</Button>
+						<Label id="$horMin"/>
 						<Button id="btnWizard" fx:id="btnShowWizard" mnemonicParsing="false" onAction="#openWizard" styleClass="$transparentBackground">
 							<tooltip>
 								<Tooltip text="Open dialog wizard"/>
@@ -60,7 +61,7 @@
 				</HBox>
 			</children>
 		</VBox>
-		<Label id="$horMax"/>
+		<!--<Label id="$horMax"/>-->
 		<VBox HBox.hgrow="ALWAYS" alignment="CENTER_LEFT" maxWidth="100" minWidth="100" prefWidth="100">
 			<children>
 				<RadioButton id="Self" mnemonicParsing="false" onAction="#changeSection" text="Self">
@@ -78,7 +79,7 @@
 				<RadioButton id="Close" mnemonicParsing="false" onAction="#changeSection" text="Close" toggleGroup="$groupSection"/>
 			</children>
 		</VBox>
-		<Label id="$horMax"/>
+		<!--<Label id="$horMax"/>-->
 		<VBox HBox.hgrow="ALWAYS" prefHeight="200.0" prefWidth="100.0" fx:id="vBoxElement" GridPane.columnIndex="2">
 			<children>
 				<Label id="$verMid"/>
