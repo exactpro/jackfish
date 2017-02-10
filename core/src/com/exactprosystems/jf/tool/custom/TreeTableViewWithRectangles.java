@@ -8,6 +8,7 @@ import com.exactprosystems.jf.tool.custom.layout.CustomRectangle;
 import com.exactprosystems.jf.tool.custom.layout.LayoutExpressionBuilderController;
 import com.exactprosystems.jf.tool.custom.xpath.XpathTreeItem;
 import com.exactprosystems.jf.tool.custom.xpath.XpathViewer;
+import com.exactprosystems.jf.tool.dictionary.dialog.DialogWizardController;
 import com.exactprosystems.jf.tool.dictionary.dialog.ElementWizardBean;
 import com.sun.javafx.scene.control.skin.TreeTableViewSkin;
 import javafx.application.Platform;
@@ -44,6 +45,8 @@ public class TreeTableViewWithRectangles
 
 	private Node waitingNode;
 
+	private DialogWizardController controller;
+
 	private List<Consumer<XpathTreeItem>> selectionConsumers = new ArrayList<>();
 	private Consumer<List<CustomRectangle>> markedRowsConsumer;
 
@@ -55,8 +58,9 @@ public class TreeTableViewWithRectangles
 		put(XpathTreeItem.TreeItemState.QUESTION, true);
 	}};
 
-	public TreeTableViewWithRectangles()
+	public TreeTableViewWithRectangles(DialogWizardController dialogWizardController)
 	{
+		this.controller = dialogWizardController;
 		this.anchorPane = new AnchorPane();
 		this.treeTableView = new TreeTableView<>();
 		this.treeTableView.setSkin(new MyCustomSkin(this.treeTableView));
@@ -99,7 +103,9 @@ public class TreeTableViewWithRectangles
 				if (treeItem != null)
 				{
 					XpathTreeItem xpathTreeItem = treeItem.getValue();
+					this.controller.changeStateCount(-1, xpathTreeItem.getState());
 					xpathTreeItem.changeState();
+					this.controller.changeStateCount(+1, xpathTreeItem.getState());
 					this.displayMarkedRows();
 					refresh();
 				}
@@ -189,6 +195,7 @@ public class TreeTableViewWithRectangles
 		List<TreeItem<XpathTreeItem>> list = new ArrayList<>();
 		TreeItem<XpathTreeItem> root = this.treeTableView.getRoot();
 		byPass(root, list, xpathTreeItem -> xpathTreeItem != null && xpathTreeItem.contains(bean));
+		this.treeTableView.getSelectionModel().clearSelection();
 		if (list.size() == 1)
 		{
 			selectAndScroll(list.get(0));
@@ -320,7 +327,9 @@ public class TreeTableViewWithRectangles
 		}
 		if (selectedItem != null)
 		{
+			this.controller.changeStateCount(-1, selectedItem.getValue().getState() == null ? XpathTreeItem.TreeItemState.ADD : selectedItem.getValue().getState());
 			selectedItem.getValue().addRelation(bean, XpathTreeItem.TreeItemState.ADD);
+			this.controller.changeStateCount(1, selectedItem.getValue().getState());
 		}
 		refresh();
 	}

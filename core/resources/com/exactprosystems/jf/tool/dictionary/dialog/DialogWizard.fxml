@@ -10,6 +10,7 @@
 <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1000.0" prefWidth="1500.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.exactprosystems.jf.tool.dictionary.dialog.DialogWizardController">
 	<fx:define>
 		<CssVariables fx:id="transparentBackground" fx:constant="TRANSPARENT_BACKGROUND"/>
+		<CssVariables fx:id="boldLabel" fx:constant="BOLD_LABEL"/>
 		<CssVariables fx:id="verMin" fx:constant="VERTICAL_MIN"/>
 		<CssVariables fx:id="verMid" fx:constant="VERTICAL_MID"/>
 		<CssVariables fx:id="verMax" fx:constant="VERTICAL_MAX"/>
@@ -47,8 +48,8 @@
 														<Label text="Dialog : " GridPane.halignment="RIGHT" />
 														<TextField fx:id="tfDialogName" GridPane.columnIndex="1" />
 														<Label text="Self id : " GridPane.columnIndex="2" GridPane.halignment="RIGHT" />
-														<Label fx:id="lblSelfId" GridPane.columnIndex="3" GridPane.halignment="LEFT" />
-														<HBox GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+														<Label fx:id="lblSelfId" GridPane.columnIndex="3" GridPane.halignment="LEFT" styleClass="$boldLabel"/>
+														<HBox GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.valignment="CENTER" alignment="CENTER_RIGHT">
 															<children>
 																<Button fx:id="btnGenerateOnOpen" onAction="#generateOnOpen" text="On open" />
 																<Label id="$horMid"/>

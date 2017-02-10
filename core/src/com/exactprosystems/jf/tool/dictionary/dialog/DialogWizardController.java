@@ -92,7 +92,7 @@ public class DialogWizardController implements Initializable, ContainingParent
 		this.imageViewWithScale = new ImageViewWithScale();
 		this.verSplitPane.getItems().add(0, this.imageViewWithScale.getContent());
 
-		this.treeViewWithRectangles = new TreeTableViewWithRectangles();
+		this.treeViewWithRectangles = new TreeTableViewWithRectangles(this);
 		this.paneTreeView.setCenter(this.treeViewWithRectangles.getContent());
 
 		this.imageViewWithScale.setClickConsumer(this.treeViewWithRectangles::selectItem);
@@ -296,7 +296,9 @@ public class DialogWizardController implements Initializable, ContainingParent
 		XpathTreeItem value = byNode.getValue();
 		if (value != null)
 		{
+			this.changeStateCount(-1, value.getState());
 			value.addRelation(bean, state);
+			this.changeStateCount(1, value.getState());
 			switch (state)
 			{
 				case ADD:
@@ -313,16 +315,6 @@ public class DialogWizardController implements Initializable, ContainingParent
 		}
 	}
 
-	void foundBad(NodeList list, ElementWizardBean bean)
-	{
-		List<TreeItem<XpathTreeItem>> byNodes = this.treeViewWithRectangles.findByNodes(list);
-		byNodes.stream().map(TreeItem::getValue).filter(Objects::nonNull).forEach(item ->
-		{
-			item.addRelation(bean, XpathTreeItem.TreeItemState.QUESTION);
-		});
-		this.treeViewWithRectangles.setState(XpathTreeItem.TreeItemState.QUESTION, this.cbQuestion.isSelected());
-	}
-
 	void displayOnButtons(boolean isOpenFilled, boolean isCloseFilled)
 	{
 		//TODO replace via style classes
@@ -333,6 +325,31 @@ public class DialogWizardController implements Initializable, ContainingParent
 	void clearAndAddRelation(ElementWizardBean bean)
 	{
 		this.treeViewWithRectangles.clearAndAddRelation(bean);
+	}
+
+	public void changeStateCount(int count, XpathTreeItem.TreeItemState state)
+	{
+		if (state == null)
+		{
+			return;
+		}
+		CheckBox box = null;
+		switch (state)
+		{
+			case ADD:
+				box = this.cbAdd;
+				break;
+			case MARK:
+				box = this.cbMark;
+				break;
+			case QUESTION:
+				box = this.cbQuestion;
+				break;
+		}
+		String text = box.getText();
+		text = text.isEmpty() ? "0" : text;
+		int current = Integer.parseInt(text);
+		box.setText(String.valueOf(current + count));
 	}
 
 	//region Action methods
