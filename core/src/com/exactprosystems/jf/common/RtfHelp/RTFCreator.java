@@ -350,7 +350,7 @@ class RTFCreator {
                 if (s.contains("{{@") || s.contains("@}}"))
                 {
                     String name = replaceChars(s);
-                    result.add(hyperlink(link + name, p(fontSize(fontSize, name))));
+                    result.add(hyperlink(link + name, p(fontSize(fontSize, name+reverseTrait))));
                     result.add(fontSize(fontSize, " "));
                 }
                 else if (s.contains("{{$") || s.contains("$}}"))
@@ -392,20 +392,20 @@ class RTFCreator {
                 p(font(2, fontSize(48, "JackFish")),  text("FirstPageLine")),
                 p(font(2, fontSize(36, "User guide"))),
                 p(),
-                row("Version:", VersionInfo.getVersion()),
-                row(text("Release date:"), currentDate)
+                row(fontSize(fontSize, "Version:"), fontSize(fontSize, VersionInfo.getVersion())),
+                row(fontSize(fontSize, "Release date:"), fontSize(fontSize, currentDate))
         );
         document.section(
                 createSectionFormat(),
                 p(font(2, fontSize(30, "Document Information"))),
                 p(),
-                row(bold("Date"), bold("Version"), bold("By"), bold("Comments")),
-                row(currentDate, VersionInfo.getVersion(), "Valery Florov", "Initial Draft"),
+                row(fontSize(fontSize, bold("Date")), fontSize(fontSize, bold("Version")), fontSize(fontSize, bold("By")), fontSize(fontSize, bold("Comments"))),
+                row(fontSize(fontSize, currentDate), fontSize(fontSize, VersionInfo.getVersion()), fontSize(fontSize, "Valery Florov"), fontSize(fontSize, "Initial Draft")),
                 p(),
                 p(font(2, fontSize(30, "Abbreviations"))),
                 p(),
-                row(bold("Abbreviation"), bold("Meaning")),
-                row("JF", "JackFish")
+                row(fontSize(fontSize, bold("Abbreviation")), fontSize(fontSize, bold("Meaning"))),
+                row(fontSize(fontSize, "JF"), fontSize(fontSize, "JackFish"))
         );
     }
 

@@ -294,9 +294,9 @@ public class HTMLReportBuilder extends ReportBuilder
 		writer.fwrite("<th scope='row'>%03d</th>", item.getNumber());
 		writer.fwrite("<td>%s</td>", itemId);
 		writer.fwrite("<td><a href='javascript:void(0)' class='showBody'>%s</a></td>", item.getItemName());
-		writer.fwrite("<td id='hs_%s'></td>", id);
-		writer.fwrite("<td id='time_%s'></td>", id);
-		writer.fwrite("<td id='src_%s'></td>", id);
+		writer.fwrite("<td id='hs_%s'> </td>", id);
+		writer.fwrite("<td id='time_%s'> </td>", id);
+		writer.fwrite("<td id='scr_%s'> </td>", id);
 		writer.fwrite("</tr>");
 		//endregion
 
@@ -335,7 +335,7 @@ public class HTMLReportBuilder extends ReportBuilder
 			if (screenshot != null)
 			{
 				String link = decorateLink(screenshot.getDescription(), getImageDir() + File.separator + screenshot.getName(getReportDir()));
-				writer.fwrite("$('#scr_%s').innerHTML = '%s';\n",id,link);
+				writer.fwrite("$('#scr_%s').html('%s');\n",id,link);
 			}
 			writer.fwrite("</script>\n");
 		//endregion

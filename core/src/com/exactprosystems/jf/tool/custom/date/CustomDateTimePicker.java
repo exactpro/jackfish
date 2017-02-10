@@ -47,6 +47,7 @@ public class CustomDateTimePicker extends HBox
 		this.initialDate = initial;
 		Label label = new Label("", new ImageView(new Image(CssVariables.Icons.DATE_ICON)));
 		this.getChildren().addAll(this.editor, label);
+		this.setSpacing(4.0);
 		this.editor.setEditable(false);
 		this.editor.setOnKeyPressed(event -> show());
 		label.setOnMouseClicked(event -> show());
