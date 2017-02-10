@@ -14,9 +14,9 @@
 <?import java.lang.Double?>
 <BorderPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.exactprosystems.jf.tool.dictionary.DictionaryFxController">
 	<center>
-		<SplitPane fx:id="splitPane"  orientation="VERTICAL" >
+		<SplitPane fx:id="splitPane" dividerPositions="0.85" orientation="VERTICAL" >
 			<items>
-				<ScrollPane  SplitPane.resizableWithParent="false"  fitToHeight="true" fitToWidth="true" maxHeight="900" maxWidth="1.7976931348623157E308" pannable="true" minHeight="680"  prefHeight="700.0" prefWidth="1457.0">
+				<ScrollPane  SplitPane.resizableWithParent="false"  fitToHeight="true" fitToWidth="true" maxHeight="900" maxWidth="1.7976931348623157E308" pannable="true"   prefHeight="700.0" prefWidth="1457.0">
 					<content>
 						<GridPane fx:id="mainGridPane"  alignment="CENTER" >
 							<fx:define>
