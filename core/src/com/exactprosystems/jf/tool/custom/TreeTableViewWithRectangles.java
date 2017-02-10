@@ -44,7 +44,7 @@ public class TreeTableViewWithRectangles
 
 	private Node waitingNode;
 
-	private Consumer<XpathTreeItem> consumer;
+	private List<Consumer<XpathTreeItem>> selectionConsumers = new ArrayList<>();
 	private Consumer<List<CustomRectangle>> markedRowsConsumer;
 
 	private Map<Rectangle, TreeItem<XpathTreeItem>> map = new HashMap<>();
@@ -107,7 +107,10 @@ public class TreeTableViewWithRectangles
 
 		});
 
-		this.treeTableView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> Optional.ofNullable(consumer).ifPresent(c -> c.accept(newValue == null ? null : newValue.getValue())));
+		this.treeTableView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) ->
+				this.selectionConsumers.stream()
+						.filter(Objects::nonNull)
+						.forEach(c -> c.accept(newValue == null ? null : newValue.getValue())));
 	}
 
 	//region public methods
@@ -161,9 +164,9 @@ public class TreeTableViewWithRectangles
 		return map;
 	}
 
-	public void setTreeViewConsumer(Consumer<XpathTreeItem> consumer)
+	public void addSelectionConsumer(Consumer<XpathTreeItem> consumer)
 	{
-		this.consumer = consumer;
+		this.selectionConsumers.add(consumer);
 	}
 
 	public void setDisplayMarkedRowsConsumer(Consumer<List<CustomRectangle>> markedRowsConsumer)

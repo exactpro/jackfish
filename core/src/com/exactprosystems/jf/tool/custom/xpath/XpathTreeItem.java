@@ -64,6 +64,7 @@ public class XpathTreeItem extends XpathItem
 		else
 		{
 			this.currentState = TreeItemState.ADD;
+			this.list.forEach(b -> b.setState(this.currentState));
 		}
 	}
 

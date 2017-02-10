@@ -34,6 +34,8 @@ import java.util.function.Consumer;
 
 public class ImageViewWithScale implements IScaleListener
 {
+	private final static double WIDHT_COORDS = 120;
+
 	private final BorderPane mainPane;
 	private final ScrollPane scrollPane;
 	private final AnchorPane anchorPane;
@@ -74,8 +76,12 @@ public class ImageViewWithScale implements IScaleListener
 		this.hBox = new HBox();
 		this.group = new Group();
 		this.btnInspect = new ToggleButton();
-		this.lblInspect = new Label();
-		this.lblColor = new Label();
+		this.lblInspect = new Label("X = 0 Y = 0");
+		this.lblInspect.setPrefWidth(WIDHT_COORDS);
+		this.lblInspect.setMaxWidth(WIDHT_COORDS);
+		this.lblInspect.setMinWidth(WIDHT_COORDS);
+
+		this.lblColor = new Label(Color.BLACK.toString());
 		this.rectangleColor = new javafx.scene.shape.Rectangle();
 		this.rectangleColor.setWidth(12.0);
 		this.rectangleColor.setHeight(12.0);
@@ -216,11 +222,16 @@ public class ImageViewWithScale implements IScaleListener
 	@Override
 	public void changeScale(double scale)
 	{
+		double oldScale = this.scale;
 		this.scale = scale;
 		this.imageView.setFitHeight(this.scale * this.initial.height);
 		this.imageView.setFitWidth(this.scale * this.initial.width);
 		hideRectangle();
 		hideInspectRectangle();
+		this.markedList.forEach(r -> {
+			r.update(1 / oldScale);
+			r.update(this.scale);
+		});
 	}
 
 	//region private methods
