@@ -497,38 +497,39 @@ public class TreeTableViewWithRectangles
 
 	private void displayMarkedRows()
 	{
-		Optional.ofNullable(this.markedRowsConsumer).ifPresent(c -> {
-			List<CustomRectangle> list = this.getMarkedRows()
-					.stream()
-					.filter(r -> true)
-					.map(markedRow -> {
-						XpathTreeItem value = markedRow.getValue();
-						XpathTreeItem.TreeItemState state = value.getState();
-						value.setMarkIsVisible(state == null ? true : stateMap.get(state));
+		Optional.ofNullable(this.markedRowsConsumer).ifPresent(c -> c.accept(rectanglesFromMarkedRows()));
+	}
 
-						Rectangle rectangle = value.getRectangle();
-						CustomRectangle customRectangle = new CustomRectangle(rectangle, 1.0);
-						customRectangle.setOpacity(TRANSPARENT_RECT);
-						customRectangle.setWidthLine(LayoutExpressionBuilderController.BORDER_WIDTH);
-						customRectangle.setFill(value.getState().color());
-						customRectangle.setVisible(value.isMarkVisible());
+	public List<CustomRectangle> rectanglesFromMarkedRows()
+	{
+		return this.getMarkedRows()
+				.stream()
+				.filter(r -> true)
+				.map(markedRow -> {
+					XpathTreeItem value = markedRow.getValue();
+					XpathTreeItem.TreeItemState state = value.getState();
+					value.setMarkIsVisible(state == null ? true : stateMap.get(state));
 
-						List<XpathTreeItem.BeanWithMark> relatedList = value.getList();
-						if (!relatedList.isEmpty())
-						{
-							Text text = new Text();
-							String collect = relatedList.stream().map(XpathTreeItem.BeanWithMark::getBean).filter(Objects::nonNull).map(ElementWizardBean::getId).collect(Collectors.joining(","));
-							text.setText(collect);
-							text.setFill(value.getState().color());
-							customRectangle.setText(text);
-						}
+					Rectangle rectangle = value.getRectangle();
+					CustomRectangle customRectangle = new CustomRectangle(rectangle, 1.0);
+					customRectangle.setOpacity(TRANSPARENT_RECT);
+					customRectangle.setWidthLine(LayoutExpressionBuilderController.BORDER_WIDTH);
+					customRectangle.setFill(value.getState().color());
+					customRectangle.setVisible(value.isMarkVisible());
 
-						return customRectangle;
-					})
-					.collect(Collectors.toList());
+					List<XpathTreeItem.BeanWithMark> relatedList = value.getList();
+					if (!relatedList.isEmpty())
+					{
+						Text text = new Text();
+						String collect = relatedList.stream().map(XpathTreeItem.BeanWithMark::getBean).filter(Objects::nonNull).map(ElementWizardBean::getId).collect(Collectors.joining(","));
+						text.setText(collect);
+						text.setFill(value.getState().color());
+						customRectangle.setText(text);
+					}
 
-			c.accept(list);
-		});
+					return customRectangle;
+				})
+				.collect(Collectors.toList());
 	}
 	//endregion
 

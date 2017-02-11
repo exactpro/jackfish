@@ -31,6 +31,7 @@ import java.io.IOException;
 import java.util.*;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.DoubleConsumer;
 
 public class ImageViewWithScale implements IScaleListener
 {
@@ -66,6 +67,7 @@ public class ImageViewWithScale implements IScaleListener
 	private Map<Rectangle, Set<Rectangle>> rectanglesMap = new HashMap<>();
 
 	private Consumer<Rectangle> clickConsumer;
+	private DoubleConsumer scaleConsumer;
 
 	public ImageViewWithScale()
 	{
@@ -217,6 +219,12 @@ public class ImageViewWithScale implements IScaleListener
 				})
 				.forEach(r -> this.markedList.add(r));
 	}
+
+	public void setScaleConsumer(DoubleConsumer scaleConsumer)
+	{
+		this.scaleConsumer = scaleConsumer;
+	}
+
 	//endregion
 
 	@Override
@@ -228,10 +236,7 @@ public class ImageViewWithScale implements IScaleListener
 		this.imageView.setFitWidth(this.scale * this.initial.width);
 		hideRectangle();
 		hideInspectRectangle();
-		this.markedList.forEach(r -> {
-			r.update(1 / oldScale);
-			r.update(this.scale);
-		});
+		Optional.ofNullable(this.scaleConsumer).ifPresent(c -> c.accept(this.scale));
 	}
 
 	//region private methods

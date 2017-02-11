@@ -111,6 +111,8 @@ public class DialogWizardController implements Initializable, ContainingParent
 		});
 		this.treeViewWithRectangles.setDisplayMarkedRowsConsumer(list -> this.imageViewWithScale.displayMarkedRectangle(list));
 
+		this.imageViewWithScale.setScaleConsumer(scale -> this.imageViewWithScale.displayMarkedRectangle(this.treeViewWithRectangles.rectanglesFromMarkedRows()));
+
 		this.findPanel.getStyleClass().remove(CssVariables.FIND_PANEL);
 		this.findPanel.setListener(new IFind<TreeItem<XpathTreeItem>>()
 		{
