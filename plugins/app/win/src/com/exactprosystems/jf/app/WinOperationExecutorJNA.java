@@ -851,6 +851,9 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 		try
 		{
 			String result = this.driver.getRowIndexes(component, useNumericHeader, valueCondition, columnsToString(columns));
+			if (result.isEmpty()) {
+				return new ArrayList<>();
+			}
 			List<String> returnedList = new ArrayList<>();
 			String[] indexes = result.split(SEPARATOR_CELL);
 			Collections.addAll(returnedList, indexes);
