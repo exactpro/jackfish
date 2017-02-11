@@ -6,6 +6,7 @@ import com.exactprosystems.jf.documents.matrix.parser.SearchHelper;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.custom.layout.CustomRectangle;
 import com.exactprosystems.jf.tool.custom.layout.LayoutExpressionBuilderController;
+import com.exactprosystems.jf.tool.custom.xpath.XpathItem;
 import com.exactprosystems.jf.tool.custom.xpath.XpathTreeItem;
 import com.exactprosystems.jf.tool.custom.xpath.XpathViewer;
 import com.exactprosystems.jf.tool.dictionary.dialog.DialogWizardController;
@@ -47,6 +48,7 @@ public class TreeTableViewWithRectangles
 
 	private DialogWizardController controller;
 
+	private Consumer<List<Rectangle>> removeConsumer;
 	private List<Consumer<XpathTreeItem>> selectionConsumers = new ArrayList<>();
 	private Consumer<List<CustomRectangle>> markedRowsConsumer;
 
@@ -56,6 +58,7 @@ public class TreeTableViewWithRectangles
 		put(XpathTreeItem.TreeItemState.ADD, true);
 		put(XpathTreeItem.TreeItemState.MARK, true);
 		put(XpathTreeItem.TreeItemState.QUESTION, true);
+		put(XpathTreeItem.TreeItemState.UPDATE, true);
 	}};
 
 	public TreeTableViewWithRectangles(DialogWizardController dialogWizardController)
@@ -340,8 +343,20 @@ public class TreeTableViewWithRectangles
 	{
 		List<TreeItem<XpathTreeItem>> list = new ArrayList<>();
 		byPass(this.treeTableView.getRoot(), list, xpathTreeItem -> xpathTreeItem != null && xpathTreeItem.contains(bean));
+		Optional.ofNullable(this.removeConsumer).ifPresent(c -> c.accept(
+				list.stream()
+					.map(TreeItem::getValue)
+					.filter(Objects::nonNull)
+					.map(XpathItem::getRectangle)
+					.collect(Collectors.toList())
+		));
 		list.forEach(e -> e.getValue().clearRelation(bean));
 		refresh();
+	}
+
+	public void removeConsumer(Consumer<List<Rectangle>> consumer)
+	{
+		this.removeConsumer = consumer;
 	}
 	//endregion
 

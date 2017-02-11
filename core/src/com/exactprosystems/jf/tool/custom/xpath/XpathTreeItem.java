@@ -13,6 +13,7 @@ public class XpathTreeItem extends XpathItem
 {
 	public enum TreeItemState
 	{
+		UPDATE(CssVariables.Icons.REFRESH, Color.web("#2687fb")),
 		ADD(CssVariables.Icons.ADD_16_ICON, Color.web("#2687fb")),
 		MARK(CssVariables.Icons.MARK_ICON, Color.web("#2a9635")),
 		QUESTION(CssVariables.Icons.QUESTION_ICON, Color.web("#f3c738"));
@@ -54,7 +55,7 @@ public class XpathTreeItem extends XpathItem
 			this.addRelation(null, TreeItemState.ADD);
 			this.list.stream().map(BeanWithMark::getBean).filter(Objects::nonNull).forEach(b -> b.setColor(null));
 		}
-		else if (currentState == TreeItemState.ADD)
+		else if (currentState == TreeItemState.ADD || currentState == TreeItemState.UPDATE)
 		{
 			this.currentState = null;
 			this.list.stream().map(BeanWithMark::getBean).filter(Objects::nonNull).forEach(b -> b.setColor(null));
@@ -63,7 +64,7 @@ public class XpathTreeItem extends XpathItem
 		}
 		else
 		{
-			this.currentState = TreeItemState.ADD;
+			this.currentState = TreeItemState.UPDATE;
 			this.list.stream().map(BeanWithMark::getBean).filter(Objects::nonNull).forEach(b -> b.setColor(DialogWizardController.COLOR_ADD));
 			this.list.forEach(b -> b.setState(this.currentState));
 		}

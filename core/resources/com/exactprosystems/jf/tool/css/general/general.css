@@ -231,6 +231,10 @@
 	-fx-graphic : url('icons/question_mark.png')
 
 }
+#cbUpdate{
+	-fx-graphic : url('icons/refresh.png')
+
+}
 #cbRemoved {
 	-fx-graphic : url('icons/delete_16.png')
 
@@ -244,7 +248,7 @@
 
 }
 #btnRelation {
-	-fx-graphic : url('icons/add_16.png')
+	-fx-graphic : url('icons/refresh.png')
 
 }
 #btnWizard {

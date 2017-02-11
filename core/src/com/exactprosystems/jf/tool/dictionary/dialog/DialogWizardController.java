@@ -67,6 +67,7 @@ public class DialogWizardController implements Initializable, ContainingParent
 	public static final Color COLOR_NOT_FOUND		= Color.rgb(255, 0, 0, 0.1);
 	public static final Color COLOR_NOT_FINDING		= Color.rgb(128, 128, 128, 0.1);
 	public static final Color COLOR_ADD				= Color.rgb(0,0,255, 0.1);
+	public static final Color COLOR_UPDATE			= Color.rgb(0,0,255, 0.1);
 
 	public static Color colorByState(XpathTreeItem.TreeItemState state)
 	{
@@ -89,6 +90,7 @@ public class DialogWizardController implements Initializable, ContainingParent
 
 	public CheckBox cbMark;
 	public CheckBox cbAdd;
+	public CheckBox cbUpdate;
 	public CheckBox cbQuestion;
 
 	public FindPanel<TreeItem<XpathTreeItem>> findPanel;
@@ -123,6 +125,7 @@ public class DialogWizardController implements Initializable, ContainingParent
 			}
 		});
 		this.treeViewWithRectangles.setDisplayMarkedRowsConsumer(list -> this.imageViewWithScale.displayMarkedRectangle(list));
+		this.treeViewWithRectangles.removeConsumer(list -> this.imageViewWithScale.removeMarkedRectangles(list));
 
 		this.imageViewWithScale.setScaleConsumer(scale -> this.imageViewWithScale.displayMarkedRectangle(this.treeViewWithRectangles.rectanglesFromMarkedRows()));
 
@@ -142,6 +145,7 @@ public class DialogWizardController implements Initializable, ContainingParent
 			}
 		});
 
+		this.cbUpdate.selectedProperty().addListener((observable, oldValue, newValue) -> this.treeViewWithRectangles.setState(XpathTreeItem.TreeItemState.UPDATE, newValue));
 		this.cbAdd.selectedProperty().addListener((observable, oldValue, newValue) -> this.treeViewWithRectangles.setState(XpathTreeItem.TreeItemState.ADD, newValue));
 		this.cbMark.selectedProperty().addListener((observable, oldValue, newValue) -> this.treeViewWithRectangles.setState(XpathTreeItem.TreeItemState.MARK, newValue));
 		this.cbQuestion.selectedProperty().addListener((observable, oldValue, newValue) -> this.treeViewWithRectangles.setState(XpathTreeItem.TreeItemState.QUESTION, newValue));
@@ -331,6 +335,11 @@ public class DialogWizardController implements Initializable, ContainingParent
 					this.treeViewWithRectangles.setState(state, this.cbQuestion.isSelected());
 					bean.setColor(COLOR_QUESTION);
 					break;
+				case UPDATE:
+					this.treeViewWithRectangles.setState(state, this.cbUpdate.isSelected());
+					bean.setColor(COLOR_UPDATE);
+					break;
+
 			}
 		}
 		refreshTable();
@@ -366,6 +375,8 @@ public class DialogWizardController implements Initializable, ContainingParent
 			case QUESTION:
 				box = this.cbQuestion;
 				break;
+			case UPDATE:
+				box = this.cbUpdate;
 		}
 		String text = box.getText();
 		text = text.isEmpty() ? "0" : text;

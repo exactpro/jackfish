@@ -32,6 +32,7 @@ import java.util.*;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.DoubleConsumer;
+import java.util.stream.Collectors;
 
 public class ImageViewWithScale implements IScaleListener
 {
@@ -229,6 +230,18 @@ public class ImageViewWithScale implements IScaleListener
 		this.scaleConsumer = scaleConsumer;
 	}
 
+	public void removeMarkedRectangles(List<Rectangle> list)
+	{
+		List<CustomRectangle> rectangles = this.markedList.stream()
+				.filter(cr -> list.stream()
+						.map(r -> new CustomRectangle(r, this.scale))
+						.anyMatch(c -> c.equals(cr))
+				)
+				.peek(cr -> cr.setVisible(false))
+				.peek(cr -> cr.removeGroup(this.group))
+				.collect(Collectors.toList());
+		this.markedList.removeAll(rectangles);
+	}
 	//endregion
 
 	@Override

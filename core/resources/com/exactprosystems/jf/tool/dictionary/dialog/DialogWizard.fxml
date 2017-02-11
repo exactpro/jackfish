@@ -77,6 +77,8 @@
 										<Button id="btnNextMark" mnemonicParsing="false" onAction="#nextMark" styleClass="$transparentBackground" />
 										<Button id="btnPrevMark" mnemonicParsing="false" onAction="#prevMark" styleClass="$transparentBackground" />
 										<Separator orientation="VERTICAL" prefHeight="200.0" />
+										<CheckBox id="cbUpdate" fx:id="cbUpdate" maxWidth="75.0" minWidth="75.0" mnemonicParsing="false" prefWidth="75.0" selected="true" text="0" />
+										<Separator orientation="VERTICAL" prefHeight="200.0" />
 										<CheckBox id="cbAdd" fx:id="cbAdd" maxWidth="75.0" minWidth="75.0" mnemonicParsing="false" prefWidth="75.0" selected="true" text="0" />
 										<Separator orientation="VERTICAL" prefHeight="200.0" />
 										<CheckBox id="cbMark" fx:id="cbMark" maxWidth="75.0" minWidth="75.0" mnemonicParsing="false" prefWidth="75.0" selected="true" text="0"/>
