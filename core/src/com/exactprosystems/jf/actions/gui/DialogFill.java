@@ -308,9 +308,9 @@ public class DialogFill extends AbstractAction
 					{
 						errorKind = ErrorKind.EMPTY_PARAMETER;
 					}
-					errorsValue.put(name, new MatrixError(t.getMessage(), errorKind, owner));
+					errorsValue.put(name, new MatrixError(mes, errorKind, owner));
 					super.setErrors(errorsValue);
-					super.setError(t.getMessage(), errorKind);
+					super.setError(mes, errorKind);
 					return;
 				}
 				//can't throw exception. use setError and return
