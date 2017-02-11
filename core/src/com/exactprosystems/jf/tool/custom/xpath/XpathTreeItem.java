@@ -1,15 +1,13 @@
 package com.exactprosystems.jf.tool.custom.xpath;
 
 import com.exactprosystems.jf.tool.CssVariables;
+import com.exactprosystems.jf.tool.dictionary.dialog.DialogWizardController;
 import com.exactprosystems.jf.tool.dictionary.dialog.ElementWizardBean;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import org.w3c.dom.Node;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 public class XpathTreeItem extends XpathItem
 {
@@ -54,22 +52,29 @@ public class XpathTreeItem extends XpathItem
 		{
 			this.currentState = TreeItemState.ADD;
 			this.addRelation(null, TreeItemState.ADD);
+			this.list.stream().map(BeanWithMark::getBean).filter(Objects::nonNull).forEach(b -> b.setColor(null));
 		}
 		else if (currentState == TreeItemState.ADD)
 		{
 			this.currentState = null;
+			this.list.stream().map(BeanWithMark::getBean).filter(Objects::nonNull).forEach(b -> b.setColor(null));
 			//remove all relation
 			this.list.clear();
 		}
 		else
 		{
 			this.currentState = TreeItemState.ADD;
+			this.list.stream().map(BeanWithMark::getBean).filter(Objects::nonNull).forEach(b -> b.setColor(DialogWizardController.COLOR_ADD));
 			this.list.forEach(b -> b.setState(this.currentState));
 		}
 	}
 
 	public void addRelation(ElementWizardBean bean, TreeItemState state)
 	{
+		if (bean != null)
+		{
+			bean.setColor(DialogWizardController.colorByState(state));
+		}
 		this.list.add(new BeanWithMark(bean, state));
 		this.currentState = state;
 	}

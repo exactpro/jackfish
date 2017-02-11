@@ -8,8 +8,10 @@
 
 package com.exactprosystems.jf.tool.dictionary.dialog;
 
+import com.exactprosystems.jf.api.app.Addition;
 import com.exactprosystems.jf.api.app.ControlKind;
 import com.exactprosystems.jf.api.app.IControl;
+import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.documents.guidic.controls.AbstractControl;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
@@ -60,6 +62,23 @@ import java.util.stream.Collectors;
 
 public class DialogWizardController implements Initializable, ContainingParent
 {
+	public static final Color COLOR_MARK			= Color.rgb(0, 255, 0, 0.1);
+	public static final Color COLOR_QUESTION		= Color.rgb(255, 255, 0, 0.1);
+	public static final Color COLOR_NOT_FOUND		= Color.rgb(255, 0, 0, 0.1);
+	public static final Color COLOR_NOT_FINDING		= Color.rgb(128, 128, 128, 0.1);
+	public static final Color COLOR_ADD				= Color.rgb(0,0,255, 0.1);
+
+	public static Color colorByState(XpathTreeItem.TreeItemState state)
+	{
+		switch (state)
+		{
+			case ADD: return COLOR_ADD;
+			case MARK: return COLOR_MARK;
+			case QUESTION:return COLOR_QUESTION;
+		}
+		return null;
+	}
+
 	public Parent parent;
 	public SplitPane horSplitPane;
 	public SplitPane verSplitPane;
@@ -283,10 +302,12 @@ public class DialogWizardController implements Initializable, ContainingParent
 		return null;
 	}
 
-	void foundGreat(Node node, ElementWizardBean bean, XpathTreeItem.TreeItemState state)
+	void displayFoundControl(Node node, ElementWizardBean bean, XpathTreeItem.TreeItemState state)
 	{
 	    if (node == null)
 	    {
+	    	bean.setColor(COLOR_NOT_FOUND);
+	    	refreshTable();
 	        return;
 	    }
 		TreeItem<XpathTreeItem> byNode = this.treeViewWithRectangles.findByNode(node);
@@ -300,16 +321,19 @@ public class DialogWizardController implements Initializable, ContainingParent
 			{
 				case ADD:
 					this.treeViewWithRectangles.setState(state, this.cbAdd.isSelected());
+					bean.setColor(COLOR_ADD);
 					break;
 				case MARK:
 					this.treeViewWithRectangles.setState(state, this.cbMark.isSelected());
+					bean.setColor(COLOR_MARK);
 					break;
 				case QUESTION:
 					this.treeViewWithRectangles.setState(state, this.cbQuestion.isSelected());
+					bean.setColor(COLOR_QUESTION);
 					break;
 			}
-//			this.treeViewWithRectangles.setState(state, this.cbMark.isSelected());
 		}
+		refreshTable();
 	}
 
 	void displayOnButtons(boolean isOpenFilled, boolean isCloseFilled)
@@ -424,9 +448,18 @@ public class DialogWizardController implements Initializable, ContainingParent
 						{
 							for (XpathTreeItem.BeanWithMark beanWithMark : xpathTreeItem.getList())
 							{
+								ElementWizardBean bean = beanWithMark.getBean();
+								if (bean != null)
+								{
+									if (bean.getAbstractControl().getAddition() == Addition.Many || Str.IsNullOrEmpty(bean.getAbstractControl().getOwnerID()))
+									{
+										bean.setColor(DialogWizardController.COLOR_NOT_FINDING);
+										continue;
+									}
+								}
 								Thread.sleep(200);
 								Platform.runLater(() -> lblInfo.setText("Start updating item " + ++count[0] + " of " + sum));
-								Common.tryCatch(() -> model.arrangeOne(xpathTreeItem.getNode(), beanWithMark.getBean(), beanWithMark.getState()), "Error on arrange one");
+								Common.tryCatch(() -> model.arrangeOne(xpathTreeItem.getNode(), bean, beanWithMark.getState()), "Error on arrange one");
 								Platform.runLater(() -> {
 									lblInfo.setText("End updating " + count[0] + " of " + sum);
 									progressBar.setProgress((double) count[0] / sum);
@@ -520,6 +553,18 @@ public class DialogWizardController implements Initializable, ContainingParent
 	private void initTable()
 	{
 		this.tableView.setEditable(true);
+		this.tableView.setRowFactory(row -> new TableRow<ElementWizardBean>(){
+			@Override
+			protected void updateItem(ElementWizardBean item, boolean empty)
+			{
+				super.updateItem(item, empty);
+				setBackground(null);
+				if (item != null && !empty && item.getColor() != null)
+				{
+					setBackground(new Background(new BackgroundFill(item.getColor(), null, null)));
+				}
+			}
+		});
 		TableColumn<ElementWizardBean, Integer> columnNumber = new TableColumn<>("#");
 		columnNumber.setCellValueFactory(new PropertyValueFactory<>("number"));
 		columnNumber.setCellFactory(e -> new TableCell<ElementWizardBean, Integer>()
@@ -864,6 +909,14 @@ public class DialogWizardController implements Initializable, ContainingParent
 		box.getChildren().addAll(cbIsAbsolute, tf, btnXpath);
 		pane.add(lbl, 0, 0);
 		pane.add(box, 1, 0);
+	}
+
+	public void refreshTable()
+	{
+		Platform.runLater(() -> {
+			this.tableView.getColumns().get(0).setVisible(false);
+			this.tableView.getColumns().get(0).setVisible(true);
+		});
 	}
 	//endregion
 }

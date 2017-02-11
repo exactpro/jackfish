@@ -106,6 +106,7 @@ public class TreeTableViewWithRectangles
 					this.controller.changeStateCount(-1, xpathTreeItem.getState());
 					xpathTreeItem.changeState();
 					this.controller.changeStateCount(+1, xpathTreeItem.getState());
+					this.controller.refreshTable();
 					this.displayMarkedRows();
 					refresh();
 				}
@@ -330,6 +331,7 @@ public class TreeTableViewWithRectangles
 			this.controller.changeStateCount(-1, selectedItem.getValue().getState() == null ? XpathTreeItem.TreeItemState.ADD : selectedItem.getValue().getState());
 			selectedItem.getValue().addRelation(bean, XpathTreeItem.TreeItemState.ADD);
 			this.controller.changeStateCount(1, selectedItem.getValue().getState());
+			this.controller.refreshTable();
 		}
 		refresh();
 	}

@@ -144,8 +144,8 @@ public class ImageViewWithScale implements IScaleListener
 
 	public void displayImage(BufferedImage image)
 	{
+		this.image = image;
 		Platform.runLater(() -> {
-			this.image = image;
 			this.hBox.getChildren().forEach(node ->  node.setDisable(false));
 			this.anchorPane.getChildren().remove(this.waitingNode);
 

@@ -2,6 +2,7 @@ package com.exactprosystems.jf.tool.dictionary.dialog;
 
 import com.exactprosystems.jf.api.app.ControlKind;
 import com.exactprosystems.jf.documents.guidic.controls.AbstractControl;
+import javafx.scene.paint.Color;
 
 public class ElementWizardBean
 {
@@ -12,6 +13,9 @@ public class ElementWizardBean
 	private boolean isNew;
 	private int count;
 	private ElementWizardBean option = this;
+
+	@Deprecated
+	private Color color;
 
 	private AbstractControl abstractControl;
 
@@ -108,6 +112,16 @@ public class ElementWizardBean
 	public void setAbstractControl(AbstractControl abstractControl)
 	{
 		this.abstractControl = abstractControl;
+	}
+
+	public Color getColor()
+	{
+		return color;
+	}
+
+	public void setColor(Color color)
+	{
+		this.color = color;
 	}
 
 	@Override

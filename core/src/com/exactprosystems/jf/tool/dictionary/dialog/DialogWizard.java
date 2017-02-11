@@ -36,7 +36,6 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 public class DialogWizard
 {
@@ -754,6 +753,11 @@ public class DialogWizard
 		int count = 0;
 		Node found = null;
 		AbstractControl abstractControl = bean.getAbstractControl();
+		if (abstractControl.getAddition() == Addition.Many || Str.IsNullOrEmpty(abstractControl.getOwnerID()))
+		{
+			bean.setColor(DialogWizardController.COLOR_NOT_FINDING);
+			return;
+		}
 		Locator locator = abstractControl.locator();
 		List<Node> nodeList;
         try
@@ -769,12 +773,12 @@ public class DialogWizard
 
 		if (count == 1)
 		{
-			this.controller.foundGreat(found, bean, TreeItemState.MARK);
+			this.controller.displayFoundControl(found, bean, TreeItemState.MARK);
 		}
 		else if (count > 1 || count == 0)
 		{
 			Node bestIndex = findBestIndex(bean);
-			this.controller.foundGreat(bestIndex, bean, TreeItemState.QUESTION);
+			this.controller.displayFoundControl(bestIndex, bean, TreeItemState.QUESTION);
 		}
 		bean.setCount(count);
 	}
