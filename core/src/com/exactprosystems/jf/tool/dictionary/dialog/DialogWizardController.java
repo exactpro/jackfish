@@ -96,13 +96,7 @@ public class DialogWizardController implements Initializable, ContainingParent
 		this.paneTreeView.setCenter(this.treeViewWithRectangles.getContent());
 
 		this.imageViewWithScale.setClickConsumer(this.treeViewWithRectangles::selectItem);
-		this.treeViewWithRectangles.addSelectionConsumer(xpathItem ->
-		{
-			if (xpathItem != null)
-			{
-				this.imageViewWithScale.displayRectangle(xpathItem.getRectangle());
-			}
-		});
+		this.treeViewWithRectangles.addSelectionConsumer(xpathItem -> this.imageViewWithScale.displayRectangle(xpathItem == null ? null : xpathItem.getRectangle()));
 		this.treeViewWithRectangles.addSelectionConsumer(xpathTreeItem -> {
 			if (xpathTreeItem != null)
 			{

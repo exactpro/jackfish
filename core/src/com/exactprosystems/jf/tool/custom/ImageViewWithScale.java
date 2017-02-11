@@ -189,18 +189,22 @@ public class ImageViewWithScale implements IScaleListener
 		{
 			//do nothing
 		}
-		else if (this.markedList.contains(new CustomRectangle(rectangle, 1.0)))
-		{
-			CustomRectangle customRectangle = this.markedList.get(this.markedList.indexOf(new CustomRectangle(rectangle, 1.0)));
-			customRectangle.setOpacity(1.0);
-		}
 		else
 		{
-
-			if (this.rectangle != null)
+			CustomRectangle eq = new CustomRectangle(rectangle, this.scale);
+			if (this.markedList.contains(eq))
 			{
-				this.rectangle.updateRectangle(rectangle, this.scale);
-				this.rectangle.setVisible(true);
+				CustomRectangle customRectangle = this.markedList.get(this.markedList.indexOf(eq));
+				customRectangle.setOpacity(1.0);
+			}
+			else
+			{
+
+				if (this.rectangle != null)
+				{
+					this.rectangle.updateRectangle(rectangle, this.scale);
+					this.rectangle.setVisible(true);
+				}
 			}
 		}
 	}

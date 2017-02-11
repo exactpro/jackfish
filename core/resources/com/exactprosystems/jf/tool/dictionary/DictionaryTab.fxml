@@ -16,7 +16,7 @@
 	<center>
 		<SplitPane fx:id="splitPane" dividerPositions="0.85" orientation="VERTICAL" >
 			<items>
-				<ScrollPane  SplitPane.resizableWithParent="false"  fitToHeight="true" fitToWidth="true" maxHeight="900" maxWidth="1.7976931348623157E308" pannable="true"   prefHeight="700.0" prefWidth="1457.0">
+				<ScrollPane fitToHeight="true" fitToWidth="true" maxHeight="900" maxWidth="1.7976931348623157E308" pannable="true"   prefHeight="700.0" prefWidth="1457.0">
 					<content>
 						<GridPane fx:id="mainGridPane"  alignment="CENTER" >
 							<fx:define>
