@@ -134,12 +134,12 @@ public class ElementWizardBean
 
 		ElementWizardBean that = (ElementWizardBean) o;
 
-		return number == that.number;
+		return abstractControl != null ? abstractControl.equals(that.abstractControl) : that.abstractControl == null;
 	}
 
 	@Override
 	public int hashCode()
 	{
-		return number;
+		return abstractControl != null ? abstractControl.hashCode() : 0;
 	}
 }

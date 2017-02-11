@@ -212,30 +212,27 @@ public class DialogWizard
 		switch (state)
 		{
 			case ADD:
-				if (bean == null)
+				Locator locator = compile(composeId(node), composeKind(node), node);
+				if (locator != null)
 				{
-					Locator locator = compile(composeId(node), composeKind(node), node);
-					if (locator != null)
-					{
-					    AbstractControl control = AbstractControl.create(locator, this.selfControl.getID());
-	                    updateExtraInfo(this.window, node, control);
-	                	this.window.addControl(SectionKind.Run, control);
-					}
+					AbstractControl control = AbstractControl.create(locator, this.selfControl.getID());
+					updateExtraInfo(this.window, node, control);
+					this.window.addControl(SectionKind.Run, control);
 				}
-				else
-				{
-					Locator locator = compile(bean.getId(), bean.getControlKind(), node);
-					if (locator != null)
-					{
-					    AbstractControl control = AbstractControl.create(locator, this.selfControl.getID());
-	                    updateExtraInfo(this.window, node, bean.getAbstractControl());
-	                    Section section = (Section)this.window.getSection(SectionKind.Run);
-	                    section.replaceControl(bean.getAbstractControl(), control);
-					}
-				}
-                displayElements();
+				displayElements();
 				break;
 
+			case UPDATE:
+				Locator locatorUpdate = compile(bean.getId(), bean.getControlKind(), node);
+				if (locatorUpdate != null)
+				{
+					AbstractControl control = AbstractControl.create(locatorUpdate, this.selfControl.getID());
+					updateExtraInfo(this.window, node, bean.getAbstractControl());
+					Section section = (Section)this.window.getSection(SectionKind.Run);
+					section.replaceControl(bean.getAbstractControl(), control);
+				}
+				displayElements();
+				break;
 			case MARK:
 				updateExtraInfo(this.window, node, bean.getAbstractControl());
 				break;

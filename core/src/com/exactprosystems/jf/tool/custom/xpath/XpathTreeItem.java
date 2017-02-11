@@ -39,7 +39,7 @@ public class XpathTreeItem extends XpathItem
 	}
 
 	private boolean markIsVisible = true;
-	private List<BeanWithMark> list = new ArrayList<>();
+	private Set<BeanWithMark> set = new HashSet<>();
 	private TreeItemState currentState;
 
 	public XpathTreeItem(HBox box, Node node)
@@ -53,20 +53,19 @@ public class XpathTreeItem extends XpathItem
 		{
 			this.currentState = TreeItemState.ADD;
 			this.addRelation(null, TreeItemState.ADD);
-			this.list.stream().map(BeanWithMark::getBean).filter(Objects::nonNull).forEach(b -> b.setColor(null));
+			this.set.stream().map(BeanWithMark::getBean).filter(Objects::nonNull).forEach(b -> b.setColor(null));
 		}
 		else if (currentState == TreeItemState.ADD || currentState == TreeItemState.UPDATE)
 		{
 			this.currentState = null;
-			this.list.stream().map(BeanWithMark::getBean).filter(Objects::nonNull).forEach(b -> b.setColor(null));
-			//remove all relation
-			this.list.clear();
+			this.set.stream().map(BeanWithMark::getBean).filter(Objects::nonNull).forEach(b -> b.setColor(null));
+			this.set.clear();
 		}
 		else
 		{
 			this.currentState = TreeItemState.UPDATE;
-			this.list.stream().map(BeanWithMark::getBean).filter(Objects::nonNull).forEach(b -> b.setColor(DialogWizardController.COLOR_ADD));
-			this.list.forEach(b -> b.setState(this.currentState));
+			this.set.stream().map(BeanWithMark::getBean).filter(Objects::nonNull).forEach(b -> b.setColor(DialogWizardController.COLOR_ADD));
+			this.set.forEach(b -> b.setState(this.currentState));
 		}
 	}
 
@@ -76,24 +75,24 @@ public class XpathTreeItem extends XpathItem
 		{
 			bean.setColor(DialogWizardController.colorByState(state));
 		}
-		this.list.add(new BeanWithMark(bean, state));
+		this.set.add(new BeanWithMark(bean, state));
 		this.currentState = state;
 	}
 
 	public void clearRelation(ElementWizardBean bean)
 	{
-		this.list.clear();
+		this.set.clear();
 		this.currentState = null;
 	}
 
 	public boolean contains(ElementWizardBean bean)
 	{
-		return this.list.stream().map(BeanWithMark::getBean).anyMatch(bean::equals);
+		return this.set.stream().map(BeanWithMark::getBean).anyMatch(bean::equals);
 	}
 
 	public List<BeanWithMark> getList()
 	{
-		return list;
+		return new ArrayList<>(set);
 	}
 
 	public TreeItemState getState()
