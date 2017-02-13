@@ -51,14 +51,13 @@ import org.w3c.dom.NodeList;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.net.URL;
+import java.util.*;
 import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.ResourceBundle;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class DialogWizardController implements Initializable, ContainingParent
 {
@@ -384,6 +383,11 @@ public class DialogWizardController implements Initializable, ContainingParent
 		box.setText(String.valueOf(current + count));
 	}
 
+	private void clearCheckboxes()
+	{
+		Stream.of(this.cbAdd, this.cbUpdate, this.cbMark, this.cbQuestion).forEach(c -> Platform.runLater(() -> c.setText("0")));
+	}
+
 	//region Action methods
 	public void cancel(ActionEvent actionEvent)
 	{
@@ -454,11 +458,14 @@ public class DialogWizardController implements Initializable, ContainingParent
 					@Override
 					protected Void call() throws Exception
 					{
+						clearCheckboxes();
 						final int[] count = {0};
 						for (XpathTreeItem xpathTreeItem : list)
 						{
-							for (XpathTreeItem.BeanWithMark beanWithMark : xpathTreeItem.getList())
+							ArrayList<XpathTreeItem.BeanWithMark> newList = new ArrayList<>(xpathTreeItem.getList());
+							for (XpathTreeItem.BeanWithMark beanWithMark : newList)
 							{
+								xpathTreeItem.clearRelation(beanWithMark.getBean());
 								ElementWizardBean bean = beanWithMark.getBean();
 								if (bean != null)
 								{
@@ -490,39 +497,6 @@ public class DialogWizardController implements Initializable, ContainingParent
 			dialog.close();
 		});
 		service.start();
-//		final int[] count = {0};
-//		for (XpathTreeItem xpathTreeItem : list)
-//		{
-//			for (XpathTreeItem.BeanWithMark beanWithMark : xpathTreeItem.getList())
-//			{
-//				Service<StringAndCount> service = new Service<StringAndCount>()
-//				{
-//					@Override
-//					protected Task<StringAndCount> createTask()
-//					{
-//						return new Task<StringAndCount>()
-//						{
-//							@Override
-//							protected StringAndCount call() throws Exception
-//							{
-//								model.arrangeOne(xpathTreeItem.getNode(), beanWithMark.getBean(), beanWithMark.getState());
-//								return new StringAndCount(++count[0], "My " + count[0]);
-//							}
-//						};
-//					}
-//				};
-//				service.setExecutor(taskExecutor);
-//				service.setOnSucceeded(e -> {
-//					StringAndCount stringAndCount = (StringAndCount) e.getSource().getValue();
-//					lblInfo.setText("Done " + stringAndCount.msg);
-//					progressBar.setProgress(((double) stringAndCount.count / sum));
-//				});
-//				service.setOnFailed(e -> {
-//
-//				});
-//				service.start();
-//			}
-//		}
 	}
 
 	public void generateOnOpen(ActionEvent actionEvent)
