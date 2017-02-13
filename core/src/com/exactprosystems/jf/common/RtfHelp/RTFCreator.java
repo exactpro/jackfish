@@ -389,20 +389,20 @@ class RTFCreator {
         document.section(
                 createFirstPageFormat(),
                 p(),
-                p(font(2, fontSize(48, "JackFish")),  text("FirstPageLine")),
-                p(font(2, fontSize(36, "User guide"))),
+                p(font(0, fontSize(48, bold("JackFish"))),  text("FirstPageLine")),
+                p(font(0, fontSize(36, bold("User guide")))),
                 p(),
                 row(fontSize(fontSize, "Version:"), fontSize(fontSize, VersionInfo.getVersion())),
                 row(fontSize(fontSize, "Release date:"), fontSize(fontSize, currentDate))
         );
         document.section(
                 createSectionFormat(),
-                p(font(2, fontSize(30, "Document Information"))),
+                p(font(0, fontSize(30, bold("Document Information")))),
                 p(),
                 row(fontSize(fontSize, bold("Date")), fontSize(fontSize, bold("Version")), fontSize(fontSize, bold("By")), fontSize(fontSize, bold("Comments"))),
                 row(fontSize(fontSize, currentDate), fontSize(fontSize, VersionInfo.getVersion()), fontSize(fontSize, "Valery Florov"), fontSize(fontSize, "Initial Draft")),
                 p(),
-                p(font(2, fontSize(30, "Abbreviations"))),
+                p(font(0, fontSize(30, bold("Abbreviations")))),
                 p(),
                 row(fontSize(fontSize, bold("Abbreviation")), fontSize(fontSize, bold("Meaning"))),
                 row(fontSize(fontSize, "JF"), fontSize(fontSize, "JackFish"))
@@ -411,7 +411,7 @@ class RTFCreator {
 
     private void createDescription() throws IOException, BadLocationException
     {
-        intro.add(p(tab(), tab(), tab(), tab(), font(2, fontSize(30, "Introduction" + trait)), lineBreak()));
+        intro.add(p(tab(), tab(), tab(), tab(), font(0, fontSize(30, bold("Introduction" + trait))), lineBreak()));
         createDocumentation(introduction, intro);
         writeIntro();
     }
@@ -499,7 +499,7 @@ class RTFCreator {
                         }
                     }
                     if (sb.length() != 0){
-                        list.add(p(tab(), tab(), tab(), tab(), font(2, fontSize(30, sb.toString()+trait)), lineBreak()));
+                        list.add(p(tab(), tab(), tab(), tab(), font(0, fontSize(30, bold(sb.toString()+trait))), lineBreak()));
                         sb.setLength(0);
                     }
                 }
@@ -514,7 +514,7 @@ class RTFCreator {
                                 list.add(p(fontSize(fontSize, sb.toString())));
                                 sb.setLength(0);
                             }
-                            list.add(p(font(2, fontSize(fontSize, replaceChars(s)))));
+                            list.add(p(font(0, fontSize(fontSize, replaceChars(s)))));
                         }
                         else if (s.startsWith("{{&"))
                         {
@@ -524,7 +524,7 @@ class RTFCreator {
                         else if (header && s.contains("&}}"))
                         {
                             sb.append(replaceChars(s));
-                            list.add(p(font(2, fontSize(fontSize, sb.toString()))));
+                            list.add(p(font(0, fontSize(fontSize, sb.toString()))));
                             sb.setLength(0);
                             header = false;
                         }
@@ -554,7 +554,7 @@ class RTFCreator {
             {
                 if (strs[0].contains("{{&") && strs[0].contains("&}}"))
                 {
-                    list.add(p(font(2, fontSize(fontSize, replaceChars(strs[0])))));
+                    list.add(p(font(0, fontSize(fontSize, replaceChars(strs[0])))));
                 }
                 else if (strs[0].contains("{{#") && strs[0].contains("#}}"))
                 {
@@ -574,7 +574,7 @@ class RTFCreator {
 
     private void mvelDocumentation() throws IOException
     {
-        mvels.add(p(tab(), tab(), tab(), tab(), font(2, fontSize(30, "MVEL" + trait)), lineBreak()));
+        mvels.add(p(tab(), tab(), tab(), tab(), font(0, fontSize(30, bold("MVEL" + trait))), lineBreak()));
         createDocumentation(mvelDoc, mvels);
         writeMvel();
     }
@@ -594,7 +594,7 @@ class RTFCreator {
         List<RtfActionsHelper> sql = new ArrayList<>();
         List<RtfActionsHelper> matrix = new ArrayList<>();
 
-        actions.add(p(tab(),tab(), tab(),tab(), font(2, fontSize(30, "Actions" + trait)), lineBreak()));
+        actions.add(p(tab(),tab(), tab(),tab(), font(0, fontSize(30, bold("Actions" + trait))), lineBreak()));
         for (Class<?> clazz : ActionsList.actions)
         {
             ActionAttribute classAnnotation = null;
@@ -683,7 +683,7 @@ class RTFCreator {
 
     void getAnnotationsForItems() throws IOException, BadLocationException
     {
-        items.add(p(tab(),tab(), tab(),tab(), font(2, fontSize(30, "Items" + trait)), lineBreak()));
+        items.add(p(tab(),tab(), tab(),tab(), font(0, fontSize(30, bold("Items" + trait))), lineBreak()));
         for (Class<?> clazz : Parser.knownItems){
             MatrixItemAttribute classAnnotation = null;
             boolean deprecated = false;
