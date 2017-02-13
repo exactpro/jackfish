@@ -62,17 +62,17 @@ public class BookmarksCreator extends FileWriter{
                 {
                     result.append(s.replace("WriteFonts", "Arial;}{\\f1\\fcharset1 Courier;}{\\f2\\fcharset2 FS Lola ExtraBold"));
                 }
-                else if (s.equals("\\par"))
+                /*else if (s.equals("\\par"))
                 {
                     result.append(s.replace("\\par", "\\par\\qd"));
-                }
+                }*/
                 else if (s.contains("\\{\\{*") && s.contains("*\\}\\}"))
                 {
                     result.append(s.replace(s, "{\\b " + s.replace("\\{\\{*", "").replace("*\\}\\}", "") + '}'));
                 }
                 else if(s.contains("\\{\\{`") || s.contains("`\\}\\}") || s.contains("`\\}\\}\\{\\{`"))
                 {
-                    result.append(s.replace("\\{\\{`", " \\par\\qd ").replace("`\\}\\}", " \\par\\qd ").replace("`\\}\\}\\{\\{`", " \\par\\qd "));
+                    result.append(s.replace("\\{\\{`", " \\par ").replace("`\\}\\}", " \\par ").replace("`\\}\\}\\{\\{`", " \\par "));
                 }
                 else
                 {
@@ -110,17 +110,17 @@ public class BookmarksCreator extends FileWriter{
             {
                 return super.append(s.replace("FirstPageLine", "\\pard \\brdrb \\brdrs\\brdrw50\\brsp20\\brdrcf0 "));
             }
-            else if (s.equals("\\par"))
+            /*else if (s.equals("\\par"))
             {
                 return super.append(s.replace("\\par", "\\par\\qd"));
-            }
+            }*/
             else if (s.contains("\\{\\{*") && s.contains("*\\}\\}"))
             {
                 return super.append(s.replace(s, "{\\b " + s.replace("\\{\\{*", "").replace("*\\}\\}", "") + '}'));
             }
             else if(s.contains("\\{\\{`") || s.contains("`\\}\\}") || s.contains("`\\}\\}\\{\\{`"))
             {
-                return super.append(s.replace("\\{\\{`", " \\par\\qd ").replace("`\\}\\}", " \\par\\qd ").replace("`\\}\\}\\{\\{`", " \\par\\qd "));
+                return super.append(s.replace("\\{\\{`", " \\par ").replace("`\\}\\}", " \\par ").replace("`\\}\\}\\{\\{`", " \\par "));
             }
             else if (s.contains("987654321"))
             {
