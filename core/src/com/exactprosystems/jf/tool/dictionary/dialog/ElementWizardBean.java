@@ -133,12 +133,16 @@ public class ElementWizardBean
 
 		ElementWizardBean that = (ElementWizardBean) o;
 
-		return abstractControl != null ? abstractControl.equals(that.abstractControl) : that.abstractControl == null;
+		if (number != that.number)
+			return false;
+		return abstractControl.equals(that.abstractControl);
 	}
 
 	@Override
 	public int hashCode()
 	{
-		return abstractControl != null ? abstractControl.hashCode() : 0;
+		int result = number;
+		result = 31 * result + abstractControl.hashCode();
+		return result;
 	}
 }

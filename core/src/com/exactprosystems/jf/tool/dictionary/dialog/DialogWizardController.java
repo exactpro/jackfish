@@ -11,6 +11,7 @@ package com.exactprosystems.jf.tool.dictionary.dialog;
 import com.exactprosystems.jf.api.app.Addition;
 import com.exactprosystems.jf.api.app.ControlKind;
 import com.exactprosystems.jf.api.app.IControl;
+import com.exactprosystems.jf.api.app.Visibility;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.documents.guidic.controls.AbstractControl;
 import com.exactprosystems.jf.tool.Common;
@@ -48,7 +49,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -258,37 +258,59 @@ public class DialogWizardController implements Initializable, ContainingParent
 		return this.tableView.getItems();
 	}
 
-	AbstractControl editElement(AbstractControl abstractControl)
+	AbstractControl editElement(AbstractControl abstractControl, List<String> values)
 	{
 		Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
 		alert.getDialogPane().getStylesheets().addAll(Common.currentThemesPaths());
 		alert.getDialogPane().setHeader(new Label());
 		alert.setTitle("Change element");
 		GridPane gridPane = new GridPane();
-		gridPane.setPrefWidth(400);
+		gridPane.setPrefWidth(800);
 		gridPane.setMaxWidth(Double.MAX_VALUE);
 		alert.getDialogPane().setContent(gridPane);
 		gridPane.getStyleClass().addAll(CssVariables.HGAP_MIN, CssVariables.VGAP_MIN);
 
+		//region create columns
 		ColumnConstraints c0 = new ColumnConstraints();
-		c0.setPercentWidth(30);
+		c0.setPercentWidth(15);
 		c0.setHalignment(HPos.RIGHT);
 
 		ColumnConstraints c1 = new ColumnConstraints();
 		c1.setFillWidth(true);
-		c1.setPercentWidth(70);
+		c1.setPercentWidth(35);
 		c1.setHalignment(HPos.LEFT);
-		gridPane.getColumnConstraints().addAll(c0, c1);
 
-		int index = 1;
+
+		ColumnConstraints c2 = new ColumnConstraints();
+		c2.setPercentWidth(15);
+		c2.setHalignment(HPos.RIGHT);
+
+		ColumnConstraints c3 = new ColumnConstraints();
+		c3.setFillWidth(true);
+		c3.setPercentWidth(35);
+		c3.setHalignment(HPos.LEFT);
+
+		gridPane.getColumnConstraints().addAll(c0, c1, c2, c3);
+		//endregion
+
+		int index = 0;
+
+		addComboToLeftPane(gridPane, "Owner : ", abstractControl.getOwnerID(), newOwner -> Common.tryCatch(()->abstractControl.set(AbstractControl.ownerIdName, newOwner), "Error on set parameters"), index++, values);
+		addComboToLeftPane(gridPane, "Additional : ", abstractControl.getAddition(), newAdd -> Common.tryCatch(()->abstractControl.set(AbstractControl.additionName, newAdd), "Error on set parameters"), index++, Arrays.asList(Addition.values()));
+		addComboToLeftPane(gridPane, "Ref : ", abstractControl.getRefID(), refId -> Common.tryCatch(()->abstractControl.set(AbstractControl.refIdName, refId), "Error on set parameters"), index++,values);
+		addToLeftPane(gridPane, "Timeout : ", String.valueOf(abstractControl.getTimeout()), newTimeout -> Common.tryCatch(()->abstractControl.set(AbstractControl.timeoutName, newTimeout), "Error on set parameters"), index++);
+		addComboToLeftPane(gridPane, "Visibility : ", abstractControl.getVisibility(), newVis -> Common.tryCatch(()->abstractControl.set(AbstractControl.visibilityName, newVis), "Error on set parameters"),index++, Arrays.asList(Visibility.values()));
+
+		index = 1;
+
 		addXpathToPane(gridPane, abstractControl.getXpath(), abstractControl.useAbsoluteXpath(), newId -> Common.tryCatch(() -> abstractControl.set(AbstractControl.xpathName, newId), "Error on set parameter"), newB -> Common.tryCatch(() -> abstractControl.set(AbstractControl.absoluteXpathName, newB), "Error on set parameter"));
-		addToPane(gridPane, "UID : ", abstractControl.getUID(), newId -> Common.tryCatch(() -> abstractControl.set(AbstractControl.uidName, newId), "Error on set parameter"), index++);
-		addToPane(gridPane, "Class : ", abstractControl.getClazz(), newId -> Common.tryCatch(() -> abstractControl.set(AbstractControl.clazzName, newId), "Error on set parameter"), index++);
-		addToPane(gridPane, "Name : ", abstractControl.getName(), newId -> Common.tryCatch(() -> abstractControl.set(AbstractControl.nameName, newId), "Error on set parameter"), index++);
-		addToPane(gridPane, "Title : ", abstractControl.getTitle(), newId -> Common.tryCatch(() -> abstractControl.set(AbstractControl.titleName, newId), "Error on set parameter"), index++);
-		addToPane(gridPane, "Action : ", abstractControl.getAction(), newId -> Common.tryCatch(() -> abstractControl.set(AbstractControl.actionName, newId), "Error on set parameter"), index++);
-		addToPane(gridPane, "Text : ", abstractControl.getText(), newId -> Common.tryCatch(() -> abstractControl.set(AbstractControl.textName, newId), "Error on set parameter"), index++);
-		addToPane(gridPane, "Tooltip : ", abstractControl.getTooltip(), newId -> Common.tryCatch(() -> abstractControl.set(AbstractControl.tooltipName, newId), "Error on set parameter"), index++);
+		addToRightPane(gridPane, "UID : ", abstractControl.getUID(), newId -> Common.tryCatch(() -> abstractControl.set(AbstractControl.uidName, newId), "Error on set parameter"), index++);
+		addToRightPane(gridPane, "Class : ", abstractControl.getClazz(), newId -> Common.tryCatch(() -> abstractControl.set(AbstractControl.clazzName, newId), "Error on set parameter"), index++);
+		addToRightPane(gridPane, "Name : ", abstractControl.getName(), newId -> Common.tryCatch(() -> abstractControl.set(AbstractControl.nameName, newId), "Error on set parameter"), index++);
+		addToRightPane(gridPane, "Title : ", abstractControl.getTitle(), newId -> Common.tryCatch(() -> abstractControl.set(AbstractControl.titleName, newId), "Error on set parameter"), index++);
+		addToRightPane(gridPane, "Action : ", abstractControl.getAction(), newId -> Common.tryCatch(() -> abstractControl.set(AbstractControl.actionName, newId), "Error on set parameter"), index++);
+		addToRightPane(gridPane, "Text : ", abstractControl.getText(), newId -> Common.tryCatch(() -> abstractControl.set(AbstractControl.textName, newId), "Error on set parameter"), index++);
+		addToRightPane(gridPane, "Tooltip : ", abstractControl.getTooltip(), newId -> Common.tryCatch(() -> abstractControl.set(AbstractControl.tooltipName, newId), "Error on set parameter"), index++);
 
 		Optional<ButtonType> buttonType = alert.showAndWait();
 		if (buttonType.isPresent())
@@ -315,6 +337,7 @@ public class DialogWizardController implements Initializable, ContainingParent
 		if (value != null)
 		{
 			this.changeStateCount(-1, value.getState());
+			value.clearRelation(bean);
 			value.addRelation(bean, state);
 			this.changeStateCount(1, value.getState());
 			switch (state)
@@ -841,7 +864,18 @@ public class DialogWizardController implements Initializable, ContainingParent
 		this.tableView.getColumns().addAll(columnNumber, columnId, columnKind, columnIsXpath, columnIsNew, columnCount, columnOption);
 	}
 
-	private void addToPane(GridPane pane, String id, String value, Consumer<String> consumer, int index)
+	private void addToRightPane(GridPane pane, String id, String value, Consumer<String> consumer, int index)
+	{
+		Label lbl = new Label(id);
+		CustomFieldWithButton tf = new CustomFieldWithButton(value);
+		tf.setMaxWidth(Double.MAX_VALUE);
+		tf.textProperty().addListener((observable, oldValue, newValue) -> consumer.accept(newValue));
+		GridPane.setFillWidth(tf, true);
+		pane.add(lbl, 2, index);
+		pane.add(tf, 3, index);
+	}
+
+	private void addToLeftPane(GridPane pane, String id, String value, Consumer<String> consumer, int index)
 	{
 		Label lbl = new Label(id);
 		CustomFieldWithButton tf = new CustomFieldWithButton(value);
@@ -852,9 +886,23 @@ public class DialogWizardController implements Initializable, ContainingParent
 		pane.add(tf, 1, index);
 	}
 
+	private <T> void addComboToLeftPane(GridPane pane, String id, T value, Consumer<T> consumer, int index, List<T> values)
+	{
+		ChoiceBox<T> cb = new ChoiceBox<>();
+		cb.getItems().add(null);
+		cb.getItems().addAll(values);
+		cb.getSelectionModel().select(value);
+		cb.setMaxWidth(Double.MAX_VALUE);
+		cb.setOnAction(e -> consumer.accept(cb.getValue()));
+		Label lbl = new Label(id);
+
+		pane.add(lbl, 0, index);
+		pane.add(cb, 1, index);
+	}
+
 	private void addXpathToPane(GridPane pane, String value, boolean isAbsolute, Consumer<String> consumer, Consumer<Boolean> absoluteConsumer)
 	{
-		Label lbl = new Label("Xpath");
+		Label lbl = new Label("Xpath : ");
 		HBox box = new HBox();
 		box.setAlignment(Pos.CENTER);
 
@@ -878,8 +926,8 @@ public class DialogWizardController implements Initializable, ContainingParent
 			}
 		});
 		box.getChildren().addAll(cbIsAbsolute, tf, btnXpath);
-		pane.add(lbl, 0, 0);
-		pane.add(box, 1, 0);
+		pane.add(lbl, 2, 0);
+		pane.add(box, 3, 0);
 	}
 
 	public void refreshTable()
