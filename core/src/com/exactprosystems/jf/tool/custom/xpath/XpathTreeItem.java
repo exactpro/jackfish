@@ -53,18 +53,18 @@ public class XpathTreeItem extends XpathItem
 		{
 			this.currentState = TreeItemState.ADD;
 			this.addRelation(null, TreeItemState.ADD);
-			this.set.stream().map(BeanWithMark::getBean).filter(Objects::nonNull).forEach(b -> b.setColor(null));
+			this.set.stream().map(BeanWithMark::getBean).filter(Objects::nonNull).forEach(b -> b.setStyleClass(null));
 		}
 		else if (currentState == TreeItemState.ADD || currentState == TreeItemState.UPDATE)
 		{
 			this.currentState = null;
-			this.set.stream().map(BeanWithMark::getBean).filter(Objects::nonNull).forEach(b -> b.setColor(null));
+			this.set.stream().map(BeanWithMark::getBean).filter(Objects::nonNull).forEach(b -> b.setStyleClass(null));
 			this.set.clear();
 		}
 		else
 		{
 			this.currentState = TreeItemState.UPDATE;
-			this.set.stream().map(BeanWithMark::getBean).filter(Objects::nonNull).forEach(b -> b.setColor(DialogWizardController.COLOR_ADD));
+			this.set.stream().map(BeanWithMark::getBean).filter(Objects::nonNull).forEach(b -> b.setStyleClass(CssVariables.COLOR_ADD));
 			this.set.forEach(b -> b.setState(this.currentState));
 		}
 	}
@@ -73,7 +73,7 @@ public class XpathTreeItem extends XpathItem
 	{
 		if (bean != null)
 		{
-			bean.setColor(DialogWizardController.colorByState(state));
+			bean.setStyleClass(DialogWizardController.styleByState(state));
 		}
 		this.set.add(new BeanWithMark(bean, state));
 		this.currentState = state;

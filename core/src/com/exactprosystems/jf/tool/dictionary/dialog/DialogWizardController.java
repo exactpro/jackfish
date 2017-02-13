@@ -23,10 +23,12 @@ import com.exactprosystems.jf.tool.custom.find.FindPanel;
 import com.exactprosystems.jf.tool.custom.find.IFind;
 import com.exactprosystems.jf.tool.custom.xpath.XpathTreeItem;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
+import com.sun.javafx.css.PseudoClassState;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
+import javafx.css.PseudoClass;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.geometry.*;
@@ -61,20 +63,15 @@ import java.util.stream.Stream;
 
 public class DialogWizardController implements Initializable, ContainingParent
 {
-	public static final Color COLOR_MARK			= Color.rgb(0, 255, 0, 0.1);
-	public static final Color COLOR_QUESTION		= Color.rgb(255, 255, 0, 0.1);
-	public static final Color COLOR_NOT_FOUND		= Color.rgb(255, 0, 0, 0.1);
-	public static final Color COLOR_NOT_FINDING		= Color.rgb(128, 128, 128, 0.1);
-	public static final Color COLOR_ADD				= Color.rgb(0,0,255, 0.1);
-	public static final Color COLOR_UPDATE			= Color.rgb(0,0,255, 0.1);
-
-	public static Color colorByState(XpathTreeItem.TreeItemState state)
+	public static String styleByState(XpathTreeItem.TreeItemState state)
 	{
 		switch (state)
 		{
-			case ADD: return COLOR_ADD;
-			case MARK: return COLOR_MARK;
-			case QUESTION:return COLOR_QUESTION;
+			case UPDATE : return CssVariables.COLOR_UPDATE;
+			case ADD: return CssVariables.COLOR_ADD;
+			case MARK: return CssVariables.COLOR_MARK;
+			case QUESTION:return CssVariables.COLOR_QUESTION;
+
 		}
 		return null;
 	}
@@ -309,7 +306,7 @@ public class DialogWizardController implements Initializable, ContainingParent
 	{
 	    if (node == null)
 	    {
-	    	bean.setColor(COLOR_NOT_FOUND);
+	    	bean.setStyleClass(CssVariables.COLOR_NOT_FOUND);
 	    	refreshTable();
 	        return;
 	    }
@@ -324,19 +321,19 @@ public class DialogWizardController implements Initializable, ContainingParent
 			{
 				case ADD:
 					this.treeViewWithRectangles.setState(state, this.cbAdd.isSelected());
-					bean.setColor(COLOR_ADD);
+					bean.setStyleClass(CssVariables.COLOR_ADD);
 					break;
 				case MARK:
 					this.treeViewWithRectangles.setState(state, this.cbMark.isSelected());
-					bean.setColor(COLOR_MARK);
+					bean.setStyleClass(CssVariables.COLOR_MARK);
 					break;
 				case QUESTION:
 					this.treeViewWithRectangles.setState(state, this.cbQuestion.isSelected());
-					bean.setColor(COLOR_QUESTION);
+					bean.setStyleClass(CssVariables.COLOR_QUESTION);
 					break;
 				case UPDATE:
 					this.treeViewWithRectangles.setState(state, this.cbUpdate.isSelected());
-					bean.setColor(COLOR_UPDATE);
+					bean.setStyleClass(CssVariables.COLOR_UPDATE);
 					break;
 
 			}
@@ -471,7 +468,7 @@ public class DialogWizardController implements Initializable, ContainingParent
 								{
 									if (bean.getAbstractControl().getAddition() == Addition.Many || Str.IsNullOrEmpty(bean.getAbstractControl().getOwnerID()))
 									{
-										bean.setColor(DialogWizardController.COLOR_NOT_FINDING);
+										bean.setStyleClass(CssVariables.COLOR_NOT_FINDING);
 										continue;
 									}
 								}
@@ -538,18 +535,7 @@ public class DialogWizardController implements Initializable, ContainingParent
 	private void initTable()
 	{
 		this.tableView.setEditable(true);
-		this.tableView.setRowFactory(row -> new TableRow<ElementWizardBean>(){
-			@Override
-			protected void updateItem(ElementWizardBean item, boolean empty)
-			{
-				super.updateItem(item, empty);
-				setBackground(null);
-				if (item != null && !empty && item.getColor() != null)
-				{
-					setBackground(new Background(new BackgroundFill(item.getColor(), null, null)));
-				}
-			}
-		});
+		this.tableView.setRowFactory(row -> new CustomRowFactory());
 		TableColumn<ElementWizardBean, Integer> columnNumber = new TableColumn<>("#");
 		columnNumber.setCellValueFactory(new PropertyValueFactory<>("number"));
 		columnNumber.setCellFactory(e -> new TableCell<ElementWizardBean, Integer>()
@@ -904,4 +890,37 @@ public class DialogWizardController implements Initializable, ContainingParent
 		});
 	}
 	//endregion
+
+	private class CustomRowFactory extends TableRow<ElementWizardBean>
+	{
+		private final PseudoClass customSelected = PseudoClassState.getPseudoClass("customSelectedState");
+		private final PseudoClass selected = PseudoClassState.getPseudoClass("selected");
+
+		public CustomRowFactory()
+		{
+			this.getStyleClass().addAll(CssVariables.CUSTOM_TABLE_ROW);
+			this.selectedProperty().addListener((observable, oldValue, newValue) -> {
+				this.pseudoClassStateChanged(customSelected, newValue);
+				this.pseudoClassStateChanged(selected, false); // remove selected pseudostate, cause this state change text color
+			});
+		}
+
+		@Override
+		protected void updateItem(ElementWizardBean item, boolean empty)
+		{
+			super.updateItem(item, empty);
+			this.getStyleClass().removeAll(
+					CssVariables.COLOR_MARK,
+					CssVariables.COLOR_QUESTION,
+					CssVariables.COLOR_NOT_FOUND,
+					CssVariables.COLOR_NOT_FINDING,
+					CssVariables.COLOR_ADD,
+					CssVariables.COLOR_UPDATE
+			);
+			if (item != null && !empty && item.getStyleClass() != null)
+			{
+				this.getStyleClass().add(item.getStyleClass());
+			}
+		}
+	}
 }
