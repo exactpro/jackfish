@@ -334,7 +334,7 @@ public class HTMLReportBuilder extends ReportBuilder
 			writer.fwrite("$('#time_%s').html('%s ms');\n", id, time <= 1 ? "< 1" : time);
 			if (screenshot != null)
 			{
-				String link = decorateLink(screenshot.getDescription(), getImageDir() + File.separator + screenshot.getName(getReportDir()));
+				String link = decorateLink(screenshot.getDescription(), getImageDir() + "/" + screenshot.getName(getReportDir()));
 				writer.fwrite("$('#scr_%s').html('%s');\n",id,link);
 			}
 			writer.fwrite("</script>\n");
