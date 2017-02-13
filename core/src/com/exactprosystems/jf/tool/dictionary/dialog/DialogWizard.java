@@ -16,6 +16,7 @@ import com.exactprosystems.jf.documents.guidic.*;
 import com.exactprosystems.jf.documents.guidic.Window;
 import com.exactprosystems.jf.documents.guidic.controls.AbstractControl;
 import com.exactprosystems.jf.tool.Common;
+import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.custom.xpath.ImageAndOffset;
 import com.exactprosystems.jf.tool.custom.xpath.XpathTreeItem.TreeItemState;
 import com.exactprosystems.jf.tool.custom.xpath.XpathViewer;
@@ -752,7 +753,7 @@ public class DialogWizard
 		AbstractControl abstractControl = bean.getAbstractControl();
 		if (abstractControl.getAddition() == Addition.Many || Str.IsNullOrEmpty(abstractControl.getOwnerID()))
 		{
-			bean.setColor(DialogWizardController.COLOR_NOT_FINDING);
+			bean.setStyleClass(CssVariables.COLOR_NOT_FINDING);
 			return;
 		}
 		Locator locator = abstractControl.locator();

@@ -189,6 +189,17 @@ public class CssVariables
 
 	//endregion
 
+	//region Wizard
+	public static final String CUSTOM_TABLE_ROW				= "customTableRow";
+	public static final String COLOR_MARK					= "colorMark";
+	public static final String COLOR_QUESTION				= "colorQuestion";
+	public static final String COLOR_NOT_FOUND				= "colorNotFound";
+	public static final String COLOR_NOT_FINDING			= "colorNotFinding";
+	public static final String COLOR_ADD					= "colorAdd";
+	public static final String COLOR_UPDATE					= "colorUpdate";
+
+	//endregion
+
 	/**
 	 * Spinner css
 	 */

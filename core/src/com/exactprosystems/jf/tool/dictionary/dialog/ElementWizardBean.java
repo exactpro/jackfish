@@ -14,8 +14,7 @@ public class ElementWizardBean
 	private int count;
 	private ElementWizardBean option = this;
 
-	@Deprecated
-	private Color color;
+	private String styleClass;
 
 	private AbstractControl abstractControl;
 
@@ -114,14 +113,14 @@ public class ElementWizardBean
 		this.abstractControl = abstractControl;
 	}
 
-	public Color getColor()
+	public String getStyleClass()
 	{
-		return color;
+		return styleClass;
 	}
 
-	public void setColor(Color color)
+	public void setStyleClass(String styleClass)
 	{
-		this.color = color;
+		this.styleClass = styleClass;
 	}
 
 	@Override
