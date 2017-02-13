@@ -24,6 +24,13 @@ public class ProxyWinGuiApp extends ProxyApplication
 		}
 	}
 	
+    @Override
+    public int reconnect(Map<String, String> parameters) throws Exception
+    {
+        System.out.println("WinGuiApp.reconnect() parameters = " + Arrays.toString(parameters.values().toArray()));
+        return super.reconnect(parameters);
+    }
+
 	@Override
 	public int connect(int port, String jar, String work, String remoteClassName, Map<String, String> driverParameters, Map<String, String> parameters) throws Exception
 	{

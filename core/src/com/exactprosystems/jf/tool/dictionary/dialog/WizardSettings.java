@@ -11,13 +11,42 @@ package com.exactprosystems.jf.tool.dictionary.dialog;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.exactprosystems.jf.common.Settings;
+import com.exactprosystems.jf.common.Settings.SettingsValue;
+
 public class WizardSettings 
 {
-    public WizardSettings() 
+    public WizardSettings(Settings settings) 
     {
+        for(Kind kind : Kind.values())
+        {
+            SettingsValue min = settings.getValueOrDefault(Settings.GLOBAL_NS, Settings.WIZARD_NAME, kind.name() + "_MIN", "0.0");
+            SettingsValue max = settings.getValueOrDefault(Settings.GLOBAL_NS, Settings.WIZARD_NAME, kind.name() + "_MAX", "0.0");
+            setMin(kind, Double.parseDouble(min.getValue()));
+            setMax(kind, Double.parseDouble(max.getValue()));
+        }
+        
+        SettingsValue threshold = settings.getValueOrDefault(Settings.GLOBAL_NS, Settings.WIZARD_NAME, Settings.THRESHOLD, "0.0");
+        setThreshold(Double.parseDouble(threshold.getValue()));
     }
     
     public enum Kind { TYPE, PATH, SIZE, POSITION, ATTR }
+    
+    public double scale()
+    {
+        if (this.scale == null)
+        {
+            this.scale = 0.0;
+            for (Kind kind : Kind.values())
+            {
+                this.scale += getMax(kind);
+            }
+            
+            this.scale = this.scale == 0.0 ? 1 : 1/this.scale();
+        }
+        
+        return this.scale.doubleValue();
+    }
     
     public double getMax(Kind kind)
     {
@@ -34,6 +63,7 @@ public class WizardSettings
     public void setMax(Kind kind, double d)
     {
         this.maxs.put(kind, d);
+        this.scale = null;
     }
 
     public void setMin(Kind kind, double d)
@@ -54,4 +84,5 @@ public class WizardSettings
     private Map<Kind, Double> maxs = new HashMap<>();
     private Map<Kind, Double> mins = new HashMap<>();
     private double threshold = 0.0;
+    private Double scale = null;
 }

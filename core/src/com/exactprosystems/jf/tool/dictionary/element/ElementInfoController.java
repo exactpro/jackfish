@@ -118,9 +118,6 @@ public class ElementInfoController implements Initializable, ContainingParent
 			tf.maxWidthProperty().bind(this.fieldGrid.getColumnConstraints().get(1).maxWidthProperty());
 			tf.minWidthProperty().bind(this.fieldGrid.getColumnConstraints().get(1).minWidthProperty());
 		});
-		this.tfUID.prefWidthProperty().bind(this.identifiersGrid.getColumnConstraints().get(1).maxWidthProperty());
-		this.tfUID.maxWidthProperty().bind(this.identifiersGrid.getColumnConstraints().get(1).maxWidthProperty());
-		this.tfUID.minWidthProperty().bind(this.identifiersGrid.getColumnConstraints().get(1).minWidthProperty());
 	}
 
 	public void init(DictionaryFx model, Configuration configuration, GridPane gridPane, NavigationController navigation, String themePath)

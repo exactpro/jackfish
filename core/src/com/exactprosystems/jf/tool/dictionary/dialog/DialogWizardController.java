@@ -1,7 +1,18 @@
+////////////////////////////////////////////////////////////////////////////////
+//  Copyright (c) 2009-2015, Exactpro Systems, LLC
+//  Quality Assurance & Related Development for Innovative Trading Systems.
+//  All rights reserved.
+//  This is unpublished, licensed software, confidential and proprietary
+//  information which is the property of Exactpro Systems, LLC or its licensors.
+////////////////////////////////////////////////////////////////////////////////
+
 package com.exactprosystems.jf.tool.dictionary.dialog;
 
+import com.exactprosystems.jf.api.app.Addition;
 import com.exactprosystems.jf.api.app.ControlKind;
 import com.exactprosystems.jf.api.app.IControl;
+import com.exactprosystems.jf.api.app.Visibility;
+import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.documents.guidic.controls.AbstractControl;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
@@ -12,15 +23,21 @@ import com.exactprosystems.jf.tool.custom.controls.field.CustomFieldWithButton;
 import com.exactprosystems.jf.tool.custom.find.FindPanel;
 import com.exactprosystems.jf.tool.custom.find.IFind;
 import com.exactprosystems.jf.tool.custom.xpath.XpathTreeItem;
+import com.exactprosystems.jf.tool.helpers.DialogsHelper;
+import com.sun.javafx.css.PseudoClassState;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
+import javafx.concurrent.Service;
+import javafx.concurrent.Task;
+import javafx.css.PseudoClass;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
-import javafx.geometry.HPos;
-import javafx.geometry.Pos;
+import javafx.geometry.*;
+import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
+import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -32,20 +49,33 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.net.URL;
+import java.util.*;
 import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.ResourceBundle;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class DialogWizardController implements Initializable, ContainingParent
 {
+	public static String styleByState(XpathTreeItem.TreeItemState state)
+	{
+		switch (state)
+		{
+			case UPDATE : return CssVariables.COLOR_UPDATE;
+			case ADD: return CssVariables.COLOR_ADD;
+			case MARK: return CssVariables.COLOR_MARK;
+			case QUESTION:return CssVariables.COLOR_QUESTION;
+
+		}
+		return null;
+	}
+
 	public Parent parent;
 	public SplitPane horSplitPane;
 	public SplitPane verSplitPane;
@@ -56,6 +86,7 @@ public class DialogWizardController implements Initializable, ContainingParent
 
 	public CheckBox cbMark;
 	public CheckBox cbAdd;
+	public CheckBox cbUpdate;
 	public CheckBox cbQuestion;
 
 	public FindPanel<TreeItem<XpathTreeItem>> findPanel;
@@ -78,17 +109,21 @@ public class DialogWizardController implements Initializable, ContainingParent
 		this.imageViewWithScale = new ImageViewWithScale();
 		this.verSplitPane.getItems().add(0, this.imageViewWithScale.getContent());
 
-		this.treeViewWithRectangles = new TreeTableViewWithRectangles();
+		this.treeViewWithRectangles = new TreeTableViewWithRectangles(this);
 		this.paneTreeView.setCenter(this.treeViewWithRectangles.getContent());
 
 		this.imageViewWithScale.setClickConsumer(this.treeViewWithRectangles::selectItem);
-		this.treeViewWithRectangles.setTreeViewConsumer(xpathItem -> {
-			if (xpathItem != null)
+		this.treeViewWithRectangles.addSelectionConsumer(xpathItem -> this.imageViewWithScale.displayRectangle(xpathItem == null ? null : xpathItem.getRectangle()));
+		this.treeViewWithRectangles.addSelectionConsumer(xpathTreeItem -> {
+			if (xpathTreeItem != null)
 			{
-				this.imageViewWithScale.displayRectangle(xpathItem.getRectangle());
+				//TODO which bean we need select into table?
 			}
 		});
 		this.treeViewWithRectangles.setDisplayMarkedRowsConsumer(list -> this.imageViewWithScale.displayMarkedRectangle(list));
+		this.treeViewWithRectangles.removeConsumer(list -> this.imageViewWithScale.removeMarkedRectangles(list));
+
+		this.imageViewWithScale.setScaleConsumer(scale -> this.imageViewWithScale.displayMarkedRectangle(this.treeViewWithRectangles.rectanglesFromMarkedRows()));
 
 		this.findPanel.getStyleClass().remove(CssVariables.FIND_PANEL);
 		this.findPanel.setListener(new IFind<TreeItem<XpathTreeItem>>()
@@ -106,6 +141,7 @@ public class DialogWizardController implements Initializable, ContainingParent
 			}
 		});
 
+		this.cbUpdate.selectedProperty().addListener((observable, oldValue, newValue) -> this.treeViewWithRectangles.setState(XpathTreeItem.TreeItemState.UPDATE, newValue));
 		this.cbAdd.selectedProperty().addListener((observable, oldValue, newValue) -> this.treeViewWithRectangles.setState(XpathTreeItem.TreeItemState.ADD, newValue));
 		this.cbMark.selectedProperty().addListener((observable, oldValue, newValue) -> this.treeViewWithRectangles.setState(XpathTreeItem.TreeItemState.MARK, newValue));
 		this.cbQuestion.selectedProperty().addListener((observable, oldValue, newValue) -> this.treeViewWithRectangles.setState(XpathTreeItem.TreeItemState.QUESTION, newValue));
@@ -119,11 +155,6 @@ public class DialogWizardController implements Initializable, ContainingParent
 		this.parent = parent;
 	}
 	//endregion
-
-	void setOnHiding(Consumer<DialogEvent> consumer)
-	{
-		this.dialog.setOnHiding(consumer::accept);
-	}
 
 	void init(DialogWizard model, String windowName)
 	{
@@ -156,17 +187,21 @@ public class DialogWizardController implements Initializable, ContainingParent
 	{
 		if (document != null)
 		{
-			this.treeViewWithRectangles.displayDocument(document, xOffset, yOffset);
-			this.model.findElements(this.tableView.getItems());
-			BufferedImage image = this.imageViewWithScale.getImage();
-			this.imageViewWithScale.setListRectangles(this.treeViewWithRectangles.buildMap(image.getWidth(), image.getHeight(), new Dimension(image.getWidth() / 16, image.getHeight() / 16)));
-			this.hBoxToolbar.getChildren().forEach(node -> node.setDisable(false));
-			this.tableView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-				if (newValue != null)
-				{
-					this.treeViewWithRectangles.selectItem(newValue);
-				}
-			});
+		    Common.tryCatch(() -> 
+		    {
+    			this.treeViewWithRectangles.displayDocument(document, xOffset, yOffset);
+    			this.model.findElements(this.tableView.getItems());
+    			BufferedImage image = this.imageViewWithScale.getImage();
+    			this.imageViewWithScale.setListRectangles(this.treeViewWithRectangles.buildMap(image.getWidth(), image.getHeight(), new Dimension(image.getWidth() / 16, image.getHeight() / 16)));
+    			this.hBoxToolbar.getChildren().forEach(node -> node.setDisable(false));
+    			this.tableView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) ->
+    			{
+    				if (newValue != null)
+    				{
+    					this.treeViewWithRectangles.selectItem(newValue);
+    				}
+    			});
+		    }, "Error on display tree");
 		}
 	}
 
@@ -209,53 +244,73 @@ public class DialogWizardController implements Initializable, ContainingParent
 		else
 		{
 			this.tableView.getItems().set(index, bean);
-//			this.tableView.getColumns().forEach(column -> Platform.runLater(() -> {
-//				column.setVisible(false);
-//				column.setVisible(true);
-//			}));
+			//			this.tableView.getColumns().forEach(column -> Platform.runLater(() -> {
+			//				column.setVisible(false);
+			//				column.setVisible(true);
+			//			}));
 		}
 	}
 
 	List<ElementWizardBean> remove(ElementWizardBean bean)
 	{
 		this.tableView.getItems().remove(bean);
+		this.treeViewWithRectangles.removeBean(bean);
 		return this.tableView.getItems();
 	}
 
-	AbstractControl editElement(AbstractControl abstractControl)
+	AbstractControl editElement(AbstractControl abstractControl, List<String> values)
 	{
 		Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
 		alert.getDialogPane().getStylesheets().addAll(Common.currentThemesPaths());
 		alert.getDialogPane().setHeader(new Label());
 		alert.setTitle("Change element");
 		GridPane gridPane = new GridPane();
-		gridPane.setPrefWidth(400);
+		gridPane.setPrefWidth(800);
 		gridPane.setMaxWidth(Double.MAX_VALUE);
 		alert.getDialogPane().setContent(gridPane);
 		gridPane.getStyleClass().addAll(CssVariables.HGAP_MIN, CssVariables.VGAP_MIN);
 
+		//region create columns
 		ColumnConstraints c0 = new ColumnConstraints();
-		c0.setPercentWidth(30);
+		c0.setPercentWidth(15);
 		c0.setHalignment(HPos.RIGHT);
 
 		ColumnConstraints c1 = new ColumnConstraints();
 		c1.setFillWidth(true);
-		c1.setPercentWidth(70);
+		c1.setPercentWidth(35);
 		c1.setHalignment(HPos.LEFT);
-		gridPane.getColumnConstraints().addAll(c0, c1);
 
-		int index = 1;
-		addXpathToPane(gridPane, abstractControl.getXpath(), abstractControl.useAbsoluteXpath(),
-				  newId -> Common.tryCatch(() -> abstractControl.set(AbstractControl.xpathName, newId), "Error on set parameter")
-				, newB -> Common.tryCatch(() -> abstractControl.set(AbstractControl.absoluteXpathName, newB), "Error on set parameter")
-		);
-		addToPane(gridPane, "UID : ",		abstractControl.getUID(), 		newId -> Common.tryCatch(() -> abstractControl.set(AbstractControl.uidName, newId), "Error on set parameter"), index++);
-		addToPane(gridPane, "Class : ",		abstractControl.getClazz(),		newId -> Common.tryCatch(() -> abstractControl.set(AbstractControl.clazzName, newId), "Error on set parameter"), index++);
-		addToPane(gridPane, "Name : ",	 	abstractControl.getName(), 		newId -> Common.tryCatch(() -> abstractControl.set(AbstractControl.nameName, newId), "Error on set parameter"), index++);
-		addToPane(gridPane, "Title : ",	 	abstractControl.getTitle(),		newId -> Common.tryCatch(() -> abstractControl.set(AbstractControl.titleName, newId), "Error on set parameter"), index++);
-		addToPane(gridPane, "Action : ", 	abstractControl.getAction(),	newId -> Common.tryCatch(() -> abstractControl.set(AbstractControl.actionName, newId), "Error on set parameter"), index++);
-		addToPane(gridPane, "Text : ",	 	abstractControl.getText(),		newId -> Common.tryCatch(() -> abstractControl.set(AbstractControl.textName, newId), "Error on set parameter"), index++);
-		addToPane(gridPane, "Tooltip : ", 	abstractControl.getTooltip(), 	newId -> Common.tryCatch(() -> abstractControl.set(AbstractControl.tooltipName, newId), "Error on set parameter"), index++);
+
+		ColumnConstraints c2 = new ColumnConstraints();
+		c2.setPercentWidth(15);
+		c2.setHalignment(HPos.RIGHT);
+
+		ColumnConstraints c3 = new ColumnConstraints();
+		c3.setFillWidth(true);
+		c3.setPercentWidth(35);
+		c3.setHalignment(HPos.LEFT);
+
+		gridPane.getColumnConstraints().addAll(c0, c1, c2, c3);
+		//endregion
+
+		int index = 0;
+
+		addComboToLeftPane(gridPane, "Owner : ", abstractControl.getOwnerID(), newOwner -> Common.tryCatch(()->abstractControl.set(AbstractControl.ownerIdName, newOwner), "Error on set parameters"), index++, values);
+		addComboToLeftPane(gridPane, "Additional : ", abstractControl.getAddition(), newAdd -> Common.tryCatch(()->abstractControl.set(AbstractControl.additionName, newAdd), "Error on set parameters"), index++, Arrays.asList(Addition.values()));
+		addComboToLeftPane(gridPane, "Ref : ", abstractControl.getRefID(), refId -> Common.tryCatch(()->abstractControl.set(AbstractControl.refIdName, refId), "Error on set parameters"), index++,values);
+		addToLeftPane(gridPane, "Timeout : ", String.valueOf(abstractControl.getTimeout()), newTimeout -> Common.tryCatch(()->abstractControl.set(AbstractControl.timeoutName, newTimeout), "Error on set parameters"), index++);
+		addComboToLeftPane(gridPane, "Visibility : ", abstractControl.getVisibility(), newVis -> Common.tryCatch(()->abstractControl.set(AbstractControl.visibilityName, newVis), "Error on set parameters"),index++, Arrays.asList(Visibility.values()));
+
+		index = 1;
+
+		addXpathToPane(gridPane, abstractControl.getXpath(), abstractControl.useAbsoluteXpath(), newId -> Common.tryCatch(() -> abstractControl.set(AbstractControl.xpathName, newId), "Error on set parameter"), newB -> Common.tryCatch(() -> abstractControl.set(AbstractControl.absoluteXpathName, newB), "Error on set parameter"));
+		addToRightPane(gridPane, "UID : ", abstractControl.getUID(), newId -> Common.tryCatch(() -> abstractControl.set(AbstractControl.uidName, newId), "Error on set parameter"), index++);
+		addToRightPane(gridPane, "Class : ", abstractControl.getClazz(), newId -> Common.tryCatch(() -> abstractControl.set(AbstractControl.clazzName, newId), "Error on set parameter"), index++);
+		addToRightPane(gridPane, "Name : ", abstractControl.getName(), newId -> Common.tryCatch(() -> abstractControl.set(AbstractControl.nameName, newId), "Error on set parameter"), index++);
+		addToRightPane(gridPane, "Title : ", abstractControl.getTitle(), newId -> Common.tryCatch(() -> abstractControl.set(AbstractControl.titleName, newId), "Error on set parameter"), index++);
+		addToRightPane(gridPane, "Action : ", abstractControl.getAction(), newId -> Common.tryCatch(() -> abstractControl.set(AbstractControl.actionName, newId), "Error on set parameter"), index++);
+		addToRightPane(gridPane, "Text : ", abstractControl.getText(), newId -> Common.tryCatch(() -> abstractControl.set(AbstractControl.textName, newId), "Error on set parameter"), index++);
+		addToRightPane(gridPane, "Tooltip : ", abstractControl.getTooltip(), newId -> Common.tryCatch(() -> abstractControl.set(AbstractControl.tooltipName, newId), "Error on set parameter"), index++);
 
 		Optional<ButtonType> buttonType = alert.showAndWait();
 		if (buttonType.isPresent())
@@ -269,29 +324,44 @@ public class DialogWizardController implements Initializable, ContainingParent
 		return null;
 	}
 
-	void foundGreat(Node node, ElementWizardBean bean)
+	void displayFoundControl(Node node, ElementWizardBean bean, XpathTreeItem.TreeItemState state)
 	{
+	    if (node == null)
+	    {
+	    	bean.setStyleClass(CssVariables.COLOR_NOT_FOUND);
+	    	refreshTable();
+	        return;
+	    }
 		TreeItem<XpathTreeItem> byNode = this.treeViewWithRectangles.findByNode(node);
 		XpathTreeItem value = byNode.getValue();
 		if (value != null)
 		{
-			value.setState(XpathTreeItem.TreeItemState.MARK);
-			value.addRelation(bean);
-			this.treeViewWithRectangles.setState(XpathTreeItem.TreeItemState.MARK, this.cbMark.isSelected());
-		}
-	}
+			this.changeStateCount(-1, value.getState());
+			value.clearRelation(bean);
+			value.addRelation(bean, state);
+			this.changeStateCount(1, value.getState());
+			switch (state)
+			{
+				case ADD:
+					this.treeViewWithRectangles.setState(state, this.cbAdd.isSelected());
+					bean.setStyleClass(CssVariables.COLOR_ADD);
+					break;
+				case MARK:
+					this.treeViewWithRectangles.setState(state, this.cbMark.isSelected());
+					bean.setStyleClass(CssVariables.COLOR_MARK);
+					break;
+				case QUESTION:
+					this.treeViewWithRectangles.setState(state, this.cbQuestion.isSelected());
+					bean.setStyleClass(CssVariables.COLOR_QUESTION);
+					break;
+				case UPDATE:
+					this.treeViewWithRectangles.setState(state, this.cbUpdate.isSelected());
+					bean.setStyleClass(CssVariables.COLOR_UPDATE);
+					break;
 
-	void foundBad(NodeList list, ElementWizardBean bean)
-	{
-		List<TreeItem<XpathTreeItem>> byNodes = this.treeViewWithRectangles.findByNodes(list);
-		byNodes.stream()
-				.map(TreeItem::getValue)
-				.filter(Objects::nonNull)
-				.forEach(item -> {
-					item.setState(XpathTreeItem.TreeItemState.QUESTION);
-					item.addRelation(bean);
-				});
-		this.treeViewWithRectangles.setState(XpathTreeItem.TreeItemState.QUESTION, this.cbQuestion.isSelected());
+			}
+		}
+		refreshTable();
 	}
 
 	void displayOnButtons(boolean isOpenFilled, boolean isCloseFilled)
@@ -301,15 +371,52 @@ public class DialogWizardController implements Initializable, ContainingParent
 		this.btnGenerateOnClose.setStyle("-fx-background-color : " + (!isCloseFilled ? "rgba(0,255,0, 0.1)" : "rgba(255,0,0, 0.1)"));
 	}
 
+	void clearAndAddRelation(ElementWizardBean bean)
+	{
+		this.treeViewWithRectangles.clearAndAddRelation(bean);
+	}
+
+	public void changeStateCount(int count, XpathTreeItem.TreeItemState state)
+	{
+		if (state == null)
+		{
+			return;
+		}
+		CheckBox box = null;
+		switch (state)
+		{
+			case ADD:
+				box = this.cbAdd;
+				break;
+			case MARK:
+				box = this.cbMark;
+				break;
+			case QUESTION:
+				box = this.cbQuestion;
+				break;
+			case UPDATE:
+				box = this.cbUpdate;
+		}
+		String text = box.getText();
+		text = text.isEmpty() ? "0" : text;
+		int current = Integer.parseInt(text);
+		box.setText(String.valueOf(current + count));
+	}
+
+	private void clearCheckboxes()
+	{
+		Stream.of(this.cbAdd, this.cbUpdate, this.cbMark, this.cbQuestion).forEach(c -> Platform.runLater(() -> c.setText("0")));
+	}
+
 	//region Action methods
 	public void cancel(ActionEvent actionEvent)
 	{
-		this.model.close(false);
+		this.model.close(false, this.tableView.getItems());
 	}
 
 	public void accept(ActionEvent actionEvent)
 	{
-		this.model.close(true);
+		this.model.close(true, this.tableView.getItems());
 	}
 
 	public void nextMark(ActionEvent actionEvent)
@@ -322,12 +429,95 @@ public class DialogWizardController implements Initializable, ContainingParent
 		this.treeViewWithRectangles.prevMark();
 	}
 
-    public void magic(ActionEvent actionEvent)
-    {
-        final List<XpathTreeItem> list = this.treeViewWithRectangles.getMarkedRows().stream().map(e -> e.getValue())
-                .collect(Collectors.toList());
-        Common.tryCatch(() ->  this.model.arrangeAll(list), "Error on arrange all");
-    }
+	public void magic(ActionEvent actionEvent)
+	{
+		ExecutorService taskExecutor = Executors.newSingleThreadExecutor();
+
+		final List<XpathTreeItem> list = this.treeViewWithRectangles.getMarkedRows().stream().map(TreeItem::getValue).collect(Collectors.toList());
+		int sum = list.stream().mapToInt(x -> Math.max(1, x.getList().size())).sum();
+		if (sum == 0)
+		{
+			DialogsHelper.showInfo("Nothing to update");
+			return;
+		}
+		Dialog<String> dialog = new Dialog<>();
+		dialog.setWidth(400.0);
+
+		BorderPane borderPane = new BorderPane();
+		borderPane.setPrefWidth(400.0);
+		Label lblInfo = new Label();
+		ProgressBar progressBar = new ProgressBar();
+		progressBar.setMaxWidth(Double.MAX_VALUE);
+		progressBar.setProgress(0);
+
+		Button btnStop = new Button("Stop");
+		btnStop.setOnAction(e -> {
+			dialog.setResult("");
+			taskExecutor.shutdownNow();
+			dialog.close();
+		});
+
+		borderPane.setTop(lblInfo);
+		borderPane.setCenter(progressBar);
+		borderPane.setBottom(btnStop);
+		BorderPane.setAlignment(btnStop, Pos.CENTER_RIGHT);
+		BorderPane.setMargin(btnStop, new Insets(8, 0, 0, 0));
+
+		dialog.getDialogPane().setContent(borderPane);
+		dialog.getDialogPane().setHeader(new Label());
+		dialog.setTitle("Updating elements");
+		dialog.show();
+
+		Service<Void> service = new Service<Void>()
+		{
+			@Override
+			protected Task<Void> createTask()
+			{
+				return new Task<Void>()
+				{
+					@Override
+					protected Void call() throws Exception
+					{
+						clearCheckboxes();
+						final int[] count = {0};
+						for (XpathTreeItem xpathTreeItem : list)
+						{
+							ArrayList<XpathTreeItem.BeanWithMark> newList = new ArrayList<>(xpathTreeItem.getList());
+							for (XpathTreeItem.BeanWithMark beanWithMark : newList)
+							{
+								xpathTreeItem.clearRelation(beanWithMark.getBean());
+								ElementWizardBean bean = beanWithMark.getBean();
+								if (bean != null)
+								{
+									if (bean.getAbstractControl().getAddition() == Addition.Many || Str.IsNullOrEmpty(bean.getAbstractControl().getOwnerID()))
+									{
+										bean.setStyleClass(CssVariables.COLOR_NOT_FINDING);
+										continue;
+									}
+								}
+								Thread.sleep(200);
+								Platform.runLater(() -> lblInfo.setText("Start updating item " + ++count[0] + " of " + sum));
+								Common.tryCatch(() -> model.arrangeOne(xpathTreeItem.getNode(), bean, beanWithMark.getState()), "Error on arrange one");
+								Platform.runLater(() -> {
+									lblInfo.setText("End updating " + count[0] + " of " + sum);
+									progressBar.setProgress((double) count[0] / sum);
+								});
+							}
+						}
+						return null;
+					}
+				};
+			}
+		};
+		service.setExecutor(taskExecutor);
+		service.setOnSucceeded(e -> {
+			Common.tryCatch(() -> Thread.sleep(200), "");
+			Common.tryCatch(() -> model.findElements(this.tableView.getItems()), "Error on find elements");
+			dialog.setResult("");
+			dialog.close();
+		});
+		service.start();
+	}
 
 	public void generateOnOpen(ActionEvent actionEvent)
 	{
@@ -368,9 +558,11 @@ public class DialogWizardController implements Initializable, ContainingParent
 	private void initTable()
 	{
 		this.tableView.setEditable(true);
+		this.tableView.setRowFactory(row -> new CustomRowFactory());
 		TableColumn<ElementWizardBean, Integer> columnNumber = new TableColumn<>("#");
 		columnNumber.setCellValueFactory(new PropertyValueFactory<>("number"));
-		columnNumber.setCellFactory(e -> new TableCell<ElementWizardBean, Integer>(){
+		columnNumber.setCellFactory(e -> new TableCell<ElementWizardBean, Integer>()
+		{
 			@Override
 			protected void updateItem(Integer item, boolean empty)
 			{
@@ -393,7 +585,8 @@ public class DialogWizardController implements Initializable, ContainingParent
 		TableColumn<ElementWizardBean, String> columnId = new TableColumn<>("Id");
 		columnId.setCellValueFactory(new PropertyValueFactory<>("id"));
 		columnId.setEditable(true);
-		columnId.setCellFactory(e -> new TableCell<ElementWizardBean, String>(){
+		columnId.setCellFactory(e -> new TableCell<ElementWizardBean, String>()
+		{
 			private TextField tf;
 
 			@Override
@@ -436,13 +629,15 @@ public class DialogWizardController implements Initializable, ContainingParent
 				if (this.tf == null)
 				{
 					this.tf = new TextField(getString());
-					this.tf.focusedProperty().addListener((observable, oldValue, newValue) -> {
+					this.tf.focusedProperty().addListener((observable, oldValue, newValue) ->
+					{
 						if (!newValue && tf != null)
 						{
 							commitEdit(tf.getText());
 						}
 					});
-					this.tf.setOnKeyPressed(t -> {
+					this.tf.setOnKeyPressed(t ->
+					{
 						if (t.getCode() == KeyCode.ENTER)
 						{
 							commitEdit(tf.getText());
@@ -464,7 +659,8 @@ public class DialogWizardController implements Initializable, ContainingParent
 				return String.valueOf(getItem() == null ? "" : getItem());
 			}
 		});
-		columnId.setOnEditCommit(e -> {
+		columnId.setOnEditCommit(e ->
+		{
 			ElementWizardBean elementWizardBean = e.getRowValue();
 			if (elementWizardBean != null)
 			{
@@ -475,14 +671,16 @@ public class DialogWizardController implements Initializable, ContainingParent
 
 		TableColumn<ElementWizardBean, ControlKind> columnKind = new TableColumn<>("Kind");
 		columnKind.setCellValueFactory(new PropertyValueFactory<>("controlKind"));
-		columnKind.setOnEditCommit(e -> {
+		columnKind.setOnEditCommit(e ->
+		{
 			ElementWizardBean rowValue = e.getRowValue();
 			if (rowValue != null)
 			{
-				Common.tryCatch(() -> this.model.updateControlKind(rowValue,e.getNewValue()), "Error on update control kind");
+				Common.tryCatch(() -> this.model.updateControlKind(rowValue, e.getNewValue()), "Error on update control kind");
 			}
 		});
-		columnKind.setCellFactory(e -> new TableCell<ElementWizardBean, ControlKind>(){
+		columnKind.setCellFactory(e -> new TableCell<ElementWizardBean, ControlKind>()
+		{
 			ChoiceBox<ControlKind> comboBox;
 
 			@Override
@@ -526,7 +724,8 @@ public class DialogWizardController implements Initializable, ContainingParent
 					this.comboBox = new ChoiceBox<>(FXCollections.observableArrayList(ControlKind.values()));
 					this.comboBox.getSelectionModel().select(getItem());
 					this.comboBox.setOnAction(e -> commitEdit(this.comboBox.getSelectionModel().getSelectedItem()));
-					this.comboBox.showingProperty().addListener((observable, oldValue, newValue) -> {
+					this.comboBox.showingProperty().addListener((observable, oldValue, newValue) ->
+					{
 						if (!newValue)
 						{
 							cancelEdit();
@@ -548,7 +747,8 @@ public class DialogWizardController implements Initializable, ContainingParent
 
 		TableColumn<ElementWizardBean, Boolean> columnIsXpath = new TableColumn<>("Xpath");
 		columnIsXpath.setCellValueFactory(new PropertyValueFactory<>("xpath"));
-		columnIsXpath.setCellFactory(e -> new TableCell<ElementWizardBean, Boolean>(){
+		columnIsXpath.setCellFactory(e -> new TableCell<ElementWizardBean, Boolean>()
+		{
 			@Override
 			protected void updateItem(Boolean item, boolean empty)
 			{
@@ -570,7 +770,8 @@ public class DialogWizardController implements Initializable, ContainingParent
 
 		TableColumn<ElementWizardBean, Boolean> columnIsNew = new TableColumn<>("New");
 		columnIsNew.setCellValueFactory(new PropertyValueFactory<>("isNew"));
-		columnIsNew.setCellFactory(e -> new TableCell<ElementWizardBean, Boolean>(){
+		columnIsNew.setCellFactory(e -> new TableCell<ElementWizardBean, Boolean>()
+		{
 			@Override
 			protected void updateItem(Boolean item, boolean empty)
 			{
@@ -592,7 +793,8 @@ public class DialogWizardController implements Initializable, ContainingParent
 
 		TableColumn<ElementWizardBean, Integer> columnCount = new TableColumn<>("Count");
 		columnCount.setCellValueFactory(new PropertyValueFactory<>("count"));
-		columnCount.setCellFactory(e -> new TableCell<ElementWizardBean, Integer>(){
+		columnCount.setCellFactory(e -> new TableCell<ElementWizardBean, Integer>()
+		{
 			@Override
 			protected void updateItem(Integer item, boolean empty)
 			{
@@ -618,7 +820,8 @@ public class DialogWizardController implements Initializable, ContainingParent
 		columnOption.setPrefWidth(100);
 		columnOption.setMaxWidth(100);
 		columnOption.setMinWidth(100);
-		columnOption.setCellFactory(e -> new TableCell<ElementWizardBean, ElementWizardBean>(){
+		columnOption.setCellFactory(e -> new TableCell<ElementWizardBean, ElementWizardBean>()
+		{
 			@Override
 			protected void updateItem(ElementWizardBean item, boolean empty)
 			{
@@ -646,7 +849,7 @@ public class DialogWizardController implements Initializable, ContainingParent
 					btnRelation.setTooltip(new Tooltip("Set relation"));
 					btnRelation.getStyleClass().add(CssVariables.TRANSPARENT_BACKGROUND);
 					btnRelation.setOnAction(e -> model.updateRelation(item));
-					box.getChildren().addAll(btnEdit, btnRemove, btnRelation);
+					box.getChildren().addAll(btnEdit, btnRelation, btnRemove);
 					setGraphic(box);
 				}
 				else
@@ -661,7 +864,18 @@ public class DialogWizardController implements Initializable, ContainingParent
 		this.tableView.getColumns().addAll(columnNumber, columnId, columnKind, columnIsXpath, columnIsNew, columnCount, columnOption);
 	}
 
-	private void addToPane(GridPane pane, String id, String value, Consumer<String> consumer, int index)
+	private void addToRightPane(GridPane pane, String id, String value, Consumer<String> consumer, int index)
+	{
+		Label lbl = new Label(id);
+		CustomFieldWithButton tf = new CustomFieldWithButton(value);
+		tf.setMaxWidth(Double.MAX_VALUE);
+		tf.textProperty().addListener((observable, oldValue, newValue) -> consumer.accept(newValue));
+		GridPane.setFillWidth(tf, true);
+		pane.add(lbl, 2, index);
+		pane.add(tf, 3, index);
+	}
+
+	private void addToLeftPane(GridPane pane, String id, String value, Consumer<String> consumer, int index)
 	{
 		Label lbl = new Label(id);
 		CustomFieldWithButton tf = new CustomFieldWithButton(value);
@@ -672,9 +886,23 @@ public class DialogWizardController implements Initializable, ContainingParent
 		pane.add(tf, 1, index);
 	}
 
+	private <T> void addComboToLeftPane(GridPane pane, String id, T value, Consumer<T> consumer, int index, List<T> values)
+	{
+		ChoiceBox<T> cb = new ChoiceBox<>();
+		cb.getItems().add(null);
+		cb.getItems().addAll(values);
+		cb.getSelectionModel().select(value);
+		cb.setMaxWidth(Double.MAX_VALUE);
+		cb.setOnAction(e -> consumer.accept(cb.getValue()));
+		Label lbl = new Label(id);
+
+		pane.add(lbl, 0, index);
+		pane.add(cb, 1, index);
+	}
+
 	private void addXpathToPane(GridPane pane, String value, boolean isAbsolute, Consumer<String> consumer, Consumer<Boolean> absoluteConsumer)
 	{
-		Label lbl = new Label("Xpath");
+		Label lbl = new Label("Xpath : ");
 		HBox box = new HBox();
 		box.setAlignment(Pos.CENTER);
 
@@ -689,7 +917,8 @@ public class DialogWizardController implements Initializable, ContainingParent
 
 		Button btnXpath = new Button();
 		Common.customizeLabeled(btnXpath, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.XPATH_TREE);
-		btnXpath.setOnAction(event -> {
+		btnXpath.setOnAction(event ->
+		{
 			String newXpath = this.model.showXpathViewer(tf.getText());
 			if (newXpath != null)
 			{
@@ -697,8 +926,49 @@ public class DialogWizardController implements Initializable, ContainingParent
 			}
 		});
 		box.getChildren().addAll(cbIsAbsolute, tf, btnXpath);
-		pane.add(lbl, 0, 0);
-		pane.add(box, 1, 0);
+		pane.add(lbl, 2, 0);
+		pane.add(box, 3, 0);
+	}
+
+	public void refreshTable()
+	{
+		Platform.runLater(() -> {
+			this.tableView.getColumns().get(0).setVisible(false);
+			this.tableView.getColumns().get(0).setVisible(true);
+		});
 	}
 	//endregion
+
+	private class CustomRowFactory extends TableRow<ElementWizardBean>
+	{
+		private final PseudoClass customSelected = PseudoClassState.getPseudoClass("customSelectedState");
+		private final PseudoClass selected = PseudoClassState.getPseudoClass("selected");
+
+		public CustomRowFactory()
+		{
+			this.getStyleClass().addAll(CssVariables.CUSTOM_TABLE_ROW);
+			this.selectedProperty().addListener((observable, oldValue, newValue) -> {
+				this.pseudoClassStateChanged(customSelected, newValue);
+				this.pseudoClassStateChanged(selected, false); // remove selected pseudostate, cause this state change text color
+			});
+		}
+
+		@Override
+		protected void updateItem(ElementWizardBean item, boolean empty)
+		{
+			super.updateItem(item, empty);
+			this.getStyleClass().removeAll(
+					CssVariables.COLOR_MARK,
+					CssVariables.COLOR_QUESTION,
+					CssVariables.COLOR_NOT_FOUND,
+					CssVariables.COLOR_NOT_FINDING,
+					CssVariables.COLOR_ADD,
+					CssVariables.COLOR_UPDATE
+			);
+			if (item != null && !empty && item.getStyleClass() != null)
+			{
+				this.getStyleClass().add(item.getStyleClass());
+			}
+		}
+	}
 }

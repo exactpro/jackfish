@@ -108,6 +108,8 @@ namespace UIAdapter
             //logger.All("title=" + title + " height=" + height + " width=" + width + " pid=" + pid + " controlKind=" + controlKind + " timeout=" + timeout);
             Task<int> task = Task<int>.Factory.StartNew(() =>
             {
+                handler = null;
+                process = null;
                 title = ConvertString.replaceUnicodeSubStringToChar(title);
 
                 int runningTime = 0;

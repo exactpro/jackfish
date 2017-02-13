@@ -107,7 +107,13 @@ public class ReportBrowser extends BorderPane
 			loadWorker.stateProperty().addListener((observable, oldValue, newValue) -> {
 				if (newValue == Worker.State.SUCCEEDED)
 				{
-					this.textTab.setText(this.engine.getTitle());
+					String title = this.engine.getTitle();
+					if (title == null)
+					{
+						String location = this.engine.getLocation();
+						title = location.substring(location.lastIndexOf(File.separator) + 1);
+					}
+					this.textTab.setText(title);
 				}
 			});
 			

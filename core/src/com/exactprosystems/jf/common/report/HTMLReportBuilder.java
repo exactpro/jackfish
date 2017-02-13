@@ -216,21 +216,41 @@ public class HTMLReportBuilder extends ReportBuilder
 		writer.fwrite("<tr><td width='200'><a href='#' class='showSource'>Matrix <span class='caret'></span>  </a><td><span id='reportName'>%s</span>\n", matrixName);
 		writer.fwrite("<tr class='matrixSource'><td colspan='2'>\n");
 		writer.fwrite("<script>\n");
-		writer.fwrite("function copyToClipboard(text) {\n" +
-				"	console.log('TEXT : ' + text);\n"+
-				"	var w = document.createElement('textArea');\n" +
-				"	w.value = text;\n" +
-				"	w.setSelectionRange(0, text.length);\n" +
-				"	//w.style.width = 0;\n" +
-				"	//w.style.height = 0;\n" +
-				"	document.body.appendChild(w);\n" +
-				"	w.setSelectionRange(0, text.length);\n" +
-				"	var q = document.execCommand('copy');\n" +
-				"	document.body.removeChild(w);\n" +
-				"  }");
+		writer.fwrite("function copyToClipboard(elem) {\n"
+				+ "var clone = $('#copy').clone();\n"
+				+ "$('#copy').remove();\n"
+				+ "    var targetId = '_hiddenCopyText_';\n"
+				+ "    var origSelectionStart, origSelectionEnd;\n"
+				+ "    target = document.getElementById(targetId);\n"
+				+ "    if (!target) {\n"
+				+ "var target = document.createElement(\"textarea\");\n"
+				+ "target.style.position = 'absolute';\n"
+				+ "target.style.left = '-9999px';\n"
+				+ "target.style.top = '0';\n"
+				+ "target.id = targetId;\n"
+				+ "        document.body.appendChild(target);\n"
+				+ "        }\n"
+				+ "        target.textContent = elem.textContent;\n"
+				+ "    \n"
+				+ "    var currentFocus = document.activeElement;\n"
+				+ "    target.focus();\n"
+				+ "    target.setSelectionRange(0, target.value.length);\n"
+				+ "    var succeed;\n"
+				+ "    try {\n"
+				+ "     succeed = document.execCommand(\"copy\");\n"
+				+ "    } catch(e) {\n"
+				+ "        succeed = false;\n"
+				+ "    }\n"
+				+ "    if (currentFocus && typeof currentFocus.focus === \"function\") {\n"
+				+ "        currentFocus.focus();\n"
+				+ "    }\n"
+				+ "    target.textContent = \"\";\n"
+				+ "    $('pre').prepend(clone); \n"
+				+ "    return succeed;\n"
+				+ "  }");
 		writer.fwrite("</script>\n");
 		writer.fwrite("<pre id='matrixSource'>");
-		writer.fwrite("<button onclick=\"copyToClipboard(document.getElementById('matrixSource').innerHTML)\" class='btn btn-default copyMatrix'>Copy</button>\n");
+		writer.fwrite("<button id=\"copy\" onclick=\"copyToClipboard(document.getElementById('matrixSource'))\" class='btn btn-default copyMatrix'>Copy</button>\n");
 	}
 
 	@Override
@@ -274,9 +294,9 @@ public class HTMLReportBuilder extends ReportBuilder
 		writer.fwrite("<th scope='row'>%03d</th>", item.getNumber());
 		writer.fwrite("<td>%s</td>", itemId);
 		writer.fwrite("<td><a href='javascript:void(0)' class='showBody'>%s</a></td>", item.getItemName());
-		writer.fwrite("<td id='hs_%s'></td>", id);
-		writer.fwrite("<td id='time_%s'></td>", id);
-		writer.fwrite("<td id='src_%s'></td>", id);
+		writer.fwrite("<td id='hs_%s'> </td>", id);
+		writer.fwrite("<td id='time_%s'> </td>", id);
+		writer.fwrite("<td id='scr_%s'> </td>", id);
 		writer.fwrite("</tr>");
 		//endregion
 
@@ -314,8 +334,8 @@ public class HTMLReportBuilder extends ReportBuilder
 			writer.fwrite("$('#time_%s').html('%s ms');\n", id, time <= 1 ? "< 1" : time);
 			if (screenshot != null)
 			{
-				String link = decorateLink(screenshot.getDescription(), getImageDir() + File.separator + screenshot.getName(getReportDir()));
-				writer.fwrite("$('#scr_%s').innerHTML = '%s';\n",id,link);
+				String link = decorateLink(screenshot.getDescription(), getImageDir() + "/" + screenshot.getName(getReportDir()));
+				writer.fwrite("$('#scr_%s').html('%s');\n",id,link);
 			}
 			writer.fwrite("</script>\n");
 		//endregion

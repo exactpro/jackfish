@@ -21,6 +21,7 @@ import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
+import javafx.geometry.VPos;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.input.Dragboard;
@@ -81,7 +82,6 @@ public class WatcherFxController implements Initializable, ContainingParent
 	public void setParent(Parent parent)
 	{
 		dialog = new Alert(Alert.AlertType.INFORMATION);
-		dialog.setTitle("Watcher");
 		dialog.getDialogPane().setContent(parent);
 		dialog.initModality(Modality.NONE);
 		dialog.setResizable(true);
@@ -94,8 +94,11 @@ public class WatcherFxController implements Initializable, ContainingParent
 		this.table.setListener(this.model::removeItems);
 		this.expressionField = new ExpressionField(evaluator);
 		this.expressionField.setHelperForExpressionField("Watcher", matrix);
+		this.expressionField.setMaxWidth(1.7976931348623157E308);
 		this.mainGrid.add(expressionField, 0, 1);
-		GridPane.setMargin(this.expressionField, new Insets(0, 5, 0, 5));
+		this.mainGrid.setPadding(new Insets(0,16,5,16));
+		this.dialog.getDialogPane().setHeader(new Label());
+		GridPane.setValignment(this.expressionField, VPos.BOTTOM);
 		this.table.completeFirstColumn("Expression", "key", true, false);
 		this.table.completeSecondColumn("Result", "value", false, true);
 		this.table.onFinishEditFirstColumn((value, newValue) -> this.model.updateRow(newValue, this.table.getItems().indexOf(value)));
@@ -107,7 +110,7 @@ public class WatcherFxController implements Initializable, ContainingParent
 		if (!isShow())
 		{
 			this.dialog.getDialogPane().getStylesheets().addAll(Common.currentThemesPaths());
-			this.dialog.setHeaderText("Watcher for " + text);
+			this.dialog.setTitle("Watcher for " + text);
 			Optional<ButtonType> buttonType = this.dialog.showAndWait();
 			buttonType.filter(bt -> bt.getButtonData().equals(ButtonBar.ButtonData.OK_DONE)).ifPresent(bt -> Common.tryCatch(this.model::saveData, "Error on close watcher"));
 		}

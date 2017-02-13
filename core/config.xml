@@ -195,7 +195,7 @@
             <key>LogLevel</key>
             <value>ALL</value>
         </parameters>
-        <appDicPath>dic/gui/LayoutTesting.xml</appDicPath>
+        <appDicPath>dic/gui/LayoutHtmlTesting.xml</appDicPath>
         <appJar>${JF}/apps/win.jar</appJar>
         <appWorkDir>${JF}/apps/</appWorkDir>
         <appStartPort>12000</appStartPort>

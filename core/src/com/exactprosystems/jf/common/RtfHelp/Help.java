@@ -11,12 +11,16 @@ public class Help {
         return this.getClass().getResource("Header.png");
     }
 
+    public URL introPicture(){
+        return this.getClass().getResource("Intro.png");
+    }
+
     public URL footer(){
         return this.getClass().getResource("Footer.png");
     }
 
     public URL introduction(){
-        return this.getClass().getResource("Introduction.rtf");
+        return this.getClass().getResource("intro.txt");
     }
 
     public URL mvel(){

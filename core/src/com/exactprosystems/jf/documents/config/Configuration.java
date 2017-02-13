@@ -81,8 +81,8 @@ import java.util.stream.Collectors;
 @XmlAccessorType(XmlAccessType.NONE)
 
 @DocumentInfo(
-		newName = "NewConfiguration", 
-		extentioin = "xml", 
+		newName = "NewConfiguration",
+		extentioin = "xml",
 		description = "Jackfish configuration"
 )
 public class Configuration extends AbstractDocument
@@ -125,11 +125,11 @@ public class Configuration extends AbstractDocument
 	//endregion
 
 	public static final String entryName			= "name";
-	
+
 	public static final String sqlEntry				= "sqlEntry";
 	public static final String sqlJar				= "sqlJar";
 	public static final String sqlConnection 		= "sqlConnection";
-	
+
 	public static final String clientEntry			= "clientEntry";
 	public static final String clientDescription 	= "clientDescription";
 	public static final String clientJar			= "clientJar";
@@ -142,11 +142,11 @@ public class Configuration extends AbstractDocument
 
 	public static final String appEntry				= "appEntry";
 	public static final String appDescription 		= "appDescription";
-	public static final String appDicPath			= "appDicPath"; 
+	public static final String appDicPath			= "appDicPath";
 	public static final String appJar				= "appJar";
 	public static final String appWorkDir			= "appWorkDir";
 	public static final String appStartPort			= "appStartPort";
-	
+
 	public static final String parametersEntry		= "parameters";
 	public static final String parametersKey		= "key";
 	public static final String parametersValue		= "value";
@@ -174,7 +174,7 @@ public class Configuration extends AbstractDocument
 		DEFAULT_IMPORTS.add(new MutableString(String.class.getPackage().getName()));
         DEFAULT_IMPORTS.add(new MutableString(Color.class.getPackage().getName()));
         DEFAULT_IMPORTS.add(new MutableString(ActionEvent.class.getPackage().getName()));
-        
+
         DEFAULT_IMPORTS.add(new MutableString(Table.class.getPackage().getName()));
         DEFAULT_IMPORTS.add(new MutableString(Do.class.getPackage().getName()));
 		DEFAULT_IMPORTS.add(new MutableString(Condition.class.getPackage().getName()));
@@ -206,19 +206,19 @@ public class Configuration extends AbstractDocument
 
 	@XmlElement(name = time)
 	protected MutableString timeValue;
-	
+
 	@XmlElement(name = date)
 	protected MutableString dateValue;
-	
+
 	@XmlElement(name = dateTime)
 	protected MutableString dateTimeValue;
-	
+
 	@XmlElement(name = formats)
 	protected MutableArrayList<MutableString> formatsValue;
 
 	@XmlElement(name = reports)
 	protected MutableString reportsValue;
-	
+
 	@XmlElement(name = git)
 	@Deprecated
 	protected MutableString gitValue;
@@ -231,13 +231,13 @@ public class Configuration extends AbstractDocument
 
 	@XmlElement(name = vars)
 	protected MutableString varsValue;
-	
+
 	@XmlElement(name = userVars)
 	protected MutableArrayList<MutableString> userVarsValue;
 
 	@XmlElement(name = matrix)
 	protected MutableArrayList<MutableString> matricesValue;
-	
+
 	@XmlElement(name = appDict)
 	protected MutableArrayList<MutableString> appDictionariesValue;
 
@@ -267,7 +267,7 @@ public class Configuration extends AbstractDocument
 		super(fileName, factory);
 
 		this.changed 					= false;
-		
+
 		this.timeValue					= new MutableString();
 		this.dateValue					= new MutableString();
 		this.dateTimeValue				= new MutableString();
@@ -275,7 +275,7 @@ public class Configuration extends AbstractDocument
 		this.reportsValue				= new MutableString();
 		this.gitValue					= new MutableString();
         this.versionValue               = new MutableString();
-		
+
 		this.globalHandlerValue			= new GlobalHandler();
 
 		this.sqlEntriesValue 			= new MutableArrayList<SqlEntry>();
@@ -309,7 +309,7 @@ public class Configuration extends AbstractDocument
 	public static Configuration createNewConfiguration(String pathToConfig, DocumentFactory factory)
 	{
 		Configuration config = new Configuration(pathToConfig, factory);
-		
+
 		config.varsValue = new MutableString("vars.ini");
 		config.timeValue = DEFAULT_TIME;
 		config.dateValue = DEFAULT_DATE;
@@ -322,10 +322,10 @@ public class Configuration extends AbstractDocument
 		config.reportsValue.set(REPORTS_FOLDER);
 		config.clientDictionariesValue.add(new MutableString(CLIENT_DIC_FOLDER));
 		config.appDictionariesValue.add(new MutableString(APP_DIC_FOLDER));
-		
+
 		return config;
 	}
-	
+
 	public MutableString getTime()
 	{
 		return this.timeValue;
@@ -440,14 +440,14 @@ public class Configuration extends AbstractDocument
 			return this.globals.get(name);
 		}
 	}
-	
+
 	public AbstractEvaluator createEvaluator() throws Exception
 	{
 		if (Str.IsNullOrEmpty(this.evaluatorValue))
 		{
 			throw new Exception("Empty evaluator class name.");
 		}
-		
+
 		AbstractEvaluator evaluator	= objectFromClassName(this.evaluatorValue, AbstractEvaluator.class);
 		evaluator.addImports(toStringList(DEFAULT_IMPORTS));
 		evaluator.addImports(toStringList(this.importsValue));
@@ -457,11 +457,11 @@ public class Configuration extends AbstractDocument
 			vars.injectVariables(evaluator);
 		}
 		evaluator.reset("" + getVersion());
-		
+
 		return evaluator;
 	}
 
-	
+
 	public void refresh()  throws Exception
 	{
 		refreshVars();
@@ -474,7 +474,7 @@ public class Configuration extends AbstractDocument
 		display();
 	}
 
-	
+
 	protected void refreshLibs()
 	{
 		IMatrixListener checker = new MatrixListener();
@@ -489,22 +489,24 @@ public class Configuration extends AbstractDocument
 			if (folderFile.exists() && folderFile.isDirectory())
 			{
 				File[] libFiles = folderFile.listFiles((dir, name) -> name != null && name.endsWith(matrixExt));
-				
+
+				List<String> nameSpaces = new ArrayList<>();
+
 				for (File libFile : libFiles)
 				{
-					Date currentTime  = new Date(libFile.lastModified());
+					Date currentTime = new Date(libFile.lastModified());
 					Date previousTime = this.documentsActuality.put(libFile.getAbsolutePath(), currentTime);
-					
-					if (previousTime != null && !currentTime.after(previousTime))
+
+					if (previousTime != null && !currentTime.after(previousTime) && !new Date(folderFile.lastModified()).after(previousTime))
 					{
 						continue;
 					}
-					
+
 					try (Reader reader = new FileReader(libFile))
 					{
-					    Context context = getFactory().createContext();
-					    MatrixRunner runner = context.createRunner(libFile.getName(), null, new Date(), null);
-						Matrix matrix = getFactory().createLibrary(libFile.getAbsolutePath(), runner); 
+						Context context = getFactory().createContext();
+						MatrixRunner runner = context.createRunner(libFile.getName(), null, new Date(), null);
+						Matrix matrix = getFactory().createLibrary(libFile.getAbsolutePath(), runner);
 						if (!checker.isOk())
 						{
 							logger.error("Library load error: [" + libFile.getName() + "] " + checker.getExceptionMessage());
@@ -521,6 +523,7 @@ public class Configuration extends AbstractDocument
 							for (String ns : namespaces)
 							{
 								this.libs.put(ns, matrix);
+								nameSpaces.add(ns);
 							}
 						}
 					}
@@ -530,6 +533,10 @@ public class Configuration extends AbstractDocument
 					}
 				}
 			}
+			else
+			{
+				this.libs.entrySet().removeIf(entry -> entry.getValue().getName().contains(folderFile.getAbsolutePath()));
+			}
 		}
 	}
 
@@ -538,7 +545,7 @@ public class Configuration extends AbstractDocument
 		try
 		{
 			this.systemVars.clear();
-			
+
 			setUserVariablesFromMask(this.varsValue.get());
 			for (MutableString userVars : this.userVarsValue)
 			{
@@ -550,11 +557,11 @@ public class Configuration extends AbstractDocument
 			logger.error(e.getMessage(), e);
 		}
 	}
-	
+
 	public void refreshMatrices()
 	{}
-	
-	public void refreshAppDictionaries()  
+
+	public void refreshAppDictionaries()
 	{
 		for (AppEntry entry : this.appEntriesValue)
 		{
@@ -564,16 +571,16 @@ public class Configuration extends AbstractDocument
 			{
 				continue;
 			}
-			
+
 			File dicFile = new File(MainRunner.makeDirWithSubstitutions(dicPath));
 			Date currentTime  = new Date(dicFile.lastModified());
 			Date previousTime = this.documentsActuality.get(dicFile.getAbsolutePath());
-			
+
 			if (previousTime != null && !currentTime.after(previousTime))
 			{
 				continue;
 			}
-			
+
 			try
 			{
 				if (this.applications.isLoaded(name))
@@ -583,20 +590,20 @@ public class Configuration extends AbstractDocument
 					factory.init(dictionary);
 					this.documentsActuality.put(dicFile.getAbsolutePath(), currentTime);
 				}
-			} 
+			}
 			catch (Exception e)
 			{
 				logger.error(e.getMessage(), e);
 			}
 		}
 	}
-	
-	public void refreshClientDictionaries() 
+
+	public void refreshClientDictionaries()
 	{}
-	
-	public void refreshReport() 
+
+	public void refreshReport()
 	{}
-	
+
     //------------------------------------------------------------------------------------------------------------------
     // interface Document
     //------------------------------------------------------------------------------------------------------------------
@@ -607,18 +614,18 @@ public class Configuration extends AbstractDocument
     	try
     	{
 			this.valid = false;
-	
+
 	        jaxbContextClasses[0] = this.getClass();
 	        JAXBContext jaxbContext = JAXBContext.newInstance(jaxbContextClasses);
-	
-	
+
+
 	        SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
 	        Source schemaFile = new StreamSource(Xsd.class.getResourceAsStream("Configuration.xsd"));
 	        Schema schema = schemaFactory.newSchema(schemaFile);
-	
-	
+
+
 	        Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
-	
+
 	        unmarshaller.setSchema(schema);
 	        unmarshaller.setEventHandler(event ->
 			{
@@ -626,18 +633,18 @@ public class Configuration extends AbstractDocument
 
 				return false;
 			});
-	
+
 	        Configuration config = (Configuration) unmarshaller.unmarshal(reader);
 	        config.factory = getFactory();
-	        
+
 	        setAll(config);
-	        
+
 			this.reportFactoryObj		= objectFromClassName(reportFactoryValue, ReportFactory.class);
 
 			DateTime.setFormats(this.timeValue.get(), this.dateValue.get(), this.dateTimeValue.get());
 			Converter.setFormats(toStringList(this.formatsValue));
-			
-			refresh(); 
+
+			refresh();
 
 			this.valid = true;
     	}
@@ -648,10 +655,10 @@ public class Configuration extends AbstractDocument
 	}
 
     @Override
-    public boolean canClose() throws Exception 
+    public boolean canClose() throws Exception
     {
     	boolean res = true;
-    	
+
 		synchronized (this.subordinates)
 		{
 			for (Document doc : this.subordinates)
@@ -673,7 +680,7 @@ public class Configuration extends AbstractDocument
 			copy = new HashSet<>();
 			copy.addAll(this.subordinates);
 		}
-		
+
 		// save list of all opened documents ...
 		settings.removeAll(Settings.MAIN_NS, Settings.OPENED);
 		settings.saveIfNeeded();
@@ -699,12 +706,12 @@ public class Configuration extends AbstractDocument
 		this.services.stopAllServices();
 		this.applications.stopAllApplications();
     }
-    
+
     @Override
     public void save(String fileName) throws Exception
     {
     	super.save(fileName);
-    	
+
         try(OutputStream os = new FileOutputStream(new File(fileName)))
         {
             JAXBContext jaxbContext = JAXBContext.newInstance(jaxbContextClasses);
@@ -732,7 +739,7 @@ public class Configuration extends AbstractDocument
 		{
 			return true;
 		}
-		
+
 		return this.timeValue.isChanged()
 				|| this.dateValue.isChanged()
 				|| this.dateTimeValue.isChanged()
@@ -757,7 +764,7 @@ public class Configuration extends AbstractDocument
 	public void saved()
 	{
 		super.saved();
-		
+
 		this.changed = false;
 		this.timeValue.saved();
 		this.dateValue.saved();
@@ -815,12 +822,12 @@ public class Configuration extends AbstractDocument
 		return getEntry(name, this.appEntriesValue);
 	}
 
-	
+
 	public RunnerListener getRunnerListener()
 	{
 		return this.runnerListener;
 	}
-	
+
 	public List<AppEntry> getAppEntries()
 	{
 		return this.appEntriesValue;
@@ -850,7 +857,7 @@ public class Configuration extends AbstractDocument
 	{
 		return this.libs.get(name);
 	}
-	
+
 	public Map<String, Matrix> getLibs()
 	{
 		return this.libs;
@@ -860,7 +867,7 @@ public class Configuration extends AbstractDocument
 	{
 		return this.valid;
 	}
-    
+
 	public final void register(Document doc)
 	{
 		synchronized (this.subordinates)
@@ -886,7 +893,7 @@ public class Configuration extends AbstractDocument
 	{
 		this.globals = map;
 	}
-	
+
 	public static List<String> toStringList(MutableArrayList<MutableString> str)
 	{
 		return str.stream().map(a -> MainRunner.makeDirWithSubstitutions(a.get())).collect(Collectors.toList());
@@ -900,7 +907,7 @@ public class Configuration extends AbstractDocument
 	@SuppressWarnings("unchecked")
 	protected <T extends Entry> T getEntry(String name, List<T> entries) throws Exception
 	{
-		if (entries == null) 
+		if (entries == null)
 		{
 			return null;
 		}
@@ -915,7 +922,7 @@ public class Configuration extends AbstractDocument
 	}
 
 
-	
+
 	@SuppressWarnings("unchecked")
 	private <T> T objectFromClassName(String name, Class<T> baseType) 	throws Exception
 	{
@@ -925,17 +932,17 @@ public class Configuration extends AbstractDocument
 			try
 			{
 				type = Class.forName(name);
-			} 
+			}
 			catch (ClassNotFoundException e)
 			{
 				type = Class.forName(baseType.getPackage().getName() + "." + name);
 			}
-			
+
 			if (!baseType.isAssignableFrom(type))
 			{
 				throw new Exception("class '" + name + "' is not assignable from " + baseType.getName());
 			}
-	
+
 			return (T)type.newInstance();
 		}
 		catch (Exception e)
@@ -951,7 +958,7 @@ public class Configuration extends AbstractDocument
 		{
 			return;
 		}
-		
+
 		final File file = new File(MainRunner.makeDirWithSubstitutions(userVariablesFileName));
 		if (file.exists())
 		{
@@ -985,12 +992,12 @@ public class Configuration extends AbstractDocument
 		this.appDictionariesValue.from(config.appDictionariesValue);
 		this.clientDictionariesValue.from(config.clientDictionariesValue);
 		this.librariesValue.from(config.librariesValue);
-		
+
 		this.changed = false;
 	}
 
-	private static final Class<?>[] jaxbContextClasses = 
-		{ 
+	private static final Class<?>[] jaxbContextClasses =
+		{
 			Configuration.class,
 			SqlEntry.class,
 			ClientEntry.class,
@@ -1007,8 +1014,8 @@ public class Configuration extends AbstractDocument
 	protected ReportFactory			reportFactoryObj;
 	protected Map<String, Matrix>	libs;
 	protected Map<String, Date>		documentsActuality;
-	protected Map<String, Object>	globals; 
-	protected Set<SystemVars>		systemVars; 
+	protected Map<String, Object>	globals;
+	protected Set<SystemVars>		systemVars;
 
 	protected ClientsPool			clients;
 	protected ServicePool			services;
@@ -1016,7 +1023,7 @@ public class Configuration extends AbstractDocument
 	protected DataBasePool			databases;
 
 	protected final List<Document> 	subordinates = new ArrayList<>();
-	
+
 	protected boolean valid = false;
 
 	private static final Logger logger = Logger.getLogger(Configuration.class);

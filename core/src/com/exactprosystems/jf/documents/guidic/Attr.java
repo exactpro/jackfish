@@ -14,6 +14,8 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlValue;
 
+import com.exactprosystems.jf.api.common.Str;
+
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.NONE)
 public class Attr 
@@ -30,7 +32,36 @@ public class Attr
 	{
 	}
 
-	public Attr(String name, String value)
+	@Override
+    public int hashCode()
+    {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((name == null) ? 0 : name.hashCode());
+        result = prime * result + ((value == null) ? 0 : value.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj)
+    {
+        if (this == obj)
+        {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass())
+        {
+            return false;
+        }
+        Attr other = (Attr) obj;
+        if (!Str.areEqual(this.name, other.name))
+        {
+            return false;
+        }
+        return Str.areEqual(this.value, other.value);
+    }
+
+    public Attr(String name, String value)
 	{
 		this.name = name;
 		this.value = value;

@@ -209,7 +209,7 @@ public final class TestCase extends MatrixItem
 		Table table = context.getTable();
 		RowTable row = new RowTable();
 		int position = -1;
-		
+		super.screenshot = null;
 		try
 		{
 			Settings settings = getMatrix().getFactory().getSettings();

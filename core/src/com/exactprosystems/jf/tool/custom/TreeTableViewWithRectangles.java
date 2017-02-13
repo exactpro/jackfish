@@ -6,8 +6,10 @@ import com.exactprosystems.jf.documents.matrix.parser.SearchHelper;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.custom.layout.CustomRectangle;
 import com.exactprosystems.jf.tool.custom.layout.LayoutExpressionBuilderController;
+import com.exactprosystems.jf.tool.custom.xpath.XpathItem;
 import com.exactprosystems.jf.tool.custom.xpath.XpathTreeItem;
 import com.exactprosystems.jf.tool.custom.xpath.XpathViewer;
+import com.exactprosystems.jf.tool.dictionary.dialog.DialogWizardController;
 import com.exactprosystems.jf.tool.dictionary.dialog.ElementWizardBean;
 import com.sun.javafx.scene.control.skin.TreeTableViewSkin;
 import javafx.application.Platform;
@@ -44,7 +46,10 @@ public class TreeTableViewWithRectangles
 
 	private Node waitingNode;
 
-	private Consumer<XpathTreeItem> consumer;
+	private DialogWizardController controller;
+
+	private Consumer<List<Rectangle>> removeConsumer;
+	private List<Consumer<XpathTreeItem>> selectionConsumers = new ArrayList<>();
 	private Consumer<List<CustomRectangle>> markedRowsConsumer;
 
 	private Map<Rectangle, TreeItem<XpathTreeItem>> map = new HashMap<>();
@@ -53,10 +58,12 @@ public class TreeTableViewWithRectangles
 		put(XpathTreeItem.TreeItemState.ADD, true);
 		put(XpathTreeItem.TreeItemState.MARK, true);
 		put(XpathTreeItem.TreeItemState.QUESTION, true);
+		put(XpathTreeItem.TreeItemState.UPDATE, true);
 	}};
 
-	public TreeTableViewWithRectangles()
+	public TreeTableViewWithRectangles(DialogWizardController dialogWizardController)
 	{
+		this.controller = dialogWizardController;
 		this.anchorPane = new AnchorPane();
 		this.treeTableView = new TreeTableView<>();
 		this.treeTableView.setSkin(new MyCustomSkin(this.treeTableView));
@@ -99,7 +106,10 @@ public class TreeTableViewWithRectangles
 				if (treeItem != null)
 				{
 					XpathTreeItem xpathTreeItem = treeItem.getValue();
+					this.controller.changeStateCount(-1, xpathTreeItem.getState());
 					xpathTreeItem.changeState();
+					this.controller.changeStateCount(+1, xpathTreeItem.getState());
+					this.controller.refreshTable();
 					this.displayMarkedRows();
 					refresh();
 				}
@@ -107,7 +117,10 @@ public class TreeTableViewWithRectangles
 
 		});
 
-		this.treeTableView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> Optional.ofNullable(consumer).ifPresent(c -> c.accept(newValue == null ? null : newValue.getValue())));
+		this.treeTableView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) ->
+				this.selectionConsumers.stream()
+						.filter(Objects::nonNull)
+						.forEach(c -> c.accept(newValue == null ? null : newValue.getValue())));
 	}
 
 	//region public methods
@@ -161,9 +174,9 @@ public class TreeTableViewWithRectangles
 		return map;
 	}
 
-	public void setTreeViewConsumer(Consumer<XpathTreeItem> consumer)
+	public void addSelectionConsumer(Consumer<XpathTreeItem> consumer)
 	{
-		this.consumer = consumer;
+		this.selectionConsumers.add(consumer);
 	}
 
 	public void setDisplayMarkedRowsConsumer(Consumer<List<CustomRectangle>> markedRowsConsumer)
@@ -185,7 +198,8 @@ public class TreeTableViewWithRectangles
 	{
 		List<TreeItem<XpathTreeItem>> list = new ArrayList<>();
 		TreeItem<XpathTreeItem> root = this.treeTableView.getRoot();
-		byPass(root, list, xpathTreeItem -> xpathTreeItem != null && xpathTreeItem.getList().contains(bean));
+		byPass(root, list, xpathTreeItem -> xpathTreeItem != null && xpathTreeItem.contains(bean));
+		this.treeTableView.getSelectionModel().clearSelection();
 		if (list.size() == 1)
 		{
 			selectAndScroll(list.get(0));
@@ -302,6 +316,53 @@ public class TreeTableViewWithRectangles
 			this.treeTableView.getColumns().get(0).setVisible(false);
 			this.treeTableView.getColumns().get(0).setVisible(true);
 		});
+	}
+
+	public void clearAndAddRelation(ElementWizardBean bean)
+	{
+		TreeItem<XpathTreeItem> selectedItem = this.treeTableView.getSelectionModel().getSelectedItem();
+		if (selectedItem == null)
+		{
+			this.treeTableView.getSelectionModel().selectFirst();
+		}
+		if (selectedItem != null)
+		{
+			boolean prevStateIsSet = selectedItem.getValue().getState() != null;
+			clearRelation(bean);
+			this.controller.changeStateCount(-1, prevStateIsSet ? selectedItem.getValue().getState() : XpathTreeItem.TreeItemState.UPDATE);
+			selectedItem.getValue().addRelation(bean, XpathTreeItem.TreeItemState.UPDATE);
+			this.controller.changeStateCount(1, selectedItem.getValue().getState());
+			this.controller.refreshTable();
+		}
+		this.displayMarkedRows();
+		refresh();
+	}
+
+	private void clearRelation(ElementWizardBean bean)
+	{
+		List<TreeItem<XpathTreeItem>> list = new ArrayList<>();
+		byPass(this.treeTableView.getRoot(), list, x -> x != null && x.contains(bean));
+		list.forEach(item -> item.getValue().clearRelation(bean));
+	}
+
+	public void removeBean(ElementWizardBean bean)
+	{
+		List<TreeItem<XpathTreeItem>> list = new ArrayList<>();
+		byPass(this.treeTableView.getRoot(), list, xpathTreeItem -> xpathTreeItem != null && xpathTreeItem.contains(bean));
+		Optional.ofNullable(this.removeConsumer).ifPresent(c -> c.accept(
+				list.stream()
+					.map(TreeItem::getValue)
+					.filter(Objects::nonNull)
+					.map(XpathItem::getRectangle)
+					.collect(Collectors.toList())
+		));
+		list.forEach(e -> e.getValue().clearRelation(bean));
+		refresh();
+	}
+
+	public void removeConsumer(Consumer<List<Rectangle>> consumer)
+	{
+		this.removeConsumer = consumer;
 	}
 	//endregion
 
@@ -459,38 +520,39 @@ public class TreeTableViewWithRectangles
 
 	private void displayMarkedRows()
 	{
-		Optional.ofNullable(this.markedRowsConsumer).ifPresent(c -> {
-			List<CustomRectangle> list = this.getMarkedRows()
-					.stream()
-					.filter(r -> true)
-					.map(markedRow -> {
-						XpathTreeItem value = markedRow.getValue();
-						XpathTreeItem.TreeItemState state = value.getState();
-						value.setMarkIsVisible(state == null ? true : stateMap.get(state));
+		Optional.ofNullable(this.markedRowsConsumer).ifPresent(c -> c.accept(rectanglesFromMarkedRows()));
+	}
 
-						Rectangle rectangle = value.getRectangle();
-						CustomRectangle customRectangle = new CustomRectangle(rectangle, 1.0);
-						customRectangle.setOpacity(TRANSPARENT_RECT);
-						customRectangle.setWidthLine(LayoutExpressionBuilderController.BORDER_WIDTH);
-						customRectangle.setFill(value.getState().color());
-						customRectangle.setVisible(value.isMarkVisible());
+	public List<CustomRectangle> rectanglesFromMarkedRows()
+	{
+		return this.getMarkedRows()
+				.stream()
+				.filter(r -> true)
+				.map(markedRow -> {
+					XpathTreeItem value = markedRow.getValue();
+					XpathTreeItem.TreeItemState state = value.getState();
+					value.setMarkIsVisible(state == null ? true : stateMap.get(state));
 
-						List<ElementWizardBean> relatedList = value.getList();
-						if (!relatedList.isEmpty())
-						{
-							Text text = new Text();
-							String collect = relatedList.stream().map(ElementWizardBean::getId).collect(Collectors.joining(","));
-							text.setText(collect);
-							text.setFill(value.getState().color());
-							customRectangle.setText(text);
-						}
+					Rectangle rectangle = value.getRectangle();
+					CustomRectangle customRectangle = new CustomRectangle(rectangle, 1.0);
+					customRectangle.setOpacity(TRANSPARENT_RECT);
+					customRectangle.setWidthLine(LayoutExpressionBuilderController.BORDER_WIDTH);
+					customRectangle.setFill(value.getState().color());
+					customRectangle.setVisible(value.isMarkVisible());
 
-						return customRectangle;
-					})
-					.collect(Collectors.toList());
+					List<XpathTreeItem.BeanWithMark> relatedList = value.getList();
+					if (!relatedList.isEmpty())
+					{
+						Text text = new Text();
+						String collect = relatedList.stream().map(XpathTreeItem.BeanWithMark::getBean).filter(Objects::nonNull).map(ElementWizardBean::getId).collect(Collectors.joining(","));
+						text.setText(collect);
+						text.setFill(value.getState().color());
+						customRectangle.setText(text);
+					}
 
-			c.accept(list);
-		});
+					return customRectangle;
+				})
+				.collect(Collectors.toList());
 	}
 	//endregion
 
@@ -555,11 +617,12 @@ public class TreeTableViewWithRectangles
 			if (item != null && !empty)
 			{
 				XpathTreeItem.TreeItemState icon = item.getState();
-				List<ElementWizardBean> list = item.getList();
+				List<XpathTreeItem.BeanWithMark> list = item.getList();
 				if (!list.isEmpty())
 				{
 					String tooltip = list.stream()
-							.map(bean -> bean.getId() + " ["+bean.getControlKind().name() + "]")
+							.filter(beanWithMark -> beanWithMark.getBean() != null)
+							.map(bean -> bean.getBean().getId() + " ["+bean.getBean().getControlKind().name() + "]")
 							.collect(Collectors.joining("\n"));
 					this.setTooltip(new Tooltip(tooltip));
 				}

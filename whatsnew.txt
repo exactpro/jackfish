@@ -1,4 +1,12 @@
 --------------------------------------------------------------------------------
+08.02.2017 4.3.0.1941
+RM40207 feature : Add parameter AppConnection to action ApplicationConnectTo to reuse plugin instance
+
+--------------------------------------------------------------------------------
+08.02.2017 4.3.0.1938
+RM40096 feature : correct xpath in the dictionary if it starts with // and the ownerId is not empty
+
+--------------------------------------------------------------------------------
 06.02.2017 4.3.0.1926
 RM40031 bug : JackFish | Dictionary | Spaces should be cut in the beginning and in the end of names of dialogues and elements
 

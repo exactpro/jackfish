@@ -1,6 +1,8 @@
 package com.exactprosystems.jf.tool.dictionary.dialog;
 
 import com.exactprosystems.jf.api.app.ControlKind;
+import com.exactprosystems.jf.documents.guidic.controls.AbstractControl;
+import javafx.scene.paint.Color;
 
 public class ElementWizardBean
 {
@@ -12,12 +14,17 @@ public class ElementWizardBean
 	private int count;
 	private ElementWizardBean option = this;
 
+	private String styleClass;
+
+	private AbstractControl abstractControl;
+
 	public ElementWizardBean()
 	{
 	}
 
-	public ElementWizardBean(int number, String id, ControlKind controlKind, boolean xpath, boolean isNew, int count)
+	public ElementWizardBean(AbstractControl abstractControl, int number, String id, ControlKind controlKind, boolean xpath, boolean isNew, int count)
 	{
+		this.abstractControl = abstractControl;
 		this.number = number;
 		this.id = id;
 		this.controlKind = controlKind;
@@ -96,6 +103,26 @@ public class ElementWizardBean
 		this.option = option;
 	}
 
+	public AbstractControl getAbstractControl()
+	{
+		return abstractControl;
+	}
+
+	public void setAbstractControl(AbstractControl abstractControl)
+	{
+		this.abstractControl = abstractControl;
+	}
+
+	public String getStyleClass()
+	{
+		return styleClass;
+	}
+
+	public void setStyleClass(String styleClass)
+	{
+		this.styleClass = styleClass;
+	}
+
 	@Override
 	public boolean equals(Object o)
 	{
@@ -106,12 +133,16 @@ public class ElementWizardBean
 
 		ElementWizardBean that = (ElementWizardBean) o;
 
-		return number == that.number;
+		if (number != that.number)
+			return false;
+		return abstractControl.equals(that.abstractControl);
 	}
 
 	@Override
 	public int hashCode()
 	{
-		return number;
+		int result = number;
+		result = 31 * result + abstractControl.hashCode();
+		return result;
 	}
 }

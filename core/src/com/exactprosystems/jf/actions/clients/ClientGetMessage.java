@@ -33,10 +33,22 @@ import com.exactprosystems.jf.functions.HelpKind;
 @ActionAttribute(
 		group					= ActionGroups.Clients,
 		suffix					= "CLGM",
-		generalDescription 		= "Try to get a message whose fields are equal to the given fields or message witch matches given criteria.",
+		generalDescription 		= "{{`The purpose of the action is to get the message, which conforms the required condition."
+				+ " The search of the message takes place in the message queue. If the message with the required conditions wasn't"
+				+ " found, the search starts from the beginning of the queue because during the search new messages can appear in the queue.`}}"
+				+ "{{`The search happens during the specified period of time, if the message is not found upon the expiry of time, the action fails.`}}",
 		additionFieldsAllowed 	= true,
-		outputDescription 		= "Message object or error if time is expired.",
-		outputType				= MapMessage.class
+		additionalDescription 	= "Values, in accordance with which the search of the message will happen.",
+		outputDescription 		= "The message or error, if the message was not found within the time limit.",
+		outputType				= MapMessage.class,
+		examples 				= "{{`1. Load the client for FIX.`}}"
+				+ "{{`2. Find the message with the value Value and name Name.`}}"
+				+ "{{##Id;#Action;#ClientId\n"
+				+ "CLLD1;ClientLoad;'FIX'\n"
+				+ "\n"
+				+ "\n"
+				+ "#Id;#Action;#ClientConnection;#MessageType;#Name\n"
+				+ "CLGM1;ClientGetMessage;CLLD1.Out;'35';'Value'#}}"
 	)
 public class ClientGetMessage extends AbstractAction 
 {
@@ -46,19 +58,19 @@ public class ClientGetMessage extends AbstractAction
 	public final static String timeoutName 		= "MessageTimeout";
 	public final static String removeName 		= "Remove";
 
-	@ActionFieldAttribute(name = connectionName, mandatory = true, description = "The client connection." )
+	@ActionFieldAttribute(name = connectionName, mandatory = true, description = "The connection with the client, which is derived from the action ClientLoad." )
 	protected ClientConnection	connection	= null;
 
-	@ActionFieldAttribute(name = messageTypeName, mandatory = true, description = "Message type." )
+	@ActionFieldAttribute(name = messageTypeName, mandatory = true, description = "The type of the message." )
 	protected String	messageType	= null;
 
-	@ActionFieldAttribute(name = conditionsName, mandatory = false, description = "Conditions which should be matched to get a message.")
+	@ActionFieldAttribute(name = conditionsName, mandatory = false, description = "The conditions upon which the message will be checked.")
 	protected Condition[] conditions;
 
-	@ActionFieldAttribute(name = timeoutName, mandatory = false, description = "Timeout in milliseconds.")
+	@ActionFieldAttribute(name = timeoutName, mandatory = false, description = "The time which is given to find the acceptable message.")
 	protected Integer timeout;
 	
-	@ActionFieldAttribute(name = removeName, mandatory = false, description = "Remove the found message.")
+	@ActionFieldAttribute(name = removeName, mandatory = false, description = "Delete the found message.")
 	protected Boolean remove;
 
 	public ClientGetMessage()

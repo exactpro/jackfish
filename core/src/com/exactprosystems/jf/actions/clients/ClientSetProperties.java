@@ -29,14 +29,24 @@ import java.util.List;
 @ActionAttribute(
 		group 					= ActionGroups.Clients, 
 		suffix 					= "CLSP", 
-		generalDescription 		= "Sets special properties for the client ", 
-		additionFieldsAllowed 	= true 
+		generalDescription 		= "The purpose of the action is to set properties to the client."
+				+ " The following properties are available: {{$SenderCompID$}}, {{$TargetCompID$}}, {{$MsgSeqNum$}}.",
+		additionFieldsAllowed 	= true,
+		additionalDescription 	= "In the value of the additional parameter the name of the property is indicated, in the parameter  value the property value is pointed out.",
+		examples 				= "{{`1. Load the client for FIX`}}"
+				+ "{{`2. Set the propertyName the value Value`}}"
+				+ "{{##Id;#Action;#ClientId\n"
+				+ "CLLD1;ClientLoad;'FIX'\n"
+				+ "\n"
+				+ "\n"
+				+ "#Id;#Action;#ClientConnection;#Name\n"
+				+ "CLSP1;ClientSetProperties;CLLD1.Out;'Value'#}}"
 	)
 public class ClientSetProperties extends AbstractAction
 {
 	public final static String	connectionName	= "ClientConnection";
 
-	@ActionFieldAttribute(name = connectionName, mandatory = true, description = "The client connection.")
+	@ActionFieldAttribute(name = connectionName, mandatory = true, description = "The connection with the client, which is derived from the action ClientLoad.")
 	protected ClientConnection	connection		= null;
 
 	public ClientSetProperties()

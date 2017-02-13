@@ -27,20 +27,39 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 @ActionAttribute(
 		group = ActionGroups.Clients, 
 		suffix					= "CLDEC",
-		generalDescription = "Convert given array of bytes to a MapMessage. ", 
-		additionFieldsAllowed = false, 
-		outputDescription = "Converted message.", 
-		outputType = MapMessage.class
+		generalDescription 		= "The purpose of the action is for  the message decode. Converts the massive byte in the message."
+				+ " Start of the client is not mandatory.",
+		additionFieldsAllowed 	= false,
+		outputDescription 		= "Converted message.",
+		outputType 				= MapMessage.class,
+		examples 				= "{{`1. Load the client for FIX.`}}"
+				+ "{{`2. Create the message.`}}"
+				+ "{{`3. Encode the message.`}}"
+				+ "{{`4. Decode the message.`}}"
+				+ "{{##Id;#Action;#ClientId\n"
+				+ "CLLD1;ClientLoad;'FIX'\n"
+				+ "\n"
+				+ "\n"
+				+ "#Id;#Action;#Name\n"
+				+ "MSGCR1;MessageCreate;'Value'\n"
+				+ "\n"
+				+ "\n"
+				+ "#Id;#Action;#Message;#ClientConnection\n"
+				+ "CLENC1;ClientEncode;MSGCR1.Out;CLLD1.Out\n"
+				+ "\n"
+				+ "\n"
+				+ "#Id;#Action;#Array;#ClientConnection\n"
+				+ "CLDEC1;ClientDecode;CLENC1.Out;CLLD1.Out#}}"
 		)
 public class ClientDecode extends AbstractAction
 {
 	public final static String connectionName 	= "ClientConnection";
 	public final static String arrayName 		= "Array";
 
-	@ActionFieldAttribute(name = connectionName, mandatory = true, description = "The client connection." )
+	@ActionFieldAttribute(name = connectionName, mandatory = true, description = "The connection with the client, which is derived from the action ClientLoad." )
 	protected ClientConnection	connection	= null;
 
-	@ActionFieldAttribute(name = arrayName, mandatory = true, description = "Array of bytes.")
+	@ActionFieldAttribute(name = arrayName, mandatory = true, description = "A massive byte which is required to convert in MapMessage.")
 	protected Byte[]	array	= null;
 
 	public ClientDecode()

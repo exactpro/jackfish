@@ -28,21 +28,31 @@ import com.exactprosystems.jf.documents.matrix.parser.items.TypeMandatory;
 import com.exactprosystems.jf.functions.HelpKind;
 
 @ActionAttribute(
-		group = ActionGroups.Clients, 
-		suffix = "CLCNCT", 
-		generalDescription = "Connect the client to the given socket", 
+		group 				  = ActionGroups.Clients,
+		suffix 				  = "CLCNCT",
+		generalDescription 	  = "The purpose of the action is to connect the client to the specific socket. Usually the number of the socket comes from the service.\n" +
+				"Later the client will bring in and send messages through this socket.",
 		additionFieldsAllowed = true, 
-		outputDescription = "True, if client connects successful."
+		outputDescription 	  = "True, if the connection was successful.",
+		additionalDescription = "Parameters for  the client run are indicated.",
+		examples 			  = "{{`1. Load the client for FIX.`}}"
+				+ "{{`2. Connect the client to the port №10506.`}}"
+				+ "{{##Id;#Action;#ClientId\n"
+				+ "CLLD1;ClientLoad;'FIX'\n"
+				+ "\n"
+				+ "\n"
+				+ "#Id;#Action;#ClientConnection;#Socket\n"
+				+ "CLCNCT1;ClientConnect;CLLD1.Out;10506#}}"
 )
 public class ClientConnect extends AbstractAction
 {
 	public final static String	connectionName		= "ClientConnection";
 	public final static String	socketName			= "Socket";
 
-	@ActionFieldAttribute(name = connectionName, mandatory = true, description = "The client connection.")
+	@ActionFieldAttribute(name = connectionName, mandatory = true, description = "The connection with the client, which is derived from the action ClientLoad.")
 	protected ClientConnection	connection = null;
 
-	@ActionFieldAttribute(name = socketName, mandatory = true, description = "Socket to which this client has to connect.")
+	@ActionFieldAttribute(name = socketName, mandatory = true, description = "The port that will use the client.")
 	protected Socket socket = null;
 
 	public ClientConnect()

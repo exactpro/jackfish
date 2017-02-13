@@ -20,10 +20,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.scene.Parent;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.Dialog;
-import javafx.scene.control.Tooltip;
+import javafx.scene.control.*;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 
@@ -64,7 +61,9 @@ public class LogsFxController implements Initializable, ContainingParent
 		this.dialog.setResizable(true);
 		this.dialog.getDialogPane().setPrefWidth(600);
 		this.dialog.getDialogPane().setPrefHeight(600);
-		this.dialog.setHeaderText("Main.log");
+		this.dialog.setHeaderText("");
+		this.dialog.setTitle("Main.log");
+		this.dialog.getDialogPane().setHeader(new Label());
 		this.dialog.getDialogPane().setContent(parent);
 		this.dialog.getDialogPane().getStylesheets().addAll(Common.currentThemesPaths());
 	}

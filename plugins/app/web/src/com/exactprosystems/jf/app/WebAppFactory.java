@@ -161,34 +161,6 @@ public class WebAppFactory implements IApplicationFactory
     @Override
     public PluginInfo getInfo()
     {
-        return info; 
-    }
-
-    //----------------------------------------------------------------------------------------------
-	// VersionSupported
-	//----------------------------------------------------------------------------------------------
-	@Override
-	public int requiredMajorVersion()
-	{
-		return requiredMajorVersion;
-	}
-
-	@Override
-	public int requiredMinorVersion()
-	{
-		return requiredMinorVersion;
-	}
-
-	@Override
-	public boolean isSupported(int major, int minor)
-	{
-		return (major * 1000 + minor) >= (requiredMajorVersion * 1000 + requiredMinorVersion);
-	}
-	//----------------------------------------------------------------------------------------------
-	
-    protected static PluginInfo info;
-    static 
-    {
         Map<ControlKind, String[]>      controlMap = new HashMap<>();
 
         add(controlMap, ControlKind.Any,           "*");
@@ -221,19 +193,39 @@ public class WebAppFactory implements IApplicationFactory
         
         Map<LocatorFieldKind, String>   fieldMap = new HashMap<>();
         
-        fieldMap.put(LocatorFieldKind.ACTION,       "");
-        fieldMap.put(LocatorFieldKind.UID,          ""); 
-        fieldMap.put(LocatorFieldKind.CLAZZ,        "");
-        fieldMap.put(LocatorFieldKind.XPATH,        "");
-        fieldMap.put(LocatorFieldKind.NAME,         "");
-        fieldMap.put(LocatorFieldKind.TITLE,        "");
-        fieldMap.put(LocatorFieldKind.ACTION,       "");
-        fieldMap.put(LocatorFieldKind.TEXT,         "");
-        fieldMap.put(LocatorFieldKind.TOOLTIP,      "");
+        fieldMap.put(LocatorFieldKind.ACTION,       "action");
+        fieldMap.put(LocatorFieldKind.UID,          "id"); 
+        fieldMap.put(LocatorFieldKind.CLAZZ,        "class");
+        fieldMap.put(LocatorFieldKind.NAME,         "name");
+        fieldMap.put(LocatorFieldKind.TITLE,        "title");
+        fieldMap.put(LocatorFieldKind.TEXT,         "placeholder");
+        fieldMap.put(LocatorFieldKind.TOOLTIP,      "title");
         
-        info = new PluginInfo(controlMap, fieldMap);
+        return new PluginInfo(controlMap, fieldMap);
     }
-    
+
+    //----------------------------------------------------------------------------------------------
+	// VersionSupported
+	//----------------------------------------------------------------------------------------------
+	@Override
+	public int requiredMajorVersion()
+	{
+		return requiredMajorVersion;
+	}
+
+	@Override
+	public int requiredMinorVersion()
+	{
+		return requiredMinorVersion;
+	}
+
+	@Override
+	public boolean isSupported(int major, int minor)
+	{
+		return (major * 1000 + minor) >= (requiredMajorVersion * 1000 + requiredMinorVersion);
+	}
+	//----------------------------------------------------------------------------------------------
+	
     private static void add(Map<ControlKind, String[]> controlMap, ControlKind kind, String ... nodes)
     {
         controlMap.put(kind, nodes);

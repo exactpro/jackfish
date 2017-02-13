@@ -31,9 +31,13 @@ import java.io.IOException;
 import java.util.*;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.DoubleConsumer;
+import java.util.stream.Collectors;
 
 public class ImageViewWithScale implements IScaleListener
 {
+	private final static double WIDHT_COORDS = 120;
+
 	private final BorderPane mainPane;
 	private final ScrollPane scrollPane;
 	private final AnchorPane anchorPane;
@@ -64,6 +68,7 @@ public class ImageViewWithScale implements IScaleListener
 	private Map<Rectangle, Set<Rectangle>> rectanglesMap = new HashMap<>();
 
 	private Consumer<Rectangle> clickConsumer;
+	private DoubleConsumer scaleConsumer;
 
 	public ImageViewWithScale()
 	{
@@ -74,8 +79,12 @@ public class ImageViewWithScale implements IScaleListener
 		this.hBox = new HBox();
 		this.group = new Group();
 		this.btnInspect = new ToggleButton();
-		this.lblInspect = new Label();
-		this.lblColor = new Label();
+		this.lblInspect = new Label("X = 0 Y = 0");
+		this.lblInspect.setPrefWidth(WIDHT_COORDS);
+		this.lblInspect.setMaxWidth(WIDHT_COORDS);
+		this.lblInspect.setMinWidth(WIDHT_COORDS);
+
+		this.lblColor = new Label(Color.BLACK.toString());
 		this.rectangleColor = new javafx.scene.shape.Rectangle();
 		this.rectangleColor.setWidth(12.0);
 		this.rectangleColor.setHeight(12.0);
@@ -136,8 +145,8 @@ public class ImageViewWithScale implements IScaleListener
 
 	public void displayImage(BufferedImage image)
 	{
+		this.image = image;
 		Platform.runLater(() -> {
-			this.image = image;
 			this.hBox.getChildren().forEach(node ->  node.setDisable(false));
 			this.anchorPane.getChildren().remove(this.waitingNode);
 
@@ -181,18 +190,22 @@ public class ImageViewWithScale implements IScaleListener
 		{
 			//do nothing
 		}
-		else if (this.markedList.contains(new CustomRectangle(rectangle, 1.0)))
-		{
-			CustomRectangle customRectangle = this.markedList.get(this.markedList.indexOf(new CustomRectangle(rectangle, 1.0)));
-			customRectangle.setOpacity(1.0);
-		}
 		else
 		{
-
-			if (this.rectangle != null)
+			CustomRectangle eq = new CustomRectangle(rectangle, this.scale);
+			if (this.markedList.contains(eq))
 			{
-				this.rectangle.updateRectangle(rectangle, this.scale);
-				this.rectangle.setVisible(true);
+				CustomRectangle customRectangle = this.markedList.get(this.markedList.indexOf(eq));
+				customRectangle.setOpacity(1.0);
+			}
+			else
+			{
+
+				if (this.rectangle != null)
+				{
+					this.rectangle.updateRectangle(rectangle, this.scale);
+					this.rectangle.setVisible(true);
+				}
 			}
 		}
 	}
@@ -211,16 +224,36 @@ public class ImageViewWithScale implements IScaleListener
 				})
 				.forEach(r -> this.markedList.add(r));
 	}
+
+	public void setScaleConsumer(DoubleConsumer scaleConsumer)
+	{
+		this.scaleConsumer = scaleConsumer;
+	}
+
+	public void removeMarkedRectangles(List<Rectangle> list)
+	{
+		List<CustomRectangle> rectangles = this.markedList.stream()
+				.filter(cr -> list.stream()
+						.map(r -> new CustomRectangle(r, this.scale))
+						.anyMatch(c -> c.equals(cr))
+				)
+				.peek(cr -> cr.setVisible(false))
+				.peek(cr -> cr.removeGroup(this.group))
+				.collect(Collectors.toList());
+		this.markedList.removeAll(rectangles);
+	}
 	//endregion
 
 	@Override
 	public void changeScale(double scale)
 	{
+		double oldScale = this.scale;
 		this.scale = scale;
 		this.imageView.setFitHeight(this.scale * this.initial.height);
 		this.imageView.setFitWidth(this.scale * this.initial.width);
 		hideRectangle();
 		hideInspectRectangle();
+		Optional.ofNullable(this.scaleConsumer).ifPresent(c -> c.accept(this.scale));
 	}
 
 	//region private methods

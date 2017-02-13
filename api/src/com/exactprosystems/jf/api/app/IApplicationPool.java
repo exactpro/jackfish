@@ -23,6 +23,7 @@ public interface IApplicationPool extends IPool
 	IApplicationFactory	loadApplicationFactory(String id) throws Exception;
 	AppConnection 		connectToApplication(String id, Map<String, String> args) throws Exception;
 	AppConnection 		startApplication(String id, Map<String, String> params) throws Exception;
+    void                reconnectToApplication(AppConnection connection, Map<String, String> args) throws Exception;
 	void 				stopApplication(AppConnection connection) throws Exception;
 	void 				stopAllApplications() throws Exception;
 }

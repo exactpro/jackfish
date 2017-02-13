@@ -130,8 +130,8 @@ public class HelpBuilder extends ReportBuilder
 			+ "<div class='searchDiv'>\n"
 			+ "<span class='searchControls'>\n"
 			+ "<input class='searchInput' type='text' placeholder='Search'/\n>"
-			+ "<button id='btnPrev'>&#923;</button>\n"
-			+ "<button id='btnNext'>V</button>\n"
+			+ "<button class='noNactiveBtn' id='btnPrev'>&#923;</button>\n"
+			+ "<button class='noNactiveBtn' id='btnNext'>V</button>\n"
 			+ "</span>\n"
 			+ "<label class='searchLabel'></label\n>");
 		writer.fwrite("<td><h0>Version <td>%s</h0></td>\n", VersionInfo.getVersion());

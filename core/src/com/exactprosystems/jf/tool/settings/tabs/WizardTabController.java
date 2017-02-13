@@ -39,20 +39,20 @@ public class WizardTabController implements Initializable, ContainingParent, ITa
 	@Override
 	public void initialize(URL location, ResourceBundle resources)
 	{
-		this.tfTypeMin.setText(Settings.defaultSettings().getValue(Settings.GLOBAL_NS, Settings.WIZARD_NAME, WizardSettings.Kind.TYPE.name() + Settings.MAX).getValue());
-		this.tfTypeMax.setText(Settings.defaultSettings().getValue(Settings.GLOBAL_NS, Settings.WIZARD_NAME, WizardSettings.Kind.TYPE.name() + Settings.MIN).getValue());
+		this.tfTypeMin.setText(Settings.defaultSettings().getValue(Settings.GLOBAL_NS, Settings.WIZARD_NAME, WizardSettings.Kind.TYPE.name() + Settings.MIN).getValue());
+		this.tfTypeMax.setText(Settings.defaultSettings().getValue(Settings.GLOBAL_NS, Settings.WIZARD_NAME, WizardSettings.Kind.TYPE.name() + Settings.MAX).getValue());
+
+		this.tfPathMin.setText(Settings.defaultSettings().getValue(Settings.GLOBAL_NS, Settings.WIZARD_NAME, WizardSettings.Kind.PATH.name() + Settings.MIN).getValue());
+		this.tfPathMax.setText(Settings.defaultSettings().getValue(Settings.GLOBAL_NS, Settings.WIZARD_NAME, WizardSettings.Kind.PATH.name() + Settings.MAX).getValue());
 		
-		this.tfPathMin.setText(Settings.defaultSettings().getValue(Settings.GLOBAL_NS, Settings.WIZARD_NAME, WizardSettings.Kind.PATH.name() + Settings.MAX).getValue());
-		this.tfPathMax.setText(Settings.defaultSettings().getValue(Settings.GLOBAL_NS, Settings.WIZARD_NAME, WizardSettings.Kind.PATH.name() + Settings.MIN).getValue());
+		this.tfSizeMin.setText(Settings.defaultSettings().getValue(Settings.GLOBAL_NS, Settings.WIZARD_NAME, WizardSettings.Kind.SIZE.name() + Settings.MIN).getValue());
+		this.tfSizeMax.setText(Settings.defaultSettings().getValue(Settings.GLOBAL_NS, Settings.WIZARD_NAME, WizardSettings.Kind.SIZE.name() + Settings.MAX).getValue());
 		
-		this.tfSizeMin.setText(Settings.defaultSettings().getValue(Settings.GLOBAL_NS, Settings.WIZARD_NAME, WizardSettings.Kind.SIZE.name() + Settings.MAX).getValue());
-		this.tfSizeMax.setText(Settings.defaultSettings().getValue(Settings.GLOBAL_NS, Settings.WIZARD_NAME, WizardSettings.Kind.SIZE.name() + Settings.MIN).getValue());
+		this.tfPositionMin.setText(Settings.defaultSettings().getValue(Settings.GLOBAL_NS, Settings.WIZARD_NAME, WizardSettings.Kind.POSITION.name() + Settings.MIN).getValue());
+		this.tfPositionMax.setText(Settings.defaultSettings().getValue(Settings.GLOBAL_NS, Settings.WIZARD_NAME, WizardSettings.Kind.POSITION.name() + Settings.MAX).getValue());
 		
-		this.tfPositionMin.setText(Settings.defaultSettings().getValue(Settings.GLOBAL_NS, Settings.WIZARD_NAME, WizardSettings.Kind.POSITION.name() + Settings.MAX).getValue());
-		this.tfPositionMax.setText(Settings.defaultSettings().getValue(Settings.GLOBAL_NS, Settings.WIZARD_NAME, WizardSettings.Kind.POSITION.name() + Settings.MIN).getValue());
-		
-		this.tfAttrMin.setText(Settings.defaultSettings().getValue(Settings.GLOBAL_NS, Settings.WIZARD_NAME, WizardSettings.Kind.ATTR.name() + Settings.MAX).getValue());
-		this.tfAttrMax.setText(Settings.defaultSettings().getValue(Settings.GLOBAL_NS, Settings.WIZARD_NAME, WizardSettings.Kind.ATTR.name() + Settings.MIN).getValue());
+		this.tfAttrMin.setText(Settings.defaultSettings().getValue(Settings.GLOBAL_NS, Settings.WIZARD_NAME, WizardSettings.Kind.ATTR.name() + Settings.MIN).getValue());
+		this.tfAttrMax.setText(Settings.defaultSettings().getValue(Settings.GLOBAL_NS, Settings.WIZARD_NAME, WizardSettings.Kind.ATTR.name() + Settings.MAX).getValue());
 		
 		this.tfThreshold.setText(Settings.defaultSettings().getValue(Settings.GLOBAL_NS, Settings.WIZARD_NAME, Settings.THRESHOLD).getValue());
 	}
@@ -73,20 +73,20 @@ public class WizardTabController implements Initializable, ContainingParent, ITa
 
 	public void displayInfo(Map<String, String> collect)
 	{
-		if (collect.get(WizardSettings.Kind.TYPE.name() + Settings.MAX) != null) this.tfTypeMin.setText(collect.get(WizardSettings.Kind.TYPE.name() + Settings.MAX));
-		if (collect.get(WizardSettings.Kind.TYPE.name() + Settings.MIN) != null) this.tfTypeMax.setText(collect.get(WizardSettings.Kind.TYPE.name() + Settings.MIN));
+		if (collect.get(WizardSettings.Kind.TYPE.name() + Settings.MIN) != null) this.tfTypeMin.setText(collect.get(WizardSettings.Kind.TYPE.name() + Settings.MIN));
+		if (collect.get(WizardSettings.Kind.TYPE.name() + Settings.MAX) != null) this.tfTypeMax.setText(collect.get(WizardSettings.Kind.TYPE.name() + Settings.MAX));
 
-		if (collect.get(WizardSettings.Kind.PATH.name() + Settings.MAX) != null) this.tfPathMin.setText(collect.get(WizardSettings.Kind.PATH.name() + Settings.MAX));
-		if (collect.get(WizardSettings.Kind.PATH.name() + Settings.MIN) != null) this.tfPathMax.setText(collect.get(WizardSettings.Kind.PATH.name() + Settings.MIN));
+		if (collect.get(WizardSettings.Kind.PATH.name() + Settings.MIN) != null) this.tfPathMin.setText(collect.get(WizardSettings.Kind.PATH.name() + Settings.MIN));
+		if (collect.get(WizardSettings.Kind.PATH.name() + Settings.MAX) != null) this.tfPathMax.setText(collect.get(WizardSettings.Kind.PATH.name() + Settings.MAX));
 
-		if (collect.get(WizardSettings.Kind.SIZE.name() + Settings.MAX) != null) this.tfSizeMin.setText(collect.get(WizardSettings.Kind.SIZE.name() + Settings.MAX));
-		if (collect.get(WizardSettings.Kind.SIZE.name() + Settings.MIN) != null) this.tfSizeMax.setText(collect.get(WizardSettings.Kind.SIZE.name() + Settings.MIN));
+		if (collect.get(WizardSettings.Kind.SIZE.name() + Settings.MIN) != null) this.tfSizeMin.setText(collect.get(WizardSettings.Kind.SIZE.name() + Settings.MIN));
+		if (collect.get(WizardSettings.Kind.SIZE.name() + Settings.MAX) != null) this.tfSizeMax.setText(collect.get(WizardSettings.Kind.SIZE.name() + Settings.MAX));
 
-		if (collect.get(WizardSettings.Kind.POSITION.name() + Settings.MAX) != null) this.tfPositionMin.setText(collect.get(WizardSettings.Kind.POSITION.name() + Settings.MAX));
-		if (collect.get(WizardSettings.Kind.POSITION.name() + Settings.MIN) != null) this.tfPositionMax.setText(collect.get(WizardSettings.Kind.POSITION.name() + Settings.MIN));
+		if (collect.get(WizardSettings.Kind.POSITION.name() + Settings.MIN) != null) this.tfPositionMin.setText(collect.get(WizardSettings.Kind.POSITION.name() + Settings.MIN));
+		if (collect.get(WizardSettings.Kind.POSITION.name() + Settings.MAX) != null) this.tfPositionMax.setText(collect.get(WizardSettings.Kind.POSITION.name() + Settings.MAX));
 
-		if (collect.get(WizardSettings.Kind.ATTR.name() + Settings.MAX) != null) this.tfAttrMin.setText(collect.get(WizardSettings.Kind.ATTR.name() + Settings.MAX));
-		if (collect.get(WizardSettings.Kind.ATTR.name() + Settings.MIN) != null) this.tfAttrMax.setText(collect.get(WizardSettings.Kind.ATTR.name() + Settings.MIN));
+		if (collect.get(WizardSettings.Kind.ATTR.name() + Settings.MIN) != null) this.tfAttrMin.setText(collect.get(WizardSettings.Kind.ATTR.name() + Settings.MIN));
+		if (collect.get(WizardSettings.Kind.ATTR.name() + Settings.MAX) != null) this.tfAttrMax.setText(collect.get(WizardSettings.Kind.ATTR.name() + Settings.MAX));
 
 		if (collect.get(Settings.THRESHOLD) != null) this.tfThreshold.setText(collect.get(Settings.THRESHOLD));
 	}

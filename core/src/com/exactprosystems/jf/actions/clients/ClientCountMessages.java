@@ -33,10 +33,20 @@ import java.util.Map;
 @ActionAttribute(
 		group					= ActionGroups.Clients,
 		suffix					= "CLCNT",
-		generalDescription 		= "Count messages whose fields are equal to the given fields or messages witch match given criteria.",
+		generalDescription 		= "The purpose of the action is to count the messages, which field set responds to the reported condition."
+				+ " Simple comparison conditions are passed in additional parameters. Complicated comparison conditions are indicated in the parameter Conditions.",
 		additionFieldsAllowed 	= true,
-		outputDescription 		= "Number of matched messages.",
-		outputType				= Integer.class
+		outputDescription 		= "The number of messages which meet the requirements.",
+		outputType				= Integer.class,
+		additionalDescription 	= "In the name of the parameter the key is indicated, in the option setting the predicted value is indicated.",
+		examples 				= "{{`1. Load the client for FIX.`}}"
+				+ "{{`2. Count the number of messages with the field name Name and  the field value Value.`}}"
+				+ "{{##Id;#Action;#ClientId\n"
+				+ "CLLD1;ClientLoad;'FIX'\n"
+				+ "\n"
+				+ "\n"
+				+ "#Id;#Action;#ClientConnection;#MessageType;#Name\n"
+				+ "CLCNT1;ClientCountMessages;CLLD1.Out;'35';'Value'#}}"
 	)
 public class ClientCountMessages extends AbstractAction 
 {
@@ -44,13 +54,13 @@ public class ClientCountMessages extends AbstractAction
 	public final static String messageTypeName = "MessageType";
 	public final static String conditionsName = "Conditions";
 
-	@ActionFieldAttribute(name = connectionName, mandatory = true, description = "The client connection." )
+	@ActionFieldAttribute(name = connectionName, mandatory = true, description = "The connection with the client, which is derived from the action ClientLoad.")
 	protected ClientConnection	connection	= null;
 
 	@ActionFieldAttribute(name = messageTypeName, mandatory = true, description = "Message type." )
 	protected String	messageType	= null;
 
-	@ActionFieldAttribute(name = conditionsName, mandatory = false, description = "Conditions.")
+	@ActionFieldAttribute(name = conditionsName, mandatory = false, description = "The conditions in which the comparison will be carried out.")
 	protected Condition[] conditions;
 
 	public ClientCountMessages()

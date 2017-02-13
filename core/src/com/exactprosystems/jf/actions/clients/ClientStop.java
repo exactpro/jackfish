@@ -23,14 +23,29 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 @ActionAttribute(
 		group					= ActionGroups.Clients,
 		suffix					= "CLSTP",
-		generalDescription 		= "Stops desired client. ",
-		additionFieldsAllowed 	= false
+		generalDescription 		= "The purpose of the action is to stop connectivity break with the service. "
+				+ "The start of the client is mandatory.",
+		additionFieldsAllowed 	= false,
+		examples 				= "{{`1. Load the client for FIX.`}}"
+				+ "{{`2. Start the client.`}}"
+				+ "3. Stop the client.\n"
+				+ "\n"
+				+ "{{##Id;#Action;#ClientId\n"
+				+ "CLLD1;ClientLoad;'FIX'\n"
+				+ "\n"
+				+ "\n"
+				+ "#Id;#Action;#ClientConnection\n"
+				+ "CLSTRT1;ClientStart;CLLD1.Out\n"
+				+ "\n"
+				+ "\n"
+				+ "#Id;#Action;#ClientConnection\n"
+				+ "CLSTP1;ClientStop;CLLD1.Out#}}"
 	)
 public class ClientStop extends AbstractAction 
 {
 	public final static String connectionName = "ClientConnection";
 
-	@ActionFieldAttribute(name = connectionName, mandatory = true, description = "The client connection." )
+	@ActionFieldAttribute(name = connectionName, mandatory = true, description = "The connection with the client, which is derived from the action ClientLoad." )
 	protected ClientConnection	connection	= null;
 
 	public ClientStop()

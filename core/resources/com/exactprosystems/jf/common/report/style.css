@@ -36,7 +36,8 @@ h4 {
 }
 
 button {
-    margin: 0;
+    margin-left: 4px;
+    margin-right: 4px;
     font: inherit;
     color: inherit;
     overflow: visible;
@@ -229,6 +230,7 @@ button::-moz-focus-inner {
 }
 
 .btn-info {
+    margin-left: 0px;
     color: #fff;
     background-color: #5bc0de;
     border-color: #46b8da;
@@ -578,8 +580,6 @@ a:visited {
 
 .matrixSource pre {
 	margin: 1em 0 1em 0;
-	border-top: 3px double black;
-	border-bottom: 3px double black;
 	padding: 1em 3em 1em 3em;
 }
 

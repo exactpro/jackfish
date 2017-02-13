@@ -26,16 +26,22 @@ import java.util.List;
 @ActionAttribute(
 		group					= ActionGroups.Clients,
 		suffix					= "CLLD",
-		generalDescription 		= "Loads desired client and inits it. ",
+		generalDescription 		= "The purpose of the action is to load,initialize and get the connection with the Client."
+				+ "Later, the received connection is used in such actions as {{@ClientStart@}}, {{@ClientStop@}}, {{@ClientDecode@}} and etc."
+				+ " Clients represent the entity which performs functions in respect of client- server."
+				+ " The client can send and get messages through received TCP connection.",
 		additionFieldsAllowed 	= false,
-		outputDescription = "Connection to the client.", 
-		outputType = ClientConnection.class
+		outputDescription 		= "The connection with the Client.",
+		outputType 				= ClientConnection.class,
+		examples 				= "{{`Load the client for FIX.`}}"
+				+ "{{##Id;#Action;#ClientId\n"
+				+ "CLLD1;ClientLoad;'FIX'#}}"
 	)
 public class ClientLoad extends AbstractAction 
 {
 	public final static String idName = "ClientId";
 
-	@ActionFieldAttribute(name = idName, mandatory = true, description = "The client id." )
+	@ActionFieldAttribute(name = idName, mandatory = true, description = "Id of the Client, with which the connection should be made." )
 	protected String 		id	= null;
 
 	public ClientLoad()

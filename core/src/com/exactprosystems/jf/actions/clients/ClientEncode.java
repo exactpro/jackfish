@@ -26,20 +26,34 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 @ActionAttribute(
 		group					= ActionGroups.Clients,
 		suffix					= "CLENC",
-		generalDescription 		= "Convert given MapMessage to array of bytes. ",
+		generalDescription 		= "The purpose of the action is to encode the message. It converts the message in a massive byte."
+				+ " Start of the client is not mandatory.",
 		additionFieldsAllowed 	= false,
 		outputDescription 		= "Array of bytes.",
-		outputType				= byte[].class
+		outputType				= byte[].class,
+		examples 				= "{{`1. Load the client for FIX.`}}"
+				+ "{{`2. Create the message.`}}"
+				+ "{{`3. Encode the message.`}}"
+				+ "{{##Id;#Action;#ClientId\n"
+				+ "CLLD1;ClientLoad;'FIX'\n"
+				+ "\n"
+				+ "\n"
+				+ "#Id;#Action;#Name\n"
+				+ "MSGCR1;MessageCreate;'Value'\n"
+				+ "\n"
+				+ "\n"
+				+ "#Id;#Action;#Message;#ClientConnection\n"
+				+ "CLENC1;ClientEncode;MSGCR1.Out;CLLD1.Out#}}"
 	)
 public class ClientEncode extends AbstractAction
 {
 	public final static String connectionName 	= "ClientConnection";
 	public final static String messageName 		= "Message";
 
-	@ActionFieldAttribute(name = connectionName, mandatory = true, description = "The client connection." )
+	@ActionFieldAttribute(name = connectionName, mandatory = true, description = "The connection with the client, which is derived from the action ClientLoad." )
 	protected ClientConnection	connection	= null;
 
-	@ActionFieldAttribute(name = messageName, mandatory = true, description = "The message that will be encoded." )
+	@ActionFieldAttribute(name = messageName, mandatory = true, description = "The object type MapMessage, which is required to convert in a massive byte." )
 	protected MapMessage	message	= null;
 
 	public ClientEncode() 

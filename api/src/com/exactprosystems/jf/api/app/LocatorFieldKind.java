@@ -4,13 +4,13 @@ public enum LocatorFieldKind
 {
     UID, 
     CLAZZ, 
-    XPATH, 
     NAME, 
     TITLE, 
     ACTION, 
     TEXT, 
     TOOLTIP, 
     
+    XPATH, 
     EXPRESSION, 
     COLUMNS, 
     WEAK, 

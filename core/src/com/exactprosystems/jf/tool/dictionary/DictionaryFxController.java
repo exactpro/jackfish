@@ -33,6 +33,8 @@ import javafx.scene.Parent;
 import javafx.scene.control.SplitPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
+import javafx.stage.Stage;
+import javafx.stage.Window;
 
 import java.net.URL;
 import java.util.Collection;
@@ -75,11 +77,8 @@ public class DictionaryFxController implements Initializable, ContainingParent
 	public void initialize(URL url, ResourceBundle resourceBundle)
 	{
 		this.listView = new CustomListView<>(true);
+		this.listView.setMaxHeight(250.0);
 		this.splitPane.getItems().add(listView);
-		this.listView.setPrefHeight(150);
-		this.listView.setMaxHeight(400);
-		this.listView.setMinHeight(100);
-		this.splitPane.setDividerPosition(1, 0.85);
 	}
 
 	public void saved(String name)
