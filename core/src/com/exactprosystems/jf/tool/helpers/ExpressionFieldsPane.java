@@ -21,7 +21,7 @@ public class ExpressionFieldsPane extends BorderPane
 		Common.sizeLabel(this.key);
 		this.expressionField.sizeTextField();
 
-		this.setLeft(this.key);
+		this.setTop(this.key);
 		this.setCenter(this.expressionField);
 	}
 
