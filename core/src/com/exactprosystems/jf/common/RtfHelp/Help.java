@@ -26,4 +26,8 @@ public class Help {
     public URL mvel(){
         return this.getClass().getResource("mvel.txt");
     }
+
+    public URL panel(){
+        return this.getClass().getResource("panel.txt");
+    }
 }

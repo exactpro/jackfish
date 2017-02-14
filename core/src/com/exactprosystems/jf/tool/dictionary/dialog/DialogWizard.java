@@ -658,7 +658,12 @@ public class DialogWizard
 
 	void changeElement(ElementWizardBean bean) throws Exception
 	{
-		AbstractControl newControl = this.controller.editElement(AbstractControl.createCopy(bean.getAbstractControl()));
+		List<String> list = this.window.getControls(null)
+				.stream()
+				.filter(c -> c.getID() != null && !c.getID().isEmpty())
+				.map(IControl::getID)
+				.collect(Collectors.toList());
+		AbstractControl newControl = this.controller.editElement(AbstractControl.createCopy(bean.getAbstractControl()), list);
 		if (newControl != null)
 		{
 			this.updateBean(newControl, bean);

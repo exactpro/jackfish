@@ -320,10 +320,6 @@ public class TreeTableViewWithRectangles
 
 	public void clearAndAddRelation(ElementWizardBean bean)
 	{
-		List<TreeItem<XpathTreeItem>> list = new ArrayList<>();
-		byPass(this.treeTableView.getRoot(), list, x -> x != null && x.contains(bean));
-		list.forEach(item -> item.getValue().clearRelation(bean));
-
 		TreeItem<XpathTreeItem> selectedItem = this.treeTableView.getSelectionModel().getSelectedItem();
 		if (selectedItem == null)
 		{
@@ -331,12 +327,22 @@ public class TreeTableViewWithRectangles
 		}
 		if (selectedItem != null)
 		{
-			this.controller.changeStateCount(-1, selectedItem.getValue().getState() == null ? XpathTreeItem.TreeItemState.ADD : selectedItem.getValue().getState());
-			selectedItem.getValue().addRelation(bean, XpathTreeItem.TreeItemState.ADD);
+			boolean prevStateIsSet = selectedItem.getValue().getState() != null;
+			clearRelation(bean);
+			this.controller.changeStateCount(-1, prevStateIsSet ? selectedItem.getValue().getState() : XpathTreeItem.TreeItemState.UPDATE);
+			selectedItem.getValue().addRelation(bean, XpathTreeItem.TreeItemState.UPDATE);
 			this.controller.changeStateCount(1, selectedItem.getValue().getState());
 			this.controller.refreshTable();
 		}
+		this.displayMarkedRows();
 		refresh();
+	}
+
+	private void clearRelation(ElementWizardBean bean)
+	{
+		List<TreeItem<XpathTreeItem>> list = new ArrayList<>();
+		byPass(this.treeTableView.getRoot(), list, x -> x != null && x.contains(bean));
+		list.forEach(item -> item.getValue().clearRelation(bean));
 	}
 
 	public void removeBean(ElementWizardBean bean)

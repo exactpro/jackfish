@@ -60,7 +60,7 @@ public class BookmarksCreator extends FileWriter{
                 }
                 else if (s.contains("WriteFonts"))
                 {
-                    result.append(s.replace("WriteFonts", "Arial;}{\\f1\\fcharset1 Courier;}{\\f2\\fcharset2 FS Lola ExtraBold"));
+                    result.append(s.replace("WriteFonts", "\\fswiss Arial;}{\\fmodern \\f1\\fcharset1 Courier;}{\\fscript \\f2\\fcharset1 Cursive"));
                 }
                 /*else if (s.equals("\\par"))
                 {
@@ -104,7 +104,7 @@ public class BookmarksCreator extends FileWriter{
             }
             else if (s.contains("WriteFonts"))
             {
-                return super.append(s.replace("WriteFonts", "Arial;}{\\f1\\fcharset1 Courier;}{\\f2\\fcharset2 FS Lola ExtraBold"));
+                return super.append(s.replace("WriteFonts", "\\fswiss Arial;}{\\fmodern \\f1\\fcharset1 Courier;}{\\fscript \\f2\\fcharset1 Cursive"));
             }
             else if (s.contains("FirstPageLine"))
             {
