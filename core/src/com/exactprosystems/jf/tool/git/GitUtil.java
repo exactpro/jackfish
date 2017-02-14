@@ -326,7 +326,7 @@ public class GitUtil
 	public static void ignoreFiles(List<File> files) throws Exception
 	{
 		File gitIgnore = checkGitIgnoreFile();
-		try (FileWriter writer = new FileWriter(gitIgnore))
+		try (FileWriter writer = new FileWriter(gitIgnore, true))
 		{
 			for (File file : files)
 			{
@@ -350,7 +350,7 @@ public class GitUtil
 			replaceFiles(list, status.getChanged(), GitBean.Status.CHANGED);
 			replaceFiles(list, status.getRemoved(), GitBean.Status.REMOVED);
 			replaceFiles(list, status.getConflicting(), GitBean.Status.CONFLICTING);
-			Collections.sort(list, (b1, b2) -> b1.getStatus().compareTo(b2.getStatus()));
+			list.sort(Comparator.comparing(GitBean::getStatus));
 			return list;
 		}
 	}
