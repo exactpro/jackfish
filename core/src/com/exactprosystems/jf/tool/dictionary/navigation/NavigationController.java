@@ -157,10 +157,10 @@ public class NavigationController implements Initializable, ContainingParent
 			Common.customizeLabeled(this.btnPasteElement, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.DICTIONARY_PASTE);
 		});
 
-		if (!Main.IS_LOCAL_BUILD)
-		{
-			this.btnShowWizard.setVisible(false);
-		}
+//		if (!Main.IS_LOCAL_BUILD)
+//		{
+//			this.btnShowWizard.setVisible(false);
+//		}
 	}
 
 	public void init(DictionaryFx model, GridPane gridPane, Settings settings, CustomTab owner)
