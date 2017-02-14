@@ -16,6 +16,10 @@ function addListeners(element, name, func) {
 	if (func.indexOf(6) != -1 ) { onkeypress(element, name); }
 }
 
+function changeCombobox(element){
+	document.getElementById('centralLabel').textContent = 'ComboBox_' + element.value;
+}
+
 function changeSelected(rb) {
 	document.getElementById('centralLabel').textContent = 'RadioButton1_' + (rb.checked ? '' : 'un') + "checked";
 }

@@ -9,9 +9,9 @@
             <button id="Button" uid="button"/>
             <textBox id="TextBox" uid="input"/>
             <label id="Label" uid="centralLabel"/>
-            <label id="centralLabel" uid="centralLabel"/>
+            <label id="centralLabel" uid="centralLabel" visibility="Visible"/>
             <any id="Any" uid="any" addition="Many"/>
-            <label id="moveLabel" uid="moveLabel"/>
+            <label id="moveLabel" uid="moveLabel" visibility="Visible"/>
             <button id="Button1" class="manyButton" addition="Many"/>
             <wait id="Wait"/>
             <checkBox id="CheckBox" uid="checkbox" addition="Many"/>
@@ -21,6 +21,13 @@
             <radioButton id="RadioButton" uid="radioButton" addition="Many"/>
             <radioButton id="RadioButton1" uid="radioButton1" addition="Many"/>
             <progressBar id="ProgressBar" uid="ProgressBar" addition="Many"/>
+            <toggleButton id="ToggleB" uid="toggleb" addition="Many"/>
+            <comboBox id="ComboBox" uid="combobox" addition="Many"/>
+            <panel id="PanelBase" uid="basicpanel" addition="Many"/>
+            <listView id="ListUL" uid="listUL" addition="Many"/>
+            <frame id="MyFrame" uid="myIframe" owner="" addition="Many"/>
+            <dialog id="DialogD" uid="dialogd" xpath=".//dialog[@id=&amp;quot;dialogd&amp;quot;]" useAbsoluteXpath="true" owner="" addition="Many"/>
+            <image id="ImageIDE" uid="imageIDE" owner="" addition="Many"/>
         </run>
         <onClose/>
         <close>

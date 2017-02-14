@@ -73,16 +73,18 @@
 	</script>
 </head>
 <body onload="addAllListeners()">
+
 <div id="divLabel">
 	<table>
 		<tbody>
-			<tr>
-				<td width="200px"><label id="centralLabel" class="add_listener" kindname="Label" func="123456" name="centralLabel">Central label</label></td>
-				<td width="200px"><label id="moveLabel">Move label</label></td>
-			</tr>
+		<tr>
+			<td width="200px"><label id="centralLabel" class="add_listener" kindname="Label" func="123456" name="centralLabel">Central label</label></td>
+			<td width="200px"><label id="moveLabel">Move label</label></td>
+		</tr>
 		</tbody>
 	</table>
 </div>
+
 <div id="divButton">
 	<button id="button" class="add_listener" kindname="Button" func="123456" name="Button">Button</button>
 </div>
@@ -176,9 +178,13 @@
 </div>
 
 <div id="divCheckbox">
-	<label>CheckBox
-		<input id ="checkbox" type="checkbox" name="CheckBox" class="checkBoxUnChecked add_listener" func="123456" kindname="CheckBox" checked/>
-	</label>
+	<input id ="checkbox" type="checkbox" name="CheckBox" class="checkBoxUnChecked add_listener" func="123456" value="CheckBox" kindname="CheckBox" checked/>
+	CheckBox
+</div>
+
+<div id="divToggleBox">
+	<input id ="toggleb" type="checkbox" name="ToggleB" class="toggleBoxUnChecked add_listener" func="123456" value="ToggleB" kindname="ToggleB" checked/>
+	ToggleB
 </div>
 
 <div id="divSlider">
@@ -195,13 +201,17 @@
 	<label id="labelRadioGroup"></label>
 </div>
 
+<div id="basicpanel" name="PanelBase" class="add_listener panel panel-default" kindname="PanelBase" func="123456">
+	BasicPanel
+</div>
+
 <div id="divProgress">
 	<progress value="10" max="100" name="ProgressBar" id="ProgressBar" kindname="ProgressBar" func="123456" class="add_listener"></progress>
 </div>
 
 <div id="divCombobox">
 	<label id="labelCombobox">Combobox example</label>
-	<select id="comboBoxID" onchange="changeCombobox(this)">
+	<select id="combobox" name="ComboBox" class="add_listener" kindname="ComboBox" func="23456" onchange="changeCombobox(this)">
 		<option value="Green">Green</option>
 		<option value="Yellow">Yellow</option>
 		<option value="Orange">Orange</option>
@@ -211,7 +221,7 @@
 
 <div id="divUL">
 	<label id="labelUL">List UL Example</label>
-	<ul id="listUL">
+	<ul id="listUL" name="ListUL" class="add_listener" kindname="ListUL" func="123456">
 		<li>Coffee</li>
 		<li><a href="http://www.google.com" title="Juice">Juice</a></li>
 		<li>Tea
@@ -236,7 +246,13 @@
 	<button class="manyButton">ButtonMany1</button>
 	<button class="manyButton">ButtonMany2</button>
 </div>
-<iframe id="myIframe"
-		src="iframe.html"></iframe>
+<iframe id="myIframe" name="MyFrame" class="add_listener" kindname="MyFrame" func="123456" src="iframe.html"></iframe>
+
+<dialog id="dialogd" name="DialogD" class="add_listener" kindname="DialogD" func="123456" open>
+	This is an open dialog window
+</dialog>
+
+<img src="ide.png" alt="Test Image" id="imageIDE" name="ImageIDE" class="add_listener" kindname="ImageIDE" func="123456" />
+
 </body>
 </html>
