@@ -462,6 +462,7 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 		long begin = System.currentTimeMillis();
 		try
 		{
+			this.logger.debug("Locator : " + locator);
 			long time = System.currentTimeMillis();
 			while (System.currentTimeMillis() < time + ms)
 			{
@@ -469,7 +470,7 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 				{
 					this.driver.clearCache();
 					List<UIProxyJNA> elements = this.findAll(null, locator);
-					this.logger.debug("Found : " + elements.size() + " elements on method wait");
+					this.logger.debug("Found : " + elements.size() + " elements on method wait. Expected : " + (toAppear ? ">0" : "0") );
 					if (toAppear)
 					{
 						if (elements.size() > 0)

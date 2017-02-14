@@ -579,7 +579,7 @@ public enum OperationKind
 		@Override
 		protected String formulaTemplate(Part part)
 		{
-			return part.locatorId == null ? ".wait(%15$s, %2$d, %6$b)" : ".wait('%13$s', %2$d, %6$b)";
+			return part.locatorId == null ? ".wait(%15$s, %2$d, %16$b)" : ".wait('%13$s', %2$d, %16$b)";
 		}
 		
 
@@ -593,7 +593,7 @@ public enum OperationKind
 		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, Holder<T> holder, OperationResult result) throws Exception
 		{
 			AtomicLong atomicLong = new AtomicLong();
-			boolean ok = executor.wait(holder.get(LocatorKind.Element), part.i , part.toAppear, atomicLong);
+			boolean ok = executor.wait(part.locator, part.i , part.toAppear, atomicLong);
 			result.setText(String.valueOf(atomicLong.get()));
 			return ok;
 		}
@@ -818,7 +818,8 @@ public enum OperationKind
 								part.key,
 								part.locatorId,
 								part.locatorKind,
-								part.locator
+								part.locator,
+								part.toAppear
 							);
 	}
 	
