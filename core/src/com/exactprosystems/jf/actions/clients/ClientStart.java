@@ -19,7 +19,6 @@ import com.exactprosystems.jf.api.client.ClientConnection;
 import com.exactprosystems.jf.api.client.IClient;
 import com.exactprosystems.jf.api.common.ParametersKind;
 import com.exactprosystems.jf.api.error.ErrorKind;
-import com.exactprosystems.jf.common.RtfHelp.BookmarksCreator;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;

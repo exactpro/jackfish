@@ -11,7 +11,7 @@ package com.exactprosystems.jf.common;
 import com.exactprosystems.jf.api.common.ApiVersionInfo;
 import com.exactprosystems.jf.api.common.DateTime;
 import com.exactprosystems.jf.api.common.Str;
-import com.exactprosystems.jf.common.RtfHelp.RtfGenerator;
+import com.exactprosystems.jf.common.rtfhelp.RtfGenerator;
 import com.exactprosystems.jf.common.version.VersionInfo;
 import com.exactprosystems.jf.documents.ConsoleDocumentFactory;
 import com.exactprosystems.jf.documents.DocumentFactory;
@@ -26,7 +26,6 @@ import org.apache.commons.cli.*;
 import org.apache.log4j.Logger;
 import org.apache.log4j.xml.DOMConfigurator;
 
-import javax.swing.text.BadLocationException;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.SchemaOutputResolver;

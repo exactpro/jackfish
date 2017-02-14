@@ -9,7 +9,6 @@
 package com.exactprosystems.jf.tool.custom.treetable;
 
 import com.exactprosystems.jf.common.Settings;
-import com.exactprosystems.jf.common.RtfHelp.Help;
 import com.exactprosystems.jf.common.report.ContextHelpFactory;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
@@ -17,9 +16,7 @@ import com.exactprosystems.jf.documents.matrix.parser.Tokens;
 import com.exactprosystems.jf.documents.matrix.parser.items.ActionItem;
 import com.exactprosystems.jf.documents.matrix.parser.items.End;
 import com.exactprosystems.jf.documents.matrix.parser.items.HelpActionItem;
-import com.exactprosystems.jf.documents.matrix.parser.items.HelpChapterItem;
 import com.exactprosystems.jf.documents.matrix.parser.items.HelpItem;
-import com.exactprosystems.jf.documents.matrix.parser.items.HelpTextItem;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;

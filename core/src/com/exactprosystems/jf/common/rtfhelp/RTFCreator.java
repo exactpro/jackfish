@@ -1,4 +1,4 @@
-package com.exactprosystems.jf.common.RtfHelp;
+package com.exactprosystems.jf.common.rtfhelp;
 
 import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionFieldAttribute;
@@ -22,7 +22,6 @@ import java.io.*;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.*;
 
 class RTFCreator {
@@ -47,12 +46,12 @@ class RTFCreator {
     private final String link = "#";
     private final String trait = "123456789";
     private final String reverseTrait = "987654321";
-    private final URL pictureIntro = rtfHelp.introPicture();
-    private final URL pictureHeader = rtfHelp.header();
-    private final URL pictureFooter = rtfHelp.footer();
-    private final URL introduction = rtfHelp.introduction();
-    private final URL panelDoc = rtfHelp.panel();
-    private final URL mvelDoc = rtfHelp.mvel();
+    private final InputStream pictureIntro = rtfHelp.introPicture();
+    private final InputStream pictureHeader = rtfHelp.headerPicture();
+    private final InputStream pictureFooter = rtfHelp.footerPicture();
+    private final InputStream introduction = rtfHelp.introduction();
+    private final InputStream panelDoc = rtfHelp.panel();
+    private final InputStream mvelDoc = rtfHelp.mvel();
     private final int fontSize = 20;
 
     private void writeItems() throws IOException
@@ -381,9 +380,7 @@ class RTFCreator {
             File file = new File(path);
 
             if (file.delete()) {
-                System.out.println(file.getName() + " is deleted!");
-            } else {
-                System.out.println("Delete operation is failed.");
+                //gratz!
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -431,9 +428,10 @@ class RTFCreator {
                 .replace("{{@", "").replace("@}}", ""); //link
     }
 
-    private void createDocumentation(URL url, List<RtfPara> list) throws IOException
+    private void createDocumentation(InputStream stream, List<RtfPara> list) throws IOException
     {
-        BufferedReader br = new BufferedReader(new FileReader( new File(url.getFile())));
+        BufferedReader br = new BufferedReader(new InputStreamReader(stream));
+
         for(String line; (line = br.readLine()) != null; ) {
             String[] strs = line.split("\\s+");
             ArrayList<RtfText> text = new ArrayList<>();
@@ -474,7 +472,7 @@ class RTFCreator {
                         }
                         else
                         {
-                            System.out.println("Documentation! " + s);
+
                         }
                     }
                     RtfText[] arr = new RtfText[text.size()];
@@ -590,7 +588,6 @@ class RTFCreator {
 
     private void panelDocumentation() throws IOException
     {
-        //panels.add(p(tab(), tab(), tab(), tab(), font(0, fontSize(30, bold("MVEL" + trait))), lineBreak()));
         createDocumentation(panelDoc, panels);
         writePanel();
     }

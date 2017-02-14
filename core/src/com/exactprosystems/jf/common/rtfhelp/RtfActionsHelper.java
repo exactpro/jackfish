@@ -1,4 +1,4 @@
-package com.exactprosystems.jf.common.RtfHelp;
+package com.exactprosystems.jf.common.rtfhelp;
 
 import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionFieldAttribute;
