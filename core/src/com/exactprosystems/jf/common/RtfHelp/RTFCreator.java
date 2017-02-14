@@ -38,6 +38,7 @@ class RTFCreator {
     private List<RtfPara> actions = new ArrayList<>();
     private List<RtfPara> contents = new ArrayList<>();
     private List<RtfPara> mvels = new ArrayList<>();
+    private List<RtfPara> panels = new ArrayList<>();
     private List<RtfPara> intro = new ArrayList<>();
     private Map<String, List<RtfActionsHelper>> actionGroups = new HashMap<>();
     private List<String> itemsName = new ArrayList<>();
@@ -50,6 +51,7 @@ class RTFCreator {
     private final URL pictureHeader = rtfHelp.header();
     private final URL pictureFooter = rtfHelp.footer();
     private final URL introduction = rtfHelp.introduction();
+    private final URL panelDoc = rtfHelp.panel();
     private final URL mvelDoc = rtfHelp.mvel();
     private final int fontSize = 20;
 
@@ -63,6 +65,12 @@ class RTFCreator {
     {
         RtfPara[] arr = new RtfPara[mvels.size()];
         document.section(createSectionFormat(), mvels.toArray(arr));
+    }
+
+    private void writePanel() throws IOException
+    {
+        RtfPara[] arr = new RtfPara[panels.size()];
+        document.section(createSectionFormat(), panels.toArray(arr));
     }
 
     private void writeActions() throws IOException
@@ -128,27 +136,28 @@ class RTFCreator {
         contents.add(p(text("2. "), text (" "), hyperlink(link + "Architecture", p("Architecture" +reverseTrait))));
         contents.add(p(text("3. "), text (" "), hyperlink(link + "Requirements", p("System Requirements" +reverseTrait))));
         contents.add(p(text("4. "), text (" "), hyperlink(link + "MVEL", p("MVEL" +reverseTrait))));
-        contents.add(p("5. Actions: "));
+        contents.add(p(text("5. "), text (" "), hyperlink(link + "panel", p("Configuration panel" +reverseTrait))));
+        contents.add(p("6. Actions: "));
         int count = 0;
         int innerCount = 0;
         for( Map.Entry<String, List<RtfActionsHelper>> entry  : actionGroups.entrySet())
         {
             count++;
-            contents.add(p(tab(), fontSize(fontSize, " 5." + count + " "), fontSize(fontSize, " " + entry.getKey())));
+            contents.add(p(tab(), fontSize(fontSize, " 6." + count + " "), fontSize(fontSize, " " + entry.getKey())));
             for (RtfActionsHelper s : entry.getValue())
             {
                 innerCount++;
-                contents.add(p(tab(), tab(), fontSize(fontSize, " 5." + count + "." + innerCount + " " ), fontSize(fontSize, " "), hyperlink(link + s.getName(), p(fontSize(fontSize, s.getName() +reverseTrait) ))));
+                contents.add(p(tab(), tab(), fontSize(fontSize, " 6." + count + "." + innerCount + " " ), fontSize(fontSize, " "), hyperlink(link + s.getName(), p(fontSize(fontSize, s.getName() +reverseTrait) ))));
             }
             innerCount = 0;
         }
 
-        contents.add(p("6. Items: "));
+        contents.add(p("7. Items: "));
         count = 0;
         for(String name : itemsName)
         {
             count++;
-            contents.add(p(tab(), fontSize(fontSize, " 6." + count + " "), fontSize(fontSize, " "), hyperlink(link + name, p(fontSize(fontSize, name+reverseTrait)))));
+            contents.add(p(tab(), fontSize(fontSize, " 7." + count + " "), fontSize(fontSize, " "), hyperlink(link + name, p(fontSize(fontSize, name+reverseTrait)))));
         }
         writeContents();
     }
@@ -409,13 +418,6 @@ class RTFCreator {
         );
     }
 
-    private void createDescription() throws IOException, BadLocationException
-    {
-        intro.add(p(tab(), tab(), tab(), tab(), font(0, fontSize(30, bold("Introduction" + trait))), lineBreak()));
-        createDocumentation(introduction, intro);
-        writeIntro();
-    }
-
     private String replaceChars (String s)
     {
         return s.replace("(?U)[\\pP\\s]", "").trim()
@@ -572,11 +574,25 @@ class RTFCreator {
         }
     }
 
+    private void createDescription() throws IOException, BadLocationException
+    {
+        intro.add(p(tab(), tab(), tab(), tab(), font(0, fontSize(30, bold("Introduction" + trait))), lineBreak()));
+        createDocumentation(introduction, intro);
+        writeIntro();
+    }
+
     private void mvelDocumentation() throws IOException
     {
         mvels.add(p(tab(), tab(), tab(), tab(), font(0, fontSize(30, bold("MVEL" + trait))), lineBreak()));
         createDocumentation(mvelDoc, mvels);
         writeMvel();
+    }
+
+    private void panelDocumentation() throws IOException
+    {
+        //panels.add(p(tab(), tab(), tab(), tab(), font(0, fontSize(30, bold("MVEL" + trait))), lineBreak()));
+        createDocumentation(panelDoc, panels);
+        writePanel();
     }
 
     void getAnnotationsForActions() throws IOException
@@ -710,6 +726,7 @@ class RTFCreator {
         }
         createContents();
         createDescription();
+        panelDocumentation();
         mvelDocumentation();
         createActionsManual();
         writeActions();

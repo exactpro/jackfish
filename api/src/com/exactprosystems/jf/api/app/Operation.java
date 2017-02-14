@@ -547,31 +547,21 @@ public class Operation implements Iterable<Part>, Serializable
 	@DescriptionAttribute(text = Do.wait)
 	public Operation wait(String str)
 	{
-		this.list.add(new Part(OperationKind.WAIT).setLocatorId(str).setInt(10000).setBool(true));
+		this.list.add(new Part(OperationKind.WAIT).setLocatorId(str).setInt(10000).setToAppear(true).setLocatorKind(LocatorKind.Element));
 		return this;
 	}
 
 	@DescriptionAttribute(text = Do.wait)
 	public Operation wait(String str, int ms, boolean toAppear)
 	{
-		this.list.add(new Part(OperationKind.USE_LOCATOR).setLocatorId(str).setLocatorKind(LocatorKind.Element));
-		this.list.add(new Part(OperationKind.USE_LOCATOR).setLocatorId(str).setLocatorKind(LocatorKind.Owner));
-		this.list.add(new Part(OperationKind.USE_LOCATOR).setLocatorId(str).setLocatorKind(LocatorKind.Header));
-		this.list.add(new Part(OperationKind.USE_LOCATOR).setLocatorId(str).setLocatorKind(LocatorKind.Rows));
-
-		this.list.add(new Part(OperationKind.WAIT).setInt(ms).setBool(false).setToAppear(toAppear));
+		this.list.add(new Part(OperationKind.WAIT).setInt(ms).setLocatorId(str).setLocatorKind(LocatorKind.Element).setToAppear(toAppear));
 		return this;
 	}
 
 	@DescriptionAttribute(text = Do.wait)
 	public Operation wait(Locator locator, int ms, boolean toAppear)
 	{
-		this.list.add(new Part(OperationKind.USE_LOCATOR).setLocator(locator).setLocatorKind(LocatorKind.Element));
-		this.list.add(new Part(OperationKind.USE_LOCATOR).setLocator(null).setLocatorKind(LocatorKind.Owner));
-		this.list.add(new Part(OperationKind.USE_LOCATOR).setLocator(null).setLocatorKind(LocatorKind.Header));
-		this.list.add(new Part(OperationKind.USE_LOCATOR).setLocator(null).setLocatorKind(LocatorKind.Rows));
-
-		this.list.add(new Part(OperationKind.WAIT).setInt(ms).setBool(false).setToAppear(toAppear));
+		this.list.add(new Part(OperationKind.WAIT).setInt(ms).setLocator(locator).setToAppear(toAppear));
 		return this;
 	}
 
