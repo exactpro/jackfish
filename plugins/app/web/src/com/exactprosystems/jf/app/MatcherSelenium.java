@@ -29,7 +29,6 @@ public class MatcherSelenium extends By
     public static boolean newApproach = false;
     public PluginInfo pluginInfo = null;
     
-    
 	public MatcherSelenium(PluginInfo info, ControlKind controlKind, Locator locator) throws RemoteException
 	{
 		if (locator == null)
