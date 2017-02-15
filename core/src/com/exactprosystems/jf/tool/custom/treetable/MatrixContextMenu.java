@@ -275,6 +275,7 @@ public class MatrixContextMenu extends ContextMenu
 					dialog.getDialogPane().setPrefWidth(1024);
 					dialog.getDialogPane().setPrefHeight(768);
 					dialog.setResizable(true);
+					dialog.getDialogPane().setHeader(new Label());
 					dialog.setTitle("Help for " + help.getItemName());
 					dialog.setHeaderText(null);
 					dialog.getDialogPane().getStylesheets().addAll(Common.currentThemesPaths());

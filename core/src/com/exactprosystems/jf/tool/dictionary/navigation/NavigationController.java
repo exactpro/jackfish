@@ -664,7 +664,7 @@ public class NavigationController implements Initializable, ContainingParent
 		{
 			textField = new TextField(this.converter.apply(getItem()));
 			textField.getStyleClass().add(CssVariables.TEXT_FIELD_VARIABLES);
-			textField.setMinWidth(this.getWidth() - this.getGraphicTextGap() * 2);
+			textField.setMinWidth(225);
 			textField.setOnKeyPressed(t -> {
 				if (t.getCode() == KeyCode.ENTER)
 				{

@@ -1,3 +1,6 @@
+15.02.2017 4.4.0.1997
+RM40330 Do.getTableSize() now work correctly for empty table in web plugin
+
 --------------------------------------------------------------------------------
 15.02.2017 4.4.0.1994
 RM40318 feature : [wizard] Columns field and Weak checkbox on Change element Dialog.

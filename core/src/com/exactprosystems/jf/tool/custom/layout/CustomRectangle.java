@@ -9,8 +9,11 @@ package com.exactprosystems.jf.tool.custom.layout;
 
 import com.exactprosystems.jf.tool.CssVariables;
 
+import javafx.animation.*;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
+import javafx.scene.effect.ColorAdjust;
+import javafx.scene.effect.Effect;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
@@ -46,6 +49,8 @@ public class CustomRectangle
 
 	private boolean isInit = false;
 	private boolean isVisible = false;
+
+	private Timeline timeline;
 
 	public CustomRectangle(Rectangle rectangle, double scaleFactor)
 	{
@@ -155,6 +160,11 @@ public class CustomRectangle
 		this.text.setVisible(flag);
 		this.text.setX(this.top.getStartX() + 5);
 		this.text.setY(this.top.getStartY() + this.text.getFont().getSize());
+		if (flag)
+		{
+			createTransition();
+			this.timeline.play();
+		}
 	}
 
 	public void setVisible(boolean flag)
@@ -418,5 +428,30 @@ public class CustomRectangle
 		double min = Math.min(line.getStartX(), line.getEndX());
 		double max = Math.max(line.getStartX(), line.getEndX());
 		return min <= dot && dot <= max;
+	}
+
+	private void createTransition()
+	{
+		if (this.timeline != null)
+		{
+			this.timeline.stop();
+		}
+		Effect effect = this.text.getEffect();
+		ColorAdjust color = new ColorAdjust();
+		if (!(effect instanceof ColorAdjust))
+		{
+			this.text.setEffect(color);
+		}
+		else
+		{
+			color = ((ColorAdjust) effect);
+		}
+		color.setBrightness(0.0);
+		this.timeline = new Timeline(
+				new KeyFrame(javafx.util.Duration.seconds(0), new KeyValue(color.brightnessProperty(), color.brightnessProperty().getValue(), Interpolator.LINEAR)),
+				new KeyFrame(javafx.util.Duration.seconds(1), new KeyValue(color.brightnessProperty(), -1, Interpolator.LINEAR))
+		);
+		timeline.setAutoReverse(true);
+		timeline.setCycleCount(-1);
 	}
 }

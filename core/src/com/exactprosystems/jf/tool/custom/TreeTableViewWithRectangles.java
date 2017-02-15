@@ -568,7 +568,12 @@ public class TreeTableViewWithRectangles
 					if (!relatedList.isEmpty())
 					{
 						Text text = new Text();
-						String collect = relatedList.stream().map(XpathTreeItem.BeanWithMark::getBean).filter(Objects::nonNull).map(ElementWizardBean::getId).collect(Collectors.joining(","));
+						String collect = relatedList.stream()
+								.map(XpathTreeItem.BeanWithMark::getBean)
+								.filter(Objects::nonNull)
+								.map(ElementWizardBean::getId)
+								.map(id -> Str.IsNullOrEmpty(id) || "null".equals(id) ? "" : id)
+								.collect(Collectors.joining(","));
 						text.setText(collect);
 						text.setFill(value.getState().color());
 						customRectangle.setText(text);
