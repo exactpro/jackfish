@@ -1,4 +1,8 @@
 --------------------------------------------------------------------------------
+15.02.2017 4.4.0.1994
+RM40318 feature : [wizard] Columns field and Weak checkbox on Change element Dialog.
+
+--------------------------------------------------------------------------------
 15.02.2017 4.4.0.1993
 RM40316 feature : [wizard] The ability to copy attribute value.
 
