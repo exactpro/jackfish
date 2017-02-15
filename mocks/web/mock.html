@@ -219,6 +219,10 @@
 	</select>
 </div>
 
+<dialog id="dialogd" name="DialogD" class="add_listener" kindname="DialogD" func="123456" open>
+    This is an open dialog window
+</dialog>
+
 <div id="divUL">
 	<label id="labelUL">List UL Example</label>
 	<ul id="listUL" name="ListUL" class="add_listener" kindname="ListUL" func="123456">
@@ -246,13 +250,29 @@
 	<button class="manyButton">ButtonMany1</button>
 	<button class="manyButton">ButtonMany2</button>
 </div>
-<iframe id="myIframe" name="MyFrame" class="add_listener" kindname="MyFrame" func="123456" src="iframe.html"></iframe>
 
-<dialog id="dialogd" name="DialogD" class="add_listener" kindname="DialogD" func="123456" open>
-	This is an open dialog window
-</dialog>
+<div id="divNavbar">
+    <ul id="navbar">
+        <li id="main" class="add_listener" kindname="Main" name="Main" func="123456">Main</li>
+        <li id="news" class="add_listener" kindname="News" name="News" func="123456">News</li>
+        <li>Contacts
+            <ul>
+                <li id="address" class="add_listener" kindname="Address" name="Address" func="123456">Address</li>
+                <li id="phone" class="add_listener" kindname="Phone" name="Phone" func="123456">Phone</li>
+                <li id="email" class="add_listener" kindname="Email" name="Email" func="123456">Email</li>
+            </ul>
+        </li>
+        <li id="about" class="add_listener" kindname="About" name="About" func="123456">About</li>
+    </ul>
+</div>
 
-<img src="ide.png" alt="Test Image" id="imageIDE" name="ImageIDE" class="add_listener" kindname="ImageIDE" func="123456" />
+<div id="divFrame">
+    <iframe id="myIframe" name="MyFrame" class="add_listener" kindname="MyFrame" func="123456" src="iframe.html"></iframe>
+</div>
+
+<div id="divImageIDE">
+    <img src="ide.png" alt="Test Image" id="imageIDE" name="ImageIDE" class="add_listener" kindname="ImageIDE" func="123456" />
+</div>
 
 </body>
 </html>
