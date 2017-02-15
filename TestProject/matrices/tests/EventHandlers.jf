@@ -1,5 +1,5 @@
-#Id;#TestCase
-T1;T1
+#Id;#TestCase;#Kind;#Depends;#For
+T1;T1;;;
     #Id;#Global;#Let
     t;1;1
 
@@ -18,15 +18,15 @@ T1;T1
     #SetHandler;#Kind
     onStepError;OnStepError
 
-    #Step
-    'S1'
+    #Step;#Kind;#For
+    'S1';;
         #Id;#Global;#Let
         s;1;1
 
     #EndStep
 
-    #Step
-    'S2'
+    #Step;#Kind;#For
+    'S2';;
         #Id;#Global;#Let
         s;1;2
 
@@ -35,7 +35,7 @@ T1;T1
 
         #OnError
             #Id;#Global;#Let
-            res;1;res + 'OnError'
+            res;1;res + 'OnError '
 
 
     #EndStep
@@ -43,8 +43,8 @@ T1;T1
     #SetHandler;#Kind
     ;OnStepError
 
-    #Step
-    'S3'
+    #Step;#Kind;#For
+    'S3';;
         #Id;#Global;#Let
         s;1;3
 
@@ -80,8 +80,8 @@ T1;T1
     #EndSubCase
 
 
-#Id;#TestCase
-T2;T2
+#Id;#TestCase;#Kind;#Depends;#For
+T2;T2;;;
     #Id;#Global;#Let
     t;1;2
 
@@ -116,8 +116,8 @@ T2;T2
     #EndSubCase
 
 
-#Id;#TestCase
-T3;T3
+#Id;#TestCase;#Kind;#Depends;#For
+T3;T3;;;
     #Id;#Global;#Let
     t;1;3
 
@@ -125,8 +125,8 @@ T3;T3
     'f3'
 
 
-#Id;#TestCase
-T4;T4
+#Id;#TestCase;#Kind;#Depends;#For
+T4;T4;;;
     #Id;#Global;#Let
     t;1;4
 
@@ -137,8 +137,8 @@ T4;T4
     ;OnTestCaseFinish
 
 
-#Id;#TestCase
-T5;T5
+#Id;#TestCase;#Kind;#Depends;#For
+T5;T5;;;
     #Id;#Global;#Let
     t;1;5
 
@@ -151,8 +151,8 @@ T5;T5
 
 
 
-#Id;#TestCase
-T6;T6
+#Id;#TestCase;#Kind;#Depends;#For
+T6;T6;;;
     #Id;#Global;#Let
     t;1;6
 
@@ -168,8 +168,8 @@ T6;T6
 
 
 
-#Id;#TestCase
-T7;T7
+#Id;#TestCase;#Kind;#Depends;#For
+T7;T7;;;
     #Id;#Global;#Let
     t;1;7
 
@@ -177,6 +177,6 @@ T7;T7
     Print;res
 
     #Assert;#Message
-    res == 'SS1 SF1 SS2 SE2s2 SF2 SS3 s3e6 SF3 F2 S3 E3f3 F3 S4 E5f5 f6e6 ';'test failed'
+    res == 'SS1 SF1 SS2 OnError SS3 s3e6 F2 S3 E3f3 S4 f5e5 f6e6 ';'test failed'
 
 
