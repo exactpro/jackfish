@@ -3,9 +3,11 @@ package com.exactprosystems.jf.tool.custom;
 import com.exactprosystems.jf.api.app.IRemoteApplication;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.documents.matrix.parser.SearchHelper;
+import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.custom.layout.CustomRectangle;
 import com.exactprosystems.jf.tool.custom.layout.LayoutExpressionBuilderController;
+import com.exactprosystems.jf.tool.custom.xpath.XpathCell;
 import com.exactprosystems.jf.tool.custom.xpath.XpathItem;
 import com.exactprosystems.jf.tool.custom.xpath.XpathTreeItem;
 import com.exactprosystems.jf.tool.custom.xpath.XpathViewer;
@@ -17,6 +19,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.EventTarget;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.control.MenuItem;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
@@ -447,6 +450,27 @@ public class TreeTableViewWithRectangles
 	private Text createText(String text, String cssClass)
 	{
 		Text t = new Text(text);
+		t.setOnContextMenuRequested(event -> {
+
+			MenuItem item = new MenuItem("Copy " + text);
+			item.setOnAction(e -> Common.copyText(text));
+			if (t.getParent().getParent() instanceof XpathTreeTableCell)
+			{
+				XpathTreeTableCell parent = (XpathTreeTableCell) t.getParent().getParent();
+				SeparatorMenuItem separator = new SeparatorMenuItem();
+				ContextMenu treeMenu = parent.getContextMenu();
+				treeMenu.getItems().add(0, item);
+				treeMenu.getItems().add(1, separator);
+				treeMenu.setOnHidden(e -> treeMenu.getItems().removeAll(item, separator));
+			}
+			else
+			{
+				ContextMenu menu = new ContextMenu();
+				menu.setAutoHide(true);
+				menu.getItems().add(item);
+				menu.show(t, MouseInfo.getPointerInfo().getLocation().getX(), MouseInfo.getPointerInfo().getLocation().getY());
+			}
+		});
 		t.getStyleClass().add(cssClass);
 		return t;
 	}
@@ -590,6 +614,18 @@ public class TreeTableViewWithRectangles
 
 	private class XpathTreeTableCell extends TreeTableCell<XpathTreeItem, XpathTreeItem>
 	{
+		public XpathTreeTableCell()
+		{
+			ContextMenu menu = new ContextMenu();
+			menu.setAutoHide(true);
+
+			MenuItem copyText = new MenuItem("Copy node");
+			copyText.setOnAction(event -> Optional.ofNullable(this.getTreeTableRow().getTreeItem().getValue()).ifPresent(value -> Common.copyText(value.getText())));
+			menu.getItems().add(copyText);
+
+			this.setContextMenu(menu);
+		}
+
 		@Override
 		protected void updateItem(XpathTreeItem item, boolean empty)
 		{
