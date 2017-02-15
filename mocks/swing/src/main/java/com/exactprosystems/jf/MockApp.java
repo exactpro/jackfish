@@ -281,8 +281,8 @@ public class MockApp
 				{
 					if (e.getClickCount() == 2)
 					{
-						//						centralLabel.setText("Table_double_click_" + row + "_" + column);
-						// centralLabel.setText("Table_double_click");
+						//centralLabel.setText("Table_double_click_" + row + "_" + column);
+						centralLabel.setText("Table_double_click");
 
 						Object instr = new InstrumentHelper(1);
 						table.setValueAt(instr,1,1);
@@ -674,6 +674,10 @@ public class MockApp
 				if (e.getKeyCode() == KeyEvent.VK_F1)
 				{
 					centralLabel.setText(name + "_up_F1");
+				}
+				if (e.getKeyCode() == KeyEvent.VK_CONTROL)
+				{
+					centralLabel.setText(name + "_up_CONTROL");
 				}
 			}
 		};

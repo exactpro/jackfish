@@ -2,7 +2,7 @@
 #TestCase;#Kind;#Depends;#For
 Prepare;;;
     #Id;#Global;#Let
-    adapter;1;'SWING'
+    adapter;1;parameter
 
     #Id;#Action;#File
     TBL1;TableLoadFromFile;'testdata/'+adapter+'.csv'
@@ -241,12 +241,6 @@ Save to matrix;;;
     TextReport;'matrix';matrixText
 
     #Action;#Text;#File
-    TextSaveToFile;matrixText;'testdata/result_new.jf'
-
-
-#TestCase;#Kind;#Depends;#For
-Execute;;;
-    #Id;#Action;#Matrix
-    MXRN2;MatrixRun;'testdata/result_new.jf'
+    TextSaveToFile;matrixText;matrixTestsPath + 'check' + adapter + '.jf'
 
 

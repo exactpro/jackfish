@@ -17,7 +17,7 @@
             <tabPanel id="TabPanel" class="javax.swing.JTabbedPane" addition="Many"/>
             <label id="centralLabel" class="javax.swing.JLabel" name="centralLabel" text="" addition="Many"/>
             <toggleButton id="ToggleButton" class="javax.swing.JToggleButton" name="ToggleButton" addition="Many"/>
-            <frame id="Frame" class="javax.swing.JFrame" name="frame0" title="Mock app" addition="Many"/>
+            <frame id="Frame" class="javax.swing.JFrame" name="frame0" title="Mock swing app" addition="Many"/>
             <label id="Label" class="javax.swing.JLabel" name="centralLabel" text="" addition="Many"/>
             <progressBar id="ProgressBar" class="javax.swing.JProgressBar" name="ProgressBar" addition="Many"/>
             <panel id="Panel" class="javax.swing.JPanel" name="Panel" addition="Many"/>

@@ -1,11 +1,8 @@
 // 
 #TestCase;#Kind;#Depends;#For
 Prepare;;;
-    #Id;#Global;#Let
-    adapter;1;'SWING'
-
     #Id;#Action;#File
-    TBL1;TableLoadFromFile;'testdata/'+adapter+'.csv'
+    TBL1;TableLoadFromFile;'testdata/allControlsAndOperations_new.csv'
 
     #Id;#Action;#Content
     TXT1;TextCreate;''
@@ -15,8 +12,8 @@ Prepare;;;
     1;Vars;'$p';'$w';'$t';'$n';'-';'N';'mask';'Name';'Off';'N'
 
     // adapter may be SWING or WEB ( in future will need add adapter for WinApp)
-    #Global;#Action;#headerText;#headerTextAssert;#table;#matrixText;#delay;#pattern
-    1;Vars;'\t#Action\u003b#Dialog\u003b#AppConnection\u003b#';'\t#Action\u003b#Dialog\u003b#Assert\u003b#AppConnection\u003b#';TBL1.Out;TXT1.Out;'.delay(500)';def(pattern, str) {Matcher matcher = Pattern.compile(pattern).matcher(str)\u003bif (matcher.find()) {return matcher.group(1)\u003b}return ''\u003b}
+    #Global;#Action;#headerText;#headerTextAssert;#table;#matrixText;#adapter;#delay;#pattern
+    1;Vars;'\t#Action\u003b#Dialog\u003b#AppConnection\u003b#';'\t#Action\u003b#Dialog\u003b#Assert\u003b#AppConnection\u003b#';TBL1.Out;TXT1.Out;'WEB';'.delay(500)';def(pattern, str) {Matcher matcher = Pattern.compile(pattern).matcher(str)\u003bif (matcher.find()) {return matcher.group(1)\u003b}return ''\u003b}
 
     #Global;#Action;#operationPattern;#templatePattern;#wherePattern;#prepareOperationPattern;#reasonPattern;#isNotNeedName;#avaliableAdapter
     1;Vars;def (x) { return pattern("\\$p=#(.+?)#", x)};def (x) { return pattern("\\$t=#(.+?)#", x)};def (x) { return pattern("\\$w=#(\\w)#", x)};def (x) {return pattern("\\$b=#(.+?)#", x)};def (x) { return pattern("\\$f=#(.+?)#", x)};def(x) {return x.contains(needName)};def(x) { if (x.indexOf('$') != -1) {return x.substring(0,x.indexOf('$'))\u003b}return x\u003b}
@@ -142,19 +139,33 @@ Generate;;;
             #EndIf
 
             #If
-            !avaliableAdapter(currentValue).contains('Y')
+            !avaliableAdapter(currentValue).contains(adapterLetter)
                 #Global;#Action;#reason
                 1;Vars;reasonPattern(currentValue)
 
+                #Id;#Let
+                conditionSW;(currentValue == 'S' && adapterLetter == 'W') || (currentValue == 'W' && adapterLetter == 'S')
+
                 #If
-                reason.isEmpty()
-                    #Global;#Action;#reason
-                    1;Vars;'is not allowed'
+                conditionSW
+                    #Action;#Line;#Text
+                    TextAddLine;headerTextAssert + name+'\n\tDialogFill\u003b\'Main\'\u003bThis.Result==Result.Passed\u003bappConnection\u003b'+currentOperation+'\n';matrixText
 
                 #EndIf
 
-                #Action;#Line;#Text
-                TextAddLine;headerTextAssert + name+'\n\tDialogFill\u003b\'Main\'\u003bThis.Result==Result.Failed && This.Reason.contains(\''+reason+'\')\u003bappConnection\u003b'+currentOperation+'\n';matrixText
+                #If
+                !conditionSW
+                    #If
+                    reason.isEmpty()
+                        #Global;#Action;#reason
+                        1;Vars;'is not allowed'
+
+                    #EndIf
+
+                    #Action;#Line;#Text
+                    TextAddLine;headerTextAssert + name+'\n\tDialogFill\u003b\'Main\'\u003bThis.Result==Result.Failed && This.Reason.contains(\''+reason+'\')\u003bappConnection\u003b'+currentOperation+'\n';matrixText
+
+                #EndIf
 
             #Else
                 #Action;#prepareOperation
@@ -194,12 +205,6 @@ Generate;;;
 
                         #Global;#Action;#checkLabel
                         1;Vars;'centralLabel'
-
-
-                    #Case
-                    'a'
-                        #Action;#Line;#Text
-                        TextAddLine;'\t'+'#Action\u003b#Assert\u003b#Dialog\u003b#AppConnection\u003b#'+name+'\n\t'+'DialogFill\u003b'+templatePattern(currentValue)+'\u003b'+'\'Main\'\u003bappConnection\u003b'+currentOperation;matrixText
 
 
                     #Default
@@ -244,9 +249,21 @@ Save to matrix;;;
     TextSaveToFile;matrixText;'testdata/result_new.jf'
 
 
-#TestCase;#Kind;#Depends;#For
-Execute;;;
-    #Id;#Action;#Matrix
-    MXRN2;MatrixRun;'testdata/result_new.jf'
+#Off;#TestCase;#Kind;#Depends;#For
+1;Execute;;;
+    #Id;#Action;#Text
+    MXRN1;MatrixRunFromText;matrixText
+
+    #Id;#Action;#Assert;#Matrix;#Time
+    MXWT1;MatrixWait;MXRN1.Out.failed() == 0;MXRN1.Out;100000
+
+    #Id;#Action;#matrix;#passed;#failed;#report
+    resTab;TableCreate;;;;
+
+    #Action;#Table;#matrix;#passed;#failed;#report
+    TableAddValue;resTab.Out;MXRN1.Out.getMatrixName();'<font color="LawnGreen">'+MXRN1.Out.passed()+'</font>';'<font color="Red">'+MXRN1.Out.failed()+'</font>';'<a href="../'+MXRN1.Out.getReportName()+'">'+MXRN1.Out.getMatrixName()+'</a>'
+
+    #Action;#Table;#Title
+    TableReport;resTab.Out;''
 
 
