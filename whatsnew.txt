@@ -1,5 +1,11 @@
+--------------------------------------------------------------------------------
+15.02.2017 4.4.0.1991
+RM40317 feature : [wizard] The ability to find only visible elements.
+
+--------------------------------------------------------------------------------
 14.02.2017 4.4.0.1986
 RM40301 git ignore : fixed. Now, add possibilities for append to .gitignore file
+
 --------------------------------------------------------------------------------
 08.02.2017 4.3.0.1941
 RM40207 feature : Add parameter AppConnection to action ApplicationConnectTo to reuse plugin instance

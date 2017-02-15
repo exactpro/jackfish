@@ -67,7 +67,7 @@ public class SeleniumRemoteApplication extends RemoteApplication
 		"}; \n" +
 		" \n" +
 		"function go(e) { \n" +
-		"    if (e.tagName !== undefined) { \n" +
+		"    if (e.tagName !== undefined && (e.offsetWidth > 0 || e.offsetHeight > 0)) { \n" +
 		"        var child = []; \n" +
 		"        var els = e.childNodes; \n" +
 		"        for(var i=0; i<els.length; i++) { \n" +
