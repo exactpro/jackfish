@@ -28,6 +28,8 @@ public class MergeEditor
 
 	private MergeEditorController controller;
 
+	boolean isSuccessful;
+
 	public MergeEditor(Main model, String filePath) throws Exception
 	{
 		this.filePath = filePath;
@@ -49,6 +51,7 @@ public class MergeEditor
 
 	public void close()
 	{
+		this.isSuccessful = false;
 		this.controller.closeDialog();
 	}
 
@@ -56,13 +59,13 @@ public class MergeEditor
 	{
 		Common.writeToFile(new File(this.filePath), Arrays.asList(result.split("\n")));
 		GitUtil.addFileToIndex(this.model.getCredential(), this.filePath);
-		this.close();
+		this.isSuccessful = true;
+		this.controller.closeDialog();
 	}
 
-	public void saveResult(List<String> result) throws Exception
+	public boolean isSuccessful()
 	{
-		Common.writeToFile(new File(this.filePath), result);
-		GitUtil.addFileToIndex(this.model.getCredential(), this.filePath);
+		return isSuccessful;
 	}
 
 	private void evaluate() throws Exception

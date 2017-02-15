@@ -59,6 +59,12 @@ public class GitMerge
 
 	public void merge(GitMergeBean bean) throws Exception
 	{
-		new MergeEditor(this.model, bean.getFileName()).display();
+		MergeEditor mergeEditor = new MergeEditor(this.model, bean.getFileName());
+		mergeEditor.display();
+		if (mergeEditor.isSuccessful())
+		{
+			this.mergedFiles.add(bean.getFileName());
+			this.controller.removeBean(bean);
+		}
 	}
 }

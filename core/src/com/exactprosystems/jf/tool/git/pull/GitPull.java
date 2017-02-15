@@ -10,6 +10,7 @@ package com.exactprosystems.jf.tool.git.pull;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.git.CredentialBean;
 import com.exactprosystems.jf.tool.git.GitUtil;
+import com.exactprosystems.jf.tool.git.merge.editor.MergeEditor;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.main.Main;
 import javafx.concurrent.Service;
@@ -96,6 +97,16 @@ public class GitPull
 	public void display()
 	{
 		this.controller.show();
+	}
+
+	public void merge(GitPullBean item) throws Exception
+	{
+		MergeEditor mergeEditor = new MergeEditor(this.model, item.getFileName());
+		mergeEditor.display();
+		if (mergeEditor.isSuccessful())
+		{
+			item.resolve();
+		}
 	}
 
 	private void displayFiles(List<GitPullBean> list) throws Exception

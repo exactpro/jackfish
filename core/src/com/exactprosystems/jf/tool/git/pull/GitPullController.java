@@ -175,7 +175,15 @@ public class GitPullController implements Initializable, ContainingParent
 							refresh();
 						}, "Error on accept ours"));
 
-						menuButton.setOnAction(e -> DialogsHelper.showInfo("Merge not implemented yet. Merge yourself"));
+						merge.setOnAction(e -> Common.tryCatch(() -> {
+							model.merge((GitPullBean) getTableRow().getItem());
+							refresh();
+						}, "Error on merge"));
+
+						menuButton.setOnAction(e -> Common.tryCatch(() -> {
+							model.merge((GitPullBean) getTableRow().getItem());
+							refresh();
+						}, "Error on merge"));
 						setGraphic(menuButton);
 					}
 					else
