@@ -349,12 +349,11 @@ public abstract class RemoteApplication implements IRemoteApplication
 		catch (Exception e)
 		{
 			String msg = String.format("Error findAll(%s, %s)", owner, element);
-//			throw new ProxyException(msg, e.getMessage(), e);
-			System.err.println("~~~~~~ " + msg);
 			throw new ElementNotFoundException(msg, element);
 		}
 	}
 	
+	@Deprecated
 	@Override
 	public final Locator getLocator (Locator owner, ControlKind controlKind, int x, int y) throws RemoteException
 	{

@@ -11,6 +11,8 @@ package com.exactprosystems.jf.app;
 import com.exactprosystems.jf.api.app.ControlKind;
 import com.exactprosystems.jf.api.app.IRemoteApplication;
 import com.exactprosystems.jf.api.app.Locator;
+import com.exactprosystems.jf.api.app.LocatorFieldKind;
+import com.exactprosystems.jf.api.app.PluginInfo;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.error.app.ElementNotFoundException;
 import com.exactprosystems.jf.api.error.app.NullParameterException;
@@ -36,14 +38,18 @@ public class MatcherSwing <T extends Component> extends GenericTypeMatcher<T>
 {
 	public static final String	itemName		= "item";
 
-	public static final String	actionName		= "action";
-	public static final String	titleName		= "title";
-	public static final String	textName		= "text";
-	public static final String	tooltipName		= "tooltip";
-	public static final String	nameName		= "name";
-	public static final String	className		= "class";
+//	public static final String	actionName		= "action";
+//	public static final String	titleName		= "title";
+//	public static final String	textName		= "text";
+//	public static final String	tooltipName		= "tooltip";
+//	public static final String	nameName		= "name";
+//	public static final String	className		= "class";
 	
-	public MatcherSwing(Class<T> type, Component owner, ControlKind controlKind, Locator locator) throws RemoteException
+	public static boolean newApproach     = false;
+
+	private PluginInfo info; 
+	
+	public MatcherSwing(PluginInfo info, Class<T> type, Component owner, ControlKind controlKind, Locator locator) throws RemoteException
 	{
 		super(type);
 		
@@ -51,6 +57,7 @@ public class MatcherSwing <T extends Component> extends GenericTypeMatcher<T>
 		{
 			throw new NullParameterException("locator");
 		}
+		this.info = info;
 		this.locator = locator;
 
 		String xpath = this.locator.getXpath();
@@ -58,7 +65,7 @@ public class MatcherSwing <T extends Component> extends GenericTypeMatcher<T>
 		{
 			try
 			{
-				Document document = createDocument(owner, true, false);
+				Document document = createDocument(this.info, owner, true, false);
 				XPathFactory factory = XPathFactory.newInstance();
 				XPath xPath = factory.newXPath();
 
@@ -75,39 +82,39 @@ public class MatcherSwing <T extends Component> extends GenericTypeMatcher<T>
 		logger.debug("=========================================");
 		logger.debug("Matcher locator = " + locator);
 	}
-
-	public static Document createDocument(Component owner, boolean addItems, boolean addRectangles) throws ParserConfigurationException
+	
+	public static Document createDocument(PluginInfo info, Component owner, boolean addItems, boolean addRectangles) throws ParserConfigurationException
 	{
 		DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder builder = builderFactory.newDocumentBuilder();
 		Document document = builder.newDocument();
-		buildDom(document, document, owner, addItems, addRectangles);
+		buildDom(info, document, document, owner, addItems, addRectangles);
 		
 		return document;
 	}
 	
-	public static Component find(Component owner, String xpath)
-	{
-		try
-		{
-			Document document = createDocument(owner, true, false);
-			XPathFactory factory = XPathFactory.newInstance();
-			XPath xPath = factory.newXPath();
-
-			Node node = (Node) xPath.compile(xpath).evaluate(document, XPathConstants.NODE);
-			if (node != null)
-			{
-				return (Component)node.getUserData(itemName);
-			}
-		}
-		catch (Exception pe)
-		{
-			logger.error(pe.getMessage(), pe);
-			return null;
-		}
-
-		return null;
-	}
+//	public static Component find(Component owner, String xpath)
+//	{
+//		try
+//		{
+//			Document document = createDocument(owner, true, false);
+//			XPathFactory factory = XPathFactory.newInstance();
+//			XPath xPath = factory.newXPath();
+//
+//			Node node = (Node) xPath.compile(xpath).evaluate(document, XPathConstants.NODE);
+//			if (node != null)
+//			{
+//				return (Component)node.getUserData(itemName);
+//			}
+//		}
+//		catch (Exception pe)
+//		{
+//			logger.error(pe.getMessage(), pe);
+//			return null;
+//		}
+//
+//		return null;
+//	}
 
 	public static String getAction(Component obj)
 	{
@@ -227,7 +234,7 @@ public class MatcherSwing <T extends Component> extends GenericTypeMatcher<T>
 		{
 			objText = obj.getClass().getName();
 		}
-		
+
 		return objText;
 	}
 
@@ -256,7 +263,7 @@ public class MatcherSwing <T extends Component> extends GenericTypeMatcher<T>
 		if (this.nodelist != null)
 		{
 			result = contains(this.nodelist, objNew);
-			if (this.locator.useAbsoluteXpath())
+	        if (this.locator.getXpath() != null && !this.locator.getXpath().isEmpty())
 			{
 				return result;
 			}
@@ -288,7 +295,7 @@ public class MatcherSwing <T extends Component> extends GenericTypeMatcher<T>
 		return result;
 	}
 
-    public static void buildDom(Document document, Node current, Component component, boolean addItems, boolean addRectangles)
+    private static void buildDom(PluginInfo info, Document document, Node current, Component component, boolean addItems, boolean addRectangles)
     {
     	if (component == null)
     	{
@@ -320,6 +327,13 @@ public class MatcherSwing <T extends Component> extends GenericTypeMatcher<T>
 		{
 			node.setUserData(IRemoteApplication.rectangleName, getRect(component), null);
 		}
+
+        String className    = info.attributeName(LocatorFieldKind.CLAZZ);
+        String nameName     = info.attributeName(LocatorFieldKind.NAME);
+        String titleName    = info.attributeName(LocatorFieldKind.TITLE);
+        String actionName   = info.attributeName(LocatorFieldKind.ACTION);
+        String tooltipName  = info.attributeName(LocatorFieldKind.TOOLTIP);
+		
     	
 		node.setAttribute(actionName,	getAction(component));
 		node.setAttribute(titleName, 	getTitle(component));
@@ -339,7 +353,7 @@ public class MatcherSwing <T extends Component> extends GenericTypeMatcher<T>
     		
     		for(Component child : container.getComponents())
     		{
-    			buildDom(document, node, child, addItems, addRectangles);
+    			buildDom(info, document, node, child, addItems, addRectangles);
     		}
     	}
     }
@@ -354,15 +368,6 @@ public class MatcherSwing <T extends Component> extends GenericTypeMatcher<T>
 			return new Rectangle(c.getLocationOnScreen(), c.getSize());
 		}
 		return new Rectangle(0, 0, 0, 0);
-//		//see Component.class , method getLocationOnWindow
-//		Point curLocation = c.getLocation();
-//		for (Container parent = c.getParent(); parent != null/* && !(parent instanceof Window)*/; parent = parent.getParent())
-//		{
-//			curLocation.x += parent.getX();
-//			curLocation.y += parent.getY();
-//		}
-//
-//		return new Rectangle(curLocation, c.getSize());
 	}
 
 	public static void setLogger(Logger log)

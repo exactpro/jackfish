@@ -191,7 +191,6 @@ public class SeleniumRemoteApplication extends RemoteApplication
 			String url = args.get(WebAppFactory.urlName);
 
 	        String newSearch = args.get(WebAppFactory.newSearchName);
-	        
             if (newSearch != null && !newSearch.isEmpty())
             {
                 logger.info(WebAppFactory.newSearchName + " = " + newSearch);

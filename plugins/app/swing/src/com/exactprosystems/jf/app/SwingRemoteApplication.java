@@ -152,7 +152,15 @@ public class SwingRemoteApplication extends RemoteApplication
 
 		logger.debug("Launching application: class=" + mainClass + " jar=" + jar + " arg=" + arg);
 
-		try
+        String newSearch = args.get(SwingAppFactory.newSearchName);
+        
+        if (newSearch != null && !newSearch.isEmpty())
+        {
+            logger.info(SwingAppFactory.newSearchName + " = " + newSearch);
+            MatcherSwing.newApproach = Boolean.parseBoolean(newSearch);
+        }
+
+        try
 		{
 			List<URL> urls = new ArrayList<URL>();
 			urls.add(new URL("file:" + jar));
@@ -353,6 +361,7 @@ public class SwingRemoteApplication extends RemoteApplication
 		}
 	}
 
+	@Deprecated
 	@Override
 	protected Locator getLocatorDerived(Locator owner, ControlKind controlKind, int x, int y) throws Exception
 	{
@@ -668,7 +677,7 @@ public class SwingRemoteApplication extends RemoteApplication
 				component = this.operationExecutor.find(null, owner).target;
 			}
 
-			return MatcherSwing.createDocument(component, false, true);
+			return MatcherSwing.createDocument(this.info, component, false, true);
 		}
 		catch (RemoteException e)
 		{

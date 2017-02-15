@@ -238,7 +238,7 @@ public class MatcherSelenium extends By
 	
     private String xpathFromControlNew(ControlKind controlKind, Locator locator)
     {
-        if (locator.getXpath() != null)
+        if (locator.getXpath() != null && !locator.getXpath().isEmpty())
         {
             return locator.getXpath();
         }

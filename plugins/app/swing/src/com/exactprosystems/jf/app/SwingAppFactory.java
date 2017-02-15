@@ -12,9 +12,13 @@ import com.exactprosystems.jf.api.app.ControlKind;
 import com.exactprosystems.jf.api.app.IApplication;
 import com.exactprosystems.jf.api.app.IApplicationFactory;
 import com.exactprosystems.jf.api.app.IGuiDictionary;
+import com.exactprosystems.jf.api.app.LocatorFieldKind;
 import com.exactprosystems.jf.api.app.PluginInfo;
 import com.exactprosystems.jf.api.common.ParametersKind;
 
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Scanner;
 
 public class SwingAppFactory implements IApplicationFactory
@@ -22,7 +26,9 @@ public class SwingAppFactory implements IApplicationFactory
 	private static final int requiredMajorVersion = 2;
 	private static final int requiredMinorVersion = 27;
 
-	public static final String logLevel         = "LogLevel";
+    public static final String newSearchName    = "NewSearch";
+
+    public static final String logLevel         = "LogLevel";
 	public final static String jreExecName 		= "jreExec";
 	public final static String jreArgsName 		= "jreArgs";
 	public final static String mainClassName 	= "MainClass";
@@ -52,7 +58,7 @@ public class SwingAppFactory implements IApplicationFactory
 	{
 		switch (kind)
 		{
-			case LOAD:		return new String[] { jreExecName, jreArgsName, logLevel };
+			case LOAD:		return new String[] { newSearchName, jreExecName, jreArgsName, logLevel };
 			case START:		return new String[] { jarName, argsName, mainClassName };
 			case CONNECT:	return new String[] { urlName };
 			default:		return empty;	
@@ -128,7 +134,24 @@ public class SwingAppFactory implements IApplicationFactory
     @Override
     public PluginInfo getInfo()
     {
-        return null; // TODO 
+        Map<ControlKind, String[]> controlMap = new LinkedHashMap<>();
+
+        for (ControlKind kind : ControlKind.values())
+        {
+            controlMap.put(kind, new String[] { "*" });
+        }
+
+        Map<LocatorFieldKind, String> fieldMap = new HashMap<>();
+
+        fieldMap.put(LocatorFieldKind.UID,      null);
+        fieldMap.put(LocatorFieldKind.ACTION,   "action");
+        fieldMap.put(LocatorFieldKind.CLAZZ,    "class");
+        fieldMap.put(LocatorFieldKind.NAME,     "name");
+        fieldMap.put(LocatorFieldKind.TITLE,    "title");
+        fieldMap.put(LocatorFieldKind.TEXT,     null);
+        fieldMap.put(LocatorFieldKind.TOOLTIP,  "tooltip");
+
+        return new PluginInfo(controlMap, fieldMap);
     }
 
     //----------------------------------------------------------------------------------------------

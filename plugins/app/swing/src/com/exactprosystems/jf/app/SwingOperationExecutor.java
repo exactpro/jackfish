@@ -158,7 +158,7 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 			}
 
 			List<ComponentFixture<Component>> res = new ArrayList<>();
-			MatcherSwing<Component> matcher = new MatcherSwing<>(Component.class, owner, controlKind, locator);
+			MatcherSwing<Component> matcher = new MatcherSwing<>(this.info, Component.class, owner, controlKind, locator);
 			Collection<Component> components = this.currentRobot.finder().findAll(owner, matcher);
 			for (final Component component : components)
 			{
@@ -195,7 +195,7 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 			}
 
 			List<ComponentFixture<Component>> res = new ArrayList<>();
-			MatcherSwing<Component> matcher = new MatcherSwing<>(Component.class, container, element.getControlKind(), element);
+			MatcherSwing<Component> matcher = new MatcherSwing<>(this.info, Component.class, container, element.getControlKind(), element);
 			Collection<Component> components = this.currentRobot.finder().findAll(container, matcher);
 			for (final Component component : components)
 			{
@@ -665,7 +665,7 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 					MatcherSwing<Component> matcher = null;
 					try
 					{
-						matcher = new MatcherSwing<>(Component.class, currentRoot(), locator.getControlKind(), locator);
+						matcher = new MatcherSwing<>(SwingOperationExecutor.this.info, Component.class, currentRoot(), locator.getControlKind(), locator);
 					}
 					catch (RemoteException e)
 					{
@@ -1376,7 +1376,7 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 					{
 						own = this.currentRoot();
 					}
-					ret = (ComponentFixture<T>) WindowFinder.findFrame(new MatcherSwing<Frame>(Frame.class, own, null, locator)).using(currentRobot);
+					ret = (ComponentFixture<T>) WindowFinder.findFrame(new MatcherSwing<Frame>(this.info, Frame.class, own, null, locator)).using(currentRobot);
 					FrameFixture jff = (FrameFixture) ret;
 					jff.target.toFront();
 					break;
@@ -1632,11 +1632,11 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 		Component component = null;
 		if (window != null)
 		{
-			component = this.currentRobot.finder().find((Container) window.target, new MatcherSwing<T>(type, window.target, locator.getControlKind(), locator));
+			component = this.currentRobot.finder().find((Container) window.target, new MatcherSwing<T>(this.info, type, window.target, locator.getControlKind(), locator));
 		}
 		else
 		{
-			component = this.currentRobot.finder().find(new MatcherSwing<Component>(Component.class, currentRoot(), locator.getControlKind(), locator));
+			component = this.currentRobot.finder().find(new MatcherSwing<Component>(this.info, Component.class, currentRoot(), locator.getControlKind(), locator));
 		}
 
 		return (T) component;
