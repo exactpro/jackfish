@@ -560,7 +560,13 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 		{
 			try
 			{
-				return findRows(additional, component).size();
+				List<WebElement> tbody = component.findElements(By.xpath("child::tbody"));
+				if (tbody.isEmpty())
+				{
+					return 0;
+				}
+				WebElement firstTbody = tbody.get(0);
+				return firstTbody.findElements(By.xpath("child::tr")).size();
 			}
 			catch (StaleElementReferenceException e)
 			{
