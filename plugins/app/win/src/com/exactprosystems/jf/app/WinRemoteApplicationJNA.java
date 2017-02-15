@@ -34,6 +34,7 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 	private Logger logger;
 	private JnaDriverImpl driver;
 	private WinOperationExecutorJNA operationExecutor;
+	private PluginInfo info;
 
 	@Override
 	protected void createLoggerDerived(String logName, String serverLogLevel, String serverLogPattern) throws Exception
@@ -57,6 +58,13 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 			throw e;
 		}
 	}
+
+    @Override
+    protected void setPluginInfoDerived(PluginInfo info) throws Exception
+    {
+        this.info = info;
+        this.operationExecutor.setPluginInfo(info);
+    }
 
 	@Override
 	public Serializable getProperty(String name) throws RemoteException
@@ -725,5 +733,4 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 		System.arraycopy(arr, 2, windowRuntimeId, 0, arr[1]);
 		return new UIProxyJNA(windowRuntimeId);
 	}
-
 }

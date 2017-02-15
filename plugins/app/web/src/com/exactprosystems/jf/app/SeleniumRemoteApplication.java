@@ -95,6 +95,7 @@ public class SeleniumRemoteApplication extends RemoteApplication
 		" \n" +
 		"return go(arguments[0]); \n";
 
+	// TODO is it the same information as in plugin info?
 	private static Map<String, ArrayList<ControlKind>> mapTagsControlKind = new HashMap<>();
 
 	static
@@ -148,6 +149,13 @@ public class SeleniumRemoteApplication extends RemoteApplication
 		MatcherSelenium.setLogger(logger);
 	}
 
+    @Override
+    protected void setPluginInfoDerived(PluginInfo info) throws Exception
+    {
+        this.info = info;
+        this.operationExecutor.setPluginInfo(info);
+    }
+
 	@Override
 	public Serializable getProperty(String name) throws RemoteException
 	{
@@ -182,6 +190,14 @@ public class SeleniumRemoteApplication extends RemoteApplication
 			String browserName = args.get(WebAppFactory.browserName);
 			String url = args.get(WebAppFactory.urlName);
 
+	        String newSearch = args.get(WebAppFactory.newSearchName);
+	        
+            if (newSearch != null && !newSearch.isEmpty())
+            {
+                logger.info(WebAppFactory.newSearchName + " = " + newSearch);
+                MatcherSelenium.newApproach = Boolean.parseBoolean(newSearch);
+            }
+			
 			String safariDriverPath = args.get(WebAppFactory.safariDriverPathName);
 			if (safariDriverPath != null && !safariDriverPath.isEmpty())
 			{
@@ -590,7 +606,7 @@ public class SeleniumRemoteApplication extends RemoteApplication
 		WebElement ownerElement = null;
 		if (owner != null)
 		{
-			By byOwner = new MatcherSelenium(owner.getControlKind(), owner);
+			By byOwner = new MatcherSelenium(this.info, owner.getControlKind(), owner);
 			List<WebElement> owners = this.driver.findElements(byOwner);
 			if (owners.isEmpty())
 			{
@@ -604,7 +620,7 @@ public class SeleniumRemoteApplication extends RemoteApplication
 			ownerElement = owners.get(0);
 		}
 
-		By by = new MatcherSelenium(locator.getControlKind(), locator);
+		By by = new MatcherSelenium(this.info, locator.getControlKind(), locator);
 		List<WebElement> elements = (ownerElement == null ? this.driver.findElements(by) : ownerElement.findElements(by));
 
 		List<String> result = new ArrayList<>();
@@ -999,6 +1015,7 @@ public class SeleniumRemoteApplication extends RemoteApplication
 	private static long time = System.currentTimeMillis();
 
 	private WebDriverListenerNew driver;
+	private PluginInfo info;
 
 	private boolean needTune = true;
 	private double offsetX;

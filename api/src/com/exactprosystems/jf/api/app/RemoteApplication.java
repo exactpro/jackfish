@@ -86,6 +86,25 @@ public abstract class RemoteApplication implements IRemoteApplication
 		}
 	}
 
+    @Override
+    public void setPluginInfo   (PluginInfo info) throws RemoteException
+    {
+        try 
+        {
+            exceptionIfNull(info,            "info", "setPluginInfo");
+            
+            setPluginInfoDerived(info);
+        }
+        catch (RemoteException e)
+        {
+            throw e;
+        }
+        catch (Exception e)
+        {
+            String msg = String.format("Error setPluginInfo(%s)", info);
+            throw new ProxyException(msg, e.getMessage(), e);
+        }
+    }
 
 
 	@Override
@@ -548,6 +567,8 @@ public abstract class RemoteApplication implements IRemoteApplication
 
 
 	protected abstract void createLoggerDerived(String logName, String serverLogLevel, String serverLogPattern) throws Exception;
+
+	protected abstract void setPluginInfoDerived(PluginInfo info) throws Exception;
 
 	protected abstract int connectDerived(Map<String, String> args) throws Exception;
 

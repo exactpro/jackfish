@@ -8,12 +8,15 @@
 
 package com.exactprosystems.jf.api.app;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Optional;
 
-public class PluginInfo
+public class PluginInfo implements Serializable
 {
+    private static final long serialVersionUID = -1595364917643729823L;
+
     public PluginInfo(Map<ControlKind, String[]> controlMap, Map<LocatorFieldKind, String> fieldMap)
     {
         this.controlMap = controlMap;

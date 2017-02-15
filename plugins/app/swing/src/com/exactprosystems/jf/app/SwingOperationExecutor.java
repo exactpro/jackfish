@@ -57,6 +57,7 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 	private boolean isAltDown = false;
 	private boolean isShiftDown = false;
 	private boolean isControlDown = false;
+	private PluginInfo info;
 
 	public SwingOperationExecutor(Robot currentRobot, Logger logger)
 	{
@@ -93,7 +94,14 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 
 	//region OperationExecutor methods
 
-	@Override
+
+    @Override
+    public void setPluginInfo(PluginInfo info)
+    {
+        this.info = info;
+    }
+
+    @Override
 	public Rectangle getRectangle(ComponentFixture<Component> component) throws Exception
 	{
 		try

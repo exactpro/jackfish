@@ -56,6 +56,12 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 		this.customAction = new Actions(this.driver);
 	}
 
+    @Override
+    public void setPluginInfo(PluginInfo info)
+    {
+        this.info = info;
+    }
+
 	@Override
 	public Rectangle getRectangle(WebElement component) throws Exception
 	{
@@ -589,7 +595,7 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 		{
 			try
 			{
-				By by = new MatcherSelenium(controlKind, locator);
+				By by = new MatcherSelenium(this.info, controlKind, locator);
 				return (window == null) ? driver.findElements(by) : window.findElements(by);
 			}
 			catch (StaleElementReferenceException e)
@@ -627,7 +633,7 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 					}
 					window = elements.get(0);
 				}
-				By by = new MatcherSelenium(locator.getControlKind(), locator);
+				By by = new MatcherSelenium(this.info, locator.getControlKind(), locator);
 				return (window == null) ? driver.findElements(by) : window.findElements(by);
 			}
 			catch (StaleElementReferenceException e)
@@ -1010,7 +1016,7 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 				try
 				{
 					logger.debug("Wait to " + (toAppear ? "" : "Dis") + "appear for " + locator + " on time " + ms);
-					final By by = new MatcherSelenium(locator.getControlKind(), locator);
+					final By by = new MatcherSelenium(this.info, locator.getControlKind(), locator);
 
 					long time = System.currentTimeMillis();
 					while (System.currentTimeMillis() < time + ms)
@@ -1459,7 +1465,7 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 				return null;
 		}
 	}
-
+	
 	//region private methods
 	private String getElementString(WebElement element)
 	{
@@ -1864,7 +1870,7 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 
 				if (additional != null)
 				{
-					MatcherSelenium by = new MatcherSelenium(ControlKind.Row, additional);
+					MatcherSelenium by = new MatcherSelenium(this.info, ControlKind.Row, additional);
 					List<WebElement> elements = table.findElement(By.xpath("child::" + tag_tbody)).findElements(by);
 					unmarkRowIsHeader(table);
 					return elements;
@@ -2058,5 +2064,6 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 
 	private Actions customAction;
 	private WebDriverListenerNew driver;
+	private PluginInfo info;
 	private Logger logger;
 }

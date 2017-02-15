@@ -45,7 +45,8 @@ public class SwingRemoteApplication extends RemoteApplication
 	private HighLighter highLighter = null;
 
 	public SwingOperationExecutor operationExecutor;
-
+	private PluginInfo info;
+	
 	@Override
 	protected void createLoggerDerived(String logName, String serverLogLevel, String serverLogPattern) throws Exception
 	{
@@ -71,6 +72,13 @@ public class SwingRemoteApplication extends RemoteApplication
 			throw e;
 		}
 	}
+
+    @Override
+    protected void setPluginInfoDerived(PluginInfo info) throws Exception
+    {
+        this.info = info;
+        this.operationExecutor.setPluginInfo(info);
+    }
 
 	@Override
 	public Serializable getProperty(String name) throws RemoteException

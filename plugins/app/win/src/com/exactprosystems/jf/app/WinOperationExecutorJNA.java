@@ -37,12 +37,19 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 
 	private Logger logger;
 	private JnaDriverImpl driver;
+	private PluginInfo info;
 
 	public WinOperationExecutorJNA(Logger logger, JnaDriverImpl driver)
 	{
 		this.logger = logger;
 		this.driver = driver;
 	}
+
+    @Override
+    public void setPluginInfo(PluginInfo info)
+    {
+        this.info = info;
+    }
 
 	@Override
 	public Rectangle getRectangle(UIProxyJNA component) throws Exception
