@@ -32,18 +32,18 @@ dependencies {
 	sqlData(group:	'org.postgresql',							name: 'postgresql',			version: '9.0-801.jdbc4')
 	sqlData(group:	'com.microsoft.sqlserver',					name: 'mssql-jdbc',			version: '6.1.0.jre8', transitive : false)
 
-	unixDriver(group: 'com.googleapis.storage.chromedriver',	  name: 'chromedriver-linux',	version: '2.25',	classifier: 'x86', ext: 'elf')
-	unixDriver(group: 'com.googleapis.storage.chromedriver',	  name: 'chromedriver-linux',	version: '2.25',	classifier: 'x64', ext: 'elf')
+	unixDriver(group: 'com.googleapis.storage.chromedriver',	  name: 'chromedriver-linux',	version: '2.27',	classifier: 'x86', ext: 'elf')
+	unixDriver(group: 'com.googleapis.storage.chromedriver',	  name: 'chromedriver-linux',	version: '2.27',	classifier: 'x64', ext: 'elf')
 	unixDriver(group: 'org.mozilla.geckodriver',				  name: 'geckodriver-linux',	 version: '0.11.1', classifier: 'x86', ext: 'elf')
 	unixDriver(group: 'org.mozilla.geckodriver',				  name: 'geckodriver-linux',	 version: '0.11.1', classifier: 'x64', ext: 'elf')
 
-	winDriver(group: 'com.googleapis.storage.chromedriver',		name: 'chromedriver-win',	  version: '2.25',	classifier: 'x86', ext: 'exe')
+	winDriver(group: 'com.googleapis.storage.chromedriver',		name: 'chromedriver-win',	  version: '2.27',	classifier: 'x86', ext: 'exe')
 	winDriver(group: 'org.mozilla.geckodriver',					name: 'geckodriver-win',		version: '0.11.1', classifier: 'x86', ext: 'exe')
 	winDriver(group: 'org.mozilla.geckodriver',					name: 'geckodriver-win',		version: '0.11.1', classifier: 'x64', ext: 'exe')
 	winDriver(group: 'org.seleniumhq.iedriverserver',			 name: 'iedriverserver',		version: '2.53.1', classifier: 'x86', ext: 'exe')
 	winDriver(group: 'org.seleniumhq.iedriverserver',			 name: 'iedriverserver',		version: '2.53.1', classifier: 'x64', ext: 'exe')
 
-	macDriver(group: 'com.googleapis.storage.chromedriver',		name: 'chromedriver-mac',	  version: '2.25',	classifier: 'x64', ext: 'bin')
+	macDriver(group: 'com.googleapis.storage.chromedriver',		name: 'chromedriver-mac',	  version: '2.27',	classifier: 'x64', ext: 'bin')
 	macDriver(group: 'org.mozilla.geckodriver',					name: 'geckodriver-mac',		version: '0.11.1', classifier: 'x64', ext: 'bin')
 }
 
