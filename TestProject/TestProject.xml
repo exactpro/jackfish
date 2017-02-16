@@ -38,7 +38,7 @@
         <name>WEB</name>
         <parameters>
             <key>ChromeDriverPath</key>
-            <value>unix/chromedriver-linux-2.25-x64.</value>
+            <value>unix/chromedriver-linux-2.27-x64.</value>
         </parameters>
         <parameters>
             <key>IEDriverPath</key>
