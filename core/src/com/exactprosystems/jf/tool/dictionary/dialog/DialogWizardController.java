@@ -327,7 +327,7 @@ public class DialogWizardController implements Initializable, ContainingParent
 
 	void displayFoundControl(Node node, ElementWizardBean bean, XpathTreeItem.TreeItemState state)
 	{
-	    if (node == null)
+	    if (node == null || node instanceof Document)
 	    {
 	    	bean.setStyleClass(CssVariables.COLOR_NOT_FOUND);
 	    	refreshTable();

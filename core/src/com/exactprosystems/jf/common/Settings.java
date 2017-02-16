@@ -342,21 +342,21 @@ public class Settings
 		));
 		settings.setMapValues(GLOBAL_NS, WIZARD_NAME, mapOf(
 				WizardSettings.Kind.TYPE.name()+MAX, "1",
-				WizardSettings.Kind.TYPE.name()+MIN, "-1",
+				WizardSettings.Kind.TYPE.name()+MIN, "0",
 
 				WizardSettings.Kind.PATH.name()+MAX, "1",
-				WizardSettings.Kind.PATH.name()+MIN, "-1",
+				WizardSettings.Kind.PATH.name()+MIN, "0",
 
 				WizardSettings.Kind.SIZE.name()+MAX, "1",
-				WizardSettings.Kind.SIZE.name()+MIN, "-1",
+				WizardSettings.Kind.SIZE.name()+MIN, "0",
 
 				WizardSettings.Kind.POSITION.name()+MAX, "1",
-				WizardSettings.Kind.POSITION.name()+MIN, "-1",
+				WizardSettings.Kind.POSITION.name()+MIN, "0",
 
 				WizardSettings.Kind.ATTR.name()+MAX, "1",
-				WizardSettings.Kind.ATTR.name()+MIN, "-1",
+				WizardSettings.Kind.ATTR.name()+MIN, "0",
 
-				THRESHOLD, "-1"
+				THRESHOLD, "0.5"
 		));
 		return settings;
 	}

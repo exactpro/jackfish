@@ -4,6 +4,7 @@ import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.dictionary.dialog.WizardSettings;
 import com.exactprosystems.jf.tool.settings.SettingsPanel;
+import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -39,22 +40,7 @@ public class WizardTabController implements Initializable, ContainingParent, ITa
 	@Override
 	public void initialize(URL location, ResourceBundle resources)
 	{
-		this.tfTypeMin.setText(Settings.defaultSettings().getValue(Settings.GLOBAL_NS, Settings.WIZARD_NAME, WizardSettings.Kind.TYPE.name() + Settings.MIN).getValue());
-		this.tfTypeMax.setText(Settings.defaultSettings().getValue(Settings.GLOBAL_NS, Settings.WIZARD_NAME, WizardSettings.Kind.TYPE.name() + Settings.MAX).getValue());
-
-		this.tfPathMin.setText(Settings.defaultSettings().getValue(Settings.GLOBAL_NS, Settings.WIZARD_NAME, WizardSettings.Kind.PATH.name() + Settings.MIN).getValue());
-		this.tfPathMax.setText(Settings.defaultSettings().getValue(Settings.GLOBAL_NS, Settings.WIZARD_NAME, WizardSettings.Kind.PATH.name() + Settings.MAX).getValue());
-		
-		this.tfSizeMin.setText(Settings.defaultSettings().getValue(Settings.GLOBAL_NS, Settings.WIZARD_NAME, WizardSettings.Kind.SIZE.name() + Settings.MIN).getValue());
-		this.tfSizeMax.setText(Settings.defaultSettings().getValue(Settings.GLOBAL_NS, Settings.WIZARD_NAME, WizardSettings.Kind.SIZE.name() + Settings.MAX).getValue());
-		
-		this.tfPositionMin.setText(Settings.defaultSettings().getValue(Settings.GLOBAL_NS, Settings.WIZARD_NAME, WizardSettings.Kind.POSITION.name() + Settings.MIN).getValue());
-		this.tfPositionMax.setText(Settings.defaultSettings().getValue(Settings.GLOBAL_NS, Settings.WIZARD_NAME, WizardSettings.Kind.POSITION.name() + Settings.MAX).getValue());
-		
-		this.tfAttrMin.setText(Settings.defaultSettings().getValue(Settings.GLOBAL_NS, Settings.WIZARD_NAME, WizardSettings.Kind.ATTR.name() + Settings.MIN).getValue());
-		this.tfAttrMax.setText(Settings.defaultSettings().getValue(Settings.GLOBAL_NS, Settings.WIZARD_NAME, WizardSettings.Kind.ATTR.name() + Settings.MAX).getValue());
-		
-		this.tfThreshold.setText(Settings.defaultSettings().getValue(Settings.GLOBAL_NS, Settings.WIZARD_NAME, Settings.THRESHOLD).getValue());
+		defaultSettings();
 	}
 	//endregion
 
@@ -123,5 +109,31 @@ public class WizardTabController implements Initializable, ContainingParent, ITa
 		this.model.updateSettingsValue(WizardSettings.Kind.ATTR.name() + Settings.MIN, Settings.WIZARD_NAME, this.tfAttrMin.getText());
 
 		this.model.updateSettingsValue(Settings.THRESHOLD, Settings.WIZARD_NAME, this.tfThreshold.getText());
+	}
+
+	public void restoreDefaults(ActionEvent event)
+	{
+		defaultSettings();
+	}
+
+	private void defaultSettings()
+	{
+		Settings defaultSettings = Settings.defaultSettings();
+		this.tfTypeMin.setText(defaultSettings.getValue(Settings.GLOBAL_NS, Settings.WIZARD_NAME, WizardSettings.Kind.TYPE.name() + Settings.MIN).getValue());
+		this.tfTypeMax.setText(defaultSettings.getValue(Settings.GLOBAL_NS, Settings.WIZARD_NAME, WizardSettings.Kind.TYPE.name() + Settings.MAX).getValue());
+
+		this.tfPathMin.setText(defaultSettings.getValue(Settings.GLOBAL_NS, Settings.WIZARD_NAME, WizardSettings.Kind.PATH.name() + Settings.MIN).getValue());
+		this.tfPathMax.setText(defaultSettings.getValue(Settings.GLOBAL_NS, Settings.WIZARD_NAME, WizardSettings.Kind.PATH.name() + Settings.MAX).getValue());
+
+		this.tfSizeMin.setText(defaultSettings.getValue(Settings.GLOBAL_NS, Settings.WIZARD_NAME, WizardSettings.Kind.SIZE.name() + Settings.MIN).getValue());
+		this.tfSizeMax.setText(defaultSettings.getValue(Settings.GLOBAL_NS, Settings.WIZARD_NAME, WizardSettings.Kind.SIZE.name() + Settings.MAX).getValue());
+
+		this.tfPositionMin.setText(defaultSettings.getValue(Settings.GLOBAL_NS, Settings.WIZARD_NAME, WizardSettings.Kind.POSITION.name() + Settings.MIN).getValue());
+		this.tfPositionMax.setText(defaultSettings.getValue(Settings.GLOBAL_NS, Settings.WIZARD_NAME, WizardSettings.Kind.POSITION.name() + Settings.MAX).getValue());
+
+		this.tfAttrMin.setText(defaultSettings.getValue(Settings.GLOBAL_NS, Settings.WIZARD_NAME, WizardSettings.Kind.ATTR.name() + Settings.MIN).getValue());
+		this.tfAttrMax.setText(defaultSettings.getValue(Settings.GLOBAL_NS, Settings.WIZARD_NAME, WizardSettings.Kind.ATTR.name() + Settings.MAX).getValue());
+
+		this.tfThreshold.setText(defaultSettings.getValue(Settings.GLOBAL_NS, Settings.WIZARD_NAME, Settings.THRESHOLD).getValue());
 	}
 }
