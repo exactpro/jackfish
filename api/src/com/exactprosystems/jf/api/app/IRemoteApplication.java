@@ -22,6 +22,7 @@ import java.util.Map;
 public interface IRemoteApplication extends Remote
 {
 	String	rectangleName	= "rectangle";
+    String  visibleName     = "visible";
 
 	Serializable                getProperty		(String name) throws RemoteException;
 

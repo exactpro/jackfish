@@ -22,9 +22,11 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import com.exactprosystems.jf.api.app.ControlKind;
+import com.exactprosystems.jf.api.app.IRemoteApplication;
 import com.exactprosystems.jf.api.app.Locator;
 import com.exactprosystems.jf.api.app.LocatorFieldKind;
 import com.exactprosystems.jf.api.app.PluginInfo;
+import com.exactprosystems.jf.api.app.Visibility;
 
 public class WizardMatcher
 {
@@ -39,12 +41,23 @@ public class WizardMatcher
         {
             return Collections.emptyList();
         }
-        
+        Visibility visibility = locator.getVisibility();
         String xpathStr = xpathFromControl(locator.getControlKind(), locator);
         XPath xpath = XPathFactory.newInstance().newXPath();
         XPathExpression compile = xpath.compile(xpathStr);
         NodeList nodeList = (NodeList) compile.evaluate(from, XPathConstants.NODESET);
-        return IntStream.range(0, nodeList.getLength()).mapToObj(nodeList::item).collect(Collectors.toList());
+        return IntStream.range(0, nodeList.getLength())
+                .mapToObj(nodeList::item)
+                .filter(n -> 
+                {
+                    if (visibility == Visibility.Visible)
+                    {
+                        return true;
+                    }
+                    Boolean visible = (Boolean)n.getUserData(IRemoteApplication.visibleName);
+                    return visible != null && visible.booleanValue();
+                })
+                .collect(Collectors.toList());
     }
     
     private String xpathFromControl(ControlKind controlKind, Locator locator)
