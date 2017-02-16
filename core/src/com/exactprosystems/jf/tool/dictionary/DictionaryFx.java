@@ -440,6 +440,11 @@ public class DictionaryFx extends GuiDictionary
 			DialogsHelper.showError("Self control is null.\nFill the self control before call the wizard");
 			return;
 		}
+        if (Str.IsNullOrEmpty(selfControl.getID()))
+        {
+            DialogsHelper.showError("Self should have ID.");
+            return;
+        }
 		Window copyWindow = Window.createCopy(((Window) window));
 		copyWindow.setName(window.getName());
 		DialogWizard wizard = new DialogWizard(this, copyWindow, this.applicationConnector.getAppConnection());
