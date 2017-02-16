@@ -235,6 +235,7 @@ public class CssVariables
 		//TODO think about it
 		private static final String	IMAGES_DIR				= "com/exactprosystems/jf/tool/css/general/icons";
 
+		public static final String  LOGO_FISH 				= IMAGES_DIR + "/jf_logo_fish.png";
 		public static final String	MAIN_ICON				= IMAGES_DIR + "/ide.png";
 		public static final String	LOADING_ICON			= IMAGES_DIR + "/loading.png";
 		public static final String	MARK_ICON				= IMAGES_DIR + "/check.png";
