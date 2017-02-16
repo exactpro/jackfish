@@ -91,7 +91,7 @@ namespace UIAdapter
         public static Condition Conditions(ControlKind controlKind, string Uid, string Xpath, string Clazz, string Name, string Title, string Text)
         {
             List<Condition> list = new List<Condition>();
-            AddToList(list, Property(controlKind));
+            AddToList(list, Program.pluginInfo.conditionByKind(controlKind));
 
             AddPropertyToList(list, Uid, AutomationElement.AutomationIdProperty);
             AddPropertyToList(list, Clazz, AutomationElement.ClassNameProperty);
@@ -133,42 +133,6 @@ namespace UIAdapter
             list.Add(condition);
         }
 
-        private static Condition Property(ControlKind controlKind)
-        {
-            switch (controlKind)
-            {
-                case ControlKind.Any: return Condition.TrueCondition;
-                case ControlKind.Button: return new OrCondition(new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.Button), new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.SplitButton));
-                case ControlKind.CheckBox: return new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.CheckBox);
-                case ControlKind.ComboBox: return new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.ComboBox);
-                case ControlKind.Dialog: return new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.Window);
-                case ControlKind.Frame: return new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.Window);
-                case ControlKind.Label: return new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.Text);
-                case ControlKind.MenuItem: return new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.MenuItem);
-                case ControlKind.Panel: return new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.Pane);
-                case ControlKind.RadioGroup: return new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.RadioButton);
-                case ControlKind.Row: return new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.Custom);
-                case ControlKind.Table: return new OrCondition(new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.Table), new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.DataGrid));
-                case ControlKind.TabPanel: return new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.Tab);
-                case ControlKind.TextBox: return new OrCondition(new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.Edit), new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.Document));
-                case ControlKind.ToggleButton: return new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.Button);
-                case ControlKind.ListView: return new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.List);
-                case ControlKind.Tree: return new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.Tree);
-                case ControlKind.Wait: return null;
-                case ControlKind.Tooltip: return new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.ToolTip);
-                case ControlKind.Image: return new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.Image);
-                case ControlKind.Splitter: return null;
-                case ControlKind.Spinner: return new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.Spinner);
-                case ControlKind.ProgressBar: return new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.ProgressBar);
-                case ControlKind.ScrollBar: return new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.ScrollBar);
-                case ControlKind.Slider: return new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.Slider);
-                case ControlKind.TreeItem: return new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.TreeItem);
-
-
-                default: throw new Exception("Unknown ControlKind: " + controlKind);
-            }
-        }
-
         public static AutomationElement[] FindByXpath(AutomationElement owner, ControlKind controlKind, string Uid, string Xpath, string Clazz, string Name, string Title, string Text)
         {
             long start = Program.getMilis();
@@ -203,7 +167,8 @@ namespace UIAdapter
             {
                 return Xpath;
             }
-            String[] ar = null;
+            String[] ar = Program.pluginInfo.nodeByKind(controlKind);
+            /*
             switch (controlKind)
             {
                 case ControlKind.Button: ar = new string[] { "Button", "SplitButton" }; break;
@@ -229,6 +194,7 @@ namespace UIAdapter
                 case ControlKind.Slider: ar = new string[] { "Slider" }; break;
                 default: ar = new string[] { "*" }; break;
             }
+            */
             if (ar == null || ar.Length == 0)
             {
                 return null;
@@ -309,12 +275,21 @@ namespace UIAdapter
             string simpleName = Tag(element);
             node = XmlElementWithObject.Create(document.CreateElement(simpleName));
             node.UserData = element;
+            //TODO fix me, if I wrong
+            /*
             node.SetAttribute(AttributeKind.UID.ToString().ToLower(), element.Current.AutomationId);
             node.SetAttribute(AttributeKind.CLASS.ToString().ToLower(), element.Current.ClassName);
             //node.SetAttribute(AttributeKind.TEXT.ToString().ToLower(), element.Current.HelpText);
             node.SetAttribute(AttributeKind.NAME.ToString().ToLower(), element.Current.Name);
             node.SetAttribute(RUNTIME_ID_ATTRIBUTE, string.Join(SEPARATOR, element.GetRuntimeId()));
             node.SetAttribute(AttributeKind.TYPE_NAME.ToString().ToLower(), simpleName);
+             */
+            node.SetAttribute(Program.pluginInfo.attributeName(LocatorFieldKind.UID), element.Current.AutomationId);
+            node.SetAttribute(Program.pluginInfo.attributeName(LocatorFieldKind.CLAZZ), element.Current.ClassName);
+            //TODO think, why we don't use TEXT
+            //node.SetAttribute(AttributeKind.TEXT.ToString().ToLower(), element.Current.HelpText);
+            node.SetAttribute(Program.pluginInfo.attributeName(LocatorFieldKind.NAME).ToLower(), element.Current.Name);
+            node.SetAttribute(RUNTIME_ID_ATTRIBUTE, string.Join(SEPARATOR, element.GetRuntimeId()));
             object obj;
             if (element.TryGetCurrentPattern(ValuePattern.Pattern, out obj))
             {

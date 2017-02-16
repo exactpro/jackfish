@@ -24,7 +24,7 @@ namespace UIAdapter
         internal const uint MOUSEEVENTF_ABSOLUTE = 0x8000;
     }
 
-    enum AttributeKind : int
+    public enum AttributeKind : int
     {
         ID = 0,
         UID = 1,
@@ -35,6 +35,26 @@ namespace UIAdapter
         ENABLED = 6,
         VISIBLE = 7,
         ITEMS = 8
+    }
+
+    public enum LocatorFieldKind : int
+    {
+        UID = 0, 
+        CLAZZ = 1, 
+        NAME = 2, 
+        TITLE = 3, 
+        ACTION = 4, 
+        TEXT = 5, 
+        TOOLTIP = 6, 
+    
+        XPATH = 7, 
+        EXPRESSION = 8, 
+        COLUMNS = 9, 
+        WEAK = 10,
+        ADDITION = 11, 
+        VISIBILITY = 12, 
+        USE_NUMERIC_HEADER = 13, 
+        USE_ABSOLUTE_XPATH = 14
     }
 
     enum MouseAction : uint

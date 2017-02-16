@@ -11,7 +11,10 @@ package com.exactprosystems.jf.app;
 import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.common.ParametersKind;
 
+import java.lang.reflect.Field;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Scanner;
 
 public class WinAppFactory implements IApplicationFactory
@@ -135,8 +138,40 @@ public class WinAppFactory implements IApplicationFactory
     @Override
     public PluginInfo getInfo()
     {
-    	//TODO fix me
-        return new PluginInfo(new HashMap<>(),new HashMap<>());
+		Map<ControlKind, String[]> controlMap = new LinkedHashMap<>();
+
+		add(controlMap, ControlKind.Any,           	ControlType.Any);
+		add(controlMap, ControlKind.Button,        	ControlType.Button, ControlType.SplitButton);
+		add(controlMap, ControlKind.CheckBox,	   	ControlType.CheckBox);
+		add(controlMap, ControlKind.ComboBox,	   	ControlType.ComboBox);
+		add(controlMap, ControlKind.Dialog,        	ControlType.Window);
+		add(controlMap, ControlKind.Frame,         	ControlType.Window);
+		add(controlMap, ControlKind.Label,         	ControlType.Text);
+		add(controlMap, ControlKind.MenuItem,      	ControlType.MenuItem);
+		add(controlMap, ControlKind.Panel,         	ControlType.Pane);
+		add(controlMap, ControlKind.RadioButton,   	ControlType.RadioButton);
+		add(controlMap, ControlKind.Row,           	ControlType.Custom);
+		add(controlMap, ControlKind.Table,         	ControlType.Table, ControlType.DataGrid);
+		add(controlMap, ControlKind.TabPanel,      	ControlType.Tab);
+		add(controlMap, ControlKind.TextBox,       	ControlType.Edit, ControlType.Document);
+		add(controlMap, ControlKind.ToggleButton,  	ControlType.Button);
+		add(controlMap, ControlKind.ListView,  		ControlType.List);
+		add(controlMap, ControlKind.Tree,  			ControlType.Tree);
+		add(controlMap, ControlKind.Tooltip, 		ControlType.ToolTip);
+		add(controlMap, ControlKind.Image, 			ControlType.Image);
+		add(controlMap, ControlKind.Spinner, 		ControlType.Spinner);
+		add(controlMap, ControlKind.ProgressBar,	ControlType.ProgressBar);
+		add(controlMap, ControlKind.ScrollBar,		ControlType.ScrollBar);
+		add(controlMap, ControlKind.Slider,			ControlType.Slider);
+		add(controlMap, ControlKind.TreeItem,		ControlType.TreeItem);
+
+		Map<LocatorFieldKind, String> fieldMap = new LinkedHashMap<>();
+		fieldMap.put(LocatorFieldKind.UID,		AttributeKind.UID.name().toLowerCase());
+		fieldMap.put(LocatorFieldKind.CLAZZ,	AttributeKind.CLASS.name().toLowerCase());
+		fieldMap.put(LocatorFieldKind.NAME,		AttributeKind.NAME.name().toLowerCase());
+		fieldMap.put(LocatorFieldKind.TEXT,		AttributeKind.TEXT.name().toLowerCase());
+
+		return new PluginInfo(controlMap, fieldMap);
     }
 
     //----------------------------------------------------------------------------------------------
@@ -158,6 +193,15 @@ public class WinAppFactory implements IApplicationFactory
 	public boolean isSupported(int major, int minor)
 	{
 		return (major * 1000 + minor) >= (requiredMajorVersion * 1000 + requiredMinorVersion);
+	}
+
+	private static void add(Map<ControlKind, String[]> controlMap, ControlKind kind, ControlType ... types)
+	{
+		String[] a = new String[types.length];
+		for (int i = 0; i < a.length; i++) {
+			a[i] = types[i].getName();
+		}
+		controlMap.put(kind, a);
 	}
 	//----------------------------------------------------------------------------------------------
 }

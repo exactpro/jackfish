@@ -1,7 +1,9 @@
 package com.exactprosystems.jf.app;
 
 import com.exactprosystems.jf.api.app.ControlKind;
+import com.exactprosystems.jf.api.app.LocatorFieldKind;
 import com.exactprosystems.jf.api.app.MouseAction;
+import com.exactprosystems.jf.api.app.PluginInfo;
 import com.exactprosystems.jf.api.client.ICondition;
 import com.exactprosystems.jf.api.conditions.Condition;
 import com.exactprosystems.jf.api.error.app.*;
@@ -25,17 +27,6 @@ public class JnaDriverImpl
 	private final Logger logger;
 	private final static String dllDir = "bin/UIAdapter.dll";
 	private final static String pdbDir = "bin/UIAdapter.pdb";
-
-	public static void main(String[] args) throws Exception
-	{
-		JnaDriverImpl driver = new JnaDriverImpl(Logger.getLogger(JnaDriverImpl.class));
-		driver.connect("Calc", Integer.MIN_VALUE, Integer.MIN_VALUE, Integer.MIN_VALUE, null, 5000);
-		System.out.println("title : " + driver.title());
-		int l = 100 * 100;
-		int a[] = new int[l];
-		String id = "42,4458408";
-		System.out.println(driver.getProperty(new UIProxyJNA(new int[]{42, 4458408}), WindowProperty.NameProperty));
-	}
 
 	public JnaDriverImpl(Logger logger) throws Exception
 	{
@@ -98,6 +89,16 @@ public class JnaDriverImpl
 		long start = System.currentTimeMillis();
 		this.jnaDriver.createLogger(logLevel);
 		this.logger.info(String.format("createLogLevel(%s), time : (ms) : %d", logLevel, System.currentTimeMillis() - start));
+		checkCSharpTimes();
+		checkError();
+	}
+
+	public void setPluginInfo(PluginInfo pluginInfo) throws Exception
+	{
+		long start = System.currentTimeMillis();
+		String pluginString = pluginInfoToString(pluginInfo);
+		this.jnaDriver.setPluginInfo(pluginString);
+		this.logger.info(String.format("setPluginInfo(%s), time : (ms) : %d", pluginString, System.currentTimeMillis() - start));
 		checkCSharpTimes();
 		checkError();
 	}
@@ -477,6 +478,58 @@ public class JnaDriverImpl
 		}
 	}
 	//endregion
+
+	private static String pluginInfoToString(PluginInfo info)
+	{
+		StringBuilder builder = new StringBuilder();
+
+		builder.append("KindMap{");
+		String bigSep = "";
+		for (ControlKind kind : ControlKind.values()) {
+			String[] strings = info.nodeByControlKind(kind);
+			if (strings != null) {
+				builder.append(bigSep).append(kind.ordinal()).append(":");
+				String sep = "";
+				for (String s : strings) {
+					builder.append(sep).append(ControlType.get(s).getId());
+					sep = ",";
+				}
+				bigSep = ";";
+			}
+		}
+		builder.append("}\n");
+
+		bigSep = "";
+		builder.append("LocatorMap{");
+		for (LocatorFieldKind kind : LocatorFieldKind.values()) {
+			String s = info.attributeName(kind);
+			if (s != null) {
+				builder.append(bigSep).append(kind.ordinal()).append(":").append(s); // todo fix me, if I'm wrong
+				bigSep = ";";
+			}
+		}
+
+		builder.append("}");
+		return builder.toString();
+	}
+
+	public static void main(String[] args) throws Exception {
+		WinAppFactory f = new WinAppFactory();
+		PluginInfo info = f.getInfo();
+		System.out.println(pluginInfoToString(info));
+
+	}
+
+	public static void main1(String[] args) throws Exception
+	{
+		JnaDriverImpl driver = new JnaDriverImpl(Logger.getLogger(JnaDriverImpl.class));
+		driver.connect("Calc", Integer.MIN_VALUE, Integer.MIN_VALUE, Integer.MIN_VALUE, null, 5000);
+		System.out.println("title : " + driver.title());
+		int l = 100 * 100;
+		int a[] = new int[l];
+		String id = "42,4458408";
+		System.out.println(driver.getProperty(new UIProxyJNA(new int[]{42, 4458408}), WindowProperty.NameProperty));
+	}
 
 	private JnaDriver jnaDriver;
 }

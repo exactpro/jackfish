@@ -64,7 +64,8 @@ public class WinRemoteApplicationJNA extends RemoteApplication
     {
         this.info = info;
         this.operationExecutor.setPluginInfo(info);
-    }
+		this.driver.setPluginInfo(info);
+	}
 
 	@Override
 	public Serializable getProperty(String name) throws RemoteException

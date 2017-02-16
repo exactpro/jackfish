@@ -7,6 +7,7 @@ public enum AttributeKind
 	CLASS,
 	TEXT,
 	NAME,
+
 	TYPE_NAME,
 	ENABLED,
 	VISIBLE,

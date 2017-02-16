@@ -99,6 +99,19 @@ namespace UIAdapter
                 MakeError(e);
             }
         }
+
+        [DllExport("setPluginInfo", CallingConvention.Cdecl)]
+        public static void SetPluginInfo(String str)
+        {
+            try
+            {
+                pluginInfo = PluginInfo.infoFromString(str);
+            }
+            catch (Exception e)
+            {
+                MakeError(e);
+            }
+        }
         #endregion
 
         #region application methods
@@ -2443,6 +2456,8 @@ namespace UIAdapter
         #region variables
 
         public static Logger.Logger logger = new Logger.Logger(LogLevel.None);
+
+        public static PluginInfo pluginInfo = null;
 
         private static int maxTimeout = 10000;
 

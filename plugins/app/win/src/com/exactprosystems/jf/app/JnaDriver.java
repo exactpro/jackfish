@@ -16,6 +16,7 @@ public interface JnaDriver extends Library {
 	String uiAutomationTime();
 	String getFrameworkId();
 	void maxTimeout(int timeout);
+	void setPluginInfo(String pluginInfo);
 
 	void createLogger(String logLevel);
 	//endregion
