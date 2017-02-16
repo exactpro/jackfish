@@ -67,7 +67,7 @@ public class SeleniumRemoteApplication extends RemoteApplication
 		"}; \n" +
 		" \n" +
 		"function go(e) { \n" +
-		"    if (e.tagName !== undefined && (e.offsetWidth > 0 || e.offsetHeight > 0)) { \n" +
+		"    if (e.tagName !== undefined) { \n" +
 		"        var child = []; \n" +
 		"        var els = e.childNodes; \n" +
 		"        for(var i=0; i<els.length; i++) { \n" +
@@ -79,6 +79,7 @@ public class SeleniumRemoteApplication extends RemoteApplication
 		"        var temp = { \n" +
 		"            " + TAG_FIELD + " : e.tagName, \n" +
 		"            " + ATTRIBUTES_FIELD + " : attrs(e), \n" +
+		"            " + IRemoteApplication.visibleName + " : (e.offsetWidth > 0 || e.offsetHeight > 0), \n" +
 		"            " + IRemoteApplication.rectangleName + " : { \n" +
 		"            " + "    left : e.getBoundingClientRect().left, \n" +
 		"            " + "    top : e.getBoundingClientRect().top, \n" +
@@ -916,32 +917,6 @@ public class SeleniumRemoteApplication extends RemoteApplication
 		return null;
 	}
 
-	private void outToLog(StringBuilder sb, Map<String, Object> map, int level)
-	{
-		String spaces = "";
-		for (int i = 0; i < level; i++)
-		{
-			spaces += "    ";
-		}
-
-		sb.append(spaces + "tag  : " + map.get(TAG_FIELD)).append('\n');
-		sb.append(spaces + "attr : " + map.get(ATTRIBUTES_FIELD)).append('\n');
-		sb.append(spaces + "text : " + map.get(ELEMENT_TEXT_FIELD)).append('\n');
-		sb.append(spaces + "rec  : " + map.get(IRemoteApplication.rectangleName)).append('\n');
-
-		Object childMap = map.get(ELEMENT_CHILD_FIELD);
-
-		if (childMap != null)
-		{
-			int i = 0;
-			for (Map<String, Object> ch : (List<Map<String, Object>>) childMap)
-			{
-				sb.append(spaces + "child[" + i++ + "]").append('\n');
-				outToLog(sb, ch, level + 1);
-			}
-		}
-	}
-
 	private void transform(Map<String, Object> map, Document document, Node element)
 	{
 		Object tag = map.get(TAG_FIELD);
@@ -960,6 +935,11 @@ public class SeleniumRemoteApplication extends RemoteApplication
 		{
 			element.setUserData(IRemoteApplication.rectangleName, createRectangle((Map<String, String>) rec), null);
 		}
+        Object vis = map.get(IRemoteApplication.visibleName);
+        if (vis != null)
+        {
+            element.setUserData(IRemoteApplication.visibleName, (boolean)vis, null);
+        }
 
 		Object childMap = map.get(ELEMENT_CHILD_FIELD);
 
