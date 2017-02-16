@@ -11,6 +11,7 @@ package com.exactprosystems.jf.app;
 import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.common.ParametersKind;
 
+import java.util.HashMap;
 import java.util.Scanner;
 
 public class WinAppFactory implements IApplicationFactory
@@ -134,7 +135,8 @@ public class WinAppFactory implements IApplicationFactory
     @Override
     public PluginInfo getInfo()
     {
-        return null; // TODO 
+    	//TODO fix me
+        return new PluginInfo(new HashMap<>(),new HashMap<>());
     }
 
     //----------------------------------------------------------------------------------------------
