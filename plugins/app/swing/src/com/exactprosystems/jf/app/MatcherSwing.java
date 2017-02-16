@@ -252,8 +252,7 @@ public class MatcherSwing <T extends Component> extends GenericTypeMatcher<T>
 			((Window)obj).setAlwaysOnTop(false);			
 		}
 		
-		boolean result = obj.isShowing() || obj instanceof JCheckBox && obj.isVisible() 
-				|| obj instanceof JTabbedPane && obj.isShowing();
+		boolean result = isVisible(obj);
 		Component objNew = obj;
 
 		if (!result)
@@ -295,6 +294,13 @@ public class MatcherSwing <T extends Component> extends GenericTypeMatcher<T>
 		return result;
 	}
 
+    private static boolean isVisible(Component obj)
+    {
+        boolean result = obj.isShowing() || obj instanceof JCheckBox && obj.isVisible() 
+				|| obj instanceof JTabbedPane && obj.isShowing();
+        return result;
+    }
+
     private static void buildDom(PluginInfo info, Document document, Node current, Component component, boolean addItems, boolean addRectangles)
     {
     	if (component == null)
@@ -326,6 +332,9 @@ public class MatcherSwing <T extends Component> extends GenericTypeMatcher<T>
 		if (addRectangles)
 		{
 			node.setUserData(IRemoteApplication.rectangleName, getRect(component), null);
+			
+			boolean visible = isVisible(component);
+			node.setUserData(IRemoteApplication.visibleName, visible, null);
 		}
 
         String className    = info.attributeName(LocatorFieldKind.CLAZZ);
