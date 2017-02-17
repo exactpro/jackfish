@@ -33,7 +33,6 @@ public interface JnaDriver extends Library {
 	String listAll(String ownerId, int controlKindId, String uid, String xpath, String clazz, String name, String title, String text, boolean many);
 	int findAllForLocator(int[] arr, int len, String ownerId, int controlKindId, String uid, String xpath, String clazz, String name, String title, String text, boolean many);
 	int findAll(int[] arr, int len, String elementId, int scopeId, int propertyId, String value);
-	int elementByCoords(int[] resultId, int length, int controlKindId, int x, int y);
 	//endregion
 
 	String elementAttribute(String elementId, int partId);

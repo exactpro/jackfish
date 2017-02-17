@@ -205,17 +205,6 @@ public class JnaDriverImpl
 		return result;
 	}
 
-	public int elementByCoords(int[] resultId, ControlKind kind, int x, int y) throws Exception
-	{
-		long start = System.currentTimeMillis();
-		int result = this.jnaDriver.elementByCoords(resultId, resultId.length, kind.ordinal(), x, y);
-		this.logger.info(String.format("elementByCoords(%s,%s,%d,%d) = %d, time (ms) : %d", Arrays.toString(resultId), kind, x, y, result, 
-				System.currentTimeMillis() - start));
-		checkCSharpTimes();
-		checkError();
-		return result;
-	}
-
 	//endregion
 
 	public String elementAttribute(UIProxyJNA element, AttributeKind kind) throws Exception
@@ -437,11 +426,6 @@ public class JnaDriverImpl
 		return res;
 	}
 
-//	private String conditionToString(StringCondition condition)
-//	{
-//		return condition == null ? "" : condition.getName() + "," + condition.getValue() + "," + condition.isIgnoreCase();
-//	}
-//
 	private void checkError() throws RemoteException
 	{
 		String error = this.jnaDriver.lastError();

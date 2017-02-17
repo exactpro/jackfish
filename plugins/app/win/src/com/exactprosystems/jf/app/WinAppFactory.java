@@ -20,7 +20,7 @@ import java.util.Scanner;
 public class WinAppFactory implements IApplicationFactory
 {
 	private static final int		requiredMajorVersion	= 2;
-	private static final int		requiredMinorVersion	= 27;
+	private static final int		requiredMinorVersion	= 28;
 
 	public static final String		logLevel				= "LogLevel";
 	public static final String		jreExecName				= "jreExec";

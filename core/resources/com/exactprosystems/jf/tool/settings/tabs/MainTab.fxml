@@ -35,7 +35,6 @@
 		<CheckBox id="useFullScreen" fx:id="useFullScreen" mnemonicParsing="false" text="Use fullscreen mode" GridPane.columnIndex="1" GridPane.rowIndex="6" />
 		<Label text="Theme :" GridPane.halignment="RIGHT" GridPane.rowIndex="3" />
 		<ComboBox id="theme" fx:id="comboBoxTheme" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-		<CheckBox id="useCompactMode" fx:id="useSmallWindow" mnemonicParsing="false" text="Use compact mode" GridPane.columnIndex="1" GridPane.rowIndex="8" />
 		<Label text="Copyright" GridPane.halignment="LEFT" GridPane.rowIndex="9" GridPane.valignment="BOTTOM">
 			<GridPane.margin>
 				<Insets bottom="8.0" />

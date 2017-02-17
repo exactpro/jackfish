@@ -16,14 +16,12 @@ import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.custom.BorderWrapper;
-import com.exactprosystems.jf.tool.custom.shutter.DelayShutterButton;
 import com.exactprosystems.jf.tool.custom.tab.CustomTab;
 import com.exactprosystems.jf.tool.custom.tab.CustomTabPane;
 import com.exactprosystems.jf.tool.custom.xpath.XpathViewer;
 import com.exactprosystems.jf.tool.dictionary.DictionaryFx;
 import com.exactprosystems.jf.tool.dictionary.DictionaryFxController;
 import com.exactprosystems.jf.tool.dictionary.FindListView;
-import com.exactprosystems.jf.tool.main.Main;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.event.ActionEvent;
@@ -36,7 +34,6 @@ import javafx.scene.control.*;
 import javafx.scene.input.*;
 import javafx.scene.layout.*;
 import javafx.scene.text.Text;
-import javafx.stage.Stage;
 import org.w3c.dom.Document;
 
 import java.net.URL;
@@ -156,11 +153,6 @@ public class NavigationController implements Initializable, ContainingParent
 			Common.customizeLabeled(this.btnPasteDialog, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.DICTIONARY_PASTE);
 			Common.customizeLabeled(this.btnPasteElement, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.DICTIONARY_PASTE);
 		});
-
-//		if (!Main.IS_LOCAL_BUILD)
-//		{
-//			this.btnShowWizard.setVisible(false);
-//		}
 	}
 
 	public void init(DictionaryFx model, GridPane gridPane, Settings settings, CustomTab owner)
@@ -168,9 +160,7 @@ public class NavigationController implements Initializable, ContainingParent
 		this.model = model;
 		//TODO this need move from here to model
 		this.fullScreen = Boolean.parseBoolean(settings.getValueOrDefault(Settings.GLOBAL_NS, Settings.SETTINGS, "useFullScreenXpath", "false").getValue());
-		boolean compactMode = Boolean.parseBoolean(settings.getValueOrDefault(Settings.GLOBAL_NS, Settings.SETTINGS, Settings.USE_COMPACT_MODE, "false").getValue());
 		setChoiseBoxListeners();
-		createShutters(this.hBoxElement, owner, compactMode);
 
 		gridPane.add(this.pane, 0, 0);
 	}
@@ -433,73 +423,6 @@ public class NavigationController implements Initializable, ContainingParent
 		Scene scene = CustomTabPane.getInstance().getScene();
 		scene.removeEventFilter(KeyEvent.KEY_PRESSED, pressHandler);
 		scene.removeEventFilter(KeyEvent.KEY_RELEASED, releaseHandler);
-	}
-
-	private void createShutters(HBox hBox, CustomTab owner, boolean compactMode)
-	{
-		DelayShutterButton recOneButton = new DelayShutterButton("Record one component", CssVariables.Icons.DICTIONARY_RECORD_ONE, 10000);
-		DelayShutterButton recManyButton = new DelayShutterButton("Record component until toggled", CssVariables.Icons.DICTIONARY_RECORD_INF, 10000);
-		DelayShutterButton renewButton = new DelayShutterButton("Rerecord current component", CssVariables.Icons.DICTIONARY_RENEW, 10000);
-		ToggleGroup group = new ToggleGroup();
-		recOneButton.setToggleGroup(group);
-		recManyButton.setToggleGroup(group);
-		renewButton.setToggleGroup(group);
-
-		hBox.getChildren().add(0, recOneButton);
-		hBox.getChildren().add(1, Common.createSpacer(Common.SpacerEnum.HorizontalMin));
-		hBox.getChildren().add(2, recManyButton);
-		hBox.getChildren().add(3, Common.createSpacer(Common.SpacerEnum.HorizontalMin));
-		hBox.getChildren().add(4, renewButton);
-		hBox.getChildren().add(5, Common.createSpacer(Common.SpacerEnum.HorizontalMin));
-		Scene scene = CustomTabPane.getInstance().getScene();
-		pressHandler = keyEvent -> {
-			if (keyEvent.getCode() == KeyCode.CONTROL && owner != null && owner.isSelected())
-			{
-				recOneButton.start();
-				recManyButton.start();
-				renewButton.start();
-			}
-		};
-		releaseHandler = keyEvent -> {
-			if (keyEvent.getCode() == KeyCode.CONTROL && owner != null && owner.isSelected())
-			{
-				if (recOneButton.isSelected() || recManyButton.isSelected() || renewButton.isSelected())
-				{
-					if (compactMode)
-					{
-						((Stage) scene.getWindow()).setIconified(true);
-					}
-				}
-				recOneButton.stop();
-				recManyButton.stop();
-				renewButton.stop();
-			}
-		};
-		scene.addEventHandler(KeyEvent.KEY_PRESSED, pressHandler);
-		scene.addEventHandler(KeyEvent.KEY_RELEASED, releaseHandler);
-
-		recOneButton.setSwithconAction(h -> tryCatch(this.model::startGrabbing, ""));
-		recOneButton.setSwithcoffAction(h -> tryCatch(this.model::endGrabbing, ""));
-		recOneButton.setCompleteAction((x, y) -> {
-			tryCatch(() -> this.model.elementRecord(x, y, currentWindow(), currentSection()), "");
-			Platform.runLater(() -> ((Stage) scene.getWindow()).setIconified(false));
-			group.selectToggle(null);
-		});
-
-		recManyButton.setSwithconAction(h -> tryCatch(this.model::startGrabbing, ""));
-		recManyButton.setSwithcoffAction(h -> tryCatch(this.model::endGrabbing, ""));
-		recManyButton.setCompleteAction((x, y) -> {
-			tryCatch(() -> this.model.elementRecord(x, y, currentWindow(), currentSection()), "");
-			Platform.runLater(() -> ((Stage) scene.getWindow()).setIconified(false));
-		});
-
-		renewButton.setSwithconAction(h -> tryCatch(this.model::startGrabbing, ""));
-		renewButton.setSwithcoffAction(h -> tryCatch(this.model::endGrabbing, ""));
-		renewButton.setCompleteAction((x, y) -> {
-			tryCatch(() -> model.elementRenew(x, y, currentWindow(), currentSection(), currentElement()), "");
-			Platform.runLater(() -> ((Stage) scene.getWindow()).setIconified(false));
-			group.selectToggle(null);
-		});
 	}
 
 	private <T> void display(T item, Collection<T> items, FindListView<T> listView, ChangeListener<T> listener)

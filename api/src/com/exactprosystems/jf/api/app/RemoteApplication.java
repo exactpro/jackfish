@@ -353,28 +353,6 @@ public abstract class RemoteApplication implements IRemoteApplication
 		}
 	}
 	
-	@Deprecated
-	@Override
-	public final Locator getLocator (Locator owner, ControlKind controlKind, int x, int y) throws RemoteException
-	{
-		try 
-		{
-			exceptionIfNull(controlKind, 	"controlKind", "getLocator");
-
-			return getLocatorDerived(owner, controlKind, x, y);
-		}
-		catch (RemoteException e)
-		{
-			throw e;
-		}
-		catch (Exception e)
-		{
-			String msg = String.format("Error getLocator(%s, %d, %d)", controlKind, x, y);
-			throw new ProxyException(msg, e.getMessage(), e);
-		}
-	}
-	
-	
 	@Override
 	public final ImageWrapper getImage(Locator owner, Locator element) throws RemoteException
 	{
@@ -511,24 +489,6 @@ public abstract class RemoteApplication implements IRemoteApplication
 	}
 
 	@Override
-	public void startGrabbing() throws RemoteException
-	{
-		try
-		{
-			startGrabbingDerived();
-		}
-		catch (RemoteException e)
-		{
-			throw e;
-		}
-		catch (Exception e)
-		{
-			String msg = String.format("Error start grabbing");
-			throw new ProxyException(msg, e.getMessage(), e);
-		}
-	}
-
-	@Override
 	public void startNewDialog() throws RemoteException
 	{
 		try
@@ -542,24 +502,6 @@ public abstract class RemoteApplication implements IRemoteApplication
 		catch (Exception e)
 		{
 			String msg = String.format("Error start new dialog");
-			throw new ProxyException(msg, e.getMessage(), e);
-		}
-	}
-
-	@Override
-	public void endGrabbing() throws RemoteException
-	{
-		try
-		{
-			endGrabbingDerived();
-		}
-		catch (RemoteException e)
-		{
-			throw e;
-		}
-		catch (Exception e)
-		{
-			String msg = String.format("Error stop grabbing");
 			throw new ProxyException(msg, e.getMessage(), e);
 		}
 	}
@@ -593,8 +535,6 @@ public abstract class RemoteApplication implements IRemoteApplication
 
 	protected abstract Collection<String> findAllDerived(Locator owner, Locator element) throws Exception;
 	
-	protected abstract Locator getLocatorDerived (Locator owner, ControlKind controlKind, int x, int y) throws Exception;
-
 	protected abstract ImageWrapper getImageDerived(Locator owner, Locator element) throws Exception;
 
 	protected abstract Rectangle getRectangleDerived(Locator owner, Locator element) throws Exception;
@@ -612,10 +552,6 @@ public abstract class RemoteApplication implements IRemoteApplication
 	protected abstract Document getTreeDerived(Locator owner) throws Exception;
 
 	protected abstract void startNewDialogDerived() throws Exception;
-
-	protected abstract void startGrabbingDerived() throws Exception;
-
-	protected abstract void endGrabbingDerived() throws Exception;
 
 	private static String removeExtraQuotes(String string)
 	{

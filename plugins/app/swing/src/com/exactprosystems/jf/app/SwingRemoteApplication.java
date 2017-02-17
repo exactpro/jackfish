@@ -42,7 +42,6 @@ public class SwingRemoteApplication extends RemoteApplication
 {
 	private Logger logger = null;
 	private Robot currentRobot;
-	private HighLighter highLighter = null;
 
 	public SwingOperationExecutor operationExecutor;
 	private PluginInfo info;
@@ -121,15 +120,6 @@ public class SwingRemoteApplication extends RemoteApplication
 
 			this.currentRobot = new RobotListener(BasicRobot.robotWithCurrentAwtHierarchy());
 			this.operationExecutor = new SwingOperationExecutor(this.currentRobot, this.logger);
-
-			SwingUtilities.invokeLater(new Runnable()
-			{
-				@Override
-				public void run()
-				{
-					highLighter = new HighLighter();
-				}
-			});
 		}
 		catch (Exception e)
 		{
@@ -174,7 +164,6 @@ public class SwingRemoteApplication extends RemoteApplication
 
 			this.currentRobot = new RobotListener(BasicRobot.robotWithCurrentAwtHierarchy());
 			this.operationExecutor = new SwingOperationExecutor(this.currentRobot, this.logger);
-			this.highLighter = new HighLighter();
 		}
 		catch (Exception e)
 		{
@@ -193,14 +182,6 @@ public class SwingRemoteApplication extends RemoteApplication
 	{
 		try
 		{
-			if (this.highLighter != null)
-			{
-				this.highLighter.close();
-			}
-		}
-		catch (RemoteException e)
-		{
-			throw e;
 		}
 		catch (Exception e)
 		{
@@ -356,70 +337,6 @@ public class SwingRemoteApplication extends RemoteApplication
 		catch (Exception e)
 		{
 			logger.error(String.format("findAllDerived (%s,%s)", owner, element));
-			logger.error(e.getMessage(), e);
-			throw e;
-		}
-	}
-
-	@Deprecated
-	@Override
-	protected Locator getLocatorDerived(Locator owner, ControlKind controlKind, int x, int y) throws Exception
-	{
-		try
-		{
-			Component main = null;
-			Point mainCoords = new Point();
-			if (owner != null)
-			{
-				main = this.operationExecutor.find(null, owner).target;
-			}
-			else
-			{
-				main = this.operationExecutor.currentRoot();
-			}
-
-			if (main == null)
-			{
-				throw new Exception("Can't find the main window.");
-			}
-			
-			if (main.isShowing()) 
-			{
-				mainCoords = main.getLocationOnScreen();
-			}
-
-			Component component = componentAtPosition(main, x - mainCoords.x, y - mainCoords.y);
-			component = parentForKind(component, controlKind);
-
-			if (component == null)
-			{
-				return null;
-			}
-
-			if (component.isShowing())
-			{
-				// we have a component and should highlight it
-				this.highLighter.start(component.getLocationOnScreen(), component.getSize());
-	
-				ControlKind newControlKind = determitateControlKind(component);
-	
-				String id = component.getName();
-				id = id == null ? newControlKind.name() : id;
-	
-				Locator locator = new Locator(null, id, newControlKind);
-				locator.clazz(MatcherSwing.getClass(component)).name(MatcherSwing.getName(component)).title(MatcherSwing.getTitle(component)).action(MatcherSwing.getAction(component)).text(MatcherSwing.getText(component)).tooltip(MatcherSwing.getToolTip(component));
-	
-				return locator;
-			}
-			return null;
-		}
-		catch (RemoteException e)
-		{
-			throw e;
-		}
-		catch (Exception e)
-		{
-			logger.error(String.format("getLocatorDerived(%s, %s, %d, %d)", owner, controlKind, x, y));
 			logger.error(e.getMessage(), e);
 			throw e;
 		}
@@ -666,11 +583,6 @@ public class SwingRemoteApplication extends RemoteApplication
 			if (owner == null)
 			{
 				component = this.operationExecutor.currentRoot();
-//				logger.debug("current root : " + component);
-//				logger.debug("current root hc : " + component.hashCode());
-//				component = findFirstShowing(component, this.logger);
-//				logger.debug("component : " + component);
-//				logger.debug("component hc : " + component.hashCode());
 			}
 			else
 			{
@@ -722,79 +634,6 @@ public class SwingRemoteApplication extends RemoteApplication
 		return null;
 	}
 
-	@Override
-	protected void startGrabbingDerived() throws Exception
-	{
-		// done
-	}
-
-	@Override
-	protected void endGrabbingDerived() throws Exception
-	{
-		// done
-	}
-
-	private Component componentAtPosition(Component component, int x, int y)
-	{
-		if (component == null)
-		{
-			return null;
-		}
-
-    	if (component instanceof Dialog)
-    	{
-    		logger.error("+++ " + component);
-    	}
-
-		if (component instanceof Container)
-		{
-			Container container = (Container) component;
-			for (Component comp : container.getComponents())
-			{
-				if (!comp.isVisible())
-				{
-					continue;
-				}
-				if (comp.getBounds().contains(x, y))
-				{
-					return componentAtPosition(comp, x - comp.getX(), y - comp.getY());
-				}
-			}
-		}
-
-		return component;
-	}
-
-	private Component parentForKind(Component component, ControlKind controlKind) throws Exception
-	{
-		if (component == null || controlKind == null)
-		{
-			return null;
-		}
-		Class<? extends Component> found = classToControlKind.get(controlKind);
-		if (found == null)
-		{
-			throw new Exception("Unknown ControlKind: " + controlKind);
-		}
-
-		if (found.isAssignableFrom(component.getClass()))
-		{
-			return component;
-		}
-		return parentForKind(component.getParent(), controlKind);
-	}
-
-	private ControlKind determitateControlKind(Component component)
-	{
-		for (Entry<ControlKind, Class<? extends Component>> entry : classToControlKind.entrySet())
-		{
-			if (entry.getValue().isAssignableFrom(component.getClass()))
-			{
-				return entry.getKey();
-			}
-		}
-		return ControlKind.Any;
-	}
 
 	private static Map<ControlKind, Class<? extends Component>> classToControlKind = new LinkedHashMap<>();
 

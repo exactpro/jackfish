@@ -182,22 +182,6 @@ public class DictionaryFx extends GuiDictionary
 		this.currentAdapterStore = currentAdapterStore;
 	}
 
-	public void startGrabbing() throws Exception
-	{
-		if (isApplicationRun())
-		{
-			this.applicationConnector.getAppConnection().getApplication().service().startGrabbing();
-		}
-	}
-
-	public void endGrabbing() throws Exception
-	{
-		if (isApplicationRun())
-		{
-			this.applicationConnector.getAppConnection().getApplication().service().endGrabbing();
-		}
-	}
-
 	//------------------------------------------------------------------------------------------------------------------
 	public void windowChanged(IWindow window, IWindow.SectionKind sectionKind) throws Exception
 	{
@@ -583,100 +567,6 @@ public class DictionaryFx extends GuiDictionary
 
 			addCommand(undo, redo);
 			super.changed(true);
-		}
-	}
-
-	public void elementRecord(double x, double y, IWindow window, IWindow.SectionKind sectionKind) throws Exception
-	{
-		if (window == null)
-		{
-			throw new Exception("You need select a dialog at first.");
-		}
-		if (isApplicationRun())
-		{
-			IRemoteApplication service = this.applicationConnector.getAppConnection().getApplication().service();
-			if (service != null)
-			{
-				Locator locator = service.getLocator(null, ControlKind.Any, (int) x, (int) y);
-				if (locator != null)
-				{
-					ControlKind controlKind = locator.getControlKind();
-					AbstractControl newControl = AbstractControl.create(controlKind);
-
-					IControl selfControl = window.getSelfControl();
-					String ownerId = selfControl == null ? null : selfControl.getID();
-
-					newControl.set(AbstractControl.idName, locator.getId());
-					newControl.set(AbstractControl.uidName, locator.getUid());
-					newControl.set(AbstractControl.xpathName, locator.getXpath());
-					newControl.set(AbstractControl.ownerIdName, ownerId);
-					newControl.set(AbstractControl.clazzName, locator.getClazz());
-					newControl.set(AbstractControl.nameName, locator.getName());
-					newControl.set(AbstractControl.titleName, locator.getTitle());
-					newControl.set(AbstractControl.actionName, locator.getAction());
-					newControl.set(AbstractControl.additionName, null);
-					newControl.set(AbstractControl.visibilityName, null);
-					newControl.set(AbstractControl.weakName, locator.isWeak());
-					newControl.set(AbstractControl.textName, locator.getText());
-					newControl.set(AbstractControl.timeoutName, 0);
-					newControl.set(AbstractControl.tooltipName, locator.getTooltip());
-					newControl.set(AbstractControl.expressionName, null);
-					newControl.set(AbstractControl.rowsName, null);
-					newControl.set(AbstractControl.useNumericHeaderName, false);
-					newControl.correctAllXml();
-
-					AbstractControl copy = AbstractControl.createCopy(newControl);
-					Command undo = () -> Common.tryCatch(() ->
-					{
-						window.removeControl(copy);
-						displayElement(window, sectionKind, window.getFirstControl(sectionKind));
-					}, "");
-					Command redo = () -> Common.tryCatch(() ->
-					{
-						window.addControl(sectionKind, copy);
-						displayElement(window, sectionKind, copy);
-					}, "");
-					addCommand(undo, redo);
-					super.changed(true);
-				}
-				this.controller.println("record : " + locator + " locator " + (locator == null ? "not " : "") + "found");
-			}
-		}
-	}
-
-	public void elementRenew(double x, double y, IWindow window, IWindow.SectionKind sectionKind, IControl control) throws Exception
-	{
-		if (window == null)
-		{
-			throw new Exception("You need select a dialog at first.");
-		}
-		if (isApplicationRun())
-		{
-			IRemoteApplication service = this.applicationConnector.getAppConnection().getApplication().service();
-			if (service != null)
-			{
-				Locator owner = getLocator(window.getOwnerControl(control));
-				Locator old = getLocator(AbstractControl.createCopy(control));
-
-				Locator locator = service.getLocator(owner, control.getBindedClass(), (int) x, (int) y);
-
-				Command undo = () -> Common.tryCatch(() ->
-				{
-					((AbstractControl) control).renew(old);
-					displayElement(window, sectionKind, control);
-				}, "");
-				Command redo = () -> Common.tryCatch(() ->
-				{
-					if (locator != null)
-					{
-						((AbstractControl) control).renew(locator);
-						displayElement(window, sectionKind, control);
-					}
-				}, "");
-				addCommand(undo, redo);
-				this.controller.println("renew : " + locator + " locator " + (locator == null ? "not " : "") + "found");
-				super.changed(true);
-			}
 		}
 	}
 

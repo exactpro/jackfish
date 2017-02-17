@@ -13,6 +13,7 @@ import java.awt.*;
 import java.util.Timer;
 import java.util.TimerTask;
 
+@Deprecated
 public class DelayShutterButton extends BorderPane
 {
 	private long maxDelay;

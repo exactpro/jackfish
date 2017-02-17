@@ -82,7 +82,6 @@ public class Settings
 	public static final String	TIME_NOTIFICATION = "timeNotification";
 	public static final String	THEME = "theme";
 	public static final String	USE_FULL_SCREEN	= "useFullScreen";
-	public static final String	USE_COMPACT_MODE = "useCompactMode";
 	public static final String	USE_FULLSCREEN_XPATH = "useFullScreenXpath";
 	public static final String	COPYRIGHT = "copyright";
 	//endregion
@@ -311,7 +310,6 @@ public class Settings
 		settings.setMapValues(GLOBAL_NS, SETTINGS, mapOf(
 				MAX_LAST_COUNT,"10",
 				USE_FULL_SCREEN,"false",
-				USE_COMPACT_MODE,"false",
 				TIME_NOTIFICATION,"5",
 				THEME,"WHITE",
 				COPYRIGHT,"//==============================================\\n//  Copyright (c) 2009-2016, Exactpro Systems, LLC\\n//  Quality Assurance &amp; Related Development for Innovative " +

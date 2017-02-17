@@ -971,32 +971,6 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 		}
 	}
 
-	public Locator locatorFromUIProxy(UIProxyJNA element) throws Exception
-	{
-		try
-		{
-			String id = this.driver.elementAttribute(element, AttributeKind.ID);
-			String uid = this.driver.elementAttribute(element, AttributeKind.UID);
-			String clazz = this.driver.elementAttribute(element, AttributeKind.CLASS);
-			String name = this.driver.elementAttribute(element, AttributeKind.NAME);
-			String tooltip = this.driver.elementAttribute(element, AttributeKind.TEXT);
-			Locator locator = new Locator(null, id, ControlKind.findByClazz(clazz));
-			locator.uid(uid).clazz(clazz).name(name).tooltip(tooltip);
-			return locator;
-		}
-		catch (Exception e)
-		{
-			this.logger.error(String.format("locatorFromUIProxy(%s)", element));
-			this.logger.error(e.getMessage(), e);
-			throw e;
-		}
-	}
-
-	public Locator locatorFromUIProxy(int[] id) throws Exception
-	{
-		return locatorFromUIProxy(new UIProxyJNA(id));
-	}
-
 	private String columnsToString(String[] a)
 	{
 		if (a == null || a.length == 0)

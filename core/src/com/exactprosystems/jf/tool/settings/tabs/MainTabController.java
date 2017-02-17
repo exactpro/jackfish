@@ -32,7 +32,6 @@ public class MainTabController implements Initializable, ContainingParent, ITabH
 	public ComboBox<Theme> comboBoxTheme;
 	public ComboBox<String> cbFontFamily;
 	public ComboBox<Double> cbFontSize;
-	public CheckBox useSmallWindow;
 	public CheckBox useFullScreenXpath;
 	public TextArea taCopyright;
 	public GridPane numberGrid;
@@ -55,7 +54,6 @@ public class MainTabController implements Initializable, ContainingParent, ITabH
 
 		this.comboBoxTheme.setId(Settings.THEME);
 		this.useFullScreen.setId(Settings.USE_FULL_SCREEN);
-		this.useSmallWindow.setId(Settings.USE_COMPACT_MODE);
 
 		this.comboBoxTheme.setItems(FXCollections.observableArrayList(Arrays.stream(Theme.values()).filter(Theme::isVisible).collect(Collectors.toList())));
 		initializeFont();
@@ -63,7 +61,6 @@ public class MainTabController implements Initializable, ContainingParent, ITabH
 		comboBoxTheme.getSelectionModel().selectedItemProperty().addListener((observableValue, theme, theme2) -> Platform.runLater(() -> this.useFullScreen.getScene().getStylesheets().setAll(theme2.getPath())));
 
 		this.useFullScreen.setOnAction(actionEvent -> this.model.updateSettingsValue(this.useFullScreen.getId(), Settings.SETTINGS, String.valueOf(useFullScreen.isSelected())));
-		this.useSmallWindow.setOnAction(actionEvent -> this.model.updateSettingsValue(this.useSmallWindow.getId(), Settings.SETTINGS, String.valueOf(useSmallWindow.isSelected())));
 		this.useFullScreenXpath.setOnAction(actionEvent -> this.model.updateSettingsValue(this.useFullScreenXpath.getId(), Settings.SETTINGS, String.valueOf(useFullScreenXpath.isSelected())));
 	}
 
@@ -86,7 +83,6 @@ public class MainTabController implements Initializable, ContainingParent, ITabH
 				Settings.defaultSettings().getValueOrDefault(Settings.GLOBAL_NS, "Main", Settings.TIME_NOTIFICATION, "").getValue() : res.get(ntfTimeNotification.getId()));
 		this.useFullScreen.setSelected(Boolean.valueOf(res.get(useFullScreen.getId()) == null ?
 				Settings.defaultSettings().getValueOrDefault(Settings.GLOBAL_NS, "Main", Settings.USE_FULL_SCREEN, "false").getValue() : res.get(useFullScreen.getId())));
-		this.useSmallWindow.setSelected(Boolean.valueOf(res.get(useSmallWindow.getId()) == null ? "false" : res.get(useSmallWindow.getId())));
 		this.useFullScreenXpath.setSelected(Boolean.valueOf(res.get(useFullScreenXpath.getId()) == null ?
 				Settings.defaultSettings().getValueOrDefault(Settings.GLOBAL_NS, "Main", Settings.USE_FULLSCREEN_XPATH, "false").getValue() : res.get(useFullScreenXpath.getId())));
 		this.taCopyright.setText(res.get(taCopyright.getId()) == null ?
@@ -173,7 +169,7 @@ public class MainTabController implements Initializable, ContainingParent, ITabH
 
 	public void save()
 	{
-		Arrays.asList(this.useFullScreen, this.useSmallWindow, this.useFullScreenXpath)
+		Arrays.asList(this.useFullScreen, this.useFullScreenXpath)
 				.forEach(cb -> this.model.updateSettingsValue(cb.getId(), Settings.SETTINGS, String.valueOf(cb.isSelected())));
 
 		this.model.updateSettingsValue(this.comboBoxTheme.getId(), Settings.SETTINGS, this.comboBoxTheme.getSelectionModel().getSelectedItem().toString());

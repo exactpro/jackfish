@@ -33,9 +33,6 @@ import javafx.scene.Parent;
 import javafx.scene.control.SplitPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
-import javafx.stage.Stage;
-import javafx.stage.Window;
-
 import java.net.URL;
 import java.util.Collection;
 import java.util.ResourceBundle;

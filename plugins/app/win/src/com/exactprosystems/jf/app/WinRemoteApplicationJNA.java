@@ -393,40 +393,6 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 	}
 
 	@Override
-	protected Locator getLocatorDerived(Locator owner, ControlKind controlKind, int x, int y) throws Exception
-	{
-		try
-		{
-			int initialLength = 100;
-			int[] res = new int[initialLength];
-			int returnLength = this.driver.elementByCoords(res, controlKind, x, y);
-			if (returnLength == 0)
-			{
-				throw new ElementNotFoundException(x, y);
-			}
-			if (returnLength > initialLength)
-			{
-				initialLength = returnLength;
-				res = new int[initialLength];
-				this.driver.elementByCoords(res, controlKind, x, y);
-			}
-			int[] newRes = new int[returnLength];
-			System.arraycopy(res, 0, newRes, 0, returnLength);
-			return this.operationExecutor.locatorFromUIProxy(newRes);
-		}
-		catch (RemoteException e)
-		{
-			throw e;
-		}
-		catch (Exception e)
-		{
-			this.logger.error(String.format("getLocatorDerived(%s,%s,%d,%d)", owner, controlKind, x, y));
-			this.logger.error(e.getMessage(), e);
-			throw e;
-		}
-	}
-
-	@Override
 	protected ImageWrapper getImageDerived(Locator owner, Locator element) throws Exception
 	{
 		try
@@ -591,23 +557,10 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 		{
 			parent = this.operationExecutor.find(null, owner);
 		}
-//		return null;
 		long start = System.currentTimeMillis();
 		Document doc = createDoc(parent);
 		this.logger.info("BUILD TREE TIME (MS) : " + (System.currentTimeMillis() - start));
 		return doc;
-	}
-
-	@Override
-	protected void startGrabbingDerived() throws Exception
-	{
-		//done
-	}
-
-	@Override
-	protected void endGrabbingDerived() throws Exception
-	{
-		//done
 	}
 
 	private Document createDoc(UIProxyJNA owner) throws Exception

@@ -13,8 +13,6 @@ import com.exactprosystems.jf.api.common.SerializablePair;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.error.app.FeatureNotSupportedException;
 import com.exactprosystems.jf.api.error.app.NullParameterException;
-import com.exactprosystems.jf.app.js.JSInjection;
-import com.exactprosystems.jf.app.js.JSInjectionFactory;
 import org.apache.log4j.*;
 import org.openqa.selenium.*;
 import org.openqa.selenium.Dimension;
@@ -30,9 +28,7 @@ import org.w3c.dom.Node;
 import javax.imageio.ImageIO;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import java.awt.*;
 import java.awt.Rectangle;
-import java.awt.event.InputEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.Serializable;
@@ -259,7 +255,6 @@ public class SeleniumRemoteApplication extends RemoteApplication
 			}
 			Browser browser = Browser.valueOf(browserName.toUpperCase());
 			this.driver = new WebDriverListenerNew(browser.createDriver(chromeDriverBinary, firefoxProfileDirectory, usePrivateMode));
-			this.jsInjection = JSInjectionFactory.getJSInjection(browser);
 			this.operationExecutor = new SeleniumOperationExecutor(this.driver, this.logger);
 			this.driver.get(url);
 			
@@ -267,8 +262,6 @@ public class SeleniumRemoteApplication extends RemoteApplication
 			{
 				this.driver.manage().window().maximize();
 			}
-
-			needTune = true;
 		}
 		catch (Exception e)
 		{
@@ -449,7 +442,6 @@ public class SeleniumRemoteApplication extends RemoteApplication
 		});
 		thread.start();
 		thread.join(10000);
-		needTune = true;
 		return result[0];
 	}
 
@@ -490,114 +482,6 @@ public class SeleniumRemoteApplication extends RemoteApplication
 		}
 		while (++repeat < repeatLimit);
 		throw real;
-	}
-
-
-	@Override
-	protected Locator getLocatorDerived(Locator owner, ControlKind controlKind, int x, int y) throws Exception
-	{
-		if (needTune)
-		{
-			return tuneDisplay();
-		}
-		WebElement o = (WebElement) this.driver.executeScript("return document.elementFromPoint(" + (x - offsetX) + ", " + (y - offsetY) + ");");
-		return getLocator(controlKind, o);
-	}
-
-	private Locator tuneDisplay() throws Exception
-	{
-		if (needTune)
-		{
-			try
-			{
-				this.jsInjection.injectJSLocation(driver);
-				Robot robot = new Robot();
-				Thread.sleep(1000);
-				robot.mousePress(InputEvent.BUTTON1_DOWN_MASK);
-				robot.mouseRelease(InputEvent.BUTTON1_DOWN_MASK);
-
-				Object o = this.driver.executeScript(JSInjectionFactory.returnLocation);
-				ArrayList<?> longs = (ArrayList<?>) o;
-				long xL = ((Long) longs.get(0));
-				long yL = ((Long) longs.get(1));
-
-				java.awt.Point location = MouseInfo.getPointerInfo().getLocation();
-				double x1 = location.getX();
-				double y1 = location.getY();
-				offsetX = x1 - xL;
-				offsetY = y1 - yL;
-			}
-			catch (Exception e)
-			{
-				logger.error("Error on tune display");
-				logger.error(e.getMessage(), e);
-				throw new Exception(e.getMessage());
-			}
-		}
-		needTune = false;
-		return null;
-	}
-
-	private Locator getLocator(ControlKind kind, WebElement e)
-	{
-		ControlKind controlKind;
-		WebElement element;
-		if (kind == null || kind == ControlKind.Any)
-		{
-			controlKind = mapTagsControlKind.get(e.getTagName()) == null ? ControlKind.Any : mapTagsControlKind.get(e.getTagName()).get(0);
-			element = e;
-		}
-		else
-		{
-			element = parentKind(e, kind);
-			controlKind = kind;
-		}
-		String idElement = element.getAttribute("id");
-		String id = idElement == null ? controlKind.name() + element.getTagName() : idElement;
-
-		Locator locator = new Locator(null, id, controlKind);
-		locator
-			.uid(idElement)
-			.clazz(element.getAttribute("class"))
-			.name(element.getAttribute("name"))
-			.title(element.getAttribute("title"))
-			.action(element.getAttribute("action"))
-			.text(element.getText());
-		return locator;
-	}
-
-	private WebElement parentKind(WebElement e, ControlKind kind)
-	{
-		ArrayList<ControlKind> controlKinds = mapTagsControlKind.get(e.getTagName());
-
-		if (controlKinds != null)
-		{
-			for (ControlKind ck : controlKinds)
-			{
-				if (kind == ck)
-				{
-					return e;
-				}
-			}
-			return parentKind(findParent(e), kind);
-		}
-		else
-		{
-			WebElement parent = findParent(e);
-			if (parentKind(parent, kind) != null)
-			{
-				return parent;
-			}
-		}
-		return null;
-	}
-
-	private WebElement findParent(WebElement e)
-	{
-		logger.debug("e : " + getElementString(e));
-		WebElement r = e.findElement(By.xpath(".."));
-		logger.debug("r : " + getElementString(r));
-		return r;
 	}
 
 	@Override
@@ -833,7 +717,6 @@ public class SeleniumRemoteApplication extends RemoteApplication
 			flag = tab.equalsIgnoreCase("true");
 		}
 		this.driver.executeScript("function createDoc(){var w = window.open('" + url + "'" + (flag ? ",'_blank'" : "") + ")}; createDoc();");
-		needTune = true;
 	}
 
 	@Override
@@ -972,18 +855,6 @@ public class SeleniumRemoteApplication extends RemoteApplication
 		return new java.awt.Rectangle((int) x, (int) y, (int) w, (int) h);
 	}
 
-	@Override
-	protected void startGrabbingDerived() throws Exception
-	{
-		this.jsInjection.injectJSHighlight(this.driver);
-	}
-
-	@Override
-	protected void endGrabbingDerived() throws Exception
-	{
-		this.jsInjection.stopInject(this.driver);
-	}
-
 	private void log(String message)
 	{
 		long newTime = System.currentTimeMillis();
@@ -996,11 +867,7 @@ public class SeleniumRemoteApplication extends RemoteApplication
 	private WebDriverListenerNew driver;
 	private PluginInfo info;
 
-	private boolean needTune = true;
-	private double offsetX;
-	private double offsetY;
 	private final int repeatLimit = 5;
-	private JSInjection jsInjection;
 	public OperationExecutor<WebElement> operationExecutor;
 	private Logger logger = null;
 }
