@@ -17,7 +17,6 @@ import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.custom.BorderWrapper;
 import com.exactprosystems.jf.tool.custom.tab.CustomTab;
-import com.exactprosystems.jf.tool.custom.tab.CustomTabPane;
 import com.exactprosystems.jf.tool.custom.xpath.XpathViewer;
 import com.exactprosystems.jf.tool.dictionary.DictionaryFx;
 import com.exactprosystems.jf.tool.dictionary.DictionaryFxController;
@@ -25,11 +24,9 @@ import com.exactprosystems.jf.tool.dictionary.FindListView;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.*;
 import javafx.scene.layout.*;
@@ -39,7 +36,6 @@ import org.w3c.dom.Document;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.ResourceBundle;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
@@ -78,7 +74,6 @@ public class NavigationController implements Initializable, ContainingParent
 
 	private DictionaryFx model;
 	private boolean fullScreen = false;
-	private List<String> themePaths;
 	private AppConnection appConnection;
 	
 	public void setAppConnection(AppConnection appConnection)
@@ -415,14 +410,8 @@ public class NavigationController implements Initializable, ContainingParent
 		this.listViewElement.addChangeListener(this.elementChangeListener);
 	}
 
-	private EventHandler<KeyEvent> pressHandler;
-	private EventHandler<KeyEvent> releaseHandler;
-
 	public void close()
 	{
-		Scene scene = CustomTabPane.getInstance().getScene();
-		scene.removeEventFilter(KeyEvent.KEY_PRESSED, pressHandler);
-		scene.removeEventFilter(KeyEvent.KEY_RELEASED, releaseHandler);
 	}
 
 	private <T> void display(T item, Collection<T> items, FindListView<T> listView, ChangeListener<T> listener)
@@ -499,11 +488,9 @@ public class NavigationController implements Initializable, ContainingParent
 		private TextField textField;
 		private IUpdater<T> updater;
 		private Function<T, String> converter;
-		private BiConsumer<T, Integer> biConsumer;
 
 		public CustomListCell(IUpdater<T> updater, Function<T, String> converter, BiConsumer<T, Integer> biConsumer)
 		{
-			this.biConsumer = biConsumer;
 			this.updater = updater;
 			this.converter = converter;
 			this.setOnDragDetected(event -> {
