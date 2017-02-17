@@ -18,14 +18,3 @@ ListUL;;Y$t=#ListUL#;-;Y;-;-;-;N;N;N;N;N;-;N;N;N;N;N;-;N;-;-;-;-;-;-;-;-;-;-;-;Y
 MyFrame;;Y$t=#MyFrame#;-;N;-;-;-;-;-;-;-;-;-;Y$p=#0,0#;Y$p=#0,0#;N;Y$p=#0,0#;Y$p=#0,0#;-;-;-;-;-;-;-;-;-;-;-;-;-;Y;Y;Y;Y;Y;N;N;N;N;N;N;N;N
 DialogD;;Y$t=#DialogD#;-;Y;-;-;-;-;-;-;-;-;-;Y$p=#68,33#;Y$p=#68,34#;Y;Y$p=#68,34#;Y$p=#68,34#;-;-;-;-;-;-;-;-;-;-;-;-;-;Y;Y;Y;Y;Y;N;N;N;N;N;N;N;N
 ImageIDE;;Y$t=#ImageIDE#;-;Y;-;-;-;-;-;-;-;-;-;Y;Y;Y;Y;Y;-;-;-;-;-;-;-;-;-;-;-;-;-;Y;Y;Y;Y;Y;N;N;N;N;N;N;Y$t=#This.Out.ImageIDE.x == 18 && This.Out.ImageIDE.y == 1093 && This.Out.ImageIDE.width == 48 && This.Out.ImageIDE.height == 48#;N
-Row;;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N
-ScrollBar;;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N
-Tree;;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N
-TreeItem;;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N
-Splitter;;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N
-ToolTip;;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N
-MenuItem;;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N
-Menu;;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N
-Menu1;;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N
-Spinner;;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N
-TabPanel;;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N
