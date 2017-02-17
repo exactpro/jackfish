@@ -357,6 +357,7 @@ public class MatcherSwing<T extends Component> extends GenericTypeMatcher<T>
     {
         if (result || kind == null)
         {
+            System.err.println("<< " + result);
             return result;
         }
         boolean weak = locator.isWeak();
