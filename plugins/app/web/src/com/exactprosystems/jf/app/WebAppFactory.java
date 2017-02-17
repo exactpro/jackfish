@@ -26,8 +26,6 @@ public class WebAppFactory implements IApplicationFactory
 	private static final int requiredMajorVersion = 2;
 	private static final int requiredMinorVersion = 28;
 
-	public static final String newSearchName        = "NewSearch";
-	
 	public static final String logLevel				= "LogLevel";
 	public final static String jreExecName 			= "jreExec";
 	public final static String jreArgsName 			= "jreArgs";
@@ -69,7 +67,7 @@ public class WebAppFactory implements IApplicationFactory
 	{
 		switch (kind)
 		{
-			case LOAD:		return new String[] { newSearchName, jreExecName, jreArgsName, safariDriverPathName, chromeDriverPathName, geckoDriverPathName, ieDriverPathName, chromeDriverBinary, firefoxProfileDir,
+			case LOAD:		return new String[] { jreExecName, jreArgsName, safariDriverPathName, chromeDriverPathName, geckoDriverPathName, ieDriverPathName, chromeDriverBinary, firefoxProfileDir,
 					usePrivateMode, logLevel };
 			case START:		return new String[] { browserName, urlName };
 			case PROPERTY:	return new String[] { propertyUrlName, propertyTitle };
