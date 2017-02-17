@@ -48,13 +48,6 @@ public class ProxySwingApp extends ProxyApplication
 
 	private void tune(Map<String, String> driverParameters, Map<String, String> parameters)
 	{
-        String newSearch  = driverParameters.get(SwingAppFactory.newSearchName);
-        if (newSearch != null && !newSearch.isEmpty())
-        {
-            System.out.println(SwingAppFactory.newSearchName + "=" + newSearch);
-            parameters.put(SwingAppFactory.newSearchName, newSearch);
-        }
-
         String jreExec 	= driverParameters.get(SwingAppFactory.jreExecName);
 		if (jreExec != null && !jreExec.isEmpty())
 		{
