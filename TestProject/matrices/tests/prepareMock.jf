@@ -16,7 +16,7 @@ Prepare;;;
 
     // adapter may be SWING or WEB ( in future will need add adapter for WinApp)
     #Global;#Action;#headerText;#headerTextAssert;#table;#matrixText;#delay;#pattern
-    1;Vars;'\t#Action\u003b#Dialog\u003b#AppConnection\u003b#';'\t#Action\u003b#Dialog\u003b#Assert\u003b#AppConnection\u003b#';TBL1.Out;TXT1.Out;'.delay(500)';def(pattern, str) {Matcher matcher = Pattern.compile(pattern).matcher(str)\u003bif (matcher.find()) {return matcher.group(1)\u003b}return ''\u003b}
+    1;Vars;'\t#Action\u003b#Dialog\u003b#AppConnection\u003b#';'\t#Action\u003b#Dialog\u003b#Assert\u003b#AppConnection\u003b#';TBL1.Out;TXT1.Out;'.delay(400)';def(pattern, str) {Matcher matcher = Pattern.compile(pattern).matcher(str)\u003bif (matcher.find()) {return matcher.group(1)\u003b}return ''\u003b}
 
     #Global;#Action;#operationPattern;#templatePattern;#wherePattern;#prepareOperationPattern;#reasonPattern;#isNotNeedName;#avaliableAdapter
     1;Vars;def (x) { return pattern("\\$p=#(.+?)#", x)};def (x) { return pattern("\\$t=#(.+?)#", x)};def (x) { return pattern("\\$w=#(\\w)#", x)};def (x) {return pattern("\\$b=#(.+?)#", x)};def (x) { return pattern("\\$f=#(.+?)#", x)};def(x) {return x.contains(needName)};def(x) { if (x.indexOf('$') != -1) {return x.substring(0,x.indexOf('$'))\u003b}return x\u003b}
