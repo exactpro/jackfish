@@ -242,7 +242,6 @@ public class MatcherSwing<T extends Component> extends GenericTypeMatcher<T>
             }
         }
         
-        System.err.println("==================== " + this.locator);
         result = part(result, this.locator, LocatorFieldKind.CLAZZ,   getClass(objNew));
         result = part(result, this.locator, LocatorFieldKind.NAME,    getName(objNew));
         result = part(result, this.locator, LocatorFieldKind.TEXT,    getText(objNew));
@@ -355,13 +354,16 @@ public class MatcherSwing<T extends Component> extends GenericTypeMatcher<T>
 
     private boolean part(boolean result, Locator locator, LocatorFieldKind kind, String objText)
     {
-        if (result || kind == null)
+        if (kind == null)
         {
-            System.err.println("<< " + result);
             return result;
         }
         boolean weak = locator.isWeak();
         String locatorText = Str.asString(locator.get(kind));
+        if (Str.IsNullOrEmpty(locatorText))
+        {
+            return result;
+        }
 
         if (objText != null)
         {
