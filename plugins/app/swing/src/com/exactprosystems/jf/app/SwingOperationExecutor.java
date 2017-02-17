@@ -457,7 +457,7 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 			}
 			else if (component.target instanceof JList)
 			{
-				JList jList = component.targetCastedTo(JList.class);
+				JList<?> jList = component.targetCastedTo(JList.class);
 				jList.setSelectedIndex(index);
 			}
 
@@ -536,7 +536,7 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 			}
 			else if (component.target instanceof JList)
 			{
-				JList jList = component.targetCastedTo(JList.class);
+				JList<?> jList = component.targetCastedTo(JList.class);
 				jList.setSelectedValue(selectedText, true);
 			}
 
@@ -763,11 +763,11 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 
 	@Override
 	public List<String> getList(ComponentFixture<Component> fixture) throws Exception {
-			ListModel model = getListModelFromComponentOrError(fixture.target);
+			ListModel<?> model = getListModelFromComponentOrError(fixture.target);
 			return getListOfNamesFromListItems(model);
 	}
 
-	private List<String> getListOfNamesFromListItems(ListModel model) {
+	private List<String> getListOfNamesFromListItems(ListModel<?> model) {
 		ArrayList<String> resultList = new ArrayList<>();
 		for (int i = 0; i < model.getSize(); i++)
 		{
@@ -776,15 +776,12 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 		return resultList;
 	}
 
-	private ListModel getListModelFromComponentOrError(Component component) {
+	private ListModel<?> getListModelFromComponentOrError(Component component) {
 		switch (component.getClass().getSimpleName())
 		{
-			case "JComboBox":
-				return ((JComboBox) component).getModel();
-			case "JList":
-				return ((JList) component).getModel();
-			default:
-				throw new Error("Element " + component.getName() + " does not have list model. Please try another element.");
+			case "JComboBox":	return ((JComboBox<?>) component).getModel();
+			case "JList":		return ((JList<?>) component).getModel();
+			default:			throw new Error("Element " + component.getName() + " does not have list model. Please try another element.");
 		}
 	}
 
@@ -910,6 +907,12 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 				events.add(new MouseEvent(component, MouseEvent.MOUSE_DRAGGED, System.currentTimeMillis(), ALT_CTRL_SHIFT, x, y, NO_CLICK, NOT_SHOW_POPUP, MouseEvent.BUTTON1));
 				events.add(new MouseEvent(component, MouseEvent.MOUSE_RELEASED, System.currentTimeMillis(), ALT_CTRL_SHIFT, x, y, ONE_CLICK, NOT_SHOW_POPUP, MouseEvent.BUTTON1));
 				break;
+				
+            case DragNDrop: // TODO is it needed to implement?
+                break;
+
+            case Move:
+                break;
 		}
 		return events;
 	}
@@ -1542,11 +1545,11 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 		}
 		else if (currentComponent instanceof JComboBox)
 		{
-			return String.valueOf(((JComboBox) currentComponent).getSelectedItem());
+			return String.valueOf(((JComboBox<?>) currentComponent).getSelectedItem());
 		}
 		else if (currentComponent instanceof JList)
 		{
-			return String.valueOf(((JList) currentComponent).getSelectedValue());
+			return String.valueOf(((JList<?>) currentComponent).getSelectedValue());
 		}
 		else if (currentComponent instanceof JProgressBar)
 		{
@@ -1659,7 +1662,7 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 					throw new WrongParameterException("The column '" + name + "' is not found. Possible values are: " + humanReadableHeaders(fieldIndexes));
 				}
 				Object value = getValueTableCell(fixture, i, index);
-				if (!valueCondition.isMatched(name, value))
+				if (!valueCondition.isMatched(name, value)) // FIXME replace to another isMathched()
 				{
 					found = false;
 				}
@@ -1674,7 +1677,7 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 					throw new WrongParameterException("The column '" + name + "' is not found. Possible values are: " + humanReadableHeaders(fieldIndexes));
 				}
 				Color color = fixture.foregroundAt(TableCell.row(i).column(index)).target();
-				if (!colorCondition.isMatched(name, color))
+				if (!colorCondition.isMatched(name, color)) // FIXME replace to another isMathched()
 				{
 					found = false;
 				}
@@ -2031,7 +2034,8 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 			}
 			else
 			{
-				Enumeration<TreeNode> children = node.children();
+				@SuppressWarnings("unchecked")
+                Enumeration<TreeNode> children = node.children();
 				while (children.hasMoreElements())
 				{
 					TreeNode found = find(children.nextElement(), level + 1, path);
@@ -2112,7 +2116,7 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 		}
 		else if (component instanceof JList)
 		{
-			return (ComponentFixture<T>) new JListFixture(this.currentRobot, ((JList) component));
+			return (ComponentFixture<T>) new JListFixture(this.currentRobot, ((JList<?>) component));
 		}
 		else if (component instanceof JMenuItem)
 		{

@@ -36,7 +36,6 @@ import java.net.URLClassLoader;
 import java.rmi.RemoteException;
 import java.util.*;
 import java.util.List;
-import java.util.Map.Entry;
 
 public class SwingRemoteApplication extends RemoteApplication
 {
@@ -141,14 +140,6 @@ public class SwingRemoteApplication extends RemoteApplication
 		String arg = args.get(SwingAppFactory.argsName);
 
 		logger.debug("Launching application: class=" + mainClass + " jar=" + jar + " arg=" + arg);
-
-        String newSearch = args.get(SwingAppFactory.newSearchName);
-        
-        if (newSearch != null && !newSearch.isEmpty())
-        {
-            logger.info(SwingAppFactory.newSearchName + " = " + newSearch);
-            MatcherSwing.newApproach = Boolean.parseBoolean(newSearch);
-        }
 
         try
 		{
