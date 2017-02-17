@@ -16,6 +16,6 @@ public enum LocatorFieldKind
     WEAK, 
     ADDITION, 
     VISIBILITY, 
-    USE_NUMERIC_HEADER, 
-    USE_ABSOLUTE_XPATH;
+    USE_NUMERIC_HEADER
+    ;
 }

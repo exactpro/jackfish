@@ -125,7 +125,6 @@
 						<CustomFieldWithButton id="expression" fx:id="tfExpression" GridPane.columnIndex="1" GridPane.rowIndex="10" />
 						<HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1">
 							<children>
-								<CheckBox id="useAbsoluteXpath" fx:id="checkBoxAbsoluteXpath" />
 								<CustomFieldWithButton id="xpath" fx:id="tfXpath" HBox.hgrow="ALWAYS" />
 								<Button alignment="CENTER" mnemonicParsing="false" onAction="#showTree" fx:id="xpathHelper" />
 							</children>

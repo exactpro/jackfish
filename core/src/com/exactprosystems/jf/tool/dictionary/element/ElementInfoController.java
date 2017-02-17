@@ -64,7 +64,6 @@ public class ElementInfoController implements Initializable, ContainingParent
 	public CustomFieldWithButton tfExpression;
 	public TextField tfTimeout;
 	public Button xpathHelper;
-	public CheckBox checkBoxAbsoluteXpath;
 	public GridPane mainGrid;
 	public Button btnGoToOwner;
 	public GridPane fieldGrid;
@@ -108,8 +107,8 @@ public class ElementInfoController implements Initializable, ContainingParent
 		assert tfTitle != null : "fx:id=\"tfTitle\" was not injected: check your FXML file 'ElementInfo.fxml'.";
 		assert checkBoxUseNumericHeader != null : "fx:id=\"checkBoxUseNumericHeader\" was not injected: check your FXML file 'ElementInfo.fxml'.";
 		Common.customizeLabeled(this.xpathHelper, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.XPATH_TREE);
-		Platform.runLater(() -> {
-			this.checkBoxAbsoluteXpath.setTooltip(new Tooltip("Absolute xpath"));
+		Platform.runLater(() -> 
+		{
 			((BorderPane) this.pane).setCenter(BorderWrapper.wrap(this.mainGrid).color(Common.currentTheme().getReverseColor()).title("Element info").build());
 		});
 
@@ -300,7 +299,6 @@ public class ElementInfoController implements Initializable, ContainingParent
 
 			this.checkBoxWeak.setSelected(control != null && control.isWeak());
 			this.checkBoxUseNumericHeader.setSelected(control != null && control.useNumericHeader());
-			this.checkBoxAbsoluteXpath.setSelected(control != null && control.useAbsoluteXpath());
 			this.previousValue = "";
 			this.currentControl = control;
 			this.window = window;
@@ -326,7 +324,6 @@ public class ElementInfoController implements Initializable, ContainingParent
 			changeText(this.tfID, "");
 		});
 		this.tfTimeout.focusedProperty().addListener(numberFocusListener(this.tfTimeout));
-		this.checkBoxAbsoluteXpath.selectedProperty().addListener((obs, prev, next) -> changeBoolean(this.checkBoxAbsoluteXpath, next));
 	}
 
 	private void refreshElement()
@@ -343,18 +340,6 @@ public class ElementInfoController implements Initializable, ContainingParent
 				previousValue = value;
 			}
 		}, "Error on changing " + source.getId());
-	}
-
-	private void changeBoolean(CheckBox source, Boolean value)
-	{
-		tryCatch(() -> {
-					Arrays.asList(
-							this.tfUID, this.tfClass,this.tfText,
-							this.tfName, this.tfTooltip, this.tfAction,
-							this.tfTitle).forEach(tf -> tf.setDisable(value));
-					this.navigation.parameterSet(source.getId(), value);
-				}, "Error on changing " + source.getId()
-		);
 	}
 
 	private void changeNumber(TextField source, String value)

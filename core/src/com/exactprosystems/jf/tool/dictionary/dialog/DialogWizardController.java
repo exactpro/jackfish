@@ -304,7 +304,7 @@ public class DialogWizardController implements Initializable, ContainingParent
 		addCheckBoxToLeftPane(gridPane, "Weak", abstractControl.isWeak(), newWeak -> Common.tryCatch(() -> abstractControl.set(AbstractControl.weakName, newWeak), "Error on set new columns"),index++ );
 		index = 1;
 
-		addXpathToPane(gridPane, abstractControl.getXpath(), abstractControl.useAbsoluteXpath(), newId -> Common.tryCatch(() -> abstractControl.set(AbstractControl.xpathName, newId), "Error on set parameter"), newB -> Common.tryCatch(() -> abstractControl.set(AbstractControl.absoluteXpathName, newB), "Error on set parameter"));
+		addXpathToPane(gridPane, abstractControl.getXpath(), newId -> Common.tryCatch(() -> abstractControl.set(AbstractControl.xpathName, newId), "Error on set parameter"));
 		addToRightPane(gridPane, "UID : ", abstractControl.getUID(), newId -> Common.tryCatch(() -> abstractControl.set(AbstractControl.uidName, newId), "Error on set parameter"), index++);
 		addToRightPane(gridPane, "Class : ", abstractControl.getClazz(), newId -> Common.tryCatch(() -> abstractControl.set(AbstractControl.clazzName, newId), "Error on set parameter"), index++);
 		addToRightPane(gridPane, "Name : ", abstractControl.getName(), newId -> Common.tryCatch(() -> abstractControl.set(AbstractControl.nameName, newId), "Error on set parameter"), index++);
@@ -910,16 +910,11 @@ public class DialogWizardController implements Initializable, ContainingParent
 		pane.add(checkBox, 1, index);
 	}
 
-	private void addXpathToPane(GridPane pane, String value, boolean isAbsolute, Consumer<String> consumer, Consumer<Boolean> absoluteConsumer)
+	private void addXpathToPane(GridPane pane, String value, Consumer<String> consumer)
 	{
 		Label lbl = new Label("Xpath : ");
 		HBox box = new HBox();
 		box.setAlignment(Pos.CENTER);
-
-		CheckBox cbIsAbsolute = new CheckBox("");
-		cbIsAbsolute.setSelected(isAbsolute);
-		cbIsAbsolute.selectedProperty().addListener((observable, oldValue, newValue) -> absoluteConsumer.accept(newValue));
-		cbIsAbsolute.setAlignment(Pos.CENTER);
 
 		CustomFieldWithButton tf = new CustomFieldWithButton(value);
 		tf.textProperty().addListener((observable, oldValue, newValue) -> consumer.accept(newValue));
@@ -935,7 +930,7 @@ public class DialogWizardController implements Initializable, ContainingParent
 				tf.setText(newXpath);
 			}
 		});
-		box.getChildren().addAll(cbIsAbsolute, tf, btnXpath);
+		box.getChildren().addAll(tf, btnXpath);
 		pane.add(lbl, 2, 0);
 		pane.add(box, 3, 0);
 	}

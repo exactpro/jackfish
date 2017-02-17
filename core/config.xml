@@ -204,4 +204,24 @@
         <appWorkDir>${JF}/apps/</appWorkDir>
         <appStartPort>12000</appStartPort>
     </appEntry>
+    <appEntry>
+        <name>SWING</name>
+        <parameters>
+            <key>jreExec</key>
+            <value></value>
+        </parameters>
+        <parameters>
+            <key>jreArgs</key>
+            <value></value>
+        </parameters>
+        <parameters>
+            <key>LogLevel</key>
+            <value>ERROR</value>
+        </parameters>
+        <appDescription>Swing applications</appDescription>
+        <appDicPath>dic/gui/mock_swing_dic.xml</appDicPath>
+        <appJar>${JF}/apps/swing.jar</appJar>
+        <appWorkDir>${JF}/apps</appWorkDir>
+        <appStartPort>7000</appStartPort>
+    </appEntry>
 </configuration>

@@ -34,7 +34,6 @@ public class Locator implements Serializable
 		this.addition			= control.getAddition();
 		this.visibility			= control.getVisibility();
 		this.useNumericHeader	= control.useNumericHeader();
-		this.useAbsoluteXpath	= control.useAbsoluteXpath();
 		this.columns			= notNull(control.getColumns());
 	}
 
@@ -111,10 +110,6 @@ public class Locator implements Serializable
 		if (this.addition != null)
 		{
 			sb.append(comma); 		sb.append("addition = "); 	sb.append(this.addition);  	comma = ", ";
-		}
-		if (this.useAbsoluteXpath != null)
-		{
-			sb.append(comma);		sb.append("useAbsoluteXpath = ");sb.append(this.useAbsoluteXpath);
 		}
 		if (!Str.IsNullOrEmpty(this.columns))
 		{
@@ -204,12 +199,6 @@ public class Locator implements Serializable
 	public boolean useNumericHeader()
 	{
 		return this.useNumericHeader!= null && this.useNumericHeader;
-	}
-
-	@Deprecated
-	public boolean useAbsoluteXpath()
-	{
-		return this.useAbsoluteXpath != null && this.useAbsoluteXpath;
 	}
 
 	public Locator id(String id)
@@ -308,11 +297,11 @@ public class Locator implements Serializable
 		return this;
 	}
 
-	public Locator absoluteXpath(Boolean useAbsoluteXpath)
-	{
-		this.useAbsoluteXpath = useAbsoluteXpath;
-		return this;
-	}
+//	@Deprecated
+//	public Locator absoluteXpath(Boolean useAbsoluteXpath)
+//	{
+//		return this;
+//	}
 
 	public Operation operation()
 	{
@@ -348,7 +337,6 @@ public class Locator implements Serializable
             case ADDITION:              return this.addition;
             case VISIBILITY:            return this.visibility;
             case USE_NUMERIC_HEADER:    return this.useNumericHeader;
-            case USE_ABSOLUTE_XPATH:    return this.useAbsoluteXpath;
         }
 
 	    return null;
@@ -378,7 +366,6 @@ public class Locator implements Serializable
             case ADDITION:              this.addition		= (Addition)value; return;
             case VISIBILITY:            this.visibility		= (Visibility)value; return;
             case USE_NUMERIC_HEADER:    this.useNumericHeader	= (Boolean)value; return;
-            case USE_ABSOLUTE_XPATH:    this.useAbsoluteXpath	= (Boolean)value; return;
         }
 	}
 	
@@ -415,6 +402,4 @@ public class Locator implements Serializable
 	private Addition addition;
 	private Visibility visibility;
 	private Boolean useNumericHeader;
-	@Deprecated
-	private Boolean useAbsoluteXpath;
 }

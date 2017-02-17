@@ -14,7 +14,6 @@ import com.exactprosystems.jf.common.ControlsAttributes;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.HTMLhelper;
 import com.exactprosystems.jf.documents.guidic.ExtraInfo;
-import com.exactprosystems.jf.documents.matrix.parser.items.MutableArrayList;
 
 import org.apache.log4j.Logger;
 
@@ -199,7 +198,6 @@ public abstract class AbstractControl implements IControl, Mutable
 		copy.set(columnsName,			control.getColumns()		);
 		copy.set(useNumericHeaderName,	control.useNumericHeader()	);
         copy.set(infoName,              control.getInfo()           );
-		copy.set(absoluteXpathName,		control.useAbsoluteXpath()	);
 
         return copy;
     }
@@ -232,7 +230,6 @@ public abstract class AbstractControl implements IControl, Mutable
         ret.rows = "";
         ret.header = "";
         ret.columns = "";
-        ret.absoluteXpath = locator.useAbsoluteXpath();
         return ret;
     }	 
 
@@ -260,7 +257,6 @@ public abstract class AbstractControl implements IControl, Mutable
 	{
 		this.uid = locator.getUid();
 		this.xpath = locator.getXpath();
-		this.absoluteXpath = locator.useAbsoluteXpath();
 		this.clazz = locator.getClazz();
 		this.name = locator.getName();
 		this.title = locator.getTitle();
@@ -423,13 +419,6 @@ public abstract class AbstractControl implements IControl, Mutable
 	public IExtraInfo getInfo()
 	{
 	    return this.info;
-	}
-
-	@Deprecated
-	@Override
-	public boolean useAbsoluteXpath()
-	{
-		return this.absoluteXpath == null ? false : this.absoluteXpath;
 	}
 
 	@Override
@@ -604,6 +593,7 @@ public abstract class AbstractControl implements IControl, Mutable
 		this.tooltip = xmlToText(this.tooltip);
 		this.expression = xmlToText(this.expression);
 		this.columns = xmlToText(this.columns);
+        this.absoluteXpath = null;
 		
 		if (!Str.IsNullOrEmpty(this.ownerId) && !Str.IsNullOrEmpty(this.xpath))
 		{
@@ -639,7 +629,7 @@ public abstract class AbstractControl implements IControl, Mutable
 		this.weak = booleanToXml(this.weak);
 		this.useNumericHeader = booleanToXml(this.useNumericHeader);
 		this.timeout = integerToXml(this.timeout);
-		this.absoluteXpath = booleanToXml(this.absoluteXpath);
+		this.absoluteXpath = null;
 	}
 
 	private String xmlToText(String source)

@@ -20,8 +20,6 @@ public interface IControl
     String              getRefID();
 	String 				getUID();
 	String 				getXpath();
-	@Deprecated
-	boolean				useAbsoluteXpath();
 	String 				getClazz();
 	String 				getName();
 	String 				getTitle();

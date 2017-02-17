@@ -469,11 +469,11 @@ public class DialogWizard
             {
                 parent = parent.getParentNode();
                 String relativePath = XpathViewer.fullXpath("", null, parent, false, parameters, false);
-                Locator relativeLocator = new Locator().kind(kind).id(id).absoluteXpath(true).xpath(relativePath);
+                Locator relativeLocator = new Locator().kind(kind).id(id).xpath(relativePath);
                 if (tryLocator(relativeLocator, parent) == 1)
                 {
                     String finalPath = XpathViewer.fullXpath(relativePath, parent, node, false, null, false);
-                    Locator finalLocator = new Locator().kind(kind).id(id).absoluteXpath(true).xpath(finalPath);
+                    Locator finalLocator = new Locator().kind(kind).id(id).xpath(finalPath);
                     if (tryLocator(finalLocator, node) == 1)
                     {
                         return finalLocator;
@@ -482,7 +482,7 @@ public class DialogWizard
             }
         }
 	    
-        Locator locator = new Locator().kind(kind).id(id).absoluteXpath(true).xpath(xpath);
+        Locator locator = new Locator().kind(kind).id(id).xpath(xpath);
         if (tryLocator(locator, node) == 1)
         {
             return locator;
@@ -818,7 +818,7 @@ public class DialogWizard
 
 	private ElementWizardBean create(int number, AbstractControl control, boolean isNew)
 	{
-		return new ElementWizardBean(control, number, control.getID(), control.getBindedClass(), ((control.getXpath() != null && !control.getXpath().isEmpty()) || control.useAbsoluteXpath()), isNew, 0);
+		return new ElementWizardBean(control, number, control.getID(), control.getBindedClass(), Str.IsNullOrEmpty(control.getXpath()), isNew, 0);
 	}
 
 	private void updateBean(AbstractControl control, ElementWizardBean bean)

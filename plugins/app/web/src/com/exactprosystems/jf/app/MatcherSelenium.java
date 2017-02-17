@@ -99,13 +99,10 @@ public class MatcherSelenium extends By
 
 	private String xpathFromControl(ControlKind controlKind, Locator locator)
 	{
-		logger.debug("locator use absolute xpath : " + locator.useAbsoluteXpath());
+		logger.debug("locator use xpath : " + locator.getXpath());
 		if (locator.getXpath() != null)
 		{
-			if (locator.useAbsoluteXpath())
-			{
-				return locator.getXpath();
-			}
+			return locator.getXpath();
 		}
 		if (controlKind == null)
 		{
