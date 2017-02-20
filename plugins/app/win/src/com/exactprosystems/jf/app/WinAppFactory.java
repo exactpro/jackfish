@@ -154,8 +154,9 @@ public class WinAppFactory implements IApplicationFactory
 		add(controlMap, ControlKind.Table,         	ControlType.Table, ControlType.DataGrid);
 		add(controlMap, ControlKind.TabPanel,      	ControlType.Tab);
 		add(controlMap, ControlKind.TextBox,       	ControlType.Edit, ControlType.Document);
+
 		add(controlMap, ControlKind.ToggleButton,  	ControlType.Button);
-		add(controlMap, ControlKind.ListView,  		ControlType.List);
+		add(controlMap, ControlKind.ListView,  		ControlType.List, ControlType.DataGrid);
 		add(controlMap, ControlKind.Tree,  			ControlType.Tree);
 		add(controlMap, ControlKind.Tooltip, 		ControlType.ToolTip);
 		add(controlMap, ControlKind.Image, 			ControlType.Image);

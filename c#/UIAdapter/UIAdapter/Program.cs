@@ -2055,7 +2055,8 @@ namespace UIAdapter
             List<AutomationElement> listItems = new List<AutomationElement>();
             while (child != null)
             {
-                if (child.Current.ControlType == ControlType.ListItem)
+                var ct = child.Current.ControlType;
+                if (ct == ControlType.ListItem || ct == ControlType.DataItem)
                 {
                     listItems.Add(child);
                 }
