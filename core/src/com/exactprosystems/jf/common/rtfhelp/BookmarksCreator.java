@@ -4,6 +4,66 @@ import java.io.*;
 
 public class BookmarksCreator extends FileWriter{
 
+    private String createCell(String text, boolean last)
+    {
+        String insertText =  text;
+        /*if (text.contains("\\{\\{*") && text.contains("*\\}\\}"))
+        {
+            insertText = text.replaceAll("\\{\\{*", "{\\b ").replaceAll("*\\}\\}", '\\}');
+        }*/
+        if (last){
+            return "\\s20\\ql\\nowidctlpar\\hyphpar0\\ltrpar\\cf1\\kerning1\\dbch\\af5\\langfe1081\\dbch\\af6\\afs24\\loch\\f3\\fs"
+                    + 20 + "\\lang1033\\intbl{\\rtlch \\ltrch\\loch "
+                    + insertText + "}\\cell\\row\\pard\\pard\\plain";
+        } else {
+            return "\\s20\\ql\\nowidctlpar\\hyphpar0\\ltrpar\\cf1\\kerning1\\dbch\\af5\\langfe1081\\dbch\\af6\\afs24\\loch\\f3\\fs"
+                    + 20 + "\\lang1033\\intbl{\\rtlch \\ltrch\\loch "
+                    + insertText + "}\\cell\\pard\\plain";
+        }
+    }
+
+    private String createRows(String initialText)
+    {
+        final String twoCells = "\\trowd\\trql\\ltrrow\\trpaddft3\\trpaddt0\\trpaddfl3\\trpaddl0\\trpaddfb3\\trpaddb0\\trpaddfr3\\trpaddr0\\clbrdrt\\brdrhair\\brdrw1\\brdrcf1\\clbrdrl"
+                + "\\brdrhair\\brdrw1\\brdrcf1\\clbrdrb\\brdrhair\\brdrw1\\brdrcf1\\cellx4819\\clbrdrt\\brdrhair\\brdrw1\\brdrcf1\\clbrdrl\\brdrhair\\brdrw1\\brdrcf1\\clbrdrb\\brdrhair"
+                + "\\brdrw1\\brdrcf1\\clbrdrr\\brdrhair\\brdrw1\\brdrcf1\\cellx9638\\pgndec\\pard\\plain \n";
+        final String threeCells = "\\trowd\\trql\\trleft0\\ltrrow\\trpaddft3\\trpaddt0\\trpaddfl3\\trpaddl0\\trpaddfb3\\trpaddb0\\trpaddfr3\\trpaddr0\\clbrdrt\\brdrs\\brdrw2\\brdrcf17"
+                + "\\clbrdrl\\brdrs\\brdrw2\\brdrcf17\\clbrdrb\\brdrs\\brdrw2\\brdrcf17\\cellx3212\\clbrdrt\\brdrs\\brdrw2\\brdrcf17\\clbrdrl\\brdrs\\brdrw2\\brdrcf17\\clbrdrb\\brdrs\\brdrw2"
+                + "\\brdrcf17\\cellx6425\\clbrdrt\\brdrs\\brdrw2\\brdrcf17\\clbrdrl\\brdrs\\brdrw2\\brdrcf17\\clbrdrb\\brdrs\\brdrw2\\brdrcf17\\clbrdrr\\brdrs\\brdrw2\\brdrcf17\\cellx9638\\pgndec\\pard\\plain \n";
+        final String fourCells = "\\trowd\\trql\\ltrrow\\trpaddft3\\trpaddt0\\trpaddfl3\\trpaddl0\\trpaddfb3\\trpaddb0\\trpaddfr3\\trpaddr0\\clbrdrt\\brdrhair\\brdrw1\\brdrcf1\\clbrdrl\\brdrhair"
+                + "\\brdrw1\\brdrcf1\\clbrdrb\\brdrhair\\brdrw1\\brdrcf1\\cellx2409\\clbrdrt\\brdrhair\\brdrw1\\brdrcf1\\clbrdrl\\brdrhair\\brdrw1\\brdrcf1\\clbrdrb\\brdrhair\\brdrw1\\brdrcf1"
+                + "\\cellx4819\\clbrdrt\\brdrhair\\brdrw1\\brdrcf1\\clbrdrl\\brdrhair\\brdrw1\\brdrcf1\\clbrdrb\\brdrhair\\brdrw1\\brdrcf1\\cellx7228\\clbrdrt\\brdrhair\\brdrw1\\brdrcf1"
+                + "\\clbrdrl\\brdrhair\\brdrw1\\brdrcf1\\clbrdrb\\brdrhair\\brdrw1\\brdrcf1\\clbrdrr\\brdrhair\\brdrw1\\brdrcf1\\cellx9638\\pgndec\\pard\\plain \n";
+        final String closeRow = "\\s0\\ql\\nowidctlpar\\hyphpar0\\ltrpar\\cf1\\kerning1\\dbch\\af5\\langfe1081\\dbch\\af6\\afs24\\alang1081\\loch\\f3\\fs20\\lang1033\\nowidctlpar\\hyphpar0\\rtlch \\ltrch\\loch";
+        StringBuilder sb = new StringBuilder();
+        String [] cells = initialText.split("\\\\\\{\\\\\\{\\+");
+        switch (cells.length-1){
+            case 2:
+                sb.append(twoCells);
+                break;
+            case 3:
+                sb.append(threeCells);
+                break;
+            case 4:
+                sb.append(fourCells);
+                break;
+
+            default:
+                break;
+        }
+        for (int i = 1; i < cells.length; i++){
+            if (i != cells.length-1){
+                sb.append(createCell(cells[i].replace("+\\}\\}", ""), false));
+            }
+            else
+            {
+                sb.append(createCell(cells[i].replace("+\\}\\}", ""), true));
+            }
+        }
+        sb.append(closeRow);
+        return sb.toString();
+    }
+
     public BookmarksCreator(String fileName, boolean append) throws IOException {
         super(fileName, append);
     }
@@ -26,6 +86,12 @@ public class BookmarksCreator extends FileWriter{
 
     @Override
     public Writer append(CharSequence csq) throws IOException {
+        if (csq.toString().contains("\\{\\{=") && csq.toString().contains("=\\}\\}"))
+        {
+            String initialText = csq.toString().replace("{\\fs20 ", "").replace("\\{\\{=", "").replace("=\\}\\}", "");
+            String text = initialText.substring(0, initialText.length() - 2);
+            return super.append(createRows(text));
+        }
         String[] strs = csq.toString().split("\\s+");
         boolean addSpace = true;
         if (strs.length > 1){
