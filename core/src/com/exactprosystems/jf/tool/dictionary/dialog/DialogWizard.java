@@ -434,6 +434,14 @@ public class DialogWizard
 		{
 			return;
 		}
+		if (kind == LocatorFieldKind.TEXT)
+		{
+			String textContent = node.getTextContent();
+			if (isStable(textContent))
+			{
+				list.add(new Pair(kind, textContent));
+			}
+		}
 		String attrName = this.pluginInfo.attributeName(kind);
 		if (attrName == null)
 		{
@@ -529,7 +537,11 @@ public class DialogWizard
         {
             return false;
         }
-        return identifier.matches("^[a-zA-Z\\s]+$");
+		if (identifier.split(" ").length > 2)
+		{
+			return false;
+		}
+		return identifier.matches("^[a-zA-Z\\s]+$");
     }
 	
 	//----------------------------------------------------------------------------------------------
@@ -812,7 +824,7 @@ public class DialogWizard
 
 	private ElementWizardBean create(int number, AbstractControl control, boolean isNew)
 	{
-		return new ElementWizardBean(control, number, control.getID(), control.getBindedClass(), Str.IsNullOrEmpty(control.getXpath()), isNew, 0);
+		return new ElementWizardBean(control, number, control.getID(), control.getBindedClass(), !Str.IsNullOrEmpty(control.getXpath()), isNew, 0);
 	}
 
 	private void updateBean(AbstractControl control, ElementWizardBean bean)
