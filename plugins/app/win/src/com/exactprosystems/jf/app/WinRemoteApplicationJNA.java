@@ -605,6 +605,8 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 		{
 			node.setUserData(IRemoteApplication.rectangleName, this.operationExecutor.getRectangle(parent), null);
 		}
+		String isVisible = this.driver.elementAttribute(parent, AttributeKind.VISIBLE);
+		node.setUserData(IRemoteApplication.visibleName, Boolean.valueOf(isVisible), null);
 		try
 		{
 			for (AttributeKind kind : AttributeKind.values())
