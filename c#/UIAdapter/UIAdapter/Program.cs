@@ -337,6 +337,13 @@ namespace UIAdapter
                 List<AutomationElement> listItems = getListItems(owner);
                 List<string> namesList = getNamesOfListItems(listItems);
                 //TODO check if we have comboBox with checkboxes
+                
+                if (namesList.Count == 0)
+                {
+                    string result = string.Join(SEPARATOR_COMMA, namesList);
+                    logger.All("method GetList", getMilis() - startMethod);
+                    return ConvertString.replaceNonASCIIToUnicode(result);
+                }
                 bool isCheckboxes = true;
                 string firstElement = namesList[0];
                 for (int i = 1; i < namesList.Count; i++)
@@ -347,6 +354,7 @@ namespace UIAdapter
                         break;
                     }
                 }
+
                 //TODO this code is unbelievable
                 if (isCheckboxes)
                 {
