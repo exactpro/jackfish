@@ -15,7 +15,7 @@ namespace UIAdapter
             Task<AutomationElement[]> task = Task<AutomationElement[]>.Factory.StartNew(() =>
             {
                 AutomationElement[] ret = null;
-                if (Xpath != null)
+                if (!String.IsNullOrEmpty(Xpath))
                 {
                     long start = Program.getMilis();
                     ret = WinMatcher.FindByXpath(owner, controlKind, Uid, Xpath, Clazz, Name, Title, Text);
