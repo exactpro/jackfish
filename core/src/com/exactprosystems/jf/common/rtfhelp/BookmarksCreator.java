@@ -7,10 +7,22 @@ public class BookmarksCreator extends FileWriter{
     private String createCell(String text, boolean last)
     {
         String insertText =  text;
-        /*if (text.contains("\\{\\{*") && text.contains("*\\}\\}"))
+        if (text.contains("\\{\\{*") && text.contains("*\\}\\}"))
         {
-            insertText = text.replaceAll("\\{\\{*", "{\\b ").replaceAll("*\\}\\}", '\\}');
-        }*/
+            StringBuilder sb = new StringBuilder();
+            for (String s : text.split("\\s+"))
+            {
+                if (s.contains("\\{\\{*") && s.contains("*\\}\\}"))
+                {
+                    sb.append(s.replace(s, "{\\b " + s.replace("\\{\\{*", "").replace("*\\}\\}", "") + '}')).append(" ");
+                }
+                else
+                {
+                    sb.append(s).append(" ");
+                }
+            }
+            insertText = sb.toString();
+        }
         if (last){
             return "\\s20\\ql\\nowidctlpar\\hyphpar0\\ltrpar\\cf1\\kerning1\\dbch\\af5\\langfe1081\\dbch\\af6\\afs24\\loch\\f3\\fs"
                     + 20 + "\\lang1033\\intbl{\\rtlch \\ltrch\\loch "
