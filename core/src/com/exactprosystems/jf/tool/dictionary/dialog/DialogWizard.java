@@ -523,21 +523,15 @@ public class DialogWizard
         return this.matcher.findAll(this.document, locator);
     }
 
-	private boolean isStable(String identifier)
-	{
-		if (Str.IsNullOrEmpty(identifier))
-		{
-			return false;
-		}
-		else if (identifier.matches(".*\\d+.*"))
-		{
-			return false;
-		}
-		else
-		{
-			return true;
-		}
-	}
+    private boolean isStable(String identifier)
+    {
+        if (Str.IsNullOrEmpty(identifier))
+        {
+            return false;
+        }
+        return identifier.matches("^[a-zA-Z\\s]+$");
+    }
+	
 	//----------------------------------------------------------------------------------------------
 
 
