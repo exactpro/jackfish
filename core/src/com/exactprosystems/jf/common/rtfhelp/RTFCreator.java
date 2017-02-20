@@ -134,8 +134,8 @@ class RTFCreator {
         contents.add(p(text("1. "), text (" "), hyperlink(link + "Introduction", p("Introduction" +reverseTrait))));
         contents.add(p(text("2. "), text (" "), hyperlink(link + "Architecture", p("Architecture" +reverseTrait))));
         contents.add(p(text("3. "), text (" "), hyperlink(link + "Requirements", p("System Requirements" +reverseTrait))));
-        contents.add(p(text("4. "), text (" "), hyperlink(link + "MVEL", p("MVEL" +reverseTrait))));
-        contents.add(p(text("5. "), text (" "), hyperlink(link + "panel", p("Configuration panel" +reverseTrait))));
+        contents.add(p(text("4. "), text (" "), hyperlink(link + "panel", p("Configuration panel" +reverseTrait))));
+        contents.add(p(text("5. "), text (" "), hyperlink(link + "MVEL", p("MVEL" +reverseTrait))));
         contents.add(p("6. Actions: "));
         int count = 0;
         int innerCount = 0;
@@ -442,7 +442,7 @@ class RTFCreator {
             if (strs.length != 0)
             {
                 //rows
-                if (line.contains("{{=") && line.contains("=}}"))
+                /*if (line.contains("{{=") && line.contains("=}}"))
                 {
                     for (String s : strs)
                     {
@@ -479,7 +479,7 @@ class RTFCreator {
                     list.add(row(text.toArray(arr)));
                     text.clear();
                 }
-                else if (line.contains("{{#") && line.contains("#}}")) //code
+                else*/ if (line.contains("{{#") && line.contains("#}}")) //code
                 {
                     for (String s : strs)
                     {
@@ -490,7 +490,7 @@ class RTFCreator {
                         sb.setLength(0);
                     }
                 }
-                else if (line.contains("{{!") && line.contains("!}}")) //code
+                else if (line.contains("{{!") && line.contains("!}}")) //header
                 {
                     for (int i = 0; i < strs.length; i++){
                         sb.append(replaceChars(strs[i]));
