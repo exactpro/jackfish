@@ -23,7 +23,7 @@ namespace UIAdapter.Tables
             throw new Exception("Framework " + frameworkId + " not found");
         }
 
-        private static String GetFrameworkId(AutomationElement element)
+        public static String GetFrameworkId(AutomationElement element)
         {
             TreeWalker walker = TreeWalker.RawViewWalker;
             string frameworkId = element.Current.FrameworkId;
