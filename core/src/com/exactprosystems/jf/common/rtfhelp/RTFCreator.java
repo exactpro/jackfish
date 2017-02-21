@@ -387,11 +387,11 @@ class RTFCreator {
         }
     }
 
-    private String createTable(String[][] text)
+    private String createTable(List<List<String>> text)
     {
         StringBuilder sb = new StringBuilder();
         sb.append("{{=");
-        for (String[] row : text){
+        for (List<String> row : text){
             sb.append("{{-");
             for (String cell : row)
             {
@@ -414,20 +414,32 @@ class RTFCreator {
                 p(font(0, fontSize(48, bold("JackFish"))),  text("FirstPageLine")),
                 p(font(0, fontSize(36, bold("User guide")))),
                 p(),
-                row(fontSize(fontSize, "Version:"), fontSize(fontSize, VersionInfo.getVersion())),
-                row(fontSize(fontSize, "Release date:"), fontSize(fontSize, currentDate))
+                p(text(createTable(
+                        new ArrayList<List<String>>(){{
+                            add(new ArrayList<String>(){{add("Version"); add(VersionInfo.getVersion());}});
+                            add(new ArrayList<String>(){{add("Release date:"); add(currentDate);}});
+                        }}
+                )))
         );
         document.section(
                 createSectionFormat(),
                 p(font(0, fontSize(30, bold("Document Information")))),
                 p(),
-                row(fontSize(fontSize, bold("Date")), fontSize(fontSize, bold("Version")), fontSize(fontSize, bold("By")), fontSize(fontSize, bold("Comments"))),
-                row(fontSize(fontSize, currentDate), fontSize(fontSize, VersionInfo.getVersion()), fontSize(fontSize, "Valery Florov"), fontSize(fontSize, "Initial Draft")),
+                p(text(createTable(
+                        new ArrayList<List<String>>(){{
+                            add(new ArrayList<String>(){{add("{{*Date*}}"); add("{{*Version*}}"); add("{{*By*}}"); add("{{*Comments*}}");}});
+                            add(new ArrayList<String>(){{add(currentDate); add(VersionInfo.getVersion()); add("Valery Florov"); add("Initial Draft");}});
+                        }}
+                ))),
                 p(),
                 p(font(0, fontSize(30, bold("Abbreviations")))),
                 p(),
-                row(fontSize(fontSize, bold("Abbreviation")), fontSize(fontSize, bold("Meaning"))),
-                row(fontSize(fontSize, "JF"), fontSize(fontSize, "JackFish"))
+                p(text(createTable(
+                        new ArrayList<List<String>>(){{
+                            add(new ArrayList<String>(){{add("{{*Abbreviation*}}"); add("{{*Meaning*}}");}});
+                            add(new ArrayList<String>(){{add("JF"); add("JackFish");}});
+                        }}
+                )))
         );
     }
 

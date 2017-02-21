@@ -24,6 +24,7 @@ public class BookmarksCreator extends FileWriter{
             insertText = sb.toString().replace("\\tab", "");
         }
         if (last){
+            //cf - color
             return "\\s20\\ql\\nowidctlpar\\hyphpar0\\ltrpar\\cf1\\kerning1\\dbch\\af5\\langfe1081\\dbch\\af6\\afs24\\loch\\f3\\fs"
                     + 20 + "\\lang1033\\intbl{\\rtlch \\ltrch\\loch "
                     + insertText + "}\\cell\\row\\pard";
@@ -35,7 +36,7 @@ public class BookmarksCreator extends FileWriter{
     }
 
     private String createRows(String initialText)
-    {
+    {   //brdrcf - color
         final String twoCells = "\\trowd\\trql\\ltrrow\\trpaddft3\\trpaddt0\\trpaddfl3\\trpaddl0\\trpaddfb3\\trpaddb0\\trpaddfr3\\trpaddr0\\clbrdrt\\brdrhair\\brdrw1\\brdrcf1\\clbrdrl"
                 + "\\brdrhair\\brdrw1\\brdrcf1\\clbrdrb\\brdrhair\\brdrw1\\brdrcf1\\cellx4819\\clbrdrt\\brdrhair\\brdrw1\\brdrcf1\\clbrdrl\\brdrhair\\brdrw1\\brdrcf1\\clbrdrb\\brdrhair"
                 + "\\brdrw1\\brdrcf1\\clbrdrr\\brdrhair\\brdrw1\\brdrcf1\\cellx9638\\pgndec\\pard\\plain \n";
@@ -137,6 +138,7 @@ public class BookmarksCreator extends FileWriter{
 
     @Override
     public Writer append(CharSequence csq) throws IOException {
+        System.out.println(csq);
         if (csq.toString().contains("\\{\\{=") && csq.toString().contains("=\\}\\}"))
         {
             String initialText = csq.toString().replace("\\{\\{=", "").replace("=\\}\\}", "");
