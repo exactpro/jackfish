@@ -833,7 +833,7 @@ public class DialogWizard
 		bean.setControlKind(control.getBindedClass());
 		bean.setId(control.getID());
 		bean.setIsNew(true);
-		bean.setXpath((control.getXpath() != null && !control.getXpath().isEmpty()));
+		bean.setXpath(!Str.IsNullOrEmpty(control.getXpath()));
 	}
 	//endregion
 }
