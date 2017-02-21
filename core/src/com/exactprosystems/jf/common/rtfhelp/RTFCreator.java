@@ -387,6 +387,22 @@ class RTFCreator {
         }
     }
 
+    private String createTable(List<List<String>> text)
+    {
+        StringBuilder sb = new StringBuilder();
+        sb.append("{{=");
+        for (List<String> row : text){
+            sb.append("{{-");
+            for (String cell : row)
+            {
+                sb.append("{{+").append(cell).append("+}}");
+            }
+            sb.append("-}}");
+        }
+        sb.append("=}}");
+        return sb.toString();
+    }
+
     void prepareDocument() throws IOException {
         deleteDocument(path);
         document.documentFormatting(RtfDocfmt.footnoteNumberingArabic());
@@ -398,20 +414,32 @@ class RTFCreator {
                 p(font(0, fontSize(48, bold("JackFish"))),  text("FirstPageLine")),
                 p(font(0, fontSize(36, bold("User guide")))),
                 p(),
-                row(fontSize(fontSize, "Version:"), fontSize(fontSize, VersionInfo.getVersion())),
-                row(fontSize(fontSize, "Release date:"), fontSize(fontSize, currentDate))
+                p(text(createTable(
+                        new ArrayList<List<String>>(){{
+                            add(new ArrayList<String>(){{add("Version"); add(VersionInfo.getVersion());}});
+                            add(new ArrayList<String>(){{add("Release date:"); add(currentDate);}});
+                        }}
+                )))
         );
         document.section(
                 createSectionFormat(),
                 p(font(0, fontSize(30, bold("Document Information")))),
                 p(),
-                row(fontSize(fontSize, bold("Date")), fontSize(fontSize, bold("Version")), fontSize(fontSize, bold("By")), fontSize(fontSize, bold("Comments"))),
-                row(fontSize(fontSize, currentDate), fontSize(fontSize, VersionInfo.getVersion()), fontSize(fontSize, "Valery Florov"), fontSize(fontSize, "Initial Draft")),
+                p(text(createTable(
+                        new ArrayList<List<String>>(){{
+                            add(new ArrayList<String>(){{add("{{*Date*}}"); add("{{*Version*}}"); add("{{*By*}}"); add("{{*Comments*}}");}});
+                            add(new ArrayList<String>(){{add(currentDate); add(VersionInfo.getVersion()); add("Valery Florov"); add("Initial Draft");}});
+                        }}
+                ))),
                 p(),
                 p(font(0, fontSize(30, bold("Abbreviations")))),
                 p(),
-                row(fontSize(fontSize, bold("Abbreviation")), fontSize(fontSize, bold("Meaning"))),
-                row(fontSize(fontSize, "JF"), fontSize(fontSize, "JackFish"))
+                p(text(createTable(
+                        new ArrayList<List<String>>(){{
+                            add(new ArrayList<String>(){{add("{{*Abbreviation*}}"); add("{{*Meaning*}}");}});
+                            add(new ArrayList<String>(){{add("JF"); add("JackFish");}});
+                        }}
+                )))
         );
     }
 
@@ -420,8 +448,9 @@ class RTFCreator {
         return s.replace("(?U)[\\pP\\s]", "").trim()
                 .replace("{{&", "").replace("&}}", "")  //font2
                 .replace("{{*", "").replace("*}}", "")  //bolder
-                .replace("{{=", "").replace("=}}", "")  //row
-                .replace("{{-", "").replace("-}}", "")  //cell
+                .replace("{{=", "").replace("=}}", "")  //table
+                .replace("{{-", "").replace("-}}", "")  //row
+                .replace("{{+", "").replace("+}}", "")  //cell
                 .replace("{{$", "").replace("$}}", "")  //italic
                 .replace("{{#", "").replace("#}}", "")  //code
                 .replace("{{!", "").replace("!}}", "")  //header
@@ -431,122 +460,105 @@ class RTFCreator {
     private void createDocumentation(InputStream stream, List<RtfPara> list) throws IOException
     {
         BufferedReader br = new BufferedReader(new InputStreamReader(stream));
+        boolean isTable = false;
+        StringBuilder sb = new StringBuilder();
 
         for(String line; (line = br.readLine()) != null; ) {
             String[] strs = line.split("\\s+");
             ArrayList<RtfText> text = new ArrayList<>();
-            StringBuilder sb = new StringBuilder();
+
             boolean header = false;
-            boolean cell = false;
 
             if (strs.length != 0)
             {
                 //rows
-                /*if (line.contains("{{=") && line.contains("=}}"))
+                if (line.contains("{{=") || isTable)
                 {
-                    for (String s : strs)
-                    {
-                        if (s.contains("{{*Operator*}}") || s.contains("{{*Description*}}") || s.contains("{{*Example*}}"))
-                        {
-                            text.add(bold(fontSize(fontSize, replaceChars(s))));
-                        }
-                        else if (s.contains("{{-") && s.contains("-}}"))
-                        {
-                            text.add(fontSize(fontSize, replaceChars(s)));
-                        }
-                        else if (s.contains("{{-"))
-                        {
-                            sb.append(replaceChars(s)).append(" ");
-                            cell = true;
-                        }
-                        else if (s.contains("-}}") && cell)
-                        {
-                            sb.append(replaceChars(s));
-                            cell = false;
-                            text.add(fontSize(fontSize, sb.toString()));
-                            sb.setLength(0);
-                        }
-                        else if (cell)
-                        {
-                            sb.append(s).append(" ");
-                        }
-                        else
-                        {
+                    isTable = true;
+                    sb.append(line);
 
-                        }
-                    }
-                    RtfText[] arr = new RtfText[text.size()];
-                    list.add(row(text.toArray(arr)));
-                    text.clear();
-                }
-                else*/ if (line.contains("{{#") && line.contains("#}}")) //code
-                {
-                    for (String s : strs)
+                    if (line.contains("=}}"))
                     {
-                        sb.append(replaceChars(s)).append(" ");
-                    }
-                    if (sb.length() != 0){
-                        list.add(p(font(1, fontSize(fontSize, sb.toString()))));
+                        isTable = false;
+                        list.add(p(sb.toString()));
                         sb.setLength(0);
                     }
                 }
-                else if (line.contains("{{!") && line.contains("!}}")) //header
-                {
-                    for (int i = 0; i < strs.length; i++){
-                        sb.append(replaceChars(strs[i]));
-                        if (i != strs.length -1){
-                            sb.append(" ");
-                        }
-                    }
-                    if (sb.length() != 0){
-                        list.add(p(tab(), tab(), tab(), tab(), font(0, fontSize(30, bold(sb.toString()+trait))), lineBreak()));
-                        sb.setLength(0);
-                    }
-                }
-                else
-                {
-                    for (String s : strs)
+                else {
+                    if (sb.length() != 0)
                     {
-                        if (s.contains("{{&") && s.contains("&}}")){
-                            if (sb.length() !=0){
-                                text.add(fontSize(fontSize, sb.toString()));
-                                text.add(fontSize(fontSize, " "));
-                                list.add(p(fontSize(fontSize, sb.toString())));
-                                sb.setLength(0);
-                            }
-                            list.add(p(font(0, fontSize(fontSize, replaceChars(s)))));
-                        }
-                        else if (s.startsWith("{{&"))
+                        System.out.println(sb.toString());
+                    }
+                    if (line.contains("{{#") && line.contains("#}}")) //code
+                    {
+                        for (String s : strs)
                         {
                             sb.append(replaceChars(s)).append(" ");
-                            header = true;
                         }
-                        else if (header && s.contains("&}}"))
-                        {
-                            sb.append(replaceChars(s));
-                            list.add(p(font(0, fontSize(fontSize, sb.toString()))));
+                        if (sb.length() != 0){
+                            list.add(p(font(1, fontSize(fontSize, sb.toString()))));
                             sb.setLength(0);
-                            header = false;
-                        }
-                        else if (header)
-                        {
-                            sb.append(s).append(" ");
-                        }
-                        else if (s.equals("PutIntroPictureHere"))
-                        {
-                            list.add(p(picture(pictureIntro).type(RtfPicture.PictureType.PNG)));
-                        }
-                        else
-                        {
-                            sb.append(s).append(" ");
                         }
                     }
-                    if (sb.length() != 0){
-                        text.add(fontSize(fontSize, sb.toString()));
-                        text.add(fontSize(fontSize, " "));
-                        RtfText[] arr = new RtfText[text.size()];
-                        list.add(p(text.toArray(arr)));
-                        text.clear();
+                    else if (line.contains("{{!") && line.contains("!}}")) //header
+                    {
+                        for (int i = 0; i < strs.length; i++){
+                            sb.append(replaceChars(strs[i]));
+                            if (i != strs.length -1){
+                                sb.append(" ");
+                            }
+                        }
+                        if (sb.length() != 0){
+                            list.add(p(tab(), tab(), tab(), tab(), font(0, fontSize(30, bold(sb.toString()+trait))), lineBreak()));
+                            sb.setLength(0);
+                        }
+                    }
+                    else
+                    {
+                        for (String s : strs)
+                        {
+                            if (s.contains("{{&") && s.contains("&}}")){
+                                if (sb.length() !=0){
+                                    text.add(fontSize(fontSize, sb.toString()));
+                                    text.add(fontSize(fontSize, " "));
+                                    list.add(p(fontSize(fontSize, sb.toString())));
+                                    sb.setLength(0);
+                                }
+                                list.add(p(font(0, fontSize(fontSize, replaceChars(s)))));
+                            }
+                            else if (s.startsWith("{{&"))
+                            {
+                                sb.append(replaceChars(s)).append(" ");
+                                header = true;
+                            }
+                            else if (header && s.contains("&}}"))
+                            {
+                                sb.append(replaceChars(s));
+                                list.add(p(font(0, fontSize(fontSize, sb.toString()))));
+                                sb.setLength(0);
+                                header = false;
+                            }
+                            else if (header)
+                            {
+                                sb.append(s).append(" ");
+                            }
+                            else if (s.equals("PutIntroPictureHere"))
+                            {
+                                list.add(p(picture(pictureIntro).type(RtfPicture.PictureType.PNG)));
+                            }
+                            else
+                            {
+                                sb.append(s).append(" ");
+                            }
+                        }
+                        if (sb.length() != 0){
+                            text.add(fontSize(fontSize, sb.toString()));
+                            text.add(fontSize(fontSize, " "));
+                            RtfText[] arr = new RtfText[text.size()];
+                            list.add(p(text.toArray(arr)));
+                            text.clear();
+                            sb.setLength(0);
+                        }
                     }
                 }
             }

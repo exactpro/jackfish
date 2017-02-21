@@ -344,7 +344,7 @@ namespace UIAdapter
                     logger.All("method GetList", getMilis() - startMethod);
                     return ConvertString.replaceNonASCIIToUnicode(result);
                 }
-                bool isCheckboxes = true;
+                bool isCheckboxes = TableFactory.GetFrameworkId(owner).Equals("Silverlight");
                 string firstElement = namesList[0];
                 for (int i = 1; i < namesList.Count; i++)
                 {

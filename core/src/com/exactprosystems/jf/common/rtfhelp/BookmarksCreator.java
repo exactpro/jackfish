@@ -21,12 +21,13 @@ public class BookmarksCreator extends FileWriter{
                     sb.append(s).append(" ");
                 }
             }
-            insertText = sb.toString();
+            insertText = sb.toString().replace("\\tab", "");
         }
         if (last){
+            //cf - color
             return "\\s20\\ql\\nowidctlpar\\hyphpar0\\ltrpar\\cf1\\kerning1\\dbch\\af5\\langfe1081\\dbch\\af6\\afs24\\loch\\f3\\fs"
                     + 20 + "\\lang1033\\intbl{\\rtlch \\ltrch\\loch "
-                    + insertText + "}\\cell\\row\\pard\\pard\\plain";
+                    + insertText + "}\\cell\\row\\pard";
         } else {
             return "\\s20\\ql\\nowidctlpar\\hyphpar0\\ltrpar\\cf1\\kerning1\\dbch\\af5\\langfe1081\\dbch\\af6\\afs24\\loch\\f3\\fs"
                     + 20 + "\\lang1033\\intbl{\\rtlch \\ltrch\\loch "
@@ -35,7 +36,7 @@ public class BookmarksCreator extends FileWriter{
     }
 
     private String createRows(String initialText)
-    {
+    {   //brdrcf - color
         final String twoCells = "\\trowd\\trql\\ltrrow\\trpaddft3\\trpaddt0\\trpaddfl3\\trpaddl0\\trpaddfb3\\trpaddb0\\trpaddfr3\\trpaddr0\\clbrdrt\\brdrhair\\brdrw1\\brdrcf1\\clbrdrl"
                 + "\\brdrhair\\brdrw1\\brdrcf1\\clbrdrb\\brdrhair\\brdrw1\\brdrcf1\\cellx4819\\clbrdrt\\brdrhair\\brdrw1\\brdrcf1\\clbrdrl\\brdrhair\\brdrw1\\brdrcf1\\clbrdrb\\brdrhair"
                 + "\\brdrw1\\brdrcf1\\clbrdrr\\brdrhair\\brdrw1\\brdrcf1\\cellx9638\\pgndec\\pard\\plain \n";
@@ -46,33 +47,72 @@ public class BookmarksCreator extends FileWriter{
                 + "\\brdrw1\\brdrcf1\\clbrdrb\\brdrhair\\brdrw1\\brdrcf1\\cellx2409\\clbrdrt\\brdrhair\\brdrw1\\brdrcf1\\clbrdrl\\brdrhair\\brdrw1\\brdrcf1\\clbrdrb\\brdrhair\\brdrw1\\brdrcf1"
                 + "\\cellx4819\\clbrdrt\\brdrhair\\brdrw1\\brdrcf1\\clbrdrl\\brdrhair\\brdrw1\\brdrcf1\\clbrdrb\\brdrhair\\brdrw1\\brdrcf1\\cellx7228\\clbrdrt\\brdrhair\\brdrw1\\brdrcf1"
                 + "\\clbrdrl\\brdrhair\\brdrw1\\brdrcf1\\clbrdrb\\brdrhair\\brdrw1\\brdrcf1\\clbrdrr\\brdrhair\\brdrw1\\brdrcf1\\cellx9638\\pgndec\\pard\\plain \n";
-        final String closeRow = "\\s0\\ql\\nowidctlpar\\hyphpar0\\ltrpar\\cf1\\kerning1\\dbch\\af5\\langfe1081\\dbch\\af6\\afs24\\alang1081\\loch\\f3\\fs20\\lang1033\\nowidctlpar\\hyphpar0\\rtlch \\ltrch\\loch";
+        final String twoSeparator = "\\trowd\\trql\\ltrrow\\trpaddft3\\trpaddt0\\trpaddfl3\\trpaddl0\\trpaddfb3\\trpaddb0\\trpaddfr3\\trpaddr0\\clbrdrl\\brdrhair\\brdrw1\\brdrcf1\\clbrdrb"
+                + "\\brdrhair\\brdrw1\\brdrcf1\\cellx4819\\clbrdrl\\brdrhair\\brdrw1\\brdrcf1\\clbrdrb\\brdrhair\\brdrw1\\brdrcf1\\clbrdrr\\brdrhair\\brdrw1\\brdrcf1\\cellx9638\\pard\\plain";
+        final String threeSeparator = "\\trowd\\trql\\trleft0\\ltrrow\\trpaddft3\\trpaddt0\\trpaddfl3\\trpaddl0\\trpaddfb3\\trpaddb0\\trpaddfr3\\trpaddr0\\clbrdrl\\brdrs\\brdrw15\\brdrcf17"
+                + "\\clbrdrb\\brdrs\\brdrw15\\brdrcf17\\cellx3212\\clbrdrl\\brdrs\\brdrw15\\brdrcf17\\clbrdrb\\brdrs\\brdrw15\\brdrcf17\\cellx6425\\clbrdrl\\brdrs\\brdrw15\\brdrcf17\\clbrdrb"
+                + "\\brdrs\\brdrw15\\brdrcf17\\clbrdrr\\brdrs\\brdrw15\\brdrcf17\\cellx9638\\pard\\plain \n";
+        final String fourSeparator = "\\trowd\\trql\\ltrrow\\trpaddft3\\trpaddt0\\trpaddfl3\\trpaddl0\\trpaddfb3\\trpaddb0\\trpaddfr3\\trpaddr0\\clbrdrl\\brdrhair\\brdrw1\\brdrcf1\\clbrdrb"
+                + "\\brdrhair\\brdrw1\\brdrcf1\\cellx2409\\clbrdrl\\brdrhair\\brdrw1\\brdrcf1\\clbrdrb\\brdrhair\\brdrw1\\brdrcf1\\cellx4819\\clbrdrl\\brdrhair\\brdrw1\\brdrcf1\\clbrdrb\\brdrhair"
+                + "\\brdrw1\\brdrcf1\\cellx7228\\clbrdrl\\brdrhair\\brdrw1\\brdrcf1\\clbrdrb\\brdrhair\\brdrw1\\brdrcf1\\clbrdrr\\brdrhair\\brdrw1\\brdrcf1\\cellx9638\\pard\\plain";
+        int constant = 0;
         StringBuilder sb = new StringBuilder();
-        String [] cells = initialText.split("\\\\\\{\\\\\\{\\+");
-        switch (cells.length-1){
-            case 2:
-                sb.append(twoCells);
-                break;
-            case 3:
-                sb.append(threeCells);
-                break;
-            case 4:
-                sb.append(fourCells);
-                break;
+        String [] rows = initialText.split("\\\\\\{\\\\\\{-");
+        if (rows.length >= 1){
+            String[] c = rows[1].split("\\\\\\{\\\\\\{\\+");
+            switch (c.length-1){
+                case 2:
+                    sb.append(twoCells);
+                    constant = 2;
+                    break;
+                case 3:
+                    sb.append(threeCells);
+                    constant = 3;
+                    break;
+                case 4:
+                    sb.append(fourCells);
+                    constant = 4;
+                    break;
 
-            default:
-                break;
-        }
-        for (int i = 1; i < cells.length; i++){
-            if (i != cells.length-1){
-                sb.append(createCell(cells[i].replace("+\\}\\}", ""), false));
+                default:
+                    break;
             }
-            else
+        }
+        for (int i = 1; i < rows.length; i++)
+        {
+            String[] cells = rows[i].replace("-\\}\\}", "").split("\\\\\\{\\\\\\{\\+");
+            for (int j = 1; j < cells.length; j++)
             {
-                sb.append(createCell(cells[i].replace("+\\}\\}", ""), true));
+                if (j != cells.length-1){
+                    sb.append(createCell(cells[j].replace("+\\}\\}", ""), false));
+                }
+                else
+                {
+                    sb.append(createCell(cells[j].replace("+\\}\\}", ""), true));
+                    if (i == rows.length -1)
+                    {
+                        sb.append("\\pard\\plain");
+                    }
+                    else
+                    {
+                        switch (constant){
+                            case 2:
+                                sb.append(twoSeparator);
+                                break;
+                            case 3:
+                                sb.append(threeSeparator);
+                                break;
+                            case 4:
+                                sb.append(fourSeparator);
+                                break;
+
+                            default:
+                                break;
+                        }
+                    }
+                }
             }
         }
-        sb.append(closeRow);
         return sb.toString();
     }
 
@@ -98,11 +138,11 @@ public class BookmarksCreator extends FileWriter{
 
     @Override
     public Writer append(CharSequence csq) throws IOException {
+        System.out.println(csq);
         if (csq.toString().contains("\\{\\{=") && csq.toString().contains("=\\}\\}"))
         {
-            String initialText = csq.toString().replace("{\\fs20 ", "").replace("\\{\\{=", "").replace("=\\}\\}", "");
-            String text = initialText.substring(0, initialText.length() - 2);
-            return super.append(createRows(text));
+            String initialText = csq.toString().replace("\\{\\{=", "").replace("=\\}\\}", "");
+            return super.append(createRows(initialText));
         }
         String[] strs = csq.toString().split("\\s+");
         boolean addSpace = true;
