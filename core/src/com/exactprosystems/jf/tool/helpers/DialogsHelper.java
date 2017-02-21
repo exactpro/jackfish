@@ -625,6 +625,8 @@ public abstract class DialogsHelper
 	public static Alert createGitDialog(String title, Parent parent)
 	{
 		Alert dialog = new Alert(Alert.AlertType.INFORMATION);
+		dialog.initModality(Modality.WINDOW_MODAL);
+		dialog.initOwner(Common.node);
 		dialog.setResult(new ButtonType("", ButtonBar.ButtonData.CANCEL_CLOSE));
 		dialog.setResizable(true);
 		dialog.getDialogPane().getStylesheets().addAll(Common.currentThemesPaths());
