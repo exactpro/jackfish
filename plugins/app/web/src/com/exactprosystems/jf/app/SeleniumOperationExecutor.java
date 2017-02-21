@@ -371,8 +371,15 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 			try
 			{
 				List<Map<String, String>> list = new ArrayList<>();
-
-				List<String> headers = getHeaders(table, useNumericHeader, header, columns);
+				List<String> headers = null;
+				if(header != null)
+				{
+					headers = getHeadersFromHeaderField(header);
+				}
+				else
+				{
+					headers = getHeaders(table, columns);
+				}
 
 				List<WebElement> rows = findRows(additional, table);
 
@@ -416,7 +423,16 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 			try
 			{
 				List<String> result = new ArrayList<>();
-				List<String> headers = getHeaders(table, useNumericHeader, header, columns);
+				List<String> headers = null;
+				if(header != null)
+				{
+					headers = getHeadersFromHeaderField(header);
+				}
+				else
+				{
+					headers = getHeaders(table, columns);
+				}
+
 				List<WebElement> rows = findRows(additional, table);
 				for (int i = 0; i < rows.size(); i++)
 				{
@@ -453,7 +469,16 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 		{
 			try
 			{
-				List<String> headers = getHeaders(table, useNumericHeader, header, columns);
+				List<String> headers = null;
+				if(header != null)
+				{
+					headers = getHeadersFromHeaderField(header);
+				}
+				else
+				{
+					headers = getHeaders(table, columns);
+				}
+
 				this.logger.debug("Found headers : " + headers);
 				List<WebElement> rows = findRows(additional, table);
 				this.logger.debug("Found rows. Rows size : " + rows.size());
@@ -489,7 +514,16 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 		{
 			try
 			{
-				List<String> headers = getHeaders(component, useNumericHeader, header, columns);
+				List<String> headers = null;
+				if(header != null)
+				{
+					headers = getHeadersFromHeaderField(header);
+				}
+				else
+				{
+					headers = getHeaders(component, columns);
+				}
+
 				List<WebElement> rows = findRows(additional, component);
 
 				if (rows.isEmpty())
@@ -526,7 +560,15 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 		String outerHTML = component.getAttribute("outerHTML");
 		Document doc = Jsoup.parse(outerHTML);
 		AtomicBoolean ab = new AtomicBoolean(false);
-		List<String> headers = getHeadersFromHTML(outerHTML, ab, columns);
+		List<String> headers = null;
+		if(header != null)
+		{
+			headers = getHeadersFromHeaderField(header);
+		}
+		else
+		{
+			headers = getHeadersFromHTML(outerHTML, ab, columns);
+		}
 		logger.debug("Headers : " + headers);
 		Elements rows = findRows(doc);
 		if (ab.get())
@@ -556,6 +598,21 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 		}
 		logger.debug("############");
 		return res;
+	}
+
+	private List<String> getHeadersFromHeaderField(Locator header) throws Exception {
+		WebElement headerTable = find(null, header);
+		List<WebElement> thRows = headerTable.findElements(By.tagName(tag_th));
+		if (!thRows.isEmpty())
+		{
+			return Converter.convertColumns(convertColumnsToHeaders(thRows, null, new WebElementText()));
+		}
+		List<WebElement> tdRows = headerTable.findElements(By.tagName(tag_td));
+		if (!tdRows.isEmpty())
+		{
+			return Converter.convertColumns(convertColumnsToHeaders(tdRows, null, new WebElementText()));
+		}
+		return null;
 	}
 
 	@Override
@@ -738,7 +795,7 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 				}
 				else
 				{
-					getHeaders(tableComp, false, null, null);
+					getHeaders(tableComp, null);
 					List<WebElement> rows = findRows(additional, tableComp);
 					WebElement row1 = rows.get(y);
 					List<WebElement> cells1 = row1.findElements(By.xpath("child::" + tag_td));
@@ -1607,14 +1664,19 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 				Map<String, String> result = new LinkedHashMap<>();
 				List<WebElement> cells = row.findElements(By.xpath("child::"+tag_td));
 				this.logger.debug("Found cells : " + cells.size());
-				for (int i = 0; i < (headers.size() > cells.size() ? cells.size() : headers.size()); i++)
+
+				for (int i = 0; i < headers.size(); i++)
 				{
 					String key = headers.get(i);
-					WebElement webElement = cells.get(i);
-
-					result.put(key, webElement.getText());
+					if (i < cells.size()) {
+						WebElement webElement = cells.get(i);
+						result.put(key, webElement.getText());
+					}
+					else
+					{
+						result.put(key, "");
+					}
 				}
-
 				return result;
 			}
 			catch (StaleElementReferenceException e)
@@ -1665,7 +1727,7 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 		throw real;
 	}
 
-	private List<String> getHeaders(WebElement grid, @Deprecated boolean useNumericHeader, @Deprecated Locator header, String[] columns) throws Exception
+	private List<String> getHeaders(WebElement grid, String[] columns) throws Exception
 	{
 		Exception real = null;
 		int repeat = 1;
@@ -1673,7 +1735,6 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 		{
 			try
 			{
-				logger.debug("Header : " + header + "  != null : " + (header != null));
 				if (columns != null)
 				{
 					this.logger.debug("Columns : " + Arrays.toString(columns));
@@ -1778,27 +1839,12 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 			}
 			return res;
 		}
-		int i;
-		Iterator<T> iterator = headers.iterator();
-		for(i = 0; i < columns.length; i++)
-		{
-			if (iterator.hasNext())
-			{
-				iterator.next();
+		else {
+			for (int i = 0; i < columns.length; i++) {
 				res.add(columns[i]);
 			}
-			else
-			{
-				break;
-			}
+			return res;
 		}
-		while (iterator.hasNext())
-		{
-			iterator.next();
-			res.add(String.valueOf(i++));
-		}
-
-		return res;
 	}
 
 	private List<String> getHeadersFromBody(WebElement grid, String[] columns) throws RemoteException
@@ -1876,11 +1922,6 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 				List<WebElement> rows = table.findElement(By.xpath("child::" + tag_tbody)).findElements(By.xpath("child::" + tag_tr));
 				List<WebElement> cells = rows.get(0).findElements(By.xpath("child::" + tag_th));
 				boolean empty = cells.isEmpty();
-
-				if (empty)
-				{
-					getHeaders(table, false, null, null);
-				}
 
 				if (additional != null)
 				{
