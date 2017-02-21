@@ -2,7 +2,6 @@ package com.exactprosystems.jf.tool.dictionary.dialog;
 
 import com.exactprosystems.jf.api.app.ControlKind;
 import com.exactprosystems.jf.documents.guidic.controls.AbstractControl;
-import javafx.scene.paint.Color;
 
 public class ElementWizardBean
 {
