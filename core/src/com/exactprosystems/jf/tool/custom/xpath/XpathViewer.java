@@ -143,11 +143,7 @@ public class XpathViewer
         
         if (relative == null)
         {
-            if (!fromRoot)
-            {
-                return "./" + xpath(node.getParentNode(), node, useText, parameters);
-            }
-            return xpath(null, node, useText, parameters);
+			return xpath(fromRoot ? null : node.getParentNode(), node, useText, parameters);
         }
         else
         {
@@ -188,15 +184,11 @@ public class XpathViewer
 
 	private static String xpath(Node parent, Node node, boolean useText, List<String> parameters)
 	{
-		if (node instanceof Document)
+		if (node instanceof Document || node == null || node.equals(parent))
 		{
-			return "";
+			return "/";
 		}
-		if (node == null || node.equals(parent))
-		{
-			return "";
-		}
-		return xpath(parent, node.getParentNode(), false, null) + "/" + node.getNodeName() 
+		return xpath(parent, node.getParentNode(), false, null) + "/" + node.getNodeName()
 				+ 	(parameters != null && !parameters.isEmpty() || useText
 						? "[" + getParameters(node, useText, parameters) + "]"
 						: (hasSiblings(node) 
