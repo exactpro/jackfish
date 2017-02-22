@@ -2,7 +2,7 @@
 <dictionary>
     <window name="Main">
         <self>
-            <panel id="body" xpath=".//body" useAbsoluteXpath="true"/>
+            <panel id="body" xpath=".//body"/>
         </self>
         <onOpen>
             <wait addition="WaitToAppear" timeout="5000"/>
@@ -23,7 +23,7 @@
             <wait id="00000" addition="WaitToAppear" timeout="5000"/>
         </onOpen>
         <run>
-            <button id="Item1" uid="" xpath=".//a[contains(text(), &amp;quot;Item 1&amp;quot;)]" useAbsoluteXpath="true" owner="MenuPanel" class="" name="" title="" text="Item 1">
+            <button id="Item1" uid="" xpath=".//a[contains(text(), &amp;quot;Item 1&amp;quot;)]" owner="MenuPanel" class="" name="" title="" text="Item 1">
                 <info>
                     <xpath>/div/ul/li[1]/a</xpath>
                     <rectangle x1="0.0" y1="0.0" x2="0.03288409703504044" y2="1.0"/>
@@ -31,7 +31,7 @@
                     <attr name="href">#</attr>
                 </info>
             </button>
-            <button id="Item2" uid="" xpath=".//a[contains(text(), &amp;quot;Item 2&amp;quot;)]" useAbsoluteXpath="true" owner="MenuPanel" class="" name="" title="" text="Item 2">
+            <button id="Item2" uid="" xpath=".//a[contains(text(), &amp;quot;Item 2&amp;quot;)]" owner="MenuPanel" class="" name="" title="" text="Item 2">
                 <info>
                     <xpath>/div/ul/li[2]/a</xpath>
                     <rectangle x1="0.03504043126684636" y1="0.0" x2="0.0679245283018868" y2="1.0"/>
@@ -48,6 +48,15 @@
                 </info>
             </button>
             <button id="Item4" uid="" owner="MenuPanel" class="" name="" title="" text="Item 4"/>
+        </run>
+        <onClose/>
+        <close/>
+    </window>
+    <window name="TestTable">
+        <self/>
+        <onOpen/>
+        <run>
+            <textBox id="TableLikePanel" xpath=".//div[@id=&amp;quot;grid1&amp;quot;]"/>
         </run>
         <onClose/>
         <close/>

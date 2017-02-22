@@ -1,0 +1,82 @@
+// 
+#Id;#TestCase;#Kind;#Depends;#For
+beforeTC;start;Never;;
+    #Id;#Global;#Action;#AppId;#Browser;#URL
+    APPSTR1;1;ApplicationStart;'WEB';'Chrome';'http://ui-grid.info/docs/#/tutorial/101_intro'
+
+
+#TestCase;#Kind;#Depends;#For
+exec;;;
+    // scroll to table
+    #Id;#Action;#Dialog;#AppConnection;#TableLikePanel
+    DLGFLL1;DialogFill;'TestTable';APPSTR1.Out;Do.delay(700).click()
+
+    #Id;#Global;#RawText
+    getJSON;1;Text
+    "return JSON.stringify( angular.element(arguments[0]).scope().myData)"
+    #EndRawText
+
+    #Id;#Action;#Dialog;#AppConnection;#TableLikePanel
+    DLGFLL3;DialogFill;'TestTable';APPSTR1.Out;Do.script(getJSON.toString())
+
+    #Id;#Call;#str
+    CALL_1;parseJson;DLGFLL3.Out.TableLikePanel
+
+    #Action;#Table;#Title;#BeforeTestCase
+    TableReport;CALL_1;'Tables';'beforeTC'
+
+
+#TestCase;#Kind;#Depends;#For
+stop;;;
+    #Id;#Action;#AppConnection
+    APPSTP1;ApplicationStop;APPSTR1.Out
+
+
+#Id;#SubCase;#str
+parseJson;;DLGFLL3.Out.TableLikePanel
+    #Id;#Let
+    groupList;Arrays.asList(Str.groups(str, '\\{.+?\\}'))
+
+    #Id;#Action
+    TBL1;TableCreate
+
+    #ForEach;#In
+    group;groupList
+        // {bla-bla-bla} -> bla-bla-bla
+        #Id;#Let
+        group;group.substring(1, group.length-1)
+
+        // collect to list
+        #Id;#Let
+        keyValueList;Arrays.asList(group.split(','))
+
+        #Id;#Let
+        q;new RowTable()
+
+        #ForEach;#In
+        keyValuePair;keyValueList
+            // asd:zxc -> [asd, zxc]
+            #Id;#Let
+            keyValueArray;keyValuePair.split(':')
+
+            #Id;#Let
+            addColumns;TBL1.Out.addColumns(keyValueArray[0])
+
+            #Action;#Table
+            TableAddValue;TBL1.Out
+
+            #Id;#Let
+            row;q.put(keyValueArray[0],keyValueArray[1])
+
+        #EndForEach
+
+        #Id;#Let
+        addRow;TBL1.Out.add(q)
+
+    #EndForEach
+
+    #Return
+    TBL1.Out
+
+#EndSubCase
+
