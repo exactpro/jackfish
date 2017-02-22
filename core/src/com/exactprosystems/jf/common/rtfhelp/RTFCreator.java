@@ -358,7 +358,7 @@ class RTFCreator {
                 if (s.contains("{{@") || s.contains("@}}"))
                 {
                     String name = replaceChars(s);
-                    result.add(hyperlink(link + name, p(fontSize(fontSize, name+reverseTrait))));
+                    result.add(hyperlink(link + name.replaceAll("(?U)[\\pP\\s]", ""), p(fontSize(fontSize, name+reverseTrait))));
                     result.add(fontSize(fontSize, " "));
                 }
                 else if (s.contains("{{$") || s.contains("$}}"))
@@ -369,7 +369,7 @@ class RTFCreator {
                 {
                     result.add(fontSize(fontSize, replaceChars(s) + " "));
                 }
-                result.add(fontSize(fontSize, " "));
+                result.add(text(" "));
             }
 
         return result;
@@ -407,7 +407,7 @@ class RTFCreator {
         deleteDocument(path);
         document.documentFormatting(RtfDocfmt.footnoteNumberingArabic());
         document.info(author("ExactProSystems"), subject("Contains info about classes which used in project"), title("JackFish manual"));
-        document.header(color(233, 157, 80), font("WriteFonts"));
+        document.header(color(255, 255, 255), font("WriteFonts"));
         document.section(
                 createFirstPageFormat(),
                 p(),

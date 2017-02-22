@@ -1,5 +1,7 @@
 package com.exactprosystems.jf.common.rtfhelp;
 
+import com.exactprosystems.jf.api.common.Str;
+
 import java.io.*;
 
 public class BookmarksCreator extends FileWriter{
@@ -25,36 +27,41 @@ public class BookmarksCreator extends FileWriter{
         }
         if (last){
             //cf - color
-            return "\\s20\\ql\\nowidctlpar\\hyphpar0\\ltrpar\\cf1\\kerning1\\dbch\\af5\\langfe1081\\dbch\\af6\\afs24\\loch\\f3\\fs"
+            return "\\s20\\ql\\nowidctlpar\\hyphpar0\\ltrpar\\cf2\\kerning1\\dbch\\af5\\langfe1081\\dbch\\af6\\afs24\\loch\\f3\\fs"
                     + 20 + "\\lang1033\\intbl{\\rtlch \\ltrch\\loch "
                     + insertText + "}\\cell\\row\\pard";
         } else {
-            return "\\s20\\ql\\nowidctlpar\\hyphpar0\\ltrpar\\cf1\\kerning1\\dbch\\af5\\langfe1081\\dbch\\af6\\afs24\\loch\\f3\\fs"
+            return "\\s20\\ql\\nowidctlpar\\hyphpar0\\ltrpar\\cf2\\kerning1\\dbch\\af5\\langfe1081\\dbch\\af6\\afs24\\loch\\f3\\fs"
                     + 20 + "\\lang1033\\intbl{\\rtlch \\ltrch\\loch "
                     + insertText + "}\\cell\\pard\\plain";
         }
     }
 
-    private String createRows(String initialText)
-    {   //brdrcf - color
-        final String twoCells = "\\trowd\\trql\\ltrrow\\trpaddft3\\trpaddt0\\trpaddfl3\\trpaddl0\\trpaddfb3\\trpaddb0\\trpaddfr3\\trpaddr0\\clbrdrt\\brdrhair\\brdrw1\\brdrcf1\\clbrdrl"
-                + "\\brdrhair\\brdrw1\\brdrcf1\\clbrdrb\\brdrhair\\brdrw1\\brdrcf1\\cellx4819\\clbrdrt\\brdrhair\\brdrw1\\brdrcf1\\clbrdrl\\brdrhair\\brdrw1\\brdrcf1\\clbrdrb\\brdrhair"
-                + "\\brdrw1\\brdrcf1\\clbrdrr\\brdrhair\\brdrw1\\brdrcf1\\cellx9638\\pgndec\\pard\\plain \n";
-        final String threeCells = "\\trowd\\trql\\trleft0\\ltrrow\\trpaddft3\\trpaddt0\\trpaddfl3\\trpaddl0\\trpaddfb3\\trpaddb0\\trpaddfr3\\trpaddr0\\clbrdrt\\brdrs\\brdrw2\\brdrcf17"
-                + "\\clbrdrl\\brdrs\\brdrw2\\brdrcf17\\clbrdrb\\brdrs\\brdrw2\\brdrcf17\\cellx3212\\clbrdrt\\brdrs\\brdrw2\\brdrcf17\\clbrdrl\\brdrs\\brdrw2\\brdrcf17\\clbrdrb\\brdrs\\brdrw2"
-                + "\\brdrcf17\\cellx6425\\clbrdrt\\brdrs\\brdrw2\\brdrcf17\\clbrdrl\\brdrs\\brdrw2\\brdrcf17\\clbrdrb\\brdrs\\brdrw2\\brdrcf17\\clbrdrr\\brdrs\\brdrw2\\brdrcf17\\cellx9638\\pgndec\\pard\\plain \n";
-        final String fourCells = "\\trowd\\trql\\ltrrow\\trpaddft3\\trpaddt0\\trpaddfl3\\trpaddl0\\trpaddfb3\\trpaddb0\\trpaddfr3\\trpaddr0\\clbrdrt\\brdrhair\\brdrw1\\brdrcf1\\clbrdrl\\brdrhair"
-                + "\\brdrw1\\brdrcf1\\clbrdrb\\brdrhair\\brdrw1\\brdrcf1\\cellx2409\\clbrdrt\\brdrhair\\brdrw1\\brdrcf1\\clbrdrl\\brdrhair\\brdrw1\\brdrcf1\\clbrdrb\\brdrhair\\brdrw1\\brdrcf1"
-                + "\\cellx4819\\clbrdrt\\brdrhair\\brdrw1\\brdrcf1\\clbrdrl\\brdrhair\\brdrw1\\brdrcf1\\clbrdrb\\brdrhair\\brdrw1\\brdrcf1\\cellx7228\\clbrdrt\\brdrhair\\brdrw1\\brdrcf1"
-                + "\\clbrdrl\\brdrhair\\brdrw1\\brdrcf1\\clbrdrb\\brdrhair\\brdrw1\\brdrcf1\\clbrdrr\\brdrhair\\brdrw1\\brdrcf1\\cellx9638\\pgndec\\pard\\plain \n";
-        final String twoSeparator = "\\trowd\\trql\\ltrrow\\trpaddft3\\trpaddt0\\trpaddfl3\\trpaddl0\\trpaddfb3\\trpaddb0\\trpaddfr3\\trpaddr0\\clbrdrl\\brdrhair\\brdrw1\\brdrcf1\\clbrdrb"
-                + "\\brdrhair\\brdrw1\\brdrcf1\\cellx4819\\clbrdrl\\brdrhair\\brdrw1\\brdrcf1\\clbrdrb\\brdrhair\\brdrw1\\brdrcf1\\clbrdrr\\brdrhair\\brdrw1\\brdrcf1\\cellx9638\\pard\\plain";
-        final String threeSeparator = "\\trowd\\trql\\trleft0\\ltrrow\\trpaddft3\\trpaddt0\\trpaddfl3\\trpaddl0\\trpaddfb3\\trpaddb0\\trpaddfr3\\trpaddr0\\clbrdrl\\brdrs\\brdrw15\\brdrcf17"
-                + "\\clbrdrb\\brdrs\\brdrw15\\brdrcf17\\cellx3212\\clbrdrl\\brdrs\\brdrw15\\brdrcf17\\clbrdrb\\brdrs\\brdrw15\\brdrcf17\\cellx6425\\clbrdrl\\brdrs\\brdrw15\\brdrcf17\\clbrdrb"
-                + "\\brdrs\\brdrw15\\brdrcf17\\clbrdrr\\brdrs\\brdrw15\\brdrcf17\\cellx9638\\pard\\plain \n";
-        final String fourSeparator = "\\trowd\\trql\\ltrrow\\trpaddft3\\trpaddt0\\trpaddfl3\\trpaddl0\\trpaddfb3\\trpaddb0\\trpaddfr3\\trpaddr0\\clbrdrl\\brdrhair\\brdrw1\\brdrcf1\\clbrdrb"
-                + "\\brdrhair\\brdrw1\\brdrcf1\\cellx2409\\clbrdrl\\brdrhair\\brdrw1\\brdrcf1\\clbrdrb\\brdrhair\\brdrw1\\brdrcf1\\cellx4819\\clbrdrl\\brdrhair\\brdrw1\\brdrcf1\\clbrdrb\\brdrhair"
-                + "\\brdrw1\\brdrcf1\\cellx7228\\clbrdrl\\brdrhair\\brdrw1\\brdrcf1\\clbrdrb\\brdrhair\\brdrw1\\brdrcf1\\clbrdrr\\brdrhair\\brdrw1\\brdrcf1\\cellx9638\\pard\\plain";
+    private String createRows(String initialText, boolean noBorder)
+    {
+        String color = "\\brdrcf2"; //black
+        if (noBorder){
+            color = "\\brdrcf1"; //white
+        }
+
+        final String twoCells = "\\trowd\\trql\\ltrrow\\trpaddft3\\trpaddt0\\trpaddfl3\\trpaddl0\\trpaddfb3\\trpaddb0\\trpaddfr3\\trpaddr0\\clbrdrt\\brdrhair\\brdrw1" + color + "\\clbrdrl"
+                + "\\brdrhair\\brdrw1" + color + "\\clbrdrb\\brdrhair\\brdrw1" + color + "\\cellx4819\\clbrdrt\\brdrhair\\brdrw1" + color + "\\clbrdrl\\brdrhair\\brdrw1" + color + "\\clbrdrb\\brdrhair"
+                + "\\brdrw1" + color + "\\clbrdrr\\brdrhair\\brdrw1" + color + "\\cellx9638\\pgndec\\pard\\plain \n";
+        final String threeCells = "\\trowd\\trql\\trleft0\\ltrrow\\trpaddft3\\trpaddt0\\trpaddfl3\\trpaddl0\\trpaddfb3\\trpaddb0\\trpaddfr3\\trpaddr0\\clbrdrt\\brdrs\\brdrw2" + color
+                + "\\clbrdrl\\brdrs\\brdrw2" + color + "\\clbrdrb\\brdrs\\brdrw2" + color + "\\cellx3212\\clbrdrt\\brdrs\\brdrw2" + color + "\\clbrdrl\\brdrs\\brdrw2" + color + "\\clbrdrb\\brdrs\\brdrw2"
+                + color + "\\cellx6425\\clbrdrt\\brdrs\\brdrw2" + color + "\\clbrdrl\\brdrs\\brdrw2" + color + "\\clbrdrb\\brdrs\\brdrw2" + color + "\\clbrdrr\\brdrs\\brdrw2" + color + "\\cellx9638\\pgndec\\pard\\plain \n";
+        final String fourCells = "\\trowd\\trql\\ltrrow\\trpaddft3\\trpaddt0\\trpaddfl3\\trpaddl0\\trpaddfb3\\trpaddb0\\trpaddfr3\\trpaddr0\\clbrdrt\\brdrhair\\brdrw1" + color + "\\clbrdrl\\brdrhair"
+                + "\\brdrw1" + color + "\\clbrdrb\\brdrhair\\brdrw1" + color + "\\cellx2409\\clbrdrt\\brdrhair\\brdrw1" + color + "\\clbrdrl\\brdrhair\\brdrw1" + color + "\\clbrdrb\\brdrhair\\brdrw1" + color
+                + "\\cellx4819\\clbrdrt\\brdrhair\\brdrw1" + color + "\\clbrdrl\\brdrhair\\brdrw1" + color + "\\clbrdrb\\brdrhair\\brdrw1" + color + "\\cellx7228\\clbrdrt\\brdrhair\\brdrw1" + color
+                + "\\clbrdrl\\brdrhair\\brdrw1" + color + "\\clbrdrb\\brdrhair\\brdrw1" + color + "\\clbrdrr\\brdrhair\\brdrw1" + color + "\\cellx9638\\pgndec\\pard\\plain \n";
+        final String twoSeparator = "\\trowd\\trql\\ltrrow\\trpaddft3\\trpaddt0\\trpaddfl3\\trpaddl0\\trpaddfb3\\trpaddb0\\trpaddfr3\\trpaddr0\\clbrdrl\\brdrhair\\brdrw1" + color + "\\clbrdrb"
+                + "\\brdrhair\\brdrw1" + color + "\\cellx4819\\clbrdrl\\brdrhair\\brdrw1" + color + "\\clbrdrb\\brdrhair\\brdrw1" + color + "\\clbrdrr\\brdrhair\\brdrw1" + color + "\\cellx9638\\pard\\plain";
+        final String threeSeparator = "\\trowd\\trql\\trleft0\\ltrrow\\trpaddft3\\trpaddt0\\trpaddfl3\\trpaddl0\\trpaddfb3\\trpaddb0\\trpaddfr3\\trpaddr0\\clbrdrl\\brdrs\\brdrw15" + color
+                + "\\clbrdrb\\brdrs\\brdrw15" + color + "\\cellx3212\\clbrdrl\\brdrs\\brdrw15" + color + "\\clbrdrb\\brdrs\\brdrw15" + color + "\\cellx6425\\clbrdrl\\brdrs\\brdrw15" + color + "\\clbrdrb"
+                + "\\brdrs\\brdrw15" + color + "\\clbrdrr\\brdrs\\brdrw15" + color + "\\cellx9638\\pard\\plain \n";
+        final String fourSeparator = "\\trowd\\trql\\ltrrow\\trpaddft3\\trpaddt0\\trpaddfl3\\trpaddl0\\trpaddfb3\\trpaddb0\\trpaddfr3\\trpaddr0\\clbrdrl\\brdrhair\\brdrw1" + color + "\\clbrdrb"
+                + "\\brdrhair\\brdrw1" + color + "\\cellx2409\\clbrdrl\\brdrhair\\brdrw1" + color + "\\clbrdrb\\brdrhair\\brdrw1" + color + "\\cellx4819\\clbrdrl\\brdrhair\\brdrw1" + color + "\\clbrdrb\\brdrhair"
+                + "\\brdrw1" + color + "\\cellx7228\\clbrdrl\\brdrhair\\brdrw1" + color + "\\clbrdrb\\brdrhair\\brdrw1" + color + "\\clbrdrr\\brdrhair\\brdrw1" + color + "\\cellx9638\\pard\\plain";
         int constant = 0;
         StringBuilder sb = new StringBuilder();
         String [] rows = initialText.split("\\\\\\{\\\\\\{-");
@@ -138,11 +145,12 @@ public class BookmarksCreator extends FileWriter{
 
     @Override
     public Writer append(CharSequence csq) throws IOException {
-        System.out.println(csq);
         if (csq.toString().contains("\\{\\{=") && csq.toString().contains("=\\}\\}"))
         {
             String initialText = csq.toString().replace("\\{\\{=", "").replace("=\\}\\}", "");
-            return super.append(createRows(initialText));
+            if (!Str.IsNullOrEmpty(initialText)){
+                return super.append(createRows(initialText, false));
+            }
         }
         String[] strs = csq.toString().split("\\s+");
         boolean addSpace = true;
@@ -163,6 +171,10 @@ public class BookmarksCreator extends FileWriter{
                     String r = s.replace("987654321", "");
                     result.append(r);
                     addSpace = false;
+                }
+                else if (s.contains("colortbl"))
+                {
+                    result.append(s.replace("colortbl", "colortbl\\red233\\green157\\blue80;"));
                 }
                 else if (s.contains("WriteLine"))
                 {
