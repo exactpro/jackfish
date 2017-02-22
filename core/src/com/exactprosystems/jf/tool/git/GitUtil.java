@@ -13,12 +13,12 @@ import com.exactprosystems.jf.tool.git.merge.editor.Chunk;
 import com.exactprosystems.jf.tool.git.pull.GitPullBean;
 import com.exactprosystems.jf.tool.git.reset.FileWithStatusBean;
 import com.exactprosystems.jf.tool.git.reset.GitResetBean;
-import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 import org.eclipse.jgit.api.*;
 import org.eclipse.jgit.api.errors.CheckoutConflictException;
+import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.diff.DiffEntry;
 import org.eclipse.jgit.errors.UnsupportedCredentialItem;
 import org.eclipse.jgit.lib.*;
@@ -39,6 +39,7 @@ import org.eclipse.jgit.util.FS;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -162,46 +163,68 @@ public class GitUtil
 						.setRemoteBranchName(remoteBranchName)
 						.call();
 
-				MergeResult m = pullResult.getMergeResult();
-				if (m != null)
+				//get merging files
+				MergeResult mergeResult = pullResult.getMergeResult();
+				if (mergeResult != null)
 				{
-					Map<String, int[][]> allConflicts = m.getConflicts();
+					Map<String, int[][]> allConflicts = mergeResult.getConflicts();
 					if (allConflicts != null)
 					{
 						list.addAll(allConflicts.keySet().stream().map(path -> new GitPullBean(path, true)).collect(Collectors.toList()));
 					}
 				}
+
+				//get fetching files
+				FetchResult fetchResult = pullResult.getFetchResult();
+				Collection<TrackingRefUpdate> trackingRefUpdates = fetchResult.getTrackingRefUpdates();
+				String fullBranch = git.getRepository().getFullBranch();
+				for (TrackingRefUpdate update : trackingRefUpdates)
+				{
+					if (update.getRemoteName().equals(fullBranch))
+					{
+						continue;
+					}
+					ObjectId oldObjectId = update.getOldObjectId();
+					ObjectId newObjectId = update.getNewObjectId();
+
+					ObjectId oldTreeId = git.getRepository().resolve(oldObjectId.name() + "^{tree}");
+					ObjectId newTreeId = git.getRepository().resolve(newObjectId.name() + "^{tree}");
+
+					List<DiffEntry> diffEntries = getDiffEntries(git, oldTreeId, newTreeId);
+					for (DiffEntry diff : diffEntries)
+					{
+						DiffEntry.ChangeType changeType = diff.getChangeType();
+						String fileName = changeType == DiffEntry.ChangeType.DELETE ? diff.getOldPath() : diff.getNewPath();
+						GitPullBean pullBean = new GitPullBean(fileName, false);
+						if (!list.contains(pullBean))
+						{
+							list.add(pullBean);
+						}
+					}
+				}
+				return list;
 			}
 			catch (CheckoutConflictException cce)
 			{
 				throw new Exception("\nNeed to commit the files before pulling : " + cce.getConflictingPaths().toString());
 			}
-
-			ObjectId head = git.getRepository().resolve("refs/remotes/origin/HEAD^{tree}");
-			if (head == null)
-			{
-				head = git.getRepository().resolve("HEAD^{tree}");
-				DialogsHelper.showInfo("Something wrong. Pulled files can't showing correctly. Try to push all your files and reclone project");
-			}
-			ObjectReader reader = git.getRepository().newObjectReader();
-			CanonicalTreeParser oldTreeIter = new CanonicalTreeParser();
-			oldTreeIter.reset(reader, oldHead);
-			CanonicalTreeParser newTreeIter = new CanonicalTreeParser();
-			newTreeIter.reset(reader, head);
-			List<DiffEntry> diffs = git.diff().setNewTree(newTreeIter).setOldTree(oldTreeIter).call();
-
-			for (DiffEntry diff : diffs)
-			{
-				DiffEntry.ChangeType changeType = diff.getChangeType();
-				String fileName = changeType == DiffEntry.ChangeType.DELETE ? diff.getOldPath() : diff.getNewPath();
-				GitPullBean pullBean = new GitPullBean(fileName, false);
-				if (!list.contains(pullBean))
-				{
-					list.add(pullBean);
-				}
-			}
-			return list;
 		}
+	}
+
+	private static List<DiffEntry> getDiffEntries(Git git, ObjectId oldHead, ObjectId head) throws IOException, GitAPIException
+	{
+		ObjectReader reader = git.getRepository().newObjectReader();
+
+		CanonicalTreeParser oldTreeIter = new CanonicalTreeParser();
+		oldTreeIter.reset(reader, oldHead);
+
+		CanonicalTreeParser newTreeIter = new CanonicalTreeParser();
+		newTreeIter.reset(reader, head);
+
+		return git.diff()
+				.setNewTree(newTreeIter)
+				.setOldTree(oldTreeIter)
+				.call();
 	}
 
 	public static List<Chunk> getConflicts(CredentialBean bean, String fileName) throws Exception
@@ -281,16 +304,7 @@ public class GitUtil
 				parentId = commit.getParent(0).getTree().getId();
 			}
 
-			ObjectReader reader = git.getRepository().newObjectReader();
-
-			CanonicalTreeParser oldTreeIter = new CanonicalTreeParser();
-			oldTreeIter.reset(reader, parentId);
-
-			CanonicalTreeParser newTreeIter = new CanonicalTreeParser();
-			newTreeIter.reset(reader, currentId);
-
-			List<DiffEntry> diffs = git.diff().setNewTree(newTreeIter).setOldTree(oldTreeIter).call();
-
+			List<DiffEntry> diffs = getDiffEntries(git, parentId, currentId);
 			list.addAll(diffs.stream().map(FileWithStatusBean::new).collect(Collectors.toList()));
 
 			return list;

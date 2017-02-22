@@ -34,6 +34,12 @@ public class GitPullBean
 	}
 
 	@Override
+	public String toString()
+	{
+		return this.fileName + " needMerge : " + this.needMerge;
+	}
+
+	@Override
 	public boolean equals(Object o)
 	{
 		if (this == o)
