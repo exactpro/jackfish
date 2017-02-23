@@ -393,6 +393,36 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 		return result;
 	}
 
+    public int findFirst(Condition[] conditions)
+    {
+        int index = -1;
+        int count = 0;
+        for (Map<Header, Object> row : this.innerList)
+        {
+            boolean matched = true;
+            for (Condition condition : conditions)
+            {
+                String name = condition.getName();
+                Object actualValue = row.get(headerByName(name));
+
+                if (!condition.isMatched(name, actualValue))
+                {
+                    matched = false;
+                    break;
+                }
+            }
+
+            if (matched)
+            {
+                index = count;
+                break;
+            }
+            count++;
+        }
+
+        return index;
+    }
+
 	public void upload(SqlConnection connection, String table) throws SQLException
 	{
 		Statement statement = null;
