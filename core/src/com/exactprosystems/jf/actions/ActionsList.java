@@ -98,7 +98,7 @@ public class ActionsList
 		        TableConsiderColumnsAs.class,
 		        TableCreate.class,
 		        TableEdit.class,
-		        TableFindFirst.class,
+		        TableGetRowIndexes.class,
 		        TableLeftJoin.class,
 				TableRemoveColumns.class,
 		        TableLoadFromFile.class,

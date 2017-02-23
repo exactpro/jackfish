@@ -393,9 +393,9 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 		return result;
 	}
 
-    public int findFirst(Condition[] conditions)
+    public List<Integer> findAllIndexes(Condition[] conditions)
     {
-        int index = -1;
+        List<Integer> indexes = new ArrayList<>();
         int count = 0;
         for (Map<Header, Object> row : this.innerList)
         {
@@ -414,13 +414,12 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 
             if (matched)
             {
-                index = count;
-                break;
+                indexes.add(count);
             }
             count++;
         }
 
-        return index;
+        return indexes;
     }
 
 	public void upload(SqlConnection connection, String table) throws SQLException
