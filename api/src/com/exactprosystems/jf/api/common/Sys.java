@@ -17,6 +17,12 @@ import java.net.UnknownHostException;
 
 public class Sys
 {
+    @DescriptionAttribute(text = "Returns PID of current process (the tool itself).")
+    public static int currentProcessId()
+    {
+        return ProcessTools.currentProcessId();
+    }
+    
     @DescriptionAttribute(text = "Returns current host name")
     public static String hostName()
     {
