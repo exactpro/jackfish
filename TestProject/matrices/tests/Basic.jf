@@ -47,8 +47,8 @@ RM38584 use name on assert;;;
 
 #TestCase;#Kind;#Depends;#For
 RM37970 fail into loops works incorrectly;;;
-    #Step;#Kind
-    'while';
+    #Step;#Kind;#For
+    'while';;
         #Id;#Call
         CALL_1;SUB_1
 
@@ -59,8 +59,8 @@ RM37970 fail into loops works incorrectly;;;
 
     #EndStep
 
-    #Step;#Kind
-    'for';
+    #Step;#Kind;#For
+    'for';;
         #Id;#Call
         CALL_1;SUB_2
 
@@ -71,8 +71,8 @@ RM37970 fail into loops works incorrectly;;;
 
     #EndStep
 
-    #Step;#Kind
-    'foreach';
+    #Step;#Kind;#For
+    'foreach';;
         #Id;#Call
         CALL_1;SUB_3
 
@@ -132,8 +132,8 @@ RM37970 fail into loops works incorrectly;;;
     #EndSubCase
 
 
-#Id;#TestCase;#Kind;#Depends;#For
-38699;RM 38699 Action For starts calculating since 1;;;
+#TestCase;#Kind;#Depends;#For
+RM38699 Action For starts calculating since 1;;;
     #Id;#Let
     str;''
 
@@ -158,5 +158,50 @@ RM38720 TableLoadFromDir return table when directory doesn't exists;;;
 
     #Id;#Action;#Assert;#Dir
     TBLD2;TableLoadFromDir;TBLD2.Out.getHeader(0) == 'Name' && TBLD2.Out.getHeader(4) == 'Hidden';'.'
+
+
+#TestCase;#Kind;#Depends;#For
+RM38916 AddColumnTable action does't update lines after add column;;;
+    #Id;#Action;#testName
+    TBL2;TableCreate;
+
+    #Id;#Let
+    t;TBL2.Out
+
+    #Action;#Table;#testName
+    TableAddValue;t;'name1'
+
+    #Action;#Table;#testName
+    TableAddValue;t;'name2'
+
+    #Off;#Action;#;#
+    1;Print;t[0];t[1]
+
+    #Action;#Table;#Columns
+    TableAddColumns;t;'description'
+
+    #Action;#Table
+    TableAddValue;t
+
+    #Action;#Table;#Index;#description
+    TableSetValue;t;0;'zero'
+
+    #Action;#Table;#Index;#description
+    TableSetValue;t;1;'one'
+
+    #Action;#Table;#Index;#description
+    TableSetValue;t;2;'two'
+
+    #Off;#Action;#;#;#
+    1;Print;t[0];t[1];t[2]
+
+    #Assert;#Message
+    t[0].description.equals('zero');
+
+    #Assert;#Message
+    t[1].description.equals('one');
+
+    #Assert;#Message
+    t[2].description.equals('two');
 
 
