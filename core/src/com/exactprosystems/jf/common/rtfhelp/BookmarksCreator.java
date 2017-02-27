@@ -8,11 +8,11 @@ public class BookmarksCreator extends FileWriter{
 
     private boolean noBorder = false;
 
-    public boolean isNoBorder() {
+    private boolean isNoBorder() {
         return noBorder;
     }
 
-    public void setNoBorder(boolean noBorder) {
+    void setNoBorder(boolean noBorder) {
         this.noBorder = noBorder;
     }
 
@@ -184,7 +184,7 @@ public class BookmarksCreator extends FileWriter{
                 }
                 else if (s.contains("colortbl"))
                 {
-                    result.append(s.replace("colortbl", "colortbl\\red233\\green157\\blue80;"));
+                    result.append(s.replace("colortbl", "colortbl\\red233\\green157\\blue80;\\red255\\green255\\blue255;"));
                 }
                 else if (s.contains("WriteLine"))
                 {

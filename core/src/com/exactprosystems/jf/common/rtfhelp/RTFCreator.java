@@ -407,7 +407,7 @@ class RTFCreator {
         deleteDocument(path);
         document.documentFormatting(RtfDocfmt.footnoteNumberingArabic());
         document.info(author("ExactProSystems"), subject("Contains info about classes which used in project"), title("JackFish manual"));
-        document.header(color(255, 255, 255), font("WriteFonts"));
+        document.header(color(0, 0, 0), font("WriteFonts"));
         document.section(
                 createFirstPageFormat(),
                 p(),
