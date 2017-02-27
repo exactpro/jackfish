@@ -6,6 +6,16 @@ import java.io.*;
 
 public class BookmarksCreator extends FileWriter{
 
+    private boolean noBorder = false;
+
+    public boolean isNoBorder() {
+        return noBorder;
+    }
+
+    public void setNoBorder(boolean noBorder) {
+        this.noBorder = noBorder;
+    }
+
     private String createCell(String text, boolean last)
     {
         String insertText =  text;
@@ -149,7 +159,7 @@ public class BookmarksCreator extends FileWriter{
         {
             String initialText = csq.toString().replace("\\{\\{=", "").replace("=\\}\\}", "");
             if (!Str.IsNullOrEmpty(initialText)){
-                return super.append(createRows(initialText, false));
+                return super.append(createRows(initialText, isNoBorder()));
             }
         }
         String[] strs = csq.toString().split("\\s+");

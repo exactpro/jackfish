@@ -742,7 +742,9 @@ class RTFCreator {
         writeItems();
     }
 
-    void saveDocument() throws IOException {
-        document.out(new BookmarksCreator(path, true));
+    void saveDocument(boolean noBorder) throws IOException {
+        BookmarksCreator ap = new BookmarksCreator(path, true);
+        ap.setNoBorder(noBorder);
+        document.out(ap);
     }
 }

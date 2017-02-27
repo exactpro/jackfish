@@ -5,13 +5,13 @@ import java.io.IOException;
 
 public class RtfGenerator
 {
-    public static void createRTF() throws IOException, BadLocationException
+    public static void createRTF(boolean noBorder) throws IOException, BadLocationException
     {
         RTFCreator creator = new RTFCreator();
 
         creator.prepareDocument();
         creator.getAnnotationsForActions();
         creator.getAnnotationsForItems();
-        creator.saveDocument();
+        creator.saveDocument(noBorder);
     }
 }

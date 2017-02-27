@@ -98,6 +98,7 @@ public class MainRunner
 					.create("username");
 
             Option saveDocs     = new Option("docs",    "Save the documentation in rtf format." );
+			Option noBorder     = new Option("noBorder",    "Create rtf documentation without table borders." );
 			Option saveSchema 	= new Option("schema", 	"Save the config schema." );
 			Option help 		= new Option("help", 	"Print this message." );
 			Option versionOut 	= new Option("version", "Print version only.");
@@ -116,6 +117,7 @@ public class MainRunner
 			options.addOption(username);
 			options.addOption(versionOut);
 			options.addOption(saveDocs);
+			options.addOption(noBorder);
             options.addOption(saveSchema);
 			options.addOption(help);
 			options.addOption(shortPaths);
@@ -157,8 +159,8 @@ public class MainRunner
 
             if (line.hasOption(saveDocs.getOpt()))
             {
-                saveDocs();
-                
+				saveDocs(line.hasOption(noBorder.getOpt()));
+
                 System.exit(0);
             }
 
@@ -541,9 +543,9 @@ public class MainRunner
 		}
 	}
 	
-    private static void saveDocs() throws Exception
+    private static void saveDocs(boolean noBorder) throws Exception
     {
-        RtfGenerator.createRTF();
+        RtfGenerator.createRTF(noBorder);
     }
 	
 	private static void saveSchema(Class<?> clazz, final String fileName)
