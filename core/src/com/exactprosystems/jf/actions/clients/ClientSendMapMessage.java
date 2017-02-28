@@ -55,7 +55,7 @@ import java.util.List;
 public class ClientSendMapMessage extends AbstractAction
 {
 	public final static String connectionName = "ClientConnection";
-	public final static String messageName = "Message";
+	public final static String messageName = "MapMessage";
 	public final static String checkName = "Check";
 
 	@ActionFieldAttribute(name = connectionName, mandatory = true, description = "The connection with the client, which is derived from the action ClientLoad." )

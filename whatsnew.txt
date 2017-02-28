@@ -1,4 +1,8 @@
 --------------------------------------------------------------------------------
+01.03.2017 4.4.0.2046
+RM40634 bug : for ClientEncode action Message field dissappeares after save/load a matrix
+
+--------------------------------------------------------------------------------
 23.02.2017 4.4.0.2037
 RM40512 Opportunity to get index of first row is found by value
 
