@@ -22,8 +22,20 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 @ActionAttribute(
 		group					= ActionGroups.Messages,
 		suffix					= "MSGCMP",
-		generalDescription 		= "Compares the given messages. It will fail if the messages are not equal.",
-		additionFieldsAllowed 	= false
+		generalDescription 		= "The purpose of the action is to compare two MapMessage.\n" +
+				"MapMessage is the output of such actions as MessageCreate, ClientCreateMapMessage, ClientDecode, ClientGetMessage, ClientSendMessage. \n" +
+				"If there is dissimilarity in the compared objects MapMessage action fails.",
+		additionFieldsAllowed 	= false,
+		examples = "1-2. Create two objects of MapMessage type with different values \n" +
+				"3. Check them with MessageCompareTwo action.\n" +
+				"{{##Id;#Action;#Fields\n" +
+				"MSGCR1;MessageCreate;{'First item' : 'First Value', 'Second Item' : 'Second Value'}\n" +
+				"\n" +
+				"#Id;#Action;#Fields\n" +
+				"MSGCR2;MessageCreate;{'First item' : 'First Value', 'Fourth Item' : 'Fourth Value'}\n" +
+				"\n" +
+				"#Id;#Action;#Expected;#Actual\n" +
+				"MSGCMP1;MessageCompareTwo;MSGCR2.Out;MSGCR1.Out#}}"
 	)
 public class MessageCompareTwo extends AbstractAction 
 {
@@ -31,13 +43,13 @@ public class MessageCompareTwo extends AbstractAction
 	public final static String expectedName = "Expected";
 	public final static String excludeName = "Exclude";
 
-	@ActionFieldAttribute(name = actualName, mandatory = true, description = "Actual message, got from any source.")
+	@ActionFieldAttribute(name = actualName, mandatory = true, description = "MapMessage which should be compared.")
 	protected MapMessage actual = null;
 
-	@ActionFieldAttribute(name = expectedName, mandatory = true, description = "Expected message, got from any source.")
+	@ActionFieldAttribute(name = expectedName, mandatory = true, description = "MapMessage which should be compared with.")
 	protected MapMessage expected = null;
 
-	@ActionFieldAttribute(name = excludeName, mandatory = false, description = "Fields that will not be compare.")
+	@ActionFieldAttribute(name = excludeName, mandatory = false, description = "An array of column names which should be excluded from comparison.")
 	protected String[] exclude;
 	
 	public MessageCompareTwo()

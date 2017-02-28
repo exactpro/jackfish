@@ -27,10 +27,15 @@ import java.util.Map;
 @ActionAttribute(
 		group					= ActionGroups.Messages,
 		suffix					= "MSGCR",
-		generalDescription 		= "Assemble a message from given data.",
+		generalDescription 		= "The purpose of the action is to create an object of MapMessage type.\n" +
+				"The object of MapMessage type is a collection which stores data in the form of key/value pairs.\n" +
+				"It is used in such actions as ClientCheckFields, ClientCheckMessage, ClientEncode, ClientSendMapMessage, MessageCheck, MessageCompareTwo.",
+		additionalDescription = "Names and values are passed to fill MapMessage. This parameter is used only if the parameter Fiels is not set.",
 		additionFieldsAllowed 	= true,
 		outputDescription 		= "Message object.",
-		outputType				= MapMessage.class
+		outputType				= MapMessage.class,
+		examples = "{{##Id;#Action;#Fields\n" +
+				"MSGCR1;MessageCreate;{'First item' : 'First Value', 'Second Item' : 'Second Value'}#}}"
 	)
 public class MessageCreate extends AbstractAction 
 {
@@ -38,13 +43,13 @@ public class MessageCreate extends AbstractAction
 	public final static String sourceName = "Source";
 	public final static String fieldsName = "Fields";
 
-	@ActionFieldAttribute(name = messageTypeName, mandatory = false, description = "Message type." )
+	@ActionFieldAttribute(name = messageTypeName, mandatory = false, description = "The type of created MapMessage should be specified." )
 	protected String 				messageType;
 
-	@ActionFieldAttribute(name = sourceName, mandatory = false, description = "Source of message." )
+	@ActionFieldAttribute(name = sourceName, mandatory = false, description = "The source of created MapMessage should be specified." )
 	protected String 				source;
 
-	@ActionFieldAttribute(name = fieldsName, mandatory = false, description = "Collection of fields." )
+	@ActionFieldAttribute(name = fieldsName, mandatory = false, description = "The collection of Map type values is specified." )
 	protected Map<String, Object> 	fields;
 
 	public MessageCreate()
