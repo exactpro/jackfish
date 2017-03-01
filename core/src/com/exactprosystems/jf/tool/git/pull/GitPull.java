@@ -113,7 +113,7 @@ public class GitPull
 	{
 		if (list.stream().anyMatch(GitPullBean::isNeedMerge))
 		{
-			List<String> strings = this.model.gitMerge();
+			List<String> strings = this.model.getMergeFiles();
 			list.stream().filter(b -> strings.contains(b.getFileName())).forEach(GitPullBean::resolve);
 		}
 		this.controller.displayFiles(list);

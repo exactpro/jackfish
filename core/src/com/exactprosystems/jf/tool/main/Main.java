@@ -385,6 +385,17 @@ public class Main extends Application
 		return gitMerge.getMergedFiles();
 	}
 
+	public List<String> getMergeFiles() throws Exception
+	{
+		return GitUtil.gitStatus(getCredential())
+				.stream()
+				.filter(gb -> gb.getStatus() == GitBean.Status.CONFLICTING)
+				.map(GitBean::getFile)
+				.map(File::getAbsolutePath)
+				.collect(Collectors.toList());
+
+	}
+
 	public void gitBranches() throws Exception
 	{
 		new GitBranch(this).display();
