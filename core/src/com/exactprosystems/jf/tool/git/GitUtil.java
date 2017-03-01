@@ -401,7 +401,10 @@ public class GitUtil
 					ObjectId objectId = treeWalk.getObjectId(0);
 					ObjectLoader loader = repository.open(objectId);
 					File tmpFile = File.createTempFile("temp", null);
-					loader.copyTo(new FileOutputStream(tmpFile));
+					try (FileOutputStream fos = new FileOutputStream(tmpFile))
+					{
+						loader.copyTo(fos);
+					}
 					return Common.readFile(tmpFile, true);
 				}
 			}
@@ -441,7 +444,10 @@ public class GitUtil
 					ObjectId objectId = treeWalk.getObjectId(0);
 					ObjectLoader loader = repository.open(objectId);
 					File tmpFile = File.createTempFile("temp", null);
-					loader.copyTo(new FileOutputStream(tmpFile));
+					try (FileOutputStream fos = new FileOutputStream(tmpFile))
+					{
+						loader.copyTo(fos);
+					}
 					return Common.readFile(tmpFile, true);
 				}
 			}
