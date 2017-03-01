@@ -180,7 +180,7 @@ public class GitUtil
 				String fullBranch = git.getRepository().getFullBranch();
 				for (TrackingRefUpdate update : trackingRefUpdates)
 				{
-					if (update.getRemoteName().equals(fullBranch))
+					if (!update.getRemoteName().equals(fullBranch))
 					{
 						continue;
 					}
