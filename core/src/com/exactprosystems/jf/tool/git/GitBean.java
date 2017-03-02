@@ -16,6 +16,7 @@ public class GitBean
 	public enum Status
 	{
 		//TODO add styleclasses
+		EMPTY		("",""),
 		ADDED		(CssVariables.GIT_ADDED_FILE,		"new file"),
 		REMOVED		(CssVariables.GIT_REMOVED_FILE,		"deleted"),
 		CHANGED		(CssVariables.GIT_CHANGED_FILE,		"modified"),
@@ -47,6 +48,7 @@ public class GitBean
 	private Status status;
 	private final File file;
 	private boolean isChecked;
+	private boolean isMatch;
 
 	public GitBean(Status status, File file)
 	{
@@ -77,6 +79,16 @@ public class GitBean
 	public void setChecked(boolean checked)
 	{
 		this.isChecked = checked;
+	}
+
+	public boolean isMatch()
+	{
+		return isMatch;
+	}
+
+	public void setMatch(boolean match)
+	{
+		isMatch = match;
 	}
 
 	@Override

@@ -66,6 +66,14 @@ public class GitUtil
 		return false;
 	}
 
+	public static File gitRootDirectory(CredentialBean credentialBean) throws Exception
+	{
+		try (Git git = git(credentialBean))
+		{
+			return git.getRepository().getWorkTree();
+		}
+	}
+
 	//region Clone
 	public static void gitClone(String remotePath, File projectFolder, CredentialBean credentials, ProgressMonitor monitor) throws Exception
 	{

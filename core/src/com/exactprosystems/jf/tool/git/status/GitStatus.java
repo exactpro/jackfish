@@ -21,11 +21,11 @@ public class GitStatus
 	private Main model;
 	private final GitStatusController controller;
 
-	public GitStatus(Main model)
+	public GitStatus(Main model) throws Exception
 	{
 		this.model = model;
 		this.controller = Common.loadController(this.getClass().getResource("GitStatus.fxml"));
-		this.controller.init(this);
+		this.controller.init(this, GitUtil.gitRootDirectory(this.model.getCredential()));
 	}
 
 	public void display(List<GitBean> list, String state)

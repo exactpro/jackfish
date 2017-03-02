@@ -157,7 +157,7 @@ public class BuildTree
 				.forEach(items::add);
 	}
 
-	public static void addListenerToExpandChild(TreeItem<TreeNode> rootItem)
+	public static void addListenerToExpandChild(TreeItem<?> rootItem)
 	{
 		rootItem.expandedProperty().addListener((observable, oldValue, newValue) -> {
 			if (newValue)
