@@ -365,6 +365,8 @@ public class GitUtil
 			replaceFiles(list, status.getRemoved(), GitBean.Status.REMOVED);
 			replaceFiles(list, status.getConflicting(), GitBean.Status.CONFLICTING);
 			list.sort(Comparator.comparing(GitBean::getStatus));
+			List<String> collect = status.getIgnoredNotInIndex().stream().map(File::new).map(File::getAbsolutePath).collect(Collectors.toList());
+			list.removeIf(bean -> collect.contains(bean.getFile().getAbsolutePath()));
 			return list;
 		}
 	}
