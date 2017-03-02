@@ -21,6 +21,7 @@ import org.openqa.selenium.chrome.ChromeDriverService;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.GeckoDriverService;
 import org.openqa.selenium.ie.InternetExplorerDriverService;
+import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -834,7 +835,14 @@ public class SeleniumRemoteApplication extends RemoteApplication
 		{
 			for (Map<String, String> att : map)
 			{
-				((Element) element).setAttribute(att.get(ATTRIBUTE_NAME_FIELD), att.get(ATTRIBUTE_VALUE_FIELD));
+				try
+				{
+					((Element) element).setAttribute(att.get(ATTRIBUTE_NAME_FIELD), att.get(ATTRIBUTE_VALUE_FIELD));
+				}
+				catch (DOMException e)
+				{
+					//nothing;
+				}
 			}
 		}
 	}
