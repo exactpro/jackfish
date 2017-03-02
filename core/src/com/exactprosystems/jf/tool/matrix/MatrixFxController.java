@@ -359,6 +359,11 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 	public void displayTab(MatrixItem matrixItem)
 	{
 		matrixItem.display(this.driver, this.context);
+		int size = this.tree.getRoot().getChildren().size();
+		if (size == 2)
+		{
+			this.tree.getRoot().getChildren().get(0).setExpanded(true);
+		}
 	}
 
 	public void coloring()
