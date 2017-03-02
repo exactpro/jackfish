@@ -17,11 +17,24 @@ public class OperationResult implements Serializable
 	private static final long			serialVersionUID	= -2015741070415094348L;
 
 	private boolean						ok					= false;
+	private Integer                     integer             = null;
 	private String						text				= null;
+    private String                      error               = null;
 	private Map<String, String>			map					= null;
 	private Map<String, ValueAndColor>	colorMap			= null;
 	private String[][]					array				= null;
 	private Rectangle 					rectangle 			= null;
+
+	public void setInt(int i)
+	{
+	    this.integer = i;
+	}
+	
+    public void setError(String text)
+    {
+        this.ok = false;
+        this.error = text;
+    }
 
 	public void setText(String text)
 	{
@@ -73,6 +86,10 @@ public class OperationResult implements Serializable
 
 	public Object getValue()
 	{
+	    if (this.integer != null)
+	    {
+	        return this.integer;
+	    }
 		if (this.text != null)
 		{
 			return this.text;
@@ -100,8 +117,17 @@ public class OperationResult implements Serializable
 	
 	public String humanablePresentation()
 	{
-		StringBuilder builder = new StringBuilder("ok [" + this.ok + "]");
-		if (this.text != null)
+	    if (!this.ok)
+	    {
+	        return "Error: " + this.error;
+	    }
+	    
+		StringBuilder builder = new StringBuilder();
+		if (this.integer != null)
+        {
+            builder.append(" int [").append(this.integer).append("];");
+        }
+        if (this.text != null)
 		{
 			builder.append(" text [").append(this.text).append("];");
 		}
@@ -128,6 +154,6 @@ public class OperationResult implements Serializable
 	@Override
 	public String toString()
 	{
-		return "OpRes[ok=" + this.ok + ", text="  + this.text + "]";
+		return humanablePresentation();
 	}
 }

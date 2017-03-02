@@ -1,4 +1,8 @@
 --------------------------------------------------------------------------------
+02.03.2017 4.4.0.2058
+RM40679 bug: Action Do.getTableSize() returns value in string format
+
+--------------------------------------------------------------------------------
 02.03.2017 4.4.0.2056
 RM40670 fixed. Now, if node have invalid attribute, this attribute not will added to the node.
 

@@ -76,7 +76,7 @@ public enum OperationKind
 		@Override
 		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, Holder<T> holder, OperationResult result) throws Exception
 		{
-			result.setText(String.valueOf(holder.size()));
+			result.setInt(holder.size());
 			return true;
 		}
 	},
@@ -778,7 +778,7 @@ public enum OperationKind
 		@Override
 		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, Holder<T> holder, OperationResult result) throws Exception
 		{
-			result.setText("" + executor.getTableSize(holder.getValue(), holder.get(LocatorKind.Rows), holder.get(LocatorKind.Header), 
+			result.setInt(executor.getTableSize(holder.getValue(), holder.get(LocatorKind.Rows), holder.get(LocatorKind.Header), 
 					holder.get(LocatorKind.Element).useNumericHeader()));
 
 			return true;
