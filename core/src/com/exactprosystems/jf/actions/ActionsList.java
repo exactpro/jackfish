@@ -120,6 +120,7 @@ public class ActionsList
 		        TextSetValue.class,
 		        Wait.class,
 				Vars.class,
+				XmlCreate.class,
 				XmlAddNode.class,
 				XmlChildren.class,
 				XmlCompare.class,
