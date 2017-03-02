@@ -3,8 +3,10 @@
 RM40670 fixed. Now, if node have invalid attribute, this attribute not will added to the node.
 
 --------------------------------------------------------------------------------
-02.03.2017 4.4.0.2052
+02.03.2054 4.4.0.2048
+RM40665 bug : [TableSort] Sorting for integer isn't correct
 RM40491 : fixed
+
 --------------------------------------------------------------------------------
 01.03.2017 4.4.0.2048
 RM40353 bug : fixed

@@ -11,6 +11,7 @@
     <formats>HH:mm:ss</formats>
     <formats>HH:mm:ss Z</formats>
     <formats>HH:mm:ss:SSS</formats>
+    <formats>yyyyMMdd-HH:mm:ss</formats>
     <reports>reports</reports>
     <git></git>
     <version>1.2.3.4</version>
@@ -29,6 +30,7 @@
     <userVars>personal.ini</userVars>
     <userVars>uservars/rf.ini</userVars>
     <userVars>uservars/nodal.ini</userVars>
+    <userVars>uservars/myvars.ini</userVars>
     <matrix>${JF}/matrices</matrix>
     <appDict>dic/gui</appDict>
     <clientDict>dic/clients</clientDict>

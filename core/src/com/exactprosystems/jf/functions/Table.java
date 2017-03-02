@@ -251,12 +251,16 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 		changed(true);
 		Header header = this.headers[colNumber];
 		this.innerList.sort((o1, o2) -> 
-		{
+		{ 
 			Object obj1 = o1.get(header);
 			Object obj2 = o2.get(header);
+			
+			obj1 = convertCell(header, obj1);
+            obj2 = convertCell(header, obj2);
+			
 			Header.HeaderType type = header.type == null ? Header.HeaderType.STRING : header.type;
 			int compare = type.compare(obj1, obj2);
-			return az ? compare : (-1) * compare;
+			return az ? compare : -compare;
 		});
 		return this;
 	}

@@ -174,9 +174,6 @@ RM38916 AddColumnTable action does't update lines after add column;;;
     #Action;#Table;#testName
     TableAddValue;t;'name2'
 
-    #Off;#Action;#;#
-    1;Print;t[0];t[1]
-
     #Action;#Table;#Columns
     TableAddColumns;t;'description'
 
@@ -192,9 +189,6 @@ RM38916 AddColumnTable action does't update lines after add column;;;
     #Action;#Table;#Index;#description
     TableSetValue;t;2;'two'
 
-    #Off;#Action;#;#;#
-    1;Print;t[0];t[1];t[2]
-
     #Assert;#Message
     t[0].description.equals('zero');
 
@@ -203,5 +197,31 @@ RM38916 AddColumnTable action does't update lines after add column;;;
 
     #Assert;#Message
     t[2].description.equals('two');
+
+
+#Id;#TestCase;#Kind;#Depends;#For
+RM40665;[TableSort] Sorting for integer isn't correct;Never;;
+    #Id;#RawTable
+    DATA1;Table
+    @;int
+    0;2
+    1;10
+    2;3
+    #EndRawTable
+
+    #Id;#Action;#ColumnName;#Table
+    TBLS2;TableSort;'int';DATA1
+
+    #Assert;#Message
+    TBLS2.Out[0].int == '10';'Wrong string order'
+
+    #Action;#Table;#Integer
+    TableConsiderColumnsAs;DATA1;'int'
+
+    #Id;#Action;#ColumnName;#Table
+    TBLS1;TableSort;'int';DATA1
+
+    #Assert;#Message
+    TBLS1.Out[0].int == 2;'Wrong integer order'
 
 
