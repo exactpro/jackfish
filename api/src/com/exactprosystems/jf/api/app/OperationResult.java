@@ -86,6 +86,10 @@ public class OperationResult implements Serializable
 
 	public Object getValue()
 	{
+	    if (this.error != null)
+	    {
+	        return this.error;
+	    }
 	    if (this.integer != null)
 	    {
 	        return this.integer;
