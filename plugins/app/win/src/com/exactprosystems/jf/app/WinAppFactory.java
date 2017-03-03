@@ -11,8 +11,6 @@ package com.exactprosystems.jf.app;
 import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.common.ParametersKind;
 
-import java.lang.reflect.Field;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Scanner;
@@ -141,7 +139,7 @@ public class WinAppFactory implements IApplicationFactory
 		Map<ControlKind, String[]> controlMap = new LinkedHashMap<>();
 
 		add(controlMap, ControlKind.Any,           	ControlType.Any);
-		add(controlMap, ControlKind.Button,        	ControlType.Button, ControlType.SplitButton);
+		add(controlMap, ControlKind.Button,        	ControlType.Button, ControlType.SplitButton, ControlType.Hyperlink);
 		add(controlMap, ControlKind.CheckBox,	   	ControlType.CheckBox);
 		add(controlMap, ControlKind.ComboBox,	   	ControlType.ComboBox);
 		add(controlMap, ControlKind.Dialog,        	ControlType.Window);
