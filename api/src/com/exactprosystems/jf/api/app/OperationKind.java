@@ -833,7 +833,7 @@ public enum OperationKind
 		}
 		if (!locator.getControlKind().isAllowed(part.kind))
 		{
-			throw new OperationNotAllowedException("Operation " + part.kind + " is not allowed for " + locator.getControlKind());
+            throw new OperationNotAllowedException("Operation " + part.kind + " is not allowed for " + locator.getControlKind());
 		}
 
 		// find it, if it needs
