@@ -211,6 +211,19 @@ public class GitUtil
 		}
 	}
 
+	public static String checkFile(CredentialBean bean, String filePath) throws Exception
+	{
+		if (new File(filePath).exists())
+		{
+			return filePath;
+		}
+		try (Git git = git(bean))
+		{
+			String pathToGitFolder = git.getRepository().getDirectory().getParent();
+			return pathToGitFolder + File.separator + filePath;
+		}
+	}
+
 	private static List<DiffEntry> getDiffEntries(Git git, ObjectId oldHead, ObjectId head) throws IOException, GitAPIException
 	{
 		ObjectReader reader = git.getRepository().newObjectReader();

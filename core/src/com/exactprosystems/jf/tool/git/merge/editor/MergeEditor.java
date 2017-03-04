@@ -57,7 +57,7 @@ public class MergeEditor
 
 	public void saveResult(String result) throws Exception
 	{
-		Common.writeToFile(new File(this.filePath), Arrays.asList(result.split("\n")));
+		Common.writeToFile(new File(GitUtil.checkFile(this.model.getCredential(), this.filePath)), Arrays.asList(result.split("\n")));
 		GitUtil.addFileToIndex(this.model.getCredential(), this.filePath);
 		this.isSuccessful = true;
 		this.controller.closeDialog();
