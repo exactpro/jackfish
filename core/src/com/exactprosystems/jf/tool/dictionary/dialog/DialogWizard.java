@@ -25,6 +25,7 @@ import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import org.w3c.dom.Document;
+import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import java.awt.*;
 import java.awt.geom.Point2D;
@@ -40,7 +41,6 @@ import java.util.stream.IntStream;
 
 public class DialogWizard
 {
-    private static final double     NEAREST_PARENT_FACTOR = 0.5;
     private static final int		MAX_TRIES = 128;
     
     private static ExecutorService  executor = Executors.newFixedThreadPool(1);
@@ -264,10 +264,14 @@ public class DialogWizard
 	private List<Attr> extractAttributes(Node node)
 	{
 		List<Attr> attributes = new ArrayList<>();
-		for (int index = 0; index < node.getAttributes().getLength(); index++)
+		NamedNodeMap attrs = node.getAttributes();
+		if (attrs != null)
 		{
-			Node attr = node.getAttributes().item(index);
-			attributes.add(new Attr(attr.getNodeName(), attr.getNodeValue()));
+    		for (int index = 0; index < attrs.getLength(); index++)
+    		{
+    			Node attr = attrs.item(index);
+    			attributes.add(new Attr(attr.getNodeName(), attr.getNodeValue()));
+    		}
 		}
 		return attributes;
 	}
@@ -276,26 +280,32 @@ public class DialogWizard
 	{
 		// try many methods here
 		Locator locator = null;
-
+		
 		locator = locatorById(id, kind, node);
 		if (locator != null)
 		{
 			return locator;
 		}
 
-		locator = locatorByAttr(id, kind,  node);
+        locator = locatorByAttr(id, kind,  node);
 		if (locator != null)
 		{
 			return locator;
 		}
 
-		locator = locatorByXpath(id, kind,  node);
+        locator = locatorByXpath(id, kind,  node);
 		if (locator != null)
 		{
 			return locator;
 		}
 
-		return null; // can't compile the such locator
+        locator = locatorByRelativeXpath(id, kind,  node);
+        if (locator != null)
+        {
+            return locator;
+        }
+
+        return null; // can't compile the such locator
 	}
 
 	private String composeId(Node node)
@@ -375,15 +385,7 @@ public class DialogWizard
 
 	private Locator locatorByAttr(String id, ControlKind kind, Node node)
 	{
-        List<Pair> list = new ArrayList<>();
-		addAttr(list, node, LocatorFieldKind.UID);
-		addAttr(list, node, LocatorFieldKind.CLAZZ);
-		addAttr(list, node, LocatorFieldKind.NAME);
-		addAttr(list, node, LocatorFieldKind.TITLE);
-		addAttr(list, node, LocatorFieldKind.ACTION);
-		addAttr(list, node, LocatorFieldKind.TOOLTIP);
-		addAttr(list, node, LocatorFieldKind.TEXT);
-        
+        List<Pair> list = allAttributes(node);
 		List<List<Pair>> cases = IntStream.range(1, 1 << list.size())
 			.boxed()
 			.sorted((a,b) -> Integer.bitCount(a) - Integer.bitCount(b))
@@ -395,6 +397,7 @@ public class DialogWizard
 		{
 			Locator locator = new Locator().kind(kind).id(id);
 			caze.forEach(p -> locator.set(p.kind, p.value));
+			
 			if (tryLocator(locator, node) == 1) 
 			{
 				return locator;
@@ -415,7 +418,19 @@ public class DialogWizard
 		}
 		return res;
 	}
-	
+
+	private List<Pair>  allAttributes(Node node)
+	{
+        List<Pair> list = new ArrayList<>();
+        addAttr(list, node, LocatorFieldKind.UID);
+        addAttr(list, node, LocatorFieldKind.CLAZZ);
+        addAttr(list, node, LocatorFieldKind.NAME);
+        addAttr(list, node, LocatorFieldKind.TITLE);
+        addAttr(list, node, LocatorFieldKind.ACTION);
+        addAttr(list, node, LocatorFieldKind.TOOLTIP);
+        addAttr(list, node, LocatorFieldKind.TEXT);
+        return list;
+	}
 	
 	private static class Pair
 	{
@@ -459,39 +474,44 @@ public class DialogWizard
 			list.add(new Pair(kind, value));
 		}
 	}
-
+	
 	private Locator locatorByXpath(String id, ControlKind kind, Node node)
 	{
         String ownerPath = ".";
-        Node ownerNode = XpathViewer.getFirst(this.rootNode, "/*");
 
-        String xpath = XpathViewer.fullXpath(ownerPath, ownerNode, node, false, null, true);
+        List<String> parameters = allRealAttributes(node);
+        String relativePath = XpathViewer.fullXpath(ownerPath, this.rootNode, node, false, parameters, false);
+        Locator locator = new Locator().kind(kind).id(id).xpath(relativePath);
         
-        String[] parts = xpath.split("/");
-        int stepLimit = Math.max(1, (int)(parts.length * NEAREST_PARENT_FACTOR));
-
-        String idName = this.pluginInfo.attributeName(LocatorFieldKind.UID);
-        if(idName != null)
+        if (tryLocator(locator, node) == 1)
         {
-            List<String> parameters = new ArrayList<>();
-            parameters.add(idName);
-    
-            Node parent = node; 
-            for (int level = 0; level < stepLimit; level++)
+            return locator;
+        }
+        return null;
+	}
+
+	private Locator locatorByRelativeXpath(String id, ControlKind kind, Node node)
+	{
+        String ownerPath = ".";
+        String xpath = XpathViewer.fullXpath(ownerPath, this.rootNode, node, false, null, true);
+        String[] parts = xpath.split("/");
+
+        Node parent = node; 
+        for (int level = 0; level < parts.length; level++)
+        {
+            Locator relativeLocator = locatorByXpath(id, kind, parent);
+            if (relativeLocator != null)
             {
-                parent = parent.getParentNode();
-                String relativePath = XpathViewer.fullXpath(ownerPath, ownerNode, parent, false, parameters, false);
-                Locator relativeLocator = new Locator().kind(kind).id(id).xpath(relativePath);
-                if (tryLocator(relativeLocator, parent) == 1)
+                String finalPath = XpathViewer.fullXpath(relativeLocator.getXpath(), parent, node, false, null, false);
+                
+                Locator finalLocator = new Locator().kind(kind).id(id).xpath(finalPath);
+                if (tryLocator(finalLocator, node) == 1)
                 {
-                    String finalPath = XpathViewer.fullXpath(relativePath, parent, node, false, null, false);
-                    Locator finalLocator = new Locator().kind(kind).id(id).xpath(finalPath);
-                    if (tryLocator(finalLocator, node) == 1)
-                    {
-                        return finalLocator;
-                    }
+                    return finalLocator;
                 }
             }
+
+            parent = parent.getParentNode();
         }
 	    
         Locator locator = new Locator().kind(kind).id(id).xpath(xpath);
@@ -503,6 +523,21 @@ public class DialogWizard
         return null;
 	}
 
+	private List<String> allRealAttributes(Node node)
+	{
+	    List<String> res = new ArrayList<>();
+	    NamedNodeMap attributes = node.getAttributes();
+	    if (attributes != null)
+	    {
+	        for (int index = 0; index < attributes.getLength(); index++)
+	        {
+	            Node attr = attributes.item(index);
+	            res.add(attr.getNodeName());
+	        }
+	    }
+        return res;
+	}
+	
 	private int tryLocator(Locator locator, Node node)
 	{
 		if (locator == null)
