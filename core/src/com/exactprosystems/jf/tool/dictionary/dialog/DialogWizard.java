@@ -54,6 +54,7 @@ public class DialogWizard
     private WizardSettings          wizardSettings;
     private WizardMatcher           matcher;
     private Document                document;
+    private Node                    rootNode;
 
     private Service<Document>       documentService;
     private Service<ImageAndOffset> imageService;
@@ -96,7 +97,7 @@ public class DialogWizard
         
         Map<Double, Node> candidates = new HashMap<>();
         
-        passTree(this.document, node -> candidates.put(similarityFactor(node, kind, info), node));
+        passTree(this.rootNode, node -> candidates.put(similarityFactor(node, kind, info), node));
         Double maxKey = candidates.keySet().stream().max(Double::compare).orElse(Double.MIN_VALUE);
         return maxKey != null && maxKey > this.wizardSettings.getThreshold() ? candidates.get(maxKey) : null;
     }
@@ -122,7 +123,7 @@ public class DialogWizard
         {
             Rect        actualRectangle     = relativeRect(this.dialogRectangle, (Rectangle)node.getUserData(IRemoteApplication.rectangleName));
             String      actualName          = node.getNodeName();
-            String      actualPath          = XpathViewer.fullXpath("", this.document, node, false, null, true);
+            String      actualPath          = XpathViewer.fullXpath("", this.rootNode, node, false, null, true);
             List<Attr>  actualAttr          = extractAttributes(node);
             
             Rect        expectedRectangle   = (Rect)info.get(ExtraInfo.rectangleName);
@@ -249,7 +250,7 @@ public class DialogWizard
 		Rectangle rec = (Rectangle)node.getUserData(IRemoteApplication.rectangleName);
 		Rect rectangle = relativeRect(this.dialogRectangle, rec);
 
-		info.set(ExtraInfo.xpathName, 		XpathViewer.fullXpath("", this.document, node, false, null, true));
+		info.set(ExtraInfo.xpathName, 		XpathViewer.fullXpath("", this.rootNode, node, false, null, true));
 		info.set(ExtraInfo.nodeName, 		node.getNodeName());
 		info.set(ExtraInfo.rectangleName, 	rectangle);
 		List<Attr> attributes = extractAttributes(node);
@@ -461,7 +462,10 @@ public class DialogWizard
 
 	private Locator locatorByXpath(String id, ControlKind kind, Node node)
 	{
-        String xpath = XpathViewer.fullXpath("", this.document, node, false, null, true);
+        String ownerPath = ".";
+        Node ownerNode = XpathViewer.getFirst(this.rootNode, "/*");
+
+        String xpath = XpathViewer.fullXpath(ownerPath, ownerNode, node, false, null, true);
         
         String[] parts = xpath.split("/");
         int stepLimit = Math.max(1, (int)(parts.length * NEAREST_PARENT_FACTOR));
@@ -476,7 +480,7 @@ public class DialogWizard
             for (int level = 0; level < stepLimit; level++)
             {
                 parent = parent.getParentNode();
-                String relativePath = XpathViewer.fullXpath("", null, parent, false, parameters, false);
+                String relativePath = XpathViewer.fullXpath(ownerPath, ownerNode, parent, false, parameters, false);
                 Locator relativeLocator = new Locator().kind(kind).id(id).xpath(relativePath);
                 if (tryLocator(relativeLocator, parent) == 1)
                 {
@@ -528,7 +532,7 @@ public class DialogWizard
 
     private List<Node> findAll(Locator locator) throws Exception
     {
-        return this.matcher.findAll(this.document, locator);
+        return this.matcher.findAll(this.rootNode, locator);
     }
 
     private boolean isStable(String identifier)
@@ -615,6 +619,7 @@ public class DialogWizard
 		this.documentService.setOnSucceeded(event ->
 		{
 			this.document = (Document) event.getSource().getValue();
+			this.rootNode = XpathViewer.getFirst(this.document, "/*");
 			this.controller.displayTree(this.document, xOffset, yOffset);
 		});
 		this.imageService.setOnSucceeded(event ->
@@ -789,7 +794,7 @@ public class DialogWizard
 		List<Node> nodeList;
         try
         {
-            nodeList = this.matcher.findAll(this.document, locator);
+            nodeList = this.matcher.findAll(this.rootNode, locator);
             count = nodeList.size();
             found = count > 0 ? nodeList.get(0) : null;
         }

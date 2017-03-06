@@ -43,6 +43,7 @@ public class WizardMatcher
         }
         Visibility visibility = locator.getVisibility();
         String xpathStr = xpathFromControl(locator.getControlKind(), locator);
+        
         XPath xpath = XPathFactory.newInstance().newXPath();
         XPathExpression compile = xpath.compile(xpathStr);
         NodeList nodeList = (NodeList) compile.evaluate(from, XPathConstants.NODESET);
