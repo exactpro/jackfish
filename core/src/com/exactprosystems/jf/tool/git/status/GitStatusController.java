@@ -25,6 +25,7 @@ import javafx.scene.text.Text;
 import java.io.File;
 import java.net.URL;
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -42,15 +43,18 @@ public class GitStatusController implements Initializable, ContainingParent
 	public void initialize(URL location, ResourceBundle resources)
 	{
 		this.tfPattern.textProperty().addListener((observable, oldValue, newValue) -> {
+			//TODO need implement this behavior
 			if (newValue != null && !newValue.isEmpty())
 			{
-				List<GitBean> list = new ArrayList<>();
-				byPass(this.treeView.getRoot(), list, gb -> gb.getFile().getPath().matches(newValue));
-				list.forEach(gb -> System.out.println(gb.getFile()));
+				//				List<GitBean> list = new ArrayList<>();
+				//				byPass(this.treeView.getRoot(), list, gb -> gb.getFile().getPath().matches(newValue));
+				//				list.forEach(gb -> System.out.println(gb.getFile()));
 			}
 			else
 			{
-
+				List<GitBean> list = new ArrayList<>();
+				byPass(this.treeView.getRoot(), list, p -> true);
+				list.forEach(gb -> gb.setChecked(false));
 			}
 		});
 	}
@@ -67,17 +71,22 @@ public class GitStatusController implements Initializable, ContainingParent
 	//region event methods
 	public void revertSelected(ActionEvent actionEvent)
 	{
-		List<GitBean> list = new ArrayList<>();
-		byPass(this.treeView.getRoot(), list, GitBean::isChecked);
-		Common.tryCatch(() -> this.model.revertFiles(list.stream().map(GitBean::getFile).collect(Collectors.toList())), "Error on revert selected items");
+		Set<String> set = new HashSet<>();
+		byPass(this.treeView.getRoot(), treeItem -> collect(set, treeItem));
+		Common.tryCatch(() -> this.model.revertPaths(set), "Error on revert selected items");
+	}
 
+	private void byPass(TreeItem<GitBean> item, Consumer<TreeItem<GitBean>> consumer)
+	{
+		consumer.accept(item);
+		item.getChildren().forEach(i -> byPass(i, consumer));
 	}
 
 	public void ignoreSelected(ActionEvent actionEvent)
 	{
 		List<GitBean> list = new ArrayList<>();
 		byPass(this.treeView.getRoot(), list, GitBean::isChecked);
-		Common.tryCatch(() -> this.model.revertFiles(list.stream().map(GitBean::getFile).collect(Collectors.toList())), "Error on revert selected items");
+		Common.tryCatch(() -> this.model.ignoreFiles(list.stream().map(GitBean::getFile).collect(Collectors.toList())), "Error on revert selected items");
 	}
 
 	public void select(ActionEvent actionEvent)
@@ -119,8 +128,40 @@ public class GitStatusController implements Initializable, ContainingParent
 	}
 
 	//region private methods
+	private void collect(Set<String> list, TreeItem<GitBean> treeItem)
+	{
+		boolean isParent = !treeItem.getChildren().isEmpty();
+		boolean isChecked = treeItem.getValue().isChecked();
+
+		if (isParent && isChecked)
+		{
+			collectAllFromDir(list, treeItem);
+		}
+		else if (isChecked)
+		{
+			list.add(treeItem.getValue().getFile().getPath());
+		}
+	}
+
+	private void collectAllFromDir(Set<String> list, TreeItem<GitBean> treeItem)
+	{
+		for (TreeItem<GitBean> item : treeItem.getChildren())
+		{
+			boolean isParent = !item.getChildren().isEmpty();
+			if (isParent)
+			{
+				collectAllFromDir(list, item);
+			}
+			else
+			{
+				list.add(item.getValue().getFile().getPath());
+			}
+		}
+	}
+
 	private void displayTree(List<GitBean> list)
 	{
+		this.treeView.getRoot().getChildren().clear();
 		for (GitBean gitBean : list)
 		{
 			List<GitBean> parents = getParents(gitBean);

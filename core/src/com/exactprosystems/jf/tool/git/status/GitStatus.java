@@ -15,6 +15,8 @@ import com.exactprosystems.jf.tool.main.Main;
 
 import java.io.File;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class GitStatus
 {
@@ -33,16 +35,16 @@ public class GitStatus
 		this.controller.display(list, state);
 	}
 
-	public void revertFiles(List<File> collect) throws Exception
+	void revertPaths(Set<String> paths) throws Exception
 	{
 		CredentialBean credential = this.model.getCredential();
-		GitUtil.revertFiles(credential, collect);
+		GitUtil.revertPaths(credential, paths);
 		this.controller.updateFiles(GitUtil.gitStatus(credential));
 	}
 
-	public void ignoreFiles(List<File> collect) throws Exception
+	void ignoreFiles(List<File> collect) throws Exception
 	{
-		GitUtil.ignoreFiles(collect);
+		GitUtil.ignorePaths(collect.stream().map(File::getPath).collect(Collectors.toList()));
 		this.controller.updateFiles(GitUtil.gitStatus(this.model.getCredential()));
 	}
 }

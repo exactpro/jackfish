@@ -73,7 +73,7 @@ public class GitCommit
 					@Override
 					protected Void call() throws Exception
 					{
-						DialogsHelper.showInfo("Start commitinging");
+						DialogsHelper.showInfo("Start commiting");
 						GitUtil.gitCommit(credential, list.stream().map(GitBean::getFile).collect(Collectors.toList()), msg, isAmend);
 						return null;
 					}

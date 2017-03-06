@@ -22,7 +22,7 @@
 				<Button mnemonicParsing="false" onAction="#revertSelected" text="Revert selected"/>
 				<Button mnemonicParsing="false" onAction="#ignoreSelected" text="Ignore selected"/>
 			</HBox>
-			<HBox alignment="CENTER">
+			<HBox alignment="CENTER" visible="false">
 				<Label text="File pattern : "/>
 				<TextField fx:id="tfPattern" HBox.hgrow="ALWAYS"/>
 				<Button text="Select" onAction="#select"/>

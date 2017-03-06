@@ -47,6 +47,8 @@ import static org.eclipse.jgit.lib.Constants.*;
 
 public class GitUtil
 {
+	private static final CredentialBean EMPTY_BEAN = new CredentialBean("", "", "", "");
+
 	private GitUtil()
 	{
 
@@ -348,6 +350,28 @@ public class GitUtil
 	//endregion
 
 	//region Status
+	public static void revertPaths(CredentialBean bean, Set<String> paths) throws Exception
+	{
+		try (Git git = git(bean))
+		{
+			CheckoutCommand checkout = git.checkout();
+			paths.forEach(checkout::addPath);
+			checkout.call();
+		}
+	}
+
+	public static void ignorePaths(List<String> paths) throws Exception
+	{
+		File gitIgnore = checkGitIgnoreFile();
+		try (FileWriter writer = new FileWriter(gitIgnore, true))
+		{
+			for (String path : paths)
+			{
+				writer.write(path + "\n");
+			}
+		}
+	}
+
 	public static void revertFiles(CredentialBean bean, List<File> files) throws Exception
 	{
 		try (Git git = git(bean))
@@ -356,19 +380,6 @@ public class GitUtil
 			files.stream().map(File::getPath).map(Common::getRelativePath).forEach(checkout::addPath);
 			checkout.call();
 		}
-	}
-
-	public static void ignoreFiles(List<File> files) throws Exception
-	{
-		File gitIgnore = checkGitIgnoreFile();
-		try (FileWriter writer = new FileWriter(gitIgnore, true))
-		{
-			for (File file : files)
-			{
-				writer.write(Common.getRelativePath(file.getAbsolutePath()) + "\n");
-			}
-		}
-
 	}
 
 	public static List<GitBean> gitStatus(CredentialBean credential) throws Exception
@@ -652,6 +663,7 @@ public class GitUtil
 	}
 	//endregion
 
+	//region Tags
 	public static List<Tag> getTags(CredentialBean bean) throws Exception
 	{
 		try (Git git = git(bean))
@@ -706,20 +718,13 @@ public class GitUtil
 			return fullname;
 		}
 	}
-
-	public static void gitDummy(Object... objects) throws Exception
-	{
-		for (int i = 0; i < 5; i++)
-		{
-			System.out.println("tick " + i);
-			Thread.sleep(3000);
-		}
-	}
+	//endregion
 
 	//region private methods
 	private static File checkGitIgnoreFile() throws Exception
 	{
-		File file = new File(Constants.GITIGNORE_FILENAME);
+		File rootDirectory = gitRootDirectory(EMPTY_BEAN);
+		File file = new File(rootDirectory + File.separator + Constants.GITIGNORE_FILENAME);
 		if (!file.exists())
 		{
 			file.createNewFile();
