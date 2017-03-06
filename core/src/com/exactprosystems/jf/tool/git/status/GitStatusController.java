@@ -9,7 +9,9 @@ package com.exactprosystems.jf.tool.git.status;
 
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
+import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.git.GitBean;
+import com.exactprosystems.jf.tool.git.GitUtil;
 import com.exactprosystems.jf.tool.newconfig.ConfigurationTreeView;
 import com.exactprosystems.jf.tool.newconfig.nodes.BuildTree;
 import javafx.collections.FXCollections;
@@ -24,6 +26,9 @@ import javafx.scene.text.Text;
 
 import java.io.File;
 import java.net.URL;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
@@ -43,19 +48,35 @@ public class GitStatusController implements Initializable, ContainingParent
 	public void initialize(URL location, ResourceBundle resources)
 	{
 		this.tfPattern.textProperty().addListener((observable, oldValue, newValue) -> {
-			//TODO need implement this behavior
-			if (newValue != null && !newValue.isEmpty())
+			List<GitBean> list = new ArrayList<>();
+			byPass(this.treeView.getRoot(), list, p -> true);
+			list.forEach(gb -> gb.setMatch(false));
+
+			Common.tryCatch(() ->
 			{
-				//				List<GitBean> list = new ArrayList<>();
-				//				byPass(this.treeView.getRoot(), list, gb -> gb.getFile().getPath().matches(newValue));
-				//				list.forEach(gb -> System.out.println(gb.getFile()));
-			}
-			else
-			{
-				List<GitBean> list = new ArrayList<>();
-				byPass(this.treeView.getRoot(), list, p -> true);
-				list.forEach(gb -> gb.setChecked(false));
-			}
+				if (newValue != null && !newValue.isEmpty())
+				{
+					List<Path> pathList = new ArrayList<>();
+					byPassDirectory(GitUtil.gitRootDirectory(GitUtil.EMPTY_BEAN), pathList::add, newValue);
+					List<String> filePaths = pathList.stream().map(Path::toFile).map(File::getAbsolutePath).collect(Collectors.toList());
+
+					List<GitBean> beanList = new ArrayList<>();
+					byPass(this.treeView.getRoot(), beanList, gb ->
+					{
+						try
+						{
+							return filePaths.contains(new File(GitUtil.checkFile(GitUtil.EMPTY_BEAN, gb.getFile().getPath())).getAbsolutePath());
+						}
+						catch (Exception e)
+						{
+							//nothing;
+						}
+						return false;
+					});
+					beanList.forEach(gb -> gb.setMatch(true));
+				}
+			}, "Error");
+			refreshTree();
 		});
 	}
 	//endregion
@@ -89,13 +110,20 @@ public class GitStatusController implements Initializable, ContainingParent
 		Common.tryCatch(() -> this.model.ignoreFiles(list.stream().map(GitBean::getFile).collect(Collectors.toList())), "Error on revert selected items");
 	}
 
+	public void ignoreByPattern(ActionEvent actionEvent)
+	{
+		Common.tryCatch(() -> this.model.ignoreByPattern(this.tfPattern.getText()), "Error on revert selected items");
+	}
+
 	public void select(ActionEvent actionEvent)
 	{
 		List<GitBean> list = new ArrayList<>();
 		byPass(this.treeView.getRoot(), list, GitBean::isMatch);
 		list.forEach(gb -> gb.setChecked(true));
+		refreshTree();
 	}
 	//endregion
+
 
 	void init(GitStatus model, File rootDirectory)
 	{
@@ -128,6 +156,33 @@ public class GitStatusController implements Initializable, ContainingParent
 	}
 
 	//region private methods
+	private static void byPassDirectory(File path, Consumer<Path> consumer, String pattern) throws Exception
+	{
+		try (DirectoryStream<Path> stream = Files.newDirectoryStream(path.toPath(), pattern))
+		{
+			stream.forEach(consumer);
+		}
+
+		File[] files = path.listFiles();
+		if (files != null)
+		{
+			for (File file : files)
+			{
+				if (file.isDirectory())
+				{
+					byPassDirectory(file, consumer, pattern);
+				}
+			}
+		}
+	}
+
+	private void refreshTree()
+	{
+		boolean expanded = this.treeView.getRoot().isExpanded();
+		this.treeView.getRoot().setExpanded(!expanded);
+		this.treeView.getRoot().setExpanded(expanded);
+	}
+
 	private void collect(Set<String> list, TreeItem<GitBean> treeItem)
 	{
 		boolean isParent = !treeItem.getChildren().isEmpty();
@@ -241,6 +296,7 @@ public class GitStatusController implements Initializable, ContainingParent
 		protected void updateItem(GitBean item, boolean empty)
 		{
 			super.updateItem(item, empty);
+			this.getStyleClass().remove(CssVariables.GIT_MATCHED_FILE);
 			if (item != null && !empty)
 			{
 				BorderPane pane = new BorderPane();
@@ -249,11 +305,12 @@ public class GitStatusController implements Initializable, ContainingParent
 				box.setSelected(item.isChecked());
 				box.selectedProperty().addListener((observable, oldValue, newValue) -> item.setChecked(newValue));
 
-				Label itemStatus = new Label(item.getStatus().getPreffix());
-				itemStatus.getStyleClass().addAll(item.getStatus().getStyleClass());
-
 				Label itemFile = new Label(item.getFile().getName());
 				itemFile.getStyleClass().addAll(item.getStatus().getStyleClass());
+				if (item.isMatch() && !this.getStyleClass().contains(CssVariables.GIT_MATCHED_FILE))
+				{
+					this.getStyleClass().add(CssVariables.GIT_MATCHED_FILE);
+				}
 				BorderPane.setAlignment(itemFile, Pos.CENTER_LEFT);
 				pane.setLeft(box);
 				pane.setCenter(itemFile);

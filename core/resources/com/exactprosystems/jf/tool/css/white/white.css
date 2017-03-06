@@ -697,6 +697,10 @@ CellView > .text-input.text-field{
 	-fx-background-color : #20b2aa
 
 }
+.gitMatchedFile {
+	-fx-background-color : rgb(0,255,0,0.1);
+
+}
 
 .gitMergeNoConflict .content{
 	-fx-background-color : rgba(0,255,0, 0.3);

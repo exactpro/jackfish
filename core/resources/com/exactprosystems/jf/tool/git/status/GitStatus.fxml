@@ -21,8 +21,9 @@
 			<HBox prefHeight="30.0" minHeight="30.0" maxHeight="30.0">
 				<Button mnemonicParsing="false" onAction="#revertSelected" text="Revert selected"/>
 				<Button mnemonicParsing="false" onAction="#ignoreSelected" text="Ignore selected"/>
+				<Button mnemonicParsing="false" onAction="#ignoreByPattern" text="Ignore by pattern"/>
 			</HBox>
-			<HBox alignment="CENTER" visible="false">
+			<HBox alignment="CENTER">
 				<Label text="File pattern : "/>
 				<TextField fx:id="tfPattern" HBox.hgrow="ALWAYS"/>
 				<Button text="Select" onAction="#select"/>

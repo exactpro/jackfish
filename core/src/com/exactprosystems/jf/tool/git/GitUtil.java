@@ -47,7 +47,7 @@ import static org.eclipse.jgit.lib.Constants.*;
 
 public class GitUtil
 {
-	private static final CredentialBean EMPTY_BEAN = new CredentialBean("", "", "", "");
+	public static final CredentialBean EMPTY_BEAN = new CredentialBean("", "", "", "");
 
 	private GitUtil()
 	{

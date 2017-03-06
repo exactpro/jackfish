@@ -17,6 +17,7 @@ import java.io.File;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class GitStatus
 {
@@ -45,6 +46,12 @@ public class GitStatus
 	void ignoreFiles(List<File> collect) throws Exception
 	{
 		GitUtil.ignorePaths(collect.stream().map(File::getPath).collect(Collectors.toList()));
+		this.controller.updateFiles(GitUtil.gitStatus(this.model.getCredential()));
+	}
+
+	void ignoreByPattern(String pattern) throws Exception
+	{
+		GitUtil.ignorePaths(Stream.of(pattern).collect(Collectors.toList()));
 		this.controller.updateFiles(GitUtil.gitStatus(this.model.getCredential()));
 	}
 }
