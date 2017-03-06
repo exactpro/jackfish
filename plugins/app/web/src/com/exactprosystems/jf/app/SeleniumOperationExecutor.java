@@ -1142,234 +1142,234 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 				switch (key)
 				{
 					case ESCAPE:
-						this.customAction.sendKeys(component, Keys.ESCAPE).perform();
+						this.customAction.sendKeys(Keys.ESCAPE).perform();
 						break;
 					case F1:
-						this.customAction.sendKeys(component, Keys.F1).perform();
+						this.customAction.sendKeys(Keys.F1).perform();
 						break;
 					case F2:
-						this.customAction.sendKeys(component, Keys.F2).perform();
+						this.customAction.sendKeys(Keys.F2).perform();
 						break;
 					case F3:
-						this.customAction.sendKeys(component, Keys.F3).perform();
+						this.customAction.sendKeys(Keys.F3).perform();
 						break;
 					case F4:
-						this.customAction.sendKeys(component, Keys.F4).perform();
+						this.customAction.sendKeys(Keys.F4).perform();
 						break;
 					case F5:
-						this.customAction.sendKeys(component, Keys.F5).perform();
+						this.customAction.sendKeys(Keys.F5).perform();
 						break;
 					case F6:
-						this.customAction.sendKeys(component, Keys.F6).perform();
+						this.customAction.sendKeys(Keys.F6).perform();
 						break;
 					case F7:
-						this.customAction.sendKeys(component, Keys.F7).perform();
+						this.customAction.sendKeys(Keys.F7).perform();
 						break;
 					case F8:
-						this.customAction.sendKeys(component, Keys.F8).perform();
+						this.customAction.sendKeys(Keys.F8).perform();
 						break;
 					case F9:
-						this.customAction.sendKeys(component, Keys.F9).perform();
+						this.customAction.sendKeys(Keys.F9).perform();
 						break;
 					case F10:
-						this.customAction.sendKeys(component, Keys.F10).perform();
+						this.customAction.sendKeys(Keys.F10).perform();
 						break;
 					case F11:
-						this.customAction.sendKeys(component, Keys.F11).perform();
+						this.customAction.sendKeys(Keys.F11).perform();
 						break;
 					case F12:
-						this.customAction.sendKeys(component, Keys.F12).perform();
+						this.customAction.sendKeys(Keys.F12).perform();
 						break;
 
 					case DIG1:
-						this.customAction.sendKeys(component, Keys.NUMPAD1).perform();
+						this.customAction.sendKeys(Keys.NUMPAD1).perform();
 						break;
 					case DIG2:
-						this.customAction.sendKeys(component, Keys.NUMPAD2).perform();
+						this.customAction.sendKeys(Keys.NUMPAD2).perform();
 						break;
 					case DIG3:
-						this.customAction.sendKeys(component, Keys.NUMPAD3).perform();
+						this.customAction.sendKeys(Keys.NUMPAD3).perform();
 						break;
 					case DIG4:
-						this.customAction.sendKeys(component, Keys.NUMPAD4).perform();
+						this.customAction.sendKeys(Keys.NUMPAD4).perform();
 						break;
 					case DIG5:
-						this.customAction.sendKeys(component, Keys.NUMPAD5).perform();
+						this.customAction.sendKeys(Keys.NUMPAD5).perform();
 						break;
 					case DIG6:
-						this.customAction.sendKeys(component, Keys.NUMPAD6).perform();
+						this.customAction.sendKeys(Keys.NUMPAD6).perform();
 						break;
 					case DIG7:
-						this.customAction.sendKeys(component, Keys.NUMPAD7).perform();
+						this.customAction.sendKeys(Keys.NUMPAD7).perform();
 						break;
 					case DIG8:
-						this.customAction.sendKeys(component, Keys.NUMPAD8).perform();
+						this.customAction.sendKeys(Keys.NUMPAD8).perform();
 						break;
 					case DIG9:
-						this.customAction.sendKeys(component, Keys.NUMPAD9).perform();
+						this.customAction.sendKeys(Keys.NUMPAD9).perform();
 						break;
 					case DIG0:
-						this.customAction.sendKeys(component, Keys.NUMPAD0).perform();
+						this.customAction.sendKeys(Keys.NUMPAD0).perform();
 						break;
 					case BACK_SPACE:
-						this.customAction.sendKeys(component, Keys.BACK_SPACE).perform();
+						this.customAction.sendKeys(Keys.BACK_SPACE).perform();
 						break;
 					case INSERT:
-						this.customAction.sendKeys(component, Keys.INSERT).perform();
+						this.customAction.sendKeys(Keys.INSERT).perform();
 						break;
 					case HOME:
-						this.customAction.sendKeys(component, Keys.HOME).perform();
+						this.customAction.sendKeys(Keys.HOME).perform();
 						break;
 					case PAGE_UP:
-						this.customAction.sendKeys(component, Keys.PAGE_UP).perform();
+						this.customAction.sendKeys(Keys.PAGE_UP).perform();
 						break;
 
 					case TAB:
-						this.customAction.sendKeys(component, Keys.TAB).perform();
+						this.customAction.sendKeys(Keys.TAB).perform();
 						break;
 					case Q:
-						this.customAction.sendKeys(component, "q").perform();
+						this.customAction.sendKeys("q").perform();
 						break;
 					case W:
-						this.customAction.sendKeys(component, "w").perform();
+						this.customAction.sendKeys("w").perform();
 						break;
 					case E:
-						this.customAction.sendKeys(component, "e").perform();
+						this.customAction.sendKeys("e").perform();
 						break;
 					case R:
-						this.customAction.sendKeys(component, "r").perform();
+						this.customAction.sendKeys("r").perform();
 						break;
 					case T:
-						this.customAction.sendKeys(component, "t").perform();
+						this.customAction.sendKeys("t").perform();
 						break;
 					case Y:
-						this.customAction.sendKeys(component, "y").perform();
+						this.customAction.sendKeys("y").perform();
 						break;
 					case U:
-						this.customAction.sendKeys(component, "u").perform();
+						this.customAction.sendKeys("u").perform();
 						break;
 					case I:
-						this.customAction.sendKeys(component, "i").perform();
+						this.customAction.sendKeys("i").perform();
 						break;
 					case O:
-						this.customAction.sendKeys(component, "o").perform();
+						this.customAction.sendKeys("o").perform();
 						break;
 					case P:
-						this.customAction.sendKeys(component, "p").perform();
+						this.customAction.sendKeys("p").perform();
 						break;
 					case SLASH:
 						break;
 					case BACK_SLASH:
 						break;
 					case DELETE:
-						this.customAction.sendKeys(component, Keys.DELETE).perform();
+						this.customAction.sendKeys(Keys.DELETE).perform();
 						break;
 					case END:
-						this.customAction.sendKeys(component, Keys.END).perform();
+						this.customAction.sendKeys(Keys.END).perform();
 						break;
 					case PAGE_DOWN:
-						this.customAction.sendKeys(component, Keys.PAGE_DOWN).perform();
+						this.customAction.sendKeys(Keys.PAGE_DOWN).perform();
 						break;
 
 					case CAPS_LOCK:
 						break;
 					case A:
-						this.customAction.sendKeys(component, "a").perform();
+						this.customAction.sendKeys("a").perform();
 						break;
 					case S:
-						this.customAction.sendKeys(component, "s").perform();
+						this.customAction.sendKeys("s").perform();
 						break;
 					case D:
-						this.customAction.sendKeys(component, "d").perform();
+						this.customAction.sendKeys("d").perform();
 						break;
 					case F:
-						this.customAction.sendKeys(component, "f").perform();
+						this.customAction.sendKeys("f").perform();
 						break;
 					case G:
-						this.customAction.sendKeys(component, "g").perform();
+						this.customAction.sendKeys("g").perform();
 						break;
 					case H:
-						this.customAction.sendKeys(component, "h").perform();
+						this.customAction.sendKeys("h").perform();
 						break;
 					case J:
-						this.customAction.sendKeys(component, "j").perform();
+						this.customAction.sendKeys("j").perform();
 						break;
 					case K:
-						this.customAction.sendKeys(component, "k").perform();
+						this.customAction.sendKeys("k").perform();
 						break;
 					case L:
-						this.customAction.sendKeys(component, "l").perform();
+						this.customAction.sendKeys("l").perform();
 						break;
 					case SEMICOLON:
-						this.customAction.sendKeys(component, Keys.SEMICOLON).perform();
+						this.customAction.sendKeys(Keys.SEMICOLON).perform();
 						break;
 					case QUOTE:
 						break;
 					case DOUBLE_QUOTE:
 						break;
 					case ENTER:
-						this.customAction.sendKeys(component, Keys.ENTER).perform();
+						this.customAction.sendKeys(Keys.ENTER).perform();
 						break;
 
 					case SHIFT:
-						this.customAction.sendKeys(component, Keys.SHIFT).perform();
+						this.customAction.sendKeys(Keys.SHIFT).perform();
 						break;
 					case Z:
-						this.customAction.sendKeys(component, "z").perform();
+						this.customAction.sendKeys("z").perform();
 						break;
 					case X:
-						this.customAction.sendKeys(component, "x").perform();
+						this.customAction.sendKeys("x").perform();
 						break;
 					case C:
-						this.customAction.sendKeys(component, "c").perform();
+						this.customAction.sendKeys("c").perform();
 						break;
 					case V:
-						this.customAction.sendKeys(component, "v").perform();
+						this.customAction.sendKeys("v").perform();
 						break;
 					case B:
-						this.customAction.sendKeys(component, "b").perform();
+						this.customAction.sendKeys("b").perform();
 						break;
 					case N:
-						this.customAction.sendKeys(component, "n").perform();
+						this.customAction.sendKeys("n").perform();
 						break;
 					case M:
-						this.customAction.sendKeys(component, "m").perform();
+						this.customAction.sendKeys("m").perform();
 						break;
 					case DOT:
-						this.customAction.sendKeys(component, Keys.DECIMAL).perform();
+						this.customAction.sendKeys(Keys.DECIMAL).perform();
 						break;
 					case UP:
-						this.customAction.sendKeys(component, Keys.UP).perform();
+						this.customAction.sendKeys(Keys.UP).perform();
 						break;
 
 					case CONTROL:
-						this.customAction.sendKeys(component, Keys.CONTROL).perform();
+						this.customAction.sendKeys(Keys.CONTROL).perform();
 						break;
 					case ALT:
-						this.customAction.sendKeys(component, Keys.ALT).perform();
+						this.customAction.sendKeys(Keys.ALT).perform();
 						break;
 					case SPACE:
-						this.customAction.sendKeys(component, Keys.SPACE).perform();
+						this.customAction.sendKeys(Keys.SPACE).perform();
 						break;
 					case LEFT:
-						this.customAction.sendKeys(component, Keys.LEFT).perform();
+						this.customAction.sendKeys(Keys.LEFT).perform();
 						break;
 					case DOWN:
-						this.customAction.sendKeys(component, Keys.DOWN).perform();
+						this.customAction.sendKeys(Keys.DOWN).perform();
 						break;
 
 					case RIGHT:
-						this.customAction.sendKeys(component, Keys.RIGHT).perform();
+						this.customAction.sendKeys(Keys.RIGHT).perform();
 						break;
 
 					case PLUS:
-						this.customAction.sendKeys(component, Keys.ADD).perform();
+						this.customAction.sendKeys(Keys.ADD).perform();
 						break;
 					case MINUS:
-						this.customAction.sendKeys(component, Keys.SUBTRACT).perform();
+						this.customAction.sendKeys(Keys.SUBTRACT).perform();
 						break;
 					case UNDERSCORE:
-						this.customAction.sendKeys(component, Keys.chord(Keys.SHIFT, "-")).perform();
+						this.customAction.sendKeys(Keys.chord(Keys.SHIFT, "-")).perform();
 						break;
 
 					default:
