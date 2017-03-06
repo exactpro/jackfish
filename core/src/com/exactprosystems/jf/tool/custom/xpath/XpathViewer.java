@@ -2,6 +2,7 @@ package com.exactprosystems.jf.tool.custom.xpath;
 
 import com.exactprosystems.jf.api.app.IRemoteApplication;
 import com.exactprosystems.jf.api.app.Locator;
+import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.tool.Common;
 import javafx.concurrent.Task;
 import org.w3c.dom.Document;
@@ -81,8 +82,14 @@ public class XpathViewer
 
 	public void applyXpath(String xpath)
 	{
+        Node rootNode = this.document;
+        if (this.owner != null)
+        {
+            rootNode = getFirst(this.document, "/*");
+        }
+	    
 		this.controller.deselectItems();
-		this.controller.displayResults(evaluate(xpath));
+		this.controller.displayResults(evaluate(rootNode, xpath));
 	}
 
 	public void updateNode(Node node)
@@ -97,23 +104,36 @@ public class XpathViewer
 
 	public void createXpaths(boolean useText, List<String> parameters)
 	{
-		Node relativeNode = null;
-		if (this.relativeXpath != null)
-		{
-			List<Node> nodes = evaluate(this.relativeXpath);
-			relativeNode = nodes == null || nodes.isEmpty() ? null : nodes.get(0);
+        String relativePath = null;
+        Node relativeNode = null;
+        Node rootNode = this.document;
+        
+        if (this.owner != null)
+        {
+            relativePath = ".";
+            relativeNode = getFirst(this.document, "/*");
+            rootNode = relativeNode;
+        }
+        
+        if (!Str.IsNullOrEmpty(this.relativeXpath))
+        {
+            relativePath = this.relativeXpath;
+            relativeNode = getFirst(this.document, this.relativeXpath);
 		}
 		
-		String xpath1 = fullXpath(this.relativeXpath, relativeNode, currentNode, false, 	null, 		true);
-		String xpath2 = fullXpath(this.relativeXpath, relativeNode, currentNode, useText, 	parameters, true);
-		String xpath3 = fullXpath(this.relativeXpath, relativeNode, currentNode, false, 	null, 		false);
-		String xpath4 = fullXpath(this.relativeXpath, relativeNode,	currentNode, useText, 	parameters, false);
-		
-		this.controller.displayXpaths(xpath1, xpath2, xpath3, xpath4);
-		this.controller.displayCounters(evaluate(xpath1), evaluate(xpath2), evaluate(xpath3), evaluate(xpath4));
+		String xpath1 = fullXpath(relativePath, relativeNode, currentNode, false, 	null, 		true);
+		String xpath2 = fullXpath(relativePath, relativeNode, currentNode, useText, parameters, true);
+		String xpath3 = fullXpath(relativePath, relativeNode, currentNode, false, 	null, 		false);
+		String xpath4 = fullXpath(relativePath, relativeNode, currentNode, useText, parameters, false);
 
-		Rectangle rectangle = (Rectangle) this.currentNode.getUserData(IRemoteApplication.rectangleName);
-		this.controller.displayRectangle(rectangle);
+		this.controller.displayXpaths(xpath1, xpath2, xpath3, xpath4);
+		this.controller.displayCounters(evaluate(rootNode, xpath1), evaluate(rootNode, xpath2), evaluate(rootNode, xpath3), evaluate(rootNode, xpath4));
+
+		if (this.currentNode != null)
+		{
+    		Rectangle rectangle = (Rectangle) this.currentNode.getUserData(IRemoteApplication.rectangleName);
+    		this.controller.displayRectangle(rectangle);
+		}
 	}
 	
 	public static String text(Node node)
@@ -134,7 +154,7 @@ public class XpathViewer
 		return sb.toString();
 	}
 
-    public static String fullXpath(String relativeXpath, Node relative, Node node, boolean useText, List<String> parameters, boolean fromRoot)
+    public static String fullXpath(String relativeXpath, Node relative, Node node, boolean useText, List<String> parameters, boolean longPath)
     {
         if (node == null)
         {
@@ -143,9 +163,9 @@ public class XpathViewer
         
         if (relative == null)
         {
-            if (!fromRoot)
+            if (!longPath)
             {
-                return "./" + xpath(node.getParentNode(), node, useText, parameters);
+                return "/" + xpath(node.getParentNode(), node, useText, parameters);
             }
             return xpath(null, node, useText, parameters);
         }
@@ -159,33 +179,44 @@ public class XpathViewer
                 current = current.getParentNode();
                 backPath += "/..";
             }
+            
+            if (!longPath)
+            {
+                return  relativeXpath + backPath + "/" + xpath(node.getParentNode(), node, useText, parameters);
+            }
             return relativeXpath + backPath + xpath(common, node, useText, parameters);
         }
+    }
+    
+    public static List<Node> evaluate(Node node,  String xpathStr)
+    {
+        if (xpathStr == null)
+        {
+            return null;
+        }
+        XPath xpath = XPathFactory.newInstance().newXPath();
+        try
+        {
+            XPathExpression compile = xpath.compile(xpathStr);
+            NodeList nodeList = (NodeList) compile.evaluate(node, XPathConstants.NODESET);
+            return IntStream.range(0, nodeList.getLength()).mapToObj(nodeList::item).collect(Collectors.toList());
+        }
+        catch (XPathExpressionException e)
+        {
+        }
+        
+        return null;
+    }
+
+    public static Node getFirst(Node node, String xpathStr)
+    {
+        List<Node> nodes = evaluate(node, xpathStr);
+        return nodes == null || nodes.isEmpty() ? null : nodes.get(0);
     }
     
 	// ============================================================
 	// private methods
 	// ============================================================
-	private List<Node> evaluate(String xpathStr)
-	{
-		if (xpathStr == null)
-		{
-			return null;
-		}
-		XPath xpath = XPathFactory.newInstance().newXPath();
-		try
-		{
-			XPathExpression compile = xpath.compile(xpathStr);
-			NodeList nodeList = (NodeList) compile.evaluate(this.document.getDocumentElement(), XPathConstants.NODESET);
-			return IntStream.range(0, nodeList.getLength()).mapToObj(nodeList::item).collect(Collectors.toList());
-		}
-		catch (XPathExpressionException e)
-		{
-		}
-		
-		return null;
-	}
-
 	private static String xpath(Node parent, Node node, boolean useText, List<String> parameters)
 	{
         if (node instanceof Document)

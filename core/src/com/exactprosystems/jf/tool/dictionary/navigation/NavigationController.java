@@ -301,17 +301,9 @@ public class NavigationController implements Initializable, ContainingParent
 		if (this.appConnection != null)
 		{
 			Locator owner = null;
-			if (selectedOwner == null)
+			if (selectedOwner != null)
 			{
-				IControl selfControl = currentWindow().getSelfControl();
-				if (selfControl != null && selfControl != currentElement())
-				{
-					owner = selfControl.locator();
-				}
-			}
-			else
-			{
-				owner = selectedOwner.locator();
+	            owner = selectedOwner.locator();
 			}
 			IRemoteApplication service = this.appConnection.getApplication().service();
 			service.startNewDialog();

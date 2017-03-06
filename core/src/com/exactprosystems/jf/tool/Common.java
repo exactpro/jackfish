@@ -439,6 +439,7 @@ public abstract class Common
 
 	public static void writeToFile(File file, List<String> lines) throws Exception
 	{
+	    logger.error(">> " + new File(".").getAbsolutePath());
 		try (PrintWriter writer = new PrintWriter(new FileWriter(file)))
 		{
 			lines.forEach(writer::println);
