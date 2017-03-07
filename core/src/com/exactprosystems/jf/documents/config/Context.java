@@ -116,7 +116,7 @@ public class Context implements IContext, AutoCloseable
        String name = this.handlers.get(handlerKind);
        if (name == null)
        {
-           GlobalHandler globalHandler = this.getConfiguration().getGlobalHandler(); 
+           GlobalHandler globalHandler = getConfiguration().getGlobalHandler(); 
            if (globalHandler != null && globalHandler.isEnabled())
            {
                name = globalHandler.getGlobalHandler(handlerKind).get();
@@ -232,6 +232,12 @@ public class Context implements IContext, AutoCloseable
 		String ns = parts[0];
 		String id = parts[1];
 
+		Configuration config = getConfiguration();
+		if (this.lastConfigUpdate == null || config.getLastUpdateDate().compareTo(this.lastConfigUpdate) > 0)
+		{
+		    this.lastConfigUpdate = config.getLastUpdateDate();
+		    this.libs.clear();
+		}
 		Matrix matrix = this.libs.get(ns);
 		
 		if (matrix == null)
@@ -404,6 +410,7 @@ public class Context implements IContext, AutoCloseable
 
 	private Map<String, Matrix> libs = new HashMap<>();
 	private Map<HandlerKind, String> handlers = new HashMap<>();
+	private Date   lastConfigUpdate = null;
 	
 	private static final Logger logger = Logger.getLogger(Context.class);
 }

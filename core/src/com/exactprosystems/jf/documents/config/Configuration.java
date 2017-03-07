@@ -346,11 +346,6 @@ public class Configuration extends AbstractDocument
 		return this.reportsValue;
 	}
 
-	public MutableString getGit()
-	{
-		return this.gitValue;
-	}
-
     public MutableString getVersion()
     {
         return this.versionValue;
@@ -461,6 +456,10 @@ public class Configuration extends AbstractDocument
 		return evaluator;
 	}
 
+	public Date getLastUpdateDate()
+	{
+	    return this.lastUpdate;
+	}
 
 	public void refresh()  throws Exception
 	{
@@ -471,6 +470,8 @@ public class Configuration extends AbstractDocument
 		refreshClientDictionaries();
 		refreshReport();
 
+		this.lastUpdate = new Date();
+		
 		display();
 	}
 
@@ -558,10 +559,10 @@ public class Configuration extends AbstractDocument
 		}
 	}
 
-	public void refreshMatrices()
+	protected void refreshMatrices()
 	{}
 
-	public void refreshAppDictionaries()
+	protected void refreshAppDictionaries()
 	{
 		for (AppEntry entry : this.appEntriesValue)
 		{
@@ -598,10 +599,10 @@ public class Configuration extends AbstractDocument
 		}
 	}
 
-	public void refreshClientDictionaries()
+	protected void refreshClientDictionaries()
 	{}
 
-	public void refreshReport()
+	protected void refreshReport()
 	{}
 
     //------------------------------------------------------------------------------------------------------------------
@@ -744,7 +745,6 @@ public class Configuration extends AbstractDocument
 				|| this.dateValue.isChanged()
 				|| this.dateTimeValue.isChanged()
 				|| this.formatsValue.isChanged()
-				|| this.gitValue.isChanged()
                 || this.versionValue.isChanged()
 				|| this.reportsValue.isChanged()
 				|| this.sqlEntriesValue.isChanged()
@@ -770,7 +770,6 @@ public class Configuration extends AbstractDocument
 		this.dateValue.saved();
 		this.dateTimeValue.saved();
 		this.formatsValue.saved();
-		this.gitValue.saved();
         this.versionValue.saved();
 		this.reportsValue.saved();
 		this.appEntriesValue.saved();
@@ -977,7 +976,6 @@ public class Configuration extends AbstractDocument
 		this.dateValue.set(config.dateValue);
 		this.dateTimeValue.set(config.dateTimeValue);
 		this.formatsValue.from(config.formatsValue);
-		this.gitValue.set(config.gitValue);
         this.versionValue.set(config.versionValue);
 		this.globalHandlerValue.setValue(config.globalHandlerValue);
 		this.reportsValue.set(config.reportsValue);
@@ -1021,6 +1019,7 @@ public class Configuration extends AbstractDocument
 	protected ServicePool			services;
 	protected ApplicationPool		applications;
 	protected DataBasePool			databases;
+	protected Date                  lastUpdate = new Date();
 
 	protected final List<Document> 	subordinates = new ArrayList<>();
 
