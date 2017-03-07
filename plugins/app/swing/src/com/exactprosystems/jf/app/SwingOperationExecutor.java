@@ -1756,247 +1756,113 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 
 	private int getKeyCode(Keyboard key)
 	{
-		int id = 0;
 		switch (key)
 		{
-			case ESCAPE:
-				id = KeyEvent.VK_ESCAPE;
-				break;
-			case F1:
-				id = KeyEvent.VK_F1;
-				break;
-			case F2:
-				id = KeyEvent.VK_F2;
-				break;
-			case F3:
-				id = KeyEvent.VK_F3;
-				break;
-			case F4:
-				id = KeyEvent.VK_F4;
-				break;
-			case F5:
-				id = KeyEvent.VK_F5;
-				break;
-			case F6:
-				id = KeyEvent.VK_F6;
-				break;
-			case F7:
-				id = KeyEvent.VK_F7;
-				break;
-			case F8:
-				id = KeyEvent.VK_F8;
-				break;
-			case F9:
-				id = KeyEvent.VK_F9;
-				break;
-			case F10:
-				id = KeyEvent.VK_F10;
-				break;
-			case F11:
-				id = KeyEvent.VK_F11;
-				break;
-			case F12:
-				id = KeyEvent.VK_F12;
-				break;
+			case ESCAPE : return KeyEvent.VK_ESCAPE;
+			case F1 : return KeyEvent.VK_F1;
+			case F2 : return KeyEvent.VK_F2;
+			case F3 : return KeyEvent.VK_F3;
+			case F4 : return KeyEvent.VK_F4;
+			case F5 : return KeyEvent.VK_F5;
+			case F6 : return KeyEvent.VK_F6;
+			case F7 : return KeyEvent.VK_F7;
+			case F8 : return KeyEvent.VK_F8;
+			case F9 : return KeyEvent.VK_F9;
+			case F10 : return KeyEvent.VK_F10;
+			case F11 : return KeyEvent.VK_F11;
+			case F12 : return KeyEvent.VK_F12;
 
-			case DIG1:
-				id = KeyEvent.VK_1;
-				break;
-			case DIG2:
-				id = KeyEvent.VK_2;
-				break;
-			case DIG3:
-				id = KeyEvent.VK_3;
-				break;
-			case DIG4:
-				id = KeyEvent.VK_4;
-				break;
-			case DIG5:
-				id = KeyEvent.VK_5;
-				break;
-			case DIG6:
-				id = KeyEvent.VK_6;
-				break;
-			case DIG7:
-				id = KeyEvent.VK_7;
-				break;
-			case DIG8:
-				id = KeyEvent.VK_8;
-				break;
-			case DIG9:
-				id = KeyEvent.VK_9;
-				break;
-			case DIG0:
-				id = KeyEvent.VK_0;
-				break;
-			case BACK_SPACE:
-				id = KeyEvent.VK_BACK_SPACE;
-				break;
-			case INSERT:
-				id = KeyEvent.VK_INSERT;
-				break;
-			case HOME:
-				id = KeyEvent.VK_HOME;
-				break;
-			case PAGE_UP:
-				id = KeyEvent.VK_PAGE_UP;
-				break;
+			case DIG1 : return KeyEvent.VK_1;
+			case DIG2 : return KeyEvent.VK_2;
+			case DIG3 : return KeyEvent.VK_3;
+			case DIG4 : return KeyEvent.VK_4;
+			case DIG5 : return KeyEvent.VK_5;
+			case DIG6 : return KeyEvent.VK_6;
+			case DIG7 : return KeyEvent.VK_7;
+			case DIG8 : return KeyEvent.VK_8;
+			case DIG9 : return KeyEvent.VK_9;
+			case DIG0 : return KeyEvent.VK_0;
+			case BACK_SPACE : return KeyEvent.VK_BACK_SPACE;
+			case INSERT : return KeyEvent.VK_INSERT;
+			case HOME : return KeyEvent.VK_HOME;
+			case PAGE_UP : return KeyEvent.VK_PAGE_UP;
 
-			case TAB:
-				id = KeyEvent.VK_TAB;
-				break;
-			case Q:
-				id = KeyEvent.VK_Q;
-				break;
-			case W:
-				id = KeyEvent.VK_W;
-				break;
-			case E:
-				id = KeyEvent.VK_E;
-				break;
-			case R:
-				id = KeyEvent.VK_R;
-				break;
-			case T:
-				id = KeyEvent.VK_T;
-				break;
-			case Y:
-				id = KeyEvent.VK_Y;
-				break;
-			case U:
-				id = KeyEvent.VK_U;
-				break;
-			case I:
-				id = KeyEvent.VK_I;
-				break;
-			case O:
-				id = KeyEvent.VK_O;
-				break;
-			case P:
-				id = KeyEvent.VK_P;
-				break;
-			case SLASH:
-				id = KeyEvent.VK_SLASH;
-				break;
-			case BACK_SLASH:
-				id = KeyEvent.VK_BACK_SLASH;
-				break;
-			case DELETE:
-				id = KeyEvent.VK_DELETE;
-				break;
-			case END:
-				id = KeyEvent.VK_END;
-				break;
-			case PAGE_DOWN:
-				id = KeyEvent.VK_PAGE_DOWN;
-				break;
+			case TAB : return KeyEvent.VK_TAB;
+			case Q : return KeyEvent.VK_Q;
+			case W : return KeyEvent.VK_W;
+			case E : return KeyEvent.VK_E;
+			case R : return KeyEvent.VK_R;
+			case T : return KeyEvent.VK_T;
+			case Y : return KeyEvent.VK_Y;
+			case U : return KeyEvent.VK_U;
+			case I : return KeyEvent.VK_I;
+			case O : return KeyEvent.VK_O;
+			case P : return KeyEvent.VK_P;
+			case SLASH : return KeyEvent.VK_SLASH;
+			case BACK_SLASH : return KeyEvent.VK_BACK_SLASH;
+			case DELETE : return KeyEvent.VK_DELETE;
+			case END : return KeyEvent.VK_END;
+			case PAGE_DOWN : return KeyEvent.VK_PAGE_DOWN;
 
-			case CAPS_LOCK:
-				id = KeyEvent.VK_CAPS_LOCK;
-				break;
-			case A:
-				id = KeyEvent.VK_A;
-				break;
-			case S:
-				id = KeyEvent.VK_S;
-				break;
-			case D:
-				id = KeyEvent.VK_D;
-				break;
-			case F:
-				id = KeyEvent.VK_F;
-				break;
-			case G:
-				id = KeyEvent.VK_G;
-				break;
-			case H:
-				id = KeyEvent.VK_H;
-				break;
-			case J:
-				id = KeyEvent.VK_J;
-				break;
-			case K:
-				id = KeyEvent.VK_K;
-				break;
-			case L:
-				id = KeyEvent.VK_L;
-				break;
-			case SEMICOLON:
-				id = KeyEvent.VK_SEMICOLON;
-				break;
-			case QUOTE:
-				id = KeyEvent.VK_QUOTE;
-				break;
-			case DOUBLE_QUOTE:
-				id = KeyEvent.VK_QUOTEDBL;
-				break;
-			case ENTER:
-				id = KeyEvent.VK_ENTER;
-				break;
+			case CAPS_LOCK : return KeyEvent.VK_CAPS_LOCK;
+			case A : return KeyEvent.VK_A;
+			case S : return KeyEvent.VK_S;
+			case D : return KeyEvent.VK_D;
+			case F : return KeyEvent.VK_F;
+			case G : return KeyEvent.VK_G;
+			case H : return KeyEvent.VK_H;
+			case J : return KeyEvent.VK_J;
+			case K : return KeyEvent.VK_K;
+			case L : return KeyEvent.VK_L;
+			case SEMICOLON : return KeyEvent.VK_SEMICOLON;
+			case QUOTE : return KeyEvent.VK_QUOTE;
+			case DOUBLE_QUOTE : return KeyEvent.VK_QUOTEDBL;
+			case ENTER : return KeyEvent.VK_ENTER;
 
-			case SHIFT:
-				id = KeyEvent.VK_SHIFT;
-				break;
-			case Z:
-				id = KeyEvent.VK_Z;
-				break;
-			case X:
-				id = KeyEvent.VK_X;
-				break;
-			case C:
-				id = KeyEvent.VK_C;
-				break;
-			case V:
-				id = KeyEvent.VK_V;
-				break;
-			case B:
-				id = KeyEvent.VK_B;
-				break;
-			case N:
-				id = KeyEvent.VK_N;
-				break;
-			case M:
-				id = KeyEvent.VK_M;
-				break;
-			case DOT:
-				id = KeyEvent.VK_PERIOD;
-				break;
-			case UP:
-				id = KeyEvent.VK_UP;
-				break;
+			case SHIFT : return KeyEvent.VK_SHIFT;
+			case Z : return KeyEvent.VK_Z;
+			case X : return KeyEvent.VK_X;
+			case C : return KeyEvent.VK_C;
+			case V : return KeyEvent.VK_V;
+			case B : return KeyEvent.VK_B;
+			case N : return KeyEvent.VK_N;
+			case M : return KeyEvent.VK_M;
+			case DOT : return KeyEvent.VK_PERIOD;
+			case UP : return KeyEvent.VK_UP;
 
-			case CONTROL:
-				id = KeyEvent.VK_CONTROL;
-				break;
-			case ALT:
-				id = KeyEvent.VK_ALT;
-				break;
-			case SPACE:
-				id = KeyEvent.VK_SPACE;
-				break;
-			case LEFT:
-				id = KeyEvent.VK_LEFT;
-				break;
-			case DOWN:
-				id = KeyEvent.VK_DOWN;
-				break;
+			case CONTROL : return KeyEvent.VK_CONTROL;
+			case ALT : return KeyEvent.VK_ALT;
+			case SPACE : return KeyEvent.VK_SPACE;
+			case LEFT : return KeyEvent.VK_LEFT;
+			case DOWN : return KeyEvent.VK_DOWN;
 
-			case RIGHT:
-				id = KeyEvent.VK_RIGHT;
-				break;
+			case RIGHT : return KeyEvent.VK_RIGHT;
 
-			case PLUS:
-				id = KeyEvent.VK_PLUS;
-				break;
-			case MINUS:
-				id = KeyEvent.VK_MINUS;
-				break;
+			case PLUS : return KeyEvent.VK_PLUS;
+			case MINUS : return KeyEvent.VK_MINUS;
 
-			case UNDERSCORE:
-				id = KeyEvent.VK_UNDERSCORE;
-				break;
+			case UNDERSCORE : return KeyEvent.VK_UNDERSCORE;
+
+			case NUM_LOCK: return KeyEvent.VK_NUM_LOCK;
+			case NUM_DIVIDE : return KeyEvent.VK_DIVIDE;
+			case NUM_SEPARATOR : return KeyEvent.VK_SEPARATOR;
+			case NUM_MULTIPLY : return KeyEvent.VK_MULTIPLY;
+			case NUM_MINUS : return KeyEvent.VK_SUBTRACT;
+			case NUM_DIG7 : return KeyEvent.VK_NUMPAD7;
+			case NUM_DIG8 : return KeyEvent.VK_NUMPAD8;
+			case NUM_DIG9 : return KeyEvent.VK_NUMPAD9;
+			case NUM_PLUS : return KeyEvent.VK_ADD;
+			case NUM_DIG4 : return KeyEvent.VK_NUMPAD4;
+			case NUM_DIG5 : return KeyEvent.VK_NUMPAD5;
+			case NUM_DIG6 : return KeyEvent.VK_NUMPAD6;
+			case NUM_DIG1 : return KeyEvent.VK_NUMPAD1;
+			case NUM_DIG2 : return KeyEvent.VK_NUMPAD2;
+			case NUM_DIG3 : return KeyEvent.VK_NUMPAD3;
+			case NUM_DIG0 : return KeyEvent.VK_NUMPAD0;
+			case NUM_DOT : return KeyEvent.VK_DECIMAL;
+			case NUM_ENTER : return KeyEvent.VK_ENTER;
+			default: return 0;
 		}
-		return id;
 	}
 
 	private int getModifierKeysArePressed()
