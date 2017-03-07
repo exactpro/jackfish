@@ -140,7 +140,10 @@ public class MatrixFx extends Matrix
 			stopDefaultApplication();
 		}
 
-		this.controller.close();
+		if (this.controller != null)
+		{
+		    this.controller.close();
+		}
 	}
 
 	@Override
