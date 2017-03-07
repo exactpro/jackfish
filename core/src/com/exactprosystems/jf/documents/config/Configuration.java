@@ -495,10 +495,10 @@ public class Configuration extends AbstractDocument
 
 				for (File libFile : libFiles)
 				{
-					Date currentTime = new Date(libFile.lastModified());
-					Date previousTime = this.documentsActuality.put(libFile.getAbsolutePath(), currentTime);
+					Date fileTime = new Date(libFile.lastModified());
+					Date previousTime = this.documentsActuality.put(libFile.getAbsolutePath(), fileTime);
 
-					if (previousTime != null && !currentTime.after(previousTime) && !new Date(folderFile.lastModified()).after(previousTime))
+					if (previousTime != null && previousTime.compareTo(fileTime) >= 0)
 					{
 						continue;
 					}
