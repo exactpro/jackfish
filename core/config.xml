@@ -202,8 +202,8 @@
             <value>ALL</value>
         </parameters>
         <appDicPath>dic/gui/LayoutHtmlTesting.xml</appDicPath>
-        <appJar>${JF}/apps/win.jar</appJar>
-        <appWorkDir>${JF}/apps/</appWorkDir>
+        <appJar>c:/projects/JackFish/core/apps/win.jar</appJar>
+        <appWorkDir>c:/projects/JackFish/core/apps/</appWorkDir>
         <appStartPort>12000</appStartPort>
     </appEntry>
     <appEntry>
