@@ -265,6 +265,25 @@ namespace UIAdapter
                 case "plus": return VirtualKeyCode.OEM_PLUS;
                 case "minus": return VirtualKeyCode.OEM_MINUS;
                 case "underscore": return VirtualKeyCode.OEM_MINUS; //todo
+                case "num_lock": return VirtualKeyCode.NUMLOCK;
+                case "num_separator": return VirtualKeyCode.SEPARATOR;
+                case "num_divide": return VirtualKeyCode.DIVIDE;
+                case "num_multiply" : return VirtualKeyCode.MULTIPLY;
+                case "num_minus" : return VirtualKeyCode.SUBTRACT;
+                case "num_dig7" : return VirtualKeyCode.NUMPAD7;
+                case "num_dig8" : return VirtualKeyCode.NUMPAD8;
+                case "num_dig9": return VirtualKeyCode.NUMPAD9;
+                case "num_plus": return VirtualKeyCode.ADD;
+                case "num_dig4": return VirtualKeyCode.NUMPAD4;
+                case "num_dig5": return VirtualKeyCode.NUMPAD5;
+                case "num_dig6": return VirtualKeyCode.NUMPAD6;
+                case "num_dig1": return VirtualKeyCode.NUMPAD1;
+                case "num_dig2": return VirtualKeyCode.NUMPAD2;
+                case "num_dig3": return VirtualKeyCode.NUMPAD3;
+                case "num_dig0": return VirtualKeyCode.NUMPAD0;
+                case "num_dot": return VirtualKeyCode.DECIMAL;
+                case "num_enter": return VirtualKeyCode.RETURN;
+
                 default: return VirtualKeyCode.VK_Q;
             }
         }

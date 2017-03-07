@@ -1,3 +1,6 @@
+07.03.2017 4.4.0.2067
+Feature #40772 implemented. Added tokens :
+NUM_LOCK, NUM_DIVIDE, NUM_SEPARATOR, NUM_MULTIPLY, NUM_MINUS, NUM_DIG7, NUM_DIG8, NUM_DIG9, NUM_PLUS, NUM_DIG4, NUM_DIG5, NUM_DIG6, NUM_DIG1, NUM_DIG2, NUM_DIG3, NUM_DIG0, NUM_DOT, NUM_ENTER
 --------------------------------------------------------------------------------
 07.03.2017 4.4.0.2066
 RM39988 bug: Changes in subcases don't apply without reloading matrix

@@ -1372,6 +1372,60 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 						this.customAction.sendKeys(Keys.chord(Keys.SHIFT, "-")).perform();
 						break;
 
+					case NUM_LOCK:
+						//todo nothing, because Keys dosen't contains numlock key
+						break;
+					case NUM_DIVIDE:
+						this.customAction.sendKeys(Keys.DIVIDE).perform();
+						break;
+					case NUM_SEPARATOR:
+						this.customAction.sendKeys(Keys.SEPARATOR).perform();
+						break;
+					case NUM_MULTIPLY:
+						this.customAction.sendKeys(Keys.MULTIPLY).perform();
+						break;
+					case NUM_MINUS:
+						this.customAction.sendKeys(Keys.SUBTRACT).perform();
+						break;
+					case NUM_DIG7:
+						this.customAction.sendKeys(Keys.NUMPAD7).perform();
+						break;
+					case NUM_DIG8:
+						this.customAction.sendKeys(Keys.NUMPAD8).perform();
+						break;
+					case NUM_DIG9:
+						this.customAction.sendKeys(Keys.NUMPAD9).perform();
+						break;
+					case NUM_PLUS:
+						this.customAction.sendKeys(Keys.ADD).perform();
+						break;
+					case NUM_DIG4:
+						this.customAction.sendKeys(Keys.NUMPAD4).perform();
+						break;
+					case NUM_DIG5:
+						this.customAction.sendKeys(Keys.NUMPAD5).perform();
+						break;
+					case NUM_DIG6:
+						this.customAction.sendKeys(Keys.NUMPAD6).perform();
+						break;
+					case NUM_DIG1:
+						this.customAction.sendKeys(Keys.NUMPAD1).perform();
+						break;
+					case NUM_DIG2:
+						this.customAction.sendKeys(Keys.NUMPAD2).perform();
+						break;
+					case NUM_DIG3:
+						this.customAction.sendKeys(Keys.NUMPAD3).perform();
+						break;
+					case NUM_DIG0:
+						this.customAction.sendKeys(Keys.NUMPAD0).perform();
+						break;
+					case NUM_DOT:
+						this.customAction.sendKeys(Keys.DECIMAL).perform();
+						break;
+					case NUM_ENTER:
+						this.customAction.sendKeys(Keys.ENTER).perform();
+						break;
 					default:
 						return false;
 				}

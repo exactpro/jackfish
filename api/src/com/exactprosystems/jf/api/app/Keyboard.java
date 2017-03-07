@@ -20,10 +20,41 @@ public enum Keyboard implements Serializable
 	CONTROL(null),	ALT(null), SPACE(' '),														LEFT(null),DOWN(null),RIGHT(null),
 
 	PLUS('+'), MINUS('-'),
-	UNDERSCORE('_')
+	UNDERSCORE('_'),
+
+	//numpad keys
+	NUM_LOCK(null),
+	NUM_DIVIDE('/'),
+	NUM_SEPARATOR('/'),
+	NUM_MULTIPLY('*'),
+	NUM_MINUS('-'),
+	NUM_DIG7('7'),
+	NUM_DIG8('8'),
+	NUM_DIG9('9'),
+	NUM_PLUS('+'),
+	NUM_DIG4('4'),
+	NUM_DIG5('5'),
+	NUM_DIG6('6'),
+	NUM_DIG1('1'),
+	NUM_DIG2('2'),
+	NUM_DIG3('3'),
+	NUM_DIG0('0'),
+	NUM_DOT('.'),
+	NUM_ENTER(null),
 	;
 
-    private Keyboard(Character ch)
+	public static void main(String[] args)
+	{
+		for (Keyboard keyboard : Keyboard.values())
+		{
+			if (keyboard.name().startsWith("NUM"))
+			{
+				System.out.println("case \""+keyboard.name().toLowerCase()+"\" : return VirtualKeyCode.;");
+			}
+		}
+	}
+
+	private Keyboard(Character ch)
     {
         this.ch = ch;
     }
