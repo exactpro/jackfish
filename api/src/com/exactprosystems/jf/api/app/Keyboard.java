@@ -24,6 +24,7 @@ public enum Keyboard implements Serializable
 
 	//numpad keys
 	NUM_LOCK(null),
+	NUM_DIVIDE('/'),
 	NUM_SEPARATOR('/'),
 	NUM_MULTIPLY('*'),
 	NUM_MINUS('-'),
@@ -42,7 +43,18 @@ public enum Keyboard implements Serializable
 	NUM_ENTER(null),
 	;
 
-    private Keyboard(Character ch)
+	public static void main(String[] args)
+	{
+		for (Keyboard keyboard : Keyboard.values())
+		{
+			if (keyboard.name().startsWith("NUM"))
+			{
+				System.out.println("case \""+keyboard.name().toLowerCase()+"\" : return VirtualKeyCode.;");
+			}
+		}
+	}
+
+	private Keyboard(Character ch)
     {
         this.ch = ch;
     }
