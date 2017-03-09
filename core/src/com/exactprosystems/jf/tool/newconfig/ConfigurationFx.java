@@ -751,6 +751,11 @@ public class ConfigurationFx extends Configuration
 	{
 		addFile(file, super.userVarsValue, this::displayLibrary);
 	}
+
+	public void openCsv(File file) throws Exception
+	{
+		this.model.loadCsv(file.getAbsolutePath());
+	}
 	//endregion
 
 	public void updateHandlerValue(HandlerKind kind, String newValue) throws Exception

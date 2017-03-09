@@ -16,6 +16,7 @@ import com.exactprosystems.jf.common.evaluator.Variables;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.common.report.ReportTable;
 import com.exactprosystems.jf.documents.config.Context;
+import com.exactprosystems.jf.documents.config.Context.EntryPoint;
 import com.exactprosystems.jf.documents.matrix.parser.*;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
 import com.exactprosystems.jf.exceptions.ParametersException;
@@ -84,7 +85,8 @@ public final class Call extends MatrixItem
 			},
 			(str) -> 
 			{ 
-				driver.setCurrentItem(context.referenceToSubcase(str, this));
+			    EntryPoint entryPoint = context.referenceToSubcase(str, this);
+				driver.setCurrentItem(entryPoint.subCase, entryPoint.matrix);
 				return str;
 			}, null, 'G' ); 
 		driver.showParameters(this, layout, 1, 3, this.parameters, null, false);
@@ -259,7 +261,7 @@ public final class Call extends MatrixItem
 
 	private void updateReference(Context context, String name)
 	{
-	    this.ref = context.referenceToSubcase(name, this);
+	    this.ref = context.referenceToSubcase(name, this).subCase;
 	}
 	
 	//==============================================================================================

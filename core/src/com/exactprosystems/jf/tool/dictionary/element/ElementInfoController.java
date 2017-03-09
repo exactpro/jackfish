@@ -179,14 +179,6 @@ public class ElementInfoController implements Initializable, ContainingParent
 		tryCatch(() -> this.navigation.parameterSet(AbstractControl.useNumericHeaderName, this.checkBoxUseNumericHeader.isSelected()), "Error on changing using numeric headers");
 	}
 	
-	public void changeId(ActionEvent actionEvent)
-	{
-		tryCatch(() -> {
-			TextField source = (TextField) actionEvent.getSource();
-			this.navigation.parameterSetId(source.getText());
-		}, "Error on changing " + actionEvent);
-	}
-
 	public void clear(ActionEvent actionEvent)
 	{
 		tryCatch(() -> {

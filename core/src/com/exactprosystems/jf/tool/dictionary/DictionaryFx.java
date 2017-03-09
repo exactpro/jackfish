@@ -608,81 +608,6 @@ public class DictionaryFx extends GuiDictionary
 
 
 	//------------------------------------------------------------------------------------------------------------------
-	public void parameterSetId(IWindow window, IWindow.SectionKind sectionKind, IControl control, Object value) throws Exception
-	{
-		tryCatchThrow(() ->
-		{
-			if (control != null && control instanceof AbstractControl)
-			{
-				AbstractControl copy = AbstractControl.createCopy(control);
-				String oldName = copy.getID();
-				Command undo = () -> Common.tryCatch(() ->
-				{
-					((AbstractControl) control).set(AbstractControl.idName, oldName);
-					displayElement(window, sectionKind, control);
-				}, "");
-				Command redo = () -> Common.tryCatch(() ->
-				{
-					((AbstractControl) control).set(AbstractControl.idName, value);
-					displayElement(window, sectionKind, control);
-				}, "");
-				addCommand(undo, redo);
-				super.changed(true);
-			}
-		}, "Cannot set field '" + AbstractControl.idName + "' to value '" + value + "'");
-	}
-
-	public void parameterSetOwner(IWindow window, SectionKind sectionKind, IControl control, String ownerId) throws Exception
-	{
-		tryCatchThrow(() ->
-		{
-			if (control != null && control instanceof AbstractControl)
-			{
-				AbstractControl copy = AbstractControl.createCopy(control);
-				String oldOwnerId = copy.getOwnerID();
-				Command undo = () -> Common.tryCatch(() ->
-				{
-					((AbstractControl) control).set(AbstractControl.ownerIdName, oldOwnerId);
-					displayElement(window, sectionKind, control);
-				}, "");
-				Command redo = () -> Common.tryCatch(() ->
-				{
-					((AbstractControl) control).set(AbstractControl.ownerIdName, ownerId);
-					displayElement(window, sectionKind, control);
-				}, "");
-				addCommand(undo, redo);
-
-				super.changed(true);
-			}
-		}, "Cannot set field '" + AbstractControl.ownerIdName + "' to value '" + ownerId + "'");
-	}
-
-	public void parameterSetRef(IWindow window, SectionKind sectionKind, IControl control, String refId) throws Exception
-	{
-		tryCatchThrow(() ->
-		{
-			if (control != null && control instanceof AbstractControl)
-			{
-				AbstractControl copy = AbstractControl.createCopy(control);
-				String oldRefId = copy.getRefID();
-				Command undo = () -> Common.tryCatch(() ->
-				{
-					((AbstractControl) control).set(AbstractControl.refIdName, oldRefId);
-					displayElement(window, sectionKind, control);
-				}, "");
-				Command redo = () -> Common.tryCatch(() ->
-				{
-					((AbstractControl) control).set(AbstractControl.refIdName, refId);
-					displayElement(window, sectionKind, control);
-				}, "");
-				addCommand(undo, redo);
-
-				super.changed(true);
-			}
-		}, "Cannot set field '" + AbstractControl.refIdName + "' to value '" + refId + "'");
-	}
-
-
 	public void parameterSet(IWindow window, IWindow.SectionKind sectionKind, IControl control, String parameter, Object value) throws Exception
 	{
 		tryCatchThrow(() ->
@@ -691,8 +616,16 @@ public class DictionaryFx extends GuiDictionary
 			{
 				AbstractControl copy = AbstractControl.createCopy(control);
 				Object oldValue = copy.get(parameter);
-				Command undo = () -> Common.tryCatch(() -> ((AbstractControl) control).set(parameter, oldValue), "");
-				Command redo = () -> Common.tryCatch(() -> ((AbstractControl) control).set(parameter, value), "");
+				Command undo = () -> Common.tryCatch(() -> 
+				{
+				    ((AbstractControl) control).set(parameter, trimIfString(oldValue));
+                    displayElement(window, sectionKind, control);
+				}, "");
+				Command redo = () -> Common.tryCatch(() -> 
+				{
+				    ((AbstractControl) control).set(parameter, trimIfString(value)); 
+                    displayElement(window, sectionKind, control);
+				}, "");
 				addCommand(undo, redo);
 				super.changed(true);
 			}
@@ -709,7 +642,7 @@ public class DictionaryFx extends GuiDictionary
 			{
 				if (oldControl.getBindedClass() != newControl.getBindedClass())
 				{
-					Section section = (Section) window.getSection(sectionKind);
+                    Section section = (Section) window.getSection(sectionKind);
 					section.replaceControl(newControl, control);
 					displayElement(window, sectionKind, control);
 				}
@@ -726,31 +659,6 @@ public class DictionaryFx extends GuiDictionary
 			addCommand(undo, redo);
 			super.changed(true);
 		}
-	}
-
-	public void parameterSetXpath(IWindow window, IWindow.SectionKind sectionKind, IControl control, String xpath) throws Exception
-	{
-		tryCatchThrow(() ->
-		{
-			if (control != null && control instanceof AbstractControl)
-			{
-				AbstractControl copy = AbstractControl.createCopy(control);
-				String oldValue = copy.getXpath();
-				Command undo = () -> Common.tryCatch(() ->
-				{
-					((AbstractControl) control).set(AbstractControl.xpathName, oldValue);
-					displayElement(window, sectionKind, control);
-				}, "");
-				Command redo = () -> Common.tryCatch(() ->
-				{
-					((AbstractControl) control).set(AbstractControl.xpathName, xpath);
-					displayElement(window, sectionKind, control);
-				}, "");
-				addCommand(undo, redo);
-
-				super.changed(true);
-			}
-		}, "Cannot set field 'xpath' to value '" + xpath + "'");
 	}
 
 	public void parameterGoToOwner(IWindow window, IControl owner) throws Exception
@@ -899,6 +807,15 @@ public class DictionaryFx extends GuiDictionary
 	//------------------------------------------------------------------------------------------------------------------
 	// private methods
 	//------------------------------------------------------------------------------------------------------------------
+    private Object trimIfString(Object value)
+    {
+        if (value instanceof String)
+        {
+            return ((String)value).trim();
+        }
+        return value;
+    }
+    
 	private boolean isApplicationRun()
 	{
 		return this.applicationConnector != null && this.applicationConnector.getAppConnection() != null && this.applicationConnector.getAppConnection().isGood();

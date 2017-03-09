@@ -49,6 +49,20 @@ public class Context implements IContext, AutoCloseable
 				resultColumn, errorColumn, screenshotColumn
 			};
 
+	public static class EntryPoint
+	{
+	    public static EntryPoint NULL = new EntryPoint(null, null);
+	    
+	    public EntryPoint(Matrix matrix, SubCase subCase)
+        {
+	        this.matrix = matrix;
+	        this.subCase = subCase;
+        }
+	    
+	    public Matrix matrix;
+	    public SubCase subCase;
+	}
+	
 	private Monitor monitor = new Monitor();
 	
 	public Context(DocumentFactory factory, IMatrixListener matrixListener, PrintStream out, Presenter presenter) throws Exception
@@ -90,7 +104,7 @@ public class Context implements IContext, AutoCloseable
             }
             else
             {
-                SubCase subCase = referenceToSubcase(name, item);
+                SubCase subCase = referenceToSubcase(name, item).subCase;
                 if (subCase != null)
                 {
                     this.handlers.put(handlerKind, name);
@@ -125,7 +139,7 @@ public class Context implements IContext, AutoCloseable
        
        if (!Str.IsNullOrEmpty(name))
        {
-           SubCase handler = referenceToSubcase(name, item);
+           SubCase handler = referenceToSubcase(name, item).subCase;
            if (handler != null)
            {
                if (handlerKind == HandlerKind.OnTestCaseError || handlerKind == HandlerKind.OnStepError)
@@ -208,27 +222,32 @@ public class Context implements IContext, AutoCloseable
 	{
 	}
 
-	public SubCase referenceToSubcase(String name, MatrixItem item)
+	public EntryPoint referenceToSubcase(String name, MatrixItem item)
 	{
-	    if (item != null)
-	    {
-    		MatrixItem ref = item.findParent(MatrixRoot.class).find(true, SubCase.class, name);
-    
-    		if (ref != null && ref instanceof SubCase)
-    		{
-    			return (SubCase) ref;
-    		}
-	    }
-	    
-		if (name == null)
-		{
-			return null;
-		}
-		String[] parts = name.split("\\.");
-		if (parts.length < 2)
-		{
-			return null;
-		}
+        if (name == null)
+        {
+            return EntryPoint.NULL;
+        }
+        String[] parts = name.split("\\.");
+        
+        if (parts.length == 0)
+        {
+            return EntryPoint.NULL;
+        }
+        else if (parts.length == 1)
+        {
+            if (item != null)
+    	    {
+        		MatrixItem ref = item.findParent(MatrixRoot.class).find(true, SubCase.class, name);
+        
+        		if (ref != null && ref instanceof SubCase)
+        		{
+        			return new EntryPoint(item.getMatrix(), (SubCase) ref);
+        		}
+    	    }
+            return EntryPoint.NULL;
+        }
+		
 		String ns = parts[0];
 		String id = parts[1];
 
@@ -245,7 +264,7 @@ public class Context implements IContext, AutoCloseable
             matrix = getConfiguration().getLibs().get(ns);
             if (matrix == null)
             {
-                return null;
+                return EntryPoint.NULL;
             }
 
             try
@@ -267,10 +286,10 @@ public class Context implements IContext, AutoCloseable
 		MatrixItem mitem = matrix.getRoot().find(false, NameSpace.class, ns);
 		if(mitem == null) 
 		{
-			return null;
+            return EntryPoint.NULL;
 		}
 
-		return (SubCase) mitem.find(true, SubCase.class, id);
+		return new EntryPoint(matrix, (SubCase) mitem.find(true, SubCase.class, id));
 	}
 	
 	public List<ReadableValue> subcases(MatrixItem item)

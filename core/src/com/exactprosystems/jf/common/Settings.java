@@ -103,8 +103,9 @@ public class Settings
 	//endregion
 
 	//region Matrix
-	public static final String	MATRIX_DEFAULT_SCREENSHOT = "matrixDefaultScreenshot";
+	public static final String MATRIX_DEFAULT_SCREENSHOT = "matrixDefaultScreenshot";
 	public static final String	MATRIX_POPUPS				= "matrixPopups";
+	public static final String MATRIX_FOLD_ITEMS = "foldNewItems";
 	//endregion
 
 	public static final String	THRESHOLD			= "threshold";
@@ -335,8 +336,7 @@ public class Settings
 		));
 
 		settings.setMapValues(GLOBAL_NS, MATRIX_NAME, mapOf(
-				MATRIX_DEFAULT_SCREENSHOT, ScreenshotKind.Never.name(),
-				MATRIX_POPUPS, "false"
+				MATRIX_DEFAULT_SCREENSHOT, ScreenshotKind.Never.name(), MATRIX_POPUPS, "false", MATRIX_FOLD_ITEMS, "false"
 		));
 		settings.setMapValues(GLOBAL_NS, WIZARD_NAME, mapOf(
 				WizardSettings.Kind.TYPE.name()+MAX, "1",

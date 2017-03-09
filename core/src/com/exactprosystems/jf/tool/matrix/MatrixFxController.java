@@ -536,7 +536,7 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 	{
 		Platform.runLater(() -> {
 			item.display(this.driver, this.context);
-			this.driver.setCurrentItem(item);
+			this.driver.setCurrentItem(item, this.model);
 		});
 	}
 	
