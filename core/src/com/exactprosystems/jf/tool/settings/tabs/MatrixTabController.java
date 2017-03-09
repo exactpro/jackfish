@@ -22,6 +22,7 @@ public class MatrixTabController implements Initializable, ContainingParent, ITa
 	public Parent parent;
 	public ComboBox<ScreenshotKind> cbScreenshot;
 	public CheckBox cbPopup;
+	public CheckBox cbFoldNewItems;
 	private SettingsPanel model;
 
 	//region Initializable
@@ -50,6 +51,7 @@ public class MatrixTabController implements Initializable, ContainingParent, ITa
 	{
 		this.cbScreenshot.getSelectionModel().select(ScreenshotKind.valueOf(collect.getOrDefault(Settings.MATRIX_DEFAULT_SCREENSHOT, ScreenshotKind.Never.name())));
 		this.cbPopup.setSelected(Boolean.valueOf(collect.getOrDefault(Settings.MATRIX_POPUPS, "false")));
+		this.cbFoldNewItems.setSelected(Boolean.valueOf(collect.getOrDefault(Settings.MATRIX_FOLD_ITEMS, "false")));
 	}
 
 	public void displayInto(Tab tab)
@@ -70,5 +72,6 @@ public class MatrixTabController implements Initializable, ContainingParent, ITa
 	{
 		this.model.updateSettingsValue(Settings.MATRIX_DEFAULT_SCREENSHOT, Settings.MATRIX_NAME, this.cbScreenshot.getSelectionModel().getSelectedItem().name());
 		this.model.updateSettingsValue(Settings.MATRIX_POPUPS, Settings.MATRIX_NAME, String.valueOf(this.cbPopup.isSelected()));
+		this.model.updateSettingsValue(Settings.MATRIX_FOLD_ITEMS, Settings.MATRIX_NAME, String.valueOf(this.cbFoldNewItems.isSelected()));
 	}
 }
