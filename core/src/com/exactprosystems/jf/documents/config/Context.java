@@ -224,15 +224,12 @@ public class Context implements IContext, AutoCloseable
 
 	public EntryPoint referenceToSubcase(String name, MatrixItem item)
 	{
-	    System.err.println(">> " + name + " " + item);
         if (name == null)
         {
             return EntryPoint.NULL;
         }
         String[] parts = name.split("\\.");
         
-        System.err.println(">> parts = " + Arrays.toString(parts));
-
         if (parts.length == 0)
         {
             return EntryPoint.NULL;
