@@ -29,6 +29,7 @@ import javafx.scene.layout.GridPane;
 import org.apache.log4j.Logger;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -82,14 +83,13 @@ public class MatrixTreeView extends TreeTableView<MatrixItem>
 				TreeItem<MatrixItem> parent = treeItem.getParent();
 				while (parent != null)
 				{
-					parent.setExpanded(true);
+			        parent.setExpanded(true);
 					parent = parent.getParent();
 				}
 				final int row = getRow(treeItem);
 				getSelectionModel().clearAndSelect(row);
 				tryCatch(() -> Thread.sleep(100), "Error sleep");
 				scrollTo(row);
-				treeItem.setExpanded(true);
 			});
 		}
 	}
@@ -126,6 +126,20 @@ public class MatrixTreeView extends TreeTableView<MatrixItem>
 		expand(getRoot(), false);
 	}
 
+    public void expand(TreeItem<MatrixItem> rootItem, boolean flag)
+    {
+        if (rootItem == null)
+        {
+            return;
+        }
+        
+        rootItem.getChildren().forEach(item ->
+        {
+            item.setExpanded(flag);
+            expand(item, flag);
+        });
+    }
+	
 	public List<MatrixItem> currentItems()
 	{
 		return getSelectionModel().getSelectedCells().stream().map(TreeTablePosition::getTreeItem).map(TreeItem::getValue).collect(Collectors.toList());
@@ -145,7 +159,7 @@ public class MatrixTreeView extends TreeTableView<MatrixItem>
 
 	public TreeItem<MatrixItem> find(TreeItem<MatrixItem> parent, MatrixItem item)
 	{
-		return find(parent, matrixItem -> item == matrixItem);
+		return find(parent, matrixItem -> Objects.equals(item, matrixItem));
 	}
 
 	public TreeItem<MatrixItem> find(Predicate<MatrixItem> strategy)
@@ -321,14 +335,6 @@ public class MatrixTreeView extends TreeTableView<MatrixItem>
 		this.getColumns().add(gridColumn);
 		gridColumn.setMaxWidth(Double.MAX_VALUE);
 		gridColumn.prefWidthProperty().bind(this.widthProperty().subtract(numberColumn.getWidth() + iconColumn.getWidth() + offColumn.getWidth() + reportOffColumn.getWidth()).subtract(2));
-	}
-
-	private void expand(TreeItem<MatrixItem> rootItem, boolean flag)
-	{
-		rootItem.getChildren().forEach(item -> {
-			item.setExpanded(flag);
-			expand(item, flag);
-		});
 	}
 
 	public void scrollTo(int index)

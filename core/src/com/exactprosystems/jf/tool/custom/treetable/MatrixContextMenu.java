@@ -9,6 +9,7 @@
 package com.exactprosystems.jf.tool.custom.treetable;
 
 import com.exactprosystems.jf.common.Settings;
+import com.exactprosystems.jf.common.Settings.SettingsValue;
 import com.exactprosystems.jf.common.report.ContextHelpFactory;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
@@ -34,16 +35,22 @@ import javafx.scene.layout.Pane;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class MatrixContextMenu extends ContextMenu
 {
+    private boolean fold = false;
+    
 	public MatrixContextMenu(Context context, MatrixFx matrix, MatrixTreeView tree, Settings settings)
 	{
 		super();
 
+		SettingsValue foldSetting = settings.getValueOrDefault(Settings.GLOBAL_NS, Settings.MATRIX_NAME, Settings.MATRIX_FOLD_ITEMS, "false");
+		this.fold = Boolean.parseBoolean(foldSetting.getValue());
+		
 		setAutoHide(true);
 
 		MenuItem breakPoint = new MenuItem("Breakpoint", new ImageView(new Image(CssVariables.Icons.BREAK_POINT_ICON)));
@@ -146,7 +153,17 @@ public class MatrixContextMenu extends ContextMenu
 
 	private void addBefore(MatrixTreeView treeView, MatrixFx matrix)
 	{
-		Common.tryCatch(() -> matrix.insertNew(treeView.currentItem(), Tokens.TempItem.get(), null), "Error on add before");
+	    // TODO
+		Common.tryCatch(() ->
+		{
+		    MatrixItem item = treeView.currentItem();
+		    MatrixItem[] inserted =  matrix.insertNew(item, Tokens.TempItem.get(), null);
+		    for(MatrixItem one : inserted)
+		    {
+	            TreeItem<MatrixItem> treeItem = treeView.find(one);
+	            treeView.expand(treeItem, !this.fold);
+		    }
+		}, "Error on add before");
 	}
 
 	private void breakPoint(MatrixFx matrix, MatrixTreeView tree)
@@ -174,7 +191,17 @@ public class MatrixContextMenu extends ContextMenu
 
 	private void pasteItems(MatrixFx matrix, MatrixTreeView tree)
 	{
-		Common.tryCatch(() -> matrix.paste(tree.currentItem()), "Error on paste");
+	    // TODO
+		Common.tryCatch(() -> 
+		{
+            MatrixItem item = tree.currentItem();
+            MatrixItem[] inserted =  matrix.paste(item);
+            for(MatrixItem one : inserted)
+            {
+                TreeItem<MatrixItem> treeItem = tree.find(one);
+                tree.expand(treeItem, !this.fold);
+            }
+		}, "Error on paste");
 	}
 
 	private void gotoLine(MatrixTreeView tree)
