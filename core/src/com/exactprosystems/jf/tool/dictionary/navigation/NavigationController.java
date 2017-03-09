@@ -12,6 +12,7 @@ import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.app.IWindow.SectionKind;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.common.Settings;
+import com.exactprosystems.jf.documents.guidic.controls.AbstractControl;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.CssVariables;
@@ -233,11 +234,6 @@ public class NavigationController implements Initializable, ContainingParent
 		this.model.parameterSetControlKind(currentWindow(), currentSection(), currentElement(), controlKind);
 	}
 
-	public void parameterSetId(Object value) throws Exception
-	{
-		this.model.parameterSetId(currentWindow(), currentSection(), currentElement(), value);
-	}
-
 	public void parameterGoToOwner(IControl control) throws Exception
 	{
 		this.model.parameterGoToOwner(currentWindow(), control);
@@ -245,12 +241,12 @@ public class NavigationController implements Initializable, ContainingParent
 
 	public void parameterSetOwner(String ownerId) throws Exception
 	{
-		this.model.parameterSetOwner(currentWindow(), currentSection(), currentElement(), ownerId);
+		this.model.parameterSet(currentWindow(), currentSection(), currentElement(), AbstractControl.ownerIdName, ownerId);
 	}
 
 	public void parameterSetRef(String refId) throws Exception
 	{
-		this.model.parameterSetRef(currentWindow(), currentSection(), currentElement(), refId);
+		this.model.parameterSet(currentWindow(), currentSection(), currentElement(), AbstractControl.refIdName, refId);
 	}
 
 	public void parameterSet(String parameter, Object value) throws Exception
@@ -314,7 +310,7 @@ public class NavigationController implements Initializable, ContainingParent
 				String id = currentElement().getID();
 	
 				String result = viewer.show(xpath, "Xpath for " + (id == null ? "empty" : id), Common.currentThemesPaths(), this.fullScreen);
-				this.model.parameterSetXpath(currentWindow(), currentSection(), currentElement(), result);
+		        this.model.parameterSet(currentWindow(), currentSection(), currentElement(), AbstractControl.xpathName, result);
 			}
 		}
 	}
