@@ -8,6 +8,7 @@
 package com.exactprosystems.jf.tool.newconfig.nodes;
 
 import com.exactprosystems.jf.documents.DocumentInfo;
+import com.exactprosystems.jf.documents.csv.Csv;
 import com.exactprosystems.jf.documents.vars.SystemVars;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
@@ -106,12 +107,21 @@ public class FileSystemTreeNode extends TreeNode
 
 				return menu;
 			};
+
+			Function<File, Common.Function> doubleClickFunction = f -> () ->
+			{
+				if (f.getName().toLowerCase().endsWith("." + Csv.class.getAnnotation(DocumentInfo.class).extentioin()))
+				{
+					this.model.openCsv(f);
+				}
+			};
+
 			Arrays.stream(initialFiles)
 					.sorted(ConfigurationTreeView.comparator)
 					.forEach(
 							file -> new BuildTree(file, this.treeItem)
 									.ignoredFiles(ignoreFiles.stream().map(ConfigurationFx::path).collect(Collectors.toList()))
-									.menuTopFolder(menuTopFolder)
+									.menuTopFolder(menuTopFolder).doubleClickEvent(doubleClickFunction)
 									.menuFiles(menuFiles)
 									.byPass());
 		}
