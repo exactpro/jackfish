@@ -539,14 +539,13 @@ public class DisplayDriverFx implements DisplayDriver
 	}
 
 	@Override
-	public void setCurrentItem(MatrixItem item)
+	public void setCurrentItem(MatrixItem item, Matrix matrix)
 	{
-		if (item == null)
+		if (item == null || matrix == null)
 		{
 			return;
 		}
 
-		Matrix matrix = item.getMatrix();
 		CustomTab tab = Common.checkDocument(matrix);
 		Matrix matrixFx = null;
 		if (tab != null)

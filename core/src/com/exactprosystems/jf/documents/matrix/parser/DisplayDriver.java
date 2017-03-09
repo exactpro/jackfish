@@ -10,6 +10,7 @@ package com.exactprosystems.jf.documents.matrix.parser;
 
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.documents.config.Context;
+import com.exactprosystems.jf.documents.matrix.Matrix;
 import com.exactprosystems.jf.documents.matrix.parser.items.CommentString;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 import com.exactprosystems.jf.functions.Table;
@@ -39,7 +40,7 @@ public interface DisplayDriver
 	void 		showGrid			(MatrixItem item, Object layout, int row, int column, Table table);
 	void 		hide				(MatrixItem item, Object layout, int row, boolean hide);
 	void		setupCall			(MatrixItem item, String reference, Parameters parameters);
-	void 		setCurrentItem		(MatrixItem item);
+	void 		setCurrentItem		(MatrixItem item, Matrix matrix);
 	void		deleteItem			(MatrixItem item);
 	void		layoutWizard		(MatrixItem item, Table table, Context context);
 }

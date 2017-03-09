@@ -15,6 +15,7 @@ import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.common.report.ReportTable;
 import com.exactprosystems.jf.documents.config.Context;
+import com.exactprosystems.jf.documents.config.Context.EntryPoint;
 import com.exactprosystems.jf.documents.config.HandlerKind;
 import com.exactprosystems.jf.documents.matrix.parser.*;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
@@ -69,7 +70,8 @@ public final class SetHandler extends MatrixItem
 			},
 			(str) -> 
 			{ 
-				driver.setCurrentItem(context.referenceToSubcase(str, this));
+			    EntryPoint entryPoint = context.referenceToSubcase(str, this);
+				driver.setCurrentItem(entryPoint.subCase, entryPoint.matrix);
 				return str;
 			}, null, 'G' );
 		
