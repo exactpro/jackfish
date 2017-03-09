@@ -45,7 +45,7 @@ public class GitStatus
 
 	void ignoreFiles(List<File> collect) throws Exception
 	{
-		GitUtil.ignorePaths(collect.stream().map(File::getPath).collect(Collectors.toList()));
+		GitUtil.ignorePaths(collect.stream().map(File::getPath).map(path -> path.replaceAll("\\\\","/")).collect(Collectors.toList()));
 		this.controller.updateFiles(GitUtil.gitStatus(this.model.getCredential()));
 	}
 

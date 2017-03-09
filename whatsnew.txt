@@ -1,3 +1,6 @@
+09.03.2017 4.4.0.2074
+RM40351
+Fixed. Replace all window separator ( \ )to unix separator ( / ) on .gitignore file
 --------------------------------------------------------------------------------
 09.03.2017 4.4.0.2073
 RM40129 bug: File has not been opened after 'G' button is clicked
