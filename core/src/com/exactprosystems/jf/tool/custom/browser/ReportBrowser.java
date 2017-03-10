@@ -130,6 +130,15 @@ public class ReportBrowser extends BorderPane
 			
 			this.engine.setCreatePopupHandler(param -> {
 				CustomBrowserTab customTab = new CustomBrowserTab();
+                try
+                {
+                    // RM38890 the tab needs a little time to load its content
+                    Thread.sleep(100);
+                }
+                catch (Exception e)
+                {
+                    // nothing to do
+                }
 				this.getTabPane().getTabs().add(customTab);
 				this.getTabPane().getSelectionModel().select(customTab);
 				return customTab.engine;
