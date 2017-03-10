@@ -268,6 +268,8 @@ task createTool(type: Zip) {
 		exclude("build*")
 		exclude(".*")
 		exclude("src")
+		exclude("bin")
+		exclude("resources")
 		exclude("reports/*")
 		exclude("logs")
 		exclude("remote_out.txt")
