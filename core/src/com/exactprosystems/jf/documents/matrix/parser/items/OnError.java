@@ -92,7 +92,7 @@ public final class OnError extends MatrixItem
 				}
 			}
 
-			return ret;
+			return new ReturnAndResult(start, ret);
 		}
 		catch (Exception e)
 		{
