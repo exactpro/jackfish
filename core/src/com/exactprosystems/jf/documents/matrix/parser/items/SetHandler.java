@@ -36,8 +36,9 @@ import java.util.stream.Collectors;
 		real			= true,
 		hasValue 		= true, 
 		hasParameters 	= false,
-        hasChildren 	= false
-	)
+        hasChildren 	= false,
+		seeAlsoClass 	= {SubCase.class, Step.class, TestCase.class}
+)
 public final class SetHandler extends MatrixItem 
 {	
 	public SetHandler()

@@ -34,8 +34,9 @@ import java.util.List;
 		real			= true,
 		hasValue 		= false,
 		hasParameters 	= false,
-        hasChildren 	= false
-	)
+        hasChildren 	= false,
+		seeAlsoClass 	= {For.class, While.class, Continue.class}
+)
 public class Break extends MatrixItem
 {
     public Break()

@@ -38,8 +38,9 @@ import java.util.Set;
 		real			= true,
 		hasValue 		= true, 
 		hasParameters 	= false,
-        hasChildren 	= true
-	)
+        hasChildren 	= true,
+		seeAlsoClass 	= {For.class, ForEach.class}
+)
 public class While extends MatrixItem
 {
 	public While()

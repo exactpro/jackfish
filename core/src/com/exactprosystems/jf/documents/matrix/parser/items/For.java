@@ -41,7 +41,8 @@ import java.util.concurrent.atomic.AtomicReference;
 		real			= true,
 		hasValue 		= true, 
 		hasParameters 	= false,
-        hasChildren 	= true
+        hasChildren 	= true,
+		seeAlsoClass 	= {While.class, ForEach.class}
 	)
 public final class For extends MatrixItem
 {

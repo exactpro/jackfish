@@ -28,7 +28,8 @@ import java.util.List;
         real			= true,
 		hasValue 		= false, 
 		hasParameters 	= false,
-        hasChildren 	= true
+        hasChildren 	= true,
+		seeAlsoClass 	= {If.class}
 	)
 public class Else extends MatrixItem
 {

@@ -48,7 +48,8 @@ import java.util.stream.Collectors;
 		real			= true,
 		hasValue 		= true, 
 		hasParameters 	= false,
-        hasChildren 	= true
+        hasChildren 	= true,
+		seeAlsoClass 	= {TestCase.class}
 	)
 public class Step extends MatrixItem
 {

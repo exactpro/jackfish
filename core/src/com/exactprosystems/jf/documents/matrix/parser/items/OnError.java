@@ -35,8 +35,9 @@ import java.util.List;
 		real			= true,
 		hasValue 		= false, 
 		hasParameters 	= false,
-        hasChildren 	= true
-	)
+        hasChildren 	= true,
+		seeAlsoClass 	= {Fail.class}
+)
 public final class OnError extends MatrixItem 
 {	
 	public OnError()

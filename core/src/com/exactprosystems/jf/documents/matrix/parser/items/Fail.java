@@ -39,8 +39,9 @@ import java.util.Set;
 		real				= true,
 		hasValue 			= true, 
 		hasParameters 		= false, 
-		hasChildren 		= false
-		)
+		hasChildren 		= false,
+		seeAlsoClass 		= {TestCase.class}
+)
 public class Fail extends MatrixItem
 {
 	public Fail()
