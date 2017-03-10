@@ -14,11 +14,7 @@ import com.exactprosystems.jf.common.report.ContextHelpFactory;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Tokens;
-import com.exactprosystems.jf.documents.matrix.parser.items.ActionItem;
-import com.exactprosystems.jf.documents.matrix.parser.items.End;
-import com.exactprosystems.jf.documents.matrix.parser.items.HelpActionItem;
-import com.exactprosystems.jf.documents.matrix.parser.items.HelpItem;
-import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
+import com.exactprosystems.jf.documents.matrix.parser.items.*;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
@@ -26,6 +22,8 @@ import com.exactprosystems.jf.tool.matrix.MatrixFx;
 import com.exactprosystems.jf.tool.settings.SettingsPanel;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.event.EventTarget;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -35,7 +33,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 
-import java.util.Arrays;
 import java.util.Date;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -107,7 +104,19 @@ public class MatrixContextMenu extends ContextMenu
 			{
 				return;
 			}
-			if (!(keyEvent.getTarget() instanceof MatrixTreeView))
+			//check that control placed inside matrixTreeView
+			EventTarget parent = keyEvent.getTarget();
+			if (!(parent instanceof Node))
+			{
+				return;
+			}
+			boolean inside = parent instanceof MatrixTreeView;
+			while (!inside && parent != null && parent instanceof Node)
+			{
+				parent = ((Node) parent).getParent();
+				inside = parent instanceof MatrixTreeView;
+			}
+			if (!inside)
 			{
 				return;
 			}
