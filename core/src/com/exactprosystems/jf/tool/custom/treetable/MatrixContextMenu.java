@@ -9,15 +9,12 @@
 package com.exactprosystems.jf.tool.custom.treetable;
 
 import com.exactprosystems.jf.common.Settings;
+import com.exactprosystems.jf.common.Settings.SettingsValue;
 import com.exactprosystems.jf.common.report.ContextHelpFactory;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Tokens;
-import com.exactprosystems.jf.documents.matrix.parser.items.ActionItem;
-import com.exactprosystems.jf.documents.matrix.parser.items.End;
-import com.exactprosystems.jf.documents.matrix.parser.items.HelpActionItem;
-import com.exactprosystems.jf.documents.matrix.parser.items.HelpItem;
-import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
+import com.exactprosystems.jf.documents.matrix.parser.items.*;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
@@ -25,6 +22,8 @@ import com.exactprosystems.jf.tool.matrix.MatrixFx;
 import com.exactprosystems.jf.tool.settings.SettingsPanel;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.event.EventTarget;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -40,10 +39,15 @@ import java.util.stream.Collectors;
 
 public class MatrixContextMenu extends ContextMenu
 {
+    private boolean fold = false;
+    
 	public MatrixContextMenu(Context context, MatrixFx matrix, MatrixTreeView tree, Settings settings)
 	{
 		super();
 
+		SettingsValue foldSetting = settings.getValueOrDefault(Settings.GLOBAL_NS, Settings.MATRIX_NAME, Settings.MATRIX_FOLD_ITEMS, "false");
+		this.fold = Boolean.parseBoolean(foldSetting.getValue());
+		
 		setAutoHide(true);
 
 		MenuItem breakPoint = new MenuItem("Breakpoint", new ImageView(new Image(CssVariables.Icons.BREAK_POINT_ICON)));
@@ -100,7 +104,19 @@ public class MatrixContextMenu extends ContextMenu
 			{
 				return;
 			}
-			if (!(keyEvent.getTarget() instanceof MatrixTreeView))
+			//check that control placed inside matrixTreeView
+			EventTarget parent = keyEvent.getTarget();
+			if (!(parent instanceof Node))
+			{
+				return;
+			}
+			boolean inside = parent instanceof MatrixTreeView;
+			while (!inside && parent != null && parent instanceof Node)
+			{
+				parent = ((Node) parent).getParent();
+				inside = parent instanceof MatrixTreeView;
+			}
+			if (!inside)
 			{
 				return;
 			}
@@ -146,7 +162,17 @@ public class MatrixContextMenu extends ContextMenu
 
 	private void addBefore(MatrixTreeView treeView, MatrixFx matrix)
 	{
-		Common.tryCatch(() -> matrix.insertNew(treeView.currentItem(), Tokens.TempItem.get(), null), "Error on add before");
+	    // TODO
+		Common.tryCatch(() ->
+		{
+		    MatrixItem item = treeView.currentItem();
+		    MatrixItem[] inserted =  matrix.insertNew(item, Tokens.TempItem.get(), null);
+		    for(MatrixItem one : inserted)
+		    {
+	            TreeItem<MatrixItem> treeItem = treeView.find(one);
+	            treeView.expand(treeItem, !this.fold);
+		    }
+		}, "Error on add before");
 	}
 
 	private void breakPoint(MatrixFx matrix, MatrixTreeView tree)
@@ -174,7 +200,17 @@ public class MatrixContextMenu extends ContextMenu
 
 	private void pasteItems(MatrixFx matrix, MatrixTreeView tree)
 	{
-		Common.tryCatch(() -> matrix.paste(tree.currentItem()), "Error on paste");
+	    // TODO
+		Common.tryCatch(() -> 
+		{
+            MatrixItem item = tree.currentItem();
+            MatrixItem[] inserted =  matrix.paste(item);
+            for(MatrixItem one : inserted)
+            {
+                TreeItem<MatrixItem> treeItem = tree.find(one);
+                tree.expand(treeItem, !this.fold);
+            }
+		}, "Error on paste");
 	}
 
 	private void gotoLine(MatrixTreeView tree)

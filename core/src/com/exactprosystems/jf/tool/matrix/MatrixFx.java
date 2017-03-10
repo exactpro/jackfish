@@ -543,7 +543,7 @@ public class MatrixFx extends Matrix
 		Sys.copyToClipboard(string);
 	}
 
-	public void paste(MatrixItem where) throws Exception
+	public MatrixItem[] paste(MatrixItem where) throws Exception
 	{
 		String string = Sys.getFromClipboard();
 		Parser parser = new Parser();
@@ -553,14 +553,17 @@ public class MatrixFx extends Matrix
 		{
 			insert(where, items);
 		}
+		return items;
 	}
 
-	public void insertNew(MatrixItem item, String kind, String value) throws Exception
+	public MatrixItem[] insertNew(MatrixItem item, String kind, String value) throws Exception
 	{
 		MatrixItem newItem = Parser.createItem(kind, value);
 		newItem.init(this);
 		newItem.createId();
-		insert(item, new MatrixItem[]{newItem});
+		MatrixItem[] items = new MatrixItem[]{newItem};
+		insert(item, items);
+		return items;
 	}
 
 	public void move(MatrixItem from, MatrixItem to) throws Exception
