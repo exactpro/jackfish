@@ -102,12 +102,9 @@ public class RawMessage extends MatrixItem
 			return null;
 		}); 
 		driver.showCheckBox(this, layout, 1, 6, "Global", this.global, this.global);
-		driver.showToggleButton(this, layout, 1, 7, "Hide", b ->
-		{
-			driver.hide(this, layout, 2, b);
-			return null;
-		}, b -> b ? "Hide" : "Show", this.message.size() != 0);
-//		driver.showGrid(this, layout, 2, 0, this.message); // TODO add a new grid for messages 
+		driver.showToggleButton(this, layout, 1, 7, 
+		        b -> driver.hide(this, layout, 2, b), 
+		        b -> b ? "Hide" : "Show", this.message.size() != 0);
 		driver.hide(this, layout, 2, this.message.size() == 0);
 		return layout;
 	}

@@ -82,11 +82,9 @@ public final class ActionItem extends MatrixItem
 		driver.showParameters(this, layout, 1, 2, this.parameters, () -> this.id.get() + ".In.", false);
 		driver.showCheckBox(this, layout, 2, 0, "G", this.global, this.global);
 		driver.showCheckBox(this, layout, 2, 0, "I", this.ignoreErr, this.ignoreErr);
-		driver.showToggleButton(this, layout, 2, 1, "Asserts", b ->
-		{
-			driver.hide(this, layout, 3, b);
-			return null;
-		}, b -> "Asserts", !(this.assertBool.isExpressionNullOrEmpty()));
+		driver.showToggleButton(this, layout, 2, 1, 
+		        b -> driver.hide(this, layout, 3, b), 
+		        b -> "Asserts", !(this.assertBool.isExpressionNullOrEmpty()));
 		driver.showLabel(this, layout, 3, 0, Tokens.Assert.get());
 		driver.showExpressionField(this, layout, 3, 1, Tokens.Assert.get(), this.assertBool, this.assertBool, null, null, null, null);
 		driver.hide(this, layout, 3, this.assertBool.isExpressionNullOrEmpty());
