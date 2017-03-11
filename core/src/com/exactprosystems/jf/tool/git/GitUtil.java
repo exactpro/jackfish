@@ -95,7 +95,7 @@ public class GitUtil
 			AddCommand add = git.add();
 			files.stream().map(File::getPath).map(Common::getRelativePath).forEach(add::addFilepattern);
 			add.call();
-			git.commit().setAmend(isAmend).setAll(true).setMessage(msg).call();
+			git.commit().setAmend(isAmend).setMessage(msg).call();
 		}
 	}
 

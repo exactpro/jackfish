@@ -1,3 +1,5 @@
+11.03.2017 4.4.0.2084
+RM40859 bug : JF add all modified files to commit instead of selected. Fixed
 --------------------------------------------------------------------------------
 10.03.2017 4.4.0.2083
 RM38953 bug: Failed to load class
