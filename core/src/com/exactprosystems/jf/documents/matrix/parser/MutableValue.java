@@ -8,6 +8,8 @@
 
 package com.exactprosystems.jf.documents.matrix.parser;
 
+import java.util.Objects;
+
 import com.exactprosystems.jf.api.app.Mutable;
 
 public class MutableValue<T> implements Mutable, Getter<T>, Setter<T>, Cloneable
@@ -26,7 +28,7 @@ public class MutableValue<T> implements Mutable, Getter<T>, Setter<T>, Cloneable
 	@Override
 	public void set(T value)
 	{
-		this.changed = this.changed || !areEqual(this.value, value);
+		this.changed = this.changed || !Objects.equals(this.value, value);
 		this.value = value;
 	}
 	
@@ -70,18 +72,6 @@ public class MutableValue<T> implements Mutable, Getter<T>, Setter<T>, Cloneable
 		return this.value == null || ("" + this.value).isEmpty(); 
 	}
 
-	
-    private static boolean areEqual(Object s1, Object s2)
-    {
-    	if (s1 == null)
-    	{
-    		return s1 == s2;
-    	}
-    	
-    	return s1.equals(s2);
-    }
-
-	
 	private T value = null;
 	
 	private boolean changed = false; 

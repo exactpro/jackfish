@@ -38,6 +38,7 @@ import org.apache.log4j.Logger;
 import java.io.File;
 import java.io.Reader;
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -523,19 +524,6 @@ public class MatrixFx extends Matrix
 		addCommand(undo, redo);
 	}
 
-	public void setOff(int number, boolean flag)
-	{
-		Command undo = () ->
-		{
-			findAndCall(number, item -> item.setOff(!flag));
-		};
-		Command redo = () ->
-		{
-			findAndCall(number, item -> item.setOff(flag));
-		};
-		addCommand(undo, redo);
-	}
-
 	public void copy(List<MatrixItem> list) throws Exception
 	{
 		Parser parser = new Parser();
@@ -747,18 +735,6 @@ public class MatrixFx extends Matrix
 		this.controller.displayClientList(result);
 	}
 
-	@FunctionalInterface
-	public static interface MatrixItemApplier
-	{
-		void call(MatrixItem item) throws Exception;
-	}
-
-	@FunctionalInterface
-	public static interface ParameterApplier
-	{
-		void call(Parameters parameters) throws Exception;
-	}
-
 	private void insert(MatrixItem where, MatrixItem[] items) throws Exception
 	{
 		MatrixItem parent = where.getParent();
@@ -841,14 +817,14 @@ public class MatrixFx extends Matrix
 
 	}
 
-	private void checkAndCall(List<MatrixItem> items, MatrixItemApplier applier)
+	private void checkAndCall(List<MatrixItem> items, Consumer<MatrixItem> applier)
 	{
 		if (items != null && !items.isEmpty() && applier != null)
 		{
 			items.forEach(item -> {
 				try
 				{
-					applier.call(item);
+					applier.accept(item);
 				}
 				catch (Exception e)
 				{
@@ -860,32 +836,14 @@ public class MatrixFx extends Matrix
 		}
 	}
 
-	private void findAndCall(int itemNumber, MatrixItemApplier applier)
+	private void findAndCallParameters(int itemNumber, Consumer<Parameters> applier, int selectIndex)
 	{
 		MatrixItem item = find(it -> it.getNumber() == itemNumber);
 		if (item != null && applier != null)
 		{
 			try
 			{
-				applier.call(item);
-				enumerate();
-				this.controller.refresh();
-			}
-			catch (Exception e)
-			{
-				logger.error(e.getMessage(), e);
-			}
-		}
-	}
-
-	private void findAndCallParameters(int itemNumber, ParameterApplier applier, int selectIndex)
-	{
-		MatrixItem item = find(it -> it.getNumber() == itemNumber);
-		if (item != null && applier != null)
-		{
-			try
-			{
-				applier.call(item.getParameters());
+				applier.accept(item.getParameters());
 				this.controller.refreshParameters(item, selectIndex);
 			}
 			catch (Exception e)
