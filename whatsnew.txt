@@ -1,3 +1,5 @@
+13.03.2017 4.4.0.2090
+RM40864 Action RawText is working incorrectly : fixed. Now, hotkeys for matrix don't work into text input controls
 --------------------------------------------------------------------------------
 13.03.2017 4.4.0.2089
 RM39588 bug : Action TableSetValue is passed when enter nonexistent column
