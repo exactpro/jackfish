@@ -1,4 +1,8 @@
 --------------------------------------------------------------------------------
+13.03.2017 4.4.0.2089
+RM39588 bug : Action TableSetValue is passed when enter nonexistent column
+
+--------------------------------------------------------------------------------
 13.03.2017 4.4.0.2088
 RM40490 bug : Report Off or Report On are not followed with any specific markings applied to the TAB or offer to save changes made to it.
 

@@ -225,3 +225,19 @@ RM40665;[TableSort] Sorting for integer isn't correct;Never;;
     TBLS1.Out[0].int == 2;'Wrong integer order'
 
 
+// 
+#Id;#TestCase;#Kind;#Depends;#For
+RM39588;Action TableSetValue is passed when enter nonexistent column;Never;;
+    #Id;#RawTable
+    DATA1;Table
+    @;newH
+    0;newR
+    #EndRawTable
+
+    #Action;#Assert;#Table;#Index;#ffff
+    TableSetValue;This.Result == Result.Failed && This.Reason.contains('not exist');DATA1;0;1111
+
+    #Action;#Assert;#Table;#gggg
+    TableAddValue;This.Result == Result.Failed && This.Reason.contains('not exist');DATA1;22222
+
+
