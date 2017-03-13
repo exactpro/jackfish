@@ -222,7 +222,7 @@ public final class Call extends MatrixItem
 
 				if (result == Result.Failed)
 				{
-					return ret;
+					return new ReturnAndResult(start, ret);
 				}
 
 				return new ReturnAndResult(start, Result.Passed, ret.getOut());

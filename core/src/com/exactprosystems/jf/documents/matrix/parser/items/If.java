@@ -162,7 +162,7 @@ public class If extends MatrixItem
 					MatrixItem branchElse = super.find(false, Else.class, null);
 					if (branchElse != null)
 					{
-						return branchElse.execute(context, listener, evaluator, report);
+						return new ReturnAndResult(start, branchElse.execute(context, listener, evaluator, report));
 					}
 					return new ReturnAndResult(start, Result.Passed);
 				}

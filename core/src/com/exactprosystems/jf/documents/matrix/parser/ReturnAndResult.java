@@ -14,7 +14,15 @@ import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 
 public class ReturnAndResult
 {
-	public ReturnAndResult(long start, MatrixError error, Result result)
+    public ReturnAndResult(long start, ReturnAndResult other)
+    {
+        this.time   = System.currentTimeMillis() - start;
+        this.result = other.result;
+        this.out    = other.out;
+        this.error  = other.error;
+    }
+    
+    public ReturnAndResult(long start, MatrixError error, Result result)
 	{
 		this.time = System.currentTimeMillis() - start;
 		this.result = result;

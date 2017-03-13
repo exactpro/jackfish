@@ -215,7 +215,7 @@ public final class SubCase extends MatrixItem
 					result = ret.getResult();
 				}
 			}
-			return ret;
+			return new ReturnAndResult(start, ret);
 		}
 		catch (Exception e)
 		{

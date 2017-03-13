@@ -124,7 +124,7 @@ public class Context implements IContext, AutoCloseable
         {
             ((OnError)localHandler).setError(err);
             
-            return localHandler.execute(context, listener, evaluator, report);
+            return new ReturnAndResult(start, localHandler.execute(context, listener, evaluator, report));
         }
 	    
        String name = this.handlers.get(handlerKind);
@@ -158,7 +158,7 @@ public class Context implements IContext, AutoCloseable
                    handler.setRealParameters(new Parameters());
                }
                
-               return handler.execute(this, this.matrixListener, this.evaluator, report);
+               return new ReturnAndResult(start, handler.execute(this, this.matrixListener, this.evaluator, report));
            }
            else
            {

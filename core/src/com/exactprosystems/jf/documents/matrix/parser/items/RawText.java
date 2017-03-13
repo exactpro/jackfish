@@ -71,11 +71,9 @@ public class RawText extends MatrixItem
 			this.text.clear();
 			this.text.addAll(list);
 		});
-		driver.showToggleButton(this, layout, 1, 4, "Hide", b ->
-		{
-			driver.hide(this, layout, 2, b);
-			return null;
-		}, b -> b ? "Hide" : "Show", this.text.size() == 0);
+		driver.showToggleButton(this, layout, 1, 4, 
+		        b -> driver.hide(this, layout, 2, b),
+		        b -> b ? "Hide" : "Show", this.text.size() == 0);
 
 		return layout;
 	}

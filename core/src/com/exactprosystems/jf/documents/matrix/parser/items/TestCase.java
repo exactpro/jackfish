@@ -15,7 +15,6 @@ import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.evaluator.Variables;
 import com.exactprosystems.jf.common.report.ReportBuilder;
-import com.exactprosystems.jf.common.report.ReportTable;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.config.HandlerKind;
 import com.exactprosystems.jf.documents.matrix.parser.*;
@@ -129,11 +128,8 @@ public final class TestCase extends MatrixItem
         });
         driver.showLabel(this, layout, 2, 4, "Plugin:");
         driver.showExpressionField(this, layout, 2, 5, Tokens.For.get(), this.plugin, this.plugin, null, null, null, null);
-		driver.showToggleButton(this, layout, 1, 3, "Show additional", b ->
-		{
-			driver.hide(this, layout, 2, b);
-			return null;
-		},
+		driver.showToggleButton(this, layout, 1, 3, 
+		        b -> driver.hide(this, layout, 2, b),
 				b -> (b ? "Hide" : "Show") + " additional",
 				!((this.kind.isNullOrEmpty() || this.kind.get().equals(ScreenshotKind.Never.name())) && this.depends.isNullOrEmpty() && this.plugin.isExpressionNullOrEmpty()));
 

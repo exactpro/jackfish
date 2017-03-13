@@ -462,31 +462,32 @@ public class DisplayDriverFx implements DisplayDriver
 	}
 
 	@Override
-	public void showButton(MatrixItem item, Object layout, int row, int column, String name, Function<MatrixItem, Void> action)
+	public void showButton(MatrixItem item, Object layout, int row, int column, String name, Consumer<MatrixItem> action)
 	{
 		GridPane pane = (GridPane) layout;
 		Button button = new Button(name);
-		button.setOnAction(e -> action.apply(item));
+		button.setOnAction(e -> action.accept(item));
 		pane.add(button, column, row);
 		GridPane.setMargin(button, INSETS);
 	}
 
 	@Override
-	public void showToggleButton(MatrixItem item, Object layout, int row, int column, String name, Function<Boolean, Void> action, Function<Boolean, String> changeName, boolean initialValue)
+	public void showToggleButton(MatrixItem item, Object layout, int row, int column, Consumer<Boolean> action, 
+	          Function<Boolean, String> changeName, boolean initialValue)
 	{
 		GridPane pane = (GridPane) layout;
-		ToggleButton toggleButton = new ToggleButton(name);
+		ToggleButton toggleButton = new ToggleButton(changeName.apply(initialValue));
 		toggleButton.setSelected(initialValue);
 		toggleButton.setOnAction(e ->
 		{
 			selectCurrentRow(((MatrixTreeRow) pane.getParent().getParent()));
 			boolean isNotSelected = !toggleButton.isSelected();
-			action.apply(isNotSelected);
+			action.accept(isNotSelected);
 			toggleButton.setText(changeName.apply(!isNotSelected));
 		});
 		if (!initialValue)
 		{
-			action.apply(true);
+			action.accept(true);
 		}
 		pane.add(toggleButton, column, row);
 		GridPane.setMargin(toggleButton, INSETS);

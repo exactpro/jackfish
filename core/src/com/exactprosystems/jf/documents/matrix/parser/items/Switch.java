@@ -174,14 +174,14 @@ public class Switch extends MatrixItem
 						{
 							if (eval == null)
 							{
-								return item.execute(context, listener, evaluator, report);
+								return new ReturnAndResult(start, item.execute(context, listener, evaluator, report));
 							}
 						}
 						else
 						{
 							if (value.equals(eval))
 							{
-								return item.execute(context, listener, evaluator, report);
+								return new ReturnAndResult(start, item.execute(context, listener, evaluator, report));
 							}
 						}
 					}
@@ -192,7 +192,7 @@ public class Switch extends MatrixItem
 				}
 				else if (item instanceof Default)
 				{
-					return item.execute(context, listener, evaluator, report);
+					return new ReturnAndResult(start, item.execute(context, listener, evaluator, report));
 				}
 			}
 			
