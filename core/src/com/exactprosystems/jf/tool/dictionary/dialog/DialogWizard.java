@@ -318,6 +318,7 @@ public class DialogWizard
             res = composeFromAttr(res, node, LocatorFieldKind.TITLE);
             res = composeFromAttr(res, node, LocatorFieldKind.ACTION);
 		}
+        res = composeFromText(res, node);
 		return res;
 	}
 
@@ -342,10 +343,25 @@ public class DialogWizard
 	        }
 	        		
 	        String attr = attrNode.getNodeValue();
-	        if (!Str.IsNullOrEmpty(attr) && isStable(attr))
+	        if (isStable(attr))
 	        {
 	        	return attr;
 	        }
+        }
+        return null;
+    }
+
+    private String composeFromText(String res, Node node)
+    {
+        if (res != null)
+        {
+            return res;
+        }
+        
+        String text = node.getTextContent();
+        if (isStable(text))
+        {
+            return text;
         }
         return null;
     }

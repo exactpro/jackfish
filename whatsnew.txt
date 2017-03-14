@@ -1,5 +1,11 @@
+--------------------------------------------------------------------------------
+14.03.2017 4.4.0.2092
+RM40886 feature : If to add an element with a tag label, then parameter ID of created JF item will be empty
+
+--------------------------------------------------------------------------------
 14.03.2017 4.4.0.2091
 Methods getRow, getRowByIndex, getRowIndexes and select now availables for JTree elements in swing plagin.
+
 --------------------------------------------------------------------------------
 
 13.03.2017 4.4.0.2090
