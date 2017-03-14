@@ -1044,7 +1044,7 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 	}
 
 	@Override
-	public boolean fold(WebElement component, String path, boolean collaps) throws Exception
+	public boolean expand(WebElement component, String path, boolean expandOrCollapse) throws Exception
 	{
 		// TODO process the parameter path
 		Exception real = null;

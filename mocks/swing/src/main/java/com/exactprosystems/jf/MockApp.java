@@ -11,6 +11,7 @@ import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellEditor;
+import javax.swing.tree.DefaultMutableTreeNode;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.EventObject;
@@ -283,9 +284,7 @@ public class MockApp
 					{
 						//centralLabel.setText("Table_double_click_" + row + "_" + column);
 						centralLabel.setText("Table_double_click");
-
-						Object instr = new InstrumentHelper(1);
-						table.setValueAt(instr,1,1);
+						table.setValueAt("tr_2_td_2",1,1);
 						//table.setValueAt("123123123",1,1);
 					}
 				}
@@ -539,7 +538,23 @@ public class MockApp
 	private void createPanelTree()
 	{
 		JPanel panel = createPanel("panelTree");
-		JTree tree = new JTree();
+
+		DefaultMutableTreeNode root = new DefaultMutableTreeNode("JTree");
+		JTree tree = new JTree(root);
+		DefaultMutableTreeNode colorsRed = new DefaultMutableTreeNode("colors, red");
+		DefaultMutableTreeNode colors = new DefaultMutableTreeNode("colors");
+		DefaultMutableTreeNode orange = new DefaultMutableTreeNode("Orange");
+		DefaultMutableTreeNode red = new DefaultMutableTreeNode("red");
+		DefaultMutableTreeNode blue = new DefaultMutableTreeNode("blue");
+		DefaultMutableTreeNode green = new DefaultMutableTreeNode("green");
+		root.add(colorsRed);
+		root.add(colors);
+		colors.add(red);
+		colors.add(blue);
+		colors.add(green);
+		root.add(orange);
+		tree.expandRow(0);
+
 		JScrollPane scrollPane = new JScrollPane(tree);
 		addListeners(tree, "Tree");
 		tree.getSelectionModel().addTreeSelectionListener(listener -> System.out.println(listener.getPath()));

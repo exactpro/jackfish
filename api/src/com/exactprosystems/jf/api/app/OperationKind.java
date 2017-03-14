@@ -516,7 +516,7 @@ public enum OperationKind
 		@Override
 		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, Holder<T> holder, OperationResult result) throws Exception
 		{
-			return executor.fold(holder.getValue(), part.text, false);
+			return executor.expand(holder.getValue(), part.text, true);
 		}
 	},
 	
@@ -531,7 +531,7 @@ public enum OperationKind
 		@Override
 		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, Holder<T> holder, OperationResult result) throws Exception
 		{
-			return executor.fold(holder.getValue(), part.text, true);
+			return executor.expand(holder.getValue(), part.text, false);
 		}
 	},
 

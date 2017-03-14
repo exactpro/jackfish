@@ -318,6 +318,11 @@ public class SwingRemoteApplication extends RemoteApplication
 						res.add("value=" + combobox.getModel().getElementAt(i));
 					}
 				}
+				if (component.target instanceof JTree)
+				{
+					JTree tree = (JTree)component.target;
+					res.addAll(operationExecutor.JTreeToPathsList(tree));
+				}
 			}
 			return res;
 		}
