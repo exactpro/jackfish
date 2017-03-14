@@ -570,10 +570,10 @@ public class DictionaryFx extends GuiDictionary
 		}
 	}
 
-	public void checkNewId(IWindow currentWindow, String id) throws Exception
+	public void checkNewId(IWindow currentWindow, IControl currentControl, String id) throws Exception
 	{
 		IControl controlForName = currentWindow.getControlForName(SectionKind.Run, id);
-		if (controlForName != null)
+		if (controlForName != null && !Objects.equals(currentControl, controlForName))
 		{
 			this.controller.showInfo(String.format("Id with name '%s' already exist", id));
 		}
