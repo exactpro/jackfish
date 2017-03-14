@@ -44,4 +44,50 @@
         <onClose/>
         <close/>
     </window>
+    <window name="DisabledComponents">
+        <self>
+            <any id="rootFrame" xpath="//JFrame"/>
+        </self>
+        <onOpen/>
+        <run>
+            <label id="label" xpath=".//JPanel[@action=&amp;quot;&amp;quot; and @class=&amp;quot;javax.swing.JPanel&amp;quot; and @name=&amp;quot;&amp;quot; and @title=&amp;quot;&amp;quot; and @tooltip=&amp;quot;&amp;quot;]//JLabel" owner="rootFrame" rows="" header="" columns="">
+                <info>
+                    <xpath>/JRootPane/JLayeredPane/JPanel/JPanel[19]/JPanel/JLabel</xpath>
+                    <rectangle x1="0.42125" y1="0.9550000000000001" x2="0.45125" y2="0.975"/>
+                    <node>JLabel</node>
+                    <attr name="action"></attr>
+                    <attr name="class">javax.swing.JLabel</attr>
+                    <attr name="name"></attr>
+                    <attr name="title"></attr>
+                    <attr name="tooltip"></attr>
+                </info>
+            </label>
+            <checkBox id="checkBox" xpath=".//JCheckBox[@action=&amp;quot;&amp;quot; and @class=&amp;quot;javax.swing.JCheckBox&amp;quot; and @name=&amp;quot;&amp;quot; and @title=&amp;quot;&amp;quot; and @tooltip=&amp;quot;&amp;quot;]" owner="rootFrame" rows="" header="" columns="">
+                <info>
+                    <xpath>/JRootPane/JLayeredPane/JPanel/JPanel[19]/JPanel/JCheckBox</xpath>
+                    <rectangle x1="0.55125" y1="0.9525" x2="0.5775" y2="0.97875"/>
+                    <node>JCheckBox</node>
+                    <attr name="action"></attr>
+                    <attr name="class">javax.swing.JCheckBox</attr>
+                    <attr name="name"></attr>
+                    <attr name="title"></attr>
+                    <attr name="tooltip"></attr>
+                </info>
+            </checkBox>
+            <comboBox id="comboBoxChanged" xpath=".//JComboBox[@action=&amp;quot;comboBoxChanged&amp;quot; and @class=&amp;quot;javax.swing.JComboBox&amp;quot; and @name=&amp;quot;&amp;quot; and @title=&amp;quot;&amp;quot; and @tooltip=&amp;quot;&amp;quot;]" owner="rootFrame" rows="" header="" columns="">
+                <info>
+                    <xpath>/JRootPane/JLayeredPane/JPanel/JPanel[19]/JPanel/JComboBox</xpath>
+                    <rectangle x1="0.4575" y1="0.9500000000000001" x2="0.545" y2="0.9812500000000001"/>
+                    <node>JComboBox</node>
+                    <attr name="action">comboBoxChanged</attr>
+                    <attr name="class">javax.swing.JComboBox</attr>
+                    <attr name="name"></attr>
+                    <attr name="title"></attr>
+                    <attr name="tooltip"></attr>
+                </info>
+            </comboBox>
+        </run>
+        <onClose/>
+        <close/>
+    </window>
 </dictionary>

@@ -60,9 +60,26 @@ public class MockApp
 		createPanelScrollBar();
 		createPanelSplitPane();
 		createPanelAny();
+		createPanelWithDisableComponents();
 
 		this.frame.setSize(new Dimension(800, 800));
 		this.frame.setVisible(true);
+	}
+
+	private void createPanelWithDisableComponents() {
+		JPanel panel = new JPanel();
+		// disabled
+		JLabel label = new JLabel("qwe");
+		JComboBox<String> comboBox = new JComboBox<>(new String[]{"Green", "Yellow", "Orange", "Blue"});
+		JCheckBox checkBox = new JCheckBox();
+		label.setEnabled(false);
+		comboBox.setEnabled(false);
+		checkBox.setEnabled(false);
+		panel.add(label);
+		panel.add(comboBox);
+		panel.add(checkBox);
+
+		createPanel("panelPanel").add(panel);
 	}
 
 	private JMenuBar createMenu()
