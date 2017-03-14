@@ -357,9 +357,10 @@ public class DictionaryFx extends GuiDictionary
 							}
 							else
 							{
-								IControl owner = window.getOwnerControl(control);
-								Locator ownerLocator = owner == null ? null : owner.locator();
-								Collection<String> all = applicationConnector.getAppConnection().getApplication().service().findAll(ownerLocator, control.locator());
+					            Locator owner = getLocator(window.getOwnerControl(control));
+					            Locator locator = getLocator(control);
+								
+								Collection<String> all = applicationConnector.getAppConnection().getApplication().service().findAll(owner, locator);
 
 								Result result = null;
 								if (all.size() == 1 || (Addition.Many.equals(control.getAddition()) && all.size() > 0))

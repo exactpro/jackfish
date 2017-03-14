@@ -309,20 +309,24 @@ public class SwingRemoteApplication extends RemoteApplication
 			List<ComponentFixture<Component>> components = this.operationExecutor.findAll(element.getControlKind(), ownerFixture, element);
 			for (ComponentFixture<Component> component : components)
 			{
-				res.add("" + component.target);
+			    StringBuilder sb = new StringBuilder("" + component.target);
 				if (component.target instanceof JComboBox)
 				{
 					JComboBox<?> combobox = (JComboBox<?>)component.target;
 					for (int i = 0; i < combobox.getModel().getSize(); i++)
 					{
-						res.add("value=" + combobox.getModel().getElementAt(i));
+						sb.append('\n').append("value=" + combobox.getModel().getElementAt(i));
 					}
 				}
 				if (component.target instanceof JTree)
 				{
 					JTree tree = (JTree)component.target;
-					res.addAll(operationExecutor.JTreeToPathsList(tree));
+					for (String val : operationExecutor.JTreeToPathsList(tree))
+					{
+					    sb.append('\n').append(val);
+					}
 				}
+                res.add(sb.toString());
 			}
 			return res;
 		}

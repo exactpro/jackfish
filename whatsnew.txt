@@ -1,4 +1,8 @@
 --------------------------------------------------------------------------------
+14.03.2017 4.4.0.2096
+RM40898 bug : Wrong numbers after test all components
+
+--------------------------------------------------------------------------------
 14.03.2017 4.4.0.2095
 RM40044 feature : JackFish | Dictionary | Disable an addition of dialogues to the dictionary and elements within a dialog with the same names.
 
