@@ -1,3 +1,7 @@
+14.03.2017 4.4.0.2091
+Methods getRow, getRowByIndex, getRowIndexes and select now availables for JTree elements in swing plagin.
+--------------------------------------------------------------------------------
+
 13.03.2017 4.4.0.2090
 RM40864 Action RawText is working incorrectly : fixed. Now, hotkeys for matrix don't work into text input controls
 --------------------------------------------------------------------------------
