@@ -570,6 +570,20 @@ public class DictionaryFx extends GuiDictionary
 		}
 	}
 
+    public boolean checkDialogName(IWindow currentWindow, String name)
+    {
+        IWindow window;
+        try
+        {
+            window = getWindow(name);
+        }
+        catch (Exception e)
+        {
+            return true;
+        }
+        return window == null || Objects.equals(currentWindow, window);
+    }
+
 	public void checkNewId(IWindow currentWindow, IControl currentControl, String id) throws Exception
 	{
 		IControl controlForName = currentWindow.getControlForName(SectionKind.Run, id);

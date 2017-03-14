@@ -1,4 +1,8 @@
 --------------------------------------------------------------------------------
+14.03.2017 4.4.0.2095
+RM40044 feature : JackFish | Dictionary | Disable an addition of dialogues to the dictionary and elements within a dialog with the same names.
+
+--------------------------------------------------------------------------------
 14.03.2017 4.4.0.2092
 RM40886 feature : If to add an element with a tag label, then parameter ID of created JF item will be empty
 
