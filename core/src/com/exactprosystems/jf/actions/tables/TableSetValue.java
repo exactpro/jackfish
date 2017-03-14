@@ -12,6 +12,7 @@ import com.exactprosystems.jf.actions.AbstractAction;
 import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
+import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
@@ -55,18 +56,26 @@ public class TableSetValue extends AbstractAction
 	{
 	}
 	
-	@Override
+    @Override
+    public void initDefaultValues() 
+    {
+    }
+
+    @Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
-		table.setValue(index, parameters.select(TypeMandatory.Extra));
-		
+        Parameters params = parameters.select(TypeMandatory.Extra);
+        for (String name : params.keySet())
+        {
+            if (!this.table.columnIsPresent(name))
+            {
+                super.setError("The header " + name + " does not exist in the table", ErrorKind.WRONG_PARAMETERS);
+                return;
+            }
+        }
+        
+		this.table.setValue(this.index, params);
 		super.setResult(null);
-	}
-
-	@Override
-	public void initDefaultValues() {
-		// TODO Auto-generated method stub
-		
 	}
 }
 

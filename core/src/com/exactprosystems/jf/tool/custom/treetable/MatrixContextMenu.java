@@ -110,6 +110,10 @@ public class MatrixContextMenu extends ContextMenu
 			{
 				return;
 			}
+			if (parent instanceof TextInputControl)
+			{
+				return;
+			}
 			boolean inside = parent instanceof MatrixTreeView;
 			while (!inside && parent != null && parent instanceof Node)
 			{

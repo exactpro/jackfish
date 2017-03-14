@@ -1,8 +1,21 @@
+13.03.2017 4.4.0.2090
+RM40864 Action RawText is working incorrectly : fixed. Now, hotkeys for matrix don't work into text input controls
+--------------------------------------------------------------------------------
+13.03.2017 4.4.0.2089
+RM39588 bug : Action TableSetValue is passed when enter nonexistent column
+
+--------------------------------------------------------------------------------
+13.03.2017 4.4.0.2088
+RM40490 bug : Report Off or Report On are not followed with any specific markings applied to the TAB or offer to save changes made to it.
+
+--------------------------------------------------------------------------------
 11.03.2017 4.4.0.2085
 RM40836 feature : chrome driver was updated. Change on your configuration for plugins path to chrome driver from 2.27 to 2.28
+
 --------------------------------------------------------------------------------
 11.03.2017 4.4.0.2084
 RM40859 bug : JF add all modified files to commit instead of selected. Fixed
+
 --------------------------------------------------------------------------------
 10.03.2017 4.4.0.2083
 RM38953 bug: Failed to load class

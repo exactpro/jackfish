@@ -151,7 +151,7 @@ public abstract class AbstractDocument implements Document
 	}
 	
 	
-	protected void changed(boolean flag)
+	public void changed(boolean flag)
 	{
 		Optional.ofNullable(listener).ifPresent(l -> l.change(flag));
 	}
