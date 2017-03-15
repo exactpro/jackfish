@@ -225,6 +225,7 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 			{
 				DialogsHelper.showInfo(format);
 			}
+			this.tree.refresh();
 		});
 	}
 
@@ -250,19 +251,13 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 	@Override
 	public void started(Matrix matrix, MatrixItem item)
 	{
-		if (toggleTracing.isSelected())
-		{
-			Platform.runLater(this.tree::refresh);
-		}
+		this.refreshTreeIfToogle();
 	}
 
 	@Override
 	public void finished(Matrix matrix, MatrixItem item, Result result)
 	{
-		if (toggleTracing.isSelected())
-		{
-			Platform.runLater(this.tree::refresh);
-		}
+		this.refreshTreeIfToogle();
 	}
 
 	@Override
@@ -270,7 +265,7 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 	{
 		try
 		{
-			Platform.runLater(this.tree::refresh);
+			this.refreshTreeIfToogle();
 			Optional.ofNullable(this.watcher).ifPresent(WatcherFx::update);
 			TreeItem<MatrixItem> treeItem = this.tree.find(item);
 			if (treeItem == null)
@@ -599,6 +594,14 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 	// ------------------------------------------------------------------------------------------------------------------
 	// private methods
 	// ------------------------------------------------------------------------------------------------------------------
+	private void refreshTreeIfToogle()
+	{
+		if (this.toggleTracing.isSelected())
+		{
+			this.tree.refresh();
+		}
+	}
+
 	private void initShortcuts(final Settings settings)
 	{
 		this.pane.addEventFilter(KeyEvent.KEY_PRESSED, keyEvent -> tryCatch(() ->
