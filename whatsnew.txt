@@ -1,3 +1,5 @@
+15.03.2017 4.4.0.2097
+RM40888 bug : Action RawTable is working incorrectly
 --------------------------------------------------------------------------------
 14.03.2017 4.4.0.2096
 RM40898 bug : Wrong numbers after test all components
