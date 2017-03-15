@@ -313,7 +313,6 @@ public class ElementInfoController implements Initializable, ContainingParent
 					});
 				});
 		
-		// TODO here
 		this.tfID.focusedProperty().addListener(textIdFocusListener(this.tfID));
 		this.tfID.setHandler(event -> {
 			this.tfID.clear();
