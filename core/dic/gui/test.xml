@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<dictionary>
+    <window name="Main">
+        <self>
+            <any id="Owner" xpath="/html"/>
+        </self>
+        <onOpen/>
+        <run>
+            <button owner="Owner" text="Operations" rows="" header="" columns="">
+                <info>
+                    <xpath>/body/eod-cache-app/nav/div/div/table/tbody/tr/td[1]/form/li/a</xpath>
+                    <rectangle x1="0.022102425876010783" y1="0.13636363636363635" x2="0.05983827493261456" y2="0.15353535353535352"/>
+                    <node>a</node>
+                    <attr name="href">http://ft-sdes-bap04:9180/jdg/object-viewer/webmenus</attr>
+                    <attr name="routerlink">/webmenus</attr>
+                </info>
+            </button>
+            <button owner="Owner" text="Object Search" rows="" header="" columns="">
+                <info>
+                    <xpath>/body/eod-cache-app/nav/div/div/table/tbody/tr/td[2]/form/li/a</xpath>
+                    <rectangle x1="0.07870619946091645" y1="0.13636363636363635" x2="0.12722371967654988" y2="0.15353535353535352"/>
+                    <node>a</node>
+                    <attr name="href">http://ft-sdes-bap04:9180/jdg/object-viewer/monza</attr>
+                    <attr name="routerlink">/monza</attr>
+                </info>
+            </button>
+            <panel xpath="./body/eod-cache-app/div[1]/div/ng-component/div[2]/form/div[4]/div" owner="Owner" rows="" header="" columns="">
+                <info>
+                    <xpath>/body/eod-cache-app/div[1]/div/ng-component/div[2]/form/div[4]/div</xpath>
+                    <rectangle x1="0.00431266846361186" y1="0.4212121212121212" x2="0.9956873315363882" y2="0.4393939393939394"/>
+                    <node>div</node>
+                    <attr name="class">alert alert-danger</attr>
+                </info>
+            </panel>
+            <panel id="spacer3" xpath="./body/eod-cache-app/div[1]/div/ng-component/div[1]" owner="Owner" rows="" header="" columns="">
+                <info>
+                    <xpath>/body/eod-cache-app/div[1]/div/ng-component/div[1]</xpath>
+                    <rectangle x1="0.00431266846361186" y1="0.2909090909090909" x2="0.9956873315363882" y2="0.3212121212121212"/>
+                    <node>div</node>
+                    <attr name="id">spacer</attr>
+                    <attr name="style">height:30px</attr>
+                </info>
+            </panel>
+        </run>
+        <onClose/>
+        <close/>
+    </window>
+    <window name="Login">
+        <self>
+            <panel id="Owner" xpath=".//div[@class=&amp;quot;col-md-4 col-md-offset-4 pg-content&amp;quot;]"/>
+        </self>
+        <onOpen/>
+        <run/>
+        <onClose/>
+        <close/>
+    </window>
+</dictionary>
