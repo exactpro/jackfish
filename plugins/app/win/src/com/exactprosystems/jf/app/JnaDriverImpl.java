@@ -406,6 +406,15 @@ public class JnaDriverImpl
 		return res;
 	}
 
+	public boolean elementIsEnabled(UIProxyJNA component) throws Exception {
+		long start = System.currentTimeMillis();
+		String res = ConvertString.replaceUnicodeSubStringsToCharSymbols(this.jnaDriver.elementIsEnabled(component.getIdString()));
+		this.logger.info(String.format("elementIsEnabled(%s) = %s, time (ms) : %d", component, res, System.currentTimeMillis() - start));
+		checkCSharpTimes();
+		checkError();
+		return Boolean.parseBoolean(res);
+	}
+
 	public String getTable(UIProxyJNA table, boolean useNumericHeader) throws Exception
 	{
 		long start = System.currentTimeMillis();
