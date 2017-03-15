@@ -818,7 +818,8 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 	}
 
 	@Override
-	public boolean elementIsEnabled(WebElement component) {
+	public boolean elementIsEnabled(WebElement component)
+	{
 		return component.isEnabled();
 	}
 	//endregion

@@ -243,7 +243,8 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 	}
 
 	@Override
-	public boolean elementIsEnabled(ComponentFixture<Component> component) {
+	public boolean elementIsEnabled(ComponentFixture<Component> component)
+	{
 		return component.target.isEnabled();
 	}
 
