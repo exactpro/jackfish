@@ -573,25 +573,18 @@ public class DictionaryFx extends GuiDictionary
 
     public boolean checkDialogName(IWindow currentWindow, String name)
     {
-        IWindow window;
-        try
-        {
-            window = getWindow(name);
-        }
-        catch (Exception e)
-        {
-            return true;
-        }
-        return window == null || Objects.equals(currentWindow, window);
+        long count = super.windows.stream().filter(w -> !Objects.equals(currentWindow, w) && Objects.equals(w.getName(), name)).count();
+        return count == 0;
     }
 
-	public void checkNewId(IWindow currentWindow, IControl currentControl, String id) throws Exception
+	public boolean checkNewId(IWindow currentWindow, IControl currentControl, String id)
 	{
-		IControl controlForName = currentWindow.getControlForName(SectionKind.Run, id);
-		if (controlForName != null && !Objects.equals(currentControl, controlForName))
-		{
-			this.controller.showInfo(String.format("Id with name '%s' already exist", id));
-		}
+	    if (Str.IsNullOrEmpty(id))
+	    {
+	        return true;
+	    }
+		List<IControl> all = currentWindow.allMatched((s, c) -> true);
+		return all.isEmpty(); 
 	}
 
 	public void elementMove(IWindow window, IWindow.SectionKind section, IControl control, Integer newIndex) throws Exception

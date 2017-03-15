@@ -161,7 +161,7 @@ public class GuiDictionary extends AbstractDocument implements IGuiDictionary
 	}
 
 	@Override
-	public IWindow getWindow(String name) throws Exception
+	public IWindow getWindow(String name)
 	{
     	Iterator<Window> iterator = this.windows.iterator();
     	while (iterator.hasNext())
@@ -172,8 +172,7 @@ public class GuiDictionary extends AbstractDocument implements IGuiDictionary
     			return window;
     		}
     	}
-
-		throw new Exception("The dialog with name '" + name + "' can not be found in the dictionary.");
+    	return null;
 	}
 
 	@Override

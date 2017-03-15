@@ -113,7 +113,7 @@ public class NavigationController implements Initializable, ContainingParent
 				.contains(s.toUpperCase()))),
 				false);
 		this.listViewElement.setCellFactory(param -> new CustomListCell<>(
-		        (w, s) -> true,
+		        (w, s) -> this.model.checkNewId(w.control.getSection().getWindow(), w.control, s),
 				(w, s) -> {},
 				e -> e.control.toString(),
 				(w, i) -> Common.tryCatch(() -> this.model.elementMove(currentWindow(), currentSection(), w.control,i), "Error on move element")
@@ -325,9 +325,9 @@ public class NavigationController implements Initializable, ContainingParent
 	}
 
 
-	public void checkNewId(String id) throws Exception
+	public boolean checkNewId(String id)
 	{
-		this.model.checkNewId(currentWindow(), currentElement(), id);
+		return this.model.checkNewId(currentWindow(), currentElement(), id);
 	}
 
 

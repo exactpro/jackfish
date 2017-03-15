@@ -128,6 +128,12 @@ public class ImageGet extends AbstractAction
 		{
 			IGuiDictionary dictionary = connection.getDictionary();
 			IWindow window = dictionary.getWindow(this.dialog);
+			if (window == null)
+			{
+			    super.setError("Window " + this.dialog + " not found in the dictionary",ErrorKind.DIALOG_NOT_FOUND);
+			    return;
+			}
+			
 			
 			if (this.name == null)
 			{

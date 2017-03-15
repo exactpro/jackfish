@@ -113,6 +113,11 @@ public class DialogSwitchToWindow extends AbstractAction
 			}
 			IGuiDictionary dictionary = this.connection.getDictionary();
 			IWindow window = dictionary.getWindow(this.dialog);
+            if (window == null)
+            {
+                super.setError("Window " + this.dialog + " not found in the dictionary",ErrorKind.DIALOG_NOT_FOUND);
+                return;
+            }
 
 			logger.debug("Process dialog : " + window);
 			IControl element = window.getControlForName(null, frame);

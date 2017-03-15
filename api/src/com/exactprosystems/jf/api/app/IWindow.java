@@ -9,6 +9,8 @@
 package com.exactprosystems.jf.api.app;
 
 import java.util.Collection;
+import java.util.List;
+import java.util.function.BiFunction;
 
 
 public interface IWindow
@@ -43,6 +45,7 @@ public interface IWindow
 
 	void 				checkParams(Collection<String> set) throws Exception;
 	boolean 			containsControl(String controlName) throws Exception;
+    List<IControl>      allMatched(BiFunction<ISection, IControl, Boolean> predicat);
 
 	
 }
