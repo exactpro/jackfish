@@ -8,6 +8,7 @@
 package com.exactprosystems.jf.app;
 
 import com.exactprosystems.jf.api.app.*;
+import com.exactprosystems.jf.api.common.Converter;
 import com.exactprosystems.jf.api.common.SerializablePair;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.error.app.ElementNotFoundException;
@@ -603,10 +604,10 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 		}
 		if (addRectangles)
 		{
-			node.setUserData(IRemoteApplication.rectangleName, this.operationExecutor.getRectangle(parent), null);
+			node.setAttribute(IRemoteApplication.rectangleName, Converter.rectangleToString(this.operationExecutor.getRectangle(parent)));
 		}
 		String isVisible = this.driver.elementAttribute(parent, AttributeKind.VISIBLE);
-		node.setUserData(IRemoteApplication.visibleName, Boolean.valueOf(isVisible), null);
+		node.setAttribute(IRemoteApplication.visibleName, "" + isVisible);
 		try
 		{
 			for (AttributeKind kind : AttributeKind.values())

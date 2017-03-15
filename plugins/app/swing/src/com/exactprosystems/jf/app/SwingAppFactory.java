@@ -24,7 +24,7 @@ import java.util.Scanner;
 public class SwingAppFactory implements IApplicationFactory
 {
 	private static final int requiredMajorVersion = 2;
-	private static final int requiredMinorVersion = 28;
+	private static final int requiredMinorVersion = 29;
 
     public static final String logLevel         = "LogLevel";
 	public final static String jreExecName 		= "jreExec";

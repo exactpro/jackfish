@@ -234,6 +234,12 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 	}
 
 	@Override
+	public boolean elementIsEnabled(UIProxyJNA component) throws Exception
+	{
+		return this.driver.elementIsEnabled(component);
+	}
+
+	@Override
 	public boolean tableIsContainer()
 	{
 		return false;

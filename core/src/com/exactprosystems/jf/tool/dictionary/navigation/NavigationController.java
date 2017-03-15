@@ -10,6 +10,7 @@ package com.exactprosystems.jf.tool.dictionary.navigation;
 
 import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.app.IWindow.SectionKind;
+import com.exactprosystems.jf.api.common.Converter;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.documents.guidic.controls.AbstractControl;
@@ -23,7 +24,6 @@ import com.exactprosystems.jf.tool.dictionary.DictionaryFx;
 import com.exactprosystems.jf.tool.dictionary.DictionaryFxController;
 import com.exactprosystems.jf.tool.dictionary.FindListView;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
-
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.event.ActionEvent;
@@ -31,7 +31,10 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
-import javafx.scene.input.*;
+import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.Dragboard;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.TransferMode;
 import javafx.scene.layout.*;
 import javafx.scene.text.Text;
 import org.w3c.dom.Document;
@@ -312,7 +315,9 @@ public class NavigationController implements Initializable, ContainingParent
 			}
 			IRemoteApplication service = this.appConnection.getApplication().service();
 			service.startNewDialog();
-			Document document = service.getTree(owner);
+			//			Document document = service.getTree(owner);
+			byte[] treeBytes = service.getTreeBytes(owner);
+			Document document = Converter.convertByteArrayToXmlDocument(treeBytes);
 			if (document != null)
 			{
 				XpathViewer viewer = new XpathViewer(owner, document, service);

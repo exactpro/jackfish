@@ -1,3 +1,9 @@
+15.03.2017 4.4.0.2102
+RM34024
+RM39987
+Change behaviour for getting xml document from plugins side.
+Now, we zip it on plugin side and unzip on core side.
+--------------------------------------------------------------------------------
 15.03.2017 4.4.0.2098
 RM40826 Matrix tab show marker of current item if colors off
 RM39290 Execution triangle has hang-up

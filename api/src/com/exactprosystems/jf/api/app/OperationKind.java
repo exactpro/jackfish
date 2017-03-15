@@ -9,6 +9,7 @@
 package com.exactprosystems.jf.api.app;
 
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.api.error.app.ElementNotEnabled;
 import com.exactprosystems.jf.api.error.app.ElementNotFoundException;
 import com.exactprosystems.jf.api.error.app.OperationNotAllowedException;
 
@@ -127,6 +128,12 @@ public enum OperationKind
 	SET("setValue")
 	{
 		@Override
+		protected boolean checkEnabled()
+		{
+			return true;
+		}
+
+		@Override
 		protected String formulaTemplate(Part part)
 		{
 			return ".setValue(%5$f)";
@@ -174,6 +181,12 @@ public enum OperationKind
 	PUSH("push")
 	{
 		@Override
+		protected boolean checkEnabled()
+		{
+			return true;
+		}
+
+		@Override
 		protected String formulaTemplate(Part part)
 		{
 			return ".push()";
@@ -188,6 +201,12 @@ public enum OperationKind
 	
 	PRESS("press")
 	{
+		@Override
+		protected boolean checkEnabled()
+		{
+			return true;
+		}
+
 		@Override
 		protected String formulaTemplate(Part part)
 		{
@@ -204,6 +223,12 @@ public enum OperationKind
 	KEY_UP("keyUp")
 	{
 		@Override
+		protected boolean checkEnabled()
+		{
+			return true;
+		}
+
+		@Override
 		protected String formulaTemplate(Part part)
 		{
 			return ".keyUp(%12$s)";
@@ -218,6 +243,12 @@ public enum OperationKind
 	
 	KEY_DOWN("keyDown")
 	{
+		@Override
+		protected boolean checkEnabled()
+		{
+			return true;
+		}
+
 		@Override
 		protected String formulaTemplate(Part part)
 		{
@@ -430,6 +461,12 @@ public enum OperationKind
 	TEXT("text")
 	{
 		@Override
+		protected boolean checkEnabled()
+		{
+			return true;
+		}
+
+		@Override
 		protected String formulaTemplate(Part part)
 		{
 			return ".text('%8$s', %6$b)";
@@ -445,6 +482,12 @@ public enum OperationKind
 	
 	TEXT_XY("text(x,y)")
 	{
+		@Override
+		protected boolean checkEnabled()
+		{
+			return true;
+		}
+
 		@Override
 		protected String formulaTemplate(Part part)
 		{
@@ -463,6 +506,12 @@ public enum OperationKind
 	TOGGLE("toggle")
 	{
 		@Override
+		protected boolean checkEnabled()
+		{
+			return true;
+		}
+
+		@Override
 		protected String formulaTemplate(Part part)
 		{
 			return ".toogle(%6$b)";
@@ -477,6 +526,12 @@ public enum OperationKind
 	
 	SELECT_BY_INDEX("select")
 	{
+		@Override
+		protected boolean checkEnabled()
+		{
+			return true;
+		}
+
 		@Override
 		protected String formulaTemplate(Part part)
 		{
@@ -493,6 +548,12 @@ public enum OperationKind
 	SELECT("select")
 	{
 		@Override
+		protected boolean checkEnabled()
+		{
+			return true;
+		}
+
+		@Override
 		protected String formulaTemplate(Part part)
 		{
 			return ".select('%8$s')";
@@ -508,6 +569,12 @@ public enum OperationKind
 	EXPAND("expand")
 	{
 		@Override
+		protected boolean checkEnabled()
+		{
+			return true;
+		}
+
+		@Override
 		protected String formulaTemplate(Part part)
 		{
 			return ".expand('%8$s')";
@@ -522,6 +589,12 @@ public enum OperationKind
 	
 	COLLAPSE("collapse")
 	{
+		@Override
+		protected boolean checkEnabled()
+		{
+			return true;
+		}
+
 		@Override
 		protected String formulaTemplate(Part part)
 		{
@@ -869,11 +942,22 @@ public enum OperationKind
 			}
 			
 		}
+
+		if (checkEnabled() && !executor.elementIsEnabled(holder.getValue()))
+		{
+			throw new ElementNotEnabled("Element " + locator.getId() + " is not enabled");
+		}
+
 		return operateDerived(part, executor, holder, result);
 	}
 
 
 	protected String formulaTemplate(Part part) { return ""; } // TODO
+
+	protected boolean checkEnabled()
+	{
+		return false;
+	}
 
 	protected boolean needToFind()
 	{
