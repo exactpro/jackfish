@@ -72,12 +72,15 @@ public class MockApp
 		JLabel label = new JLabel("qwe");
 		JComboBox<String> comboBox = new JComboBox<>(new String[]{"Green", "Yellow", "Orange", "Blue"});
 		JCheckBox checkBox = new JCheckBox();
+		JTextField textField = new JTextField("some text");
 		label.setEnabled(false);
 		comboBox.setEnabled(false);
 		checkBox.setEnabled(false);
+		textField.setEnabled(false);
 		panel.add(label);
 		panel.add(comboBox);
 		panel.add(checkBox);
+		panel.add(textField);
 
 		createPanel("panelPanel").add(panel);
 	}

@@ -816,6 +816,11 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 		while (++repeat < repeatLimit);
 		throw real;
 	}
+
+	@Override
+	public boolean elementIsEnabled(WebElement component) {
+		return component.isEnabled();
+	}
 	//endregion
 
 	@Override
