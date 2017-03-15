@@ -8,8 +8,25 @@
 
 package com.exactprosystems.jf.api.common;
 
+import com.exactprosystems.jf.api.app.IRemoteApplication;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+
 import javax.sql.rowset.serial.SerialBlob;
-import java.io.*;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Source;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import java.awt.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -18,7 +35,9 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.List;
 import java.util.Map.Entry;
+import java.util.stream.IntStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
@@ -26,7 +45,107 @@ import java.util.zip.ZipOutputStream;
 public class Converter
 {
 	private static final String CLASS_NAME = "class.name";
+	private static final String XML_DOCUMENT = "document.xml";
 
+	//region methods with xml document
+	public static byte[] convertXmlDocumentToZipByteArray(Document tree) throws Exception
+	{
+		byte[] bytes = convertToByteArray(tree);
+		System.err.println("Convert tree to byte array size : " + bytes.length);
+
+		ByteArrayOutputStream outputStream;
+
+		try (ByteArrayOutputStream baos = new ByteArrayOutputStream(); ZipOutputStream zos = new ZipOutputStream(baos))
+		{
+			ZipEntry zipEntry = new ZipEntry(XML_DOCUMENT);
+			zos.putNextEntry(zipEntry);
+			zos.write(bytes, 0, bytes.length);
+			zos.closeEntry();
+			outputStream = baos;
+		}
+		byte[] newBytes = outputStream.toByteArray();
+		System.err.println("Zip byte array size : " + newBytes.length);
+		return newBytes;
+	}
+
+	public static Document convertByteArrayToXmlDocument(byte[] array) throws Exception
+	{
+		try (InputStream in = new ByteArrayInputStream(array); ZipInputStream zis = new ZipInputStream(in))
+		{
+			ZipEntry nextEntry = zis.getNextEntry();
+			if (nextEntry == null)
+			{
+				throw new Exception("Not entry found");
+			}
+			String name = nextEntry.getName();
+			if (name.equals(XML_DOCUMENT))
+			{
+				byte[] buf = readAll(zis);
+
+				DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+				factory.setValidating(false);
+				DocumentBuilder builder = factory.newDocumentBuilder();
+				Document doc = builder.parse(new ByteArrayInputStream(buf));
+				convertAttributesToUserData(doc);
+				return doc;
+			}
+			else
+			{
+				throw new Exception("Now entry with name " + XML_DOCUMENT);
+			}
+		}
+	}
+
+	private static byte[] convertToByteArray(Document tree) throws Exception
+	{
+		try (ByteArrayOutputStream bos = new ByteArrayOutputStream())
+		{
+			Transformer transformer = TransformerFactory.newInstance().newTransformer();
+			Source source = new DOMSource(tree);
+			StreamResult result = new StreamResult(bos);
+			transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+			transformer.setOutputProperty(OutputKeys.METHOD, "xml");
+			transformer.transform(source, result);
+			return bos.toByteArray();
+		}
+	}
+
+	private static void convertAttributesToUserData(Node element)
+	{
+		boolean isElement = element.getNodeType() == Node.ELEMENT_NODE;
+		if (isElement)
+		{
+			Element e = (Element) element;
+			String rect = e.getAttribute(IRemoteApplication.rectangleName);
+			if (!Str.IsNullOrEmpty(rect))
+			{
+				e.removeAttribute(IRemoteApplication.rectangleName);
+				Rectangle rectangle = rectangleFromString(rect);
+				e.setUserData(IRemoteApplication.rectangleName, rectangle, null);
+			}
+			String visible = e.getAttribute(IRemoteApplication.visibleName);
+			if (!Str.IsNullOrEmpty(visible))
+			{
+				e.removeAttribute(IRemoteApplication.visibleName);
+				e.setUserData(IRemoteApplication.visibleName, Boolean.valueOf(visible), null);
+			}
+		}
+		IntStream.range(0, element.getChildNodes().getLength()).mapToObj(element.getChildNodes()::item).forEach(Converter::convertAttributesToUserData);
+	}
+
+	public static String rectangleToString(Rectangle r)
+	{
+		return "" + r.x + "," + r.y + "," + r.width + "," + r.height;
+	}
+
+	public static Rectangle rectangleFromString(String s)
+	{
+		String[] split = s.split(",");
+		return new Rectangle(Integer.parseInt(split[0]), Integer.parseInt(split[1]), Integer.parseInt(split[2]), Integer.parseInt(split[3]));
+	}
+	//endregion
+
+	//region work with SQL blobs
 	public static Blob storableToBlob(Storable object) throws Exception
 	{
 		if (object == null)
@@ -35,9 +154,8 @@ public class Converter
 		}
 		List<String> list = object.getFileList();
 		ByteArrayOutputStream outputStream = null;
-		
-		try (ByteArrayOutputStream baos = new ByteArrayOutputStream(); 
-				ZipOutputStream zos = new ZipOutputStream(baos))
+
+		try (ByteArrayOutputStream baos = new ByteArrayOutputStream(); ZipOutputStream zos = new ZipOutputStream(baos))
 		{
 			{
 				byte[] data = object.getClass().getName().getBytes();
@@ -47,7 +165,7 @@ public class Converter
 				zos.write(data);
 				zos.closeEntry();
 			}
-			
+
 			for (String filename : list)
 			{
 				byte[] data = object.getData(filename);
@@ -60,7 +178,7 @@ public class Converter
 			outputStream = baos;
 		}
 		catch (Exception e)
-		{ 
+		{
 			e.printStackTrace();
 		}
 
@@ -109,7 +227,7 @@ public class Converter
 		
 		return retValue;
 	}
-
+	//endregion
 
 	private static byte[] readAll(InputStream is) throws IOException
 	{

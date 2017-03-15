@@ -10,6 +10,7 @@ package com.exactprosystems.jf.tool.dictionary.dialog;
 
 import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.app.IWindow.SectionKind;
+import com.exactprosystems.jf.api.common.Converter;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.error.JFRemoteException;
 import com.exactprosystems.jf.documents.guidic.*;
@@ -27,6 +28,7 @@ import javafx.concurrent.Task;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
+
 import java.awt.*;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
@@ -637,7 +639,8 @@ public class DialogWizard
 					@Override
 					protected Document call() throws Exception
 					{
-						return service().getTree(DialogWizard.this.selfControl.locator());
+						byte[] treeBytes = service().getTreeBytes(DialogWizard.this.selfControl.locator());
+						return Converter.convertByteArrayToXmlDocument(treeBytes);
 					}
 				};
 			}

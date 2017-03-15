@@ -8,6 +8,7 @@
 
 package com.exactprosystems.jf.api.app;
 
+import com.exactprosystems.jf.api.common.Converter;
 import com.exactprosystems.jf.api.common.SerializablePair;
 import com.exactprosystems.jf.api.error.app.ElementNotFoundException;
 import com.exactprosystems.jf.api.error.app.ProxyException;
@@ -484,6 +485,26 @@ public abstract class RemoteApplication implements IRemoteApplication
 		catch (Exception e)
 		{
 			String msg = String.format("Error getTree(%s)", owner);
+			throw new ProxyException(msg, e.getMessage(), e);
+		}
+	}
+
+	@Override
+	public byte[] getTreeBytes(Locator owner) throws RemoteException
+	{
+		try
+		{
+			Document tree = getTreeDerived(owner);
+
+			return Converter.convertXmlDocumentToZipByteArray(tree);
+		}
+		catch (RemoteException e)
+		{
+			throw e;
+		}
+		catch (Exception e)
+		{
+			String msg = String.format("Error getTreeBytes(%s)", owner);
 			throw new ProxyException(msg, e.getMessage(), e);
 		}
 	}

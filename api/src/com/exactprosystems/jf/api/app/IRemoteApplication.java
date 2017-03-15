@@ -21,8 +21,8 @@ import java.util.Map;
 
 public interface IRemoteApplication extends Remote
 {
-	String	rectangleName	= "rectangle";
-    String  visibleName     = "visible";
+	String rectangleName = "jf_rectangle";
+	String visibleName = "jf_visible";
 
 	Serializable                getProperty		(String name) throws RemoteException;
 
@@ -48,5 +48,8 @@ public interface IRemoteApplication extends Remote
 	int 						closeAll		(Locator element, Collection<LocatorAndOperation> operations) throws RemoteException;
 	String 						closeWindow		() throws RemoteException;
 	Document 					getTree			(Locator owner) throws RemoteException;
-    void                        startNewDialog  () throws RemoteException;
+
+	byte[] getTreeBytes(Locator owner) throws RemoteException;
+
+	void                        startNewDialog  () throws RemoteException;
 }

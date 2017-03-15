@@ -9,6 +9,7 @@
 package com.exactprosystems.jf.app;
 
 import com.exactprosystems.jf.api.app.*;
+import com.exactprosystems.jf.api.common.Converter;
 import com.exactprosystems.jf.api.common.SerializablePair;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.error.app.FeatureNotSupportedException;
@@ -807,16 +808,7 @@ public class SeleniumRemoteApplication extends RemoteApplication
 		{
 			element.setTextContent(textElement);
 		}
-		Object rec = map.get(IRemoteApplication.rectangleName);
-		if (rec != null)
-		{
-			element.setUserData(IRemoteApplication.rectangleName, createRectangle((Map<String, String>) rec), null);
-		}
-        Object vis = map.get(IRemoteApplication.visibleName);
-        if (vis != null)
-        {
-            element.setUserData(IRemoteApplication.visibleName, (boolean)vis, null);
-        }
+		setUserData(map, element);
 
 		Object childMap = map.get(ELEMENT_CHILD_FIELD);
 
@@ -826,6 +818,20 @@ public class SeleniumRemoteApplication extends RemoteApplication
 			{
 				transform(ch, document, element);
 			}
+		}
+	}
+
+	private void setUserData(Map<String, Object> map, Node element)
+	{
+		Object rec = map.get(IRemoteApplication.rectangleName);
+		if (rec != null)
+		{
+			((Element) element).setAttribute(IRemoteApplication.rectangleName, Converter.rectangleToString(createRectangle((Map<String, String>) rec)));
+		}
+		Object vis = map.get(IRemoteApplication.visibleName);
+		if (vis != null)
+		{
+			((Element) element).setAttribute(IRemoteApplication.visibleName, "" + vis);
 		}
 	}
 

@@ -13,6 +13,7 @@ import com.exactprosystems.jf.api.app.IRemoteApplication;
 import com.exactprosystems.jf.api.app.Locator;
 import com.exactprosystems.jf.api.app.LocatorFieldKind;
 import com.exactprosystems.jf.api.app.PluginInfo;
+import com.exactprosystems.jf.api.common.Converter;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.error.app.ElementNotFoundException;
 import com.exactprosystems.jf.api.error.app.NullParameterException;
@@ -291,11 +292,13 @@ public class MatcherSwing<T extends Component> extends GenericTypeMatcher<T>
         }
         if (addRectangles)
         {
-            node.setUserData(IRemoteApplication.rectangleName, getRect(component), null);
+			node.setAttribute(IRemoteApplication.rectangleName, Converter.rectangleToString(getRect(component)));
+			node.setAttribute(IRemoteApplication.visibleName, "" + isVisible(component));
 
-            boolean visible = isVisible(component);
-            node.setUserData(IRemoteApplication.visibleName, visible, null);
-        }
+			//			node.setUserData(IRemoteApplication.rectangleName, getRect(component), null);
+			//            boolean visible = isVisible(component);
+			//            node.setUserData(IRemoteApplication.visibleName, visible, null);
+		}
 
         String className    = info.attributeName(LocatorFieldKind.CLAZZ);
         String nameName     = info.attributeName(LocatorFieldKind.NAME);
