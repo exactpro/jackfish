@@ -89,7 +89,7 @@ public class ReportBrowser extends BorderPane
 		this.tabPane.getTabs().add(mainTab);
 	}
 
-	private static class CustomBrowserTab extends Tab
+	private class CustomBrowserTab extends Tab
 	{
 		private WebEngine engine;
 		private Hyperlink crossButton;
@@ -133,7 +133,7 @@ public class ReportBrowser extends BorderPane
                 try
                 {
                     // RM38890 the tab needs a little time to load its content
-                    Thread.sleep(100);
+                    Thread.sleep(500);
                 }
                 catch (Exception e)
                 {
@@ -154,7 +154,12 @@ public class ReportBrowser extends BorderPane
 			
 			this.crossButton.setOnAction(actionEvent ->
 			{
-				this.getTabPane().getTabs().remove(this);
+			    ObservableList<Tab> tabs = this.getTabPane().getTabs();
+				tabs.remove(this);
+				if (tabs.size() == 0)
+				{
+				    ReportBrowser.this.getScene().getWindow().hide();
+				}
 			});
 		}
 
