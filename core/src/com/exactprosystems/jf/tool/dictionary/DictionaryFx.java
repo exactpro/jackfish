@@ -583,7 +583,7 @@ public class DictionaryFx extends GuiDictionary
 	    {
 	        return true;
 	    }
-		List<IControl> all = currentWindow.allMatched((s, c) -> true);
+		List<IControl> all = currentWindow.allMatched((s, c) ->  !Objects.equals(currentControl, c) && Objects.equals(c.getID(), id) );
 		return all.isEmpty(); 
 	}
 

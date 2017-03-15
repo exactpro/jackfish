@@ -431,7 +431,7 @@ public class ElementInfoController implements Initializable, ContainingParent
 			    else
 			    {
 	                DialogsHelper.showError("Element with id " + id + " already exists.");
-	                tf.undo();
+	                tf.setText(this.previousValue);
 			    }
 			}
 		});
