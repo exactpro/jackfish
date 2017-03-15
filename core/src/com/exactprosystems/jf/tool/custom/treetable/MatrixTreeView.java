@@ -96,10 +96,11 @@ public class MatrixTreeView extends TreeTableView<MatrixItem>
 
 	public void refresh()
 	{
-		Optional.ofNullable(this.getColumns().get(0)).ifPresent(col -> {
+		Platform.runLater(() -> Optional.ofNullable(this.getColumns().get(0)).ifPresent(col ->
+		{
 			col.setVisible(false);
 			col.setVisible(true);
-		});
+		}));
 	}
 
 	public void refreshParameters(MatrixItem item, int selectedIndex)

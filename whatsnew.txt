@@ -1,3 +1,7 @@
+15.03.2017 4.4.0.2098
+RM40826 Matrix tab show marker of current item if colors off
+RM39290 Execution triangle has hang-up
+--------------------------------------------------------------------------------
 15.03.2017 4.4.0.2097
 RM40888 bug : Action RawTable is working incorrectly
 --------------------------------------------------------------------------------
