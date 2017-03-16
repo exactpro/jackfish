@@ -37,6 +37,15 @@ public class TexReportBuilder extends ReportBuilder
 		super(outputPath, matrixName, currentTime);
 	}
 
+	public static void main(String[] args){
+		try {
+			TexReportBuilder report = (TexReportBuilder) new TexReportFactory().createReportBuilder("/home/alexander.kruglov/Documents/shared folder VM", "new.txt", new Date());
+			report.helpCreate(report);
+		} catch (Exception e) {
+			e.getStackTrace();
+		}
+	}
+
 	private static Help help = new Help();
 
 	@Override
@@ -291,7 +300,7 @@ public class TexReportBuilder extends ReportBuilder
 			}
 			else if (line.contains("${"))
 			{
-				System.out.println(line);
+				//System.out.println(line);
 				sb.append(replaceChars(line));
 			}
 			else
@@ -323,9 +332,6 @@ public class TexReportBuilder extends ReportBuilder
 		report.reportStarted(null,"");
 		makeItemHelp(report);
 		report.reportFinished(0,0,new Date(),new Date());
-
-		/*TexReportBuilder report = (TexReportBuilder) new TexReportFactory().createReportBuilder("/home/alexander.kruglov/Documents/shared folder VM", "new.txt", new Date());
-		report.helpCreate(report);*/
 	}
 
 	private void makeItemHelp(ReportBuilder report) throws IllegalAccessException, InstantiationException
