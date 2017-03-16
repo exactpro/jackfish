@@ -410,6 +410,8 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 			toggleTracing.getTooltip().setText("Color " + (!toggleTracing.isSelected() ? "off" : "on"));
 			
 			this.context.setTracing(b);
+			this.refresh();
+			this.tree.setTracing(b);
 			
 		}, "Error on setting color");
 	}

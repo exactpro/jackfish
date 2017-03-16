@@ -42,6 +42,8 @@ public class MatrixTreeView extends TreeTableView<MatrixItem>
 
 	private final static Logger logger = Logger.getLogger(MatrixTreeView.class);
 
+	private boolean isTracing;
+
 	public MatrixTreeView()
 	{
 		super(null);
@@ -151,6 +153,16 @@ public class MatrixTreeView extends TreeTableView<MatrixItem>
 		TreeItem<MatrixItem> selectedItem = getSelectionModel().getSelectedItem();
 		MatrixItem item = selectedItem != null ? selectedItem.getValue() : null;
 		return item;
+	}
+
+	public void setTracing(boolean flag)
+	{
+		this.isTracing = flag;
+	}
+
+	public boolean isTracing()
+	{
+		return isTracing;
 	}
 
 	public TreeItem<MatrixItem> find(MatrixItem item)
