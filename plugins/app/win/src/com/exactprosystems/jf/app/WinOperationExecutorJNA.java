@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 {
@@ -330,9 +331,25 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 	{
 		try
 		{
-			String className = this.driver.getProperty(component, WindowProperty.ClassNameProperty);
-			if (className.equalsIgnoreCase(ControlKind.ToggleButton.getClazz()) || className.equals(ControlKind.CheckBox
-					.getClazz()))
+			int length = 100;
+			int[] arr = new int[length];
+			int count = this.driver.getPatterns(arr, component);
+			if (count > length)
+			{
+				length = count;
+				arr = new int[length];
+				count = this.driver.getPatterns(arr, component);
+			}
+
+			int patternsCount = count;
+			int[] patterns = new int[patternsCount];
+			System.arraycopy(arr, 0, patterns, 0, patternsCount);
+
+			List<WindowPattern> collect = Arrays.stream(patterns)
+					.mapToObj(WindowPattern::byId)
+					.collect(Collectors.toList());
+
+			if (collect.contains(WindowPattern.TogglePattern))
 			{
 				String property = this.driver.getProperty(component, WindowProperty.ToggleStateProperty);
 				boolean isSelected = property.equals("On");
@@ -341,7 +358,7 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 					this.driver.doPatternCall(component, WindowPattern.TogglePattern, "Toggle", null, -1);
 				}
 			}
-			else if (className.equalsIgnoreCase(ControlKind.RadioButton.getClazz()))
+			else if (collect.contains(WindowPattern.SelectionItemPattern))
 			{
 				String property = this.driver.getProperty(component, WindowProperty.IsSelectedProperty);
 				boolean isSelected = Boolean.parseBoolean(property);
