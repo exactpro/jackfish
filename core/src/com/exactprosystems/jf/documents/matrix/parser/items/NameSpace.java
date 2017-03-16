@@ -39,7 +39,8 @@ import java.util.Set;
         real			= true,
         hasValue 		= true,
         hasParameters 	= false,
-        hasChildren 	= true
+        hasChildren 	= true,
+		seeAlsoClass 	= {SubCase.class, Call.class}
 )
 public final class NameSpace extends MatrixItem
 {

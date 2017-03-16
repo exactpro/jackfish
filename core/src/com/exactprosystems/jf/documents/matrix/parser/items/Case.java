@@ -34,7 +34,8 @@ import java.util.Set;
         real			= true,
 		hasValue 		= true, 
 		hasParameters 	= false,
-        hasChildren 	= true
+        hasChildren 	= true,
+		seeAlsoClass 	= {Switch.class}
 	)
 public class Case extends MatrixItem
 {

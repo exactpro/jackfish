@@ -39,7 +39,8 @@ import java.util.Set;
         real			= true,
         hasValue 		= true,
         hasParameters 	= false,
-        hasChildren 	= true
+        hasChildren 	= true,
+		seeAlsoClass 	= {Case.class, Default.class}
 )
 public class Switch extends MatrixItem
 {

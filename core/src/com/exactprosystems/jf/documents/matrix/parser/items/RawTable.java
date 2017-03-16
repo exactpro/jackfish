@@ -36,8 +36,9 @@ import java.util.Set;
 		hasValue 		= true, 
 		hasParameters 	= false, 
 		hasChildren 	= false,
-		raw 			= true
-	)
+		raw 			= true,
+		seeAlsoClass 	= {RawText.class}
+)
 public class RawTable extends MatrixItem
 {
 	public RawTable()

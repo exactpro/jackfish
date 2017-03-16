@@ -12,4 +12,17 @@
 \usepackage{amsmath}
 \usepackage{graphicx}
 %% \usepackage[colorinlistoftodos]{todonotes}
-\usepackage[colorlinks=true, allcolors=blue]{hyperref}
+\usepackage[colorlinks=true, bookmarks=true, allcolors=blue]{hyperref}
+
+\title{JackFish}
+\author{JackFish dev team}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\newpage
+
+\tableofcontents
+
+\newpage

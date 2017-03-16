@@ -40,7 +40,8 @@ import java.util.Set;
         real			= true,
         hasValue 		= true,
         hasParameters 	= true,
-        hasChildren 	= true
+        hasChildren 	= true,
+		seeAlsoClass 	= {Call.class, Return.class}
 )
 public final class SubCase extends MatrixItem
 {

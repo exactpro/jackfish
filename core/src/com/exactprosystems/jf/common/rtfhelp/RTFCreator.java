@@ -217,6 +217,22 @@ class RTFCreator {
                     actions.add(p());
                 }
 
+                if (classAnnotations.seeAlsoClass().length >0)
+                {
+                    List<RtfText> seeAlsoText = new ArrayList<>();
+                    for (int i = 0; i < classAnnotations.seeAlsoClass().length; i++)
+                    {
+                        String sName = classAnnotations.seeAlsoClass()[i].getSimpleName();
+                        seeAlsoText.add(hyperlink(link + sName, p(fontSize(fontSize, sName +reverseTrait))));
+                        if (i != classAnnotations.seeAlsoClass().length -1){
+                            seeAlsoText.add(fontSize(fontSize, ", "));
+                        }
+                    }
+                    actions.add(p(italic(fontSize(fontSize, "See also:"))));
+                    actions.add(p(seeAlsoText.toArray()));
+                    actions.add(p());
+                }
+
                 if (!fieldAnnotations.isEmpty())
                 {
                     actions.add(p(italic(fontSize(fontSize,"Fields:"))));
@@ -260,7 +276,7 @@ class RTFCreator {
         items.add(p(findHyperlinks(classAnnotation.description()).toArray()));
         items.add(p());
 
-        if (!classAnnotation.seeAlso().equals(""))
+        /*if (!classAnnotation.seeAlso().equals(""))
         {
             List<RtfText> seeAlsoText = new ArrayList<>();
             String[] seeAlso = classAnnotation.seeAlso().split(",");
@@ -269,6 +285,22 @@ class RTFCreator {
                 String q = replaceChars(seeAlso[i]);
                 seeAlsoText.add(hyperlink(link + q, p(fontSize(fontSize, q +reverseTrait))));
                 if (i != seeAlso.length -1){
+                    seeAlsoText.add(fontSize(fontSize, ", "));
+                }
+            }
+            items.add(p(italic(fontSize(fontSize, "See also:"))));
+            items.add(p(seeAlsoText.toArray()));
+            items.add(p());
+        }*/
+
+        if (classAnnotation.seeAlsoClass().length > 0)
+        {
+            List<RtfText> seeAlsoText = new ArrayList<>();
+            for (int i = 0; i < classAnnotation.seeAlsoClass().length; i++)
+            {
+                String fullName = classAnnotation.seeAlsoClass()[i].getSimpleName();
+                seeAlsoText.add(hyperlink(link + fullName, p(fontSize(fontSize, fullName +reverseTrait))));
+                if (i != classAnnotation.seeAlsoClass().length -1){
                     seeAlsoText.add(fontSize(fontSize, ", "));
                 }
             }
@@ -586,14 +618,14 @@ class RTFCreator {
 
     private void createDescription() throws IOException, BadLocationException
     {
-        intro.add(p(tab(), tab(), tab(), tab(), font(0, fontSize(30, bold("Introduction" + trait))), lineBreak()));
+        //intro.add(p(tab(), tab(), tab(), tab(), font(0, fontSize(30, bold("Introduction" + trait))), lineBreak()));
         createDocumentation(introduction, intro);
         writeIntro();
     }
 
     private void mvelDocumentation() throws IOException
     {
-        mvels.add(p(tab(), tab(), tab(), tab(), font(0, fontSize(30, bold("MVEL" + trait))), lineBreak()));
+        //mvels.add(p(tab(), tab(), tab(), tab(), font(0, fontSize(30, bold("MVEL" + trait))), lineBreak()));
         createDocumentation(mvelDoc, mvels);
         writeMvel();
     }
