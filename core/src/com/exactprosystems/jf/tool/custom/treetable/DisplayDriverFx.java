@@ -314,6 +314,7 @@ public class DisplayDriverFx implements DisplayDriver
 		GridPane pane = (GridPane) layout;
 
 		ExpressionField field = new ExpressionField(this.context.getEvaluator(), get.get());
+		field.setStretchable(true);
 		field.setContextMenu(this.rowContextMenu);
 		field.setFirstActionListener(firstHandler);
 		field.setSecondActionListener(secondHandler);
