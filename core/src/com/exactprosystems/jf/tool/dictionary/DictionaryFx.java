@@ -357,9 +357,10 @@ public class DictionaryFx extends GuiDictionary
 							}
 							else
 							{
-								IControl owner = window.getOwnerControl(control);
-								Locator ownerLocator = owner == null ? null : owner.locator();
-								Collection<String> all = applicationConnector.getAppConnection().getApplication().service().findAll(ownerLocator, control.locator());
+					            Locator owner = getLocator(window.getOwnerControl(control));
+					            Locator locator = getLocator(control);
+								
+								Collection<String> all = applicationConnector.getAppConnection().getApplication().service().findAll(owner, locator);
 
 								Result result = null;
 								if (all.size() == 1 || (Addition.Many.equals(control.getAddition()) && all.size() > 0))
@@ -570,13 +571,20 @@ public class DictionaryFx extends GuiDictionary
 		}
 	}
 
-	public void checkNewId(IWindow currentWindow, String id) throws Exception
+    public boolean checkDialogName(IWindow currentWindow, String name)
+    {
+        long count = super.windows.stream().filter(w -> !Objects.equals(currentWindow, w) && Objects.equals(w.getName(), name)).count();
+        return count == 0;
+    }
+
+	public boolean checkNewId(IWindow currentWindow, IControl currentControl, String id)
 	{
-		IControl controlForName = currentWindow.getControlForName(SectionKind.Run, id);
-		if (controlForName != null)
-		{
-			this.controller.showInfo(String.format("Id with name '%s' already exist", id));
-		}
+	    if (Str.IsNullOrEmpty(id))
+	    {
+	        return true;
+	    }
+		List<IControl> all = currentWindow.allMatched((s, c) ->  !Objects.equals(currentControl, c) && Objects.equals(c.getID(), id) );
+		return all.isEmpty(); 
 	}
 
 	public void elementMove(IWindow window, IWindow.SectionKind section, IControl control, Integer newIndex) throws Exception

@@ -19,6 +19,8 @@ import com.exactprosystems.jf.tool.custom.BorderWrapper;
 import com.exactprosystems.jf.tool.custom.controls.field.CustomFieldWithButton;
 import com.exactprosystems.jf.tool.dictionary.DictionaryFx;
 import com.exactprosystems.jf.tool.dictionary.navigation.NavigationController;
+import com.exactprosystems.jf.tool.helpers.DialogsHelper;
+
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -310,6 +312,7 @@ public class ElementInfoController implements Initializable, ContainingParent
 						changeText(tf, "");
 					});
 				});
+		
 		this.tfID.focusedProperty().addListener(textIdFocusListener(this.tfID));
 		this.tfID.setHandler(event -> {
 			this.tfID.clear();
@@ -419,9 +422,17 @@ public class ElementInfoController implements Initializable, ContainingParent
 			}
 			if (!newValue && oldValue)
 			{
-				Common.tryCatch(() -> this.navigation.checkNewId(tf.getText()), "");
-				changeText(tf, tf.getText());
-				refreshElement();
+			    String id = tf.getText();
+			    if (this.navigation.checkNewId(id))
+			    {
+    				changeText(tf, id);
+    				refreshElement();
+			    }
+			    else
+			    {
+	                DialogsHelper.showError("Element with id " + id + " already exists.");
+	                tf.setText(this.previousValue);
+			    }
 			}
 		});
 	}

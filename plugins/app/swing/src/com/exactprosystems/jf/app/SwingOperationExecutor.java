@@ -11,6 +11,7 @@ package com.exactprosystems.jf.app;
 import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.client.ICondition;
 import com.exactprosystems.jf.api.common.Converter;
+import com.exactprosystems.jf.api.conditions.StringCondition;
 import com.exactprosystems.jf.api.error.app.ElementNotFoundException;
 import com.exactprosystems.jf.api.error.app.FeatureNotSupportedException;
 import com.exactprosystems.jf.api.error.app.OperationNotAllowedException;
@@ -239,6 +240,12 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 	public ComponentFixture<Component> lookAtTable(ComponentFixture<Component> component, Locator additional, Locator header, int x, int y) throws Exception
 	{
 		throw new FeatureNotSupportedException("lookAtTable");
+	}
+
+	@Override
+	public boolean elementIsEnabled(ComponentFixture<Component> component)
+	{
+		return component.target.isEnabled();
 	}
 
 	@Override
@@ -539,6 +546,15 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 				JList<?> jList = component.targetCastedTo(JList.class);
 				jList.setSelectedValue(selectedText, true);
 			}
+			else if (component.target instanceof JTree)
+			{
+				JTree tree = component.targetCastedTo(JTree.class);
+				int index = findIndex(tree, selectedText);
+				if (index == -1) {
+					throw new WrongParameterException("Path '" + selectedText + "' is not found in the tree.");
+				}
+				tree.setSelectionRow(index);
+			}
 
 			waitForIdle();
 			return true;
@@ -556,7 +572,7 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 	}
 
 	@Override
-	public boolean fold(ComponentFixture<Component> component, String path, boolean collaps) throws Exception
+	public boolean expand(ComponentFixture<Component> component, String path, boolean expandOrCollapse) throws Exception
 	{
 		try
 		{
@@ -579,20 +595,18 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 			else if (currentComponent instanceof JTree)
 			{
 				JTree tree = component.targetCastedTo(JTree.class);
-				TreeNode node = find((TreeNode) tree.getModel().getRoot(), 0, split);
-
-				if (node == null)
+				int index = findIndex(tree, path);
+				if (index == -1)
 				{
 					throw new WrongParameterException("Path '" + path + "' is not found in the tree.");
 				}
-				TreePath treePath = new TreePath(((DefaultMutableTreeNode) node).getPath());
-				if (collaps)
+				if (expandOrCollapse)
 				{
-					tree.expandPath(treePath);
+					tree.expandPath(tree.getPathForRow(index));
 				}
 				else
 				{
-					tree.collapsePath(treePath);
+					tree.collapsePath(tree.getPathForRow(index));
 				}
 			}
 
@@ -604,7 +618,7 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 		}
 		catch (Throwable e)
 		{
-			logger.error(String.format("fold(%s, %b)", component, collaps));
+			logger.error(String.format("fold(%s, %b)", component, expandOrCollapse));
 			logger.error(e.getMessage(), e);
 			throw e;
 		}
@@ -917,7 +931,7 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 		return events;
 	}
 
-	private void executeEventsList(Component component, ArrayList<AWTEvent> events)
+	private void executeEventsList(final Component component, final ArrayList<AWTEvent> events)
 	{
 		SwingUtilities.invokeLater(new Runnable()
 		{
@@ -1110,39 +1124,42 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 	@Override
 	public Map<String, String> getRow(ComponentFixture<Component> component, Locator rows, Locator header, boolean useNumericHeader, String[] columns, ICondition valueCondition, ICondition colorCondition) throws Exception
 	{
-		try
-		{
+		try {
 			this.currentRobot.waitForIdle();
-			JTable table = component.targetCastedTo(JTable.class);
-			JTableFixture fixture = new JTableFixture(this.currentRobot, table);
-			Map<String, Integer> fieldIndexes = getTableHeaders(table, columns);
-			List<String> rowsIndexes = getIndexes(fixture, fieldIndexes, valueCondition, colorCondition);
+			Map<String, String> ret = new LinkedHashMap<>();
+			if (component.target instanceof JTable) {
+				JTable table = component.targetCastedTo(JTable.class);
+				JTableFixture fixture = new JTableFixture(this.currentRobot, table);
+				Map<String, Integer> fieldIndexes = getTableHeaders(table, columns);
+				List<String> rowsIndexes = getIndexes(fixture, fieldIndexes, valueCondition, colorCondition);
 
-			if (rowsIndexes.size() == 1)
-			{
-				Map<String, String> ret = new LinkedHashMap<String, String>();
+				if (rowsIndexes.size() == 1) {
+					for (Entry<String, Integer> entry : fieldIndexes.entrySet()) {
+						String name = entry.getKey();
+						Integer colIndex = fieldIndexes.get(name);
+						if (colIndex == null) {
+							throw new WrongParameterException("The column '" + name + "' is not found. Possible values are: " + humanReadableHeaders(fieldIndexes));
+						}
+						String value = String.valueOf(getValueTableCell(fixture, Integer.parseInt(rowsIndexes.get(0)), colIndex));
 
-				for (Entry<String, Integer> entry : fieldIndexes.entrySet())
-				{
-					String name = entry.getKey();
-					Integer colIndex = fieldIndexes.get(name);
-					if (colIndex == null)
-					{
-						throw new WrongParameterException("The column '" + name + "' is not found. Possible values are: " + humanReadableHeaders(fieldIndexes));
+						String underscopedName = name.replace(' ', '_');
+						ret.put(underscopedName, value);
 					}
-					String value = String.valueOf(getValueTableCell(fixture, Integer.parseInt(rowsIndexes.get(0)), colIndex));
-
-					String underscopedName = name.replace(' ', '_');
-					ret.put(underscopedName, value);
+					return ret;
+				} else if (rowsIndexes.size() > 1) {
+					throw new Exception("Too many rows");
 				}
-
+			}
+			if (component.target instanceof JTree) {
+				String path = ((StringCondition) valueCondition).getValue();
+				JTree tree = component.targetCastedTo(JTree.class);
+				int index = findIndex(tree, path);
+				if (index == -1) {
+					throw new WrongParameterException("Path '" + path + "' is not found in the tree.");
+				}
+				ret.put("value", JTreeToPathsList((JTree)component.target).get(index));
 				return ret;
 			}
-			else if (rowsIndexes.size() > 1)
-			{
-				throw new Exception("Too many rows");
-			}
-
 			return null;
 		}
 		catch (RemoteException e)
@@ -1163,11 +1180,26 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 		try
 		{
 			this.currentRobot.waitForIdle();
-			JTable table = component.targetCastedTo(JTable.class);
-			JTableFixture fixture = new JTableFixture(this.currentRobot, table);
-			Map<String, Integer> fieldIndexes = getTableHeaders(table, columns);
-
-			return getIndexes(fixture, fieldIndexes, valueCondition, colorCondition);
+			if (component.target instanceof JTable)
+			{
+				JTable table = component.targetCastedTo(JTable.class);
+				JTableFixture fixture = new JTableFixture(this.currentRobot, table);
+				Map<String, Integer> fieldIndexes = getTableHeaders(table, columns);
+				return getIndexes(fixture, fieldIndexes, valueCondition, colorCondition);
+			}
+			if (component.target instanceof JTree)
+			{
+				String path = ((StringCondition) valueCondition).getValue();
+				JTree tree = component.targetCastedTo(JTree.class);
+				int index = findIndex(tree, path);
+				if (index == -1) {
+					throw new WrongParameterException("Path '" + path + "' is not found in the tree.");
+				}
+				List<String> res = new ArrayList<>();
+				res.add(String.valueOf(index));
+				return res;
+			}
+			return Collections.emptyList();
 		}
 		catch (RemoteException e)
 		{
@@ -1188,21 +1220,24 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 		try
 		{
 			this.currentRobot.waitForIdle();
-			JTable table = component.targetCastedTo(JTable.class);
+			Map<String, String> ret = new LinkedHashMap<>();
+			if(component.target instanceof JTable) {
+				JTable table = component.targetCastedTo(JTable.class);
+				Map<String, Integer> fieldIndexes = getTableHeaders(table, columns);
+				JTableFixture fixture = (JTableFixture) (ComponentFixture<? extends Component>) component;
+				for (Entry<String, Integer> entry : fieldIndexes.entrySet()) {
+					String name = entry.getKey();
+					Integer colIndex = entry.getValue();
 
-			Map<String, Integer> fieldIndexes = null;
-			Map<String, String> ret = new LinkedHashMap<String, String>();
+					String value = String.valueOf(getValueTableCell(fixture, i, colIndex));
+					String underscopedName = name.replace(' ', '_');
 
-			fieldIndexes = getTableHeaders(table, columns);
-			JTableFixture fixture = (((JTableFixture) (ComponentFixture<? extends Component>) component));
-			for (Entry<String, Integer> entry : fieldIndexes.entrySet()) {
-				String name = entry.getKey();
-				Integer colIndex = entry.getValue();
-
-				String value = String.valueOf(getValueTableCell(fixture, i, colIndex));
-				String underscopedName = name.replace(' ', '_');
-
-				ret.put(underscopedName, value);
+					ret.put(underscopedName, value);
+				}
+			}
+			if(component.target instanceof JTree)
+			{
+				ret.put("value", JTreeToPathsList((JTree)component.target).get(i));
 			}
 			return ret;
 		}
@@ -1914,6 +1949,43 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 		}
 
 		return null;
+	}
+
+	List<String> JTreeToPathsList(JTree tree)
+	{
+		int i = 0;
+		List<String> result = new ArrayList<>();
+		StringBuilder pathBuilder = new StringBuilder();
+		while (tree.getPathForRow(i) != null) {
+			if (tree.getPathForRow(i).getParentPath() != null) {
+				pathBuilder
+						.append(tree.getPathForRow(i).getParentPath().toString())
+						.append('[')
+						.append(tree.getPathForRow(i).getLastPathComponent().toString())
+						.append(']');
+			} else {
+				pathBuilder
+						.append('[')
+						.append(tree.getPathForRow(i).getLastPathComponent().toString())
+						.append(']');
+			}
+			result.add(pathBuilder.toString());
+			pathBuilder.delete(0, pathBuilder.length());
+			i++;
+		}
+		return result;
+	}
+
+	private int findIndex(JTree tree, String path)
+	{
+		List<String> rows = JTreeToPathsList(tree);
+		for (int i = 0; i < rows.size(); i++) {
+			if(path.equals(rows.get(i)))
+			{
+				return i;
+			}
+		}
+		return -1;
 	}
 
 	/*

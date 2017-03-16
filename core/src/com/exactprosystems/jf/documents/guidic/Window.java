@@ -17,6 +17,7 @@ import org.apache.log4j.Logger;
 
 import javax.xml.bind.annotation.*;
 import java.util.*;
+import java.util.function.BiFunction;
 
 @XmlRootElement(name = "window")
 @XmlAccessorType(XmlAccessType.NONE)
@@ -364,6 +365,21 @@ public class Window implements IWindow, Mutable
 
 		return null;
 	}
+
+    @Override
+    public List<IControl> allMatched(BiFunction<ISection, IControl, Boolean> predicat)
+    {
+        List<IControl> res = new ArrayList<>();
+        this.allSections.values().forEach(s -> s.getControls().forEach(c -> 
+        { 
+            if (predicat.apply(s, c)) 
+            { 
+                res.add(c); 
+            } 
+        } ));
+        return res;
+    }
+
 
 	//------------------------------------------------------------------------------------------------------------------
 	public void evaluateAll(AbstractEvaluator evaluator)

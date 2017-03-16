@@ -234,6 +234,12 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 	}
 
 	@Override
+	public boolean elementIsEnabled(UIProxyJNA component) throws Exception
+	{
+		return this.driver.elementIsEnabled(component);
+	}
+
+	@Override
 	public boolean tableIsContainer()
 	{
 		return false;
@@ -414,12 +420,12 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 	}
 
 	@Override
-	public boolean fold(UIProxyJNA component, String path, boolean collaps) throws Exception
+	public boolean expand(UIProxyJNA component, String path, boolean expandOrCollapse) throws Exception
 	{
 		try
 		{
 			//TODO call to menu and tree - doPatternCall 
-			if (collaps)
+			if (expandOrCollapse)
 			{
 
 			}
@@ -431,7 +437,7 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 		}
 		catch (Exception e)
 		{
-			this.logger.error(String.format("fold(%s,%s,%b)", component, path, collaps));
+			this.logger.error(String.format("fold(%s,%s,%b)", component, path, expandOrCollapse));
 			this.logger.error(e.getMessage(), e);
 			throw e;
 		}

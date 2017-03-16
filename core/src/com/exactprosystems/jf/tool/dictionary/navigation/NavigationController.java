@@ -10,6 +10,7 @@ package com.exactprosystems.jf.tool.dictionary.navigation;
 
 import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.app.IWindow.SectionKind;
+import com.exactprosystems.jf.api.common.Converter;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.documents.guidic.controls.AbstractControl;
@@ -22,6 +23,7 @@ import com.exactprosystems.jf.tool.custom.xpath.XpathViewer;
 import com.exactprosystems.jf.tool.dictionary.DictionaryFx;
 import com.exactprosystems.jf.tool.dictionary.DictionaryFxController;
 import com.exactprosystems.jf.tool.dictionary.FindListView;
+import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.event.ActionEvent;
@@ -29,7 +31,10 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
-import javafx.scene.input.*;
+import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.Dragboard;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.TransferMode;
 import javafx.scene.layout.*;
 import javafx.scene.text.Text;
 import org.w3c.dom.Document;
@@ -39,6 +44,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.ResourceBundle;
 import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -95,24 +101,30 @@ public class NavigationController implements Initializable, ContainingParent
 		assert hBoxElement != null : "fx:id=\"hBoxElement\" was not injected: check your FXML file 'Navigation.fxml'.";
 		assert btnFindElement != null : "fx:id=\"btnFindElement\" was not injected: check your FXML file 'Navigation.fxml'.";
 		assert btnFindDialog != null : "fx:id=\"btnFindDialog\" was not injected: check your FXML file 'Navigation.fxml'.";
+		
 		this.listViewWindow = new FindListView<>((w, s) -> w.getName().toUpperCase().contains(s.toUpperCase()), true);
 		this.listViewWindow.setCellFactory(param -> new CustomListCell<>(
+		        (w, s) -> this.model.checkDialogName(w, s),
 				(w, s) -> Common.tryCatch(() -> this.model.dialogRename(w, s), "Error on rename"),
 				IWindow::getName,
-				(d,i) ->Common.tryCatch(() -> this.model.dialogMove(d,currentSection(), i), "Error on move")
+				(d,i) -> Common.tryCatch(() -> this.model.dialogMove(d,currentSection(), i), "Error on move")
 		));
+		
 		this.vBoxWindow.getChildren().add(0, this.listViewWindow);
+
 		this.listViewElement = new FindListView<>((e, s) -> (!Str.IsNullOrEmpty(e.control.getID()) && e.control.getID().toUpperCase().contains(s.toUpperCase()) || (e.control.getBindedClass().getClazz().toUpperCase()
 				.contains(s.toUpperCase()))),
 				false);
 		this.listViewElement.setCellFactory(param -> new CustomListCell<>(
+		        (w, s) -> this.model.checkNewId(w.control.getSection().getWindow(), w.control, s),
 				(w, s) -> {},
 				e -> e.control.toString(),
 				(w, i) -> Common.tryCatch(() -> this.model.elementMove(currentWindow(), currentSection(), w.control,i), "Error on move element")
 		));
 		this.vBoxElement.getChildren().add(0, this.listViewElement);
-		Platform.runLater(() -> {
-
+		
+		Platform.runLater(() -> 
+		{
 			ScrollPane scrollPaneWindow = new ScrollPane(this.vBoxWindow);
 			scrollPaneWindow.setFitToWidth(true);
 			scrollPaneWindow.setFitToHeight(true);
@@ -303,7 +315,9 @@ public class NavigationController implements Initializable, ContainingParent
 			}
 			IRemoteApplication service = this.appConnection.getApplication().service();
 			service.startNewDialog();
-			Document document = service.getTree(owner);
+			//			Document document = service.getTree(owner);
+			byte[] treeBytes = service.getTreeBytes(owner);
+			Document document = Converter.convertByteArrayToXmlDocument(treeBytes);
 			if (document != null)
 			{
 				XpathViewer viewer = new XpathViewer(owner, document, service);
@@ -316,9 +330,9 @@ public class NavigationController implements Initializable, ContainingParent
 	}
 
 
-	public void checkNewId(String id) throws Exception
+	public boolean checkNewId(String id)
 	{
-		this.model.checkNewId(currentWindow(), id);
+		return this.model.checkNewId(currentWindow(), currentElement(), id);
 	}
 
 
@@ -474,11 +488,13 @@ public class NavigationController implements Initializable, ContainingParent
 	private class CustomListCell<T> extends ListCell<T>
 	{
 		private TextField textField;
-		private IUpdater<T> updater;
+		private BiConsumer<T, String> updater;
 		private Function<T, String> converter;
+        private BiFunction<T, String, Boolean> checker;
 
-		public CustomListCell(IUpdater<T> updater, Function<T, String> converter, BiConsumer<T, Integer> biConsumer)
+		public CustomListCell(BiFunction<T, String, Boolean> checker, BiConsumer<T, String> updater, Function<T, String> converter, BiConsumer<T, Integer> biConsumer)
 		{
+		    this.checker = checker;
 			this.updater = updater;
 			this.converter = converter;
 			this.setOnDragDetected(event -> {
@@ -564,33 +580,37 @@ public class NavigationController implements Initializable, ContainingParent
 			textField.getStyleClass().add(CssVariables.TEXT_FIELD_VARIABLES);
 			textField.setMinWidth(225);
 			textField.setOnKeyPressed(t -> {
-				if (t.getCode() == KeyCode.ENTER)
+			    KeyCode code = t.getCode();
+				if (code == KeyCode.ENTER || code == KeyCode.TAB)
 				{
-					this.updater.update(getItem(), textField.getText());
-					commitEdit(getItem());
+				    checkAndRename();
 				}
 				else if (t.getCode() == KeyCode.ESCAPE)
 				{
 					cancelEdit();
 				}
-				else if (t.getCode() == KeyCode.TAB)
-				{
-					this.updater.update(getItem(), textField.getText());
-					commitEdit(getItem());
-				}
 			});
+			
 			textField.focusedProperty().addListener((observable, oldValue, newValue) -> {
 				if (!newValue && textField != null)
 				{
-					this.updater.update(getItem(), textField.getText());
-					commitEdit(getItem());
+                    checkAndRename();
 				}
 			});
 		}
-	}
 
-	private interface IUpdater<T>
-	{
-		void update(T item, String s);
+        private void checkAndRename()
+        {
+            if (this.checker.apply(getItem(), textField.getText()))
+            {
+                this.updater.accept(getItem(), textField.getText());
+                commitEdit(getItem());
+            }
+            else
+            {
+                DialogsHelper.showError("Dialog with name " + textField.getText() + " already exists.");   
+                cancelEdit();
+            }
+        }
 	}
 }

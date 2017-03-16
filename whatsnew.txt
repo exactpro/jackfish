@@ -1,6 +1,44 @@
+--------------------------------------------------------------------------------
+15.03.2017 4.4.0.2104
+RM38903 feature : Closing Report Window if you have closed the latest tab in Report Window 
+RM38890	bug : White box instead the screenshot
+
+--------------------------------------------------------------------------------
+15.03.2017 4.4.0.2102
+RM34024
+RM39987
+Change behaviour for getting xml document from plugins side.
+Now, we zip it on plugin side and unzip on core side.
+
+--------------------------------------------------------------------------------
+15.03.2017 4.4.0.2098
+RM40826 Matrix tab show marker of current item if colors off
+RM39290 Execution triangle has hang-up
+--------------------------------------------------------------------------------
+15.03.2017 4.4.0.2097
+RM40888 bug : Action RawTable is working incorrectly
+--------------------------------------------------------------------------------
+14.03.2017 4.4.0.2096
+RM40898 bug : Wrong numbers after test all components
+
+--------------------------------------------------------------------------------
+14.03.2017 4.4.0.2095
+RM40044 feature : JackFish | Dictionary | Disable an addition of dialogues to the dictionary and elements within a dialog with the same names.
+
+--------------------------------------------------------------------------------
+14.03.2017 4.4.0.2092
+RM40886 feature : If to add an element with a tag label, then parameter ID of created JF item will be empty
+
+--------------------------------------------------------------------------------
+14.03.2017 4.4.0.2091
+Methods getRow, getRowByIndex, getRowIndexes and select now availables for JTree elements in swing plagin.
+
+--------------------------------------------------------------------------------
+
 13.03.2017 4.4.0.2090
 RM40864 Action RawText is working incorrectly : fixed. Now, hotkeys for matrix don't work into text input controls
 --------------------------------------------------------------------------------
+
 13.03.2017 4.4.0.2089
 RM39588 bug : Action TableSetValue is passed when enter nonexistent column
 

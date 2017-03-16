@@ -1088,6 +1088,17 @@ namespace UIAdapter
             }
         }
 
+        [DllExport("elementIsEnabled", CallingConvention.Cdecl)]
+        public static string ElementIsEnabled(String inid)
+        {
+            long startMethod = getMilis();
+            int[] id = stringToIntArray(inid);
+            UpdateHandler();
+            AutomationElement element = FindByRuntimeId(id);
+            logger.All("method elementIsEnabled", getMilis() - startMethod);
+            return element.GetCurrentPropertyValue(AutomationElement.IsEnabledProperty).ToString();
+        }
+
         [DllExport("getProperty", CallingConvention.Cdecl)]
         public static string GetProperty(String inid, int propertyId)
         {

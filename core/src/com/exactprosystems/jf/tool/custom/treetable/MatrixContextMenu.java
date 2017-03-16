@@ -17,6 +17,8 @@ import com.exactprosystems.jf.documents.matrix.parser.Tokens;
 import com.exactprosystems.jf.documents.matrix.parser.items.*;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
+import com.exactprosystems.jf.tool.custom.grideditor.SpreadsheetGridView;
+import com.exactprosystems.jf.tool.custom.grideditor.SpreadsheetView;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.matrix.MatrixFx;
 import com.exactprosystems.jf.tool.settings.SettingsPanel;
@@ -110,12 +112,12 @@ public class MatrixContextMenu extends ContextMenu
 			{
 				return;
 			}
-			if (parent instanceof TextInputControl)
+			if (parent instanceof TextInputControl || parent instanceof SpreadsheetView || parent instanceof SpreadsheetGridView)
 			{
 				return;
 			}
 			boolean inside = parent instanceof MatrixTreeView;
-			while (!inside && parent != null && parent instanceof Node)
+			while (!inside && parent != null)
 			{
 				parent = ((Node) parent).getParent();
 				inside = parent instanceof MatrixTreeView;

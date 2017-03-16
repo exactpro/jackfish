@@ -138,6 +138,12 @@ public class DialogValidate extends AbstractAction
 		}
 		IGuiDictionary dictionary = connection.getDictionary();
 		IWindow window = dictionary.getWindow(this.dialog);
+        if (window == null)
+        {
+            super.setError("Window " + this.dialog + " not found in the dictionary",ErrorKind.DIALOG_NOT_FOUND);
+            return;
+        }
+		
 		Set<ControlKind> supportedControls = new HashSet<>();
 		supportedControls.addAll(Arrays.asList(app.getFactory().supportedControlKinds()));
 
