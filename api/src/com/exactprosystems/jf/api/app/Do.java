@@ -8,6 +8,8 @@
 
 package com.exactprosystems.jf.api.app;
 
+import java.util.List;
+
 import com.exactprosystems.jf.api.client.ICondition;
 import com.exactprosystems.jf.api.common.DescriptionAttribute;
 
@@ -56,6 +58,13 @@ public class Do
 	//endregion
 
 	//region Checking operations
+    static final String checkList = "Check, that value list of current component equals @list. The item order may be ignored by @ignoreOrder";
+    @DescriptionAttribute(text = Do.checkList)
+    public static Operation checkList(List<String> list, boolean ignoreOrder)
+    {
+        return new Operation().checkList(list, ignoreOrder);
+    }
+	
 	static final String check = "Check, that value of current component equals @word";
 	@DescriptionAttribute(text = Do.check)
 	public static Operation check(String word)

@@ -14,7 +14,13 @@ import com.exactprosystems.jf.api.error.app.ElementNotFoundException;
 import com.exactprosystems.jf.api.error.app.OperationNotAllowedException;
 
 import java.rmi.RemoteException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicLong;
 
 public enum OperationKind
@@ -261,6 +267,75 @@ public enum OperationKind
 			return executor.upAndDown(holder.getValue(), part.key, true);
 		}
 	},
+	
+	CHECK_LIST("checkList")  
+    {
+        @Override
+        protected String formulaTemplate(Part part)
+        {
+            return ".checkList(%17$s, %6$b)";
+        }
+
+        @Override
+        public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, Holder<T> holder, OperationResult result) throws Exception
+        {
+            List<String> list = executor.getList(holder.getValue());
+            StringBuilder sb = new StringBuilder();
+            boolean res = compareTwoLists(part.list, list, part.b, sb);
+            if (!res)
+            {
+                result.setError(sb.toString());
+            }
+            result.setOk(res);
+            return res;
+        }
+
+        private boolean compareTwoLists(List<String> expected, List<String> actual, boolean ignoreOrder, StringBuilder sb)
+        {
+            if (expected == actual)
+            {
+                return true;
+            }
+            boolean res = true;
+            List<String> expectedCopy = expected == null ? new ArrayList<>() : new ArrayList<String>(expected); 
+            List<String> actualCopy   = actual   == null ? new ArrayList<>() : new ArrayList<String>(actual);
+            if (ignoreOrder)
+            {
+                actualCopy.removeAll(expected);
+                expectedCopy.removeAll(actual);
+                if (!actualCopy.isEmpty())
+                {
+                    res = false;
+                    sb.append(" extra items in actual: ").append(Arrays.toString(actualCopy.toArray()));
+                }
+                if (!expectedCopy.isEmpty())
+                {
+                    res = false;
+                    sb.append(" extra items in expected: ").append(Arrays.toString(expectedCopy.toArray()));
+                }
+            }
+            else
+            {
+                List<String> diff = new ArrayList<>();
+                for (int i = 0; i < Math.max(expectedCopy.size(), actualCopy.size()); i++)
+                {
+                    String expStr = i < expectedCopy.size() ? expectedCopy.get(i) : "";
+                    String actStr = i < actualCopy.size()   ? actualCopy.get(i)   : "";
+                    if (!Objects.equals(expStr, actStr))
+                    {
+                        diff.add(expStr + " : " + actStr);
+                        res = false;
+                    }
+                }
+                if (!res)
+                {
+                    sb.append("mismatched: " + Arrays.toString(diff.toArray()));
+                }
+                
+            }
+            return res;
+        }
+    },
 	
 	CHECK("check")
 	{
@@ -856,7 +931,7 @@ public enum OperationKind
 
 			return true;
 		}
-	},
+	}, 
 	;
 	
 	
@@ -892,7 +967,8 @@ public enum OperationKind
 								part.locatorId,
 								part.locatorKind,
 								part.locator,
-								part.toAppear
+								part.toAppear,
+								part.list
 							);
 	}
 	

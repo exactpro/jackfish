@@ -12,12 +12,13 @@ import com.exactprosystems.jf.api.app.IWindow.SectionKind;
 import com.exactprosystems.jf.api.client.ICondition;
 
 import java.io.Serializable;
+import java.util.List;
 
 public class Part implements Serializable
 {
-	private static final long serialVersionUID = -5317750838749524513L;
+    private static final long serialVersionUID = -3414311737172884970L;
 
-	public Part(OperationKind kind)
+    public Part(OperationKind kind)
 	{
 		this.kind = kind;
 
@@ -36,6 +37,7 @@ public class Part implements Serializable
 		this.str = null;
 		this.text = null;
 		this.key = null;
+		this.list = null;
 		this.mouse = null;
 
 		this.locatorKind = null;
@@ -182,6 +184,13 @@ public class Part implements Serializable
 		this.key = key;
 		return this;
 	}
+	
+	public Part setList(List<String> list)
+	{
+	    this.list = list;
+	    return this;
+	}
+	
 
 	public Part setValue(double d)
 	{
@@ -212,6 +221,7 @@ public class Part implements Serializable
 	protected ICondition colorCondition;
 	protected MouseAction mouse;
 	protected Keyboard key;
+	protected List<String> list;
 
 	protected String locatorId;
 	protected LocatorKind locatorKind;

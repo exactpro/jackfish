@@ -20,6 +20,7 @@ public class OperationResult implements Serializable
 	private Integer                     integer             = null;
 	private String						text				= null;
     private String                      error               = null;
+    private List<String>                list                = null;
 	private Map<String, String>			map					= null;
 	private Map<String, ValueAndColor>	colorMap			= null;
 	private String[][]					array				= null;
@@ -65,12 +66,7 @@ public class OperationResult implements Serializable
 
 	public void setList(List<String> list)
 	{
-		this.map = new LinkedHashMap<>();
-		for (int i = 0; i < list.size(); i++)
-		{
-			String s = list.get(i);
-			this.map.put(String.valueOf(i), s);
-		}
+		this.list = new ArrayList<>(list);
 	}
 
 	public void setRectangle(Rectangle rectangle)
@@ -106,6 +102,10 @@ public class OperationResult implements Serializable
 		{
 			return this.colorMap;
 		}
+        if (this.list != null)
+        {
+            return this.list;
+        }
 		if (this.array != null)
 		{
 			return  this.array;
@@ -147,6 +147,10 @@ public class OperationResult implements Serializable
 		{
 			builder.append(" color map [").append(this.colorMap).append("];");
 		}
+        if (this.list != null)
+        {
+            builder.append(" list [").append(this.list).append("];");
+        }
 		if (this.array != null)
 		{
 			builder.append(" array [").append(Arrays.deepToString(this.array)).append("];");

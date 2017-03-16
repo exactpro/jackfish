@@ -219,7 +219,14 @@ public class Operation implements Iterable<Part>, Serializable
 		return this;
 	}
 
-	@DescriptionAttribute(text = Do.check)
+    @DescriptionAttribute(text = Do.checkList)
+    public Operation checkList(List<String> list, boolean ignoreOrder)
+    {
+        this.list.add(new Part(OperationKind.CHECK_LIST).setList(list).setBool(ignoreOrder));
+        return this;
+    }
+
+    @DescriptionAttribute(text = Do.check)
 	public Operation check(String word)
 	{
 		return check(word, true);
