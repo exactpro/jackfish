@@ -245,14 +245,14 @@ public class TexReportBuilder extends ReportBuilder
 	{
 		if (value != null)
         {
-        	for (int i = 0; i < value.length -1; i++)
+            for (int i = 0; i < value.length ; i++)
         	{
         		if (i != value.length-1)
         		{
-					writer.fwrite("%s\\\\", ReportHelper.objToString(value[i], false));
+					writer.fwrite("%s & ", ReportHelper.objToString(value[i], false));
 				} else
 				{
-					writer.fwrite("%s&", ReportHelper.objToString(value[i], false));
+					writer.fwrite("%s \\\\ ", ReportHelper.objToString(value[i], false));
 				}
 			}
             writer.fwrite("\n");
