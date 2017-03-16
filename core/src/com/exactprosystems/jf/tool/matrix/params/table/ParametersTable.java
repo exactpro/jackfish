@@ -313,6 +313,7 @@ public class ParametersTable extends CustomScrollPane
 	private ExpressionField createExpressionField(Parameter par)
 	{
 		ExpressionField expressionField = new ExpressionField(this.context.getEvaluator(), par.getExpression());
+		expressionField.setStretchable(true);
 		if (this.matrixItem instanceof ActionItem)
 		{
 			ActionItem actionItem = (ActionItem) this.matrixItem;

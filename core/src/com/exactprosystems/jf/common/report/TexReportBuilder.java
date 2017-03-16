@@ -37,6 +37,16 @@ public class TexReportBuilder extends ReportBuilder
 		super(outputPath, matrixName, currentTime);
 	}
 
+	public static void main(String[] args){
+		try {
+			TexReportBuilder report = (TexReportBuilder) new TexReportFactory().createReportBuilder("/home/alexander.kruglov/Documents/shared folder VM", "new.txt", new Date());
+			report.reportStarted(null,"");
+			report.reportFinished(0,0,new Date(),new Date());
+		} catch (Exception e) {
+			e.getStackTrace();
+		}
+	}
+
 	private static Help help = new Help();
 
 	@Override
@@ -135,6 +145,50 @@ public class TexReportBuilder extends ReportBuilder
 		addDocumentation(writer, help.introduction());
 		addDocumentation(writer, help.panel());
 		addDocumentation(writer, help.mvel());
+		MatrixItem tmp;
+		for (Class<?> clazz : Parser.knownItems)
+		{
+			MatrixItemAttribute attribute = clazz.getAnnotation(MatrixItemAttribute.class);
+			if (attribute == null)
+			{
+				return;
+			}
+
+			if ((!attribute.real() || clazz.equals(ActionItem.class) || clazz.equals(TempItem.class)) && clazz.getAnnotation(Deprecated.class) != null)
+			{
+				continue;
+			}
+
+			try{
+				tmp = (MatrixItem) clazz.newInstance();
+				itemStarted(tmp);
+				itemIntermediate(tmp);
+				/*tmp.execute(null, null, null, this);
+				if (attribute.seeAlsoClass().length > 0)
+				{
+					StringBuilder sb = new StringBuilder();
+					for (int i = 0; i < attribute.seeAlsoClass().length -1; i++)
+					{
+						String l = attribute.seeAlsoClass()[i].getSimpleName();
+						sb.append(decorateLink(l, l));
+						if (i != attribute.seeAlsoClass().length -1){
+							sb.append(" , ");
+						}
+					}
+					reportItemLine(writer, tmp, "", sb.toString(), null);
+				}
+
+				if (!attribute.examples().equals(""))
+				{
+
+				}*/
+			} catch (Exception e)
+			{
+				e.getStackTrace();
+			}
+
+			break;
+		}
 	}
 
 	@Override
@@ -179,6 +233,7 @@ public class TexReportBuilder extends ReportBuilder
 	@Override
 	protected void reportItemFooter(ReportWriter writer, MatrixItem item, Integer id, long time, ImageWrapper screenshot) throws IOException
 	{
+		System.out.println(item.getParameters());
 	}
 
 	@Override
@@ -291,7 +346,6 @@ public class TexReportBuilder extends ReportBuilder
 			}
 			else if (line.contains("${"))
 			{
-				System.out.println(line);
 				sb.append(replaceChars(line));
 			}
 			else
@@ -315,60 +369,6 @@ public class TexReportBuilder extends ReportBuilder
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-		}
-	}
-
-	//todo
-	public void helpCreate(ReportBuilder report) throws Exception {
-		report.reportStarted(null,"");
-		makeItemHelp(report);
-		report.reportFinished(0,0,new Date(),new Date());
-
-		/*TexReportBuilder report = (TexReportBuilder) new TexReportFactory().createReportBuilder("/home/alexander.kruglov/Documents/shared folder VM", "new.txt", new Date());
-		report.helpCreate(report);*/
-	}
-
-	private void makeItemHelp(ReportBuilder report) throws IllegalAccessException, InstantiationException
-	{
-		MatrixItem tmp = null;
-		for (Class<?> clazz : Parser.knownItems)
-		{
-			MatrixItemAttribute attribute = clazz.getAnnotation(MatrixItemAttribute.class);
-			if (attribute == null)
-			{
-				return;
-			}
-
-			if (!attribute.real() || clazz.equals(ActionItem.class) || clazz.equals(TempItem.class))
-			{
-				continue;
-			}
-
-			tmp = (MatrixItem) clazz.newInstance();
-			report.itemStarted(tmp);
-			report.itemIntermediate(tmp);
-			report.outLine(tmp, "", attribute.description(), null);
-
-			if (attribute.seeAlsoClass().length > 0)
-			{
-				StringBuilder sb = new StringBuilder();
-				for (int i = 0; i < attribute.seeAlsoClass().length -1; i++)
-				{
-					String l = attribute.seeAlsoClass()[i].getSimpleName();
-					sb.append(decorateLink(l, l));
-					if (i != attribute.seeAlsoClass().length -1){
-						sb.append(" , ");
-					}
-				}
-				report.outLine(tmp, "", sb.toString(), null);
-			}
-
-			if (!attribute.examples().equals(""))
-			{
-				//report.outLine(tmp, "", "Examples:", null);
-				//report.outLine(tmp, "", note("Examples", attribute.examples()), null);
-			}
-			report.itemFinished(tmp, 0, null);
 		}
 	}
 }

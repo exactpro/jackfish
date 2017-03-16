@@ -1,3 +1,6 @@
+16.03.2017 4.4.2110
+RM37481 Add flexibility to actions' fields when typing : implemented
+
 --------------------------------------------------------------------------------
 15.03.2017 4.4.0.2104
 RM38903 feature : Closing Report Window if you have closed the latest tab in Report Window 

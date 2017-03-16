@@ -8,7 +8,6 @@
 package com.exactprosystems.jf.tool.custom.expfield;
 
 import com.exactprosystems.jf.actions.ReadableValue;
-import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.documents.matrix.Matrix;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.ListProvider;
@@ -16,7 +15,6 @@ import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.custom.controls.field.CustomField;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
-
 import javafx.beans.value.ChangeListener;
 import javafx.event.EventDispatcher;
 import javafx.event.EventHandler;
@@ -27,7 +25,6 @@ import javafx.scene.control.Label;
 import javafx.scene.input.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
-
 import org.apache.log4j.Logger;
 
 import java.util.List;
@@ -51,6 +48,10 @@ public class ExpressionField extends CustomField
 	private ChangeListener<Boolean> focusListener;
 	private ChangeListener<Boolean> globalListener;
 
+	private boolean isStretchable;
+
+	private final int MIN_WIDTH = 80;
+
 	public ExpressionField(AbstractEvaluator evaluator)
 	{
 		this(evaluator, null);
@@ -59,13 +60,15 @@ public class ExpressionField extends CustomField
 	public ExpressionField(AbstractEvaluator evaluator, String text)
 	{
 		super(text);
+		this.setMinWidth(MIN_WIDTH);
+		this.setPrefWidth(MIN_WIDTH);
 		this.evaluator = evaluator;
 		this.getStyleClass().add(CssVariables.EXPRESSION_EDITOR);
-		globalListener = (observable, oldValue, newValue) ->
+		this.globalListener = (observable, oldValue, newValue) ->
 		{
 			Optional.ofNullable(valueListener).ifPresent(listener -> listener.changed(observable, oldValue, newValue));
 			Optional.ofNullable(focusListener).ifPresent(listener -> listener.changed(observable, oldValue, newValue));
-			stretchIfCan(this.getText());
+			stretchField(this.getText());
 		};
 		this.focusedProperty().addListener(globalListener);
 
@@ -81,8 +84,6 @@ public class ExpressionField extends CustomField
 		this.secondPane.getStyleClass().setAll(CssVariables.EXPRESSION_SECOND_PANE);
 		this.secondPane.setCursor(Cursor.DEFAULT);
 
-		sizeTextField();
-
 		this.hBox = new HBox();
 		this.hBox.setSpacing(5);
 		this.hBox.setAlignment(Pos.CENTER);
@@ -90,7 +91,7 @@ public class ExpressionField extends CustomField
 		disableDefaultContextMenu();
 		listeners();
 		showButtons();
-		stretchIfCan(this.getText());
+		stretchField(this.getText());
 	}
 
 	public void clearlListener()
@@ -176,9 +177,7 @@ public class ExpressionField extends CustomField
 	public void sizeTextField()
 	{
 		String text = getText();
-		Common.sizeTextField(this);
-		this.setMinWidth(60);
-		this.setPrefWidth((Str.IsNullOrEmpty(text) ? 60 : text.length() * 8 + 20));
+		this.stretchField(text);
 	}
 
 	public Object getEvaluatedValue() throws Exception
@@ -232,6 +231,11 @@ public class ExpressionField extends CustomField
 		((Label) this.secondPane.getChildren().get(0)).setText(name);
 	}
 
+	public void setStretchable(boolean flag)
+	{
+		this.isStretchable = flag;
+	}
+
 	// ============================================================
 	// private methods
 	// ============================================================
@@ -275,7 +279,7 @@ public class ExpressionField extends CustomField
 			{
 				String str = dragboard.getString();
 				this.setText(str);
-				stretchIfCan(str);
+				stretchField(str);
 				Optional.ofNullable(valueListener).ifPresent(listener -> listener.changed(null, true, false));
 				b = true;
 			}
@@ -290,6 +294,14 @@ public class ExpressionField extends CustomField
 				event.acceptTransferModes(TransferMode.MOVE);
 			}
 			event.consume();
+		});
+
+		this.textProperty().addListener((observable, oldValue, newValue) ->
+		{
+			if (this.isStretchable)
+			{
+				stretchField(newValue);
+			}
 		});
 	}
 
@@ -310,22 +322,11 @@ public class ExpressionField extends CustomField
 		});
 	}
 
-	//TODO think about it
-	public void stretchIfCan(String text)
+	private void stretchField(String text)
 	{
-		int size = text != null ? (text.length() * 8 + 20) : 60;
-
-		if (this.getScene() != null)
-		{
-			double v = this.getScene().getWindow().getWidth() / 3;
-			if (size > v)
-			{
-				this.setPrefWidth(v);
-				return;
-			}
-		}
-		this.setPrefWidth(size+20);
+		this.setPrefWidth(Common.computeTextWidth(this.getFont(), text, 0.0D) + 40);
 	}
+
 
 	private void showButtons()
 	{

@@ -35,12 +35,12 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextBoundsType;
 import javafx.stage.Stage;
 import org.apache.log4j.Logger;
 
 import java.awt.*;
-import java.awt.datatransfer.Clipboard;
-import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.StringSelection;
 import java.io.File;
 import java.io.FileWriter;
@@ -190,7 +190,7 @@ public abstract class Common
 
 	public static void sizeLabel(Label label)
 	{
-		label.setPrefWidth(label.getText().length() * 8 + 20);
+		label.setPrefWidth(computeTextWidth(label.getFont(), label.getText(), 0.0D) + 20);
 		label.setPrefHeight(PREF_HEIGHT);
 		label.setMaxHeight(MAX_HEIGHT);
 		label.setMinHeight(MIN_HEIGHT);
@@ -200,7 +200,7 @@ public abstract class Common
 	{
 		int width = 80;
 		field.setMinWidth(width);
-		field.setPrefWidth(field.getText() == null ? width : (field.getText().equals("") ? width : (field.getText().length() * 8 + 20)));
+		field.setPrefWidth(computeTextWidth(field.getFont(), field.getText(), 0.0D) + 40);
 	}
 
 	public static void sizeButtons(int px, Button... buttons)
@@ -466,5 +466,38 @@ public abstract class Common
 			return evaluator.createString(((File) value).getPath());
 		}
 		return Str.asString(value);
+	}
+
+
+	static final Text helper;
+	static final double DEFAULT_WRAPPING_WIDTH;
+	static final double DEFAULT_LINE_SPACING;
+	static final String DEFAULT_TEXT;
+	static final TextBoundsType DEFAULT_BOUNDS_TYPE;
+
+	static
+	{
+		helper = new Text();
+		DEFAULT_WRAPPING_WIDTH = helper.getWrappingWidth();
+		DEFAULT_LINE_SPACING = helper.getLineSpacing();
+		DEFAULT_TEXT = helper.getText();
+		DEFAULT_BOUNDS_TYPE = helper.getBoundsType();
+	}
+
+	public static double computeTextWidth(Font font, String text, double help0)
+	{
+		helper.setText(text);
+		helper.setFont(font);
+
+		helper.setWrappingWidth(0.0D);
+		helper.setLineSpacing(0.0D);
+		double d = Math.min(helper.prefWidth(-1.0D), help0);
+		helper.setWrappingWidth((int) Math.ceil(d));
+		d = Math.ceil(helper.getLayoutBounds().getWidth());
+
+		helper.setWrappingWidth(DEFAULT_WRAPPING_WIDTH);
+		helper.setLineSpacing(DEFAULT_LINE_SPACING);
+		helper.setText(DEFAULT_TEXT);
+		return d;
 	}
 }

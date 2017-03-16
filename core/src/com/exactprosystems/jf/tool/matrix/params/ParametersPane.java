@@ -254,6 +254,7 @@ public class ParametersPane extends CustomScrollPane
 		if (!this.oneLine)
 		{
 			ExpressionField expressionField = new ExpressionField(this.context.getEvaluator(), par.getExpression());
+			expressionField.setStretchable(true);
 			if (this.matrixItem instanceof ActionItem)
 			{
 				ActionItem actionItem = (ActionItem) this.matrixItem;
