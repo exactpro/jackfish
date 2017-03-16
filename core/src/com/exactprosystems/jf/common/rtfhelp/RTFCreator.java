@@ -618,14 +618,14 @@ class RTFCreator {
 
     private void createDescription() throws IOException, BadLocationException
     {
-        intro.add(p(tab(), tab(), tab(), tab(), font(0, fontSize(30, bold("Introduction" + trait))), lineBreak()));
+        //intro.add(p(tab(), tab(), tab(), tab(), font(0, fontSize(30, bold("Introduction" + trait))), lineBreak()));
         createDocumentation(introduction, intro);
         writeIntro();
     }
 
     private void mvelDocumentation() throws IOException
     {
-        mvels.add(p(tab(), tab(), tab(), tab(), font(0, fontSize(30, bold("MVEL" + trait))), lineBreak()));
+        //mvels.add(p(tab(), tab(), tab(), tab(), font(0, fontSize(30, bold("MVEL" + trait))), lineBreak()));
         createDocumentation(mvelDoc, mvels);
         writeMvel();
     }
