@@ -11,12 +11,15 @@ package com.exactprosystems.jf.common.report;
 import com.exactprosystems.jf.api.app.ImageWrapper;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.charts.ChartBuilder;
+import com.exactprosystems.jf.common.MatrixRunner;
+import com.exactprosystems.jf.common.VerboseLevel;
 import com.exactprosystems.jf.common.rtfhelp.Help;
-import com.exactprosystems.jf.documents.matrix.parser.Parser;
-import com.exactprosystems.jf.documents.matrix.parser.items.ActionItem;
-import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
-import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItemAttribute;
-import com.exactprosystems.jf.documents.matrix.parser.items.TempItem;
+import com.exactprosystems.jf.documents.ConsoleDocumentFactory;
+import com.exactprosystems.jf.documents.DocumentFactory;
+import com.exactprosystems.jf.documents.config.Configuration;
+import com.exactprosystems.jf.documents.config.Context;
+import com.exactprosystems.jf.documents.matrix.Matrix;
+import com.exactprosystems.jf.documents.matrix.parser.items.*;
 
 import java.io.*;
 import java.util.Date;
@@ -37,15 +40,44 @@ public class TexReportBuilder extends ReportBuilder
 		super(outputPath, matrixName, currentTime);
 	}
 
-	public static void main(String[] args){
-		try {
-			TexReportBuilder report = (TexReportBuilder) new TexReportFactory().createReportBuilder("/home/alexander.kruglov/Documents/shared folder VM", "new.txt", new Date());
-			report.reportStarted(null,"");
-			report.reportFinished(0,0,new Date(),new Date());
-		} catch (Exception e) {
-			e.getStackTrace();
-		}
-	}
+    public static void main(String[] args)
+    {
+        System.err.println(">> begin");
+        try
+        {
+            DocumentFactory docFactory = new ConsoleDocumentFactory(VerboseLevel.All);
+            Configuration configuration = docFactory.createConfig("/home/alexander.kruglov/IdeaProjects/jackfish/core/config.xml");
+            docFactory.setConfiguration(configuration);
+            try (BufferedReader reader = new BufferedReader(new FileReader("/home/alexander.kruglov/IdeaProjects/jackfish/core/config.xml")))
+            {
+                configuration.load(reader);
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace(System.err);
+            }
+            Context context = docFactory.createContext();
+            MatrixRunner runner = context.createRunner("New", null, new Date(), null);
+            Matrix matrix = context.getFactory().createMatrix("New", runner);
+
+
+            TexReportBuilder report = (TexReportBuilder) new TexReportFactory().createReportBuilder(".", "new.txt",
+                    new Date());
+            MatrixItem help = new HelpItem(For.class);
+            help.init(matrix);
+
+
+            report.reportStarted(null, "");
+            help.execute(context, context.getMatrixListener(), context.getEvaluator(), report);
+            report.reportFinished(0, 0, new Date(), new Date());
+
+            System.err.println(">> done " + report.getReportName());
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace(System.err);
+        }
+    }
 
 	private static Help help = new Help();
 
@@ -80,37 +112,18 @@ public class TexReportBuilder extends ReportBuilder
         {
             return "";
         }
-        
-        switch (marker)
-        {
-            case OM + "1": return "";
-            case "1" + CM: return "";  
 
-            case OM + "2": return "";
-            case "2" + CM: return "";  
-
-            case OM + "3": return "";
-            case "3" + CM: return "";  
-
-            case OM + "!": return "";
-            case "!" + CM: return "";
-
-            case OM + "$": return "";     
-            case "$" + CM: return "";       
-
-            case OM + "#": return "";    
-            case "#" + CM: return "";  
-            
-            case OM + "@": return "";
-            case "@" + CM: return "";
-
-            case OM + "`": return "";
-            case "`" + CM: return "\n\n";
-
-            case OM + "_": return "";
-            case "_" + CM: return "";
-        }
-        return "";		
+        return marker.replace("(?U)[\\pP\\s]", "").trim()
+                .replace("{{&", "").replace("&}}", "")  //font2
+                .replace("{{*", "").replace("*}}", "")  //bolder
+                .replace("{{=", "").replace("=}}", "")  //table
+                .replace("{{-", "").replace("-}}", "")  //row
+                .replace("{{+", "").replace("+}}", "")  //cell
+                .replace("{{$", "").replace("$}}", "")  //italic
+                .replace("{{#", "").replace("#}}", "")  //code
+                .replace("{{!", "").replace("!}}", "")  //header
+                .replace("{{@", "").replace("@}}", ""); //link
+                //.replace("${", "\\textdollar {");
 	}
 
 	@Override
@@ -142,53 +155,9 @@ public class TexReportBuilder extends ReportBuilder
 	@Override
 	protected void reportHeaderTotal(ReportWriter writer, Date date) throws IOException
 	{
-		addDocumentation(writer, help.introduction());
+		/*addDocumentation(writer, help.introduction());
 		addDocumentation(writer, help.panel());
-		addDocumentation(writer, help.mvel());
-		MatrixItem tmp;
-		for (Class<?> clazz : Parser.knownItems)
-		{
-			MatrixItemAttribute attribute = clazz.getAnnotation(MatrixItemAttribute.class);
-			if (attribute == null)
-			{
-				return;
-			}
-
-			if ((!attribute.real() || clazz.equals(ActionItem.class) || clazz.equals(TempItem.class)) && clazz.getAnnotation(Deprecated.class) != null)
-			{
-				continue;
-			}
-
-			try{
-				tmp = (MatrixItem) clazz.newInstance();
-				itemStarted(tmp);
-				itemIntermediate(tmp);
-				/*tmp.execute(null, null, null, this);
-				if (attribute.seeAlsoClass().length > 0)
-				{
-					StringBuilder sb = new StringBuilder();
-					for (int i = 0; i < attribute.seeAlsoClass().length -1; i++)
-					{
-						String l = attribute.seeAlsoClass()[i].getSimpleName();
-						sb.append(decorateLink(l, l));
-						if (i != attribute.seeAlsoClass().length -1){
-							sb.append(" , ");
-						}
-					}
-					reportItemLine(writer, tmp, "", sb.toString(), null);
-				}
-
-				if (!attribute.examples().equals(""))
-				{
-
-				}*/
-			} catch (Exception e)
-			{
-				e.getStackTrace();
-			}
-
-			break;
-		}
+		addDocumentation(writer, help.mvel());*/
 	}
 
 	@Override
@@ -233,7 +202,6 @@ public class TexReportBuilder extends ReportBuilder
 	@Override
 	protected void reportItemFooter(ReportWriter writer, MatrixItem item, Integer id, long time, ImageWrapper screenshot) throws IOException
 	{
-		System.out.println(item.getParameters());
 	}
 
 	@Override
@@ -306,20 +274,6 @@ public class TexReportBuilder extends ReportBuilder
 		chartBuilder.report(writer, ++chartCount);
 	}
 
-	private String replaceChars (String s)
-	{
-		return s.replace("(?U)[\\pP\\s]", "").trim()
-				.replace("{{&", "").replace("&}}", "")  //font2
-				.replace("{{*", "").replace("*}}", "")  //bolder
-				.replace("{{=", "").replace("=}}", "")  //table
-				.replace("{{-", "").replace("-}}", "")  //row
-				.replace("{{+", "").replace("+}}", "")  //cell
-				.replace("{{$", "").replace("$}}", "")  //italic
-				.replace("{{#", "").replace("#}}", "")  //code
-				.replace("{{!", "").replace("!}}", "")  //header
-				.replace("{{@", "").replace("@}}", ""); //link
-	}
-
 	private void addBookmarks(ReportWriter writer, String  uniqueName) throws IOException
 	{
 		writer.fwrite("\\hypertarget{%s}{}",  uniqueName);
@@ -332,11 +286,11 @@ public class TexReportBuilder extends ReportBuilder
 		for(String line; (line = br.readLine()) != null; )
 		{
 			if (line.contains("{{!") && line.contains("!}}")){
-				sb.append("\\section{").append(replaceChars(line)).append("}");
+				sb.append("\\section{").append(replaceMarker(line)).append("}");
 			}
 			else if (line.contains("{{#") && line.contains("#}}"))
 			{
-				sb.append("\\textit{").append(replaceChars(line)).append("}");
+				sb.append("\\textit{").append(replaceMarker(line)).append("}");
 			}
 			else if (line.equals("PutIntroPictureHere"))
 			{
@@ -346,11 +300,20 @@ public class TexReportBuilder extends ReportBuilder
 			}
 			else if (line.contains("${"))
 			{
-				sb.append(replaceChars(line));
+                String[] words = line.split("\\s");
+                for (String word : words){
+                    if(word.contains("${")){
+                        sb.append(replaceMarker(word)).append(" ");
+                    }
+                    else
+                    {
+                        sb.append(word).append(" ");
+                    }
+                }
 			}
 			else
 			{
-				sb.append(replaceChars(line));
+				sb.append(replaceMarker(line));
 			}
 			sb.append("\\newline \n");
 		}

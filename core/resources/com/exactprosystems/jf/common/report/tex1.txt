@@ -19,10 +19,10 @@
 \date{\today}
 
 \begin{document}
-\maketitle
+%% \maketitle
 
-\newpage
+%% \newpage
 
-\tableofcontents
+%% \tableofcontents
 
-\newpage
+%% \newpage
