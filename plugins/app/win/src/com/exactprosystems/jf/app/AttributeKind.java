@@ -2,12 +2,12 @@ package com.exactprosystems.jf.app;
 
 public enum AttributeKind
 {
+	ID(false),
 	UID(true),
 	CLASS(true),
 	TEXT(true),
 	NAME(true),
 
-	ID(false),
 	TYPE_NAME(false),
 	ENABLED(false),
 	VISIBLE(false),
