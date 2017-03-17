@@ -23,6 +23,7 @@ import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.stage.Modality;
+import javafx.stage.Stage;
 import javafx.stage.Window;
 
 import java.net.URL;
@@ -182,6 +183,7 @@ public class ScheduleController implements Initializable, ContainingParent
 	public void show(Window window)
 	{
 		this.dialog = new Alert(Alert.AlertType.INFORMATION);
+		Common.addIcons(((Stage) dialog.getDialogPane().getScene().getWindow()));
 		this.dialog.setResizable(true);
 		this.dialog.initModality(Modality.NONE);
 		this.dialog.initOwner(window);

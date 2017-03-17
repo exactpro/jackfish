@@ -261,7 +261,7 @@ public class MainController implements Initializable, ContainingParent
 		this.stage.setTitle(Configuration.projectName);
 		this.stage.setMinHeight(600);
 		this.stage.setMinWidth(600);
-		this.stage.getIcons().add(new Image(CssVariables.Icons.MAIN_ICON));
+		Common.addIcons(this.stage);
 		initializeButtons(settings);
 	}
 
@@ -740,6 +740,7 @@ public class MainController implements Initializable, ContainingParent
 		ListView<String> listView = new ListView<>();
 		listView.getItems().addAll(this.customTabPane.getTabs().stream().map(tab -> ((CustomTab) tab).getTitle()).collect(Collectors.toList()));
 		Dialog<ButtonType> dialog = new Alert(Alert.AlertType.CONFIRMATION);
+		Common.addIcons(((Stage) dialog.getDialogPane().getScene().getWindow()));
 		dialog.getDialogPane().setContent(listView);
 		dialog.getDialogPane().setPrefHeight(400);
 		dialog.getDialogPane().setPrefWidth(432);

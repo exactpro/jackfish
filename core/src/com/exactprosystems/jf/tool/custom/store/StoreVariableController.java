@@ -17,6 +17,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.layout.Region;
+import javafx.stage.Stage;
 
 import java.net.URL;
 import java.util.Date;
@@ -77,6 +78,7 @@ public class StoreVariableController implements Initializable, ContainingParent
 	public void show()
 	{
 		Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+		Common.addIcons(((Stage) alert.getDialogPane().getScene().getWindow()));
 		alert.setResizable(true);
 		alert.setTitle("Store");
 		alert.setHeaderText("Edit store variable");

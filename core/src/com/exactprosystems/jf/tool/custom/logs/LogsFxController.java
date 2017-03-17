@@ -23,6 +23,7 @@ import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.Stage;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -58,6 +59,7 @@ public class LogsFxController implements Initializable, ContainingParent
 	public void setParent(Parent parent)
 	{
 		this.dialog = new Alert(Alert.AlertType.INFORMATION);
+		Common.addIcons(((Stage) this.dialog.getDialogPane().getScene().getWindow()));
 		this.dialog.setResizable(true);
 		this.dialog.getDialogPane().setPrefWidth(600);
 		this.dialog.getDialogPane().setPrefHeight(600);

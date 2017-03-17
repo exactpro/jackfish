@@ -38,6 +38,7 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.Stage;
 
 import javax.xml.bind.annotation.XmlRootElement;
 import java.io.File;
@@ -1091,6 +1092,7 @@ public class ConfigurationFx extends Configuration
 		ListView<String> listView = new ListView<>();
 		possibilities.stream().forEach((possibility) -> listView.getItems().add(possibility.getDescription()));
 		Dialog<ButtonType> dialog = new Alert(Alert.AlertType.INFORMATION);
+		Common.addIcons(((Stage) dialog.getDialogPane().getScene().getWindow()));
 		dialog.setHeaderText("Possibilities for " + entryName);
 		dialog.setTitle("Possibilities");
 		dialog.getDialogPane().setContent(listView);

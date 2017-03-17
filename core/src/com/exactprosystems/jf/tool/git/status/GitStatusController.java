@@ -23,6 +23,7 @@ import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 
 import java.io.File;
 import java.net.URL;
@@ -134,6 +135,7 @@ public class GitStatusController implements Initializable, ContainingParent
 	void display(List<GitBean> list, String state)
 	{
 		Dialog<ButtonType> dialog = new Alert(Alert.AlertType.INFORMATION);
+		Common.addIcons(((Stage) dialog.getDialogPane().getScene().getWindow()));
 		dialog.setResizable(true);
 		dialog.getDialogPane().getStylesheets().addAll(Common.currentThemesPaths());
 		dialog.setTitle("Git status");
