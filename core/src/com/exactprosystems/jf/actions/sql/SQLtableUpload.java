@@ -46,7 +46,8 @@ import com.exactprosystems.jf.sql.SqlConnection;
 				"SQLEXEC1;SQLexecute;'CREATE TABLE users (id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,name VARCHAR(30) NOT NULL,age int NOT NULL)';SQLCNT1.Out\n" +
 				"\n" +
 				"#Action;#Table;#Connection;#Data\n" +
-				"SQLtableUpload;'users';SQLCNT1.Out;DATA1#}}"
+				"SQLtableUpload;'users';SQLCNT1.Out;DATA1#}}",
+		seeAlsoClass = {SQLdisconnect.class, SQLexecute.class, SQLinsert.class, SQLselect.class, SQLconnect.class}
 	)
 public class SQLtableUpload extends AbstractAction
 {

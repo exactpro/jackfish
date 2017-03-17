@@ -34,7 +34,8 @@ import com.exactprosystems.jf.functions.Text;
 + "#Action;#Line;#Text;#Index\n"
 + "TextSetValue;'string successfully set';TXT1.Out;2#}}",
 		seeAlso = "{{@TextReport@}}, {{@TextAddLine@}}, {{@TextLoadFromFile@}}, {{@TextCreate@}}, {{@TextSaveToFile@}}," +
-				" {{@TextPerform@}}"
+				" {{@TextPerform@}}",
+		seeAlsoClass = {TextReport.class, TextAddLine.class, TextLoadFromFile.class, TextCreate.class, TextSaveToFile.class, TextPerform.class}
 	)
 public class TextSetValue extends AbstractAction 
 {

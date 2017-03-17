@@ -34,7 +34,9 @@ import java.util.List;
 + "#Action;#Title;#Text\n"
 + "TextReport;’My text’;TXT1.Out#}}\n",
 		seeAlso = "{{@TextPerform@}}, {{@TextAddLine@}}, {{@TextLoadFromFile@}}, {{@TextCreate@}}, {{@TextSaveToFile@}}," +
-				" {{@TextSetValue@}}"
+				" {{@TextSetValue@}}",
+		seeAlsoClass = {TextPerform.class, TextAddLine.class, TextLoadFromFile.class, TextCreate.class, TextSaveToFile.class,
+		TextSetValue.class}
 	)
 public class TextReport extends AbstractAction 
 {

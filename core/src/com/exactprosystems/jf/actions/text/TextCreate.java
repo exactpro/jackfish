@@ -41,7 +41,9 @@ import java.io.StringReader;
 + "#Assert;#Message\n"
 + "TXT1.Out.toString() == 'Text';#}}\n",
 		seeAlso = "{{@TextReport@}}, {{@TextAddLine@}}, {{@TextLoadFromFile@}}, {{@TextPerform@}}, {{@TextSaveToFile@}}," +
-				" {{@TextSetValue@}}"
+				" {{@TextSetValue@}}",
+		seeAlsoClass = {TextReport.class, TextAddLine.class, TextLoadFromFile.class, TextPerform.class,
+		TextSaveToFile.class, TextSetValue.class}
 	)
 public class TextCreate extends AbstractAction 
 {

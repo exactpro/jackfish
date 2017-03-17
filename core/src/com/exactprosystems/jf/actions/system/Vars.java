@@ -15,6 +15,7 @@ import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
+import com.exactprosystems.jf.documents.matrix.parser.items.Let;
 import com.exactprosystems.jf.documents.matrix.parser.items.TypeMandatory;
 
 @ActionAttribute(
@@ -33,7 +34,8 @@ import com.exactprosystems.jf.documents.matrix.parser.items.TypeMandatory;
 		examples 			  = "Create 2 global variables with names “name” and “age”, with values “Mike” and “42” accordingly.\n"
 				+ "{{##Global;#Action;#name;#age\n"
 				+ "1;Vars;'Mike';'42'#}}",
-		seeAlso = "{{@Let@}}"
+		seeAlso = "{{@Let@}}",
+		seeAlsoClass = {Let.class}
 )
 
 public class Vars extends AbstractAction

@@ -19,6 +19,7 @@ import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
+import com.exactprosystems.jf.documents.matrix.parser.items.RawTable;
 import com.exactprosystems.jf.functions.HelpKind;
 import com.exactprosystems.jf.functions.Table;
 
@@ -35,7 +36,8 @@ import com.exactprosystems.jf.functions.Table;
 		examples 				=
 				"{{`1. Get table downloaded from file testTable.csv divided internally with '|'. Verify that table is downloaded correctly.`}} "
 				+ "{{##Id;#Action;#Assert;#File;#Delimiter\n"
-				+ "TLFF;TableLoadFromFile;TLFF.Out.size() > 0;'PathToFile/testTable.csv';'|'#}}"
+				+ "TLFF;TableLoadFromFile;TLFF.Out.size() > 0;'PathToFile/testTable.csv';'|'#}}",
+		seeAlsoClass = {RawTable.class, TableLoadFromDir.class, TableCreate.class, TableSelect.class}
 	)
 public class TableLoadFromFile extends AbstractAction 
 {

@@ -32,7 +32,8 @@ import com.exactprosystems.jf.functions.Table;
 				+ "TableColumnRename;TC;'FirstName'\n"
 				+ "\n"
 				+ "#Assert;#Message\n"
-				+ "TC.getHeader(0) == 'FirstName';'Values is not equals'#}}"
+				+ "TC.getHeader(0) == 'FirstName';'Values is not equals'#}}",
+		seeAlsoClass = {TableReplace.class, TableAddColumns.class, TableConsiderColumnsAs.class, TableAddValue.class}
 )
 public class TableColumnRename extends AbstractAction
 {

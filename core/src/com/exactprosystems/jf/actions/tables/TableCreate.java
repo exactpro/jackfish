@@ -15,6 +15,7 @@ import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
+import com.exactprosystems.jf.documents.matrix.parser.items.RawTable;
 import com.exactprosystems.jf.documents.matrix.parser.items.TypeMandatory;
 import com.exactprosystems.jf.functions.Table;
 
@@ -39,7 +40,8 @@ import com.exactprosystems.jf.functions.Table;
 				+ "TC;TableCreate;;\n"
 				+ "\n"
 				+ "#Assert;#Message\n"
-				+ "TC.Out.getHeader(0) == 'Name' && TC.Out.getHeader(1) == 'Age';'Table is not correct'#}}\n"
+				+ "TC.Out.getHeader(0) == 'Name' && TC.Out.getHeader(1) == 'Age';'Table is not correct'#}}\n",
+		seeAlsoClass = {RawTable.class, TableLoadFromDir.class, TableLoadFromFile.class, TableSelect.class}
 	)
 public class TableCreate extends AbstractAction 
 {

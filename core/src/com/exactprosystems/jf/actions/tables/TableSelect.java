@@ -17,6 +17,7 @@ import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
+import com.exactprosystems.jf.documents.matrix.parser.items.RawTable;
 import com.exactprosystems.jf.documents.matrix.parser.items.TypeMandatory;
 import com.exactprosystems.jf.functions.Table;
 
@@ -32,6 +33,7 @@ import com.exactprosystems.jf.functions.Table;
 		outputDescription 		= "Outputs the table containing the selected lines.",
 		outputType				= Table.class,
 		seeAlso 				= "{{@RawTable@}}, {{@TableLoadFromDir@}}, {{@TableLoadFromFile@}}, {{@TableCreate@}}",
+		seeAlsoClass = {RawTable.class, TableLoadFromDir.class, TableLoadFromFile.class, TableCreate.class},
 		examples = "{{`Example #1:`}}"
 				+ "{{`1. Create a table with columns Name and Age. Complete the table with 3 lines.`}}"
 				+ "{{`2. Set the data type  Integer for the column Age.`}}"

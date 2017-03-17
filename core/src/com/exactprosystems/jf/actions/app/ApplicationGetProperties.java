@@ -46,8 +46,8 @@ import com.exactprosystems.jf.functions.HelpKind;
 				"\n" +
 				"#Assert;#Message\n" +
 				"!Str.IsNullOrEmpty(AGP1.Out.URL);'String is null or empty'#}}",
-		seeAlso					=
-				"{{@ApplicationStart@}}, {{@ApplicationConnectTo@}}"
+		seeAlso	= "{{@ApplicationStart@}}, {{@ApplicationConnectTo@}}",
+		seeAlsoClass = {ApplicationStart.class, ApplicationConnectTo.class}
 )
 public class ApplicationGetProperties extends AbstractAction
 {

@@ -36,7 +36,8 @@ import com.exactprosystems.jf.functions.Text;
 + "#Assert;#Message\n"
 + "TXT1.Out != null;#}}\n",
 		seeAlso = "{{@TextReport@}}, {{@TextAddLine@}}, {{@TextPerform@}}, {{@TextCreate@}}, {{@TextSaveToFile@}}," +
-				" {{@TextSetValue@}}"
+				" {{@TextSetValue@}}",
+		seeAlsoClass = {TextReport.class, TextAddLine.class, TextPerform.class, TextCreate.class, TextSaveToFile.class, TextSetValue.class}
 	)
 public class TextLoadFromFile extends AbstractAction 
 {

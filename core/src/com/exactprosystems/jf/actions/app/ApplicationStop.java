@@ -31,7 +31,8 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 		examples = "{{##Action;#AppConnection\n" +
 				"ApplicationStop;app\n#}}",
 		seeAlso					=
-				"{{@ApplicationConnectTo@}}, {{@ApplicationStart@}}"
+				"{{@ApplicationConnectTo@}}, {{@ApplicationStart@}}",
+		seeAlsoClass = {ApplicationConnectTo.class, ApplicationStart.class}
 	)
 public class ApplicationStop extends AbstractAction 
 {

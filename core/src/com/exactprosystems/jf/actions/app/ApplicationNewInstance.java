@@ -41,7 +41,8 @@ import java.util.Map;
 		examples = "{{##Id;#Action;#Browser;#URL;#AppConnection\n" +
 				"APPNI1;ApplicationNewInstance;'Chrome';'http://google.com';app#}}",
 		seeAlso					=
-				"{{@ApplicationStart@}}, {{@ApplicationConnectTo@}}"
+				"{{@ApplicationStart@}}, {{@ApplicationConnectTo@}}",
+		seeAlsoClass = {ApplicationStart.class, ApplicationConnectTo.class}
 )
 public class ApplicationNewInstance extends AbstractAction
 {

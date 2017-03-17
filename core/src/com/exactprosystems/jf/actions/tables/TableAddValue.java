@@ -39,7 +39,8 @@ import com.exactprosystems.jf.functions.Table;
 				+ "TableAddValue;0;TC;'Mike'\n"
 				+ "\n"
 				+ "#Assert;#Message\n"
-				+ "TC.get(0).get('Name') == 'Mike' && TC.get(0).get('Age') == null;'Values are not equals'#}}"
+				+ "TC.get(0).get('Name') == 'Mike' && TC.get(0).get('Age') == null;'Values are not equals'#}}",
+		seeAlsoClass = {TableReplace.class, TableAddColumns.class, TableConsiderColumnsAs.class, TableColumnRename.class}
 	)
 public class TableAddValue extends AbstractAction 
 {

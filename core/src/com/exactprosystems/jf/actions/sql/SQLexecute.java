@@ -56,7 +56,8 @@ import com.exactprosystems.jf.sql.SqlConnection;
 				"SQLINS1;SQLinsert;'insert into users (name, age) values (?, ?)';SQLCNT1.Out;name;age\n" +
 				"\n" +
 				"#Id;#Action;#Query;#Connection;#User new name;#User age we get earlier\n" +
-				"SQLEXEC2;SQLexecute;'update users set name=? where ? = 23';SQLCNT1.Out;'john';age#}}"
+				"SQLEXEC2;SQLexecute;'update users set name=? where ? = 23';SQLCNT1.Out;'john';age#}}",
+		seeAlsoClass = {SQLdisconnect.class, SQLinsert.class, SQLselect.class, SQLtableUpload.class, SQLconnect.class}
 	)
 public class SQLexecute extends AbstractAction
 {

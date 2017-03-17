@@ -17,6 +17,7 @@ import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
+import com.exactprosystems.jf.documents.matrix.parser.items.RawTable;
 import com.exactprosystems.jf.functions.HelpKind;
 import com.exactprosystems.jf.functions.Table;
 import java.io.File;
@@ -35,7 +36,8 @@ import java.io.File;
         seeAlso 			  = "{{@RawTable@}}, {{@TableCreate@}}, {{@TableLoadFromFile@}}, {{@TableSelect@}}",
         examples              ="{{`1. Create a table with information about files/folders in directory Home.`}}\n"
                 + "{{##Id;#Action;#Dir\n"
-                + "TBLD1;TableLoadFromDir;System.getProperty('user.home')#}}"
+                + "TBLD1;TableLoadFromDir;System.getProperty('user.home')#}}",
+        seeAlsoClass = {RawTable.class, TableCreate.class, TableLoadFromFile.class, TableSelect.class}
 )
 public class TableLoadFromDir extends AbstractAction
 {

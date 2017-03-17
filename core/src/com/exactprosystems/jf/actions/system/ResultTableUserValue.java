@@ -57,7 +57,8 @@ import com.exactprosystems.jf.functions.Table;
 				+ "\n"
 				+ "    #Action;#BeforeTestCase;#Table;#Title\n"
 				+ "    TableReport;'First';RESTBL1.Out;'Result table'#}}",
-		seeAlso = "{{@ResultTable@}}"
+		seeAlso = "{{@ResultTable@}}",
+		seeAlsoClass = {ResultTable.class}
 )
 public class ResultTableUserValue extends AbstractAction
 {

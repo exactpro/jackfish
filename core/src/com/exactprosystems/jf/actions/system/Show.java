@@ -32,7 +32,8 @@ import com.exactprosystems.jf.functions.Notifier;
 				+ "\n"
 				+ "{{##Action;#Text;#Notifier\n"
 				+ "Show;'Current time is: ' + DateTime.currentTime();Notifier.Info#}}",
-		seeAlso = "{{@Print@}}"
+		seeAlso = "{{@Print@}}",
+		seeAlsoClass = {Print.class}
 	)
 public class Show extends AbstractAction 
 {

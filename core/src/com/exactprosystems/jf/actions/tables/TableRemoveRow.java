@@ -31,7 +31,8 @@ import com.exactprosystems.jf.functions.Table;
 				+ "#Id;#Action;#Table;#Index\n"
 				+ "TBLRR1;TableRemoveRow;TC;0\n"
 				+ "#Assert;#Message\n"
-				+ "TC.get(0).get('Name') == 'Anna';'Table is not correct'#}}"
+				+ "TC.get(0).get('Name') == 'Anna';'Table is not correct'#}}",
+		seeAlsoClass = {TableReplace.class, TableAddColumns.class, TableConsiderColumnsAs.class, TableColumnRename.class}
 )
 public class TableRemoveRow extends AbstractAction
 {
