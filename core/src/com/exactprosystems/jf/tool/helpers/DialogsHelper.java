@@ -53,6 +53,7 @@ import javafx.scene.web.WebView;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.apache.log4j.Logger;
 
@@ -85,6 +86,7 @@ public abstract class DialogsHelper
 	public static ButtonType showParametersDialog(String title, final Map<String, String> parameters, AbstractEvaluator evaluator)
 	{
 		Dialog<ButtonType> dialog = new Dialog<>();
+		Common.addIcons(((Stage) dialog.getDialogPane().getScene().getWindow()));
 		dialog.getDialogPane().setPrefHeight(500);
 		dialog.getDialogPane().setPrefWidth(500);
 		dialog.setTitle("Parameters");
@@ -110,6 +112,7 @@ public abstract class DialogsHelper
 	public static ButtonType showFileChangedDialog(String fileName)
 	{
 		Dialog<ButtonType> dialog = new Alert(Alert.AlertType.CONFIRMATION);
+		Common.addIcons(((Stage) dialog.getDialogPane().getScene().getWindow()));
 		dialog.setTitle("Warning");
 		dialog.getDialogPane().setHeaderText("File " + fileName + " was changed by another process");
 		dialog.getDialogPane().setContentText("Reload it?");
@@ -124,6 +127,7 @@ public abstract class DialogsHelper
 		DateTimePickerSkin skin = new DateTimePickerSkin(picker);
 		Node popupContent = skin.getPopupContent();
 		Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+		Common.addIcons(((Stage) alert.getDialogPane().getScene().getWindow()));
 		alert.getDialogPane().setContent(popupContent);
 		alert.setTitle("Select date");
 		alert.setHeaderText("Choose date");
@@ -137,6 +141,7 @@ public abstract class DialogsHelper
 	public static boolean showQuestionDialog(String header, String body)
 	{
 		Dialog<ButtonType> dialog = new Alert(Alert.AlertType.CONFIRMATION);
+		Common.addIcons(((Stage) dialog.getDialogPane().getScene().getWindow()));
 		dialog.setTitle("Warning");
 		dialog.getDialogPane().setHeaderText(header);
 		dialog.getDialogPane().setContentText(body);
@@ -148,6 +153,7 @@ public abstract class DialogsHelper
 	public static ButtonType showSaveFileDialog(String fileName)
 	{
 		Dialog<ButtonType> dialog = new Dialog<>();
+		Common.addIcons(((Stage) dialog.getDialogPane().getScene().getWindow()));
 		dialog.setTitle("Save");
 		dialog.getDialogPane().setHeaderText("File " + fileName + " was changed.");
 		dialog.getDialogPane().setContentText("Do you want to save?");
@@ -183,6 +189,7 @@ public abstract class DialogsHelper
 		pane.setTop(tf);
 		BorderPane.setAlignment(tf, Pos.CENTER);
 		Dialog<ButtonType> dialog = new Alert(Alert.AlertType.CONFIRMATION);
+		Common.addIcons(((Stage) dialog.getDialogPane().getScene().getWindow()));
 		dialog.setHeaderText(title);
 		dialog.getDialogPane().setContent(pane);
 		dialog.setResizable(true);
@@ -264,6 +271,7 @@ public abstract class DialogsHelper
 		TextField tf = new TextField();
 		pane.setTop(tf);
 		Dialog<ButtonType> dialog = new Alert(Alert.AlertType.CONFIRMATION);
+		Common.addIcons(((Stage) dialog.getDialogPane().getScene().getWindow()));
 		dialog.getDialogPane().setPrefWidth(500);
 		dialog.setHeaderText(title);
 		dialog.getDialogPane().setContent(pane);
@@ -507,6 +515,7 @@ public abstract class DialogsHelper
 	public static void showAboutProgram()
 	{
 		Dialog<ButtonType> dialog = new Alert(Alert.AlertType.INFORMATION);
+		Common.addIcons(((Stage) dialog.getDialogPane().getScene().getWindow()));
 		dialog.setTitle("About program");
 		dialog.getDialogPane().setPrefWidth(600);
 		dialog.getDialogPane().setPrefHeight(250);
@@ -555,6 +564,7 @@ public abstract class DialogsHelper
 		WebEngine engine = browser.getEngine();
 		engine.loadContent(help);
 		Dialog<ButtonType> dialog = new Alert(Alert.AlertType.INFORMATION);
+		Common.addIcons(((Stage) dialog.getDialogPane().getScene().getWindow()));
 		dialog.setResizable(true);
 		dialog.getDialogPane().setPrefWidth(1024);
 		dialog.getDialogPane().setPrefHeight(768);
@@ -577,6 +587,7 @@ public abstract class DialogsHelper
 				boolean addButton = configuration != null;
 				ReportBrowser reportBrowser = new ReportBrowser(file);
 				Dialog<ButtonType> dialog = new Dialog<>();
+				Common.addIcons(((Stage) dialog.getDialogPane().getScene().getWindow()));
 				if (addButton)
 				{
 					dialog.getDialogPane().getButtonTypes().add(new ButtonType("Open", ButtonBar.ButtonData.OTHER));
@@ -625,6 +636,7 @@ public abstract class DialogsHelper
 	public static Alert createGitDialog(String title, Parent parent)
 	{
 		Alert dialog = new Alert(Alert.AlertType.INFORMATION);
+		Common.addIcons(((Stage) dialog.getDialogPane().getScene().getWindow()));
 		dialog.initModality(Modality.WINDOW_MODAL);
 		dialog.initOwner(Common.node);
 		dialog.setResult(new ButtonType("", ButtonBar.ButtonData.CANCEL_CLOSE));
@@ -655,6 +667,7 @@ public abstract class DialogsHelper
 	public static boolean showYesNoDialog(String message, String question)
 	{
 		Dialog<ButtonType> dialog = new Alert(Alert.AlertType.CONFIRMATION);
+		Common.addIcons(((Stage) dialog.getDialogPane().getScene().getWindow()));
 		dialog.setHeaderText(question);
 		dialog.getDialogPane().setPrefWidth(1000);
 		dialog.setContentText(message);
@@ -672,6 +685,7 @@ public abstract class DialogsHelper
 		BorderPane borderPane = new BorderPane();
 		borderPane.setCenter(browser);
 		Dialog<ButtonType> dialog = new Alert(Alert.AlertType.INFORMATION);
+		Common.addIcons(((Stage) dialog.getDialogPane().getScene().getWindow()));
 		dialog.getDialogPane().setHeader(new Label());
 		dialog.setHeaderText("Help");
 		GridPane grid = (GridPane) dialog.getDialogPane().lookup(".header-panel");

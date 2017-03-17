@@ -7,10 +7,12 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.exactprosystems.jf.tool.git;
 
+import com.exactprosystems.jf.tool.Common;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
+import javafx.stage.Stage;
 
 import java.util.Arrays;
 import java.util.function.BiConsumer;
@@ -27,6 +29,7 @@ public class CredentialDialog
 	public void display(String username, String password)
 	{
 		Dialog dialog = new Dialog();
+		Common.addIcons(((Stage) dialog.getDialogPane().getScene().getWindow()));
 		dialog.setResizable(true);
 
 		GridPane gridPane = new GridPane();

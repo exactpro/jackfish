@@ -20,6 +20,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 
+import javafx.stage.Stage;
 import org.apache.log4j.Logger;
 
 import java.net.URL;
@@ -84,6 +85,7 @@ public class TestingConnectionFxController implements Initializable, ContainingP
 	public void display()
 	{
 		Dialog dialog = new Alert(Alert.AlertType.INFORMATION);
+		Common.addIcons(((Stage) dialog.getDialogPane().getScene().getWindow()));
 		dialog.getDialogPane().setContent(this.parent);
 		dialog.setHeaderText("Test connection for " + this.name);
 		dialog.getDialogPane().getStylesheets().addAll(Common.currentThemesPaths());

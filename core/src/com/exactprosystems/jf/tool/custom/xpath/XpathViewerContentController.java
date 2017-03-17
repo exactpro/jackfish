@@ -485,6 +485,7 @@ public class XpathViewerContentController implements Initializable, ContainingPa
 	private Alert createAlert(String title, List<String> themePaths)
 	{
 		Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+		Common.addIcons(((Stage) alert.getDialogPane().getScene().getWindow()));
 		alert.getDialogPane().getStylesheets().addAll(themePaths);
 		alert.setTitle(title);
 		alert.setResizable(true);

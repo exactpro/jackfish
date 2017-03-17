@@ -40,6 +40,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
+import javafx.stage.Stage;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -344,6 +345,7 @@ public class LayoutWizardController implements Initializable, ContainingParent, 
 	private void initDialog()
 	{
 		this.dialog = new Alert(Alert.AlertType.INFORMATION);
+		Common.addIcons(((Stage) dialog.getDialogPane().getScene().getWindow()));
 		this.dialog.getDialogPane().getStylesheets().addAll(Common.currentThemesPaths());
 		this.dialog.getDialogPane().setPrefHeight(1000);
 		this.dialog.getDialogPane().setPrefWidth(1000);

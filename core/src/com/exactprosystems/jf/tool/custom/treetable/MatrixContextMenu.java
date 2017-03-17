@@ -34,6 +34,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
+import javafx.stage.Stage;
 
 import java.util.Date;
 import java.util.Optional;
@@ -313,6 +314,7 @@ public class MatrixContextMenu extends ContextMenu
 					engine.loadContent(str);
 
 					Dialog<?> dialog = new Alert(Alert.AlertType.INFORMATION);
+					Common.addIcons(((Stage) dialog.getDialogPane().getScene().getWindow()));
 					dialog.getDialogPane().setContent(browser);
 					dialog.getDialogPane().setPrefWidth(1024);
 					dialog.getDialogPane().setPrefHeight(768);

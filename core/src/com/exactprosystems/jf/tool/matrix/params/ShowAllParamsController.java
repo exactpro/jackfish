@@ -23,6 +23,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTreeCell;
+import javafx.stage.Stage;
 import javafx.util.Pair;
 
 import java.net.URL;
@@ -134,6 +135,7 @@ public class ShowAllParamsController implements Initializable, ContainingParent
 	public ArrayList<Pair<ReadableValue, TypeMandatory>> show()
 	{
 		this.dialog = new Alert(Alert.AlertType.CONFIRMATION);
+		Common.addIcons(((Stage) dialog.getDialogPane().getScene().getWindow()));
 		this.dialog.setHeaderText(title);
 		this.dialog.setResizable(true);
 		this.dialog.getDialogPane().setContent(this.parent);

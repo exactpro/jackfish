@@ -47,6 +47,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
@@ -261,6 +262,7 @@ public class DialogWizardController implements Initializable, ContainingParent
 	AbstractControl editElement(AbstractControl abstractControl, List<String> values)
 	{
 		Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+		Common.addIcons(((Stage) dialog.getDialogPane().getScene().getWindow()));
 		alert.getDialogPane().getStylesheets().addAll(Common.currentThemesPaths());
 		alert.getDialogPane().setHeader(new Label());
 		alert.setTitle("Change element");
@@ -442,6 +444,7 @@ public class DialogWizardController implements Initializable, ContainingParent
 			return;
 		}
 		Dialog<String> dialog = new Dialog<>();
+		Common.addIcons(((Stage) dialog.getDialogPane().getScene().getWindow()));
 		dialog.setWidth(400.0);
 
 		BorderPane borderPane = new BorderPane();
@@ -535,6 +538,7 @@ public class DialogWizardController implements Initializable, ContainingParent
 	private void initDialog()
 	{
 		this.dialog = new Alert(Alert.AlertType.CONFIRMATION);
+		Common.addIcons(((Stage) this.dialog.getDialogPane().getScene().getWindow()));
 		this.dialog.setResult(new ButtonType("", ButtonBar.ButtonData.CANCEL_CLOSE));
 		this.dialog.setResizable(true);
 		this.dialog.getDialogPane().getStylesheets().addAll(Common.currentThemesPaths());

@@ -17,6 +17,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.apache.log4j.Logger;
 
@@ -181,6 +182,7 @@ public class SettingsPanelController implements Initializable, ContainingParent
 	public void display(String title)
 	{
 		this.dialog = new Dialog<>();
+		Common.addIcons(((Stage) dialog.getDialogPane().getScene().getWindow()));
 		ButtonType save = new ButtonType("Save", ButtonBar.ButtonData.OK_DONE);
 		this.dialog.getDialogPane().getButtonTypes().addAll(save, ButtonType.CANCEL);
 		ButtonBar.setButtonData(this.dialog.getDialogPane().lookupButton(save), ButtonBar.ButtonData.OTHER);
