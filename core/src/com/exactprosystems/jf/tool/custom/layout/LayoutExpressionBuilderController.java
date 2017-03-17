@@ -392,6 +392,7 @@ public class LayoutExpressionBuilderController implements Initializable, Contain
 	private Alert createAlert(String title)
 	{
 		Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+		Common.addIcons(((Stage) alert.getDialogPane().getScene().getWindow()));
 		Button okButton = (Button) alert.getDialogPane().lookupButton(ButtonType.OK);
 		okButton.setDefaultButton(false);
 

@@ -446,6 +446,11 @@ public abstract class Common
 		}
 	}
 
+	public static void addIcons(Stage stage)
+	{
+		stage.getIcons().addAll(new Image(CssVariables.Icons.MAIN_ICON));
+	}
+
 	public static String createLiteral(Object value, AbstractEvaluator evaluator)
 	{
 		if (value instanceof String)

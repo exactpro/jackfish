@@ -28,6 +28,7 @@ import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Modality;
+import javafx.stage.Stage;
 import javafx.stage.Window;
 
 import java.net.URL;
@@ -82,6 +83,7 @@ public class WatcherFxController implements Initializable, ContainingParent
 	public void setParent(Parent parent)
 	{
 		dialog = new Alert(Alert.AlertType.INFORMATION);
+		Common.addIcons(((Stage) this.dialog.getDialogPane().getScene().getWindow()));
 		dialog.getDialogPane().setContent(parent);
 		dialog.initModality(Modality.NONE);
 		dialog.setResizable(true);

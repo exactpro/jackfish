@@ -31,6 +31,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Font;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
+import javafx.stage.Stage;
 
 import java.net.URL;
 import java.util.Optional;
@@ -86,6 +87,7 @@ public class HelperControllerFx implements Initializable, ContainingParent
 	public void setParent(Parent parent)
 	{
 		this.dialog = new Alert(Alert.AlertType.CONFIRMATION);
+		Common.addIcons(((Stage) this.dialog.getDialogPane().getScene().getWindow()));
 		DialogPane dialogPane = this.dialog.getDialogPane();
 		dialogPane.setPrefHeight(800);
 		dialogPane.setPrefWidth(1000);
@@ -332,6 +334,7 @@ public class HelperControllerFx implements Initializable, ContainingParent
 		public String showAndGet()
 		{
 			Dialog<ButtonType> dialog = new Alert(Alert.AlertType.CONFIRMATION);
+			Common.addIcons(((Stage) dialog.getDialogPane().getScene().getWindow()));
 			dialog.getDialogPane().setContent(tableView);
 			dialog.getDialogPane().setPrefWidth(500);
 			dialog.getDialogPane().setPrefHeight(500);

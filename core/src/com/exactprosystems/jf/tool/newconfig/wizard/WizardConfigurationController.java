@@ -18,6 +18,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
+import javafx.stage.Stage;
 
 import java.io.File;
 import java.net.URL;
@@ -110,6 +111,7 @@ public class WizardConfigurationController implements Initializable, ContainingP
 	public Boolean display()
 	{
 		Dialog<Boolean> dialog = new Dialog<>();
+		Common.addIcons(((Stage) dialog.getDialogPane().getScene().getWindow()));
 		dialog.setResizable(true);
 		dialog.getDialogPane().getStylesheets().addAll(Common.currentThemesPaths());
 		dialog.setTitle("New Project");
