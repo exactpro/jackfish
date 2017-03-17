@@ -122,7 +122,8 @@ public class TexReportBuilder extends ReportBuilder
                 .replace("{{$", "").replace("$}}", "")  //italic
                 .replace("{{#", "").replace("#}}", "")  //code
                 .replace("{{!", "").replace("!}}", "")  //header
-                .replace("{{@", "").replace("@}}", ""); //link
+                .replace("{{@", "").replace("@}}", "")  //link
+                .replace("#", "\\#");
                 //.replace("${", "\\textdollar {");
 	}
 
@@ -245,16 +246,20 @@ public class TexReportBuilder extends ReportBuilder
 	{
 		if (value != null)
         {
-            for (int i = 0; i < value.length ; i++)
+            if (value.length == 2){
+                writer.fwrite("%s & \\multicolumn{2}{p{4cm}|}{\\raggedright %s}\\\\", replaceMarker(ReportHelper.objToString(value[0], false)), replaceMarker(ReportHelper.objToString(value[1], false)));
+            }
+
+            /*for (int i = 0; i < value.length ; i++)
         	{
         		if (i != value.length-1)
         		{
-					writer.fwrite("%s & ", ReportHelper.objToString(value[i], false));
+					writer.fwrite("%s & ", replaceMarker(ReportHelper.objToString(value[i], false)));
 				} else
 				{
-					writer.fwrite("%s \\\\ ", ReportHelper.objToString(value[i], false));
+					writer.fwrite("%s \\\\ ", replaceMarker(ReportHelper.objToString(value[i], false)));
 				}
-			}
+			}*/
             writer.fwrite("\n");
         }
 	}
