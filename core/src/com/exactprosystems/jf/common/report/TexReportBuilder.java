@@ -224,7 +224,7 @@ public class TexReportBuilder extends ReportBuilder
 	@Override
 	protected void tableHeader(ReportWriter writer, ReportTable table, String tableTitle, String[] columns, int[] percents) throws IOException
 	{
-		writer.fwrite(" \n \\begin{table} \n");
+		writer.fwrite(" \n \\begin{table}[h] \n");
 		if (!Str.IsNullOrEmpty(tableTitle))
 		{
 			writer.fwrite("\\caption{%s}\n", this.postProcess(tableTitle));
@@ -247,7 +247,9 @@ public class TexReportBuilder extends ReportBuilder
 		if (value != null)
         {
             if (value.length == 2){
-                writer.fwrite("%s & \\multicolumn{2}{p{4cm}|}{\\raggedright %s}\\\\", replaceMarker(ReportHelper.objToString(value[0], false)), replaceMarker(ReportHelper.objToString(value[1], false)));
+                writer.fwrite("\\multicolumn{}{|p{0.4\\linewidth}|}{\\raggedright %s} & \\multicolumn{}{p{0.6\\linewidth}|}{\\raggedright %s}\\\\",
+                        replaceMarker(ReportHelper.objToString(value[0], false)),
+                        replaceMarker(ReportHelper.objToString(value[1], false)));
             }
 
             /*for (int i = 0; i < value.length ; i++)
