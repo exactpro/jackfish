@@ -11,6 +11,7 @@ package com.exactprosystems.jf.tool.helpers;
 import com.exactprosystems.jf.actions.ReadableValue;
 import com.exactprosystems.jf.api.common.ApiVersionInfo;
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.common.MatrixRunner;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.HelpBuilder;
 import com.exactprosystems.jf.common.report.HelpFactory;
@@ -19,6 +20,7 @@ import com.exactprosystems.jf.documents.Document;
 import com.exactprosystems.jf.documents.DocumentFactory;
 import com.exactprosystems.jf.documents.DocumentInfo;
 import com.exactprosystems.jf.documents.config.Configuration;
+import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.Matrix;
 import com.exactprosystems.jf.functions.HelpKind;
 import com.exactprosystems.jf.functions.Notifier;
@@ -619,7 +621,9 @@ public abstract class DialogsHelper
 					String name = reportBrowser.getMatrix();
 					if (name != null && !name.isEmpty())
 					{
-						Matrix matrix = factory.createMatrix(matrName[0], null); // TODO check if context help still works
+                        Context context = factory.createContext();
+                        MatrixRunner runner = context.createRunner(matrName[0], null, new Date(), null);
+						Matrix matrix = factory.createMatrix(matrName[0], runner);
 						matrix.load(new StringReader(name));
 						matrix.display();
 					}

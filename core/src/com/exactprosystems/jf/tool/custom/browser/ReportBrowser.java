@@ -47,9 +47,16 @@ public class ReportBrowser extends BorderPane
 	{
 		try
 		{
+		    String copyName = "Copy";
 			CustomBrowserTab selectedItem = (CustomBrowserTab) this.tabPane.getSelectionModel().getSelectedItem();
 			Document document = selectedItem.engine.getDocument();
-			return document.getElementsByTagName("pre").item(0).getTextContent();
+			String content = document.getElementsByTagName("pre").item(0).getTextContent();
+			if (content.startsWith(copyName))
+			{
+			    content = content.substring(copyName.length());
+			}
+			
+			return content;
 		}
 		catch (Exception e)
 		{
