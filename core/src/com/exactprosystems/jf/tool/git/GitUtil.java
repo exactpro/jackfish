@@ -448,7 +448,7 @@ public class GitUtil
 	public static void mergeTheirs(CredentialBean credentialBean, String filePath) throws Exception
 	{
 		List<String> theirs = getTheirs(credentialBean, filePath);
-		Common.writeToFile(new File(filePath), theirs);
+		Common.writeToFile(new File(GitUtil.checkFile(credentialBean, filePath)), theirs);
 		try (Git git = git(credentialBean))
 		{
 			git.add().addFilepattern(filePath).call();
@@ -491,7 +491,7 @@ public class GitUtil
 	public static void mergeYours(CredentialBean credentialBean, String filePath) throws Exception
 	{
 		List<String> yours = getYours(credentialBean, filePath);
-		Common.writeToFile(new File(filePath), yours);
+		Common.writeToFile(new File(GitUtil.checkFile(credentialBean, filePath)), yours);
 		try (Git git = git(credentialBean))
 		{
 			git.add().addFilepattern(filePath).call();
