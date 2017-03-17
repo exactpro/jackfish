@@ -2,16 +2,28 @@ package com.exactprosystems.jf.app;
 
 public enum AttributeKind
 {
-	ID,
-	UID,
-	CLASS,
-	TEXT,
-	NAME,
+	UID(true),
+	CLASS(true),
+	TEXT(true),
+	NAME(true),
 
-	TYPE_NAME,
-	ENABLED,
-	VISIBLE,
-	ITEMS;
+	ID(false),
+	TYPE_NAME(false),
+	ENABLED(false),
+	VISIBLE(false),
+	ITEMS(false);
+
+	AttributeKind(boolean addToAttribute)
+	{
+		this.addToAttribute = addToAttribute;
+	}
+
+	private boolean addToAttribute;
+
+	public boolean isAddToAttributes()
+	{
+		return addToAttribute;
+	}
 
 	public static boolean isSupported(String name)
 	{
