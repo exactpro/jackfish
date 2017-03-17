@@ -28,7 +28,8 @@ import com.exactprosystems.jf.documents.matrix.parser.items.TypeMandatory;
 		examples = "The following example will output the following row to the console: “Comment for a string:  Name = Value”\n"
 				+ "{{##Action;#Str;#Name\n"
 				+ "Print;'Comment for a string: ';'Value'#}}",
-		seeAlso = "{{@Show@}}"
+		seeAlso = "{{@Show@}}",
+		seeAlsoClass = {Show.class}
 	)
 public class Print extends AbstractAction 
 {

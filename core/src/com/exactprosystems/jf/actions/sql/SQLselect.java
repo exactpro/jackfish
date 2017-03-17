@@ -62,7 +62,8 @@ import com.exactprosystems.jf.sql.SqlConnection;
 				"SQLSLCT1;SQLselect;'select name, age from test.users where name = ? and age = ?';SQLCNT1.Out;name;age\n" +
 				"\n" +
 				"#Action;#Table;#Title\n" +
-				"TableReport;SQLSLCT1.Out;'Report title'#}}"
+				"TableReport;SQLSLCT1.Out;'Report title'#}}",
+		seeAlsoClass = {SQLdisconnect.class, SQLexecute.class, SQLinsert.class, SQLtableUpload.class, SQLconnect.class}
 	)
 public class SQLselect extends AbstractAction
 {

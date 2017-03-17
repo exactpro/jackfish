@@ -52,7 +52,8 @@ import com.exactprosystems.jf.functions.Table;
 				+ "TableConsiderColumnsAs;'SalaryPerYear';TS.Out\n"
 				+ "\n"
 				+ "#Assert;#Message\n"
-				+ "TS.Out.size() == 2 && TS.Out.get(0).get('SalaryPerYear') == '144000'#}}"
+				+ "TS.Out.size() == 2 && TS.Out.get(0).get('SalaryPerYear') == '144000'#}}",
+		seeAlsoClass = {TableReplace.class, TableAddColumns.class, TableColumnRename.class, TableAddValue.class}
 
 	)
 public class TableConsiderColumnsAs extends AbstractAction 

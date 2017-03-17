@@ -200,23 +200,6 @@ class RTFCreator {
                 }
                 actions.add(p());
 
-                if (!classAnnotations.seeAlso().equals(""))
-                {
-                    List<RtfText> seeAlsoText = new ArrayList<>();
-                    String[] seeAlso = classAnnotations.seeAlso().split(",");
-                    for (int i = 0; i < seeAlso.length; i++)
-                    {
-                        String q = replaceChars(seeAlso[i]);
-                        seeAlsoText.add(hyperlink(link + q, p(fontSize(fontSize, q +reverseTrait))));
-                        if (i != seeAlso.length -1){
-                            seeAlsoText.add(fontSize(fontSize, ", "));
-                        }
-                    }
-                    actions.add(p(italic(fontSize(fontSize, "See also:"))));
-                    actions.add(p(seeAlsoText.toArray()));
-                    actions.add(p());
-                }
-
                 if (classAnnotations.seeAlsoClass().length >0)
                 {
                     List<RtfText> seeAlsoText = new ArrayList<>();
@@ -275,23 +258,6 @@ class RTFCreator {
         items.add(p(bold(name), lineBreak()));
         items.add(p(findHyperlinks(classAnnotation.description()).toArray()));
         items.add(p());
-
-        /*if (!classAnnotation.seeAlso().equals(""))
-        {
-            List<RtfText> seeAlsoText = new ArrayList<>();
-            String[] seeAlso = classAnnotation.seeAlso().split(",");
-            for (int i = 0; i < seeAlso.length; i++)
-            {
-                String q = replaceChars(seeAlso[i]);
-                seeAlsoText.add(hyperlink(link + q, p(fontSize(fontSize, q +reverseTrait))));
-                if (i != seeAlso.length -1){
-                    seeAlsoText.add(fontSize(fontSize, ", "));
-                }
-            }
-            items.add(p(italic(fontSize(fontSize, "See also:"))));
-            items.add(p(seeAlsoText.toArray()));
-            items.add(p());
-        }*/
 
         if (classAnnotation.seeAlsoClass().length > 0)
         {

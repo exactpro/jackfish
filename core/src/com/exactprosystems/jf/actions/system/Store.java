@@ -27,7 +27,8 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 				+ "\n"
 				+ "{{##Action;#Value;#Name\n"
 				+ "Store;DateTime.current();'Current time'#}}",
-		seeAlso = "{{@Restore@}}"
+		seeAlso = "{{@Restore@}}",
+		seeAlsoClass = {Restore.class}
 )
 
 public class Store extends AbstractAction

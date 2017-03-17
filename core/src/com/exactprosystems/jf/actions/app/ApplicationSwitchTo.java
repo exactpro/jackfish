@@ -34,7 +34,8 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 				"#Assert;#Message\n" +
 				"Str.IsNullOrEmpty(AST.Out);'Title is null'#}}",
 		seeAlso					=
-				"{{@ApplicationStart@}}, {{@ApplicationConnectTo@}}"
+				"{{@ApplicationStart@}}, {{@ApplicationConnectTo@}}",
+		seeAlsoClass = {ApplicationStart.class, ApplicationConnectTo.class}
 	)
 public class ApplicationSwitchTo extends AbstractAction
 {

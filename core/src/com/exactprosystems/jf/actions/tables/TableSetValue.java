@@ -27,6 +27,7 @@ import com.exactprosystems.jf.functions.Table;
 		additionalDescription 	= "Set values for all cells in the line given. Each parameter name sets the column"
 				+ " title, where the value is set. The value if a corresponding parameter sets the value of the column.",
 		seeAlso = "{{@TableReplace@}}, {{@TableAddColumns@}}, {{@TableConsiderColumnAs@}}, {{@TableColumnRename@}}",
+		seeAlsoClass = {TableReplace.class, TableAddColumns.class, TableConsiderColumnsAs.class, TableColumnRename.class},
 		examples = "{{`1. Create a table with columns Name and Age. Add values to the first line of the table.`}}"
 				+ "{{`2. Set the value for the columns Name and Age 'John' and '42' in the first line.`}}"
 				+ "{{`3. Verify that the new values were inserted correctly. `}}"

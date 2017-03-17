@@ -31,7 +31,8 @@ import com.exactprosystems.jf.functions.Text;
                         + "#Action;#Line;#Text\n"
                         + "TextAddLine;'New line';TXT1.Out#}}\n",
         seeAlso = "{{@TextReport@}}, {{@TextPerform@}}, {{@TextLoadFromFile@}}, {{@TextCreate@}}, {{@TextSaveToFile@}}," +
-                " {{@TextSetValue@}}"
+                " {{@TextSetValue@}}",
+        seeAlsoClass = {TextReport.class, TextPerform.class, TextLoadFromFile.class, TextCreate.class, TextSaveToFile.class, TextSetValue.class}
 )
 public class TextAddLine extends AbstractAction {
     public final static String textName = "Text";

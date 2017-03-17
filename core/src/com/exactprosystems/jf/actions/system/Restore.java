@@ -30,7 +30,8 @@ import java.util.Map.Entry;
 				+ "the local variable “create date”.\n"
 				+ "{{##Action;#AsVar;#Name\n"
 				+ "Restore;'create date';'Current time'#}}",
-		seeAlso = "{{@Store@}}"
+		seeAlso = "{{@Store@}}",
+		seeAlsoClass = {Store.class}
 )
 
 public class Restore extends AbstractAction

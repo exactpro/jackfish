@@ -24,7 +24,8 @@ import java.util.List;
 				"{{##Action;#Navigate;#Navigate;#AppConnection\n" +
 				"ApplicationNavigate;NavigateKind.BACK;NavigateKind.FORWARD;app#}}\n",
 		seeAlso				  =
-				"{{@ApplicationStart@}}, {{@ApplicationConnectTo@}}"
+				"{{@ApplicationStart@}}, {{@ApplicationConnectTo@}}",
+		seeAlsoClass = {ApplicationStart.class, ApplicationConnectTo.class}
 )
 public class ApplicationNavigate extends AbstractAction
 {

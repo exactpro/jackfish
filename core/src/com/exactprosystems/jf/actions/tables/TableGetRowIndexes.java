@@ -18,6 +18,7 @@ import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
+import com.exactprosystems.jf.documents.matrix.parser.items.RawTable;
 import com.exactprosystems.jf.documents.matrix.parser.items.TypeMandatory;
 import com.exactprosystems.jf.functions.Table;
 
@@ -32,7 +33,8 @@ import com.exactprosystems.jf.functions.Table;
 		outputDescription 		= "Outputs the index list mathching to condtions.",
 		outputType				= List.class,
 		seeAlso 				= "{{@RawTable@}}, {{@TableLoadFromDir@}}, {{@TableLoadFromFile@}}, {{@TableCreate@}}, {{@TableSelect@}},  ",
-		examples = "" // TODO make the examples, pls
+		examples = "", // TODO make the examples, pls
+		seeAlsoClass = {RawTable.class, TableLoadFromFile.class, TableLoadFromDir.class, TableCreate.class, TableSelect.class}
 	)
 public class TableGetRowIndexes extends AbstractAction 
 {

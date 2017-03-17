@@ -38,7 +38,8 @@ import com.exactprosystems.jf.functions.Table;
 				+ "TableAddColumns;0;TC;{'Gender','Salary'}\n"
 				+ "\n"
 				+ "#Assert;#Message\n"
-				+ "TC.getHeader(0) == 'Gender' && TC.getHeader(1) == 'Salary' && TC.getHeader(2) == 'Name' && TC.getHeader(3) == 'Age';'Table is not correct'#}}"
+				+ "TC.getHeader(0) == 'Gender' && TC.getHeader(1) == 'Salary' && TC.getHeader(2) == 'Name' && TC.getHeader(3) == 'Age';'Table is not correct'#}}",
+		seeAlsoClass = {TableReplace.class, TableColumnRename.class, TableAddValue.class, TableConsiderColumnsAs.class}
 	)
 public class TableAddColumns extends AbstractAction 
 {

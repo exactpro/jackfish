@@ -30,7 +30,8 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
                 "MXRN1;MatrixRun;'matrices/Matrix.jf'\n" +
                 "\n" +
                 "#Id;#Action;#Time;#Matrix\n" +
-                "MXWT1;MatrixWait;5000;MXRN1.Out#}}"
+                "MXWT1;MatrixWait;5000;MXRN1.Out#}}",
+        seeAlsoClass = {MatrixRunFromText.class, MatrixRun.class}
 )
 public class MatrixWait extends AbstractAction {
     public final static String matrixName = "Matrix";

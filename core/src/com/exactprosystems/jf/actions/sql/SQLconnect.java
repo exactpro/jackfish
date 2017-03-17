@@ -43,7 +43,8 @@ import java.util.List;
 				"\n" +
 				"#Assert;#Message\n" +
 				"!(SQL.Out.isClosed());'connection is not established'#}}",
-		seeAlso = "{{@ SQLexecute @}}, {{@ SQLinsert @}}, {{@ SQLselect @}}, {{@ SQLtableUpload @}}, {{@ SQLdisconnect @}}."
+		seeAlso = "{{@ SQLexecute @}}, {{@ SQLinsert @}}, {{@ SQLselect @}}, {{@ SQLtableUpload @}}, {{@ SQLdisconnect @}}.",
+		seeAlsoClass = {SQLexecute.class, SQLinsert.class, SQLselect.class, SQLtableUpload.class, SQLdisconnect.class}
 	)
 public class SQLconnect  extends AbstractAction
 {

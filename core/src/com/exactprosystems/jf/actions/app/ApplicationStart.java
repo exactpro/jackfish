@@ -13,6 +13,7 @@ import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
 import com.exactprosystems.jf.actions.ReadableValue;
+import com.exactprosystems.jf.actions.gui.*;
 import com.exactprosystems.jf.api.app.AppConnection;
 import com.exactprosystems.jf.api.app.IApplicationPool;
 import com.exactprosystems.jf.api.common.ParametersKind;
@@ -70,7 +71,10 @@ examples				=
 + "the whole matrix rather than just within the {{$TestCase$}} containing the action. "
 + "{{##Id;#Global;#Action;#AppId;#Browser;#URL\n"
 + "APPSTR1;1;ApplicationStart;'WEB';Browser;Env1 #}} "
-+ "It is a standart using this action with web.jar plugin."
++ "It is a standart using this action with web.jar plugin.",
+seeAlsoClass = {ApplicationStop.class, ApplicationConnectTo.class, ApplicationGetProperties.class, ApplicationNewInstance.class,
+ApplicationRefresh.class, ApplicationResize.class, ApplicationSwitchTo.class, DialogAlert.class, DialogCheckLayout.class,
+		DialogClose.class, DialogFill.class, DialogSwitchToWindow.class}
 )
 public class ApplicationStart extends AbstractAction 
 {

@@ -33,7 +33,8 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 				"{{##Action;#Maximize;#AppConnection\n" +
 				"ApplicationResize;true;app#}}\n",
 		seeAlso					=
-				"{{@ApplicationStart@}}, {{@ApplicationConnectTo@}}"
+				"{{@ApplicationStart@}}, {{@ApplicationConnectTo@}}",
+		seeAlsoClass = {ApplicationStart.class, ApplicationConnectTo.class}
 	)
 public class ApplicationResize extends AbstractAction
 {

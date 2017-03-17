@@ -58,7 +58,8 @@ import com.exactprosystems.jf.sql.SqlConnection;
 				"SQLINS1;SQLinsert;'insert into users (name, age) values (?, ?)';SQLCNT1.Out;name;age\n" +
 				"\n" +
 				"#Assert;#Message\n" +
-				"SQLINS1.Out.size() > 0;#}}"
+				"SQLINS1.Out.size() > 0;#}}",
+		seeAlsoClass = {SQLdisconnect.class, SQLexecute.class, SQLselect.class, SQLtableUpload.class, SQLconnect.class}
 	)
 public class SQLinsert extends AbstractAction
 {
