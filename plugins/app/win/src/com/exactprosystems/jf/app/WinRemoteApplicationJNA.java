@@ -612,7 +612,7 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 		{
 			for (AttributeKind kind : AttributeKind.values())
 			{
-				if (kind == AttributeKind.TYPE_NAME || kind == AttributeKind.ITEMS || kind == AttributeKind.ID)
+				if (!kind.isAddToAttributes())
 				{
 					continue;
 				}

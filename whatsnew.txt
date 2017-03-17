@@ -1,3 +1,6 @@
+17.03.2017 4.4.0.2115
+RM40969 Attribute "enabled" in path interferes with locating elements : fixed
+--------------------------------------------------------------------------------
 16.03.2017 4.4.0.2114
 RM40962 Do.toggle() doesn't work for CheckBox element (win plugin) : fixed
 --------------------------------------------------------------------------------
