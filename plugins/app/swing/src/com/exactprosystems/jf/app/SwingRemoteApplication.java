@@ -296,17 +296,8 @@ public class SwingRemoteApplication extends RemoteApplication
 		try
 		{
 			List<String> res = new ArrayList<String>();
-			ComponentFixture<Component> ownerFixture = null;
-			if (owner != null)
-			{
-				ownerFixture = this.operationExecutor.find(null, owner);
-			}
-			else
-			{
-				ownerFixture = new AnyComponentlFixture(currentRobot, this.operationExecutor.currentRoot());
-			}
-
-			List<ComponentFixture<Component>> components = this.operationExecutor.findAll(element.getControlKind(), ownerFixture, element);
+			List<ComponentFixture<Component>> components = this.operationExecutor.findAll(owner, element);
+			
 			for (ComponentFixture<Component> component : components)
 			{
 			    StringBuilder sb = new StringBuilder("" + component.target);
@@ -501,7 +492,7 @@ public class SwingRemoteApplication extends RemoteApplication
 			logger.debug("operations count : " + operations.size());
 			logger.debug("element : " + element.toString());
 			
-			Component root = this.operationExecutor.currentRoot();
+			Component root = this.operationExecutor.fromOwner(null);
 			ComponentFixture<Component> rootFixture = this.operationExecutor.getFixture(root);
 			
 			List<ComponentFixture<Component>> dialogs = this.operationExecutor.findAll(ControlKind.Any, rootFixture, element);
@@ -578,17 +569,7 @@ public class SwingRemoteApplication extends RemoteApplication
 	{
 		try
 		{
-			Component component = null;
-			logger.debug("owner : " + owner);
-			if (owner == null)
-			{
-				component = this.operationExecutor.currentRoot();
-			}
-			else
-			{
-				component = this.operationExecutor.find(null, owner).target;
-			}
-
+			Component component = this.operationExecutor.fromOwner(owner);
 			return MatcherSwing.createDocument(this.info, component, false, true);
 		}
 		catch (RemoteException e)
@@ -601,71 +582,5 @@ public class SwingRemoteApplication extends RemoteApplication
 			logger.error(e.getMessage(), e);
 			throw e;
 		}
-	}
-
-	static Component findFirstShowing(Component root, Logger logger)
-	{
-		logger.debug("root : " + root);
-		logger.debug("root ins Container ? " + (root instanceof Container));
-		logger.debug("root hs : " + root.hashCode());
-		if (root instanceof Container)
-		{
-			Component[] components = ((Container) root).getComponents();
-			logger.debug("find " + components.length + " components");
-			for (Component component : components)
-			{
-				logger.debug("component is showing ? " + component.isShowing());
-				logger.debug("component hs : " + component.hashCode());
-				if (component.isShowing())
-				{
-					return component;
-				}
-			}
-			logger.debug("top level components not showing");
-			for (Component component : components)
-			{
-				Component firstShowing = findFirstShowing(component, logger);
-				if (firstShowing != null)
-				{
-					return firstShowing;
-				}
-			}
-		}
-		return null;
-	}
-
-
-	private static Map<ControlKind, Class<? extends Component>> classToControlKind = new LinkedHashMap<>();
-
-	static
-	{
-		// order is important. see function determitateControlKind
-		classToControlKind.put(ControlKind.Button, JButton.class);
-		classToControlKind.put(ControlKind.CheckBox, JCheckBox.class);
-		classToControlKind.put(ControlKind.ComboBox, JComboBox.class);
-		classToControlKind.put(ControlKind.Dialog, JDialog.class);
-		classToControlKind.put(ControlKind.Frame, JFrame.class);
-		classToControlKind.put(ControlKind.Label, JLabel.class);
-		classToControlKind.put(ControlKind.ListView, JList.class);
-		classToControlKind.put(ControlKind.Menu, JMenu.class);
-		classToControlKind.put(ControlKind.MenuItem, JMenuItem.class);
-		classToControlKind.put(ControlKind.Panel, JPanel.class);
-		classToControlKind.put(ControlKind.ProgressBar, JProgressBar.class);
-		classToControlKind.put(ControlKind.RadioButton, JRadioButton.class);
-		classToControlKind.put(ControlKind.ScrollBar, JScrollBar.class);
-		classToControlKind.put(ControlKind.Slider, JSlider.class);
-		classToControlKind.put(ControlKind.Splitter, JSplitPane.class);
-		classToControlKind.put(ControlKind.Table, JTable.class);
-		classToControlKind.put(ControlKind.TabPanel, JTabbedPane.class);
-		classToControlKind.put(ControlKind.TextBox, JTextField.class);
-		classToControlKind.put(ControlKind.ToggleButton, JToggleButton.class);
-		classToControlKind.put(ControlKind.Tooltip, JToolTip.class);
-		classToControlKind.put(ControlKind.Tree, JTree.class);
-
-		classToControlKind.put(ControlKind.Any, Component.class);
-		classToControlKind.put(ControlKind.Wait, Component.class);
-		classToControlKind.put(ControlKind.Image, Component.class);
-		classToControlKind.put(ControlKind.TreeItem, Component.class);
-		classToControlKind.put(ControlKind.Row, Component.class);
 	}
 }

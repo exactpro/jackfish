@@ -46,9 +46,9 @@ public class TexReportBuilder extends ReportBuilder
         try
         {
             DocumentFactory docFactory = new ConsoleDocumentFactory(VerboseLevel.All);
-            Configuration configuration = docFactory.createConfig("/home/alexander.kruglov/IdeaProjects/jackfish/core/config.xml");
+            Configuration configuration = docFactory.createConfig("config.xml");
             docFactory.setConfiguration(configuration);
-            try (BufferedReader reader = new BufferedReader(new FileReader("/home/alexander.kruglov/IdeaProjects/jackfish/core/config.xml")))
+            try (BufferedReader reader = new BufferedReader(new FileReader("config.xml")))
             {
                 configuration.load(reader);
             }
@@ -61,7 +61,7 @@ public class TexReportBuilder extends ReportBuilder
             Matrix matrix = context.getFactory().createMatrix("New", runner);
 
 
-            TexReportBuilder report = (TexReportBuilder) new TexReportFactory().createReportBuilder(".", "new.txt",
+            TexReportBuilder report = (TexReportBuilder) new TexReportFactory().createReportBuilder(".", "new.tex",
                     new Date());
             MatrixItem help = new HelpItem(For.class);
             help.init(matrix);

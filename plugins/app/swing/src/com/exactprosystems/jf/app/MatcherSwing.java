@@ -29,10 +29,14 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpression;
+import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
 import java.awt.*;
 import java.rmi.RemoteException;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class MatcherSwing<T extends Component> extends GenericTypeMatcher<T>
 {
@@ -60,8 +64,17 @@ public class MatcherSwing<T extends Component> extends GenericTypeMatcher<T>
                 Document document = createDocument(this.info, owner, true, false);
                 XPathFactory factory = XPathFactory.newInstance();
                 XPath xPath = factory.newXPath();
+                Node root = document;
+                try
+                {
+                    XPathExpression compile = xPath.compile("/*");
+                    root = (Node) compile.evaluate(document, XPathConstants.NODE);
+                }
+                catch (XPathExpressionException e)
+                {
+                }
 
-                this.nodelist = (NodeList) xPath.compile(xpath).evaluate(document, XPathConstants.NODESET);
+                this.nodelist = (NodeList) xPath.compile(xpath).evaluate(root, XPathConstants.NODESET);
                 logger.debug("Found by xpath : " + nodelist.getLength());
             }
             catch (Exception pe)

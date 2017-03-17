@@ -66,6 +66,29 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 		this.logger = logger;
 	}
 
+	public Component fromOwner(Locator owner)  throws RemoteException
+	{
+        try
+        {
+            Component component = null;
+            logger.debug("owner : " + owner);
+            if (owner == null)
+            {
+                component = currentRoot();
+            }
+            else
+            {
+                    component = find(null, owner).target;
+            }
+            return component;
+        }
+        catch (Exception e)
+        {
+            throw new RemoteException(e.getMessage(), e);
+        }
+	}
+	
+	
 	public Component currentFrame()
 	{
 		Collection<Component> list = this.currentRobot.finder().findAll(new ComponentMatcher()
@@ -152,7 +175,7 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 		try
 		{
 			this.currentRobot.waitForIdle();
-			Container owner = (Container) currentRoot();
+			Container owner = (Container)fromOwner(null);
 			if (window != null && window.target instanceof Container)
 			{
 				owner = (Container) window.target;
@@ -185,16 +208,7 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 		try
 		{
 			this.currentRobot.waitForIdle();
-			Container container = (Container) currentRoot();
-			if (owner != null)
-			{
-				ComponentFixture<Component> found = find(null, owner);
-				if (found != null && found.target instanceof Container)
-				{
-					container = (Container) found.target;
-				}
-			}
-
+			Container container = (Container)fromOwner(owner);  
 			List<ComponentFixture<Component>> res = new ArrayList<>();
 			MatcherSwing<Component> matcher = new MatcherSwing<>(this.info, Component.class, container, element.getControlKind(), element);
 			Collection<Component> components = this.currentRobot.finder().findAll(container, matcher);
@@ -1364,14 +1378,9 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 	private <T extends Component> ComponentFixture<T> getComponent(Locator owner, Locator locator) throws RemoteException
 	{
 		ComponentFixture<T> ret = null;
-		ComponentFixture<?> window = null;
-		Component own = null;
-
-		if (owner != null)
-		{
-			window = getComponent(null, owner);
-			own = window.target;
-		}
+        Component own = fromOwner(owner);
+		ComponentFixture<?> window = getFixture(own);
+		
 		Component component = null;
 		ControlKind controlKind = locator.getControlKind();
 		if (controlKind != null)
