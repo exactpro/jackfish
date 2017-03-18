@@ -230,15 +230,6 @@ public final class Call extends MatrixItem
 			report.outLine(this, null, "Sub case '" + this.name + "' is not found.", null);
 			throw new MatrixException(super.getNumber(), this, "Sub case '" + this.name + "' is not found.");
 		}
-		catch (ParametersException e)
-		{
-			listener.error(getMatrix(), getNumber(), this, e.getMessage());
-			for (String error : e.getParameterErrors()) 
-			{
-				listener.error(getMatrix(), getNumber(), this, error);
-			}
-			return new ReturnAndResult(start, Result.Failed, e.getMessage(), ErrorKind.EXCEPTION, this);
-		}
 		catch (Exception e)
 		{
 			logger.error(e.getMessage(), e);
