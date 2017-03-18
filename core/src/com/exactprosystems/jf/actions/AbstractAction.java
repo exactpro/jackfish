@@ -355,56 +355,6 @@ public abstract class AbstractAction implements Cloneable
     //==============================================================================================
     // Private members
     //==============================================================================================
-//    public void documentAction(ReportBuilder report)
-//    {
-//        ReportTable table;
-//
-//        Class<?> type = getClass();
-//        ActionAttribute attr = type.getAnnotation(ActionAttribute.class);
-//
-//        table = report.addTable("", null, true, 100,
-//                new int[] { 30, 70 }, new String[] {getClass().getSimpleName(), ""});
-//
-//        table.addValues("Description", attr.generalDescription());
-//        if (attr.additionFieldsAllowed())
-//        {
-//            table.addValues("Additional fields", "Yes");
-//            table.addValues("Additiona fields description", attr.additionalDescription());
-//        }
-//        else
-//        {
-//        	table.addValues("Additional fields", "No");
-//        }
-//        table.addValues("See also", attr.seeAlso());
-//        table.addValues("Examples", HTMLhelper.htmlescape(attr.examples()));
-//
-//
-//        // Input
-//        Map<String, FieldAndAttributes> fieldsAttr = getFieldsAttributes();
-//
-//        table = report.addTable("Input:", null, true, 4,
-//                new int[] {0, 0, 60, 0, 0}, new String[] {"Field name", "Field type", "Description", "Mandatory", "Default value"});
-//
-//        for (Entry<String, FieldAndAttributes> entry : fieldsAttr.entrySet())
-//        {
-//            String name = entry.getKey();
-//            Field field = entry.getValue().field;
-//            ActionFieldAttribute fieldAttr = entry.getValue().attribute;
-//
-//            table.addValues(name,
-//                    typeDescription(field.getType()),
-//                    fieldAttr.description(),
-//                    fieldAttr.mandatory() ? "Yes" : "No",
-//                    fieldAttr.mandatory() ? "" : "");
-//        }
-//
-//        // Output
-//        table = report.addTable("Output:", null, true, 100,
-//                new int[] {20, 40}, new String[] {"Output type", "Description"});
-//
-//        table.addValues(typeDescription(attr.outputType()),
-//                attr.outputDescription());
-//    }
 
     private void reportParameters(ReportBuilder report, Parameters parameters)
     {
@@ -424,10 +374,10 @@ public abstract class AbstractAction implements Cloneable
     {
         if (!assertBool.isExpressionNullOrEmpty() )
         {
-	        ReportTable assertTable = report.addTable("Asserts", null, false, 1,
-	                new int[] {20, 40, 40}, new String[] {"Statement", "Expression", "Value"});
+	        ReportTable assertTable = report.addTable("Assert", null, false, 1,
+	                new int[] {60, 40}, new String[] {"Expression", "Value"});
 	
-	        tableAssertRowIfNotNull(assertTable, "Assert", 			assertBool.getExpression(), 	assertBool.getValue());
+	        assertTable.addValues(assertBool.getExpression(), assertBool.getValue());
         }
 
         ReportTable resultTable = report.addTable("Results", null, false, 1,
@@ -444,14 +394,6 @@ public abstract class AbstractAction implements Cloneable
         if (obj != null)
         {
             table.addValues(title, obj);
-        }
-    }
-
-    private void tableAssertRowIfNotNull(ReportTable table, Object title, String expression, Object obj)
-    {
-        if (obj != null)
-        {
-            table.addValues(title, expression, obj);
         }
     }
 
@@ -647,7 +589,27 @@ public abstract class AbstractAction implements Cloneable
         @Override
     	public String toString()
     	{
-    		return getClass().getSimpleName() + " {Result=" + this.Result + " ErrorKind=" + this.Kind + " Reason=" + this.Reason + "}";
+            StringBuilder sb = new StringBuilder(getClass().getSimpleName());
+            sb.append("{ ");
+            if (this.Result != null)
+            {
+                sb.append("Result=").append(this.Result).append(" ");
+            }
+            if (this.Out != null)
+            {
+                sb.append("Out=").append(this.Out).append(" ");
+            }
+            if (this.Kind != null)
+            {
+                sb.append("Kind=").append(this.Kind).append(" ");
+            }
+            if (this.Reason != null)
+            {
+                sb.append("Reason=").append(this.Reason).append(" ");
+            }
+            sb.append("}");
+            
+    		return sb.toString();
     	}
     	
 		public void clearResults()
