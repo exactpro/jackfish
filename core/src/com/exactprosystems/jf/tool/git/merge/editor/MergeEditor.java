@@ -72,34 +72,36 @@ public class MergeEditor
 	{
 		Iterator<Chunk> iterator = this.conflicts.iterator();
 		int i = 0;
-		Chunk lastTheirChunk = null;
+		int yourLastPos = 0;
+		int theirLastPos = 0;
 		while (iterator.hasNext())
 		{
 			Chunk chunk = iterator.next();
 			if (!chunk.isHasConflict())
 			{
-				String yourText = listToStr(this.yourLines.subList(chunk.getStart(), chunk.getEnd()));
-				String theirText;
-				if (lastTheirChunk == null)
-				{
-					theirText = listToStr(this.theirLines.subList(chunk.getStart(), chunk.getEnd()));
-				}
-				else
-				{
-					int length = chunk.getEnd() - chunk.getStart();
-					theirText = listToStr(this.theirLines.subList(lastTheirChunk.getEnd(), lastTheirChunk.getEnd() + length));
-				}
+				int diff = chunk.getEnd() - chunk.getStart();
+
+				String yourText = listToStr(this.yourLines.subList(yourLastPos, yourLastPos + diff));
+				yourLastPos += diff;
+
+				String theirText = listToStr(this.theirLines.subList(theirLastPos, theirLastPos + diff));
+				theirLastPos += diff;
+
 				this.controller.addLines(yourText, theirText, yourText, false, i);
 			}
 			else
 			{
-				Chunk.ChunkState state = chunk.getState();
-				assert state == Chunk.ChunkState.Your;
 				Chunk theirChunk = iterator.next();
-				String yourText = listToStr(this.yourLines.subList(chunk.getStart(), chunk.getEnd()));
-				String theirText = listToStr(this.theirLines.subList(theirChunk.getStart(), theirChunk.getEnd()));
+
+				int yourDiff = chunk.getEnd() - chunk.getStart();
+				String yourText = listToStr(this.yourLines.subList(yourLastPos, yourLastPos + yourDiff));
+				yourLastPos += yourDiff;
+
+				int theirDiff = theirChunk.getEnd() - theirChunk.getStart();
+				String theirText = listToStr(this.theirLines.subList(theirLastPos, theirLastPos + theirDiff));
+				theirLastPos += theirDiff;
+
 				this.controller.addLines(yourText, theirText, "", true, i);
-				lastTheirChunk = theirChunk;
 			}
 			i++;
 		}
