@@ -40,13 +40,9 @@ import java.util.Set;
 				"Add;;1;2\n" +
 				"#Id;#Let\n" +
 				"result;firstNumber + secondNumber\n" +
-				"\n" +
 				"#Return\n" +
 				"result\n" +
-				"\n" +
 				"#EndSubCase\n" +
-				"\n" +
-				"\n" +
 				"#Id;#Call;#firstNumber;#secondNumber\n" +
 				"CALL_1;Add;1;2#}}",
 		seeAlso 		= "SubCase, Return",

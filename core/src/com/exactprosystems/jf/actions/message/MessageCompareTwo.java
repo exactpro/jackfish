@@ -30,10 +30,8 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 				"3. Check them with MessageCompareTwo action.\n" +
 				"{{##Id;#Action;#Fields\n" +
 				"MSGCR1;MessageCreate;{'First item' : 'First Value', 'Second Item' : 'Second Value'}\n" +
-				"\n" +
 				"#Id;#Action;#Fields\n" +
 				"MSGCR2;MessageCreate;{'First item' : 'First Value', 'Fourth Item' : 'Fourth Value'}\n" +
-				"\n" +
 				"#Id;#Action;#Expected;#Actual\n" +
 				"MSGCMP1;MessageCompareTwo;MSGCR2.Out;MSGCR1.Out#}}"
 	)

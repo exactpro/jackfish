@@ -30,10 +30,8 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 				+ "{{`3. Close a connection.`}} "
 				+ "{{##Id;#Action;#ServiceId\n"
 				+ "SRVLD1;ServiceLoad;'MatrixService'\n"
-				+ "\n"
 				+ "#Id;#Action;#Port;#ServiceConnection\n"
 				+ "SRVSTRT1;ServiceStart;10565;SRVLD1.Out\n"
-				+ "\n"
 				+ "#Id;#Action;#ServiceConnection\n"
 				+ "SRVSTP1;ServiceStop;SRVLD1.Out#}}"
 	)

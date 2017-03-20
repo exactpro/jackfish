@@ -38,7 +38,6 @@ import java.util.Set;
 								"aa;Test case;Never;;\n" +
 								"#Fail\n" +
 								"'my error'\n" +
-								"\n" +
 								"#OnError\n" +
 								"#Action;#Where error was\n" +
 								"Print;err.Where#}}",

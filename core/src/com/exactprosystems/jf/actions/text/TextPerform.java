@@ -42,13 +42,10 @@ import com.exactprosystems.jf.functions.Text;
         examples                =
  "{{##Id;#Action;#Content\n"
 + "TXT1;TextCreate;'My taxes in 2016 is @{amount * 0.13} rub'\n"
-+ "\n"
 + "#Id;#Let\n"
 + "amount;100\n"
-+ "\n"
 + "#Id;#Action;#Text\n"
 + "TXT2;TextPerform;TXT1.Out\n"
-+ "\n"
 + "#Assert;#Message\n"
 + "TXT2.Out.toString() == 'My taxes in 2016 is 13 rub';'Assert failed'#}}\n",
         seeAlso = "{{@TextReport@}}, {{@TextAddLine@}}, {{@TextLoadFromFile@}}, {{@TextCreate@}}, {{@TextSaveToFile@}}," +

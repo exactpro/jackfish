@@ -41,7 +41,6 @@ import java.util.concurrent.atomic.AtomicReference;
 							"a;1;10;1\n" +
 							"#Action;#a\n" +
 							"Print;a\n" +
-							"\n" +
 							"#EndFor#}}",
 		seeAlso 		= "While, ForEach",
 		shouldContain 	= { Tokens.For, Tokens.From, Tokens.To },

@@ -37,10 +37,8 @@ import java.util.List;
 				+ "{{`3. Create and send the raw message."
 				+ "{{##Id;#Action;#ClientId\n"
 				+ "CLLD1;ClientLoad;'FIX'\n"
-				+ "\n"
 				+ "#Id;#Action;#ClientConnection;#Socket\n"
 				+ "CLCNCT1;ClientConnect;CLLD1.Out;10555\n"
-				+ "\n"
 				+ "#Id;#Action;#ClientConnection;#Data\n"
 				+ "CLSRM1;ClientSendRawMessage;CLLD1.Out;{0,1,0,1,0,1,0}#}}"
 	)

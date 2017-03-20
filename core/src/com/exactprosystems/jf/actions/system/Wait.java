@@ -27,7 +27,6 @@ import java.util.Date;
 				+ " action correctly, it is needed to specify at least one optional parameter.",
 		additionFieldsAllowed 	= false,
 		examples 				= "Stop running a matrix for 5 seconds.\n"
-				+ "\n"
 				+ "{{##Action;#Time\n"
 				+ "Wait;5000#}}"
 	)

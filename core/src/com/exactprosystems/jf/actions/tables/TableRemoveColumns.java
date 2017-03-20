@@ -31,10 +31,8 @@ import com.exactprosystems.jf.functions.Table;
 				+ "@;Name;Age;Gender;Salary\n"
 				+ "0;;;;\n"
 				+ "#EndRawTable\n"
-				+ "\n"
 				+ "#Action;#Table;#Columns\n"
 				+ "TableRemoveColumns;TC;{'Name','Age','Gender'}\n"
-				+ "\n"
 				+ "#Assert;#Message\n"
 				+ "TC.getHeader(0) == 'Salary';#}}"
 )

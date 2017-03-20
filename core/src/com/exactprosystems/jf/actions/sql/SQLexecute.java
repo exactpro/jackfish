@@ -42,19 +42,14 @@ import com.exactprosystems.jf.sql.SqlConnection;
 				"{{` 6. Execute the Update query using placeholders. `}}\n" +
 				"{{##Id;#Action;#User;#Server;#Base;#Sql;#Password\n" +
 				"SQLCNT1;SQLconnect;'username';'127.0.0.1:3306';'myDatabase';'MySQL';'userpassword'\n" +
-				"\n" +
 				"#Id;#Action;#Query;#Connection\n" +
 				"SQLEXEC1;SQLexecute;'CREATE TABLE users (id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,name VARCHAR(30) NOT NULL,age int NOT NULL)';SQLCNT1.Out\n" +
-				"\n" +
 				"#Id;#Let\n" +
 				"name;'mike'\n" +
-				"\n" +
 				"#Id;#Let\n" +
 				"age;23\n" +
-				"\n" +
 				"#Id;#Action;#Query;#Connection;#User name we get earlier;#User age we get earlier\n" +
 				"SQLINS1;SQLinsert;'insert into users (name, age) values (?, ?)';SQLCNT1.Out;name;age\n" +
-				"\n" +
 				"#Id;#Action;#Query;#Connection;#User new name;#User age we get earlier\n" +
 				"SQLEXEC2;SQLexecute;'update users set name=? where ? = 23';SQLCNT1.Out;'john';age#}}",
 		seeAlsoClass = {SQLdisconnect.class, SQLinsert.class, SQLselect.class, SQLtableUpload.class, SQLconnect.class}

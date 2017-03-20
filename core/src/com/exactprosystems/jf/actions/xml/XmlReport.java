@@ -46,7 +46,6 @@ import java.util.List;
 				+ "{{`2. Reflect the content of the Xml object in the report.`}} "
 				+ "{{##Id;#Action;#File\n"
 				+ "XML1;XmlLoadFromFile;'/path/Xml.xml'\n"
-				+ "\n"
 				+ "#Action;#Xml;#Title\n"
 				+ "XmlReport;Xml1;’Xml report’#}}"
 	)

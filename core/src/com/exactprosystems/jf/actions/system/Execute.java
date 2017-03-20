@@ -41,7 +41,6 @@ import java.util.List;
 				+ "2. Check if you get an answer in the form of text when executing the current command.\n"
 				+ "{{##Id;#Action;#Command\n"
 				+ "EXEC1;Execute;'help'\n"
-				+ "\n"
 				+ "#Assert;#Message\n"
 				+ "Str.IsNullOrEmpty(EXEC1.Out.Text);'Command wasn't executed'#}}"
 	)

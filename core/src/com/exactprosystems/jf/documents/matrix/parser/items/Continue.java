@@ -33,12 +33,9 @@ import java.util.List;
 							"#If\n" +
 							"a == 9\n" +
 							"#Continue\n" +
-							"\n" +
 							"#EndIf\n" +
-							"\n" +
 							"#Action;#a\n" +
 							"Print;a\n" +
-							"\n" +
 							"#EndFor#}}",
 		seeAlso 		= "For, While, Break",
 		shouldContain 	= { Tokens.Continue },

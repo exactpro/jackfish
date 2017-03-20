@@ -43,12 +43,8 @@ import java.util.List;
 				+ "{{`3. Create and send the message, check it beforehand with the indication of CHECK - true in the  parameter.`}}"
 				+ "{{##Id;#Action;#ClientId\n"
 				+ "CLLD1;ClientLoad;'FIX'\n"
-				+ "\n"
-				+ "\n"
 				+ "#Id;#Action;#ClientConnection;#Socket\n"
 				+ "CLCNCT1;ClientConnect;CLLD1.Out;10555\n"
-				+ "\n"
-				+ "\n"
 				+ "#Id;#Action;#ClientConnection;#MessageType;#Name;#SecondName\n"
 				+ "CLSM1;ClientSendMessage;CLLD1.Out;'35';'Value';'SecondValue'#}}"
 	)

@@ -37,10 +37,8 @@ import static com.exactprosystems.jf.actions.gui.Helper.message;
 		additionalDescription = "The name of the additional parameter should contain the ID of the element. The value should contain the expected number of detected elements.",
 		examples 			  = "{{`1. Connect to the web application.`}}"
 				+ "{{`2. Check the accessibility of all elements described in MyDialog.`}}"
-				+ "\n"
 				+ "{{##Id;#Action;#Browser;#URL;#AppId\n"
 				+ "APPSTR1;ApplicationStart;'Chrome';'https://google.com';'WEB'\n"
-				+ "\n"
 				+ "#Action;#Dialog;#AppConnection\n"
 				+ "DialogValidate;'MyDialog';APPSTR1.Out#}}"
 	)

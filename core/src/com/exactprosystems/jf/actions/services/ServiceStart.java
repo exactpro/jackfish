@@ -33,7 +33,6 @@ import java.util.List;
 				+ "{{`2. Load a service woth an additional parameter Port, that was loaded earlier.`}} "
 				+ "{{##Id;#Action;#ServiceId\n"
 				+ "SRVLD1;ServiceLoad;'MatrixService'\n"
-				+ "\n"
 				+ "#Id;#Action;#Port;#ServiceConnection\n"
 				+ "SRVSTRT1;ServiceStart;10565;SRVLD1.Out#}}"
 	)

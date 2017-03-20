@@ -23,16 +23,13 @@ import java.util.List;
 							" Line Else is only one for If.",
 		examples 		= "{{##Id;#Let\n" +
 							"year;new DateTime().getYears(new Date())\n" +
-							"\n" +
 							"#If\n" +
 							"year == 2017\n" +
 							"#Action;#today\n" +
 							"Print;'is 2017'\n" +
-							"\n" +
 							"#Else\n" +
 							"#Action;#today\n" +
 							"Print;'is not 2017'\n" +
-							"\n" +
 							"#EndIf#}}",
 		seeAlso 		= "If",
 		shouldContain 	= { Tokens.Else },

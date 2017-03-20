@@ -51,10 +51,8 @@ import com.exactprosystems.jf.functions.Xml;
 				+ "{{`3. Make sure that a new Xml structure has been created.`}} "
 				+ "{{##Id;#Action;#File\n"
 				+ "XML1;XmlLoadFromFile;'/path/Xml.xml'\n"
-				+ "\n"
 				+ "#Id;#Action;#Xml;#Xpath;#NodeName\n"
 				+ "XS;XmlSelect;Xml1;’//from;’sub_item’\n"
-				+ "\n"
 				+ "#Assert;#Message\n"
 				+ "XS.Out != null;'Object is null'#}}"
 	)

@@ -31,10 +31,8 @@ import java.util.List;
 				+ "{{`3. Switch focus back to the MainFrame of the web application, located in MyDialog.`}}"
 				+ "{{##Id;#Action;#Browser;#URL;#AppId\n"
 				+ "APPSTR1;ApplicationStart;'Chrome';'https://google.com';'WEB'\n"
-				+ "\n"
 				+ "#Id;#Action;#AppId;#Main window\n"
 				+ "APPSTR2;ApplicationConnectTo;'WIN';'WinApp'\n"
-				+ "\n"
 				+ "#Action;#Frame;#Dialog;#AppConnection\n"
 				+ "DialogSwitchToWindow;'MainFrame';'MyDialog';APPSTR1.Out#}}"
 	)

@@ -39,8 +39,6 @@ import com.exactprosystems.jf.functions.HelpKind;
 				+ "{{`2. Connect the client to the port №10506.`}}"
 				+ "{{##Id;#Action;#ClientId\n"
 				+ "CLLD1;ClientLoad;'FIX'\n"
-				+ "\n"
-				+ "\n"
 				+ "#Id;#Action;#ClientConnection;#Socket\n"
 				+ "CLCNCT1;ClientConnect;CLLD1.Out;10506#}}"
 )

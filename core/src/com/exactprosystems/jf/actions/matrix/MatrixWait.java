@@ -28,7 +28,6 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
         seeAlso = "{{@MatrixRunFromText@}}, {{@MatrixRun@}}",
         examples = "{{##Id;#Action;#Matrix\n" +
                 "MXRN1;MatrixRun;'matrices/Matrix.jf'\n" +
-                "\n" +
                 "#Id;#Action;#Time;#Matrix\n" +
                 "MXWT1;MatrixWait;5000;MXRN1.Out#}}",
         seeAlsoClass = {MatrixRunFromText.class, MatrixRun.class}

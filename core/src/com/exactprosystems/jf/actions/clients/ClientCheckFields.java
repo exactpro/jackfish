@@ -34,12 +34,8 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 				+ "{{`3.Check the message.`}}"
 				+ "{{##Id;#Action;#ClientId\n"
 				+ "CLLD1;ClientLoad;'FIX'\n"
-				+ "\n"
-				+ "\n"
 				+ "#Id;#Action;#ClientConnection;#MessageType;#Name\n"
 				+ "CLCRMM1;ClientCreateMapMessage;CLLD1.Out;'35';'Value'\n"
-				+ "\n"
-				+ "\n"
 				+ "#Id;#Action;#Message;#ClientConnection\n"
 				+ "CLCHM1;ClientCheckFields;CLCRMM1.Out;CLLD1.Out#}}"
 	)

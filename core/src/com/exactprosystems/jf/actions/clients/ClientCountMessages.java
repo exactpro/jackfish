@@ -43,8 +43,6 @@ import java.util.Map;
 				+ "{{`2. Count the number of messages with the field name Name and  the field value Value.`}}"
 				+ "{{##Id;#Action;#ClientId\n"
 				+ "CLLD1;ClientLoad;'FIX'\n"
-				+ "\n"
-				+ "\n"
 				+ "#Id;#Action;#ClientConnection;#MessageType;#Name\n"
 				+ "CLCNT1;ClientCountMessages;CLLD1.Out;'35';'Value'#}}"
 	)
