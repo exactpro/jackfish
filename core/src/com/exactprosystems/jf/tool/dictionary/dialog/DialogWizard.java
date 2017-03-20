@@ -19,7 +19,7 @@ import com.exactprosystems.jf.documents.guidic.controls.AbstractControl;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.custom.xpath.ImageAndOffset;
-import com.exactprosystems.jf.tool.custom.xpath.XpathTreeItem.TreeItemState;
+import com.exactprosystems.jf.tool.custom.xpath.TreeItemState;
 import com.exactprosystems.jf.tool.custom.xpath.XpathViewer;
 import com.exactprosystems.jf.tool.dictionary.DictionaryFx;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
@@ -46,7 +46,6 @@ public class DialogWizard
     private static final int		MAX_TRIES = 128;
     
     private static ExecutorService  executor = Executors.newFixedThreadPool(1);
-    private DictionaryFx            dictionary;
     private Window                  window;
     private IControl                selfControl;
 
@@ -69,7 +68,6 @@ public class DialogWizard
 
 	public DialogWizard(DictionaryFx dictionary, IWindow window, AppConnection appConnection) throws Exception
 	{
-		this.dictionary = dictionary;
 		this.window = (Window)window;
 		this.appConnection = appConnection;
 		this.pluginInfo = appConnection.getApplication().getFactory().getInfo();
@@ -776,6 +774,7 @@ public class DialogWizard
 				bean1.setNumber(i);
 				this.controller.displayElement(bean1);
 			}
+			this.controller.updateCounters();
 		}
 	}
 

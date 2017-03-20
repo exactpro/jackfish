@@ -22,6 +22,7 @@ import com.exactprosystems.jf.tool.custom.TreeTableViewWithRectangles;
 import com.exactprosystems.jf.tool.custom.controls.field.CustomFieldWithButton;
 import com.exactprosystems.jf.tool.custom.find.FindPanel;
 import com.exactprosystems.jf.tool.custom.find.IFind;
+import com.exactprosystems.jf.tool.custom.xpath.TreeItemState;
 import com.exactprosystems.jf.tool.custom.xpath.XpathTreeItem;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.sun.javafx.css.PseudoClassState;
@@ -58,25 +59,12 @@ import java.util.*;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class DialogWizardController implements Initializable, ContainingParent
 {
-	public static String styleByState(XpathTreeItem.TreeItemState state)
-	{
-		switch (state)
-		{
-			case UPDATE : return CssVariables.COLOR_UPDATE;
-			case ADD: return CssVariables.COLOR_ADD;
-			case MARK: return CssVariables.COLOR_MARK;
-			case QUESTION:return CssVariables.COLOR_QUESTION;
-
-		}
-		return null;
-	}
-
 	public Parent parent;
 	public SplitPane horSplitPane;
 	public SplitPane verSplitPane;
@@ -89,12 +77,14 @@ public class DialogWizardController implements Initializable, ContainingParent
 	public CheckBox cbAdd;
 	public CheckBox cbUpdate;
 	public CheckBox cbQuestion;
-
+	
 	public FindPanel<TreeItem<XpathTreeItem>> findPanel;
 	public HBox hBoxToolbar;
 	public Button btnGenerateOnOpen;
 	public Button btnGenerateOnClose;
 
+	private Map<TreeItemState, CheckBox> counters = new HashMap<>();
+	
 	private DialogWizard model;
 	private Alert dialog;
 
@@ -107,6 +97,11 @@ public class DialogWizardController implements Initializable, ContainingParent
 	@Override
 	public void initialize(URL location, ResourceBundle resources)
 	{
+	    this.counters.put(TreeItemState.MARK,       this.cbMark);
+        this.counters.put(TreeItemState.ADD,        this.cbAdd);
+        this.counters.put(TreeItemState.UPDATE,     this.cbUpdate);
+        this.counters.put(TreeItemState.QUESTION,   this.cbQuestion);
+	    
 		this.imageViewWithScale = new ImageViewWithScale();
 		this.verSplitPane.getItems().add(0, this.imageViewWithScale.getContent());
 
@@ -142,10 +137,7 @@ public class DialogWizardController implements Initializable, ContainingParent
 			}
 		});
 
-		this.cbUpdate.selectedProperty().addListener((observable, oldValue, newValue) -> this.treeViewWithRectangles.setState(XpathTreeItem.TreeItemState.UPDATE, newValue));
-		this.cbAdd.selectedProperty().addListener((observable, oldValue, newValue) -> this.treeViewWithRectangles.setState(XpathTreeItem.TreeItemState.ADD, newValue));
-		this.cbMark.selectedProperty().addListener((observable, oldValue, newValue) -> this.treeViewWithRectangles.setState(XpathTreeItem.TreeItemState.MARK, newValue));
-		this.cbQuestion.selectedProperty().addListener((observable, oldValue, newValue) -> this.treeViewWithRectangles.setState(XpathTreeItem.TreeItemState.QUESTION, newValue));
+		this.counters.forEach((k,v) -> v.selectedProperty().addListener((observable, oldValue, newValue) -> this.treeViewWithRectangles.setState(k, newValue)));
 	}
 	//endregion
 
@@ -245,10 +237,6 @@ public class DialogWizardController implements Initializable, ContainingParent
 		else
 		{
 			this.tableView.getItems().set(index, bean);
-			//			this.tableView.getColumns().forEach(column -> Platform.runLater(() -> {
-			//				column.setVisible(false);
-			//				column.setVisible(true);
-			//			}));
 		}
 	}
 
@@ -327,7 +315,7 @@ public class DialogWizardController implements Initializable, ContainingParent
 		return null;
 	}
 
-	void displayFoundControl(Node node, ElementWizardBean bean, XpathTreeItem.TreeItemState state)
+	void displayFoundControl(Node node, ElementWizardBean bean, TreeItemState state)
 	{
 	    if (node == null || node instanceof Document)
 	    {
@@ -335,35 +323,18 @@ public class DialogWizardController implements Initializable, ContainingParent
 	    	refreshTable();
 	        return;
 	    }
+	    
 		TreeItem<XpathTreeItem> byNode = this.treeViewWithRectangles.findByNode(node);
 		XpathTreeItem value = byNode.getValue();
 		if (value != null)
 		{
-			this.changeStateCount(-1, value.getState());
 			value.clearRelation(bean);
 			value.addRelation(bean, state);
-			this.changeStateCount(1, value.getState());
-			switch (state)
-			{
-				case ADD:
-					this.treeViewWithRectangles.setState(state, this.cbAdd.isSelected());
-					bean.setStyleClass(CssVariables.COLOR_ADD);
-					break;
-				case MARK:
-					this.treeViewWithRectangles.setState(state, this.cbMark.isSelected());
-					bean.setStyleClass(CssVariables.COLOR_MARK);
-					break;
-				case QUESTION:
-					this.treeViewWithRectangles.setState(state, this.cbQuestion.isSelected());
-					bean.setStyleClass(CssVariables.COLOR_QUESTION);
-					break;
-				case UPDATE:
-					this.treeViewWithRectangles.setState(state, this.cbUpdate.isSelected());
-					bean.setStyleClass(CssVariables.COLOR_UPDATE);
-					break;
-
-			}
+			
+			this.treeViewWithRectangles.setState(state, this.counters.get(state).isSelected());
+            bean.setStyleClass(state.getCssStyle());
 		}
+        updateCounters();
 		refreshTable();
 	}
 
@@ -379,36 +350,29 @@ public class DialogWizardController implements Initializable, ContainingParent
 		this.treeViewWithRectangles.clearAndAddRelation(bean);
 	}
 
-	public void changeStateCount(int count, XpathTreeItem.TreeItemState state)
+	public void updateCounters()
 	{
-		if (state == null)
-		{
-			return;
-		}
-		CheckBox box = null;
-		switch (state)
-		{
-			case ADD:
-				box = this.cbAdd;
-				break;
-			case MARK:
-				box = this.cbMark;
-				break;
-			case QUESTION:
-				box = this.cbQuestion;
-				break;
-			case UPDATE:
-				box = this.cbUpdate;
-		}
-		String text = box.getText();
-		text = text.isEmpty() ? "0" : text;
-		int current = Integer.parseInt(text);
-		box.setText(String.valueOf(current + count));
+	    Map<TreeItemState, AtomicInteger> values = new HashMap<>(); 
+	    values.put(TreeItemState.MARK,       new AtomicInteger(0));
+	    values.put(TreeItemState.ADD,        new AtomicInteger(0));
+	    values.put(TreeItemState.UPDATE,     new AtomicInteger(0));
+	    values.put(TreeItemState.QUESTION,   new AtomicInteger(0));
+	    
+	    this.treeViewWithRectangles.passTree(i -> 
+	    { 
+	        TreeItemState state = i.getState();
+	        if (state != null)
+	        {
+	            values.get(state).addAndGet(i.getList().size());
+	        }
+	    });
+	    
+	    values.forEach((k,v) -> this.counters.get(k).setText("" + v.get()));
 	}
-
+	
 	private void clearCheckboxes()
 	{
-		Stream.of(this.cbAdd, this.cbUpdate, this.cbMark, this.cbQuestion).forEach(c -> Platform.runLater(() -> c.setText("0")));
+		this.counters.forEach((k,v) -> Platform.runLater(() -> v.setText("0")));
 	}
 
 	//region Action methods
