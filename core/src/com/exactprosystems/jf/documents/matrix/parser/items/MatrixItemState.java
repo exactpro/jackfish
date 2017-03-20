@@ -4,5 +4,6 @@ public enum MatrixItemState
 {
 	None,
 	BreakPoint,
-	Executing
+	Executing,
+	ExecutingWithBreakPoint
 }

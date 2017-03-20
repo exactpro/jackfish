@@ -29,6 +29,12 @@ public class IconCell extends TreeTableCell<MatrixItem, MatrixItemState>
 						setGraphic(new ImageView(new Image(CssVariables.Icons.EXECUTING_ITEM_ICON)));
 					}
 					return;
+				case ExecutingWithBreakPoint:
+					if (((MatrixTreeView) getTreeTableRow().getTreeTableView()).isTracing())
+					{
+						setGraphic(new ImageView(new Image(CssVariables.Icons.EXECUTING_ITEM_ICON)));
+					}
+					return;
 			}
 		}
 	}
