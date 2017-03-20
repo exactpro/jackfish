@@ -473,11 +473,11 @@ public abstract class ReportBuilder implements Storable
 	    				{
 	    					columns[i] = postProcess(columns[i]);
 	    				}
-						tableHeader(writer, table, postProcess(table.getTitle()), columns, table.getPercents());
+						tableHeader(writer, table, postProcess(table.getTitle()), columns, null);
     				}
     				else
     				{
-						tableHeader(writer, table, table.getTitle(), columns, table.getPercents());
+						tableHeader(writer, table, table.getTitle(), columns, null);
     				}
     				
 		

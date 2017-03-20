@@ -344,17 +344,9 @@ public class HelpBuilder extends ReportBuilder
 		this.actionWriter.fwrite("<table class='table table-bordered'>\n");
 		this.actionWriter.fwrite("<thead>\n");
 		this.actionWriter.fwrite("<tr>\n");
-		if (columns.length == percents.length){
-			for (int i=0; i < columns.length; i++){
-				this.actionWriter.fwrite("<td width='%d%%'>%s", percents[i], columns[i]);
-			}
-		}
-		else
+		for (String column : columns)
 		{
-			for (String column : columns)
-			{
-				this.actionWriter.fwrite("<th>%s</th>", column);
-			}
+			this.actionWriter.fwrite("<th>%s</th>", column);
 		}
 		this.actionWriter.fwrite("</tr>\n");
 		this.actionWriter.fwrite("</thead>\n");
@@ -431,8 +423,8 @@ public class HelpBuilder extends ReportBuilder
             tmp = (MatrixItem) clazz.newInstance();
             report.itemStarted(tmp);
             report.itemIntermediate(tmp);
-            ReportTable table = report.addTable("", null, true, 100, new int[] { 30, 70 }, "", "");
-            table.addValues("Description", attribute.description());
+			ReportTable table = report.addTable("", null, true, 100, new int[] { 30, 70 });
+			table.addValues("Description", attribute.description());
             table.addValues("Examples", attribute.examples());
             if (!attribute.seeAlso().equals(""))
             {

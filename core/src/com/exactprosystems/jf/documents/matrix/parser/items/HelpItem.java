@@ -43,16 +43,12 @@ public class HelpItem extends MatrixItem
         }
 
         report.itemIntermediate(item);
-        ReportTable table = report.addTable(item.getItemName(), null, true, 100, new int[] { 30, 70 }, "", "");
+        ReportTable table = report.addTable("", null, true, 100, new int[] { 30, 70 });
         table.addValues("Description", attribute.description());
         table.addValues("Examples", attribute.examples());
-        if (attribute.seeAlsoClass().length > 0)
+        if (!attribute.seeAlso().equals(""))
         {
-            StringBuilder sb = new StringBuilder();
-            for (Class clz : attribute.seeAlsoClass()){
-                sb.append(clz.getSimpleName()).append(" ");
-            }
-            table.addValues("See also", sb.toString());
+            table.addValues("See also", attribute.seeAlso());
         }
     }
 
