@@ -25,8 +25,11 @@ import java.util.Optional;
 import java.util.Set;
 
 @MatrixItemAttribute(
-		description 	= "Raw text.",
-		examples 		= "{{##RawText#}}",
+		description 	= "This operator is used to describe an object as Text. It has its own mini editor.",
+		examples 		= "{{##Id;#RawText\n" +
+							"TEXT1;Text\n" +
+							"\"Hello world\"\n" +
+							"#EndRawText#}}",
 		seeAlso 		= "RawTable",
 		shouldContain 	= { Tokens.RawText }, 
 		mayContain 		= { Tokens.Id, Tokens.Off, Tokens.RepOff, Tokens.Global }, 

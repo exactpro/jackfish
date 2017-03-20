@@ -29,8 +29,19 @@ import java.util.Map;
 import java.util.Set;
 
 @MatrixItemAttribute(
-		description 		= "Make this TestCase failed.",
-		examples 			= "{{##Fail#}}",
+		description 		= "This operator generates a failure in the current matrix place. If a failure given can’t be proceeded" +
+								" by  OnError or by a global error handler, the current TestCase is failed. \n" +
+								"Parameter Fail can take a string value then an error with this message is generated and this message is shown" +
+								" instead of failure.  An operator Fail can be called in an error handler and a variable err can be passed to him. \n" +
+								"(see OnError). In this case an exact failure place can be found.",
+		examples 			= "{{##Id;#TestCase;#Kind;#Depends;#For\n" +
+								"aa;Test case;Never;;\n" +
+								"#Fail\n" +
+								"'my error'\n" +
+								"\n" +
+								"#OnError\n" +
+								"#Action;#Where error was\n" +
+								"Print;err.Where#}}",
 		seeAlso 			= "TestCase",
 		shouldContain 		= { Tokens.Fail }, 
 		mayContain 			= { Tokens.Off, Tokens.RepOff }, 

@@ -31,8 +31,12 @@ import java.util.Map;
 import java.util.Set;
 
 @MatrixItemAttribute(
-		description 	= "Need to assigns a value to a variable, or just evaluates an expression.",
-		examples 		= "{{##Let#}}",
+		description 	= "This operator is used to name a variable and set a value. \n" +
+							"If there is no name, this expression is performed. The variable name is given In the left field," +
+							" in the right field is the variable value or expression, which result will be saved in the variable.",
+		examples 		= "The variable  greeting is set with value Hello Wolrd!" +
+							"{{##Id;#Let\n" +
+							"greeting;'Hello world!'#}}",
 		shouldContain 	= { Tokens.Let },
 		mayContain 		= { Tokens.Id, Tokens.Off, Tokens.RepOff, Tokens.Global }, 
 		parents			= { Case.class, Else.class, For.class, ForEach.class, If.class,

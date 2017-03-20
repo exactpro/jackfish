@@ -38,8 +38,12 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @MatrixItemAttribute(
-		description 	= "Elementary step in the script",
-		examples 		= "{{##Step#}}",
+		description 	= "This is an analogue of TestCase block , it is used to divide TestCase. \n" +
+							"Each Step keeps its result in a separate line in a system table  (see action ResultTable).\n" +
+							"Step which contains an action ResultTable is always Passed.",
+		examples 		= "{{##Step;#Kind\n" +
+							";\n" +
+							"#EndStep#}}",
 		seeAlso 		= "TestCase",
 		shouldContain 	= { Tokens.Step },
 		mayContain 		= { Tokens.IgnoreErr, Tokens.Off, Tokens.Kind, Tokens.For, Tokens.RepOff },

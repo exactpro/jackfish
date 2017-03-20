@@ -29,8 +29,14 @@ import java.util.Map;
 import java.util.Set;
 
 @MatrixItemAttribute(
-		description 	= "Returns value from SubCase.",
-		examples 		= "{{##Return#}}",
+		description 	= "This operator breaks  SubCase performing and returns the result. ",
+		examples 		= "{{##Id;#SubCase\n" +
+							"SUB_1;\n" +
+							"#Id;#Let\n" +
+							"result;2+2*2\n" +
+							"#Return\n" +
+							"result\n" +
+							"#EndSubCase#}}",
 		seeAlso 		= "SubCase, Call",
 		shouldContain 	= { Tokens.Return },
 		mayContain 		= { Tokens.Off, Tokens.RepOff }, 

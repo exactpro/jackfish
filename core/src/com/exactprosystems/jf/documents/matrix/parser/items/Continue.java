@@ -24,8 +24,22 @@ import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
 import java.util.List;
 
 @MatrixItemAttribute(
-		description 	= "Break chain of execution into loops or blocks.",
-		examples 		= "{{##Continue#}}",
+		description 	= "This operator is used to move to the next cycles iteration For, ForEach, While.\n" +
+							"The new iteration starts with checking if cycle conditions are true.",
+		examples 		= "Create a cycle from 1 to 10 with an operator For and display variable value a  in console." +
+							" If variable а = 9 start a cycle from the beginning with an operator Continue." +
+							"{{##For;#From;#To;#Step\n" +
+							"a;1;10;1\n" +
+							"#If\n" +
+							"a == 9\n" +
+							"#Continue\n" +
+							"\n" +
+							"#EndIf\n" +
+							"\n" +
+							"#Action;#a\n" +
+							"Print;a\n" +
+							"\n" +
+							"#EndFor#}}",
 		seeAlso 		= "For, While, Break",
 		shouldContain 	= { Tokens.Continue },
 		mayContain 		= { Tokens.Off, Tokens.RepOff }, 

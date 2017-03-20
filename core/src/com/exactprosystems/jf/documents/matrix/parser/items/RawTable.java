@@ -25,8 +25,12 @@ import java.util.Optional;
 import java.util.Set;
 
 @MatrixItemAttribute(
-		description 	= "Raw data. Need to describe block of data",
-		examples 		= "{{##RawTable#}}",
+		description 	= "This operator is used to describe an object asTable. In matrix editor there is a special mini editor for  rowText и rawMessage for this operator.",
+		examples 		= "{{##Id;#RawTable\n" +
+							"DATA1;Table\n" +
+							"@;newH\n" +
+							"0;newR\n" +
+							"#EndRawTable#}}",
 		seeAlso 		= "RawText",
 		shouldContain 	= { Tokens.RawTable }, 
 		mayContain 		= { Tokens.Id, Tokens.Off, Tokens.RepOff, Tokens.Global }, 

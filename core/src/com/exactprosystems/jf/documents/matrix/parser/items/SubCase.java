@@ -31,8 +31,14 @@ import java.util.Map;
 import java.util.Set;
 
 @MatrixItemAttribute(
-        description 	= "Subroutine.",
-		examples 		= "{{##SubCase#}}",
+        description 	= "This operator describes a subprogram. In parameters the program arguments are described, factual parameters are used with Call. \n" +
+							"SubCase is performed by the Call operator only." +
+							" SubCase operator can even be located in commented testcases.",
+		examples 		= "{{##Id;#SubCase\n" +
+							"SUB_1;\n" +
+							"#Action;#Greeting\n" +
+							"Print;'Hello!'\n" +
+							"#EndSubCase#}}",
 		seeAlso 		= "Call, Return",
         shouldContain 	= { Tokens.SubCase },
         mayContain 		= { Tokens.Id, Tokens.Off, Tokens.RepOff },

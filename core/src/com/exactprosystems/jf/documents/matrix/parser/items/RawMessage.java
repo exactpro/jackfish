@@ -36,8 +36,12 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 @MatrixItemAttribute(
-		description 	= "Raw data in message form.",
-		examples 		= "{{##RawMessage#}}",
+		description 	= "This operator is used to describe an object MapMessage of the type given.",
+		examples 		= "{{##Id;#RawMessage;#Client\n" +
+							"MSG1;none;FIX\n" +
+							"$;MessageType\n" +
+							"0;none\n" +
+							"#EndRawMessage#}}",
 		shouldContain 	= { Tokens.RawMessage, Tokens.Client }, 
 		mayContain 		= { Tokens.Id, Tokens.Off, Tokens.RepOff, Tokens.Global }, 
 		parents			= { Case.class, Else.class, For.class, ForEach.class, If.class,

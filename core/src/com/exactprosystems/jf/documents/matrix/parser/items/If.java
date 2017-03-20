@@ -29,8 +29,22 @@ import java.util.Map;
 import java.util.Set;
 
 @MatrixItemAttribute(
-        description 	= "Condition executing.",
-		examples 		= "{{##If#}}",
+        description 	= "This operator creates matrix branch depending on condition.  The operator if takes a logic expression." +
+							" If true is a result of this expression, a code block inside of if operator is performed. \n" +
+							"If the expression is false, the operator line Else is performed. If this line isn’t there, an action is performed continually. ",
+		examples 		= "{{##Id;#Let\n" +
+							"year;new DateTime().getYears(new Date())\n" +
+							"\n" +
+							"#If\n" +
+							"year == 2017\n" +
+							"#Action;#today\n" +
+							"Print;'is 2017'\n" +
+							"\n" +
+							"#Else\n" +
+							"#Action;#today\n" +
+							"Print;'is not 2017'\n" +
+							"\n" +
+							"#EndIf#}}",
 		seeAlso 		= "Else",
         shouldContain 	= { Tokens.If },
         mayContain 		= { Tokens.Off, Tokens.RepOff },

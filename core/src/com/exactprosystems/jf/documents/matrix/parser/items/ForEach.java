@@ -34,8 +34,15 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
 @MatrixItemAttribute(
-	description 	= "Loop from start value to end value with step. Need to organize a loop over a collection",
-	examples 		= "{{##ForEach#}}",
+	description 	= "Operator ForEach is used to organize a cycle according the collection elements: massive, list, table, Map etc. \n" +
+						"Fields:\n" +
+						"ForEach – a variable name is given which is set with the next element value by each iteration.  \n" +
+						"In – a collection is given which is needed to organize a cycle.",
+	examples 		= "{{##ForEach;#In\n" +
+						"a;['First', 'Second']\n" +
+						"#Action;#a\n" +
+						"Print;a\n" +
+						"#EndForEach#}}",
 	seeAlso 		= "For, While",
 	shouldContain 	= { Tokens.ForEach, Tokens.In },
 	mayContain 		= { Tokens.Off, Tokens.RepOff }, 

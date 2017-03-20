@@ -19,8 +19,21 @@ import com.exactprosystems.jf.documents.matrix.parser.Tokens;
 import java.util.List;
 
 @MatrixItemAttribute(
-		description 	= "Executed if condition is false.",
-		examples 		= "{{##Else#}}",
+		description 	= "This operator describes a line of the operator If which is performed if condition  - false." +
+							" Line Else is only one for If.",
+		examples 		= "{{##Id;#Let\n" +
+							"year;new DateTime().getYears(new Date())\n" +
+							"\n" +
+							"#If\n" +
+							"year == 2017\n" +
+							"#Action;#today\n" +
+							"Print;'is 2017'\n" +
+							"\n" +
+							"#Else\n" +
+							"#Action;#today\n" +
+							"Print;'is not 2017'\n" +
+							"\n" +
+							"#EndIf#}}",
 		seeAlso 		= "If",
 		shouldContain 	= { Tokens.Else },
 		mayContain 		= { Tokens.Off, Tokens.RepOff }, 

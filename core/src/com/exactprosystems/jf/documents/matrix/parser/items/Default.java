@@ -11,8 +11,30 @@ import com.exactprosystems.jf.documents.matrix.parser.Tokens;
 import java.util.List;
 
 @MatrixItemAttribute(
-		description 	= "Executed if all cases are not suitable.",
-		examples 		= "{{##Default#}}",
+		description 	= "This operator describes a line of the operator Switch, which wil be performed if none of Case has been worked. \n" +
+							"This operator is 1 only  and should be necessarily placed after all Case blocks.",
+		examples 		= "Variable number is transferred to the field switch. As variable value doesn’t match any Case," +
+							" block Default will be performed." +
+							"{{# #Id;#Let\n" +
+							"number;0\n" +
+							"\n" +
+							"#Switch\n" +
+							"number\n" +
+							"#Case\n" +
+							"1\n" +
+							"#Action;#Greeting\n" +
+							"Print;'Hello!'\n" +
+							"\n" +
+							"#Case\n" +
+							"2\n" +
+							"#Action;#Greeting\n" +
+							"Print;'Hi!'\n" +
+							"\n" +
+							"#Default\n" +
+							"#Action;#Greeting\n" +
+							"Print;'Farewell'\n" +
+							"\n" +
+							"#EndSwitch#}}",
 		seeAlso 		= "For, While, Break",
 		shouldContain 	= { Tokens.Default },
 		mayContain 		= { Tokens.Off, Tokens.RepOff }, 

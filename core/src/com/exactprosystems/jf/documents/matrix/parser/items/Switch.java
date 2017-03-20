@@ -29,8 +29,21 @@ import java.util.Map;
 import java.util.Set;
 
 @MatrixItemAttribute(
-        description 	= "Condition executing.",
-		examples 		= "{{##Switch#}}",
+        description 	= "This operator allows to define multiple branches. With case и default the operator will be performed which condition is true. If no case suits, default is performed.",
+		examples 		= "In switch is transferred true in case are placed expressions as regular. \n" +
+							"In the field switch number 1 is passed, which matches the number from the first Case given. \n" +
+							"If number 2 is passed to Switch, the second Case is performed" +
+							"{{##Switch\n" +
+							"1\n" +
+							"#Case\n" +
+							"1\n" +
+							"#Action;#Greeting\n" +
+							"Print;'Hello!'\n" +
+							"#Case\n" +
+							"2\n" +
+							"#Action;#Greeting\n" +
+							"Print;'Bye!'\n" +
+							"#EndSwitch#}}",
 		seeAlso 		= "Case, Default",
         shouldContain 	= { Tokens.Switch },
         mayContain 		= { Tokens.Off, Tokens.RepOff },

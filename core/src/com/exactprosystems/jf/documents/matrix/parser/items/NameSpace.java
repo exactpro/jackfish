@@ -30,8 +30,21 @@ import java.util.Map;
 import java.util.Set;
 
 @MatrixItemAttribute(
-        description 	= "Namespace.",
-		examples 		= "{{##Namespace#}}",
+        description 	= "This operator introduces a name space in the library in order to link to Subcase from this library. \n" +
+							"In the operator NameSpace are SubCases, which can be called with the use of Call - NameSpaceId.SubCase ID afterwards.\n" +
+							"The Id of NameSpace operator is the name of the creating library.\n" +
+							"In the name space NameSpace are SubCase.",
+		examples 		= "Create a library MyLibrary, which contains SubCase PrintHi.\n" +
+							"After the given matrix has been saved in a file, which is used to store libraries, it can be called in Call operator as following: \n" +
+							"MyLibrary.PrintHi" +
+							"{{##Id;#NameSpace\n" +
+							"MyLibrary;\n" +
+							"#Id;#SubCase\n" +
+							"SUB_1;\n" +
+							"#Action;#Greeting\n" +
+							"Print;'Hello!'\n" +
+							"#EndSubCase\n" +
+							"#EndNameSpace#}}",
 		seeAlso 		= "SubCase, Call",
         shouldContain 	= { Tokens.NameSpace },
         mayContain 		= { Tokens.Id, Tokens.Off, Tokens.RepOff },

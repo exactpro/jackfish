@@ -28,8 +28,18 @@ import java.util.Map;
 import java.util.Set;
 
 @MatrixItemAttribute(
-		description 	= "Loop while condition is true.",
-		examples 		= "{{##While#}}",
+		description 	= "Operator While is used to organized a cycle.",
+		examples 		= "Notify a variable а and set value 1 to it.\n" +
+							"While the variable value is а < 10 in  While cycle display its value in console  and increase it by 1." +
+							"{{##Id;#Let\n" +
+							"a;1\n" +
+							"#While\n" +
+							"a < 10\n" +
+							"#Action;#a\n" +
+							"Print;a\n" +
+							"#Id;#Let\n" +
+							"a;a+1\n" +
+							"#EndWhile#}}",
 		seeAlso 		= "For, ForEach",
 		shouldContain 	= { Tokens.While },
 		mayContain 		= { Tokens.Off, Tokens.RepOff },
