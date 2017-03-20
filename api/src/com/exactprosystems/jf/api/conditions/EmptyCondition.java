@@ -48,18 +48,6 @@ public class EmptyCondition extends Condition  implements Serializable
 	}
 
 	@Override
-	public boolean isMatched(String otherName, Object otherValue)
-	{
-		return otherValue == null || ("" + otherValue).isEmpty();
-	}
-
-	@Override
-	public boolean isMatched2(String otherName, Object otherValue1, Object otherValue2)
-	{
-		return false;
-	}
-
-	@Override
 	public String explanation(String name, Object actualValue)
 	{
 		return "'" + actualValue + "' is not empty"; 

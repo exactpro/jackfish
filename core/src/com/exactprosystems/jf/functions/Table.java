@@ -375,13 +375,11 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 
 		for (Map<Header, Object> row : this.innerList)
 		{
+		    RowTable rowTable =  convertToStr(row);
 			boolean matched = true;
 			for (Condition condition : conditions)
 			{
-				String name = condition.getName();
-				Object actualValue = row.get(headerByName(name));
-				
-				if (!condition.isMatched(name, actualValue))
+				if (!condition.isMatched(rowTable))
 				{
 					matched = false;
 					break;
@@ -403,13 +401,11 @@ public class Table implements List<RowTable>, Mutable, Cloneable
         int count = 0;
         for (Map<Header, Object> row : this.innerList)
         {
+            RowTable rowTable =  convertToStr(row);
             boolean matched = true;
             for (Condition condition : conditions)
             {
-                String name = condition.getName();
-                Object actualValue = row.get(headerByName(name));
-
-                if (!condition.isMatched(name, actualValue))
+                if (!condition.isMatched(rowTable))
                 {
                     matched = false;
                     break;

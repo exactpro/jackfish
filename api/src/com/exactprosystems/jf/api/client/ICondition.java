@@ -17,11 +17,6 @@ public interface ICondition
 
 	boolean isMatched(Map<String, Object> map);
 
-	@Deprecated
-	boolean isMatched(String otherName, Object otherValue);
-	@Deprecated
-	boolean isMatched2(String otherName, Object otherValue1, Object otherValue2);
-
 	String explanation(String name, Object actualValue);
 
 }

@@ -1699,29 +1699,29 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 
 			if (valueCondition != null)
 			{
-				String name = valueCondition.getName();
-				Integer index = fieldIndexes.get(name);
-				if (index == null)
-				{
-					throw new WrongParameterException("The column '" + name + "' is not found. Possible values are: " + humanReadableHeaders(fieldIndexes));
-				}
-				Object value = getValueTableCell(fixture, i, index);
-				if (!valueCondition.isMatched(name, value)) // FIXME replace to another isMathched()
-				{
-					found = false;
-				}
+                Map<String, Object> values = new HashMap<>();
+                for (int j = 0; j < table.getColumnCount(); j++)
+                {
+                    String name = valueCondition.getName();
+                    Object value = table.getColumnName(j);
+                    values.put(name, value);
+                }
+                if (!valueCondition.isMatched(values))
+                {
+                    found = false;
+                }
 			}
 
 			if (found && colorCondition != null)
 			{
-				String name = colorCondition.getName();
-				Integer index = fieldIndexes.get(name);
-				if (index == null)
-				{
-					throw new WrongParameterException("The column '" + name + "' is not found. Possible values are: " + humanReadableHeaders(fieldIndexes));
-				}
-				Color color = fixture.foregroundAt(TableCell.row(i).column(index)).target();
-				if (!colorCondition.isMatched(name, color)) // FIXME replace to another isMathched()
+                Map<String, Object> colors = new HashMap<>();
+                for (int j = 0; j < table.getColumnCount(); j++)
+                {
+                    String name = valueCondition.getName();
+                    Color color = fixture.foregroundAt(TableCell.row(i).column(j)).target();
+                    colors.put(name, color);
+                }
+				if (!colorCondition.isMatched(colors))
 				{
 					found = false;
 				}

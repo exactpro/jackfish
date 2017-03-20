@@ -60,30 +60,6 @@ public class StringCondition extends Condition  implements Serializable
 	}
 
 	@Override
-	public boolean isMatched(String otherName, Object otherValue)
-	{
-		if (!isMatchedName(otherName))
-		{
-			return true;
-		}
-
-		String otherStrValue = "" + otherValue;
-		
-		if (this.ignoreCase)
-		{
-			return this.value.equalsIgnoreCase(otherStrValue);
-		}
-			
-		return this.value.equals(otherStrValue);
-	}
-
-	@Override
-	public boolean isMatched2(String otherName, Object otherValue1, Object otherValue2)
-	{
-    	return isMatched(otherName, otherValue1);
-	}
-
-	@Override
 	public String explanation(String name, Object actualValue)
 	{
 		if (this.ignoreCase)

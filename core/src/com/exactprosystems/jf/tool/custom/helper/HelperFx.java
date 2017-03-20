@@ -9,6 +9,7 @@
 package com.exactprosystems.jf.tool.custom.helper;
 
 import com.exactprosystems.jf.api.common.DescriptionAttribute;
+import com.exactprosystems.jf.api.common.HideAttribute;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.evaluator.Variables;
@@ -84,6 +85,10 @@ public class HelperFx
 
 				for (Method method : clazz.getMethods())
 				{
+				    if (method.getAnnotation(HideAttribute.class) != null)
+				    {
+				        continue;
+				    }
 					SimpleMethod simpleMethod = getStringSimpleMethod(method);
 					if (simpleMethod != null)
 					{
@@ -107,6 +112,7 @@ public class HelperFx
 				}
 
 				observableAll.addAll(Arrays.stream(clazz.getFields())
+	                            .filter(t -> t.getAnnotation(HideAttribute.class) == null )
 								.map(this::getStringsSimpleField)
 								.filter(simpleField -> simpleField != null)
 								.collect(Collectors.toList())
@@ -200,7 +206,10 @@ public class HelperFx
 
 		public List<String> getParameters()
 		{
-			return Arrays.stream(this.method.getParameterTypes()).map(type -> type.getSimpleName()).collect(Collectors.toList());
+			return Arrays.stream(this.method.getParameterTypes())
+                    .filter(t -> t.getAnnotation(HideAttribute.class) == null )
+			        .map(type -> type.getSimpleName())
+			        .collect(Collectors.toList());
 		}
 
 		public String getReturnType()

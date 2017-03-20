@@ -26,7 +26,7 @@ public class ClientHelper
 			String name = condition.getName();
 			Object actualValue = valueByName(actual, name);
 			
-			if (!condition.isMatched(name, actualValue))
+			if (!condition.isMatched(actual))
 			{
 				result.put(name, condition.explanation(name, actualValue)); 
 			}
@@ -52,11 +52,7 @@ public class ClientHelper
 		
 		for (ICondition condition : conditions)
 		{
-			String name = condition.getName();
-			
-			Object value = valueByName(message, name);
-			
-			if (!condition.isMatched(name, value))
+			if (!condition.isMatched(message))
 			{
 				return false;
 			}

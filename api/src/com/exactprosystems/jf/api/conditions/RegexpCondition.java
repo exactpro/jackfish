@@ -44,23 +44,6 @@ public class RegexpCondition extends Condition implements Serializable
 	}
 
 	@Override
-	public boolean isMatched(String otherName, Object otherValue)
-	{
-		if (!isMatchedName(otherName))
-		{
-			return true;
-		}
-		String otherStrValue = "" + otherValue;
-		return Pattern.compile(this.pattern).matcher(otherStrValue).find();
-	}
-
-	@Override
-	public boolean isMatched2(String otherName, Object otherValue1, Object otherValue2)
-	{
-    	return isMatched(otherName, otherValue1);
-	}
-
-	@Override
 	public String explanation(String name, Object actualValue)
 	{
 		return "'" + String.valueOf(actualValue) + "' not suitable for regular expression '" + String.valueOf(this.pattern) + "'";

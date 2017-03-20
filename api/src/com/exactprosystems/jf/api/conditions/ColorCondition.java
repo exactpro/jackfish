@@ -58,68 +58,6 @@ public class ColorCondition extends Condition implements Serializable
 	}
 
 	@Override
-	public boolean isMatched(String otherName, Object otherValue)
-	{
-		if (!isMatchedName(otherName))
-		{
-			return true;
-		}
-		
-		if (otherValue instanceof Color)
-		{
-			return this.value.equals(otherValue);
-		}
-
-		return false;
-	}
-
-	@Override
-	public boolean isMatched2(String otherName, Object otherValue1, Object otherValue2)
-	{
-		if (!isMatchedName(otherName))
-		{
-			return true;
-		}
-		
-		if (this.foreground)
-		{
-			if (otherValue1 == null)
-			{
-				return this.value == otherValue1;
-			}
-			
-			if (this.value == null)
-			{
-				return false;
-			}
-			
-			if (otherValue1 instanceof Color)
-			{
-				return this.value.equals(otherValue1);
-			}
-		}
-		else
-		{
-			if (otherValue2 == null)
-			{
-				return this.value == otherValue2;
-			}
-			
-			if (this.value == null)
-			{
-				return false;
-			}
-			
-			if (otherValue2 instanceof Color)
-			{
-                return this.value.equals(otherValue2);
-			}
-		}
-		
-		return false;
-	}
-
-	@Override
 	public String explanation(String name, Object actualValue)
 	{
 		return String.valueOf(this.value) + " != " + actualValue;

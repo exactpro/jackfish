@@ -50,18 +50,6 @@ public class NotCondition extends Condition
 		return this.cond.isMatchedName(otherName);
 	}
 	
-	@Override
-	public boolean isMatched(String otherName, Object otherValue)
-	{
-		return !this.cond.isMatched(otherName, otherValue);
-	}
-
-    @Override
-    public boolean isMatched2(String otherName, Object otherValue1, Object otherValue2)
-    {
-    	return isMatched(otherName, otherValue1);
-    }
-    
     @Override
     public String explanation(String name, Object actualValue)
     {

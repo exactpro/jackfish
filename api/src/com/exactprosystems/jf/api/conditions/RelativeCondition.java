@@ -53,48 +53,6 @@ public abstract class RelativeCondition extends Condition  implements Serializab
 	}
 
 	@Override
-	public boolean isMatched(String otherName, Object otherValue)
-	{
-		if (!isMatchedName(otherName))
-		{
-			return true;
-		}
-		
-		Integer result = compare(otherValue);
-		
-		if (result == null)
-		{
-			return false;
-		}
-		
-		switch (this.relation)
-		{
-		case Less:
-			return result < 0;
-
-		case LessEqual:
-			return result < 0 || result == 0;
-
-		case Equal:
-			return result == 0;
-			
-		case Great:
-			return result > 0;
-			
-		case GreatEqual:
-			return result > 0 || result == 0;
-		}
-		
-		return false;
-	}
-	
-	@Override
-	public boolean isMatched2(String otherName, Object otherValue1, Object otherValue2)
-	{
-    	return isMatched(otherName, otherValue1);
-	}
-
-	@Override
 	public String explanation(String name, Object actualValue)
 	{
 		return "expected = '" + valueStr() + "' is not" + this.relation.sign + " actual = '" + actualValue + "'";
