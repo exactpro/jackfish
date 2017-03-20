@@ -60,8 +60,8 @@ public class WinAppFactory implements IApplicationFactory
 		{
 			case LOAD:		return new String[] { jreExecName, jreArgsName, maxTimeout, logLevel};
 			case START:		return new String[] { execName, workDirName, argsName };
-			case CONNECT:
-				return new String[]{mainWindowName, mainWindowHeight, mainWindowWidth, pidName, controlKindName, connectionTimeout};
+			case CONNECT:   return new String[] { mainWindowName, mainWindowHeight, mainWindowWidth, pidName, controlKindName, connectionTimeout };
+			case PROPERTY:  return new String[] { propertyWindowRectangle }; 
 			default:		return empty;	
 		}
 	}
