@@ -1,4 +1,12 @@
 --------------------------------------------------------------------------------
+20.03.2017 4.4.0.2136
+40497 feature : ApplicationGetProperties -> All parameters doesn't contain parameters
+
+--------------------------------------------------------------------------------
+20.03.2017 4.4.0.2134
+RM41051 bug: TableReport action does not work correctly
+
+--------------------------------------------------------------------------------
 20.03.2017 4.4.0.2133
 RM40894 bug: Dialog wizard | Element's counter is not working
 
