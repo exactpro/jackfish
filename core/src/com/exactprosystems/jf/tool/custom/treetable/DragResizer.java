@@ -14,12 +14,14 @@ import javafx.scene.layout.Region;
 
 import java.util.Optional;
 import java.util.function.DoubleConsumer;
+import java.util.function.DoublePredicate;
 
 public class DragResizer
 {
 	private static final int RESIZE_MARGIN = 5;
 	private final Region region;
-	private final int MIN_VALUE = 40;
+	private final int minValue = 40;
+	private DoublePredicate predicate;
 	private double y;
 	private boolean initMinHeight;
 	private boolean dragging;
@@ -35,6 +37,18 @@ public class DragResizer
 	{
 		final DragResizer resizer = new DragResizer(region, consumer);
 
+		region.setOnMousePressed(resizer::mousePressed);
+		region.setOnMouseDragged(resizer::mouseDragged);
+		region.setOnMouseMoved(resizer::mouseOver);
+		region.setOnMouseReleased(resizer::mouseReleased);
+		region.setOnMouseExited(resizer::mouseExited);
+		region.getStyleClass().add(CssVariables.RESIZABLE_REGION);
+	}
+
+	public static void makeResizable(Region region, DoublePredicate minPredicate, DoubleConsumer consumer)
+	{
+		final DragResizer resizer = new DragResizer(region, consumer);
+		resizer.predicate = minPredicate;
 		region.setOnMousePressed(resizer::mousePressed);
 		region.setOnMouseDragged(resizer::mouseDragged);
 		region.setOnMouseMoved(resizer::mouseOver);
@@ -88,7 +102,8 @@ public class DragResizer
 		}
 		double mousey = event.getY();
 		double newHeight = region.getMinHeight() + (mousey - y);
-		if (newHeight > MIN_VALUE)
+		Boolean value = Optional.ofNullable(this.predicate).map(pr -> pr.test(newHeight)).orElse(newHeight > minValue);
+		if (value)
 		{
 			region.setMinHeight(newHeight);
 			region.setPrefHeight(newHeight);

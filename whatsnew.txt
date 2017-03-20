@@ -1,3 +1,6 @@
+20.03.2017 4.4.0.2131
+RM40938 An ability to expand text boxes in the Merge Editor window. Implemented
+--------------------------------------------------------------------------------
 20.03.2017 4.4.0.2129
 RM40995 Jf can't open merge editor, when file contains more than 1 conflict. Fixed
 --------------------------------------------------------------------------------
