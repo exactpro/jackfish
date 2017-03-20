@@ -445,7 +445,7 @@ public abstract class ReportBuilder implements Storable
 			int count = 1;
 			while ((line = src.readLine()) != null)
 			{
-				reportMatrixRow(writer, count, postProcess(line));
+				reportMatrixRow(writer, count, line);
 				count++;
 			}
 			src.close();

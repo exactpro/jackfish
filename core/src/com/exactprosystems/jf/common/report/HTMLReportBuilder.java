@@ -394,7 +394,7 @@ public class HTMLReportBuilder extends ReportBuilder
 		{
 			writer.fwrite("<div class='movable' data-moveto='%s' >\n",table.getBeforeTestcase());
 		}
-		writer.fwrite("<h4 class='tableTitle'>%s</h4>",this.postProcess(tableTitle));
+        writer.fwrite("<span>%s</span>", this.postProcess(tableTitle));
 		writer.fwrite("<table width='100%%' class='table table-bordered'>\n");
 
 		//region display headers
