@@ -271,18 +271,6 @@ public class GitUtil
 				return null;
 			}
 			List<Chunk> lines = new ArrayList<>();
-			Chunk curCh = null;
-
-			int nrOfConflicts = 0;
-			// just counting
-			for (MergeChunk mergeChunk : mergeChunks) {
-				if (mergeChunk.getConflictState().equals(MergeChunk.ConflictState.FIRST_CONFLICTING_RANGE)) {
-					nrOfConflicts++;
-				}
-			}
-
-			String asd = "aaaaa";
-
 			for (MergeChunk mergeChunk : mergeChunks)
 			{
 				MergeChunk.ConflictState conflictState = mergeChunk.getConflictState();

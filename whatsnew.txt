@@ -1,3 +1,5 @@
+20.03.2017 4.4.0.2129
+RM40995 Jf can't open merge editor, when file contains more than 1 conflict. Fixed
 --------------------------------------------------------------------------------
 17.03.2017 4.4.0.2125
 RM40909 bug : Components count in XPath builder doesn't equal count when we click test all components

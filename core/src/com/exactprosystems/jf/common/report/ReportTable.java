@@ -9,7 +9,9 @@
 package com.exactprosystems.jf.common.report;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.IntStream;
 
 public class ReportTable
 {
@@ -19,6 +21,14 @@ public class ReportTable
 		this.beforeTestcase = beforeTestcase;
 		this.decorated = decorated;
 		this.columns = columns;
+		//sum of widths cant be more 100
+		if (widths != null && IntStream.of(widths).sum() > 100){
+			int[] n = {};
+			for (int i : widths){
+				n = addElement(n, i / IntStream.of(widths).sum());
+			}
+			this.percents = n;
+		} else {this.percents = widths;}
 	}
 
 	public void addValues(Object ... values)
@@ -56,9 +66,20 @@ public class ReportTable
 		return this.data;
 	}
 
+	public int[] getPercents() {
+		return this.percents;
+	}
+
+	private static int[] addElement(int[] a, int e) {
+		a  = Arrays.copyOf(a, a.length + 1);
+		a[a.length - 1] = e;
+		return a;
+	}
+
 	protected boolean decorated;
 	protected String title;
 	protected String beforeTestcase;
 	protected String[] columns;
 	protected List<Object[]> data;
+	protected int[] percents;
 }
