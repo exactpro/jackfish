@@ -10,6 +10,7 @@ package com.exactprosystems.jf.tool.git.merge.editor;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.CssVariables;
+import com.exactprosystems.jf.tool.custom.treetable.DragResizer;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
@@ -101,6 +102,8 @@ public class MergeEditorController implements Initializable, ContainingParent
 		TextArea taTheir = new TextArea();
 		taTheir.setEditable(false);
 
+		DragResizer.makeResizable(taResult, v -> v > Math.max(taYour.getMinHeight(), taTheir.getMinHeight()), taResult::setPrefHeight);
+
 		RowConstraints rowConstraints = new RowConstraints();
 		rowConstraints.setFillHeight(true);
 
@@ -142,7 +145,7 @@ public class MergeEditorController implements Initializable, ContainingParent
 		taTheir.setText(theirText);
 
 		Arrays.asList(taYour, taTheir).forEach(ta -> {
-			double value = ta.getParagraphs().size() * (ta.getFont().getSize() + 3) + 13;
+			double value = (ta.getParagraphs().size() + 1) * (ta.getFont().getSize() + 3) + 13;
 			ta.setPrefHeight(value);
 			ta.setMinHeight(value);
 		});
