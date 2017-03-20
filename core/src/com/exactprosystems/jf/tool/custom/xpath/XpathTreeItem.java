@@ -1,43 +1,15 @@
 package com.exactprosystems.jf.tool.custom.xpath;
 
 import com.exactprosystems.jf.tool.CssVariables;
-import com.exactprosystems.jf.tool.dictionary.dialog.DialogWizardController;
 import com.exactprosystems.jf.tool.dictionary.dialog.ElementWizardBean;
 import javafx.scene.layout.HBox;
-import javafx.scene.paint.Color;
+
 import org.w3c.dom.Node;
 
 import java.util.*;
 
 public class XpathTreeItem extends XpathItem
 {
-	public enum TreeItemState
-	{
-		UPDATE(CssVariables.Icons.REFRESH, Color.web("#2687fb")),
-		ADD(CssVariables.Icons.ADD_16_ICON, Color.web("#2687fb")),
-		MARK(CssVariables.Icons.MARK_ICON, Color.web("#2a9635")),
-		QUESTION(CssVariables.Icons.QUESTION_ICON, Color.web("#f3c738"));
-
-		private String iconPath;
-		private Color color;
-
-		TreeItemState(String iconPath, Color color)
-		{
-			this.iconPath = iconPath;
-			this.color = color;
-		}
-
-		public String getIconPath()
-		{
-			return iconPath;
-		}
-
-		public Color color()
-		{
-			return color;
-		}
-	}
-
 	private boolean markIsVisible = true;
 	private Set<BeanWithMark> set = new HashSet<>();
 	private TreeItemState currentState;
@@ -71,9 +43,9 @@ public class XpathTreeItem extends XpathItem
 
 	public void addRelation(ElementWizardBean bean, TreeItemState state)
 	{
-		if (bean != null)
+		if (bean != null && state != null)
 		{
-			bean.setStyleClass(DialogWizardController.styleByState(state));
+			bean.setStyleClass(state.getCssStyle());
 		}
 		this.set.add(new BeanWithMark(bean, state));
 		this.currentState = state;

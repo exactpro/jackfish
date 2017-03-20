@@ -7,7 +7,7 @@ import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.custom.layout.CustomRectangle;
 import com.exactprosystems.jf.tool.custom.layout.LayoutExpressionBuilderController;
-import com.exactprosystems.jf.tool.custom.xpath.XpathCell;
+import com.exactprosystems.jf.tool.custom.xpath.TreeItemState;
 import com.exactprosystems.jf.tool.custom.xpath.XpathItem;
 import com.exactprosystems.jf.tool.custom.xpath.XpathTreeItem;
 import com.exactprosystems.jf.tool.custom.xpath.XpathViewer;
@@ -57,11 +57,11 @@ public class TreeTableViewWithRectangles
 
 	private Map<Rectangle, TreeItem<XpathTreeItem>> map = new HashMap<>();
 
-	private Map<XpathTreeItem.TreeItemState, Boolean> stateMap = new HashMap<XpathTreeItem.TreeItemState, Boolean>(){{
-		put(XpathTreeItem.TreeItemState.ADD, true);
-		put(XpathTreeItem.TreeItemState.MARK, true);
-		put(XpathTreeItem.TreeItemState.QUESTION, true);
-		put(XpathTreeItem.TreeItemState.UPDATE, true);
+	private Map<TreeItemState, Boolean> stateMap = new HashMap<TreeItemState, Boolean>(){{
+		put(TreeItemState.ADD, true);
+		put(TreeItemState.MARK, true);
+		put(TreeItemState.QUESTION, true);
+		put(TreeItemState.UPDATE, true);
 	}};
 
 	public TreeTableViewWithRectangles(DialogWizardController dialogWizardController)
@@ -109,11 +109,12 @@ public class TreeTableViewWithRectangles
 				if (treeItem != null)
 				{
 					XpathTreeItem xpathTreeItem = treeItem.getValue();
-					this.controller.changeStateCount(-1, xpathTreeItem.getState());
+//					this.controller.changeStateCount(-1, xpathTreeItem.getState());
 					xpathTreeItem.changeState();
-					this.controller.changeStateCount(+1, xpathTreeItem.getState());
+//					this.controller.changeStateCount(+1, xpathTreeItem.getState());
 					this.controller.refreshTable();
 					this.displayMarkedRows();
+					this.controller.updateCounters();
 					refresh();
 				}
 			}
@@ -126,6 +127,26 @@ public class TreeTableViewWithRectangles
 						.forEach(c -> c.accept(newValue == null ? null : newValue.getValue())));
 	}
 
+    public void passTree(Consumer<XpathTreeItem> consumer)
+    {
+        passTreeFrom(this.treeTableView.getRoot(), consumer);
+    }	    
+    
+    private void passTreeFrom(TreeItem<XpathTreeItem> item, Consumer<XpathTreeItem> consumer)
+    {
+        if (item == null)
+        {
+            return;
+        }
+        XpathTreeItem value = item.getValue();
+        if (consumer != null && value != null)
+        {
+            consumer.accept(value);
+        }
+        item.getChildren().forEach(child -> passTreeFrom(child, consumer));
+    }
+
+	
 	//region public methods
 	public void replaceWaitingPane(Node node)
 	{
@@ -286,7 +307,7 @@ public class TreeTableViewWithRectangles
 		this.treeTableView.getSelectionModel().select(treeItem);
 	}
 
-	public void setState(XpathTreeItem.TreeItemState state, boolean newValue)
+	public void setState(TreeItemState state, boolean newValue)
 	{
 		this.stateMap.replace(state, newValue);
 		this.displayMarkedRows();
@@ -332,9 +353,10 @@ public class TreeTableViewWithRectangles
 		{
 			boolean prevStateIsSet = selectedItem.getValue().getState() != null;
 			clearRelation(bean);
-			this.controller.changeStateCount(-1, prevStateIsSet ? selectedItem.getValue().getState() : XpathTreeItem.TreeItemState.UPDATE);
-			selectedItem.getValue().addRelation(bean, XpathTreeItem.TreeItemState.UPDATE);
-			this.controller.changeStateCount(1, selectedItem.getValue().getState());
+//			this.controller.changeStateCount(-1, prevStateIsSet ? selectedItem.getValue().getState() : TreeItemState.UPDATE);
+			selectedItem.getValue().addRelation(bean, TreeItemState.UPDATE);
+//			this.controller.changeStateCount(1, selectedItem.getValue().getState());
+			this.controller.updateCounters();
 			this.controller.refreshTable();
 		}
 		this.displayMarkedRows();
@@ -554,7 +576,7 @@ public class TreeTableViewWithRectangles
 				.filter(r -> true)
 				.map(markedRow -> {
 					XpathTreeItem value = markedRow.getValue();
-					XpathTreeItem.TreeItemState state = value.getState();
+					TreeItemState state = value.getState();
 					value.setMarkIsVisible(state == null ? true : stateMap.get(state));
 
 					Rectangle rectangle = value.getRectangle();
@@ -657,7 +679,7 @@ public class TreeTableViewWithRectangles
 			setTooltip(null);
 			if (item != null && !empty)
 			{
-				XpathTreeItem.TreeItemState icon = item.getState();
+				TreeItemState icon = item.getState();
 				List<XpathTreeItem.BeanWithMark> list = item.getList();
 				if (!list.isEmpty())
 				{
