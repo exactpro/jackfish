@@ -32,7 +32,6 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 		examples 				=
 				"{{##Id;#Action;#AppConnection\n"
 				+ "ACW;ApplicationCloseWindow;app\n"
-				+ "\n"
 				+ "#Assert;#Message\n"
 				+ "!Str.IsNullOrEmpty(ACW.Out);'String is null or empty'#}}",
 		seeAlso					= "{{@ApplicationStart@}}, {{@ApplicationConnectTo@}}",

@@ -43,7 +43,6 @@ import com.exactprosystems.jf.functions.HelpKind;
 				+ " window opened with the context menu of this action in {{$“All parameters”$}} option.",
 		examples = "{{##Id;#Action;#URL;#AppConnection\n" +
 				"AGP1;ApplicationGetProperties;;app\n" +
-				"\n" +
 				"#Assert;#Message\n" +
 				"!Str.IsNullOrEmpty(AGP1.Out.URL);'String is null or empty'#}}",
 		seeAlso	= "{{@ApplicationStart@}}, {{@ApplicationConnectTo@}}",

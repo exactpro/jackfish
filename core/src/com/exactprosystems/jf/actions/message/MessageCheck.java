@@ -39,7 +39,6 @@ import java.util.Map.Entry;
 				"2. Compare the values in MapMessage with the value passed in Additional parameters. \n" +
 				"{{##Id;#Action;#Fields\n" +
 				"MSGCR1;MessageCreate;{'First item' : 'First Value', 'Second Item' : 'Second Value'}\n" +
-				"\n" +
 				"#Id;#Action;#ActualMessage;#First item\n" +
 				"MSGCHK1;MessageCheck;MSGCR1.Out;'Second Value'#}}"
 	)

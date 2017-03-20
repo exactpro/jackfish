@@ -50,10 +50,8 @@ import com.exactprosystems.jf.functions.Xml;
 				+ "{{`3. Check the outcome`}} "
 				+ "{{##Id;#Action;#File\n"
 				+ "XML2;XmlLoadFromFile;'/path/Xml.xml'\n"
-				+ "\n"
 				+ "#Id;#Action;#Xpath;#Xml\n"
 				+ "XML2;XmlFindFirst;'//name';XML1.Out\n"
-				+ "\n"
 				+ "#Assert;#Message\n"
 				+ "XML2.Out.getChild().getAttribute() == 'first';'No such attribute'#}}"
 	)

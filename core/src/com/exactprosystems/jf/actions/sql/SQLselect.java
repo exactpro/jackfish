@@ -45,22 +45,16 @@ import com.exactprosystems.jf.sql.SqlConnection;
 				"{{` 7. Add the table to the report using the Table Report action `}}\n" +
 				"{{##Id;#Action;#User;#Server;#Base;#Sql;#Password\n" +
 				"SQLCNT1;SQLconnect;'username';'127.0.0.1:3306';'myDatabase';'MySQL';'userpassword'\n" +
-				"\n" +
 				"#Id;#Action;#Query;#Connection\n" +
 				"SQLEXEC1;SQLexecute;'CREATE TABLE users (id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,name VARCHAR(30) NOT NULL,age int NOT NULL)';SQLCNT1.Out\n" +
-				"\n" +
 				"#Id;#Let\n" +
 				"name;'mike'\n" +
-				"\n" +
 				"#Id;#Let\n" +
 				"age;23\n" +
-				"\n" +
 				"#Id;#Action;#Query;#Connection;#User name we get earlier ;#User age we get earlier\n" +
 				"SQLEXEC3;SQLexecute;'insert into users (name, age) values (?, ?)';SQLCNT1.Out;name;age\n" +
-				"\n" +
 				"#Id;#Action;#Query;#Connection;#User name we get earlier ;#User age we get earlier\n" +
 				"SQLSLCT1;SQLselect;'select name, age from test.users where name = ? and age = ?';SQLCNT1.Out;name;age\n" +
-				"\n" +
 				"#Action;#Table;#Title\n" +
 				"TableReport;SQLSLCT1.Out;'Report title'#}}",
 		seeAlsoClass = {SQLdisconnect.class, SQLexecute.class, SQLinsert.class, SQLtableUpload.class, SQLconnect.class}

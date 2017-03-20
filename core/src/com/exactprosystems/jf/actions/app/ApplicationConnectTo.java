@@ -53,7 +53,6 @@ import java.util.Map;
 				+ "{{@DialogFill@}}, {{@DialogSwitchToWindow@}}",
 		examples = "{{##Id;#Global;#Action;#Browser;#URL;#AppId\n" +
 				"app;1;ApplicationStart;'Chrome';'http://google.com';'WEB'\n" +
-				"\n" +
 				"#Assert;#Message\n" +
 				"app.Out.IsGood();'Connection is not established'#}}",
 		seeAlsoClass = {ApplicationStop.class, ApplicationStart.class, ApplicationGetProperties.class, ApplicationNewInstance.class,

@@ -37,8 +37,6 @@ import java.util.List;
 				+ "{{`2. Set the propertyName the value Value`}}"
 				+ "{{##Id;#Action;#ClientId\n"
 				+ "CLLD1;ClientLoad;'FIX'\n"
-				+ "\n"
-				+ "\n"
 				+ "#Id;#Action;#ClientConnection;#Name\n"
 				+ "CLSP1;ClientSetProperties;CLLD1.Out;'Value'#}}"
 	)

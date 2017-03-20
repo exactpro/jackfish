@@ -42,8 +42,6 @@ import com.exactprosystems.jf.functions.HelpKind;
 				+ "{{`2. Start the client.`}}"
 				+ "{{##Id;#Action;#ClientId\n"
 				+ "CLLD1;ClientLoad;'FIX'\n"
-				+ "\n"
-				+ "\n"
 				+ "#Id;#Action;#ClientConnection\n"
 				+ "CLSTRT1;ClientStart;CLLD1.Out#}}"
 	)

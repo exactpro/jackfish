@@ -29,7 +29,6 @@ import com.exactprosystems.jf.functions.Notifier;
 		additionFieldsAllowed 	= false,
 		examples 				= "Output the following row \"Current time is: current_time\" in the pop-up window, "
 				+ "with notification type Info.\n"
-				+ "\n"
 				+ "{{##Action;#Text;#Notifier\n"
 				+ "Show;'Current time is: ' + DateTime.currentTime();Notifier.Info#}}",
 		seeAlso = "{{@Print@}}",

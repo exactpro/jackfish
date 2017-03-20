@@ -30,7 +30,6 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 		outputType				= String.class,
 		examples = "{{##Id;#Action;#Title;#AppConnection\n" +
 				"AST;ApplicationSwitchTo;'Title';app\n" +
-				"\n" +
 				"#Assert;#Message\n" +
 				"Str.IsNullOrEmpty(AST.Out);'Title is null'#}}",
 		seeAlso					=

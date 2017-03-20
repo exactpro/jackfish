@@ -33,13 +33,10 @@ import com.exactprosystems.jf.functions.Xml;
 				+ "\n"
 				+ "{{##Id;#Action;#File\n"
 				+ "XML1;XmlLoadFromFile;'/home/victor.krasnovid/Desktop/Xml.xml'\n"
-				+ "\n"
 				+ "#Id;#Action;#Xpath;#NodeName;#Xml\n"
 				+ "XML2;XmlSelect;'//friend';'newParent';XML1.Out\n"
-				+ "\n"
 				+ "#Id;#Action;#Expected;#Actual\n"
 				+ "XMLCMP1;XmlCompare;XML2.Out.getChildren().get(0);XML2.Out.getChildren().get(1)\n"
-				+ "\n"
 				+ "#Assert;#Message\n"
 				+ "XMLCMP1.Out;'Xmls does not equals'#}}"
 	)

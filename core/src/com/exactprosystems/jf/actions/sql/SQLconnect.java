@@ -37,10 +37,8 @@ import java.util.List;
 		examples =
 				"{{` 1. Establish a database connection setting all mandatory parameters. `}}" +
 				"{{` 2. Check that the connection is created and open. `}}" +
-				"\n" +
 				"{{##Id;#Action;#User;#Server;#Base;#Sql;#Password\n" +
 				"SQLCNT1;SQLconnect;'username';'127.0.0.1:3306';'myDatabase';'MySQL';'userpassword'\n" +
-				"\n" +
 				"#Assert;#Message\n" +
 				"!(SQL.Out.isClosed());'connection is not established'#}}",
 		seeAlso = "{{@ SQLexecute @}}, {{@ SQLinsert @}}, {{@ SQLselect @}}, {{@ SQLtableUpload @}}, {{@ SQLdisconnect @}}.",

@@ -31,8 +31,6 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 		examples 				= "{{`1. Load the client for FIX.`}}"
 				+ "{{`2. Clear the list of the client messages.`}}"
 				+ "{{#CLLD1;ClientLoad;'FIX'\n"
-				+ "\n"
-				+ "\n"
 				+ "#Id;#Action;#ClientConnection\n"
 				+ "CLCLM1;ClientClearMessages;CLLD1.Out#}}"
 	)

@@ -27,7 +27,6 @@ import com.exactprosystems.jf.functions.Text;
         additionFieldsAllowed = false,
         examples =        "{{##Id;#Action;#Content\n"
                         + "TXT1;TextCreate;'Text'\n"
-                        + "\n"
                         + "#Action;#Line;#Text\n"
                         + "TextAddLine;'New line';TXT1.Out#}}\n",
         seeAlso = "{{@TextReport@}}, {{@TextPerform@}}, {{@TextLoadFromFile@}}, {{@TextCreate@}}, {{@TextSaveToFile@}}," +

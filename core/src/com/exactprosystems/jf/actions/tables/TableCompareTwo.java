@@ -41,13 +41,11 @@ import java.util.List;
 				+ "@;Name;Age\n"
 				+ "0;Mike;42\n"
 				+ "#EndRawTable\n"
-				+ "\n"
 				+ "#Id;#RawTable\n"
 				+ "TC1;Table\n"
 				+ "@;Name;Age\n"
 				+ "0;Mike;41\n"
 				+ "#EndRawTable\n"
-				+ "\n"
 				+ "#Action;#Expected;#Actual\n"
 				+ "TableCompareTwo;TC;TC1#}}"
 	)

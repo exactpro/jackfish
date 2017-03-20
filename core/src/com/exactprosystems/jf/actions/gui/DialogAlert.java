@@ -35,7 +35,6 @@ import java.util.List;
 				+ "{{`2. Ensure we have the notification heading as an output value.`}}"
 				+ "{{##Id;#Action;#Text;#Perform;#AppConnection\n"
 				+ "DLGALRT1;DialogAlert;'hello';PerformKind.Accept;APPSTR1.Out\n"
-				+ "\n"
 				+ "#Assert;#Message\n"
 				+ "DLGALRT1.Out != null;#}}"
 	)

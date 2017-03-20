@@ -29,13 +29,10 @@ import com.exactprosystems.jf.sql.SqlConnection;
 		examples = "{{` 1. Establish a database connection setting all mandatory parameters. `}}" +
 				"{{` 2. Close the database connection. `}}" +
 				"{{` 3. Confirm that the database connection is closed. `}}" +
-				"\n" +
 				"{{# #Id;#Action;#User;#Server;#Base;#Sql;#Password\n" +
 				"SQLCNT1;SQLconnect;'username';'127.0.0.1:3306';'myDatabase';'MySQL';'userpassword'\n" +
-				"\n" +
 				"#Id;#Action;#Connection\n" +
 				"SQLDCNT1;SQLdisconnect;SQLCNT1.Out\n" +
-				"\n" +
 				"#Assert;#Message\n" +
 				"SQLCNT1.Out.isClosed();'connection is not closed'. #}}",
 		seeAlso = "{{@ SQLexecute @}}, {{@ SQLinsert @}}, {{@ SQLselect @}}, {{@ SQLtableUpload @}}, {{@ SQLconnect @}}.",

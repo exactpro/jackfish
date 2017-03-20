@@ -47,12 +47,8 @@ import java.util.Map.Entry;
 				+ "{{`3. Check the message.`}}"
 				+ "{{##Id;#Action;#ClientId\n"
 				+ "CLLD1;ClientLoad;'FIX'\n"
-				+ "\n"
-				+ "\n"
 				+ "#Id;#Action;#ClientConnection;#MessageType;#FirstName\n"
 				+ "CLCRMM1;ClientCreateMapMessage;CLLD1.Out;'35';'FirstValue'\n"
-				+ "\n"
-				+ "\n"
 				+ "#Id;#Action;#ActualMessage;#ExpectedMessageType;#ClientConnection;#FirstName\n"
 				+ "CLMSGCHK1;ClientCheckMessage;CLCRMM1.Out;'35';CLLD1.Out;'FirstValue'#}}"
 	)

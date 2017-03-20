@@ -42,8 +42,6 @@ import com.exactprosystems.jf.functions.HelpKind;
 				+ "{{`2. Create message type MapMessage.`}}"
 				+ "#Id;#Action;#ClientId\n"
 				+ "CLLD1;ClientLoad;'FIX'\n"
-				+ "\n"
-				+ "\n"
 				+ "{{##Id;#Action;#ClientConnection;#MessageType;#First;#Second\n"
 				+ "CLCRMM1;ClientCreateMapMessage;CLLD1.Out;'35';'Value';'Value'#}}"
 	)

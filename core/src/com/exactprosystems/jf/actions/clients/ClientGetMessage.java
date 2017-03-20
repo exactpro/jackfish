@@ -45,8 +45,6 @@ import com.exactprosystems.jf.functions.HelpKind;
 				+ "{{`2. Find the message with the value Value and name Name.`}}"
 				+ "{{##Id;#Action;#ClientId\n"
 				+ "CLLD1;ClientLoad;'FIX'\n"
-				+ "\n"
-				+ "\n"
 				+ "#Id;#Action;#ClientConnection;#MessageType;#Name\n"
 				+ "CLGM1;ClientGetMessage;CLLD1.Out;'35';'Value'#}}"
 	)

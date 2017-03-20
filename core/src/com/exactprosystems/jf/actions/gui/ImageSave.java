@@ -33,13 +33,10 @@ import java.io.File;
 		examples 				= "{{`1. Connect to web application`}}"
 				+ "{{`2. Get the images of the whole application.`}}"
 				+ "{{`3. Save the file to the user’s home directory.`}}"
-				+ "\n"
 				+ "{{##Id;#Action;#Browser;#URL;#AppId\n"
 				+ "APPSTR1;ApplicationStart;'Chrome';'https://google.com';'WEB'\n"
-				+ "\n"
 				+ "#Id;#Action;#AppConnection\n"
 				+ "IMGGET1;ImageGet;APPSTR1.Out\n"
-				+ "\n"
 				+ "#Id;#Action;#Dir;#Image\n"
 				+ "IMGSV1;ImageSave;currentUser/home;IMGGET1.Out#}}"
 	)

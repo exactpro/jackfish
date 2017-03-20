@@ -32,7 +32,6 @@ import com.exactprosystems.jf.functions.Text;
 		examples =
  "{{##Id;#Action;#File\n"
 + "TXT1;TextLoadFromFile;’path/text.txt’\n"
-+ "\n"
 + "#Assert;#Message\n"
 + "TXT1.Out != null;#}}\n",
 		seeAlso = "{{@TextReport@}}, {{@TextAddLine@}}, {{@TextPerform@}}, {{@TextCreate@}}, {{@TextSaveToFile@}}," +

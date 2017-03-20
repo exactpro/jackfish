@@ -17,23 +17,19 @@ import java.util.List;
 							" block Default will be performed." +
 							"{{# #Id;#Let\n" +
 							"number;0\n" +
-							"\n" +
 							"#Switch\n" +
 							"number\n" +
 							"#Case\n" +
 							"1\n" +
 							"#Action;#Greeting\n" +
 							"Print;'Hello!'\n" +
-							"\n" +
 							"#Case\n" +
 							"2\n" +
 							"#Action;#Greeting\n" +
 							"Print;'Hi!'\n" +
-							"\n" +
 							"#Default\n" +
 							"#Action;#Greeting\n" +
 							"Print;'Farewell'\n" +
-							"\n" +
 							"#EndSwitch#}}",
 		seeAlso 		= "For, While, Break",
 		shouldContain 	= { Tokens.Default },

@@ -34,10 +34,8 @@ import com.exactprosystems.jf.functions.Table;
 				+ "@;Name;Age\n"
 				+ "0;;\n"
 				+ "#EndRawTable\n"
-				+ "\n"
 				+ "#Action;#Index;#Table;#Name\n"
 				+ "TableAddValue;0;TC;'Mike'\n"
-				+ "\n"
 				+ "#Assert;#Message\n"
 				+ "TC.get(0).get('Name') == 'Mike' && TC.get(0).get('Age') == null;'Values are not equals'#}}",
 		seeAlsoClass = {TableReplace.class, TableAddColumns.class, TableConsiderColumnsAs.class, TableColumnRename.class}

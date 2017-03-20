@@ -38,7 +38,6 @@ import com.exactprosystems.jf.functions.Table;
 				+ "{{`2. Verify that the created object has columns  set initially.`}}\n"
 				+ "{{##Id;#Action;#Name;#Age\n"
 				+ "TC;TableCreate;;\n"
-				+ "\n"
 				+ "#Assert;#Message\n"
 				+ "TC.Out.getHeader(0) == 'Name' && TC.Out.getHeader(1) == 'Age';'Table is not correct'#}}\n",
 		seeAlsoClass = {RawTable.class, TableLoadFromDir.class, TableLoadFromFile.class, TableSelect.class}

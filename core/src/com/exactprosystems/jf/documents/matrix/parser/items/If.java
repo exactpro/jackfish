@@ -34,16 +34,13 @@ import java.util.Set;
 							"If the expression is false, the operator line Else is performed. If this line isn’t there, an action is performed continually. ",
 		examples 		= "{{##Id;#Let\n" +
 							"year;new DateTime().getYears(new Date())\n" +
-							"\n" +
 							"#If\n" +
 							"year == 2017\n" +
 							"#Action;#today\n" +
 							"Print;'is 2017'\n" +
-							"\n" +
 							"#Else\n" +
 							"#Action;#today\n" +
 							"Print;'is not 2017'\n" +
-							"\n" +
 							"#EndIf#}}",
 		seeAlso 		= "Else",
         shouldContain 	= { Tokens.If },

@@ -41,16 +41,12 @@ import com.exactprosystems.jf.functions.Table;
 				+ "1;John;32;25000*12\n"
 				+ "2;Fred;21;7000*12\n"
 				+ "#EndRawTable\n"
-				+ "\n"
 				+ "#Action;#Table;#Integer\n"
 				+ "TableConsiderColumnsAs;TC;'Age'\n"
-				+ "\n"
 				+ "#Id;#Action;#Table;#Age\n"
 				+ "TS;TableSelect;TC;new NumberCondition('Age','>',25)\n"
-				+ "\n"
 				+ "#Action;#Expression;#Table\n"
 				+ "TableConsiderColumnsAs;'SalaryPerYear';TS.Out\n"
-				+ "\n"
 				+ "#Assert;#Message\n"
 				+ "TS.Out.size() == 2 && TS.Out.get(0).get('SalaryPerYear') == '144000'#}}",
 		seeAlsoClass = {TableReplace.class, TableAddColumns.class, TableColumnRename.class, TableAddValue.class}

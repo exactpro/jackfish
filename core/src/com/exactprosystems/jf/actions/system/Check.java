@@ -45,7 +45,6 @@ import java.util.Map.Entry;
                 + "0;Russia;Moscow\n"
                 + "1;Germany;Berlin\n"
                 + "#EndRawTable\n"
-                + "\n"
                 + "#Action;#DoNotFail;#Actual;#Country;#Capital\n"
                 + "Check;true;DATA1.get(0);'Russia';'Berlin'#}}"
     )

@@ -36,12 +36,8 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 				+ "{{`3. Encode the message.`}}"
 				+ "{{##Id;#Action;#ClientId\n"
 				+ "CLLD1;ClientLoad;'FIX'\n"
-				+ "\n"
-				+ "\n"
 				+ "#Id;#Action;#Name\n"
 				+ "MSGCR1;MessageCreate;'Value'\n"
-				+ "\n"
-				+ "\n"
 				+ "#Id;#Action;#Message;#ClientConnection\n"
 				+ "CLENC1;ClientEncode;MSGCR1.Out;CLLD1.Out#}}"
 	)

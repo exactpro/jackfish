@@ -44,10 +44,8 @@ import com.exactprosystems.jf.functions.Xml;
 				+ "{{`3. Make sure that the element has been deleted and its content is not in the report.`}} "
 				+ "{{##Id;#Action;#File\n"
 				+ "XML1;XmlLoadFromFile;'/path/Xml.xml'\n"
-				+ "\n"
 				+ "#Action;#Xpath;#Xml\n"
 				+ "XmlRemove;'//from';XML1.Out\n"
-				+ "\n"
 				+ "#Action;#Xml;#Title\n"
 				+ "XmlReport;XML1.Out;'Report Title'#}}"
 	)

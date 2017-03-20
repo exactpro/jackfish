@@ -41,10 +41,8 @@ import static com.exactprosystems.jf.actions.gui.Helper.message;
 				+ "{{`3. Check the number of closed elements.`}}"
 				+ "{{##Id;#Action;#Browser;#URL;#AppId\n"
 				+ "APPSTR1;ApplicationStart;'Chrome';'https://google.com';'WEB'\n"
-				+ "\n"
 				+ "#Id;#Action;#Dialog;#AppConnection\n"
 				+ "DLGCLS1;DialogClose;'MyDialog';APPSTR1.Out\n"
-				+ "\n"
 				+ "#Assert;#Message\n"
 				+ "DLGCLS1.Out > 0;'0 elements was closed'#}}"
 )

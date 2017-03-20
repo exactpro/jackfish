@@ -45,7 +45,6 @@ import com.exactprosystems.jf.functions.Xml;
 				+ "\n"
 				+ "{{##Id;#Action;#File\n"
 				+ "XML1;XmlLoadFromFile;'/path/Xml.xml'\n"
-				+ "\n"
 				+ "#Id;#Action;#Text;#Xml\n"
 				+ "XSN;XmlSetNode;'Text for insert';Xml#}}"
 	)

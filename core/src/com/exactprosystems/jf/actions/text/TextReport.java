@@ -30,7 +30,6 @@ import java.util.List;
 		examples =
  "{{##Id;#Action;#Content\n"
 + "TXT1;TextCreate;'Text'\n"
-+ "\n"
 + "#Action;#Title;#Text\n"
 + "TextReport;’My text’;TXT1.Out#}}\n",
 		seeAlso = "{{@TextPerform@}}, {{@TextAddLine@}}, {{@TextLoadFromFile@}}, {{@TextCreate@}}, {{@TextSaveToFile@}}," +
