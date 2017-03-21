@@ -923,6 +923,17 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 		return result;
 	}
 
+	public static String generateColumnName(Table table)
+	{
+		int currentIndexColumn = 0;
+		String columnName = "NewColumn", temp = "NewColumn";
+		while (table.columnIsPresent(columnName))
+		{
+			columnName = temp + currentIndexColumn++;
+		}
+		return columnName;
+	}
+
 	@Override
 	public String toString()
 	{

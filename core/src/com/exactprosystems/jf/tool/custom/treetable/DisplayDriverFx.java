@@ -33,6 +33,8 @@ import com.exactprosystems.jf.tool.custom.grideditor.SpreadsheetView;
 import com.exactprosystems.jf.tool.custom.grideditor.TableDataProvider;
 import com.exactprosystems.jf.tool.custom.label.CommentsLabel;
 import com.exactprosystems.jf.tool.custom.layout.wizard.LayoutWizard;
+import com.exactprosystems.jf.tool.custom.number.NumberSpinner;
+import com.exactprosystems.jf.tool.custom.number.NumberTextField;
 import com.exactprosystems.jf.tool.custom.tab.CustomTab;
 import com.exactprosystems.jf.tool.custom.tab.CustomTabPane;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
@@ -47,17 +49,15 @@ import javafx.scene.control.*;
 import javafx.scene.layout.*;
 
 import java.io.FileReader;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class DisplayDriverFx implements DisplayDriver
 {
+	private static final String GRID_PARENT = "gridParent";
+
 	public DisplayDriverFx(MatrixTreeView treeView, Context context, MatrixContextMenu rowContextMenu, MatrixParametersContextMenu parametersContextMenu)
 	{
 		this.treeView = treeView;
@@ -473,6 +473,46 @@ public class DisplayDriverFx implements DisplayDriver
 	}
 
 	@Override
+	public void showSpinner(MatrixItem item, Object layout, int row, int column, double prefWidth, Setter<Integer> set, Getter<Integer> get, int minValue, int maxValue)
+	{
+		GridPane pane = ((GridPane) layout);
+
+		Integer initialValue = get.get();
+		NumberTextField numberField = new NumberTextField(initialValue, minValue, maxValue);
+		numberField.focusedProperty().addListener((observable, oldValue, newValue) ->
+		{
+			if (!newValue && oldValue)
+			{
+				if (Str.IsNullOrEmpty(numberField.getText()))
+				{
+					DialogsHelper.showInfo("Field can't be empty. Initial size was setted");
+					numberField.setText("" + initialValue);
+				}
+				set.set(numberField.getValue());
+			}
+		});
+		NumberSpinner spinner = new NumberSpinner(numberField);
+		spinner.setPrefWidth(prefWidth);
+
+		pane.add(spinner, column, row);
+		GridPane.setMargin(spinner, INSETS);
+	}
+
+	@Override
+	public void updateTable(MatrixItem item, Object layout, Table table)
+	{
+		GridPane pane = ((GridPane) layout);
+
+		Optional<BorderPane> gridParent = pane.getChildren().stream().filter(node -> node.getStyleClass().contains(GRID_PARENT)).map(node -> (BorderPane) node).findFirst();
+		if (gridParent.isPresent())
+		{
+			BorderPane borderPane = gridParent.get();
+			SpreadsheetView spreadsheetView = (SpreadsheetView) borderPane.getCenter();
+			spreadsheetView.setDataProvider(new TableDataProvider(table));
+		}
+	}
+
+	@Override
 	public void showToggleButton(MatrixItem item, Object layout, int row, int column, Consumer<Boolean> action, 
 	          Function<Boolean, String> changeName, boolean initialValue)
 	{
@@ -511,14 +551,15 @@ public class DisplayDriverFx implements DisplayDriver
 		DataProvider<String> provider = new TableDataProvider(table);
 		SpreadsheetView view = new SpreadsheetView(provider);
 		view.setContextMenu(this.rowContextMenu);
+		view.setPrefHeight(30 * (Math.min(provider.getRowHeaders().size(), 4) + 1));
+
 		BorderPane borderPane = new BorderPane();
+		borderPane.getStyleClass().add(GRID_PARENT);
 		borderPane.setCenter(view);
 		DragResizer.makeResizable(borderPane, view::setPrefHeight);
-		view.setPrefHeight(30 * (Math.min(provider.getRowHeaders().size(), 4) + 1));
-		BorderPane newPane = new BorderPane();
-		newPane.setCenter(borderPane);
-		BorderPane.setMargin(newPane, new Insets(0, 0, 10, 0));
-		pane.add(newPane, column, row, 6, 2);
+		BorderPane.setMargin(borderPane, new Insets(0, 0, 10, 0));
+
+		pane.add(borderPane, column, row, 8, 2);
 	}
 
 	@Override

@@ -17,12 +17,12 @@ import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.*;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
 import com.exactprosystems.jf.functions.Table;
+import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @MatrixItemAttribute(
 		description 	= "This operator is used to describe an object asTable. In matrix editor there is a special mini editor for  rowText и rawMessage for this operator.",
@@ -50,6 +50,8 @@ public class RawTable extends MatrixItem
 		super();
 		this.typeName = new MutableValue<>();
 		this.table = Table.emptyTable();
+		this.prefCols = this.table.getHeaderSize();
+		this.prefRows = this.table.size();
 		this.table.setChangeListener(flag -> this.owner.changed(flag));
 	}
 
@@ -76,6 +78,33 @@ public class RawTable extends MatrixItem
 		        b -> b ? "Hide" : "Show", this.table.size() != 0);
 		driver.hide(this, layout, 2, this.table.size() == 0);
 		driver.showButton(this, layout, 1, 5, "Layout wizard", item -> driver.layoutWizard(item, table, context));
+
+		driver.showSpinner(this, layout, 1, 6, 75, v -> this.prefRows = v, () -> this.prefRows, 0, 250);
+		driver.showSpinner(this, layout, 1, 7, 75, v -> this.prefCols = v, () -> this.prefCols, 0, 50);
+		driver.showButton(this, layout, 1, 8, "Apply", item ->
+		{
+			if (this.prefCols < this.table.getHeaderSize() || this.prefRows < this.table.size())
+			{
+				boolean needContinue = DialogsHelper.showQuestionDialog(String.format("Current table size is [%s;%s] and passed size [%s;%s]. Table will cut ", this.table.size(), this.table.getHeaderSize(), this.prefRows, this.prefCols), "Do you want to continue cutting the table?");
+				if (needContinue)
+				{
+					List<String> collect = IntStream.range(this.prefCols, this.table.getHeaderSize()).mapToObj(this.table::getHeader).collect(Collectors.toList());
+					this.table.removeColumns(collect.toArray(new String[collect.size()]));
+
+					for (int i = this.table.size() - 1; i >= this.prefRows; i--)
+					{
+						this.table.remove(i);
+					}
+				}
+			}
+			else
+			{
+				IntStream.range(0, this.prefCols - this.table.getHeaderSize()).mapToObj(i -> Table.generateColumnName(this.table)).forEach(this.table::addColumns);
+
+				IntStream.range(0, this.prefRows - this.table.size()).mapToObj(i -> IntStream.range(0, this.table.getHeaderSize()).mapToObj(j -> "").collect(Collectors.toList())).map(list -> list.toArray(new Object[list.size()])).forEach(this.table::addValue);
+			}
+			driver.updateTable(this, layout, this.table);
+		});
 		return layout;
 	}
 
@@ -117,12 +146,14 @@ public class RawTable extends MatrixItem
 		if (this.firstUsing)
 		{
 			this.table = new Table(str, null);
+			this.prefCols = this.table.getHeaderSize();
 			this.table.setChangeListener(flag -> Optional.ofNullable(this.owner).ifPresent(own -> own.changed(flag)));
 			this.firstUsing = false;
 			return;
 		}
 
 		this.table.addValue(str);
+		this.prefRows = this.table.size();
 	}
 	
 	@Override
@@ -166,8 +197,7 @@ public class RawTable extends MatrixItem
 	
 
 	@Override
-	protected boolean matchesDerived(String what, boolean caseSensitive,
-			boolean wholeWord)
+	protected boolean matchesDerived(String what, boolean caseSensitive, boolean wholeWord)
 	{
 		return SearchHelper.matches(this.typeName.get(), what, caseSensitive, wholeWord);
 	}
@@ -176,7 +206,7 @@ public class RawTable extends MatrixItem
 	protected void checkItSelf(Context context, AbstractEvaluator evaluator,
 			IMatrixListener listener, Set<String> ids, Parameters parameters)
 	{
-		if (this.id != null && !this.id.isNullOrEmpty() && ids.contains(this.id))
+		if (this.id != null && !this.id.isNullOrEmpty() && ids.contains(this.id.get()))
 		{
 			listener.error(this.owner, getNumber(), this, "id '" + this.id + "' has already defined.");
 		}
@@ -198,7 +228,6 @@ public class RawTable extends MatrixItem
 
 			if (!super.id.isNullOrEmpty())
 			{
-				// set variable into local name space
 				vars.set(super.getId(), ret.getOut());
 			}
 
@@ -218,6 +247,9 @@ public class RawTable extends MatrixItem
 	// ==============================================================================================
 	private MutableValue<String> typeName;
 	private Table table;
+
+	private int prefCols;
+	private int prefRows;
 	
 	private boolean firstUsing = true;
 }

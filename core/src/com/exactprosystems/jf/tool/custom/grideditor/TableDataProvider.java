@@ -7,14 +7,12 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.exactprosystems.jf.tool.custom.grideditor;
 
-import com.exactprosystems.jf.common.evaluator.MvelEvaluator;
 import com.exactprosystems.jf.functions.Table;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 public class TableDataProvider implements DataProvider<String>
 {
-	private final String fileName = "src/com/exactprosystems/jf/tool/custom/grideditor/allControlsAndOperations.csv";
 	private Table table;
 
 	public TableDataProvider(Table table)
@@ -145,4 +143,8 @@ public class TableDataProvider implements DataProvider<String>
 		return strings;
 	}
 
+	public Table getTable()
+	{
+		return table;
+	}
 }

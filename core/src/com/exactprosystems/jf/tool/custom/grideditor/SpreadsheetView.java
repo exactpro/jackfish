@@ -9,7 +9,7 @@ package com.exactprosystems.jf.tool.custom.grideditor;
 
 import com.exactprosystems.jf.api.common.Sys;
 import com.exactprosystems.jf.exceptions.ColumnIsPresentException;
-import com.exactprosystems.jf.tool.Common;
+import com.exactprosystems.jf.functions.Table;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import javafx.application.Platform;
 import javafx.beans.property.*;
@@ -45,7 +45,6 @@ public class SpreadsheetView extends Control
 	}
 
 	private static final int minProgression = Integer.MIN_VALUE;
-	public static final String EMPTY = "N";
 	private static int currentIndexColumn = 0;
 	private static final double DEFAULT_ROW_HEADER_WIDTH = 30.0;
 
@@ -224,21 +223,11 @@ public class SpreadsheetView extends Control
 
 	public void addColumn(int index)
 	{
-		boolean flag = true;
-		while (flag)
-		{
-			try
-			{
-				currentIndexColumn++;
-				this.providerProperty().get().addColumn(index, "NewColumn" + currentIndexColumn);
-				flag = false;
-			}
-			catch (ColumnIsPresentException e)
-			{
-				//nothing
-			}
-		}
-		this.setDataProvider(this.providerProperty().get());
+		DataProvider dataProvider = this.providerProperty().get();
+		Table table = ((TableDataProvider) dataProvider).getTable();
+		String newHeader = Table.generateColumnName(table);
+		dataProvider.addColumn(index, newHeader);
+		this.setDataProvider(dataProvider);
 	}
 
 	public void removeColumn(int index)
@@ -666,10 +655,13 @@ public class SpreadsheetView extends Control
 		 */
 		int columnCount = rows[0].split("\t").length;
 		List<String> columnHeaders = this.providerProperty.get().getColumnHeaders();
+		DataProvider dataProvider = this.providerProperty().get();
 		if (indexSelectedColumn + columnCount > columnHeaders.size())
 		{
 			int addSize = indexSelectedColumn + columnCount - columnHeaders.size();
-			IntStream.range(0, addSize).forEach(i -> this.providerProperty().get().addColumn(this.providerProperty().get().columnCount(), "NewColumn" + currentIndexColumn++));
+			TableDataProvider tableDataProvider = (TableDataProvider) dataProvider;
+			Table table = tableDataProvider.getTable();
+			IntStream.range(0, addSize).forEach(i -> dataProvider.addColumn(dataProvider.columnCount(), Table.generateColumnName(table)));
 			this.setDataProvider(providerProperty().get());
 		}
 
@@ -697,11 +689,11 @@ public class SpreadsheetView extends Control
 		 * add rows if needs
 		 */
 		int rowCount = rows.length;
-		List<String> rowHeaders = this.providerProperty().get().getRowHeaders();
+		List<String> rowHeaders = dataProvider.getRowHeaders();
 		if (indexSelectedRow + rowCount > rowHeaders.size())
 		{
 			int addSize = indexSelectedRow + rowCount - rowHeaders.size();
-			IntStream.range(0, addSize).forEach(value -> this.providerProperty().get().addRow(this.providerProperty().get().rowCount()));
+			IntStream.range(0, addSize).forEach(value -> dataProvider.addRow(dataProvider.rowCount()));
 			this.setDataProvider(providerProperty().get());
 		}
 
@@ -710,7 +702,7 @@ public class SpreadsheetView extends Control
 			String[] cells = rows[i].split("\t");
 			for (int j = 0; j < cells.length; j++)
 			{
-				this.providerProperty().get().setCellValue(indexSelectedColumn + j, indexSelectedRow + i, cells[j]);
+				dataProvider.setCellValue(indexSelectedColumn + j, indexSelectedRow + i, cells[j]);
 			}
 		}
 		this.setDataProvider(this.getProvider());

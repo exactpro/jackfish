@@ -1,3 +1,7 @@
+21.03.2017 4.4.0.2143
+RM39614 Unavailability to create table with defined size. Implemented
+
+--------------------------------------------------------------------------------
 21.03.2017 4.4.0.2142
 RM39937 A size of JackFish is saved then JackFish reopenning. Implemented
 
