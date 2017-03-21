@@ -1,3 +1,8 @@
+21.03.2017 4.4.0.2139
+RM40936 During work with a second matrix, the focus shifts to the first matrix.
+Fixed. Now, new docs will has name with indexes, if current name is presented
+
+--------------------------------------------------------------------------------
 21.03.2017 4.4.0.2138
 RM41060 Show executing item only one : implemented
 
