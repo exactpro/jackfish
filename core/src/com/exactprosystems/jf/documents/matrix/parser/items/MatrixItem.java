@@ -816,10 +816,10 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 		boolean wasError = false;
 		Object out = null;
 		MatrixError error = null;
-		for(MatrixItem item : this.children)
+		//clear state
+		this.changeState(MatrixItemState.ExecutingParent);
+		for (MatrixItem item : this.children)
 		{
-			//clear state
-			this.changeState(MatrixItemState.None);
 			if (executeUntilNot != null)
 			{
 				if (Arrays.asList(executeUntilNot).contains(item.getClass()))
@@ -868,9 +868,9 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 					break;
 				}
 			}
-			//restore state for current item ( parent for executing)
-			this.changeState(MatrixItemState.Executing);
 		}
+		//restore state for current item ( parent for executing)
+		this.changeState(MatrixItemState.Executing);
 
 		if (wasError)
 		{

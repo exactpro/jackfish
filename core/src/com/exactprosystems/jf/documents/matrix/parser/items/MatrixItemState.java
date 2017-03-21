@@ -5,5 +5,6 @@ public enum MatrixItemState
 	None,
 	BreakPoint,
 	Executing,
-	ExecutingWithBreakPoint
+	ExecutingWithBreakPoint,
+	ExecutingParent,
 }

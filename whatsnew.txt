@@ -1,3 +1,6 @@
+21.03.2017 4.4.0.2138
+RM41060 Show executing item only one : implemented
+--------------------------------------------------------------------------------
 20.03.2017 4.4.0.2131
 RM40938 An ability to expand text boxes in the Merge Editor window. Implemented
 --------------------------------------------------------------------------------
