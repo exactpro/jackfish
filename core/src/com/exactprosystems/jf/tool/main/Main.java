@@ -58,21 +58,22 @@ import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 import org.eclipse.jgit.transport.*;
 import org.eclipse.jgit.util.FS;
 
+import java.awt.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.Reader;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
+import java.util.*;
 import java.util.List;
-import java.util.Optional;
+import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 
 public class Main extends Application
 {
-	public static final boolean IS_LOCAL_BUILD = VersionInfo.getVersion().contains("local_build");
+	public static final String DIMENSION_AND_POSITION = "dimensionAndPosition";
+	private static final String SEPARATOR = ";";
+	private static final String SMALL_SEPARATOR = "x";
 	private static final Logger logger = Logger.getLogger(Main.class);
 
 	private static String configName = null;
@@ -235,6 +236,15 @@ public class Main extends Application
 	@Override
 	public void start(final Stage stage) throws Exception
 	{
+		loadDimensionAndPosition((w, h) ->
+		{
+			stage.setWidth(w);
+			stage.setHeight(h);
+		}, (x, y) ->
+		{
+			stage.setX(x);
+			stage.setY(y);
+		});
 		controller.init(factory, Main.this, settings, stage);
 		Common.node = stage;
 		controller.display();
@@ -734,8 +744,8 @@ public class Main extends Application
 				{
 					this.config.close(this.factory.getSettings());
 					setConfiguration(null);
+					saveDimensionAndPosition();
 					this.controller.close();
-
 					return true;
 				}
 				return false;
@@ -896,6 +906,33 @@ public class Main extends Application
 		}
 		doc.create();
 		doc.display();
+	}
+
+	private void saveDimensionAndPosition() throws Exception
+	{
+		Dimension dimension = this.controller.getDimension();
+		Point position = this.controller.getPosition();
+		String str = dimension.getWidth() + SMALL_SEPARATOR + dimension.getHeight() + SEPARATOR + position.getX() + SMALL_SEPARATOR + position.getY();
+		this.factory.getSettings().setValue(Settings.GLOBAL_NS, Settings.SETTINGS, DIMENSION_AND_POSITION, str);
+		this.factory.getSettings().saveIfNeeded();
+	}
+
+	private void loadDimensionAndPosition(BiConsumer<Double, Double> dimOperator, BiConsumer<Double, Double> posOperator)
+	{
+		SettingsValue settingsValue = this.factory.getSettings().getValue(Settings.GLOBAL_NS, Settings.SETTINGS, DIMENSION_AND_POSITION);
+		if (settingsValue != null)
+		{
+			String value = settingsValue.getValue();
+			String[] split = value.split(SEPARATOR);
+			String dimension = split[0];
+			String position = split[1];
+
+			String[] d = dimension.split(SMALL_SEPARATOR);
+			dimOperator.accept(Double.valueOf(d[0]), Double.valueOf(d[1]));
+
+			String[] p = position.split(SMALL_SEPARATOR);
+			posOperator.accept(Double.valueOf(p[0]), Double.valueOf(p[1]));
+		}
 	}
 
 	//region private git methods

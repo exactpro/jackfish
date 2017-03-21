@@ -35,6 +35,11 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.Label;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuItem;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
@@ -45,6 +50,7 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import org.apache.log4j.Logger;
 
+import java.awt.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.net.URL;
@@ -679,6 +685,16 @@ public class MainController implements Initializable, ContainingParent
 		}).findFirst();
 		first.ifPresent(this.customTabPane.getSelectionModel()::select);
 		return first.isPresent();
+	}
+
+	Dimension getDimension()
+	{
+		return new Dimension((int) this.stage.getWidth(), (int) this.stage.getHeight());
+	}
+
+	Point getPosition()
+	{
+		return new Point((int) this.stage.getX(), (int) this.stage.getY());
 	}
 
 	//region Private methods
