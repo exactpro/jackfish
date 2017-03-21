@@ -303,6 +303,7 @@ public class CssVariables
 		public static final String	ADD_AFTER_ICON			= IMAGES_DIR + "/addAfter.png";
 		public static final String	BREAK_POINT_ICON 		= IMAGES_DIR + "/breakPoint.png";
 		public static final String	EXECUTING_ITEM_ICON 	= IMAGES_DIR + "/executingItem.png";
+		public static final String EXECUTING_BREAK_POINT_ICON = IMAGES_DIR + "/executingAndBreakPoint.png";
 		public static final String	MOVE_LEFT_ICON			= IMAGES_DIR + "/move_left.png";
 		public static final String	MOVE_RIGHT_ICON			= IMAGES_DIR + "/move_right.png";
 		public static final String	GO_TO_LINE_ICON			= IMAGES_DIR + "/goToLine.png";

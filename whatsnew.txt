@@ -1,3 +1,6 @@
+21.03.2017 4.4.0.2138
+RM41060 Show executing item only one : implemented
+
 --------------------------------------------------------------------------------
 20.03.2017 4.4.0.2136
 40497 bug : aggregate conditions (or, and) work improperly

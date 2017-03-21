@@ -379,6 +379,9 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 			return new ReturnAndResult(start, Result.Off);
 		}
 
+		this.changeState(this.isBreakPoint() ? MatrixItemState.ExecutingWithBreakPoint : MatrixItemState.Executing);
+		listener.started(this.owner, this);
+
 		if (context.checkMonitor(listener, this))
 		{
 			return new ReturnAndResult(start, Result.Stopped);
@@ -391,11 +394,7 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
         }
 
 		beforeReport(report);
-
-		this.changeState(MatrixItemState.Executing);
-		listener.started(this.owner, this);
 		report.itemStarted(this);
-
 		report.itemIntermediate(this);
 		
 		// TODO handling exceptions should be here
@@ -660,7 +659,7 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
     public final void setBreakPoint(boolean breakPoint)
     {
         this.breakPoint = breakPoint;
-		this.matrixItemState = breakPoint ? MatrixItemState.BreakPoint : MatrixItemState.None;
+		changeState(breakPoint ? MatrixItemState.BreakPoint : MatrixItemState.None);
 	}
 
 	public final void changeState(MatrixItemState state)
@@ -817,7 +816,9 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 		boolean wasError = false;
 		Object out = null;
 		MatrixError error = null;
-		for(MatrixItem item : this.children)
+		//clear state
+		this.changeState(MatrixItemState.ExecutingParent);
+		for (MatrixItem item : this.children)
 		{
 			if (executeUntilNot != null)
 			{
@@ -868,6 +869,8 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 				}
 			}
 		}
+		//restore state for current item ( parent for executing)
+		this.changeState(MatrixItemState.Executing);
 
 		if (wasError)
 		{
