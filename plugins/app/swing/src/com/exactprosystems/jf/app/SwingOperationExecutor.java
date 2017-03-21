@@ -1702,8 +1702,8 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
                 Map<String, Object> values = new HashMap<>();
                 for (int j = 0; j < table.getColumnCount(); j++)
                 {
-                    String name = valueCondition.getName();
-                    Object value = table.getColumnName(j);
+                    String name = table.getColumnName(j);
+                    Object value = getValueTableCell(fixture, i, j);
                     values.put(name, value);
                 }
                 if (!valueCondition.isMatched(values))
@@ -1717,7 +1717,7 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
                 Map<String, Object> colors = new HashMap<>();
                 for (int j = 0; j < table.getColumnCount(); j++)
                 {
-                    String name = valueCondition.getName();
+                    String name = table.getColumnName(j);
                     Color color = fixture.foregroundAt(TableCell.row(i).column(j)).target();
                     colors.put(name, color);
                 }
