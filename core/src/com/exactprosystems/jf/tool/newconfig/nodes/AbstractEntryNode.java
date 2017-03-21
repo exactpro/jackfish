@@ -135,7 +135,6 @@ public abstract class AbstractEntryNode<T extends Entry> extends TreeNode
 		Common.tryCatch(() -> {
 			this.model.changeEntry(entry, key, value);
 			cache.remove(this.entry);
-			System.out.println("entry was changed " + entry);
 		}, String.format("Error on set value of '%s' to parameter '%s' on class '%s'", value, key, entry.getClass()));
 	}
 	//endregion

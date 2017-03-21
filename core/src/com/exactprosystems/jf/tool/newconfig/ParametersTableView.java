@@ -28,7 +28,6 @@ public class ParametersTableView extends TableView<TablePair>
 	public ParametersTableView()
 	{
 		this.hide();
-//		this.setHeightTable(200);
 		TableColumn<TablePair, String> keyColumn = new TableColumn<>();
 		keyColumn.setText("Parameter");
 		keyColumn.setCellValueFactory(new PropertyValueFactory<>("key"));
@@ -75,14 +74,6 @@ public class ParametersTableView extends TableView<TablePair>
 	public void setEditableNode(TreeNode editableNode)
 	{
 		this.editableNode = editableNode;
-	}
-
-	private void setHeightTable(int value)
-	{
-		this.setPrefHeight(value);
-		this.setMinHeight(value);
-		this.setMaxHeight(value);
-		this.setOpacity(value == 0 ? 0 : 1);
 	}
 
 	private class TableContextMenuCell extends TableCell<TablePair, String>
@@ -203,7 +194,7 @@ public class ParametersTableView extends TableView<TablePair>
 					{
 						if (needCancel)
 						{
-							cancelEdit();
+							commitEdit(this.textField.getText());
 							needCancel = true;
 						}
 					}
