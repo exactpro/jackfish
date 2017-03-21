@@ -789,7 +789,20 @@ public class Main extends Application
 			throw new Exception("Unknown type of document: " + clazz);
 		}
 
-		return annotation.newName();
+		return checkName(annotation.newName());
+	}
+
+	private String checkName(String name)
+	{
+		List<String> names = this.config.getSubordinates().stream().map(Document::getName).collect(Collectors.toList());
+
+		String temp = name;
+		int index = 0;
+		while (names.contains(name))
+		{
+			name = temp + "(" + index++ + ")";
+		}
+		return name;
 	}
 
 	private Optional<File> chooseFile(Class<? extends Document> clazz, String filePath, OpenSaveMode mode) throws Exception
