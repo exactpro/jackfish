@@ -115,7 +115,7 @@
         </parameters>
         <parameters>
             <key>jreArgs</key>
-            <value>-Xms128m -Xmx1G</value>
+            <value>-Xms128m -Xmx1G -agentlib:jdwp=transport=dt_socket,server=n,address=admini-PC:5005,suspend=y</value>
         </parameters>
         <parameters>
             <key>SafariDriverPath</key>
@@ -163,7 +163,7 @@
         </parameters>
         <parameters>
             <key>jreArgs</key>
-            <value></value>
+            <value>-agentlib:jdwp=transport=dt_socket,server=n,address=admini-PC:5005,suspend=y</value>
         </parameters>
         <parameters>
             <key>SafariDriverPath</key>
@@ -215,7 +215,7 @@
         </parameters>
         <parameters>
             <key>jreArgs</key>
-            <value>-Xms128m -Xmx1G</value>
+            <value>-Xms128m -Xmx1G -agentlib:jdwp=transport=dt_socket,server=n,address=admini-PC:5005,suspend=y</value>
         </parameters>
         <parameters>
             <key>SafariDriverPath</key>

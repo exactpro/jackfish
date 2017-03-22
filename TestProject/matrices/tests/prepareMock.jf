@@ -47,7 +47,7 @@ Add start adapter action;;;
         #Case
         'WIN'
             #Action;#Line;#Text
-            TextAddLine;'\t#Id\u003b#Action\u003b#AppId\u003b#Jar\u003b#Args\u003b#MainClass\n\tAPPSTR1\u003bApplicationStart\u003b\''+mockSwingApp+'\'\u003b\''+mockSwingJar+'\'\u003b\u003b\''+mockSwingClass+\''+'\n\n' +'\t#Id\u003b#Action\u003b#AppId\u003b#Exec\u003b#Args\u003b#WorkDir\n\tAPPSTR1\u003bApplicationStart\u003b\''+mockWinApp+'\'\u003b\''+'\'\u003b\u003b\''+mockWinDir+\'';matrixText
+            TextAddLine;'\t#Id\u003b#Action\u003b#AppId\u003b#Exec\u003b#Args\u003b#WorkDir\n\tAPPSTR1\u003bApplicationStart\u003b\''+mockWinApp+'\'\u003b\''+mockWinExec+'\'\u003b\u003b\''+mockWinDir+\'';matrixText
 
 
     #EndSwitch

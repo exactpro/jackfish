@@ -5,20 +5,20 @@ INIT;Setup;;;
 
 
 // 
-#Id;#Off;#TestCase;#Kind;#Depends;#For
-Test;1;EventHandlers;;;
+#Id;#TestCase;#Kind;#Depends;#For
+Test;EventHandlers;;;
     #Call;#testName
     runMatrix;'EventHandlers'
 
 
-#Id;#Off;#TestCase;#Kind;#Depends;#For
-Test;1;Basic;;;
+#Id;#TestCase;#Kind;#Depends;#For
+Test;Basic;;;
     #Call;#testName
     runMatrix;'Basic'
 
 
-#Id;#Off;#TestCase;#Kind;#Depends;#For
-Test;1;CheckMockWeb;;;
+#Id;#TestCase;#Kind;#Depends;#For
+Test;CheckMockWeb;;;
     #Id;#Action;#Matrix;#Parameter
     MXRN1;MatrixRun;matrixTestsPath + 'prepareMock' +  '.jf';'WEB'
 
@@ -29,8 +29,8 @@ Test;1;CheckMockWeb;;;
     runMatrix;'checkWEB'
 
 
-#Id;#Off;#TestCase;#Kind;#Depends;#For
-Test;1;CheckMockSwing;;;
+#Id;#TestCase;#Kind;#Depends;#For
+Test;CheckMockSwing;;;
     #Id;#Action;#Matrix;#Parameter
     MXRN1;MatrixRun;matrixTestsPath + 'prepareMock' +  '.jf';'SWING'
 

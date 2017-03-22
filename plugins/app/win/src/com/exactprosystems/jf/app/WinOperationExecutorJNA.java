@@ -322,33 +322,8 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 	@Override
 	public boolean toggle(UIProxyJNA component, boolean value) throws Exception
 	{
-		try
-		{
-			String className = this.driver.getProperty(component, WindowProperty.ClassNameProperty);
-			if (className.equalsIgnoreCase(ControlKind.ToggleButton.getClazz()) || className.equals(ControlKind.CheckBox
-					.getClazz()))
-			{
-				String property = this.driver.getProperty(component, WindowProperty.ToggleStateProperty);
-				boolean isSelected = property.equals("On");
-				if (value ^ isSelected)
-				{
-					this.driver.doPatternCall(component, WindowPattern.TogglePattern, "Toggle", null, -1);
-				}
-			}
-			else if (className.equalsIgnoreCase(ControlKind.RadioButton.getClazz()))
-			{
-				String property = this.driver.getProperty(component, WindowProperty.IsSelectedProperty);
-				boolean isSelected = Boolean.parseBoolean(property);
-				if (value ^ isSelected)
-				{
-					this.driver.doPatternCall(component, WindowPattern.SelectionItemPattern, "Select", null, -1);
-				}
-			}
-			else
-			{
-				return false;
-			}
-			return true;
+		try {
+			return toggleThroughClassName(component, value) || toggleThroughLocalizeControlType(component, value);
 		}
 		catch (RemoteException e)
 		{
@@ -360,6 +335,46 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 			this.logger.error(e.getMessage(), e);
 			throw e;
 		}
+	}
+
+	private boolean toggleThroughLocalizeControlType(UIProxyJNA component, boolean value) throws Exception {
+		if ("check box".equalsIgnoreCase(this.driver.getProperty(component, WindowProperty.LocalizedControlTypeProperty)))
+		{
+			if(value ^ "On".equalsIgnoreCase(this.driver.getProperty(component, WindowProperty.ToggleStateProperty)))
+			{
+				this.driver.doPatternCall(component, WindowPattern.TogglePattern, "Toggle", null, -1);
+			}
+			return true;
+        }
+		return false;
+	}
+
+	private boolean toggleThroughClassName(UIProxyJNA component, boolean value) throws Exception
+	{
+		String className = this.driver.getProperty(component, WindowProperty.ClassNameProperty);
+		if (className.equalsIgnoreCase(ControlKind.ToggleButton.getClazz()) || className.equals(ControlKind.CheckBox.getClazz()))
+        {
+            String property = this.driver.getProperty(component, WindowProperty.ToggleStateProperty);
+            boolean isSelected = "On".equals(property);
+            if (value ^ isSelected)
+            {
+                this.driver.doPatternCall(component, WindowPattern.TogglePattern, "Toggle", null, -1);
+            }
+        }
+        else if (className.equalsIgnoreCase(ControlKind.RadioButton.getClazz()))
+        {
+            String property = this.driver.getProperty(component, WindowProperty.IsSelectedProperty);
+            boolean isSelected = Boolean.parseBoolean(property);
+            if (value ^ isSelected)
+            {
+                this.driver.doPatternCall(component, WindowPattern.SelectionItemPattern, "Select", null, -1);
+            }
+        }
+        else
+        {
+            return false;
+        }
+		return true;
 	}
 
 	@Override
@@ -561,7 +576,6 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 	{
 		try
 		{
-			//TODO for elements, which have selection pattern, we need to use it;
 			int length = 100;
 			int[] arr = new int[length];
 			int res = this.driver.getPatterns(arr, component);
@@ -603,7 +617,6 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 			String result;
 			if (isSelectionPatternPresent)
 			{
-				// result = this.driver.doPatternCall(component, WindowPattern.SelectionPattern, "GetSelection", null, -1);
 				result = this.driver.getProperty(component, WindowProperty.SelectionProperty);
 			}
 			else if (isSelectionItemPatternPresent)
@@ -648,7 +661,73 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 	{
 		try
 		{
-			return this.driver.getProperty(component, WindowProperty.NameProperty);
+			int length = 100;
+			int[] arr = new int[length];
+			int res = this.driver.getPatterns(arr, component);
+			if (res > length)
+			{
+				length = res;
+				arr = new int[length];
+				this.driver.getPatterns(arr, component);
+			}
+			boolean isSelectionPatternPresent = false;
+			boolean isSelectionItemPatternPresent = false;
+			boolean isTogglePattern = false;
+			boolean isTextPattern = false;
+			boolean isRangeValuePattern = false;
+
+			for (int p : arr)
+			{
+				if (WindowPattern.TogglePattern.getId() == p)
+				{
+					isTogglePattern = true;
+				}
+				if (WindowPattern.SelectionItemPattern.getId() == p)
+				{
+					isSelectionItemPatternPresent = true;
+				}
+				if (WindowPattern.SelectionPattern.getId() == p)
+				{
+					isSelectionPatternPresent = true;
+				}
+				if (WindowPattern.TextPattern.getId() == p)
+				{
+					isTextPattern = true;
+				}
+				if (WindowPattern.RangeValuePattern.getId() == p)
+				{
+					isRangeValuePattern = true;
+				}
+			}
+			String result;
+			if (isSelectionPatternPresent)
+			{
+				result = this.driver.getProperty(component, WindowProperty.SelectionProperty);
+			}
+			else if (isSelectionItemPatternPresent)
+			{
+				result = this.driver.getProperty(component, WindowProperty.IsSelectedProperty);
+			}
+			else if (isTogglePattern)
+			{
+				result = this.driver.getProperty(component, WindowProperty.NameProperty);
+			}
+			else if (isTextPattern)
+			{
+				result = this.driver.getProperty(component, WindowProperty.IsTextPatternAvailableProperty);
+			}
+			else if (isRangeValuePattern)
+			{
+				result = this.driver.getProperty(component, WindowProperty.IsRangeValuePatternAvailableProperty);
+			}
+			else {
+				result = this.driver.getProperty(component, WindowProperty.ValueProperty);
+				if (Str.IsNullOrEmpty(result)) {
+					result = this.driver.getProperty(component, WindowProperty.NameProperty);
+				}
+			}
+
+			return result;
 		}
 		catch (RemoteException e)
 		{
