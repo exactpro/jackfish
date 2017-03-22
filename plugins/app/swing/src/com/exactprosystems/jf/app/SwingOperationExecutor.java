@@ -1371,6 +1371,14 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 		}
 	}
 
+    @Override
+    public Color getColorXY(ComponentFixture<Component> component, int x, int y) throws Exception
+    {
+        Point point = getPointLocation(component.target, x, y);
+        return new java.awt.Robot().getPixelColor(point.x, point.y);
+    }
+
+	
 	//endregion
 
 	//region private methods

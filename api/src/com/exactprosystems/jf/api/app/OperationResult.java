@@ -8,6 +8,7 @@
 
 package com.exactprosystems.jf.api.app;
 
+import java.awt.Color;
 import java.awt.Rectangle;
 import java.io.Serializable;
 import java.util.*;
@@ -17,6 +18,7 @@ public class OperationResult implements Serializable
 	private static final long			serialVersionUID	= -2015741070415094348L;
 
 	private boolean						ok					= false;
+    private Color                       color               = null;
 	private Integer                     integer             = null;
 	private String						text				= null;
     private String                      error               = null;
@@ -26,6 +28,11 @@ public class OperationResult implements Serializable
 	private String[][]					array				= null;
 	private Rectangle 					rectangle 			= null;
 
+	public void setColor(Color color)
+	{
+	    this.color = color;
+	}
+	
 	public void setInt(int i)
 	{
 	    this.integer = i;
@@ -86,6 +93,10 @@ public class OperationResult implements Serializable
 	    {
 	        return this.error;
 	    }
+        if (this.color != null)
+        {
+            return this.color;
+        }
 	    if (this.integer != null)
 	    {
 	        return this.integer;
@@ -127,6 +138,10 @@ public class OperationResult implements Serializable
 	    }
 	    
 		StringBuilder builder = new StringBuilder();
+        if (this.color != null)
+        {
+            builder.append(" color [").append(this.color).append("];");
+        }
 		if (this.integer != null)
         {
             builder.append(" int [").append(this.integer).append("];");

@@ -8,6 +8,7 @@
 
 package com.exactprosystems.jf.api.app;
 
+import java.awt.Color;
 import java.util.List;
 
 import com.exactprosystems.jf.api.client.ICondition;
@@ -65,7 +66,14 @@ public class Do
         return new Operation().checkList(list, ignoreOrder);
     }
 	
-	static final String check = "Check, that value of current component equals @word";
+    static final String checkColor = "Check, that color of pixel with coords @x, @y equals @color";
+    @DescriptionAttribute(text = Do.checkColor)
+    public static Operation checkColor(int x, int y, Color color)
+    {
+        return new Operation().checkColor(x, y, color);
+    }
+
+    static final String check = "Check, that value of current component equals @word";
 	@DescriptionAttribute(text = Do.check)
 	public static Operation check(String word)
 	{
@@ -159,6 +167,13 @@ public class Do
 		return new Operation().setValue(value);
 	}
 
+    static final String getColor= "Return color for point in coords @x, @y.";
+    @DescriptionAttribute(text = Do.getColor)
+    public static Operation getColor(int x, int y)
+    {
+        return new Operation().getColor(x, y);
+    }
+	
 	static final String getValue= "Return value from current component.For example, for checkbox this will be true or false (selected or unselected).";
 	@DescriptionAttribute(text = Do.getValue)
 	public static Operation getValue()

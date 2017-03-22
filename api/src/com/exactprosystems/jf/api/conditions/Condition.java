@@ -86,40 +86,46 @@ public abstract class Condition implements ICondition, Serializable
 		return new OrCondition(cond);
 	}
 	
-    @DescriptionAttribute(text = "creates instance of NotCondition. Parameter @cond will be given to constructor.")
+    @DescriptionAttribute(text = "creates instance of NotCondition. Parameter @cond will be passed to constructor.")
 	public static NotCondition not(Condition cond)
 	{
 		return new NotCondition(cond);
 	}
 
-    @DescriptionAttribute(text = "creates instance of StringCondition. Parameter @name will be given to constructor.")
+    @DescriptionAttribute(text = "creates instance of StringCondition. Parameter @name will be passed to constructor.")
 	public static EmptyCondition empty(String name)
 	{
 	    return new EmptyCondition(name);
 	}
 	
-    @DescriptionAttribute(text = "creates instance of RegexpCondition. Parameters @name and @pattern will be given to constructor.")
+    @DescriptionAttribute(text = "creates instance of RegexpCondition. Parameters @name and @pattern will be passed to constructor.")
     public static RegexpCondition regexp(String name, String pattern)
     {
         return new RegexpCondition(name, pattern);
     }
 	
-    @DescriptionAttribute(text = "creates instance of StringCondition. Parameters @name, @pattern and @ignoreCase will be given to constructor.")
+    @DescriptionAttribute(text = "creates instance of StringCondition. Parameters @name, @pattern and @ignoreCase will be passed to constructor.")
     public static StringCondition string(String name, String value, boolean ignoreCase)
     {
         return new StringCondition(name, value, ignoreCase);
     }
     
-    @DescriptionAttribute(text = "creates instance of DateCondition. Parameters @name, @ralationStr, @value and @precision will be given to constructor.")
+    @DescriptionAttribute(text = "creates instance of DateCondition. Parameters @name, @ralationStr, @value and @precision will be passed to constructor.")
     public static DateCondition date(String name, String ralationStr, Date value, String precision) throws Exception
     {
         return new DateCondition(name, ralationStr, value, precision);
     }
     
-    @DescriptionAttribute(text = "creates instance of NumberCondition. Parameters @name, @relationStr and @value will be given to constructor.")
+    @DescriptionAttribute(text = "creates instance of NumberCondition. Parameters @name, @relationStr and @value will be passed to constructor.")
     public static NumberCondition number(String name, String relationStr, Number value) throws Exception
     {
         return new NumberCondition(name, relationStr, value);
+    }
+    
+    @DescriptionAttribute(text = "creates instance of ColorCondition. Parameters @name and @color will be passed to constructor.")
+    public static ColorCondition color(String name, Color color)
+    {
+        return new ColorCondition(name, color);
     }
     
 	@HideAttribute

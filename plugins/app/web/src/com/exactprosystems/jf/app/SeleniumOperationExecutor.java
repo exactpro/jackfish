@@ -29,11 +29,15 @@ import org.openqa.selenium.support.ui.Select;
 
 import java.awt.*;
 import java.awt.Rectangle;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.rmi.RemoteException;
 import java.util.*;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
+
+import javax.imageio.ImageIO;
 
 public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 {
@@ -647,6 +651,16 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 		while (++repeat < repeatLimit);
 		throw real;
 	}
+	
+    @Override
+    public Color getColorXY(WebElement component, int x, int y) throws Exception
+    {
+        Point location = component.getLocation();
+        File image = driver.getScreenshotAs(OutputType.FILE);
+        BufferedImage bufferedImage = ImageIO.read(image);
+        int rgb = bufferedImage.getRGB(location.x + x, location.y + y);
+        return new Color(rgb);
+    }
 	//endregion
 
 	//region public find methods

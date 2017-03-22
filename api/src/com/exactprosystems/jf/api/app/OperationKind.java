@@ -9,17 +9,21 @@
 package com.exactprosystems.jf.api.app;
 
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.api.conditions.ColorCondition;
 import com.exactprosystems.jf.api.error.app.ElementNotEnabled;
 import com.exactprosystems.jf.api.error.app.ElementNotFoundException;
 import com.exactprosystems.jf.api.error.app.OperationNotAllowedException;
 
+import java.awt.Color;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -337,7 +341,32 @@ public enum OperationKind
         }
     },
 	
-	CHECK("check")
+    CHECK_COLOR_XY("checkColor")
+    {
+        @Override
+        protected String formulaTemplate(Part part)
+        {
+            return ".checkColor(%3$d, %4$d, %10$s)";
+        }
+
+        @Override
+        public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, Holder<T> holder, OperationResult result) throws Exception
+        {
+            Color actual = executor.getColorXY(holder.getValue(), part.x, part.y);
+            Map<String, Object> map = new HashMap<>();
+            map.put("color", actual);
+            boolean res = part.colorCondition.isMatched(map);
+            if (!res)
+            {
+                result.setError("Expected color: " + ((ColorCondition)part.colorCondition).getColor() + " actual color: " + actual);
+            }
+            result.setOk(res);
+            return res;
+        }
+    },
+    
+
+    CHECK("check")
 	{
 		@Override
 		protected String formulaTemplate(Part part)
@@ -796,6 +825,23 @@ public enum OperationKind
 			return true;
 		}
 	},
+
+    GET_COLOR_XY("getColor")
+    {
+        @Override
+        protected String formulaTemplate(Part part)
+        {
+            return ".getColor(%3$d, %4$d)";
+        }
+
+        @Override
+        public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, Holder<T> holder, OperationResult result) throws Exception
+        {
+            Color actual = executor.getColorXY(holder.getValue(), part.x, part.y);
+            result.setColor(actual);
+            return true;
+        }
+    },
 
 	GET_VALUE_XY("getValue(x,y)")
 	{

@@ -994,7 +994,13 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 		}
 	}
 
-	private String columnsToString(String[] a)
+    @Override
+    public Color getColorXY(UIProxyJNA component, int x, int y) throws Exception
+    {
+        return Color.black; // TODO implement this
+    }
+
+    private String columnsToString(String[] a)
 	{
 		if (a == null || a.length == 0)
 		{

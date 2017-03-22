@@ -63,6 +63,15 @@ public class ColorCondition extends Condition implements Serializable
 		return String.valueOf(this.value) + " != " + actualValue;
 	}
 
+	public Color getColor()
+	{
+	    if (this.value != null)
+	    {
+	        return this.value;
+	    }
+	    return Color.black;
+	}
+	
 	private InnerColor value = null;
 
 	private boolean foreground = true;

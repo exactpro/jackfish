@@ -36,7 +36,7 @@ public interface OperationExecutor<T>
 	boolean						toggle			(T component, boolean value																								) throws Exception;
 	boolean						select			(T component, String selectedText																						) throws Exception;
 	boolean						selectByIndex	(T component, int index																									) throws Exception;
-	boolean						expand			(T component, String path, boolean expandOrCollapse																				) throws Exception;
+	boolean						expand			(T component, String path, boolean expandOrCollapse																		) throws Exception;
 	boolean						text			(T component, String text, boolean clear																				) throws Exception;
 	boolean						wait			(Locator locator, int ms, boolean toAppear, AtomicLong atomicLong														) throws Exception;
 	boolean 					setValue		(T component, double value																								) throws Exception;
@@ -49,11 +49,12 @@ public interface OperationExecutor<T>
 	boolean 					mouseTable		(T component, int column, int row, MouseAction action																	) throws Exception;
 	boolean						textTableCell	(T component, int column, int row, String text																			) throws Exception;
 	String						getValueTableCell(T component, int column, int row																						) throws Exception;
-	Map<String, String> 		getRow			(T component, Locator additional, @Deprecated Locator header, @Deprecated boolean useNumericHeader, String[] columns, ICondition valueCondition, ICondition colorCondition) throws Exception;
-	List<String> 				getRowIndexes	(T component, Locator additional, @Deprecated Locator header, @Deprecated boolean useNumericHeader, String[] columns, ICondition valueCondition, ICondition colorCondition) throws Exception;
-	Map<String,String> 			getRowByIndex	(T component, Locator additional, @Deprecated Locator header, @Deprecated boolean useNumericHeader, String[] columns, int i						) throws Exception;
-	Map<String, ValueAndColor>	getRowWithColor	(T component, Locator additional, @Deprecated Locator header, @Deprecated boolean useNumericHeader, String[] columns, int i						) throws Exception;
-	String[][]					getTable		(T component, Locator additional, @Deprecated Locator header, @Deprecated boolean useNumericHeader, String[] columns							) throws Exception;
-	int							getTableSize	(T component, Locator additional, @Deprecated Locator header, @Deprecated boolean useNumericHeader												) throws Exception;
+	Map<String, String> 		getRow			(T component, Locator additional, Locator header, boolean useNumericHeader, String[] columns, ICondition valueCondition, ICondition colorCondition) throws Exception;
+	List<String> 				getRowIndexes	(T component, Locator additional, Locator header, boolean useNumericHeader, String[] columns, ICondition valueCondition, ICondition colorCondition) throws Exception;
+	Map<String,String> 			getRowByIndex	(T component, Locator additional, Locator header, boolean useNumericHeader, String[] columns, int i						) throws Exception;
+	Map<String, ValueAndColor>	getRowWithColor	(T component, Locator additional, Locator header, boolean useNumericHeader, String[] columns, int i						) throws Exception;
+	String[][]					getTable		(T component, Locator additional, Locator header, boolean useNumericHeader, String[] columns							) throws Exception;
+	int							getTableSize	(T component, Locator additional, Locator header, boolean useNumericHeader												) throws Exception;
+    Color                       getColorXY      (T component, int x, int y                                                                                              ) throws Exception;
 	
 }

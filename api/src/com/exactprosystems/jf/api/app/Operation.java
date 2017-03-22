@@ -10,8 +10,10 @@ package com.exactprosystems.jf.api.app;
 
 import com.exactprosystems.jf.api.client.ICondition;
 import com.exactprosystems.jf.api.common.DescriptionAttribute;
+import com.exactprosystems.jf.api.conditions.Condition;
 import com.exactprosystems.jf.api.error.app.NullParameterException;
 
+import java.awt.Color;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -226,6 +228,13 @@ public class Operation implements Iterable<Part>, Serializable
         return this;
     }
 
+    @DescriptionAttribute(text = Do.checkColor)
+    public Operation checkColor(int x, int y, Color color)
+    {
+        this.list.add(new Part(OperationKind.CHECK_COLOR_XY).setColorCondition(Condition.color("color", color)).setX(x).setY(y));
+        return this;
+    }
+
     @DescriptionAttribute(text = Do.check)
 	public Operation check(String word)
 	{
@@ -312,6 +321,13 @@ public class Operation implements Iterable<Part>, Serializable
 		return this;
 	}
 
+    @DescriptionAttribute(text = Do.getColor)
+    public Operation getColor(int x, int y)
+    {
+        this.list.add(new Part(OperationKind.GET_COLOR_XY).setX(x).setY(y));
+        return this;
+    }
+	
 	@DescriptionAttribute(text = Do.getValueWithCoor)
 	public Operation getValue(int x, int y)
 	{
