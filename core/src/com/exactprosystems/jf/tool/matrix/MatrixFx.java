@@ -610,7 +610,6 @@ public class MatrixFx extends Matrix
 	{
 		if (getMatrixRunner() != null)
 		{
-			this.controller.coloring();
 			getFactory().getConfiguration().getRunnerListener().subscribe(getMatrixRunner());
 			if (!getMatrixRunner().isRunning())
 			{
@@ -625,7 +624,7 @@ public class MatrixFx extends Matrix
 		if (getMatrixRunner() != null)
 		{
 		    getMatrixRunner().stop();
-			this.controller.coloring();
+			this.controller.refresh();
 			this.controller.displayAfterStopped("Matrix stopped");
 		}
 	}

@@ -384,6 +384,7 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 
 		if (context.checkMonitor(listener, this))
 		{
+			this.changeState(this.isBreakPoint() ? MatrixItemState.BreakPoint : MatrixItemState.None);
 			return new ReturnAndResult(start, Result.Stopped);
 		}
 
@@ -659,7 +660,8 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
     public final void setBreakPoint(boolean breakPoint)
     {
         this.breakPoint = breakPoint;
-		changeState(breakPoint ? MatrixItemState.BreakPoint : MatrixItemState.None);
+		MatrixItemState oldState = getItemState();
+		changeState(breakPoint ? MatrixItemState.BreakPoint : oldState == MatrixItemState.ExecutingWithBreakPoint ? MatrixItemState.Executing : oldState);
 	}
 
 	public final void changeState(MatrixItemState state)

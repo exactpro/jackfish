@@ -17,6 +17,7 @@ import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.Matrix;
 import com.exactprosystems.jf.documents.matrix.parser.Result;
+import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItemState;
 import com.exactprosystems.jf.functions.Table;
 import org.apache.log4j.Logger;
 
@@ -237,6 +238,10 @@ public class MatrixRunner implements IMatrixRunner, AutoCloseable
 			{
 				this.thread = null;
 			}
+		}
+		if (this.matrix != null)
+		{
+			this.matrix.getRoot().bypass(item -> item.changeState(item.isBreakPoint() ? MatrixItemState.BreakPoint : MatrixItemState.None));
 		}
 	}
 	

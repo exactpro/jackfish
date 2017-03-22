@@ -227,7 +227,16 @@ public final class Call extends MatrixItem
 				Variables vars = isGlobal() ? evaluator.getGlobals() : evaluator.getLocals();
 
 				this.ref.setRealParameters(parameters);
+				boolean isSubcaseIntoMatrix = this.getMatrix().getRoot().find(true, SubCase.class, this.ref.getId()) == this.ref;
+				if (isSubcaseIntoMatrix)
+				{
+					this.changeState(isBreakPoint() ? MatrixItemState.BreakPoint : MatrixItemState.ExecutingParent);
+				}
 				ReturnAndResult ret = this.ref.execute(context, listener, evaluator, report);
+				if (isSubcaseIntoMatrix)
+				{
+					this.changeState(isBreakPoint() ? MatrixItemState.ExecutingWithBreakPoint : MatrixItemState.Executing);
+				}
 				Result result = ret.getResult();
 
 				if (super.getId() != null && !super.getId().isEmpty())
