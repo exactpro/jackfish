@@ -89,10 +89,10 @@
             <key>NewSearch</key>
             <value>true</value>
         </parameters>
-        <appDescription>Web applications</appDescription>
+        <appDescription>Web applications for unix</appDescription>
         <appDicPath>dic/mock_web_dic.xml</appDicPath>
-        <appJar>C:/Users/user_adm/workspace - git/JackFish/core/apps/web.jar</appJar>
-        <appWorkDir>C:/Users/user_adm/workspace - git/JackFish/core/apps</appWorkDir>
+        <appJar>${JF}/apps/web.jar</appJar>
+        <appWorkDir>${JF}/apps</appWorkDir>
         <appStartPort>7000</appStartPort>
     </appEntry>
     <appEntry>
@@ -115,7 +115,7 @@
         </parameters>
         <parameters>
             <key>jreArgs</key>
-            <value>-Xms128m -Xmx1G -agentlib:jdwp=transport=dt_socket,server=n,address=admini-PC:5005,suspend=y</value>
+            <value>-Xms128m -Xmx1G</value>
         </parameters>
         <parameters>
             <key>SafariDriverPath</key>
@@ -137,10 +137,10 @@
             <key>LogLevel</key>
             <value>ERROR</value>
         </parameters>
-        <appDescription>Web applications</appDescription>
+        <appDescription>Web applications for windows</appDescription>
         <appDicPath>dic/mock_web_dic.xml</appDicPath>
-        <appJar>C:/Users/user_adm/workspace - git/JackFish/core/apps/web.jar</appJar>
-        <appWorkDir>C:/Users/user_adm/workspace - git/JackFish/core/apps</appWorkDir>
+        <appJar>${JF}/apps/web.jar</appJar>
+        <appWorkDir>${JF}/apps</appWorkDir>
         <appStartPort>7000</appStartPort>
     </appEntry>
     <appEntry>
@@ -163,7 +163,7 @@
         </parameters>
         <parameters>
             <key>jreArgs</key>
-            <value>-agentlib:jdwp=transport=dt_socket,server=n,address=admini-PC:5005,suspend=y</value>
+            <value></value>
         </parameters>
         <parameters>
             <key>SafariDriverPath</key>
@@ -191,7 +191,7 @@
         </parameters>
         <appDescription>Swing applications</appDescription>
         <appDicPath>dic/mock_swing_dic.xml</appDicPath>
-        <appJar>C:/Users/user_adm/workspace - git/JackFish/core/apps/swing.jar</appJar>
+        <appJar>${JF}/apps/swing.jar</appJar>
         <appWorkDir>.</appWorkDir>
         <appStartPort>7000</appStartPort>
     </appEntry>
@@ -215,7 +215,7 @@
         </parameters>
         <parameters>
             <key>jreArgs</key>
-            <value>-Xms128m -Xmx1G -agentlib:jdwp=transport=dt_socket,server=n,address=admini-PC:5005,suspend=y</value>
+            <value>-Xms128m -Xmx1G</value>
         </parameters>
         <parameters>
             <key>SafariDriverPath</key>
@@ -239,8 +239,8 @@
         </parameters>
         <appDescription>Win applications</appDescription>
         <appDicPath>dic/mock_win_dic.xml</appDicPath>
-        <appJar>C:/Users/user_adm/workspace - git/JackFish/core/apps/win.jar</appJar>
-        <appWorkDir>C:/Users/user_adm/workspace - git/JackFish/core/apps</appWorkDir>
+        <appJar>${JF}/apps/win.jar</appJar>
+        <appWorkDir>.</appWorkDir>
         <appStartPort>7000</appStartPort>
     </appEntry>
 </configuration>
