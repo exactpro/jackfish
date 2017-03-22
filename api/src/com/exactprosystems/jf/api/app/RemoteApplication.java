@@ -278,13 +278,13 @@ public abstract class RemoteApplication implements IRemoteApplication
 	}
 
 	@Override
-	public final String switchTo(String title, boolean softCondition) throws RemoteException
+	public final String switchTo(Map<String, String> criteria, boolean softCondition) throws RemoteException
 	{
 		try 
 		{
-			exceptionIfNull(title, "title", "switchTo");
+			exceptionIfNull(criteria, "criteria", "switchTo");
 
-			return switchToDerived(title, softCondition);
+			return switchToDerived(criteria, softCondition);
 		}
 		catch (RemoteException e)
 		{
@@ -292,7 +292,7 @@ public abstract class RemoteApplication implements IRemoteApplication
 		}
 		catch (Exception e)
 		{
-			String msg = String.format("Error switchTo(%s)", title);
+			String msg = String.format("Error switchTo(%s)", criteria);
 			throw new ProxyException(msg, e.getMessage(), e);
 		}
 	}
@@ -548,7 +548,7 @@ public abstract class RemoteApplication implements IRemoteApplication
 
 	protected abstract Collection<String> titlesDerived() throws Exception;
 
-	protected abstract String switchToDerived(String title, boolean softCondition) throws Exception;
+	protected abstract String switchToDerived(Map<String, String> criteria, boolean softCondition) throws Exception;
 
 	protected abstract void switchToFrameDerived(Locator owner) throws Exception;
 

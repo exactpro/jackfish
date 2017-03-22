@@ -18,7 +18,7 @@ import java.util.Scanner;
 public class WinAppFactory implements IApplicationFactory
 {
 	private static final int		requiredMajorVersion	= 2;
-	private static final int		requiredMinorVersion	= 29;
+	private static final int		requiredMinorVersion	= 30;
 
 	public static final String		logLevel				= "LogLevel";
 	public static final String		jreExecName				= "jreExec";
@@ -37,6 +37,7 @@ public class WinAppFactory implements IApplicationFactory
 	public static final String		argsName				= "Args";
 
 	public static final String      propertyWindowRectangle = "Rectangle";
+    public static final String      propertyTitle           = "Title";
 	private static String[] empty = {  };
 
 	private static ControlKind[] supportedControls = 
@@ -61,7 +62,7 @@ public class WinAppFactory implements IApplicationFactory
 			case LOAD:		return new String[] { jreExecName, jreArgsName, maxTimeout, logLevel};
 			case START:		return new String[] { execName, workDirName, argsName };
 			case CONNECT:   return new String[] { mainWindowName, mainWindowHeight, mainWindowWidth, pidName, controlKindName, connectionTimeout };
-			case PROPERTY:  return new String[] { propertyWindowRectangle }; 
+			case PROPERTY:  return new String[] { propertyWindowRectangle, propertyTitle }; 
 			default:		return empty;	
 		}
 	}
