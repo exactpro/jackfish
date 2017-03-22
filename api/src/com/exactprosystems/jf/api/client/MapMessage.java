@@ -99,6 +99,11 @@ public class MapMessage implements Map<String, Object>, Serializable, Mutable, C
 		this.messageType = messageType;
 	}
 
+	public String getSource()
+	{
+	    return this.source;
+	}
+	
 	@Override
 	public String toString()
 	{

@@ -180,7 +180,7 @@ public class HTMLhelper
 				} 
 				else if (ch == '\n')
 				{
-					buf.append("<p>");
+					buf.append("<br>");
 				}
 				else
 				{

@@ -17,8 +17,8 @@ Test;Basic;;;
     runMatrix;'Basic'
 
 
-#Id;#TestCase;#Kind;#Depends;#For
-Test;CheckMockWeb;;;
+#Id;#Off;#TestCase;#Kind;#Depends;#For
+Test;1;CheckMockWeb;;;
     #Id;#Action;#Matrix;#Parameter
     MXRN1;MatrixRun;matrixTestsPath + 'prepareMock' +  '.jf';'WEB'
 
@@ -29,8 +29,8 @@ Test;CheckMockWeb;;;
     runMatrix;'checkWEB'
 
 
-#Id;#TestCase;#Kind;#Depends;#For
-Test;CheckMockSwing;;;
+#Id;#Off;#TestCase;#Kind;#Depends;#For
+Test;1;CheckMockSwing;;;
     #Id;#Action;#Matrix;#Parameter
     MXRN1;MatrixRun;matrixTestsPath + 'prepareMock' +  '.jf';'SWING'
 
@@ -39,6 +39,18 @@ Test;CheckMockSwing;;;
 
     #Call;#testName
     runMatrix;'checkSWING'
+
+
+#Id;#TestCase;#Kind;#Depends;#For
+Test;CheckMockWin;;;
+    #Id;#Action;#Matrix;#Parameter
+    MXRN1;MatrixRun;matrixTestsPath + 'prepareMock' +  '.jf';'WIN'
+
+    #Id;#Action;#Matrix
+    MXWT1;MatrixWait;MXRN1.Out
+
+    #Call;#testName
+    runMatrix;'checkWIN'
 
 
 // 
@@ -55,7 +67,7 @@ REPORT;Cleanup;;;
     TBLSLCT1.Out.size() == 0;'There are fails in the tests'
 
     #Id;#SubCase;#testName
-    runMatrix;Running test;'checkSWING'
+    runMatrix;Running test;'checkWIN'
         #Id;#Action;#Matrix
         MXRN1;MatrixRun;matrixTestsPath + testName +  '.jf'
 

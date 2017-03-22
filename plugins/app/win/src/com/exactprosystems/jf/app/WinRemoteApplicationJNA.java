@@ -86,6 +86,8 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 					throw new RemoteException(e.getMessage(), e.getCause());
 				}
 
+            case WinAppFactory.propertyTitle :
+                throw new FeatureNotSupportedException("getProperty");
 
 		}
 		return null;
@@ -312,7 +314,7 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 	}
 
 	@Override
-	protected String switchToDerived(String title, boolean softCondition) throws Exception
+	protected String switchToDerived(Map<String, String> criteria, boolean softCondition) throws Exception
 	{
 		throw new FeatureNotSupportedException("switchTo");
 	}

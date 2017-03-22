@@ -712,6 +712,7 @@ public class DictionaryFx extends GuiDictionary
 	public void stopApplication() throws Exception
 	{
 		this.applicationConnector.stopApplication();
+        displayApplicationControl(null);
 	}
 
 	public void sendKeys(String text, IControl control, IWindow window) throws Exception
@@ -782,8 +783,9 @@ public class DictionaryFx extends GuiDictionary
 	{
 		if (isApplicationRun())
 		{
-			String title = this.applicationConnector.getAppConnection().getApplication().service().switchTo(selectedItem, true);
-			displayApplicationControl(title);
+		    Map<String, String> map = new HashMap<>();
+		    map.put("Title", selectedItem);
+			this.applicationConnector.getAppConnection().getApplication().service().switchTo(map, true);
 		}
 	}
 

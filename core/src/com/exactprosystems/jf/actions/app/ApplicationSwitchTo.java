@@ -8,24 +8,37 @@
 
 package com.exactprosystems.jf.actions.app;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import com.exactprosystems.jf.actions.AbstractAction;
 import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
+import com.exactprosystems.jf.actions.ReadableValue;
 import com.exactprosystems.jf.api.app.AppConnection;
 import com.exactprosystems.jf.api.app.IApplication;
+import com.exactprosystems.jf.api.common.ParametersKind;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
+import com.exactprosystems.jf.documents.matrix.parser.Parameter;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
+import com.exactprosystems.jf.documents.matrix.parser.items.TypeMandatory;
+import com.exactprosystems.jf.functions.HelpKind;
 
 @ActionAttribute(
 		group					= ActionGroups.App,
 		suffix					= "APPSW",
 		generalDescription 		= "Plug-in dependent action. The purpose of the action is to switch the focus among "
 				+ "windows/tabs of the web application.",
-		additionFieldsAllowed 	= false,
+		additionFieldsAllowed 	= true,
+		additionalDescription   = "The parameters are determined by the chosen plug-in. {{`For example, additional "
+                + "parameters {{$Title$}} and {{$URL$}} are available for web plug-in. They are necessary to get the information"
+                + " about the title bar and the address respectively.`}} The parameters can be chosen in the dialogue"
+                + " window opened with the context menu of this action in {{$“All parameters”$}} option.", 
 		outputDescription 		= "It returns the title bar of the window which gained the focus.",
 		outputType				= String.class,
 		examples = "{{##Id;#Action;#Title;#AppConnection\n" +
@@ -39,7 +52,6 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 public class ApplicationSwitchTo extends AbstractAction
 {
 	public final static String connectionName = "AppConnection";
-	public final static String titleName = "Title";
 	public final static String softConditionName = "SoftCondition";
 
 	@ActionFieldAttribute(name = connectionName, mandatory = true, description = "A special object which identifies the"
@@ -47,10 +59,6 @@ public class ApplicationSwitchTo extends AbstractAction
 			+ " of the application the indicated action belongs to. It is the output value of such actions"
 			+ " as {{@ApplicationStart@}}, {{@ApplicationConnectTo@}}.")
 	protected AppConnection	connection	= null;
-
-	@ActionFieldAttribute(name = titleName, mandatory = true, description = "It contains a string which will be used"
-			+ " for searching in the title bar of the window required to be in focus. By default, the working principle is “contains”.")
-	protected String 				title	= null;
 
 	@ActionFieldAttribute(name = softConditionName, mandatory = false, description = "If the parameter value is true,"
 			+ " the string in Title will be compared to the window title bar using the “contains” principle."
@@ -60,6 +68,25 @@ public class ApplicationSwitchTo extends AbstractAction
 	public ApplicationSwitchTo()
 	{
 	}
+
+	@Override
+    protected void helpToAddParametersDerived(List<ReadableValue> list, Context context, Parameters parameters) throws Exception
+    {
+        Helper.helpToAddParameters(list, ParametersKind.PROPERTY, this.owner.getMatrix(), context, parameters, null, connectionName);
+    }
+
+    @Override
+    protected HelpKind howHelpWithParameterDerived(Context context, Parameters parameters, String fieldName) throws Exception
+    {
+        boolean res = Helper.canFillParameter(this.owner.getMatrix(), context, parameters, null, connectionName, fieldName);
+        return res ? HelpKind.ChooseFromList : null;
+    }
+    
+    @Override
+    protected void listToFillParameterDerived(List<ReadableValue> list, Context context, String parameterToFill, Parameters parameters) throws Exception
+    {
+        Helper.fillListForParameter(list, this.owner.getMatrix(), context, parameters, null, connectionName, parameterToFill);
+    }
 
 	@Override
 	public void initDefaultValues() 
@@ -76,8 +103,11 @@ public class ApplicationSwitchTo extends AbstractAction
 		}
 		else
 		{
+		    Map<String, String> map = new HashMap<>();
+		    parameters.select(TypeMandatory.Extra).forEach((k,v) -> map.put(k, String.valueOf(v)));
+		    
 			IApplication app = connection.getApplication();
-			String res = app.service().switchTo(this.title, this.softCondition);
+			String res = app.service().switchTo(map, this.softCondition);
 			
 			if (res.equals(""))
 			{

@@ -81,7 +81,15 @@ public class SwingRemoteApplication extends RemoteApplication
 	@Override
 	public Serializable getProperty(String name) throws RemoteException
 	{
-		throw new FeatureNotSupportedException("getProperty");
+	    if (this.operationExecutor != null)
+	    {
+            switch (name)
+            {
+                case SwingAppFactory.propertyTitle:
+                    return this.operationExecutor.currentFrame().getName();
+            }
+	    }
+        return null;
 	}
 
 	@Override
@@ -279,7 +287,7 @@ public class SwingRemoteApplication extends RemoteApplication
 	}
 
 	@Override
-	protected String switchToDerived(final String title, boolean softCondition) throws Exception
+	protected String switchToDerived(final Map<String, String> criteria, boolean softCondition) throws Exception
 	{
 		throw new FeatureNotSupportedException("switchTo");
 	}

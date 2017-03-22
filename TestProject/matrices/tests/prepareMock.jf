@@ -11,8 +11,8 @@ Prepare;;;
     TXT1;TextCreate;''
 
     // see help.txt
-    #Global;#Action;#operationParameter;#where;#template;#needName;#notAllowed;#adapterLetter;#mask;#controlName;#offName;#notWrite
-    1;Vars;'$p';'$w';'$t';'$n';'-';'N';'mask';'Name';'Off';'N'
+    #Global;#Action;#operationParameter;#where;#template;#needName;#notAllowed;#mask;#controlName;#offName;#notWrite
+    1;Vars;'$p';'$w';'$t';'$n';'-';'mask';'Name';'Off';'N'
 
     // adapter may be SWING or WEB ( in future will need add adapter for WinApp)
     #Global;#Action;#headerText;#headerTextAssert;#table;#matrixText;#delay;#pattern
@@ -37,26 +37,23 @@ Add start adapter action;;;
             #Action;#Line;#Text
             TextAddLine;'\t#Id\u003b#Action\u003b#AppId\u003b#Jar\u003b#Args\u003b#MainClass\n\tAPPSTR1\u003bApplicationStart\u003b\''+mockSwingApp+'\'\u003b\''+mockSwingJar+'\'\u003b\u003b\''+mockSwingClass+\'';matrixText
 
-            #Action;#Line;#Text
-            TextAddLine;'\t#Global\u003b#Action\u003b#appConnection\n\t1\u003bVars\u003bAPPSTR1.Out';matrixText
-
-            #Global;#Action;#adapterLetter
-            1;Vars;'S'
-
 
         #Case
         'WEB'
             #Action;#Line;#Text
             TextAddLine;String.format('\t#Id\u003b#Action\u003b#AppId\u003b#Browser\u003b#URL\n\tAPPSTR1\u003bApplicationStart\u003b\''+mockWebApp+'\'\u003b\''+mockWebBrowser+'\'\u003b\''+mockWebURL+\'',projectDirectory);matrixText
 
-            #Action;#Line;#Text
-            TextAddLine;'\t#Global\u003b#Action\u003b#appConnection\n\t1\u003bVars\u003bAPPSTR1.Out';matrixText
 
-            #Global;#Action;#adapterLetter
-            1;Vars;'W'
+        #Case
+        'WIN'
+            #Action;#Line;#Text
+            TextAddLine;'\t#Id\u003b#Action\u003b#AppId\u003b#Exec\u003b#Args\u003b#WorkDir\n\tAPPSTR1\u003bApplicationStart\u003b\''+mockWinApp+'\'\u003b\''+mockWinExec+'\'\u003b\u003b\''+mockWinDir+\'';matrixText
 
 
     #EndSwitch
+
+    #Action;#Line;#Text
+    TextAddLine;'\t#Global\u003b#Action\u003b#appConnection\n\t1\u003bVars\u003bAPPSTR1.Out';matrixText
 
 
 #TestCase;#Kind;#Depends;#For

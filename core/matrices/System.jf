@@ -1,5 +1,5 @@
-#Off;#TestCase;#Kind;#Depends;#For
-1;Testbench;;;
+#TestCase;#Kind;#Depends;#For
+Testbench;;;
     #Action;#key;#begin
     Vars;0;System.currentTimeMillis()
 
@@ -14,8 +14,8 @@
     Print;System.currentTimeMillis() - begin
 
 
-#Off;#TestCase;#Kind;#Depends;#For
-1;ActionFor;;;
+#TestCase;#Kind;#Depends;#For
+ActionFor;;;
     #Global;#Action;#result
     1;Vars;0
 
@@ -31,15 +31,6 @@
 
     #Action;#result
     Print;result
-
-
-#Off;#TestCase;#Kind;#Depends;#For
-1;CallFromLib;;;
-    #Id;#Call;#a;#b
-    callLib;LIB.Test;140;150
-
-    #Action;#result
-    Print;callLib
 
 
 #TestCase;#Kind;#Depends;#For
@@ -72,8 +63,8 @@ Test matrix start;;;
     Print;'the End'
 
 
-#Off;#TestCase;#Kind;#Depends;#For
-1;Test Store;;;
+#TestCase;#Kind;#Depends;#For
+Test Store;;;
     #Action;#date
     Vars;new Date()
 
@@ -84,8 +75,8 @@ Test matrix start;;;
     Print;date
 
 
-#Off;#TestCase;#Kind;#Depends;#For
-1;test Restore;;;
+#TestCase;#Kind;#Depends;#For
+test Restore;;;
     #Action;#Time
     Wait;3000
 
@@ -96,14 +87,14 @@ Test matrix start;;;
     Print;restoreValue.Out;new Date()
 
 
-#Off;#TestCase;#Kind;#Depends;#For
-1;test execute;;;
+#TestCase;#Kind;#Depends;#For
+test execute;;;
     #Id;#Action;#Command;#Wait
     EXEC1;Execute;'ls';true
 
 
-#Off;#TestCase;#Kind;#Depends;#For
-1;null;;;
+#TestCase;#Kind;#Depends;#For
+null;;;
     #Id;#Action;#Content
     TXT1;TextCreate;'#TestCase\nfirst case\n#Action\u003B#s\nPrint\u003B222'
 

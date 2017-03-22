@@ -28,7 +28,7 @@ import java.util.Map;
 import java.util.Set;
 
 @MatrixItemAttribute(
-		description 	= "SThis operator is used to call a subprogram which is organized with SubCase. Call is performed with id SubCase giving name NameSpace - > NameSpace.SubCaseID\n" +
+		description 	= "This operator is used to call a subprogram which is organized with SubCase. Call is performed with id SubCase giving name NameSpace - > NameSpace.SubCaseID\n" +
 				"SubCase that is being called can be in the current matrix as well as in the library (Project directory -> library). \n" +
 				"In case if SubCase returns any value, it is available via  id operator Call.\n" +
 				"If SubCase is being called with operator Call, factual parameters, which are used by performing  SubCase, can be transferred.  Arguments should be named. ",
