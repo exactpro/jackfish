@@ -90,6 +90,7 @@ public class NumberSpinner extends HBox
 		incrementButton.minHeightProperty().bind(buttonHeight.add(spacing));
 		incrementButton.setFocusTraversable(false);
 		incrementButton.setOnAction(ae -> {
+			this.numberField.requestFocus();
 			increment();
 			ae.consume();
 		});
@@ -109,6 +110,7 @@ public class NumberSpinner extends HBox
 
 		decrementButton.setFocusTraversable(false);
 		decrementButton.setOnAction(ae -> {
+			this.numberField.requestFocus();
 			decrement();
 			ae.consume();
 		});

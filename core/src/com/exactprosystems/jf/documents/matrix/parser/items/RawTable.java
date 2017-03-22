@@ -80,8 +80,9 @@ public class RawTable extends MatrixItem
 		driver.showButton(this, layout, 1, 5, "Layout wizard", item -> driver.layoutWizard(item, table, context));
 
 		driver.showSpinner(this, layout, 1, 6, 75, v -> this.prefRows = v, () -> this.prefRows, 0, 250);
-		driver.showSpinner(this, layout, 1, 7, 75, v -> this.prefCols = v, () -> this.prefCols, 0, 50);
-		driver.showButton(this, layout, 1, 8, "Apply", item ->
+		driver.showLabel(this, layout, 1, 7, "x");
+		driver.showSpinner(this, layout, 1, 8, 75, v -> this.prefCols = v, () -> this.prefCols, 0, 50);
+		driver.showButton(this, layout, 1, 9, "Apply", item ->
 		{
 			if (this.prefCols < this.table.getHeaderSize() || this.prefRows < this.table.size())
 			{

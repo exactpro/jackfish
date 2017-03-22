@@ -495,7 +495,6 @@ public class DisplayDriverFx implements DisplayDriver
 		spinner.setPrefWidth(prefWidth);
 
 		pane.add(spinner, column, row);
-		GridPane.setMargin(spinner, INSETS);
 	}
 
 	@Override
