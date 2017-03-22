@@ -202,10 +202,6 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 			{
 				throw new Exception("Executable name can't be null or empty");
 			}
-			if (Str.IsNullOrEmpty(workDir))
-			{
-				throw new Exception("Working directory can't be null or empty");
-			}
 			this.logger.info("##########################################################################################################");
 			this.logger.info("runDerived(" + args + ")");
 			this.driver = new JnaDriverImpl(this.logger);
