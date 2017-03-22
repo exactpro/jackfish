@@ -2271,14 +2271,14 @@ namespace UIAdapter
             if (handler == null && process != null)
             {
                 int runningTime = 0;
-                int MAXTIME = 20000; // wait 20 second before throw exception
+                int MAXTIME = 60000; // wait 60 second before throw exception
                 int TIMEWAIT = 100;
                 IntPtr mainWindowHandle = process.MainWindowHandle;
                 while (mainWindowHandle.Equals(IntPtr.Zero))
                 {
                     if (runningTime > MAXTIME)
                     {
-                        throw new Exception("Could not find window still 20 seconds");
+                        throw new Exception("Could not find window still 60 seconds");
                     }
                     List<Process> children = GetChildProcesses(process);
                     bool isExit = false;

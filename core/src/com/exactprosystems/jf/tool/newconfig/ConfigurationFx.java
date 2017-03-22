@@ -29,6 +29,7 @@ import com.exactprosystems.jf.documents.matrix.Matrix;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.RunnerListener;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.SupportedEntry;
+import com.exactprosystems.jf.tool.git.GitUtil;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.main.DocumentKind;
 import com.exactprosystems.jf.tool.main.Main;
@@ -1108,6 +1109,7 @@ public class ConfigurationFx extends Configuration
 		{
 			cleanDirectory(directory);
 		}
+		rmFromGit(directory);
 		directory.delete();
 	}
 
@@ -1124,9 +1126,25 @@ public class ConfigurationFx extends Configuration
 				}
 				else
 				{
+					rmFromGit(file);
 					file.delete();
 				}
 			}
+		}
+	}
+
+	private static void rmFromGit(File file)
+	{
+		try
+		{
+			if (Main.IS_PROJECT_UNDER_GIT)
+			{
+				GitUtil.rmFile(file);
+			}
+		}
+		catch (Exception e)
+		{
+
 		}
 	}
 
