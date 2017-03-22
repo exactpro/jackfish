@@ -36,7 +36,7 @@ import java.io.File;
 import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.util.*;
-import java.util.List;
+import java.util.Map.Entry;
 
 public class SeleniumRemoteApplication extends RemoteApplication
 {
@@ -404,7 +404,7 @@ public class SeleniumRemoteApplication extends RemoteApplication
 	}
 
 	@Override
-	protected String switchToDerived(final String title, final boolean softCondition) throws Exception
+	protected String switchToDerived(final Map<String, String> criteria, final boolean softCondition) throws Exception
 	{
 		final String[] result = new String[]{""};
 
@@ -416,17 +416,29 @@ public class SeleniumRemoteApplication extends RemoteApplication
 				try
 				{
 					Set<String> set = driver.getWindowHandles();
+					
+                    for (String handle : set)
+                    {
+                        driver.switchTo().window(handle);
 
-					for (String handle : set)
-					{
-						driver.switchTo().window(handle);
-						result[0] = driver.getTitle();
-						if (softCondition && driver.getTitle().contains(title) || !softCondition && driver.getTitle().equals(title))
-						{
-							driver.manage().window().maximize();
-							return;
-						}
-					}
+                        StringBuilder sb = new StringBuilder();
+                        boolean res = true;
+                        for (Entry<String, String> entry : criteria.entrySet())
+                        {
+                            String name = entry.getKey();
+                            String expected = entry.getValue();
+                            String actual = String.valueOf(getProperty(name));
+                            sb.append(name).append(":").append(actual).append(" ");
+
+                            res = res && (softCondition && actual.contains(expected) || !softCondition && actual.equals(expected));
+                        }
+                        if (res)
+                        {
+                            result[0] = sb.toString(); 
+                            driver.manage().window().maximize();
+                            return;
+                        }
+                    }
 				}
 				catch (Exception e)
 				{
