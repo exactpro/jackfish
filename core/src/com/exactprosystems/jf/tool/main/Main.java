@@ -76,6 +76,8 @@ public class Main extends Application
 	private static final String SMALL_SEPARATOR = "x";
 	private static final Logger logger = Logger.getLogger(Main.class);
 
+	public static boolean IS_PROJECT_UNDER_GIT;
+
 	private static String configName = null;
 
 	private MainController controller;
@@ -135,8 +137,8 @@ public class Main extends Application
 		notifyPreloader(new Preloader.ProgressNotification(15));
 
 		controller.disableMenu(true);
-		boolean isGit = GitUtil.isGitRepository();
-		controller.isGit(isGit);
+		IS_PROJECT_UNDER_GIT = GitUtil.isGitRepository();
+		controller.isGit(IS_PROJECT_UNDER_GIT);
 
 		notifyPreloader(new Preloader.ProgressNotification(20));
 

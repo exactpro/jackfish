@@ -708,6 +708,24 @@ public class GitUtil
 	}
 	//endregion
 
+	public static void rmFile(File file) throws Exception
+	{
+		try (Git git = git(EMPTY_BEAN))
+		{
+			String repositoryPath = git.getRepository().getWorkTree().getPath();
+			String filePath = file.getPath();
+			if (filePath.contains(repositoryPath))
+			{
+				filePath = filePath.substring(repositoryPath.length() + 1);
+			}
+			else
+			{
+				filePath = checkFile(EMPTY_BEAN, file.getPath());
+			}
+			git.rm().addFilepattern(filePath).call();
+		}
+	}
+
 	//region private methods
 	private static File checkGitIgnoreFile() throws Exception
 	{
