@@ -13,6 +13,7 @@
     <formats>HH:mm:ss:SSS</formats>
     <reports>reports</reports>
     <git></git>
+    <version></version>
     <import>com.exactprosystems.jf.common.parser</import>
     <import>java.math</import>
     <import>java.util.regex</import>
@@ -34,8 +35,16 @@
     <matrix>matrices</matrix>
     <appDict>dic</appDict>
     <library>libtp</library>
+    <globalHandler enable="true">
+        <onTestCaseStart></onTestCaseStart>
+        <onTestCaseFinish></onTestCaseFinish>
+        <onTestCaseError></onTestCaseError>
+        <onStepStart></onStepStart>
+        <onStepFinish></onStepFinish>
+        <onStepError></onStepError>
+    </globalHandler>
     <appEntry>
-        <name>WEB</name>
+        <name>WEB_Unix</name>
         <parameters>
             <key>ChromeDriverPath</key>
 			<value>unix/chromedriver-linux-2.2-x64.</value>
@@ -80,21 +89,21 @@
             <key>NewSearch</key>
             <value>true</value>
         </parameters>
-        <appDescription>Web applications</appDescription>
+        <appDescription>Web applications for unix</appDescription>
         <appDicPath>dic/mock_web_dic.xml</appDicPath>
         <appJar>${JF}/apps/web.jar</appJar>
         <appWorkDir>${JF}/apps</appWorkDir>
         <appStartPort>7000</appStartPort>
     </appEntry>
-        <appEntry>
-        <name>WEB_WIN</name>
+    <appEntry>
+        <name>WEB_Windows</name>
         <parameters>
             <key>ChromeDriverPath</key>
 			<value>win/chromedriver-win-2.28-x86.exe</value>
         </parameters>
         <parameters>
             <key>IEDriverPath</key>
-            <value></value>
+            <value>win/iedriverserver-2.53.1-x64.exe</value>
         </parameters>
         <parameters>
             <key>ChromeDriverBinary</key>
@@ -128,13 +137,12 @@
             <key>LogLevel</key>
             <value>ERROR</value>
         </parameters>
-        <appDescription>Web applications</appDescription>
+        <appDescription>Web applications for windows</appDescription>
         <appDicPath>dic/mock_web_dic.xml</appDicPath>
         <appJar>${JF}/apps/web.jar</appJar>
         <appWorkDir>${JF}/apps</appWorkDir>
         <appStartPort>7000</appStartPort>
     </appEntry>
-
     <appEntry>
         <name>SWING</name>
         <parameters>
@@ -184,6 +192,54 @@
         <appDescription>Swing applications</appDescription>
         <appDicPath>dic/mock_swing_dic.xml</appDicPath>
         <appJar>${JF}/apps/swing.jar</appJar>
+        <appWorkDir>.</appWorkDir>
+        <appStartPort>7000</appStartPort>
+    </appEntry>
+    <appEntry>
+        <name>WIN</name>
+        <parameters>
+            <key>ChromeDriverPath</key>
+            <value></value>
+        </parameters>
+        <parameters>
+            <key>IEDriverPath</key>
+            <value></value>
+        </parameters>
+        <parameters>
+            <key>ChromeDriverBinary</key>
+            <value></value>
+        </parameters>
+        <parameters>
+            <key>jreExec</key>
+            <value></value>
+        </parameters>
+        <parameters>
+            <key>jreArgs</key>
+            <value>-Xms128m -Xmx1G</value>
+        </parameters>
+        <parameters>
+            <key>SafariDriverPath</key>
+            <value></value>
+        </parameters>
+        <parameters>
+            <key>FirefoxProfileDirectory</key>
+            <value></value>
+        </parameters>
+        <parameters>
+            <key>UsePrivateMode</key>
+            <value></value>
+        </parameters>
+        <parameters>
+            <key>GeckoDriverPath</key>
+            <value></value>
+        </parameters>
+        <parameters>
+            <key>LogLevel</key>
+            <value>ERROR</value>
+        </parameters>
+        <appDescription>Win applications</appDescription>
+        <appDicPath>dic/mock_win_dic.xml</appDicPath>
+        <appJar>${JF}/apps/win.jar</appJar>
         <appWorkDir>.</appWorkDir>
         <appStartPort>7000</appStartPort>
     </appEntry>
