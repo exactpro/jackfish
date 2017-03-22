@@ -44,7 +44,7 @@
         <onStepError></onStepError>
     </globalHandler>
     <appEntry>
-        <name>WEB (Unix)</name>
+        <name>WEB_Unix</name>
         <parameters>
             <key>ChromeDriverPath</key>
             <value>unix/chromedriver-linux-2.27-x64.</value>
@@ -96,7 +96,7 @@
         <appStartPort>7000</appStartPort>
     </appEntry>
     <appEntry>
-        <name>WEB (Windows)</name>
+        <name>WEB_Windows</name>
         <parameters>
             <key>ChromeDriverPath</key>
             <value>win/chromedriver-win-2.27-x86.exe</value>
