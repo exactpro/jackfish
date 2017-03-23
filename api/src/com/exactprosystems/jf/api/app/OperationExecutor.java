@@ -27,7 +27,8 @@ public interface OperationExecutor<T>
 	List<T> 					findAll			(Locator owner, Locator element																							) throws Exception;
 	T 							find			(Locator owner, Locator element																							) throws Exception;
 	T							lookAtTable		(T table, Locator additional, Locator header, int x, int y																) throws Exception;
-	boolean						elementIsEnabled(T component) throws Exception;
+	boolean						elementIsEnabled(T component                                                                                                            ) throws Exception;
+    boolean                     elementIsVisible(T component                                                                                                            ) throws Exception;
 	boolean						tableIsContainer();
 	boolean 					mouse			(T component, int x, int y, MouseAction action																			) throws Exception;
 	boolean						press			(T component, Keyboard key																								) throws Exception;

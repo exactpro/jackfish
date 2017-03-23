@@ -221,6 +221,20 @@ public class Operation implements Iterable<Part>, Serializable
 		return this;
 	}
 
+    @DescriptionAttribute(text = Do.isEnabled)
+    public Operation isEnabled()
+    {
+        this.list.add(new Part(OperationKind.IS_ENABLED));
+        return this;
+    }
+	
+    @DescriptionAttribute(text = Do.isVisible)
+    public Operation isVisible()
+    {
+        this.list.add(new Part(OperationKind.IS_VISIBLE));
+        return this;
+    }
+    
     @DescriptionAttribute(text = Do.checkList)
     public Operation checkList(List<String> list, boolean ignoreOrder)
     {

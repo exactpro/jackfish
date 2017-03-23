@@ -836,7 +836,13 @@ public class SeleniumOperationExecutor implements OperationExecutor<WebElement>
 	{
 		return component.isEnabled();
 	}
-	//endregion
+
+    @Override
+    public boolean elementIsVisible(WebElement component)
+    {
+        return component.isDisplayed();
+    }
+    // endregion
 
 	@Override
 	public boolean mouse(WebElement component, int x, int y, MouseAction action) throws Exception

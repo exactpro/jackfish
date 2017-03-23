@@ -10,9 +10,15 @@ package com.exactprosystems.jf.api.app;
 
 import java.io.Serializable;
 
+import com.exactprosystems.jf.api.common.DescriptionAttribute;
+
 public enum Visibility implements Serializable
 {
-	Visible;
+    @DescriptionAttribute(text = "Make this element visible")
+	Visible,
+	@DescriptionAttribute(text = "Make this element enabled")
+    Enable;
+    
 
 	private static final long serialVersionUID = 3590062511245720428L;
 }

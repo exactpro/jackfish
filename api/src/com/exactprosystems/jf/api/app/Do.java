@@ -59,6 +59,20 @@ public class Do
 	//endregion
 
 	//region Checking operations
+    static final String isEnabled = "Return true, if current component is enabled.";
+    @DescriptionAttribute(text = Do.isEnabled)
+    public static Operation isEnabled()
+    {
+        return new Operation().isEnabled();
+    }
+	
+    static final String isVisible = "Return true, if current component is visible.";
+    @DescriptionAttribute(text = Do.isVisible)
+    public static Operation isVisible()
+    {
+        return new Operation().isVisible();
+    }
+    
     static final String checkList = "Check, that value list of current component equals @list. The item order may be ignored by @ignoreOrder";
     @DescriptionAttribute(text = Do.checkList)
     public static Operation checkList(List<String> list, boolean ignoreOrder)

@@ -262,6 +262,12 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 		return component.target.isEnabled();
 	}
 
+    @Override
+    public boolean elementIsVisible(ComponentFixture<Component> component)
+    {
+        return component.target.isVisible();
+    }
+
 	@Override
 	public boolean mouse(ComponentFixture<Component> component, int x, int y, MouseAction action) throws Exception
 	{

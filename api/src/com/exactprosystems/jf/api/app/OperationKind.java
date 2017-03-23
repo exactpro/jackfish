@@ -272,6 +272,40 @@ public enum OperationKind
 		}
 	},
 	
+    IS_ENABLED("isEnabled")
+    {
+        @Override
+        protected String formulaTemplate(Part part)
+        {
+            return ".isEnabled()";
+        }
+
+        @Override
+        public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, Holder<T> holder, OperationResult result) throws Exception
+        {
+            boolean res = executor.elementIsEnabled(holder.getValue());
+            result.setBool(res);
+            return true;
+        }
+    },
+    
+    IS_VISIBLE("isVisible")
+    {
+        @Override
+        protected String formulaTemplate(Part part)
+        {
+            return ".isVisible()";
+        }
+
+        @Override
+        public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, Holder<T> holder, OperationResult result) throws Exception
+        {
+            boolean res = executor.elementIsVisible(holder.getValue());
+            result.setBool(res);
+            return true;
+        }
+    },
+    
 	CHECK_LIST("checkList")  
     {
         @Override
@@ -1065,16 +1099,17 @@ public enum OperationKind
 			
 		}
 
-		if (checkEnabled() && !executor.elementIsEnabled(holder.getValue()))
+		Visibility visibility = locator.getVisibility();
+		if ((visibility != Visibility.Enable) && checkEnabled() && !executor.elementIsEnabled(holder.getValue()))
 		{
-			throw new ElementNotEnabled("Element " + locator.getId() + " is not enabled");
+			throw new ElementNotEnabled("Element " + locator.getId() + " is not enabled in operation: " + this);
 		}
 
 		return operateDerived(part, executor, holder, result);
 	}
 
 
-	protected String formulaTemplate(Part part) { return ""; } // TODO
+	protected String formulaTemplate(Part part) { return ""; } 
 
 	protected boolean checkEnabled()
 	{

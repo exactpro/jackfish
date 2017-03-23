@@ -416,6 +416,16 @@ public class JnaDriverImpl
 		return Boolean.parseBoolean(res);
 	}
 
+    public boolean elementIsVisible(UIProxyJNA component) throws Exception
+    {
+        long start = System.currentTimeMillis();
+        String res = ConvertString.replaceUnicodeSubStringsToCharSymbols(this.jnaDriver.elementIsVisible(component.getIdString()));
+        this.logger.info(String.format("elementIsVisible(%s) = %s, time (ms) : %d", component, res, System.currentTimeMillis() - start));
+        checkCSharpTimes();
+        checkError();
+        return Boolean.parseBoolean(res);
+    }
+
 	public String getTable(UIProxyJNA table, boolean useNumericHeader) throws Exception
 	{
 		long start = System.currentTimeMillis();

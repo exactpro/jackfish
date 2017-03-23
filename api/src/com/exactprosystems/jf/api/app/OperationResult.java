@@ -18,6 +18,7 @@ public class OperationResult implements Serializable
 	private static final long			serialVersionUID	= -2015741070415094348L;
 
 	private boolean						ok					= false;
+    private Boolean                     bool                = null;
     private Color                       color               = null;
 	private Integer                     integer             = null;
 	private String						text				= null;
@@ -28,6 +29,12 @@ public class OperationResult implements Serializable
 	private String[][]					array				= null;
 	private Rectangle 					rectangle 			= null;
 
+	
+	public void setBool(Boolean bool)
+	{
+	    this.bool = bool;
+	}
+	
 	public void setColor(Color color)
 	{
 	    this.color = color;
@@ -93,6 +100,10 @@ public class OperationResult implements Serializable
 	    {
 	        return this.error;
 	    }
+        if (this.bool != null)
+        {
+            return this.bool;
+        }
         if (this.color != null)
         {
             return this.color;
@@ -138,6 +149,10 @@ public class OperationResult implements Serializable
 	    }
 	    
 		StringBuilder builder = new StringBuilder();
+        if (this.bool != null)
+        {
+            builder.append(" bool [").append(this.bool).append("];");
+        }
         if (this.color != null)
         {
             builder.append(" color [").append(this.color).append("];");

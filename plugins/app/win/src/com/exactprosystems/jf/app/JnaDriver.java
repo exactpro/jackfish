@@ -72,6 +72,7 @@ public interface JnaDriver extends Library {
 	int getTableSize(String tableId);
 
     String elementIsEnabled(String idString);
+    String elementIsVisible(String idString);
     //endregion
 
 }
