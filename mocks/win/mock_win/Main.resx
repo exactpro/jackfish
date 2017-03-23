@@ -1236,7 +1236,7 @@
     <value>865, 780</value>
   </data>
   <data name="$this.Text" xml:space="preserve">
-    <value>mock_win</value>
+    <value>MockWin</value>
   </data>
   <data name="$this.ToolTip" xml:space="preserve">
     <value>It's some Tooltip!</value>

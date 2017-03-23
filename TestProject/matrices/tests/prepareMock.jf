@@ -46,15 +46,36 @@ Add start adapter action;;;
 
         #Case
         'WIN'
+            #Id;#RawText
+            TEXT1;Text
+            "	#Id;#Action;#Command;#Wait"
+            "	EXEC1;Execute;mockWinExec;false"
+            "	"
+            "	#For;#From;#To;#Step"
+            "	i;0;10;1"
+            "	    #Id;#Action;#AppId;#MainWindow"
+            "	    APPSTR1;ApplicationConnectTo;'WIN';'MockWin'"
+            "	"
+            "	    #Global;#Action;#appConnection"
+            "	    1;Vars;APPSTR1.Out"
+            "	"
+            "	    #Break"
+            "	"
+            "	    #OnError"
+            "	        #Action;#Time"
+            "        	Wait;5000"
+            "	"
+            "	#EndFor"
+            #EndRawText
+
             #Action;#Line;#Text
-            TextAddLine;'\t#Id\u003b#Action\u003b#AppId\u003b#Exec\u003b#Args\u003b#WorkDir\n\tAPPSTR1\u003bApplicationStart\u003b\''+mockWinApp+'\'\u003b\''+mockWinExec+'\'\u003b\u003b\''+mockWinDir+\'';matrixText
+            TextAddLine;TEXT1.toString();matrixText
 
 
     #EndSwitch
 
     #Action;#Line;#Text
     TextAddLine;'\t#Global\u003b#Action\u003b#appConnection\n\t1\u003bVars\u003bAPPSTR1.Out';matrixText
-
 
 #TestCase;#Kind;#Depends;#For
 Generate;;;
@@ -228,8 +249,27 @@ Add close adapter action;;;
     #Action;#Line;#Text
     TextAddLine;'#TestCase\nstop application';matrixText
 
-    #Action;#Line;#Text
-    TextAddLine;'\t#Action\u003b#AppConnection\n\tApplicationStop\u003bappConnection';matrixText
+    #If
+    adapter != 'WIN'
+        #Action;#Line;#Text
+        TextAddLine;'\t#Action\u003b#AppConnection\n\tApplicationStop\u003bappConnection';matrixText
+
+    #Else
+        #Id;#RawText
+        TEXT1;Text
+        "	#Action;#Dialog;#AppConnection;#DialogCloseButton"
+        "	DialogFill;'Main';appConnection;Do.click()"
+        "	"
+        "	"
+        "	#Action;#AppConnection"
+        "	ApplicationStop;appConnection"
+        #EndRawText
+
+        #Action;#Line;#Text
+        TextAddLine;TEXT1.toString();matrixText
+
+
+    #EndIf
 
 
 #TestCase;#Kind;#Depends;#For

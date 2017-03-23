@@ -32,6 +32,7 @@
             <any id="Any" uid="Any" owner="owner" class="" name="" action="" text="" addition="Many"/>
             <wait id="Wait" owner="owner"/>
             <label id="Label" uid="centralLabel" owner="owner" class="" name="" text="" addition="Many"/>
+            <button id="DialogCloseButton" owner="owner" name="Close"/>
         </run>
         <onClose/>
         <close/>
