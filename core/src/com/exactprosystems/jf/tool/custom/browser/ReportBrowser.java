@@ -13,13 +13,12 @@ import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Worker;
 import javafx.geometry.Pos;
+import javafx.scene.control.*;
 import javafx.scene.control.Button;
-import javafx.scene.control.Hyperlink;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
-import javafx.scene.control.ToolBar;
+import javafx.scene.control.MenuItem;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
@@ -28,6 +27,8 @@ import javafx.scene.web.WebHistory;
 import javafx.scene.web.WebView;
 import org.w3c.dom.Document;
 
+import java.awt.*;
+import java.awt.datatransfer.StringSelection;
 import java.io.File;
 
 public class ReportBrowser extends BorderPane
@@ -102,11 +103,35 @@ public class ReportBrowser extends BorderPane
 		private Hyperlink crossButton;
 		private Text textTab;
 
+		private void createContextMenu(WebView webView) {
+			ContextMenu contextMenu = new ContextMenu();
+			MenuItem copy = new MenuItem("Copy");
+			copy.setOnAction(e -> {
+				String selection;
+				selection = (String) webView.getEngine()
+						.executeScript("window.getSelection().toString()");
+				StringSelection stringSelection = new StringSelection(selection);
+				Toolkit.getDefaultToolkit().getSystemClipboard().setContents(stringSelection, null);
+			});
+
+			contextMenu.getItems().addAll(copy);
+
+			webView.setOnMousePressed(e -> {
+				if (e.getButton() == MouseButton.SECONDARY) {
+					contextMenu.show(webView, e.getScreenX(), e.getScreenY());
+				} else {
+					contextMenu.hide();
+				}
+			});
+		}
+
 		public CustomBrowserTab()
 		{
 			WebView view = new WebView();
 			this.engine = view.getEngine();
 			this.setContent(view);
+			view.setContextMenuEnabled(false);
+			createContextMenu(view);
 			
 			textTab = new Text();
 			this.textTab.setText("New tab...");

@@ -1061,7 +1061,8 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
     @Override
     public Color getColorXY(UIProxyJNA component, int x, int y) throws Exception
     {
-        return Color.black; // TODO implement this
+		Rectangle rectangle = getRectangle(component);
+		return new Robot().getPixelColor(rectangle.x + x, rectangle.y + y);
     }
 
     private String columnsToString(String[] a)

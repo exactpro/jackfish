@@ -43,9 +43,15 @@ import javafx.geometry.VPos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
@@ -58,11 +64,14 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.apache.log4j.Logger;
 
+import java.awt.*;
+import java.awt.datatransfer.StringSelection;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -684,6 +693,8 @@ public abstract class DialogsHelper
 		WebView browser = new WebView();
 		WebEngine engine = browser.getEngine();
 		engine.loadContent(content);
+		browser.setContextMenuEnabled(false);
+		createContextMenu(browser);
 
 		BorderPane borderPane = new BorderPane();
 		borderPane.setCenter(browser);
@@ -703,6 +714,28 @@ public abstract class DialogsHelper
 		dialog.getDialogPane().getStylesheets().addAll(Common.currentThemesPaths());
 		dialog.initModality(Modality.NONE);
 		dialog.show();
+	}
+
+	private static void createContextMenu(WebView webView) {
+		ContextMenu contextMenu = new ContextMenu();
+		MenuItem copy = new MenuItem("Copy");
+		copy.setOnAction(e -> {
+			String selection;
+			selection = (String) webView.getEngine()
+					.executeScript("window.getSelection().toString()");
+			StringSelection stringSelection = new StringSelection(selection);
+			Toolkit.getDefaultToolkit().getSystemClipboard().setContents(stringSelection, null);
+		});
+
+		contextMenu.getItems().addAll(copy);
+
+		webView.setOnMousePressed(e -> {
+			if (e.getButton() == MouseButton.SECONDARY) {
+				contextMenu.show(webView, e.getScreenX(), e.getScreenY());
+			} else {
+				contextMenu.hide();
+			}
+		});
 	}
 
 	private static String getCurrentDir()
