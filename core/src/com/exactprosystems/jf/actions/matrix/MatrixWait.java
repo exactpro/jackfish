@@ -25,7 +25,6 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
         generalDescription = "The purpose of this action is to wait until the executed matrix stops. "
                 + "If the matrix doesn’t stop during the specified timeout, an action is failed.",
         additionFieldsAllowed = false,
-        seeAlso = "{{@MatrixRunFromText@}}, {{@MatrixRun@}}",
         examples = "{{##Id;#Action;#Matrix\n" +
                 "MXRN1;MatrixRun;'matrices/Matrix.jf'\n" +
                 "#Id;#Action;#Time;#Matrix\n" +

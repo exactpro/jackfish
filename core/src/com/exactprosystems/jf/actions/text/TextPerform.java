@@ -48,8 +48,6 @@ import com.exactprosystems.jf.functions.Text;
 + "TXT2;TextPerform;TXT1.Out\n"
 + "#Assert;#Message\n"
 + "TXT2.Out.toString() == 'My taxes in 2016 is 13 rub';'Assert failed'#}}\n",
-        seeAlso = "{{@TextReport@}}, {{@TextAddLine@}}, {{@TextLoadFromFile@}}, {{@TextCreate@}}, {{@TextSaveToFile@}}," +
-				" {{@TextSetValue@}}",
 		seeAlsoClass = {TextReport.class, TextAddLine.class, TextLoadFromFile.class, TextCreate.class, TextSaveToFile.class, TextSetValue.class}
 	)
 public class TextPerform extends AbstractAction 

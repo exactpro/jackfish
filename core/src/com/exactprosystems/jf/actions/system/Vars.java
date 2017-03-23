@@ -34,7 +34,6 @@ import com.exactprosystems.jf.documents.matrix.parser.items.TypeMandatory;
 		examples 			  = "Create 2 global variables with names “name” and “age”, with values “Mike” and “42” accordingly.\n"
 				+ "{{##Global;#Action;#name;#age\n"
 				+ "1;Vars;'Mike';'42'#}}",
-		seeAlso = "{{@Let@}}",
 		seeAlsoClass = {Let.class}
 )
 

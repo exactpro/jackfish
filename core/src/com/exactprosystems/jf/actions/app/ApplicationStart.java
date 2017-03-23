@@ -59,12 +59,6 @@ outputDescription 		=
 + "the indicated action belongs to. For example, in order to shut down the application under test and to free "
 + "its resources via the {{@ApplicationStop@}} action the user must pass a valid object to this action, "
 + "which was received from {{$ApplicationStart$}} action.",
-
-seeAlso					= 
-  "{{@ApplicationStop@}}, {{@ApplicationConnectTo@}}, {{@ApplicationGetProperties@}}, {{@ApplicationNewInstance@}}, "
-+ "{{@ApplicationRefresh@}}, {{@ApplicationResize@}}, {{@ApplicationSwitchTo@}}, {{@DialogAlert@}}, {{@DialogCheckLayout@}}, "
-+ "{{@DialogClose@}}, {{@DialogFill@}}, {{@DialogSwitchToWindow@}}",
-
 examples				=
   "As a rule, {{$ApplicationStart$}} is placed in one of the initial TestCases where initialization is performed. "
 + "Therefore it requires that the {{$Global$}} flag be set, as access to the output value is necessary within "

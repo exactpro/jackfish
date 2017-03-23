@@ -26,7 +26,7 @@ public @interface ActionAttribute
 	String generalDescription();
 	String additionalDescription() default "";
 	String outputDescription() default "No output value.";
-	String seeAlso() default "";
+	//String seeAlso() default "";
     Class<?>[] seeAlsoClass() default {};
 	String examples() default "";
 }

@@ -47,10 +47,6 @@ import java.util.Map;
 				+ "This object is required in many other actions to specify the session of the application the"
 				+ " indicated action belongs to. Should be created with an active {{$“Global”$}} flag.",
 		outputType				= AppConnection.class,
-		seeAlso					= "{{@ApplicationStop@}}, {{@ApplicationStart@}}, {{@ApplicationGetProperties@}},"
-				+ " {{@ApplicationNewInstance@}}, {{@ApplicationRefresh@}}, {{@ApplicationResize@}}, "
-				+ "{{@ApplicationSwitchTo@}}, {{@DialogAlert@}}, {{@DialogCheckLayout@}}, {{@DialogClose@}}, "
-				+ "{{@DialogFill@}}, {{@DialogSwitchToWindow@}}",
 		examples = "{{##Id;#Global;#Action;#Browser;#URL;#AppId\n" +
 				"app;1;ApplicationStart;'Chrome';'http://google.com';'WEB'\n" +
 				"#Assert;#Message\n" +

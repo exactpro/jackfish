@@ -17,7 +17,6 @@ import com.exactprosystems.jf.functions.Table;
 		additionFieldsAllowed 	= false,
 		outputDescription 		= "True if removing is successful",
 		outputType 				= Boolean.class,
-		seeAlso 				= "{{@TableReplace@}}, {{@TableAddColumns@}}, {{@TableConsiderColumnAs@}}, {{@TableColumnRename@}}",
 		examples 				=
 				"{{` 1. Create a table with columns Name and Age. Add two lines with data to the table. `}}"
 				+ "{{` 2. Delete the first line in the table, the line with the index 0. `}}"

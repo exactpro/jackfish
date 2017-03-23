@@ -35,7 +35,6 @@ import com.exactprosystems.jf.sql.SqlConnection;
 				"SQLDCNT1;SQLdisconnect;SQLCNT1.Out\n" +
 				"#Assert;#Message\n" +
 				"SQLCNT1.Out.isClosed();'connection is not closed'. #}}",
-		seeAlso = "{{@ SQLexecute @}}, {{@ SQLinsert @}}, {{@ SQLselect @}}, {{@ SQLtableUpload @}}, {{@ SQLconnect @}}.",
 		seeAlsoClass = {SQLexecute.class, SQLinsert.class, SQLselect.class, SQLtableUpload.class, SQLconnect.class}
 	)
 public class SQLdisconnect extends AbstractAction

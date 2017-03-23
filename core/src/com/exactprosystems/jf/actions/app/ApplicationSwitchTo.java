@@ -45,8 +45,6 @@ import com.exactprosystems.jf.functions.HelpKind;
 				"AST;ApplicationSwitchTo;'Title';app\n" +
 				"#Assert;#Message\n" +
 				"Str.IsNullOrEmpty(AST.Out);'Title is null'#}}",
-		seeAlso					=
-				"{{@ApplicationStart@}}, {{@ApplicationConnectTo@}}",
 		seeAlsoClass = {ApplicationStart.class, ApplicationConnectTo.class}
 	)
 public class ApplicationSwitchTo extends AbstractAction

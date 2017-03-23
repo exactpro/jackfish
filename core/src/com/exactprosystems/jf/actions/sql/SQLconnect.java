@@ -41,7 +41,6 @@ import java.util.List;
 				"SQLCNT1;SQLconnect;'username';'127.0.0.1:3306';'myDatabase';'MySQL';'userpassword'\n" +
 				"#Assert;#Message\n" +
 				"!(SQL.Out.isClosed());'connection is not established'#}}",
-		seeAlso = "{{@ SQLexecute @}}, {{@ SQLinsert @}}, {{@ SQLselect @}}, {{@ SQLtableUpload @}}, {{@ SQLdisconnect @}}.",
 		seeAlsoClass = {SQLexecute.class, SQLinsert.class, SQLselect.class, SQLtableUpload.class, SQLdisconnect.class}
 	)
 public class SQLconnect  extends AbstractAction

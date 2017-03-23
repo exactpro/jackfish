@@ -40,7 +40,6 @@ import java.util.Date;
 				"MXRN1;MatrixRunFromText;Text\n" +
 				"#Assert;#Message\n" +
 				"MXRN1.Out.isRunning();'MatrixRun is failed'#}}",
-		seeAlso = "{{@MatrixRun@}}, {{@MatrixWait@}}",
 		seeAlsoClass = {MatrixRun.class, MatrixWait.class}
 	)
 public class MatrixRunFromText extends AbstractAction 

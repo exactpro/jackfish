@@ -23,7 +23,6 @@ import com.exactprosystems.jf.functions.Table;
 		generalDescription 		= "This action is determined to add columns to the table given. It can be used if a "
 				+ "table is created from different sources or if new columns are added to the table given.",
 		additionFieldsAllowed 	= false,
-		seeAlso = "{{@TableReplace@}}, {{@TableColumnRename@}}, {{@AddValue@}}, {{@TableConsiderColumnsAs@}}",
 		examples 				=
 				"{{`1. Create a table with columns Name and Age.`}}"
 				+ "{{`2. Add to the table created columns Gender and Salary (to the line number 0).`}}"

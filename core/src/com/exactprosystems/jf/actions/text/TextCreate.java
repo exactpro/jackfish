@@ -39,8 +39,6 @@ import java.io.StringReader;
 + "TXT1;TextCreate;'Text'\n"
 + "#Assert;#Message\n"
 + "TXT1.Out.toString() == 'Text';#}}\n",
-		seeAlso = "{{@TextReport@}}, {{@TextAddLine@}}, {{@TextLoadFromFile@}}, {{@TextPerform@}}, {{@TextSaveToFile@}}," +
-				" {{@TextSetValue@}}",
 		seeAlsoClass = {TextReport.class, TextAddLine.class, TextLoadFromFile.class, TextPerform.class,
 		TextSaveToFile.class, TextSetValue.class}
 	)

@@ -34,7 +34,6 @@ import com.exactprosystems.jf.sql.SqlConnection;
 				+ "description set as a parameter value. {{$ Attention! You should mind the order of additional parameters. $}}",
 		outputType = Boolean.class,
 		outputDescription = "Returns 'true' if the query was for data selection and 'false' if for data change.",
-		seeAlso = "{{@ SQLdisconnect@}}, {{@ SQLinsert @}}, {{@ SQLselect @}}, {{@ SQLtableUpload @}}, {{@ SQLconnect @}}.",
 		examples = "{{` 1. Create a connection to a database. `}}" +
 				"{{` 2. Execute the query to create Users table. `}}" +
 				"{{` 3.-4. Define and initialize Name and Age variables. `}}" +

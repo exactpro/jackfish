@@ -40,8 +40,6 @@ import java.util.Map;
 				+ " window opened with the context menu of this action in {{$“All parameters”$}} option.",
 		examples = "{{##Id;#Action;#Browser;#URL;#AppConnection\n" +
 				"APPNI1;ApplicationNewInstance;'Chrome';'http://google.com';app#}}",
-		seeAlso					=
-				"{{@ApplicationStart@}}, {{@ApplicationConnectTo@}}",
 		seeAlsoClass = {ApplicationStart.class, ApplicationConnectTo.class}
 )
 public class ApplicationNewInstance extends AbstractAction

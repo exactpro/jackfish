@@ -52,7 +52,14 @@ public class HelpActionItem extends MatrixItem
         {
             table.addValues("Additional fields", "No");
         }
-        table.addValues("See also", attr.seeAlso());
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < attr.seeAlsoClass().length; i++){
+            sb.append(attr.seeAlsoClass()[i].getSimpleName());
+            if (i != attr.seeAlsoClass().length-1){
+                sb.append(", ");
+            }
+        }
+        table.addValues("See also", sb.toString());
         table.addValues("Examples", HTMLhelper.htmlescape(attr.examples()));
 
         // Input

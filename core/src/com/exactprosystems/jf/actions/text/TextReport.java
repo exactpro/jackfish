@@ -32,8 +32,6 @@ import java.util.List;
 + "TXT1;TextCreate;'Text'\n"
 + "#Action;#Title;#Text\n"
 + "TextReport;’My text’;TXT1.Out#}}\n",
-		seeAlso = "{{@TextPerform@}}, {{@TextAddLine@}}, {{@TextLoadFromFile@}}, {{@TextCreate@}}, {{@TextSaveToFile@}}," +
-				" {{@TextSetValue@}}",
 		seeAlsoClass = {TextPerform.class, TextAddLine.class, TextLoadFromFile.class, TextCreate.class, TextSaveToFile.class,
 		TextSetValue.class}
 	)

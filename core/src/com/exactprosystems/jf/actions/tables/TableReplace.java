@@ -15,7 +15,6 @@ import com.exactprosystems.jf.functions.Table;
 		generalDescription 		= "This action is used to replace cell values if the value is equal to the given "
 				+ "one or complies with a regular expression.",
 		additionFieldsAllowed 	= false,
-		seeAlso 				= "{{@TableAddValue@}}, {{@TableAddColumns@}}, {{@TableConsiderColumnAs@}}, {{@TableColumnRename@}}, {{@TableRemoveRow@}}",
 		examples 				=
 				"{{`1. Create a table with columns Name and Age. Add four lines with data about Mike, Anna, John, Bruce.`}}"
 				+ "{{`2. Replace all that comply with Regexp with 'passed'.`}}"

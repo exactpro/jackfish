@@ -33,7 +33,6 @@ import java.io.File;
                 + " an object Table is created without any columns or rows. If it is directed to an empty directory, a"
                 + " table is created with column titles and 0 rows.",
         outputType = Table.class,
-        seeAlso 			  = "{{@RawTable@}}, {{@TableCreate@}}, {{@TableLoadFromFile@}}, {{@TableSelect@}}",
         examples              ="{{`1. Create a table with information about files/folders in directory Home.`}}\n"
                 + "{{##Id;#Action;#Dir\n"
                 + "TBLD1;TableLoadFromDir;System.getProperty('user.home')#}}",

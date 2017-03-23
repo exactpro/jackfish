@@ -36,7 +36,6 @@ import com.exactprosystems.jf.sql.SqlConnection;
 		outputDescription 		= "Returns a list containing primary auto-increment line key generated as a result"
 				+ " of executing an SQL query.",
 		outputType				= List.class,
-		seeAlso = "{{@ SQLdisconnect@}}, {{@ SQLexecute @}}, {{@ SQLselect @}}, {{@ SQLtableUpload @}}, {{@ SQLconnect @}}.",
 		examples = "{{` 1. Create a connection to a database. `}}" +
 				"{{` 2. Execute the query to create Users table. `}}" +
 				"{{` 3.-4. Define and initialize Name and Age variables.`}}" +

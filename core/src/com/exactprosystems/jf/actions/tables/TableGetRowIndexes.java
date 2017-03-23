@@ -32,7 +32,6 @@ import com.exactprosystems.jf.functions.Table;
 				+ " the parameter’s value. In the value it is needed to specify the content which defines the search.",
 		outputDescription 		= "Outputs the index list mathching to condtions.",
 		outputType				= List.class,
-		seeAlso 				= "{{@RawTable@}}, {{@TableLoadFromDir@}}, {{@TableLoadFromFile@}}, {{@TableCreate@}}, {{@TableSelect@}},  ",
 		examples = "", // TODO make the examples, pls
 		seeAlsoClass = {RawTable.class, TableLoadFromFile.class, TableLoadFromDir.class, TableCreate.class, TableSelect.class}
 	)

@@ -34,7 +34,6 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 				+ "ACW;ApplicationCloseWindow;app\n"
 				+ "#Assert;#Message\n"
 				+ "!Str.IsNullOrEmpty(ACW.Out);'String is null or empty'#}}",
-		seeAlso					= "{{@ApplicationStart@}}, {{@ApplicationConnectTo@}}",
         seeAlsoClass            = { ApplicationStart.class, ApplicationConnectTo.class }
 )
 public class ApplicationCloseWindow extends AbstractAction

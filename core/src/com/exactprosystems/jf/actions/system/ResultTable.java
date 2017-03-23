@@ -67,7 +67,6 @@ import com.exactprosystems.jf.functions.Table;
 				+ "    RESTBL1;ResultTable;true\n"
 				+ "    #Action;#BeforeTestCase;#Table;#Title\n"
 				+ "    TableReport;'First';RESTBL1.Out;'Result table'#}}",
-		seeAlso = "{{@ResultTableUserValue@}}",
 		seeAlsoClass = {ResultTableUserValue.class}
 )
 public class ResultTable extends AbstractAction

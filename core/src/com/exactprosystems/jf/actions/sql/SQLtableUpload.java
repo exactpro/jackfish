@@ -27,7 +27,6 @@ import com.exactprosystems.jf.sql.SqlConnection;
 		generalDescription 		= "The following action is needed to upload the data from the {{$Table$}} object to the"
 				+ " database. The data is added using the Union principle (adding to the end of the database)",
 		additionFieldsAllowed 	= false,
-		seeAlso = "{{@ SQLdisconnect@}}, {{@ SQLexecute @}}, {{@ SQLinsert @}}, {{@ SQLselect @}}, {{@ SQLconnect @}}.",
 		examples = "{{` 1. Create a table. `}}" +
 				"{{` 2. Create a connection to a database. `}}" +
 				"{{` 3. Execute a query to create the Users table. `}}" +

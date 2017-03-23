@@ -26,7 +26,6 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 		examples 			= "Save object DateTime that contains current date and time when doing this action.\n"
 				+ "{{##Action;#Value;#Name\n"
 				+ "Store;DateTime.current();'Current time'#}}",
-		seeAlso = "{{@Restore@}}",
 		seeAlsoClass = {Restore.class}
 )
 

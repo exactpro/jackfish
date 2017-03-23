@@ -32,7 +32,6 @@ import com.exactprosystems.jf.functions.Table;
 		additionFieldsAllowed 	= false,
 		outputDescription 		= "If file is not found, object Table is not created.",
 		outputType				= Table.class,
-		seeAlso 				= "{{@RawTable@}}, {{@TableLoadFromDir@}}, {{@TableCreate@}}, {{@TableSelect@}}",
 		examples 				=
 				"{{`1. Get table downloaded from file testTable.csv divided internally with '|'. Verify that table is downloaded correctly.`}} "
 				+ "{{##Id;#Action;#Assert;#File;#Delimiter\n"

@@ -33,7 +33,6 @@ import com.exactprosystems.jf.functions.Table;
 		additionalDescription 	= "Additional parameters are used to assign column titles. The value field of parameter is left empty.",
 		outputDescription 		= "Table structure.",
 		outputType				= Table.class,
-		seeAlso 				= "{{@RawTable@}}, {{@TableLoadFromDir@}}, {{@TableLoadFromFile@}}, {{@TableSelect@}}",
 		examples 				= "{{`1.Create a table with columns Name and Age.`}}"
 				+ "{{`2. Verify that the created object has columns  set initially.`}}\n"
 				+ "{{##Id;#Action;#Name;#Age\n"

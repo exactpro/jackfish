@@ -28,7 +28,6 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 		additionFieldsAllowed 	= false,
 		examples = "{{##Action;#AppConnection\n" +
 				"ApplicationRefresh;app\n#}}",
-		seeAlso	= "{{@ApplicationStart@}}, {{@ApplicationConnectTo@}}",
 		seeAlsoClass = {ApplicationStart.class, ApplicationConnectTo.class}
 	)
 public class ApplicationRefresh extends AbstractAction

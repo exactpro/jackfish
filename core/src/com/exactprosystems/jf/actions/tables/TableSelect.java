@@ -32,7 +32,6 @@ import com.exactprosystems.jf.functions.Table;
 				+ " the parameter’s value. In the value it is needed to specify the content which defines the selection.",
 		outputDescription 		= "Outputs the table containing the selected lines.",
 		outputType				= Table.class,
-		seeAlso 				= "{{@RawTable@}}, {{@TableLoadFromDir@}}, {{@TableLoadFromFile@}}, {{@TableCreate@}}",
 		seeAlsoClass = {RawTable.class, TableLoadFromDir.class, TableLoadFromFile.class, TableCreate.class},
 		examples = "{{`Example #1:`}}"
 				+ "{{`1. Create a table with columns Name and Age. Complete the table with 3 lines.`}}"

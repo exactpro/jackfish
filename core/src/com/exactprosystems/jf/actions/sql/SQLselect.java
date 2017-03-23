@@ -36,7 +36,6 @@ import com.exactprosystems.jf.sql.SqlConnection;
 		outputDescription 		= "Select SQL query returns a Table object. The returned Table column names coincide"
 				+ " with the Table column names we get as a result of a query.",
 		outputType				= Table.class,
-		seeAlso = "{{@ SQLdisconnect@}}, {{@ SQLexecute @}}, {{@ SQLinsert @}}, {{@ SQLtableUpload @}}, {{@ SQLconnect @}}.",
 		examples = "{{` 1. Create a connection to a database. `}}" +
 				"{{` 2. Execute the query to create Users table `}}" +
 				"{{` 3.-4. Define and initialize Name and Age variables `}}" +

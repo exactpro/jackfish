@@ -28,7 +28,6 @@ import com.exactprosystems.jf.functions.Table;
 				+ "calculated  when actions TableReport (if parameter ReportValues is used), TableSaveToFile (if parameter"
 				+ " SaveValues is used), TableCompareTwo are performed.",
 		additionFieldsAllowed 	= false,
-		seeAlso = "{{@TableReplace@}}, {{@TableAddColumns@}}, {{@TableColumnRename@}}, {{@TableAddValue@}}",
 		examples 				=
 				"{{`1. Create a table with columns Name and Age, SalaryPerYear and populate it with values.`}}"
 				+ "{{`2. Set data type  Integer for column  Age.`}}"
