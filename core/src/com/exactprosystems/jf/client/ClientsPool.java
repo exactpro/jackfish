@@ -12,7 +12,6 @@ import com.exactprosystems.jf.api.client.ClientConnection;
 import com.exactprosystems.jf.api.client.IClient;
 import com.exactprosystems.jf.api.client.IClientFactory;
 import com.exactprosystems.jf.api.client.IClientsPool;
-import com.exactprosystems.jf.api.common.ApiVersionInfo;
 import com.exactprosystems.jf.api.common.IContext;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.common.MainRunner;
@@ -43,48 +42,13 @@ public class ClientsPool implements IClientsPool
 	// PoolVersionSupported
 	//----------------------------------------------------------------------------------------------
 	@Override
-	public int requiredMajorVersion(String id)
-	{
-		try
-		{
-			ClientEntry entry = parametersEntry(id);
-			IClientFactory clientFactory = loadClientFactory(id, entry);
-			return clientFactory.requiredMajorVersion();
-		}
-		catch (Exception e)
-		{
-			logger.error(e.getMessage(), e);
-		}
-
-		return -1;
-	}
-
-	@Override
-	public int requiredMinorVersion(String id)
-	{
-		try
-		{
-			ClientEntry entry = parametersEntry(id);
-			IClientFactory clientFactory = loadClientFactory(id, entry);
-			return clientFactory.requiredMinorVersion();
-		}
-		catch (Exception e)
-		{
-			logger.error(e.getMessage(), e);
-		}
-
-		return -1;
-	}
-
-	@Override
 	public boolean isSupported(String id)
 	{
 		try
 		{
 			ClientEntry entry = parametersEntry(id);
 			IClientFactory clientFactory = loadClientFactory(id, entry);
-			boolean ret = clientFactory.isSupported(ApiVersionInfo.majorVersion(), ApiVersionInfo.minorVersion());
-			return ret;
+			return clientFactory != null;
 		}
 		catch (Exception e)
 		{
@@ -123,10 +87,6 @@ public class ClientsPool implements IClientsPool
 	{
 		ClientEntry entry = parametersEntry(id);
 		IClientFactory clientFactory = loadClientFactory(id, entry);
-		if (!clientFactory.isSupported(ApiVersionInfo.majorVersion(), ApiVersionInfo.minorVersion()))
-		{
-			throwException(id, clientFactory);
-		}
 		return clientFactory;
 	}
 
@@ -142,10 +102,6 @@ public class ClientsPool implements IClientsPool
 			
 			ClientEntry entry = parametersEntry(id);
 			IClientFactory clientFactory = loadClientFactory(id, entry);
-			if (!clientFactory.isSupported(ApiVersionInfo.majorVersion(), ApiVersionInfo.minorVersion()))
-			{
-				throwException(id, clientFactory);
-			}
 
 			List<Parameter> list = entry.getParameters();
 			Map<String, String> map = new HashMap<String, String>();
@@ -267,12 +223,6 @@ public class ClientsPool implements IClientsPool
 			this.clientFactories.put(id, clientFactory);
 		}
 		return clientFactory;
-	}
-	
-	private void throwException(String id, IClientFactory clientFactory) throws Exception
-	{
-		throw new Exception("Application '" + id + "' needs API no less than " 
-				+ clientFactory.requiredMajorVersion() + "." + clientFactory.requiredMinorVersion());
 	}
 	
 	private DocumentFactory factory;

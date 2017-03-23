@@ -32,9 +32,9 @@ clean.doFirst {
 jar {
 	manifest {
 		attributes(
+			'Implementation-Version' : rootProject.ext.version,
 			'Main-class' : 'com.exactprosystems.jf.common.MainRunner',
-			'Class-Path' : '.',
-			'Version' : rootProject.ext.version
+			'Class-Path' : '.'
 		)
 	}
 	from { 

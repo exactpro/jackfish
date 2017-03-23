@@ -74,15 +74,8 @@ public abstract class AbstractEntryNode<T extends Entry> extends TreeNode
 				String text = "";
 				if (!supportedEntry.isSupported())
 				{
+				    text = "Not supported";
 					icon = new Image(CssVariables.Icons.UNSUPPORT_ENTRY_ICON);
-					if (supportedEntry.getRequaredMajorVersion() == -1 && supportedEntry.getRequaredMinorVersion() == -1)
-					{
-						text = "error on load";
-					}
-					else
-					{
-						text = "<required " + supportedEntry.getRequaredMajorVersion() + "." + supportedEntry.getRequaredMinorVersion() + ">";
-					}
 				}
 				Text exceptionText = new Text(text);
 				exceptionText.setOpacity(0.5);

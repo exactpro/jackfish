@@ -8,7 +8,6 @@
 
 package com.exactprosystems.jf.service;
 
-import com.exactprosystems.jf.api.common.ApiVersionInfo;
 import com.exactprosystems.jf.api.common.IContext;
 import com.exactprosystems.jf.api.common.exception.EmptyParameterException;
 import com.exactprosystems.jf.api.common.exception.VersionException;
@@ -38,40 +37,6 @@ public class ServicePool implements IServicesPool
 	//----------------------------------------------------------------------------------------------
 	// PoolVersionSupported
 	//----------------------------------------------------------------------------------------------
-	@Override
-	public int requiredMajorVersion(String serviceId)
-	{
-		try
-		{
-			ServiceEntry entry = parametersEntry(serviceId);
-			IServiceFactory serviceFactory = loadServiceFactory(serviceId, entry);
-			return serviceFactory.requiredMajorVersion();
-		}
-		catch (Exception e)
-		{
-			logger.error(e.getMessage());
-		}
-
-		return -1;
-	}
-
-	
-	@Override
-	public int requiredMinorVersion(String serviceId)
-	{
-		try
-		{
-			ServiceEntry entry = parametersEntry(serviceId);
-			IServiceFactory serviceFactory = loadServiceFactory(serviceId, entry);
-			return serviceFactory.requiredMinorVersion();
-		}
-		catch (Exception e)
-		{
-			logger.error(e.getMessage());
-		}
-
-		return -1;
-	}
 
 	@Override
 	public boolean isSupported(String serviceId)
@@ -80,7 +45,7 @@ public class ServicePool implements IServicesPool
 		{
 			ServiceEntry entry = parametersEntry(serviceId);
 			IServiceFactory serviceFactory = loadServiceFactory(serviceId, entry);
-			return serviceFactory.isSupported(ApiVersionInfo.majorVersion(), ApiVersionInfo.minorVersion());
+			return serviceFactory != null;
 		}
 		catch (Exception e)
 		{
@@ -89,27 +54,6 @@ public class ServicePool implements IServicesPool
 
 		return false;
 	}
-
-	//----------------------------------------------------------------------------------------------
-	// IServicePool
-	//----------------------------------------------------------------------------------------------
-//	@Override
-//	public boolean canFillParameter(String serviceId, String parameterToFill) throws Exception
-//	{
-//		ServiceEntry entry = parametersEntry(serviceId);
-//		IServiceFactory serviceFactory = loadServiceFactory(serviceId, entry);
-//
-//		return serviceFactory.canFillParameter(parameterToFill);
-//	}
-//
-//	@Override
-//	public String[] listForParameter(String serviceId, String parameterToFill) throws Exception
-//	{
-//		ServiceEntry entry = parametersEntry(serviceId);
-//		IServiceFactory serviceFactory = loadServiceFactory(serviceId, entry);
-//
-//		return serviceFactory.listForParameter(parameterToFill);
-//	}
 
 	@Override
 	public List<String> servicesNames()
@@ -132,36 +76,11 @@ public class ServicePool implements IServicesPool
 		return result;
 	}	
 
-//	@Override
-//	public String[] wellKnownParameters(String serviceId) throws Exception
-//	{
-//		ServiceEntry entry = parametersEntry(serviceId);
-//		IServiceFactory serviceFactory = loadServiceFactory(serviceId, entry);
-//
-//		return serviceFactory.wellKnownParameters();
-//	}
-//
-//
-//	@Override
-//	public String[] wellKnownStartArgs(String serviceId) throws Exception
-//	{
-//		ServiceEntry entry = parametersEntry(serviceId);
-//		IServiceFactory serviceFactory = loadServiceFactory(serviceId, entry);
-//
-//		return serviceFactory.wellKnownStartArgs();
-//	}
-
-	
-
 	@Override
 	public IServiceFactory loadServiceFactory(String serviceId) throws Exception
 	{
 		ServiceEntry entry = parametersEntry(serviceId);
 		IServiceFactory serviceFactory = loadServiceFactory(serviceId, entry);
-		if (!serviceFactory.isSupported(ApiVersionInfo.majorVersion(), ApiVersionInfo.minorVersion()))
-		{
-			throwException(serviceId, serviceFactory);
-		}
 		return serviceFactory;
 	}
 
@@ -177,10 +96,6 @@ public class ServicePool implements IServicesPool
 			
 			ServiceEntry entry = parametersEntry(serviceId);
 			IServiceFactory serviceFactory = loadServiceFactory(serviceId, entry);
-			if (!serviceFactory.isSupported(ApiVersionInfo.majorVersion(), ApiVersionInfo.minorVersion()))
-			{
-				throwException(serviceId, serviceFactory);
-			}
 			List<Parameter> list = entry.getParameters();
 			Map<String, String> map = new HashMap<String, String>();
 			for (Parameter param : list)
@@ -320,12 +235,6 @@ public class ServicePool implements IServicesPool
 		return serviceFactory;
 	}
 	
-	private void throwException(String serviceId, IServiceFactory serviceFactory) throws Exception
-	{
-		throw new VersionException("Application '" + serviceId + "' needs API no less than " 
-				+ serviceFactory.requiredMajorVersion() + "." + serviceFactory.requiredMinorVersion());
-	}
-
 	private Map<String, ServiceStatus> mapServices;
 
 	private DocumentFactory factory;

@@ -11,14 +11,10 @@ package com.exactprosystems.jf.tool;
 public class SupportedEntry
 {
 	private boolean isSupported;
-	private int requaredMajorVersion;
-	private int requaredMinorVersion;
 
-	public SupportedEntry(boolean isSupported, int requredMajorVersion, int requredMinorVersion)
+	public SupportedEntry(boolean isSupported)
 	{
 		this.isSupported = isSupported;
-		this.requaredMajorVersion = requredMajorVersion;
-		this.requaredMinorVersion = requredMinorVersion;
 	}
 
 	public boolean isSupported()
@@ -31,33 +27,9 @@ public class SupportedEntry
 		this.isSupported = isSupported;
 	}
 
-	public int getRequaredMajorVersion()
-	{
-		return requaredMajorVersion;
-	}
-
-	public void setRequaredMajorVersion(int requaredMajorVersion)
-	{
-		this.requaredMajorVersion = requaredMajorVersion;
-	}
-
-	public int getRequaredMinorVersion()
-	{
-		return requaredMinorVersion;
-	}
-
-	public void setRequaredMinorVersion(int requaredMinorVersion)
-	{
-		this.requaredMinorVersion = requaredMinorVersion;
-	}
-
 	@Override
 	public String toString()
 	{
-		return "SupportedEntry{" +
-				"isSupported=" + isSupported +
-				", requaredMajorVersion=" + requaredMajorVersion +
-				", requaredMinorVersion=" + requaredMinorVersion +
-				'}';
+		return "SupportedEntry{ isSupported=" + isSupported + " }";
 	}
 }

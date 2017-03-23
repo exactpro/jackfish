@@ -9,7 +9,6 @@
 package com.exactprosystems.jf.app;
 
 import com.exactprosystems.jf.api.app.*;
-import com.exactprosystems.jf.api.common.ApiVersionInfo;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.common.MainRunner;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
@@ -45,44 +44,12 @@ public class ApplicationPool implements IApplicationPool
 	// PoolVersionSupported
 	//----------------------------------------------------------------------------------------------
 	@Override
-	public int requiredMajorVersion(String id)
-	{
-		try
-		{
-			IApplicationFactory applicationFactory = loadFactory(id);
-			return applicationFactory.requiredMajorVersion();
-		}
-		catch (Exception e)
-		{
-			logger.error(e.getMessage());
-		}
-
-		return -1;
-	}
-
-	@Override
-	public int requiredMinorVersion(String id)
-	{
-		try
-		{
-			IApplicationFactory applicationFactory = loadFactory(id);
-			return applicationFactory.requiredMinorVersion();
-		}
-		catch (Exception e)
-		{
-			logger.error(e.getMessage());
-		}
-
-		return -1;
-	}
-
-	@Override
 	public boolean isSupported(String id)
 	{
 		try
 		{
 			IApplicationFactory applicationFactory = loadFactory(id);
-			return applicationFactory.isSupported(ApiVersionInfo.majorVersion(), ApiVersionInfo.minorVersion());
+			return applicationFactory != null;
 		}
 		catch (Exception e)
 		{
@@ -134,11 +101,6 @@ public class ApplicationPool implements IApplicationPool
 	public IApplicationFactory loadApplicationFactory(String id) throws Exception
 	{
 		IApplicationFactory applicationFactory = loadFactory(id);
-		if (!applicationFactory.isSupported(ApiVersionInfo.majorVersion(), ApiVersionInfo.minorVersion()))
-		{
-			throwException(id, applicationFactory);
-		}
-		
 		return applicationFactory;
 	}
 
@@ -158,10 +120,6 @@ public class ApplicationPool implements IApplicationPool
 
 			Map<String, String> driverParameters = getDriverParameters(entry);
 			IApplicationFactory applicationFactory = loadFactory(id, entry);
-			if (!applicationFactory.isSupported(ApiVersionInfo.majorVersion(), ApiVersionInfo.minorVersion()))
-			{
-				throwException(id, applicationFactory);
-			}
 			IApplication application = applicationFactory.createApplication();
 			application.init(this, applicationFactory);
 			String remoteClassName = applicationFactory.getRemoteClassName();
@@ -201,10 +159,6 @@ public class ApplicationPool implements IApplicationPool
 			
 			Map<String, String> driverParameters = getDriverParameters(entry);
 			IApplicationFactory applicationFactory = loadFactory(id, entry);
-			if (!applicationFactory.isSupported(ApiVersionInfo.majorVersion(), ApiVersionInfo.minorVersion()))
-			{
-				throwException(id, applicationFactory);
-			}
 			IApplication application = applicationFactory.createApplication();
 			application.init(this, applicationFactory);
 			String remoteClassName = applicationFactory.getRemoteClassName();
@@ -419,13 +373,6 @@ public class ApplicationPool implements IApplicationPool
 		return true;
 	}
 	
-	private void throwException(String id, IApplicationFactory applicationFactory) throws Exception
-	{
-		throw new Exception("Application '" + id + "' needs API no less than " 
-				+ applicationFactory.requiredMajorVersion() + "." + applicationFactory.requiredMinorVersion());
-	}
-
-
 	private DocumentFactory factory;
 
 	private Map<String, IApplicationFactory> appFactories;

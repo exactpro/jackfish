@@ -21,9 +21,6 @@ public class MatrixServiceFactory implements IServiceFactory
 	public final static String portName 			= "Port";
 	public final static String onConnectedName 		= "OnConnected";
 	
-	private static final int requiredMajorVersion = 2;
-	private static final int requiredMinorVersion = 25;
-
 	private static String[] empty = {  };
 
 	//----------------------------------------------------------------------------------------------
@@ -64,26 +61,5 @@ public class MatrixServiceFactory implements IServiceFactory
 	public Set<ServicePossibility> possebilities()
 	{
 		return ServiceHelper.possebilities(MatrixService.class);
-	}
-
-	//----------------------------------------------------------------------------------------------
-	// VersionSupported
-	//----------------------------------------------------------------------------------------------
-	@Override
-	public int requiredMajorVersion()
-	{
-		return requiredMajorVersion;
-	}
-
-	@Override
-	public int requiredMinorVersion()
-	{
-		return requiredMinorVersion;
-	}
-
-	@Override
-	public boolean isSupported(int major, int minor)
-	{
-		return (major * 1000 + minor) >= (requiredMajorVersion * 1000 + requiredMinorVersion);
 	}
 }

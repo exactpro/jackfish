@@ -8,41 +8,14 @@
 
 package com.exactprosystems.jf.common.version;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Properties;
-
-public class VersionInfo 
+public class VersionInfo
 {
-	private static String version = null;
-	
-	public static String getVersion()
-	{
-		
-		if ( version == null )
-		{
-			InputStream inStream = VersionInfo.class.getResourceAsStream("version.properties");
-			
-			if ( inStream != null )
-			{
-				Properties properties = new Properties();
-				
-				try
-				{
-					properties.load(inStream);
-					
-					version = properties.getProperty("VERSION");
-				}
-				catch ( IOException e )
-				{
-					version = "1.0.0.1";
-				}
-			}
-			else
-				version = "1.0.0.1";
-		}
-		
-		return version;
-	}
+    public static String getVersion()
+    {
+        Package pkg = VersionInfo.class.getPackage();
+        String version = pkg.getImplementationVersion(); 
+
+        return version == null ? "LocalBuild" : version;
+    }
 
 }

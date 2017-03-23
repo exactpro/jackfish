@@ -17,9 +17,6 @@ import java.util.Scanner;
 
 public class WinAppFactory implements IApplicationFactory
 {
-	private static final int		requiredMajorVersion	= 2;
-	private static final int		requiredMinorVersion	= 30;
-
 	public static final String		logLevel				= "LogLevel";
 	public static final String		jreExecName				= "jreExec";
 	public static final String		jreArgsName				= "jreArgs";
@@ -175,26 +172,6 @@ public class WinAppFactory implements IApplicationFactory
     }
 
     //----------------------------------------------------------------------------------------------
-	// VersionSupported
-	//----------------------------------------------------------------------------------------------
-	@Override
-	public int requiredMajorVersion()
-	{
-		return requiredMajorVersion;
-	}
-
-	@Override
-	public int requiredMinorVersion()
-	{
-		return requiredMinorVersion;
-	}
-
-	@Override
-	public boolean isSupported(int major, int minor)
-	{
-		return (major * 1000 + minor) >= (requiredMajorVersion * 1000 + requiredMinorVersion);
-	}
-
 	private static void add(Map<ControlKind, String[]> controlMap, ControlKind kind, ControlType ... types)
 	{
 		String[] a = new String[types.length];

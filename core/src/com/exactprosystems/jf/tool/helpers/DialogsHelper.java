@@ -9,7 +9,6 @@
 package com.exactprosystems.jf.tool.helpers;
 
 import com.exactprosystems.jf.actions.ReadableValue;
-import com.exactprosystems.jf.api.common.ApiVersionInfo;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.common.MatrixRunner;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
@@ -526,7 +525,7 @@ public abstract class DialogsHelper
 		grid.setHgap(8);
 		Image img = new Image(CssVariables.Icons.LOGO_FISH);
 		dialog.setResizable(true);
-		String version = String.format("Version : %25s %nApi version : %5s", VersionInfo.getVersion(), ApiVersionInfo.majorVersion() + "." + ApiVersionInfo.minorVersion());
+		String version = String.format("Version : %25s", VersionInfo.getVersion());
 		String name = "JackFish";
 		Text nameText = new Text(name);
 		nameText.setFont(javafx.scene.text.Font.font(30));

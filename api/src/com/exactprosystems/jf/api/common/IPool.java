@@ -9,8 +9,5 @@ package com.exactprosystems.jf.api.common;
 
 public interface IPool
 {
-	int 			requiredMajorVersion(String id);
-	int 			requiredMinorVersion(String id);
-	
 	boolean 		isSupported(String id);
 }

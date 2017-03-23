@@ -188,8 +188,6 @@ subprojects {
 	jar {
     	manifest {
         	attributes('Implementation-Version': "${revision}")
-			attributes('Build_Name': "${archivesBaseName}")
-        	attributes('Build_Number': "${build_number}")
         	attributes('Git_Hash': "${git_hash}")
         }
     }
@@ -214,12 +212,6 @@ subprojects {
 	    }
 	    doFirst { sharedDir.mkdirs() }
 	}
-}
-
-task replaceVersion {
-	dependsOn clean
-	def versionFile = new File(rootProject.rootDir.path+'/core/resources/com/exactprosystems/jf/common/version/version.properties')
-	versionFile.text = 'VERSION = ' + rootProject.ext.version
 }
 
 task makeTool() {

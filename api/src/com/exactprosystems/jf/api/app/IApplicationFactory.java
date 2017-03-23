@@ -9,9 +9,8 @@
 package com.exactprosystems.jf.api.app;
 
 import com.exactprosystems.jf.api.common.IFactory;
-import com.exactprosystems.jf.api.common.VersionSupported;
 
-public interface IApplicationFactory  extends VersionSupported, IFactory
+public interface IApplicationFactory  extends IFactory
 {
 	String helpFileName	=	"helpFile.html";
 	String				getHelp();

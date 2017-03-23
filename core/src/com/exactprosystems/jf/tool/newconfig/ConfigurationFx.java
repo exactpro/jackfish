@@ -531,7 +531,7 @@ public class ConfigurationFx extends Configuration
 				.map(ClientEntry::toString)
 				.collect(Collectors.toMap(
 						id -> id,
-						id -> new SupportedEntry(clientPool.isSupported(id), clientPool.requiredMajorVersion(id), clientPool.requiredMinorVersion(id))
+						id -> new SupportedEntry(clientPool.isSupported(id))
 				))
 		);
 		this.displayClient();
@@ -588,7 +588,7 @@ public class ConfigurationFx extends Configuration
 		for (ServiceEntry entry : getServiceEntries())
 		{
 			String id = entry.toString();
-			this.supportedServices.put(entry.toString(), new SupportedEntry(servicePool.isSupported(id), servicePool.requiredMajorVersion(id), servicePool.requiredMinorVersion(id)));
+			this.supportedServices.put(entry.toString(), new SupportedEntry(servicePool.isSupported(id)));
 		}
 		this.displayService();
 	}
@@ -693,7 +693,7 @@ public class ConfigurationFx extends Configuration
 		for (AppEntry entry : getAppEntries())
 		{
 			String id = entry.toString();
-			this.supportedApps.put(entry.toString(), new SupportedEntry(AppPool.isSupported(id), AppPool.requiredMajorVersion(id), AppPool.requiredMinorVersion(id)));
+			this.supportedApps.put(entry.toString(), new SupportedEntry(AppPool.isSupported(id)));
 		}
 		this.displayApp();
 	}
@@ -812,17 +812,17 @@ public class ConfigurationFx extends Configuration
 		if (entry.getClass().getSimpleName().equals(ClientEntry.class.getSimpleName()))
 		{
 			pool = getClientPool();
-			supportedEntry = new SupportedEntry(pool.isSupported(id), pool.requiredMajorVersion(id), pool.requiredMinorVersion(id));
+			supportedEntry = new SupportedEntry(pool.isSupported(id));
 		}
 		else if (entry.getClass().getSimpleName().equals(AppEntry.class.getSimpleName()))
 		{
 			pool = getApplicationPool();
-			supportedEntry = new SupportedEntry(pool.isSupported(id), pool.requiredMajorVersion(id), pool.requiredMinorVersion(id));
+			supportedEntry = new SupportedEntry(pool.isSupported(id));
 		}
 		else if (entry.getClass().getSimpleName().equals(ServiceEntry.class.getSimpleName()))
 		{
 			pool = getServicesPool();
-			supportedEntry = new SupportedEntry(pool.isSupported(id), pool.requiredMajorVersion(id), pool.requiredMinorVersion(id));
+			supportedEntry = new SupportedEntry(pool.isSupported(id));
 		}
 		return supportedEntry;
 	}

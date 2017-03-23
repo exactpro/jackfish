@@ -8,7 +8,6 @@
 
 package com.exactprosystems.jf.common;
 
-import com.exactprosystems.jf.api.common.ApiVersionInfo;
 import com.exactprosystems.jf.api.common.DateTime;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.common.rtfhelp.RtfGenerator;
@@ -52,7 +51,6 @@ public class MainRunner
 		try
 		{
 			logger.info("Tool version: " + VersionInfo.getVersion());
-			logger.info("API version:  " + ApiVersionInfo.majorVersion() + "." + ApiVersionInfo.minorVersion());
 			logger.info("args: " + Arrays.toString(hidePassword(args)));
 			
 			Option startAtName = OptionBuilder
@@ -403,7 +401,6 @@ public class MainRunner
 	private static void printVersion()
 	{
 		System.out.println(Configuration.projectName + "  ver." + VersionInfo.getVersion());
-		System.out.println("API ver. " + ApiVersionInfo.majorVersion() + "." + ApiVersionInfo.minorVersion());
 	}
 
 	private static boolean processMatrix(DocumentFactory factory, File matrix,  

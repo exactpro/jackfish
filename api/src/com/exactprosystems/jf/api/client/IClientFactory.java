@@ -11,9 +11,8 @@ package com.exactprosystems.jf.api.client;
 import java.util.Set;
 
 import com.exactprosystems.jf.api.common.IFactory;
-import com.exactprosystems.jf.api.common.VersionSupported;
 
-public interface IClientFactory  extends VersionSupported, IFactory
+public interface IClientFactory  extends IFactory
 {
 	void				init(IMessageDictionary dictionary);
 	
