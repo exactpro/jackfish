@@ -29,7 +29,7 @@ public class TrueCondition extends Condition  implements Serializable
 	@Override
 	public String serialize()
 	{
-		return "E" + start + getName() + finish;
+		return super.getSerializePrefix(this.getClass()) + start + getName() + finish;
 	}
 
 	@Override

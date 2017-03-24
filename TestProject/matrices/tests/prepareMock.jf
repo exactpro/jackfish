@@ -79,8 +79,6 @@ Add start adapter action;;;
 
 #TestCase;#Kind;#Depends;#For
 Generate;;;
-    #ReportOff
-
     #Action;#maskMap
     Vars;table.get(0)
 
@@ -192,8 +190,15 @@ Generate;;;
                 whereCheck
                     #Case
                     's'
+                        #If
+                        !checkedValue.contains('\'')
+                            #Id;#Let
+                            checkedValue;'\''+checkedValue+'\''
+
+                        #EndIf
+
                         #Action;#Line;#Text
-                        TextAddLine;headerTextAssert+name+'\n\tDialogFill\u003b\'Main\'\u003bThis.Out.'+name+'==\''+checkedValue+'\'\u003bappConnection\u003b'+currentOperation+'\n';matrixText
+                        TextAddLine;headerTextAssert+name+'\n\tDialogFill\u003b\'Main\'\u003bThis.Out.'+name+'=='+checkedValue+'\u003bappConnection\u003b'+currentOperation+'\n';matrixText
 
 
                     #Case
@@ -240,8 +245,6 @@ Generate;;;
         #EndFor
 
     #EndFor
-
-    #ReportOn
 
 
 #TestCase;#Kind;#Depends;#For

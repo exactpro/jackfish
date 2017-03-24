@@ -5,6 +5,7 @@ import com.exactprosystems.jf.api.app.LocatorFieldKind;
 import com.exactprosystems.jf.api.app.MouseAction;
 import com.exactprosystems.jf.api.app.PluginInfo;
 import com.exactprosystems.jf.api.client.ICondition;
+import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.conditions.Condition;
 import com.exactprosystems.jf.api.error.app.*;
 import com.sun.jna.Native;
@@ -27,8 +28,7 @@ public class JnaDriverImpl
 	private final Logger logger;
 	private final static String dllDir = "bin/UIAdapter.dll";
 	private final static String pdbDir = "bin/UIAdapter.pdb";
-
-	public JnaDriverImpl(Logger logger) throws Exception
+public JnaDriverImpl(Logger logger) throws Exception
 	{
 		this.logger = logger;
 		if (Platform.is64Bit())
@@ -449,10 +449,10 @@ public class JnaDriverImpl
 	private void checkError() throws RemoteException
 	{
 		String error = this.jnaDriver.lastError();
-		int errorNumber = this.jnaDriver.lastErrorNumber();
-		this.logger.error(error);
-		if (error != null)
+		if (!Str.IsNullOrEmpty(error))
 		{
+			int errorNumber = this.jnaDriver.lastErrorNumber();
+			this.logger.error(error);
 			switch (errorNumber)
 			{
 				case 0: throw new FeatureNotSupportedException(error);

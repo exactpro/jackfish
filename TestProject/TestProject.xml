@@ -47,7 +47,7 @@
         <name>WEB_Unix</name>
         <parameters>
             <key>ChromeDriverPath</key>
-			<value>unix/chromedriver-linux-2.2-x64.</value>
+            <value>unix/chromedriver-linux-2.2-x64.</value>
         </parameters>
         <parameters>
             <key>IEDriverPath</key>
@@ -99,7 +99,7 @@
         <name>WEB_Windows</name>
         <parameters>
             <key>ChromeDriverPath</key>
-			<value>win/chromedriver-win-2.28-x86.exe</value>
+            <value>win/chromedriver-win-2.28-x86.exe</value>
         </parameters>
         <parameters>
             <key>IEDriverPath</key>
@@ -235,7 +235,7 @@
         </parameters>
         <parameters>
             <key>LogLevel</key>
-            <value>ERROR</value>
+            <value>ALL</value>
         </parameters>
         <appDescription>Win applications</appDescription>
         <appDicPath>dic/mock_win_dic.xml</appDicPath>

@@ -35,7 +35,7 @@ public class ColorCondition extends Condition implements Serializable
 	@Override
 	public String serialize()
 	{
-		return "C" + start + getName() + separator + this.value + separator + this.foreground + finish;
+		return super.getSerializePrefix(this.getClass()) + start + getName() + separator + this.value + separator + this.foreground + finish;
 	}
 	
 	@Override
@@ -70,6 +70,18 @@ public class ColorCondition extends Condition implements Serializable
 	        return this.value;
 	    }
 	    return Color.black;
+	}
+
+	public String colorToString()
+	{
+
+		/*
+			TODO be careful, when change type from InnerColor to Color.
+			We need ovveride convert our color to value 'Color[1, 2, 3]'
+			or change pattern on win side
+			Now, pattern to parse color of win side : "Color\\[(\\d+),\\s?(\\d+),\\s?(\\d+)\\]"
+		 */
+		return this.value.toString();
 	}
 	
 	private InnerColor value = null;

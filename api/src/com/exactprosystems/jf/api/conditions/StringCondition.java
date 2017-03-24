@@ -33,7 +33,7 @@ public class StringCondition extends Condition  implements Serializable
 	@Override
 	public String serialize()
 	{
-		return "S" + start + getName() + separator + this.value + separator + this.ignoreCase + finish;
+		return super.getSerializePrefix(this.getClass()) + start + getName() + separator + this.value + separator + this.ignoreCase + finish;
 	}
 
 	@Override
@@ -68,12 +68,6 @@ public class StringCondition extends Condition  implements Serializable
 		}
 		
 		return "'" + this.value + "' != '" + actualValue + "'";
-	}
-
-	//TODO these methods need to WinPlugin
-	public boolean isIgnoreCase()
-	{
-		return ignoreCase;
 	}
 
 	public String getValue()

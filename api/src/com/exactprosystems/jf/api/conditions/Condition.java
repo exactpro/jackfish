@@ -15,6 +15,7 @@ import com.exactprosystems.jf.api.common.HideAttribute;
 import java.awt.*;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -28,6 +29,21 @@ public abstract class Condition implements ICondition, Serializable
 	public static final char 	start				= '{';
 	public static final char 	finish				= '}';
 
+	private Map<Class<? extends Condition>, String> prefixMap = new HashMap<Class<? extends Condition>, String>(){{
+		put(AndCondition.class, 		"&");
+		put(ColorCondition.class, 		"C");
+		put(DateCondition.class, 		"D");
+		put(EmptyCondition.class, 		"E");
+		put(NotCondition.class, 		"!");
+		put(NumberCondition.class, 		"N");
+		put(OrCondition.class,			"^");
+		put(RegexpCondition.class, 		"$");
+		put(StringCondition.class,		"S");
+		put(TrueCondition.class,		"T");
+
+	}};
+
+	//region static methods
 	@HideAttribute
 	public 	static Condition[] convertToCondition(Map<String, Object> expected) throws Exception
 	{
@@ -127,22 +143,21 @@ public abstract class Condition implements ICondition, Serializable
     {
         return new ColorCondition(name, color);
     }
+	//endregion
     
 	@HideAttribute
 	public Condition(String name)
 	{
 		this.name = name;
 	}
-	
-	
-	
-	
+
 	@Override
 	public String getName()
 	{
 		return this.name;
 	}
 
+	//region protected methods
 	protected boolean isMatchedName(String otherName)
 	{
 		if (this.name == null)
@@ -152,6 +167,12 @@ public abstract class Condition implements ICondition, Serializable
 
 		return this.name.equals(otherName);
 	}
+
+	protected final String getSerializePrefix(Class<? extends Condition> clazz)
+	{
+		return this.prefixMap.get(clazz);
+	}
+	//endregion
 
 	private String name;
 }

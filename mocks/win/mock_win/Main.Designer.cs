@@ -34,9 +34,6 @@
             this.TextBox = new System.Windows.Forms.TextBox();
             this.CheckBox = new System.Windows.Forms.CheckBox();
             this.Table1 = new System.Windows.Forms.DataGridView();
-            this.name = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.pid = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.check = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.centralLabel = new System.Windows.Forms.Label();
             this.moveLabel = new System.Windows.Forms.Label();
             this.rb1 = new System.Windows.Forms.RadioButton();
@@ -85,6 +82,11 @@
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.ToggleButton = new System.Windows.Forms.CheckBox();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
+            this.name = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.pid = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.check = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.dateColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.numberColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.Table1)).BeginInit();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.Slider)).BeginInit();
@@ -131,32 +133,20 @@
             // 
             this.Table1.AllowUserToAddRows = false;
             this.Table1.AllowUserToDeleteRows = false;
+            this.Table1.AllowUserToOrderColumns = true;
             this.Table1.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
             this.Table1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.Table1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.name,
             this.pid,
-            this.check});
+            this.check,
+            this.dateColumn,
+            this.numberColumn});
             resources.ApplyResources(this.Table1, "Table1");
             this.Table1.Name = "Table1";
             this.Table1.RowHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
             this.Table1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.CommonMouseDown);
             this.Table1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.CommonMouseMove);
-            // 
-            // name
-            // 
-            resources.ApplyResources(this.name, "name");
-            this.name.Name = "name";
-            // 
-            // pid
-            // 
-            resources.ApplyResources(this.pid, "pid");
-            this.pid.Name = "pid";
-            // 
-            // check
-            // 
-            resources.ApplyResources(this.check, "check");
-            this.check.Name = "check";
             // 
             // centralLabel
             // 
@@ -515,6 +505,33 @@
             this.ToggleButton.MouseMove += new System.Windows.Forms.MouseEventHandler(this.CommonMouseMove);
             this.ToggleButton.MouseUp += new System.Windows.Forms.MouseEventHandler(this.CommonMouseDown);
             // 
+            // name
+            // 
+            resources.ApplyResources(this.name, "name");
+            this.name.Name = "name";
+            // 
+            // pid
+            // 
+            resources.ApplyResources(this.pid, "pid");
+            this.pid.Name = "pid";
+            // 
+            // check
+            // 
+            resources.ApplyResources(this.check, "check");
+            this.check.Name = "check";
+            // 
+            // dateColumn
+            // 
+            resources.ApplyResources(this.dateColumn, "dateColumn");
+            this.dateColumn.Name = "dateColumn";
+            this.dateColumn.ReadOnly = true;
+            // 
+            // numberColumn
+            // 
+            resources.ApplyResources(this.numberColumn, "numberColumn");
+            this.numberColumn.Name = "numberColumn";
+            this.numberColumn.ReadOnly = true;
+            // 
             // Main
             // 
             resources.ApplyResources(this, "$this");
@@ -574,9 +591,6 @@
         private System.Windows.Forms.TextBox TextBox;
         private System.Windows.Forms.CheckBox CheckBox;
         private System.Windows.Forms.DataGridView Table1;
-        private System.Windows.Forms.DataGridViewTextBoxColumn name;
-        private System.Windows.Forms.DataGridViewTextBoxColumn pid;
-        private System.Windows.Forms.DataGridViewCheckBoxColumn check;
         public System.Windows.Forms.Label centralLabel;
         public System.Windows.Forms.Label moveLabel;
         private System.Windows.Forms.RadioButton rb1;
@@ -625,6 +639,11 @@
         private System.Windows.Forms.ToolTip toolTip1;
         private System.Windows.Forms.CheckBox ToggleButton;
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn name;
+        private System.Windows.Forms.DataGridViewTextBoxColumn pid;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn check;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dateColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn numberColumn;
     }
 }
 

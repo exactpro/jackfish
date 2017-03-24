@@ -47,8 +47,9 @@ namespace mock_win
                 Table1.Rows[i].Cells["name"].Value = "name_"+i;
                 Table1.Rows[i].Cells["pid"].Value = i;
                 Table1.Rows[i].Cells["check"].Value = true;
+                Table1.Rows[i].Cells["numberColumn"].Value = i*50;
+                Table1.Rows[i].Cells["dateColumn"].Value = new DateTime(2010+i, i+1, i+1, i+1, i+1, i+1);
             }
-            
         }
 
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)

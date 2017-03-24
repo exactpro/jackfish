@@ -16,7 +16,8 @@ import java.util.Date;
 
 public class DateCondition extends RelativeCondition  implements Serializable
 {
-
+	//TODO this pattern used in win side. If you want to change it, don't forget change on win side.
+	private static final String PATTERN = "yyyy.MM.dd HH:mm:ss";
 	private static final long serialVersionUID = -713599951095234259L;
 
 	public DateCondition(String name, String ralationStr, Date value, String precision) throws Exception
@@ -45,13 +46,13 @@ public class DateCondition extends RelativeCondition  implements Serializable
 	@Override
 	public String serialize()
 	{
-		return "D" + start + getName() + separator + this.relation.getSign() + separator + this.value + separator + this.precision + finish;
+		return super.getSerializePrefix(this.getClass()) + start + getName() + separator + this.relation.getSign() + separator + new DateTime(this.value).str(PATTERN) + separator + this.precision.alias + finish;
 	}
 
 	@Override
 	public String toString()
 	{
-		return DateCondition.class.getSimpleName() + " [name=" + getName() + " " + this.relation.getSign() + " value=" + DateTime.strDateTime(value) + "]";
+		return DateCondition.class.getSimpleName() + " [name=" + getName() + " " + this.relation.getSign() + " value=" + DateTime.getDate(this.value).str(PATTERN) + "]";
 	}
 
 	@Override

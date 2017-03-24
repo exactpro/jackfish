@@ -8,6 +8,8 @@
 
 package com.exactprosystems.jf.api.conditions;
 
+import com.exactprosystems.jf.api.client.ICondition;
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -27,7 +29,7 @@ public class AndCondition extends Condition
 	@Override
 	public String serialize()
 	{
-		return "&" + start + this.cond.stream().map(s -> s.serialize()).reduce((s1,s2) -> s1 + separator + s2).orElse("") + finish; 
+		return super.getSerializePrefix(this.getClass()) + start + this.cond.stream().map(ICondition::serialize).reduce((s1, s2) -> s1 + separator + s2).orElse("") + finish;
 	}
 	
 	@Override
