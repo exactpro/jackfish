@@ -1170,7 +1170,7 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 		{
 			return table;
 		}
-		return report.addTable("Diffirents", null, true, 0, new int[]{10, 45, 45}, "#", "Expected", "Actual");
+		return report.addTable("Differences", null, true, 0, new int[]{10, 45, 45}, "#", "Expected", "Actual");
 	}
 
 	private Set<String> names(Table expected, String[] exclude)
