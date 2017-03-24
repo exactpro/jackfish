@@ -378,7 +378,6 @@ RF;RegressionFramework
     // //==============================================
     #Id;#SubCase;#date;#pathToSave
     repXmlExport;Export to XML file;;
-
         #Id;#Call
         SQL;RF.Connect
 
@@ -387,7 +386,7 @@ RF;RegressionFramework
 
         #Id;#RawText
         testSetText;Text
-        "SELECT s.test_set"
+        "SELECT s.test_set, s.host"
         "FROM scenarios AS s "
         "WHERE s.test_set <> '' AND s.manual = 0 AND s.run_id = ?"
         "GROUP BY s.test_set; "
@@ -395,6 +394,9 @@ RF;RegressionFramework
 
         #Id;#Action;#runId;#Query;#Connection
         testSetQuery;SQLselect;runId.id;testSetText.toString();SQL
+
+        #Id;#Let
+        hostname;testSetQuery.Out.size() > 0 ? testSetQuery.Out[0].host : null
 
         #ForEach;#In
         testSet;testSetQuery.Out
@@ -520,8 +522,21 @@ RF;RegressionFramework
                 #Id;#Let
                 failTS;SQLSLCT4.Out.size() > 0 ? SQLSLCT4.Out[0].fail : null
 
-                #Action;#timestamp;#failures;#time;#tests;#NodeName;#Xml;#name
-                XmlAddNode;scenarios[rowScenarios].date + 'T' + scenarios[rowScenarios].time;failTS;TStotalTime /1000;TStests;'testsuite';XML1.Out;scenarios[rowScenarios].scenario
+                #Id;#RawText
+                errorcountSQL;Text
+                "SELECT count(error) as error"
+                "FROM details"
+                "WHERE error <> 'null' and scenario_id = ? "
+                #EndRawText
+
+                #Id;#Action;#scenarioId;#Query;#Connection
+                SQLSLCT6;SQLselect;scenarios[rowScenarios].id;errorcountSQL.toString();SQL
+
+                #Id;#Let
+                errorTS;SQLSLCT6.Out.size() > 0 ? SQLSLCT6.Out[0].error : null
+
+                #Action;#hostname;#timestamp;#failures;#time;#tests;#NodeName;#Xml;#name;#errors;#skipped;#disabled
+                XmlAddNode;hostname;scenarios[rowScenarios].date + 'T' + scenarios[rowScenarios].time;failTS;TStotalTime /1000;TStests;'testsuite';XML1.Out;scenarios[rowScenarios].scenario;errorTS;0;0
 
                 #Id;#Action;#Xml
                 XML2;XmlChildren;XML1.Out
@@ -541,7 +556,7 @@ RF;RegressionFramework
                 #ForEach;#In
                 testCases;SQLSLCT5.Out
                     #Action;#name;#classname;#time;#NodeName;#Xml
-                    XmlAddNode;scenarios[rowScenarios].scenario + ' ' + testCases.testcase;testCases.testcase;testCases.time /1000;'testcase';last
+                    XmlAddNode;testCases.testcase;scenarios[rowScenarios].scenario;testCases.time /1000;'testcase';last
 
                 #EndForEach
 
