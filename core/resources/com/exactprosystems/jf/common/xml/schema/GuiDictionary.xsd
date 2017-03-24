@@ -406,6 +406,7 @@
   <xs:simpleType name="visibility">
     <xs:restriction base="xs:string">
       <xs:enumeration value="Visible"/>
+      <xs:enumeration value="Enable"/>
     </xs:restriction>
   </xs:simpleType>
 </xs:schema>
