@@ -9,8 +9,10 @@
 package com.exactprosystems.jf.tool.custom.table;
 
 import com.exactprosystems.jf.tool.CssVariables;
+import com.exactprosystems.jf.tool.newconfig.TablePair;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
+import javafx.event.Event;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
@@ -247,6 +249,21 @@ public class CustomTable<T> extends TableView<T>
 				{
 					setText(getString());
 					setContentDisplay(ContentDisplay.TEXT_ONLY);
+				}
+			}
+		}
+
+		@Override
+		public void commitEdit(String item)
+		{
+			if (!isEditing() && !item.equals(getItem()))
+			{
+				TableView<T> table = getTableView();
+				if (table != null)
+				{
+					TableColumn<T, String> column = getTableColumn();
+					TableColumn.CellEditEvent<T, String> event = new TableColumn.CellEditEvent<>(table, new TablePosition<>(table, getIndex(), column), TableColumn.editCommitEvent(), item);
+					Event.fireEvent(column, event);
 				}
 			}
 		}

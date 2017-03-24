@@ -33,8 +33,9 @@ import javafx.concurrent.Task;
 import javafx.css.PseudoClass;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
-import javafx.geometry.*;
+import javafx.geometry.HPos;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
@@ -593,6 +594,21 @@ public class DialogWizardController implements Initializable, ContainingParent
 				setContentDisplay(ContentDisplay.TEXT_ONLY);
 			}
 
+			@Override
+			public void commitEdit(String item)
+			{
+				if (!isEditing() && !item.equals(getItem()))
+				{
+					TableView<ElementWizardBean> table = getTableView();
+					if (table != null)
+					{
+						TableColumn<ElementWizardBean, String> column = getTableColumn();
+						TableColumn.CellEditEvent<ElementWizardBean, String> event = new TableColumn.CellEditEvent<>(table, new TablePosition<>(table, getIndex(), column), TableColumn.editCommitEvent(), item);
+						javafx.event.Event.fireEvent(column, event);
+					}
+				}
+			}
+
 			private void createTextField()
 			{
 				if (this.tf == null)
@@ -684,6 +700,21 @@ public class DialogWizardController implements Initializable, ContainingParent
 				super.cancelEdit();
 				setText(getString());
 				setContentDisplay(ContentDisplay.TEXT_ONLY);
+			}
+
+			@Override
+			public void commitEdit(ControlKind item)
+			{
+				if (!isEditing() && !item.equals(getItem()))
+				{
+					TableView<ElementWizardBean> table = getTableView();
+					if (table != null)
+					{
+						TableColumn<ElementWizardBean, ControlKind> column = getTableColumn();
+						TableColumn.CellEditEvent<ElementWizardBean, ControlKind> event = new TableColumn.CellEditEvent<>(table, new TablePosition<>(table, getIndex(), column), TableColumn.editCommitEvent(), item);
+						javafx.event.Event.fireEvent(column, event);
+					}
+				}
 			}
 
 			private void createCB()

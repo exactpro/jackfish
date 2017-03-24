@@ -599,7 +599,8 @@ public class NavigationController implements Initializable, ContainingParent
 			});
 		}
 
-        private void checkAndRename()
+
+		private void checkAndRename()
         {
             if (this.checker.apply(getItem(), textField.getText()))
             {

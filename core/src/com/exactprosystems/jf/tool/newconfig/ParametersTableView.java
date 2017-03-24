@@ -11,6 +11,7 @@ import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.custom.controls.field.CustomFieldWithButton;
 import com.exactprosystems.jf.tool.newconfig.nodes.TreeNode;
 import javafx.application.Platform;
+import javafx.event.Event;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
@@ -23,7 +24,7 @@ import java.util.stream.Collectors;
 
 public class ParametersTableView extends TableView<TablePair>
 {
-	private TreeNode	editableNode;
+	private TreeNode editableNode;
 
 	public ParametersTableView()
 	{
@@ -36,12 +37,16 @@ public class ParametersTableView extends TableView<TablePair>
 		valueColumn.setText("Value");
 		valueColumn.setCellValueFactory(new PropertyValueFactory<>("value"));
 		valueColumn.setCellFactory(e -> new TableColumnCell());
-		valueColumn.setOnEditCommit(e -> Optional.ofNullable(editableNode).ifPresent(node ->
+		valueColumn.setOnEditCommit(e ->
 		{
-			node.updateParameter(e.getRowValue().getKey(), e.getNewValue());
-			this.updateParameters(null);
-			this.updateParameters(editableNode.getParameters());
-		}));
+			System.out.println("Editable node : " + editableNode);
+			Optional.ofNullable(editableNode).ifPresent(node ->
+			{
+				node.updateParameter(e.getRowValue().getKey(), e.getNewValue());
+				this.updateParameters(null);
+				this.updateParameters(editableNode.getParameters());
+			});
+		});
 		valueColumn.setEditable(true);
 		this.setEditable(true);
 
@@ -99,7 +104,7 @@ public class ParametersTableView extends TableView<TablePair>
 
 	private class TableColumnCell extends TableContextMenuCell
 	{
-		private TextField	textField;
+		private TextField textField;
 
 		public TableColumnCell()
 		{
@@ -115,10 +120,7 @@ public class ParametersTableView extends TableView<TablePair>
 			{
 				return;
 			}
-//			if (this.textField == null)
-//			{
-				createTextField();
-//			}
+			createTextField();
 			this.textField.setText(getString());
 			setGraphic(this.textField);
 			setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
@@ -130,6 +132,25 @@ public class ParametersTableView extends TableView<TablePair>
 		{
 			super.cancelEdit();
 			setText(String.valueOf(getItem()));
+			setContentDisplay(ContentDisplay.TEXT_ONLY);
+		}
+
+		@Override
+		public void commitEdit(String item)
+		{
+			if (!isEditing() && !item.equals(getItem()))
+			{
+				TableView<TablePair> table = getTableView();
+				if (table != null)
+				{
+					TableColumn<TablePair, String> column = getTableColumn();
+					TableColumn.CellEditEvent<TablePair, String> event = new TableColumn.CellEditEvent<>(table, new TablePosition<>(table, getIndex(), column), TableColumn.editCommitEvent(), item);
+					Event.fireEvent(column, event);
+				}
+			}
+
+			super.commitEdit(item);
+
 			setContentDisplay(ContentDisplay.TEXT_ONLY);
 		}
 

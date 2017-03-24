@@ -10,7 +10,6 @@ package com.exactprosystems.jf.tool.matrix.schedule;
 
 import com.exactprosystems.jf.api.common.IMatrixRunner;
 import com.exactprosystems.jf.api.common.MatrixState;
-import com.exactprosystems.jf.common.MatrixRunner;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.CssVariables;
@@ -18,6 +17,7 @@ import com.exactprosystems.jf.tool.custom.date.CustomDateTimePicker;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.scene.Parent;
@@ -129,10 +129,20 @@ public class ScheduleController implements Initializable, ContainingParent
 				}
 			}
 
+
 			@Override
 			public void commitEdit(Date newValue)
 			{
-				super.commitEdit(newValue);
+				if (!isEditing() && !newValue.equals(getItem()))
+				{
+					TableView<RunnerWithState> table = getTableView();
+					if (table != null)
+					{
+						TableColumn<RunnerWithState, Date> column = getTableColumn();
+						TableColumn.CellEditEvent<RunnerWithState, Date> event = new TableColumn.CellEditEvent<>(table, new TablePosition<>(table, getIndex(), column), TableColumn.editCommitEvent(), newValue);
+						Event.fireEvent(column, event);
+					}
+				}
 				RunnerWithState runner = (RunnerWithState) getTableRow().getItem();
 				runner.getRunner().setStartTime(newValue);
 			}
