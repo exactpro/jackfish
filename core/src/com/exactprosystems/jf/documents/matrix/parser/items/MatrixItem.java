@@ -661,7 +661,16 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
     {
         this.breakPoint = breakPoint;
 		MatrixItemState oldState = getItemState();
-		changeState(breakPoint ? MatrixItemState.BreakPoint : oldState == MatrixItemState.ExecutingWithBreakPoint ? MatrixItemState.Executing : oldState);
+		MatrixItemState newState;
+		if (breakPoint)
+		{
+			newState = oldState == MatrixItemState.Executing ? MatrixItemState.ExecutingWithBreakPoint : MatrixItemState.BreakPoint;
+		}
+		else
+		{
+			newState = oldState == MatrixItemState.ExecutingWithBreakPoint ? MatrixItemState.Executing : MatrixItemState.None;
+		}
+		changeState(newState);
 	}
 
 	public final void changeState(MatrixItemState state)
