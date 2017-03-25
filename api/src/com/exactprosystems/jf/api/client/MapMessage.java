@@ -319,7 +319,6 @@ public class MapMessage implements Map<String, Object>, Serializable, Mutable, C
 	{
 		return this.fields.entrySet();
 	}
-
 	
 	private boolean changed;
 	private String messageType = null;
