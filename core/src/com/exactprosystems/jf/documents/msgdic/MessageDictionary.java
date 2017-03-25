@@ -268,8 +268,18 @@ public class MessageDictionary extends AbstractDocument implements IMessageDicti
 	@Override
 	public IMessage 		getMessage(String name)
 	{
+	    if (name == null)
+	    {
+	        return null;
+	    }
+	    
 		for (Message mess : this.messages.messages)
 		{
+		    if (name.equals(mess.getName()))
+		    {
+		        return mess;
+		    }
+		    
 			IAttribute attr = mess.getAttribute("MessageType");
 			if (attr == null)
 			{

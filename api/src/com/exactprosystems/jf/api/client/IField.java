@@ -19,7 +19,7 @@ public interface IField
 	IAttribute			getValue(String name);
 	List<IAttribute>	getValues();
 	String				getName();
-	Object				getReference();
+	IField				getReference();
 	String				getId();
 	IType				getType();
 	String				getDefaultvalue();

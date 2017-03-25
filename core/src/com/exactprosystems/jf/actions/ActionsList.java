@@ -39,7 +39,6 @@ public class ActionsList
 		        ClientClearMessages.class,
 		        ClientConnect.class,
 		        ClientCountMessages.class,
-		        ClientCreateMapMessage.class,
 		        ClientEncode.class,
 		        ClientDecode.class,
 		        ClientGetMessage.class,

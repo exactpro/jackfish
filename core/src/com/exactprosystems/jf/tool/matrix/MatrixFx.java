@@ -72,8 +72,8 @@ public class MatrixFx extends Matrix
 		displayGuiDictionaries();
 		displayClientDictionaries();
 
+        restoreSettings(getFactory().getSettings());
 		this.controller.displayTab(this.getRoot());
-		restoreSettings(getFactory().getSettings());
 	}
 
 	@Override

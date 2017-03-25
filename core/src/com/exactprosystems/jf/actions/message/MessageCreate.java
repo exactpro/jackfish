@@ -12,15 +12,20 @@ import com.exactprosystems.jf.actions.AbstractAction;
 import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
+import com.exactprosystems.jf.actions.ReadableValue;
+import com.exactprosystems.jf.actions.clients.Helper;
 import com.exactprosystems.jf.api.client.MapMessage;
+import com.exactprosystems.jf.api.common.ParametersKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Parameter;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.documents.matrix.parser.items.TypeMandatory;
+import com.exactprosystems.jf.functions.HelpKind;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -43,7 +48,7 @@ public class MessageCreate extends AbstractAction
 	public final static String sourceName = "Source";
 	public final static String fieldsName = "Fields";
 
-	@ActionFieldAttribute(name = messageTypeName, mandatory = false, description = "The type of created MapMessage should be specified." )
+	@ActionFieldAttribute(name = messageTypeName, mandatory = true, description = "The type of created MapMessage should be specified." )
 	protected String 				messageType;
 
 	@ActionFieldAttribute(name = sourceName, mandatory = false, description = "The source of created MapMessage should be specified." )
@@ -55,6 +60,41 @@ public class MessageCreate extends AbstractAction
 	public MessageCreate()
 	{
 	}
+	
+    @Override
+    protected void helpToAddParametersDerived(List<ReadableValue> list, Context context, Parameters parameters)
+            throws Exception
+    {
+        Helper.helpToAddParameters(list, ParametersKind.ENCODE, context, this.owner.getMatrix(), parameters, null, null, messageTypeName);
+    }
+
+    @Override
+    protected HelpKind howHelpWithParameterDerived(Context context, Parameters parameters, String fieldName)
+            throws Exception
+    {
+        if (messageTypeName.equals(fieldName))
+        {
+            return HelpKind.ChooseFromList;
+        }
+        boolean res = Helper.canFillParameter(this.owner.getMatrix(), context, parameters, null, null, fieldName);
+        return res ? HelpKind.ChooseFromList : null;
+    }
+
+    @Override
+    protected void listToFillParameterDerived(List<ReadableValue> list, Context context, String parameterToFill,
+            Parameters parameters) throws Exception
+    {
+        switch (parameterToFill)
+        {
+        case messageTypeName:
+            Helper.messageTypes(list, this.owner.getMatrix(), context, parameters, null, null);
+            break;
+
+        default:
+            Helper.messageValues(list, context, this.owner.getMatrix(), parameters, null, null, messageTypeName, parameterToFill);
+            break;
+        }
+    }
 	
 	@Override
 	public void initDefaultValues() 
@@ -72,7 +112,7 @@ public class MessageCreate extends AbstractAction
 		
 		if (this.fields == null)
 		{
-			map = new HashMap<String, Object>();
+			map = new LinkedHashMap<String, Object>();
 			
 			for (Parameter parameter : parameters.select(TypeMandatory.Extra))
 			{
@@ -116,12 +156,7 @@ public class MessageCreate extends AbstractAction
 		}
 		
 		MapMessage ret = new MapMessage(this.messageType, map, this.source);
-		
-		if (ret != null)
-		{
-			super.setResult(ret);
-			return;
-		}
+		super.setResult(ret);
 	}
 }
 

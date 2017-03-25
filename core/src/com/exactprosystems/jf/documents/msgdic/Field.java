@@ -60,7 +60,7 @@ public class Field implements IField
 	@XmlAttribute(name = "reference")
 	@XmlIDREF
 	@XmlSchemaType(name = "IDREF")
-	protected Object			reference;
+	protected Field		     reference;
 
 	@XmlAttribute(name = "id")
 	@XmlJavaTypeAdapter(CollapsedStringAdapter.class)
@@ -140,7 +140,7 @@ public class Field implements IField
 	}
 
 	@Override
-	public Object getReference()
+	public IField getReference()
 	{
 		return this.reference;
 	}
@@ -154,7 +154,7 @@ public class Field implements IField
 	@Override
 	public IType getType()
 	{
-		return this.type == null ? null : this.type;
+		return this.type;
 	}
 
 	@Override

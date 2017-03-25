@@ -34,7 +34,7 @@ import java.util.stream.Collectors;
 
 	public Map<String, Object> makeCopy()
 	{
-		Map<String, Object> result = new HashMap<>();
+		Map<String, Object> result = new LinkedHashMap<>();
 		result.putAll(this);
 		return result;
 	}

@@ -19,7 +19,7 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 
 import java.util.List;
 
-class Helper
+public class Helper
 {
 	public static void clientsNames(List<ReadableValue> list, Context context) throws Exception
 	{
@@ -90,24 +90,32 @@ class Helper
 		IClientFactory factory = getFactory(matrix, context, parameters, clientName, connectionName);
 		AbstractEvaluator evaluator = context.getEvaluator();
 		IMessageDictionary dic = factory.getDictionary();
-		for(IMessage message : dic.getMessages())
-		{
-			IAttribute attrMessageType = message.getAttribute("MessageType");
-			if (attrMessageType != null)
-			{
-				String quoted = evaluator.createString(attrMessageType.getValue());
-				list.add(new ReadableValue(quoted, message.getName()));
-			}
-		}
-		for(IField field : dic.getFields())
-		{
-			IAttribute attrFixType = field.getAttribute("fixtype");
-			if (attrFixType != null && "NUMINGROUP".equals(attrFixType.getValue()))
-			{
-				String quoted = evaluator.createString(field.getName());
-				list.add(new ReadableValue(quoted, field.getName()));
-			}
-		}
+        for (IField message : dic.getMessages())
+        {
+            IAttribute entityType = message.getAttribute("entity_type");
+            if (entityType == null)
+            {
+                continue;
+            }
+
+            String quoted = "";
+            String entity = entityType.getValue();
+            if ("Message".equals(entity))
+            {
+                IAttribute attrMessageType = message.getAttribute("MessageType");
+                if (attrMessageType != null)
+                {
+                    quoted = evaluator.createString(attrMessageType.getValue());
+                }
+
+                list.add(new ReadableValue(quoted, message.getName()));
+            }
+            else if ("Group".equals(entity))
+            {
+                quoted = evaluator.createString(message.getName());
+                list.add(new ReadableValue(quoted));
+            }
+        }
 	}
 
 	public static void messageValues(List<ReadableValue> list, Context context, Matrix matrix, Parameters parameters, 
@@ -122,36 +130,32 @@ class Helper
 		{
 			throw new Exception("The message with message type='" + messageType + "' is unknown.");
 		}
-		String fieldType = Str.asString(parameters.get(fieldName));
-		IField field = message.getField(fieldType);
+		IField field = message.getField(fieldName);
 		if (field == null)
 		{
 			throw new Exception("The field with name='" + fieldName + "' is unknown.");
 		}
 		
-		Object ref = field.getReference();
-		if (ref != null && ref instanceof IField)
-		{
-			field = (IField)ref;
-		}
+        Class<?> type = field.getType().getJavaClass();
+        boolean needQuotes = type != null && (type == String.class || type == Character.class);
+        if (type == Boolean.class)
+        {
+            list.add(ReadableValue.TRUE);
+            list.add(ReadableValue.FALSE);
+        }
+        for(IAttribute attr : field.getValues())
+        {
+            String str = attr.getValue();
+            if (needQuotes)
+            {
+                str = evaluator.createString(str);
+            }
 
-		Class<?> type = field.getType().getJavaClass();
-		
-		boolean needQuotes = type != null && (type == String.class || type == Character.class);
-		
-		for (IAttribute value : field.getValues())
-		{
-			String str = value.getValue();
-			if (needQuotes)
-			{
-				str = evaluator.createString(str);
-			}
-
-			if (!Str.IsNullOrEmpty(str))
-			{
-				list.add(new ReadableValue(str, value.getName()));
-			}
-		}
+            if (!Str.IsNullOrEmpty(str))
+            {
+                list.add(new ReadableValue(str, attr.getName()));
+            }
+        }
 	}
 
 	public static void helpToAddParameters(List<ReadableValue> list, ParametersKind kind, Context context, Matrix matrix, Parameters parameters, 
@@ -183,9 +187,13 @@ class Helper
 	public static boolean canFillParameter(Matrix matrix, Context context, Parameters parameters, 
 			String idName, String connectionName, String parameterName) throws Exception
 	{
-		IClientFactory factory = getFactory(matrix, context, parameters, idName, connectionName);
-		return factory.canFillParameter(parameterName);
+        IClientFactory factory = getFactory(matrix, context, parameters, idName, connectionName);
+        IMessageDictionary dic = factory.getDictionary();
+        IField field = dic.getField(parameterName);
+        if (field == null)
+        {
+            return false;
+        }
+        return  field.getType().getJavaClass() == Boolean.class || field.getValues() != null && field.getValues().size() > 0;
 	}
-	
-
 }
