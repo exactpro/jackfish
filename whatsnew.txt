@@ -1,3 +1,7 @@
+27.03.2017 4.4.0.2180
+RM36642 Console -> Preservation of the console size at the time of saving of matrix : implemented
+--------------------------------------------------------------------------------
+
 27.03.2017 4.4.0.2178
 RM41205 Undo function -> The data which is been repaired is not displayed : fixed
 

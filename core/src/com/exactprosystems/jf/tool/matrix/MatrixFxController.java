@@ -111,6 +111,7 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 		}, "Error on moving to item"), true);
 		this.listView.autoScroll(true);
 		this.listView.setMinHeight(100.0);
+		this.listView.setMaxHeight(250.0);
 		this.splitPane.getItems().add(this.listView);
 		this.tree = new MatrixTreeView();
 		this.mainScrollPane.setContent(this.tree);
