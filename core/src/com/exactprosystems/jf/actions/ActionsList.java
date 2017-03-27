@@ -115,6 +115,7 @@ public class ActionsList
 		        TextCreate.class,
 		        TextLoadFromFile.class,
 		        TextPerform.class,
+                TextReport.class,
 		        MessageReport.class,
 		        TextSaveToFile.class,
 		        TextSetValue.class,
