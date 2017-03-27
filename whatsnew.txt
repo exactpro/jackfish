@@ -2,6 +2,10 @@
 RM41106 It is not possible to commit/push UNSTAGED files. Fixed
 
 --------------------------------------------------------------------------------
+27.03.2017 4.4.0.2173
+RM41228 bug : TextReport action is not found in JF
+
+--------------------------------------------------------------------------------
 24.03.2017 4.4.0.2171
 RM41035 feature : Repeating Groups Functionality
 
