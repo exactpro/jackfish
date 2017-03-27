@@ -175,7 +175,7 @@ public class ApplicationConnector
 		};
 
 		this.task.setOnSucceeded(workerStateEvent -> update(ApplicationStatus.Connected, null, false));
-		this.task.setOnFailed(workerStateEvent -> update(ApplicationStatus.Connected, task.getException(), false));
+		this.task.setOnFailed(workerStateEvent -> update(ApplicationStatus.Disconnected, task.getException(), false));
 		Thread thread = new Thread(this.task);
 		thread.setName("Start app " + this.idAppEntry + ", thread id : " + thread.getId());
 		thread.setDaemon(true);
