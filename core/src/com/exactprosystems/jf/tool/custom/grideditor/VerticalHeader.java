@@ -19,7 +19,6 @@ import javafx.geometry.NodeOrientation;
 import javafx.scene.Cursor;
 import javafx.scene.control.*;
 import javafx.scene.control.TableView.TableViewSelectionModel;
-import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -29,6 +28,7 @@ import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.List;
 import java.util.Stack;
+import java.util.stream.Collectors;
 
 public class VerticalHeader extends StackPane
 {
@@ -461,14 +461,22 @@ public class VerticalHeader extends StackPane
 	{
 		final ContextMenu contextMenu = new ContextMenu();
 		contextMenu.setAutoHide(true);
-		MenuItem addRowBefore = new MenuItem("Add before");
+
+		MenuItem addRowBefore = new MenuItem("Add before row " + row);
 		addRowBefore.setOnAction(e -> this.spreadsheetView.addRowBefore(row));
-		MenuItem addRowAfter = new MenuItem("Add after");
+
+		MenuItem addRowAfter = new MenuItem("Add after after " + row);
 		addRowAfter.setOnAction(e -> this.spreadsheetView.addRowAfter(row));
-		MenuItem removeRow = new MenuItem("Remove row");
-		removeRow.setOnAction(e -> this.spreadsheetView.removeRow(row));
+
+		MenuItem removeRow = new MenuItem("Remove rows");
+		removeRow.setOnAction(e -> this.spreadsheetView.removeRows(this.spreadsheetView.getSelectionModel().getSelectedCells().stream().map(TablePositionBase::getRow).distinct().collect(Collectors.toList())));
+
 		contextMenu.getItems().addAll(addRowBefore, addRowAfter, removeRow);
-		contextMenu.setOnShowing(event -> headerClicked(row, new MouseEvent(null, null, null, 0, 0, 0, 0, MouseButton.PRIMARY, 1, false, false, false, false, true, false, false, false, false, false, null)));
+
+		contextMenu.setOnShowing(e ->
+		{
+			System.out.println(this.spreadsheetView.getSelectionModel().getSelectedCells());
+		});
 
 		return contextMenu;
 	}

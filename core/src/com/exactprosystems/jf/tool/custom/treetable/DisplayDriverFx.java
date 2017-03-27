@@ -549,7 +549,6 @@ public class DisplayDriverFx implements DisplayDriver
 		GridPane pane = (GridPane) layout;
 		DataProvider<String> provider = new TableDataProvider(table);
 		SpreadsheetView view = new SpreadsheetView(provider);
-		view.setContextMenu(this.rowContextMenu);
 		view.setPrefHeight(30 * (Math.min(provider.getRowHeaders().size(), 4) + 1));
 
 		BorderPane borderPane = new BorderPane();
@@ -558,7 +557,7 @@ public class DisplayDriverFx implements DisplayDriver
 		DragResizer.makeResizable(borderPane, view::setPrefHeight);
 		BorderPane.setMargin(borderPane, new Insets(0, 0, 10, 0));
 
-		pane.add(borderPane, column, row, 8, 2);
+		pane.add(borderPane, column, row, 10, 2);
 	}
 
 	@Override

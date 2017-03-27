@@ -230,17 +230,13 @@ public class SpreadsheetView extends Control
 		this.setDataProvider(dataProvider);
 	}
 
-	public void removeColumn(int index)
+	public void removeColumn(List<Integer> columns)
 	{
-		this.providerProperty().get().removeColumn(index);
+		for (int i = columns.size() - 1; i >= 0; i--)
+		{
+			this.providerProperty().get().removeColumn(columns.get(i));
+		}
 		this.setDataProvider(providerProperty().get());
-	}
-
-	public void renameColumn(int index, String text)
-	{
-		SpreadsheetColumn spreadsheetColumn = this.columns.get(index);
-		this.providerProperty().get().setColumnName(index, text);
-		spreadsheetColumn.setText(text);
 	}
 
 	public void renameColumn(SpreadsheetColumn column, String text)
@@ -283,6 +279,15 @@ public class SpreadsheetView extends Control
 	public void removeRow(Integer row)
 	{
 		this.providerProperty().get().removeRow(row);
+		this.setDataProvider(this.providerProperty().get());
+	}
+
+	public void removeRows(List<Integer> rows)
+	{
+		for (int i = rows.size() - 1; i >= 0; i--)
+		{
+			this.providerProperty().get().removeRow(rows.get(i));
+		}
 		this.setDataProvider(this.providerProperty().get());
 	}
 
@@ -590,8 +595,8 @@ public class SpreadsheetView extends Control
 		MenuItem addRowAfter = new MenuItem("Add after");
 		addRowAfter.setOnAction(e -> addRowAfter(this.getSelectionModel().getSelectedCells().get(0).getRow()));
 
-		MenuItem removeRow = new MenuItem("Remove row");
-		removeRow.setOnAction(e -> removeRow(this.getSelectionModel().getSelectedCells().get(0).getRow()));
+		MenuItem removeRow = new MenuItem("Remove rows");
+		removeRow.setOnAction(e -> removeRows(this.getSelectionModel().getSelectedCells().stream().map(TablePositionBase::getRow).distinct().collect(Collectors.toList())));
 
 		MenuItem copyItems = new MenuItem("Copy");
 		copyItems.setOnAction(event -> copy(false));

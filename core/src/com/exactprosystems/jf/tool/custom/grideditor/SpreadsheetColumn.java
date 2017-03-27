@@ -10,13 +10,11 @@ package com.exactprosystems.jf.tool.custom.grideditor;
 import com.exactprosystems.jf.api.common.Str;
 import javafx.beans.Observable;
 import javafx.collections.ObservableList;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public final class SpreadsheetColumn {
 
@@ -68,8 +66,11 @@ public final class SpreadsheetColumn {
 		MenuItem addColumnAfter = new MenuItem("Add column after");
 		addColumnAfter.setOnAction(e -> this.spreadsheetView.addColumn(this.spreadsheetView.getColumns().indexOf(this) + 1));
 
-		MenuItem removeColumn = new MenuItem("Remove");
-		removeColumn.setOnAction(e -> this.spreadsheetView.removeColumn(this.spreadsheetView.getColumns().indexOf(this)));
+		MenuItem removeColumn = new MenuItem("Remove columns");
+		removeColumn.setOnAction(e ->
+		{
+			this.spreadsheetView.removeColumn(this.spreadsheetView.getSelectionModel().getSelectedCells().stream().map(TablePosition::getColumn).distinct().collect(Collectors.toList()));
+		});
 
 		MenuItem renameColumn = new MenuItem("Rename");
 		renameColumn.setOnAction(e -> startRenameColumn());
