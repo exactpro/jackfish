@@ -1,3 +1,6 @@
+27.03.2017 4.4.0.2174
+RM41106 It is not possible to commit/push UNSTAGED files. Fixed
+
 --------------------------------------------------------------------------------
 24.03.2017 4.4.0.2171
 RM41035 feature : Repeating Groups Functionality

@@ -225,12 +225,12 @@ public class GitUtil
 	{
 		if (new File(filePath).exists())
 		{
-			return filePath;
+			return replaceWinSeparatorToInux(filePath);
 		}
 		try (Git git = git(bean))
 		{
 			String pathToGitFolder = git.getRepository().getDirectory().getParent();
-			return pathToGitFolder + File.separator + filePath;
+			return replaceWinSeparatorToInux(pathToGitFolder + File.separator + filePath);
 		}
 	}
 
@@ -343,7 +343,7 @@ public class GitUtil
 		try (Git git = git(bean))
 		{
 			CheckoutCommand checkout = git.checkout();
-			paths.forEach(checkout::addPath);
+			paths.stream().map(GitUtil::replaceWinSeparatorToInux).forEach(checkout::addPath);
 			checkout.call();
 		}
 	}
@@ -355,18 +355,8 @@ public class GitUtil
 		{
 			for (String path : paths)
 			{
-				writer.write(path + "\n");
+				writer.write(replaceWinSeparatorToInux(path) + "\n");
 			}
-		}
-	}
-
-	public static void revertFiles(CredentialBean bean, List<File> files) throws Exception
-	{
-		try (Git git = git(bean))
-		{
-			CheckoutCommand checkout = git.checkout();
-			files.stream().map(File::getPath).map(Common::getRelativePath).forEach(checkout::addPath);
-			checkout.call();
 		}
 	}
 
@@ -415,7 +405,7 @@ public class GitUtil
 				{
 					treeWalk.addTree(tree);
 					treeWalk.setRecursive(true);
-					treeWalk.setFilter(PathFilter.create(filePath));
+					treeWalk.setFilter(PathFilter.create(replaceWinSeparatorToInux(filePath)));
 					if (!treeWalk.next())
 					{
 						return Collections.emptyList();
@@ -435,6 +425,7 @@ public class GitUtil
 
 	public static void mergeTheirs(CredentialBean credentialBean, String filePath) throws Exception
 	{
+		filePath = replaceWinSeparatorToInux(filePath);
 		List<String> theirs = getTheirs(credentialBean, filePath);
 		Common.writeToFile(new File(GitUtil.checkFile(credentialBean, filePath)), theirs);
 		try (Git git = git(credentialBean))
@@ -458,7 +449,7 @@ public class GitUtil
 				{
 					treeWalk.addTree(tree);
 					treeWalk.setRecursive(true);
-					treeWalk.setFilter(PathFilter.create(filePath));
+					treeWalk.setFilter(PathFilter.create(replaceWinSeparatorToInux(filePath)));
 					if (!treeWalk.next())
 					{
 						return Collections.emptyList();
@@ -478,6 +469,7 @@ public class GitUtil
 
 	public static void mergeYours(CredentialBean credentialBean, String filePath) throws Exception
 	{
+		filePath = replaceWinSeparatorToInux(filePath);
 		List<String> yours = getYours(credentialBean, filePath);
 		Common.writeToFile(new File(GitUtil.checkFile(credentialBean, filePath)), yours);
 		try (Git git = git(credentialBean))
@@ -490,7 +482,7 @@ public class GitUtil
 	{
 		try (Git git = git(bean))
 		{
-			git.add().addFilepattern(filePath).call();
+			git.add().addFilepattern(replaceWinSeparatorToInux(filePath)).call();
 		}
 	}
 	//endregion
@@ -712,8 +704,9 @@ public class GitUtil
 	{
 		try (Git git = git(EMPTY_BEAN))
 		{
-			String repositoryPath = git.getRepository().getWorkTree().getPath();
+			String repositoryPath = replaceWinSeparatorToInux(git.getRepository().getWorkTree().getPath());
 			String filePath = file.getPath();
+			filePath = replaceWinSeparatorToInux(filePath);
 			if (filePath.contains(repositoryPath))
 			{
 				filePath = filePath.substring(repositoryPath.length() + 1);
@@ -727,6 +720,11 @@ public class GitUtil
 	}
 
 	//region private methods
+	private static String replaceWinSeparatorToInux(String path)
+	{
+		return path.replace('\\', '/');
+	}
+
 	private static File checkGitIgnoreFile() throws Exception
 	{
 		File rootDirectory = gitRootDirectory(EMPTY_BEAN);
@@ -740,7 +738,10 @@ public class GitUtil
 
 	private static void replaceFiles(List<GitBean> mainList, Set<String> newList, GitBean.Status status)
 	{
-		List<GitBean> collect = newList.stream().map(st -> new GitBean(status, new File(st))).collect(Collectors.toList());
+		List<GitBean> collect = newList.stream()
+				.map(GitUtil::replaceWinSeparatorToInux)
+				.map(st -> new GitBean(status, new File(st)))
+				.collect(Collectors.toList());
 		mainList.stream().filter(collect::contains).forEach(bean -> bean.updateStatus(status));
 	}
 
