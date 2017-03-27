@@ -48,8 +48,8 @@ Add start adapter action;;;
         'WIN'
             #Id;#RawText
             TEXT1;Text
-            "	#Id;#Action;#Command;#Wait"
-            "	EXEC1;Execute;mockWinExec;false"
+            "	#Id;#Off;#Action;#Command;#Wait"
+            "	EXEC1;1;Execute;mockWinExec;false"
             "	"
             "	#For;#From;#To;#Step"
             "	i;0;10;1"
@@ -76,6 +76,7 @@ Add start adapter action;;;
 
     #Action;#Line;#Text
     TextAddLine;'\t#Global\u003b#Action\u003b#appConnection\n\t1\u003bVars\u003bAPPSTR1.Out';matrixText
+
 
 #TestCase;#Kind;#Depends;#For
 Generate;;;
@@ -253,8 +254,8 @@ Add close adapter action;;;
     #Else
         #Id;#RawText
         TEXT1;Text
-        "	#Action;#Dialog;#AppConnection;#DialogCloseButton"
-        "	DialogFill;'Main';appConnection;Do.click()"
+        "	#Action;#Off;#Dialog;#AppConnection;#DialogCloseButton"
+        "	DialogFill;1;'Main';appConnection;Do.click()"
         "	"
         "	"
         "	#Action;#AppConnection"
