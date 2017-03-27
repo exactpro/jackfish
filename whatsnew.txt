@@ -1,3 +1,7 @@
+27.03.2017 4.4.0.2178
+RM41205 Undo function -> The data which is been repaired is not displayed : fixed
+
+--------------------------------------------------------------------------------
 27.03.2017 4.4.0.2174
 RM41106 It is not possible to commit/push UNSTAGED files. Fixed
 

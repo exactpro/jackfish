@@ -121,6 +121,10 @@ public class ParametersPane extends CustomScrollPane
 			{
 				exist = parameterBox(par, this.contextMenuHandler);
 			}
+			else
+			{
+				exist.updateParameter(par);
+			}
 			exist.updateIndex(this.parameters.getIndex(par));
 			if (i == selectedIndex)
 			{

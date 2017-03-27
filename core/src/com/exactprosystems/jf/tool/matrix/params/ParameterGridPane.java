@@ -127,4 +127,13 @@ public class ParameterGridPane extends GridPane
 		}
 		textField.setPrefWidth(size);
 	}
+
+	public void updateParameter(Parameter parameter)
+	{
+		if (this.key instanceof TextField)
+		{
+			((TextField) this.key).setText(parameter.getName());
+		}
+		this.value.setText(parameter.getExpression());
+	}
 }
