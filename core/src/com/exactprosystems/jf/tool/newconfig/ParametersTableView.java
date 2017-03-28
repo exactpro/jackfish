@@ -39,7 +39,6 @@ public class ParametersTableView extends TableView<TablePair>
 		valueColumn.setCellFactory(e -> new TableColumnCell());
 		valueColumn.setOnEditCommit(e ->
 		{
-			System.out.println("Editable node : " + editableNode);
 			Optional.ofNullable(editableNode).ifPresent(node ->
 			{
 				node.updateParameter(e.getRowValue().getKey(), e.getNewValue());

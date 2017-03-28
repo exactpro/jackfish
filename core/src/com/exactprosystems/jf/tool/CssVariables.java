@@ -320,24 +320,11 @@ public class CssVariables
 
 		//Need remove or reorder icons below
 
-		public static final String	ZOOM_PLUS				= IMAGES_DIR + "/zoom_plus.png";
-		public static final String	ZOOM_MINUS				= IMAGES_DIR + "/zoom_minus.png";
-
 		public static final String	FIND_ICON_SMALL			= IMAGES_DIR + "/find_small.png";
 
 		public static final String	LOG						= IMAGES_DIR + "/log.png";
 		public static final String	REFRESH					= IMAGES_DIR + "/refresh.png";
 		public static final String	INSPECT_ICON			= IMAGES_DIR + "/inspect.png";
-
-
-		public static final String	DICTIONARY_NEW				= IMAGES_DIR + "/new.png";
-		public static final String	DICTIONARY_DELETE			= IMAGES_DIR + "/delete_24.png";
-		public static final String	DICTIONARY_RENEW			= IMAGES_DIR + "/renew.png";
-		public static final String	DICTIONARY_TEST				= IMAGES_DIR + "/test.png";
-		public static final String	DICTIONARY_COPY				= IMAGES_DIR + "/copy_24.png";
-		public static final String	DICTIONARY_PASTE			= IMAGES_DIR + "/paste_24.png";
-		public static final String	DICTIONARY_RECORD_ONE		= IMAGES_DIR + "/record_one.png";
-		public static final String	DICTIONARY_RECORD_INF		= IMAGES_DIR + "/record_inf.png";
 
 		public static final String	GIT_ACCEPT_YOUR				= IMAGES_DIR + "/acceptYour.png";
 		public static final String	GIT_ACCEPT_THEIR			= IMAGES_DIR + "/acceptTheir.png";

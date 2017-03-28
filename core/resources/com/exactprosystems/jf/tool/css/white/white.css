@@ -648,6 +648,7 @@ CellView > .text-input.text-field{
 }
 .auto-complete-popup > .list-view > .placeholder > .label {
 	-fx-text-fill: derive(-fx-control-inner-background,-30%);
+
 }
 
 /*Configuration*/

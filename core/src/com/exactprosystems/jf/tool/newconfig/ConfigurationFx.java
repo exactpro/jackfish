@@ -745,7 +745,6 @@ public class ConfigurationFx extends Configuration
 
 	public void useAsLibrary(String file)
 	{
-		System.out.println(file);
 		addFile(file, super.librariesValue, this::displayLibrary);
 	}
 
