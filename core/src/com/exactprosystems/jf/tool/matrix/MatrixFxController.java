@@ -40,7 +40,6 @@ import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -395,21 +394,12 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 		tryCatch(this.model::stepMatrix, "Error on stepping matrix");
 	}
 
-	public void toogleTracing(ActionEvent event)
+	public void toggleTracing(ActionEvent event)
 	{
 		tryCatch(() ->
 		{
 			boolean b = toggleTracing.isSelected();
-			if (b)
-			{
-				((ImageView) toggleTracing.getGraphic()).setImage(new javafx.scene.image.Image(CssVariables.Icons.COLOR_ON_MATRIX_ICON));
-			}
-			else
-			{
-				((ImageView) toggleTracing.getGraphic()).setImage(new javafx.scene.image.Image(CssVariables.Icons.COLOR_OFF_MATRIX_ICON));
-			}
-			toggleTracing.getTooltip().setText("Color " + (!toggleTracing.isSelected() ? "off" : "on"));
-			
+			toggleTracing.getTooltip().setText("Color " + (b ? "on" : "off"));
 			this.context.setTracing(b);
 			this.refresh();
 			this.tree.setTracing(b);
@@ -648,36 +638,13 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 	{
 		Platform.runLater(() -> tryCatch(() ->
 		{
-			btnStartMatrix.setTooltip(new Tooltip("Start\n" + getShortcutTooltip(settings, Settings.START_MATRIX)));
-			btnStopMatrix.setTooltip(new Tooltip("Stop\n" + getShortcutTooltip(settings, Settings.STOP_MATRIX)));
-			btnPauseMatrix.setTooltip(new Tooltip("Pause\n" + getShortcutTooltip(settings, Settings.PAUSE_MATRIX)));
-			btnWatch.setTooltip(new Tooltip("Watch"));
-			btnStepMatrix.setTooltip(new Tooltip("Step"));
-			btnShowResult.setTooltip(new Tooltip("Show result"));
-			toggleTracing.setTooltip(new Tooltip("Color off"));
-			toggleTracing.getStyleClass().add(CssVariables.TOGGLE_BUTTON_WITHOUT_BORDER);
-			btnFind.setTooltip(new Tooltip("Find\n" + getShortcutTooltip(settings, Settings.FIND_ON_MATRIX)));
-			btnStartDefaultApplication.setTooltip(new Tooltip("Start default application"));
-			btnConnectDefaultApplication.setTooltip(new Tooltip("Connect default application"));
-			btnStopDefaultApplication.setTooltip(new Tooltip("Stop default application"));
-			btnStartDefaultClient.setTooltip(new Tooltip("Start default client"));
-			btnStopDefaultClient.setTooltip(new Tooltip("Stop default client"));
+			this.btnStartMatrix.setTooltip(new Tooltip("Start\n" + getShortcutTooltip(settings, Settings.START_MATRIX)));
+			this.btnStopMatrix.setTooltip(new Tooltip("Stop\n" + getShortcutTooltip(settings, Settings.STOP_MATRIX)));
+			this.btnPauseMatrix.setTooltip(new Tooltip("Pause\n" + getShortcutTooltip(settings, Settings.PAUSE_MATRIX)));
+			this.btnFind.setTooltip(new Tooltip("Find\n" + getShortcutTooltip(settings, Settings.FIND_ON_MATRIX)));
 
-			customizeLabeled(btnStartDefaultApplication, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.START_APPLICATION);
-			customizeLabeled(btnConnectDefaultApplication, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.CONNECT_APPLICATION);
-			customizeLabeled(btnStopDefaultApplication, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.STOP_APPLICATION);
-			customizeLabeled(btnStopDefaultClient, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.STOP_APPLICATION);
-			customizeLabeled(btnStartDefaultClient, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.START_APPLICATION);
-			customizeLabeled(btnStartMatrix, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.START_MATRIX_ICON);
-			customizeLabeled(btnStopMatrix, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.STOP_MATRIX_ICON);
-			customizeLabeled(btnPauseMatrix, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.PAUSE_MATRIX_ICON);
-			customizeLabeled(btnWatch, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.WATCH_MATRIX_ICON);
-			customizeLabeled(btnStepMatrix, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.STEP_MATRIX_ICON);
-			customizeLabeled(btnShowResult, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.SHOW_RESULT_MATRIX_ICON);
-			customizeLabeled(toggleTracing, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.COLOR_OFF_MATRIX_ICON);
-			customizeLabeled(btnFind, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.FIND_ON_MATRIX);
-
-			sizeButtons(BUTTON_SIZE_WITH_ICON, btnStartMatrix, btnStopMatrix, btnPauseMatrix, btnWatch, btnStepMatrix, btnShowResult);
+			this.toggleTracing.setTooltip(new Tooltip("Color off"));
+			this.toggleTracing.getStyleClass().add(CssVariables.TOGGLE_BUTTON_WITHOUT_BORDER);
 		}, "Error on setting tooltip or images"));
 	}
 }

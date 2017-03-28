@@ -130,6 +130,9 @@ public class Main extends Application
 			DialogsHelper.showError("Settings are invalid. Using empty settings.");
 			this.settings = new Settings();
 		}
+		Settings.SettingsValue theme = this.settings.getValueOrDefault(Settings.GLOBAL_NS, Settings.SETTINGS, Settings.THEME, Theme.WHITE.name());
+		Common.setTheme(Theme.valueOf(theme.getValue().toUpperCase()));
+
 		notifyPreloader(new Preloader.ProgressNotification(5));
 
 		controller = Common.loadController(Main.class.getResource("tool.fxml"));
@@ -162,9 +165,6 @@ public class Main extends Application
 			notifyPreloader(new Preloader.ProgressNotification(35));
 		}
 		notifyPreloader(new Preloader.ProgressNotification(40));
-
-		Settings.SettingsValue theme = this.settings.getValueOrDefault(Settings.GLOBAL_NS, Settings.SETTINGS, Settings.THEME, Theme.WHITE.name());
-		Common.setTheme(Theme.valueOf(theme.getValue().toUpperCase()));
 
 		notifyPreloader(new Preloader.ProgressNotification(50));
 		try

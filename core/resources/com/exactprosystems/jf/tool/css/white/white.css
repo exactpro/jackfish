@@ -798,3 +798,65 @@ CellView > .text-input.text-field{
 	-fx-graphic : url("icons/folder.png")
 
 }
+
+/*Matrix tab*/
+#matrixBtnStartDefaultClient {
+	-fx-graphic : url("icons/stop_small.png")
+
+}
+#matrixBtnStopDefaultClient {
+	-fx-graphic : url("icons/start_small.png")
+
+}
+
+#matrixBtnStartDefaultApplication {
+	-fx-graphic : url("icons/start_small.png")
+
+}
+#matrixBtnConnectDefaultApplication {
+	-fx-graphic : url("icons/connect_small.png")
+
+}
+#matrixBtnStopDefaultApplication {
+	-fx-graphic : url("icons/stop_small.png")
+
+}
+
+#matrixBtnFind {
+	-fx-graphic : url("icons/find.png")
+
+}
+#matrixBtnWatch {
+	-fx-graphic : url("icons/watch.png")
+
+}
+
+#matrixBtnStartMatrix {
+	-fx-graphic : url("icons/start.png")
+
+}
+#matrixBtnStopMatrix {
+	-fx-graphic : url("icons/stop.png")
+
+}
+#matrixBtnPauseMatrix {
+	-fx-graphic : url("icons/pause.png")
+
+}
+
+#matrixBtnStepMatrix {
+	-fx-graphic : url("icons/step.png")
+
+}
+#matrixBtnShowResult {
+	-fx-graphic : url("icons/showResult.png")
+
+}
+#matrixToggleTracing {
+	-fx-graphic : url("icons/colorOff.png")
+
+}
+#matrixToggleTracing:selected {
+	-fx-graphic : url("icons/colorOn.png")
+
+}
