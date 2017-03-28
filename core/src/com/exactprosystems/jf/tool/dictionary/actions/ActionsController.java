@@ -76,31 +76,10 @@ public class ActionsController implements Initializable, ContainingParent
 	@Override
 	public void initialize(URL url, ResourceBundle resourceBundle)
 	{
-		assert btnStop != null : "fx:id=\"btnStopConnection\" was not injected: check your FXML file 'Actions.fxml'.";
-		assert mainGrid != null : "fx:id=\"mainGrid\" was not injected: check your FXML file 'Actions.fxml'.";
-		assert comboBoxWindows != null : "fx:id=\"comboBoxDriverWindows\" was not injected: check your FXML file 'Actions.fxml'.";
-		assert tfSendKeys != null : "fx:id=\"tfSendKeys\" was not injected: check your FXML file 'Actions.fxml'.";
-		assert elementActionsGrid != null : "fx:id=\"elementActionsGrid\" was not injected: check your FXML file 'Actions.fxml'.";
-		assert comboBoxApps != null : "fx:id=\"comboBoxApps\" was not injected: check your FXML file 'Actions.fxml'.";
-		assert comboBoxAppsStore != null : "fx:id=\"comboBoxAppsEntries\" was not injected: check your FXML file 'Actions.fxml'.";
-		assert btnStartApplication != null : "fx:id=\"btnStartApplication\" was not injected: check your FXML file 'Actions.fxml'.";
-		assert btnConnectApplication != null : "fx:id=\"btnConnectApplication\" was not injected: check your FXML file 'Actions.fxml'.";
-		assert imageArea != null : "fx:id=\"labelArea\" was not injected: check your FXML file 'Actions.fxml'.";
 		imageArea.getStyleClass().add(CssVariables.IMAGE_AREA);
 		comboBoxWindows.setOnShowing(event -> tryCatch(() -> this.model.displayTitles(), "Error on update titles"));
 		comboBoxAppsStore.setOnShowing(event -> tryCatch(() -> this.model.displayStores(), "Error on update titles"));
-		Platform.runLater(() -> {
-			btnStartApplication.setTooltip(new Tooltip("Start application"));
-			btnStop.setTooltip(new Tooltip("Stop application"));
-			btnConnectApplication.setTooltip(new Tooltip("Connect application"));
-
-			Common.customizeLabeled(btnStartApplication, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.START_APPLICATION);
-			Common.customizeLabeled(btnConnectApplication, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.CONNECT_APPLICATION);
-			Common.customizeLabeled(btnStop, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.STOP_APPLICATION);
-
-			((BorderPane) this.pane).setCenter(BorderWrapper.wrap(this.mainGrid).title("Actions").color(Common.currentTheme().getReverseColor()).build());
-
-		});
+		Platform.runLater(() -> ((BorderPane) this.pane).setCenter(BorderWrapper.wrap(this.mainGrid).title("Actions").color(Common.currentTheme().getReverseColor()).build()));
 	}
 
 	public void init(DictionaryFx model, GridPane gridPane, AbstractEvaluator evaluator, NavigationController navigation, 
@@ -111,7 +90,6 @@ public class ActionsController implements Initializable, ContainingParent
 		this.info = info;
 
 		this.expressionField = new ExpressionField(evaluator);
-//		this.elementActionsGrid.add(this.expressionField, 0, 3, 2, 1);
 		this.hBoxDoIt.getChildren().add(0, this.expressionField);
 		HBox.setHgrow(this.expressionField, Priority.ALWAYS);
 		this.expressionField.setHelperForExpressionField(null, null);

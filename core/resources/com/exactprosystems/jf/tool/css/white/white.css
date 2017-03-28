@@ -860,3 +860,54 @@ CellView > .text-input.text-field{
 	-fx-graphic : url("icons/colorOn.png")
 
 }
+
+/*Dictionary tab*/
+#dictionaryBtnStartApplication {
+	-fx-graphic : url("icons/start_small.png")
+
+}
+#dictionaryBtnConnectApplication {
+	-fx-graphic : url("icons/connect_small.png")
+
+}
+#dictionaryBtnStopApplication {
+	-fx-graphic : url("icons/stop_small.png")
+
+}
+
+#dictionaryBtnNewDialog {
+	-fx-graphic : url("icons/new.png")
+
+}
+#dictionaryBtnDeleteDialog {
+	-fx-graphic : url("icons/delete_24.png")
+
+}
+#dictionaryBtnCopyDialog {
+	-fx-graphic : url("icons/copy_24.png")
+
+}
+#dictionaryBtnPasteDialog {
+	-fx-graphic : url("icons/paste_24.png")
+
+}
+#dictionaryBtnNewElement {
+	-fx-graphic : url("icons/new.png")
+
+}
+#dictionaryBtnDeleteElement {
+	-fx-graphic : url("icons/delete_24.png")
+
+}
+#dictionaryBtnCopyElement {
+	-fx-graphic : url("icons/copy_24.png")
+
+}
+#dictionaryBtnPasteElement {
+	-fx-graphic : url("icons/paste_24.png")
+
+}
+#dictionaryBtnTestSection {
+	-fx-graphic : url("icons/test.png")
+
+}

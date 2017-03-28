@@ -28,25 +28,25 @@
 				<Label id="$verMid"/>
 				<HBox alignment="CENTER_LEFT">
 					<children>
-						<Button fx:id="btnNewDialog" alignment="CENTER" mnemonicParsing="false" onAction="#newWindow">
+						<Button id="dictionaryBtnNewDialog" fx:id="btnNewDialog" alignment="CENTER" mnemonicParsing="false" onAction="#newWindow" styleClass="$transparentBackground">
 							<tooltip>
 								<Tooltip text="Create new window"/>
 							</tooltip>
 						</Button>
 						<Label id="$horMin"/>
-						<Button fx:id="btnDeleteDialog" alignment="CENTER" mnemonicParsing="false" onAction="#deleteWindow">
+						<Button id="dictionaryBtnDeleteDialog" fx:id="btnDeleteDialog" alignment="CENTER" mnemonicParsing="false" onAction="#deleteWindow" styleClass="$transparentBackground">
 							<tooltip>
 								<Tooltip text="Delete selected window"/>
 							</tooltip>
 						</Button>
 						<Label id="$horMin"/>
-						<Button fx:id="btnCopyDialog" mnemonicParsing="false" onAction="#copyDialog">
+						<Button id="dictionaryBtnCopyDialog" fx:id="btnCopyDialog" mnemonicParsing="false" onAction="#copyDialog" styleClass="$transparentBackground">
 							<tooltip>
 								<Tooltip text="Copy current dialog with all elements"/>
 							</tooltip>
 						</Button>
 						<Label id="$horMin"/>
-						<Button fx:id="btnPasteDialog" mnemonicParsing="false" onAction="#pasteDialog">
+						<Button id="dictionaryBtnPasteDialog" fx:id="btnPasteDialog" mnemonicParsing="false" onAction="#pasteDialog" styleClass="$transparentBackground">
 							<tooltip>
 								<Tooltip text="Paste copied dialog"/>
 							</tooltip>
@@ -85,33 +85,33 @@
 				<Label id="$verMid"/>
 				<HBox fx:id="hBoxElement">
 					<children>
-						<Button fx:id="btnNewElement" mnemonicParsing="false" onAction="#newElement">
+						<Button id="dictionaryBtnNewElement" fx:id="btnNewElement" mnemonicParsing="false" onAction="#newElement" styleClass="$transparentBackground">
 							<tooltip>
 								<Tooltip text="Create new Element"/>
 							</tooltip>
 						</Button>
 						<Label id="$horMin"/>
-						<Button fx:id="btnDeleteElement" mnemonicParsing="false" onAction="#deleteElement">
+						<Button id="dictionaryBtnDeleteElement" fx:id="btnDeleteElement" mnemonicParsing="false" onAction="#deleteElement" styleClass="$transparentBackground">
 							<tooltip>
 								<Tooltip text="Delete current element"/>
 							</tooltip>
 						</Button>
 						<Label id="$horMin"/>
-						<Button fx:id="btnCopyElement" mnemonicParsing="false" onAction="#copyElement">
+						<Button id="dictionaryBtnCopyElement" fx:id="btnCopyElement" mnemonicParsing="false" onAction="#copyElement" styleClass="$transparentBackground">
 							<tooltip>
 								<Tooltip text="Copy current element"/>
 							</tooltip>
 						</Button>
 						<Label id="$horMin"/>
-						<Button fx:id="btnPasteElement" mnemonicParsing="false" onAction="#pasteElement">
+						<Button id="dictionaryBtnPasteElement" fx:id="btnPasteElement" mnemonicParsing="false" onAction="#pasteElement" styleClass="$transparentBackground">
 							<tooltip>
 								<Tooltip text="Paste copied element"/>
 							</tooltip>
 						</Button>
 						<Label id="$horMin"/>
-						<Button fx:id="btnTestWindow" mnemonicParsing="false" onAction="#testingDialog">
+						<Button id="dictionaryBtnTestSection" fx:id="btnTestWindow" mnemonicParsing="false" onAction="#testingDialog" styleClass="$transparentBackground">
 							<tooltip>
-								<Tooltip text="Test all controls"/>
+								<Tooltip text="Test all controls into the current section"/>
 							</tooltip>
 						</Button>
 					</children>

@@ -306,20 +306,14 @@ public class CssVariables
 		//region TODO need create icons for dark/white theme
 		public static final String GLOBAL_HANDLER_ICON = IMAGES_DIR + "/globalHandlerIcon.png";
 
-		//endregion
-
-		//Need remove or reorder icons below
 		public static final String	MARK_ICON				= IMAGES_DIR + "/check.png";
 		public static final String	ADD_16_ICON				= IMAGES_DIR + "/add_16.png";
 		public static final String	QUESTION_ICON			= IMAGES_DIR + "/question_mark.png";
 
+		//endregion
 
+		//Need remove or reorder icons below
 
-		public static final String	START_MATRIX_ICON		= IMAGES_DIR + "/start.png";
-		public static final String	DESTROY_MATRIX_ICON		= IMAGES_DIR + "/destroy.png";
-
-		public static final String	FOLDER_MATRIX_ICON		= IMAGES_DIR + "/folder.png";
-		public static final String	OPEN_MATRIX_ICON		= IMAGES_DIR + "/open.png";
 		public static final String	START_APPLICATION		= IMAGES_DIR + "/start_small.png";
 		public static final String	CONNECT_APPLICATION		= IMAGES_DIR + "/connect_small.png";
 		public static final String	STOP_APPLICATION		= IMAGES_DIR + "/stop_small.png";

@@ -14,13 +14,11 @@ import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.documents.guidic.controls.AbstractControl;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
-import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.custom.BorderWrapper;
 import com.exactprosystems.jf.tool.custom.controls.field.CustomFieldWithButton;
 import com.exactprosystems.jf.tool.dictionary.DictionaryFx;
 import com.exactprosystems.jf.tool.dictionary.navigation.NavigationController;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
-
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -89,30 +87,7 @@ public class ElementInfoController implements Initializable, ContainingParent
 	@Override
 	public void initialize(URL url, ResourceBundle resourceBundle)
 	{
-		assert tfXpath != null : "fx:id=\"tfXpath\" was not injected: check your FXML file 'ElementInfo.fxml'.";
-		assert tfUID != null : "fx:id=\"tfUID\" was not injected: check your FXML file 'ElementInfo.fxml'.";
-		assert tfID != null : "fx:id=\"tfID\" was not injected: check your FXML file 'ElementInfo.fxml'.";
-		assert tfClass != null : "fx:id=\"tfClass\" was not injected: check your FXML file 'ElementInfo.fxml'.";
-		assert choiceBoxVisibility != null : "fx:id=\"choiceBoxVisibility\" was not injected: check your FXML file 'ElementInfo.fxml'.";
-		assert tfText != null : "fx:id=\"tfText\" was not injected: check your FXML file 'ElementInfo.fxml'.";
-		assert tfTimeout != null : "fx:id=\"tfTimeout\" was not injected: check your FXML file 'ElementInfo.fxml'.";
-		assert tfName != null : "fx:id=\"tfName\" was not injected: check your FXML file 'ElementInfo.fxml'.";
-		assert choiceBoxAddition != null : "fx:id=\"choiceBoxAddition\" was not injected: check your FXML file 'ElementInfo.fxml'.";
-		assert tfTooltip != null : "fx:id=\"tfTooltip\" was not injected: check your FXML file 'ElementInfo.fxml'.";
-		assert comboBoxControl != null : "fx:id=\"comboBoxControl\" was not injected: check your FXML file 'ElementInfo.fxml'.";
-		assert choiceBoxHeader != null : "fx:id=\"choiceBoxHeader\" was not injected: check your FXML file 'ElementInfo.fxml'.";
-		assert choiceBoxRows != null : "fx:id=\"choiceBoxRows\" was not injected: check your FXML file 'ElementInfo.fxml'.";
-		assert checkBoxWeak != null : "fx:id=\"checkBoxWeak\" was not injected: check your FXML file 'ElementInfo.fxml'.";
-		assert choiceBoxOwner != null : "fx:id=\"choiceBoxOwner\" was not injected: check your FXML file 'ElementInfo.fxml'.";
-		assert tfAction != null : "fx:id=\"tfAction\" was not injected: check your FXML file 'ElementInfo.fxml'.";
-		assert tfExpression != null : "fx:id=\"tfExpression\" was not injected: check your FXML file 'ElementInfo.fxml'.";
-		assert tfTitle != null : "fx:id=\"tfTitle\" was not injected: check your FXML file 'ElementInfo.fxml'.";
-		assert checkBoxUseNumericHeader != null : "fx:id=\"checkBoxUseNumericHeader\" was not injected: check your FXML file 'ElementInfo.fxml'.";
-		Common.customizeLabeled(this.xpathHelper, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.XPATH_TREE);
-		Platform.runLater(() -> 
-		{
-			((BorderPane) this.pane).setCenter(BorderWrapper.wrap(this.mainGrid).color(Common.currentTheme().getReverseColor()).title("Element info").build());
-		});
+		Platform.runLater(() -> ((BorderPane) this.pane).setCenter(BorderWrapper.wrap(this.mainGrid).color(Common.currentTheme().getReverseColor()).title("Element info").build()));
 
 		Arrays.asList(tfID, tfUID, tfXpath, tfClass, tfText, tfName, tfTooltip, tfColumns, tfAction, tfTitle, tfExpression).forEach(tf -> {
 			tf.prefWidthProperty().bind(this.fieldGrid.getColumnConstraints().get(1).maxWidthProperty());

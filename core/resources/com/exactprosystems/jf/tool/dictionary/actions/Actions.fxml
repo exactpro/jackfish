@@ -1,18 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import com.exactprosystems.jf.tool.CssVariables?>
+<?import com.exactprosystems.jf.tool.*?>
 <?import com.exactprosystems.jf.tool.custom.controls.field.CustomFieldWithButton?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ComboBox?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.layout.VBox?>
-
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 <BorderPane prefHeight="513.0" prefWidth="1105.0" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.exactprosystems.jf.tool.dictionary.actions.ActionsController">
 	<fx:define>
 		<CssVariables fx:id="verMin" fx:constant="VERTICAL_MIN" />
@@ -22,6 +13,8 @@
 		<CssVariables fx:id="horMin" fx:constant="HORIZONTAL_MIN" />
 		<CssVariables fx:id="horMid" fx:constant="HORIZONTAL_MID" />
 		<CssVariables fx:id="horMax" fx:constant="HORIZONTAL_MAX" />
+
+		<CssVariables fx:id="transparentBackground" fx:constant="TRANSPARENT_BACKGROUND"/>
 	</fx:define>
 	<center>
 		<GridPane fx:id="mainGrid">
@@ -59,11 +52,24 @@
 									<children>
 										<ComboBox fx:id="comboBoxApps" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
 										<Label />
-										<Button fx:id="btnStartApplication" mnemonicParsing="false" onAction="#startApplication" />
+										<Button id="dictionaryBtnStartApplication" fx:id="btnStartApplication" mnemonicParsing="false" onAction="#startApplication" styleClass="$transparentBackground">
+											<tooltip>
+												<Tooltip text="Start the selected application"/>
+											</tooltip>
+										</Button>
 										<Label />
-										<Button fx:id="btnConnectApplication" mnemonicParsing="false" onAction="#connectApplication" />
+										<Button id="dictionaryBtnConnectApplication" fx:id="btnConnectApplication" mnemonicParsing="false" onAction="#connectApplication"
+												styleClass="$transparentBackground">
+											<tooltip>
+												<Tooltip text="Connect the selected application"/>
+											</tooltip>
+										</Button>
 										<Label />
-										<Button fx:id="btnStop" mnemonicParsing="false" onAction="#stopConnection" />
+										<Button id="dictionaryBtnStopApplication" fx:id="btnStop" mnemonicParsing="false" onAction="#stopConnection" styleClass="$transparentBackground">
+											<tooltip>
+												<Tooltip text="Stop the selected application"/>
+											</tooltip>
+										</Button>
 									</children>
 								</HBox>
 								<Label text="Stored connection:" GridPane.halignment="LEFT" GridPane.rowIndex="1" />

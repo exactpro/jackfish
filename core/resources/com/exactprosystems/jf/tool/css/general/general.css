@@ -202,10 +202,6 @@
 	-fx-graphic : url('icons/refresh.png')
 
 }
-#btnWizard {
-	-fx-graphic : url('icons/wizard.png')
-
-}
 #btnNextMark {
 	-fx-graphic : url('icons/next.png')
 
@@ -461,4 +457,14 @@
 	-fx-pref-height : 32;
 	-fx-max-height : 32;
 	-fx-min-height : 32;
+}
+
+/*Dictionary tab*/
+#dictionaryBtnXpathHelper {
+	-fx-graphic : url("icons/tree.png")
+
+}
+#btnWizard {
+	-fx-graphic : url('icons/wizard.png')
+
 }
