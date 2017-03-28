@@ -169,55 +169,6 @@
 
 /*Custom classes*/
 
-/*MainController*/
-/*Toolbar*/
-#btnLoadMatrix {
-	-fx-graphic : url("icons/loadMatrix.png")
-
-}
-#btnNewMatrix {
-	-fx-graphic : url("icons/matrixNew.png")
-
-}
-#btnSaveDocument {
-	-fx-graphic : url("icons/documentSave.png")
-
-}
-#btnSaveAsDocument {
-	-fx-graphic : url("icons/documentSaveAs.png")
-
-}
-#btnOpenMainLog {
-	-fx-graphic : url("icons/log.png")
-
-}
-#btnShowCalculator {
-	-fx-graphic : url("icons/calc.png")
-
-}
-#btnUndo  {
-	-fx-graphic : url("icons/undo_32.png");
-
-}
-#btnRedo {
-	-fx-graphic : url("icons/redo_32.png");
-
-}
-#splitMenuButtonToolbar {
-	-fx-graphic : url("icons/start.png")
-
-}
-
-/*ProjectPane*/
-#saveConfiguration {
-	-fx-graphic : url("icons/saveConfiguration.png");
-
-}
-#reloadConfiguration {
-	-fx-graphic : url("icons/refresh.png");
-
-}
-
 /*Dialog wizard*/
 #cbMark {
 	-fx-graphic : url('icons/check.png')
