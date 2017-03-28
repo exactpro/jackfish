@@ -31,6 +31,8 @@
 		<CssVariables fx:id="horMin" fx:constant="HORIZONTAL_MIN" />
 		<CssVariables fx:id="horMid" fx:constant="HORIZONTAL_MID" />
 		<CssVariables fx:id="horMax" fx:constant="HORIZONTAL_MAX" />
+
+		<CssVariables fx:id="transparentBackground" fx:constant="TRANSPARENT_BACKGROUND"/>
 	</fx:define>
 	<center>
 		<GridPane fx:id="mainGrid">
@@ -126,7 +128,7 @@
 						<HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1">
 							<children>
 								<CustomFieldWithButton id="xpath" fx:id="tfXpath" HBox.hgrow="ALWAYS" />
-								<Button alignment="CENTER" mnemonicParsing="false" onAction="#showTree" fx:id="xpathHelper" />
+								<Button alignment="CENTER" mnemonicParsing="false" onAction="#showTree" id="dictionaryBtnXpathHelper" fx:id="xpathHelper" styleClass="$transparentBackground"/>
 							</children>
 						</HBox>
 					</children>

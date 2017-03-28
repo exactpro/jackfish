@@ -169,55 +169,6 @@
 
 /*Custom classes*/
 
-/*MainController*/
-/*Toolbar*/
-#btnLoadMatrix {
-	-fx-graphic : url("icons/loadMatrix.png")
-
-}
-#btnNewMatrix {
-	-fx-graphic : url("icons/matrixNew.png")
-
-}
-#btnSaveDocument {
-	-fx-graphic : url("icons/documentSave.png")
-
-}
-#btnSaveAsDocument {
-	-fx-graphic : url("icons/documentSaveAs.png")
-
-}
-#btnOpenMainLog {
-	-fx-graphic : url("icons/log.png")
-
-}
-#btnShowCalculator {
-	-fx-graphic : url("icons/calc.png")
-
-}
-#btnUndo  {
-	-fx-graphic : url("icons/undo_32.png");
-
-}
-#btnRedo {
-	-fx-graphic : url("icons/redo_32.png");
-
-}
-#splitMenuButtonToolbar {
-	-fx-graphic : url("icons/start.png")
-
-}
-
-/*ProjectPane*/
-#saveConfiguration {
-	-fx-graphic : url("icons/saveConfiguration.png");
-
-}
-#reloadConfiguration {
-	-fx-graphic : url("icons/refresh.png");
-
-}
-
 /*Dialog wizard*/
 #cbMark {
 	-fx-graphic : url('icons/check.png')
@@ -231,10 +182,6 @@
 	-fx-graphic : url('icons/question_mark.png')
 
 }
-#cbUpdate{
-	-fx-graphic : url('icons/refresh.png')
-
-}
 #cbRemoved {
 	-fx-graphic : url('icons/delete_16.png')
 
@@ -245,22 +192,6 @@
 }
 #btnRemove {
 	-fx-graphic : url('icons/delete_16.png')
-
-}
-#btnRelation {
-	-fx-graphic : url('icons/refresh.png')
-
-}
-#btnWizard {
-	-fx-graphic : url('icons/wizard.png')
-
-}
-#btnNextMark {
-	-fx-graphic : url('icons/next.png')
-
-}
-#btnPrevMark {
-	-fx-graphic : url('icons/previous.png')
 
 }
 .customTableRow:customSelectedState {
@@ -490,3 +421,60 @@
 	-fx-border-color : transparent;
 }
 
+/*Matrix tab*/
+#matrixBtnStartDefaultClient,
+#matrixBtnStopDefaultClient,
+#matrixBtnStartDefaultApplication,
+#matrixBtnConnectDefaultApplication,
+#matrixBtnStopDefaultApplication,
+#matrixBtnFind ,
+#matrixBtnWatch ,
+#matrixBtnStartMatrix ,
+#matrixBtnStopMatrix ,
+#matrixBtnPauseMatrix ,
+#matrixBtnStepMatrix ,
+#matrixBtnShowResult {
+	-fx-pref-width : 32;
+	-fx-max-width : 32;
+	-fx-min-width : 32;
+
+	-fx-pref-height : 32;
+	-fx-max-height : 32;
+	-fx-min-height : 32;
+}
+
+/*Dictionary tab*/
+#dictionaryBtnXpathHelper {
+	-fx-graphic : url("icons/tree.png")
+
+}
+#btnWizard {
+	-fx-graphic : url('icons/wizard.png')
+
+}
+
+/*Scale pane*/
+.scalePane {
+	-fx-spacing : sizeMin;
+
+}
+#scalePaneBtnZoomMinus,
+#scalePaneBtnZoomPlus {
+	-fx-opacity : 0.5;
+
+}
+#scalePaneBtnZoomMinus:hover,
+#scalePaneBtnZoomPlus:hover {
+	-fx-opacity : 0.5;
+
+}
+
+/*ImageViewWithScale*/
+#btnInspect {
+	-fx-opacity : 0.5;
+
+}
+#btnInspect:selected {
+	-fx-opacity : 1.0;
+
+}

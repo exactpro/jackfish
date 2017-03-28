@@ -1,11 +1,11 @@
 .root {
-	-fx-base: rgb(50, 50, 50);
-	-fx-background: rgb(50, 50, 50);
-	-fx-control-inner-background:  rgb(50, 50, 50);
+	-fx-base: #535353;
+	-fx-background: #535353;
+	-fx-control-inner-background:  #535353;
 	-fx-text-base-color : #eeeeee;
-	-fx-company-color-dark : #2A7596;
-	-fx-company-color-light : #3CB6EB;
-	-fx-hover-button-color : #555555;
+	-fx-company-color-dark : #2687fb;
+	-fx-company-color-light : #2687fb;
+	-fx-hover-button-color : #474747;
 	-fx-selection-bar-non-focused : transparent;
 }
 
@@ -23,17 +23,32 @@
 
 }
 .tab {
-	-fx-background-color: linear-gradient(to top, -fx-base, derive(-fx-base,30%));
+	-fx-background-color: #424242;
+	-fx-border-width : 1px;
+	-fx-border-color : #383838;
+}
+.tab:selected {
+	-fx-background-color : #535353;
+
+}
+.tab:hover {
+	-fx-background-color : #535353;
 
 }
 .tab:selected .tabLabel {
-	-fx-fill : -fx-company-color-light;
+	-fx-fill : #f0f0f0;
+
+}
+.tab-header-area > .tab-header-background {
+	-fx-background-color : #424242;
 
 }
 .tabLabel {
-	-fx-fill : -fx-text-base-color;
+	-fx-fill : #a8a8a8;
+	-fx-font-weight: bold;
 
 }
+
 .list-view > .virtual-flow > .clipped-container > .sheet > .cell:selected {
 	-fx-background-color : -fx-company-color-dark;
 
@@ -43,17 +58,21 @@
 	-fx-background-color: transparent;
 	-fx-border-width : 1px;
 	-fx-border-color : derive(-fx-text-base-color, 10%);
+	-fx-border-radius : 4px;
 }
 .button:hover {
 	-fx-background-color: -fx-hover-button-color;
 
 }
 .menu-bar {
-	-fx-background-color: linear-gradient(to bottom, -fx-base, derive(-fx-base,30%));
+	-fx-background-color: -fx-base;
+	-fx-border-width : 1px;
 
 }
 .tool-bar:horizontal {
-	-fx-background-color: linear-gradient(to bottom, derive(-fx-base,+50%), derive(-fx-base,-40%), derive(-fx-base,-20%));
+	-fx-background-color: -fx-base;
+	-fx-border-color : #383838;
+	-fx-border-width: 1px;
 
 }
 .split-pane:horizontal > * > .split-pane-divider {
@@ -67,16 +86,25 @@
 }
 .text-input {
 	-fx-prompt-text-fill: derive(-fx-text-base-color,-30%);
-	-fx-border-color : -fx-hover-button-color;
+	-fx-border-color : #636363;
+	-fx-background-color: #474747;
+	-fx-border-width : 1px;
+	-fx-border-radius : 2px;
+}
+
+.text-input:focused,
+.custom-text-field:text-field-has-focus {
+	-fx-border-color : #2687fb;
+
 }
 .separator:horizontal > .line {
 	-fx-border-width : 1 0 0 0;
-	-fx-border-color : -fx-company-color-dark transparent transparent transparent;
+	-fx-border-color : #383838;
 	-fx-background-color : transparent;
 }
 .separator:vertical > .line {
 	-fx-border-width : 0 1 0 0;
-	-fx-border-color : transparent -fx-company-color-dark transparent transparent;
+	-fx-border-color : #383838;
 	-fx-background-color : transparent;
 }
 .delayShutter {
@@ -161,9 +189,18 @@ Text {
 	-fx-border-color : transparent;
 }
 
+.customTreeTableView .tree-table-row-cell:filled {
+	-fx-border-color : #454545;
+
+}
+.customTreeTableView .tree-table-row-cell:customSelectedState {
+	-fx-background-color: #6b6b6b;
+	-fx-border-color : #2687fb;
+}
+
 /*Matrix tree view*/
 .customTreeTableView {
-	-fx-table-cell-border-color : white;
+	-fx-table-cell-border-color : #454545;
 
 }
 .customTreeTableView .scroll-bar:vertical {
@@ -193,8 +230,17 @@ Text {
 
 }
 .check-box > .box {
-	-fx-background-color: linear-gradient(to top, -fx-base, derive(-fx-base,100%));
+	-fx-background-color: #4d4d4d;
+	-fx-border-color : #828282;
+	-fx-border-size : 1px;
+	-fx-border-radius : 2px;
+}
+.check-box:selected > .box {
 
+	-fx-background-color: #d4d4d4;
+	-fx-border-color : #d4d4d4;
+	-fx-border-size : 1px;
+	-fx-border-radius : 2px;
 }
 
 /*Custom Table*/
@@ -269,58 +315,37 @@ Text {
 }
 
 /*MatrixFx tab*/
-.executingMatrixItem {
-	-fx-background-color : -fx-company-color-light;
-
-}
-.defaultMatrixItem {
-	-fx-background-color : transparent;
-
-}
-.pausedMatrixItem {
-	-fx-background-color : rgb(255, 0, 0, 0.5);
-
-}
-.errorMatrixItem {
-	-fx-background-color : red;
-
-}
+.tab:hover.executingTab,
+.tab:selected.executingTab,
 .executingTab {
 	-fx-background-color : #5D53A2;
 
 }
+.tab:hover.stoppedTab,
+.tab:selected.stoppedTab,
 .stoppedTab {
 	-fx-background-color : red;
 
 }
+.tab:hover.matrixFinishedOk,
+.tab:selected.matrixFinishedOk,
 .matrixFinishedOk {
 	-fx-background-color : #4A6E3A;
 
 }
+.tab:hover.matrixFinishedBad,
+.tab:selected.matrixFinishedBad,
 .matrixFinishedBad {
 	-fx-background-color : red;
 
 }
-.finishedTab {
-	-fx-background-color : lightgreen;
 
-}
-.defaultTab {
-	-fx-background-color : transparent;
-	-fx-border-color : black;
-	-fx-border-width : 1px;
-
-}
 .simpleItem {
 	-fx-border-color : lightgray;
 	-fx-border-width : 1 0 1 0;
 }
 .trueOffItem {
 	-fx-background-color : #7F8181;
-
-}
-.falseOffItem {
-	-fx-background-color: -fx-control-inner-background;
 
 }
 .boldLabel {
@@ -370,7 +395,7 @@ Text {
 
 /*Helper*/
 .compileFailed {
-	-fx-text-fill : red;
+	-fx-text-fill : #FF6F6F;
 
 }
 .evaluateFailed {
@@ -378,7 +403,7 @@ Text {
 
 }
 .evaluateSuccess {
-	-fx-text-fill : green;
+	-fx-text-fill : #00D100;
 
 }
 .expectedClass {
@@ -435,8 +460,8 @@ Text {
 
 }
 .emptyGrid {
-	-fx-border-color : grey;
-	-fx-border-size : 2px;
+	-fx-border-color : #7d7d7d;
+	-fx-background-color : #535353;
 
 }
 
@@ -569,10 +594,11 @@ CellView > .text-input.text-field{
 	-fx-text-fill: -fx-text-inner-color;
 	-fx-highlight-fill: derive(-fx-control-inner-background,-20%);
 	-fx-highlight-text-fill: -fx-text-inner-color;
-	-fx-background-color: linear-gradient(to bottom, derive(-fx-text-box-border, -10%), -fx-text-box-border),
-		linear-gradient(from 0px 0px to 0px 5px, derive(-fx-control-inner-background, -9%), -fx-control-inner-background);
-	-fx-background-insets: 0, 1;
-	-fx-background-radius: 3, 2;
+	-fx-border-color : #636363;
+	-fx-background-color: #474747;
+	-fx-border-width : 1px;
+	-fx-border-radius : 2px;
+
 }
 .custom-text-field:right-node-visible {
 	-fx-padding: 0.333333em 0 0.333333em 0.583em;
@@ -584,15 +610,7 @@ CellView > .text-input.text-field{
 }
 .custom-text-field:focused,
 .custom-text-field:text-field-has-focus {
-	-fx-highlight-fill: -fx-accent;
-	-fx-highlight-text-fill: white;
-	-fx-background-color:
-		-fx-focus-color,
-		-fx-control-inner-background,
-		-fx-faint-focus-color,
-		linear-gradient(from 0px 0px to 0px 5px, derive(-fx-control-inner-background, -9%), -fx-control-inner-background);
-	-fx-background-insets: -0.2, 1, -1.4, 3;
-	-fx-background-radius: 3, 2, 4, 0;
+	-fx-border-color : #2687fb;
 }
 
 .customFieldWithButton .customPane {
@@ -650,7 +668,7 @@ CellView > .text-input.text-field{
 
 /*FindPanel*/
 .findPanel {
-	-fx-background-color : gray;
+	-fx-background-color : #595B59;
 
 }
 .splitPaneHideDivider *.split-pane-divider {
@@ -712,5 +730,226 @@ CellView > .text-input.text-field{
 .customTabPane{
 	-fx-open-tab-animation: NONE;
 	-fx-close-tab-animation: NONE;
+
+}
+
+
+/*  Images  */
+
+/*MainController*/
+/*Toolbar*/
+#btnLoadMatrix {
+	-fx-graphic : url("icons/loadMatrix.png")
+
+}
+#btnNewMatrix {
+	-fx-graphic : url("icons/matrixNew.png")
+
+}
+#btnSaveDocument {
+	-fx-graphic : url("icons/documentSave.png")
+
+}
+#btnSaveAsDocument {
+	-fx-graphic : url("icons/documentSaveAs.png")
+
+}
+#btnOpenMainLog {
+	-fx-graphic : url("icons/log.png")
+
+}
+#btnShowCalculator {
+	-fx-graphic : url("icons/calc.png")
+
+}
+#btnUndo  {
+	-fx-graphic : url("icons/undo_32.png");
+
+}
+#btnRedo {
+	-fx-graphic : url("icons/redo_32.png");
+
+}
+#splitMenuButtonToolbar {
+	-fx-graphic : url("icons/start.png")
+
+}
+
+/*ProjectPane*/
+#saveConfiguration {
+	-fx-graphic : url("icons/saveConfiguration.png");
+
+}
+#reloadConfiguration {
+	-fx-graphic : url("icons/refresh.png");
+
+}
+
+/*Scheduler*/
+#scheduleBtnStart {
+	-fx-graphic : url("icons/start.png")
+
+}
+#scheduleBtnStop {
+	-fx-graphic : url("icons/stop.png")
+
+}
+#scheduleBtnDestroy {
+	-fx-graphic : url("icons/destroy.png")
+
+}
+#scheduleBtnShowSelected {
+	-fx-graphic : url("icons/open.png")
+
+}
+#scheduleBtnLoadSeveral {
+	-fx-graphic : url("icons/folder.png")
+
+}
+
+/*Matrix tab*/
+#matrixBtnStartDefaultClient {
+	-fx-graphic : url("icons/stop_small.png")
+
+}
+#matrixBtnStopDefaultClient {
+	-fx-graphic : url("icons/start_small.png")
+
+}
+
+#matrixBtnStartDefaultApplication {
+	-fx-graphic : url("icons/start_small.png")
+
+}
+#matrixBtnConnectDefaultApplication {
+	-fx-graphic : url("icons/connect_small.png")
+
+}
+#matrixBtnStopDefaultApplication {
+	-fx-graphic : url("icons/stop_small.png")
+
+}
+
+#matrixBtnFind {
+	-fx-graphic : url("icons/find.png")
+
+}
+#matrixBtnWatch {
+	-fx-graphic : url("icons/watch.png")
+
+}
+
+#matrixBtnStartMatrix {
+	-fx-graphic : url("icons/start.png")
+
+}
+#matrixBtnStopMatrix {
+	-fx-graphic : url("icons/stop.png")
+
+}
+#matrixBtnPauseMatrix {
+	-fx-graphic : url("icons/pause.png")
+
+}
+
+#matrixBtnStepMatrix {
+	-fx-graphic : url("icons/step.png")
+
+}
+#matrixBtnShowResult {
+	-fx-graphic : url("icons/showResult.png")
+
+}
+#matrixToggleTracing {
+	-fx-graphic : url("icons/colorOff.png")
+
+}
+#matrixToggleTracing:selected {
+	-fx-graphic : url("icons/colorOn.png")
+
+}
+
+/*Dictionary tab*/
+#dictionaryBtnStartApplication {
+	-fx-graphic : url("icons/start_small.png")
+
+}
+#dictionaryBtnConnectApplication {
+	-fx-graphic : url("icons/connect_small.png")
+
+}
+#dictionaryBtnStopApplication {
+	-fx-graphic : url("icons/stop_small.png")
+
+}
+
+#dictionaryBtnNewDialog {
+	-fx-graphic : url("icons/new.png")
+
+}
+#dictionaryBtnDeleteDialog {
+	-fx-graphic : url("icons/delete_24.png")
+
+}
+#dictionaryBtnCopyDialog {
+	-fx-graphic : url("icons/copy_24.png")
+
+}
+#dictionaryBtnPasteDialog {
+	-fx-graphic : url("icons/paste_24.png")
+
+}
+#dictionaryBtnNewElement {
+	-fx-graphic : url("icons/new.png")
+
+}
+#dictionaryBtnDeleteElement {
+	-fx-graphic : url("icons/delete_24.png")
+
+}
+#dictionaryBtnCopyElement {
+	-fx-graphic : url("icons/copy_24.png")
+
+}
+#dictionaryBtnPasteElement {
+	-fx-graphic : url("icons/paste_24.png")
+
+}
+#dictionaryBtnTestSection {
+	-fx-graphic : url("icons/test.png")
+
+}
+
+/*Scale pane*/
+#scalePaneBtnZoomMinus {
+	-fx-graphic : url("icons/zoom_minus.png")
+
+}
+#scalePaneBtnZoomPlus {
+	-fx-graphic : url("icons/zoom_plus.png")
+
+}
+
+/*ImageViewWithScale*/
+#btnInspect {
+	-fx-graphic : url("icons/inspect.png")
+
+}
+
+/*Wizard*/
+#btnRelation {
+	-fx-graphic : url('icons/refresh.png')
+
+}
+#btnNextMark {
+	-fx-graphic : url('icons/next.png')
+
+}
+#btnPrevMark {
+	-fx-graphic : url('icons/previous.png')
+
+}
+#cbUpdate{
+	-fx-graphic : url('icons/refresh.png')
 
 }

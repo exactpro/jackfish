@@ -60,11 +60,8 @@ public class NavigationController implements Initializable, ContainingParent
 
 	public ToggleGroup groupSection;
 	public HBox hBoxElement;
-	//	public BorderPane paneWindow;
 	public VBox vBoxWindow;
-//	public BorderPane paneElement;
 	public VBox vBoxElement;
-	public Button btnRenameWindow;
 
 	public Button btnNewElement;
 	public Button btnDeleteElement;
@@ -150,16 +147,6 @@ public class NavigationController implements Initializable, ContainingParent
 			((Region) element).setPrefWidth(widthForElement);
 			((HBox)this.pane).getChildren().add(element);
 			HBox.setHgrow(element, Priority.ALWAYS);
-
-			Common.customizeLabeled(this.btnNewDialog, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.DICTIONARY_NEW);
-			Common.customizeLabeled(this.btnDeleteDialog, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.DICTIONARY_DELETE);
-			Common.customizeLabeled(this.btnNewElement, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.DICTIONARY_NEW);
-			Common.customizeLabeled(this.btnDeleteElement, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.DICTIONARY_DELETE);
-			Common.customizeLabeled(this.btnTestWindow, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.DICTIONARY_TEST);
-			Common.customizeLabeled(this.btnCopyDialog, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.DICTIONARY_COPY);
-			Common.customizeLabeled(this.btnCopyElement, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.DICTIONARY_COPY);
-			Common.customizeLabeled(this.btnPasteDialog, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.DICTIONARY_PASTE);
-			Common.customizeLabeled(this.btnPasteElement, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.DICTIONARY_PASTE);
 		});
 	}
 

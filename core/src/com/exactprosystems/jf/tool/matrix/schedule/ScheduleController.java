@@ -12,7 +12,6 @@ import com.exactprosystems.jf.api.common.IMatrixRunner;
 import com.exactprosystems.jf.api.common.MatrixState;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
-import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.custom.date.CustomDateTimePicker;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleObjectProperty;
@@ -166,17 +165,6 @@ public class ScheduleController implements Initializable, ContainingParent
 
 		columnDone.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getExecuted()));
 		columnDone.prefWidthProperty().bind(new SimpleObjectProperty<>(widthDone));
-
-		initializeButtons();
-	}
-
-	private void initializeButtons()
-	{
-		Common.customizeLabeled(this.btnStart, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.START_MATRIX_ICON);
-		Common.customizeLabeled(this.btnStop, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.STOP_MATRIX_ICON);
-		Common.customizeLabeled(this.btnDestroy, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.DESTROY_MATRIX_ICON);
-		Common.customizeLabeled(this.btnLoadSeveral, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.FOLDER_MATRIX_ICON);
-		Common.customizeLabeled(this.btnShowSelected, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.OPEN_MATRIX_ICON);
 	}
 
 	@Override

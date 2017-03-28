@@ -8,14 +8,14 @@
    information which is the property of Exactpro Systems, LLC or its licensors.
   -->
 
+<?import com.exactprosystems.jf.tool.CssVariables?>
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
-<?import javafx.scene.control.ToolBar?>
+<?import javafx.scene.control.*?>
 <?import javafx.scene.layout.BorderPane?>
-
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.exactprosystems.jf.tool.matrix.schedule.ScheduleController">
+	<fx:define>
+		<CssVariables fx:id="transparentBackground" fx:constant="TRANSPARENT_BACKGROUND"/>
+	</fx:define>
 	<center>
 		<TableView fx:id="tableView" editable="true" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
 			<columns>
@@ -33,11 +33,11 @@
 	<top>
 		<ToolBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
 			<items>
-				<Button fx:id="btnStart" mnemonicParsing="false" onAction="#startSelected" />
-				<Button fx:id="btnStop" mnemonicParsing="false" onAction="#stopSelected" />
-				<Button fx:id="btnDestroy" mnemonicParsing="false" onAction="#destroySelected" />
-				<Button fx:id="btnShowSelected" mnemonicParsing="false" onAction="#showSelected" />
-				<Button fx:id="btnLoadSeveral" mnemonicParsing="false" onAction="#loadSeveral" />
+				<Button id="scheduleBtnStart" fx:id="btnStart" mnemonicParsing="false" onAction="#startSelected" styleClass="$transparentBackground"/>
+				<Button id="scheduleBtnStop" fx:id="btnStop" mnemonicParsing="false" onAction="#stopSelected" styleClass="$transparentBackground"/>
+				<Button id="scheduleBtnDestroy" fx:id="btnDestroy" mnemonicParsing="false" onAction="#destroySelected" styleClass="$transparentBackground"/>
+				<Button id="scheduleBtnShowSelected" fx:id="btnShowSelected" mnemonicParsing="false" onAction="#showSelected" styleClass="$transparentBackground"/>
+				<Button id="scheduleBtnLoadSeveral" fx:id="btnLoadSeveral" mnemonicParsing="false" onAction="#loadSeveral" styleClass="$transparentBackground"/>
 			</items>
 		</ToolBar>
 	</top>

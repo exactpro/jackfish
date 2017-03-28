@@ -224,29 +224,8 @@
 }
 
 /*MatrixFx tab*/
-.executingMatrixItem {
-	-fx-background-color : -fx-company-color-light;
-
-}
-.defaultMatrixItem {
-	-fx-background-color : transparent;
-
-}
-.pausedMatrixItem {
-	-fx-background-color : rgb(255, 0, 0, 0.5);
-
-}
-.errorMatrixItem {
-	-fx-background-color : red;
-
-}
-
 .executingTab {
 	-fx-background-color : derived(-fx-company-color-dark, 90%);
-
-}
-.finishedTab {
-	-fx-background-color : lightgreen;
 
 }
 
@@ -648,6 +627,7 @@ CellView > .text-input.text-field{
 }
 .auto-complete-popup > .list-view > .placeholder > .label {
 	-fx-text-fill: derive(-fx-control-inner-background,-30%);
+
 }
 
 /*Configuration*/
@@ -722,5 +702,226 @@ CellView > .text-input.text-field{
 .customTabPane{
 	-fx-open-tab-animation: NONE;
 	-fx-close-tab-animation: NONE;
+
+}
+
+
+/*  Images  */
+
+/*MainController*/
+/*Toolbar*/
+#btnLoadMatrix {
+	-fx-graphic : url("icons/loadMatrix.png")
+
+}
+#btnNewMatrix {
+	-fx-graphic : url("icons/matrixNew.png")
+
+}
+#btnSaveDocument {
+	-fx-graphic : url("icons/documentSave.png")
+
+}
+#btnSaveAsDocument {
+	-fx-graphic : url("icons/documentSaveAs.png")
+
+}
+#btnOpenMainLog {
+	-fx-graphic : url("icons/log.png")
+
+}
+#btnShowCalculator {
+	-fx-graphic : url("icons/calc.png")
+
+}
+#btnUndo  {
+	-fx-graphic : url("icons/undo_32.png");
+
+}
+#btnRedo {
+	-fx-graphic : url("icons/redo_32.png");
+
+}
+#splitMenuButtonToolbar {
+	-fx-graphic : url("icons/start.png")
+
+}
+
+/*ProjectPane*/
+#saveConfiguration {
+	-fx-graphic : url("icons/saveConfiguration.png");
+
+}
+#reloadConfiguration {
+	-fx-graphic : url("icons/refresh.png");
+
+}
+
+/*Scheduler*/
+#scheduleBtnStart {
+	-fx-graphic : url("icons/start.png")
+
+}
+#scheduleBtnStop {
+	-fx-graphic : url("icons/stop.png")
+
+}
+#scheduleBtnDestroy {
+	-fx-graphic : url("icons/destroy.png")
+
+}
+#scheduleBtnShowSelected {
+	-fx-graphic : url("icons/open.png")
+
+}
+#scheduleBtnLoadSeveral {
+	-fx-graphic : url("icons/folder.png")
+
+}
+
+/*Matrix tab*/
+#matrixBtnStartDefaultClient {
+	-fx-graphic : url("icons/stop_small.png")
+
+}
+#matrixBtnStopDefaultClient {
+	-fx-graphic : url("icons/start_small.png")
+
+}
+
+#matrixBtnStartDefaultApplication {
+	-fx-graphic : url("icons/start_small.png")
+
+}
+#matrixBtnConnectDefaultApplication {
+	-fx-graphic : url("icons/connect_small.png")
+
+}
+#matrixBtnStopDefaultApplication {
+	-fx-graphic : url("icons/stop_small.png")
+
+}
+
+#matrixBtnFind {
+	-fx-graphic : url("icons/find.png")
+
+}
+#matrixBtnWatch {
+	-fx-graphic : url("icons/watch.png")
+
+}
+
+#matrixBtnStartMatrix {
+	-fx-graphic : url("icons/start.png")
+
+}
+#matrixBtnStopMatrix {
+	-fx-graphic : url("icons/stop.png")
+
+}
+#matrixBtnPauseMatrix {
+	-fx-graphic : url("icons/pause.png")
+
+}
+
+#matrixBtnStepMatrix {
+	-fx-graphic : url("icons/step.png")
+
+}
+#matrixBtnShowResult {
+	-fx-graphic : url("icons/showResult.png")
+
+}
+#matrixToggleTracing {
+	-fx-graphic : url("icons/colorOff.png")
+
+}
+#matrixToggleTracing:selected {
+	-fx-graphic : url("icons/colorOn.png")
+
+}
+
+/*Dictionary tab*/
+#dictionaryBtnStartApplication {
+	-fx-graphic : url("icons/start_small.png")
+
+}
+#dictionaryBtnConnectApplication {
+	-fx-graphic : url("icons/connect_small.png")
+
+}
+#dictionaryBtnStopApplication {
+	-fx-graphic : url("icons/stop_small.png")
+
+}
+
+#dictionaryBtnNewDialog {
+	-fx-graphic : url("icons/new.png")
+
+}
+#dictionaryBtnDeleteDialog {
+	-fx-graphic : url("icons/delete_24.png")
+
+}
+#dictionaryBtnCopyDialog {
+	-fx-graphic : url("icons/copy_24.png")
+
+}
+#dictionaryBtnPasteDialog {
+	-fx-graphic : url("icons/paste_24.png")
+
+}
+#dictionaryBtnNewElement {
+	-fx-graphic : url("icons/new.png")
+
+}
+#dictionaryBtnDeleteElement {
+	-fx-graphic : url("icons/delete_24.png")
+
+}
+#dictionaryBtnCopyElement {
+	-fx-graphic : url("icons/copy_24.png")
+
+}
+#dictionaryBtnPasteElement {
+	-fx-graphic : url("icons/paste_24.png")
+
+}
+#dictionaryBtnTestSection {
+	-fx-graphic : url("icons/test.png")
+
+}
+
+/*Scale pane*/
+#scalePaneBtnZoomMinus {
+	-fx-graphic : url("icons/zoom_minus.png")
+
+}
+#scalePaneBtnZoomPlus {
+	-fx-graphic : url("icons/zoom_plus.png")
+
+}
+
+/*ImageViewWithScale*/
+#btnInspect {
+	-fx-graphic : url("icons/inspect.png")
+
+}
+
+/*Wizard*/
+#btnRelation {
+	-fx-graphic : url('icons/refresh.png')
+
+}
+#btnNextMark {
+	-fx-graphic : url('icons/next.png')
+
+}
+#btnPrevMark {
+	-fx-graphic : url('icons/previous.png')
+
+}
+#cbUpdate{
+	-fx-graphic : url('icons/refresh.png')
 
 }

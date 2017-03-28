@@ -86,7 +86,7 @@ public class RawTable extends MatrixItem
 		{
 			if (this.prefCols < this.table.getHeaderSize() || this.prefRows < this.table.size())
 			{
-				boolean needContinue = DialogsHelper.showQuestionDialog(String.format("Current table size is [%s;%s] and passed size [%s;%s]. Table will cut ", this.table.size(), this.table.getHeaderSize(), this.prefRows, this.prefCols), "Do you want to continue cutting the table?");
+				boolean needContinue = DialogsHelper.showQuestionDialog(String.format("Current table size is [%s;%s] and given size is [%s;%s].The table will be cut ", this.table.size(), this.table.getHeaderSize(), this.prefRows, this.prefCols), "Do you want to continue cutting the table?");
 				if (needContinue)
 				{
 					List<String> collect = IntStream.range(this.prefCols, this.table.getHeaderSize()).mapToObj(this.table::getHeader).collect(Collectors.toList());
