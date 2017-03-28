@@ -1,9 +1,14 @@
+--------------------------------------------------------------------------------
+27.03.2017 4.4.0.2186
+RM41276 bug : it is impossible to save in var-file any values contains \
+
+--------------------------------------------------------------------------------
 27.03.2017 4.4.0.2181
 RM39611 Unavailability to remove more than one row at the same time
 Add ability to remove many rows and columns
 Return context menu to grid on a matrix
---------------------------------------------------------------------------------
 
+--------------------------------------------------------------------------------
 27.03.2017 4.4.0.2180
 RM36642 Console -> Preservation of the console size at the time of saving of matrix : implemented
 --------------------------------------------------------------------------------
