@@ -182,10 +182,6 @@
 	-fx-graphic : url('icons/question_mark.png')
 
 }
-#cbUpdate{
-	-fx-graphic : url('icons/refresh.png')
-
-}
 #cbRemoved {
 	-fx-graphic : url('icons/delete_16.png')
 
@@ -196,18 +192,6 @@
 }
 #btnRemove {
 	-fx-graphic : url('icons/delete_16.png')
-
-}
-#btnRelation {
-	-fx-graphic : url('icons/refresh.png')
-
-}
-#btnNextMark {
-	-fx-graphic : url('icons/next.png')
-
-}
-#btnPrevMark {
-	-fx-graphic : url('icons/previous.png')
 
 }
 .customTableRow:customSelectedState {
@@ -467,4 +451,29 @@
 #btnWizard {
 	-fx-graphic : url('icons/wizard.png')
 
+}
+
+/*Scale pane*/
+.scalePane {
+	-fx-spacing : sizeMin;
+
+}
+#scalePaneBtnZoomMinus,
+#scalePaneBtnZoomPlus {
+	-fx-opacity : 0.5;
+
+}
+#scalePaneBtnZoomMinus:hover,
+#scalePaneBtnZoomPlus:hover {
+	-fx-opacity : 0.5;
+
+}
+
+/*ImageViewWithScale*/
+#btnInspect {
+	-fx-opacity : 0.5;
+
+}
+#btnInspect:selected {
+	-fx-opacity : 1.0;
 }

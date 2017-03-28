@@ -169,7 +169,13 @@ public class CssVariables
 	public static final String	NOT_EDITABLE_FIELD			= "notEditableField";
 	public static final String	BROWSER						= "browser";
 
+	/*Scale Pane*/
+	public static final String SCALE_PANE = "scalePane";
+	public static final String SCALE_PANE_ZOOM_MINUS = "scalePaneBtnZoomMinus";
+	public static final String SCALE_PANE_ZOOM_PLUS = "scalePaneBtnZoomPlus";
 
+	/*ImageViewWithScale*/
+	public static final String BUTTON_INSPECT = "btnInspect";
 	//region Configuration
 	public static final String	FULL_PATH_LABEL				= "fullPathLabel";
 	//endregion
@@ -217,7 +223,7 @@ public class CssVariables
 	public static final String	HORIZONTAL_MIN				= "horizontalMin";
 	public static final String	HORIZONTAL_MID				= "horizontalMid";
 	public static final String	HORIZONTAL_MAX				= "horizontalMax";
-	
+
 	public static final String	HGAP_MIN					= "hgapMin";
 	public static final String	HGAP_MID					= "hgapMid";
 	public static final String	HGAP_MAX					= "hgapMax";
@@ -228,7 +234,7 @@ public class CssVariables
 	//endregion
 
 	public static final String	CUSTOM_TAB_PANE				= "customTabPane";
-	
+
 	public static final String	IMAGE_AREA					= "imageArea";
 
 	public static class Icons
@@ -314,22 +320,10 @@ public class CssVariables
 
 		//Need remove or reorder icons below
 
-		public static final String	START_APPLICATION		= IMAGES_DIR + "/start_small.png";
-		public static final String	CONNECT_APPLICATION		= IMAGES_DIR + "/connect_small.png";
-		public static final String	STOP_APPLICATION		= IMAGES_DIR + "/stop_small.png";
 		public static final String	ZOOM_PLUS				= IMAGES_DIR + "/zoom_plus.png";
 		public static final String	ZOOM_MINUS				= IMAGES_DIR + "/zoom_minus.png";
 
-		public static final String	STOP_MATRIX_ICON		= IMAGES_DIR + "/stop.png";
-		public static final String	PAUSE_MATRIX_ICON		= IMAGES_DIR + "/pause.png";
-		public static final String	WATCH_MATRIX_ICON		= IMAGES_DIR + "/watch.png";
-		public static final String	STEP_MATRIX_ICON		= IMAGES_DIR + "/step.png";
-		public static final String	SHOW_RESULT_MATRIX_ICON	= IMAGES_DIR + "/showResult.png";
-		public static final String	COLOR_ON_MATRIX_ICON	= IMAGES_DIR + "/colorOn.png";
-		public static final String	COLOR_OFF_MATRIX_ICON	= IMAGES_DIR + "/colorOff.png";
-		public static final String	FIND_ON_MATRIX			= IMAGES_DIR + "/find.png";
 		public static final String	FIND_ICON_SMALL			= IMAGES_DIR + "/find_small.png";
-		public static final String	SCALE_ICON_SMALL		= IMAGES_DIR + "/scale_small.png";
 
 		public static final String	LOG						= IMAGES_DIR + "/log.png";
 		public static final String	REFRESH					= IMAGES_DIR + "/refresh.png";

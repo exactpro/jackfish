@@ -7,9 +7,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.exactprosystems.jf.tool.custom.scale;
 
-import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
-import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -23,8 +21,6 @@ public class ScalePane extends HBox
 	private double currentZoom = 1;
 	private int currentZoomPosition = 3;
 
-	private Button btnZoomPlus;
-	private Button btnZoomMinus;
 	private Label labelZoom;
 
 	private IScaleListener listener;
@@ -37,10 +33,18 @@ public class ScalePane extends HBox
 	public ScalePane(IScaleListener listener)
 	{
 		super();
+		this.getStyleClass().addAll(CssVariables.SCALE_PANE);
 		this.setAlignment(Pos.CENTER_LEFT);
 		this.listener = listener;
-		this.btnZoomMinus = new Button();
-		this.btnZoomPlus = new Button();
+
+		Button btnZoomMinus = new Button();
+		btnZoomMinus.setId(CssVariables.SCALE_PANE_ZOOM_MINUS);
+		btnZoomMinus.getStyleClass().addAll(CssVariables.TRANSPARENT_BACKGROUND);
+
+		Button btnZoomPlus = new Button();
+		btnZoomPlus.setId(CssVariables.SCALE_PANE_ZOOM_PLUS);
+		btnZoomPlus.getStyleClass().addAll(CssVariables.TRANSPARENT_BACKGROUND);
+
 		this.labelZoom = new Label("100%");
 		this.labelZoom.setOnMouseClicked(event -> {
 			if (event.getClickCount() == 2)
@@ -51,13 +55,9 @@ public class ScalePane extends HBox
 				this.listener();
 			}
 		});
-		this.setSpacing(5);
-		Platform.runLater(() -> {
-			Common.customizeLabeled(this.btnZoomMinus, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.ZOOM_MINUS);
-			Common.customizeLabeled(this.btnZoomPlus, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.ZOOM_PLUS);
-		});
 
-		this.btnZoomMinus.setOnAction(event -> {
+		btnZoomMinus.setOnAction(event ->
+		{
 			if (currentZoomPosition == 0)
 			{
 				return;
@@ -67,7 +67,8 @@ public class ScalePane extends HBox
 			listener();
 		});
 
-		this.btnZoomPlus.setOnAction(event -> {
+		btnZoomPlus.setOnAction(event ->
+		{
 			if (this.currentZoomPosition == this.zooms.length - 1)
 			{
 				return;
@@ -76,16 +77,7 @@ public class ScalePane extends HBox
 			displayScale();
 			listener();
 		});
-
-		this.btnZoomMinus.setOpacity(0.5);
-		this.btnZoomPlus.setOpacity(0.5);
-		this.btnZoomMinus.setOnMouseEntered(event -> this.btnZoomMinus.setOpacity(1.0));
-		this.btnZoomMinus.setOnMouseExited(event -> this.btnZoomMinus.setOpacity(0.5));
-
-		this.btnZoomPlus.setOnMouseEntered(event -> this.btnZoomPlus.setOpacity(1.0));
-		this.btnZoomPlus.setOnMouseExited(event -> this.btnZoomPlus.setOpacity(0.5));
-
-		this.getChildren().addAll(this.btnZoomMinus, this.labelZoom, this.btnZoomPlus);
+		this.getChildren().addAll(btnZoomMinus, this.labelZoom, btnZoomPlus);
 	}
 
 	public void setListener(IScaleListener listener)

@@ -911,3 +911,37 @@ CellView > .text-input.text-field{
 	-fx-graphic : url("icons/test.png")
 
 }
+
+/*Scale pane*/
+#scalePaneBtnZoomMinus {
+	-fx-graphic : url("icons/zoom_minus.png")
+
+}
+#scalePaneBtnZoomPlus {
+	-fx-graphic : url("icons/zoom_plus.png")
+
+}
+
+/*ImageViewWithScale*/
+#btnInspect {
+	-fx-graphic : url("icons/inspect.png")
+
+}
+
+/*Wizard*/
+#btnRelation {
+	-fx-graphic : url('icons/refresh.png')
+
+}
+#btnNextMark {
+	-fx-graphic : url('icons/next.png')
+
+}
+#btnPrevMark {
+	-fx-graphic : url('icons/previous.png')
+
+}
+#cbUpdate{
+	-fx-graphic : url('icons/refresh.png')
+
+}
