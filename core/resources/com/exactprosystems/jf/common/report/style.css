@@ -634,3 +634,8 @@ div.movable{
 div.moved {
 	display: inherit;
 }
+
+.tdMax {
+	max-width: 200px;
+	word-wrap: break-word;
+}

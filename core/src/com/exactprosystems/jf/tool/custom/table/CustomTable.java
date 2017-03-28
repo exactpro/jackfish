@@ -8,9 +8,11 @@
 
 package com.exactprosystems.jf.tool.custom.table;
 
+import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.newconfig.TablePair;
 import javafx.application.Platform;
+import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.event.Event;
 import javafx.scene.control.*;
@@ -36,6 +38,19 @@ public class CustomTable<T> extends TableView<T>
 	{
 		this(null);
 		this.mayChanged = isChanged;
+		
+        getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        setOnKeyPressed(keyEvent -> {
+            if (keyEvent.getCode() == KeyCode.DELETE && keyEvent.isShiftDown())
+            {
+                deleteAllItems();
+            }
+            else if (keyEvent.getCode() == KeyCode.DELETE)
+            {
+                deleteItems();
+            }
+        });
+
 	}
 
 	public CustomTable(ContextMenuListener<T> listener)
@@ -139,17 +154,34 @@ public class CustomTable<T> extends TableView<T>
 		this.getItems().clear();
 	}
 
-	private void onEditCommitColumn(CustomTableColumn c, final EditCommit<T> editCommit)
-	{
-		c.setOnEditCommit(t -> {
-			T t1 = t.getTableView().getItems().get(t.getTablePosition().getRow());
-			editCommit.onFinishEdit(t1, t.getNewValue());
-			this.getColumns().forEach(column -> Platform.runLater(() -> {
-				column.setVisible(false);
-				column.setVisible(true);
-			}));
-		});
-	}
+    private void onEditCommitColumn(CustomTableColumn c, final EditCommit<T> editCommit)
+    {
+        c.setOnEditCommit(t ->
+        {
+            System.err.println("==========================================================");
+//          System.err.println("#### " + c.getTableView());
+//          System.err.println("#### " + c.getTableView().getItems());
+//          System.err.println("#### " + t.getTablePosition());
+//          System.err.println("#### " + t.getRowValue());
+            
+          
+          
+            if (t.getTablePosition() != null)
+            {
+
+//                T t1 = t.getTableView().getItems().get(t.getTablePosition().getRow());
+                T t1 = t.getRowValue();
+                editCommit.onFinishEdit(t1, t.getNewValue());
+            }
+            update();
+//            
+//            this.getColumns().forEach(column -> Platform.runLater(() ->
+//            {
+//                column.setVisible(false);
+//                column.setVisible(true);
+//            }));
+        });
+    }
 
 	private void completeColumn(CustomTableColumn column, String name, String valueFactory, boolean editable, boolean needTooltip)
 	{
@@ -175,27 +207,17 @@ public class CustomTable<T> extends TableView<T>
 	private class CustomTableCell extends TableCell<T, String>
 	{
 		private TextField textField;
+		private boolean cancelled = false;
 
 		public CustomTableCell()
 		{
-			Platform.runLater(() -> {
-				getTableView().getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-				getTableView().setOnKeyPressed(keyEvent -> {
-					if (keyEvent.getCode() == KeyCode.DELETE && keyEvent.isShiftDown())
-					{
-						deleteAllItems();
-					}
-					else if (keyEvent.getCode() == KeyCode.DELETE)
-					{
-						deleteItems();
-					}
-				});
-			});
+		    super();
 		}
-
+		
 		@Override
 		public void startEdit()
 		{
+            System.err.println(">> startEdit");
 			super.startEdit();
 			CustomTableColumn column = ((CustomTableColumn) getTableColumn());
 			if (column.isEditable())
@@ -209,19 +231,27 @@ public class CustomTable<T> extends TableView<T>
 				setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
 				Platform.runLater(textField::requestFocus);
 			}
+            System.err.println("<< startEdit");
 		}
 
 		@Override
 		public void cancelEdit()
 		{
-			super.cancelEdit();
-			setText(String.valueOf(getItem()));
-			setContentDisplay(ContentDisplay.TEXT_ONLY);
+		    if (this.cancelled)
+		    {
+		        this.cancelled = false;
+    		    System.err.println(">> cancelEdit");
+    			super.cancelEdit();
+    			setText(Str.asString(getItem()));
+    			setContentDisplay(ContentDisplay.TEXT_ONLY);
+                System.err.println("<< cancelEdit");
+		    }
 		}
 
 		@Override
 		protected void updateItem(String s, boolean b)
 		{
+//            System.err.println(">> updateItem " + s + "  " + b);
 			super.updateItem(s, b);
 			if (b || s == null)
 			{
@@ -230,47 +260,58 @@ public class CustomTable<T> extends TableView<T>
 			}
 			else
 			{
-				CustomTableColumn column = ((CustomTableColumn) this.getTableColumn());
+                setText(getString());
+                setContentDisplay(ContentDisplay.TEXT_ONLY);
+
+                CustomTableColumn column = ((CustomTableColumn) this.getTableColumn());
 				if (column.isNeedTooltip())
 				{
 					Tooltip tip = new Tooltip(getString());
 					Tooltip.install(this, tip);
 				}
-//				if (isEditing())
-//				{
-//					if (textField != null)
-//					{
-//						textField.setText(getString());
-//					}
-//					setGraphic(textField);
-//					setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
-//				}
-//				else
-				{
-					setText(getString());
-					setContentDisplay(ContentDisplay.TEXT_ONLY);
-				}
 			}
+//            System.err.println("<< updateItem");
 		}
 
+//        @Override
+//        public void commitEdit(String item)
+//        {
+//            System.err.println(">> commitEdit " + item);
+//            super.commitEdit(item);
+//            System.err.println("<< commitEdit");
+//        }
+		
 		@Override
 		public void commitEdit(String item)
 		{
+            System.err.println(">> commitEdit " + item);
+            super.commitEdit(item);
 			if (!isEditing() && !item.equals(getItem()))
 			{
 				TableView<T> table = getTableView();
 				if (table != null)
 				{
+				    System.err.println("## " + getIndex());
+				    
+				    
+				    
 					TableColumn<T, String> column = getTableColumn();
-					TableColumn.CellEditEvent<T, String> event = new TableColumn.CellEditEvent<>(table, new TablePosition<>(table, getIndex(), column), TableColumn.editCommitEvent(), item);
+					TableColumn.CellEditEvent<T, String> event = new TableColumn.CellEditEvent<>(table, 
+					        new TablePosition<>(table, getIndex(), column), TableColumn.editCommitEvent(), item);
+					
+					System.err.println(">> event = " + event);
 					Event.fireEvent(column, event);
 				}
 			}
+            super.commitEdit(item);
+
+            setContentDisplay(ContentDisplay.TEXT_ONLY);
+            System.err.println("<< commitEdit");
 		}
 
 		private String getString()
 		{
-			return String.valueOf(getItem() == null ? "" : getItem());
+			return Str.asString(getItem());
 		}
 
 		private void createTextField()
@@ -278,25 +319,29 @@ public class CustomTable<T> extends TableView<T>
 			textField = new TextField(getString());
 			textField.getStyleClass().add(CssVariables.TEXT_FIELD_VARIABLES);
 			textField.setMinWidth(this.getWidth() - this.getGraphicTextGap() * 2);
-			textField.setOnKeyPressed(t -> {
-				if (t.getCode() == KeyCode.ENTER)
+			textField.setOnKeyPressed(t -> 
+			{
+//                System.err.println(">> keyPressed " + t.getCode());
+				if (t.getCode() == KeyCode.ENTER || t.getCode() == KeyCode.TAB)
 				{
 					commitEdit(textField.getText());
 				}
 				else if (t.getCode() == KeyCode.ESCAPE)
 				{
+				    this.cancelled = true;
 					cancelEdit();
 				}
-				else if (t.getCode() == KeyCode.TAB)
-				{
-					commitEdit(textField.getText());
-				}
+//                System.err.println("<< keyPressed ");
 			});
-			textField.focusedProperty().addListener((observable, oldValue, newValue) -> {
+			textField.focusedProperty().addListener((observable, oldValue, newValue) -> 
+			{
+			    System.err.println(">> focusedChanged " + oldValue + "  " + newValue);
+			    
 				if (!newValue && textField != null)
 				{
 					commitEdit(textField.getText());
 				}
+                System.err.println("<< focusedChanged");
 			});
 		}
 	}

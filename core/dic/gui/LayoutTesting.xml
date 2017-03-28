@@ -56,7 +56,7 @@
         <self/>
         <onOpen/>
         <run>
-            <textBox id="TableLikePanel" xpath=".//div[@id=&amp;quot;grid1&amp;quot;]"/>
+            <textBox id="TableLikePanel" xpath=".//div[@id=&amp;quot;grid1&amp;quot;]" visibility="Enable"/>
         </run>
         <onClose/>
         <close/>
