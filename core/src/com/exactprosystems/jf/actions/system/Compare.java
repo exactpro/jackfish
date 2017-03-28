@@ -27,6 +27,7 @@ import com.exactprosystems.jf.functions.Table;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Map.Entry;
 
 @ActionAttribute(
@@ -120,16 +121,7 @@ public class Compare extends AbstractAction
             
             if (found)
             {
-                boolean comp = false;
-                if (expectedValue == null)
-                {
-                    comp = expectedValue == actualValue;
-                }
-                else 
-                {
-                    comp = expectedValue.equals(actualValue);
-                }
-                
+                boolean comp =  Objects.equals(expectedValue, actualValue);
                 line = new Object[] { name, Str.asString(expectedValue), Str.asString(actualValue), comp ? Result.Passed : Result.Failed };
                 res = res && comp;
             }
