@@ -64,24 +64,16 @@ public class CssVariables
 	public static final String	BORDER_WRAPPER_TITLE		= "borderWrapperTitle";
 
 	/*Matrix tab*/
-	public static final String	EXECUTING_MATRIX_ITEM		= "executingMatrixItem";
-	public static final String	DEFAULT_MATRIX_ITEM			= "defaultMatrixItem";
-	public static final String	PAUSED_MATRIX_ITEM			= "pausedMatrixItem";
-	public static final String	ERROR_MATRIX_ITEM			= "errorMatrixItem";
-
 	public static final String	EXECUTING_TAB				= "executingTab";
-	public static final String	FINISHED_TAB				= "finishedTab";
 
 	public static final String	MATRIX_FINISHED_OK			= "matrixFinishedOk";
 	public static final String	MATRIX_FINISHED_BAD			= "matrixFinishedBad";
 
 	public static final String	ITEM_OFF_TRUE				= "trueOffItem";
-	public static final String	ITEM_OFF_FALSE				= "falseOffItem";
 	public static final String SIMPLE_ITEM = "simpleItem";
 
 	public static final String	OBLIQUE_LABEL				= "obliqueLabel";
 	public static final String	BOLD_LABEL					= "boldLabel";
-	public static final String	BORDER_LABEL				= "borderLabel";
 	/*Matrix comment*/
 	public static final String	UNFOCUSED_TEXT_AREA			= "unfocusedTextArea";
 	public static final String	TOGGLE_BUTTON_WITHOUT_BORDER= "toggleButtonWithoutBorder";
@@ -148,8 +140,6 @@ public class CssVariables
 	public static final String	EXPRESSION_BUTTON			= "expressionButton";
 	public static final String	EXPRESSION_FIRST_PANE		= "firstPane";
 	public static final String	EXPRESSION_SECOND_PANE		= "secondPane";
-	public static final String	EXPRESSION_FIELD_FIRST		= "firstButton";
-	public static final String	EXPRESSION_FIELD_SECOND		= "secondButton";
 
 	/*Layout builder*/
 	public static final String	SELF_CONTROL 				= "selfControl";
@@ -322,11 +312,10 @@ public class CssVariables
 
 		public static final String	FIND_ICON_SMALL			= IMAGES_DIR + "/find_small.png";
 
-		public static final String	LOG						= IMAGES_DIR + "/log.png";
 		public static final String	REFRESH					= IMAGES_DIR + "/refresh.png";
 		public static final String	INSPECT_ICON			= IMAGES_DIR + "/inspect.png";
 
-		public static final String	GIT_ACCEPT_YOUR				= IMAGES_DIR + "/acceptYour.png";
-		public static final String	GIT_ACCEPT_THEIR			= IMAGES_DIR + "/acceptTheir.png";
+		public static final String GIT_ACCEPT_YOUR = IMAGES_DIR + "/acceptYour.png";
+		public static final String GIT_ACCEPT_THEIR = IMAGES_DIR + "/acceptTheir.png";
 	}
 }

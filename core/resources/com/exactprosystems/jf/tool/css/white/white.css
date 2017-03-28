@@ -224,29 +224,8 @@
 }
 
 /*MatrixFx tab*/
-.executingMatrixItem {
-	-fx-background-color : -fx-company-color-light;
-
-}
-.defaultMatrixItem {
-	-fx-background-color : transparent;
-
-}
-.pausedMatrixItem {
-	-fx-background-color : rgb(255, 0, 0, 0.5);
-
-}
-.errorMatrixItem {
-	-fx-background-color : red;
-
-}
-
 .executingTab {
 	-fx-background-color : derived(-fx-company-color-dark, 90%);
-
-}
-.finishedTab {
-	-fx-background-color : lightgreen;
 
 }
 
