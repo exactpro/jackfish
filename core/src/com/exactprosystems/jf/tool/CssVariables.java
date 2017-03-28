@@ -233,9 +233,11 @@ public class CssVariables
 		private static final String	IMAGES_DIR				= "com/exactprosystems/jf/tool/css/general/icons";
 
 		//region Theme independence icons
-		public static final String  LOGO_FISH 				= IMAGES_DIR + "/jf_logo_fish.png";
-		public static final String	MAIN_ICON				= IMAGES_DIR + "/ide.png";
+		public static final String LOGO_FISH = IMAGES_DIR + "/jf_logo_fish.png";
+		public static final String MAIN_ICON = IMAGES_DIR + "/ide.png";
 		public static final String XPATH_TREE = IMAGES_DIR + "/tree.png";
+		public static final String UNSUPPORT_ENTRY_ICON = IMAGES_DIR + "/unsupportIcon.png";
+		public static final String SUPPORT_ENTRY_ICON = IMAGES_DIR + "/supportIcon.png";
 
 		//endregion
 
@@ -267,8 +269,6 @@ public class CssVariables
 		public static final String SERVICE_ICON = THEME_IMAGES_DIR + "/serviceIcon.png";
 		public static final String APP_ICON = THEME_IMAGES_DIR + "/appIcon.png";
 		public static final String FILE_SYSTEM_ICON = THEME_IMAGES_DIR + "/fileSystemIcon.png";
-		public static final String UNSUPPORT_ENTRY_ICON = THEME_IMAGES_DIR + "/unsupportIcon.png";
-		public static final String SUPPORT_ENTRY_ICON = THEME_IMAGES_DIR + "/supportIcon.png";
 		public static final String SERVICE_NOT_STARTED_ICON = THEME_IMAGES_DIR + "/serviceNotStartedIcon.png";
 		public static final String SERVICE_STARTED_GOOD_ICON = THEME_IMAGES_DIR + "/serviceStartedGoodIcon.png";
 		public static final String SERVICE_STARTED_FAIL_ICON = THEME_IMAGES_DIR + "/serviceStartedFailIcon.png";
@@ -297,7 +297,13 @@ public class CssVariables
 
 		public static final String FIND_NEXT = THEME_IMAGES_DIR + "/next.png";
 		public static final String FIND_PREVIOUS = THEME_IMAGES_DIR + "/previous.png";
+
+		public static final String REFRESH = THEME_IMAGES_DIR + "/refresh.png";
+		public static final String INSPECT_ICON = THEME_IMAGES_DIR + "/inspect.png";
+
+		public static final String FIND_ICON_SMALL = THEME_IMAGES_DIR + "/find_small.png";
 		//endregion
+
 
 		//region TODO need create icons for dark/white theme
 		public static final String GLOBAL_HANDLER_ICON = IMAGES_DIR + "/globalHandlerIcon.png";
@@ -310,10 +316,6 @@ public class CssVariables
 
 		//Need remove or reorder icons below
 
-		public static final String	FIND_ICON_SMALL			= IMAGES_DIR + "/find_small.png";
-
-		public static final String	REFRESH					= IMAGES_DIR + "/refresh.png";
-		public static final String	INSPECT_ICON			= IMAGES_DIR + "/inspect.png";
 
 		public static final String GIT_ACCEPT_YOUR = IMAGES_DIR + "/acceptYour.png";
 		public static final String GIT_ACCEPT_THEIR = IMAGES_DIR + "/acceptTheir.png";
