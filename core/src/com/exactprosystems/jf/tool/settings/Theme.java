@@ -12,19 +12,21 @@ import javafx.scene.paint.Color;
 
 public enum Theme
 {
-	GENERAL					("com/exactprosystems/jf/tool/css/general/general.css", false,null,null),
+	GENERAL("com/exactprosystems/jf/tool/css/general/general.css", "com/exactprosystems/jf/tool/css/general/icons", false, null, null),
 
-	WHITE					("com/exactprosystems/jf/tool/css/white/white.css"				, true	, Color.WHITE, Color.BLACK),
-	DARK					("com/exactprosystems/jf/tool/css/dark/dark.css"				, true	, Color.BLACK, Color.web("#eeeeee"));
+	WHITE("com/exactprosystems/jf/tool/css/white/white.css", "com/exactprosystems/jf/tool/css/white/icons", true, Color.WHITE, Color.BLACK),
+	DARK("com/exactprosystems/jf/tool/css/dark/dark.css", "com/exactprosystems/jf/tool/css/dark/icons", true, Color.BLACK, Color.web("#eeeeee"));
 
 	private String path;
+	private String pathToIcons;
 	private boolean visible;
 	private Color mainColor;
 	private Color reverseColor;
 
-	Theme(String path, boolean visible, Color mainColor, Color reverseColor)
+	Theme(String path, String pathToIcons, boolean visible, Color mainColor, Color reverseColor)
 	{
 		this.path = path;
+		this.pathToIcons = pathToIcons;
 		this.visible = visible;
 		this.mainColor = mainColor;
 		this.reverseColor = reverseColor;
@@ -33,6 +35,11 @@ public enum Theme
 	public String getPath()
 	{
 		return path;
+	}
+
+	public String getPathToIcons()
+	{
+		return pathToIcons;
 	}
 
 	public boolean isVisible()

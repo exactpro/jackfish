@@ -8,10 +8,14 @@
    information which is the property of Exactpro Systems, LLC or its licensors.
   -->
 
+<?import com.exactprosystems.jf.tool.CssVariables?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <BorderPane xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.exactprosystems.jf.tool.matrix.MatrixFxController">
+	<fx:define>
+		<CssVariables fx:id="transparentBackground" fx:constant="TRANSPARENT_BACKGROUND"/>
+	</fx:define>
 	<center>
 		<SplitPane fx:id="splitPane" orientation="VERTICAL" dividerPositions="0.85">
 			<items>
@@ -41,14 +45,26 @@
 									</items>
 								</SplitMenuButton>
 								<Label minWidth="8"/>
-								<Button fx:id="btnFind" mnemonicParsing="false" onAction="#showFindPanel"/>
-								<Button fx:id="btnWatch" mnemonicParsing="false" onAction="#showWatch"/>
-								<ToggleButton fx:id="toggleTracing" mnemonicParsing="false" onAction="#toogleTracing"/>
-								<Button fx:id="btnStartMatrix" mnemonicParsing="false" onAction="#startMatrix"/>
-								<Button fx:id="btnStopMatrix" mnemonicParsing="false" onAction="#stopMatrix"/>
-								<Button fx:id="btnPauseMatrix" mnemonicParsing="false" onAction="#pauseMatrix"/>
-								<Button fx:id="btnStepMatrix" mnemonicParsing="false" onAction="#stepMatrix"/>
-								<Button fx:id="btnShowResult" mnemonicParsing="false" onAction="#showResult"/>
+								<Button id="matrixBtnFind" fx:id="btnFind" mnemonicParsing="false" onAction="#showFindPanel" styleClass="$transparentBackground"/>
+								<Button id="matrixBtnWatch" fx:id="btnWatch" mnemonicParsing="false" onAction="#showWatch" styleClass="$transparentBackground">
+									<tooltip>
+										<Tooltip text="Open watcher"/>
+									</tooltip>
+								</Button>
+								<ToggleButton id="matrixToggleTracing" fx:id="toggleTracing" mnemonicParsing="false" onAction="#toggleTracing" styleClass="$transparentBackground"/>
+								<Button id="matrixBtnStartMatrix" fx:id="btnStartMatrix" mnemonicParsing="false" onAction="#startMatrix" styleClass="$transparentBackground"/>
+								<Button id="matrixBtnStopMatrix" fx:id="btnStopMatrix" mnemonicParsing="false" onAction="#stopMatrix" styleClass="$transparentBackground"/>
+								<Button id="matrixBtnPauseMatrix" fx:id="btnPauseMatrix" mnemonicParsing="false" onAction="#pauseMatrix" styleClass="$transparentBackground"/>
+								<Button id="matrixBtnStepMatrix" fx:id="btnStepMatrix" mnemonicParsing="false" onAction="#stepMatrix" styleClass="$transparentBackground">
+									<tooltip>
+										<Tooltip text="Step matrix (Execute current item and stop on next)"/>
+									</tooltip>
+								</Button>
+								<Button id="matrixBtnShowResult" fx:id="btnShowResult" mnemonicParsing="false" onAction="#showResult" styleClass="$transparentBackground">
+									<tooltip>
+										<Tooltip text="Show report for the matrix"/>
+									</tooltip>
+								</Button>
 							</children>
 							<padding>
 								<Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
@@ -78,9 +94,24 @@
 									<right>
 										<HBox alignment="CENTER_LEFT" prefHeight="43.0" BorderPane.alignment="CENTER_LEFT">
 											<children>
-												<Button fx:id="btnStartDefaultApplication" mnemonicParsing="false" onAction="#startDefaultApplication"/>
-												<Button fx:id="btnConnectDefaultApplication" mnemonicParsing="false" onAction="#connectDefaultApplication"/>
-												<Button fx:id="btnStopDefaultApplication" mnemonicParsing="false" onAction="#stopDefaultApplication"/>
+												<Button id="matrixBtnStartDefaultApplication" fx:id="btnStartDefaultApplication" mnemonicParsing="false" onAction="#startDefaultApplication"
+														styleClass="$transparentBackground">
+													<tooltip>
+														<Tooltip text="Start the selected application"/>
+													</tooltip>
+												</Button>
+												<Button id="matrixBtnConnectDefaultApplication" fx:id="btnConnectDefaultApplication" mnemonicParsing="false" onAction="#connectDefaultApplication"
+														styleClass="$transparentBackground">
+													<tooltip>
+														<Tooltip text="Connect the selected application"/>
+													</tooltip>
+												</Button>
+												<Button id="matrixBtnStopDefaultApplication" fx:id="btnStopDefaultApplication" mnemonicParsing="false" onAction="#stopDefaultApplication"
+														styleClass="$transparentBackground">
+													<tooltip>
+														<Tooltip text="Stop the selected application"/>
+													</tooltip>
+												</Button>
 											</children>
 											<padding>
 												<Insets left="8.0"/>
@@ -102,8 +133,18 @@
 									<right>
 										<HBox alignment="CENTER_LEFT" prefHeight="43.0" BorderPane.alignment="CENTER_LEFT">
 											<children>
-												<Button fx:id="btnStartDefaultClient" mnemonicParsing="false" onAction="#startDefaultClient"/>
-												<Button fx:id="btnStopDefaultClient" mnemonicParsing="false" onAction="#stopDefaultClient"/>
+												<Button id="matrixBtnStartDefaultClient" fx:id="btnStartDefaultClient" mnemonicParsing="false" onAction="#startDefaultClient"
+														styleClass="$transparentBackground">
+													<tooltip>
+														<Tooltip text="Start the selected client"/>
+													</tooltip>
+												</Button>
+												<Button id="matrixBtnStopDefaultClient" fx:id="btnStopDefaultClient" mnemonicParsing="false" onAction="#stopDefaultClient"
+														styleClass="$transparentBackground">
+													<tooltip>
+														<Tooltip text="Stop the selected component"/>
+													</tooltip>
+												</Button>
 											</children>
 											<padding>
 												<Insets left="8.0"/>

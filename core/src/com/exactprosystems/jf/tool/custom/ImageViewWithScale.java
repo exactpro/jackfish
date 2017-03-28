@@ -109,7 +109,9 @@ public class ImageViewWithScale implements IScaleListener
 		this.mainPane.setTop(this.hBox);
 		this.hBox.setAlignment(Pos.CENTER_LEFT);
 
-		this.btnInspect.setOpacity(0.5);
+		this.btnInspect.setId(CssVariables.BUTTON_INSPECT);
+		this.btnInspect.getStyleClass().addAll(CssVariables.TRANSPARENT_BACKGROUND, CssVariables.TOGGLE_BUTTON_WITHOUT_BORDER);
+
 		this.hBox.getChildren().addAll(this.scalePane
 				, Common.createSpacer(Common.SpacerEnum.HorizontalMid)
 				, this.btnInspect
@@ -131,9 +133,6 @@ public class ImageViewWithScale implements IScaleListener
 		this.inspectRectangle.setVisible(false);
 
 		this.scalePane.setListener(this);
-
-		Common.customizeLabeled(this.btnInspect, CssVariables.TRANSPARENT_BACKGROUND, CssVariables.Icons.INSPECT_ICON);
-
 		listeners();
 	}
 
@@ -247,7 +246,6 @@ public class ImageViewWithScale implements IScaleListener
 	@Override
 	public void changeScale(double scale)
 	{
-		double oldScale = this.scale;
 		this.scale = scale;
 		this.imageView.setFitHeight(this.scale * this.initial.height);
 		this.imageView.setFitWidth(this.scale * this.initial.width);
@@ -321,7 +319,6 @@ public class ImageViewWithScale implements IScaleListener
 		});
 
 		this.btnInspect.selectedProperty().addListener((observable, oldValue, newValue) -> {
-			this.btnInspect.setOpacity(newValue ? 1.0 : 0.5);
 			this.needInspect = newValue;
 			if (!newValue)
 			{

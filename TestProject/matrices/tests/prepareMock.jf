@@ -46,30 +46,8 @@ Add start adapter action;;;
 
         #Case
         'WIN'
-            #Id;#RawText
-            TEXT1;Text
-            "	#Id;#Off;#Action;#Command;#Wait"
-            "	EXEC1;1;Execute;mockWinExec;false"
-            "	"
-            "	#For;#From;#To;#Step"
-            "	i;0;10;1"
-            "	    #Id;#Action;#AppId;#MainWindow"
-            "	    APPSTR1;ApplicationConnectTo;'WIN';'MockWin'"
-            "	"
-            "	    #Global;#Action;#appConnection"
-            "	    1;Vars;APPSTR1.Out"
-            "	"
-            "	    #Break"
-            "	"
-            "	    #OnError"
-            "	        #Action;#Time"
-            "        	Wait;5000"
-            "	"
-            "	#EndFor"
-            #EndRawText
-
             #Action;#Line;#Text
-            TextAddLine;TEXT1.toString();matrixText
+            TextAddLine;'\t#Id\u003b#Action\u003b#AppId\u003b#Exec\u003b#Args\u003b#WorkDir\n\tAPPSTR1\u003bApplicationStart\u003b\''+mockWinApp+'\'\u003b\''+mockWinExec+'\'\u003b\u003b\''+mockWinDir+\'';matrixText
 
 
     #EndSwitch
@@ -80,6 +58,8 @@ Add start adapter action;;;
 
 #TestCase;#Kind;#Depends;#For
 Generate;;;
+    #ReportOff
+
     #Action;#maskMap
     Vars;table.get(0)
 
@@ -240,33 +220,16 @@ Generate;;;
 
     #EndFor
 
+    #ReportOn
+
 
 #TestCase;#Kind;#Depends;#For
 Add close adapter action;;;
     #Action;#Line;#Text
     TextAddLine;'#TestCase\nstop application';matrixText
 
-    #If
-    adapter != 'WIN'
-        #Action;#Line;#Text
-        TextAddLine;'\t#Action\u003b#AppConnection\n\tApplicationStop\u003bappConnection';matrixText
-
-    #Else
-        #Id;#RawText
-        TEXT1;Text
-        "	#Action;#Off;#Dialog;#AppConnection;#DialogCloseButton"
-        "	DialogFill;1;'Main';appConnection;Do.click()"
-        "	"
-        "	"
-        "	#Action;#AppConnection"
-        "	ApplicationStop;appConnection"
-        #EndRawText
-
-        #Action;#Line;#Text
-        TextAddLine;TEXT1.toString();matrixText
-
-
-    #EndIf
+    #Action;#Line;#Text
+    TextAddLine;'\t#Action\u003b#AppConnection\n\tApplicationStop\u003bappConnection';matrixText
 
 
 #TestCase;#Kind;#Depends;#For

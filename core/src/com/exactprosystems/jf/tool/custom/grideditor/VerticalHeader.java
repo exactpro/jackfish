@@ -472,12 +472,6 @@ public class VerticalHeader extends StackPane
 		removeRow.setOnAction(e -> this.spreadsheetView.removeRows(this.spreadsheetView.getSelectionModel().getSelectedCells().stream().map(TablePositionBase::getRow).distinct().collect(Collectors.toList())));
 
 		contextMenu.getItems().addAll(addRowBefore, addRowAfter, removeRow);
-
-		contextMenu.setOnShowing(e ->
-		{
-			System.out.println(this.spreadsheetView.getSelectionModel().getSelectedCells());
-		});
-
 		return contextMenu;
 	}
 

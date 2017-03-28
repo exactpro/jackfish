@@ -64,24 +64,16 @@ public class CssVariables
 	public static final String	BORDER_WRAPPER_TITLE		= "borderWrapperTitle";
 
 	/*Matrix tab*/
-	public static final String	EXECUTING_MATRIX_ITEM		= "executingMatrixItem";
-	public static final String	DEFAULT_MATRIX_ITEM			= "defaultMatrixItem";
-	public static final String	PAUSED_MATRIX_ITEM			= "pausedMatrixItem";
-	public static final String	ERROR_MATRIX_ITEM			= "errorMatrixItem";
-
 	public static final String	EXECUTING_TAB				= "executingTab";
-	public static final String	FINISHED_TAB				= "finishedTab";
 
 	public static final String	MATRIX_FINISHED_OK			= "matrixFinishedOk";
 	public static final String	MATRIX_FINISHED_BAD			= "matrixFinishedBad";
 
 	public static final String	ITEM_OFF_TRUE				= "trueOffItem";
-	public static final String	ITEM_OFF_FALSE				= "falseOffItem";
 	public static final String SIMPLE_ITEM = "simpleItem";
 
 	public static final String	OBLIQUE_LABEL				= "obliqueLabel";
 	public static final String	BOLD_LABEL					= "boldLabel";
-	public static final String	BORDER_LABEL				= "borderLabel";
 	/*Matrix comment*/
 	public static final String	UNFOCUSED_TEXT_AREA			= "unfocusedTextArea";
 	public static final String	TOGGLE_BUTTON_WITHOUT_BORDER= "toggleButtonWithoutBorder";
@@ -148,8 +140,6 @@ public class CssVariables
 	public static final String	EXPRESSION_BUTTON			= "expressionButton";
 	public static final String	EXPRESSION_FIRST_PANE		= "firstPane";
 	public static final String	EXPRESSION_SECOND_PANE		= "secondPane";
-	public static final String	EXPRESSION_FIELD_FIRST		= "firstButton";
-	public static final String	EXPRESSION_FIELD_SECOND		= "secondButton";
 
 	/*Layout builder*/
 	public static final String	SELF_CONTROL 				= "selfControl";
@@ -169,7 +159,13 @@ public class CssVariables
 	public static final String	NOT_EDITABLE_FIELD			= "notEditableField";
 	public static final String	BROWSER						= "browser";
 
+	/*Scale Pane*/
+	public static final String SCALE_PANE = "scalePane";
+	public static final String SCALE_PANE_ZOOM_MINUS = "scalePaneBtnZoomMinus";
+	public static final String SCALE_PANE_ZOOM_PLUS = "scalePaneBtnZoomPlus";
 
+	/*ImageViewWithScale*/
+	public static final String BUTTON_INSPECT = "btnInspect";
 	//region Configuration
 	public static final String	FULL_PATH_LABEL				= "fullPathLabel";
 	//endregion
@@ -217,7 +213,7 @@ public class CssVariables
 	public static final String	HORIZONTAL_MIN				= "horizontalMin";
 	public static final String	HORIZONTAL_MID				= "horizontalMid";
 	public static final String	HORIZONTAL_MAX				= "horizontalMax";
-	
+
 	public static final String	HGAP_MIN					= "hgapMin";
 	public static final String	HGAP_MID					= "hgapMid";
 	public static final String	HGAP_MAX					= "hgapMax";
@@ -228,7 +224,7 @@ public class CssVariables
 	//endregion
 
 	public static final String	CUSTOM_TAB_PANE				= "customTabPane";
-	
+
 	public static final String	IMAGE_AREA					= "imageArea";
 
 	public static class Icons
@@ -236,113 +232,92 @@ public class CssVariables
 		//TODO think about it
 		private static final String	IMAGES_DIR				= "com/exactprosystems/jf/tool/css/general/icons";
 
-		public static final String  LOGO_FISH 				= IMAGES_DIR + "/jf_logo_fish.png";
-		public static final String	MAIN_ICON				= IMAGES_DIR + "/ide.png";
-		public static final String	LOADING_ICON			= IMAGES_DIR + "/loading.png";
+		//region Theme independence icons
+		public static final String LOGO_FISH = IMAGES_DIR + "/jf_logo_fish.png";
+		public static final String MAIN_ICON = IMAGES_DIR + "/ide.png";
+		public static final String XPATH_TREE = IMAGES_DIR + "/tree.png";
+		public static final String UNSUPPORT_ENTRY_ICON = IMAGES_DIR + "/unsupportIcon.png";
+		public static final String SUPPORT_ENTRY_ICON = IMAGES_DIR + "/supportIcon.png";
+
+		//endregion
+
+		//region Theme dependence icons
+		private static final String THEME_IMAGES_DIR = Common.currentTheme().getPathToIcons();
+
+		public static final String UNDO_ICON_SMALL = THEME_IMAGES_DIR + "/undo_16.png";
+		public static final String REDO_ICON_SMALL = THEME_IMAGES_DIR + "/redo_16.png";
+		public static final String DATE_ICON = THEME_IMAGES_DIR + "/date.png";
+
+		public static final String SCHEDULER_MATRIX_ICON = THEME_IMAGES_DIR + "/scheduler.png";
+		public static final String SHOW_SETTINGS_ICON = THEME_IMAGES_DIR + "/showSettings.png";
+		public static final String ABOUT_PROGRAM_ICON = THEME_IMAGES_DIR + "/aboutProgram.png";
+		public static final String ACTIONS_HELP_ICON = THEME_IMAGES_DIR + "/help.png";
+
+		public static final String NOTIFICATION_PIN_TRUE = THEME_IMAGES_DIR + "/pinTrue.png";
+		public static final String NOTIFICATION_PIN_FALSE = THEME_IMAGES_DIR + "/pinFalse.png";
+
+		public static final String CONFIGURATION_ICON = THEME_IMAGES_DIR + "/configurationIcon.png";
+		public static final String EVALUATOR_ICON = THEME_IMAGES_DIR + "/evaluatorIcon.png";
+		public static final String FORMAT_ICON = THEME_IMAGES_DIR + "/formatIcon.png";
+		public static final String MATRIX_ICON = THEME_IMAGES_DIR + "/matrixIcon.png";
+		public static final String LIBRARY_ICON = THEME_IMAGES_DIR + "/libraryIcon.png";
+		public static final String FOLDER_ICON = THEME_IMAGES_DIR + "/folderIcon.png";
+		public static final String FOLDER_ICON_OPENED = THEME_IMAGES_DIR + "/folderIconOpened.png";
+		public static final String VARS_ICON = THEME_IMAGES_DIR + "/varsIcon.png";
+		public static final String SQL_ICON = THEME_IMAGES_DIR + "/sqlIcon.png";
+		public static final String CLIENT_ICON = THEME_IMAGES_DIR + "/clientIcon.png";
+		public static final String SERVICE_ICON = THEME_IMAGES_DIR + "/serviceIcon.png";
+		public static final String APP_ICON = THEME_IMAGES_DIR + "/appIcon.png";
+		public static final String FILE_SYSTEM_ICON = THEME_IMAGES_DIR + "/fileSystemIcon.png";
+		public static final String SERVICE_NOT_STARTED_ICON = THEME_IMAGES_DIR + "/serviceNotStartedIcon.png";
+		public static final String SERVICE_STARTED_GOOD_ICON = THEME_IMAGES_DIR + "/serviceStartedGoodIcon.png";
+		public static final String SERVICE_STARTED_FAIL_ICON = THEME_IMAGES_DIR + "/serviceStartedFailIcon.png";
+		public static final String APP_DICTIONARY_ICON = THEME_IMAGES_DIR + "/appDictionaryIcon.png";
+		public static final String CLIENT_DICTIONARY_ICON = THEME_IMAGES_DIR + "/clientDictionaryIcon.png";
+		public static final String REPORT_ICON = THEME_IMAGES_DIR + "/reportFolderIcon.png";
+		public static final String GO_BACK = THEME_IMAGES_DIR + "/goBack.png";
+		public static final String GO_FORWARD = THEME_IMAGES_DIR + "/goForward.png";
+		public static final String RELOAD = THEME_IMAGES_DIR + "/reload.png";
+
+		public static final String CLOSE_BUTTON_ICON = THEME_IMAGES_DIR + "/close-button.png";
+		public static final String ALL_PARAMETERS_ICON = THEME_IMAGES_DIR + "/allParameters.png";
+		public static final String REMOVE_PARAMETER_ICON = THEME_IMAGES_DIR + "/removeParameter.png";
+		public static final String ADD_PARAMETER_ICON = THEME_IMAGES_DIR + "/addParameter.png";
+		public static final String DELETE_ICON = THEME_IMAGES_DIR + "/delete.png";
+		public static final String PASTE_ICON = THEME_IMAGES_DIR + "/paste.png";
+		public static final String COPY_ICON = THEME_IMAGES_DIR + "/copy.png";
+		public static final String HELP_ICON = THEME_IMAGES_DIR + "/help.png";
+		public static final String ADD_BEFORE_ICON = THEME_IMAGES_DIR + "/addBefore.png";
+		public static final String BREAK_POINT_ICON = THEME_IMAGES_DIR + "/breakPoint.png";
+		public static final String EXECUTING_ITEM_ICON = THEME_IMAGES_DIR + "/executingItem.png";
+		public static final String EXECUTING_BREAK_POINT_ICON = THEME_IMAGES_DIR + "/executingAndBreakPoint.png";
+		public static final String MOVE_LEFT_ICON = THEME_IMAGES_DIR + "/move_left.png";
+		public static final String MOVE_RIGHT_ICON = THEME_IMAGES_DIR + "/move_right.png";
+		public static final String GO_TO_LINE_ICON = THEME_IMAGES_DIR + "/goToLine.png";
+
+		public static final String FIND_NEXT = THEME_IMAGES_DIR + "/next.png";
+		public static final String FIND_PREVIOUS = THEME_IMAGES_DIR + "/previous.png";
+
+		public static final String REFRESH = THEME_IMAGES_DIR + "/refresh.png";
+		public static final String INSPECT_ICON = THEME_IMAGES_DIR + "/inspect.png";
+
+		public static final String FIND_ICON_SMALL = THEME_IMAGES_DIR + "/find_small.png";
+		//endregion
+
+
+		//region TODO need create icons for dark/white theme
+		public static final String GLOBAL_HANDLER_ICON = IMAGES_DIR + "/globalHandlerIcon.png";
+
 		public static final String	MARK_ICON				= IMAGES_DIR + "/check.png";
 		public static final String	ADD_16_ICON				= IMAGES_DIR + "/add_16.png";
 		public static final String	QUESTION_ICON			= IMAGES_DIR + "/question_mark.png";
 
-		public static final String	LOAD_MATRIX_ICON		= IMAGES_DIR + "/loadMatrix.png";
-		public static final String	NEW_MATRIX_ICON			= IMAGES_DIR + "/matrixNew.png";
-		public static final String	DOCUMENT_SAVE_ICON		= IMAGES_DIR + "/documentSave.png";
-		public static final String	DOCUMENT_SAVE_AS_ICON	= IMAGES_DIR + "/documentSaveAs.png";
-		public static final String	CONFIGURATION_SAVE_ICON	= IMAGES_DIR + "/saveConfiguration.png";
+		//endregion
 
-		public static final String	CALCULATOR_ICON			= IMAGES_DIR + "/calc.png";
-		public static final String	UNDO_ICON				= IMAGES_DIR + "/undo_32.png";
-		public static final String	REDO_ICON				= IMAGES_DIR + "/redo_32.png";
-		public static final String	UNDO_ICON_SMALL			= IMAGES_DIR + "/undo_16.png";
-		public static final String	REDO_ICON_SMALL			= IMAGES_DIR + "/redo_16.png";
-		public static final String	DATE_ICON				= IMAGES_DIR + "/date.png";
+		//Need remove or reorder icons below
 
-		public static final String	NOTIFICATION_PIN_TRUE	= IMAGES_DIR + "/pinTrue.png";
-		public static final String	NOTIFICATION_PIN_FALSE	= IMAGES_DIR + "/pinFalse.png";
 
-		public static final String	XPATH_TREE				= IMAGES_DIR + "/tree.png";
-		public static final String	START_MATRIX_ICON		= IMAGES_DIR + "/start.png";
-		public static final String	DESTROY_MATRIX_ICON		= IMAGES_DIR + "/destroy.png";
-		public static final String	SCHEDULER_MATRIX_ICON	= IMAGES_DIR + "/scheduler.png";
-		public static final String	FOLDER_MATRIX_ICON		= IMAGES_DIR + "/folder.png";
-		public static final String	OPEN_MATRIX_ICON		= IMAGES_DIR + "/open.png";
-		public static final String	START_APPLICATION		= IMAGES_DIR + "/start_small.png";
-		public static final String	CONNECT_APPLICATION		= IMAGES_DIR + "/connect_small.png";
-		public static final String	STOP_APPLICATION		= IMAGES_DIR + "/stop_small.png";
-		public static final String	ZOOM_PLUS				= IMAGES_DIR + "/zoom_plus.png";
-		public static final String	ZOOM_MINUS				= IMAGES_DIR + "/zoom_minus.png";
-
-		public static final String	STOP_MATRIX_ICON		= IMAGES_DIR + "/stop.png";
-		public static final String	PAUSE_MATRIX_ICON		= IMAGES_DIR + "/pause.png";
-		public static final String	WATCH_MATRIX_ICON		= IMAGES_DIR + "/watch.png";
-		public static final String	STEP_MATRIX_ICON		= IMAGES_DIR + "/step.png";
-		public static final String	SHOW_RESULT_MATRIX_ICON	= IMAGES_DIR + "/showResult.png";
-		public static final String	COLOR_ON_MATRIX_ICON	= IMAGES_DIR + "/colorOn.png";
-		public static final String	COLOR_OFF_MATRIX_ICON	= IMAGES_DIR + "/colorOff.png";
-		public static final String	FIND_ON_MATRIX			= IMAGES_DIR + "/find.png";
-		public static final String	FIND_ICON_SMALL			= IMAGES_DIR + "/find_small.png";
-		public static final String	SCALE_ICON_SMALL		= IMAGES_DIR + "/scale_small.png";
-		public static final String	FIND_NEXT				= IMAGES_DIR + "/next.png";
-		public static final String	FIND_PREVIOUS			= IMAGES_DIR + "/previous.png";
-		public static final String	LOG						= IMAGES_DIR + "/log.png";
-		public static final String	REFRESH					= IMAGES_DIR + "/refresh.png";
-		public static final String	INSPECT_ICON			= IMAGES_DIR + "/inspect.png";
-
-		public static final String	SHOW_SETTINGS_ICON		= IMAGES_DIR + "/showSettings.png";
-		public static final String	ABOUT_PROGRAM_ICON		= IMAGES_DIR + "/aboutProgram.png";
-		public static final String	ACTIONS_HELP_ICON		= IMAGES_DIR + "/help.png";
-		public static final String	CLOSE_BUTTON_ICON		= IMAGES_DIR + "/close-button.png";
-		public static final String	ALL_PARAMETERS_ICON		= IMAGES_DIR + "/allParameters.png";
-		public static final String	REMOVE_PARAMETER_ICON	= IMAGES_DIR + "/removeParameter.png";
-		public static final String	ADD_PARAMETER_ICON		= IMAGES_DIR + "/addParameter.png";
-		public static final String	DELETE_ICON				= IMAGES_DIR + "/delete.png";
-		public static final String	PASTE_ICON				= IMAGES_DIR + "/paste.png";
-		public static final String	COPY_ICON				= IMAGES_DIR + "/copy.png";
-		public static final String	HELP_ICON				= IMAGES_DIR + "/help.png";
-		public static final String	ADD_CHILD_ICON			= IMAGES_DIR + "/addChild.png";
-		public static final String	ADD_BEFORE_ICON			= IMAGES_DIR + "/addBefore.png";
-		public static final String	ADD_AFTER_ICON			= IMAGES_DIR + "/addAfter.png";
-		public static final String	BREAK_POINT_ICON 		= IMAGES_DIR + "/breakPoint.png";
-		public static final String	EXECUTING_ITEM_ICON 	= IMAGES_DIR + "/executingItem.png";
-		public static final String EXECUTING_BREAK_POINT_ICON = IMAGES_DIR + "/executingAndBreakPoint.png";
-		public static final String	MOVE_LEFT_ICON			= IMAGES_DIR + "/move_left.png";
-		public static final String	MOVE_RIGHT_ICON			= IMAGES_DIR + "/move_right.png";
-		public static final String	GO_TO_LINE_ICON			= IMAGES_DIR + "/goToLine.png";
-
-		public static final String	EVALUATOR_ICON				= IMAGES_DIR + "/evaluatorIcon.png";
-		public static final String	GLOBAL_HANDLER_ICON			= IMAGES_DIR + "/globalHandlerIcon.png";
-		public static final String	FORMAT_ICON					= IMAGES_DIR + "/formatIcon.png";
-		public static final String	MATRIX_ICON					= IMAGES_DIR + "/matrixIcon.png";
-		public static final String	LIBRARY_ICON				= IMAGES_DIR + "/libraryIcon.png";
-		public static final String	FOLDER_ICON					= IMAGES_DIR + "/folderIcon.png";
-		public static final String	FOLDER_ICON_OPENED			= IMAGES_DIR + "/folderIconOpened.png";
-		public static final String	VARS_ICON					= IMAGES_DIR + "/varsIcon.png";
-		public static final String	SQL_ICON					= IMAGES_DIR + "/sqlIcon.png";
-		public static final String	CLIENT_ICON					= IMAGES_DIR + "/clientIcon.png";
-		public static final String	SERVICE_ICON				= IMAGES_DIR + "/serviceIcon.png";
-		public static final String	APP_ICON					= IMAGES_DIR + "/appIcon.png";
-		public static final String	FILE_SYSTEM_ICON			= IMAGES_DIR + "/fileSystemIcon.png";
-		public static final String	UNSUPPORT_ENTRY_ICON		= IMAGES_DIR + "/unsupportIcon.png";
-		public static final String	SUPPORT_ENTRY_ICON			= IMAGES_DIR + "/supportIcon.png";
-		public static final String	SERVICE_NOT_STARTED_ICON	= IMAGES_DIR + "/serviceNotStartedIcon.png";
-		public static final String	SERVICE_STARTED_GOOD_ICON	= IMAGES_DIR + "/serviceStartedGoodIcon.png";
-		public static final String	SERVICE_STARTED_FAIL_ICON	= IMAGES_DIR + "/serviceStartedFailIcon.png";
-		public static final String	APP_DICTIONARY_ICON			= IMAGES_DIR + "/appDictionaryIcon.png";
-		public static final String	CLIENT_DICTIONARY_ICON		= IMAGES_DIR + "/clientDictionaryIcon.png";
-		public static final String	REPORT_ICON					= IMAGES_DIR + "/reportFolderIcon.png";
-		public static final String	GO_BACK						= IMAGES_DIR + "/goBack.png";
-		public static final String	GO_FORWARD					= IMAGES_DIR + "/goForward.png";
-		public static final String	RELOAD						= IMAGES_DIR + "/reload.png";
-		public static final String	CONFIGURATION_ICON			= IMAGES_DIR + "/configurationIcon.png";
-		public static final String	DICTIONARY_NEW				= IMAGES_DIR + "/new.png";
-		public static final String	DICTIONARY_DELETE			= IMAGES_DIR + "/delete_24.png";
-		public static final String	DICTIONARY_RENEW			= IMAGES_DIR + "/renew.png";
-		public static final String	DICTIONARY_TEST				= IMAGES_DIR + "/test.png";
-		public static final String	DICTIONARY_COPY				= IMAGES_DIR + "/copy_24.png";
-		public static final String	DICTIONARY_PASTE			= IMAGES_DIR + "/paste_24.png";
-		public static final String	DICTIONARY_RECORD_ONE		= IMAGES_DIR + "/record_one.png";
-		public static final String	DICTIONARY_RECORD_INF		= IMAGES_DIR + "/record_inf.png";
-
-		public static final String	GIT_ACCEPT_YOUR				= IMAGES_DIR + "/acceptYour.png";
-		public static final String	GIT_ACCEPT_THEIR			= IMAGES_DIR + "/acceptTheir.png";
+		public static final String GIT_ACCEPT_YOUR = IMAGES_DIR + "/acceptYour.png";
+		public static final String GIT_ACCEPT_THEIR = IMAGES_DIR + "/acceptTheir.png";
 	}
 }
