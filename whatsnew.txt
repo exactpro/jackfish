@@ -1,3 +1,8 @@
+27.03.2017 4.4.0.2185
+RM41275 report is show with a very long horizontal scroll bar
+fixed
+--------------------------------------------------------------------------------
+
 27.03.2017 4.4.0.2181
 RM39611 Unavailability to remove more than one row at the same time
 Add ability to remove many rows and columns

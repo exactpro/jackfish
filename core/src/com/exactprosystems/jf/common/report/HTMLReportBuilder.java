@@ -426,7 +426,15 @@ public class HTMLReportBuilder extends ReportBuilder
 			int count = 0;
 			for (Object obj : value)
 			{
-				writer.fwrite("<td>%s</td>", ReportHelper.objToString(obj, count >= quotes));
+				String string = ReportHelper.objToString(obj, count >= quotes);
+				String[] split = string.split("\n");
+				StringBuilder sb = new StringBuilder();
+				for (String str : split)
+				{
+					str = str.replace(" ", "&nbsp;").replace("\t","&nbsp;&nbsp;&nbsp;&nbsp;");
+					sb.append(str).append("<br>");
+				}
+				writer.fwrite("<td class='tdMax'>%s</td>", sb.toString());
 				count++;
 			}
 			writer.fwrite("</tr>");
