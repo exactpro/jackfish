@@ -535,7 +535,7 @@
     <value>12, 336</value>
   </data>
   <data name="Slider.Size" type="System.Drawing.Size, System.Drawing">
-    <value>373, 45</value>
+    <value>817, 45</value>
   </data>
   <data name="Slider.TabIndex" type="System.Int32, mscorlib">
     <value>10</value>
