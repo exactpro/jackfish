@@ -41,6 +41,7 @@ namespace mock_win
 
         private void fillTable()
         {
+            Table1.Columns[3].DefaultCellStyle.Format = "yyyy.MM.dd HH:mm:ss";
             for (int i=0; i<5; i++)
             {
                 Table1.Rows.Add();
@@ -65,6 +66,12 @@ namespace mock_win
             {
                 case "centralLabel":
                     text = "Label";
+                    break;
+                case "Blue":
+                case "Green":
+                case "Yellow":
+                case "Orange":
+                    text = "RadioButton";
                     break;
                 default:
                     text = control.Name;
@@ -111,6 +118,12 @@ namespace mock_win
                 case "centralLabel":
                     text = "Label";
                     break;
+                case "Blue":
+                case "Green":
+                case "Yellow":
+                case "Orange":
+                    text = "RadioButton";
+                    break;
                 default:
                     text = control.Name;
                     break;
@@ -133,13 +146,14 @@ namespace mock_win
 
         private void CheckBox_CheckedChanged(object sender, EventArgs e)
         {
-            if (CheckBox.Checked)
+            CheckBox control = (CheckBox)sender;
+            if (control.Checked)
             {
-                centralLabel.Text = CheckBox.Name + "_checked";
+                centralLabel.Text = control.Name + "_checked";
             }
             else
             {
-                centralLabel.Text = CheckBox.Name + "_unchecked";
+                centralLabel.Text = control.Name + "_unchecked";
             }
         }
 
@@ -151,6 +165,19 @@ namespace mock_win
         private void TextBox_TextChanged(object sender, EventArgs e)
         {
             centralLabel.Text = TextBox.Name + "_" + TextBox.Text;
+        }
+
+        private void TabPanel_Selected(object sender, TabControlEventArgs e)
+        {
+            TabControl control = (TabControl)sender;
+            centralLabel.Text = control.Name + "_" + control.SelectedTab.Text;
+        }
+
+        private void ListView_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            ListBox control = (ListBox)sender;
+            control.GetSelected(0);
+            centralLabel.Text = control.Name + "_" + control.SelectedItem.ToString();
         }
     }
 }

@@ -194,6 +194,42 @@
   <metadata name="name.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
+  <metadata name="pid.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <metadata name="check.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <metadata name="dateColumn.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <metadata name="numberColumn.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <data name="Table1.Location" type="System.Drawing.Point, System.Drawing">
+    <value>12, 126</value>
+  </data>
+  <data name="Table1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>452, 150</value>
+  </data>
+  <data name="Table1.TabIndex" type="System.Int32, mscorlib">
+    <value>3</value>
+  </data>
+  <data name="&gt;&gt;Table1.Name" xml:space="preserve">
+    <value>Table1</value>
+  </data>
+  <data name="&gt;&gt;Table1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataGridView, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;Table1.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;Table1.ZOrder" xml:space="preserve">
+    <value>17</value>
+  </data>
+  <metadata name="name.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
   <data name="name.HeaderText" xml:space="preserve">
     <value>name</value>
   </data>
@@ -226,27 +262,6 @@
   </metadata>
   <data name="numberColumn.HeaderText" xml:space="preserve">
     <value>Number column</value>
-  </data>
-  <data name="Table1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>12, 126</value>
-  </data>
-  <data name="Table1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>452, 150</value>
-  </data>
-  <data name="Table1.TabIndex" type="System.Int32, mscorlib">
-    <value>3</value>
-  </data>
-  <data name="&gt;&gt;Table1.Name" xml:space="preserve">
-    <value>Table1</value>
-  </data>
-  <data name="&gt;&gt;Table1.Type" xml:space="preserve">
-    <value>System.Windows.Forms.DataGridView, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;Table1.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;Table1.ZOrder" xml:space="preserve">
-    <value>17</value>
   </data>
   <data name="centralLabel.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -302,94 +317,94 @@
   <data name="&gt;&gt;moveLabel.ZOrder" xml:space="preserve">
     <value>15</value>
   </data>
-  <metadata name="rb1.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+  <metadata name="Green.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
-  <data name="rb1.AutoSize" type="System.Boolean, mscorlib">
+  <data name="Green.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
-  <data name="rb1.Location" type="System.Drawing.Point, System.Drawing">
+  <data name="Green.Location" type="System.Drawing.Point, System.Drawing">
     <value>3, 3</value>
   </data>
-  <data name="rb1.Size" type="System.Drawing.Size, System.Drawing">
+  <data name="Green.Size" type="System.Drawing.Size, System.Drawing">
     <value>54, 17</value>
   </data>
-  <data name="rb1.TabIndex" type="System.Int32, mscorlib">
+  <data name="Green.TabIndex" type="System.Int32, mscorlib">
     <value>6</value>
   </data>
-  <data name="rb1.Text" xml:space="preserve">
+  <data name="Green.Text" xml:space="preserve">
     <value>Green</value>
   </data>
-  <data name="&gt;&gt;rb1.Name" xml:space="preserve">
-    <value>rb1</value>
+  <data name="&gt;&gt;Green.Name" xml:space="preserve">
+    <value>Green</value>
   </data>
-  <data name="&gt;&gt;rb1.Type" xml:space="preserve">
+  <data name="&gt;&gt;Green.Type" xml:space="preserve">
     <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;rb1.Parent" xml:space="preserve">
+  <data name="&gt;&gt;Green.Parent" xml:space="preserve">
     <value>panel1</value>
   </data>
-  <data name="&gt;&gt;rb1.ZOrder" xml:space="preserve">
+  <data name="&gt;&gt;Green.ZOrder" xml:space="preserve">
     <value>3</value>
   </data>
-  <metadata name="rb2.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+  <metadata name="Yellow.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
-  <data name="rb2.AutoSize" type="System.Boolean, mscorlib">
+  <data name="Yellow.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
-  <data name="rb2.Location" type="System.Drawing.Point, System.Drawing">
+  <data name="Yellow.Location" type="System.Drawing.Point, System.Drawing">
     <value>94, 3</value>
   </data>
-  <data name="rb2.Size" type="System.Drawing.Size, System.Drawing">
+  <data name="Yellow.Size" type="System.Drawing.Size, System.Drawing">
     <value>56, 17</value>
   </data>
-  <data name="rb2.TabIndex" type="System.Int32, mscorlib">
+  <data name="Yellow.TabIndex" type="System.Int32, mscorlib">
     <value>7</value>
   </data>
-  <data name="rb2.Text" xml:space="preserve">
+  <data name="Yellow.Text" xml:space="preserve">
     <value>Yellow</value>
   </data>
-  <data name="&gt;&gt;rb2.Name" xml:space="preserve">
-    <value>rb2</value>
+  <data name="&gt;&gt;Yellow.Name" xml:space="preserve">
+    <value>Yellow</value>
   </data>
-  <data name="&gt;&gt;rb2.Type" xml:space="preserve">
+  <data name="&gt;&gt;Yellow.Type" xml:space="preserve">
     <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;rb2.Parent" xml:space="preserve">
+  <data name="&gt;&gt;Yellow.Parent" xml:space="preserve">
     <value>panel1</value>
   </data>
-  <data name="&gt;&gt;rb2.ZOrder" xml:space="preserve">
+  <data name="&gt;&gt;Yellow.ZOrder" xml:space="preserve">
     <value>1</value>
   </data>
-  <metadata name="rb4.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+  <metadata name="Blue.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
-  <metadata name="rb3.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+  <metadata name="Orange.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
-  <data name="&gt;&gt;rb4.Name" xml:space="preserve">
-    <value>rb4</value>
+  <data name="&gt;&gt;Blue.Name" xml:space="preserve">
+    <value>Blue</value>
   </data>
-  <data name="&gt;&gt;rb4.Type" xml:space="preserve">
+  <data name="&gt;&gt;Blue.Type" xml:space="preserve">
     <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;rb4.Parent" xml:space="preserve">
+  <data name="&gt;&gt;Blue.Parent" xml:space="preserve">
     <value>panel1</value>
   </data>
-  <data name="&gt;&gt;rb4.ZOrder" xml:space="preserve">
+  <data name="&gt;&gt;Blue.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
-  <data name="&gt;&gt;rb3.Name" xml:space="preserve">
-    <value>rb3</value>
+  <data name="&gt;&gt;Orange.Name" xml:space="preserve">
+    <value>Orange</value>
   </data>
-  <data name="&gt;&gt;rb3.Type" xml:space="preserve">
+  <data name="&gt;&gt;Orange.Type" xml:space="preserve">
     <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;rb3.Parent" xml:space="preserve">
+  <data name="&gt;&gt;Orange.Parent" xml:space="preserve">
     <value>panel1</value>
   </data>
-  <data name="&gt;&gt;rb3.ZOrder" xml:space="preserve">
+  <data name="&gt;&gt;Orange.ZOrder" xml:space="preserve">
     <value>2</value>
   </data>
   <data name="panel1.Location" type="System.Drawing.Point, System.Drawing">
@@ -413,71 +428,71 @@
   <data name="&gt;&gt;panel1.ZOrder" xml:space="preserve">
     <value>14</value>
   </data>
-  <metadata name="rb4.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+  <metadata name="Blue.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
-  <data name="rb4.AutoSize" type="System.Boolean, mscorlib">
+  <data name="Blue.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="rb4.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+  <data name="Blue.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
-  <data name="rb4.Location" type="System.Drawing.Point, System.Drawing">
+  <data name="Blue.Location" type="System.Drawing.Point, System.Drawing">
     <value>276, 3</value>
   </data>
-  <data name="rb4.Size" type="System.Drawing.Size, System.Drawing">
+  <data name="Blue.Size" type="System.Drawing.Size, System.Drawing">
     <value>46, 17</value>
   </data>
-  <data name="rb4.TabIndex" type="System.Int32, mscorlib">
+  <data name="Blue.TabIndex" type="System.Int32, mscorlib">
     <value>10</value>
   </data>
-  <data name="rb4.Text" xml:space="preserve">
+  <data name="Blue.Text" xml:space="preserve">
     <value>Blue</value>
   </data>
-  <data name="&gt;&gt;rb4.Name" xml:space="preserve">
-    <value>rb4</value>
+  <data name="&gt;&gt;Blue.Name" xml:space="preserve">
+    <value>Blue</value>
   </data>
-  <data name="&gt;&gt;rb4.Type" xml:space="preserve">
+  <data name="&gt;&gt;Blue.Type" xml:space="preserve">
     <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;rb4.Parent" xml:space="preserve">
+  <data name="&gt;&gt;Blue.Parent" xml:space="preserve">
     <value>panel1</value>
   </data>
-  <data name="&gt;&gt;rb4.ZOrder" xml:space="preserve">
+  <data name="&gt;&gt;Blue.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
-  <metadata name="rb3.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+  <metadata name="Orange.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
-  <data name="rb3.AutoSize" type="System.Boolean, mscorlib">
+  <data name="Orange.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
-  <data name="rb3.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+  <data name="Orange.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
-  <data name="rb3.Location" type="System.Drawing.Point, System.Drawing">
+  <data name="Orange.Location" type="System.Drawing.Point, System.Drawing">
     <value>185, 3</value>
   </data>
-  <data name="rb3.Size" type="System.Drawing.Size, System.Drawing">
+  <data name="Orange.Size" type="System.Drawing.Size, System.Drawing">
     <value>60, 17</value>
   </data>
-  <data name="rb3.TabIndex" type="System.Int32, mscorlib">
+  <data name="Orange.TabIndex" type="System.Int32, mscorlib">
     <value>9</value>
   </data>
-  <data name="rb3.Text" xml:space="preserve">
+  <data name="Orange.Text" xml:space="preserve">
     <value>Orange</value>
   </data>
-  <data name="&gt;&gt;rb3.Name" xml:space="preserve">
-    <value>rb3</value>
+  <data name="&gt;&gt;Orange.Name" xml:space="preserve">
+    <value>Orange</value>
   </data>
-  <data name="&gt;&gt;rb3.Type" xml:space="preserve">
+  <data name="&gt;&gt;Orange.Type" xml:space="preserve">
     <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;rb3.Parent" xml:space="preserve">
+  <data name="&gt;&gt;Orange.Parent" xml:space="preserve">
     <value>panel1</value>
   </data>
-  <data name="&gt;&gt;rb3.ZOrder" xml:space="preserve">
+  <data name="&gt;&gt;Orange.ZOrder" xml:space="preserve">
     <value>2</value>
   </data>
   <data name="ComboBox.Items" xml:space="preserve">
@@ -932,18 +947,6 @@
   <data name="&gt;&gt;ProgressBar.ZOrder" xml:space="preserve">
     <value>7</value>
   </data>
-  <data name="&gt;&gt;label5.Name" xml:space="preserve">
-    <value>label5</value>
-  </data>
-  <data name="&gt;&gt;label5.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;label5.Parent" xml:space="preserve">
-    <value>Panel</value>
-  </data>
-  <data name="&gt;&gt;label5.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
   <data name="Panel.Location" type="System.Drawing.Point, System.Drawing">
     <value>12, 666</value>
   </data>
@@ -964,36 +967,6 @@
   </data>
   <data name="&gt;&gt;Panel.ZOrder" xml:space="preserve">
     <value>6</value>
-  </data>
-  <data name="label5.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="label5.Enabled" type="System.Boolean, mscorlib">
-    <value>False</value>
-  </data>
-  <data name="label5.Location" type="System.Drawing.Point, System.Drawing">
-    <value>167, 6</value>
-  </data>
-  <data name="label5.Size" type="System.Drawing.Size, System.Drawing">
-    <value>33, 13</value>
-  </data>
-  <data name="label5.TabIndex" type="System.Int32, mscorlib">
-    <value>0</value>
-  </data>
-  <data name="label5.Text" xml:space="preserve">
-    <value>panel</value>
-  </data>
-  <data name="&gt;&gt;label5.Name" xml:space="preserve">
-    <value>label5</value>
-  </data>
-  <data name="&gt;&gt;label5.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;label5.Parent" xml:space="preserve">
-    <value>Panel</value>
-  </data>
-  <data name="&gt;&gt;label5.ZOrder" xml:space="preserve">
-    <value>0</value>
   </data>
   <data name="groupBox1.Location" type="System.Drawing.Point, System.Drawing">
     <value>391, 666</value>
@@ -1361,6 +1334,36 @@
   <data name="$this.ToolTip" xml:space="preserve">
     <value>It's some Tooltip!</value>
   </data>
+  <data name="&gt;&gt;name.Name" xml:space="preserve">
+    <value>name</value>
+  </data>
+  <data name="&gt;&gt;name.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;pid.Name" xml:space="preserve">
+    <value>pid</value>
+  </data>
+  <data name="&gt;&gt;pid.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;check.Name" xml:space="preserve">
+    <value>check</value>
+  </data>
+  <data name="&gt;&gt;check.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataGridViewCheckBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;dateColumn.Name" xml:space="preserve">
+    <value>dateColumn</value>
+  </data>
+  <data name="&gt;&gt;dateColumn.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;numberColumn.Name" xml:space="preserve">
+    <value>numberColumn</value>
+  </data>
+  <data name="&gt;&gt;numberColumn.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
   <data name="&gt;&gt;header1.Name" xml:space="preserve">
     <value>header1</value>
   </data>
@@ -1474,36 +1477,6 @@
   </data>
   <data name="&gt;&gt;saveFileDialog1.Type" xml:space="preserve">
     <value>System.Windows.Forms.SaveFileDialog, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;name.Name" xml:space="preserve">
-    <value>name</value>
-  </data>
-  <data name="&gt;&gt;name.Type" xml:space="preserve">
-    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;pid.Name" xml:space="preserve">
-    <value>pid</value>
-  </data>
-  <data name="&gt;&gt;pid.Type" xml:space="preserve">
-    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;check.Name" xml:space="preserve">
-    <value>check</value>
-  </data>
-  <data name="&gt;&gt;check.Type" xml:space="preserve">
-    <value>System.Windows.Forms.DataGridViewCheckBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;dateColumn.Name" xml:space="preserve">
-    <value>dateColumn</value>
-  </data>
-  <data name="&gt;&gt;dateColumn.Type" xml:space="preserve">
-    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;numberColumn.Name" xml:space="preserve">
-    <value>numberColumn</value>
-  </data>
-  <data name="&gt;&gt;numberColumn.Type" xml:space="preserve">
-    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;$this.Name" xml:space="preserve">
     <value>Main</value>

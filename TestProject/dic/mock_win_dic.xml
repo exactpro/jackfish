@@ -15,7 +15,7 @@
             <scrollBar id="HScrollBar" uid="HScrollBar" owner="owner" class="" addition="Many"/>
             <scrollBar id="vScrollBar" uid="VScrollBar" owner="owner" class="" addition="Many"/>
             <comboBox id="ComboBox" uid="ComboBox" owner="owner" class="" name="" action="" addition="Many"/>
-            <radioButton id="RadioButton" xpath=".//RadioButton[contains(@uid,&amp;quot;rb&amp;quot;)]" owner="owner" class="" action="" text="" addition="Many"/>
+            <radioButton id="RadioButton" xpath=".//RadioButton[contains(@uid,&amp;quot;Green&amp;quot;)]" owner="owner" class="" action="" text="" addition="Many"/>
             <tree id="Tree" uid="Tree" owner="owner" class="" addition="Many"/>
             <tabPanel id="TabPanel" uid="TabPanel" owner="owner" class="" addition="Many"/>
             <label id="centralLabel" uid="centralLabel" owner="owner" class="" name="" text="" addition="Many"/>
