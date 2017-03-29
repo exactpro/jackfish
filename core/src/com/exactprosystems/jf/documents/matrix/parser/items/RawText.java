@@ -13,16 +13,14 @@ import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.evaluator.Variables;
 import com.exactprosystems.jf.common.report.ReportBuilder;
+import com.exactprosystems.jf.common.undoredo.Command;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.*;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
 import com.exactprosystems.jf.functions.Text;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @MatrixItemAttribute(
 		description 	= "This operator is used to describe an object as Text. It has its own mini editor.",
@@ -71,8 +69,26 @@ public class RawText extends MatrixItem
 		driver.showTextBox(this, layout, 1, 2, this.description, this.description, () -> this.description.get());
 		driver.showCheckBox(this, layout, 1, 3, "Global", this.global, this.global);
 		driver.showTextArea(this, layout, 2, 0, this.text, list -> {
-			this.text.clear();
-			this.text.addAll(list);
+			List<String> oldList = new ArrayList<>(this.text.subList(0, this.text.size()));
+			if (list.equals(oldList))
+			{
+				return;
+			}
+			Command undo = () ->
+			{
+				this.text.clear();
+				this.text.addAll(oldList);
+				driver.updateTextArea(this, layout, text);
+			};
+
+			Command redo = () ->
+			{
+				this.text.clear();
+				this.text.addAll(list);
+				driver.updateTextArea(this, layout, text);
+			};
+			this.owner.addCommand(undo, redo);
+
 		});
 		driver.showToggleButton(this, layout, 1, 4, 
 		        b -> driver.hide(this, layout, 2, b),

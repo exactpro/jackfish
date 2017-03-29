@@ -375,13 +375,32 @@ public class DisplayDriverFx implements DisplayDriver
 		{
 			textArea.appendText(s + "\n");
 		}
-		textArea.textProperty().addListener((observable, oldValue, newValue) ->
+		textArea.focusedProperty().addListener((observable, oldValue, newValue) ->
 		{
-			String[] split = newValue.split("\n");
-			consumer.accept(Arrays.asList(split));
+			if (!newValue && oldValue)
+			{
+				String[] split = textArea.getText().split("\n");
+				consumer.accept(Arrays.asList(split));
+			}
 		});
 		pane.add(textArea, column, row, Integer.MAX_VALUE, 1);
 
+	}
+
+	@Override
+	public void updateTextArea(MatrixItem item, Object layout, Text text)
+	{
+		GridPane pane = (GridPane) layout;
+		Node lookup = pane.lookup(".text-area");
+		if (lookup instanceof TextArea)
+		{
+			TextArea ta = (TextArea) lookup;
+			ta.setText("");
+			for (String s : text)
+			{
+				ta.appendText(s + "\n");
+			}
+		}
 	}
 
 	@Override
