@@ -106,7 +106,7 @@ public abstract class ProxyApplication implements IApplication
 		add(commandLine, remoteClassName);
 		add(commandLine, String.valueOf(port));
 		
-		System.err.println(commandLine);
+		System.out.println(commandLine);
 
 		//command need be like this
 		//java -cp jar.jar:another1.jar:another2.jar com.exactprosystems.jf.api.app.RemoteApplication remoteClassName port

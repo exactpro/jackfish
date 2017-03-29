@@ -14,6 +14,8 @@ import com.exactprosystems.jf.api.common.SerializablePair;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.error.app.FeatureNotSupportedException;
 import com.exactprosystems.jf.api.error.app.NullParameterException;
+import com.exactprosystems.jf.api.error.app.TimeoutException;
+
 import org.apache.log4j.*;
 import org.openqa.selenium.*;
 import org.openqa.selenium.Dimension;
@@ -37,6 +39,7 @@ import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.util.*;
 import java.util.Map.Entry;
+import java.util.concurrent.TimeUnit;
 
 public class SeleniumRemoteApplication extends RemoteApplication
 {
@@ -251,7 +254,30 @@ public class SeleniumRemoteApplication extends RemoteApplication
 			Browser browser = Browser.valueOf(browserName.toUpperCase());
 			this.driver = new WebDriverListenerNew(browser.createDriver(chromeDriverBinary, firefoxProfileDirectory, usePrivateMode));
 			this.operationExecutor = new SeleniumOperationExecutor(this.driver, this.logger);
-			this.driver.get(url);
+			
+            Thread t = new Thread(new Runnable()
+            {
+                public void run()
+                {
+                    driver.get(Thread.currentThread().getName());
+                }
+            }, url);
+            t.start();
+            try
+            {
+                t.join(30000);
+            }
+            catch (InterruptedException e)
+            { 
+                // ignore
+            }
+            if (t.isAlive())
+            { 
+                // Thread still alive, we need to abort and it means that timeout expired
+                t.interrupt();
+                this.driver = null;
+                throw new TimeoutException("Page loading");
+            }			
 			
 			if(!browser.equals(Browser.ANDROIDBROWSER) && !browser.equals(Browser.ANDROIDCHROME))
 			{

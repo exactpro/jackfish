@@ -33,7 +33,7 @@ public abstract class RemoteApplication implements IRemoteApplication
 			{
 				throw new Exception("Too few arguments :" + args.length);
 			}
-			System.err.println("Starting remote");
+			System.err.println(time() + " Starting remote");
 
 			String mainClassName = removeExtraQuotes(args[0]);
 			String portSt = removeExtraQuotes(args[1]);
@@ -41,22 +41,22 @@ public abstract class RemoteApplication implements IRemoteApplication
 			
 			int port = Integer.parseInt(portSt);
 
-			System.err.println("mainClass  = " + mainClassName);
-			System.err.println("port       = " + portSt);
-			System.err.println("other args = " + Arrays.toString(argsApp));
+			System.err.println(time() + " mainClass  = " + mainClassName);
+			System.err.println(time() + " port       = " + portSt);
+			System.err.println(time() + " other args = " + Arrays.toString(argsApp));
 			
 
-			System.err.println("Creating remote service...");
+			System.err.println(time() + " Creating remote service...");
 			IRemoteApplication service = objectFromClassName(mainClassName, IRemoteApplication.class);
-			System.err.println("... creating complete");
+			System.err.println(time() + " ... creating complete");
 
 			services.add(service); // to keep strong reference from GC
 			
-			System.err.println("Registering remote stub...");
+			System.err.println(time() + " Registering remote stub...");
 			Remote stub = UnicastRemoteObject.exportObject(service, 0);
 			final Registry registry = LocateRegistry.createRegistry(port);
 			registry.rebind(IApplication.serviceName, stub);
-			System.err.println("... registering complete");
+			System.err.println(time() + " ... registering complete");
 		}
 		catch (Exception e)
 		{
@@ -65,7 +65,13 @@ public abstract class RemoteApplication implements IRemoteApplication
 	}	
 	
 
-	@Override
+	private static String time()
+    {
+        return new Date().toString();
+    }
+
+
+    @Override
 	public final void createLogger(String logName, String serverLogLevel, String serverLogPattern) throws RemoteException
 	{
 		try 
