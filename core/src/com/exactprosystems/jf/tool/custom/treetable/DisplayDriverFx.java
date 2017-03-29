@@ -568,7 +568,7 @@ public class DisplayDriverFx implements DisplayDriver
 		GridPane pane = (GridPane) layout;
 		DataProvider<String> provider = new TableDataProvider(table);
 		SpreadsheetView view = new SpreadsheetView(provider);
-		view.setPrefHeight(30 * (Math.min(provider.getRowHeaders().size(), 4) + 1));
+		view.setPrefHeight(25 * (Math.min(provider.getRowHeaders().size(), 50) + 1));
 
 		BorderPane borderPane = new BorderPane();
 		borderPane.getStyleClass().add(GRID_PARENT);

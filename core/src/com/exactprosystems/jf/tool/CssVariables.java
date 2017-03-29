@@ -289,8 +289,6 @@ public class CssVariables
 		public static final String HELP_ICON = THEME_IMAGES_DIR + "/help.png";
 		public static final String ADD_BEFORE_ICON = THEME_IMAGES_DIR + "/addBefore.png";
 		public static final String BREAK_POINT_ICON = THEME_IMAGES_DIR + "/breakPoint.png";
-		public static final String EXECUTING_ITEM_ICON = THEME_IMAGES_DIR + "/executingItem.png";
-		public static final String EXECUTING_BREAK_POINT_ICON = THEME_IMAGES_DIR + "/executingAndBreakPoint.png";
 		public static final String MOVE_LEFT_ICON = THEME_IMAGES_DIR + "/move_left.png";
 		public static final String MOVE_RIGHT_ICON = THEME_IMAGES_DIR + "/move_right.png";
 		public static final String GO_TO_LINE_ICON = THEME_IMAGES_DIR + "/goToLine.png";
@@ -311,6 +309,9 @@ public class CssVariables
 		public static final String	MARK_ICON				= IMAGES_DIR + "/check.png";
 		public static final String	ADD_16_ICON				= IMAGES_DIR + "/add_16.png";
 		public static final String	QUESTION_ICON			= IMAGES_DIR + "/question_mark.png";
+
+		public static final String EXECUTING_ITEM_ICON = IMAGES_DIR + "/executingItem.png";
+		public static final String EXECUTING_BREAK_POINT_ICON = IMAGES_DIR + "/executingAndBreakPoint.png";
 
 		//endregion
 
