@@ -20,10 +20,12 @@ packages
 obj
 
 #JF files
-apps
-clients
-services
-sql
+#files contains generated .jar files
+core/apps
+core/clients
+core/services
+core/sql
+
 logs
 .log.xml
 .settings.xml
