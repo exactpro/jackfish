@@ -16,6 +16,7 @@ import com.exactprosystems.jf.documents.DocumentInfo;
 import com.exactprosystems.jf.documents.matrix.parser.Parameter;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 
+import java.io.BufferedReader;
 import java.io.FileWriter;
 import java.io.Reader;
 import java.util.ArrayList;
@@ -44,14 +45,33 @@ public class SystemVars extends AbstractDocument
 	@Override
 	public void load(Reader reader) throws Exception
 	{
-    	LinkedProperties prop = new LinkedProperties();
-        prop.load(reader);
-        this.parameters.clear();
-        
-        for (Map.Entry<Object, Object> entry : prop.entrySet())
-        {
-            this.parameters.add(String.valueOf(entry.getKey()), String.valueOf(entry.getValue()));
-        }
+	    try (BufferedReader br = new BufferedReader(reader))
+	    {
+	        String line = null;
+	        this.parameters.clear();
+	        while ((line = br.readLine()) != null)
+	        {
+	            if (line.isEmpty() || line.trim().startsWith("#"))
+	            {
+	                continue;
+	            }
+	            
+	            String[] parts = line.split("=");
+	            switch (parts.length)
+	            {
+	                case 0:
+	                    break;
+	                    
+	                case 1:  
+	                    this.parameters.add(String.valueOf(parts[0]), null);
+	                    break;
+	                    
+	                default: 
+	                    this.parameters.add(String.valueOf(parts[0]), String.valueOf(parts[1]));
+	            }
+	            
+	        }
+	    }
 	}
 
     @Override

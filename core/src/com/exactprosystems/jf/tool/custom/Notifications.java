@@ -88,7 +88,7 @@ public class Notifications
 
 	public void show()
 	{
-		if (Common.node.getScene() == null)
+		if (Common.node == null || Common.node.getScene() == null)
 		{
 			System.err.println(this.msg);
 			return;
