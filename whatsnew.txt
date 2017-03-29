@@ -1,3 +1,6 @@
+29.03.2017 4.4.0.2195
+RM38890
+White box instead the screenshot. Fixed
 --------------------------------------------------------------------------------
 28.03.2017 4.4.0.2188
 RM41229 bug : [Vars] Vars editor is not correct working

@@ -13,8 +13,8 @@ import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Worker;
 import javafx.geometry.Pos;
-import javafx.scene.control.*;
 import javafx.scene.control.Button;
+import javafx.scene.control.*;
 import javafx.scene.control.MenuItem;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -25,11 +25,14 @@ import javafx.scene.text.Text;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebHistory;
 import javafx.scene.web.WebView;
+import javafx.stage.Stage;
 import org.w3c.dom.Document;
 
 import java.awt.*;
 import java.awt.datatransfer.StringSelection;
 import java.io.File;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class ReportBrowser extends BorderPane
 {
@@ -48,15 +51,15 @@ public class ReportBrowser extends BorderPane
 	{
 		try
 		{
-		    String copyName = "Copy";
+			String copyName = "Copy";
 			CustomBrowserTab selectedItem = (CustomBrowserTab) this.tabPane.getSelectionModel().getSelectedItem();
 			Document document = selectedItem.engine.getDocument();
 			String content = document.getElementsByTagName("pre").item(0).getTextContent();
 			if (content.startsWith(copyName))
 			{
-			    content = content.substring(copyName.length());
+				content = content.substring(copyName.length());
 			}
-			
+
 			return content;
 		}
 		catch (Exception e)
@@ -103,23 +106,28 @@ public class ReportBrowser extends BorderPane
 		private Hyperlink crossButton;
 		private Text textTab;
 
-		private void createContextMenu(WebView webView) {
+		private void createContextMenu(WebView webView)
+		{
 			ContextMenu contextMenu = new ContextMenu();
 			MenuItem copy = new MenuItem("Copy");
-			copy.setOnAction(e -> {
+			copy.setOnAction(e ->
+			{
 				String selection;
-				selection = (String) webView.getEngine()
-						.executeScript("window.getSelection().toString()");
+				selection = (String) webView.getEngine().executeScript("window.getSelection().toString()");
 				StringSelection stringSelection = new StringSelection(selection);
 				Toolkit.getDefaultToolkit().getSystemClipboard().setContents(stringSelection, null);
 			});
 
 			contextMenu.getItems().addAll(copy);
 
-			webView.setOnMousePressed(e -> {
-				if (e.getButton() == MouseButton.SECONDARY) {
+			webView.setOnMousePressed(e ->
+			{
+				if (e.getButton() == MouseButton.SECONDARY)
+				{
 					contextMenu.show(webView, e.getScreenX(), e.getScreenY());
-				} else {
+				}
+				else
+				{
 					contextMenu.hide();
 				}
 			});
@@ -132,11 +140,12 @@ public class ReportBrowser extends BorderPane
 			this.setContent(view);
 			view.setContextMenuEnabled(false);
 			createContextMenu(view);
-			
+
 			textTab = new Text();
 			this.textTab.setText("New tab...");
 			Worker<Void> loadWorker = this.engine.getLoadWorker();
-			loadWorker.stateProperty().addListener((observable, oldValue, newValue) -> {
+			loadWorker.stateProperty().addListener((observable, oldValue, newValue) ->
+			{
 				if (newValue == Worker.State.SUCCEEDED)
 				{
 					String title = this.engine.getTitle();
@@ -148,7 +157,7 @@ public class ReportBrowser extends BorderPane
 					this.textTab.setText(title);
 				}
 			});
-			
+
 			this.setClosable(false);
 			this.crossButton = new Hyperlink();
 			Image image = new Image(CssVariables.Icons.CLOSE_BUTTON_ICON);
@@ -159,23 +168,17 @@ public class ReportBrowser extends BorderPane
 			box.setAlignment(Pos.CENTER_RIGHT);
 			box.getChildren().addAll(this.textTab, this.crossButton);
 			this.setGraphic(box);
-			
-			this.engine.setCreatePopupHandler(param -> {
+
+			this.engine.setCreatePopupHandler(param ->
+			{
 				CustomBrowserTab customTab = new CustomBrowserTab();
-                try
-                {
-                    // RM38890 the tab needs a little time to load its content
-                    Thread.sleep(500);
-                }
-                catch (Exception e)
-                {
-                    // nothing to do
-                }
 				this.getTabPane().getTabs().add(customTab);
 				this.getTabPane().getSelectionModel().select(customTab);
+				// RM38890 the tab needs be resized for display image
+				changeSize(customTab);
 				return customTab.engine;
 			});
-			
+
 			this.crossButton.setDisable(true);
 			this.crossButton.setVisible(false);
 			this.setOnSelectionChanged(arg0 ->
@@ -183,16 +186,42 @@ public class ReportBrowser extends BorderPane
 				crossButton.setDisable(!isSelected());
 				crossButton.setVisible(isSelected());
 			});
-			
+
 			this.crossButton.setOnAction(actionEvent ->
 			{
-			    ObservableList<Tab> tabs = this.getTabPane().getTabs();
+				ObservableList<Tab> tabs = this.getTabPane().getTabs();
 				tabs.remove(this);
 				if (tabs.size() == 0)
 				{
-				    ReportBrowser.this.getScene().getWindow().hide();
+					ReportBrowser.this.getScene().getWindow().hide();
 				}
 			});
+		}
+
+		private void changeSize(CustomBrowserTab customTab)
+		{
+			Timer animTimer = new Timer();
+			Stage stage = (Stage) customTab.getTabPane().getScene().getWindow();
+			animTimer.scheduleAtFixedRate(new TimerTask()
+			{
+				int i = 0;
+
+				@Override
+				public void run()
+				{
+					if (i < 1)
+					{
+						stage.setWidth(stage.getWidth() + 1);
+						stage.setHeight(stage.getHeight() + 1);
+					}
+					else
+					{
+						this.cancel();
+					}
+					i++;
+				}
+
+			}, 0, 25);
 		}
 
 		public void load(File file)
