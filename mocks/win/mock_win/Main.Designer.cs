@@ -34,13 +34,18 @@
             this.TextBox = new System.Windows.Forms.TextBox();
             this.CheckBox = new System.Windows.Forms.CheckBox();
             this.Table1 = new System.Windows.Forms.DataGridView();
+            this.name = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.pid = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.check = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.dateColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.numberColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.centralLabel = new System.Windows.Forms.Label();
             this.moveLabel = new System.Windows.Forms.Label();
-            this.rb1 = new System.Windows.Forms.RadioButton();
-            this.rb2 = new System.Windows.Forms.RadioButton();
+            this.Green = new System.Windows.Forms.RadioButton();
+            this.Yellow = new System.Windows.Forms.RadioButton();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.rb4 = new System.Windows.Forms.RadioButton();
-            this.rb3 = new System.Windows.Forms.RadioButton();
+            this.Blue = new System.Windows.Forms.RadioButton();
+            this.Orange = new System.Windows.Forms.RadioButton();
             this.ComboBox = new System.Windows.Forms.ComboBox();
             this.Slider = new System.Windows.Forms.TrackBar();
             this.Tree = new System.Windows.Forms.TreeView();
@@ -56,7 +61,6 @@
             this.header3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.ProgressBar = new System.Windows.Forms.ProgressBar();
             this.Panel = new System.Windows.Forms.Panel();
-            this.label5 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.menuToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -82,18 +86,12 @@
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.ToggleButton = new System.Windows.Forms.CheckBox();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
-            this.name = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.pid = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.check = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.dateColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.numberColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.Table1)).BeginInit();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.Slider)).BeginInit();
             this.TabPanel.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
-            this.Panel.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.Splitter)).BeginInit();
             this.Splitter.Panel1.SuspendLayout();
@@ -148,6 +146,33 @@
             this.Table1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.CommonMouseDown);
             this.Table1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.CommonMouseMove);
             // 
+            // name
+            // 
+            resources.ApplyResources(this.name, "name");
+            this.name.Name = "name";
+            // 
+            // pid
+            // 
+            resources.ApplyResources(this.pid, "pid");
+            this.pid.Name = "pid";
+            // 
+            // check
+            // 
+            resources.ApplyResources(this.check, "check");
+            this.check.Name = "check";
+            // 
+            // dateColumn
+            // 
+            resources.ApplyResources(this.dateColumn, "dateColumn");
+            this.dateColumn.Name = "dateColumn";
+            this.dateColumn.ReadOnly = true;
+            // 
+            // numberColumn
+            // 
+            resources.ApplyResources(this.numberColumn, "numberColumn");
+            this.numberColumn.Name = "numberColumn";
+            this.numberColumn.ReadOnly = true;
+            // 
             // centralLabel
             // 
             resources.ApplyResources(this.centralLabel, "centralLabel");
@@ -162,52 +187,56 @@
             this.moveLabel.MouseDown += new System.Windows.Forms.MouseEventHandler(this.CommonMouseDown);
             this.moveLabel.MouseMove += new System.Windows.Forms.MouseEventHandler(this.CommonMouseMove);
             // 
-            // rb1
+            // Green
             // 
-            resources.ApplyResources(this.rb1, "rb1");
-            this.rb1.Name = "rb1";
-            this.rb1.TabStop = true;
-            this.rb1.UseVisualStyleBackColor = true;
-            this.rb1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.CommonKeyDown);
-            this.rb1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.CommonMouseMove);
+            resources.ApplyResources(this.Green, "Green");
+            this.Green.Name = "Green";
+            this.Green.TabStop = true;
+            this.Green.UseVisualStyleBackColor = true;
+            this.Green.KeyDown += new System.Windows.Forms.KeyEventHandler(this.CommonKeyDown);
+            this.Green.MouseDown += new System.Windows.Forms.MouseEventHandler(this.CommonMouseDown);
+            this.Green.MouseMove += new System.Windows.Forms.MouseEventHandler(this.CommonMouseMove);
             // 
-            // rb2
+            // Yellow
             // 
-            resources.ApplyResources(this.rb2, "rb2");
-            this.rb2.Name = "rb2";
-            this.rb2.TabStop = true;
-            this.rb2.UseVisualStyleBackColor = true;
-            this.rb2.KeyDown += new System.Windows.Forms.KeyEventHandler(this.CommonKeyDown);
-            this.rb2.MouseMove += new System.Windows.Forms.MouseEventHandler(this.CommonMouseMove);
+            resources.ApplyResources(this.Yellow, "Yellow");
+            this.Yellow.Name = "Yellow";
+            this.Yellow.TabStop = true;
+            this.Yellow.UseVisualStyleBackColor = true;
+            this.Yellow.KeyDown += new System.Windows.Forms.KeyEventHandler(this.CommonKeyDown);
+            this.Yellow.MouseDown += new System.Windows.Forms.MouseEventHandler(this.CommonMouseDown);
+            this.Yellow.MouseMove += new System.Windows.Forms.MouseEventHandler(this.CommonMouseMove);
             // 
             // panel1
             // 
-            this.panel1.Controls.Add(this.rb4);
-            this.panel1.Controls.Add(this.rb2);
-            this.panel1.Controls.Add(this.rb3);
-            this.panel1.Controls.Add(this.rb1);
+            this.panel1.Controls.Add(this.Blue);
+            this.panel1.Controls.Add(this.Yellow);
+            this.panel1.Controls.Add(this.Orange);
+            this.panel1.Controls.Add(this.Green);
             resources.ApplyResources(this.panel1, "panel1");
             this.panel1.Name = "panel1";
             this.panel1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.CommonMouseDown);
             this.panel1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.CommonMouseMove);
             // 
-            // rb4
+            // Blue
             // 
-            resources.ApplyResources(this.rb4, "rb4");
-            this.rb4.Name = "rb4";
-            this.rb4.TabStop = true;
-            this.rb4.UseVisualStyleBackColor = true;
-            this.rb4.KeyDown += new System.Windows.Forms.KeyEventHandler(this.CommonKeyDown);
-            this.rb4.MouseMove += new System.Windows.Forms.MouseEventHandler(this.CommonMouseMove);
+            resources.ApplyResources(this.Blue, "Blue");
+            this.Blue.Name = "Blue";
+            this.Blue.TabStop = true;
+            this.Blue.UseVisualStyleBackColor = true;
+            this.Blue.KeyDown += new System.Windows.Forms.KeyEventHandler(this.CommonKeyDown);
+            this.Blue.MouseDown += new System.Windows.Forms.MouseEventHandler(this.CommonMouseDown);
+            this.Blue.MouseMove += new System.Windows.Forms.MouseEventHandler(this.CommonMouseMove);
             // 
-            // rb3
+            // Orange
             // 
-            resources.ApplyResources(this.rb3, "rb3");
-            this.rb3.Name = "rb3";
-            this.rb3.TabStop = true;
-            this.rb3.UseVisualStyleBackColor = true;
-            this.rb3.KeyDown += new System.Windows.Forms.KeyEventHandler(this.CommonKeyDown);
-            this.rb3.MouseMove += new System.Windows.Forms.MouseEventHandler(this.CommonMouseMove);
+            resources.ApplyResources(this.Orange, "Orange");
+            this.Orange.Name = "Orange";
+            this.Orange.TabStop = true;
+            this.Orange.UseVisualStyleBackColor = true;
+            this.Orange.KeyDown += new System.Windows.Forms.KeyEventHandler(this.CommonKeyDown);
+            this.Orange.MouseDown += new System.Windows.Forms.MouseEventHandler(this.CommonMouseDown);
+            this.Orange.MouseMove += new System.Windows.Forms.MouseEventHandler(this.CommonMouseMove);
             // 
             // ComboBox
             // 
@@ -249,6 +278,7 @@
             resources.ApplyResources(this.TabPanel, "TabPanel");
             this.TabPanel.Name = "TabPanel";
             this.TabPanel.SelectedIndex = 0;
+            this.TabPanel.Selected += new System.Windows.Forms.TabControlEventHandler(this.TabPanel_Selected);
             this.TabPanel.KeyDown += new System.Windows.Forms.KeyEventHandler(this.CommonKeyDown);
             this.TabPanel.MouseDown += new System.Windows.Forms.MouseEventHandler(this.CommonMouseDown);
             this.TabPanel.MouseMove += new System.Windows.Forms.MouseEventHandler(this.CommonMouseMove);
@@ -259,7 +289,6 @@
             resources.ApplyResources(this.tabPage1, "tabPage1");
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.UseVisualStyleBackColor = true;
-            this.tabPage1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.CommonMouseMove);
             // 
             // label3
             // 
@@ -289,9 +318,12 @@
             resources.GetString("ListView.Items4")});
             resources.ApplyResources(this.ListView, "ListView");
             this.ListView.Name = "ListView";
+            this.ListView.SelectedIndexChanged += new System.EventHandler(this.ListView_SelectedIndexChanged);
+            this.ListView.DisplayMemberChanged += new System.EventHandler(this.ListView_SelectedIndexChanged);
+            this.ListView.SelectedValueChanged += new System.EventHandler(this.ListView_SelectedIndexChanged);
             this.ListView.KeyDown += new System.Windows.Forms.KeyEventHandler(this.CommonKeyDown);
-            this.ListView.MouseDown += new System.Windows.Forms.MouseEventHandler(this.CommonMouseDown);
             this.ListView.MouseMove += new System.Windows.Forms.MouseEventHandler(this.CommonMouseMove);
+            this.ListView.MouseUp += new System.Windows.Forms.MouseEventHandler(this.CommonMouseDown);
             // 
             // Table
             // 
@@ -327,23 +359,17 @@
             // 
             resources.ApplyResources(this.ProgressBar, "ProgressBar");
             this.ProgressBar.Name = "ProgressBar";
-            this.ProgressBar.Value = 30;
+            this.ProgressBar.Value = 10;
             this.ProgressBar.MouseDown += new System.Windows.Forms.MouseEventHandler(this.CommonMouseDown);
             this.ProgressBar.MouseMove += new System.Windows.Forms.MouseEventHandler(this.CommonMouseMove);
             // 
             // Panel
             // 
             this.Panel.BackColor = System.Drawing.SystemColors.ControlLight;
-            this.Panel.Controls.Add(this.label5);
             resources.ApplyResources(this.Panel, "Panel");
             this.Panel.Name = "Panel";
             this.Panel.MouseDown += new System.Windows.Forms.MouseEventHandler(this.CommonMouseDown);
             this.Panel.MouseMove += new System.Windows.Forms.MouseEventHandler(this.CommonMouseMove);
-            // 
-            // label5
-            // 
-            resources.ApplyResources(this.label5, "label5");
-            this.label5.Name = "label5";
             // 
             // groupBox1
             // 
@@ -501,36 +527,10 @@
             resources.ApplyResources(this.ToggleButton, "ToggleButton");
             this.ToggleButton.Name = "ToggleButton";
             this.ToggleButton.UseVisualStyleBackColor = true;
+            this.ToggleButton.CheckedChanged += new System.EventHandler(this.CheckBox_CheckedChanged);
             this.ToggleButton.KeyDown += new System.Windows.Forms.KeyEventHandler(this.CommonKeyDown);
             this.ToggleButton.MouseMove += new System.Windows.Forms.MouseEventHandler(this.CommonMouseMove);
             this.ToggleButton.MouseUp += new System.Windows.Forms.MouseEventHandler(this.CommonMouseDown);
-            // 
-            // name
-            // 
-            resources.ApplyResources(this.name, "name");
-            this.name.Name = "name";
-            // 
-            // pid
-            // 
-            resources.ApplyResources(this.pid, "pid");
-            this.pid.Name = "pid";
-            // 
-            // check
-            // 
-            resources.ApplyResources(this.check, "check");
-            this.check.Name = "check";
-            // 
-            // dateColumn
-            // 
-            resources.ApplyResources(this.dateColumn, "dateColumn");
-            this.dateColumn.Name = "dateColumn";
-            this.dateColumn.ReadOnly = true;
-            // 
-            // numberColumn
-            // 
-            resources.ApplyResources(this.numberColumn, "numberColumn");
-            this.numberColumn.Name = "numberColumn";
-            this.numberColumn.ReadOnly = true;
             // 
             // Main
             // 
@@ -570,8 +570,6 @@
             this.tabPage1.PerformLayout();
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
-            this.Panel.ResumeLayout(false);
-            this.Panel.PerformLayout();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.Splitter.Panel1.ResumeLayout(false);
@@ -593,11 +591,11 @@
         private System.Windows.Forms.DataGridView Table1;
         public System.Windows.Forms.Label centralLabel;
         public System.Windows.Forms.Label moveLabel;
-        private System.Windows.Forms.RadioButton rb1;
-        private System.Windows.Forms.RadioButton rb2;
+        private System.Windows.Forms.RadioButton Green;
+        private System.Windows.Forms.RadioButton Yellow;
         private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.RadioButton rb4;
-        private System.Windows.Forms.RadioButton rb3;
+        private System.Windows.Forms.RadioButton Blue;
+        private System.Windows.Forms.RadioButton Orange;
         private System.Windows.Forms.ComboBox ComboBox;
         private System.Windows.Forms.TrackBar Slider;
         private System.Windows.Forms.TreeView Tree;
@@ -614,7 +612,6 @@
         private System.Windows.Forms.ProgressBar ProgressBar;
         private System.Windows.Forms.Panel Panel;
         private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.Label label5;
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem menuToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem optionsToolStripMenuItem;

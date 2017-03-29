@@ -718,10 +718,6 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 			{
 				result = this.driver.getProperty(component, WindowProperty.SelectionProperty);
 			}
-			else if (isSelectionItemPatternPresent)
-			{
-				result = this.driver.getProperty(component, WindowProperty.IsSelectedProperty);
-			}
 			else if (isTogglePattern)
 			{
 				result = this.driver.getProperty(component, WindowProperty.NameProperty);

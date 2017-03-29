@@ -185,7 +185,7 @@ public JnaDriverImpl(Logger logger) throws Exception
 		text = ConvertString.replaceNonASCIISymbolsToUnicodeSubString(text);
 
 		int result = this.jnaDriver.findAllForLocator(arr, arr.length, owner.getIdString(), kind.ordinal(), uid, xpath, clazz, name, title, text, many);
-		this.logger.info(String.format("findAllForLocator(%s,%d,%s,%s,%s,%s,%s,%s,%s,%s,%b) = %d, time (ms) : %d", Arrays.toString(arr), arr.length, owner, kind, uid, xpath, clazz, name, title, text, many, result, 
+		this.logger.info(String.format("findAllForLocator(%s,%d,%s,%s,%s,%s,%s,%s,%s,%s,%b) = %d, time (ms) : %d", Arrays.toString(arr), arr.length, owner, kind, uid, xpath, clazz, name, title, text, many, result,
 				System.currentTimeMillis() - start));
 		checkCSharpTimes();
 		checkError();
