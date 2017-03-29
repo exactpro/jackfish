@@ -152,6 +152,8 @@ subprojects {
 			name "ExactproArtifactory"
 			url "http://arti.exactpro.com/libs-release/"
 		}
+		maven { url "http://arti.exactpro.com/libs-snapshot-local" }
+
 //		mavenCentral()
 	}
 	

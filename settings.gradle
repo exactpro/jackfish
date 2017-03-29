@@ -21,6 +21,7 @@ include	'core',
 							//clients
 		'plugins:client:dts',
 		'plugins:client:fix',
+		'plugins:client:sfclient',
 							//services
 		'plugins:service:matrix',
 		'plugins:service:sailfish'
