@@ -64,11 +64,21 @@ public class HelpBuilder extends ReportBuilder
 	}
 
     @Override
-    protected String decorateGroupCell(String content, int level)
+    protected String decorateGroupCell(String content, int level, boolean isNode)
     {
-        String res = String.format("<a href=\"javascript:void(%d)\" indent-level=\"0\" class=\"group\">%s</a>",               
-                level,
-                HTMLhelper.htmlMarker(content));
+        String res = null;
+        if (isNode)
+        {
+            res = String.format("<a href=\"javascript:void(0)\" indent-level=\"%d\" class=\"group\">%s</a>",               
+                    level,
+                    content);
+        }
+        else
+        {
+            res = String.format("<span indent-level=\"%d\" class=\"group\">%s</span>",               
+                    level,
+                    content);
+        }
         return res;
     }
 

@@ -386,13 +386,13 @@ public abstract class ReportBuilder implements Storable
 		return decorateExpandingBlock(value.toString(), content);
 	}
 
-    public String decorateGroupCell(Object value, int level)
+    public String decorateGroupCell(Object value, int level, boolean isNode)
     {
         if (value == null)
         {
             return "";
         }
-        return decorateGroupCell(value.toString(), level);
+        return decorateGroupCell(value.toString(), level, isNode);
     }
 
 	protected abstract String decorateStyle(String value, String style);
@@ -401,7 +401,7 @@ public abstract class ReportBuilder implements Storable
 
 	protected abstract String decorateExpandingBlock(String name, String content);
 
-    protected abstract String decorateGroupCell(String content, int level);
+    protected abstract String decorateGroupCell(String content, int level, boolean isNode);
 
     protected abstract String replaceMarker(String marker);
 	

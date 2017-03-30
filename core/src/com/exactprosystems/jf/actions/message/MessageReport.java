@@ -14,11 +14,14 @@ import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
-import com.exactprosystems.jf.common.report.ReportTable;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.functions.HelpKind;
+import com.exactprosystems.jf.functions.Table;
+
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 
 @ActionAttribute(
@@ -33,6 +36,9 @@ import java.util.Map.Entry;
 	)
 public class MessageReport extends AbstractAction 
 {
+    public final static String columnsField       = "Field";
+    public final static String columnValue        = "Value";
+    
     public final static String messageName        = "MapMessage";
     public final static String beforeTestCaseName = "BeforeTestCase";
     public final static String titleName          = "Title";
@@ -102,19 +108,65 @@ public class MessageReport extends AbstractAction
         report = this.toReport == null ? report : this.toReport;
         this.beforeTestCase = ActionsReportHelper.getBeforeTestCase(this.beforeTestCase, this.owner.getMatrix());
 
-        ReportTable table = report.addExplicitTable(Str.asString(this.title), this.beforeTestCase, true, 0,
-                new int[] { 50, 50 }, new String[] { "Field", "Value" });
+        Table table = new Table(new String[] { columnsField, columnValue }, evaluator);
+        table.considerAsGroup(columnsField);
 
-        for (Entry<String, Object> entry : this.message.entrySet())
-        {
-            table.addValues(entry.getKey(), entry.getValue());
-        }
+        outMessage(table, this.message, "");
+
         if (this.message.getSource() != null)
         {
-            table.addValues("Source", this.message.getSource());
+            addRow(table, "Source", this.message.getSource());
         }
 
+        table.report(report, this.title, this.beforeTestCase, false, true);
         super.setResult(null);
     }
+    
+    private void outMessage(Table table, MapMessage message, String path)
+    {
+        for (Entry<String, Object> entry : message.entrySet())
+        {
+            String name = entry.getKey();
+            Object value = entry.getValue();
+            
+            if (value.getClass().isArray())
+            {
+                int count = 0;
+                Object[] array = (Object[])value;
+                for (Object group : array)
+                {
+                    if (group instanceof MapMessage)
+                    {
+                        addRow(table, makePath(path, name + "[" + count + "]/*"), "");
+                        outMessage(table, (MapMessage)group, makePath(path, name));
+                    }
+                    count++;
+                }
+            }
+            else
+            {
+                addRow(table, makePath(path, name), Str.asString(value));
+            }
+        }
+    }
+    
+    private String makePath(String path, String addon)
+    {
+        if (Str.IsNullOrEmpty(path))
+        {
+            return addon;
+        }
+        return path + "/" + addon;
+    }
+    
+    private void addRow(Table table, String field, String value)
+    {
+        Map<String, Object> row = new LinkedHashMap<>();
+        row.put(columnsField, field);
+        row.put(columnValue,  value);
+        table.addValue(table.size(), row);
+    }
+    
+   
 }
 

@@ -67,7 +67,7 @@ public class DummyReportBuilder extends ReportBuilder
 	}
 
     @Override
-    protected String decorateGroupCell(String content, int level)
+    protected String decorateGroupCell(String content, int level, boolean isNode)
     {
         return null;
     }

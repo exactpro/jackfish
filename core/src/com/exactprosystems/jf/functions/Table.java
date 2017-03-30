@@ -749,70 +749,81 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 		return list.toArray(new String[list.size()]);
 	}
 
-	public void report(ReportBuilder report, String title, String beforeTestcase, boolean withNumbers, boolean reportValues, Parameters newColumns, String ... columns) throws Exception
-	{
-		if (beforeTestcase != null || report.reportIsOn())   //TODO zzz
-		{
+    public void report(ReportBuilder report, String title, String beforeTestcase, boolean withNumbers,
+            boolean reportValues, Parameters newColumns, String... columns) throws Exception
+    {
+        if (beforeTestcase != null || report.reportIsOn()) // TODO zzz
+        {
+            int[] columnsIndexes = getIndexes(columns);
 
-			int[] columnsIndexes = getIndexes(columns);
+            if (columnsIndexes.length == 0)
+            {
+                columnsIndexes = new int[this.headers.length];
+                for (int i = 0; i < this.headers.length; i++)
+                {
+                    columnsIndexes[i] = i;
+                }
+            }
 
-			if (columnsIndexes.length == 0) {
-				columnsIndexes = new int[this.headers.length];
-				for (int i = 0; i < this.headers.length; i++) {
-					columnsIndexes[i] = i;
-				}
-			}
+            int addition = withNumbers ? 1 : 0;
+            String[] headers = new String[addition + columnsIndexes.length];
+            if (withNumbers)
+            {
+                headers[0] = "#";
+            }
+            int col = 0;
+            for (int index : columnsIndexes)
+            {
+                headers[col++ + addition] = this.headers[index].name;
+            }
+            headers = convertHeaders(newColumns, headers, withNumbers);
+            ReportTable table = report.addExplicitTable(title, beforeTestcase, true, 0, new int[] {}, headers);
 
-			int addition = withNumbers ? 1 : 0;
-			String[] headers = new String[addition + columnsIndexes.length];
-			if (withNumbers) {
-				headers[0] = "#";
-			}
-			int col = 0;
-			for (int index : columnsIndexes) {
-				headers[col++ + addition] = this.headers[index].name;
-			}
-			headers = convertHeaders(newColumns, headers, withNumbers);
-			ReportTable table = report.addExplicitTable(title, beforeTestcase, true, 0, new int[]{}, headers);
+            Function<String, String> func = name -> newColumns == null ? name
+                    : newColumns.entrySet().stream().filter(e -> name.equals(String.valueOf(e.getValue()))).findFirst()
+                            .map(Entry::getKey).orElse(name);
 
-			Function<String, String> func = name -> newColumns == null ? name : newColumns.entrySet()
-					.stream()
-					.filter(e -> name.equals(String.valueOf(e.getValue())))
-					.findFirst()
-					.map(Entry::getKey)
-					.orElse(name);
+            int count = 0;
+            for (Map<Header, Object> row : this.innerList)
+            {
+                Object[] value = new Object[headers.length];
+                if (withNumbers)
+                {
+                    value[0] = count;
+                }
 
-			int count = 0;
-			for (Map<Header, Object> row : this.innerList) {
-				Object[] value = new Object[headers.length];
-				if (withNumbers) {
-					value[0] = count;
-				}
+                for (int i = addition; i < headers.length; i++)
+                {
+                    Header header = headerByName(func.apply(headers[i]));
+                    if (reportValues)
+                    {
+                        value[i] = convertCell(header, row.get(header), report);
+                    }
+                    else
+                    {
+                        Object v = row.get(header);
+                        if (v instanceof ImageWrapper)
+                        {
+                            ImageWrapper iw = (ImageWrapper) v;
+                            String description = iw.getDescription() == null ? iw.toString() : iw.getDescription();
+                            v = report.decorateLink(description,
+                                    report.getImageDir() + File.separator + iw.getName(report.getReportDir()));
+                        }
+                        else if (v instanceof ReportBuilder)
+                        {
+                            ReportBuilder rb = (ReportBuilder) v;
+                            String name = rb.getName();
 
-				for (int i = addition; i < headers.length; i++) {
-					Header header = headerByName(func.apply(headers[i]));
-					if (reportValues) {
-						value[i] = convertCell(header, row.get(header), report);
-					} else {
-						Object v = row.get(header);
-						if (v instanceof ImageWrapper) {
-							ImageWrapper iw = (ImageWrapper) v;
-							String description = iw.getDescription() == null ? iw.toString() : iw.getDescription();
-							v = report.decorateLink(description, report.getImageDir() + File.separator + iw.getName(report.getReportDir()));
-						} else if (v instanceof ReportBuilder) {
-							ReportBuilder rb = (ReportBuilder) v;
-							String name = rb.getName();
-
-							v = report.decorateLink(name, name);
-						}
-						value[i] = v;
-					}
-				}
-				table.addValues(value);
-				count++;
-			}
-		}
-	}
+                            v = report.decorateLink(name, name);
+                        }
+                        value[i] = v;
+                    }
+                }
+                table.addValues(value);
+                count++;
+            }
+        }
+    }
 
 	public boolean extendEquals(ReportBuilder report, Table expected, String[] exclude, boolean ignoreRowsOrder)
 	{
@@ -1326,68 +1337,60 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 		return res;
 	}
 	
-	private Object convertCell(Header header, Object source, ReportBuilder report)
-	{
-		if (header.type == null)
-		{
-			return source;
-		}
-		Object value = null;
-		try
-		{
-			if (header.type == Header.HeaderType.EXPRESSION && this.evaluator != null)
-			{
-				value = this.evaluator.evaluate("" + source);
-			}
-			else if (header.type == Header.HeaderType.GROUP)
+    private Object convertCell(Header header, Object source, ReportBuilder report)
+    {
+        if (header.type == null)
+        {
+            return source;
+        }
+        Object value = null;
+        try
+        {
+            if (header.type == Header.HeaderType.EXPRESSION && this.evaluator != null)
             {
-			    if (report != null)
-			    {
-	                AtomicInteger level = new AtomicInteger(0);
-	                StringBuilder group = new StringBuilder();
-	                
-	                boolean isGroup = extract(Str.asString(source), group, level);
-
-	                if (isGroup)
-	                {
-	                    value = report.decorateGroupCell(group, level.get());
-	                }
-	                else
-	                {
-	                    value = group.toString();
-	                }
-			    }
-			    else
-			    {
-			        value = "" + source;
-			    }
+                value = this.evaluator.evaluate("" + source);
             }
-			else
-			{
-				value = Converter.convertToType(source, header.type.clazz);
-			}
-		}
-		catch (Exception e)
-		{
-			value = e.getMessage();
-		}
-		
-		return value;
-	}
+            else if (header.type == Header.HeaderType.GROUP)
+            {
+                if (report != null)
+                {
+                    AtomicInteger level = new AtomicInteger(0);
+                    StringBuilder group = new StringBuilder();
+                    boolean isNode = extract(Str.asString(source), group, level);
+                    value = report.decorateGroupCell(group, level.get(), isNode);
+                }
+                else
+                {
+                    value = "" + source;
+                }
+            }
+            else
+            {
+                value = Converter.convertToType(source, header.type.clazz);
+            }
+        }
+        catch (Exception e)
+        {
+            value = e.getMessage();
+        }
+
+        return value;
+    }
 	
-	private boolean extract(String path, StringBuilder group,  AtomicInteger outLevel)   // TODO implement this
+	private boolean extract(String path, StringBuilder group,  AtomicInteger outLevel)
 	{
 	    String[] parts = path.split("/");
-	    outLevel.set(parts.length - 1);
 	    int last = parts.length - 1;
 	    if (parts[last].equals("*"))
 	    {
-	        group.append(parts[last]);
+	        group.append(parts[last - 1]);
+	        outLevel.set(Math.max(0, parts.length - 2));
 	        return true;
 	    }
 	    else
 	    {
-	        group.append(parts[last - 1]);
+	        group.append(parts[last]);
+            outLevel.set(Math.max(0, parts.length - 1));
 	        return false;
 	    }
 	}
