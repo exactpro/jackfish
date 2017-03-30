@@ -116,7 +116,6 @@ public class ActionsList
 		        TextLoadFromFile.class,
 		        TextPerform.class,
                 TextReport.class,
-		        MessageReport.class,
 		        TextSaveToFile.class,
 		        TextSetValue.class,
 		        Wait.class,
