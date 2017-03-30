@@ -259,9 +259,9 @@ public class SeleniumRemoteApplication extends RemoteApplication
             {
                 public void run()
                 {
-                    driver.get(Thread.currentThread().getName());
+                    driver.get(url);
                 }
-            }, url);
+            });
             t.start();
             try
             {
