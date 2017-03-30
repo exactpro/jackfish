@@ -105,6 +105,12 @@ public class TexReportBuilder extends ReportBuilder
 		return name;
 	}
 
+    @Override
+    protected String decorateGroupCell(String content, int level)
+    {
+        return content;
+    }
+
 	@Override
 	protected String replaceMarker(String marker)
 	{

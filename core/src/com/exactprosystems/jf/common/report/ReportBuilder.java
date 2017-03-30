@@ -386,13 +386,24 @@ public abstract class ReportBuilder implements Storable
 		return decorateExpandingBlock(value.toString(), content);
 	}
 
+    public String decorateGroupCell(Object value, int level)
+    {
+        if (value == null)
+        {
+            return "";
+        }
+        return decorateGroupCell(value.toString(), level);
+    }
+
 	protected abstract String decorateStyle(String value, String style);
 
 	protected abstract String decorateLink(String name, String link);
 
 	protected abstract String decorateExpandingBlock(String name, String content);
 
-	protected abstract String replaceMarker(String marker);
+    protected abstract String decorateGroupCell(String content, int level);
+
+    protected abstract String replaceMarker(String marker);
 	
 	protected abstract String generateReportName(String outputPath, String matrixName, String suffix, Date date) throws IOException;
 

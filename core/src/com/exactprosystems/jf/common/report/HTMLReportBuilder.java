@@ -59,7 +59,6 @@ public class HTMLReportBuilder extends ReportBuilder
 		String res = String.format("<a href=\"%s\" target=\"_blank\">%s</a>",
 				link,
 				name);
-		
 		return res;
 	}
 
@@ -74,7 +73,16 @@ public class HTMLReportBuilder extends ReportBuilder
 		return res;
 	}
 
-	@Override
+    @Override
+    protected String decorateGroupCell(String content, int level)
+    {
+        String res = String.format("<a href=\"javascript:void(%d)\" indent-level=\"0\" class=\"group\">%s</a>",               
+                level,
+                content);
+        return res;
+    }
+
+    @Override
 	protected String replaceMarker(String marker)
 	{
 		return HTMLhelper.htmlMarker(marker);
@@ -431,7 +439,7 @@ public class HTMLReportBuilder extends ReportBuilder
 				StringBuilder sb = new StringBuilder();
 				for (String str : split)
 				{
-					str = str.replace(" ", "&nbsp;").replace("\t","&nbsp;&nbsp;&nbsp;&nbsp;");
+					str = str.replace("\t","&nbsp;&nbsp;&nbsp;&nbsp;");
 					sb.append(str).append("<br>");
 				}
 				writer.fwrite("<td class='tdMax'>%s</td>", sb.toString());

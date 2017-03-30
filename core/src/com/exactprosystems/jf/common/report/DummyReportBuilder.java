@@ -66,6 +66,12 @@ public class DummyReportBuilder extends ReportBuilder
 		return null;
 	}
 
+    @Override
+    protected String decorateGroupCell(String content, int level)
+    {
+        return null;
+    }
+
 	@Override
 	protected void putMark(ReportWriter writer, String mark) throws IOException
 	{

@@ -30,6 +30,7 @@ import java.sql.*;
 import java.util.*;
 import java.util.Date;
 import java.util.Map.Entry;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -255,8 +256,8 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 			Object obj1 = o1.get(header);
 			Object obj2 = o2.get(header);
 			
-			obj1 = convertCell(header, obj1);
-            obj2 = convertCell(header, obj2);
+			obj1 = convertCell(header, obj1, null);
+            obj2 = convertCell(header, obj2, null);
 			
 			Header.HeaderType type = header.type == null ? Header.HeaderType.STRING : header.type;
 			int compare = type.compare(obj1, obj2);
@@ -319,7 +320,7 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 				Object value = null;
 				if (saveValues)
 				{
-					value = convertCell(headers[i], source);
+					value = convertCell(headers[i], source, null);
 				}
 				else
 				{
@@ -367,6 +368,11 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 	{
 		considerAs(Header.HeaderType.EXPRESSION, columns);
 	}
+
+    public void considerAsGroup(String... columns) throws Exception
+    {
+        considerAs(Header.HeaderType.GROUP, columns);
+    }
 
 	public Table select(Condition[] conditions)
 	{
@@ -786,7 +792,7 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 				for (int i = addition; i < headers.length; i++) {
 					Header header = headerByName(func.apply(headers[i]));
 					if (reportValues) {
-						value[i] = convertCell(header, row.get(header));
+						value[i] = convertCell(header, row.get(header), report);
 					} else {
 						Object v = row.get(header);
 						if (v instanceof ImageWrapper) {
@@ -1315,12 +1321,12 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 		{
 			Header header = entry.getKey();
 			Object source = entry.getValue();
-			res.put(header.name, convertCell(header, source));
+			res.put(header.name, convertCell(header, source, null));
 		}
 		return res;
 	}
 	
-	private Object convertCell(Header header, Object source)
+	private Object convertCell(Header header, Object source, ReportBuilder report)
 	{
 		if (header.type == null)
 		{
@@ -1333,6 +1339,29 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 			{
 				value = this.evaluator.evaluate("" + source);
 			}
+			else if (header.type == Header.HeaderType.GROUP)
+            {
+			    if (report != null)
+			    {
+	                AtomicInteger level = new AtomicInteger(0);
+	                StringBuilder group = new StringBuilder();
+	                
+	                boolean isGroup = extract(Str.asString(source), group, level);
+
+	                if (isGroup)
+	                {
+	                    value = report.decorateGroupCell(group, level.get());
+	                }
+	                else
+	                {
+	                    value = group.toString();
+	                }
+			    }
+			    else
+			    {
+			        value = "" + source;
+			    }
+            }
 			else
 			{
 				value = Converter.convertToType(source, header.type.clazz);
@@ -1344,6 +1373,23 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 		}
 		
 		return value;
+	}
+	
+	private boolean extract(String path, StringBuilder group,  AtomicInteger outLevel)   // TODO implement this
+	{
+	    String[] parts = path.split("/");
+	    outLevel.set(parts.length - 1);
+	    int last = parts.length - 1;
+	    if (parts[last].equals("*"))
+	    {
+	        group.append(parts[last]);
+	        return true;
+	    }
+	    else
+	    {
+	        group.append(parts[last - 1]);
+	        return false;
+	    }
 	}
 	
 	private class TableListIterator implements ListIterator<RowTable>
