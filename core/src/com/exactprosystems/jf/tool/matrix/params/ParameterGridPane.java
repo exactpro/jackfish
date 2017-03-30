@@ -134,6 +134,9 @@ public class ParameterGridPane extends GridPane
 		{
 			((TextField) this.key).setText(parameter.getName());
 		}
-		this.value.setText(parameter.getExpression());
+		if (this.value != null)
+		{
+			this.value.setText(parameter.getExpression());
+		}
 	}
 }

@@ -1,3 +1,7 @@
+29.03.2017 4.4.0.2202
+RM41348
+Inconsistent behavior of 'Add parameter' command from menu for Action SubCase. Fixed
+
 --------------------------------------------------------------------------------
 29.03.2017 4.4.0.2198
 RM41325 bug : If Browser hangs, JF too hangs
