@@ -62,8 +62,8 @@
             this.ProgressBar = new System.Windows.Forms.ProgressBar();
             this.Panel = new System.Windows.Forms.Panel();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
-            this.menuToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.Menu = new System.Windows.Forms.MenuStrip();
+            this.MenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.oneToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.twoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -92,7 +92,7 @@
             this.TabPanel.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
-            this.menuStrip1.SuspendLayout();
+            this.Menu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.Splitter)).BeginInit();
             this.Splitter.Panel1.SuspendLayout();
             this.Splitter.Panel2.SuspendLayout();
@@ -378,27 +378,27 @@
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.TabStop = false;
             // 
-            // menuStrip1
+            // Menu
             // 
-            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.menuToolStripMenuItem,
+            this.Menu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.MenuItem,
             this.aboutToolStripMenuItem});
-            resources.ApplyResources(this.menuStrip1, "menuStrip1");
-            this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.CommonMouseDown);
-            this.menuStrip1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.CommonMouseMove);
+            resources.ApplyResources(this.Menu, "Menu");
+            this.Menu.Name = "Menu";
+            this.Menu.MouseDown += new System.Windows.Forms.MouseEventHandler(this.CommonMouseDown);
+            this.Menu.MouseMove += new System.Windows.Forms.MouseEventHandler(this.CommonMouseMove);
             // 
-            // menuToolStripMenuItem
+            // MenuItem
             // 
-            this.menuToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.MenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.optionsToolStripMenuItem,
             this.toolStripSeparator1,
             this.saveToolStripMenuItem,
             this.openToolStripMenuItem,
             this.toolStripSeparator2,
             this.exitToolStripMenuItem});
-            this.menuToolStripMenuItem.Name = "menuToolStripMenuItem";
-            resources.ApplyResources(this.menuToolStripMenuItem, "menuToolStripMenuItem");
+            this.MenuItem.Name = "MenuItem";
+            resources.ApplyResources(this.MenuItem, "MenuItem");
             // 
             // optionsToolStripMenuItem
             // 
@@ -442,6 +442,7 @@
             // 
             this.sixToolStripMenuItem.Name = "sixToolStripMenuItem";
             resources.ApplyResources(this.sixToolStripMenuItem, "sixToolStripMenuItem");
+            this.sixToolStripMenuItem.Click += new System.EventHandler(this.sixToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
@@ -558,8 +559,8 @@
             this.Controls.Add(this.CheckBox);
             this.Controls.Add(this.TextBox);
             this.Controls.Add(this.Button);
-            this.Controls.Add(this.menuStrip1);
-            this.MainMenuStrip = this.menuStrip1;
+            this.Controls.Add(this.Menu);
+            this.MainMenuStrip = this.Menu;
             this.Name = "Main";
             this.toolTip1.SetToolTip(this, resources.GetString("$this.ToolTip"));
             ((System.ComponentModel.ISupportInitialize)(this.Table1)).EndInit();
@@ -571,8 +572,8 @@
             this.tabPage1.PerformLayout();
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
-            this.menuStrip1.ResumeLayout(false);
-            this.menuStrip1.PerformLayout();
+            this.Menu.ResumeLayout(false);
+            this.Menu.PerformLayout();
             this.Splitter.Panel1.ResumeLayout(false);
             this.Splitter.Panel1.PerformLayout();
             this.Splitter.Panel2.ResumeLayout(false);
@@ -613,8 +614,8 @@
         private System.Windows.Forms.ProgressBar ProgressBar;
         private System.Windows.Forms.Panel Panel;
         private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.MenuStrip menuStrip1;
-        private System.Windows.Forms.ToolStripMenuItem menuToolStripMenuItem;
+        private System.Windows.Forms.MenuStrip Menu;
+        private System.Windows.Forms.ToolStripMenuItem MenuItem;
         private System.Windows.Forms.ToolStripMenuItem optionsToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripMenuItem oneToolStripMenuItem;

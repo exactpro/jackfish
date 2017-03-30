@@ -179,5 +179,10 @@ namespace mock_win
             control.GetSelected(0);
             centralLabel.Text = control.Name + "_" + control.SelectedItem.ToString();
         }
+
+        private void sixToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            centralLabel.Text = "six_click";
+        }
     }
 }

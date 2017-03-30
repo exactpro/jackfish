@@ -401,6 +401,12 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 	@Override
 	public boolean select(UIProxyJNA component, String selectedText) throws Exception
 	{
+		int[] itemId = findItem(component, selectedText);
+		this.driver.doPatternCall(new UIProxyJNA(itemId), WindowPattern.SelectionItemPattern, "Select", null, -1);
+		return true;
+	}
+
+	private int[] findItem(UIProxyJNA component, String selectedText) throws Exception {
 		try
 		{
 			WindowTreeScope treeScope = WindowTreeScope.Descendants;
@@ -427,8 +433,7 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 			int[] itemId = new int[itemLength];
 			System.arraycopy(arr, 2, itemId, 0, itemLength);
 			this.logger.info("Element id array : " + Arrays.toString(itemId));
-			this.driver.doPatternCall(new UIProxyJNA(itemId), WindowPattern.SelectionItemPattern, "Select", null, -1);
-			return true;
+			return itemId;
 		}
 		catch (RemoteException e)
 		{
@@ -447,14 +452,34 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 	{
 		try
 		{
-			//TODO call to menu and tree - doPatternCall 
-			if (expandOrCollapse)
-			{
+			String[] split = path.split("/");
+			logger.debug("path : " + path);
 
+			if (this.driver.elementAttribute(component, AttributeKind.TYPE_NAME).toLowerCase().contains("menu"))
+			{
+				for (int i = 0; i < split.length; i++) {
+					int[] itemId = findItem(component, split[i]);
+					this.driver.mouse(new UIProxyJNA(itemId), MouseAction.LeftClick, 5, 5);
+				}
+				return true;
 			}
-			else
+			else if (this.driver.elementAttribute(component, AttributeKind.TYPE_NAME).toLowerCase().contains("tree"))
 			{
+				for (int i = 0; i < split.length - 1; i++)
+				{
+					int[] itemId = findItem(component, split[i]);
+					this.driver.doPatternCall(new UIProxyJNA(itemId), WindowPattern.ExpandCollapsePattern, "Expand", null, -1);
+				}
 
+				int[] itemId = findItem(component, split[split.length - 1]);
+				if (expandOrCollapse)
+				{
+					this.driver.doPatternCall(new UIProxyJNA(itemId), WindowPattern.ExpandCollapsePattern, "Expand", null, -1);
+				}
+				else
+				{
+					this.driver.doPatternCall(new UIProxyJNA(itemId), WindowPattern.ExpandCollapsePattern, "Collapse", null, -1);
+				}
 			}
 			return true;
 		}
