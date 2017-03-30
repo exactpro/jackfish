@@ -56,20 +56,15 @@ public class SystemVars extends AbstractDocument
 	                continue;
 	            }
 	            
-	            String[] parts = line.split("=");
-	            switch (parts.length)
+	            int firstEq = line.indexOf('=');
+	            if (firstEq >= 0)
 	            {
-	                case 0:
-	                    break;
-	                    
-	                case 1:  
-	                    this.parameters.add(String.valueOf(parts[0]), null);
-	                    break;
-	                    
-	                default: 
-	                    this.parameters.add(String.valueOf(parts[0]), String.valueOf(parts[1]));
+	                this.parameters.add(line.substring(0,  firstEq), line.substring(firstEq + 1));
 	            }
-	            
+	            else
+	            {
+	                this.parameters.add(line, null);
+	            }
 	        }
 	    }
 	}

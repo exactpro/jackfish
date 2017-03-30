@@ -143,4 +143,55 @@ $(document).ready(function(){
 				event.preventDefault();
 			}
 		);
+	$('[indent-level]').filter(function(i,e) {
+		var indentLevel = $(e).attr('indent-level');
+
+		//update style
+		$(e).css('margin-left', function(i,e) {
+			return indentLevel*20;
+		});
+
+		return indentLevel != 0;
+	}).map(function(i,e) {
+		$(this).parent().parent().hide()
+	});
+
+	$('a.group').each(function(i,e) {
+		$(e).click(function(event) {
+			var tr = $(this).parent().parent();
+			var isOpened = $(tr).attr('opened');
+
+			if (isOpened == undefined) {
+				$(tr).attr('opened', 'true');
+				isOpened = true;
+			} else {
+				$(tr).removeAttr('opened');
+				isOpened = false;
+			}
+			var indentLevel = parseInt($(tr).attr('indent-level'));
+                            console.log(indentLevel);
+			var all = $(tr).nextAll();
+			for(var i = 0; i < all.length; i++) {
+				var elem = $(all[i]);
+				var il = elem.attr('indent-level');
+				if (parseInt(il) <= indentLevel) {
+					break;
+				}
+				if (!isOpened) {
+					$(elem).removeAttr('opened');
+					$(elem).hide();
+					continue;
+				}
+				if (parseInt(il) > (indentLevel+1)) {
+					continue;
+				}
+
+				if ($(elem).is(':visible')) {
+					$(elem).hide();
+				} else {
+					$(elem).show();
+				}
+			}
+		});
+	});
 });

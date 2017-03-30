@@ -60,6 +60,12 @@ public class ContextHelpBuilder extends ReportBuilder
 		return "";
 	}
 
+    @Override
+    protected String decorateGroupCell(String content, int level)
+    {
+        return "";
+    }
+
 	@Override
 	protected String generateReportDir(String matrixName, Date date) throws IOException
 	{

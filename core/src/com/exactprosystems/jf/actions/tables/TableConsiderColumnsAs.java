@@ -61,6 +61,7 @@ public class TableConsiderColumnsAs extends AbstractAction
 	public final static String asBigDecimalName = "BigDecimal";
 	public final static String asDateName = "Date";
 	public final static String asExpressionName = "Expression";
+    public final static String asGroupName = "Group";
 
 	@ActionFieldAttribute(name = tableName, mandatory = true, description = "A table is needed to be performed.\n")
 	protected Table 	table 	= null;
@@ -86,6 +87,9 @@ public class TableConsiderColumnsAs extends AbstractAction
 	@ActionFieldAttribute(name = asExpressionName, mandatory = false, description = "Is specified as an array of column names, where it is needed to set data type - Expression.")
 	protected String[]	asExpression;
 	
+    @ActionFieldAttribute(name = asGroupName, mandatory = false, description = "Is specified as an array of column names, where it is needed to set data type - Group.")
+    protected String[]  asGroup;
+    
 	public TableConsiderColumnsAs()
 	{
 	}
@@ -93,13 +97,14 @@ public class TableConsiderColumnsAs extends AbstractAction
 	@Override
 	public void initDefaultValues() 
 	{
-		asString 		= new String[] {};
-		asBoolean 		= new String[] {};
-		asInteger 		= new String[] {};
-		asDouble 		= new String[] {};
-		asBigDecimal 	= new String[] {};
-		asDate 			= new String[] {};
-		asExpression 	= new String[] {};
+		this.asString 		= new String[] {};
+		this.asBoolean 		= new String[] {};
+		this.asInteger 		= new String[] {};
+		this.asDouble 		= new String[] {};
+		this.asBigDecimal 	= new String[] {};
+		this.asDate 		= new String[] {};
+		this.asExpression 	= new String[] {};
+		this.asGroup        = new String[] {};
 	}
 	
 	@Override
@@ -133,6 +138,10 @@ public class TableConsiderColumnsAs extends AbstractAction
 		{
 			this.table.considerAsExpression(this.asExpression);
 		}
+        if (this.asGroup.length > 0)
+        {
+            this.table.considerAsGroup(this.asGroup);
+        }
 		
 		super.setResult(null);
 	}

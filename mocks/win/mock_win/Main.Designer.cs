@@ -256,6 +256,7 @@
             // Slider
             // 
             resources.ApplyResources(this.Slider, "Slider");
+            this.Slider.Maximum = 50;
             this.Slider.Name = "Slider";
             this.Slider.KeyDown += new System.Windows.Forms.KeyEventHandler(this.CommonKeyDown);
             this.Slider.MouseDown += new System.Windows.Forms.MouseEventHandler(this.CommonMouseDown);

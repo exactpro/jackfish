@@ -15,7 +15,8 @@ class Header implements Cloneable
 		DOUBLE		(Double.class),
 		DATE		(Date.class),
 		BIG_DECIMAL	(BigDecimal.class),
-		EXPRESSION	(Object.class), 
+		EXPRESSION	(Object.class),
+		GROUP       (String.class),
 		;
 		
 		HeaderType(Class<?> clazz)

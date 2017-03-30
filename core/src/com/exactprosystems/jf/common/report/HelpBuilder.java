@@ -63,6 +63,15 @@ public class HelpBuilder extends ReportBuilder
 		return HTMLhelper.htmlMarker(name);
 	}
 
+    @Override
+    protected String decorateGroupCell(String content, int level)
+    {
+        String res = String.format("<a href=\"javascript:void(%d)\" indent-level=\"0\" class=\"group\">%s</a>",               
+                level,
+                HTMLhelper.htmlMarker(content));
+        return res;
+    }
+
 	@Override
 	protected String replaceMarker(String marker)
 	{
