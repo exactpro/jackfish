@@ -27,7 +27,7 @@ public interface DataProvider<T>
 
 	void addColumn(int column, String name);
 
-	void removeColumn(int column);
+	void removeColumns(Integer[] columnsIndex);
 
 	void addRow(int row);
 

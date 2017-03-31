@@ -232,10 +232,7 @@ public class SpreadsheetView extends Control
 
 	public void removeColumn(List<Integer> columns)
 	{
-		for (int i = columns.size() - 1; i >= 0; i--)
-		{
-			this.providerProperty().get().removeColumn(columns.get(i));
-		}
+		this.providerProperty().get().removeColumns(columns.toArray(new Integer[columns.size()]));
 		this.setDataProvider(providerProperty().get());
 	}
 
