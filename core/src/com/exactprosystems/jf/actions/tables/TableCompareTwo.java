@@ -49,7 +49,7 @@ import java.util.List;
 				+ "#Action;#Expected;#Actual\n"
 				+ "TableCompareTwo;TC;TC1#}}"
 	)
-public class TableCompareTwo extends AbstractAction 
+public class TableCompareTwo extends AbstractAction
 {
 	public final static String actualName = "Actual";
 	public final static String expectedName = "Expected";
@@ -72,20 +72,20 @@ public class TableCompareTwo extends AbstractAction
 	public TableCompareTwo()
 	{
 	}
-	
+
 	@Override
-	public void initDefaultValues() 
+	public void initDefaultValues()
 	{
 		exclude = new String[]{};
 		ignoreRowsOrder = false;
 	}
-	
+
 	@Override
 	protected HelpKind howHelpWithParameterDerived(Context context, Parameters parameters, String fieldName) throws Exception
 	{
 		return ignoreRowsOrderName.equals(fieldName) ? HelpKind.ChooseFromList : null;
 	}
-	
+
 	@Override
 	protected void listToFillParameterDerived(List<ReadableValue> list, Context context, String parameterToFill, Parameters parameters) throws Exception
 	{
@@ -98,7 +98,7 @@ public class TableCompareTwo extends AbstractAction
 		}
 	}
 
-	
+
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
@@ -113,15 +113,15 @@ public class TableCompareTwo extends AbstractAction
 			super.setError("Expected table is null", ErrorKind.EMPTY_PARAMETER);
 			return;
 		}
-	
+
 		Table differences = new Table(new String[] { "Expected", "Actual" }, evaluator);
 		boolean res = Table.extendEquals(report, differences, this.actual, this.expected, this.exclude, this.ignoreRowsOrder);
-		
+
 		if (!res)
 		{
 			super.setError("Tables are not equal.", ErrorKind.NOT_EQUAL);
 		}
         super.setResult(differences);
 	}
-	
+
 }

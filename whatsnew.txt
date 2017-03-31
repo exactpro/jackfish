@@ -1,4 +1,8 @@
 --------------------------------------------------------------------------------
+31.03.2017 4.4.0.2208
+RM41192 feature : For Action TableCompareTwo, add the function to retrieve the data displayed in the report using the Out parameter.
+
+--------------------------------------------------------------------------------
 29.03.2017 4.4.0.2203
 RM39476 feature : new action MessageReport
 
