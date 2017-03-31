@@ -259,7 +259,14 @@ public class SeleniumRemoteApplication extends RemoteApplication
             {
                 public void run()
                 {
+                    logger.info("Before driver.get(" + url + ")");
                     driver.get(url);
+                    logger.info("After driver.get(" + url + ")");
+                    if(!browser.equals(Browser.ANDROIDBROWSER) && !browser.equals(Browser.ANDROIDCHROME))
+                    {
+                        driver.manage().window().maximize();
+                        logger.info("After driver.maximize()");
+                    }
                 }
             });
             t.start();
@@ -278,11 +285,6 @@ public class SeleniumRemoteApplication extends RemoteApplication
                 this.driver = null;
                 throw new TimeoutException("Page loading");
             }			
-			
-			if(!browser.equals(Browser.ANDROIDBROWSER) && !browser.equals(Browser.ANDROIDCHROME))
-			{
-				this.driver.manage().window().maximize();
-			}
 		}
 		catch (Exception e)
 		{
