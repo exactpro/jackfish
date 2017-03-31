@@ -11,6 +11,9 @@ import com.exactprosystems.jf.functions.Table;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
+import java.util.Arrays;
+import java.util.stream.Collectors;
+
 public class TableDataProvider implements DataProvider<String>
 {
 	private Table table;
@@ -81,10 +84,14 @@ public class TableDataProvider implements DataProvider<String>
 	}
 
 	@Override
-	public void removeColumn(int column)
+	public void removeColumns(Integer ... columnsIndex)
 	{
-		String name = this.table.getHeader(column);
-		this.table.removeColumns(name);
+		this.table.removeColumns(
+				Arrays.stream(columnsIndex)
+						.map(this.table::getHeader)
+						.collect(Collectors.toList())
+						.toArray(new String[columnsIndex.length])
+		);
 	}
 
 	@Override

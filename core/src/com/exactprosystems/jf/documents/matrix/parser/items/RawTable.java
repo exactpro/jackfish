@@ -20,9 +20,9 @@ import com.exactprosystems.jf.functions.Table;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 
 import java.io.IOException;
-import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 @MatrixItemAttribute(
 		description 	= "This operator is used to describe an object asTable. In matrix editor there is a special mini editor for  rowText и rawMessage for this operator.",
@@ -52,7 +52,6 @@ public class RawTable extends MatrixItem
 		this.table = Table.emptyTable();
 		this.prefCols = this.table.getHeaderSize();
 		this.prefRows = this.table.size();
-		this.table.setChangeListener(flag -> this.owner.changed(flag));
 	}
 
 	@Override
@@ -67,6 +66,11 @@ public class RawTable extends MatrixItem
 	protected Object displayYourself(DisplayDriver driver, Context context)
 	{
 		Object layout = driver.createLayout(this, 3);
+
+		this.table.setDisplayListener(table -> driver.updateTable(this, layout, table));
+		this.table.setChangeListener(flag -> this.owner.changed(flag));
+		this.table.setUndoRedoFunction((u, r) -> this.owner.addCommand(u, r));
+
 		driver.showComment(this, layout, 0, 0, getComments());
 		driver.showTextBox(this, layout, 1, 0, this.id, this.id, () -> this.id.get());
 		driver.showTitle(this, layout, 1, 1, Tokens.RawTable.get(), context.getFactory().getSettings());
@@ -84,27 +88,14 @@ public class RawTable extends MatrixItem
 		driver.showSpinner(this, layout, 1, 8, 75, v -> this.prefCols = v, () -> this.prefCols, 0, 50);
 		driver.showButton(this, layout, 1, 9, "Apply", item ->
 		{
-			if (this.prefCols < this.table.getHeaderSize() || this.prefRows < this.table.size())
-			{
-				boolean needContinue = DialogsHelper.showQuestionDialog(String.format("Current table size is [%s;%s] and given size is [%s;%s].The table will be cut ", this.table.size(), this.table.getHeaderSize(), this.prefRows, this.prefCols), "Do you want to continue cutting the table?");
-				if (needContinue)
-				{
-					List<String> collect = IntStream.range(this.prefCols, this.table.getHeaderSize()).mapToObj(this.table::getHeader).collect(Collectors.toList());
-					this.table.removeColumns(collect.toArray(new String[collect.size()]));
-
-					for (int i = this.table.size() - 1; i >= this.prefRows; i--)
-					{
-						this.table.remove(i);
-					}
-				}
-			}
-			else
-			{
-				IntStream.range(0, this.prefCols - this.table.getHeaderSize()).mapToObj(i -> Table.generateColumnName(this.table)).forEach(this.table::addColumns);
-
-				IntStream.range(0, this.prefRows - this.table.size()).mapToObj(i -> IntStream.range(0, this.table.getHeaderSize()).mapToObj(j -> "").collect(Collectors.toList())).map(list -> list.toArray(new Object[list.size()])).forEach(this.table::addValue);
-			}
-			driver.updateTable(this, layout, this.table);
+			this.table.extendsTable(this.prefCols, this.prefRows, () ->
+					DialogsHelper.showQuestionDialog(
+							String.format("Current table size is [%s;%s] and given size is [%s;%s].The table will be cut ",
+									this.table.size()
+									, this.table.getHeaderSize()
+									, this.prefRows
+									, this.prefCols),
+							"Do you want to continue cutting the table?"));
 		});
 		return layout;
 	}
@@ -148,7 +139,6 @@ public class RawTable extends MatrixItem
 		{
 			this.table = new Table(str, null);
 			this.prefCols = this.table.getHeaderSize();
-			this.table.setChangeListener(flag -> Optional.ofNullable(this.owner).ifPresent(own -> own.changed(flag)));
 			this.firstUsing = false;
 			return;
 		}
