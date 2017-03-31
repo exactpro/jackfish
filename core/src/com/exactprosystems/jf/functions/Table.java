@@ -20,6 +20,7 @@ import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.common.report.ReportHelper;
 import com.exactprosystems.jf.common.report.ReportTable;
+import com.exactprosystems.jf.common.undoredo.Command;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.exceptions.ColumnIsPresentException;
 import com.exactprosystems.jf.sql.SqlConnection;
@@ -31,14 +32,37 @@ import java.util.*;
 import java.util.Date;
 import java.util.Map.Entry;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.BiConsumer;
+import java.util.function.BooleanSupplier;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class Table implements List<RowTable>, Mutable, Cloneable
 {
+	//region fields
 	private static final String EMPTY_HEADER	= "newH";
 	private static final String EMPTY_ROW		= "newR";
+
+	private BiConsumer<Command, Command> undoRedoFunction;
+	private Consumer<Table> displayFunction;
+
+	private boolean useColumnNumber = false;
+	private static final String ROW_INDEX_SYMBOL = "@";
+	private List<Map<Header, Object>> innerList = null;
+	private Header[] headers;
+	private AbstractEvaluator evaluator;
+
+	private ChangeListener changeListener;
+
+	private String fileName;
+	static int index = 0;
+	private boolean changed;
+	private static final Logger logger = Logger.getLogger(Table.class);
+	//endregion
+
+	//region Constructors
 	private Table(AbstractEvaluator evaluator)
 	{
 		this.evaluator = evaluator;
@@ -153,15 +177,16 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 		this(evaluator);
 		readFilesInfo(dirName);
 	}
+	//endregion
 
+	//region Static constructors
 	public static Table emptyTable()
 	{
 		return new Table(new String[][]{new String[]{EMPTY_HEADER}, new String[]{EMPTY_ROW}}, null);
 	}
+	//endregion
 
-	//==============================================================================================
-	// Interface Mutable
-	//==============================================================================================
+	//region Interface Mutable
 	@Override
 	public boolean isChanged()
 	{
@@ -173,10 +198,9 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 	{
 		this.changed = false;
 	}
+	//endregion
 
-	//==============================================================================================
-	// Interface Cloneable
-	//==============================================================================================
+	//region Interface Cloneable
 	@Override
 	public Table clone() throws CloneNotSupportedException
 	{
@@ -197,770 +221,9 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 		
 		return clone;
 	}
+	//endregion
 
-	//==============================================================================================
-
-	public boolean isEmptyTable()
-	{
-		return this.headers.length == 1
-				&& this.headers[0].name.equals(EMPTY_HEADER)
-				&& this.innerList.size() == 1
-				&& this.innerList.get(0).get(headerByName(EMPTY_HEADER)).equals(EMPTY_ROW);
-	}
-
-	public void fillFromTable(Table table)
-	{
-		this.headers = new ArrayList<Header>().toArray(new Header[0]);
-		this.innerList.clear();
-		this.addColumns(Arrays.stream(table.headers).map(h -> h.name).toArray(String[]::new));
-		for (int i = 0; i < table.innerList.size(); i++)
-		{
-			Map<String, Object> stringObjectMap = convertToStr(table.innerList.get(i));
-			Map<Header, Object> newMap = new LinkedHashMap<>();
-			stringObjectMap.entrySet().forEach(entry -> newMap.put(headerByName(entry.getKey()), entry.getValue()));
-			this.innerList.add(newMap);
-		}
-	}
-	
-	public void setEvaluator(AbstractEvaluator evaluator)
-	{
-		this.evaluator = evaluator;
-	}
-	
-	public boolean removeRow(int index)
-	{
-		this.innerList.remove(index);
-		changed(true);
-		return true;
-	}
-
-	public Table sort(String colName, boolean az) throws Exception
-	{
-		changed(true);
-		for (int i = 0; i < this.headers.length; i++)
-		{
-			if (this.headers[i].name.equals(colName))
-			{
-				return this.sort(i, az);
-			}
-		}
-		throw new Exception("Column this name \'" + colName + "\' not fount in the table");
-	}
-
-	public Table sort(int colNumber, boolean az)
-	{
-		changed(true);
-		Header header = this.headers[colNumber];
-		this.innerList.sort((o1, o2) -> 
-		{ 
-			Object obj1 = o1.get(header);
-			Object obj2 = o2.get(header);
-			
-			obj1 = convertCell(header, obj1, null);
-            obj2 = convertCell(header, obj2, null);
-			
-			Header.HeaderType type = header.type == null ? Header.HeaderType.STRING : header.type;
-			int compare = type.compare(obj1, obj2);
-			return az ? compare : -compare;
-		});
-		return this;
-	}
-
-	public boolean save(String fileName, char delimiter, boolean saveValues, boolean withNmumbers)
-	{
-		CsvWriter writer = null;
-
-		try (Writer bufferedWriter = new BufferedWriter(new FileWriter(fileName)))
-		{
-			writer = new CsvWriter(bufferedWriter, delimiter);
-			return save(writer, "", saveValues, withNmumbers);
-		}
-		catch (Exception e)
-		{
-			logger.error(e.getMessage(), e);
-			return false;
-		}
-		finally
-		{
-			if (writer != null)
-			{
-				writer.close();
-			}
-		}
-	}
-	
-	public boolean save(CsvWriter writer, String indent, boolean saveValues, boolean withNmumbers) throws IOException
-	{
-		int columns = this.headers.length + (withNmumbers ? 1 : 0);
-		String[] record = new String[columns];
-		int count = 0;
-		if (withNmumbers)
-		{
-			record[count++] = indent + ROW_INDEX_SYMBOL;
-		}
-		for (int i = 0; i < this.headers.length; i++)
-		{
-			record[count++] = this.headers[i].name;
-		}
-		writer.writeRecord(record, true);
-
-
-		List<Map<Header, Object>> innerList1 = this.innerList;
-		for (int j = 0; j < innerList1.size(); j++)
-		{
-			count = 0;
-			if (withNmumbers)
-			{
-				record[count++] = indent + String.valueOf(j);
-			}
-			Map<Header, Object> f = innerList1.get(j);
-			for (int i = 0; i < this.headers.length; i++)
-			{
-				Object source = f.get(this.headers[i]);
-				Object value = null;
-				if (saveValues)
-				{
-					value = convertCell(headers[i], source, null);
-				}
-				else
-				{
-					value = source;
-				}
-				record[count++] = String.valueOf(value == null ? "" : value);
-			}
-			writer.writeRecord(record, true);
-		}
-		return true;
-	}
-	
-	
-	public void considerAsString(String... columns) throws Exception
-	{
-		considerAs(Header.HeaderType.STRING, columns);
-	}
-
-	public void considerAsBoolean(String... columns) throws Exception
-	{
-		considerAs(Header.HeaderType.BOOL, columns);
-	}
-
-	public void considerAsInt(String... columns) throws Exception
-	{
-		considerAs(Header.HeaderType.INT, columns);
-	}
-
-	public void considerAsDouble(String... columns) throws Exception
-	{
-		considerAs(Header.HeaderType.DOUBLE, columns);
-	}
-
-	public void considerAsDate(String... columns) throws Exception
-	{
-		considerAs(Header.HeaderType.DATE, columns);
-	}
-
-	public void considerAsBigDecimal(String... columns) throws Exception
-	{
-		considerAs(Header.HeaderType.BIG_DECIMAL, columns);
-	}
-
-	public void considerAsExpression(String... columns) throws Exception
-	{
-		considerAs(Header.HeaderType.EXPRESSION, columns);
-	}
-
-    public void considerAsGroup(String... columns) throws Exception
-    {
-        considerAs(Header.HeaderType.GROUP, columns);
-    }
-
-	public Table select(Condition[] conditions)
-	{
-		Table result = new Table(this.evaluator);
-		result.headers = this.headers.clone();
-
-		for (Map<Header, Object> row : this.innerList)
-		{
-		    RowTable rowTable =  convertToStr(row);
-			boolean matched = true;
-			for (Condition condition : conditions)
-			{
-				if (!condition.isMatched(rowTable))
-				{
-					matched = false;
-					break;
-				}
-			}
-
-			if (matched)
-			{
-				result.innerList.add(row);
-			}
-		}
-
-		return result;
-	}
-
-    public List<Integer> findAllIndexes(Condition[] conditions)
-    {
-        List<Integer> indexes = new ArrayList<>();
-        int count = 0;
-        for (Map<Header, Object> row : this.innerList)
-        {
-            RowTable rowTable =  convertToStr(row);
-            boolean matched = true;
-            for (Condition condition : conditions)
-            {
-                if (!condition.isMatched(rowTable))
-                {
-                    matched = false;
-                    break;
-                }
-            }
-
-            if (matched)
-            {
-                indexes.add(count);
-            }
-            count++;
-        }
-
-        return indexes;
-    }
-
-	public void upload(SqlConnection connection, String table) throws SQLException
-	{
-		Statement statement = null;
-		try
-		{
-			statement = connection.getConnection().createStatement();
-			Header[] headers = this.headers;
-			int i = 0;
-			for (Map<Header, Object> map : this.innerList)
-			{
-				StringBuilder sql = new StringBuilder("INSERT INTO ");
-				sql.append(table).append(" SET");
-
-				for (Header header : headers)
-				{
-					sql.append(" ").append(header.name).append("=");
-					sql.append("'").append(map.get(header)).append("',");
-				}
-				sql.deleteCharAt(sql.length() - 1);
-				statement.addBatch(sql.toString());
-				if (i == 10)
-				{
-					statement.executeBatch();
-					i = 0;
-				}
-				else
-				{
-					i++;
-				}
-			}
-		}
-		finally
-		{
-			if (statement != null)
-			{
-				statement.executeBatch();
-				statement.close();
-			}
-		}
-	}
-
-	public void addColumns(String... columns)
-	{
-		changed(true);
-		List<Header> list = new ArrayList<Header>();
-		if (this.headers != null)
-		{
-			list.addAll(Arrays.asList(this.headers));
-		}
-		
-		for (String column : columns)
-		{
-			if (column.equals(ROW_INDEX_SYMBOL))
-			{
-				this.useColumnNumber = true;
-				continue;
-			}
-			if (!columnIsPresent(column))
-			{
-				list.add(new Header(column, null));
-			}
-		}
-		
-		this.headers = list.toArray(new Header[0]);
-		addEmptyStringToAllLinesInNewColumn();
-	}
-
-	public void addColumns(int index, String... columns)
-	{
-		for (String column : columns)
-		{
-			if (columnIsPresent(column))
-			{
-				throw new ColumnIsPresentException(String.format("Column with name %s already present", column));
-			}
-		}
-		changed(true);
-		if (this.headers == null)
-		{
-			this.headers = new Header[]{};
-		}
-		List<Header> newHeaders = new ArrayList<>(Arrays.asList(this.headers));
-		newHeaders.addAll(index, Arrays.stream(columns).map(s -> new Header(s, null)).collect(Collectors.toList()));
-		this.headers = newHeaders.toArray(new Header[newHeaders.size()]);
-		addEmptyStringToAllLinesInNewColumn();
-	}
-
-	private void addEmptyStringToAllLinesInNewColumn()
-	{
-		final String EMPTY_STRING = "";
-		this.innerList.forEach(e ->
-				Arrays.stream(this.headers).filter(h ->
-						!e.containsKey(h)).forEach(h ->
-						e.put(h, EMPTY_STRING)));
-	}
-
-	public boolean columnIsPresent(String columnName)
-	{
-		if (this.headers == null || this.headers.length == 0)
-		{
-			return false;
-		}
-		for (Header header : this.headers)
-		{
-			if (header != null && Str.areEqual(columnName, header.name))
-			{
-				return true;
-			}
-		}
-		return false;
-	}
-
-	public void removeColumns(String... columns)
-	{
-		if (this.headers == null)
-		{
-			return;
-		}
-		changed(true);
-		List<String> strings = Arrays.asList(columns);
-		List<Header> headers = new ArrayList<>(Arrays.asList(this.headers));
-		Iterator<Header> iterator = headers.iterator();
-		while (iterator.hasNext())
-		{
-			Header header = iterator.next();
-			String next = header.name;
-			if (strings.contains(next)) // TODO why isn't equals() ?
-			{
-				this.innerList.forEach(row -> row.remove(header));
-				iterator.remove();
-			}
-
-		}
-		this.headers = headers.toArray(new Header[headers.size()]);
-	}
-
-	public void updateValue(int index, RowTable row)
-	{
-		changed(true);
-		Map<Header, Object> newMap = new LinkedHashMap<>();
-		Map<Header, Object> oldMap = this.innerList.get(index);
-		Arrays.stream(this.headers).forEach(h ->
-		{
-			Object rowValue = row.get(h.name);
-			if (rowValue == null)
-			{
-				rowValue = oldMap.get(h);
-			}
-			newMap.put(h, rowValue);
-		});
-		this.innerList.set(index, newMap);
-	}
-
-	public void setValue(int index, RowTable row)
-	{
-		changed(true);
-		this.innerList.set(index, convert(row));
-	}
-
-	public void setValue(int index, Map<String, Object> map)
-	{
-		changed(true);
-		Map<Header, Object> line = this.innerList.get(index);
-		for (Entry<String, Object> entry : map.entrySet())
-		{
-			String name = entry.getKey();
-			Object value = entry.getValue();
-
-			line.put(headerByName(name), value);
-		}
-	}
-
-	public void renameColumn(String oldValue, String newValue) throws Exception
-	{
-		for (Header h : this.headers)
-		{
-			if (h.name.equals(oldValue))
-			{
-				h.name = newValue;
-				return;
-			}
-		}
-		throw new Exception(String.format("Column with name %s not presented into table", oldValue));
-	}
-
-	public void addValue(int index, Map<String, Object> map)
-	{
-		changed(true);
-		if (this.headers != null)
-		{
-			Map<Header, Object> line = convert(map);
-			if (index >= 0)
-			{
-				this.innerList.add(index, line);
-			}
-			else
-			{
-				this.innerList.add(line);
-			}
-		}
-	}
-
-	public void addValue(int index, Object[] arr)
-	{
-		changed(true);
-		if (this.headers != null)
-		{
-			Map<Header, Object> line = convert(arr);
-			this.innerList.add(index, line);
-		}
-	}
-
-	public void addValue(Object[] arr)
-	{
-		changed(true);
-		if (this.headers != null)
-		{
-			if (this.useColumnNumber)
-			{
-				arr = Arrays.copyOfRange(arr, 1, arr.length);
-			}
-
-			Map<Header, Object> line = convert(arr);
-			this.innerList.add(line);
-		}
-	}
-
-	public void changeValue(String headerName, int indexRow, Object newValue)
-	{
-		changed(true);
-		if (this.headers != null)
-		{
-			Map<Header, Object> row = this.innerList.get(indexRow);
-			if(row != null)
-			{
-				row.remove(headerByName(headerName));
-				row.put(headerByName(headerName), newValue);
-			}
-		}
-	}
-
-	public void replace(Object source, Object dest, boolean matchCell, String ...columns)
-	{
-		if (columns == null || columns.length == 0 || areEqual(source, dest))
-		{
-			return;
-		}
-
-		List<Header> filtered = filter(columns);
-		
-		for (Map<Header, Object> row : this.innerList)
-		{
-			for (Header header : filtered)
-			{
-				Object value = row.get(header);
-				if (!matchCell)
-				{
-					String sValue = String.valueOf(value);
-					String sSource = String.valueOf(source);
-					if (sValue.contains(sSource)) // TODO why contains ?!!
-					{
-						row.remove(header);
-						row.put(header, sValue.replace(sSource, String.valueOf(dest)));
-					}
-				}
-				else if (areEqual(value, source))
-				{
-					row.put(header, dest);
-				}
-			}
-		}
-	}
-	public void replace(String regexp, Object dest, String ...columns)
-	{
-		if (columns == null || columns.length == 0)
-		{
-			return;
-		}
-
-		List<Header> filtered = filter(columns);
-		
-		for (Map<Header, Object> row : this.innerList)
-		{
-			for (Header header : filtered)
-			{
-				Object value = row.get(header);
-				if (String.valueOf(value).matches(regexp))
-				{
-					row.put(header, dest);
-				}
-			}
-		}
-	}
-
-	public void report(ReportBuilder report, String title, String beforeTestcase, boolean withNumbers, boolean reportValues) throws Exception
-	{
-		String[] columns = Arrays.stream(this.headers).map(h -> h.name).toArray(num -> new String[num]);
-		
-		report(report, title, beforeTestcase, withNumbers, reportValues, null, columns);
-	}
-
-	private String[] convertHeaders(Parameters parameters, String[] headers, boolean withNumbers)
-	{
-		if (parameters == null)
-		{
-			return headers;
-		}
-		List<String> list = new ArrayList<>();
-		if (withNumbers)
-		{
-			list.add("#");
-		}
-		list.addAll(parameters.values()
-			.stream()
-			.map(String::valueOf)
-			.collect(Collectors.toList())
-		);
-
-		return list.toArray(new String[list.size()]);
-	}
-
-    public void report(ReportBuilder report, String title, String beforeTestcase, boolean withNumbers,
-            boolean reportValues, Parameters newColumns, String... columns) throws Exception
-    {
-        if (beforeTestcase != null || report.reportIsOn()) // TODO zzz
-        {
-            int[] columnsIndexes = getIndexes(columns);
-
-            if (columnsIndexes.length == 0)
-            {
-                columnsIndexes = new int[this.headers.length];
-                for (int i = 0; i < this.headers.length; i++)
-                {
-                    columnsIndexes[i] = i;
-                }
-            }
-
-            int addition = withNumbers ? 1 : 0;
-            String[] headers = new String[addition + columnsIndexes.length];
-            if (withNumbers)
-            {
-                headers[0] = "#";
-            }
-            int col = 0;
-            for (int index : columnsIndexes)
-            {
-                headers[col++ + addition] = this.headers[index].name;
-            }
-            headers = convertHeaders(newColumns, headers, withNumbers);
-            ReportTable table = report.addExplicitTable(title, beforeTestcase, true, 0, new int[] {}, headers);
-
-            Function<String, String> func = name -> newColumns == null ? name
-                    : newColumns.entrySet().stream().filter(e -> name.equals(String.valueOf(e.getValue()))).findFirst()
-                            .map(Entry::getKey).orElse(name);
-
-            int count = 0;
-            for (Map<Header, Object> row : this.innerList)
-            {
-                Object[] value = new Object[headers.length];
-                if (withNumbers)
-                {
-                    value[0] = count;
-                }
-
-                for (int i = addition; i < headers.length; i++)
-                {
-                    Header header = headerByName(func.apply(headers[i]));
-                    if (reportValues)
-                    {
-                        value[i] = convertCell(header, row.get(header), report);
-                    }
-                    else
-                    {
-                        Object v = row.get(header);
-                        if (v instanceof ImageWrapper)
-                        {
-                            ImageWrapper iw = (ImageWrapper) v;
-                            String description = iw.getDescription() == null ? iw.toString() : iw.getDescription();
-                            v = report.decorateLink(description,
-                                    report.getImageDir() + File.separator + iw.getName(report.getReportDir()));
-                        }
-                        else if (v instanceof ReportBuilder)
-                        {
-                            ReportBuilder rb = (ReportBuilder) v;
-                            String name = rb.getName();
-
-                            v = report.decorateLink(name, name);
-                        }
-                        value[i] = v;
-                    }
-                }
-                table.addValues(value);
-                count++;
-            }
-        }
-    }
-
-	public boolean extendEquals(ReportBuilder report, Table expected, String[] exclude, boolean ignoreRowsOrder)
-	{
-		Set<String> expectedNames = names(expected, exclude);
-		Set<String> actualNames = names(this, exclude);
-		ReportTable table = null;
-
-		if (!expectedNames.equals(actualNames))
-		{
-			table = createTable(table, report);
-			table.addValues("", Arrays.toString(expectedNames.toArray()), Arrays.toString(actualNames.toArray()));
-			return false;
-		}
-
-		boolean result = true;
-		if (ignoreRowsOrder)
-		{
-			boolean[] actualMatched = new boolean[this.innerList.size()]; 
-			boolean[] expectedMatched = new boolean[expected.innerList.size()];
-
-			int actualCounter = 0;
-			Iterator<Map<Header, Object>> actualIterator = this.innerList.iterator();
-			while (actualIterator.hasNext())
-			{
-				Map<Header, Object> actualRow = actualIterator.next();
-
-				int expectedCounter = 0;
-				Iterator<Map<Header, Object>> expectedIterator = expected.innerList.iterator();
-				while (expectedIterator.hasNext())
-				{
-					Map<Header, Object> expectedRow = expectedIterator.next();
-					Map<String, ArrayList<Object>> stringMap = compareRows(convertToStr(actualRow), convertToStr(expectedRow), expectedNames);
-					if (stringMap.isEmpty())
-					{
-						actualMatched[actualCounter] = true;
-						expectedMatched[expectedCounter] = true;
-					}
-
-					expectedCounter++;
-				}
-				actualCounter++;
-			}
-
-			int count = 0;
-			Iterator<Map<Header, Object>> expectedIterator = expected.innerList.iterator();
-			while (expectedIterator.hasNext())
-			{
-				Map<Header, Object> expectedRow = expectedIterator.next();
-				if (!expectedMatched[count])
-				{
-					table = createTable(table, report);
-					table.addValues(count, ReportHelper.objToString(expectedRow, false), "");
-					result = false;
-				}
-				count++;
-			}
-
-			count = 0;
-			actualIterator = this.innerList.iterator();
-			while (actualIterator.hasNext())
-			{
-				Map<Header, Object> actualRow = actualIterator.next();
-				if (!actualMatched[count])
-				{
-					table = createTable(table, report);
-					table.addValues(count, "", ReportHelper.objToString(actualRow, false));
-					result = false;
-				}
-				count++;
-			}
-		}
-		else
-		{
-			Iterator<Map<Header, Object>> actualIterator = this.innerList.iterator();
-			Iterator<Map<Header, Object>> expectedIterator = expected.innerList.iterator();
-
-			int rowCount = 0;
-			while (actualIterator.hasNext() && expectedIterator.hasNext())
-			{
-				Map<Header, Object> actualRow = actualIterator.next();
-				Map<Header, Object> expectedRow = expectedIterator.next();
-				Map<String, ArrayList<Object>> stringMap = compareRows(convertToStr(actualRow), convertToStr(expectedRow), expectedNames);
-				if (!stringMap.isEmpty())
-				{
-					table = createTable(table, report);
-					table.addValues(rowCount, ReportHelper.objToString(expectedRow, false), ReportHelper.objToString(actualRow, false));
-					for (Entry<String, ArrayList<Object>> entry : stringMap.entrySet())
-					{
-						table.addValues(entry.getKey(), entry.getValue().get(0), entry.getValue().get(1));
-					}
-					result = false;
-				}
-
-				rowCount++;
-			}
-			while (expectedIterator.hasNext())
-			{
-				Map<Header, Object> expectedRow = expectedIterator.next();
-				table = createTable(table, report);
-				table.addValues(rowCount, ReportHelper.objToString(expectedRow, false), "");
-				rowCount++;
-				result = false;
-			}
-			while (actualIterator.hasNext())
-			{
-				Map<Header, Object> actualRow = actualIterator.next();
-				table = createTable(table, report);
-				table.addValues(rowCount, "", ReportHelper.objToString(actualRow, false));
-				rowCount++;
-				result = false;
-			}
-		}
-
-		return result;
-	}
-
-	public static String generateColumnName(Table table)
-	{
-		int currentIndexColumn = 0;
-		String columnName = "NewColumn", temp = "NewColumn";
-		while (table.columnIsPresent(columnName))
-		{
-			columnName = temp + currentIndexColumn++;
-		}
-		return columnName;
-	}
-
-	@Override
-	public String toString()
-	{
-		return Table.class.getSimpleName() + " [" + this.fileName + ":" + Arrays.toString(this.headers) + ":" + size() + "]";
-	}
-
-	//==============================================================================================
-	// Interface List
-	//==============================================================================================
-
+	//region Intefrace List
 	@Override
 	public int size()
 	{
@@ -1144,12 +407,660 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 		}
 		return res;
 	}
+	//endregion
 
-	//==============================================================================================
-
-	public void setChangeListener(ChangeListener changeListener)
+	public Table sort(String colName, boolean az) throws Exception
 	{
-		this.changeListener = changeListener;
+		changed(true);
+		for (int i = 0; i < this.headers.length; i++)
+		{
+			if (this.headers[i].name.equals(colName))
+			{
+				return this.sort(i, az);
+			}
+		}
+		throw new Exception("Column this name \'" + colName + "\' not fount in the table");
+	}
+
+	public Table sort(int colNumber, boolean az)
+	{
+		changed(true);
+		Header header = this.headers[colNumber];
+		this.innerList.sort((o1, o2) ->
+		{
+			Object obj1 = o1.get(header);
+			Object obj2 = o2.get(header);
+
+			obj1 = convertCell(header, obj1, null);
+			obj2 = convertCell(header, obj2, null);
+
+			Header.HeaderType type = header.type == null ? Header.HeaderType.STRING : header.type;
+			int compare = type.compare(obj1, obj2);
+			return az ? compare : -compare;
+		});
+		return this;
+	}
+
+	public void considerAsString(String... columns) throws Exception
+	{
+		considerAs(Header.HeaderType.STRING, columns);
+	}
+
+	public void considerAsBoolean(String... columns) throws Exception
+	{
+		considerAs(Header.HeaderType.BOOL, columns);
+	}
+
+	public void considerAsInt(String... columns) throws Exception
+	{
+		considerAs(Header.HeaderType.INT, columns);
+	}
+
+	public void considerAsDouble(String... columns) throws Exception
+	{
+		considerAs(Header.HeaderType.DOUBLE, columns);
+	}
+
+	public void considerAsDate(String... columns) throws Exception
+	{
+		considerAs(Header.HeaderType.DATE, columns);
+	}
+
+	public void considerAsBigDecimal(String... columns) throws Exception
+	{
+		considerAs(Header.HeaderType.BIG_DECIMAL, columns);
+	}
+
+	public void considerAsExpression(String... columns) throws Exception
+	{
+		considerAs(Header.HeaderType.EXPRESSION, columns);
+	}
+
+	public void considerAsGroup(String... columns) throws Exception
+	{
+		considerAs(Header.HeaderType.GROUP, columns);
+	}
+
+	public Table select(Condition[] conditions)
+	{
+		Table result = new Table(this.evaluator);
+		result.headers = this.headers.clone();
+
+		for (Map<Header, Object> row : this.innerList)
+		{
+			RowTable rowTable =  convertToStr(row);
+			boolean matched = true;
+			for (Condition condition : conditions)
+			{
+				if (!condition.isMatched(rowTable))
+				{
+					matched = false;
+					break;
+				}
+			}
+
+			if (matched)
+			{
+				result.innerList.add(row);
+			}
+		}
+
+		return result;
+	}
+
+	public void upload(SqlConnection connection, String table) throws SQLException
+	{
+		Statement statement = null;
+		try
+		{
+			statement = connection.getConnection().createStatement();
+			Header[] headers = this.headers;
+			int i = 0;
+			for (Map<Header, Object> map : this.innerList)
+			{
+				StringBuilder sql = new StringBuilder("INSERT INTO ");
+				sql.append(table).append(" SET");
+
+				for (Header header : headers)
+				{
+					sql.append(" ").append(header.name).append("=");
+					sql.append("'").append(map.get(header)).append("',");
+				}
+				sql.deleteCharAt(sql.length() - 1);
+				statement.addBatch(sql.toString());
+				if (i == 10)
+				{
+					statement.executeBatch();
+					i = 0;
+				}
+				else
+				{
+					i++;
+				}
+			}
+		}
+		finally
+		{
+			if (statement != null)
+			{
+				statement.executeBatch();
+				statement.close();
+			}
+		}
+	}
+
+	public List<Integer> findAllIndexes(Condition[] conditions)
+	{
+		List<Integer> indexes = new ArrayList<>();
+		int count = 0;
+		for (Map<Header, Object> row : this.innerList)
+		{
+			RowTable rowTable =  convertToStr(row);
+			boolean matched = true;
+			for (Condition condition : conditions)
+			{
+				if (!condition.isMatched(rowTable))
+				{
+					matched = false;
+					break;
+				}
+			}
+
+			if (matched)
+			{
+				indexes.add(count);
+			}
+			count++;
+		}
+
+		return indexes;
+	}
+
+	public void replace(Object source, Object dest, boolean matchCell, String ...columns)
+	{
+		if (columns == null || columns.length == 0 || areEqual(source, dest))
+		{
+			return;
+		}
+
+		List<Header> filtered = filter(columns);
+
+		for (Map<Header, Object> row : this.innerList)
+		{
+			for (Header header : filtered)
+			{
+				Object value = row.get(header);
+				if (!matchCell)
+				{
+					String sValue = String.valueOf(value);
+					String sSource = String.valueOf(source);
+					if (sValue.contains(sSource)) // TODO why contains ?!!
+					{
+						row.remove(header);
+						row.put(header, sValue.replace(sSource, String.valueOf(dest)));
+					}
+				}
+				else if (areEqual(value, source))
+				{
+					row.put(header, dest);
+				}
+			}
+		}
+	}
+
+	public void replace(String regexp, Object dest, String ...columns)
+	{
+		if (columns == null || columns.length == 0)
+		{
+			return;
+		}
+
+		List<Header> filtered = filter(columns);
+
+		for (Map<Header, Object> row : this.innerList)
+		{
+			for (Header header : filtered)
+			{
+				Object value = row.get(header);
+				if (String.valueOf(value).matches(regexp))
+				{
+					row.put(header, dest);
+				}
+			}
+		}
+	}
+
+	public void report(ReportBuilder report, String title, String beforeTestcase, boolean withNumbers, boolean reportValues) throws Exception
+	{
+		String[] columns = Arrays.stream(this.headers).map(h -> h.name).toArray(num -> new String[num]);
+
+		report(report, title, beforeTestcase, withNumbers, reportValues, null, columns);
+	}
+
+	public void report(ReportBuilder report, String title, String beforeTestcase, boolean withNumbers,
+					   boolean reportValues, Parameters newColumns, String... columns) throws Exception
+	{
+		if (beforeTestcase != null || report.reportIsOn()) // TODO zzz
+		{
+			int[] columnsIndexes = getIndexes(columns);
+
+			if (columnsIndexes.length == 0)
+			{
+				columnsIndexes = new int[this.headers.length];
+				for (int i = 0; i < this.headers.length; i++)
+				{
+					columnsIndexes[i] = i;
+				}
+			}
+
+			int addition = withNumbers ? 1 : 0;
+			String[] headers = new String[addition + columnsIndexes.length];
+			if (withNumbers)
+			{
+				headers[0] = "#";
+			}
+			int col = 0;
+			for (int index : columnsIndexes)
+			{
+				headers[col++ + addition] = this.headers[index].name;
+			}
+			headers = convertHeaders(newColumns, headers, withNumbers);
+			ReportTable table = report.addExplicitTable(title, beforeTestcase, true, 0, new int[] {}, headers);
+
+			Function<String, String> func = name -> newColumns == null ? name
+					: newColumns.entrySet().stream().filter(e -> name.equals(String.valueOf(e.getValue()))).findFirst()
+					.map(Entry::getKey).orElse(name);
+
+			int count = 0;
+			for (Map<Header, Object> row : this.innerList)
+			{
+				Object[] value = new Object[headers.length];
+				if (withNumbers)
+				{
+					value[0] = count;
+				}
+
+				for (int i = addition; i < headers.length; i++)
+				{
+					Header header = headerByName(func.apply(headers[i]));
+					if (reportValues)
+					{
+						value[i] = convertCell(header, row.get(header), report);
+					}
+					else
+					{
+						Object v = row.get(header);
+						if (v instanceof ImageWrapper)
+						{
+							ImageWrapper iw = (ImageWrapper) v;
+							String description = iw.getDescription() == null ? iw.toString() : iw.getDescription();
+							v = report.decorateLink(description,
+									report.getImageDir() + File.separator + iw.getName(report.getReportDir()));
+						}
+						else if (v instanceof ReportBuilder)
+						{
+							ReportBuilder rb = (ReportBuilder) v;
+							String name = rb.getName();
+
+							v = report.decorateLink(name, name);
+						}
+						value[i] = v;
+					}
+				}
+				table.addValues(value);
+				count++;
+			}
+		}
+	}
+
+	public boolean extendEquals(ReportBuilder report, Table expected, String[] exclude, boolean ignoreRowsOrder)
+	{
+		Set<String> expectedNames = names(expected, exclude);
+		Set<String> actualNames = names(this, exclude);
+		ReportTable table = null;
+
+		if (!expectedNames.equals(actualNames))
+		{
+			table = createTable(table, report);
+			table.addValues("", Arrays.toString(expectedNames.toArray()), Arrays.toString(actualNames.toArray()));
+			return false;
+		}
+
+		boolean result = true;
+		if (ignoreRowsOrder)
+		{
+			boolean[] actualMatched = new boolean[this.innerList.size()];
+			boolean[] expectedMatched = new boolean[expected.innerList.size()];
+
+			int actualCounter = 0;
+			Iterator<Map<Header, Object>> actualIterator = this.innerList.iterator();
+			while (actualIterator.hasNext())
+			{
+				Map<Header, Object> actualRow = actualIterator.next();
+
+				int expectedCounter = 0;
+				Iterator<Map<Header, Object>> expectedIterator = expected.innerList.iterator();
+				while (expectedIterator.hasNext())
+				{
+					Map<Header, Object> expectedRow = expectedIterator.next();
+					Map<String, ArrayList<Object>> stringMap = compareRows(convertToStr(actualRow), convertToStr(expectedRow), expectedNames);
+					if (stringMap.isEmpty())
+					{
+						actualMatched[actualCounter] = true;
+						expectedMatched[expectedCounter] = true;
+					}
+
+					expectedCounter++;
+				}
+				actualCounter++;
+			}
+
+			int count = 0;
+			Iterator<Map<Header, Object>> expectedIterator = expected.innerList.iterator();
+			while (expectedIterator.hasNext())
+			{
+				Map<Header, Object> expectedRow = expectedIterator.next();
+				if (!expectedMatched[count])
+				{
+					table = createTable(table, report);
+					table.addValues(count, ReportHelper.objToString(expectedRow, false), "");
+					result = false;
+				}
+				count++;
+			}
+
+			count = 0;
+			actualIterator = this.innerList.iterator();
+			while (actualIterator.hasNext())
+			{
+				Map<Header, Object> actualRow = actualIterator.next();
+				if (!actualMatched[count])
+				{
+					table = createTable(table, report);
+					table.addValues(count, "", ReportHelper.objToString(actualRow, false));
+					result = false;
+				}
+				count++;
+			}
+		}
+		else
+		{
+			Iterator<Map<Header, Object>> actualIterator = this.innerList.iterator();
+			Iterator<Map<Header, Object>> expectedIterator = expected.innerList.iterator();
+
+			int rowCount = 0;
+			while (actualIterator.hasNext() && expectedIterator.hasNext())
+			{
+				Map<Header, Object> actualRow = actualIterator.next();
+				Map<Header, Object> expectedRow = expectedIterator.next();
+				Map<String, ArrayList<Object>> stringMap = compareRows(convertToStr(actualRow), convertToStr(expectedRow), expectedNames);
+				if (!stringMap.isEmpty())
+				{
+					table = createTable(table, report);
+					table.addValues(rowCount, ReportHelper.objToString(expectedRow, false), ReportHelper.objToString(actualRow, false));
+					for (Entry<String, ArrayList<Object>> entry : stringMap.entrySet())
+					{
+						table.addValues(entry.getKey(), entry.getValue().get(0), entry.getValue().get(1));
+					}
+					result = false;
+				}
+
+				rowCount++;
+			}
+			while (expectedIterator.hasNext())
+			{
+				Map<Header, Object> expectedRow = expectedIterator.next();
+				table = createTable(table, report);
+				table.addValues(rowCount, ReportHelper.objToString(expectedRow, false), "");
+				rowCount++;
+				result = false;
+			}
+			while (actualIterator.hasNext())
+			{
+				Map<Header, Object> actualRow = actualIterator.next();
+				table = createTable(table, report);
+				table.addValues(rowCount, "", ReportHelper.objToString(actualRow, false));
+				rowCount++;
+				result = false;
+			}
+		}
+
+		return result;
+	}
+
+	public boolean removeRow(int index)
+	{
+		this.innerList.remove(index);
+		changed(true);
+		return true;
+	}
+
+	public boolean isEmptyTable()
+	{
+		return this.headers.length == 1
+				&& this.headers[0].name.equals(EMPTY_HEADER)
+				&& this.innerList.size() == 1
+				&& this.innerList.get(0).get(headerByName(EMPTY_HEADER)).equals(EMPTY_ROW);
+	}
+
+	public void fillFromTable(Table table)
+	{
+		this.headers = new ArrayList<Header>().toArray(new Header[0]);
+		this.innerList.clear();
+		this.addColumns(Arrays.stream(table.headers).map(h -> h.name).toArray(String[]::new));
+		for (int i = 0; i < table.innerList.size(); i++)
+		{
+			Map<String, Object> stringObjectMap = convertToStr(table.innerList.get(i));
+			Map<Header, Object> newMap = new LinkedHashMap<>();
+			stringObjectMap.entrySet().forEach(entry -> newMap.put(headerByName(entry.getKey()), entry.getValue()));
+			this.innerList.add(newMap);
+		}
+	}
+	
+	public void setEvaluator(AbstractEvaluator evaluator)
+	{
+		this.evaluator = evaluator;
+	}
+	
+	public boolean save(String fileName, char delimiter, boolean saveValues, boolean withNmumbers)
+	{
+		CsvWriter writer = null;
+
+		try (Writer bufferedWriter = new BufferedWriter(new FileWriter(fileName)))
+		{
+			writer = new CsvWriter(bufferedWriter, delimiter);
+			return save(writer, "", saveValues, withNmumbers);
+		}
+		catch (Exception e)
+		{
+			logger.error(e.getMessage(), e);
+			return false;
+		}
+		finally
+		{
+			if (writer != null)
+			{
+				writer.close();
+			}
+		}
+	}
+	
+	public boolean save(CsvWriter writer, String indent, boolean saveValues, boolean withNmumbers) throws IOException
+	{
+		int columns = this.headers.length + (withNmumbers ? 1 : 0);
+		String[] record = new String[columns];
+		int count = 0;
+		if (withNmumbers)
+		{
+			record[count++] = indent + ROW_INDEX_SYMBOL;
+		}
+		for (int i = 0; i < this.headers.length; i++)
+		{
+			record[count++] = this.headers[i].name;
+		}
+		writer.writeRecord(record, true);
+
+
+		List<Map<Header, Object>> innerList1 = this.innerList;
+		for (int j = 0; j < innerList1.size(); j++)
+		{
+			count = 0;
+			if (withNmumbers)
+			{
+				record[count++] = indent + String.valueOf(j);
+			}
+			Map<Header, Object> f = innerList1.get(j);
+			for (int i = 0; i < this.headers.length; i++)
+			{
+				Object source = f.get(this.headers[i]);
+				Object value = null;
+				if (saveValues)
+				{
+					value = convertCell(headers[i], source, null);
+				}
+				else
+				{
+					value = source;
+				}
+				record[count++] = String.valueOf(value == null ? "" : value);
+			}
+			writer.writeRecord(record, true);
+		}
+		return true;
+	}
+
+	public void addColumns(String... columns)
+	{
+		changed(true);
+		List<Header> list = new ArrayList<Header>();
+		if (this.headers != null)
+		{
+			list.addAll(Arrays.asList(this.headers));
+		}
+		
+		for (String column : columns)
+		{
+			if (column.equals(ROW_INDEX_SYMBOL))
+			{
+				this.useColumnNumber = true;
+				continue;
+			}
+			if (!columnIsPresent(column))
+			{
+				list.add(new Header(column, null));
+			}
+		}
+		
+		this.headers = list.toArray(new Header[0]);
+		addEmptyStringToAllLinesInNewColumn();
+	}
+
+	public boolean columnIsPresent(String columnName)
+	{
+		if (this.headers == null || this.headers.length == 0)
+		{
+			return false;
+		}
+		for (Header header : this.headers)
+		{
+			if (header != null && Str.areEqual(columnName, header.name))
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public void updateValue(int index, RowTable row)
+	{
+		changed(true);
+		Map<Header, Object> newMap = new LinkedHashMap<>();
+		Map<Header, Object> oldMap = this.innerList.get(index);
+		Arrays.stream(this.headers).forEach(h ->
+		{
+			Object rowValue = row.get(h.name);
+			if (rowValue == null)
+			{
+				rowValue = oldMap.get(h);
+			}
+			newMap.put(h, rowValue);
+		});
+		this.innerList.set(index, newMap);
+	}
+
+	public void setValue(int index, RowTable row)
+	{
+		changed(true);
+		this.innerList.set(index, convert(row));
+	}
+
+	public void setValue(int index, Map<String, Object> map)
+	{
+		changed(true);
+		Map<Header, Object> line = this.innerList.get(index);
+		for (Entry<String, Object> entry : map.entrySet())
+		{
+			String name = entry.getKey();
+			Object value = entry.getValue();
+
+			line.put(headerByName(name), value);
+		}
+	}
+
+	public void renameColumn(String oldValue, String newValue) throws Exception
+	{
+		for (Header h : this.headers)
+		{
+			if (h.name.equals(oldValue))
+			{
+				h.name = newValue;
+				return;
+			}
+		}
+		throw new Exception(String.format("Column with name %s not presented into table", oldValue));
+	}
+
+	public void addValue(int index, Map<String, Object> map)
+	{
+		changed(true);
+		if (this.headers != null)
+		{
+			Map<Header, Object> line = convert(map);
+			if (index >= 0)
+			{
+				this.innerList.add(index, line);
+			}
+			else
+			{
+				this.innerList.add(line);
+			}
+		}
+	}
+
+	public void addValue(Object[] arr)
+	{
+		changed(true);
+		if (this.headers != null)
+		{
+			if (this.useColumnNumber)
+			{
+				arr = Arrays.copyOfRange(arr, 1, arr.length);
+			}
+
+			Map<Header, Object> line = convert(arr);
+			this.innerList.add(line);
+		}
+	}
+
+	public static String generateColumnName(Table table)
+	{
+		int currentIndexColumn = 0;
+		String columnName = "NewColumn", temp = "NewColumn";
+		while (table.columnIsPresent(columnName))
+		{
+			columnName = temp + currentIndexColumn++;
+		}
+		return columnName;
 	}
 
 	public int getHeaderSize()
@@ -1157,29 +1068,296 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 		return this.headers.length;
 	}
 
-	public int getHeaderIndex(String name)
-	{
-		return IntStream.range(0, this.headers.length).filter(i -> name.equals(this.headers[i].name)).findFirst().orElse(-1);
-	}
-
 	public String getHeader(int index)
 	{
 		return this.headers[index].name;
 	}
 
-	public void setHeader(int index, String s)
+
+
+
+	//region Undo/Redo functionality
+	public void addColumns(int index, String... columns)
 	{
-		if (this.headers[index] != null && Str.areEqual(this.headers[index].name, s))
+		Arrays.stream(columns)
+				.filter(this::columnIsPresent)
+				.findFirst()
+				.ifPresent(column -> {
+					throw new ColumnIsPresentException(String.format("Column with name %s already present", column));
+				});
+
+		if (this.headers == null)
+		{
+			this.headers = new Header[]{};
+		}
+		List<Header> oldHeaders = new ArrayList<>(Arrays.asList(this.headers));
+		List<Header> newHeaders = new ArrayList<>(Arrays.asList(this.headers));
+
+		Command undo = () ->
+		{
+			this.headers = oldHeaders.toArray(new Header[oldHeaders.size()]);
+			this.innerList.forEach(map ->
+					map.keySet().stream()
+							.filter(head -> !oldHeaders.contains(head))
+							.forEach(map::remove));
+			displayFunction();
+		};
+		Command redo = () ->
+		{
+			ArrayList<Header> headers = new ArrayList<>(newHeaders);
+			headers.addAll(index, Arrays.stream(columns).map(s -> new Header(s, null)).collect(Collectors.toList()));
+			this.headers = headers.toArray(new Header[headers.size()]);
+			addEmptyStringToAllLinesInNewColumn();
+			displayFunction();
+		};
+		changed(true);
+		addUndoRedo(undo, redo);
+	}
+
+	public void removeColumns(String... columns)
+	{
+		if (this.headers == null)
 		{
 			return;
 		}
-		if (columnIsPresent(s))
+
+		List<Header> oldHeaders = new ArrayList<>(Arrays.asList(this.headers));
+		List<Header> newHeaders = new ArrayList<>(Arrays.asList(this.headers));
+		Map<Integer, Map<Header, Object>> removedValues = new LinkedHashMap<>();
+
+		List<String> removedColumnsList = Arrays.asList(columns);
+
+		Iterator<Header> newHeadersIterator = newHeaders.iterator();
+		while (newHeadersIterator.hasNext())
 		{
-			throw new ColumnIsPresentException(s);
+			Header header = newHeadersIterator.next();
+			String headerName = header.name;
+			if (removedColumnsList.contains(headerName))
+			{
+				//save all removed values to temp map
+				IntStream.range(0, this.innerList.size())
+						.forEach(i -> {
+							Map<Header, Object> map = removedValues.computeIfAbsent(i, k -> new LinkedHashMap<>());
+							map.put(header, this.innerList.get(i).get(header));
+						});
+				//remove header
+				newHeadersIterator.remove();
+			}
 		}
+
+		Command undo = () ->
+		{
+			this.headers = oldHeaders.toArray(new Header[oldHeaders.size()]);
+			//restore all removed values back
+			removedValues.forEach((i,map) -> this.innerList.get(i).putAll(map));
+			displayFunction();
+		};
+		Command redo = () ->
+		{
+			this.headers = newHeaders.toArray(new Header[newHeaders.size()]);
+			removedValues.values()
+					.stream()
+					.map(Map::keySet)
+					.flatMap(Collection::stream)
+					.distinct()
+					.forEach(header -> this.innerList.forEach(row -> row.remove(header)));
+			displayFunction();
+		};
 		changed(true);
-		this.headers[index].name = s.trim();
+		addUndoRedo(undo, redo);
 	}
+
+	public void addValue(int index, Object[] arr)
+	{
+		if (this.headers == null)
+		{
+			return;
+		}
+
+		Command undo = () ->
+		{
+			this.innerList.remove(index);
+			displayFunction();
+		};
+		Command redo = () ->
+		{
+			Map<Header, Object> line = convert(arr);
+			this.innerList.add(index, line);
+			displayFunction();
+		};
+		changed(true);
+		addUndoRedo(undo, redo);
+	}
+
+	public void changeValue(String headerName, int indexRow, Object newValue)
+	{
+		if (this.headers == null)
+		{
+			return;
+		}
+		Map<Header, Object> row = this.innerList.get(indexRow);
+		if (row == null)
+		{
+			return;
+		}
+		Header header = headerByName(headerName);
+		Object oldValue = row.get(header);
+		Command undo = () ->
+		{
+			row.remove(header);
+			row.put(header, oldValue);
+			displayFunction();
+		};
+		Command redo = () ->
+		{
+			row.remove(header);
+			row.put(header, newValue);
+			displayFunction();
+		};
+		addUndoRedo(undo, redo);
+		changed(true);
+	}
+
+	public void setHeader(int index, String newName)
+	{
+		if (this.headers[index] != null && Str.areEqual(this.headers[index].name, newName))
+		{
+			return;
+		}
+		if (columnIsPresent(newName))
+		{
+			throw new ColumnIsPresentException(newName);
+		}
+
+		String oldName = this.headers[index].name;
+		Command undo = () ->
+		{
+			this.headers[index].name = oldName;
+			displayFunction();
+		};
+		Command redo = () ->
+		{
+			this.headers[index].name = newName;
+			displayFunction();
+		};
+		changed(true);
+		addUndoRedo(undo, redo);
+	}
+
+	public void extendsTable(int prefCols, int prefRows, BooleanSupplier supplier)
+	{
+		Table oldTable = new Table(this.evaluator);
+		oldTable.fillFromTable(this);
+
+		Command undo = () ->
+		{
+			this.headers = new ArrayList<Header>().toArray(new Header[0]);
+			this.innerList.clear();
+			this.fillFromTable(oldTable);
+			displayFunction();
+		};
+		Command redo = () ->
+		{
+			if (prefCols < this.getHeaderSize() || prefRows < this.size())
+			{
+				if (supplier.getAsBoolean())
+				{
+					List<String> collect = IntStream.range(prefCols, this.getHeaderSize())
+							.mapToObj(this::getHeader)
+							.collect(Collectors.toList());
+					this.removeColumns(collect.toArray(new String[collect.size()]));
+
+					for (int i = this.size() - 1; i >= prefRows; i--)
+					{
+						this.remove(i);
+					}
+				}
+			}
+			else
+			{
+				IntStream.range(0, prefCols - this.getHeaderSize())
+						.mapToObj(i -> Table.generateColumnName(this))
+						.forEach(this::addColumns);
+
+				IntStream.range(0, prefRows - this.size())
+						.mapToObj(i -> IntStream.range(0, this.getHeaderSize())
+								.mapToObj(j -> "")
+								.collect(Collectors.toList()))
+						.map(list -> list.toArray(new Object[list.size()]))
+						.forEach(this::addValue);
+			}
+			displayFunction();
+		};
+		changed(true);
+		addUndoRedo(undo, redo);
+	}
+	//endregion
+
+	@Override
+	public String toString()
+	{
+		return Table.class.getSimpleName() + " [" + this.fileName + ":" + Arrays.toString(this.headers) + ":" + size() + "]";
+	}
+
+	//region Listeners
+	public void setChangeListener(ChangeListener changeListener)
+	{
+		this.changeListener = changeListener;
+	}
+
+	public void setUndoRedoFunction(BiConsumer<Command, Command> function)
+	{
+		this.undoRedoFunction = function;
+	}
+
+	public void setDisplayListener(Consumer<Table> consumer)
+	{
+		this.displayFunction = consumer;
+	}
+	//endregion
+
+	//region private methods
+
+	private void displayFunction()
+	{
+		Optional.ofNullable(this.displayFunction).ifPresent(df -> df.accept(this));
+	}
+
+	private void addUndoRedo(Command undo, Command redo)
+	{
+		Optional.ofNullable(this.undoRedoFunction).ifPresent(func -> func.accept(undo, redo));
+	}
+
+	private String[] convertHeaders(Parameters parameters, String[] headers, boolean withNumbers)
+	{
+		if (parameters == null)
+		{
+			return headers;
+		}
+		List<String> list = new ArrayList<>();
+		if (withNumbers)
+		{
+			list.add("#");
+		}
+		list.addAll(parameters.values()
+				.stream()
+				.map(String::valueOf)
+				.collect(Collectors.toList())
+		);
+
+		return list.toArray(new String[list.size()]);
+	}
+
+	private void addEmptyStringToAllLinesInNewColumn()
+	{
+		final String EMPTY_STRING = "";
+		this.innerList.forEach(row ->
+				Arrays.stream(this.headers)
+					.filter(header -> !row.containsKey(header))
+					.forEach(header -> row.put(header, EMPTY_STRING))
+		);
+	}
+
 
 	private ReportTable createTable(ReportTable table, ReportBuilder report)
 	{
@@ -1303,7 +1481,6 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 		return map;
 	}
 
-	
 	private Map<Header, Object> convert(Map<String, Object> e)
 	{
 		Map<Header, Object> map = new LinkedHashMap<>();
@@ -1557,17 +1734,5 @@ public class Table implements List<RowTable>, Mutable, Cloneable
     	
     	return s1.equals(s2);
     }
-
-	private boolean useColumnNumber = false;
-	private static final String ROW_INDEX_SYMBOL = "@";
-	private List<Map<Header, Object>> innerList = null;
-	private Header[] headers;
-	private AbstractEvaluator evaluator;
-
-	private ChangeListener changeListener;
-
-	private String fileName;
-	static int index = 0;
-	private boolean changed;
-	private static final Logger logger = Logger.getLogger(Table.class);
+	//endregion
 }

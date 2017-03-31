@@ -37,7 +37,7 @@ public class SelectedCellsMapTemp<T extends TablePositionBase>
 
 	public T get(int i)
 	{
-		if (i < 0)
+		if (i < 0 || i > this.sortedSelectedCells.size())
 		{
 			return null;
 		}
