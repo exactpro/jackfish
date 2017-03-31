@@ -24,8 +24,8 @@ import java.util.List;
 		suffix					= "TBLCMP",
 		generalDescription 		= "This action is determined to compare two tables.",
 		additionFieldsAllowed 	= false,
-		outputDescription 		= "There is no output. The information about Actual and Expected tables match is reported. "
-				+ "If compared tables are not equal the detailed information about distinctions is displayed. ",
+		outputType              = Table.class,
+		outputDescription       = "A table as a resulf of compare.",
 		examples 				=
 				"{{`1 Create a table with columns Name and Age. The first table line is applied with values Mike and 42 accordingly.`}}"
 				+ "{{`2. Create a table similar to the previous. The first table line is applied with values Mike and 42 accordingly.`}}"
@@ -114,15 +114,14 @@ public class TableCompareTwo extends AbstractAction
 			return;
 		}
 	
-		boolean res = this.actual.extendEquals(report, this.expected, this.exclude, this.ignoreRowsOrder);
+		Table differences = new Table(new String[] { "Expected", "Actual" }, evaluator);
+		boolean res = Table.extendEquals(report, differences, this.actual, this.expected, this.exclude, this.ignoreRowsOrder);
 		
-		if (res)
-		{
-			super.setResult(null);
-		}
-		else
+		if (!res)
 		{
 			super.setError("Tables are not equal.", ErrorKind.NOT_EQUAL);
 		}
+        super.setResult(differences);
 	}
+	
 }
