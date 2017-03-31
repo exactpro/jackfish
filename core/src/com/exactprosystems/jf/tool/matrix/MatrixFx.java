@@ -117,14 +117,32 @@ public class MatrixFx extends Matrix
 
 		if (isChanged())
 		{
-			ButtonType desision = DialogsHelper.showSaveFileDialog(this.getName());
-			if (desision == ButtonType.YES)
+			ButtonType decision;
+			while (true)
 			{
-				save(getName());
-			}
-			if (desision == ButtonType.CANCEL)
-			{
-				return false;
+				decision = DialogsHelper.showSaveFileDialog(this.getName());
+				if (decision == ButtonType.YES && super.hasName())
+				{
+					save(getName());
+					break;
+				}
+				if (decision == ButtonType.YES && !super.hasName())
+				{
+					File file = DialogsHelper.showSaveAsDialog(this);
+					if (file != null)
+					{
+						save(file.getPath());
+						break;
+					}
+				}
+				if (decision == ButtonType.NO)
+				{
+					return true;
+				}
+				if (decision == ButtonType.CANCEL)
+				{
+					return false;
+				}
 			}
 		}
 
