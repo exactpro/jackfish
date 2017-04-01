@@ -282,7 +282,7 @@ public class SeleniumRemoteApplication extends RemoteApplication
             {
                 t.start();
                 logger.info("Before join");
-                t.join(10000);
+                t.join(60000);
                 logger.info("After join");
             }
             catch (InterruptedException e)
