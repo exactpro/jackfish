@@ -18,6 +18,7 @@ class Header implements Cloneable
 		EXPRESSION	(Object.class),
 		GROUP       (String.class),
         HYPERLINK   (String.class),
+        COLORED     (String.class),
 		;
 		
 		HeaderType(Class<?> clazz)

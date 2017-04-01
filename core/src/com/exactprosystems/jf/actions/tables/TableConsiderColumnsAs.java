@@ -53,16 +53,17 @@ import com.exactprosystems.jf.functions.Table;
 	)
 public class TableConsiderColumnsAs extends AbstractAction 
 {
-	public final static String tableName = "Table";
-	public final static String asStringName = "String";
-	public final static String asBooleanName = "Boolean";
-	public final static String asIntegerName = "Integer";
-	public final static String asDoubleName = "Double";
-	public final static String asBigDecimalName = "BigDecimal";
-	public final static String asDateName = "Date";
-	public final static String asExpressionName = "Expression";
-    public final static String asGroupName = "Group";
-    public final static String asHyperlinkName = "Hyperlink";
+    public final static String tableName        = "Table";
+    public final static String asStringName     = "String";
+    public final static String asBooleanName    = "Boolean";
+    public final static String asIntegerName    = "Integer";
+    public final static String asDoubleName     = "Double";
+    public final static String asBigDecimalName = "BigDecimal";
+    public final static String asDateName       = "Date";
+    public final static String asExpressionName = "Expression";
+    public final static String asGroupName      = "Group";
+    public final static String asHyperlinkName  = "Hyperlink";
+    public final static String asColoredName    = "Colored";
 
 	@ActionFieldAttribute(name = tableName, mandatory = true, description = "A table is needed to be performed.\n")
 	protected Table 	table 	= null;
@@ -93,7 +94,10 @@ public class TableConsiderColumnsAs extends AbstractAction
     
     @ActionFieldAttribute(name = asHyperlinkName, mandatory = false, description = "Is specified as an array of column names, where it is needed to set data type - Hyperlink.")
     protected String[]  asHyperlink;
-    
+
+    @ActionFieldAttribute(name = asColoredName, mandatory = false, description = "Is specified as an array of column names, where it is needed to set data type - Colored.")
+    protected String[]  asColored;
+
 	public TableConsiderColumnsAs()
 	{
 	}
@@ -110,6 +114,7 @@ public class TableConsiderColumnsAs extends AbstractAction
 		this.asExpression 	= new String[] {};
 		this.asGroup        = new String[] {};
 		this.asHyperlink    = new String[] {};
+        this.asColored      = new String[] {};
 	}
 	
 	@Override
@@ -150,6 +155,10 @@ public class TableConsiderColumnsAs extends AbstractAction
         if (this.asHyperlink.length > 0)
         {
             this.table.considerAsHyperlink(this.asHyperlink);
+        }
+        if (this.asColored.length > 0)
+        {
+            this.table.considerAsColored(this.asColored);
         }
 		
 		super.setResult(null);

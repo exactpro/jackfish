@@ -16,6 +16,7 @@ import com.exactprosystems.jf.documents.matrix.parser.Result;
 import com.exactprosystems.jf.documents.matrix.parser.items.CommentString;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 
+import java.awt.Color;
 import java.io.File;
 import java.io.IOException;
 import java.text.DateFormat;

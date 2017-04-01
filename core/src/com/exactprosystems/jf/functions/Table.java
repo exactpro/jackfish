@@ -600,6 +600,11 @@ public class Table implements List<RowTable>, Mutable, Cloneable
         considerAs(Header.HeaderType.HYPERLINK, columns);
     }
 
+    public void considerAsColored(String... columns) throws Exception
+    {
+        considerAs(Header.HeaderType.COLORED, columns);
+    }
+
 	public Table select(Condition[] conditions)
 	{
 		Table result = new Table(this.evaluator);
@@ -1413,8 +1418,22 @@ public class Table implements List<RowTable>, Mutable, Cloneable
                 {
                     StringBuilder name = new StringBuilder();
                     StringBuilder link = new StringBuilder();
-                    extractLink(Str.asString(source), name, link);
+                    splitToTwo(Str.asString(source), name, link);
                     value = report.decorateLink(name.toString(), link.toString());
+                }
+                else
+                {
+                    value = "" + source;
+                }
+            }
+            else if (header.type == Header.HeaderType.COLORED)
+            {
+                if (report != null)
+                {
+                    StringBuilder name = new StringBuilder();
+                    StringBuilder color = new StringBuilder();
+                    splitToTwo(Str.asString(source), name, color);
+                    value = report.decorateStyle(name.toString(), color.toString());
                 }
                 else
                 {
@@ -1434,18 +1453,18 @@ public class Table implements List<RowTable>, Mutable, Cloneable
         return value;
     }
 	
-	private void extractLink(String str, StringBuilder name, StringBuilder link)
+	private void splitToTwo(String str, StringBuilder part1, StringBuilder part2)
     {
         String[] parts = str.split("\\|");
         if (parts.length > 1)
         {
-            name.append(parts[0]);
-            link.append(parts[1]);
+            part1.append(parts[0]);
+            part2.append(parts[1]);
         }
         else
         {
-            name.append(parts[0]);
-            link.append(parts[0]);
+            part1.append(parts[0]);
+            part2.append(parts[0]);
         }
     }
 
