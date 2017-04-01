@@ -17,6 +17,7 @@ class Header implements Cloneable
 		BIG_DECIMAL	(BigDecimal.class),
 		EXPRESSION	(Object.class),
 		GROUP       (String.class),
+        HYPERLINK   (String.class),
 		;
 		
 		HeaderType(Class<?> clazz)

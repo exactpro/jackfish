@@ -62,6 +62,7 @@ public class TableConsiderColumnsAs extends AbstractAction
 	public final static String asDateName = "Date";
 	public final static String asExpressionName = "Expression";
     public final static String asGroupName = "Group";
+    public final static String asHyperlinkName = "Hyperlink";
 
 	@ActionFieldAttribute(name = tableName, mandatory = true, description = "A table is needed to be performed.\n")
 	protected Table 	table 	= null;
@@ -90,6 +91,9 @@ public class TableConsiderColumnsAs extends AbstractAction
     @ActionFieldAttribute(name = asGroupName, mandatory = false, description = "Is specified as an array of column names, where it is needed to set data type - Group.")
     protected String[]  asGroup;
     
+    @ActionFieldAttribute(name = asHyperlinkName, mandatory = false, description = "Is specified as an array of column names, where it is needed to set data type - Hyperlink.")
+    protected String[]  asHyperlink;
+    
 	public TableConsiderColumnsAs()
 	{
 	}
@@ -105,6 +109,7 @@ public class TableConsiderColumnsAs extends AbstractAction
 		this.asDate 		= new String[] {};
 		this.asExpression 	= new String[] {};
 		this.asGroup        = new String[] {};
+		this.asHyperlink    = new String[] {};
 	}
 	
 	@Override
@@ -141,6 +146,10 @@ public class TableConsiderColumnsAs extends AbstractAction
         if (this.asGroup.length > 0)
         {
             this.table.considerAsGroup(this.asGroup);
+        }
+        if (this.asHyperlink.length > 0)
+        {
+            this.table.considerAsHyperlink(this.asHyperlink);
         }
 		
 		super.setResult(null);

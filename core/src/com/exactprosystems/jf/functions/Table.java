@@ -595,6 +595,11 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 		considerAs(Header.HeaderType.GROUP, columns);
 	}
 
+    public void considerAsHyperlink(String... columns) throws Exception
+    {
+        considerAs(Header.HeaderType.HYPERLINK, columns);
+    }
+
 	public Table select(Condition[] conditions)
 	{
 		Table result = new Table(this.evaluator);
@@ -1402,6 +1407,20 @@ public class Table implements List<RowTable>, Mutable, Cloneable
                     value = "" + source;
                 }
             }
+            else if (header.type == Header.HeaderType.HYPERLINK)
+            {
+                if (report != null)
+                {
+                    StringBuilder name = new StringBuilder();
+                    StringBuilder link = new StringBuilder();
+                    extractLink(Str.asString(source), name, link);
+                    value = report.decorateLink(name.toString(), link.toString());
+                }
+                else
+                {
+                    value = "" + source;
+                }
+            }
             else
             {
                 value = Converter.convertToType(source, header.type.clazz);
@@ -1415,7 +1434,22 @@ public class Table implements List<RowTable>, Mutable, Cloneable
         return value;
     }
 	
-	private boolean extract(String path, StringBuilder group,  AtomicInteger outLevel)
+	private void extractLink(String str, StringBuilder name, StringBuilder link)
+    {
+        String[] parts = str.split("\\|");
+        if (parts.length > 1)
+        {
+            name.append(parts[0]);
+            link.append(parts[1]);
+        }
+        else
+        {
+            name.append(parts[0]);
+            link.append(parts[0]);
+        }
+    }
+
+    private boolean extract(String path, StringBuilder group,  AtomicInteger outLevel)
 	{
 	    String[] parts = path.split("/");
 	    int last = parts.length - 1;
