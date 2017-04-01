@@ -251,29 +251,38 @@ public class SeleniumRemoteApplication extends RemoteApplication
 			{
 				throw new NullParameterException(WebAppFactory.urlName);
 			}
-			Browser browser = Browser.valueOf(browserName.toUpperCase());
-			this.driver = new WebDriverListenerNew(browser.createDriver(chromeDriverBinary, firefoxProfileDirectory, usePrivateMode));
-			this.operationExecutor = new SeleniumOperationExecutor(this.driver, this.logger);
 			
             Thread t = new Thread(new Runnable()
             {
                 public void run()
                 {
-                    logger.info("Before driver.get(" + url + ")");
-                    driver.get(url);
-                    logger.info("After driver.get(" + url + ")");
-                    if(!browser.equals(Browser.ANDROIDBROWSER) && !browser.equals(Browser.ANDROIDCHROME))
+                    try
                     {
-                        driver.manage().window().maximize();
-                        logger.info("After driver.maximize()");
+                        Browser browser = Browser.valueOf(browserName.toUpperCase());
+                        driver = new WebDriverListenerNew(browser.createDriver(chromeDriverBinary, firefoxProfileDirectory, usePrivateMode));
+                        operationExecutor = new SeleniumOperationExecutor(driver, logger);
+
+                        logger.info("Before driver.get(" + url + ")");
+                        driver.get(url);
+                        logger.info("After driver.get(" + url + ")");
+                        if(!browser.equals(Browser.ANDROIDBROWSER) && !browser.equals(Browser.ANDROIDCHROME))
+                        {
+                            driver.manage().window().maximize();
+                            logger.info("After driver.maximize()");
+                        }
                     }
+                    catch (Exception e)
+                    {
+                        logger.error(e.getMessage(), e);
+                    }
+                    
                 }
             });
             try
             {
                 t.start();
                 logger.info("Before join");
-                t.join(60000);
+                t.join(10000);
                 logger.info("After join");
             }
             catch (InterruptedException e)
@@ -290,6 +299,11 @@ public class SeleniumRemoteApplication extends RemoteApplication
                 logger.info("Before throw");
                 throw new TimeoutException("Page loading");
             }			
+            
+            if (this.driver == null || this.operationExecutor == null)
+            {
+                throw new Exception("Driver creation is failed");
+            }
 		}
 		catch (Exception e)
 		{
