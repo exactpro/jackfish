@@ -269,20 +269,25 @@ public class SeleniumRemoteApplication extends RemoteApplication
                     }
                 }
             });
-            t.start();
             try
             {
+                t.start();
+                logger.info("Before join");
                 t.join(30000);
+                logger.info("After join");
             }
             catch (InterruptedException e)
             { 
                 // ignore
+                logger.error(e.getMessage());
             }
             if (t.isAlive())
             { 
                 // Thread still alive, we need to abort and it means that timeout expired
+                logger.info("Before interrupt");
                 t.interrupt();
                 this.driver = null;
+                logger.info("Before throw");
                 throw new TimeoutException("Page loading");
             }			
 		}
