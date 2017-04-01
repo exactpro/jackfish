@@ -15,12 +15,10 @@ import com.exactprosystems.jf.api.app.Mutable;
 import com.exactprosystems.jf.api.common.Converter;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.conditions.Condition;
-import com.exactprosystems.jf.common.ChangeListener;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.common.report.ReportHelper;
 import com.exactprosystems.jf.common.report.ReportTable;
-import com.exactprosystems.jf.common.undoredo.Command;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.exceptions.ColumnIsPresentException;
 import com.exactprosystems.jf.sql.SqlConnection;
@@ -32,9 +30,7 @@ import java.util.*;
 import java.util.Date;
 import java.util.Map.Entry;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.BiConsumer;
 import java.util.function.BooleanSupplier;
-import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -45,16 +41,11 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 	private static final String EMPTY_HEADER	= "newH";
 	private static final String EMPTY_ROW		= "newR";
 
-	private BiConsumer<Command, Command> undoRedoFunction;
-	private Consumer<Table> displayFunction;
-
 	private boolean useColumnNumber = false;
 	private static final String ROW_INDEX_SYMBOL = "@";
 	private List<Map<Header, Object>> innerList = null;
 	private Header[] headers;
 	private AbstractEvaluator evaluator;
-
-	private ChangeListener changeListener;
 
 	private String fileName;
 	static int index = 0;
@@ -487,12 +478,6 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 		this.innerList.add(index, convert(element));
 	}
 
-	private void changed(boolean flag)
-	{
-		this.changed = flag;
-		Optional.ofNullable(this.changeListener).ifPresent(c -> c.change(this.changed));
-	}
-
 	@Override
 	public RowTable remove(int index)
 	{
@@ -707,7 +692,7 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 
 	public void replace(Object source, Object dest, boolean matchCell, String ...columns)
 	{
-		if (columns == null || columns.length == 0 || areEqual(source, dest))
+		if (columns == null || columns.length == 0 || Objects.equals(source, dest))
 		{
 			return;
 		}
@@ -729,7 +714,7 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 						row.put(header, sValue.replace(sSource, String.valueOf(dest)));
 					}
 				}
-				else if (areEqual(value, source))
+				else if (Objects.equals(value, source))
 				{
 					row.put(header, dest);
 				}
@@ -769,7 +754,7 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 	public void report(ReportBuilder report, String title, String beforeTestcase, boolean withNumbers,
 					   boolean reportValues, Parameters newColumns, String... columns) throws Exception
 	{
-		if (beforeTestcase != null || report.reportIsOn()) // TODO zzz
+		if (beforeTestcase != null || report.reportIsOn()) 
 		{
 			int[] columnsIndexes = getIndexes(columns);
 
@@ -1080,251 +1065,126 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 
 
 	//region Undo/Redo functionality
-	public void addColumns(int index, String... columns)
-	{
-		Arrays.stream(columns)
-				.filter(this::columnIsPresent)
-				.findFirst()
-				.ifPresent(column -> {
-					throw new ColumnIsPresentException(String.format("Column with name %s already present", column));
-				});
+    public void addColumns(int index, String... columns)
+    {
+        for (String column : columns)
+        {
+            if (columnIsPresent(column))
+            {
+                throw new ColumnIsPresentException(String.format("Column with name %s already present", column));
+            }
+        }
+        changed(true);
+        if (this.headers == null)
+        {
+            this.headers = new Header[]{};
+        }
+        List<Header> newHeaders = new ArrayList<>(Arrays.asList(this.headers));
+        newHeaders.addAll(index, Arrays.stream(columns).map(s -> new Header(s, null)).collect(Collectors.toList()));
+        this.headers = newHeaders.toArray(new Header[newHeaders.size()]);
+        addEmptyStringToAllLinesInNewColumn();
+    }
 
-		if (this.headers == null)
-		{
-			this.headers = new Header[]{};
-		}
-		List<Header> oldHeaders = new ArrayList<>(Arrays.asList(this.headers));
-		List<Header> newHeaders = new ArrayList<>(Arrays.asList(this.headers));
+    public void removeColumns(String... columns)
+    {
+        if (this.headers == null)
+        {
+            return;
+        }
+        changed(true);
+        List<String> strings = Arrays.asList(columns);
+        List<Header> headers = new ArrayList<>(Arrays.asList(this.headers));
+        Iterator<Header> iterator = headers.iterator();
+        while (iterator.hasNext())
+        {
+            Header header = iterator.next();
+            String next = header.name;
+            if (strings.contains(next)) // TODO why isn't equals() ?
+            {
+                this.innerList.forEach(row -> row.remove(header));
+                iterator.remove();
+            }
 
-		Command undo = () ->
-		{
-			this.headers = oldHeaders.toArray(new Header[oldHeaders.size()]);
-			this.innerList.forEach(map ->
-					map.keySet().stream()
-							.filter(head -> !oldHeaders.contains(head))
-							.forEach(map::remove));
-			displayFunction();
-		};
-		Command redo = () ->
-		{
-			ArrayList<Header> headers = new ArrayList<>(newHeaders);
-			headers.addAll(index, Arrays.stream(columns).map(s -> new Header(s, null)).collect(Collectors.toList()));
-			this.headers = headers.toArray(new Header[headers.size()]);
-			addEmptyStringToAllLinesInNewColumn();
-			displayFunction();
-		};
-		changed(true);
-		addUndoRedo(undo, redo);
-	}
+        }
+        this.headers = headers.toArray(new Header[headers.size()]);
+    }
 
-	public void removeColumns(String... columns)
-	{
-		if (this.headers == null)
-		{
-			return;
-		}
+    public void addValue(int index, Object[] arr)
+    {
+        changed(true);
+        if (this.headers != null)
+        {
+            Map<Header, Object> line = convert(arr);
+            this.innerList.add(index, line);
+        }
+    }
 
-		List<Header> oldHeaders = new ArrayList<>(Arrays.asList(this.headers));
-		List<Header> newHeaders = new ArrayList<>(Arrays.asList(this.headers));
-		Map<Integer, Map<Header, Object>> removedValues = new LinkedHashMap<>();
+    public void changeValue(String headerName, int indexRow, Object newValue)
+    {
+        changed(true);
+        if (this.headers != null)
+        {
+            Map<Header, Object> row = this.innerList.get(indexRow);
+            if(row != null)
+            {
+                row.remove(headerByName(headerName));
+                row.put(headerByName(headerName), newValue);
+            }
+        }
+    }
 
-		List<String> removedColumnsList = Arrays.asList(columns);
-
-		Iterator<Header> newHeadersIterator = newHeaders.iterator();
-		while (newHeadersIterator.hasNext())
-		{
-			Header header = newHeadersIterator.next();
-			String headerName = header.name;
-			if (removedColumnsList.contains(headerName))
-			{
-				//save all removed values to temp map
-				IntStream.range(0, this.innerList.size())
-						.forEach(i -> {
-							Map<Header, Object> map = removedValues.computeIfAbsent(i, k -> new LinkedHashMap<>());
-							map.put(header, this.innerList.get(i).get(header));
-						});
-				//remove header
-				newHeadersIterator.remove();
-			}
-		}
-
-		Command undo = () ->
-		{
-			this.headers = oldHeaders.toArray(new Header[oldHeaders.size()]);
-			//restore all removed values back
-			removedValues.forEach((i,map) -> this.innerList.get(i).putAll(map));
-			displayFunction();
-		};
-		Command redo = () ->
-		{
-			this.headers = newHeaders.toArray(new Header[newHeaders.size()]);
-			removedValues.values()
-					.stream()
-					.map(Map::keySet)
-					.flatMap(Collection::stream)
-					.distinct()
-					.forEach(header -> this.innerList.forEach(row -> row.remove(header)));
-			displayFunction();
-		};
-		changed(true);
-		addUndoRedo(undo, redo);
-	}
-
-	public void addValue(int index, Object[] arr)
-	{
-		if (this.headers == null)
-		{
-			return;
-		}
-
-		Command undo = () ->
-		{
-			this.innerList.remove(index);
-			displayFunction();
-		};
-		Command redo = () ->
-		{
-			Map<Header, Object> line = convert(arr);
-			this.innerList.add(index, line);
-			displayFunction();
-		};
-		changed(true);
-		addUndoRedo(undo, redo);
-	}
-
-	public void changeValue(String headerName, int indexRow, Object newValue)
-	{
-		if (this.headers == null)
-		{
-			return;
-		}
-		Map<Header, Object> row = this.innerList.get(indexRow);
-		if (row == null)
-		{
-			return;
-		}
-		Header header = headerByName(headerName);
-		Object oldValue = row.get(header);
-		Command undo = () ->
-		{
-			row.remove(header);
-			row.put(header, oldValue);
-			displayFunction();
-		};
-		Command redo = () ->
-		{
-			row.remove(header);
-			row.put(header, newValue);
-			displayFunction();
-		};
-		addUndoRedo(undo, redo);
-		changed(true);
-	}
-
-	public void setHeader(int index, String newName)
-	{
-		if (this.headers[index] != null && Str.areEqual(this.headers[index].name, newName))
-		{
-			return;
-		}
-		if (columnIsPresent(newName))
-		{
-			throw new ColumnIsPresentException(newName);
-		}
-
-		String oldName = this.headers[index].name;
-		Command undo = () ->
-		{
-			this.headers[index].name = oldName;
-			displayFunction();
-		};
-		Command redo = () ->
-		{
-			this.headers[index].name = newName;
-			displayFunction();
-		};
-		changed(true);
-		addUndoRedo(undo, redo);
-	}
+    public void setHeader(int index, String s)
+    {
+        if (this.headers[index] != null && Str.areEqual(this.headers[index].name, s))
+        {
+            return;
+        }
+        if (columnIsPresent(s))
+        {
+            throw new ColumnIsPresentException(s);
+        }
+        changed(true);
+        this.headers[index].name = s.trim();
+    }
 
 	public void extendsTable(int prefCols, int prefRows, BooleanSupplier supplier)
 	{
 		Table oldTable = new Table(this.evaluator);
 		oldTable.fillFromTable(this);
 
-		Command undo = () ->
+		if (prefCols < this.getHeaderSize() || prefRows < this.size())
 		{
-			this.headers = new ArrayList<Header>().toArray(new Header[0]);
-			this.innerList.clear();
-			this.fillFromTable(oldTable);
-			displayFunction();
-		};
-		Command redo = () ->
-		{
-			if (prefCols < this.getHeaderSize() || prefRows < this.size())
+			if (supplier.getAsBoolean())
 			{
-				if (supplier.getAsBoolean())
-				{
-					List<String> collect = IntStream.range(prefCols, this.getHeaderSize())
-							.mapToObj(this::getHeader)
-							.collect(Collectors.toList());
-					this.removeColumns(collect.toArray(new String[collect.size()]));
+				List<String> collect = IntStream.range(prefCols, this.getHeaderSize())
+						.mapToObj(this::getHeader)
+						.collect(Collectors.toList());
+				this.removeColumns(collect.toArray(new String[collect.size()]));
 
-					for (int i = this.size() - 1; i >= prefRows; i--)
-					{
-						this.remove(i);
-					}
+				for (int i = this.size() - 1; i >= prefRows; i--)
+				{
+					this.remove(i);
 				}
 			}
-			else
-			{
-				IntStream.range(0, prefCols - this.getHeaderSize())
-						.mapToObj(i -> Table.generateColumnName(this))
-						.forEach(this::addColumns);
+		}
+		else
+		{
+			IntStream.range(0, prefCols - this.getHeaderSize())
+					.mapToObj(i -> Table.generateColumnName(this))
+					.forEach(this::addColumns);
 
-				IntStream.range(0, prefRows - this.size())
-						.mapToObj(i -> IntStream.range(0, this.getHeaderSize())
-								.mapToObj(j -> "")
-								.collect(Collectors.toList()))
-						.map(list -> list.toArray(new Object[list.size()]))
-						.forEach(this::addValue);
-			}
-			displayFunction();
-		};
+			IntStream.range(0, prefRows - this.size())
+					.mapToObj(i -> IntStream.range(0, this.getHeaderSize())
+							.mapToObj(j -> "")
+							.collect(Collectors.toList()))
+					.map(list -> list.toArray(new Object[list.size()]))
+					.forEach(this::addValue);
+		}
 		changed(true);
-		addUndoRedo(undo, redo);
-	}
-	//endregion
-
-	//region Listeners
-	public void setChangeListener(ChangeListener changeListener)
-	{
-		this.changeListener = changeListener;
-	}
-
-	public void setUndoRedoFunction(BiConsumer<Command, Command> function)
-	{
-		this.undoRedoFunction = function;
-	}
-
-	public void setDisplayListener(Consumer<Table> consumer)
-	{
-		this.displayFunction = consumer;
 	}
 	//endregion
 
 	//region private methods
-
-	private void displayFunction()
-	{
-		Optional.ofNullable(this.displayFunction).ifPresent(df -> df.accept(this));
-	}
-
-	private void addUndoRedo(Command undo, Command redo)
-	{
-		Optional.ofNullable(this.undoRedoFunction).ifPresent(func -> func.accept(undo, redo));
-	}
-
 	private String[] convertHeaders(Parameters parameters, String[] headers, boolean withNumbers)
 	{
 		if (parameters == null)
@@ -1726,14 +1586,9 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 				.collect(Collectors.toList());
 	}
 	
-    private static boolean areEqual(Object s1, Object s2)
+    private void changed(boolean flag)
     {
-    	if (s1 == null)
-    	{
-    		return s1 == s2;
-    	}
-    	
-    	return s1.equals(s2);
+        this.changed = flag;
     }
 	//endregion
 }

@@ -67,10 +67,6 @@ public class RawTable extends MatrixItem
 	{
 		Object layout = driver.createLayout(this, 3);
 
-		this.table.setDisplayListener(table -> driver.updateTable(this, layout, table));
-		this.table.setChangeListener(flag -> this.owner.changed(flag));
-		this.table.setUndoRedoFunction((u, r) -> this.owner.addCommand(u, r));
-
 		driver.showComment(this, layout, 0, 0, getComments());
 		driver.showTextBox(this, layout, 1, 0, this.id, this.id, () -> this.id.get());
 		driver.showTitle(this, layout, 1, 1, Tokens.RawTable.get(), context.getFactory().getSettings());
@@ -96,6 +92,7 @@ public class RawTable extends MatrixItem
 									, this.prefRows
 									, this.prefCols),
 							"Do you want to continue cutting the table?"));
+			driver.updateTable(this, layout, table);
 		});
 		return layout;
 	}
