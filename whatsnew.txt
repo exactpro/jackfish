@@ -1,4 +1,7 @@
 --------------------------------------------------------------------------------
+03.04.2017 4.4.0.2219
+RM 39455 feature : ability to select and copy multiply rows from JF console
+--------------------------------------------------------------------------------
 01.04.2017 4.4.0.2218
 RM41272 bug : Dialogs in swing plugin doesn't grab focus now
 
