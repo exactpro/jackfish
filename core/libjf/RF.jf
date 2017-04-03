@@ -546,17 +546,32 @@ RF;RegressionFramework
 
                 #Id;#RawText
                 findTestCase;Text
-                "SELECT testcase, time from details"
+                "SELECT testcase, time, error from details"
                 "where scenario_id = ?"
                 #EndRawText
 
                 #Id;#Action;#scenarioId;#Query;#Connection
                 SQLSLCT5;SQLselect;scenarios[rowScenarios].id;findTestCase.toString();SQL
 
+                #Action;#Table;#Title
+                TableReport;SQLSLCT5.Out;'1234'
+
                 #ForEach;#In
                 testCases;SQLSLCT5.Out
                     #Action;#name;#classname;#time;#NodeName;#Xml
                     XmlAddNode;testCases.testcase;scenarios[rowScenarios].scenario;testCases.time /1000;'testcase';last
+
+                    #If
+                    !testCases.error.equals('null')
+
+                        #Id;#Action;#Xml
+                        XML4;XmlChildren;last
+
+                        #Action;#type;#message;#NodeName;#Xml
+                        XmlAddNode;'testFailure';testCases.error;'failure';XML4.Out[XML4.Out.size - 1]
+                    #EndIf
+
+
 
                 #EndForEach
 

@@ -18,29 +18,6 @@ import java.util.Optional;
 
 public class ColorCell<T> extends ListCell<ConsoleText<T>>
 {
-	public ColorCell(boolean mayClear)
-	{
-		ContextMenu contextMenu = new ContextMenu();
-
-		MenuItem clear = new MenuItem("Clear");
-		MenuItem copy = new MenuItem("Copy");
-
-		contextMenu.getItems().addAll(copy);
-		if (mayClear)
-		{
-			contextMenu.getItems().add(clear);
-		}
-
-		setContextMenu(contextMenu);
-
-		clear.setOnAction(event -> {
-			getListView().getItems().forEach(i -> i.setText(""));
-			getListView().getItems().clear();
-		});
-
-		copy.setOnAction(event -> Optional.ofNullable(getListView().getSelectionModel().getSelectedItem()).ifPresent(selectedItem -> Common.copyText(selectedItem.toString())));
-	}
-
 	@Override
 	protected void updateItem(final ConsoleText<T> s, boolean b)
 	{
