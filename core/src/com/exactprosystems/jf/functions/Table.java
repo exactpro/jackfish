@@ -1071,10 +1071,6 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 		return this.headers[index].name;
 	}
 
-
-
-
-	//region Undo/Redo functionality
     public void addColumns(int index, String... columns)
     {
         for (String column : columns)
@@ -1156,43 +1152,6 @@ public class Table implements List<RowTable>, Mutable, Cloneable
         changed(true);
         this.headers[index].name = s.trim();
     }
-
-	public void extendsTable(int prefCols, int prefRows, BooleanSupplier supplier)
-	{
-		Table oldTable = new Table(this.evaluator);
-		oldTable.fillFromTable(this);
-
-		if (prefCols < this.getHeaderSize() || prefRows < this.size())
-		{
-			if (supplier.getAsBoolean())
-			{
-				List<String> collect = IntStream.range(prefCols, this.getHeaderSize())
-						.mapToObj(this::getHeader)
-						.collect(Collectors.toList());
-				this.removeColumns(collect.toArray(new String[collect.size()]));
-
-				for (int i = this.size() - 1; i >= prefRows; i--)
-				{
-					this.remove(i);
-				}
-			}
-		}
-		else
-		{
-			IntStream.range(0, prefCols - this.getHeaderSize())
-					.mapToObj(i -> Table.generateColumnName(this))
-					.forEach(this::addColumns);
-
-			IntStream.range(0, prefRows - this.size())
-					.mapToObj(i -> IntStream.range(0, this.getHeaderSize())
-							.mapToObj(j -> "")
-							.collect(Collectors.toList()))
-					.map(list -> list.toArray(new Object[list.size()]))
-					.forEach(this::addValue);
-		}
-		changed(true);
-	}
-	//endregion
 
 	//region private methods
 	private String[] convertHeaders(Parameters parameters, String[] headers, boolean withNumbers)

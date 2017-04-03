@@ -33,7 +33,7 @@ public class CsvFx extends Csv
 	{
 		super(fileName, factory);
 		
-		this.provider = new TableDataProvider(super.table);
+		this.provider = new TableDataProvider(super.table, this::addCommand);
 	}
 
 	//==============================================================================================================================
@@ -59,9 +59,7 @@ public class CsvFx extends Csv
 	public void load(Reader reader) throws Exception
 	{
 		super.load(reader);
-
-		this.provider = new TableDataProvider(super.table);
-		//TODO implements undo redo
+		this.provider = new TableDataProvider(super.table, this::addCommand);
 	}
 
     @Override

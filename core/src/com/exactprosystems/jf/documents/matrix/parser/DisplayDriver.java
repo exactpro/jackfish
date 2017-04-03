@@ -17,6 +17,7 @@ import com.exactprosystems.jf.functions.Table;
 import com.exactprosystems.jf.functions.Text;
 
 import java.util.List;
+import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -39,7 +40,7 @@ public interface DisplayDriver
 
 	void showSpinner(MatrixItem item, Object layout, int row, int column, double prefWidth, Setter<Integer> set, Getter<Integer> get, int minValue, int maxValue);
 
-	void updateTable(MatrixItem item, Object layout, Table table);
+	void		extendsTable(Object layout, int prefCols, int prefRows, BooleanSupplier supplier);
 	void 		showToggleButton	(MatrixItem item, Object layout, int row, int column, Consumer<Boolean> action, Function<Boolean, String> changeName, boolean initialValue);
 	void 		showParameters		(MatrixItem item, Object layout, int row, int column, Parameters parameters, FormulaGenerator generator, boolean oneLine);
 	void 		showGrid			(MatrixItem item, Object layout, int row, int column, Table table);

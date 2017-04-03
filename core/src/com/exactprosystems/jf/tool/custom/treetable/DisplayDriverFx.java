@@ -50,6 +50,7 @@ import javafx.scene.layout.*;
 
 import java.io.FileReader;
 import java.util.*;
+import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -517,8 +518,12 @@ public class DisplayDriverFx implements DisplayDriver
 	}
 
 	@Override
-	public void updateTable(MatrixItem item, Object layout, Table table)
+	public void extendsTable(Object layout, int prefCols, int prefRows, BooleanSupplier supplier)
 	{
+		if (!supplier.getAsBoolean())
+		{
+			return;
+		}
 		GridPane pane = ((GridPane) layout);
 
 		Optional<BorderPane> gridParent = pane.getChildren().stream().filter(node -> node.getStyleClass().contains(GRID_PARENT)).map(node -> (BorderPane) node).findFirst();
@@ -526,13 +531,12 @@ public class DisplayDriverFx implements DisplayDriver
 		{
 			BorderPane borderPane = gridParent.get();
 			SpreadsheetView spreadsheetView = (SpreadsheetView) borderPane.getCenter();
-			spreadsheetView.setDataProvider(new TableDataProvider(table));
+			spreadsheetView.getProvider().extendsTable(prefCols, prefRows);
 		}
 	}
 
 	@Override
-	public void showToggleButton(MatrixItem item, Object layout, int row, int column, Consumer<Boolean> action, 
-	          Function<Boolean, String> changeName, boolean initialValue)
+	public void showToggleButton(MatrixItem item, Object layout, int row, int column, Consumer<Boolean> action, Function<Boolean, String> changeName, boolean initialValue)
 	{
 		GridPane pane = (GridPane) layout;
 		ToggleButton toggleButton = new ToggleButton(changeName.apply(initialValue));
@@ -566,8 +570,9 @@ public class DisplayDriverFx implements DisplayDriver
 	public void showGrid(MatrixItem item, Object layout, int row, int column, Table table)
 	{
 		GridPane pane = (GridPane) layout;
-		DataProvider<String> provider = new TableDataProvider(table);
+		DataProvider<String> provider = new TableDataProvider(table, (undo, redo) -> item.getMatrix().addCommand(undo, redo));
 		SpreadsheetView view = new SpreadsheetView(provider);
+		provider.displayFunction(view::display);
 		view.setPrefHeight(25 * (Math.min(provider.getRowHeaders().size(), 50) + 1));
 
 		BorderPane borderPane = new BorderPane();

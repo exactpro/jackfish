@@ -8,8 +8,6 @@
 package com.exactprosystems.jf.tool.custom.grideditor;
 
 import com.exactprosystems.jf.api.common.Sys;
-import com.exactprosystems.jf.exceptions.ColumnIsPresentException;
-import com.exactprosystems.jf.functions.Table;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import javafx.application.Platform;
 import javafx.beans.property.*;
@@ -22,11 +20,14 @@ import javafx.event.EventHandler;
 import javafx.event.EventType;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.control.MenuItem;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.util.Pair;
 
+import java.awt.*;
 import java.util.*;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
 import java.util.regex.Matcher;
@@ -221,44 +222,33 @@ public class SpreadsheetView extends Control
 		}
 	}
 
-	public void addColumn(int index)
+	public final void display(DataProvider<String> dataProvider)
 	{
-		DataProvider dataProvider = this.providerProperty().get();
-		Table table = ((TableDataProvider) dataProvider).getTable();
-		String newHeader = Table.generateColumnName(table);
-		dataProvider.addColumn(index, newHeader);
 		this.setDataProvider(dataProvider);
 	}
 
-	public void removeColumn(List<Integer> columns)
+	public void addColumn(int index)
+	{
+		this.providerProperty().get().addNewColumn(index);
+	}
+
+	public void removeColumns(List<Integer> columns)
 	{
 		this.providerProperty().get().removeColumns(columns.toArray(new Integer[columns.size()]));
-		this.setDataProvider(providerProperty().get());
 	}
 
 	public void renameColumn(SpreadsheetColumn column, String text)
 	{
-		String oldValue = column.getText();
-		try
-		{
-			this.providerProperty().get().setColumnName(this.columns.indexOf(column), text);
-			column.setText(text);
-		}
-		catch (ColumnIsPresentException e)
-		{
-			DialogsHelper.showError(e.getMessage());
-			//this.providerProperty().get().setColumnName(this.columns.indexOf(column), oldValue);
-		}
+		this.providerProperty().get().setColumnName(this.columns.indexOf(column), text);
 	}
 
 	public void switchColumn(boolean on, int columnIndex)
 	{
-		int rowCount = this.providerProperty().get().rowCount();
-		for (int i = 0; i < rowCount; i++)
-		{
-			this.providerProperty.get().setCellValue(columnIndex, i, on ? "" : "x");
-		}
-		this.setDataProvider(providerProperty.get());
+		this.providerProperty.get().setColumnValues(columnIndex,
+				IntStream.range(0, this.providerProperty.get().rowCount())
+						.mapToObj(i -> on ? "" : "x")
+						.toArray()
+		);
 	}
 
 	public void addRowBefore(Integer row)
@@ -273,23 +263,14 @@ public class SpreadsheetView extends Control
 		this.setDataProvider(this.providerProperty().get());
 	}
 
-	public void removeRow(Integer row)
-	{
-		this.providerProperty().get().removeRow(row);
-		this.setDataProvider(this.providerProperty().get());
-	}
-
 	public void removeRows(List<Integer> rows)
 	{
-		for (int i = rows.size() - 1; i >= 0; i--)
-		{
-			this.providerProperty().get().removeRow(rows.get(i));
-		}
-		this.setDataProvider(this.providerProperty().get());
+		this.providerProperty().get().removeRows(rows.toArray(new Integer[rows.size()]));
 	}
 
 	public void extentionView(ObservableList<ObservableList<String>> initial, Direction direction, RectangleSelection.GridRange range)
 	{
+		Map<Point, String> map = new LinkedHashMap<>();
 		switch (direction)
 		{
 			case UP:
@@ -305,12 +286,11 @@ public class SpreadsheetView extends Control
 					int progression = strings.size() == 1 ? 1 : getProgression(strings);
 					int skip = progression != minProgression ? 1 : size;
 					int currentProgression = progression != minProgression ? progression : -1;
-
 					for (int i = range.getBottom() - size; i > range.getTop() - 1; i--)
 					{
 						String value = String.valueOf(this.providerProperty.get().getCellValue(j, i + skip));
 						String evaluatedText = getEvaluatedText(value, currentProgression);
-						this.providerProperty.get().setCellValue(j, i, evaluatedText);
+						map.put(new Point(j, i), evaluatedText);
 					}
 				}
 
@@ -348,8 +328,7 @@ public class SpreadsheetView extends Control
 							newProgression = newProgression + currentProgression;
 						}
 						String evaluatedText = getEvaluatedText(value, newProgression);
-						this.providerProperty.get().setCellValue(j, i, evaluatedText);
-
+						map.put(new Point(j, i), evaluatedText);
 					}
 				}
 				break;
@@ -366,7 +345,7 @@ public class SpreadsheetView extends Control
 					{
 						String value = String.valueOf(this.providerProperty.get().getCellValue(j + skip, i + range.getTop()));
 						String evaluatedText = getEvaluatedText(value, currentProgression);
-						this.providerProperty().get().setCellValue(j, i + range.getTop(), evaluatedText);
+						map.put(new Point(j, i + range.getTop()), evaluatedText);
 					}
 				}
 
@@ -382,12 +361,12 @@ public class SpreadsheetView extends Control
 					for (int j = range.getLeft() + strings.size(); j < range.getRight() + 1; j++)
 					{
 						String evaluatedText = getEvaluatedText(String.valueOf(this.providerProperty.get().getCellValue(j - skip, i + range.getTop())), currentProgression);
-						this.providerProperty.get().setCellValue(j, i + range.getTop(), evaluatedText);
+						map.put(new Point(j, i + range.getTop()), evaluatedText);
 					}
 				}
 				break;
 		}
-		this.setDataProvider(this.providerProperty().get());
+		this.providerProperty.get().updateCells(map);
 	}
 
 	private static int getProgression(List<String> strings)
@@ -640,7 +619,6 @@ public class SpreadsheetView extends Control
 
 	private void paste(boolean withHeader)
 	{
-		String text = Sys.getFromClipboard();
 		List<TablePosition> selectedCells = this.getSelectionModel().getSelectedCells();
 		if (selectedCells.size() != 1)
 		{
@@ -648,75 +626,16 @@ public class SpreadsheetView extends Control
 			return;
 		}
 		TablePosition selectedCell = selectedCells.get(0);
-		String[] rows = text.split("\n");
-		int indexSelectedColumn = selectedCell.getColumn();
-		int indexSelectedRow = selectedCell.getRow();
-
-		/**
-		 * add columns if needs
-		 */
-		int columnCount = rows[0].split("\t").length;
-		List<String> columnHeaders = this.providerProperty.get().getColumnHeaders();
-		DataProvider dataProvider = this.providerProperty().get();
-		if (indexSelectedColumn + columnCount > columnHeaders.size())
-		{
-			int addSize = indexSelectedColumn + columnCount - columnHeaders.size();
-			TableDataProvider tableDataProvider = (TableDataProvider) dataProvider;
-			Table table = tableDataProvider.getTable();
-			IntStream.range(0, addSize).forEach(i -> dataProvider.addColumn(dataProvider.columnCount(), Table.generateColumnName(table)));
-			this.setDataProvider(providerProperty().get());
-		}
-
-		if (withHeader)
-		{
-			String[] headers = rows[0].split("\t");
-			for (int i = 0; i < columnCount; i++)
-			{
-				SpreadsheetColumn q = this.columns.get(indexSelectedColumn + i);
-				String w = headers[i];
-				this.renameColumn(q, w);
-			}
-			/**
-			 * remove 1st row from rows, because we used that string yet
-			 */
-			String[] newRows = new String[rows.length - 1];
-			for (int i = 1; i < rows.length; i++)
-			{
-				newRows[i - 1] = rows[i];
-			}
-			rows = newRows;
-		}
-
-		/**
-		 * add rows if needs
-		 */
-		int rowCount = rows.length;
-		List<String> rowHeaders = dataProvider.getRowHeaders();
-		if (indexSelectedRow + rowCount > rowHeaders.size())
-		{
-			int addSize = indexSelectedRow + rowCount - rowHeaders.size();
-			IntStream.range(0, addSize).forEach(value -> dataProvider.addRow(dataProvider.rowCount()));
-			this.setDataProvider(providerProperty().get());
-		}
-
-		for (int i = 0; i < rows.length; i++)
-		{
-			String[] cells = rows[i].split("\t");
-			for (int j = 0; j < cells.length; j++)
-			{
-				dataProvider.setCellValue(indexSelectedColumn + j, indexSelectedRow + i, cells[j]);
-			}
-		}
-		this.setDataProvider(this.getProvider());
+		this.providerProperty.get().paste(selectedCell.getColumn(), selectedCell.getRow(), withHeader);
 	}
 
 	public void deleteSelectedCells()
 	{
-		for (TablePosition<ObservableList<SpreadsheetCell>, ?> position : getSelectionModel().getSelectedCells())
-		{
-			this.providerProperty().get().setCellValue(position.getColumn(), position.getRow(), this.providerProperty.get().defaultValue());
-		}
-		setDataProvider(this.providerProperty().get());
+		this.providerProperty.get().clearCells(getSelectionModel().getSelectedCells()
+				.stream()
+				.map(pos -> new Point(pos.getColumn(), pos.getRow()))
+				.collect(Collectors.toList())
+		);
 	}
 
 	private TableColumn<ObservableList<SpreadsheetCell>, SpreadsheetCell> getTableColumn(DataProvider provider, int columnIndex)

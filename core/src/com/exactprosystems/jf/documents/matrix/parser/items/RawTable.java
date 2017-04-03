@@ -84,15 +84,18 @@ public class RawTable extends MatrixItem
 		driver.showSpinner(this, layout, 1, 8, 75, v -> this.prefCols = v, () -> this.prefCols, 0, 50);
 		driver.showButton(this, layout, 1, 9, "Apply", item ->
 		{
-			this.table.extendsTable(this.prefCols, this.prefRows, () ->
-					DialogsHelper.showQuestionDialog(
+			driver.extendsTable(layout, this.prefCols, this.prefRows, () ->
+			{
+				if (prefCols < this.table.getHeaderSize() || prefRows < this.table.size())
+				{
+					return DialogsHelper.showQuestionDialog(
 							String.format("Current table size is [%s;%s] and given size is [%s;%s].The table will be cut ",
-									this.table.size()
-									, this.table.getHeaderSize()
-									, this.prefRows
-									, this.prefCols),
-							"Do you want to continue cutting the table?"));
-			driver.updateTable(this, layout, table);
+									  this.table.size(),  this.table.getHeaderSize()
+									, this.prefRows,      this.prefCols),
+							"Do you want to continue cutting the table?");
+				}
+				return true;
+			});
 		});
 		return layout;
 	}

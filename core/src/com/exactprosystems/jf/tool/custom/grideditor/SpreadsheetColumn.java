@@ -67,10 +67,15 @@ public final class SpreadsheetColumn {
 		addColumnAfter.setOnAction(e -> this.spreadsheetView.addColumn(this.spreadsheetView.getColumns().indexOf(this) + 1));
 
 		MenuItem removeColumn = new MenuItem("Remove columns");
-		removeColumn.setOnAction(e ->
-		{
-			this.spreadsheetView.removeColumn(this.spreadsheetView.getSelectionModel().getSelectedCells().stream().map(TablePosition::getColumn).distinct().collect(Collectors.toList()));
-		});
+		removeColumn.setOnAction(e -> this.spreadsheetView.removeColumns(
+				this.spreadsheetView.getSelectionModel()
+						.getSelectedCells()
+						.stream()
+						.map(TablePosition::getColumn)
+						.distinct()
+						.collect(Collectors.toList())
+				)
+		);
 
 		MenuItem renameColumn = new MenuItem("Rename");
 		renameColumn.setOnAction(e -> startRenameColumn());

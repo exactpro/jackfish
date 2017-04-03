@@ -124,6 +124,7 @@ public class CsvFxController implements Initializable, ContainingParent
 		{
 			this.provider = provider;
 			this.view = new SpreadsheetView(this.provider);
+			this.provider.displayFunction(this.view::display);
 			this.pane.setCenter(this.view);
 		});
 	}
