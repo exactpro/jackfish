@@ -1428,7 +1428,6 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 					ret = (ComponentFixture<T>) new DialogFixture(this.currentRobot, (JDialog) component);
 					DialogFixture jdf = (DialogFixture) ret;
 					jdf.target.toFront();
-					jdf.focus();
 					break;
 
 				case Frame:
@@ -2062,7 +2061,6 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 		{
 			DialogFixture fixture = new DialogFixture(this.currentRobot, (JDialog) component);
 			fixture.target.toFront();
-			fixture.focus();
 			return (ComponentFixture<T>) fixture;
 		}
 		else if (component instanceof JFrame)

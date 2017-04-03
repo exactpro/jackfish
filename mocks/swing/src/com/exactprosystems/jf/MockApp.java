@@ -630,6 +630,24 @@ public class MockApp
 	{
 		JDialog dialog = new JDialog(this.frame, "Dialog");
 		addListeners(dialog, "DialogD");
+		JPanel panel = new JPanel();
+		JLabel label = new JLabel("LabelD");
+		JButton button = new JButton("ButtonD");
+		panel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				label.setText("LabelD");
+			}
+		});
+		button.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				label.setText("ButtonD_click");
+			}
+		});
+		panel.add(label);
+		panel.add(button);
+		dialog.add(panel);
 		dialog.setDefaultCloseOperation(JDialog.HIDE_ON_CLOSE);
 		dialog.setSize(100, 100);
 		dialog.setVisible(true);

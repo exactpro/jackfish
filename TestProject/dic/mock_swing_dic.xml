@@ -90,4 +90,15 @@
         <onClose/>
         <close/>
     </window>
+    <window name="Dialog">
+        <self>
+            <dialog id="DialogD" title="Dialog" addition="Many"/>
+        </self>
+        <onOpen/>
+        <run>
+            <button id="button" xpath=".//JButton" owner="DialogD"/>
+        </run>
+        <onClose/>
+        <close/>
+    </window>
 </dictionary>
