@@ -945,6 +945,8 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
             case DragNDrop: // TODO is it needed to implement?
                 break;
 
+			case Focus:
+			case Enter:
             case Move:
                 break;
 		}
@@ -1428,6 +1430,7 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 					ret = (ComponentFixture<T>) new DialogFixture(this.currentRobot, (JDialog) component);
 					DialogFixture jdf = (DialogFixture) ret;
 					jdf.target.toFront();
+					executeAction(MouseAction.Focus, component, 0, 0);
 					break;
 
 				case Frame:
@@ -2061,6 +2064,7 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 		{
 			DialogFixture fixture = new DialogFixture(this.currentRobot, (JDialog) component);
 			fixture.target.toFront();
+			executeAction(MouseAction.Focus, component, 0, 0);
 			return (ComponentFixture<T>) fixture;
 		}
 		else if (component instanceof JFrame)
