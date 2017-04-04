@@ -8,10 +8,13 @@
 
 package com.exactprosystems.jf.api.conditions;
 
+import com.exactprosystems.jf.api.common.DescriptionAttribute;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.text.NumberFormat;
 
+@DescriptionAttribute(text = "Returns rows which contains the given number")
 public class NumberCondition extends RelativeCondition  implements Serializable
 {
 

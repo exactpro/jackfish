@@ -8,11 +8,13 @@
 
 package com.exactprosystems.jf.api.conditions;
 
+import com.exactprosystems.jf.api.common.DescriptionAttribute;
 import com.exactprosystems.jf.api.common.Str;
 
 import java.io.Serializable;
 import java.util.Map;
 
+@DescriptionAttribute(text = "Return rows which content satisfy the compare (more, less, equal etc) with the given parameters")
 public abstract class RelativeCondition extends Condition  implements Serializable
 {
 

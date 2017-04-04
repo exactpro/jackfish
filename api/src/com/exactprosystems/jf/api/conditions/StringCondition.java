@@ -8,11 +8,13 @@
 
 package com.exactprosystems.jf.api.conditions;
 
+import com.exactprosystems.jf.api.common.DescriptionAttribute;
 import com.exactprosystems.jf.api.common.Str;
 
 import java.io.Serializable;
 import java.util.Map;
 
+@DescriptionAttribute(text = "Returns rows which contains the given string")
 public class StringCondition extends Condition  implements Serializable
 {
 

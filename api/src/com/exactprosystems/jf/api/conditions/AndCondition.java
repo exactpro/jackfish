@@ -9,12 +9,14 @@
 package com.exactprosystems.jf.api.conditions;
 
 import com.exactprosystems.jf.api.client.ICondition;
+import com.exactprosystems.jf.api.common.DescriptionAttribute;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+@DescriptionAttribute(text = "Returns rows that satisfy ALL conditions")
 public class AndCondition extends Condition
 {
 	private static final long serialVersionUID = -7043230215754395460L;

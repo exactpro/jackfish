@@ -8,9 +8,12 @@
 
 package com.exactprosystems.jf.api.conditions;
 
+import com.exactprosystems.jf.api.common.DescriptionAttribute;
+
 import java.io.Serializable;
 import java.util.Map;
 
+@DescriptionAttribute(text = "Returns all rows from table")
 public class TrueCondition extends Condition  implements Serializable
 {
 

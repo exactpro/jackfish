@@ -10,10 +10,12 @@ package com.exactprosystems.jf.api.conditions;
 
 import com.exactprosystems.jf.api.common.Converter;
 import com.exactprosystems.jf.api.common.DateTime;
+import com.exactprosystems.jf.api.common.DescriptionAttribute;
 
 import java.io.Serializable;
 import java.util.Date;
 
+@DescriptionAttribute(text = "Returns rows that satisfy the given date")
 public class DateCondition extends RelativeCondition  implements Serializable
 {
 	//TODO this pattern used in win side. If you want to change it, don't forget change on win side.

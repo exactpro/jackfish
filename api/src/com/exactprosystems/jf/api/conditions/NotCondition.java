@@ -8,7 +8,11 @@
 
 package com.exactprosystems.jf.api.conditions;
 
+import com.exactprosystems.jf.api.common.DescriptionAttribute;
+
 import java.util.Map;
+
+@DescriptionAttribute(text = "Returns rows that NOT satisfy the condition")
 
 public class NotCondition extends Condition
 {
