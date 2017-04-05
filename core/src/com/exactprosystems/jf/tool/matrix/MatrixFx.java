@@ -105,6 +105,9 @@ public class MatrixFx extends Matrix
 			this.controller.saved(getName());
 			this.controller.displayTitle(getName());
 		}
+		if (getMatrixRunner() != null){
+			getMatrixRunner().setMatrixFile(getName());
+		}
 	}
 
 	@Override

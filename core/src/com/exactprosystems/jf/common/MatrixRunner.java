@@ -298,6 +298,12 @@ public class MatrixRunner implements IMatrixRunner, AutoCloseable
 		return this.report.getReportDir();
 	}
 
+	@Override
+	public void setMatrixFile(String name)
+	{
+		this.matrixFile = new File(name);
+	}
+
 	private void loadFromReader(Context context, Reader reader) throws Exception
 	{
 		this.matrix = context.getFactory().createMatrix(this.matrixFile.getName(), this);
