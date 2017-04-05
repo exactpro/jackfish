@@ -30,4 +30,5 @@ public interface IMatrixRunner
     void setStartTime(Date date);
     IContext getContext();
     Date getStartTime();
+    void setMatrixFile(String name);
 }
