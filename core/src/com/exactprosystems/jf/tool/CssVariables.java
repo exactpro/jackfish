@@ -223,7 +223,11 @@ public class CssVariables
 	public static final String	VGAP_MAX					= "vgapMax";
 	//endregion
 
-	public static final String	CUSTOM_TAB_PANE				= "customTabPane";
+	public static final String CUSTOM_TAB_PANE       		= "customTabPane";
+	public static final String TEMP_CUSTOM_TAB       		= "tempCustomTab";
+	public static final String TEMP_VIEW_CUSTOM_TAB  		= "tempCustomTabSimple";
+	public static final String TEMP_VIEW_OVER_CUSTOM_TAB 	= "tempCustomTabOver";
+
 
 	public static final String	IMAGE_AREA					= "imageArea";
 

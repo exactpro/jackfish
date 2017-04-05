@@ -172,6 +172,20 @@
 }
 
 /*Custom classes*/
+.tempCustomTab {
+	-fx-border-color : null;
+	-fx-border-width : 0px;
+	-fx-background-color : transparent;
+
+}
+.tempCustomTabSimple {
+	-fx-background-radius : 2px;
+
+}
+.tempCustomTabOver {
+	-fx-border-width : 2px;
+	-fx-border-radius : 2px;
+}
 
 /*Dialog wizard*/
 #cbMark {

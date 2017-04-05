@@ -697,13 +697,14 @@ CellView > .text-input.text-field{
 
 }
 
-.customTabPane{
-	-fx-open-tab-animation: NONE;
-	-fx-close-tab-animation: NONE;
+.tempCustomTabSimple {
+	-fx-background-color : #a8a8a8;
 
 }
-
-
+.tempCustomTabOver {
+	-fx-background-color : #f0f0f0;
+	-fx-border-color : -fx-company-color-light;
+}
 /*  Images  */
 
 /*MainController*/

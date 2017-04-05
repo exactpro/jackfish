@@ -14,11 +14,11 @@ import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import javafx.application.Platform;
-import javafx.geometry.Bounds;
 import javafx.geometry.Pos;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Hyperlink;
+import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -28,7 +28,6 @@ import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.HBox;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 
 import java.io.FileReader;
@@ -45,25 +44,25 @@ public class CustomTab extends Tab implements AutoCloseable
 	private Document			document;
 	private FileWatcher			watcher;
 	private Settings			settings;
-	private final AtomicBoolean		warningIsShow;
+	private final AtomicBoolean	warningIsShow;
 
 	private CustomTabPane tabPane;
 	private HBox view;
 
 	public CustomTab(Document document, Settings settings, CustomTabPane tabPane)
 	{
-		this(document, settings);
+		super();
 		this.tabPane = tabPane;
+		this.warningIsShow = new AtomicBoolean(false);
+		this.settings = settings;
+		this.document = document;
+
+		init();
 	}
 
-	public CustomTab(Document document, Settings settings)
+	protected void init()
 	{
-		super();
-
-		this.warningIsShow = new AtomicBoolean(false); 
-		this.settings = settings;
 		this.setClosable(false);
-		this.document = document;
 
 		this.view = new HBox();
 		this.view.setAlignment(Pos.CENTER);
@@ -84,20 +83,8 @@ public class CustomTab extends Tab implements AutoCloseable
 		});
 		this.view.getChildren().addAll(this.text, this.crossButton);
 		this.view.setOnDragDetected(e -> {
-			this.tabPane.getTabsMap().clear();
-			this.getTabPane().getTabs().stream()
-					.map(t -> (CustomTab) t)
-					.forEach(t -> {
-						HBox view = t.view;
-						Bounds bounds = view.getBoundsInLocal();
-						Bounds screenBounds = view.localToScreen(bounds);
-						int x = (int) screenBounds.getMinX();
-						int y = (int) screenBounds.getMinY();
-						int width = (int) screenBounds.getWidth();
-						int height = (int) screenBounds.getHeight();
-						Rectangle rec = new Rectangle(x, y, width, height);
-						this.tabPane.getTabsMap().put(t, rec);
-					});
+			tabPane.draggingTabProperty().set(this);
+			tabPane.addTempTabs();
 
 			Dragboard dragboard = this.view.startDragAndDrop(TransferMode.MOVE);
 			ClipboardContent clipboardContent = new ClipboardContent();
@@ -105,13 +92,11 @@ public class CustomTab extends Tab implements AutoCloseable
 			dragboard.setContent(clipboardContent);
 			WritableImage snapshot = this.view.snapshot(new SnapshotParameters(), null);
 			dragboard.setDragView(snapshot);
-			//save current tab
-			this.tabPane.draggingTabProperty().set(this);
 
 			e.consume();
 		});
-		this.view.setOnDragExited(e -> {
-			//TODO implement
+		this.view.setOnDragOver(e -> {
+			tabPane.droppedTabProperty().set(null);
 		});
 		this.setGraphic(this.view);
 
@@ -122,7 +107,7 @@ public class CustomTab extends Tab implements AutoCloseable
 			{
 				if (Common.appIsFocused() && isSelected())
 				{
-					synchronized (warningIsShow) 
+					synchronized (warningIsShow)
 					{
 						if(!warningIsShow.get())
 						{
@@ -233,4 +218,77 @@ public class CustomTab extends Tab implements AutoCloseable
 	{
 		return view;
 	}
+
+	public static class TempCustomTab extends CustomTab
+	{
+		public TempCustomTab(Document document, Settings settings,CustomTabPane pane)
+		{
+			super(document, settings, pane);
+			this.getStyleClass().addAll(CssVariables.TEMP_CUSTOM_TAB);
+		}
+
+		@Override
+		protected void init()
+		{
+			super.view = new HBox();
+			super.view.getStyleClass().addAll(CssVariables.TEMP_VIEW_CUSTOM_TAB);
+			Label lbl = new Label();
+			lbl.setPrefWidth(15);
+			lbl.setMinWidth(15);
+			lbl.setMaxWidth(15);
+			super.view.getChildren().add(lbl);
+			super.view.setOnDragOver(e -> {
+				super.tabPane.droppedTabProperty().set(this);
+				super.view.getStyleClass().removeAll(CssVariables.TEMP_VIEW_OVER_CUSTOM_TAB);
+				super.view.getStyleClass().add(CssVariables.TEMP_VIEW_OVER_CUSTOM_TAB);
+			});
+			super.view.setOnDragExited(e -> {
+				super.view.getStyleClass().removeAll(CssVariables.TEMP_VIEW_OVER_CUSTOM_TAB);
+			});
+			setGraphic(super.view);
+		}
+
+		@Override
+		public void close() throws Exception
+		{
+
+		}
+
+		@Override
+		public void saved(String fileName)
+		{
+
+		}
+
+		@Override
+		public void reload() throws Exception
+		{
+
+		}
+
+		@Override
+		public void onClose() throws Exception
+		{
+
+		}
+
+		@Override
+		public String getTitle()
+		{
+			return super.getTitle();
+		}
+
+		@Override
+		public Document getDocument()
+		{
+			return null;
+		}
+
+		@Override
+		public void setTitle(String text)
+		{
+
+		}
+	}
+
 }
