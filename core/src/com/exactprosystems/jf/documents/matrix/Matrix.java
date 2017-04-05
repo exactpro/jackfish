@@ -218,7 +218,11 @@ public class Matrix extends AbstractDocument implements IMatrix
 	public void save(String fileName) throws Exception
 	{
 		super.save(fileName);
-
+		if (getMatrixRunner() != null)
+		{
+			getMatrixRunner().setMatrixFile(getName());
+		}
+		
 		try (Writer rawWriter = new FileWriter(new File(fileName)))
 		{
 			Parser parser = new Parser();
