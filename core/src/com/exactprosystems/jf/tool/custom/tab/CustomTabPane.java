@@ -39,7 +39,12 @@ public class CustomTabPane extends TabPane
 	{
 		super();
 		this.getStyleClass().add(CssVariables.CUSTOM_TAB_PANE);
-		this.setOnDragEntered(e -> addTempTabs());
+		this.setOnDragEntered(e -> {
+			if (this.tempTabList.isEmpty())
+			{
+				addTempTabs();
+			}
+		});
 		this.setOnDragDone(e ->
 		{
 			final Dragboard dragboard = e.getDragboard();
