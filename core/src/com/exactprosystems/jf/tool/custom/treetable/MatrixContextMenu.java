@@ -22,6 +22,7 @@ import com.exactprosystems.jf.tool.custom.grideditor.SpreadsheetView;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.matrix.MatrixFx;
 import com.exactprosystems.jf.tool.settings.SettingsPanel;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.event.EventTarget;
@@ -36,6 +37,7 @@ import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -169,16 +171,10 @@ public class MatrixContextMenu extends ContextMenu
 
 	private void addBefore(MatrixTreeView treeView, MatrixFx matrix)
 	{
-	    // TODO
 		Common.tryCatch(() ->
 		{
 		    MatrixItem item = treeView.currentItem();
 		    MatrixItem[] inserted =  matrix.insertNew(item, Tokens.TempItem.get(), null);
-		    for(MatrixItem one : inserted)
-		    {
-	            TreeItem<MatrixItem> treeItem = treeView.find(one);
-	            treeView.expand(treeItem, !this.fold);
-		    }
 		}, "Error on add before");
 	}
 
@@ -207,16 +203,11 @@ public class MatrixContextMenu extends ContextMenu
 
 	private void pasteItems(MatrixFx matrix, MatrixTreeView tree)
 	{
-	    // TODO
-		Common.tryCatch(() -> 
+		Common.tryCatch(() ->
 		{
             MatrixItem item = tree.currentItem();
             MatrixItem[] inserted =  matrix.paste(item);
-            for(MatrixItem one : inserted)
-            {
-                TreeItem<MatrixItem> treeItem = tree.find(one);
-                tree.expand(treeItem, !this.fold);
-            }
+			Platform.runLater(() -> Arrays.stream(inserted).map(tree::find).forEach(treeItem -> tree.expand(treeItem, !this.fold)));
 		}, "Error on paste");
 	}
 
@@ -249,7 +240,7 @@ public class MatrixContextMenu extends ContextMenu
 				}
 				else
 				{
-					tree.setCurrent(treeItem);
+					tree.setCurrent(treeItem, false);
 				}
 			}
 			catch (NumberFormatException e)

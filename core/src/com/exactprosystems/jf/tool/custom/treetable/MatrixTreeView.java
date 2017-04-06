@@ -14,18 +14,15 @@ import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItemState;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.CssVariables;
-import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.matrix.MatrixFx;
 import com.exactprosystems.jf.tool.matrix.params.ParametersPane;
 import com.exactprosystems.jf.tool.settings.SettingsPanel;
 import com.sun.javafx.scene.control.skin.TreeTableViewSkin;
-
 import javafx.application.Platform;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.GridPane;
-
 import org.apache.log4j.Logger;
 
 import java.util.List;
@@ -43,6 +40,7 @@ public class MatrixTreeView extends TreeTableView<MatrixItem>
 	private final static Logger logger = Logger.getLogger(MatrixTreeView.class);
 
 	private boolean isTracing;
+	private boolean needExpand;
 
 	public MatrixTreeView()
 	{
@@ -54,6 +52,11 @@ public class MatrixTreeView extends TreeTableView<MatrixItem>
 		initTable();
 	}
 
+	public void setNeedExpand(boolean flag)
+	{
+		this.needExpand = flag;
+	}
+
 	public void init(MatrixFx matrix, Settings settings, ContextMenu contextMenu)
 	{
 		this.matrix = matrix;
@@ -61,23 +64,13 @@ public class MatrixTreeView extends TreeTableView<MatrixItem>
 		setRoot(new TreeItem<>(matrix.getRoot()));
 
 		setRowFactory(treeView -> {
-			try
-			{
-				MatrixTreeRow row = new MatrixTreeRow(contextMenu);
-				shortCuts(row, settings);
-				return row;
-			}
-			catch (Exception e)
-			{
-				String message = "Error on set cell factory\n" + e.getMessage();
-				logger.error(message, e);
-				DialogsHelper.showError(message);
-			}
-			return new TreeTableRow<>();
+			MatrixTreeRow row = new MatrixTreeRow(contextMenu);
+			shortCuts(row, settings);
+			return row;
 		});
 	}
 
-	public void setCurrent(TreeItem<MatrixItem> treeItem)
+	public void setCurrent(TreeItem<MatrixItem> treeItem, boolean needExpand)
 	{
 		if (treeItem != null)
 		{
@@ -87,6 +80,10 @@ public class MatrixTreeView extends TreeTableView<MatrixItem>
 				{
 			        parent.setExpanded(true);
 					parent = parent.getParent();
+				}
+				if (needExpand)
+				{
+					expand(treeItem, !this.needExpand);
 				}
 				final int row = getRow(treeItem);
 				getSelectionModel().clearAndSelect(row);
@@ -131,17 +128,17 @@ public class MatrixTreeView extends TreeTableView<MatrixItem>
 
     public void expand(TreeItem<MatrixItem> rootItem, boolean flag)
     {
-        if (rootItem == null)
-        {
-            return;
-        }
-        
-        rootItem.getChildren().forEach(item ->
-        {
-            item.setExpanded(flag);
-            expand(item, flag);
-        });
-    }
+		if (rootItem == null)
+		{
+			return;
+		}
+		rootItem.setExpanded(flag);
+		rootItem.getChildren().forEach(item ->
+		{
+			item.setExpanded(flag);
+			expand(item, flag);
+		});
+	}
 	
 	public List<MatrixItem> currentItems()
 	{
@@ -151,8 +148,7 @@ public class MatrixTreeView extends TreeTableView<MatrixItem>
 	public MatrixItem currentItem()
 	{
 		TreeItem<MatrixItem> selectedItem = getSelectionModel().getSelectedItem();
-		MatrixItem item = selectedItem != null ? selectedItem.getValue() : null;
-		return item;
+		return selectedItem != null ? selectedItem.getValue() : null;
 	}
 
 	public void setTracing(boolean flag)

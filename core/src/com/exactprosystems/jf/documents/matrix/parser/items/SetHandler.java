@@ -13,7 +13,6 @@ import com.exactprosystems.jf.actions.ReadableValue;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
-import com.exactprosystems.jf.common.report.ReportTable;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.config.Context.EntryPoint;
 import com.exactprosystems.jf.documents.config.HandlerKind;
@@ -72,7 +71,7 @@ public final class SetHandler extends MatrixItem
 			(str) -> 
 			{ 
 			    EntryPoint entryPoint = context.referenceToSubcase(str, this);
-				driver.setCurrentItem(entryPoint.subCase, entryPoint.matrix);
+				driver.setCurrentItem(entryPoint.subCase, entryPoint.matrix, false);
 				return str;
 			}, null, 'G' );
 		

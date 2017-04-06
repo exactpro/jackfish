@@ -106,7 +106,7 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 		this.listView = new CustomListView<>(matrixItem -> tryCatch(() ->
 		{
 			TreeItem<MatrixItem> treeItem = this.tree.find(matrixItem);
-			Optional.ofNullable(treeItem).ifPresent(item -> Platform.runLater(() -> this.tree.setCurrent(item)));
+			Optional.ofNullable(treeItem).ifPresent(item -> Platform.runLater(() -> this.tree.setCurrent(item, false)));
 		}, "Error on moving to item"), true);
 		this.listView.autoScroll(true);
 		this.listView.setMinHeight(100.0);
@@ -122,7 +122,7 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 				tree.getSelectionModel().clearSelection();
 				TreeItem<MatrixItem> root = tree.getRoot();
 				TreeItem<MatrixItem> treeItem = tree.find(root, matrixItem);
-				tree.setCurrent(treeItem);
+				tree.setCurrent(treeItem, false);
 			}
 
 			@Override
@@ -301,7 +301,10 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 	public void init(MatrixFx model, Context context, TabConsole console)
 	{
 		Settings settings = context.getFactory().getSettings();
-		
+		Settings.SettingsValue foldSetting = settings.getValueOrDefault(Settings.GLOBAL_NS, Settings.MATRIX_NAME, Settings.MATRIX_FOLD_ITEMS, "false");
+		boolean fold = Boolean.parseBoolean(foldSetting.getValue());
+
+		this.tree.setNeedExpand(fold);
 		MatrixParametersContextMenu parametersContextMenu 	= new MatrixParametersContextMenu(context, model, this.tree, settings);
 		MatrixContextMenu 			rowContextMenu 			= new MatrixContextMenu(context, model, this.tree, settings);
 		rowContextMenu.initShortcuts(settings, this.tree, model, context);
@@ -354,11 +357,6 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 	public void displayTab(MatrixItem matrixItem)
 	{
 		matrixItem.display(this.driver, this.context);
-		int size = this.tree.getRoot().getChildren().size();
-		if (size == 2)
-		{
-			this.tree.getRoot().getChildren().get(0).setExpanded(true);
-		}
 	}
 
 	public void coloring()
@@ -503,7 +501,7 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 		Platform.runLater(() -> this.tree.refreshParameters(item, selectIndex));
 	}
 
-	public void setCurrent(MatrixItem item)
+	public void setCurrent(MatrixItem item, boolean needExpand)
 	{
 		Platform.runLater(() -> {
 			TreeItem<MatrixItem> treeItem = this.tree.find(item);
@@ -511,7 +509,7 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 			{
 				treeItem = this.tree.find(this.tree.getRoot(), matrixItem -> item.getId().equals(matrixItem.getId()));
 			}
-			this.tree.setCurrent(treeItem);
+			this.tree.setCurrent(treeItem, needExpand);
 		} );
 	}
 
@@ -520,11 +518,11 @@ public class MatrixFxController implements Initializable, ContainingParent, IMat
 		Platform.runLater(() -> this.driver.deleteItem(item) );
 	}
 
-	public void display(MatrixItem item)
+	public void display(MatrixItem item, boolean needExpand)
 	{
 		Platform.runLater(() -> {
 			item.display(this.driver, this.context);
-			this.driver.setCurrentItem(item, this.model);
+			this.driver.setCurrentItem(item, this.model, needExpand);
 		});
 	}
 	
