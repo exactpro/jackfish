@@ -400,6 +400,11 @@ public class Configuration extends AbstractDocument
 		return librariesValue;
 	}
 
+	public MutableArrayList<MutableString> getMatricesValue()
+	{
+		return matricesValue;
+	}
+
 	public IClientsPool getClientPool()
 	{
 		return this.clients;

@@ -431,6 +431,12 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 
 	public final void write(int level, CsvWriter writer) throws IOException
 	{
+
+		if(this.getClass().isAnnotationPresent(Deprecated.class))
+		{
+			return;
+		}
+
         String indent = "";
 		if (this instanceof Else)
 		{

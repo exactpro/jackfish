@@ -43,6 +43,12 @@ public class Matrix extends AbstractDocument implements IMatrix
 {
 	public static final String EMPTY_STRING = "<empty>";
 
+	public Matrix(String matrixName, DocumentFactory factory) {
+		super(matrixName, factory);
+		this.root = new MatrixRoot(matrixName);
+		this.buffer = new StringBuilder();
+	}
+
 	public Matrix(String matrixName, DocumentFactory factory, IMatrixRunner runner, IMatrixListener matrixListener, boolean isLibrary) throws Exception
 	{
 		super(matrixName, factory); 
