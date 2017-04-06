@@ -244,10 +244,12 @@ public class SpreadsheetView extends Control
 
 	public void switchColumn(boolean on, int columnIndex)
 	{
+		int range = this.providerProperty.get().rowCount();
 		this.providerProperty.get().setColumnValues(columnIndex,
-				IntStream.range(0, this.providerProperty.get().rowCount())
+				IntStream.range(0, range)
 						.mapToObj(i -> on ? "" : "x")
-						.toArray()
+						.collect(Collectors.toList())
+						.toArray(new String[range])
 		);
 	}
 
