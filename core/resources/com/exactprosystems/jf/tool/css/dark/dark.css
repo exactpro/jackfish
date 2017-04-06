@@ -585,8 +585,6 @@ CellView > .text-input.text-field{
 /*Custom Text Fields*/
 .custom-text-field {
 	-fx-text-fill: -fx-text-inner-color;
-	-fx-highlight-fill: derive(-fx-control-inner-background,-20%);
-	-fx-highlight-text-fill: -fx-text-inner-color;
 	-fx-border-color : #636363;
 	-fx-background-color: #474747;
 	-fx-border-width : 1px;
