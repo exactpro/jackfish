@@ -18,6 +18,78 @@ Test;Basic;;;
 
 
 #Id;#TestCase;#Kind;#Depends;#For
+Test;GUI;;;
+    #Call;#testName
+    runMatrix;'GUI'
+
+
+#Id;#TestCase;#Kind;#Depends;#For
+Test;System;;;
+    #Call;#testName
+    runMatrix;'System'
+
+
+#Id;#TestCase;#Kind;#Depends;#For
+Test;Report;;;
+    #Call;#testName
+    runMatrix;'Report'
+
+
+#Id;#TestCase;#Kind;#Depends;#For
+Test;App;;;
+    #Call;#testName
+    runMatrix;'App'
+
+
+#Id;#TestCase;#Kind;#Depends;#For
+Test;Messages;;;
+    #Call;#testName
+    runMatrix;'Messages'
+
+
+#Id;#TestCase;#Kind;#Depends;#For
+Test;Clients;;;
+    #Call;#testName
+    runMatrix;'Clients'
+
+
+#Id;#TestCase;#Kind;#Depends;#For
+Test;Services;;;
+    #Call;#testName
+    runMatrix;'Services'
+
+
+#Id;#TestCase;#Kind;#Depends;#For
+Test;Tables;;;
+    #Call;#testName
+    runMatrix;'Tables'
+
+
+#Id;#TestCase;#Kind;#Depends;#For
+Test;Text;;;
+    #Call;#testName
+    runMatrix;'Text'
+
+
+#Id;#TestCase;#Kind;#Depends;#For
+Test;XML;;;
+    #Call;#testName
+    runMatrix;'XML'
+
+
+#Id;#TestCase;#Kind;#Depends;#For
+Test;SQL;;;
+    #Call;#testName
+    runMatrix;'SQL'
+
+
+#Id;#TestCase;#Kind;#Depends;#For
+Test;Matrix;;;
+    #Call;#testName
+    runMatrix;'Matrix'
+
+
+#Id;#TestCase;#Kind;#Depends;#For
 Test;CheckMockWeb;;;
     #Id;#Action;#Matrix;#Parameter
     MXRN1;MatrixRun;matrixTestsPath + 'prepareMock' +  '.jf';'WEB'
@@ -67,7 +139,7 @@ REPORT;Cleanup;;;
     TBLSLCT1.Out.size() == 0;'There are fails in the tests'
 
     #Id;#SubCase;#testName
-    runMatrix;Running test;'Basic'
+    runMatrix;Running test;'Matrix'
         #Id;#Action;#Matrix
         MXRN1;MatrixRun;matrixTestsPath + testName +  '.jf'
 
