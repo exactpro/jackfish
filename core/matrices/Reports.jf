@@ -24,8 +24,11 @@ Init;Never;;
     #Id;#Let
     Detailed;'Detailed'
 
+    #Id;#Let
+    Remove;'Remove summary'
+
     #Id;#Action;#DefaultValue;#Title;#HelpKind;#DataSource
-    INP1;Input;Overall;'Choose the report:';HelpKind.ChooseFromList;[ Overall, Progress, Summary, Export, Detailed ]
+    INP1;Input;Overall;'Choose the report:';HelpKind.ChooseFromList;[ Overall, Progress, Summary, Export, Detailed, Remove]
 
     #Switch
     INP1.Out
@@ -63,6 +66,12 @@ Init;Never;;
         Detailed
             #Call;#date
             RF.repLastAllDetails;date
+
+
+        #Case
+        Remove
+            #Id;#Call;#date
+            CALL_1;RF.deleteSummary;date
 
 
     #EndSwitch
