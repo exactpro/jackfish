@@ -46,7 +46,7 @@ public interface DisplayDriver
 	void 		showGrid			(MatrixItem item, Object layout, int row, int column, Table table);
 	void 		hide				(MatrixItem item, Object layout, int row, boolean hide);
 	void		setupCall			(MatrixItem item, String reference, Parameters parameters);
-	void 		setCurrentItem		(MatrixItem item, Matrix matrix);
+	void 		setCurrentItem		(MatrixItem item, Matrix matrix, boolean needExpand);
 	void		deleteItem			(MatrixItem item);
 	void		layoutWizard		(MatrixItem item, Table table, Context context);
 }

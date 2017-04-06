@@ -102,7 +102,7 @@ public final class Call extends MatrixItem
 			(str) -> 
 			{ 
 			    EntryPoint entryPoint = context.referenceToSubcase(str, this);
-				driver.setCurrentItem(entryPoint.subCase, entryPoint.matrix);
+				driver.setCurrentItem(entryPoint.subCase, entryPoint.matrix, false);
 				return str;
 			}, null, 'G' ); 
 		driver.showParameters(this, layout, 1, 3, this.parameters, null, false);

@@ -203,20 +203,15 @@ public class MatrixFx extends Matrix
 			return;
 		}
 		
-		int lastIndex = Math.min(item.count() - 1, index);
-		@SuppressWarnings("unused")
-        int number = lastIndex < 0 ? item.getNumber() : item.get(lastIndex).getNumber();
 		Command undo = () ->
 		{
 			super.remove(what);
 			this.controller.remove(what);
-//			this.controller.setCurrent(find(i -> i.getNumber() == number));
 		};
 		Command redo = () ->
 		{
 			super.insert(item, index, what);
-			this.controller.display(what);
-//			this.controller.setCurrent(what);
+			this.controller.display(what, true);
 		};
 		if (!(what instanceof TempItem))
 		{
@@ -262,7 +257,6 @@ public class MatrixFx extends Matrix
 			newItem.init(this);
 			newItem.createId();
 			insert(tempItem.getParent(), index, newItem);
-			//			tempItem.getParent().insert(index, newItem);
 		}
 		catch (Exception e)
 		{
@@ -273,11 +267,6 @@ public class MatrixFx extends Matrix
 			this.controller.remove(tempItem);
 			tempItem.remove();
 			enumerate();
-			//			if (newItem != null)
-			//			{
-			//				this.controller.display(newItem);
-			//				this.controller.setCurrent(newItem);
-			//			}
 		}
 
 		super.changed(true);
@@ -292,7 +281,7 @@ public class MatrixFx extends Matrix
 			int index = super.getIndex(item);
 			Command undo = () -> {
 				super.insert(parent, index, item);
-				this.controller.display(item);
+				this.controller.display(item, false);
 			};
 			Command redo = () -> {
 				super.remove(item);
@@ -354,7 +343,7 @@ public class MatrixFx extends Matrix
 				collect.sort(Comparator.comparingInt(Temp::getIndex));
 				collect.forEach(temp -> {
 					super.insert(temp.getParent(), temp.getIndex(), temp.getItem());
-					this.controller.display(temp.getItem());
+					this.controller.display(temp.getItem(), false);
 				});
 				enumerate();
 			};
@@ -582,9 +571,9 @@ public class MatrixFx extends Matrix
 		super.changed(true);
 	}
 
-	public void setCurrent(MatrixItem item)
+	public void setCurrent(MatrixItem item, boolean needExpand)
 	{
-		this.controller.setCurrent(item);
+		this.controller.setCurrent(item, needExpand);
 	}
 
 	public void breakPoint(List<MatrixItem> items)

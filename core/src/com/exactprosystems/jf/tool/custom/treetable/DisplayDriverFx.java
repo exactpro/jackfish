@@ -604,7 +604,7 @@ public class DisplayDriverFx implements DisplayDriver
 	}
 
 	@Override
-	public void setCurrentItem(MatrixItem item, Matrix matrix)
+	public void setCurrentItem(MatrixItem item, Matrix matrix, boolean needExpand)
 	{
 		if (item == null || matrix == null)
 		{
@@ -634,7 +634,7 @@ public class DisplayDriverFx implements DisplayDriver
 		}
 		if (matrixFx != null)
 		{
-			((MatrixFx) matrixFx).setCurrent(item);
+			((MatrixFx) matrixFx).setCurrent(item, needExpand);
 		}
 	}
 

@@ -29,7 +29,7 @@ public class MatrixTreeRow extends TreeTableRow<MatrixItem>
 	private final PseudoClass customSelected = PseudoClassState.getPseudoClass("customSelectedState");
 	private final PseudoClass selected = PseudoClassState.getPseudoClass("selected");
 
-	public MatrixTreeRow(ContextMenu contextMenu) throws Exception
+	public MatrixTreeRow(ContextMenu contextMenu)
 	{
 		setContextMenu(contextMenu);
 		this.selectedProperty().addListener((observable, oldValue, newValue) -> {

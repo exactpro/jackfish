@@ -1,3 +1,7 @@
+06.04.2017 4.4.0.2231
+RM40706. Implement necessary behavior. Can change it Settings -> Matrix -> checkbox Fold new items
+--------------------------------------------------------------------------------
+
 03.04.2017 4.4.0.2228
 RM41381 [JF] Multiple creation of JF empty tab after drag-n-drop selected tab from one to another place when other tabs occupy all JF tabs-bar space .Fixed.
 --------------------------------------------------------------------------------
