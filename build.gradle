@@ -165,6 +165,10 @@ subprojects {
 	    }
 	}
 
+	configurations.all {
+       resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
+    }
+
 	clean {
 		new File(releaseDir).deleteDir()
 	}
