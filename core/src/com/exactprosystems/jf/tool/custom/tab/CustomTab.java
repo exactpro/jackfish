@@ -84,7 +84,6 @@ public class CustomTab extends Tab implements AutoCloseable
 		this.view.getChildren().addAll(this.text, this.crossButton);
 		this.view.setOnDragDetected(e -> {
 			tabPane.draggingTabProperty().set(this);
-			tabPane.addTempTabs();
 
 			Dragboard dragboard = this.view.startDragAndDrop(TransferMode.MOVE);
 			ClipboardContent clipboardContent = new ClipboardContent();

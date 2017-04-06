@@ -39,6 +39,7 @@ public class CustomTabPane extends TabPane
 	{
 		super();
 		this.getStyleClass().add(CssVariables.CUSTOM_TAB_PANE);
+		this.setOnDragEntered(e -> addTempTabs());
 		this.setOnDragDone(e ->
 		{
 			final Dragboard dragboard = e.getDragboard();
@@ -50,16 +51,20 @@ public class CustomTabPane extends TabPane
 			}
 			else if (dragboard.hasString() && TAB_DRAG_KEY.equals(dragboard.getString()) && draggingTab != null)
 			{
+
 				int index = this.getTabs().indexOf(droppedTab);
 				int realIndex = index / 2;
 
 				this.removeTempTabs();
-				this.getTabs().remove(draggingTab);
-				this.getTabs().add(Math.min(realIndex, this.getTabs().size()), draggingTab);
-				this.getSelectionModel().select(draggingTab);
+				ArrayList<Tab> oldTabs = new ArrayList<>(this.getTabs());
+				this.getTabs().clear();
+				oldTabs.remove(draggingTab);
+				oldTabs.add(Math.min(realIndex, oldTabs.size()), draggingTab);
 
 				this.draggingTab.set(null);
 				this.droppedTab.set(null);
+				this.getTabs().setAll(oldTabs);
+				this.getSelectionModel().select(draggingTab);
 			}
 			e.consume();
 		});
