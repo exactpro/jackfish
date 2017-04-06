@@ -8,6 +8,7 @@
 
 package com.exactprosystems.jf.tool.custom.helper;
 
+import com.exactprosystems.jf.api.common.DescriptionAttribute;
 import com.exactprosystems.jf.api.app.Do;
 import com.exactprosystems.jf.api.app.DoSpec;
 import com.exactprosystems.jf.api.common.DateTime;
@@ -176,6 +177,14 @@ public class HelperControllerFx implements Initializable, ContainingParent
 		this.taResult.getStyleClass().add(styleClass);
 	}
 
+	private void displayAnnotation(Class<?> clazz){
+		//todo add more annotations
+		String description = clazz.getAnnotation(DescriptionAttribute.class).text();
+		if (!Str.IsNullOrEmpty(description)){
+			this.taDescription.setText(description);
+		}
+	}
+
 	public void displayClass(Class<?> clazz)
 	{
 		StringBuilder className = new StringBuilder("<html><body bgcolor='#f5f5dc'>");
@@ -189,6 +198,7 @@ public class HelperControllerFx implements Initializable, ContainingParent
 				.append(" </font></label>");
 		className.append("</body></html>");
 		engine.loadContent(className.toString());
+		displayAnnotation(clazz);
 	}
 
 	public void displayMethods(ObservableList<HelperFx.IToString> list)
