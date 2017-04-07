@@ -941,14 +941,13 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 				events.add(new MouseEvent(component, MouseEvent.MOUSE_DRAGGED, System.currentTimeMillis(), ALT_CTRL_SHIFT, x, y, NO_CLICK, NOT_SHOW_POPUP, MouseEvent.BUTTON1));
 				events.add(new MouseEvent(component, MouseEvent.MOUSE_RELEASED, System.currentTimeMillis(), ALT_CTRL_SHIFT, x, y, ONE_CLICK, NOT_SHOW_POPUP, MouseEvent.BUTTON1));
 				break;
-				
-            case DragNDrop: // TODO is it needed to implement?
-                break;
 
+			case DragNDrop:
 			case Focus:
 			case Enter:
-            case Move:
-                break;
+			case Move:
+			case Activated:
+				break;
 		}
 		return events;
 	}
@@ -1428,9 +1427,6 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 				case Dialog:
 					component = getComp(JDialog.class, window, locator);
 					ret = (ComponentFixture<T>) new DialogFixture(this.currentRobot, (JDialog) component);
-					DialogFixture jdf = (DialogFixture) ret;
-					jdf.target.toFront();
-					executeAction(MouseAction.Focus, component, 0, 0);
 					break;
 
 				case Frame:
@@ -1440,8 +1436,6 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 						own = this.currentRoot();
 					}
 					ret = (ComponentFixture<T>) WindowFinder.findFrame(new MatcherSwing<Frame>(this.info, Frame.class, own, null, locator)).using(currentRobot);
-					FrameFixture jff = (FrameFixture) ret;
-					jff.target.toFront();
 					break;
 
 				case Label:
@@ -2063,15 +2057,10 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 		else if (component instanceof JDialog)
 		{
 			DialogFixture fixture = new DialogFixture(this.currentRobot, (JDialog) component);
-			fixture.target.toFront();
-			executeAction(MouseAction.Focus, component, 0, 0);
-			return (ComponentFixture<T>) fixture;
 		}
 		else if (component instanceof JFrame)
 		{
 			FrameFixture frameFixture = new FrameFixture(this.currentRobot, (Frame) component);
-			frameFixture.target.toFront();
-			return (ComponentFixture<T>) frameFixture;
 		}
 		else if (component instanceof JLabel)
 		{
