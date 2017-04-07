@@ -133,6 +133,7 @@ allprojects {
 subprojects {
 	apply plugin: 'maven'
 	apply plugin: 'java'
+	apply plugin: 'idea'
 	apply plugin: 'eclipse'
 	apply plugin: 'artifactory'
 
@@ -193,6 +194,12 @@ subprojects {
 	            }
 	        }
 	    }
+	}
+
+	idea {
+		module {
+			outputDir = file('bin');
+		}
 	}
 
 	compileJava {
