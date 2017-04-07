@@ -11,6 +11,7 @@ package com.exactprosystems.jf.api.app;
 import java.io.File;
 import java.lang.ProcessBuilder.Redirect;
 import java.rmi.RemoteException;
+import java.rmi.ServerException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.*;
@@ -173,16 +174,13 @@ public abstract class ProxyApplication implements IApplication
                 this.service.setPluginInfo(this.factory.getInfo());
                 return pid;
 	    	}
+	    	catch (ServerException se) {
+				tryStop();
+				throw new Exception((se.getCause().getMessage()), se.getCause());
+			}
 	    	catch (Throwable t)
 	    	{
-				try
-				{
-					stop(false);
-				}
-				catch (Exception e)
-				{
-
-				}
+				tryStop();
 				throw t;
 	    	}
 	    }
@@ -195,6 +193,17 @@ public abstract class ProxyApplication implements IApplication
 	    	}
 	    	throw new Exception("The service can not start.");
 	    }
+	}
+
+	private void tryStop(){
+		try
+		{
+			stop(false);
+		}
+		catch (Exception e)
+		{
+
+		}
 	}
 
 	

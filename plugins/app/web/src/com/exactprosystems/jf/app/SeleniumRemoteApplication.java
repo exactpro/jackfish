@@ -52,6 +52,9 @@ public class SeleniumRemoteApplication extends RemoteApplication
 
 	private Alert currentAlert;
 
+	private	Exception te = null;
+
+
 	private static final String SCRIPT = 
 		" \n" +
 		"function attrs(e) { \n" +
@@ -188,9 +191,16 @@ public class SeleniumRemoteApplication extends RemoteApplication
 		try
 		{
 			logger.info("##########################################################################################################");
-
 			String browserName = args.get(WebAppFactory.browserName);
 			String url = args.get(WebAppFactory.urlName);
+			if (Str.IsNullOrEmpty(browserName) || browserName.equals("null"))
+			{
+				throw new Exception("Browser can't be null or empty.");
+			}
+			if (Str.IsNullOrEmpty(url) || url.equals("null"))
+			{
+				throw new Exception("URL can't be null or empty.");
+			}
 
 			String safariDriverPath = args.get(WebAppFactory.safariDriverPathName);
 			if (safariDriverPath != null && !safariDriverPath.isEmpty())
@@ -258,7 +268,13 @@ public class SeleniumRemoteApplication extends RemoteApplication
                 {
                     try
                     {
-                        Browser browser = Browser.valueOf(browserName.toUpperCase());
+
+                    	Browser browser = null;
+                    	try {
+							browser = Browser.valueOf(browserName.toUpperCase());
+						} catch (Exception e){
+							te =  new Exception("Wrong browser name.");
+						}
                         driver = new WebDriverListenerNew(browser.createDriver(chromeDriverBinary, firefoxProfileDirectory, usePrivateMode));
                         operationExecutor = new SeleniumOperationExecutor(driver, logger);
 
@@ -283,6 +299,11 @@ public class SeleniumRemoteApplication extends RemoteApplication
                 t.start();
                 logger.info("Before join");
                 t.join(60000);
+                if (te != null){
+                	Exception ne = te;
+                	te = null;
+					throw ne;
+				}
                 logger.info("After join");
             }
             catch (InterruptedException e)
