@@ -57,18 +57,16 @@ public abstract class DocumentFactory
 		try
 		{
 			checkConfiguration();
-			AbstractEvaluator eval = this.configuration.createEvaluator();
-			 
-			 return eval;
+			return this.configuration.createEvaluator();
 		}
 		catch (Exception e)
 		{
-			error(null, e);
+			error(e);
 		}
 		return null;
 	}
 
-	public final Context 				createContext() throws Exception
+	public final Context 				createContext()
 	{
 		try
 		{
@@ -77,7 +75,7 @@ public abstract class DocumentFactory
 		}
 		catch (Exception e)
 		{
-			error(null, e);
+			error(e);
 		}
 		return null;
 	}
@@ -90,7 +88,7 @@ public abstract class DocumentFactory
 		}
 		catch (Exception e)
 		{
-			error(null, e);
+			error(e);
 		}
 		return null;
 	}
@@ -100,13 +98,11 @@ public abstract class DocumentFactory
 		try
 		{
 			checkConfiguration();
-			Matrix ret = createLibrary(fileName, this.configuration, runner, createMatrixListener());
-			
-			return ret;
+			return createLibrary(fileName, this.configuration, runner, createMatrixListener());
 		}
 		catch (Exception e)
 		{
-			error(null, e);
+			error(e);
 		}
 		return null;
 	}
@@ -116,13 +112,11 @@ public abstract class DocumentFactory
 		try
 		{
 			checkConfiguration();
-			Matrix ret = createMatrix(fileName, this.configuration, runner, createMatrixListener());
-			
-			return ret;
+			return createMatrix(fileName, this.configuration, runner, createMatrixListener());
 		}
 		catch (Exception e)
 		{
-			error(null, e);
+			error(e);
 		}
 		return null;
 	}
@@ -136,7 +130,7 @@ public abstract class DocumentFactory
 		}
 		catch (Exception e)
 		{
-			error(null, e);
+			error(e);
 		}
 		return null;
 	}
@@ -150,7 +144,7 @@ public abstract class DocumentFactory
 		}
 		catch (Exception e)
 		{
-			error(null, e);
+			error(e);
 		}
 		return null;
 	}
@@ -164,7 +158,7 @@ public abstract class DocumentFactory
 		}
 		catch (Exception e)
 		{
-			error(null, e);
+			error(e);
 		}
 		return null;
 	}
@@ -178,7 +172,7 @@ public abstract class DocumentFactory
 		}
 		catch (Exception e)
 		{
-			error(null, e);
+			error(e);
 		}
 		return null;
 	}
@@ -192,18 +186,18 @@ public abstract class DocumentFactory
 		}
 		catch (Exception e)
 		{
-			error(null, e);
+			error(e);
 		}
 		return null;
 	}
 
-	public abstract void 					error(String message, Exception exeption);
-	
 	public abstract void 					popup(String message, Notifier notifier);
 
 	public abstract Object					input(AbstractEvaluator evaluator, String title, Object defaultValue, HelpKind helpKind, List<ReadableValue> dataSource);
 
     public abstract boolean                 editTable(AbstractEvaluator evaluator, String title, Table table, Map<String, Boolean> columns);
+
+	protected abstract void					error(Exception exeption);
 
 	protected abstract Context 				createContext(Configuration configuration, IMatrixListener matrixListener) throws Exception;
 

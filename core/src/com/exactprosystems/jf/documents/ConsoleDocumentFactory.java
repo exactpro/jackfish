@@ -118,12 +118,8 @@ public class ConsoleDocumentFactory extends DocumentFactory
 	}
 	
 	@Override
-	public void 				error(String message, Exception exeption)
+	public void 				error(Exception exeption)
 	{
-		if (message != null)
-		{
-			System.err.println(message);
-		}
 		if (exeption != null)
 		{
 			exeption.printStackTrace(System.err);

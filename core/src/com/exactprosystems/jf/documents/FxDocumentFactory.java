@@ -117,16 +117,12 @@ public class FxDocumentFactory extends DocumentFactory
 	}
 
 	@Override
-	public void 				error(String message, Exception exeption)
+	public void 				error(Exception exception)
 	{
-		if (exeption != null)
+		if (exception != null)
 		{
-			logger.error(">> " + exeption.getMessage() + "\n" + message, exeption);
-			DialogsHelper.showError(exeption.getMessage() + "\n" + message);
-		}
-		else
-		{
-			DialogsHelper.showError(message);
+			logger.error(">> " + exception.getMessage(), exception);
+			DialogsHelper.showError(exception.getMessage());
 		}
 	}
 	
