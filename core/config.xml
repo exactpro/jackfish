@@ -73,6 +73,20 @@
         <clientLimit>0</clientLimit>
         <clientDictionary>dic/clients/FIX50.xml</clientDictionary>
     </clientEntry>
+    <clientEntry>
+        <name>SF</name>
+        <parameters>
+            <key>sfWorkplace</key>
+            <value>${JF}/../../sfworkspase</value>
+        </parameters>
+        <parameters>
+            <key>sfSettings</key>
+            <value>fix_client.xml</value>
+        </parameters>
+        <clientJar>${JF}/clients/sfclient.jar</clientJar>
+        <clientLimit>0</clientLimit>
+        <clientDictionary>dic/clients/FIX50.xml</clientDictionary>
+    </clientEntry>
     <serviceEntry>
         <name>SF</name>
         <serviceDescription>Saifish service.</serviceDescription>
@@ -87,7 +101,7 @@
         <name>WEB</name>
         <parameters>
             <key>ChromeDriverPath</key>
-			<value>unix/chromedriver-linux-2.28-x64.</value>
+            <value>unix/chromedriver-linux-2.28-x64.</value>
         </parameters>
         <parameters>
             <key>IEDriverPath</key>
@@ -139,7 +153,7 @@
         <name>WEB_WIN</name>
         <parameters>
             <key>ChromeDriverPath</key>
-			<value>win/chromedriver-win-2.28-x86.exe</value>
+            <value>win/chromedriver-win-2.28-x86.exe</value>
         </parameters>
         <parameters>
             <key>IEDriverPath</key>
@@ -202,8 +216,8 @@
             <value>ALL</value>
         </parameters>
         <appDicPath>dic/gui/LayoutHtmlTesting.xml</appDicPath>
-		<appJar>${JF}/apps/win.jar</appJar>
-		<appWorkDir>${JF}/apps/</appWorkDir>
+        <appJar>${JF}/apps/win.jar</appJar>
+        <appWorkDir>${JF}/apps/</appWorkDir>
         <appStartPort>12000</appStartPort>
     </appEntry>
     <appEntry>

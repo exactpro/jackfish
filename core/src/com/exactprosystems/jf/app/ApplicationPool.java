@@ -345,7 +345,9 @@ public class ApplicationPool implements IApplicationPool
 		Map<String, String> driverParameters = new HashMap<String, String>();
 		for (Parameter param : list)
 		{
-			driverParameters.put(param.getKey(), param.getValue());
+            String key   = param.getKey();
+            String value = MainRunner.makeDirWithSubstitutions(param.getValue());
+            driverParameters.put(key, value);
 		}
 		return driverParameters;
 	}

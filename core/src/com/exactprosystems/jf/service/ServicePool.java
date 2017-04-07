@@ -98,10 +98,12 @@ public class ServicePool implements IServicesPool
 			IServiceFactory serviceFactory = loadServiceFactory(serviceId, entry);
 			List<Parameter> list = entry.getParameters();
 			Map<String, String> map = new HashMap<String, String>();
-			for (Parameter param : list)
-			{
-				map.put(param.getKey(), param.getValue());
-			}
+            for (Parameter param : list)
+            {
+                String key = param.getKey();
+                String value = MainRunner.makeDirWithSubstitutions(param.getValue());
+                map.put(key, value);
+            }
 
 			IService service = serviceFactory.createService();
 			service.init(this, serviceFactory, map);
