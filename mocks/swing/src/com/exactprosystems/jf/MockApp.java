@@ -7,6 +7,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.exactprosystems.jf;
 
+import sun.awt.TimedWindowEvent;
 import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.table.DefaultTableModel;
@@ -16,11 +17,18 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.EventObject;
 
+import static java.awt.event.WindowEvent.WINDOW_GAINED_FOCUS;
+import static java.awt.event.WindowEvent.WINDOW_LOST_FOCUS;
+
 public class MockApp
 {
 	private JFrame frame;
+	private JFrame frame2;
 	private JLabel centralLabel;
 	private JLabel moveLabel;
+	private JTextField textField;
+	private JFrame frame3;
+
 	public static void main(String[] args)
 	{
 		SwingUtilities.invokeLater(MockApp::new);
@@ -35,7 +43,7 @@ public class MockApp
 		this.frame.setJMenuBar(menuBar);
 		this.frame.setLayout(grid);
 		this.frame.setLocation(200, 200);
-		this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		this.centralLabel = new JLabel();
 		addListeners(this.centralLabel, "Label");
 		this.moveLabel = new JLabel();
@@ -64,6 +72,79 @@ public class MockApp
 
 		this.frame.setSize(new Dimension(800, 800));
 		this.frame.setVisible(true);
+
+		// frame two
+		this.frame2 = new JFrame("Mock swing app additional frame");
+		this.frame2.setLocation(1000, 200);
+		this.frame2.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+		this.frame2.setSize(new Dimension(1100,700));
+		this.frame2.setVisible(true);
+		allEvents(createPanelFrame2());
+		//createAndShowGui();
+	}
+
+	private void createAndShowGui() {
+			//Create and set up the window.
+			frame3 = new JFrame("TopLevelDemo");
+			frame3.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+
+			//Create the menu bar.  Make it have a green background.
+			JMenuBar greenMenuBar = new JMenuBar();
+			greenMenuBar.setOpaque(true);
+			greenMenuBar.setBackground(new Color(154, 165, 127));
+			greenMenuBar.setPreferredSize(new Dimension(200, 20));
+
+			//Create a yellow label to put in the content pane.
+			JLabel yellowLabel = new JLabel();
+			yellowLabel.setOpaque(true);
+			yellowLabel.setBackground(new Color(248, 213, 131));
+			yellowLabel.setPreferredSize(new Dimension(200, 180));
+
+			//Set the menu bar and add the label to the content pane.
+			frame3.setJMenuBar(greenMenuBar);
+			frame3.getContentPane().add(yellowLabel, BorderLayout.CENTER);
+
+			//Display the window.
+			frame3.pack();
+			frame3.setVisible(true);
+	}
+
+	private void allEvents(JTextArea textArea) {
+		Toolkit.getDefaultToolkit().addAWTEventListener(
+				event -> {
+					if(event instanceof TimedWindowEvent)
+					{
+						int i = 0;
+						i++;
+					}
+					if(event instanceof FocusEvent)
+					{
+						int i = 0;
+						i++;
+					}
+//					textArea.append("\n"+event.toString());
+//					textArea.moveCaretPosition(0);
+				},
+				AWTEvent.COMPONENT_EVENT_MASK |
+				AWTEvent.CONTAINER_EVENT_MASK |
+				AWTEvent.FOCUS_EVENT_MASK |
+						AWTEvent.KEY_EVENT_MASK |
+						//AWTEvent.MOUSE_EVENT_MASK |
+						//AWTEvent.MOUSE_MOTION_EVENT_MASK |
+						AWTEvent.WINDOW_EVENT_MASK |
+						AWTEvent.ACTION_EVENT_MASK |
+						AWTEvent.ADJUSTMENT_EVENT_MASK |
+						AWTEvent.ITEM_EVENT_MASK |
+						AWTEvent.TEXT_EVENT_MASK |
+						AWTEvent.INPUT_METHOD_EVENT_MASK |
+						AWTEvent.PAINT_EVENT_MASK |
+						AWTEvent.INVOCATION_EVENT_MASK |
+						AWTEvent.HIERARCHY_EVENT_MASK |
+						AWTEvent.HIERARCHY_BOUNDS_EVENT_MASK |
+						AWTEvent.MOUSE_WHEEL_EVENT_MASK |
+						AWTEvent.WINDOW_STATE_EVENT_MASK |
+						AWTEvent.WINDOW_FOCUS_EVENT_MASK
+		);
 	}
 
 	private void createPanelWithDisableComponents() {
@@ -220,11 +301,89 @@ public class MockApp
 		panelButton.add(button);
 	}
 
+	private JTextArea createPanelFrame2()
+	{
+		JPanel panel = new JPanel(new FlowLayout());
+		this.frame2.getContentPane().add(panel);
+		JButton button = new JButton("Open modal dialog");
+		JButton buttonClear = new JButton("Clear list");
+		button.setName("button");
+		JButton buttonDispatch = new JButton("dispatch");
+		buttonDispatch.setName("dispatch");
+		buttonDispatch.addActionListener(e -> {
+
+		});
+
+		JTextArea textArea = new JTextArea();
+		JTextField textField = new JTextField();
+		textField.setName("text");
+		textField.addKeyListener(new KeyListener() {
+			public void keyPressed(KeyEvent e) {
+				if(e.getKeyCode() == 98)
+				{
+					//frame2.dispatchEvent(new FocusEvent(buttonDispatch, FocusEvent.FOCUS_LOST));
+					//frame2.dispatchEvent(new sun.awt.TimedWindowEvent(frame2, WINDOW_LOST_FOCUS, null, 0));
+					//frame2.dispatchEvent(new WindowEvent(frame2, WindowEvent.WINDOW_DEACTIVATED, 0, 0));
+					frame3.dispatchEvent(new WindowEvent(frame3, WindowEvent.WINDOW_ACTIVATED, 0, 0));
+					frame3.dispatchEvent(new sun.awt.TimedWindowEvent(frame3, WINDOW_GAINED_FOCUS, null, 0));
+					//frame.dispatchEvent(new FocusEvent(frame, FocusEvent.FOCUS_GAINED));
+					//frame.dispatchEvent(new PaintEvent(frame, PaintEvent.PAINT, frame.getBounds()));
+					//frame2.dispatchEvent(new PaintEvent(frame2, PaintEvent.PAINT, frame2.getBounds()));
+
+					//frame.getFocusCycleRootAncestor();
+					JLayeredPane pane = frame3.getLayeredPane();
+					//Point point = org.fest.swing.awt.AWT.visibleCenterOf(pane);
+//					frame3.dispatchEvent(new FocusEvent(pane, FocusEvent.FOCUS_GAINED));
+//					frame3.dispatchEvent(new MouseEvent(pane, MouseEvent.MOUSE_ENTERED, System.currentTimeMillis(), 0, point.x, point.y, 0, false, MouseEvent.NOBUTTON));
+//					frame3.dispatchEvent(new MouseEvent(pane, MouseEvent.MOUSE_MOVED, System.currentTimeMillis(), 0, point.x, point.y, 0, false, MouseEvent.NOBUTTON));
+//					frame3.dispatchEvent(new MouseEvent(pane, MouseEvent.MOUSE_PRESSED, System.currentTimeMillis(), 0, point.x, point.y, 1, false, MouseEvent.BUTTON1));
+//					frame3.dispatchEvent(new MouseEvent(pane, MouseEvent.MOUSE_RELEASED, System.currentTimeMillis(), 0, point.x, point.y, 1, false, MouseEvent.BUTTON1));
+//					frame3.dispatchEvent(new MouseEvent(pane, MouseEvent.MOUSE_CLICKED, System.currentTimeMillis(), 0, point.x, point.y, 1, false, MouseEvent.BUTTON1));
+				}
+				if(e.getKeyCode() == 97)
+				{
+					textArea.setText(null);
+				}
+			}
+
+			public void keyReleased(KeyEvent e) {
+
+			}
+
+			public void keyTyped(KeyEvent e) {
+
+			}
+		});
+		JScrollPane scrollPane = new JScrollPane(textArea);
+		scrollPane.setPreferredSize(new Dimension(1000,500));
+		buttonClear.addActionListener(e -> textArea.setText(null));
+		textField.setPreferredSize( new Dimension( 200, 24 ));
+		button.addActionListener(event -> {
+			JDialog dialog = new JDialog(frame2, "ModalDialog");
+			JButton button1 = new JButton("Close Dialog");
+			button1.addActionListener(e -> dialog.dispose());
+			dialog.setModal(true);
+			dialog.setLayout(new FlowLayout());
+			dialog.add(button1);
+			dialog.setDefaultCloseOperation(JDialog.HIDE_ON_CLOSE);
+			dialog.setSize(150, 100);
+			dialog.setLocation(1350, 200);
+			dialog.setVisible(true);
+		});
+		panel.add(button);
+		panel.add(buttonClear);
+		panel.add(textField);
+		panel.add(scrollPane);
+		panel.add(buttonDispatch);
+		return textArea;
+	}
+
 	private void createPanelInput()
 	{
 		JPanel inputPanel = createPanel("panelInput");
 
-		JTextField textField = new JTextField();
+		textField = new JTextField();
+		textField.setOpaque(true);
 		String name = "TextBox";
 		addListeners(textField, name);
 		textField.getDocument().addDocumentListener(new DocumentListener()
@@ -628,7 +787,8 @@ public class MockApp
 
 	private void createPanelDialog()
 	{
-		JDialog dialog = new JDialog(this.frame, "Dialog");
+		JDialog dialog = new JDialog(frame, "Dialog");
+		dialog.setLocation(1000,600);
 		JButton button = new JButton("ButtonD");
 		addListeners(dialog, "DialogD");
 		addListeners(button, "ButtonD");

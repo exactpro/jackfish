@@ -2,7 +2,7 @@
 <dictionary>
     <window name="Main">
         <self>
-            <any id="owner" xpath=".//JFrame"/>
+            <any id="owner" xpath="//JFrame[@name=&amp;quot;frame0&amp;quot;]"/>
         </self>
         <onOpen/>
         <run>
@@ -97,6 +97,49 @@
         <onOpen/>
         <run>
             <button id="button" xpath=".//JButton" owner="DialogD"/>
+        </run>
+        <onClose/>
+        <close/>
+    </window>
+    <window name="AdditionakFrame">
+        <self>
+            <frame id="additionalFrame" xpath="//JFrame[@name=&amp;quot;frame1&amp;quot;]"/>
+        </self>
+        <onOpen/>
+        <run>
+            <button id="button" owner="additionalFrame" name="button" rows="" header="" columns="">
+                <info>
+                    <xpath>/JRootPane/JLayeredPane/JPanel/JPanel/JButton</xpath>
+                    <rectangle x1="0.3" y1="0.17500000000000002" x2="0.6971428571428572" y2="0.305"/>
+                    <node>JButton</node>
+                    <attr name="action">Open modal dialog</attr>
+                    <attr name="class">javax.swing.JButton</attr>
+                    <attr name="name">button</attr>
+                    <attr name="title"></attr>
+                    <attr name="tooltip"></attr>
+                </info>
+            </button>
+            <textBox id="text" owner="additionalFrame" name="text" rows="" header="" columns="">
+                <info>
+                    <xpath>/JRootPane/JLayeredPane/JPanel/JPanel/JTextField</xpath>
+                    <rectangle x1="0.21428571428571427" y1="0.33" x2="0.7857142857142857" y2="0.45"/>
+                    <node>JTextField</node>
+                    <attr name="action"></attr>
+                    <attr name="class">javax.swing.JTextField</attr>
+                    <attr name="name">text</attr>
+                    <attr name="title"></attr>
+                    <attr name="tooltip"></attr>
+                </info>
+            </textBox>
+        </run>
+        <onClose/>
+        <close/>
+    </window>
+    <window name="NewWindow">
+        <self/>
+        <onOpen/>
+        <run>
+            <any/>
         </run>
         <onClose/>
         <close/>
