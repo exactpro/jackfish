@@ -8,9 +8,9 @@
 
 package com.exactprosystems.jf.api.service;
 
-import java.util.Map;
-
 import com.exactprosystems.jf.api.common.IContext;
+
+import java.util.Map;
 
 public interface IService
 {

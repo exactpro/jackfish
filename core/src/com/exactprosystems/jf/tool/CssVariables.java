@@ -274,8 +274,6 @@ public class CssVariables
 		public static final String APP_ICON = THEME_IMAGES_DIR + "/appIcon.png";
 		public static final String FILE_SYSTEM_ICON = THEME_IMAGES_DIR + "/fileSystemIcon.png";
 		public static final String SERVICE_NOT_STARTED_ICON = THEME_IMAGES_DIR + "/serviceNotStartedIcon.png";
-		public static final String SERVICE_STARTED_GOOD_ICON = THEME_IMAGES_DIR + "/serviceStartedGoodIcon.png";
-		public static final String SERVICE_STARTED_FAIL_ICON = THEME_IMAGES_DIR + "/serviceStartedFailIcon.png";
 		public static final String APP_DICTIONARY_ICON = THEME_IMAGES_DIR + "/appDictionaryIcon.png";
 		public static final String CLIENT_DICTIONARY_ICON = THEME_IMAGES_DIR + "/clientDictionaryIcon.png";
 		public static final String REPORT_ICON = THEME_IMAGES_DIR + "/reportFolderIcon.png";
@@ -316,6 +314,8 @@ public class CssVariables
 
 		public static final String EXECUTING_ITEM_ICON = IMAGES_DIR + "/executingItem.png";
 		public static final String EXECUTING_BREAK_POINT_ICON = IMAGES_DIR + "/executingAndBreakPoint.png";
+		public static final String SERVICE_STARTED_GOOD_ICON = IMAGES_DIR + "/serviceStartedGoodIcon.png";
+		public static final String SERVICE_STARTED_FAIL_ICON = IMAGES_DIR + "/serviceStartedFailIcon.png";
 
 		//endregion
 

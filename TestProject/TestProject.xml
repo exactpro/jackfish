@@ -43,6 +43,11 @@
         <onStepFinish></onStepFinish>
         <onStepError></onStepError>
     </globalHandler>
+    <serviceEntry>
+        <name>TestService</name>
+        <serviceDescription>Test service</serviceDescription>
+        <serviceJar>${JF}/services/test.jar</serviceJar>
+    </serviceEntry>
     <appEntry>
         <name>WEB_Unix</name>
         <parameters>

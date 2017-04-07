@@ -266,6 +266,7 @@ public class DisplayDriverFx implements DisplayDriver
 		textBox.setStyle(Common.FONT_SIZE);
 		textBox.setText(get.get());
 		Common.sizeTextField(textBox);
+		textBox.setPrefWidth(Common.computeTextWidth(textBox.getFont(), textBox.getText(), 0.0D) + 40);
 		textBox.focusedProperty().addListener((observable, oldValue, newValue) ->
 		{
 			if (!oldValue && newValue)
@@ -296,6 +297,7 @@ public class DisplayDriverFx implements DisplayDriver
 				item.getMatrix().addCommand(undo, redo);
 			}
 		});
+		textBox.textProperty().addListener((observable, oldValue, newValue) -> textBox.setPrefWidth(Common.computeTextWidth(textBox.getFont(), textBox.getText(), 0.0D) + 40));
 
 		if (generator != null)
 		{

@@ -32,7 +32,7 @@ public class ServiceConnection implements AutoCloseable
 		return ServiceConnection.class.getSimpleName() + "{" + this.id + ":" +hashCode() + "}";
 	}
 	
-	public boolean isBad()
+	public boolean isStopped()
 	{
 		return this.service == null;
 	}

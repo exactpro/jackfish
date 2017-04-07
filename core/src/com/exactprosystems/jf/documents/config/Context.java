@@ -76,10 +76,23 @@ public class Context implements IContext, AutoCloseable
 		createResultTable();
 	}
 
+	//region interface IContext
 	@Override
 	public MatrixRunner createRunner(String name, Reader reader, Date startTime, Object parameter) throws Exception
 	{
 		return new MatrixRunner(this, name, reader, startTime, parameter);
+	}
+
+	public Context createCopy()
+	{
+		return this.getFactory().createContext();
+	}
+	//endregion
+
+	public IContext setOut(PrintStream out)
+	{
+		this.outStream = out;
+		return this;
 	}
 
     public void reset() throws Exception
@@ -180,12 +193,7 @@ public class Context implements IContext, AutoCloseable
         }
     }
 
-    @Override
-	public IContext setOut(PrintStream out)
-	{
-		this.outStream = out;
-		return this;
-	}
+
 	
 	public AbstractEvaluator getEvaluator()
 	{

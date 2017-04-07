@@ -13,7 +13,7 @@ import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
 import com.exactprosystems.jf.api.error.ErrorKind;
-import com.exactprosystems.jf.api.service.IService;
+import com.exactprosystems.jf.api.service.IServicesPool;
 import com.exactprosystems.jf.api.service.ServiceConnection;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
@@ -35,7 +35,7 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 				+ "#Id;#Action;#ServiceConnection\n"
 				+ "SRVSTP1;ServiceStop;SRVLD1.Out#}}"
 	)
-public class ServiceStop extends AbstractAction 
+public class ServiceStop extends AbstractAction
 {
 	public final static String connectionName = "ServiceConnection";
 
@@ -45,27 +45,30 @@ public class ServiceStop extends AbstractAction
 	public ServiceStop()
 	{
 	}
-	
+
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
 		if (this.connection == null)
 		{
 			super.setError("Connection is null", ErrorKind.EMPTY_PARAMETER);
+			return;
 		}
-		else
+		try
 		{
-			IService service = connection.getService();
-			service.stop();
-			
+			IServicesPool servicesPool = context.getConfiguration().getServicesPool();
+			servicesPool.stopService(connection);
 			super.setResult(null);
+		}
+		catch (Exception e)
+		{
+			super.setError(e.getMessage(), ErrorKind.SERVICE_ERROR);
 		}
 	}
 
 	@Override
 	public void initDefaultValues() {
-		// TODO Auto-generated method stub
-		
+
 	}
 
 }

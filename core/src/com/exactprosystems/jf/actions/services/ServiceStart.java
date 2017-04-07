@@ -11,7 +11,7 @@ package com.exactprosystems.jf.actions.services;
 import com.exactprosystems.jf.actions.*;
 import com.exactprosystems.jf.api.common.ParametersKind;
 import com.exactprosystems.jf.api.error.ErrorKind;
-import com.exactprosystems.jf.api.service.IService;
+import com.exactprosystems.jf.api.service.IServicesPool;
 import com.exactprosystems.jf.api.service.ServiceConnection;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
@@ -90,19 +90,17 @@ public class ServiceStart extends AbstractAction
 		if (this.connection == null)
 		{
 			super.setError("Connection is null", ErrorKind.EMPTY_PARAMETER);
+			return;
 		}
-		else
+		try
 		{
-			IService service = this.connection.getService();
-			boolean res = service.start(context, parameters.select(TypeMandatory.Extra));
-			if (res)
-			{
-				super.setResult(null);
-			}
-			else
-			{
-				super.setError("Connection can not be established. Possibly the port is in use.", ErrorKind.SERVICE_ERROR);
-			}
+			IServicesPool servicesPool = context.getConfiguration().getServicesPool();
+			servicesPool.startService(context, this.connection, parameters.select(TypeMandatory.Extra));
+			super.setResult(null);
+		}
+		catch (Exception e)
+		{
+			super.setError(e.getMessage(), ErrorKind.SERVICE_ERROR);
 		}
 	}
 

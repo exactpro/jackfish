@@ -13,6 +13,7 @@ import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
 import com.exactprosystems.jf.actions.ReadableValue;
+import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.api.service.IServicesPool;
 import com.exactprosystems.jf.api.service.ServiceConnection;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
@@ -74,22 +75,21 @@ public class ServiceLoad extends AbstractAction
 	{
 		try
 		{
-			IServicesPool service = context.getConfiguration().getServicesPool();
-			ServiceConnection connection = service.loadService(this.id);
+			IServicesPool servicesPool = context.getConfiguration().getServicesPool();
+			ServiceConnection connection = servicesPool.loadService(this.id);
 			
 			super.setResult(connection);
 		}
 		catch (Exception e)
 		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			super.setError(e.getMessage(), ErrorKind.SERVICE_ERROR);
 		}
 	}
 
 	@Override
-	public void initDefaultValues() {
-		// TODO Auto-generated method stub
-		
+	public void initDefaultValues()
+	{
+
 	}
 
 }

@@ -16,5 +16,7 @@ public interface IContext
 {
 	IMatrixRunner createRunner(String name, Reader reader, Date startTime, Object parameter) throws Exception;
 
-    IContext setOut(PrintStream console);
+	IContext setOut(PrintStream console);
+
+	IContext createCopy();
 }

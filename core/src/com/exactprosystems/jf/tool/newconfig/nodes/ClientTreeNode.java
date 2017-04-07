@@ -61,7 +61,7 @@ public class ClientTreeNode extends TreeNode
 				e -> ConfigurationTreeView.showInputDialog("Enter new client name").ifPresent(
 						res -> Common.tryCatch(() -> this.model.addNewClientEntry(res), "Error on add new client")));
 		menu.getItems().addAll(
-				ConfigurationTreeView.createItem(TEST_VERSION, () -> this.model.testAppVersion(), "Error on test app version"),
+				ConfigurationTreeView.createItem(TEST_VERSION, () -> this.model.testClientVersion(), "Error on test app version"),
 				ConfigurationTreeView.createDisabledItem(REFRESH),
 				ConfigurationTreeView.createDisabledItem(EXCLUDE_CLIENT_DIC_FOLDER),
 				ConfigurationTreeView.createDisabledItem(OPEN_DICTIONARY),

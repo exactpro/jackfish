@@ -16,14 +16,14 @@ import java.util.Map;
 
 public interface IServicesPool  extends IPool
 {
-	public List<String> servicesNames();
+	List<String> servicesNames();
 	
-	public IServiceFactory loadServiceFactory(String id) throws Exception;
-	public ServiceConnection loadService(String id) throws Exception;
-	public void startService(IContext context, ServiceConnection connection, Map<String, Object> params) throws Exception;
-	public void stopService(ServiceConnection connection) throws Exception;
-	public void stopAllServices();
+	IServiceFactory loadServiceFactory(String id) throws Exception;
+	ServiceConnection loadService(String id) throws Exception;
+	void startService(IContext context, ServiceConnection connection, Map<String, Object> params) throws Exception;
+	void stopService(ServiceConnection connection) throws Exception;
+	void stopAllServices();
 
-	public ServiceStatus getStatus(String id);
+	ServiceStatus getStatus(String id);
 }
 

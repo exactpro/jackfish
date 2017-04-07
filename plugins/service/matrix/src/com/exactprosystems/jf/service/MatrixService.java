@@ -55,12 +55,21 @@ public class MatrixService  extends AbstractTcpServer
 			runner.start();
 			runner.join(0);
 			runner.stop();
-			
-			clientSocket.close();
 		}
 		catch (Exception e)
 		{
 			logger.error(e.getMessage(), e);
+		}
+		finally
+		{
+			try
+			{
+				clientSocket.close();
+			}
+			catch (IOException e)
+			{
+				logger.error(e.getMessage(), e);
+			}
 		}
 	}
 

@@ -10,7 +10,6 @@ package com.exactprosystems.jf.service;
 
 import com.exactprosystems.jf.api.common.IContext;
 import com.exactprosystems.jf.api.common.exception.EmptyParameterException;
-import com.exactprosystems.jf.api.common.exception.VersionException;
 import com.exactprosystems.jf.api.service.*;
 import com.exactprosystems.jf.common.MainRunner;
 import com.exactprosystems.jf.documents.DocumentFactory;
@@ -23,20 +22,17 @@ import org.apache.log4j.Logger;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class ServicePool implements IServicesPool
 {
 	public ServicePool(DocumentFactory factory)
 	{
 		this.factory = factory;
-		this.serviceFactories = new HashMap<String, IServiceFactory>();
-		this.connections = new HashSet<ServiceConnection>();
+		this.serviceFactories = new HashMap<>();
+		this.connections = new HashSet<>();
 		this.mapServices = new HashMap<>();
 	}
-
-	//----------------------------------------------------------------------------------------------
-	// PoolVersionSupported
-	//----------------------------------------------------------------------------------------------
 
 	@Override
 	public boolean isSupported(String serviceId)
@@ -58,7 +54,7 @@ public class ServicePool implements IServicesPool
 	@Override
 	public List<String> servicesNames()
 	{
-		List<String> result = new ArrayList<String>();
+		List<String> result = new ArrayList<>();
 		for (ServiceEntry entry : this.factory.getConfiguration().getServiceEntries())
 		{
 			String name = null; 
@@ -74,14 +70,13 @@ public class ServicePool implements IServicesPool
 			}
 		}
 		return result;
-	}	
+	}
 
 	@Override
 	public IServiceFactory loadServiceFactory(String serviceId) throws Exception
 	{
 		ServiceEntry entry = parametersEntry(serviceId);
-		IServiceFactory serviceFactory = loadServiceFactory(serviceId, entry);
-		return serviceFactory;
+		return loadServiceFactory(serviceId, entry);
 	}
 
 	@Override
@@ -97,14 +92,7 @@ public class ServicePool implements IServicesPool
 			ServiceEntry entry = parametersEntry(serviceId);
 			IServiceFactory serviceFactory = loadServiceFactory(serviceId, entry);
 			List<Parameter> list = entry.getParameters();
-			Map<String, String> map = new HashMap<String, String>();
-            for (Parameter param : list)
-            {
-                String key = param.getKey();
-                String value = MainRunner.makeDirWithSubstitutions(param.getValue());
-                map.put(key, value);
-            }
-
+			Map<String, String> map = list.stream().collect(Collectors.toMap(Parameter::getKey, parameter -> MainRunner.makeDirWithSubstitutions(parameter.getValue())));
 			IService service = serviceFactory.createService();
 			service.init(this, serviceFactory, map);
 			ServiceConnection connection = new ServiceConnection(service, serviceId);
@@ -123,9 +111,13 @@ public class ServicePool implements IServicesPool
 	@Override
 	public synchronized void startService(IContext context, ServiceConnection connection, Map<String, Object> params) throws Exception
 	{
-		if (connection == null || connection.isBad())
+		if (connection == null || connection.isStopped())
 		{
-			throw new Exception("The service " + connection + " is not loaded.");
+			throw new Exception("The service " + connection + " is not loaded or already stopped.");
+		}
+		if (this.mapServices.containsKey(connection.getId()))
+		{
+			throw new Exception(String.format("The service '%s' already started.", connection.getId()));
 		}
 		try
 		{
@@ -151,13 +143,12 @@ public class ServicePool implements IServicesPool
 	{
 		try
 		{
-			if (connection == null || connection.isBad())
+			if (connection == null || connection.isStopped())
 			{
-				throw new Exception("The service " + connection + " is not loaded.");
+				throw new Exception("The service " + connection + " is not loaded or already stopped.");
 			}
 			
-			IService service = connection.getService();
-			service.stop();
+			connection.close();
 			this.connections.remove(connection);
 			this.mapServices.remove(connection.getId());
 		}
@@ -189,7 +180,7 @@ public class ServicePool implements IServicesPool
 	@Override
 	public ServiceStatus getStatus(String serviceId)
 	{
-		return Optional.ofNullable(this.mapServices.get(serviceId)).orElse(ServiceStatus.NotStarted);
+		return this.mapServices.getOrDefault(serviceId, ServiceStatus.NotStarted);
 	}
 
 	//----------------------------------------------------------------------------------------------

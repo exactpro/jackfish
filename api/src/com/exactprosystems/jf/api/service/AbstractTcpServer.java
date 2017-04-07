@@ -60,7 +60,7 @@ public abstract class AbstractTcpServer implements IService
 								@Override
 								public void run()
 								{
-									connected(context, clientSocket, out, in);
+									connected(context.createCopy(), clientSocket, out, in);
 								}
 							});
 							synchronized (monitor)

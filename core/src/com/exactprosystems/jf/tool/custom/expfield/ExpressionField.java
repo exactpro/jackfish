@@ -186,14 +186,14 @@ public class ExpressionField extends CustomField
 	}
 
 	private String savedText;
-	private boolean isHide = true;
+	private boolean isShadowTextIsNotPresented = true;
 
 	public void showShadowText()
 	{
-		if (isHide)
+		if (isShadowTextIsNotPresented)
 		{
 			savedText = this.getText();
-			isHide = false;
+			isShadowTextIsNotPresented = false;
 			if (this.evaluator != null)
 			{
 				String shadowText;
@@ -218,7 +218,7 @@ public class ExpressionField extends CustomField
 		this.getStyleClass().removeAll(CssVariables.INCORRECT_FIELD, CssVariables.CORRECT_FIELD);
 		this.setText(savedText);
 		this.setEditable(true);
-		isHide = true;
+		isShadowTextIsNotPresented = true;
 	}
 
 	public void setNameFirst(String name)
@@ -324,7 +324,10 @@ public class ExpressionField extends CustomField
 
 	private void stretchField(String text)
 	{
-		this.setPrefWidth(Common.computeTextWidth(this.getFont(), text, 0.0D) + 40);
+		if (isShadowTextIsNotPresented)
+		{
+			this.setPrefWidth(Common.computeTextWidth(this.getFont(), text, 0.0D) + 40);
+		}
 	}
 
 
