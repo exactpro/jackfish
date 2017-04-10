@@ -23,7 +23,7 @@ import java.util.Collection;
 
 public abstract class AutoCompletionBinding<T> implements EventTarget
 {
-	private static final long AUTO_COMPLETE_DELAY = 250;
+	private static final long AUTO_COMPLETE_DELAY = 1;
 	private final Node completionTarget;
 	private final AutoCompletePopup<T> autoCompletionPopup;
 	private final Object suggestionsTaskLock = new Object();

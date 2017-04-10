@@ -14,6 +14,7 @@ import com.exactprosystems.jf.api.service.*;
 import com.exactprosystems.jf.common.MainRunner;
 import com.exactprosystems.jf.documents.DocumentFactory;
 import com.exactprosystems.jf.documents.config.Configuration;
+import com.exactprosystems.jf.documents.config.Entry;
 import com.exactprosystems.jf.documents.config.Parameter;
 import com.exactprosystems.jf.documents.config.ServiceEntry;
 
@@ -30,8 +31,8 @@ public class ServicePool implements IServicesPool
 	{
 		this.factory = factory;
 		this.serviceFactories = new HashMap<>();
+		this.serviceStatusMap = new HashMap<>();
 		this.connections = new HashSet<>();
-		this.mapServices = new HashMap<>();
 	}
 
 	@Override
@@ -54,22 +55,12 @@ public class ServicePool implements IServicesPool
 	@Override
 	public List<String> servicesNames()
 	{
-		List<String> result = new ArrayList<>();
-		for (ServiceEntry entry : this.factory.getConfiguration().getServiceEntries())
-		{
-			String name = null; 
-			try
-			{
-				name = entry.toString();
-				result.add(name);
-			}
-			catch (Exception e)
-			{
-				logger.error("Error in serviceNames() name = " + name);
-				logger.error(e.getMessage(), e);
-			}
-		}
-		return result;
+		return this.factory.getConfiguration()
+				.getServiceEntries()
+				.stream()
+				.map(Entry::toString)
+				.filter(Objects::nonNull)
+				.collect(Collectors.toList());
 	}
 
 	@Override
@@ -115,23 +106,22 @@ public class ServicePool implements IServicesPool
 		{
 			throw new Exception("The service " + connection + " is not loaded or already stopped.");
 		}
-		if (this.mapServices.containsKey(connection.getId()))
+		if (this.serviceStatusMap.get(connection) == ServiceStatus.StartSuccessful)
 		{
 			throw new Exception(String.format("The service '%s' already started.", connection.getId()));
 		}
 		try
 		{
-
 			IService service = connection.getService();
-			this.mapServices.remove(connection.getId());
-			this.mapServices.put(connection.getId(), ServiceStatus.StartSuccessful);
+			this.serviceStatusMap.remove(connection);
+			this.serviceStatusMap.put(connection, ServiceStatus.StartSuccessful);
 			service.start(context, params);
 		}
 		catch (Exception e)
 		{
 			ServiceStatus startFailed = ServiceStatus.StartFailed;
 			startFailed.setMsg(e.getMessage());
-			this.mapServices.replace(connection.getId(), startFailed);
+			this.serviceStatusMap.replace(connection, startFailed);
 			logger.error(String.format("Error in startService(%s)", connection));
 			logger.error(e.getMessage(), e);
 			throw e;
@@ -149,8 +139,8 @@ public class ServicePool implements IServicesPool
 			}
 			
 			connection.close();
+			this.serviceStatusMap.remove(connection);
 			this.connections.remove(connection);
-			this.mapServices.remove(connection.getId());
 		}
 		catch (Exception e)
 		{
@@ -180,7 +170,12 @@ public class ServicePool implements IServicesPool
 	@Override
 	public ServiceStatus getStatus(String serviceId)
 	{
-		return this.mapServices.getOrDefault(serviceId, ServiceStatus.NotStarted);
+		return this.serviceStatusMap.entrySet()
+				.stream()
+				.filter(e -> e.getKey().getId().equals(serviceId))
+				.map(Map.Entry::getValue)
+				.findFirst()
+				.orElse(ServiceStatus.NotStarted);
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -227,15 +222,11 @@ public class ServicePool implements IServicesPool
 		
 		return serviceFactory;
 	}
-	
-	private Map<String, ServiceStatus> mapServices;
 
+	private Map<ServiceConnection, ServiceStatus> serviceStatusMap;
 	private DocumentFactory factory;
-
 	private Map<String, IServiceFactory> serviceFactories;
-
-	private Set<ServiceConnection> connections;
-
 	private static final Logger logger = Logger.getLogger(ServicePool.class);
+	private Set<ServiceConnection> connections;
 
 }
