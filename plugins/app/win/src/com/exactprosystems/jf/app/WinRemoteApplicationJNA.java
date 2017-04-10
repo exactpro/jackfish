@@ -168,6 +168,11 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 				}
 			}
 
+			if (height == Integer.MIN_VALUE && width == Integer.MIN_VALUE && pid  == Integer.MIN_VALUE && controlKind == null && ( Str.IsNullOrEmpty(title) || title.equals("null")))
+			{
+				throw new Exception("At least one of params (MainWindow, ControlKind, Height, PID, Width) must be filled");
+			}
+
 			logger.info("##########################################################################################################");
 			logger.info(String.format("connectionDerived(%s, %d, %d, %d, %s, $d)", title, height, width, pid, controlKind, timeout));
 			logger.info("All parameters : " + args.toString());
@@ -198,9 +203,13 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 			String workDir = args.get(workDirName);
 			String parameters = args.get(argsName);
 
-			if (Str.IsNullOrEmpty(exec))
+			if (Str.IsNullOrEmpty(exec) || exec.equals("null"))
 			{
-				throw new Exception("Executable name can't be null or empty");
+				throw new Exception("Exec can't be null or empty.");
+			}
+			if (Str.IsNullOrEmpty(workDir) || workDir.equals("null"))
+			{
+				throw new Exception("WorkDir can't be null or empty.");
 			}
 			this.logger.info("##########################################################################################################");
 			this.logger.info("runDerived(" + args + ")");
