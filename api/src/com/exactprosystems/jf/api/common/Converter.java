@@ -366,6 +366,17 @@ public class Converter
 				return (T) new Integer(((Number) object).intValue());
 			}
 		}
+        else if (type.isAssignableFrom(Long.class))
+        {
+            if (object instanceof String)
+            {
+                return (T) new Long(Long.parseLong(String.valueOf(object)));
+            }
+            else if (object instanceof Number)
+            {
+                return (T) new Long(((Number) object).longValue());
+            }
+        }
 		else if (type.isAssignableFrom(Double.class))
 		{
 			if (object instanceof String)
@@ -400,7 +411,7 @@ public class Converter
 			}
 		}
 
-		throw new Exception("Can not convert " + object + " to type " + type);
+		throw new Exception("Cannot convert " + object + " of type " + object.getClass() + " to type " + type);
 	}
 
 	public static Date parseDate(String date) throws ParseException

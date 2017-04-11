@@ -221,7 +221,12 @@ public class MessageDictionary extends AbstractDocument implements IMessageDicti
 	//----------------------------------------------------------------------------------------------------------------------
 	// interface IMessageDictionary
 	//----------------------------------------------------------------------------------------------------------------------
-	
+    @Override
+    public String getFilePath()
+    {
+        return getName();
+    }
+
 	@Override
 	public String getDescription()
 	{

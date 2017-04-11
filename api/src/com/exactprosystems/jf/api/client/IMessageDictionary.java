@@ -12,7 +12,8 @@ import java.util.List;
 
 public interface IMessageDictionary
 {
-	String			getDescription();
+    String          getFilePath();
+    String			getDescription();
 	IField 			getField(String name);
 	List<IField>	getFields();
 	IMessage 		getMessageByName(String name);

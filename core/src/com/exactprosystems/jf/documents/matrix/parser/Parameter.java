@@ -255,20 +255,9 @@ public class Parameter implements Mutable, Cloneable, Setter<String>, Getter<Str
 	        {
 	            throw new Exception("Type " + valueType.getName() + " is an array. It needs an single object " + type.getName());
 	        }
-	        else if (!type.isArray() && !valueType.isArray())
+	        else 
 	        {
-	            if (type.isAssignableFrom(valueType))
-	            {
-	                return;
-	            }
-	            else
-	            {
-	                throw new Exception("Type " + valueType.getName() + " cannot be cast to " + type.getName());
-	            }
-	        }
-	        else
-	        {
-	            throw new Exception("It is impossible. Call the developers.");
+	            this.value = Converter.convertToType(this.value, type);
 	        }
     	}
         catch (Exception e)

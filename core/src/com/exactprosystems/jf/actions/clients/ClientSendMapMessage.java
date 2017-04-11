@@ -59,7 +59,7 @@ public class ClientSendMapMessage extends AbstractAction
 	protected MapMessage	message	= null;
 
 	@ActionFieldAttribute(name = checkName, mandatory = false, description = "Validation message check before sending. As a default true." )
-	protected boolean	check;
+	protected Boolean	check;
 
 
 	public ClientSendMapMessage()
@@ -97,7 +97,7 @@ public class ClientSendMapMessage extends AbstractAction
 	@Override
 	public void initDefaultValues() 
 	{
-		check	= true;
+		this.check	= true;
 	}
 
 	@Override

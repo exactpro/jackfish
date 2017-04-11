@@ -31,30 +31,37 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
                 "MXWT1;MatrixWait;5000;MXRN1.Out#}}",
         seeAlsoClass = {MatrixRunFromText.class, MatrixRun.class}
 )
-public class MatrixWait extends AbstractAction {
+public class MatrixWait extends AbstractAction
+{
     public final static String matrixName = "Matrix";
-    public final static String timeName = "Time";
+    public final static String timeName   = "Time";
 
     @ActionFieldAttribute(name = matrixName, mandatory = true, description = "A special object that connects to the"
             + " matrix which is run.")
-    protected MatrixRunner matrix = null;
+    protected MatrixRunner     matrix     = null;
 
     @ActionFieldAttribute(name = timeName, mandatory = false, description = "Matrix timeout per millisecond."
             + "If the matrix doesn’t stop during the specified timeout, an action is failed."
             + "If the value is 0 – there will be pending before the matrix stops with no time limit."
             + "Be careful with such a value, if the started matrix is cycled, the current matrix will hang up in latency.")
-    protected long time;
+    protected Long             time;
 
     @Override
-    public void initDefaultValues() {
-        time = 0L;
+    public void initDefaultValues()
+    {
+        this.time = 0L;
     }
 
     @Override
-    public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception {
-        if (this.matrix == null) {
+    public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator)
+            throws Exception
+    {
+        if (this.matrix == null)
+        {
             super.setError("The matrix object is null", ErrorKind.EMPTY_PARAMETER);
-        } else {
+        }
+        else
+        {
             this.matrix.join(this.time);
             super.setResult(null);
         }

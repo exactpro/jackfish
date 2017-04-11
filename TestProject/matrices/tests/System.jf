@@ -1,3 +1,67 @@
-#TestCase;#Kind;#Depends;#For
-Test case;Never;;
+#Id;#TestCase;#Kind;#Depends;#For
+CHECK;Check;Never;;
+    #Id;#Let
+    actual;{'one' : 'oneValue', 'two' : 100 }
+
+    #Action;#Actual;#one
+    Check;actual;'oneValue'
+
+    #Action;#Actual;#one;#two
+    Check;actual;'oneValue';100
+
+    #Action;#Actual;#DoNotFail;#one;#two
+    Check;actual;true;'oneValue';100
+
+    #Action;#Actual;#DoNotFail;#one;#two
+    Check;actual;false;'oneValue';100
+
+    #Action;#Actual;#DoNotFail;#one;#two;#tree
+    Check;actual;true;'oneValue';100;'anyValue'
+
+    // Negative testing
+    #Action;#Assert;#Actual
+    Check;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;
+
+    #Action;#Assert;#Actual
+    Check;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;111
+
+    #Action;#Assert;#Actual;#one;#two
+    Check;This.Result == Result.Failed && This.Kind == ErrorKind.NOT_EQUAL;actual;'oneValue';200
+
+    #Action;#Assert;#Actual;#one;#two;#tree
+    Check;This.Result == Result.Failed && This.Kind == ErrorKind.NOT_EQUAL;actual;'oneValue';100;'anyValue'
+
+    #Action;#Assert;#Actual;#DoNotFail;#one;#two;#tree
+    Check;This.Result == Result.Failed && This.Kind == ErrorKind.NOT_EQUAL;actual;false;'oneValue';100;'anyValue'
+
+
+#Id;#Off;#TestCase;#Kind;#Depends;#For
+COMPARE;1;Compare;Never;;
+
+#Id;#Off;#TestCase;#Kind;#Depends;#For
+EXEC;1;Execute;Never;;
+
+#Id;#Off;#TestCase;#Kind;#Depends;#For
+INPUT;1;Input;Never;;
+
+#Id;#Off;#TestCase;#Kind;#Depends;#For
+PRINT;1;Print;Never;;
+
+#Id;#Off;#TestCase;#Kind;#Depends;#For
+RESTORE;1;Restore;Never;;
+
+#Id;#Off;#TestCase;#Kind;#Depends;#For
+RESULT;1;ResultTable;Never;;
+
+#Id;#Off;#TestCase;#Kind;#Depends;#For
+RT_USERVAL;1;ResultTableUserValue;Never;;
+
+#Id;#Off;#TestCase;#Kind;#Depends;#For
+SHOW;1;Show;Never;;
+
+#Id;#Off;#TestCase;#Kind;#Depends;#For
+STORE;1;Store;Never;;
+
+#Id;#Off;#TestCase;#Kind;#Depends;#For
+WAIT;1;Wait;Never;;
 

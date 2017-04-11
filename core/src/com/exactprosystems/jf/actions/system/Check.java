@@ -12,6 +12,7 @@ import com.exactprosystems.jf.actions.AbstractAction;
 import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
+import com.exactprosystems.jf.actions.ReadableValue;
 import com.exactprosystems.jf.api.client.ClientHelper;
 import com.exactprosystems.jf.api.client.MapMessage;
 import com.exactprosystems.jf.api.conditions.Condition;
@@ -22,8 +23,10 @@ import com.exactprosystems.jf.common.report.ReportTable;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.documents.matrix.parser.items.TypeMandatory;
+import com.exactprosystems.jf.functions.HelpKind;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -65,6 +68,30 @@ public class Check extends AbstractAction
     {
     }
 
+    @Override
+    protected HelpKind howHelpWithParameterDerived(Context context, Parameters parameters, String fieldName)
+    {
+        switch (fieldName)
+        {
+            case dontFailName:
+                return HelpKind.ChooseFromList;
+        }
+        return null;
+    }
+
+    @Override
+    protected void listToFillParameterDerived(List<ReadableValue> list, Context context, String parameterToFill, Parameters parameters) throws Exception
+    {
+        switch (parameterToFill)
+        {
+            case dontFailName:
+                list.add(ReadableValue.TRUE);
+                list.add(ReadableValue.FALSE);
+                break;
+        }
+    }
+
+    
     @Override
     public void initDefaultValues() 
     {

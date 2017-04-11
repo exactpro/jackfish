@@ -62,7 +62,7 @@ public class ClientSendMessage extends AbstractAction
 	protected String	messageType	= null;
 
 	@ActionFieldAttribute(name = checkName, mandatory = false, description = "Checks the validation before the message sending. As a default true.")
-	protected boolean	check;
+	protected Boolean	check;
 
 	public ClientSendMessage()
 	{

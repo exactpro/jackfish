@@ -15,7 +15,6 @@ import com.exactprosystems.jf.common.evaluator.Variables;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.common.report.ReportTable;
 import com.exactprosystems.jf.documents.config.Context;
-import com.exactprosystems.jf.documents.matrix.Matrix;
 import com.exactprosystems.jf.documents.matrix.parser.Parameter;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.documents.matrix.parser.Result;
@@ -26,14 +25,11 @@ import com.exactprosystems.jf.documents.matrix.parser.items.MatrixError;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 import com.exactprosystems.jf.documents.matrix.parser.items.TypeMandatory;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
-import com.exactprosystems.jf.exceptions.ParametersException;
 import org.apache.log4j.Logger;
 
 import java.lang.reflect.Field;
 import java.util.*;
 import java.util.Map.Entry;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 public abstract class AbstractAction implements Cloneable
 {
@@ -131,55 +127,39 @@ public abstract class AbstractAction implements Cloneable
     {
         try
         {
-        	logger.trace(getClass().getSimpleName() + ".doAction()");
-        	
             clearResults();
             this.action.In = parameters;
             evaluator.getLocals().set(Tokens.This.get(), this.action);
 			if (!Str.IsNullOrEmpty(actionId))
 			{
-				Supplier<Variables> variables = owner.isGlobal() ? evaluator::getGlobals : evaluator::getLocals;
-				Consumer<String> consumer = str -> variables.get().set(str, this.action);
-				consumer.accept(actionId);
+	            Variables variables = owner.isGlobal() ? evaluator.getGlobals() : evaluator.getLocals();
+	            variables.set(actionId, this.action);
 			}
 
-    		boolean parametersAreCorrect = parameters.evaluateAll(evaluator);
-    		parametersAreCorrect = parametersAreCorrect && injectParameters(parameters);
+			boolean parametersAreCorrect = parameters.evaluateAll(evaluator);
             reportParameters(report, parameters);
-
             if (parametersAreCorrect)
             {
-                //-------------------------------------------------------------
-                // Do the action!
-                //-------------------------------------------------------------
-                doRealAction(context, report, parameters, evaluator);
-                //-------------------------------------------------------------
-
-
-                if (this.action.Result == null)
+                if (injectParameters(parameters))
                 {
-                    String str = "Action " + this.getClass() + " works incorrectly.";
-                    throw new Exception(str);
+                    //-------------------------------------------------------------
+                    // Do the action!
+                    //-------------------------------------------------------------
+                    doRealAction(context, report, parameters, evaluator);
+                    //-------------------------------------------------------------
+
+                    if (this.action.Result == null)
+                    {
+                        String str = "Action " + this.getClass() + " works incorrectly.";
+                        throw new Exception(str);
+                    }
                 }
             }
             else
             {
-				throw new ParametersException("Errors in parameters expressions " + this.toString(), parameters);
+                setError("Errors in parameter expressions", ErrorKind.EXPRESSION_ERROR);
             }
-
         }
-		catch (ParametersException e)
-		{
-			setError(e.getMessage(), ErrorKind.EXPRESSION_ERROR);
-			Matrix matrix = this.owner.getMatrix();
-			
-			IMatrixListener listener = context.getMatrixListener();
-			listener.error(matrix, this.owner.getNumber(), this.owner, e.getMessage());
-			for (String error : e.getParameterErrors()) 
-			{
-				listener.error(matrix, this.owner.getNumber(), this.owner, error);
-			}
-		}
         catch (Exception e)
         {
             logger.error(e.getMessage(), e);
@@ -402,7 +382,6 @@ public abstract class AbstractAction implements Cloneable
         boolean allCorrect = true;
 
         Map<String, FieldAndAttributes> descriptions = getFieldsAttributes();
-
         for (Parameter parameter : parameters)
         {
             try
@@ -412,12 +391,25 @@ public abstract class AbstractAction implements Cloneable
 
                 if (description != null)
                 {
-                    // this field is marked with ActionFieldAttribute
-
                 	parameter.correctType(description.field.getType());
                 	if (parameter.isValid()) // why allCorrect isn't changed if parameter is invalid?
                 	{
-	                    injectValue(name, description, parameter.getValue());
+	                    Object value = parameter.getValue();
+	                    if (value == null && description.attribute.mandatory())
+	                    {
+	                        setError("Mandatory parameter " + name + " is empty", ErrorKind.EMPTY_PARAMETER);
+	                        allCorrect = false;
+	                    }
+	                    else
+	                    {
+	                        description.field.setAccessible(true);;
+	                        description.field.set(this, value);
+	                    }
+                	}
+                	else
+                	{
+                	    setError("Parameter " + name + ": " + parameter.getValue(), ErrorKind.WRONG_PARAMETERS);
+                	    allCorrect = false;
                 	}
                 }
             }
@@ -530,29 +522,6 @@ public abstract class AbstractAction implements Cloneable
         return list;
     }
 
-
-    private void injectValue(String name, FieldAndAttributes description, Object value) throws Exception
-    {
-        if (value == null)
-        {
-            if (description.attribute.mandatory())
-            {
-                throw new Exception("Mandatory field " + name + " is null");
-            }
-        }
-        else
-        {
-            try
-            {
-                description.field.setAccessible(true);;
-                description.field.set(this, value);
-            }
-            catch (Exception e)
-            {
-                logger.error(e.getMessage(), e);
-            }
-        }
-    }
 
     private void clearResults()
     {

@@ -83,6 +83,10 @@
             <key>sfSettings</key>
             <value>fix_client.xml</value>
         </parameters>
+        <parameters>
+            <key>sfUri</key>
+            <value>trm2:FIX_Client</value>
+        </parameters>
         <clientJar>${JF}/clients/sfclient.jar</clientJar>
         <clientLimit>0</clientLimit>
         <clientDictionary>dic/clients/FIX50.xml</clientDictionary>
