@@ -95,6 +95,14 @@ public class MainRunner
 					.withDescription("Specify the username which will be used when tool works with a git repository. ")
 					.create("username");
 
+			Option convertTo = OptionBuilder
+					.withArgName("file")
+					.hasArg()
+					.withDescription("Convert old matrices to the new format")
+					.create("convertTo");
+
+
+
             Option saveDocs     = new Option("docs",    "Save the documentation in rtf format." );
 			Option saveSchema 	= new Option("schema", 	"Save the config schema." );
 			Option help 		= new Option("help", 	"Print this message." );
@@ -102,7 +110,7 @@ public class MainRunner
 			Option shortPaths 	= new Option("short", 	"Show only short paths in tracing." );
             Option console      = new Option("console",	"Do not open GUI. Batch mode.");
             Option child      	= new Option("child",	"NEVER use this option. It is only for internal purpose.");
-			
+
 			Options options = new Options();
 
 			options.addOption(startAtName);
@@ -119,6 +127,7 @@ public class MainRunner
 			options.addOption(shortPaths);
             options.addOption(console);
             options.addOption(child);
+			options.addOption(convertTo);
 
 			
 			CommandLineParser parser = new GnuParser();
@@ -207,7 +216,7 @@ public class MainRunner
 	
 				if (line.hasOption(console.getOpt()))
 				{
-					runInConsoleMode(line, configString, verboseLevel, startAtName, inputName, outputName, shortPaths);
+					runInConsoleMode(line, configString, verboseLevel, startAtName, inputName, outputName, shortPaths, convertTo);
 				}
 				else
 				{
@@ -219,7 +228,6 @@ public class MainRunner
 				}
 				break;
 			}
-			
 			
 		} 
 		catch (Exception e)
@@ -288,7 +296,7 @@ public class MainRunner
 
 	
 	private static void runInConsoleMode(CommandLine line, String configString, VerboseLevel verboseLevel, 
-			Option startAtName, Option inputName, Option outputName, Option shortPaths) throws java.text.ParseException
+			Option startAtName, Option inputName, Option outputName, Option shortPaths, Option convertTo) throws java.text.ParseException
 	{
 		printVersion();
 
@@ -318,7 +326,15 @@ public class MainRunner
 			System.out.println("Configuration option is empty.");
 			System.exit(2);
 		}
-		
+
+		if (line.hasOption(convertTo.getOpt()))
+		{
+			String newFolderName = line.getOptionValue(convertTo.getOpt());
+			MatrixConverter matrixConverter = new MatrixConverter(configuration.getMatricesValue(), configuration.getLibrariesValue(), newFolderName);
+			matrixConverter.start();
+			System.out.println("All matrix converted and saved to folder " + newFolderName);
+			return;
+		}
 		
 		if (!line.hasOption(inputName.getOpt()))
 		{
