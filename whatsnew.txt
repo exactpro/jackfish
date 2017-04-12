@@ -1,3 +1,7 @@
+12.04.2017 4.4.0 2257
+Add ability to convert matrix with old syntax to the new one.
+To do it just run JF with key -convertTo=<name_of_destination_folder>
+--------------------------------------------------------------------------------
 06.04.2017 4.4.0.2244
 Fix 41452. Now any elements gets focus through events only
 --------------------------------------------------------------------------------
