@@ -4,6 +4,9 @@ description = "UIAdapter"
 
 task buildUIAdapter(type: Msbuild){
     projectFile = 'UIAdapterRunner/UIAdapterRunner.csproj'
+    
+    verbosity = 'detailed'
+    ext["flp1"] = "LogFile=" + file("${project.name}.errors.log").path + ";ErrorsOnly;Verbosity=diag"
 }
 
 distribute.dependsOn.add(buildUIAdapter)
