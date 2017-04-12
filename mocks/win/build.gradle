@@ -1,9 +1,12 @@
 import com.ullink.Msbuild
 
 description = "Win Mock"
+/*
 
 task buildMockWin(type: Msbuild){
     projectFile = 'mock_win/mock_win.csproj'
 }
 
 distribute.dependsOn.add(buildMockWin)
+
+*/
