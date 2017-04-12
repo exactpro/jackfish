@@ -9,6 +9,6 @@ task buildUIAdapter(type: Msbuild){
     verbosity = 'detailed'
     ext["flp1"] = "LogFile=" + file("${project.name}.errors.log").path + ";ErrorsOnly;Verbosity=diag"
 }
-*/
 
 distribute.dependsOn.add(buildUIAdapter)
+*/
