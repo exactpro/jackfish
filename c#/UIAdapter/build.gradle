@@ -1,0 +1,9 @@
+import com.ullink.Msbuild
+
+description = "UIAdapter"
+
+task buildUIAdapter(type: Msbuild){
+    projectFile = 'UIAdapterRunner/UIAdapterRunner.csproj'
+}
+
+distribute.dependsOn.add(buildUIAdapter)

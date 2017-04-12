@@ -3,6 +3,7 @@ plugins {
 	id 'maven'
 	id "com.jfrog.artifactory" version "2.2.5"
 	id "us.kirchmeier.capsule" version "1.0.2"
+	id 'com.ullink.msbuild' version '2.16'
 }
 
 artifactoryPublish.skip = true

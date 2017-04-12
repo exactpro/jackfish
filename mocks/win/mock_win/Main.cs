@@ -28,7 +28,7 @@ namespace mock_win
             list.Add(new String[] { "tr_2_td_1", "tr_2_td_2", "tr_2_td_3" });
             list.Add(new String[] { "tr_3_td_1", "tr_3_td_2", "tr_3_td_3" });
             list.Add(new String[] { "Green", "", "51" });
-            list.Add(new String[] { "Stark", "128 North Street", "35" });
+            list.Add(new String[] { "Stark", "North", "35" });
 
             foreach (String[] item in list)
             {
