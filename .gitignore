@@ -15,7 +15,6 @@ gen
 bin
 
 #CShart files
-packages
 *.suo
 obj
 
