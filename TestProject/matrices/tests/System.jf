@@ -1,5 +1,5 @@
-#Id;#TestCase;#Kind;#Depends;#For
-CHECK;Check;Never;;
+#Id;#Off;#TestCase;#Kind;#Depends;#For
+CHECK;1;Check;Never;;
     #Id;#Let
     actual;{'one' : 'oneValue', 'two' : 100 }
 
@@ -35,8 +35,35 @@ CHECK;Check;Never;;
     Check;This.Result == Result.Failed && This.Kind == ErrorKind.NOT_EQUAL;actual;false;'oneValue';100;'anyValue'
 
 
-#Id;#Off;#TestCase;#Kind;#Depends;#For
-COMPARE;1;Compare;Never;;
+#Id;#TestCase;#Kind;#Depends;#For
+COMPARE;Compare;Never;;
+    #Id;#Let
+    expected;{'one' : 'oneValue', 'two' : 100 }
+
+    #Id;#Let
+    actual1;{'one' : 'oneValue', 'two' : 100 }
+
+    #Id;#Let
+    actual2;{'one' : 'oneValue', 'two' : 200 }
+
+    #Id;#Let
+    actual3;{'one' : 'oneValue', 'two' : 100, 'tree' : 'anyValue' }
+
+    #Id;#Off;#Action;#Expected;#Actual
+    CMP1;1;Compare;;
+
+    // Negative testing
+    #Id;#Action;#Assert;#Expected;#Actual
+    CMP1;Compare;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;
+
+    // Negative testing
+    #Id;#Action;#Assert;#Expected;#Actual
+    CMP2;Compare;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;expected;
+
+    // Negative testing
+    #Id;#Action;#Assert;#Expected;#Actual
+    CMP3;Compare;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;actual1
+
 
 #Id;#Off;#TestCase;#Kind;#Depends;#For
 EXEC;1;Execute;Never;;

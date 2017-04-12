@@ -92,7 +92,7 @@ Test;Matrix;;;
 #Id;#TestCase;#Kind;#Depends;#For
 Test;CheckMockWeb;;;
     #Id;#Action;#Matrix;#Parameter
-    MXRN1;MatrixRun;matrixTestsPath + 'prepareMock' +  '.jf';'WEB'
+    MXRN1;MatrixRun;matrixTestsPath + 'prepareMock.jf';'WEB'
 
     #Id;#Action;#Matrix
     MXWT1;MatrixWait;MXRN1.Out
@@ -104,7 +104,7 @@ Test;CheckMockWeb;;;
 #Id;#TestCase;#Kind;#Depends;#For
 Test;CheckMockSwing;;;
     #Id;#Action;#Matrix;#Parameter
-    MXRN1;MatrixRun;matrixTestsPath + 'prepareMock' +  '.jf';'SWING'
+    MXRN1;MatrixRun;matrixTestsPath + 'prepareMock.jf';'SWING'
 
     #Id;#Action;#Matrix
     MXWT1;MatrixWait;MXRN1.Out
@@ -116,7 +116,7 @@ Test;CheckMockSwing;;;
 #Id;#TestCase;#Kind;#Depends;#For
 Test;CheckMockWin;;;
     #Id;#Action;#Matrix;#Parameter
-    MXRN1;MatrixRun;matrixTestsPath + 'prepareMock' +  '.jf';'WIN'
+    MXRN1;MatrixRun;matrixTestsPath + 'prepareMock.jf';'WIN'
 
     #Id;#Action;#Matrix
     MXWT1;MatrixWait;MXRN1.Out
