@@ -14,6 +14,7 @@ import com.exactprosystems.jf.api.client.IClientFactory;
 import com.exactprosystems.jf.api.client.IClientsPool;
 import com.exactprosystems.jf.api.common.IContext;
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.common.CommonHelper;
 import com.exactprosystems.jf.common.MainRunner;
 import com.exactprosystems.jf.documents.DocumentFactory;
 import com.exactprosystems.jf.documents.config.ClientEntry;
@@ -176,7 +177,7 @@ public class ClientsPool implements IClientsPool
 		if (!Str.IsNullOrEmpty(dictionaryName))
 		{
 			dictionary = this.factory.createClientDictionary(dictionaryName);
-	    	try (Reader reader = new FileReader(dictionaryName))
+	    	try (Reader reader = CommonHelper.readerFromFileName(dictionaryName))
 	    	{
 	    		dictionary.load(reader);
 	    	}

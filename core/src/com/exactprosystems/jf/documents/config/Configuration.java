@@ -24,6 +24,7 @@ import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.api.service.IServicesPool;
 import com.exactprosystems.jf.app.ApplicationPool;
 import com.exactprosystems.jf.client.ClientsPool;
+import com.exactprosystems.jf.common.CommonHelper;
 import com.exactprosystems.jf.common.MainRunner;
 import com.exactprosystems.jf.common.MatrixRunner;
 import com.exactprosystems.jf.common.MutableString;
@@ -508,7 +509,7 @@ public class Configuration extends AbstractDocument
 						continue;
 					}
 
-					try (Reader reader = new FileReader(libFile))
+					try (Reader reader = CommonHelper.readerFromFile(libFile))
 					{
 						Context context = getFactory().createContext();
 						MatrixRunner runner = context.createRunner(libFile.getName(), null, new Date(), null);
@@ -966,7 +967,7 @@ public class Configuration extends AbstractDocument
 		final File file = new File(MainRunner.makeDirWithSubstitutions(userVariablesFileName));
 		if (file.exists())
 		{
-			try (Reader reader = new FileReader(file))
+			try (Reader reader = CommonHelper.readerFromFile(file))
 			{
 				SystemVars vars = getFactory().createVars(userVariablesFileName);
 				vars.load(reader);

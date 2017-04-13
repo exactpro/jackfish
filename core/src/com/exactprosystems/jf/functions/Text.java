@@ -10,6 +10,7 @@ package com.exactprosystems.jf.functions;
 
 import com.exactprosystems.jf.api.app.Mutable;
 import com.exactprosystems.jf.common.ChangeListener;
+import com.exactprosystems.jf.common.CommonHelper;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.common.report.ReportTable;
@@ -35,7 +36,7 @@ public class Text implements List<String>, Mutable, Cloneable
 	public Text(String fileName) throws FileNotFoundException, IOException
 	{
 		this();
-		try (Reader reader = new FileReader(fileName))
+		try (Reader reader = CommonHelper.readerFromFileName(fileName))
 		{
 			read(reader);
 		}

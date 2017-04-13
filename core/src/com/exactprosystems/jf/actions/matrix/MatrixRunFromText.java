@@ -12,6 +12,7 @@ import com.exactprosystems.jf.actions.AbstractAction;
 import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
+import com.exactprosystems.jf.common.CommonHelper;
 import com.exactprosystems.jf.common.MatrixRunner;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
@@ -19,6 +20,7 @@ import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.functions.HelpKind;
 import com.exactprosystems.jf.functions.Text;
+import com.exactprosystems.jf.tool.Common;
 
 import java.io.Reader;
 import java.io.StringReader;
@@ -78,7 +80,7 @@ public class MatrixRunFromText extends AbstractAction
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception 
 	{
         try(Context newContext = context.getFactory().createContext();
-				Reader reader = new StringReader(this.text.toString())	)
+				Reader reader = CommonHelper.readerFromString(this.text.toString())	)
 		{
 			MatrixRunner runner = newContext.createRunner("new", reader, this.at, this.parameter);
             newContext.setOut(context.getOut());

@@ -10,6 +10,7 @@ package com.exactprosystems.jf.tool.matrix.schedule;
 
 import com.exactprosystems.jf.api.common.IMatrixRunner;
 import com.exactprosystems.jf.api.common.MatrixState;
+import com.exactprosystems.jf.common.CommonHelper;
 import com.exactprosystems.jf.common.MatrixRunner;
 import com.exactprosystems.jf.documents.DocumentFactory;
 import com.exactprosystems.jf.documents.FxDocumentFactory;
@@ -104,7 +105,7 @@ public class RunnerScheduler implements RunnerListener
 			files.stream().filter(Objects::nonNull)
 			.forEach(file -> Common.tryCatch(() ->
 			{
-		        try(Reader reader = new FileReader(file))
+		        try(Reader reader = CommonHelper.readerFromFile(file))
 		        {
 					Context context = this.factory.createContext();
 					MatrixRunner runner = context.createRunner(file.getPath(), reader, null, null);

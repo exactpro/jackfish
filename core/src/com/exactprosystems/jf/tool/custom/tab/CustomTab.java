@@ -8,6 +8,7 @@
 
 package com.exactprosystems.jf.tool.custom.tab;
 
+import com.exactprosystems.jf.common.CommonHelper;
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.documents.Document;
 import com.exactprosystems.jf.tool.Common;
@@ -174,7 +175,7 @@ public class CustomTab extends Tab implements AutoCloseable
 			{
 				Common.tryCatch(() ->
 				{
-					try (Reader reader = new FileReader(this.document.getName()))
+					try (Reader reader = CommonHelper.readerFromFileName(this.document.getName()))
 					{
 						this.document.load(reader);
 					}

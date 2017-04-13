@@ -14,6 +14,7 @@ import com.exactprosystems.jf.api.client.IClientFactory;
 import com.exactprosystems.jf.api.common.IMatrix;
 import com.exactprosystems.jf.api.common.IMatrixRunner;
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.common.CommonHelper;
 import com.exactprosystems.jf.common.MatrixRunner;
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
@@ -182,7 +183,7 @@ public class Matrix extends AbstractDocument implements IMatrix
 			{
 				this.buffer.append(line).append('\n');
 			}
-			Reader stringReader = new StringReader(this.buffer.toString());
+			Reader stringReader = CommonHelper.readerFromString(this.buffer.toString());
 
 			Parser parser = new Parser();
 			this.root = parser.readMatrix(this.root, stringReader);

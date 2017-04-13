@@ -9,6 +9,7 @@
 package com.exactprosystems.jf.tool.main;
 
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.common.CommonHelper;
 import com.exactprosystems.jf.common.MainRunner;
 import com.exactprosystems.jf.common.MatrixRunner;
 import com.exactprosystems.jf.common.Settings;
@@ -676,7 +677,7 @@ public class Main extends Application
 
 	public void runMatrixFromFile(File file) throws Exception
 	{
-        Reader reader = new FileReader(file);
+        Reader reader = CommonHelper.readerFromFile(file);
         Context context = this.factory.createContext();
         MatrixRunner runner = context.createRunner(file.getPath(), reader, null, null);
         runner.setOnFinished(mr -> 
@@ -854,7 +855,7 @@ public class Main extends Application
 		}
 		try
 		{
-			try (Reader reader = new FileReader(file))
+			try (Reader reader = CommonHelper.readerFromFile(file))
 			{
 				doc.load(reader);
 			}
@@ -864,7 +865,7 @@ public class Main extends Application
 				DialogsHelper.showError(e.getMessage());
 
 				doc = this.factory.createPlainText(doc.getName());
-				try (Reader reader = new FileReader(file))
+				try (Reader reader = CommonHelper.readerFromFile(file))
 				{
 					doc.load(reader);
 				}

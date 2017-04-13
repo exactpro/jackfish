@@ -314,6 +314,12 @@ public class MessageDictionary extends AbstractDocument implements IMessageDicti
 		return this.version;
 	}
 
+    @Override
+    public String getXmlns()
+    {
+        return ""; // TODO 
+    } 
+
 	//----------------------------------------------------------------------------------------------------------------------
 
 	@Override

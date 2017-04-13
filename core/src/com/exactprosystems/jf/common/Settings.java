@@ -271,7 +271,7 @@ public class Settings
 		Settings settings = null;
 		if (file.exists())
 		{
-			try(Reader reader = new FileReader(file))
+			try(Reader reader = CommonHelper.readerFromFile(file))
 			{
 				JAXBContext jaxbContext = JAXBContext.newInstance(jaxbContextClasses);
 				Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();

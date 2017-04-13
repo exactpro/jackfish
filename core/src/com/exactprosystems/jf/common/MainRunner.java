@@ -426,7 +426,7 @@ public class MainRunner
 		{
 			logger.info(String.format("Processing '%s' start at '%s'", matrix.getName(), startAt.toString()));
 
-			try(    Reader reader = new FileReader(matrix);
+			try(    Reader reader = CommonHelper.readerFromFile(matrix);
 			        Context	context = factory.createContext();
 			        MatrixRunner runner = context.createRunner(matrix.getPath(), reader, startAt, null) )
 			{

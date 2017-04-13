@@ -10,6 +10,7 @@ package com.exactprosystems.jf.app;
 
 import com.exactprosystems.jf.api.app.*;
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.common.CommonHelper;
 import com.exactprosystems.jf.common.MainRunner;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.documents.DocumentFactory;
@@ -328,7 +329,7 @@ public class ApplicationPool implements IApplicationPool
 		if (!Str.IsNullOrEmpty(dictionaryName))
 		{
 			dictionary = this.factory.createAppDictionary(dictionaryName);
-	    	try (Reader reader = new FileReader(dictionaryName))
+	    	try (Reader reader = CommonHelper.readerFromFileName(dictionaryName))
 	    	{
 	    		dictionary.load(reader);
 	    	}

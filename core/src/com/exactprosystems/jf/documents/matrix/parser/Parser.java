@@ -10,6 +10,7 @@ package com.exactprosystems.jf.documents.matrix.parser;
 
 import com.csvreader.CsvReader;
 import com.csvreader.CsvWriter;
+import com.exactprosystems.jf.common.CommonHelper;
 import com.exactprosystems.jf.documents.DocumentFactory;
 import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.documents.matrix.Matrix;
@@ -329,7 +330,7 @@ public class Parser
 
 	public MatrixItem[] stringToItems(String string) throws MatrixException, Exception
 	{
-		Reader reader = new StringReader(string);
+		Reader reader = CommonHelper.readerFromString(string);
 		MatrixItem root = new MatrixRoot("root");
 		
 		root = readMatrix(root, reader);
