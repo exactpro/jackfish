@@ -114,7 +114,7 @@ public class TableCompareTwo extends AbstractAction
 			return;
 		}
 
-		Table differences = new Table(new String[] { "Expected", "Actual" }, evaluator);
+		Table differences = new Table(new String[] { "Description", "Expected", "Actual" }, evaluator);
 		boolean res = Table.extendEquals(report, differences, this.actual, this.expected, this.exclude, this.ignoreRowsOrder);
 
         super.setResult(differences);

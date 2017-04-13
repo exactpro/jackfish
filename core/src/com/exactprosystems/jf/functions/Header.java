@@ -4,6 +4,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.Objects;
 
 class Header implements Cloneable
 {
@@ -105,9 +106,7 @@ class Header implements Cloneable
 			return false;
 
 		Header header = (Header) o;
-
-		return index == header.index;
-
+		return Objects.equals(this.index, header.index) && Objects.equals(this.name, header.name);
 	}
 
 	@Override

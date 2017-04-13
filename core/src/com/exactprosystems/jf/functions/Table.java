@@ -38,12 +38,13 @@ import java.util.stream.IntStream;
 public class Table implements List<RowTable>, Mutable, Cloneable
 {
 	//region fields
-	private static final String EMPTY_HEADER	= "newH";
-	private static final String EMPTY_ROW		= "newR";
+	private static final String EMPTY_HEADER       = "newH";
+	private static final String EMPTY_ROW		   = "newR";
 
 	private boolean useColumnNumber = false;
-	private static final String ROW_INDEX_SYMBOL = "@";
-	private List<Map<Header, Object>> innerList = null;
+    private static final String ROW_VAR_NAME       = "_";
+	private static final String ROW_INDEX_SYMBOL   = "@";
+	private List<Map<Header, Object>> innerList    = null;
 	private Header[] headers;
 	private AbstractEvaluator evaluator;
 
@@ -210,6 +211,7 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 			clone.innerList.add(copy);
 		}
 		
+		
 		return clone;
 	}
 	//endregion
@@ -222,7 +224,7 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 
 		if (!expectedNames.equals(actualNames))
 		{
-			table = addMismatchedRow(table, report, differences, "", Arrays.toString(expectedNames.toArray()), Arrays.toString(actualNames.toArray()));
+			table = addMismatchedRow(table, report, differences, "Column names", Arrays.toString(expectedNames.toArray()), Arrays.toString(actualNames.toArray()));
 			return false;
 		}
 
@@ -236,15 +238,19 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 			Iterator<Map<Header, Object>> actualIterator = actual.innerList.iterator();
 			while (actualIterator.hasNext())
 			{
-				Map<Header, Object> actualRow = actualIterator.next();
-
+				RowTable actualRow = actual.convertToStr(actualIterator.next(), expectedNames);
 				int expectedCounter = 0;
 				Iterator<Map<Header, Object>> expectedIterator = expected.innerList.iterator();
 				while (expectedIterator.hasNext())
 				{
-					Map<Header, Object> expectedRow = expectedIterator.next();
-					Map<String, ArrayList<Object>> stringMap = compareRows(actual.convertToStr(actualRow), expected.convertToStr(expectedRow), expectedNames);
-					if (stringMap.isEmpty())
+				    if (expectedMatched[expectedCounter])
+				    {
+				        expectedIterator.next();
+				        expectedCounter++;
+				        continue;
+				    }
+	                RowTable expectedRow = expected.convertToStr(expectedIterator.next(), expectedNames);
+					if (Objects.equals(actualRow, expectedRow))
 					{
 						actualMatched[actualCounter] = true;
 						expectedMatched[expectedCounter] = true;
@@ -259,10 +265,10 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 			Iterator<Map<Header, Object>> expectedIterator = expected.innerList.iterator();
 			while (expectedIterator.hasNext())
 			{
-				Map<Header, Object> expectedRow = expectedIterator.next();
+			    RowTable expectedRow = expected.convertToStr(expectedIterator.next(), expectedNames);
 				if (!expectedMatched[count])
 				{
-					table = addMismatchedRow(table, report, differences, "" + count, ReportHelper.objToString(expectedRow, false), "");
+					table = addMismatchedRow(table, report, differences, "Extra row[" + count + "]", ReportHelper.objToString(expectedRow, false), "");
 					result = false;
 				}
 				count++;
@@ -272,16 +278,16 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 			actualIterator = actual.innerList.iterator();
 			while (actualIterator.hasNext())
 			{
-				Map<Header, Object> actualRow = actualIterator.next();
+			    RowTable actualRow = actual.convertToStr(actualIterator.next(), expectedNames); 
 				if (!actualMatched[count])
 				{
-					table = addMismatchedRow(table, report, differences, "" + count, "", ReportHelper.objToString(actualRow, false));
+					table = addMismatchedRow(table, report, differences, "Extra row[" + count + "]", "", ReportHelper.objToString(actualRow, false));
 					result = false;
 				}
 				count++;
 			}
 		}
-		else
+		else // ignoreRowsOrder
 		{
 			Iterator<Map<Header, Object>> actualIterator   = actual.innerList.iterator();
 			Iterator<Map<Header, Object>> expectedIterator = expected.innerList.iterator();
@@ -289,15 +295,16 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 			int rowCount = 0;
 			while (actualIterator.hasNext() && expectedIterator.hasNext())
 			{
-				Map<Header, Object> actualRow = actualIterator.next();
-				Map<Header, Object> expectedRow = expectedIterator.next();
-				Map<String, ArrayList<Object>> stringMap = compareRows(actual.convertToStr(actualRow), expected.convertToStr(expectedRow), expectedNames);
-				if (!stringMap.isEmpty())
+				RowTable actualRow = actual.convertToStr(actualIterator.next(), expectedNames);
+				RowTable expectedRow = expected.convertToStr(expectedIterator.next(), expectedNames);
+				if (!Objects.equals(actualRow, expectedRow))
 				{
-					table = addMismatchedRow(table, report, differences, "" + rowCount, ReportHelper.objToString(expectedRow, false), ReportHelper.objToString(actualRow, false));
-					for (Entry<String, ArrayList<Object>> entry : stringMap.entrySet())
+					table = addMismatchedRow(table, report, differences, "Row[" + rowCount + "]", ReportHelper.objToString(expectedRow, false), ReportHelper.objToString(actualRow, false));
+					for (String name : expectedNames)
 					{
-	                    table = addMismatchedRow(table, report, differences, entry.getKey(), "" + entry.getValue().get(0), "" + entry.getValue().get(1));
+                        String expectedValue = Str.asString(expectedRow.get(name));
+                        String actualValue   = Str.asString(actualRow.get(name));
+	                    table = addMismatchedRow(table, report, differences, "Row[" + rowCount + "]." + name, expectedValue, actualValue);
 					}
 					result = false;
 				}
@@ -306,15 +313,15 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 			}
 			while (expectedIterator.hasNext())
 			{
-				Map<Header, Object> expectedRow = expectedIterator.next();
-				table = addMismatchedRow(table, report, differences, "" + rowCount, ReportHelper.objToString(expectedRow, false), "");
+                RowTable expectedRow = expected.convertToStr(expectedIterator.next(), expectedNames);
+				table = addMismatchedRow(table, report, differences, "Extra row[" + rowCount + "]", ReportHelper.objToString(expectedRow, false), "");
 				rowCount++;
 				result = false;
 			}
 			while (actualIterator.hasNext())
 			{
-				Map<Header, Object> actualRow = actualIterator.next();
-				table = addMismatchedRow(table, report, differences, "" + rowCount, "", ReportHelper.objToString(actualRow, false));
+                RowTable actualRow = actual.convertToStr(actualIterator.next(), expectedNames);
+				table = addMismatchedRow(table, report, differences, "Extra row[" + rowCount + "]", "", ReportHelper.objToString(actualRow, false));
 				rowCount++;
 				result = false;
 			}
@@ -545,8 +552,8 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 			Object obj1 = o1.get(header);
 			Object obj2 = o2.get(header);
 
-			obj1 = convertCell(header, obj1, null);
-			obj2 = convertCell(header, obj2, null);
+			obj1 = convertCell(o1, header, obj1, null);
+			obj2 = convertCell(o2, header, obj2, null);
 
 			Header.HeaderType type = header.type == null ? Header.HeaderType.STRING : header.type;
 			int compare = type.compare(obj1, obj2);
@@ -809,7 +816,7 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 					Header header = headerByName(func.apply(headers[i]));
 					if (reportValues)
 					{
-						value[i] = convertCell(header, row.get(header), report);
+						value[i] = convertCell(row, header, row.get(header), report);
 					}
 					else
 					{
@@ -925,7 +932,7 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 				Object value = null;
 				if (saveValues)
 				{
-					value = convertCell(headers[i], source, null);
+					value = convertCell(f, headers[i], source, null);
 				}
 				else
 				{
@@ -1190,10 +1197,10 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 	    ReportTable result = table;
 		if (result == null)
 		{
-		    result = report.addTable("Differences", null, true, 0, new int[]{10, 45, 45}, "#", "Expected", "Actual");
+		    result = report.addTable("Differences", null, true, 0, new int[]{30, 35, 35}, "Description", "Expected", "Actual");
 		}
 		result.addValues(name, expectedValue, actualValue);
-        differences.addValue(new String[] { expectedValue, actualValue } );
+        differences.addValue(new String[] { name, expectedValue, actualValue } );
 		
         return result; 
 	}
@@ -1214,44 +1221,6 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 		return names;
 	}
 
-	private static Map<String, ArrayList<Object>> compareRows(Map<String, Object> thisRow, Map<String, Object> otherRow, Set<String> names)
-	{
-		Map<String, ArrayList<Object>> map = new LinkedHashMap<>();
-		for (String name : names)
-		{
-			if (!thisRow.containsKey(name) || !otherRow.containsKey(name))
-			{
-				map.put(name, new ArrayList<>());
-			}
-
-			Object thisValue = thisRow.get(name);
-			Object otherValue = otherRow.get(name);
-
-			if (thisValue == null)
-			{
-				if (otherValue == null)
-				{
-					continue;
-				}
-				else if (!otherValue.equals(thisValue))
-				{
-					ArrayList<Object> objects = new ArrayList<>();
-					objects.add(otherValue);
-					objects.add(thisValue);
-					map.put(name, objects);
-				}
-			}
-			else if (!thisValue.equals(otherValue))
-			{
-				ArrayList<Object> objects = new ArrayList<>();
-				objects.add(otherValue);
-				objects.add(thisValue);
-				map.put(name, objects);
-			}
-		}
-
-		return map;
-	}
 
 	private void considerAs(Header.HeaderType type, String... columns) throws Exception
 	{
@@ -1332,19 +1301,26 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 		return e.stream().map(this::convert).collect(Collectors.toList());
 	}
 
+    private RowTable convertToStr(Map<Header, Object> map, Set<String> names)
+    {
+        RowTable res = convertToStr(map);
+        res.keepOnly(names);
+        return res;
+    }
+	
 	private RowTable convertToStr(Map<Header, Object> map)
 	{
 		RowTable res = new RowTable(map);
 		for (Entry<Header, Object> entry : map.entrySet())
 		{
 			Header header = entry.getKey();
-			Object source = entry.getValue();
-			res.put(header.name, convertCell(header, source, null));
+			Object value = entry.getValue();
+			res.put(header.name, Str.asString(convertCell(map, header, value, null)));
 		}
 		return res;
 	}
 	
-    private Object convertCell(Header header, Object source, ReportBuilder report)
+    private Object convertCell(Map<Header, Object> row,  Header header, Object source, ReportBuilder report)
     {
         if (header.type == null)
         {
@@ -1355,7 +1331,9 @@ public class Table implements List<RowTable>, Mutable, Cloneable
         {
             if (header.type == Header.HeaderType.EXPRESSION && this.evaluator != null)
             {
+                this.evaluator.getLocals().set(ROW_VAR_NAME, new RowTable(row));
                 value = this.evaluator.evaluate("" + source);
+                this.evaluator.getLocals().delete(ROW_VAR_NAME);
             }
             else if (header.type == Header.HeaderType.GROUP)
             {

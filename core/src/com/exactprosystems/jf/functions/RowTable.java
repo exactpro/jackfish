@@ -9,38 +9,70 @@ package com.exactprosystems.jf.functions;
 
 import java.util.Collection;
 import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
-
-import com.exactprosystems.jf.functions.Header.HeaderType;
+import java.util.stream.Collectors;
 
 
 public class RowTable implements Map<String, Object>, Cloneable
 {
 	public RowTable(Map<Header, Object> map)
 	{
+	    this();
+	    
 		if (map == null)
 		{
 			throw new NullPointerException("map");
 		}
-		
-		this.source = map;
+		map.forEach((k,v) -> this.source.put(k.name, v));
 	}
 
 	public RowTable()
 	{
-		this(new LinkedHashMap<Header, Object>());
+	    this.source = new LinkedHashMap<String, Object>();
 	}
 	
-	@Override
+    public void keepOnly(Set<String> names)
+    {
+        this.source = this.source.entrySet()
+                .stream()
+                .filter(e -> names.contains(e.getKey()))
+                .collect(Collectors.toMap(k -> k.getKey(), v -> v.getValue()));
+    }
+
+    @Override
 	public String toString()
 	{
 		return this.source.toString();
 	}
 	
+	@Override
+    public int hashCode()
+    {
+        return Objects.hashCode(this.source);
+    }
 
-	//==============================================================================================
+    @Override
+    public boolean equals(Object obj)
+    {
+        if (this == obj)
+        {
+            return true;
+        }
+        if (obj == null)
+        {
+            return false;
+        }
+        if (getClass() != obj.getClass())
+        {
+            return false;
+        }
+        RowTable other = (RowTable) obj;
+        return Objects.equals(this.source, other.source);
+    }
+
+    //==============================================================================================
 	// Interface Cloneable
 	//==============================================================================================
 	@Override
@@ -71,7 +103,7 @@ public class RowTable implements Map<String, Object>, Cloneable
 	@Override
 	public boolean containsKey(Object key)
 	{
-		return keySet().contains(key);
+		return this.source.containsKey(key);
 	}
 
 	@Override
@@ -83,69 +115,37 @@ public class RowTable implements Map<String, Object>, Cloneable
 	@Override
 	public Object get(Object key)
 	{
-		for (Map.Entry<Header, Object> entry : this.source.entrySet())
-		{
-			if (entry.getKey().name.equals(key))
-			{
-				return entry.getValue();
-			}
-		}
-		
-		return null;
+	    return this.source.get(key);
 	}
 
 	@Override
 	public Object put(String key, Object value)
 	{
-		for (Map.Entry<Header, Object> entry : this.source.entrySet())
-		{
-			if (entry.getKey().name.equals(key))
-			{
-				Object res = entry.getValue();
-				entry.setValue(value);
-				return res;
-			}
-		}
-
-		Header header = new Header(key, HeaderType.STRING);
-		this.source.put(header, value);
-		
-		return null;
+	    return this.source.put(key, value);
 	}
 
 	@Override
 	public Object remove(Object key)
 	{
-		return put(key == null ? null : key.toString(), null);
+	    return this.source.remove(key);
 	}
 
 	@Override
 	public void putAll(Map<? extends String, ? extends Object> m)
 	{
-		for (Map.Entry<? extends String, ? extends Object> entry : m.entrySet())
-		{
-			put(entry.getKey(), entry.getValue());
-		}
+		this.source.putAll(m);
 	}
 
 	@Override
 	public void clear()
 	{
-		for (Map.Entry<Header, Object> entry : this.source.entrySet())
-		{
-			entry.setValue(null);
-		}
+	    this.source.clear();
 	}
 
 	@Override
 	public Set<String> keySet()
 	{
-		Set<String> res = new LinkedHashSet<>();
-		for (Header key : this.source.keySet())
-		{
-			res.add(key.name);
-		}
-		return res;
+	    return this.source.keySet();
 	}
 
 	@Override
@@ -157,13 +157,8 @@ public class RowTable implements Map<String, Object>, Cloneable
 	@Override
 	public Set<Map.Entry<String, Object>> entrySet()
 	{
-		Map<String, Object> res = new LinkedHashMap<>();
-		for (Map.Entry<Header, Object> entry : this.source.entrySet())
-		{
-			res.put(entry.getKey().name, entry.getValue());
-		}
-		return res.entrySet();
+	    return this.source.entrySet();
 	}
 
-	private Map<Header, Object> source;
+    private Map<String, Object> source;
 }

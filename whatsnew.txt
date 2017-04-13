@@ -1,11 +1,17 @@
+--------------------------------------------------------------------------------
+13.04.2017 4.4.0.2258
+RM41192 feature : For Action TableCompareTwo, add the function to retrieve the data displayed in the report using the Out parameter.
+
+--------------------------------------------------------------------------------
 12.04.2017 4.4.0 2257
 Add ability to convert matrix with old syntax to the new one.
 To do it just run JF with key -convertTo=<name_of_destination_folder>
+
 --------------------------------------------------------------------------------
 06.04.2017 4.4.0.2244
 Fix 41452. Now any elements gets focus through events only
---------------------------------------------------------------------------------
 
+--------------------------------------------------------------------------------
 06.04.2017 4.4.0.2231
 RM40706. Implement necessary behavior. Can change it Settings -> Matrix -> checkbox Fold new items
 --------------------------------------------------------------------------------

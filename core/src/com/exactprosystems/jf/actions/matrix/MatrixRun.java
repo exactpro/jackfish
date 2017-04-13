@@ -21,8 +21,11 @@ import com.exactprosystems.jf.functions.HelpKind;
 import com.exactprosystems.jf.tool.custom.console.ConsoleText;
 import com.exactprosystems.jf.tool.matrix.TabConsole;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileReader;
+import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.io.Reader;
 import java.util.Date;
@@ -96,7 +99,7 @@ public class MatrixRun extends AbstractAction
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception 
 	{
         try(Context newContext = context.getFactory().createContext();
-			Reader reader = new FileReader(new File(this.matrix)))
+            Reader reader = new BufferedReader(new InputStreamReader(new FileInputStream(this.matrix), "UTF-8")) ) 
 		{
 			MatrixRunner runner = newContext.createRunner(this.matrix, reader, this.at, this.parameter);
             newContext.setOut(context.getOut());
