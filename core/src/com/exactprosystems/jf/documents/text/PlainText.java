@@ -8,6 +8,7 @@
 
 package com.exactprosystems.jf.documents.text;
 
+import com.exactprosystems.jf.common.CommonHelper;
 import com.exactprosystems.jf.documents.AbstractDocument;
 import com.exactprosystems.jf.documents.DocumentFactory;
 import com.exactprosystems.jf.documents.DocumentInfo;
@@ -89,7 +90,8 @@ public class PlainText extends AbstractDocument
 
 	private void write(String fileName) throws IOException
 	{
-		try (Writer writer = new FileWriter(fileName); BufferedWriter buffWriter = new BufferedWriter(writer))
+		try (Writer writer = CommonHelper.writerToFileName(fileName); 
+		     BufferedWriter buffWriter = new BufferedWriter(writer))
 		{
 			for (String line : this.property.get().split("\n"))
 			{

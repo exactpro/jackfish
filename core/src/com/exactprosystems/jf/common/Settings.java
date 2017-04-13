@@ -361,7 +361,7 @@ public class Settings
 
 	public synchronized void save(String fileName) throws Exception
 	{
-		try (Writer writer = new FileWriter(new File(fileName)))
+		try (Writer writer = CommonHelper.writerToFileName(fileName))
 		{
 			JAXBContext jaxbContext = JAXBContext.newInstance(jaxbContextClasses);
 

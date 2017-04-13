@@ -80,7 +80,7 @@ public class Text implements List<String>, Mutable, Cloneable
 	
 	public boolean save(String fileName)
 	{
-		try (Writer writer = new FileWriter(fileName))
+		try (Writer writer = CommonHelper.writerToFileName(fileName))
 		{
 			save(writer);
 		}

@@ -15,6 +15,7 @@ import com.exactprosystems.jf.api.app.Mutable;
 import com.exactprosystems.jf.api.common.Converter;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.conditions.Condition;
+import com.exactprosystems.jf.common.CommonHelper;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.common.report.ReportHelper;
@@ -882,7 +883,7 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 	{
 		CsvWriter writer = null;
 
-		try (Writer bufferedWriter = new BufferedWriter(new FileWriter(fileName)))
+		try (Writer bufferedWriter = CommonHelper.writerToFileName(fileName))
 		{
 			writer = new CsvWriter(bufferedWriter, delimiter);
 			return save(writer, "", saveValues, withNmumbers);

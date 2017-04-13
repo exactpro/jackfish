@@ -230,7 +230,7 @@ public class Matrix extends AbstractDocument implements IMatrix
 			getMatrixRunner().setMatrixFile(getName());
 		}
 		
-		try (Writer rawWriter = new FileWriter(new File(fileName)))
+		try (Writer rawWriter = CommonHelper.writerToFileName(fileName))
 		{
 			Parser parser = new Parser();
 			parser.saveMatrix(this.root, rawWriter);
