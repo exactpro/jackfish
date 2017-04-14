@@ -58,13 +58,8 @@ Add start adapter action;;;
 
 #TestCase;#Kind;#Depends;#For
 Generate;;;
-    #ReportOff
-
-    #Action;#maskMap
-    Vars;table.get(0)
-
-    #Action;#maskOff;#maskName
-    Vars;maskMap.remove(offName);maskMap.remove(controlName)
+    #Action;#Table;#Index;#Name;#Off
+    TableSetValue;table;0;null;null
 
     #For;#From;#To;#Step
     i;1;table.size()-1;1
@@ -72,7 +67,7 @@ Generate;;;
         Vars;table.get(i)
 
         #Action;#name;#needOff;#entrySet
-        Vars;currentLine.remove(controlName);currentLine.remove(offName);currentLine.entrySet()
+        Vars;table[i].Name;table[i].Off;table[i]
 
         // if off not empty, we will skip this line
         #If
@@ -93,7 +88,7 @@ Generate;;;
             1;Vars;valueArray.get(j);operationsArray.get(j)
 
             #Action;#currentMask
-            Vars;maskMap.get(currentOperation)
+            Vars;table[0].get(currentOperation)
 
             #If
             currentValue != null && currentValue.equals(notWrite)
@@ -219,8 +214,6 @@ Generate;;;
         #EndFor
 
     #EndFor
-
-    #ReportOn
 
 
 #TestCase;#Kind;#Depends;#For
