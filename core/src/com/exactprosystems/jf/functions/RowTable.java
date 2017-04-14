@@ -14,6 +14,8 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import com.exactprosystems.jf.api.common.Str;
+
 
 public class RowTable implements Map<String, Object>, Cloneable
 {
@@ -33,12 +35,12 @@ public class RowTable implements Map<String, Object>, Cloneable
 	    this.source = new LinkedHashMap<String, Object>();
 	}
 	
-    public void keepOnly(Set<String> names)
+    public void makeStrValues(Set<String> names)
     {
         this.source = this.source.entrySet()
                 .stream()
                 .filter(e -> names.contains(e.getKey()))
-                .collect(Collectors.toMap(k -> k.getKey(), v -> v.getValue()));
+                .collect(Collectors.toMap(k -> k.getKey(), v -> Str.asString(v.getValue())));
     }
 
     @Override

@@ -1305,7 +1305,7 @@ public class Table implements List<RowTable>, Mutable, Cloneable
     private RowTable convertToStr(Map<Header, Object> map, Set<String> names)
     {
         RowTable res = convertToStr(map);
-        res.keepOnly(names);
+        res.makeStrValues(names);
         return res;
     }
 	
@@ -1316,7 +1316,7 @@ public class Table implements List<RowTable>, Mutable, Cloneable
 		{
 			Header header = entry.getKey();
 			Object value = entry.getValue();
-			res.put(header.name, Str.asString(convertCell(map, header, value, null)));
+			res.put(header.name, convertCell(map, header, value, null));
 		}
 		return res;
 	}
