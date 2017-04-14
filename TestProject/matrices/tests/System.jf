@@ -1,5 +1,5 @@
-#Id;#Off;#TestCase;#Kind;#Depends;#For
-CHECK;1;Check;Never;;
+#Id;#TestCase;#Kind;#Depends;#For
+CHECK;Check;Never;;
     #Id;#Let
     actual;{'one' : 'oneValue', 'two' : 100 }
 
