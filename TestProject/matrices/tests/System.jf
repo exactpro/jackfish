@@ -77,8 +77,90 @@ PRINT;1;Print;Never;;
 #Id;#Off;#TestCase;#Kind;#Depends;#For
 RESTORE;1;Restore;Never;;
 
-#Id;#Off;#TestCase;#Kind;#Depends;#For
-RESULT;1;ResultTable;Never;;
+#Id;#TestCase;#Kind;#Depends;#For
+RESULT;ResultTable;Never;;
+    #Id;#Let
+    expectedColumns; [ 'Matrix', 'TestCaseId', 'TestCase', 'StepIdentity', 'Step', 'Time', 'Result', 'Error', 'Screenshot' ]
+
+    #Id;#Action;#Decoraded
+    RESTBL1;ResultTable;true
+
+    #Assert;#Message
+    RESTBL1.Out.getClass() == Table;'Type is not Table'
+
+    #Assert;#Message
+    RESTBL1.Out.size() > 0;'Table is empty'
+
+    #Assert;#Message
+    RESTBL1.Out[0].keySet().containsAll(expectedColumns);'Wrong column set'
+
+    #Id;#Action;#Decoraded
+    RESTBL2;ResultTable;false
+
+    #Assert;#Message
+    RESTBL2.Out.getClass() == Table;'Type is not Table'
+
+    #Assert;#Message
+    RESTBL2.Out[0].keySet().containsAll(expectedColumns);'Wrong column set'
+
+    #Id;#Action;#Decoraded
+    RESTBL3;ResultTable;true
+
+    #Step;#Kind;#For
+    ;;
+    #EndStep
+
+    #Id;#Action;#Decoraded
+    RESTBL4;ResultTable;true
+
+    #Assert;#Message
+    RESTBL4.Out.size() == RESTBL3.Out.size() + 1;
+
+    #Id;#RawText
+    TEXT1;Text
+    "#Id;#TestCase;#Kind;#Depends;#For"
+    "TC1;Testcase1;Never;;"
+    "    #Step;#Kind;#For"
+    "    'ST1';;"
+    "    #EndStep"
+    ""
+    "    #Step;#Kind;#For"
+    "    'ST2';;"
+    "        #Fail"
+    "        'User error'"
+    ""
+    "    #EndStep"
+    #EndRawText
+
+    #Id;#Action;#Text
+    MXRN1;MatrixRunFromText;TEXT1
+
+    #Id;#Action;#Matrix
+    MXWT1;MatrixWait;MXRN1.Out
+
+    #Id;#Action;#Decoraded;#Matrix
+    RESTBL5;ResultTable;true;MXRN1.Out
+
+    #Id;#RawTable
+    expectedTable;Table
+    @;Matrix;TestCaseId;TestCase;StepIdentity;Step;Time;Result;Error;Screenshot
+    0;new;TC1;TestCase Testcase1;;;9;Failed;User error;
+    1;new;TC1;TestCase Testcase1;ST1;Step 'ST1';3;Passed;;
+    2;new;TC1;TestCase Testcase1;ST2;Step 'ST2';1;Failed;User error;
+    #EndRawTable
+
+    #Id;#Action;#Expected;#Actual;#ExcludeColumns
+    TBLCMP1;TableCompareTwo;expectedTable;RESTBL5.Out;'Time'
+
+    // =====================================================================
+    // Negative tests
+    #Id;#Action;#Assert;#Decoraded
+    RESTBL6;ResultTable;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;
+
+    // 
+    #Id;#Action;#Assert;#Decoraded;#Matrix
+    RESTBL7;ResultTable;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;true;100
+
 
 #Id;#Off;#TestCase;#Kind;#Depends;#For
 RT_USERVAL;1;ResultTableUserValue;Never;;
