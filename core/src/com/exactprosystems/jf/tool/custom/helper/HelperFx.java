@@ -9,6 +9,7 @@
 package com.exactprosystems.jf.tool.custom.helper;
 
 import com.exactprosystems.jf.api.common.DescriptionAttribute;
+import com.exactprosystems.jf.api.common.FieldParameter;
 import com.exactprosystems.jf.api.common.HideAttribute;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
@@ -114,7 +115,7 @@ public class HelperFx
 				observableAll.addAll(Arrays.stream(clazz.getFields())
 	                            .filter(t -> t.getAnnotation(HideAttribute.class) == null )
 								.map(this::getStringsSimpleField)
-								.filter(simpleField -> simpleField != null)
+								.filter(Objects::nonNull)
 								.collect(Collectors.toList())
 				);
 				Collections.sort(observableAll, ascentingSorting ? comparatorAZ : comparatorZA);
@@ -199,17 +200,32 @@ public class HelperFx
 			return (this.method.getModifiers() & Modifier.STATIC) != 0;
 		}
 
-		public String getName()
+		private List<String> getParameters()
 		{
-			return this.method.getName();
+			return Arrays.stream(this.method.getParameters())
+					.filter(p -> p.getAnnotation(HideAttribute.class) == null)
+					.map(p -> {
+						String parameterName = Optional.ofNullable(p.getAnnotation(FieldParameter.class))
+								.map(FieldParameter::name)
+								.orElse("");
+
+						return p.getType().getSimpleName() + " " + parameterName;
+					})
+					.collect(Collectors.toList());
 		}
 
-		public List<String> getParameters()
+		private List<String> getParameterTypes()
 		{
 			return Arrays.stream(this.method.getParameterTypes())
                     .filter(t -> t.getAnnotation(HideAttribute.class) == null )
-			        .map(type -> type.getSimpleName())
+			        .map(Class::getSimpleName)
 			        .collect(Collectors.toList());
+		}
+
+		@Override
+		public String getName()
+		{
+			return this.method.getName();
 		}
 
 		public String getReturnType()
@@ -221,19 +237,14 @@ public class HelperFx
 		public String toString()
 		{
 			StringBuilder sb = new StringBuilder();
-			sb.append(isStatic() ? "S" : "")
-				.append('\t')
-				.append(getName())
-				.append('(');
-			String comma = "";
-			for (String parameter : getParameters())
-			{
-				sb.append(comma);
-				sb.append(parameter);
-				comma = ", ";
-			}
-			sb.append(") : ")
-				.append(getReturnType());
+			sb.append(isStatic() ? "S" : "").append('\t').append(getName()).append('(');
+
+			String parameters = getParameters()
+					.stream()
+					.collect(Collectors.joining(", "));
+			sb.append(parameters);
+
+			sb.append(") : ").append(getReturnType());
 
 			return sb.toString();
 		}
@@ -243,7 +254,7 @@ public class HelperFx
 			StringBuilder s = new StringBuilder(getName());
 			s.append("(");
 			String comma = "";
-			for (String parameter : getParameters())
+			for (String parameter : getParameterTypes())
 			{
 				s.append(comma);
 				s.append(parameter);
@@ -256,12 +267,9 @@ public class HelperFx
 		@Override
 		public String getDescription()
 		{
-			DescriptionAttribute attr = this.method.getAnnotation(DescriptionAttribute.class);
-			if (attr == null)
-			{
-				return null;
-			}
-			return attr.text();
+			return Optional.ofNullable(this.method.getAnnotation(DescriptionAttribute.class))
+					.map(DescriptionAttribute::text)
+					.orElse(null);
 		}
 	}
 
@@ -288,12 +296,9 @@ public class HelperFx
 		@Override
 		public String getDescription()
 		{
-			DescriptionAttribute attr = this.field.getAnnotation(DescriptionAttribute.class);
-			if (attr == null)
-			{
-				return null;
-			}
-			return attr.text();
+			return Optional.ofNullable(this.field.getAnnotation(DescriptionAttribute.class))
+					.map(DescriptionAttribute::text)
+					.orElse(null);
 		}
 	}
 
