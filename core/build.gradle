@@ -3,7 +3,7 @@ ext.jarName = "jackfish.jar"
 ext.javaVersion = 1.8;
 
 archivesBaseName = 'jackfish-core'
-
+compileJava.options.encoding = 'UTF-8'
 dependencies {
 	compile project(':api');
 	compile group: 'commons-cli', name: 'commons-cli', version: '1.2'
