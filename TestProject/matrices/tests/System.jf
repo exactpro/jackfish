@@ -80,7 +80,7 @@ RESTORE;1;Restore;Never;;
 #Id;#TestCase;#Kind;#Depends;#For
 RESULT;ResultTable;Never;;
     #Id;#Let
-    expectedColumns; [ 'Matrix', 'TestCaseId', 'TestCase', 'StepIdentity', 'Step', 'Time', 'Result', 'Error', 'Screenshot' ]
+    expectedColumns;[ 'Matrix', 'TestCaseId', 'TestCase', 'StepIdentity', 'Step', 'Time', 'Result', 'Error', 'Screenshot' ]
 
     #Id;#Action;#Decoraded
     RESTBL1;ResultTable;true
@@ -118,18 +118,18 @@ RESULT;ResultTable;Never;;
 
     #Id;#RawText
     TEXT1;Text
-    "#Id;#TestCase;#Kind;#Depends;#For"
-    "TC1;Testcase1;Never;;"
-    "    #Step;#Kind;#For"
-    "    'ST1';;"
-    "    #EndStep"
-    ""
-    "    #Step;#Kind;#For"
-    "    'ST2';;"
-    "        #Fail"
-    "        'User error'"
-    ""
-    "    #EndStep"
+    ~;"#Id;#TestCase;#Kind;#Depends;#For"
+    ~;"TC1;Testcase1;;;"
+    ~;"    #Step;#Kind;#For"
+    ~;"    'ST1';;"
+    ~;"    #EndStep"
+    ~;""
+    ~;"    #Step;#Kind;#For"
+    ~;"    'ST2';;"
+    ~;"        #Fail"
+    ~;"        'User error'"
+    ~;""
+    ~;"    #EndStep"
     #EndRawText
 
     #Id;#Action;#Text

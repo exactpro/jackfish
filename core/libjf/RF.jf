@@ -157,7 +157,7 @@ RF;RegressionFramework
                         i;standartResult.Out.getHeaderSize();resultTab.Out.getHeaderSize() - 1;1
                             #Id;#RawText
                             TEXT6;Text
-                            "INSERT INTO user_details (details_id, name, value) VALUES (?, ?, ?);"
+                            ~;"INSERT INTO user_details (details_id, name, value) VALUES (?, ?, ?);"
                             #EndRawText
 
                             #Action;#Connection;#Query;#detailsId;#name;#value
@@ -222,11 +222,11 @@ RF;RegressionFramework
             'MYSQL'
                 #Id;#RawText
                 TEXT4;Text
-                "SELECT  "
-                "	sp.count AS `Passed`, "
-                "	sf.count AS `Failed`"
-                "FROM (SELECT COUNT(id) AS count FROM scenarios WHERE failed = 0 AND run_id = ? ) AS sp "
-                "LEFT JOIN (SELECT COUNT(id) AS count FROM scenarios WHERE failed <> 0 AND run_id = ? ) AS sf ON true "
+                ~;"SELECT  "
+                ~;"	sp.count AS `Passed`, "
+                ~;"	sf.count AS `Failed`"
+                ~;"FROM (SELECT COUNT(id) AS count FROM scenarios WHERE failed = 0 AND run_id = ? ) AS sp "
+                ~;"LEFT JOIN (SELECT COUNT(id) AS count FROM scenarios WHERE failed <> 0 AND run_id = ? ) AS sf ON true "
                 #EndRawText
 
 
@@ -234,11 +234,11 @@ RF;RegressionFramework
             'MSSQL'
                 #Id;#RawText
                 TEXT4;Text
-                "SELECT  "
-                "	sp.count AS ""Passed"", "
-                "	sf.count AS ""Failed"""
-                "FROM (SELECT COUNT(id) AS count FROM scenarios WHERE failed = 0 AND run_id = ? ) AS sp "
-                "LEFT JOIN (SELECT COUNT(id) AS count FROM scenarios WHERE failed <> 0 AND run_id = ? ) AS sf ON 1=1"
+                ~;"SELECT  "
+                ~;"	sp.count AS ""Passed"", "
+                ~;"	sf.count AS ""Failed"""
+                ~;"FROM (SELECT COUNT(id) AS count FROM scenarios WHERE failed = 0 AND run_id = ? ) AS sp "
+                ~;"LEFT JOIN (SELECT COUNT(id) AS count FROM scenarios WHERE failed <> 0 AND run_id = ? ) AS sf ON 1=1"
                 #EndRawText
 
 
@@ -283,28 +283,28 @@ RF;RegressionFramework
             'MYSQL'
                 #Id;#RawText
                 TEXT1;delete from details
-                "DELETE FROM details"
-                "WHERE scenario_id IN ("
-                "    SELECT id FROM scenarios"
-                "    WHERE run_id IN ("
-                "        SELECT id FROM runs"
-                "        WHERE create_time=?"
-                "    )"
-                ")"
+                ~;"DELETE FROM details"
+                ~;"WHERE scenario_id IN ("
+                ~;"    SELECT id FROM scenarios"
+                ~;"    WHERE run_id IN ("
+                ~;"        SELECT id FROM runs"
+                ~;"        WHERE create_time=?"
+                ~;"    )"
+                ~;")"
                 #EndRawText
 
                 #Id;#RawText
                 TEXT2;delete from scenarios
-                "DELETE FROM scenarios"
-                "WHERE run_id IN ("
-                "    SELECT id FROM runs"
-                "    WHERE create_time=?"
-                ")"
+                ~;"DELETE FROM scenarios"
+                ~;"WHERE run_id IN ("
+                ~;"    SELECT id FROM runs"
+                ~;"    WHERE create_time=?"
+                ~;")"
                 #EndRawText
 
                 #Id;#RawText
                 TEXT3;delete from runs
-                "DELETE FROM runs WHERE create_time=?"
+                ~;"DELETE FROM runs WHERE create_time=?"
                 #EndRawText
 
 
@@ -312,41 +312,41 @@ RF;RegressionFramework
             'MSSQL'
                 #Id;#RawText
                 TEXT1;delete from details
-                "DELETE FROM details "
-                "WHERE scenario_id in ("
-                "    SELECT scenario_id "
-                "    FROM details AS d "
-                "    LEFT JOIN scenarios AS s "
-                "    ON d.scenario_id = s.id "
-                "    WHERE s.id in ("
-                "        SELECT id FROM scenarios "
-                "        WHERE  id in ("
-                "             SELECT run_id "
-                "             FROM scenarios AS s "
-                "             LEFT JOIN runs AS r "
-                "                  ON r.id = s.run_id "
-                "                  WHERE r.id = (SELECT id FROM runs WHERE create_time = ?)"
-                "        )"
-                "    )"
-                ")"
+                ~;"DELETE FROM details "
+                ~;"WHERE scenario_id in ("
+                ~;"    SELECT scenario_id "
+                ~;"    FROM details AS d "
+                ~;"    LEFT JOIN scenarios AS s "
+                ~;"    ON d.scenario_id = s.id "
+                ~;"    WHERE s.id in ("
+                ~;"        SELECT id FROM scenarios "
+                ~;"        WHERE  id in ("
+                ~;"             SELECT run_id "
+                ~;"             FROM scenarios AS s "
+                ~;"             LEFT JOIN runs AS r "
+                ~;"                  ON r.id = s.run_id "
+                ~;"                  WHERE r.id = (SELECT id FROM runs WHERE create_time = ?)"
+                ~;"        )"
+                ~;"    )"
+                ~;")"
                 #EndRawText
 
                 #Id;#RawText
                 TEXT2;delete from scenarios
-                "DELETE FROM scenarios "
-                "WHERE run_id in ("
-                "SELECT run_id FROM scenarios AS s "
-                "LEFT JOIN runs AS r "
-                "ON r.id = s.run_id "
-                "WHERE r.id = ("
-                "SELECT id FROM runs WHERE create_time = ?"
-                ")"
-                ")"
+                ~;"DELETE FROM scenarios "
+                ~;"WHERE run_id in ("
+                ~;"SELECT run_id FROM scenarios AS s "
+                ~;"LEFT JOIN runs AS r "
+                ~;"ON r.id = s.run_id "
+                ~;"WHERE r.id = ("
+                ~;"SELECT id FROM runs WHERE create_time = ?"
+                ~;")"
+                ~;")"
                 #EndRawText
 
                 #Id;#RawText
                 TEXT3;delete from runs
-                "DELETE FROM runs WHERE id in (SELECT id FROM runs WHERE create_time = ?);"
+                ~;"DELETE FROM runs WHERE id in (SELECT id FROM runs WHERE create_time = ?);"
                 #EndRawText
 
 
@@ -391,22 +391,22 @@ RF;RegressionFramework
             'MYSQL'
                 #Id;#RawText
                 TEXT2;Text
-                "SELECT "
-                "  r.tool_version,"
-                "  r.app_version,"
-                "  s.scenario, "
-                "  s.manual, "
-                "  DATE(s.start_time) AS date, "
-                "  TIME(s.start_time) AS time, "
-                "  IF(s.failed = 0, ""Passed"", ""Failed"") AS result, "
-                "  s.performer AS performer, "
-                "  s.test_set AS testSet, "
-                "  s.host AS host, "
-                "  s.username AS username,"
-                "  s.report AS report"
-                "FROM scenarios AS s "
-                "LEFT JOIN runs AS r ON r.id = ?"
-                "WHERE s.test_set <> '' AND s.manual = 0 AND s.run_id = ?"
+                ~;"SELECT "
+                ~;"  r.tool_version,"
+                ~;"  r.app_version,"
+                ~;"  s.scenario, "
+                ~;"  s.manual, "
+                ~;"  DATE(s.start_time) AS date, "
+                ~;"  TIME(s.start_time) AS time, "
+                ~;"  IF(s.failed = 0, ""Passed"", ""Failed"") AS result, "
+                ~;"  s.performer AS performer, "
+                ~;"  s.test_set AS testSet, "
+                ~;"  s.host AS host, "
+                ~;"  s.username AS username,"
+                ~;"  s.report AS report"
+                ~;"FROM scenarios AS s "
+                ~;"LEFT JOIN runs AS r ON r.id = ?"
+                ~;"WHERE s.test_set <> '' AND s.manual = 0 AND s.run_id = ?"
                 #EndRawText
 
 
@@ -414,22 +414,22 @@ RF;RegressionFramework
             'MSSQL'
                 #Id;#RawText
                 TEXT2;Text
-                "SELECT "
-                "  r.tool_version,"
-                "  r.app_version,"
-                "  s.scenario, "
-                "  s.manual, "
-                "  CONVERT(DATE, s.start_time) AS date,"
-                "  CONVERT(TIME, s.start_time) AS time, "
-                "  case s.failed when 0 then 'Passed' else 'Failed' end as result,"
-                "  s.performer AS performer, "
-                "  s.test_set AS testSet, "
-                "  s.host AS host, "
-                "  s.username AS username,"
-                "  s.report AS report"
-                "FROM scenarios AS s "
-                "LEFT JOIN runs AS r ON r.id = ?"
-                "WHERE s.test_set <> '' AND s.manual = 0 AND s.run_id = ?"
+                ~;"SELECT "
+                ~;"  r.tool_version,"
+                ~;"  r.app_version,"
+                ~;"  s.scenario, "
+                ~;"  s.manual, "
+                ~;"  CONVERT(DATE, s.start_time) AS date,"
+                ~;"  CONVERT(TIME, s.start_time) AS time, "
+                ~;"  case s.failed when 0 then 'Passed' else 'Failed' end as result,"
+                ~;"  s.performer AS performer, "
+                ~;"  s.test_set AS testSet, "
+                ~;"  s.host AS host, "
+                ~;"  s.username AS username,"
+                ~;"  s.report AS report"
+                ~;"FROM scenarios AS s "
+                ~;"LEFT JOIN runs AS r ON r.id = ?"
+                ~;"WHERE s.test_set <> '' AND s.manual = 0 AND s.run_id = ?"
                 #EndRawText
 
 
@@ -485,10 +485,10 @@ RF;RegressionFramework
 
         #Id;#RawText
         testSetText;Text
-        "SELECT s.test_set, s.host"
-        "FROM scenarios AS s "
-        "WHERE s.test_set <> '' AND s.manual = 0 AND s.run_id = ?"
-        "GROUP BY s.test_set; "
+        ~;"SELECT s.test_set, s.host"
+        ~;"FROM scenarios AS s "
+        ~;"WHERE s.test_set <> '' AND s.manual = 0 AND s.run_id = ?"
+        ~;"GROUP BY s.test_set; "
         #EndRawText
 
         #Id;#Action;#runId;#Query;#Connection
@@ -501,12 +501,12 @@ RF;RegressionFramework
         testSet;testSetQuery.Out
             #Id;#RawText
             totalCountSQL;Text
-            "SELECT COUNT(d.id) AS count,SUM(d.time) AS time"
-            "FROM details AS d"
-            "WHERE d.scenario_id IN ("
-            "	select distinct id from scenarios"
-            "where test_set= ? and run_id = ?"
-            ")"
+            ~;"SELECT COUNT(d.id) AS count,SUM(d.time) AS time"
+            ~;"FROM details AS d"
+            ~;"WHERE d.scenario_id IN ("
+            ~;"	select distinct id from scenarios"
+            ~;"where test_set= ? and run_id = ?"
+            ~;")"
             #EndRawText
 
             #Id;#Action;#test_set;#run_id;#Query;#Connection
@@ -520,12 +520,12 @@ RF;RegressionFramework
 
             #Id;#RawText
             failuresSQL;Text
-            "SELECT COUNT(d.id) AS count "
-            "FROM details AS d"
-            "WHERE d.scenario_id IN ("
-            "	select distinct id from scenarios"
-            "where test_set= ? and run_id = ?"
-            ") and result = 'Failed'"
+            ~;"SELECT COUNT(d.id) AS count "
+            ~;"FROM details AS d"
+            ~;"WHERE d.scenario_id IN ("
+            ~;"	select distinct id from scenarios"
+            ~;"where test_set= ? and run_id = ?"
+            ~;") and result = 'Failed'"
             #EndRawText
 
             #Id;#Action;#test_set;#runId;#Query;#Connection
@@ -549,15 +549,15 @@ RF;RegressionFramework
                 'MYSQL'
                     #Id;#RawText
                     TEXT5;Text
-                    "SELECT "
-                    "  s.id, s.scenario, "
-                    "  IF(s.failed > 0, ""Failed"", ""Passed"") AS status, "
-                    "  s.host, "
-                    "  s.username, "
-                    "  DATE(s.start_time) AS date, "
-                    "  TIME(s.start_time) AS time "
-                    "FROM scenarios AS s"
-                    "WHERE s.manual = 0 AND s.run_id = ? AND s.test_set = ? ; "
+                    ~;"SELECT "
+                    ~;"  s.id, s.scenario, "
+                    ~;"  IF(s.failed > 0, ""Failed"", ""Passed"") AS status, "
+                    ~;"  s.host, "
+                    ~;"  s.username, "
+                    ~;"  DATE(s.start_time) AS date, "
+                    ~;"  TIME(s.start_time) AS time "
+                    ~;"FROM scenarios AS s"
+                    ~;"WHERE s.manual = 0 AND s.run_id = ? AND s.test_set = ? ; "
                     #EndRawText
 
 
@@ -565,15 +565,15 @@ RF;RegressionFramework
                 'MSSQL'
                     #Id;#RawText
                     TEXT5;Text
-                    "SELECT "
-                    "  s.id, s.scenario, "
-                    "  CASE WHEN s.failed <> 0 THEN  0 ELSE 1 END AS status, "
-                    "  s.host, "
-                    "  s.username, "
-                    "  CONVERT(DATE, s.start_time) AS date, "
-                    "  CONVERT(TIME, s.start_time) AS time "
-                    "FROM scenarios AS s"
-                    "WHERE s.manual = 0 AND s.run_id = ? AND s.test_set = ? ; "
+                    ~;"SELECT "
+                    ~;"  s.id, s.scenario, "
+                    ~;"  CASE WHEN s.failed <> 0 THEN  0 ELSE 1 END AS status, "
+                    ~;"  s.host, "
+                    ~;"  s.username, "
+                    ~;"  CONVERT(DATE, s.start_time) AS date, "
+                    ~;"  CONVERT(TIME, s.start_time) AS time "
+                    ~;"FROM scenarios AS s"
+                    ~;"WHERE s.manual = 0 AND s.run_id = ? AND s.test_set = ? ; "
                     #EndRawText
 
 
@@ -594,9 +594,9 @@ RF;RegressionFramework
             rowScenarios;0;(int)scenarios.size - 1;1
                 #Id;#RawText
                 countTSQL;Text
-                "SELECT COUNT(id) AS tests, SUM(time) as totalTime  "
-                "FROM details"
-                "WHERE scenario_id = ?"
+                ~;"SELECT COUNT(id) AS tests, SUM(time) as totalTime  "
+                ~;"FROM details"
+                ~;"WHERE scenario_id = ?"
                 #EndRawText
 
                 #Id;#Action;#scenarioId;#Query;#Connection
@@ -610,9 +610,9 @@ RF;RegressionFramework
 
                 #Id;#RawText
                 failCountTSQL;Text
-                "SELECT count(result) as fail"
-                "FROM details"
-                "WHERE result = ""Failed"" and scenario_id = ? "
+                ~;"SELECT count(result) as fail"
+                ~;"FROM details"
+                ~;"WHERE result = ""Failed"" and scenario_id = ? "
                 #EndRawText
 
                 #Id;#Action;#scenarioId;#Query;#Connection
@@ -623,9 +623,9 @@ RF;RegressionFramework
 
                 #Id;#RawText
                 errorcountSQL;Text
-                "SELECT count(error) as error"
-                "FROM details"
-                "WHERE error <> 'null' and scenario_id = ? "
+                ~;"SELECT count(error) as error"
+                ~;"FROM details"
+                ~;"WHERE error <> 'null' and scenario_id = ? "
                 #EndRawText
 
                 #Id;#Action;#scenarioId;#Query;#Connection
@@ -645,8 +645,8 @@ RF;RegressionFramework
 
                 #Id;#RawText
                 findTestCase;Text
-                "SELECT testcase, time, error from details"
-                "where scenario_id = ?"
+                ~;"SELECT testcase, time, error from details"
+                ~;"where scenario_id = ?"
                 #EndRawText
 
                 #Id;#Action;#scenarioId;#Query;#Connection
@@ -700,11 +700,11 @@ RF;RegressionFramework
 
         #Id;#RawText
         testSetText;Text
-        "SELECT "
-        "  s.test_set "
-        "FROM scenarios AS s "
-        "WHERE s.test_set <> '' AND s.manual = 0 AND s.run_id = ?"
-        "GROUP BY s.test_set; "
+        ~;"SELECT "
+        ~;"  s.test_set "
+        ~;"FROM scenarios AS s "
+        ~;"WHERE s.test_set <> '' AND s.manual = 0 AND s.run_id = ?"
+        ~;"GROUP BY s.test_set; "
         #EndRawText
 
         #Id;#Action;#Query;#Connection;#runId
@@ -727,15 +727,15 @@ RF;RegressionFramework
                 'MYSQL'
                     #Id;#RawText
                     TEXT5;Text
-                    "SELECT "
-                    "  s.id, s.scenario, "
-                    "  IF(s.failed > 0, ""Failed"", ""Passed"") AS status, "
-                    "  s.host, "
-                    "  s.username, "
-                    "  DATE(s.start_time) AS date, "
-                    "  TIME(s.start_time) AS time "
-                    "FROM scenarios AS s"
-                    "WHERE s.manual = 0 AND s.run_id = ? AND s.test_set = ? ; "
+                    ~;"SELECT "
+                    ~;"  s.id, s.scenario, "
+                    ~;"  IF(s.failed > 0, ""Failed"", ""Passed"") AS status, "
+                    ~;"  s.host, "
+                    ~;"  s.username, "
+                    ~;"  DATE(s.start_time) AS date, "
+                    ~;"  TIME(s.start_time) AS time "
+                    ~;"FROM scenarios AS s"
+                    ~;"WHERE s.manual = 0 AND s.run_id = ? AND s.test_set = ? ; "
                     #EndRawText
 
 
@@ -743,15 +743,15 @@ RF;RegressionFramework
                 'MSSQL'
                     #Id;#RawText
                     TEXT5;Text
-                    "SELECT "
-                    "  s.id, s.scenario, "
-                    "  CASE WHEN s.failed <> 0 THEN  0 ELSE 1 END AS status, "
-                    "  s.host, "
-                    "  s.username, "
-                    "  CONVERT(DATE, s.start_time) AS date, "
-                    "  CONVERT(TIME, s.start_time) AS time "
-                    "FROM scenarios AS s"
-                    "WHERE s.manual = 0 AND s.run_id = ? AND s.test_set = ? ; "
+                    ~;"SELECT "
+                    ~;"  s.id, s.scenario, "
+                    ~;"  CASE WHEN s.failed <> 0 THEN  0 ELSE 1 END AS status, "
+                    ~;"  s.host, "
+                    ~;"  s.username, "
+                    ~;"  CONVERT(DATE, s.start_time) AS date, "
+                    ~;"  CONVERT(TIME, s.start_time) AS time "
+                    ~;"FROM scenarios AS s"
+                    ~;"WHERE s.manual = 0 AND s.run_id = ? AND s.test_set = ? ; "
                     #EndRawText
 
 
@@ -772,11 +772,11 @@ RF;RegressionFramework
             rowScenarios;0;(int)scenarios.size - 1;1
                 #Id;#RawText
                 selectFromTableText;Text
-                "SELECT d.scenario_id, d.error  FROM details AS d "
-                "WHERE scenario_id = ? "
-                "AND "
-                "	(NOT EXISTS (SELECT 1 FROM details WHERE scenario_id = ? AND step <> 'null') OR step <> 'null')"
-                "  ;"
+                ~;"SELECT d.scenario_id, d.error  FROM details AS d "
+                ~;"WHERE scenario_id = ? "
+                ~;"AND "
+                ~;"	(NOT EXISTS (SELECT 1 FROM details WHERE scenario_id = ? AND step <> 'null') OR step <> 'null')"
+                ~;"  ;"
                 #EndRawText
 
                 #Id;#Action;#Connection;#Query;#scenario_id;#scenario_id
@@ -871,22 +871,22 @@ RF;RegressionFramework
             'MYSQL'
                 #Id;#RawText
                 TEXT1;Text
-                "SELECT "
-                "  s.scenario, "
-                "  DATE(s.start_time) AS date, "
-                "  TIME(s.start_time) AS time, "
-                "  s.performer, "
-                "  s.host, "
-                "  s.username, "
-                "  d.testcase, "
-                "  d.step, "
-                "  d.time, "
-                "  d.result, "
-                "  d.error, "
-                "  d.screenshot "
-                "FROM scenarios AS s "
-                "LEFT JOIN details AS d ON d.scenario_id = s.id "
-                "WHERE s.manual = 0 AND s.run_id = ?"
+                ~;"SELECT "
+                ~;"  s.scenario, "
+                ~;"  DATE(s.start_time) AS date, "
+                ~;"  TIME(s.start_time) AS time, "
+                ~;"  s.performer, "
+                ~;"  s.host, "
+                ~;"  s.username, "
+                ~;"  d.testcase, "
+                ~;"  d.step, "
+                ~;"  d.time, "
+                ~;"  d.result, "
+                ~;"  d.error, "
+                ~;"  d.screenshot "
+                ~;"FROM scenarios AS s "
+                ~;"LEFT JOIN details AS d ON d.scenario_id = s.id "
+                ~;"WHERE s.manual = 0 AND s.run_id = ?"
                 #EndRawText
 
 
@@ -894,22 +894,22 @@ RF;RegressionFramework
             'MSSQL'
                 #Id;#RawText
                 TEXT1;Text
-                "SELECT "
-                "  s.scenario, "
-                "  CONVERT(date,s.start_time) AS date, "
-                "  CONVERT(time, s.start_time) AS time, "
-                "  s.performer, "
-                "  s.host, "
-                "  s.username, "
-                "  d.testcase, "
-                "  d.step, "
-                "  d.time, "
-                "  d.result, "
-                "  d.error, "
-                "  d.screenshot "
-                "FROM scenarios AS s "
-                "LEFT JOIN details AS d ON d.scenario_id = s.id "
-                "WHERE s.manual = 0 AND s.run_id = ?"
+                ~;"SELECT "
+                ~;"  s.scenario, "
+                ~;"  CONVERT(date,s.start_time) AS date, "
+                ~;"  CONVERT(time, s.start_time) AS time, "
+                ~;"  s.performer, "
+                ~;"  s.host, "
+                ~;"  s.username, "
+                ~;"  d.testcase, "
+                ~;"  d.step, "
+                ~;"  d.time, "
+                ~;"  d.result, "
+                ~;"  d.error, "
+                ~;"  d.screenshot "
+                ~;"FROM scenarios AS s "
+                ~;"LEFT JOIN details AS d ON d.scenario_id = s.id "
+                ~;"WHERE s.manual = 0 AND s.run_id = ?"
                 #EndRawText
 
 
@@ -1043,13 +1043,13 @@ RF;RegressionFramework
         date == null
             #Id;#RawText
             query;Text
-            "SELECT "
-            "  r.tool_version,"
-            "  r.app_version,"
-            "  r.id,"
-            "  r.create_time"
-            "FROM runs AS r"
-            "WHERE r.id = (SELECT MAX(id) AS id FROM runs)"
+            ~;"SELECT "
+            ~;"  r.tool_version,"
+            ~;"  r.app_version,"
+            ~;"  r.id,"
+            ~;"  r.create_time"
+            ~;"FROM runs AS r"
+            ~;"WHERE r.id = (SELECT MAX(id) AS id FROM runs)"
             #EndRawText
 
             #Id;#Action;#Connection;#Query
@@ -1066,11 +1066,11 @@ RF;RegressionFramework
             'MYSQL'
                 #Id;#RawText
                 query;Text
-                "SELECT id, tool_version, app_version, create_time, duration "
-                "FROM runs "
-                "WHERE create_time <= ? "
-                "ORDER BY create_time DESC "
-                "LIMIT 1 "
+                ~;"SELECT id, tool_version, app_version, create_time, duration "
+                ~;"FROM runs "
+                ~;"WHERE create_time <= ? "
+                ~;"ORDER BY create_time DESC "
+                ~;"LIMIT 1 "
                 #EndRawText
 
 
@@ -1078,10 +1078,10 @@ RF;RegressionFramework
             'MSSQL'
                 #Id;#RawText
                 query;Text
-                "SELECT TOP 1 id, tool_version, app_version, create_time, duration   "
-                "FROM runs "
-                "WHERE create_time <= ? "
-                "ORDER BY create_time DESC  "
+                ~;"SELECT TOP 1 id, tool_version, app_version, create_time, duration   "
+                ~;"FROM runs "
+                ~;"WHERE create_time <= ? "
+                ~;"ORDER BY create_time DESC  "
                 #EndRawText
 
 
@@ -1125,13 +1125,13 @@ RF;RegressionFramework
             'MYSQL'
                 #Id;#RawText
                 query;Text
-                "SELECT r.create_time, r.duration "
-                "FROM runs AS r "
-                "WHERE r.id = (SELECT id  "
-                "FROM runs "
-                "WHERE create_time <= ?  "
-                "ORDER BY create_time DESC "
-                "LIMIT 1 )"
+                ~;"SELECT r.create_time, r.duration "
+                ~;"FROM runs AS r "
+                ~;"WHERE r.id = (SELECT id  "
+                ~;"FROM runs "
+                ~;"WHERE create_time <= ?  "
+                ~;"ORDER BY create_time DESC "
+                ~;"LIMIT 1 )"
                 #EndRawText
 
 
@@ -1139,12 +1139,12 @@ RF;RegressionFramework
             'MSSQL'
                 #Id;#RawText
                 query;Text
-                "SELECT r.create_time, r.duration "
-                "FROM runs AS r "
-                "WHERE r.id = (SELECT TOP 1 id "
-                "FROM runs "
-                "WHERE create_time <= ?  "
-                "ORDER BY create_time DESC)"
+                ~;"SELECT r.create_time, r.duration "
+                ~;"FROM runs AS r "
+                ~;"WHERE r.id = (SELECT TOP 1 id "
+                ~;"FROM runs "
+                ~;"WHERE create_time <= ?  "
+                ~;"ORDER BY create_time DESC)"
                 #EndRawText
 
 
@@ -1250,62 +1250,62 @@ RF;RegressionFramework
                 'MYSQL'
                     #Id;#RawText
                     query1;create
-                    "CREATE TABLE IF NOT EXISTS `runs` ("
-                    "  `id` int(11) NOT NULL AUTO_INCREMENT,"
-                    "  `create_time` datetime DEFAULT NULL,"
-                    "  `duration` int(11) DEFAULT NULL,"
-                    "  `tool_version` VARCHAR(100) NULL,"
-                    "  `app_version` VARCHAR(100) NULL,"
-                    "  PRIMARY KEY (`id`)"
-                    ") ENGINE=InnoDB AUTO_INCREMENT=94 DEFAULT CHARSET=utf8;"
+                    ~;"CREATE TABLE IF NOT EXISTS `runs` ("
+                    ~;"  `id` int(11) NOT NULL AUTO_INCREMENT,"
+                    ~;"  `create_time` datetime DEFAULT NULL,"
+                    ~;"  `duration` int(11) DEFAULT NULL,"
+                    ~;"  `tool_version` VARCHAR(100) NULL,"
+                    ~;"  `app_version` VARCHAR(100) NULL,"
+                    ~;"  PRIMARY KEY (`id`)"
+                    ~;") ENGINE=InnoDB AUTO_INCREMENT=94 DEFAULT CHARSET=utf8;"
                     #EndRawText
 
                     #Id;#RawText
                     query2;create
-                    "CREATE TABLE IF NOT EXISTS `scenarios` ("
-                    "  `id` int(11) NOT NULL AUTO_INCREMENT,"
-                    "  `run_id` int(11) NOT NULL,"
-                    "  `scenario` varchar(256) NOT NULL,"
-                    "  `test_set` VARCHAR(256) NULL,"
-                    "  `counter` int(3) DEFAULT NULL,"
-                    "  `performer` varchar(256) DEFAULT NULL,"
-                    "  `priority` int(1) DEFAULT NULL,"
-                    "  `manual` int(1) DEFAULT NULL,"
-                    "  `start_time` datetime DEFAULT NULL,"
-                    "  `host` varchar(45) DEFAULT NULL,"
-                    "  `username` varchar(45) DEFAULT NULL,"
-                    "  `passed` int(11) DEFAULT '0',"
-                    "  `failed` int(11) DEFAULT '0',"
-                    "  `report` longblob,"
-                    "  `done` int(1) DEFAULT NULL,"
-                    "  PRIMARY KEY (`id`)"
-                    ") ENGINE=InnoDB AUTO_INCREMENT=278 DEFAULT CHARSET=utf8;"
+                    ~;"CREATE TABLE IF NOT EXISTS `scenarios` ("
+                    ~;"  `id` int(11) NOT NULL AUTO_INCREMENT,"
+                    ~;"  `run_id` int(11) NOT NULL,"
+                    ~;"  `scenario` varchar(256) NOT NULL,"
+                    ~;"  `test_set` VARCHAR(256) NULL,"
+                    ~;"  `counter` int(3) DEFAULT NULL,"
+                    ~;"  `performer` varchar(256) DEFAULT NULL,"
+                    ~;"  `priority` int(1) DEFAULT NULL,"
+                    ~;"  `manual` int(1) DEFAULT NULL,"
+                    ~;"  `start_time` datetime DEFAULT NULL,"
+                    ~;"  `host` varchar(45) DEFAULT NULL,"
+                    ~;"  `username` varchar(45) DEFAULT NULL,"
+                    ~;"  `passed` int(11) DEFAULT '0',"
+                    ~;"  `failed` int(11) DEFAULT '0',"
+                    ~;"  `report` longblob,"
+                    ~;"  `done` int(1) DEFAULT NULL,"
+                    ~;"  PRIMARY KEY (`id`)"
+                    ~;") ENGINE=InnoDB AUTO_INCREMENT=278 DEFAULT CHARSET=utf8;"
                     #EndRawText
 
                     #Id;#RawText
                     query3;create
-                    "CREATE TABLE IF NOT EXISTS `details` ("
-                    "  `id` int(11) NOT NULL AUTO_INCREMENT,"
-                    "  `scenario_id` int(11) NOT NULL,"
-                    "  `testcase` varchar(256) DEFAULT NULL,"
-                    "  `step` varchar(256) DEFAULT NULL,"
-                    "  `time` int(11) DEFAULT NULL,"
-                    "  `result` varchar(45) DEFAULT NULL,"
-                    "  `error` varchar(256) DEFAULT NULL,"
-                    "  `screenshot` longblob,"
-                    "  PRIMARY KEY (`id`)"
-                    ") ENGINE=InnoDB AUTO_INCREMENT=567 DEFAULT CHARSET=utf8;"
+                    ~;"CREATE TABLE IF NOT EXISTS `details` ("
+                    ~;"  `id` int(11) NOT NULL AUTO_INCREMENT,"
+                    ~;"  `scenario_id` int(11) NOT NULL,"
+                    ~;"  `testcase` varchar(256) DEFAULT NULL,"
+                    ~;"  `step` varchar(256) DEFAULT NULL,"
+                    ~;"  `time` int(11) DEFAULT NULL,"
+                    ~;"  `result` varchar(45) DEFAULT NULL,"
+                    ~;"  `error` varchar(256) DEFAULT NULL,"
+                    ~;"  `screenshot` longblob,"
+                    ~;"  PRIMARY KEY (`id`)"
+                    ~;") ENGINE=InnoDB AUTO_INCREMENT=567 DEFAULT CHARSET=utf8;"
                     #EndRawText
 
                     #Id;#RawText
                     query4;create
-                    "CREATE TABLE IF NOT EXISTS `user_details` ("
-                    "  `id` int(11) NOT NULL AUTO_INCREMENT,"
-                    "  `details_id` int(11) NOT NULL,"
-                    "  `name` varchar(100) NOT NULL,"
-                    "  `value` varchar(256) DEFAULT NULL,"
-                    "  PRIMARY KEY (`id`)"
-                    ") ENGINE=InnoDB DEFAULT CHARSET=utf8;"
+                    ~;"CREATE TABLE IF NOT EXISTS `user_details` ("
+                    ~;"  `id` int(11) NOT NULL AUTO_INCREMENT,"
+                    ~;"  `details_id` int(11) NOT NULL,"
+                    ~;"  `name` varchar(100) NOT NULL,"
+                    ~;"  `value` varchar(256) DEFAULT NULL,"
+                    ~;"  PRIMARY KEY (`id`)"
+                    ~;") ENGINE=InnoDB DEFAULT CHARSET=utf8;"
                     #EndRawText
 
 
@@ -1313,68 +1313,68 @@ RF;RegressionFramework
                 'MSSQL'
                     #Id;#RawText
                     query1;create
-                    "IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE table_name = 'runs' and TABLE_SCHEMA=SCHEMA_NAME()) "
-                    "CREATE TABLE runs "
-                    "("
-                    "  id int IDENTITY(1,1) PRIMARY KEY NOT NULL ,  "
-                    "  create_time datetime DEFAULT NULL,  "
-                    "  duration int DEFAULT NULL,"
-                    "  tool_version VARCHAR(100) NULL,"
-                    "  app_version VARCHAR(100) NULL"
-                    ") ;"
+                    ~;"IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE table_name = 'runs' and TABLE_SCHEMA=SCHEMA_NAME()) "
+                    ~;"CREATE TABLE runs "
+                    ~;"("
+                    ~;"  id int IDENTITY(1,1) PRIMARY KEY NOT NULL ,  "
+                    ~;"  create_time datetime DEFAULT NULL,  "
+                    ~;"  duration int DEFAULT NULL,"
+                    ~;"  tool_version VARCHAR(100) NULL,"
+                    ~;"  app_version VARCHAR(100) NULL"
+                    ~;") ;"
                     #EndRawText
 
                     #Id;#RawText
                     query2;create
-                    "IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE table_name = 'scenarios' and TABLE_SCHEMA=SCHEMA_NAME()) "
-                    "CREATE TABLE  scenarios  "
-                    "("
-                    "  id int IDENTITY(1,1) PRIMARY KEY NOT NULL,"
-                    "  run_id int NOT NULL,"
-                    "  scenario varchar(256) NOT NULL,"
-                    "  test_set varchar(256) DEFAULT NULL,"
-                    "  counter int DEFAULT '0',"
-                    "  performer varchar(100) DEFAULT NULL,"
-                    "  priority int DEFAULT NULL,"
-                    "  env varchar(100) DEFAULT NULL,"
-                    "  manual int DEFAULT NULL,"
-                    "  start_time datetime DEFAULT NULL,"
-                    "  host varchar(45) DEFAULT NULL,"
-                    "  username varchar(45) DEFAULT NULL,"
-                    "  passed int DEFAULT '0',"
-                    "  failed int DEFAULT '0',"
-                    "  report VARBINARY(MAX),"
-                    "  done int DEFAULT NULL"
-                    ");"
-                    " "
+                    ~;"IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE table_name = 'scenarios' and TABLE_SCHEMA=SCHEMA_NAME()) "
+                    ~;"CREATE TABLE  scenarios  "
+                    ~;"("
+                    ~;"  id int IDENTITY(1,1) PRIMARY KEY NOT NULL,"
+                    ~;"  run_id int NOT NULL,"
+                    ~;"  scenario varchar(256) NOT NULL,"
+                    ~;"  test_set varchar(256) DEFAULT NULL,"
+                    ~;"  counter int DEFAULT '0',"
+                    ~;"  performer varchar(100) DEFAULT NULL,"
+                    ~;"  priority int DEFAULT NULL,"
+                    ~;"  env varchar(100) DEFAULT NULL,"
+                    ~;"  manual int DEFAULT NULL,"
+                    ~;"  start_time datetime DEFAULT NULL,"
+                    ~;"  host varchar(45) DEFAULT NULL,"
+                    ~;"  username varchar(45) DEFAULT NULL,"
+                    ~;"  passed int DEFAULT '0',"
+                    ~;"  failed int DEFAULT '0',"
+                    ~;"  report VARBINARY(MAX),"
+                    ~;"  done int DEFAULT NULL"
+                    ~;");"
+                    ~;" "
                     #EndRawText
 
                     #Id;#RawText
                     query3;create
-                    "IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE table_name = 'details' and TABLE_SCHEMA=SCHEMA_NAME()) "
-                    "CREATE TABLE details "
-                    "("
-                    "  id int  IDENTITY(1,1) PRIMARY KEY NOT NULL,"
-                    "  scenario_id int NOT NULL,"
-                    "  testcase varchar(256) DEFAULT NULL,"
-                    "  step varchar(256) DEFAULT NULL,"
-                    "  time int DEFAULT NULL,"
-                    "  result varchar(45) DEFAULT NULL,"
-                    "  error varchar(256) DEFAULT NULL,"
-                    "  screenshot VARBINARY(MAX)"
-                    " );"
+                    ~;"IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE table_name = 'details' and TABLE_SCHEMA=SCHEMA_NAME()) "
+                    ~;"CREATE TABLE details "
+                    ~;"("
+                    ~;"  id int  IDENTITY(1,1) PRIMARY KEY NOT NULL,"
+                    ~;"  scenario_id int NOT NULL,"
+                    ~;"  testcase varchar(256) DEFAULT NULL,"
+                    ~;"  step varchar(256) DEFAULT NULL,"
+                    ~;"  time int DEFAULT NULL,"
+                    ~;"  result varchar(45) DEFAULT NULL,"
+                    ~;"  error varchar(256) DEFAULT NULL,"
+                    ~;"  screenshot VARBINARY(MAX)"
+                    ~;" );"
                     #EndRawText
 
                     #Id;#RawText
                     query4;create
-                    "IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE table_name = 'user_details' and TABLE_SCHEMA=SCHEMA_NAME())"
-                    "CREATE TABLE user_details "
-                    "("
-                    "  id int IDENTITY(1,1) PRIMARY KEY NOT NULL,"
-                    "  details_id int NOT NULL,"
-                    "  name varchar(100) NOT NULL,"
-                    "  value varchar(256) DEFAULT NULL"
-                    ");"
+                    ~;"IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE table_name = 'user_details' and TABLE_SCHEMA=SCHEMA_NAME())"
+                    ~;"CREATE TABLE user_details "
+                    ~;"("
+                    ~;"  id int IDENTITY(1,1) PRIMARY KEY NOT NULL,"
+                    ~;"  details_id int NOT NULL,"
+                    ~;"  name varchar(100) NOT NULL,"
+                    ~;"  value varchar(256) DEFAULT NULL"
+                    ~;");"
                     #EndRawText
 
 

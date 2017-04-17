@@ -42,6 +42,8 @@ import java.util.*;
 )
 public class RawText extends MatrixItem
 {
+    private static final String RAW_PREFIX = "~";
+    
 	public RawText()
 	{
 		super();
@@ -133,15 +135,28 @@ public class RawText extends MatrixItem
 			this.text = new Text();
 			this.text.setChangeListener(flag -> Optional.ofNullable(this.owner).ifPresent(own -> own.changed(flag)));
 			this.firstUsing = false;
-		    this.text.add(str[0]);
+		    this.text.add(extractData(str));
 
 			return;
 		}
 
-		this.text.add(str[0]);
+		this.text.add(extractData(str));
 	}
 
-	@Override
+	private String extractData(String[] str)
+    {
+	    if (str == null || str.length == 0)
+	    {
+	        return "";
+	    }
+	    if (str.length > 1 && str[0].endsWith(RAW_PREFIX))
+	    {
+	        return str[1];
+	    }
+        return str[0];
+    }
+
+    @Override
 	public String getItemName()
 	{
 		return super.getItemName() + " " + (this.description.get() == null ? "" : this.description.get());
@@ -172,7 +187,7 @@ public class RawText extends MatrixItem
 		{
 		    for (String str : this.text)
 		    {
-		        writer.writeRecord(new String[] { indent + "\"" + str.replace("\"", "\"\"")  + "\""}, true);
+		        writer.writeRecord(new String[] { indent +  RAW_PREFIX, "\"" + str.replace("\"", "\"\"")  + "\""}, true);
 		    }
 		}
 		catch (IOException e)
@@ -229,6 +244,8 @@ public class RawText extends MatrixItem
 	// ==============================================================================================
 	// Private members
 	// ==============================================================================================
+	
+	
     private MutableValue<String>    description;
     private Text                    text;
 
