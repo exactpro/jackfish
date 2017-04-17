@@ -1,3 +1,8 @@
+17.04.2017 4.4.0.2272
+Feature #41704 [JF] JF position saving.
+Added new key on command line -forgetScreenPosition. If this option is presented, position and size don't restore on launching and don't store after close application
+--------------------------------------------------------------------------------
+
 17.04.2017 4.4.0.2268
 Bug #41623 IE11 Published isn't moved to front layer
 --------------------------------------------------------------------------------

@@ -62,7 +62,6 @@ import org.eclipse.jgit.util.FS;
 import java.awt.*;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.Reader;
 import java.nio.file.Path;
 import java.util.*;
@@ -72,6 +71,7 @@ import java.util.stream.Collectors;
 
 public class Main extends Application
 {
+	public static boolean needForget = false;
 	public static final String DIMENSION_AND_POSITION = "dimensionAndPosition";
 	private static final String SEPARATOR = ";";
 	private static final String SMALL_SEPARATOR = "x";
@@ -913,17 +913,20 @@ public class Main extends Application
 
 	private void saveDimensionAndPosition() throws Exception
 	{
-		Dimension dimension = this.controller.getDimension();
-		Point position = this.controller.getPosition();
-		String str = dimension.getWidth() + SMALL_SEPARATOR + dimension.getHeight() + SEPARATOR + position.getX() + SMALL_SEPARATOR + position.getY();
-		this.factory.getSettings().setValue(Settings.GLOBAL_NS, Settings.SETTINGS, DIMENSION_AND_POSITION, str);
-		this.factory.getSettings().saveIfNeeded();
+		if (!needForget)
+		{
+			Dimension dimension = this.controller.getDimension();
+			Point position = this.controller.getPosition();
+			String str = dimension.getWidth() + SMALL_SEPARATOR + dimension.getHeight() + SEPARATOR + position.getX() + SMALL_SEPARATOR + position.getY();
+			this.factory.getSettings().setValue(Settings.GLOBAL_NS, Settings.SETTINGS, DIMENSION_AND_POSITION, str);
+			this.factory.getSettings().saveIfNeeded();
+		}
 	}
 
 	private void loadDimensionAndPosition(BiConsumer<Double, Double> dimOperator, BiConsumer<Double, Double> posOperator)
 	{
 		SettingsValue settingsValue = this.factory.getSettings().getValue(Settings.GLOBAL_NS, Settings.SETTINGS, DIMENSION_AND_POSITION);
-		if (settingsValue != null)
+		if (settingsValue != null && !needForget)
 		{
 			String value = settingsValue.getValue();
 			String[] split = value.split(SEPARATOR);

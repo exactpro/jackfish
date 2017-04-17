@@ -109,6 +109,7 @@ public class MainRunner
 			Option versionOut 	= new Option("version", "Print version only.");
 			Option shortPaths 	= new Option("short", 	"Show only short paths in tracing." );
             Option console      = new Option("console",	"Do not open GUI. Batch mode.");
+            Option forgetScreenPosition = new Option("forgetScreenPosition", "If this option is mentioned then just don't restore position and size from the previous run.");
             Option child      	= new Option("child",	"NEVER use this option. It is only for internal purpose.");
 
 			Options options = new Options();
@@ -128,6 +129,7 @@ public class MainRunner
             options.addOption(console);
             options.addOption(child);
 			options.addOption(convertTo);
+			options.addOption(forgetScreenPosition);
 
 			
 			CommandLineParser parser = new GnuParser();
@@ -220,7 +222,7 @@ public class MainRunner
 				}
 				else
 				{
-					configString = runInGuiMode(line, configString, username, password, child);
+					configString = runInGuiMode(line, configString, username, password, child, forgetScreenPosition);
 					if (!Str.IsNullOrEmpty(configString))
 					{
 						continue;
@@ -382,10 +384,11 @@ public class MainRunner
 		System.exit(allPassed ? 0 : 1);
 	}
 
-	private static String runInGuiMode(CommandLine line, String configString, Option username, Option password, Option child)
+	private static String runInGuiMode(CommandLine line, String configString, Option username, Option password, Option child, Option forgetScreenResolution)
 	{
 		String passwordValue = line.getOptionValue(password.getOpt());
 		String usernameValue = line.getOptionValue(username.getOpt());
+		Main.needForget =  line.hasOption(forgetScreenResolution.getOpt());
 		String[] guiArgs = configString != null ? new String[]{ configString, usernameValue, passwordValue } : new String[]{};
 		LauncherImpl.launchApplication(Main.class, Preloader.class, guiArgs);
 		String config = Main.getConfigName();
