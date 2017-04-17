@@ -31,6 +31,7 @@ public class DateTime extends Date
 		setTime(date.getTime());
 	}
 
+	@HideAttribute
 	@DescriptionAttribute(text = "Sets formats for convert string to date")
 	public static void setFormats(String timeFormat, String dateFormat, String dateTimeFormat)
 	{
@@ -40,7 +41,7 @@ public class DateTime extends Date
 	}
 	
 	@DescriptionAttribute(text = "Set time (hours, minutes and seconds) from @str.\n If @str dosen't fit converters, will be ParseException")
-	public DateTime setTime(String str) throws ParseException
+	public DateTime setTime(@FieldParameter(name = "str") String str) throws ParseException
 	{
 		DateTime time = time(str);
 		setTime(time.hours(), time.minutes(), time.seconds());
@@ -48,7 +49,7 @@ public class DateTime extends Date
 	}
 
 	@DescriptionAttribute(text = "Set @hours, @minutes and @seconds to current date")
-	public DateTime setTime(int hours, int minutes, int seconds)
+	public DateTime setTime(@FieldParameter(name = "hours") int hours, @FieldParameter(name = "minutes") int minutes, @FieldParameter(name = "seconds") int seconds)
 	{
 		Calendar c = new GregorianCalendar();
 		c.setTime(this);
@@ -60,7 +61,7 @@ public class DateTime extends Date
 	}
 
 	@DescriptionAttribute(text = "Set date (years, months and days) from @str.\n If @str dosen't fit converters, will be ParseException")
-	public DateTime setDate(String str) throws ParseException
+	public DateTime setDate(@FieldParameter(name = "str") String str) throws ParseException
 	{
 		DateTime date = date(str);
 		setDate(date.years(), date.months(), date.days());
@@ -68,7 +69,7 @@ public class DateTime extends Date
 	}
 
 	@DescriptionAttribute(text = "Set @year, @month and @day to current date")
-	public DateTime setDate(int year, int month, int day)
+	public DateTime setDate(@FieldParameter(name = "year") int year, @FieldParameter(name = "month") int month, @FieldParameter(name = "day") int day)
 	{
 		Calendar c = new GregorianCalendar();
 		c.setTime(this);
@@ -80,7 +81,7 @@ public class DateTime extends Date
 	}
 
 	@DescriptionAttribute(text = "Shift current time right @hours, @minutes and @seconds")
-	public DateTime shiftTime(int hours, int minutes, int seconds)
+	public DateTime shiftTime(@FieldParameter(name = "hours") int hours, @FieldParameter(name = "minutes") int minutes, @FieldParameter(name = "seconds") int seconds)
 	{
 		Calendar c = new GregorianCalendar();
 		c.setTime(this);
@@ -92,7 +93,7 @@ public class DateTime extends Date
 	}
 
 	@DescriptionAttribute(text = "Shift current date right @year, @month and @day")
-	public DateTime shiftDate(int year, int month, int day)
+	public DateTime shiftDate(@FieldParameter(name = "year") int year, @FieldParameter(name = "month") int month, @FieldParameter(name = "day") int day)
 	{
 		Calendar c = new GregorianCalendar();
 		c.setTime(this);
@@ -188,7 +189,8 @@ public class DateTime extends Date
 		return new DateTime(calendar.getTime());
 	}
 
-	public String str(String format)
+	@DescriptionAttribute(text="Convert current instance of date to String via @format")
+	public String str(@FieldParameter(name = "format") String format)
 	{
 		return new SimpleDateFormat(format).format(this);
 	}
@@ -209,19 +211,19 @@ public class DateTime extends Date
 	}
 
 	@DescriptionAttribute(text = "Return date from @str using @format for date. If @str dosen't fit converters, will be ParseException")
-	public static DateTime dateTime(String str, String format) throws ParseException
+	public static DateTime dateTime(@FieldParameter(name = "str") String str, @FieldParameter(name = "format") String format) throws ParseException
 	{
 		return new DateTime(new SimpleDateFormat(format).parse(str));
 	}
 
 	@DescriptionAttribute(text = "Return date from @str. If @str dosen't fit converters, will be ParseException")
-	public static DateTime date(String str) throws ParseException
+	public static DateTime date(@FieldParameter(name = "str") String str) throws ParseException
 	{
 		return new DateTime(Converter.parseDate(str));
 	}
 
 	@DescriptionAttribute(text = "Return date with @year, @month and @day")
-	public static DateTime date(int year, int month, int day)
+	public static DateTime date(@FieldParameter(name = "year") int year, @FieldParameter(name = "month") int month, @FieldParameter(name = "day") int day)
 	{
 		return new DateTime(new GregorianCalendar(year, month, day).getTime());
 	}
@@ -233,13 +235,13 @@ public class DateTime extends Date
 	}
 
 	@DescriptionAttribute(text = "Return time from @str. If @str dosen't fit converters, will be ParseException")
-	public static DateTime time(String str) throws ParseException
+	public static DateTime time(@FieldParameter(name = "str") String str) throws ParseException
 	{
 		return DateTime.getTime(date(str));
 	}
 
 	@DescriptionAttribute(text = "Return time with @hours, @minutes and @seconds")
-	public static DateTime time(int hours, int minutes, int seconds)
+	public static DateTime time(@FieldParameter(name = "hours") int hours, @FieldParameter(name = "minutes") int minutes, @FieldParameter(name = "seconds") int seconds)
 	{
 		Calendar current = new GregorianCalendar();
 		
@@ -251,25 +253,25 @@ public class DateTime extends Date
 	// operations relative current date/time
 	//------------------------------------------------------------------------------------------------------------------
 	@DescriptionAttribute(text = "Add @days to date @d and return resulting date")
-	public static DateTime add(Date d, int days)
+	public static DateTime add(@FieldParameter(name = "d") Date d, @FieldParameter(name = "days") int days)
 	{
 		return new DateTime(d).shiftDate(0, 0, days);
 	}
 
 	@DescriptionAttribute(text = "Add @hours, @minutes and @seconds to date @d and return resulting date")
-	public static DateTime add(Date d, int hours, int minutes, int seconds)
+	public static DateTime add(@FieldParameter(name = "d") Date d, @FieldParameter(name = "hours") int hours, @FieldParameter(name = "minutes") int minutes, @FieldParameter(name = "seconds") int seconds)
 	{
 		return new DateTime(d).shiftTime(hours, minutes, seconds);
 	}
 
 	@DescriptionAttribute(text = "Add @days to current date")
-	public static DateTime addDays(int days)
+	public static DateTime addDays(@FieldParameter(name = "days") int days)
 	{
 		return add(new Date(), days);
 	}
 
 	@DescriptionAttribute(text = "Add @hours, @minutes and @seconds to current date")
-	public static DateTime addTime(int hours, int minutes, int seconds)
+	public static DateTime addTime(@FieldParameter(name = "hours") int hours, @FieldParameter(name = "minutes") int minutes, @FieldParameter(name = "seconds") int seconds)
 	{
 		return add(new Date(), hours, minutes, seconds);
 	}
@@ -288,7 +290,7 @@ public class DateTime extends Date
 	}
 
 	@DescriptionAttribute(text = "Convert @date to string with date converter")
-	public static String strDate(Date date)
+	public static String strDate(@FieldParameter(name = "date") Date date)
 	{
 		if (date == null)
 		{
@@ -301,7 +303,7 @@ public class DateTime extends Date
 	}
 
 	@DescriptionAttribute(text = "Convert @date to string with time converter")
-	public static String strTime(Date date)
+	public static String strTime(@FieldParameter(name = "date") Date date)
 	{
 		if (date == null)
 		{
@@ -314,7 +316,7 @@ public class DateTime extends Date
 	}
 
 	@DescriptionAttribute(text = "Convert @date to string with date-time converter")
-	public static String strDateTime(Date date)
+	public static String strDateTime(@FieldParameter(name = "date") Date date)
 	{
 		if (date == null)
 		{
@@ -330,59 +332,61 @@ public class DateTime extends Date
 	// parts of date/time
 	//------------------------------------------------------------------------------------------------------------------
 	@DescriptionAttribute(text = "Get years from @date")
-	public static int getYears(Date date)
+	public static int getYears(@FieldParameter(name = "date") Date date)
 	{
 		return new DateTime(date).years();
 	}
 
 	@DescriptionAttribute(text = "Get months (number) from @date")
-	public static int getMonths(Date date)
+	public static int getMonths(@FieldParameter(name = "date") Date date)
 	{
 		return new DateTime(date).months();
 	}
 
     @DescriptionAttribute(text = "Get day of week from @date")
-    public static int getDayOfWeek(Date date)
+    public static int getDayOfWeek(@FieldParameter(name = "date") Date date)
     {
         return new DateTime(date).dayOfWeek();
     }
 
 	@DescriptionAttribute(text = "Get days from @date")
-	public static int getDays(Date date)
+	public static int getDays(@FieldParameter(name = "date") Date date)
 	{
 		return new DateTime(date).days();
 	}
 
 	@DescriptionAttribute(text = "Get hours from @date")
-	public static int getHours(Date date)
+	public static int getHours(@FieldParameter(name = "date") Date date)
 	{
 		return new DateTime(date).hours();
 	}
 
 	@DescriptionAttribute(text = "Get minutes from @date")
-	public static int getMinutes(Date date)
+	public static int getMinutes(@FieldParameter(name = "date") Date date)
 	{
 		return new DateTime(date).minutes();
 	}
 
 	@DescriptionAttribute(text = "Get seconds from @date")
-	public static int getSeconds(Date date)
+	public static int getSeconds(@FieldParameter(name = "date") Date date)
 	{
 		return new DateTime(date).seconds();
 	}
 
-	@DescriptionAttribute(text = "Get miliseconds from @date")
-	public static int getMilliseconds(Date date)
+	@DescriptionAttribute(text = "Get milliseconds from @date")
+	public static int getMilliseconds(@FieldParameter(name = "date") Date date)
 	{
 		return new DateTime(date).milliseconds();
 	}
 
-	public static DateTime getDate(Date date)
+	@DescriptionAttribute(text = "Get date from instance of type java.util.Date @date")
+	public static DateTime getDate(@FieldParameter(name = "date") Date date)
 	{
 		return new DateTime(date).date();
 	}
-	
-	public static DateTime getTime(Date date)
+
+	@DescriptionAttribute(text = "Get time from instance of type java.util.Date @date")
+	public static DateTime getTime(@FieldParameter(name = "date") Date date)
 	{
 		return new DateTime(date).time();
 	}

@@ -9,7 +9,6 @@
 package com.exactprosystems.jf.api.common;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -17,7 +16,7 @@ public class Str
 {
 	@DescriptionAttribute(
 			text = "Return array of strings with groups, that were found in string @string with @pattern.\n" + "See also Regular expressions")
-	public static String[] groups(String string, String pattern)
+	public static String[] groups(@FieldParameter(name = "string") String string, @FieldParameter(name = "pattern") String pattern)
 	{
 		ArrayList<String> res = new ArrayList<>();
 		Pattern p = Pattern.compile(pattern);
@@ -30,7 +29,7 @@ public class Str
 	}
 
 	@DescriptionAttribute(text = "Return true, if strings @s1 and @s2 are equivalents")
-    public static boolean areEqual(String s1, String s2)
+    public static boolean areEqual(@FieldParameter(name = "s1") String s1, @FieldParameter(name = "s2") String s2)
     {
     	if (s1 == null)
     	{
@@ -41,7 +40,7 @@ public class Str
     }
 
 	@DescriptionAttribute(text = "Return true, if string @s is empty or null, and false otherwise")
-    public static boolean IsNullOrEmpty(String s)
+    public static boolean IsNullOrEmpty(@FieldParameter(name = "s") String s)
     {
     	if (s == null)
     	{
@@ -52,7 +51,7 @@ public class Str
     }
 
 	@DescriptionAttribute(text = "Return String value of @object")
-	public static String asString(Object object)
+	public static String asString(@FieldParameter(name = "object") Object object)
 	{
 		if (object == null)
 		{

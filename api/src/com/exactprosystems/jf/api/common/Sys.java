@@ -22,45 +22,45 @@ import java.nio.file.StandardCopyOption;
 
 public class Sys
 {
-    @DescriptionAttribute(text = "Returns PID of current process (the tool itself).")
-    public static int currentProcessId()
-    {
-        return ProcessTools.currentProcessId();
-    }
-    
-    @DescriptionAttribute(text = "Returns current host name")
-    public static String hostName()
-    {
-        String hostname = "Unknown";
+	@DescriptionAttribute(text = "Returns PID of current process (the tool itself).")
+	public static int currentProcessId()
+	{
+		return ProcessTools.currentProcessId();
+	}
 
-        try
-        {
-            InetAddress addr;
-            addr = InetAddress.getLocalHost();
-            hostname = addr.getHostName();
-        }
-        catch (UnknownHostException ex)
-        {
-            // nothing to do
-        }
-        return hostname;
-    }
+	@DescriptionAttribute(text = "Returns current host name")
+	public static String hostName()
+	{
+		String hostname = "Unknown";
 
-    @DescriptionAttribute(text = "Returns current user name")
-    public static String userName()
-    {
-        return System.getProperty("user.name");
-    }
+		try
+		{
+			InetAddress addr;
+			addr = InetAddress.getLocalHost();
+			hostname = addr.getHostName();
+		}
+		catch (UnknownHostException ex)
+		{
+			// nothing to do
+		}
+		return hostname;
+	}
 
-    
-    @DescriptionAttribute(text = "Returns OS name")
-    public static String osName()
-    {
-    	return System.getProperty("os.name");
-    }
+	@DescriptionAttribute(text = "Returns current user name")
+	public static String userName()
+	{
+		return System.getProperty("user.name");
+	}
 
-    @DescriptionAttribute(text = "Save @text to clipboard")
-	public static void copyToClipboard(String text)
+
+	@DescriptionAttribute(text = "Returns OS name")
+	public static String osName()
+	{
+		return System.getProperty("os.name");
+	}
+
+	@DescriptionAttribute(text = "Save @text to clipboard")
+	public static void copyToClipboard(@FieldParameter(name = "text") String text)
 	{
 		StringSelection stringSelection = new StringSelection(text);
 		Toolkit.getDefaultToolkit().getSystemClipboard().setContents(stringSelection, null);
@@ -82,23 +82,21 @@ public class Sys
 		}
 	}
 
-    @DescriptionAttribute(text = "Checks if file with @paht exists")
-	public static boolean exists(String path)
+	@DescriptionAttribute(text = "Checks if file with @paht exists")
+	public static boolean exists(@FieldParameter(name = "path") String path)
 	{
-	    return Files.exists(Paths.get(path), LinkOption.NOFOLLOW_LINKS);
+		return Files.exists(Paths.get(path), LinkOption.NOFOLLOW_LINKS);
 	}
-	
-    @DescriptionAttribute(text = "Copy file from @pathFrom to @pathTo")
-	public static void copyFile(String pathFrom, String pathTo) throws IOException
+
+	@DescriptionAttribute(text = "Copy file from @pathFrom to @pathTo")
+	public static void copyFile(@FieldParameter(name = "pathFrom") String pathFrom, @FieldParameter(name = "pathTo") String pathTo) throws IOException
 	{
-        Files.copy(Paths.get(pathFrom), Paths.get(pathTo), StandardCopyOption.COPY_ATTRIBUTES);
+		Files.copy(Paths.get(pathFrom), Paths.get(pathTo), StandardCopyOption.COPY_ATTRIBUTES);
 	}
-	
-    @DescriptionAttribute(text = "Move/rename file from @pathFrom to @pathTo")
-    public static void moveFile(String pathFrom, String pathTo) throws IOException
-    {
-        Files.move(Paths.get(pathFrom), Paths.get(pathTo), StandardCopyOption.ATOMIC_MOVE);
-    }
-    
-    
+
+	@DescriptionAttribute(text = "Move/rename file from @pathFrom to @pathTo")
+	public static void moveFile(@FieldParameter(name = "pathFrom") String pathFrom, @FieldParameter(name = "pathTo") String pathTo) throws IOException
+	{
+		Files.move(Paths.get(pathFrom), Paths.get(pathTo), StandardCopyOption.ATOMIC_MOVE);
+	}
 }

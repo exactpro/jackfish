@@ -10,10 +10,11 @@ package com.exactprosystems.jf.api.app;
 
 import com.exactprosystems.jf.api.client.ICondition;
 import com.exactprosystems.jf.api.common.DescriptionAttribute;
+import com.exactprosystems.jf.api.common.FieldParameter;
 import com.exactprosystems.jf.api.conditions.Condition;
 import com.exactprosystems.jf.api.error.app.NullParameterException;
 
-import java.awt.Color;
+import java.awt.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -116,14 +117,14 @@ public class Operation implements Iterable<Part>, Serializable
 	
 
 	@DescriptionAttribute(text = Do.foreach)
-	public Operation foreach(Operation operation)
+	public Operation foreach(@FieldParameter(name = "operation") Operation operation)
 	{
 		this.list.add(new Part(OperationKind.FOREACH).setInt(Integer.MAX_VALUE).setOperation(operation));
 		return this;
 	}
 
 	@DescriptionAttribute(text = Do.foreach_max)
-	public Operation foreach(Operation operation, int max)
+	public Operation foreach(@FieldParameter(name = "operation") Operation operation, @FieldParameter(name = "max") int max)
 	{
 		this.list.add(new Part(OperationKind.FOREACH).setInt(max).setOperation(operation));
 		return this;
@@ -144,14 +145,14 @@ public class Operation implements Iterable<Part>, Serializable
 	}
 
 	@DescriptionAttribute(text = Do.use)
-	public Operation use(int i)
+	public Operation use(@FieldParameter(name = "i") int i)
 	{
 		this.list.add(new Part(OperationKind.USE).setInt(i));
 		return this;
 	}
 
 	@DescriptionAttribute(text = Do.setValue)
-	public Operation setValue(double value)
+	public Operation setValue(@FieldParameter(name = "value") double value)
 	{
 		this.list.add(new Part(OperationKind.SET).setValue(value));
 		return this;
@@ -186,7 +187,7 @@ public class Operation implements Iterable<Part>, Serializable
 	}
 
     @DescriptionAttribute(text = Do.sequence)
-    public Operation sequence(String text)
+    public Operation sequence(@FieldParameter(name = "text") String text)
     {
         for (char ch : text.toCharArray())
         {
@@ -201,21 +202,21 @@ public class Operation implements Iterable<Part>, Serializable
     }
 
 	@DescriptionAttribute(text = Do.press)
-	public Operation press(Keyboard key)
+	public Operation press(@FieldParameter(name = "key") Keyboard key)
 	{
 		this.list.add(new Part(OperationKind.PRESS).setKey(key));
 		return this;
 	}
 
 	@DescriptionAttribute(text = Do.keyDown)
-	public Operation keyDown(Keyboard key)
+	public Operation keyDown(@FieldParameter(name = "key") Keyboard key)
 	{
 		this.list.add(new Part(OperationKind.KEY_DOWN).setKey(key));
 		return this;
 	}
 
 	@DescriptionAttribute(text = Do.keyUp)
-	public Operation keyUp(Keyboard key)
+	public Operation keyUp(@FieldParameter(name = "key") Keyboard key)
 	{
 		this.list.add(new Part(OperationKind.KEY_UP).setKey(key));
 		return this;
@@ -236,86 +237,86 @@ public class Operation implements Iterable<Part>, Serializable
     }
     
     @DescriptionAttribute(text = Do.checkList)
-    public Operation checkList(List<String> list, boolean ignoreOrder)
+    public Operation checkList(@FieldParameter(name = "list") List<String> list, @FieldParameter(name = "ignoreOrder") boolean ignoreOrder)
     {
         this.list.add(new Part(OperationKind.CHECK_LIST).setList(list).setBool(ignoreOrder));
         return this;
     }
 
     @DescriptionAttribute(text = Do.checkColor)
-    public Operation checkColor(int x, int y, Color color)
+    public Operation checkColor(@FieldParameter(name = "x") int x, @FieldParameter(name = "y") int y, @FieldParameter(name = "color") Color color)
     {
         this.list.add(new Part(OperationKind.CHECK_COLOR_XY).setColorCondition(Condition.color("color", color)).setX(x).setY(y));
         return this;
     }
 
     @DescriptionAttribute(text = Do.check)
-	public Operation check(String word)
+	public Operation check(@FieldParameter(name = "word") String word)
 	{
 		return check(word, true);
 	}
 
 	@DescriptionAttribute(text = Do.checkWithCoor)
-	public Operation check(String word, int x, int y)
+	public Operation check(@FieldParameter(name = "word") String word, @FieldParameter(name = "x") int x, @FieldParameter(name = "y") int y)
 	{
 		return check(word, x, y, true);
 	}
 
 	@DescriptionAttribute(text = Do.checkWithCoorAndFlag)
-	public Operation check(String word, int x, int y, boolean flag)
+	public Operation check(@FieldParameter(name = "word") String word, @FieldParameter(name = "x") int x, @FieldParameter(name = "y") int y, @FieldParameter(name = "flag") boolean flag)
 	{
 		this.list.add(new Part(OperationKind.CHECK_XY).setText(word).setX(x).setY(y).setBool(flag));
 		return this;
 	}
 
 	@DescriptionAttribute(text = Do.checkWithFlag)
-	public Operation check(String word, boolean flag)
+	public Operation check(@FieldParameter(name = "word") String word, @FieldParameter(name = "flag") boolean flag)
 	{
 		this.list.add(new Part(OperationKind.CHECK).setText(word).setBool(flag));
 		return this;
 	}
 
 	@DescriptionAttribute(text = Do.checkRegexp)
-	public Operation checkRegexp(String regexp)
+	public Operation checkRegexp(@FieldParameter(name = "regexp") String regexp)
 	{
 		return checkRegexp(regexp, true);
 	}
 
 	@DescriptionAttribute(text = Do.checkRegexpCoor)
-	public Operation checkRegexp(String regexp, int x, int y)
+	public Operation checkRegexp(@FieldParameter(name = "regexp") String regexp, @FieldParameter(name = "x") int x, @FieldParameter(name = "y") int y)
 	{
 		return checkRegexp(regexp, x, y, true);
 	}
 
 	@DescriptionAttribute(text = Do.checkAttr)
-	public Operation checkAttr(String name, String value)
+	public Operation checkAttr(@FieldParameter(name = "name") String name, @FieldParameter(name = "value") String value)
 	{
 		return checkAttr(name, value, true);
 	}
 
 	@DescriptionAttribute(text = Do.checkAttrWithFlag)
-	public Operation checkAttr(String name, String value, boolean flag)
+	public Operation checkAttr(@FieldParameter(name = "name") String name, @FieldParameter(name = "value") String value, @FieldParameter(name = "flag") boolean flag)
 	{
 		this.list.add(new Part(OperationKind.CHECK_ATTR).setStr(name).setText(value).setBool(flag));
 		return this;
 	}
 
 	@DescriptionAttribute(text = Do.checkAttrRegexp)
-	public Operation checkAttrRegexp(String name, String regexp, boolean flag)
+	public Operation checkAttrRegexp(@FieldParameter(name = "name") String name, @FieldParameter(name = "regexp") String regexp, @FieldParameter(name = "flag") boolean flag)
 	{
 		this.list.add(new Part(OperationKind.CHECK_ATTR_REGEXP).setStr(name).setText(regexp).setBool(flag));
 		return this;
 	}
 
 	@DescriptionAttribute(text = Do.checkRegexpCoorAndFlag)
-	public Operation checkRegexp(String regexp, int x, int y, boolean flag)
+	public Operation checkRegexp(@FieldParameter(name = "regexp") String regexp, @FieldParameter(name = "x") int x, @FieldParameter(name = "y") int y, @FieldParameter(name = "flag") boolean flag)
 	{
 		this.list.add(new Part(OperationKind.CHECK_REGEXP_XY).setText(regexp).setX(x).setY(y).setBool(flag));
 		return this;
 	}
 
 	@DescriptionAttribute(text = Do.checkRegexpWithFlag)
-	public Operation checkRegexp(String regexp, boolean flag)
+	public Operation checkRegexp(@FieldParameter(name = "regexp") String regexp, @FieldParameter(name = "flag") boolean flag)
 	{
 		this.list.add(new Part(OperationKind.CHECK_REGEXP).setText(regexp).setBool(flag));
 		return this;
@@ -329,21 +330,21 @@ public class Operation implements Iterable<Part>, Serializable
 	}
 
 	@DescriptionAttribute(text = Do.getAttr)
-	public Operation getAttr(String name)
+	public Operation getAttr(@FieldParameter(name = "name") String name)
 	{
 		this.list.add(new Part(OperationKind.GET_ATTR).setStr(name));
 		return this;
 	}
 
     @DescriptionAttribute(text = Do.getColor)
-    public Operation getColor(int x, int y)
+    public Operation getColor(@FieldParameter(name = "x") int x, @FieldParameter(name = "y") int y)
     {
         this.list.add(new Part(OperationKind.GET_COLOR_XY).setX(x).setY(y));
         return this;
     }
 	
 	@DescriptionAttribute(text = Do.getValueWithCoor)
-	public Operation getValue(int x, int y)
+	public Operation getValue(@FieldParameter(name = "x") int x, @FieldParameter(name = "y") int y)
 	{
 		this.list.add(new Part(OperationKind.GET_VALUE_XY).setX(x).setY(y));
 		return this;
@@ -357,28 +358,42 @@ public class Operation implements Iterable<Part>, Serializable
 	}
 
 	@DescriptionAttribute(text = Do.getRow)
-	public Operation getRow(ICondition valueCondition, ICondition colorCondition)
+	public Operation getRow(@FieldParameter(name = "valueCondition") ICondition valueCondition, @FieldParameter(name = "colorCondition") ICondition colorCondition)
 	{
 		this.list.add(new Part(OperationKind.GET_ROW).setValueCondition(valueCondition).setColorCondition(colorCondition));
 		return this;
 	}
 
+	@DescriptionAttribute(text = Do.getRowOneCondition)
+	public Operation getRow(@FieldParameter(name = "valueCondition") ICondition valueCondition)
+	{
+		this.list.add(new Part(OperationKind.GET_ROW).setValueCondition(valueCondition));
+		return this;
+	}
+
 	@DescriptionAttribute(text = Do.getRowIndexes)
-	public Operation getRowIndexes(ICondition valueCondition, ICondition colorCondition)
+	public Operation getRowIndexes(@FieldParameter(name = "valueCondition") ICondition valueCondition, @FieldParameter(name = "colorCondition") ICondition colorCondition)
 	{
 		this.list.add(new Part(OperationKind.GET_ROW_INDEXES).setValueCondition(valueCondition).setColorCondition(colorCondition));
 		return this;
 	}
 
+	@DescriptionAttribute(text = Do.getRowIndexesOneCondition)
+	public Operation getRowIndexes(@FieldParameter(name = "valueCondition") ICondition valueCondition)
+	{
+		this.list.add(new Part(OperationKind.GET_ROW_INDEXES).setValueCondition(valueCondition));
+		return this;
+	}
+
 	@DescriptionAttribute(text = Do.getRowByIndex)
-	public Operation getRowByIndex(int index)
+	public Operation getRowByIndex(@FieldParameter(name = "index") int index)
 	{
 		this.list.add(new Part(OperationKind.GET_ROW_BY_INDEX).setInt(index));
 		return this;
 	}
 
 	@DescriptionAttribute(text = Do.getRowWithColor)
-	public Operation getRowWithColor(int index)
+	public Operation getRowWithColor(@FieldParameter(name = "index") int index)
 	{
 		this.list.add(new Part(OperationKind.GET_ROW_WITH_COLOR).setInt(index));
 		return this;
@@ -392,7 +407,7 @@ public class Operation implements Iterable<Part>, Serializable
 	}
 
 	@DescriptionAttribute(text = Do.useLocatorId)
-	public Operation use(String locator)
+	public Operation use(@FieldParameter(name = "locator") String locator)
 	{
 		this.list.add(new Part(OperationKind.USE_LOCATOR).setLocatorId(locator).setLocatorKind(LocatorKind.Element));
 		this.list.add(new Part(OperationKind.USE_LOCATOR).setLocatorId(locator).setLocatorKind(LocatorKind.Owner));
@@ -402,7 +417,7 @@ public class Operation implements Iterable<Part>, Serializable
 	}
 
 	@DescriptionAttribute(text = Do.useLocator)
-	public Operation use(Locator locator)
+	public Operation use(@FieldParameter(name = "locator") Locator locator)
 	{
 		this.list.add(new Part(OperationKind.USE_LOCATOR).setLocator(locator).setLocatorKind(LocatorKind.Element));
 		this.list.add(new Part(OperationKind.USE_LOCATOR).setLocator(null).setLocatorKind(LocatorKind.Owner));
@@ -412,14 +427,14 @@ public class Operation implements Iterable<Part>, Serializable
 	}
 
 	@DescriptionAttribute(text = Do.useLocatorKind)
-	public Operation use(Locator locator, LocatorKind locatorKind)
+	public Operation use(@FieldParameter(name = "locator") Locator locator, @FieldParameter(name = "locatorKind") LocatorKind locatorKind)
 	{
 		this.list.add(new Part(OperationKind.USE_LOCATOR).setLocator(locator).setLocatorKind(locatorKind));
 		return this;
 	}
 
 	@DescriptionAttribute(text = Do.useLocatorIdKind)
-	public Operation use(String locatorId, LocatorKind locatorKind)
+	public Operation use(@FieldParameter(name = "locatorId") String locatorId, @FieldParameter(name = "locatorKind") LocatorKind locatorKind)
 	{
 		this.list.add(new Part(OperationKind.USE_LOCATOR).setLocatorId(locatorId).setLocatorKind(locatorKind).setBool(true));
 		return this;
@@ -433,7 +448,7 @@ public class Operation implements Iterable<Part>, Serializable
 	}
 
 	@DescriptionAttribute(text = Do.moveWithCoor)
-	public Operation move(int x, int y)
+	public Operation move(@FieldParameter(name = "x") int x, @FieldParameter(name = "y") int y)
 	{
 		this.list.add(new Part(OperationKind.MOVE_XY).setX(x).setY(y));
 		return this;
@@ -447,81 +462,81 @@ public class Operation implements Iterable<Part>, Serializable
 	}
 
 	@DescriptionAttribute(text = Do.clickWithCoor)
-	public Operation click(int x, int y)
+	public Operation click(@FieldParameter(name = "x") int x, @FieldParameter(name = "y") int y)
 	{
 		return click(x, y, MouseAction.LeftClick);
 	}
 
 	@DescriptionAttribute(text = Do.clickWithCoorAndAction)
-	public Operation click(int x, int y, MouseAction action)
+	public Operation click(@FieldParameter(name = "x") int x, @FieldParameter(name = "y") int y, @FieldParameter(name = "action") MouseAction action)
 	{
 		this.list.add(new Part(OperationKind.CLICK_XY).setX(x).setY(y).setMouseAction(action));
 		return this;
 	}
 
 	@DescriptionAttribute(text = Do.text)
-	public Operation text(String str)
+	public Operation text(@FieldParameter(name = "str") String str)
 	{
 		return text(str, false);
 	}
 
 	@DescriptionAttribute(text = Do.textWithBool)
-	public Operation text(String str, boolean clear)
+	public Operation text(@FieldParameter(name = "str") String str, @FieldParameter(name = "clear") boolean clear)
 	{
 		this.list.add(new Part(OperationKind.TEXT).setText(str).setBool(clear));
 		return this;
 	}
 
 	@DescriptionAttribute(text = Do.textColumnRow)
-	public Operation text(String str, int column, int row)
+	public Operation text(@FieldParameter(name = "str") String str, @FieldParameter(name = "column") int column, @FieldParameter(name = "row") int row)
 	{
 		this.list.add(new Part(OperationKind.TEXT_XY).setText(str).setX(column).setY(row));
 		return this;
 	}
 
 	@DescriptionAttribute(text = Do.toggle)
-	public Operation toggle(boolean bool)
+	public Operation toggle(@FieldParameter(name = "bool") boolean bool)
 	{
 		this.list.add(new Part(OperationKind.TOGGLE).setBool(bool));
 		return this;
 	}
 
 	@DescriptionAttribute(text = Do.selectByIndex)
-    public Operation select(int index)
+    public Operation select(@FieldParameter(name = "index") int index)
     {
         this.list.add(new Part(OperationKind.SELECT_BY_INDEX).setInt(index));
         return this;
     }
 
 	@DescriptionAttribute(text = Do.select)
-    public Operation select(String selectText)
+    public Operation select(@FieldParameter(name = "selectText") String selectText)
     {
         this.list.add(new Part(OperationKind.SELECT).setText(selectText));
         return this;
     }
 
 	@DescriptionAttribute(text = Do.expand)
-	public Operation expand(String path)
+	public Operation expand(@FieldParameter(name = "path") String path)
 	{
         this.list.add(new Part(OperationKind.EXPAND).setText(path));
         return this;
 	}
 
 	@DescriptionAttribute(text = Do.collapse)
-	public Operation collapse(String path)
+	public Operation collapse(@FieldParameter(name = "path") String path)
 	{
         this.list.add(new Part(OperationKind.COLLAPSE).setText(path));
         return this;
 	}
 
-	public Operation script(String script)
+	public Operation script(@FieldParameter(name = "script") String script)
 	{
 		this.list.add(new Part(OperationKind.SCRIPT).setText(script));
 		return this;
 	}
 
 	@DescriptionAttribute(text = Do.dragNdrop)
-	public Operation dragNdrop(int x1, int y1, String another, int x2, int y2)
+	public Operation dragNdrop(@FieldParameter(name = "x1") int x1, @FieldParameter(name = "y1") int y1, @FieldParameter(name = "another") String another, @FieldParameter(name = "x2") int x2, @FieldParameter(name = "y2") int y2)
 	{
 		this.list.add(new Part(OperationKind.USE_LOCATOR).setLocatorId(another).setLocatorKind(LocatorKind.Dropped));
 		this.list.add(new Part(OperationKind.USE_LOCATOR).setLocatorId(another).setLocatorKind(LocatorKind.DroppedOwner));
@@ -535,7 +550,7 @@ public class Operation implements Iterable<Part>, Serializable
 	}
 
 	@DescriptionAttribute(text = Do.dragNdropFromCenterOfElement)
-	public Operation dragNdropFromCenterOfElement(String another, int x2, int y2)
+	public Operation dragNdropFromCenterOfElement(@FieldParameter(name = "another") String another, @FieldParameter(name = "x2") int x2, @FieldParameter(name = "y2") int y2)
 	{
 		this.list.add(new Part(OperationKind.USE_LOCATOR).setLocatorId(another).setLocatorKind(LocatorKind.Dropped));
 		this.list.add(new Part(OperationKind.USE_LOCATOR).setLocatorId(another).setLocatorKind(LocatorKind.DroppedOwner));
@@ -547,7 +562,7 @@ public class Operation implements Iterable<Part>, Serializable
 	}
 
 	@DescriptionAttribute(text = Do.dragNdropCursor)
-	public Operation dragNdrop(int x1, int y1, String another, int x2, int y2, boolean moveCursor)
+	public Operation dragNdrop(@FieldParameter(name = "x1") int x1, @FieldParameter(name = "y1") int y1, @FieldParameter(name = "another") String another, @FieldParameter(name = "x2") int x2, @FieldParameter(name = "y2") int y2, @FieldParameter(name="moveCursor") boolean moveCursor)
 	{
 		this.list.add(new Part(OperationKind.USE_LOCATOR).setLocatorId(another).setLocatorKind(LocatorKind.Dropped));
 		this.list.add(new Part(OperationKind.USE_LOCATOR).setLocatorId(another).setLocatorKind(LocatorKind.DroppedOwner));
@@ -562,7 +577,7 @@ public class Operation implements Iterable<Part>, Serializable
 	}
 
 	@DescriptionAttribute(text = Do.dragNdropFromCenterOfElementCursor)
-	public Operation dragNdropFromCenterOfElement(String another, int x2, int y2, boolean moveCursor)
+	public Operation dragNdropFromCenterOfElement(@FieldParameter(name = "another") String another, @FieldParameter(name = "x2") int x2, @FieldParameter(name = "y2") int y2, @FieldParameter(name = "moveCursor") boolean moveCursor)
 	{
 		this.list.add(new Part(OperationKind.USE_LOCATOR).setLocatorId(another).setLocatorKind(LocatorKind.Dropped));
 		this.list.add(new Part(OperationKind.USE_LOCATOR).setLocatorId(another).setLocatorKind(LocatorKind.DroppedOwner));
@@ -575,28 +590,28 @@ public class Operation implements Iterable<Part>, Serializable
 	}
 
 	@DescriptionAttribute(text = Do.delay)
-	public Operation delay(int ms)
+	public Operation delay(@FieldParameter(name = "ms") int ms)
 	{
 		this.list.add(new Part(OperationKind.DELAY).setInt(ms));
 		return this;
 	}
 
 	@DescriptionAttribute(text = Do.wait)
-	public Operation wait(String str)
+	public Operation wait(@FieldParameter(name = "str") String str)
 	{
 		this.list.add(new Part(OperationKind.WAIT).setLocatorId(str).setInt(10000).setToAppear(true).setLocatorKind(LocatorKind.Element));
 		return this;
 	}
 
 	@DescriptionAttribute(text = Do.wait)
-	public Operation wait(String str, int ms, boolean toAppear)
+	public Operation wait(@FieldParameter(name = "str") String str, @FieldParameter(name = "ms") int ms, @FieldParameter(name = "toAppear") boolean toAppear)
 	{
 		this.list.add(new Part(OperationKind.WAIT).setInt(ms).setLocatorId(str).setLocatorKind(LocatorKind.Element).setToAppear(toAppear));
 		return this;
 	}
 
 	@DescriptionAttribute(text = Do.wait)
-	public Operation wait(Locator locator, int ms, boolean toAppear)
+	public Operation wait(@FieldParameter(name = "locator") Locator locator, @FieldParameter(name = "ms") int ms, @FieldParameter(name = "toAppear") boolean toAppear)
 	{
 		this.list.add(new Part(OperationKind.WAIT).setInt(ms).setLocator(locator).setToAppear(toAppear));
 		return this;
