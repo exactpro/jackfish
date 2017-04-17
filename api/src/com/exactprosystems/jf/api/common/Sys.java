@@ -12,8 +12,13 @@ import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.StringSelection;
+import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.nio.file.Files;
+import java.nio.file.LinkOption;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 
 public class Sys
 {
@@ -76,4 +81,24 @@ public class Sys
 			return "";
 		}
 	}
+
+    @DescriptionAttribute(text = "Checks if file with @paht exists")
+	public static boolean exists(String path)
+	{
+	    return Files.exists(Paths.get(path), LinkOption.NOFOLLOW_LINKS);
+	}
+	
+    @DescriptionAttribute(text = "Copy file from @pathFrom to @pathTo")
+	public static void copyFile(String pathFrom, String pathTo) throws IOException
+	{
+        Files.copy(Paths.get(pathFrom), Paths.get(pathTo), StandardCopyOption.COPY_ATTRIBUTES);
+	}
+	
+    @DescriptionAttribute(text = "Move/rename file from @pathFrom to @pathTo")
+    public static void moveFile(String pathFrom, String pathTo) throws IOException
+    {
+        Files.move(Paths.get(pathFrom), Paths.get(pathTo), StandardCopyOption.ATOMIC_MOVE);
+    }
+    
+    
 }
