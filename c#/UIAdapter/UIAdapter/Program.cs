@@ -217,6 +217,7 @@ namespace UIAdapter
                 logger.All("Connected successful ? " + res);
                 if (res)
                 {
+                    toFront();
                     return task.Result;
                 }
                 else
@@ -254,6 +255,7 @@ namespace UIAdapter
                 Thread.Sleep(1000);
                 UpdateHandler();
                 frameWorkId = handler.Current.FrameworkId;
+                toFront();
                 logger.All("method Run", getMilis() - startMethod);
                 return handler.Current.ProcessId;
             }
@@ -2362,17 +2364,32 @@ namespace UIAdapter
         {
             try
             {
-                object propValue = handler.GetCurrentPropertyValue(AutomationElement.IsKeyboardFocusableProperty);
-                Boolean isKeyboardFocusable = (Boolean)propValue;
-                if (!isKeyboardFocusable)
-                {
-                    return;
-                }
+                logger.All("Start method toFront()");
+                logger.All("Start invoke win32 api method SafeNativeMethods.SetForegroundWindow(new IntPtr(handler.Current.NativeWindowHandle))");
                 SafeNativeMethods.SetForegroundWindow(new IntPtr(handler.Current.NativeWindowHandle));
-                handler.SetFocus();
+                logger.All("End invoke win32 api method SafeNativeMethods.SetForegroundWindow(new IntPtr(handler.Current.NativeWindowHandle))");
+                logger.All("Start set focus to handler");
+                object propValue = handler.GetCurrentPropertyValue(AutomationElement.IsKeyboardFocusableProperty);
+                logger.All("Get property handler.GetCurrentPropertyValue(AutomationElement.IsKeyboardFocusableProperty) : " + propValue);
+                Boolean isKeyboardFocusable = (Boolean)propValue;
+                logger.All("Is keyboard focusable : " + isKeyboardFocusable);
+                if (isKeyboardFocusable)
+                {
+                    handler.SetFocus();
+                }
+                logger.All("End set focus to handler");
             }
             catch (Exception e)
-            { }
+            {
+                logger.Error("Error on toFront() : " + e.Message, e);
+                Exception innerException = e.InnerException;
+                logger.Error("Inner exception is null ? " + (innerException == null));
+                while (innerException != null)
+                {
+                    logger.Error("Innder exception : " + innerException.Message, innerException);
+                    innerException = innerException.InnerException;
+                }
+            }
         }
 
         [Obsolete]
