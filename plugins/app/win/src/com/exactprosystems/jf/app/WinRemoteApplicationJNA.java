@@ -641,6 +641,12 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 			return;
 		}
 
+		if (tag.equalsIgnoreCase("combobox"))
+		{
+			current.appendChild(node);
+			return;
+		}
+
 		if (current.getNodeName().equalsIgnoreCase("datagrid"))
 		{
 			if (!tag.equalsIgnoreCase("header"))

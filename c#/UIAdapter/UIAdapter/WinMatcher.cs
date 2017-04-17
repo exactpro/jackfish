@@ -275,19 +275,8 @@ namespace UIAdapter
             string simpleName = Tag(element);
             node = XmlElementWithObject.Create(document.CreateElement(simpleName));
             node.UserData = element;
-            //TODO fix me, if I wrong
-            /*
-            node.SetAttribute(AttributeKind.UID.ToString().ToLower(), element.Current.AutomationId);
-            node.SetAttribute(AttributeKind.CLASS.ToString().ToLower(), element.Current.ClassName);
-            //node.SetAttribute(AttributeKind.TEXT.ToString().ToLower(), element.Current.HelpText);
-            node.SetAttribute(AttributeKind.NAME.ToString().ToLower(), element.Current.Name);
-            node.SetAttribute(RUNTIME_ID_ATTRIBUTE, string.Join(SEPARATOR, element.GetRuntimeId()));
-            node.SetAttribute(AttributeKind.TYPE_NAME.ToString().ToLower(), simpleName);
-             */
             node.SetAttribute(Program.pluginInfo.attributeName(LocatorFieldKind.UID), element.Current.AutomationId);
             node.SetAttribute(Program.pluginInfo.attributeName(LocatorFieldKind.CLAZZ), element.Current.ClassName);
-            //TODO think, why we don't use TEXT
-            //node.SetAttribute(AttributeKind.TEXT.ToString().ToLower(), element.Current.HelpText);
             node.SetAttribute(Program.pluginInfo.attributeName(LocatorFieldKind.NAME).ToLower(), element.Current.Name);
             node.SetAttribute(RUNTIME_ID_ATTRIBUTE, string.Join(SEPARATOR, element.GetRuntimeId()));
             object obj;
@@ -308,6 +297,11 @@ namespace UIAdapter
 
             if (!element.Current.FrameworkId.ToUpper().Equals("SILVERLIGHT") && simpleName.ToUpper().Equals("TABLE"))
             {
+                return;
+            }
+            if (simpleName.ToUpper().Equals("COMBOBOX"))
+            {
+                current.AppendChild(node);
                 return;
             }
             if (current.Name.ToUpper().Equals("DATAGRID"))
