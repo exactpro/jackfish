@@ -251,4 +251,13 @@
         <onClose/>
         <close/>
     </window>
+    <window name="SilverLight">
+        <self>
+            <any id="owner" xpath="//Pane[@class=&amp;quot;Internet Explorer_Server&amp;quot; and @name=&amp;quot;SilverLightMock&amp;quot;]" name=""/>
+        </self>
+        <onOpen/>
+        <run/>
+        <onClose/>
+        <close/>
+    </window>
 </dictionary>
