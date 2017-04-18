@@ -418,7 +418,7 @@ namespace UIAdapter.Cond
             }
             object value = null;
             dic.TryGetValue(name, out value);
-            return value == null || ("" + value).Length == 0;
+            return value == null || ("" + value).Length == 0 || ("" + value).Equals(Tables.AbstractTable.EMPTY_CELL);
         }
 
         public string Value { get; private set; }
