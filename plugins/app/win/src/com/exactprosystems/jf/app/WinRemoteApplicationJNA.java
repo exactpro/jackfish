@@ -523,7 +523,23 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 	@Override
 	protected int closeAllDerived(Locator element, Collection<LocatorAndOperation> operations) throws Exception
 	{
-		throw new FeatureNotSupportedException("closeAll");
+		List<UIProxyJNA> listUiElements = this.operationExecutor.findAll(null, element);
+		logger.debug("Found " + listUiElements.size() + " windows");
+		int count = 0;
+		for (UIProxyJNA uiElement : listUiElements)
+		{
+			try
+			{
+				this.driver.doPatternCall(uiElement, WindowPattern.WindowPattern, "Close", null, -1);
+				count++;
+			}
+			catch (Exception e)
+			{
+				logger.error("Can't close window.");
+				logger.error(e.getMessage(), e);
+			}
+		}
+		return count;
 	}
 
 	@Override

@@ -93,8 +93,8 @@ namespace UIAdapter.Tables
 
     abstract class AbstractTable
     {
-        protected static readonly String EMPTY_CELL = "EMPTY_CELL_EMPTY";
-        protected static readonly String EMPTY_HEADER_CELL = "EMPTY_HEADER_CELL_EMPTY";
+        public static readonly String EMPTY_CELL = "EMPTY_CELL_EMPTY";
+        public static readonly String EMPTY_HEADER_CELL = "EMPTY_HEADER_CELL_EMPTY";
 
         protected readonly AutomationElement table;
         protected readonly Logger.Logger logger;
@@ -412,7 +412,6 @@ namespace UIAdapter.Tables
         {
             TreeWalker walker = TreeWalker.RawViewWalker;
             this.logger.All("Row : " + row.Current.Name + " and controlType : " + row.Current.ControlType.ProgrammaticName);
-            //buildDom(row);
             AutomationElement firstCell = this.FindFirstCellFromRow(row);
             StringBuilder builder = new StringBuilder();
             string sep = "";

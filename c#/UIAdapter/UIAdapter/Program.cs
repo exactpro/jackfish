@@ -1038,18 +1038,21 @@ namespace UIAdapter
                         logger.All("GetWindowRect : " + f2);
                         logger.All(String.Format("Window has left {0}, top {1}, right {2}, bottom {3}", rect.Left, rect.Top, rect.Right, rect.Bottom)); 
                         return null;
-
                     }
                     else if (elementPattern is WindowPattern)
                     {
-                        WindowPattern windowPattern = elementPattern as WindowPattern;
-                        WindowVisualState windowState = (WindowVisualState)args[0];
-                        //if we try to min/max window, that was min/max - just reutrn
-                        if (windowPattern.Current.WindowVisualState == windowState)
+                        //args not null if we try to change visual state of window.
+                        //args is null if we try to close window.
+                        if (args != null)
                         {
-                            return null;
+                            WindowPattern windowPattern = elementPattern as WindowPattern;
+                            WindowVisualState windowState = (WindowVisualState)args[0];
+                            //if we try to min/max window, that was min/max - just reutrn
+                            if (windowPattern.Current.WindowVisualState == windowState)
+                            {
+                                return null;
+                            }
                         }
-
                     }
 
                     MethodInfo info = elementPattern.GetType().GetMethod(method);

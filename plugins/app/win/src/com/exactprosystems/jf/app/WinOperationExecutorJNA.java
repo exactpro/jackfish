@@ -917,7 +917,8 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 	{
 		try
 		{
-			return this.driver.getValueTableCell(component, column, row);
+			String valueTableCell = this.driver.getValueTableCell(component, column, row);
+			return EMPTY_CELL.equals(valueTableCell) ? "" : valueTableCell;
 		}
 		catch (RemoteException e)
 		{
@@ -1122,7 +1123,7 @@ public class WinOperationExecutorJNA implements OperationExecutor<UIProxyJNA>
 			if (iterator.hasNext())
 			{
 				iterator.next();
-				res.add(columns[i]);
+				res.add(EMPTY_HEADER_CELL.equals(columns[i]) ? "" : columns[i]);
 			}
 			else
 			{
