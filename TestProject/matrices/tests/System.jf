@@ -49,9 +49,6 @@ COMPARE;Compare;Never;;
     #Id;#Let
     actual3;{'one' : 'oneValue', 'two' : 100, 'tree' : 'anyValue' }
 
-    #Id;#Off;#Action;#Expected;#Actual
-    CMP1;1;Compare;;
-
     // Negative testing
     #Id;#Action;#Assert;#Expected;#Actual
     CMP1;Compare;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;
@@ -139,7 +136,7 @@ RESULT;ResultTable;Never;;
     MXWT1;MatrixWait;MXRN1.Out
 
     #Id;#Action;#Decoraded;#Matrix
-    RESTBL5;ResultTable;true;MXRN1.Out
+    RESTBL5;ResultTable;false;MXRN1.Out
 
     #Id;#RawTable
     expectedTable;Table
