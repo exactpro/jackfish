@@ -18,7 +18,17 @@ namespace mock_win
             InitializeComponent();
             fillTable();
             fillListView();
+            fillContextMenu();
             ComboBox.SelectedIndex = 0;
+        }
+
+        private void fillContextMenu()
+        {
+            ContextMenu cm = new ContextMenu();
+            cm.MenuItems.Add("one");
+            cm.MenuItems.Add("two");
+            cm.MenuItems.Add("three");
+            ToggleButton.ContextMenu = cm;
         }
 
         private void fillListView()
@@ -183,6 +193,11 @@ namespace mock_win
         private void sixToolStripMenuItem_Click(object sender, EventArgs e)
         {
             centralLabel.Text = "six_click";
+        }
+
+        private void toolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            centralLabel.Text = "cm_one_click";
         }
     }
 }

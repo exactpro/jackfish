@@ -913,6 +913,38 @@ public class MockApp
 	{
 		return new MouseAdapter()
 		{
+			private void createPopupMenu(MouseEvent e) {
+				JPopupMenu menu = new JPopupMenu();
+				JMenuItem item1 = new JMenuItem(new AbstractAction("one") {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						centralLabel.setText("cm_one_click");
+					}
+				});
+				JMenuItem item2 = new JMenuItem("two");
+				JMenuItem item3 = new JMenuItem("three");
+				menu.add(item1);
+				menu.add(item2);
+				menu.add(item3);
+				menu.show(e.getComponent(), e.getX(), e.getY());
+			}
+
+			@Override
+			public void mousePressed(MouseEvent e) {
+				if(e.isPopupTrigger())
+				{
+					createPopupMenu(e);
+				}
+			}
+
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				if(e.isPopupTrigger())
+				{
+					createPopupMenu(e);
+				}
+			}
+
 			@Override
 			public void mouseClicked(MouseEvent e)
 			{
