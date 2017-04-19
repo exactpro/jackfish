@@ -41,7 +41,7 @@
  	</logger>
 
 	<logger name="com.exactprosystems.testtools">
-  		<level value="DEBUG"/>
+  		<level value="ALL"/>
   		<appender-ref ref="LogMainFile"/>
  	</logger>
 	<logger name="com.exactprosystems.jf.actions">
@@ -53,7 +53,7 @@
   		<appender-ref ref="LogMainFile"/>
  	</logger>
 	<logger name="com.exactprosystems.jf.client">
-  		<level value="ALL"/>
+  		<level value="INFO"/>
   		<appender-ref ref="LogMainFile"/>
  	</logger>
 	<logger name="com.exactprosystems.jf.common">
