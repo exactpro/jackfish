@@ -20,5 +20,4 @@ public interface IMessageDictionary
 	IMessage 		getMessage(String name);
 	List<IMessage>	getMessages();
 	String			getVersion();
-    String          getXmlns();
 }

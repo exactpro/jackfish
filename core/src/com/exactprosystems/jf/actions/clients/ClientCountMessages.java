@@ -18,6 +18,7 @@ import com.exactprosystems.jf.api.client.ClientHelper;
 import com.exactprosystems.jf.api.client.IClient;
 import com.exactprosystems.jf.api.client.Possibility;
 import com.exactprosystems.jf.api.common.ParametersKind;
+import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.conditions.Condition;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
@@ -55,7 +56,7 @@ public class ClientCountMessages extends AbstractAction
 	@ActionFieldAttribute(name = connectionName, mandatory = true, description = "The connection with the client, which is derived from the action ClientLoad.")
 	protected ClientConnection	connection	= null;
 
-	@ActionFieldAttribute(name = messageTypeName, mandatory = true, description = "Message type." )
+	@ActionFieldAttribute(name = messageTypeName, mandatory = true, description = "Message type. Use * for any type of messages." )
 	protected String	messageType	= null;
 
 	@ActionFieldAttribute(name = conditionsName, mandatory = false, description = "The conditions in which the comparison will be carried out.")
@@ -88,6 +89,7 @@ public class ClientCountMessages extends AbstractAction
 		switch (parameterToFill)
 		{
 			case messageTypeName:
+                list.add(new ReadableValue(context.getEvaluator().createString("*"), "Any messages"));
 				Helper.messageTypes(list, this.owner.getMatrix(), context, parameters, null, connectionName);
 				break;
 				
@@ -117,7 +119,7 @@ public class ClientCountMessages extends AbstractAction
 			Integer ret = null;
 			Map<String, Object> additional = parameters.select(TypeMandatory.Extra);
 			
-			if (this.conditions != null || additional != null)
+			if (!Str.areEqual(this.messageType, "*") || this.conditions != null || additional != null)
 			{
 				ret = client.countMessages(additional, this.messageType, this.conditions);
 			}

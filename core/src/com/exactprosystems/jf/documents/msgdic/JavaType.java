@@ -44,7 +44,16 @@ public enum JavaType implements IType
     @XmlEnumValue("java.lang.Character")
     JAVA_LANG_CHARACTER(Character.class),
     @XmlEnumValue("java.math.BigDecimal")
-    JAVA_MATH_BIG_DECIMAL(BigDecimal.class);
+    JAVA_MATH_BIG_DECIMAL(BigDecimal.class),
+    @XmlEnumValue("org.threeten.bp.LocalDateTime")
+    ORG_THREETEN_BP_LOCALDATETIME(org.threeten.bp.LocalDateTime.class),
+    @XmlEnumValue("org.threeten.bp.LocalDate")
+    ORG_THREETEN_BP_LOCALDATE(org.threeten.bp.LocalDate.class),
+    @XmlEnumValue("org.threeten.bp.LocalTime")
+    ORG_THREETEN_BP_LOCALTIME(org.threeten.bp.LocalTime.class)
+    ;
+    
+    
     private final Class<?> type;
 
 	JavaType(Class<?> type)

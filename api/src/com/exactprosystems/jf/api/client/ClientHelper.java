@@ -41,7 +41,7 @@ public class ClientHelper
 	
 	public static boolean isMatched(MapMessage message, String messageType, ICondition[] conditions) throws Exception
 	{
-		if (!Str.areEqual(message.getMessageType(), messageType))
+		if (!Str.areEqual("*", messageType) && !Str.areEqual(message.getMessageType(), messageType))
 		{
 			return false;
 		}

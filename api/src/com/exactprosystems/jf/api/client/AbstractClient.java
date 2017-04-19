@@ -10,6 +10,7 @@ package com.exactprosystems.jf.api.client;
 
 import com.exactprosystems.jf.api.common.IContext;
 import com.exactprosystems.jf.api.conditions.Condition;
+import com.exactprosystems.jf.api.error.client.ClientException;
 
 import java.net.Socket;
 import java.util.ArrayList;
