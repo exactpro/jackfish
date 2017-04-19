@@ -34,11 +34,12 @@ import org.fest.swing.util.Pair;
 
 import javax.swing.*;
 import javax.swing.text.JTextComponent;
-import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeNode;
-import javax.swing.tree.TreePath;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.FocusEvent;
+import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.rmi.RemoteException;
@@ -663,6 +664,29 @@ public class SwingOperationExecutor implements OperationExecutor<ComponentFixtur
 					textComponent.setText(text);
 				}
 				return true;
+			}
+			else if (component.target instanceof JComboBox)
+			{
+				JComboBox jComboBox = component.targetCastedTo(JComboBox.class);
+				if (!jComboBox.isEditable())
+				{
+					throw new Exception("ComboBox is not editable");
+				}
+				Component editorComponent = jComboBox.getEditor().getEditorComponent();
+				if (editorComponent instanceof JTextComponent)
+				{
+					JTextComponent textComponent = (JTextComponent) editorComponent;
+					if (!clear)
+					{
+						String currentText = textComponent.getText();
+						textComponent.setText(currentText + text);
+					}
+					else
+					{
+						textComponent.setText(text);
+					}
+					return true;
+				}
 			}
 			throw new OperationNotAllowedException(String.format("Component %s does not support text entering", component.target));
 		}

@@ -8,17 +8,18 @@
 package com.exactprosystems.jf;
 
 import sun.awt.TimedWindowEvent;
+
 import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellEditor;
+import javax.swing.text.JTextComponent;
 import javax.swing.tree.DefaultMutableTreeNode;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.EventObject;
 
 import static java.awt.event.WindowEvent.WINDOW_GAINED_FOCUS;
-import static java.awt.event.WindowEvent.WINDOW_LOST_FOCUS;
 
 public class MockApp
 {
@@ -659,6 +660,32 @@ public class MockApp
 		comboBox.addActionListener(event -> centralLabel.setText("ComboBox_" + comboBox.getSelectedItem().toString()));
 		panel.add(comboBox);
 		panel.add(new JLabel());
+
+		JComboBox<String> editableComboBox = new JComboBox<>(new String[]{"", "One", "Two", "Three"});
+		editableComboBox.setEditable(true);
+		JTextComponent editorComponent = (JTextComponent) editableComboBox.getEditor().getEditorComponent();
+		String editableName = "EditableComboBox";
+		editorComponent.getDocument().addDocumentListener(new DocumentListener()
+		{
+			@Override
+			public void insertUpdate(DocumentEvent e)
+			{
+				centralLabel.setText(editableName + "_" + editorComponent.getText());
+			}
+
+			@Override
+			public void removeUpdate(DocumentEvent e)
+			{
+			}
+
+			@Override
+			public void changedUpdate(DocumentEvent e)
+			{
+			}
+		});
+
+		editableComboBox.setName(editableName);
+		panel.add(editableComboBox);
 		panel.add(new JLabel());
 	}
 

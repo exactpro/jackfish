@@ -14,6 +14,7 @@
             <slider id="Slider" owner="owner" class="javax.swing.JSlider" addition="Many"/>
             <scrollBar id="ScrollBar" owner="owner" class="javax.swing.JScrollBar" addition="Many"/>
             <comboBox id="ComboBox" owner="owner" class="javax.swing.JComboBox" name="ComboBox" action="comboBoxChanged" addition="Many"/>
+            <comboBox id="EditableComboBox" owner="owner" class="javax.swing.JComboBox" name="EditableComboBox" addition="Many"/>
             <radioButton id="RadioButton" owner="owner" class="javax.swing.JRadioButton" action="Green" text="Green" addition="Many"/>
             <tree id="Tree" owner="owner" class="javax.swing.JTree" addition="Many"/>
             <tabPanel id="TabPanel" owner="owner" class="javax.swing.JTabbedPane" addition="Many"/>
