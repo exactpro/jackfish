@@ -4,6 +4,7 @@ Added the new parameter for the ApplicationStart/Connect action on win plugin - 
 Default value - false.
 If this parameter are true, the application will always move to the front layer.
 Don't use with parameter with value true for connecting to a context menu.
+RM41743 bug : Do.wait() -> Another name of element is displayed in the report.
 
 --------------------------------------------------------------------------------
 18.04.2017 4.4.0.2280

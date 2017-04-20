@@ -103,7 +103,7 @@ public class DialogClose extends AbstractAction
 		
 		if (element == null)
 		{
-			super.setError(message(id, window, SectionKind.Self, null, "Self control is not found."), ErrorKind.ELEMENT_NOT_FOUND);
+			super.setError(message(id, window, SectionKind.Self, null, null, "Self control is not found."), ErrorKind.ELEMENT_NOT_FOUND);
 			return;
 		}
 		

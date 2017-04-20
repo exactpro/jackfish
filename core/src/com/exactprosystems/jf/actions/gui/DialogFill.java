@@ -206,14 +206,14 @@ public class DialogFill extends AbstractAction
 			{
 				if (checkControl(supportedControls, control))
 				{
-					super.setError(message(id, window, onOpen, control, "is not allowed"), ErrorKind.OPERATION_NOT_ALLOWED);
+					super.setError(message(id, window, onOpen, control, null, "is not allowed"), ErrorKind.OPERATION_NOT_ALLOWED);
 					return;
 				}
 
 				OperationResult res = control.operate(service, window, null);
 				if (!res.isOk())
 				{
-					super.setError(message(id, window, onOpen, control, "" + res.getValue()), ErrorKind.OPERATION_FAILED);
+					super.setError(message(id, window, onOpen, control, res.getLocator(), "" + res.getValue()), ErrorKind.OPERATION_FAILED);
 					return;
 				}
 			}
@@ -242,7 +242,7 @@ public class DialogFill extends AbstractAction
 			}
 			if (control == null)
 			{
-				String message = message(id, window, run, control, "is not allowed");
+				String message = message(id, window, run, control, null, "is not allowed");
 				errorsValue.put(name, new MatrixError(message, ErrorKind.LOCATOR_NOT_FOUND, this.owner));
 				super.setErrors(errorsValue);
 				super.setError(message, ErrorKind.LOCATOR_NOT_FOUND);
@@ -251,7 +251,7 @@ public class DialogFill extends AbstractAction
 
 			if (checkControl(supportedControls, control))
 			{
-				String message = message(id, window, run, control, "is not allowed");
+				String message = message(id, window, run, control, null, "is not allowed");
 				errorsValue.put(name, new MatrixError(message, ErrorKind.LOCATOR_NOT_FOUND, this.owner));
 				super.setErrors(errorsValue);
 				super.setError(message, ErrorKind.LOCATOR_NOT_FOUND);
@@ -273,7 +273,7 @@ public class DialogFill extends AbstractAction
 				}
 				else
 				{
-					String message = message(id, window, run, control, "" + res.getValue());
+					String message = message(id, window, run, control, res.getLocator(), "" + res.getValue());
 					errorsValue.put(name, new MatrixError(message, ErrorKind.LOCATOR_NOT_FOUND, this.owner));
 					if (this.stopOnFail)
 					{
@@ -291,7 +291,7 @@ public class DialogFill extends AbstractAction
 			{
 				//Todo i think, that all exception from remote side need be instance of JFRemoteException
 				RemoteException t = (RemoteException) e.getCause();
-				String mes = message(id, window, run, control, t.getMessage());
+				String mes = message(id, window, run, control, null, t.getMessage());
 
 				if (!this.stopOnFail)
 				{
@@ -328,7 +328,7 @@ public class DialogFill extends AbstractAction
 				if (this.stopOnFail)
 				{
 
-					String message = message(id, window, run, control, e.getMessage());
+					String message = message(id, window, run, control, null, e.getMessage());
 					errorsValue.put(name, new MatrixError(message, ErrorKind.EXCEPTION, owner));
 					super.setErrors(errorsValue);
 					super.setError(message, ErrorKind.EXCEPTION);
@@ -337,7 +337,7 @@ public class DialogFill extends AbstractAction
 				else
 				{
 
-					String message = message(id, window, run, control, e.getMessage());
+					String message = message(id, window, run, control, null, e.getMessage());
 					errorsValue.put(name, new MatrixError(message, ErrorKind.EXCEPTION, owner));
 					allReportErrors += message;
 				}
@@ -352,14 +352,14 @@ public class DialogFill extends AbstractAction
 			{
 				if (checkControl(supportedControls, control))
 				{
-					super.setError(message(id, window, onClose, control, "is not allowed"), ErrorKind.OPERATION_NOT_ALLOWED);
+					super.setError(message(id, window, onClose, control, null, "is not allowed"), ErrorKind.OPERATION_NOT_ALLOWED);
 					return;
 				}
 
 				OperationResult res = control.operate(service, window, null);
 				if (!res.isOk())
 				{
-					super.setError(message(id, window, onClose, control, "" + res.getValue()), ErrorKind.OPERATION_FAILED);
+					super.setError(message(id, window, onClose, control, res.getLocator(), "" + res.getValue()), ErrorKind.OPERATION_FAILED);
 					return;
 				}
 			}

@@ -18,10 +18,7 @@ import java.awt.Color;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -226,7 +223,7 @@ public enum OperationKind
 		@Override
 		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, Holder<T> holder, OperationResult result) throws Exception
 		{
-			return executor.press(holder.getValue(), part.key);
+		    return executor.press(holder.getValue(), part.key);
 		}
 	},
 	
@@ -247,7 +244,7 @@ public enum OperationKind
 		@Override
 		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, Holder<T> holder, OperationResult result) throws Exception
 		{
-			return executor.upAndDown(holder.getValue(), part.key, false);
+		    return executor.upAndDown(holder.getValue(), part.key, false);
 		}
 	},
 	
@@ -268,7 +265,7 @@ public enum OperationKind
 		@Override
 		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, Holder<T> holder, OperationResult result) throws Exception
 		{
-			return executor.upAndDown(holder.getValue(), part.key, true);
+		    return executor.upAndDown(holder.getValue(), part.key, true);
 		}
 	},
 	
@@ -320,10 +317,6 @@ public enum OperationKind
             List<String> list = executor.getList(holder.getValue());
             StringBuilder sb = new StringBuilder();
             boolean res = compareTwoLists(part.list, list, part.b, sb);
-            if (!res)
-            {
-                result.setError(sb.toString());
-            }
             result.setOk(res);
             return res;
         }
@@ -384,6 +377,12 @@ public enum OperationKind
         }
 
         @Override
+        protected String errorMessage(Part part)
+        {
+            return null;
+        }
+        
+        @Override
         public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, Holder<T> holder, OperationResult result) throws Exception
         {
             Color actual = executor.getColorXY(holder.getValue(), part.x, part.y);
@@ -392,7 +391,7 @@ public enum OperationKind
             boolean res = part.colorCondition.isMatched(map);
             if (!res)
             {
-                result.setError("Expected color: " + ((ColorCondition)part.colorCondition).getColor() + " actual color: " + actual);
+                result.setError("Expected color: " + ((ColorCondition)part.colorCondition).getColor() + " actual color: " + actual, part.locator);
             }
             result.setOk(res);
             return res;
@@ -539,11 +538,11 @@ public enum OperationKind
 				Locator locator = holder.get(LocatorKind.Element);
 				if (locator != null && locator.getControlKind() == ControlKind.Table)
 				{
-					return executor.mouse(executor.lookAtTable(holder.getValue(), holder.get(LocatorKind.Rows), holder.get(LocatorKind.Header), part.x, part.y), Integer.MIN_VALUE, Integer.MIN_VALUE, MouseAction.Move);
+				    return executor.mouse(executor.lookAtTable(holder.getValue(), holder.get(LocatorKind.Rows), holder.get(LocatorKind.Header), part.x, part.y), Integer.MIN_VALUE, Integer.MIN_VALUE, MouseAction.Move);
 				}
 				else
 				{
-					return executor.mouse(holder.getValue(), part.x, part.y, MouseAction.Move);
+				    return executor.mouse(holder.getValue(), part.x, part.y, MouseAction.Move);
 				}
 			}
 		}
@@ -579,18 +578,18 @@ public enum OperationKind
 			MouseAction mouse = part.mouse == null ? MouseAction.LeftClick : part.mouse;
 			if (isTable(holder, executor))
 			{
-				return executor.mouseTable(holder.getValue(), part.x, part.y, mouse);
+			    return executor.mouseTable(holder.getValue(), part.x, part.y, mouse);
 			}
 			else
 			{
 				Locator locator = holder.get(LocatorKind.Element);
 				if (locator != null && locator.getControlKind() == ControlKind.Table)
 				{
-					return executor.mouse(executor.lookAtTable(holder.getValue(), holder.get(LocatorKind.Rows), holder.get(LocatorKind.Header), part.x, part.y), Integer.MIN_VALUE, Integer.MIN_VALUE, mouse);
+				    return executor.mouse(executor.lookAtTable(holder.getValue(), holder.get(LocatorKind.Rows), holder.get(LocatorKind.Header), part.x, part.y), Integer.MIN_VALUE, Integer.MIN_VALUE, mouse);
 				}
 				else
 				{
-					return executor.mouse(holder.getValue(), part.x, part.y, mouse);
+				    return executor.mouse(holder.getValue(), part.x, part.y, mouse);
 				}
 			}
 		}
@@ -614,7 +613,7 @@ public enum OperationKind
 		@Override
 		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, Holder<T> holder, OperationResult result) throws Exception
 		{
-			return executor.text(holder.getValue(), "" + part.text, part.b);
+		    return executor.text(holder.getValue(), "" + part.text, part.b);
 		}
 	},
 	
@@ -635,7 +634,7 @@ public enum OperationKind
 		@Override
 		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, Holder<T> holder, OperationResult result) throws Exception
 		{
-			return isTable(holder, executor) 
+		    return isTable(holder, executor) 
 					? executor.textTableCell(holder.getValue(), part.x, part.y, "" + part.text) 
 					: executor.text(executor.lookAtTable(holder.getValue(), holder.get(LocatorKind.Rows), holder.get(LocatorKind.Header), part.x, part.y), "" + part.text, part.b);
 		}
@@ -658,7 +657,7 @@ public enum OperationKind
 		@Override
 		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, Holder<T> holder, OperationResult result) throws Exception
 		{
-			return executor.toggle(holder.getValue(), part.b);
+		    return executor.toggle(holder.getValue(), part.b);
 		}
 	},
 	
@@ -679,7 +678,7 @@ public enum OperationKind
 		@Override
 		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, Holder<T> holder, OperationResult result) throws Exception
 		{
-            return executor.selectByIndex(holder.getValue(), part.i);
+		    return executor.selectByIndex(holder.getValue(), part.i);
 		}
 	},
 	
@@ -700,7 +699,7 @@ public enum OperationKind
 		@Override
 		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, Holder<T> holder, OperationResult result) throws Exception
 		{
-            return executor.select(holder.getValue(), part.text);
+		    return executor.select(holder.getValue(), part.text);
 		}
 	},
 	
@@ -721,7 +720,7 @@ public enum OperationKind
 		@Override
 		public <T> boolean operateDerived(Part part, OperationExecutor<T> executor, Holder<T> holder, OperationResult result) throws Exception
 		{
-			return executor.expand(holder.getValue(), part.text, true);
+		    return executor.expand(holder.getValue(), part.text, true);
 		}
 	},
 	
@@ -793,6 +792,10 @@ public enum OperationKind
 			return part.locatorId == null ? ".wait(%15$s, %2$d, %16$b)" : ".wait('%13$s', %2$d, %16$b)";
 		}
 		
+	    protected String errorMessage(Part part)
+	    {
+	        return this.toFormula(part) + " Timeout";
+	    }
 
 		@Override
 		protected boolean needToFind()
@@ -1105,7 +1108,16 @@ public enum OperationKind
 			throw new ElementNotEnabled("Element " + locator.getId() + " is not enabled in operation: " + this);
 		}
 
-		return operateDerived(part, executor, holder, result);
+		boolean res = operateDerived(part, executor, holder, result);
+		if (!res)
+		{
+		    String errorMessage = errorMessage(part); 
+		    if (errorMessage != null)
+		    {
+		        result.setError(errorMessage(part), part.locator);
+		    }
+		}
+		return res;
 	}
 
 
@@ -1121,7 +1133,12 @@ public enum OperationKind
 		return true;
 	}
 	
-	protected abstract <T> boolean operateDerived(Part part, OperationExecutor<T> executor, Holder<T> holder, OperationResult result) throws Exception;
+    protected String errorMessage(Part part)
+    {
+        return this.toFormula(part) + " can't be performed";
+    }
+
+    protected abstract <T> boolean operateDerived(Part part, OperationExecutor<T> executor, Holder<T> holder, OperationResult result) throws Exception;
 
 	private static boolean checkText(String componentText, String what, boolean isRegexp, boolean needException) throws Exception
 	{

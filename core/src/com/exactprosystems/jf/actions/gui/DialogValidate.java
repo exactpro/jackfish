@@ -158,14 +158,14 @@ public class DialogValidate extends AbstractAction
 			{
 				if (checkControl(supportedControls, control))
 				{
-					super.setError(message(id, window, onOpen, control, "is not allowed"), ErrorKind.OPERATION_NOT_ALLOWED);
+					super.setError(message(id, window, onOpen, control, null, "is not allowed"), ErrorKind.OPERATION_NOT_ALLOWED);
 					return;
 				}
 
 				OperationResult res = control.operate(service, window, null);
 				if (!res.isOk())
 				{
-					super.setError(message(id, window, onOpen, control, "" + res.getValue()), ErrorKind.NOT_EQUAL);
+					super.setError(message(id, window, onOpen, control, res.getLocator(), "" + res.getValue()), ErrorKind.NOT_EQUAL);
 					return;
 				}
 			}
@@ -186,7 +186,7 @@ public class DialogValidate extends AbstractAction
             IControl control  = sectionRun.getControlById(parameter.getName());
             if (control == null)
             {
-                super.setError(message(id, window, run, control, "is not found in the dictionary"), ErrorKind.LOCATOR_NOT_FOUND);
+                super.setError(message(id, window, run, control, null, "is not found in the dictionary"), ErrorKind.LOCATOR_NOT_FOUND);
                 return;
             }
 
@@ -213,7 +213,7 @@ public class DialogValidate extends AbstractAction
 
 		if (!totalResult)
 		{
-			super.setError(message(id, window, run, null, "Dialog verifing failed."), ErrorKind.FAIL);
+			super.setError(message(id, window, run, null, null, "Dialog verifing failed."), ErrorKind.FAIL);
 			return;
 		}
 
@@ -228,14 +228,14 @@ public class DialogValidate extends AbstractAction
 			{
 				if (checkControl(supportedControls, control))
 				{
-					super.setError(message(id, window, onClose, control, "is not allowed"), ErrorKind.OPERATION_NOT_ALLOWED);
+					super.setError(message(id, window, onClose, control, null, "is not allowed"), ErrorKind.OPERATION_NOT_ALLOWED);
 					return;
 				}
 
 				OperationResult res = control.operate(service, window, null);
 				if (!res.isOk())
 				{
-					super.setError(message(id, window, onClose, control, " returned 'false'. Process is stopped."), ErrorKind.NOT_EQUAL);
+					super.setError(message(id, window, onClose, control, res.getLocator(), " returned 'false'. Process is stopped."), ErrorKind.NOT_EQUAL);
 					return;
 				}
 			}

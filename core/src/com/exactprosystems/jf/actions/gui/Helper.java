@@ -14,6 +14,7 @@ import com.exactprosystems.jf.api.app.IControl;
 import com.exactprosystems.jf.api.app.IGuiDictionary;
 import com.exactprosystems.jf.api.app.IWindow;
 import com.exactprosystems.jf.api.app.IWindow.SectionKind;
+import com.exactprosystems.jf.api.app.Locator;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.documents.config.Context;
@@ -80,10 +81,10 @@ class Helper
 		return dictionary;
 	}
 	
-	public static String message(String appId, IWindow window, SectionKind section, IControl control, String msg)
+	public static String message(String appId, IWindow window, SectionKind section, IControl control, Locator locator, String msg)
 	{
-		return "App[" + appId + "] " + "Dialog[" + window.getName() +  "] Section[" + section + "] " 
-				+ (control == null ? "" : ("Control[" + control + "] ")) + msg;
+        return "/" + appId + "/" + window.getName() +  "/" + section + "/" + Str.asString(control) + " - " + Str.asString(locator) + " "
+                + msg;
 	}
 
 	

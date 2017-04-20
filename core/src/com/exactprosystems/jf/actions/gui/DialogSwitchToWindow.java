@@ -121,7 +121,7 @@ public class DialogSwitchToWindow extends AbstractAction
 			IControl element = window.getControlForName(null, frame);
 			if (element == null)
 			{
-				super.setError(message(id, window, SectionKind.Self, null, "Self control is not found."), ErrorKind.ELEMENT_NOT_FOUND);
+				super.setError(message(id, window, SectionKind.Self, null, null, "Self control is not found."), ErrorKind.ELEMENT_NOT_FOUND);
 				return;
 			}
 			service.switchToFrame(element.locator());

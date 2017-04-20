@@ -155,7 +155,7 @@ public class ImageGet extends AbstractAction
 				IControl control = window.getControlForName(SectionKind.Run, this.name);
 				if (control == null)
 				{
-					super.setError(message(id, window, SectionKind.Self, null, "Self control is not found."), ErrorKind.ELEMENT_NOT_FOUND);
+					super.setError(message(id, window, SectionKind.Self, null, null, "Self control is not found."), ErrorKind.ELEMENT_NOT_FOUND);
 					return;
 				}
 				IControl owner = window.getOwnerControl(control);

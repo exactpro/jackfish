@@ -23,6 +23,7 @@ public class OperationResult implements Serializable
 	private Integer                     integer             = null;
 	private String						text				= null;
     private String                      error               = null;
+    private Locator                     locator             = null;
     private List<String>                list                = null;
 	private Map<String, String>			map					= null;
 	private Map<String, ValueAndColor>	colorMap			= null;
@@ -45,10 +46,11 @@ public class OperationResult implements Serializable
 	    this.integer = i;
 	}
 	
-    public void setError(String text)
+    public void setError(String text, Locator locator)
     {
         this.ok = false;
         this.error = text;
+        this.locator = locator;
     }
 
 	public void setText(String text)
@@ -140,6 +142,11 @@ public class OperationResult implements Serializable
 		return null;
 	}
 	
+	public Locator getLocator()
+	{
+	    return this.locator;
+	}
+	
 	
 	public String humanablePresentation()
 	{
@@ -149,6 +156,10 @@ public class OperationResult implements Serializable
 	    }
 	    
 		StringBuilder builder = new StringBuilder();
+        if (this.locator != null)
+        {
+            builder.append(" locator [").append(this.locator).append("];");
+        }
         if (this.bool != null)
         {
             builder.append(" bool [").append(this.bool).append("];");

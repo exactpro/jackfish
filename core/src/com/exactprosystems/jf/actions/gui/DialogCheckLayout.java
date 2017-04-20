@@ -164,14 +164,14 @@ public class DialogCheckLayout extends AbstractAction
 			{
 				if (checkControl(supportedControls, control))
 				{
-					super.setError(message(id, window, onOpen, control, "is not allowed"), ErrorKind.OPERATION_NOT_ALLOWED);
+					super.setError(message(id, window, onOpen, control, null, "is not allowed"), ErrorKind.OPERATION_NOT_ALLOWED);
 					return;
 				}
 
 				OperationResult res = control.operate(service, window, null);
 				if (!res.isOk())
 				{
-					super.setError(message(id, window, onOpen, control, "" + res.getValue()), ErrorKind.NOT_EQUAL);
+					super.setError(message(id, window, onOpen, control, res.getLocator(), "" + res.getValue()), ErrorKind.NOT_EQUAL);
 					return;
 				}
 			}
@@ -190,13 +190,13 @@ public class DialogCheckLayout extends AbstractAction
 			IControl control = sectionRun.getControlByIdAndValue(name, obj);
 			if (control == null)
 			{
-				super.setError(message(id, window, run, control, "is not allowed"), ErrorKind.LOCATOR_NOT_FOUND);
+				super.setError(message(id, window, run, control, null, "is not allowed"), ErrorKind.LOCATOR_NOT_FOUND);
 				return;
 			}
 
 			if (checkControl(supportedControls, control))
 			{
-				super.setError(message(id, window, run, control, "is not allowed"), ErrorKind.OPERATION_NOT_ALLOWED);
+				super.setError(message(id, window, run, control, null, "is not allowed"), ErrorKind.OPERATION_NOT_ALLOWED);
 				return;
 			}
 			
@@ -215,7 +215,7 @@ public class DialogCheckLayout extends AbstractAction
 
 		if (!totalResult)
 		{
-			super.setError(message(id, window, run, null, "Layout checking failed."), ErrorKind.NOT_EQUAL);
+			super.setError(message(id, window, run, null, null, "Layout checking failed."), ErrorKind.NOT_EQUAL);
 			return;
 		}
 
@@ -228,14 +228,14 @@ public class DialogCheckLayout extends AbstractAction
 			{
 				if (checkControl(supportedControls, control))
 				{
-					super.setError(message(id, window, onClose, control, "is not allowed"), ErrorKind.OPERATION_NOT_ALLOWED);
+					super.setError(message(id, window, onClose, control, null, "is not allowed"), ErrorKind.OPERATION_NOT_ALLOWED);
 					return;
 				}
 
 				OperationResult res = control.operate(service, window, null);
 				if (!res.isOk())
 				{
-					super.setError(message(id, window, onClose, control, " returned 'false'. Process is stopped."), ErrorKind.NOT_EQUAL);
+					super.setError(message(id, window, onClose, control, res.getLocator(), " returned 'false'. Process is stopped."), ErrorKind.NOT_EQUAL);
 					return;
 				}
 			}
