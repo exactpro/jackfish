@@ -2113,10 +2113,24 @@ namespace UIAdapter
         private static void SetTextToElement(AutomationElement element, string text)
         {
             int windowHandle = (int)element.GetCurrentPropertyValue(AutomationElement.NativeWindowHandleProperty);
+            logger.All("Get element handle : " + windowHandle);
             if (windowHandle != 0x0)
             {
+                logger.All("start send message via winAPI");
                 IntPtr ptr = new IntPtr(windowHandle);              // WM_SETTEXT = 0x000C
-                UIAdapter.Win32.UnsafeNativeMethods.SendMessage(ptr, 0x000C, IntPtr.Zero, text);
+                IntPtr ret = UIAdapter.Win32.UnsafeNativeMethods.SendMessage(ptr, 0x000C, IntPtr.Zero, text);
+                logger.All("end send message via winAPI. Return value : " + ret);
+
+                //if returned value is -1 ( i think this mean, that text not setted and i don't see the text on gui) try to use ValuePattern for setting text;
+                if (ret.Equals(new IntPtr(-1)))
+                {
+                    object obj = null;
+                    if (element.TryGetCurrentPattern(ValuePattern.Pattern, out obj))
+                    {
+                        var vp = (ValuePattern)obj;
+                        vp.SetValue(text);
+                    }
+                }
             }
             else
             {
