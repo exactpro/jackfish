@@ -255,7 +255,6 @@
             resources.ApplyResources(this.ComboBox, "ComboBox");
             this.ComboBox.Name = "ComboBox";
             this.ComboBox.SelectedValueChanged += new System.EventHandler(this.ComboBox_SelectedValueChanged);
-            //this.ComboBox.TextUpdate += new System.EventHandler(this.ComboBox_TextValueChanged);
             this.ComboBox.TextChanged += new System.EventHandler(this.ComboBox_TextValueChanged);
             this.ComboBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.CommonKeyDown);
             this.ComboBox.MouseDown += new System.Windows.Forms.MouseEventHandler(this.CommonMouseDown);
@@ -570,6 +569,9 @@
             // Main
             // 
             resources.ApplyResources(this, "$this");
+            this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
+            this.Left = 100;
+            this.Top = 50;
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ContextMenuStrip = this.contextMenuStrip1;
             this.Controls.Add(this.ToggleButton);
