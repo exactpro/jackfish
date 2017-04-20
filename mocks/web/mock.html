@@ -67,9 +67,16 @@
 		}
 	};
 
+	var comboBoxKeyUp = function(e, cb) {
+		if (cb.value.match(/^[a-zA-Z!]+$/)) {
+			document.getElementById('centralLabel').textContent = 'EditableComboBox_' + cb.value;
+		}
+	}
+
 	document.addEventListener('DOMContentLoaded', function () {
 		document.querySelector('#checkbox').addEventListener('change', function(e) {console.log(e)});
 	});
+});
 	</script>
 </head>
 <body onload="addAllListeners()">
@@ -217,6 +224,16 @@
 		<option value="Orange">Orange</option>
 		<option value="Blue">Blue</option>
 	</select>
+</div>
+<div id="divEditableComboBox">
+	<div>
+		<select class="editableBox">
+			<option value="1">Value number 1</option>
+			<option value="2">Value number 2</option>
+			<option value="3">Value number 3</option>
+		</select>
+		<input class="timeTextBox" onkeyup="comboBoxKeyUp(event,this)" id="editableComboBox" name="timebox"/>
+	</div>
 </div>
 
 <dialog id="dialogd" name="DialogD" class="add_listener" kindname="DialogD" func="123456" open>

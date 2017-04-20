@@ -59,7 +59,7 @@
         <name>WEB_Unix</name>
         <parameters>
             <key>ChromeDriverPath</key>
-            <value>unix/chromedriver-linux-2.2-x64.</value>
+            <value>unix/chromedriver-linux-2.28-x64.</value>
         </parameters>
         <parameters>
             <key>IEDriverPath</key>

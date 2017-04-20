@@ -2,7 +2,7 @@
 <dictionary>
     <window name="Main">
         <self>
-            <any id="" uid="" xpath="//body" useAbsoluteXpath="true" class="" title="" text=""/>
+            <any id="" uid="" xpath="//body" class="" title="" text=""/>
         </self>
         <onOpen/>
         <run>
@@ -26,8 +26,9 @@
             <panel id="PanelBase" uid="basicpanel" addition="Many"/>
             <listView id="ListUL" uid="listUL" addition="Many"/>
             <frame id="MyFrame" uid="myIframe" owner="" addition="Many"/>
-            <dialog id="DialogD" uid="dialogd" xpath=".//dialog[@id=&amp;quot;dialogd&amp;quot;]" useAbsoluteXpath="true" owner="" addition="Many"/>
+            <dialog id="DialogD" uid="dialogd" xpath=".//dialog[@id=&amp;quot;dialogd&amp;quot;]" owner="" addition="Many"/>
             <image id="ImageIDE" uid="imageIDE" owner="" addition="Many"/>
+            <comboBox id="EditableComboBox" uid="editableComboBox" addition="Many"/>
         </run>
         <onClose/>
         <close>
