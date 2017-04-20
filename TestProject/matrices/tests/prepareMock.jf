@@ -58,9 +58,6 @@ Add start adapter action;;;
 
 #TestCase;#Kind;#Depends;#For
 Generate;;;
-    #Action;#Table;#Index;#Name;#Off
-    TableSetValue;table;0;null;null
-
     #For;#From;#To;#Step
     i;1;table.size()-1;1
         #Action;#currentLine
@@ -80,7 +77,7 @@ Generate;;;
         Vars;new ArrayList(currentLine.keySet());new ArrayList(currentLine.values())
 
         #Action;#Line;#Text
-        TextAddLine;'#TestCase\ncontrol ' + name;matrixText
+        TextAddLine;'#TestCase\u003b#Kind\u003b#Depends\u003b#For\ncontrol ' + name + '\u003bOnError\u003b\u003b';matrixText
 
         #For;#From;#To;#Step
         j;2;operationsArray.size() - 1;1
