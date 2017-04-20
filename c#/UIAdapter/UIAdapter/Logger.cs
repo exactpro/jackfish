@@ -125,7 +125,7 @@ namespace UIAdapter.Logger
             {
                 frame = trace.GetFrame(4);
             }
-            return String.Format("{0,-5}  {1} [ThreadId : {2}] {3}:{4} - {5}\r\n"
+            return String.Format("{0,-5}  {1} [ThreadId : {2}] {3,17}:{4,4} - {5}\r\n"
                 , level.ToUpper()
                 , DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff")
                 , System.Threading.Thread.CurrentThread.ManagedThreadId

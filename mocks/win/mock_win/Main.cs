@@ -172,6 +172,11 @@ namespace mock_win
             centralLabel.Text = ComboBox.Name + "_" + ComboBox.SelectedItem;
         }
 
+        private void ComboBox_TextValueChanged(object sender, EventArgs e)
+        {
+            centralLabel.Text = ComboBox.Name + "_" + ComboBox.Text;
+        }
+
         private void TextBox_TextChanged(object sender, EventArgs e)
         {
             centralLabel.Text = TextBox.Name + "_" + TextBox.Text;
