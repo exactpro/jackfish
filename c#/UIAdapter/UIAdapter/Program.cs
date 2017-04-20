@@ -116,7 +116,7 @@ namespace UIAdapter
 
         #region application methods
         [DllExport("connect", CallingConvention.Cdecl)]
-        public static int Connect(string title, int height, int width, int pid, int controlKind, int timeout)
+        public static int Connect(string title, int height, int width, int pid, int controlKind, int timeout, bool alwaysToFront)
         {
             //logger.All("title=" + title + " height=" + height + " width=" + width + " pid=" + pid + " controlKind=" + controlKind + " timeout=" + timeout);
             Task<int> task = Task<int>.Factory.StartNew(() =>
@@ -217,7 +217,8 @@ namespace UIAdapter
                 logger.All("Connected successful ? " + res);
                 if (res)
                 {
-                    //toFront();
+                    Program.alwaysToFront = alwaysToFront;
+                    toFront();
                     return task.Result;
                 }
                 else
@@ -235,7 +236,7 @@ namespace UIAdapter
         }
 
         [DllExport("run", CallingConvention.Cdecl)]
-        public static int Run(string exec, string workDir, string param)
+        public static int Run(string exec, string workDir, string param, bool alwaysToFront)
         {
             try
             {
@@ -255,7 +256,8 @@ namespace UIAdapter
                 Thread.Sleep(1000);
                 UpdateHandler();
                 frameWorkId = handler.Current.FrameworkId;
-                //toFront();
+                Program.alwaysToFront = alwaysToFront;
+                toFront();
                 logger.All("method Run", getMilis() - startMethod);
                 return handler.Current.ProcessId;
             }
@@ -2370,12 +2372,15 @@ namespace UIAdapter
                 object propValue = handler.GetCurrentPropertyValue(AutomationElement.IsKeyboardFocusableProperty);
                 Boolean isKeyboardFocusable = (Boolean)propValue;
                 logger.All("Is keyboard focusable : " + isKeyboardFocusable);
-                if (!isKeyboardFocusable)
+                if (isKeyboardFocusable)
+                {
+                    handler.SetFocus();
+                }
+                else if (!alwaysToFront)
                 {
                     return;
                 }
                 SafeNativeMethods.SetForegroundWindow(new IntPtr(handler.Current.NativeWindowHandle));
-                handler.SetFocus();
             }
             catch (Exception e)
             {
@@ -2421,7 +2426,7 @@ namespace UIAdapter
         #region variables
 
         public static Logger.Logger logger = new Logger.Logger(LogLevel.None);
-
+        public static bool alwaysToFront = false;
         public static PluginInfo pluginInfo = null;
 
         private static int maxTimeout = 10000;

@@ -105,11 +105,11 @@ public JnaDriverImpl(Logger logger) throws Exception
 	//endregion
 
 	//region application methods
-	public int connect(String title, int height, int width, int pid, ControlKind controlKind, int timeout) throws Exception
+	public int connect(String title, int height, int width, int pid, ControlKind controlKind, int timeout, boolean alwaysToFront) throws Exception
 	{
 		long start = System.currentTimeMillis();
 		title = ConvertString.replaceNonASCIISymbolsToUnicodeSubString(title);
-		int ret = this.jnaDriver.connect(title, height, width, pid, controlKind == null ? Integer.MIN_VALUE : controlKind.ordinal(), timeout);
+		int ret = this.jnaDriver.connect(title, height, width, pid, controlKind == null ? Integer.MIN_VALUE : controlKind.ordinal(), timeout, alwaysToFront);
 		this.logger.info(String.format("connect(%s), time (ms) : %d", title, System.currentTimeMillis() - start));
 		checkCSharpTimes();
 		checkError();
@@ -117,11 +117,11 @@ public JnaDriverImpl(Logger logger) throws Exception
 		return ret;
 	}
 
-	public int run(String exec, String workDir, String param) throws Exception
+	public int run(String exec, String workDir, String param, boolean alwaysToFront) throws Exception
 	{
 		long start = System.currentTimeMillis();
-		int ret = this.jnaDriver.run(exec, workDir, param);
-		this.logger.info(String.format("start(%s,%s,%s), time (ms) : %d", exec, workDir, param, System.currentTimeMillis() - start));
+		int ret = this.jnaDriver.run(exec, workDir, param, alwaysToFront);
+		this.logger.info(String.format("start(%s,%s,%s,%s), time (ms) : %d", exec, workDir, param, alwaysToFront, System.currentTimeMillis() - start));
 		checkCSharpTimes();
 		checkError();
 		
@@ -527,7 +527,7 @@ public JnaDriverImpl(Logger logger) throws Exception
 	public static void main1(String[] args) throws Exception
 	{
 		JnaDriverImpl driver = new JnaDriverImpl(Logger.getLogger(JnaDriverImpl.class));
-		driver.connect("Calc", Integer.MIN_VALUE, Integer.MIN_VALUE, Integer.MIN_VALUE, null, 5000);
+		driver.connect("Calc", Integer.MIN_VALUE, Integer.MIN_VALUE, Integer.MIN_VALUE, null, 5000, false);
 		System.out.println("title : " + driver.title());
 		int l = 100 * 100;
 		int a[] = new int[l];

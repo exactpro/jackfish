@@ -22,6 +22,7 @@ public class WinAppFactory implements IApplicationFactory
 	public static final String		jreArgsName				= "jreArgs";
 	public static final String		maxTimeout				= "MaxTimeout";
 
+	public static final String		alwaysToFront			= "AlwaysToFront";
 	public static final String		mainWindowName			= "MainWindow";
 	public static final String		mainWindowHeight		= "Height";
 	public static final String		mainWindowWidth			= "Width";
@@ -57,8 +58,8 @@ public class WinAppFactory implements IApplicationFactory
 		switch (kind)
 		{
 			case LOAD:		return new String[] { jreExecName, jreArgsName, maxTimeout, logLevel};
-			case START:		return new String[] { execName, workDirName, argsName };
-			case CONNECT:   return new String[] { mainWindowName, mainWindowHeight, mainWindowWidth, pidName, controlKindName, connectionTimeout };
+			case START:		return new String[] { execName, workDirName, argsName, alwaysToFront };
+			case CONNECT:   return new String[] { mainWindowName, mainWindowHeight, mainWindowWidth, pidName, controlKindName, connectionTimeout, alwaysToFront };
 			case PROPERTY:  return new String[] { propertyWindowRectangle, propertyTitle }; 
 			default:		return empty;	
 		}

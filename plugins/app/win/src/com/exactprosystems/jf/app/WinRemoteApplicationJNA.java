@@ -173,14 +173,16 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 				throw new Exception("At least one of params (MainWindow, ControlKind, Height, PID, Width) must be filled");
 			}
 
+			boolean alwaysToFront = Boolean.valueOf(args.get(WinAppFactory.alwaysToFront));
+
 			logger.info("##########################################################################################################");
-			logger.info(String.format("connectionDerived(%s, %d, %d, %d, %s, $d)", title, height, width, pid, controlKind, timeout));
+			logger.info(String.format("connectionDerived(%s, %d, %d, %d, %s, %d, %s)", title, height, width, pid, controlKind, timeout, alwaysToFront));
 			logger.info("All parameters : " + args.toString());
 			this.driver = new JnaDriverImpl(this.logger);
 			setLogger(this.driver, args.get(logLevel));
 			setMaxTimeout(this.driver, args.get(maxTimeout));
 			this.operationExecutor = new WinOperationExecutorJNA(this.logger, this.driver);
-			return this.driver.connect(title, height, width, pid, controlKind, timeout);
+			return this.driver.connect(title, height, width, pid, controlKind, timeout, alwaysToFront);
 		}
 		catch (RemoteException e)
 		{
@@ -211,13 +213,14 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 			{
 				throw new Exception("WorkDir can't be null or empty.");
 			}
+			boolean alwaysToFront = Boolean.valueOf(args.get(WinAppFactory.alwaysToFront));
 			this.logger.info("##########################################################################################################");
 			this.logger.info("runDerived(" + args + ")");
 			this.driver = new JnaDriverImpl(this.logger);
 			setLogger(this.driver, args.get(logLevel));
 			setMaxTimeout(this.driver, args.get(maxTimeout));
 			this.operationExecutor = new WinOperationExecutorJNA(this.logger, this.driver);
-			return this.driver.run(exec, workDir, parameters);
+			return this.driver.run(exec, workDir, parameters, alwaysToFront);
 		}
 		catch (RemoteException e)
 		{
