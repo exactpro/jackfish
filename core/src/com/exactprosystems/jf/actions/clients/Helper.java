@@ -89,7 +89,7 @@ public class Helper
 	{
 		IClientFactory factory = getFactory(matrix, context, parameters, clientName, connectionName);
 		AbstractEvaluator evaluator = context.getEvaluator();
-		IMessageDictionary dic = factory.getDictionary();
+	    IMessageDictionary dic = factory.getDictionary();
         for (IField message : dic.getMessages())
         {
             IAttribute entityType = message.getAttribute("entity_type");
@@ -172,14 +172,17 @@ public class Helper
 		if (messageTypeName != null)
 		{
 			String messageType = Str.asString(parameters.get(messageTypeName));
-			IMessage message = dic.getMessage(messageType);
-			if (message == null)
+			if (!Str.areEqual(messageType, "*"))
 			{
-				throw new Exception("The message with message type='" + messageType + "' is unknown.");
-			}
-			for (IField field : message.getFields())
-			{
-				list.add(new ReadableValue(field.getName()));
+    			IMessage message = dic.getMessage(messageType);
+    			if (message == null)
+    			{
+    				throw new Exception("The message with message type='" + messageType + "' is unknown.");
+    			}
+    			for (IField field : message.getFields())
+    			{
+    				list.add(new ReadableValue(field.getName()));
+    			}
 			}
 		}
 	}

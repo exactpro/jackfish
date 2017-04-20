@@ -59,7 +59,7 @@ public class ClientGetMessage extends AbstractAction
 	@ActionFieldAttribute(name = connectionName, mandatory = true, description = "The connection with the client, which is derived from the action ClientLoad." )
 	protected ClientConnection	connection	= null;
 
-	@ActionFieldAttribute(name = messageTypeName, mandatory = true, description = "The type of the message." )
+	@ActionFieldAttribute(name = messageTypeName, mandatory = true, description = "The type of the message. Use * for any type of messages." )
 	protected String	messageType	= null;
 
 	@ActionFieldAttribute(name = conditionsName, mandatory = false, description = "The conditions upon which the message will be checked.")
@@ -84,7 +84,7 @@ public class ClientGetMessage extends AbstractAction
 	@Override
 	protected HelpKind howHelpWithParameterDerived(Context context, Parameters parameters, String fieldName) throws Exception
 	{
-		if (messageTypeName.equals(fieldName))
+		if (messageTypeName.equals(fieldName) || removeName.equals(fieldName))
 		{
 			return HelpKind.ChooseFromList;
 		}
@@ -98,6 +98,7 @@ public class ClientGetMessage extends AbstractAction
 		switch (parameterToFill)
 		{
 			case messageTypeName:
+                list.add(new ReadableValue(context.getEvaluator().createString("*"), "Any messages"));
 				Helper.messageTypes(list, this.owner.getMatrix(), context, parameters, null, connectionName);
 				break;
 				

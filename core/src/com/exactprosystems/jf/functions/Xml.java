@@ -151,7 +151,6 @@ public class Xml
 		List<Xml> res = new ArrayList<Xml>();
 		NodeList nodes = this.node.getChildNodes();
 		
-		
 		if (nodes != null)
 		{
 			for (int i = 0; i < nodes.getLength(); i++)

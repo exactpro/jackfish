@@ -69,6 +69,10 @@
             <key>HeartBeatTimeout</key>
             <value>2000</value>
         </parameters>
+        <parameters>
+            <key>MillisecondsInUTC</key>
+            <value>true</value>
+        </parameters>
         <clientJar>${JF}/clients/fix.jar</clientJar>
         <clientLimit>0</clientLimit>
         <clientDictionary>dic/clients/FIX50.xml</clientDictionary>
@@ -89,7 +93,14 @@
         </parameters>
         <clientJar>${JF}/clients/sfclient.jar</clientJar>
         <clientLimit>0</clientLimit>
-        <clientDictionary>dic/clients/FIX50.xml</clientDictionary>
+        <clientDictionary>dic/clients/FIX50.LSE.xml</clientDictionary>
+    </clientEntry>
+    <clientEntry>
+        <name>TestClient</name>
+        <clientDescription>Test dts client</clientDescription>
+        <clientJar>${JF}/clients/fix.jar</clientJar>
+        <clientLimit>0</clientLimit>
+        <clientDictionary>../core/dic/clients/FIX50.xml</clientDictionary>
     </clientEntry>
     <serviceEntry>
         <name>SF</name>
@@ -100,6 +111,11 @@
         <name>TEST</name>
         <serviceDescription>It is a matrix run service</serviceDescription>
         <serviceJar>services/test.jar</serviceJar>
+    </serviceEntry>
+    <serviceEntry>
+        <name>TestService</name>
+        <serviceDescription>Test service</serviceDescription>
+        <serviceJar>${JF}/services/test.jar</serviceJar>
     </serviceEntry>
     <appEntry>
         <name>WEB</name>

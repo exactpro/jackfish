@@ -1,4 +1,8 @@
 --------------------------------------------------------------------------------
+18.04.2017 4.4.0.2280
+RM41742 bug : Actions help -> add additional info for select
+
+--------------------------------------------------------------------------------
 18.04.2017 4.4.0.2274
 Bug #41718 [WIN] DialogClose throws FeatureNotSupportedException. Fixed
 Bug #41717 EmptyCondition doesn't work. Fixed

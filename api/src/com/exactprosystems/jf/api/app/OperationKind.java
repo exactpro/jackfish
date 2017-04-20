@@ -662,7 +662,7 @@ public enum OperationKind
 		}
 	},
 	
-	SELECT_BY_INDEX("select")
+	SELECT_BY_INDEX("select(int)")
 	{
 		@Override
 		protected boolean checkEnabled()
@@ -683,7 +683,7 @@ public enum OperationKind
 		}
 	},
 	
-	SELECT("select")
+	SELECT("select(str)")
 	{
 		@Override
 		protected boolean checkEnabled()

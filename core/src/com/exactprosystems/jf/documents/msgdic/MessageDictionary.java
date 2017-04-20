@@ -27,34 +27,36 @@ import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 
+import org.apache.log4j.Logger;
+
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "MessageDictionary", propOrder = { "description", "fields", "messages" })
-@XmlRootElement(name = "dictionary")
+@XmlType(
+        name = "MessageDictionary", 
+        propOrder = { "description", "fields", "messages" }
+        )
+
+//xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+//targetNamespace="http://exactprosystems.com/dictionary"
+//xmlns:tns="http://exactprosystems.com/dictionary" elementFormDefault="qualified"
+
+
+@XmlRootElement(
+        name = "dictionary"
+        )
 
 @DocumentInfo(
 		newName = "NewDictionary", 
 		extentioin = "xml", 
 		description = "Message dictionary"
 )
-public class MessageDictionary extends AbstractDocument implements IMessageDictionary
+public class MessageDictionary extends AbstractDocument implements IMessageDictionary, Serializable
 {
-	public MessageDictionary()
-	{
-		this(null, null);
-	}
-
-	public MessageDictionary(String fileName, DocumentFactory factory)
-	{
-		super(fileName, factory);
-
-		this.fields = new Fields();
-		this.messages = new Messages();
-		this.changed = false;
-	}
+    private static final long serialVersionUID = 8949804056711432386L;
+    private static final Logger logger = Logger.getLogger(MessageDictionary.class);
 
 	protected String	description;
 
@@ -121,6 +123,20 @@ public class MessageDictionary extends AbstractDocument implements IMessageDicti
 		protected List<Message>	messages;
 	}
 
+    public MessageDictionary()
+    {
+        this(null, null);
+    }
+
+    public MessageDictionary(String fileName, DocumentFactory factory)
+    {
+        super(fileName, factory);
+
+        this.fields = new Fields();
+        this.messages = new Messages();
+        this.changed = false;
+    }
+
 	//----------------------------------------------------------------------------------------------------------------------
 	// interface Document
 	//----------------------------------------------------------------------------------------------------------------------
@@ -146,6 +162,7 @@ public class MessageDictionary extends AbstractDocument implements IMessageDicti
 				@Override
 				public boolean handleEvent(ValidationEvent event)
 				{
+				    logger.error(event);
 					System.out.println("Error in message dictionary : " + event);
 					return false;
 				}
@@ -313,12 +330,6 @@ public class MessageDictionary extends AbstractDocument implements IMessageDicti
 	{
 		return this.version;
 	}
-
-    @Override
-    public String getXmlns()
-    {
-        return ""; // TODO 
-    } 
 
 	//----------------------------------------------------------------------------------------------------------------------
 

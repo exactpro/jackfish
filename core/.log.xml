@@ -30,16 +30,20 @@
 		</layout>
 	</appender>
 
-	<logger name="com.exactprosystems.jf.documents">
-  		<level value="INFO"/>
-  		<appender-ref ref="LogGuiFile"/>
- 	</logger>
-
 	<logger name="com.exactprosystems.jf.tool">
   		<level value="INFO"/>
   		<appender-ref ref="LogGuiFile"/>
  	</logger>
 
+	<logger name="com.exactprosystems.jf.documents">
+  		<level value="INFO"/>
+  		<appender-ref ref="LogMainFile"/>
+ 	</logger>
+
+	<logger name="com.exactprosystems.testtools">
+  		<level value="ALL"/>
+  		<appender-ref ref="LogMainFile"/>
+ 	</logger>
 	<logger name="com.exactprosystems.jf.actions">
   		<level value="INFO"/>
   		<appender-ref ref="LogMainFile"/>
@@ -73,7 +77,5 @@
 		<level value="ERROR" />
 		<appender-ref ref="LogMainFile" />
 	</logger>
-	
-	<root>
-	</root>
+
 </log4j:configuration>
