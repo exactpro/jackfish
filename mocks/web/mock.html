@@ -43,6 +43,7 @@
 			document.getElementById("centralLabel").textContent = className.indexOf("down") == -1 ? "Up" : "Down";
 		});
 	});
+
 	var textBoxKeyUp = function(e, tb) {
 		console.log(e);
 		if (e.ctrlKey) {
@@ -76,7 +77,6 @@
 	document.addEventListener('DOMContentLoaded', function () {
 		document.querySelector('#checkbox').addEventListener('change', function(e) {console.log(e)});
 	});
-});
 	</script>
 </head>
 <body onload="addAllListeners()">
