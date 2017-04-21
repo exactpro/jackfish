@@ -49,8 +49,6 @@ public class Wait extends AbstractAction
 		byTime = null;
 	}
 
-	private final int sleepCount = 20;
-	
 	@Override
 	protected HelpKind howHelpWithParameterDerived(Context context, Parameters parameters, String fieldName) throws Exception
 	{
@@ -60,18 +58,14 @@ public class Wait extends AbstractAction
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
-		if (this.timeout != null)
+        if (this.timeout != null)
 		{
-			sleep(this.timeout);
+		    sleepUpTo(context, System.currentTimeMillis() + this.timeout);
 			super.setResult(null);
 		}
 		else if (this.byTime != null)
 		{
-			long timeout = this.byTime.getTime() - (new Date().getTime());
-			if (timeout > 0)
-			{
-				sleep(timeout);
-			}
+            sleepUpTo(context, this.byTime.getTime());
 			super.setResult(null);
 		}
 		else
@@ -80,20 +74,23 @@ public class Wait extends AbstractAction
 		}
 	}
 
-	private void sleep(long timeout) throws InterruptedException
-	{
-		long quotient = timeout / sleepCount;
-		long module = timeout % sleepCount;
-		if (quotient > 0)
-		{
-			for (int i = 0; i < sleepCount; i++)
-			{
-				Thread.sleep(quotient);
-			}
-		}
-		if (module > 0)
-		{
-			Thread.sleep(module);
-		}
-	}
+	private void sleepUpTo(Context context, long finish)
+    {
+	    long current;
+	    while ((current = System.currentTimeMillis()) < finish)
+	    {
+	        if (context.isStop())
+	        {
+	            break;
+	        }
+            try
+            {
+                Thread.sleep(Math.min(100, finish - current));
+            }
+            catch (InterruptedException e)
+            {
+                // nothing to do
+            }
+	    }
+    }
 }
