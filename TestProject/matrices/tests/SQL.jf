@@ -1,7 +1,16 @@
 #TestCase;#Kind;#Depends;#For
+Global vars;;;
+    #Id;#Global;#Let
+    user;1;'root'
+
+    #Id;#Global;#Let
+    pass;1;'qwert1234'
+
+
+#TestCase;#Kind;#Depends;#For
 Connect/Disconect;Never;;
     #Id;#Action;#User;#Server;#Base;#Sql;#Password
-    SQLCNT0;SQLconnect;'root';'127.0.0.1';'';'MySql';''
+    SQLCNT0;SQLconnect;user;'127.0.0.1';'';'MySql';pass
 
     #Id;#Action;#Query;#Connection
     SQLEXEC0;SQLexecute;'CREATE SCHEMA IF NOT EXISTS sqltestbase';SQLCNT0.Out
@@ -31,7 +40,7 @@ Connect/Disconect;Never;;
     SQLCNT6;SQLconnect;This.Result == Result.Failed && This.Kind == ErrorKind.SQL_ERROR;'root';'127.0.0.1';'sqltestbase';'MsSql';''
 
     #Id;#Action;#Assert;#User;#Server;#Base;#Sql;#Password
-    SQLCNT7;SQLconnect;SQLCNT7.Result != Result.Failed;'root';'127.0.0.1';'sqltestbase';'MySql';''
+    SQLCNT7;SQLconnect;SQLCNT7.Result != Result.Failed;user;'127.0.0.1';'sqltestbase';'MySql';pass
 
     #Id;#Action;#Query;#Connection
     SQLEXEC28;SQLexecute;'DROP SCHEMA IF EXISTS sqltestbase';SQLCNT7.Out
@@ -48,7 +57,7 @@ Execute;;;
     #EndRawText
 
     #Id;#Action;#User;#Server;#Base;#Sql;#Password
-    SQLCNT8;SQLconnect;'root';'127.0.0.1';'';'MySql';''
+    SQLCNT8;SQLconnect;user;'127.0.0.1';'';'MySql';pass
 
     #Id;#Action;#Query;#Connection
     SQLEXEC1;SQLexecute;'DROP SCHEMA IF EXISTS newtest';SQLCNT8.Out
@@ -122,7 +131,7 @@ Insert/Select;;;
     #EndRawText
 
     #Id;#Action;#User;#Server;#Base;#Sql;#Password
-    SQLCNT9;SQLconnect;'root';'127.0.0.1';'';'MySql';''
+    SQLCNT9;SQLconnect;user;'127.0.0.1';'';'MySql';pass
 
     #Id;#Action;#Query;#Connection
     SQLEXEC1;SQLexecute;'DROP SCHEMA IF EXISTS newtest';SQLCNT9.Out
@@ -196,7 +205,7 @@ TableUpload;;;
     #EndRawTable
 
     #Id;#Action;#User;#Server;#Base;#Sql;#Password
-    SQLCNT10;SQLconnect;'root';'127.0.0.1';'';'MySql';''
+    SQLCNT10;SQLconnect;user;'127.0.0.1';'';'MySql';pass
 
     #Id;#Action;#Query;#Connection
     SQLEXEC24;SQLexecute;'DROP SCHEMA IF EXISTS newtest';SQLCNT10.Out
