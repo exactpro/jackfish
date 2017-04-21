@@ -39,11 +39,6 @@ import java.util.List;
         propOrder = { "description", "fields", "messages" }
         )
 
-//xmlns:xs="http://www.w3.org/2001/XMLSchema" 
-//targetNamespace="http://exactprosystems.com/dictionary"
-//xmlns:tns="http://exactprosystems.com/dictionary" elementFormDefault="qualified"
-
-
 @XmlRootElement(
         name = "dictionary"
         )
@@ -58,10 +53,13 @@ public class MessageDictionary extends AbstractDocument implements IMessageDicti
     private static final long serialVersionUID = 8949804056711432386L;
     private static final Logger logger = Logger.getLogger(MessageDictionary.class);
 
+    @XmlElement(required = false)
 	protected String	description;
 
+    @XmlElement(required = true)
 	protected Fields	fields;
 
+    @XmlElement(required = true)
 	protected Messages	messages;
 
 	@XmlAttribute(name = "name", required = true)

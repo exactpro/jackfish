@@ -87,10 +87,6 @@
             <key>sfSettings</key>
             <value>fix_client.xml</value>
         </parameters>
-        <parameters>
-            <key>sfUri</key>
-            <value>trm2:FIX_Client</value>
-        </parameters>
         <clientJar>${JF}/clients/sfclient.jar</clientJar>
         <clientLimit>0</clientLimit>
         <clientDictionary>dic/clients/FIX50.LSE.xml</clientDictionary>
@@ -100,7 +96,7 @@
         <clientDescription>Test dts client</clientDescription>
         <clientJar>${JF}/clients/fix.jar</clientJar>
         <clientLimit>0</clientLimit>
-        <clientDictionary>../core/dic/clients/FIX50.xml</clientDictionary>
+        <clientDictionary>dic/clients/FIX50.xml</clientDictionary>
     </clientEntry>
     <serviceEntry>
         <name>SF</name>

@@ -1,3 +1,8 @@
+--------------------------------------------------------------------------------
+18.04.2017 4.4.0.2291
+RM41303 feature : [clients] create client adapter for using services from SailFish
+
+--------------------------------------------------------------------------------
 20.04.2017 4.4.0.2282
 Bug #41623 IE11 Published isn't moved to front layer.
 Added the new parameter for the ApplicationStart/Connect action on win plugin - AlwaysToFront.
