@@ -10,21 +10,13 @@ package com.exactprosystems.jf.tool.text;
 
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.documents.DocumentFactory;
-import com.exactprosystems.jf.documents.DocumentInfo;
 import com.exactprosystems.jf.documents.text.PlainText;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
-
 import javafx.scene.control.ButtonType;
 
-import java.io.*;
 import java.util.Optional;
 
-@DocumentInfo(
-		newName = "TextFx", 
-		extentioin = "txt", 
-		description = "Plain text"
-)
 public class PlainTextFx extends PlainText
 {
 	public PlainTextFx(String fileName, DocumentFactory factory)
@@ -32,14 +24,12 @@ public class PlainTextFx extends PlainText
 		super(fileName, factory);
 	}
 
-	//==============================================================================================================================
-	// AbstractDocument
-	//==============================================================================================================================
+	//region AbstractDocument
 	@Override
 	public void display() throws Exception
 	{
 		super.display();
-		
+
 		initController();
 
 		this.controller.displayTitle(Common.getSimpleTitle(getName()));
@@ -47,25 +37,13 @@ public class PlainTextFx extends PlainText
 	}
 
 	@Override
-	public void create() throws Exception
+	public boolean canClose() throws Exception
 	{
-		super.create();
-	}
-	
-	@Override
-	public void load(Reader reader) throws Exception
-	{
-		super.load(reader);
-	}
-
-    @Override
-    public boolean canClose()  throws Exception
-    {
 		if (!super.canClose())
 		{
 			return false;
 		}
-		
+
 		if (isChanged())
 		{
 			ButtonType desision = DialogsHelper.showSaveFileDialog(this.getName());
@@ -78,25 +56,25 @@ public class PlainTextFx extends PlainText
 				return false;
 			}
 		}
-		
-		return true;
-    }
 
-    @Override
-    public void save(String fileName) throws Exception
-    {
-    	super.save(fileName);
+		return true;
+	}
+
+	@Override
+	public void save(String fileName) throws Exception
+	{
+		super.save(fileName);
 		this.controller.saved(getName());
-    }
-    
+	}
+
 	@Override
 	public void close(Settings settings) throws Exception
 	{
 		super.close(settings);
 		this.controller.close();
 	}
+	//endregion
 
-    //------------------------------------------------------------------------------------------------------------------
 	private void initController()
 	{
 		if (!this.isControllerInit)

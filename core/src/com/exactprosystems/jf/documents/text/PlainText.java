@@ -23,13 +23,14 @@ public class PlainText extends AbstractDocument
 	public PlainText(String fileName, DocumentFactory factory)
 	{
 		super(fileName, factory);
-		this.property = new SimpleStringProperty()
+		this.property = new SimpleStringProperty("")
 		{
 			@Override
 			public void set(String arg0)
 			{
 				super.set(arg0);
-				changed = true;
+				changed(true);
+				isChanged = true;
 			}
 		};
 	}
@@ -55,22 +56,13 @@ public class PlainText extends AbstractDocument
 	{
 		super.save(fileName);
 		write(fileName);
+		this.isChanged = false;
 	}
 
-	// ------------------------------------------------------------------------------------------------------------------
-	// interface Mutable
-	// ------------------------------------------------------------------------------------------------------------------
 	@Override
 	public boolean isChanged()
 	{
-		return this.changed;
-	}
-
-	@Override
-	public void saved()
-	{
-		super.saved();
-		this.changed = false;
+		return this.isChanged;
 	}
 
 	// ------------------------------------------------------------------------------------------------------------------
@@ -103,5 +95,5 @@ public class PlainText extends AbstractDocument
 
 	protected StringProperty			property;		// TODO we need our own string holder 
 
-	protected boolean					changed				= false;
+	protected boolean					isChanged				= false;
 }

@@ -115,7 +115,7 @@ public class ConfigurationTreeView extends TreeView<TreeNode>
 			}
 			else
 			{
-				return f1.getName().compareTo(f2.getName());
+				return f1.getName().toLowerCase().compareTo(f2.getName().toLowerCase());
 			}
 		};
 

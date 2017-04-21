@@ -14,6 +14,7 @@ import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.error.app.ProxyException;
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
+import com.exactprosystems.jf.common.highlighter.StyleWithRange;
 import com.exactprosystems.jf.documents.Document;
 import com.exactprosystems.jf.tool.custom.label.CommentsLabel;
 import com.exactprosystems.jf.tool.custom.tab.CustomTab;
@@ -39,6 +40,8 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextBoundsType;
 import javafx.stage.Stage;
 import org.apache.log4j.Logger;
+import org.fxmisc.richtext.StyleSpans;
+import org.fxmisc.richtext.StyleSpansBuilder;
 
 import java.awt.*;
 import java.awt.datatransfer.StringSelection;
@@ -54,8 +57,7 @@ import java.nio.file.Paths;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.Arrays;
-import java.util.Date;
+import java.util.*;
 import java.util.List;
 
 public abstract class Common
@@ -473,6 +475,16 @@ public abstract class Common
 		return Str.asString(value);
 	}
 
+	public static StyleSpans<Collection<String>> convertFromList(List<StyleWithRange> list)
+	{
+		StyleSpansBuilder<Collection<String>> spansBuilder = new StyleSpansBuilder<>();
+		list.forEach(styleWithRange ->
+		{
+			String style = styleWithRange.getStyle();
+			spansBuilder.add(style == null ? Collections.emptyList() : Collections.singleton(style), styleWithRange.getRange());
+		});
+		return spansBuilder.create();
+	}
 
 	static final Text helper;
 	static final double DEFAULT_WRAPPING_WIDTH;

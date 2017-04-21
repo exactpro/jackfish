@@ -10,23 +10,16 @@ package com.exactprosystems.jf.tool.csv;
 
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.documents.DocumentFactory;
-import com.exactprosystems.jf.documents.DocumentInfo;
 import com.exactprosystems.jf.documents.csv.Csv;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.custom.grideditor.DataProvider;
 import com.exactprosystems.jf.tool.custom.grideditor.TableDataProvider;
 import com.exactprosystems.jf.tool.helpers.DialogsHelper;
-
 import javafx.scene.control.ButtonType;
 
 import java.io.Reader;
 import java.util.Optional;
 
-@DocumentInfo(
-		newName 	= "NewCsv", 
-		extentioin 	= "csv", 
-		description = "CSV"
-)
 public class CsvFx extends Csv
 {
 	public CsvFx(String fileName, DocumentFactory factory)

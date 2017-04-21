@@ -18,11 +18,12 @@ import com.exactprosystems.jf.common.version.VersionInfo;
 import com.exactprosystems.jf.documents.*;
 import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.documents.config.Context;
+import com.exactprosystems.jf.documents.csv.Csv;
 import com.exactprosystems.jf.documents.guidic.GuiDictionary;
 import com.exactprosystems.jf.documents.matrix.Matrix;
+import com.exactprosystems.jf.documents.text.PlainText;
 import com.exactprosystems.jf.documents.vars.SystemVars;
 import com.exactprosystems.jf.tool.Common;
-import com.exactprosystems.jf.tool.csv.CsvFx;
 import com.exactprosystems.jf.tool.custom.store.StoreVariable;
 import com.exactprosystems.jf.tool.git.CredentialBean;
 import com.exactprosystems.jf.tool.git.CredentialDialog;
@@ -44,7 +45,6 @@ import com.exactprosystems.jf.tool.matrix.MatrixFx;
 import com.exactprosystems.jf.tool.newconfig.ConfigurationFx;
 import com.exactprosystems.jf.tool.newconfig.wizard.WizardConfiguration;
 import com.exactprosystems.jf.tool.settings.Theme;
-import com.exactprosystems.jf.tool.text.PlainTextFx;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
@@ -478,7 +478,7 @@ public class Main extends Application
 	public void loadPlainText(String filePath) throws Exception
 	{
 		checkConfig();
-		Optional<File> optional = chooseFile(PlainTextFx.class, filePath, DialogsHelper.OpenSaveMode.OpenFile);
+		Optional<File> optional = chooseFile(PlainText.class, filePath, DialogsHelper.OpenSaveMode.OpenFile);
 		if (optional.isPresent())
 		{
 			loadDocument(optional.get(), this.factory.createPlainText(optional.get().getPath()), DocumentKind.PLAIN_TEXT);
@@ -488,7 +488,7 @@ public class Main extends Application
 	public void loadCsv(String filePath) throws Exception
 	{
 		checkConfig();
-		Optional<File> optional = chooseFile(CsvFx.class, filePath, DialogsHelper.OpenSaveMode.OpenFile);
+		Optional<File> optional = chooseFile(Csv.class, filePath, DialogsHelper.OpenSaveMode.OpenFile);
 		if (optional.isPresent())
 		{
 			loadDocument(optional.get(), this.factory.createCsv(optional.get().getPath()), DocumentKind.CSV);
@@ -552,13 +552,13 @@ public class Main extends Application
 	public void newPlainText() throws Exception
 	{
 		checkConfig();
-		createDocument(this.factory.createPlainText(newName(PlainTextFx.class)));
+		createDocument(this.factory.createPlainText(newName(PlainText.class)));
 	}
 
 	public void newCsv() throws Exception
 	{
 		checkConfig();
-		createDocument(this.factory.createCsv(newName(CsvFx.class)));
+		createDocument(this.factory.createCsv(newName(Csv.class)));
 	}
 	//endregion
 

@@ -1,11 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import javafx.geometry.*?>
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-
 <!--
    Copyright (c) 2009-2015, Exactpro Systems, LLC
    Quality Assurance & Related Development for Innovative Trading Systems.
@@ -14,16 +8,25 @@
    information which is the property of Exactpro Systems, LLC or its licensors.
   -->
 
-<GridPane fx:id="grid" prefHeight="428.0" prefWidth="504.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.exactprosystems.jf.tool.text.PlainTextFxController">
-   <columnConstraints>
-      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="70.0" />
-      <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" />
-   </columnConstraints>
-   <rowConstraints>
-      <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
-      <RowConstraints minHeight="10.0" percentHeight="7.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
-   </rowConstraints>
-   <children>
-      <HBox prefHeight="100.0" prefWidth="200.0" GridPane.rowIndex="1" />
-   </children>
-</GridPane>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.VBox?>
+<BorderPane fx:id="mainPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0"
+			xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.exactprosystems.jf.tool.text.PlainTextFxController">
+	<top>
+		<VBox>
+			<children>
+				<ToolBar fx:id="toolbar" prefHeight="40.0" prefWidth="600.0" BorderPane.alignment="CENTER">
+					<items>
+						<CheckBox fx:id="cbShowLineNumbers" mnemonicParsing="false" text="Show line number"/>
+						<Separator orientation="VERTICAL"/>
+						<Label text="Highlight"/>
+						<ComboBox fx:id="cbHighlighting" prefWidth="150.0"/>
+						<Separator orientation="VERTICAL"/>
+						<Button fx:id="btnFindAndReplace" mnemonicParsing="false" onAction="#findAndReplace" text="FindAndReplace"/>
+					</items>
+				</ToolBar>
+			</children>
+		</VBox>
+	</top>
+</BorderPane>

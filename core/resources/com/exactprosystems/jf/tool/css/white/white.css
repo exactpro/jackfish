@@ -698,6 +698,69 @@ CellView > .text-input.text-field{
 	-fx-background-color : #f0f0f0;
 	-fx-border-color : -fx-company-color-light;
 }
+
+/*Code area*/
+/*General syntax*/
+.keyword {
+    -fx-fill: purple;
+    -fx-font-weight: bold;
+}
+/*Matrix syntax*/
+.actions {
+	-fx-fill: #00bfff;
+	-fx-font-weight: bold;
+}
+
+.semicolon {
+    -fx-font-weight: bold;
+
+}
+.paren {
+    -fx-fill: firebrick;
+    -fx-font-weight: bold;
+}
+.bracket {
+    -fx-fill: darkgreen;
+    -fx-font-weight: bold;
+}
+.brace {
+    -fx-fill: teal;
+    -fx-font-weight: bold;
+}
+.string {
+    -fx-fill: green;
+
+}
+.comment {
+	-fx-fill: cadetblue;
+
+}
+.paragraph-box:has-caret {
+    -fx-background-color: #f2f9fc;
+
+}
+/*XmlSyntax*/
+.tagmark {
+    -fx-fill: gray;
+
+}
+.anytag {
+    -fx-fill: crimson;
+
+}
+.paren {
+    -fx-fill: firebrick;
+    -fx-font-weight: bold;
+}
+.attribute {
+    -fx-fill: darkviolet;
+
+}
+.avalue {
+    -fx-fill: green;
+
+}
+
 /*  Images  */
 
 /*MainController*/
