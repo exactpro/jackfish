@@ -10,25 +10,25 @@ Connect/Disconect;Never;;
     SQLDCNT0;SQLdisconnect;SQLCNT0.Out
 
     #Id;#Action;#Assert;#User;#Server;#Base;#Sql;#Password
-    SQLCNT1;SQLconnect;SQLCNT1.Result == Result.Failed;'qwe';'127.0.0.1';'sqltestbase';'MySql';''
+    SQLCNT1;SQLconnect;This.Result == Result.Failed && This.Kind == ErrorKind.SQL_ERROR;'qwe';'127.0.0.1';'sqltestbase';'MySql';''
 
     #Id;#Action;#Assert;#Connection
-    SQLDCNT2;SQLdisconnect;SQLDCNT2.Result == Result.Failed;SQLCNT1.Out
+    SQLDCNT2;SQLdisconnect;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;SQLCNT1.Out
 
     #Id;#Action;#Assert;#User;#Server;#Base;#Sql;#Password
-    SQLCNT2;SQLconnect;SQLCNT2.Result == Result.Failed;'root';'127.0.0.1';'sqltestbase';'MySql';'123443dw'
+    SQLCNT2;SQLconnect;This.Result == Result.Failed && This.Kind == ErrorKind.SQL_ERROR;'root';'127.0.0.1';'sqltestbase';'MySql';'123443dw'
 
     #Id;#Action;#Assert;#User;#Server;#Base;#Sql;#Password
-    SQLCNT3;SQLconnect;SQLCNT3.Result == Result.Failed;'qwe';'127.0.0.1';'sqltestbase';'MySql';'wsdl'
+    SQLCNT3;SQLconnect;This.Result == Result.Failed && This.Kind == ErrorKind.SQL_ERROR;'qwe';'127.0.0.1';'sqltestbase';'MySql';'wsdl'
 
     #Id;#Action;#Assert;#User;#Server;#Base;#Sql;#Password
-    SQLCNT4;SQLconnect;SQLCNT4.Result == Result.Failed;'root';'127.0.0.1';'qwerty';'MySql';''
+    SQLCNT4;SQLconnect;This.Result == Result.Failed && This.Kind == ErrorKind.SQL_ERROR;'root';'127.0.0.1';'qwerty';'MySql';''
 
     #Id;#Action;#Assert;#User;#Server;#Base;#Sql;#Password
-    SQLCNT5;SQLconnect;SQLCNT5.Result == Result.Failed;'root';'127.0.0.2';'sqltestbase';'MySql';''
+    SQLCNT5;SQLconnect;This.Result == Result.Failed && This.Kind == ErrorKind.SQL_ERROR;'root';'127.0.0.2';'sqltestbase';'MySql';''
 
     #Id;#Action;#Assert;#User;#Server;#Base;#Sql;#Password
-    SQLCNT6;SQLconnect;SQLCNT6.Result == Result.Failed;'root';'127.0.0.1';'sqltestbase';'MsSql';''
+    SQLCNT6;SQLconnect;This.Result == Result.Failed && This.Kind == ErrorKind.SQL_ERROR;'root';'127.0.0.1';'sqltestbase';'MsSql';''
 
     #Id;#Action;#Assert;#User;#Server;#Base;#Sql;#Password
     SQLCNT7;SQLconnect;SQLCNT7.Result != Result.Failed;'root';'127.0.0.1';'sqltestbase';'MySql';''
@@ -187,6 +187,14 @@ TableUpload;;;
     3;kesha;40
     #EndRawTable
 
+    #Id;#RawTable
+    DATA2;Table
+    @;name;age
+    0;matvey;35
+    1;egor;null
+    2;lesha;qwerty
+    #EndRawTable
+
     #Id;#Action;#User;#Server;#Base;#Sql;#Password
     SQLCNT10;SQLconnect;'root';'127.0.0.1';'';'MySql';''
 
@@ -207,6 +215,9 @@ TableUpload;;;
 
     #Id;#Action;#Expected;#Actual
     TBLCMP1;TableCompareTwo;DATA1;SQLSLCT5.Out
+
+    #Action;#Assert;#Table;#Connection;#Data
+    SQLtableUpload;This.Result == Result.Failed && This.Kind == ErrorKind.SQL_ERROR;'newtest.users';SQLCNT10.Out;DATA2
 
     #Id;#Action;#Query;#Connection
     SQLEXEC27;SQLexecute;'DROP SCHEMA IF EXISTS newtest';SQLCNT10.Out
