@@ -43,6 +43,16 @@
         <onStepFinish></onStepFinish>
         <onStepError></onStepError>
     </globalHandler>
+    <sqlEntry>
+        <name>MySql</name>
+        <sqlJar>${JF}/sql/mysql-connector-java-5.1.26.jar</sqlJar>
+        <sqlConnection>jdbc:mysql://${SERVER}/${BASE}?generateSimpleParameterMetadata=true</sqlConnection>
+    </sqlEntry>
+    <sqlEntry>
+        <name>MsSql</name>
+        <sqlJar>${JF}/sql/mssql-jdbc-6.1.0.jre8.jar</sqlJar>
+        <sqlConnection>jdbc:sqlserver://${SERVER}\SQLEXPRESS;databaseName=${BASE};</sqlConnection>
+    </sqlEntry>
     <clientEntry>
         <name>TestClient</name>
         <clientDescription>Test dts client</clientDescription>
