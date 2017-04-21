@@ -67,9 +67,6 @@ public class MessageDictionary extends AbstractDocument implements IMessageDicti
 	@XmlSchemaType(name = "NMTOKEN")
 	protected String	name;
 
-	@XmlAttribute(name = "version")
-	protected String	version;
-
 	@XmlAccessorType(XmlAccessType.FIELD)
 	@XmlType(name = "", propOrder = { "fields" })
 	public static class Fields implements Mutable
@@ -173,7 +170,6 @@ public class MessageDictionary extends AbstractDocument implements IMessageDicti
 			this.messages = messageDictionary.messages;
 			this.description = messageDictionary.description;
 			this.name = messageDictionary.name;
-			this.version = messageDictionary.version;
 			
 			this.changed = true;
 		}
@@ -321,12 +317,6 @@ public class MessageDictionary extends AbstractDocument implements IMessageDicti
 	public List<IMessage>	getMessages()
 	{
 		return this.messages.messages == null ? null : (List<IMessage>)(List<?>) this.messages.messages;
-	}
-
-	@Override
-	public String getVersion()
-	{
-		return this.version;
 	}
 
 	//----------------------------------------------------------------------------------------------------------------------

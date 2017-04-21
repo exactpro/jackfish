@@ -19,5 +19,4 @@ public interface IMessageDictionary
 	IMessage 		getMessageByName(String name);
 	IMessage 		getMessage(String name);
 	List<IMessage>	getMessages();
-	String			getVersion();
 }

@@ -73,6 +73,10 @@
             <key>MillisecondsInUTC</key>
             <value>true</value>
         </parameters>
+        <parameters>
+            <key>BeginString</key>
+            <value>FIXT.1.1</value>
+        </parameters>
         <clientJar>${JF}/clients/fix.jar</clientJar>
         <clientLimit>0</clientLimit>
         <clientDictionary>dic/clients/FIX50.xml</clientDictionary>
