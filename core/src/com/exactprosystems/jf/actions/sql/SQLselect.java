@@ -15,6 +15,7 @@ import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
 import com.exactprosystems.jf.api.error.ErrorKind;
+import com.exactprosystems.jf.api.error.JFSQLException;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
@@ -79,9 +80,8 @@ public class SQLselect extends AbstractAction
 	@Override
 	protected void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
-		if (this.connection == null)
-		{
-			super.setError("Connection is null", ErrorKind.EMPTY_PARAMETER);
+		if(this.connection.isClosed()){
+			super.setError("Connection is not established", ErrorKind.SQL_ERROR);
 		}
 		else
 		{
@@ -91,6 +91,10 @@ public class SQLselect extends AbstractAction
 				super.setResult(result);
 			}
 			catch (SQLException e)
+			{
+				super.setError(e.getMessage(), ErrorKind.SQL_ERROR);
+			}
+			catch (JFSQLException e)
 			{
 				super.setError(e.getMessage(), ErrorKind.SQL_ERROR);
 			}

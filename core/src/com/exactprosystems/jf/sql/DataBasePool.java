@@ -8,6 +8,7 @@
 
 package com.exactprosystems.jf.sql;
 
+import com.exactprosystems.jf.api.error.JFSQLException;
 import com.exactprosystems.jf.common.MainRunner;
 import com.exactprosystems.jf.documents.DocumentFactory;
 import com.exactprosystems.jf.documents.config.Configuration;
@@ -43,11 +44,6 @@ public class DataBasePool
 	
 	public Table select(SqlConnection connection, String text, Object[] objs) throws Exception
 	{
-		if (connection.isClosed())
-		{
-			throw new Exception(connection.toString() + " is not established." );
-		}
-		
 		PreparedStatement query = connection.getConnection().prepareStatement(text, 
 				ResultSet.TYPE_FORWARD_ONLY, 
 				ResultSet.CONCUR_READ_ONLY);
@@ -61,11 +57,6 @@ public class DataBasePool
 	
 	public boolean execute(SqlConnection connection, String text, Object[] objs) throws Exception
 	{
-		if (connection.isClosed())
-		{
-			throw new Exception(connection.toString() + " is not established." );
-		}
-		
 		PreparedStatement query = connection.getConnection().prepareStatement(text, 
 				ResultSet.TYPE_FORWARD_ONLY, 
 				ResultSet.CONCUR_READ_ONLY);
@@ -76,11 +67,6 @@ public class DataBasePool
 
 	public List<Integer> insert(SqlConnection connection, String text, Object[] objs) throws Exception
 	{
-		if (connection.isClosed())
-		{
-			throw new Exception(connection.toString() + " is not established." );
-		}
-		
 		PreparedStatement query = connection.getConnection().prepareStatement(text, 
 				Statement.RETURN_GENERATED_KEYS);
 		fillParameters(objs, query);
@@ -152,10 +138,13 @@ public class DataBasePool
 		return driver;
 	}
 	
-	private void fillParameters(Object[] objs, PreparedStatement query) throws SQLException
+	private void fillParameters(Object[] objs, PreparedStatement query) throws SQLException, JFSQLException
 	{
 		int index = 1;
 		int limit = query.getParameterMetaData().getParameterCount();
+		if (limit != objs.length){
+			throw new JFSQLException("Number of transferred params not equal number of required params in query");
+		}
 		for (Object obj : objs)
 		{
 			if (index <= limit)

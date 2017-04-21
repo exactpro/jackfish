@@ -1,3 +1,217 @@
 #TestCase;#Kind;#Depends;#For
-Test case;Never;;
+Connect/Disconect;Never;;
+    #Id;#Action;#User;#Server;#Base;#Sql;#Password
+    SQLCNT0;SQLconnect;'root';'127.0.0.1';'';'MySql';''
+
+    #Id;#Action;#Query;#Connection
+    SQLEXEC0;SQLexecute;'CREATE SCHEMA IF NOT EXISTS sqltestbase';SQLCNT0.Out
+
+    #Id;#Action;#Connection
+    SQLDCNT0;SQLdisconnect;SQLCNT0.Out
+
+    #Id;#Action;#Assert;#User;#Server;#Base;#Sql;#Password
+    SQLCNT1;SQLconnect;SQLCNT1.Result == Result.Failed;'qwe';'127.0.0.1';'sqltestbase';'MySql';''
+
+    #Id;#Action;#Assert;#Connection
+    SQLDCNT2;SQLdisconnect;SQLDCNT2.Result == Result.Failed;SQLCNT1.Out
+
+    #Id;#Action;#Assert;#User;#Server;#Base;#Sql;#Password
+    SQLCNT2;SQLconnect;SQLCNT2.Result == Result.Failed;'root';'127.0.0.1';'sqltestbase';'MySql';'123443dw'
+
+    #Id;#Action;#Assert;#User;#Server;#Base;#Sql;#Password
+    SQLCNT3;SQLconnect;SQLCNT3.Result == Result.Failed;'qwe';'127.0.0.1';'sqltestbase';'MySql';'wsdl'
+
+    #Id;#Action;#Assert;#User;#Server;#Base;#Sql;#Password
+    SQLCNT4;SQLconnect;SQLCNT4.Result == Result.Failed;'root';'127.0.0.1';'qwerty';'MySql';''
+
+    #Id;#Action;#Assert;#User;#Server;#Base;#Sql;#Password
+    SQLCNT5;SQLconnect;SQLCNT5.Result == Result.Failed;'root';'127.0.0.2';'sqltestbase';'MySql';''
+
+    #Id;#Action;#Assert;#User;#Server;#Base;#Sql;#Password
+    SQLCNT6;SQLconnect;SQLCNT6.Result == Result.Failed;'root';'127.0.0.1';'sqltestbase';'MsSql';''
+
+    #Id;#Action;#Assert;#User;#Server;#Base;#Sql;#Password
+    SQLCNT7;SQLconnect;SQLCNT7.Result != Result.Failed;'root';'127.0.0.1';'sqltestbase';'MySql';''
+
+    #Id;#Action;#Query;#Connection
+    SQLEXEC28;SQLexecute;'DROP SCHEMA IF EXISTS sqltestbase';SQLCNT7.Out
+
+    #Id;#Action;#Connection
+    SQLDCNT1;SQLdisconnect;SQLCNT7.Out
+
+
+#TestCase;#Kind;#Depends;#For
+Execute;;;
+    #Id;#RawText
+    TEXT1;Text
+    ~;"insert into newtest.users (name, age) values (?, ?)"
+    #EndRawText
+
+    #Id;#Action;#User;#Server;#Base;#Sql;#Password
+    SQLCNT8;SQLconnect;'root';'127.0.0.1';'';'MySql';''
+
+    #Id;#Action;#Query;#Connection
+    SQLEXEC1;SQLexecute;'DROP SCHEMA IF EXISTS newtest';SQLCNT8.Out
+
+    #Id;#Action;#Query;#Connection
+    SQLEXEC2;SQLexecute;'CREATE SCHEMA IF NOT EXISTS newtest';SQLCNT8.Out
+
+    #Id;#Action;#Query;#Connection
+    SQLEXEC3;SQLexecute;'CREATE TABLE newtest.users (id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,name VARCHAR(30) NOT NULL,age int NOT NULL)';SQLCNT8.Out
+
+    #Id;#IgnoreErr;#Action;#Query;#Connection
+    SQLEXEC4;1;SQLexecute;'insert into newtest.users (name, age) values (\'mike\', 23)';SQLCNT8.Out
+
+    #Id;#IgnoreErr;#Action;#Assert;#Query;#Connection
+    SQLEXEC5;1;SQLexecute;This.Out == true;'SELECT * FROM information_schema.tables WHERE table_schema = \'newtest\' AND table_name = \'users\' LIMIT 1';SQLCNT8.Out
+
+    #Id;#IgnoreErr;#Action;#Assert;#Query;#Connection
+    SQLEXEC6;1;SQLexecute;This.Result == Result.Failed && This.Kind == ErrorKind.SQL_ERROR;'insert into newtest.user (name, age) values (\'mike\', 23)';SQLCNT8.Out
+
+    #Id;#IgnoreErr;#Action;#Assert;#Query;#Connection
+    SQLEXEC7;1;SQLexecute;This.Result == Result.Failed && This.Kind == ErrorKind.SQL_ERROR;'insert into newtest.users (name, age) values (\'mike\', \'mike\')';SQLCNT8.Out
+
+    #Id;#IgnoreErr;#Action;#Assert;#Query;#Connection
+    SQLEXEC8;1;SQLexecute;This.Result == Result.Failed && This.Kind == ErrorKind.SQL_ERROR;'insert into newtest.users (name, age) values (23, \'mike\')';SQLCNT8.Out
+
+    #Id;#IgnoreErr;#Action;#Assert;#Query;#Connection
+    SQLEXEC9;1;SQLexecute;This.Result == Result.Failed && This.Kind == ErrorKind.SQL_ERROR;'insert into newtest.users (name, age) values (\'mike\', \'\')';SQLCNT8.Out
+
+    #Id;#IgnoreErr;#Action;#Assert;#Query;#Connection
+    SQLEXEC10;1;SQLexecute;This.Result == Result.Failed && This.Kind == ErrorKind.SQL_ERROR;'insert into newtest.users (name, age) values (\'\', \'\')';SQLCNT8.Out
+
+    #Id;#IgnoreErr;#Action;#Query;#Connection;#name;#age
+    SQLEXEC11;1;SQLexecute;TEXT1;SQLCNT8.Out;'mike';45
+
+    #Id;#IgnoreErr;#Action;#Query;#Connection;#name;#age
+    SQLEXEC12;1;SQLexecute;TEXT1;SQLCNT8.Out;0;45
+
+    #Id;#IgnoreErr;#Action;#Assert;#Query;#Connection;#name;#age
+    SQLEXEC13;1;SQLexecute;This.Result == Result.Failed && This.Kind == ErrorKind.SQL_ERROR;TEXT1;SQLCNT8.Out;'john';'asd'
+
+    #Id;#Action;#Assert;#Query;#Connection;#name;#age;#any
+    SQLEXEC14;SQLexecute;This.Result == Result.Failed && This.Kind == ErrorKind.SQL_ERROR;TEXT1;SQLCNT8.Out;'ivan';25;'any'
+
+    #Id;#IgnoreErr;#Action;#Assert;#Query;#Connection;#name
+    SQLEXEC15;1;SQLexecute;This.Result == Result.Failed && This.Kind == ErrorKind.SQL_ERROR;TEXT1;SQLCNT8.Out;'john'
+
+    #Id;#Action;#Assert;#Query;#Connection
+    SQLEXEC22;SQLexecute;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;SQLCNT8.Out
+
+    #Id;#Action;#Assert;#Query;#Connection
+    SQLEXEC23;SQLexecute;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;TEXT1;
+
+    #Id;#Action;#Query;#Connection
+    SQLEXEC16;SQLexecute;'DROP TABLE IF EXISTS newtest.users';SQLCNT8.Out
+
+    #Id;#Action;#Query;#Connection
+    SQLEXEC17;SQLexecute;'DROP SCHEMA IF EXISTS newtest';SQLCNT8.Out
+
+    #Id;#Action;#Connection
+    SQLDCNT3;SQLdisconnect;SQLCNT8.Out
+
+    #Id;#Action;#Assert;#Query;#Connection;#name;#age
+    SQLEXEC21;SQLexecute;This.Result == Result.Failed && This.Kind == ErrorKind.EXCEPTION;TEXT1;SQLCNT8.Out;'test';10
+
+
+#TestCase;#Kind;#Depends;#For
+Insert/Select;;;
+    #Id;#RawText
+    TEXT2;Text
+    ~;"insert into newtest.users (name, age) values (?, ?)"
+    #EndRawText
+
+    #Id;#Action;#User;#Server;#Base;#Sql;#Password
+    SQLCNT9;SQLconnect;'root';'127.0.0.1';'';'MySql';''
+
+    #Id;#Action;#Query;#Connection
+    SQLEXEC1;SQLexecute;'DROP SCHEMA IF EXISTS newtest';SQLCNT9.Out
+
+    #Id;#Action;#Query;#Connection
+    SQLEXEC18;SQLexecute;'CREATE SCHEMA IF NOT EXISTS newtest';SQLCNT9.Out
+
+    #Id;#Action;#Query;#Connection
+    SQLEXEC19;SQLexecute;'CREATE TABLE newtest.users (id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,name VARCHAR(30) NOT NULL,age int NOT NULL)';SQLCNT9.Out
+
+    #Id;#Action;#Assert;#Query;#Connection
+    SQLINS1;SQLinsert;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;SQLCNT9.Out
+
+    #Id;#Action;#Assert;#Query;#Connection
+    SQLINS2;SQLinsert;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;TEXT2;
+
+    #Id;#Action;#Query;#Connection;#name;#age
+    SQLINS3;SQLinsert;TEXT2;SQLCNT9.Out;'ivan';25
+
+    #Id;#Action;#Query;#Connection;#name;#age
+    SQLINS4;SQLinsert;TEXT2;SQLCNT9.Out;'petr';10
+
+    #Id;#Action;#Query;#Connection;#name;#age
+    SQLINS5;SQLinsert;TEXT2;SQLCNT9.Out;'igor';23
+
+    #Id;#Action;#Assert;#Query;#Connection;#name;#age;#any
+    SQLINS6;SQLinsert;This.Result == Result.Failed && This.Kind == ErrorKind.SQL_ERROR;TEXT2;SQLCNT9.Out;'qwerty';11;'123'
+
+    #Id;#Action;#Assert;#Query;#Connection
+    SQLSLCT1;SQLselect;This.Out.isEmpty == true;'select * from newtest.users where name = \'vnjfvjfhfjfhfhfhfhfhfh\'';SQLCNT9.Out
+
+    #Id;#Action;#Query;#Connection;#name;#age
+    SQLSLCT2;SQLselect;'select * from newtest.users where name=? and age=?';SQLCNT9.Out;'igor';23
+
+    #Id;#Action;#Assert;#Query;#Connection;#name
+    SQLSLCT3;SQLselect;This.Result == Result.Failed && This.Kind == ErrorKind.SQL_ERROR;'select * from newtest.users where name=? and age=?';SQLCNT9.Out;'petr'
+
+    #Id;#Action;#Assert;#Query;#Connection
+    SQLINS7;SQLinsert;This.Result == Result.Failed && This.Kind == ErrorKind.SQL_ERROR;'select surname from newtest.users';SQLCNT9.Out
+
+    #Id;#Action;#Query;#Connection
+    SQLEXEC20;SQLexecute;'DROP SCHEMA IF EXISTS newtest';SQLCNT9.Out
+
+    #Id;#Action;#Connection
+    SQLDCNT4;SQLdisconnect;SQLCNT9.Out
+
+    #Id;#Action;#Assert;#Query;#Connection;#name;#age
+    SQLINS8;SQLinsert;This.Result == Result.Failed && This.Kind == ErrorKind.EXCEPTION;TEXT2;SQLCNT9.Out;'tsar';57
+
+    #Id;#Action;#Assert;#Query;#Connection
+    SQLSLCT4;SQLselect;This.Result == Result.Failed && This.Kind == ErrorKind.EXCEPTION;'select * from newtest.users';SQLCNT9.Out
+
+
+#TestCase;#Kind;#Depends;#For
+TableUpload;;;
+    #Id;#RawTable
+    DATA1;Table
+    @;name;age
+    0;ivan;10
+    1;pert;20
+    2;sidr;30
+    3;kesha;40
+    #EndRawTable
+
+    #Id;#Action;#User;#Server;#Base;#Sql;#Password
+    SQLCNT10;SQLconnect;'root';'127.0.0.1';'';'MySql';''
+
+    #Id;#Action;#Query;#Connection
+    SQLEXEC24;SQLexecute;'DROP SCHEMA IF EXISTS newtest';SQLCNT10.Out
+
+    #Id;#Action;#Query;#Connection
+    SQLEXEC25;SQLexecute;'CREATE SCHEMA IF NOT EXISTS newtest';SQLCNT10.Out
+
+    #Id;#Action;#Query;#Connection
+    SQLEXEC26;SQLexecute;'CREATE TABLE newtest.users (id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,name VARCHAR(30) NOT NULL,age int NOT NULL)';SQLCNT10.Out
+
+    #Action;#Table;#Connection;#Data
+    SQLtableUpload;'newtest.users';SQLCNT10.Out;DATA1
+
+    #Id;#Action;#Query;#Connection
+    SQLSLCT5;SQLselect;'SELECT a.name, a.age FROM newtest.users a';SQLCNT10.Out
+
+    #Id;#Action;#Expected;#Actual
+    TBLCMP1;TableCompareTwo;DATA1;SQLSLCT5.Out
+
+    #Id;#Action;#Query;#Connection
+    SQLEXEC27;SQLexecute;'DROP SCHEMA IF EXISTS newtest';SQLCNT10.Out
+
+    #Id;#Action;#Connection
+    SQLDCNT5;SQLdisconnect;SQLCNT10.Out
+
 
