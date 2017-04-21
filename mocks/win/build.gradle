@@ -1,12 +1,15 @@
 import com.ullink.Msbuild
 
 description = "Win Mock"
-/*
 
 task buildMockWin(type: Msbuild){
     projectFile = 'mock_win/mock_win.csproj'
 }
 
-distribute.dependsOn.add(buildMockWin)
-
-*/
+String osName = System.getProperty("os.name").toLowerCase()
+if (osName.contains("windows")) {
+    distribute.dependsOn.add(buildMockWin)
+} else
+{
+    println "task 'buildMockWin' doesn't run because your actual OS is '" + osName + "' but expected 'Windows'"
+}
