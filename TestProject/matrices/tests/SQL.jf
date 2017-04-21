@@ -111,7 +111,7 @@ Execute;;;
     SQLDCNT3;SQLdisconnect;SQLCNT8.Out
 
     #Id;#Action;#Assert;#Query;#Connection;#name;#age
-    SQLEXEC21;SQLexecute;This.Result == Result.Failed && This.Kind == ErrorKind.EXCEPTION;TEXT1;SQLCNT8.Out;'test';10
+    SQLEXEC21;SQLexecute;This.Result == Result.Failed && This.Kind == ErrorKind.SQL_ERROR;TEXT1;SQLCNT8.Out;'test';10
 
 
 #TestCase;#Kind;#Depends;#For
@@ -170,10 +170,10 @@ Insert/Select;;;
     SQLDCNT4;SQLdisconnect;SQLCNT9.Out
 
     #Id;#Action;#Assert;#Query;#Connection;#name;#age
-    SQLINS8;SQLinsert;This.Result == Result.Failed && This.Kind == ErrorKind.EXCEPTION;TEXT2;SQLCNT9.Out;'tsar';57
+    SQLINS8;SQLinsert;This.Result == Result.Failed && This.Kind == ErrorKind.SQL_ERROR;TEXT2;SQLCNT9.Out;'tsar';57
 
     #Id;#Action;#Assert;#Query;#Connection
-    SQLSLCT4;SQLselect;This.Result == Result.Failed && This.Kind == ErrorKind.EXCEPTION;'select * from newtest.users';SQLCNT9.Out
+    SQLSLCT4;SQLselect;This.Result == Result.Failed && This.Kind == ErrorKind.SQL_ERROR;'select * from newtest.users';SQLCNT9.Out
 
 
 #TestCase;#Kind;#Depends;#For
