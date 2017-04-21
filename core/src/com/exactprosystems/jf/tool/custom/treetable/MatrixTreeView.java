@@ -20,6 +20,7 @@ import com.exactprosystems.jf.tool.settings.SettingsPanel;
 import com.sun.javafx.scene.control.skin.TreeTableViewSkin;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.collections.ListChangeListener;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.GridPane;
@@ -48,8 +49,24 @@ public class MatrixTreeView extends TreeTableView<MatrixItem>
 		this.setSkin(new MatrixTreeViewSkin(this));
 		this.setShowRoot(false);
 		this.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-		this.getStyleClass().addAll(CssVariables.EMPTY_HEADER_COLUMN, CssVariables.CUSTOM_TREE_TABLE_VIEW);
+		this.getStyleClass().addAll(CssVariables.CUSTOM_TREE_TABLE_VIEW);
 		initTable();
+		TreeTableColumn[] columns = this.getColumns().toArray(new TreeTableColumn[this.getColumns().size()]);
+		this.getColumns().addListener(new ListChangeListener<TreeTableColumn<MatrixItem, ?>>()
+		{
+			public boolean suspended;
+
+			@Override
+			public void onChanged(Change<? extends TreeTableColumn<MatrixItem, ?>> change)
+			{
+				change.next();
+				if (change.wasReplaced() && !suspended) {
+					this.suspended = true;
+					getColumns().setAll(columns);
+					this.suspended = false;
+				}
+			}
+		});
 	}
 
 	public void setNeedExpand(boolean flag)
@@ -226,11 +243,11 @@ public class MatrixTreeView extends TreeTableView<MatrixItem>
 	private void initTable()
 	{
 		this.setEditable(true);
-		TreeTableColumn<MatrixItem, Integer> numberColumn = new TreeTableColumn<>();
+		TreeTableColumn<MatrixItem, Integer> numberColumn = new TreeTableColumn<>("#");
 		numberColumn.setSortable(false);
-		numberColumn.setMinWidth(40);
-		numberColumn.setPrefWidth(40);
-		numberColumn.setMaxWidth(41);
+		numberColumn.setMinWidth(50);
+		numberColumn.setPrefWidth(50);
+		numberColumn.setMaxWidth(50);
 		numberColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getValue().getNumber()));
 		numberColumn.setCellFactory(p -> new TreeTableCell<MatrixItem, Integer>(){
 			@Override
@@ -248,23 +265,23 @@ public class MatrixTreeView extends TreeTableView<MatrixItem>
 			}
 		});
 
-		TreeTableColumn<MatrixItem, MatrixItemState> iconColumn = new TreeTableColumn<>();
+		TreeTableColumn<MatrixItem, MatrixItemState> iconColumn = new TreeTableColumn<>("I");
 		iconColumn.setSortable(false);
 		iconColumn.setMinWidth(23);
 		iconColumn.setPrefWidth(23);
-		iconColumn.setMaxWidth(24);
+		iconColumn.setMaxWidth(23);
 		iconColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getValue().getItemState()));
 		iconColumn.setCellFactory(value -> new IconCell());
 
-		TreeTableColumn<MatrixItem, MatrixItem> gridColumn = new TreeTableColumn<>();
+		TreeTableColumn<MatrixItem, MatrixItem> gridColumn = new TreeTableColumn<>("Actions");
 		gridColumn.setSortable(false);
 		gridColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getValue()));
 		gridColumn.setCellFactory(param -> new MatrixItemCell());
 
-		TreeTableColumn<MatrixItem, MatrixItem> reportOffColumn = new TreeTableColumn<>();
+		TreeTableColumn<MatrixItem, MatrixItem> reportOffColumn = new TreeTableColumn<>("R");
 		reportOffColumn.setSortable(false);
 		reportOffColumn.setMinWidth(25);
-		reportOffColumn.setMaxWidth(26);
+		reportOffColumn.setMaxWidth(25);
 		reportOffColumn.setPrefWidth(25);
 		reportOffColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getValue()));
 		reportOffColumn.setCellFactory(p -> new TreeTableCell<MatrixItem, MatrixItem>()
@@ -299,10 +316,10 @@ public class MatrixTreeView extends TreeTableView<MatrixItem>
 			}
 		});
 
-		TreeTableColumn<MatrixItem, MatrixItem> offColumn = new TreeTableColumn<>();
+		TreeTableColumn<MatrixItem, MatrixItem> offColumn = new TreeTableColumn<>("E");
 		offColumn.setSortable(false);
 		offColumn.setMinWidth(25);
-		offColumn.setMaxWidth(26);
+		offColumn.setMaxWidth(25);
 		offColumn.setPrefWidth(25);
 		offColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getValue()));
 		offColumn.setCellFactory(p -> new TreeTableCell<MatrixItem, MatrixItem>()
