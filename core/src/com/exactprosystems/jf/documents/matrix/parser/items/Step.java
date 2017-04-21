@@ -13,6 +13,7 @@ import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
+import com.exactprosystems.jf.common.evaluator.Variables;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.common.report.ReportTable;
 import com.exactprosystems.jf.documents.config.Context;
@@ -212,11 +213,12 @@ public class Step extends MatrixItem
 			
 			report.outLine(this, null, String.format("Step %s", identifyValue), null);
 
+            this.locals = evaluator.createLocals();
             ret = context.runHandler(start, context, listener, this, HandlerKind.OnStepStart, report, null, null);
 			
             if (ret.getResult() != Result.Failed)
             {
-                ret = executeChildren(start, context, listener, evaluator, report, new Class<?>[] { OnError.class }, null);
+                ret = executeChildren(start, context, listener, evaluator, report, new Class<?>[] { OnError.class }, this.locals);
             }
 
             if (ret.getResult() == Result.Failed)
@@ -264,6 +266,7 @@ public class Step extends MatrixItem
 		return ret;
 	}
 
+    private Variables locals = null;
 	private Parameter identify;
     private MutableValue<String> kind;
     private Parameter plugin;

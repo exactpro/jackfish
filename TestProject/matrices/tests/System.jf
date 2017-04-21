@@ -71,8 +71,98 @@ INPUT;1;Input;Never;;
 #Id;#Off;#TestCase;#Kind;#Depends;#For
 PRINT;1;Print;Never;;
 
-#Id;#Off;#TestCase;#Kind;#Depends;#For
-RESTORE;1;Restore;Never;;
+#Id;#TestCase;#Kind;#Depends;#For
+RESTORE;Restore;Never;;
+    #Id;#Action;#Name
+    RST;Restore;''
+
+    #Assert;#Message
+    RST.Out == null;'Should be null'
+
+    #Id;#Action;#Name
+    RST1;Restore;'nonExistingName'
+
+    #Assert;#Message
+    RST1.Out == null;'Should be null'
+
+    #Action;#Value;#Name
+    Store;100;'existingName'
+
+    #Id;#Action;#Name
+    RST2;Restore;'existingName'
+
+    #Assert;#Message
+    RST2.Out == 100;'Should be 100'
+
+    #Id;#Let
+    var1;1
+
+    #Id;#Action;#Name;#AsVar
+    RST3;Restore;'existingName';'var1'
+
+    #Assert;#Message
+    var1 == 100;'Shoulnt be 100'
+
+    #Assert;#Message
+    !(isdef var2);'var2 shouldnt be defined yet'
+
+    #Step;#Kind;#For
+    ;;
+        #Action;#Name;#AsVar
+        Restore;'existingName';'var2'
+
+    #EndStep
+
+    #Assert;#Message
+    !(isdef var2);'var2 shouldnt be defined yet'
+
+    #Step;#Kind;#For
+    ;;
+        #Global;#Action;#Name;#AsVar
+        1;Restore;'existingName';'var2'
+
+    #EndStep
+
+    #Assert;#Message
+    isdef var2;'var2 should be defined'
+
+    #Id;#RawText
+    TEXT1;Text
+    ~;"#TestCase;#Kind;#Depends;#For"
+    ~;"Test case;Never;;"
+    ~;"    #Action;#Value;#Name"
+    ~;"    Store;200;'existingName2'"
+    ~;""
+    ~;"    #Action;#Name;#AsVar"
+    ~;"    Restore;'existingName2';'extVar1'"
+    ~;""
+    ~;"    #Global;#Action;#Name;#AsVar"
+    ~;"    1;Restore;'existingName2';'extVar2'"
+    #EndRawText
+
+    #Id;#Action;#Text
+    MXRN1;MatrixRunFromText;TEXT1
+
+    #Id;#Action;#Matrix
+    MXWT1;MatrixWait;MXRN1.Out
+
+    #Assert;#Message
+    !(isdef extVar1);'Shouldnt be defined'
+
+    #Assert;#Message
+    !(isdef extVar2);'Shouldnt be defined'
+
+    #Id;#Action;#Name;#AsVar
+    RST4;Restore;'existingName2';'var3'
+
+    #Assert;#Message
+    var3 == 200;'Should be 200'
+
+    // =====================================================================
+    // Negative tests
+    #Id;#Action;#Assert;#Name
+    RST5;Restore;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;
+
 
 #Id;#TestCase;#Kind;#Depends;#For
 RESULT;ResultTable;Never;;
