@@ -75,10 +75,19 @@ public enum Highlighter
 			return map;
 		}
 	},
+
 	Sql
 	{
-		//TODO add needed keywords;
-		private final String[] KEYWORDS = new String[]{"SELECT", "CREATE", "TABLE", "FROM", "DEFAULT"};
+		private final String[] KEYWORDS = new String[]{
+				"TABLE", "FROM", "DEFAULT", "ALTER TABLE",
+				"AND", "AS", "AVG", "BETWEEN",
+				"COUNT", "CREATE TABLE", "DELETE",
+				"GROUP BY", "INNER JOIN", "NULL",
+				"INSERT", "LIKE", "LIMIT",
+				"MAX", "MIN", "OR", "ORDER BY",
+				"OUTER JOIN", "ROUND", "SELECT",
+				"SELECT DISTINCT", "SUM", "UPDATE", "WHERE"
+		};
 
 		private final String KEYWORD_PATTERN       = "(" + String.join("|", KEYWORDS) + ")\\b";
 		private final String PAREN_PATTERN         = "\\(|\\)";
@@ -113,6 +122,7 @@ public enum Highlighter
 			return map;
 		}
 	},
+
 	Xml
 	{
 		private final Pattern XML_TAG = Pattern.compile(
@@ -186,7 +196,52 @@ public enum Highlighter
 			return list;
 		}
 	},
-	;
+
+	Java
+	{
+		private final String[] KEYWORDS = new String[]{
+				"new", "with", "assert", "isdef", "!",
+				"==", "!=", ">", "<", ">=", "<=",
+				"contains", "is", "instanceof",
+				"&&", "||", "or", "~=",
+				"&", "|", "^", "+", "-", "/", "*","%", ":",
+				"in"
+
+		};
+
+		private final String KEYWORD_PATTERN       = "(" + String.join("|", KEYWORDS) + ")\\b";
+		private final String PAREN_PATTERN         = "\\(|\\)";
+		private final String BRACKET_PATTERN       = "\\[|\\]";
+		private final String SEMICOLON_PATTERN     = ";";
+		private final String STRING_PATTERN        = "\"([^\"\n])*\"";
+		private final String STRING_PATTERN2       = "'([^\'\n])*\'";
+
+		@Override
+		protected Map<String, String> groupPatternMap()
+		{
+			Map<String, String> map = new HashMap<>();
+			map.put("KEYWORD", KEYWORD_PATTERN);
+			map.put("PAREN", PAREN_PATTERN);
+			map.put("BRACKET", BRACKET_PATTERN);
+			map.put("SEMICOLON", SEMICOLON_PATTERN);
+			map.put("STRING", STRING_PATTERN);
+			map.put("STRING2", STRING_PATTERN2);
+			return map;
+		}
+
+		@Override
+		protected Map<String, String> groupStyleMap()
+		{
+			Map<String, String> map = new HashMap<>();
+			map.put("KEYWORD", "keyword");
+			map.put("PAREN", "paren");
+			map.put("BRACKET", "bracket");
+			map.put("SEMICOLON", "semicolon");
+			map.put("STRING", "string");
+			map.put("STRING2", "string");
+			return map;
+		}
+	};
 
 	public List<StyleWithRange> getStyles(String text)
 	{
