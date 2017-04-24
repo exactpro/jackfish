@@ -1,3 +1,57 @@
-#TestCase;#Kind;#Depends;#For
-Test case;Never;;
+#Id;#TestCase;#Kind;#Depends;#For
+INIT;Init;;;
+    #Id;#Global;#Action;#AppId;#Browser;#URL
+    APPSTR1;1;ApplicationStart;mockWebApp;mockWebBrowser;mockWebURL
+
+
+#Id;#TestCase;#Kind;#Depends;#For
+DESCTOP;DesctopScreenshot;Never;;
+    #Id;#Action
+    DSK1;DesktopScreenshot
+
+    #Assert;#Message
+    DSK1.Out.getImage().getHeight() > 480 && DSK1.Out.getImage().getWidth() > 640;'Too small image'
+
+
+#Id;#TestCase;#Kind;#Depends;#For
+ALERT;DialogAlert;;;
+    #Id;#Let
+    text;'text in alert'
+
+    #Id;#Action;#Dialog;#AppConnection;#TextBox
+    DLGFLL1;DialogFill;'Main';APPSTR1.Out;Do.script('prompt(\'+text+\')')
+
+    #Id;#Action;#Perform;#AppConnection
+    DLGALRT1;DialogAlert;PerformKind.Accept;APPSTR1.Out
+
+
+#Id;#TestCase;#Kind;#Depends;#For
+LAYOUT;DialogCheckLayout;;;
+
+#Id;#TestCase;#Kind;#Depends;#For
+CLOSE;DialogClose;;;
+
+#Id;#TestCase;#Kind;#Depends;#For
+FILL;DialogFill;;;
+
+#Id;#TestCase;#Kind;#Depends;#For
+SWITCH;DialogSwitchToWindow;;;
+
+#Id;#TestCase;#Kind;#Depends;#For
+VALIDATE;DialogValidate;;;
+
+#Id;#TestCase;#Kind;#Depends;#For
+IMAGE_GET;ImageGet;;;
+
+#Id;#TestCase;#Kind;#Depends;#For
+IMAGE_REP;ImageReport;;;
+
+#Id;#TestCase;#Kind;#Depends;#For
+IMAGE_SAVE;ImageSave;;;
+
+#Id;#TestCase;#Kind;#Depends;#For
+CLEANUP;Cleanup;;;
+    #Id;#Action;#AppConnection
+    APPSTP1;ApplicationStop;APPSTR1.Out
+
 
