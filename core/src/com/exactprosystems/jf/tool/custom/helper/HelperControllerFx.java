@@ -155,7 +155,7 @@ public class HelperControllerFx implements Initializable, ContainingParent
 
 	public String showAndWait(String expression)
 	{
-		this.styleClassedTextArea.appendText(expression);
+		this.styleClassedTextArea.appendText(expression == null ? "" : expression);
 		this.dialog.getDialogPane().getScene().getStylesheets().addAll(Common.currentThemesPaths());
 		Optional<ButtonType> buttonType = this.dialog.showAndWait();
 		return buttonType.isPresent() && buttonType.get().equals(ButtonType.OK) ?  styleClassedTextArea.getText() : expression;

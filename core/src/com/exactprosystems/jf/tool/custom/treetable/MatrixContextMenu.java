@@ -36,6 +36,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
+import org.fxmisc.richtext.StyledTextArea;
 
 import java.util.Arrays;
 import java.util.Date;
@@ -115,7 +116,7 @@ public class MatrixContextMenu extends ContextMenu
 			{
 				return;
 			}
-			if (parent instanceof TextInputControl || parent instanceof SpreadsheetView || parent instanceof SpreadsheetGridView)
+			if (parent instanceof TextInputControl || parent instanceof SpreadsheetView || parent instanceof SpreadsheetGridView || parent instanceof StyledTextArea)
 			{
 				return;
 			}

@@ -481,7 +481,7 @@ public abstract class Common
 		list.forEach(styleWithRange ->
 		{
 			String style = styleWithRange.getStyle();
-			spansBuilder.add(style == null ? Collections.emptyList() : Collections.singleton(style), styleWithRange.getRange());
+			spansBuilder.add(Collections.singleton(style == null ? "default" : style), styleWithRange.getRange());
 		});
 		return spansBuilder.create();
 	}

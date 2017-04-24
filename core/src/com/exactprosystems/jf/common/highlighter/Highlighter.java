@@ -201,6 +201,7 @@ public enum Highlighter
 	{
 		private final String[] KEYWORDS = new String[]{
 				"new", "with", "assert", "isdef",
+				"def", "return",
 				"contains", "is", "instanceof",
 				"in"
 		};
@@ -214,7 +215,8 @@ public enum Highlighter
 		private final String KEYWORD_PATTERN       = "(" + String.join("|", KEYWORDS) + ")\\b";
 		private final String SYMBOLS_PATTERN       = "(" + String.join("|", SYMBOLS) + ")";
 		private final String PAREN_PATTERN         = "\\(|\\)";
-		private final String BRACKET_PATTERN       = "\\[|\\]";
+		private final String BRACE_PATTERN       = "\\[|\\]";
+		private final String BRACKET_PATTERN       = "\\{|\\}";
 		private final String SEMICOLON_PATTERN     = ";";
 		private final String STRING_PATTERN        = "\"([^\"\n])*\"";
 		private final String STRING_PATTERN2       = "'([^\'\n])*\'";
@@ -226,6 +228,7 @@ public enum Highlighter
 			map.put("KEYWORD", KEYWORD_PATTERN);
 			map.put("SYMBOLS", SYMBOLS_PATTERN);
 			map.put("PAREN", PAREN_PATTERN);
+			map.put("BRACE", BRACE_PATTERN);
 			map.put("BRACKET", BRACKET_PATTERN);
 			map.put("SEMICOLON", SEMICOLON_PATTERN);
 			map.put("STRING", STRING_PATTERN);
@@ -240,6 +243,7 @@ public enum Highlighter
 			map.put("KEYWORD", "keyword");
 			map.put("SYMBOLS", "symbols");
 			map.put("PAREN", "paren");
+			map.put("BRACE", "brace");
 			map.put("BRACKET", "bracket");
 			map.put("SEMICOLON", "semicolon");
 			map.put("STRING", "string");

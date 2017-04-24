@@ -730,6 +730,76 @@ CellView > .text-input.text-field{
 	-fx-background-color : #f0f0f0;
 	-fx-border-color : -fx-company-color-light;
 }
+/*Code area*/
+.styled-text-area {
+	-fx-background-color : #535353;
+
+}
+/*General syntax*/
+.default {
+	-fx-fill : -fx-text-base-color;
+
+}
+.keyword {
+	-fx-fill: #CC7832;
+	-fx-font-weight: bold;
+}
+.semicolon {
+	-fx-fill : #c0c0c0;
+	-fx-font-weight: bold;
+}
+.paren {
+    -fx-fill: lightcoral;
+    -fx-font-weight: bold;
+}
+.bracket {
+    -fx-fill: lightgreen;
+    -fx-font-weight: bold;
+}
+.brace {
+    -fx-fill: turquoise;
+    -fx-font-weight: bold;
+}
+.string {
+	-fx-fill: lightgreen;
+
+}
+/*Matrix syntax*/
+.actions {
+	-fx-fill: lightskyblue;
+	-fx-font-weight: bold;
+}
+.comment {
+	-fx-fill: #d3d3d3;
+
+}
+.paragraph-box:has-caret {
+	-fx-background-color: #f2f9fc;
+
+}
+/*XmlSyntax*/
+.tagmark {
+	-fx-fill: gray;
+
+}
+.anytag {
+    -fx-fill: crimson;
+
+}
+.attribute {
+    -fx-fill: darkviolet;
+
+}
+.avalue {
+    -fx-fill: green;
+
+}
+/*Java syntax*/
+.symbols {
+	-fx-fill: coral;
+
+}
+
 /*  Images  */
 
 /*MainController*/
