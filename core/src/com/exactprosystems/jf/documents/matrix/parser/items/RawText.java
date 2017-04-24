@@ -12,6 +12,7 @@ import com.csvreader.CsvWriter;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.evaluator.Variables;
+import com.exactprosystems.jf.common.highlighter.Highlighter;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.common.undoredo.Command;
 import com.exactprosystems.jf.documents.config.Context;
@@ -21,6 +22,7 @@ import com.exactprosystems.jf.functions.Text;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @MatrixItemAttribute(
 		description 	= "This operator is used to describe an object as Text. It has its own mini editor.",
@@ -30,7 +32,7 @@ import java.util.*;
 							"#EndRawText#}}",
 		seeAlso 		= "RawTable",
 		shouldContain 	= { Tokens.RawText }, 
-		mayContain 		= { Tokens.Id, Tokens.Off, Tokens.RepOff, Tokens.Global }, 
+		mayContain 		= { Tokens.Id, Tokens.Off, Tokens.RepOff, Tokens.Global, Tokens.Kind},
 		parents			= { Case.class, Else.class, For.class, ForEach.class, If.class,
 							OnError.class, Step.class, SubCase.class, TestCase.class, While.class },
 		real 			= true, 
@@ -50,6 +52,7 @@ public class RawText extends MatrixItem
 		this.text = new Text();
 		this.text.setChangeListener(flag -> this.owner.changed(flag));
 		this.description = new MutableValue<>();
+		this.highlighterMutableValue = new MutableValue<>(Highlighter.None.name());
 	}
 
 	@Override
@@ -91,10 +94,20 @@ public class RawText extends MatrixItem
 			};
 			this.owner.addCommand(undo, redo);
 
-		});
+		}, Highlighter.byName(this.highlighterMutableValue.get()));
 		driver.showToggleButton(this, layout, 1, 4, 
 		        b -> driver.hide(this, layout, 2, b),
 		        b -> b ? "Hide" : "Show", this.text.size() > 0);
+
+		driver.showLabel(this, layout, 1, 5, "Highlighting:");
+		driver.showComboBox(this, layout, 1, 6, newValue -> {
+					if (newValue != null)
+					{
+						this.highlighterMutableValue.set(newValue);
+						driver.displayHighlight(layout, Highlighter.byName(newValue));
+					}
+				}, this.highlighterMutableValue,
+				() -> Arrays.stream(Highlighter.values()).map(Highlighter::name).collect(Collectors.toList()));
 
 		return layout;
 	}
@@ -166,6 +179,7 @@ public class RawText extends MatrixItem
 	protected void initItSelf(Map<Tokens, String> systemParameters)
 	{
         this.description.set(systemParameters.get(Tokens.RawText));
+		this.highlighterMutableValue.set(systemParameters.getOrDefault(Tokens.Kind, Highlighter.None.name()));
 	}
 
 	@Override
@@ -177,7 +191,8 @@ public class RawText extends MatrixItem
 	@Override
 	protected void writePrefixItSelf(CsvWriter writer, List<String> firstLine, List<String> secondLine)
 	{
-		addParameter(firstLine, secondLine, Tokens.RawText.get(), this.description.get()); 
+		addParameter(firstLine, secondLine, Tokens.RawText.get(), this.description.get());
+		addParameter(firstLine, secondLine, Tokens.Kind.get(), this.highlighterMutableValue.get());
 	}
 
 	@Override
@@ -245,9 +260,9 @@ public class RawText extends MatrixItem
 	// Private members
 	// ==============================================================================================
 	
-	
-    private MutableValue<String>    description;
-    private Text                    text;
+	private MutableValue<String>    highlighterMutableValue;
+	private MutableValue<String>    description;
+	private Text                    text;
 
 	private boolean					firstUsing	= true;
 }

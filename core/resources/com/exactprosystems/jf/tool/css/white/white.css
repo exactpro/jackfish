@@ -705,12 +705,6 @@ CellView > .text-input.text-field{
     -fx-fill: purple;
     -fx-font-weight: bold;
 }
-/*Matrix syntax*/
-.actions {
-	-fx-fill: #00bfff;
-	-fx-font-weight: bold;
-}
-
 .semicolon {
     -fx-font-weight: bold;
 
@@ -730,6 +724,11 @@ CellView > .text-input.text-field{
 .string {
     -fx-fill: green;
 
+}
+/*Matrix syntax*/
+.actions {
+	-fx-fill: #00bfff;
+	-fx-font-weight: bold;
 }
 .comment {
 	-fx-fill: cadetblue;
@@ -758,6 +757,11 @@ CellView > .text-input.text-field{
 }
 .avalue {
     -fx-fill: green;
+
+}
+/*Java syntax*/
+.symbols {
+	-fx-fill: brown;
 
 }
 

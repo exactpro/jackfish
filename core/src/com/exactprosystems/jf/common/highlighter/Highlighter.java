@@ -85,7 +85,7 @@ public enum Highlighter
 				"GROUP BY", "INNER JOIN", "NULL",
 				"INSERT", "LIKE", "LIMIT",
 				"MAX", "MIN", "OR", "ORDER BY",
-				"OUTER JOIN", "ROUND", "SELECT",
+				"JOIN", "ROUND", "SELECT",
 				"SELECT DISTINCT", "SUM", "UPDATE", "WHERE"
 		};
 
@@ -200,16 +200,19 @@ public enum Highlighter
 	Java
 	{
 		private final String[] KEYWORDS = new String[]{
-				"new", "with", "assert", "isdef", "!",
-				"==", "!=", ">", "<", ">=", "<=",
+				"new", "with", "assert", "isdef",
 				"contains", "is", "instanceof",
-				"&&", "||", "or", "~=",
-				"&", "|", "^", "+", "-", "/", "*","%", ":",
 				"in"
+		};
 
+		private final String[] SYMBOLS = new String[] {
+				"!","==", "!=", ">", "<", ">=", "<=",
+				"\\|", "or", "~=",
+				"&", "\\|", "^", "\\+", "\\-", "/", "\\*","%", ":"
 		};
 
 		private final String KEYWORD_PATTERN       = "(" + String.join("|", KEYWORDS) + ")\\b";
+		private final String SYMBOLS_PATTERN       = "(" + String.join("|", SYMBOLS) + ")";
 		private final String PAREN_PATTERN         = "\\(|\\)";
 		private final String BRACKET_PATTERN       = "\\[|\\]";
 		private final String SEMICOLON_PATTERN     = ";";
@@ -221,6 +224,7 @@ public enum Highlighter
 		{
 			Map<String, String> map = new HashMap<>();
 			map.put("KEYWORD", KEYWORD_PATTERN);
+			map.put("SYMBOLS", SYMBOLS_PATTERN);
 			map.put("PAREN", PAREN_PATTERN);
 			map.put("BRACKET", BRACKET_PATTERN);
 			map.put("SEMICOLON", SEMICOLON_PATTERN);
@@ -234,6 +238,7 @@ public enum Highlighter
 		{
 			Map<String, String> map = new HashMap<>();
 			map.put("KEYWORD", "keyword");
+			map.put("SYMBOLS", "symbols");
 			map.put("PAREN", "paren");
 			map.put("BRACKET", "bracket");
 			map.put("SEMICOLON", "semicolon");
@@ -242,6 +247,11 @@ public enum Highlighter
 			return map;
 		}
 	};
+
+	public static Highlighter byName(String name)
+	{
+		return Arrays.stream(values()).filter(h -> h.name().toLowerCase().equals(name.toLowerCase())).findFirst().orElseThrow(() -> new RuntimeException("Unknown name : " + name));
+	}
 
 	public List<StyleWithRange> getStyles(String text)
 	{

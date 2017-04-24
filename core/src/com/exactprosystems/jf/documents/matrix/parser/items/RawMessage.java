@@ -80,12 +80,12 @@ public class RawMessage extends MatrixItem
 		driver.showTextBox(this, layout, 1, 0, this.id, this.id, () -> this.id.get());
 		driver.showTitle(this, layout, 1, 1, Tokens.RawMessage.get(), context.getFactory().getSettings());
 		driver.showLabel(this, layout, 1, 2, Tokens.Client.get());
-		driver.showComboBox(this, layout, 1, 3, this.clientName, this.clientName, v ->
+		driver.showComboBox(this, layout, 1, 3, this.clientName, this.clientName, () ->
 		{
 			return context.getConfiguration().getClientPool().clientNames();
 		}); 
 		driver.showLabel(this, layout, 1, 4, "Message type");
-		driver.showComboBox(this, layout, 1, 5, this.typeName, this.typeName, v -> 
+		driver.showComboBox(this, layout, 1, 5, this.typeName, this.typeName, () ->
 		{
 			if (this.clientName == null)
 			{

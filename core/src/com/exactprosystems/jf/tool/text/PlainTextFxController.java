@@ -8,11 +8,9 @@
 
 package com.exactprosystems.jf.tool.text;
 
-import com.exactprosystems.jf.actions.ActionsList;
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.common.Settings.SettingsValue;
 import com.exactprosystems.jf.common.highlighter.Highlighter;
-import com.exactprosystems.jf.documents.matrix.parser.Tokens;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.custom.tab.CustomTab;
@@ -32,11 +30,8 @@ import org.fxmisc.richtext.StyleClassedTextArea;
 import org.reactfx.Subscription;
 
 import java.net.URL;
-import java.util.Arrays;
 import java.util.Optional;
 import java.util.ResourceBundle;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 public class PlainTextFxController implements Initializable, ContainingParent
 {
@@ -50,35 +45,6 @@ public class PlainTextFxController implements Initializable, ContainingParent
 	private Parent      pane;
 	private PlainTextFx model;
 	private CustomTab   tab;
-
-	private static final String[] KEYWORDS = Arrays.stream(Tokens.values())
-			.map(Enum::name)
-			.collect(Collectors.toList())
-			.toArray(new String[Tokens.values().length]);
-
-	private static final String KEYWORD_PATTERN       = "#(" + String.join("|", KEYWORDS) + ")\\b";
-	private static final String PAREN_PATTERN         = "\\(|\\)";
-	private static final String BRACE_PATTERN         = "\\{|\\}";
-	private static final String BRACKET_PATTERN       = "\\[|\\]";
-	private static final String SEMICOLON_PATTERN     = ";";
-	private static final String STRING_PATTERN        = "\"([^\"\n])*\"";
-	private static final String STRING_PATTERN2       = "'([^\'\n])*\'";
-	private static final String COMMENT_PATTERN       = "//.*";
-	private static final String ACTIONS_PATTERN       = "\\b(" + String.join("|", Arrays.stream(ActionsList.actions).map(Class::getSimpleName).collect(Collectors.toList())) + ")\\b";
-
-	private static final Pattern PATTERN = Pattern.compile(
-			"(?<KEYWORD>" + KEYWORD_PATTERN + ")"
-					+ "|(?<PAREN>" + PAREN_PATTERN + ")"
-					+ "|(?<BRACE>" + BRACE_PATTERN + ")"
-					+ "|(?<BRACKET>" + BRACKET_PATTERN + ")"
-					+ "|(?<SEMICOLON>" + SEMICOLON_PATTERN + ")"
-					+ "|(?<STRING>" + STRING_PATTERN + ")"
-					+ "|(?<STRING2>" + STRING_PATTERN2 + ")"
-					+ "|(?<COMMENT>" + COMMENT_PATTERN + ")"
-					+ "|(?<ACTIONS>" + ACTIONS_PATTERN + ")"
-
-	);
-
 	private Subscription lastSubscription;
 
 	//region Interface Initializible
@@ -148,6 +114,7 @@ public class PlainTextFxController implements Initializable, ContainingParent
 		this.textArea.clear();
 		this.textArea.appendText(property.get());
 		this.textArea.textProperty().addListener((observable, oldValue, newValue) -> property.set(newValue));
+		this.textArea.positionCaret(0);
 	}
 
 	public void findAndReplace(ActionEvent actionEvent)

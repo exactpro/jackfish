@@ -14,18 +14,9 @@ import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
-import com.exactprosystems.jf.common.report.ReportTable;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.config.HandlerKind;
-import com.exactprosystems.jf.documents.matrix.parser.DisplayDriver;
-import com.exactprosystems.jf.documents.matrix.parser.MutableValue;
-import com.exactprosystems.jf.documents.matrix.parser.Parameter;
-import com.exactprosystems.jf.documents.matrix.parser.Parameters;
-import com.exactprosystems.jf.documents.matrix.parser.Result;
-import com.exactprosystems.jf.documents.matrix.parser.ReturnAndResult;
-import com.exactprosystems.jf.documents.matrix.parser.ScreenshotKind;
-import com.exactprosystems.jf.documents.matrix.parser.SearchHelper;
-import com.exactprosystems.jf.documents.matrix.parser.Tokens;
+import com.exactprosystems.jf.documents.matrix.parser.*;
 import com.exactprosystems.jf.documents.matrix.parser.listeners.IMatrixListener;
 import com.exactprosystems.jf.functions.Notifier;
 import com.exactprosystems.jf.functions.RowTable;
@@ -144,7 +135,7 @@ public class Step extends MatrixItem
         driver.showExpressionField(this, layout, 1, 1, Tokens.Step.get(), this.identify, this.identify, null, null, null, null);
         driver.showCheckBox(this, layout, 1, 2, Tokens.IgnoreErr.get(), this.ignoreErr, this.ignoreErr);
         driver.showLabel(this, layout, 1, 3, " Screenshot:");
-        driver.showComboBox(this, layout, 1, 4, this.kind, this.kind, v -> Arrays.stream(ScreenshotKind.values()).map(Enum::toString).collect(Collectors.toList()));
+        driver.showComboBox(this, layout, 1, 4, this.kind, this.kind,() -> Arrays.stream(ScreenshotKind.values()).map(Enum::toString).collect(Collectors.toList()));
         driver.showLabel(this, layout, 1, 5, " Plugin:");
         driver.showExpressionField(this, layout, 1, 6, Tokens.For.get(), this.plugin, this.plugin, null, null, null, null);
 

@@ -123,14 +123,14 @@ public final class TestCase extends MatrixItem
 		driver.showTextBox(this, layout, 1, 2, this.name, this.name, null);
 
         driver.showLabel(this, layout, 2, 0, Tokens.Depends.get() + ":");
-        driver.showComboBox(this, layout, 2, 1, this.depends, this.depends, v -> 
+        driver.showComboBox(this, layout, 2, 1, this.depends, this.depends, () ->
         {
             List<String> list = this.owner.listOfIds(TestCase.class);
             list.add(0, "");
             return list;
         });
         driver.showLabel(this, layout, 2, 2, "Screenshot:");
-        driver.showComboBox(this, layout, 2, 3, this.kind, this.kind, v -> 
+        driver.showComboBox(this, layout, 2, 3, this.kind, this.kind, () ->
         {
         	List<String> list = ScreenshotKind.names();
         	list.add(0, "");

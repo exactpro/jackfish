@@ -12,6 +12,7 @@ import com.exactprosystems.jf.api.app.AppConnection;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.common.MatrixRunner;
 import com.exactprosystems.jf.common.Settings;
+import com.exactprosystems.jf.common.highlighter.Highlighter;
 import com.exactprosystems.jf.common.undoredo.Command;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.Matrix;
@@ -47,12 +48,15 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
+import org.fxmisc.richtext.StyleClassedTextArea;
+import org.reactfx.Subscription;
 
 import java.io.FileReader;
 import java.util.*;
 import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 public class DisplayDriverFx implements DisplayDriver
@@ -214,7 +218,7 @@ public class DisplayDriverFx implements DisplayDriver
 	}
 
 	@Override
-	public void showComboBox(MatrixItem item, Object layout, int row, int column, Setter<String> set, Getter<String> get, Function<Void, List<String>> handler)
+	public void showComboBox(MatrixItem item, Object layout, int row, int column, Setter<String> set, Getter<String> get, Supplier<List<String>> handler)
 	{
 		GridPane pane = (GridPane) layout;
 		ComboBox<String> comboBox = new ComboBox<>();
@@ -246,7 +250,7 @@ public class DisplayDriverFx implements DisplayDriver
 			{
 				if (!oldValue && newValue)
 				{
-					List<String> list = handler.apply(null);
+					List<String> list = handler.get();
 					comboBox.setItems(FXCollections.observableArrayList(list));
 				}
 			});
@@ -368,22 +372,25 @@ public class DisplayDriverFx implements DisplayDriver
 	}
 
 	@Override
-	public void showTextArea(MatrixItem item, Object layout, int row, int column, Text text, Consumer<List<String>> consumer)
+	public void showTextArea(MatrixItem item, Object layout, int row, int column, Text text, Consumer<List<String>> consumer, Highlighter highlighter)
 	{
 		GridPane pane = (GridPane) layout;
-		TextArea textArea = new TextArea();
-		textArea.setPrefWidth(Double.MAX_VALUE);
+		StyleClassedTextArea textArea = new StyleClassedTextArea();
 		DragResizer.makeResizable(textArea, textArea::setPrefHeight);
-		for (String s : text)
-		{
-			textArea.appendText(s + "\n");
-		}
+		textArea.setPrefWidth(Double.MAX_VALUE);
+		textArea.getUndoManager().close();
+		textArea.appendText(text.stream().collect(Collectors.joining("\n")));
+		Optional.ofNullable(this.lastSubscription).ifPresent(Subscription::unsubscribe);
+		textArea.setStyleSpans(0, Common.convertFromList(highlighter.getStyles(textArea.getText())));
+		this.lastSubscription = textArea.richChanges()
+				.filter(ch -> !ch.getInserted().equals(ch.getRemoved()))
+				.subscribe(change -> textArea.setStyleSpans(0, Common.convertFromList(highlighter.getStyles(textArea.getText()))));
+
 		textArea.focusedProperty().addListener((observable, oldValue, newValue) ->
 		{
 			if (!newValue && oldValue)
 			{
-				String[] split = textArea.getText().split("\n");
-				consumer.accept(Arrays.asList(split));
+				consumer.accept(Arrays.asList(textArea.getText().split("\n")));
 			}
 		});
 		pane.add(textArea, column, row, Integer.MAX_VALUE, 1);
@@ -391,18 +398,33 @@ public class DisplayDriverFx implements DisplayDriver
 	}
 
 	@Override
+	public void displayHighlight(Object layout, Highlighter highlighter)
+	{
+		GridPane gridPane = (GridPane) layout;
+
+		Node node = gridPane.getChildren().stream()
+				.filter(child -> child instanceof StyleClassedTextArea)
+				.findFirst()
+				.orElseThrow(() -> new RuntimeException("Never"));
+
+		StyleClassedTextArea styledTextArea = (StyleClassedTextArea) node;
+		Optional.ofNullable(this.lastSubscription).ifPresent(Subscription::unsubscribe);
+		styledTextArea.setStyleSpans(0, Common.convertFromList(highlighter.getStyles(styledTextArea.getText())));
+		this.lastSubscription = styledTextArea.richChanges()
+				.filter(ch -> !ch.getInserted().equals(ch.getRemoved()))
+				.subscribe(change -> styledTextArea.setStyleSpans(0, Common.convertFromList(highlighter.getStyles(styledTextArea.getText()))));
+	}
+
+	@Override
 	public void updateTextArea(MatrixItem item, Object layout, Text text)
 	{
 		GridPane pane = (GridPane) layout;
-		Node lookup = pane.lookup(".text-area");
-		if (lookup instanceof TextArea)
+		Node lookup = pane.lookup(".styled-text-area");
+		if (lookup instanceof StyleClassedTextArea)
 		{
-			TextArea ta = (TextArea) lookup;
-			ta.setText("");
-			for (String s : text)
-			{
-				ta.appendText(s + "\n");
-			}
+			StyleClassedTextArea ta = (StyleClassedTextArea) lookup;
+			ta.clear();
+			ta.appendText(text.stream().collect(Collectors.joining("\n")));
 		}
 	}
 
@@ -755,7 +777,7 @@ public class DisplayDriverFx implements DisplayDriver
 		}
 	}
 
-
+	private Subscription lastSubscription;
 	private static final Insets INSETS = new Insets(0, 0, 0, 5);
 	private static final String LINE_SEPARATOR = System.getProperty("line.separator");
 	private MatrixTreeView treeView;
