@@ -8,13 +8,10 @@
 
 package com.exactprosystems.jf.tool.custom.helper;
 
-import com.exactprosystems.jf.api.common.DescriptionAttribute;
 import com.exactprosystems.jf.api.app.Do;
 import com.exactprosystems.jf.api.app.DoSpec;
-import com.exactprosystems.jf.api.common.DateTime;
-import com.exactprosystems.jf.api.common.Rnd;
-import com.exactprosystems.jf.api.common.Str;
-import com.exactprosystems.jf.api.common.Sys;
+import com.exactprosystems.jf.api.common.*;
+import com.exactprosystems.jf.common.highlighter.Highlighter;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.ContainingParent;
 import com.exactprosystems.jf.tool.CssVariables;
@@ -24,6 +21,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -33,6 +31,7 @@ import javafx.scene.text.Font;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
+import org.fxmisc.richtext.StyleClassedTextArea;
 
 import java.net.URL;
 import java.util.Optional;
@@ -42,15 +41,17 @@ public class HelperControllerFx implements Initializable, ContainingParent
 {
 	public BorderPane					borderPane;
 	public TextArea						taDescription;
+	public BorderPane mainPane;
 	private Class<?>					clazz;
 
-	private Dialog<ButtonType>			dialog;
-	public ToggleButton					btnVoid;
-	public ToggleButton					btnStatic;
-	public Button						btnCancel;
-	public Button						btnOk;
-	public TextArea						taInput;
-	public SplitMenuButton				smbClass;
+	private Dialog<ButtonType>   dialog;
+	public  ToggleButton         btnVoid;
+	public  ToggleButton         btnStatic;
+	public  Button               btnCancel;
+	public  Button               btnOk;
+//	public TextArea						styleClassedTextArea;
+	public  StyleClassedTextArea styleClassedTextArea;
+	public  SplitMenuButton      smbClass;
 
 	private FindListView<IToString>		listMembers;
 	public TextArea						taResult;
@@ -66,10 +67,20 @@ public class HelperControllerFx implements Initializable, ContainingParent
 	{
 		assert listMembers != null : "fx:id=\"listViewMethods\" was not injected: check your FXML file 'HelperFx.fxml'.";
 		assert btnCancel != null : "fx:id=\"btnCancel\" was not injected: check your FXML file 'HelperFx.fxml'.";
-		assert taInput != null : "fx:id=\"taInput\" was not injected: check your FXML file 'HelperFx.fxml'.";
 		assert btnOk != null : "fx:id=\"btnOk\" was not injected: check your FXML file 'HelperFx.fxml'.";
+		this.styleClassedTextArea = new StyleClassedTextArea();
+		this.mainPane.setCenter(this.styleClassedTextArea);
+
+		//				<TextArea fx:id="taInput" maxHeight="300.0" maxWidth="1.7976931348623157E308" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER"/>
+		this.styleClassedTextArea.setMaxWidth(Double.MAX_VALUE);
+		this.styleClassedTextArea.setMaxHeight(300.0);
+		BorderPane.setAlignment(this.styleClassedTextArea, Pos.CENTER);
+		this.styleClassedTextArea.setStyleSpans(0, Common.convertFromList(Highlighter.Java.getStyles(this.styleClassedTextArea.getText())));
+		this.styleClassedTextArea.richChanges()
+				.filter(ch -> !ch.getInserted().equals(ch.getRemoved()))
+				.subscribe(change -> this.styleClassedTextArea.setStyleSpans(0, Common.convertFromList(Highlighter.Java.getStyles(this.styleClassedTextArea.getText()))));
 		this.taResult.setFont(Font.font("Monospaced", 14));
-		this.taInput.setWrapText(true);
+		this.styleClassedTextArea.setWrapText(true);
 
 		this.engine = viewClassName.getEngine();
 		this.viewClassName.setContextMenuEnabled(false);
@@ -81,7 +92,7 @@ public class HelperControllerFx implements Initializable, ContainingParent
 				new MenuItem(Do.class.getSimpleName()),
 				new MenuItem(DoSpec.class.getSimpleName())
 		);
-		this.smbClass.getItems().forEach(item -> item.setOnAction(event -> this.taInput.appendText(item.getText())));
+		this.smbClass.getItems().forEach(item -> item.setOnAction(event -> this.styleClassedTextArea.appendText(item.getText())));
 	}
 
 	@Override
@@ -105,7 +116,7 @@ public class HelperControllerFx implements Initializable, ContainingParent
 	{
 		this.model = model;
 		this.clazz = clazz;
-		this.taInput.setEditable(editable);
+		this.styleClassedTextArea.setEditable(editable);
 		this.listMembers = new FindListView<>((iToString, s) -> iToString.getName().contains(s), false);
 		this.borderPane.setCenter(this.listMembers);
 
@@ -144,10 +155,10 @@ public class HelperControllerFx implements Initializable, ContainingParent
 
 	public String showAndWait(String expression)
 	{
-		this.taInput.setText(expression);
+		this.styleClassedTextArea.appendText(expression);
 		this.dialog.getDialogPane().getScene().getStylesheets().addAll(Common.currentThemesPaths());
 		Optional<ButtonType> buttonType = this.dialog.showAndWait();
-		return buttonType.isPresent() && buttonType.get().equals(ButtonType.OK) ?  taInput.getText() : expression;
+		return buttonType.isPresent() && buttonType.get().equals(ButtonType.OK) ?  styleClassedTextArea.getText() : expression;
 	}
 
 	public void close()
@@ -236,9 +247,9 @@ public class HelperControllerFx implements Initializable, ContainingParent
 			ShowAllVars vars = new ShowAllVars(data, this.clazz);
 			Optional.ofNullable(vars.showAndGet()).ifPresent(varName ->
 			{
-				int position = taInput.getCaretPosition();
-				taInput.insertText(position, varName);
-				taInput.positionCaret(position + varName.length());
+				int position = styleClassedTextArea.getCaretPosition();
+				styleClassedTextArea.insertText(position, varName);
+				styleClassedTextArea.positionCaret(position + varName.length());
 			});
 		}, "Error on show all vars");
 	}
@@ -248,13 +259,13 @@ public class HelperControllerFx implements Initializable, ContainingParent
 	// ============================================================
 	private String getText()
 	{
-		if (this.taInput.getSelectedText().isEmpty())
+		if (this.styleClassedTextArea.getSelectedText().isEmpty())
 		{
-			return this.taInput.getText();
+			return this.styleClassedTextArea.getText();
 		}
 		else
 		{
-			return this.taInput.getSelectedText();
+			return this.styleClassedTextArea.getSelectedText();
 		}
 	}
 
@@ -264,12 +275,12 @@ public class HelperControllerFx implements Initializable, ContainingParent
 		{
 			Common.tryCatch(() ->
 			{
-				evaluate(taInput.getText());
+				evaluate(styleClassedTextArea.getText());
 				event.consume();
 			}, "Error on showing");
 		});
 
-		this.taInput.textProperty().addListener((observableValue, before, after) -> Common.tryCatch(() -> evaluate(after), "Error on evaluate"));
+		this.styleClassedTextArea.textProperty().addListener((observableValue, before, after) -> Common.tryCatch(() -> evaluate(after), "Error on evaluate"));
 
 		this.listMembers.getListView().setOnMouseClicked(mouseEvent -> Common.tryCatch(() ->
 		{
@@ -282,40 +293,40 @@ public class HelperControllerFx implements Initializable, ContainingParent
 					if (selectedMember instanceof HelperFx.SimpleMethod)
 					{
 						HelperFx.SimpleMethod method = (HelperFx.SimpleMethod) selectedMember;
-						int caretPosition = taInput.getCaretPosition();
+						int caretPosition = styleClassedTextArea.getCaretPosition();
 						String methodName = method.getName();
-						if (taInput.getText().indexOf(".", caretPosition - 1) != (caretPosition - 1))
+						if (styleClassedTextArea.getText().indexOf(".", caretPosition - 1) != (caretPosition - 1))
 						{
-							taInput.insertText(caretPosition, ".");
+							styleClassedTextArea.insertText(caretPosition, ".");
 							caretPosition++;
 						}
-						taInput.insertText(caretPosition, method.getMethodWithParams());
-						taInput.positionCaret(caretPosition + methodName.length() + 2);
+						styleClassedTextArea.insertText(caretPosition, method.getMethodWithParams());
+						styleClassedTextArea.positionCaret(caretPosition + methodName.length() + 2);
 					}
 					else if (selectedMember instanceof HelperFx.SimpleField)
 					{
 						HelperFx.SimpleField field = ((HelperFx.SimpleField) selectedMember);
-						int caretPosition = taInput.getCaretPosition();
+						int caretPosition = styleClassedTextArea.getCaretPosition();
 						String methodName = field.getName();
-						if (taInput.getText().indexOf(".", caretPosition - 1) != (caretPosition - 1))
+						if (styleClassedTextArea.getText().indexOf(".", caretPosition - 1) != (caretPosition - 1))
 						{
-							taInput.insertText(caretPosition, ".");
+							styleClassedTextArea.insertText(caretPosition, ".");
 							caretPosition++;
 						}
-						taInput.insertText(caretPosition, methodName);
-						taInput.positionCaret(caretPosition + methodName.length());
+						styleClassedTextArea.insertText(caretPosition, methodName);
+						styleClassedTextArea.positionCaret(caretPosition + methodName.length());
 					}
 				}
 			}
 		}, "Error on function insertion"));
 
-		taInput.selectedTextProperty().addListener((observableValue, before, after) ->
+		styleClassedTextArea.selectedTextProperty().addListener((observableValue, before, after) ->
 		{
 			Common.tryCatch(() ->
 			{
 				if (after.isEmpty())
 				{
-					evaluate(taInput.getText());
+					evaluate(styleClassedTextArea.getText());
 				}
 				else
 				{

@@ -15,7 +15,7 @@
 			prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
 			fx:controller="com.exactprosystems.jf.tool.custom.helper.HelperControllerFx">
 	<top>
-		<BorderPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+		<BorderPane fx:id="mainPane" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
 			<top>
 				<ToolBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
 					<items>
@@ -27,9 +27,6 @@
 					</items>
 				</ToolBar>
 			</top>
-			<center>
-				<TextArea fx:id="taInput" maxHeight="300.0" maxWidth="1.7976931348623157E308" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER"/>
-			</center>
 		</BorderPane>
 	</top>
 	<center>
