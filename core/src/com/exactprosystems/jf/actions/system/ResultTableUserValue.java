@@ -83,8 +83,18 @@ public class ResultTableUserValue extends AbstractAction
 			return;
 		}
 		Set<String> predefinedColumns = new HashSet<>(Arrays.asList(Context.resultColumns));
+		Parameters extraParams = parameters.select(TypeMandatory.Extra);
 		
-		for (Parameter parameter : parameters.select(TypeMandatory.Extra))
+		for (String name : extraParams.keySet())
+		{
+		    if (predefinedColumns.contains(name))
+		    {
+    		    super.setError("Parameter '" + name + "' is reserved word.", ErrorKind.WRONG_PARAMETERS);
+    		    return;
+		    }
+		}
+		
+		for (Parameter parameter : extraParams)
 		{
 			String name = parameter.getName();
 			Object value = parameter.getValue();
