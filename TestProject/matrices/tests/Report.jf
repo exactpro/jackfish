@@ -1,3 +1,277 @@
+#Id;#TestCase;#Kind;#Depends;#For
+prepare;;;;
+
 #TestCase;#Kind;#Depends;#For
-Test case;Never;;
+Check Report with one parameter;Never;;
+    #Id;#RawText;#Kind
+    TEXT1;Text;Matrix
+    ~;"#TestCase;#Kind;#Depends;#For"
+    ~;"Test case;Never;;"
+    ~;"    #Action;#Str"
+    ~;"    Report;'report with one parameter'"
+    #EndRawText
+
+    #Id;#Call;#rawText
+    pathToReport;runMatrix;TEXT1
+
+    #Id;#Call;#pathToReport
+    appCon;runBrowser;pathToReport
+
+    #Id;#Let
+    locator;new Locator().kind(ControlKind.Any).visibility(Visibility.Visible).xpath('.//span[contains(.,\'report with one parameter\')]')
+
+    #Id;#Action;#Assert;#Dialog;#AppConnection;#MockElement
+    DLGFLL1;DialogFill;This.Out.MockElement == false;'DialogForTestReport';appCon;Do.use(locator).isVisible()
+
+    #Id;#Call;#appCon
+    CALL_2;expand;appCon
+
+    // check that element inside table
+    #Id;#Action;#Assert;#Dialog;#AppConnection;#MockElement
+    DLGFLL5;DialogFill;This.Out.MockElement == true;'DialogForTestReport';appCon;Do.use(locator).isVisible()
+
+    #Id;#Call;#appCon
+    CALL_2;stopBrowser;appCon
+
+
+#TestCase;#Kind;#Depends;#For
+Check Report with one parameter with invalid before test case;Never;;
+    #Id;#RawText;#Kind
+    TEXT1;Text;Matrix
+    ~;"#TestCase;#Kind;#Depends;#For"
+    ~;"Test case;Never;;"
+    ~;"    #Action;#Str;#BeforeTestCase"
+    ~;"    Report;'report with one parameter';'invalid testCaseId'"
+    #EndRawText
+
+    #Id;#Call;#rawText
+    pathToReport;runMatrix;TEXT1
+
+    #Id;#Call;#pathToReport
+    appCon;runBrowser;pathToReport
+
+    #Id;#Let
+    locator;new Locator().kind(ControlKind.Any).visibility(Visibility.Visible).xpath('.//span[contains(.,\'report with one parameter\')]')
+
+    #Id;#Action;#Assert;#Dialog;#AppConnection;#MockElement
+    DLGFLL1;DialogFill;This.Out.MockElement == false;'DialogForTestReport';appCon;Do.use(locator).isVisible()
+
+    #Id;#Call;#appCon
+    CALL_2;expand;appCon
+
+    // check that element inside table
+    #Id;#Action;#Assert;#Dialog;#AppConnection;#MockElement
+    DLGFLL5;DialogFill;This.Out.MockElement == true;'DialogForTestReport';appCon;Do.use(locator).isVisible()
+
+    #Id;#Call;#appCon
+    CALL_2;stopBrowser;appCon
+
+
+#TestCase;#Kind;#Depends;#For
+Check Report with parameter beforeTestCase;Never;;
+    #Id;#RawText;#Kind
+    TEXT1;Text;Matrix
+    ~;"#Id;#TestCase;#Kind;#Depends;#For"
+    ~;"before;Test case;Never;;"
+    ~;"    #Action;#Str;#BeforeTestCase"
+    ~;"    Report;'report with one parameter';'before'"
+    #EndRawText
+
+    #Id;#Call;#rawText
+    pathToReport;runMatrix;TEXT1
+
+    #Id;#Call;#pathToReport
+    appCon;runBrowser;pathToReport
+
+    #Id;#Let
+    locator;new Locator().kind(ControlKind.Any).visibility(Visibility.Visible).xpath('.//span[contains(.,\'report with one parameter\')]')
+
+    #Id;#Action;#Assert;#Dialog;#AppConnection;#MockElement
+    DLGFLL1;DialogFill;This.Out.MockElement == true;'DialogForTestReport';appCon;Do.use(locator).isVisible()
+
+    #Id;#Call;#appCon
+    CALL_2;expand;appCon
+
+    // check that element outside table
+    #Id;#Action;#Assert;#Dialog;#AppConnection;#MockElement
+    DLGFLL5;DialogFill;This.Result == Result.Failed && This.Reason.contains('No one element was found');'DialogForTestReport';appCon;Do.use('MainTable', LocatorKind.Owner).use(locator, LocatorKind.Element).isVisible()
+
+    #Id;#Call;#appCon
+    CALL_2;stopBrowser;appCon
+
+
+#TestCase;#Kind;#Depends;#For
+Check Report with many parameters inside table;Never;;
+    #Id;#RawText;#Kind
+    TEXT1;Text;Matrix
+    ~;"#TestCase;#Kind;#Depends;#For"
+    ~;"Test case;Never;;"
+    ~;"    #Action;#One;#two"
+    ~;"    Report;'one';'Two'"
+    #EndRawText
+
+    #Id;#Call;#rawText
+    pathToReport;runMatrix;TEXT1
+
+    #Id;#Call;#pathToReport
+    appCon;runBrowser;pathToReport
+
+    #Id;#Let
+    locator;new Locator().kind(ControlKind.Any).visibility(Visibility.Visible).xpath('.//span[contains(text(), "One = one") and contains(text(), "two = Two")]')
+
+    #Id;#Action;#Assert;#Dialog;#AppConnection;#MockElement
+    DLGFLL1;DialogFill;This.Out.MockElement == false;'DialogForTestReport';appCon;Do.use(locator).isVisible()
+
+    #Id;#Call;#appCon
+    CALL_1;expand;appCon
+
+    // check that element inside table
+    #Id;#Action;#Assert;#Dialog;#AppConnection;#MockElement
+    DLGFLL5;DialogFill;This.Out.MockElement == true;'DialogForTestReport';appCon;Do.use(locator).isVisible()
+
+    #Id;#Call;#appCon
+    CALL_2;stopBrowser;appCon
+
+
+#TestCase;#Kind;#Depends;#For
+Check ReportName;Never;;
+    #Id;#RawText;#Kind
+    TEXT1;Text;Matrix
+    ~;"#TestCase;#Kind;#Depends;#For"
+    ~;"Test case;Never;;"
+    ~;"    #Action;#Name"
+    ~;"    ReportName;'report name'"
+    #EndRawText
+
+    #Id;#Call;#rawText
+    pathToReport;runMatrix;TEXT1
+
+    #Assert;#Message
+    pathToReport.endsWith('report name.html');'Report file dosnt contains expected string'
+
+    #Id;#Call;#pathToReport
+    appCon;runBrowser;pathToReport
+
+    #Id;#Let
+    locator;new Locator().kind(ControlKind.Any).visibility(Visibility.Visible).xpath('.//span[@id=\'name\']/span[.=\'report name\']')
+
+    // check that report contains 'report name'
+    #Id;#Action;#Assert;#Dialog;#AppConnection;#MockElement
+    DLGFLL1;DialogFill;This.Out.MockElement == true;'DialogForTestReport';appCon;Do.use(locator).isVisible()
+
+    #Id;#Call;#appCon
+    CALL_2;stopBrowser;appCon
+
+
+#TestCase;#Kind;#Depends;#For
+Report finish without reportstart;;;
+    #Action;#Assert;#Passed;#Report;#Failed
+    ReportFinish;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;123;;456
+
+
+#TestCase;#Kind;#Depends;#For
+report show with invalid report;;;
+    #Action;#Assert;#Report
+    ReportShow;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;'asd'
+
+
+#TestCase;#Kind;#Depends;#For
+report finish without passed;;;
+    #Id;#Action;#ReportName
+    REP1;ReportStart;'my new report name'
+
+    #Action;#Assert;#Passed;#Report;#Failed
+    ReportFinish;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;REP1.Out;123
+
+
+#TestCase;#Kind;#Depends;#For
+report finish without failed;;;
+    #Id;#Action;#ReportName
+    REP1;ReportStart;'my new report name'
+
+    #Action;#Assert;#Passed;#Report;#Failed
+    ReportFinish;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;123;REP1.Out;
+
+
+#TestCase;#Kind;#Depends;#For
+report start finish;;;
+    #Id;#Action;#ReportName
+    REP1;ReportStart;'my new report name'
+
+    #Action;#ToReport;#Str
+    Report;REP1.Out;'par'
+
+    #Id;#Let
+    passed;123
+
+    #Id;#Let
+    failed;456
+
+    #Id;#Let
+    startTime;DateTime.date(2,2,2,2,2,2)
+
+    #Id;#Let
+    finishTime;DateTime.date(1,1,1,1,1,1)
+
+    #Action;#Passed;#Report;#Failed;#FinishTime;#StartTime
+    ReportFinish;passed;REP1.Out;failed;finishTime;startTime
+
+    #Id;#Call;#pathToReport
+    appCon;runBrowser;REP1.Out.getReportName()
+
+    #Id;#Action;#Dialog;#AppConnection;#Executed;#Passed;#Failed;#startTime;#finishTime
+    DLGFLL4;DialogFill;'DialogForTestReport';appCon;Do.check('Executed : ' + (passed+failed));Do.check('Passed : ' + passed);Do.check('Failed : ' + failed);Do.check(startTime.str('yyyy-MM-dd HH:mm:ss'));Do.check(finishTime.str('yyyy-MM-dd HH:mm:ss'))
+
+    #Id;#Call;#appCon
+    CALL_3;stopBrowser;appCon
+
+
+#TestCase;#Kind;#Depends;#For
+subcases;;;
+    #Id;#SubCase;#rawText
+    runMatrix;returned value - path to report;TEXT1
+        #Id;#Action;#Text
+        MXRN1;MatrixRunFromText;rawText
+
+        #Id;#Action;#Matrix
+        MXWT1;MatrixWait;MXRN1.Out
+
+        #Assert;#Message
+        MXRN1.Out.failed() == 0;'Matrix contains failed testcase. Check the matrix'
+
+        #Return
+        MXRN1.Out.getReportName()
+
+    #EndSubCase
+
+    #Id;#SubCase;#pathToReport
+    runBrowser;returned value - appConnection;REP1.Out.getReportName()
+        #Id;#Action;#AppId;#Browser;#URL
+        APPSTR1;ApplicationStart;mockWebApp;mockWebBrowser;'file://' + new File(pathToReport).getAbsolutePath()
+
+        #Return
+        APPSTR1.Out
+
+    #EndSubCase
+
+    #Id;#SubCase;#appCon
+    stopBrowser;;appCon
+        #Id;#Action;#AppConnection
+        APPSTP1;ApplicationStop;appCon
+
+    #EndSubCase
+
+    #Id;#SubCase;#appCon
+    expand;;appCon
+        #Id;#Action;#Dialog;#AppConnection;#Executed
+        DLGFLL1;DialogFill;'DialogForTestReport';appCon;Do.click()
+
+        #Id;#Action;#Dialog;#AppConnection;#MockElement
+        DLGFLL2;DialogFill;'DialogForTestReport';appCon;Do.use(new Locator().kind(ControlKind.Any).xpath('.//a[contains(.,"TestCase")]')).click()
+
+        #Id;#Action;#Dialog;#AppConnection;#MockElement
+        DLGFLL3;DialogFill;'DialogForTestReport';appCon;Do.use(new Locator().kind(ControlKind.Any).xpath('.//a[contains(.,"ActionItem (Report)")]')).click()
+
+    #EndSubCase
+
 

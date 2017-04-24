@@ -45,4 +45,19 @@
         <onClose/>
         <close/>
     </window>
+    <window name="DialogForTestReport">
+        <self/>
+        <onOpen/>
+        <run>
+            <any id="MockElement"/>
+            <button id="Executed" class="filterTotal"/>
+            <table id="MainTable" class="repLog"/>
+            <button id="Passed" class="filterPassed"/>
+            <button id="Failed" class="filterFailed"/>
+            <label id="startTime" xpath=".//span[@id=&amp;#39;startTime&amp;#39;]/span"/>
+            <label id="finishTime" xpath=".//span[@id=&amp;#39;finishTime&amp;#39;]/span"/>
+        </run>
+        <onClose/>
+        <close/>
+    </window>
 </dictionary>

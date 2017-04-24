@@ -12,11 +12,14 @@ import com.exactprosystems.jf.actions.AbstractAction;
 import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
+import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.functions.HelpKind;
+
+import java.io.File;
 
 @ActionAttribute(
 		group					= ActionGroups.Report,
@@ -72,8 +75,13 @@ public class ReportShow extends AbstractAction
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
-	    context.showReport(this.report);
-		
+		if (!new File(this.report).exists())
+		{
+			setError("File not found", ErrorKind.WRONG_PARAMETERS);
+			return;
+		}
+		context.showReport(this.report);
+
 		super.setResult(null);
 	}
 }
