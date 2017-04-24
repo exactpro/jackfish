@@ -63,9 +63,8 @@ public class SQLtableUpload extends AbstractAction
 	@Override
 	protected void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
-		if (this.connection == null)
-		{
-			super.setError("Connection is null", ErrorKind.EMPTY_PARAMETER);
+		if(this.connection.isClosed()){
+			super.setError("Connection is not established", ErrorKind.SQL_ERROR);
 		}
 		else
 		{

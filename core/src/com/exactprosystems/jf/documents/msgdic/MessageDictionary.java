@@ -39,11 +39,6 @@ import java.util.List;
         propOrder = { "description", "fields", "messages" }
         )
 
-//xmlns:xs="http://www.w3.org/2001/XMLSchema" 
-//targetNamespace="http://exactprosystems.com/dictionary"
-//xmlns:tns="http://exactprosystems.com/dictionary" elementFormDefault="qualified"
-
-
 @XmlRootElement(
         name = "dictionary"
         )
@@ -58,19 +53,19 @@ public class MessageDictionary extends AbstractDocument implements IMessageDicti
     private static final long serialVersionUID = 8949804056711432386L;
     private static final Logger logger = Logger.getLogger(MessageDictionary.class);
 
+    @XmlElement(required = false)
 	protected String	description;
 
+    @XmlElement(required = true)
 	protected Fields	fields;
 
+    @XmlElement(required = true)
 	protected Messages	messages;
 
 	@XmlAttribute(name = "name", required = true)
 	@XmlJavaTypeAdapter(CollapsedStringAdapter.class)
 	@XmlSchemaType(name = "NMTOKEN")
 	protected String	name;
-
-	@XmlAttribute(name = "version")
-	protected String	version;
 
 	@XmlAccessorType(XmlAccessType.FIELD)
 	@XmlType(name = "", propOrder = { "fields" })
@@ -175,7 +170,6 @@ public class MessageDictionary extends AbstractDocument implements IMessageDicti
 			this.messages = messageDictionary.messages;
 			this.description = messageDictionary.description;
 			this.name = messageDictionary.name;
-			this.version = messageDictionary.version;
 			
 			this.changed = true;
 		}
@@ -323,12 +317,6 @@ public class MessageDictionary extends AbstractDocument implements IMessageDicti
 	public List<IMessage>	getMessages()
 	{
 		return this.messages.messages == null ? null : (List<IMessage>)(List<?>) this.messages.messages;
-	}
-
-	@Override
-	public String getVersion()
-	{
-		return this.version;
 	}
 
 	//----------------------------------------------------------------------------------------------------------------------

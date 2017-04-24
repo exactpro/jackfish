@@ -1,48 +1,39 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<xs:schema version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+<xs:schema elementFormDefault="qualified" version="1.0" targetNamespace="http://exactprosystems.com/dictionary" xmlns:tns="http://exactprosystems.com/dictionary" xmlns:xs="http://www.w3.org/2001/XMLSchema">
 
-  <xs:element name="dictionary" type="MessageDictionary"/>
+  <xs:element name="dictionary" type="tns:MessageDictionary"/>
 
   <xs:complexType name="MessageDictionary">
-    <xs:complexContent>
-      <xs:extension base="abstractDocument">
         <xs:sequence>
           <xs:element name="description" type="xs:string" minOccurs="0"/>
-          <xs:element name="fields" minOccurs="0">
+          <xs:element name="fields">
             <xs:complexType>
               <xs:sequence>
-                <xs:element name="field" type="Field" minOccurs="0" maxOccurs="unbounded"/>
+                <xs:element name="field" type="tns:Field" minOccurs="0" maxOccurs="unbounded"/>
               </xs:sequence>
             </xs:complexType>
           </xs:element>
-          <xs:element name="messages" minOccurs="0">
+          <xs:element name="messages">
             <xs:complexType>
               <xs:sequence>
-                <xs:element name="message" type="Message" minOccurs="0" maxOccurs="unbounded"/>
+                <xs:element name="message" type="tns:Message" minOccurs="0" maxOccurs="unbounded"/>
               </xs:sequence>
             </xs:complexType>
           </xs:element>
         </xs:sequence>
         <xs:attribute name="name" type="xs:NMTOKEN" use="required"/>
-        <xs:attribute name="version" type="xs:string"/>
-      </xs:extension>
-    </xs:complexContent>
-  </xs:complexType>
-
-  <xs:complexType name="abstractDocument" abstract="true">
-    <xs:sequence/>
   </xs:complexType>
 
   <xs:complexType name="Field">
     <xs:sequence>
       <xs:element name="description" type="xs:string" minOccurs="0"/>
-      <xs:element name="attribute" type="Attribute" minOccurs="0" maxOccurs="unbounded"/>
-      <xs:element name="value" type="Attribute" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="attribute" type="tns:Attribute" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="value" type="tns:Attribute" minOccurs="0" maxOccurs="unbounded"/>
     </xs:sequence>
     <xs:attribute name="name" type="xs:NMTOKEN"/>
     <xs:attribute name="reference" type="xs:IDREF"/>
     <xs:attribute name="id" type="xs:ID"/>
-    <xs:attribute name="type" type="JavaType"/>
+    <xs:attribute name="type" type="tns:JavaType"/>
     <xs:attribute name="defaultvalue" type="xs:string"/>
     <xs:attribute name="required" type="xs:boolean"/>
     <xs:attribute name="isCollection" type="xs:boolean"/>
@@ -52,16 +43,16 @@
     <xs:simpleContent>
       <xs:extension base="xs:string">
         <xs:attribute name="name" type="xs:NMTOKEN" use="required"/>
-        <xs:attribute name="type" type="JavaType"/>
+        <xs:attribute name="type" type="tns:JavaType"/>
       </xs:extension>
     </xs:simpleContent>
   </xs:complexType>
 
   <xs:complexType name="Message">
     <xs:complexContent>
-      <xs:extension base="Field">
+      <xs:extension base="tns:Field">
         <xs:sequence>
-          <xs:element name="field" type="Field" minOccurs="0" maxOccurs="unbounded"/>
+          <xs:element name="field" type="tns:Field" minOccurs="0" maxOccurs="unbounded"/>
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>

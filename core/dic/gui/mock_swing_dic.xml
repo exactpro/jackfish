@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<dictionary>
+    <window name="Main">
+        <self>
+            <any id="owner" xpath=".//JFrame"/>
+        </self>
+        <onOpen/>
+        <run>
+            <button id="Button" owner="owner" class="javax.swing.JButton" name="Button" action="Button" text="Button" addition="Many"/>
+            <textBox id="TextBox" owner="owner" class="javax.swing.JTextField" name="TextBox" text=""/>
+            <table id="Table" owner="owner" class="javax.swing.JTable" name="Table" text="" addition="Many"/>
+            <table id="Table1" owner="owner" class="javax.swing.JTable" name="Table1" text="" addition="Many"/>
+            <checkBox id="CheckBox" owner="owner" class="javax.swing.JCheckBox" action="CheckBox" text="CheckBox" addition="Many"/>
+            <slider id="Slider" owner="owner" class="javax.swing.JSlider" addition="Many"/>
+            <scrollBar id="ScrollBar" owner="owner" class="javax.swing.JScrollBar" addition="Many"/>
+            <comboBox id="ComboBox" owner="owner" class="javax.swing.JComboBox" name="ComboBox" action="comboBoxChanged" addition="Many"/>
+            <radioButton id="RadioButton" owner="owner" class="javax.swing.JRadioButton" action="Green" text="Green" addition="Many"/>
+            <tree id="Tree" owner="owner" class="javax.swing.JTree" addition="Many"/>
+            <tabPanel id="TabPanel" owner="owner" class="javax.swing.JTabbedPane" addition="Many"/>
+            <label id="centralLabel" owner="owner" class="javax.swing.JLabel" name="centralLabel" text="" addition="Many"/>
+            <toggleButton id="ToggleButton" owner="owner" class="javax.swing.JToggleButton" name="ToggleButton" addition="Many"/>
+            <frame id="Frame" owner="owner" class="javax.swing.JFrame" name="frame0" title="Mock swing app" addition="Many"/>
+            <label id="Label" owner="owner" class="javax.swing.JLabel" name="centralLabel" text="" addition="Many"/>
+            <progressBar id="ProgressBar" owner="owner" class="javax.swing.JProgressBar" name="ProgressBar" addition="Many"/>
+            <panel id="Panel" owner="owner" class="javax.swing.JPanel" name="Panel" addition="Many"/>
+            <dialog id="DialogD" title="Dialog" addition="Many"/>
+            <listView id="ListView" owner="owner" class="javax.swing.JList" addition="Many"/>
+            <menu id="Menu" owner="owner" class="javax.swing.JMenu" name="Menu" action="Menu" text="Menu" addition="Many"/>
+            <menuItem id="MenuItem" owner="owner" class="javax.swing.JMenuItem" name="MenuItem" action="MenuItem" text="MenuItem" addition="Many"/>
+            <menu id="Menu" owner="owner" class="javax.swing.JMenu" action="Menu1" text="Menu1" addition="Many"/>
+            <menu id="Menu1" owner="owner" class="javax.swing.JMenu" action="JMenu 1" text="JMenu 1"/>
+            <image id="Image" owner="owner"/>
+            <row id="Row" owner="owner"/>
+            <treeItem id="TreeItem" owner="owner"/>
+            <splitter id="Splitter" owner="owner" class="javax.swing.JSplitPane" name="Splitter" addition="Many"/>
+            <radioButton id="RadioButton1" owner="owner" class="javax.swing.JRadioButton" action="Yellow" text="Yellow" addition="Many"/>
+            <toolTip id="ToolTip" owner="owner" text="ToolTip" addition="Many"/>
+            <menu id="Menu2" xpath=".//JMenu[@action=&amp;quot;Menu1&amp;quot;]" owner="owner" class="" action="" text=""/>
+            <any id="Any" owner="owner" class="javax.swing.JButton" name="Any" action="Any" text="Any" addition="Many"/>
+            <wait id="Wait" owner="owner"/>
+            <label id="moveLabel" owner="owner" class="javax.swing.JLabel" name="moveLabel" text=""/>
+            <button id="Button1" owner="owner" class="javax.swing.JButton" name="ButtonMany" addition="Many"/>
+        </run>
+        <onClose/>
+        <close>
+            <any xpath="./JRootPane/JLayeredPane/JPanel/JPanel19/JPanel/JComboBox" owner="owner"/>
+        </close>
+    </window>
+    <window name="DisabledComponents">
+        <self>
+            <any id="rootFrame" xpath="//JFrame"/>
+        </self>
+        <onOpen/>
+        <run>
+            <label id="label" xpath=".//JPanel[@action=&amp;quot;&amp;quot; and @class=&amp;quot;javax.swing.JPanel&amp;quot; and @name=&amp;quot;&amp;quot; and @title=&amp;quot;&amp;quot; and @tooltip=&amp;quot;&amp;quot;]//JLabel" owner="rootFrame" rows="" header="" columns="">
+                <info>
+                    <xpath>/JRootPane/JLayeredPane/JPanel/JPanel[19]/JPanel/JLabel</xpath>
+                    <rectangle x1="0.42125" y1="0.9550000000000001" x2="0.45125" y2="0.975"/>
+                    <node>JLabel</node>
+                    <attr name="action"></attr>
+                    <attr name="class">javax.swing.JLabel</attr>
+                    <attr name="name"></attr>
+                    <attr name="title"></attr>
+                    <attr name="tooltip"></attr>
+                </info>
+            </label>
+            <checkBox id="checkBox" xpath=".//JCheckBox[@action=&amp;quot;&amp;quot; and @class=&amp;quot;javax.swing.JCheckBox&amp;quot; and @name=&amp;quot;&amp;quot; and @title=&amp;quot;&amp;quot; and @tooltip=&amp;quot;&amp;quot;]" owner="rootFrame" rows="" header="" columns="">
+                <info>
+                    <xpath>/JRootPane/JLayeredPane/JPanel/JPanel[19]/JPanel/JCheckBox</xpath>
+                    <rectangle x1="0.55125" y1="0.9525" x2="0.5775" y2="0.97875"/>
+                    <node>JCheckBox</node>
+                    <attr name="action"></attr>
+                    <attr name="class">javax.swing.JCheckBox</attr>
+                    <attr name="name"></attr>
+                    <attr name="title"></attr>
+                    <attr name="tooltip"></attr>
+                </info>
+            </checkBox>
+            <comboBox id="comboBoxChanged" xpath="./JRootPane/JLayeredPane/JPanel/JPanel[19]/JPanel/JComboBox" owner="rootFrame" rows="" header="" columns="">
+                <info>
+                    <xpath>/JRootPane/JLayeredPane/JPanel/JPanel[19]/JPanel/JComboBox</xpath>
+                    <rectangle x1="0.4575" y1="0.9500000000000001" x2="0.545" y2="0.9812500000000001"/>
+                    <node>JComboBox</node>
+                    <attr name="action">comboBoxChanged</attr>
+                    <attr name="class">javax.swing.JComboBox</attr>
+                    <attr name="name"></attr>
+                    <attr name="title"></attr>
+                    <attr name="tooltip"></attr>
+                </info>
+            </comboBox>
+            <comboBox id="comboBoxChanged2" xpath=".//JRootPane/JLayeredPane/JPanel/JPanel[19]/JPanel/JComboBox" owner="rootFrame" rows="" header="" columns="">
+                <info>
+                    <xpath>/JRootPane/JLayeredPane/JPanel/JPanel[19]/JPanel/JComboBox</xpath>
+                    <rectangle x1="0.4575" y1="0.9500000000000001" x2="0.545" y2="0.9812500000000001"/>
+                    <node>JComboBox</node>
+                    <attr name="action">comboBoxChanged</attr>
+                    <attr name="class">javax.swing.JComboBox</attr>
+                    <attr name="name"></attr>
+                    <attr name="title"></attr>
+                    <attr name="tooltip"></attr>
+                </info>
+            </comboBox>
+        </run>
+        <onClose/>
+        <close/>
+    </window>
+</dictionary>

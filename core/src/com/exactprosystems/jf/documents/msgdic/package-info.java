@@ -6,17 +6,5 @@
 //  information which is the property of Exactpro Systems, LLC or its licensors.
 ////////////////////////////////////////////////////////////////////////////////
 
-package com.exactprosystems.jf.api.client;
-
-import java.util.List;
-
-public interface IMessageDictionary
-{
-    String          getFilePath();
-    String			getDescription();
-	IField 			getField(String name);
-	List<IField>	getFields();
-	IMessage 		getMessageByName(String name);
-	IMessage 		getMessage(String name);
-	List<IMessage>	getMessages();
-}
+@javax.xml.bind.annotation.XmlSchema(namespace = "http://exactprosystems.com/dictionary", elementFormDefault = javax.xml.bind.annotation.XmlNsForm.QUALIFIED)
+package com.exactprosystems.jf.documents.msgdic;
