@@ -34,6 +34,7 @@ public class MatrixTreeNode extends TreeNode
 	private static final SerializablePair<String, String> REFRESH_MATRIX = new SerializablePair<>("Refresh", CssVariables.Icons.REFRESH);
 
 	private static final SerializablePair<String, String> OPEN_MATRIX = new SerializablePair<>("Open matrix", CssVariables.Icons.MATRIX_ICON);
+	private static final SerializablePair<String, String> OPEN_AS_TEXT = new SerializablePair<>("Open as text", CssVariables.Icons.MATRIX_ICON);
 	private static final SerializablePair<String, String> ADD_NEW_MATRIX = new SerializablePair<>("Add new matrix", CssVariables.Icons.ADD_PARAMETER_ICON);
 	private static final SerializablePair<String, String> REMOVE_MATRIX = new SerializablePair<>("Remove matrix", CssVariables.Icons.REMOVE_PARAMETER_ICON);
 	private static final SerializablePair<String, String> ADD_TO_TOOLBAR = new SerializablePair<>("Add to toolbar", CssVariables.Icons.ADD_PARAMETER_ICON);
@@ -67,6 +68,7 @@ public class MatrixTreeNode extends TreeNode
 		ContextMenu menu = new ContextMenu();
 		menu.getItems().addAll(
 				ConfigurationTreeView.createDisabledItem(OPEN_MATRIX),
+				ConfigurationTreeView.createDisabledItem(OPEN_AS_TEXT),
 				ConfigurationTreeView.createDisabledItem(ADD_NEW_MATRIX),
 				ConfigurationTreeView.createDisabledItem(REMOVE_MATRIX),
 				ConfigurationTreeView.createDisabledItem(ADD_TO_TOOLBAR),
@@ -87,6 +89,7 @@ public class MatrixTreeNode extends TreeNode
 			ContextMenu menu = new ContextMenu();
 			menu.getItems().addAll(
 					ConfigurationTreeView.createDisabledItem(OPEN_MATRIX),
+					ConfigurationTreeView.createDisabledItem(OPEN_AS_TEXT),
 					ConfigurationTreeView.createDisabledItem(REMOVE_MATRIX),
 					ConfigurationTreeView.createDisabledItem(ADD_TO_TOOLBAR),
 					ConfigurationTreeView.createItem(EXCLUDE_MATRIX_FOLDER, () -> model.excludeMatrixDirectory(file.getName()), "Error on remove matrix directory"),
@@ -99,6 +102,7 @@ public class MatrixTreeNode extends TreeNode
 			ContextMenu menu = new ContextMenu();
 			menu.getItems().addAll(
 					ConfigurationTreeView.createItem(OPEN_MATRIX,() -> this.model.openMatrix(file), "Error on on open matrix"),
+					ConfigurationTreeView.createItem(OPEN_AS_TEXT,() -> this.model.openPlainText(file), "Error on on open matrix"),
 					ConfigurationTreeView.createItem(ADD_NEW_MATRIX, () -> ConfigurationTreeView.showInputDialog("Enter new name").ifPresent(
 							name -> Common.tryCatch(() -> this.model.addNewMatrix(file, name), "Error on create new matrix")), "Error on add new matrix"),
 					ConfigurationTreeView.createItem(REMOVE_MATRIX, () -> this.model.removeMatrix(file), "Error on remove matrix"),
@@ -114,6 +118,7 @@ public class MatrixTreeNode extends TreeNode
 			ContextMenu menu = new ContextMenu();
 			menu.getItems().addAll(
 					ConfigurationTreeView.createDisabledItem(OPEN_MATRIX),
+					ConfigurationTreeView.createDisabledItem(OPEN_AS_TEXT),
 					ConfigurationTreeView.createItem(ADD_NEW_MATRIX, () -> ConfigurationTreeView.showInputDialog("Enter new name").ifPresent(
 							name -> Common.tryCatch(() -> this.model.addNewMatrix(file, name), "Error on create new matrix")), "Error on add new matrix"),
 					ConfigurationTreeView.createDisabledItem(REMOVE_MATRIX),

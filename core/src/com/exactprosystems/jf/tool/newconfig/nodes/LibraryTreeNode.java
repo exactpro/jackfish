@@ -38,6 +38,7 @@ public class LibraryTreeNode extends TreeNode
 	private static final SerializablePair<String, String> ADD_NEW_LIBRARY = new SerializablePair<>("Add new library to", CssVariables.Icons.ADD_PARAMETER_ICON);
 	private static final SerializablePair<String, String> EXCLUDE_LIB_FOLDER = new SerializablePair<>("Exclude library folder", CssVariables.Icons.REMOVE_PARAMETER_ICON);
 	private static final SerializablePair<String, String> OPEN_LIBRARY = new SerializablePair<>("Open library", CssVariables.Icons.LIBRARY_ICON);
+	private static final SerializablePair<String, String> OPEN_AS_TEXT = new SerializablePair<>("Open as text", CssVariables.Icons.LIBRARY_ICON);
 	private static final SerializablePair<String, String> REMOVE_LIBRARY = new SerializablePair<>("Remove library", CssVariables.Icons.REMOVE_PARAMETER_ICON);
 
 
@@ -66,6 +67,7 @@ public class LibraryTreeNode extends TreeNode
 
 		menu.getItems().addAll(
 				ConfigurationTreeView.createDisabledItem(OPEN_LIBRARY),
+				ConfigurationTreeView.createDisabledItem(OPEN_AS_TEXT),
 				ConfigurationTreeView.createDisabledItem(REMOVE_LIBRARY),
 				ConfigurationTreeView.createItem(REFRESH_LIBRARY, () -> this.model.updateLibraries(), "Error on refresh libs")
 		);
@@ -160,6 +162,7 @@ public class LibraryTreeNode extends TreeNode
 			ContextMenu menu = new ContextMenu();
 			menu.getItems().addAll(
 					ConfigurationTreeView.createItem(OPEN_LIBRARY, () -> model.openLibrary(this.fullPath), "Error on open library file"),
+					ConfigurationTreeView.createItem(OPEN_AS_TEXT, () -> model.openPlainText(new File(this.fullPath)), "Error on open library file"),
 					ConfigurationTreeView.createItem(REMOVE_LIBRARY, () -> model.removeLibrary(this.namespace), "Error on remove library"),
 					ConfigurationTreeView.createDisabledItem(ADD_NEW_LIBRARY),
 					ConfigurationTreeView.createDisabledItem(EXCLUDE_LIB_FOLDER),

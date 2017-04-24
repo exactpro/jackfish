@@ -757,6 +757,12 @@ public class ConfigurationFx extends Configuration
 	{
 		this.model.loadCsv(file.getAbsolutePath());
 	}
+
+	public void openPlainText(File file) throws Exception
+	{
+		this.model.loadPlainText(path(file));
+	}
+
 	//endregion
 
 	public void updateHandlerValue(HandlerKind kind, String newValue) throws Exception
