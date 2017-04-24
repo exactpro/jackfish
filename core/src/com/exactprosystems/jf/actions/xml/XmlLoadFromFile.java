@@ -45,7 +45,7 @@ import com.exactprosystems.jf.functions.Xml;
 				+ "\n"
 				+ "{{`2. Make sure that the object has been created and contains nodes.`}} "
 				+ "{{##Id;#Action;#File\n"
-				+ "XML1;XmlLoadFromFile;'/home/victor.krasnovid/Desktop/Xml.xml'\n"
+				+ "XML1;XmlLoadFromFile;'PathToTheFile'\n"
 				+ "#Assert;#Message\n"
 				+ "XML1.Result.toString() == 'Passed';'No such attribute'#}}"
 	)

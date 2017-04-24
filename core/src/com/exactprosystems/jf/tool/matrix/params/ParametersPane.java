@@ -252,7 +252,7 @@ public class ParametersPane extends CustomScrollPane
 
 		if (this.generator != null)
 		{
-			key.setOnDragDetected(new DragDetector(() -> this.generator.generate() + par.getName())::onDragDetected);
+			key.setOnDragDetected(new DragDetector(() -> par.getExpression())::onDragDetected);
 		}
 
 		if (!this.oneLine)
