@@ -32,7 +32,7 @@ import com.exactprosystems.jf.functions.Xml;
 				+ "{{`4. Check the results of the comparison.`}}"
 				+ "\n"
 				+ "{{##Id;#Action;#File\n"
-				+ "XML1;XmlLoadFromFile;'/home/victor.krasnovid/Desktop/Xml.xml'\n"
+				+ "XML1;XmlLoadFromFile;'pathToTheFile'\n"
 				+ "#Id;#Action;#Xpath;#NodeName;#Xml\n"
 				+ "XML2;XmlSelect;'//friend';'newParent';XML1.Out\n"
 				+ "#Id;#Action;#Expected;#Actual\n"

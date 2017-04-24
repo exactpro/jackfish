@@ -1,3 +1,161 @@
 #TestCase;#Kind;#Depends;#For
-Test case;Never;;
+Create;Never;;
+    #Id;#Let
+    TestString;'My String 1234567890!@#$%^&*()\\//'
+
+    #Id;#Action;#Assert;#Content
+    TXT1;TextCreate;This.Result == Result.Passed && This.Out.toString() == TestString + '\n';TestString
+
+    // Negative Testing
+    #Id;#Action;#Assert;#Content
+    TXT2;TextCreate;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;
+
+
+#TestCase;#Kind;#Depends;#For
+Text Add New Line;;;
+    #Id;#Let
+    TestLine;'My test line'
+
+    #Id;#Action;#Content
+    TXT3;TextCreate;TestLine
+
+    #Action;#Assert;#Line;#Text
+    TextAddLine;This.Result == Result.Passed && TXT3.Out.size() == 2;TestLine;TXT3.Out
+
+    #Action;#Line;#Text
+    TextAddLine;new Integer(0);TXT3.Out
+
+    // Negative Testing
+    #Action;#Assert;#Line;#Text
+    TextAddLine;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;
+
+    #Action;#Assert;#Line;#Text
+    TextAddLine;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;TestLine;
+
+    #Action;#Assert;#Line;#Text
+    TextAddLine;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;TXT3.Out
+
+    #Action;#Assert;#Line;#Text
+    TextAddLine;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS && This.Reason == 'Parameter Text: Cannot convert 0 of type class java.lang.Integer to type class com.exactprosystems.jf.functions.Text';TestLine;new Integer(0)
+
+
+#TestCase;#Kind;#Depends;#For
+Text Load From File;;;
+    #Id;#Let
+    testString;'My test text for Text actions'
+
+    #Id;#Action;#Content
+    TXT14;TextCreate;testString
+
+    #Action;#Text;#File
+    TextSaveToFile;TXT14.Out;'test.txt'
+
+    #Id;#Action;#Assert;#File
+    TXT4;TextLoadFromFile;This.Out.toString() == testString + '\n';'test.txt'
+
+    #Id;#Action;#Assert;#File
+    TXT5;TextLoadFromFile;This.Result == Result.Failed && This.Reason == 'Exception occurred: fileThatDoesNotExist (No such file or directory)';'fileThatDoesNotExist'
+
+    #Id;#Action;#Assert;#File
+    TXT8;TextLoadFromFile;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;
+
+
+#TestCase;#Kind;#Depends;#For
+Text Perform;;;
+    #Id;#Let
+    length;100
+
+    #Id;#Action;#Content
+    TXT7;TextCreate;'My test string length is not @{length * 100}'
+
+    #Id;#Action;#Content
+    TXT11;TextCreate;'My test string length is not @{size}'
+
+    #Id;#Action;#Assert;#Text
+    TXT6;TextPerform;This.Out.toString() == 'My test string length is not 10000\n';TXT7.Out
+
+    #Id;#Action;#Assert;#Text
+    TXT9;TextPerform;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;
+
+    #Id;#Action;#Assert;#Text
+    TXT10;TextPerform;TXT10.Result == Result.Failed && TXT10.Reason.contains('Error: unresolvable property or identifier: size');TXT11.Out
+
+
+#TestCase;#Kind;#Depends;#For
+Text Set Value;;;
+    #Id;#Let
+    first;'First Line'
+
+    #Id;#Let
+    second;'Second Line'
+
+    #Id;#Let
+    newSecond;'New Second line'
+
+    #Id;#Action;#Content
+    TXT12;TextCreate;first
+
+    #Action;#Line;#Text
+    TextAddLine;second;TXT12.Out
+
+    #Action;#Assert;#Line;#Text;#Index
+    TextSetValue;TXT12.Out.get(1) == newSecond && TXT12.Out.get(0) == first;newSecond;TXT12.Out;1
+
+    #Action;#Assert;#Line;#Text;#Index
+    TextSetValue;This.Reason ==  'Index \'' + Integer.MIN_VALUE + '\' is out of bounds' && This.Kind == ErrorKind.WRONG_PARAMETERS;newSecond;TXT12.Out;Integer.MIN_VALUE
+
+    #Action;#Assert;#Line;#Text;#Index
+    TextSetValue;This.Reason == 'Index \'' + Integer.MAX_VALUE + '\' is out of bounds' && This.Kind == ErrorKind.WRONG_PARAMETERS;newSecond;TXT12.Out;Integer.MAX_VALUE
+
+    #Action;#Assert;#Line;#Text;#Index
+    TextSetValue;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;;
+
+    #Action;#Assert;#Line;#Text;#Index
+    TextSetValue;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;newSecond;;
+
+    #Action;#Assert;#Line;#Text;#Index
+    TextSetValue;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;TXT12.Out;
+
+    #Action;#Assert;#Line;#Text;#Index
+    TextSetValue;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;;1
+
+    #Action;#Assert;#Line;#Text;#Index
+    TextSetValue;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;newSecond;TXT12.Out;
+
+    #Action;#Assert;#Line;#Text;#Index
+    TextSetValue;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;newSecond;;1
+
+    #Action;#Assert;#Line;#Text;#Index
+    TextSetValue;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;TXT12.Out;1
+
+
+#TestCase;#Kind;#Depends;#For
+Text Save To File;;;
+    #Id;#Let
+    testString;'My test text for Text actions'
+
+    #Id;#Action;#Content
+    TXT13;TextCreate;testString
+
+    #Action;#Text;#File
+    TextSaveToFile;TXT13.Out;'test.txt'
+
+    #Id;#Action;#Assert;#File
+    TXT15;TextLoadFromFile;This.Out.toString() == testString + '\n';'test.txt'
+
+    #Id;#Action;#Assert;#File
+    TXT17;TextLoadFromFile;This.Result == Result.Failed && This.Reason == 'Exception occurred: test333.txt (No such file or directory)';'test333.txt'
+
+    #Action;#Assert;#Text;#File
+    TextSaveToFile;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;
+
+    #Action;#Assert;#Text;#File
+    TextSaveToFile;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;TXT17.Out;
+
+    #Action;#Assert;#Text;#File
+    TextSaveToFile;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;'test.txt'
+
+
+#TestCase;#Kind;#Depends;#For
+TODO Text Report;;;
 

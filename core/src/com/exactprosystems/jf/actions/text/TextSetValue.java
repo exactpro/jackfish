@@ -12,6 +12,7 @@ import com.exactprosystems.jf.actions.AbstractAction;
 import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
+import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
@@ -57,8 +58,14 @@ public class TextSetValue extends AbstractAction
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
+		if (index < 0 || index >= this.text.size())
+		{
+			super.setError("Index '" + index + "' is out of bounds", ErrorKind.WRONG_PARAMETERS);
+			return;
+		}
+
 		text.set(this.index, this.line);
-		
+
 		super.setResult(null);
 	}
 
