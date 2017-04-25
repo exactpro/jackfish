@@ -1,3 +1,87 @@
-#TestCase;#Kind;#Depends;#For
-Test case;Never;;
+#Id;#TestCase;#Kind;#Depends;#For
+TABLE_ADD_COLUMNS;Test case;Never;;
+    #Id;#Action;#id;#name
+    TBL1;TableCreate;;
+
+    #Action;#Table;#Columns
+    TableAddColumns;TBL1.Out;'surname'
+
+    #Assert;#Message
+    TBL1.Out.getHeader(2).equals('surname');'column was not added'
+
+    #Action;#Table;#Columns
+    TableAddColumns;TBL1.Out;new String[]{'adress','postindex'}
+
+    #Assert;#Message
+    TBL1.Out.getHeader(3).equals('adress') && TBL1.Out.getHeader(4).equals('postindex');'column was not added'
+
+    #Action;#Table;#Columns;#Index
+    TableAddColumns;TBL1.Out;'age';2
+
+    #Assert;#Message
+    TBL1.Out.getHeader(2).equals('age');'column was not added'
+
+    #Action;#Assert;#Table;#Columns;#Index
+    TableAddColumns;This.Result == Result.Failed && This.Kind == ErrorKind.EXCEPTION;TBL1.Out;'preid';-1
+
+    #Action;#Assert;#Table;#Columns;#Index
+    TableAddColumns;This.Result == Result.Failed && This.Kind == ErrorKind.EXCEPTION;TBL1.Out;'nnn';999
+
+
+#Id;#TestCase;#Kind;#Depends;#For
+TABLE_SORT;Test case;Never;;
+
+#Id;#TestCase;#Kind;#Depends;#For
+TABLE_COMPARE_TWO;Test case;Never;;
+
+#Id;#TestCase;#Kind;#Depends;#For
+TABLE_LEFT_JOIN;Test case;Never;;
+
+#Id;#TestCase;#Kind;#Depends;#For
+TABLE_ADD_VALUE;Test case;Never;;
+
+#Id;#TestCase;#Kind;#Depends;#For
+TABLE_COLUMN_RENAME;Test case;Never;;
+
+#Id;#TestCase;#Kind;#Depends;#For
+TABLE_LOAD_FROM_FILE;Test case;Never;;
+
+#Id;#TestCase;#Kind;#Depends;#For
+TABLE_REMOVE_COLUMNS;Test case;Never;;
+
+#Id;#TestCase;#Kind;#Depends;#For
+TABLE_CONSIDER_COLUMNS_AS;Test case;Never;;
+
+#Id;#TestCase;#Kind;#Depends;#For
+TABLE_GET_ROW_INDEXES;Test case;Never;;
+
+#Id;#TestCase;#Kind;#Depends;#For
+TABLE_REPLACE;Test case;Never;;
+
+#Id;#TestCase;#Kind;#Depends;#For
+TABLE_LOAD_FROM_DIR;Test case;Never;;
+
+#Id;#TestCase;#Kind;#Depends;#For
+TABLE_SAVE_TO_FILE;Test case;Never;;
+
+#Id;#TestCase;#Kind;#Depends;#For
+TABLE_CREATE;Test case;Never;;
+
+#Id;#TestCase;#Kind;#Depends;#For
+TABLE_SET_VALUE;Test case;Never;;
+
+#Id;#TestCase;#Kind;#Depends;#For
+TABLE_EDIT;Test case;Never;;
+
+#Id;#TestCase;#Kind;#Depends;#For
+TABLE_SELECT;Test case;Never;;
+
+#Id;#TestCase;#Kind;#Depends;#For
+TABLE_UNION;Test case;Never;;
+
+#Id;#TestCase;#Kind;#Depends;#For
+TABLE_REPORT;Test case;Never;;
+
+#Id;#TestCase;#Kind;#Depends;#For
+TABLE_REMOVE_ROW;Test case;Never;;
 

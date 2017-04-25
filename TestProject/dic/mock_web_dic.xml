@@ -13,7 +13,7 @@
             <any id="Any" uid="any" addition="Many"/>
             <label id="moveLabel" uid="moveLabel" visibility="Visible"/>
             <button id="Button1" class="manyButton" addition="Many"/>
-            <wait id="Wait"/>
+            <wait id="Wait" addition="Many"/>
             <checkBox id="CheckBox" uid="checkbox" addition="Many"/>
             <table id="Table" uid="table" addition="Many"/>
             <table id="Table1" uid="table1" addition="Many"/>
