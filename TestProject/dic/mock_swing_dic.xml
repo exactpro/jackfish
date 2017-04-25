@@ -38,7 +38,7 @@
             <toolTip id="ToolTip" owner="owner" text="ToolTip" addition="Many"/>
             <menu id="Menu2" xpath=".//JMenu[@action=&amp;quot;Menu1&amp;quot;]" owner="owner" class="" action="" text=""/>
             <any id="Any" owner="owner" class="javax.swing.JButton" name="Any" action="Any" text="Any" addition="Many"/>
-            <wait id="Wait" owner="owner"/>
+            <wait id="Wait" owner="owner" addition="Many"/>
             <label id="moveLabel" owner="owner" class="javax.swing.JLabel" name="moveLabel" text=""/>
             <button id="Button1" owner="owner" class="javax.swing.JButton" name="ButtonMany" addition="Many"/>
         </run>

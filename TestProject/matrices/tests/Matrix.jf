@@ -1,3 +1,9 @@
-#TestCase;#Kind;#Depends;#For
-Test case;Never;;
+#Id;#TestCase;#Kind;#Depends;#For
+MATRIX_WAIT;Test case;Never;;
+
+#Id;#TestCase;#Kind;#Depends;#For
+MATRIX_RUN_FROM_TEXT;Test case;Never;;
+
+#Id;#TestCase;#Kind;#Depends;#For
+MATRIX_RUN;Test case;Never;;
 

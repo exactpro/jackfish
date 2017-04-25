@@ -30,7 +30,7 @@
             <treeItem id="TreeItem" owner="owner"/>
             <toolTip id="ToolTip" owner="owner" text="It&amp;#39;s some Tooltip!" addition="Many"/>
             <any id="Any" uid="Any" owner="owner" class="" name="" action="" text="" addition="Many"/>
-            <wait id="Wait" owner="owner"/>
+            <wait id="Wait" owner="owner" addition="Many"/>
             <label id="Label" uid="centralLabel" owner="owner" class="" name="" text="" addition="Many"/>
             <button id="DialogCloseButton" owner="owner" name="Close"/>
         </run>

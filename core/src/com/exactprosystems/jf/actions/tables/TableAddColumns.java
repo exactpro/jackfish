@@ -67,7 +67,7 @@ public class TableAddColumns extends AbstractAction
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
-		if (index >= 0)
+		if (index != Integer.MIN_VALUE)
 		{
 			table.addColumns(index, columns);
 		}
