@@ -12,6 +12,7 @@ import com.exactprosystems.jf.actions.AbstractAction;
 import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.actions.ActionGroups;
+import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Context;
@@ -61,19 +62,25 @@ public class TableAddColumns extends AbstractAction
 	@Override
 	public void initDefaultValues() 
 	{
-		index	= Integer.MIN_VALUE;
+		this.index	= null;
 	}
 	
 	@Override
 	public void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
-		if (index != Integer.MIN_VALUE)
+		if (this.index != null)
 		{
-			table.addColumns(index, columns);
+		    if (this.index < 0 || this.index >= this.table.getHeaderSize())
+		    {
+		        super.setError("Index is out of bounds", ErrorKind.WRONG_PARAMETERS);
+		        return;
+		    }
+		        
+			this.table.addColumns(this.index, this.columns);
 		}
 		else
 		{
-			table.addColumns(columns);
+			this.table.addColumns(this.columns);
 		}
 
 		super.setResult(null);
