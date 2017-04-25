@@ -165,7 +165,7 @@ public class If extends MatrixItem
 				Boolean	bool = (Boolean) eval;
 				if (bool)
 				{
-					ret = executeChildren(start, context, listener, evaluator, report, new Class<?>[] { Else.class }, null);
+					ret = executeChildren(start, context, listener, evaluator, report, new Class<?>[] { Else.class });
 					return ret;
 				}
 				else

@@ -194,19 +194,15 @@ public final class SubCase extends MatrixItem
 			return new ReturnAndResult(start, Result.NotExecuted);
 		}
 
-		Variables oldLocals = null;
+        Variables locals = evaluator.createLocals(); 
 		try
 		{
-			this.locals = evaluator.createLocals();
-
-			this.locals.set(parameters);
+			evaluator.getLocals().set(parameters);
 
 			reportParameters(report, parameters);
 			report.itemIntermediate(this);
 
-			
-			oldLocals = evaluator.getLocals();
-			ReturnAndResult ret = executeChildren(start, context, listener, evaluator, report, new Class<?>[] { OnError.class }, this.locals);
+			ReturnAndResult ret = executeChildren(start, context, listener, evaluator, report, new Class<?>[] { OnError.class });
 
 			Result result = ret.getResult();
 			
@@ -232,7 +228,7 @@ public final class SubCase extends MatrixItem
 		finally
 		{
 			this.call = false;
-			evaluator.setLocals(oldLocals);
+			evaluator.setLocals(locals);
 		}
 	}
 
@@ -254,8 +250,6 @@ public final class SubCase extends MatrixItem
 			table.addValues(parameter.getName(), parameter.getExpression(), parameter.getValue());
 		}
 	}
-
-	private Variables	locals	= null;
 
 	private boolean	call	= false;
 

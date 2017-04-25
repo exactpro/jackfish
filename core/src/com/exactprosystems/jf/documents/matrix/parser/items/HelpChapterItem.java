@@ -42,7 +42,7 @@ public class HelpChapterItem extends MatrixItem
             logger.error(e.getMessage(), e);
             return new ReturnAndResult(start, Result.Failed, e.getMessage(), ErrorKind.EXCEPTION, this);
         }
-        return executeChildren(start, context, listener, evaluator, report, new Class<?>[] {  }, null);
+        return executeChildren(start, context, listener, evaluator, report, new Class<?>[] {  });
 	}
 
 	private String str = null;

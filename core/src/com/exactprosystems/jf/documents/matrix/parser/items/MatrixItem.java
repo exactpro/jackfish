@@ -16,7 +16,6 @@ import com.exactprosystems.jf.api.common.Converter;
 import com.exactprosystems.jf.api.common.IMatrixItem;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
-import com.exactprosystems.jf.common.evaluator.Variables;
 import com.exactprosystems.jf.common.report.ReportBuilder;
 import com.exactprosystems.jf.documents.config.Configuration;
 import com.exactprosystems.jf.documents.config.Context;
@@ -813,7 +812,7 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 
 	protected ReturnAndResult executeItSelf(long start, Context context, IMatrixListener listener, AbstractEvaluator evaluator, ReportBuilder report, Parameters parameters)
 	{
-		return executeChildren(start, context, listener, evaluator, report, null, null);
+		return executeChildren(start, context, listener, evaluator, report, null);
 	}
 
 	protected void afterReport(ReportBuilder report)
@@ -828,7 +827,7 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 	}
 
 	protected final ReturnAndResult executeChildren(long start, Context context,  IMatrixListener listener, AbstractEvaluator evaluator,
-			ReportBuilder report, Class<?>[] executeUntilNot, Variables locals)
+			ReportBuilder report, Class<?>[] executeUntilNot)
 	{
 		boolean wasError = false;
 		Object out = null;
@@ -843,11 +842,6 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 				{
 					break;
 				}
-			}
-
-			if (locals != null)
-			{
-				evaluator.setLocals(locals);
 			}
 
 			ReturnAndResult ret = item.execute(context, listener, evaluator, report);

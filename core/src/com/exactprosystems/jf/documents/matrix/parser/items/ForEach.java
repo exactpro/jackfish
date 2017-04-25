@@ -13,7 +13,6 @@ import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
-import com.exactprosystems.jf.common.report.ReportTable;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.DisplayDriver;
 import com.exactprosystems.jf.documents.matrix.parser.MatrixException;
@@ -30,7 +29,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
 @MatrixItemAttribute(
@@ -182,7 +180,7 @@ public final class ForEach extends MatrixItem
 			{
 				report.outLine(this, null, String.format("loop %s = %s", this.var, Str.asString(current.get())), count++);
 
-				ret = executeChildren(start, context, listener, evaluator, report, new Class<?>[] { OnError.class }, null);
+				ret = executeChildren(start, context, listener, evaluator, report, new Class<?>[] { OnError.class });
 				result = ret.getResult();
 
 				if (result == Result.Failed)

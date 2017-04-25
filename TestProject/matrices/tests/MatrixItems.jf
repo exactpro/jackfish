@@ -1,6 +1,73 @@
 #Id;#TestCase;#Kind;#Depends;#For
 VISIBILITY;Variable visibility;Never;;
+    // ======================================================================
+    // var files visibility
     #Assert;#Message
     isdef TRUE;'Should be defined in vars.ini'
+
+    // ======================================================================
+    // local vars have priority
+    #Id;#Global;#Let
+    mixed;1;100
+
+    #Assert;#Message
+    mixed == 100;'Expected=' + 100 + ' Actual=' + mixed
+
+    #Id;#Let
+    mixed;150
+
+    #Assert;#Message
+    mixed == 150;'Expected=' + 150 + ' Actual=' + mixed
+
+    #Id;#Let
+    local1;123
+
+    // ======================================================================
+    // override global value
+    #Step;#Kind;#For
+    ;;
+        // 
+        #Assert;#Message
+        local1 == 123;'Expected=' + 123 + ' Actual=' + local1
+
+        // still the same
+        #Assert;#Message
+        mixed == 150;'Expected=' + 150 + ' Actual=' + mixed
+
+        #Id;#Let
+        mixed;300
+
+        // 
+        #Assert;#Message
+        mixed == 300;'Expected=' + 150 + ' Actual=' + mixed
+
+        #Id;#Global;#Let
+        global;1;1000
+
+        #Id;#Let
+        local;777
+
+    #EndStep
+
+    #Assert;#Message
+    mixed == 150;'Expected=' + 150 + ' Actual=' + mixed
+
+    #Assert;#Message
+    global == 1000;'Expected=' + 1000 + ' Actual=' + global
+
+    #Assert;#Message
+    !(isdef local);'Shouldnt be defined here'
+
+    #Id;#Let
+    newlocal;888
+
+
+#Id;#TestCase;#Kind;#Depends;#For
+VISIBILITY;Variable visibility continue;;;
+    #Assert;#Message
+    mixed == 100;'Expected=' + 100 + ' Actual=' + mixed
+
+    #Assert;#Message
+    !(isdef newlocal);'Shouldnt be defined here'
 
 
