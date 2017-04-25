@@ -22,10 +22,10 @@ TABLE_ADD_COLUMNS;Test case;Never;;
     TBL1.Out.getHeader(2).equals('age');'column was not added'
 
     #Action;#Assert;#Table;#Columns;#Index
-    TableAddColumns;This.Result == Result.Failed && This.Kind == ErrorKind.EXCEPTION;TBL1.Out;'preid';-1
+    TableAddColumns;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;TBL1.Out;'preid';-1
 
     #Action;#Assert;#Table;#Columns;#Index
-    TableAddColumns;This.Result == Result.Failed && This.Kind == ErrorKind.EXCEPTION;TBL1.Out;'nnn';999
+    TableAddColumns;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;TBL1.Out;'nnn';999
 
 
 #Id;#TestCase;#Kind;#Depends;#For
