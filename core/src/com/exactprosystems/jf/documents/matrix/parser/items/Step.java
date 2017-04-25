@@ -160,6 +160,7 @@ public class Step extends MatrixItem
     @Override
 	protected ReturnAndResult executeItSelf(long start, Context context, IMatrixListener listener, AbstractEvaluator evaluator, ReportBuilder report, Parameters parameters)
 	{
+        Variables locals = evaluator.createLocals(); 
 		ReturnAndResult ret = null;
 		Table table = context.getTable();
 		RowTable row = new RowTable();
@@ -204,12 +205,11 @@ public class Step extends MatrixItem
 			
 			report.outLine(this, null, String.format("Step %s", identifyValue), null);
 
-            this.locals = evaluator.createLocals();
             ret = context.runHandler(start, context, listener, this, HandlerKind.OnStepStart, report, null, null);
 			
             if (ret.getResult() != Result.Failed)
             {
-                ret = executeChildren(start, context, listener, evaluator, report, new Class<?>[] { OnError.class }, this.locals);
+                ret = executeChildren(start, context, listener, evaluator, report, new Class<?>[] { OnError.class });
             }
 
             if (ret.getResult() == Result.Failed)
@@ -253,11 +253,14 @@ public class Step extends MatrixItem
 			}
 			return new ReturnAndResult(start, Result.Failed, e.getMessage(), ErrorKind.EXCEPTION, this);
 		}
+		finally
+		{
+		    evaluator.setLocals(locals);
+		}
 
 		return ret;
 	}
 
-    private Variables locals = null;
 	private Parameter identify;
     private MutableValue<String> kind;
     private Parameter plugin;

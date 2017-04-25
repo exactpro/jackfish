@@ -12,7 +12,6 @@ import com.csvreader.CsvWriter;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.report.ReportBuilder;
-import com.exactprosystems.jf.common.report.ReportTable;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.DisplayDriver;
 import com.exactprosystems.jf.documents.matrix.parser.Parameter;
@@ -152,7 +151,7 @@ public class While extends MatrixItem
 			{
 				report.outLine(this, null, "loop", this.loops);
 
-				ret = executeChildren(start, context, listener, evaluator, report, new Class<?>[] { OnError.class }, null);
+				ret = executeChildren(start, context, listener, evaluator, report, new Class<?>[] { OnError.class });
 				result = ret.getResult();
 
 				if (result == Result.Failed)

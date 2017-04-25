@@ -13,7 +13,6 @@ import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.evaluator.Variables;
 import com.exactprosystems.jf.common.report.ReportBuilder;
-import com.exactprosystems.jf.common.report.ReportTable;
 import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.DisplayDriver;
 import com.exactprosystems.jf.documents.matrix.parser.MutableValue;
@@ -173,17 +172,13 @@ public final class NameSpace extends MatrixItem
 	@Override
 	protected ReturnAndResult executeItSelf(long start, Context context, IMatrixListener listener, AbstractEvaluator evaluator, ReportBuilder report, Parameters parameters)
 	{
-		Variables oldLocals = null;
+		Variables locals = evaluator.createLocals();
 		try
 		{
-			this.locals = evaluator.createLocals();
-
-			this.locals.set(parameters);
-
 			report.itemIntermediate(this);
 
-			oldLocals = evaluator.getLocals();
-			ReturnAndResult res = executeChildren(start, context, listener, evaluator, report, new Class<?>[] { OnError.class }, this.locals);
+            evaluator.getLocals().set(parameters);
+			ReturnAndResult res = executeChildren(start, context, listener, evaluator, report, new Class<?>[] { OnError.class });
 
 			return res;
 		}
@@ -195,7 +190,7 @@ public final class NameSpace extends MatrixItem
 		}
 		finally
 		{
-			evaluator.setLocals(oldLocals);
+			evaluator.setLocals(locals);
 		}
 	}
 
@@ -208,8 +203,6 @@ public final class NameSpace extends MatrixItem
 	// ==============================================================================================
 	// Private members
 	// ==============================================================================================
-
-	private Variables	locals	= null;
 
 	private MutableValue<String> name;
 }

@@ -212,6 +212,7 @@ public final class TestCase extends MatrixItem
 	@Override
 	protected ReturnAndResult executeItSelf(long start, Context context, IMatrixListener listener, AbstractEvaluator evaluator, ReportBuilder report, Parameters parameters)
 	{
+        Variables locals = evaluator.createLocals(); 
 		ReturnAndResult ret = null;
 		Table table = context.getTable();
 		RowTable row = new RowTable();
@@ -261,14 +262,12 @@ public final class TestCase extends MatrixItem
             this.plugin.evaluate(evaluator);
 	        doSreenshot(row, this.plugin.getValue(), screenshotKind, ScreenshotKind.OnStart, ScreenshotKind.OnStartOrError);
 			doShowPopup(showPopups, context, "started", Notifier.Info);
-	        
-			this.locals = evaluator.createLocals();
-			
+
 			ret = context.runHandler(start, context, listener, this, HandlerKind.OnTestCaseStart, report, null, null);
 
 			if (ret.getResult() != Result.Failed)
 			{
-    			ret = executeChildren(start, context, listener, evaluator, report, new Class<?>[] { OnError.class }, this.locals);
+    			ret = executeChildren(start, context, listener, evaluator, report, new Class<?>[] { OnError.class });
 			}
 			
 			if (ret.getResult() == Result.Failed)
@@ -309,6 +308,10 @@ public final class TestCase extends MatrixItem
 				table.updateValue(position, row);
 			}
 		}
+		finally
+		{
+		    evaluator.setLocals(locals);
+		}
 
 		return ret;
 	}
@@ -320,7 +323,6 @@ public final class TestCase extends MatrixItem
 	}
 
 	
-	private Variables locals = null;
     private Parameter plugin;
 	private MutableValue<String> name;
     private MutableValue<String> kind;

@@ -26,7 +26,7 @@ public class MvelEvaluator extends AbstractEvaluator
 {
     private ParserContext context = new ParserContext();
     private Variables     globals = new MvelVariables();
-    private Variables     locals  = null;
+    private Variables     locals  = new MvelVariables();
 
     public MvelEvaluator()
 	{
@@ -44,14 +44,7 @@ public class MvelEvaluator extends AbstractEvaluator
 		if (compiled instanceof Serializable)
 		{
 			Serializable expr = (Serializable)compiled;
-			if (this.locals == null)
-			{
-				return MVEL.executeExpression(expr, this.globals.getVars());
-			}
-			else
-			{
-				return MVEL.executeExpression(expr, makeVars());
-			}
+			return MVEL.executeExpression(expr, makeVars());
 		}
 		throw new Exception("Wrong type of precompiled: " + compiled);
 	}
@@ -60,28 +53,14 @@ public class MvelEvaluator extends AbstractEvaluator
 	protected Object rawEvaluate(String expression) throws Exception
 	{
 		Serializable expr = MVEL.compileExpression(expression, this.context);
-		if (this.locals == null)
-		{
-			return MVEL.executeExpression(expr, this.globals.getVars());
-		}
-		else
-		{
-			return MVEL.executeExpression(expr, makeVars());
-		}
+		return MVEL.executeExpression(expr, makeVars());
 	}
 
 	@Override
 	protected String rawTemplateEvaluate(String expression)
 	{
 		CompiledTemplate expr = TemplateCompiler.compileTemplate(expression);
-		if (this.locals == null)
-		{
-			return (String)TemplateRuntime.execute(expr, this.globals.getVars());
-		}
-		else
-		{
-			return (String)TemplateRuntime.execute(expr, makeVars());
-		}
+		return (String)TemplateRuntime.execute(expr, makeVars());
 	}
 
 	@Override
@@ -94,21 +73,14 @@ public class MvelEvaluator extends AbstractEvaluator
 	public Variables createLocals()
 	{
 		 MvelVariables vars = new MvelVariables();
-		 if (this.locals != null)
-		 {
-		     vars.set(this.locals.getVars());
-		 }
+	     vars.set(this.locals.getVars());
 		 return vars;
 	}
 
 	@Override
 	public Variables getLocals()
 	{
-		if (this.locals != null)
-		{
-			return this.locals;
-		}
-		return this.globals;
+		return this.locals;
 	}
 
 	@Override
