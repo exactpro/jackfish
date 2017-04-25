@@ -734,7 +734,7 @@ public abstract class MatrixItem implements IMatrixItem, Mutable, Cloneable
 
 	public String getItemName()
 	{
-		return getClass().getSimpleName();
+		return (isGlobal() ? "^" : "") + getClass().getSimpleName();
 	}
 
 	public void addKnownParameters()

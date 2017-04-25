@@ -24,7 +24,11 @@ import com.exactprosystems.jf.api.conditions.Condition;
 
 public class MvelEvaluator extends AbstractEvaluator 
 {
-	public MvelEvaluator()
+    private ParserContext context = new ParserContext();
+    private Variables     globals = new MvelVariables();
+    private Variables     locals  = null;
+
+    public MvelEvaluator()
 	{
 	}
 	
@@ -46,10 +50,7 @@ public class MvelEvaluator extends AbstractEvaluator
 			}
 			else
 			{
-				Map<String, Object> vars = new HashMap<String, Object>();
-				vars.putAll(this.locals.getVars());
-				vars.putAll(this.globals.getVars());
-				return MVEL.executeExpression(expr, vars);
+				return MVEL.executeExpression(expr, makeVars());
 			}
 		}
 		throw new Exception("Wrong type of precompiled: " + compiled);
@@ -65,10 +66,7 @@ public class MvelEvaluator extends AbstractEvaluator
 		}
 		else
 		{
-			Map<String, Object> vars = new HashMap<String, Object>();
-			vars.putAll(locals.getVars());
-			vars.putAll(this.globals.getVars());
-			return MVEL.executeExpression(expr, vars);
+			return MVEL.executeExpression(expr, makeVars());
 		}
 	}
 
@@ -82,14 +80,10 @@ public class MvelEvaluator extends AbstractEvaluator
 		}
 		else
 		{
-			Map<String, Object> vars = new HashMap<String, Object>();
-			vars.putAll(locals.getVars());
-			vars.putAll(this.globals.getVars());
-			return (String)TemplateRuntime.execute(expr, vars);
+			return (String)TemplateRuntime.execute(expr, makeVars());
 		}
 	}
-	
-	
+
 	@Override
 	public Variables getGlobals()
 	{
@@ -150,9 +144,11 @@ public class MvelEvaluator extends AbstractEvaluator
 		return null;
 	}
 	
-	private ParserContext context = new ParserContext();
-
-	private Variables globals = new MvelVariables();
-	
-	private Variables locals = null;
+    private Map<String, Object> makeVars()
+    {
+        Map<String, Object> vars = new HashMap<String, Object>();
+        vars.putAll(this.globals.getVars());
+        vars.putAll(this.locals.getVars());
+        return vars;
+    }
 }

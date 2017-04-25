@@ -17,37 +17,37 @@ import static com.exactprosystems.jf.api.app.OperationKind.*;
 public enum ControlKind 
 {	
     // 											default			allOther
-	Any				("Any", 			false, 	CLICK,			CLICK, DRAG_N_DROP),
+	Any				("Any", 			false, 	CLICK,			CLICK, CLICK_XY, MOVE, DRAG_N_DROP),
 	Wait        	("Wait", 			true,  	WAIT 		    ),
-	Button      	("Button", 			false, 	PUSH, 			CLICK, DRAG_N_DROP, PRESS, KEY_UP, KEY_DOWN,   GET, GET_VALUE, CHECK, CHECK_REGEXP),
-	CheckBox    	("CheckBox", 		false, 	TOGGLE,			CLICK, PRESS, KEY_UP, KEY_DOWN, GET_VALUE, CHECK, CHECK_REGEXP, GET),
-	ComboBox    	("ComboBox", 		false,	SELECT,			CLICK, SELECT_BY_INDEX, PRESS, KEY_UP, KEY_DOWN, GET_VALUE, CHECK, CHECK_REGEXP, GET,  GET_LIST, CHECK_LIST, TEXT),
-	Dialog      	("Dialog", 			false,	CLICK, 			CLICK, DRAG_N_DROP, PRESS, KEY_UP, KEY_DOWN),
-	Frame       	("Frame", 			false, 	CLICK, 			CLICK, DRAG_N_DROP, PRESS, KEY_UP, KEY_DOWN),
-	Image			("Image", 			false,	CLICK, 			CLICK, DRAG_N_DROP, PRESS, KEY_UP, KEY_DOWN),
-	Label       	("Label", 			false,	CLICK, 			CLICK, DRAG_N_DROP, PRESS, KEY_UP, KEY_DOWN, GET, GET_VALUE, CHECK, CHECK_REGEXP),
-	ListView    	("ListView", 		false, 	CLICK,			CLICK, PRESS, KEY_UP, KEY_DOWN, GET_VALUE, CHECK, CHECK_REGEXP, GET_LIST, CHECK_LIST, SELECT, SELECT_BY_INDEX),
-	Menu    		("Menu", 			false,	CLICK, 			CLICK, PRESS, KEY_UP, KEY_DOWN, GET, COLLAPSE, EXPAND, GET_LIST, CHECK_LIST),
-	MenuItem    	("MenuItem", 		false,	CLICK, 			CLICK, GET,  CLICK_XY),
-	Panel       	("Panel", 			false,	CLICK, 			CLICK, DRAG_N_DROP, TEXT, PRESS, KEY_UP, KEY_DOWN, GET_VALUE, CHECK, CHECK_REGEXP),
-	ProgressBar		("ProgressBar", 	false,	GET_VALUE, 		CLICK, CHECK, CHECK_REGEXP),
-	RadioButton		("RadioButton", 	false,	TOGGLE, 		CLICK, PRESS, KEY_UP, KEY_DOWN, GET_VALUE, CHECK, CHECK_REGEXP, GET),
-	Row         	("Row", 			false,	CLICK, 			CLICK, GET,   PRESS, KEY_UP, KEY_DOWN),
-	ScrollBar		("ScrollBar", 		false,	SET, 			CLICK, PRESS, KEY_UP, KEY_DOWN, GET_VALUE,  CHECK, CHECK_REGEXP),
-	Slider			("Slider", 			false, 	SET, 			CLICK, PRESS, KEY_UP, KEY_DOWN, GET_VALUE, CHECK, CHECK_REGEXP, CLICK),
-	Splitter		("Splitter", 		false,	SET, 			CLICK, PRESS, KEY_UP, KEY_DOWN, GET_VALUE, CHECK, CHECK_REGEXP, CLICK),
-	Spinner			("Spinner", 		false,	CLICK, 			CLICK, PRESS, KEY_UP, KEY_DOWN, GET_VALUE, CHECK, CHECK_REGEXP, SET),
-	Table       	("Table", 			false,	GET_TABLE, 		GET_VALUE_XY, TEXT_XY, CHECK_XY, CHECK_REGEXP_XY, PRESS, KEY_UP, KEY_DOWN, GET_ROW, GET_ROW_INDEXES, GET_ROW_BY_INDEX, GET_ROW_WITH_COLOR, GET_TABLE, GET_TABLE_SIZE),
-	TabPanel    	("TabPanel", 		false,	SELECT, 		CLICK, PRESS, KEY_UP, KEY_DOWN, GET_VALUE, CHECK, CHECK_REGEXP, SELECT_BY_INDEX, GET_LIST, CHECK_LIST),
-	TextBox     	("TextBox", 		false,	TEXT, 			CLICK, DRAG_N_DROP, PRESS, KEY_UP, KEY_DOWN, GET_VALUE, CHECK, CHECK_REGEXP, GET),
-	ToggleButton	("ToggleButton", 	false,	TOGGLE, 		CLICK, DRAG_N_DROP, PRESS, KEY_UP, KEY_DOWN, GET_VALUE, CHECK, CHECK_REGEXP, GET),
-	Tooltip     	("ToolTip", 		false,	GET, 			GET_VALUE, CHECK, CHECK_REGEXP),
-	Tree        	("Tree", 			false, 	CLICK, 			CLICK, SELECT, PRESS, KEY_UP, KEY_DOWN, COLLAPSE, EXPAND, GET_ROW, GET_ROW_INDEXES, GET_ROW_BY_INDEX, GET_LIST, CHECK_LIST),
-	TreeItem		("TreeItem", 		false,	CLICK, 			CLICK, DRAG_N_DROP, PRESS, KEY_UP, KEY_DOWN, GET_VALUE, CHECK, CHECK_REGEXP)
+	Button      	("Button", 			false, 	PUSH, 			CLICK, CLICK_XY, MOVE, DRAG_N_DROP, PRESS, KEY_UP, KEY_DOWN,   GET, GET_VALUE, CHECK, CHECK_REGEXP),
+	CheckBox    	("CheckBox", 		false, 	TOGGLE,			CLICK, CLICK_XY, MOVE, PRESS, KEY_UP, KEY_DOWN, GET_VALUE, CHECK, CHECK_REGEXP, GET),
+	ComboBox    	("ComboBox", 		false,	SELECT,			CLICK, CLICK_XY, MOVE, SELECT_BY_INDEX, PRESS, KEY_UP, KEY_DOWN, GET_VALUE, CHECK, CHECK_REGEXP, GET,  GET_LIST, CHECK_LIST, TEXT),
+	Dialog      	("Dialog", 			false,	CLICK, 			CLICK, CLICK_XY, MOVE, DRAG_N_DROP, PRESS, KEY_UP, KEY_DOWN),
+	Frame       	("Frame", 			false, 	CLICK, 			CLICK, CLICK_XY, MOVE, DRAG_N_DROP, PRESS, KEY_UP, KEY_DOWN),
+	Image			("Image", 			false,	CLICK, 			CLICK, CLICK_XY, MOVE, DRAG_N_DROP, PRESS, KEY_UP, KEY_DOWN),
+	Label       	("Label", 			false,	CLICK, 			CLICK, CLICK_XY, MOVE, DRAG_N_DROP, PRESS, KEY_UP, KEY_DOWN, GET, GET_VALUE, CHECK, CHECK_REGEXP),
+	ListView    	("ListView", 		false, 	CLICK,			CLICK, CLICK_XY, MOVE, PRESS, KEY_UP, KEY_DOWN, GET_VALUE, CHECK, CHECK_REGEXP, GET_LIST, CHECK_LIST, SELECT, SELECT_BY_INDEX),
+	Menu    		("Menu", 			false,	CLICK, 			CLICK, CLICK_XY, MOVE, PRESS, KEY_UP, KEY_DOWN, GET, COLLAPSE, EXPAND, GET_LIST, CHECK_LIST),
+	MenuItem    	("MenuItem", 		false,	CLICK, 			CLICK, CLICK_XY, MOVE, GET,  CLICK_XY),
+	Panel       	("Panel", 			false,	CLICK, 			CLICK, CLICK_XY, MOVE, DRAG_N_DROP, TEXT, PRESS, KEY_UP, KEY_DOWN, GET_VALUE, CHECK, CHECK_REGEXP),
+	ProgressBar		("ProgressBar", 	false,	GET_VALUE, 		CLICK, CLICK_XY, MOVE, CHECK, CHECK_REGEXP),
+	RadioButton		("RadioButton", 	false,	TOGGLE, 		CLICK, CLICK_XY, MOVE, PRESS, KEY_UP, KEY_DOWN, GET_VALUE, CHECK, CHECK_REGEXP, GET),
+	Row         	("Row", 			false,	CLICK, 			CLICK, CLICK_XY, MOVE, GET,   PRESS, KEY_UP, KEY_DOWN),
+	ScrollBar		("ScrollBar", 		false,	SET, 			CLICK, CLICK_XY, MOVE, PRESS, KEY_UP, KEY_DOWN, GET_VALUE,  CHECK, CHECK_REGEXP),
+	Slider			("Slider", 			false, 	SET, 			CLICK, CLICK_XY, MOVE, PRESS, KEY_UP, KEY_DOWN, GET_VALUE, CHECK, CHECK_REGEXP, CLICK),
+	Splitter		("Splitter", 		false,	SET, 			CLICK, CLICK_XY, MOVE, PRESS, KEY_UP, KEY_DOWN, GET_VALUE, CHECK, CHECK_REGEXP, CLICK),
+	Spinner			("Spinner", 		false,	CLICK, 			CLICK, CLICK_XY, MOVE, PRESS, KEY_UP, KEY_DOWN, GET_VALUE, CHECK, CHECK_REGEXP, SET),
+	Table       	("Table", 			false,	GET_TABLE, 		CLICK_XY, GET_VALUE_XY, TEXT_XY, CHECK_XY, CHECK_REGEXP_XY, PRESS, KEY_UP, KEY_DOWN, GET_ROW, GET_ROW_INDEXES, GET_ROW_BY_INDEX, GET_ROW_WITH_COLOR, GET_TABLE, GET_TABLE_SIZE),
+	TabPanel    	("TabPanel", 		false,	SELECT, 		CLICK, CLICK_XY, MOVE, PRESS, KEY_UP, KEY_DOWN, GET_VALUE, CHECK, CHECK_REGEXP, SELECT_BY_INDEX, GET_LIST, CHECK_LIST),
+	TextBox     	("TextBox", 		false,	TEXT, 			CLICK, CLICK_XY, MOVE, DRAG_N_DROP, PRESS, KEY_UP, KEY_DOWN, GET_VALUE, CHECK, CHECK_REGEXP, GET),
+	ToggleButton	("ToggleButton", 	false,	TOGGLE, 		CLICK, CLICK_XY, MOVE, DRAG_N_DROP, PRESS, KEY_UP, KEY_DOWN, GET_VALUE, CHECK, CHECK_REGEXP, GET),
+	Tooltip     	("ToolTip", 		false,	GET, 			MOVE, GET_VALUE, CHECK, CHECK_REGEXP),
+	Tree        	("Tree", 			false, 	CLICK, 			CLICK, CLICK_XY, MOVE, SELECT, PRESS, KEY_UP, KEY_DOWN, COLLAPSE, EXPAND, GET_ROW, GET_ROW_INDEXES, GET_ROW_BY_INDEX, GET_LIST, CHECK_LIST),
+	TreeItem		("TreeItem", 		false,	CLICK, 			CLICK, CLICK_XY, MOVE, DRAG_N_DROP, PRESS, KEY_UP, KEY_DOWN, GET_VALUE, CHECK, CHECK_REGEXP)
 	;
 	
     private static OperationKind[] almostAll = new OperationKind[] { IS_ENABLED, IS_VISIBLE, GET_COLOR_XY, CHECK_COLOR_XY, COUNT, GET_RECTANGLE, GET_ATTR, CHECK_ATTR, 
-            CHECK_ATTR_REGEXP, MOVE, MOVE_XY, CLICK_XY, SCRIPT };
+            CHECK_ATTR_REGEXP, MOVE_XY, SCRIPT };
     private static OperationKind[] all = new OperationKind[] { WAIT, DELAY, REPEAT, FOREACH, USE_LOCATOR, USE, };
     private static Set<OperationKind> almostAllSet;
     private static Set<OperationKind> allSet;
