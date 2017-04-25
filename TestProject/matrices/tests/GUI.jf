@@ -19,10 +19,28 @@ ALERT;DialogAlert;;;
     text;'text in alert'
 
     #Id;#Action;#Dialog;#AppConnection;#TextBox
-    DLGFLL1;DialogFill;'Main';APPSTR1.Out;Do.script('prompt(\'+text+\')')
+    DLGFLL1;DialogFill;'Main';APPSTR1.Out;Do.script('alert(\''+text+'\')')
 
     #Id;#Action;#Perform;#AppConnection
-    DLGALRT1;DialogAlert;PerformKind.Accept;APPSTR1.Out
+    DLGALRT1;DialogAlert;PerformKind.Dismiss;APPSTR1.Out
+
+    #Assert;#Message
+    DLGALRT1.Out == text;'Wrong text'
+
+    #Id;#Action;#Dialog;#AppConnection;#TextBox
+    DLGFLL2;DialogFill;'Main';APPSTR1.Out;Do.script('prompt(\''+text+'\')')
+
+    #Id;#Action;#Perform;#AppConnection
+    DLGALRT2;DialogAlert;PerformKind.Nothing;APPSTR1.Out
+
+    #Assert;#Message
+    DLGALRT2.Out == text;'Wrong text'
+
+    #Id;#Action;#Perform;#AppConnection;#Text
+    DLGALRT3;DialogAlert;PerformKind.Accept;APPSTR1.Out;'new text'
+
+    #Assert;#Message
+    DLGALRT3.Out == text;'Wrong text'
 
 
 #Id;#TestCase;#Kind;#Depends;#For

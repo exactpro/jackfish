@@ -110,7 +110,7 @@ public class DialogAlert extends AbstractAction
 		SerializablePair<String, Boolean> alertText;
 		try
 		{
-			 alertText = service.getAlertText();
+			alertText = service.getAlertText();
 		}
 		catch (RemoteException e)
 		{

@@ -750,7 +750,7 @@ public enum OperationKind
 		@Override
 		protected String formulaTemplate(Part part)
 		{
-			return ".script('%8%s')";
+			return ".script('%8$s')";
 		}
 
 		@Override
