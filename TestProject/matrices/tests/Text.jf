@@ -48,10 +48,10 @@ Text Load From File;;;
     TXT14;TextCreate;testString
 
     #Action;#Text;#File
-    TextSaveToFile;TXT14.Out;'test.txt'
+    TextSaveToFile;TXT14.Out;new File('').getAbsolutePath().replace(File.separator, '/') + '/testdata/ForTextTests.txt'
 
     #Id;#Action;#Assert;#File
-    TXT4;TextLoadFromFile;This.Out.toString() == testString + '\n';'test.txt'
+    TXT4;TextLoadFromFile;This.Out.toString() == testString + '\n';new File('').getAbsolutePath().replace(File.separator, '/') + '/testdata/ForTextTests.txt'
 
     #Id;#Action;#Assert;#File
     TXT5;TextLoadFromFile;This.Result == Result.Failed && This.Reason == 'Exception occurred: fileThatDoesNotExist (No such file or directory)';'fileThatDoesNotExist'
@@ -138,13 +138,13 @@ Text Save To File;;;
     TXT13;TextCreate;testString
 
     #Action;#Text;#File
-    TextSaveToFile;TXT13.Out;'test.txt'
+    TextSaveToFile;TXT13.Out;new File('').getAbsolutePath().replace(File.separator, '/') + '/testdata/ForTextTests.txt'
 
     #Id;#Action;#Assert;#File
-    TXT15;TextLoadFromFile;This.Out.toString() == testString + '\n';'test.txt'
+    TXT15;TextLoadFromFile;This.Out.toString() == testString + '\n';new File('').getAbsolutePath().replace(File.separator, '/') + '/testdata/ForTextTests.txt'
 
     #Id;#Action;#Assert;#File
-    TXT17;TextLoadFromFile;This.Result == Result.Failed && This.Reason == 'Exception occurred: test333.txt (No such file or directory)';'test333.txt'
+    TXT17;TextLoadFromFile;This.Result == Result.Failed && This.Reason == 'Exception occurred: test3333333.txt (No such file or directory)';'test3333333.txt'
 
     #Action;#Assert;#Text;#File
     TextSaveToFile;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;
@@ -153,7 +153,7 @@ Text Save To File;;;
     TextSaveToFile;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;TXT17.Out;
 
     #Action;#Assert;#Text;#File
-    TextSaveToFile;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;'test.txt'
+    TextSaveToFile;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;new File('').getAbsolutePath().replace(File.separator, '/') + '/testdata/ForTextTests.txt'
 
 
 #TestCase;#Kind;#Depends;#For
