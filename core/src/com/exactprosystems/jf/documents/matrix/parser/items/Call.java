@@ -209,6 +209,7 @@ public final class Call extends MatrixItem
 	@Override
 	protected ReturnAndResult executeItSelf(long start, Context context, IMatrixListener listener, AbstractEvaluator evaluator, ReportBuilder report, Parameters parameters)
 	{
+        Variables locals = evaluator.createLocals(); 
 		try
 		{
 			boolean parametersAreCorrect = parameters.evaluateAll(evaluator);
@@ -224,8 +225,8 @@ public final class Call extends MatrixItem
 			}
 			if (this.ref != null)
 			{
-				Variables vars = isGlobal() ? evaluator.getGlobals() : evaluator.getLocals();
-
+			    evaluator.getLocals().clear();
+			    
 				this.ref.setRealParameters(parameters);
 				boolean isSubcaseIntoMatrix = this.getMatrix().getRoot().find(true, SubCase.class, this.ref.getId()) == this.ref;
 				if (isSubcaseIntoMatrix)
@@ -241,6 +242,7 @@ public final class Call extends MatrixItem
 
 				if (super.getId() != null && !super.getId().isEmpty())
 				{
+	                Variables vars = isGlobal() ? evaluator.getGlobals() : locals;
 					vars.set(super.getId(), ret.getOut());
 				}
 
@@ -258,6 +260,10 @@ public final class Call extends MatrixItem
 		{
 			logger.error(e.getMessage(), e);
 			return new ReturnAndResult(start, Result.Failed, e.getMessage(), ErrorKind.EXCEPTION, this);
+		}
+		finally
+		{
+		    evaluator.setLocals(locals);
 		}
 	}	
 

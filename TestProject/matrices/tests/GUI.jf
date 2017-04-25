@@ -66,6 +66,38 @@ IMAGE_REP;ImageReport;;;
 
 #Id;#TestCase;#Kind;#Depends;#For
 IMAGE_SAVE;ImageSave;;;
+    #Id;#Action
+    DSK2;DesktopScreenshot
+
+    #Id;#Action;#Image;#Dir
+    IMGSV1;ImageSave;DSK2.Out;'reports'
+
+    #Assert;#Message
+    Sys.exists(IMGSV1.Out);'Image is not saved'
+
+    #Id;#Let
+    fileName;'reports/saved.jpg'
+
+    #Id;#Action;#Image;#File
+    IMGSV2;ImageSave;DSK2.Out;fileName
+
+    #Assert;#Message
+    Sys.exists(IMGSV2.Out) && IMGSV2.Out == fileName;'Image is not saved'
+
+    // =====================================================================
+    // Negative tests
+    #Id;#Action;#Assert;#Image
+    IMGSV3;ImageSave;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;
+
+    #Id;#Action;#Assert;#Image
+    IMGSV4;ImageSave;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;DSK2.Out
+
+    #Id;#Action;#Assert;#Image;#File
+    IMGSV5;ImageSave;This.Result == Result.Failed && This.Kind == ErrorKind.EXCEPTION;DSK2.Out;''
+
+    #Id;#Action;#Assert;#Image;#Dir
+    IMGSV6;ImageSave;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;DSK2.Out;''
+
 
 #Id;#TestCase;#Kind;#Depends;#For
 CLEANUP;Cleanup;;;

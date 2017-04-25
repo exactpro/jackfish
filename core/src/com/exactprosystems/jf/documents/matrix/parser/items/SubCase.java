@@ -194,9 +194,9 @@ public final class SubCase extends MatrixItem
 			return new ReturnAndResult(start, Result.NotExecuted);
 		}
 
-        Variables locals = evaluator.createLocals(); 
 		try
 		{
+		    evaluator.getLocals().clear();
 			evaluator.getLocals().set(parameters);
 
 			reportParameters(report, parameters);
@@ -228,7 +228,6 @@ public final class SubCase extends MatrixItem
 		finally
 		{
 			this.call = false;
-			evaluator.setLocals(locals);
 		}
 	}
 

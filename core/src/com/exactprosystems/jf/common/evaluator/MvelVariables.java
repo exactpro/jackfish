@@ -55,6 +55,12 @@ public class MvelVariables extends Variables
 		return this.var.get(string);
 	}
 
+	@Override
+	public void clear()
+	{
+	    this.var.clear();
+	}
+	
 	private Map<String, Object> var = new HashMap<String, Object>();
 
 }

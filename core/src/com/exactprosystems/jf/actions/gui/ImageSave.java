@@ -21,6 +21,9 @@ import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.functions.HelpKind;
 
 import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.LinkOption;
+import java.nio.file.Paths;
 
 
 @ActionAttribute(
@@ -91,6 +94,17 @@ public class ImageSave extends AbstractAction
 		}
 		else if (this.dir != null)
 		{
+		    File dir = new File(this.dir);
+		    if (!dir.exists())
+		    {
+		        super.setError("Directory '" + this.dir + "' does not exist", ErrorKind.WRONG_PARAMETERS);
+		        return;
+		    }
+		    if (!dir.isDirectory())
+		    {
+                super.setError("'" + this.dir + "' is not a directory", ErrorKind.WRONG_PARAMETERS);
+                return;
+		    }
 			File path = this.image.saveToDir(this.dir);
 	        super.setResult(path.getAbsolutePath());
 		}

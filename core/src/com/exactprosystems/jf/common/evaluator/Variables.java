@@ -26,4 +26,6 @@ public abstract class Variables
 	public abstract Map<String, Object> getVars();
 
 	public abstract Object getVariable(String string);
+	
+	public abstract void clear();
 }
