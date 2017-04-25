@@ -54,7 +54,7 @@ Text Load From File;;;
     TXT4;TextLoadFromFile;This.Out.toString() == testString + '\n';new File('').getAbsolutePath().replace(File.separator, '/') + '/testdata/ForTextTests.txt'
 
     #Id;#Action;#Assert;#File
-    TXT5;TextLoadFromFile;This.Result == Result.Failed && This.Reason == 'Exception occurred: fileThatDoesNotExist (No such file or directory)';'fileThatDoesNotExist'
+    TXT5;TextLoadFromFile;This.Result == Result.Failed && This.Kind == ErrorKind.EXCEPTION;'fileThatDoesNotExist'
 
     #Id;#Action;#Assert;#File
     TXT8;TextLoadFromFile;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;
@@ -144,7 +144,7 @@ Text Save To File;;;
     TXT15;TextLoadFromFile;This.Out.toString() == testString + '\n';new File('').getAbsolutePath().replace(File.separator, '/') + '/testdata/ForTextTests.txt'
 
     #Id;#Action;#Assert;#File
-    TXT17;TextLoadFromFile;This.Result == Result.Failed && This.Reason == 'Exception occurred: test3333333.txt (No such file or directory)';'test3333333.txt'
+    TXT17;TextLoadFromFile;This.Result == Result.Failed && This.Kind == ErrorKind.EXCEPTION;'test3333333.txt'
 
     #Action;#Assert;#Text;#File
     TextSaveToFile;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;
