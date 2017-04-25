@@ -6,6 +6,13 @@ INIT;Setup;;;
 
 // 
 #Id;#TestCase;#Kind;#Depends;#For
+Test;MatrixItems;;;
+    #Call;#testName
+    runMatrix;'MatrixItems'
+
+
+// 
+#Id;#TestCase;#Kind;#Depends;#For
 Test;EventHandlers;;;
     #Call;#testName
     runMatrix;'EventHandlers'

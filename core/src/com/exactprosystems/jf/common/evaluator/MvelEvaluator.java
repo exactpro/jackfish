@@ -31,7 +31,7 @@ public class MvelEvaluator extends AbstractEvaluator
 	@Override
 	protected Object rawCompile(String expression)  throws Exception
 	{
-		return MVEL.compileExpression(expression, context);
+		return MVEL.compileExpression(expression, this.context);
 	}
 
 	@Override
@@ -47,7 +47,7 @@ public class MvelEvaluator extends AbstractEvaluator
 			else
 			{
 				Map<String, Object> vars = new HashMap<String, Object>();
-				vars.putAll(locals.getVars());
+				vars.putAll(this.locals.getVars());
 				vars.putAll(this.globals.getVars());
 				return MVEL.executeExpression(expr, vars);
 			}
@@ -58,7 +58,7 @@ public class MvelEvaluator extends AbstractEvaluator
 	@Override
 	protected Object rawEvaluate(String expression) throws Exception
 	{
-		Serializable expr = MVEL.compileExpression(expression, context);
+		Serializable expr = MVEL.compileExpression(expression, this.context);
 		if (this.locals == null)
 		{
 			return MVEL.executeExpression(expr, this.globals.getVars());
@@ -99,7 +99,12 @@ public class MvelEvaluator extends AbstractEvaluator
 	@Override
 	public Variables createLocals()
 	{
-		return new MvelVariables();
+		 MvelVariables vars = new MvelVariables();
+		 if (this.locals != null)
+		 {
+		     vars.set(this.locals.getVars());
+		 }
+		 return vars;
 	}
 
 	@Override

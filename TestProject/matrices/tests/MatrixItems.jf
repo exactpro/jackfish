@@ -1,0 +1,6 @@
+#Id;#TestCase;#Kind;#Depends;#For
+VISIBILITY;Variable visibility;Never;;
+    #Assert;#Message
+    isdef TRUE;'Should be defined in vars.ini'
+
+
