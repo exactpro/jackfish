@@ -187,7 +187,7 @@ report finish without passed;;;
 #TestCase;#Kind;#Depends;#For
 report finish without failed;;;
     #Id;#Action;#ReportName
-    REP1;ReportStart;'my new report name'
+    REP1;ReportStart;'my new report name1'
 
     #Action;#Assert;#Passed;#Report;#Failed
     ReportFinish;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;123;REP1.Out;
@@ -196,7 +196,7 @@ report finish without failed;;;
 #TestCase;#Kind;#Depends;#For
 report start finish;;;
     #Id;#Action;#ReportName
-    REP1;ReportStart;'my new report name'
+    REP1;ReportStart;'my new report name3'
 
     #Action;#ToReport;#Str
     Report;REP1.Out;'par'

@@ -13,26 +13,13 @@ import com.exactprosystems.jf.api.common.Storable;
 import com.exactprosystems.jf.charts.ChartBuilder;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixRoot;
-
 import org.apache.log4j.Logger;
 
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.CharArrayReader;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.nio.file.CopyOption;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Stack;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -324,7 +311,6 @@ public abstract class ReportBuilder implements Storable
 		reportFooter(writer, failed, passed, startTime == null ? new Date() : startTime, 
 				finishTime == null ? new Date() : finishTime, this.name, this.reportName);
 		writer.close();
-		Thread.sleep(500);
 
 		if (fullName != null)
 		{
