@@ -51,6 +51,11 @@ namespace Expression.Blend.SampleData.ComboBoxData
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
+        //public override string ToString()
+        //{
+        //    return this.name;
+        //}
+
         protected virtual void OnPropertyChanged(string propertyName)
         {
             if (this.PropertyChanged != null)

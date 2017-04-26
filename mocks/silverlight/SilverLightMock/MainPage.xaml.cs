@@ -17,6 +17,23 @@ namespace SilverLightMock
         public MainPage()
         {
             InitializeComponent();
+            List<Person> list = new List<Person>();
+            list.Add(new Person("AA"));
+            list.Add(new Person("BB"));
+            list.Add(new Person("CC"));
+
+            string[] sample = { "a", "aa", "b", "bb", "c", "ac" };
+            //autocompleteBox.ItemsSource = sample;
+            //autocompleteBox.ItemsSource = list;
+        }
+
+        class Person
+        {
+            string name { get; set; }
+            public Person(string name)
+            {
+                this.name = name;
+            }
         }
     }
 }
