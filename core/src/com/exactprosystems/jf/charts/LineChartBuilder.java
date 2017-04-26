@@ -31,6 +31,11 @@ public class LineChartBuilder extends ChartBuilder
 	private String yAxisDescription = "";
 	private String labelColumn;
 
+	public LineChartBuilder() throws JFException
+	{
+		super(null, null, null);
+	}
+
 	public LineChartBuilder(Table table, Parameters params ,Map<String, Color> colorMap) throws JFException
 	{
 		super(table, params, colorMap);

@@ -105,7 +105,7 @@
         </parameters>
         <parameters>
             <key>LogLevel</key>
-            <value>ERROR</value>
+            <value>ALL</value>
         </parameters>
         <parameters>
             <key>NewSearch</key>

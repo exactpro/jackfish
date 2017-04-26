@@ -195,8 +195,8 @@ report finish without failed;;;
 
 #TestCase;#Kind;#Depends;#For
 report start finish;;;
-    #Id;#Action;#ReportName
-    REP1;ReportStart;'my new report name3'
+    #Id;#Action;#ReportName;#Version
+    REP1;ReportStart;'my new report name3';'my version'
 
     #Action;#ToReport;#Str
     Report;REP1.Out;'par'
@@ -219,17 +219,584 @@ report start finish;;;
     #Id;#Call;#pathToReport
     appCon;runBrowser;REP1.Out.getReportName()
 
-    #Id;#Action;#Dialog;#AppConnection;#Executed;#Passed;#Failed;#startTime;#finishTime
-    DLGFLL4;DialogFill;'DialogForTestReport';appCon;Do.check('Executed : ' + (passed+failed));Do.check('Passed : ' + passed);Do.check('Failed : ' + failed);Do.check(startTime.str('yyyy-MM-dd HH:mm:ss'));Do.check(finishTime.str('yyyy-MM-dd HH:mm:ss'))
+    #Id;#Action;#Dialog;#AppConnection;#Executed;#Passed;#Failed;#startTime;#finishTime;#version
+    DLGFLL4;DialogFill;'DialogForTestReport';appCon;Do.check('Executed : ' + (passed+failed));Do.check('Passed : ' + passed);Do.check('Failed : ' + failed);Do.check(startTime.str('yyyy-MM-dd HH:mm:ss'));Do.check(finishTime.str('yyyy-MM-dd HH:mm:ss'));Do.check('my version')
 
     #Id;#Call;#appCon
     CALL_3;stopBrowser;appCon
 
 
 #TestCase;#Kind;#Depends;#For
+report chart (negavitve with empty parameters);;;
+    #Action;#Assert;#Type;#Table;#Title
+    ChartReport;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;;
+
+    #Action;#Assert;#Type;#Table;#Title
+    ChartReport;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;ChartKind.Line;;
+
+    #Id;#Action
+    TBL1;TableCreate
+
+    #Action;#Assert;#Type;#Table;#Title
+    ChartReport;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;TBL1.Out;
+
+
+// TODO
+// Add check for all xAxis
+// and for all lines and bars
+#TestCase;#Kind;#Depends;#For
+report chart Line chart;;;
+    #Step;#Kind;#For
+    'line chart with empty labels';;
+        #Id;#Action
+        TBL2;TableCreate
+
+        #Action;#Assert;#Type;#Table;#Title;#YAxisDescription
+        ChartReport;This.Result == Result.Failed && This.Kind==ErrorKind.EMPTY_PARAMETER;ChartKind.Line;TBL2.Out;'line chart';'description'
+
+    #EndStep
+
+    #Step;#Kind;#For
+    'line chart passed inside testcase with description';;
+        #Id;#RawText;#Kind
+        TEXT1;Text;Matrix
+        ~;"#TestCase;#Kind;#Depends;#For"
+        ~;"Test case;Never;;"
+        ~;"    #Id;#RawTable"
+        ~;"    DATA1;Table"
+        ~;"    @;Labels;Mike salary;John Salary"
+        ~;"    0;2001;1;2"
+        ~;"    1;2002;2;3"
+        ~;"    2;2003;3;4"
+        ~;"    3;2004;3;4"
+        ~;"    4;2005;3;5"
+        ~;"    5;2006;4;5"
+        ~;"    #EndRawTable"
+        ~;""
+        ~;"    #Action;#Type;#Table;#Title;#Labels;#YAxisDescription"
+        ~;"    ChartReport;ChartKind.Line;DATA1;'line chart';'Labels';'description'"
+        #EndRawText
+
+        #Id;#Call;#rawText
+        CALL_1;runMatrix;TEXT1
+
+        #Id;#Call;#pathToReport
+        appCon;runBrowser;CALL_1
+
+        #Id;#Action;#Assert;#Dialog;#AppConnection;#title;#svg
+        DLGFLL5;DialogFill;This.Out.title == false && This.Out.svg == false;'DialogForTestCharts';appCon;Do.isVisible();Do.isVisible()
+
+        #Id;#Call;#appCon
+        CALL_3;expandChart;appCon
+
+        #Id;#Action;#Dialog;#AppConnection;#title;#description;#xAxisTicks;#lines;#svg
+        DLGFLL6;DialogFill;'DialogForTestCharts';appCon;Do.check('line chart');Do.check('description');Do.count();Do.count();Do.isVisible()
+
+        #Assert;#Message
+        DLGFLL6.Out.xAxisTicks == 6;'Expected 6 and actual ' + DLGFLL6.Out.xAxisTicks
+
+        #Assert;#Message
+        DLGFLL6.Out.lines == 2;'Expected 2 and actual ' + DLGFLL6.Out.lines
+
+        #Assert;#Message
+        DLGFLL6.Out.svg;'Expected true'
+
+        #Id;#Action;#Assert;#Dialog;#AppConnection;#xAxisTicks;#lines
+        DLGFLL7;DialogFill;DLGFLL7.Out.xAxisTicks == 2001 && DLGFLL7.Out.lines == "Mike salary";'DialogForTestCharts';appCon;Do.use(0).getValue();Do.use(0).getValue()
+
+        #Id;#Action;#Assert;#Dialog;#AppConnection;#xAxisTicks;#lines
+        DLGFLL8;DialogFill;DLGFLL8.Out.xAxisTicks == 2006 && DLGFLL8.Out.lines == "John Salary";'DialogForTestCharts';appCon;Do.use(5).getValue();Do.use(1).getValue()
+
+        #Id;#Call;#appCon
+        CALL_2;stopBrowser;appCon
+
+    #EndStep
+
+    #Step;#Kind;#For
+    'line chart passed outside testcase with description';;
+        #Id;#RawText;#Kind
+        TEXT2;Text;Matrix
+        ~;"#Id;#TestCase;#Kind;#Depends;#For"
+        ~;"myId;Test case;Never;;"
+        ~;"    #Id;#RawTable"
+        ~;"    DATA1;Table"
+        ~;"    @;Labels;Mike salary;John Salary"
+        ~;"    0;2001;1;2"
+        ~;"    1;2002;2;3"
+        ~;"    2;2003;3;4"
+        ~;"    3;2004;3;4"
+        ~;"    4;2005;3;5"
+        ~;"    5;2006;4;5"
+        ~;"    #EndRawTable"
+        ~;""
+        ~;"    #Action;#Type;#Table;#Title;#Labels;#YAxisDescription;#BeforeTestCase"
+        ~;"    ChartReport;ChartKind.Line;DATA1;'line chart';'Labels';'description';'myId'"
+        #EndRawText
+
+        #Id;#Call;#rawText
+        CALL_2;runMatrix;TEXT2
+
+        #Id;#Call;#pathToReport
+        appCon;runBrowser;CALL_2
+
+        #Id;#Action;#Assert;#Dialog;#AppConnection;#title;#svg
+        DLGFLL55;DialogFill;This.Out.title == true && This.Out.svg == true;'DialogForTestCharts';appCon;Do.isVisible();Do.isVisible()
+
+        #Id;#Call;#appCon
+        CALL_3;expandChart;appCon
+
+        #Id;#Action;#Dialog;#AppConnection;#title;#description;#xAxisTicks;#lines;#svg
+        DLGFLL66;DialogFill;'DialogForTestCharts';appCon;Do.check('line chart');Do.check('description');Do.count();Do.count();Do.isVisible()
+
+        #Assert;#Message
+        DLGFLL66.Out.xAxisTicks == 6;'Expected 6 and actual ' + DLGFLL66.Out.xAxisTicks
+
+        #Assert;#Message
+        DLGFLL66.Out.lines == 2;'Expected 2 and actual ' + DLGFLL66.Out.lines
+
+        #Assert;#Message
+        DLGFLL66.Out.svg;'Expected true'
+
+        #Id;#Action;#Assert;#Dialog;#AppConnection;#xAxisTicks;#lines
+        DLGFLL77;DialogFill;DLGFLL77.Out.xAxisTicks == 2001 && DLGFLL77.Out.lines == "Mike salary";'DialogForTestCharts';appCon;Do.use(0).getValue();Do.use(0).getValue()
+
+        #Id;#Action;#Assert;#Dialog;#AppConnection;#xAxisTicks;#lines
+        DLGFLL88;DialogFill;DLGFLL88.Out.xAxisTicks == 2006 && DLGFLL88.Out.lines == "John Salary";'DialogForTestCharts';appCon;Do.use(5).getValue();Do.use(1).getValue()
+
+        #Id;#Action;#Assert;#Dialog;#AppConnection;#MockElement
+        DLGFLL9;DialogFill;This.Result == Result.Failed;'DialogForTestReport';appCon;Do.use(new Locator().kind(ControlKind.Any).xpath('.//table[contains(@class,"innerTable")]//div[@class="container"]')).isVisible()
+
+        #Id;#Call;#appCon
+        CALL_2;stopBrowser;appCon
+
+    #EndStep
+
+    #Step;#Kind;#For
+    'line chart passed inside testcase without description';;
+        #Id;#RawText;#Kind
+        TEXT1;Text;Matrix
+        ~;"#TestCase;#Kind;#Depends;#For"
+        ~;"Test case;Never;;"
+        ~;"    #Id;#RawTable"
+        ~;"    DATA1;Table"
+        ~;"    @;Labels;Mike salary;John Salary"
+        ~;"    0;2001;1;2"
+        ~;"    1;2002;2;3"
+        ~;"    2;2003;3;4"
+        ~;"    3;2004;3;4"
+        ~;"    4;2005;3;5"
+        ~;"    5;2006;4;5"
+        ~;"    #EndRawTable"
+        ~;""
+        ~;"    #Action;#Type;#Table;#Title;#Labels"
+        ~;"    ChartReport;ChartKind.Line;DATA1;'line chart';'Labels'"
+        #EndRawText
+
+        #Id;#Call;#rawText
+        CALL_1;runMatrix;TEXT1
+
+        #Id;#Call;#pathToReport
+        appCon;runBrowser;CALL_1
+
+        #Id;#Call;#appCon
+        CALL_3;expandChart;appCon
+
+        #Id;#Action;#Dialog;#AppConnection;#description
+        DLGFLL667;DialogFill;'DialogForTestCharts';appCon;Do.check('')
+
+        #Id;#Call;#appCon
+        CALL_2;stopBrowser;appCon
+
+    #EndStep
+
+    #Step;#Kind;#For
+    'line chart with user colors';;
+        #Id;#RawText;#Kind
+        TEXT21;Text;Matrix
+        ~;"#Id;#TestCase;#Kind;#Depends;#For"
+        ~;"myId;Test case;Never;;"
+        ~;"    #Id;#RawTable"
+        ~;"    DATA1;Table"
+        ~;"    @;Labels;Mike salary;John Salary"
+        ~;"    0;2001;1;2"
+        ~;"    1;2002;2;3"
+        ~;"    2;2003;3;4"
+        ~;"    3;2004;3;4"
+        ~;"    4;2005;3;5"
+        ~;"    5;2006;4;5"
+        ~;"    #EndRawTable"
+        ~;""
+        ~;"    #Action;#Type;#Table;#Title;#Labels;#YAxisDescription;#BeforeTestCase;#Colors"
+        ~;"    ChartReport;ChartKind.Line;DATA1;'line chart';'Labels';'description';'myId';{'Mike salary' : Color.GREEN, 'John Salary' : Color.RED}"
+        #EndRawText
+
+        #Id;#Call;#rawText
+        CALL_4;runMatrix;TEXT21
+
+        #Id;#Call;#pathToReport
+        appCon;runBrowser;CALL_4
+
+        #Id;#Action;#Dialog;#AppConnection;#svg;#svg
+        DLGFLL10;DialogFill;'DialogForTestCharts';appCon;Do.checkColor(686,113, Color.GREEN);Do.checkColor(534, 62, Color.RED)
+
+        #Id;#Call;#appCon
+        CALL_5;stopBrowser;appCon
+
+    #EndStep
+
+
+#TestCase;#Kind;#Depends;#For
+report chart Bar chart;;;
+    #Step;#Kind;#For
+    'bar chart with empty labels';;
+        #Id;#Action
+        TBL2;TableCreate
+
+        #Action;#Assert;#Type;#Table;#Title;#YAxisDescription
+        ChartReport;This.Result == Result.Failed && This.Kind==ErrorKind.EMPTY_PARAMETER;ChartKind.Bar;TBL2.Out;'line chart';'description'
+
+    #EndStep
+
+    #Step;#Kind;#For
+    'bar chart passed inside testcase with description';;
+        #Id;#RawText;#Kind
+        TEXT1;Text;Matrix
+        ~;"#TestCase;#Kind;#Depends;#For"
+        ~;"Test case;Never;;"
+        ~;"    #Id;#RawTable"
+        ~;"    DATA1;Table"
+        ~;"    @;Labels;Mike salary;John Salary"
+        ~;"    0;2001;1;2"
+        ~;"    1;2002;2;3"
+        ~;"    2;2003;3;4"
+        ~;"    3;2004;3;4"
+        ~;"    4;2005;3;5"
+        ~;"    5;2006;4;5"
+        ~;"    #EndRawTable"
+        ~;""
+        ~;"    #Action;#Type;#Table;#Title;#Labels;#YAxisDescription"
+        ~;"    ChartReport;ChartKind.Bar;DATA1;'line chart';'Labels';'description'"
+        #EndRawText
+
+        #Id;#Call;#rawText
+        CALL_1;runMatrix;TEXT1
+
+        #Id;#Call;#pathToReport
+        appCon;runBrowser;CALL_1
+
+        #Id;#Action;#Assert;#Dialog;#AppConnection;#title;#svg
+        DLGFLL5;DialogFill;This.Out.title == false && This.Out.svg == false;'DialogForTestCharts';appCon;Do.isVisible();Do.isVisible()
+
+        #Id;#Call;#appCon
+        CALL_3;expandChart;appCon
+
+        #Id;#Action;#Dialog;#AppConnection;#title;#description;#xAxisTicks;#bars;#legend;#svg
+        DLGFLL6;DialogFill;'DialogForTestCharts';appCon;Do.check('line chart');Do.check('description');Do.count();Do.count();Do.count();Do.isVisible()
+
+        #Assert;#Message
+        DLGFLL6.Out.xAxisTicks == 6;'Expected 6 and actual ' + DLGFLL6.Out.xAxisTicks
+
+        #Assert;#Message
+        DLGFLL6.Out.legend == 2;'Expected 2 and actual ' + DLGFLL6.Out.legend
+
+        #Assert;#Message
+        DLGFLL6.Out.bars == 6;'Expected 6 and actual ' + DLGFLL6.Out.bars
+
+        #Assert;#Message
+        DLGFLL6.Out.svg;'Expected true'
+
+        #Id;#Action;#Assert;#Dialog;#AppConnection;#xAxisTicks;#legend
+        DLGFLL7;DialogFill;DLGFLL7.Out.xAxisTicks == 2001 && DLGFLL7.Out.legend == "Mike salary";'DialogForTestCharts';appCon;Do.use(0).getValue();Do.use(0).getValue()
+
+        #Id;#Action;#Assert;#Dialog;#AppConnection;#xAxisTicks;#legend
+        DLGFLL8;DialogFill;DLGFLL8.Out.xAxisTicks == 2006 && DLGFLL8.Out.legend == "John Salary";'DialogForTestCharts';appCon;Do.use(5).getValue();Do.use(1).getValue()
+
+        #Id;#Call;#appCon
+        CALL_2;stopBrowser;appCon
+
+    #EndStep
+
+    #Step;#Kind;#For
+    'bar chart passed outside testcase with description';;
+        #Id;#RawText;#Kind
+        TEXT2;Text;Matrix
+        ~;"#Id;#TestCase;#Kind;#Depends;#For"
+        ~;"myId;Test case;Never;;"
+        ~;"    #Id;#RawTable"
+        ~;"    DATA1;Table"
+        ~;"    @;Labels;Mike salary;John Salary"
+        ~;"    0;2001;1;2"
+        ~;"    1;2002;2;3"
+        ~;"    2;2003;3;4"
+        ~;"    3;2004;3;4"
+        ~;"    4;2005;3;5"
+        ~;"    5;2006;4;5"
+        ~;"    #EndRawTable"
+        ~;""
+        ~;"    #Action;#Type;#Table;#Title;#Labels;#YAxisDescription;#BeforeTestCase"
+        ~;"    ChartReport;ChartKind.Bar;DATA1;'line chart';'Labels';'description';'myId'"
+        #EndRawText
+
+        #Id;#Call;#rawText
+        CALL_2;runMatrix;TEXT2
+
+        #Id;#Call;#pathToReport
+        appCon;runBrowser;CALL_2
+
+        #Id;#Action;#Assert;#Dialog;#AppConnection;#title;#svg
+        DLGFLL55;DialogFill;This.Out.title == true && This.Out.svg == true;'DialogForTestCharts';appCon;Do.isVisible();Do.isVisible()
+
+        #Id;#Call;#appCon
+        CALL_3;expandChart;appCon
+
+        #Id;#Action;#Dialog;#AppConnection;#title;#description;#xAxisTicks;#legend;#bars;#svg
+        DLGFLL66;DialogFill;'DialogForTestCharts';appCon;Do.check('line chart');Do.check('description');Do.count();Do.count();Do.count();Do.isVisible()
+
+        #Assert;#Message
+        DLGFLL66.Out.bars == 6;'Expected 6 and actual ' + DLGFLL66.Out.bars
+
+        #Assert;#Message
+        DLGFLL66.Out.xAxisTicks == 6;'Expected 6 and actual ' + DLGFLL66.Out.xAxisTicks
+
+        #Assert;#Message
+        DLGFLL66.Out.legend == 2;'Expected 2 and actual ' + DLGFLL66.Out.legend
+
+        #Assert;#Message
+        DLGFLL66.Out.svg;'Expected true'
+
+        #Id;#Action;#Assert;#Dialog;#AppConnection;#xAxisTicks;#legend
+        DLGFLL77;DialogFill;DLGFLL77.Out.xAxisTicks == 2001 && DLGFLL77.Out.legend == "Mike salary";'DialogForTestCharts';appCon;Do.use(0).getValue();Do.use(0).getValue()
+
+        #Id;#Action;#Assert;#Dialog;#AppConnection;#xAxisTicks;#legend
+        DLGFLL88;DialogFill;DLGFLL88.Out.xAxisTicks == 2006 && DLGFLL88.Out.legend == "John Salary";'DialogForTestCharts';appCon;Do.use(5).getValue();Do.use(1).getValue()
+
+        #Id;#Action;#Assert;#Dialog;#AppConnection;#MockElement
+        DLGFLL9;DialogFill;This.Result == Result.Failed;'DialogForTestReport';appCon;Do.use(new Locator().kind(ControlKind.Any).xpath('.//table[contains(@class,"innerTable")]//div[@class="container"]')).isVisible()
+
+        #Id;#Call;#appCon
+        CALL_2;stopBrowser;appCon
+
+    #EndStep
+
+    #Step;#Kind;#For
+    'bar chart passed inside testcase without description';;
+        #Id;#RawText;#Kind
+        TEXT1;Text;Matrix
+        ~;"#TestCase;#Kind;#Depends;#For"
+        ~;"Test case;Never;;"
+        ~;"    #Id;#RawTable"
+        ~;"    DATA1;Table"
+        ~;"    @;Labels;Mike salary;John Salary"
+        ~;"    0;2001;1;2"
+        ~;"    1;2002;2;3"
+        ~;"    2;2003;3;4"
+        ~;"    3;2004;3;4"
+        ~;"    4;2005;3;5"
+        ~;"    5;2006;4;5"
+        ~;"    #EndRawTable"
+        ~;""
+        ~;"    #Action;#Type;#Table;#Title;#Labels"
+        ~;"    ChartReport;ChartKind.Bar;DATA1;'line chart';'Labels'"
+        #EndRawText
+
+        #Id;#Call;#rawText
+        CALL_1;runMatrix;TEXT1
+
+        #Id;#Call;#pathToReport
+        appCon;runBrowser;CALL_1
+
+        #Id;#Call;#appCon
+        CALL_3;expandChart;appCon
+
+        #Id;#Action;#Dialog;#AppConnection;#description
+        DLGFLL667;DialogFill;'DialogForTestCharts';appCon;Do.check('')
+
+        #Id;#Call;#appCon
+        CALL_2;stopBrowser;appCon
+
+    #EndStep
+
+    #Step;#Kind;#For
+    'bar chart with user colors';;
+        #Id;#RawText;#Kind
+        TEXT21;Text;Matrix
+        ~;"#Id;#TestCase;#Kind;#Depends;#For"
+        ~;"myId;Test case;Never;;"
+        ~;"    #Id;#RawTable"
+        ~;"    DATA1;Table"
+        ~;"    @;Labels;Mike salary;John Salary"
+        ~;"    0;2001;1;2"
+        ~;"    1;2002;2;3"
+        ~;"    2;2003;3;4"
+        ~;"    3;2004;3;4"
+        ~;"    4;2005;3;5"
+        ~;"    5;2006;4;5"
+        ~;"    #EndRawTable"
+        ~;""
+        ~;"    #Action;#Type;#Table;#Title;#Labels;#YAxisDescription;#BeforeTestCase;#Colors"
+        ~;"    ChartReport;ChartKind.Bar;DATA1;'line chart';'Labels';'description';'myId';{'Mike salary' : Color.GREEN, 'John Salary' : Color.RED}"
+        #EndRawText
+
+        #Id;#Call;#rawText
+        CALL_4;runMatrix;TEXT21
+
+        #Id;#Let
+        greenRects;[104,215,376,518,681,819]
+
+        #Id;#Let
+        redRects;[144,269,444,585,728,874]
+
+        #Id;#Call;#pathToReport
+        appCon;runBrowser;CALL_4
+
+        #For;#From;#To;#Step
+        i;0;greenRects.size() - 1;1
+            #Id;#Action;#Dialog;#AppConnection;#svg;#svg
+            DLGFLL11;DialogFill;'DialogForTestCharts';appCon;Do.checkColor(greenRects[i],400,Color.GREEN);Do.checkColor(redRects[i],400,Color.RED)
+
+        #EndFor
+
+        #Id;#Action;#Dialog;#AppConnection;#svg;#svg
+        DLGFLL12;DialogFill;'DialogForTestCharts';appCon;Do.checkColor(926,28,Color.GREEN);Do.checkColor(926,49,Color.RED)
+
+        #Id;#Call;#appCon
+        CALL_5;stopBrowser;appCon
+
+    #EndStep
+
+
+#TestCase;#Kind;#Depends;#For
+report chart Pie chart;;;
+    #Step;#Kind;#For
+    'pie chart inside table';;
+        #Id;#RawText;#Kind
+        TEXT3;Text;Matrix
+        ~;"#TestCase;#Kind;#Depends;#For"
+        ~;"Test case;Never;;"
+        ~;"    #Id;#RawTable"
+        ~;"    DATA1;Table"
+        ~;"    @;A;B;C"
+        ~;"    0;1;2;3"
+        ~;"    #EndRawTable"
+        ~;""
+        ~;"    #Action;#Type;#Table;#Title"
+        ~;"    ChartReport;ChartKind.Pie;DATA1;'Title'"
+        #EndRawText
+
+        #Id;#Call;#rawText
+        CALL_4;runMatrix;TEXT3
+
+        #Id;#Call;#pathToReport
+        appCon;runBrowser;CALL_4
+
+        #Id;#Action;#Assert;#Dialog;#AppConnection;#title;#svg
+        DLGFLL1;DialogFill;This.Out.title == false && This.Out.svg == false;'DialogForTestCharts';appCon;Do.isVisible();Do.isVisible()
+
+        #Id;#Call;#appCon
+        CALL_1;expandChart;appCon
+
+        #Id;#Action;#Assert;#Dialog;#AppConnection;#slices
+        DLGFLL5;DialogFill;This.Out.slices == 3;'DialogForTestCharts';appCon;Do.count()
+
+        #Id;#Let
+        list;['A','B','C']
+
+        #For;#From;#To;#Step
+        i;0;list.size() - 1;1
+            #Id;#Action;#Dialog;#AppConnection;#slices
+            DLGFLL6;DialogFill;'DialogForTestCharts';appCon;Do.use(i).check(list[i])
+
+        #EndFor
+
+        #Id;#Call;#appCon
+        CALL_6;stopBrowser;appCon
+
+    #EndStep
+
+    #Step;#Kind;#For
+    'pie chart outside table';;
+        #Id;#RawText;#Kind
+        TEXT1;Text;Matrix
+        ~;"#Id;#TestCase;#Kind;#Depends;#For"
+        ~;"myId;Test case;Never;;"
+        ~;"    #Id;#RawTable"
+        ~;"    DATA1;Table"
+        ~;"    @;A;B;C"
+        ~;"    0;1;2;3"
+        ~;"    #EndRawTable"
+        ~;""
+        ~;"    #Action;#Type;#Table;#Title;#BeforeTestCase"
+        ~;"    ChartReport;ChartKind.Pie;DATA1;'Title';'myId'"
+        #EndRawText
+
+        #Id;#Call;#rawText
+        pathToReport;runMatrix;TEXT1
+
+        #Id;#Call;#pathToReport
+        appCon;runBrowser;pathToReport
+
+        #Id;#Action;#Assert;#Dialog;#AppConnection;#title;#svg
+        DLGFLL11;DialogFill;This.Out.title == true && This.Out.svg == true;'DialogForTestCharts';appCon;Do.isVisible();Do.isVisible()
+
+        #Id;#Action;#Assert;#Dialog;#AppConnection;#slices
+        DLGFLL55;DialogFill;This.Out.slices == 3;'DialogForTestCharts';appCon;Do.count()
+
+        #Id;#Let
+        list;['A','B','C']
+
+        #For;#From;#To;#Step
+        i;0;list.size() - 1;1
+            #Id;#Action;#Dialog;#AppConnection;#slices
+            DLGFLL66;DialogFill;'DialogForTestCharts';appCon;Do.use(i).check(list[i])
+
+        #EndFor
+
+        #Id;#Call;#appCon
+        CALL_1;expandChart;appCon
+
+        #Id;#Action;#Assert;#Dialog;#AppConnection;#MockElement
+        DLGFLL9;DialogFill;This.Result == Result.Failed;'DialogForTestReport';appCon;Do.use(new Locator().kind(ControlKind.Any).xpath('.//table[contains(@class,"innerTable")]//div[@class="container"]')).isVisible()
+
+        #Id;#Call;#appCon
+        CALL_6;stopBrowser;appCon
+
+    #EndStep
+
+    #Step;#Kind;#For
+    'pie chart with user colors';;
+        #Id;#RawText;#Kind
+        TEXT;Text;Matrix
+        ~;"#Id;#TestCase;#Kind;#Depends;#For"
+        ~;"myId;Test case;Never;;"
+        ~;"    #Id;#RawTable"
+        ~;"    DATA1;Table"
+        ~;"    @;A;B;C"
+        ~;"    0;1;2;3"
+        ~;"    #EndRawTable"
+        ~;""
+        ~;"    #Action;#Type;#Table;#Title;#BeforeTestCase;#Colors"
+        ~;"    ChartReport;ChartKind.Pie;DATA1;'Title';'myId';{'A' : Color.RED, 'B' : Color.GREEN, 'C' : Color.BLUE}"
+        #EndRawText
+
+        #Id;#Call;#rawText
+        pathToReport;runMatrix;TEXT
+
+        #Id;#Call;#pathToReport
+        appCon;runBrowser;pathToReport
+
+        #Id;#Action;#Dialog;#AppConnection;#svg;#svg;#svg
+        DLGFLL56;DialogFill;'DialogForTestCharts';appCon;Do.checkColor(100, 85, Color.RED);Do.checkColor(100, 200, Color.GREEN);Do.checkColor(200, 200, Color.BLUE)
+
+        #Id;#Call;#appCon
+        CALL_2;stopBrowser;appCon
+
+    #EndStep
+
+
+#TestCase;#Kind;#Depends;#For
 subcases;;;
     #Id;#SubCase;#rawText
-    runMatrix;returned value - path to report;TEXT1
+    runMatrix;returned value - path to report;TEXT
         #Id;#Action;#Text
         MXRN1;MatrixRunFromText;rawText
 
@@ -245,7 +812,7 @@ subcases;;;
     #EndSubCase
 
     #Id;#SubCase;#pathToReport
-    runBrowser;returned value - appConnection;REP1.Out.getReportName()
+    runBrowser;returned value - appConnection;pathToReport
         #Id;#Action;#AppId;#Browser;#URL
         APPSTR1;ApplicationStart;mockWebApp;mockWebBrowser;'file://' + new File(pathToReport).getAbsolutePath()
 
@@ -271,6 +838,40 @@ subcases;;;
 
         #Id;#Action;#Dialog;#AppConnection;#MockElement
         DLGFLL3;DialogFill;'DialogForTestReport';appCon;Do.use(new Locator().kind(ControlKind.Any).xpath('.//a[contains(.,"ActionItem (Report)")]')).click()
+
+    #EndSubCase
+
+    #Id;#SubCase;#appCon
+    expandChart;;appCon
+        #Id;#Action;#Dialog;#AppConnection;#Executed
+        DLGFLL1;DialogFill;'DialogForTestReport';appCon;Do.click()
+
+        #Id;#Action;#Dialog;#AppConnection;#MockElement
+        DLGFLL2;DialogFill;'DialogForTestReport';appCon;Do.use(new Locator().kind(ControlKind.Any).xpath('.//a[contains(.,"TestCase")]')).click()
+
+        #Id;#Action;#Dialog;#AppConnection;#MockElement
+        DLGFLL3;DialogFill;'DialogForTestReport';appCon;Do.use(new Locator().kind(ControlKind.Any).xpath('.//a[contains(.,"ActionItem (ChartReport)")]')).click()
+
+    #EndSubCase
+
+    #Id;#SubCase;#appCon;#list
+    expandWithPath;;;
+        #If
+        !(list is java.util.List)
+            #Fail
+            'Passed array is not instance of List'
+
+        #EndIf
+
+        #Id;#Action;#Dialog;#AppConnection;#Executed
+        DLGFLL1;DialogFill;'DialogForTestReport';appCon;Do.click()
+
+        #ForEach;#In
+        link;list
+            #Id;#Action;#MockElement;#Dialog;#AppConnection
+            DLGFLL4;DialogFill;Do.use(new Locator().kind(ControlKind.Any).xpath('.//a[contains(.,"'+link+'")]')).click();'DialogForTestReport';appCon
+
+        #EndForEach
 
     #EndSubCase
 

@@ -22,6 +22,11 @@ import java.util.Map;
 
 public class GanntChartBuilder extends ChartBuilder
 {
+	public GanntChartBuilder() throws JFException
+	{
+		super(null, null, null);
+	}
+
 	public GanntChartBuilder(Table table, Parameters params, Map<String, Color> colorMap) throws JFException
 	{
 		super(table, params, colorMap);

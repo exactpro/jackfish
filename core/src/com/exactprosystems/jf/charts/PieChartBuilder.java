@@ -22,6 +22,11 @@ import java.util.Map;
 
 public class PieChartBuilder extends ChartBuilder
 {
+	public PieChartBuilder() throws JFException
+	{
+		super(null, null, null);
+	}
+
 	public PieChartBuilder(Table table, Parameters params, Map<String, Color> colors) throws JFException
 	{
 		super(table, params, colors);

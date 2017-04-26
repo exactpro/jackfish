@@ -125,7 +125,7 @@ public class ChartReport extends AbstractAction
 			tab = (Table) tabObj;
 		}
 		
-		ChartBuilder chartBuilder = ChartFactory.createChartBuilder(kind, tab, null, parameters.select(TypeMandatory.Extra));
+		ChartBuilder chartBuilder = ChartFactory.createStubChartBuilder(kind);
 		chartBuilder.helpToAddParameters(list, context);
 	}
 

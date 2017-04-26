@@ -31,6 +31,11 @@ public class BarChartBuilder extends ChartBuilder
 	private String yAxisDescription = "";
 	private String labelColumn;
 
+	public BarChartBuilder() throws JFException
+	{
+		super(null, null, null);
+	}
+
 	public BarChartBuilder(Table table, Parameters params, Map<String, Color> colorMap) throws JFException
 	{
 		super(table, params, colorMap);

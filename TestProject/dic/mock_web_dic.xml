@@ -56,6 +56,25 @@
             <button id="Failed" class="filterFailed"/>
             <label id="startTime" xpath=".//span[@id=&amp;#39;startTime&amp;#39;]/span"/>
             <label id="finishTime" xpath=".//span[@id=&amp;#39;finishTime&amp;#39;]/span"/>
+            <label id="version" xpath="//table[@class=&amp;quot;table&amp;quot;]/tbody/tr[2]/td[2]"/>
+        </run>
+        <onClose/>
+        <close/>
+    </window>
+    <window name="DialogForTestCharts">
+        <self>
+            <any id="self" xpath="//div[@class=&amp;quot;container&amp;quot;]"/>
+        </self>
+        <onOpen/>
+        <run>
+            <label id="title" class="tableTitle" visibility="Visible"/>
+            <label id="description" xpath=".//*[@transform=&amp;#39;rotate(-90)&amp;#39;]" owner="self" class="" visibility="Visible"/>
+            <label id="xAxisTicks" xpath=".//*[@class=&amp;quot;x axis&amp;quot; and name()=&amp;quot;g&amp;quot;]/*[@class=&amp;quot;tick&amp;quot; and name()=&amp;quot;g&amp;quot;]/*[name()=&amp;quot;text&amp;quot;]" owner="self" addition="Many"/>
+            <label id="lines" xpath=".//*[@class=&amp;quot;myLine&amp;quot;]/*[name()=&amp;quot;text&amp;quot;]" owner="self" addition="Many"/>
+            <label id="svg" xpath=".//*[name()=&amp;quot;svg&amp;quot;]" visibility="Visible"/>
+            <label id="bars" xpath=".//*[@class=&amp;quot;rect&amp;quot;]" owner="self" addition="Many"/>
+            <label id="legend" xpath=".//*[name()=&amp;quot;g&amp;quot; and @class=&amp;quot;legend&amp;quot;]/*[name()=&amp;quot;text&amp;quot;]" owner="self" addition="Many"/>
+            <label id="slices" xpath=".//*[@class=&amp;quot;slice&amp;quot; and name()=&amp;quot;g&amp;quot;]/*[name()=&amp;quot;text&amp;quot;]" owner="self" addition="Many"/>
         </run>
         <onClose/>
         <close/>

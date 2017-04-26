@@ -10,6 +10,7 @@ package com.exactprosystems.jf.actions;
 
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.error.ErrorKind;
+import com.exactprosystems.jf.api.error.JFException;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
 import com.exactprosystems.jf.common.evaluator.Variables;
 import com.exactprosystems.jf.common.report.ReportBuilder;
@@ -125,55 +126,60 @@ public abstract class AbstractAction implements Cloneable
     public final Result doAction(Context context, AbstractEvaluator evaluator,
                                  ReportBuilder report, Parameters parameters, String actionId, Parameter assertBool)
     {
-        try
-        {
-            clearResults();
-            this.action.In = parameters;
-            evaluator.getLocals().set(Tokens.This.get(), this.action);
+		try
+		{
+			clearResults();
+			this.action.In = parameters;
+			evaluator.getLocals().set(Tokens.This.get(), this.action);
 			if (!Str.IsNullOrEmpty(actionId))
 			{
-	            Variables variables = owner.isGlobal() ? evaluator.getGlobals() : evaluator.getLocals();
-	            variables.set(actionId, this.action);
+				Variables variables = owner.isGlobal() ? evaluator.getGlobals() : evaluator.getLocals();
+				variables.set(actionId, this.action);
 			}
 
 			boolean parametersAreCorrect = parameters.evaluateAll(evaluator);
-            reportParameters(report, parameters);
-            if (parametersAreCorrect)
-            {
-                if (injectParameters(parameters))
-                {
-                    //-------------------------------------------------------------
-                    // Do the action!
-                    //-------------------------------------------------------------
-                    doRealAction(context, report, parameters, evaluator);
-                    //-------------------------------------------------------------
+			reportParameters(report, parameters);
+			if (parametersAreCorrect)
+			{
+				if (injectParameters(parameters))
+				{
+					//-------------------------------------------------------------
+					// Do the action!
+					//-------------------------------------------------------------
+					doRealAction(context, report, parameters, evaluator);
+					//-------------------------------------------------------------
 
-                    if (this.action.Result == null)
-                    {
-                        String str = "Action " + this.getClass() + " works incorrectly.";
-                        throw new Exception(str);
-                    }
-                }
-            }
-            else
-            {
-                setError("Errors in parameter expressions", ErrorKind.EXPRESSION_ERROR);
-            }
-        }
-        catch (Exception e)
-        {
-            logger.error(e.getMessage(), e);
-            if (e.getCause() != null)
-            {
-                setError("Exception occurred: " + e.getCause().getMessage(), ErrorKind.EXCEPTION);
-            }
-            else
-            {
-                setError("Exception occurred: " + e.getMessage(), ErrorKind.EXCEPTION);
-            }
-        }
-        
-        try
+					if (this.action.Result == null)
+					{
+						String str = "Action " + this.getClass() + " works incorrectly.";
+						throw new Exception(str);
+					}
+				}
+			}
+			else
+			{
+				setError("Errors in parameter expressions", ErrorKind.EXPRESSION_ERROR);
+			}
+		}
+		catch (JFException e)
+		{
+			logger.error(e.getMessage(), e);
+			setError(e.getMessage(), e.getErrorKind());
+		}
+		catch (Exception e)
+		{
+			logger.error(e.getMessage(), e);
+			if (e.getCause() != null)
+			{
+				setError("Exception occurred: " + e.getCause().getMessage(), ErrorKind.EXCEPTION);
+			}
+			else
+			{
+				setError("Exception occurred: " + e.getMessage(), ErrorKind.EXCEPTION);
+			}
+		}
+
+		try
         {
         	checkAsserts(evaluator, assertBool);
 		}

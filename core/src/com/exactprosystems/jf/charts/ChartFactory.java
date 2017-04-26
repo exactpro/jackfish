@@ -23,29 +23,25 @@ public class ChartFactory
 	
 	public static ChartBuilder createChartBuilder(ChartKind chartKind, Table table, Map<String, Color> colors, Parameters params) throws JFException
 	{
-		ChartBuilder chart = null;
 		switch (chartKind)
 		{
-		case Bar:
-			chart = new BarChartBuilder(table, params, colors);
-			break;
-			
-		case Line:
-			chart = new LineChartBuilder(table, params, colors);
-			break;
-			
-		case Pie:
-			chart = new PieChartBuilder(table, params, colors);
-			break;
-			
-		case Gannt:
-			chart = new GanntChartBuilder(table, params, colors);
-			break;
-
-		default:
-			throw new UnknownChartKindException("" + chartKind);
+			case Bar:	return new BarChartBuilder(table, params, colors);
+			case Line:	return new LineChartBuilder(table, params, colors);
+			case Pie:	return new PieChartBuilder(table, params, colors);
+			case Gannt:	return new GanntChartBuilder(table, params, colors);
+			default:	throw new UnknownChartKindException("" + chartKind);
 		}
+	}
 
-		return chart;
+	public static ChartBuilder createStubChartBuilder(ChartKind kind) throws JFException
+	{
+		switch (kind)
+		{
+			case Line:	return new LineChartBuilder();
+			case Bar:	return new BarChartBuilder();
+			case Pie:	return new PieChartBuilder();
+			case Gannt:	return new GanntChartBuilder();
+			default: throw new UnknownChartKindException("" + kind);
+		}
 	}
 }
