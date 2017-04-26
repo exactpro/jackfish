@@ -324,6 +324,7 @@ public abstract class ReportBuilder implements Storable
 		reportFooter(writer, failed, passed, startTime == null ? new Date() : startTime, 
 				finishTime == null ? new Date() : finishTime, this.name, this.reportName);
 		writer.close();
+		Thread.sleep(500);
 
 		if (fullName != null)
 		{
