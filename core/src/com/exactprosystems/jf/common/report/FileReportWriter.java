@@ -39,6 +39,7 @@ public class FileReportWriter extends ReportWriter
 	@Override
 	public void close() throws IOException
 	{
+	    this.writer.flush();
 		this.writer.close();
 	}
 
