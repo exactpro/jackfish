@@ -3,7 +3,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:System="clr-namespace:System;assembly=mscorlib" xmlns:sdk="http://schemas.microsoft.com/winfx/2006/xaml/presentation/sdk" x:Class="SilverLightMock.MainPage"
+    xmlns:System="clr-namespace:System;assembly=mscorlib" xmlns:sdk="http://schemas.microsoft.com/winfx/2006/xaml/presentation/sdk" xmlns:SampleData="clr-namespace:Expression.Blend.SampleData.ComboBoxData" x:Class="SilverLightMock.MainPage"
     mc:Ignorable="d"
     d:DesignHeight="300" d:DesignWidth="400">
     <UserControl.Resources>
@@ -61,8 +61,8 @@
                 <Setter.Value>
                     <ControlTemplate TargetType="ListBoxItem">
                         <Grid x:Name="RootElement">
-                            <CheckBox ClickMode="Press" Content="{Binding Path=Name}"
-                          IsChecked="{Binding Path=IsSelected, Mode=TwoWay}" />
+                            <CheckBox ClickMode="Press" Content="{Binding Name}"
+                          IsChecked="{Binding IsSelected, Mode=TwoWay}" />
                         </Grid>
                     </ControlTemplate>
                 </Setter.Value>
@@ -346,6 +346,6 @@
                 <sdk:DataGridTextColumn Binding="{Binding String}" Header="String"/>
             </sdk:DataGrid.Columns>
         </sdk:DataGrid>
-
+        <sdk:AutoCompleteBox HorizontalAlignment="Left" Height="28" Margin="10,243,0,0" VerticalAlignment="Top" Width="120" x:Name="autocompleteBox" IsDropDownOpen="True" ItemsSource="{Binding Collection, Source={StaticResource ComboBoxData}}" FilterMode="None" ItemTemplate="{StaticResource ItemTemplate}"/>
     </Grid>
 </UserControl>
